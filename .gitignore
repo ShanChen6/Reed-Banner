@@ -1,0 +1,95 @@
+# ─── Dependencies ───────────────────────────────────────────
+node_modules/
+.pnpm-store/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ─── Next.js / build output ─────────────────────────────────
+.next/
+out/
+build/
+dist/
+next-env.d.ts
+
+# ─── TypeScript ─────────────────────────────────────────────
+*.tsbuildinfo
+
+# ─── Testing & coverage ─────────────────────────────────────
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# ─── Environment variables (KHÔNG BAO GIỜ commit) ───────────
+# Chứa DATABASE_URL, AUTH_SECRET, OAuth client secret...
+.env
+.env.*
+!.env.example
+
+# ─── Vercel ─────────────────────────────────────────────────
+.vercel/
+
+# ─── Database (Prisma / Drizzle / local) ────────────────────
+# Giữ lại thư mục migrations để theo dõi schema.
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+prisma/*.db
+prisma/*.db-journal
+
+# ─── Script cân bằng & mô phỏng ─────────────────────────────
+# Kết quả chạy mô phỏng AI đấu AI (có thể rất lớn).
+# Nếu muốn lưu một bản báo cáo, đặt ở docs/ thay vì đây.
+balance-output/
+simulations/output/
+*.replay.json
+
+# ─── Notion sync ────────────────────────────────────────────
+# File JSON tĩnh sinh từ Notion ĐƯỢC commit (game đọc lúc build).
+# Chỉ bỏ qua bộ nhớ tạm của script đồng bộ.
+.notion-cache/
+
+# ─── Logs ───────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.turbo/
+
+# ─── Asset nguồn & file nặng ────────────────────────────────
+# File làm việc gốc của art/âm thanh, chỉ commit bản xuất ra.
+*.psd
+*.kra
+*.aseprite.bak
+*.blend1
+*.wav.asd
+
+# ─── Editor & IDE ───────────────────────────────────────────
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# ─── OS ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Misc ───────────────────────────────────────────────────
+*.pem
+.cache/
+tmp/
+temp/
