@@ -1,0 +1,29 @@
+# Nhật ký thay đổi thiết kế
+
+> Mới nhất ở trên cùng. Mỗi mục ghi quyết định và lý do nếu có.
+
+## 18/10/2026
+
+**Tổ chức docs**
+- Tách `docs/co-lau-design.md` thành các file theo chủ đề trong `docs/design/` và `docs/tech/`; gom TODO về [cau-hoi-mo.md](cau-hoi-mo.md).
+- Thống nhất tên: Cờ Lau (Reed Banner), repo `ShanChen6/Reed-Banner`. Bỏ đề xuất tạo repo mới `co-lau`.
+- Đổi "Ngũ hành" thành "Nguyên tố" vì giờ có 6 nguyên tố.
+
+**Gameplay (Shan chốt)**
+- Bàn cờ từ 8×8 thành **12 cột × 8 hàng**, bố cục ngang (theo ảnh tham khảo bố cục).
+- **Cascade** vẫn tạo ô đặc biệt và **cho thêm lượt**; mỗi nước đi tối đa 1 lượt thêm.
+- **Bỏ luật đi sai bị trừ máu.** Thay bằng đồng hồ **30 giây mỗi lượt**, hết giờ mất lượt.
+- Thêm thể thức **1vs1** bên cạnh **3vs3**.
+- **Nhân vật chính** là Đinh Bộ Lĩnh, có từ lúc tạo game, chọn 1 trong 6 nguyên tố và được đổi nguyên tố trước mỗi trận.
+- Thêm nguyên tố **Lôi**: Kim, Mộc, Thủy, Hỏa, Thổ, Lôi.
+- Nhân vật chính có **7 kỹ năng** (1 bị động, 6 chủ động) theo nguyên tố, gồm kỹ năng tác động trực tiếp lên đối thủ và lên bàn cờ. Đã có tên 6 kỹ năng chủ động hệ Mộc.
+- Trang bị từ 3 ô thành **9 ô**: Vũ khí, Đính mão, Y phục, Hộ thủ, Bảo ngoa, Giới chỉ, Hạng liên, Hộ phù, Ngọc bội.
+
+**Đề xuất kèm theo (chờ chốt, đã ghi trong câu hỏi mở)**
+- Quan hệ khắc chế và dấu ấn của Lôi.
+- Đồng hồ 30 giây được tắt ở Luyện tập và `/demo`.
+- Luật 1vs1, luật phá ô bằng kỹ năng, chỉ số chính của 9 ô trang bị.
+
+## 16/10/2026
+
+- Bản chốt thiết kế đầu tiên sau buổi phản biện (`docs/co-lau-design.md`).

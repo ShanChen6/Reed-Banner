@@ -1,0 +1,142 @@
+# Nhân vật, nghề & kỹ năng
+
+> Cập nhật: 18/10/2026
+>
+> Các con số là **điểm xuất phát**. Script cân bằng sẽ chỉnh lại.
+
+## 1. Mô hình chung
+
+- **Chỉ số:** Máu tối đa, Công (ATK), Thủ (DEF).
+- Mỗi nhân vật có **một nghề** cố định và **một nguyên tố**. Đối thủ AI cũng có nghề và nguyên tố.
+- **Không có độ hiếm.** Mọi nhân vật kèm cân bằng ở cùng một cấp. Nhân vật mua thêm mang giá trị **chiến thuật** (bao phủ nguyên tố, kỹ năng khác), không mạnh hơn.
+- Nhân vật lịch sử (nhân vật chính, trùm đối thủ) được ghi rõ là hư cấu hóa. Nhân vật kèm thường là **hư cấu**.
+
+## 2. Nhân vật chính: Đinh Bộ Lĩnh
+
+- Có ngay từ lúc tạo game, **luôn ra trận** ở cả 1vs1 và 3vs3.
+- **Nghề:** Tướng sĩ (hưởng nội tại nghề Tướng sĩ, xem mục 4.1).
+- **Nguyên tố:** chọn 1 trong 6 (Kim, Mộc, Thủy, Hỏa, Thổ, Lôi) khi tạo game, và được **đổi trước mỗi trận**. Trong trận không đổi được.
+- **7 kỹ năng theo nguyên tố:** 1 bị động + 6 chủ động. Đổi nguyên tố thì đổi cả bộ kỹ năng. Mỗi nguyên tố có bộ kỹ năng riêng, tổng cộng 6 bộ.
+- Kỹ năng của nhân vật chính đã mang sẵn màu nguyên tố, nên không cộng dấu ấn nguyên tố như chiêu nghề.
+
+### 2.1 Ba loại kỹ năng chủ động
+
+| Loại | Ví dụ tác dụng |
+|---|---|
+| **Tác động đối thủ** | Sát thương đơn mục tiêu, sát thương toàn bộ kẻ địch, hiệu ứng bất lợi |
+| **Tác động bàn cờ** | Phá hủy ô ngẫu nhiên, phá hủy một vùng ô (xem mục 5) |
+| **Hỗ trợ bản thân** | Hồi máu, Khiên, Công+, Thủ+, Hồi phục |
+
+Một kỹ năng có thể thuộc nhiều loại, ví dụ vừa gây sát thương vừa phá một vùng ô.
+
+### 2.2 Bộ kỹ năng hệ 🌳 Mộc
+
+| # | Kỹ năng | Loại | Tác dụng |
+|---|---|---|---|
+| Bị động | _Chưa đặt tên_ | — | _Chưa thiết kế_ |
+| 1 | **Lục Diệp Phong** | Bàn cờ | Phá hủy ngẫu nhiên một số ô cờ |
+| 2 | **Linh Mộc Hồi Sinh** | Hỗ trợ | Hỗ trợ, tăng cường bản thân |
+| 3 | **Thanh Mộc Hộ Pháp** | Đối thủ + bàn cờ | Sát thương đơn mục tiêu lớn, phá hủy 1 vùng ô |
+| 4 | **Cuồng Vũ Thiên Diệp** | Đối thủ + bàn cờ | Sát thương toàn bộ kẻ địch, phá hủy 1 vùng ô |
+| 5 | **Thiên Nhiên Đại Chú** | Đối thủ + bàn cờ | Sát thương đơn mục tiêu lớn, phá hủy vùng ô rộng hơn kỹ năng 3 |
+| 6 | **Thanh Trúc Bảo Phù** | Hỗ trợ | Hỗ trợ, tăng cường bản thân |
+
+> TODO: kỹ năng bị động hệ Mộc; số ô bị phá, kích thước vùng, chi phí năng lượng và hệ số sát thương của từng kỹ năng; hiệu ứng cụ thể của hai kỹ năng hỗ trợ (chọn trong [danh sách hiệu ứng](04-hieu-ung.md)).
+
+### 2.3 Bộ kỹ năng các nguyên tố khác
+
+> TODO: bộ 7 kỹ năng cho Kim, Thủy, Hỏa, Thổ, Lôi. Gợi ý giữ cùng khung với hệ Mộc (1 bị động, 1 bàn cờ, 2 hỗ trợ, 3 tấn công kèm phá ô) để 6 bộ cân bằng với nhau.
+
+### 2.4 Mở khóa & chi phí
+
+> TODO: 6 kỹ năng chủ động mở theo cấp hay có sẵn; chi phí năng lượng từng kỹ năng; nâng cấp bằng điểm kỹ năng.
+
+## 3. Luật dùng kỹ năng chủ động (mọi nhân vật)
+
+- Dùng kỹ năng là **hành động miễn phí trước khi đổi ô**, mỗi lượt tối đa **1 lần**. Chỉ **người hành động** trong lượt mới được dùng.
+- Trừ đúng chi phí năng lượng. Không đủ năng lượng thì kỹ năng bị khóa.
+- Kỹ năng gây sát thương bỏ qua DEF, vẫn chịu sĩ khí và nguyên tố (xem [Công thức](03-tai-nguyen-cong-thuc.md#3-công-thức-sát-thương)).
+- Câm lặng chặn mọi kỹ năng chủ động, không chặn kỹ năng bị động.
+
+## 4. Nhân vật kèm, nghề & chiêu nghề
+
+- Ở 3vs3, người chơi chọn **2 nhân vật kèm** cùng ra trận với nhân vật chính.
+- Mỗi nhân vật kèm = **Nghề + Nguyên tố + 1 tuyệt chiêu đặc trưng**. Nguyên tố của nhân vật kèm cố định.
+- **Khởi đầu:** người chơi có nhân vật chính và **5 nhân vật kèm hư cấu**, mỗi người một nghề còn lại (Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư).
+  > TODO: nguyên tố và tuyệt chiêu đặc trưng của 5 nhân vật kèm khởi đầu.
+- Danh sách nhân vật kèm bán ở cửa hàng:
+  > TODO: chốt sau khi hoàn thiện hệ thống (dự kiến khoảng 12 nhân vật, cộng với nhân vật nhận khi thắng trùm chiến dịch).
+
+### 4.1 Sáu nghề & nội tại
+
+Mỗi nghề gắn với một loại ô.
+
+| Ô | Nghề | Nội tại trong trận | Phụ ngoài trận |
+|---|---|---|---|
+| ⚔️ | **Tướng sĩ** | Ghép kiếm từ 4 ô trở lên: +30% sát thương | — |
+| ☯️ | **Pháp sư** | Năng lượng từ âm dương ×1.5 | — |
+| 🍙 | **Binh lính** | Lương tụt −3/lượt thay vì −5; mỗi bậc sĩ khí trên mức bình thường: +5% DEF | — |
+| ❤️ | **Y sư** | Hồi máu từ tim ×1.5; hồi vượt máu tối đa chuyển thành Khiên tạm thời | — |
+| 💰 | **Mưu sĩ** | Ghép vàng trừ năng lượng đối thủ (mỗi ô −2) | +10% vàng cuối trận |
+| 📖 | **Quân sư** | Ghép sách giảm ATK đối thủ 5% mỗi ô (tối đa −30%, 3 lượt) | +10% kinh nghiệm cuối trận |
+
+### 4.2 Khung kỹ năng nhân vật kèm
+
+| Nấc | Năng lượng | Kỹ năng | Mở khóa |
+|---|---|---|---|
+| 1 | 30 | Chiêu nghề (chung theo nghề) | Có sẵn |
+| 2 | 60 | Chiêu nhánh: **mua được cả 2, chọn 1 khi vào trận** | Cấp 5 |
+| 3 | 100 | Tuyệt chiêu đặc trưng (riêng nhân vật) | Cấp 10, **làm ở giai đoạn 3** |
+
+- Điểm kỹ năng dùng để mở nhánh nấc 2 và nâng cấp chiêu (cấp 1 đến 5: tăng sức mạnh hoặc giảm chi phí).
+- Chiêu nghề có lõi trung tính, cộng [dấu ấn nguyên tố](05-nguyen-to.md#4-dấu-ấn-nguyên-tố-trên-chiêu-nghề) của người tung chiêu. Riêng tuyệt chiêu nấc 3 được mang đậm nguyên tố của nhân vật.
+
+### 4.3 Bộ chiêu nghề (bản nháp)
+
+**⚔️ Tướng sĩ: dồn sát thương, cổ vũ cả đội**
+- Nấc 1, **Trảm kích:** 150% ATK vào 1 đối thủ.
+- Nấc 2A, **Hiệu lệnh:** Công +25% cho cả đội, 2 lượt.
+- Nấc 2B, **Phá trận:** 220% ATK vào 1 đối thủ, kèm Thủ −30% trong 2 lượt.
+
+**🍙 Binh lính: khiêu khích, chịu đòn**
+- Nấc 1, **Thủ thành:** Khiêu khích 2 lượt, kèm Khiên bằng 20% máu tối đa của bản thân.
+- Nấc 2A, **Phản kích:** Phản đòn 40% trong 2 lượt, kèm Thủ +30%.
+- Nấc 2B, **Tường khiên:** Khiên bằng 15% máu tối đa cho cả đội.
+
+**☯️ Pháp sư: bậc thầy nguyên tố, phá giáp**
+- Nấc 1, **Phép công:** 130% ATK vào 1 đối thủ.
+- Nấc 2A, **Ngũ hành ấn:** 100% ATK vào 1 đối thủ, kèm dấu ấn **cường hóa**, chắc chắn kích hoạt.
+- Nấc 2B, **Phép lan:** 70% ATK vào cả đội đối thủ.
+
+**❤️ Y sư: hồi máu, giải trừ**
+- Nấc 1, **Linh dược:** hồi 20% máu cho 1 đồng đội (người chơi chọn), kèm Thanh tẩy người đó.
+- Nấc 2A, **Dưỡng sinh:** Hồi phục 8% máu mỗi lượt cho cả đội, 3 lượt.
+- Nấc 2B, **Tế độ:** hồi 15% máu cả đội, kèm Thanh tẩy cả đội.
+
+**💰 Mưu sĩ: mua chuộc, phá năng lượng**
+- Nấc 1, **Mua chuộc:** trừ 30 năng lượng của 1 đối thủ.
+- Nấc 2A, **Ly gián:** Câm lặng 1 đối thủ trong 2 lượt.
+- Nấc 2B, **Cắt quân lương:** trừ 15 lương chung của phe đối thủ, kèm trừ 10 năng lượng mỗi đối thủ.
+
+**📖 Quân sư: suy yếu, điều binh**
+- Nấc 1, **Nghi binh:** Công −25% cho 1 đối thủ, 2 lượt.
+- Nấc 2A, **Phá kế:** Xua tan toàn bộ hiệu ứng có lợi của cả đội đối thủ.
+- Nấc 2B, **Bày trận:** Thủ +25% cho cả đội, 2 lượt.
+
+**Khắc chế giữa các nghề (tham khảo):**
+- Câm lặng (Mưu sĩ) khắc Pháp sư.
+- Xua tan (Quân sư) khắc Binh lính và Y sư.
+- Khiêu khích (Binh lính) bảo vệ đồng đội khỏi Tướng sĩ.
+- Thanh tẩy (Y sư) giải khống chế.
+
+## 5. Kỹ năng tác động lên bàn cờ
+
+Đề xuất luật chung (chờ chốt):
+
+- Ô bị kỹ năng phá hủy **được thu hoạch** như ô bị ô đặc biệt nổ.
+- Ô đặc biệt bị phá thì **kích hoạt** hiệu ứng của nó.
+- Sau khi phá, bàn lấp đầy và cascade như bình thường (xem [Bàn cờ](01-ban-co.md#4-sinh-ô--lấp-đầy-bàn)).
+- Cascade sinh ra từ kỹ năng **không** cho lượt thêm, vì dùng kỹ năng không phải là nước đi. Người chơi vẫn đổi ô sau đó như thường.
+- Ô "ngẫu nhiên" do server chọn bằng luồng ngẫu nhiên của bàn cờ, nên AI không biết trước.
+
+> TODO: chốt luật phá ô ở trên.
