@@ -6,7 +6,7 @@
 
 Mỗi nhân vật (nhân vật chính và nhân vật kèm) có **9 ô trang bị**.
 
-| # | Ô | Chỉ số chính (đề xuất) | Giới hạn |
+| # | Ô | Chỉ số chính | Giới hạn |
 |---|---|---|---|
 | 1 | **Vũ khí** | +ATK | Theo nghề (đao kiếm, pháp trượng, hồ lô…) |
 | 2 | **Đính mão** (mũ) | +Máu | Dùng chung mọi nghề |
@@ -18,7 +18,9 @@ Mỗi nhân vật (nhân vật chính và nhân vật kèm) có **9 ô trang b�
 | 8 | **Hộ phù** (bùa hộ mệnh) | +DEF | Dùng chung mọi nghề |
 | 9 | **Ngọc bội** | +Máu | Dùng chung mọi nghề |
 
-> TODO: chốt chỉ số chính của từng ô (cột trên là đề xuất, chia đều 3 ô cho mỗi chỉ số); có thêm chỉ số phụ (năng lượng khởi đầu, hồi máu…) cho trang sức hay không.
+- Mỗi chỉ số chính có đúng 3 ô.
+
+> TODO: có thêm chỉ số phụ (năng lượng khởi đầu, hồi máu…) cho trang sức hay không.
 
 ## 2. Nguyên tố của trang bị
 
@@ -43,7 +45,7 @@ Có hai mốc thưởng: **6 món** và **9 món**. Mốc 9 món cộng thêm v�
 
 ## 4. Phẩm theo màu
 
-Mỗi trang bị có một **phẩm**, hiển thị bằng màu khung và tên. Đề xuất 5 bậc:
+Mỗi trang bị có một **phẩm**, hiển thị bằng màu khung và tên. Có 5 bậc:
 
 | Bậc | Màu | Tên | Hệ số chỉ số |
 |---|---|---|---|
@@ -56,8 +58,6 @@ Mỗi trang bị có một **phẩm**, hiển thị bằng màu khung và tên. 
 - Hệ số phẩm nhân với chỉ số gốc của món, trước khi nhân hệ số nguyên tố ([Nguyên tố](05-nguyen-to.md#3-hệ-số-trang-bị-so-với-nguyên-tố-của-nhân-vật)).
 - Phẩm chỉ áp cho trang bị. Nhân vật vẫn **không có độ hiếm**.
 
-> TODO: số bậc, tên và hệ số phẩm ở trên là đề xuất, chờ chốt.
-
 ## 5. Ghép nâng bậc
 
 - Ghép **3 món cùng bậc** thành **1 món bậc kế tiếp**. Bậc Cam là bậc cao nhất, không ghép tiếp.
@@ -67,7 +67,9 @@ Mỗi trang bị có một **phẩm**, hiển thị bằng màu khung và tên. 
 - Trang bị đang mặc được dùng làm nguyên liệu; ô đó trở thành trống sau khi ghép.
 - Server thực hiện ghép trong một transaction ([Hạ tầng](../tech/ha-tang.md#3-database)).
 
-> TODO: phí vàng cho mỗi lần ghép; có tỉ lệ thất bại hay không (đề xuất: không, luôn thành công).
+- Ghép **luôn thành công**, không có tỉ lệ thất bại.
+
+> TODO: phí vàng cho mỗi lần ghép.
 
 ## 6. Nguồn trang bị
 

@@ -1,6 +1,6 @@
 # Bộ kỹ năng nhân vật chính
 
-> Cập nhật: 18/10/2026 · Trạng thái: **bản nháp, chờ Shan duyệt**.
+> Cập nhật: 18/10/2026 · Trạng thái: **Shan đã duyệt** (18/10/2026).
 >
 > Mọi con số là **điểm xuất phát**. Script mô phỏng cân bằng sẽ chỉnh lại.
 
@@ -39,7 +39,7 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 - Kỹ năng có vùng **do người chơi chọn**: chạm vào một ô làm tâm. Vùng tự dịch vào trong nếu tràn ra ngoài bàn 12×8. Vùng có kích thước chẵn (2×2, 4×4) lấy ô được chạm làm góc trên trái.
 - Kỹ năng có ô **ngẫu nhiên**: server chọn bằng luồng ngẫu nhiên của bàn cờ, không trùng ô. AI không biết trước.
-- Ô bị phá được thu hoạch, ô đặc biệt bị phá thì kích hoạt, cascade sau kỹ năng không cho lượt thêm (luật đề xuất ở [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#5-kỹ-năng-tác-động-lên-bàn-cờ)).
+- Ô bị phá được thu hoạch, ô đặc biệt bị phá thì kích hoạt, cascade sau kỹ năng không cho lượt thêm (luật ở [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#5-kỹ-năng-tác-động-lên-bàn-cờ)).
 - Kỹ năng **trượt** (chỉ hệ Phong): dịch toàn bộ một hàng hoặc một cột do người chơi chọn đi 1 hoặc 2 ô theo hướng chọn; ô tràn khỏi một đầu quay vào đầu kia. Trượt không phá ô và không thu hoạch; nếu tạo bộ ghép thì cascade như bình thường (không cho lượt thêm). Ô đặc biệt trượt theo như ô thường.
 - Kỹ năng **biến ô** đổi loại ô thường; không biến ô đặc biệt. Ô vừa biến có thể tạo bộ ghép và cascade ngay.
 
@@ -65,12 +65,12 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 | Ô | Kỹ năng | Chi phí | Tác dụng |
 |---|---|---|---|
-| Bị động | **Sinh Sôi Bất Tận** _(tên tạm)_ | Nộ | Hồi phục 8% máu tối đa mỗi lượt cho cả đội, 3 lượt. |
+| Bị động | **Sinh Sôi Bất Tận** | Nộ | Hồi phục 8% máu tối đa mỗi lượt cho cả đội, 3 lượt. |
 | 1 | **Lục Diệp Phong** | 20 | Phá **8 ô ngẫu nhiên**. |
 | 2 | **Linh Mộc Hồi Sinh** | 30 | Hồi 15% máu tối đa, biến 3 ô ngẫu nhiên thành ❤️. |
 | 3 | **Thanh Mộc Hộ Pháp** | 40 | 170% ATK vào 1 đối thủ, hồi cho bản thân 30% sát thương gây ra. Phá vùng **2×2**. |
 | 4 | **Cuồng Vũ Thiên Diệp** | 60 | 85% ATK vào toàn bộ kẻ địch. Phá vùng **3×3**. |
-| 5 | **Cổ Thụ Trấn Thiên** _(tên tạm)_ | 100 | 300% ATK vào 1 đối thủ, Hồi phục 6% máu cho bản thân 2 lượt. Phá vùng **4×4**. |
+| 5 | **Cổ Thụ Trấn Thiên** | 100 | 300% ATK vào 1 đối thủ, Hồi phục 6% máu cho bản thân 2 lượt. Phá vùng **4×4**. |
 | 6 | **Thanh Trúc Bảo Phù** | 50 | Hồi phục 8% máu mỗi lượt trong 3 lượt, Thanh tẩy bản thân, Thủ +15% 2 lượt. |
 
 ## 3. ⚙️ Kim: đánh chắc, xuyên giáp
@@ -111,7 +111,7 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 | 5 | **Liệt Diễm Phần Thành** | 100 | 360% ATK vào 1 đối thủ, Thiêu đốt 3 lượt. Phá vùng **5×3**. |
 | 6 | **Dục Hỏa Trùng Sinh** | 50 | Hồi 20% máu tối đa, Công +20% cho bản thân 2 lượt. |
 
-- Lượng Thiêu đốt mỗi lượt: 10% ATK của người tung (đề xuất).
+- Lượng Thiêu đốt mỗi lượt: 10% ATK của người tung.
 
 ## 6. ⛰️ Thổ: trụ lâu, chịu đòn
 
@@ -163,4 +163,4 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 | ⚡ Lôi | 180 / 90 / 320 | Phá năng lượng, Câm lặng | Ít hồi máu, phụ thuộc ô âm dương |
 | 🌪️ Phong | 175 / 85 / 300 | Trượt hàng/cột tạo combo, Xua tan, hồi năng lượng | Không hồi máu, ít Khiên |
 
-> TODO: chạy mô phỏng để kiểm tra 7 bộ cân bằng với nhau và với nhân vật kèm; Shan duyệt tên các hệ Kim, Thủy, Hỏa, Thổ, Lôi, Phong và tên kỹ năng bị động hệ Mộc.
+> TODO: chạy mô phỏng để kiểm tra 7 bộ cân bằng với nhau và với nhân vật kèm.

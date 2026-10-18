@@ -91,7 +91,7 @@ Mỗi nghề gắn với một loại ô. Ô 🥁 Trống trận không gắn v�
 - Điểm kỹ năng dùng để mở nhánh nấc 2 và nâng cấp chiêu (cấp 1 đến 5: tăng sức mạnh hoặc giảm chi phí).
 - Chiêu nghề có lõi trung tính, cộng [dấu ấn nguyên tố](05-nguyen-to.md#5-dấu-ấn-nguyên-tố-trên-chiêu-nghề) của người tung chiêu. Riêng tuyệt chiêu nấc 3 được mang đậm nguyên tố của nhân vật.
 
-### 4.3 Bộ chiêu nghề (bản nháp)
+### 4.3 Bộ chiêu nghề
 
 **⚔️ Tướng sĩ: dồn sát thương, cổ vũ cả đội**
 - Nấc 1, **Trảm kích:** 150% ATK vào 1 đối thủ.
@@ -131,12 +131,10 @@ Mỗi nghề gắn với một loại ô. Ô 🥁 Trống trận không gắn v�
 
 ## 5. Kỹ năng tác động lên bàn cờ
 
-Đề xuất luật chung (chờ chốt):
+Luật chung:
 
 - Ô bị kỹ năng phá hủy **được thu hoạch** như ô bị ô đặc biệt nổ.
 - Ô đặc biệt bị phá thì **kích hoạt** hiệu ứng của nó.
 - Sau khi phá, bàn lấp đầy và cascade như bình thường (xem [Bàn cờ](01-ban-co.md#4-sinh-ô--lấp-đầy-bàn)).
 - Cascade sinh ra từ kỹ năng **không** cho lượt thêm, vì dùng kỹ năng không phải là nước đi. Người chơi vẫn đổi ô sau đó như thường.
 - Ô "ngẫu nhiên" do server chọn bằng luồng ngẫu nhiên của bàn cờ, nên AI không biết trước.
-
-> TODO: chốt luật phá ô ở trên.

@@ -59,7 +59,7 @@ Tính theo **tổng số ô của một bộ ghép liền nhau**.
 
 ### Bản yếu (từ chữ L/T)
 
-> Bản nháp, chờ Shan duyệt. Nguyên tắc: cùng chủ đề với bản mạnh, sức tác động khoảng một nửa, hình dạng khác nhau để người chơi phân biệt được.
+> Shan chốt ngày 18/10/2026. Nguyên tắc: cùng chủ đề với bản mạnh, sức tác động khoảng một nửa, hình dạng khác nhau để người chơi phân biệt được.
 
 | Nguồn | Ô đặc biệt | Hiệu ứng khi được ghép | So với bản mạnh |
 |---|---|---|---|
