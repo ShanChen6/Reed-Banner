@@ -1,3 +1,4 @@
+export * from "./areas";
 export * from "./generate";
 export * from "./grid";
 export * from "./match";

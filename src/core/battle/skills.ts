@@ -1,6 +1,7 @@
 // Chiêu nghề nấc 1–2 của nhân vật kèm, xem docs/design/06-nhan-vat-ky-nang.md mục 4.
 // Kỹ năng là dữ liệu; battle.ts thực thi các bước theo thứ tự.
 
+import type { TileKind } from "../board";
 import type { EffectKind } from "./effects";
 import type { Element } from "./elements";
 import type { Profession } from "./rules";
@@ -10,7 +11,12 @@ export type SkillTarget = "enemy" | "ally" | "self" | "allEnemies" | "team";
 
 /** to: "targets" là các mục tiêu của kỹ năng, "self" là người tung chiêu. */
 export type SkillStep =
-  | { readonly type: "damage"; readonly atk: number }
+  | {
+      readonly type: "damage";
+      readonly atk: number;
+      /** Hồi cho người tung chiêu theo tỉ lệ sát thương gây ra. */
+      readonly lifesteal?: number;
+    }
   | {
       readonly type: "effect";
       readonly to: "targets" | "self";
@@ -25,13 +31,20 @@ export type SkillStep =
   | { readonly type: "dispel"; readonly to: "targets" }
   | { readonly type: "energy"; readonly to: "targets"; readonly amount: number }
   | { readonly type: "enemyFood"; readonly amount: number }
-  | { readonly type: "mark"; readonly enhanced: boolean; readonly guaranteed?: boolean };
+  | { readonly type: "mark"; readonly enhanced: boolean; readonly guaranteed?: boolean }
+  /** Phá ô: ngẫu nhiên, hoặc vùng vuông quanh ô người chơi chạm. */
+  | { readonly type: "destroy"; readonly area: { readonly random: number } | { readonly square: number } }
+  | { readonly type: "transform"; readonly kind: TileKind; readonly count: number };
 
 export interface SkillDef {
   readonly id: string;
   readonly name: string;
-  readonly profession: Profession;
-  readonly tier: 1 | 2;
+  /** Chiêu nghề của nhân vật kèm. */
+  readonly profession?: Profession;
+  readonly tier?: 1 | 2;
+  /** Kỹ năng nhân vật chính theo nguyên tố, ô 1–6. */
+  readonly element?: Element;
+  readonly slot?: number;
   readonly cost: number;
   readonly target: SkillTarget;
   readonly steps: readonly SkillStep[];
@@ -113,7 +126,43 @@ const DEFS: readonly SkillDef[] = [
   },
 ];
 
-export const SKILLS: Readonly<Record<string, SkillDef>> = Object.fromEntries(DEFS.map((d) => [d.id, d]));
+// Bộ kỹ năng nhân vật chính hệ Mộc, docs/design/12-ky-nang-nhan-vat-chinh.md mục 2.
+const MAIN: readonly SkillDef[] = [
+  {
+    id: "lucDiepPhong", name: "Lục Diệp Phong", element: "moc", slot: 1, cost: 20, target: "self",
+    steps: [{ type: "destroy", area: { random: 8 } }],
+  },
+  {
+    id: "linhMocHoiSinh", name: "Linh Mộc Hồi Sinh", element: "moc", slot: 2, cost: 30, target: "self",
+    steps: [{ type: "heal", to: "self", ratio: 0.15 }, { type: "transform", kind: "tim", count: 3 }],
+  },
+  {
+    id: "thanhMocHoPhap", name: "Thanh Mộc Hộ Pháp", element: "moc", slot: 3, cost: 40, target: "enemy",
+    steps: [{ type: "damage", atk: 1.7, lifesteal: 0.3 }, { type: "destroy", area: { square: 2 } }],
+  },
+  {
+    id: "cuongVuThienDiep", name: "Cuồng Vũ Thiên Diệp", element: "moc", slot: 4, cost: 60, target: "allEnemies",
+    steps: [{ type: "damage", atk: 0.85 }, { type: "destroy", area: { square: 3 } }],
+  },
+  {
+    id: "coThuTranThien", name: "Cổ Thụ Trấn Thiên", element: "moc", slot: 5, cost: 100, target: "enemy",
+    steps: [
+      { type: "damage", atk: 3 },
+      { type: "effect", to: "self", effect: "regen", value: 0.06, turns: 2, ofMaxHp: true },
+      { type: "destroy", area: { square: 4 } },
+    ],
+  },
+  {
+    id: "thanhTrucBaoPhu", name: "Thanh Trúc Bảo Phù", element: "moc", slot: 6, cost: 50, target: "self",
+    steps: [
+      { type: "effect", to: "self", effect: "regen", value: 0.08, turns: 3, ofMaxHp: true },
+      { type: "cleanse", to: "self" },
+      { type: "effect", to: "self", effect: "defUp", value: 0.15, turns: 2 },
+    ],
+  },
+];
+
+export const SKILLS: Readonly<Record<string, SkillDef>> = Object.fromEntries([...DEFS, ...MAIN].map((d) => [d.id, d]));
 
 export function getSkill(id: string): SkillDef | undefined {
   return SKILLS[id];
@@ -122,6 +171,24 @@ export function getSkill(id: string): SkillDef | undefined {
 export function professionSkills(profession: Profession): SkillDef[] {
   return DEFS.filter((d) => d.profession === profession);
 }
+
+/** 6 kỹ năng chủ động của nhân vật chính theo nguyên tố (hiện có hệ Mộc). */
+export function mainSkills(element: Element): SkillDef[] {
+  return MAIN.filter((d) => d.element === element).sort((a, b) => (a.slot ?? 0) - (b.slot ?? 0));
+}
+
+/** Kỹ năng cần người chơi chạm một ô làm tâm hoặc góc vùng. */
+export function needsCell(def: SkillDef): boolean {
+  return def.steps.some((s) => s.type === "destroy" && "square" in s.area);
+}
+
+/**
+ * Kỹ năng bị động của thủ lĩnh theo nguyên tố, tự kích hoạt khi đầy Nộ.
+ * Hiện có hệ Mộc: Sinh Sôi Bất Tận, Hồi phục 8% máu tối đa mỗi lượt cho cả đội, 3 lượt.
+ */
+export const PASSIVES: Partial<Record<Element, { readonly name: string; readonly teamRegen: number }>> = {
+  moc: { name: "Sinh Sôi Bất Tận", teamRegen: 0.08 },
+};
 
 /**
  * Dấu ấn nguyên tố trên chiêu nghề, xem docs/design/05-nguyen-to.md mục 5.
