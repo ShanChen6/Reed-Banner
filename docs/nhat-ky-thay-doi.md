@@ -31,6 +31,9 @@
 - Viết chi tiết 42 kỹ năng (6 nguyên tố × 7) theo một khung chung: chi phí 20/30/40/60/100/50, mở khóa cấp 1/1/5/10/20/15, nâng cấp 1–5.
 - Ở 1vs1, kỹ năng toàn bộ kẻ địch gây ×1.5 sát thương.
 
+**Bản yếu của 6 ô đặc biệt (bản nháp, chờ duyệt)**
+- Kiếm đồng, Bùa âm dương, Giỏ bánh, Tim bạc, Túi vàng, Thẻ tre; sức tác động khoảng một nửa bản mạnh. Kiếm đồng tính ×1.5 ô kiếm.
+
 **Đề xuất kèm theo (chờ chốt, đã ghi trong câu hỏi mở)**
 - Dấu ấn của Lôi.
 - Đồng hồ 30 giây được tắt ở Luyện tập và `/demo`.

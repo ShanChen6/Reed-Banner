@@ -32,7 +32,7 @@ Tính theo **tổng số ô của một bộ ghép liền nhau**.
 
 - **Cascade** (ô tự rơi rồi ghép): vẫn tạo được ô đặc biệt **và vẫn cho thêm lượt**, theo đúng bảng trên.
 - **Mỗi nước đi được tối đa 1 lượt thêm**, dù nước đó và các bước cascade sau nó tạo ra bao nhiêu bộ ghép từ 4 ô trở lên.
-- Ô đặc biệt xuất hiện tại ô người chơi vừa kéo. Nếu do cascade thì xuất hiện ở ô giữa bộ ghép.
+- Ô đặc biệt xuất hiện tại ô người chơi vừa kéo. Nếu do cascade thì xuất hiện ở ô giữa bộ ghép (với chữ L/T là ô góc nơi hai nhánh gặp nhau).
 - Nhiều bộ ghép trong cùng một nước được xét độc lập, nên một nước có thể tạo nhiều ô đặc biệt.
 - Ô bị **nổ hoặc xóa** bởi ô đặc biệt đều **được thu hoạch**. Combo không giới hạn.
 - Giới hạn kỹ thuật (người chơi không thấy): server dừng xử lý sau tối đa **100 bước cascade** mỗi lượt.
@@ -57,7 +57,21 @@ Tính theo **tổng số ô của một bộ ghép liền nhau**.
 
 ### Bản yếu (từ chữ L/T)
 
-> TODO: thiết kế bản yếu của 6 ô đặc biệt.
+> Bản nháp, chờ Shan duyệt. Nguyên tắc: cùng chủ đề với bản mạnh, sức tác động khoảng một nửa, hình dạng khác nhau để người chơi phân biệt được.
+
+| Nguồn | Ô đặc biệt | Hiệu ứng khi được ghép | So với bản mạnh |
+|---|---|---|---|
+| L/T ⚔️ | Kiếm đồng | Nổ **chữ thập nhỏ** (tâm + 4 ô kề, 5 ô) | Kiếm lửa nổ 3×3 (9 ô) |
+| L/T ☯️ | Bùa âm dương | Xóa **đoạn 5 ô** theo hàng ngang qua nó (2 ô mỗi bên); người hành động nhận thêm **+10 năng lượng** | Thái cực xóa cả hàng hoặc cột |
+| L/T 🍙 | Giỏ bánh | Biến **2 ô ngẫu nhiên** thành bánh chưng; phe mình nhận ngay **+5 lương** | Mâm cỗ biến 4 ô |
+| L/T ❤️ | Tim bạc | Hồi **10% máu tối đa** cho đồng đội đang có % máu thấp nhất (1vs1: bản thân) | Tim vàng hồi cả đội |
+| L/T 💰 | Túi vàng | Xóa **tối đa 6 ô** cùng loại với một ô ngẫu nhiên trên bàn | Rương vàng xóa toàn bộ ô cùng loại |
+| L/T 📖 | Thẻ tre | Xóa **chữ thập bán kính 2** (tâm + 2 ô mỗi hướng, 9 ô) | Binh thư xóa cả hàng lẫn cột (19 ô) |
+
+- Kiếm đồng khi được ghép tính **×1.5** một ô kiếm thường trong công thức sát thương (kiếm lửa ×2).
+- Ô bị bản yếu xóa cũng được thu hoạch và có thể kích hoạt ô đặc biệt khác, giống bản mạnh.
+- Ô "ngẫu nhiên" do server chọn bằng luồng ngẫu nhiên của bàn cờ.
+- Bản yếu không bao giờ tự nâng thành bản mạnh.
 
 ## 4. Sinh ô & lấp đầy bàn
 

@@ -33,7 +33,7 @@
 
 ```
 Sát thương kiếm = round( ATK
-                         × (ô kiếm thường + 2 × ô kiếm lửa)
+                         × (ô kiếm thường + 1.5 × ô kiếm đồng + 2 × ô kiếm lửa)
                          × Sĩ khí × Nguyên tố × Cascade × Nội tại nghề
                          × 100 / (100 + DEF đối thủ) )
 
