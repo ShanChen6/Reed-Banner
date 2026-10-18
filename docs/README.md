@@ -10,7 +10,7 @@
 |---|---|
 | [00-tong-quan.md](design/00-tong-quan.md) | Ý tưởng, nguồn gốc, nguyên tắc clean-room |
 | [01-ban-co.md](design/01-ban-co.md) | Bàn cờ 12×8, loại ô, luật ghép, ô đặc biệt, sinh ô, đồng hồ 30 giây |
-| [02-tran-dau.md](design/02-tran-dau.md) | Thể thức 1vs1 và 3vs3, lượt, mục tiêu, trụ vững |
+| [02-tran-dau.md](design/02-tran-dau.md) | Thể thức 1vs1 và 3vs3, lượt, mục tiêu, máu & thời lượng |
 | [03-tai-nguyen-cong-thuc.md](design/03-tai-nguyen-cong-thuc.md) | Lương, sĩ khí, năng lượng, công thức sát thương |
 | [04-hieu-ung.md](design/04-hieu-ung.md) | Hiệu ứng trạng thái |
 | [05-nguyen-to.md](design/05-nguyen-to.md) | 6 nguyên tố, khắc chế, hệ số trang bị, dấu ấn |
@@ -63,6 +63,5 @@
 | **Chiêu nghề** | Kỹ năng nấc 1–2 của nhân vật kèm, chung theo nghề |
 | **Dấu ấn** | Hiệu ứng phụ theo nguyên tố cộng vào chiêu nghề |
 | **Lương / Sĩ khí** | Tài nguyên chung của phe và mức hệ số sát thương suy ra từ nó |
-| **Trụ vững** | Luật không thể bị hạ gục trong một lượt khi còn trên 30% máu |
 | **Tianwu** | AI điều khiển phe đối thủ |
 | **Seed** | Số khởi tạo bộ sinh ngẫu nhiên của trận, chỉ nằm trên server |

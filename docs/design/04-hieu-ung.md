@@ -30,5 +30,5 @@
   - Không ảnh hưởng kỹ năng diện rộng.
   - Tối đa 2 lượt.
   - Mất hiệu lực khi người khiêu khích bị Đóng băng hoặc gục.
-- Không có hiệu ứng hạ gục tức thì (giữ luật trụ vững).
+- Không có hiệu ứng hạ gục tức thì.
 - Đây là **mức trần cho bản đầu**: 9 hiệu ứng kéo dài + 2 tác dụng tức thì. Kỹ năng mới (kể cả 6 kỹ năng của nhân vật chính) chỉ dùng các hiệu ứng trong danh sách này.

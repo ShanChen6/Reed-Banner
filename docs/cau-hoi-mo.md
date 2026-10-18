@@ -10,7 +10,7 @@
 - [ ] Mức lợi thế "sân nhà" của trùm và bảng tỉ lệ ô cho từng màn. → [Bàn cờ](design/01-ban-co.md#tỉ-lệ-sinh-ô-theo-màn)
 - [ ] Đồng hồ 30 giây có được tắt ở Luyện tập và `/demo` không (đề xuất: được tắt). → [Bàn cờ](design/01-ban-co.md#5-giới-hạn-thời-gian--kéo-sai)
 - [ ] Cân bằng riêng cho 1vs1 (máu gốc, thời lượng mục tiêu). → [Trận đấu](design/02-tran-dau.md#3-luật-1vs1)
-- [ ] Chỉ số gốc theo nghề và theo cấp (sau khi chạy mô phỏng).
+- [ ] Chỉ số gốc theo nghề và theo cấp (sau khi chạy mô phỏng), cân lại máu và sát thương vì đã bỏ luật trụ vững. → [Trận đấu](design/02-tran-dau.md#4-máu--thời-lượng)
 
 ## Nguyên tố
 
