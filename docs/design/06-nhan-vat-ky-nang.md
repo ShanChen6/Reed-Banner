@@ -85,7 +85,7 @@ Mỗi nghề gắn với một loại ô. Ô 🥁 Trống trận không gắn v�
 | Nấc | Năng lượng | Kỹ năng | Mở khóa |
 |---|---|---|---|
 | 1 | 30 | Chiêu nghề (chung theo nghề) | Có sẵn |
-| 2 | 60 | Chiêu nhánh: **mua được cả 2, chọn 1 khi vào trận** | Cấp 5 |
+| 2 | 45 | Chiêu nhánh: **mua được cả 2, chọn 1 khi vào trận** | Cấp 5 |
 | 3 | 100 | Tuyệt chiêu đặc trưng (riêng nhân vật) | Cấp 10, **làm ở giai đoạn 3** |
 
 - Điểm kỹ năng dùng để mở nhánh nấc 2 và nâng cấp chiêu (cấp 1 đến 5: tăng sức mạnh hoặc giảm chi phí).
@@ -94,34 +94,34 @@ Mỗi nghề gắn với một loại ô. Ô 🥁 Trống trận không gắn v�
 ### 4.3 Bộ chiêu nghề
 
 **⚔️ Tướng sĩ: dồn sát thương, cổ vũ cả đội**
-- Nấc 1, **Trảm kích:** 150% ATK vào 1 đối thủ.
+- Nấc 1, **Trảm kích:** 210% ATK vào 1 đối thủ.
 - Nấc 2A, **Hiệu lệnh:** Công +25% cho cả đội, 2 lượt.
-- Nấc 2B, **Phá trận:** 220% ATK vào 1 đối thủ, kèm Thủ −30% trong 2 lượt.
+- Nấc 2B, **Phá trận:** 300% ATK vào 1 đối thủ, kèm Thủ −30% trong 2 lượt.
 
 **🍙 Binh lính: khiêu khích, chịu đòn**
-- Nấc 1, **Thủ thành:** Khiêu khích 2 lượt, kèm Khiên bằng 20% máu tối đa của bản thân.
+- Nấc 1, **Thủ thành:** Khiêu khích 2 lượt, kèm Khiên bằng 25% máu tối đa của bản thân.
 - Nấc 2A, **Phản kích:** Phản đòn 40% trong 2 lượt, kèm Thủ +30%.
-- Nấc 2B, **Tường khiên:** Khiên bằng 15% máu tối đa cho cả đội.
+- Nấc 2B, **Tường khiên:** Khiên bằng 20% máu tối đa cho cả đội.
 
 **☯️ Pháp sư: bậc thầy nguyên tố, phá giáp**
-- Nấc 1, **Phép công:** 130% ATK vào 1 đối thủ.
-- Nấc 2A, **Ngũ hành ấn:** 100% ATK vào 1 đối thủ, kèm dấu ấn **cường hóa**, chắc chắn kích hoạt.
-- Nấc 2B, **Phép lan:** 70% ATK vào cả đội đối thủ.
+- Nấc 1, **Phép công:** 180% ATK vào 1 đối thủ.
+- Nấc 2A, **Ngũ hành ấn:** 140% ATK vào 1 đối thủ, kèm dấu ấn **cường hóa**, chắc chắn kích hoạt.
+- Nấc 2B, **Phép lan:** 100% ATK vào cả đội đối thủ.
 
 **❤️ Y sư: hồi máu, giải trừ**
-- Nấc 1, **Linh dược:** hồi 20% máu cho 1 đồng đội (người chơi chọn), kèm Thanh tẩy người đó.
-- Nấc 2A, **Dưỡng sinh:** Hồi phục 8% máu mỗi lượt cho cả đội, 3 lượt.
-- Nấc 2B, **Tế độ:** hồi 15% máu cả đội, kèm Thanh tẩy cả đội.
+- Nấc 1, **Linh dược:** hồi 30% máu cho 1 đồng đội (người chơi chọn), kèm Thanh tẩy người đó.
+- Nấc 2A, **Dưỡng sinh:** Hồi phục 10% máu mỗi lượt cho cả đội, 3 lượt.
+- Nấc 2B, **Tế độ:** hồi 20% máu cả đội, kèm Thanh tẩy cả đội.
 
 **💰 Mưu sĩ: mua chuộc, phá năng lượng**
-- Nấc 1, **Mua chuộc:** trừ 30 năng lượng của 1 đối thủ.
+- Nấc 1, **Mua chuộc:** trừ 40 năng lượng của 1 đối thủ.
 - Nấc 2A, **Ly gián:** Câm lặng 1 đối thủ trong 2 lượt.
 - Nấc 2B, **Cắt quân lương:** trừ 15 lương chung của phe đối thủ, kèm trừ 10 năng lượng mỗi đối thủ.
 
 **📖 Quân sư: suy yếu, điều binh**
-- Nấc 1, **Nghi binh:** Công −25% cho 1 đối thủ, 2 lượt.
+- Nấc 1, **Nghi binh:** Công −30% cho 1 đối thủ, 2 lượt.
 - Nấc 2A, **Phá kế:** Xua tan toàn bộ hiệu ứng có lợi của cả đội đối thủ.
-- Nấc 2B, **Bày trận:** Thủ +25% cho cả đội, 2 lượt.
+- Nấc 2B, **Bày trận:** Thủ +30% cho cả đội, 2 lượt.
 
 **Khắc chế giữa các nghề (tham khảo):**
 - Câm lặng (Mưu sĩ) khắc Pháp sư.
