@@ -15,7 +15,7 @@
 | [04-hieu-ung.md](design/04-hieu-ung.md) | Hiệu ứng trạng thái |
 | [05-nguyen-to.md](design/05-nguyen-to.md) | 7 nguyên tố, khắc chế, hệ số trang bị, dấu ấn |
 | [06-nhan-vat-ky-nang.md](design/06-nhan-vat-ky-nang.md) | Nhân vật chính, nhân vật kèm, nghề, kỹ năng |
-| [07-trang-bi.md](design/07-trang-bi.md) | 9 ô trang bị |
+| [07-trang-bi.md](design/07-trang-bi.md) | 9 ô trang bị, thưởng bộ, phẩm màu, ghép nâng bậc |
 | [08-tien-trinh-kinh-te.md](design/08-tien-trinh-kinh-te.md) | Kinh nghiệm, cấp, vàng, cửa hàng |
 | [09-che-do-choi.md](design/09-che-do-choi.md) | Luyện tập, Thường, Chiến dịch, Đánh trùm, Leo tháp, Sinh tồn |
 | [10-ai.md](design/10-ai.md) | AI Tianwu |

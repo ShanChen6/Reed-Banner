@@ -30,8 +30,10 @@
 ## Trang bị & kinh tế
 
 - [ ] Chỉ số chính của từng ô trong 9 ô trang bị, có chỉ số phụ hay không. → [Trang bị](design/07-trang-bi.md#1-chín-ô-trang-bị)
-- [ ] Danh sách bộ trang bị, thưởng bộ và cộng hưởng nguyên tố. → [Trang bị](design/07-trang-bi.md#3-thưởng-khi-mặc-đủ-9-món)
-- [ ] Bảng rơi đồ và danh sách trang bị. → [Trang bị](design/07-trang-bi.md#4-nguồn-trang-bị)
+- [ ] Danh sách bộ trang bị, thưởng bộ và cộng hưởng nguyên tố ở mốc 6 và 9 món. → [Trang bị](design/07-trang-bi.md#3-thưởng-bộ--cộng-hưởng-nguyên-tố)
+- [ ] Số bậc, tên, hệ số phẩm trang bị (đề xuất 5 bậc Trắng → Cam). → [Trang bị](design/07-trang-bi.md#4-phẩm-theo-màu)
+- [ ] Phí vàng khi ghép nâng bậc, có tỉ lệ thất bại hay không. → [Trang bị](design/07-trang-bi.md#5-ghép-nâng-bậc)
+- [ ] Bảng rơi đồ theo phẩm và danh sách trang bị. → [Trang bị](design/07-trang-bi.md#6-nguồn-trang-bị)
 - [ ] Giá trị mỗi ô vàng và ô sách. → [Tiến trình](design/08-tien-trinh-kinh-te.md#2-vàng)
 
 ## Chế độ chơi
