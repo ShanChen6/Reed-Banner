@@ -79,6 +79,4 @@ Mỗi nhân vật mang đúng một nguyên tố. Nhân vật chính được đ
 | ⚡ Lôi | Trừ 10 năng lượng mục tiêu | Câm lặng mục tiêu 1 lượt |
 | 🌪️ Phong | Công −10% mục tiêu 1 lượt | Xua tan mục tiêu |
 
-> TODO: dấu ấn Lôi và Phong ở trên là đề xuất, chờ chốt.
-
 - Kỹ năng của **nhân vật chính** đã mang sẵn nguyên tố (mỗi nguyên tố một bộ kỹ năng riêng), nên không cộng thêm dấu ấn.

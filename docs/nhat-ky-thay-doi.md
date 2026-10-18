@@ -65,6 +65,14 @@
 - Đồng hồ 30 giây được tắt ở Luyện tập và `/demo`.
 - Luật 1vs1, luật phá ô bằng kỹ năng, chỉ số chính của 9 ô trang bị.
 
+**Chốt các đề xuất (Shan đồng ý, trừ tên miền)**
+- Duyệt ô Trống trận, thanh Nộ, 7 kỹ năng bị động, bản yếu của 7 ô đặc biệt và bộ 49 kỹ năng nhân vật chính kèm tên. Số liệu vẫn là điểm xuất phát, chờ mô phỏng.
+- Đồng hồ 30 giây được tắt ở Luyện tập và `/demo`.
+- Dấu ấn Lôi và Phong, luật phá ô bằng kỹ năng.
+- Chỉ số chính của 9 ô trang bị; 5 phẩm Trắng → Cam; ghép luôn thành công.
+- Thể thức từng chế độ chơi; thêm Thử thách hằng ngày, Thế cờ, Đấu trường bóng ma (làm sau cùng).
+- Tên miền chưa chốt.
+
 ## 16/10/2026
 
 - Bản chốt thiết kế đầu tiên sau buổi phản biện (`docs/co-lau-design.md`).
