@@ -6,7 +6,7 @@
 
 - Kích thước **12 cột × 8 hàng** (bàn ngang), đặt giữa màn hình, hai phe đứng hai bên (xem [Giao diện](11-giao-dien.md)).
 - Trên điện thoại, game chơi ở **màn hình xoay ngang**; mỗi ô khoảng 40px, cả bàn khoảng 480×320px.
-- **6 loại ô:**
+- **7 loại ô:**
 
 | Ô | Tên | Tác dụng khi ghép |
 |---|---|---|
@@ -16,6 +16,7 @@
 | ❤️ | Tim | Hồi máu (cho người hành động) |
 | 💰 | Thỏi vàng | Vàng (tài nguyên ngoài trận) |
 | 📖 | Sách | Kinh nghiệm (tài nguyên ngoài trận) |
+| 🥁 | Trống trận | Nộ cho thủ lĩnh phe mình (xem [Tài nguyên](03-tai-nguyen-cong-thuc.md#3-nộ-và-kỹ-năng-bị-động)) |
 
 - **Không** gắn nguyên tố vào ô, để bàn cờ dễ đọc.
 
@@ -51,6 +52,7 @@ Tính theo **tổng số ô của một bộ ghép liền nhau**.
 | 5 ❤️ | Tim vàng | Hồi máu cho cả đội |
 | 5 💰 | Rương vàng | Xóa toàn bộ ô cùng màu với một ô ngẫu nhiên |
 | 5 📖 | Binh thư | Xóa cả hàng lẫn cột (hình chữ thập) |
+| 5 🥁 | Trống đồng | Thủ lĩnh nhận +40 nộ; cả đội Công +10% 2 lượt |
 
 - **Không có kiếm lửa rơi ngẫu nhiên** như bản gốc. Kiếm lửa chỉ sinh ra từ ghép 5 kiếm.
 - Kiếm lửa khi được ghép tính **gấp đôi** một ô kiếm thường trong công thức sát thương.
@@ -67,6 +69,7 @@ Tính theo **tổng số ô của một bộ ghép liền nhau**.
 | L/T ❤️ | Tim bạc | Hồi **10% máu tối đa** cho đồng đội đang có % máu thấp nhất (1vs1: bản thân) | Tim vàng hồi cả đội |
 | L/T 💰 | Túi vàng | Xóa **tối đa 6 ô** cùng loại với một ô ngẫu nhiên trên bàn | Rương vàng xóa toàn bộ ô cùng loại |
 | L/T 📖 | Thẻ tre | Xóa **chữ thập bán kính 2** (tâm + 2 ô mỗi hướng, 9 ô) | Binh thư xóa cả hàng lẫn cột (19 ô) |
+| L/T 🥁 | Trống da | Thủ lĩnh nhận +20 nộ | Trống đồng +40 nộ kèm Công+ cả đội |
 
 - Kiếm đồng khi được ghép tính **×1.5** một ô kiếm thường trong công thức sát thương (kiếm lửa ×2).
 - Ô bị bản yếu xóa cũng được thu hoạch và có thể kích hoạt ô đặc biệt khác, giống bản mạnh.
@@ -96,7 +99,7 @@ Tính theo **tổng số ô của một bộ ghép liền nhau**.
 
 ### Tỉ lệ sinh ô theo màn
 
-- Bảng chuẩn (màn thường, chế độ Thường): ⚔️ 20% · ☯️ 18% · 🍙 18% · ❤️ 18% · 💰 13% · 📖 13%.
+- Bảng chuẩn (màn thường, chế độ Thường): ⚔️ 18% · ☯️ 16% · 🍙 15% · ❤️ 15% · 💰 11% · 📖 11% · 🥁 14%.
 - **Màn thường trong chiến dịch:** có thể có bảng tỉ lệ riêng như một đặc tính của màn, ví dụ "Thành Cổ Loa: nhiều kiếm, ít tim". Đây là câu đố chọn đội.
 - **Trận trùm ("sân nhà"):** tăng tỉ lệ ô theo nghề của trùm, kèm **lợi thế bất đối xứng** để trùm hưởng nhiều hơn, ví dụ trùm nhận ×1.5 từ ô nghề của nó.
   > TODO: cân bằng mức lợi thế sân nhà.

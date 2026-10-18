@@ -26,10 +26,25 @@
 
 - **Âm dương:** người hành động nhận **10 mỗi ô** (Pháp sư ×1.5; đang Đói thì ×0.5).
 - **Tĩnh tâm** (chỉ 3vs3): hai đồng đội **không** hành động trong lượt của phe mình, mỗi người nhận **+4**.
-- **Phẫn nộ:** nhận **+1 cho mỗi 5% máu tối đa** bị mất.
 - Dùng kỹ năng thì trừ đúng chi phí của kỹ năng; phần còn lại giữ nguyên. Không đủ năng lượng thì kỹ năng bị khóa và hiện thông báo "Không đủ năng lượng (hiện có/cần)".
 
-## 3. Công thức sát thương
+## 3. Nộ và kỹ năng bị động
+
+- Mỗi phe có **một thanh Nộ** (0–100), gắn với **thủ lĩnh**: phe người chơi là nhân vật chính; phe AI là nhân vật đứng vị trí 1. Nhân vật kèm không có nộ.
+- **Tích nộ:**
+  - Mỗi ô 🥁 Trống trận ghép được (do bất kỳ ai trong phe ghép): **+8 nộ**.
+  - Thủ lĩnh mất máu: **+1 nộ cho mỗi 2% máu tối đa** bị mất.
+  - Ô đặc biệt Trống da / Trống đồng: +20 / +40 nộ ([Bàn cờ](01-ban-co.md#3-ô-đặc-biệt)).
+- **Đầy 100 nộ:** kỹ năng bị động của thủ lĩnh **tự kích hoạt** ngay, có hiệu lực **3 lượt** của phe mình (trừ khi kỹ năng ghi khác), rồi nộ về 0.
+  - Kích hoạt không tốn năng lượng, không tính vào giới hạn 1 kỹ năng mỗi lượt, và không bị Câm lặng chặn.
+  - Trong lúc bị động đang có hiệu lực, thanh nộ không tích thêm.
+  - Thủ lĩnh đã gục thì nộ dừng tích, giữ nguyên số đang có.
+- Nộ reset về 0 mỗi trận (kể cả Chiến dịch).
+- Mục tiêu cân bằng: bị động kích hoạt khoảng 2–3 lần mỗi trận chuẩn.
+
+> TODO: kiểm tra tốc độ tích nộ bằng mô phỏng.
+
+## 4. Công thức sát thương
 
 ```
 Sát thương kiếm = round( ATK

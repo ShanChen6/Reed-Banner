@@ -19,7 +19,7 @@ Bố cục **ngang** (landscape), cả trên desktop lẫn điện thoại xoay 
 
 - **Giữa:** bàn cờ 12×8.
 - **Trên cùng, giữa:** báo lượt của ai ("Lượt của bạn" / "Lượt đối thủ") và đồng hồ đếm ngược 30 giây.
-- **Góc trên trái / phải:** khung từng nhân vật của mỗi phe: tên, cấp, thanh máu, thanh năng lượng, biểu tượng hiệu ứng trạng thái kèm số lượt còn lại.
+- **Góc trên trái / phải:** khung từng nhân vật của mỗi phe: tên, cấp, thanh máu, thanh năng lượng, thanh nộ (chỉ ở thủ lĩnh), biểu tượng hiệu ứng trạng thái kèm số lượt còn lại.
   - 1vs1: mỗi bên một khung.
   - 3vs3: mỗi bên ba khung xếp dọc; khung của người hành động được làm sáng; chạm vào khung để đổi người hành động.
 - Lương thực của mỗi phe hiển thị cạnh khung của phe đó.
@@ -33,7 +33,7 @@ Bố cục **ngang** (landscape), cả trên desktop lẫn điện thoại xoay 
 
 - Responsive cho desktop và mobile; thao tác vuốt hoặc kéo để đổi ô.
 - Animation ghép ô, cascade, phá ô do kỹ năng, hiệu ứng chiến đấu, âm thanh.
-- Thông báo sát thương rõ ràng (xem [Công thức](03-tai-nguyen-cong-thuc.md#3-công-thức-sát-thương)).
+- Thông báo sát thương rõ ràng (xem [Công thức](03-tai-nguyen-cong-thuc.md#4-công-thức-sát-thương)).
 - Mỗi hiệu ứng trạng thái là một biểu tượng trên chân dung, kèm số lượt còn lại.
 - Tỉ lệ ô của màn hiển thị trước trận bằng thanh màu nhỏ.
 - Danh mục trên `/games` của ShanVerse: **Puzzle & Logic**.
