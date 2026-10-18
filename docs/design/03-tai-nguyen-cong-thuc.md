@@ -44,7 +44,7 @@ Sát thương kỹ năng = round( Sát thương gốc của kỹ năng × Sĩ kh
 | Hệ số | Giá trị |
 |---|---|
 | Sĩ khí | 1.15 / 1 / 0.75 / 0.5 |
-| Nguyên tố (trong trận) | 1.25 (khắc) / 1 / 0.75 (bị khắc) |
+| Nguyên tố (trong trận) | 1.25 (khắc) / 1.1 (tương sinh) / 1 / 0.75 (bị khắc) |
 | Cascade | +10% mỗi bước, tối đa +50% |
 | DEF | Dạng phần trăm: DEF 50 giảm 33%, DEF 100 giảm 50%; không bao giờ vô hiệu hóa hoàn toàn |
 
