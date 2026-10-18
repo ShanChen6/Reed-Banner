@@ -38,14 +38,20 @@
 
 ## AI
 
-- [ ] Các mức độ khó và tính cách AI theo nghề. → [AI](design/10-ai.md)
+- [ ] Tính cách AI theo nghề và độ ngẫu nhiên từng mức khó. → [AI](design/10-ai.md#chấm-điểm-theo-độ-khó)
 
 ## Kỹ thuật
 
-- [ ] Đồng hồ 30 giây khi mất mạng giữa trận. → [Hạ tầng](tech/ha-tang.md#2-trận-đấu-server-có-thẩm-quyền)
 - [ ] Chốt tên miền (đề xuất `colau.vercel.app`). → [Kiến trúc](tech/kien-truc.md#3-sơ-đồ)
 
 ## Đã chốt ngày 18/10/2026
+
+- [x] Hết giờ xử lý kiểu tính lười, không dùng dịch vụ ngoài; người chơi bỏ đi thì AI đánh tới hết trận.
+- [x] Đồng hồ không dừng khi mất mạng.
+- [x] Client chỉ chạy trước phần biết chắc của nước đi.
+- [x] Cách AI chấm nước đi theo từng mức độ khó.
+- [x] Không chặn cày vàng và sách; thua giữ 100%.
+- [x] Cấu trúc một lượt (trượt, kỹ năng, đổi ô), đặt lại đồng hồ sau kỹ năng, cách đếm lượt thêm.
 
 - [x] Ô Trống trận, thanh Nộ và 7 kỹ năng bị động kích hoạt bằng nộ.
 - [x] Bản yếu (từ chữ L/T) của 7 ô đặc biệt.

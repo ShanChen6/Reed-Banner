@@ -58,7 +58,7 @@ Cờ Lau viết mới hoàn toàn bằng **TypeScript**. Không dùng Java và k
 ## 4. Cờ Lau (repo Reed-Banner)
 
 - Website Next.js riêng, deploy riêng trên Vercel. Chứa toàn bộ server, database, đăng nhập, chiến dịch, BXH.
-- Logic trận đấu là TypeScript thuần, xác định theo seed. Cùng một đoạn code chạy ở `/demo` (offline), `/play` (dự đoán phía client) và `/api` (thẩm quyền phía server).
+- Logic trận đấu là TypeScript thuần, xác định theo seed. Cùng một đoạn code chạy ở `/demo` (offline), `/play` (chạy trước phần biết chắc phía client, xem [Hạ tầng](ha-tang.md#2-trận-đấu-server-có-thẩm-quyền)) và `/api` (thẩm quyền phía server).
 - Mọi mở rộng sau này (nhân vật, chế độ, PvP…) chỉ sửa ở repo này.
 
 ## 5. Màn chơi thử (`/demo`)

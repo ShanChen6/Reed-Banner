@@ -24,7 +24,7 @@
 - Mặc định là **người kế tiếp sau người vừa ra tay**, theo thứ tự vị trí, và **được làm sáng sẵn**. Người chơi chỉ chạm vào chân dung khi muốn đổi người.
 - **Người vừa hành động phải nghỉ 1 lượt** (không được chọn liên tiếp). Luật mặc định tự thỏa mãn điều này.
 - Bỏ qua người đã gục và người đang bị Đóng băng.
-- **Lượt thêm:** thuộc về phe, phải chọn người khác; mặc định là người kế tiếp.
+- **Lượt thêm:** thuộc về phe, phải chọn người khác; mặc định là người kế tiếp. Cách đếm lượt thêm: xem [mục 5](#5-cấu-trúc-một-lượt).
 - Chỉ còn một người sống thì người đó đánh mọi lượt.
 
 ### 2.3 Mục tiêu
@@ -52,3 +52,17 @@ Mọi luật của 3vs3 áp dụng, trừ các điểm sau:
 - **Thời lượng mục tiêu (chế độ Thường, 3vs3):** 6–10 phút, nghiêng về 6–8 phút, tương đương 20–30 lượt mỗi bên.
 - **Trận trùm:** dài khoảng gấp rưỡi bình thường.
 - Máu, ATK, tốc độ tụt lương và chi phí năng lượng được **tính ngược** từ thời lượng mục tiêu, rồi kiểm chứng bằng script mô phỏng (AI đấu AI hàng nghìn trận).
+
+## 5. Cấu trúc một lượt
+
+> Shan chốt ngày 18/10/2026.
+
+- Mỗi lần ra tay gồm, theo đúng thứ tự:
+  1. **Trượt miễn phí** (chỉ khi bị động Thuận Phong của hệ Phong đang có hiệu lực).
+  2. **Tối đa 1 kỹ năng.**
+  3. **1 nước đổi ô.** Chỉ nước đổi ô mới kết thúc lượt; trượt và kỹ năng không bao giờ kết thúc lượt.
+- **Đồng hồ:** dùng xong một kỹ năng tốn năng lượng thì đồng hồ được đặt lại **30 giây** để còn đổi ô. Trượt miễn phí không đặt lại đồng hồ. Vì mỗi lần ra tay chỉ có 1 kỹ năng, một lượt dài tối đa khoảng 60 giây; mô phỏng cân thời lượng trận tính theo mức này.
+- **Hết giờ giữa lượt:** các bước server đã ghi nhận (trượt, kỹ năng) giữ nguyên, chỉ mất phần còn lại của lượt.
+- **Lượt thêm:**
+  - Là **phần nối dài của lượt hiện tại** trong cách đếm thời gian: không trừ thời hạn hiệu ứng, không chạy Thiêu đốt hay Hồi phục, không trừ lượt của kỹ năng bị động.
+  - Nhưng về hành động thì như một lần ra tay mới: được làm lại đủ 3 bước trên (trượt miễn phí nếu còn hiệu lực, 1 kỹ năng, 1 nước đổi ô) và có đồng hồ 30 giây mới. Câm lặng hay thiếu năng lượng vẫn chặn kỹ năng như thường.
