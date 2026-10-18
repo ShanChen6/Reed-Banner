@@ -13,14 +13,14 @@
 | [02-tran-dau.md](design/02-tran-dau.md) | Thể thức 1vs1 và 3vs3, lượt, mục tiêu, máu & thời lượng |
 | [03-tai-nguyen-cong-thuc.md](design/03-tai-nguyen-cong-thuc.md) | Lương, sĩ khí, năng lượng, công thức sát thương |
 | [04-hieu-ung.md](design/04-hieu-ung.md) | Hiệu ứng trạng thái |
-| [05-nguyen-to.md](design/05-nguyen-to.md) | 6 nguyên tố, khắc chế, hệ số trang bị, dấu ấn |
+| [05-nguyen-to.md](design/05-nguyen-to.md) | 7 nguyên tố, khắc chế, hệ số trang bị, dấu ấn |
 | [06-nhan-vat-ky-nang.md](design/06-nhan-vat-ky-nang.md) | Nhân vật chính, nhân vật kèm, nghề, kỹ năng |
 | [07-trang-bi.md](design/07-trang-bi.md) | 9 ô trang bị |
 | [08-tien-trinh-kinh-te.md](design/08-tien-trinh-kinh-te.md) | Kinh nghiệm, cấp, vàng, cửa hàng |
 | [09-che-do-choi.md](design/09-che-do-choi.md) | Luyện tập, Thường, Chiến dịch, Đánh trùm, Leo tháp, Sinh tồn |
 | [10-ai.md](design/10-ai.md) | AI Tianwu |
 | [11-giao-dien.md](design/11-giao-dien.md) | Bố cục màn hình trận đấu |
-| [12-ky-nang-nhan-vat-chinh.md](design/12-ky-nang-nhan-vat-chinh.md) | 42 kỹ năng của nhân vật chính theo 6 nguyên tố |
+| [12-ky-nang-nhan-vat-chinh.md](design/12-ky-nang-nhan-vat-chinh.md) | 49 kỹ năng của nhân vật chính theo 7 nguyên tố |
 
 **Kỹ thuật** (`tech/`)
 
@@ -58,7 +58,7 @@
 | **Người hành động** | Nhân vật đang đánh trong lượt này của phe |
 | **Nhân vật chính** | Đinh Bộ Lĩnh, nhân vật của người chơi, luôn ra trận |
 | **Nhân vật kèm** | Hai nhân vật đi cùng nhân vật chính ở 3vs3 |
-| **Nguyên tố** | Kim, Mộc, Thủy, Hỏa, Thổ, Lôi (trước đây gọi là ngũ hành) |
+| **Nguyên tố** | Kim, Mộc, Thủy, Hỏa, Thổ, Lôi, Phong (trước đây gọi là ngũ hành) |
 | **Nghề** | Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư; mỗi nghề gắn với một loại ô |
 | **Chiêu nghề** | Kỹ năng nấc 1–2 của nhân vật kèm, chung theo nghề |
 | **Dấu ấn** | Hiệu ứng phụ theo nguyên tố cộng vào chiêu nghề |
