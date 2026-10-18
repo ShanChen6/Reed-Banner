@@ -4,10 +4,16 @@
 
 import {
   STANDARD_WEIGHTS,
+  destroyCells,
   generateBoard,
+  inBounds,
+  randomCells,
+  squareArea,
   swap,
+  transformCells,
   validateWeights,
   type CascadeStep,
+  type MoveResult,
   type Pos,
   type SpawnWeights,
 } from "../board";
@@ -26,7 +32,7 @@ import {
 } from "./effects";
 import { elementMultiplier } from "./elements";
 import * as R from "./rules";
-import { MARK, getSkill, markAudience, type SkillDef } from "./skills";
+import { MARK, PASSIVES, getSkill, markAudience, needsCell, type SkillDef } from "./skills";
 import {
   canAct,
   isAlive,
@@ -51,6 +57,8 @@ export type BattleEvent =
   | { readonly type: "frozenSkip"; readonly side: SideIndex }
   | { readonly type: "swap"; readonly from: Pos; readonly to: Pos; readonly steps: readonly CascadeStep[] }
   | { readonly type: "skill"; readonly side: SideIndex; readonly fighter: number; readonly skill: string }
+  /** Bàn cờ đổi do kỹ năng: phá hoặc biến ô, kèm cascade. */
+  | { readonly type: "board"; readonly steps: readonly CascadeStep[]; readonly transformed: readonly Pos[] }
   | { readonly type: "shuffle" }
   | {
       readonly type: "damage";
@@ -74,7 +82,13 @@ export type BattleEvent =
 
 export type BattleAction =
   | { readonly type: "selectActor"; readonly fighter: number }
-  | { readonly type: "skill"; readonly skill: string; readonly target?: number }
+  | {
+      readonly type: "skill";
+      readonly skill: string;
+      readonly target?: number;
+      /** Ô người chơi chạm, cho kỹ năng phá vùng. */
+      readonly cell?: Pos;
+    }
   | { readonly type: "swap"; readonly from: Pos; readonly to: Pos }
   | { readonly type: "timeout" };
 
@@ -175,7 +189,10 @@ export function act(prev: BattleState, action: BattleAction, now = 0): ActResult
       if (actor.energy < def.cost) return { ok: false, error: "notEnoughEnergy" };
       const targets = skillTargets(state, def, action.target);
       if (!targets) return { ok: false, error: "invalidTarget" };
-      ctx.useSkill(def, targets);
+      if (needsCell(def) && !(action.cell && inBounds(state.board, action.cell))) {
+        return { ok: false, error: "invalidTarget" };
+      }
+      ctx.useSkill(def, targets, action.cell);
       return { ok: true, state, events: ctx.events };
     }
     case "swap": {
@@ -403,7 +420,7 @@ class Ctx {
     this.emit({ type: "turnStart", side: s.turn.side, actor: s.turn.actor, extra });
   }
 
-  useSkill(def: SkillDef, targets: readonly FighterRef[]): void {
+  useSkill(def: SkillDef, targets: readonly FighterRef[], cell?: Pos): void {
     const s = this.state;
     const self: FighterRef = { side: s.turn.side, fighter: s.turn.actor };
     const caster = this.fighter(self);
@@ -430,9 +447,24 @@ class Ctx {
                 elementMultiplier(caster.element, target.element) *
                 R.defenseMultiplier(effectiveDef(s.sides[t.side], target)),
             );
-            this.damage(t, amount, "skill", self);
+            const dealt = this.damage(t, amount, "skill", self);
+            if (step.lifesteal && dealt > 0) this.heal(self, Math.round(dealt * step.lifesteal));
           }
           break;
+        case "destroy": {
+          const area = step.area;
+          const result = this.withBoardRng((rng) => {
+            const cells = "random" in area ? randomCells(s.board, area.random, rng) : squareArea(s.board, cell!, area.square);
+            return destroyCells(s.board, cells, rng, s.weights);
+          });
+          this.applyBoardChange(result, []);
+          break;
+        }
+        case "transform": {
+          const result = this.withBoardRng((rng) => transformCells(s.board, step.kind, step.count, rng, s.weights));
+          this.applyBoardChange(result, result.transformed);
+          break;
+        }
         case "effect":
           for (const r of recipients(step.to)) {
             const f = this.fighter(r);
@@ -468,6 +500,17 @@ class Ctx {
       }
       if (s.winner !== null) return;
     }
+  }
+
+  /** Thu hoạch ô bị kỹ năng phá như một nước đi, nhưng không cho lượt thêm. */
+  private applyBoardChange(result: MoveResult, transformed: readonly Pos[]): void {
+    const s = this.state;
+    s.board = result.board;
+    this.emit({ type: "board", steps: result.steps, transformed });
+    result.steps.forEach((step, i) => {
+      if (s.winner === null) this.applyStep(step, i);
+    });
+    if (result.shuffled) this.emit({ type: "shuffle" });
   }
 
   private applyMark(self: FighterRef, targets: readonly FighterRef[], enhanced: boolean, guaranteed: boolean): void {
@@ -659,15 +702,30 @@ class Ctx {
       // +1 vì lượt đang diễn ra không tính; bị động có hiệu lực 3 lượt tiếp theo của phe.
       own.passiveTurns = R.PASSIVE_TURNS + 1;
       this.emit({ type: "passive", side });
+      this.triggerPassive(side);
+    }
+  }
+
+  private triggerPassive(side: SideIndex): void {
+    const own = this.state.sides[side];
+    const passive = PASSIVES[own.fighters[own.leader]!.element];
+    if (!passive) return;
+    // Hồi phục chạy đầu lượt của phe và hết hạn cuối lượt: kích hoạt trong lượt của phe mình thì
+    // lượt này không có lần hồi nào, nên cộng thêm 1 để đủ 3 lần.
+    const turns = R.PASSIVE_TURNS + (this.state.turn.side === side ? 1 : 0);
+    for (const i of aliveIndices(own)) {
+      const f = own.fighters[i]!;
+      this.applyEffect({ side, fighter: i }, { kind: "regen", value: Math.round(f.maxHp * passive.teamRegen), turns });
     }
   }
 
   /** Khiên hấp thụ trước; Phản đòn trả lại một phần cho kẻ tấn công (không phản tiếp). */
-  private damage(ref: FighterRef, amount: number, source: DamageSource, attacker?: FighterRef): void {
+  /** Trả về lượng sát thương gây ra (gồm phần Khiên hấp thụ). */
+  private damage(ref: FighterRef, amount: number, source: DamageSource, attacker?: FighterRef): number {
     const s = this.state;
     const own = s.sides[ref.side];
     const f = this.fighter(ref);
-    if (!isAlive(f) || amount <= 0) return;
+    if (!isAlive(f) || amount <= 0) return 0;
 
     let absorbed = 0;
     const shield = findEffect(f.effects, "shield");
@@ -689,7 +747,7 @@ class Ctx {
         s.winner = otherSide(ref.side);
         s.turn.deadline = null;
         this.emit({ type: "end", winner: s.winner });
-        return;
+        return lost + absorbed;
       }
     }
 
@@ -697,5 +755,6 @@ class Ctx {
     if (reflect && attacker && source !== "reflect") {
       this.damage(attacker, Math.round(amount * reflect.value), "reflect");
     }
+    return lost + absorbed;
   }
 }
