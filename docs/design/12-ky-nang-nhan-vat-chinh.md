@@ -10,7 +10,7 @@ Tên kỹ năng hệ Mộc (trừ kỹ năng bị động) do Shan đặt. Tên 
 
 ## 1. Khung chung
 
-Sáu bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo bộ hệ Mộc của Shan.
+Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo bộ hệ Mộc của Shan.
 
 | Ô | Vai trò | Năng lượng | Mở khóa | Mức sức mạnh chuẩn |
 |---|---|---|---|---|
@@ -22,7 +22,7 @@ Sáu bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo 
 | 5 | **Tuyệt kỹ** đơn mục tiêu + phá vùng rộng | 100 | Cấp 20 | 320% ATK, phá khoảng 16 ô |
 | 6 | **Hỗ trợ lớn** | 50 | Cấp 15 | Hai hiệu ứng có lợi, hoặc một hiệu ứng cho cả đội |
 
-- **Lệch theo nguyên tố:** Hỏa gây sát thương cao hơn chuẩn khoảng 10–15% nhưng tự làm yếu thủ; Thổ thấp hơn khoảng 20% nhưng kèm Khiên; Thủy và Mộc thấp hơn khoảng 5–10% nhưng kèm khống chế hoặc hồi máu; Kim và Lôi ở mức chuẩn kèm hiệu ứng phụ.
+- **Lệch theo nguyên tố:** Phong ở mức gần chuẩn nhưng mạnh về điều khiển bàn cờ; Hỏa gây sát thương cao hơn chuẩn khoảng 10–15% nhưng tự làm yếu thủ; Thổ thấp hơn khoảng 20% nhưng kèm Khiên; Thủy và Mộc thấp hơn khoảng 5–10% nhưng kèm khống chế hoặc hồi máu; Kim và Lôi ở mức chuẩn kèm hiệu ứng phụ.
 - Ở giai đoạn 1 (Luyện tập, cùng một cấp), cả 7 kỹ năng mở sẵn; mốc mở khóa chỉ áp dụng từ giai đoạn 3.
 - Sát thương kỹ năng bỏ qua DEF, vẫn chịu sĩ khí và nguyên tố ([Công thức](03-tai-nguyen-cong-thuc.md#3-công-thức-sát-thương)).
 
@@ -40,6 +40,7 @@ Sáu bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo 
 - Kỹ năng có vùng **do người chơi chọn**: chạm vào một ô làm tâm. Vùng tự dịch vào trong nếu tràn ra ngoài bàn 12×8. Vùng có kích thước chẵn (2×2, 4×4) lấy ô được chạm làm góc trên trái.
 - Kỹ năng có ô **ngẫu nhiên**: server chọn bằng luồng ngẫu nhiên của bàn cờ, không trùng ô. AI không biết trước.
 - Ô bị phá được thu hoạch, ô đặc biệt bị phá thì kích hoạt, cascade sau kỹ năng không cho lượt thêm (luật đề xuất ở [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#5-kỹ-năng-tác-động-lên-bàn-cờ)).
+- Kỹ năng **trượt** (chỉ hệ Phong): dịch toàn bộ một hàng hoặc một cột do người chơi chọn đi 1 hoặc 2 ô theo hướng chọn; ô tràn khỏi một đầu quay vào đầu kia. Trượt không phá ô và không thu hoạch; nếu tạo bộ ghép thì cascade như bình thường (không cho lượt thêm). Ô đặc biệt trượt theo như ô thường.
 - Kỹ năng **biến ô** đổi loại ô thường; không biến ô đặc biệt. Ô vừa biến có thể tạo bộ ghép và cascade ngay.
 
 | Ký hiệu | Hình | Số ô |
@@ -50,6 +51,7 @@ Sáu bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo 
 | 5×3 | 5 cột × 3 hàng quanh tâm | 15 |
 | Chữ thập nhỏ | Tâm + 4 ô kề | 5 |
 | Chữ thập lớn | Cả hàng + cả cột qua tâm | 19 |
+| Chữ X lớn | Tâm + 2 ô mỗi hướng chéo | 9 |
 | Đoạn 4 | 4 ô thẳng hàng, ngang hoặc dọc (người chơi chọn hướng) | 4 |
 | Cột | Cả một cột | 8 |
 
@@ -133,9 +135,23 @@ Sáu bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo 
 | 3 | **Lôi Tiễn Xuyên Vân** | 40 | 180% ATK vào 1 đối thủ, trừ 15 năng lượng của mục tiêu. Phá **4 ô ngẫu nhiên**. |
 | 4 | **Lôi Võng Thiên La** | 60 | 90% ATK vào toàn bộ kẻ địch, trừ 10 năng lượng mỗi mục tiêu. Phá **9 ô ngẫu nhiên**. |
 | 5 | **Cửu Tiêu Lôi Phạt** | 100 | 320% ATK vào 1 đối thủ, Câm lặng 1 lượt. Phá **1 cột + 8 ô ngẫu nhiên**. |
-| 6 | **Phong Lôi Hiệu Lệnh** | 50 | Công +25% cho cả đội 2 lượt, trừ 15 năng lượng của mọi đối thủ. |
+| 6 | **Lôi Đình Hiệu Lệnh** | 50 | Công +25% cho cả đội 2 lượt, trừ 15 năng lượng của mọi đối thủ. |
 
-## 8. So sánh nhanh
+## 8. 🌪️ Phong: linh hoạt, điều khiển bàn cờ
+
+| Ô | Kỹ năng | NL | Tác dụng |
+|---|---|---|---|
+| Bị động | **Thuận Phong** | — | Đầu mỗi lượt của phe mình, nhận +4 năng lượng. |
+| 1 | **Phong Quyển Tàn Vân** | 20 | **Trượt** 1 hàng hoặc 1 cột đi 1–2 ô. |
+| 2 | **Thanh Phong Tụ Khí** | 30 | Công +20% cho bản thân 2 lượt, nhận ngay 10 năng lượng. |
+| 3 | **Phong Nhận Liệt Không** | 40 | 175% ATK vào 1 đối thủ, Xua tan mục tiêu. Phá vùng **2×2**. |
+| 4 | **Cuồng Phong Quét Trận** | 60 | 85% ATK vào toàn bộ kẻ địch, Công −15% mỗi mục tiêu 2 lượt. Phá **chữ X lớn**. |
+| 5 | **Bão Táp Càn Khôn** | 100 | 300% ATK vào 1 đối thủ, Xua tan và Công −25% mục tiêu 2 lượt. **Trượt** 1 hàng 2 ô rồi phá vùng **4×4**. |
+| 6 | **Phong Hành Vạn Lý** | 50 | Thủ +15% cho cả đội 2 lượt, cả đội nhận 15 năng lượng. |
+
+- Phong là hệ duy nhất có kỹ năng trượt, nên mạnh nhất ở việc chủ động tạo combo và ô đặc biệt.
+
+## 9. So sánh nhanh
 
 | Nguyên tố | Sát thương ô 3 / 4 / 5 | Điểm mạnh | Điểm yếu |
 |---|---|---|---|
@@ -145,5 +161,6 @@ Sáu bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo 
 | 🔥 Hỏa | 200 / 100 / 360 (+15% bị động) | Sát thương cao nhất | DEF bản thân thấp |
 | ⛰️ Thổ | 150 / 75 / 260 | Khiên nhiều, tạo lương | Sát thương thấp nhất |
 | ⚡ Lôi | 180 / 90 / 320 | Phá năng lượng, Câm lặng | Ít hồi máu, phụ thuộc ô âm dương |
+| 🌪️ Phong | 175 / 85 / 300 | Trượt hàng/cột tạo combo, Xua tan, hồi năng lượng | Không hồi máu, ít Khiên |
 
-> TODO: chạy mô phỏng để kiểm tra 6 bộ cân bằng với nhau và với nhân vật kèm; Shan duyệt tên các hệ Kim, Thủy, Hỏa, Thổ, Lôi và tên kỹ năng bị động hệ Mộc.
+> TODO: chạy mô phỏng để kiểm tra 7 bộ cân bằng với nhau và với nhân vật kèm; Shan duyệt tên các hệ Kim, Thủy, Hỏa, Thổ, Lôi, Phong và tên kỹ năng bị động hệ Mộc.

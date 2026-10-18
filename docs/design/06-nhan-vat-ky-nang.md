@@ -15,8 +15,8 @@
 
 - Có ngay từ lúc tạo game, **luôn ra trận** ở cả 1vs1 và 3vs3.
 - **Nghề:** Tướng sĩ (hưởng nội tại nghề Tướng sĩ, xem mục 4.1).
-- **Nguyên tố:** chọn 1 trong 6 (Kim, Mộc, Thủy, Hỏa, Thổ, Lôi) khi tạo game, và được **đổi trước mỗi trận**. Trong trận không đổi được.
-- **7 kỹ năng theo nguyên tố:** 1 bị động + 6 chủ động. Đổi nguyên tố thì đổi cả bộ kỹ năng. Mỗi nguyên tố có bộ kỹ năng riêng, tổng cộng 6 bộ.
+- **Nguyên tố:** chọn 1 trong 7 (Kim, Mộc, Thủy, Hỏa, Thổ, Lôi, Phong) khi tạo game, và được **đổi trước mỗi trận**. Trong trận không đổi được.
+- **7 kỹ năng theo nguyên tố:** 1 bị động + 6 chủ động. Đổi nguyên tố thì đổi cả bộ kỹ năng. Mỗi nguyên tố có bộ kỹ năng riêng, tổng cộng 7 bộ.
 - Kỹ năng của nhân vật chính đã mang sẵn màu nguyên tố, nên không cộng dấu ấn nguyên tố như chiêu nghề.
 
 ### 2.1 Ba loại kỹ năng chủ động
@@ -31,9 +31,9 @@ Một kỹ năng có thể thuộc nhiều loại, ví dụ vừa gây sát thư
 
 ### 2.2 Bộ kỹ năng theo nguyên tố
 
-Chi tiết 6 bộ (42 kỹ năng), chi phí năng lượng, mốc mở khóa, nâng cấp và vùng phá ô: xem [Bộ kỹ năng nhân vật chính](12-ky-nang-nhan-vat-chinh.md).
+Chi tiết 7 bộ (49 kỹ năng), chi phí năng lượng, mốc mở khóa, nâng cấp và vùng phá ô: xem [Bộ kỹ năng nhân vật chính](12-ky-nang-nhan-vat-chinh.md).
 
-Tóm tắt khung chung, áp cho cả 6 nguyên tố:
+Tóm tắt khung chung, áp cho cả 7 nguyên tố:
 
 | Ô | Vai trò | Năng lượng | Mở khóa |
 |---|---|---|---|

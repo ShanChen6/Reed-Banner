@@ -14,14 +14,14 @@
 
 ## Nguyên tố
 
-- [ ] Dấu ấn Lôi trên chiêu nghề (đề xuất: trừ 10 năng lượng / Câm lặng 1 lượt). → [Nguyên tố](design/05-nguyen-to.md#5-dấu-ấn-nguyên-tố-trên-chiêu-nghề)
+- [ ] Dấu ấn Lôi và Phong trên chiêu nghề (đề xuất Lôi: trừ 10 năng lượng / Câm lặng; Phong: Công −10% / Xua tan). → [Nguyên tố](design/05-nguyen-to.md#5-dấu-ấn-nguyên-tố-trên-chiêu-nghề)
 
 ## Nhân vật & kỹ năng
 
-- [ ] Duyệt bộ 42 kỹ năng nhân vật chính (bản nháp): tác dụng, chi phí, mốc mở khóa. → [Bộ kỹ năng](design/12-ky-nang-nhan-vat-chinh.md)
-- [ ] Duyệt tên kỹ năng các hệ Kim, Thủy, Hỏa, Thổ, Lôi, tên bị động hệ Mộc và tên tạm "Cổ Thụ Trấn Thiên". → [Bộ kỹ năng](design/12-ky-nang-nhan-vat-chinh.md)
+- [ ] Duyệt bộ 49 kỹ năng nhân vật chính (bản nháp): tác dụng, chi phí, mốc mở khóa. → [Bộ kỹ năng](design/12-ky-nang-nhan-vat-chinh.md)
+- [ ] Duyệt tên kỹ năng các hệ Kim, Thủy, Hỏa, Thổ, Lôi, Phong, tên bị động hệ Mộc và tên tạm "Cổ Thụ Trấn Thiên". → [Bộ kỹ năng](design/12-ky-nang-nhan-vat-chinh.md)
 - [ ] Số điểm kỹ năng cần cho mỗi cấp nâng kỹ năng. → [Bộ kỹ năng](design/12-ky-nang-nhan-vat-chinh.md#11-nâng-cấp)
-- [ ] Mô phỏng cân bằng 6 bộ kỹ năng với nhau và với nhân vật kèm. → [Bộ kỹ năng](design/12-ky-nang-nhan-vat-chinh.md#8-so-sánh-nhanh)
+- [ ] Mô phỏng cân bằng 7 bộ kỹ năng với nhau và với nhân vật kèm. → [Bộ kỹ năng](design/12-ky-nang-nhan-vat-chinh.md#9-so-sánh-nhanh)
 - [ ] Luật phá ô bằng kỹ năng (thu hoạch, kích hoạt ô đặc biệt, lượt thêm). → [Nhân vật](design/06-nhan-vat-ky-nang.md#5-kỹ-năng-tác-động-lên-bàn-cờ)
 - [ ] Nguyên tố và tuyệt chiêu đặc trưng của 5 nhân vật kèm khởi đầu. → [Nhân vật](design/06-nhan-vat-ky-nang.md#4-nhân-vật-kèm-nghề--chiêu-nghề)
 - [ ] Danh sách nhân vật kèm trong cửa hàng (khoảng 12) và giá. → [Tiến trình](design/08-tien-trinh-kinh-te.md#3-cửa-hàng)
