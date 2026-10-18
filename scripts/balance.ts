@@ -5,6 +5,8 @@ import { parseArgs } from "node:util";
 import { buildMatchups, runBattle, summarize, type Difficulty, type SimMode } from "../src/core";
 
 const { values } = parseArgs({
+  // pnpm chuyển nguyên dấu "--" vào argv; bỏ nó đi để parseArgs đọc được các cờ phía sau.
+  args: process.argv.slice(2).filter((a) => a !== "--"),
   options: {
     mode: { type: "string", default: "3v3" },
     battles: { type: "string", default: "100" },
