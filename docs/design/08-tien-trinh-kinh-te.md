@@ -15,6 +15,9 @@
 ## 2. Vàng
 
 - Dùng để mua nhân vật kèm, mua trang bị, và đổi lương (**10 vàng = 10 lương**).
+- **Không chặn cày** (Shan chốt 18/10/2026): không có trần vàng hay sách mỗi trận, không giảm dần theo số lượt. Thua trận vẫn **giữ 100%** vàng và sách đã nhặt.
+  - Chấp nhận được vì BXH xếp theo tiến độ chiến dịch, người cày chỉ đi nhanh hơn chứ không ảnh hưởng ai.
+  - Hệ quả: giá cửa hàng phải cân theo **người cày nhiều nhất**, không theo người chơi trung bình.
 
 > TODO: giá trị mỗi ô vàng và ô sách (vàng và kinh nghiệm mỗi ô).
 
