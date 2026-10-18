@@ -4,7 +4,24 @@ Game match-3 chiến đấu theo lượt, lấy cảm hứng từ thời kỳ Lo
 
 Mini game thuộc ShanVerse.
 
-**Trạng thái:** đang thiết kế, chưa có code.
+**Trạng thái:** giai đoạn 0, đã dựng khung Next.js.
+
+## Phát triển
+
+Cần Node 22+ và pnpm 10.
+
+```bash
+pnpm install
+pnpm dev        # http://localhost:3000
+pnpm test       # node:test qua tsx
+pnpm lint
+pnpm typecheck
+pnpm build
+```
+
+- `src/app/`: giao diện Next.js (App Router).
+- `src/core/`: logic trận đấu, TypeScript thuần, xác định theo seed. ESLint chặn import React/Next, `Math.random()`, `Date.now()` và API trình duyệt trong thư mục này ([kiến trúc](docs/tech/kien-truc.md)).
+- `tests/`: test cho `src/core/`.
 
 ## Tài liệu
 
