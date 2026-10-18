@@ -44,10 +44,10 @@ Mọi luật của 3vs3 áp dụng, trừ các điểm sau:
 
 > TODO: cân bằng riêng cho 1vs1 (máu gốc, thời lượng mục tiêu), vì không còn đồng đội chia sát thương.
 
-## 4. Bảo vệ & thời lượng
+## 4. Máu & thời lượng
 
-- **Trụ vững:** nhân vật còn **trên 30% máu** thì không thể bị hạ gục trong một lượt; đòn chí mạng chỉ đưa xuống 1 máu. Áp cho **cả hai phe** và cả hai thể thức.
-- Máu gốc được đặt cao để một combo không quét sạch cả đội.
+- **Không có luật trụ vững** (đã bỏ ngày 18/10/2026). Nhân vật có thể bị hạ gục trong một lượt; việc tránh bị quét sạch bằng một combo được giải quyết bằng cân bằng **máu và sát thương** của nhân vật.
+- Máu gốc phải đủ cao so với sát thương, để một combo lớn hoặc một tuyệt kỹ không hạ gục nhân vật đang đầy máu. Mục tiêu cụ thể đặt khi chạy mô phỏng.
 - Mỗi lượt có tối đa **30 giây** (xem [Bàn cờ](01-ban-co.md#5-giới-hạn-thời-gian--kéo-sai)).
 - **Thời lượng mục tiêu (chế độ Thường, 3vs3):** 6–10 phút, nghiêng về 6–8 phút, tương đương 20–30 lượt mỗi bên.
 - **Trận trùm:** dài khoảng gấp rưỡi bình thường.
