@@ -54,26 +54,26 @@ const mark: SkillStep = { type: "mark", enhanced: false };
 
 const DEFS: readonly SkillDef[] = [
   // Tướng sĩ
-  { id: "tramKich", name: "Trảm kích", profession: "tuongSi", tier: 1, cost: 30, target: "enemy", steps: [{ type: "damage", atk: 1.5 }, mark] },
+  { id: "tramKich", name: "Trảm kích", profession: "tuongSi", tier: 1, cost: 30, target: "enemy", steps: [{ type: "damage", atk: 2.1 }, mark] },
   {
-    id: "hieuLenh", name: "Hiệu lệnh", profession: "tuongSi", tier: 2, cost: 60, target: "team",
+    id: "hieuLenh", name: "Hiệu lệnh", profession: "tuongSi", tier: 2, cost: 45, target: "team",
     steps: [{ type: "effect", to: "targets", effect: "atkUp", value: 0.25, turns: 2 }, mark],
   },
   {
-    id: "phaTran", name: "Phá trận", profession: "tuongSi", tier: 2, cost: 60, target: "enemy",
-    steps: [{ type: "damage", atk: 2.2 }, { type: "effect", to: "targets", effect: "defDown", value: 0.3, turns: 2 }, mark],
+    id: "phaTran", name: "Phá trận", profession: "tuongSi", tier: 2, cost: 45, target: "enemy",
+    steps: [{ type: "damage", atk: 3 }, { type: "effect", to: "targets", effect: "defDown", value: 0.3, turns: 2 }, mark],
   },
   // Binh lính
   {
     id: "thuThanh", name: "Thủ thành", profession: "binhLinh", tier: 1, cost: 30, target: "self",
     steps: [
       { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 },
-      { type: "effect", to: "self", effect: "shield", value: 0.2, turns: null, ofMaxHp: true },
+      { type: "effect", to: "self", effect: "shield", value: 0.25, turns: null, ofMaxHp: true },
       mark,
     ],
   },
   {
-    id: "phanKich", name: "Phản kích", profession: "binhLinh", tier: 2, cost: 60, target: "self",
+    id: "phanKich", name: "Phản kích", profession: "binhLinh", tier: 2, cost: 45, target: "self",
     steps: [
       { type: "effect", to: "self", effect: "reflect", value: 0.4, turns: 2 },
       { type: "effect", to: "self", effect: "defUp", value: 0.3, turns: 2 },
@@ -81,48 +81,48 @@ const DEFS: readonly SkillDef[] = [
     ],
   },
   {
-    id: "tuongKhien", name: "Tường khiên", profession: "binhLinh", tier: 2, cost: 60, target: "team",
-    steps: [{ type: "effect", to: "targets", effect: "shield", value: 0.15, turns: null, ofMaxHp: true }, mark],
+    id: "tuongKhien", name: "Tường khiên", profession: "binhLinh", tier: 2, cost: 45, target: "team",
+    steps: [{ type: "effect", to: "targets", effect: "shield", value: 0.2, turns: null, ofMaxHp: true }, mark],
   },
   // Pháp sư
-  { id: "phepCong", name: "Phép công", profession: "phapSu", tier: 1, cost: 30, target: "enemy", steps: [{ type: "damage", atk: 1.3 }, mark] },
+  { id: "phepCong", name: "Phép công", profession: "phapSu", tier: 1, cost: 30, target: "enemy", steps: [{ type: "damage", atk: 1.8 }, mark] },
   {
-    id: "nguHanhAn", name: "Ngũ hành ấn", profession: "phapSu", tier: 2, cost: 60, target: "enemy",
-    steps: [{ type: "damage", atk: 1 }, { type: "mark", enhanced: true, guaranteed: true }],
+    id: "nguHanhAn", name: "Ngũ hành ấn", profession: "phapSu", tier: 2, cost: 45, target: "enemy",
+    steps: [{ type: "damage", atk: 1.4 }, { type: "mark", enhanced: true, guaranteed: true }],
   },
-  { id: "phepLan", name: "Phép lan", profession: "phapSu", tier: 2, cost: 60, target: "allEnemies", steps: [{ type: "damage", atk: 0.7 }, mark] },
+  { id: "phepLan", name: "Phép lan", profession: "phapSu", tier: 2, cost: 45, target: "allEnemies", steps: [{ type: "damage", atk: 1 }, mark] },
   // Y sư
   {
     id: "linhDuoc", name: "Linh dược", profession: "ySu", tier: 1, cost: 30, target: "ally",
+    steps: [{ type: "heal", to: "targets", ratio: 0.3 }, { type: "cleanse", to: "targets" }, mark],
+  },
+  {
+    id: "duongSinh", name: "Dưỡng sinh", profession: "ySu", tier: 2, cost: 45, target: "team",
+    steps: [{ type: "effect", to: "targets", effect: "regen", value: 0.1, turns: 3, ofMaxHp: true }, mark],
+  },
+  {
+    id: "teDo", name: "Tế độ", profession: "ySu", tier: 2, cost: 45, target: "team",
     steps: [{ type: "heal", to: "targets", ratio: 0.2 }, { type: "cleanse", to: "targets" }, mark],
   },
-  {
-    id: "duongSinh", name: "Dưỡng sinh", profession: "ySu", tier: 2, cost: 60, target: "team",
-    steps: [{ type: "effect", to: "targets", effect: "regen", value: 0.08, turns: 3, ofMaxHp: true }, mark],
-  },
-  {
-    id: "teDo", name: "Tế độ", profession: "ySu", tier: 2, cost: 60, target: "team",
-    steps: [{ type: "heal", to: "targets", ratio: 0.15 }, { type: "cleanse", to: "targets" }, mark],
-  },
   // Mưu sĩ
-  { id: "muaChuoc", name: "Mua chuộc", profession: "muuSi", tier: 1, cost: 30, target: "enemy", steps: [{ type: "energy", to: "targets", amount: -30 }, mark] },
+  { id: "muaChuoc", name: "Mua chuộc", profession: "muuSi", tier: 1, cost: 30, target: "enemy", steps: [{ type: "energy", to: "targets", amount: -40 }, mark] },
   {
-    id: "lyGian", name: "Ly gián", profession: "muuSi", tier: 2, cost: 60, target: "enemy",
+    id: "lyGian", name: "Ly gián", profession: "muuSi", tier: 2, cost: 45, target: "enemy",
     steps: [{ type: "effect", to: "targets", effect: "silence", value: 0, turns: 2 }, mark],
   },
   {
-    id: "catQuanLuong", name: "Cắt quân lương", profession: "muuSi", tier: 2, cost: 60, target: "allEnemies",
+    id: "catQuanLuong", name: "Cắt quân lương", profession: "muuSi", tier: 2, cost: 45, target: "allEnemies",
     steps: [{ type: "enemyFood", amount: -15 }, { type: "energy", to: "targets", amount: -10 }, mark],
   },
   // Quân sư
   {
     id: "nghiBinh", name: "Nghi binh", profession: "quanSu", tier: 1, cost: 30, target: "enemy",
-    steps: [{ type: "effect", to: "targets", effect: "atkDown", value: 0.25, turns: 2 }, mark],
+    steps: [{ type: "effect", to: "targets", effect: "atkDown", value: 0.3, turns: 2 }, mark],
   },
-  { id: "phaKe", name: "Phá kế", profession: "quanSu", tier: 2, cost: 60, target: "allEnemies", steps: [{ type: "dispel", to: "targets" }, mark] },
+  { id: "phaKe", name: "Phá kế", profession: "quanSu", tier: 2, cost: 45, target: "allEnemies", steps: [{ type: "dispel", to: "targets" }, mark] },
   {
-    id: "bayTran", name: "Bày trận", profession: "quanSu", tier: 2, cost: 60, target: "team",
-    steps: [{ type: "effect", to: "targets", effect: "defUp", value: 0.25, turns: 2 }, mark],
+    id: "bayTran", name: "Bày trận", profession: "quanSu", tier: 2, cost: 45, target: "team",
+    steps: [{ type: "effect", to: "targets", effect: "defUp", value: 0.3, turns: 2 }, mark],
   },
 ];
 

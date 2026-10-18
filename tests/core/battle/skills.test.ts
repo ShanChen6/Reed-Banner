@@ -37,10 +37,10 @@ const me = (s: BattleState, i = 0) => s.sides[0].fighters[i]!;
 const foe = (s: BattleState, i = 0) => s.sides[1].fighters[i]!;
 
 describe("khung kỹ năng", () => {
-  it("mỗi nghề có 1 chiêu nấc 1 (30) và 2 chiêu nấc 2 (60)", () => {
+  it("mỗi nghề có 1 chiêu nấc 1 (30) và 2 chiêu nấc 2 (45)", () => {
     for (const p of PROFESSIONS) {
       const list = professionSkills(p);
-      assert.deepEqual(list.map((d) => [d.tier, d.cost]), [[1, 30], [2, 60], [2, 60]], p);
+      assert.deepEqual(list.map((d) => [d.tier, d.cost]), [[1, 30], [2, 45], [2, 45]], p);
     }
   });
 
@@ -77,24 +77,24 @@ describe("khung kỹ năng", () => {
 });
 
 describe("chiêu nghề", () => {
-  it("Trảm kích: 150% ATK chịu DEF; dấu ấn Kim: Thủ −15%", () => {
+  it("Trảm kích: 210% ATK chịu DEF; dấu ấn Kim: Thủ −15%", () => {
     const s = setup([solo(fighter("a", { skills: ["tramKich"] })), solo(fighter("b", { def: 100, element: "loi" }))]);
     const r = ok(act(s, { type: "skill", skill: "tramKich" }));
-    assert.equal(foe(r.state).hp, 1000 - 75);
+    assert.equal(foe(r.state).hp, 1000 - 105);
     assert.deepEqual(foe(r.state).effects, [{ kind: "defDown", value: 0.15, turns: 1 }]);
   });
 
   it("Phép lan ở 1vs1 trúng một đối thủ ×1.5", () => {
     const s = setup([solo(fighter("a", { skills: ["phepLan"], element: "loi" })), solo(fighter("b", { element: "kim" }))]);
     const r = ok(act(s, { type: "skill", skill: "phepLan" }));
-    assert.equal(foe(r.state).hp, 1000 - 105);
+    assert.equal(foe(r.state).hp, 1000 - 150);
   });
 
   it("Khiên hấp thụ trước khi trừ máu", () => {
     const s = setup([solo(fighter("a", { skills: ["tramKich"], element: "loi" })), solo(fighter("b", { element: "kim" }))]);
     foe(s).effects.push({ kind: "shield", value: 100, turns: null });
     const r = ok(act(s, { type: "skill", skill: "tramKich" }));
-    assert.equal(foe(r.state).hp, 1000 - 50);
+    assert.equal(foe(r.state).hp, 1000 - 110);
     assert.equal(foe(r.state).effects.length, 0);
   });
 
@@ -102,7 +102,7 @@ describe("chiêu nghề", () => {
     const s = setup([solo(fighter("a", { skills: ["tramKich"], element: "loi" })), solo(fighter("b", { element: "kim" }))]);
     foe(s).effects.push({ kind: "reflect", value: 0.4, turns: 2 });
     const r = ok(act(s, { type: "skill", skill: "tramKich" }));
-    assert.equal(me(r.state).hp, 1000 - 60);
+    assert.equal(me(r.state).hp, 1000 - 84);
   });
 
   it("Thủ thành ở 3vs3: Khiêu khích buộc kỹ năng đơn mục tiêu nhắm vào người khiêu khích", () => {
@@ -117,7 +117,7 @@ describe("chiêu nghề", () => {
   it("Thủ thành ở 1vs1: không có Khiêu khích, vẫn có Khiên", () => {
     const s = setup([solo(fighter("a", { skills: ["thuThanh"], profession: "binhLinh", element: "loi" })), solo(fighter("b"))]);
     const r = ok(act(s, { type: "skill", skill: "thuThanh" }));
-    assert.deepEqual(me(r.state).effects, [{ kind: "shield", value: 200, turns: null }]);
+    assert.deepEqual(me(r.state).effects, [{ kind: "shield", value: 250, turns: null }]);
   });
 
   it("Linh dược hồi máu và Thanh tẩy đồng đội được chọn", () => {
@@ -125,7 +125,7 @@ describe("chiêu nghề", () => {
     me(s, 1).hp = 500;
     me(s, 1).effects.push({ kind: "burn", value: 10, turns: 2 }, { kind: "atkUp", value: 0.2, turns: 2 });
     const r = ok(act(s, { type: "skill", skill: "linhDuoc", target: 1 }));
-    assert.equal(me(r.state, 1).hp, 700);
+    assert.equal(me(r.state, 1).hp, 800);
     assert.deepEqual(me(r.state, 1).effects.map((e) => e.kind), ["atkUp"]);
   });
 
@@ -159,7 +159,7 @@ describe("chiêu nghề", () => {
   it("Thiêu đốt (dấu ấn Hỏa) trừ máu đầu lượt của phe bị ảnh hưởng", () => {
     const s = setup([solo(fighter("a", { skills: ["muaChuoc"], profession: "muuSi", element: "hoa" })), solo(fighter("b"))]);
     let r = ok(act(s, { type: "skill", skill: "muaChuoc" }));
-    assert.equal(foe(r.state).energy, 70);
+    assert.equal(foe(r.state).energy, 60);
     const m = findValidMoves(r.state.board)[0]!;
     r = ok(act(r.state, { type: "swap", ...m }));
     assert.ok(r.events.some((e) => e.type === "damage" && e.side === 1 && e.source === "burn" && e.amount === 30));
