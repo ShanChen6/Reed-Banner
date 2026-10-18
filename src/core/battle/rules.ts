@@ -85,3 +85,11 @@ export function cascadeMultiplier(stepIndex: number): number {
 export function defenseMultiplier(def: number, pierce = 0): number {
   return 100 / (100 + Math.max(0, def * (1 - pierce)));
 }
+
+export const TRONG_DONG_ATK = 0.1;
+export const TRONG_DONG_TURNS = 2;
+export const QUAN_SU_PER_TILE = 0.05;
+export const QUAN_SU_MAX = 0.3;
+export const QUAN_SU_TURNS = 3;
+/** Mặc định tạm: docs ghi "Khiên tạm thời" nhưng chưa ghi thời lượng. */
+export const Y_SU_SHIELD_TURNS = 2;

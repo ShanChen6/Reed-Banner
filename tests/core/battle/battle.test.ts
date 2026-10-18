@@ -179,7 +179,7 @@ describe("áp kết quả bàn cờ", () => {
     });
     const r = ok(act(withBoard(state, BOARD), { type: "swap", from: { row: 2, col: 3 }, to: { row: 2, col: 2 } }));
     // lương 55: bình thường; Hỏa khắc Kim ×1.25; DEF 100 ×0.5
-    assert.deepEqual(swordDamage(r.events), { type: "damage", side: 1, fighter: 0, amount: 38, source: "sword" });
+    assert.deepEqual(swordDamage(r.events), { type: "damage", side: 1, fighter: 0, amount: 38, absorbed: 0, source: "sword" });
   });
 
   it("đói thì giảm sát thương", () => {
@@ -188,7 +188,7 @@ describe("áp kết quả bàn cờ", () => {
       seed: 1,
     });
     const r = ok(act(withBoard(state, BOARD), { type: "swap", from: { row: 2, col: 3 }, to: { row: 2, col: 2 } }));
-    assert.deepEqual(swordDamage(r.events), { type: "damage", side: 1, fighter: 0, amount: 45, source: "sword" });
+    assert.deepEqual(swordDamage(r.events), { type: "damage", side: 1, fighter: 0, amount: 45, absorbed: 0, source: "sword" });
   });
 
   it("ghép âm dương cho năng lượng; Pháp sư ×1.5", () => {
@@ -227,7 +227,7 @@ describe("áp kết quả bàn cờ", () => {
     assert.equal(state.sides[0].food, 0);
     assert.deepEqual(
       events.find((e) => e.type === "damage"),
-      { type: "damage", side: 0, fighter: 0, amount: 30, source: "starvation" },
+      { type: "damage", side: 0, fighter: 0, amount: 30, absorbed: 0, source: "starvation" },
     );
   });
 

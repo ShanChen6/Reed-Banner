@@ -1,6 +1,7 @@
 // Trạng thái trận đấu: dữ liệu thuần, tuần tự hóa được (lưu DB, gửi client).
 
 import type { Board, SpawnWeights } from "../board";
+import type { Effect } from "./effects";
 import type { Element } from "./elements";
 import type { Profession } from "./rules";
 
@@ -12,11 +13,14 @@ export interface FighterConfig {
   readonly maxHp: number;
   readonly atk: number;
   readonly def: number;
+  /** Kỹ năng chủ động mang vào trận (id trong SKILLS). */
+  readonly skills?: readonly string[];
 }
 
 export interface Fighter extends FighterConfig {
   hp: number;
   energy: number;
+  effects: Effect[];
 }
 
 export interface SideConfig {
@@ -51,6 +55,8 @@ export interface TurnState {
   acted: number[];
   /** Lần ra tay hiện tại là lượt thêm. */
   extra: boolean;
+  /** Đã dùng kỹ năng trong lần ra tay này (tối đa 1). */
+  skillUsed: boolean;
   /** Mốc hết giờ (ms); null khi tắt đồng hồ. */
   deadline: number | null;
   /** Số lượt đã bắt đầu của cả trận, tính từ 1. */
@@ -72,6 +78,10 @@ export interface BattleState {
 
 export function isAlive(f: Fighter): boolean {
   return f.hp > 0;
+}
+
+export function canAct(f: Fighter): boolean {
+  return isAlive(f) && !f.effects.some((e) => e.kind === "freeze");
 }
 
 export function otherSide(side: SideIndex): SideIndex {
