@@ -6,7 +6,8 @@
 
 ## Gameplay
 
-- [ ] Duyệt bản yếu (từ chữ L/T) của 6 ô đặc biệt (bản nháp). → [Bàn cờ](design/01-ban-co.md#bản-yếu-từ-chữ-lt)
+- [ ] Duyệt ô Trống trận, thanh Nộ và 7 kỹ năng bị động kích hoạt bằng nộ (bản nháp); kiểm tra tốc độ tích nộ. → [Tài nguyên](design/03-tai-nguyen-cong-thuc.md#3-nộ-và-kỹ-năng-bị-động)
+- [ ] Duyệt bản yếu (từ chữ L/T) của 7 ô đặc biệt (bản nháp). → [Bàn cờ](design/01-ban-co.md#bản-yếu-từ-chữ-lt)
 - [ ] Mức lợi thế "sân nhà" của trùm và bảng tỉ lệ ô cho từng màn. → [Bàn cờ](design/01-ban-co.md#tỉ-lệ-sinh-ô-theo-màn)
 - [ ] Đồng hồ 30 giây có được tắt ở Luyện tập và `/demo` không (đề xuất: được tắt). → [Bàn cờ](design/01-ban-co.md#5-giới-hạn-thời-gian--kéo-sai)
 - [ ] Cân bằng riêng cho 1vs1 (máu gốc, thời lượng mục tiêu). → [Trận đấu](design/02-tran-dau.md#3-luật-1vs1)

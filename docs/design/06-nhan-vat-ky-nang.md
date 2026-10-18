@@ -37,7 +37,7 @@ Tóm tắt khung chung, áp cho cả 7 nguyên tố:
 
 | Ô | Vai trò | Năng lượng | Mở khóa |
 |---|---|---|---|
-| Bị động | Luôn có hiệu lực | — | Cấp 1 |
+| Bị động | Tự kích hoạt khi đầy Nộ | 100 nộ | Cấp 1 |
 | 1 | Bàn cờ: phá hoặc biến ô | 20 | Cấp 1 |
 | 2 | Hỗ trợ nhỏ | 30 | Cấp 1 |
 | 3 | Đơn mục tiêu + phá vùng nhỏ | 40 | Cấp 5 |
@@ -51,8 +51,9 @@ Tóm tắt khung chung, áp cho cả 7 nguyên tố:
 
 - Dùng kỹ năng là **hành động miễn phí trước khi đổi ô**, mỗi lượt tối đa **1 lần**. Chỉ **người hành động** trong lượt mới được dùng.
 - Trừ đúng chi phí năng lượng. Không đủ năng lượng thì kỹ năng bị khóa.
-- Kỹ năng gây sát thương bỏ qua DEF, vẫn chịu sĩ khí và nguyên tố (xem [Công thức](03-tai-nguyen-cong-thuc.md#3-công-thức-sát-thương)).
+- Kỹ năng gây sát thương bỏ qua DEF, vẫn chịu sĩ khí và nguyên tố (xem [Công thức](03-tai-nguyen-cong-thuc.md#4-công-thức-sát-thương)).
 - Câm lặng chặn mọi kỹ năng chủ động, không chặn kỹ năng bị động.
+- Kỹ năng bị động chỉ có ở thủ lĩnh (nhân vật chính, hoặc nhân vật vị trí 1 của đội AI) và kích hoạt bằng Nộ ([Tài nguyên](03-tai-nguyen-cong-thuc.md#3-nộ-và-kỹ-năng-bị-động)). Đội AI dùng bộ bị động theo nguyên tố của thủ lĩnh.
 
 ## 4. Nhân vật kèm, nghề & chiêu nghề
 
@@ -65,7 +66,7 @@ Tóm tắt khung chung, áp cho cả 7 nguyên tố:
 
 ### 4.1 Sáu nghề & nội tại
 
-Mỗi nghề gắn với một loại ô.
+Mỗi nghề gắn với một loại ô. Ô 🥁 Trống trận không gắn với nghề nào; nó nuôi thanh Nộ của thủ lĩnh.
 
 | Ô | Nghề | Nội tại trong trận | Phụ ngoài trận |
 |---|---|---|---|

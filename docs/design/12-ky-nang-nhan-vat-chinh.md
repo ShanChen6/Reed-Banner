@@ -14,7 +14,7 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 | Ô | Vai trò | Năng lượng | Mở khóa | Mức sức mạnh chuẩn |
 |---|---|---|---|---|
-| Bị động | Luôn có hiệu lực | — | Cấp 1 | — |
+| Bị động | Tự kích hoạt khi đầy **Nộ**, hiệu lực 3 lượt | 100 nộ | Cấp 1 | Một đợt bùng nổ đáng kể nhưng không quyết định trận |
 | 1 | **Bàn cờ**: phá hoặc biến ô | 20 | Cấp 1 | Khoảng 8 ô bị tác động |
 | 2 | **Hỗ trợ nhỏ** cho bản thân | 30 | Cấp 1 | Hồi 15% máu, hoặc Khiên 20%, hoặc Công +25% 2 lượt |
 | 3 | **Đơn mục tiêu** + phá vùng nhỏ | 40 | Cấp 5 | 180% ATK, phá khoảng 4 ô |
@@ -24,14 +24,14 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 - **Lệch theo nguyên tố:** Phong ở mức gần chuẩn nhưng mạnh về điều khiển bàn cờ; Hỏa gây sát thương cao hơn chuẩn khoảng 10–15% nhưng tự làm yếu thủ; Thổ thấp hơn khoảng 20% nhưng kèm Khiên; Thủy và Mộc thấp hơn khoảng 5–10% nhưng kèm khống chế hoặc hồi máu; Kim và Lôi ở mức chuẩn kèm hiệu ứng phụ.
 - Ở giai đoạn 1 (Luyện tập, cùng một cấp), cả 7 kỹ năng mở sẵn; mốc mở khóa chỉ áp dụng từ giai đoạn 3.
-- Sát thương kỹ năng bỏ qua DEF, vẫn chịu sĩ khí và nguyên tố ([Công thức](03-tai-nguyen-cong-thuc.md#3-công-thức-sát-thương)).
+- Sát thương kỹ năng bỏ qua DEF, vẫn chịu sĩ khí và nguyên tố ([Công thức](03-tai-nguyen-cong-thuc.md#4-công-thức-sát-thương)).
 
 ### 1.1 Nâng cấp
 
 - Mỗi kỹ năng chủ động có **cấp 1 đến 5**, nâng bằng điểm kỹ năng.
 - Mỗi cấp trên 1: **+10%** hệ số chính (sát thương, lượng hồi, Khiên, % Công/Thủ). Thời lượng và số ô không đổi.
 - Cấp 5: chi phí năng lượng giảm **10%** (làm tròn xuống bội số của 5).
-- Kỹ năng bị động không nâng cấp.
+- Kỹ năng bị động không nâng cấp. Cách tích nộ xem [Tài nguyên](03-tai-nguyen-cong-thuc.md#3-nộ-và-kỹ-năng-bị-động).
 
 > TODO: số điểm kỹ năng cần cho mỗi cấp.
 
@@ -63,9 +63,9 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 ## 2. 🌳 Mộc: đánh dai, hồi máu
 
-| Ô | Kỹ năng | NL | Tác dụng |
+| Ô | Kỹ năng | Chi phí | Tác dụng |
 |---|---|---|---|
-| Bị động | **Sinh Sôi Bất Tận** _(tên tạm)_ | — | Đầu mỗi lượt của phe mình, hồi 3% máu tối đa. |
+| Bị động | **Sinh Sôi Bất Tận** _(tên tạm)_ | Nộ | Hồi phục 8% máu tối đa mỗi lượt cho cả đội, 3 lượt. |
 | 1 | **Lục Diệp Phong** | 20 | Phá **8 ô ngẫu nhiên**. |
 | 2 | **Linh Mộc Hồi Sinh** | 30 | Hồi 15% máu tối đa, biến 3 ô ngẫu nhiên thành ❤️. |
 | 3 | **Thanh Mộc Hộ Pháp** | 40 | 170% ATK vào 1 đối thủ, hồi cho bản thân 30% sát thương gây ra. Phá vùng **2×2**. |
@@ -75,9 +75,9 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 ## 3. ⚙️ Kim: đánh chắc, xuyên giáp
 
-| Ô | Kỹ năng | NL | Tác dụng |
+| Ô | Kỹ năng | Chi phí | Tác dụng |
 |---|---|---|---|
-| Bị động | **Kim Cốt Thiết Thân** | — | Đánh thường (ghép kiếm) bỏ qua 20% DEF của mục tiêu. |
+| Bị động | **Kim Cốt Thiết Thân** | Nộ | 3 lượt: đánh thường bỏ qua 40% DEF, kỹ năng xuyên Khiên. |
 | 1 | **Luyện Kim Thành Kiếm** | 20 | Biến **4 ô ngẫu nhiên** thành ⚔️. |
 | 2 | **Kim Ý Ngưng Thần** | 30 | Công +25% cho bản thân, 2 lượt. |
 | 3 | **Đoạn Kim Nhất Tuyến** | 40 | 180% ATK vào 1 đối thủ, Thủ −20% mục tiêu 2 lượt. Phá **đoạn 4**. |
@@ -87,9 +87,9 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 ## 4. 💧 Thủy: khống chế
 
-| Ô | Kỹ năng | NL | Tác dụng |
+| Ô | Kỹ năng | Chi phí | Tác dụng |
 |---|---|---|---|
-| Bị động | **Hàn Tuyền** | — | Kỹ năng gây sát thương có thêm 15% cơ hội Đóng băng mục tiêu 1 lượt. |
+| Bị động | **Hàn Tuyền** | Nộ | Đóng băng ngay 1 đối thủ (người chơi chọn) 1 lượt; 3 lượt sau đó kỹ năng gây sát thương có thêm 25% cơ hội Đóng băng. |
 | 1 | **Thủy Nguyệt Tụ Linh** | 20 | Biến **5 ô ngẫu nhiên** thành ☯️. |
 | 2 | **Thanh Lưu Tẩy Trần** | 30 | Thanh tẩy bản thân, hồi 10% máu tối đa. |
 | 3 | **Hàn Băng Tiễn** | 40 | 165% ATK vào 1 đối thủ, 30% cơ hội Đóng băng 1 lượt. Phá vùng **2×2**. |
@@ -101,9 +101,9 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 ## 5. 🔥 Hỏa: sát thương lớn, thủ yếu
 
-| Ô | Kỹ năng | NL | Tác dụng |
+| Ô | Kỹ năng | Chi phí | Tác dụng |
 |---|---|---|---|
-| Bị động | **Liệt Hỏa Tâm** | — | Sát thương kỹ năng +15%; DEF bản thân −10%. |
+| Bị động | **Liệt Hỏa Tâm** | Nộ | 3 lượt: mọi sát thương của bản thân +30%, DEF bản thân −15%. |
 | 1 | **Phóng Hỏa Thiêu Doanh** | 20 | Phá vùng **3×3** do người chơi chọn. |
 | 2 | **Nộ Hỏa Thiêu Thân** | 30 | Công +35% cho bản thân 2 lượt, kèm Thủ −15% bản thân 2 lượt. |
 | 3 | **Xích Diễm Tiễn** | 40 | 200% ATK vào 1 đối thủ, Thiêu đốt 2 lượt. Phá **chữ thập nhỏ**. |
@@ -115,9 +115,9 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 ## 6. ⛰️ Thổ: trụ lâu, chịu đòn
 
-| Ô | Kỹ năng | NL | Tác dụng |
+| Ô | Kỹ năng | Chi phí | Tác dụng |
 |---|---|---|---|
-| Bị động | **Bàn Thạch** | — | Đầu trận nhận Khiên bằng 15% máu tối đa; DEF bản thân +10%. |
+| Bị động | **Bàn Thạch** | Nộ | Khiên bằng 25% máu tối đa cho bản thân, Phản đòn 25% trong 3 lượt. |
 | 1 | **Hậu Thổ Tích Lương** | 20 | Biến **5 ô ngẫu nhiên** thành 🍙. |
 | 2 | **Thạch Giáp** | 30 | Khiên bằng 20% máu tối đa cho bản thân. |
 | 3 | **Sơn Băng Địa Liệt** | 40 | 150% ATK vào 1 đối thủ, Khiên 10% máu tối đa cho bản thân. Phá vùng **2×2**. |
@@ -127,9 +127,9 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 ## 7. ⚡ Lôi: đánh nhanh, phá nhịp
 
-| Ô | Kỹ năng | NL | Tác dụng |
+| Ô | Kỹ năng | Chi phí | Tác dụng |
 |---|---|---|---|
-| Bị động | **Điện Quang Tốc Kích** | — | Mỗi ô ☯️ ghép được cho thêm 2 năng lượng; kỹ năng gây sát thương trừ thêm 5 năng lượng của mỗi mục tiêu trúng đòn. |
+| Bị động | **Điện Quang Tốc Kích** | Nộ | Trừ ngay 20 năng lượng của mọi đối thủ; 3 lượt sau đó mỗi ô ☯️ ghép được cho thêm 5 năng lượng. |
 | 1 | **Lôi Trụ Giáng Thế** | 20 | Phá **1 cột** do người chơi chọn. |
 | 2 | **Tĩnh Điện Hộ Thân** | 30 | Thanh tẩy bản thân, Thủ +20% 2 lượt. |
 | 3 | **Lôi Tiễn Xuyên Vân** | 40 | 180% ATK vào 1 đối thủ, trừ 15 năng lượng của mục tiêu. Phá **4 ô ngẫu nhiên**. |
@@ -139,9 +139,9 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 ## 8. 🌪️ Phong: linh hoạt, điều khiển bàn cờ
 
-| Ô | Kỹ năng | NL | Tác dụng |
+| Ô | Kỹ năng | Chi phí | Tác dụng |
 |---|---|---|---|
-| Bị động | **Thuận Phong** | — | Đầu mỗi lượt của phe mình, nhận +4 năng lượng. |
+| Bị động | **Thuận Phong** | Nộ | Nhận ngay 15 năng lượng; 3 lượt sau đó mỗi lượt được **trượt** miễn phí 1 hàng hoặc 1 cột đi 1 ô (không tốn năng lượng, không tính là dùng kỹ năng). |
 | 1 | **Phong Quyển Tàn Vân** | 20 | **Trượt** 1 hàng hoặc 1 cột đi 1–2 ô. |
 | 2 | **Thanh Phong Tụ Khí** | 30 | Công +20% cho bản thân 2 lượt, nhận ngay 10 năng lượng. |
 | 3 | **Phong Nhận Liệt Không** | 40 | 175% ATK vào 1 đối thủ, Xua tan mục tiêu. Phá vùng **2×2**. |

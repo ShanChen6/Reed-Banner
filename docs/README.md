@@ -11,7 +11,7 @@
 | [00-tong-quan.md](design/00-tong-quan.md) | Ý tưởng, nguồn gốc, nguyên tắc clean-room |
 | [01-ban-co.md](design/01-ban-co.md) | Bàn cờ 12×8, loại ô, luật ghép, ô đặc biệt, sinh ô, đồng hồ 30 giây |
 | [02-tran-dau.md](design/02-tran-dau.md) | Thể thức 1vs1 và 3vs3, lượt, mục tiêu, máu & thời lượng |
-| [03-tai-nguyen-cong-thuc.md](design/03-tai-nguyen-cong-thuc.md) | Lương, sĩ khí, năng lượng, công thức sát thương |
+| [03-tai-nguyen-cong-thuc.md](design/03-tai-nguyen-cong-thuc.md) | Lương, sĩ khí, năng lượng, nộ, công thức sát thương |
 | [04-hieu-ung.md](design/04-hieu-ung.md) | Hiệu ứng trạng thái |
 | [05-nguyen-to.md](design/05-nguyen-to.md) | 7 nguyên tố, khắc chế, hệ số trang bị, dấu ấn |
 | [06-nhan-vat-ky-nang.md](design/06-nhan-vat-ky-nang.md) | Nhân vật chính, nhân vật kèm, nghề, kỹ năng |
@@ -50,7 +50,7 @@
 
 | Thuật ngữ | Nghĩa |
 |---|---|
-| **Ô** | Một viên trên bàn cờ (Kiếm, Âm dương, Bánh chưng, Tim, Thỏi vàng, Sách) |
+| **Ô** | Một viên trên bàn cờ (Kiếm, Âm dương, Bánh chưng, Tim, Thỏi vàng, Sách, Trống trận) |
 | **Bộ ghép** | Nhóm từ 3 ô cùng loại liền nhau |
 | **Cascade** | Ô rơi xuống sau khi ăn tạo thành bộ ghép mới mà không cần người chơi kéo |
 | **Lượt thêm** | Lượt đánh tiếp ngay, nhận được khi ghép từ 4 ô trở lên |
@@ -62,6 +62,8 @@
 | **Nghề** | Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư; mỗi nghề gắn với một loại ô |
 | **Chiêu nghề** | Kỹ năng nấc 1–2 của nhân vật kèm, chung theo nghề |
 | **Dấu ấn** | Hiệu ứng phụ theo nguyên tố cộng vào chiêu nghề |
+| **Nộ** | Thanh 0–100 của thủ lĩnh, tích từ ô Trống trận và khi mất máu; đầy thì kỹ năng bị động tự kích hoạt |
+| **Thủ lĩnh** | Nhân vật mang thanh Nộ và kỹ năng bị động: nhân vật chính, hoặc nhân vật vị trí 1 của đội AI |
 | **Lương / Sĩ khí** | Tài nguyên chung của phe và mức hệ số sát thương suy ra từ nó |
 | **Tianwu** | AI điều khiển phe đối thủ |
 | **Seed** | Số khởi tạo bộ sinh ngẫu nhiên của trận, chỉ nằm trên server |
