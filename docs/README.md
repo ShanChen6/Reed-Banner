@@ -20,6 +20,7 @@
 | [09-che-do-choi.md](design/09-che-do-choi.md) | Luyện tập, Thường, Chiến dịch, Đánh trùm, Leo tháp, Sinh tồn |
 | [10-ai.md](design/10-ai.md) | AI Tianwu |
 | [11-giao-dien.md](design/11-giao-dien.md) | Bố cục màn hình trận đấu |
+| [12-ky-nang-nhan-vat-chinh.md](design/12-ky-nang-nhan-vat-chinh.md) | 42 kỹ năng của nhân vật chính theo 6 nguyên tố |
 
 **Kỹ thuật** (`tech/`)
 

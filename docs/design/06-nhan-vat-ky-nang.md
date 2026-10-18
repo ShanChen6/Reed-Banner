@@ -29,29 +29,23 @@
 
 Một kỹ năng có thể thuộc nhiều loại, ví dụ vừa gây sát thương vừa phá một vùng ô.
 
-### 2.2 Bộ kỹ năng hệ 🌳 Mộc
+### 2.2 Bộ kỹ năng theo nguyên tố
 
-| # | Kỹ năng | Loại | Tác dụng |
+Chi tiết 6 bộ (42 kỹ năng), chi phí năng lượng, mốc mở khóa, nâng cấp và vùng phá ô: xem [Bộ kỹ năng nhân vật chính](12-ky-nang-nhan-vat-chinh.md).
+
+Tóm tắt khung chung, áp cho cả 6 nguyên tố:
+
+| Ô | Vai trò | Năng lượng | Mở khóa |
 |---|---|---|---|
-| Bị động | _Chưa đặt tên_ | — | _Chưa thiết kế_ |
-| 1 | **Lục Diệp Phong** | Bàn cờ | Phá hủy ngẫu nhiên một số ô cờ |
-| 2 | **Linh Mộc Hồi Sinh** | Hỗ trợ | Hỗ trợ, tăng cường bản thân |
-| 3 | **Thanh Mộc Hộ Pháp** | Đối thủ + bàn cờ | Sát thương đơn mục tiêu lớn, phá hủy 1 vùng ô |
-| 4 | **Cuồng Vũ Thiên Diệp** | Đối thủ + bàn cờ | Sát thương toàn bộ kẻ địch, phá hủy 1 vùng ô |
-| 5 | **Cổ Thụ Trấn Thiên** (tên tạm) | Đối thủ + bàn cờ | Sát thương đơn mục tiêu lớn, phá hủy vùng ô rộng hơn kỹ năng 3 |
-| 6 | **Thanh Trúc Bảo Phù** | Hỗ trợ | Hỗ trợ, tăng cường bản thân |
+| Bị động | Luôn có hiệu lực | — | Cấp 1 |
+| 1 | Bàn cờ: phá hoặc biến ô | 20 | Cấp 1 |
+| 2 | Hỗ trợ nhỏ | 30 | Cấp 1 |
+| 3 | Đơn mục tiêu + phá vùng nhỏ | 40 | Cấp 5 |
+| 4 | Toàn bộ kẻ địch + phá vùng | 60 | Cấp 10 |
+| 5 | Tuyệt kỹ đơn mục tiêu + phá vùng rộng | 100 | Cấp 20 |
+| 6 | Hỗ trợ lớn | 50 | Cấp 15 |
 
 > Tên kỹ năng phải tự đặt, không trùng tên chiêu của game khác (nguyên tắc clean-room). "Cổ Thụ Trấn Thiên" thay cho tên cũ vì tên cũ trùng một game đang phát hành.
-
-> TODO: kỹ năng bị động hệ Mộc; số ô bị phá, kích thước vùng, chi phí năng lượng và hệ số sát thương của từng kỹ năng; hiệu ứng cụ thể của hai kỹ năng hỗ trợ (chọn trong [danh sách hiệu ứng](04-hieu-ung.md)).
-
-### 2.3 Bộ kỹ năng các nguyên tố khác
-
-> TODO: bộ 7 kỹ năng cho Kim, Thủy, Hỏa, Thổ, Lôi, theo [tính cách nguyên tố](05-nguyen-to.md#2-tính-cách-nguyên-tố). Gợi ý giữ cùng khung với hệ Mộc (1 bị động, 1 bàn cờ, 2 hỗ trợ, 3 tấn công kèm phá ô) để 6 bộ cân bằng với nhau.
-
-### 2.4 Mở khóa & chi phí
-
-> TODO: 6 kỹ năng chủ động mở theo cấp hay có sẵn; chi phí năng lượng từng kỹ năng; nâng cấp bằng điểm kỹ năng.
 
 ## 3. Luật dùng kỹ năng chủ động (mọi nhân vật)
 

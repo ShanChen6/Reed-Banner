@@ -38,7 +38,7 @@ Mọi luật của 3vs3 áp dụng, trừ các điểm sau:
 
 - Nhân vật duy nhất đánh **mọi lượt**, kể cả lượt thêm. Không có luật nghỉ 1 lượt.
 - Đánh thường và kỹ năng đơn mục tiêu luôn nhắm vào đối thủ duy nhất. **Khiêu khích** không có tác dụng.
-- Kỹ năng "cho cả đội" chỉ tác động lên bản thân; kỹ năng "toàn bộ kẻ địch" chỉ trúng một đối thủ.
+- Kỹ năng "cho cả đội" chỉ tác động lên bản thân; kỹ năng "toàn bộ kẻ địch" chỉ trúng một đối thủ nhưng gây ×1.5 sát thương.
 - **Tĩnh tâm** (năng lượng cho đồng đội không hành động) không áp dụng.
 - Đóng băng làm nhân vật **mất lượt** thay vì bị bỏ qua trong luân phiên.
 

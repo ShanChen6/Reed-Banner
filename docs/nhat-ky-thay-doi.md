@@ -27,6 +27,10 @@
 - Đổi tên kỹ năng "Thiên Nhiên Đại Chú" (trùng tên chiêu của game đó) thành tên tạm "Cổ Thụ Trấn Thiên".
 - Không xây cộng điểm tiềm năng, chí mạng, né và bang hội.
 
+**Bộ kỹ năng nhân vật chính (bản nháp, chờ duyệt)**
+- Viết chi tiết 42 kỹ năng (6 nguyên tố × 7) theo một khung chung: chi phí 20/30/40/60/100/50, mở khóa cấp 1/1/5/10/20/15, nâng cấp 1–5.
+- Ở 1vs1, kỹ năng toàn bộ kẻ địch gây ×1.5 sát thương.
+
 **Đề xuất kèm theo (chờ chốt, đã ghi trong câu hỏi mở)**
 - Dấu ấn của Lôi.
 - Đồng hồ 30 giây được tắt ở Luyện tập và `/demo`.
