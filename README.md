@@ -17,6 +17,7 @@ pnpm test       # node:test qua tsx
 pnpm lint
 pnpm typecheck
 pnpm build
+pnpm sim -- --mode all --battles 200   # mô phỏng cân bằng AI đấu AI
 ```
 
 - `src/app/`: giao diện Next.js (App Router).
