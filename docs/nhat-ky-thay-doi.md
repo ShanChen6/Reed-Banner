@@ -52,6 +52,11 @@
 **Kỹ năng chịu DEF (Shan chốt)**
 - Sát thương kỹ năng giờ bị giảm theo DEF như đánh thường. Thêm hệ số Xuyên giáp; Kim là hệ có xuyên giáp. Hệ số kỹ năng sẽ được nâng lại khi mô phỏng.
 
+**Trang bị: mốc thưởng, phẩm, ghép (Shan chốt; số liệu là bản nháp)**
+- Thưởng bộ và cộng hưởng nguyên tố có hai mốc: 6 món và 9 món.
+- Trang bị có phẩm theo màu (đề xuất 5 bậc Trắng, Lục, Lam, Tím, Cam).
+- Ghép 3 món cùng bậc, cùng hệ (nguyên tố), cùng loại ô để lên bậc kế tiếp; không ghép khác hệ.
+
 **Đề xuất kèm theo (chờ chốt, đã ghi trong câu hỏi mở)**
 - Dấu ấn của Lôi.
 - Đồng hồ 30 giây được tắt ở Luyện tập và `/demo`.
