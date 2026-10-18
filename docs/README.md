@@ -19,7 +19,7 @@
 | [08-tien-trinh-kinh-te.md](design/08-tien-trinh-kinh-te.md) | Kinh nghiệm, cấp, vàng, cửa hàng |
 | [09-che-do-choi.md](design/09-che-do-choi.md) | Luyện tập, Thường, Chiến dịch, Đánh trùm, Leo tháp, Sinh tồn |
 | [10-ai.md](design/10-ai.md) | AI Tianwu |
-| [11-giao-dien.md](design/11-giao-dien.md) | Bố cục màn hình trận đấu |
+| [11-giao-dien.md](design/11-giao-dien.md) | Bố cục màn hình trận đấu, điều khiển (vuốt, click, bàn phím) |
 | [12-ky-nang-nhan-vat-chinh.md](design/12-ky-nang-nhan-vat-chinh.md) | 49 kỹ năng của nhân vật chính theo 7 nguyên tố |
 
 **Kỹ thuật** (`tech/`)

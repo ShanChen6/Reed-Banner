@@ -43,6 +43,10 @@
 - [ ] Chi tiết Sinh tồn (số đối thủ mỗi đợt, đường cong sức mạnh) và Leo tháp (phần thưởng giữa các tầng). → [Chế độ chơi](design/09-che-do-choi.md#3-leo-tháp-vô-hạn)
 - [ ] Có đưa Thử thách hằng ngày, Thế cờ, Đấu trường bóng ma vào không. → [Chế độ chơi](design/09-che-do-choi.md#5-đề-xuất-thêm-chờ-chốt)
 
+## Giao diện
+
+- [ ] Cho phép đổi phím trong cài đặt; phím tắt Túi đồ và xem chi tiết sát thương. → [Giao diện](design/11-giao-dien.md#23-bàn-phím)
+
 ## AI
 
 - [ ] Các mức độ khó và tính cách AI theo nghề. → [AI](design/10-ai.md)
