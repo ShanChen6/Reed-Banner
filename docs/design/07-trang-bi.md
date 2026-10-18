@@ -24,6 +24,7 @@ Mỗi nhân vật (nhân vật chính và nhân vật kèm) có **9 ô trang b�
 
 - Mỗi trang bị có một nguyên tố. Hệ số chỉ số so với nguyên tố của nhân vật theo [Nguyên tố](05-nguyen-to.md#3-hệ-số-trang-bị-so-với-nguyên-tố-của-nhân-vật).
 - Nhân vật chính đổi nguyên tố trước trận thì hệ số trang bị được tính lại theo nguyên tố mới.
+- **Vũ khí của nhân vật chính:** giữ riêng một vũ khí đã trang bị cho mỗi nghề. Đổi nghề trước trận thì vũ khí của nghề đó tự mặc vào; nghề chưa có vũ khí thì ô vũ khí để trống.
 
 ## 3. Thưởng khi mặc đủ 9 món
 

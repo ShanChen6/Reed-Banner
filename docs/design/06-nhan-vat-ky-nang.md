@@ -7,14 +7,17 @@
 ## 1. Mô hình chung
 
 - **Chỉ số:** Máu tối đa, Công (ATK), Thủ (DEF).
-- Mỗi nhân vật có **một nghề** cố định và **một nguyên tố**. Đối thủ AI cũng có nghề và nguyên tố.
+- Mỗi nhân vật có **một nghề** và **một nguyên tố**; nhân vật kèm cố định cả hai, riêng nhân vật chính đổi được trước trận. Đối thủ AI cũng có nghề và nguyên tố.
 - **Không có độ hiếm.** Mọi nhân vật kèm cân bằng ở cùng một cấp. Nhân vật mua thêm mang giá trị **chiến thuật** (bao phủ nguyên tố, kỹ năng khác), không mạnh hơn.
 - Nhân vật lịch sử (nhân vật chính, trùm đối thủ) được ghi rõ là hư cấu hóa. Nhân vật kèm thường là **hư cấu**.
 
 ## 2. Nhân vật chính: Đinh Bộ Lĩnh
 
 - Có ngay từ lúc tạo game, **luôn ra trận** ở cả 1vs1 và 3vs3.
-- **Nghề:** Tướng sĩ (hưởng nội tại nghề Tướng sĩ, xem mục 4.1).
+- **Nghề:** chọn 1 trong 6 nghề **trước mỗi trận** (mặc định Tướng sĩ khi tạo game). Nhân vật chính hưởng nội tại của nghề đang chọn (xem mục 4.1). Trong trận không đổi được.
+  - Nghề **không** đổi bộ kỹ năng: 6 kỹ năng chủ động và kỹ năng bị động đi theo nguyên tố. Nghề chỉ quyết định nội tại nghề, loại ô gắn với nghề và loại vũ khí.
+  - 6 nghề × 7 nguyên tố cho 42 cách dựng nhân vật chính.
+  - Đội được phép có nhiều người cùng nghề (ví dụ hai Y sư). Nội tại tác động lên cả phe, như lương của Binh lính, không cộng dồn.
 - **Nguyên tố:** chọn 1 trong 7 (Kim, Mộc, Thủy, Hỏa, Thổ, Lôi, Phong) khi tạo game, và được **đổi trước mỗi trận**. Trong trận không đổi được.
 - **7 kỹ năng theo nguyên tố:** 1 bị động + 6 chủ động. Đổi nguyên tố thì đổi cả bộ kỹ năng. Mỗi nguyên tố có bộ kỹ năng riêng, tổng cộng 7 bộ.
 - Kỹ năng của nhân vật chính đã mang sẵn màu nguyên tố, nên không cộng dấu ấn nguyên tố như chiêu nghề.
@@ -59,7 +62,7 @@ Tóm tắt khung chung, áp cho cả 7 nguyên tố:
 
 - Ở 3vs3, người chơi chọn **2 nhân vật kèm** cùng ra trận với nhân vật chính.
 - Mỗi nhân vật kèm = **Nghề + Nguyên tố + 1 tuyệt chiêu đặc trưng**. Nguyên tố của nhân vật kèm cố định.
-- **Khởi đầu:** người chơi có nhân vật chính và **5 nhân vật kèm hư cấu**, mỗi người một nghề còn lại (Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư).
+- **Khởi đầu:** người chơi có nhân vật chính (mặc định Tướng sĩ) và **5 nhân vật kèm hư cấu**, mỗi người một nghề còn lại (Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư). Khi nhân vật chính đổi sang nghề khác, nhân vật kèm cùng nghề vẫn ra trận được.
   > TODO: nguyên tố và tuyệt chiêu đặc trưng của 5 nhân vật kèm khởi đầu.
 - Danh sách nhân vật kèm bán ở cửa hàng:
   > TODO: chốt sau khi hoàn thiện hệ thống (dự kiến khoảng 12 nhân vật, cộng với nhân vật nhận khi thắng trùm chiến dịch).
