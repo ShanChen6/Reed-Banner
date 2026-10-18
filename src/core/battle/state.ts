@@ -68,6 +68,8 @@ export interface BattleState {
   board: Board;
   /** Trạng thái luồng ngẫu nhiên của bàn cờ (bàn khởi đầu và ô rơi). */
   boardRng: number;
+  /** Trạng thái luồng ngẫu nhiên riêng của AI, tách khỏi luồng bàn cờ. */
+  aiRng: number;
   readonly weights: SpawnWeights;
   readonly timer: boolean;
   turn: TurnState;
