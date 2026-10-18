@@ -10,7 +10,7 @@
 | **3vs3** | Nhân vật chính + 2 nhân vật kèm | 3 nhân vật |
 
 - Nhân vật chính **luôn ra trận** ở cả hai thể thức.
-- Trước trận, người chơi được **đổi nguyên tố** của nhân vật chính (xem [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md)). Trong trận thì không đổi được.
+- Trước trận, người chơi được **đổi nguyên tố và nghề** của nhân vật chính (xem [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md)). Trong trận thì không đổi được.
 - Chế độ nào dùng thể thức nào: xem [Chế độ chơi](09-che-do-choi.md).
 
 ## 2. Luật 3vs3

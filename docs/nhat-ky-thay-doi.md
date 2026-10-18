@@ -46,6 +46,9 @@
 - Mỗi phe có thanh Nộ gắn với thủ lĩnh; đầy 100 thì kỹ năng bị động tự kích hoạt 3 lượt. Viết lại 7 kỹ năng bị động theo cơ chế này.
 - Bỏ cơ chế "Phẫn nộ" của năng lượng; mất máu giờ tích Nộ thay vì năng lượng.
 
+**Nghề của nhân vật chính (Shan chốt)**
+- Đinh Bộ Lĩnh không còn cố định Tướng sĩ: chọn 1 trong 6 nghề trước mỗi trận, như nguyên tố. Nghề chỉ đổi nội tại và vũ khí, không đổi kỹ năng.
+
 **Đề xuất kèm theo (chờ chốt, đã ghi trong câu hỏi mở)**
 - Dấu ấn của Lôi.
 - Đồng hồ 30 giây được tắt ở Luyện tập và `/demo`.
