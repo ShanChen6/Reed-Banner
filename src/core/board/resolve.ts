@@ -2,7 +2,7 @@
 // Xem docs/design/01-ban-co.md mục 2–4.
 
 import type { Rng } from "../rng";
-import { applyGravity, indexOf, posOf, swapCells, type Board, type Pos } from "./grid";
+import { applyGravity, inBounds, indexOf, posOf, swapCells, type Board, type Pos } from "./grid";
 import { refill, shuffleBoard } from "./generate";
 import {
   cascadeSpawnPos,
@@ -90,6 +90,7 @@ function resolveStep(
   rng: Rng,
   weights: SpawnWeights,
   moved: readonly Pos[],
+  initial: readonly Pos[] = [],
 ): CascadeStep {
   const cleared = new Set<number>();
   const queue: Activation[] = [];
@@ -110,6 +111,7 @@ function resolveStep(
     const direction = mainDirection(group);
     for (const pos of group.cells) clear(pos, direction);
   }
+  for (const pos of initial) clear(pos, "row");
 
   const activations: Activation[] = [];
   const transforms: { kind: TileKind; count: number }[] = [];
@@ -168,4 +170,35 @@ function resolveStep(
     boardAfter: filled.board,
     spawned: filled.spawned,
   };
+}
+
+function mergeResults(first: CascadeStep | null, rest: MoveResult): MoveResult {
+  if (!first) return { ...rest, extraTurn: false };
+  const harvest = emptyHarvest();
+  for (const kind of TILE_KINDS) harvest[kind] = first.harvest[kind] + rest.harvest[kind];
+  return { board: rest.board, steps: [first, ...rest.steps], harvest, extraTurn: false, shuffled: rest.shuffled };
+}
+
+/**
+ * Kỹ năng phá ô: ô bị phá được thu hoạch, ô đặc biệt bị phá thì kích hoạt, rồi cascade như thường.
+ * Cascade sau kỹ năng không cho lượt thêm (docs/design/06-nhan-vat-ky-nang.md mục 5).
+ */
+export function destroyCells(board: Board, cells: readonly Pos[], rng: Rng, weights: SpawnWeights): MoveResult {
+  const valid = cells.filter((p) => inBounds(board, p));
+  const first = valid.length > 0 ? resolveStep(board, [], rng, weights, [], valid) : null;
+  return mergeResults(first, resolveBoard(first ? first.boardAfter : board, rng, weights));
+}
+
+/** Kỹ năng biến ô: đổi `count` ô thường ngẫu nhiên thành `kind`, rồi cascade (không cho lượt thêm). */
+export function transformCells(
+  board: Board,
+  kind: TileKind,
+  count: number,
+  rng: Rng,
+  weights: SpawnWeights,
+): MoveResult & { readonly transformed: readonly Pos[] } {
+  const targets = pickTransformTargets(board, kind, count, new Set(), rng);
+  const cells = [...board.cells];
+  for (const pos of targets) cells[indexOf(board, pos)] = { kind };
+  return { ...mergeResults(null, resolveBoard({ ...board, cells }, rng, weights)), transformed: targets };
 }
