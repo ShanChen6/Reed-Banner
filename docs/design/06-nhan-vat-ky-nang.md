@@ -38,14 +38,16 @@ Một kỹ năng có thể thuộc nhiều loại, ví dụ vừa gây sát thư
 | 2 | **Linh Mộc Hồi Sinh** | Hỗ trợ | Hỗ trợ, tăng cường bản thân |
 | 3 | **Thanh Mộc Hộ Pháp** | Đối thủ + bàn cờ | Sát thương đơn mục tiêu lớn, phá hủy 1 vùng ô |
 | 4 | **Cuồng Vũ Thiên Diệp** | Đối thủ + bàn cờ | Sát thương toàn bộ kẻ địch, phá hủy 1 vùng ô |
-| 5 | **Thiên Nhiên Đại Chú** | Đối thủ + bàn cờ | Sát thương đơn mục tiêu lớn, phá hủy vùng ô rộng hơn kỹ năng 3 |
+| 5 | **Cổ Thụ Trấn Thiên** (tên tạm) | Đối thủ + bàn cờ | Sát thương đơn mục tiêu lớn, phá hủy vùng ô rộng hơn kỹ năng 3 |
 | 6 | **Thanh Trúc Bảo Phù** | Hỗ trợ | Hỗ trợ, tăng cường bản thân |
+
+> Tên kỹ năng phải tự đặt, không trùng tên chiêu của game khác (nguyên tắc clean-room). "Cổ Thụ Trấn Thiên" thay cho tên cũ vì tên cũ trùng một game đang phát hành.
 
 > TODO: kỹ năng bị động hệ Mộc; số ô bị phá, kích thước vùng, chi phí năng lượng và hệ số sát thương của từng kỹ năng; hiệu ứng cụ thể của hai kỹ năng hỗ trợ (chọn trong [danh sách hiệu ứng](04-hieu-ung.md)).
 
 ### 2.3 Bộ kỹ năng các nguyên tố khác
 
-> TODO: bộ 7 kỹ năng cho Kim, Thủy, Hỏa, Thổ, Lôi. Gợi ý giữ cùng khung với hệ Mộc (1 bị động, 1 bàn cờ, 2 hỗ trợ, 3 tấn công kèm phá ô) để 6 bộ cân bằng với nhau.
+> TODO: bộ 7 kỹ năng cho Kim, Thủy, Hỏa, Thổ, Lôi, theo [tính cách nguyên tố](05-nguyen-to.md#2-tính-cách-nguyên-tố). Gợi ý giữ cùng khung với hệ Mộc (1 bị động, 1 bàn cờ, 2 hỗ trợ, 3 tấn công kèm phá ô) để 6 bộ cân bằng với nhau.
 
 ### 2.4 Mở khóa & chi phí
 
@@ -89,7 +91,7 @@ Mỗi nghề gắn với một loại ô.
 | 3 | 100 | Tuyệt chiêu đặc trưng (riêng nhân vật) | Cấp 10, **làm ở giai đoạn 3** |
 
 - Điểm kỹ năng dùng để mở nhánh nấc 2 và nâng cấp chiêu (cấp 1 đến 5: tăng sức mạnh hoặc giảm chi phí).
-- Chiêu nghề có lõi trung tính, cộng [dấu ấn nguyên tố](05-nguyen-to.md#4-dấu-ấn-nguyên-tố-trên-chiêu-nghề) của người tung chiêu. Riêng tuyệt chiêu nấc 3 được mang đậm nguyên tố của nhân vật.
+- Chiêu nghề có lõi trung tính, cộng [dấu ấn nguyên tố](05-nguyen-to.md#5-dấu-ấn-nguyên-tố-trên-chiêu-nghề) của người tung chiêu. Riêng tuyệt chiêu nấc 3 được mang đậm nguyên tố của nhân vật.
 
 ### 4.3 Bộ chiêu nghề (bản nháp)
 

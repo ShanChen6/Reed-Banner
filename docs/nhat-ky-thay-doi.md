@@ -19,8 +19,16 @@
 - Nhân vật chính có **7 kỹ năng** (1 bị động, 6 chủ động) theo nguyên tố, gồm kỹ năng tác động trực tiếp lên đối thủ và lên bàn cờ. Đã có tên 6 kỹ năng chủ động hệ Mộc.
 - Trang bị từ 3 ô thành **9 ô**: Vũ khí, Đính mão, Y phục, Hộ thủ, Bảo ngoa, Giới chỉ, Hạng liên, Hộ phù, Ngọc bội.
 
+**Sau khi tham khảo trang Loạn 12 Sứ Quân bản mới (Shan chốt)**
+- Lôi chỉ khắc Thủy, bị Thổ khắc.
+- Thêm bảng tính cách nguyên tố để định hướng kỹ năng.
+- Tương sinh có tác dụng trong trận: ×1.1 sát thương khi nguyên tố người đánh sinh ra nguyên tố mục tiêu.
+- Trang bị có thưởng bộ và cộng hưởng nguyên tố khi mặc đủ 9 món.
+- Đổi tên kỹ năng "Thiên Nhiên Đại Chú" (trùng tên chiêu của game đó) thành tên tạm "Cổ Thụ Trấn Thiên".
+- Không xây cộng điểm tiềm năng, chí mạng, né và bang hội.
+
 **Đề xuất kèm theo (chờ chốt, đã ghi trong câu hỏi mở)**
-- Quan hệ khắc chế và dấu ấn của Lôi.
+- Dấu ấn của Lôi.
 - Đồng hồ 30 giây được tắt ở Luyện tập và `/demo`.
 - Luật 1vs1, luật phá ô bằng kỹ năng, chỉ số chính của 9 ô trang bị.
 

@@ -10,16 +10,32 @@ Mỗi nhân vật mang đúng một nguyên tố. Nhân vật chính được đ
 
 | Nguyên tố | Khắc | Bị khắc bởi | Tương sinh (sinh ra) |
 |---|---|---|---|
-| ⚙️ Kim | Mộc | Hỏa, Lôi | Thủy |
+| ⚙️ Kim | Mộc | Hỏa | Thủy |
 | 🌳 Mộc | Thổ | Kim | Hỏa |
 | 💧 Thủy | Hỏa | Thổ, Lôi | Mộc |
 | 🔥 Hỏa | Kim | Thủy | Thổ |
 | ⛰️ Thổ | Thủy, Lôi | Mộc | Kim |
-| ⚡ Lôi | Thủy, Kim | Thổ | — |
+| ⚡ Lôi | Thủy | Thổ | — |
 
-> TODO (chờ Shan chốt): quan hệ của Lôi ở trên là đề xuất. Lôi khắc 2 và chỉ bị 1 khắc, nên cần kiểm tra cân bằng bằng mô phỏng.
+- Lôi khắc đúng 1 nguyên tố (Thủy) và bị đúng 1 nguyên tố khắc (Thổ), giống năm nguyên tố còn lại.
+- Thủy và Thổ là hai nguyên tố có thêm một quan hệ (Thủy bị 2 khắc, Thổ khắc 2); cần kiểm tra bằng mô phỏng.
 
-## 2. Hệ số trang bị (so với nguyên tố của nhân vật)
+## 2. Tính cách nguyên tố
+
+Định hướng chung khi thiết kế kỹ năng nhân vật chính, kỹ năng bị động và tuyệt chiêu theo nguyên tố. Chỉ dùng các hiệu ứng trong [danh sách hiệu ứng](04-hieu-ung.md).
+
+| Nguyên tố | Tính cách | Hiệu ứng hay dùng |
+|---|---|---|
+| ⚙️ Kim | Đánh chắc, xuyên giáp | Thủ−, sát thương bỏ qua Khiên |
+| 🌳 Mộc | Đánh dai, hồi máu | Hồi phục, hồi máu, phá ô trên bàn cờ |
+| 💧 Thủy | Khống chế | Đóng băng |
+| 🔥 Hỏa | Sát thương lớn nhưng thủ yếu | Thiêu đốt, Công+ |
+| ⛰️ Thổ | Trụ lâu, chịu đòn | Khiên, Phản đòn, Thủ+ |
+| ⚡ Lôi | Đánh nhanh, phá nhịp đối thủ | Trừ năng lượng, Câm lặng |
+
+> Game không có chỉ số chí mạng hay né, nên "đánh nhanh" của Lôi được thể hiện qua phá năng lượng và Câm lặng thay vì chí mạng.
+
+## 3. Hệ số trang bị (so với nguyên tố của nhân vật)
 
 | Quan hệ | Hệ số chỉ số |
 |---|---|
@@ -31,13 +47,19 @@ Mỗi nhân vật mang đúng một nguyên tố. Nhân vật chính được đ
 - Lôi không có quan hệ tương sinh, nên trang bị Lôi và nhân vật Lôi chỉ có các mức ×1.5, ×1 và ×0.75.
 - Vì nhân vật chính đổi được nguyên tố, hệ số trang bị của nhân vật chính được **tính lại mỗi lần đổi**.
 
-## 3. Trong trận
+## 4. Trong trận
 
-- Nguyên tố của bên đánh khắc nguyên tố của bên bị đánh: **+25% sát thương**. Bị khắc ngược lại: **−25%**.
+| Quan hệ (người tung đòn → mục tiêu) | Hệ số sát thương |
+|---|---|
+| Khắc (ví dụ Kim đánh Mộc) | **×1.25** |
+| Tương sinh (nguyên tố người đánh sinh ra nguyên tố mục tiêu, ví dụ Kim đánh Thủy) | **×1.1** |
+| Bình thường | ×1 |
+| Bị khắc (ví dụ Mộc đánh Kim) | **×0.75** |
+
 - Nguyên tố dùng để tính khắc chế là **nguyên tố của người tung đòn**.
 - **Không** gắn nguyên tố vào ô trên bàn cờ, để bàn cờ dễ đọc.
 
-## 4. Dấu ấn nguyên tố trên chiêu nghề
+## 5. Dấu ấn nguyên tố trên chiêu nghề
 
 Áp cho **chiêu nghề của nhân vật kèm** (xem [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#4-nhân-vật-kèm-nghề--chiêu-nghề)).
 

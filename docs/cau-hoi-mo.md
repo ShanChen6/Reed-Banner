@@ -14,11 +14,11 @@
 
 ## Nguyên tố
 
-- [ ] Quan hệ khắc chế của Lôi (đề xuất: khắc Thủy và Kim, bị Thổ khắc). → [Nguyên tố](design/05-nguyen-to.md#1-quan-hệ-khắc-chế)
-- [ ] Dấu ấn Lôi trên chiêu nghề (đề xuất: trừ 10 năng lượng / Câm lặng 1 lượt). → [Nguyên tố](design/05-nguyen-to.md#4-dấu-ấn-nguyên-tố-trên-chiêu-nghề)
+- [ ] Dấu ấn Lôi trên chiêu nghề (đề xuất: trừ 10 năng lượng / Câm lặng 1 lượt). → [Nguyên tố](design/05-nguyen-to.md#5-dấu-ấn-nguyên-tố-trên-chiêu-nghề)
 
 ## Nhân vật & kỹ năng
 
+- [ ] Tên chính thức cho kỹ năng 5 hệ Mộc (tên tạm: Cổ Thụ Trấn Thiên). → [Nhân vật](design/06-nhan-vat-ky-nang.md#22-bộ-kỹ-năng-hệ--mộc)
 - [ ] Kỹ năng bị động hệ Mộc và con số cụ thể của 6 kỹ năng chủ động hệ Mộc. → [Nhân vật](design/06-nhan-vat-ky-nang.md#22-bộ-kỹ-năng-hệ--mộc)
 - [ ] Bộ 7 kỹ năng cho Kim, Thủy, Hỏa, Thổ, Lôi. → [Nhân vật](design/06-nhan-vat-ky-nang.md#23-bộ-kỹ-năng-các-nguyên-tố-khác)
 - [ ] Cách mở khóa và chi phí năng lượng 6 kỹ năng chủ động của nhân vật chính. → [Nhân vật](design/06-nhan-vat-ky-nang.md#24-mở-khóa--chi-phí)
@@ -29,7 +29,8 @@
 ## Trang bị & kinh tế
 
 - [ ] Chỉ số chính của từng ô trong 9 ô trang bị, có chỉ số phụ hay không. → [Trang bị](design/07-trang-bi.md#1-chín-ô-trang-bị)
-- [ ] Bảng rơi đồ và danh sách trang bị. → [Trang bị](design/07-trang-bi.md#3-nguồn-trang-bị)
+- [ ] Danh sách bộ trang bị, thưởng bộ và cộng hưởng nguyên tố. → [Trang bị](design/07-trang-bi.md#3-thưởng-khi-mặc-đủ-9-món)
+- [ ] Bảng rơi đồ và danh sách trang bị. → [Trang bị](design/07-trang-bi.md#4-nguồn-trang-bị)
 - [ ] Giá trị mỗi ô vàng và ô sách. → [Tiến trình](design/08-tien-trinh-kinh-te.md#2-vàng)
 
 ## Chế độ chơi

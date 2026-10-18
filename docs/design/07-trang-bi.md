@@ -22,10 +22,19 @@ Mỗi nhân vật (nhân vật chính và nhân vật kèm) có **9 ô trang b�
 
 ## 2. Nguyên tố của trang bị
 
-- Mỗi trang bị có một nguyên tố. Hệ số chỉ số so với nguyên tố của nhân vật theo [Nguyên tố](05-nguyen-to.md#2-hệ-số-trang-bị-so-với-nguyên-tố-của-nhân-vật).
+- Mỗi trang bị có một nguyên tố. Hệ số chỉ số so với nguyên tố của nhân vật theo [Nguyên tố](05-nguyen-to.md#3-hệ-số-trang-bị-so-với-nguyên-tố-của-nhân-vật).
 - Nhân vật chính đổi nguyên tố trước trận thì hệ số trang bị được tính lại theo nguyên tố mới.
 
-## 3. Nguồn trang bị
+## 3. Thưởng khi mặc đủ 9 món
+
+- **Thưởng bộ:** cả 9 món cùng thuộc một bộ thì nhận thêm hiệu ứng của bộ đó.
+- **Cộng hưởng nguyên tố:** cả 9 món cùng một nguyên tố thì nhận thêm hiệu ứng cộng hưởng của nguyên tố đó. Nguyên tố của trang bị **không cần** trùng nguyên tố nhân vật.
+- Hai loại thưởng cộng dồn được nếu cùng thỏa.
+- Vì nhân vật chính đổi được nguyên tố, cộng hưởng nguyên tố cho phép giữ một bộ đồ cố định mà vẫn có lợi.
+
+> TODO: danh sách bộ trang bị, giá trị thưởng bộ và cộng hưởng của từng nguyên tố; có thưởng từng phần (ví dụ 5/9 món) hay không.
+
+## 4. Nguồn trang bị
 
 - Rơi ngẫu nhiên sau trận (server quyết định).
 - Cửa hàng bán món cố định, giá cao.
