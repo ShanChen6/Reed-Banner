@@ -50,10 +50,13 @@
 Sát thương kiếm = round( ATK
                          × (ô kiếm thường + 1.5 × ô kiếm đồng + 2 × ô kiếm lửa)
                          × Sĩ khí × Nguyên tố × Cascade × Nội tại nghề
-                         × 100 / (100 + DEF đối thủ) )
+                         × 100 / (100 + DEF hiệu lực) )
 
-Sát thương kỹ năng = round( Sát thương gốc của kỹ năng × Sĩ khí × Nguyên tố )
-                     // bỏ qua DEF
+Sát thương kỹ năng = round( Sát thương gốc của kỹ năng
+                            × Sĩ khí × Nguyên tố
+                            × 100 / (100 + DEF hiệu lực) )
+
+DEF hiệu lực = DEF đối thủ × (1 − Xuyên giáp)
 ```
 
 | Hệ số | Giá trị |
@@ -62,6 +65,10 @@ Sát thương kỹ năng = round( Sát thương gốc của kỹ năng × Sĩ kh
 | Nguyên tố (trong trận) | 1.25 (khắc) / 1.1 (tương sinh) / 1 / 0.75 (bị khắc) |
 | Cascade | +10% mỗi bước, tối đa +50% |
 | DEF | Dạng phần trăm: DEF 50 giảm 33%, DEF 100 giảm 50%; không bao giờ vô hiệu hóa hoàn toàn |
+| Xuyên giáp | 0 nếu không ghi gì; một số kỹ năng hoặc hiệu ứng ghi rõ "bỏ qua X% DEF" |
 
+- **Kỹ năng chịu DEF như đánh thường** (Shan chốt 18/10/2026), để DEF, Thủ+/Thủ− và trang bị thủ có ý nghĩa với mọi nguồn sát thương.
+- **Không** chịu DEF: Thiêu đốt, Phản đòn, mất máu do hết lương (sát thương gián tiếp).
+- Hệ số % ATK của kỹ năng hiện là điểm xuất phát tính khi kỹ năng còn bỏ qua DEF; sẽ nâng lên (dự kiến khoảng ×1.3–1.5) khi chạy mô phỏng.
 - Tổng hệ số nằm trong khoảng 0.375× đến khoảng 2.16× (chưa tính nội tại nghề và kỹ năng bị động).
 - **Hiển thị:** con số lớn ở giữa màn hình, kèm biểu tượng nhỏ cho từng hệ số đang có hiệu lực. Chạm giữ hoặc rê chuột để xem bảng chi tiết.

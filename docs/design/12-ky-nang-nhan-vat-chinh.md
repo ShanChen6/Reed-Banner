@@ -24,7 +24,7 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 - **Lệch theo nguyên tố:** Phong ở mức gần chuẩn nhưng mạnh về điều khiển bàn cờ; Hỏa gây sát thương cao hơn chuẩn khoảng 10–15% nhưng tự làm yếu thủ; Thổ thấp hơn khoảng 20% nhưng kèm Khiên; Thủy và Mộc thấp hơn khoảng 5–10% nhưng kèm khống chế hoặc hồi máu; Kim và Lôi ở mức chuẩn kèm hiệu ứng phụ.
 - Ở giai đoạn 1 (Luyện tập, cùng một cấp), cả 7 kỹ năng mở sẵn; mốc mở khóa chỉ áp dụng từ giai đoạn 3.
-- Sát thương kỹ năng bỏ qua DEF, vẫn chịu sĩ khí và nguyên tố ([Công thức](03-tai-nguyen-cong-thuc.md#4-công-thức-sát-thương)).
+- Sát thương kỹ năng chịu DEF, sĩ khí và nguyên tố ([Công thức](03-tai-nguyen-cong-thuc.md#4-công-thức-sát-thương)).
 
 ### 1.1 Nâng cấp
 
@@ -77,12 +77,12 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 | Ô | Kỹ năng | Chi phí | Tác dụng |
 |---|---|---|---|
-| Bị động | **Kim Cốt Thiết Thân** | Nộ | 3 lượt: đánh thường bỏ qua 40% DEF, kỹ năng xuyên Khiên. |
+| Bị động | **Kim Cốt Thiết Thân** | Nộ | 3 lượt: đánh thường và kỹ năng bỏ qua 40% DEF, kỹ năng xuyên Khiên. |
 | 1 | **Luyện Kim Thành Kiếm** | 20 | Biến **4 ô ngẫu nhiên** thành ⚔️. |
 | 2 | **Kim Ý Ngưng Thần** | 30 | Công +25% cho bản thân, 2 lượt. |
-| 3 | **Đoạn Kim Nhất Tuyến** | 40 | 180% ATK vào 1 đối thủ, Thủ −20% mục tiêu 2 lượt. Phá **đoạn 4**. |
+| 3 | **Đoạn Kim Nhất Tuyến** | 40 | 180% ATK vào 1 đối thủ, bỏ qua 30% DEF, Thủ −20% mục tiêu 2 lượt. Phá **đoạn 4**. |
 | 4 | **Thiết Kỵ Tung Hoành** | 60 | 90% ATK vào toàn bộ kẻ địch. Phá **1 cột**. |
-| 5 | **Kim Ấn Phá Thiên** | 100 | 320% ATK vào 1 đối thủ, xuyên Khiên (bỏ qua Khiên của mục tiêu). Phá **chữ thập lớn**. |
+| 5 | **Kim Ấn Phá Thiên** | 100 | 320% ATK vào 1 đối thủ, bỏ qua 50% DEF và xuyên Khiên (bỏ qua Khiên của mục tiêu). Phá **chữ thập lớn**. |
 | 6 | **Giáp Đồng Hộ Thể** | 50 | Thủ +30% và Công +15% cho bản thân, 3 lượt. |
 
 ## 4. 💧 Thủy: khống chế

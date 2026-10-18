@@ -49,6 +49,9 @@
 **Nghề của nhân vật chính (Shan chốt)**
 - Đinh Bộ Lĩnh không còn cố định Tướng sĩ: chọn 1 trong 6 nghề trước mỗi trận, như nguyên tố. Nghề chỉ đổi nội tại và vũ khí, không đổi kỹ năng.
 
+**Kỹ năng chịu DEF (Shan chốt)**
+- Sát thương kỹ năng giờ bị giảm theo DEF như đánh thường. Thêm hệ số Xuyên giáp; Kim là hệ có xuyên giáp. Hệ số kỹ năng sẽ được nâng lại khi mô phỏng.
+
 **Đề xuất kèm theo (chờ chốt, đã ghi trong câu hỏi mở)**
 - Dấu ấn của Lôi.
 - Đồng hồ 30 giây được tắt ở Luyện tập và `/demo`.
