@@ -37,6 +37,7 @@
   - Ô đặc biệt Trống da / Trống đồng: +20 / +40 nộ ([Bàn cờ](01-ban-co.md#3-ô-đặc-biệt)).
 - **Đầy 100 nộ:** kỹ năng bị động của thủ lĩnh **tự kích hoạt** ngay, có hiệu lực **3 lượt** của phe mình (trừ khi kỹ năng ghi khác), rồi nộ về 0.
   - Kích hoạt không tốn năng lượng, không tính vào giới hạn 1 kỹ năng mỗi lượt, và không bị Câm lặng chặn.
+  - Lượt thêm không tính là một lượt của phe, nên không trừ thời hạn bị động (xem [Trận đấu](02-tran-dau.md#5-cấu-trúc-một-lượt)).
   - Trong lúc bị động đang có hiệu lực, thanh nộ không tích thêm.
   - Thủ lĩnh đã gục thì nộ dừng tích, giữ nguyên số đang có.
 - Nộ reset về 0 mỗi trận (kể cả Chiến dịch).

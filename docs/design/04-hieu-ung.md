@@ -23,7 +23,7 @@
 
 ## 3. Luật chung
 
-- Thời lượng đếm theo **lượt của phe bị ảnh hưởng**.
+- Thời lượng đếm theo **lượt của phe bị ảnh hưởng**. Lượt thêm không tính là lượt mới: không trừ thời hạn, không chạy Thiêu đốt hay Hồi phục.
 - **Cùng loại thì làm mới, không cộng dồn:** giữ giá trị mạnh hơn và thời lượng dài hơn.
 - **Đóng băng** tối đa 2 lượt; sau khi tan thì **miễn nhiễm 1 lượt**.
 - **Khiêu khích:**
