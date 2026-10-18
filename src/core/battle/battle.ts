@@ -119,6 +119,8 @@ export interface BattleConfig {
   readonly now?: number;
 }
 
+const AI_SEED_SALT = 0x9e3779b9;
+
 export function createBattle(config: BattleConfig): { state: BattleState; events: BattleEvent[] } {
   const weights = config.weights ?? STANDARD_WEIGHTS;
   validateWeights(weights);
@@ -145,6 +147,7 @@ export function createBattle(config: BattleConfig): { state: BattleState; events
     sides,
     board,
     boardRng: rng.state(),
+    aiRng: (config.seed ^ AI_SEED_SALT) >>> 0,
     weights,
     timer: config.timer ?? true,
     turn: {
