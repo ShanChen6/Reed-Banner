@@ -75,6 +75,11 @@ function describe(state: BattleState, e: BattleEvent): string | null {
       return e.side === PLAYER ? "Bị động thủ lĩnh phe bạn kích hoạt" : "Bị động thủ lĩnh đối thủ kích hoạt";
     case "shuffle":
       return "Hết nước đi, bàn cờ được xáo lại";
+    case "spirit": {
+      const firstAlive = state.sides[e.side].fighters.findIndex((f) => f.hp > 0);
+      if (e.spirit !== 90 || e.fighter !== firstAlive) return null;
+      return e.side === PLAYER ? "Trận kéo dài, tinh thần phe bạn bắt đầu giảm" : "Trận kéo dài, tinh thần đối thủ bắt đầu giảm";
+    }
     case "frozenSkip":
       return e.side === PLAYER ? "Phe bạn bị Đóng băng, mất lượt" : "Đối thủ bị Đóng băng, mất lượt";
     case "end":
@@ -143,6 +148,7 @@ function FighterCard({
       <div className="space-y-1">
         <Bar label="Máu" value={fighter.hp} max={fighter.maxHp} color="bg-rose-500" />
         <Bar label="NL" value={fighter.energy} max={100} color="bg-sky-500" />
+        <Bar label="TT" value={fighter.spirit} max={100} color="bg-emerald-500" />
         {rage !== null && <Bar label="Nộ" value={rage} max={100} color="bg-orange-500" />}
       </div>
       {fighter.effects.length > 0 && (

@@ -43,8 +43,8 @@ Mọi luật của 3vs3 áp dụng, trừ các điểm sau:
 - Đóng băng làm nhân vật **mất lượt** thay vì bị bỏ qua trong luân phiên.
 
 - **Máu tối đa ×2** ở 1vs1, vì không có đồng đội chia sát thương.
-- **Mệt mỏi** (Shan chốt 19/10/2026): từ lượt thứ 30 của mỗi bên, mọi lượng hồi máu (kỹ năng, ô tim, Hồi phục, hút máu) và Khiên mới giảm 10% mỗi lượt, về 0 từ lượt 39. Trận giữa hai bên thiên hồi máu, phòng thủ vẫn kết thúc bằng hạ gục.
-- Mô phỏng 19/10/2026 (150 trận, AI Thường): trung vị 22 lượt mỗi bên, 90% trận xong trong 48 lượt, không còn trận chạm giới hạn lượt.
+- **Tinh thần** (19/10/2026, thay luật Mệt mỏi): trận kéo dài thì Tinh thần của mỗi tướng giảm, kéo ATK, DEF, hồi máu và Khiên xuống. Áp dụng cả 1vs1 và 3vs3, xem [Tài nguyên & công thức](03-tai-nguyen-cong-thuc.md#5-tinh-thần-riêng-từng-tướng).
+- Mô phỏng 19/10/2026 (150 trận, AI Thường): trung vị 20 lượt mỗi bên, 90% trận xong trong 48.5 lượt, không còn trận chạm giới hạn lượt.
 
 > TODO: thời lượng mục tiêu riêng cho 1vs1.
 

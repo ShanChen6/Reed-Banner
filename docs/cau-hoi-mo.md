@@ -8,7 +8,7 @@
 
 - [ ] Kiểm tra tốc độ tích nộ bằng mô phỏng. → [Tài nguyên](design/03-tai-nguyen-cong-thuc.md#3-nộ-và-kỹ-năng-bị-động)
 - [ ] Mức lợi thế "sân nhà" của trùm và bảng tỉ lệ ô cho từng màn. → [Bàn cờ](design/01-ban-co.md#tỉ-lệ-sinh-ô-theo-màn)
-- [ ] Thời lượng mục tiêu riêng cho 1vs1 (đã có máu ×2 và luật Mệt mỏi). → [Trận đấu](design/02-tran-dau.md#3-luật-1vs1)
+- [ ] Thời lượng mục tiêu riêng cho 1vs1 (đã có máu ×2 và Tinh thần). → [Trận đấu](design/02-tran-dau.md#3-luật-1vs1)
 - [ ] Chỉ số gốc theo nghề và theo cấp (sau khi chạy mô phỏng), cân lại máu và sát thương vì đã bỏ luật trụ vững. → [Trận đấu](design/02-tran-dau.md#4-máu--thời-lượng)
 
 

@@ -20,6 +20,8 @@ export interface FighterConfig {
 export interface Fighter extends FighterConfig {
   hp: number;
   energy: number;
+  /** Tinh thần chiến đấu, 0..SPIRIT_MAX; giảm khi trận kéo dài. */
+  spirit: number;
   effects: Effect[];
 }
 
