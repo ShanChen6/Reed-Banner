@@ -208,6 +208,23 @@
     offset-rotate: auto;
     animation-name: lac-orbit;
   }
+  /* Vòng bay bắt đầu ở mép phải và đi xuống; nửa đầu vòng chim bay sang trái nên lật dọc để không ngửa bụng. */
+  .lac-bob.lac-upright {
+    animation-name: lac-bob, lac-upright;
+    animation-timing-function: ease-in-out, step-end;
+    animation-iteration-count: infinite;
+  }
+}
+@keyframes lac-upright {
+  0% {
+    transform: scaleY(-1);
+  }
+  50% {
+    transform: none;
+  }
+  100% {
+    transform: scaleY(-1);
+  }
 }
 .lac-bob {
   animation: lac-bob 3.2s ease-in-out infinite;

@@ -93,7 +93,10 @@ export default function LacBirds() {
           className="lac-fly absolute left-0 opacity-75"
           style={{ top: `${6 + i * 13}%`, animationDuration: `${LAP}s`, animationDelay: `${b.delay}s` }}
         >
-          <LacBird className={`lac-bob ${b.size}`} style={{ "--flap": `${b.flap}s` } as React.CSSProperties} />
+          <LacBird
+            className={`lac-bob lac-upright ${b.size}`}
+            style={{ "--flap": `${b.flap}s`, animationDuration: `3.2s, ${LAP}s`, animationDelay: `0s, ${b.delay}s` } as React.CSSProperties}
+          />
         </div>
       ))}
     </div>
