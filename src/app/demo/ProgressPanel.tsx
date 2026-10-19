@@ -1,11 +1,13 @@
 "use client";
 
-// Bảng tiến trình của /demo và /play: cấp, kinh nghiệm, điểm kỹ năng, nâng kỹ năng, mua và chọn chiêu nhánh.
+// Bảng tiến trình của /demo và /play: cấp, kinh nghiệm, điểm kỹ năng, nâng kỹ năng, mua và chọn chiêu nhánh,
+// tuyệt chiêu nấc 3.
 // Mọi luật nằm trong @/core/progress; ở đây chỉ hiển thị và gửi thao tác (/demo áp tại chỗ, /play gửi server).
 
 import { useState } from "react";
 import {
   BRANCH_COST,
+  companionById,
   BRANCH_UNLOCK_LEVEL,
   MAIN_ID,
   MAIN_SLOT_UNLOCK,
@@ -16,25 +18,29 @@ import {
   progressOf,
   scaleSkill,
   SKILL_MAX_LEVEL,
-  STARTER_COMPANIONS,
   totalXpFor,
+  ULTIMATE_UNLOCK_LEVEL,
+  ultimateOf,
   upgradeCost,
   xpToNext,
   type CharacterProgress,
   type Profile,
   type ProfileAction,
-  type ProgressError,
+  type ProfileError,
   type SkillDef,
 } from "@/core";
 import { PROFESSION_NAME } from "./labels";
 import { SkillIcon } from "./art/skills";
 
-const ERROR: Record<ProgressError | "network" | "conflict", string> = {
+/** Thông báo lỗi của thao tác hồ sơ, dùng chung với ShopPanel. */
+export const PROFILE_ERROR: Record<ProfileError | "network" | "conflict", string> = {
   maxLevel: "Đã đạt cấp tối đa",
   notEnoughPoints: "Không đủ điểm kỹ năng",
   locked: "Chưa mở khóa",
   owned: "Đã có",
   invalidSkill: "Kỹ năng không hợp lệ",
+  notEnoughGold: "Không đủ vàng",
+  notOwned: "Chưa có nhân vật này",
   network: "Mất kết nối tới server, thử lại",
   conflict: "Hồ sơ vừa đổi ở nơi khác, đã tải lại",
 };
@@ -132,7 +138,7 @@ export default function ProgressPanel({
     setBusy(true);
     void onAction(a).then((error) => {
       setBusy(false);
-      setMessage(error ? (ERROR[error as keyof typeof ERROR] ?? error) : null);
+      setMessage(error ? (PROFILE_ERROR[error as keyof typeof PROFILE_ERROR] ?? error) : null);
     });
   };
 
@@ -162,7 +168,8 @@ export default function ProgressPanel({
         {teamIds.map((id) => {
           const p = progressOf(profile, id);
           const isMain = id === MAIN_ID;
-          const companion = isMain ? null : professionSkills(companionProfession(id));
+          const ultimate = isMain ? undefined : ultimateOf(id);
+          const companion = isMain ? null : [...professionSkills(companionProfession(id)), ...(ultimate ? [ultimate] : [])];
           return (
             <div key={id} className="flex flex-col gap-1.5 rounded bg-black/5 p-2">
               <div className="flex items-center justify-between font-semibold">
@@ -196,7 +203,17 @@ export default function ProgressPanel({
                           key={def.id}
                           def={def}
                           level={p.skillLevels[def.id] ?? 1}
-                          lockedText={owned ? null : p.level < BRANCH_UNLOCK_LEVEL ? `Mở ở cấp ${BRANCH_UNLOCK_LEVEL}` : null}
+                          lockedText={
+                            def.tier === 3
+                              ? p.level < ULTIMATE_UNLOCK_LEVEL
+                                ? `Tuyệt chiêu, mở ở cấp ${ULTIMATE_UNLOCK_LEVEL}`
+                                : null
+                              : owned
+                                ? null
+                                : p.level < BRANCH_UNLOCK_LEVEL
+                                  ? `Mở ở cấp ${BRANCH_UNLOCK_LEVEL}`
+                                  : null
+                          }
                           canUp={!locked && !busy}
                           points={p.skillPoints}
                           onUp={() => commit({ type: "upgrade", character: id, key: def.id })}
@@ -232,7 +249,8 @@ export default function ProgressPanel({
               </ul>
               {!isMain && (
                 <p className="opacity-60">
-                  {PROFESSION_NAME[companionProfession(id)]} · chiêu nhánh nấc 2 mua từ cấp {BRANCH_UNLOCK_LEVEL}, mỗi trận mang 1.
+                  {PROFESSION_NAME[companionProfession(id)]} · chiêu nhánh nấc 2 mua từ cấp {BRANCH_UNLOCK_LEVEL}, mỗi trận mang 1; tuyệt chiêu
+                  nấc 3 tự mở ở cấp {ULTIMATE_UNLOCK_LEVEL}.
                 </p>
               )}
             </div>
@@ -247,6 +265,6 @@ export default function ProgressPanel({
   );
 }
 
-const companionOf = (id: string) => STARTER_COMPANIONS.find((c) => c.id === id);
+const companionOf = (id: string) => companionById(id);
 const companionProfession = (id: string) => companionOf(id)!.profession;
 const companionName = (id: string) => companionOf(id)?.name ?? id;

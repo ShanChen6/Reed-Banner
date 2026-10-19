@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   act,
+  ALL_COMPANIONS,
   addXp,
   applyProfileAction,
   applyRewards,
@@ -12,6 +13,7 @@ import {
   buildMain,
   buyBranch,
   createBattle,
+  DEFAULT_TEAM,
   fighterSkill,
   getSkill,
   leveledFoe,
@@ -19,13 +21,18 @@ import {
   MAX_LEVEL,
   NEW_PROGRESS,
   newProfile,
+  ownsCompanion,
   parseProfile,
   parseProfileAction,
+  PROFESSIONS,
   professionSkills,
   profileTeam,
   scaleSkill,
+  SHOP_COMPANIONS,
+  SHOP_PRICES,
   STARTER_COMPANIONS,
   totalXpFor,
+  ultimateOf,
   upgradeSkill,
   xpToNext,
   type BattleState,
@@ -133,13 +140,31 @@ describe("mở khóa và dựng nhân vật", () => {
     assert.deepEqual(buildCompanion(haVan, NEW_PROGRESS).skills, ["phepCong"]);
   });
 
+  it("tuyệt chiêu nấc 3 tự mở ở cấp 10, nâng được bằng điểm", () => {
+    const leThach = STARTER_COMPANIONS[1]!;
+    assert.ok(!buildCompanion(leThach, at(9, 3)).skills!.includes("tranSonHoQuan"));
+    assert.deepEqual(upgradeSkill(at(9, 3), "tranSonHoQuan", "binhLinh", "leThach"), { ok: false, error: "locked" });
+    assert.deepEqual(buildCompanion(leThach, at(10, 3)).skills, ["thuThanh", "tranSonHoQuan"]);
+    // Tuyệt chiêu của người khác không nâng được.
+    assert.deepEqual(upgradeSkill(at(10, 3), "tranSonHoQuan", "binhLinh", "haVan"), { ok: false, error: "locked" });
+    const r = upgradeSkill(at(10, 3), "tranSonHoQuan", "binhLinh", "leThach");
+    assert.ok(r.ok);
+    assert.equal(buildCompanion(leThach, r.progress).skillLevels!.tranSonHoQuan, 2);
+    for (const c of STARTER_COMPANIONS) {
+      const ult = ultimateOf(c.id)!;
+      assert.equal(ult.tier, 3);
+      assert.equal(ult.cost, 100);
+      assert.equal(ult.profession, c.profession);
+    }
+  });
+
   it("tiến trình tự dựng tiêu hết điểm có thể tiêu", () => {
     const p = autoProgress(12, "ySu");
     assert.equal(p.level, 12);
     assert.deepEqual([...p.branches].sort(), ["duongSinh", "teDo"]);
     assert.ok(p.skillPoints <= 1);
     const foe = leveledFoe(STARTER_COMPANIONS[2]!, 12);
-    assert.equal(foe.skills!.length, 2);
+    assert.deepEqual(foe.skills!.length, 3); // nấc 1, một nhánh, tuyệt chiêu từ cấp 10
     const main = autoProgress(MAX_LEVEL, null);
     assert.ok(Object.values(main.skillLevels).every((l) => l >= 4));
   });
@@ -218,7 +243,47 @@ describe("thao tác trên hồ sơ", () => {
     assert.deepEqual(applyProfileAction(p0, { type: "buyBranch", character: "dinhBoLinh", skill: "x" }), { ok: false, error: "invalidSkill" });
   });
 
+  it("mua nhân vật kèm bằng vàng và chọn đội 3vs3", () => {
+    const rich = { ...newProfile(), gold: SHOP_PRICES.basic + 10 };
+    assert.deepEqual(applyProfileAction(newProfile(), { type: "buyCompanion", character: "daoLam" }), { ok: false, error: "notEnoughGold" });
+    assert.deepEqual(applyProfileAction(rich, { type: "buyCompanion", character: "haVan" }), { ok: false, error: "invalidSkill" });
+    assert.deepEqual(applyProfileAction(rich, { type: "chooseTeam", companions: ["haVan", "daoLam"] }), { ok: false, error: "notOwned" });
+    assert.deepEqual(applyProfileAction(rich, { type: "upgrade", character: "daoLam", key: "phepCong" }), { ok: false, error: "notOwned" });
+    const bought = applyProfileAction(rich, { type: "buyCompanion", character: "daoLam" });
+    assert.ok(bought.ok);
+    assert.equal(bought.profile.gold, 10);
+    assert.ok(ownsCompanion(bought.profile, "daoLam"));
+    assert.deepEqual(applyProfileAction(bought.profile, { type: "buyCompanion", character: "daoLam" }), { ok: false, error: "owned" });
+    for (const bad of [["haVan"], ["haVan", "haVan"], ["haVan", "vuLoi"]]) {
+      assert.equal(applyProfileAction(bought.profile, { type: "chooseTeam", companions: bad }).ok, false);
+    }
+    const team = applyProfileAction(bought.profile, { type: "chooseTeam", companions: ["daoLam", "leThach"] });
+    assert.ok(team.ok);
+    assert.deepEqual(team.profile.team, ["daoLam", "leThach"]);
+    // Lưu rồi đọc lại giữ nhân vật đã mua và đội; đội hỏng thì về mặc định.
+    const saved = parseProfile(JSON.parse(JSON.stringify(team.profile)));
+    assert.deepEqual(saved, team.profile);
+    assert.deepEqual(parseProfile({ ...team.profile, team: ["vuLoi", "haVan"] }).team, DEFAULT_TEAM);
+    assert.ok(!ownsCompanion(parseProfile({ ...team.profile, companions: { ...team.profile.companions, giaMao: NEW_PROGRESS } }), "giaMao"));
+    assert.deepEqual(profileTeam(team.profile, team.profile.team).map((f) => f.id), ["dinhBoLinh", "daoLam", "leThach"]);
+  });
+
+  it("cửa hàng: 12 nhân vật, 2 mỗi nghề, đủ 7 hệ, ai cũng có tuyệt chiêu riêng", () => {
+    assert.equal(SHOP_COMPANIONS.length, 12);
+    for (const p of PROFESSIONS) assert.equal(SHOP_COMPANIONS.filter((c) => c.fighter.profession === p).length, 2);
+    assert.equal(new Set(SHOP_COMPANIONS.map((c) => c.fighter.element)).size, 7);
+    for (const c of ALL_COMPANIONS) {
+      const ult = ultimateOf(c.id);
+      assert.ok(ult, c.id);
+      assert.equal(ult.profession, c.profession);
+      assert.ok(c.skills!.includes(ult.id));
+    }
+  });
+
   it("kiểm tra hình dạng thao tác gửi lên", () => {
+    assert.deepEqual(parseProfileAction({ type: "buyCompanion", character: "daoLam" }), { type: "buyCompanion", character: "daoLam" });
+    assert.deepEqual(parseProfileAction({ type: "chooseTeam", companions: ["a", "b"] }), { type: "chooseTeam", companions: ["a", "b"] });
+    assert.equal(parseProfileAction({ type: "chooseTeam", companions: ["a", 1] }), null);
     assert.deepEqual(parseProfileAction({ type: "upgrade", character: "dinhBoLinh", key: "o1", x: 1 }), {
       type: "upgrade",
       character: "dinhBoLinh",
