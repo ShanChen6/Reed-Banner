@@ -4,6 +4,7 @@ import {
   PROFESSIONS,
   act,
   createBattle,
+  fatigueMultiplier,
   findValidMoves,
   professionSkills,
   type BattleState,
@@ -220,5 +221,36 @@ describe("trận tự đấu có kỹ năng", () => {
       if (state.winner !== null) finished++;
     }
     assert.ok(finished >= 7, `chỉ ${finished}/14 trận kết thúc`);
+  });
+});
+
+describe("Mệt mỏi (1vs1)", () => {
+  it("từ lượt 30 mỗi phe, hồi máu và Khiên giảm 10% mỗi lượt, về 0 sau 10 lượt", () => {
+    assert.equal(fatigueMultiplier(29), 1);
+    assert.equal(fatigueMultiplier(30), 0.9);
+    assert.ok(Math.abs(fatigueMultiplier(35) - 0.4) < 1e-9);
+    assert.equal(fatigueMultiplier(39), 0);
+    assert.equal(fatigueMultiplier(60), 0);
+  });
+
+  it("ở 1vs1 lượt 35 của phe: Linh dược chỉ hồi 40%, Thủ thành cho Khiên 40%", () => {
+    const s = setup([solo(fighter("a", { skills: ["linhDuoc"], profession: "ySu", element: "loi" })), solo(fighter("b"))]);
+    s.turn.number = 69;
+    me(s).hp = 500;
+    const r = ok(act(s, { type: "skill", skill: "linhDuoc" }));
+    assert.equal(me(r.state).hp, 500 + Math.round(2000 * 0.22 * 0.4));
+
+    const t = setup([solo(fighter("a", { skills: ["thuThanh"], profession: "binhLinh", element: "loi" })), solo(fighter("b"))]);
+    t.turn.number = 69;
+    const r2 = ok(act(t, { type: "skill", skill: "thuThanh" }));
+    assert.deepEqual(me(r2.state).effects, [{ kind: "shield", value: 160, turns: null }]);
+  });
+
+  it("không áp dụng ở 3vs3", () => {
+    const s = setup([trio("p", { skills: ["linhDuoc"], profession: "ySu", element: "loi" }), trio("q")]);
+    s.turn.number = 79;
+    me(s, 1).hp = 500;
+    const r = ok(act(s, { type: "skill", skill: "linhDuoc", target: 1 }));
+    assert.equal(me(r.state, 1).hp, 720);
   });
 });

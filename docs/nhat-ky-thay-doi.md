@@ -5,6 +5,7 @@
 ## 19/10/2026
 
 **1vs1 và Nộ**
+- Luật Mệt mỏi cho 1vs1 (Shan chọn): từ lượt 30 mỗi bên, hồi máu và Khiên giảm 10% mỗi lượt, về 0 sau 10 lượt. Mô phỏng: không còn trận hòa, trung vị 22 lượt mỗi bên.
 - 1vs1: máu tối đa ×2 (trước đó trận 1vs1 chỉ kéo dài trung vị khoảng 4 lượt mỗi bên). Máu cao hơn nữa thì trận hòa tăng mạnh vì các cặp thiên về hồi máu, phòng thủ không hạ được nhau.
 - Thủ lĩnh có nguyên tố chưa làm kỹ năng bị động thì không tích Nộ (trước đó vẫn báo kích hoạt nhưng không có tác dụng).
 

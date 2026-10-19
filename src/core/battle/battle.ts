@@ -575,7 +575,19 @@ class Ctx {
     }
   }
 
+  /** 1 ngoài 1vs1; ở 1vs1 giảm dần theo luật Mệt mỏi. */
+  private fatigue(): number {
+    const s = this.state;
+    if (!s.sides.every((side) => side.fighters.length === 1)) return 1;
+    return R.fatigueMultiplier(Math.ceil(s.turn.number / 2));
+  }
+
   private applyEffect(ref: FighterRef, effect: Effect): void {
+    if (effect.kind === "shield") {
+      const value = Math.round(effect.value * this.fatigue());
+      if (value <= 0) return;
+      effect = { ...effect, value };
+    }
     if (addEffect(this.fighter(ref).effects, effect)) this.emit({ type: "effect", ...ref, effect: effect.kind });
   }
 
@@ -695,7 +707,7 @@ class Ctx {
     const f = this.fighter(ref);
     if (!isAlive(f)) return;
     const before = f.hp;
-    f.hp = Math.min(f.maxHp, f.hp + amount);
+    f.hp = Math.min(f.maxHp, f.hp + Math.round(amount * this.fatigue()));
     if (f.hp !== before) this.emit({ type: "heal", ...ref, amount: f.hp - before });
   }
 
