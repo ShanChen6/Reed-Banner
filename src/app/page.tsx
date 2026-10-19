@@ -16,6 +16,7 @@ import { Portrait } from "./demo/art/portraits";
 import { TileArt } from "./demo/art/tiles";
 import { FAQ, PROFESSION_PERK, TILE_GIVES } from "./home/data";
 import ElementPicker from "./home/ElementPicker";
+import LacBirds from "./home/LacBirds";
 
 const NAV = [
   { href: "#gioi-thieu", label: "Cách chơi" },
@@ -128,6 +129,7 @@ export default function Home() {
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_70%_40%,#5a1e1499,transparent_60%),radial-gradient(ellipse_at_10%_90%,#d4a24c22,transparent_50%)]"
           />
+          <LacBirds />
           <CloudCorner className="pointer-events-none absolute left-3 top-3 size-12 opacity-60" />
           <CloudCorner className="pointer-events-none absolute bottom-3 right-3 size-12 rotate-180 opacity-60" />
           <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 md:grid-cols-[1fr_1.1fr] md:py-20">
