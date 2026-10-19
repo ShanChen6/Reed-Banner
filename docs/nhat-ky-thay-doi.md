@@ -7,6 +7,7 @@
 **Trận online (giai đoạn 2, Shan chọn Neon + Drizzle)**
 - Server xử lý từng hành động: `src/core/match/` (chạy bù hết giờ kiểu tính lười, AI đánh ngay, xử thua 24 giờ, ẩn seed) và `src/server/` (kho Postgres/bộ nhớ, cookie khách ký HMAC), API `/api/battles`.
 - Bảng `matches` (Drizzle), migration tự áp khi build nếu có `DATABASE_URL`.
+- Trang `/play` chơi online qua API: đồng hồ 30 giây theo giờ server, hết giờ tự chạy bù, tải lại trang tiếp tục được trận dở. Đội hình tạm như Luyện tập 3vs3.
 
 **Tiến trình nhân vật (code, Shan yêu cầu làm tiếp lối chơi; số liệu Claude đặt, chờ duyệt)**
 - `src/core/progress/`: kinh nghiệm và cấp (tối đa 30), 1 điểm kỹ năng mỗi cấp, nâng kỹ năng cấp 1–5 (+10% hệ số chính mỗi cấp, cấp 5 giảm 10% năng lượng), mở ô kỹ năng nhân vật chính theo cấp 1/1/5/10/20/15, mua chiêu nhánh nấc 2 từ cấp 5 và mang 1 chiêu mỗi trận, chỉ số +3% mỗi cấp, phần thưởng cuối trận (ô sách 5 kinh nghiệm, ô vàng 3 vàng).
