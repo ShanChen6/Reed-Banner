@@ -44,4 +44,6 @@
 
 - Bán nhân vật kèm (xem [Nhân vật](06-nhan-vat-ky-nang.md#4-nhân-vật-kèm-nghề--chiêu-nghề)) và trang bị cố định giá cao (xem [Trang bị](07-trang-bi.md)).
 
-> TODO: danh sách nhân vật trong cửa hàng (khoảng 12) và giá.
+- **Nhân vật kèm** (Claude đặt 19/10/2026, chờ Shan duyệt): 12 người, giá 1 500 hoặc 3 000 vàng, danh sách ở [Nhân vật](06-nhan-vat-ky-nang.md#45-nhân-vật-kèm-ở-cửa-hàng). Mua bằng thao tác `buyCompanion` trên hồ sơ (server trừ vàng), chơi được ở `/demo` chế độ Tiến trình và `/play`.
+
+> TODO: danh sách trang bị cố định của cửa hàng và giá.

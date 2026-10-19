@@ -4,6 +4,10 @@
 
 ## 19/10/2026
 
+**Cửa hàng nhân vật kèm (giai đoạn 3, Claude đặt, chờ Shan duyệt)**
+- 12 nhân vật kèm hư cấu, 2 người mỗi nghề, đủ 7 hệ, mỗi người một tuyệt chiêu riêng; giá 1 500 hoặc 3 000 vàng.
+- Hồ sơ lưu nhân vật đã có và đội 3vs3 đã chọn; `/demo` (Tiến trình) và `/play` có bảng Đội hình và cửa hàng. Server chỉ cho ra trận nhân vật đã có.
+
 **Tuyệt chiêu nấc 3 (giai đoạn 3, Claude đặt, chờ Shan duyệt)**
 - 5 nhân vật kèm khởi đầu mỗi người một tuyệt chiêu riêng, 100 năng lượng, mang đậm nguyên tố của người đó: Hà Vân Hỏa Vũ Liệu Nguyên, Lê Thạch Trấn Sơn Hộ Quân, Mai Thanh Cam Lộ Hồi Xuân, Tô Kim Kim Ngân Ly Tán, Phùng Phong Phong Vân Biến Trận.
 - Tự mở ở cấp 10, không tốn điểm (nhánh nấc 2 đã tốn điểm và chỉ mang 1, nên nấc 3 là phần thưởng của việc lên cấp); nâng cấp bằng điểm như chiêu khác. Chế độ Luyện tập mở sẵn.

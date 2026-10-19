@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { act, createBattle, STARTER_COMPANIONS, ultimateOf, type BattleState, type FighterConfig } from "../../../src/core";
+import { act, companionById, createBattle, needsCell, SHOP_COMPANIONS, STARTER_COMPANIONS, ultimateOf, type BattleState, type FighterConfig } from "../../../src/core";
 
-const byId = (id: string) => STARTER_COMPANIONS.find((c) => c.id === id)!;
+const byId = (id: string) => companionById(id)!;
 const foe = (id: string): FighterConfig => ({ id, name: id, element: "moc", profession: "tuongSi", maxHp: 1000, atk: 50, def: 0 });
 
 /** Phe 0 là nhân vật kèm `id` cùng một đồng đội, phe 1 là hai đối thủ; mọi người đầy năng lượng. */
@@ -75,5 +75,17 @@ describe("tuyệt chiêu nấc 3", () => {
     assert.ok(s.sides[1].fighters.every((f) => f.effects.some((e) => e.kind === "atkDown")));
     assert.equal(s.sides[0].fighters[1]!.energy, 20);
     assert.ok(r.events.some((e) => e.type === "slide"));
+  });
+
+  it("tuyệt chiêu của nhân vật cửa hàng dùng được trong trận", () => {
+    for (const { fighter } of SHOP_COMPANIONS) {
+      const def = ultimateOf(fighter.id)!;
+      const extra = {
+        ...(def.target === "enemy" || def.target === "ally" ? { target: 0 } : {}),
+        ...(needsCell(def) ? { cell: { row: 3, col: 3 } } : {}),
+      };
+      const r = act(setup(fighter.id), { type: "skill", skill: def.id, ...extra });
+      assert.ok(r.ok, `${def.id}: ${r.ok ? "" : r.error}`);
+    }
   });
 });

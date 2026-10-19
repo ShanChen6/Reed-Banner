@@ -190,6 +190,88 @@ const ULTIMATES: readonly SkillDef[] = [
       { type: "slide", distance: 2 },
     ],
   },
+  // Nhân vật kèm bán ở cửa hàng, docs/design/06-nhan-vat-ky-nang.md mục 4.5.
+  {
+    id: "kimQuaThietMa", name: "Kim Qua Thiết Mã", profession: "tuongSi", tier: 3, character: "tranCuong", cost: 100, target: "enemy",
+    steps: [{ type: "damage", atk: 2.8, pierce: 0.4 }, { type: "effect", to: "targets", effect: "defDown", value: 0.3, turns: 2 }],
+  },
+  {
+    id: "xichHoaDoatKy", name: "Xích Hỏa Đoạt Kỳ", profession: "tuongSi", tier: 3, character: "lyLiet", cost: 100, target: "enemy",
+    steps: [
+      { type: "damage", atk: 3 },
+      { type: "effect", to: "targets", effect: "burn", value: 0.15, ofAtk: true, turns: 3 },
+      { type: "destroy", area: { cross: "small" } },
+    ],
+  },
+  {
+    id: "bangHaPhongToa", name: "Băng Hà Phong Tỏa", profession: "phapSu", tier: 3, character: "daoLam", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "damage", atk: 1.2 },
+      { type: "effect", to: "targets", effect: "freeze", value: 0, turns: 1, chance: 0.35 },
+      { type: "destroy", area: { random: 8 } },
+    ],
+  },
+  {
+    id: "thienLoiGiangThe", name: "Thiên Lôi Giáng Thế", profession: "phapSu", tier: 3, character: "vuLoi", cost: 100, target: "enemy",
+    steps: [{ type: "damage", atk: 2.5 }, { type: "energy", to: "targets", amount: -30 }, { type: "destroy", area: { columns: 1 } }],
+  },
+  {
+    id: "reGiaGiuThanh", name: "Rễ Già Giữ Thành", profession: "binhLinh", tier: 3, character: "hoangMoc", cost: 100, target: "team",
+    steps: [
+      { type: "effect", to: "targets", effect: "regen", value: 0.06, turns: 3, ofMaxHp: true },
+      { type: "effect", to: "self", effect: "shield", value: 0.25, turns: null, ofMaxHp: true },
+      { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 },
+    ],
+  },
+  {
+    id: "thietBichDongThanh", name: "Thiết Bích Đồng Thành", profession: "binhLinh", tier: 3, character: "caoKien", cost: 100, target: "self",
+    steps: [
+      { type: "effect", to: "self", effect: "defUp", value: 0.5, turns: 3 },
+      { type: "effect", to: "self", effect: "reflect", value: 0.5, turns: 2 },
+      { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 },
+    ],
+  },
+  {
+    id: "xuanMocVanSinh", name: "Xuân Mộc Vạn Sinh", profession: "ySu", tier: 3, character: "lucDiep", cost: 100, target: "team",
+    steps: [
+      { type: "heal", to: "targets", ratio: 0.2 },
+      { type: "effect", to: "targets", effect: "regen", value: 0.06, turns: 2, ofMaxHp: true },
+    ],
+  },
+  {
+    id: "gioLanhTayUe", name: "Gió Lành Tẩy Uế", profession: "ySu", tier: 3, character: "bachSuong", cost: 100, target: "team",
+    steps: [{ type: "cleanse", to: "targets" }, { type: "heal", to: "targets", ratio: 0.18 }, { type: "energy", to: "targets", amount: 15 }],
+  },
+  {
+    id: "hoaThieuKhoLuong", name: "Hỏa Thiêu Kho Lương", profession: "muuSi", tier: 3, character: "ninhHoa", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "enemyFood", amount: -25 },
+      { type: "energy", to: "targets", amount: -25 },
+      { type: "effect", to: "targets", effect: "burn", value: 0.1, ofAtk: true, turns: 2 },
+    ],
+  },
+  {
+    id: "thuyDonLyGian", name: "Thủy Độn Ly Gián", profession: "muuSi", tier: 3, character: "quachAn", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "effect", to: "targets", effect: "silence", value: 0, turns: 1, chance: 0.5 },
+      { type: "energy", to: "targets", amount: -20 },
+    ],
+  },
+  {
+    id: "batTranThachLuy", name: "Bát Trận Thạch Lũy", profession: "quanSu", tier: 3, character: "taThach", cost: 100, target: "team",
+    steps: [
+      { type: "effect", to: "targets", effect: "defUp", value: 0.3, turns: 2 },
+      { type: "effect", to: "targets", effect: "shield", value: 0.12, turns: null, ofMaxHp: true },
+    ],
+  },
+  {
+    id: "loiTranKinhHon", name: "Lôi Trận Kinh Hồn", profession: "quanSu", tier: 3, character: "macVan", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "effect", to: "targets", effect: "atkDown", value: 0.25, turns: 2 },
+      { type: "energy", to: "targets", amount: -20 },
+      { type: "destroy", area: { random: 6 } },
+    ],
+  },
 ];
 
 // Bộ kỹ năng nhân vật chính theo nguyên tố, docs/design/12-ky-nang-nhan-vat-chinh.md mục 2–7.
