@@ -8,12 +8,15 @@ import {
   destroyCells,
   generateBoard,
   inBounds,
+  indexOf,
   isValidSlide,
   randomCells,
+  slideCells,
   slideLine,
   swap,
   transformCells,
   validateWeights,
+  type Board,
   type CascadeStep,
   type MoveResult,
   type Pos,
@@ -72,9 +75,18 @@ export type BattleEvent =
   | { readonly type: "skill"; readonly side: SideIndex; readonly fighter: number; readonly skill: string }
   /** Trượt hàng/cột (kỹ năng hoặc lần trượt miễn phí của bị động Phong). */
   | { readonly type: "slide"; readonly side: SideIndex; readonly fighter: number; readonly slide: Slide; readonly free: boolean }
-  /** Bàn cờ đổi do kỹ năng: phá, biến hoặc trượt ô, kèm cascade. */
-  | { readonly type: "board"; readonly steps: readonly CascadeStep[]; readonly transformed: readonly Pos[] }
-  | { readonly type: "shuffle" }
+  /**
+   * Bàn cờ đổi do kỹ năng: phá, biến hoặc trượt ô, kèm cascade.
+   * before: bàn ngay trước bước xóa đầu tiên (sau khi trượt hoặc biến ô), để giao diện dựng hoạt ảnh.
+   */
+  | {
+      readonly type: "board";
+      readonly steps: readonly CascadeStep[];
+      readonly transformed: readonly Pos[];
+      readonly before: Board;
+    }
+  /** Bàn hết nước đi và được xáo lại; board là bàn sau khi xáo. */
+  | { readonly type: "shuffle"; readonly board: Board }
   | {
       readonly type: "damage";
       readonly side: SideIndex;
@@ -252,7 +264,7 @@ export function act(prev: BattleState, action: BattleAction, now = 0): ActResult
       outcome.steps.forEach((step, i) => {
         if (state.winner === null) ctx.applyStep(step, i);
       });
-      if (outcome.shuffled) ctx.emit({ type: "shuffle" });
+      if (outcome.shuffled) ctx.emit({ type: "shuffle", board: outcome.board });
       if (state.winner !== null) return { ok: true, state, events: ctx.events };
 
       turn.acted.push(turn.actor);
@@ -506,7 +518,8 @@ class Ctx {
     s.turn.slideUsed = true;
     s.sides[s.turn.side].freeSlides--;
     this.emit({ type: "slide", side: s.turn.side, fighter: s.turn.actor, slide, free: true });
-    this.applyBoardChange(this.withBoardRng((rng) => slideLine(s.board, slide, rng, s.weights)), []);
+    const before = slideCells(s.board, slide);
+    this.applyBoardChange(this.withBoardRng((rng) => slideLine(s.board, slide, rng, s.weights)), [], before);
   }
 
   useSkill(def: SkillDef, targets: readonly FighterRef[], cell?: Pos, slide?: Slide): void {
@@ -556,21 +569,25 @@ class Ctx {
           break;
         case "destroy": {
           const area = step.area;
+          const before = s.board;
           const result = this.withBoardRng((rng) => {
             const cells = "random" in area ? randomCells(s.board, area.random, rng) : areaCells(s.board, cell!, area);
             return destroyCells(s.board, cells, rng, s.weights);
           });
-          this.applyBoardChange(result, []);
+          this.applyBoardChange(result, [], before);
           break;
         }
         case "slide": {
           this.emit({ type: "slide", side: self.side, fighter: self.fighter, slide: slide!, free: false });
-          this.applyBoardChange(this.withBoardRng((rng) => slideLine(s.board, slide!, rng, s.weights)), []);
+          const before = slideCells(s.board, slide!);
+          this.applyBoardChange(this.withBoardRng((rng) => slideLine(s.board, slide!, rng, s.weights)), [], before);
           break;
         }
         case "transform": {
           const result = this.withBoardRng((rng) => transformCells(s.board, step.kind, step.count, rng, s.weights));
-          this.applyBoardChange(result, result.transformed);
+          const cells = [...s.board.cells];
+          for (const pos of result.transformed) cells[indexOf(s.board, pos)] = { kind: step.kind };
+          this.applyBoardChange(result, result.transformed, { ...s.board, cells });
           break;
         }
         case "effect":
@@ -616,14 +633,14 @@ class Ctx {
   }
 
   /** Thu hoạch ô bị kỹ năng phá như một nước đi, nhưng không cho lượt thêm. */
-  private applyBoardChange(result: MoveResult, transformed: readonly Pos[]): void {
+  private applyBoardChange(result: MoveResult, transformed: readonly Pos[], before: Board): void {
     const s = this.state;
     s.board = result.board;
-    this.emit({ type: "board", steps: result.steps, transformed });
+    this.emit({ type: "board", steps: result.steps, transformed, before });
     result.steps.forEach((step, i) => {
-      if (s.winner === null) this.applyStep(step, i);
+      if (s.winner === null) this.applyStep(step, i, true);
     });
-    if (result.shuffled) this.emit({ type: "shuffle" });
+    if (result.shuffled) this.emit({ type: "shuffle", board: result.board });
   }
 
   private applyMark(self: FighterRef, targets: readonly FighterRef[], enhanced: boolean, guaranteed: boolean): void {
@@ -699,7 +716,8 @@ class Ctx {
     for (const effect of removeEffects(this.fighter(ref).effects, kinds)) this.emit({ type: "effectEnd", ...ref, effect });
   }
 
-  applyStep(step: CascadeStep, index: number): void {
+  /** fromSkill: bàn cờ đổi do kỹ năng hoặc trượt miễn phí, thu hoạch giảm theo SKILL_BOARD_*. */
+  applyStep(step: CascadeStep, index: number, fromSkill = false): void {
     const s = this.state;
     const sideIdx = s.turn.side;
     const foeIdx = otherSide(sideIdx);
@@ -726,6 +744,7 @@ class Ctx {
     if (morale === "hungry" || morale === "starving") energy *= R.ENERGY_HUNGRY;
     energy += count("amDuong", "weak") * R.BUA_AM_DUONG_ENERGY;
     if (passiveOn(own, own.fighters[own.leader]!, "loi")) energy += h.amDuong * PASSIVE.loiEnergyPerTile;
+    if (fromSkill) energy *= R.SKILL_BOARD_ENERGY;
     if (energy > 0) this.gainEnergy(self, Math.round(energy));
 
     // Hồi máu; Y sư: hồi vượt máu tối đa thành Khiên tạm thời.
@@ -764,7 +783,8 @@ class Ctx {
     // Đánh thường bằng kiếm
     const weak = count("kiem", "weak");
     const strong = count("kiem", "strong");
-    const units = h.kiem - weak - strong + R.SWORD_WEAK * weak + R.SWORD_STRONG * strong;
+    const units =
+      (h.kiem - weak - strong + R.SWORD_WEAK * weak + R.SWORD_STRONG * strong) * (fromSkill ? R.SKILL_BOARD_SWORD : 1);
     const target = singleTarget(s, s.turn.actor);
     if (units > 0 && target !== null) {
       const t = foe.fighters[target]!;
@@ -867,7 +887,6 @@ class Ctx {
       case "phong":
         // Trượt miễn phí: xem canFreeSlide.
         own.freeSlides = PASSIVE.phongFreeSlides;
-        this.gainEnergy(leaderRef, PASSIVE.phongEnergy);
         break;
       // Kim, Hỏa: hiệu lực khi passiveTurns > 0, xem passiveOn.
       default:

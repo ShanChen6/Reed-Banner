@@ -67,4 +67,5 @@ Ba cách điều khiển dùng song song; người chơi đổi qua lại bất 
 - Thông báo sát thương rõ ràng (xem [Công thức](03-tai-nguyen-cong-thuc.md#4-công-thức-sát-thương)).
 - Mỗi hiệu ứng trạng thái là một biểu tượng trên chân dung, kèm số lượt còn lại.
 - Tỉ lệ ô của màn hiển thị trước trận bằng thanh màu nhỏ.
+- Phong cách hình ảnh, bảng màu và yêu cầu cho họa sĩ: xem [Hình ảnh](13-hinh-anh.md).
 - Danh mục trên `/games` của ShanVerse: **Puzzle & Logic**.
