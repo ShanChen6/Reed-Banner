@@ -2,7 +2,15 @@
 // nên mỗi bước là một câu lệnh tự đứng được: chạy song song thì người gắn danh tính trước thắng.
 
 import { and, eq } from "drizzle-orm";
-import type { Account, AccountStore, OAuthProfile, ProviderId } from "../accounts";
+import {
+  PASSWORD_PROVIDER,
+  type Account,
+  type AccountStore,
+  type OAuthProfile,
+  type PasswordPatch,
+  type PasswordRecord,
+  type ProviderId,
+} from "../accounts";
 import { accounts, identities } from "./schema";
 import type { Db } from "./store";
 
@@ -33,8 +41,50 @@ export class DrizzleAccountStore implements AccountStore {
   async get(id: string): Promise<Account | null> {
     const [row] = await this.db.select().from(accounts).where(eq(accounts.id, id)).limit(1);
     if (!row) return null;
-    const ids = await this.db.select({ provider: identities.provider }).from(identities).where(eq(identities.accountId, id));
-    const providers = [...new Set(ids.map((i) => i.provider as ProviderId))].sort();
-    return { id: row.id, name: row.name, avatarUrl: row.avatarUrl, providers, createdAt: row.createdAt, lastLoginAt: row.lastLoginAt };
+    const ids = await this.db
+      .select({ provider: identities.provider, subject: identities.subject })
+      .from(identities)
+      .where(eq(identities.accountId, id));
+    const providers = [...new Set(ids.filter((i) => i.provider !== PASSWORD_PROVIDER).map((i) => i.provider as ProviderId))].sort();
+    const username = ids.find((i) => i.provider === PASSWORD_PROVIDER)?.subject ?? null;
+    return {
+      id: row.id,
+      name: row.name,
+      avatarUrl: row.avatarUrl,
+      providers,
+      username,
+      createdAt: row.createdAt,
+      lastLoginAt: row.lastLoginAt,
+    };
+  }
+
+  async getPassword(username: string): Promise<PasswordRecord | null> {
+    const [row] = await this.db
+      .select()
+      .from(identities)
+      .where(and(eq(identities.provider, PASSWORD_PROVIDER), eq(identities.subject, username)))
+      .limit(1);
+    if (!row?.passwordHash) return null;
+    return { accountId: row.accountId, hash: row.passwordHash, failedCount: row.failedCount, lockedUntil: row.lockedUntil };
+  }
+
+  async createPassword(accountId: string, username: string, hash: string, now: number): Promise<boolean> {
+    await this.db
+      .insert(accounts)
+      .values({ id: accountId, name: username, avatarUrl: null, createdAt: now, lastLoginAt: now })
+      .onConflictDoNothing();
+    const rows = await this.db
+      .insert(identities)
+      .values({ provider: PASSWORD_PROVIDER, subject: username, accountId, createdAt: now, passwordHash: hash })
+      .onConflictDoNothing()
+      .returning({ accountId: identities.accountId });
+    return rows.length > 0;
+  }
+
+  async updatePassword(username: string, patch: PasswordPatch): Promise<void> {
+    await this.db
+      .update(identities)
+      .set({ passwordHash: patch.hash, failedCount: patch.failedCount, lockedUntil: patch.lockedUntil })
+      .where(and(eq(identities.provider, PASSWORD_PROVIDER), eq(identities.subject, username)));
   }
 }
