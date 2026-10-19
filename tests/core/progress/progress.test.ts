@@ -26,6 +26,7 @@ import {
   scaleSkill,
   STARTER_COMPANIONS,
   totalXpFor,
+  ultimateOf,
   upgradeSkill,
   xpToNext,
   type BattleState,
@@ -133,13 +134,31 @@ describe("mở khóa và dựng nhân vật", () => {
     assert.deepEqual(buildCompanion(haVan, NEW_PROGRESS).skills, ["phepCong"]);
   });
 
+  it("tuyệt chiêu nấc 3 tự mở ở cấp 10, nâng được bằng điểm", () => {
+    const leThach = STARTER_COMPANIONS[1]!;
+    assert.ok(!buildCompanion(leThach, at(9, 3)).skills!.includes("tranSonHoQuan"));
+    assert.deepEqual(upgradeSkill(at(9, 3), "tranSonHoQuan", "binhLinh", "leThach"), { ok: false, error: "locked" });
+    assert.deepEqual(buildCompanion(leThach, at(10, 3)).skills, ["thuThanh", "tranSonHoQuan"]);
+    // Tuyệt chiêu của người khác không nâng được.
+    assert.deepEqual(upgradeSkill(at(10, 3), "tranSonHoQuan", "binhLinh", "haVan"), { ok: false, error: "locked" });
+    const r = upgradeSkill(at(10, 3), "tranSonHoQuan", "binhLinh", "leThach");
+    assert.ok(r.ok);
+    assert.equal(buildCompanion(leThach, r.progress).skillLevels!.tranSonHoQuan, 2);
+    for (const c of STARTER_COMPANIONS) {
+      const ult = ultimateOf(c.id)!;
+      assert.equal(ult.tier, 3);
+      assert.equal(ult.cost, 100);
+      assert.equal(ult.profession, c.profession);
+    }
+  });
+
   it("tiến trình tự dựng tiêu hết điểm có thể tiêu", () => {
     const p = autoProgress(12, "ySu");
     assert.equal(p.level, 12);
     assert.deepEqual([...p.branches].sort(), ["duongSinh", "teDo"]);
     assert.ok(p.skillPoints <= 1);
     const foe = leveledFoe(STARTER_COMPANIONS[2]!, 12);
-    assert.equal(foe.skills!.length, 2);
+    assert.deepEqual(foe.skills!.length, 3); // nấc 1, một nhánh, tuyệt chiêu từ cấp 10
     const main = autoProgress(MAX_LEVEL, null);
     assert.ok(Object.values(main.skillLevels).every((l) => l >= 4));
   });
