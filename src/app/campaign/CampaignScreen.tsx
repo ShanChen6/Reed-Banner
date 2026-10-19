@@ -11,6 +11,7 @@ import {
   CAMPAIGN_FOOD_MAX,
   CAMPAIGN_FOOD_MIN,
   FOOD_PRICE,
+  RECOMMENDED_LEVEL_BONUS,
   stageFoes,
   stageUnlocked,
   type CampaignStage,
@@ -44,7 +45,8 @@ function StageDetail({
 }) {
   const foes = stageFoes(stage);
   const cleared = profile.campaign.cleared.includes(stage.id);
-  const under = profile.main.level < stage.level;
+  const recommended = stage.level + RECOMMENDED_LEVEL_BONUS;
+  const under = profile.main.level < recommended;
   return (
     <div className="flex flex-col gap-3">
       <div>
@@ -64,8 +66,12 @@ function StageDetail({
         <dt className="text-stone-400">Độ khó</dt>
         <dd className="font-semibold">{DIFFICULTY_NAME[stage.difficulty]}</dd>
         <dt className="text-stone-400">Cấp đối thủ</dt>
-        <dd className={`font-semibold ${under ? "text-rose-400" : ""}`}>
-          {stage.level}
+        <dd className="font-semibold">{stage.level}</dd>
+        <dt className="text-stone-400">Cấp gợi ý</dt>
+        <dd
+          className={`font-semibold ${under ? "text-rose-400" : "text-emerald-400"}`}
+        >
+          {recommended}
         </dd>
         <dt className="text-stone-400">Thưởng lần đầu</dt>
         <dd className="font-semibold text-amber-300">
@@ -118,7 +124,8 @@ function StageDetail({
         </button>
         {under && (
           <span className="text-sm text-rose-300">
-            Đinh Bộ Lĩnh mới cấp {profile.main.level}, thấp hơn đối thủ.
+            Đinh Bộ Lĩnh mới cấp {profile.main.level}; đánh trận thường lên cấp{" "}
+            {recommended} sẽ dễ hơn.
           </span>
         )}
         {stage.mode === "3v3" && (

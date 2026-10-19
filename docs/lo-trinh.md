@@ -20,7 +20,7 @@ Mỗi dòng là một PR vào develop, làm theo thứ tự. Số liệu là đi
 
 | # | Việc | Ghi chú |
 |---|---|---|
-| 4.1 | Chương 1 "Cờ lau dẹp loạn": 13 màn, lương mang sang, doanh trại, luật màn, trang `/campaign` | Đang làm. Sứ quân là nhân vật lịch sử có bộ 6 kỹ năng như Đinh Bộ Lĩnh |
+| 4.1 | Chương 1 "Cờ lau dẹp loạn": 13 màn, lương mang sang, doanh trại, luật màn, trang `/campaign` | Đã làm (19/10/2026). Sứ quân là nhân vật lịch sử có bộ 6 kỹ năng như Đinh Bộ Lĩnh |
 | 4.2 | Tướng lịch sử gia nhập khi qua màn: Nguyễn Bặc, Đinh Điền, Lê Hoàn, Trịnh Tú, Lưu Cơ, Đinh Liễn | Bộ kỹ năng đầy đủ, nâng theo ô như nhân vật chính; ra trận như nhân vật kèm |
 | 4.3 | Chiêu riêng cho từng sứ quân (1 tuyệt chiêu mang dấu ấn lịch sử) và thoại trước/sau trận | Thay bộ kỹ năng theo nguyên tố dùng chung |
 | 4.4 | Cân độ khó chiến dịch bằng mô phỏng: người chơi cày bình thường qua được màn trước ở cấp gợi ý | Thêm `pnpm sim -- --stage <id>` |
