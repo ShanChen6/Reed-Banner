@@ -8,6 +8,7 @@
 - Server xử lý từng hành động: `src/core/match/` (chạy bù hết giờ kiểu tính lười, AI đánh ngay, xử thua 24 giờ, ẩn seed) và `src/server/` (kho Postgres/bộ nhớ, cookie khách ký HMAC), API `/api/battles`.
 - Bảng `matches` (Drizzle), migration tự áp khi build nếu có `DATABASE_URL`.
 - Trang `/play` chơi online qua API: đồng hồ 30 giây theo giờ server, hết giờ tự chạy bù, tải lại trang tiếp tục được trận dở. Đội hình tạm như Luyện tập 3vs3.
+- Đăng ký bằng tên đăng nhập + mật khẩu (Shan đồng ý, bản chưa có email): quên mật khẩu là mất tài khoản nên form khuyên liên kết thêm Google/GitHub; sai 5 lần khóa 15 phút. Nới quy tắc cũ "chỉ dùng OAuth để hạn chế nhiều tài khoản".
 - Trang đăng nhập riêng `/dang-nhap` (Shan yêu cầu): chọn Google/GitHub hoặc chơi với tư cách khách; đã đăng nhập thì xem tài khoản, liên kết thêm, đăng xuất. Trang chủ có link "Đăng nhập" ở thanh trên.
 - Đăng nhập Google và GitHub (Shan yêu cầu): danh tính gắn thẳng vào tài khoản khách đang dùng nên không mất trận, không cần gộp dữ liệu; đăng nhập ở máy khác thì vào lại đúng tài khoản. Tự viết luồng OAuth thay vì Auth.js (Auth.js v5 vẫn là bản beta, và mô hình "khách chính là tài khoản" không cần bảng phiên của thư viện).
 

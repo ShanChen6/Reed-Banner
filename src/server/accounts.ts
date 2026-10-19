@@ -1,5 +1,5 @@
-// Tài khoản và đăng nhập OAuth. Tài khoản chính là tài khoản khách: lần đầu đăng nhập, danh tính OAuth
-// được gắn vào id khách đang dùng nên trận và dữ liệu đã có giữ nguyên, không cần gộp.
+// Tài khoản và đăng nhập (OAuth hoặc tên đăng nhập + mật khẩu). Tài khoản chính là tài khoản khách: lần
+// đầu đăng nhập hay đăng ký, danh tính được gắn vào id khách đang dùng nên trận và dữ liệu giữ nguyên.
 // Xem docs/tech/ha-tang.md mục 4. Postgres ở ./db/accounts; bản trong bộ nhớ cho dev và test.
 
 export type ProviderId = "google" | "github";
@@ -13,11 +13,17 @@ export interface OAuthProfile {
   readonly avatarUrl: string | null;
 }
 
+/** Danh tính tên đăng nhập + mật khẩu nằm cùng bảng với danh tính OAuth, dưới tên nhà cung cấp này. */
+export const PASSWORD_PROVIDER = "password";
+
 export interface Account {
   readonly id: string;
   readonly name: string;
   readonly avatarUrl: string | null;
+  /** Nhà cung cấp OAuth đã liên kết. */
   readonly providers: readonly ProviderId[];
+  /** Tên đăng nhập (đã chuẩn hóa) nếu tài khoản có mật khẩu. */
+  readonly username: string | null;
   readonly createdAt: number;
   readonly lastLoginAt: number;
 }
@@ -31,7 +37,25 @@ export interface AccountStore {
    */
   link(accountId: string, profile: OAuthProfile, now: number): Promise<string>;
   get(id: string): Promise<Account | null>;
+  /** Mật khẩu của một tên đăng nhập (đã chuẩn hóa); null nếu chưa ai dùng tên đó. */
+  getPassword(username: string): Promise<PasswordRecord | null>;
+  /**
+   * Gắn tên đăng nhập + mật khẩu vào tài khoản (tạo tài khoản mang tên đó nếu chưa có; tài khoản đã có thì
+   * giữ tên hiển thị). Trả về false nếu tên đã thuộc tài khoản khác.
+   */
+  createPassword(accountId: string, username: string, hash: string, now: number): Promise<boolean>;
+  updatePassword(username: string, patch: PasswordPatch): Promise<void>;
 }
+
+export interface PasswordRecord {
+  readonly accountId: string;
+  readonly hash: string;
+  /** Số lần sai liên tiếp, đặt lại khi đúng hoặc khi bị khóa. */
+  readonly failedCount: number;
+  readonly lockedUntil: number | null;
+}
+
+export type PasswordPatch = Partial<Pick<PasswordRecord, "hash" | "failedCount" | "lockedUntil">>;
 
 /**
  * Đăng nhập: danh tính đã thuộc tài khoản nào thì vào tài khoản đó (khách hiện tại, nếu có, bị bỏ lại).
@@ -50,8 +74,9 @@ export async function signIn(
 }
 
 export class MemoryAccountStore implements AccountStore {
-  private readonly accounts = new Map<string, Omit<Account, "providers">>();
+  private readonly accounts = new Map<string, Omit<Account, "providers" | "username">>();
   private readonly identities = new Map<string, { provider: ProviderId; accountId: string }>();
+  private readonly passwords = new Map<string, PasswordRecord>();
 
   async accountForIdentity(provider: ProviderId, subject: string): Promise<string | null> {
     return this.identities.get(`${provider}:${subject}`)?.accountId ?? null;
@@ -75,6 +100,25 @@ export class MemoryAccountStore implements AccountStore {
     const a = this.accounts.get(id);
     if (!a) return null;
     const providers = [...this.identities.values()].filter((i) => i.accountId === id).map((i) => i.provider);
-    return { ...a, providers: [...new Set(providers)].sort() };
+    const username = [...this.passwords.entries()].find(([, r]) => r.accountId === id)?.[0] ?? null;
+    return { ...a, providers: [...new Set(providers)].sort(), username };
+  }
+
+  async getPassword(username: string): Promise<PasswordRecord | null> {
+    return this.passwords.get(username) ?? null;
+  }
+
+  async createPassword(accountId: string, username: string, hash: string, now: number): Promise<boolean> {
+    if (this.passwords.has(username)) return false;
+    if (!this.accounts.has(accountId)) {
+      this.accounts.set(accountId, { id: accountId, name: username, avatarUrl: null, createdAt: now, lastLoginAt: now });
+    }
+    this.passwords.set(username, { accountId, hash, failedCount: 0, lockedUntil: null });
+    return true;
+  }
+
+  async updatePassword(username: string, patch: PasswordPatch): Promise<void> {
+    const r = this.passwords.get(username);
+    if (r) this.passwords.set(username, { ...r, ...patch });
   }
 }

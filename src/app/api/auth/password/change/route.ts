@@ -1,0 +1,21 @@
+// POST /api/auth/password/change (form): đổi mật khẩu của tài khoản đang đăng nhập.
+
+import { NextResponse, type NextRequest } from "next/server";
+import { formText, guestOf, sameOrigin } from "@/server/http";
+import { changePassword } from "@/server/password";
+import { accountStore } from "@/server/store";
+import { loginPageError } from "../redirect";
+
+export async function POST(request: NextRequest) {
+  const form = await request.formData();
+  const id = guestOf(request);
+  if (!sameOrigin(request) || !id) return loginPageError(request, "doi-mat-khau", "noPassword");
+  const r = await changePassword(
+    accountStore(),
+    id,
+    { current: formText(form, "current"), password: formText(form, "password"), confirm: formText(form, "confirm") },
+    Date.now(),
+  );
+  if (!r.ok) return loginPageError(request, "doi-mat-khau", r.error);
+  return NextResponse.redirect(new URL("/dang-nhap?doiMatKhau=ok", request.nextUrl.origin), 303);
+}
