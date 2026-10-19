@@ -21,6 +21,7 @@
 | [10-ai.md](design/10-ai.md) | AI Tianwu |
 | [11-giao-dien.md](design/11-giao-dien.md) | Bố cục màn hình trận đấu, điều khiển (vuốt, click, bàn phím) |
 | [12-ky-nang-nhan-vat-chinh.md](design/12-ky-nang-nhan-vat-chinh.md) | 49 kỹ năng của nhân vật chính theo 7 nguyên tố |
+| [13-hinh-anh.md](design/13-hinh-anh.md) | Phong cách và bảng màu bộ hình SVG, bản yêu cầu cho họa sĩ |
 
 **Kỹ thuật** (`tech/`)
 
