@@ -37,9 +37,12 @@ import {
   ERROR_TEXT,
   GOOD_EFFECTS,
   PROFESSION_NAME,
-  TILE_ICON,
+  TILE_NAME,
+  SPECIAL_NAME,
 } from "./labels";
 import { bounceFrames, eventFrames, type Frame } from "./animation";
+import { CloudCorner, DongSonBand, ELEMENT_COLOR, ElementIcon, FoodIcon, LeaderFlag, ShieldIcon } from "./art/icons";
+import { TileArt } from "./art/tiles";
 
 const PLAYER = 0;
 const AI = 1;
@@ -215,15 +218,24 @@ function FighterCard({
       type="button"
       onClick={onClick}
       disabled={!onClick || !alive}
-      className={`relative w-full rounded-lg bg-[var(--panel)] p-2 text-left ${ring} ${alive ? "" : "opacity-40 grayscale"} disabled:cursor-default`}
+      className={`relative w-full rounded-lg border-l-4 bg-[var(--panel)] p-2 text-left ${ring} ${alive ? "" : "opacity-40 grayscale"} disabled:cursor-default`}
+      style={{ borderLeftColor: ELEMENT_COLOR[fighter.element] }}
     >
-      <div className="mb-1 flex items-baseline justify-between gap-2">
-        <span className="truncate text-sm font-semibold">
-          {leader && <span title="Thủ lĩnh">👑 </span>}
-          {fighter.name}
+      <div className="mb-1 flex items-center justify-between gap-2">
+        <span className="flex min-w-0 items-center gap-1 text-sm font-semibold">
+          {leader && (
+            <span title="Thủ lĩnh" className="shrink-0">
+              <LeaderFlag className="size-4" />
+            </span>
+          )}
+          <span className="truncate">{fighter.name}</span>
         </span>
-        <span className="shrink-0 text-[10px] opacity-60">
-          {PROFESSION_NAME[fighter.profession]} · {ELEMENT_NAME[fighter.element]}
+        <span className="flex shrink-0 items-center gap-1 text-[10px] opacity-75">
+          {PROFESSION_NAME[fighter.profession]}
+          <span title={ELEMENT_NAME[fighter.element]} className="shrink-0">
+            <ElementIcon element={fighter.element} className="size-3.5" />
+          </span>
+          <span className="hidden lg:inline">{ELEMENT_NAME[fighter.element]}</span>
         </span>
       </div>
       <div className="space-y-1">
@@ -249,9 +261,10 @@ function FighterCard({
         <span
           key={f.id}
           aria-hidden
-          className={`float-up pointer-events-none absolute right-2 top-1 text-lg font-extrabold tabular-nums drop-shadow ${FLOAT_TONE[f.tone]}`}
+          className={`float-up pointer-events-none absolute right-2 top-1 flex items-center gap-0.5 text-lg font-extrabold tabular-nums drop-shadow ${FLOAT_TONE[f.tone]}`}
           style={{ animationDelay: `${f.order * FLOAT_STAGGER_MS}ms` }}
         >
+          {f.tone === "shield" && <ShieldIcon className="size-4" />}
           {f.text}
         </span>
       ))}
@@ -260,6 +273,14 @@ function FighterCard({
 }
 
 const SWIPE_PX = 12;
+
+/** Vị trí bốn họa tiết mây ở góc khung bàn cờ (hình gốc đặt ở góc trên trái). */
+const CORNERS = [
+  "-left-0.5 -top-0.5",
+  "-right-0.5 -top-0.5 -scale-x-100",
+  "-bottom-0.5 -left-0.5 -scale-y-100",
+  "-bottom-0.5 -right-0.5 -scale-100",
+] as const;
 
 export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
   const [round, setRound] = useState(0);
@@ -315,7 +336,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
             ? [[`+${e.amount}`, "heal"]]
             : []
           : [
-              ...(e.absorbed > 0 ? [[`🛡${e.absorbed}`, "shield"] as [string, Float["tone"]]] : []),
+              ...(e.absorbed > 0 ? [[`${e.absorbed}`, "shield"] as [string, Float["tone"]]] : []),
               ...(e.amount > 0 ? [[`-${e.amount}`, "damage"] as [string, Float["tone"]]] : []),
             ];
       return items.map(([text, tone]) => {
@@ -619,8 +640,8 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
 
   const palette =
     theme === "light"
-      ? "[--bg:#f5f1e8] [--panel:#ffffff] [--cell:#ece4d3] text-stone-900"
-      : "[--bg:#1c1917] [--panel:#292524] [--cell:#3a3330] text-stone-100";
+      ? "[--bg:#f3ebdc] [--panel:#fffaf0] [--cell:#e2d3b6] [--frame:#7a2c1d] [--gold:#b8862f] text-stone-900"
+      : "[--bg:#17110e] [--panel:#271d18] [--cell:#3a2c24] [--frame:#5a1e14] [--gold:#d4a24c] text-stone-100";
 
   const frame = anim ? anim.frames[anim.i] : undefined;
   const board = frame?.board ?? state.board;
@@ -634,7 +655,9 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
       <div className="flex w-full flex-col gap-2 md:w-40 md:shrink-0 lg:w-56">
         <div className="flex items-center justify-between text-xs opacity-80">
           <span className="font-semibold">{s === PLAYER ? "Phe bạn" : "Tianwu"}</span>
-          <span title="Lương thực">🍙 {own.food}/100</span>
+          <span title="Lương thực" className="flex items-center gap-1 tabular-nums">
+            <FoodIcon className="size-3.5" /> {own.food}/100
+          </span>
         </div>
         {own.fighters.map((f, i) => {
           const isActor = state.winner === null && state.turn.side === s && state.turn.actor === i;
@@ -665,10 +688,13 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
   };
 
   return (
-    <div ref={rootRef} className={`${palette} min-h-dvh bg-[var(--bg)] p-3 sm:p-4`}>
+    <div ref={rootRef} className={`${palette} demo-bg min-h-dvh bg-[var(--bg)] p-3 sm:p-4`}>
       <div className="mx-auto flex max-w-6xl flex-col gap-3">
         <header className="flex flex-wrap items-center justify-between gap-2">
-          <h1 className="text-lg font-bold">Cờ Lau · Chơi thử</h1>
+          <h1 className="flex items-center gap-1.5 text-lg font-bold">
+            <LeaderFlag className="size-6" />
+            Cờ Lau · Chơi thử
+          </h1>
           <div className="text-sm font-semibold" aria-live="polite">
             {!started
               ? "Chọn độ khó để bắt đầu"
@@ -697,13 +723,18 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
             </select>
           </label>
         </header>
+        <DongSonBand className="-mt-1 w-full opacity-70" />
 
         <div className="flex flex-col gap-3 md:flex-row md:items-start">
           {side(PLAYER)}
 
           <div className="flex min-w-0 flex-1 flex-col gap-2">
+            <div className="relative rounded-xl border-2 border-[var(--gold)] bg-[var(--frame)] p-1.5 shadow-lg">
+            {CORNERS.map((c) => (
+              <CloudCorner key={c} className={`pointer-events-none absolute z-10 size-5 ${c}`} />
+            ))}
             <div
-              className="relative grid touch-none select-none gap-0.5 overflow-hidden rounded-lg bg-black/20 p-1"
+              className="relative grid touch-none select-none gap-0.5 overflow-hidden rounded-md bg-black/25 p-0.5"
               style={{ gridTemplateColumns: `repeat(${board.cols}, minmax(0, 1fr))` }}
               onPointerUp={onPointerUp}
               onPointerLeave={() => (drag.current = null)}
@@ -717,21 +748,16 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                 const isSel =
                   (selected?.row === pos.row && selected.col === pos.col) || (from?.row === pos.row && from.col === pos.col);
                 const isCur = showCursor && cursor.row === pos.row && cursor.col === pos.col;
-                const special =
-                  tile?.special === "strong"
-                    ? "ring-2 ring-yellow-300"
-                    : tile?.special === "weak"
-                      ? "ring-2 ring-slate-300"
-                      : "";
                 return (
                   <div
                     key={cellAnim ? `${anim!.id}-${anim!.i}-${i}` : i}
                     role="gridcell"
                     data-row={pos.row}
                     data-col={pos.col}
+                    aria-label={tile ? (tile.special ? SPECIAL_NAME[tile.special][tile.kind] : TILE_NAME[tile.kind]) : "Ô trống"}
                     onPointerDown={(e) => onPointerDown(pos, e)}
-                    className={`relative aspect-square rounded bg-[var(--cell)] text-[clamp(12px,3.2vw,28px)] ${special} ${
-                      isSel ? "scale-110 bg-amber-400/60" : ""
+                    className={`relative aspect-square rounded-md bg-[var(--cell)] ${
+                      isSel ? "z-10 scale-110 ring-2 ring-amber-300" : ""
                     } ${isCur ? "outline-2 outline-sky-400" : ""} ${(aim && needsCell(aim.skill)) || slideAim ? "cursor-crosshair" : "cursor-pointer"}`}
                   >
                     {tile && (
@@ -747,7 +773,11 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                             : undefined
                         }
                       >
-                        {TILE_ICON[tile.kind]}
+                        <TileArt
+                          kind={tile.kind}
+                          special={tile.special}
+                          className={`size-full ${tile.special === "strong" ? "tile-strong" : ""}`}
+                        />
                       </span>
                     )}
                   </div>
@@ -780,8 +810,9 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                           setElement(e);
                           setState(newBattle(round, e));
                         }}
-                        className={`rounded px-2.5 py-1 text-sm ${element === e ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
+                        className={`flex items-center gap-1.5 rounded px-2.5 py-1 text-sm ${element === e ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
                       >
+                        <ElementIcon element={e} className="size-4" />
                         {ELEMENT_NAME[e]}
                       </button>
                     ))}
@@ -813,6 +844,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                   </div>
                 </div>
               )}
+            </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-1.5" aria-label="Kỹ năng">
@@ -847,9 +879,9 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                     setSelected(null);
                     setSlideAim(slideAim && !slideAim.skill ? null : { skill: null, max: PASSIVE.phongFreeSlide, from: null });
                   }}
-                  className={`rounded px-2 py-1 text-xs ${slideAim && !slideAim.skill ? "bg-rose-500 text-white" : "bg-teal-600 text-white"}`}
+                  className={`flex items-center gap-1 rounded px-2 py-1 text-xs ${slideAim && !slideAim.skill ? "bg-rose-500 text-white" : "bg-teal-600 text-white"}`}
                 >
-                  🌪️ Trượt miễn phí
+                  <ElementIcon element="phong" className="size-3.5" /> Trượt miễn phí
                 </button>
               )}
             </div>

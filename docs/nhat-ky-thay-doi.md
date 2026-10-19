@@ -4,6 +4,9 @@
 
 ## 19/10/2026
 
+**Hình ảnh**
+- Thay emoji ở /demo bằng bộ hình SVG tự vẽ (Shan đồng ý): 7 ô cờ, ô đặc biệt bản yếu và bản mạnh, 7 biểu tượng nguyên tố, cờ lau thủ lĩnh, khung bàn cờ. Phong cách khắc gỗ dân gian và hoa văn trống đồng. Chân dung nhân vật và hình trang bị để sau, thuê họa sĩ hoặc dùng công cụ AI theo bản yêu cầu ở [Hình ảnh](design/13-hinh-anh.md).
+
 **Bộ kỹ năng nhân vật chính**
 - Code xong bộ Kim, Thủy, Hỏa, Thổ, Lôi cùng kỹ năng bị động (Shan yêu cầu).
 - Hỏa Phóng Hỏa Thiêu Doanh tăng giá 20 → 35, Lôi Trụ Giáng Thế 20 → 40: phá ô giá rẻ thu hoạch như một nước đi miễn phí.
