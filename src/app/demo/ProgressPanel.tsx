@@ -7,6 +7,7 @@
 import { useState } from "react";
 import {
   BRANCH_COST,
+  companionById,
   BRANCH_UNLOCK_LEVEL,
   MAIN_ID,
   MAIN_SLOT_UNLOCK,
@@ -17,7 +18,6 @@ import {
   progressOf,
   scaleSkill,
   SKILL_MAX_LEVEL,
-  STARTER_COMPANIONS,
   totalXpFor,
   ULTIMATE_UNLOCK_LEVEL,
   ultimateOf,
@@ -26,18 +26,21 @@ import {
   type CharacterProgress,
   type Profile,
   type ProfileAction,
-  type ProgressError,
+  type ProfileError,
   type SkillDef,
 } from "@/core";
 import { PROFESSION_NAME } from "./labels";
 import { SkillIcon } from "./art/skills";
 
-const ERROR: Record<ProgressError | "network" | "conflict", string> = {
+/** Thông báo lỗi của thao tác hồ sơ, dùng chung với ShopPanel. */
+export const PROFILE_ERROR: Record<ProfileError | "network" | "conflict", string> = {
   maxLevel: "Đã đạt cấp tối đa",
   notEnoughPoints: "Không đủ điểm kỹ năng",
   locked: "Chưa mở khóa",
   owned: "Đã có",
   invalidSkill: "Kỹ năng không hợp lệ",
+  notEnoughGold: "Không đủ vàng",
+  notOwned: "Chưa có nhân vật này",
   network: "Mất kết nối tới server, thử lại",
   conflict: "Hồ sơ vừa đổi ở nơi khác, đã tải lại",
 };
@@ -135,7 +138,7 @@ export default function ProgressPanel({
     setBusy(true);
     void onAction(a).then((error) => {
       setBusy(false);
-      setMessage(error ? (ERROR[error as keyof typeof ERROR] ?? error) : null);
+      setMessage(error ? (PROFILE_ERROR[error as keyof typeof PROFILE_ERROR] ?? error) : null);
     });
   };
 
@@ -262,6 +265,6 @@ export default function ProgressPanel({
   );
 }
 
-const companionOf = (id: string) => STARTER_COMPANIONS.find((c) => c.id === id);
+const companionOf = (id: string) => companionById(id);
 const companionProfession = (id: string) => companionOf(id)!.profession;
 const companionName = (id: string) => companionOf(id)?.name ?? id;

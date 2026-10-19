@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { ABANDON_MS, autoProgress, findValidMoves, GRACE_MS, newProfile, TURN_MS } from "../../src/core";
+import { ABANDON_MS, applyProfileAction, autoProgress, findValidMoves, GRACE_MS, newProfile, TURN_MS } from "../../src/core";
 import { actBattle, createBattleFor, getBattle, httpStatus, parseAction, parseNewBattle } from "../../src/server/battles";
 import { newGuestId, signGuest, verifyGuest } from "../../src/server/guest";
 import { loadProfile, MemoryProfileStore, updateProfile } from "../../src/server/profiles";
@@ -107,6 +107,22 @@ describe("dịch vụ trận online", () => {
     const saved = (await loadProfile(profiles, "g_2")).profile;
     assert.equal(saved.element, "kim");
     assert.equal(saved.profession, "ySu");
+  });
+
+  it("chỉ ra trận nhân vật kèm đã có; mua rồi thì được", async () => {
+    const store = new MemoryMatchStore();
+    const profiles = new MemoryProfileStore();
+    const deps = { store, profiles, now: T0, seed: 4, newId: () => "m_shop" };
+    const withShop = parseNewBattle({ ...input, companions: ["haVan", "daoLam"] })!;
+    assert.ok(withShop, "nhân vật cửa hàng là id hợp lệ");
+    assert.deepEqual(await createBattleFor("g_3", withShop, deps), { ok: false, error: "badRequest" });
+    const cur = await loadProfile(profiles, "g_3");
+    assert.ok(await profiles.put("g_3", { ...cur.profile, gold: 5000 }, cur.version));
+    const bought = await updateProfile(profiles, "g_3", (p) => applyProfileAction(p, { type: "buyCompanion", character: "daoLam" }), T0);
+    assert.ok(bought.ok);
+    const created = await createBattleFor("g_3", withShop, deps);
+    assert.ok(created.ok);
+    assert.deepEqual(created.view.battle.sides[0].fighters.map((f) => f.id), ["dinhBoLinh", "haVan", "daoLam"]);
   });
 
   it("ghi hồ sơ kèm điều kiện version: bị ghi trước thì đọc lại và thử lại", async () => {

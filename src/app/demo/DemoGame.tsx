@@ -15,9 +15,11 @@ import {
   getSkill,
   isAdjacent,
   ELEMENTS,
+  companionById,
   fighterSkill,
   isAlive,
   leveledFoe,
+  MAIN_ID,
   mainCharacter,
   mainSkills,
   needsCell,
@@ -77,6 +79,7 @@ import { Portrait } from "./art/portraits";
 import { SkillIcon } from "./art/skills";
 import { TileArt } from "./art/tiles";
 import ProgressPanel from "./ProgressPanel";
+import ShopPanel from "./ShopPanel";
 import {
   actOnline,
   createOnline,
@@ -98,7 +101,7 @@ const DIFFICULTIES: Difficulty[] = ["easy", "normal", "hard", "boss", "nightmare
 /** Nguyên tố đã có bộ kỹ năng nhân vật chính. */
 const MAIN_ELEMENTS = ELEMENTS.filter((e) => mainSkills(e).length > 0);
 
-const byId = (id: string) => STARTER_COMPANIONS.find((c) => c.id === id)!;
+const byId = (id: string) => companionById(id)!;
 
 /** Trang bị mẫu của trận demo: bậc 0 là không mặc đồ; `set` null là không bộ nào đạt mốc. */
 interface DemoGear {
@@ -125,16 +128,18 @@ interface Setup {
   readonly profile: Profile;
 }
 
-const COMPANION_IDS = ["haVan", "maiThanh"] as const;
-const TEAM_IDS = ["dinhBoLinh", ...COMPANION_IDS] as const;
-const FOE_IDS = ["leThach", "toKim", "phungPhong"] as const;
+/** Đội Tianwu: 3 nhân vật kèm khởi đầu đầu tiên không có trong đội người chơi. */
+const foeIds = (team: readonly string[]) =>
+  STARTER_COMPANIONS.filter((c) => !team.includes(c.id))
+    .slice(0, 3)
+    .map((c) => c.id);
 
-/** Trận demo cố định: nhân vật chính và 2 nhân vật kèm, đấu đội Tianwu 3 người. */
+/** Trận demo: nhân vật chính và 2 nhân vật kèm của hồ sơ, đấu đội Tianwu 3 người. */
 function demoSides({ element, profession, gear, mode, profile }: Setup): [SideConfig, SideConfig] {
   const leveled = { ...profile, element, profession };
-  const team = mode === "progress" ? profileTeam(leveled, COMPANION_IDS) : [mainCharacter(element, profession), ...COMPANION_IDS.map(byId)];
+  const team = mode === "progress" ? profileTeam(leveled, profile.team) : [mainCharacter(element, profession), ...profile.team.map(byId)];
   const level = profile.main.level;
-  const foes = FOE_IDS.map((id) => (mode === "progress" ? leveledFoe(byId(id), level) : byId(id)));
+  const foes = foeIds(profile.team).map((id) => (mode === "progress" ? leveledFoe(byId(id), level) : byId(id)));
   return [
     { fighters: team.map((f) => gearUp(f, gear, gear.set)), leader: 0 },
     { fighters: foes.map((f) => gearUp(f, gear, null)), leader: 0 },
@@ -169,7 +174,7 @@ interface Outcome {
   readonly levelUps: readonly LevelUp[];
 }
 
-const fighterName = (id: string) => (id === "dinhBoLinh" ? "Đinh Bộ Lĩnh" : byId(id).name);
+const fighterName = (id: string) => (id === MAIN_ID ? "Đinh Bộ Lĩnh" : (companionById(id)?.name ?? id));
 
 const NO_GEAR: DemoGear = { tier: 0, set: null };
 
@@ -896,7 +901,7 @@ export default function DemoGame({
       return;
     }
     setPending(true);
-    void createOnline({ mode: "3v3", element, profession, companions: COMPANION_IDS, difficulty }).then((res) => {
+    void createOnline({ mode: "3v3", element, profession, companions: profile.team, difficulty }).then((res) => {
       setPending(false);
       beginOnline(res);
     });
@@ -1341,9 +1346,13 @@ export default function DemoGame({
         </div>
 
         {mode === "progress" && (
+          <ShopPanel profile={profile} locked={started && state.winner === null} onAction={profileAction} />
+        )}
+
+        {mode === "progress" && (
           <ProgressPanel
             profile={{ ...profile, element }}
-            teamIds={TEAM_IDS}
+            teamIds={[MAIN_ID, ...profile.team]}
             locked={started && state.winner === null}
             storage={online ? "lưu trên server" : "lưu trên trình duyệt này"}
             onAction={profileAction}

@@ -2,12 +2,14 @@
 // Không phụ thuộc Next.js; route handler chỉ đọc cookie/body rồi gọi vào đây, test gọi thẳng.
 
 import {
+  ALL_COMPANIONS,
   applyRewards,
   battleRewards,
   ELEMENTS,
   HUMAN,
   humanAct,
   leveledFoe,
+  ownsCompanion,
   PROFESSIONS,
   profileTeam,
   settle,
@@ -80,7 +82,7 @@ export function parseNewBattle(body: unknown): NewBattleInput | null {
   const companions = Array.isArray(body.companions) ? body.companions : [];
   if (!oneOf(["1v1", "3v3"] as const, mode) || !oneOf(ELEMENTS, element) || !oneOf(PROFESSIONS, profession)) return null;
   if (!oneOf(DIFFICULTIES, difficulty)) return null;
-  const ids = STARTER_COMPANIONS.map((c) => c.id);
+  const ids = ALL_COMPANIONS.map((c) => c.id);
   if (mode === "3v3" && (companions.length !== 2 || new Set(companions).size !== 2 || !companions.every((c) => oneOf(ids, c)))) return null;
   return { mode, element, profession, difficulty, companions: mode === "3v3" ? (companions as string[]) : [] };
 }
@@ -147,6 +149,8 @@ function pickFoes(input: NewBattleInput, seed: number): FighterConfig[] {
  */
 export async function createBattleFor(ownerId: string, input: NewBattleInput, deps: Deps): Promise<ServiceResult> {
   const { profile } = await loadProfile(deps.profiles, ownerId);
+  // Chỉ ra trận nhân vật đã có (khởi đầu hoặc đã mua).
+  if (!input.companions.every((id) => ownsCompanion(profile, id))) return { ok: false, error: "badRequest" };
   const chosen = { ...profile, element: input.element, profession: input.profession };
   if (chosen.element !== profile.element || chosen.profession !== profile.profession) {
     // Chỉ để lần sau mở trang chọn sẵn; ghi không được (hai tab cùng ghi) cũng không sao.
