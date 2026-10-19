@@ -1,7 +1,7 @@
 // Đội hình khởi đầu: nhân vật chính và 5 nhân vật kèm hư cấu.
 // Chỉ số và nguyên tố của nhân vật kèm là điểm xuất phát, chờ mô phỏng cân bằng.
 
-import { mainSkills, professionSkills } from "../battle/skills";
+import { mainSkills, professionSkills, ultimateOf } from "../battle/skills";
 import type { Element } from "../battle/elements";
 import type { Profession } from "../battle/rules";
 import type { FighterConfig } from "../battle/state";
@@ -41,8 +41,8 @@ function companion(id: string, name: string, profession: Profession, element: El
     element,
     profession,
     ...BASE_STATS[profession],
-    // Giai đoạn 1 chỉ có chiêu nấc 1–2, chưa có tuyệt chiêu nấc 3.
-    skills: professionSkills(profession).map((s) => s.id),
+    // Bản mở hết: chiêu nấc 1–2 và tuyệt chiêu nấc 3. Tiến trình lọc lại theo cấp ở buildCompanion.
+    skills: [...professionSkills(profession), ultimateOf(id)].flatMap((s) => (s ? [s.id] : [])),
   };
 }
 

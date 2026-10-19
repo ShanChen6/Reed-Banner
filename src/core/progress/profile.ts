@@ -62,7 +62,7 @@ export function profileTeam(profile: Profile, companionIds: readonly string[] = 
 
 /** Đối thủ AI ở một cấp: tiến trình tự dựng (tiêu đều điểm kỹ năng, mua cả hai nhánh). */
 export function leveledFoe(base: FighterConfig, level: number): FighterConfig {
-  const p = autoProgress(level, base.profession);
+  const p = autoProgress(level, base.profession, base.id);
   // Đối thủ AI luân phiên chiêu nhánh theo id để hai nhánh đều xuất hiện.
   const branch = p.branches.length > 1 ? p.branches[(level + base.id.length) % p.branches.length] : undefined;
   return buildCompanion(base, p, branch);
@@ -133,7 +133,7 @@ export function applyProfileAction(profile: Profile, action: ProfileAction): Pro
   const p = progressOf(profile, action.character);
   switch (action.type) {
     case "upgrade": {
-      const r = upgradeSkill(p, action.key, profession);
+      const r = upgradeSkill(p, action.key, profession, isMain ? undefined : action.character);
       return r.ok ? { ok: true, profile: withProgress(profile, action.character, r.progress) } : r;
     }
     case "buyBranch": {

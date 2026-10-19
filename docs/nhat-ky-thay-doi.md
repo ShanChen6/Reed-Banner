@@ -4,6 +4,10 @@
 
 ## 19/10/2026
 
+**Tuyệt chiêu nấc 3 (giai đoạn 3, Claude đặt, chờ Shan duyệt)**
+- 5 nhân vật kèm khởi đầu mỗi người một tuyệt chiêu riêng, 100 năng lượng, mang đậm nguyên tố của người đó: Hà Vân Hỏa Vũ Liệu Nguyên, Lê Thạch Trấn Sơn Hộ Quân, Mai Thanh Cam Lộ Hồi Xuân, Tô Kim Kim Ngân Ly Tán, Phùng Phong Phong Vân Biến Trận.
+- Tự mở ở cấp 10, không tốn điểm (nhánh nấc 2 đã tốn điểm và chỉ mang 1, nên nấc 3 là phần thưởng của việc lên cấp); nâng cấp bằng điểm như chiêu khác. Chế độ Luyện tập mở sẵn.
+
 **Trận online (giai đoạn 2, Shan chọn Neon + Drizzle)**
 - Việc định kỳ mỗi ngày (Vercel Cron): chốt trận bỏ dở quá 24 giờ và cộng thưởng, xóa khách không chơi quá 30 ngày. Cần biến `CRON_SECRET`.
 - Hồ sơ tiến trình lưu trên server: `/play` chơi theo hồ sơ (cấp, kỹ năng, chiêu nhánh) thay cho đội Luyện tập, thưởng cuối trận cộng trên server, nâng kỹ năng gửi qua `/api/profile`. `/demo` vẫn lưu ở trình duyệt.
