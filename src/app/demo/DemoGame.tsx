@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   act,
+  applyRewards,
+  battleRewards,
   canFreeSlide,
   createBattle,
   createRng,
@@ -12,14 +14,20 @@ import {
   getSkill,
   isAdjacent,
   ELEMENTS,
+  fighterSkill,
   isAlive,
+  leveledFoe,
   mainCharacter,
   mainSkills,
   needsCell,
+  newProfile,
+  parseProfile,
   PASSIVE,
   PASSIVES,
   playAiTurn,
   presetLoadout,
+  PROFESSIONS,
+  profileTeam,
   rollDrop,
   selectableActors,
   slideStep,
@@ -29,6 +37,7 @@ import {
   tileAt,
   withGear,
   type BattleAction,
+  type BattleRewards,
   type BattleEvent,
   type BattleState,
   type Difficulty,
@@ -36,7 +45,10 @@ import {
   type Fighter,
   type FighterConfig,
   type GearItem,
+  type LevelUp,
   type Pos,
+  type Profession,
+  type Profile,
   type SideConfig,
   type SkillDef,
   type Slide,
@@ -61,6 +73,7 @@ import { GearIcon } from "./art/gear";
 import { Portrait } from "./art/portraits";
 import { SkillIcon } from "./art/skills";
 import { TileArt } from "./art/tiles";
+import ProgressPanel from "./ProgressPanel";
 
 const PLAYER = 0;
 const AI = 1;
@@ -84,19 +97,65 @@ function gearUp(f: FighterConfig, gear: DemoGear, set: string | null): FighterCo
   return gear.tier === 0 ? f : withGear(f, presetLoadout(f.element, f.profession, gear.tier, set));
 }
 
+/**
+ * Luyện tập: mọi kỹ năng mở sẵn, cùng một cấp. Tiến trình: đội theo hồ sơ lưu trên trình duyệt, đối thủ
+ * cùng cấp với nhân vật chính.
+ */
+type DemoMode = "practice" | "progress";
+
+interface Setup {
+  readonly element: Element;
+  readonly profession: Profession;
+  readonly gear: DemoGear;
+  readonly mode: DemoMode;
+  readonly profile: Profile;
+}
+
+const COMPANION_IDS = ["haVan", "maiThanh"] as const;
+const TEAM_IDS = ["dinhBoLinh", ...COMPANION_IDS] as const;
+const FOE_IDS = ["leThach", "toKim", "phungPhong"] as const;
+
 /** Trận demo cố định: nhân vật chính và 2 nhân vật kèm, đấu đội Tianwu 3 người. */
-function demoSides(element: Element, gear: DemoGear): [SideConfig, SideConfig] {
-  const mine = [mainCharacter(element), byId("haVan"), byId("maiThanh")].map((f) => gearUp(f, gear, gear.set));
-  const foes = [byId("leThach"), byId("toKim"), byId("phungPhong")].map((f) => gearUp(f, gear, null));
+function demoSides({ element, profession, gear, mode, profile }: Setup): [SideConfig, SideConfig] {
+  const leveled = { ...profile, element, profession };
+  const team = mode === "progress" ? profileTeam(leveled, COMPANION_IDS) : [mainCharacter(element, profession), ...COMPANION_IDS.map(byId)];
+  const level = profile.main.level;
+  const foes = FOE_IDS.map((id) => (mode === "progress" ? leveledFoe(byId(id), level) : byId(id)));
   return [
-    { fighters: mine, leader: 0 },
-    { fighters: foes, leader: 0 },
+    { fighters: team.map((f) => gearUp(f, gear, gear.set)), leader: 0 },
+    { fighters: foes.map((f) => gearUp(f, gear, null)), leader: 0 },
   ];
 }
 
-function newBattle(round: number, element: Element, gear: DemoGear): BattleState {
-  return createBattle({ sides: demoSides(element, gear), seed: DEMO_SEED + round, timer: false, firstSide: PLAYER }).state;
+function newBattle(round: number, setup: Setup): BattleState {
+  return createBattle({ sides: demoSides(setup), seed: DEMO_SEED + round, timer: false, firstSide: PLAYER }).state;
 }
+
+const PROFILE_KEY = "coLau.profile.v1";
+
+function loadProfile(): Profile {
+  try {
+    const raw = window.localStorage.getItem(PROFILE_KEY);
+    return parseProfile(raw ? JSON.parse(raw) : null);
+  } catch {
+    return newProfile();
+  }
+}
+
+function saveProfile(p: Profile): void {
+  try {
+    window.localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
+  } catch {
+    // Trình duyệt chặn lưu trữ: hồ sơ chỉ sống tới khi tải lại trang.
+  }
+}
+
+interface Outcome {
+  readonly rewards: BattleRewards;
+  readonly levelUps: readonly LevelUp[];
+}
+
+const fighterName = (id: string) => (id === "dinhBoLinh" ? "Đinh Bộ Lĩnh" : byId(id).name);
 
 const NO_GEAR: DemoGear = { tier: 0, set: null };
 
@@ -331,7 +390,15 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
   const [started, setStarted] = useState(false);
   const [element, setElement] = useState<Element>("moc");
   const [gear, setGear] = useState<DemoGear>(NO_GEAR);
-  const [state, setState] = useState<BattleState>(() => newBattle(0, "moc", NO_GEAR));
+  const [profession, setProfession] = useState<Profession>("tuongSi");
+  const [mode, setMode] = useState<DemoMode>("practice");
+  const [profile, setProfile] = useState<Profile>(newProfile);
+  const [outcome, setOutcome] = useState<Outcome | null>(null);
+  const setup = useMemo<Setup>(() => ({ element, profession, gear, mode, profile }), [element, profession, gear, mode, profile]);
+  /** Bàn cờ xem trước khi chưa bắt đầu; dựng lại mỗi khi đổi lựa chọn trước trận. */
+  const preview = useMemo(() => newBattle(round, setup), [round, setup]);
+  const [live, setState] = useState<BattleState | null>(null);
+  const state = live ?? preview;
   const [selected, setSelected] = useState<Pos | null>(null);
   const [cursor, setCursor] = useState<Pos>({ row: 3, col: 5 });
   const [showCursor, setShowCursor] = useState(false);
@@ -355,7 +422,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
   const myTurn = playerTurn && anim === null;
   const actor = state.sides[PLAYER].fighters[state.turn.actor]!;
   const selectable = useMemo(() => (myTurn ? selectableActors(state) : []), [myTurn, state]);
-  const skills = useMemo(() => (actor.skills ?? []).map((id) => getSkill(id)).filter((d): d is SkillDef => !!d), [actor]);
+  const skills = useMemo(() => (actor.skills ?? []).map((id) => fighterSkill(actor, id)).filter((d): d is SkillDef => !!d), [actor]);
 
   const flash = useCallback((text: string) => {
     setToast(text);
@@ -422,9 +489,16 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
         pushLog(next, events);
         setState(next);
         showNumbers(events);
+        if (mode === "progress" && before.winner === null && next.winner !== null) {
+          const rewards = battleRewards(next, PLAYER);
+          const r = applyRewards(profile, next.sides[PLAYER].fighters.map((f) => f.id), rewards);
+          setProfile(r.profile);
+          saveProfile(r.profile);
+          setOutcome({ rewards, levelUps: r.levelUps });
+        }
       });
     },
-    [play, pushLog, showNumbers],
+    [play, pushLog, showNumbers, mode, profile],
   );
 
   const apply = useCallback(
@@ -433,7 +507,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
       if (!r.ok) {
         let text = ERROR_TEXT[r.error];
         if (r.error === "notEnoughEnergy" && action.type === "skill") {
-          text += ` (${actor.energy}/${getSkill(action.skill)?.cost ?? 0})`;
+          text += ` (${actor.energy}/${fighterSkill(actor, action.skill)?.cost ?? 0})`;
         }
         if (r.error === "invalidMove" && action.type === "swap") play(bounceFrames(state.board, action.from, action.to), () => {});
         flash(text);
@@ -442,7 +516,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
       commit(state, r.state, r.events);
       return true;
     },
-    [state, actor.energy, flash, play, commit],
+    [state, actor, flash, play, commit],
   );
 
   // Lượt của Tianwu: chạy trọn lượt sau một nhịp nghỉ ngắn để người chơi kịp nhìn.
@@ -674,19 +748,30 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
     [state.winner, round, difficulty],
   );
 
+  /** Về màn chọn trước trận để đổi nguyên tố, nghề, trang bị hoặc nâng kỹ năng. */
   const restart = () => {
-    const next = round + 1;
-    setRound(next);
+    setRound(round + 1);
     setAnim(null);
     afterAnim.current = null;
     setFloats([]);
-    setState(newBattle(next, element, gear));
+    setState(null);
+    setOutcome(null);
     setSelected(null);
     setAim(null);
     setSlideAim(null);
     setPendingSlide(null);
     setLog([]);
+    setStarted(false);
+  };
+
+  const start = () => {
+    setState(preview);
     setStarted(true);
+  };
+
+  const changeProfile = (p: Profile) => {
+    setProfile(p);
+    saveProfile(p);
   };
 
   const palette =
@@ -848,8 +933,40 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                 </div>
               )}
               {!started && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-black/60 text-white">
+                <div className="absolute inset-0 flex flex-col items-center justify-center-safe gap-2 overflow-y-auto rounded-lg bg-black/60 p-2 text-white sm:gap-3">
                   <p className="text-sm">Đinh Bộ Lĩnh, Hà Vân và Mai Thanh đấu đội Tianwu.</p>
+                  <div className="flex flex-wrap justify-center gap-1.5" role="radiogroup" aria-label="Chế độ">
+                    {(["practice", "progress"] as const).map((m) => (
+                      <button
+                        key={m}
+                        type="button"
+                        role="radio"
+                        aria-checked={mode === m}
+                        onClick={() => {
+                          if (m === "progress" && mode !== "progress") setProfile(loadProfile());
+                          setMode(m);
+                        }}
+                        className={`rounded px-2.5 py-1 text-sm ${mode === m ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
+                      >
+                        {m === "practice" ? "Luyện tập (mở hết kỹ năng)" : `Tiến trình (cấp ${profile.main.level})`}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap items-center justify-center gap-1.5" role="radiogroup" aria-label="Nghề nhân vật chính">
+                    <span className="text-xs opacity-80">Nghề:</span>
+                    {PROFESSIONS.map((p) => (
+                      <button
+                        key={p}
+                        type="button"
+                        role="radio"
+                        aria-checked={profession === p}
+                        onClick={() => setProfession(p)}
+                        className={`rounded px-2 py-0.5 text-xs ${profession === p ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
+                      >
+                        {PROFESSION_NAME[p]}
+                      </button>
+                    ))}
+                  </div>
                   <div className="flex flex-wrap justify-center gap-1.5" role="radiogroup" aria-label="Nguyên tố nhân vật chính">
                     {MAIN_ELEMENTS.map((e) => (
                       <button
@@ -859,7 +976,6 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                         aria-checked={element === e}
                         onClick={() => {
                           setElement(e);
-                          setState(newBattle(round, e, gear));
                         }}
                         className={`flex items-center gap-1.5 rounded px-2.5 py-1 text-sm ${element === e ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
                       >
@@ -877,9 +993,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                         role="radio"
                         aria-checked={gear.tier === t}
                         onClick={() => {
-                          const g = { ...gear, tier: t };
-                          setGear(g);
-                          setState(newBattle(round, element, g));
+                          setGear({ ...gear, tier: t });
                         }}
                         className={`rounded px-2.5 py-1 text-sm ${gear.tier === t ? "bg-amber-500 font-semibold text-stone-950" : `bg-white/15 ${t === 0 ? "" : TIER_CLASS[t]}`}`}
                       >
@@ -897,9 +1011,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                           role="radio"
                           aria-checked={gear.set === id}
                           onClick={() => {
-                            const g = { ...gear, set: id };
-                            setGear(g);
-                            setState(newBattle(round, element, g));
+                            setGear({ ...gear, set: id });
                           }}
                           className={`rounded px-2.5 py-1 text-sm ${gear.set === id ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
                         >
@@ -922,7 +1034,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                   )}
                   <button
                     type="button"
-                    onClick={() => setStarted(true)}
+                    onClick={start}
                     className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
                   >
                     Bắt đầu ({DIFFICULTY_NAME[difficulty]})
@@ -946,6 +1058,18 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                       "Không rơi trang bị."
                     )}
                   </p>
+                  {outcome && (
+                    <div className="text-center text-sm">
+                      <p>
+                        +{outcome.rewards.xp[0]} kinh nghiệm mỗi người · +{outcome.rewards.gold} vàng
+                      </p>
+                      {outcome.levelUps.map((u) => (
+                        <p key={u.id} className="font-semibold text-amber-300">
+                          {fighterName(u.id)} lên cấp {u.level}!
+                        </p>
+                      ))}
+                    </div>
+                  )}
                   <div className="flex flex-wrap justify-center gap-2">
                     <a
                       href="/"
@@ -956,7 +1080,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                       Lưu tiến độ &amp; chơi chiến dịch
                     </a>
                     <button type="button" onClick={restart} className="rounded bg-white/20 px-4 py-2">
-                      Chơi lại
+                      {mode === "progress" ? "Nâng kỹ năng & đánh tiếp" : "Chơi lại"}
                     </button>
                   </div>
                 </div>
@@ -1023,6 +1147,16 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
 
           {side(AI)}
         </div>
+
+        {mode === "progress" && (
+          <ProgressPanel
+            profile={{ ...profile, element }}
+            teamIds={TEAM_IDS}
+            locked={started && state.winner === null}
+            onChange={(p) => changeProfile({ ...p, element: profile.element })}
+            onReset={() => changeProfile(newProfile())}
+          />
+        )}
 
         <section aria-label="Nhật ký trận" className="max-h-32 overflow-y-auto rounded-lg bg-[var(--panel)] p-2 text-xs">
           {log.length === 0 ? (

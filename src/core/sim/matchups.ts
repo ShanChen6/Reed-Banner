@@ -2,6 +2,7 @@
 
 import type { Element, FighterConfig, SideConfig, SideIndex } from "../battle";
 import { presetLoadout, withGear, type Tier } from "../gear";
+import { autoProgress, buildMain, leveledFoe } from "../progress";
 import { mainCharacter, STARTER_COMPANIONS } from "../roster";
 import type { Matchup } from "./sim";
 
@@ -39,6 +40,8 @@ function gearUp(side: SideConfig, set: string | null, tier: Tier): SideConfig {
  * - 3vs3: nhân vật chính + 2 nhân vật kèm, đấu 3 nhân vật kèm (như đội AI).
  * - 1vs1: nhân vật chính hoặc một nhân vật kèm, đấu một nhân vật kèm khác.
  * Phe đi trước luân phiên theo trận. `element` là nguyên tố của nhân vật chính; `gear` mặc đồ cho cả hai phe.
+ * `level` dựng mọi nhân vật theo tiến trình tự dựng ở cấp đó (kỹ năng mở theo cấp, mỗi nhân vật kèm một
+ * chiêu nhánh); bỏ trống là bản Luyện tập mở hết kỹ năng.
  */
 export function buildMatchups(
   mode: SimMode,
@@ -46,9 +49,10 @@ export function buildMatchups(
   seed = 1,
   element: Element = "moc",
   gear?: SimGear,
+  level?: number,
 ): Matchup[] {
-  const main = mainCharacter(element);
-  const pool = STARTER_COMPANIONS;
+  const main = level === undefined ? mainCharacter(element) : buildMain(autoProgress(level, null), element, "tuongSi");
+  const pool = level === undefined ? STARTER_COMPANIONS : STARTER_COMPANIONS.map((c) => leveledFoe(c, level));
   let pairs: [SideConfig, SideConfig][];
   if (mode === "3v3") {
     const players = combinations(pool, 2).map((c) => team([main, ...c]));

@@ -15,6 +15,8 @@ export interface FighterConfig {
   readonly def: number;
   /** Kỹ năng chủ động mang vào trận (id trong SKILLS). */
   readonly skills?: readonly string[];
+  /** Cấp của từng kỹ năng (id → 1..5); bỏ trống là cấp 1. */
+  readonly skillLevels?: Readonly<Record<string, number>>;
 }
 
 export interface Fighter extends FighterConfig {
