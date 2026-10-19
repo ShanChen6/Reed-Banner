@@ -37,8 +37,9 @@
 
 - Lỗi: 404 trận không có hoặc của người khác, 409 `staleSeq`/`conflict`, 422 lỗi luật (kèm view mới để client đồng bộ), 400 body sai.
 - Trang `/play`: cùng giao diện với `/demo` nhưng mọi hành động gửi lên server. Client vẫn chạy `act` của core trên bản sao bàn cờ (không có seed) để báo lỗi tức thì, nhưng bàn cờ hiển thị chỉ lấy từ server. Đồng hồ 30 giây tính theo giờ server (mỗi response kèm `now`); quá hạn cộng ân hạn thì client gọi `GET /api/battles/:id` để chạy bù. Id trận lưu ở trình duyệt để tải lại trang vẫn "Tiếp tục trận dở". Chưa chạy trước hoạt ảnh trong lúc chờ server.
-- `GET /api/health`: báo database đã nối và đã có bảng chưa, có `SESSION_SECRET` chưa.
-- Chưa có: đăng nhập OAuth, lưu hồ sơ tiến trình trên server, việc định kỳ (Vercel Cron) xử thua và xóa khách. Đội hình online tạm dùng bản Luyện tập (mở hết kỹ năng), đối thủ là các nhân vật kèm khởi đầu chọn theo seed.
+- `GET /api/health`: báo database đã nối và đã chạy hết migration chưa, có `SESSION_SECRET` chưa, nút đăng nhập nào đang bật (`oauth`).
+- Đăng nhập (mục 4): `GET /api/auth/google|github?returnTo=/play` bắt đầu, nhà cung cấp chuyển về `/api/auth/<tên>/callback`, `POST /api/auth/logout` đăng xuất. Bảng `accounts` và `identities`.
+- Chưa có: lưu hồ sơ tiến trình trên server, việc định kỳ (Vercel Cron) xử thua và xóa khách. Đội hình online tạm dùng bản Luyện tập (mở hết kỹ năng), đối thủ là các nhân vật kèm khởi đầu chọn theo seed.
 
 
 ## 3. Database
@@ -53,8 +54,14 @@
 
 ## 4. Tài khoản
 
-- Đăng nhập **OAuth Google + GitHub** (Auth.js).
+- Đăng nhập **OAuth Google + GitHub**, tự viết luồng mã ủy quyền + PKCE (`src/server/oauth.ts`, không dùng thư viện), chỉ xin tên và ảnh đại diện, không lưu email.
 - **Khách:** tài khoản ẩn danh trên server, xác định bằng cookie đã ký. Chơi đúng luồng online như người đăng ký. Liên kết OAuth thì chỉ gắn danh tính vào tài khoản đó, không cần gộp dữ liệu.
+- **Quy tắc gắn** (`signIn` trong `src/server/accounts.ts`):
+  - Danh tính chưa thuộc ai: gắn vào khách đang dùng (cookie giữ nguyên id, hạn tăng lên 1 năm).
+  - Danh tính đã thuộc một tài khoản (đăng nhập ở máy khác): chuyển sang tài khoản đó; khách đang dùng trên máy này bị bỏ lại.
+  - Đang ở tài khoản đã đăng nhập mà đăng nhập thêm nhà cung cấp kia: gắn cả hai vào cùng tài khoản.
+  - Đăng xuất: xóa cookie; lần chơi sau là khách mới.
+- **Cấu hình** (Vercel, Production): `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` và `GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET`. Thiếu cặp nào thì nút đó ẩn đi. Địa chỉ chuyển về phải khai trước ở nhà cung cấp: `https://<tên miền>/api/auth/google/callback` (Google Cloud Console, OAuth client loại Web) và `https://<tên miền>/api/auth/github/callback` (GitHub OAuth App chỉ nhận một địa chỉ). Bản xem trước có tên miền đổi theo nhánh nên không đăng nhập được, trừ khi khai thêm địa chỉ đó.
 - Tài khoản khách **không hoạt động 30 ngày thì bị xóa**. Có cảnh báo mất dữ liệu nếu không đăng ký.
 - Tạo tài khoản (kể cả khách) là lúc người chơi chọn nguyên tố ban đầu cho nhân vật chính (nghề mặc định Tướng sĩ, đổi được trước mỗi trận).
 

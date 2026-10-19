@@ -392,7 +392,16 @@ const CORNERS = [
  * Màn chơi. `online`: trận do server xử lý qua /api/battles (trang /play), đồng hồ 30 giây bật; ngược lại
  * chạy hoàn toàn trong trình duyệt (trang /demo).
  */
-export default function DemoGame({ theme, online = false }: { theme: "light" | "dark"; online?: boolean }) {
+export default function DemoGame({
+  theme,
+  online = false,
+  account,
+}: {
+  theme: "light" | "dark";
+  online?: boolean;
+  /** Khu tài khoản (đăng nhập/đăng xuất) do trang /play dựng ở server, hiện trên đầu trang. */
+  account?: React.ReactNode;
+}) {
   const [round, setRound] = useState(0);
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
   const [started, setStarted] = useState(false);
@@ -949,6 +958,7 @@ export default function DemoGame({ theme, online = false }: { theme: "light" | "
             <LeaderFlag className="size-6" />
             {online ? "Cờ Lau · Chơi online" : "Cờ Lau · Chơi thử"}
           </h1>
+          {account}
           <div className="text-sm font-semibold" aria-live="polite">
             {!started
               ? "Chọn độ khó để bắt đầu"
