@@ -1,13 +1,12 @@
 "use client";
 
-// Bảng tiến trình của /demo: cấp, kinh nghiệm, điểm kỹ năng, nâng kỹ năng, mua và chọn chiêu nhánh.
-// Mọi luật nằm trong @/core/progress; ở đây chỉ hiển thị và gọi hàm thuần.
+// Bảng tiến trình của /demo và /play: cấp, kinh nghiệm, điểm kỹ năng, nâng kỹ năng, mua và chọn chiêu nhánh.
+// Mọi luật nằm trong @/core/progress; ở đây chỉ hiển thị và gửi thao tác (/demo áp tại chỗ, /play gửi server).
 
 import { useState } from "react";
 import {
   BRANCH_COST,
   BRANCH_UNLOCK_LEVEL,
-  buyBranch,
   MAIN_ID,
   MAIN_SLOT_UNLOCK,
   mainSkills,
@@ -20,23 +19,24 @@ import {
   STARTER_COMPANIONS,
   totalXpFor,
   upgradeCost,
-  upgradeSkill,
-  withProgress,
   xpToNext,
   type CharacterProgress,
   type Profile,
+  type ProfileAction,
   type ProgressError,
   type SkillDef,
 } from "@/core";
 import { PROFESSION_NAME } from "./labels";
 import { SkillIcon } from "./art/skills";
 
-const ERROR: Record<ProgressError, string> = {
+const ERROR: Record<ProgressError | "network" | "conflict", string> = {
   maxLevel: "Đã đạt cấp tối đa",
   notEnoughPoints: "Không đủ điểm kỹ năng",
   locked: "Chưa mở khóa",
   owned: "Đã có",
   invalidSkill: "Kỹ năng không hợp lệ",
+  network: "Mất kết nối tới server, thử lại",
+  conflict: "Hồ sơ vừa đổi ở nơi khác, đã tải lại",
 };
 
 function XpBar({ p }: { p: CharacterProgress }) {
@@ -105,48 +105,57 @@ function SkillRow({
 
 /**
  * `teamIds` là đội mang vào trận (nhân vật chính và nhân vật kèm). `locked` khi đang đánh: chỉ xem,
- * không nâng hay đổi chiêu nhánh.
+ * không nâng hay đổi chiêu nhánh. `onAction` trả về mã lỗi, hoặc null khi thành công. Không có `onReset`
+ * thì ẩn nút đặt lại (hồ sơ trên server).
  */
 export default function ProgressPanel({
   profile,
   teamIds,
   locked,
-  onChange,
+  storage,
+  onAction,
   onReset,
 }: {
   profile: Profile;
   teamIds: readonly string[];
   locked: boolean;
-  onChange: (p: Profile) => void;
-  onReset: () => void;
+  /** Nơi lưu, hiện ở tiêu đề. */
+  storage: string;
+  onAction: (a: ProfileAction) => Promise<string | null>;
+  onReset?: () => void;
 }) {
   const [message, setMessage] = useState<string | null>(null);
   const [confirmReset, setConfirmReset] = useState(false);
+  const [busy, setBusy] = useState(false);
 
-  const commit = (id: string, r: { ok: true; progress: CharacterProgress } | { ok: false; error: ProgressError }) => {
-    if (!r.ok) return setMessage(ERROR[r.error]);
-    setMessage(null);
-    onChange(withProgress(profile, id, r.progress));
+  const commit = (a: ProfileAction) => {
+    setBusy(true);
+    void onAction(a).then((error) => {
+      setBusy(false);
+      setMessage(error ? (ERROR[error as keyof typeof ERROR] ?? error) : null);
+    });
   };
 
   return (
     <section aria-label="Tiến trình" className="rounded-lg bg-[var(--panel)] p-2 text-xs">
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-        <h2 className="font-semibold">Tiến trình (lưu trên trình duyệt này)</h2>
+        <h2 className="font-semibold">Tiến trình ({storage})</h2>
         <span className="tabular-nums">Vàng: {profile.gold}</span>
         {message && <span className="text-rose-500">{message}</span>}
-        <button
-          type="button"
-          onClick={() => {
-            if (!confirmReset) return setConfirmReset(true);
-            setConfirmReset(false);
-            onReset();
-          }}
-          onBlur={() => setConfirmReset(false)}
-          className="rounded bg-black/15 px-2 py-0.5"
-        >
-          {confirmReset ? "Bấm lần nữa để xóa" : "Đặt lại hồ sơ"}
-        </button>
+        {onReset && (
+          <button
+            type="button"
+            onClick={() => {
+              if (!confirmReset) return setConfirmReset(true);
+              setConfirmReset(false);
+              onReset();
+            }}
+            onBlur={() => setConfirmReset(false)}
+            className="rounded bg-black/15 px-2 py-0.5"
+          >
+            {confirmReset ? "Bấm lần nữa để xóa" : "Đặt lại hồ sơ"}
+          </button>
+        )}
       </div>
       {locked && <p className="mb-2 opacity-70">Đang trong trận: nâng kỹ năng và đổi chiêu nhánh sau khi trận kết thúc.</p>}
       <div className="grid gap-3 md:grid-cols-3">
@@ -173,9 +182,9 @@ export default function ProgressPanel({
                           def={def}
                           level={p.skillLevels[key] ?? 1}
                           lockedText={p.level < unlock ? `Mở ở cấp ${unlock}` : null}
-                          canUp={!locked}
+                          canUp={!locked && !busy}
                           points={p.skillPoints}
-                          onUp={() => commit(id, upgradeSkill(p, key, null))}
+                          onUp={() => commit({ type: "upgrade", character: id, key })}
                         />
                       );
                     })
@@ -188,17 +197,17 @@ export default function ProgressPanel({
                           def={def}
                           level={p.skillLevels[def.id] ?? 1}
                           lockedText={owned ? null : p.level < BRANCH_UNLOCK_LEVEL ? `Mở ở cấp ${BRANCH_UNLOCK_LEVEL}` : null}
-                          canUp={!locked}
+                          canUp={!locked && !busy}
                           points={p.skillPoints}
-                          onUp={() => commit(id, upgradeSkill(p, def.id, def.profession!))}
+                          onUp={() => commit({ type: "upgrade", character: id, key: def.id })}
                           extra={
                             def.tier === 2 &&
                             (owned ? (
                               <button
                                 type="button"
-                                disabled={locked}
+                                disabled={locked || busy}
                                 aria-pressed={chosen === def.id}
-                                onClick={() => onChange({ ...profile, branchChoice: { ...profile.branchChoice, [id]: def.id } })}
+                                onClick={() => commit({ type: "chooseBranch", character: id, skill: def.id })}
                                 className={`rounded px-1.5 py-0.5 text-[10px] ${chosen === def.id ? "bg-emerald-600 text-white" : "bg-black/15"}`}
                                 title="Mỗi trận mang 1 chiêu nhánh"
                               >
@@ -208,8 +217,8 @@ export default function ProgressPanel({
                               p.level >= BRANCH_UNLOCK_LEVEL && (
                                 <button
                                   type="button"
-                                  disabled={locked || p.skillPoints < BRANCH_COST}
-                                  onClick={() => commit(id, buyBranch(p, def.id, def.profession!))}
+                                  disabled={locked || busy || p.skillPoints < BRANCH_COST}
+                                  onClick={() => commit({ type: "buyBranch", character: id, skill: def.id })}
                                   className="rounded bg-sky-700 px-1.5 py-0.5 text-[10px] text-white disabled:opacity-30"
                                 >
                                   Mua ({BRANCH_COST})

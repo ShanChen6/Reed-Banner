@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   act,
+  applyProfileAction,
   applyRewards,
   battleRewards,
   canFreeSlide,
@@ -50,6 +51,7 @@ import {
   type Pos,
   type Profession,
   type Profile,
+  type ProfileAction,
   type SideConfig,
   type SkillDef,
   type Slide,
@@ -75,7 +77,17 @@ import { Portrait } from "./art/portraits";
 import { SkillIcon } from "./art/skills";
 import { TileArt } from "./art/tiles";
 import ProgressPanel from "./ProgressPanel";
-import { actOnline, createOnline, fetchOnline, ONLINE_BATTLE_KEY, ONLINE_ERROR_TEXT, toBattleState, type OnlineResponse } from "./online";
+import {
+  actOnline,
+  createOnline,
+  fetchOnline,
+  fetchProfile,
+  ONLINE_BATTLE_KEY,
+  ONLINE_ERROR_TEXT,
+  sendProfileAction,
+  toBattleState,
+  type OnlineResponse,
+} from "./online";
 
 const PLAYER = 0;
 const AI = 1;
@@ -408,7 +420,8 @@ export default function DemoGame({
   const [element, setElement] = useState<Element>("moc");
   const [gear, setGear] = useState<DemoGear>(NO_GEAR);
   const [profession, setProfession] = useState<Profession>("tuongSi");
-  const [mode, setMode] = useState<DemoMode>("practice");
+  // /play luôn chơi theo hồ sơ trên server.
+  const [mode, setMode] = useState<DemoMode>(online ? "progress" : "practice");
   const [profile, setProfile] = useState<Profile>(newProfile);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const setup = useMemo<Setup>(() => ({ element, profession, gear, mode, profile }), [element, profession, gear, mode, profile]);
@@ -494,6 +507,17 @@ export default function DemoGame({
     setAnim({ frames, i: 0, id: animId.current++ });
   }, []);
 
+  // /play: tải hồ sơ trên server, chọn sẵn nguyên tố và nghề đã dùng lần trước.
+  useEffect(() => {
+    if (!online) return;
+    void fetchProfile().then((r) => {
+      if (!r.profile) return;
+      setProfile(r.profile);
+      setElement(r.profile.element);
+      setProfession(r.profile.profession);
+    });
+  }, [online]);
+
   useEffect(() => {
     if (!anim) return;
     const t = window.setTimeout(() => {
@@ -512,7 +536,8 @@ export default function DemoGame({
         pushLog(next, events);
         setState(next);
         showNumbers(events);
-        if (mode === "progress" && before.winner === null && next.winner !== null) {
+        // Trận online: server cộng thưởng và gửi `outcome` (xem receive).
+        if (!online && mode === "progress" && before.winner === null && next.winner !== null) {
           const rewards = battleRewards(next, PLAYER);
           const r = applyRewards(profile, next.sides[PLAYER].fighters.map((f) => f.id), rewards);
           setProfile(r.profile);
@@ -521,7 +546,7 @@ export default function DemoGame({
         }
       });
     },
-    [play, pushLog, showNumbers, mode, profile],
+    [play, pushLog, showNumbers, online, mode, profile],
   );
 
   /** Nhận trả lời của server: chạy hoạt ảnh các sự kiện rồi đồng bộ trạng thái và seq. */
@@ -534,6 +559,10 @@ export default function DemoGame({
       const next = toBattleState(res.view);
       if (res.events && res.events.length > 0) commit(before, next, res.events);
       else setState(next);
+      if (res.outcome) {
+        setOutcome(res.outcome);
+        void fetchProfile().then((r) => r.profile && setProfile(r.profile));
+      }
       if (next.winner !== null) {
         try {
           window.localStorage.removeItem(ONLINE_BATTLE_KEY);
@@ -901,6 +930,19 @@ export default function DemoGame({
     saveProfile(p);
   };
 
+  /** Nâng kỹ năng, mua/chọn chiêu nhánh: /demo áp tại chỗ rồi lưu trình duyệt, /play gửi server. */
+  const profileAction = async (a: ProfileAction): Promise<string | null> => {
+    if (!online) {
+      const r = applyProfileAction({ ...profile, element }, a);
+      if (!r.ok) return r.error;
+      changeProfile({ ...r.profile, element: profile.element });
+      return null;
+    }
+    const r = await sendProfileAction(a);
+    if (r.profile) setProfile(r.profile);
+    return r.error ?? null;
+  };
+
   const palette =
     theme === "light"
       ? "[--bg:#f3ebdc] [--panel:#fffaf0] [--cell:#e2d3b6] [--frame:#7a2c1d] [--gold:#b8862f] text-stone-900"
@@ -1066,6 +1108,7 @@ export default function DemoGame({
                   {online && (
                     <p className="max-w-md text-center text-xs opacity-80">
                       Server xử lý từng nước đi, mỗi lượt 30 giây. Hết giờ thì mất lượt; tải lại trang vẫn tiếp tục được trận.
+                      Đội theo hồ sơ của bạn (Đinh Bộ Lĩnh cấp {profile.main.level}), thưởng cuối trận lưu trên server.
                     </p>
                   )}
                   {!online && (
@@ -1302,8 +1345,9 @@ export default function DemoGame({
             profile={{ ...profile, element }}
             teamIds={TEAM_IDS}
             locked={started && state.winner === null}
-            onChange={(p) => changeProfile({ ...p, element: profile.element })}
-            onReset={() => changeProfile(newProfile())}
+            storage={online ? "lưu trên server" : "lưu trên trình duyệt này"}
+            onAction={profileAction}
+            onReset={online ? undefined : () => changeProfile(newProfile())}
           />
         )}
 

@@ -1,12 +1,26 @@
 // Gọi API trận online (/api/battles). Server có thẩm quyền: client chỉ gửi ý định và hiển thị kết quả.
 
-import type { BattleAction, BattleEvent, BattleState, Difficulty, Element, MatchView, Profession } from "@/core";
+import type {
+  BattleAction,
+  BattleEvent,
+  BattleRewards,
+  BattleState,
+  Difficulty,
+  Element,
+  LevelUp,
+  MatchView,
+  Profession,
+  Profile,
+  ProfileAction,
+} from "@/core";
 
 export interface OnlineResponse {
   readonly id?: string;
   readonly view?: MatchView;
   readonly events?: readonly BattleEvent[];
   readonly error?: string;
+  /** Phần thưởng đã cộng vào hồ sơ trên server, chỉ có ở response làm trận kết thúc. */
+  readonly outcome?: { readonly rewards: BattleRewards; readonly levelUps: readonly LevelUp[] };
   /** Giờ server lúc trả lời (ms). */
   readonly now: number;
 }
@@ -47,6 +61,31 @@ export function fetchOnline(id: string): Promise<OnlineResponse> {
 
 export function actOnline(id: string, seq: number, action: BattleAction): Promise<OnlineResponse> {
   return call(`/api/battles/${encodeURIComponent(id)}/actions`, { method: "POST", body: JSON.stringify({ seq, action }) });
+}
+
+export interface ProfileResponse {
+  readonly profile?: Profile;
+  readonly version?: number;
+  readonly error?: string;
+}
+
+async function callProfile(init?: RequestInit): Promise<ProfileResponse> {
+  try {
+    const res = await fetch("/api/profile", { ...init, headers: { "content-type": "application/json" }, cache: "no-store" });
+    return (await res.json()) as ProfileResponse;
+  } catch {
+    return { error: "network" };
+  }
+}
+
+/** Hồ sơ tiến trình lưu trên server. */
+export function fetchProfile(): Promise<ProfileResponse> {
+  return callProfile();
+}
+
+/** Gửi một thao tác (nâng kỹ năng, mua/chọn chiêu nhánh); server kiểm tra luật và trả hồ sơ mới. */
+export function sendProfileAction(action: ProfileAction): Promise<ProfileResponse> {
+  return callProfile({ method: "POST", body: JSON.stringify({ action }) });
 }
 
 export const ONLINE_ERROR_TEXT: Record<string, string> = {

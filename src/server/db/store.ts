@@ -1,6 +1,6 @@
 // Lưu trận vào Postgres bằng Drizzle. Chạy với Neon (HTTP) trên Vercel, PGlite trong test.
 
-import { and, eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import type { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
 import type { MatchRecord, MatchStore } from "../store";
 import { matches } from "./schema";
@@ -31,6 +31,15 @@ export class DrizzleMatchStore implements MatchStore {
       .update(matches)
       .set({ seq: r.match.seq, state: r.match, updatedAt: r.updatedAt })
       .where(and(eq(matches.id, r.id), eq(matches.seq, expectedSeq)))
+      .returning({ id: matches.id });
+    return rows.length > 0;
+  }
+
+  async claimReward(id: string, now: number): Promise<boolean> {
+    const rows = await this.db
+      .update(matches)
+      .set({ rewardedAt: now })
+      .where(and(eq(matches.id, id), isNull(matches.rewardedAt)))
       .returning({ id: matches.id });
     return rows.length > 0;
   }
