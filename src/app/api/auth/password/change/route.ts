@@ -4,18 +4,18 @@ import { NextResponse, type NextRequest } from "next/server";
 import { formText, guestOf, sameOrigin } from "@/server/http";
 import { changePassword } from "@/server/password";
 import { accountStore } from "@/server/store";
-import { loginPageError } from "../redirect";
+import { formError } from "../redirect";
 
 export async function POST(request: NextRequest) {
   const form = await request.formData();
   const id = guestOf(request);
-  if (!sameOrigin(request) || !id) return loginPageError(request, "change-password", "noPassword");
+  if (!sameOrigin(request) || !id) return formError(request, "/account", "noPassword");
   const r = await changePassword(
     accountStore(),
     id,
     { current: formText(form, "current"), password: formText(form, "password"), confirm: formText(form, "confirm") },
     Date.now(),
   );
-  if (!r.ok) return loginPageError(request, "change-password", r.error);
-  return NextResponse.redirect(new URL("/login?passwordChanged=1", request.nextUrl.origin), 303);
+  if (!r.ok) return formError(request, "/account", r.error);
+  return NextResponse.redirect(new URL("/account?passwordChanged=1", request.nextUrl.origin), 303);
 }
