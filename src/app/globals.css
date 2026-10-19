@@ -161,7 +161,8 @@
   animation: tile-strong 1.8s ease-in-out infinite;
 }
 
-/* Chim lạc bay ngang phần mở đầu trang giới thiệu (src/app/home/LacBirds.tsx). */
+/* Chim lạc bay vòng quanh phần mở đầu trang giới thiệu (src/app/home/LacBirds.tsx), theo chiều kim đồng hồ.
+   Trình duyệt chưa hỗ trợ offset-path hình elip thì chim bay ngang từ trái sang phải. */
 @keyframes lac-fly {
   from {
     transform: translateX(-20vw);
@@ -170,13 +171,21 @@
     transform: translateX(110vw);
   }
 }
+@keyframes lac-orbit {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
 @keyframes lac-bob {
   0%,
   100% {
-    transform: translateY(0) rotate(-2deg);
+    translate: 0 0;
   }
   50% {
-    transform: translateY(-14px) rotate(3deg);
+    translate: 0 -8px;
   }
 }
 @keyframes lac-flap {
@@ -185,26 +194,32 @@
     transform: scaleY(1);
   }
   50% {
-    transform: scaleY(0.4);
+    transform: scaleY(0.35);
   }
 }
 .lac-fly {
   animation: lac-fly linear infinite;
 }
+@supports (offset-path: ellipse(10% 10% at 50% 50%)) {
+  .lac-fly {
+    top: 0 !important;
+    offset-path: ellipse(46% 42% at 50% 50%);
+    offset-anchor: center;
+    offset-rotate: auto;
+    animation-name: lac-orbit;
+  }
+}
 .lac-bob {
   animation: lac-bob 3.2s ease-in-out infinite;
 }
-/* Cánh trên co về phía thân (mép dưới), cánh dưới co về mép trên. */
+/* Cánh co về phía thân (mép dưới) rồi giơ lại. */
 .lac-wing {
   transform-box: fill-box;
+  transform-origin: 50% 100%;
   animation: lac-flap var(--flap, 0.8s) ease-in-out infinite;
 }
-.lac-wing-up {
-  transform-origin: 50% 100%;
-}
-.lac-wing-down {
-  transform-origin: 50% 0%;
-  animation-delay: calc(var(--flap, 0.8s) * -0.1);
+.lac-wing-far {
+  animation-delay: calc(var(--flap, 0.8s) * -0.15);
 }
 
 @media (prefers-reduced-motion: reduce) {
