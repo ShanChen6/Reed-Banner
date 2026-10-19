@@ -82,3 +82,13 @@ describe("dịch vụ trận online", () => {
     assert.equal(verifyGuest(undefined, "k"), null);
   });
 });
+
+describe("kiểm tra cấu hình", () => {
+  it("không có DATABASE_URL thì báo dùng bộ nhớ", async () => {
+    const { checkDatabase } = await import("../../src/server/store");
+    const saved = process.env.DATABASE_URL;
+    delete process.env.DATABASE_URL;
+    assert.deepEqual(await checkDatabase(), { kind: "memory", ok: true });
+    if (saved !== undefined) process.env.DATABASE_URL = saved;
+  });
+});
