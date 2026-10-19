@@ -8,6 +8,7 @@
 - Server xử lý từng hành động: `src/core/match/` (chạy bù hết giờ kiểu tính lười, AI đánh ngay, xử thua 24 giờ, ẩn seed) và `src/server/` (kho Postgres/bộ nhớ, cookie khách ký HMAC), API `/api/battles`.
 - Bảng `matches` (Drizzle), migration tự áp khi build nếu có `DATABASE_URL`.
 - Trang `/play` chơi online qua API: đồng hồ 30 giây theo giờ server, hết giờ tự chạy bù, tải lại trang tiếp tục được trận dở. Đội hình tạm như Luyện tập 3vs3.
+- Sắp lại đường dẫn (Shan yêu cầu): `/` trang chủ, `/demo` chơi thử, `/play` chơi online, `/login`, `/register`, `/account` tách thành trang riêng; mục neo trên trang chủ đổi sang tiếng Anh (`#how-to-play`, `#elements`, `#roster`, `#modes`, `#faq`).
 - Đường dẫn đổi sang tiếng Anh (Shan yêu cầu): trang đăng nhập là `/login`, tham số `form`, `error`, `username`, `login=error`, `passwordChanged`; `/dang-nhap` cũ chuyển hướng vĩnh viễn sang `/login`.
 - Đăng ký bằng tên đăng nhập + mật khẩu (Shan đồng ý, bản chưa có email): quên mật khẩu là mất tài khoản nên form khuyên liên kết thêm Google/GitHub; sai 5 lần khóa 15 phút. Nới quy tắc cũ "chỉ dùng OAuth để hạn chế nhiều tài khoản".
 - Trang đăng nhập riêng (nay là `/login`) (Shan yêu cầu): chọn Google/GitHub hoặc chơi với tư cách khách; đã đăng nhập thì xem tài khoản, liên kết thêm, đăng xuất. Trang chủ có link "Đăng nhập" ở thanh trên.
