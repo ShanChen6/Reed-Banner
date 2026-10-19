@@ -4,6 +4,11 @@
 
 ## 19/10/2026
 
+**Túi đồ và 9 ô trang bị lưu trên server (giai đoạn 3, Claude đặt, chờ Shan duyệt)**
+- Hồ sơ có túi đồ (tối đa 200 món) và ô trang bị của từng nhân vật; mặc, tháo, ghép, bán đều là thao tác trên hồ sơ, `/play` lưu trên server, `/demo` lưu trên trình duyệt.
+- Món rơi sau trận vào túi đồ thay vì chỉ hiển thị. Đồ mẫu chọn theo phẩm chỉ còn ở chế độ Luyện tập.
+- Cửa hàng trang bị: tự chọn ô, hệ, bộ, nghề; Lục 400 vàng, Lam 1 200 vàng. Bán món: 5/15/50/150/500 vàng theo phẩm.
+
 **Cửa hàng nhân vật kèm (giai đoạn 3, Claude đặt, chờ Shan duyệt)**
 - 12 nhân vật kèm hư cấu, 2 người mỗi nghề, đủ 7 hệ, mỗi người một tuyệt chiêu riêng; giá 1 500 hoặc 3 000 vàng.
 - Hồ sơ lưu nhân vật đã có và đội 3vs3 đã chọn; `/demo` (Tiến trình) và `/play` có bảng Đội hình và cửa hàng. Server chỉ cho ra trận nhân vật đã có.

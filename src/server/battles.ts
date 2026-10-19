@@ -5,6 +5,7 @@ import {
   ALL_COMPANIONS,
   applyRewards,
   battleRewards,
+  createRng,
   ELEMENTS,
   HUMAN,
   humanAct,
@@ -12,6 +13,8 @@ import {
   ownsCompanion,
   PROFESSIONS,
   profileTeam,
+  receiveDrop,
+  rollDrop,
   settle,
   startMatch,
   STARTER_COMPANIONS,
@@ -22,6 +25,7 @@ import {
   type Element,
   type BattleRewards,
   type FighterConfig,
+  type GearItem,
   type LevelUp,
   type Match,
   type MatchError,
@@ -60,6 +64,10 @@ export type ServiceError = MatchError | "badRequest" | "notFound" | "conflict";
 export interface Outcome {
   readonly rewards: BattleRewards;
   readonly levelUps: readonly LevelUp[];
+  /** Món rơi đã vào túi đồ (kèm id trong hồ sơ); null khi không rơi hoặc túi đầy. */
+  readonly drop: GearItem | null;
+  /** Túi đầy: món rơi được bán ngay với giá này. */
+  readonly soldFor: number;
 }
 
 export type ServiceResult =
@@ -183,23 +191,37 @@ async function load(id: string, ownerId: string, store: MatchStore): Promise<Mat
  * Trận đã kết thúc mà chưa cộng thưởng: đánh dấu đã cộng (chỉ một request thắng) rồi cộng vào hồ sơ.
  * Thua vẫn nhận kinh nghiệm cơ bản và giữ vàng, sách đã nhặt.
  */
+/** Seed món rơi theo id trận: cộng thưởng chạy lại (lỗi ghi) vẫn ra cùng món. */
+function dropSeed(id: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < id.length; i++) h = Math.imul(h ^ id.charCodeAt(i), 16777619);
+  return h >>> 0;
+}
+
 async function reward(r: MatchRecord, match: Match, deps: Omit<Deps, "seed" | "newId">): Promise<Outcome | undefined> {
   if (match.battle.winner === null || !(await deps.store.claimReward(r.id, deps.now))) return undefined;
   const rewards = battleRewards(match.battle, HUMAN);
   const ids = match.battle.sides[HUMAN].fighters.map((f) => f.id);
+  const rolled = rollDrop(createRng(dropSeed(r.id)), match.difficulty, rewards.won, "");
   let levelUps: readonly LevelUp[] = [];
+  let drop: GearItem | null = null;
+  let soldFor = 0;
   const u = await updateProfile(
     deps.profiles,
     r.ownerId,
     (p) => {
       const applied = applyRewards(p, ids, rewards);
       levelUps = applied.levelUps;
-      return { ok: true, profile: applied.profile };
+      if (!rolled) return { ok: true, profile: applied.profile };
+      const received = receiveDrop(applied.profile, rolled);
+      drop = received.item;
+      soldFor = received.soldFor;
+      return { ok: true, profile: received.profile };
     },
     deps.now,
   );
   if (!u.ok) console.error("Không cộng được thưởng cuối trận", r.id, u.error);
-  return { rewards, levelUps };
+  return { rewards, levelUps, drop, soldFor };
 }
 
 /** Chạy bù tới `now`, lưu nếu có thay đổi, cộng thưởng nếu trận vừa kết thúc. */
