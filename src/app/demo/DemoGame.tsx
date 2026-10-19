@@ -5,6 +5,9 @@ import {
   act,
   canFreeSlide,
   createBattle,
+  createRng,
+  GEAR_SETS,
+  getGearSet,
   getSkill,
   isAdjacent,
   ELEMENTS,
@@ -15,20 +18,28 @@ import {
   PASSIVE,
   PASSIVES,
   playAiTurn,
+  presetLoadout,
+  rollDrop,
   selectableActors,
   slideStep,
   STARTER_COMPANIONS,
+  TIER_INFO,
+  TIERS,
   tileAt,
+  withGear,
   type BattleAction,
   type BattleEvent,
   type BattleState,
   type Difficulty,
   type Element,
   type Fighter,
+  type FighterConfig,
+  type GearItem,
   type Pos,
   type SideConfig,
   type SkillDef,
   type Slide,
+  type Tier,
 } from "@/core";
 import {
   DIFFICULTY_NAME,
@@ -39,6 +50,9 @@ import {
   PROFESSION_NAME,
   TILE_NAME,
   SPECIAL_NAME,
+  SLOT_NAME,
+  TIER_CLASS,
+  TIER_COLOR_NAME,
 } from "./labels";
 import { bounceFrames, eventFrames, type Frame } from "./animation";
 import { CloudCorner, DongSonBand, ELEMENT_COLOR, ElementIcon, FoodIcon, LeaderFlag, ShieldIcon } from "./art/icons";
@@ -55,16 +69,37 @@ const MAIN_ELEMENTS = ELEMENTS.filter((e) => mainSkills(e).length > 0);
 
 const byId = (id: string) => STARTER_COMPANIONS.find((c) => c.id === id)!;
 
+/** Trang bị mẫu của trận demo: bậc 0 là không mặc đồ; `set` null là không bộ nào đạt mốc. */
+interface DemoGear {
+  readonly tier: 0 | Tier;
+  readonly set: string | null;
+}
+
+/** Mặc đủ 9 món cùng hệ với nhân vật. Đội Tianwu mặc cùng bậc nhưng không có thưởng bộ. */
+function gearUp(f: FighterConfig, gear: DemoGear, set: string | null): FighterConfig {
+  return gear.tier === 0 ? f : withGear(f, presetLoadout(f.element, f.profession, gear.tier, set));
+}
+
 /** Trận demo cố định: nhân vật chính và 2 nhân vật kèm, đấu đội Tianwu 3 người. */
-function demoSides(element: Element): [SideConfig, SideConfig] {
+function demoSides(element: Element, gear: DemoGear): [SideConfig, SideConfig] {
+  const mine = [mainCharacter(element), byId("haVan"), byId("maiThanh")].map((f) => gearUp(f, gear, gear.set));
+  const foes = [byId("leThach"), byId("toKim"), byId("phungPhong")].map((f) => gearUp(f, gear, null));
   return [
-    { fighters: [mainCharacter(element), byId("haVan"), byId("maiThanh")], leader: 0 },
-    { fighters: [byId("leThach"), byId("toKim"), byId("phungPhong")], leader: 0 },
+    { fighters: mine, leader: 0 },
+    { fighters: foes, leader: 0 },
   ];
 }
 
-function newBattle(round: number, element: Element): BattleState {
-  return createBattle({ sides: demoSides(element), seed: DEMO_SEED + round, timer: false, firstSide: PLAYER }).state;
+function newBattle(round: number, element: Element, gear: DemoGear): BattleState {
+  return createBattle({ sides: demoSides(element, gear), seed: DEMO_SEED + round, timer: false, firstSide: PLAYER }).state;
+}
+
+const NO_GEAR: DemoGear = { tier: 0, set: null };
+
+function dropText(item: GearItem): string {
+  const set = getGearSet(item.set)?.name ?? item.set;
+  const prof = item.profession ? ` (${PROFESSION_NAME[item.profession]})` : "";
+  return `${SLOT_NAME[item.slot]}${prof} ${TIER_INFO[item.tier].name} hệ ${ELEMENT_NAME[item.element]}, bộ ${set}`;
 }
 
 type Aim = { skill: SkillDef } | null;
@@ -220,6 +255,7 @@ function FighterCard({
       disabled={!onClick || !alive}
       className={`relative w-full rounded-lg border-l-4 bg-[var(--panel)] p-2 text-left ${ring} ${alive ? "" : "opacity-40 grayscale"} disabled:cursor-default`}
       style={{ borderLeftColor: ELEMENT_COLOR[fighter.element] }}
+      title={`ATK ${fighter.atk} · DEF ${fighter.def} · Máu tối đa ${fighter.maxHp}`}
     >
       <div className="mb-1 flex items-center justify-between gap-2">
         <span className="flex min-w-0 items-center gap-1 text-sm font-semibold">
@@ -287,7 +323,8 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
   const [started, setStarted] = useState(false);
   const [element, setElement] = useState<Element>("moc");
-  const [state, setState] = useState<BattleState>(() => newBattle(0, "moc"));
+  const [gear, setGear] = useState<DemoGear>(NO_GEAR);
+  const [state, setState] = useState<BattleState>(() => newBattle(0, "moc", NO_GEAR));
   const [selected, setSelected] = useState<Pos | null>(null);
   const [cursor, setCursor] = useState<Pos>({ row: 3, col: 5 });
   const [showCursor, setShowCursor] = useState(false);
@@ -623,13 +660,20 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [myTurn, aim, aimIndex, cursor, selected, state, skills, fireAim, onCell, trySwap, switchActor, castSkill]);
 
+  // Món rơi sau trận theo bảng rơi đồ của core; demo chỉ hiển thị, không lưu túi đồ.
+  const drop = useMemo(
+    () =>
+      state.winner === null ? null : rollDrop(createRng(DEMO_SEED * 31 + round), difficulty, state.winner === PLAYER, `drop-${round}`),
+    [state.winner, round, difficulty],
+  );
+
   const restart = () => {
     const next = round + 1;
     setRound(next);
     setAnim(null);
     afterAnim.current = null;
     setFloats([]);
-    setState(newBattle(next, element));
+    setState(newBattle(next, element, gear));
     setSelected(null);
     setAim(null);
     setSlideAim(null);
@@ -808,7 +852,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                         aria-checked={element === e}
                         onClick={() => {
                           setElement(e);
-                          setState(newBattle(round, e));
+                          setState(newBattle(round, e, gear));
                         }}
                         className={`flex items-center gap-1.5 rounded px-2.5 py-1 text-sm ${element === e ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
                       >
@@ -817,6 +861,51 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                       </button>
                     ))}
                   </div>
+                  <div className="flex flex-wrap items-center justify-center gap-1.5" role="radiogroup" aria-label="Trang bị">
+                    <span className="text-xs opacity-80">Trang bị:</span>
+                    {([0, ...TIERS] as const).map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        role="radio"
+                        aria-checked={gear.tier === t}
+                        onClick={() => {
+                          const g = { ...gear, tier: t };
+                          setGear(g);
+                          setState(newBattle(round, element, g));
+                        }}
+                        className={`rounded px-2.5 py-1 text-sm ${gear.tier === t ? "bg-amber-500 font-semibold text-stone-950" : `bg-white/15 ${t === 0 ? "" : TIER_CLASS[t]}`}`}
+                      >
+                        {t === 0 ? "Không" : TIER_COLOR_NAME[t]}
+                      </button>
+                    ))}
+                  </div>
+                  {gear.tier !== 0 && (
+                    <div className="flex flex-wrap items-center justify-center gap-1.5" role="radiogroup" aria-label="Bộ trang bị">
+                      <span className="text-xs opacity-80">Bộ:</span>
+                      {[null, ...GEAR_SETS.map((g) => g.id)].map((id) => (
+                        <button
+                          key={id ?? "none"}
+                          type="button"
+                          role="radio"
+                          aria-checked={gear.set === id}
+                          onClick={() => {
+                            const g = { ...gear, set: id };
+                            setGear(g);
+                            setState(newBattle(round, element, g));
+                          }}
+                          className={`rounded px-2.5 py-1 text-sm ${gear.set === id ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
+                        >
+                          {id ? getGearSet(id)!.name : "Không bộ"}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {gear.tier !== 0 && (
+                    <p className="max-w-md text-center text-xs opacity-80">
+                      Cả hai đội mặc đủ 9 món {TIER_COLOR_NAME[gear.tier]} cùng hệ với từng người; đội Tianwu không có thưởng bộ.
+                    </p>
+                  )}
                   <button
                     type="button"
                     onClick={() => setStarted(true)}
@@ -829,6 +918,15 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
               {state.winner !== null && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-black/70 text-white">
                   <p className="text-xl font-bold">{state.winner === PLAYER ? "Bạn thắng!" : "Tianwu thắng"}</p>
+                  <p className="text-sm">
+                    {drop ? (
+                      <>
+                        Chiến lợi phẩm: <span className={`font-semibold ${TIER_CLASS[drop.tier]}`}>{dropText(drop)}</span>
+                      </>
+                    ) : (
+                      "Không rơi trang bị."
+                    )}
+                  </p>
                   <div className="flex flex-wrap justify-center gap-2">
                     <a
                       href="/"
