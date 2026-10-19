@@ -16,6 +16,9 @@ export const PROFESSION_TILE: Record<Profession, TileKind> = {
   quanSu: "sach",
 };
 
+/** 1vs1: máu tối đa nhân thêm, vì không có đồng đội chia sát thương. Điểm xuất phát theo mô phỏng. */
+export const SOLO_HP_MULTIPLIER = 2;
+
 export const TURN_MS = 30_000;
 export const GRACE_MS = 3_000;
 

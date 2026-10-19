@@ -4,6 +4,10 @@
 
 ## 19/10/2026
 
+**1vs1 và Nộ**
+- 1vs1: máu tối đa ×2 (trước đó trận 1vs1 chỉ kéo dài trung vị khoảng 4 lượt mỗi bên). Máu cao hơn nữa thì trận hòa tăng mạnh vì các cặp thiên về hồi máu, phòng thủ không hạ được nhau.
+- Thủ lĩnh có nguyên tố chưa làm kỹ năng bị động thì không tích Nộ (trước đó vẫn báo kích hoạt nhưng không có tác dụng).
+
 **Giảm bộ Mộc và cân lại nhịp trận (Shan chọn giảm bộ Mộc, theo mô phỏng)**
 - Mô phỏng cho thấy chỉ giảm bộ Mộc thì trận hòa (chạm giới hạn lượt) tăng vọt, vì hồi máu và khiên mạnh hơn sát thương. Nên cân cả nhịp trận cùng lúc.
 - Bộ Mộc: Sinh Sôi Bất Tận hồi 3%/lượt (từ 8%); Lục Diệp Phong 35 năng lượng, phá 5 ô (từ 20, 8 ô); sát thương bộ Mộc ×0.75 (Thanh Mộc Hộ Pháp 130%, Cuồng Vũ Thiên Diệp 65%, Cổ Thụ Trấn Thiên 225%); hồi máu bộ Mộc ×0.75.
