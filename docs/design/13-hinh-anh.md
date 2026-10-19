@@ -82,4 +82,21 @@ Mỗi nhân vật cần hai hình:
 - Tên file theo mã nhân vật trong code, ví dụ `dinhBoLinh-thieuNien-chanDung.png`, `haVan-toanThan.png`, `vuKhi-tuongSi-moc.png`.
 - Giao trước một bản phác (đen trắng) của Đinh Bộ Lĩnh tướng quân để duyệt phong cách, rồi mới vẽ tiếp.
 
+### 2.6 Đưa hình vào game
+
+- **File gốc không đổi:** file họa sĩ giao (PNG gốc và file nhiều lớp) lưu ngoài repo, ví dụ thư mục Drive của dự án. Mọi bước xử lý chỉ tạo bản sao, không ghi đè và không xóa file gốc.
+- **Bản dùng trong game** nằm ở `public/art/` (`portraits/`, `figures/`, `equipment/`), giữ nguyên tên file theo mục 2.5, đổi đuôi sang `.webp` có kênh alpha.
+- **Kích thước xuất** (thu nhỏ kiểu `contain`, giữ nguyên khung vẽ và lề trong suốt, không cắt sát viền để các hình thẳng hàng với nhau):
+
+| Loại | 1x | 2x (màn hình nét cao) |
+|---|---|---|
+| Chân dung | 128×128 | 256×256 |
+| Toàn thân | 213×320 | 427×640 |
+| Trang bị | 96×96 | 192×192 |
+
+- Không phóng to hình nhỏ hơn kích thước xuất; hình như vậy được trả lại cho bên vẽ.
+- Không tự xóa nền: hình phải được giao sẵn nền trong suốt.
+- Sau mỗi lần xử lý, kiểm tra lại kích thước, kênh alpha, dung lượng (mục tiêu dưới 60 KB mỗi hình 2x) và xem thử trên cả nền sáng lẫn nền tối.
+- Danh sách hình (`public/art/manifest.json`, đường dẫn web tương đối) được tạo khi có lô hình đầu tiên. Ô cờ, biểu tượng và khung vẫn là SVG trong code, không nằm trong danh sách này.
+
 > TODO: chọn người vẽ hoặc công cụ AI, ngân sách và thời điểm (khi gameplay đã ổn); chốt danh sách 12 sứ quân theo thứ tự chiến dịch.
