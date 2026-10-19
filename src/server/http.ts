@@ -24,9 +24,11 @@ export function serverDeps(): Deps {
 }
 
 export function respond(result: ServiceResult, newGuest?: string): NextResponse {
+  // `now` là giờ server, để client tính đồng hồ 30 giây theo đúng giờ server.
+  const now = Date.now();
   const res = result.ok
-    ? NextResponse.json({ id: result.id, view: result.view, events: result.events })
-    : NextResponse.json({ error: result.error, view: result.view }, { status: httpStatus(result.error) });
+    ? NextResponse.json({ id: result.id, view: result.view, events: result.events, now })
+    : NextResponse.json({ error: result.error, view: result.view, now }, { status: httpStatus(result.error) });
   if (newGuest) {
     res.cookies.set(GUEST_COOKIE, signGuest(newGuest), {
       httpOnly: true,
