@@ -42,6 +42,7 @@ import {
   GRACE_MS,
   type BattleAction,
   type BattleRewards,
+  type CampaignResult,
   type BattleEvent,
   type BattleState,
   type Difficulty,
@@ -73,7 +74,15 @@ import {
   TIER_COLOR_NAME,
 } from "./labels";
 import { bounceFrames, eventFrames, type Frame } from "./animation";
-import { CloudCorner, DongSonBand, ELEMENT_COLOR, ElementIcon, FoodIcon, LeaderFlag, ShieldIcon } from "./art/icons";
+import {
+  CloudCorner,
+  DongSonBand,
+  ELEMENT_COLOR,
+  ElementIcon,
+  FoodIcon,
+  LeaderFlag,
+  ShieldIcon,
+} from "./art/icons";
 import { GearIcon } from "./art/gear";
 import { Portrait } from "./art/portraits";
 import { SkillIcon } from "./art/skills";
@@ -97,7 +106,13 @@ const PLAYER = 0;
 const AI = 1;
 const AI_DELAY_MS = 700;
 const DEMO_SEED = 2026;
-const DIFFICULTIES: Difficulty[] = ["easy", "normal", "hard", "boss", "nightmare"];
+const DIFFICULTIES: Difficulty[] = [
+  "easy",
+  "normal",
+  "hard",
+  "boss",
+  "nightmare",
+];
 
 /** Nguyên tố đã có bộ kỹ năng nhân vật chính. */
 const MAIN_ELEMENTS = ELEMENTS.filter((e) => mainSkills(e).length > 0);
@@ -113,8 +128,14 @@ interface DemoGear {
 const NO_GEAR: DemoGear = { tier: 0, set: null };
 
 /** Mặc đủ 9 món cùng hệ với nhân vật. Đội Tianwu mặc cùng bậc nhưng không có thưởng bộ. */
-function gearUp(f: FighterConfig, gear: DemoGear, set: string | null): FighterConfig {
-  return gear.tier === 0 ? f : withGear(f, presetLoadout(f.element, f.profession, gear.tier, set));
+function gearUp(
+  f: FighterConfig,
+  gear: DemoGear,
+  set: string | null,
+): FighterConfig {
+  return gear.tier === 0
+    ? f
+    : withGear(f, presetLoadout(f.element, f.profession, gear.tier, set));
 }
 
 /**
@@ -138,11 +159,22 @@ const foeIds = (team: readonly string[]) =>
     .map((c) => c.id);
 
 /** Trận demo: nhân vật chính và 2 nhân vật kèm của hồ sơ, đấu đội Tianwu 3 người. */
-function demoSides({ element, profession, gear, mode, profile }: Setup): [SideConfig, SideConfig] {
+function demoSides({
+  element,
+  profession,
+  gear,
+  mode,
+  profile,
+}: Setup): [SideConfig, SideConfig] {
   const leveled = { ...profile, element, profession };
-  const team = mode === "progress" ? profileTeam(leveled, profile.team) : [mainCharacter(element, profession), ...profile.team.map(byId)];
+  const team =
+    mode === "progress"
+      ? profileTeam(leveled, profile.team)
+      : [mainCharacter(element, profession), ...profile.team.map(byId)];
   const level = profile.main.level;
-  const foes = foeIds(profile.team).map((id) => (mode === "progress" ? leveledFoe(byId(id), level) : byId(id)));
+  const foes = foeIds(profile.team).map((id) =>
+    mode === "progress" ? leveledFoe(byId(id), level) : byId(id),
+  );
   // Tiến trình mặc đồ trong túi đồ của hồ sơ (profileTeam); đồ mẫu chỉ dùng ở Luyện tập.
   const preset = mode === "progress" ? NO_GEAR : gear;
   return [
@@ -152,7 +184,12 @@ function demoSides({ element, profession, gear, mode, profile }: Setup): [SideCo
 }
 
 function newBattle(round: number, setup: Setup): BattleState {
-  return createBattle({ sides: demoSides(setup), seed: DEMO_SEED + round, timer: false, firstSide: PLAYER }).state;
+  return createBattle({
+    sides: demoSides(setup),
+    seed: DEMO_SEED + round,
+    timer: false,
+    firstSide: PLAYER,
+  }).state;
 }
 
 const PROFILE_KEY = "coLau.profile.v1";
@@ -180,13 +217,25 @@ interface Outcome {
   /** Món rơi đã vào túi đồ; null khi không rơi hoặc túi đầy (bán ngay được `soldFor` vàng). */
   readonly drop: GearItem | null;
   readonly soldFor: number;
+  /** Chỉ có ở trận chiến dịch trên /play. */
+  readonly campaign?: CampaignResult;
 }
 
-function demoDrop(round: number, difficulty: Difficulty, won: boolean): GearItem | null {
-  return rollDrop(createRng(DEMO_SEED * 31 + round), difficulty, won, `drop-${round}`);
+function demoDrop(
+  round: number,
+  difficulty: Difficulty,
+  won: boolean,
+): GearItem | null {
+  return rollDrop(
+    createRng(DEMO_SEED * 31 + round),
+    difficulty,
+    won,
+    `drop-${round}`,
+  );
 }
 
-const fighterName = (id: string) => (id === MAIN_ID ? "Đinh Bộ Lĩnh" : (companionById(id)?.name ?? id));
+const fighterName = (id: string) =>
+  id === MAIN_ID ? "Đinh Bộ Lĩnh" : (companionById(id)?.name ?? id);
 
 type Aim = { skill: SkillDef } | null;
 
@@ -223,15 +272,19 @@ const FLOAT_TONE: Record<Float["tone"], string> = {
   heal: "text-emerald-500",
 };
 
-const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const prefersReducedMotion = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function describe(state: BattleState, e: BattleEvent): string | null {
-  const name = (side: number, i: number) => state.sides[side as 0 | 1].fighters[i]?.name ?? "?";
+  const name = (side: number, i: number) =>
+    state.sides[side as 0 | 1].fighters[i]?.name ?? "?";
   switch (e.type) {
     case "skill":
       return `${name(e.side, e.fighter)} dùng ${getSkill(e.skill)?.name ?? e.skill}`;
     case "damage":
-      return e.amount > 0 ? `${name(e.side, e.fighter)} mất ${e.amount} máu` : null;
+      return e.amount > 0
+        ? `${name(e.side, e.fighter)} mất ${e.amount} máu`
+        : null;
     case "heal":
       return `${name(e.side, e.fighter)} hồi ${e.amount} máu`;
     case "ko":
@@ -241,7 +294,9 @@ function describe(state: BattleState, e: BattleEvent): string | null {
     case "passive": {
       const own = state.sides[e.side];
       const passive = PASSIVES[own.fighters[own.leader]!.element].name;
-      return e.side === PLAYER ? `Bị động ${passive} của phe bạn kích hoạt` : `Bị động ${passive} của đối thủ kích hoạt`;
+      return e.side === PLAYER
+        ? `Bị động ${passive} của phe bạn kích hoạt`
+        : `Bị động ${passive} của đối thủ kích hoạt`;
     }
     case "slide":
       return e.free
@@ -250,12 +305,18 @@ function describe(state: BattleState, e: BattleEvent): string | null {
     case "shuffle":
       return "Hết nước đi, bàn cờ được xáo lại";
     case "spirit": {
-      const firstAlive = state.sides[e.side].fighters.findIndex((f) => f.hp > 0);
+      const firstAlive = state.sides[e.side].fighters.findIndex(
+        (f) => f.hp > 0,
+      );
       if (e.spirit !== 90 || e.fighter !== firstAlive) return null;
-      return e.side === PLAYER ? "Trận kéo dài, tinh thần phe bạn bắt đầu giảm" : "Trận kéo dài, tinh thần đối thủ bắt đầu giảm";
+      return e.side === PLAYER
+        ? "Trận kéo dài, tinh thần phe bạn bắt đầu giảm"
+        : "Trận kéo dài, tinh thần đối thủ bắt đầu giảm";
     }
     case "frozenSkip":
-      return e.side === PLAYER ? "Phe bạn bị Đóng băng, mất lượt" : "Đối thủ bị Đóng băng, mất lượt";
+      return e.side === PLAYER
+        ? "Phe bạn bị Đóng băng, mất lượt"
+        : "Đối thủ bị Đóng băng, mất lượt";
     case "end":
       return e.winner === PLAYER ? "Bạn thắng!" : "Tianwu thắng";
     default:
@@ -265,17 +326,37 @@ function describe(state: BattleState, e: BattleEvent): string | null {
 
 function slideHint(a: NonNullable<SlideAim>): string {
   const what = a.axis === "row" ? "một hàng" : "một hàng hoặc một cột";
-  const how = a.exact ? `đúng ${a.max} ô` : a.max === 1 ? "1 ô" : `1–${a.max} ô`;
+  const how = a.exact
+    ? `đúng ${a.max} ô`
+    : a.max === 1
+      ? "1 ô"
+      : `1–${a.max} ô`;
   return `${a.skill ? a.skill.name : "Trượt miễn phí"}: kéo ${what} đi ${how} (chọn ô đầu rồi ô đích).`;
 }
 
-function Bar({ value, max, color, label }: { value: number; max: number; color: string; label: string }) {
+function Bar({
+  value,
+  max,
+  color,
+  label,
+}: {
+  value: number;
+  max: number;
+  color: string;
+  label: string;
+}) {
   const pct = max > 0 ? Math.max(0, Math.min(100, (value / max) * 100)) : 0;
   return (
-    <div className="flex items-center gap-1.5 text-[11px] leading-none" aria-label={`${label} ${Math.round(value)}/${max}`}>
+    <div
+      className="flex items-center gap-1.5 text-[11px] leading-none"
+      aria-label={`${label} ${Math.round(value)}/${max}`}
+    >
       <span className="w-6 shrink-0 opacity-70">{label}</span>
       <div className="h-2 flex-1 overflow-hidden rounded bg-black/30">
-        <div className={`h-full ${color} transition-[width] duration-300`} style={{ width: `${pct}%` }} />
+        <div
+          className={`h-full ${color} transition-[width] duration-300`}
+          style={{ width: `${pct}%` }}
+        />
       </div>
       <span className="w-14 shrink-0 text-right tabular-nums">
         {Math.round(value)}/{max}
@@ -321,7 +402,11 @@ function FighterCard({
             { transform: "translateX(-2px)" },
             { transform: "none" },
           ]
-        : [{ boxShadow: "none" }, { boxShadow: "0 0 0 3px rgb(52 211 153 / 0.6)" }, { boxShadow: "none" }],
+        : [
+            { boxShadow: "none" },
+            { boxShadow: "0 0 0 3px rgb(52 211 153 / 0.6)" },
+            { boxShadow: "none" },
+          ],
       { duration: hit ? 380 : 600, easing: "ease-in-out" },
     );
     // Chỉ chạy khi có lượt số mới, không chạy lại khi floats đổi vì số cũ hết hạn.
@@ -346,7 +431,12 @@ function FighterCard({
       title={`ATK ${fighter.atk} · DEF ${fighter.def} · Máu tối đa ${fighter.maxHp}`}
     >
       <div className="mb-1 flex items-center gap-2">
-        <Portrait id={fighter.id} element={fighter.element} profession={fighter.profession} className="size-9 shrink-0 md:size-7 lg:size-11" />
+        <Portrait
+          id={fighter.id}
+          element={fighter.element}
+          profession={fighter.profession}
+          className="size-9 shrink-0 md:size-7 lg:size-11"
+        />
         <div className="min-w-0 flex-1">
           <span className="flex min-w-0 items-center gap-1 text-sm font-semibold">
             {leader && (
@@ -361,15 +451,29 @@ function FighterCard({
             <span title={ELEMENT_NAME[fighter.element]} className="shrink-0">
               <ElementIcon element={fighter.element} className="size-3.5" />
             </span>
-            <span className="hidden lg:inline">{ELEMENT_NAME[fighter.element]}</span>
+            <span className="hidden lg:inline">
+              {ELEMENT_NAME[fighter.element]}
+            </span>
           </span>
         </div>
       </div>
       <div className="space-y-1">
-        <Bar label="Máu" value={fighter.hp} max={fighter.maxHp} color="bg-rose-500" />
+        <Bar
+          label="Máu"
+          value={fighter.hp}
+          max={fighter.maxHp}
+          color="bg-rose-500"
+        />
         <Bar label="NL" value={fighter.energy} max={100} color="bg-sky-500" />
-        <Bar label="TT" value={fighter.spirit} max={100} color="bg-emerald-500" />
-        {rage !== null && <Bar label="Nộ" value={rage} max={100} color="bg-orange-500" />}
+        <Bar
+          label="TT"
+          value={fighter.spirit}
+          max={100}
+          color="bg-emerald-500"
+        />
+        {rage !== null && (
+          <Bar label="Nộ" value={rage} max={100} color="bg-orange-500" />
+        )}
       </div>
       {fighter.effects.length > 0 && (
         <div className="mt-1.5 flex flex-wrap gap-1">
@@ -379,7 +483,11 @@ function FighterCard({
               className={`rounded px-1 py-0.5 text-[10px] ${GOOD_EFFECTS.includes(e.kind) ? "bg-emerald-600/40" : "bg-rose-600/40"}`}
             >
               {EFFECT_NAME[e.kind]}
-              {e.kind === "shield" ? ` ${Math.round(e.value)}` : e.turns !== null ? ` ${e.turns}` : ""}
+              {e.kind === "shield"
+                ? ` ${Math.round(e.value)}`
+                : e.turns !== null
+                  ? ` ${e.turns}`
+                  : ""}
             </span>
           ))}
         </div>
@@ -417,9 +525,12 @@ export default function DemoGame({
   theme,
   online = false,
   account,
+  autoResume = false,
 }: {
   theme: "light" | "dark";
   online?: boolean;
+  /** Vào trang là tiếp tục ngay trận online đã lưu (trang /campaign vừa tạo trận rồi chuyển sang). */
+  autoResume?: boolean;
   /** Khu tài khoản (đăng nhập/đăng xuất) do trang /play dựng ở server, hiện trên đầu trang. */
   account?: React.ReactNode;
 }) {
@@ -433,7 +544,12 @@ export default function DemoGame({
   const [mode, setMode] = useState<DemoMode>(online ? "progress" : "practice");
   const [profile, setProfile] = useState<Profile>(newProfile);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
-  const setup = useMemo<Setup>(() => ({ element, profession, gear, mode, profile }), [element, profession, gear, mode, profile]);
+  /** Màn chiến dịch của trận online đang chơi. */
+  const [stage, setStage] = useState<string | null>(null);
+  const setup = useMemo<Setup>(
+    () => ({ element, profession, gear, mode, profile }),
+    [element, profession, gear, mode, profile],
+  );
   /** Bàn cờ xem trước khi chưa bắt đầu; dựng lại mỗi khi đổi lựa chọn trước trận. */
   const preview = useMemo(() => newBattle(round, setup), [round, setup]);
   const [live, setState] = useState<BattleState | null>(null);
@@ -448,7 +564,11 @@ export default function DemoGame({
   const [toast, setToast] = useState<string | null>(null);
   const [log, setLog] = useState<LogLine[]>([]);
   const logId = useRef(0);
-  const [anim, setAnim] = useState<{ readonly frames: readonly Frame[]; readonly i: number; readonly id: number } | null>(null);
+  const [anim, setAnim] = useState<{
+    readonly frames: readonly Frame[];
+    readonly i: number;
+    readonly id: number;
+  } | null>(null);
   const animId = useRef(0);
   const afterAnim = useRef<(() => void) | null>(null);
   const [floats, setFloats] = useState<Float[]>([]);
@@ -462,25 +582,39 @@ export default function DemoGame({
   const [clock, setClock] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  const playerTurn = started && state.winner === null && state.turn.side === PLAYER;
+  const playerTurn =
+    started && state.winner === null && state.turn.side === PLAYER;
   /** Đang chạy hoạt ảnh thì chưa nhận thao tác mới. */
   const myTurn = playerTurn && anim === null && !pending;
   const actor = state.sides[PLAYER].fighters[state.turn.actor]!;
-  const selectable = useMemo(() => (myTurn ? selectableActors(state) : []), [myTurn, state]);
-  const skills = useMemo(() => (actor.skills ?? []).map((id) => fighterSkill(actor, id)).filter((d): d is SkillDef => !!d), [actor]);
+  const selectable = useMemo(
+    () => (myTurn ? selectableActors(state) : []),
+    [myTurn, state],
+  );
+  const skills = useMemo(
+    () =>
+      (actor.skills ?? [])
+        .map((id) => fighterSkill(actor, id))
+        .filter((d): d is SkillDef => !!d),
+    [actor],
+  );
 
   const flash = useCallback((text: string) => {
     setToast(text);
     window.setTimeout(() => setToast((t) => (t === text ? null : t)), 1600);
   }, []);
 
-  const pushLog = useCallback((s: BattleState, events: readonly BattleEvent[]) => {
-    const lines = events.flatMap((e) => {
-      const text = describe(s, e);
-      return text ? [{ id: logId.current++, text }] : [];
-    });
-    if (lines.length > 0) setLog((l) => [...lines.reverse(), ...l].slice(0, 30));
-  }, []);
+  const pushLog = useCallback(
+    (s: BattleState, events: readonly BattleEvent[]) => {
+      const lines = events.flatMap((e) => {
+        const text = describe(s, e);
+        return text ? [{ id: logId.current++, text }] : [];
+      });
+      if (lines.length > 0)
+        setLog((l) => [...lines.reverse(), ...l].slice(0, 30));
+    },
+    [],
+  );
 
   const showNumbers = useCallback((events: readonly BattleEvent[]) => {
     const order = new Map<string, number>();
@@ -492,21 +626,35 @@ export default function DemoGame({
             ? [[`+${e.amount}`, "heal"]]
             : []
           : [
-              ...(e.absorbed > 0 ? [[`${e.absorbed}`, "shield"] as [string, Float["tone"]]] : []),
-              ...(e.amount > 0 ? [[`-${e.amount}`, "damage"] as [string, Float["tone"]]] : []),
+              ...(e.absorbed > 0
+                ? [[`${e.absorbed}`, "shield"] as [string, Float["tone"]]]
+                : []),
+              ...(e.amount > 0
+                ? [[`-${e.amount}`, "damage"] as [string, Float["tone"]]]
+                : []),
             ];
       return items.map(([text, tone]) => {
         const key = `${e.side}:${e.fighter}`;
         const n = order.get(key) ?? 0;
         order.set(key, n + 1);
-        return { id: floatId.current++, side: e.side, fighter: e.fighter, text, tone, order: n };
+        return {
+          id: floatId.current++,
+          side: e.side,
+          fighter: e.fighter,
+          text,
+          tone,
+          order: n,
+        };
       });
     });
     if (next.length === 0) return;
     const ids = new Set(next.map((f) => f.id));
     setFloats((f) => [...f, ...next]);
     const last = Math.max(...next.map((f) => f.order));
-    window.setTimeout(() => setFloats((f) => f.filter((x) => !ids.has(x.id))), FLOAT_MS + last * FLOAT_STAGGER_MS + 100);
+    window.setTimeout(
+      () => setFloats((f) => f.filter((x) => !ids.has(x.id))),
+      FLOAT_MS + last * FLOAT_STAGGER_MS + 100,
+    );
   }, []);
 
   /** Chạy các khung hoạt ảnh rồi mới cập nhật trạng thái trận (máu, nhật ký, lượt). */
@@ -530,7 +678,8 @@ export default function DemoGame({
   useEffect(() => {
     if (!anim) return;
     const t = window.setTimeout(() => {
-      if (anim.i + 1 < anim.frames.length) return setAnim({ ...anim, i: anim.i + 1 });
+      if (anim.i + 1 < anim.frames.length)
+        return setAnim({ ...anim, i: anim.i + 1 });
       setAnim(null);
       const done = afterAnim.current;
       afterAnim.current = null;
@@ -540,20 +689,40 @@ export default function DemoGame({
   }, [anim]);
 
   const commit = useCallback(
-    (before: BattleState, next: BattleState, events: readonly BattleEvent[]) => {
+    (
+      before: BattleState,
+      next: BattleState,
+      events: readonly BattleEvent[],
+    ) => {
       play(eventFrames(before.board, events), () => {
         pushLog(next, events);
         setState(next);
         showNumbers(events);
         // Trận online: server cộng thưởng và gửi `outcome` (xem receive).
-        if (!online && mode === "progress" && before.winner === null && next.winner !== null) {
+        if (
+          !online &&
+          mode === "progress" &&
+          before.winner === null &&
+          next.winner !== null
+        ) {
           const rewards = battleRewards(next, PLAYER);
-          const r = applyRewards(profile, next.sides[PLAYER].fighters.map((f) => f.id), rewards);
+          const r = applyRewards(
+            profile,
+            next.sides[PLAYER].fighters.map((f) => f.id),
+            rewards,
+          );
           const rolled = demoDrop(round, difficulty, next.winner === PLAYER);
-          const received = rolled ? receiveDrop(r.profile, rolled) : { profile: r.profile, item: null, soldFor: 0 };
+          const received = rolled
+            ? receiveDrop(r.profile, rolled)
+            : { profile: r.profile, item: null, soldFor: 0 };
           setProfile(received.profile);
           saveProfile(received.profile);
-          setOutcome({ rewards, levelUps: r.levelUps, drop: received.item, soldFor: received.soldFor });
+          setOutcome({
+            rewards,
+            levelUps: r.levelUps,
+            drop: received.item,
+            soldFor: received.soldFor,
+          });
         }
       });
     },
@@ -564,7 +733,12 @@ export default function DemoGame({
   const receive = useCallback(
     (before: BattleState, res: OnlineResponse) => {
       clockOffset.current = res.now - Date.now();
-      if (res.error) flash(ONLINE_ERROR_TEXT[res.error] ?? ERROR_TEXT[res.error as keyof typeof ERROR_TEXT] ?? res.error);
+      if (res.error)
+        flash(
+          ONLINE_ERROR_TEXT[res.error] ??
+            ERROR_TEXT[res.error as keyof typeof ERROR_TEXT] ??
+            res.error,
+        );
       if (!res.view) return;
       seq.current = res.view.seq;
       const next = toBattleState(res.view);
@@ -601,13 +775,18 @@ export default function DemoGame({
   const apply = useCallback(
     (action: BattleAction): boolean => {
       // Online: kiểm tra trước bằng core cho phản hồi tức thì; bàn cờ thật chỉ lấy từ server.
-      const r = act(state, action, online ? Date.now() + clockOffset.current : 0);
+      const r = act(
+        state,
+        action,
+        online ? Date.now() + clockOffset.current : 0,
+      );
       if (!r.ok) {
         let text = ERROR_TEXT[r.error];
         if (r.error === "notEnoughEnergy" && action.type === "skill") {
           text += ` (${actor.energy}/${fighterSkill(actor, action.skill)?.cost ?? 0})`;
         }
-        if (r.error === "invalidMove" && action.type === "swap") play(bounceFrames(state.board, action.from, action.to), () => {});
+        if (r.error === "invalidMove" && action.type === "swap")
+          play(bounceFrames(state.board, action.from, action.to), () => {});
         flash(text);
         return false;
       }
@@ -620,7 +799,8 @@ export default function DemoGame({
 
   // Lượt của Tianwu: chạy trọn lượt sau một nhịp nghỉ ngắn để người chơi kịp nhìn.
   useEffect(() => {
-    if (online || !started || state.winner !== null || state.turn.side !== AI) return;
+    if (online || !started || state.winner !== null || state.turn.side !== AI)
+      return;
     const t = window.setTimeout(() => {
       const r = playAiTurn(state, difficulty);
       commit(state, r.state, r.events);
@@ -629,31 +809,45 @@ export default function DemoGame({
   }, [online, started, state, difficulty, commit]);
 
   // Online: đồng hồ 30 giây. Quá hạn (cộng ân hạn) thì hỏi server để chạy bù lượt mất và lượt AI.
-  const deadline = online && started && state.winner === null ? state.turn.deadline : null;
+  const deadline =
+    online && started && state.winner === null ? state.turn.deadline : null;
   useEffect(() => {
     if (deadline === null || !battleId) return;
-    const tick = window.setInterval(() => setClock(Date.now() + clockOffset.current), 250);
+    const tick = window.setInterval(
+      () => setClock(Date.now() + clockOffset.current),
+      250,
+    );
     const wait = deadline + GRACE_MS + 200 - (Date.now() + clockOffset.current);
     const before = state;
-    const t = window.setTimeout(() => {
-      setPending(true);
-      void fetchOnline(battleId).then((res) => {
-        setPending(false);
-        receive(before, res);
-      });
-    }, Math.max(0, wait));
+    const t = window.setTimeout(
+      () => {
+        setPending(true);
+        void fetchOnline(battleId).then((res) => {
+          setPending(false);
+          receive(before, res);
+        });
+      },
+      Math.max(0, wait),
+    );
     return () => {
       window.clearInterval(tick);
       window.clearTimeout(t);
     };
   }, [deadline, battleId, state, receive]);
-  const secondsLeft = deadline === null ? null : Math.max(0, Math.ceil((deadline - clock) / 1000));
+  const secondsLeft =
+    deadline === null
+      ? null
+      : Math.max(0, Math.ceil((deadline - clock) / 1000));
 
   // Báo chiều cao cho trang cha khi được nhúng bằng iframe (ShanVerse).
   useEffect(() => {
     const el = rootRef.current;
     if (!el || window.parent === window) return;
-    const post = () => window.parent.postMessage({ type: "colau:height", height: el.scrollHeight }, "*");
+    const post = () =>
+      window.parent.postMessage(
+        { type: "colau:height", height: el.scrollHeight },
+        "*",
+      );
     const ro = new ResizeObserver(post);
     ro.observe(el);
     post();
@@ -677,7 +871,9 @@ export default function DemoGame({
         setSelected(null);
         const side = def.target === "ally" ? PLAYER : AI;
         const first = state.sides[side].fighters.findIndex(isAlive);
-        setAimIndex(def.target === "ally" ? state.turn.actor : Math.max(0, first));
+        setAimIndex(
+          def.target === "ally" ? state.turn.actor : Math.max(0, first),
+        );
         return;
       }
       apply({ type: "skill", skill: def.id, ...(slide ? { slide } : {}) });
@@ -689,12 +885,21 @@ export default function DemoGame({
     (def: SkillDef) => {
       if (!myTurn) return;
       if (state.turn.skillUsed) return flash(ERROR_TEXT.skillUsed);
-      if (actor.energy < def.cost) return flash(`${ERROR_TEXT.notEnoughEnergy} (${actor.energy}/${def.cost})`);
+      if (actor.energy < def.cost)
+        return flash(
+          `${ERROR_TEXT.notEnoughEnergy} (${actor.energy}/${def.cost})`,
+        );
       const slide = slideStep(def);
       if (slide) {
         setAim(null);
         setSelected(null);
-        setSlideAim({ skill: def, max: slide.distance, axis: slide.axis, exact: slide.exact, from: null });
+        setSlideAim({
+          skill: def,
+          max: slide.distance,
+          axis: slide.axis,
+          exact: slide.exact,
+          from: null,
+        });
         return;
       }
       aimOrCast(def);
@@ -706,7 +911,8 @@ export default function DemoGame({
     (target?: number, cell?: Pos) => {
       if (!aim) return;
       const def = aim.skill;
-      if (needsCell(def) && !cell) return flash("Chọn một ô trên bàn cờ làm tâm");
+      if (needsCell(def) && !cell)
+        return flash("Chọn một ô trên bàn cờ làm tâm");
       const ok = apply({
         type: "skill",
         skill: def.id,
@@ -753,7 +959,10 @@ export default function DemoGame({
     (pos: Pos) => {
       if (!myTurn) return;
       if (slideAim) {
-        if (!slideAim.from || (slideAim.from.row === pos.row && slideAim.from.col === pos.col)) {
+        if (
+          !slideAim.from ||
+          (slideAim.from.row === pos.row && slideAim.from.col === pos.col)
+        ) {
           setSlideAim({ ...slideAim, from: slideAim.from ? null : pos });
         } else pickSlide(slideAim.from, pos);
         return;
@@ -763,7 +972,8 @@ export default function DemoGame({
         return;
       }
       if (!selected) return setSelected(pos);
-      if (selected.row === pos.row && selected.col === pos.col) return setSelected(null);
+      if (selected.row === pos.row && selected.col === pos.col)
+        return setSelected(null);
       if (isAdjacent(selected, pos)) return trySwap(selected, pos);
       setSelected(pos);
     },
@@ -782,10 +992,17 @@ export default function DemoGame({
     const dx = e.clientX - d.x;
     const dy = e.clientY - d.y;
     if (slideAim && Math.max(Math.abs(dx), Math.abs(dy)) >= SWIPE_PX) {
-      const el = document.elementFromPoint(e.clientX, e.clientY)?.closest<HTMLElement>("[data-row]");
-      if (el) return pickSlide(d.pos, { row: Number(el.dataset.row), col: Number(el.dataset.col) });
+      const el = document
+        .elementFromPoint(e.clientX, e.clientY)
+        ?.closest<HTMLElement>("[data-row]");
+      if (el)
+        return pickSlide(d.pos, {
+          row: Number(el.dataset.row),
+          col: Number(el.dataset.col),
+        });
     }
-    if (Math.max(Math.abs(dx), Math.abs(dy)) < SWIPE_PX || aim || slideAim) return onCell(d.pos);
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < SWIPE_PX || aim || slideAim)
+      return onCell(d.pos);
     if (!myTurn) return;
     const to =
       Math.abs(dx) > Math.abs(dy)
@@ -798,7 +1015,8 @@ export default function DemoGame({
     (step: 1 | -1) => {
       if (selectable.length <= 1) return;
       const i = selectable.indexOf(state.turn.actor);
-      const next = selectable[(i + step + selectable.length) % selectable.length]!;
+      const next =
+        selectable[(i + step + selectable.length) % selectable.length]!;
       apply({ type: "selectActor", fighter: next });
     },
     [selectable, state.turn.actor, apply],
@@ -809,10 +1027,18 @@ export default function DemoGame({
     const onKey = (e: KeyboardEvent) => {
       if (!myTurn) return;
       const dirs: Record<string, [number, number]> = {
-        ArrowUp: [-1, 0], w: [-1, 0], W: [-1, 0],
-        ArrowDown: [1, 0], s: [1, 0], S: [1, 0],
-        ArrowLeft: [0, -1], a: [0, -1], A: [0, -1],
-        ArrowRight: [0, 1], d: [0, 1], D: [0, 1],
+        ArrowUp: [-1, 0],
+        w: [-1, 0],
+        W: [-1, 0],
+        ArrowDown: [1, 0],
+        s: [1, 0],
+        S: [1, 0],
+        ArrowLeft: [0, -1],
+        a: [0, -1],
+        A: [0, -1],
+        ArrowRight: [0, 1],
+        d: [0, 1],
+        D: [0, 1],
       };
       const dir = dirs[e.key];
       if (aim && !needsCell(aim.skill)) {
@@ -859,12 +1085,30 @@ export default function DemoGame({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [myTurn, aim, aimIndex, cursor, selected, state, skills, fireAim, onCell, trySwap, switchActor, castSkill]);
+  }, [
+    myTurn,
+    aim,
+    aimIndex,
+    cursor,
+    selected,
+    state,
+    skills,
+    fireAim,
+    onCell,
+    trySwap,
+    switchActor,
+    castSkill,
+  ]);
 
   // Món rơi sau trận theo bảng rơi đồ của core. Tiến trình (và /play) lấy món đã vào túi từ `outcome`;
   // Luyện tập chỉ hiển thị.
   const drop = useMemo(
-    () => (mode === "progress" ? (outcome?.drop ?? null) : state.winner === null ? null : demoDrop(round, difficulty, state.winner === PLAYER)),
+    () =>
+      mode === "progress"
+        ? (outcome?.drop ?? null)
+        : state.winner === null
+          ? null
+          : demoDrop(round, difficulty, state.winner === PLAYER),
     [mode, outcome, state.winner, round, difficulty],
   );
 
@@ -887,8 +1131,12 @@ export default function DemoGame({
 
   const beginOnline = (res: OnlineResponse) => {
     clockOffset.current = res.now - Date.now();
-    if (!res.view || !res.id) return flash(ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Không tạo được trận");
+    if (!res.view || !res.id)
+      return flash(
+        ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Không tạo được trận",
+      );
     seq.current = res.view.seq;
+    setStage(res.view.stage ?? null);
     setBattleId(res.id);
     setClock(res.now);
     setState(toBattleState(res.view));
@@ -907,7 +1155,13 @@ export default function DemoGame({
       return;
     }
     setPending(true);
-    void createOnline({ mode: "3v3", element, profession, companions: profile.team, difficulty }).then((res) => {
+    void createOnline({
+      mode: "3v3",
+      element,
+      profession,
+      companions: profile.team,
+      difficulty,
+    }).then((res) => {
       setPending(false);
       beginOnline(res);
     });
@@ -936,6 +1190,15 @@ export default function DemoGame({
     });
   };
 
+  const resumed = useRef(false);
+  useEffect(() => {
+    if (!autoResume || resumed.current) return;
+    resumed.current = true;
+    resume();
+    // Chỉ chạy một lần khi vào trang.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoResume]);
+
   const changeProfile = (p: Profile) => {
     setProfile(p);
     saveProfile(p);
@@ -962,23 +1225,35 @@ export default function DemoGame({
   const frame = anim ? anim.frames[anim.i] : undefined;
   const board = frame?.board ?? state.board;
 
-  const aimingFoe = aim && !needsCell(aim.skill) && aim.skill.target === "enemy";
-  const aimingAlly = aim && !needsCell(aim.skill) && aim.skill.target === "ally";
+  const aimingFoe =
+    aim && !needsCell(aim.skill) && aim.skill.target === "enemy";
+  const aimingAlly =
+    aim && !needsCell(aim.skill) && aim.skill.target === "ally";
 
   const side = (s: 0 | 1) => {
     const own = state.sides[s];
     return (
       <div className="flex w-full flex-col gap-2 md:w-40 md:shrink-0 lg:w-56">
         <div className="flex items-center justify-between text-xs opacity-80">
-          <span className="font-semibold">{s === PLAYER ? "Phe bạn" : "Tianwu"}</span>
-          <span title="Lương thực" className="flex items-center gap-1 tabular-nums">
+          <span className="font-semibold">
+            {s === PLAYER ? "Phe bạn" : "Tianwu"}
+          </span>
+          <span
+            title="Lương thực"
+            className="flex items-center gap-1 tabular-nums"
+          >
             <FoodIcon className="size-3.5" /> {own.food}/100
           </span>
         </div>
         {own.fighters.map((f, i) => {
-          const isActor = state.winner === null && state.turn.side === s && state.turn.actor === i;
-          const canPick = s === PLAYER && selectable.includes(i) && !state.turn.skillUsed;
-          const target = (s === AI && aimingFoe) || (s === PLAYER && aimingAlly);
+          const isActor =
+            state.winner === null &&
+            state.turn.side === s &&
+            state.turn.actor === i;
+          const canPick =
+            s === PLAYER && selectable.includes(i) && !state.turn.skillUsed;
+          const target =
+            (s === AI && aimingFoe) || (s === PLAYER && aimingAlly);
           return (
             <FighterCard
               key={f.id}
@@ -1004,7 +1279,10 @@ export default function DemoGame({
   };
 
   return (
-    <div ref={rootRef} className={`${palette} demo-bg min-h-dvh bg-[var(--bg)] p-3 sm:p-4`}>
+    <div
+      ref={rootRef}
+      className={`${palette} demo-bg min-h-dvh bg-[var(--bg)] p-3 sm:p-4`}
+    >
       <div className="mx-auto flex max-w-6xl flex-col gap-3">
         <header className="flex flex-wrap items-center justify-between gap-2">
           <h1 className="flex items-center gap-1.5 text-lg font-bold">
@@ -1047,257 +1325,367 @@ export default function DemoGame({
 
           <div className="flex min-w-0 flex-1 flex-col gap-2">
             <div className="relative rounded-xl border-2 border-[var(--gold)] bg-[var(--frame)] p-1.5 shadow-lg">
-            {CORNERS.map((c) => (
-              <CloudCorner key={c} className={`pointer-events-none absolute z-10 size-5 ${c}`} />
-            ))}
-            <div
-              className="relative grid touch-none select-none gap-0.5 overflow-hidden rounded-md bg-black/25 p-0.5"
-              style={{ gridTemplateColumns: `repeat(${board.cols}, minmax(0, 1fr))` }}
-              onPointerUp={onPointerUp}
-              onPointerLeave={() => (drag.current = null)}
-              role="grid"
-              aria-label="Bàn cờ"
-            >
-              {board.cells.map((tile, i) => {
-                const pos = { row: Math.floor(i / board.cols), col: i % board.cols };
-                const cellAnim = frame?.anims[i];
-                const from = slideAim?.from;
-                const isSel =
-                  (selected?.row === pos.row && selected.col === pos.col) || (from?.row === pos.row && from.col === pos.col);
-                const isCur = showCursor && cursor.row === pos.row && cursor.col === pos.col;
-                return (
-                  <div
-                    key={cellAnim ? `${anim!.id}-${anim!.i}-${i}` : i}
-                    role="gridcell"
-                    data-row={pos.row}
-                    data-col={pos.col}
-                    aria-label={tile ? (tile.special ? SPECIAL_NAME[tile.special][tile.kind] : TILE_NAME[tile.kind]) : "Ô trống"}
-                    onPointerDown={(e) => onPointerDown(pos, e)}
-                    className={`relative aspect-square rounded-md bg-[var(--cell)] ${
-                      isSel ? "z-10 scale-110 ring-2 ring-amber-300" : ""
-                    } ${isCur ? "outline-2 outline-sky-400" : ""} ${(aim && needsCell(aim.skill)) || slideAim ? "cursor-crosshair" : "cursor-pointer"}`}
-                  >
-                    {tile && (
-                      <span
-                        className={`absolute inset-0 flex items-center justify-center ${cellAnim ? `tile-anim tile-anim-${cellAnim.kind}` : ""}`}
-                        style={
-                          cellAnim
-                            ? ({
-                                "--dx": cellAnim.dx,
-                                "--dy": cellAnim.dy,
-                                animationDuration: `${frame!.ms}ms`,
-                              } as React.CSSProperties)
-                            : undefined
-                        }
-                      >
-                        <TileArt
-                          kind={tile.kind}
-                          special={tile.special}
-                          className={`size-full ${tile.special === "strong" ? "tile-strong" : ""}`}
-                        />
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
-              {frame?.chain && (
-                <div
-                  key={`${anim!.id}-${anim!.i}`}
-                  className="chain-pop pointer-events-none absolute left-1/2 top-2 rounded bg-amber-500 px-3 py-1 text-sm font-bold text-stone-950 shadow"
-                >
-                  Chuỗi ×{frame.chain}
-                </div>
-              )}
-              {toast && (
-                <div className="pointer-events-none absolute inset-x-0 top-1/2 mx-auto w-fit -translate-y-1/2 rounded bg-black/80 px-3 py-1.5 text-sm text-white">
-                  {toast}
-                </div>
-              )}
-              {!started && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center-safe gap-2 overflow-y-auto rounded-lg bg-black/60 p-2 text-white sm:gap-3">
-                  <p className="text-sm">Đinh Bộ Lĩnh, Hà Vân và Mai Thanh đấu đội Tianwu.</p>
-                  {online && (
-                    <p className="max-w-md text-center text-xs opacity-80">
-                      Server xử lý từng nước đi, mỗi lượt 30 giây. Hết giờ thì mất lượt; tải lại trang vẫn tiếp tục được trận.
-                      Đội theo hồ sơ của bạn (Đinh Bộ Lĩnh cấp {profile.main.level}), thưởng cuối trận lưu trên server.
-                    </p>
-                  )}
-                  {!online && (
-                    <div className="flex flex-wrap justify-center gap-1.5" role="radiogroup" aria-label="Chế độ">
-                      {(["practice", "progress"] as const).map((m) => (
-                        <button
-                          key={m}
-                          type="button"
-                          role="radio"
-                          aria-checked={mode === m}
-                          onClick={() => {
-                            if (m === "progress" && mode !== "progress") setProfile(loadProfile());
-                            setMode(m);
-                          }}
-                          className={`rounded px-2.5 py-1 text-sm ${mode === m ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
-                        >
-                          {m === "practice" ? "Luyện tập (mở hết kỹ năng)" : `Tiến trình (cấp ${profile.main.level})`}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  <div className="flex flex-wrap items-center justify-center gap-1.5" role="radiogroup" aria-label="Nghề nhân vật chính">
-                    <span className="text-xs opacity-80">Nghề:</span>
-                    {PROFESSIONS.map((p) => (
-                      <button
-                        key={p}
-                        type="button"
-                        role="radio"
-                        aria-checked={profession === p}
-                        onClick={() => setProfession(p)}
-                        className={`rounded px-2 py-0.5 text-xs ${profession === p ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
-                      >
-                        {PROFESSION_NAME[p]}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="flex flex-wrap justify-center gap-1.5" role="radiogroup" aria-label="Nguyên tố nhân vật chính">
-                    {MAIN_ELEMENTS.map((e) => (
-                      <button
-                        key={e}
-                        type="button"
-                        role="radio"
-                        aria-checked={element === e}
-                        onClick={() => {
-                          setElement(e);
-                        }}
-                        className={`flex items-center gap-1.5 rounded px-2.5 py-1 text-sm ${element === e ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
-                      >
-                        <ElementIcon element={e} className="size-4" />
-                        {ELEMENT_NAME[e]}
-                      </button>
-                    ))}
-                  </div>
-                  {mode === "practice" && (
-                    <div className="flex flex-wrap items-center justify-center gap-1.5" role="radiogroup" aria-label="Trang bị">
-                      <span className="text-xs opacity-80">Trang bị:</span>
-                      {([0, ...TIERS] as const).map((t) => (
-                        <button
-                          key={t}
-                          type="button"
-                          role="radio"
-                          aria-checked={gear.tier === t}
-                          onClick={() => {
-                            setGear({ ...gear, tier: t });
-                          }}
-                          className={`rounded px-2.5 py-1 text-sm ${gear.tier === t ? "bg-amber-500 font-semibold text-stone-950" : `bg-white/15 ${t === 0 ? "" : TIER_CLASS[t]}`}`}
-                        >
-                          {t === 0 ? "Không" : TIER_COLOR_NAME[t]}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  {mode === "practice" && gear.tier !== 0 && (
-                    <div className="flex flex-wrap items-center justify-center gap-1.5" role="radiogroup" aria-label="Bộ trang bị">
-                      <span className="text-xs opacity-80">Bộ:</span>
-                      {[null, ...GEAR_SETS.map((g) => g.id)].map((id) => (
-                        <button
-                          key={id ?? "none"}
-                          type="button"
-                          role="radio"
-                          aria-checked={gear.set === id}
-                          onClick={() => {
-                            setGear({ ...gear, set: id });
-                          }}
-                          className={`rounded px-2.5 py-1 text-sm ${gear.set === id ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
-                        >
-                          {id ? getGearSet(id)!.name : "Không bộ"}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  {mode === "practice" && gear.tier !== 0 && (
-                    <div className="flex flex-wrap justify-center gap-1" aria-hidden>
-                      {GEAR_SLOTS.map((slot) => (
-                        <GearIcon key={slot} slot={slot} element={element} tier={gear.tier as Tier} profession="tuongSi" className="size-8" />
-                      ))}
-                    </div>
-                  )}
-                  {mode === "practice" && gear.tier !== 0 && (
-                    <p className="max-w-md text-center text-xs opacity-80">
-                      Cả hai đội mặc đủ 9 món {TIER_COLOR_NAME[gear.tier]} cùng hệ với từng người; đội Tianwu không có thưởng bộ.
-                    </p>
-                  )}
-                  <div className="flex flex-wrap justify-center gap-2">
-                    <button
-                      type="button"
-                      onClick={start}
-                      disabled={pending}
-                      className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950 disabled:opacity-50"
+              {CORNERS.map((c) => (
+                <CloudCorner
+                  key={c}
+                  className={`pointer-events-none absolute z-10 size-5 ${c}`}
+                />
+              ))}
+              <div
+                className="relative grid touch-none select-none gap-0.5 overflow-hidden rounded-md bg-black/25 p-0.5"
+                style={{
+                  gridTemplateColumns: `repeat(${board.cols}, minmax(0, 1fr))`,
+                }}
+                onPointerUp={onPointerUp}
+                onPointerLeave={() => (drag.current = null)}
+                role="grid"
+                aria-label="Bàn cờ"
+              >
+                {board.cells.map((tile, i) => {
+                  const pos = {
+                    row: Math.floor(i / board.cols),
+                    col: i % board.cols,
+                  };
+                  const cellAnim = frame?.anims[i];
+                  const from = slideAim?.from;
+                  const isSel =
+                    (selected?.row === pos.row && selected.col === pos.col) ||
+                    (from?.row === pos.row && from.col === pos.col);
+                  const isCur =
+                    showCursor &&
+                    cursor.row === pos.row &&
+                    cursor.col === pos.col;
+                  return (
+                    <div
+                      key={cellAnim ? `${anim!.id}-${anim!.i}-${i}` : i}
+                      role="gridcell"
+                      data-row={pos.row}
+                      data-col={pos.col}
+                      aria-label={
+                        tile
+                          ? tile.special
+                            ? SPECIAL_NAME[tile.special][tile.kind]
+                            : TILE_NAME[tile.kind]
+                          : "Ô trống"
+                      }
+                      onPointerDown={(e) => onPointerDown(pos, e)}
+                      className={`relative aspect-square rounded-md bg-[var(--cell)] ${
+                        isSel ? "z-10 scale-110 ring-2 ring-amber-300" : ""
+                      } ${isCur ? "outline-2 outline-sky-400" : ""} ${(aim && needsCell(aim.skill)) || slideAim ? "cursor-crosshair" : "cursor-pointer"}`}
                     >
-                      Bắt đầu ({DIFFICULTY_NAME[difficulty]})
-                    </button>
-                    {online && (
-                      <button type="button" onClick={resume} disabled={pending} className="rounded bg-white/20 px-4 py-2 disabled:opacity-50">
-                        Tiếp tục trận dở
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
-              {state.winner !== null && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-black/70 text-white">
-                  <p className="text-xl font-bold">{state.winner === PLAYER ? "Bạn thắng!" : "Tianwu thắng"}</p>
-                  {(!online || outcome) && (
-                    <p className="text-sm">
-                      {drop ? (
-                        <>
-                          <span className="flex items-center gap-2">
-                            <GearIcon slot={drop.slot} element={drop.element} tier={drop.tier} profession={drop.profession} className="size-12 shrink-0" />
-                            <span>
-                              Chiến lợi phẩm: <span className={`font-semibold ${TIER_CLASS[drop.tier]}`}>{gearText(drop)}</span>
-                            </span>
-                          </span>
-                        </>
-                      ) : outcome && outcome.soldFor > 0 ? (
-                        `Túi đồ đầy: món rơi được bán ngay, +${outcome.soldFor} vàng.`
-                      ) : (
-                        "Không rơi trang bị."
+                      {tile && (
+                        <span
+                          className={`absolute inset-0 flex items-center justify-center ${cellAnim ? `tile-anim tile-anim-${cellAnim.kind}` : ""}`}
+                          style={
+                            cellAnim
+                              ? ({
+                                  "--dx": cellAnim.dx,
+                                  "--dy": cellAnim.dy,
+                                  animationDuration: `${frame!.ms}ms`,
+                                } as React.CSSProperties)
+                              : undefined
+                          }
+                        >
+                          <TileArt
+                            kind={tile.kind}
+                            special={tile.special}
+                            className={`size-full ${tile.special === "strong" ? "tile-strong" : ""}`}
+                          />
+                        </span>
                       )}
+                    </div>
+                  );
+                })}
+                {frame?.chain && (
+                  <div
+                    key={`${anim!.id}-${anim!.i}`}
+                    className="chain-pop pointer-events-none absolute left-1/2 top-2 rounded bg-amber-500 px-3 py-1 text-sm font-bold text-stone-950 shadow"
+                  >
+                    Chuỗi ×{frame.chain}
+                  </div>
+                )}
+                {toast && (
+                  <div className="pointer-events-none absolute inset-x-0 top-1/2 mx-auto w-fit -translate-y-1/2 rounded bg-black/80 px-3 py-1.5 text-sm text-white">
+                    {toast}
+                  </div>
+                )}
+                {!started && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center-safe gap-2 overflow-y-auto rounded-lg bg-black/60 p-2 text-white sm:gap-3">
+                    <p className="text-sm">
+                      Đinh Bộ Lĩnh, Hà Vân và Mai Thanh đấu đội Tianwu.
                     </p>
-                  )}
-                  {outcome && (
-                    <div className="text-center text-sm">
-                      <p>
-                        +{outcome.rewards.xp[0]} kinh nghiệm mỗi người · +{outcome.rewards.gold} vàng
+                    {online && (
+                      <p className="max-w-md text-center text-xs opacity-80">
+                        Server xử lý từng nước đi, mỗi lượt 30 giây. Hết giờ thì
+                        mất lượt; tải lại trang vẫn tiếp tục được trận. Đội theo
+                        hồ sơ của bạn (Đinh Bộ Lĩnh cấp {profile.main.level}),
+                        thưởng cuối trận lưu trên server.
                       </p>
-                      {outcome.levelUps.map((u) => (
-                        <p key={u.id} className="font-semibold text-amber-300">
-                          {fighterName(u.id)} lên cấp {u.level}!
-                        </p>
+                    )}
+                    {!online && (
+                      <div
+                        className="flex flex-wrap justify-center gap-1.5"
+                        role="radiogroup"
+                        aria-label="Chế độ"
+                      >
+                        {(["practice", "progress"] as const).map((m) => (
+                          <button
+                            key={m}
+                            type="button"
+                            role="radio"
+                            aria-checked={mode === m}
+                            onClick={() => {
+                              if (m === "progress" && mode !== "progress")
+                                setProfile(loadProfile());
+                              setMode(m);
+                            }}
+                            className={`rounded px-2.5 py-1 text-sm ${mode === m ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
+                          >
+                            {m === "practice"
+                              ? "Luyện tập (mở hết kỹ năng)"
+                              : `Tiến trình (cấp ${profile.main.level})`}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    <div
+                      className="flex flex-wrap items-center justify-center gap-1.5"
+                      role="radiogroup"
+                      aria-label="Nghề nhân vật chính"
+                    >
+                      <span className="text-xs opacity-80">Nghề:</span>
+                      {PROFESSIONS.map((p) => (
+                        <button
+                          key={p}
+                          type="button"
+                          role="radio"
+                          aria-checked={profession === p}
+                          onClick={() => setProfession(p)}
+                          className={`rounded px-2 py-0.5 text-xs ${profession === p ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
+                        >
+                          {PROFESSION_NAME[p]}
+                        </button>
                       ))}
                     </div>
-                  )}
-                  <div className="flex flex-wrap justify-center gap-2">
-                    {!online && (
-                      <a
-                        href="/"
-                        target="_blank"
-                        rel="noopener"
-                        className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                    <div
+                      className="flex flex-wrap justify-center gap-1.5"
+                      role="radiogroup"
+                      aria-label="Nguyên tố nhân vật chính"
+                    >
+                      {MAIN_ELEMENTS.map((e) => (
+                        <button
+                          key={e}
+                          type="button"
+                          role="radio"
+                          aria-checked={element === e}
+                          onClick={() => {
+                            setElement(e);
+                          }}
+                          className={`flex items-center gap-1.5 rounded px-2.5 py-1 text-sm ${element === e ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
+                        >
+                          <ElementIcon element={e} className="size-4" />
+                          {ELEMENT_NAME[e]}
+                        </button>
+                      ))}
+                    </div>
+                    {mode === "practice" && (
+                      <div
+                        className="flex flex-wrap items-center justify-center gap-1.5"
+                        role="radiogroup"
+                        aria-label="Trang bị"
                       >
-                        Lưu tiến độ &amp; chơi chiến dịch
-                      </a>
+                        <span className="text-xs opacity-80">Trang bị:</span>
+                        {([0, ...TIERS] as const).map((t) => (
+                          <button
+                            key={t}
+                            type="button"
+                            role="radio"
+                            aria-checked={gear.tier === t}
+                            onClick={() => {
+                              setGear({ ...gear, tier: t });
+                            }}
+                            className={`rounded px-2.5 py-1 text-sm ${gear.tier === t ? "bg-amber-500 font-semibold text-stone-950" : `bg-white/15 ${t === 0 ? "" : TIER_CLASS[t]}`}`}
+                          >
+                            {t === 0 ? "Không" : TIER_COLOR_NAME[t]}
+                          </button>
+                        ))}
+                      </div>
                     )}
-                    <button type="button" onClick={restart} className="rounded bg-white/20 px-4 py-2">
-                      {mode === "progress" ? "Nâng kỹ năng & đánh tiếp" : "Chơi lại"}
-                    </button>
+                    {mode === "practice" && gear.tier !== 0 && (
+                      <div
+                        className="flex flex-wrap items-center justify-center gap-1.5"
+                        role="radiogroup"
+                        aria-label="Bộ trang bị"
+                      >
+                        <span className="text-xs opacity-80">Bộ:</span>
+                        {[null, ...GEAR_SETS.map((g) => g.id)].map((id) => (
+                          <button
+                            key={id ?? "none"}
+                            type="button"
+                            role="radio"
+                            aria-checked={gear.set === id}
+                            onClick={() => {
+                              setGear({ ...gear, set: id });
+                            }}
+                            className={`rounded px-2.5 py-1 text-sm ${gear.set === id ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
+                          >
+                            {id ? getGearSet(id)!.name : "Không bộ"}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {mode === "practice" && gear.tier !== 0 && (
+                      <div
+                        className="flex flex-wrap justify-center gap-1"
+                        aria-hidden
+                      >
+                        {GEAR_SLOTS.map((slot) => (
+                          <GearIcon
+                            key={slot}
+                            slot={slot}
+                            element={element}
+                            tier={gear.tier as Tier}
+                            profession="tuongSi"
+                            className="size-8"
+                          />
+                        ))}
+                      </div>
+                    )}
+                    {mode === "practice" && gear.tier !== 0 && (
+                      <p className="max-w-md text-center text-xs opacity-80">
+                        Cả hai đội mặc đủ 9 món {TIER_COLOR_NAME[gear.tier]}{" "}
+                        cùng hệ với từng người; đội Tianwu không có thưởng bộ.
+                      </p>
+                    )}
+                    <div className="flex flex-wrap justify-center gap-2">
+                      <button
+                        type="button"
+                        onClick={start}
+                        disabled={pending}
+                        className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950 disabled:opacity-50"
+                      >
+                        Bắt đầu ({DIFFICULTY_NAME[difficulty]})
+                      </button>
+                      {online && (
+                        <button
+                          type="button"
+                          onClick={resume}
+                          disabled={pending}
+                          className="rounded bg-white/20 px-4 py-2 disabled:opacity-50"
+                        >
+                          Tiếp tục trận dở
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+                {state.winner !== null && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-black/70 text-white">
+                    <p className="text-xl font-bold">
+                      {state.winner === PLAYER ? "Bạn thắng!" : "Tianwu thắng"}
+                    </p>
+                    {(!online || outcome) && (
+                      <p className="text-sm">
+                        {drop ? (
+                          <>
+                            <span className="flex items-center gap-2">
+                              <GearIcon
+                                slot={drop.slot}
+                                element={drop.element}
+                                tier={drop.tier}
+                                profession={drop.profession}
+                                className="size-12 shrink-0"
+                              />
+                              <span>
+                                Chiến lợi phẩm:{" "}
+                                <span
+                                  className={`font-semibold ${TIER_CLASS[drop.tier]}`}
+                                >
+                                  {gearText(drop)}
+                                </span>
+                              </span>
+                            </span>
+                          </>
+                        ) : outcome && outcome.soldFor > 0 ? (
+                          `Túi đồ đầy: món rơi được bán ngay, +${outcome.soldFor} vàng.`
+                        ) : (
+                          "Không rơi trang bị."
+                        )}
+                      </p>
+                    )}
+                    {outcome && (
+                      <div className="text-center text-sm">
+                        <p>
+                          +{outcome.rewards.xp[0]} kinh nghiệm mỗi người · +
+                          {outcome.rewards.gold} vàng
+                        </p>
+                        {outcome.campaign && (
+                          <p>
+                            {outcome.campaign.firstClear && (
+                              <span className="font-semibold text-amber-300">
+                                Qua màn lần đầu: +{outcome.campaign.bonusGold}{" "}
+                                vàng ·{" "}
+                              </span>
+                            )}
+                            Lương mang sang: {outcome.campaign.food}
+                          </p>
+                        )}
+                        {outcome.levelUps.map((u) => (
+                          <p
+                            key={u.id}
+                            className="font-semibold text-amber-300"
+                          >
+                            {fighterName(u.id)} lên cấp {u.level}!
+                          </p>
+                        ))}
+                      </div>
+                    )}
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {!online && (
+                        <a
+                          href="/"
+                          target="_blank"
+                          rel="noopener"
+                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                        >
+                          Lưu tiến độ &amp; chơi chiến dịch
+                        </a>
+                      )}
+                      {stage && (
+                        <a
+                          href="/campaign"
+                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                        >
+                          Về chiến dịch
+                        </a>
+                      )}
+                      <button
+                        type="button"
+                        onClick={restart}
+                        className="rounded bg-white/20 px-4 py-2"
+                      >
+                        {mode === "progress"
+                          ? "Nâng kỹ năng & đánh tiếp"
+                          : "Chơi lại"}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="flex flex-wrap items-stretch gap-1.5" aria-label="Kỹ năng">
-              <span className="w-full text-xs opacity-70">Kỹ năng của {actor.name}:</span>
+            <div
+              className="flex flex-wrap items-stretch gap-1.5"
+              aria-label="Kỹ năng"
+            >
+              <span className="w-full text-xs opacity-70">
+                Kỹ năng của {actor.name}:
+              </span>
               {skills.map((def, i) => {
-                const disabled = !myTurn || state.turn.skillUsed || actor.energy < def.cost;
-                const aiming = aim?.skill.id === def.id || slideAim?.skill?.id === def.id;
+                const disabled =
+                  !myTurn || state.turn.skillUsed || actor.energy < def.cost;
+                const aiming =
+                  aim?.skill.id === def.id || slideAim?.skill?.id === def.id;
                 return (
                   <button
                     key={def.id}
@@ -1314,8 +1702,12 @@ export default function DemoGame({
                     title={`${def.name} · ${def.cost} năng lượng · phím ${i + 1}`}
                   >
                     <SkillIcon def={def} className="size-10" />
-                    <span className="absolute left-1 top-1 rounded-br bg-black/60 px-1 font-bold text-white">{i + 1}</span>
-                    <span className="absolute right-1 top-1 rounded-bl bg-sky-700/90 px-1 tabular-nums text-white">{def.cost}</span>
+                    <span className="absolute left-1 top-1 rounded-br bg-black/60 px-1 font-bold text-white">
+                      {i + 1}
+                    </span>
+                    <span className="absolute right-1 top-1 rounded-bl bg-sky-700/90 px-1 tabular-nums text-white">
+                      {def.cost}
+                    </span>
                     <span className="text-center">{def.name}</span>
                   </button>
                 );
@@ -1326,15 +1718,28 @@ export default function DemoGame({
                   onClick={() => {
                     setAim(null);
                     setSelected(null);
-                    setSlideAim(slideAim && !slideAim.skill ? null : { skill: null, max: PASSIVE.phongFreeSlide, from: null });
+                    setSlideAim(
+                      slideAim && !slideAim.skill
+                        ? null
+                        : {
+                            skill: null,
+                            max: PASSIVE.phongFreeSlide,
+                            from: null,
+                          },
+                    );
                   }}
                   className={`flex items-center gap-1 rounded px-2 py-1 text-xs ${slideAim && !slideAim.skill ? "bg-rose-500 text-white" : "bg-teal-600 text-white"}`}
                 >
-                  <ElementIcon element="phong" className="size-3.5" /> Trượt miễn phí
+                  <ElementIcon element="phong" className="size-3.5" /> Trượt
+                  miễn phí
                 </button>
               )}
             </div>
-            {slideAim && <p className="text-xs opacity-80">{slideHint(slideAim)} Esc để hủy.</p>}
+            {slideAim && (
+              <p className="text-xs opacity-80">
+                {slideHint(slideAim)} Esc để hủy.
+              </p>
+            )}
             {aim && (
               <p className="text-xs opacity-80">
                 {needsCell(aim.skill)
@@ -1345,8 +1750,9 @@ export default function DemoGame({
               </p>
             )}
             <p className="text-[11px] opacity-60">
-              Vuốt, kéo hoặc click hai ô kề nhau để đổi chỗ. Bàn phím: mũi tên hoặc WASD, Enter chọn ô, 1–6 dùng kỹ năng, Tab
-              đổi người hành động, Esc hủy.
+              Vuốt, kéo hoặc click hai ô kề nhau để đổi chỗ. Bàn phím: mũi tên
+              hoặc WASD, Enter chọn ô, 1–6 dùng kỹ năng, Tab đổi người hành
+              động, Esc hủy.
             </p>
           </div>
 
@@ -1354,7 +1760,11 @@ export default function DemoGame({
         </div>
 
         {mode === "progress" && (
-          <ShopPanel profile={profile} locked={started && state.winner === null} onAction={profileAction} />
+          <ShopPanel
+            profile={profile}
+            locked={started && state.winner === null}
+            onAction={profileAction}
+          />
         )}
 
         {mode === "progress" && (
@@ -1377,7 +1787,10 @@ export default function DemoGame({
           />
         )}
 
-        <section aria-label="Nhật ký trận" className="max-h-32 overflow-y-auto rounded-lg bg-[var(--panel)] p-2 text-xs">
+        <section
+          aria-label="Nhật ký trận"
+          className="max-h-32 overflow-y-auto rounded-lg bg-[var(--panel)] p-2 text-xs"
+        >
           {log.length === 0 ? (
             <p className="opacity-60">Nhật ký trận sẽ hiện ở đây.</p>
           ) : (
