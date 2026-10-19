@@ -54,3 +54,41 @@ export const STARTER_COMPANIONS: readonly FighterConfig[] = [
   companion("toKim", "Tô Kim", "muuSi", "kim"),
   companion("phungPhong", "Phùng Phong", "quanSu", "phong"),
 ];
+
+export interface ShopCompanion {
+  readonly fighter: FighterConfig;
+  /** Giá vàng. */
+  readonly price: number;
+}
+
+/**
+ * Nhân vật kèm bán ở cửa hàng: 2 người mỗi nghề, nguyên tố rải đủ 7 hệ. Giá chia 2 mức (khoảng 20 và 40
+ * trận thắng), cân theo người cày nhiều nhất. Điểm xuất phát, xem docs/design/08-tien-trinh-kinh-te.md mục 3.
+ */
+export const SHOP_PRICES = { basic: 1500, elite: 3000 } as const;
+
+export const SHOP_COMPANIONS: readonly ShopCompanion[] = [
+  { fighter: companion("tranCuong", "Trần Cương", "tuongSi", "kim"), price: SHOP_PRICES.basic },
+  { fighter: companion("lyLiet", "Lý Liệt", "tuongSi", "hoa"), price: SHOP_PRICES.elite },
+  { fighter: companion("daoLam", "Đào Lam", "phapSu", "thuy"), price: SHOP_PRICES.basic },
+  { fighter: companion("vuLoi", "Vũ Lôi", "phapSu", "loi"), price: SHOP_PRICES.elite },
+  { fighter: companion("hoangMoc", "Hoàng Mộc", "binhLinh", "moc"), price: SHOP_PRICES.basic },
+  { fighter: companion("caoKien", "Cao Kiên", "binhLinh", "kim"), price: SHOP_PRICES.elite },
+  { fighter: companion("lucDiep", "Lục Diệp", "ySu", "moc"), price: SHOP_PRICES.basic },
+  { fighter: companion("bachSuong", "Bạch Sương", "ySu", "phong"), price: SHOP_PRICES.elite },
+  { fighter: companion("ninhHoa", "Ninh Hỏa", "muuSi", "hoa"), price: SHOP_PRICES.basic },
+  { fighter: companion("quachAn", "Quách Ẩn", "muuSi", "thuy"), price: SHOP_PRICES.elite },
+  { fighter: companion("taThach", "Tạ Thạch", "quanSu", "tho"), price: SHOP_PRICES.basic },
+  { fighter: companion("macVan", "Mạc Vân", "quanSu", "loi"), price: SHOP_PRICES.elite },
+];
+
+/** Mọi nhân vật kèm: khởi đầu rồi cửa hàng. */
+export const ALL_COMPANIONS: readonly FighterConfig[] = [...STARTER_COMPANIONS, ...SHOP_COMPANIONS.map((c) => c.fighter)];
+
+export function companionById(id: string): FighterConfig | undefined {
+  return ALL_COMPANIONS.find((c) => c.id === id);
+}
+
+export function shopPrice(id: string): number | undefined {
+  return SHOP_COMPANIONS.find((c) => c.fighter.id === id)?.price;
+}
