@@ -1,6 +1,6 @@
 # Câu hỏi còn mở
 
-> Cập nhật: 18/10/2026
+> Cập nhật: 19/10/2026
 >
 > Mọi TODO trong docs đều có mặt ở đây. Chốt xong mục nào thì sửa file liên quan, đánh dấu ở đây và ghi vào [nhật ký thay đổi](nhat-ky-thay-doi.md).
 
@@ -34,6 +34,7 @@
 
 ## Giao diện
 
+- [ ] Người vẽ hoặc công cụ AI, ngân sách và thời điểm vẽ chân dung, trang bị; danh sách 12 sứ quân theo thứ tự chiến dịch. → [Hình ảnh](design/13-hinh-anh.md#25-định-dạng-giao-hàng)
 - [ ] Cho phép đổi phím trong cài đặt; phím tắt Túi đồ và xem chi tiết sát thương. → [Giao diện](design/11-giao-dien.md#23-bàn-phím)
 
 ## AI
