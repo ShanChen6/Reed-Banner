@@ -161,11 +161,59 @@
   animation: tile-strong 1.8s ease-in-out infinite;
 }
 
+/* Chim lạc bay ngang phần mở đầu trang giới thiệu (src/app/home/LacBirds.tsx). */
+@keyframes lac-fly {
+  from {
+    transform: translateX(-20vw);
+  }
+  to {
+    transform: translateX(110vw);
+  }
+}
+@keyframes lac-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(3deg);
+  }
+}
+@keyframes lac-flap {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(-0.55);
+  }
+}
+.lac-fly {
+  animation: lac-fly linear infinite;
+}
+.lac-bob {
+  animation: lac-bob 3.2s ease-in-out infinite;
+}
+.lac-wing {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: lac-flap var(--flap, 0.8s) ease-in-out infinite;
+}
+.lac-wing-far {
+  animation-delay: calc(var(--flap, 0.8s) * -0.15);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .tile-anim,
   .tile-strong,
   .chain-pop,
-  .float-up {
+  .float-up,
+  .lac-bob,
+  .lac-wing {
     animation: none !important;
+  }
+  /* Không chuyển động thì đàn chim đứng yên ở giữa đường bay. */
+  .lac-fly {
+    animation-play-state: paused !important;
   }
 }
