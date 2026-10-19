@@ -4,6 +4,10 @@
 
 ## 19/10/2026
 
+**AI để dành năng lượng cho tuyệt chiêu (Claude, giai đoạn 3)**
+- Khi so kỹ năng, AI cộng thêm 40 năng lượng vào giá cho lượt dùng (mỗi lượt chỉ 1 kỹ năng), nên giờ để dành và dùng kỹ năng 100. Khiên chấm theo lượng chặn được.
+- Mô phỏng 7 hệ: tỉ lệ thắng không đổi ngoài nhiễu, trận ngắn hơn khoảng 1 lượt ở vài hệ. Chưa đổi số liệu tuyệt chiêu.
+
 **Trang hồ sơ nhân vật `/profile` (Shan yêu cầu, bố cục học theo bảng nhân vật game khác, hình tự vẽ)**
 - Thẻ Nhân vật: chân dung giữa 9 ô trang bị, thanh máu, kinh nghiệm, vàng, bảng chỉ số (phần cộng từ trang bị ghi màu xanh), thưởng bộ và cộng hưởng đang có; bên phải túi đồ dạng lưới 8×5 có lọc, 5 trang, chi tiết món, mặc/tháo/bán và khay ghép 3 món.
 - Thẻ Kỹ năng và thẻ Đội hình & cửa hàng dùng lại bảng của `/play`. Có link Hồ sơ trên `/play` và `/account`; khách cũng xem được.
