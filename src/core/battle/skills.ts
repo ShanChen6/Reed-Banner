@@ -47,7 +47,12 @@ export type SkillStep =
   | { readonly type: "mark"; readonly enhanced: boolean; readonly guaranteed?: boolean }
   /** Phá ô: ngẫu nhiên, hoặc một hình vùng quanh ô người chơi chạm. */
   | { readonly type: "destroy"; readonly area: { readonly random: number } | AreaShape }
-  | { readonly type: "transform"; readonly kind: TileKind; readonly count: number };
+  | { readonly type: "transform"; readonly kind: TileKind; readonly count: number }
+  /**
+   * Trượt 1 hàng hoặc 1 cột do người chơi chọn, tối đa `distance` ô.
+   * axis: chỉ cho trượt hàng; exact: phải đi đúng `distance` ô.
+   */
+  | { readonly type: "slide"; readonly distance: number; readonly axis?: "row"; readonly exact?: boolean };
 
 export interface SkillDef {
   readonly id: string;
@@ -366,7 +371,48 @@ const MAIN: readonly SkillDef[] = [
   },
 ];
 
-export const SKILLS: Readonly<Record<string, SkillDef>> = Object.fromEntries([...DEFS, ...MAIN].map((d) => [d.id, d]));
+// Phong được tách riêng để dễ đọc; cùng khung với các hệ khác.
+const PHONG: readonly SkillDef[] = [
+  {
+    id: "phongQuyenTanVan", name: "Phong Quyển Tàn Vân", element: "phong", slot: 1, cost: 40, target: "self",
+    steps: [{ type: "slide", distance: 2 }],
+  },
+  {
+    id: "thanhPhongTuKhi", name: "Thanh Phong Tụ Khí", element: "phong", slot: 2, cost: 30, target: "self",
+    steps: [{ type: "effect", to: "self", effect: "atkUp", value: 0.2, turns: 2 }, { type: "energy", to: "self", amount: 10 }],
+  },
+  {
+    id: "phongNhanLietKhong", name: "Phong Nhận Liệt Không", element: "phong", slot: 3, cost: 40, target: "enemy",
+    steps: [{ type: "damage", atk: 1.75 }, { type: "dispel", to: "targets" }, { type: "destroy", area: { square: 2 } }],
+  },
+  {
+    id: "cuongPhongQuetTran", name: "Cuồng Phong Quét Trận", element: "phong", slot: 4, cost: 60, target: "allEnemies",
+    steps: [
+      { type: "damage", atk: 0.85 },
+      { type: "effect", to: "targets", effect: "atkDown", value: 0.15, turns: 2 },
+      { type: "destroy", area: { diagonal: 2 } },
+    ],
+  },
+  {
+    id: "baoTapCanKhon", name: "Bão Táp Càn Khôn", element: "phong", slot: 5, cost: 100, target: "enemy",
+    steps: [
+      { type: "damage", atk: 3 },
+      { type: "dispel", to: "targets" },
+      { type: "effect", to: "targets", effect: "atkDown", value: 0.25, turns: 2 },
+      { type: "slide", distance: 2, axis: "row", exact: true },
+      { type: "destroy", area: { square: 4 } },
+    ],
+  },
+  {
+    id: "phongHanhVanLy", name: "Phong Hành Vạn Lý", element: "phong", slot: 6, cost: 50, target: "team",
+    steps: [
+      { type: "effect", to: "targets", effect: "defUp", value: 0.15, turns: 2 },
+      { type: "energy", to: "targets", amount: 15 },
+    ],
+  },
+];
+
+export const SKILLS: Readonly<Record<string, SkillDef>> = Object.fromEntries([...DEFS, ...MAIN, ...PHONG].map((d) => [d.id, d]));
 
 export function getSkill(id: string): SkillDef | undefined {
   return SKILLS[id];
@@ -376,9 +422,14 @@ export function professionSkills(profession: Profession): SkillDef[] {
   return DEFS.filter((d) => d.profession === profession);
 }
 
-/** 6 kỹ năng chủ động của nhân vật chính theo nguyên tố (chưa có hệ Phong). */
+/** 6 kỹ năng chủ động của nhân vật chính theo nguyên tố. */
 export function mainSkills(element: Element): SkillDef[] {
-  return MAIN.filter((d) => d.element === element).sort((a, b) => (a.slot ?? 0) - (b.slot ?? 0));
+  return [...MAIN, ...PHONG].filter((d) => d.element === element).sort((a, b) => (a.slot ?? 0) - (b.slot ?? 0));
+}
+
+/** Bước trượt của kỹ năng, nếu có (người chơi phải chọn hàng/cột và hướng). */
+export function slideStep(def: SkillDef): Extract<SkillStep, { type: "slide" }> | undefined {
+  return def.steps.find((s): s is Extract<SkillStep, { type: "slide" }> => s.type === "slide");
 }
 
 /** Kỹ năng cần người chơi chạm một ô làm tâm hoặc góc vùng. */
@@ -388,15 +439,16 @@ export function needsCell(def: SkillDef): boolean {
 
 /**
  * Kỹ năng bị động của thủ lĩnh theo nguyên tố, tự kích hoạt khi đầy Nộ, hiệu lực 3 lượt của phe.
- * Xem docs/design/12-ky-nang-nhan-vat-chinh.md. Chưa có hệ Phong.
+ * Xem docs/design/12-ky-nang-nhan-vat-chinh.md.
  */
-export const PASSIVES: Partial<Record<Element, { readonly name: string }>> = {
+export const PASSIVES: Record<Element, { readonly name: string }> = {
   moc: { name: "Sinh Sôi Bất Tận" },
   kim: { name: "Kim Cốt Thiết Thân" },
   thuy: { name: "Hàn Tuyền" },
   hoa: { name: "Liệt Hỏa Tâm" },
   tho: { name: "Bàn Thạch" },
   loi: { name: "Điện Quang Tốc Kích" },
+  phong: { name: "Thuận Phong" },
 };
 
 /** Số liệu kỹ năng bị động. */
@@ -416,6 +468,14 @@ export const PASSIVE = {
   /** Lôi: trừ năng lượng mọi đối thủ; mỗi ô âm dương ghép được cho thêm năng lượng. */
   loiDrain: 20,
   loiEnergyPerTile: 5,
+  /**
+   * Phong: nhận ngay năng lượng; trong thời gian hiệu lực, phe được trượt miễn phí 1 ô trước kỹ năng
+   * và đổi ô, tối đa phongFreeSlides lần cho mỗi lần kích hoạt (mô phỏng: mỗi lần ra tay một lần thì
+   * phe Phong thắng khoảng 80%).
+   */
+  phongEnergy: 15,
+  phongFreeSlide: 1,
+  phongFreeSlides: 1,
 } as const;
 
 /**

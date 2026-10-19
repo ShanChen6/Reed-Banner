@@ -8,13 +8,16 @@ import {
   destroyCells,
   generateBoard,
   inBounds,
+  isValidSlide,
   randomCells,
+  slideLine,
   swap,
   transformCells,
   validateWeights,
   type CascadeStep,
   type MoveResult,
   type Pos,
+  type Slide,
   type SpawnWeights,
 } from "../board";
 import { createRng, type Rng } from "../rng";
@@ -32,7 +35,16 @@ import {
 } from "./effects";
 import { elementMultiplier } from "./elements";
 import * as R from "./rules";
-import { MARK, PASSIVE, PASSIVES, getSkill, markAudience, needsCell, type SkillDef, type StepRecipient } from "./skills";
+import {
+  MARK,
+  PASSIVE,
+  getSkill,
+  markAudience,
+  needsCell,
+  slideStep,
+  type SkillDef,
+  type StepRecipient,
+} from "./skills";
 import {
   canAct,
   isAlive,
@@ -58,7 +70,9 @@ export type BattleEvent =
   | { readonly type: "frozenSkip"; readonly side: SideIndex }
   | { readonly type: "swap"; readonly from: Pos; readonly to: Pos; readonly steps: readonly CascadeStep[] }
   | { readonly type: "skill"; readonly side: SideIndex; readonly fighter: number; readonly skill: string }
-  /** Bàn cờ đổi do kỹ năng: phá hoặc biến ô, kèm cascade. */
+  /** Trượt hàng/cột (kỹ năng hoặc lần trượt miễn phí của bị động Phong). */
+  | { readonly type: "slide"; readonly side: SideIndex; readonly fighter: number; readonly slide: Slide; readonly free: boolean }
+  /** Bàn cờ đổi do kỹ năng: phá, biến hoặc trượt ô, kèm cascade. */
   | { readonly type: "board"; readonly steps: readonly CascadeStep[]; readonly transformed: readonly Pos[] }
   | { readonly type: "shuffle" }
   | {
@@ -89,7 +103,11 @@ export type BattleAction =
       readonly target?: number;
       /** Ô người chơi chạm, cho kỹ năng phá vùng. */
       readonly cell?: Pos;
+      /** Hàng/cột và hướng, cho kỹ năng trượt (hệ Phong). */
+      readonly slide?: Slide;
     }
+  /** Trượt miễn phí 1 ô khi bị động Phong đang có hiệu lực, làm trước kỹ năng và đổi ô. */
+  | { readonly type: "slide"; readonly slide: Slide }
   | { readonly type: "swap"; readonly from: Pos; readonly to: Pos }
   | { readonly type: "timeout" };
 
@@ -104,7 +122,8 @@ export type BattleError =
   | "notEnoughEnergy"
   | "tooLate"
   | "tooEarly"
-  | "noTimer";
+  | "noTimer"
+  | "noFreeSlide";
 
 export type ActResult =
   | { readonly ok: true; readonly state: BattleState; readonly events: readonly BattleEvent[] }
@@ -143,6 +162,7 @@ export function createBattle(config: BattleConfig): { state: BattleState; events
       food: s.food ?? R.FOOD_START,
       rage: 0,
       passiveTurns: 0,
+      freeSlides: 0,
       gold: 0,
       books: 0,
     };
@@ -162,6 +182,7 @@ export function createBattle(config: BattleConfig): { state: BattleState; events
       acted: [],
       extra: false,
       skillUsed: false,
+      slideUsed: false,
       deadline: null,
       number: 0,
     },
@@ -200,7 +221,26 @@ export function act(prev: BattleState, action: BattleAction, now = 0): ActResult
       if (needsCell(def) && !(action.cell && inBounds(state.board, action.cell))) {
         return { ok: false, error: "invalidTarget" };
       }
-      ctx.useSkill(def, targets, action.cell);
+      const slide = slideStep(def);
+      if (slide) {
+        const s = action.slide;
+        if (
+          !s ||
+          !isValidSlide(state.board, s, slide.distance) ||
+          (slide.axis && s.axis !== slide.axis) ||
+          (slide.exact && Math.abs(s.offset) !== slide.distance)
+        ) {
+          return { ok: false, error: "invalidTarget" };
+        }
+      }
+      ctx.useSkill(def, targets, action.cell, action.slide);
+      return { ok: true, state, events: ctx.events };
+    }
+    case "slide": {
+      if (late) return { ok: false, error: "tooLate" };
+      if (!canFreeSlide(state)) return { ok: false, error: "noFreeSlide" };
+      if (!isValidSlide(state.board, action.slide, PASSIVE.phongFreeSlide)) return { ok: false, error: "invalidTarget" };
+      ctx.freeSlide(action.slide);
       return { ok: true, state, events: ctx.events };
     }
     case "swap": {
@@ -230,6 +270,18 @@ export function act(prev: BattleState, action: BattleAction, now = 0): ActResult
       return { ok: true, state, events: ctx.events };
     }
   }
+}
+
+/** Phe đang đánh còn lần trượt miễn phí của bị động Phong (trước kỹ năng và đổi ô). */
+export function canFreeSlide(state: BattleState): boolean {
+  const own = state.sides[state.turn.side];
+  return (
+    state.winner === null &&
+    !state.turn.skillUsed &&
+    !state.turn.slideUsed &&
+    own.freeSlides > 0 &&
+    passiveOn(own, own.fighters[own.leader]!, "phong")
+  );
 }
 
 /** Những người phe đang đánh được chọn làm người hành động. */
@@ -372,6 +424,7 @@ class Ctx {
       acted: [],
       extra: false,
       skillUsed: false,
+      slideUsed: false,
       deadline: null,
       number: s.turn.number + 1,
     };
@@ -421,6 +474,7 @@ class Ctx {
     }
     s.turn.extra = true;
     s.turn.skillUsed = false;
+    s.turn.slideUsed = false;
     s.turn.actor = actor;
     this.startAction(true);
   }
@@ -447,7 +501,15 @@ class Ctx {
     this.emit({ type: "turnStart", side: s.turn.side, actor: s.turn.actor, extra });
   }
 
-  useSkill(def: SkillDef, targets: readonly FighterRef[], cell?: Pos): void {
+  freeSlide(slide: Slide): void {
+    const s = this.state;
+    s.turn.slideUsed = true;
+    s.sides[s.turn.side].freeSlides--;
+    this.emit({ type: "slide", side: s.turn.side, fighter: s.turn.actor, slide, free: true });
+    this.applyBoardChange(this.withBoardRng((rng) => slideLine(s.board, slide, rng, s.weights)), []);
+  }
+
+  useSkill(def: SkillDef, targets: readonly FighterRef[], cell?: Pos, slide?: Slide): void {
     const s = this.state;
     const self: FighterRef = { side: s.turn.side, fighter: s.turn.actor };
     const caster = this.fighter(self);
@@ -499,6 +561,11 @@ class Ctx {
             return destroyCells(s.board, cells, rng, s.weights);
           });
           this.applyBoardChange(result, []);
+          break;
+        }
+        case "slide": {
+          this.emit({ type: "slide", side: self.side, fighter: self.fighter, slide: slide!, free: false });
+          this.applyBoardChange(this.withBoardRng((rng) => slideLine(s.board, slide!, rng, s.weights)), []);
           break;
         }
         case "transform": {
@@ -755,8 +822,7 @@ class Ctx {
   private addRage(side: SideIndex, amount: number): void {
     const own = this.state.sides[side];
     const leader = own.fighters[own.leader]!;
-    // Thủ lĩnh chưa có kỹ năng bị động (nguyên tố chưa làm) thì không tích Nộ.
-    if (!isAlive(leader) || own.passiveTurns > 0 || !PASSIVES[leader.element]) return;
+    if (!isAlive(leader) || own.passiveTurns > 0) return;
     own.rage = Math.min(R.RAGE_MAX, own.rage + amount);
     this.emit({ type: "rage", side, amount });
     if (own.rage >= R.RAGE_MAX) {
@@ -797,6 +863,11 @@ class Ctx {
         break;
       case "loi":
         for (const i of aliveIndices(s.sides[foeIdx])) this.gainEnergy({ side: foeIdx, fighter: i }, -PASSIVE.loiDrain);
+        break;
+      case "phong":
+        // Trượt miễn phí: xem canFreeSlide.
+        own.freeSlides = PASSIVE.phongFreeSlides;
+        this.gainEnergy(leaderRef, PASSIVE.phongEnergy);
         break;
       // Kim, Hỏa: hiệu lực khi passiveTurns > 0, xem passiveOn.
       default:

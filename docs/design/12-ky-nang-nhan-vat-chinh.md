@@ -1,6 +1,6 @@
 # Bộ kỹ năng nhân vật chính
 
-> Cập nhật: 19/10/2026 · Trạng thái: **Shan đã duyệt** (18/10/2026). Đã có trong code: Mộc, Kim, Thủy, Hỏa, Thổ, Lôi (19/10/2026); Phong chờ cơ chế trượt.
+> Cập nhật: 19/10/2026 · Trạng thái: **Shan đã duyệt** (18/10/2026). Đã có trong code đủ 7 hệ (19/10/2026).
 >
 > Mọi con số là **điểm xuất phát**. Script mô phỏng cân bằng sẽ chỉnh lại.
 
@@ -142,8 +142,8 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 | Ô | Kỹ năng | Chi phí | Tác dụng |
 |---|---|---|---|
-| Bị động | **Thuận Phong** | Nộ | Nhận ngay 15 năng lượng; trong 3 lượt kế tiếp của phe, ai trong phe ra tay cũng được **trượt** miễn phí 1 hàng hoặc 1 cột đi 1 ô, làm trước kỹ năng và đổi ô (không tốn năng lượng, không tính là dùng kỹ năng, không đặt lại đồng hồ). |
-| 1 | **Phong Quyển Tàn Vân** | 20 | **Trượt** 1 hàng hoặc 1 cột đi 1–2 ô. |
+| Bị động | **Thuận Phong** | Nộ | Nhận ngay 15 năng lượng; trong 3 lượt kế tiếp của phe, người ra tay được **trượt** miễn phí 1 hàng hoặc 1 cột đi 1 ô, làm trước kỹ năng và đổi ô (không tốn năng lượng, không tính là dùng kỹ năng, không đặt lại đồng hồ). **Tối đa 1 lần mỗi lần kích hoạt** (chờ Shan chốt, xem dưới). |
+| 1 | **Phong Quyển Tàn Vân** | 40 | **Trượt** 1 hàng hoặc 1 cột đi 1–2 ô. |
 | 2 | **Thanh Phong Tụ Khí** | 30 | Công +20% cho bản thân 2 lượt, nhận ngay 10 năng lượng. |
 | 3 | **Phong Nhận Liệt Không** | 40 | 175% ATK vào 1 đối thủ, Xua tan mục tiêu. Phá vùng **2×2**. |
 | 4 | **Cuồng Phong Quét Trận** | 60 | 85% ATK vào toàn bộ kẻ địch, Công −15% mỗi mục tiêu 2 lượt. Phá **chữ X lớn**. |
@@ -151,6 +151,8 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 | 6 | **Phong Hành Vạn Lý** | 50 | Thủ +15% cho cả đội 2 lượt, cả đội nhận 15 năng lượng. |
 
 - Phong là hệ duy nhất có kỹ năng trượt, nên mạnh nhất ở việc chủ động tạo combo và ô đặc biệt.
+- Mô phỏng 19/10/2026 (3vs3, 180 trận): một lần trượt chọn khéo gần như là một nước đi miễn phí kèm combo. Cho trượt miễn phí ở mọi lần ra tay trong 3 lượt thì phe Phong thắng khoảng 80%; chỉ 1 lần mỗi lần kích hoạt thì khoảng 73%; bỏ hẳn thì 68%. Phong Quyển Tàn Vân tăng giá 20 → 40 vì cùng lý do.
+- Thao tác: kéo dọc một hàng hoặc một cột từ ô đầu tới ô đích (hoặc chạm ô đầu rồi ô đích).
 
 ## 9. So sánh nhanh
 
@@ -176,9 +178,10 @@ AI Thường, seed 7. 3vs3: 90 trận, nhân vật chính và 2 nhân vật kèm
 | 🔥 Hỏa | 68% | 20 | 77% | 6.5 |
 | ⛰️ Thổ | 68% | 22.5 | 73% | 12.5 |
 | ⚡ Lôi | 70% | 20.5 | 67% | 8 |
+| 🌪️ Phong (180 trận 3vs3) | 73% | 17.5 | 82% | 7.5 |
 
 - Ô 1 phá ô giá 20 (Hỏa 3×3, Lôi 1 cột) quá mạnh, vì ô bị phá được thu hoạch như một nước đi, kể cả kiếm. Đã nâng giá Hỏa lên 35 (bằng Mộc), Lôi lên 40. Trước khi nâng giá, phe Hỏa thắng 79–82% ở 3vs3.
 - Các số còn lại giữ đúng bảng trên.
 - Tỉ lệ thắng còn phụ thuộc khắc chế với 5 nhân vật kèm khởi đầu (ví dụ Mộc bị Tô Kim hệ Kim khắc), nên chỉ nên so sánh tương đối.
 
-> TODO: hệ Phong; chạy lại khi có đủ 7 bộ và thêm nhân vật kèm.
+> TODO: chạy lại khi có thêm nhân vật kèm, để giảm ảnh hưởng của khắc chế với 5 nhân vật kèm khởi đầu.

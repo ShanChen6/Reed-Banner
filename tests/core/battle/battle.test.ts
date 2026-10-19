@@ -215,16 +215,6 @@ describe("áp kết quả bàn cờ", () => {
     assert.equal(r.state.sides[0].passiveTurns, 4);
   });
 
-  it("thủ lĩnh chưa có bị động thì không tích nộ và không kích hoạt", () => {
-    const board = BOARD.replace("KKAKBSVABTSV", "DDADBSVABTSV");
-    const { state } = createBattle({ sides: [solo(fighter("a", { element: "phong" })), solo()], seed: 1 });
-    const primed: BattleState = structuredClone(withBoard(state, board));
-    primed.sides[0].rage = 95;
-    const r = ok(act(primed, { type: "swap", from: { row: 2, col: 3 }, to: { row: 2, col: 2 } }));
-    assert.ok(!r.events.some((e) => e.type === "passive" || e.type === "rage"));
-    assert.equal(r.state.sides[0].passiveTurns, 0);
-  });
-
   it("ghép bánh chưng cộng lương", () => {
     const board = BOARD.replace("KKAKBSVABTSV", "BBABKSVAKTSV");
     const { state } = createBattle({ sides: [solo(), solo()], seed: 1 });

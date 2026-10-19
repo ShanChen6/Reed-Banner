@@ -2,9 +2,19 @@
 // Ngang bằng thông tin: AI chỉ nhận AiView (không có luồng ngẫu nhiên của bàn cờ),
 // chỉ mô phỏng phần biết chắc, và dùng luồng ngẫu nhiên riêng (aiRng).
 
-import { areaCells, findValidMoves, pickKind, type Board, type Move, type TileKind } from "../board";
+import {
+  areaCells,
+  findValidMoves,
+  pickKind,
+  slideCells,
+  type Board,
+  type Move,
+  type Slide,
+  type TileKind,
+} from "../board";
 import {
   act,
+  canFreeSlide,
   cascadeMultiplier,
   defenseMultiplier,
   elementMultiplier,
@@ -15,6 +25,7 @@ import {
   moraleOf,
   needsCell,
   otherSide,
+  PASSIVE,
   pickTarget,
   selectableActors,
   type BattleAction,
@@ -160,8 +171,35 @@ function areaSize(board: Board, area: Extract<SkillStep, { type: "destroy" }>["a
   return areaCells(board, { row: Math.floor(board.rows / 2), col: Math.floor(board.cols / 2) }, area).length;
 }
 
+/**
+ * Lần trượt hàng/cột tốt nhất theo phần biết chắc (ô đã có trên bàn), cho kỹ năng Phong và lần
+ * trượt miễn phí của bị động. Luôn trả về một lần trượt hợp lệ, kể cả khi không tạo bộ ghép nào.
+ */
+export function bestSlide(
+  view: AiView,
+  maxDistance: number,
+  only: { readonly axis?: "row"; readonly exact?: boolean } = {},
+): { slide: Slide; score: number } {
+  const ctx = context(view);
+  const offsets = only.exact
+    ? [maxDistance, -maxDistance]
+    : Array.from({ length: maxDistance }, (_, i) => [i + 1, -(i + 1)]).flat();
+  let best: { slide: Slide; score: number } | null = null;
+  for (const axis of only.axis ? [only.axis] : (["row", "col"] as const)) {
+    const lines = axis === "row" ? view.board.rows : view.board.cols;
+    for (let index = 0; index < lines; index++) {
+      for (const offset of offsets) {
+        const slide = { axis, index, offset };
+        const score = scoreOutcome(ctx, simulateFrom(slideCells(view.board, slide), []));
+        if (!best || score > best.score) best = { slide, score };
+      }
+    }
+  }
+  return best!;
+}
+
 /** Chấm sơ bộ một kỹ năng; null nếu không dùng được hoặc vô ích. */
-function scoreSkill(view: AiView, def: SkillDef): { score: number; target?: number } | null {
+function scoreSkill(view: AiView, def: SkillDef): { score: number; target?: number; slide?: Slide } | null {
   const ctx = context(view);
   const own = view.sides[view.turn.side];
   const foe = view.sides[otherSide(view.turn.side)];
@@ -183,8 +221,15 @@ function scoreSkill(view: AiView, def: SkillDef): { score: number; target?: numb
     to === "self" ? [ctx.me] : to === "team" ? own.fighters.filter(isAlive) : to === "enemies" ? enemies : hostile ? hit : recipients;
 
   let score = 0;
+  let slide: Slide | undefined;
   for (const step of def.steps) {
     switch (step.type) {
+      case "slide": {
+        const best = bestSlide(view, step.distance, step);
+        score += best.score;
+        slide = best.slide;
+        break;
+      }
       case "damage": {
         for (const t of hit) {
           const defense = defenseMultiplier(t.def, step.pierce ?? 0);
@@ -226,7 +271,7 @@ function scoreSkill(view: AiView, def: SkillDef): { score: number; target?: numb
   }
   if (score <= 0) return null;
   const target = def.target === "enemy" ? lowestEnemy : def.target === "ally" ? lowestAlly : undefined;
-  return target === undefined ? { score } : { score, target };
+  return { score, ...(target === undefined ? {} : { target }), ...(slide ? { slide } : {}) };
 }
 
 export function chooseSkill(view: AiView): BattleAction | null {
@@ -245,7 +290,7 @@ export function chooseSkill(view: AiView): BattleAction | null {
     if (def.cost > me.energy || ratio < bestRatio * SAVE_FOR_BETTER) continue;
     if (ratio <= 1 || (best && best.ratio >= ratio)) continue;
     const cell = needsCell(def) ? { row: Math.floor(view.board.rows / 2), col: Math.floor(view.board.cols / 2) } : undefined;
-    best = { action: { type: "skill", skill: id, target: scored.target, cell }, ratio };
+    best = { action: { type: "skill", skill: id, target: scored.target, cell, slide: scored.slide }, ratio };
   }
   return best?.action ?? null;
 }
@@ -273,6 +318,11 @@ export function playAiTurn(
 
   while (state.winner === null && state.turn.side === side && state.turn.number === number) {
     if (selectableActors(state).length === 0) break;
+    if (canFreeSlide(state)) {
+      const free = bestSlide(toView(state), PASSIVE.phongFreeSlide);
+      if (free.score > 0) apply({ type: "slide", slide: free.slide });
+      if (state.winner !== null) break;
+    }
     const skill = chooseSkill(toView(state));
     if (skill) apply(skill);
     if (state.winner !== null) break;
