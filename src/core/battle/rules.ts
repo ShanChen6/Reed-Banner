@@ -20,16 +20,30 @@ export const PROFESSION_TILE: Record<Profession, TileKind> = {
 export const SOLO_HP_MULTIPLIER = 2;
 
 /**
- * Mệt mỏi (1vs1): từ lượt thứ FATIGUE_START_TURN của mỗi phe, hồi máu và Khiên giảm FATIGUE_STEP
- * mỗi lượt, về 0 sau 10 lượt, để trận giữa hai bên thiên phòng thủ vẫn kết thúc bằng hạ gục.
+ * Tinh thần: mỗi tướng bắt đầu với SPIRIT_MAX. Từ lượt thứ SPIRIT_DECAY_START_TURN của phe, đầu mỗi
+ * lượt của phe mọi tướng còn sống mất SPIRIT_DECAY. Tinh thần thấp kéo ATK, DEF, hồi máu và Khiên
+ * xuống, để trận kéo dài (nhất là giữa hai bên thiên phòng thủ) vẫn kết thúc bằng hạ gục.
  */
-export const FATIGUE_START_TURN = 30;
-export const FATIGUE_STEP = 0.1;
+export const SPIRIT_MAX = 100;
+export const SPIRIT_DECAY_START_TURN = 25;
+export const SPIRIT_DECAY = 10;
+/** ATK và DEF còn tỉ lệ này khi Tinh thần về 0. */
+export const SPIRIT_STAT_FLOOR = 0.7;
 
-/** Hệ số hồi máu và Khiên theo số lượt của phe (tính từ 1). */
-export function fatigueMultiplier(sideTurn: number): number {
-  if (sideTurn < FATIGUE_START_TURN) return 1;
-  return Math.max(0, 1 - FATIGUE_STEP * (sideTurn - FATIGUE_START_TURN + 1));
+/** Tinh thần sau khi phe đã bắt đầu `sideTurn` lượt (tính từ 1). */
+export function spiritAt(sideTurn: number): number {
+  if (sideTurn < SPIRIT_DECAY_START_TURN) return SPIRIT_MAX;
+  return Math.max(0, SPIRIT_MAX - SPIRIT_DECAY * (sideTurn - SPIRIT_DECAY_START_TURN + 1));
+}
+
+/** Hệ số ATK và DEF theo Tinh thần. */
+export function spiritStatMultiplier(spirit: number): number {
+  return SPIRIT_STAT_FLOOR + (1 - SPIRIT_STAT_FLOOR) * (spirit / SPIRIT_MAX);
+}
+
+/** Hệ số hồi máu và Khiên nhận được theo Tinh thần. */
+export function spiritHealMultiplier(spirit: number): number {
+  return spirit / SPIRIT_MAX;
 }
 
 export const TURN_MS = 30_000;

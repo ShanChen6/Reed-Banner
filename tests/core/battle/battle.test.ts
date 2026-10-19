@@ -232,6 +232,22 @@ describe("áp kết quả bàn cờ", () => {
     assert.deepEqual(r.events.find((e) => e.type === "food"), { type: "food", side: 0, amount: 12 });
   });
 
+  it("Tinh thần: đầy khi vào trận, trừ dần từ lượt 25 của phe", () => {
+    for (let seed = 1; seed < 20; seed++) {
+      const { state } = createBattle({ sides: [solo(), solo()], seed, timer: false });
+      assert.equal(state.sides[0].fighters[0]!.spirit, 100);
+      const s = structuredClone(state);
+      s.turn.number = 49;
+      const r = play(s);
+      if (r.state.turn.side !== 1 || r.state.winner !== null) continue;
+      assert.equal(r.state.sides[1].fighters[0]!.spirit, 90);
+      assert.equal(r.state.sides[0].fighters[0]!.spirit, 100);
+      assert.ok(r.events.some((e) => e.type === "spirit" && e.side === 1 && e.spirit === 90));
+      return;
+    }
+    assert.fail("không tìm được seed không có lượt thêm");
+  });
+
   it("hết lương: mất 3% máu tối đa đầu lượt", () => {
     const { state, events } = createBattle({ sides: [{ ...solo(), food: 3 }, solo()], seed: 1 });
     assert.equal(state.sides[0].food, 0);

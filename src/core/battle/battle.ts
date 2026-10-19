@@ -54,6 +54,7 @@ export interface FighterRef {
 export type BattleEvent =
   | { readonly type: "turnStart"; readonly side: SideIndex; readonly actor: number; readonly extra: boolean }
   | { readonly type: "upkeep"; readonly side: SideIndex; readonly food: number }
+  | { readonly type: "spirit"; readonly side: SideIndex; readonly fighter: number; readonly spirit: number }
   | { readonly type: "frozenSkip"; readonly side: SideIndex }
   | { readonly type: "swap"; readonly from: Pos; readonly to: Pos; readonly steps: readonly CascadeStep[] }
   | { readonly type: "skill"; readonly side: SideIndex; readonly fighter: number; readonly skill: string }
@@ -136,7 +137,7 @@ export function createBattle(config: BattleConfig): { state: BattleState; events
     return {
       fighters: s.fighters.map((f) => {
         const maxHp = solo ? Math.round(f.maxHp * R.SOLO_HP_MULTIPLIER) : f.maxHp;
-        return { ...f, maxHp, hp: maxHp, energy: 0, effects: [] };
+        return { ...f, maxHp, hp: maxHp, energy: 0, spirit: R.SPIRIT_MAX, effects: [] };
       }),
       leader: s.leader,
       food: s.food ?? R.FOOD_START,
@@ -316,14 +317,14 @@ function hpRatio(f: Fighter): number {
 }
 
 function effectiveAtk(f: Fighter): number {
-  return f.atk * statModifier(f.effects, "atkUp", "atkDown");
+  return f.atk * statModifier(f.effects, "atkUp", "atkDown") * R.spiritStatMultiplier(f.spirit);
 }
 
 /** DEF sau hiệu ứng; Binh lính +5% mỗi bậc sĩ khí trên mức bình thường. */
 function effectiveDef(side: Side, f: Fighter): number {
   const tiers = R.moraleOf(side.food) === "eager" ? 1 : 0;
   const bonus = f.profession === "binhLinh" ? R.BINH_LINH_DEF_PER_TIER * tiers : 0;
-  return f.def * (statModifier(f.effects, "defUp", "defDown") + bonus);
+  return f.def * (statModifier(f.effects, "defUp", "defDown") + bonus) * R.spiritStatMultiplier(f.spirit);
 }
 
 class Ctx {
@@ -369,6 +370,14 @@ class Ctx {
     const hasBinhLinh = own.fighters.some((f) => isAlive(f) && f.profession === "binhLinh");
     own.food = Math.max(0, own.food - (hasBinhLinh ? R.FOOD_UPKEEP_BINH_LINH : R.FOOD_UPKEEP));
     this.emit({ type: "upkeep", side, food: own.food });
+
+    if (Math.ceil(s.turn.number / 2) >= R.SPIRIT_DECAY_START_TURN) {
+      own.fighters.forEach((f, i) => {
+        if (!isAlive(f) || f.spirit === 0) return;
+        f.spirit = Math.max(0, f.spirit - R.SPIRIT_DECAY);
+        this.emit({ type: "spirit", side, fighter: i, spirit: f.spirit });
+      });
+    }
 
     own.fighters.forEach((f, i) => {
       if (own.food === 0 && isAlive(f)) {
@@ -575,16 +584,9 @@ class Ctx {
     }
   }
 
-  /** 1 ngoài 1vs1; ở 1vs1 giảm dần theo luật Mệt mỏi. */
-  private fatigue(): number {
-    const s = this.state;
-    if (!s.sides.every((side) => side.fighters.length === 1)) return 1;
-    return R.fatigueMultiplier(Math.ceil(s.turn.number / 2));
-  }
-
   private applyEffect(ref: FighterRef, effect: Effect): void {
     if (effect.kind === "shield") {
-      const value = Math.round(effect.value * this.fatigue());
+      const value = Math.round(effect.value * R.spiritHealMultiplier(this.fighter(ref).spirit));
       if (value <= 0) return;
       effect = { ...effect, value };
     }
@@ -707,7 +709,7 @@ class Ctx {
     const f = this.fighter(ref);
     if (!isAlive(f)) return;
     const before = f.hp;
-    f.hp = Math.min(f.maxHp, f.hp + Math.round(amount * this.fatigue()));
+    f.hp = Math.min(f.maxHp, f.hp + Math.round(amount * R.spiritHealMultiplier(f.spirit)));
     if (f.hp !== before) this.emit({ type: "heal", ...ref, amount: f.hp - before });
   }
 

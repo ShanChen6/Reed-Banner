@@ -4,6 +4,9 @@
 
 ## 19/10/2026
 
+**Tinh thần**
+- Thêm chỉ số Tinh thần cho mỗi tướng (Shan yêu cầu): 100 khi vào trận, từ lượt 25 của phe mất 10 mỗi lượt. ATK và DEF còn 70%, hồi máu và Khiên về 0 khi Tinh thần cạn. Áp dụng cả 1vs1 và 3vs3, thay luật Mệt mỏi. Mô phỏng: không trận hòa, 3vs3 p90 46.5 lượt (trước 58).
+
 **1vs1 và Nộ**
 - Luật Mệt mỏi cho 1vs1 (Shan chọn): từ lượt 30 mỗi bên, hồi máu và Khiên giảm 10% mỗi lượt, về 0 sau 10 lượt. Mô phỏng: không còn trận hòa, trung vị 22 lượt mỗi bên.
 - 1vs1: máu tối đa ×2 (trước đó trận 1vs1 chỉ kéo dài trung vị khoảng 4 lượt mỗi bên). Máu cao hơn nữa thì trận hòa tăng mạnh vì các cặp thiên về hồi máu, phòng thủ không hạ được nhau.
