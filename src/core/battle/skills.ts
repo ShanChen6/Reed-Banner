@@ -68,7 +68,7 @@ const DEFS: readonly SkillDef[] = [
     id: "thuThanh", name: "Thủ thành", profession: "binhLinh", tier: 1, cost: 30, target: "self",
     steps: [
       { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 },
-      { type: "effect", to: "self", effect: "shield", value: 0.25, turns: null, ofMaxHp: true },
+      { type: "effect", to: "self", effect: "shield", value: 0.2, turns: null, ofMaxHp: true },
       mark,
     ],
   },
@@ -82,7 +82,7 @@ const DEFS: readonly SkillDef[] = [
   },
   {
     id: "tuongKhien", name: "Tường khiên", profession: "binhLinh", tier: 2, cost: 45, target: "team",
-    steps: [{ type: "effect", to: "targets", effect: "shield", value: 0.2, turns: null, ofMaxHp: true }, mark],
+    steps: [{ type: "effect", to: "targets", effect: "shield", value: 0.15, turns: null, ofMaxHp: true }, mark],
   },
   // Pháp sư
   { id: "phepCong", name: "Phép công", profession: "phapSu", tier: 1, cost: 30, target: "enemy", steps: [{ type: "damage", atk: 1.8 }, mark] },
@@ -94,15 +94,15 @@ const DEFS: readonly SkillDef[] = [
   // Y sư
   {
     id: "linhDuoc", name: "Linh dược", profession: "ySu", tier: 1, cost: 30, target: "ally",
-    steps: [{ type: "heal", to: "targets", ratio: 0.3 }, { type: "cleanse", to: "targets" }, mark],
+    steps: [{ type: "heal", to: "targets", ratio: 0.22 }, { type: "cleanse", to: "targets" }, mark],
   },
   {
     id: "duongSinh", name: "Dưỡng sinh", profession: "ySu", tier: 2, cost: 45, target: "team",
-    steps: [{ type: "effect", to: "targets", effect: "regen", value: 0.1, turns: 3, ofMaxHp: true }, mark],
+    steps: [{ type: "effect", to: "targets", effect: "regen", value: 0.07, turns: 3, ofMaxHp: true }, mark],
   },
   {
     id: "teDo", name: "Tế độ", profession: "ySu", tier: 2, cost: 45, target: "team",
-    steps: [{ type: "heal", to: "targets", ratio: 0.2 }, { type: "cleanse", to: "targets" }, mark],
+    steps: [{ type: "heal", to: "targets", ratio: 0.15 }, { type: "cleanse", to: "targets" }, mark],
   },
   // Mưu sĩ
   { id: "muaChuoc", name: "Mua chuộc", profession: "muuSi", tier: 1, cost: 30, target: "enemy", steps: [{ type: "energy", to: "targets", amount: -40 }, mark] },
@@ -129,33 +129,33 @@ const DEFS: readonly SkillDef[] = [
 // Bộ kỹ năng nhân vật chính hệ Mộc, docs/design/12-ky-nang-nhan-vat-chinh.md mục 2.
 const MAIN: readonly SkillDef[] = [
   {
-    id: "lucDiepPhong", name: "Lục Diệp Phong", element: "moc", slot: 1, cost: 20, target: "self",
-    steps: [{ type: "destroy", area: { random: 8 } }],
+    id: "lucDiepPhong", name: "Lục Diệp Phong", element: "moc", slot: 1, cost: 35, target: "self",
+    steps: [{ type: "destroy", area: { random: 5 } }],
   },
   {
     id: "linhMocHoiSinh", name: "Linh Mộc Hồi Sinh", element: "moc", slot: 2, cost: 30, target: "self",
-    steps: [{ type: "heal", to: "self", ratio: 0.15 }, { type: "transform", kind: "tim", count: 3 }],
+    steps: [{ type: "heal", to: "self", ratio: 0.11 }, { type: "transform", kind: "tim", count: 3 }],
   },
   {
     id: "thanhMocHoPhap", name: "Thanh Mộc Hộ Pháp", element: "moc", slot: 3, cost: 40, target: "enemy",
-    steps: [{ type: "damage", atk: 1.7, lifesteal: 0.3 }, { type: "destroy", area: { square: 2 } }],
+    steps: [{ type: "damage", atk: 1.3, lifesteal: 0.3 }, { type: "destroy", area: { square: 2 } }],
   },
   {
     id: "cuongVuThienDiep", name: "Cuồng Vũ Thiên Diệp", element: "moc", slot: 4, cost: 60, target: "allEnemies",
-    steps: [{ type: "damage", atk: 0.85 }, { type: "destroy", area: { square: 3 } }],
+    steps: [{ type: "damage", atk: 0.65 }, { type: "destroy", area: { square: 3 } }],
   },
   {
     id: "coThuTranThien", name: "Cổ Thụ Trấn Thiên", element: "moc", slot: 5, cost: 100, target: "enemy",
     steps: [
-      { type: "damage", atk: 3 },
-      { type: "effect", to: "self", effect: "regen", value: 0.06, turns: 2, ofMaxHp: true },
+      { type: "damage", atk: 2.25 },
+      { type: "effect", to: "self", effect: "regen", value: 0.05, turns: 2, ofMaxHp: true },
       { type: "destroy", area: { square: 4 } },
     ],
   },
   {
     id: "thanhTrucBaoPhu", name: "Thanh Trúc Bảo Phù", element: "moc", slot: 6, cost: 50, target: "self",
     steps: [
-      { type: "effect", to: "self", effect: "regen", value: 0.08, turns: 3, ofMaxHp: true },
+      { type: "effect", to: "self", effect: "regen", value: 0.06, turns: 3, ofMaxHp: true },
       { type: "cleanse", to: "self" },
       { type: "effect", to: "self", effect: "defUp", value: 0.15, turns: 2 },
     ],
@@ -184,10 +184,10 @@ export function needsCell(def: SkillDef): boolean {
 
 /**
  * Kỹ năng bị động của thủ lĩnh theo nguyên tố, tự kích hoạt khi đầy Nộ.
- * Hiện có hệ Mộc: Sinh Sôi Bất Tận, Hồi phục 8% máu tối đa mỗi lượt cho cả đội, 3 lượt.
+ * Hiện có hệ Mộc: Sinh Sôi Bất Tận, Hồi phục 3% máu tối đa mỗi lượt cho cả đội, 3 lượt.
  */
 export const PASSIVES: Partial<Record<Element, { readonly name: string; readonly teamRegen: number }>> = {
-  moc: { name: "Sinh Sôi Bất Tận", teamRegen: 0.08 },
+  moc: { name: "Sinh Sôi Bất Tận", teamRegen: 0.03 },
 };
 
 /**

@@ -65,13 +65,13 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 | Ô | Kỹ năng | Chi phí | Tác dụng |
 |---|---|---|---|
-| Bị động | **Sinh Sôi Bất Tận** | Nộ | Hồi phục 8% máu tối đa mỗi lượt cho cả đội, 3 lượt. |
-| 1 | **Lục Diệp Phong** | 20 | Phá **8 ô ngẫu nhiên**. |
-| 2 | **Linh Mộc Hồi Sinh** | 30 | Hồi 15% máu tối đa, biến 3 ô ngẫu nhiên thành ❤️. |
-| 3 | **Thanh Mộc Hộ Pháp** | 40 | 170% ATK vào 1 đối thủ, hồi cho bản thân 30% sát thương gây ra. Phá vùng **2×2**. |
-| 4 | **Cuồng Vũ Thiên Diệp** | 60 | 85% ATK vào toàn bộ kẻ địch. Phá vùng **3×3**. |
-| 5 | **Cổ Thụ Trấn Thiên** | 100 | 300% ATK vào 1 đối thủ, Hồi phục 6% máu cho bản thân 2 lượt. Phá vùng **4×4**. |
-| 6 | **Thanh Trúc Bảo Phù** | 50 | Hồi phục 8% máu mỗi lượt trong 3 lượt, Thanh tẩy bản thân, Thủ +15% 2 lượt. |
+| Bị động | **Sinh Sôi Bất Tận** | Nộ | Hồi phục 3% máu tối đa mỗi lượt cho cả đội, 3 lượt. |
+| 1 | **Lục Diệp Phong** | 35 | Phá **5 ô ngẫu nhiên**. |
+| 2 | **Linh Mộc Hồi Sinh** | 30 | Hồi 11% máu tối đa, biến 3 ô ngẫu nhiên thành ❤️. |
+| 3 | **Thanh Mộc Hộ Pháp** | 40 | 130% ATK vào 1 đối thủ, hồi cho bản thân 30% sát thương gây ra. Phá vùng **2×2**. |
+| 4 | **Cuồng Vũ Thiên Diệp** | 60 | 65% ATK vào toàn bộ kẻ địch. Phá vùng **3×3**. |
+| 5 | **Cổ Thụ Trấn Thiên** | 100 | 225% ATK vào 1 đối thủ, Hồi phục 5% máu cho bản thân 2 lượt. Phá vùng **4×4**. |
+| 6 | **Thanh Trúc Bảo Phù** | 50 | Hồi phục 6% máu mỗi lượt trong 3 lượt, Thanh tẩy bản thân, Thủ +15% 2 lượt. |
 
 ## 3. ⚙️ Kim: đánh chắc, xuyên giáp
 
