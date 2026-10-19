@@ -4,6 +4,10 @@
 
 ## 19/10/2026
 
+**Trang bị (code, Shan yêu cầu)**
+- Code hệ thống trang bị trong `src/core/gear/`: 9 ô, 5 phẩm, hệ số nguyên tố, vũ khí giữ riêng theo nghề, thưởng bộ và cộng hưởng ở mốc 6 và 9 món, ghép 3 món nâng bậc. Chưa nối vào trận demo và sim.
+- Chỉ số gốc món Trắng ATK +3, Máu +30, DEF +2; 3 bộ khởi đầu (Cờ Lau, Hoa Lư, Đồng Cổ) và cộng hưởng 7 nguyên tố chỉ cộng chỉ số. Tất cả là đề xuất điểm xuất phát, chờ chốt.
+
 **Kỹ năng bàn cờ giá rẻ (cân bằng sau giai đoạn 1, Shan chọn)**
 - Ô thu hoạch khi kỹ năng hoặc lần trượt miễn phí đổi bàn cờ (phá, biến, trượt và cascade sau đó) chỉ cho 50% sát thương kiếm và 50% năng lượng âm dương. Trước đó kỹ năng ô 1 giá rẻ thu hoạch như nước đi miễn phí, và chỉ được vá bằng tăng giá từng kỹ năng.
 - Tăng lại ô 3 của Kim, Lôi, Mộc, Thủy; giảm Cuồng Phong Quét Trận; Thuận Phong bỏ 15 năng lượng tức thì. Mô phỏng 3vs3 900 trận mỗi hệ: các hệ thắng 54–69% (trước 50–75%). Chi tiết ở [Bộ kỹ năng nhân vật chính](design/12-ky-nang-nhan-vat-chinh.md#mô-phỏng-19102026).
