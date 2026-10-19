@@ -1,6 +1,6 @@
 # Trang bị
 
-> Cập nhật: 18/10/2026
+> Cập nhật: 19/10/2026
 
 ## 1. Chín ô trang bị
 
@@ -19,8 +19,8 @@ Mỗi nhân vật (nhân vật chính và nhân vật kèm) có **9 ô trang b�
 | 9 | **Ngọc bội** | +Máu | Dùng chung mọi nghề |
 
 - Mỗi chỉ số chính có đúng 3 ô.
-
-> TODO: có thêm chỉ số phụ (năng lượng khởi đầu, hồi máu…) cho trang sức hay không.
+- **Không có chỉ số phụ** (Shan chốt 19/10/2026): trang sức chỉ cộng chỉ số chính, không có năng lượng khởi đầu hay hồi máu.
+- **Chỉ số gốc** của một món phẩm Trắng (điểm xuất phát, code ở `src/core/gear/`): ATK +3, Máu +30, DEF +2. Chỉ số món = gốc × hệ số phẩm × hệ số nguyên tố, làm tròn. Ví dụ đủ 3 món Cam cùng nguyên tố cộng ATK +42, Máu +405, DEF +27.
 
 ## 2. Nguyên tố của trang bị
 
@@ -41,7 +41,45 @@ Có hai mốc thưởng: **6 món** và **9 món**. Mốc 9 món cộng thêm v�
 - Thưởng bộ và cộng hưởng nguyên tố cộng dồn được nếu cùng thỏa.
 - Vì nhân vật chính đổi được nguyên tố, cộng hưởng nguyên tố cho phép giữ một bộ đồ cố định mà vẫn có lợi.
 
-> TODO: danh sách bộ trang bị; giá trị thưởng bộ và cộng hưởng của từng nguyên tố ở mốc 6 và 9 món.
+- Chỉ số vào trận = (chỉ số gốc của nhân vật + cộng phẳng của các món) × (1 + tổng tỉ lệ thưởng bộ và cộng hưởng), làm tròn.
+- Vũ khí của nghề khác không tính vào số món; nhân vật chính thiếu vũ khí của nghề đang chọn thì chỉ có 8 món.
+
+**Thưởng bộ chốt theo mô phỏng** (Claude chốt theo ủy quyền của Shan, 19/10/2026), chỉ cộng chỉ số:
+
+| Bộ | Mốc 6 món | Mốc 9 món (thêm) |
+|---|---|---|
+| Cờ Lau | ATK +4%, Máu +3% | ATK +4%, Máu +3% |
+| Hoa Lư | DEF +12%, Máu +4% | DEF +12%, Máu +4% |
+| Đồng Cổ | ATK +7% | ATK +7% |
+
+| Cộng hưởng | Mốc 6 món | Mốc 9 món (thêm) |
+|---|---|---|
+| ⚙️ Kim | ATK +5% | ATK +5% |
+| 🌳 Mộc | Máu +6% | Máu +6% |
+| 💧 Thủy | Máu +3%, DEF +5% | Máu +3%, DEF +5% |
+| 🔥 Hỏa | ATK +6% | ATK +6% |
+| ⛰️ Thổ | DEF +10% | DEF +10% |
+| ⚡ Lôi | ATK +3%, Máu +3% | ATK +3%, Máu +3% |
+| 🌪️ Phong | ATK +3%, DEF +5% | ATK +3%, DEF +5% |
+
+### Mô phỏng 19/10/2026
+
+3vs3, AI Thường, 300 trận mỗi hệ nhân vật chính × 7 hệ. Mọi nhân vật mặc đủ 9 món cùng hệ với mình (`pnpm sim -- --gear-tier 3 --set coLau`). Số là tỉ lệ thắng trung bình của phe nhân vật chính.
+
+| Cấu hình | Thắng | Lượt mỗi phe (trung vị) |
+|---|---|---|
+| Không đồ | 63.5% | 23.6 |
+| Hai phe đồ Lam, không bộ (chỉ cộng hưởng) | 60.3% | 27.8 |
+| Đồ Cam, không bộ | 59.2% | 31.7 |
+| Đồ Lam, phe mình đủ bộ Cờ Lau | 70.0% | 26.7 |
+| Đồ Lam, phe mình đủ bộ Hoa Lư | 68.9% | 29.2 |
+| Đồ Lam, phe mình đủ bộ Đồng Cổ | 69.5% | 24.4 |
+
+- Đủ bộ 9 món hơn đối thủ không bộ khoảng **+9 điểm** tỉ lệ thắng; ba bộ lệch nhau dưới 1.5 điểm (trước khi chỉnh, Cờ Lau +11.8 và Hoa Lư +9.4).
+- Trang bị làm trận dài thêm: đồ Cam khoảng 32 lượt mỗi phe, hơi quá mục tiêu 20–30.
+- Bị động Kim **không** mạnh lên khi DEF tăng: Kim từ 58% (không đồ) xuống 55% (đồ Lam), giảm như các hệ khác.
+
+> TODO: có hiệu ứng bộ ngoài chỉ số (ví dụ Khiên đầu trận) hay không; thêm bộ trang bị.
 
 ## 4. Phẩm theo màu
 
@@ -69,11 +107,23 @@ Mỗi trang bị có một **phẩm**, hiển thị bằng màu khung và tên. 
 
 - Ghép **luôn thành công**, không có tỉ lệ thất bại.
 
-> TODO: phí vàng cho mỗi lần ghép.
+- **Phí vàng thấp** (Shan chốt 19/10/2026, không làm khó người chơi): 10 vàng khi ghép 3 món Trắng, 20 với Lục, 40 với Lam, 80 với Tím. Điểm xuất phát, chỉnh khi có giá trị ô vàng.
 
 ## 6. Nguồn trang bị
 
 - Rơi ngẫu nhiên sau trận (server quyết định); trận càng khó thì tỉ lệ rơi phẩm cao càng lớn.
 - Cửa hàng bán món cố định, giá cao.
 
-> TODO: bảng rơi đồ theo phẩm và danh sách trang bị.
+- **Bảng rơi đồ** (Claude chốt theo ủy quyền của Shan, 19/10/2026; điểm xuất phát): thắng trận chắc chắn rơi 1 món; thua có 30% rơi 1 món, phẩm tối đa Lục. Ô, nguyên tố, bộ và nghề của vũ khí chia đều.
+
+| Độ khó | ⚪ Trắng | 🟢 Lục | 🔵 Lam | 🟣 Tím | 🟠 Cam |
+|---|---|---|---|---|---|
+| Dễ | 70% | 25% | 5% | 0% | 0% |
+| Thường | 55% | 30% | 12% | 3% | 0% |
+| Khó | 35% | 35% | 20% | 8% | 2% |
+| Trùm | 15% | 30% | 30% | 18% | 7% |
+| Ác mộng | 5% | 20% | 35% | 27% | 13% |
+
+- Vì ghép cần 3 món cùng ô **và** cùng hệ, nâng một món lên Cam tốn tới 81 món Trắng cùng loại; tỉ lệ rơi phẩm cao ở trận khó là đường tắt chính.
+
+> TODO: danh sách trang bị cố định của cửa hàng và giá.
