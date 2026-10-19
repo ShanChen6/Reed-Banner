@@ -161,11 +161,95 @@
   animation: tile-strong 1.8s ease-in-out infinite;
 }
 
+/* Chim lạc bay vòng quanh phần mở đầu trang giới thiệu (src/app/home/LacBirds.tsx), theo chiều kim đồng hồ.
+   Trình duyệt chưa hỗ trợ offset-path hình elip thì chim bay ngang từ trái sang phải. */
+@keyframes lac-fly {
+  from {
+    transform: translateX(-20vw);
+  }
+  to {
+    transform: translateX(110vw);
+  }
+}
+@keyframes lac-orbit {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+@keyframes lac-bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -8px;
+  }
+}
+@keyframes lac-flap {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.35);
+  }
+}
+.lac-fly {
+  animation: lac-fly linear infinite;
+}
+@supports (offset-path: ellipse(10% 10% at 50% 50%)) {
+  .lac-fly {
+    top: 0 !important;
+    offset-path: ellipse(46% 42% at 50% 50%);
+    offset-anchor: center;
+    offset-rotate: auto;
+    animation-name: lac-orbit;
+  }
+  /* Vòng bay bắt đầu ở mép phải và đi xuống; nửa đầu vòng chim bay sang trái nên lật dọc để không ngửa bụng. */
+  .lac-bob.lac-upright {
+    animation-name: lac-bob, lac-upright;
+    animation-timing-function: ease-in-out, step-end;
+    animation-iteration-count: infinite;
+  }
+}
+@keyframes lac-upright {
+  0% {
+    transform: scaleY(-1);
+  }
+  50% {
+    transform: none;
+  }
+  100% {
+    transform: scaleY(-1);
+  }
+}
+.lac-bob {
+  animation: lac-bob 3.2s ease-in-out infinite;
+}
+/* Cánh co về phía thân (mép dưới) rồi giơ lại. */
+.lac-wing {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: lac-flap var(--flap, 0.8s) ease-in-out infinite;
+}
+.lac-wing-far {
+  animation-delay: calc(var(--flap, 0.8s) * -0.15);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .tile-anim,
   .tile-strong,
   .chain-pop,
-  .float-up {
+  .float-up,
+  .lac-bob,
+  .lac-wing {
     animation: none !important;
+  }
+  /* Không chuyển động thì đàn chim đứng yên ở giữa đường bay. */
+  .lac-fly {
+    animation-play-state: paused !important;
   }
 }
