@@ -38,7 +38,7 @@
 - Lỗi: 404 trận không có hoặc của người khác, 409 `staleSeq`/`conflict`, 422 lỗi luật (kèm view mới để client đồng bộ), 400 body sai.
 - Trang `/play`: cùng giao diện với `/demo` nhưng mọi hành động gửi lên server. Client vẫn chạy `act` của core trên bản sao bàn cờ (không có seed) để báo lỗi tức thì, nhưng bàn cờ hiển thị chỉ lấy từ server. Đồng hồ 30 giây tính theo giờ server (mỗi response kèm `now`); quá hạn cộng ân hạn thì client gọi `GET /api/battles/:id` để chạy bù. Id trận lưu ở trình duyệt để tải lại trang vẫn "Tiếp tục trận dở". Chưa chạy trước hoạt ảnh trong lúc chờ server.
 - `GET /api/health`: báo database đã nối và đã chạy hết migration chưa, có `SESSION_SECRET` chưa, nút đăng nhập nào đang bật (`oauth`).
-- Đăng nhập (mục 4): `GET /api/auth/google|github?returnTo=/play` bắt đầu, nhà cung cấp chuyển về `/api/auth/<tên>/callback`, `POST /api/auth/logout` đăng xuất. Bảng `accounts` và `identities`.
+- Đăng nhập (mục 4): trang `/dang-nhap` (link ở đầu trang chủ và trên `/play`) có nút Google/GitHub, chơi với tư cách khách, xem tài khoản, liên kết thêm và đăng xuất. `GET /api/auth/google|github?returnTo=/play` bắt đầu, nhà cung cấp chuyển về `/api/auth/<tên>/callback`, `POST /api/auth/logout` đăng xuất; `POST /api/auth/password/register|login|change` cho tên đăng nhập + mật khẩu. Bảng `accounts` và `identities`.
 - Chưa có: lưu hồ sơ tiến trình trên server, việc định kỳ (Vercel Cron) xử thua và xóa khách. Đội hình online tạm dùng bản Luyện tập (mở hết kỹ năng), đối thủ là các nhân vật kèm khởi đầu chọn theo seed.
 
 
@@ -61,6 +61,12 @@
   - Danh tính đã thuộc một tài khoản (đăng nhập ở máy khác): chuyển sang tài khoản đó; khách đang dùng trên máy này bị bỏ lại.
   - Đang ở tài khoản đã đăng nhập mà đăng nhập thêm nhà cung cấp kia: gắn cả hai vào cùng tài khoản.
   - Đăng xuất: xóa cookie; lần chơi sau là khách mới.
+- **Tên đăng nhập + mật khẩu** (Shan đồng ý 19/10/2026, bản chưa có email; `src/server/password.ts`):
+  - Lưu như một danh tính nhà cung cấp `password` trong bảng `identities` (subject là tên đăng nhập, cột `password_hash`). Mỗi tài khoản tối đa một tên đăng nhập; đăng ký khi đang là khách hoặc đã đăng nhập Google/GitHub thì gắn vào chính tài khoản đó.
+  - Tên đăng nhập 3–20 ký tự `a-z 0-9 . _`, không phân biệt hoa thường. Mật khẩu từ 8 ký tự, băm scrypt (N=16384, muối riêng), lưu kèm tham số để sau này đổi được.
+  - Sai 5 lần liên tiếp thì khóa tên đó 15 phút. Tên không tồn tại báo lỗi giống sai mật khẩu.
+  - Form gửi từ trang khác (khác Origin) bị chặn.
+  - Chưa có email nên **không lấy lại được mật khẩu**: form đăng ký cảnh báo và khuyên liên kết thêm Google/GitHub. Thêm dịch vụ email (ví dụ Resend) khi cần.
 - **Cấu hình** (Vercel, Production): `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` và `GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET`. Thiếu cặp nào thì nút đó ẩn đi. Địa chỉ chuyển về phải khai trước ở nhà cung cấp: `https://<tên miền>/api/auth/google/callback` (Google Cloud Console, OAuth client loại Web) và `https://<tên miền>/api/auth/github/callback` (GitHub OAuth App chỉ nhận một địa chỉ). Bản xem trước có tên miền đổi theo nhánh nên không đăng nhập được, trừ khi khai thêm địa chỉ đó.
 - Tài khoản khách **không hoạt động 30 ngày thì bị xóa**. Có cảnh báo mất dữ liệu nếu không đăng ký.
 - Tạo tài khoản (kể cả khách) là lúc người chơi chọn nguyên tố ban đầu cho nhân vật chính (nghề mặc định Tướng sĩ, đổi được trước mỗi trận).
@@ -75,4 +81,4 @@
 
 - Bot hoặc solver chơi hộ (giảm bằng giới hạn số trận mỗi giờ nếu cần; giới hạn này không chặn được bot ở Sinh tồn vì đó là một trận duy nhất).
 - Cày vàng và sách bằng cách kéo dài trận (xem [Tiến trình & kinh tế](../design/08-tien-trinh-kinh-te.md#2-vàng)).
-- Nhiều tài khoản (giảm nhờ chỉ dùng OAuth).
+- Nhiều tài khoản (có tên đăng nhập + mật khẩu nên dễ tạo tài khoản phụ hơn; chấp nhận vì game không chặn cày).
