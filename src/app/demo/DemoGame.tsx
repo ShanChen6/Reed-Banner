@@ -39,6 +39,7 @@ import {
   PROFESSION_NAME,
   TILE_ICON,
 } from "./labels";
+import { bounceFrames, eventFrames, type Frame } from "./animation";
 
 const PLAYER = 0;
 const AI = 1;
@@ -78,6 +79,27 @@ interface LogLine {
   readonly id: number;
   readonly text: string;
 }
+
+/** Số sát thương/hồi máu bay lên trên thẻ nhân vật. */
+interface Float {
+  readonly id: number;
+  readonly side: number;
+  readonly fighter: number;
+  readonly text: string;
+  readonly tone: "damage" | "shield" | "heal";
+  /** Thứ tự trong cùng thẻ, để các số nối đuôi nhau thay vì chồng lên nhau. */
+  readonly order: number;
+}
+
+const FLOAT_STAGGER_MS = 160;
+const FLOAT_MS = 1100;
+const FLOAT_TONE: Record<Float["tone"], string> = {
+  damage: "text-rose-500",
+  shield: "text-sky-400",
+  heal: "text-emerald-500",
+};
+
+const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function describe(state: BattleState, e: BattleEvent): string | null {
   const name = (side: number, i: number) => state.sides[side as 0 | 1].fighters[i]?.name ?? "?";
@@ -143,6 +165,7 @@ function FighterCard({
   active,
   selectable,
   targetable,
+  floats,
   onClick,
 }: {
   fighter: Fighter;
@@ -151,9 +174,34 @@ function FighterCard({
   active: boolean;
   selectable: boolean;
   targetable: boolean;
+  floats: readonly Float[];
   onClick?: () => void;
 }) {
   const alive = isAlive(fighter);
+  const ref = useRef<HTMLButtonElement>(null);
+  const lastFloat = floats.at(-1)?.id;
+
+  // Rung thẻ khi trúng đòn, viền xanh khi được hồi máu.
+  useEffect(() => {
+    const el = ref.current;
+    if (lastFloat === undefined || !el || prefersReducedMotion()) return;
+    const hit = floats.some((f) => f.tone !== "heal");
+    el.animate(
+      hit
+        ? [
+            { transform: "none" },
+            { transform: "translateX(-4px)" },
+            { transform: "translateX(4px)" },
+            { transform: "translateX(-2px)" },
+            { transform: "none" },
+          ]
+        : [{ boxShadow: "none" }, { boxShadow: "0 0 0 3px rgb(52 211 153 / 0.6)" }, { boxShadow: "none" }],
+      { duration: hit ? 380 : 600, easing: "ease-in-out" },
+    );
+    // Chỉ chạy khi có lượt số mới, không chạy lại khi floats đổi vì số cũ hết hạn.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastFloat]);
+
   const ring = targetable
     ? "ring-2 ring-rose-400"
     : active
@@ -163,10 +211,11 @@ function FighterCard({
         : "ring-1 ring-white/10";
   return (
     <button
+      ref={ref}
       type="button"
       onClick={onClick}
       disabled={!onClick || !alive}
-      className={`w-full rounded-lg bg-[var(--panel)] p-2 text-left ${ring} ${alive ? "" : "opacity-40 grayscale"} disabled:cursor-default`}
+      className={`relative w-full rounded-lg bg-[var(--panel)] p-2 text-left ${ring} ${alive ? "" : "opacity-40 grayscale"} disabled:cursor-default`}
     >
       <div className="mb-1 flex items-baseline justify-between gap-2">
         <span className="truncate text-sm font-semibold">
@@ -196,6 +245,16 @@ function FighterCard({
           ))}
         </div>
       )}
+      {floats.map((f) => (
+        <span
+          key={f.id}
+          aria-hidden
+          className={`float-up pointer-events-none absolute right-2 top-1 text-lg font-extrabold tabular-nums drop-shadow ${FLOAT_TONE[f.tone]}`}
+          style={{ animationDelay: `${f.order * FLOAT_STAGGER_MS}ms` }}
+        >
+          {f.text}
+        </span>
+      ))}
     </button>
   );
 }
@@ -218,10 +277,17 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
   const [toast, setToast] = useState<string | null>(null);
   const [log, setLog] = useState<LogLine[]>([]);
   const logId = useRef(0);
+  const [anim, setAnim] = useState<{ readonly frames: readonly Frame[]; readonly i: number; readonly id: number } | null>(null);
+  const animId = useRef(0);
+  const afterAnim = useRef<(() => void) | null>(null);
+  const [floats, setFloats] = useState<Float[]>([]);
+  const floatId = useRef(0);
   const drag = useRef<{ pos: Pos; x: number; y: number } | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  const myTurn = started && state.winner === null && state.turn.side === PLAYER;
+  const playerTurn = started && state.winner === null && state.turn.side === PLAYER;
+  /** Đang chạy hoạt ảnh thì chưa nhận thao tác mới. */
+  const myTurn = playerTurn && anim === null;
   const actor = state.sides[PLAYER].fighters[state.turn.actor]!;
   const selectable = useMemo(() => (myTurn ? selectableActors(state) : []), [myTurn, state]);
   const skills = useMemo(() => (actor.skills ?? []).map((id) => getSkill(id)).filter((d): d is SkillDef => !!d), [actor]);
@@ -239,6 +305,63 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
     if (lines.length > 0) setLog((l) => [...lines.reverse(), ...l].slice(0, 30));
   }, []);
 
+  const showNumbers = useCallback((events: readonly BattleEvent[]) => {
+    const order = new Map<string, number>();
+    const next = events.flatMap((e): Float[] => {
+      if (e.type !== "damage" && e.type !== "heal") return [];
+      const items: [string, Float["tone"]][] =
+        e.type === "heal"
+          ? e.amount > 0
+            ? [[`+${e.amount}`, "heal"]]
+            : []
+          : [
+              ...(e.absorbed > 0 ? [[`🛡${e.absorbed}`, "shield"] as [string, Float["tone"]]] : []),
+              ...(e.amount > 0 ? [[`-${e.amount}`, "damage"] as [string, Float["tone"]]] : []),
+            ];
+      return items.map(([text, tone]) => {
+        const key = `${e.side}:${e.fighter}`;
+        const n = order.get(key) ?? 0;
+        order.set(key, n + 1);
+        return { id: floatId.current++, side: e.side, fighter: e.fighter, text, tone, order: n };
+      });
+    });
+    if (next.length === 0) return;
+    const ids = new Set(next.map((f) => f.id));
+    setFloats((f) => [...f, ...next]);
+    const last = Math.max(...next.map((f) => f.order));
+    window.setTimeout(() => setFloats((f) => f.filter((x) => !ids.has(x.id))), FLOAT_MS + last * FLOAT_STAGGER_MS + 100);
+  }, []);
+
+  /** Chạy các khung hoạt ảnh rồi mới cập nhật trạng thái trận (máu, nhật ký, lượt). */
+  const play = useCallback((frames: readonly Frame[], done: () => void) => {
+    if (frames.length === 0 || prefersReducedMotion()) return done();
+    afterAnim.current = done;
+    setAnim({ frames, i: 0, id: animId.current++ });
+  }, []);
+
+  useEffect(() => {
+    if (!anim) return;
+    const t = window.setTimeout(() => {
+      if (anim.i + 1 < anim.frames.length) return setAnim({ ...anim, i: anim.i + 1 });
+      setAnim(null);
+      const done = afterAnim.current;
+      afterAnim.current = null;
+      done?.();
+    }, anim.frames[anim.i]!.ms);
+    return () => window.clearTimeout(t);
+  }, [anim]);
+
+  const commit = useCallback(
+    (before: BattleState, next: BattleState, events: readonly BattleEvent[]) => {
+      play(eventFrames(before.board, events), () => {
+        pushLog(next, events);
+        setState(next);
+        showNumbers(events);
+      });
+    },
+    [play, pushLog, showNumbers],
+  );
+
   const apply = useCallback(
     (action: BattleAction): boolean => {
       const r = act(state, action);
@@ -247,14 +370,14 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
         if (r.error === "notEnoughEnergy" && action.type === "skill") {
           text += ` (${actor.energy}/${getSkill(action.skill)?.cost ?? 0})`;
         }
+        if (r.error === "invalidMove" && action.type === "swap") play(bounceFrames(state.board, action.from, action.to), () => {});
         flash(text);
         return false;
       }
-      pushLog(r.state, r.events);
-      setState(r.state);
+      commit(state, r.state, r.events);
       return true;
     },
-    [state, actor.energy, flash, pushLog],
+    [state, actor.energy, flash, play, commit],
   );
 
   // Lượt của Tianwu: chạy trọn lượt sau một nhịp nghỉ ngắn để người chơi kịp nhìn.
@@ -262,11 +385,10 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
     if (!started || state.winner !== null || state.turn.side !== AI) return;
     const t = window.setTimeout(() => {
       const r = playAiTurn(state, difficulty);
-      pushLog(r.state, r.events);
-      setState(r.state);
+      commit(state, r.state, r.events);
     }, AI_DELAY_MS);
     return () => window.clearTimeout(t);
-  }, [started, state, difficulty, pushLog]);
+  }, [started, state, difficulty, commit]);
 
   // Báo chiều cao cho trang cha khi được nhúng bằng iframe (ShanVerse).
   useEffect(() => {
@@ -483,6 +605,9 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
   const restart = () => {
     const next = round + 1;
     setRound(next);
+    setAnim(null);
+    afterAnim.current = null;
+    setFloats([]);
     setState(newBattle(next, element));
     setSelected(null);
     setAim(null);
@@ -496,6 +621,9 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
     theme === "light"
       ? "[--bg:#f5f1e8] [--panel:#ffffff] [--cell:#ece4d3] text-stone-900"
       : "[--bg:#1c1917] [--panel:#292524] [--cell:#3a3330] text-stone-100";
+
+  const frame = anim ? anim.frames[anim.i] : undefined;
+  const board = frame?.board ?? state.board;
 
   const aimingFoe = aim && !needsCell(aim.skill) && aim.skill.target === "enemy";
   const aimingAlly = aim && !needsCell(aim.skill) && aim.skill.target === "ally";
@@ -521,6 +649,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
               active={isActor}
               selectable={canPick && !aim}
               targetable={!!target && aimIndex === i && isAlive(f)}
+              floats={floats.filter((x) => x.side === s && x.fighter === i)}
               onClick={
                 target
                   ? () => fireAim(i)
@@ -547,7 +676,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                 ? state.winner === PLAYER
                   ? "Bạn thắng!"
                   : "Tianwu thắng"
-                : myTurn
+                : playerTurn
                   ? state.turn.extra
                     ? "Lượt thêm của bạn"
                     : "Lượt của bạn"
@@ -574,15 +703,16 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
 
           <div className="flex min-w-0 flex-1 flex-col gap-2">
             <div
-              className="relative grid touch-none select-none gap-0.5 rounded-lg bg-black/20 p-1"
-              style={{ gridTemplateColumns: `repeat(${state.board.cols}, minmax(0, 1fr))` }}
+              className="relative grid touch-none select-none gap-0.5 overflow-hidden rounded-lg bg-black/20 p-1"
+              style={{ gridTemplateColumns: `repeat(${board.cols}, minmax(0, 1fr))` }}
               onPointerUp={onPointerUp}
               onPointerLeave={() => (drag.current = null)}
               role="grid"
               aria-label="Bàn cờ"
             >
-              {state.board.cells.map((tile, i) => {
-                const pos = { row: Math.floor(i / state.board.cols), col: i % state.board.cols };
+              {board.cells.map((tile, i) => {
+                const pos = { row: Math.floor(i / board.cols), col: i % board.cols };
+                const cellAnim = frame?.anims[i];
                 const from = slideAim?.from;
                 const isSel =
                   (selected?.row === pos.row && selected.col === pos.col) || (from?.row === pos.row && from.col === pos.col);
@@ -595,19 +725,42 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                       : "";
                 return (
                   <div
-                    key={i}
+                    key={cellAnim ? `${anim!.id}-${anim!.i}-${i}` : i}
                     role="gridcell"
                     data-row={pos.row}
                     data-col={pos.col}
                     onPointerDown={(e) => onPointerDown(pos, e)}
-                    className={`flex aspect-square items-center justify-center rounded bg-[var(--cell)] text-[clamp(12px,3.2vw,28px)] ${special} ${
+                    className={`relative aspect-square rounded bg-[var(--cell)] text-[clamp(12px,3.2vw,28px)] ${special} ${
                       isSel ? "scale-110 bg-amber-400/60" : ""
                     } ${isCur ? "outline-2 outline-sky-400" : ""} ${(aim && needsCell(aim.skill)) || slideAim ? "cursor-crosshair" : "cursor-pointer"}`}
                   >
-                    {tile ? TILE_ICON[tile.kind] : ""}
+                    {tile && (
+                      <span
+                        className={`absolute inset-0 flex items-center justify-center ${cellAnim ? `tile-anim tile-anim-${cellAnim.kind}` : ""}`}
+                        style={
+                          cellAnim
+                            ? ({
+                                "--dx": cellAnim.dx,
+                                "--dy": cellAnim.dy,
+                                animationDuration: `${frame!.ms}ms`,
+                              } as React.CSSProperties)
+                            : undefined
+                        }
+                      >
+                        {TILE_ICON[tile.kind]}
+                      </span>
+                    )}
                   </div>
                 );
               })}
+              {frame?.chain && (
+                <div
+                  key={`${anim!.id}-${anim!.i}`}
+                  className="chain-pop pointer-events-none absolute left-1/2 top-2 rounded bg-amber-500 px-3 py-1 text-sm font-bold text-stone-950 shadow"
+                >
+                  Chuỗi ×{frame.chain}
+                </div>
+              )}
               {toast && (
                 <div className="pointer-events-none absolute inset-x-0 top-1/2 mx-auto w-fit -translate-y-1/2 rounded bg-black/80 px-3 py-1.5 text-sm text-white">
                   {toast}
