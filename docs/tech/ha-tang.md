@@ -36,7 +36,9 @@
 | `POST /api/battles/:id/actions` | Một hành động `{ seq, action }` |
 
 - Lỗi: 404 trận không có hoặc của người khác, 409 `staleSeq`/`conflict`, 422 lỗi luật (kèm view mới để client đồng bộ), 400 body sai.
-- Chưa có: trang `/play`, đăng nhập OAuth, lưu hồ sơ tiến trình trên server, việc định kỳ (Vercel Cron) xử thua và xóa khách. Đội hình online tạm dùng bản Luyện tập (mở hết kỹ năng), đối thủ là các nhân vật kèm khởi đầu chọn theo seed.
+- Trang `/play`: cùng giao diện với `/demo` nhưng mọi hành động gửi lên server. Client vẫn chạy `act` của core trên bản sao bàn cờ (không có seed) để báo lỗi tức thì, nhưng bàn cờ hiển thị chỉ lấy từ server. Đồng hồ 30 giây tính theo giờ server (mỗi response kèm `now`); quá hạn cộng ân hạn thì client gọi `GET /api/battles/:id` để chạy bù. Id trận lưu ở trình duyệt để tải lại trang vẫn "Tiếp tục trận dở". Chưa chạy trước hoạt ảnh trong lúc chờ server.
+- `GET /api/health`: báo database đã nối và đã có bảng chưa, có `SESSION_SECRET` chưa.
+- Chưa có: đăng nhập OAuth, lưu hồ sơ tiến trình trên server, việc định kỳ (Vercel Cron) xử thua và xóa khách. Đội hình online tạm dùng bản Luyện tập (mở hết kỹ năng), đối thủ là các nhân vật kèm khởi đầu chọn theo seed.
 
 
 ## 3. Database

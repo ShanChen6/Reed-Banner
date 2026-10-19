@@ -36,6 +36,7 @@ import {
   TIERS,
   tileAt,
   withGear,
+  GRACE_MS,
   type BattleAction,
   type BattleRewards,
   type BattleEvent,
@@ -74,6 +75,7 @@ import { Portrait } from "./art/portraits";
 import { SkillIcon } from "./art/skills";
 import { TileArt } from "./art/tiles";
 import ProgressPanel from "./ProgressPanel";
+import { actOnline, createOnline, fetchOnline, ONLINE_BATTLE_KEY, ONLINE_ERROR_TEXT, toBattleState, type OnlineResponse } from "./online";
 
 const PLAYER = 0;
 const AI = 1;
@@ -213,6 +215,8 @@ function describe(state: BattleState, e: BattleEvent): string | null {
       return `${name(e.side, e.fighter)} hồi ${e.amount} máu`;
     case "ko":
       return `${name(e.side, e.fighter)} bị hạ gục`;
+    case "timeout":
+      return e.side === PLAYER ? "Hết giờ, bạn mất lượt" : "Đối thủ hết giờ";
     case "passive": {
       const own = state.sides[e.side];
       const passive = PASSIVES[own.fighters[own.leader]!.element].name;
@@ -384,7 +388,11 @@ const CORNERS = [
   "-bottom-0.5 -right-0.5 -scale-100",
 ] as const;
 
-export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
+/**
+ * Màn chơi. `online`: trận do server xử lý qua /api/battles (trang /play), đồng hồ 30 giây bật; ngược lại
+ * chạy hoàn toàn trong trình duyệt (trang /demo).
+ */
+export default function DemoGame({ theme, online = false }: { theme: "light" | "dark"; online?: boolean }) {
   const [round, setRound] = useState(0);
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
   const [started, setStarted] = useState(false);
@@ -415,11 +423,17 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
   const [floats, setFloats] = useState<Float[]>([]);
   const floatId = useRef(0);
   const drag = useRef<{ pos: Pos; x: number; y: number } | null>(null);
+  /** Trận online: id, seq server đang có, đang chờ server trả lời, lệch giờ so với server. */
+  const [battleId, setBattleId] = useState<string | null>(null);
+  const seq = useRef(0);
+  const [pending, setPending] = useState(false);
+  const clockOffset = useRef(0);
+  const [clock, setClock] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
 
   const playerTurn = started && state.winner === null && state.turn.side === PLAYER;
   /** Đang chạy hoạt ảnh thì chưa nhận thao tác mới. */
-  const myTurn = playerTurn && anim === null;
+  const myTurn = playerTurn && anim === null && !pending;
   const actor = state.sides[PLAYER].fighters[state.turn.actor]!;
   const selectable = useMemo(() => (myTurn ? selectableActors(state) : []), [myTurn, state]);
   const skills = useMemo(() => (actor.skills ?? []).map((id) => fighterSkill(actor, id)).filter((d): d is SkillDef => !!d), [actor]);
@@ -501,9 +515,44 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
     [play, pushLog, showNumbers, mode, profile],
   );
 
+  /** Nhận trả lời của server: chạy hoạt ảnh các sự kiện rồi đồng bộ trạng thái và seq. */
+  const receive = useCallback(
+    (before: BattleState, res: OnlineResponse) => {
+      clockOffset.current = res.now - Date.now();
+      if (res.error) flash(ONLINE_ERROR_TEXT[res.error] ?? ERROR_TEXT[res.error as keyof typeof ERROR_TEXT] ?? res.error);
+      if (!res.view) return;
+      seq.current = res.view.seq;
+      const next = toBattleState(res.view);
+      if (res.events && res.events.length > 0) commit(before, next, res.events);
+      else setState(next);
+      if (next.winner !== null) {
+        try {
+          window.localStorage.removeItem(ONLINE_BATTLE_KEY);
+        } catch {
+          // Không lưu được thì thôi, trận đã xong.
+        }
+      }
+    },
+    [commit, flash],
+  );
+
+  const sendOnline = useCallback(
+    (action: BattleAction) => {
+      if (!battleId) return;
+      const before = state;
+      setPending(true);
+      void actOnline(battleId, seq.current, action).then((res) => {
+        setPending(false);
+        receive(before, res);
+      });
+    },
+    [battleId, state, receive],
+  );
+
   const apply = useCallback(
     (action: BattleAction): boolean => {
-      const r = act(state, action);
+      // Online: kiểm tra trước bằng core cho phản hồi tức thì; bàn cờ thật chỉ lấy từ server.
+      const r = act(state, action, online ? Date.now() + clockOffset.current : 0);
       if (!r.ok) {
         let text = ERROR_TEXT[r.error];
         if (r.error === "notEnoughEnergy" && action.type === "skill") {
@@ -513,21 +562,43 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
         flash(text);
         return false;
       }
-      commit(state, r.state, r.events);
+      if (online) sendOnline(action);
+      else commit(state, r.state, r.events);
       return true;
     },
-    [state, actor, flash, play, commit],
+    [state, actor, flash, play, commit, online, sendOnline],
   );
 
   // Lượt của Tianwu: chạy trọn lượt sau một nhịp nghỉ ngắn để người chơi kịp nhìn.
   useEffect(() => {
-    if (!started || state.winner !== null || state.turn.side !== AI) return;
+    if (online || !started || state.winner !== null || state.turn.side !== AI) return;
     const t = window.setTimeout(() => {
       const r = playAiTurn(state, difficulty);
       commit(state, r.state, r.events);
     }, AI_DELAY_MS);
     return () => window.clearTimeout(t);
-  }, [started, state, difficulty, commit]);
+  }, [online, started, state, difficulty, commit]);
+
+  // Online: đồng hồ 30 giây. Quá hạn (cộng ân hạn) thì hỏi server để chạy bù lượt mất và lượt AI.
+  const deadline = online && started && state.winner === null ? state.turn.deadline : null;
+  useEffect(() => {
+    if (deadline === null || !battleId) return;
+    const tick = window.setInterval(() => setClock(Date.now() + clockOffset.current), 250);
+    const wait = deadline + GRACE_MS + 200 - (Date.now() + clockOffset.current);
+    const before = state;
+    const t = window.setTimeout(() => {
+      setPending(true);
+      void fetchOnline(battleId).then((res) => {
+        setPending(false);
+        receive(before, res);
+      });
+    }, Math.max(0, wait));
+    return () => {
+      window.clearInterval(tick);
+      window.clearTimeout(t);
+    };
+  }, [deadline, battleId, state, receive]);
+  const secondsLeft = deadline === null ? null : Math.max(0, Math.ceil((deadline - clock) / 1000));
 
   // Báo chiều cao cho trang cha khi được nhúng bằng iframe (ShanVerse).
   useEffect(() => {
@@ -762,11 +833,58 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
     setPendingSlide(null);
     setLog([]);
     setStarted(false);
+    setBattleId(null);
+  };
+
+  const beginOnline = (res: OnlineResponse) => {
+    clockOffset.current = res.now - Date.now();
+    if (!res.view || !res.id) return flash(ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Không tạo được trận");
+    seq.current = res.view.seq;
+    setBattleId(res.id);
+    setClock(res.now);
+    setState(toBattleState(res.view));
+    setStarted(true);
+    try {
+      window.localStorage.setItem(ONLINE_BATTLE_KEY, res.id);
+    } catch {
+      // Không lưu được: tải lại trang sẽ không tiếp tục được trận này.
+    }
   };
 
   const start = () => {
-    setState(preview);
-    setStarted(true);
+    if (!online) {
+      setState(preview);
+      setStarted(true);
+      return;
+    }
+    setPending(true);
+    void createOnline({ mode: "3v3", element, profession, companions: COMPANION_IDS, difficulty }).then((res) => {
+      setPending(false);
+      beginOnline(res);
+    });
+  };
+
+  /** Tiếp tục trận online dở (sau khi tải lại trang). */
+  const resume = () => {
+    let id: string | null = null;
+    try {
+      id = window.localStorage.getItem(ONLINE_BATTLE_KEY);
+    } catch {
+      id = null;
+    }
+    if (!id) return flash("Không có trận dở");
+    setPending(true);
+    void fetchOnline(id).then((res) => {
+      setPending(false);
+      if (res.error === "notFound") {
+        try {
+          window.localStorage.removeItem(ONLINE_BATTLE_KEY);
+        } catch {
+          // Bỏ qua.
+        }
+      }
+      beginOnline(res);
+    });
   };
 
   const changeProfile = (p: Profile) => {
@@ -829,7 +947,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
         <header className="flex flex-wrap items-center justify-between gap-2">
           <h1 className="flex items-center gap-1.5 text-lg font-bold">
             <LeaderFlag className="size-6" />
-            Cờ Lau · Chơi thử
+            {online ? "Cờ Lau · Chơi online" : "Cờ Lau · Chơi thử"}
           </h1>
           <div className="text-sm font-semibold" aria-live="polite">
             {!started
@@ -838,11 +956,11 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                 ? state.winner === PLAYER
                   ? "Bạn thắng!"
                   : "Tianwu thắng"
-                : playerTurn
-                  ? state.turn.extra
-                    ? "Lượt thêm của bạn"
-                    : "Lượt của bạn"
-                  : "Lượt đối thủ…"}
+                : pending
+                  ? "Đang chờ server…"
+                  : playerTurn
+                    ? `${state.turn.extra ? "Lượt thêm của bạn" : "Lượt của bạn"}${secondsLeft === null ? "" : ` · còn ${secondsLeft} giây`}`
+                    : "Lượt đối thủ…"}
           </div>
           <label className="flex items-center gap-2 text-xs">
             Độ khó
@@ -935,23 +1053,30 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
               {!started && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center-safe gap-2 overflow-y-auto rounded-lg bg-black/60 p-2 text-white sm:gap-3">
                   <p className="text-sm">Đinh Bộ Lĩnh, Hà Vân và Mai Thanh đấu đội Tianwu.</p>
-                  <div className="flex flex-wrap justify-center gap-1.5" role="radiogroup" aria-label="Chế độ">
-                    {(["practice", "progress"] as const).map((m) => (
-                      <button
-                        key={m}
-                        type="button"
-                        role="radio"
-                        aria-checked={mode === m}
-                        onClick={() => {
-                          if (m === "progress" && mode !== "progress") setProfile(loadProfile());
-                          setMode(m);
-                        }}
-                        className={`rounded px-2.5 py-1 text-sm ${mode === m ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
-                      >
-                        {m === "practice" ? "Luyện tập (mở hết kỹ năng)" : `Tiến trình (cấp ${profile.main.level})`}
-                      </button>
-                    ))}
-                  </div>
+                  {online && (
+                    <p className="max-w-md text-center text-xs opacity-80">
+                      Server xử lý từng nước đi, mỗi lượt 30 giây. Hết giờ thì mất lượt; tải lại trang vẫn tiếp tục được trận.
+                    </p>
+                  )}
+                  {!online && (
+                    <div className="flex flex-wrap justify-center gap-1.5" role="radiogroup" aria-label="Chế độ">
+                      {(["practice", "progress"] as const).map((m) => (
+                        <button
+                          key={m}
+                          type="button"
+                          role="radio"
+                          aria-checked={mode === m}
+                          onClick={() => {
+                            if (m === "progress" && mode !== "progress") setProfile(loadProfile());
+                            setMode(m);
+                          }}
+                          className={`rounded px-2.5 py-1 text-sm ${mode === m ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
+                        >
+                          {m === "practice" ? "Luyện tập (mở hết kỹ năng)" : `Tiến trình (cấp ${profile.main.level})`}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                   <div className="flex flex-wrap items-center justify-center gap-1.5" role="radiogroup" aria-label="Nghề nhân vật chính">
                     <span className="text-xs opacity-80">Nghề:</span>
                     {PROFESSIONS.map((p) => (
@@ -984,23 +1109,25 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                       </button>
                     ))}
                   </div>
-                  <div className="flex flex-wrap items-center justify-center gap-1.5" role="radiogroup" aria-label="Trang bị">
-                    <span className="text-xs opacity-80">Trang bị:</span>
-                    {([0, ...TIERS] as const).map((t) => (
-                      <button
-                        key={t}
-                        type="button"
-                        role="radio"
-                        aria-checked={gear.tier === t}
-                        onClick={() => {
-                          setGear({ ...gear, tier: t });
-                        }}
-                        className={`rounded px-2.5 py-1 text-sm ${gear.tier === t ? "bg-amber-500 font-semibold text-stone-950" : `bg-white/15 ${t === 0 ? "" : TIER_CLASS[t]}`}`}
-                      >
-                        {t === 0 ? "Không" : TIER_COLOR_NAME[t]}
-                      </button>
-                    ))}
-                  </div>
+                  {!online && (
+                    <div className="flex flex-wrap items-center justify-center gap-1.5" role="radiogroup" aria-label="Trang bị">
+                      <span className="text-xs opacity-80">Trang bị:</span>
+                      {([0, ...TIERS] as const).map((t) => (
+                        <button
+                          key={t}
+                          type="button"
+                          role="radio"
+                          aria-checked={gear.tier === t}
+                          onClick={() => {
+                            setGear({ ...gear, tier: t });
+                          }}
+                          className={`rounded px-2.5 py-1 text-sm ${gear.tier === t ? "bg-amber-500 font-semibold text-stone-950" : `bg-white/15 ${t === 0 ? "" : TIER_CLASS[t]}`}`}
+                        >
+                          {t === 0 ? "Không" : TIER_COLOR_NAME[t]}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                   {gear.tier !== 0 && (
                     <div className="flex flex-wrap items-center justify-center gap-1.5" role="radiogroup" aria-label="Bộ trang bị">
                       <span className="text-xs opacity-80">Bộ:</span>
@@ -1032,32 +1159,42 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                       Cả hai đội mặc đủ 9 món {TIER_COLOR_NAME[gear.tier]} cùng hệ với từng người; đội Tianwu không có thưởng bộ.
                     </p>
                   )}
-                  <button
-                    type="button"
-                    onClick={start}
-                    className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
-                  >
-                    Bắt đầu ({DIFFICULTY_NAME[difficulty]})
-                  </button>
+                  <div className="flex flex-wrap justify-center gap-2">
+                    <button
+                      type="button"
+                      onClick={start}
+                      disabled={pending}
+                      className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950 disabled:opacity-50"
+                    >
+                      Bắt đầu ({DIFFICULTY_NAME[difficulty]})
+                    </button>
+                    {online && (
+                      <button type="button" onClick={resume} disabled={pending} className="rounded bg-white/20 px-4 py-2 disabled:opacity-50">
+                        Tiếp tục trận dở
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
               {state.winner !== null && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-black/70 text-white">
                   <p className="text-xl font-bold">{state.winner === PLAYER ? "Bạn thắng!" : "Tianwu thắng"}</p>
-                  <p className="text-sm">
-                    {drop ? (
-                      <>
-                        <span className="flex items-center gap-2">
-                          <GearIcon slot={drop.slot} element={drop.element} tier={drop.tier} profession={drop.profession} className="size-12 shrink-0" />
-                          <span>
-                            Chiến lợi phẩm: <span className={`font-semibold ${TIER_CLASS[drop.tier]}`}>{dropText(drop)}</span>
+                  {!online && (
+                    <p className="text-sm">
+                      {drop ? (
+                        <>
+                          <span className="flex items-center gap-2">
+                            <GearIcon slot={drop.slot} element={drop.element} tier={drop.tier} profession={drop.profession} className="size-12 shrink-0" />
+                            <span>
+                              Chiến lợi phẩm: <span className={`font-semibold ${TIER_CLASS[drop.tier]}`}>{dropText(drop)}</span>
+                            </span>
                           </span>
-                        </span>
-                      </>
-                    ) : (
-                      "Không rơi trang bị."
-                    )}
-                  </p>
+                        </>
+                      ) : (
+                        "Không rơi trang bị."
+                      )}
+                    </p>
+                  )}
                   {outcome && (
                     <div className="text-center text-sm">
                       <p>
@@ -1071,14 +1208,16 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                     </div>
                   )}
                   <div className="flex flex-wrap justify-center gap-2">
-                    <a
-                      href="/"
-                      target="_blank"
-                      rel="noopener"
-                      className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
-                    >
-                      Lưu tiến độ &amp; chơi chiến dịch
-                    </a>
+                    {!online && (
+                      <a
+                        href="/"
+                        target="_blank"
+                        rel="noopener"
+                        className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                      >
+                        Lưu tiến độ &amp; chơi chiến dịch
+                      </a>
+                    )}
                     <button type="button" onClick={restart} className="rounded bg-white/20 px-4 py-2">
                       {mode === "progress" ? "Nâng kỹ năng & đánh tiếp" : "Chơi lại"}
                     </button>

@@ -372,6 +372,11 @@ export default function Home() {
                 Chơi thử
               </Link>
             </li>
+            <li>
+              <Link href="/play" className="hover:text-[var(--gold)]">
+                Chơi online
+              </Link>
+            </li>
           </ul>
         </div>
         <p className="mx-auto mt-6 max-w-6xl text-xs">
