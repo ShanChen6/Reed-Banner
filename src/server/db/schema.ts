@@ -31,7 +31,10 @@ export const accounts = pgTable("accounts", {
   lastLoginAt: bigint("last_login_at", { mode: "number" }).notNull(),
 });
 
-/** Danh tính OAuth gắn với tài khoản: mỗi (nhà cung cấp, id bên đó) thuộc đúng một tài khoản. */
+/**
+ * Danh tính gắn với tài khoản: mỗi (nhà cung cấp, id bên đó) thuộc đúng một tài khoản. Tên đăng nhập + mật
+ * khẩu là nhà cung cấp "password" với subject là tên đăng nhập.
+ */
 export const identities = pgTable(
   "identities",
   {
@@ -41,6 +44,10 @@ export const identities = pgTable(
       .notNull()
       .references(() => accounts.id, { onDelete: "cascade" }),
     createdAt: bigint("created_at", { mode: "number" }).notNull(),
+    /** Chỉ dùng cho nhà cung cấp "password" (subject là tên đăng nhập): mật khẩu đã băm scrypt. */
+    passwordHash: text("password_hash"),
+    failedCount: integer("failed_count").notNull().default(0),
+    lockedUntil: bigint("locked_until", { mode: "number" }),
   },
   (t) => [primaryKey({ columns: [t.provider, t.subject] }), index("identities_account_idx").on(t.accountId)],
 );

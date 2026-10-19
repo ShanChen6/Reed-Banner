@@ -50,6 +50,21 @@ export function respond(result: ServiceResult, newGuest?: string): NextResponse 
   return res;
 }
 
+/**
+ * Form gửi từ trang khác (đăng nhập hộ người chơi vào tài khoản của kẻ xấu) bị chặn: trình duyệt luôn gửi
+ * Origin với POST, nên Origin phải trùng trang này.
+ */
+export function sameOrigin(request: NextRequest): boolean {
+  const origin = request.headers.get("origin");
+  return origin !== null && origin === request.nextUrl.origin;
+}
+
+/** Chuỗi trong form; thiếu hoặc không phải chuỗi thì là chuỗi rỗng. */
+export function formText(form: FormData, key: string): string {
+  const v = form.get(key);
+  return typeof v === "string" ? v : "";
+}
+
 export async function readJson(request: NextRequest): Promise<unknown> {
   try {
     return await request.json();
