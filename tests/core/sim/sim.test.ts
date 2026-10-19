@@ -3,11 +3,11 @@ import { describe, it } from "node:test";
 import { buildMatchups, mainCharacter, runBattle, STARTER_COMPANIONS, summarize } from "../../../src/core";
 
 describe("đội hình khởi đầu", () => {
-  it("có 5 nhân vật kèm, mỗi người một nghề khác Tướng sĩ, kèm chiêu nấc 1–2", () => {
+  it("có 5 nhân vật kèm, mỗi người một nghề khác Tướng sĩ, kèm chiêu nấc 1–2 và tuyệt chiêu nấc 3", () => {
     const professions = STARTER_COMPANIONS.map((c) => c.profession);
     assert.equal(new Set(professions).size, 5);
     assert.ok(!professions.includes("tuongSi"));
-    for (const c of STARTER_COMPANIONS) assert.equal(c.skills?.length, 3);
+    for (const c of STARTER_COMPANIONS) assert.equal(c.skills?.length, 4);
   });
 
   it("nhân vật chính mang 6 kỹ năng chủ động hệ Mộc", () => {

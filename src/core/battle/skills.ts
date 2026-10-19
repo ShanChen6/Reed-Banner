@@ -1,4 +1,4 @@
-// Chiêu nghề nấc 1–2 của nhân vật kèm, xem docs/design/06-nhan-vat-ky-nang.md mục 4.
+// Chiêu nghề nấc 1–2 và tuyệt chiêu nấc 3 của nhân vật kèm, xem docs/design/06-nhan-vat-ky-nang.md mục 4.
 // Kỹ năng là dữ liệu; battle.ts thực thi các bước theo thứ tự.
 
 import type { AreaShape, TileKind } from "../board";
@@ -59,7 +59,9 @@ export interface SkillDef {
   readonly name: string;
   /** Chiêu nghề của nhân vật kèm. */
   readonly profession?: Profession;
-  readonly tier?: 1 | 2;
+  readonly tier?: 1 | 2 | 3;
+  /** Tuyệt chiêu nấc 3: id nhân vật kèm sở hữu. */
+  readonly character?: string;
   /** Kỹ năng nhân vật chính theo nguyên tố, ô 1–6. */
   readonly element?: Element;
   readonly slot?: number;
@@ -141,6 +143,134 @@ const DEFS: readonly SkillDef[] = [
   {
     id: "bayTran", name: "Bày trận", profession: "quanSu", tier: 2, cost: 45, target: "team",
     steps: [{ type: "effect", to: "targets", effect: "defUp", value: 0.3, turns: 2 }, mark],
+  },
+];
+
+// Tuyệt chiêu nấc 3, riêng từng nhân vật kèm, mang đậm nguyên tố của người đó nên không có dấu ấn.
+// Docs/design/06-nhan-vat-ky-nang.md mục 4.4. Số liệu là điểm xuất phát, chờ mô phỏng.
+const ULTIMATES: readonly SkillDef[] = [
+  {
+    id: "hoaVuLieuNguyen", name: "Hỏa Vũ Liệu Nguyên", profession: "phapSu", tier: 3, character: "haVan", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "damage", atk: 1.5 },
+      { type: "effect", to: "targets", effect: "burn", value: 0.15, ofAtk: true, turns: 2 },
+      { type: "destroy", area: { square: 3 } },
+    ],
+  },
+  {
+    id: "tranSonHoQuan", name: "Trấn Sơn Hộ Quân", profession: "binhLinh", tier: 3, character: "leThach", cost: 100, target: "team",
+    steps: [
+      { type: "effect", to: "targets", effect: "shield", value: 0.25, turns: null, ofMaxHp: true },
+      { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 },
+      { type: "effect", to: "self", effect: "reflect", value: 0.35, turns: 2 },
+    ],
+  },
+  {
+    id: "camLoHoiXuan", name: "Cam Lộ Hồi Xuân", profession: "ySu", tier: 3, character: "maiThanh", cost: 100, target: "team",
+    steps: [
+      { type: "heal", to: "targets", ratio: 0.25 },
+      { type: "cleanse", to: "targets" },
+      { type: "effect", to: "enemies", effect: "freeze", value: 0, turns: 1, chance: 0.3 },
+    ],
+  },
+  {
+    id: "kimNganLyTan", name: "Kim Ngân Ly Tán", profession: "muuSi", tier: 3, character: "toKim", cost: 100, target: "enemy",
+    steps: [
+      { type: "damage", atk: 1.8, pierce: 0.5, pierceShield: true },
+      { type: "energy", to: "targets", amount: -50 },
+      { type: "effect", to: "targets", effect: "silence", value: 0, turns: 1 },
+    ],
+  },
+  {
+    id: "phongVanBienTran", name: "Phong Vân Biến Trận", profession: "quanSu", tier: 3, character: "phungPhong", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "dispel", to: "targets" },
+      { type: "effect", to: "targets", effect: "atkDown", value: 0.3, turns: 2 },
+      { type: "energy", to: "team", amount: 20 },
+      { type: "slide", distance: 2 },
+    ],
+  },
+  // Nhân vật kèm bán ở cửa hàng, docs/design/06-nhan-vat-ky-nang.md mục 4.5.
+  {
+    id: "kimQuaThietMa", name: "Kim Qua Thiết Mã", profession: "tuongSi", tier: 3, character: "tranCuong", cost: 100, target: "enemy",
+    steps: [{ type: "damage", atk: 2.8, pierce: 0.4 }, { type: "effect", to: "targets", effect: "defDown", value: 0.3, turns: 2 }],
+  },
+  {
+    id: "xichHoaDoatKy", name: "Xích Hỏa Đoạt Kỳ", profession: "tuongSi", tier: 3, character: "lyLiet", cost: 100, target: "enemy",
+    steps: [
+      { type: "damage", atk: 3 },
+      { type: "effect", to: "targets", effect: "burn", value: 0.15, ofAtk: true, turns: 3 },
+      { type: "destroy", area: { cross: "small" } },
+    ],
+  },
+  {
+    id: "bangHaPhongToa", name: "Băng Hà Phong Tỏa", profession: "phapSu", tier: 3, character: "daoLam", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "damage", atk: 1.2 },
+      { type: "effect", to: "targets", effect: "freeze", value: 0, turns: 1, chance: 0.35 },
+      { type: "destroy", area: { random: 8 } },
+    ],
+  },
+  {
+    id: "thienLoiGiangThe", name: "Thiên Lôi Giáng Thế", profession: "phapSu", tier: 3, character: "vuLoi", cost: 100, target: "enemy",
+    steps: [{ type: "damage", atk: 2.5 }, { type: "energy", to: "targets", amount: -30 }, { type: "destroy", area: { columns: 1 } }],
+  },
+  {
+    id: "reGiaGiuThanh", name: "Rễ Già Giữ Thành", profession: "binhLinh", tier: 3, character: "hoangMoc", cost: 100, target: "team",
+    steps: [
+      { type: "effect", to: "targets", effect: "regen", value: 0.06, turns: 3, ofMaxHp: true },
+      { type: "effect", to: "self", effect: "shield", value: 0.25, turns: null, ofMaxHp: true },
+      { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 },
+    ],
+  },
+  {
+    id: "thietBichDongThanh", name: "Thiết Bích Đồng Thành", profession: "binhLinh", tier: 3, character: "caoKien", cost: 100, target: "self",
+    steps: [
+      { type: "effect", to: "self", effect: "defUp", value: 0.5, turns: 3 },
+      { type: "effect", to: "self", effect: "reflect", value: 0.5, turns: 2 },
+      { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 },
+    ],
+  },
+  {
+    id: "xuanMocVanSinh", name: "Xuân Mộc Vạn Sinh", profession: "ySu", tier: 3, character: "lucDiep", cost: 100, target: "team",
+    steps: [
+      { type: "heal", to: "targets", ratio: 0.2 },
+      { type: "effect", to: "targets", effect: "regen", value: 0.06, turns: 2, ofMaxHp: true },
+    ],
+  },
+  {
+    id: "gioLanhTayUe", name: "Gió Lành Tẩy Uế", profession: "ySu", tier: 3, character: "bachSuong", cost: 100, target: "team",
+    steps: [{ type: "cleanse", to: "targets" }, { type: "heal", to: "targets", ratio: 0.18 }, { type: "energy", to: "targets", amount: 15 }],
+  },
+  {
+    id: "hoaThieuKhoLuong", name: "Hỏa Thiêu Kho Lương", profession: "muuSi", tier: 3, character: "ninhHoa", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "enemyFood", amount: -25 },
+      { type: "energy", to: "targets", amount: -25 },
+      { type: "effect", to: "targets", effect: "burn", value: 0.1, ofAtk: true, turns: 2 },
+    ],
+  },
+  {
+    id: "thuyDonLyGian", name: "Thủy Độn Ly Gián", profession: "muuSi", tier: 3, character: "quachAn", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "effect", to: "targets", effect: "silence", value: 0, turns: 1, chance: 0.5 },
+      { type: "energy", to: "targets", amount: -20 },
+    ],
+  },
+  {
+    id: "batTranThachLuy", name: "Bát Trận Thạch Lũy", profession: "quanSu", tier: 3, character: "taThach", cost: 100, target: "team",
+    steps: [
+      { type: "effect", to: "targets", effect: "defUp", value: 0.3, turns: 2 },
+      { type: "effect", to: "targets", effect: "shield", value: 0.12, turns: null, ofMaxHp: true },
+    ],
+  },
+  {
+    id: "loiTranKinhHon", name: "Lôi Trận Kinh Hồn", profession: "quanSu", tier: 3, character: "macVan", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "effect", to: "targets", effect: "atkDown", value: 0.25, turns: 2 },
+      { type: "energy", to: "targets", amount: -20 },
+      { type: "destroy", area: { random: 6 } },
+    ],
   },
 ];
 
@@ -412,7 +542,7 @@ const PHONG: readonly SkillDef[] = [
   },
 ];
 
-export const SKILLS: Readonly<Record<string, SkillDef>> = Object.fromEntries([...DEFS, ...MAIN, ...PHONG].map((d) => [d.id, d]));
+export const SKILLS: Readonly<Record<string, SkillDef>> = Object.fromEntries([...DEFS, ...ULTIMATES, ...MAIN, ...PHONG].map((d) => [d.id, d]));
 
 export function getSkill(id: string): SkillDef | undefined {
   return SKILLS[id];
@@ -459,6 +589,11 @@ export function fighterSkill(
 
 export function professionSkills(profession: Profession): SkillDef[] {
   return DEFS.filter((d) => d.profession === profession);
+}
+
+/** Tuyệt chiêu nấc 3 của một nhân vật kèm; undefined nếu người đó chưa có. */
+export function ultimateOf(character: string): SkillDef | undefined {
+  return ULTIMATES.find((d) => d.character === character);
 }
 
 /** 6 kỹ năng chủ động của nhân vật chính theo nguyên tố. */

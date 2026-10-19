@@ -63,9 +63,9 @@ Tóm tắt khung chung, áp cho cả 7 nguyên tố:
 - Ở 3vs3, người chơi chọn **2 nhân vật kèm** cùng ra trận với nhân vật chính.
 - Mỗi nhân vật kèm = **Nghề + Nguyên tố + 1 tuyệt chiêu đặc trưng**. Nguyên tố của nhân vật kèm cố định.
 - **Khởi đầu:** người chơi có nhân vật chính (mặc định Tướng sĩ) và **5 nhân vật kèm hư cấu**, mỗi người một nghề còn lại (Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư). Khi nhân vật chính đổi sang nghề khác, nhân vật kèm cùng nghề vẫn ra trận được.
-  > TODO: nguyên tố và tuyệt chiêu đặc trưng của 5 nhân vật kèm khởi đầu.
-- Danh sách nhân vật kèm bán ở cửa hàng:
-  > TODO: chốt sau khi hoàn thiện hệ thống (dự kiến khoảng 12 nhân vật, cộng với nhân vật nhận khi thắng trùm chiến dịch).
+  Nguyên tố và tuyệt chiêu đặc trưng của 5 nhân vật kèm khởi đầu: xem [mục 4.4](#44-tuyệt-chiêu-nấc-3).
+- Nhân vật kèm bán ở cửa hàng: 12 người, xem [mục 4.5](#45-nhân-vật-kèm-ở-cửa-hàng). Nhân vật nhận khi thắng trùm chiến dịch làm cùng chiến dịch.
+- Đội 3vs3 chọn 2 trong số nhân vật kèm đã có; hồ sơ lưu đội đã chọn.
 
 ### 4.1 Sáu nghề & nội tại
 
@@ -86,7 +86,7 @@ Mỗi nghề gắn với một loại ô. Ô 🥁 Trống trận không gắn v�
 |---|---|---|---|
 | 1 | 30 | Chiêu nghề (chung theo nghề) | Có sẵn |
 | 2 | 45 | Chiêu nhánh: **mua được cả 2, chọn 1 khi vào trận** | Cấp 5 |
-| 3 | 100 | Tuyệt chiêu đặc trưng (riêng nhân vật) | Cấp 10, **làm ở giai đoạn 3** |
+| 3 | 100 | Tuyệt chiêu đặc trưng (riêng nhân vật) | **Tự mở ở cấp 10**, không tốn điểm |
 
 - Điểm kỹ năng dùng để mở nhánh nấc 2 và nâng cấp chiêu (cấp 1 đến 5: tăng sức mạnh hoặc giảm chi phí).
 - Chiêu nghề có lõi trung tính, cộng [dấu ấn nguyên tố](05-nguyen-to.md#5-dấu-ấn-nguyên-tố-trên-chiêu-nghề) của người tung chiêu. Riêng tuyệt chiêu nấc 3 được mang đậm nguyên tố của nhân vật.
@@ -128,6 +128,40 @@ Mỗi nghề gắn với một loại ô. Ô 🥁 Trống trận không gắn v�
 - Xua tan (Quân sư) khắc Binh lính và Y sư.
 - Khiêu khích (Binh lính) bảo vệ đồng đội khỏi Tướng sĩ.
 - Thanh tẩy (Y sư) giải khống chế.
+
+### 4.4 Tuyệt chiêu nấc 3
+
+Claude đặt ngày 19/10/2026, điểm xuất phát chờ Shan duyệt và mô phỏng. Mỗi tuyệt chiêu tốn **100 năng lượng**, tự có trong trận khi nhân vật kèm đạt **cấp 10**, nâng cấp bằng điểm kỹ năng như chiêu khác (cấp 5 còn 90 năng lượng). Tuyệt chiêu không mang dấu ấn nguyên tố vì nguyên tố đã nằm trong chính chiêu.
+
+| Nhân vật | Nghề | Hệ | Tuyệt chiêu | Tác dụng |
+|---|---|---|---|---|
+| Hà Vân | Pháp sư | 🔥 Hỏa | **Hỏa Vũ Liệu Nguyên** | 150% ATK vào cả đội đối thủ, Thiêu đốt 15% ATK trong 2 lượt; phá vùng 3×3 |
+| Lê Thạch | Binh lính | ⛰️ Thổ | **Trấn Sơn Hộ Quân** | Khiên 25% máu tối đa cho cả đội; bản thân Khiêu khích và Phản đòn 35% trong 2 lượt |
+| Mai Thanh | Y sư | 💧 Thủy | **Cam Lộ Hồi Xuân** | Hồi 25% máu và Thanh tẩy cả đội; mỗi đối thủ 30% bị Đóng băng 1 lượt |
+| Tô Kim | Mưu sĩ | ⚙️ Kim | **Kim Ngân Ly Tán** | 180% ATK vào 1 đối thủ, bỏ qua 50% DEF và Khiên; trừ 50 năng lượng, Câm lặng 1 lượt |
+| Phùng Phong | Quân sư | 🌪️ Phong | **Phong Vân Biến Trận** | Xua tan và giảm Công 30% cả đội đối thủ trong 2 lượt; cả đội +20 năng lượng; trượt 1 hàng hoặc cột tối đa 2 ô |
+
+- Nhân vật kèm bán ở cửa hàng sau này cũng có tuyệt chiêu riêng theo khung này.
+- Mô phỏng 19/10/2026 (300 trận, AI Thường, cả hai phe cùng cấp): tỉ lệ thắng gần như không đổi (3vs3 cấp 10: 64% so với 65% trước khi có tuyệt chiêu; cấp 20: 60% so với 59%) vì AI chấm kỹ năng theo giá trị trên mỗi điểm năng lượng nên hiếm khi để dành tới 100 (Phong Vân Biến Trận 0,6 lần mỗi trận, Hỏa Vũ Liệu Nguyên 0,2, ba chiêu còn lại gần 0; ô 5 của nhân vật chính cũng vậy). Cần dạy AI để dành cho kỹ năng lớn trước khi cân số liệu tuyệt chiêu.
+
+### 4.5 Nhân vật kèm ở cửa hàng
+
+Claude đặt ngày 19/10/2026, điểm xuất phát chờ Shan duyệt. Hai người mỗi nghề (có cả Tướng sĩ), nguyên tố rải đủ 7 hệ, tên hư cấu (không dùng tên 12 sứ quân). Giá 2 mức: **1 500 vàng** (khoảng 20 trận thắng) và **3 000 vàng** (khoảng 40 trận); mua cả 12 tốn 27 000 vàng, đủ dài cho người cày nhiều nhất. Mua về bắt đầu ở cấp 1.
+
+| Nhân vật | Nghề | Hệ | Giá | Tuyệt chiêu | Tác dụng |
+|---|---|---|---|---|---|
+| Trần Cương | Tướng sĩ | ⚙️ Kim | 1 500 | **Kim Qua Thiết Mã** | 280% ATK 1 đối thủ, bỏ qua 40% DEF, Thủ −30% 2 lượt |
+| Lý Liệt | Tướng sĩ | 🔥 Hỏa | 3 000 | **Xích Hỏa Đoạt Kỳ** | 300% ATK 1 đối thủ, Thiêu đốt 15% ATK 3 lượt; phá chữ thập nhỏ |
+| Đào Lam | Pháp sư | 💧 Thủy | 1 500 | **Băng Hà Phong Tỏa** | 120% ATK cả đội đối thủ, mỗi người 35% Đóng băng 1 lượt; phá 8 ô ngẫu nhiên |
+| Vũ Lôi | Pháp sư | ⚡ Lôi | 3 000 | **Thiên Lôi Giáng Thế** | 250% ATK 1 đối thủ, −30 năng lượng; phá 1 cột |
+| Hoàng Mộc | Binh lính | 🌿 Mộc | 1 500 | **Rễ Già Giữ Thành** | Hồi phục 6% máu/lượt cả đội 3 lượt; bản thân Khiên 25% và Khiêu khích 2 lượt |
+| Cao Kiên | Binh lính | ⚙️ Kim | 3 000 | **Thiết Bích Đồng Thành** | Thủ +50% 3 lượt, Phản đòn 50% và Khiêu khích 2 lượt |
+| Lục Diệp | Y sư | 🌿 Mộc | 1 500 | **Xuân Mộc Vạn Sinh** | Hồi 20% máu cả đội, kèm Hồi phục 6%/lượt 2 lượt |
+| Bạch Sương | Y sư | 🌪️ Phong | 3 000 | **Gió Lành Tẩy Uế** | Thanh tẩy và hồi 18% máu cả đội, +15 năng lượng mỗi người |
+| Ninh Hỏa | Mưu sĩ | 🔥 Hỏa | 1 500 | **Hỏa Thiêu Kho Lương** | Đối thủ −25 lương, mỗi người −25 năng lượng và Thiêu đốt 10% ATK 2 lượt |
+| Quách Ẩn | Mưu sĩ | 💧 Thủy | 3 000 | **Thủy Độn Ly Gián** | Mỗi đối thủ 50% bị Câm lặng 1 lượt, −20 năng lượng |
+| Tạ Thạch | Quân sư | ⛰️ Thổ | 1 500 | **Bát Trận Thạch Lũy** | Cả đội Thủ +30% 2 lượt và Khiên 12% máu |
+| Mạc Vân | Quân sư | ⚡ Lôi | 3 000 | **Lôi Trận Kinh Hồn** | Cả đội đối thủ Công −25% 2 lượt, −20 năng lượng; phá 6 ô ngẫu nhiên |
 
 ## 5. Kỹ năng tác động lên bàn cờ
 
