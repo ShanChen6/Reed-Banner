@@ -185,7 +185,7 @@
     transform: scaleY(1);
   }
   50% {
-    transform: scaleY(-0.55);
+    transform: scaleY(0.4);
   }
 }
 .lac-fly {
@@ -194,13 +194,17 @@
 .lac-bob {
   animation: lac-bob 3.2s ease-in-out infinite;
 }
+/* Cánh trên co về phía thân (mép dưới), cánh dưới co về mép trên. */
 .lac-wing {
   transform-box: fill-box;
-  transform-origin: 50% 100%;
   animation: lac-flap var(--flap, 0.8s) ease-in-out infinite;
 }
-.lac-wing-far {
-  animation-delay: calc(var(--flap, 0.8s) * -0.15);
+.lac-wing-up {
+  transform-origin: 50% 100%;
+}
+.lac-wing-down {
+  transform-origin: 50% 0%;
+  animation-delay: calc(var(--flap, 0.8s) * -0.1);
 }
 
 @media (prefers-reduced-motion: reduce) {
