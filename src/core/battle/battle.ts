@@ -41,6 +41,7 @@ import * as R from "./rules";
 import {
   MARK,
   PASSIVE,
+  fighterSkill,
   getSkill,
   markAudience,
   needsCell,
@@ -223,8 +224,8 @@ export function act(prev: BattleState, action: BattleAction, now = 0): ActResult
     case "skill": {
       if (late) return { ok: false, error: "tooLate" };
       const actor = state.sides[turn.side].fighters[turn.actor]!;
-      const def = getSkill(action.skill);
-      if (!def || !(actor.skills ?? []).includes(action.skill)) return { ok: false, error: "invalidSkill" };
+      const def = fighterSkill(actor, action.skill);
+      if (!def) return { ok: false, error: "invalidSkill" };
       if (turn.skillUsed) return { ok: false, error: "skillUsed" };
       if (hasEffect(actor.effects, "silence")) return { ok: false, error: "silenced" };
       if (actor.energy < def.cost) return { ok: false, error: "notEnoughEnergy" };
