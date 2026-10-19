@@ -67,7 +67,7 @@ describe("công thức", () => {
 describe("createBattle", () => {
   it("khởi đầu: đầy máu, 0 năng lượng, lương 60 trừ chi phí lượt đầu", () => {
     const { state, events } = createBattle({ sides: [solo(), solo()], seed: 1, now: 1000 });
-    assert.equal(state.sides[0].fighters[0]!.hp, 1000);
+    assert.equal(state.sides[0].fighters[0]!.hp, 2000, "1vs1: máu tối đa ×2");
     assert.equal(state.sides[0].food, 55);
     assert.equal(state.sides[1].food, 60);
     assert.equal(state.turn.side, 0);
@@ -146,7 +146,7 @@ describe("lượt", () => {
     const r = ok(act(state, { type: "timeout" }, 30_001));
     assert.equal(r.state.turn.side, 1);
     assert.equal(r.state.turn.deadline, 60_001);
-    assert.equal(r.state.sides[0].fighters[0]!.hp, 1000);
+    assert.equal(r.state.sides[0].fighters[0]!.hp, 2000);
   });
 });
 
@@ -206,13 +206,23 @@ describe("áp kết quả bàn cờ", () => {
 
   it("ghép trống trận tích nộ cho thủ lĩnh; đầy 100 thì kích hoạt bị động", () => {
     const board = BOARD.replace("KKAKBSVABTSV", "DDADBSVABTSV");
-    const { state } = createBattle({ sides: [solo(), solo()], seed: 1 });
+    const { state } = createBattle({ sides: [solo(fighter("a", { element: "moc" })), solo()], seed: 1 });
     const primed: BattleState = structuredClone(withBoard(state, board));
     primed.sides[0].rage = 95;
     const r = ok(act(primed, { type: "swap", from: { row: 2, col: 3 }, to: { row: 2, col: 2 } }));
     assert.ok(r.events.some((e) => e.type === "passive" && e.side === 0));
     assert.equal(r.state.sides[0].rage, 0);
     assert.equal(r.state.sides[0].passiveTurns, 4);
+  });
+
+  it("thủ lĩnh chưa có bị động thì không tích nộ và không kích hoạt", () => {
+    const board = BOARD.replace("KKAKBSVABTSV", "DDADBSVABTSV");
+    const { state } = createBattle({ sides: [solo(fighter("a", { element: "kim" })), solo()], seed: 1 });
+    const primed: BattleState = structuredClone(withBoard(state, board));
+    primed.sides[0].rage = 95;
+    const r = ok(act(primed, { type: "swap", from: { row: 2, col: 3 }, to: { row: 2, col: 2 } }));
+    assert.ok(!r.events.some((e) => e.type === "passive" || e.type === "rage"));
+    assert.equal(r.state.sides[0].passiveTurns, 0);
   });
 
   it("ghép bánh chưng cộng lương", () => {
@@ -227,7 +237,7 @@ describe("áp kết quả bàn cờ", () => {
     assert.equal(state.sides[0].food, 0);
     assert.deepEqual(
       events.find((e) => e.type === "damage"),
-      { type: "damage", side: 0, fighter: 0, amount: 30, absorbed: 0, source: "starvation" },
+      { type: "damage", side: 0, fighter: 0, amount: 60, absorbed: 0, source: "starvation" },
     );
   });
 
