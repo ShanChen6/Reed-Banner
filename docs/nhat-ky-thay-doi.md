@@ -8,6 +8,9 @@
 - Ô thu hoạch khi kỹ năng hoặc lần trượt miễn phí đổi bàn cờ (phá, biến, trượt và cascade sau đó) chỉ cho 50% sát thương kiếm và 50% năng lượng âm dương. Trước đó kỹ năng ô 1 giá rẻ thu hoạch như nước đi miễn phí, và chỉ được vá bằng tăng giá từng kỹ năng.
 - Tăng lại ô 3 của Kim, Lôi, Mộc, Thủy; giảm Cuồng Phong Quét Trận; Thuận Phong bỏ 15 năng lượng tức thì. Mô phỏng 3vs3 900 trận mỗi hệ: các hệ thắng 54–69% (trước 50–75%). Chi tiết ở [Bộ kỹ năng nhân vật chính](design/12-ky-nang-nhan-vat-chinh.md#mô-phỏng-19102026).
 
+**Hình ảnh**
+- Thay emoji ở /demo bằng bộ hình SVG tự vẽ (Shan đồng ý): 7 ô cờ, ô đặc biệt bản yếu và bản mạnh, 7 biểu tượng nguyên tố, cờ lau thủ lĩnh, khung bàn cờ. Phong cách khắc gỗ dân gian và hoa văn trống đồng. Chân dung nhân vật và hình trang bị để sau, thuê họa sĩ hoặc dùng công cụ AI theo bản yêu cầu ở [Hình ảnh](design/13-hinh-anh.md).
+
 **Bộ kỹ năng nhân vật chính**
 - Code xong bộ Kim, Thủy, Hỏa, Thổ, Lôi cùng kỹ năng bị động (Shan yêu cầu).
 - Hỏa Phóng Hỏa Thiêu Doanh tăng giá 20 → 35, Lôi Trụ Giáng Thế 20 → 40: phá ô giá rẻ thu hoạch như một nước đi miễn phí.

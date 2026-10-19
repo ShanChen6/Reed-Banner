@@ -1,16 +1,6 @@
-// Nhãn tiếng Việt và biểu tượng tạm cho trang /demo (chưa có art).
+// Nhãn tiếng Việt cho trang /demo. Hình vẽ nằm trong ./art.
 
-import type { BattleError, Difficulty, EffectKind, Element, Profession, TileKind } from "@/core";
-
-export const TILE_ICON: Record<TileKind, string> = {
-  kiem: "⚔️",
-  amDuong: "☯️",
-  banhChung: "🍙",
-  tim: "❤️",
-  vang: "💰",
-  sach: "📖",
-  trong: "🥁",
-};
+import type { BattleError, Difficulty, EffectKind, Element, Profession, SpecialGrade, TileKind } from "@/core";
 
 export const TILE_NAME: Record<TileKind, string> = {
   kiem: "Kiếm",
@@ -20,6 +10,28 @@ export const TILE_NAME: Record<TileKind, string> = {
   vang: "Vàng",
   sach: "Sách",
   trong: "Trống trận",
+};
+
+/** Tên ô đặc biệt theo docs/design/01-ban-co.md mục 3. */
+export const SPECIAL_NAME: Record<SpecialGrade, Record<TileKind, string>> = {
+  strong: {
+    kiem: "Kiếm lửa",
+    amDuong: "Âm dương thái cực",
+    banhChung: "Mâm cỗ",
+    tim: "Tim vàng",
+    vang: "Rương vàng",
+    sach: "Binh thư",
+    trong: "Trống đồng",
+  },
+  weak: {
+    kiem: "Kiếm đồng",
+    amDuong: "Bùa âm dương",
+    banhChung: "Giỏ bánh",
+    tim: "Tim bạc",
+    vang: "Túi vàng",
+    sach: "Thẻ tre",
+    trong: "Trống da",
+  },
 };
 
 export const PROFESSION_NAME: Record<Profession, string> = {
