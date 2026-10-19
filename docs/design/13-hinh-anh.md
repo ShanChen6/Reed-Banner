@@ -99,4 +99,49 @@ Mỗi nhân vật cần hai hình:
 - Sau mỗi lần xử lý, kiểm tra lại kích thước, kênh alpha, dung lượng (mục tiêu dưới 60 KB mỗi hình 2x) và xem thử trên cả nền sáng lẫn nền tối.
 - Danh sách hình (`public/art/manifest.json`, đường dẫn web tương đối) được tạo khi có lô hình đầu tiên. Ô cờ, biểu tượng và khung vẫn là SVG trong code, không nằm trong danh sách này.
 
+### 2.7 Câu lệnh mẫu cho công cụ AI vẽ ảnh
+
+Mỗi lần chỉ tạo **một hình**, luôn dán khối phong cách chung lên đầu để cả bộ đồng nhất. Câu lệnh viết bằng tiếng Anh vì đa số công cụ hiểu tốt hơn. Kết quả vẫn phải qua bước duyệt ở mục 2.5 và 2.6.
+
+**Khối phong cách chung**
+
+```text
+Style: Vietnamese folk woodblock print look, heavy dark-brown ink outlines (#2b1d14), flat colors,
+at most one shadow tone, subtle paper grain, Dong Son bronze-drum motifs (sawtooth bands,
+concentric circles) used sparingly. 10th-century Vietnam: cross-collar robes, head wraps or topknots,
+leg wraps, lamellar or leather armor. Light from the upper left, soft.
+Palette: ink #2b1d14, paper #f6ecd4, bronze gold #d4a24c, lacquer red #5a1e14, plus the character's
+element color as the main accent.
+Background: fully transparent (real alpha), no scene. One subject per image. No text, no watermark,
+no frame.
+Avoid: photorealism, 3D render, anime big eyes, Nguyen-dynasty ao dai or khan xep, Qing queue
+hairstyle, Japanese armor, cropped silhouette, checkerboard fake transparency.
+```
+
+**Chân dung** (thêm vào sau khối chung)
+
+```text
+Asset: bust portrait of Dinh Bo Linh as a young general, determined gaze, reed-flag pennant on his
+shoulder. Element accent: wood green #4f9a4a on sash and collar trim.
+Camera: three-quarter view, chest up, head about 45% of canvas height, centered.
+Canvas: 1024x1024, keep the head and shoulders inside the central 84% (8% margin each side).
+Must stay readable at 48 px.
+```
+
+**Toàn thân**
+
+```text
+Asset: full-body battle stance of Le Thach, a soldier (spear and round shield), earth element
+accent #a5772f. Facing right. Feet on a ground line 5% above the bottom edge.
+Canvas: 1024x1536, 8% side margin, nothing touching the edges.
+```
+
+**Trang bị**
+
+```text
+Asset: one equipment icon, a jade pendant (ngoc boi) on a braided cord, wood element accent
+#4f9a4a. Slight three-quarter angle, centered, 8% margin, no frame or rarity border.
+Canvas: 512x512. Must stay recognizable at 48 px.
+```
+
 > TODO: chọn người vẽ hoặc công cụ AI, ngân sách và thời điểm (khi gameplay đã ổn); chốt danh sách 12 sứ quân theo thứ tự chiến dịch.
