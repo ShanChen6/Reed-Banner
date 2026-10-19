@@ -6,6 +6,9 @@ import {
   createBattle,
   findValidMoves,
   professionSkills,
+  spiritAt,
+  spiritHealMultiplier,
+  spiritStatMultiplier,
   type BattleState,
   type FighterConfig,
   type SideConfig,
@@ -220,5 +223,47 @@ describe("trận tự đấu có kỹ năng", () => {
       if (state.winner !== null) finished++;
     }
     assert.ok(finished >= 7, `chỉ ${finished}/14 trận kết thúc`);
+  });
+});
+
+describe("Tinh thần", () => {
+  it("từ lượt 25 của phe mất 10 mỗi lượt, về 0 ở lượt 34", () => {
+    assert.equal(spiritAt(24), 100);
+    assert.equal(spiritAt(25), 90);
+    assert.equal(spiritAt(30), 40);
+    assert.equal(spiritAt(34), 0);
+    assert.equal(spiritAt(60), 0);
+    assert.equal(spiritStatMultiplier(100), 1);
+    assert.equal(spiritStatMultiplier(0), 0.7);
+    assert.equal(spiritHealMultiplier(40), 0.4);
+  });
+
+  it("Tinh thần 40: Linh dược chỉ hồi 40%, Thủ thành cho Khiên 40%", () => {
+    const s = setup([solo(fighter("a", { skills: ["linhDuoc"], profession: "ySu", element: "loi" })), solo(fighter("b"))]);
+    me(s).spirit = 40;
+    me(s).hp = 500;
+    const r = ok(act(s, { type: "skill", skill: "linhDuoc" }));
+    assert.equal(me(r.state).hp, 500 + Math.round(2000 * 0.22 * 0.4));
+
+    const t = setup([solo(fighter("a", { skills: ["thuThanh"], profession: "binhLinh", element: "loi" })), solo(fighter("b"))]);
+    me(t).spirit = 40;
+    const r2 = ok(act(t, { type: "skill", skill: "thuThanh" }));
+    assert.deepEqual(me(r2.state).effects, [{ kind: "shield", value: 160, turns: null }]);
+  });
+
+  it("Tinh thần 0: ATK và DEF còn 70%", () => {
+    const s = setup([solo(fighter("a", { skills: ["tramKich"] })), solo(fighter("b", { def: 100, element: "loi" }))]);
+    me(s).spirit = 0;
+    foe(s).spirit = 0;
+    const r = ok(act(s, { type: "skill", skill: "tramKich" }));
+    assert.equal(foe(r.state).hp, 2000 - Math.round(210 * 0.7 * (100 / 170)));
+  });
+
+  it("áp dụng cả ở 3vs3, theo Tinh thần của người được hồi", () => {
+    const s = setup([trio("p", { skills: ["linhDuoc"], profession: "ySu", element: "loi" }), trio("q")]);
+    me(s, 1).spirit = 50;
+    me(s, 1).hp = 500;
+    const r = ok(act(s, { type: "skill", skill: "linhDuoc", target: 1 }));
+    assert.equal(me(r.state, 1).hp, 500 + Math.round(1000 * 0.22 * 0.5));
   });
 });

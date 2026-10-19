@@ -189,6 +189,48 @@ export function destroyCells(board: Board, cells: readonly Pos[], rng: Rng, weig
   return mergeResults(first, resolveBoard(first ? first.boardAfter : board, rng, weights));
 }
 
+/** Trượt cả một hàng hoặc một cột (hệ Phong), xem docs/design/12-ky-nang-nhan-vat-chinh.md mục 1.2. */
+export interface Slide {
+  readonly axis: "row" | "col";
+  /** Chỉ số hàng hoặc cột. */
+  readonly index: number;
+  /** Số ô dịch: dương là sang phải/xuống, âm là sang trái/lên. */
+  readonly offset: number;
+}
+
+export function isValidSlide(board: Board, slide: Slide, maxDistance: number): boolean {
+  const size = slide.axis === "row" ? board.rows : board.cols;
+  const distance = Math.abs(slide.offset);
+  return (
+    Number.isInteger(slide.index) &&
+    Number.isInteger(slide.offset) &&
+    slide.index >= 0 &&
+    slide.index < size &&
+    distance >= 1 &&
+    distance <= maxDistance
+  );
+}
+
+/** Dịch các ô của hàng/cột; ô tràn khỏi một đầu quay vào đầu kia. Ô đặc biệt trượt theo. */
+export function slideCells(board: Board, slide: Slide): Board {
+  const cells = [...board.cells];
+  const length = slide.axis === "row" ? board.cols : board.rows;
+  const at = (k: number): Pos => (slide.axis === "row" ? { row: slide.index, col: k } : { row: k, col: slide.index });
+  for (let k = 0; k < length; k++) {
+    const from = (((k - slide.offset) % length) + length) % length;
+    cells[indexOf(board, at(k))] = board.cells[indexOf(board, at(from))]!;
+  }
+  return { ...board, cells };
+}
+
+/**
+ * Trượt rồi cascade: trượt không phá ô và không thu hoạch, bộ ghép tạo ra thì xử lý như thường
+ * (ô đặc biệt ở giữa bộ ghép), không cho lượt thêm.
+ */
+export function slideLine(board: Board, slide: Slide, rng: Rng, weights: SpawnWeights): MoveResult {
+  return mergeResults(null, resolveBoard(slideCells(board, slide), rng, weights));
+}
+
 /** Kỹ năng biến ô: đổi `count` ô thường ngẫu nhiên thành `kind`, rồi cascade (không cho lượt thêm). */
 export function transformCells(
   board: Board,

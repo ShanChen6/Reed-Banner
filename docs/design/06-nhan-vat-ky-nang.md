@@ -6,7 +6,7 @@
 
 ## 1. Mô hình chung
 
-- **Chỉ số:** Máu tối đa, Công (ATK), Thủ (DEF).
+- **Chỉ số:** Máu tối đa, Công (ATK), Thủ (DEF), Tinh thần (trong trận, xem [Tài nguyên & công thức](03-tai-nguyen-cong-thuc.md#5-tinh-thần-riêng-từng-tướng)).
 - Mỗi nhân vật có **một nghề** và **một nguyên tố**; nhân vật kèm cố định cả hai, riêng nhân vật chính đổi được trước trận. Đối thủ AI cũng có nghề và nguyên tố.
 - **Không có độ hiếm.** Mọi nhân vật kèm cân bằng ở cùng một cấp. Nhân vật mua thêm mang giá trị **chiến thuật** (bao phủ nguyên tố, kỹ năng khác), không mạnh hơn.
 - Nhân vật lịch sử (nhân vật chính, trùm đối thủ) được ghi rõ là hư cấu hóa. Nhân vật kèm thường là **hư cấu**.

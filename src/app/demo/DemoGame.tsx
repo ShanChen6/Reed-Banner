@@ -3,25 +3,32 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   act,
+  canFreeSlide,
   createBattle,
   getSkill,
   isAdjacent,
+  ELEMENTS,
   isAlive,
   mainCharacter,
+  mainSkills,
   needsCell,
+  PASSIVE,
   PASSIVES,
   playAiTurn,
   selectableActors,
+  slideStep,
   STARTER_COMPANIONS,
   tileAt,
   type BattleAction,
   type BattleEvent,
   type BattleState,
   type Difficulty,
+  type Element,
   type Fighter,
   type Pos,
   type SideConfig,
   type SkillDef,
+  type Slide,
 } from "@/core";
 import {
   DIFFICULTY_NAME,
@@ -39,21 +46,33 @@ const AI_DELAY_MS = 700;
 const DEMO_SEED = 2026;
 const DIFFICULTIES: Difficulty[] = ["easy", "normal", "hard", "boss", "nightmare"];
 
+/** Nguyên tố đã có bộ kỹ năng nhân vật chính. */
+const MAIN_ELEMENTS = ELEMENTS.filter((e) => mainSkills(e).length > 0);
+
 const byId = (id: string) => STARTER_COMPANIONS.find((c) => c.id === id)!;
 
 /** Trận demo cố định: nhân vật chính và 2 nhân vật kèm, đấu đội Tianwu 3 người. */
-function demoSides(): [SideConfig, SideConfig] {
+function demoSides(element: Element): [SideConfig, SideConfig] {
   return [
-    { fighters: [mainCharacter(), byId("haVan"), byId("maiThanh")], leader: 0 },
+    { fighters: [mainCharacter(element), byId("haVan"), byId("maiThanh")], leader: 0 },
     { fighters: [byId("leThach"), byId("toKim"), byId("phungPhong")], leader: 0 },
   ];
 }
 
-function newBattle(round: number): BattleState {
-  return createBattle({ sides: demoSides(), seed: DEMO_SEED + round, timer: false, firstSide: PLAYER }).state;
+function newBattle(round: number, element: Element): BattleState {
+  return createBattle({ sides: demoSides(element), seed: DEMO_SEED + round, timer: false, firstSide: PLAYER }).state;
 }
 
 type Aim = { skill: SkillDef } | null;
+
+/** Đang chọn hàng/cột để trượt: cho kỹ năng Phong, hoặc lần trượt miễn phí (skill null). */
+type SlideAim = {
+  readonly skill: SkillDef | null;
+  readonly max: number;
+  readonly axis?: "row";
+  readonly exact?: boolean;
+  readonly from: Pos | null;
+} | null;
 
 interface LogLine {
   readonly id: number;
@@ -71,10 +90,22 @@ function describe(state: BattleState, e: BattleEvent): string | null {
       return `${name(e.side, e.fighter)} hồi ${e.amount} máu`;
     case "ko":
       return `${name(e.side, e.fighter)} bị hạ gục`;
-    case "passive":
-      return e.side === PLAYER ? "Bị động thủ lĩnh phe bạn kích hoạt" : "Bị động thủ lĩnh đối thủ kích hoạt";
+    case "passive": {
+      const own = state.sides[e.side];
+      const passive = PASSIVES[own.fighters[own.leader]!.element].name;
+      return e.side === PLAYER ? `Bị động ${passive} của phe bạn kích hoạt` : `Bị động ${passive} của đối thủ kích hoạt`;
+    }
+    case "slide":
+      return e.free
+        ? `${name(e.side, e.fighter)} trượt miễn phí ${e.slide.axis === "row" ? "hàng" : "cột"} ${e.slide.index + 1}`
+        : null;
     case "shuffle":
       return "Hết nước đi, bàn cờ được xáo lại";
+    case "spirit": {
+      const firstAlive = state.sides[e.side].fighters.findIndex((f) => f.hp > 0);
+      if (e.spirit !== 90 || e.fighter !== firstAlive) return null;
+      return e.side === PLAYER ? "Trận kéo dài, tinh thần phe bạn bắt đầu giảm" : "Trận kéo dài, tinh thần đối thủ bắt đầu giảm";
+    }
     case "frozenSkip":
       return e.side === PLAYER ? "Phe bạn bị Đóng băng, mất lượt" : "Đối thủ bị Đóng băng, mất lượt";
     case "end":
@@ -82,6 +113,12 @@ function describe(state: BattleState, e: BattleEvent): string | null {
     default:
       return null;
   }
+}
+
+function slideHint(a: NonNullable<SlideAim>): string {
+  const what = a.axis === "row" ? "một hàng" : "một hàng hoặc một cột";
+  const how = a.exact ? `đúng ${a.max} ô` : a.max === 1 ? "1 ô" : `1–${a.max} ô`;
+  return `${a.skill ? a.skill.name : "Trượt miễn phí"}: kéo ${what} đi ${how} (chọn ô đầu rồi ô đích).`;
 }
 
 function Bar({ value, max, color, label }: { value: number; max: number; color: string; label: string }) {
@@ -143,6 +180,7 @@ function FighterCard({
       <div className="space-y-1">
         <Bar label="Máu" value={fighter.hp} max={fighter.maxHp} color="bg-rose-500" />
         <Bar label="NL" value={fighter.energy} max={100} color="bg-sky-500" />
+        <Bar label="TT" value={fighter.spirit} max={100} color="bg-emerald-500" />
         {rage !== null && <Bar label="Nộ" value={rage} max={100} color="bg-orange-500" />}
       </div>
       {fighter.effects.length > 0 && (
@@ -168,12 +206,15 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
   const [round, setRound] = useState(0);
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
   const [started, setStarted] = useState(false);
-  const [state, setState] = useState<BattleState>(() => newBattle(0));
+  const [element, setElement] = useState<Element>("moc");
+  const [state, setState] = useState<BattleState>(() => newBattle(0, "moc"));
   const [selected, setSelected] = useState<Pos | null>(null);
   const [cursor, setCursor] = useState<Pos>({ row: 3, col: 5 });
   const [showCursor, setShowCursor] = useState(false);
   const [aim, setAim] = useState<Aim>(null);
   const [aimIndex, setAimIndex] = useState(0);
+  const [slideAim, setSlideAim] = useState<SlideAim>(null);
+  const [pendingSlide, setPendingSlide] = useState<Slide | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [log, setLog] = useState<LogLine[]>([]);
   const logId = useRef(0);
@@ -246,12 +287,11 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
     [apply],
   );
 
-  const castSkill = useCallback(
-    (def: SkillDef) => {
-      if (!myTurn) return;
-      if (state.turn.skillUsed) return flash(ERROR_TEXT.skillUsed);
-      if (actor.energy < def.cost) return flash(`${ERROR_TEXT.notEnoughEnergy} (${actor.energy}/${def.cost})`);
+  /** Bắt đầu chọn mục tiêu (đối thủ, đồng đội hoặc ô) cho kỹ năng; không cần thì dùng luôn. */
+  const aimOrCast = useCallback(
+    (def: SkillDef, slide?: Slide) => {
       if (def.target === "enemy" || def.target === "ally" || needsCell(def)) {
+        setPendingSlide(slide ?? null);
         setAim({ skill: def });
         setSelected(null);
         const side = def.target === "ally" ? PLAYER : AI;
@@ -259,9 +299,26 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
         setAimIndex(def.target === "ally" ? state.turn.actor : Math.max(0, first));
         return;
       }
-      apply({ type: "skill", skill: def.id });
+      apply({ type: "skill", skill: def.id, ...(slide ? { slide } : {}) });
     },
-    [myTurn, state, actor.energy, apply, flash],
+    [state, apply],
+  );
+
+  const castSkill = useCallback(
+    (def: SkillDef) => {
+      if (!myTurn) return;
+      if (state.turn.skillUsed) return flash(ERROR_TEXT.skillUsed);
+      if (actor.energy < def.cost) return flash(`${ERROR_TEXT.notEnoughEnergy} (${actor.energy}/${def.cost})`);
+      const slide = slideStep(def);
+      if (slide) {
+        setAim(null);
+        setSelected(null);
+        setSlideAim({ skill: def, max: slide.distance, axis: slide.axis, exact: slide.exact, from: null });
+        return;
+      }
+      aimOrCast(def);
+    },
+    [myTurn, state, actor.energy, aimOrCast, flash],
   );
 
   const fireAim = useCallback(
@@ -274,15 +331,52 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
         skill: def.id,
         ...(target !== undefined ? { target } : {}),
         ...(cell ? { cell } : {}),
+        ...(pendingSlide ? { slide: pendingSlide } : {}),
       });
-      if (ok) setAim(null);
+      if (ok) {
+        setAim(null);
+        setPendingSlide(null);
+      }
     },
-    [aim, apply, flash],
+    [aim, pendingSlide, apply, flash],
+  );
+
+  /** Kéo từ ô `from` tới ô `to` cùng hàng hoặc cùng cột thành một lần trượt. */
+  const pickSlide = useCallback(
+    (from: Pos, to: Pos) => {
+      if (!slideAim) return;
+      const slide: Slide | null =
+        from.row === to.row && from.col !== to.col
+          ? { axis: "row", index: from.row, offset: to.col - from.col }
+          : from.col === to.col && from.row !== to.row
+            ? { axis: "col", index: from.col, offset: to.row - from.row }
+            : null;
+      const distance = slide ? Math.abs(slide.offset) : 0;
+      if (
+        !slide ||
+        distance > slideAim.max ||
+        (slideAim.axis && slide.axis !== slideAim.axis) ||
+        (slideAim.exact && distance !== slideAim.max)
+      ) {
+        setSlideAim({ ...slideAim, from: to });
+        return flash(slideHint(slideAim));
+      }
+      setSlideAim(null);
+      if (!slideAim.skill) apply({ type: "slide", slide });
+      else aimOrCast(slideAim.skill, slide);
+    },
+    [slideAim, apply, aimOrCast, flash],
   );
 
   const onCell = useCallback(
     (pos: Pos) => {
       if (!myTurn) return;
+      if (slideAim) {
+        if (!slideAim.from || (slideAim.from.row === pos.row && slideAim.from.col === pos.col)) {
+          setSlideAim({ ...slideAim, from: slideAim.from ? null : pos });
+        } else pickSlide(slideAim.from, pos);
+        return;
+      }
       if (aim) {
         if (needsCell(aim.skill)) fireAim(undefined, pos);
         return;
@@ -292,7 +386,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
       if (isAdjacent(selected, pos)) return trySwap(selected, pos);
       setSelected(pos);
     },
-    [myTurn, aim, selected, fireAim, trySwap],
+    [myTurn, slideAim, aim, selected, pickSlide, fireAim, trySwap],
   );
 
   const onPointerDown = (pos: Pos, e: React.PointerEvent) => {
@@ -306,7 +400,11 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
     if (!d) return;
     const dx = e.clientX - d.x;
     const dy = e.clientY - d.y;
-    if (Math.max(Math.abs(dx), Math.abs(dy)) < SWIPE_PX || aim) return onCell(d.pos);
+    if (slideAim && Math.max(Math.abs(dx), Math.abs(dy)) >= SWIPE_PX) {
+      const el = document.elementFromPoint(e.clientX, e.clientY)?.closest<HTMLElement>("[data-row]");
+      if (el) return pickSlide(d.pos, { row: Number(el.dataset.row), col: Number(el.dataset.col) });
+    }
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < SWIPE_PX || aim || slideAim) return onCell(d.pos);
     if (!myTurn) return;
     const to =
       Math.abs(dx) > Math.abs(dy)
@@ -368,6 +466,8 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
       } else if (e.key === "Escape") {
         setSelected(null);
         setAim(null);
+        setSlideAim(null);
+        setPendingSlide(null);
       } else if (e.key === "Tab") {
         e.preventDefault();
         switchActor(e.shiftKey ? -1 : 1);
@@ -383,9 +483,11 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
   const restart = () => {
     const next = round + 1;
     setRound(next);
-    setState(newBattle(next));
+    setState(newBattle(next, element));
     setSelected(null);
     setAim(null);
+    setSlideAim(null);
+    setPendingSlide(null);
     setLog([]);
     setStarted(true);
   };
@@ -415,7 +517,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
               key={f.id}
               fighter={f}
               leader={own.leader === i}
-              rage={own.leader === i && PASSIVES[f.element] ? own.rage : null}
+              rage={own.leader === i ? own.rage : null}
               active={isActor}
               selectable={canPick && !aim}
               targetable={!!target && aimIndex === i && isAlive(f)}
@@ -481,7 +583,9 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
             >
               {state.board.cells.map((tile, i) => {
                 const pos = { row: Math.floor(i / state.board.cols), col: i % state.board.cols };
-                const isSel = selected?.row === pos.row && selected.col === pos.col;
+                const from = slideAim?.from;
+                const isSel =
+                  (selected?.row === pos.row && selected.col === pos.col) || (from?.row === pos.row && from.col === pos.col);
                 const isCur = showCursor && cursor.row === pos.row && cursor.col === pos.col;
                 const special =
                   tile?.special === "strong"
@@ -493,10 +597,12 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                   <div
                     key={i}
                     role="gridcell"
+                    data-row={pos.row}
+                    data-col={pos.col}
                     onPointerDown={(e) => onPointerDown(pos, e)}
                     className={`flex aspect-square items-center justify-center rounded bg-[var(--cell)] text-[clamp(12px,3.2vw,28px)] ${special} ${
                       isSel ? "scale-110 bg-amber-400/60" : ""
-                    } ${isCur ? "outline-2 outline-sky-400" : ""} ${aim && needsCell(aim.skill) ? "cursor-crosshair" : "cursor-pointer"}`}
+                    } ${isCur ? "outline-2 outline-sky-400" : ""} ${(aim && needsCell(aim.skill)) || slideAim ? "cursor-crosshair" : "cursor-pointer"}`}
                   >
                     {tile ? TILE_ICON[tile.kind] : ""}
                   </div>
@@ -510,6 +616,23 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
               {!started && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-black/60 text-white">
                   <p className="text-sm">Đinh Bộ Lĩnh, Hà Vân và Mai Thanh đấu đội Tianwu.</p>
+                  <div className="flex flex-wrap justify-center gap-1.5" role="radiogroup" aria-label="Nguyên tố nhân vật chính">
+                    {MAIN_ELEMENTS.map((e) => (
+                      <button
+                        key={e}
+                        type="button"
+                        role="radio"
+                        aria-checked={element === e}
+                        onClick={() => {
+                          setElement(e);
+                          setState(newBattle(round, e));
+                        }}
+                        className={`rounded px-2.5 py-1 text-sm ${element === e ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
+                      >
+                        {ELEMENT_NAME[e]}
+                      </button>
+                    ))}
+                  </div>
                   <button
                     type="button"
                     onClick={() => setStarted(true)}
@@ -543,12 +666,17 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
               <span className="mr-1 text-xs opacity-70">Kỹ năng của {actor.name}:</span>
               {skills.map((def, i) => {
                 const disabled = !myTurn || state.turn.skillUsed || actor.energy < def.cost;
-                const aiming = aim?.skill.id === def.id;
+                const aiming = aim?.skill.id === def.id || slideAim?.skill?.id === def.id;
                 return (
                   <button
                     key={def.id}
                     type="button"
-                    onClick={() => (aiming ? setAim(null) : castSkill(def))}
+                    onClick={() => {
+                      if (!aiming) return castSkill(def);
+                      setAim(null);
+                      setSlideAim(null);
+                      setPendingSlide(null);
+                    }}
                     className={`rounded px-2 py-1 text-xs ${aiming ? "bg-rose-500 text-white" : "bg-[var(--panel)]"} ${
                       disabled && !aiming ? "opacity-40" : ""
                     }`}
@@ -558,7 +686,21 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                   </button>
                 );
               })}
+              {myTurn && canFreeSlide(state) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAim(null);
+                    setSelected(null);
+                    setSlideAim(slideAim && !slideAim.skill ? null : { skill: null, max: PASSIVE.phongFreeSlide, from: null });
+                  }}
+                  className={`rounded px-2 py-1 text-xs ${slideAim && !slideAim.skill ? "bg-rose-500 text-white" : "bg-teal-600 text-white"}`}
+                >
+                  🌪️ Trượt miễn phí
+                </button>
+              )}
             </div>
+            {slideAim && <p className="text-xs opacity-80">{slideHint(slideAim)} Esc để hủy.</p>}
             {aim && (
               <p className="text-xs opacity-80">
                 {needsCell(aim.skill)

@@ -78,4 +78,5 @@ export const ERROR_TEXT: Record<BattleError, string> = {
   tooLate: "Đã hết giờ",
   tooEarly: "Chưa hết giờ",
   noTimer: "Không có đồng hồ",
+  noFreeSlide: "Không còn lượt trượt miễn phí",
 };
