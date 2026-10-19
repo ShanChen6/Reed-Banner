@@ -19,8 +19,8 @@ Cờ Lau viết mới hoàn toàn bằng **TypeScript**. Không dùng Java và k
 | Logic trận đấu | **TypeScript thuần** | Không phụ thuộc React, DOM hay trình duyệt; xác định theo seed; dùng chung cho `/demo`, `/play` và API |
 | PRNG | Thuật toán xác định có seed (ví dụ mulberry32) | Seed online bốc bằng `crypto` của server |
 | API / server | **Next.js Route Handlers** | Server có thẩm quyền xử lý từng nước đi |
-| Database | **Postgres** (Neon hoặc Supabase) | Nguồn sự thật duy nhất cho dữ liệu người chơi |
-| ORM | **Prisma** hoặc **Drizzle** | Chọn ở giai đoạn 2 |
+| Database | **Postgres** trên **Neon** | Nguồn sự thật duy nhất cho dữ liệu người chơi (Shan chốt 19/10/2026) |
+| ORM | **Drizzle** | Driver Neon HTTP trên Vercel, PGlite trong test |
 | Đăng nhập | **Auth.js**, OAuth Google + GitHub | Tài khoản khách bằng cookie đã ký |
 | Dữ liệu thiết kế | **Notion** → script đồng bộ ra file JSON tĩnh trong repo | Không gọi Notion lúc đang chơi |
 | Test | `node:test` qua **tsx** | Theo quy ước ShanVerse; bắt buộc cho logic và AI |
