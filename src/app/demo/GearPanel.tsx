@@ -27,16 +27,29 @@ import {
   type Tier,
 } from "@/core";
 import { GearIcon } from "./art/gear";
-import { ELEMENT_NAME, gearText, PROFESSION_NAME, SLOT_NAME, TIER_COLOR_NAME } from "./labels";
+import {
+  ELEMENT_NAME,
+  gearText,
+  PROFESSION_NAME,
+  SLOT_NAME,
+  TIER_COLOR_NAME,
+} from "./labels";
 import { PROFILE_ERROR } from "./ProgressPanel";
 
-const nameOf = (id: string) => (id === MAIN_ID ? "Đinh Bộ Lĩnh" : (companionById(id)?.name ?? id));
+const nameOf = (id: string) =>
+  id === MAIN_ID ? "Đinh Bộ Lĩnh" : (companionById(id)?.name ?? id);
 const professionOf = (profile: Profile, id: string): Profession =>
   id === MAIN_ID ? profile.profession : companionById(id)!.profession;
-const elementOf = (profile: Profile, id: string): Element => (id === MAIN_ID ? profile.element : companionById(id)!.element);
+const elementOf = (profile: Profile, id: string): Element =>
+  id === MAIN_ID ? profile.element : companionById(id)!.element;
 
-const SLOT_ORDER = Object.fromEntries(GEAR_SLOTS.map((s, i) => [s, i])) as Record<GearSlot, number>;
-const byShelf = (a: GearItem, b: GearItem) => SLOT_ORDER[a.slot] - SLOT_ORDER[b.slot] || b.tier - a.tier || a.element.localeCompare(b.element);
+const SLOT_ORDER = Object.fromEntries(
+  GEAR_SLOTS.map((s, i) => [s, i]),
+) as Record<GearSlot, number>;
+const byShelf = (a: GearItem, b: GearItem) =>
+  SLOT_ORDER[a.slot] - SLOT_ORDER[b.slot] ||
+  b.tier - a.tier ||
+  a.element.localeCompare(b.element);
 
 const SHOP_TIERS = Object.keys(SHOP_GEAR_PRICE).map(Number) as Tier[];
 
@@ -54,7 +67,11 @@ function Select<T extends string>({
   return (
     <label className="flex items-center gap-1">
       <span className="opacity-70">{label}</span>
-      <select value={value} onChange={(e) => onChange(e.target.value as T)} className="rounded bg-black/20 px-1 py-0.5">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value as T)}
+        className="rounded bg-black/20 px-1 py-0.5"
+      >
         {options.map((o) => (
           <option key={o.value} value={o.value}>
             {o.text}
@@ -84,13 +101,6 @@ export default function GearPanel({
   const [picked, setPicked] = useState<string[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [order, setOrder] = useState<{ slot: GearSlot; element: Element; set: string; tier: Tier; profession: Profession }>({
-    slot: "vuKhi",
-    element: profile.element,
-    set: GEAR_SETS[0]!.id,
-    tier: SHOP_TIERS[0]!,
-    profession: profile.profession,
-  });
 
   const character = teamIds.includes(who) ? who : MAIN_ID;
   const disabled = locked || busy;
@@ -98,25 +108,41 @@ export default function GearPanel({
     setBusy(true);
     void onAction(a).then((error) => {
       setBusy(false);
-      setMessage(error ? (PROFILE_ERROR[error as keyof typeof PROFILE_ERROR] ?? error) : null);
+      setMessage(
+        error
+          ? (PROFILE_ERROR[error as keyof typeof PROFILE_ERROR] ?? error)
+          : null,
+      );
       if (!error) setPicked([]);
     });
   };
   const toggle = (id: string) =>
-    setPicked((cur) => (cur.includes(id) ? cur.filter((x) => x !== id) : cur.length >= 3 ? [...cur.slice(1), id] : [...cur, id]));
+    setPicked((cur) =>
+      cur.includes(id)
+        ? cur.filter((x) => x !== id)
+        : cur.length >= 3
+          ? [...cur.slice(1), id]
+          : [...cur, id],
+    );
 
   const loadout = loadoutOf(profile, character);
   const profession = professionOf(profile, character);
   const stats = gearStats(loadout, elementOf(profile, character), profession);
   const bySlot = (slot: GearSlot): GearItem | undefined =>
-    slot === "vuKhi" ? loadout.weapons[profession] : loadout.slots[slot as Exclude<GearSlot, "vuKhi">];
-  const items = picked.flatMap((id) => profile.bag.filter((it) => it.id === id));
+    slot === "vuKhi"
+      ? loadout.weapons[profession]
+      : loadout.slots[slot as Exclude<GearSlot, "vuKhi">];
+  const items = picked.flatMap((id) =>
+    profile.bag.filter((it) => it.id === id),
+  );
   const one = items.length === 1 ? items[0]! : null;
   const wearer = one ? wearerOf(profile, one.id) : null;
-  const price = SHOP_GEAR_PRICE[order.tier] ?? 0;
 
   return (
-    <section aria-label="Trang bị" className="rounded-lg bg-[var(--panel)] p-2 text-xs">
+    <section
+      aria-label="Trang bị"
+      className="rounded-lg bg-[var(--panel)] p-2 text-xs"
+    >
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-semibold">
           Trang bị · Túi đồ {profile.bag.length}/{BAG_LIMIT}
@@ -124,9 +150,17 @@ export default function GearPanel({
         <span className="tabular-nums">Vàng: {profile.gold}</span>
         {message && <span className="text-rose-500">{message}</span>}
       </div>
-      {locked && <p className="mb-2 opacity-70">Đang trong trận: đổi trang bị sau khi trận kết thúc.</p>}
+      {locked && (
+        <p className="mb-2 opacity-70">
+          Đang trong trận: đổi trang bị sau khi trận kết thúc.
+        </p>
+      )}
 
-      <div className="mb-2 flex flex-wrap gap-1" role="tablist" aria-label="Nhân vật">
+      <div
+        className="mb-2 flex flex-wrap gap-1"
+        role="tablist"
+        aria-label="Nhân vật"
+      >
         {teamIds.map((id) => (
           <button
             key={id}
@@ -141,7 +175,10 @@ export default function GearPanel({
         ))}
       </div>
 
-      <div className="flex flex-wrap items-center gap-1" aria-label={`Ô trang bị của ${nameOf(character)}`}>
+      <div
+        className="flex flex-wrap items-center gap-1"
+        aria-label={`Ô trang bị của ${nameOf(character)}`}
+      >
         {GEAR_SLOTS.map((slot) => {
           const item = bySlot(slot);
           return (
@@ -149,8 +186,14 @@ export default function GearPanel({
               key={slot}
               type="button"
               disabled={disabled || !item}
-              onClick={() => item && commit({ type: "unequip", character, item: item.id })}
-              title={item ? `${gearText(item)} · bấm để tháo` : `${SLOT_NAME[slot]}: trống`}
+              onClick={() =>
+                item && commit({ type: "unequip", character, item: item.id })
+              }
+              title={
+                item
+                  ? `${gearText(item)} · bấm để tháo`
+                  : `${SLOT_NAME[slot]}: trống`
+              }
               className={`rounded ${item ? "" : "opacity-30"} disabled:cursor-default`}
             >
               <GearIcon
@@ -164,14 +207,18 @@ export default function GearPanel({
           );
         })}
         <span className="ml-1 tabular-nums opacity-80">
-          +{stats.flat.atk} ATK · +{stats.flat.maxHp} Máu · +{stats.flat.def} DEF
+          +{stats.flat.atk} ATK · +{stats.flat.maxHp} Máu · +{stats.flat.def}{" "}
+          DEF
           {stats.bonuses.length > 0 && ` · ${stats.bonuses.length} thưởng mốc`}
         </span>
       </div>
 
       <h3 className="mt-3 mb-1 font-semibold">Túi đồ</h3>
       {profile.bag.length === 0 ? (
-        <p className="opacity-60">Chưa có món nào. Thắng trận chắc chắn rơi 1 món; cũng có thể mua ở cửa hàng bên dưới.</p>
+        <p className="opacity-60">
+          Chưa có món nào. Thắng trận chắc chắn rơi 1 món; cũng có thể mua ở cửa
+          hàng bên dưới.
+        </p>
       ) : (
         <ul className="flex flex-wrap gap-1">
           {[...profile.bag].sort(byShelf).map((it) => {
@@ -186,7 +233,13 @@ export default function GearPanel({
                   title={`${gearText(it)}${worn ? ` · ${nameOf(worn)} đang mặc` : ""}`}
                   className={`rounded ${on ? "ring-2 ring-amber-400" : ""}`}
                 >
-                  <GearIcon slot={it.slot} element={it.element} tier={it.tier} profession={it.profession} className="size-9" />
+                  <GearIcon
+                    slot={it.slot}
+                    element={it.element}
+                    tier={it.tier}
+                    profession={it.profession}
+                    className="size-9"
+                  />
                 </button>
                 {worn && (
                   <span className="pointer-events-none absolute -top-1 -right-1 rounded-full bg-emerald-600 px-1 text-[9px] text-white">
@@ -205,13 +258,20 @@ export default function GearPanel({
             <>
               <span className="min-w-0 flex-1">
                 {gearText(one)}
-                {wearer && <span className="opacity-70"> · {nameOf(wearer)} đang mặc</span>}
+                {wearer && (
+                  <span className="opacity-70">
+                    {" "}
+                    · {nameOf(wearer)} đang mặc
+                  </span>
+                )}
               </span>
               {wearer !== character && (
                 <button
                   type="button"
                   disabled={disabled}
-                  onClick={() => commit({ type: "equip", character, item: one.id })}
+                  onClick={() =>
+                    commit({ type: "equip", character, item: one.id })
+                  }
                   className="rounded bg-emerald-600 px-2 py-0.5 text-white disabled:opacity-40"
                 >
                   Mặc cho {nameOf(character)}
@@ -221,7 +281,9 @@ export default function GearPanel({
                 <button
                   type="button"
                   disabled={disabled}
-                  onClick={() => commit({ type: "unequip", character: wearer, item: one.id })}
+                  onClick={() =>
+                    commit({ type: "unequip", character: wearer, item: one.id })
+                  }
                   className="rounded bg-black/20 px-2 py-0.5 disabled:opacity-40"
                 >
                   Tháo
@@ -238,81 +300,128 @@ export default function GearPanel({
             </>
           ) : items.length === 3 ? (
             <>
-              <span className="min-w-0 flex-1">Ghép 3 món thành 1 món phẩm cao hơn, giữ bộ của món chọn đầu tiên.</span>
+              <span className="min-w-0 flex-1">
+                Ghép 3 món thành 1 món phẩm cao hơn, giữ bộ của món chọn đầu
+                tiên.
+              </span>
               <button
                 type="button"
                 disabled={disabled}
-                onClick={() => commit({ type: "merge", items: picked, main: 0 })}
+                onClick={() =>
+                  commit({ type: "merge", items: picked, main: 0 })
+                }
                 className="rounded bg-amber-500 px-2 py-0.5 font-semibold text-stone-950 disabled:opacity-40"
               >
                 Ghép (−{mergeCost(items[0]!.tier)} vàng)
               </button>
             </>
           ) : (
-            <span className="flex-1 opacity-70">Chọn thêm để đủ 3 món cùng ô, cùng hệ, cùng phẩm rồi ghép.</span>
+            <span className="flex-1 opacity-70">
+              Chọn thêm để đủ 3 món cùng ô, cùng hệ, cùng phẩm rồi ghép.
+            </span>
           )}
-          <button type="button" onClick={() => setPicked([])} className="rounded bg-black/20 px-2 py-0.5">
+          <button
+            type="button"
+            onClick={() => setPicked([])}
+            className="rounded bg-black/20 px-2 py-0.5"
+          >
             Bỏ chọn
           </button>
         </div>
       )}
 
       <h3 className="mt-3 mb-1 font-semibold">Cửa hàng trang bị</h3>
-      <div className="flex flex-wrap items-center gap-2">
-        <Select
-          label="Ô"
-          value={order.slot}
-          options={GEAR_SLOTS.map((s) => ({ value: s, text: SLOT_NAME[s] }))}
-          onChange={(slot) => setOrder({ ...order, slot })}
-        />
-        {order.slot === "vuKhi" && (
-          <Select
-            label="Nghề"
-            value={order.profession}
-            options={PROFESSIONS.map((p) => ({ value: p, text: PROFESSION_NAME[p] }))}
-            onChange={(p) => setOrder({ ...order, profession: p })}
-          />
-        )}
-        <Select
-          label="Hệ"
-          value={order.element}
-          options={ELEMENTS.map((e) => ({ value: e, text: ELEMENT_NAME[e] }))}
-          onChange={(element) => setOrder({ ...order, element })}
-        />
-        <Select
-          label="Bộ"
-          value={order.set}
-          options={GEAR_SETS.map((g) => ({ value: g.id, text: g.name }))}
-          onChange={(set) => setOrder({ ...order, set })}
-        />
-        <Select
-          label="Phẩm"
-          value={String(order.tier)}
-          options={SHOP_TIERS.map((t) => ({ value: String(t), text: `${TIER_COLOR_NAME[t]} (${SHOP_GEAR_PRICE[t]} vàng)` }))}
-          onChange={(t) => setOrder({ ...order, tier: Number(t) as Tier })}
-        />
-        <button
-          type="button"
-          disabled={disabled || profile.gold < price}
-          onClick={() =>
-            commit({
-              type: "buyGear",
-              slot: order.slot,
-              element: order.element,
-              set: order.set,
-              tier: order.tier,
-              ...(order.slot === "vuKhi" ? { profession: order.profession } : {}),
-            })
-          }
-          className="rounded bg-amber-500 px-2 py-0.5 font-semibold text-stone-950 disabled:opacity-35"
-        >
-          Mua {price}
-        </button>
-      </div>
+      <GearShop profile={profile} disabled={disabled} onBuy={commit} />
       <p className="mt-2 opacity-60">
-        Mỗi món chỉ một người mặc. Vũ khí của Đinh Bộ Lĩnh giữ riêng theo nghề; nhân vật kèm chỉ mặc vũ khí đúng nghề. Ghép cần 3
-        món cùng ô, cùng hệ, cùng phẩm (vũ khí cùng nghề).
+        Mỗi món chỉ một người mặc. Vũ khí của Đinh Bộ Lĩnh giữ riêng theo nghề;
+        nhân vật kèm chỉ mặc vũ khí đúng nghề. Ghép cần 3 món cùng ô, cùng hệ,
+        cùng phẩm (vũ khí cùng nghề).
       </p>
     </section>
+  );
+}
+
+/** Cửa hàng trang bị: chọn ô, nghề (vũ khí), hệ, bộ, phẩm rồi mua. Dùng ở bảng Trang bị và trang /profile. */
+export function GearShop({
+  profile,
+  disabled,
+  onBuy,
+}: {
+  profile: Profile;
+  disabled: boolean;
+  onBuy: (a: ProfileAction) => void;
+}) {
+  const [order, setOrder] = useState<{
+    slot: GearSlot;
+    element: Element;
+    set: string;
+    tier: Tier;
+    profession: Profession;
+  }>({
+    slot: "vuKhi",
+    element: profile.element,
+    set: GEAR_SETS[0]!.id,
+    tier: SHOP_TIERS[0]!,
+    profession: profile.profession,
+  });
+  const price = SHOP_GEAR_PRICE[order.tier] ?? 0;
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <Select
+        label="Ô"
+        value={order.slot}
+        options={GEAR_SLOTS.map((s) => ({ value: s, text: SLOT_NAME[s] }))}
+        onChange={(slot) => setOrder({ ...order, slot })}
+      />
+      {order.slot === "vuKhi" && (
+        <Select
+          label="Nghề"
+          value={order.profession}
+          options={PROFESSIONS.map((p) => ({
+            value: p,
+            text: PROFESSION_NAME[p],
+          }))}
+          onChange={(p) => setOrder({ ...order, profession: p })}
+        />
+      )}
+      <Select
+        label="Hệ"
+        value={order.element}
+        options={ELEMENTS.map((e) => ({ value: e, text: ELEMENT_NAME[e] }))}
+        onChange={(element) => setOrder({ ...order, element })}
+      />
+      <Select
+        label="Bộ"
+        value={order.set}
+        options={GEAR_SETS.map((g) => ({ value: g.id, text: g.name }))}
+        onChange={(set) => setOrder({ ...order, set })}
+      />
+      <Select
+        label="Phẩm"
+        value={String(order.tier)}
+        options={SHOP_TIERS.map((t) => ({
+          value: String(t),
+          text: `${TIER_COLOR_NAME[t]} (${SHOP_GEAR_PRICE[t]} vàng)`,
+        }))}
+        onChange={(t) => setOrder({ ...order, tier: Number(t) as Tier })}
+      />
+      <button
+        type="button"
+        disabled={disabled || profile.gold < price}
+        onClick={() =>
+          onBuy({
+            type: "buyGear",
+            slot: order.slot,
+            element: order.element,
+            set: order.set,
+            tier: order.tier,
+            ...(order.slot === "vuKhi" ? { profession: order.profession } : {}),
+          })
+        }
+        className="rounded bg-amber-500 px-2 py-0.5 font-semibold text-stone-950 disabled:opacity-35"
+      >
+        Mua {price}
+      </button>
+    </div>
   );
 }
