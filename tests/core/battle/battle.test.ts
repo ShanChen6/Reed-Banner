@@ -215,21 +215,27 @@ describe("áp kết quả bàn cờ", () => {
     assert.equal(r.state.sides[0].passiveTurns, 4);
   });
 
-  it("thủ lĩnh chưa có bị động thì không tích nộ và không kích hoạt", () => {
-    const board = BOARD.replace("KKAKBSVABTSV", "DDADBSVABTSV");
-    const { state } = createBattle({ sides: [solo(fighter("a", { element: "kim" })), solo()], seed: 1 });
-    const primed: BattleState = structuredClone(withBoard(state, board));
-    primed.sides[0].rage = 95;
-    const r = ok(act(primed, { type: "swap", from: { row: 2, col: 3 }, to: { row: 2, col: 2 } }));
-    assert.ok(!r.events.some((e) => e.type === "passive" || e.type === "rage"));
-    assert.equal(r.state.sides[0].passiveTurns, 0);
-  });
-
   it("ghép bánh chưng cộng lương", () => {
     const board = BOARD.replace("KKAKBSVABTSV", "BBABKSVAKTSV");
     const { state } = createBattle({ sides: [solo(), solo()], seed: 1 });
     const r = ok(act(withBoard(state, board), { type: "swap", from: { row: 2, col: 3 }, to: { row: 2, col: 2 } }));
     assert.deepEqual(r.events.find((e) => e.type === "food"), { type: "food", side: 0, amount: 12 });
+  });
+
+  it("Tinh thần: đầy khi vào trận, trừ dần từ lượt 25 của phe", () => {
+    for (let seed = 1; seed < 20; seed++) {
+      const { state } = createBattle({ sides: [solo(), solo()], seed, timer: false });
+      assert.equal(state.sides[0].fighters[0]!.spirit, 100);
+      const s = structuredClone(state);
+      s.turn.number = 49;
+      const r = play(s);
+      if (r.state.turn.side !== 1 || r.state.winner !== null) continue;
+      assert.equal(r.state.sides[1].fighters[0]!.spirit, 90);
+      assert.equal(r.state.sides[0].fighters[0]!.spirit, 100);
+      assert.ok(r.events.some((e) => e.type === "spirit" && e.side === 1 && e.spirit === 90));
+      return;
+    }
+    assert.fail("không tìm được seed không có lượt thêm");
   });
 
   it("hết lương: mất 3% máu tối đa đầu lượt", () => {

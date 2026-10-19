@@ -1,6 +1,6 @@
 # Tài nguyên trong trận & công thức
 
-> Cập nhật: 18/10/2026
+> Cập nhật: 19/10/2026
 >
 > Các con số dưới đây là **điểm xuất phát**. Script cân bằng sẽ chỉnh lại.
 
@@ -17,7 +17,7 @@
 | 1–29 | Đói | ×0.75 sát thương; năng lượng từ âm dương giảm còn một nửa |
 | 0 | Hết lương | ×0.5 sát thương; mất 3% máu tối đa mỗi lượt |
 
-- Sĩ khí chỉ tác động lên **sát thương và năng lượng**, không tác động lên hồi máu hay DEF.
+- Sĩ khí chỉ tác động lên **sát thương và năng lượng**, không tác động lên hồi máu hay DEF. Khác với [Tinh thần](#5-tinh-thần-riêng-từng-tướng), giảm theo độ dài trận.
 - AI chịu đúng luật như người chơi.
 - **Chế độ Thường:** lương reset mỗi trận.
 - **Chiến dịch:** lương mang sang trận sau (xem [Chế độ chơi](09-che-do-choi.md)).
@@ -51,6 +51,7 @@
 Sát thương kiếm = round( ATK
                          × (ô kiếm thường + 1.5 × ô kiếm đồng + 2 × ô kiếm lửa)
                          × Sĩ khí × Nguyên tố × Cascade × Nội tại nghề
+                         (ATK và DEF đã nhân hệ số Tinh thần)
                          × 100 / (100 + DEF hiệu lực) )
 
 Sát thương kỹ năng = round( Sát thương gốc của kỹ năng
@@ -73,3 +74,17 @@ DEF hiệu lực = DEF đối thủ × (1 − Xuyên giáp)
 - Hệ số % ATK của kỹ năng hiện là điểm xuất phát tính khi kỹ năng còn bỏ qua DEF; sẽ nâng lên (dự kiến khoảng ×1.3–1.5) khi chạy mô phỏng.
 - Tổng hệ số nằm trong khoảng 0.375× đến khoảng 2.16× (chưa tính nội tại nghề và kỹ năng bị động).
 - **Hiển thị:** con số lớn ở giữa màn hình, kèm biểu tượng nhỏ cho từng hệ số đang có hiệu lực. Chạm giữ hoặc rê chuột để xem bảng chi tiết.
+
+## 5. Tinh thần (riêng từng tướng)
+
+Shan yêu cầu 19/10/2026: trận kéo dài thì tinh thần chiến đấu giảm, kéo các chỉ số xuống theo.
+
+- Mỗi tướng vào trận với **100** Tinh thần, ở cả 1vs1 và 3vs3.
+- Từ **lượt thứ 25** của phe, đầu mỗi lượt của phe đó mọi tướng còn sống mất **10**, về 0 ở lượt 34.
+- **ATK và DEF** × (0.7 + 0.3 × Tinh thần/100): còn 70% khi Tinh thần về 0.
+- **Hồi máu nhận được** (kỹ năng, ô tim, Hồi phục, hút máu) và **Khiên mới nhận** × Tinh thần/100: về 0 thì không hồi được nữa, nên trận nào cũng kết thúc bằng hạ gục.
+- Tính theo người nhận: tướng được hồi hoặc nhận Khiên dùng Tinh thần của chính mình.
+- Thay cho luật Mệt mỏi 1vs1 cũ (chỉ giảm hồi máu và Khiên).
+- Mô phỏng 19/10/2026 (150 trận, AI Thường, seed 7): không trận nào chạm giới hạn lượt. 1vs1 trung vị 20 lượt mỗi bên, 90% xong trong 48.5 lượt; 3vs3 trung vị 27, 90% xong trong 46.5 lượt (trước đó 58), tỉ lệ thắng của phe nhân vật chính 64% (trước đó 68%).
+
+> TODO: kỹ năng, trang bị hoặc sự kiện hồi Tinh thần (ví dụ hạ gục đối thủ) nếu cần thêm chiều sâu.
