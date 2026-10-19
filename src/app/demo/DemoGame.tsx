@@ -9,6 +9,7 @@ import {
   isAlive,
   mainCharacter,
   needsCell,
+  PASSIVES,
   playAiTurn,
   selectableActors,
   STARTER_COMPANIONS,
@@ -414,7 +415,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
               key={f.id}
               fighter={f}
               leader={own.leader === i}
-              rage={own.leader === i ? own.rage : null}
+              rage={own.leader === i && PASSIVES[f.element] ? own.rage : null}
               active={isActor}
               selectable={canPick && !aim}
               targetable={!!target && aimIndex === i && isAlive(f)}
