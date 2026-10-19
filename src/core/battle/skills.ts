@@ -156,7 +156,7 @@ const MAIN: readonly SkillDef[] = [
   },
   {
     id: "thanhMocHoPhap", name: "Thanh Mộc Hộ Pháp", element: "moc", slot: 3, cost: 40, target: "enemy",
-    steps: [{ type: "damage", atk: 1.3, lifesteal: 0.3 }, { type: "destroy", area: { square: 2 } }],
+    steps: [{ type: "damage", atk: 1.5, lifesteal: 0.3 }, { type: "destroy", area: { square: 2 } }],
   },
   {
     id: "cuongVuThienDiep", name: "Cuồng Vũ Thiên Diệp", element: "moc", slot: 4, cost: 60, target: "allEnemies",
@@ -188,9 +188,9 @@ const MAIN: readonly SkillDef[] = [
     steps: [{ type: "effect", to: "self", effect: "atkUp", value: 0.25, turns: 2 }],
   },
   {
-    id: "doanKimNhatTuyen", name: "Đoạn Kim Nhất Tuyến", element: "kim", slot: 3, cost: 40, target: "enemy",
+    id: "doanKimNhatTuyen", name: "Đoạn Kim Nhất Tuyến", element: "kim", slot: 3, cost: 35, target: "enemy",
     steps: [
-      { type: "damage", atk: 1.8, pierce: 0.3 },
+      { type: "damage", atk: 2.4, pierce: 0.3 },
       { type: "effect", to: "targets", effect: "defDown", value: 0.2, turns: 2 },
       { type: "destroy", area: { line: 4 } },
     ],
@@ -222,7 +222,7 @@ const MAIN: readonly SkillDef[] = [
   {
     id: "hanBangTien", name: "Hàn Băng Tiễn", element: "thuy", slot: 3, cost: 40, target: "enemy",
     steps: [
-      { type: "damage", atk: 1.65 },
+      { type: "damage", atk: 1.75 },
       { type: "effect", to: "targets", effect: "freeze", value: 0, turns: 1, chance: 0.3 },
       { type: "destroy", area: { square: 2 } },
     ],
@@ -340,7 +340,7 @@ const MAIN: readonly SkillDef[] = [
   {
     id: "loiTienXuyenVan", name: "Lôi Tiễn Xuyên Vân", element: "loi", slot: 3, cost: 40, target: "enemy",
     steps: [
-      { type: "damage", atk: 1.8 },
+      { type: "damage", atk: 2 },
       { type: "energy", to: "targets", amount: -15 },
       { type: "destroy", area: { random: 4 } },
     ],
@@ -388,8 +388,8 @@ const PHONG: readonly SkillDef[] = [
   {
     id: "cuongPhongQuetTran", name: "Cuồng Phong Quét Trận", element: "phong", slot: 4, cost: 60, target: "allEnemies",
     steps: [
-      { type: "damage", atk: 0.85 },
-      { type: "effect", to: "targets", effect: "atkDown", value: 0.15, turns: 2 },
+      { type: "damage", atk: 0.6 },
+      { type: "effect", to: "targets", effect: "atkDown", value: 0.1, turns: 2 },
       { type: "destroy", area: { diagonal: 2 } },
     ],
   },
@@ -469,11 +469,10 @@ export const PASSIVE = {
   loiDrain: 20,
   loiEnergyPerTile: 5,
   /**
-   * Phong: nhận ngay năng lượng; trong thời gian hiệu lực, phe được trượt miễn phí 1 ô trước kỹ năng
-   * và đổi ô, tối đa phongFreeSlides lần cho mỗi lần kích hoạt (mô phỏng: mỗi lần ra tay một lần thì
-   * phe Phong thắng khoảng 80%).
+   * Phong: trong thời gian hiệu lực, phe được trượt miễn phí 1 ô trước kỹ năng và đổi ô, tối đa
+   * phongFreeSlides lần cho mỗi lần kích hoạt (mô phỏng: mỗi lần ra tay một lần thì phe Phong thắng
+   * khoảng 80%). Bỏ 15 năng lượng tức thì theo mô phỏng 19/10/2026.
    */
-  phongEnergy: 15,
   phongFreeSlide: 1,
   phongFreeSlides: 1,
 } as const;

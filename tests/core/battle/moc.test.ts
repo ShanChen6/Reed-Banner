@@ -57,7 +57,7 @@ describe("bộ kỹ năng hệ Mộc", () => {
     assert.ok(board && board.type === "board" && board.transformed.length === 3);
   });
 
-  it("Thanh Mộc Hộ Pháp cần chọn ô, gây 130% ATK và hồi 30% sát thương", () => {
+  it("Thanh Mộc Hộ Pháp cần chọn ô, gây 150% ATK và hồi 30% sát thương", () => {
     const s = setup([solo(hero()), solo(fighter("b", { element: "loi" }))]);
     me(s).hp = 500;
     assert.deepEqual(act(s, { type: "skill", skill: "thanhMocHoPhap" }), { ok: false, error: "invalidTarget" });
@@ -67,8 +67,8 @@ describe("bộ kỹ năng hệ Mộc", () => {
     });
     const r = ok(act(s, { type: "skill", skill: "thanhMocHoPhap", cell: { row: 0, col: 0 } }));
     const first = r.events.find((e) => e.type === "damage" && e.source === "skill");
-    assert.deepEqual(first, { type: "damage", side: 1, fighter: 0, amount: 130, absorbed: 0, source: "skill" });
-    assert.ok(r.events.some((e) => e.type === "heal" && e.side === 0 && e.amount === 39));
+    assert.deepEqual(first, { type: "damage", side: 1, fighter: 0, amount: 150, absorbed: 0, source: "skill" });
+    assert.ok(r.events.some((e) => e.type === "heal" && e.side === 0 && e.amount === 45));
   });
 
   it("Thanh Trúc Bảo Phù: Hồi phục, Thanh tẩy, Thủ +15%", () => {

@@ -117,7 +117,7 @@ describe("Thuận Phong", () => {
     assert.equal(canFreeSlide(used.state), false, "đã dùng kỹ năng thì không trượt được nữa");
   });
 
-  it("kích hoạt: thủ lĩnh nhận 15 năng lượng và có lần trượt miễn phí", () => {
+  it("kích hoạt: có lần trượt miễn phí, không cho năng lượng", () => {
     const team: SideConfig = { fighters: [hero(), fighter("k1"), fighter("k2")], leader: 0 };
     const foes: SideConfig = { fighters: [fighter("e1"), fighter("e2"), fighter("e3")], leader: 0 };
     const { state } = createBattle({ sides: [team, foes], seed: 1, timer: false });
@@ -127,7 +127,8 @@ describe("Thuận Phong", () => {
     for (const f of s.sides[1].fighters) f.effects.push({ kind: "reflect", value: 1, turns: 5 });
     const r = ok(act(s, { type: "skill", skill: "phongNhanLietKhong", target: 0, cell: { row: 0, col: 0 } }));
     assert.ok(r.events.some((e) => e.type === "passive" && e.side === 0));
-    assert.ok(r.events.some((e) => e.type === "energy" && e.side === 0 && e.fighter === 0 && e.amount === PASSIVE.phongEnergy));
+    const passive = r.events.findIndex((e) => e.type === "passive");
+    assert.ok(!r.events.slice(passive).some((e) => e.type === "energy" && e.side === 0 && e.fighter === 0 && e.amount > 0));
     assert.equal(r.state.sides[0].freeSlides, PASSIVE.phongFreeSlides);
   });
 });
