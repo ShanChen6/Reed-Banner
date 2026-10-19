@@ -42,7 +42,9 @@ Mọi luật của 3vs3 áp dụng, trừ các điểm sau:
 - **Tĩnh tâm** (năng lượng cho đồng đội không hành động) không áp dụng.
 - Đóng băng làm nhân vật **mất lượt** thay vì bị bỏ qua trong luân phiên.
 
-> TODO: cân bằng riêng cho 1vs1 (máu gốc, thời lượng mục tiêu), vì không còn đồng đội chia sát thương.
+- **Máu tối đa ×2** ở 1vs1, vì không có đồng đội chia sát thương (điểm xuất phát theo mô phỏng 19/10/2026: trung vị khoảng 22 lượt mỗi bên, khoảng 7% trận chạm giới hạn lượt).
+
+> TODO: thời lượng mục tiêu riêng cho 1vs1; cách kết thúc trận khi hai bên chỉ hồi máu, phòng thủ mà không hạ được nhau.
 
 ## 4. Máu & thời lượng
 

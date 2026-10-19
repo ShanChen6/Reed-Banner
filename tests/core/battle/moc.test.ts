@@ -78,7 +78,7 @@ describe("bộ kỹ năng hệ Mộc", () => {
     assert.deepEqual(
       me(r.state).effects.map((e) => [e.kind, e.value, e.turns]),
       [
-        ["regen", 60, 3],
+        ["regen", 120, 3],
         ["defUp", 0.15, 2],
       ],
     );

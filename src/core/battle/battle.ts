@@ -126,6 +126,7 @@ export function createBattle(config: BattleConfig): { state: BattleState; events
   validateWeights(weights);
   const rng = createRng(config.seed);
   const board = generateBoard(rng, weights);
+  const solo = config.sides.every((s) => s.fighters.length === 1);
   const sides = config.sides.map((s): Side => {
     if (s.fighters.length === 0) throw new RangeError("Mỗi phe cần ít nhất một nhân vật");
     if (s.leader < 0 || s.leader >= s.fighters.length) throw new RangeError("Thủ lĩnh không hợp lệ");
@@ -133,7 +134,10 @@ export function createBattle(config: BattleConfig): { state: BattleState; events
       for (const id of f.skills ?? []) if (!getSkill(id)) throw new RangeError(`Kỹ năng không tồn tại: ${id}`);
     }
     return {
-      fighters: s.fighters.map((f) => ({ ...f, hp: f.maxHp, energy: 0, effects: [] })),
+      fighters: s.fighters.map((f) => {
+        const maxHp = solo ? Math.round(f.maxHp * R.SOLO_HP_MULTIPLIER) : f.maxHp;
+        return { ...f, maxHp, hp: maxHp, energy: 0, effects: [] };
+      }),
       leader: s.leader,
       food: s.food ?? R.FOOD_START,
       rage: 0,
@@ -697,7 +701,9 @@ class Ctx {
 
   private addRage(side: SideIndex, amount: number): void {
     const own = this.state.sides[side];
-    if (!isAlive(own.fighters[own.leader]!) || own.passiveTurns > 0) return;
+    const leader = own.fighters[own.leader]!;
+    // Thủ lĩnh chưa có kỹ năng bị động (nguyên tố chưa làm) thì không tích Nộ.
+    if (!isAlive(leader) || own.passiveTurns > 0 || !PASSIVES[leader.element]) return;
     own.rage = Math.min(R.RAGE_MAX, own.rage + amount);
     this.emit({ type: "rage", side, amount });
     if (own.rage >= R.RAGE_MAX) {
