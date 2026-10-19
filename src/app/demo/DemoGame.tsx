@@ -7,6 +7,7 @@ import {
   createBattle,
   createRng,
   GEAR_SETS,
+  GEAR_SLOTS,
   getGearSet,
   getSkill,
   isAdjacent,
@@ -56,6 +57,9 @@ import {
 } from "./labels";
 import { bounceFrames, eventFrames, type Frame } from "./animation";
 import { CloudCorner, DongSonBand, ELEMENT_COLOR, ElementIcon, FoodIcon, LeaderFlag, ShieldIcon } from "./art/icons";
+import { GearIcon } from "./art/gear";
+import { Portrait } from "./art/portraits";
+import { SkillIcon } from "./art/skills";
 import { TileArt } from "./art/tiles";
 
 const PLAYER = 0;
@@ -257,22 +261,25 @@ function FighterCard({
       style={{ borderLeftColor: ELEMENT_COLOR[fighter.element] }}
       title={`ATK ${fighter.atk} · DEF ${fighter.def} · Máu tối đa ${fighter.maxHp}`}
     >
-      <div className="mb-1 flex items-center justify-between gap-2">
-        <span className="flex min-w-0 items-center gap-1 text-sm font-semibold">
-          {leader && (
-            <span title="Thủ lĩnh" className="shrink-0">
-              <LeaderFlag className="size-4" />
-            </span>
-          )}
-          <span className="truncate">{fighter.name}</span>
-        </span>
-        <span className="flex shrink-0 items-center gap-1 text-[10px] opacity-75">
-          {PROFESSION_NAME[fighter.profession]}
-          <span title={ELEMENT_NAME[fighter.element]} className="shrink-0">
-            <ElementIcon element={fighter.element} className="size-3.5" />
+      <div className="mb-1 flex items-center gap-2">
+        <Portrait id={fighter.id} element={fighter.element} profession={fighter.profession} className="size-9 shrink-0 md:size-7 lg:size-11" />
+        <div className="min-w-0 flex-1">
+          <span className="flex min-w-0 items-center gap-1 text-sm font-semibold">
+            {leader && (
+              <span title="Thủ lĩnh" className="shrink-0">
+                <LeaderFlag className="size-4" />
+              </span>
+            )}
+            <span className="truncate">{fighter.name}</span>
           </span>
-          <span className="hidden lg:inline">{ELEMENT_NAME[fighter.element]}</span>
-        </span>
+          <span className="flex items-center gap-1 text-[10px] opacity-75">
+            {PROFESSION_NAME[fighter.profession]}
+            <span title={ELEMENT_NAME[fighter.element]} className="shrink-0">
+              <ElementIcon element={fighter.element} className="size-3.5" />
+            </span>
+            <span className="hidden lg:inline">{ELEMENT_NAME[fighter.element]}</span>
+          </span>
+        </div>
       </div>
       <div className="space-y-1">
         <Bar label="Máu" value={fighter.hp} max={fighter.maxHp} color="bg-rose-500" />
@@ -902,6 +909,13 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                     </div>
                   )}
                   {gear.tier !== 0 && (
+                    <div className="flex flex-wrap justify-center gap-1" aria-hidden>
+                      {GEAR_SLOTS.map((slot) => (
+                        <GearIcon key={slot} slot={slot} element={element} tier={gear.tier as Tier} profession="tuongSi" className="size-8" />
+                      ))}
+                    </div>
+                  )}
+                  {gear.tier !== 0 && (
                     <p className="max-w-md text-center text-xs opacity-80">
                       Cả hai đội mặc đủ 9 món {TIER_COLOR_NAME[gear.tier]} cùng hệ với từng người; đội Tianwu không có thưởng bộ.
                     </p>
@@ -921,7 +935,12 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                   <p className="text-sm">
                     {drop ? (
                       <>
-                        Chiến lợi phẩm: <span className={`font-semibold ${TIER_CLASS[drop.tier]}`}>{dropText(drop)}</span>
+                        <span className="flex items-center gap-2">
+                          <GearIcon slot={drop.slot} element={drop.element} tier={drop.tier} profession={drop.profession} className="size-12 shrink-0" />
+                          <span>
+                            Chiến lợi phẩm: <span className={`font-semibold ${TIER_CLASS[drop.tier]}`}>{dropText(drop)}</span>
+                          </span>
+                        </span>
                       </>
                     ) : (
                       "Không rơi trang bị."
@@ -945,8 +964,8 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
             </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-1.5" aria-label="Kỹ năng">
-              <span className="mr-1 text-xs opacity-70">Kỹ năng của {actor.name}:</span>
+            <div className="flex flex-wrap items-stretch gap-1.5" aria-label="Kỹ năng">
+              <span className="w-full text-xs opacity-70">Kỹ năng của {actor.name}:</span>
               {skills.map((def, i) => {
                 const disabled = !myTurn || state.turn.skillUsed || actor.energy < def.cost;
                 const aiming = aim?.skill.id === def.id || slideAim?.skill?.id === def.id;
@@ -960,12 +979,15 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
                       setSlideAim(null);
                       setPendingSlide(null);
                     }}
-                    className={`rounded px-2 py-1 text-xs ${aiming ? "bg-rose-500 text-white" : "bg-[var(--panel)]"} ${
-                      disabled && !aiming ? "opacity-40" : ""
+                    className={`relative flex w-[4.25rem] flex-col items-center gap-0.5 rounded p-1 text-[10px] leading-tight ${aiming ? "bg-rose-500 text-white" : "bg-[var(--panel)]"} ${
+                      disabled && !aiming ? "opacity-40 grayscale" : ""
                     }`}
-                    title={`Phím ${i + 1}`}
+                    title={`${def.name} · ${def.cost} năng lượng · phím ${i + 1}`}
                   >
-                    {i + 1}. {def.name} <span className="opacity-60">({def.cost})</span>
+                    <SkillIcon def={def} className="size-10" />
+                    <span className="absolute left-1 top-1 rounded-br bg-black/60 px-1 font-bold text-white">{i + 1}</span>
+                    <span className="absolute right-1 top-1 rounded-bl bg-sky-700/90 px-1 tabular-nums text-white">{def.cost}</span>
+                    <span className="text-center">{def.name}</span>
                   </button>
                 );
               })}
