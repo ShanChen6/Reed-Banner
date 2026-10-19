@@ -7,3 +7,4 @@ export * from "./progress";
 export * from "./rng";
 export * from "./roster";
 export * from "./sim";
+export * from "./campaign";
