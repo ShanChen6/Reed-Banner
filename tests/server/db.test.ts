@@ -46,11 +46,35 @@ describe("lưu trận vào Postgres (PGlite, cùng migration với Neon)", () =>
       name: "gh",
       avatarUrl: "https://a",
       providers: ["github", "google"],
+      username: null,
       createdAt: 10,
       lastLoginAt: 30,
     });
     // Gắn thẳng danh tính đã có chủ vào tài khoản khác: vẫn thuộc chủ cũ.
     assert.equal(await store.link("g_3", google, 40), "g_1");
     assert.equal(await store.get("g_2"), null);
+  });
+
+  it("mật khẩu: tạo, trùng tên, cập nhật số lần sai và khóa, tên đăng nhập trong tài khoản", async () => {
+    const db = drizzle(new PGlite());
+    await migrate(db, { migrationsFolder: "drizzle" });
+    const store = new DrizzleAccountStore(db as unknown as Db);
+    assert.equal(await store.createPassword("g_1", "shan", "h1", 10), true);
+    assert.equal(await store.createPassword("g_2", "shan", "h2", 11), false);
+    assert.deepEqual(await store.getPassword("shan"), { accountId: "g_1", hash: "h1", failedCount: 0, lockedUntil: null });
+    assert.equal(await store.getPassword("khong"), null);
+    await store.updatePassword("shan", { failedCount: 3 });
+    await store.updatePassword("shan", { lockedUntil: 99 });
+    assert.deepEqual(await store.getPassword("shan"), { accountId: "g_1", hash: "h1", failedCount: 3, lockedUntil: 99 });
+    await store.updatePassword("shan", { hash: "h3", failedCount: 0, lockedUntil: null });
+    assert.deepEqual(await store.getPassword("shan"), { accountId: "g_1", hash: "h3", failedCount: 0, lockedUntil: null });
+    const acc = await store.get("g_1");
+    assert.equal(acc?.username, "shan");
+    assert.equal(acc?.name, "shan");
+    assert.deepEqual(acc?.providers, []);
+    // Tài khoản GitHub có sẵn thêm mật khẩu: giữ tên hiển thị.
+    await store.link("g_3", { provider: "github", subject: "9", name: "Gh", avatarUrl: null }, 20);
+    assert.equal(await store.createPassword("g_3", "gh_user", "h", 21), true);
+    assert.equal((await store.get("g_3"))?.name, "Gh");
   });
 });
