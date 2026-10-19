@@ -418,6 +418,45 @@ export function getSkill(id: string): SkillDef | undefined {
   return SKILLS[id];
 }
 
+/** Cấp kỹ năng: 1 đến SKILL_MAX_LEVEL, nâng bằng điểm kỹ năng. Xem docs/design/12-ky-nang-nhan-vat-chinh.md mục 1.1. */
+export const SKILL_MAX_LEVEL = 5;
+/** Mỗi cấp trên 1 cộng thêm tỉ lệ này vào hệ số chính. */
+export const SKILL_LEVEL_BONUS = 0.1;
+/** Ở cấp tối đa, chi phí năng lượng giảm tỉ lệ này, làm tròn xuống bội số của 5. */
+export const SKILL_MAX_LEVEL_DISCOUNT = 0.1;
+
+/** Hiệu ứng có giá trị là hệ số chính (Khiên, Công/Thủ, Hồi phục, Thiêu đốt, Phản đòn) được tăng theo cấp. */
+const SCALED_EFFECTS: readonly EffectKind[] = ["shield", "atkUp", "atkDown", "defUp", "defDown", "regen", "burn", "reflect"];
+
+/**
+ * Kỹ năng ở một cấp: sát thương, lượng hồi và hệ số hiệu ứng ×(1 + 10% mỗi cấp trên 1); thời lượng, số ô,
+ * cơ hội và năng lượng cộng/trừ giữ nguyên. Cấp tối đa giảm 10% chi phí.
+ */
+export function scaleSkill(def: SkillDef, level = 1): SkillDef {
+  const lv = Math.max(1, Math.min(SKILL_MAX_LEVEL, Math.floor(level)));
+  if (lv === 1) return def;
+  const m = 1 + SKILL_LEVEL_BONUS * (lv - 1);
+  const r = (x: number) => Math.round(x * m * 1000) / 1000;
+  const steps = def.steps.map((step): SkillStep => {
+    if (step.type === "damage") return { ...step, atk: r(step.atk) };
+    if (step.type === "heal") return { ...step, ratio: r(step.ratio) };
+    if (step.type === "effect" && SCALED_EFFECTS.includes(step.effect)) return { ...step, value: r(step.value) };
+    return step;
+  });
+  const cost = lv === SKILL_MAX_LEVEL ? Math.floor((def.cost * (1 - SKILL_MAX_LEVEL_DISCOUNT)) / 5) * 5 : def.cost;
+  return { ...def, cost, steps };
+}
+
+/** Kỹ năng `id` của một nhân vật, theo cấp kỹ năng của người đó; undefined nếu không mang kỹ năng này. */
+export function fighterSkill(
+  f: { readonly skills?: readonly string[]; readonly skillLevels?: Readonly<Record<string, number>> },
+  id: string,
+): SkillDef | undefined {
+  const def = getSkill(id);
+  if (!def || !(f.skills ?? []).includes(id)) return undefined;
+  return scaleSkill(def, f.skillLevels?.[id]);
+}
+
 export function professionSkills(profession: Profession): SkillDef[] {
   return DEFS.filter((d) => d.profession === profession);
 }
