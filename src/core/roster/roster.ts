@@ -14,12 +14,12 @@ export interface BaseStats {
 
 /** Chỉ số gốc theo nghề, cùng một cấp. Điểm xuất phát. */
 export const BASE_STATS: Readonly<Record<Profession, BaseStats>> = {
-  tuongSi: { maxHp: 1000, atk: 55, def: 10 },
-  phapSu: { maxHp: 900, atk: 55, def: 8 },
-  binhLinh: { maxHp: 1200, atk: 45, def: 15 },
-  ySu: { maxHp: 950, atk: 45, def: 10 },
-  muuSi: { maxHp: 950, atk: 50, def: 10 },
-  quanSu: { maxHp: 950, atk: 50, def: 10 },
+  tuongSi: { maxHp: 500, atk: 55, def: 10 },
+  phapSu: { maxHp: 450, atk: 55, def: 8 },
+  binhLinh: { maxHp: 600, atk: 45, def: 15 },
+  ySu: { maxHp: 475, atk: 45, def: 10 },
+  muuSi: { maxHp: 475, atk: 50, def: 10 },
+  quanSu: { maxHp: 475, atk: 50, def: 10 },
 };
 
 /** Nhân vật chính mặc định: Đinh Bộ Lĩnh, Tướng sĩ, bộ kỹ năng theo nguyên tố đã chọn. */
