@@ -1,9 +1,20 @@
 // Hồ sơ người chơi: tiến trình nhân vật chính và các nhân vật kèm, vàng, lựa chọn trước trận.
-// Dữ liệu thuần; client lưu tạm ở trình duyệt, server sẽ lưu DB (giai đoạn 2).
+// Dữ liệu thuần: /demo lưu ở trình duyệt, /play lưu trên server (bảng `profiles`).
 
 import type { Element, FighterConfig, Profession } from "../battle";
 import { STARTER_COMPANIONS } from "../roster";
-import { addXp, autoProgress, buildCompanion, buildMain, NEW_PROGRESS, type BattleRewards, type CharacterProgress } from "./progress";
+import {
+  addXp,
+  autoProgress,
+  buildCompanion,
+  buildMain,
+  buyBranch,
+  NEW_PROGRESS,
+  upgradeSkill,
+  type BattleRewards,
+  type CharacterProgress,
+  type ProgressError,
+} from "./progress";
 
 export const MAIN_ID = "dinhBoLinh";
 
@@ -98,4 +109,51 @@ export function parseProfile(raw: unknown): Profile {
     Object.keys(fresh.companions).map((id) => [id, isProgress(p.companions?.[id]) ? p.companions[id]! : NEW_PROGRESS]),
   );
   return { ...fresh, ...p, companions, branchChoice: p.branchChoice ?? {} };
+}
+
+// ——— Thao tác trên hồ sơ (client gửi ý định, server áp bằng chính các hàm này) ———
+
+export type ProfileAction =
+  /** Nâng kỹ năng: nhân vật chính theo ô ("o1".."o6"), nhân vật kèm theo id chiêu. */
+  | { readonly type: "upgrade"; readonly character: string; readonly key: string }
+  | { readonly type: "buyBranch"; readonly character: string; readonly skill: string }
+  /** Chọn chiêu nhánh nấc 2 đã mua để mang vào trận. */
+  | { readonly type: "chooseBranch"; readonly character: string; readonly skill: string };
+
+export type ProfileActionResult = { readonly ok: true; readonly profile: Profile } | { readonly ok: false; readonly error: ProgressError };
+
+function companionProfession(id: string): Profession | null {
+  return STARTER_COMPANIONS.find((c) => c.id === id)?.profession ?? null;
+}
+
+export function applyProfileAction(profile: Profile, action: ProfileAction): ProfileActionResult {
+  const isMain = action.character === MAIN_ID;
+  const profession = isMain ? null : companionProfession(action.character);
+  if (!isMain && profession === null) return { ok: false, error: "invalidSkill" };
+  const p = progressOf(profile, action.character);
+  switch (action.type) {
+    case "upgrade": {
+      const r = upgradeSkill(p, action.key, profession);
+      return r.ok ? { ok: true, profile: withProgress(profile, action.character, r.progress) } : r;
+    }
+    case "buyBranch": {
+      if (profession === null) return { ok: false, error: "invalidSkill" };
+      const r = buyBranch(p, action.skill, profession);
+      return r.ok ? { ok: true, profile: withProgress(profile, action.character, r.progress) } : r;
+    }
+    case "chooseBranch":
+      if (!p.branches.includes(action.skill)) return { ok: false, error: "locked" };
+      return { ok: true, profile: { ...profile, branchChoice: { ...profile.branchChoice, [action.character]: action.skill } } };
+  }
+}
+
+/** Kiểm tra hình dạng thao tác gửi lên; null khi không hợp lệ. */
+export function parseProfileAction(x: unknown): ProfileAction | null {
+  const a = x as Record<string, unknown> | null;
+  if (!a || typeof a !== "object" || typeof a.character !== "string") return null;
+  if (a.type === "upgrade" && typeof a.key === "string") return { type: "upgrade", character: a.character, key: a.key };
+  if ((a.type === "buyBranch" || a.type === "chooseBranch") && typeof a.skill === "string") {
+    return { type: a.type, character: a.character, skill: a.skill };
+  }
+  return null;
 }

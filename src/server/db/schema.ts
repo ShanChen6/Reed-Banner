@@ -1,7 +1,7 @@
 // Bảng Postgres (Neon) cho dữ liệu online. Đổi schema xong chạy `pnpm db:generate` để sinh migration.
 
 import { bigint, index, integer, jsonb, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
-import type { Match } from "@/core";
+import type { Match, Profile } from "@/core";
 
 /** Trận online. `state` là toàn bộ trạng thái trận (kể cả seed), chỉ server đọc. */
 export const matches = pgTable(
@@ -14,9 +14,22 @@ export const matches = pgTable(
     state: jsonb("state").$type<Match>().notNull(),
     createdAt: bigint("created_at", { mode: "number" }).notNull(),
     updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+    /** Lúc đã cộng phần thưởng cuối trận vào hồ sơ; null khi chưa (đặt kèm điều kiện để chỉ cộng một lần). */
+    rewardedAt: bigint("rewarded_at", { mode: "number" }),
   },
-  (t) => [index("matches_owner_idx").on(t.ownerId)],
+  (t) => [index("matches_owner_idx").on(t.ownerId), index("matches_updated_idx").on(t.updatedAt)],
 );
+
+/**
+ * Hồ sơ tiến trình của người chơi (khách hoặc đã đăng nhập): cấp, kỹ năng, chiêu nhánh, vàng. `version`
+ * tăng mỗi lần ghi, ghi kèm điều kiện `WHERE version = :expected`.
+ */
+export const profiles = pgTable("profiles", {
+  ownerId: text("owner_id").primaryKey(),
+  version: integer("version").notNull(),
+  data: jsonb("data").$type<Profile>().notNull(),
+  updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+});
 
 /**
  * Tài khoản đã đăng nhập ít nhất một lần. Id chính là id khách lúc liên kết (`g_...`), nên trận và dữ liệu

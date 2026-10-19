@@ -4,7 +4,7 @@ import { randomInt, randomUUID } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { httpStatus, type Deps, type ServiceResult } from "./battles";
 import { GUEST_COOKIE, newGuestId, signGuest, verifyGuest } from "./guest";
-import { matchStore } from "./store";
+import { matchStore, profileStore } from "./store";
 
 /** Cookie khách sống 30 ngày, khớp với hạn xóa tài khoản khách không hoạt động. */
 const GUEST_MAX_AGE = 30 * 24 * 60 * 60;
@@ -33,6 +33,7 @@ export function guestOf(request: NextRequest): string | null {
 export function serverDeps(): Deps {
   return {
     store: matchStore(),
+    profiles: profileStore(),
     // Server là nơi duy nhất được đọc giờ và bốc seed thật.
     now: Date.now(),
     seed: randomInt(0, 2 ** 32),
@@ -44,7 +45,7 @@ export function respond(result: ServiceResult, newGuest?: string): NextResponse 
   // `now` là giờ server, để client tính đồng hồ 30 giây theo đúng giờ server.
   const now = Date.now();
   const res = result.ok
-    ? NextResponse.json({ id: result.id, view: result.view, events: result.events, now })
+    ? NextResponse.json({ id: result.id, view: result.view, events: result.events, outcome: result.outcome, now })
     : NextResponse.json({ error: result.error, view: result.view, now }, { status: httpStatus(result.error) });
   if (newGuest) setAccountCookie(res, newGuest);
   return res;
