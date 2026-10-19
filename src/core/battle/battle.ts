@@ -4,11 +4,11 @@
 
 import {
   STANDARD_WEIGHTS,
+  areaCells,
   destroyCells,
   generateBoard,
   inBounds,
   randomCells,
-  squareArea,
   swap,
   transformCells,
   validateWeights,
@@ -32,7 +32,7 @@ import {
 } from "./effects";
 import { elementMultiplier } from "./elements";
 import * as R from "./rules";
-import { MARK, PASSIVES, getSkill, markAudience, needsCell, type SkillDef } from "./skills";
+import { MARK, PASSIVE, PASSIVES, getSkill, markAudience, needsCell, type SkillDef, type StepRecipient } from "./skills";
 import {
   canAct,
   isAlive,
@@ -316,6 +316,16 @@ function hpRatio(f: Fighter): number {
   return f.hp / f.maxHp;
 }
 
+/** Bị động của thủ lĩnh `f` đang có hiệu lực, đúng nguyên tố. */
+function passiveOn(side: Side, f: Fighter, element: Fighter["element"]): boolean {
+  return side.passiveTurns > 0 && side.fighters[side.leader] === f && f.element === element && isAlive(f);
+}
+
+/** Gộp hai tỉ lệ xuyên giáp: phần DEF còn lại nhân với nhau. */
+function combinePierce(a: number, b: number): number {
+  return 1 - (1 - a) * (1 - b);
+}
+
 function effectiveAtk(f: Fighter): number {
   return f.atk * statModifier(f.effects, "atkUp", "atkDown") * R.spiritStatMultiplier(f.spirit);
 }
@@ -324,7 +334,8 @@ function effectiveAtk(f: Fighter): number {
 function effectiveDef(side: Side, f: Fighter): number {
   const tiers = R.moraleOf(side.food) === "eager" ? 1 : 0;
   const bonus = f.profession === "binhLinh" ? R.BINH_LINH_DEF_PER_TIER * tiers : 0;
-  return f.def * (statModifier(f.effects, "defUp", "defDown") + bonus) * R.spiritStatMultiplier(f.spirit);
+  const passive = passiveOn(side, f, "hoa") ? PASSIVE.hoaDefDown : 0;
+  return Math.max(0, f.def * (statModifier(f.effects, "defUp", "defDown") + bonus - passive) * R.spiritStatMultiplier(f.spirit));
 }
 
 class Ctx {
@@ -445,32 +456,46 @@ class Ctx {
     if (def.cost > 0 && s.timer) s.turn.deadline = this.now + R.TURN_MS;
     this.emit({ type: "skill", side: self.side, fighter: self.fighter, skill: def.id });
 
-    const morale = R.MORALE_DAMAGE[R.moraleOf(s.sides[self.side].food)];
+    const ownSide = s.sides[self.side];
+    const morale = R.MORALE_DAMAGE[R.moraleOf(ownSide.food)];
     const spread = def.target === "allEnemies" && isDuel(s) ? 1.5 : 1;
+    const kim = passiveOn(ownSide, caster, "kim");
+    const hoa = passiveOn(ownSide, caster, "hoa") ? 1 + PASSIVE.hoaDamage : 1;
+    const thuy = passiveOn(ownSide, caster, "thuy");
 
     for (const step of def.steps) {
-      const recipients = (to: "targets" | "self") => (to === "self" ? [self] : targets);
+      const recipients = (to: StepRecipient): FighterRef[] => {
+        if (to === "self") return [self];
+        if (to === "targets") return [...targets];
+        const side = to === "team" ? self.side : otherSide(self.side);
+        return aliveIndices(s.sides[side]).map((fighter) => ({ side, fighter }));
+      };
       switch (step.type) {
         case "damage":
           for (const t of targets) {
             const target = this.fighter(t);
             if (!isAlive(target)) continue;
+            const pierce = combinePierce(step.pierce ?? 0, kim ? PASSIVE.kimPierce : 0);
             const amount = Math.round(
               step.atk *
                 effectiveAtk(caster) *
                 morale *
                 spread *
+                hoa *
                 elementMultiplier(caster.element, target.element) *
-                R.defenseMultiplier(effectiveDef(s.sides[t.side], target)),
+                R.defenseMultiplier(effectiveDef(s.sides[t.side], target), pierce),
             );
-            const dealt = this.damage(t, amount, "skill", self);
+            const dealt = this.damage(t, amount, "skill", self, step.pierceShield || kim);
             if (step.lifesteal && dealt > 0) this.heal(self, Math.round(dealt * step.lifesteal));
+            if (thuy && isAlive(target) && this.roll(PASSIVE.thuyFreezeChance)) {
+              this.applyEffect(t, { kind: "freeze", value: 0, turns: 1 });
+            }
           }
           break;
         case "destroy": {
           const area = step.area;
           const result = this.withBoardRng((rng) => {
-            const cells = "random" in area ? randomCells(s.board, area.random, rng) : squareArea(s.board, cell!, area.square);
+            const cells = "random" in area ? randomCells(s.board, area.random, rng) : areaCells(s.board, cell!, area);
             return destroyCells(s.board, cells, rng, s.weights);
           });
           this.applyBoardChange(result, []);
@@ -486,7 +511,12 @@ class Ctx {
             const f = this.fighter(r);
             if (!isAlive(f)) continue;
             if (step.effect === "taunt" && isDuel(s)) continue;
-            const value = step.ofMaxHp ? Math.round(f.maxHp * step.value) : step.value;
+            if (step.chance !== undefined && !this.roll(step.chance)) continue;
+            const value = step.ofMaxHp
+              ? Math.round(f.maxHp * step.value)
+              : step.ofAtk
+                ? Math.max(1, Math.round(caster.atk * step.value))
+                : step.value;
             this.applyEffect(r, { kind: step.effect, value, turns: step.turns });
           }
           break;
@@ -500,7 +530,7 @@ class Ctx {
           for (const r of targets) this.strip(r, POSITIVE_EFFECTS);
           break;
         case "energy":
-          for (const r of targets) this.gainEnergy(r, step.amount);
+          for (const r of recipients(step.to)) this.gainEnergy(r, step.amount);
           break;
         case "enemyFood": {
           const foeIdx = otherSide(self.side);
@@ -551,7 +581,7 @@ class Ctx {
           });
           break;
         case "thuy": {
-          const hit = guaranteed || enhanced || this.withBoardRng((rng) => rng.next() < MARK.freezeChance);
+          const hit = guaranteed || enhanced || this.roll(MARK.freezeChance);
           if (hit) this.applyEffect(r, { kind: "freeze", value: 0, turns: 1 });
           break;
         }
@@ -582,6 +612,11 @@ class Ctx {
           break;
       }
     }
+  }
+
+  /** Tung xác suất bằng luồng ngẫu nhiên của bàn cờ (AI không biết trước). */
+  private roll(chance: number): boolean {
+    return this.withBoardRng((rng) => rng.next() < chance);
   }
 
   private applyEffect(ref: FighterRef, effect: Effect): void {
@@ -623,6 +658,7 @@ class Ctx {
     if (actor.profession === "phapSu") energy *= R.ENERGY_PHAP_SU;
     if (morale === "hungry" || morale === "starving") energy *= R.ENERGY_HUNGRY;
     energy += count("amDuong", "weak") * R.BUA_AM_DUONG_ENERGY;
+    if (passiveOn(own, own.fighters[own.leader]!, "loi")) energy += h.amDuong * PASSIVE.loiEnergyPerTile;
     if (energy > 0) this.gainEnergy(self, Math.round(energy));
 
     // Hồi máu; Y sư: hồi vượt máu tối đa thành Khiên tạm thời.
@@ -667,6 +703,8 @@ class Ctx {
       const t = foe.fighters[target]!;
       const bigSword = step.matches.some((m) => m.kind === "kiem" && m.cells.length >= 4);
       const prof = actor.profession === "tuongSi" && bigSword ? R.TUONG_SI_BONUS : 1;
+      const hoa = passiveOn(own, actor, "hoa") ? 1 + PASSIVE.hoaDamage : 1;
+      const pierce = passiveOn(own, actor, "kim") ? PASSIVE.kimPierce : 0;
       const amount = Math.round(
         effectiveAtk(actor) *
           units *
@@ -674,7 +712,8 @@ class Ctx {
           elementMultiplier(actor.element, t.element) *
           R.cascadeMultiplier(index) *
           prof *
-          R.defenseMultiplier(effectiveDef(foe, t)),
+          hoa *
+          R.defenseMultiplier(effectiveDef(foe, t), pierce),
       );
       this.damage({ side: foeIdx, fighter: target }, amount, "sword", self);
       if (s.winner !== null) return;
@@ -730,28 +769,57 @@ class Ctx {
   }
 
   private triggerPassive(side: SideIndex): void {
-    const own = this.state.sides[side];
-    const passive = PASSIVES[own.fighters[own.leader]!.element];
-    if (!passive) return;
-    // Hồi phục chạy đầu lượt của phe và hết hạn cuối lượt: kích hoạt trong lượt của phe mình thì
-    // lượt này không có lần hồi nào, nên cộng thêm 1 để đủ 3 lần.
-    const turns = R.PASSIVE_TURNS + (this.state.turn.side === side ? 1 : 0);
-    for (const i of aliveIndices(own)) {
-      const f = own.fighters[i]!;
-      this.applyEffect({ side, fighter: i }, { kind: "regen", value: Math.round(f.maxHp * passive.teamRegen), turns });
+    const s = this.state;
+    const own = s.sides[side];
+    const leaderRef: FighterRef = { side, fighter: own.leader };
+    const leader = this.fighter(leaderRef);
+    // Hiệu ứng chạy hoặc hết hạn theo lượt của phe: kích hoạt trong lượt của phe mình thì lượt này
+    // chưa tính, nên cộng thêm 1 để đủ 3 lượt.
+    const ownTurn = s.turn.side === side;
+    const turns = R.PASSIVE_TURNS + (ownTurn ? 1 : 0);
+    const foeIdx = otherSide(side);
+    switch (leader.element) {
+      case "moc":
+        for (const i of aliveIndices(own)) {
+          const f = own.fighters[i]!;
+          this.applyEffect({ side, fighter: i }, { kind: "regen", value: Math.round(f.maxHp * PASSIVE.mocTeamRegen), turns });
+        }
+        break;
+      case "thuy": {
+        const t = pickTarget(s.sides[foeIdx], own.leader);
+        // Kích hoạt trong lượt đối thủ thì Đóng băng phải qua hết lượt đó mới có tác dụng.
+        if (t !== null) this.applyEffect({ side: foeIdx, fighter: t }, { kind: "freeze", value: 0, turns: ownTurn ? 1 : 2 });
+        break;
+      }
+      case "tho":
+        this.applyEffect(leaderRef, { kind: "shield", value: Math.round(leader.maxHp * PASSIVE.thoShield), turns: null });
+        this.applyEffect(leaderRef, { kind: "reflect", value: PASSIVE.thoReflect, turns });
+        break;
+      case "loi":
+        for (const i of aliveIndices(s.sides[foeIdx])) this.gainEnergy({ side: foeIdx, fighter: i }, -PASSIVE.loiDrain);
+        break;
+      // Kim, Hỏa: hiệu lực khi passiveTurns > 0, xem passiveOn.
+      default:
+        break;
     }
   }
 
   /** Khiên hấp thụ trước; Phản đòn trả lại một phần cho kẻ tấn công (không phản tiếp). */
   /** Trả về lượng sát thương gây ra (gồm phần Khiên hấp thụ). */
-  private damage(ref: FighterRef, amount: number, source: DamageSource, attacker?: FighterRef): number {
+  private damage(
+    ref: FighterRef,
+    amount: number,
+    source: DamageSource,
+    attacker?: FighterRef,
+    ignoreShield = false,
+  ): number {
     const s = this.state;
     const own = s.sides[ref.side];
     const f = this.fighter(ref);
     if (!isAlive(f) || amount <= 0) return 0;
 
     let absorbed = 0;
-    const shield = findEffect(f.effects, "shield");
+    const shield = ignoreShield ? undefined : findEffect(f.effects, "shield");
     if (shield) {
       absorbed = Math.min(shield.value, amount);
       shield.value -= absorbed;

@@ -217,7 +217,7 @@ describe("áp kết quả bàn cờ", () => {
 
   it("thủ lĩnh chưa có bị động thì không tích nộ và không kích hoạt", () => {
     const board = BOARD.replace("KKAKBSVABTSV", "DDADBSVABTSV");
-    const { state } = createBattle({ sides: [solo(fighter("a", { element: "kim" })), solo()], seed: 1 });
+    const { state } = createBattle({ sides: [solo(fighter("a", { element: "phong" })), solo()], seed: 1 });
     const primed: BattleState = structuredClone(withBoard(state, board));
     primed.sides[0].rage = 95;
     const r = ok(act(primed, { type: "swap", from: { row: 2, col: 3 }, to: { row: 2, col: 2 } }));

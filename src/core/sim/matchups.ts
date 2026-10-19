@@ -1,6 +1,6 @@
 // Sinh các cặp đấu cho mô phỏng từ đội hình khởi đầu.
 
-import type { FighterConfig, SideConfig, SideIndex } from "../battle";
+import type { Element, FighterConfig, SideConfig, SideIndex } from "../battle";
 import { mainCharacter, STARTER_COMPANIONS } from "../roster";
 import type { Matchup } from "./sim";
 
@@ -21,10 +21,10 @@ const team = (fighters: readonly FighterConfig[]): SideConfig => ({ fighters, le
  * Đội hình mỗi phe xoay vòng qua mọi tổ hợp:
  * - 3vs3: nhân vật chính + 2 nhân vật kèm, đấu 3 nhân vật kèm (như đội AI).
  * - 1vs1: nhân vật chính hoặc một nhân vật kèm, đấu một nhân vật kèm khác.
- * Phe đi trước luân phiên theo trận.
+ * Phe đi trước luân phiên theo trận. `element` là nguyên tố của nhân vật chính.
  */
-export function buildMatchups(mode: SimMode, count: number, seed = 1): Matchup[] {
-  const main = mainCharacter();
+export function buildMatchups(mode: SimMode, count: number, seed = 1, element: Element = "moc"): Matchup[] {
+  const main = mainCharacter(element);
   const pool = STARTER_COMPANIONS;
   let pairs: [SideConfig, SideConfig][];
   if (mode === "3v3") {

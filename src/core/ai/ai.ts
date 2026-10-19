@@ -2,7 +2,7 @@
 // Ngang bằng thông tin: AI chỉ nhận AiView (không có luồng ngẫu nhiên của bàn cờ),
 // chỉ mô phỏng phần biết chắc, và dùng luồng ngẫu nhiên riêng (aiRng).
 
-import { findValidMoves, pickKind, type Board, type Move, type TileKind } from "../board";
+import { areaCells, findValidMoves, pickKind, type Board, type Move, type TileKind } from "../board";
 import {
   act,
   cascadeMultiplier,
@@ -22,6 +22,8 @@ import {
   type BattleState,
   type Fighter,
   type SkillDef,
+  type SkillStep,
+  type StepRecipient,
 } from "../battle";
 import { createRng, type Rng } from "../rng";
 import { simulateFrom, simulateKnown, type KnownOutcome } from "./simulate";
@@ -148,6 +150,16 @@ export function chooseMove(view: AiView, difficulty: Difficulty, rng: Rng): Move
   return best.move;
 }
 
+/** Giá trị mỗi ô bị phá hoặc biến, tính theo ATK. */
+const CELL_VALUE = 0.3;
+/** Chỉ dùng kỹ năng đáng ít nhất tỉ lệ này so với kỹ năng đáng nhất của bộ; còn lại thì để dành năng lượng. */
+const SAVE_FOR_BETTER = 0.8;
+
+function areaSize(board: Board, area: Extract<SkillStep, { type: "destroy" }>["area"]): number {
+  if ("random" in area) return area.random;
+  return areaCells(board, { row: Math.floor(board.rows / 2), col: Math.floor(board.cols / 2) }, area).length;
+}
+
 /** Chấm sơ bộ một kỹ năng; null nếu không dùng được hoặc vô ích. */
 function scoreSkill(view: AiView, def: SkillDef): { score: number; target?: number } | null {
   const ctx = context(view);
@@ -165,40 +177,47 @@ function scoreSkill(view: AiView, def: SkillDef): { score: number; target?: numb
   );
   const recipients =
     def.target === "team" ? own.fighters.filter(isAlive) : def.target === "ally" ? [own.fighters[lowestAlly ?? 0]!] : [ctx.me];
+  const hostile = def.target === "enemy" || def.target === "allEnemies";
+  const hit = def.target === "allEnemies" ? enemies : lowestEnemy === undefined ? [] : [foe.fighters[lowestEnemy]!];
+  const list = (to: StepRecipient): Fighter[] =>
+    to === "self" ? [ctx.me] : to === "team" ? own.fighters.filter(isAlive) : to === "enemies" ? enemies : hostile ? hit : recipients;
 
   let score = 0;
   for (const step of def.steps) {
     switch (step.type) {
       case "damage": {
-        const hit = def.target === "allEnemies" ? enemies : lowestEnemy === undefined ? [] : [foe.fighters[lowestEnemy]!];
         for (const t of hit) {
-          score += Math.min(t.hp, step.atk * ctx.me.atk * elementMultiplier(ctx.me.element, t.element) * defenseMultiplier(t.def));
+          const defense = defenseMultiplier(t.def, step.pierce ?? 0);
+          score += Math.min(t.hp, step.atk * ctx.me.atk * elementMultiplier(ctx.me.element, t.element) * defense);
         }
         break;
       }
       case "heal":
-        for (const r of step.to === "self" ? [ctx.me] : recipients) score += Math.min(r.maxHp - r.hp, r.maxHp * step.ratio);
+        for (const r of list(step.to)) score += Math.min(r.maxHp - r.hp, r.maxHp * step.ratio);
         break;
       case "effect": {
-        const list = step.to === "self" ? [ctx.me] : def.target === "enemy" || def.target === "allEnemies" ? enemies : recipients;
-        for (const r of list) if (!hasEffect(r.effects, step.effect)) score += ctx.me.atk * 0.8;
+        for (const r of list(step.to)) if (!hasEffect(r.effects, step.effect)) score += ctx.me.atk * 0.8 * (step.chance ?? 1);
         break;
       }
       case "cleanse":
-        for (const r of step.to === "self" ? [ctx.me] : recipients) score += r.effects.length > 0 ? ctx.me.atk : 0;
+        for (const r of list(step.to)) score += r.effects.length > 0 ? ctx.me.atk : 0;
         break;
       case "dispel":
         for (const r of enemies) score += r.effects.length * ctx.me.atk * 0.5;
         break;
       case "energy":
-        for (const r of enemies) score += Math.min(r.energy, -step.amount) * ctx.me.atk * 0.03;
+        for (const r of list(step.to)) {
+          score += (step.amount < 0 ? Math.min(r.energy, -step.amount) : Math.min(100 - r.energy, step.amount)) * ctx.me.atk * 0.03;
+        }
         break;
       case "enemyFood":
         score += ctx.me.atk;
         break;
       case "destroy":
+        score += ctx.me.atk * CELL_VALUE * areaSize(view.board, step.area);
+        break;
       case "transform":
-        score += ctx.me.atk * 1.5;
+        score += ctx.me.atk * CELL_VALUE * step.count;
         break;
       case "mark":
         score += ctx.me.atk * 0.3;
@@ -213,13 +232,17 @@ function scoreSkill(view: AiView, def: SkillDef): { score: number; target?: numb
 export function chooseSkill(view: AiView): BattleAction | null {
   const me = view.sides[view.turn.side].fighters[view.turn.actor]!;
   if (view.turn.skillUsed || hasEffect(me.effects, "silence")) return null;
-  let best: { action: BattleAction; ratio: number } | null = null;
-  for (const id of me.skills ?? []) {
+  const options = (me.skills ?? []).flatMap((id) => {
     const def = getSkill(id);
-    if (!def || def.cost > me.energy) continue;
-    const scored = scoreSkill(view, def);
-    if (!scored) continue;
-    const ratio = scored.score / Math.max(1, def.cost * me.atk * 0.02);
+    const scored = def && scoreSkill(view, def);
+    if (!def || !scored) return [];
+    return [{ id, def, scored, ratio: scored.score / Math.max(1, def.cost * me.atk * 0.02) }];
+  });
+  // Kỹ năng đáng hơn nhưng chưa đủ năng lượng thì để dành, không tiêu vào kỹ năng kém hơn.
+  const bestRatio = Math.max(0, ...options.map((o) => o.ratio));
+  let best: { action: BattleAction; ratio: number } | null = null;
+  for (const { id, def, scored, ratio } of options) {
+    if (def.cost > me.energy || ratio < bestRatio * SAVE_FOR_BETTER) continue;
     if (ratio <= 1 || (best && best.ratio >= ratio)) continue;
     const cell = needsCell(def) ? { row: Math.floor(view.board.rows / 2), col: Math.floor(view.board.cols / 2) } : undefined;
     best = { action: { type: "skill", skill: id, target: scored.target, cell }, ratio };

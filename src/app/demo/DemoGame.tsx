@@ -6,8 +6,10 @@ import {
   createBattle,
   getSkill,
   isAdjacent,
+  ELEMENTS,
   isAlive,
   mainCharacter,
+  mainSkills,
   needsCell,
   PASSIVES,
   playAiTurn,
@@ -18,6 +20,7 @@ import {
   type BattleEvent,
   type BattleState,
   type Difficulty,
+  type Element,
   type Fighter,
   type Pos,
   type SideConfig,
@@ -39,18 +42,21 @@ const AI_DELAY_MS = 700;
 const DEMO_SEED = 2026;
 const DIFFICULTIES: Difficulty[] = ["easy", "normal", "hard", "boss", "nightmare"];
 
+/** Nguyên tố đã có bộ kỹ năng nhân vật chính. */
+const MAIN_ELEMENTS = ELEMENTS.filter((e) => mainSkills(e).length > 0);
+
 const byId = (id: string) => STARTER_COMPANIONS.find((c) => c.id === id)!;
 
 /** Trận demo cố định: nhân vật chính và 2 nhân vật kèm, đấu đội Tianwu 3 người. */
-function demoSides(): [SideConfig, SideConfig] {
+function demoSides(element: Element): [SideConfig, SideConfig] {
   return [
-    { fighters: [mainCharacter(), byId("haVan"), byId("maiThanh")], leader: 0 },
+    { fighters: [mainCharacter(element), byId("haVan"), byId("maiThanh")], leader: 0 },
     { fighters: [byId("leThach"), byId("toKim"), byId("phungPhong")], leader: 0 },
   ];
 }
 
-function newBattle(round: number): BattleState {
-  return createBattle({ sides: demoSides(), seed: DEMO_SEED + round, timer: false, firstSide: PLAYER }).state;
+function newBattle(round: number, element: Element): BattleState {
+  return createBattle({ sides: demoSides(element), seed: DEMO_SEED + round, timer: false, firstSide: PLAYER }).state;
 }
 
 type Aim = { skill: SkillDef } | null;
@@ -174,7 +180,8 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
   const [round, setRound] = useState(0);
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
   const [started, setStarted] = useState(false);
-  const [state, setState] = useState<BattleState>(() => newBattle(0));
+  const [element, setElement] = useState<Element>("moc");
+  const [state, setState] = useState<BattleState>(() => newBattle(0, "moc"));
   const [selected, setSelected] = useState<Pos | null>(null);
   const [cursor, setCursor] = useState<Pos>({ row: 3, col: 5 });
   const [showCursor, setShowCursor] = useState(false);
@@ -389,7 +396,7 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
   const restart = () => {
     const next = round + 1;
     setRound(next);
-    setState(newBattle(next));
+    setState(newBattle(next, element));
     setSelected(null);
     setAim(null);
     setLog([]);
@@ -516,6 +523,23 @@ export default function DemoGame({ theme }: { theme: "light" | "dark" }) {
               {!started && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-black/60 text-white">
                   <p className="text-sm">Đinh Bộ Lĩnh, Hà Vân và Mai Thanh đấu đội Tianwu.</p>
+                  <div className="flex flex-wrap justify-center gap-1.5" role="radiogroup" aria-label="Nguyên tố nhân vật chính">
+                    {MAIN_ELEMENTS.map((e) => (
+                      <button
+                        key={e}
+                        type="button"
+                        role="radio"
+                        aria-checked={element === e}
+                        onClick={() => {
+                          setElement(e);
+                          setState(newBattle(round, e));
+                        }}
+                        className={`rounded px-2.5 py-1 text-sm ${element === e ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
+                      >
+                        {ELEMENT_NAME[e]}
+                      </button>
+                    ))}
+                  </div>
                   <button
                     type="button"
                     onClick={() => setStarted(true)}
