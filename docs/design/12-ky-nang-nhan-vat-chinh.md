@@ -39,8 +39,8 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 - Kỹ năng có vùng **do người chơi chọn**: chạm vào một ô làm tâm. Vùng tự dịch vào trong nếu tràn ra ngoài bàn 12×8. Vùng có kích thước chẵn (2×2, 4×4) lấy ô được chạm làm góc trên trái.
 - Kỹ năng có ô **ngẫu nhiên**: server chọn bằng luồng ngẫu nhiên của bàn cờ, không trùng ô. AI không biết trước.
-- Ô bị phá được thu hoạch, ô đặc biệt bị phá thì kích hoạt, cascade sau kỹ năng không cho lượt thêm (luật ở [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#5-kỹ-năng-tác-động-lên-bàn-cờ)).
-- Kỹ năng **trượt** (chỉ hệ Phong): dịch toàn bộ một hàng hoặc một cột do người chơi chọn đi 1 hoặc 2 ô theo hướng chọn; ô tràn khỏi một đầu quay vào đầu kia. Trượt không phá ô và không thu hoạch; nếu tạo bộ ghép thì cascade như bình thường (không cho lượt thêm; ô đặc biệt sinh ra ở ô giữa bộ ghép như luật cascade). Ô đặc biệt trượt theo như ô thường.
+- Ô bị phá được thu hoạch (chỉ 50% sát thương kiếm và 50% năng lượng âm dương, kể cả cascade sau đó), ô đặc biệt bị phá thì kích hoạt, cascade sau kỹ năng không cho lượt thêm (luật ở [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#5-kỹ-năng-tác-động-lên-bàn-cờ)).
+- Kỹ năng **trượt** (chỉ hệ Phong): dịch toàn bộ một hàng hoặc một cột do người chơi chọn đi 1 hoặc 2 ô theo hướng chọn; ô tràn khỏi một đầu quay vào đầu kia. Trượt không phá ô và không thu hoạch; nếu tạo bộ ghép thì cascade như bình thường (cùng mức thu hoạch giảm như phá ô, không cho lượt thêm; ô đặc biệt sinh ra ở ô giữa bộ ghép như luật cascade). Ô đặc biệt trượt theo như ô thường.
 - Kỹ năng **biến ô** đổi loại ô thường; không biến ô đặc biệt. Ô vừa biến có thể tạo bộ ghép và cascade ngay.
 
 | Ký hiệu | Hình | Số ô |
@@ -68,7 +68,7 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 | Bị động | **Sinh Sôi Bất Tận** | Nộ | Hồi phục 3% máu tối đa mỗi lượt cho cả đội, 3 lượt. |
 | 1 | **Lục Diệp Phong** | 35 | Phá **5 ô ngẫu nhiên**. |
 | 2 | **Linh Mộc Hồi Sinh** | 30 | Hồi 11% máu tối đa, biến 3 ô ngẫu nhiên thành ❤️. |
-| 3 | **Thanh Mộc Hộ Pháp** | 40 | 130% ATK vào 1 đối thủ, hồi cho bản thân 30% sát thương gây ra. Phá vùng **2×2**. |
+| 3 | **Thanh Mộc Hộ Pháp** | 40 | 150% ATK vào 1 đối thủ, hồi cho bản thân 30% sát thương gây ra. Phá vùng **2×2**. |
 | 4 | **Cuồng Vũ Thiên Diệp** | 60 | 65% ATK vào toàn bộ kẻ địch. Phá vùng **3×3**. |
 | 5 | **Cổ Thụ Trấn Thiên** | 100 | 225% ATK vào 1 đối thủ, Hồi phục 5% máu cho bản thân 2 lượt. Phá vùng **4×4**. |
 | 6 | **Thanh Trúc Bảo Phù** | 50 | Hồi phục 6% máu mỗi lượt trong 3 lượt, Thanh tẩy bản thân, Thủ +15% 2 lượt. |
@@ -80,7 +80,7 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 | Bị động | **Kim Cốt Thiết Thân** | Nộ | 3 lượt: đánh thường và kỹ năng bỏ qua 40% DEF, kỹ năng xuyên Khiên. |
 | 1 | **Luyện Kim Thành Kiếm** | 20 | Biến **4 ô ngẫu nhiên** thành ⚔️. |
 | 2 | **Kim Ý Ngưng Thần** | 30 | Công +25% cho bản thân, 2 lượt. |
-| 3 | **Đoạn Kim Nhất Tuyến** | 40 | 180% ATK vào 1 đối thủ, bỏ qua 30% DEF, Thủ −20% mục tiêu 2 lượt. Phá **đoạn 4**. |
+| 3 | **Đoạn Kim Nhất Tuyến** | 35 | 240% ATK vào 1 đối thủ, bỏ qua 30% DEF, Thủ −20% mục tiêu 2 lượt. Phá **đoạn 4**. |
 | 4 | **Thiết Kỵ Tung Hoành** | 60 | 90% ATK vào toàn bộ kẻ địch. Phá **1 cột**. |
 | 5 | **Kim Ấn Phá Thiên** | 100 | 320% ATK vào 1 đối thủ, bỏ qua 50% DEF và xuyên Khiên (bỏ qua Khiên của mục tiêu). Phá **chữ thập lớn**. |
 | 6 | **Giáp Đồng Hộ Thể** | 50 | Thủ +30% và Công +15% cho bản thân, 3 lượt. |
@@ -92,7 +92,7 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 | Bị động | **Hàn Tuyền** | Nộ | Đóng băng ngay 1 đối thủ (người chơi chọn) 1 lượt; 3 lượt sau đó kỹ năng gây sát thương có thêm 25% cơ hội Đóng băng. |
 | 1 | **Thủy Nguyệt Tụ Linh** | 20 | Biến **5 ô ngẫu nhiên** thành ☯️. |
 | 2 | **Thanh Lưu Tẩy Trần** | 30 | Thanh tẩy bản thân, hồi 10% máu tối đa. |
-| 3 | **Hàn Băng Tiễn** | 40 | 165% ATK vào 1 đối thủ, 30% cơ hội Đóng băng 1 lượt. Phá vùng **2×2**. |
+| 3 | **Hàn Băng Tiễn** | 40 | 175% ATK vào 1 đối thủ, 30% cơ hội Đóng băng 1 lượt. Phá vùng **2×2**. |
 | 4 | **Bạch Đằng Triều Dâng** | 60 | 80% ATK vào toàn bộ kẻ địch, mỗi mục tiêu 20% cơ hội Đóng băng 1 lượt. Phá **9 ô ngẫu nhiên**. |
 | 5 | **Thủy Kiếp Vạn Trùng** | 100 | 290% ATK vào 1 đối thủ, chắc chắn Đóng băng 1 lượt. Phá **2 cột liền nhau** (16 ô). |
 | 6 | **Linh Thủy Hộ Mệnh** | 50 | Hồi 12% máu tối đa và Thanh tẩy cho cả đội. |
@@ -133,7 +133,7 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 | Bị động | **Điện Quang Tốc Kích** | Nộ | Trừ ngay 20 năng lượng của mọi đối thủ; 3 lượt sau đó mỗi ô ☯️ ghép được cho thêm 5 năng lượng. |
 | 1 | **Lôi Trụ Giáng Thế** | 40 | Phá **1 cột** do người chơi chọn. |
 | 2 | **Tĩnh Điện Hộ Thân** | 30 | Thanh tẩy bản thân, Thủ +20% 2 lượt. |
-| 3 | **Lôi Tiễn Xuyên Vân** | 40 | 180% ATK vào 1 đối thủ, trừ 15 năng lượng của mục tiêu. Phá **4 ô ngẫu nhiên**. |
+| 3 | **Lôi Tiễn Xuyên Vân** | 40 | 200% ATK vào 1 đối thủ, trừ 15 năng lượng của mục tiêu. Phá **4 ô ngẫu nhiên**. |
 | 4 | **Lôi Võng Thiên La** | 60 | 90% ATK vào toàn bộ kẻ địch, trừ 10 năng lượng mỗi mục tiêu. Phá **9 ô ngẫu nhiên**. |
 | 5 | **Cửu Tiêu Lôi Phạt** | 100 | 320% ATK vào 1 đối thủ, Câm lặng 1 lượt. Phá **1 cột + 8 ô ngẫu nhiên**. |
 | 6 | **Lôi Đình Hiệu Lệnh** | 50 | Công +25% cho cả đội 2 lượt, trừ 15 năng lượng của mọi đối thủ. |
@@ -142,11 +142,11 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 | Ô | Kỹ năng | Chi phí | Tác dụng |
 |---|---|---|---|
-| Bị động | **Thuận Phong** | Nộ | Nhận ngay 15 năng lượng; trong 3 lượt kế tiếp của phe, người ra tay được **trượt** miễn phí 1 hàng hoặc 1 cột đi 1 ô, làm trước kỹ năng và đổi ô (không tốn năng lượng, không tính là dùng kỹ năng, không đặt lại đồng hồ). **Tối đa 1 lần mỗi lần kích hoạt** (Shan chốt 19/10/2026). |
+| Bị động | **Thuận Phong** | Nộ | Trong 3 lượt kế tiếp của phe, người ra tay được **trượt** miễn phí 1 hàng hoặc 1 cột đi 1 ô, làm trước kỹ năng và đổi ô (không tốn năng lượng, không tính là dùng kỹ năng, không đặt lại đồng hồ). **Tối đa 1 lần mỗi lần kích hoạt** (Shan chốt 19/10/2026). |
 | 1 | **Phong Quyển Tàn Vân** | 40 | **Trượt** 1 hàng hoặc 1 cột đi 1–2 ô. |
 | 2 | **Thanh Phong Tụ Khí** | 30 | Công +20% cho bản thân 2 lượt, nhận ngay 10 năng lượng. |
 | 3 | **Phong Nhận Liệt Không** | 40 | 175% ATK vào 1 đối thủ, Xua tan mục tiêu. Phá vùng **2×2**. |
-| 4 | **Cuồng Phong Quét Trận** | 60 | 85% ATK vào toàn bộ kẻ địch, Công −15% mỗi mục tiêu 2 lượt. Phá **chữ X lớn**. |
+| 4 | **Cuồng Phong Quét Trận** | 60 | 60% ATK vào toàn bộ kẻ địch, Công −10% mỗi mục tiêu 2 lượt. Phá **chữ X lớn**. |
 | 5 | **Bão Táp Càn Khôn** | 100 | 300% ATK vào 1 đối thủ, Xua tan và Công −25% mục tiêu 2 lượt. **Trượt** 1 hàng 2 ô rồi phá vùng **4×4**. |
 | 6 | **Phong Hành Vạn Lý** | 50 | Thủ +15% cho cả đội 2 lượt, cả đội nhận 15 năng lượng. |
 
@@ -158,30 +158,33 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 | Nguyên tố | Sát thương ô 3 / 4 / 5 | Điểm mạnh | Điểm yếu |
 |---|---|---|---|
-| 🌳 Mộc | 170 / 85 / 300 | Hồi máu liên tục, phá ô nhiều nhất | Sát thương thấp hơn chuẩn |
-| ⚙️ Kim | 180 / 90 / 320 | Xuyên DEF và Khiên, tạo ô kiếm | Ít hồi máu |
-| 💧 Thủy | 165 / 80 / 290 | Đóng băng, tạo ô âm dương | Sát thương thấp nhất sau Thổ |
+| 🌳 Mộc | 150 / 65 / 225 | Hồi máu liên tục, phá ô nhiều nhất | Sát thương thấp hơn chuẩn |
+| ⚙️ Kim | 240 / 90 / 320 | Xuyên DEF và Khiên, tạo ô kiếm | Ít hồi máu |
+| 💧 Thủy | 175 / 80 / 290 | Đóng băng, tạo ô âm dương | Sát thương thấp nhất sau Thổ |
 | 🔥 Hỏa | 200 / 100 / 360 (+15% bị động) | Sát thương cao nhất | DEF bản thân thấp |
 | ⛰️ Thổ | 150 / 75 / 260 | Khiên nhiều, tạo lương | Sát thương thấp nhất |
-| ⚡ Lôi | 180 / 90 / 320 | Phá năng lượng, Câm lặng | Ít hồi máu, phụ thuộc ô âm dương |
-| 🌪️ Phong | 175 / 85 / 300 | Trượt hàng/cột tạo combo, Xua tan, hồi năng lượng | Không hồi máu, ít Khiên |
+| ⚡ Lôi | 200 / 90 / 320 | Phá năng lượng, Câm lặng | Ít hồi máu, phụ thuộc ô âm dương |
+| 🌪️ Phong | 175 / 60 / 300 | Trượt hàng/cột tạo combo, Xua tan, hồi năng lượng | Không hồi máu, ít Khiên |
 
 ### Mô phỏng 19/10/2026
 
-AI Thường, seed 7. 3vs3: 90 trận, nhân vật chính và 2 nhân vật kèm đấu 3 nhân vật kèm. 1vs1: 60 trận, nhân vật chính đấu từng nhân vật kèm.
+AI Thường, seed 1, 900 trận mỗi hệ cho mỗi chế độ (`pnpm sim -- --mode all --battles 900 --element <hệ>`). 3vs3: nhân vật chính và 2 nhân vật kèm đấu 3 nhân vật kèm. 1vs1: nhân vật chính đấu từng nhân vật kèm (150 trận mỗi hệ). Trước là bản trên develop trước khi giảm thu hoạch của kỹ năng bàn cờ.
 
-| Hệ nhân vật chính | 3vs3 thắng | 3vs3 trung vị lượt | 1vs1 thắng | 1vs1 trung vị lượt |
+| Hệ nhân vật chính | 3vs3 thắng (trước → sau) | 3vs3 trung vị lượt | 1vs1 thắng (trước → sau) | 1vs1 trung vị lượt |
 |---|---|---|---|---|
-| 🌳 Mộc | 66% | 24.5 | 67% | 13.5 |
-| ⚙️ Kim | 61% | 20 | 65% | 8 |
-| 💧 Thủy | 68% | 22 | 77% | 9 |
-| 🔥 Hỏa | 68% | 20 | 77% | 6.5 |
-| ⛰️ Thổ | 68% | 22.5 | 73% | 12.5 |
-| ⚡ Lôi | 70% | 20.5 | 67% | 8 |
-| 🌪️ Phong (180 trận 3vs3) | 73% | 17.5 | 82% | 7.5 |
+| 🌳 Mộc | 66.9% → 66.6% | 25.5 | 72.2% → 66.7% | 22 |
+| ⚙️ Kim | 50.2% → 53.7% | 21.5 | 60.6% → 68.9% | 17.5 |
+| 💧 Thủy | 66.9% → 59.9% | 24.5 | 80.0% → 78.3% | 18.5 |
+| 🔥 Hỏa | 62.1% → 58.4% | 22 | 70.0% → 67.8% | 18.5 |
+| ⛰️ Thổ | 66.6% → 62.6% | 24 | 75.0% → 74.4% | 20.5 |
+| ⚡ Lôi | 65.2% → 61.2% | 22.5 | 70.6% → 65.0% | 18 |
+| 🌪️ Phong | 75.2% → 69.1% | 22 | 83.3% → 79.4% | 19 |
 
-- Ô 1 phá ô giá 20 (Hỏa 3×3, Lôi 1 cột) quá mạnh, vì ô bị phá được thu hoạch như một nước đi, kể cả kiếm. Đã nâng giá Hỏa lên 35 (bằng Mộc), Lôi lên 40. Trước khi nâng giá, phe Hỏa thắng 79–82% ở 3vs3.
-- Các số còn lại giữ đúng bảng trên.
-- Tỉ lệ thắng còn phụ thuộc khắc chế với 5 nhân vật kèm khởi đầu (ví dụ Mộc bị Tô Kim hệ Kim khắc), nên chỉ nên so sánh tương đối.
+- Khoảng cách giữa hệ mạnh nhất và yếu nhất ở 3vs3 giảm từ 25 xuống 15 điểm phần trăm. Không có trận hòa.
+- Thu hoạch đủ thì kỹ năng bàn cờ giá rẻ là nước đi miễn phí: Thủy Nguyệt Tụ Linh được dùng khoảng 6 lần mỗi trận vì ô âm dương ghép ngay hoàn lại năng lượng, Phong Quyển Tàn Vân khoảng 2 lần và đáng khoảng 7 điểm phần trăm tỉ lệ thắng. Giờ ô thu hoạch khi kỹ năng đổi bàn chỉ cho 50% sát thương kiếm và 50% năng lượng (xem [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#5-kỹ-năng-tác-động-lên-bàn-cờ)); bỏ hẳn ô 1 khỏi bộ của bất kỳ hệ nào giờ chỉ đổi tỉ lệ thắng khoảng 3 điểm hoặc ít hơn.
+- Giảm thu hoạch cũng làm yếu phần phá ô của ô 3–5, nên tăng lại: Đoạn Kim Nhất Tuyến 180% → 240% và 40 → 35 năng lượng, Lôi Tiễn Xuyên Vân 180% → 200%, Thanh Mộc Hộ Pháp 130% → 150%, Hàn Băng Tiễn 165% → 175%. Phong bị giảm: Cuồng Phong Quét Trận 85% → 60% và Công −15% → −10%, Thuận Phong bỏ 15 năng lượng tức thì (lần trượt miễn phí giữ nguyên).
+- AI chấm lần trượt theo đúng mức thu hoạch giảm.
+- Kim và Phong lệch chủ yếu do khắc chế với 5 nhân vật kèm khởi đầu: Hà Vân (Pháp sư hệ Hỏa, gây sát thương nhiều nhất) khắc Kim, còn Phong khắc Lê Thạch (Binh lính hệ Thổ, người hứng đòn). Cho mọi nhân vật kèm cùng hệ với nhân vật chính (không khắc chế) thì 7 bộ kỹ năng chỉ cách nhau 57–63% (trừ Mộc, đã tăng sau đó).
+- Bị động Kim bỏ qua 40% DEF gần như không có tác dụng vì DEF hiện chỉ 8–15. Thử thêm +30% sát thương cho bị động thì Kim thắng thêm khoảng 2 điểm; chưa áp dụng vì là đổi thiết kế.
 
 > TODO: chạy lại khi có thêm nhân vật kèm, để giảm ảnh hưởng của khắc chế với 5 nhân vật kèm khởi đầu.
