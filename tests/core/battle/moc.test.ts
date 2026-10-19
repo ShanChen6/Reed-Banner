@@ -34,30 +34,30 @@ const me = (s: BattleState) => s.sides[0].fighters[0]!;
 
 describe("bộ kỹ năng hệ Mộc", () => {
   it("đủ 6 ô với chi phí theo khung chung", () => {
-    assert.deepEqual(mainSkills("moc").map((d) => [d.slot, d.cost]), [[1, 20], [2, 30], [3, 40], [4, 60], [5, 100], [6, 50]]);
+    assert.deepEqual(mainSkills("moc").map((d) => [d.slot, d.cost]), [[1, 35], [2, 30], [3, 40], [4, 60], [5, 100], [6, 50]]);
   });
 
-  it("Lục Diệp Phong phá 8 ô ngẫu nhiên và thu hoạch chúng", () => {
+  it("Lục Diệp Phong phá 5 ô ngẫu nhiên và thu hoạch chúng", () => {
     const s = setup([solo(hero()), solo(fighter("b"))]);
     const r = ok(act(s, { type: "skill", skill: "lucDiepPhong" }));
     const board = r.events.find((e) => e.type === "board");
     assert.ok(board && board.type === "board");
-    assert.ok(board.steps[0]!.cleared.length >= 8);
-    assert.equal(me(r.state).energy >= 80, true);
+    assert.ok(board.steps[0]!.cleared.length >= 5);
+    assert.equal(me(r.state).energy >= 65, true);
     assert.equal(r.state.turn.side, 0, "kỹ năng không kết thúc lượt");
     assert.equal(r.state.turn.extra, false);
   });
 
-  it("Linh Mộc Hồi Sinh hồi 15% máu và biến 3 ô thành tim", () => {
+  it("Linh Mộc Hồi Sinh hồi 11% máu và biến 3 ô thành tim", () => {
     const s = setup([solo(hero()), solo(fighter("b"))]);
     me(s).hp = 500;
     const r = ok(act(s, { type: "skill", skill: "linhMocHoiSinh" }));
-    assert.ok(me(r.state).hp >= 650);
+    assert.ok(me(r.state).hp >= 610);
     const board = r.events.find((e) => e.type === "board");
     assert.ok(board && board.type === "board" && board.transformed.length === 3);
   });
 
-  it("Thanh Mộc Hộ Pháp cần chọn ô, gây 170% ATK và hồi 30% sát thương", () => {
+  it("Thanh Mộc Hộ Pháp cần chọn ô, gây 130% ATK và hồi 30% sát thương", () => {
     const s = setup([solo(hero()), solo(fighter("b", { element: "loi" }))]);
     me(s).hp = 500;
     assert.deepEqual(act(s, { type: "skill", skill: "thanhMocHoPhap" }), { ok: false, error: "invalidTarget" });
@@ -67,8 +67,8 @@ describe("bộ kỹ năng hệ Mộc", () => {
     });
     const r = ok(act(s, { type: "skill", skill: "thanhMocHoPhap", cell: { row: 0, col: 0 } }));
     const first = r.events.find((e) => e.type === "damage" && e.source === "skill");
-    assert.deepEqual(first, { type: "damage", side: 1, fighter: 0, amount: 170, absorbed: 0, source: "skill" });
-    assert.ok(r.events.some((e) => e.type === "heal" && e.side === 0 && e.amount === 51));
+    assert.deepEqual(first, { type: "damage", side: 1, fighter: 0, amount: 130, absorbed: 0, source: "skill" });
+    assert.ok(r.events.some((e) => e.type === "heal" && e.side === 0 && e.amount === 39));
   });
 
   it("Thanh Trúc Bảo Phù: Hồi phục, Thanh tẩy, Thủ +15%", () => {
@@ -78,7 +78,7 @@ describe("bộ kỹ năng hệ Mộc", () => {
     assert.deepEqual(
       me(r.state).effects.map((e) => [e.kind, e.value, e.turns]),
       [
-        ["regen", 80, 3],
+        ["regen", 60, 3],
         ["defUp", 0.15, 2],
       ],
     );
@@ -94,7 +94,7 @@ describe("bộ kỹ năng hệ Mộc", () => {
 });
 
 describe("Sinh Sôi Bất Tận", () => {
-  it("đầy nộ: cả đội Hồi phục 8% máu tối đa, hồi đủ 3 lần", () => {
+  it("đầy nộ: cả đội Hồi phục 3% máu tối đa, hồi đủ 3 lần", () => {
     const team: SideConfig = { fighters: [hero(), fighter("k1"), fighter("k2")], leader: 0 };
     const { state } = createBattle({ sides: [team, { fighters: [fighter("e1", { atk: 1 }), fighter("e2", { atk: 1 }), fighter("e3", { atk: 1 })], leader: 0 }], seed: 2, timer: false });
     let s = structuredClone(state);
@@ -107,12 +107,12 @@ describe("Sinh Sôi Bất Tận", () => {
     let r = ok(act(s, { type: "skill", skill: "thanhMocHoPhap", target: 0, cell: { row: 0, col: 0 } }));
     assert.ok(r.events.some((e) => e.type === "passive" && e.side === 0));
     s = r.state;
-    assert.ok(s.sides[0].fighters.every((f) => f.effects.some((e) => e.kind === "regen" && e.value === 80 && e.turns === 4)));
+    assert.ok(s.sides[0].fighters.every((f) => f.effects.some((e) => e.kind === "regen" && e.value === 30 && e.turns === 4)));
 
     let ticks = 0;
     for (let i = 0; i < 12 && s.winner === null; i++) {
       r = ok(act(s, { type: "swap", ...findValidMoves(s.board)[0]! }));
-      ticks += r.events.filter((e) => e.type === "heal" && e.side === 0 && e.fighter === 1 && e.amount === 80).length;
+      ticks += r.events.filter((e) => e.type === "heal" && e.side === 0 && e.fighter === 1 && e.amount === 30).length;
       s = r.state;
     }
     assert.equal(ticks, 3);

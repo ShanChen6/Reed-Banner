@@ -2,6 +2,16 @@
 
 > Mới nhất ở trên cùng. Mỗi mục ghi quyết định và lý do nếu có.
 
+## 19/10/2026
+
+**Giảm bộ Mộc và cân lại nhịp trận (Shan chọn giảm bộ Mộc, theo mô phỏng)**
+- Mô phỏng cho thấy chỉ giảm bộ Mộc thì trận hòa (chạm giới hạn lượt) tăng vọt, vì hồi máu và khiên mạnh hơn sát thương. Nên cân cả nhịp trận cùng lúc.
+- Bộ Mộc: Sinh Sôi Bất Tận hồi 3%/lượt (từ 8%); Lục Diệp Phong 35 năng lượng, phá 5 ô (từ 20, 8 ô); sát thương bộ Mộc ×0.75 (Thanh Mộc Hộ Pháp 130%, Cuồng Vũ Thiên Diệp 65%, Cổ Thụ Trấn Thiên 225%); hồi máu bộ Mộc ×0.75.
+- Hồi máu, Hồi phục và Khiên của chiêu nghề ×0.75: Linh dược 22%, Tế độ 15%, Dưỡng sinh 7%/lượt, Thủ thành 20%, Tường khiên 15%.
+- Máu gốc mọi nghề giảm một nửa (Tướng sĩ 500, Pháp sư 450, Binh lính 600, còn lại 475).
+- Kết quả 3vs3 (120 trận, AI Thường): phe có nhân vật chính thắng khoảng 70% (từ 87–97%), không còn trận hòa, trung vị 26 lượt mỗi phe (mục tiêu 20–30).
+- 1vs1 giờ quá ngắn (trung vị khoảng 5 lượt mỗi phe); cần cân riêng như TODO ở Trận đấu mục 3.
+
 ## 18/10/2026
 
 **Tăng chiêu nghề cho nhân vật kèm (Shan yêu cầu, sau lần chạy mô phỏng đầu)**

@@ -99,9 +99,9 @@ Mỗi nghề gắn với một loại ô. Ô 🥁 Trống trận không gắn v�
 - Nấc 2B, **Phá trận:** 300% ATK vào 1 đối thủ, kèm Thủ −30% trong 2 lượt.
 
 **🍙 Binh lính: khiêu khích, chịu đòn**
-- Nấc 1, **Thủ thành:** Khiêu khích 2 lượt, kèm Khiên bằng 25% máu tối đa của bản thân.
+- Nấc 1, **Thủ thành:** Khiêu khích 2 lượt, kèm Khiên bằng 20% máu tối đa của bản thân.
 - Nấc 2A, **Phản kích:** Phản đòn 40% trong 2 lượt, kèm Thủ +30%.
-- Nấc 2B, **Tường khiên:** Khiên bằng 20% máu tối đa cho cả đội.
+- Nấc 2B, **Tường khiên:** Khiên bằng 15% máu tối đa cho cả đội.
 
 **☯️ Pháp sư: bậc thầy nguyên tố, phá giáp**
 - Nấc 1, **Phép công:** 180% ATK vào 1 đối thủ.
@@ -109,9 +109,9 @@ Mỗi nghề gắn với một loại ô. Ô 🥁 Trống trận không gắn v�
 - Nấc 2B, **Phép lan:** 100% ATK vào cả đội đối thủ.
 
 **❤️ Y sư: hồi máu, giải trừ**
-- Nấc 1, **Linh dược:** hồi 30% máu cho 1 đồng đội (người chơi chọn), kèm Thanh tẩy người đó.
-- Nấc 2A, **Dưỡng sinh:** Hồi phục 10% máu mỗi lượt cho cả đội, 3 lượt.
-- Nấc 2B, **Tế độ:** hồi 20% máu cả đội, kèm Thanh tẩy cả đội.
+- Nấc 1, **Linh dược:** hồi 22% máu cho 1 đồng đội (người chơi chọn), kèm Thanh tẩy người đó.
+- Nấc 2A, **Dưỡng sinh:** Hồi phục 7% máu mỗi lượt cho cả đội, 3 lượt.
+- Nấc 2B, **Tế độ:** hồi 15% máu cả đội, kèm Thanh tẩy cả đội.
 
 **💰 Mưu sĩ: mua chuộc, phá năng lượng**
 - Nấc 1, **Mua chuộc:** trừ 40 năng lượng của 1 đối thủ.
