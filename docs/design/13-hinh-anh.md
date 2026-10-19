@@ -11,7 +11,9 @@ File này có hai phần. Phần 1 ghi phong cách của bộ hình dựng bằn
 - **Phong cách:** lấy cảm hứng từ tranh khắc gỗ dân gian và hoa văn trống đồng Đông Sơn: nét mực đậm, mảng màu phẳng, gần như không đổ bóng (tối đa một mảng sáng nhẹ ở mép trên).
 - **Đọc được bàn cờ:** mỗi loại ô khác nhau cả màu nền, độ sáng lẫn hình vẽ, để người khó phân biệt màu vẫn chơi được.
 - **Ô đặc biệt:** bản yếu có khung vuông bằng đồng với đinh tán bốn góc; bản mạnh có vòng tròn vàng tỏa tia như mặt trời giữa mặt trống đồng và tỏa sáng nhẹ. Hai bản khác nhau về hình dạng chứ không chỉ về màu.
-- Phẩm trang bị (khung màu Trắng, Lục, Lam, Tím, Cam) cũng sẽ vẽ bằng code, nên họa sĩ **không** vẽ khung.
+- **Chân dung tạm** (`portraits.tsx`): huy hiệu tròn viền trống đồng, nền và đai áo theo nguyên tố; mỗi nhân vật khác nhau ở mũ/tóc, màu áo và đồ cầm tay theo nghề. Dùng tới khi có chân dung của họa sĩ (phần 2).
+- **Biểu tượng kỹ năng** (`skills.tsx`): huy hiệu vuông, nền theo nguyên tố (chiêu nhân vật chính) hoặc theo nghề (chiêu nhân vật kèm, tông tối hơn); hình giữa nói kỹ năng làm gì, dấu tròn ở góc nói tác dụng phụ (tăng, giảm, cả đội, đánh cả đội đối thủ, hồi máu, khiên, gỡ hiệu ứng, năng lượng, thiêu đốt, đóng băng, phản đòn). Tuyệt chiêu ô 5 có vòng tia vàng. Kỹ năng mới chưa vẽ tự lấy hình theo kiểu mục tiêu.
+- **Biểu tượng trang bị** (`gear.tsx`): 9 ô và vũ khí riêng 6 nghề, chi tiết nhấn màu theo nguyên tố. Khung phẩm khác nhau cả về hình: Trắng viền trơn, Lục thêm chấm góc, Lam viền đôi, Tím thêm hoa văn răng cưa, Cam tỏa tia. Họa sĩ **không** vẽ khung.
 
 ### Bảng màu
 
