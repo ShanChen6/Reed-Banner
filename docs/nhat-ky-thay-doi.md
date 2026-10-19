@@ -4,6 +4,11 @@
 
 ## 19/10/2026
 
+**Trang bị vào trận (Shan chốt, phần số liệu Shan giao Claude tự quyết)**
+- Không có chỉ số phụ cho trang sức. Phí ghép thấp: 10/20/40/80 vàng. Bảng rơi đồ theo độ khó; thắng rơi 1 món, thua 30% rơi món tối đa Lục.
+- Thưởng bộ chốt theo mô phỏng: Cờ Lau Máu +4% → +3%, Hoa Lư DEF +10% → +12% để ba bộ ngang nhau (đủ bộ khoảng +9 điểm tỉ lệ thắng). Bị động Kim không mạnh lên khi có trang bị.
+- `pnpm sim` có `--gear-tier`, `--set`, `--foe-set`; `/demo` chọn được phẩm và bộ trước trận, hiện chiến lợi phẩm sau trận.
+
 **Trang bị (code, Shan yêu cầu)**
 - Code hệ thống trang bị trong `src/core/gear/`: 9 ô, 5 phẩm, hệ số nguyên tố, vũ khí giữ riêng theo nghề, thưởng bộ và cộng hưởng ở mốc 6 và 9 món, ghép 3 món nâng bậc. Chưa nối vào trận demo và sim.
 - Chỉ số gốc món Trắng ATK +3, Máu +30, DEF +2; 3 bộ khởi đầu (Cờ Lau, Hoa Lư, Đồng Cổ) và cộng hưởng 7 nguyên tố chỉ cộng chỉ số. Tất cả là đề xuất điểm xuất phát, chờ chốt.
