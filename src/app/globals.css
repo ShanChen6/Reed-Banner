@@ -1,1 +1,151 @@
 @import "tailwindcss";
+
+/* Hoạt ảnh bàn cờ trang /demo (src/app/demo/animation.ts). --dx/--dy tính bằng số ô; 2px là khe giữa các ô. */
+.tile-anim {
+  --step-x: calc(var(--dx, 0) * (100% + 2px));
+  --step-y: calc(var(--dy, 0) * (100% + 2px));
+  animation-fill-mode: both;
+}
+.tile-anim-move {
+  animation-name: tile-move;
+  animation-timing-function: cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+.tile-anim-fall {
+  animation-name: tile-fall;
+  animation-timing-function: ease-in;
+}
+.tile-anim-clear {
+  animation-name: tile-clear;
+  animation-timing-function: ease-in;
+}
+.tile-anim-blast {
+  animation-name: tile-blast;
+  animation-timing-function: ease-out;
+}
+.tile-anim-pop {
+  animation-name: tile-pop;
+  animation-timing-function: ease-out;
+}
+.tile-anim-bounce {
+  animation-name: tile-bounce;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes tile-move {
+  from {
+    transform: translate(var(--step-x), var(--step-y));
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes tile-fall {
+  from {
+    transform: translate(var(--step-x), var(--step-y));
+  }
+  85% {
+    transform: translateY(4%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes tile-clear {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  35% {
+    transform: scale(1.25);
+    opacity: 1;
+    filter: brightness(1.8);
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+@keyframes tile-blast {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  40% {
+    transform: scale(1.7) rotate(12deg);
+    opacity: 1;
+    filter: brightness(2.2) drop-shadow(0 0 6px #fde047);
+  }
+  100% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+}
+@keyframes tile-pop {
+  0% {
+    transform: scale(0.3);
+    opacity: 0.4;
+  }
+  70% {
+    transform: scale(1.18);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes tile-bounce {
+  0%,
+  100% {
+    transform: none;
+  }
+  45% {
+    transform: translate(calc(var(--step-x) * 0.45), calc(var(--step-y) * 0.45));
+  }
+  70% {
+    transform: translate(calc(var(--step-x) * -0.08), calc(var(--step-y) * -0.08));
+  }
+}
+
+/* Nhãn chuỗi cascade và số sát thương/hồi máu bay lên. */
+@keyframes chain-pop {
+  0% {
+    transform: translateX(-50%) scale(0.5);
+    opacity: 0;
+  }
+  25% {
+    transform: translateX(-50%) scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0;
+  }
+}
+@keyframes float-up {
+  0% {
+    transform: translateY(6px) scale(0.8);
+    opacity: 0;
+  }
+  15% {
+    transform: translateY(0) scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-28px) scale(1);
+    opacity: 0;
+  }
+}
+.chain-pop {
+  animation: chain-pop 700ms ease-out both;
+}
+.float-up {
+  animation: float-up 1100ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile-anim,
+  .chain-pop,
+  .float-up {
+    animation: none !important;
+  }
+}
