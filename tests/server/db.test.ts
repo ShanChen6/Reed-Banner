@@ -3,8 +3,9 @@ import { describe, it } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
-import { mainCharacter, startMatch, STARTER_COMPANIONS } from "../../src/core";
+import { mainCharacter, newProfile, startMatch, STARTER_COMPANIONS } from "../../src/core";
 import { DrizzleAccountStore } from "../../src/server/db/accounts";
+import { DrizzleProfileStore } from "../../src/server/db/profiles";
 import { DrizzleMatchStore, type Db } from "../../src/server/db/store";
 import { signIn } from "../../src/server/accounts";
 
@@ -31,6 +32,23 @@ describe("lưu trận vào Postgres (PGlite, cùng migration với Neon)", () =>
     assert.equal(await store.save(next, match.seq), true);
     assert.equal(await store.save(next, match.seq), false);
     assert.equal((await store.get("m_1"))!.match.seq, match.seq + 1);
+    assert.equal(await store.claimReward("m_1", 3000), true);
+    assert.equal(await store.claimReward("m_1", 4000), false);
+    assert.equal(await store.claimReward("m_khong", 4000), false);
+  });
+
+  it("hồ sơ: tạo lần đầu, ghi kèm điều kiện version", async () => {
+    const db = drizzle(new PGlite());
+    await migrate(db, { migrationsFolder: "drizzle" });
+    const store = new DrizzleProfileStore(db as unknown as Db);
+    const p = newProfile();
+    assert.equal(await store.get("g_1"), null);
+    assert.equal(await store.put("g_1", p, 0, 1000), true);
+    assert.equal(await store.put("g_1", p, 0, 1000), false);
+    const rich = { ...p, gold: 50 };
+    assert.equal(await store.put("g_1", rich, 1, 2000), true);
+    assert.equal(await store.put("g_1", p, 1, 3000), false);
+    assert.deepEqual(await store.get("g_1"), { profile: rich, version: 2 });
   });
 
   it("tài khoản: gắn danh tính, vào lại, gắn thêm nhà cung cấp, danh tính không đổi chủ", async () => {

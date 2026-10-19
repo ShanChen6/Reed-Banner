@@ -6,7 +6,9 @@ import { drizzle } from "drizzle-orm/neon-http";
 import type { Match } from "@/core";
 import { MemoryAccountStore, type AccountStore } from "./accounts";
 import { DrizzleAccountStore } from "./db/accounts";
+import { DrizzleProfileStore } from "./db/profiles";
 import { DrizzleMatchStore, type Db } from "./db/store";
+import { MemoryProfileStore, type ProfileStore } from "./profiles";
 
 function neonDb(url: string): Db {
   return drizzle(neon(url)) as unknown as Db;
@@ -26,6 +28,8 @@ export interface MatchStore {
   get(id: string): Promise<MatchRecord | null>;
   /** Ghi đè khi seq đang lưu đúng bằng `expectedSeq`; trả về false nếu đã có request khác ghi trước. */
   save(record: MatchRecord, expectedSeq: number): Promise<boolean>;
+  /** Đánh dấu đã cộng thưởng cuối trận; true chỉ cho lần gọi đầu tiên (thưởng được cộng đúng một lần). */
+  claimReward(id: string, now: number): Promise<boolean>;
 }
 
 /**
@@ -34,6 +38,7 @@ export interface MatchStore {
  */
 export class MemoryMatchStore implements MatchStore {
   private readonly records = new Map<string, MatchRecord>();
+  private readonly rewarded = new Set<string>();
 
   async create(record: MatchRecord): Promise<void> {
     if (this.records.has(record.id)) throw new Error(`Trận đã tồn tại: ${record.id}`);
@@ -51,9 +56,15 @@ export class MemoryMatchStore implements MatchStore {
     this.records.set(record.id, structuredClone(record));
     return true;
   }
+
+  async claimReward(id: string): Promise<boolean> {
+    if (!this.records.has(id) || this.rewarded.has(id)) return false;
+    this.rewarded.add(id);
+    return true;
+  }
 }
 
-const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauAccountStore?: AccountStore };
+const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore };
 
 /**
  * Kho dùng chung của server: Postgres (Neon) khi có DATABASE_URL, ngược lại lưu trong bộ nhớ (dev).
@@ -72,10 +83,23 @@ export function accountStore(): AccountStore {
   return globalStore.coLauAccountStore;
 }
 
+/** Kho hồ sơ tiến trình, cùng nguồn với kho trận. */
+export function profileStore(): ProfileStore {
+  const url = process.env.DATABASE_URL;
+  globalStore.coLauProfileStore ??= url ? new DrizzleProfileStore(neonDb(url)) : new MemoryProfileStore();
+  return globalStore.coLauProfileStore;
+}
+
+/** Postgres cho việc định kỳ; null khi dev không có DATABASE_URL (lưu bộ nhớ, không cần dọn). */
+export function database(): Db | null {
+  const url = process.env.DATABASE_URL;
+  return url ? neonDb(url) : null;
+}
+
 export interface DatabaseCheck {
   readonly kind: "neon" | "memory";
   readonly ok: boolean;
-  /** Đã có bảng `accounts`, bảng của migration mới nhất (migration đã chạy hết). */
+  /** Đã có bảng `profiles`, bảng của migration mới nhất (migration đã chạy hết). */
   readonly migrated?: boolean;
   readonly error?: string;
 }
@@ -85,7 +109,7 @@ export async function checkDatabase(): Promise<DatabaseCheck> {
   const url = process.env.DATABASE_URL;
   if (!url) return { kind: "memory", ok: process.env.NODE_ENV !== "production" };
   try {
-    const rows = (await neon(url)`select to_regclass('public.accounts') as t`) as { t: string | null }[];
+    const rows = (await neon(url)`select to_regclass('public.profiles') as t`) as { t: string | null }[];
     const migrated = rows[0]?.t != null;
     return { kind: "neon", ok: migrated, migrated };
   } catch (e) {

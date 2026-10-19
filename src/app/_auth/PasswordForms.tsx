@@ -1,5 +1,5 @@
-// Form tên đăng nhập + mật khẩu của trang /dang-nhap: form HTML thường gửi thẳng tới /api/auth/password/*,
-// lỗi quay về trang này qua tham số `loi`.
+// Form tên đăng nhập + mật khẩu của các trang /login, /register, /account: form HTML thường gửi thẳng tới
+// /api/auth/password/*, lỗi quay về trang đã gửi qua tham số `error`.
 
 import { PASSWORD_MIN, type PasswordError } from "@/server/password";
 
