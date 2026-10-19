@@ -19,11 +19,11 @@ import ElementPicker from "./home/ElementPicker";
 import LacBirds from "./home/LacBirds";
 
 const NAV = [
-  { href: "#gioi-thieu", label: "Cách chơi" },
-  { href: "#nguyen-to", label: "7 hệ" },
-  { href: "#doi-hinh", label: "Đội hình" },
-  { href: "#che-do", label: "Chế độ" },
-  { href: "#hoi-dap", label: "Hỏi đáp" },
+  { href: "#how-to-play", label: "Cách chơi" },
+  { href: "#elements", label: "7 hệ" },
+  { href: "#roster", label: "Đội hình" },
+  { href: "#modes", label: "Chế độ" },
+  { href: "#faq", label: "Hỏi đáp" },
 ];
 
 /** Bàn cờ trang trí ở hero: sinh cố định theo seed nên server và client luôn giống nhau. */
@@ -100,7 +100,7 @@ export default function Home() {
   const board = heroBoard();
   return (
     <div className="demo-bg min-h-dvh bg-[var(--bg)] text-stone-100 [--bg:#17110e] [--frame:#5a1e14] [--gold:#d4a24c] [--panel:#271d18]">
-      <a href="#noi-dung" className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-stone-900 focus:p-2">
+      <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-stone-900 focus:p-2">
         Bỏ qua tới nội dung
       </a>
 
@@ -118,14 +118,14 @@ export default function Home() {
               </li>
             ))}
           </ul>
-          <Link href="/dang-nhap" className="ml-auto text-sm text-stone-300 hover:text-[var(--gold)] md:ml-2">
+          <Link href="/login" className="ml-auto text-sm text-stone-300 hover:text-[var(--gold)] md:ml-2">
             Đăng nhập
           </Link>
           <PlayButton className="px-3 py-1.5 text-sm" />
         </nav>
       </header>
 
-      <main id="noi-dung">
+      <main id="content">
         {/* Hero. Chưa có tranh minh họa: dùng bàn cờ thật dựng bằng SVG làm hình chính. */}
         <section className="relative overflow-hidden">
           <div
@@ -155,7 +155,7 @@ export default function Home() {
               <div className="mt-7 flex flex-wrap gap-3">
                 <PlayButton className="text-base">Chơi thử miễn phí</PlayButton>
                 <a
-                  href="#gioi-thieu"
+                  href="#how-to-play"
                   className="inline-flex items-center rounded-lg border border-stone-600 px-5 py-2.5 font-semibold text-stone-200 hover:border-[var(--gold)]"
                 >
                   Chơi thế nào?
@@ -184,7 +184,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="gioi-thieu" className="scroll-mt-16 px-4 py-16">
+        <section id="how-to-play" className="scroll-mt-16 px-4 py-16">
           <SectionTitle kicker="Cách chơi" title="Ba bước một lượt" sub="Mỗi lượt có 30 giây. Đánh sai không bị phạt, chỉ là nước đổi bị trả lại." />
           <ol className="mx-auto grid max-w-6xl gap-4 md:grid-cols-3">
             {STEPS.map((s) => (
@@ -260,7 +260,7 @@ export default function Home() {
           <p className="mt-2 text-center text-xs text-stone-500 md:hidden">Vuốt ngang để xem hết bảng.</p>
         </section>
 
-        <section id="nguyen-to" className="scroll-mt-16 px-4 py-16">
+        <section id="elements" className="scroll-mt-16 px-4 py-16">
           <SectionTitle
             kicker="7 nguyên tố"
             title="Đổi hệ, đổi lối đánh"
@@ -284,7 +284,7 @@ export default function Home() {
           </ul>
         </section>
 
-        <section id="doi-hinh" className="scroll-mt-16 px-4 py-16">
+        <section id="roster" className="scroll-mt-16 px-4 py-16">
           <SectionTitle kicker="Đội hình" title="Thủ lĩnh và năm đồng đội" sub="Đánh 1vs1 một mình, hoặc 3vs3 cùng hai đồng đội. Chân dung hiện tại là hình tạm, sẽ thay bằng tranh vẽ." />
           <ul className="mx-auto grid max-w-6xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
             <li className="flex flex-col items-center rounded-2xl border border-[var(--gold)]/60 bg-[var(--frame)]/40 p-4 text-center">
@@ -307,7 +307,7 @@ export default function Home() {
           </ul>
         </section>
 
-        <section id="che-do" className="scroll-mt-16 px-4 py-16">
+        <section id="modes" className="scroll-mt-16 px-4 py-16">
           <SectionTitle kicker="Chế độ chơi" title="Từ trận thử tới chiến dịch" />
           <ul className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {MODES.map((m) => (
@@ -328,7 +328,7 @@ export default function Home() {
           </ul>
         </section>
 
-        <section id="hoi-dap" className="scroll-mt-16 px-4 py-16">
+        <section id="faq" className="scroll-mt-16 px-4 py-16">
           <SectionTitle kicker="Hỏi đáp" title="Câu hỏi thường gặp" />
           <div className="mx-auto max-w-3xl space-y-3">
             {FAQ.map((f) => (
@@ -383,8 +383,13 @@ export default function Home() {
               </Link>
             </li>
             <li>
-              <Link href="/dang-nhap" className="hover:text-[var(--gold)]">
+              <Link href="/login" className="hover:text-[var(--gold)]">
                 Đăng nhập
+              </Link>
+            </li>
+            <li>
+              <Link href="/register" className="hover:text-[var(--gold)]">
+                Đăng ký
               </Link>
             </li>
           </ul>

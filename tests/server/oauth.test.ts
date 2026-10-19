@@ -42,8 +42,8 @@ describe("đăng nhập OAuth", () => {
   it("chỉ cho quay về đường dẫn trong trang", () => {
     assert.equal(safeReturnTo("/play?x=1"), "/play?x=1");
     for (const bad of ["https://ac.com", "//ac.com", "/\\ac.com", "", null, undefined]) assert.equal(safeReturnTo(bad), "/play");
-    assert.equal(withLoginError("/play"), "/play?dangNhap=loi");
-    assert.equal(withLoginError("/play?a=1"), "/play?a=1&dangNhap=loi");
+    assert.equal(withLoginError("/play"), "/play?login=error");
+    assert.equal(withLoginError("/play?a=1"), "/play?a=1&login=error");
   });
 
   it("URL ủy quyền có state và PKCE S256; cookie chờ mã hóa và giải mã được", () => {

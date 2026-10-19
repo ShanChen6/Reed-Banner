@@ -5,11 +5,15 @@
 ## 19/10/2026
 
 **Trận online (giai đoạn 2, Shan chọn Neon + Drizzle)**
+- Việc định kỳ mỗi ngày (Vercel Cron): chốt trận bỏ dở quá 24 giờ và cộng thưởng, xóa khách không chơi quá 30 ngày. Cần biến `CRON_SECRET`.
+- Hồ sơ tiến trình lưu trên server: `/play` chơi theo hồ sơ (cấp, kỹ năng, chiêu nhánh) thay cho đội Luyện tập, thưởng cuối trận cộng trên server, nâng kỹ năng gửi qua `/api/profile`. `/demo` vẫn lưu ở trình duyệt.
 - Server xử lý từng hành động: `src/core/match/` (chạy bù hết giờ kiểu tính lười, AI đánh ngay, xử thua 24 giờ, ẩn seed) và `src/server/` (kho Postgres/bộ nhớ, cookie khách ký HMAC), API `/api/battles`.
 - Bảng `matches` (Drizzle), migration tự áp khi build nếu có `DATABASE_URL`.
 - Trang `/play` chơi online qua API: đồng hồ 30 giây theo giờ server, hết giờ tự chạy bù, tải lại trang tiếp tục được trận dở. Đội hình tạm như Luyện tập 3vs3.
+- Sắp lại đường dẫn (Shan yêu cầu): `/` trang chủ, `/demo` chơi thử, `/play` chơi online, `/login`, `/register`, `/account` tách thành trang riêng; mục neo trên trang chủ đổi sang tiếng Anh (`#how-to-play`, `#elements`, `#roster`, `#modes`, `#faq`).
+- Đường dẫn đổi sang tiếng Anh (Shan yêu cầu): trang đăng nhập là `/login`, tham số `form`, `error`, `username`, `login=error`, `passwordChanged`; `/dang-nhap` cũ chuyển hướng vĩnh viễn sang `/login`.
 - Đăng ký bằng tên đăng nhập + mật khẩu (Shan đồng ý, bản chưa có email): quên mật khẩu là mất tài khoản nên form khuyên liên kết thêm Google/GitHub; sai 5 lần khóa 15 phút. Nới quy tắc cũ "chỉ dùng OAuth để hạn chế nhiều tài khoản".
-- Trang đăng nhập riêng `/dang-nhap` (Shan yêu cầu): chọn Google/GitHub hoặc chơi với tư cách khách; đã đăng nhập thì xem tài khoản, liên kết thêm, đăng xuất. Trang chủ có link "Đăng nhập" ở thanh trên.
+- Trang đăng nhập riêng (nay là `/login`) (Shan yêu cầu): chọn Google/GitHub hoặc chơi với tư cách khách; đã đăng nhập thì xem tài khoản, liên kết thêm, đăng xuất. Trang chủ có link "Đăng nhập" ở thanh trên.
 - Đăng nhập Google và GitHub (Shan yêu cầu): danh tính gắn thẳng vào tài khoản khách đang dùng nên không mất trận, không cần gộp dữ liệu; đăng nhập ở máy khác thì vào lại đúng tài khoản. Tự viết luồng OAuth thay vì Auth.js (Auth.js v5 vẫn là bản beta, và mô hình "khách chính là tài khoản" không cần bảng phiên của thư viện).
 
 **Tiến trình nhân vật (code, Shan yêu cầu làm tiếp lối chơi; số liệu Claude đặt, chờ duyệt)**

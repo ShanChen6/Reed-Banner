@@ -198,7 +198,7 @@ export async function completeLogin(i: CallbackInput): Promise<CallbackResult> {
   }
 }
 
-/** Thêm `?dangNhap=loi` vào đường dẫn quay về để trang báo đăng nhập không thành công. */
+/** Thêm `?login=error` vào đường dẫn quay về để trang báo đăng nhập không thành công. */
 export function withLoginError(path: string): string {
-  return `${path}${path.includes("?") ? "&" : "?"}dangNhap=loi`;
+  return `${path}${path.includes("?") ? "&" : "?"}login=error`;
 }
