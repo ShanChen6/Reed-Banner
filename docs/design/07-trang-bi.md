@@ -1,6 +1,6 @@
 # Trang bị
 
-> Cập nhật: 18/10/2026
+> Cập nhật: 19/10/2026
 
 ## 1. Chín ô trang bị
 
@@ -19,6 +19,7 @@ Mỗi nhân vật (nhân vật chính và nhân vật kèm) có **9 ô trang b�
 | 9 | **Ngọc bội** | +Máu | Dùng chung mọi nghề |
 
 - Mỗi chỉ số chính có đúng 3 ô.
+- **Chỉ số gốc** của một món phẩm Trắng (điểm xuất phát, code ở `src/core/gear/`): ATK +3, Máu +30, DEF +2. Chỉ số món = gốc × hệ số phẩm × hệ số nguyên tố, làm tròn. Ví dụ đủ 3 món Cam cùng nguyên tố cộng ATK +42, Máu +405, DEF +27.
 
 > TODO: có thêm chỉ số phụ (năng lượng khởi đầu, hồi máu…) cho trang sức hay không.
 
@@ -41,7 +42,30 @@ Có hai mốc thưởng: **6 món** và **9 món**. Mốc 9 món cộng thêm v�
 - Thưởng bộ và cộng hưởng nguyên tố cộng dồn được nếu cùng thỏa.
 - Vì nhân vật chính đổi được nguyên tố, cộng hưởng nguyên tố cho phép giữ một bộ đồ cố định mà vẫn có lợi.
 
-> TODO: danh sách bộ trang bị; giá trị thưởng bộ và cộng hưởng của từng nguyên tố ở mốc 6 và 9 món.
+- Chỉ số vào trận = (chỉ số gốc của nhân vật + cộng phẳng của các món) × (1 + tổng tỉ lệ thưởng bộ và cộng hưởng), làm tròn.
+- Vũ khí của nghề khác không tính vào số món; nhân vật chính thiếu vũ khí của nghề đang chọn thì chỉ có 8 món.
+
+**Đề xuất, chờ chốt** (điểm xuất phát trong code, hiện chỉ cộng chỉ số):
+
+| Bộ | Mốc 6 món | Mốc 9 món (thêm) |
+|---|---|---|
+| Cờ Lau | ATK +4%, Máu +4% | ATK +4%, Máu +4% |
+| Hoa Lư | DEF +10%, Máu +4% | DEF +10%, Máu +4% |
+| Đồng Cổ | ATK +7% | ATK +7% |
+
+| Cộng hưởng | Mốc 6 món | Mốc 9 món (thêm) |
+|---|---|---|
+| ⚙️ Kim | ATK +5% | ATK +5% |
+| 🌳 Mộc | Máu +6% | Máu +6% |
+| 💧 Thủy | Máu +3%, DEF +5% | Máu +3%, DEF +5% |
+| 🔥 Hỏa | ATK +6% | ATK +6% |
+| ⛰️ Thổ | DEF +10% | DEF +10% |
+| ⚡ Lôi | ATK +3%, Máu +3% | ATK +3%, Máu +3% |
+| 🌪️ Phong | ATK +3%, DEF +5% | ATK +3%, DEF +5% |
+
+> TODO: chốt danh sách bộ trang bị và giá trị thưởng bộ, cộng hưởng ở mốc 6 và 9 món; có hiệu ứng bộ ngoài chỉ số (ví dụ Khiên đầu trận) hay không.
+
+> Lưu ý cân bằng: DEF tăng nhờ trang bị (Binh lính đồ Thổ Cam đủ bộ khoảng 50 DEF, giảm 33% sát thương) làm bị động Kim (bỏ qua 40% DEF) mạnh lên rõ. Cần mô phỏng lại khi cân bằng hệ.
 
 ## 4. Phẩm theo màu
 

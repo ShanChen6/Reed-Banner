@@ -22,7 +22,7 @@
 ## Trang bị & kinh tế
 
 - [ ] Trang sức có chỉ số phụ hay không. → [Trang bị](design/07-trang-bi.md#1-chín-ô-trang-bị)
-- [ ] Danh sách bộ trang bị, thưởng bộ và cộng hưởng nguyên tố ở mốc 6 và 9 món. → [Trang bị](design/07-trang-bi.md#3-thưởng-bộ--cộng-hưởng-nguyên-tố)
+- [ ] Danh sách bộ trang bị, thưởng bộ và cộng hưởng nguyên tố ở mốc 6 và 9 món (đã có đề xuất điểm xuất phát), có hiệu ứng bộ ngoài chỉ số hay không. → [Trang bị](design/07-trang-bi.md#3-thưởng-bộ--cộng-hưởng-nguyên-tố)
 - [ ] Phí vàng khi ghép nâng bậc. → [Trang bị](design/07-trang-bi.md#5-ghép-nâng-bậc)
 - [ ] Bảng rơi đồ theo phẩm và danh sách trang bị. → [Trang bị](design/07-trang-bi.md#6-nguồn-trang-bị)
 - [ ] Giá trị mỗi ô vàng và ô sách. → [Tiến trình](design/08-tien-trinh-kinh-te.md#2-vàng)
