@@ -1,6 +1,19 @@
 // Nhãn tiếng Việt cho trang /demo. Hình vẽ nằm trong ./art.
 
-import type { BattleError, Difficulty, EffectKind, Element, GearSlot, Profession, SpecialGrade, Tier, TileKind } from "@/core";
+import {
+  getGearSet,
+  TIER_INFO,
+  type BattleError,
+  type Difficulty,
+  type EffectKind,
+  type Element,
+  type GearItem,
+  type GearSlot,
+  type Profession,
+  type SpecialGrade,
+  type Tier,
+  type TileKind,
+} from "@/core";
 
 export const TILE_NAME: Record<TileKind, string> = {
   kiem: "Kiếm",
@@ -115,3 +128,10 @@ export const TIER_CLASS: Record<Tier, string> = {
   4: "text-purple-400",
   5: "text-orange-400",
 };
+
+/** Mô tả một món: "Vũ khí (Pháp sư) Lam hệ Kim, bộ Cờ Lau". */
+export function gearText(item: GearItem): string {
+  const set = getGearSet(item.set)?.name ?? item.set;
+  const prof = item.profession ? ` (${PROFESSION_NAME[item.profession]})` : "";
+  return `${SLOT_NAME[item.slot]}${prof} ${TIER_INFO[item.tier].name} hệ ${ELEMENT_NAME[item.element]}, bộ ${set}`;
+}
