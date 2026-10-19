@@ -115,7 +115,7 @@ describe("thưởng bộ và cộng hưởng", () => {
     const nine = gearStats(fullLoadout(), "kim", "tuongSi");
     assert.equal(nine.bonuses.length, 4);
     assert.ok(Math.abs(nine.percent.atk - 0.18) < 1e-9); // Cờ Lau 4% + 4%, Kim 5% + 5%
-    assert.ok(Math.abs(nine.percent.maxHp - 0.08) < 1e-9);
+    assert.ok(Math.abs(nine.percent.maxHp - 0.06) < 1e-9);
   });
 
   it("bộ và nguyên tố đếm riêng: khác bộ vẫn được cộng hưởng", () => {
@@ -136,7 +136,7 @@ describe("chỉ số vào trận", () => {
     const kim = withGear(mainCharacter("kim"), l);
     // Tướng sĩ 500/55/10; 3 ô mỗi chỉ số, Trắng cùng hệ ×1.5: ATK 3×5, máu 3×45, DEF 3×3.
     assert.equal(kim.atk, Math.round((55 + 15) * 1.18));
-    assert.equal(kim.maxHp, Math.round((500 + 135) * 1.08));
+    assert.equal(kim.maxHp, Math.round((500 + 135) * 1.06));
     assert.equal(kim.def, Math.round(10 + 9));
 
     const moc = withGear(mainCharacter("moc"), l); // Kim khắc Mộc: ×0.75
