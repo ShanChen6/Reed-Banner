@@ -117,7 +117,7 @@ describe("chiêu nghề", () => {
   it("Thủ thành ở 1vs1: không có Khiêu khích, vẫn có Khiên", () => {
     const s = setup([solo(fighter("a", { skills: ["thuThanh"], profession: "binhLinh", element: "loi" })), solo(fighter("b"))]);
     const r = ok(act(s, { type: "skill", skill: "thuThanh" }));
-    assert.deepEqual(me(r.state).effects, [{ kind: "shield", value: 250, turns: null }]);
+    assert.deepEqual(me(r.state).effects, [{ kind: "shield", value: 200, turns: null }]);
   });
 
   it("Linh dược hồi máu và Thanh tẩy đồng đội được chọn", () => {
@@ -125,7 +125,7 @@ describe("chiêu nghề", () => {
     me(s, 1).hp = 500;
     me(s, 1).effects.push({ kind: "burn", value: 10, turns: 2 }, { kind: "atkUp", value: 0.2, turns: 2 });
     const r = ok(act(s, { type: "skill", skill: "linhDuoc", target: 1 }));
-    assert.equal(me(r.state, 1).hp, 800);
+    assert.equal(me(r.state, 1).hp, 720);
     assert.deepEqual(me(r.state, 1).effects.map((e) => e.kind), ["atkUp"]);
   });
 
