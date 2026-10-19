@@ -118,7 +118,7 @@ export default function Home() {
               </li>
             ))}
           </ul>
-          <Link href="/dang-nhap" className="ml-auto text-sm text-stone-300 hover:text-[var(--gold)] md:ml-2">
+          <Link href="/login" className="ml-auto text-sm text-stone-300 hover:text-[var(--gold)] md:ml-2">
             Đăng nhập
           </Link>
           <PlayButton className="px-3 py-1.5 text-sm" />
@@ -383,7 +383,7 @@ export default function Home() {
               </Link>
             </li>
             <li>
-              <Link href="/dang-nhap" className="hover:text-[var(--gold)]">
+              <Link href="/login" className="hover:text-[var(--gold)]">
                 Đăng nhập
               </Link>
             </li>
