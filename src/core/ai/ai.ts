@@ -169,6 +169,13 @@ export function chooseMove(view: AiView, difficulty: Difficulty, rng: Rng): Move
 const CELL_VALUE = 0.3;
 /** Chỉ dùng kỹ năng đáng ít nhất tỉ lệ này so với kỹ năng đáng nhất của bộ; còn lại thì để dành năng lượng. */
 const SAVE_FOR_BETTER = 0.8;
+/**
+ * Mỗi lượt chỉ dùng được 1 kỹ năng, nên lượt dùng cũng là một khoản chi: cộng thêm chừng này năng lượng vào
+ * giá khi so độ đáng. Không có nó AI chỉ so điểm trên năng lượng và gần như không bao giờ để dành cho kỹ năng 100.
+ */
+/** Phần lượng khiên tính như máu thật khi chấm kỹ năng. */
+const SHIELD_WORTH = 0.6;
+const TURN_SLOT_ENERGY = 40;
 
 function areaSize(board: Board, area: Extract<SkillStep, { type: "destroy" }>["area"]): number {
   if ("random" in area) return area.random;
@@ -245,7 +252,15 @@ function scoreSkill(view: AiView, def: SkillDef): { score: number; target?: numb
         for (const r of list(step.to)) score += Math.min(r.maxHp - r.hp, r.maxHp * step.ratio);
         break;
       case "effect": {
-        for (const r of list(step.to)) if (!hasEffect(r.effects, step.effect)) score += ctx.me.atk * 0.8 * (step.chance ?? 1);
+        for (const r of list(step.to)) {
+          if (hasEffect(r.effects, step.effect)) continue;
+          // Khiên là máu ảo nên chấm theo lượng chặn được (giảm vì có thể chưa bị đánh hết); hiệu ứng khác giá phẳng.
+          const worth =
+            step.effect === "shield"
+              ? (step.ofMaxHp ? r.maxHp * step.value : step.ofAtk ? ctx.me.atk * step.value : step.value) * SHIELD_WORTH
+              : ctx.me.atk * 0.8;
+          score += worth * (step.chance ?? 1);
+        }
         break;
       }
       case "cleanse":
@@ -285,7 +300,7 @@ export function chooseSkill(view: AiView): BattleAction | null {
     const def = fighterSkill(me, id);
     const scored = def && scoreSkill(view, def);
     if (!def || !scored) return [];
-    return [{ id, def, scored, ratio: scored.score / Math.max(1, def.cost * me.atk * 0.02) }];
+    return [{ id, def, scored, ratio: scored.score / Math.max(1, (def.cost + TURN_SLOT_ENERGY) * me.atk * 0.02) }];
   });
   // Kỹ năng đáng hơn nhưng chưa đủ năng lượng thì để dành, không tiêu vào kỹ năng kém hơn.
   const bestRatio = Math.max(0, ...options.map((o) => o.ratio));

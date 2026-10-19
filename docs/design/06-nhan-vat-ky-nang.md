@@ -143,6 +143,7 @@ Claude đặt ngày 19/10/2026, điểm xuất phát chờ Shan duyệt và mô 
 
 - Nhân vật kèm bán ở cửa hàng sau này cũng có tuyệt chiêu riêng theo khung này.
 - Mô phỏng 19/10/2026 (300 trận, AI Thường, cả hai phe cùng cấp): tỉ lệ thắng gần như không đổi (3vs3 cấp 10: 64% so với 65% trước khi có tuyệt chiêu; cấp 20: 60% so với 59%) vì AI chấm kỹ năng theo giá trị trên mỗi điểm năng lượng nên hiếm khi để dành tới 100 (Phong Vân Biến Trận 0,6 lần mỗi trận, Hỏa Vũ Liệu Nguyên 0,2, ba chiêu còn lại gần 0; ô 5 của nhân vật chính cũng vậy). Cần dạy AI để dành cho kỹ năng lớn trước khi cân số liệu tuyệt chiêu.
+- Mô phỏng lại 19/10/2026 sau khi AI tính cả lượt dùng kỹ năng ([10-ai](10-ai.md)), 300 trận mỗi hệ, 3vs3 cấp 10: cả 5 tuyệt chiêu đều được dùng (Phong Vân Biến Trận 0,7–0,8 lần mỗi trận, Hỏa Vũ Liệu Nguyên 0,6–0,7, ba chiêu còn lại 0,1). Tỉ lệ thắng phe chính theo hệ trước → sau: Kim 56→57%, Mộc 64→66%, Thủy 60→63%, Hỏa 60→61%, Thổ 62→62%, Lôi 65→66%, Phong 68→67%, đều trong mức nhiễu ±3 điểm. Chưa cần đổi số liệu tuyệt chiêu; ba chiêu ít dùng là chiêu phòng thủ/hồi máu, AI chỉ dùng khi đội đã mất máu.
 
 ### 4.5 Nhân vật kèm ở cửa hàng
 
