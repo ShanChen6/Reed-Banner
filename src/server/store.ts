@@ -90,6 +90,12 @@ export function profileStore(): ProfileStore {
   return globalStore.coLauProfileStore;
 }
 
+/** Postgres cho việc định kỳ; null khi dev không có DATABASE_URL (lưu bộ nhớ, không cần dọn). */
+export function database(): Db | null {
+  const url = process.env.DATABASE_URL;
+  return url ? neonDb(url) : null;
+}
+
 export interface DatabaseCheck {
   readonly kind: "neon" | "memory";
   readonly ok: boolean;

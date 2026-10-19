@@ -5,6 +5,7 @@
 ## 19/10/2026
 
 **Trận online (giai đoạn 2, Shan chọn Neon + Drizzle)**
+- Việc định kỳ mỗi ngày (Vercel Cron): chốt trận bỏ dở quá 24 giờ và cộng thưởng, xóa khách không chơi quá 30 ngày. Cần biến `CRON_SECRET`.
 - Hồ sơ tiến trình lưu trên server: `/play` chơi theo hồ sơ (cấp, kỹ năng, chiêu nhánh) thay cho đội Luyện tập, thưởng cuối trận cộng trên server, nâng kỹ năng gửi qua `/api/profile`. `/demo` vẫn lưu ở trình duyệt.
 - Server xử lý từng hành động: `src/core/match/` (chạy bù hết giờ kiểu tính lười, AI đánh ngay, xử thua 24 giờ, ẩn seed) và `src/server/` (kho Postgres/bộ nhớ, cookie khách ký HMAC), API `/api/battles`.
 - Bảng `matches` (Drizzle), migration tự áp khi build nếu có `DATABASE_URL`.
