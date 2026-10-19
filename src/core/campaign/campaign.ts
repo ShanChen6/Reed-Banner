@@ -103,7 +103,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     story:
       "Phạm Bạch Hổ giữ Đằng Châu. Muốn ông quy phục, phải thắng ông một trận cho phục.",
     mode: "1v1",
-    difficulty: "normal",
+    difficulty: "easy",
     level: 3,
     foes: [hero("phamBachHo", "Phạm Bạch Hổ", "hoa", "tuongSi")],
     firstClearGold: 200,
@@ -182,7 +182,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
       "Kiều Thuận đóng ở Hồi Hồ, ba mặt là đầm. Quân Hoa Lư phải lội nước mà đánh.",
     mode: "3v3",
     difficulty: "hard",
-    level: 12,
+    level: 10,
     foes: [
       hero("kieuThuan", "Kiều Thuận", "moc", "ySu"),
       aide("hoiHo-pho", "Phó tướng Hồi Hồ", "thuy", "binhLinh"),
@@ -200,7 +200,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
       "Lý Khuê giữ Siêu Loại, vùng đất có chùa chiền và người tài. Quân ông thiện chiến, ít khi lùi.",
     mode: "3v3",
     difficulty: "hard",
-    level: 14,
+    level: 12,
     foes: [
       hero("lyKhue", "Lý Khuê", "kim", "tuongSi"),
       aide("sieuLoai-pho", "Phó tướng Siêu Loại", "kim", "binhLinh"),
@@ -215,7 +215,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     story: "Nguyễn Thủ Tiệp xưng Vũ Ninh Vương ở Tiên Du, quân đông lương đủ.",
     mode: "3v3",
     difficulty: "hard",
-    level: 16,
+    level: 13,
     foes: [
       hero("nguyenThuTiep", "Nguyễn Thủ Tiệp", "thuy", "muuSi"),
       aide("tienDu-pho", "Phó tướng Tiên Du", "thuy", "tuongSi"),
@@ -232,7 +232,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     story: "Lã Đường giữ Tế Giang bên bờ sông, quân quen đánh trên nước.",
     mode: "3v3",
     difficulty: "hard",
-    level: 18,
+    level: 15,
     foes: [
       hero("laDuong", "Lã Đường", "thuy", "phapSu"),
       aide("teGiang-pho", "Phó tướng Tế Giang", "thuy", "binhLinh"),
@@ -250,7 +250,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
       "Nguyễn Siêu đóng ở Tây Phù Liệt, đắp thành hai lớp, quân hơn vạn người.",
     mode: "3v3",
     difficulty: "hard",
-    level: 20,
+    level: 17,
     foes: [
       hero("nguyenSieu", "Nguyễn Siêu", "hoa", "binhLinh"),
       aide("tayPhuLiet-pho", "Phó tướng Tây Phù Liệt", "hoa", "tuongSi"),
@@ -266,7 +266,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
       "Đỗ Cảnh Thạc là sứ quân cứng cỏi nhất, giữ thành Đỗ Động hơn một năm. Hạ được ông, loạn 12 sứ quân chấm dứt.",
     mode: "3v3",
     difficulty: "boss",
-    level: 22,
+    level: 20,
     boss: true,
     foes: [
       hero("doCanhThac", "Đỗ Cảnh Thạc", "tho", "tuongSi"),
@@ -278,6 +278,12 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     firstClearGold: 1000,
   },
 ];
+
+/**
+ * Cấp gợi ý cho Đinh Bộ Lĩnh: mô phỏng (AI Thường đánh thay người chơi) cho tỉ lệ thắng khoảng 30–95% khi hơn
+ * đối thủ 3 cấp, nên người chơi thật ở mức này qua được màn sau vài lần thử.
+ */
+export const RECOMMENDED_LEVEL_BONUS = 3;
 
 export function stageById(id: string): CampaignStage | undefined {
   return CAMPAIGN.find((s) => s.id === id);
