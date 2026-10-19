@@ -109,8 +109,8 @@ export interface GearSetDef extends SetBonus {
 
 /** Bộ trang bị khởi đầu. Điểm xuất phát; hiệu ứng bộ hiện chỉ cộng chỉ số. */
 export const GEAR_SETS: readonly GearSetDef[] = [
-  { id: "coLau", name: "Cờ Lau", six: { atk: 0.04, maxHp: 0.04 }, nine: { atk: 0.04, maxHp: 0.04 } },
-  { id: "hoaLu", name: "Hoa Lư", six: { def: 0.1, maxHp: 0.04 }, nine: { def: 0.1, maxHp: 0.04 } },
+  { id: "coLau", name: "Cờ Lau", six: { atk: 0.04, maxHp: 0.03 }, nine: { atk: 0.04, maxHp: 0.03 } },
+  { id: "hoaLu", name: "Hoa Lư", six: { def: 0.12, maxHp: 0.04 }, nine: { def: 0.12, maxHp: 0.04 } },
   { id: "dongCo", name: "Đồng Cổ", six: { atk: 0.07 }, nine: { atk: 0.07 } },
 ];
 
@@ -276,4 +276,25 @@ export function mergeItems(
   }
   if (base.tier >= MAX_TIER) return { ok: false, error: "maxTier" };
   return { ok: true, item: { ...base, id: newId, tier: (base.tier + 1) as Tier } };
+}
+
+/**
+ * Bộ đồ mẫu đủ 9 món cùng bậc và nguyên tố, dùng cho mô phỏng và /demo. `set` null thì xoay vòng 3 bộ
+ * để không bộ nào đạt mốc 6 món (chỉ còn cộng hưởng nguyên tố).
+ */
+export function presetLoadout(element: Element, profession: Profession, tier: Tier, set: string | null): Loadout {
+  let loadout = EMPTY_LOADOUT;
+  GEAR_SLOTS.forEach((slot, i) => {
+    const item: GearItem = {
+      id: `${slot}-${element}-${tier}`,
+      slot,
+      element,
+      tier,
+      set: set ?? GEAR_SETS[i % GEAR_SETS.length]!.id,
+      ...(slot === "vuKhi" ? { profession } : {}),
+    };
+    const r = equip(loadout, item);
+    if (r.ok) loadout = r.loadout;
+  });
+  return loadout;
 }

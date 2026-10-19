@@ -1,6 +1,6 @@
 // Nhãn tiếng Việt cho trang /demo. Hình vẽ nằm trong ./art.
 
-import type { BattleError, Difficulty, EffectKind, Element, Profession, SpecialGrade, TileKind } from "@/core";
+import type { BattleError, Difficulty, EffectKind, Element, GearSlot, Profession, SpecialGrade, Tier, TileKind } from "@/core";
 
 export const TILE_NAME: Record<TileKind, string> = {
   kiem: "Kiếm",
@@ -91,4 +91,27 @@ export const ERROR_TEXT: Record<BattleError, string> = {
   tooEarly: "Chưa hết giờ",
   noTimer: "Không có đồng hồ",
   noFreeSlide: "Không còn lượt trượt miễn phí",
+};
+
+export const SLOT_NAME: Record<GearSlot, string> = {
+  vuKhi: "Vũ khí",
+  dinhMao: "Đính mão",
+  yPhuc: "Y phục",
+  hoThu: "Hộ thủ",
+  baoNgoa: "Bảo ngoa",
+  gioiChi: "Giới chỉ",
+  hangLien: "Hạng liên",
+  hoPhu: "Hộ phù",
+  ngocBoi: "Ngọc bội",
+};
+
+/** Tên phẩm ngắn theo màu, dùng cho nút chọn. */
+export const TIER_COLOR_NAME: Record<Tier, string> = { 1: "Trắng", 2: "Lục", 3: "Lam", 4: "Tím", 5: "Cam" };
+
+export const TIER_CLASS: Record<Tier, string> = {
+  1: "text-stone-100",
+  2: "text-green-400",
+  3: "text-sky-400",
+  4: "text-purple-400",
+  5: "text-orange-400",
 };
