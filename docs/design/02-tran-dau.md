@@ -42,9 +42,11 @@ Mọi luật của 3vs3 áp dụng, trừ các điểm sau:
 - **Tĩnh tâm** (năng lượng cho đồng đội không hành động) không áp dụng.
 - Đóng băng làm nhân vật **mất lượt** thay vì bị bỏ qua trong luân phiên.
 
-- **Máu tối đa ×2** ở 1vs1, vì không có đồng đội chia sát thương (điểm xuất phát theo mô phỏng 19/10/2026: trung vị khoảng 22 lượt mỗi bên, khoảng 7% trận chạm giới hạn lượt).
+- **Máu tối đa ×2** ở 1vs1, vì không có đồng đội chia sát thương.
+- **Mệt mỏi** (Shan chốt 19/10/2026): từ lượt thứ 30 của mỗi bên, mọi lượng hồi máu (kỹ năng, ô tim, Hồi phục, hút máu) và Khiên mới giảm 10% mỗi lượt, về 0 từ lượt 39. Trận giữa hai bên thiên hồi máu, phòng thủ vẫn kết thúc bằng hạ gục.
+- Mô phỏng 19/10/2026 (150 trận, AI Thường): trung vị 22 lượt mỗi bên, 90% trận xong trong 48 lượt, không còn trận chạm giới hạn lượt.
 
-> TODO: thời lượng mục tiêu riêng cho 1vs1; cách kết thúc trận khi hai bên chỉ hồi máu, phòng thủ mà không hạ được nhau.
+> TODO: thời lượng mục tiêu riêng cho 1vs1.
 
 ## 4. Máu & thời lượng
 

@@ -19,6 +19,19 @@ export const PROFESSION_TILE: Record<Profession, TileKind> = {
 /** 1vs1: máu tối đa nhân thêm, vì không có đồng đội chia sát thương. Điểm xuất phát theo mô phỏng. */
 export const SOLO_HP_MULTIPLIER = 2;
 
+/**
+ * Mệt mỏi (1vs1): từ lượt thứ FATIGUE_START_TURN của mỗi phe, hồi máu và Khiên giảm FATIGUE_STEP
+ * mỗi lượt, về 0 sau 10 lượt, để trận giữa hai bên thiên phòng thủ vẫn kết thúc bằng hạ gục.
+ */
+export const FATIGUE_START_TURN = 30;
+export const FATIGUE_STEP = 0.1;
+
+/** Hệ số hồi máu và Khiên theo số lượt của phe (tính từ 1). */
+export function fatigueMultiplier(sideTurn: number): number {
+  if (sideTurn < FATIGUE_START_TURN) return 1;
+  return Math.max(0, 1 - FATIGUE_STEP * (sideTurn - FATIGUE_START_TURN + 1));
+}
+
 export const TURN_MS = 30_000;
 export const GRACE_MS = 3_000;
 
