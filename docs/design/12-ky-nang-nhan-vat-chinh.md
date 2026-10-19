@@ -1,6 +1,6 @@
 # Bộ kỹ năng nhân vật chính
 
-> Cập nhật: 18/10/2026 · Trạng thái: **Shan đã duyệt** (18/10/2026).
+> Cập nhật: 19/10/2026 · Trạng thái: **Shan đã duyệt** (18/10/2026). Đã có trong code: Mộc, Kim, Thủy, Hỏa, Thổ, Lôi (19/10/2026); Phong chờ cơ chế trượt.
 >
 > Mọi con số là **điểm xuất phát**. Script mô phỏng cân bằng sẽ chỉnh lại.
 
@@ -52,7 +52,7 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 | Chữ thập nhỏ | Tâm + 4 ô kề | 5 |
 | Chữ thập lớn | Cả hàng + cả cột qua tâm | 19 |
 | Chữ X lớn | Tâm + 2 ô mỗi hướng chéo | 9 |
-| Đoạn 4 | 4 ô thẳng hàng, ngang hoặc dọc (người chơi chọn hướng) | 4 |
+| Đoạn 4 | 4 ô thẳng hàng, ngang hoặc dọc (người chơi chọn hướng; code hiện chỉ có ngang, bắt đầu từ ô chạm) | 4 |
 | Cột | Cả một cột | 8 |
 
 ### 1.3 Ở thể thức 1vs1
@@ -98,13 +98,14 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 | 6 | **Linh Thủy Hộ Mệnh** | 50 | Hồi 12% máu tối đa và Thanh tẩy cho cả đội. |
 
 - Đóng băng vẫn theo luật chung: tối đa 2 lượt, miễn nhiễm 1 lượt sau khi tan ([Hiệu ứng](04-hieu-ung.md#3-luật-chung)).
+- Bị động tự kích hoạt giữa lượt nên trong code chưa cho người chơi chọn: Đóng băng đối thủ đối diện thủ lĩnh (đã gục thì người gần nhất). Kích hoạt trong lượt đối thủ thì Đóng băng kéo sang lượt kế của họ.
 
 ## 5. 🔥 Hỏa: sát thương lớn, thủ yếu
 
 | Ô | Kỹ năng | Chi phí | Tác dụng |
 |---|---|---|---|
 | Bị động | **Liệt Hỏa Tâm** | Nộ | 3 lượt: mọi sát thương của bản thân +30%, DEF bản thân −15%. |
-| 1 | **Phóng Hỏa Thiêu Doanh** | 20 | Phá vùng **3×3** do người chơi chọn. |
+| 1 | **Phóng Hỏa Thiêu Doanh** | 35 | Phá vùng **3×3** do người chơi chọn. |
 | 2 | **Nộ Hỏa Thiêu Thân** | 30 | Công +35% cho bản thân 2 lượt, kèm Thủ −15% bản thân 2 lượt. |
 | 3 | **Xích Diễm Tiễn** | 40 | 200% ATK vào 1 đối thủ, Thiêu đốt 2 lượt. Phá **chữ thập nhỏ**. |
 | 4 | **Hỏa Thiêu Liên Trại** | 60 | 100% ATK vào toàn bộ kẻ địch, Thiêu đốt 1 lượt. Phá vùng **3×3**. |
@@ -130,7 +131,7 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 | Ô | Kỹ năng | Chi phí | Tác dụng |
 |---|---|---|---|
 | Bị động | **Điện Quang Tốc Kích** | Nộ | Trừ ngay 20 năng lượng của mọi đối thủ; 3 lượt sau đó mỗi ô ☯️ ghép được cho thêm 5 năng lượng. |
-| 1 | **Lôi Trụ Giáng Thế** | 20 | Phá **1 cột** do người chơi chọn. |
+| 1 | **Lôi Trụ Giáng Thế** | 40 | Phá **1 cột** do người chơi chọn. |
 | 2 | **Tĩnh Điện Hộ Thân** | 30 | Thanh tẩy bản thân, Thủ +20% 2 lượt. |
 | 3 | **Lôi Tiễn Xuyên Vân** | 40 | 180% ATK vào 1 đối thủ, trừ 15 năng lượng của mục tiêu. Phá **4 ô ngẫu nhiên**. |
 | 4 | **Lôi Võng Thiên La** | 60 | 90% ATK vào toàn bộ kẻ địch, trừ 10 năng lượng mỗi mục tiêu. Phá **9 ô ngẫu nhiên**. |
@@ -163,4 +164,21 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 | ⚡ Lôi | 180 / 90 / 320 | Phá năng lượng, Câm lặng | Ít hồi máu, phụ thuộc ô âm dương |
 | 🌪️ Phong | 175 / 85 / 300 | Trượt hàng/cột tạo combo, Xua tan, hồi năng lượng | Không hồi máu, ít Khiên |
 
-> TODO: chạy mô phỏng để kiểm tra 7 bộ cân bằng với nhau và với nhân vật kèm.
+### Mô phỏng 19/10/2026
+
+AI Thường, seed 7. 3vs3: 90 trận, nhân vật chính và 2 nhân vật kèm đấu 3 nhân vật kèm. 1vs1: 60 trận, nhân vật chính đấu từng nhân vật kèm.
+
+| Hệ nhân vật chính | 3vs3 thắng | 3vs3 trung vị lượt | 1vs1 thắng | 1vs1 trung vị lượt |
+|---|---|---|---|---|
+| 🌳 Mộc | 66% | 24.5 | 67% | 13.5 |
+| ⚙️ Kim | 61% | 20 | 65% | 8 |
+| 💧 Thủy | 68% | 22 | 77% | 9 |
+| 🔥 Hỏa | 68% | 20 | 77% | 6.5 |
+| ⛰️ Thổ | 68% | 22.5 | 73% | 12.5 |
+| ⚡ Lôi | 70% | 20.5 | 67% | 8 |
+
+- Ô 1 phá ô giá 20 (Hỏa 3×3, Lôi 1 cột) quá mạnh, vì ô bị phá được thu hoạch như một nước đi, kể cả kiếm. Đã nâng giá Hỏa lên 35 (bằng Mộc), Lôi lên 40. Trước khi nâng giá, phe Hỏa thắng 79–82% ở 3vs3.
+- Các số còn lại giữ đúng bảng trên.
+- Tỉ lệ thắng còn phụ thuộc khắc chế với 5 nhân vật kèm khởi đầu (ví dụ Mộc bị Tô Kim hệ Kim khắc), nên chỉ nên so sánh tương đối.
+
+> TODO: hệ Phong; chạy lại khi có đủ 7 bộ và thêm nhân vật kèm.
