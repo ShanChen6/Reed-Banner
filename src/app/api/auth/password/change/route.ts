@@ -9,13 +9,13 @@ import { loginPageError } from "../redirect";
 export async function POST(request: NextRequest) {
   const form = await request.formData();
   const id = guestOf(request);
-  if (!sameOrigin(request) || !id) return loginPageError(request, "doi-mat-khau", "noPassword");
+  if (!sameOrigin(request) || !id) return loginPageError(request, "change-password", "noPassword");
   const r = await changePassword(
     accountStore(),
     id,
     { current: formText(form, "current"), password: formText(form, "password"), confirm: formText(form, "confirm") },
     Date.now(),
   );
-  if (!r.ok) return loginPageError(request, "doi-mat-khau", r.error);
-  return NextResponse.redirect(new URL("/dang-nhap?doiMatKhau=ok", request.nextUrl.origin), 303);
+  if (!r.ok) return loginPageError(request, "change-password", r.error);
+  return NextResponse.redirect(new URL("/login?passwordChanged=1", request.nextUrl.origin), 303);
 }
