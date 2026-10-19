@@ -638,7 +638,7 @@ class Ctx {
     s.board = result.board;
     this.emit({ type: "board", steps: result.steps, transformed, before });
     result.steps.forEach((step, i) => {
-      if (s.winner === null) this.applyStep(step, i);
+      if (s.winner === null) this.applyStep(step, i, true);
     });
     if (result.shuffled) this.emit({ type: "shuffle", board: result.board });
   }
@@ -716,7 +716,8 @@ class Ctx {
     for (const effect of removeEffects(this.fighter(ref).effects, kinds)) this.emit({ type: "effectEnd", ...ref, effect });
   }
 
-  applyStep(step: CascadeStep, index: number): void {
+  /** fromSkill: bàn cờ đổi do kỹ năng hoặc trượt miễn phí, thu hoạch giảm theo SKILL_BOARD_*. */
+  applyStep(step: CascadeStep, index: number, fromSkill = false): void {
     const s = this.state;
     const sideIdx = s.turn.side;
     const foeIdx = otherSide(sideIdx);
@@ -743,6 +744,7 @@ class Ctx {
     if (morale === "hungry" || morale === "starving") energy *= R.ENERGY_HUNGRY;
     energy += count("amDuong", "weak") * R.BUA_AM_DUONG_ENERGY;
     if (passiveOn(own, own.fighters[own.leader]!, "loi")) energy += h.amDuong * PASSIVE.loiEnergyPerTile;
+    if (fromSkill) energy *= R.SKILL_BOARD_ENERGY;
     if (energy > 0) this.gainEnergy(self, Math.round(energy));
 
     // Hồi máu; Y sư: hồi vượt máu tối đa thành Khiên tạm thời.
@@ -781,7 +783,8 @@ class Ctx {
     // Đánh thường bằng kiếm
     const weak = count("kiem", "weak");
     const strong = count("kiem", "strong");
-    const units = h.kiem - weak - strong + R.SWORD_WEAK * weak + R.SWORD_STRONG * strong;
+    const units =
+      (h.kiem - weak - strong + R.SWORD_WEAK * weak + R.SWORD_STRONG * strong) * (fromSkill ? R.SKILL_BOARD_SWORD : 1);
     const target = singleTarget(s, s.turn.actor);
     if (units > 0 && target !== null) {
       const t = foe.fighters[target]!;
@@ -884,7 +887,6 @@ class Ctx {
       case "phong":
         // Trượt miễn phí: xem canFreeSlide.
         own.freeSlides = PASSIVE.phongFreeSlides;
-        this.gainEnergy(leaderRef, PASSIVE.phongEnergy);
         break;
       // Kim, Hỏa: hiệu lực khi passiveTurns > 0, xem passiveOn.
       default:

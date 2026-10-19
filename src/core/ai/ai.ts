@@ -28,6 +28,8 @@ import {
   PASSIVE,
   pickTarget,
   selectableActors,
+  SKILL_BOARD_ENERGY,
+  SKILL_BOARD_SWORD,
   type BattleAction,
   type BattleEvent,
   type BattleState,
@@ -99,16 +101,18 @@ function swordDamage({ view, me, target }: Context): number {
   return me.atk * morale * elementMultiplier(me.element, target.element) * defenseMultiplier(target.def);
 }
 
-function scoreOutcome(ctx: Context, o: KnownOutcome): number {
+/** fromSkill: bàn cờ đổi do kỹ năng hoặc trượt miễn phí, thu hoạch giảm như trong battle.ts. */
+function scoreOutcome(ctx: Context, o: KnownOutcome, fromSkill = false): number {
   let score = 0;
   for (const [kind, n] of Object.entries(o.harvest) as [TileKind, number][]) {
-    if (kind !== "kiem") score += n * tileValue(ctx, kind);
+    if (kind === "kiem") continue;
+    score += n * (fromSkill && kind === "amDuong" ? tileValue(ctx, kind) * SKILL_BOARD_ENERGY : tileValue(ctx, kind));
   }
-  const perSword = swordDamage(ctx);
+  const perSword = swordDamage(ctx) * (fromSkill ? SKILL_BOARD_SWORD : 1);
   const dmg = o.swordsByStep.reduce((sum, n, i) => sum + n * cascadeMultiplier(i) * perSword, 0);
   score += dmg;
   if (ctx.target && dmg >= ctx.target.hp) score += ctx.me.atk * 10;
-  if (o.extraTurn) score += ctx.me.atk * 3;
+  if (o.extraTurn && !fromSkill) score += ctx.me.atk * 3;
   score += o.specialsCreated * ctx.me.atk * 2;
   return score;
 }
@@ -190,7 +194,7 @@ export function bestSlide(
     for (let index = 0; index < lines; index++) {
       for (const offset of offsets) {
         const slide = { axis, index, offset };
-        const score = scoreOutcome(ctx, simulateFrom(slideCells(view.board, slide), []));
+        const score = scoreOutcome(ctx, simulateFrom(slideCells(view.board, slide), []), true);
         if (!best || score > best.score) best = { slide, score };
       }
     }
