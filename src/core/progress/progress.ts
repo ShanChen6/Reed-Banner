@@ -7,6 +7,7 @@ import {
   mainSkills,
   professionSkills,
   SKILL_MAX_LEVEL,
+  ultimateOf,
   type BattleState,
   type Element,
   type FighterConfig,
@@ -45,6 +46,8 @@ export const UPGRADE_COST: Readonly<Record<number, number>> = { 1: 1, 2: 1, 3: 2
 /** Cấp nhân vật kèm mở mua chiêu nhánh nấc 2, và giá mỗi chiêu nhánh. */
 export const BRANCH_UNLOCK_LEVEL = 5;
 export const BRANCH_COST = 1;
+/** Cấp nhân vật kèm tự mở tuyệt chiêu nấc 3 (không tốn điểm). */
+export const ULTIMATE_UNLOCK_LEVEL = 10;
 /** Cấp mở khóa từng ô kỹ năng của nhân vật chính (ô 1–6). Bị động có từ cấp 1. */
 export const MAIN_SLOT_UNLOCK: Readonly<Record<number, number>> = { 1: 1, 2: 1, 3: 5, 4: 10, 5: 20, 6: 15 };
 
@@ -95,20 +98,30 @@ export function upgradeCost(level: number): number | null {
 export type ProgressError = "maxLevel" | "notEnoughPoints" | "locked" | "owned" | "invalidSkill";
 export type ProgressResult = { readonly ok: true; readonly progress: CharacterProgress } | { readonly ok: false; readonly error: ProgressError };
 
-/** Các khóa nâng cấp được phép của một nhân vật ở cấp hiện tại. */
-export function upgradeKeys(p: CharacterProgress, profession: Profession | null): string[] {
+/** Tuyệt chiêu nấc 3 đã mở của nhân vật kèm `character` ở cấp hiện tại. */
+export function unlockedUltimate(p: CharacterProgress, character: string | undefined): string | undefined {
+  return character !== undefined && p.level >= ULTIMATE_UNLOCK_LEVEL ? ultimateOf(character)?.id : undefined;
+}
+
+/**
+ * Các khóa nâng cấp được phép của một nhân vật ở cấp hiện tại. `character` là id nhân vật kèm, để biết
+ * tuyệt chiêu nấc 3 của người đó.
+ */
+export function upgradeKeys(p: CharacterProgress, profession: Profession | null, character?: string): string[] {
   if (profession === null) return unlockedMainSlots(p.level).map(mainSlotKey);
-  return professionSkills(profession)
+  const keys = professionSkills(profession)
     .filter((s) => s.tier === 1 || p.branches.includes(s.id))
     .map((s) => s.id);
+  const ultimate = unlockedUltimate(p, character);
+  return ultimate ? [...keys, ultimate] : keys;
 }
 
 /**
  * Nâng một kỹ năng lên 1 cấp. `profession` null là nhân vật chính (khóa theo ô), còn lại là nghề của
  * nhân vật kèm (khóa theo id chiêu).
  */
-export function upgradeSkill(p: CharacterProgress, key: string, profession: Profession | null): ProgressResult {
-  if (!upgradeKeys(p, profession).includes(key)) return { ok: false, error: "locked" };
+export function upgradeSkill(p: CharacterProgress, key: string, profession: Profession | null, character?: string): ProgressResult {
+  if (!upgradeKeys(p, profession, character).includes(key)) return { ok: false, error: "locked" };
   const level = p.skillLevels[key] ?? 1;
   const cost = upgradeCost(level);
   if (cost === null) return { ok: false, error: "maxLevel" };
@@ -148,13 +161,15 @@ export function buildMain(p: CharacterProgress, element: Element, profession: Pr
 }
 
 /**
- * Nhân vật kèm theo tiến trình: chiêu nấc 1 và tối đa 1 chiêu nhánh nấc 2 đã mua (`branch`; bỏ trống thì
- * lấy chiêu nhánh mua đầu tiên).
+ * Nhân vật kèm theo tiến trình: chiêu nấc 1, tối đa 1 chiêu nhánh nấc 2 đã mua (`branch`; bỏ trống thì
+ * lấy chiêu nhánh mua đầu tiên) và tuyệt chiêu nấc 3 khi đủ cấp.
  */
 export function buildCompanion(base: FighterConfig, p: CharacterProgress, branch?: string | null): FighterConfig {
   const tiers = professionSkills(base.profession);
   const chosen = branch && p.branches.includes(branch) ? branch : p.branches[0];
   const skills = tiers.filter((s) => s.tier === 1 || s.id === chosen).map((s) => s.id);
+  const ultimate = unlockedUltimate(p, base.id);
+  if (ultimate) skills.push(ultimate);
   const skillLevels = Object.fromEntries(skills.map((id) => [id, p.skillLevels[id] ?? 1]));
   return { ...scaleStats(base, p.level), skills, skillLevels };
 }
@@ -163,7 +178,7 @@ export function buildCompanion(base: FighterConfig, p: CharacterProgress, branch
  * Tiến trình tự dựng ở một cấp, dùng cho đối thủ AI và mô phỏng: tiêu hết điểm, lần lượt nâng kỹ năng
  * đang thấp nhất; nhân vật kèm mua cả hai chiêu nhánh khi đủ cấp.
  */
-export function autoProgress(level: number, profession: Profession | null): CharacterProgress {
+export function autoProgress(level: number, profession: Profession | null, character?: string): CharacterProgress {
   const lv = Math.max(1, Math.min(MAX_LEVEL, Math.floor(level)));
   let p: CharacterProgress = { ...NEW_PROGRESS, xp: totalXpFor(lv), level: lv, skillPoints: (lv - 1) * SKILL_POINTS_PER_LEVEL };
   if (profession !== null) {
@@ -173,10 +188,10 @@ export function autoProgress(level: number, profession: Profession | null): Char
     }
   }
   for (;;) {
-    const keys = upgradeKeys(p, profession).sort((a, b) => (p.skillLevels[a] ?? 1) - (p.skillLevels[b] ?? 1));
-    const next = keys.find((k) => upgradeSkill(p, k, profession).ok);
+    const keys = upgradeKeys(p, profession, character).sort((a, b) => (p.skillLevels[a] ?? 1) - (p.skillLevels[b] ?? 1));
+    const next = keys.find((k) => upgradeSkill(p, k, profession, character).ok);
     if (!next) return p;
-    p = (upgradeSkill(p, next, profession) as { ok: true; progress: CharacterProgress }).progress;
+    p = (upgradeSkill(p, next, profession, character) as { ok: true; progress: CharacterProgress }).progress;
   }
 }
 

@@ -1,4 +1,4 @@
-// Chiêu nghề nấc 1–2 của nhân vật kèm, xem docs/design/06-nhan-vat-ky-nang.md mục 4.
+// Chiêu nghề nấc 1–2 và tuyệt chiêu nấc 3 của nhân vật kèm, xem docs/design/06-nhan-vat-ky-nang.md mục 4.
 // Kỹ năng là dữ liệu; battle.ts thực thi các bước theo thứ tự.
 
 import type { AreaShape, TileKind } from "../board";
@@ -59,7 +59,9 @@ export interface SkillDef {
   readonly name: string;
   /** Chiêu nghề của nhân vật kèm. */
   readonly profession?: Profession;
-  readonly tier?: 1 | 2;
+  readonly tier?: 1 | 2 | 3;
+  /** Tuyệt chiêu nấc 3: id nhân vật kèm sở hữu. */
+  readonly character?: string;
   /** Kỹ năng nhân vật chính theo nguyên tố, ô 1–6. */
   readonly element?: Element;
   readonly slot?: number;
@@ -141,6 +143,52 @@ const DEFS: readonly SkillDef[] = [
   {
     id: "bayTran", name: "Bày trận", profession: "quanSu", tier: 2, cost: 45, target: "team",
     steps: [{ type: "effect", to: "targets", effect: "defUp", value: 0.3, turns: 2 }, mark],
+  },
+];
+
+// Tuyệt chiêu nấc 3, riêng từng nhân vật kèm, mang đậm nguyên tố của người đó nên không có dấu ấn.
+// Docs/design/06-nhan-vat-ky-nang.md mục 4.4. Số liệu là điểm xuất phát, chờ mô phỏng.
+const ULTIMATES: readonly SkillDef[] = [
+  {
+    id: "hoaVuLieuNguyen", name: "Hỏa Vũ Liệu Nguyên", profession: "phapSu", tier: 3, character: "haVan", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "damage", atk: 1.5 },
+      { type: "effect", to: "targets", effect: "burn", value: 0.15, ofAtk: true, turns: 2 },
+      { type: "destroy", area: { square: 3 } },
+    ],
+  },
+  {
+    id: "tranSonHoQuan", name: "Trấn Sơn Hộ Quân", profession: "binhLinh", tier: 3, character: "leThach", cost: 100, target: "team",
+    steps: [
+      { type: "effect", to: "targets", effect: "shield", value: 0.25, turns: null, ofMaxHp: true },
+      { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 },
+      { type: "effect", to: "self", effect: "reflect", value: 0.35, turns: 2 },
+    ],
+  },
+  {
+    id: "camLoHoiXuan", name: "Cam Lộ Hồi Xuân", profession: "ySu", tier: 3, character: "maiThanh", cost: 100, target: "team",
+    steps: [
+      { type: "heal", to: "targets", ratio: 0.25 },
+      { type: "cleanse", to: "targets" },
+      { type: "effect", to: "enemies", effect: "freeze", value: 0, turns: 1, chance: 0.3 },
+    ],
+  },
+  {
+    id: "kimNganLyTan", name: "Kim Ngân Ly Tán", profession: "muuSi", tier: 3, character: "toKim", cost: 100, target: "enemy",
+    steps: [
+      { type: "damage", atk: 1.8, pierce: 0.5, pierceShield: true },
+      { type: "energy", to: "targets", amount: -50 },
+      { type: "effect", to: "targets", effect: "silence", value: 0, turns: 1 },
+    ],
+  },
+  {
+    id: "phongVanBienTran", name: "Phong Vân Biến Trận", profession: "quanSu", tier: 3, character: "phungPhong", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "dispel", to: "targets" },
+      { type: "effect", to: "targets", effect: "atkDown", value: 0.3, turns: 2 },
+      { type: "energy", to: "team", amount: 20 },
+      { type: "slide", distance: 2 },
+    ],
   },
 ];
 
@@ -412,7 +460,7 @@ const PHONG: readonly SkillDef[] = [
   },
 ];
 
-export const SKILLS: Readonly<Record<string, SkillDef>> = Object.fromEntries([...DEFS, ...MAIN, ...PHONG].map((d) => [d.id, d]));
+export const SKILLS: Readonly<Record<string, SkillDef>> = Object.fromEntries([...DEFS, ...ULTIMATES, ...MAIN, ...PHONG].map((d) => [d.id, d]));
 
 export function getSkill(id: string): SkillDef | undefined {
   return SKILLS[id];
@@ -459,6 +507,11 @@ export function fighterSkill(
 
 export function professionSkills(profession: Profession): SkillDef[] {
   return DEFS.filter((d) => d.profession === profession);
+}
+
+/** Tuyệt chiêu nấc 3 của một nhân vật kèm; undefined nếu người đó chưa có. */
+export function ultimateOf(character: string): SkillDef | undefined {
+  return ULTIMATES.find((d) => d.character === character);
 }
 
 /** 6 kỹ năng chủ động của nhân vật chính theo nguyên tố. */
