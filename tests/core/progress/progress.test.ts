@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 import {
   act,
   addXp,
+  applyProfileAction,
   applyRewards,
   autoProgress,
   battleRewards,
@@ -19,6 +20,8 @@ import {
   NEW_PROGRESS,
   newProfile,
   parseProfile,
+  parseProfileAction,
+  professionSkills,
   profileTeam,
   scaleSkill,
   STARTER_COMPANIONS,
@@ -190,6 +193,40 @@ describe("phần thưởng và hồ sơ", () => {
     assert.deepEqual(parseProfile(null), fresh);
     const team = profileTeam(profile, ["haVan", "khongCo"]);
     assert.deepEqual(team.map((f) => f.id), ["dinhBoLinh", "haVan"]);
+  });
+});
+
+describe("thao tác trên hồ sơ", () => {
+  it("nâng kỹ năng, mua và chọn chiêu nhánh qua cùng một hàm cho /demo và server", () => {
+    const branches = professionSkills("phapSu").filter((d) => d.tier === 2);
+    const p0 = { ...newProfile(), main: at(5, 2), companions: { ...newProfile().companions, haVan: at(5, 2) } };
+    assert.deepEqual(applyProfileAction(newProfile(), { type: "upgrade", character: "dinhBoLinh", key: "o1" }), {
+      ok: false,
+      error: "notEnoughPoints",
+    });
+    const up = applyProfileAction(p0, { type: "upgrade", character: "dinhBoLinh", key: "o1" });
+    assert.ok(up.ok);
+    assert.equal(up.profile.main.skillLevels.o1, 2);
+    assert.equal(up.profile.main.skillPoints, 1);
+    assert.equal(applyProfileAction(p0, { type: "chooseBranch", character: "haVan", skill: branches[0]!.id }).ok, false);
+    const bought = applyProfileAction(p0, { type: "buyBranch", character: "haVan", skill: branches[0]!.id });
+    assert.ok(bought.ok);
+    const chosen = applyProfileAction(bought.profile, { type: "chooseBranch", character: "haVan", skill: branches[0]!.id });
+    assert.ok(chosen.ok);
+    assert.equal(chosen.profile.branchChoice.haVan, branches[0]!.id);
+    assert.deepEqual(applyProfileAction(p0, { type: "buyBranch", character: "khongCo", skill: "x" }), { ok: false, error: "invalidSkill" });
+    assert.deepEqual(applyProfileAction(p0, { type: "buyBranch", character: "dinhBoLinh", skill: "x" }), { ok: false, error: "invalidSkill" });
+  });
+
+  it("kiểm tra hình dạng thao tác gửi lên", () => {
+    assert.deepEqual(parseProfileAction({ type: "upgrade", character: "dinhBoLinh", key: "o1", x: 1 }), {
+      type: "upgrade",
+      character: "dinhBoLinh",
+      key: "o1",
+    });
+    assert.equal(parseProfileAction({ type: "upgrade", character: "dinhBoLinh" }), null);
+    assert.equal(parseProfileAction({ type: "gold", character: "dinhBoLinh", amount: 999 }), null);
+    assert.equal(parseProfileAction(null), null);
   });
 });
 

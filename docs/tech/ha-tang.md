@@ -34,12 +34,15 @@
 | `POST /api/battles` | Tạo trận `{ mode, element, profession, companions, difficulty }`; tạo khách nếu chưa có cookie |
 | `GET /api/battles/:id` | Trạng thái trận sau khi chạy bù (F5, báo hết giờ) |
 | `POST /api/battles/:id/actions` | Một hành động `{ seq, action }` |
+| `GET /api/profile` | Hồ sơ tiến trình `{ profile, version }` (chưa có thì là hồ sơ mới) |
+| `POST /api/profile` | Một thao tác `{ action }`: nâng kỹ năng, mua hoặc chọn chiêu nhánh; 422 khi sai luật |
 
 - Lỗi: 404 trận không có hoặc của người khác, 409 `staleSeq`/`conflict`, 422 lỗi luật (kèm view mới để client đồng bộ), 400 body sai.
 - Trang `/play`: cùng giao diện với `/demo` nhưng mọi hành động gửi lên server. Client vẫn chạy `act` của core trên bản sao bàn cờ (không có seed) để báo lỗi tức thì, nhưng bàn cờ hiển thị chỉ lấy từ server. Đồng hồ 30 giây tính theo giờ server (mỗi response kèm `now`); quá hạn cộng ân hạn thì client gọi `GET /api/battles/:id` để chạy bù. Id trận lưu ở trình duyệt để tải lại trang vẫn "Tiếp tục trận dở". Chưa chạy trước hoạt ảnh trong lúc chờ server.
 - `GET /api/health`: báo database đã nối và đã chạy hết migration chưa, có `SESSION_SECRET` chưa, nút đăng nhập nào đang bật (`oauth`).
 - Đăng nhập (mục 4): trang `/login` (đăng nhập Google/GitHub hoặc tên đăng nhập, chơi với tư cách khách), `/register` (đăng ký) và `/account` (xem tài khoản, liên kết thêm, đặt/đổi mật khẩu, đăng xuất); đã đăng nhập thì `/login` và `/register` chuyển sang `/account`, chưa đăng nhập thì `/account` chuyển sang `/login`. Link ở đầu trang chủ và trên `/play`. `GET /api/auth/google|github?returnTo=/play` bắt đầu, nhà cung cấp chuyển về `/api/auth/<tên>/callback`, `POST /api/auth/logout` đăng xuất; `POST /api/auth/password/register|login|change` cho tên đăng nhập + mật khẩu. Bảng `accounts` và `identities`.
-- Chưa có: lưu hồ sơ tiến trình trên server, việc định kỳ (Vercel Cron) xử thua và xóa khách. Đội hình online tạm dùng bản Luyện tập (mở hết kỹ năng), đối thủ là các nhân vật kèm khởi đầu chọn theo seed.
+- Hồ sơ tiến trình trên server (`src/server/profiles.ts`, bảng `profiles`): trận online dựng đội theo hồ sơ (cấp, kỹ năng đã nâng, chiêu nhánh đang chọn), đối thủ cùng cấp với nhân vật chính, nguyên tố và nghề vừa chọn được lưu lại. Trận kết thúc thì server cộng thưởng vào hồ sơ đúng một lần (cột `matches.rewarded_at` đặt kèm điều kiện) và gửi `outcome` trong response đó. Bỏ trận quá 24 giờ vẫn được cộng thưởng của trận thua, vào lần mở trận kế tiếp. Ghi hồ sơ kèm điều kiện `version`, bị ghi trước thì đọc lại và thử lại tối đa 3 lần. Thao tác hồ sơ dùng chung `applyProfileAction` của core với `/demo`.
+- Chưa có: việc định kỳ (Vercel Cron) xử thua và xóa khách; cửa hàng dùng vàng. Đối thủ là các nhân vật kèm khởi đầu chọn theo seed.
 
 
 ## 3. Database
