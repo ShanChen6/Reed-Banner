@@ -21,7 +21,7 @@ Cờ Lau viết mới hoàn toàn bằng **TypeScript**. Không dùng Java và k
 | API / server | **Next.js Route Handlers** | Server có thẩm quyền xử lý từng nước đi |
 | Database | **Postgres** trên **Neon** | Nguồn sự thật duy nhất cho dữ liệu người chơi (Shan chốt 19/10/2026) |
 | ORM | **Drizzle** | Driver Neon HTTP trên Vercel, PGlite trong test |
-| Đăng nhập | **Auth.js**, OAuth Google + GitHub | Tài khoản khách bằng cookie đã ký |
+| Đăng nhập | OAuth Google + GitHub, tự viết (mã ủy quyền + PKCE, `src/server/oauth.ts`) | Tài khoản khách bằng cookie đã ký; đăng nhập gắn danh tính vào chính tài khoản đó |
 | Dữ liệu thiết kế | **Notion** → script đồng bộ ra file JSON tĩnh trong repo | Không gọi Notion lúc đang chơi |
 | Test | `node:test` qua **tsx** | Theo quy ước ShanVerse; bắt buộc cho logic và AI |
 | Script cân bằng | **tsx** | Mô phỏng AI đấu AI hàng nghìn trận |
