@@ -16,20 +16,20 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-type Form = "mat-khau" | "dang-ky" | "doi-mat-khau";
+type Form = "password" | "register" | "change-password";
 
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ returnTo?: string; dangNhap?: string; cach?: string; loi?: string; u?: string; doiMatKhau?: string }>;
+  searchParams: Promise<{ returnTo?: string; login?: string; form?: string; error?: string; username?: string; passwordChanged?: string }>;
 }) {
-  const { returnTo: rawReturn, dangNhap, cach, loi, u, doiMatKhau } = await searchParams;
-  const form: Form = cach === "dang-ky" || cach === "doi-mat-khau" ? cach : "mat-khau";
+  const { returnTo: rawReturn, login, form: rawForm, error: rawError, username, passwordChanged } = await searchParams;
+  const form: Form = rawForm === "register" || rawForm === "change-password" ? rawForm : "password";
   // Lỗi chỉ hiện ở form vừa gửi.
-  const error = loi && Object.hasOwn(PASSWORD_ERROR, loi) ? (loi as keyof typeof PASSWORD_ERROR) : null;
+  const error = rawError && Object.hasOwn(PASSWORD_ERROR, rawError) ? (rawError as keyof typeof PASSWORD_ERROR) : null;
   const errorFor = (f: Form) => (form === f ? error : null);
-  const typed = (u ?? "").slice(0, 40);
-  const tabHref = (f: Form) => `/dang-nhap?cach=${f}${returnTo === "/play" ? "" : `&returnTo=${encodeURIComponent(returnTo)}`}`;
+  const typed = (username ?? "").slice(0, 40);
+  const tabHref = (f: Form) => `/login?form=${f}${returnTo === "/play" ? "" : `&returnTo=${encodeURIComponent(returnTo)}`}`;
   const returnTo = safeReturnTo(rawReturn);
   const providers = enabledProviders();
   const { id, account } = await currentUser();
@@ -50,7 +50,7 @@ export default async function LoginPage({
           <h1 className="text-center font-serif text-2xl font-bold">{account ? "Tài khoản" : "Đăng nhập"}</h1>
           <DongSonBand className="mx-auto mt-3 w-32" />
 
-          {dangNhap === "loi" && (
+          {login === "error" && (
             <p role="alert" className="mt-4 rounded bg-rose-900/40 px-3 py-2 text-sm text-rose-200">
               Đăng nhập không thành công, bạn thử lại nhé.
             </p>
@@ -99,24 +99,24 @@ export default async function LoginPage({
                     <p>
                       Tên đăng nhập: <span className="font-semibold">{account.username}</span>
                     </p>
-                    {doiMatKhau === "ok" && <p className="mt-2 text-emerald-400">Đã đổi mật khẩu.</p>}
-                    <details open={form === "doi-mat-khau"} className="mt-2">
+                    {passwordChanged === "1" && <p className="mt-2 text-emerald-400">Đã đổi mật khẩu.</p>}
+                    <details open={form === "change-password"} className="mt-2">
                       <summary className="cursor-pointer text-stone-300">Đổi mật khẩu</summary>
                       <div className="mt-3">
-                        <ChangePasswordForm error={errorFor("doi-mat-khau")} />
+                        <ChangePasswordForm error={errorFor("change-password")} />
                       </div>
                     </details>
                   </>
                 ) : (
-                  <details open={form === "dang-ky"}>
+                  <details open={form === "register"}>
                     <summary className="cursor-pointer text-stone-300">Thêm tên đăng nhập và mật khẩu</summary>
                     <div className="mt-3">
-                      <RegisterForm returnTo="/dang-nhap" username={typed} error={errorFor("dang-ky")} label="Lưu tên đăng nhập" />
+                      <RegisterForm returnTo="/login" username={typed} error={errorFor("register")} label="Lưu tên đăng nhập" />
                     </div>
                   </details>
                 )}
               </div>
-              <form action={`/api/auth/logout?returnTo=${encodeURIComponent("/dang-nhap")}`} method="post" className="w-full">
+              <form action={`/api/auth/logout?returnTo=${encodeURIComponent("/login")}`} method="post" className="w-full">
                 <button type="submit" className="w-full rounded-lg px-4 py-2 text-sm text-stone-400 hover:text-stone-200">
                   Đăng xuất
                 </button>
@@ -143,7 +143,7 @@ export default async function LoginPage({
                 <span className="h-px flex-1 bg-stone-700" />
               </div>
               <div className="grid grid-cols-2 gap-1 rounded-lg bg-black/30 p-1 text-sm" role="tablist">
-                {(["mat-khau", "dang-ky"] as const).map((f) => (
+                {(["password", "register"] as const).map((f) => (
                   <Link
                     key={f}
                     href={tabHref(f)}
@@ -151,14 +151,14 @@ export default async function LoginPage({
                     aria-selected={form === f}
                     className={`rounded-md px-3 py-1.5 text-center ${form === f ? "bg-[var(--panel)] font-semibold text-[var(--gold)]" : "text-stone-400 hover:text-stone-200"}`}
                   >
-                    {f === "mat-khau" ? "Đăng nhập" : "Đăng ký"}
+                    {f === "password" ? "Đăng nhập" : "Đăng ký"}
                   </Link>
                 ))}
               </div>
-              {form === "dang-ky" ? (
-                <RegisterForm returnTo={returnTo} username={typed} error={errorFor("dang-ky")} />
+              {form === "register" ? (
+                <RegisterForm returnTo={returnTo} username={typed} error={errorFor("register")} />
               ) : (
-                <LoginForm returnTo={returnTo} username={typed} error={errorFor("mat-khau")} />
+                <LoginForm returnTo={returnTo} username={typed} error={errorFor("password")} />
               )}
               <div className="my-1 flex items-center gap-3 text-xs text-stone-500">
                 <span className="h-px flex-1 bg-stone-700" /> hoặc <span className="h-px flex-1 bg-stone-700" />
