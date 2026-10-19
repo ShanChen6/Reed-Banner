@@ -18,7 +18,7 @@ import {
   cascadeMultiplier,
   defenseMultiplier,
   elementMultiplier,
-  getSkill,
+  fighterSkill,
   hasEffect,
   isAlive,
   MORALE_DAMAGE,
@@ -282,7 +282,7 @@ export function chooseSkill(view: AiView): BattleAction | null {
   const me = view.sides[view.turn.side].fighters[view.turn.actor]!;
   if (view.turn.skillUsed || hasEffect(me.effects, "silence")) return null;
   const options = (me.skills ?? []).flatMap((id) => {
-    const def = getSkill(id);
+    const def = fighterSkill(me, id);
     const scored = def && scoreSkill(view, def);
     if (!def || !scored) return [];
     return [{ id, def, scored, ratio: scored.score / Math.max(1, def.cost * me.atk * 0.02) }];

@@ -1,6 +1,6 @@
 # Hạ tầng & chống gian lận
 
-> Cập nhật: 18/10/2026
+> Cập nhật: 19/10/2026
 
 ## 1. Nguyên tắc
 
@@ -23,11 +23,31 @@
 - **Trận dở** được tiếp tục; quá **24 giờ** không hoàn thành thì xử thua.
 - Logic game là **TypeScript thuần, xác định theo seed**, dùng chung cho client (dự đoán, hiển thị) và server (thẩm quyền).
 
+### 2.1 Đã có trong code (19/10/2026)
+
+- `src/core/match/`: trận online thuần. `settle` chạy bù hết giờ (mốc hết giờ là `deadline + 3 giây`, lượt AI và đồng hồ mới tính từ mốc đó), xử thua khi người chơi không tự ra tay quá 24 giờ, tối đa 120 lượt chạy bù mỗi request. Khi chạy bù, AI Trùm/Ác mộng chấm như Khó (không giả lập ô rơi). `humanAct` nhận hành động kèm `seq` client đang thấy; seq lệch sau khi chạy bù thì từ chối. `viewOf` bỏ `boardRng` và `aiRng` trước khi gửi client.
+- `src/server/`: dịch vụ trận (`battles.ts`), kho lưu (`store.ts`: Postgres khi có `DATABASE_URL`, bộ nhớ khi dev), cookie khách có chữ ký HMAC (`guest.ts`, cần `SESSION_SECRET` ở production).
+- API:
+
+| Route | Việc |
+|---|---|
+| `POST /api/battles` | Tạo trận `{ mode, element, profession, companions, difficulty }`; tạo khách nếu chưa có cookie |
+| `GET /api/battles/:id` | Trạng thái trận sau khi chạy bù (F5, báo hết giờ) |
+| `POST /api/battles/:id/actions` | Một hành động `{ seq, action }` |
+
+- Lỗi: 404 trận không có hoặc của người khác, 409 `staleSeq`/`conflict`, 422 lỗi luật (kèm view mới để client đồng bộ), 400 body sai.
+- Trang `/play`: cùng giao diện với `/demo` nhưng mọi hành động gửi lên server. Client vẫn chạy `act` của core trên bản sao bàn cờ (không có seed) để báo lỗi tức thì, nhưng bàn cờ hiển thị chỉ lấy từ server. Đồng hồ 30 giây tính theo giờ server (mỗi response kèm `now`); quá hạn cộng ân hạn thì client gọi `GET /api/battles/:id` để chạy bù. Id trận lưu ở trình duyệt để tải lại trang vẫn "Tiếp tục trận dở". Chưa chạy trước hoạt ảnh trong lúc chờ server.
+- `GET /api/health`: báo database đã nối và đã có bảng chưa, có `SESSION_SECRET` chưa.
+- Chưa có: đăng nhập OAuth, lưu hồ sơ tiến trình trên server, việc định kỳ (Vercel Cron) xử thua và xóa khách. Đội hình online tạm dùng bản Luyện tập (mở hết kỹ năng), đối thủ là các nhân vật kèm khởi đầu chọn theo seed.
+
 
 ## 3. Database
 
-- **Postgres** (Neon hoặc Supabase) là nguồn sự thật duy nhất, cho cả tài sản người chơi lẫn trận đang diễn ra. Dùng kèm ORM (Prisma hoặc Drizzle).
-- **Chống ghi trùng nước đi:** cột `move_seq`, cập nhật kèm điều kiện `WHERE move_seq = :expected`.
+- **Postgres trên Neon + Drizzle** (Shan chốt 19/10/2026) là nguồn sự thật duy nhất, cho cả tài sản người chơi lẫn trận đang diễn ra.
+  - Schema ở `src/server/db/schema.ts`; đổi schema thì chạy `pnpm db:generate` để sinh migration vào `drizzle/`.
+  - `pnpm build` tự áp migration khi có `DATABASE_URL` (Vercel cấp khi gắn Neon vào project); không có thì bỏ qua. Chạy tay: `pnpm db:migrate`.
+  - Test chạy cùng migration trên PGlite (Postgres trong tiến trình), không cần database thật.
+- **Chống ghi trùng nước đi:** cột `seq` của bảng `matches`, cập nhật kèm điều kiện `WHERE seq = :expected`.
 - **Kinh tế:** mọi thao tác trong transaction, kèm ràng buộc `CHECK (gold >= 0)`.
 - **Notion** chỉ dùng cho **dữ liệu thiết kế** (nhân vật, kỹ năng, trang bị, màn chơi, lời thoại). Đồng bộ thành file tĩnh trong repo, không gọi Notion lúc đang chơi.
 
