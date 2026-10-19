@@ -2,7 +2,20 @@
 // Dữ liệu thuần: /demo lưu ở trình duyệt, /play lưu trên server (bảng `profiles`).
 
 import type { Element, FighterConfig, Profession } from "../battle";
+import { withGear, type GearItem, type GearSlot, type Tier } from "../gear";
 import { companionById, shopPrice, STARTER_COMPANIONS } from "../roster";
+import {
+  buyGear,
+  equipItem,
+  loadoutOf,
+  mergeGear,
+  parseInventory,
+  sellItem,
+  unequipItem,
+  type GearOrder,
+  type InventoryError,
+  type SavedLoadout,
+} from "./inventory";
 import {
   addXp,
   autoProgress,
@@ -32,6 +45,12 @@ export interface Profile {
   /** Chiêu nhánh nấc 2 mang vào trận, theo id nhân vật kèm. */
   readonly branchChoice: Readonly<Record<string, string>>;
   readonly gold: number;
+  /** Túi đồ: mọi món đang có, kể cả món đang mặc. */
+  readonly bag: readonly GearItem[];
+  /** Ô trang bị theo id nhân vật (chính và kèm), lưu id món trong túi. */
+  readonly loadouts: Readonly<Record<string, SavedLoadout>>;
+  /** Số dùng cho id món kế tiếp (`g<n>`), để server và /demo cấp id giống nhau. */
+  readonly nextItemId: number;
 }
 
 export function newProfile(): Profile {
@@ -44,6 +63,9 @@ export function newProfile(): Profile {
     team: DEFAULT_TEAM,
     branchChoice: {},
     gold: 0,
+    bag: [],
+    loadouts: {},
+    nextItemId: 1,
   };
 }
 
@@ -69,10 +91,11 @@ export function withProgress(profile: Profile, id: string, p: CharacterProgress)
  * bị bỏ qua.
  */
 export function profileTeam(profile: Profile, companionIds: readonly string[] = []): FighterConfig[] {
-  const main = buildMain(profile.main, profile.element, profile.profession);
+  const main = withGear(buildMain(profile.main, profile.element, profile.profession), loadoutOf(profile, MAIN_ID));
   const companions = companionIds.flatMap((id) => {
     const base = companionById(id);
-    return base && ownsCompanion(profile, id) ? [buildCompanion(base, progressOf(profile, id), profile.branchChoice[id])] : [];
+    if (!base || !ownsCompanion(profile, id)) return [];
+    return [withGear(buildCompanion(base, progressOf(profile, id), profile.branchChoice[id]), loadoutOf(profile, id))];
   });
   return [main, ...companions];
 }
@@ -125,7 +148,7 @@ export function parseProfile(raw: unknown): Profile {
   // Nhân vật khởi đầu luôn có; nhân vật mua giữ lại nếu còn trong danh sách.
   const saved = Object.entries(p.companions ?? {}).filter(([id, cp]) => companionById(id) && isProgress(cp));
   const companions = { ...fresh.companions, ...Object.fromEntries(saved) };
-  const next: Profile = { ...fresh, ...p, companions, team: fresh.team, branchChoice: p.branchChoice ?? {} };
+  const next: Profile = { ...fresh, ...p, companions, team: fresh.team, branchChoice: p.branchChoice ?? {}, ...parseInventory(p) };
   return Array.isArray(p.team) && validTeam(next, p.team) ? { ...next, team: p.team } : next;
 }
 
@@ -140,9 +163,15 @@ export type ProfileAction =
   /** Mua nhân vật kèm ở cửa hàng bằng vàng. */
   | { readonly type: "buyCompanion"; readonly character: string }
   /** Chọn 2 nhân vật kèm đã có ra trận 3vs3. */
-  | { readonly type: "chooseTeam"; readonly companions: readonly string[] };
+  | { readonly type: "chooseTeam"; readonly companions: readonly string[] }
+  /** Mặc/tháo một món trong túi cho nhân vật (chính hoặc kèm). */
+  | { readonly type: "equip" | "unequip"; readonly character: string; readonly item: string }
+  /** Ghép 3 món; `main` là vị trí món chính (lấy bộ của món này). */
+  | { readonly type: "merge"; readonly items: readonly string[]; readonly main: number }
+  | { readonly type: "sell"; readonly item: string }
+  | ({ readonly type: "buyGear" } & GearOrder);
 
-export type ProfileError = ProgressError | "notEnoughGold" | "notOwned";
+export type ProfileError = ProgressError | InventoryError;
 export type ProfileActionResult = { readonly ok: true; readonly profile: Profile } | { readonly ok: false; readonly error: ProfileError };
 
 /** Mua nhân vật kèm ở cửa hàng: trừ vàng, nhân vật vào hồ sơ ở cấp 1. */
@@ -159,6 +188,11 @@ export function applyProfileAction(profile: Profile, action: ProfileAction): Pro
     return validTeam(profile, action.companions) ? { ok: true, profile: { ...profile, team: [...action.companions] } } : { ok: false, error: "notOwned" };
   }
   if (action.type === "buyCompanion") return buyCompanion(profile, action.character);
+  if (action.type === "equip") return equipItem(profile, action.character, action.item);
+  if (action.type === "unequip") return unequipItem(profile, action.character, action.item);
+  if (action.type === "merge") return mergeGear(profile, action.items, action.main);
+  if (action.type === "sell") return sellItem(profile, action.item);
+  if (action.type === "buyGear") return buyGear(profile, action);
   const isMain = action.character === MAIN_ID;
   const profession = isMain ? null : (companionById(action.character)?.profession ?? null);
   if (!isMain && profession === null) return { ok: false, error: "invalidSkill" };
@@ -190,7 +224,30 @@ export function parseProfileAction(x: unknown): ProfileAction | null {
       ? { type: "chooseTeam", companions: ids as string[] }
       : null;
   }
+  if (a.type === "merge") {
+    const ids = a.items;
+    return Array.isArray(ids) && ids.length === 3 && ids.every((id) => typeof id === "string") && Number.isInteger(a.main)
+      ? { type: "merge", items: ids as string[], main: a.main as number }
+      : null;
+  }
+  if (a.type === "sell") return typeof a.item === "string" ? { type: "sell", item: a.item } : null;
+  if (a.type === "buyGear") {
+    if (typeof a.slot !== "string" || typeof a.element !== "string" || typeof a.set !== "string" || typeof a.tier !== "number") return null;
+    if (a.profession !== undefined && typeof a.profession !== "string") return null;
+    // Giá trị cụ thể do buyGear kiểm tra.
+    return {
+      type: "buyGear",
+      slot: a.slot as GearSlot,
+      element: a.element as Element,
+      set: a.set,
+      tier: a.tier as Tier,
+      ...(a.profession === undefined ? {} : { profession: a.profession as Profession }),
+    };
+  }
   if (typeof a.character !== "string") return null;
+  if ((a.type === "equip" || a.type === "unequip") && typeof a.item === "string") {
+    return { type: a.type, character: a.character, item: a.item };
+  }
   if (a.type === "buyCompanion") return { type: "buyCompanion", character: a.character };
   if (a.type === "upgrade" && typeof a.key === "string") return { type: "upgrade", character: a.character, key: a.key };
   if ((a.type === "buyBranch" || a.type === "chooseBranch") && typeof a.skill === "string") {

@@ -126,4 +126,11 @@ Mỗi trang bị có một **phẩm**, hiển thị bằng màu khung và tên. 
 
 - Vì ghép cần 3 món cùng ô **và** cùng hệ, nâng một món lên Cam tốn tới 81 món Trắng cùng loại; tỉ lệ rơi phẩm cao ở trận khó là đường tắt chính.
 
-> TODO: danh sách trang bị cố định của cửa hàng và giá.
+- **Cửa hàng trang bị** (Claude đặt 19/10/2026, chờ Shan duyệt): thay cho danh sách món cố định, người chơi tự chọn ô, nguyên tố, bộ (và nghề nếu là vũ khí) rồi mua món **Lục giá 400 vàng** hoặc **Lam giá 1 200 vàng**. Một món Lam bằng khoảng 17 trận thắng nhưng thay cho 9 món Trắng cùng ô và cùng hệ, nên là đường tắt đắt mà vẫn đáng. Không bán Tím và Cam: hai bậc này chỉ có từ rơi đồ trận khó và ghép.
+
+## 7. Túi đồ (code: `src/core/progress/inventory.ts`)
+
+- Mọi món nằm trong túi đồ của hồ sơ (tối đa **200 món**, kể cả món đang mặc). Ô trang bị của từng nhân vật lưu id món; mỗi món chỉ một người mặc, mặc cho người khác thì tự tháo khỏi người cũ.
+- Món rơi sau trận vào thẳng túi đồ (server quyết định ở `/play`); túi đầy thì món rơi được bán ngay.
+- **Bán** món lấy vàng: Trắng 5, Lục 15, Lam 50, Tím 150, Cam 500 (điểm xuất phát).
+- Đội Tianwu chưa mặc đồ; đồ của người chơi là lợi thế khi lên cấp.
