@@ -7,6 +7,9 @@ export default function Home() {
       <p className="text-stone-400">
         Bàn cờ {BOARD_COLS}×{BOARD_ROWS}. Đang xây dựng.
       </p>
+      <a href="/demo" className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950">
+        Chơi thử
+      </a>
     </main>
   );
 }
