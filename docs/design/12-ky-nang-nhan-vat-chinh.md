@@ -33,7 +33,8 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 - Cấp 5: chi phí năng lượng giảm **10%** (làm tròn xuống bội số của 5).
 - Kỹ năng bị động không nâng cấp. Cách tích nộ xem [Tài nguyên](03-tai-nguyen-cong-thuc.md#3-nộ-và-kỹ-năng-bị-động).
 
-> TODO: số điểm kỹ năng cần cho mỗi cấp.
+- Điểm cần mỗi cấp: 1, 1, 2, 2 (điểm xuất phát 19/10/2026, xem [Tiến trình](08-tien-trinh-kinh-te.md#11-số-liệu-điểm-xuất-phát-19102026)). Nâng theo ô nên giữ nguyên khi đổi nguyên tố.
+- Hệ số chính gồm: sát thương, lượng hồi, Khiên, Công±, Thủ±, Hồi phục, Thiêu đốt, Phản đòn. Không đổi: thời lượng, số ô, cơ hội Đóng băng, năng lượng cộng/trừ, hút máu.
 
 ### 1.2 Vùng phá ô
 

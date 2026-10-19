@@ -14,7 +14,7 @@
 
 ## Nhân vật & kỹ năng
 
-- [ ] Số điểm kỹ năng cần cho mỗi cấp nâng kỹ năng. → [Bộ kỹ năng](design/12-ky-nang-nhan-vat-chinh.md#11-nâng-cấp)
+- [ ] Số điểm kỹ năng cần cho mỗi cấp nâng kỹ năng. Đã có điểm xuất phát (1, 1, 2, 2), chờ Shan duyệt. → [Bộ kỹ năng](design/12-ky-nang-nhan-vat-chinh.md#11-nâng-cấp)
 - [ ] Mô phỏng cân bằng 7 bộ kỹ năng với nhau và với nhân vật kèm. → [Bộ kỹ năng](design/12-ky-nang-nhan-vat-chinh.md#9-so-sánh-nhanh)
 - [ ] Nguyên tố và tuyệt chiêu đặc trưng của 5 nhân vật kèm khởi đầu. → [Nhân vật](design/06-nhan-vat-ky-nang.md#4-nhân-vật-kèm-nghề--chiêu-nghề)
 - [ ] Danh sách nhân vật kèm trong cửa hàng (khoảng 12) và giá. → [Tiến trình](design/08-tien-trinh-kinh-te.md#3-cửa-hàng)
@@ -27,7 +27,8 @@
 - [x] Phí vàng khi ghép nâng bậc: thấp, 10–80 vàng (19/10/2026). → [Trang bị](design/07-trang-bi.md#5-ghép-nâng-bậc)
 - [x] Bảng rơi đồ theo phẩm (19/10/2026).
 - [ ] Danh sách trang bị cố định của cửa hàng và giá. → [Trang bị](design/07-trang-bi.md#6-nguồn-trang-bị)
-- [ ] Giá trị mỗi ô vàng và ô sách. → [Tiến trình](design/08-tien-trinh-kinh-te.md#2-vàng)
+- [ ] Giá trị mỗi ô vàng và ô sách. Đã có điểm xuất phát (3 vàng, 5 kinh nghiệm), chờ Shan duyệt.
+- [ ] Đường cong kinh nghiệm, chỉ số theo cấp (+3% mỗi cấp) và cấp tối đa 30. → [Tiến trình](design/08-tien-trinh-kinh-te.md#11-số-liệu-điểm-xuất-phát-19102026) → [Tiến trình](design/08-tien-trinh-kinh-te.md#2-vàng)
 
 ## Chế độ chơi
 
