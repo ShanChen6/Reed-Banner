@@ -61,3 +61,24 @@ export function matchStore(): MatchStore {
   globalStore.coLauMatchStore ??= process.env.DATABASE_URL ? neonStore(process.env.DATABASE_URL) : new MemoryMatchStore();
   return globalStore.coLauMatchStore;
 }
+
+export interface DatabaseCheck {
+  readonly kind: "neon" | "memory";
+  readonly ok: boolean;
+  /** Bảng `matches` đã được tạo (migration đã chạy). */
+  readonly migrated?: boolean;
+  readonly error?: string;
+}
+
+/** Kiểm tra nối Postgres và bảng `matches`; không có DATABASE_URL thì báo đang dùng bộ nhớ. */
+export async function checkDatabase(): Promise<DatabaseCheck> {
+  const url = process.env.DATABASE_URL;
+  if (!url) return { kind: "memory", ok: process.env.NODE_ENV !== "production" };
+  try {
+    const rows = (await neon(url)`select to_regclass('public.matches') as t`) as { t: string | null }[];
+    const migrated = rows[0]?.t != null;
+    return { kind: "neon", ok: migrated, migrated };
+  } catch (e) {
+    return { kind: "neon", ok: false, error: e instanceof Error ? e.name : "unknown" };
+  }
+}
