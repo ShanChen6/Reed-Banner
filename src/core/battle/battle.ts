@@ -163,13 +163,15 @@ export function createBattle(config: BattleConfig): { state: BattleState; events
   const sides = config.sides.map((s): Side => {
     if (s.fighters.length === 0) throw new RangeError("Mỗi phe cần ít nhất một nhân vật");
     if (s.leader < 0 || s.leader >= s.fighters.length) throw new RangeError("Thủ lĩnh không hợp lệ");
+    if (s.hpRatio && !(s.hpRatio[s.leader]! > 0)) throw new RangeError("Thủ lĩnh phải còn máu");
     for (const f of s.fighters) {
       for (const id of f.skills ?? []) if (!getSkill(id)) throw new RangeError(`Kỹ năng không tồn tại: ${id}`);
     }
     return {
-      fighters: s.fighters.map((f) => {
+      fighters: s.fighters.map((f, i) => {
         const maxHp = solo ? Math.round(f.maxHp * R.SOLO_HP_MULTIPLIER) : f.maxHp;
-        return { ...f, maxHp, hp: maxHp, energy: 0, spirit: R.SPIRIT_MAX, effects: [] };
+        const ratio = Math.max(0, Math.min(1, s.hpRatio?.[i] ?? 1));
+        return { ...f, maxHp, hp: Math.round(maxHp * ratio), energy: 0, spirit: R.SPIRIT_MAX, effects: [] };
       }),
       leader: s.leader,
       food: s.food ?? R.FOOD_START,
