@@ -40,7 +40,7 @@
 ## Giao diện
 
 - [ ] Người vẽ hoặc công cụ AI, ngân sách và thời điểm vẽ chân dung, trang bị; danh sách 12 sứ quân theo thứ tự chiến dịch. → [Hình ảnh](design/13-hinh-anh.md#25-định-dạng-giao-hàng)
-- [ ] Hướng phong cách: lai hai tầng chi tiết (tranh lớn chi tiết, nhân vật trận gọn), theo hẳn tranh chi tiết như hình mẫu 20/10, hay giữ khắc gỗ. → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#24-hai-tầng-chi-tiết-đề-xuất-chờ-chốt)
+- [x] Hướng phong cách: lai hai tầng chi tiết, tranh lớn chi tiết và nhân vật trận gọn (Shan chốt 20/10/2026). → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#24-hai-tầng-chi-tiết-shan-chốt-20102026)
 - [ ] Công cụ hoạt ảnh nhân vật (Spine, Rive hay tự viết), chốt sau bước thử Đ0. → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#32-đề-xuất-chờ-chốt)
 - [ ] Kiến trúc hiển thị: PixiJS cho nhân vật và hiệu ứng, bàn cờ giữ DOM tới khi đo thấy cần chuyển. → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#52-đề-xuất-ba-lớp-chồng-nhau-chờ-chốt)
 - [ ] Ngân sách dung lượng và mục tiêu hiệu năng. → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#61-ngân-sách-dung-lượng-điểm-xuất-phát)
