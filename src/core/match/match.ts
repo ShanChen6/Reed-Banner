@@ -40,6 +40,8 @@ export interface Match {
   readonly stage?: string;
   /** Đánh trùm: bậc trùm ở màn `stage`. */
   readonly raid?: RaidTier;
+  /** Leo tháp: số tầng. */
+  readonly tower?: number;
 }
 
 export interface MatchConfig {
@@ -51,6 +53,7 @@ export interface MatchConfig {
   readonly weights?: SpawnWeights;
   readonly stage?: string;
   readonly raid?: RaidTier;
+  readonly tower?: number;
 }
 
 export interface MatchStep {
@@ -77,6 +80,7 @@ export function startMatch(config: MatchConfig): MatchStep {
     forfeited: false,
     ...(config.stage ? { stage: config.stage } : {}),
     ...(config.raid ? { raid: config.raid } : {}),
+    ...(config.tower ? { tower: config.tower } : {}),
   };
   const ai = runAi(match, config.now, config.difficulty);
   return { match: ai.match, events: [...events, ...ai.events] };
@@ -197,6 +201,7 @@ export interface MatchView {
   readonly forfeited: boolean;
   readonly stage?: string;
   readonly raid?: RaidTier;
+  readonly tower?: number;
 }
 
 export function viewOf(m: Match): MatchView {
@@ -209,5 +214,6 @@ export function viewOf(m: Match): MatchView {
     forfeited: m.forfeited,
     ...(m.stage ? { stage: m.stage } : {}),
     ...(m.raid ? { raid: m.raid } : {}),
+    ...(m.tower ? { tower: m.tower } : {}),
   };
 }
