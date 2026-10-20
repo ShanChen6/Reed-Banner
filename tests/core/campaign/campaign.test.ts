@@ -17,6 +17,12 @@ import {
   mainSkills,
   newProfile,
   parseProfile,
+  RECOMMENDED_LEVEL_BONUS,
+  recommendedLevel,
+  runBattle,
+  stageMatchups,
+  stagePlayerTeam,
+  stageTeamIds,
   professionSkills,
   profileTeam,
   stageById,
@@ -221,5 +227,32 @@ describe("chiêu riêng và thoại", () => {
       for (const f of s.foes.filter((x) => x.hero)) assert.ok(f.title, f.id);
       assert.ok(s.lines.before && s.lines.win && s.lines.lose, s.id);
     }
+  });
+});
+
+describe("mô phỏng theo màn", () => {
+  it("đội người chơi theo cấp gợi ý, đội kèm là 2 tướng gia nhập gần nhất; trận mang luật màn", () => {
+    const tamDai = stageById("tamDai")!;
+    assert.deepEqual(stageTeamIds(tamDai, "heroes"), ["luuCo", "trinhTu"]);
+    assert.deepEqual(stageTeamIds(stageById("binhKieu")!, "heroes"), [
+      "dinhDien",
+      "luuCo",
+    ]);
+    assert.deepEqual(stageTeamIds(tamDai, "default"), ["haVan", "maiThanh"]);
+    const team = stagePlayerTeam(tamDai);
+    assert.equal(team.length, 3);
+    assert.equal(stagePlayerTeam(stageById("boHai")!).length, 1);
+    const [m] = stageMatchups(tamDai, 1);
+    assert.equal(m!.sides[1].food, tamDai.foeFood);
+    assert.deepEqual(
+      stageMatchups(stageById("hoiHo")!, 1)[0]!.weights,
+      stageById("hoiHo")!.weights,
+    );
+    const r = runBattle(m!, { difficulty: ["normal", tamDai.difficulty] });
+    assert.ok(r.turns > 0);
+    assert.equal(
+      recommendedLevel(tamDai),
+      tamDai.recommended ?? tamDai.level + RECOMMENDED_LEVEL_BONUS,
+    );
   });
 });

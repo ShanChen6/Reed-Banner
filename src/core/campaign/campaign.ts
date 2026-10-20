@@ -57,6 +57,8 @@ export interface CampaignStage {
   readonly foeFood?: number;
   readonly weights?: SpawnWeights;
   readonly rule?: string;
+  /** Cấp gợi ý cho Đinh Bộ Lĩnh; bỏ trống là cấp đối thủ + RECOMMENDED_LEVEL_BONUS. Cân bằng `pnpm sim -- --stage`. */
+  readonly recommended?: number;
   /** Vàng thưởng thêm lần đầu qua màn. */
   readonly firstClearGold: number;
   /** Tướng lịch sử gia nhập đội lần đầu qua màn (id trong HERO_COMPANIONS), ở cấp của màn. */
@@ -104,6 +106,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     mode: "1v1",
     difficulty: "easy",
     level: 1,
+    recommended: 4,
     foes: [aide("coLau-tre", "Trẻ chăn trâu xóm bên", "tho", "binhLinh")],
     firstClearGold: 100,
     lines: {
@@ -126,6 +129,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     mode: "1v1",
     difficulty: "easy",
     level: 2,
+    recommended: 6,
     foes: [hero("tranLam", "Trần Lãm", "thuy", "quanSu", "Trần Minh Công")],
     firstClearGold: 150,
     lines: {
@@ -147,6 +151,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     mode: "1v1",
     difficulty: "easy",
     level: 3,
+    recommended: 6,
     foes: [
       hero("phamBachHo", "Phạm Bạch Hổ", "hoa", "tuongSi", "Phạm Phòng Át"),
     ],
@@ -169,6 +174,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     mode: "3v3",
     difficulty: "normal",
     level: 5,
+    recommended: 8,
     foes: [
       hero("ngoXuongXi", "Ngô Xương Xí", "kim", "muuSi", "Kiều công"),
       aide("binhKieu-pho", "Phó tướng Bình Kiều", "kim", "binhLinh"),
@@ -193,6 +199,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     mode: "3v3",
     difficulty: "normal",
     level: 6,
+    recommended: 9,
     foes: [
       hero("ngoNhatKhanh", "Ngô Nhật Khánh", "phong", "quanSu", "Ngô Nam công"),
       aide("duongLam-pho", "Phó tướng Đường Lâm", "tho", "tuongSi"),
@@ -215,6 +222,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     mode: "3v3",
     difficulty: "normal",
     level: 8,
+    recommended: 11,
     foes: [
       hero(
         "nguyenKhoan",
@@ -248,10 +256,11 @@ export const CAMPAIGN: readonly CampaignStage[] = [
       "Kiều Công Hãn giữ Phong Châu, đất cũ của các vua Hùng, nơi dân quen nghề binh.",
     mode: "3v3",
     difficulty: "normal",
-    level: 10,
+    level: 9,
+    recommended: 14,
     foes: [
       hero("kieuCongHan", "Kiều Công Hãn", "loi", "phapSu", "Kiều Tam Chế"),
-      aide("phongChau-pho", "Phó tướng Phong Châu", "kim", "tuongSi"),
+      aide("phongChau-pho", "Phó tướng Phong Châu", "tho", "binhLinh"),
       aide("phongChau-muu", "Mưu thần Phong Châu", "phong", "muuSi"),
     ],
     firstClearGold: 400,
@@ -274,6 +283,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     mode: "3v3",
     difficulty: "hard",
     level: 10,
+    recommended: 14,
     foes: [
       hero("kieuThuan", "Kiều Thuận", "moc", "ySu", "Kiều Lệnh công"),
       aide("hoiHo-pho", "Phó tướng Hồi Hồ", "thuy", "binhLinh"),
@@ -298,6 +308,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     mode: "3v3",
     difficulty: "hard",
     level: 12,
+    recommended: 16,
     foes: [
       hero("lyKhue", "Lý Khuê", "kim", "tuongSi", "Lý Lãng công"),
       aide("sieuLoai-pho", "Phó tướng Siêu Loại", "kim", "binhLinh"),
@@ -319,6 +330,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     mode: "3v3",
     difficulty: "hard",
     level: 13,
+    recommended: 16,
     foes: [
       hero(
         "nguyenThuTiep",
@@ -348,6 +360,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     mode: "3v3",
     difficulty: "hard",
     level: 15,
+    recommended: 18,
     foes: [
       hero("luDuong", "Lữ Đường", "thuy", "phapSu", "Lữ Tá công"),
       aide("teGiang-pho", "Phó tướng Tế Giang", "thuy", "binhLinh"),
@@ -372,6 +385,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     mode: "3v3",
     difficulty: "hard",
     level: 17,
+    recommended: 21,
     foes: [
       hero("nguyenSieu", "Nguyễn Siêu", "hoa", "binhLinh", "Nguyễn Hữu công"),
       aide("tayPhuLiet-pho", "Phó tướng Tây Phù Liệt", "hoa", "tuongSi"),
@@ -394,6 +408,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     mode: "3v3",
     difficulty: "boss",
     level: 20,
+    recommended: 24,
     boss: true,
     foes: [
       hero("doCanhThac", "Đỗ Cảnh Thạc", "tho", "tuongSi", "Đỗ Lệnh công"),
@@ -417,6 +432,11 @@ export const CAMPAIGN: readonly CampaignStage[] = [
  * đối thủ 3 cấp, nên người chơi thật ở mức này qua được màn sau vài lần thử.
  */
 export const RECOMMENDED_LEVEL_BONUS = 3;
+
+/** Cấp gợi ý của màn. */
+export function recommendedLevel(stage: CampaignStage): number {
+  return stage.recommended ?? stage.level + RECOMMENDED_LEVEL_BONUS;
+}
 
 export function stageById(id: string): CampaignStage | undefined {
   return CAMPAIGN.find((s) => s.id === id);

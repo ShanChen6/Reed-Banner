@@ -197,7 +197,7 @@ Claude đặt ngày 20/10/2026, tên tự đặt (không lấy từ game khác),
 | Ngô Xương Xí | **Ngô Gia Di Mưu** | 60 | 240% ATK bỏ qua 40% Thủ, −50 năng lượng, Câm lặng 1 lượt; phá 6 ô |
 | Ngô Nhật Khánh | **Đường Lâm Phong Khởi** | 60 | 60% ATK cả đội đối thủ, Xua tan, −25% Công 2 lượt; trượt 1 hàng/cột tối đa 2 ô |
 | Nguyễn Khoan | **Tam Đái Kiên Thành** | 60 | Khiên 25% máu cả đội; bản thân Khiêu khích, Phản đòn 35% 2 lượt |
-| Kiều Công Hãn | **Phong Châu Lôi Kích** | 60 | 140% ATK cả đội đối thủ, −30 năng lượng; phá 6 ô |
+| Kiều Công Hãn | **Phong Châu Lôi Kích** | 60 | 100% ATK cả đội đối thủ, −15 năng lượng; phá 4 ô (giảm 20/10/2026: bản cũ 140%, −30, 6 ô làm màn Phong Châu chỉ còn 35% thắng) |
 | Kiều Thuận | **Hồi Hồ Sinh Khí** | 60 | Hồi 25% máu và Hồi phục 6%/lượt 2 lượt cho cả đội |
 | Lý Khuê | **Siêu Loại Phá Giáp** | 60 | 340% ATK bỏ qua 50% Thủ, −30% Thủ 2 lượt; phá 6 ô |
 | Nguyễn Thủ Tiệp | **Tiên Du Đoạt Lương** | 60 | 60% ATK cả đội đối thủ, −25 lương, −30 năng lượng, 25% Đóng băng |
