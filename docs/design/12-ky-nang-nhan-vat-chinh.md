@@ -41,7 +41,8 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 - Kỹ năng có vùng **do người chơi chọn**: chạm vào một ô làm tâm. Vùng tự dịch vào trong nếu tràn ra ngoài bàn 12×8. Vùng có kích thước chẵn (2×2, 4×4) lấy ô được chạm làm góc trên trái.
 - Kỹ năng có ô **ngẫu nhiên**: server chọn bằng luồng ngẫu nhiên của bàn cờ, không trùng ô. AI không biết trước.
 - Ô bị phá được thu hoạch (chỉ 50% sát thương kiếm và 50% năng lượng âm dương, kể cả cascade sau đó), ô đặc biệt bị phá thì kích hoạt, cascade sau kỹ năng không cho lượt thêm (luật ở [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#5-kỹ-năng-tác-động-lên-bàn-cờ)).
-- Kỹ năng **trượt** (chỉ hệ Phong): dịch toàn bộ một hàng hoặc một cột do người chơi chọn đi 1 hoặc 2 ô theo hướng chọn; ô tràn khỏi một đầu quay vào đầu kia. Trượt không phá ô và không thu hoạch; nếu tạo bộ ghép thì cascade như bình thường (cùng mức thu hoạch giảm như phá ô, không cho lượt thêm; ô đặc biệt sinh ra ở ô giữa bộ ghép như luật cascade). Ô đặc biệt trượt theo như ô thường.
+- Kỹ năng **lốc xoáy** (chỉ hệ Phong, Shan chốt 20/10/2026 thay cho trượt hàng/cột): người chơi chạm một ô làm tâm (không sát mép bàn), 8 ô quanh nó xoay vòng 1 hoặc 2 nấc theo hoặc ngược chiều kim đồng hồ; ô tâm đứng yên. Xoay không phá ô và không thu hoạch; nếu tạo bộ ghép thì cascade như bình thường (cùng mức thu hoạch giảm như phá ô, không cho lượt thêm; ô đặc biệt sinh ra ở ô giữa bộ ghép như luật cascade). Ô đặc biệt xoay theo như ô thường.
+- Kỹ năng có lốc xoáy **kèm theo** (Bão Táp Càn Khôn, tuyệt chiêu và chiêu riêng hệ Phong) thì game **tự xoay**: chọn lần xoay tạo bộ ghép nhiều ô nhất (tối đa 2 nấc), không lần nào tạo bộ ghép thì bỏ qua. Người chơi không phải thao tác thêm.
 - Kỹ năng **biến ô** đổi loại ô thường; không biến ô đặc biệt. Ô vừa biến có thể tạo bộ ghép và cascade ngay.
 
 | Ký hiệu | Hình | Số ô |
@@ -143,17 +144,19 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 
 | Ô | Kỹ năng | Chi phí | Tác dụng |
 |---|---|---|---|
-| Bị động | **Thuận Phong** | Nộ | Trong 3 lượt kế tiếp của phe, người ra tay được **trượt** miễn phí 1 hàng hoặc 1 cột đi 1 ô, làm trước kỹ năng và đổi ô (không tốn năng lượng, không tính là dùng kỹ năng, không đặt lại đồng hồ). **Tối đa 1 lần mỗi lần kích hoạt** (Shan chốt 19/10/2026). |
-| 1 | **Phong Quyển Tàn Vân** | 40 | **Trượt** 1 hàng hoặc 1 cột đi 1–2 ô. |
+| Bị động | **Thuận Phong** | Nộ | Trong 3 lượt kế tiếp của phe, người ra tay được **xoay lốc xoáy** miễn phí 1 nấc, làm trước kỹ năng và đổi ô (không tốn năng lượng, không tính là dùng kỹ năng, không đặt lại đồng hồ). **Tối đa 1 lần mỗi lần kích hoạt** (Shan chốt 19/10/2026). |
+| 1 | **Phong Quyển Tàn Vân** | 40 | **Lốc xoáy** quanh ô chọn, 1–2 nấc. |
 | 2 | **Thanh Phong Tụ Khí** | 30 | Công +20% cho bản thân 2 lượt, nhận ngay 10 năng lượng. |
 | 3 | **Phong Nhận Liệt Không** | 40 | 175% ATK vào 1 đối thủ, Xua tan mục tiêu. Phá vùng **2×2**. |
 | 4 | **Cuồng Phong Quét Trận** | 60 | 60% ATK vào toàn bộ kẻ địch, Công −10% mỗi mục tiêu 2 lượt. Phá **chữ X lớn**. |
-| 5 | **Bão Táp Càn Khôn** | 100 | 300% ATK vào 1 đối thủ, Xua tan và Công −25% mục tiêu 2 lượt. **Trượt** 1 hàng 2 ô rồi phá vùng **4×4**. |
+| 5 | **Bão Táp Càn Khôn** | 100 | 300% ATK vào 1 đối thủ, Xua tan và Công −25% mục tiêu 2 lượt. **Tự xoay** lốc xoáy rồi phá vùng **4×4**. |
 | 6 | **Phong Hành Vạn Lý** | 50 | Thủ +15% cho cả đội 2 lượt, cả đội nhận 15 năng lượng. |
 
-- Phong là hệ duy nhất có kỹ năng trượt, nên mạnh nhất ở việc chủ động tạo combo và ô đặc biệt.
+- Phong là hệ duy nhất có lốc xoáy, nên mạnh nhất ở việc chủ động tạo combo và ô đặc biệt.
+- Vì sao bỏ trượt (Shan, 20/10/2026): người chơi phải tự hình dung cả hàng 12 ô dịch đi, có ô tràn quay vòng, rất khó thấy combo; AI thì tính hết nên Phong mạnh với máy mà khó với người. Lốc xoáy chỉ đụng 8 ô trong vùng 3×3 nên dễ nhìn hơn.
+- Mô phỏng 20/10/2026 (AI Thường, cấp 10, seed 1, 600 trận mỗi chế độ, `pnpm sim -- --mode 3v3 --battles 600 --element phong --level 10`): nhân vật chính hệ Phong 3vs3 thắng 52.8% → 55.7%, 1vs1 56.7% → 57.5% (120 trận, nhiễu lớn); trung vị lượt gần như không đổi (12 → 11.5). Mức tăng nằm trong khoảng nhiễu nên giữ nguyên số liệu kỹ năng. Phong Quyển Tàn Vân được AI dùng nhiều hơn (0.38 → 0.51 lần/trận ở 3vs3).
 - Mô phỏng 19/10/2026 (3vs3, 180 trận): một lần trượt chọn khéo gần như là một nước đi miễn phí kèm combo. Cho trượt miễn phí ở mọi lần ra tay trong 3 lượt thì phe Phong thắng khoảng 80%; chỉ 1 lần mỗi lần kích hoạt thì khoảng 73%; bỏ hẳn thì 68%. Phong Quyển Tàn Vân tăng giá 20 → 40 vì cùng lý do.
-- Thao tác: kéo dọc một hàng hoặc một cột từ ô đầu tới ô đích (hoặc chạm ô đầu rồi ô đích).
+- Thao tác: chạm ô tâm (8 ô quanh được tô viền), rồi bấm nút ↺/↻ (và ×2 cho kỹ năng 2 nấc); bàn phím: Enter chọn tâm, Q ↺, E ↻, giữ Shift để xoay 2 nấc. Chạm lại ô tâm hoặc Esc để bỏ.
 
 ## 9. So sánh nhanh
 
@@ -165,7 +168,7 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 | 🔥 Hỏa | 200 / 100 / 360 (+15% bị động) | Sát thương cao nhất | DEF bản thân thấp |
 | ⛰️ Thổ | 150 / 75 / 260 | Khiên nhiều, tạo lương | Sát thương thấp nhất |
 | ⚡ Lôi | 200 / 90 / 320 | Phá năng lượng, Câm lặng | Ít hồi máu, phụ thuộc ô âm dương |
-| 🌪️ Phong | 175 / 60 / 300 | Trượt hàng/cột tạo combo, Xua tan, hồi năng lượng | Không hồi máu, ít Khiên |
+| 🌪️ Phong | 175 / 60 / 300 | Lốc xoáy tạo combo, Xua tan, hồi năng lượng | Không hồi máu, ít Khiên |
 
 ### Mô phỏng 19/10/2026
 
@@ -184,7 +187,7 @@ AI Thường, seed 1, 900 trận mỗi hệ cho mỗi chế độ (`pnpm sim -- 
 - Khoảng cách giữa hệ mạnh nhất và yếu nhất ở 3vs3 giảm từ 25 xuống 15 điểm phần trăm. Không có trận hòa.
 - Thu hoạch đủ thì kỹ năng bàn cờ giá rẻ là nước đi miễn phí: Thủy Nguyệt Tụ Linh được dùng khoảng 6 lần mỗi trận vì ô âm dương ghép ngay hoàn lại năng lượng, Phong Quyển Tàn Vân khoảng 2 lần và đáng khoảng 7 điểm phần trăm tỉ lệ thắng. Giờ ô thu hoạch khi kỹ năng đổi bàn chỉ cho 50% sát thương kiếm và 50% năng lượng (xem [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#5-kỹ-năng-tác-động-lên-bàn-cờ)); bỏ hẳn ô 1 khỏi bộ của bất kỳ hệ nào giờ chỉ đổi tỉ lệ thắng khoảng 3 điểm hoặc ít hơn.
 - Giảm thu hoạch cũng làm yếu phần phá ô của ô 3–5, nên tăng lại: Đoạn Kim Nhất Tuyến 180% → 240% và 40 → 35 năng lượng, Lôi Tiễn Xuyên Vân 180% → 200%, Thanh Mộc Hộ Pháp 130% → 150%, Hàn Băng Tiễn 165% → 175%. Phong bị giảm: Cuồng Phong Quét Trận 85% → 60% và Công −15% → −10%, Thuận Phong bỏ 15 năng lượng tức thì (lần trượt miễn phí giữ nguyên).
-- AI chấm lần trượt theo đúng mức thu hoạch giảm.
+- AI chấm lần trượt theo đúng mức thu hoạch giảm (nay là lần xoay lốc xoáy).
 - Kim và Phong lệch chủ yếu do khắc chế với 5 nhân vật kèm khởi đầu: Hà Vân (Pháp sư hệ Hỏa, gây sát thương nhiều nhất) khắc Kim, còn Phong khắc Lê Thạch (Binh lính hệ Thổ, người hứng đòn). Cho mọi nhân vật kèm cùng hệ với nhân vật chính (không khắc chế) thì 7 bộ kỹ năng chỉ cách nhau 57–63% (trừ Mộc, đã tăng sau đó).
 - Bị động Kim bỏ qua 40% DEF gần như không có tác dụng vì DEF hiện chỉ 8–15. Thử thêm +30% sát thương cho bị động thì Kim thắng thêm khoảng 2 điểm; chưa áp dụng vì là đổi thiết kế.
 

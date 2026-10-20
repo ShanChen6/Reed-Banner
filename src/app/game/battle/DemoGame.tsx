@@ -6,11 +6,12 @@ import {
   applyProfileAction,
   applyRewards,
   battleRewards,
-  canFreeSlide,
+  canFreeWhirl,
   createBattle,
   createRng,
   getSkill,
   isAdjacent,
+  isWhirlCenter,
   buildCompanion,
   buildMain,
   maxProgress,
@@ -34,7 +35,7 @@ import {
   receiveDrop,
   rollDrop,
   selectableActors,
-  slideStep,
+  whirlStep,
   stageById,
   STARTER_COMPANIONS,
   tileAt,
@@ -60,7 +61,7 @@ import {
   type ProfileAction,
   type SideConfig,
   type SkillDef,
-  type Slide,
+  type Whirl,
   type Tier,
   autoRevive,
   downedAfterWave,
@@ -277,13 +278,11 @@ const fighterName = (id: string) =>
 
 type Aim = { skill: SkillDef } | null;
 
-/** Đang chọn hàng/cột để trượt: cho kỹ năng Phong, hoặc lần trượt miễn phí (skill null). */
-type SlideAim = {
+/** Đang chọn tâm lốc xoáy: cho kỹ năng Phong, hoặc lần xoay miễn phí (skill null). */
+type WhirlAim = {
   readonly skill: SkillDef | null;
   readonly max: number;
-  readonly axis?: "row";
-  readonly exact?: boolean;
-  readonly from: Pos | null;
+  readonly center: Pos | null;
 } | null;
 
 interface LogLine {
@@ -340,9 +339,9 @@ function describe(state: BattleState, e: BattleEvent): string | null {
         ? `Bị động ${passive} của phe bạn kích hoạt`
         : `Bị động ${passive} của đối thủ kích hoạt`;
     }
-    case "slide":
+    case "whirl":
       return e.free
-        ? `${name(e.side, e.fighter)} trượt miễn phí ${e.slide.axis === "row" ? "hàng" : "cột"} ${e.slide.index + 1}`
+        ? `${name(e.side, e.fighter)} xoay lốc xoáy miễn phí quanh ô hàng ${e.whirl.center.row + 1}, cột ${e.whirl.center.col + 1}`
         : null;
     case "shuffle":
       return "Hết nước đi, bàn cờ được xáo lại";
@@ -549,15 +548,16 @@ function BreakPanel({
   );
 }
 
-function slideHint(a: NonNullable<SlideAim>): string {
-  const what = a.axis === "row" ? "một hàng" : "một hàng hoặc một cột";
-  const how = a.exact
-    ? `đúng ${a.max} ô`
-    : a.max === 1
-      ? "1 ô"
-      : `1–${a.max} ô`;
-  return `${a.skill ? a.skill.name : "Trượt miễn phí"}: kéo ${what} đi ${how} (chọn ô đầu rồi ô đích).`;
+function whirlHint(a: NonNullable<WhirlAim>): string {
+  const name = a.skill ? a.skill.name : "Xoay miễn phí";
+  return a.center
+    ? `${name}: chọn chiều xoay${a.max > 1 ? " và số nấc" : ""} (phím Q ↺, E ↻${a.max > 1 ? ", Shift để xoay 2 nấc" : ""}).`
+    : `${name}: chạm một ô không sát mép làm tâm, 8 ô quanh nó sẽ xoay vòng.`;
 }
+
+/** Ô nằm trong vòng 8 ô quanh tâm lốc xoáy. */
+const inRing = (c: Pos, p: Pos) =>
+  Math.max(Math.abs(c.row - p.row), Math.abs(c.col - p.col)) === 1;
 
 function Bar({
   value,
@@ -806,8 +806,8 @@ export default function DemoGame({
   const [showCursor, setShowCursor] = useState(false);
   const [aim, setAim] = useState<Aim>(null);
   const [aimIndex, setAimIndex] = useState(0);
-  const [slideAim, setSlideAim] = useState<SlideAim>(null);
-  const [pendingSlide, setPendingSlide] = useState<Slide | null>(null);
+  const [whirlAim, setWhirlAim] = useState<WhirlAim>(null);
+  const [pendingWhirl, setPendingWhirl] = useState<Whirl | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [log, setLog] = useState<LogLine[]>([]);
   const logId = useRef(0);
@@ -1157,9 +1157,9 @@ export default function DemoGame({
 
   /** Bắt đầu chọn mục tiêu (đối thủ, đồng đội hoặc ô) cho kỹ năng; không cần thì dùng luôn. */
   const aimOrCast = useCallback(
-    (def: SkillDef, slide?: Slide) => {
+    (def: SkillDef, whirl?: Whirl) => {
       if (def.target === "enemy" || def.target === "ally" || needsCell(def)) {
-        setPendingSlide(slide ?? null);
+        setPendingWhirl(whirl ?? null);
         setAim({ skill: def });
         setSelected(null);
         const side = def.target === "ally" ? PLAYER : AI;
@@ -1169,7 +1169,7 @@ export default function DemoGame({
         );
         return;
       }
-      apply({ type: "skill", skill: def.id, ...(slide ? { slide } : {}) });
+      apply({ type: "skill", skill: def.id, ...(whirl ? { whirl } : {}) });
     },
     [state, apply],
   );
@@ -1182,17 +1182,11 @@ export default function DemoGame({
         return flash(
           `${ERROR_TEXT.notEnoughEnergy} (${actor.energy}/${def.cost})`,
         );
-      const slide = slideStep(def);
-      if (slide) {
+      const whirl = whirlStep(def);
+      if (whirl) {
         setAim(null);
         setSelected(null);
-        setSlideAim({
-          skill: def,
-          max: slide.distance,
-          axis: slide.axis,
-          exact: slide.exact,
-          from: null,
-        });
+        setWhirlAim({ skill: def, max: whirl.turns, center: null });
         return;
       }
       aimOrCast(def);
@@ -1211,54 +1205,37 @@ export default function DemoGame({
         skill: def.id,
         ...(target !== undefined ? { target } : {}),
         ...(cell ? { cell } : {}),
-        ...(pendingSlide ? { slide: pendingSlide } : {}),
+        ...(pendingWhirl ? { whirl: pendingWhirl } : {}),
       });
       if (ok) {
         setAim(null);
-        setPendingSlide(null);
+        setPendingWhirl(null);
       }
     },
-    [aim, pendingSlide, apply, flash],
+    [aim, pendingWhirl, apply, flash],
   );
 
-  /** Kéo từ ô `from` tới ô `to` cùng hàng hoặc cùng cột thành một lần trượt. */
-  const pickSlide = useCallback(
-    (from: Pos, to: Pos) => {
-      if (!slideAim) return;
-      const slide: Slide | null =
-        from.row === to.row && from.col !== to.col
-          ? { axis: "row", index: from.row, offset: to.col - from.col }
-          : from.col === to.col && from.row !== to.row
-            ? { axis: "col", index: from.col, offset: to.row - from.row }
-            : null;
-      const distance = slide ? Math.abs(slide.offset) : 0;
-      if (
-        !slide ||
-        distance > slideAim.max ||
-        (slideAim.axis && slide.axis !== slideAim.axis) ||
-        (slideAim.exact && distance !== slideAim.max)
-      ) {
-        setSlideAim({ ...slideAim, from: to });
-        return flash(slideHint(slideAim));
-      }
-      setSlideAim(null);
-      if (!slideAim.skill) apply({ type: "slide", slide });
-      else aimOrCast(slideAim.skill, slide);
+  /** Xoay quanh tâm đã chọn: dương theo chiều kim đồng hồ. */
+  const spinWhirl = useCallback(
+    (turns: number) => {
+      if (!whirlAim?.center || Math.abs(turns) > whirlAim.max) return;
+      const whirl = { center: whirlAim.center, turns };
+      setWhirlAim(null);
+      if (!whirlAim.skill) apply({ type: "whirl", whirl });
+      else aimOrCast(whirlAim.skill, whirl);
     },
-    [slideAim, apply, aimOrCast, flash],
+    [whirlAim, apply, aimOrCast],
   );
 
   const onCell = useCallback(
     (pos: Pos) => {
       if (!myTurn) return;
-      if (slideAim) {
-        if (
-          !slideAim.from ||
-          (slideAim.from.row === pos.row && slideAim.from.col === pos.col)
-        ) {
-          setSlideAim({ ...slideAim, from: slideAim.from ? null : pos });
-        } else pickSlide(slideAim.from, pos);
-        return;
+      if (whirlAim) {
+        const c = whirlAim.center;
+        if (c && c.row === pos.row && c.col === pos.col)
+          return setWhirlAim({ ...whirlAim, center: null });
+        if (!isWhirlCenter(state.board, pos)) return flash(whirlHint({ ...whirlAim, center: null }));
+        return setWhirlAim({ ...whirlAim, center: pos });
       }
       if (aim) {
         if (needsCell(aim.skill)) fireAim(undefined, pos);
@@ -1270,7 +1247,7 @@ export default function DemoGame({
       if (isAdjacent(selected, pos)) return trySwap(selected, pos);
       setSelected(pos);
     },
-    [myTurn, slideAim, aim, selected, pickSlide, fireAim, trySwap],
+    [myTurn, whirlAim, aim, selected, state.board, flash, fireAim, trySwap],
   );
 
   const onPointerDown = (pos: Pos, e: React.PointerEvent) => {
@@ -1284,17 +1261,7 @@ export default function DemoGame({
     if (!d) return;
     const dx = e.clientX - d.x;
     const dy = e.clientY - d.y;
-    if (slideAim && Math.max(Math.abs(dx), Math.abs(dy)) >= SWIPE_PX) {
-      const el = document
-        .elementFromPoint(e.clientX, e.clientY)
-        ?.closest<HTMLElement>("[data-row]");
-      if (el)
-        return pickSlide(d.pos, {
-          row: Number(el.dataset.row),
-          col: Number(el.dataset.col),
-        });
-    }
-    if (Math.max(Math.abs(dx), Math.abs(dy)) < SWIPE_PX || aim || slideAim)
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < SWIPE_PX || aim || whirlAim)
       return onCell(d.pos);
     if (!myTurn) return;
     const to =
@@ -1334,6 +1301,12 @@ export default function DemoGame({
         D: [0, 1],
       };
       const dir = dirs[e.key];
+      if (whirlAim?.center && /^[qe]$/i.test(e.key)) {
+        e.preventDefault();
+        const turns = (e.key.toLowerCase() === "e" ? 1 : -1) * (e.shiftKey ? 2 : 1);
+        if (Math.abs(turns) <= whirlAim.max) spinWhirl(turns);
+        return;
+      }
       if (aim && !needsCell(aim.skill)) {
         const side = aim.skill.target === "ally" ? PLAYER : AI;
         const n = state.sides[side].fighters.length;
@@ -1366,8 +1339,8 @@ export default function DemoGame({
       } else if (e.key === "Escape") {
         setSelected(null);
         setAim(null);
-        setSlideAim(null);
-        setPendingSlide(null);
+        setWhirlAim(null);
+        setPendingWhirl(null);
       } else if (e.key === "Tab") {
         e.preventDefault();
         switchActor(e.shiftKey ? -1 : 1);
@@ -1382,6 +1355,8 @@ export default function DemoGame({
     myTurn,
     aim,
     aimIndex,
+    whirlAim,
+    spinWhirl,
     cursor,
     selected,
     state,
@@ -1416,8 +1391,8 @@ export default function DemoGame({
     setOutcome(null);
     setSelected(null);
     setAim(null);
-    setSlideAim(null);
-    setPendingSlide(null);
+    setWhirlAim(null);
+    setPendingWhirl(null);
     setLog([]);
     setBattleId(null);
     setSurvival(null);
@@ -1746,10 +1721,11 @@ export default function DemoGame({
                     col: i % board.cols,
                   };
                   const cellAnim = frame?.anims[i];
-                  const from = slideAim?.from;
+                  const center = whirlAim?.center;
                   const isSel =
                     (selected?.row === pos.row && selected.col === pos.col) ||
-                    (from?.row === pos.row && from.col === pos.col);
+                    (center?.row === pos.row && center.col === pos.col);
+                  const isRing = !!center && inRing(center, pos);
                   const isCur =
                     showCursor &&
                     cursor.row === pos.row &&
@@ -1770,7 +1746,7 @@ export default function DemoGame({
                       onPointerDown={(e) => onPointerDown(pos, e)}
                       className={`relative aspect-square rounded-md bg-[var(--cell)] ${
                         isSel ? "z-10 scale-110 ring-2 ring-amber-300" : ""
-                      } ${isCur ? "outline-2 outline-sky-400" : ""} ${(aim && needsCell(aim.skill)) || slideAim ? "cursor-crosshair" : "cursor-pointer"}`}
+                      } ${isRing ? "ring-2 ring-teal-400" : ""} ${isCur ? "outline-2 outline-sky-400" : ""} ${(aim && needsCell(aim.skill)) || whirlAim ? "cursor-crosshair" : "cursor-pointer"}`}
                     >
                       {tile && (
                         <span
@@ -2050,7 +2026,7 @@ export default function DemoGame({
                 const disabled =
                   !myTurn || state.turn.skillUsed || actor.energy < def.cost;
                 const aiming =
-                  aim?.skill.id === def.id || slideAim?.skill?.id === def.id;
+                  aim?.skill.id === def.id || whirlAim?.skill?.id === def.id;
                 return (
                   <button
                     key={def.id}
@@ -2058,8 +2034,8 @@ export default function DemoGame({
                     onClick={() => {
                       if (!aiming) return castSkill(def);
                       setAim(null);
-                      setSlideAim(null);
-                      setPendingSlide(null);
+                      setWhirlAim(null);
+                      setPendingWhirl(null);
                     }}
                     className={`relative flex w-[4.25rem] flex-col items-center gap-0.5 rounded p-1 text-[10px] leading-tight ${aiming ? "bg-rose-500 text-white" : "bg-[var(--panel)]"} ${
                       disabled && !aiming ? "opacity-40 grayscale" : ""
@@ -2077,33 +2053,49 @@ export default function DemoGame({
                   </button>
                 );
               })}
-              {myTurn && canFreeSlide(state) && (
+              {myTurn && canFreeWhirl(state) && (
                 <button
                   type="button"
                   onClick={() => {
                     setAim(null);
                     setSelected(null);
-                    setSlideAim(
-                      slideAim && !slideAim.skill
+                    setWhirlAim(
+                      whirlAim && !whirlAim.skill
                         ? null
                         : {
                             skill: null,
-                            max: PASSIVE.phongFreeSlide,
-                            from: null,
+                            max: PASSIVE.phongFreeWhirlTurns,
+                            center: null,
                           },
                     );
                   }}
-                  className={`flex items-center gap-1 rounded px-2 py-1 text-xs ${slideAim && !slideAim.skill ? "bg-rose-500 text-white" : "bg-teal-600 text-white"}`}
+                  className={`flex items-center gap-1 rounded px-2 py-1 text-xs ${whirlAim && !whirlAim.skill ? "bg-rose-500 text-white" : "bg-teal-600 text-white"}`}
                 >
-                  <ElementIcon element="phong" className="size-3.5" /> Trượt
+                  <ElementIcon element="phong" className="size-3.5" /> Xoay
                   miễn phí
                 </button>
               )}
             </div>
-            {slideAim && (
-              <p className="text-xs opacity-80">
-                {slideHint(slideAim)} Esc để hủy.
-              </p>
+            {whirlAim && (
+              <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                {whirlAim.center &&
+                  [-whirlAim.max, ...(whirlAim.max > 1 ? [-1, 1] : []), whirlAim.max]
+                    .filter((t, i, list) => list.indexOf(t) === i)
+                    .sort((x, y) => x - y)
+                    .map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => spinWhirl(t)}
+                        className="rounded bg-teal-600 px-2 py-1 font-bold text-white"
+                        aria-label={`Xoay ${Math.abs(t)} nấc ${t > 0 ? "theo" : "ngược"} chiều kim đồng hồ`}
+                      >
+                        {t > 0 ? "↻" : "↺"}
+                        {Math.abs(t) > 1 ? ` ×${Math.abs(t)}` : ""}
+                      </button>
+                    ))}
+                <span className="opacity-80">{whirlHint(whirlAim)} Esc để hủy.</span>
+              </div>
             )}
             {aim && (
               <p className="text-xs opacity-80">

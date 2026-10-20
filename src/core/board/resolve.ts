@@ -189,46 +189,84 @@ export function destroyCells(board: Board, cells: readonly Pos[], rng: Rng, weig
   return mergeResults(first, resolveBoard(first ? first.boardAfter : board, rng, weights));
 }
 
-/** Trượt cả một hàng hoặc một cột (hệ Phong), xem docs/design/12-ky-nang-nhan-vat-chinh.md mục 1.2. */
-export interface Slide {
-  readonly axis: "row" | "col";
-  /** Chỉ số hàng hoặc cột. */
-  readonly index: number;
-  /** Số ô dịch: dương là sang phải/xuống, âm là sang trái/lên. */
-  readonly offset: number;
+/**
+ * Lốc xoáy (hệ Phong): xoay vòng 8 ô quanh một ô tâm, xem docs/design/12-ky-nang-nhan-vat-chinh.md mục 1.2.
+ * Ô tâm đứng yên; tâm phải cách mép bàn ít nhất 1 ô để đủ 8 ô quanh.
+ */
+export interface Whirl {
+  readonly center: Pos;
+  /** Số nấc xoay: dương là theo chiều kim đồng hồ, âm là ngược chiều. */
+  readonly turns: number;
 }
 
-export function isValidSlide(board: Board, slide: Slide, maxDistance: number): boolean {
-  const size = slide.axis === "row" ? board.rows : board.cols;
-  const distance = Math.abs(slide.offset);
+/** 8 ô quanh tâm theo chiều kim đồng hồ, bắt đầu từ góc trên bên trái. */
+export function whirlRing(center: Pos): Pos[] {
+  const { row, col } = center;
+  return [
+    { row: row - 1, col: col - 1 },
+    { row: row - 1, col },
+    { row: row - 1, col: col + 1 },
+    { row, col: col + 1 },
+    { row: row + 1, col: col + 1 },
+    { row: row + 1, col },
+    { row: row + 1, col: col - 1 },
+    { row, col: col - 1 },
+  ];
+}
+
+export function isWhirlCenter(board: Board, center: Pos): boolean {
   return (
-    Number.isInteger(slide.index) &&
-    Number.isInteger(slide.offset) &&
-    slide.index >= 0 &&
-    slide.index < size &&
-    distance >= 1 &&
-    distance <= maxDistance
+    Number.isInteger(center.row) &&
+    Number.isInteger(center.col) &&
+    center.row >= 1 &&
+    center.row <= board.rows - 2 &&
+    center.col >= 1 &&
+    center.col <= board.cols - 2
   );
 }
 
-/** Dịch các ô của hàng/cột; ô tràn khỏi một đầu quay vào đầu kia. Ô đặc biệt trượt theo. */
-export function slideCells(board: Board, slide: Slide): Board {
+export function isValidWhirl(board: Board, whirl: Whirl, maxTurns: number): boolean {
+  const turns = Math.abs(whirl.turns);
+  return isWhirlCenter(board, whirl.center) && Number.isInteger(whirl.turns) && turns >= 1 && turns <= maxTurns;
+}
+
+/** Xoay các ô quanh tâm; ô đặc biệt xoay theo như ô thường. */
+export function whirlCells(board: Board, whirl: Whirl): Board {
   const cells = [...board.cells];
-  const length = slide.axis === "row" ? board.cols : board.rows;
-  const at = (k: number): Pos => (slide.axis === "row" ? { row: slide.index, col: k } : { row: k, col: slide.index });
-  for (let k = 0; k < length; k++) {
-    const from = (((k - slide.offset) % length) + length) % length;
-    cells[indexOf(board, at(k))] = board.cells[indexOf(board, at(from))]!;
-  }
+  const ring = whirlRing(whirl.center);
+  ring.forEach((pos, k) => {
+    const from = (((k - whirl.turns) % 8) + 8) % 8;
+    cells[indexOf(board, pos)] = board.cells[indexOf(board, ring[from]!)]!;
+  });
   return { ...board, cells };
 }
 
 /**
- * Trượt rồi cascade: trượt không phá ô và không thu hoạch, bộ ghép tạo ra thì xử lý như thường
+ * Xoay rồi cascade: xoay không phá ô và không thu hoạch, bộ ghép tạo ra thì xử lý như thường
  * (ô đặc biệt ở giữa bộ ghép), không cho lượt thêm.
  */
-export function slideLine(board: Board, slide: Slide, rng: Rng, weights: SpawnWeights): MoveResult {
-  return mergeResults(null, resolveBoard(slideCells(board, slide), rng, weights));
+export function whirlBoard(board: Board, whirl: Whirl, rng: Rng, weights: SpawnWeights): MoveResult {
+  return mergeResults(null, resolveBoard(whirlCells(board, whirl), rng, weights));
+}
+
+/**
+ * Lốc xoáy tự chọn cho kỹ năng có xoay kèm theo: lần xoay tạo bộ ghép nhiều ô nhất (hòa thì lấy tâm
+ * đứng trước, nấc nhỏ trước, chiều kim đồng hồ trước). null nếu không lần xoay nào tạo bộ ghép.
+ */
+export function autoWhirl(board: Board, maxTurns: number): Whirl | null {
+  let best: { whirl: Whirl; cells: number } | null = null;
+  for (let row = 1; row <= board.rows - 2; row++) {
+    for (let col = 1; col <= board.cols - 2; col++) {
+      for (let t = 1; t <= maxTurns; t++) {
+        for (const turns of [t, -t]) {
+          const whirl = { center: { row, col }, turns };
+          const cells = findMatches(whirlCells(board, whirl)).reduce((n, g) => n + g.cells.length, 0);
+          if (cells > (best?.cells ?? 0)) best = { whirl, cells };
+        }
+      }
+    }
+  }
+  return best?.whirl ?? null;
 }
 
 /** Kỹ năng biến ô: đổi `count` ô thường ngẫu nhiên thành `kind`, rồi cascade (không cho lượt thêm). */
