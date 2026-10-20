@@ -11,7 +11,6 @@ import {
   type TowerReward,
   type TowerRun,
 } from "../progress";
-import { companionById } from "../roster";
 import { newTowerRun, towerFloor, towerOffer, towerTeam } from "../tower";
 import { runBattle } from "./sim";
 
@@ -24,7 +23,7 @@ export function simProfile(level: number): Profile {
     companions: Object.fromEntries(
       DEFAULT_TEAM.map((id) => [
         id,
-        autoProgress(level, companionById(id)!.profession, id),
+        autoProgress(level, null),
       ]),
     ),
   };

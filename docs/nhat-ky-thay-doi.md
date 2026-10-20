@@ -4,6 +4,10 @@
 
 ## 20/10/2026
 
+**Hệ thống nhân vật kèm: bộ 6 ô cho mọi người, 42 tướng thường, sứ quân ở cửa hàng (Shan yêu cầu)**
+- Mọi nhân vật kèm dùng bộ 6 kỹ năng theo nguyên tố như Đinh Bộ Lĩnh, mở ô theo cấp và nâng theo ô; ô 5 là tuyệt chiêu (tướng thường) hoặc chiêu riêng (tướng lịch sử, sứ quân). Bỏ chiêu nghề và chiêu nhánh ở phe người chơi; hồ sơ cũ được hoàn điểm kỹ năng. Lý do: mô phỏng cho thấy tướng lịch sử mạnh hơn tướng thường rõ (54% so với 48%), sau khi đổi ba nhóm còn 49–51%.
+- Thêm 25 tướng thường để phủ đủ 42 tổ hợp nghề × hệ, mỗi tổ hợp một người. 12 sứ quân mở bán 3 000 vàng sau khi qua màn của họ. Giảm Thiết Bích Đồng Thành, tăng hồi máu Cam Lộ Hồi Xuân và Hoa Lư Thảo Dược. Chi tiết: [Danh sách nhân vật](design/14-nhan-vat.md).
+
 **Hai màn: landing và màn chơi theo phân cảnh (Shan yêu cầu)**
 - Bỏ các trang riêng. `/` là landing có CTA, `/game` là màn chơi duy nhất: state `currentScene` (MENU, PLAYING, CAMPAIGN, …, LOGIN, ACCOUNT) quyết định phân cảnh, đổi phân cảnh không tải lại trang mà chỉ cập nhật URL (`/game/campaign`, …), nút Back vẫn chạy. Link cũ chuyển hướng về phân cảnh tương ứng. Chi tiết: [Kiến trúc](tech/kien-truc.md#41-hai-màn-landing-và-màn-chơi-shan-chốt-20102026).
 
@@ -43,11 +47,11 @@
 - Theo danh sách Shan đưa: Lã Đường đổi thành Lữ Đường (Lữ Tá công); mỗi sứ quân có tước hiệu (Trần Minh Công, Phạm Phòng Át, …) và mỗi màn ghi vùng đất ngày nay. Ngô Nhật Khánh ghi thêm tên Ngô Nam Chỉ. Bảng ở [Chế độ chơi](design/09-che-do-choi.md#21-chương-1-cờ-lau-dẹp-loạn-claude-đặt-19102026-chờ-shan-duyệt).
 
 **Chiêu riêng và thoại sứ quân (lộ trình 4.3, Claude đặt, chờ Shan duyệt)**
-- 12 sứ quân và 6 tướng lịch sử mỗi người có một chiêu riêng thay kỹ năng ô 5. Sứ quân luôn mang chiêu riêng, giá 60 (trùm 80); tướng phe người chơi mở ở cấp 20 như ô 5. Chi tiết: [Nhân vật & kỹ năng](design/06-nhan-vat-ky-nang.md#47-chiêu-riêng-của-nhân-vật-lịch-sử).
+- 12 sứ quân và 6 tướng lịch sử mỗi người có một chiêu riêng thay kỹ năng ô 5. Sứ quân luôn mang chiêu riêng, giá 60 (trùm 80); tướng phe người chơi mở ở cấp 20 như ô 5. Chi tiết: [Nhân vật & kỹ năng](design/14-nhan-vat.md#6-sứ-quân).
 - Mỗi màn có thoại trước trận (bản đồ chiến dịch) và sau trận (thắng/thua, màn kết quả).
 
 **Tướng lịch sử gia nhập qua chiến dịch (lộ trình 4.2, Shan yêu cầu, nghề/hệ Claude đặt, chờ Shan duyệt)**
-- Nguyễn Bặc, Đinh Điền, Lưu Cơ, Trịnh Tú, Lê Hoàn, Đinh Liễn gia nhập đội khi qua 6 màn đầu lần đầu, ở cấp của màn. Mỗi người có bộ 6 kỹ năng theo nguyên tố như Đinh Bộ Lĩnh, nâng theo ô; không bán ở cửa hàng. Chi tiết: [Nhân vật & kỹ năng](design/06-nhan-vat-ky-nang.md#46-tướng-lịch-sử).
+- Nguyễn Bặc, Đinh Điền, Lưu Cơ, Trịnh Tú, Lê Hoàn, Đinh Liễn gia nhập đội khi qua 6 màn đầu lần đầu, ở cấp của màn. Mỗi người có bộ 6 kỹ năng theo nguyên tố như Đinh Bộ Lĩnh, nâng theo ô; không bán ở cửa hàng. Chi tiết: [Nhân vật & kỹ năng](design/14-nhan-vat.md#5-tướng-lịch-sử).
 - Bản đồ chiến dịch báo tướng sẽ gia nhập ở từng màn, kết quả trận báo khi có tướng mới, bảng Đội hình có mục tướng lịch sử chưa gia nhập.
 
 ## 19/10/2026

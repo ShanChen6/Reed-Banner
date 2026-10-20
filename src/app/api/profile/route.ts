@@ -1,5 +1,5 @@
 // GET /api/profile: hồ sơ tiến trình của người chơi hiện tại (chưa có thì là hồ sơ mới).
-// POST /api/profile `{ action }`: nâng kỹ năng, mua hoặc chọn chiêu nhánh; server tự kiểm tra luật.
+// POST /api/profile `{ action }`: nâng kỹ năng, mua nhân vật, trang bị…; server tự kiểm tra luật.
 
 import { NextResponse, type NextRequest } from "next/server";
 import { applyProfileAction, newProfile, parseProfileAction } from "@/core";

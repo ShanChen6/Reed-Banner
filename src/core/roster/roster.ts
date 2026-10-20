@@ -1,7 +1,8 @@
-// Đội hình khởi đầu: nhân vật chính và 5 nhân vật kèm hư cấu.
-// Chỉ số và nguyên tố của nhân vật kèm là điểm xuất phát, chờ mô phỏng cân bằng.
+// Nhân vật: Đinh Bộ Lĩnh, tướng thường (khởi đầu và cửa hàng), tướng lịch sử và sứ quân.
+// Mọi nhân vật kèm mang bộ 6 kỹ năng theo nguyên tố như Đinh Bộ Lĩnh, nâng theo ô; ô 5 là kỹ năng riêng.
+// Xem docs/design/14-nhan-vat.md; cân bằng bằng `pnpm sim -- --roster`.
 
-import { heroSkills, mainSkills, professionSkills, ultimateOf } from "../battle/skills";
+import { heroSkills, mainSkills } from "../battle/skills";
 import type { Element } from "../battle/elements";
 import type { Profession } from "../battle/rules";
 import type { FighterConfig } from "../battle/state";
@@ -34,19 +35,15 @@ export function mainCharacter(element: Element = "moc", profession: Profession =
   };
 }
 
+/**
+ * Nhân vật kèm: bộ 6 kỹ năng theo nguyên tố như nhân vật chính, ô 5 thay bằng kỹ năng riêng (tuyệt chiêu
+ * của tướng thường, chiêu riêng của tướng lịch sử và sứ quân). Bản mở hết; tiến trình lọc theo cấp ở buildHero.
+ */
 function companion(id: string, name: string, profession: Profession, element: Element): FighterConfig {
-  return {
-    id,
-    name,
-    element,
-    profession,
-    ...BASE_STATS[profession],
-    // Bản mở hết: chiêu nấc 1–2 và tuyệt chiêu nấc 3. Tiến trình lọc lại theo cấp ở buildCompanion.
-    skills: [...professionSkills(profession), ultimateOf(id)].flatMap((s) => (s ? [s.id] : [])),
-  };
+  return { ...mainCharacter(element, profession), id, name, skills: heroSkills(element, id).map((s) => s.id) };
 }
 
-/** 5 nhân vật kèm khởi đầu, mỗi người một nghề còn lại. Nguyên tố là điểm xuất phát. */
+/** 5 tướng thường khởi đầu, mỗi người một nghề còn lại. */
 export const STARTER_COMPANIONS: readonly FighterConfig[] = [
   companion("haVan", "Hà Vân", "phapSu", "hoa"),
   companion("leThach", "Lê Thạch", "binhLinh", "tho"),
@@ -62,8 +59,8 @@ export interface ShopCompanion {
 }
 
 /**
- * Nhân vật kèm bán ở cửa hàng: 2 người mỗi nghề, nguyên tố rải đủ 7 hệ. Giá chia 2 mức (khoảng 20 và 40
- * trận thắng), cân theo người cày nhiều nhất. Điểm xuất phát, xem docs/design/08-tien-trinh-kinh-te.md mục 3.
+ * Tướng thường bán ở cửa hàng: cùng 5 người khởi đầu phủ đủ 6 nghề × 7 hệ, mỗi tổ hợp một người. Giá chia
+ * 2 mức (khoảng 20 và 40 trận thắng), cân theo người cày nhiều nhất. Điểm xuất phát, xem docs/design/08-tien-trinh-kinh-te.md mục 3.
  */
 export const SHOP_PRICES = { basic: 1500, elite: 3000 } as const;
 
@@ -80,35 +77,102 @@ export const SHOP_COMPANIONS: readonly ShopCompanion[] = [
   { fighter: companion("quachAn", "Quách Ẩn", "muuSi", "thuy"), price: SHOP_PRICES.elite },
   { fighter: companion("taThach", "Tạ Thạch", "quanSu", "tho"), price: SHOP_PRICES.basic },
   { fighter: companion("macVan", "Mạc Vân", "quanSu", "loi"), price: SHOP_PRICES.elite },
+  // Thêm 20/10/2026: cùng 5 người khởi đầu và 12 người trên phủ đủ 42 tổ hợp nghề × hệ.
+  { fighter: companion("lamTung", "Lâm Tùng", "tuongSi", "moc"), price: SHOP_PRICES.basic },
+  { fighter: companion("hoLang", "Hồ Lãng", "tuongSi", "thuy"), price: SHOP_PRICES.basic },
+  { fighter: companion("khaSon", "Kha Sơn", "tuongSi", "tho"), price: SHOP_PRICES.basic },
+  { fighter: companion("tongTan", "Tống Tấn", "tuongSi", "loi"), price: SHOP_PRICES.elite },
+  { fighter: companion("huaLang", "Hứa Lăng", "tuongSi", "phong"), price: SHOP_PRICES.elite },
+  { fighter: companion("chuNgan", "Chu Ngân", "phapSu", "kim"), price: SHOP_PRICES.basic },
+  { fighter: companion("damThao", "Đàm Thảo", "phapSu", "moc"), price: SHOP_PRICES.basic },
+  { fighter: companion("doanNham", "Doãn Nham", "phapSu", "tho"), price: SHOP_PRICES.elite },
+  { fighter: companion("lieuYen", "Liễu Yên", "phapSu", "phong"), price: SHOP_PRICES.elite },
+  { fighter: companion("thaiHa", "Thái Hà", "binhLinh", "thuy"), price: SHOP_PRICES.basic },
+  { fighter: companion("truongViem", "Trương Viêm", "binhLinh", "hoa"), price: SHOP_PRICES.basic },
+  { fighter: companion("ongChan", "Ông Chấn", "binhLinh", "loi"), price: SHOP_PRICES.elite },
+  { fighter: companion("manhTuong", "Mạnh Tường", "binhLinh", "phong"), price: SHOP_PRICES.elite },
+  { fighter: companion("chauNgoc", "Châu Ngọc", "ySu", "kim"), price: SHOP_PRICES.basic },
+  { fighter: companion("hongDan", "Hồng Đan", "ySu", "hoa"), price: SHOP_PRICES.basic },
+  { fighter: companion("beLien", "Bế Liên", "ySu", "tho"), price: SHOP_PRICES.elite },
+  { fighter: companion("tieuMinh", "Tiêu Minh", "ySu", "loi"), price: SHOP_PRICES.elite },
+  { fighter: companion("nhanTruc", "Nhan Trúc", "muuSi", "moc"), price: SHOP_PRICES.basic },
+  { fighter: companion("maNhac", "Mã Nhạc", "muuSi", "tho"), price: SHOP_PRICES.basic },
+  { fighter: companion("tuKinh", "Từ Kinh", "muuSi", "loi"), price: SHOP_PRICES.elite },
+  { fighter: companion("buiPhieu", "Bùi Phiêu", "muuSi", "phong"), price: SHOP_PRICES.elite },
+  { fighter: companion("nghiemThiet", "Nghiêm Thiết", "quanSu", "kim"), price: SHOP_PRICES.basic },
+  { fighter: companion("samTue", "Sầm Tuệ", "quanSu", "moc"), price: SHOP_PRICES.basic },
+  { fighter: companion("viTrieu", "Vi Triều", "quanSu", "thuy"), price: SHOP_PRICES.elite },
+  { fighter: companion("tonDiem", "Tôn Diệm", "quanSu", "hoa"), price: SHOP_PRICES.elite },
 ];
 
 /**
- * Tướng lịch sử gia nhập đội qua chiến dịch: bộ 6 kỹ năng theo nguyên tố như nhân vật chính, nâng theo ô.
+ * Tướng lịch sử gia nhập đội qua chiến dịch, ô 5 là chiêu riêng.
  * Nghề và nguyên tố là điểm xuất phát, xem docs/design/09-che-do-choi.md mục 2.1.
  */
 export const HERO_COMPANIONS: readonly FighterConfig[] = [
-  hero("nguyenBac", "Nguyễn Bặc", "tuongSi", "hoa"),
-  hero("dinhDien", "Đinh Điền", "binhLinh", "tho"),
-  hero("luuCo", "Lưu Cơ", "muuSi", "kim"),
-  hero("trinhTu", "Trịnh Tú", "ySu", "moc"),
-  hero("leHoan", "Lê Hoàn", "quanSu", "loi"),
-  hero("dinhLien", "Đinh Liễn", "phapSu", "thuy"),
+  companion("nguyenBac", "Nguyễn Bặc", "tuongSi", "hoa"),
+  companion("dinhDien", "Đinh Điền", "binhLinh", "tho"),
+  companion("luuCo", "Lưu Cơ", "muuSi", "kim"),
+  companion("trinhTu", "Trịnh Tú", "ySu", "moc"),
+  companion("leHoan", "Lê Hoàn", "quanSu", "loi"),
+  companion("dinhLien", "Đinh Liễn", "phapSu", "thuy"),
 ];
 
-function hero(id: string, name: string, profession: Profession, element: Element): FighterConfig {
-  return { ...mainCharacter(element, profession), id, name, skills: heroSkills(element, id).map((s) => s.id) };
-}
-
-/** Tướng lịch sử: kỹ năng nâng theo ô như nhân vật chính, không có chiêu nhánh hay tuyệt chiêu riêng. */
+/** Tướng lịch sử gia nhập qua chiến dịch, không bán. */
 export function isHero(id: string): boolean {
   return HERO_COMPANIONS.some((c) => c.id === id);
 }
 
-/** Mọi nhân vật kèm: khởi đầu, cửa hàng rồi tướng lịch sử. */
+export interface WarlordCompanion extends ShopCompanion {
+  /** Màn chiến dịch có sứ quân làm thủ lĩnh; qua màn này mới mở bán. */
+  readonly stage: string;
+}
+
+/**
+ * 12 sứ quân bán ở cửa hàng sau khi người chơi đánh bại họ ở chiến dịch. Nghề, nguyên tố và chiêu riêng
+ * (ô 5) giống hệt khi làm đối thủ ở chiến dịch. Giá theo mô phỏng `pnpm sim -- --roster`.
+ */
+export const WARLORD_COMPANIONS: readonly WarlordCompanion[] = [
+  warlord("tranLam", "Trần Lãm", "quanSu", "thuy", "boHai", 3000),
+  warlord("phamBachHo", "Phạm Bạch Hổ", "tuongSi", "hoa", "dangChau", 3000),
+  warlord("ngoXuongXi", "Ngô Xương Xí", "muuSi", "kim", "binhKieu", 3000),
+  warlord("ngoNhatKhanh", "Ngô Nhật Khánh", "quanSu", "phong", "duongLam", 3000),
+  warlord("nguyenKhoan", "Nguyễn Khoan", "binhLinh", "tho", "tamDai", 3000),
+  warlord("kieuCongHan", "Kiều Công Hãn", "phapSu", "loi", "phongChau", 3000),
+  warlord("kieuThuan", "Kiều Thuận", "ySu", "moc", "hoiHo", 3000),
+  warlord("lyKhue", "Lý Khuê", "tuongSi", "kim", "sieuLoai", 3000),
+  warlord("nguyenThuTiep", "Nguyễn Thủ Tiệp", "muuSi", "thuy", "tienDu", 3000),
+  warlord("luDuong", "Lữ Đường", "phapSu", "thuy", "teGiang", 3000),
+  warlord("nguyenSieu", "Nguyễn Siêu", "binhLinh", "hoa", "tayPhuLiet", 3000),
+  warlord("doCanhThac", "Đỗ Cảnh Thạc", "tuongSi", "tho", "doDong", 3000),
+];
+
+function warlord(
+  id: string,
+  name: string,
+  profession: Profession,
+  element: Element,
+  stage: string,
+  price: number,
+): WarlordCompanion {
+  return { fighter: companion(id, name, profession, element), price, stage };
+}
+
+export function isWarlord(id: string): boolean {
+  return WARLORD_COMPANIONS.some((c) => c.fighter.id === id);
+}
+
+/** Màn chiến dịch phải qua để mở bán nhân vật `id`; undefined nếu bán ngay từ đầu. */
+export function shopUnlockStage(id: string): string | undefined {
+  return WARLORD_COMPANIONS.find((c) => c.fighter.id === id)?.stage;
+}
+
+/** Mọi nhân vật kèm: khởi đầu, cửa hàng, tướng lịch sử rồi sứ quân. */
 export const ALL_COMPANIONS: readonly FighterConfig[] = [
   ...STARTER_COMPANIONS,
   ...SHOP_COMPANIONS.map((c) => c.fighter),
   ...HERO_COMPANIONS,
+  ...WARLORD_COMPANIONS.map((c) => c.fighter),
 ];
 
 export function companionById(id: string): FighterConfig | undefined {
@@ -116,5 +180,5 @@ export function companionById(id: string): FighterConfig | undefined {
 }
 
 export function shopPrice(id: string): number | undefined {
-  return SHOP_COMPANIONS.find((c) => c.fighter.id === id)?.price;
+  return [...SHOP_COMPANIONS, ...WARLORD_COMPANIONS].find((c) => c.fighter.id === id)?.price;
 }
