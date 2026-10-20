@@ -4,6 +4,10 @@
 
 ## 19/10/2026
 
+**Chiến dịch chương 1 (Shan chọn Chiến dịch, nội dung Claude đặt, chờ Shan duyệt)**
+- 13 màn dẹp 12 sứ quân ở trang `/campaign`; sứ quân có bộ kỹ năng như Đinh Bộ Lĩnh. Lương mang sang giữa các trận, doanh trại đổi vàng lấy lương, luật màn, thưởng vàng lần đầu qua màn. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#21-chương-1-cờ-lau-dẹp-loạn-claude-đặt-19102026-chờ-shan-duyệt).
+- Lộ trình chi tiết từ giai đoạn 4 ở [Lộ trình](lo-trinh.md).
+
 **AI để dành năng lượng cho tuyệt chiêu (Claude, giai đoạn 3)**
 - Khi so kỹ năng, AI cộng thêm 40 năng lượng vào giá cho lượt dùng (mỗi lượt chỉ 1 kỹ năng), nên giờ để dành và dùng kỹ năng 100. Khiên chấm theo lượng chặn được.
 - Mô phỏng 7 hệ: tỉ lệ thắng không đổi ngoài nhiễu, trận ngắn hơn khoảng 1 lượt ở vài hệ. Chưa đổi số liệu tuyệt chiêu.
