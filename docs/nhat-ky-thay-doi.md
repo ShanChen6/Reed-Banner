@@ -2,6 +2,12 @@
 
 > Mới nhất ở trên cùng. Mỗi mục ghi quyết định và lý do nếu có.
 
+## 20/10/2026
+
+**Tướng lịch sử gia nhập qua chiến dịch (lộ trình 4.2, Shan yêu cầu, nghề/hệ Claude đặt, chờ Shan duyệt)**
+- Nguyễn Bặc, Đinh Điền, Lưu Cơ, Trịnh Tú, Lê Hoàn, Đinh Liễn gia nhập đội khi qua 6 màn đầu lần đầu, ở cấp của màn. Mỗi người có bộ 6 kỹ năng theo nguyên tố như Đinh Bộ Lĩnh, nâng theo ô; không bán ở cửa hàng. Chi tiết: [Nhân vật & kỹ năng](design/06-nhan-vat-ky-nang.md#46-tướng-lịch-sử).
+- Bản đồ chiến dịch báo tướng sẽ gia nhập ở từng màn, kết quả trận báo khi có tướng mới, bảng Đội hình có mục tướng lịch sử chưa gia nhập.
+
 ## 19/10/2026
 
 **Chiến dịch chương 1 (Shan chọn Chiến dịch, nội dung Claude đặt, chờ Shan duyệt)**

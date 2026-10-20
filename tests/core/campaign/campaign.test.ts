@@ -9,9 +9,13 @@ import {
   CAMPAIGN_FOOD_MIN,
   createBattle,
   FOOD_PRICE,
+  HERO_COMPANIONS,
+  isHero,
   mainSkills,
   newProfile,
   parseProfile,
+  professionSkills,
+  profileTeam,
   stageById,
   stageFighter,
   stageFoes,
@@ -96,6 +100,79 @@ describe("chiến dịch", () => {
         campaign: { cleared: ["coLau", 3], food: 999 },
       }).campaign.food,
       CAMPAIGN_FOOD_MAX,
+    );
+  });
+});
+
+describe("tướng lịch sử gia nhập", () => {
+  it("mỗi tướng lịch sử gia nhập ở đúng một màn, màn đó có câu kể", () => {
+    for (const h of HERO_COMPANIONS) {
+      const stages = CAMPAIGN.filter((s) => s.joins === h.id);
+      assert.equal(stages.length, 1, h.id);
+      assert.ok(stages[0]!.joinStory, h.id);
+    }
+    assert.ok(CAMPAIGN.every((s) => !s.joins || isHero(s.joins)));
+  });
+
+  it("qua màn lần đầu thì tướng gia nhập ở cấp của màn, đánh lại không cộng nữa", () => {
+    const stage = CAMPAIGN.find((s) => s.joins === "leHoan")!;
+    const first = applyCampaignResult(newProfile(), stage.id, true, 50);
+    assert.equal(first.result.joined, "leHoan");
+    const p = first.profile.companions.leHoan!;
+    assert.equal(p.level, stage.level);
+    assert.equal(p.skillPoints, stage.level - 1);
+    const again = applyCampaignResult(first.profile, stage.id, true, 50);
+    assert.equal(again.result.joined, undefined);
+    assert.equal(
+      applyCampaignResult(newProfile(), stage.id, false, 50).result.joined,
+      undefined,
+    );
+  });
+
+  it("tướng lịch sử mang bộ kỹ năng theo nguyên tố, nâng theo ô, không mua chiêu nhánh", () => {
+    let profile = applyCampaignResult(newProfile(), "tamDai", true, 50).profile;
+    const kit = mainSkills("loi");
+    let r = applyProfileAction(profile, {
+      type: "chooseTeam",
+      companions: ["haVan", "leHoan"],
+    });
+    assert.ok(r.ok);
+    profile = r.profile;
+    const hero = profileTeam(profile, profile.team)[2]!;
+    assert.equal(hero.id, "leHoan");
+    assert.equal(hero.name, "Lê Hoàn");
+    assert.equal(hero.profession, "quanSu");
+    // Cấp 8: mở ô 1, 2 và 3 (ô 3 mở ở cấp 5).
+    assert.deepEqual(
+      hero.skills,
+      kit.filter((s) => [1, 2, 3].includes(s.slot!)).map((s) => s.id),
+    );
+    r = applyProfileAction(profile, {
+      type: "upgrade",
+      character: "leHoan",
+      key: "o1",
+    });
+    assert.ok(r.ok);
+    assert.equal(r.profile.companions.leHoan!.skillLevels.o1, 2);
+    const branch = professionSkills("quanSu").find((s) => s.tier === 2)!;
+    assert.deepEqual(
+      applyProfileAction(profile, {
+        type: "buyBranch",
+        character: "leHoan",
+        skill: branch.id,
+      }),
+      {
+        ok: false,
+        error: "invalidSkill",
+      },
+    );
+    // Tướng lịch sử không bán ở cửa hàng.
+    assert.equal(
+      applyProfileAction(newProfile(), {
+        type: "buyCompanion",
+        character: "leHoan",
+      }).ok,
+      false,
     );
   });
 });

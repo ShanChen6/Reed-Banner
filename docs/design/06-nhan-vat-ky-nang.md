@@ -64,7 +64,7 @@ Tóm tắt khung chung, áp cho cả 7 nguyên tố:
 - Mỗi nhân vật kèm = **Nghề + Nguyên tố + 1 tuyệt chiêu đặc trưng**. Nguyên tố của nhân vật kèm cố định.
 - **Khởi đầu:** người chơi có nhân vật chính (mặc định Tướng sĩ) và **5 nhân vật kèm hư cấu**, mỗi người một nghề còn lại (Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư). Khi nhân vật chính đổi sang nghề khác, nhân vật kèm cùng nghề vẫn ra trận được.
   Nguyên tố và tuyệt chiêu đặc trưng của 5 nhân vật kèm khởi đầu: xem [mục 4.4](#44-tuyệt-chiêu-nấc-3).
-- Nhân vật kèm bán ở cửa hàng: 12 người, xem [mục 4.5](#45-nhân-vật-kèm-ở-cửa-hàng). Nhân vật nhận khi thắng trùm chiến dịch làm cùng chiến dịch.
+- Nhân vật kèm bán ở cửa hàng: 12 người, xem [mục 4.5](#45-nhân-vật-kèm-ở-cửa-hàng). Tướng lịch sử gia nhập qua chiến dịch, xem [mục 4.6](#46-tướng-lịch-sử).
 - Đội 3vs3 chọn 2 trong số nhân vật kèm đã có; hồ sơ lưu đội đã chọn.
 
 ### 4.1 Sáu nghề & nội tại
@@ -163,6 +163,21 @@ Claude đặt ngày 19/10/2026, điểm xuất phát chờ Shan duyệt. Hai ng�
 | Quách Ẩn | Mưu sĩ | 💧 Thủy | 3 000 | **Thủy Độn Ly Gián** | Mỗi đối thủ 50% bị Câm lặng 1 lượt, −20 năng lượng |
 | Tạ Thạch | Quân sư | ⛰️ Thổ | 1 500 | **Bát Trận Thạch Lũy** | Cả đội Thủ +30% 2 lượt và Khiên 12% máu |
 | Mạc Vân | Quân sư | ⚡ Lôi | 3 000 | **Lôi Trận Kinh Hồn** | Cả đội đối thủ Công −25% 2 lượt, −20 năng lượng; phá 6 ô ngẫu nhiên |
+
+### 4.6 Tướng lịch sử
+
+Claude đặt ngày 20/10/2026, điểm xuất phát chờ Shan duyệt. Sáu tướng lịch sử theo Đinh Bộ Lĩnh dẹp loạn, **không bán ở cửa hàng**, gia nhập khi qua màn chiến dịch lần đầu ([Chế độ chơi](09-che-do-choi.md#21-chương-1-cờ-lau-dẹp-loạn-claude-đặt-19102026-chờ-shan-duyệt)). Mỗi người mang **bộ 6 kỹ năng theo nguyên tố như nhân vật chính** (mục 2.2), mở ô theo cấp và nâng theo ô như Đinh Bộ Lĩnh; không có chiêu nhánh nấc 2 hay tuyệt chiêu riêng. Chỉ số theo nghề như mọi nhân vật; bị động ô 1 chỉ có tác dụng khi làm thủ lĩnh, mà thủ lĩnh phe người chơi luôn là Đinh Bộ Lĩnh.
+
+| Tướng | Nghề | Hệ | Gia nhập |
+|---|---|---|---|
+| Nguyễn Bặc | Tướng sĩ | 🔥 Hỏa | Cờ lau tập trận |
+| Đinh Điền | Binh lính | ⛰️ Thổ | Thử tài ở Bố Hải Khẩu |
+| Lưu Cơ | Mưu sĩ | ⚙️ Kim | Thu phục Đằng Châu |
+| Trịnh Tú | Y sư | 🌿 Mộc | Đánh Bình Kiều |
+| Lê Hoàn | Quân sư | ⚡ Lôi | Vây thành Tam Đái |
+| Đinh Liễn | Pháp sư | 💧 Thủy | Lên Phong Châu |
+
+Lộ trình 4.3 sẽ thay một kỹ năng của mỗi tướng bằng chiêu riêng mang dấu ấn lịch sử.
 
 ## 5. Kỹ năng tác động lên bàn cờ
 
