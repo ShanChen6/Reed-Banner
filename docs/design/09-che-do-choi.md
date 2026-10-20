@@ -72,7 +72,7 @@ Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (tr
   Phong Châu trước đây chỉ 35% dù hơn đối thủ 6 cấp; nguyên nhân là chiêu riêng Phong Châu Lôi Kích (bỏ nó đi thì lên 52%). Đã giảm chiêu này, đổi phó tướng Kim thành Binh lính Thổ, hạ đối thủ xuống cấp 9. Đội khởi đầu yếu hơn hẳn ở các màn Khó, nên tướng lịch sử là phần thưởng có ý nghĩa. Cấp chênh lệch ảnh hưởng ít (thêm 1 cấp thường chỉ +2–5 điểm), đội hình và hệ khắc ảnh hưởng nhiều hơn.
 - Lời dẫn và thứ tự màn dựa theo sử sách phổ thông, chỉ để làm game; Shan duyệt lại trước khi phát hành.
 
-- **Tướng lịch sử gia nhập** (Claude đặt 20/10/2026, chờ Shan duyệt): lần đầu qua màn, một tướng vào hồ sơ ở cấp của màn (điểm kỹ năng còn nguyên để người chơi tự nâng). Xem [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#46-tướng-lịch-sử).
+- **Tướng lịch sử gia nhập** (Claude đặt 20/10/2026, chờ Shan duyệt): lần đầu qua màn, một tướng vào hồ sơ ở cấp của màn (điểm kỹ năng còn nguyên để người chơi tự nâng). Xem [Nhân vật & kỹ năng](14-nhan-vat.md#5-tướng-lịch-sử).
 
   | Màn | Tướng gia nhập | Nghề | Hệ |
   |---|---|---|---|
@@ -85,7 +85,7 @@ Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (tr
 
 - Mô phỏng 20/10/2026 (80 trận mỗi màn 3vs3, hơn đối thủ 3 cấp, AI Thường): đội có 2 tướng lịch sử mới nhất thắng trung bình 65%, đội mặc định (Hà Vân, Mai Thanh) 54%. Tướng lịch sử mạnh hơn vì mang 6 kỹ năng, nhưng không vượt hẳn ở mọi màn (Phong Châu 38% so với 57%, Đỗ Động 48% so với 65%). Chưa đổi số, cân chung ở lộ trình 4.4.
 
-- **Chiêu riêng và thoại** (Claude đặt 20/10/2026, chờ Shan duyệt): mỗi sứ quân có một chiêu riêng thay ô 5 ([Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#47-chiêu-riêng-của-nhân-vật-lịch-sử)). Mỗi màn có 3 câu thoại của thủ lĩnh đối thủ: trước trận (hiện ở bản đồ chiến dịch), khi người chơi thắng và khi thua (hiện ở màn kết quả). Dữ liệu ở `lines` của từng màn trong `src/core/campaign/campaign.ts`.
+- **Chiêu riêng và thoại** (Claude đặt 20/10/2026, chờ Shan duyệt): mỗi sứ quân có một chiêu riêng thay ô 5 ([Nhân vật & kỹ năng](14-nhan-vat.md#6-sứ-quân)). Mỗi màn có 3 câu thoại của thủ lĩnh đối thủ: trước trận (hiện ở bản đồ chiến dịch), khi người chơi thắng và khi thua (hiện ở màn kết quả). Dữ liệu ở `lines` của từng màn trong `src/core/campaign/campaign.ts`.
 
 - **Bản đồ cổ** (Claude vẽ 20/10/2026, chờ Shan duyệt): trang `/campaign` có bản đồ Giao Châu thế kỷ X kiểu khắc gỗ trên giấy dó (`src/app/campaign/CampaignMap.tsx`). 13 màn đặt theo vị trí gần đúng của vùng đất ngày nay (dãn các màn quá sát nhau cho dễ bấm), có sông Hồng, Đà, Lô, Đáy, Đuống, Mã, bờ biển và núi Tản Viên, Tam Đảo, Hoa Lư. Đường hành quân nối các màn theo thứ tự: đoạn đã đi nét liền đỏ son, phần còn lại nét đứt. Màn đã qua cắm cờ lau, màn đang mở có vòng nhấp nháy, màn khóa mờ đi. Bấm (hoặc Enter) một màn đã mở để xem chi tiết như bấm trong danh sách bên dưới. Bản đồ là hình cách điệu, không phải bản đồ lịch sử đo đạc.
 
@@ -122,7 +122,7 @@ Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (tr
 - Trang `/tower`. Code ở `src/core/tower/` (dựng tầng), `src/core/progress/towerState.ts` (lượt leo lưu trong hồ sơ), server tạo trận khi gửi `tower: true`.
 - **Đội:** đội 3vs3 đang chọn ở hồ sơ, cố định cả lượt leo; chỉ số lấy theo hồ sơ lúc vào từng tầng (lên cấp, đổi đồ giữa chừng vẫn có tác dụng). Người đã ngã giữ 0 máu cho tới khi được hồi.
 - **Lương:** vào tầng 1 với 60; lương còn lại mang sang, luôn trong khoảng 20–100.
-- **Đối thủ:** 3 nhân vật kèm ngẫu nhiên theo seed của lượt leo. Tầng 1 cùng cấp nhân vật chính lúc bắt đầu leo, cứ 5 tầng thêm 1 cấp (tối đa 30). Máu và công nhân hệ số sức mạnh **0,45 ở tầng 1, +0,03 mỗi tầng** (tầng 10 là 0,72, tầng 20 là 1,02). AI: tầng 1–3 Dễ, 4–8 Thường, 9–15 Khó, 16–24 Trùm, từ 25 Ác mộng.
+- **Đối thủ:** 3 nhân vật kèm ngẫu nhiên theo seed của lượt leo. Tầng 1 cùng cấp nhân vật chính lúc bắt đầu leo, cứ 5 tầng thêm 1 cấp (tối đa 30). Máu và công nhân hệ số sức mạnh **0,38 ở tầng 1, +0,03 mỗi tầng** (tầng 10 là 0,65, tầng 20 là 0,95). Hạ từ 0,45 ngày 20/10/2026 khi nhân vật kèm lên bộ 6 ô (đối thủ mạnh hơn, trung vị tụt từ 10 xuống 8 tầng); với 0,38 AI Thường lại leo trung vị 10 tầng ở cấp 10. AI: tầng 1–3 Dễ, 4–8 Thường, 9–15 Khó, 16–24 Trùm, từ 25 Ác mộng.
 - **Tầng trùm:** cứ 5 tầng, thủ lĩnh là một sứ quân ngẫu nhiên, máu ×1,5, đánh trên sân nhà của sứ quân (bảng ô theo nguyên tố như [Đánh trùm](#22-đánh-trùm-claude-đặt-20102026-chờ-shan-duyệt)). Lần đầu vượt kỷ lục ở tầng trùm được 40 vàng × số tầng.
 - **Phần thưởng giữa các tầng** (luôn đủ 3 lựa chọn): Hồi máu (người còn đứng +50% máu tối đa, người đã ngã đứng dậy với 30%), Thêm lương (+30), hoặc một phúc ngẫu nhiên cộng dồn: Hùng khí +10% công, Thiết giáp +15% thủ, Bền chí +10% máu tối đa.
 - Mỗi tầng thắng hay thua vẫn nhận kinh nghiệm, vàng và đồ rơi như trận thường. Không bỏ được lượt leo khi đang có trận.

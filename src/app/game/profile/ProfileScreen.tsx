@@ -23,7 +23,8 @@ import {
   SELL_GOLD,
   SLOT_STAT,
   totalXpFor,
-  ultimateOf,
+  MAIN_SLOT_UNLOCK,
+  personalSkillOf,
   wearerOf,
   xpToNext,
   type ActiveBonus,
@@ -293,7 +294,8 @@ export default function ProfileScreen({
   const xpMax = progress.level >= MAX_LEVEL ? 1 : xpToNext(progress.level);
   const xpNow =
     progress.level >= MAX_LEVEL ? 1 : progress.xp - totalXpFor(progress.level);
-  const ultimate = character === MAIN_ID ? undefined : ultimateOf(character);
+  const ultimate =
+    character === MAIN_ID ? undefined : personalSkillOf(character);
 
   const shelf = FILTERS.find((f) => f.id === filter)!;
   const bag = [...profile.bag]
@@ -613,12 +615,15 @@ export default function ProfileScreen({
                 ))}
                 {ultimate && (
                   <li>
-                    Tuyệt chiêu:{" "}
+                    Kỹ năng riêng (ô 5):{" "}
                     <span className="font-semibold text-amber-200">
                       {ultimate.name}
                     </span>
-                    {progress.level < 10 && (
-                      <span className="opacity-70"> (mở ở cấp 10)</span>
+                    {progress.level < MAIN_SLOT_UNLOCK[5]! && (
+                      <span className="opacity-70">
+                        {" "}
+                        (mở ở cấp {MAIN_SLOT_UNLOCK[5]})
+                      </span>
                     )}
                   </li>
                 )}

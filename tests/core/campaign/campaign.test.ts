@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import {
   applyCampaignResult,
   autoProgress,
-  buildHero,
+  buildCompanion,
   applyProfileAction,
   BOSS_HP,
   CAMPAIGN,
@@ -23,7 +23,6 @@ import {
   stageMatchups,
   stagePlayerTeam,
   stageTeamIds,
-  professionSkills,
   profileTeam,
   stageById,
   stageFighter,
@@ -164,18 +163,6 @@ describe("tướng lịch sử gia nhập", () => {
     });
     assert.ok(r.ok);
     assert.equal(r.profile.companions.leHoan!.skillLevels.o1, 2);
-    const branch = professionSkills("quanSu").find((s) => s.tier === 2)!;
-    assert.deepEqual(
-      applyProfileAction(profile, {
-        type: "buyBranch",
-        character: "leHoan",
-        skill: branch.id,
-      }),
-      {
-        ok: false,
-        error: "invalidSkill",
-      },
-    );
     // Tướng lịch sử không bán ở cửa hàng.
     assert.equal(
       applyProfileAction(newProfile(), {
@@ -211,8 +198,8 @@ describe("chiêu riêng và thoại", () => {
         heroSkills(h.element, h.id).map((d) => d.slot),
         [1, 2, 3, 4, 5, 6],
       );
-      assert.ok(!buildHero(h, autoProgress(19, null)).skills!.includes(sig.id));
-      const at20 = buildHero(h, autoProgress(20, null));
+      assert.ok(!buildCompanion(h, autoProgress(19, null)).skills!.includes(sig.id));
+      const at20 = buildCompanion(h, autoProgress(20, null));
       assert.ok(at20.skills!.includes(sig.id));
       assert.equal(
         at20.skillLevels![sig.id],

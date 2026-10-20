@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { act, companionById, createBattle, needsCell, SHOP_COMPANIONS, STARTER_COMPANIONS, ultimateOf, type BattleState, type FighterConfig } from "../../../src/core";
+import { act, companionById, createBattle, needsCell, SHOP_COMPANIONS, slideStep, STARTER_COMPANIONS, ultimateOf, type BattleState, type FighterConfig } from "../../../src/core";
 
 const byId = (id: string) => companionById(id)!;
 const foe = (id: string): FighterConfig => ({ id, name: id, element: "moc", profession: "tuongSi", maxHp: 1000, atk: 50, def: 0 });
@@ -83,6 +83,7 @@ describe("tuyệt chiêu nấc 3", () => {
       const extra = {
         ...(def.target === "enemy" || def.target === "ally" ? { target: 0 } : {}),
         ...(needsCell(def) ? { cell: { row: 3, col: 3 } } : {}),
+        ...(slideStep(def) ? { slide: { axis: "row" as const, index: 2, offset: 2 } } : {}),
       };
       const r = act(setup(fighter.id), { type: "skill", skill: def.id, ...extra });
       assert.ok(r.ok, `${def.id}: ${r.ok ? "" : r.error}`);

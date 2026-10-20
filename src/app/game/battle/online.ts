@@ -219,7 +219,7 @@ export function fetchProfile(): Promise<ProfileResponse> {
   return callProfile();
 }
 
-/** Gửi một thao tác (nâng kỹ năng, mua/chọn chiêu nhánh); server kiểm tra luật và trả hồ sơ mới. */
+/** Gửi một thao tác (nâng kỹ năng, mua nhân vật, trang bị…); server kiểm tra luật và trả hồ sơ mới. */
 export function sendProfileAction(
   action: ProfileAction,
 ): Promise<ProfileResponse> {
