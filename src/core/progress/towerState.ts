@@ -13,8 +13,8 @@ export const BOON_BONUS: Readonly<Record<TowerBoon, number>> = {
 };
 
 /** Hồi máu: người còn sống hồi chừng này máu tối đa, người đã ngã đứng dậy với REVIVE_RATIO. */
-export const TOWER_HEAL = 0.4;
-export const TOWER_REVIVE = 0.25;
+export const TOWER_HEAL = 0.5;
+export const TOWER_REVIVE = 0.3;
 /** Thêm lương. */
 export const TOWER_FOOD = 30;
 export const TOWER_FOOD_MIN = 20;

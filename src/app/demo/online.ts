@@ -7,6 +7,7 @@ import type {
   CampaignResult,
   RaidResult,
   RaidTier,
+  TowerResult,
   GearItem,
   BattleState,
   Difficulty,
@@ -31,6 +32,7 @@ export interface OnlineResponse {
     readonly soldFor: number;
     readonly campaign?: CampaignResult;
     readonly raid?: RaidResult;
+    readonly tower?: TowerResult;
   };
   /** Giờ server lúc trả lời (ms). */
   readonly now: number;
@@ -70,6 +72,8 @@ export function createOnline(input: {
   stage?: string;
   /** Đánh trùm: bậc trùm ở màn `stage`. */
   raid?: RaidTier;
+  /** Leo tháp: đánh tầng kế tiếp. */
+  tower?: true;
 }): Promise<OnlineResponse> {
   return call("/api/battles", { method: "POST", body: JSON.stringify(input) });
 }
