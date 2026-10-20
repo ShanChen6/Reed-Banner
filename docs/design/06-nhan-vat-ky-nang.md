@@ -134,7 +134,7 @@ Từ 20/10/2026 chỉ **tùy tướng AI** ở chiến dịch dùng bộ này (n
 
 Luật chung:
 
-- Ô bị kỹ năng phá hủy **được thu hoạch** như ô bị ô đặc biệt nổ, nhưng giảm: mọi ô thu hoạch khi kỹ năng (hoặc lần trượt miễn phí của Thuận Phong) đổi bàn cờ, kể cả cascade sau đó, chỉ cho **50% sát thương kiếm** và **50% năng lượng âm dương**. Các loại ô khác giữ nguyên.
+- Ô bị kỹ năng phá hủy **được thu hoạch** như ô bị ô đặc biệt nổ, nhưng giảm: mọi ô thu hoạch khi kỹ năng (hoặc lần xoay miễn phí của Thuận Phong) đổi bàn cờ, kể cả cascade sau đó, chỉ cho **50% sát thương kiếm** và **50% năng lượng âm dương**. Các loại ô khác giữ nguyên.
   - Lý do (mô phỏng 19/10/2026): thu hoạch đủ thì kỹ năng bàn cờ giá rẻ là một nước đi miễn phí, kiếm đánh đủ sát thương còn ô âm dương hoàn lại năng lượng để dùng tiếp. Trước đây chỉ vá bằng cách tăng giá từng kỹ năng ô 1.
 - Ô đặc biệt bị phá thì **kích hoạt** hiệu ứng của nó.
 - Sau khi phá, bàn lấp đầy và cascade như bình thường (xem [Bàn cờ](01-ban-co.md#4-sinh-ô--lấp-đầy-bàn)).
