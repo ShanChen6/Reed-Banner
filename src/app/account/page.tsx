@@ -15,12 +15,18 @@ export const metadata: Metadata = { title: "Tài khoản · Cờ Lau" };
 
 export const dynamic = "force-dynamic";
 
-export default async function AccountPage({ searchParams }: { searchParams: Promise<AuthSearchParams & { passwordChanged?: string }> }) {
+export default async function AccountPage({
+  searchParams,
+}: {
+  searchParams: Promise<AuthSearchParams & { passwordChanged?: string }>;
+}) {
   const q = await searchParams;
   const { returnTo, oauthError, error, username } = readAuthParams(q);
   const { account } = await currentUser();
   if (!account) redirect(withReturnTo("/login", returnTo));
-  const linkable = enabledProviders().filter((p) => !account.providers.includes(p));
+  const linkable = enabledProviders().filter(
+    (p) => !account.providers.includes(p),
+  );
 
   return (
     <AuthCard title="Tài khoản" oauthError={oauthError}>
@@ -28,7 +34,12 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
         {account.avatarUrl ? (
           // Ảnh đại diện từ Google/GitHub; nhỏ nên không cần tối ưu qua next/image.
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={account.avatarUrl} alt="" className="size-16 rounded-full border-2 border-[var(--gold)]" referrerPolicy="no-referrer" />
+          <img
+            src={account.avatarUrl}
+            alt=""
+            className="size-16 rounded-full border-2 border-[var(--gold)]"
+            referrerPolicy="no-referrer"
+          />
         ) : (
           <div className="flex size-16 items-center justify-center rounded-full border-2 border-[var(--gold)] text-2xl font-bold">
             {account.name.slice(0, 1).toUpperCase()}
@@ -41,7 +52,8 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
               Đã liên kết:
               {account.providers.map((p) => (
                 <span key={p} className="inline-flex items-center gap-1">
-                  <ProviderLogo provider={p} className="size-4" /> {PROVIDER_NAME[p]}
+                  <ProviderLogo provider={p} className="size-4" />{" "}
+                  {PROVIDER_NAME[p]}
                 </span>
               ))}
             </p>
@@ -52,6 +64,12 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
           className="w-full rounded-lg border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-4 py-2.5 text-center font-bold uppercase tracking-wider text-amber-50"
         >
           Vào chơi
+        </Link>
+        <Link
+          href="/profile"
+          className="w-full rounded-lg bg-white/10 px-4 py-2 text-center text-sm font-semibold hover:bg-white/15"
+        >
+          Hồ sơ nhân vật
         </Link>
         {linkable.map((p) => (
           <a
@@ -66,11 +84,16 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
           {account.username ? (
             <>
               <p>
-                Tên đăng nhập: <span className="font-semibold">{account.username}</span>
+                Tên đăng nhập:{" "}
+                <span className="font-semibold">{account.username}</span>
               </p>
-              {q.passwordChanged === "1" && <p className="mt-2 text-emerald-400">Đã đổi mật khẩu.</p>}
+              {q.passwordChanged === "1" && (
+                <p className="mt-2 text-emerald-400">Đã đổi mật khẩu.</p>
+              )}
               <details open={error !== null} className="mt-2">
-                <summary className="cursor-pointer text-stone-300">Đổi mật khẩu</summary>
+                <summary className="cursor-pointer text-stone-300">
+                  Đổi mật khẩu
+                </summary>
                 <div className="mt-3">
                   <ChangePasswordForm error={error} />
                 </div>
@@ -78,15 +101,29 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
             </>
           ) : (
             <details open={error !== null}>
-              <summary className="cursor-pointer text-stone-300">Thêm tên đăng nhập và mật khẩu</summary>
+              <summary className="cursor-pointer text-stone-300">
+                Thêm tên đăng nhập và mật khẩu
+              </summary>
               <div className="mt-3">
-                <RegisterForm returnTo="/account" username={username} error={error} label="Lưu tên đăng nhập" />
+                <RegisterForm
+                  returnTo="/account"
+                  username={username}
+                  error={error}
+                  label="Lưu tên đăng nhập"
+                />
               </div>
             </details>
           )}
         </div>
-        <form action="/api/auth/logout?returnTo=/login" method="post" className="w-full">
-          <button type="submit" className="w-full rounded-lg px-4 py-2 text-sm text-stone-400 hover:text-stone-200">
+        <form
+          action="/api/auth/logout?returnTo=/login"
+          method="post"
+          className="w-full"
+        >
+          <button
+            type="submit"
+            className="w-full rounded-lg px-4 py-2 text-sm text-stone-400 hover:text-stone-200"
+          >
             Đăng xuất
           </button>
         </form>

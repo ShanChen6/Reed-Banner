@@ -87,6 +87,9 @@ describe("dịch vụ trận online", () => {
     assert.equal(version, before + 1);
     assert.equal(profile.main.xp, r.outcome.rewards.xp[0]);
     assert.equal(profile.companions.haVan!.xp, r.outcome.rewards.xp[1]);
+    // Thua có 30% rơi món (phẩm tối đa Lục); món rơi nằm trong túi đồ với id của hồ sơ.
+    assert.deepEqual(profile.bag, r.outcome.drop ? [r.outcome.drop] : []);
+    if (r.outcome.drop) assert.ok(r.outcome.drop.tier <= 2 && r.outcome.drop.id === "g1");
     const again = await getBattle(id, "g_1", { store, profiles, now: later + 1000 });
     assert.ok(again.ok && again.outcome === undefined);
     assert.equal((await loadProfile(profiles, "g_1")).version, before + 1);
