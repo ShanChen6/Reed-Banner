@@ -12,12 +12,16 @@ function combinations<T>(items: readonly T[], k: number): T[][] {
   if (k === 0) return [[]];
   const out: T[][] = [];
   items.forEach((item, i) => {
-    for (const rest of combinations(items.slice(i + 1), k - 1)) out.push([item, ...rest]);
+    for (const rest of combinations(items.slice(i + 1), k - 1))
+      out.push([item, ...rest]);
   });
   return out;
 }
 
-const team = (fighters: readonly FighterConfig[]): SideConfig => ({ fighters, leader: 0 });
+const team = (fighters: readonly FighterConfig[]): SideConfig => ({
+  fighters,
+  leader: 0,
+});
 
 /**
  * Trang bị cho mô phỏng: mọi nhân vật mặc đủ 9 món cùng `tier`, cùng nguyên tố với mình. `sets` là bộ
@@ -31,7 +35,9 @@ export interface SimGear {
 function gearUp(side: SideConfig, set: string | null, tier: Tier): SideConfig {
   return {
     ...side,
-    fighters: side.fighters.map((f) => withGear(f, presetLoadout(f.element, f.profession, tier, set))),
+    fighters: side.fighters.map((f) =>
+      withGear(f, presetLoadout(f.element, f.profession, tier, set)),
+    ),
   };
 }
 
@@ -51,18 +57,34 @@ export function buildMatchups(
   gear?: SimGear,
   level?: number,
 ): Matchup[] {
-  const main = level === undefined ? mainCharacter(element) : buildMain(autoProgress(level, null), element, "tuongSi");
-  const pool = level === undefined ? STARTER_COMPANIONS : STARTER_COMPANIONS.map((c) => leveledFoe(c, level));
+  const main =
+    level === undefined
+      ? mainCharacter(element)
+      : buildMain(autoProgress(level, null), element, "tuongSi");
+  const pool =
+    level === undefined
+      ? STARTER_COMPANIONS
+      : STARTER_COMPANIONS.map((c) => leveledFoe(c, level));
   let pairs: [SideConfig, SideConfig][];
   if (mode === "3v3") {
     const players = combinations(pool, 2).map((c) => team([main, ...c]));
     const foes = combinations(pool, 3).map((c) => team(c));
-    pairs = players.flatMap((p) => foes.map((f): [SideConfig, SideConfig] => [p, f]));
+    pairs = players.flatMap((p) =>
+      foes.map((f): [SideConfig, SideConfig] => [p, f]),
+    );
   } else {
     const all = [main, ...pool];
-    pairs = all.flatMap((a) => pool.filter((b) => b.id !== a.id).map((b): [SideConfig, SideConfig] => [team([a]), team([b])]));
+    pairs = all.flatMap((a) =>
+      pool
+        .filter((b) => b.id !== a.id)
+        .map((b): [SideConfig, SideConfig] => [team([a]), team([b])]),
+    );
   }
-  if (gear) pairs = pairs.map(([a, b]) => [gearUp(a, gear.sets[0], gear.tier), gearUp(b, gear.sets[1], gear.tier)]);
+  if (gear)
+    pairs = pairs.map(([a, b]) => [
+      gearUp(a, gear.sets[0], gear.tier),
+      gearUp(b, gear.sets[1], gear.tier),
+    ]);
   return Array.from({ length: count }, (_, i) => ({
     sides: pairs[i % pairs.length]!,
     seed: (seed + i * 7919) >>> 0,

@@ -24,18 +24,23 @@ import { SHOP_COMPANIONS, STARTER_COMPANIONS } from "../roster";
 
 /** Cứ chừng này tầng có một tầng trùm: thủ lĩnh là một sứ quân, máu ×BOSS_HP, đánh trên sân nhà. */
 export const TOWER_BOSS_EVERY = 5;
-/** Cấp đối thủ tầng 1 thấp hơn cấp nhân vật chính chừng này; mỗi tầng sau +1 cấp. */
-export const TOWER_LEVEL_OFFSET = 2;
-/** Quá cấp tối đa thì mỗi tầng đối thủ mạnh thêm chừng này (máu và công). */
-export const TOWER_OVERCAP = 0.05;
+/** Đối thủ tầng 1 cùng cấp nhân vật chính lúc bắt đầu leo; cứ TOWER_FLOORS_PER_LEVEL tầng thêm 1 cấp (tối đa 30). */
+export const TOWER_FLOORS_PER_LEVEL = 5;
+/**
+ * Sức mạnh đối thủ (nhân vào máu và công): tầng 1 là TOWER_POWER_START, mỗi tầng sau cộng TOWER_POWER_STEP.
+ * Máu mang sang nên mỗi tầng phải thắng đậm; chênh cấp ít tác dụng (mô phỏng 20/10/2026), nên chỉnh bằng hệ số này.
+ */
+export const TOWER_POWER_START = 0.45;
+export const TOWER_POWER_STEP = 0.03;
 /** Vàng thưởng khi lần đầu qua một tầng trùm (nhân số tầng). */
 export const TOWER_BOSS_GOLD = 40;
 
 /** Độ khó AI theo tầng. */
 export function towerDifficulty(floor: number): Difficulty {
-  if (floor <= 2) return "normal";
-  if (floor <= 7) return "hard";
-  if (floor <= 14) return "boss";
+  if (floor <= 3) return "easy";
+  if (floor <= 8) return "normal";
+  if (floor <= 15) return "hard";
+  if (floor <= 24) return "boss";
   return "nightmare";
 }
 
@@ -57,9 +62,10 @@ function pickDistinct<T>(rng: Rng, items: readonly T[], n: number): T[] {
   );
 }
 
-function overcap(f: FighterConfig, over: number): FighterConfig {
-  if (over <= 0) return f;
-  const k = 1 + TOWER_OVERCAP * over;
+export const towerPower = (floor: number) =>
+  TOWER_POWER_START + TOWER_POWER_STEP * (floor - 1);
+
+function scaled(f: FighterConfig, k: number): FighterConfig {
   return { ...f, maxHp: Math.round(f.maxHp * k), atk: Math.round(f.atk * k) };
 }
 
@@ -78,12 +84,17 @@ export function towerFloor(
   floor: number,
 ): TowerFloor {
   const rng = createRng(floorSeed(run.seed, floor));
-  const raw = run.baseLevel + floor - 1;
-  const level = Math.max(1, Math.min(MAX_LEVEL, raw));
-  const over = raw - MAX_LEVEL;
+  const level = Math.max(
+    1,
+    Math.min(
+      MAX_LEVEL,
+      run.baseLevel + Math.floor((floor - 1) / TOWER_FLOORS_PER_LEVEL),
+    ),
+  );
+  const k = towerPower(floor);
   const boss = isBossFloor(floor);
   const aides = pickDistinct(rng, FOE_POOL, boss ? 2 : 3).map((f) =>
-    overcap(leveledFoe(f, level), over),
+    scaled(leveledFoe(f, level), k),
   );
   if (!boss)
     return {
@@ -95,7 +106,7 @@ export function towerFloor(
       foes: aides,
     };
   const stage = RAID_STAGES[rng.int(0, RAID_STAGES.length - 1)]!;
-  const leader = overcap(stageFighter(stage.foes[0]!, level), over);
+  const leader = scaled(stageFighter(stage.foes[0]!, level), k);
   return {
     floor,
     level,
@@ -111,7 +122,7 @@ export function newTowerRun(profile: Profile, seed: number): TowerRun {
   return {
     seed: seed >>> 0,
     floor: 1,
-    baseLevel: Math.max(1, profile.main.level - TOWER_LEVEL_OFFSET),
+    baseLevel: profile.main.level,
     team: [MAIN_ID, ...profile.team],
     hp: [1, 1, 1],
     food: TOWER_FOOD_START,

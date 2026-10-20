@@ -12,6 +12,7 @@ import {
   RAID_STAGES,
   TOWER_FOOD_START,
   towerFloor,
+  towerPower,
   towerTeam,
 } from "../../../src/core";
 
@@ -23,23 +24,25 @@ const profile = () => {
 describe("leo tháp", () => {
   it("tầng sinh theo seed, cấp tăng dần, tầng 5 có sứ quân máu trùm", () => {
     const run = newTowerRun(profile(), 42);
-    assert.equal(run.baseLevel, 8);
+    assert.equal(run.baseLevel, 10);
     assert.deepEqual(towerFloor(run, 3), towerFloor(run, 3));
-    assert.equal(towerFloor(run, 1).level, 8);
-    assert.equal(towerFloor(run, 4).level, 11);
+    assert.equal(towerFloor(run, 1).level, 10);
+    assert.equal(towerFloor(run, 5).level, 10);
+    assert.equal(towerFloor(run, 6).level, 11);
     assert.equal(towerFloor(run, 1).foes.length, 3);
     const boss = towerFloor(run, 5);
     assert.ok(boss.boss);
     const leaders = RAID_STAGES.map((s) => s.foes[0]!.id);
     assert.ok(leaders.includes(boss.foes[0]!.id));
     const stage = RAID_STAGES.find((s) => s.foes[0]!.id === boss.foes[0]!.id)!;
+    const plain = stageFighter(stage.foes[0]!, boss.level).maxHp;
     assert.equal(
       boss.foes[0]!.maxHp,
-      Math.round(stageFighter(stage.foes[0]!, boss.level).maxHp * BOSS_HP),
+      Math.round(Math.round(plain * towerPower(5)) * BOSS_HP),
     );
-    // Quá cấp 30 thì đối thủ mạnh thêm.
-    assert.equal(towerFloor(run, 30).level, 30);
-    assert.ok(towerFloor(run, 31).foes[0]!.maxHp > 0);
+    // Cấp dừng ở 30, sức mạnh vẫn tăng theo tầng.
+    assert.equal(towerFloor(run, 200).level, 30);
+    assert.ok(towerPower(30) > towerPower(10));
   });
 
   it("vào trận với máu mang sang; người đã ngã không đứng dậy", () => {
@@ -82,7 +85,7 @@ describe("leo tháp", () => {
       index: 0,
     });
     assert.ok(healed.ok);
-    assert.deepEqual(healed.profile.tower.run!.hp, [1, 0.25, 0.7]);
+    assert.deepEqual(healed.profile.tower.run!.hp, [1, 0.3, 0.8]);
     assert.equal(healed.profile.tower.run!.offer, null);
 
     const atFive = {

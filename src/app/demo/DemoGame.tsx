@@ -46,6 +46,7 @@ import {
   type BattleRewards,
   type CampaignResult,
   type RaidResult,
+  type TowerResult,
   type BattleEvent,
   type BattleState,
   type Difficulty,
@@ -224,6 +225,8 @@ interface Outcome {
   readonly campaign?: CampaignResult;
   /** Chỉ có ở trận đánh trùm trên /play. */
   readonly raid?: RaidResult;
+  /** Chỉ có ở trận leo tháp trên /play. */
+  readonly tower?: TowerResult;
 }
 
 function demoDrop(
@@ -551,6 +554,7 @@ export default function DemoGame({
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   /** Màn chiến dịch của trận online đang chơi. */
   const [stage, setStage] = useState<string | null>(null);
+  const [towerFloorNo, setTowerFloorNo] = useState<number | null>(null);
   const setup = useMemo<Setup>(
     () => ({ element, profession, gear, mode, profile }),
     [element, profession, gear, mode, profile],
@@ -1142,6 +1146,7 @@ export default function DemoGame({
       );
     seq.current = res.view.seq;
     setStage(res.view.stage ?? null);
+    setTowerFloorNo(res.view.tower ?? null);
     setBattleId(res.id);
     setClock(res.now);
     setState(toBattleState(res.view));
@@ -1644,6 +1649,18 @@ export default function DemoGame({
                             Lương mang sang: {outcome.campaign.food}
                           </p>
                         )}
+                        {outcome.tower && (
+                          <p
+                            className={`font-semibold ${outcome.tower.won ? "text-amber-300" : "text-rose-300"}`}
+                          >
+                            {outcome.tower.won
+                              ? `Qua tầng ${outcome.tower.floor}!`
+                              : `Dừng ở tầng ${outcome.tower.floor}. Lượt leo kết thúc.`}
+                            {outcome.tower.newBest && " Kỷ lục mới!"}
+                            {outcome.tower.bonusGold > 0 &&
+                              ` +${outcome.tower.bonusGold} vàng tầng trùm.`}
+                          </p>
+                        )}
                         {outcome.raid?.firstClear && (
                           <p className="font-semibold text-amber-300">
                             Thắng {RAID_TIER_INFO[outcome.raid.tier].name} lần
@@ -1680,6 +1697,16 @@ export default function DemoGame({
                           className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
                         >
                           Lưu tiến độ &amp; chơi chiến dịch
+                        </a>
+                      )}
+                      {towerFloorNo !== null && (
+                        <a
+                          href="/tower"
+                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                        >
+                          {outcome?.tower?.won
+                            ? "Chọn thưởng, lên tầng"
+                            : "Về tháp"}
                         </a>
                       )}
                       {stage && (
