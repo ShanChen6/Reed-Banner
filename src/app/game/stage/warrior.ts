@@ -1,7 +1,8 @@
 /**
  * Bộ xương tướng sĩ: cả tay cầm kiếm và thanh kiếm xoay quanh vai. Đòn kiếm là một nhát chém vòng ra
  * phía trước, thi triển thì tụ sáng vào kiếm trước khi chém, kèm vệt kiếm và tia sáng ở mũi. Nhân vật có
- * tranh tư thế thì lúc ra chiêu và tuyệt chiêu đổi sang tranh đó, kèm bóng sáng và tia lửa.
+ * tranh tư thế thì lúc ra chiêu và tuyệt chiêu đổi sang tranh đó, kèm bóng sáng và tia lửa; có tranh bị hạ gục
+ * thì hết máu mờ dần sang tranh đó.
  */
 import { Container, Graphics, Sprite, type Texture } from "pixi.js";
 import type { CueKind } from "./director";
@@ -106,17 +107,22 @@ export function warrior(
     return { kind, root, bloom, ghost, main, burst, offset, texScale, sparks: particles(root, rig.fxColor, 50, 260) };
   });
   const poseOf = (kind: CueKind) => poses.find((p) => p.kind === kind);
-  const defeated = rig.defeat ? new Container() : null;
-  if (defeated && rig.defeat) {
-    const p = rig.defeat;
-    const art = new Sprite(img(p.name));
-    art.position.set(p.origin.x - p.anchor.x, p.origin.y - p.anchor.y);
-    art.scale.set(1 / (p.texScale ?? rig.texScale));
-    defeated.scale.set(p.scale);
-    defeated.visible = false;
-    defeated.addChild(art);
-    view.addChild(defeated);
-  }
+  // Tranh bị hạ gục, hiện dần khi hết máu thay cho kiểu ngả người mờ đi.
+  const fallen = rig.down
+    ? (() => {
+        const d = rig.down;
+        const root = new Container();
+        root.scale.set(d.scale);
+        root.visible = false;
+        root.tint = 0xbbbbbb;
+        const s = new Sprite(img(d.name));
+        s.position.set(d.origin.x - d.anchor.x, d.origin.y - d.anchor.y);
+        s.scale.set(1 / (d.texScale ?? rig.texScale));
+        root.addChild(s);
+        view.addChild(root);
+        return root;
+      })()
+    : null;
 
   const sx = joints.shoulder.x;
   const sy = joints.shoulder.y;
@@ -235,16 +241,17 @@ export function warrior(
     }
 
     if (down) downT = Math.min(1, downT + dt * 2.5);
+    const fall = ease(downT);
     body.x = shiftX;
-    body.rotation = lean - 0.12 * ease(downT);
+    body.rotation = lean - (fallen ? 0 : 0.12 * fall);
     body.tint = down ? 0x777777 : tint;
-    body.alpha = (1 - 0.55 * ease(downT)) * rigVis;
-    if (defeated) {
-      defeated.visible = down;
-      defeated.alpha = ease(downT);
-      body.alpha *= 1 - ease(downT);
+    body.alpha = (fallen ? 1 - fall : 1 - 0.55 * fall) * rigVis;
+    shadow.alpha = fallen ? 1 : 1 - 0.6 * fall;
+    if (fallen) {
+      fallen.visible = down;
+      fallen.alpha = fall;
+      fallen.y = -30 * (1 - fall);
     }
-    shadow.alpha = 1 - 0.6 * ease(downT);
     arm.rotation = down ? 0.15 * ease(downT) : armRot;
     armR.rotation = armRRot;
     head.rotation = headRot;

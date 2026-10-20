@@ -98,8 +98,8 @@ export interface WarriorRig {
   readonly blade: readonly [Point, Point];
   readonly fxColor: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
-  /** Tranh bị hạ gục, chuyển từ rig và giữ lại tới khi hồi sinh. */
-  readonly defeat?: PoseArt;
+  /** Tranh bị hạ gục: hết máu thì hình động mờ dần sang tranh này. */
+  readonly down?: Omit<PoseArt, "burst">;
 }
 
 /**
@@ -137,7 +137,7 @@ export function partsOf(rig: Rig): readonly string[] {
         ...rig.cloth.map((c) => c.name),
         ...rig.covers.map((c) => c.name),
         ...Object.values(rig.poses ?? {}).map((p) => p.name),
-        ...(rig.defeat ? [rig.defeat.name] : []),
+        ...(rig.down ? [rig.down.name] : []),
       ];
 }
 
@@ -280,6 +280,13 @@ const DINH_BO_LINH: WarriorRig = {
       burst: { x: 1050, y: 1460 },
     },
   },
+  // Nền ô vuông vẽ sẵn tách bằng rembg; cỡ so theo khóa thắt lưng (73 px đứng, 85 px nằm).
+  down: {
+    name: "pose-down",
+    origin: { x: 10, y: 42 },
+    anchor: { x: 850, y: 865 },
+    scale: 0.86,
+  },
 };
 
 /** Nguyễn Bặc, tướng sĩ Hỏa. Mảnh vá từ ảnh phẳng; tọa độ ráp 1024×1536. */
@@ -312,10 +319,10 @@ const NGUYEN_BAC: WarriorRig = {
   covers: [{ name: "shoulder", box: { x: 335, y: 264, w: 146, h: 242 } }],
   blade: [{ x: 295, y: 825 }, { x: 20, y: 1350 }],
   fxColor: 0xff783d,
-  defeat: {
+  down: {
     name: "pose-ko", texScale: 1 / 3,
     origin: { x: 9, y: 63 }, anchor: { x: 850, y: 980 },
-    scale: 1, burst: { x: 1200, y: 820 },
+    scale: 1,
   },
   poses: {
     cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 13, y: 6 }, anchor: { x: 810, y: 1020 }, scale: 1.25, burst: { x: 1500, y: 245 } },

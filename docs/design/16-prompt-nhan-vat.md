@@ -654,12 +654,13 @@ Full-body character art for a 2D game, to be cut into layers for animation. Char
 
 Hình toàn thân ở trên chỉ có **một tư thế đứng**. Code tách lớp rồi xoay tay, vung vũ khí, cho áo bay, nhưng thân và chân gần như không đổi dáng. Muốn chiêu lớn trông mạnh hơn hẳn thì cần thêm tranh **cùng nhân vật ở tư thế khác**. Lúc ra chiêu, game đổi sang tranh đó trong khoảnh khắc ra đòn rồi trở về hình đứng.
 
-Mỗi nhân vật cần tối đa hai tranh:
+Mỗi nhân vật cần tối đa ba tranh:
 
 | Tranh | File | Dùng khi |
 |---|---|---|
 | Ra chiêu | `<mã>-chieu.png` | Kỹ năng thường (ô 1–4, 6) |
 | Tuyệt chiêu | `<mã>-tuyetChieu.png` | Tuyệt chiêu hoặc chiêu riêng (ô 5) |
+| Bị hạ gục | `<mã>-haGuc.png` | Nhân vật hết máu, nằm lại trên sân tới hết trận |
 
 Ưu tiên nhân vật đã có hình động: Đinh Bộ Lĩnh tướng quân, Trần Cương, Đào Lam. Các nhân vật khác làm sau khi đã có hình toàn thân.
 
@@ -699,7 +700,7 @@ Cột ra chiêu dùng chung cho các kỹ năng thường của nghề. Cột tu
 
 ### 8.3 Prompt ráp sẵn
 
-Prompt ra chiêu và tuyệt chiêu ráp sẵn cho **từng nhân vật** nằm ở [Prompt tư thế ra chiêu](18-prompt-tu-the.md), sinh từ prompt toàn thân trong file này theo bảng 8.2. Sửa ngoại hình nhân vật ở đây thì cập nhật cả file đó.
+Prompt ra chiêu, tuyệt chiêu và bị hạ gục ráp sẵn cho **từng nhân vật** nằm ở [Prompt tư thế](18-prompt-tu-the.md), sinh từ prompt toàn thân trong file này theo bảng 8.2. Sửa ngoại hình nhân vật ở đây thì cập nhật cả file đó.
 
 ## 9. Chân dung bán thân
 

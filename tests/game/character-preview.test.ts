@@ -26,9 +26,9 @@ test("bảng xem thử chỉ có nhân vật có rig, dung lượng khớp các 
 
 test("tranh gục được tải trong rig, alpha thật và tỉ lệ texture đúng", () => {
   const rig = rigOf("nguyenBac");
-  assert.ok(rig?.skeleton === "warrior" && rig.defeat);
-  assert.ok(partsOf(rig).includes(rig.defeat.name));
-  for (const art of [rig.defeat, rig.poses!.cast!, rig.poses!.ultimate!]) {
+  assert.ok(rig?.skeleton === "warrior" && rig.down);
+  assert.ok(partsOf(rig).includes(rig.down.name));
+  for (const art of [rig.down, rig.poses!.cast!, rig.poses!.ultimate!]) {
     assert.equal(art.texScale, 1 / 3);
     const file: Buffer = readFileSync(`public${partUrl(rig, art.name)}`);
     assert.equal(file.toString("ascii", 12, 16), "VP8X");
