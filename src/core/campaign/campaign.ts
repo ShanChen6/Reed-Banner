@@ -32,6 +32,8 @@ export interface StageFoe {
   readonly profession: Profession;
   /** Nhân vật lịch sử: bộ 6 kỹ năng theo nguyên tố như nhân vật chính. Tùy tướng: chiêu theo nghề. */
   readonly hero: boolean;
+  /** Tước hiệu của sứ quân, ví dụ Trần Minh Công. */
+  readonly title?: string;
 }
 
 export interface CampaignStage {
@@ -39,6 +41,8 @@ export interface CampaignStage {
   readonly title: string;
   /** Đất đóng quân của đối thủ. */
   readonly place: string;
+  /** Vùng đất ngày nay. */
+  readonly region: string;
   /** Lời dẫn ngắn trước trận. */
   readonly story: string;
   readonly mode: "1v1" | "3v3";
@@ -77,7 +81,8 @@ const hero = (
   name: string,
   element: Element,
   profession: Profession,
-): StageFoe => ({ id, name, element, profession, hero: true });
+  title: string,
+): StageFoe => ({ id, name, element, profession, hero: true, title });
 const aide = (
   id: string,
   name: string,
@@ -93,6 +98,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     id: "coLau",
     title: "Cờ lau tập trận",
     place: "Hoa Lư",
+    region: "Ninh Bình",
     story:
       "Thuở chăn trâu ở động Hoa Lư, cậu bé Bộ Lĩnh lấy bông lau làm cờ, bày trận đánh nhau với trẻ chăn trâu xóm bên.",
     mode: "1v1",
@@ -114,12 +120,13 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     id: "boHai",
     title: "Thử tài ở Bố Hải Khẩu",
     place: "Bố Hải Khẩu",
+    region: "Kỳ Bố, Thái Bình",
     story:
       "Nghe tiếng sứ quân Trần Lãm, Bộ Lĩnh tìm đến đầu quân. Trần Minh Công muốn thử tài người trẻ trước khi giao binh quyền.",
     mode: "1v1",
     difficulty: "easy",
     level: 2,
-    foes: [hero("tranLam", "Trần Lãm", "thuy", "quanSu")],
+    foes: [hero("tranLam", "Trần Lãm", "thuy", "quanSu", "Trần Minh Công")],
     firstClearGold: 150,
     lines: {
       before: "Người trẻ muốn cầm quân thì trước hết phải qua được tay lão.",
@@ -134,12 +141,15 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     id: "dangChau",
     title: "Thu phục Đằng Châu",
     place: "Đằng Châu",
+    region: "Kim Động, Hưng Yên",
     story:
       "Phạm Bạch Hổ giữ Đằng Châu. Muốn ông quy phục, phải thắng ông một trận cho phục.",
     mode: "1v1",
     difficulty: "easy",
     level: 3,
-    foes: [hero("phamBachHo", "Phạm Bạch Hổ", "hoa", "tuongSi")],
+    foes: [
+      hero("phamBachHo", "Phạm Bạch Hổ", "hoa", "tuongSi", "Phạm Phòng Át"),
+    ],
     firstClearGold: 200,
     lines: {
       before: "Bạch Hổ này giữ Đằng Châu bằng gươm, không bằng lời hứa.",
@@ -153,13 +163,14 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     id: "binhKieu",
     title: "Đánh Bình Kiều",
     place: "Bình Kiều",
+    region: "Triệu Sơn, Thanh Hóa",
     story:
       "Ngô Xương Xí, cháu Ngô Quyền, giữ Bình Kiều. Quân Hoa Lư lần đầu ra trận đủ ba tướng.",
     mode: "3v3",
     difficulty: "normal",
     level: 5,
     foes: [
-      hero("ngoXuongXi", "Ngô Xương Xí", "kim", "muuSi"),
+      hero("ngoXuongXi", "Ngô Xương Xí", "kim", "muuSi", "Kiều công"),
       aide("binhKieu-pho", "Phó tướng Bình Kiều", "kim", "binhLinh"),
       aide("binhKieu-y", "Lang y Bình Kiều", "thuy", "ySu"),
     ],
@@ -176,13 +187,14 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     id: "duongLam",
     title: "Đường Lâm quy phục",
     place: "Đường Lâm",
+    region: "Sơn Tây, Hà Nội",
     story:
-      "Ngô Nhật Khánh, dòng dõi nhà Ngô, đóng ở Đường Lâm. Ông chỉ chịu hàng khi thấy quân Hoa Lư đủ mạnh.",
+      "Ngô Nhật Khánh (còn gọi Ngô Nam Chỉ), dòng dõi nhà Ngô, đóng ở Đường Lâm. Ông chỉ chịu hàng khi thấy quân Hoa Lư đủ mạnh.",
     mode: "3v3",
     difficulty: "normal",
     level: 6,
     foes: [
-      hero("ngoNhatKhanh", "Ngô Nhật Khánh", "phong", "quanSu"),
+      hero("ngoNhatKhanh", "Ngô Nhật Khánh", "phong", "quanSu", "Ngô Nam công"),
       aide("duongLam-pho", "Phó tướng Đường Lâm", "tho", "tuongSi"),
       aide("duongLam-y", "Lang y Đường Lâm", "moc", "ySu"),
     ],
@@ -197,13 +209,20 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     id: "tamDai",
     title: "Vây thành Tam Đái",
     place: "Tam Đái",
+    region: "Vĩnh Tường, Vĩnh Phúc",
     story:
       "Nguyễn Khoan cố thủ Tam Đái. Thành bị vây đã lâu, kho lương bên trong cạn dần.",
     mode: "3v3",
     difficulty: "normal",
     level: 8,
     foes: [
-      hero("nguyenKhoan", "Nguyễn Khoan", "tho", "binhLinh"),
+      hero(
+        "nguyenKhoan",
+        "Nguyễn Khoan",
+        "tho",
+        "binhLinh",
+        "Nguyễn Thái Bình",
+      ),
       aide("tamDai-pho", "Phó tướng Tam Đái", "tho", "binhLinh"),
       aide("tamDai-phap", "Thầy pháp Tam Đái", "hoa", "phapSu"),
     ],
@@ -224,13 +243,14 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     id: "phongChau",
     title: "Lên Phong Châu",
     place: "Phong Châu",
+    region: "Bạch Hạc, Phú Thọ",
     story:
       "Kiều Công Hãn giữ Phong Châu, đất cũ của các vua Hùng, nơi dân quen nghề binh.",
     mode: "3v3",
     difficulty: "normal",
     level: 10,
     foes: [
-      hero("kieuCongHan", "Kiều Công Hãn", "loi", "phapSu"),
+      hero("kieuCongHan", "Kiều Công Hãn", "loi", "phapSu", "Kiều Tam Chế"),
       aide("phongChau-pho", "Phó tướng Phong Châu", "kim", "tuongSi"),
       aide("phongChau-muu", "Mưu thần Phong Châu", "phong", "muuSi"),
     ],
@@ -248,13 +268,14 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     id: "hoiHo",
     title: "Qua đầm Hồi Hồ",
     place: "Hồi Hồ",
+    region: "Cẩm Khê, Phú Thọ",
     story:
       "Kiều Thuận đóng ở Hồi Hồ, ba mặt là đầm. Quân Hoa Lư phải lội nước mà đánh.",
     mode: "3v3",
     difficulty: "hard",
     level: 10,
     foes: [
-      hero("kieuThuan", "Kiều Thuận", "moc", "ySu"),
+      hero("kieuThuan", "Kiều Thuận", "moc", "ySu", "Kiều Lệnh công"),
       aide("hoiHo-pho", "Phó tướng Hồi Hồ", "thuy", "binhLinh"),
       aide("hoiHo-phap", "Thầy pháp Hồi Hồ", "moc", "phapSu"),
     ],
@@ -271,13 +292,14 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     id: "sieuLoai",
     title: "Đánh Siêu Loại",
     place: "Siêu Loại",
+    region: "Thuận Thành, Bắc Ninh",
     story:
       "Lý Khuê giữ Siêu Loại, vùng đất có chùa chiền và người tài. Quân ông thiện chiến, ít khi lùi.",
     mode: "3v3",
     difficulty: "hard",
     level: 12,
     foes: [
-      hero("lyKhue", "Lý Khuê", "kim", "tuongSi"),
+      hero("lyKhue", "Lý Khuê", "kim", "tuongSi", "Lý Lãng công"),
       aide("sieuLoai-pho", "Phó tướng Siêu Loại", "kim", "binhLinh"),
       aide("sieuLoai-quan", "Quân sư Siêu Loại", "tho", "quanSu"),
     ],
@@ -292,12 +314,19 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     id: "tienDu",
     title: "Hạ Tiên Du",
     place: "Tiên Du",
+    region: "Tiên Du, Bắc Ninh",
     story: "Nguyễn Thủ Tiệp xưng Vũ Ninh Vương ở Tiên Du, quân đông lương đủ.",
     mode: "3v3",
     difficulty: "hard",
     level: 13,
     foes: [
-      hero("nguyenThuTiep", "Nguyễn Thủ Tiệp", "thuy", "muuSi"),
+      hero(
+        "nguyenThuTiep",
+        "Nguyễn Thủ Tiệp",
+        "thuy",
+        "muuSi",
+        "Nguyễn Lệnh công",
+      ),
       aide("tienDu-pho", "Phó tướng Tiên Du", "thuy", "tuongSi"),
       aide("tienDu-y", "Lang y Tiên Du", "moc", "ySu"),
     ],
@@ -314,12 +343,13 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     id: "teGiang",
     title: "Thủy chiến Tế Giang",
     place: "Tế Giang",
-    story: "Lã Đường giữ Tế Giang bên bờ sông, quân quen đánh trên nước.",
+    region: "Văn Giang, Hưng Yên",
+    story: "Lữ Đường giữ Tế Giang bên bờ sông, quân quen đánh trên nước.",
     mode: "3v3",
     difficulty: "hard",
     level: 15,
     foes: [
-      hero("laDuong", "Lã Đường", "thuy", "phapSu"),
+      hero("luDuong", "Lữ Đường", "thuy", "phapSu", "Lữ Tá công"),
       aide("teGiang-pho", "Phó tướng Tế Giang", "thuy", "binhLinh"),
       aide("teGiang-quan", "Quân sư Tế Giang", "phong", "quanSu"),
     ],
@@ -336,13 +366,14 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     id: "tayPhuLiet",
     title: "Tây Phù Liệt",
     place: "Tây Phù Liệt",
+    region: "Thanh Trì, Hà Nội",
     story:
       "Nguyễn Siêu đóng ở Tây Phù Liệt, đắp thành hai lớp, quân hơn vạn người.",
     mode: "3v3",
     difficulty: "hard",
     level: 17,
     foes: [
-      hero("nguyenSieu", "Nguyễn Siêu", "hoa", "binhLinh"),
+      hero("nguyenSieu", "Nguyễn Siêu", "hoa", "binhLinh", "Nguyễn Hữu công"),
       aide("tayPhuLiet-pho", "Phó tướng Tây Phù Liệt", "hoa", "tuongSi"),
       aide("tayPhuLiet-muu", "Mưu thần Tây Phù Liệt", "loi", "muuSi"),
     ],
@@ -357,6 +388,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     id: "doDong",
     title: "Thành Đỗ Động",
     place: "Đỗ Động Giang",
+    region: "Thanh Oai, Hà Nội",
     story:
       "Đỗ Cảnh Thạc là sứ quân cứng cỏi nhất, giữ thành Đỗ Động hơn một năm. Hạ được ông, loạn 12 sứ quân chấm dứt.",
     mode: "3v3",
@@ -364,7 +396,7 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     level: 20,
     boss: true,
     foes: [
-      hero("doCanhThac", "Đỗ Cảnh Thạc", "tho", "tuongSi"),
+      hero("doCanhThac", "Đỗ Cảnh Thạc", "tho", "tuongSi", "Đỗ Lệnh công"),
       aide("doDong-pho", "Phó tướng Đỗ Động", "kim", "binhLinh"),
       aide("doDong-quan", "Quân sư Đỗ Động", "thuy", "quanSu"),
     ],

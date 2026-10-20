@@ -30,7 +30,22 @@
 
 Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (trận do server xử lý như `/play`).
 
-- 13 màn mở lần lượt: Cờ lau tập trận (Hoa Lư) → Thử tài ở Bố Hải Khẩu (Trần Lãm) → Thu phục Đằng Châu (Phạm Bạch Hổ) → Bình Kiều (Ngô Xương Xí) → Đường Lâm (Ngô Nhật Khánh) → Tam Đái (Nguyễn Khoan) → Phong Châu (Kiều Công Hãn) → Hồi Hồ (Kiều Thuận) → Siêu Loại (Lý Khuê) → Tiên Du (Nguyễn Thủ Tiệp) → Tế Giang (Lã Đường) → Tây Phù Liệt (Nguyễn Siêu) → thành Đỗ Động (Đỗ Cảnh Thạc, trùm cuối, máu ×1,5).
+- 13 màn mở lần lượt: Cờ lau tập trận ở Hoa Lư (Ninh Bình), rồi 12 sứ quân theo danh sách Shan chốt 20/10/2026; trùm cuối Đỗ Cảnh Thạc máu ×1,5.
+
+  | # | Màn | Sứ quân (tước hiệu) | Đất (ngày nay) |
+  |---|---|---|---|
+  | 2 | Thử tài ở Bố Hải Khẩu | Trần Lãm (Trần Minh Công) | Kỳ Bố, Thái Bình |
+  | 3 | Thu phục Đằng Châu | Phạm Bạch Hổ (Phạm Phòng Át) | Kim Động, Hưng Yên |
+  | 4 | Đánh Bình Kiều | Ngô Xương Xí (Kiều công) | Triệu Sơn, Thanh Hóa |
+  | 5 | Đường Lâm quy phục | Ngô Nhật Khánh, còn gọi Ngô Nam Chỉ (Ngô Nam công) | Sơn Tây, Hà Nội |
+  | 6 | Vây thành Tam Đái | Nguyễn Khoan (Nguyễn Thái Bình) | Vĩnh Tường, Vĩnh Phúc |
+  | 7 | Lên Phong Châu | Kiều Công Hãn (Kiều Tam Chế) | Bạch Hạc, Phú Thọ |
+  | 8 | Qua đầm Hồi Hồ | Kiều Thuận (Kiều Lệnh công) | Cẩm Khê, Phú Thọ |
+  | 9 | Đánh Siêu Loại | Lý Khuê (Lý Lãng công) | Thuận Thành, Bắc Ninh |
+  | 10 | Hạ Tiên Du | Nguyễn Thủ Tiệp (Nguyễn Lệnh công) | Tiên Du, Bắc Ninh |
+  | 11 | Thủy chiến Tế Giang | Lữ Đường (Lữ Tá công) | Văn Giang, Hưng Yên |
+  | 12 | Tây Phù Liệt | Nguyễn Siêu (Nguyễn Hữu công) | Thanh Trì, Hà Nội |
+  | 13 | Thành Đỗ Động | Đỗ Cảnh Thạc (Đỗ Lệnh công) | Thanh Oai, Hà Nội |
 - Ba màn đầu 1vs1, sau đó 3vs3 với sứ quân và hai tùy tướng. Độ khó Dễ → Thường → Khó → Trùm; cấp đối thủ 1 → 20.
 - **Sứ quân là nhân vật lịch sử có bộ kỹ năng như Đinh Bộ Lĩnh** (6 kỹ năng theo nguyên tố, mở theo cấp như nhân vật chính, có bị động khi làm thủ lĩnh). Tùy tướng dùng chiêu theo nghề.
 - Luật màn đang dùng: thành bị vây (Tam Đái, đối thủ 25 lương), kho lương đầy (Tiên Du, Đỗ Động, 100 lương), đầm lầy/sông nước (Hồi Hồ, Tế Giang: bánh chưng 9%, âm dương 22%).
