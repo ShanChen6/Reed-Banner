@@ -1,6 +1,6 @@
 // Bảng Postgres (Neon) cho dữ liệu online. Đổi schema xong chạy `pnpm db:generate` để sinh migration.
 
-import { bigint, index, integer, jsonb, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
+import { bigint, boolean, index, integer, jsonb, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
 import type { Match, Profile } from "@/core";
 
 /** Trận online. `state` là toàn bộ trạng thái trận (kể cả seed), chỉ server đọc. */
@@ -63,4 +63,61 @@ export const identities = pgTable(
     lockedUntil: bigint("locked_until", { mode: "number" }),
   },
   (t) => [primaryKey({ columns: [t.provider, t.subject] }), index("identities_account_idx").on(t.accountId)],
+);
+
+/**
+ * Thử thách hằng ngày: mỗi người một lượt mỗi ngày (khóa chính chặn mở trận thứ hai). Có `score` khi trận đã
+ * kết thúc; bảng xếp hạng đọc theo (day, score).
+ */
+export const dailyEntries = pgTable(
+  "daily_entries",
+  {
+    day: text("day").notNull(),
+    ownerId: text("owner_id").notNull(),
+    matchId: text("match_id").notNull(),
+    startedAt: bigint("started_at", { mode: "number" }).notNull(),
+    finishedAt: bigint("finished_at", { mode: "number" }),
+    score: integer("score"),
+    won: boolean("won"),
+    turns: integer("turns"),
+    permille: integer("permille"),
+  },
+  (t) => [primaryKey({ columns: [t.day, t.ownerId] }), index("daily_entries_rank_idx").on(t.day, t.score)],
+);
+
+/**
+ * Bảng xếp hạng: điểm hiện tại của mỗi người trên mỗi bảng (chiến dịch, từng màn, tháp, sinh tồn), tính từ hồ
+ * sơ sau mỗi lần cộng thưởng. `updatedAt` chỉ đổi khi điểm đổi, để bằng điểm thì ai đạt trước đứng trên.
+ */
+export const leaderboardScores = pgTable(
+  "leaderboard_scores",
+  {
+    board: text("board").notNull(),
+    ownerId: text("owner_id").notNull(),
+    score: integer("score").notNull(),
+    updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.board, t.ownerId] }), index("leaderboard_rank_idx").on(t.board, t.score)],
+);
+
+/**
+ * Đấu trường bóng ma: điểm, thành tích, đội phòng thủ (bản chụp), các đối thủ đang bày ra và số trận đã đánh
+ * trong ngày. Điểm đổi bằng phép cộng trong SQL để hai trận cùng lúc không ghi đè nhau.
+ */
+export const arenaPlayers = pgTable(
+  "arena_players",
+  {
+    ownerId: text("owner_id").primaryKey(),
+    rating: integer("rating").notNull(),
+    defense: jsonb("defense"),
+    offers: jsonb("offers").notNull(),
+    wins: integer("wins").notNull().default(0),
+    losses: integer("losses").notNull().default(0),
+    defenseWins: integer("defense_wins").notNull().default(0),
+    defenseLosses: integer("defense_losses").notNull().default(0),
+    day: text("day").notNull().default(""),
+    attacks: integer("attacks").notNull().default(0),
+    updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+  },
+  (t) => [index("arena_players_rating_idx").on(t.rating)],
 );

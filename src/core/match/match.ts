@@ -5,6 +5,7 @@
 import { playAiTurn, type Difficulty } from "../ai";
 import {
   act,
+  beginWave,
   createBattle,
   GRACE_MS,
   type BattleAction,
@@ -15,6 +16,16 @@ import {
   type SideIndex,
 } from "../battle";
 import type { SpawnWeights } from "../board";
+import type { RaidTier } from "../campaign";
+import {
+  planBreak,
+  survivalBreak,
+  survivalCleared,
+  wavePreview,
+  type SurvivalError,
+  type SurvivalRun,
+  type WavePreview,
+} from "../survival";
 
 /** Trận dở không có hành động nào của người chơi quá mốc này thì xử thua. */
 export const ABANDON_MS = 24 * 60 * 60 * 1000;
@@ -37,6 +48,23 @@ export interface Match {
   readonly forfeited: boolean;
   /** Id màn chiến dịch; không có ở trận Thường. */
   readonly stage?: string;
+  /** Đánh trùm: bậc trùm ở màn `stage`. */
+  readonly raid?: RaidTier;
+  /** Leo tháp: số tầng. */
+  readonly tower?: number;
+  /** Sinh tồn: lượt chơi (đợt, người gục); trận chỉ kết thúc khi `done`. */
+  readonly survival?: SurvivalRun;
+  /** Thử thách hằng ngày: khóa ngày (YYYY-MM-DD). */
+  readonly daily?: string;
+  /** Đấu trường bóng ma: đối thủ lúc vào trận. */
+  readonly arena?: ArenaOpponent;
+}
+
+/** Đối thủ đấu trường: chủ đội phòng thủ (null là bóng ma do máy tạo), tên và điểm lúc vào trận. */
+export interface ArenaOpponent {
+  readonly owner: string | null;
+  readonly name: string;
+  readonly rating: number;
 }
 
 export interface MatchConfig {
@@ -47,6 +75,11 @@ export interface MatchConfig {
   readonly now: number;
   readonly weights?: SpawnWeights;
   readonly stage?: string;
+  readonly raid?: RaidTier;
+  readonly tower?: number;
+  readonly survival?: SurvivalRun;
+  readonly daily?: string;
+  readonly arena?: ArenaOpponent;
 }
 
 export interface MatchStep {
@@ -72,6 +105,11 @@ export function startMatch(config: MatchConfig): MatchStep {
     lastHumanAt: config.now,
     forfeited: false,
     ...(config.stage ? { stage: config.stage } : {}),
+    ...(config.raid ? { raid: config.raid } : {}),
+    ...(config.tower ? { tower: config.tower } : {}),
+    ...(config.survival ? { survival: config.survival } : {}),
+    ...(config.daily ? { daily: config.daily } : {}),
+    ...(config.arena ? { arena: config.arena } : {}),
   };
   const ai = runAi(match, config.now, config.difficulty);
   return { match: ai.match, events: [...events, ...ai.events] };
@@ -83,6 +121,15 @@ export function startMatch(config: MatchConfig): MatchStep {
  */
 export function catchUpDifficulty(d: Difficulty): Difficulty {
   return d === "boss" || d === "nightmare" ? "hard" : d;
+}
+
+/**
+ * Trận đã kết thúc hẳn (cộng thưởng được). Sinh tồn: phe người chơi thắng một đợt chỉ là nghỉ giữa đợt,
+ * lượt chơi kết thúc khi `survival.done`.
+ */
+export function matchOver(m: Match): boolean {
+  if (m.battle.winner === null) return false;
+  return !m.survival || m.survival.done || m.battle.winner !== HUMAN;
 }
 
 function runAi(m: Match, at: number, difficulty: Difficulty): MatchStep {
@@ -99,6 +146,21 @@ function runAi(m: Match, at: number, difficulty: Difficulty): MatchStep {
 export function settle(start: Match, now: number): MatchStep {
   let m = start;
   const events: BattleEvent[] = [];
+  if (m.survival && !m.survival.done && now - m.lastHumanAt > ABANDON_MS) {
+    // Sinh tồn bỏ dở không xử thua: lượt chơi dừng ở đợt cuối đã vượt qua và vẫn ghi điểm.
+    const battle = structuredClone(m.battle);
+    if (battle.winner === null) battle.winner = AI_SIDE;
+    battle.turn.deadline = null;
+    return {
+      match: {
+        ...m,
+        battle,
+        seq: m.seq + 1,
+        survival: { ...m.survival, done: true },
+      },
+      events,
+    };
+  }
   if (m.battle.winner === null && now - m.lastHumanAt > ABANDON_MS) {
     const battle = structuredClone(m.battle);
     battle.winner = AI_SIDE;
@@ -129,10 +191,74 @@ export function settle(start: Match, now: number): MatchStep {
     m = ai.match;
     events.push(...ai.events);
   }
-  return { match: m, events };
+  return { match: closeLost(m), events };
 }
 
-export type MatchError = BattleError | "staleSeq" | "notYourTurn";
+export type MatchError =
+  | BattleError
+  | SurvivalError
+  | "staleSeq"
+  | "notYourTurn";
+
+/** Hành động ngoài bàn cờ của sinh tồn, chỉ làm được lúc nghỉ giữa đợt. */
+export type SurvivalAction =
+  /** Vào đợt kế; `revive` là vị trí trả lương để hồi sinh ngay. */
+  | { readonly type: "nextWave"; readonly revive?: number }
+  /** Dừng lượt chơi, ghi điểm theo số đợt đã vượt qua. */
+  | { readonly type: "endRun" };
+
+export type MatchAction = BattleAction | SurvivalAction;
+
+const isSurvivalAction = (a: MatchAction): a is SurvivalAction =>
+  a.type === "nextWave" || a.type === "endRun";
+
+/** Sinh tồn: phe người chơi gục hết thì lượt chơi kết thúc. */
+function closeLost(m: Match): Match {
+  return m.survival && !m.survival.done && m.battle.winner === AI_SIDE
+    ? { ...m, survival: { ...m.survival, done: true } }
+    : m;
+}
+
+function survivalAct(
+  m: Match,
+  action: SurvivalAction,
+  now: number,
+): MatchResult {
+  const fail = (error: MatchError): MatchResult => ({
+    ok: false,
+    error,
+    match: m,
+    events: [],
+  });
+  const run = m.survival;
+  if (!run || !survivalBreak(run, m.battle)) return fail("noBreak");
+  if (action.type === "endRun")
+    return {
+      ok: true,
+      match: {
+        ...m,
+        seq: m.seq + 1,
+        lastHumanAt: now,
+        survival: { ...run, done: true },
+      },
+      events: [],
+    };
+  const plan = planBreak(run, m.battle, action.revive);
+  if (!plan.ok) return fail(plan.error);
+  const r = beginWave(m.battle, plan.config, now);
+  return {
+    ok: true,
+    match: {
+      ...m,
+      battle: r.state,
+      difficulty: plan.wave.difficulty,
+      seq: m.seq + 1,
+      lastHumanAt: now,
+      survival: plan.run,
+    },
+    events: r.events,
+  };
+}
 
 export type MatchResult =
   | ({ readonly ok: true } & MatchStep)
@@ -150,7 +276,7 @@ export type MatchResult =
  */
 export function humanAct(
   start: Match,
-  action: BattleAction,
+  action: MatchAction,
   expectedSeq: number,
   now: number,
 ): MatchResult {
@@ -164,6 +290,10 @@ export function humanAct(
   // Seq khác: client gửi lặp, hoặc vừa chạy bù hết giờ nên nước đi nhắm vào bàn cờ cũ.
   if (expectedSeq !== settled.match.seq) return fail("staleSeq");
   const m = settled.match;
+  if (isSurvivalAction(action)) {
+    const r = survivalAct(m, action, now);
+    return { ...r, events: [...settled.events, ...r.events] };
+  }
   if (m.battle.winner !== null) return fail("battleOver");
   if (m.battle.turn.side !== HUMAN) return fail("notYourTurn");
   const r = act(m.battle, action, now);
@@ -177,7 +307,7 @@ export function humanAct(
   const ai = runAi(next, now, m.difficulty);
   return {
     ok: true,
-    match: ai.match,
+    match: closeLost(ai.match),
     events: [...settled.events, ...r.events, ...ai.events],
   };
 }
@@ -191,6 +321,35 @@ export interface MatchView {
   readonly seq: number;
   readonly forfeited: boolean;
   readonly stage?: string;
+  readonly raid?: RaidTier;
+  readonly tower?: number;
+  readonly survival?: SurvivalView;
+  readonly daily?: string;
+  /** Đấu trường: tên đối thủ (không lộ id chủ đội). */
+  readonly arena?: { readonly name: string; readonly rating: number };
+}
+
+/** Sinh tồn gửi cho client: không có seed, kèm báo trước đợt kế tiếp. */
+export interface SurvivalView {
+  readonly wave: number;
+  readonly cleared: number;
+  readonly downed: readonly (number | null)[];
+  readonly done: boolean;
+  /** Đợt đang đánh. */
+  readonly current: WavePreview;
+  /** Đợt kế tiếp; không có khi lượt chơi đã kết thúc. */
+  readonly next?: WavePreview;
+}
+
+function survivalView(run: SurvivalRun, battle: BattleState): SurvivalView {
+  return {
+    wave: run.wave,
+    cleared: survivalCleared(run, battle),
+    downed: run.downed,
+    done: run.done,
+    current: wavePreview(run, run.wave),
+    ...(run.done ? {} : { next: wavePreview(run, run.wave + 1) }),
+  };
 }
 
 export function viewOf(m: Match): MatchView {
@@ -202,5 +361,12 @@ export function viewOf(m: Match): MatchView {
     seq: m.seq,
     forfeited: m.forfeited,
     ...(m.stage ? { stage: m.stage } : {}),
+    ...(m.raid ? { raid: m.raid } : {}),
+    ...(m.tower ? { tower: m.tower } : {}),
+    ...(m.survival ? { survival: survivalView(m.survival, m.battle) } : {}),
+    ...(m.daily ? { daily: m.daily } : {}),
+    ...(m.arena
+      ? { arena: { name: m.arena.name, rating: m.arena.rating } }
+      : {}),
   };
 }

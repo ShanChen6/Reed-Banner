@@ -2,7 +2,7 @@
 // Chỉ chạy với Postgres; bản bộ nhớ khi dev không cần dọn.
 
 import { and, inArray, isNull, lt, sql } from "drizzle-orm";
-import { matches, profiles } from "./schema";
+import { arenaPlayers, dailyEntries, leaderboardScores, matches, profiles } from "./schema";
 import type { Db } from "./store";
 
 /** Trận chưa cộng thưởng và không có gì thay đổi từ trước `before` (cũ nhất trước). */
@@ -37,9 +37,12 @@ export async function staleGuestIds(db: Db, before: number, limit: number): Prom
   return list.map((r) => r.owner_id);
 }
 
-/** Xóa trận và hồ sơ của các khách này. */
+/** Xóa trận, hồ sơ, lượt thử thách ngày, điểm xếp hạng và đấu trường của các khách này. */
 export async function deleteGuests(db: Db, ids: readonly string[]): Promise<void> {
   if (ids.length === 0) return;
   await db.delete(matches).where(inArray(matches.ownerId, [...ids]));
   await db.delete(profiles).where(inArray(profiles.ownerId, [...ids]));
+  await db.delete(dailyEntries).where(inArray(dailyEntries.ownerId, [...ids]));
+  await db.delete(leaderboardScores).where(inArray(leaderboardScores.ownerId, [...ids]));
+  await db.delete(arenaPlayers).where(inArray(arenaPlayers.ownerId, [...ids]));
 }

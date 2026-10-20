@@ -4,6 +4,31 @@
 
 ## 20/10/2026
 
+**Đấu trường bóng ma (lộ trình 5.5, Claude đặt, chờ Shan duyệt)**
+- Trang `/arena`: mỗi người để lại một đội phòng thủ (bản chụp đội 3vs3), người khác đánh với đội đó do AI Khó điều khiển. 3 đối thủ gần điểm nhất, thiếu người thì thêm bóng ma luyện tập. 10 trận mỗi ngày, điểm kiểu Elo bắt đầu 1000 (ngang điểm thắng +16, người phòng thủ −8), thắng thêm 50 vàng. Có tab Đấu trường ở bảng xếp hạng. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#53-đấu-trường-bóng-ma-claude-đặt-20102026-chờ-shan-duyệt).
+
+**Bảng xếp hạng (lộ trình 4.6, Claude đặt, chờ Shan duyệt)**
+- Trang `/leaderboard` với 4 bảng: chiến dịch (số màn, rồi tổng lượt ít nhất), từng màn (ít lượt nhất), leo tháp (tầng cao nhất), sinh tồn (đợt nhiều nhất). Hồ sơ giờ lưu số lượt ít nhất mỗi màn. Server ghi điểm sau mỗi trận online. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#23-bảng-xếp-hạng-claude-đặt-20102026-chờ-shan-duyệt).
+
+**Nhiệm vụ, thành tựu, điểm danh (lộ trình 5.4, Claude đặt, chờ Shan duyệt)**
+- Trang `/quests` có 3 phần:
+  - Nhiệm vụ ngày (4 việc) và tuần (5 việc), đổi lúc 0 giờ giờ Việt Nam; tuần bắt đầu thứ Hai.
+  - 12 thành tựu trọn đời.
+  - Điểm danh chuỗi 7 ngày, 50 đến 300 vàng.
+- Server cộng tiến độ khi trận online kết thúc; người chơi bấm Nhận để lấy vàng. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#52-nhiệm-vụ-thành-tựu-điểm-danh-claude-đặt-20102026-chờ-shan-duyệt).
+
+**Thử thách hằng ngày (lộ trình 5.2, Claude đặt, chờ Shan duyệt)**
+- Trang `/daily`: mỗi ngày (0 giờ giờ Việt Nam) một đề chung, gồm đội cho sẵn cấp 10 không trang bị, một sứ quân trên sân nhà và AI Khó. Seed chỉ nằm trên server. Mỗi người đánh một lần. Xếp hạng: thắng trên thua, ít lượt hơn rồi nhiều máu hơn. Thưởng 150/50 vàng. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#51-thử-thách-hằng-ngày-claude-đặt-20102026-chờ-shan-duyệt).
+
+**Sinh tồn (lộ trình 5.3, Claude đặt, chờ Shan duyệt)**
+- Trang `/survival`: một trận 3vs3 không dừng trên cùng bàn cờ, đối thủ theo đợt (2 rồi 3 đối thủ, cứ 5 đợt một sứ quân), luôn báo trước đợt kế. Nghỉ giữa đợt: +20% máu, +25 lương, giữ năng lượng; người gục tự đứng dậy sau 2 đợt hoặc trả 40 lương. Mô phỏng AI Thường vượt qua trung vị 11–12 đợt, mỗi đợt khoảng 10 lượt mỗi bên. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#41-bản-đầu-claude-đặt-20102026-chờ-shan-duyệt).
+
+**Leo tháp (lộ trình 5.1, Claude đặt, chờ Shan duyệt)**
+- Trang `/tower`: chuỗi tầng 3vs3, máu và lương mang sang, thắng tầng chọn hồi máu, thêm lương hoặc một phúc cộng dồn; cứ 5 tầng một sứ quân làm trùm. Độ khó theo hệ số sức mạnh 0,45 + 0,03 mỗi tầng; mô phỏng AI Thường leo được trung vị 10 tầng ở mọi cấp. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#31-bản-đầu-claude-đặt-20102026-chờ-shan-duyệt).
+
+**Đánh trùm (lộ trình 4.5, Claude đặt, chờ Shan duyệt)**
+- Qua màn có sứ quân thì đánh lại sứ quân đó ở 3 bậc (+4/+8/+12 cấp, AI khó hơn 1/2/3 nấc), trên sân nhà (bàn cờ theo nguyên tố, sứ quân đầy lương). Thưởng lần đầu mỗi bậc: vàng và 1 món Tinh/Bảo/Thần phẩm. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#22-đánh-trùm-claude-đặt-20102026-chờ-shan-duyệt).
+
 **Bản đồ cổ trang chiến dịch (Claude, chờ Shan duyệt)**
 - Trang `/campaign` có bản đồ Giao Châu thế kỷ X kiểu khắc gỗ: 13 màn đặt theo vùng đất, sông, núi, bờ biển; đường hành quân đỏ son, màn đã qua cắm cờ lau, bấm màn để chọn. Mô tả ở [Chế độ chơi](design/09-che-do-choi.md#21-chương-1-cờ-lau-dẹp-loạn-claude-đặt-19102026-chờ-shan-duyệt).
 
