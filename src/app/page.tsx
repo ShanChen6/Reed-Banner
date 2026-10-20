@@ -12,6 +12,7 @@ import {
 } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME, SPECIAL_NAME, TILE_NAME } from "./game/battle/labels";
 import { CloudCorner, DongSonBand, ElementIcon, LeaderFlag } from "./game/art/icons";
+import Image from "next/image";
 import { Portrait } from "./game/art/portraits";
 import { TileArt } from "./game/art/tiles";
 import { FAQ, PROFESSION_PERK, TILE_GIVES } from "./home/data";
@@ -96,6 +97,13 @@ function PlayButton({ className = "", children = "Chơi ngay" }: { className?: s
   );
 }
 
+/** Ba tranh Đinh Bộ Lĩnh (public/art/splash/), kích thước gốc để next/image giữ đúng tỉ lệ. */
+const DBL_ERAS = [
+  { src: "/art/splash/dinh-bo-linh-nien-thieu.webp", w: 570, title: "Thiếu niên", note: "Cờ lau tập trận bên sông Hoàng Long." },
+  { src: "/art/splash/dinh-bo-linh-tuong-quan.webp", w: 569, title: "Tướng quân", note: "Hình trong trận: áo choàng bay, chém kiếm." },
+  { src: "/art/splash/dinh-bo-linh-hoang-de.webp", w: 597, title: "Hoàng đế", note: "Đinh Tiên Hoàng, dựng nước Đại Cồ Việt." },
+] as const;
+
 export default function Home() {
   const board = heroBoard();
   return (
@@ -126,7 +134,7 @@ export default function Home() {
       </header>
 
       <main id="content">
-        {/* Hero. Chưa có tranh minh họa: dùng bàn cờ thật dựng bằng SVG làm hình chính. */}
+        {/* Hero: bàn cờ thật dựng bằng SVG làm hình chính. */}
         <section className="relative overflow-hidden">
           <div
             aria-hidden
@@ -182,6 +190,20 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* Ba thời của nhân vật chính, từ cậu bé cờ lau tới hoàng đế. */}
+        <section id="hero-story" className="scroll-mt-16 px-4 py-16">
+          <SectionTitle kicker="Nhân vật chính" title="Đinh Bộ Lĩnh qua ba thời" sub="Từ cậu bé chăn trâu cầm cờ lau, thành vị tướng dẹp loạn sứ quân, rồi lên ngôi hoàng đế." />
+          <ul className="mx-auto grid max-w-5xl grid-cols-3 gap-3 md:gap-6">
+            {DBL_ERAS.map((e) => (
+              <li key={e.src} className="flex flex-col items-center justify-end rounded-2xl border border-[var(--gold)]/40 bg-[var(--frame)]/40 p-2 text-center md:p-4">
+                <Image src={e.src} alt={`Đinh Bộ Lĩnh ${e.title}`} width={e.w} height={900} sizes="(min-width: 768px) 300px, 30vw" className="h-auto w-full drop-shadow-[0_12px_20px_#000a]" />
+                <p className="mt-2 font-serif text-base font-bold md:text-lg">{e.title}</p>
+                <p className="hidden text-xs text-stone-400 sm:block">{e.note}</p>
+              </li>
+            ))}
+          </ul>
         </section>
 
         <section id="how-to-play" className="scroll-mt-16 px-4 py-16">

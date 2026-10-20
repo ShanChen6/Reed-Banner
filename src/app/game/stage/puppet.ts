@@ -18,7 +18,7 @@ export async function loadPuppet(rig: Rig, still: boolean): Promise<Puppet> {
   const tex = Object.fromEntries(names.map((p, i) => [p, loaded[urls[i]!]!]));
   return rig.skeleton === "mage"
     ? mage(rig, tex as Record<(typeof MAGE_PARTS)[number], Texture>, still)
-    : warrior(rig, tex as Parameters<typeof warrior>[1], still);
+    : warrior(rig, tex, still);
 }
 
 function mage(
@@ -223,7 +223,7 @@ function mage(
     update,
     play(kind) {
       if (down || still) return;
-      action = { kind, t: 0, fired: false };
+      action = { kind: kind === "ultimate" ? "cast" : kind, t: 0, fired: false };
     },
     setDown(next) {
       if (next === down) return;

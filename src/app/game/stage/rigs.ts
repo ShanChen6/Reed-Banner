@@ -63,18 +63,23 @@ export interface MageRig {
   readonly fxColor: number;
 }
 
-/** Các lớp của bộ xương tướng sĩ, xếp từ dưới lên trên. Kiếm nằm trong nhóm tay, dưới lớp tay. */
-export const WARRIOR_PARTS = [
-  "body",
-  "apron",
-  "armR",
-  "sword",
-  "arm",
-  "pauldron",
-  "head",
-] as const;
+/** Gió uốn một lớp vải (lưới): càng xa đầu buộc càng bay nhiều. */
+export interface Wind {
+  readonly axis: "x" | "y";
+  /** Vị trí (0..1) dọc theo trục bắt đầu chịu gió. */
+  readonly start: number;
+  readonly amp: number;
+  readonly freq: number;
+  readonly k: number;
+  readonly phase: number;
+  /** Lượn theo chiều dọc thay vì ngang (dải lụa, áo choàng bay ngang). */
+  readonly vertical?: boolean;
+  /** Đầu buộc ở cuối trục (bên phải hoặc bên dưới) thay vì đầu trục. */
+  readonly reverse?: boolean;
+}
 
-export type WarriorPart = (typeof WARRIOR_PARTS)[number];
+/** Lớp cố định của bộ xương tướng sĩ. Kiếm và tay cầm kiếm cùng xoay quanh vai. */
+export type WarriorPart = "body" | "armR" | "sword" | "arm" | "head";
 
 export interface WarriorRig {
   readonly skeleton: "warrior";
@@ -83,18 +88,52 @@ export interface WarriorRig {
   readonly foot: Point;
   readonly height: number;
   readonly parts: Readonly<Record<WarriorPart, PartBox>>;
+  /** Lớp vải bay theo gió. `behind`: vẽ sau thân (áo choàng, dải buộc tóc), còn lại vẽ ngay trên thân. */
+  readonly cloth: readonly { readonly name: string; readonly box: PartBox; readonly wind: Wind; readonly behind?: boolean }[];
+  /** Lớp phủ lên tay cầm kiếm (giáp vai, tay áo) để che chỗ nối ở vai. */
+  readonly covers: readonly { readonly name: string; readonly box: PartBox }[];
   /** shoulder: vai tay cầm kiếm (cả tay và kiếm xoay quanh đây); elbowR: khuỷu tay không; neck: cổ. */
   readonly joints: Readonly<Record<"shoulder" | "elbowR" | "neck", Point>>;
   /** Chuôi và mũi kiếm lúc đứng yên, để đặt hào quang dọc lưỡi. */
   readonly blade: readonly [Point, Point];
   readonly fxColor: number;
+  readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
 }
+
+/**
+ * Tranh tư thế vẽ riêng (ra chiêu, tuyệt chiêu): game thay hình động bằng tranh này trong khoảnh khắc ra
+ * đòn. Tọa độ theo ảnh gốc của tranh; ảnh xuất ra đã cắt sát và thu nhỏ theo texScale của rig.
+ */
+export interface PoseArt {
+  readonly name: string;
+  /** Góc trên trái của phần đã cắt trong ảnh gốc. */
+  readonly origin: Point;
+  /** Điểm trong tranh đặt trùng chân nhân vật đứng (giữa hai bàn chân, mặt đất). */
+  readonly anchor: Point;
+  /** Phóng ảnh gốc của tranh về cỡ người trong rig (so theo khóa thắt lưng). */
+  readonly scale: number;
+  /** Chỗ tóe tia sáng lúc trúng đòn. */
+  readonly burst: Point;
+}
+
+export type PoseKind = "cast" | "ultimate";
 
 export type Rig = MageRig | WarriorRig;
 
 /** Lớp ảnh của một bộ xương. */
 export function partsOf(rig: Rig): readonly string[] {
-  return rig.skeleton === "mage" ? MAGE_PARTS : WARRIOR_PARTS;
+  return rig.skeleton === "mage"
+    ? MAGE_PARTS
+    : [
+        "body",
+        "armR",
+        "sword",
+        "arm",
+        "head",
+        ...rig.cloth.map((c) => c.name),
+        ...rig.covers.map((c) => c.name),
+        ...Object.values(rig.poses ?? {}).map((p) => p.name),
+      ];
 }
 
 /** Đào Lam, pháp sư hệ Thủy: bản thử Đ0, tách bằng live2dlayer (xem docs/design/15-ke-hoach-do-hoa.md). */
@@ -147,13 +186,19 @@ const TRAN_CUONG: WarriorRig = {
   height: 1035,
   parts: {
     body: { x: 2, y: 0, w: 626, h: 1035 },
-    apron: { x: 392, y: 538, w: 120, h: 270 },
     armR: { x: 518, y: 340, w: 103, h: 245 },
     sword: { x: 1, y: 373, w: 249, h: 662 },
     arm: { x: 158, y: 284, w: 159, h: 235 },
-    pauldron: { x: 204, y: 114, w: 145, h: 189 },
     head: { x: 339, y: 8, w: 124, h: 145 },
   },
+  cloth: [
+    {
+      name: "apron",
+      box: { x: 392, y: 538, w: 120, h: 270 },
+      wind: { axis: "y", start: 0.3, amp: 6, freq: 1.2, k: 2.4, phase: 0.8 },
+    },
+  ],
+  covers: [{ name: "pauldron", box: { x: 204, y: 114, w: 145, h: 189 } }],
   joints: {
     shoulder: { x: 268, y: 262 },
     elbowR: { x: 540, y: 385 },
@@ -166,10 +211,77 @@ const TRAN_CUONG: WarriorRig = {
   fxColor: 0xffd27a,
 };
 
+/**
+ * Đinh Bộ Lĩnh, nhân vật chính, bản tướng quân. Ảnh Shan gửi đã có nền trong suốt; tách lớp bằng code như
+ * Trần Cương. Áo choàng và dải buộc tóc bay theo gió từ phía vai và búi tóc. Hệ tọa độ: ảnh 1024×1536.
+ */
+const DINH_BO_LINH: WarriorRig = {
+  skeleton: "warrior",
+  dir: "dinh-bo-linh",
+  texScale: 0.5,
+  foot: { x: 600, y: 1492 },
+  height: 1500,
+  parts: {
+    body: { x: 17, y: 1, w: 958, h: 1516 },
+    armR: { x: 830, y: 524, w: 135, h: 300 },
+    sword: { x: 17, y: 586, w: 469, h: 784 },
+    arm: { x: 312, y: 495, w: 163, h: 304 },
+    head: { x: 545, y: 8, w: 183, h: 260 },
+  },
+  cloth: [
+    {
+      name: "ribbon",
+      box: { x: 298, y: 67, w: 281, h: 256 },
+      wind: { axis: "x", start: 0.2, amp: 14, freq: 1.8, k: 4.5, phase: 0.3, vertical: true, reverse: true },
+      behind: true,
+    },
+    {
+      name: "cape",
+      box: { x: 56, y: 387, w: 340, h: 624 },
+      wind: { axis: "x", start: 0.15, amp: 16, freq: 1.2, k: 3.2, phase: 1.4, vertical: true, reverse: true },
+      behind: true,
+    },
+    {
+      name: "sash",
+      box: { x: 640, y: 610, w: 84, h: 405 },
+      wind: { axis: "y", start: 0.15, amp: 5, freq: 1.3, k: 2.6, phase: 2.1 },
+    },
+  ],
+  covers: [{ name: "sleeve", box: { x: 384, y: 380, w: 122, h: 126 } }],
+  joints: {
+    shoulder: { x: 430, y: 470 },
+    elbowR: { x: 855, y: 555 },
+    neck: { x: 630, y: 262 },
+  },
+  blade: [
+    { x: 300, y: 815 },
+    { x: 30, y: 1360 },
+  ],
+  fxColor: 0xffc46b,
+  // Hai tranh tư thế Shan gửi, nền tách bằng rembg (isnet-anime).
+  poses: {
+    cast: {
+      name: "pose-cast",
+      origin: { x: 0, y: 11 },
+      anchor: { x: 670, y: 1005 },
+      scale: 1.17,
+      burst: { x: 1520, y: 240 },
+    },
+    ultimate: {
+      name: "pose-ultimate",
+      origin: { x: 0, y: 55 },
+      anchor: { x: 735, y: 1530 },
+      scale: 1.02,
+      burst: { x: 1050, y: 1460 },
+    },
+  },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
   tranCuong: TRAN_CUONG,
+  dinhBoLinh: DINH_BO_LINH,
 };
 
 export function rigOf(id: string): Rig | null {
