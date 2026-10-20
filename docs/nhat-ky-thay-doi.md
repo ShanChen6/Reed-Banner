@@ -4,6 +4,10 @@
 
 ## 20/10/2026
 
+**Cân độ khó chiến dịch (lộ trình 4.4, Claude)**
+- Lệnh `pnpm sim -- --stage <id|all>` đánh màn với đúng luật màn, Đinh Bộ Lĩnh xoay vòng 7 hệ; `--sweep 2..5` thử nhiều mức hơn cấp.
+- Cấp gợi ý đặt riêng từng màn (4 → 24). Phong Châu nhẹ đi (chiêu riêng Kiều Công Hãn giảm, phó tướng đổi thành Binh lính Thổ, đối thủ cấp 9). Mọi màn thắng ≥50% ở cấp gợi ý với đội có tướng lịch sử. Bảng số liệu: [Chế độ chơi](design/09-che-do-choi.md#21-chương-1-cờ-lau-dẹp-loạn-claude-đặt-19102026-chờ-shan-duyệt).
+
 **Tên, tước hiệu và đất của 12 sứ quân (Shan chốt)**
 - Theo danh sách Shan đưa: Lã Đường đổi thành Lữ Đường (Lữ Tá công); mỗi sứ quân có tước hiệu (Trần Minh Công, Phạm Phòng Át, …) và mỗi màn ghi vùng đất ngày nay. Ngô Nhật Khánh ghi thêm tên Ngô Nam Chỉ. Bảng ở [Chế độ chơi](design/09-che-do-choi.md#21-chương-1-cờ-lau-dẹp-loạn-claude-đặt-19102026-chờ-shan-duyệt).
 
