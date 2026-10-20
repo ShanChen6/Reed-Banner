@@ -6,6 +6,8 @@ import { migrate } from "drizzle-orm/pglite/migrator";
 import { mainCharacter, newProfile, startMatch, STARTER_COMPANIONS } from "../../src/core";
 import { DrizzleAccountStore } from "../../src/server/db/accounts";
 import { DrizzleDailyStore } from "../../src/server/db/daily";
+import { DrizzleLeaderboardStore } from "../../src/server/db/leaderboard";
+import { MemoryLeaderboardStore, type LeaderboardStore } from "../../src/server/leaderboard";
 import { DrizzleProfileStore } from "../../src/server/db/profiles";
 import { DrizzleMatchStore, type Db } from "../../src/server/db/store";
 import { signIn } from "../../src/server/accounts";
@@ -123,5 +125,27 @@ describe("lưu trận vào Postgres (PGlite, cùng migration với Neon)", () =>
     assert.equal(await store.rankOf(day, "g_a"), 3);
     assert.equal(await store.rankOf(day, "g_b"), 1);
     assert.equal(await store.rankOf("2026-10-21", "g_a"), null);
+  });
+
+  it("bảng xếp hạng: điểm cao trước, bằng điểm thì ai đạt trước; ghi lại cùng điểm không đổi mốc", async () => {
+    const db = drizzle(new PGlite());
+    await migrate(db, { migrationsFolder: "drizzle" });
+    const accounts = new DrizzleAccountStore(db as unknown as Db);
+    await signIn(accounts, { provider: "google", subject: "1", name: "Shan", avatarUrl: null }, "g_a", 1, () => "g_x");
+    for (const store of [new DrizzleLeaderboardStore(db as unknown as Db), new MemoryLeaderboardStore()] as LeaderboardStore[]) {
+      await store.submit("g_a", [{ board: "tower", score: 10 }], 100);
+      await store.submit("g_b", [{ board: "tower", score: 10 }], 200);
+      await store.submit("g_c", [{ board: "tower", score: 12 }, { board: "survival", score: 3 }], 300);
+      // Cùng điểm gửi lại sau: g_a vẫn đạt trước g_b.
+      await store.submit("g_a", [{ board: "tower", score: 10 }], 400);
+      const top = await store.top("tower", 10);
+      assert.deepEqual(top.map((e) => e.ownerId), ["g_c", "g_a", "g_b"]);
+      assert.deepEqual(await store.rankOf("tower", "g_b"), { rank: 3, score: 10 });
+      assert.equal(await store.rankOf("survival", "g_a"), null);
+      await store.submit("g_b", [{ board: "tower", score: 15 }], 500);
+      assert.deepEqual(await store.rankOf("tower", "g_b"), { rank: 1, score: 15 });
+    }
+    const top = await new DrizzleLeaderboardStore(db as unknown as Db).top("tower", 10);
+    assert.equal(top.find((e) => e.ownerId === "g_a")!.name, "Shan");
   });
 });
