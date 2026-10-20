@@ -8,6 +8,8 @@ import type {
   RaidTier,
   TowerResult,
   SurvivalResult,
+  DailyScore,
+  FighterConfig,
   MatchAction,
   GearItem,
   BattleState,
@@ -35,6 +37,10 @@ export interface OnlineResponse {
     readonly raid?: RaidResult;
     readonly tower?: TowerResult;
     readonly survival?: SurvivalResult;
+    readonly daily?: {
+      readonly score: DailyScore;
+      readonly rank: number | null;
+    };
   };
   /** Giờ server lúc trả lời (ms). */
   readonly now: number;
@@ -78,6 +84,8 @@ export function createOnline(input: {
   tower?: true;
   /** Sinh tồn: bắt đầu lượt chơi mới. */
   survival?: true;
+  /** Thử thách hằng ngày: đề của hôm nay. */
+  daily?: true;
 }): Promise<OnlineResponse> {
   return call("/api/battles", { method: "POST", body: JSON.stringify(input) });
 }
@@ -95,6 +103,38 @@ export function actOnline(
     method: "POST",
     body: JSON.stringify({ seq, action }),
   });
+}
+
+/** Đề thử thách hôm nay, lượt của mình và bảng xếp hạng (GET /api/daily). */
+export interface DailyResponse {
+  readonly day?: string;
+  readonly setup?: {
+    readonly team: readonly FighterConfig[];
+    readonly foes: readonly FighterConfig[];
+    readonly stage: string;
+    readonly difficulty: Difficulty;
+  };
+  readonly mine?: {
+    readonly matchId: string;
+    readonly result: DailyScore | null;
+    readonly rank: number | null;
+  } | null;
+  readonly top?: readonly {
+    readonly rank: number;
+    readonly name: string;
+    readonly mine: boolean;
+    readonly score: DailyScore;
+  }[];
+  readonly error?: string;
+}
+
+export async function fetchDaily(): Promise<DailyResponse> {
+  try {
+    const res = await fetch("/api/daily", { cache: "no-store" });
+    return (await res.json()) as DailyResponse;
+  } catch {
+    return { error: "network" };
+  }
 }
 
 export interface ProfileResponse {
@@ -134,4 +174,5 @@ export const ONLINE_ERROR_TEXT: Record<string, string> = {
   conflict: "Trận vừa được cập nhật ở nơi khác, đã tải lại",
   staleSeq: "Bàn cờ đã đổi (hết giờ?), đã tải lại",
   badRequest: "Yêu cầu không hợp lệ",
+  dailyDone: "Hôm nay bạn đã đánh thử thách ngày rồi",
 };

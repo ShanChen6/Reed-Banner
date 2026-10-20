@@ -1,6 +1,6 @@
 // Bảng Postgres (Neon) cho dữ liệu online. Đổi schema xong chạy `pnpm db:generate` để sinh migration.
 
-import { bigint, index, integer, jsonb, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
+import { bigint, boolean, index, integer, jsonb, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
 import type { Match, Profile } from "@/core";
 
 /** Trận online. `state` là toàn bộ trạng thái trận (kể cả seed), chỉ server đọc. */
@@ -63,4 +63,24 @@ export const identities = pgTable(
     lockedUntil: bigint("locked_until", { mode: "number" }),
   },
   (t) => [primaryKey({ columns: [t.provider, t.subject] }), index("identities_account_idx").on(t.accountId)],
+);
+
+/**
+ * Thử thách hằng ngày: mỗi người một lượt mỗi ngày (khóa chính chặn mở trận thứ hai). Có `score` khi trận đã
+ * kết thúc; bảng xếp hạng đọc theo (day, score).
+ */
+export const dailyEntries = pgTable(
+  "daily_entries",
+  {
+    day: text("day").notNull(),
+    ownerId: text("owner_id").notNull(),
+    matchId: text("match_id").notNull(),
+    startedAt: bigint("started_at", { mode: "number" }).notNull(),
+    finishedAt: bigint("finished_at", { mode: "number" }),
+    score: integer("score"),
+    won: boolean("won"),
+    turns: integer("turns"),
+    permille: integer("permille"),
+  },
+  (t) => [primaryKey({ columns: [t.day, t.ownerId] }), index("daily_entries_rank_idx").on(t.day, t.score)],
 );
