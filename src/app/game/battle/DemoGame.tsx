@@ -120,6 +120,8 @@ import {
   type OnlineResponse,
 } from "./online";
 import { SceneLink } from "../SceneContext";
+import BattleStage from "../stage/BattleStage";
+import { createCueBus, stageCues } from "../stage/director";
 
 const PLAYER = 0;
 const AI = 1;
@@ -187,6 +189,13 @@ const foeIds = (team: readonly string[]) =>
     .slice(0, 3)
     .map((c) => c.id);
 
+/** Nhân vật đã có hình động (src/app/game/stage/rigs.ts), cho đứng đầu đội Tianwu ở Luyện tập để xem thử. */
+const SHOWCASE_FOE = "daoLam";
+const practiceFoeIds = (team: readonly string[]) =>
+  team.includes(SHOWCASE_FOE)
+    ? foeIds(team)
+    : [SHOWCASE_FOE, ...foeIds(team).slice(0, 2)];
+
 /** Trận demo: nhân vật chính và 2 nhân vật kèm của hồ sơ, đấu đội Tianwu 3 người. */
 function demoSides({
   element,
@@ -204,9 +213,10 @@ function demoSides({
           ...profile.team.map((id) => maxed(byId(id))),
         ];
   const level = profile.main.level;
-  const foes = foeIds(profile.team).map((id) =>
-    mode === "progress" ? leveledFoe(byId(id), level) : maxed(byId(id)),
-  );
+  const foes =
+    mode === "progress"
+      ? foeIds(profile.team).map((id) => leveledFoe(byId(id), level))
+      : practiceFoeIds(profile.team).map((id) => maxed(byId(id)));
   // Tiến trình mặc đồ trong túi đồ của hồ sơ (profileTeam); đồ mẫu chỉ dùng ở Luyện tập.
   const preset = mode === "progress" ? NO_GEAR : gear;
   return [
@@ -819,6 +829,8 @@ export default function DemoGame({
   const animId = useRef(0);
   const afterAnim = useRef<(() => void) | null>(null);
   const [floats, setFloats] = useState<Float[]>([]);
+  /** Kênh động tác cho sân khấu trận. */
+  const [cueBus] = useState(createCueBus);
   const floatId = useRef(0);
   const drag = useRef<{ pos: Pos; x: number; y: number } | null>(null);
   /** Trận online: id, seq server đang có, đang chờ server trả lời, lệch giờ so với server. */
@@ -944,6 +956,8 @@ export default function DemoGame({
       after: BattleState,
       events: readonly BattleEvent[],
     ) => {
+      const cues = stageCues(before, events);
+      cueBus.emit(cues.start);
       play(eventFrames(before.board, events), () => {
         // Chơi offline: đồng hồ lượt mới tính từ lúc hoạt ảnh xong, thời gian xem hoạt ảnh không bị trừ.
         const shown =
@@ -958,6 +972,7 @@ export default function DemoGame({
         pushLog(shown, events);
         setState(shown);
         showNumbers(events);
+        cueBus.emit(cues.end);
         // Trận online: server cộng thưởng và gửi `outcome` (xem receive).
         if (
           !online &&
@@ -995,6 +1010,7 @@ export default function DemoGame({
       play,
       pushLog,
       showNumbers,
+      cueBus,
       online,
       mode,
       profile,
@@ -1681,6 +1697,18 @@ export default function DemoGame({
             onStart={start}
             onResume={online ? resume : undefined}
             onReturn={backToBattle}
+          />
+        )}
+
+        {started && (
+          <BattleStage
+            sides={[state.sides[PLAYER].fighters, state.sides[AI].fighters]}
+            actor={
+              state.winner === null
+                ? { side: state.turn.side, fighter: state.turn.actor }
+                : null
+            }
+            bus={cueBus}
           />
         )}
 
