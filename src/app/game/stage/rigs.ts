@@ -97,7 +97,26 @@ export interface WarriorRig {
   /** Chuôi và mũi kiếm lúc đứng yên, để đặt hào quang dọc lưỡi. */
   readonly blade: readonly [Point, Point];
   readonly fxColor: number;
+  readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
 }
+
+/**
+ * Tranh tư thế vẽ riêng (ra chiêu, tuyệt chiêu): game thay hình động bằng tranh này trong khoảnh khắc ra
+ * đòn. Tọa độ theo ảnh gốc của tranh; ảnh xuất ra đã cắt sát và thu nhỏ theo texScale của rig.
+ */
+export interface PoseArt {
+  readonly name: string;
+  /** Góc trên trái của phần đã cắt trong ảnh gốc. */
+  readonly origin: Point;
+  /** Điểm trong tranh đặt trùng chân nhân vật đứng (giữa hai bàn chân, mặt đất). */
+  readonly anchor: Point;
+  /** Phóng ảnh gốc của tranh về cỡ người trong rig (so theo khóa thắt lưng). */
+  readonly scale: number;
+  /** Chỗ tóe tia sáng lúc trúng đòn. */
+  readonly burst: Point;
+}
+
+export type PoseKind = "cast" | "ultimate";
 
 export type Rig = MageRig | WarriorRig;
 
@@ -105,7 +124,16 @@ export type Rig = MageRig | WarriorRig;
 export function partsOf(rig: Rig): readonly string[] {
   return rig.skeleton === "mage"
     ? MAGE_PARTS
-    : ["body", "armR", "sword", "arm", "head", ...rig.cloth.map((c) => c.name), ...rig.covers.map((c) => c.name)];
+    : [
+        "body",
+        "armR",
+        "sword",
+        "arm",
+        "head",
+        ...rig.cloth.map((c) => c.name),
+        ...rig.covers.map((c) => c.name),
+        ...Object.values(rig.poses ?? {}).map((p) => p.name),
+      ];
 }
 
 /** Đào Lam, pháp sư hệ Thủy: bản thử Đ0, tách bằng live2dlayer (xem docs/design/15-ke-hoach-do-hoa.md). */
@@ -230,6 +258,23 @@ const DINH_BO_LINH: WarriorRig = {
     { x: 30, y: 1360 },
   ],
   fxColor: 0xffc46b,
+  // Hai tranh tư thế Shan gửi, nền tách bằng rembg (isnet-anime).
+  poses: {
+    cast: {
+      name: "pose-cast",
+      origin: { x: 0, y: 11 },
+      anchor: { x: 670, y: 1005 },
+      scale: 1.17,
+      burst: { x: 1520, y: 240 },
+    },
+    ultimate: {
+      name: "pose-ultimate",
+      origin: { x: 0, y: 55 },
+      anchor: { x: 735, y: 1530 },
+      scale: 1.02,
+      burst: { x: 1050, y: 1460 },
+    },
+  },
 };
 
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */

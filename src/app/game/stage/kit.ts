@@ -120,6 +120,10 @@ export function particles(parent: Container, color: number, count: number, gravi
     return { s, life: 0, max: 1, vx: 0, vy: 0 };
   });
   return {
+    /** Còn hạt nào đang bay. */
+    active() {
+      return drops.some((d) => d.life > 0);
+    },
     spawn(x: number, y: number, vx: number, vy: number, size: number, life: number) {
       const d = drops.find((d) => d.life <= 0);
       if (!d) return;

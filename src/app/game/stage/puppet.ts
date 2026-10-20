@@ -223,7 +223,7 @@ function mage(
     update,
     play(kind) {
       if (down || still) return;
-      action = { kind, t: 0, fired: false };
+      action = { kind: kind === "ultimate" ? "cast" : kind, t: 0, fired: false };
     },
     setDown(next) {
       if (next === down) return;
