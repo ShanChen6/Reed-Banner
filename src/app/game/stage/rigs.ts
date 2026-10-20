@@ -98,11 +98,7 @@ export interface WarriorRig {
   readonly blade: readonly [Point, Point];
   readonly fxColor: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
-  /** Cẳng tay rời: đao đi theo khuỷu tay, bắp tay vẫn xoay quanh vai. */
-  readonly forearms?: {
-    readonly sword: { readonly box: PartBox; readonly joint: Point };
-    readonly free: { readonly box: PartBox; readonly joint: Point };
-  };
+
 }
 
 /**
@@ -135,7 +131,6 @@ export function partsOf(rig: Rig): readonly string[] {
         "sword",
         "arm",
         "head",
-        ...(rig.forearms ? ["forearm", "forearmR"] : []),
         ...rig.cloth.map((c) => c.name),
         ...rig.covers.map((c) => c.name),
         ...Object.values(rig.poses ?? {}).map((p) => p.name),
@@ -293,17 +288,13 @@ const NGUYEN_BAC: WarriorRig = {
   parts: {
     body: { x: 340, y: 210, w: 654, h: 1308 },
     head: { x: 565, y: 30, w: 224, h: 273 },
-    arm: { x: 345, y: 400, w: 270, h: 146 },
-    armR: { x: 750, y: 390, w: 230, h: 156 },
+    arm: { x: 345, y: 400, w: 270, h: 410 },
+    armR: { x: 750, y: 505, w: 230, h: 326 },
     sword: { x: 55, y: 660, w: 402, h: 730 },
   },
-  forearms: {
-    sword: { box: { x: 345, y: 505, w: 270, h: 306 }, joint: { x: 495, y: 525 } },
-    free: { box: { x: 750, y: 505, w: 230, h: 326 }, joint: { x: 870, y: 525 } },
-  },
   joints: {
-    shoulder: { x: 550, y: 420 },
-    elbowR: { x: 800, y: 410 },
+    shoulder: { x: 550, y: 385 },
+    elbowR: { x: 870, y: 525 },
     neck: { x: 685, y: 280 },
   },
   cloth: [
