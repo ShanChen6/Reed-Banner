@@ -53,7 +53,7 @@ function StageDetail({
     <div className="flex flex-col gap-3">
       <div>
         <p className="text-xs tracking-widest text-amber-300/80 uppercase">
-          {stage.place}
+          {stage.place} · {stage.region}
         </p>
         <h2 className="text-xl font-bold text-amber-100">{stage.title}</h2>
         <p className="mt-1 text-sm leading-relaxed text-stone-300 italic">
@@ -132,6 +132,11 @@ function StageDetail({
             />
             <div className="min-w-0 text-xs">
               <p className="truncate text-sm font-semibold">{f.name}</p>
+              {stage.foes[i]!.title && (
+                <p className="truncate text-amber-200/80">
+                  {stage.foes[i]!.title}
+                </p>
+              )}
               <p className="flex items-center gap-1 text-stone-300">
                 <ElementIcon element={f.element} className="size-3.5" />{" "}
                 {ELEMENT_NAME[f.element]} · {PROFESSION_NAME[f.profession]}

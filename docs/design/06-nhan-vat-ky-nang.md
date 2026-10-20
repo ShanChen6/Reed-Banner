@@ -201,7 +201,7 @@ Claude đặt ngày 20/10/2026, tên tự đặt (không lấy từ game khác),
 | Kiều Thuận | **Hồi Hồ Sinh Khí** | 60 | Hồi 25% máu và Hồi phục 6%/lượt 2 lượt cho cả đội |
 | Lý Khuê | **Siêu Loại Phá Giáp** | 60 | 340% ATK bỏ qua 50% Thủ, −30% Thủ 2 lượt; phá 6 ô |
 | Nguyễn Thủ Tiệp | **Tiên Du Đoạt Lương** | 60 | 60% ATK cả đội đối thủ, −25 lương, −30 năng lượng, 25% Đóng băng |
-| Lã Đường | **Tế Giang Thủy Trận** | 60 | 150% ATK cả đội đối thủ, 35% Đóng băng; biến 4 ô thành âm dương |
+| Lữ Đường | **Tế Giang Thủy Trận** | 60 | 150% ATK cả đội đối thủ, 35% Đóng băng; biến 4 ô thành âm dương |
 | Nguyễn Siêu | **Phù Liệt Hỏa Lũy** | 60 | Khiên 30% máu và Khiêu khích cho bản thân; Thiêu đốt 15% ATK cả đội đối thủ |
 | Đỗ Cảnh Thạc | **Đỗ Động Kiên Tâm** | 80 | 360% ATK vào 1 đối thủ; cả đội +30% Thủ 2 lượt; phá 8 ô |
 
