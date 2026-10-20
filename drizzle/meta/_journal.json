@@ -29,6 +29,13 @@
       "when": 1792428172428,
       "tag": "0003_profiles",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792472219557,
+      "tag": "0004_daily",
+      "breakpoints": true
     }
   ]
 }

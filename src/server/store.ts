@@ -6,9 +6,11 @@ import { drizzle } from "drizzle-orm/neon-http";
 import type { Match } from "@/core";
 import { MemoryAccountStore, type AccountStore } from "./accounts";
 import { DrizzleAccountStore } from "./db/accounts";
+import { DrizzleDailyStore } from "./db/daily";
 import { DrizzleProfileStore } from "./db/profiles";
 import { DrizzleMatchStore, type Db } from "./db/store";
 import { MemoryProfileStore, type ProfileStore } from "./profiles";
+import { MemoryDailyStore, type DailyStore } from "./daily";
 
 function neonDb(url: string): Db {
   return drizzle(neon(url)) as unknown as Db;
@@ -64,7 +66,7 @@ export class MemoryMatchStore implements MatchStore {
   }
 }
 
-const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore };
+const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore };
 
 /**
  * Kho dùng chung của server: Postgres (Neon) khi có DATABASE_URL, ngược lại lưu trong bộ nhớ (dev).
@@ -90,6 +92,13 @@ export function profileStore(): ProfileStore {
   return globalStore.coLauProfileStore;
 }
 
+/** Kho thử thách hằng ngày, cùng nguồn với kho trận. */
+export function dailyStore(): DailyStore {
+  const url = process.env.DATABASE_URL;
+  globalStore.coLauDailyStore ??= url ? new DrizzleDailyStore(neonDb(url)) : new MemoryDailyStore();
+  return globalStore.coLauDailyStore;
+}
+
 /** Postgres cho việc định kỳ; null khi dev không có DATABASE_URL (lưu bộ nhớ, không cần dọn). */
 export function database(): Db | null {
   const url = process.env.DATABASE_URL;
@@ -99,7 +108,7 @@ export function database(): Db | null {
 export interface DatabaseCheck {
   readonly kind: "neon" | "memory";
   readonly ok: boolean;
-  /** Đã có bảng `profiles`, bảng của migration mới nhất (migration đã chạy hết). */
+  /** Đã có bảng `daily_entries`, bảng của migration mới nhất (migration đã chạy hết). */
   readonly migrated?: boolean;
   readonly error?: string;
 }
@@ -109,7 +118,7 @@ export async function checkDatabase(): Promise<DatabaseCheck> {
   const url = process.env.DATABASE_URL;
   if (!url) return { kind: "memory", ok: process.env.NODE_ENV !== "production" };
   try {
-    const rows = (await neon(url)`select to_regclass('public.profiles') as t`) as { t: string | null }[];
+    const rows = (await neon(url)`select to_regclass('public.daily_entries') as t`) as { t: string | null }[];
     const migrated = rows[0]?.t != null;
     return { kind: "neon", ok: migrated, migrated };
   } catch (e) {

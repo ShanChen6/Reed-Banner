@@ -4,6 +4,9 @@
 
 ## 20/10/2026
 
+**Thử thách hằng ngày (lộ trình 5.2, Claude đặt, chờ Shan duyệt)**
+- Trang `/daily`: mỗi ngày (0 giờ giờ Việt Nam) một đề chung, gồm đội cho sẵn cấp 10 không trang bị, một sứ quân trên sân nhà và AI Khó. Seed chỉ nằm trên server. Mỗi người đánh một lần. Xếp hạng: thắng trên thua, ít lượt hơn rồi nhiều máu hơn. Thưởng 150/50 vàng. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#51-thử-thách-hằng-ngày-claude-đặt-20102026-chờ-shan-duyệt).
+
 **Sinh tồn (lộ trình 5.3, Claude đặt, chờ Shan duyệt)**
 - Trang `/survival`: một trận 3vs3 không dừng trên cùng bàn cờ, đối thủ theo đợt (2 rồi 3 đối thủ, cứ 5 đợt một sứ quân), luôn báo trước đợt kế. Nghỉ giữa đợt: +20% máu, +25 lương, giữ năng lượng; người gục tự đứng dậy sau 2 đợt hoặc trả 40 lương. Mô phỏng AI Thường vượt qua trung vị 11–12 đợt, mỗi đợt khoảng 10 lượt mỗi bên. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#41-bản-đầu-claude-đặt-20102026-chờ-shan-duyệt).
 

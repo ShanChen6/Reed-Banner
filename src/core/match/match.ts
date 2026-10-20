@@ -54,6 +54,8 @@ export interface Match {
   readonly tower?: number;
   /** Sinh tồn: lượt chơi (đợt, người gục); trận chỉ kết thúc khi `done`. */
   readonly survival?: SurvivalRun;
+  /** Thử thách hằng ngày: khóa ngày (YYYY-MM-DD). */
+  readonly daily?: string;
 }
 
 export interface MatchConfig {
@@ -67,6 +69,7 @@ export interface MatchConfig {
   readonly raid?: RaidTier;
   readonly tower?: number;
   readonly survival?: SurvivalRun;
+  readonly daily?: string;
 }
 
 export interface MatchStep {
@@ -95,6 +98,7 @@ export function startMatch(config: MatchConfig): MatchStep {
     ...(config.raid ? { raid: config.raid } : {}),
     ...(config.tower ? { tower: config.tower } : {}),
     ...(config.survival ? { survival: config.survival } : {}),
+    ...(config.daily ? { daily: config.daily } : {}),
   };
   const ai = runAi(match, config.now, config.difficulty);
   return { match: ai.match, events: [...events, ...ai.events] };
@@ -309,6 +313,7 @@ export interface MatchView {
   readonly raid?: RaidTier;
   readonly tower?: number;
   readonly survival?: SurvivalView;
+  readonly daily?: string;
 }
 
 /** Sinh tồn gửi cho client: không có seed, kèm báo trước đợt kế tiếp. */
@@ -346,5 +351,6 @@ export function viewOf(m: Match): MatchView {
     ...(m.raid ? { raid: m.raid } : {}),
     ...(m.tower ? { tower: m.tower } : {}),
     ...(m.survival ? { survival: survivalView(m.survival, m.battle) } : {}),
+    ...(m.daily ? { daily: m.daily } : {}),
   };
 }
