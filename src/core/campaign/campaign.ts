@@ -520,6 +520,8 @@ export function applyCampaignResult(
   stageId: string,
   won: boolean,
   foodLeft: number,
+  /** Số lượt của trận (hai phe), để giữ thành tích ít lượt nhất khi thắng. */
+  turns?: number,
 ): { profile: Profile; result: CampaignResult } {
   const stage = stageById(stageId);
   const firstClear =
@@ -535,13 +537,19 @@ export function applyCampaignResult(
   const companions = joined
     ? { ...profile.companions, [joined]: autoJoin(stage!.level) }
     : profile.companions;
-  const campaign: CampaignState = {
+  let campaign: CampaignState = {
     ...profile.campaign,
     cleared: firstClear
       ? [...profile.campaign.cleared, stageId]
       : profile.campaign.cleared,
     food,
   };
+  const prevBest = campaign.bestTurns[stageId];
+  if (stage && won && turns && turns > 0 && !(prevBest! <= turns))
+    campaign = {
+      ...campaign,
+      bestTurns: { ...campaign.bestTurns, [stageId]: turns },
+    };
   return {
     profile: {
       ...profile,

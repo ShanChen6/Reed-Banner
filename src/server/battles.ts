@@ -69,6 +69,7 @@ import {
 import { loadProfile, updateProfile, type ProfileStore } from "./profiles";
 import type { MatchRecord, MatchStore } from "./store";
 import { dailySeed, type DailyStore } from "./daily";
+import { submitProfile, type LeaderboardStore } from "./leaderboard";
 
 export interface Deps {
   readonly store: MatchStore;
@@ -80,6 +81,8 @@ export interface Deps {
   /** Thử thách hằng ngày: kho lượt đánh và khóa bí mật sinh seed của ngày. Không có thì không mở được. */
   readonly daily?: DailyStore;
   readonly dailySecret?: string;
+  /** Bảng xếp hạng: ghi điểm sau mỗi lần cộng thưởng. */
+  readonly leaderboard?: LeaderboardStore;
 }
 
 const DIFFICULTIES: readonly Difficulty[] = [
@@ -712,6 +715,7 @@ async function reward(
           stage,
           rewards.won,
           match.battle.sides[HUMAN].food,
+          match.battle.turn.number,
         );
         next = c.profile;
         campaign = c.result;
@@ -725,6 +729,13 @@ async function reward(
     deps.now,
   );
   if (!u.ok) console.error("Không cộng được thưởng cuối trận", r.id, u.error);
+  else
+    await submitProfile(
+      deps.leaderboard,
+      r.ownerId,
+      u.stored.profile,
+      deps.now,
+    );
   return {
     rewards,
     levelUps,

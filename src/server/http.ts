@@ -4,7 +4,7 @@ import { randomInt, randomUUID } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { httpStatus, type Deps, type ServiceResult } from "./battles";
 import { GUEST_COOKIE, newGuestId, signGuest, verifyGuest } from "./guest";
-import { dailyStore, matchStore, profileStore } from "./store";
+import { dailyStore, leaderboardStore, matchStore, profileStore } from "./store";
 
 /** Cookie khách sống 30 ngày, khớp với hạn xóa tài khoản khách không hoạt động. */
 const GUEST_MAX_AGE = 30 * 24 * 60 * 60;
@@ -39,6 +39,7 @@ export function serverDeps(): Deps {
     seed: randomInt(0, 2 ** 32),
     newId: () => `m_${randomUUID()}`,
     daily: dailyStore(),
+    leaderboard: leaderboardStore(),
     dailySecret: process.env.SESSION_SECRET,
   };
 }

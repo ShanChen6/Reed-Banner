@@ -25,6 +25,7 @@ import {
 } from "../../src/server/profiles";
 import { MemoryMatchStore } from "../../src/server/store";
 import { dailyBoard, MemoryDailyStore } from "../../src/server/daily";
+import { MemoryLeaderboardStore } from "../../src/server/leaderboard";
 import { DAILY_GOLD } from "../../src/core";
 
 const T0 = 5_000_000;
@@ -287,7 +288,10 @@ describe("trận chiến dịch", () => {
     assert.ok(
       await profiles.put(
         "g_c",
-        { ...cur.profile, campaign: { cleared: [], food: 42, raids: {} } },
+        {
+          ...cur.profile,
+          campaign: { cleared: [], food: 42, raids: {}, bestTurns: {} },
+        },
         cur.version,
       ),
     );
@@ -336,6 +340,7 @@ describe("trận chiến dịch", () => {
       cleared: ["coLau"],
       food: 33,
       raids: {},
+      bestTurns: { coLau: 1 },
     });
     assert.equal(saved.companions.nguyenBac?.level, 1);
   });
@@ -354,7 +359,12 @@ describe("trận đánh trùm", () => {
     assert.deepEqual(locked, { ok: false, error: "badRequest" });
 
     const cur = await loadProfile(profiles, "g_r");
-    const campaign = { cleared: ["coLau", "boHai"], food: 40, raids: {} };
+    const campaign = {
+      cleared: ["coLau", "boHai"],
+      food: 40,
+      raids: {},
+      bestTurns: {},
+    };
     assert.ok(
       await profiles.put(
         "g_r",
@@ -488,6 +498,7 @@ describe("trận sinh tồn", () => {
       seed: 21,
       newId: () => "m_s1",
     };
+    const leaderboard = new MemoryLeaderboardStore();
     const body = { ...input, survival: true };
     assert.equal(parseNewBattle({ ...body, survival: 1 }), null);
     assert.equal(parseNewBattle({ ...body, tower: true }), null);
@@ -536,7 +547,7 @@ describe("trận sinh tồn", () => {
       r.id,
       "g_s",
       { seq, action: { type: "endRun" } },
-      { store, profiles, now: T0 + 3000 },
+      { store, profiles, leaderboard, now: T0 + 3000 },
     );
     assert.ok(end.ok && end.outcome?.survival);
     assert.deepEqual(end.outcome.survival, {
@@ -551,6 +562,11 @@ describe("trận sinh tồn", () => {
     // Nhiệm vụ: một trận sinh tồn, thắng, vượt 2 đợt.
     assert.equal(p.quests.weekStats.waves, 2);
     assert.equal(p.quests.totals.play, 1);
+    // Bảng xếp hạng sinh tồn ghi ngay khi cộng thưởng.
+    assert.deepEqual(await leaderboard.rankOf("survival", "g_s"), {
+      rank: 1,
+      score: 2,
+    });
   });
 });
 

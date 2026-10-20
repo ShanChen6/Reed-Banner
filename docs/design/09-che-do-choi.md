@@ -101,6 +101,15 @@ Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (tr
 - Mô phỏng 20/10/2026 (`pnpm sim -- --stage all --raid 1|2|3`, 70 trận mỗi ô, AI Thường đánh thay người chơi ở cấp gợi ý, đội có 2 tướng lịch sử): thắng trung bình 46% ở Bậc I, 46% Bậc II, 39% Bậc III, dao động 14–73% theo màn. Bậc II chưa khó hơn Bậc I vì cấp gợi ý tăng cùng cấp đối thủ, còn AI ở cấp cao khác nhau ít. Khó nhất là Bình Kiều (14–26%), Siêu Loại (24–31%) và Bố Hải (27–34%); dễ nhất Hồi Hồ (63–73%). Đây là nội dung thử thách nên để khó hơn chiến dịch; cân từng màn để sau nếu cần.
 - Bản đầu cho sứ quân luôn đi trước và AI nhảy thẳng lên Trùm: thắng chỉ 6–36% ở Bậc I nên đã bỏ.
 
+### 2.3 Bảng xếp hạng (Claude đặt 20/10/2026, chờ Shan duyệt)
+
+- Trang `/leaderboard` có 4 bảng: **Chiến dịch**, **Từng màn** (chọn màn), **Leo tháp**, **Sinh tồn**. Mỗi bảng hiện 50 người đứng đầu và hạng của người đang xem. Thử thách hằng ngày giữ bảng riêng ở `/daily`.
+- **Chiến dịch:** qua nhiều màn hơn đứng trên; bằng số màn thì tổng số lượt ít nhất của các màn đã qua ít hơn đứng trên. Màn qua trước khi có bảng (chưa lưu số lượt) tính 200 lượt.
+- **Từng màn:** thắng màn đó với ít lượt nhất (đếm lượt của cả hai phe). Hồ sơ lưu số lượt ít nhất mỗi màn (`campaign.bestTurns`), chỉ tính trận thắng màn chiến dịch, không tính đánh trùm.
+- **Leo tháp:** tầng cao nhất đã qua. **Sinh tồn:** số đợt nhiều nhất đã vượt.
+- Bằng điểm thì người đạt điểm đó trước đứng trên. Khách hiện là "Khách" kèm 4 ký tự cuối mã.
+- Server ghi điểm vào bảng `leaderboard_scores` sau mỗi lần cộng thưởng trận online; người chơi có thành tích từ trước được ghi khi mở trang. Điểm tính từ hồ sơ nên trận ở `/demo` không lên bảng. Code ở `src/core/progress/leaderboard.ts` và `src/server/leaderboard.ts`.
+
 ## 3. Leo tháp (Vô hạn)
 
 - Máu và lương **mang sang** giữa các tầng, không tự hồi.

@@ -25,7 +25,7 @@ Mỗi dòng là một PR vào develop, làm theo thứ tự. Số liệu là đi
 | 4.3 | Chiêu riêng cho từng sứ quân (1 tuyệt chiêu mang dấu ấn lịch sử) và thoại trước/sau trận | Đã làm (20/10/2026). Chiêu riêng thay ô 5 cho 12 sứ quân và 6 tướng lịch sử; 3 câu thoại mỗi màn |
 | 4.4 | Cân độ khó chiến dịch bằng mô phỏng: người chơi cày bình thường qua được màn trước ở cấp gợi ý | Đã làm (20/10/2026). `pnpm sim -- --stage all`, thêm `--sweep 2..5` và `--team default` khi cần; cấp gợi ý riêng từng màn, mọi màn ≥50% thắng ở cấp gợi ý |
 | 4.5 | Đánh trùm: đánh lại sứ quân đã hạ ở mức khó cao hơn, luật "sân nhà", thưởng riêng | Đã làm (20/10/2026). 3 bậc cho 12 sứ quân, sân nhà theo nguyên tố, thưởng vàng và trang bị lần đầu; xem [Chế độ chơi](design/09-che-do-choi.md#22-đánh-trùm-claude-đặt-20102026-chờ-shan-duyệt) |
-| 4.6 | Bảng xếp hạng (BXH) | Theo số màn, lượt ít nhất mỗi màn |
+| 4.6 | Bảng xếp hạng (BXH) | Đã làm (20/10/2026). Trang `/leaderboard`: chiến dịch theo số màn rồi tổng lượt, từng màn theo lượt ít nhất, leo tháp, sinh tồn; xem [Chế độ chơi](design/09-che-do-choi.md#23-bảng-xếp-hạng-claude-đặt-20102026-chờ-shan-duyệt) |
 
 ### Giai đoạn 5: Chế độ thêm
 
