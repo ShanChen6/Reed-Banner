@@ -38,7 +38,7 @@ function checkFall(step: CascadeStep, anims: Readonly<Record<number, { dx: numbe
 }
 
 describe("hoạt ảnh trang /demo", () => {
-  it("khung cuối của mỗi lượt khớp bàn cờ thật, kể cả trượt, kỹ năng và xáo bàn", () => {
+  it("khung cuối của mỗi lượt khớp bàn cờ thật, kể cả lốc xoáy, kỹ năng và xáo bàn", () => {
     let s = battle(7);
     let checked = 0;
     for (let turn = 0; turn < 60 && s.winner === null; turn++) {
@@ -51,6 +51,20 @@ describe("hoạt ảnh trang /demo", () => {
       s = r.state;
     }
     assert.ok(checked > 20);
+  });
+
+  it("lốc xoáy: mỗi ô bay từ đúng chỗ cũ của nó trong vòng", () => {
+    const s = battle(3);
+    const whirl = { center: { row: 2, col: 4 }, turns: -2 };
+    const frames = eventFrames(s.board, [{ type: "whirl", side: 0, fighter: 0, whirl, free: true }]);
+    assert.equal(frames.length, 1);
+    const { board, anims } = frames[0]!;
+    assert.equal(Object.keys(anims).length, 8);
+    for (const [i, a] of Object.entries(anims)) {
+      const row = Math.floor(Number(i) / board.cols) + a.dy;
+      const col = (Number(i) % board.cols) + a.dx;
+      assert.deepEqual(board.cells[Number(i)], s.board.cells[row * board.cols + col]);
+    }
   });
 
   it("ô rơi lấy đúng ô phía trên", () => {

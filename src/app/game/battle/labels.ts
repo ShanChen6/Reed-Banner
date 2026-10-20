@@ -103,7 +103,7 @@ export const ERROR_TEXT: Record<BattleError, string> = {
   tooLate: "Đã hết giờ",
   tooEarly: "Chưa hết giờ",
   noTimer: "Không có đồng hồ",
-  noFreeSlide: "Không còn lượt trượt miễn phí",
+  noFreeWhirl: "Không còn lượt xoay miễn phí",
 };
 
 export const SLOT_NAME: Record<GearSlot, string> = {
