@@ -83,13 +83,15 @@ export type WarriorPart = "body" | "armR" | "sword" | "arm" | "head";
 
 export interface WarriorRig {
   readonly skeleton: "warrior";
+  /** Giáo dùng nhịp đẩy ngắn; bỏ trống giữ nhát chém của các tướng sĩ cũ. */
+  readonly weapon?: "spear";
   readonly dir: string;
   readonly texScale: number;
   readonly foot: Point;
   readonly height: number;
   readonly parts: Readonly<Record<WarriorPart, PartBox>>;
   /** Lớp vải bay theo gió. `behind`: vẽ sau thân (áo choàng, dải buộc tóc), còn lại vẽ ngay trên thân. */
-  readonly cloth: readonly { readonly name: string; readonly box: PartBox; readonly wind: Wind; readonly behind?: boolean }[];
+  readonly cloth: readonly { readonly name: string; readonly box: PartBox; readonly wind: Wind; readonly behind?: boolean; readonly overArms?: boolean }[];
   /** Lớp phủ lên tay cầm kiếm (giáp vai, tay áo) để che chỗ nối ở vai. */
   readonly covers: readonly { readonly name: string; readonly box: PartBox }[];
   /** shoulder: vai tay cầm kiếm (cả tay và kiếm xoay quanh đây); elbowR: khuỷu tay không; neck: cổ. */
@@ -330,12 +332,90 @@ const NGUYEN_BAC: WarriorRig = {
   },
 };
 
+/** Đinh Điền, binh lính hệ Thổ. Tọa độ giữ nguyên theo ảnh nguồn 1024×1536. */
+const DINH_DIEN: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "dinh-dien",
+  texScale: 0.5,
+  foot: { x: 560, y: 1508 },
+  height: 1510,
+  parts: {
+    body: { x: 206, y: 65, w: 808, h: 1447 },
+    armR: { x: 711, y: 439, w: 304, h: 562 },
+    sword: { x: 44, y: 3, w: 246, h: 1418 },
+    arm: { x: 164, y: 490, w: 198, h: 188 },
+    head: { x: 402, y: 65, w: 276, h: 252 }
+  },
+  cloth: [
+    {
+      name: "ribbon",
+      box: { x: 285, y: 181, w: 122, h: 146 },
+      wind: { axis: "x", start: 0.2, amp: 3, freq: 1.4, k: 2.6, phase: 0.0, reverse: true, vertical: true },
+      behind: true
+    },
+    {
+      name: "sash",
+      box: { x: 350, y: 623, w: 188, h: 268 },
+      wind: { axis: "y", start: 0.2, amp: 3, freq: 1.4, k: 2.6, phase: 0.7 }
+    },
+    {
+      name: "plume",
+      box: { x: 587, y: 704, w: 252, h: 330 },
+      wind: { axis: "y", start: 0.2, amp: 3, freq: 1.4, k: 2.6, phase: 1.4 },
+      overArms: true
+    }
+  ],
+  covers: [
+    {
+      name: "sleeve",
+      box: { x: 258, y: 400, w: 118, h: 158 }
+    }
+  ],
+  joints: {
+    shoulder: { x: 331, y: 518 },
+    elbowR: { x: 767, y: 489 },
+    neck: { x: 529, y: 301 }
+  },
+  blade: [
+    { x: 180, y: 240 },
+    { x: 145, y: 4 }
+  ],
+  fxColor: 0xd9ad65,
+  poses: {
+    cast: {
+      origin: { x: 75, y: 13 },
+      scale: 0.95,
+      texScale: 1 / 3,
+      name: "pose-cast",
+      anchor: { x: 615, y: 1005 },
+      burst: { x: 1510, y: 244 }
+    },
+    ultimate: {
+      origin: { x: 35, y: 11 },
+      scale: 0.95,
+      texScale: 1 / 3,
+      name: "pose-ultimate",
+      anchor: { x: 803, y: 1000 },
+      burst: { x: 1380, y: 750 }
+    }
+  },
+  down: {
+    origin: { x: 127, y: 5 },
+    scale: 0.95,
+    texScale: 1 / 3,
+    name: "pose-down",
+    anchor: { x: 725, y: 1004 }
+  }
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
   tranCuong: TRAN_CUONG,
   dinhBoLinh: DINH_BO_LINH,
   nguyenBac: NGUYEN_BAC,
+  dinhDien: DINH_DIEN,
 };
 
 export function rigOf(id: string): Rig | null {

@@ -17,11 +17,13 @@ test("bảng xem thử chỉ có nhân vật có rig, dung lượng khớp các 
     assert.equal(urls.size, character.files.length);
     for (const name of partsOf(rig)) assert.ok(urls.has(partUrl(rig, name)));
   }
-  const nguyenBac = characters.find((c) => c.id === "nguyenBac")!;
-  assert.ok(nguyenBac.assets.every((a) => a.file), "Nguyễn Bặc cần đủ năm ảnh đối chiếu");
-  assert.ok(nguyenBac.files.reduce((sum, file) => sum + file.bytes, 0) <= 350_000);
-  const portrait = nguyenBac.assets.find((a) => a.kind === "portrait")!.file!;
-  assert.ok(portrait.bytes < 30_000);
+  for (const id of ["nguyenBac", "dinhDien"]) {
+    const character = characters.find((c) => c.id === id)!;
+    assert.ok(character.assets.every((a) => a.file), `${id} cần đủ năm ảnh đối chiếu`);
+    assert.ok(character.files.reduce((sum, file) => sum + file.bytes, 0) <= 350_000);
+    const portrait = character.assets.find((a) => a.kind === "portrait")!.file!;
+    assert.ok(portrait.bytes < 30_000);
+  }
 });
 
 test("tranh gục được tải trong rig, alpha thật và tỉ lệ texture đúng", () => {
