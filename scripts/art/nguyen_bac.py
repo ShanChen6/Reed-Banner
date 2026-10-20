@@ -61,6 +61,10 @@ for name, part in layers.items():
     boxes[name] = dict(x=x,y=y,w=r-x,h=b-y)
     cropped = part.crop((x,y,r,b))
     cropped.resize(((r-x)//2,(b-y)//2), Image.Resampling.LANCZOS).save(root/f'{name}.webp', quality=76,method=6)
+# Avatar dùng cùng RGB gốc và alpha, thêm viền trống phía trên để mặt ở giữa khung tròn.
+portrait = source.crop((425, -20, 855, 410)).resize((256, 256), Image.Resampling.LANCZOS)
+portrait.save(root/'portrait.webp', quality=86, method=6)
+assert (root/'portrait.webp').stat().st_size < 30_000
 # Đối chiếu trước nén: ráp các lớp phải khớp nguyên hình nguồn, không đổi tỷ lệ.
 assembled = Image.new('RGBA',source.size)
 for name in ['body','ribbon','cape','sash','head','armR','sword','arm']:
