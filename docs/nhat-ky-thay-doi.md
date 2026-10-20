@@ -4,6 +4,10 @@
 
 ## 20/10/2026
 
+**Hoạt ảnh nhân vật tự viết bằng code, không mua Spine (Shan chốt sau bản thử Đ0)**
+- Bản thử pháp sư hệ Thủy (`/prototypes/water-mage.html`): ảnh Copilot, tách lớp bằng live2dlayer, 15 lớp WebP 282 KB, hoạt ảnh PixiJS uốn lưới và xoay khớp. Shan duyệt chuyển động; giữ cách này, tiết kiệm 379 USD Spine Professional.
+- Quy trình làm một nhân vật: Copilot (toàn thân, nền trơn) → live2dlayer → sửa trong Photopea (tách bắp tay, đồ cầm tay) → Claude dựng động tác.
+
 **Hệ Phong: lốc xoáy thay trượt hàng/cột (Shan chốt)**
 - Lý do: trượt bắt người chơi tự hình dung cả hàng 12 ô (hoặc cột 8 ô) dịch đi, có ô tràn quay vòng, rất khó thấy combo; AI thì tính hết nên Phong mạnh với máy mà khó với người. Shan chọn Lốc xoáy trong 3 phương án (đổi ô tầm xa, lốc xoáy, trượt có game chọn hộ).
 - Lốc xoáy: chạm 1 ô không sát mép làm tâm, 8 ô quanh xoay 1–2 nấc theo hoặc ngược chiều kim đồng hồ, ô tâm đứng yên; cascade và thu hoạch giảm như trượt cũ. Thuận Phong cho 1 lần xoay miễn phí 1 nấc; Phong Quyển Tàn Vân xoay tối đa 2 nấc. Kỹ năng có xoay kèm theo (Bão Táp Càn Khôn, tuyệt chiêu và chiêu riêng hệ Phong) game tự xoay, người chơi không thao tác thêm. Chi tiết: [Kỹ năng nhân vật chính](design/12-ky-nang-nhan-vat-chinh.md) mục 8.
