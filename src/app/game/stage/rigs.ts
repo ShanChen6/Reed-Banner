@@ -98,6 +98,8 @@ export interface WarriorRig {
   readonly blade: readonly [Point, Point];
   readonly fxColor: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
+  /** Tranh bị hạ gục: hết máu thì hình động mờ dần sang tranh này. */
+  readonly down?: Omit<PoseArt, "burst">;
 }
 
 /**
@@ -133,6 +135,7 @@ export function partsOf(rig: Rig): readonly string[] {
         ...rig.cloth.map((c) => c.name),
         ...rig.covers.map((c) => c.name),
         ...Object.values(rig.poses ?? {}).map((p) => p.name),
+        ...(rig.down ? [rig.down.name] : []),
       ];
 }
 
@@ -274,6 +277,13 @@ const DINH_BO_LINH: WarriorRig = {
       scale: 1.02,
       burst: { x: 1050, y: 1460 },
     },
+  },
+  // Nền ô vuông vẽ sẵn tách bằng rembg; cỡ so theo khóa thắt lưng (73 px đứng, 85 px nằm).
+  down: {
+    name: "pose-down",
+    origin: { x: 10, y: 42 },
+    anchor: { x: 850, y: 865 },
+    scale: 0.86,
   },
 };
 
