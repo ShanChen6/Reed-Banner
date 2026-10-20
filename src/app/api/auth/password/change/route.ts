@@ -9,13 +9,13 @@ import { formError } from "../redirect";
 export async function POST(request: NextRequest) {
   const form = await request.formData();
   const id = guestOf(request);
-  if (!sameOrigin(request) || !id) return formError(request, "/account", "noPassword");
+  if (!sameOrigin(request) || !id) return formError(request, "/game/account", "noPassword");
   const r = await changePassword(
     accountStore(),
     id,
     { current: formText(form, "current"), password: formText(form, "password"), confirm: formText(form, "confirm") },
     Date.now(),
   );
-  if (!r.ok) return formError(request, "/account", r.error);
-  return NextResponse.redirect(new URL("/account?passwordChanged=1", request.nextUrl.origin), 303);
+  if (!r.ok) return formError(request, "/game/account", r.error);
+  return NextResponse.redirect(new URL("/game/account?passwordChanged=1", request.nextUrl.origin), 303);
 }

@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
   const username = formText(form, "username");
   // Đang đăng nhập thì form nằm ở /account (thêm tên đăng nhập vào tài khoản), còn lại ở /register.
   const id = guestOf(request);
-  const page = id && (await accountStore().get(id)) ? "/account" : "/register";
+  const page = id && (await accountStore().get(id)) ? "/game/account" : "/game/register";
   if (!sameOrigin(request)) return formError(request, page, "wrong", username, returnTo);
   const r = await register(
     accountStore(),
