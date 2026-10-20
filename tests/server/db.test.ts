@@ -5,6 +5,7 @@ import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
 import { mainCharacter, newProfile, startMatch, STARTER_COMPANIONS } from "../../src/core";
 import { DrizzleAccountStore } from "../../src/server/db/accounts";
+import { DrizzleDailyStore } from "../../src/server/db/daily";
 import { DrizzleProfileStore } from "../../src/server/db/profiles";
 import { DrizzleMatchStore, type Db } from "../../src/server/db/store";
 import { signIn } from "../../src/server/accounts";
@@ -94,5 +95,33 @@ describe("lưu trận vào Postgres (PGlite, cùng migration với Neon)", () =>
     await store.link("g_3", { provider: "github", subject: "9", name: "Gh", avatarUrl: null }, 20);
     assert.equal(await store.createPassword("g_3", "gh_user", "h", 21), true);
     assert.equal((await store.get("g_3"))?.name, "Gh");
+  });
+
+  it("thử thách ngày: mỗi người một lượt, xếp hạng theo điểm rồi giờ xong, kèm tên tài khoản", async () => {
+    const db = drizzle(new PGlite());
+    await migrate(db, { migrationsFolder: "drizzle" });
+    const accounts = new DrizzleAccountStore(db as unknown as Db);
+    await signIn(accounts, { provider: "google", subject: "1", name: "Shan", avatarUrl: null }, "g_a", 1, () => "g_x");
+    const store = new DrizzleDailyStore(db as unknown as Db);
+    const day = "2026-10-20";
+    assert.equal(await store.start(day, "g_a", "m_a", 10), true);
+    assert.equal(await store.start(day, "g_a", "m_khac", 11), false);
+    assert.equal(await store.start(day, "g_b", "m_b", 12), true);
+    assert.equal(await store.start(day, "g_c", "m_c", 13), true);
+    assert.equal((await store.get(day, "g_a"))!.result, null);
+    const win = (turns: number) => ({ won: true, turns, permille: 500, score: 1_000_000 - turns * 1000 + 500 });
+    await store.finish(day, "g_a", win(30), 100);
+    await store.finish(day, "g_b", win(20), 200);
+    await store.finish(day, "g_c", win(30), 50);
+    // Ghi lần hai không đổi kết quả.
+    await store.finish(day, "g_b", win(40), 300);
+    const top = await store.top(day, 10);
+    assert.deepEqual(top.map((e) => e.ownerId), ["g_b", "g_c", "g_a"]);
+    assert.equal(top[2]!.name, "Shan");
+    assert.equal(top[0]!.name, null);
+    assert.equal(top[0]!.result!.turns, 20);
+    assert.equal(await store.rankOf(day, "g_a"), 3);
+    assert.equal(await store.rankOf(day, "g_b"), 1);
+    assert.equal(await store.rankOf("2026-10-21", "g_a"), null);
   });
 });

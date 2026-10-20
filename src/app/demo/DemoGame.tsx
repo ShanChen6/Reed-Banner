@@ -72,6 +72,7 @@ import {
   SURVIVAL_REVIVE_HP,
   type MatchAction,
   type SurvivalResult,
+  type DailyScore,
   type SurvivalView,
   type WavePreview,
 } from "@/core";
@@ -239,6 +240,7 @@ interface Outcome {
   /** Chỉ có ở trận leo tháp trên /play. */
   readonly tower?: TowerResult;
   readonly survival?: SurvivalResult;
+  readonly daily?: { readonly score: DailyScore; readonly rank: number | null };
 }
 
 function demoDrop(
@@ -706,6 +708,8 @@ export default function DemoGame({
   const [towerFloorNo, setTowerFloorNo] = useState<number | null>(null);
   /** Sinh tồn: đợt, người gục, báo trước đợt kế. */
   const [survival, setSurvival] = useState<SurvivalView | null>(null);
+  /** Thử thách hằng ngày: khóa ngày của trận đang chơi. */
+  const [dailyDay, setDailyDay] = useState<string | null>(null);
   const setup = useMemo<Setup>(
     () => ({ element, profession, gear, mode, profile }),
     [element, profession, gear, mode, profile],
@@ -1294,6 +1298,7 @@ export default function DemoGame({
     setStarted(false);
     setBattleId(null);
     setSurvival(null);
+    setDailyDay(null);
   };
 
   const beginOnline = (res: OnlineResponse) => {
@@ -1306,6 +1311,7 @@ export default function DemoGame({
     setStage(res.view.stage ?? null);
     setTowerFloorNo(res.view.tower ?? null);
     setSurvival(res.view.survival ?? null);
+    setDailyDay(res.view.daily ?? null);
     setBattleId(res.id);
     setClock(res.now);
     setState(toBattleState(res.view));
@@ -1848,6 +1854,17 @@ export default function DemoGame({
                               ` +${outcome.tower.bonusGold} vàng tầng trùm.`}
                           </p>
                         )}
+                        {outcome.daily && (
+                          <p className="font-semibold text-amber-300">
+                            Thử thách ngày:{" "}
+                            {outcome.daily.score.won
+                              ? `thắng sau ${outcome.daily.score.turns} lượt`
+                              : "thua"}
+                            {outcome.daily.rank !== null &&
+                              `, hạng ${outcome.daily.rank} hôm nay`}
+                            .
+                          </p>
+                        )}
                         {outcome.survival && (
                           <p className="font-semibold text-amber-300">
                             Vượt qua {outcome.survival.cleared} đợt
@@ -1902,6 +1919,14 @@ export default function DemoGame({
                           {outcome?.tower?.won
                             ? "Chọn thưởng, lên tầng"
                             : "Về tháp"}
+                        </a>
+                      )}
+                      {dailyDay && (
+                        <a
+                          href="/daily"
+                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                        >
+                          Xem bảng xếp hạng
                         </a>
                       )}
                       {survival && (

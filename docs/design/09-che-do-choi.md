@@ -188,3 +188,24 @@ Mỗi đợt khoảng 10 lượt mỗi bên, đúng mức trên của mục tiê
 - 🧩 **Thế cờ:** bàn cờ dựng sẵn, ô rơi cố định, hạ gục đối thủ trong đúng K nước.
 - ⚔️ **Đấu trường bóng ma:** PvP không đồng bộ, đánh với đội hình của người chơi khác do AI điều khiển (làm sau cùng).
 - **Cơ chế giữ chân:** nhiệm vụ ngày/tuần, thành tựu, bộ sưu tập nhân vật.
+
+### 5.1 Thử thách hằng ngày (Claude đặt 20/10/2026, chờ Shan duyệt)
+
+Trang `/daily`, code ở `src/core/daily/` (đề và điểm), `src/server/daily.ts` (seed, lượt, bảng xếp hạng), bảng `daily_entries`.
+
+- **Ngày:** đổi lúc 0 giờ giờ Việt Nam (UTC+7).
+- **Seed:** HMAC của khóa bí mật server (`SESSION_SECRET`) với ngày, nên không đoán trước được đề ngày mai. Bàn cờ, ô rơi và AI dùng cùng seed: ai đi cùng nước thì gặp cùng ô rơi.
+- **Đề như nhau với mọi người:**
+  - Đội cho sẵn: Đinh Bộ Lĩnh với nguyên tố và nghề theo đề, cùng 2 nhân vật kèm.
+  - Đối thủ: một sứ quân dẫn 2 tùy tướng, đánh trên sân nhà của sứ quân.
+  - Mọi nhân vật cấp 10, không trang bị.
+  - AI mức Khó, người chơi đi trước. Hồ sơ người chơi không ảnh hưởng gì tới đề.
+- **Một lượt mỗi ngày:** server ghi chỗ trong `daily_entries` trước khi tạo trận (khóa chính ngày + người chơi). Tải lại trang vẫn tiếp tục được trận đang dở.
+- **Điểm và xếp hạng:**
+  - Thắng luôn đứng trên thua.
+  - Cùng thắng thì ít lượt hơn đứng trên, rồi tới còn nhiều máu hơn.
+  - Thua thì xếp theo sát thương đã gây.
+  - Cùng điểm thì ai xong trước đứng trên.
+  - Bảng hiện 20 người đầu, kèm hạng của mình. Khách hiện "Khách" kèm 4 ký tự cuối của id.
+- **Thưởng:** 150 vàng khi thắng, 50 vàng khi thua. Không có kinh nghiệm hay món rơi, vì đội là đội của đề.
+- Mô phỏng 60 đề: AI Thường thắng AI Khó 65%, trung bình 39 lượt (hai phe).

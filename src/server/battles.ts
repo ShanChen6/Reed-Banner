@@ -7,6 +7,10 @@ import {
   applyRaidResult,
   applyTowerResult,
   applySurvivalResult,
+  DAILY_GOLD,
+  dailyKey,
+  dailyScore,
+  dailySetup,
   applyRewards,
   battleRewards,
   createRng,
@@ -38,6 +42,7 @@ import {
   viewOf,
   type MatchAction,
   type SurvivalResult,
+  type DailyScore,
   type BattleEvent,
   type Difficulty,
   type Element,
@@ -60,6 +65,7 @@ import {
 } from "@/core";
 import { loadProfile, updateProfile, type ProfileStore } from "./profiles";
 import type { MatchRecord, MatchStore } from "./store";
+import { dailySeed, type DailyStore } from "./daily";
 
 export interface Deps {
   readonly store: MatchStore;
@@ -68,6 +74,9 @@ export interface Deps {
   /** Seed 32 bit, server bốc bằng crypto; client không bao giờ thấy. */
   readonly seed: number;
   readonly newId: () => string;
+  /** Thử thách hằng ngày: kho lượt đánh và khóa bí mật sinh seed của ngày. Không có thì không mở được. */
+  readonly daily?: DailyStore;
+  readonly dailySecret?: string;
 }
 
 const DIFFICULTIES: readonly Difficulty[] = [
@@ -93,9 +102,17 @@ export interface NewBattleInput {
   readonly tower?: true;
   /** Sinh tồn: bắt đầu lượt chơi mới với đội đang chọn ở hồ sơ. */
   readonly survival?: true;
+  /** Thử thách hằng ngày: đề chung của hôm nay, mỗi người một lượt. */
+  readonly daily?: true;
 }
 
-export type ServiceError = MatchError | "badRequest" | "notFound" | "conflict";
+export type ServiceError =
+  | MatchError
+  | "badRequest"
+  | "notFound"
+  | "conflict"
+  /** Hôm nay đã đánh thử thách ngày. */
+  | "dailyDone";
 
 /** Phần thưởng cuối trận đã cộng vào hồ sơ, gửi kèm đúng một lần (response làm trận kết thúc). */
 export interface Outcome {
@@ -113,6 +130,8 @@ export interface Outcome {
   readonly tower?: TowerResult;
   /** Chỉ có ở sinh tồn. */
   readonly survival?: SurvivalResult;
+  /** Chỉ có ở thử thách hằng ngày: điểm và hạng lúc vừa xong. */
+  readonly daily?: { readonly score: DailyScore; readonly rank: number | null };
 }
 
 export type ServiceResult =
@@ -137,6 +156,18 @@ const oneOf = <T extends string>(list: readonly T[], x: unknown): x is T =>
 /** Kiểm tra body tạo trận; null khi không hợp lệ. */
 export function parseNewBattle(body: unknown): NewBattleInput | null {
   if (!isObj(body)) return null;
+  if (body.daily !== undefined) {
+    if (body.daily !== true) return null;
+    // Đề ngày quyết định đội và đối thủ; bỏ qua mọi lựa chọn khác.
+    return {
+      mode: "3v3",
+      element: "moc",
+      profession: "tuongSi",
+      companions: [],
+      difficulty: "hard",
+      daily: true,
+    };
+  }
   if (body.survival !== undefined) {
     if (
       body.survival !== true ||
@@ -293,6 +324,7 @@ export async function createBattleFor(
 ): Promise<ServiceResult> {
   if (input.tower) return createTowerBattle(ownerId, input, deps);
   if (input.survival) return createSurvivalBattle(ownerId, input, deps);
+  if (input.daily) return createDailyBattle(ownerId, deps);
   const { profile } = await loadProfile(deps.profiles, ownerId);
   // Chỉ ra trận nhân vật đã có (khởi đầu hoặc đã mua).
   if (!input.companions.every((id) => ownsCompanion(profile, id)))
@@ -479,6 +511,77 @@ async function createSurvivalBattle(
   return { ok: true, id: record.id, view: viewOf(match), events };
 }
 
+/** Thử thách hằng ngày: giữ chỗ lượt của hôm nay trước rồi mới tạo trận, nên mỗi người chỉ một trận một ngày. */
+async function createDailyBattle(
+  ownerId: string,
+  deps: Deps,
+): Promise<ServiceResult> {
+  if (!deps.daily || !deps.dailySecret)
+    return { ok: false, error: "badRequest" };
+  const day = dailyKey(deps.now);
+  const seed = dailySeed(deps.dailySecret, day);
+  const id = deps.newId();
+  if (!(await deps.daily.start(day, ownerId, id, deps.now)))
+    return { ok: false, error: "dailyDone" };
+  const setup = dailySetup(seed);
+  const { match, events } = startMatch({
+    sides: [
+      { fighters: setup.team, leader: 0 },
+      { fighters: setup.foes, leader: 0 },
+    ],
+    difficulty: setup.difficulty,
+    // Cùng seed cho bàn cờ và AI: ai đi cùng nước thì gặp cùng ô rơi.
+    seed,
+    firstSide: 0,
+    now: deps.now,
+    weights: setup.weights,
+    daily: day,
+  });
+  const record: MatchRecord = {
+    id,
+    ownerId,
+    match,
+    createdAt: deps.now,
+    updatedAt: deps.now,
+  };
+  await deps.store.create(record);
+  return { ok: true, id, view: viewOf(match), events };
+}
+
+/** Thử thách ngày xong: ghi điểm lên bảng xếp hạng, chỉ cộng vàng (đội là đội của đề, không nhận kinh nghiệm). */
+async function rewardDaily(
+  r: MatchRecord,
+  match: Match,
+  day: string,
+  deps: Omit<Deps, "seed" | "newId">,
+): Promise<Outcome> {
+  const score = dailyScore(match.battle);
+  const gold = score.won ? DAILY_GOLD.win : DAILY_GOLD.loss;
+  const u = await updateProfile(
+    deps.profiles,
+    r.ownerId,
+    (p) => ({ ok: true, profile: { ...p, gold: p.gold + gold } }),
+    deps.now,
+  );
+  if (!u.ok) console.error("Không cộng được thưởng thử thách ngày", r.id);
+  let rank: number | null = null;
+  if (deps.daily) {
+    await deps.daily.finish(day, r.ownerId, score, deps.now);
+    rank = await deps.daily.rankOf(day, r.ownerId);
+  }
+  return {
+    rewards: {
+      won: score.won,
+      xp: match.battle.sides[HUMAN].fighters.map(() => 0),
+      gold,
+    },
+    levelUps: [],
+    drop: null,
+    soldFor: 0,
+    daily: { score, rank },
+  };
+}
+
 async function load(
   id: string,
   ownerId: string,
@@ -508,6 +611,7 @@ async function reward(
 ): Promise<Outcome | undefined> {
   if (!matchOver(match) || !(await deps.store.claimReward(r.id, deps.now)))
     return undefined;
+  if (match.daily) return rewardDaily(r, match, match.daily, deps);
   // Sinh tồn: vượt qua ít nhất một đợt tính là thắng (kinh nghiệm, món rơi).
   const cleared = match.survival
     ? survivalCleared(match.survival, match.battle)
@@ -682,6 +786,7 @@ export async function actBattle(
 /** Mã HTTP cho từng lỗi. */
 export function httpStatus(error: ServiceError): number {
   if (error === "notFound") return 404;
-  if (error === "conflict" || error === "staleSeq") return 409;
+  if (error === "conflict" || error === "staleSeq" || error === "dailyDone")
+    return 409;
   return error === "badRequest" ? 400 : 422;
 }

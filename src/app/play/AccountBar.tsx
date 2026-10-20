@@ -37,6 +37,12 @@ export default async function AccountBar({
         Sinh tồn
       </Link>
       <Link
+        href="/daily"
+        className="rounded bg-amber-500 px-2 py-1 font-semibold text-stone-950"
+      >
+        Thử thách ngày
+      </Link>
+      <Link
         href="/profile"
         className="rounded bg-[var(--panel)] px-2 py-1 font-semibold"
       >
