@@ -8,7 +8,7 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { LeaderFlag } from "./art/icons";
+import { LogoMark } from "./art/logo";
 import ArenaScreen from "./arena/ArenaScreen";
 import DemoGame from "./battle/DemoGame";
 import CampaignScreen from "./campaign/CampaignScreen";
@@ -75,7 +75,7 @@ export default function GameShell({
           <nav className="mx-auto flex max-w-6xl items-center gap-3 px-3 py-2 text-sm sm:px-4">
             {currentScene === "MENU" ? (
               <Link href="/" className="flex items-center gap-1.5 font-serif text-base font-bold">
-                <LeaderFlag className="size-6" /> Cờ Lau
+                <LogoMark className="size-7" /> Cờ Lau
               </Link>
             ) : (
               <SceneLink scene="MENU" className="flex items-center gap-1.5 rounded px-2 py-1 font-semibold hover:bg-white/10">

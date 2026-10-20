@@ -12,6 +12,7 @@ import {
 } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME, SPECIAL_NAME, TILE_NAME } from "./game/battle/labels";
 import { CloudCorner, DongSonBand, ElementIcon, LeaderFlag } from "./game/art/icons";
+import { Logo, LogoMark } from "./game/art/logo";
 import Image from "next/image";
 import { Portrait } from "./game/art/portraits";
 import { TileArt } from "./game/art/tiles";
@@ -115,7 +116,7 @@ export default function Home() {
       <header className="sticky top-0 z-40 border-b border-[var(--gold)]/25 bg-[#17110e]/85 backdrop-blur">
         <nav className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-2.5">
           <Link href="/" className="flex items-center gap-2 font-serif text-lg font-bold">
-            <LeaderFlag className="size-7" /> Cờ Lau
+            <LogoMark className="size-8" /> Cờ Lau
           </Link>
           <ul className="ml-auto hidden items-center gap-5 text-sm text-stone-300 md:flex">
             {NAV.map((n) => (
@@ -145,8 +146,9 @@ export default function Home() {
           <CloudCorner className="pointer-events-none absolute bottom-3 right-3 size-12 rotate-180 opacity-60" />
           <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 md:grid-cols-[1fr_1.1fr] md:py-20">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[var(--gold)]">Loạn 12 Sứ Quân · Thế kỷ X</p>
-              <h1 className="mt-3 font-serif text-6xl font-black tracking-tight md:text-7xl">Cờ Lau</h1>
+              <h1 className="-mx-4 -mt-6 max-w-[520px] md:-mx-8">
+                <Logo priority className="h-auto w-full" />
+              </h1>
               <p className="mt-4 max-w-md text-lg text-stone-300">
                 Game ghép ô chiến đấu theo lượt. Cầm cờ lau như Đinh Bộ Lĩnh thuở chăn trâu, dẫn đồng đội và dẹp loạn bằng những
                 nước ghép khôn ngoan.
@@ -382,7 +384,7 @@ export default function Home() {
         <div className="mx-auto flex max-w-6xl flex-col gap-6 md:flex-row md:items-start md:justify-between">
           <div>
             <p className="flex items-center gap-2 font-serif text-lg font-bold text-stone-200">
-              <LeaderFlag className="size-6" /> Cờ Lau
+              <LogoMark className="size-7" /> Cờ Lau
             </p>
             <p className="mt-1">Mini game thuộc ShanVerse.</p>
           </div>
