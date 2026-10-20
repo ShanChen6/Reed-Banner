@@ -47,7 +47,28 @@ Mỗi hệ có một màu ([bảng màu](13-hinh-anh.md#bảng-màu)), một h�
 - Nhân vật đọc được ở chiều cao 160 px (điện thoại xoay ngang): bóng dáng (silhouette) mỗi nghề khác nhau, vũ khí nhìn ra ngay.
 - Hiệu ứng chiêu không che bàn cờ quá 0,6 giây và không che đồng hồ lượt.
 
-### 2.4 Bảng mẫu (style frame) trước khi vẽ hàng loạt
+### 2.4 Hai tầng chi tiết (đề xuất, chờ chốt)
+
+Hình mẫu Shan gửi ngày 20/10/2026 (Đinh Bộ Lĩnh tướng quân trên mỏm đá, rồng vàng, ba lá cờ) là tranh tô màu chi tiết, nửa tả thực nửa anime, khác nét khắc gỗ màu phẳng ở mục 2.1. Đề xuất dùng **hai tầng chi tiết**:
+
+| Tầng | Dùng ở | Mức chi tiết | Kích thước hiển thị |
+|---|---|---|---|
+| **Tranh lớn (splash)** | Landing, menu, màn chọn nhân vật, cận cảnh tuyệt chiêu, bảng thắng | Chi tiết như hình mẫu: hoa văn, ánh kim, nền có linh vật | 400–1000 px |
+| **Nhân vật trong trận** | Sân khấu 3vs3, có hoạt ảnh | Cùng màu, cùng trang phục nhưng **gọn**: bớt hoa văn nhỏ, viền rõ, bóng 1–2 tông, không vật trang trí rời | 160–320 px |
+
+- Tầng trận vẽ lại từ tranh lớn chứ không thu nhỏ: ở 160 px, hoa văn nhỏ thành nhiễu và bóng dáng phải đọc được.
+- Áo choàng, dải lụa và cờ bay trong tầng trận cần **biến dạng lưới** (mesh), nên nếu chọn hướng này thì Spine Pro (hoặc Rive) gần như bắt buộc, cách tự viết ở mục 3.1 không đủ.
+- Ngân sách mục 6.1 tăng cho tầng tranh lớn (≤ 250 KB mỗi tranh ở 1x, chỉ tải ở màn cần); tầng trận giữ nguyên.
+
+**Bài học từ hình mẫu (áp dụng cho mọi hình tạo bằng AI):**
+
+- Nền ô vuông xám trắng là **nền trong suốt vẽ giả**: file là RGB, không có kênh alpha. Tóc, lửa, lông cờ gần như không tách nền được bằng tay. Tạo lại trên **nền trơn một màu** (xanh lá hoặc hồng tươi, không có trong nhân vật) hoặc dùng công cụ xuất được alpha thật.
+- Một hình chỉ một chủ thể: nhân vật, linh vật, cờ và mỏm đá tách thành hình riêng để làm lớp nền và parallax.
+- **Đúng thời đại:** cờ thời Đinh ghi 大瞿越 (Đại Cồ Việt) hoặc chữ 丁 (Đinh), không ghi 大越 (quốc hiệu từ năm 1054 thời Lý). Cờ chủ đạo của Đinh Bộ Lĩnh nên là **cờ lau** (bông lau trắng), đúng tên game.
+- Tránh motif đọc thành cổ trang Trung Quốc: rồng vàng có sừng kiểu triều đình, giáp vai đầu rồng, mũ quan nhiều tầng. Linh vật lấy theo bảng 2.2; nếu dùng rồng thì dùng dáng rồng Việt thân rắn uốn khúc mềm, và bàn trước với Shan vì rồng Việt định hình rõ từ thời Lý.
+- Giữ lại từ hình mẫu: góc máy thấp tạo vẻ uy nghi, bảng màu đỏ son, xanh rêu, vàng đồng, vũ khí phát sáng theo nguyên tố.
+
+### 2.5 Bảng mẫu (style frame) trước khi vẽ hàng loạt
 
 Trước khi đặt vẽ cả bộ, làm **3 bảng mẫu** dựng sẵn để duyệt:
 
@@ -297,7 +318,7 @@ Mỗi bước là một hoặc vài PR vào develop. Cột "Ai" là phần việ
 | Bước | Việc | Ai | Xong khi |
 |---|---|---|---|
 | **Đ0. Thử nghiệm** | 1 nhân vật Đinh Bộ Lĩnh (hình tạm cắt mảnh) với `idle` + `attack`, dựng bằng Spine và bằng cách tự viết; một sân khấu PixiJS trên màn trận hiện tại; đo dung lượng và fps trên điện thoại | Claude, Shan tạo 1 hình | Chốt công cụ hoạt ảnh (mục 3.2) và kiến trúc lớp (5.2) |
-| **Đ1. Art bible + bảng mẫu** | 3 bảng mẫu mục 2.4, bảng linh vật 2.2, quy cách mảnh 4.4; cập nhật [Hình ảnh](13-hinh-anh.md) | Shan / họa sĩ, Claude viết docs | Shan duyệt bảng mẫu |
+| **Đ1. Art bible + bảng mẫu** | 3 bảng mẫu mục 2.5, bảng linh vật 2.2, quy cách mảnh 4.4; cập nhật [Hình ảnh](13-hinh-anh.md) | Shan / họa sĩ, Claude viết docs | Shan duyệt bảng mẫu và chốt hai tầng chi tiết (2.4) |
 | **Đ2. Pipeline ảnh** | `pnpm art:build`, `art:check`, manifest có mã băm, cache immutable, `/demo/art` đọc manifest, ngân sách trong CI | Claude | CI đỏ khi vượt ngân sách |
 | **Đ3. Tách màn trận + đạo diễn** | Tách `DemoGame.tsx` (5.3), một vòng rAF, đạo diễn dòng thời gian, tốc độ ×1/×2/bỏ qua; AI Chơi thử chạy trong worker | Claude | Hành vi trận không đổi, test cũ xanh, không còn tác vụ > 50 ms khi AI nghĩ |
 | **Đ4. Sân khấu nhân vật** | Lớp PixiJS, nhân vật chính có đủ bộ hoạt ảnh 4.2, các nhân vật khác tạm dùng chân dung có hiệu ứng nhún; tải theo nhu cầu 6.3; mức chất lượng 7.5 | Claude, Shan / họa sĩ: mảnh Đinh Bộ Lĩnh | Đạt mục tiêu 7.1 trên điện thoại thử |
@@ -329,4 +350,5 @@ Mỗi bước là một hoặc vài PR vào develop. Cột "Ai" là phần việ
 > TODO (chờ chốt): ngân sách dung lượng và hiệu năng ở mục 6.1 và 7.1. → mục 6.1
 > TODO (chờ chốt): bảng linh vật 7 hệ và mức xuất hiện của linh vật. → mục 2.2
 > TODO (chờ chốt): người vẽ (họa sĩ hay Shan tự tạo bằng AI), ai tách mảnh và dựng xương. → mục 4.4
+> TODO (chờ chốt): hướng phong cách: lai hai tầng chi tiết, theo hẳn tranh chi tiết, hay giữ khắc gỗ. → mục 2.4
 > TODO (chờ chốt): 2 font tiêu đề và nội dung. → mục 8.3
