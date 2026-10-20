@@ -548,6 +548,9 @@ describe("trận sinh tồn", () => {
     assert.equal(end.outcome.rewards.won, true);
     const p = (await loadProfile(profiles, "g_s")).profile;
     assert.equal(p.survival.best, 2);
+    // Nhiệm vụ: một trận sinh tồn, thắng, vượt 2 đợt.
+    assert.equal(p.quests.weekStats.waves, 2);
+    assert.equal(p.quests.totals.play, 1);
   });
 });
 

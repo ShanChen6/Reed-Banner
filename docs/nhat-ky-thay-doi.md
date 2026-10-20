@@ -4,6 +4,13 @@
 
 ## 20/10/2026
 
+**Nhiệm vụ, thành tựu, điểm danh (lộ trình 5.4, Claude đặt, chờ Shan duyệt)**
+- Trang `/quests` có 3 phần:
+  - Nhiệm vụ ngày (4 việc) và tuần (5 việc), đổi lúc 0 giờ giờ Việt Nam; tuần bắt đầu thứ Hai.
+  - 12 thành tựu trọn đời.
+  - Điểm danh chuỗi 7 ngày, 50 đến 300 vàng.
+- Server cộng tiến độ khi trận online kết thúc; người chơi bấm Nhận để lấy vàng. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#52-nhiệm-vụ-thành-tựu-điểm-danh-claude-đặt-20102026-chờ-shan-duyệt).
+
 **Thử thách hằng ngày (lộ trình 5.2, Claude đặt, chờ Shan duyệt)**
 - Trang `/daily`: mỗi ngày (0 giờ giờ Việt Nam) một đề chung, gồm đội cho sẵn cấp 10 không trang bị, một sứ quân trên sân nhà và AI Khó. Seed chỉ nằm trên server. Mỗi người đánh một lần. Xếp hạng: thắng trên thua, ít lượt hơn rồi nhiều máu hơn. Thưởng 150/50 vàng. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#51-thử-thách-hằng-ngày-claude-đặt-20102026-chờ-shan-duyệt).
 
