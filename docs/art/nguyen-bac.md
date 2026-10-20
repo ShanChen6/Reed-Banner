@@ -1,43 +1,44 @@
 # Nguyễn Bặc — hình động trong trận
 
-- Roster: `nguyenBac`, tướng sĩ hệ Hỏa; không sửa `src/core/`.
-- Asset: `public/art/characters/nguyenBac/`, 13 WebP, **333.524 byte** (333,5 KB thập phân; 325,7 KiB), gồm cả hai tranh tư thế. Sáu bản sao cùng nhân vật dùng chung texture; ngay cả tính sáu lần cũng dưới 3 MB ảnh nhân vật.
-- Rig: hệ tọa độ ráp 1024×1536, texture 0,5×; khớp vai tay cầm đao, khuỷu tay không và cổ. Áo choàng, khăn, vạt áo và bông lau dùng lưới gió.
-- Đánh thường dùng rig; kỹ năng thường dùng `pose-cast`, ô 5 dùng `pose-ultimate` qua director hiện có.
-- Luyện tập đặt Nguyễn Bặc trong đội Tianwu để mở `/game/practice` là thấy ngay.
+- Roster: `nguyenBac`, tướng sĩ Hỏa; không sửa `src/core/`.
+- Thư mục: `public/art/characters/nguyenBac/`.
+- **11 WebP, 303.450 byte** (303,5 KB thập phân), gồm cả hai tranh kỹ năng; dưới 350 KB.
+- Dùng bộ dựng `warrior.ts` có sẵn của Trần Cương/Đinh Bộ Lĩnh: tay cầm đao và đao cùng xoay quanh vai; giáp vai cố định che mối nối. Kỹ năng thường dùng tranh ra chiêu, ô 5 dùng tranh tuyệt chiêu.
 
-## Nguồn và xử lý
+## Giữ đúng thiết kế gốc
 
-Ba ảnh do Shan cung cấp: `nguyễn bặc.png`, `nguyenbacrachieu.png`, `nguyenbactuyetchieu.png`. Dùng công cụ imagegen tích hợp, sau đó cắt ô, ráp tọa độ và xuất WebP bằng Pillow. Không dùng API CLI.
+Bản trước dùng mảnh phục dựng và co giãn riêng từng phần nên sai tỷ lệ thân, đầu và tay. Bản hiện tại thay toàn bộ lớp đứng bằng **pixel RGB từ ảnh đứng gốc 1024×1536** của Shan. Imagegen tích hợp chỉ cung cấp alpha tách nền; không dùng RGB được AI vẽ lại. Không lật tay, không dịch hoặc co giãn riêng bộ phận.
 
-Bộ prompt cuối (cùng các ảnh nguồn tương ứng):
+Các lớp cắt theo tọa độ nguồn, rồi thu nhỏ đồng đều 0,5× để xuất WebP. Vị trí và kích thước mỗi lớp lưu trong `nguyen-bac-boxes.json`; test đối chiếu metadata này với rig và kích thước WebP. Bộ cắt kiểm tra rằng ráp các lớp trước nén cho ảnh giống từng pixel hiển thị với ảnh nguồn đã gắn alpha, trên cùng nền xám.
 
-1. “Edit supplied warrior into isolated puppet parts on transparent alpha. Preserve exact face, clothes, painting style. 4 columns by 3 rows grid, no labels, each part inside own cell with generous margins. Row1: (1) torso plus legs and boots, no head arms sword cape sash; reconstruct hidden armor (2) head neck and hair bun, no trailing ribbons (3) left-image upper arm and shoulder armor (4) left-image forearm and gripping hand. Row2: (1) whole sword including handle no hand (2) right-image upper arm shoulder armor (3) right-image forearm and empty hand (4) red front sash. Row3: (1) flowing red cape (2) hair ribbons (3) white belt feathers (4) empty. Keep each piece original standing orientation, extend hidden elbow and shoulder joints for overlap. Pieces separate, no overlap between cells. Absolutely transparent background, no text, no extra objects.”
-2. “Use case: background-extraction. Edit target: supplied Nguyen Bac sword attack illustration. Remove ONLY the entire gradient background, make genuinely transparent alpha. Preserve exact full character, face, pose, sword, all flowing red fabric and white feathers. Crisp clean cutout edges, no glow, no floor shadow, no background residue. Entire sword tip and boots visible. Do not redraw or redesign.”
-3. “Use case: background-extraction. Edit target: supplied Nguyen Bac ultimate sword illustration. Remove ONLY the entire gradient background, make genuinely transparent alpha. Preserve exact full character, shouting face, pose, raised sword, all flowing red fabric and white feathers. Crisp clean cutout edges, no glow, no floor shadow, no background residue. Entire sword tip and boots visible. Do not redraw or redesign.”
+| Điểm | x | y |
+|---|---:|---:|
+| Vai tay cầm đao, dưới tay áo | 411 | 470 |
+| Khuỷu tay không | 850 | 525 |
+| Cổ | 598 | 245 |
+| Giữa chân, mặt sân | 620 | 1518 |
+| Chuôi đao / đầu lưỡi | 295 / 20 | 825 / 1350 |
 
-## Hạn chế
+Tọa độ đều trong khung nguồn 1024×1536, không phải pixel WebP. Khớp vai trước đây đặt ở x=550 làm cánh tay xoay lệch vào thân; nay khớp và lớp tay cùng lấy trực tiếp từ ảnh gốc. Đầu, áo, chân và vũ khí cũng giữ tỷ lệ nguồn.
 
-Mảnh được phục dựng từ ảnh phẳng bằng AI, không phải PSD tác giả: một số hoa văn, tỉ lệ thân và phần bị che khác ảnh đứng gốc. Tay có khớp khuỷu riêng nhưng chân giữ liền thân; chuyển động là rối cắt mảnh, hai tranh hành động đổi bằng crossfade, không phải hoạt ảnh vẽ từng khung. Vải chỉ uốn nhẹ để tránh lộ đường nối. Ngân sách trên là ảnh Nguyễn Bặc; không bao gồm JavaScript, âm thanh hoặc các tài sản khác của toàn trang.
+## Tái xuất
 
-## Sửa hướng tay
+Cần Pillow, ảnh nguồn `nguyễn bặc.png` và ảnh tách nền có alpha đúng khung nguồn:
 
-Hai tay được tách lại thành cánh tay hoàn chỉnh đúng hướng ảnh nguồn. Tay cầm đao giữ liền; bắp tay không nằm trên thân, cẳng tay không xoay quanh khuỷu. Không lật riêng bắp tay hay bàn tay. Chỉnh lại vị trí đao để chuôi nằm trong bàn tay phải.
+```sh
+python3 scripts/art/nguyen_bac.py '/đường/dẫn/nguyễn bặc.png' '/đường/dẫn/alpha.png'
+```
 
-Prompt sửa (imagegen tích hợp, ảnh đứng gốc làm đầu vào):
+Script từ chối ảnh khác kích thước 1024×1536, cắt lớp, kiểm tra ảnh ráp, ghi WebP và metadata. Sau khi đổi đường cắt phải đồng bộ PartBox trong `rigs.ts`; test sẽ bắt tọa độ không khớp.
 
-“Extract ONLY the two complete arms of this exact warrior as isolated transparent cutouts, side by side, preserving original anatomical handedness and original orientation. LEFT HALF: his anatomical RIGHT arm, the arm on viewer's LEFT in the source, including its shoulder armor, sleeve, exposed upper arm, elbow, bracer and gripping hand. Remove the sword but keep the hand curled exactly as in source, ready to grip the handle, correct thumb orientation. The shoulder is at upper right, hand at lower left, arm slants down toward left. RIGHT HALF: his anatomical LEFT arm, on viewer's RIGHT in source, from shoulder armor through sleeve upper arm elbow bracer to relaxed open hand. Shoulder upper left, hand lower right, slants down right. Keep BOTH arms as they actually appear in source, DO NOT MIRROR either arm. No sword, torso, head, cape, background, labels or other objects. Both arms complete shoulder-to-fingertips, side by side with ample transparent separation and margins, true alpha. Match source colors and illustration, correct elbows, hands and thumbs, no duplicate hands.”
+Prompt alpha cuối, dùng công cụ imagegen tích hợp:
 
-## Đồng bộ với rig đã ổn
+> Use case: background-extraction. Edit ONLY the background of this exact image, producing a faithful transparent cutout of the entire Nguyen Bac standing warrior. Preserve EXACT original 1024x1536 canvas and pixel locations, silhouette, anatomical proportions, stance, face, clothing, all red cape and hair ribbons, white feathers, BOTH arms and hands and complete sword. Do not reposition, resize, crop, rotate, mirror, recompose, stylize or redraw anything. Remove the gradient background to genuine alpha including the gaps between legs and between arms and torso, with crisp clean edges. No floor shadow. One single intact original figure, no parts sheet. Exact registration to source image is essential for cutting animation layers at source coordinates.
 
-Dùng nguyên bộ dựng `warrior.ts` của Trần Cương và Đinh Bộ Lĩnh trên develop. Đã bỏ nhánh cẳng tay riêng thêm trước đó: tay cầm đao và đao cùng một container xoay quanh vai; bắp tay không cố định trên thân, chỉ cẳng tay xoay nhẹ ở khuỷu. Nhờ đó tay, vũ khí, hào quang, vệt đao và tia trúng đòn dùng chung phép xoay đã kiểm chứng. Giáp vai nằm trên thân để che mối nối như `pauldron`/`sleeve` ở hai rig cũ.
+Hai tranh hành động từ `nguyenbacrachieu.png` và `nguyenbactuyetchieu.png` do Shan cung cấp, đã tách nền bằng imagegen tích hợp và xuất WebP. Prompt tương ứng yêu cầu chỉ xóa nền, giữ nguyên nhân vật, khuôn mặt, tư thế, đao, vải đỏ và bông lau, đầu đao và giày hiện đầy đủ, alpha thật, không vẽ lại.
 
-Tọa độ theo hệ ráp 1024×1536; WebP có kích thước 0,5×.
+## Kiểm tra và giới hạn
 
-| Khớp | x | y | Lớp nối |
-|---|---:|---:|---|
-| Vai tay cầm đao | 550 | 385 | tay liền bắt đầu y=400; giáp vai phủ y=260–460 |
-| Khuỷu tay không | 870 | 525 | thân chứa bắp tay; cẳng tay bắt đầu y=505 |
-| Cổ | 685 | 280 | đầu và thân |
+Đã so sánh ba rig ở cùng cỡ và cùng góc lấy đà/chém trong Pixi thực tế, đồng thời kiểm tra đứng/đánh thường/ra chiêu/tuyệt chiêu ở `/game/practice` khung 844×390. Không tràn ngang, các ảnh nhân vật tải thành công. Console có lỗi `/favicon.ico` thiếu sẵn của repo.
 
-Kiểm tra so sánh ba rig ở cùng cỡ, cùng góc đứng, lấy đà +0,2 rad và chém −0,95 rad bằng cây Pixi thật. Test kiểm tra khớp ở vùng nối và kích thước WebP khớp `PartBox`/`texScale`.
+Chân giữ liền thân; hoạt ảnh là rối cắt mảnh và đổi tranh bằng crossfade. Vải uốn nhẹ vì ảnh phẳng không có đầy đủ phần vải bị tay/đao che. Nền alpha do AI phân đoạn có thể mất các sợi rất mảnh. Chưa đo FPS trên điện thoại thật.

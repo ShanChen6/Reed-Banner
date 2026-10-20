@@ -38,8 +38,11 @@ test("khớp Nguyễn Bặc nằm trong vùng chồng, kích thước texture kh
   const boxes = [
     ...Object.entries(rig.parts),
     ...rig.covers.map((c) => [c.name, c.box] as const),
+    ...rig.cloth.map((c) => [c.name, c.box] as const),
   ] as const;
+  const sourceBoxes = JSON.parse(readFileSync("docs/art/nguyen-bac-boxes.json", "utf8"));
   for (const [name, box] of boxes) {
+    assert.deepEqual(box, sourceBoxes[name], `${name} lệch tọa độ cắt từ ảnh nguồn`);
     const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
     assert.equal(data.toString("ascii", 12, 16), "VP8X");
     // WebP mở rộng lưu kích thước trừ một bằng 24 bit; các lớp này đều có alpha.
