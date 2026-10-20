@@ -4,6 +4,7 @@ import type {
   BattleAction,
   BattleEvent,
   BattleRewards,
+  CampaignResult,
   GearItem,
   BattleState,
   Difficulty,
@@ -26,6 +27,7 @@ export interface OnlineResponse {
     readonly levelUps: readonly LevelUp[];
     readonly drop: GearItem | null;
     readonly soldFor: number;
+    readonly campaign?: CampaignResult;
   };
   /** Giờ server lúc trả lời (ms). */
   readonly now: number;
@@ -44,7 +46,11 @@ export function toBattleState(view: MatchView): BattleState {
 
 async function call(url: string, init?: RequestInit): Promise<OnlineResponse> {
   try {
-    const res = await fetch(url, { ...init, headers: { "content-type": "application/json" }, cache: "no-store" });
+    const res = await fetch(url, {
+      ...init,
+      headers: { "content-type": "application/json" },
+      cache: "no-store",
+    });
     return (await res.json()) as OnlineResponse;
   } catch {
     return { error: "network", now: Date.now() };
@@ -57,6 +63,8 @@ export function createOnline(input: {
   profession: Profession;
   companions: readonly string[];
   difficulty: Difficulty;
+  /** Màn chiến dịch; server lấy thể thức, độ khó và đối thủ theo màn. */
+  stage?: string;
 }): Promise<OnlineResponse> {
   return call("/api/battles", { method: "POST", body: JSON.stringify(input) });
 }
@@ -65,8 +73,15 @@ export function fetchOnline(id: string): Promise<OnlineResponse> {
   return call(`/api/battles/${encodeURIComponent(id)}`);
 }
 
-export function actOnline(id: string, seq: number, action: BattleAction): Promise<OnlineResponse> {
-  return call(`/api/battles/${encodeURIComponent(id)}/actions`, { method: "POST", body: JSON.stringify({ seq, action }) });
+export function actOnline(
+  id: string,
+  seq: number,
+  action: BattleAction,
+): Promise<OnlineResponse> {
+  return call(`/api/battles/${encodeURIComponent(id)}/actions`, {
+    method: "POST",
+    body: JSON.stringify({ seq, action }),
+  });
 }
 
 export interface ProfileResponse {
@@ -77,7 +92,11 @@ export interface ProfileResponse {
 
 async function callProfile(init?: RequestInit): Promise<ProfileResponse> {
   try {
-    const res = await fetch("/api/profile", { ...init, headers: { "content-type": "application/json" }, cache: "no-store" });
+    const res = await fetch("/api/profile", {
+      ...init,
+      headers: { "content-type": "application/json" },
+      cache: "no-store",
+    });
     return (await res.json()) as ProfileResponse;
   } catch {
     return { error: "network" };
@@ -90,7 +109,9 @@ export function fetchProfile(): Promise<ProfileResponse> {
 }
 
 /** Gửi một thao tác (nâng kỹ năng, mua/chọn chiêu nhánh); server kiểm tra luật và trả hồ sơ mới. */
-export function sendProfileAction(action: ProfileAction): Promise<ProfileResponse> {
+export function sendProfileAction(
+  action: ProfileAction,
+): Promise<ProfileResponse> {
   return callProfile({ method: "POST", body: JSON.stringify({ action }) });
 }
 

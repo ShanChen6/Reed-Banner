@@ -19,6 +19,12 @@ export default async function AccountBar({
         </span>
       )}
       <Link
+        href="/campaign"
+        className="rounded bg-amber-500 px-2 py-1 font-semibold text-stone-950"
+      >
+        Chiến dịch
+      </Link>
+      <Link
         href="/profile"
         className="rounded bg-[var(--panel)] px-2 py-1 font-semibold"
       >
