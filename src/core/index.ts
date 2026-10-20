@@ -11,3 +11,4 @@ export * from "./campaign";
 export * from "./tower";
 export * from "./survival";
 export * from "./daily";
+export * from "./arena";

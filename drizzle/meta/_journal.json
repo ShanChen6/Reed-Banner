@@ -43,6 +43,13 @@
       "when": 1792473077074,
       "tag": "0005_leaderboard",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792478344998,
+      "tag": "0006_arena",
+      "breakpoints": true
     }
   ]
 }

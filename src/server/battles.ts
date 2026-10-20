@@ -3,6 +3,14 @@
 
 import {
   ALL_COMPANIONS,
+  ARENA_ATTACKS_PER_DAY,
+  ARENA_DIFFICULTY,
+  ARENA_OFFERS,
+  ARENA_WIN_GOLD,
+  arenaDay,
+  arenaDelta,
+  defenseOf,
+  ghostTeam,
   applyCampaignResult,
   applyRaidResult,
   applyTowerResult,
@@ -70,6 +78,7 @@ import { loadProfile, updateProfile, type ProfileStore } from "./profiles";
 import type { MatchRecord, MatchStore } from "./store";
 import { dailySeed, type DailyStore } from "./daily";
 import { submitProfile, type LeaderboardStore } from "./leaderboard";
+import { offerDefense, type ArenaStore } from "./arena";
 
 export interface Deps {
   readonly store: MatchStore;
@@ -83,6 +92,8 @@ export interface Deps {
   readonly dailySecret?: string;
   /** Bảng xếp hạng: ghi điểm sau mỗi lần cộng thưởng. */
   readonly leaderboard?: LeaderboardStore;
+  /** Đấu trường bóng ma. Không có thì không mở được. */
+  readonly arena?: ArenaStore;
 }
 
 const DIFFICULTIES: readonly Difficulty[] = [
@@ -110,6 +121,8 @@ export interface NewBattleInput {
   readonly survival?: true;
   /** Thử thách hằng ngày: đề chung của hôm nay, mỗi người một lượt. */
   readonly daily?: true;
+  /** Đấu trường: đánh đối thủ thứ mấy trong các đối thủ đang bày. */
+  readonly arena?: number;
 }
 
 export type ServiceError =
@@ -118,7 +131,11 @@ export type ServiceError =
   | "notFound"
   | "conflict"
   /** Hôm nay đã đánh thử thách ngày. */
-  | "dailyDone";
+  | "dailyDone"
+  /** Hôm nay đã hết trận đấu trường. */
+  | "arenaLimit"
+  /** Đối thủ đấu trường không còn. */
+  | "arenaGone";
 
 /** Phần thưởng cuối trận đã cộng vào hồ sơ, gửi kèm đúng một lần (response làm trận kết thúc). */
 export interface Outcome {
@@ -138,6 +155,18 @@ export interface Outcome {
   readonly survival?: SurvivalResult;
   /** Chỉ có ở thử thách hằng ngày: điểm và hạng lúc vừa xong. */
   readonly daily?: { readonly score: DailyScore; readonly rank: number | null };
+  /** Chỉ có ở đấu trường. */
+  readonly arena?: ArenaResult;
+}
+
+/** Kết quả đấu trường: điểm đổi và điểm mới của người đánh. */
+export interface ArenaResult {
+  readonly won: boolean;
+  readonly opponent: string;
+  readonly delta: number;
+  /** Null khi không ghi được điểm (lỗi kho). */
+  readonly rating: number | null;
+  readonly gold: number;
 }
 
 export type ServiceResult =
@@ -162,6 +191,23 @@ const oneOf = <T extends string>(list: readonly T[], x: unknown): x is T =>
 /** Kiểm tra body tạo trận; null khi không hợp lệ. */
 export function parseNewBattle(body: unknown): NewBattleInput | null {
   if (!isObj(body)) return null;
+  if (body.arena !== undefined) {
+    if (
+      !Number.isInteger(body.arena) ||
+      (body.arena as number) < 0 ||
+      (body.arena as number) >= ARENA_OFFERS
+    )
+      return null;
+    // Đội là đội 3vs3 đang chọn ở hồ sơ, đối thủ là đội phòng thủ đã bày.
+    return {
+      mode: "3v3",
+      element: "moc",
+      profession: "tuongSi",
+      companions: [],
+      difficulty: ARENA_DIFFICULTY,
+      arena: body.arena as number,
+    };
+  }
   if (body.daily !== undefined) {
     if (body.daily !== true) return null;
     // Đề ngày quyết định đội và đối thủ; bỏ qua mọi lựa chọn khác.
@@ -331,6 +377,8 @@ export async function createBattleFor(
   if (input.tower) return createTowerBattle(ownerId, input, deps);
   if (input.survival) return createSurvivalBattle(ownerId, input, deps);
   if (input.daily) return createDailyBattle(ownerId, deps);
+  if (input.arena !== undefined)
+    return createArenaBattle(ownerId, input.arena, deps);
   const { profile } = await loadProfile(deps.profiles, ownerId);
   // Chỉ ra trận nhân vật đã có (khởi đầu hoặc đã mua).
   if (!input.companions.every((id) => ownsCompanion(profile, id)))
@@ -554,7 +602,115 @@ async function createDailyBattle(
   return { ok: true, id, view: viewOf(match), events };
 }
 
+/**
+ * Đấu trường: đánh đối thủ thứ `index` đang bày bằng đội 3vs3 đang chọn ở hồ sơ. Dùng một trận của ngày rồi
+ * xóa các đối thủ đã bày, để lần sau mở trang có đối thủ mới. Lần đầu đánh mà chưa có đội phòng thủ thì
+ * lấy luôn đội này.
+ */
+async function createArenaBattle(
+  ownerId: string,
+  index: number,
+  deps: Deps,
+): Promise<ServiceResult> {
+  const arena = deps.arena;
+  if (!arena) return { ok: false, error: "badRequest" };
+  const row = await arena.ensure(ownerId, deps.now);
+  const offer = row.offers[index];
+  if (!offer) return { ok: false, error: "badRequest" };
+  const defense = await offerDefense(arena, offer);
+  if (!defense) {
+    // Chủ đội đã bị xóa (khách bỏ chơi lâu): bỏ các đối thủ cũ để lần sau bày mới.
+    await arena.setOffers(ownerId, []);
+    return { ok: false, error: "arenaGone" };
+  }
+  const { profile } = await loadProfile(deps.profiles, ownerId);
+  if (
+    !(await arena.useAttack(
+      ownerId,
+      arenaDay(deps.now),
+      ARENA_ATTACKS_PER_DAY,
+      deps.now,
+    ))
+  )
+    return { ok: false, error: "arenaLimit" };
+  if (!row.defense)
+    await arena.setDefense(ownerId, defenseOf(profile), deps.now);
+  await arena.setOffers(ownerId, []);
+  // Điểm đối thủ lấy lúc vào trận; bóng ma máy tạo luôn ở điểm khởi đầu.
+  const rating =
+    offer.owner === null
+      ? offer.rating
+      : ((await arena.get(offer.owner))?.rating ?? offer.rating);
+  const { match, events } = startMatch({
+    sides: [
+      { fighters: profileTeam(profile, profile.team), leader: 0 },
+      { fighters: ghostTeam(defense, offer.name), leader: 0 },
+    ],
+    difficulty: ARENA_DIFFICULTY,
+    seed: deps.seed,
+    firstSide: (deps.seed & 1) as SideIndex,
+    now: deps.now,
+    arena: { owner: offer.owner, name: offer.name, rating },
+  });
+  const record: MatchRecord = {
+    id: deps.newId(),
+    ownerId,
+    match,
+    createdAt: deps.now,
+    updatedAt: deps.now,
+  };
+  await deps.store.create(record);
+  return { ok: true, id: record.id, view: viewOf(match), events };
+}
+
+/** Ghi điểm đấu trường cho hai bên sau trận. Lỗi chỉ ghi log, không làm hỏng cộng thưởng. */
+async function settleArena(
+  ownerId: string,
+  match: Match,
+  won: boolean,
+  deps: Omit<Deps, "seed" | "newId">,
+): Promise<ArenaResult | undefined> {
+  const opp = match.arena;
+  if (!opp) return undefined;
+  const gold = won ? ARENA_WIN_GOLD : 0;
+  const arena = deps.arena;
+  if (!arena) return { won, opponent: opp.name, delta: 0, rating: null, gold };
+  try {
+    const mine = await arena.ensure(ownerId, deps.now);
+    const d = arenaDelta(mine.rating, opp.rating, won);
+    const rating = await arena.record(
+      ownerId,
+      d.attacker,
+      won ? "win" : "loss",
+      deps.now,
+    );
+    const scores: [string, number | null][] = [[ownerId, rating]];
+    if (opp.owner !== null)
+      scores.push([
+        opp.owner,
+        await arena.record(
+          opp.owner,
+          d.defender,
+          won ? "defenseLoss" : "defenseWin",
+          deps.now,
+        ),
+      ]);
+    for (const [owner, score] of scores)
+      if (score !== null)
+        await deps.leaderboard?.submit(
+          owner,
+          [{ board: "arena", score }],
+          deps.now,
+        );
+    return { won, opponent: opp.name, delta: d.attacker, rating, gold };
+  } catch (e) {
+    console.error("Không ghi được điểm đấu trường", ownerId, e);
+    return { won, opponent: opp.name, delta: 0, rating: null, gold };
+  }
+}
+
 function matchMode(m: Match): MatchMode {
+  if (m.arena) return "arena";
   if (m.survival) return "survival";
   if (m.tower) return "tower";
   if (m.stage) return m.raid ? "raid" : "campaign";
@@ -673,6 +829,10 @@ async function reward(
       levelUps = applied.levelUps;
       let next: Profile = {
         ...applied.profile,
+        // Đấu trường: vàng thưởng thêm khi thắng.
+        gold:
+          applied.profile.gold +
+          (match.arena && rewards.won ? ARENA_WIN_GOLD : 0),
         quests: recordMatch(
           applied.profile.quests,
           {
@@ -736,6 +896,7 @@ async function reward(
       u.stored.profile,
       deps.now,
     );
+  const arena = await settleArena(r.ownerId, match, rewards.won, deps);
   return {
     rewards,
     levelUps,
@@ -745,6 +906,7 @@ async function reward(
     ...(raid ? { raid } : {}),
     ...(tower ? { tower } : {}),
     ...(survival ? { survival } : {}),
+    ...(arena ? { arena } : {}),
   };
 }
 
@@ -834,8 +996,13 @@ export async function actBattle(
 
 /** Mã HTTP cho từng lỗi. */
 export function httpStatus(error: ServiceError): number {
-  if (error === "notFound") return 404;
-  if (error === "conflict" || error === "staleSeq" || error === "dailyDone")
+  if (error === "notFound" || error === "arenaGone") return 404;
+  if (
+    error === "conflict" ||
+    error === "staleSeq" ||
+    error === "dailyDone" ||
+    error === "arenaLimit"
+  )
     return 409;
   return error === "badRequest" ? 400 : 422;
 }

@@ -56,6 +56,15 @@ export interface Match {
   readonly survival?: SurvivalRun;
   /** Thử thách hằng ngày: khóa ngày (YYYY-MM-DD). */
   readonly daily?: string;
+  /** Đấu trường bóng ma: đối thủ lúc vào trận. */
+  readonly arena?: ArenaOpponent;
+}
+
+/** Đối thủ đấu trường: chủ đội phòng thủ (null là bóng ma do máy tạo), tên và điểm lúc vào trận. */
+export interface ArenaOpponent {
+  readonly owner: string | null;
+  readonly name: string;
+  readonly rating: number;
 }
 
 export interface MatchConfig {
@@ -70,6 +79,7 @@ export interface MatchConfig {
   readonly tower?: number;
   readonly survival?: SurvivalRun;
   readonly daily?: string;
+  readonly arena?: ArenaOpponent;
 }
 
 export interface MatchStep {
@@ -99,6 +109,7 @@ export function startMatch(config: MatchConfig): MatchStep {
     ...(config.tower ? { tower: config.tower } : {}),
     ...(config.survival ? { survival: config.survival } : {}),
     ...(config.daily ? { daily: config.daily } : {}),
+    ...(config.arena ? { arena: config.arena } : {}),
   };
   const ai = runAi(match, config.now, config.difficulty);
   return { match: ai.match, events: [...events, ...ai.events] };
@@ -314,6 +325,8 @@ export interface MatchView {
   readonly tower?: number;
   readonly survival?: SurvivalView;
   readonly daily?: string;
+  /** Đấu trường: tên đối thủ (không lộ id chủ đội). */
+  readonly arena?: { readonly name: string; readonly rating: number };
 }
 
 /** Sinh tồn gửi cho client: không có seed, kèm báo trước đợt kế tiếp. */
@@ -352,5 +365,8 @@ export function viewOf(m: Match): MatchView {
     ...(m.tower ? { tower: m.tower } : {}),
     ...(m.survival ? { survival: survivalView(m.survival, m.battle) } : {}),
     ...(m.daily ? { daily: m.daily } : {}),
+    ...(m.arena
+      ? { arena: { name: m.arena.name, rating: m.arena.rating } }
+      : {}),
   };
 }
