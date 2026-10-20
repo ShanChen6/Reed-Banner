@@ -1,6 +1,6 @@
 # Lộ trình
 
-> Cập nhật: 19/10/2026
+> Cập nhật: 20/10/2026
 
 | Giai đoạn | Nội dung | Mục đích |
 |---|---|---|
@@ -41,7 +41,7 @@ Mỗi dòng là một PR vào develop, làm theo thứ tự. Số liệu là đi
 
 | # | Việc |
 |---|---|
-| 6.1 | Chân dung và trang bị vẽ thật (họa sĩ hoặc Shan tạo theo [13-hinh-anh](design/13-hinh-anh.md)) |
+| 6.1 | Chân dung và trang bị vẽ thật (họa sĩ hoặc Shan tạo theo [13-hinh-anh](design/13-hinh-anh.md)); đồ họa, hoạt ảnh nhân vật và hiệu năng theo [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#9-lộ-trình-triển-khai) (bước Đ0–Đ9) |
 | 6.2 | Âm thanh, nhạc nền, hiệu ứng đánh |
 | 6.3 | Hướng dẫn chơi lần đầu (màn cờ lau làm màn hướng dẫn) |
 | 6.4 | Kiểm tra trên điện thoại, hiệu năng, chốt tên miền, đưa develop lên main |
