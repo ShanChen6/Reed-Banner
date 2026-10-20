@@ -63,7 +63,39 @@ export interface MageRig {
   readonly fxColor: number;
 }
 
-export type Rig = MageRig;
+/** Các lớp của bộ xương tướng sĩ, xếp từ dưới lên trên. Kiếm nằm trong nhóm tay, dưới lớp tay. */
+export const WARRIOR_PARTS = [
+  "body",
+  "apron",
+  "armR",
+  "sword",
+  "arm",
+  "pauldron",
+  "head",
+] as const;
+
+export type WarriorPart = (typeof WARRIOR_PARTS)[number];
+
+export interface WarriorRig {
+  readonly skeleton: "warrior";
+  readonly dir: string;
+  readonly texScale: number;
+  readonly foot: Point;
+  readonly height: number;
+  readonly parts: Readonly<Record<WarriorPart, PartBox>>;
+  /** shoulder: vai tay cầm kiếm (cả tay và kiếm xoay quanh đây); elbowR: khuỷu tay không; neck: cổ. */
+  readonly joints: Readonly<Record<"shoulder" | "elbowR" | "neck", Point>>;
+  /** Chuôi và mũi kiếm lúc đứng yên, để đặt hào quang dọc lưỡi. */
+  readonly blade: readonly [Point, Point];
+  readonly fxColor: number;
+}
+
+export type Rig = MageRig | WarriorRig;
+
+/** Lớp ảnh của một bộ xương. */
+export function partsOf(rig: Rig): readonly string[] {
+  return rig.skeleton === "mage" ? MAGE_PARTS : WARRIOR_PARTS;
+}
 
 /** Đào Lam, pháp sư hệ Thủy: bản thử Đ0, tách bằng live2dlayer (xem docs/design/15-ke-hoach-do-hoa.md). */
 const DAO_LAM: MageRig = {
@@ -103,9 +135,41 @@ const DAO_LAM: MageRig = {
   fxColor: 0x9fe3ff,
 };
 
+/**
+ * Trần Cương, tướng sĩ hệ Kim. Tách lớp bằng code từ bản thiết kế phẳng (không có PSD): phần bị tay, kiếm
+ * và vạt áo che được vá tạm, nên động tác giữ biên độ vừa phải. Hệ tọa độ: ảnh toàn thân 628×1035.
+ */
+const TRAN_CUONG: WarriorRig = {
+  skeleton: "warrior",
+  dir: "tran-cuong",
+  texScale: 0.5,
+  foot: { x: 400, y: 1018 },
+  height: 1035,
+  parts: {
+    body: { x: 2, y: 0, w: 626, h: 1035 },
+    apron: { x: 392, y: 538, w: 120, h: 270 },
+    armR: { x: 518, y: 340, w: 103, h: 245 },
+    sword: { x: 1, y: 373, w: 249, h: 662 },
+    arm: { x: 158, y: 284, w: 159, h: 235 },
+    pauldron: { x: 204, y: 114, w: 145, h: 189 },
+    head: { x: 339, y: 8, w: 124, h: 145 },
+  },
+  joints: {
+    shoulder: { x: 268, y: 262 },
+    elbowR: { x: 540, y: 385 },
+    neck: { x: 402, y: 150 },
+  },
+  blade: [
+    { x: 225, y: 530 },
+    { x: 30, y: 1020 },
+  ],
+  fxColor: 0xffd27a,
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
+  tranCuong: TRAN_CUONG,
 };
 
 export function rigOf(id: string): Rig | null {

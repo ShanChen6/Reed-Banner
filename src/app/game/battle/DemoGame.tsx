@@ -190,11 +190,11 @@ const foeIds = (team: readonly string[]) =>
     .map((c) => c.id);
 
 /** Nhân vật đã có hình động (src/app/game/stage/rigs.ts), cho đứng đầu đội Tianwu ở Luyện tập để xem thử. */
-const SHOWCASE_FOE = "daoLam";
-const practiceFoeIds = (team: readonly string[]) =>
-  team.includes(SHOWCASE_FOE)
-    ? foeIds(team)
-    : [SHOWCASE_FOE, ...foeIds(team).slice(0, 2)];
+const SHOWCASE_FOES = ["tranCuong", "daoLam"];
+const practiceFoeIds = (team: readonly string[]) => {
+  const shown = SHOWCASE_FOES.filter((id) => !team.includes(id));
+  return [...shown, ...foeIds(team)].slice(0, 3);
+};
 
 /** Trận demo: nhân vật chính và 2 nhân vật kèm của hồ sơ, đấu đội Tianwu 3 người. */
 function demoSides({
