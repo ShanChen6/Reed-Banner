@@ -319,12 +319,13 @@ const G = {
       <path d="M38 21 L36 27" stroke={LIGHT} strokeWidth={2} strokeLinecap="round" />
     </g>
   ),
-  slideArrows: (
+  whirl: (
     <g>
-      <rect x={8} y={18} width={9} height={9} rx={2} {...fill} />
-      <rect x={20} y={18} width={9} height={9} rx={2} {...fill} />
-      <rect x={32} y={18} width={9} height={9} rx={2} fill={LIGHT} opacity={0.4} />
-      <path d="M10 12 H36 L32 8 M10 34 H36 L32 38 M36 12 L32 16 M36 34 L32 30" {...line} strokeWidth={2.2} />
+      <rect x={20} y={20} width={8} height={8} rx={2} {...fill} />
+      <rect x={7} y={7} width={7} height={7} rx={2} fill={LIGHT} opacity={0.45} />
+      <rect x={34} y={34} width={7} height={7} rx={2} fill={LIGHT} opacity={0.45} />
+      <path d="M24 9 A15 15 0 0 1 39 24 M24 39 A15 15 0 0 1 9 24" {...line} strokeWidth={2.4} />
+      <path d="M35 19 L39 24 L43 19 M13 29 L9 24 L5 29" {...line} strokeWidth={2.2} />
     </g>
   ),
   crescent: (
@@ -475,7 +476,7 @@ const SKILL_ICON: Readonly<Record<string, IconSpec>> = {
   cuuTieuLoiPhat: { glyph: "storm" },
   loiDinhHieuLenh: { glyph: "drum", badge: "up" },
   // Phong
-  phongQuyenTanVan: { glyph: "slideArrows" },
+  phongQuyenTanVan: { glyph: "whirl" },
   thanhPhongTuKhi: { glyph: "swirl", badge: "up" },
   phongNhanLietKhong: { glyph: "crescent" },
   cuongPhongQuetTran: { glyph: "tornado", badge: "aoe" },

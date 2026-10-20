@@ -113,6 +113,6 @@ Tính theo **tổng số ô của một bộ ghép liền nhau**.
   - Server đếm giờ (ghi `deadline` mỗi lượt), cộng 3 giây ân hạn cho độ trễ mạng.
   - Thời gian chạy animation (cascade, kỹ năng, lượt của AI) không tính vào giờ của người chơi.
   - Lượt thêm có đồng hồ 30 giây mới.
-  - Dùng kỹ năng tốn năng lượng thì đồng hồ đặt lại 30 giây; trượt miễn phí thì không (xem [Trận đấu](02-tran-dau.md#5-cấu-trúc-một-lượt)).
+  - Dùng kỹ năng tốn năng lượng thì đồng hồ đặt lại 30 giây; xoay lốc xoáy miễn phí thì không (xem [Trận đấu](02-tran-dau.md#5-cấu-trúc-một-lượt)).
   - Đồng hồ server **không bao giờ dừng**, kể cả khi mất mạng (xem [Hạ tầng](../tech/ha-tang.md#2-trận-đấu-server-có-thẩm-quyền)).
 - **Không có luật phạt đi sai.** Kéo hai ô không tạo bộ ghép thì ô bật về chỗ cũ, không tính lượt, đồng hồ vẫn chạy.

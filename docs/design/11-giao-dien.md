@@ -54,7 +54,7 @@ Ba cách điều khiển dùng song song; người chơi đổi qua lại bất 
 | Tab / Shift+Tab | Chuyển người hành động sang người kế tiếp / trước đó (3vs3) |
 | 1 – 6 | Chọn kỹ năng chủ động 1 – 6 của người hành động |
 
-- **Ngắm kỹ năng bằng bàn phím:** sau khi chọn kỹ năng, ← → đổi mục tiêu (đồng đội hoặc đối thủ) rồi Enter để dùng. Kỹ năng có vùng trên bàn cờ thì con trỏ chuyển vào bàn, di chuyển để chọn tâm rồi Enter. Kỹ năng trượt (hệ Phong) chọn hàng/cột bằng con trỏ, rồi mũi tên để chọn hướng.
+- **Ngắm kỹ năng bằng bàn phím:** sau khi chọn kỹ năng, ← → đổi mục tiêu (đồng đội hoặc đối thủ) rồi Enter để dùng. Kỹ năng có vùng trên bàn cờ thì con trỏ chuyển vào bàn, di chuyển để chọn tâm rồi Enter. Kỹ năng lốc xoáy (hệ Phong) chọn tâm bằng con trỏ và Enter, rồi Q xoay ngược, E xoay theo chiều kim đồng hồ (giữ Shift để xoay 2 nấc).
 - Con trỏ bàn phím là một khung viền rõ trên ô; tự ẩn khi người chơi dùng chuột hoặc chạm, hiện lại khi bấm phím.
 - Đồng hồ 30 giây áp như nhau cho mọi cách điều khiển.
 

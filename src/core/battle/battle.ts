@@ -9,19 +9,20 @@ import {
   generateBoard,
   inBounds,
   indexOf,
-  isValidSlide,
+  autoWhirl,
+  isValidWhirl,
   randomCells,
-  slideCells,
-  slideLine,
   swap,
   transformCells,
   validateWeights,
+  whirlBoard,
+  whirlCells,
   type Board,
   type CascadeStep,
   type MoveResult,
   type Pos,
-  type Slide,
   type SpawnWeights,
+  type Whirl,
 } from "../board";
 import { createRng, type Rng } from "../rng";
 import {
@@ -45,7 +46,7 @@ import {
   getSkill,
   markAudience,
   needsCell,
-  slideStep,
+  whirlStep,
   type SkillDef,
   type StepRecipient,
 } from "./skills";
@@ -99,17 +100,17 @@ export type BattleEvent =
       readonly fighter: number;
       readonly skill: string;
     }
-  /** Trượt hàng/cột (kỹ năng hoặc lần trượt miễn phí của bị động Phong). */
+  /** Lốc xoáy (kỹ năng hoặc lần xoay miễn phí của bị động Phong). */
   | {
-      readonly type: "slide";
+      readonly type: "whirl";
       readonly side: SideIndex;
       readonly fighter: number;
-      readonly slide: Slide;
+      readonly whirl: Whirl;
       readonly free: boolean;
     }
   /**
-   * Bàn cờ đổi do kỹ năng: phá, biến hoặc trượt ô, kèm cascade.
-   * before: bàn ngay trước bước xóa đầu tiên (sau khi trượt hoặc biến ô), để giao diện dựng hoạt ảnh.
+   * Bàn cờ đổi do kỹ năng: phá, biến hoặc xoay ô, kèm cascade.
+   * before: bàn ngay trước bước xóa đầu tiên (sau khi xoay hoặc biến ô), để giao diện dựng hoạt ảnh.
    */
   | {
       readonly type: "board";
@@ -176,11 +177,11 @@ export type BattleAction =
       readonly target?: number;
       /** Ô người chơi chạm, cho kỹ năng phá vùng. */
       readonly cell?: Pos;
-      /** Hàng/cột và hướng, cho kỹ năng trượt (hệ Phong). */
-      readonly slide?: Slide;
+      /** Tâm và số nấc, cho kỹ năng lốc xoáy (hệ Phong). */
+      readonly whirl?: Whirl;
     }
-  /** Trượt miễn phí 1 ô khi bị động Phong đang có hiệu lực, làm trước kỹ năng và đổi ô. */
-  | { readonly type: "slide"; readonly slide: Slide }
+  /** Xoay lốc xoáy miễn phí khi bị động Phong đang có hiệu lực, làm trước kỹ năng và đổi ô. */
+  | { readonly type: "whirl"; readonly whirl: Whirl }
   | { readonly type: "swap"; readonly from: Pos; readonly to: Pos }
   | { readonly type: "timeout" };
 
@@ -196,7 +197,7 @@ export type BattleError =
   | "tooLate"
   | "tooEarly"
   | "noTimer"
-  | "noFreeSlide";
+  | "noFreeWhirl";
 
 export type ActResult =
   | {
@@ -248,7 +249,7 @@ function buildSide(s: SideConfig, solo: boolean): Side {
     food: s.food ?? R.FOOD_START,
     rage: 0,
     passiveTurns: 0,
-    freeSlides: 0,
+    freeWhirls: 0,
     gold: 0,
     books: 0,
   };
@@ -279,7 +280,7 @@ export function createBattle(config: BattleConfig): {
       acted: [],
       extra: false,
       skillUsed: false,
-      slideUsed: false,
+      whirlUsed: false,
       deadline: null,
       number: 0,
     },
@@ -333,7 +334,7 @@ export function beginWave(
   });
   own.food = Math.max(0, Math.min(R.FOOD_MAX, config.food));
   own.passiveTurns = 0;
-  own.freeSlides = 0;
+  own.freeWhirls = 0;
   state.sides[1] = buildSide(config.foes, false);
   state.lastActors = [state.lastActors[0], null];
   state.turn = { ...state.turn, number: 0 };
@@ -379,27 +380,18 @@ export function act(
       ) {
         return { ok: false, error: "invalidTarget" };
       }
-      const slide = slideStep(def);
-      if (slide) {
-        const s = action.slide;
-        if (
-          !s ||
-          !isValidSlide(state.board, s, slide.distance) ||
-          (slide.axis && s.axis !== slide.axis) ||
-          (slide.exact && Math.abs(s.offset) !== slide.distance)
-        ) {
-          return { ok: false, error: "invalidTarget" };
-        }
-      }
-      ctx.useSkill(def, targets, action.cell, action.slide);
+      const whirl = whirlStep(def);
+      if (whirl && !(action.whirl && isValidWhirl(state.board, action.whirl, whirl.turns)))
+        return { ok: false, error: "invalidTarget" };
+      ctx.useSkill(def, targets, action.cell, action.whirl);
       return { ok: true, state, events: ctx.events };
     }
-    case "slide": {
+    case "whirl": {
       if (late) return { ok: false, error: "tooLate" };
-      if (!canFreeSlide(state)) return { ok: false, error: "noFreeSlide" };
-      if (!isValidSlide(state.board, action.slide, PASSIVE.phongFreeSlide))
+      if (!canFreeWhirl(state)) return { ok: false, error: "noFreeWhirl" };
+      if (!isValidWhirl(state.board, action.whirl, PASSIVE.phongFreeWhirlTurns))
         return { ok: false, error: "invalidTarget" };
-      ctx.freeSlide(action.slide);
+      ctx.freeWhirl(action.whirl);
       return { ok: true, state, events: ctx.events };
     }
     case "swap": {
@@ -438,14 +430,14 @@ export function act(
   }
 }
 
-/** Phe đang đánh còn lần trượt miễn phí của bị động Phong (trước kỹ năng và đổi ô). */
-export function canFreeSlide(state: BattleState): boolean {
+/** Phe đang đánh còn lần xoay miễn phí của bị động Phong (trước kỹ năng và đổi ô). */
+export function canFreeWhirl(state: BattleState): boolean {
   const own = state.sides[state.turn.side];
   return (
     state.winner === null &&
     !state.turn.skillUsed &&
-    !state.turn.slideUsed &&
-    own.freeSlides > 0 &&
+    !state.turn.whirlUsed &&
+    own.freeWhirls > 0 &&
     passiveOn(own, own.fighters[own.leader]!, "phong")
   );
 }
@@ -625,7 +617,7 @@ class Ctx {
       acted: [],
       extra: false,
       skillUsed: false,
-      slideUsed: false,
+      whirlUsed: false,
       deadline: null,
       number: s.turn.number + 1,
     };
@@ -689,7 +681,7 @@ class Ctx {
     }
     s.turn.extra = true;
     s.turn.skillUsed = false;
-    s.turn.slideUsed = false;
+    s.turn.whirlUsed = false;
     s.turn.actor = actor;
     this.startAction(true);
   }
@@ -723,20 +715,25 @@ class Ctx {
     });
   }
 
-  freeSlide(slide: Slide): void {
+  freeWhirl(whirl: Whirl): void {
     const s = this.state;
-    s.turn.slideUsed = true;
-    s.sides[s.turn.side].freeSlides--;
+    s.turn.whirlUsed = true;
+    s.sides[s.turn.side].freeWhirls--;
+    this.applyWhirl(whirl, true);
+  }
+
+  private applyWhirl(whirl: Whirl, free: boolean): void {
+    const s = this.state;
     this.emit({
-      type: "slide",
+      type: "whirl",
       side: s.turn.side,
       fighter: s.turn.actor,
-      slide,
-      free: true,
+      whirl,
+      free,
     });
-    const before = slideCells(s.board, slide);
+    const before = whirlCells(s.board, whirl);
     this.applyBoardChange(
-      this.withBoardRng((rng) => slideLine(s.board, slide, rng, s.weights)),
+      this.withBoardRng((rng) => whirlBoard(s.board, whirl, rng, s.weights)),
       [],
       before,
     );
@@ -746,7 +743,7 @@ class Ctx {
     def: SkillDef,
     targets: readonly FighterRef[],
     cell?: Pos,
-    slide?: Slide,
+    whirl?: Whirl,
   ): void {
     const s = this.state;
     const self: FighterRef = { side: s.turn.side, fighter: s.turn.actor };
@@ -830,22 +827,10 @@ class Ctx {
           this.applyBoardChange(result, [], before);
           break;
         }
-        case "slide": {
-          this.emit({
-            type: "slide",
-            side: self.side,
-            fighter: self.fighter,
-            slide: slide!,
-            free: false,
-          });
-          const before = slideCells(s.board, slide!);
-          this.applyBoardChange(
-            this.withBoardRng((rng) =>
-              slideLine(s.board, slide!, rng, s.weights),
-            ),
-            [],
-            before,
-          );
+        case "whirl": {
+          // Bước tự xoay chọn theo bàn lúc tới bước; không có lần xoay tạo bộ ghép thì bỏ qua.
+          const chosen = step.auto ? autoWhirl(s.board, step.turns) : whirl!;
+          if (chosen) this.applyWhirl(chosen, false);
           break;
         }
         case "transform": {
@@ -1028,7 +1013,7 @@ class Ctx {
       this.emit({ type: "effectEnd", ...ref, effect });
   }
 
-  /** fromSkill: bàn cờ đổi do kỹ năng hoặc trượt miễn phí, thu hoạch giảm theo SKILL_BOARD_*. */
+  /** fromSkill: bàn cờ đổi do kỹ năng hoặc xoay miễn phí, thu hoạch giảm theo SKILL_BOARD_*. */
   applyStep(step: CascadeStep, index: number, fromSkill = false): void {
     const s = this.state;
     const sideIdx = s.turn.side;
@@ -1259,8 +1244,8 @@ class Ctx {
           this.gainEnergy({ side: foeIdx, fighter: i }, -PASSIVE.loiDrain);
         break;
       case "phong":
-        // Trượt miễn phí: xem canFreeSlide.
-        own.freeSlides = PASSIVE.phongFreeSlides;
+        // Xoay miễn phí: xem canFreeWhirl.
+        own.freeWhirls = PASSIVE.phongFreeWhirls;
         break;
       // Kim, Hỏa: hiệu lực khi passiveTurns > 0, xem passiveOn.
       default:

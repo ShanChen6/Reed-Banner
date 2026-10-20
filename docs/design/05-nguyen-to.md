@@ -34,7 +34,7 @@ Mỗi nhân vật mang đúng một nguyên tố. Nhân vật chính được đ
 | 🔥 Hỏa | Sát thương lớn nhưng thủ yếu | Thiêu đốt, Công+ |
 | ⛰️ Thổ | Trụ lâu, chịu đòn | Khiên, Phản đòn, Thủ+ |
 | ⚡ Lôi | Đánh nhanh, phá nhịp đối thủ | Trừ năng lượng, Câm lặng |
-| 🌪️ Phong | Linh hoạt, điều khiển bàn cờ | Trượt hàng/cột, Xua tan, Công− |
+| 🌪️ Phong | Linh hoạt, điều khiển bàn cờ | Lốc xoáy (xoay 8 ô quanh tâm), Xua tan, Công− |
 
 > Game không có chỉ số chí mạng hay né, nên "đánh nhanh" của Lôi được thể hiện qua phá năng lượng và Câm lặng thay vì chí mạng.
 

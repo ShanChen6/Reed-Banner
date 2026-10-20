@@ -62,11 +62,11 @@ Mọi luật của 3vs3 áp dụng, trừ các điểm sau:
 > Shan chốt ngày 18/10/2026.
 
 - Mỗi lần ra tay gồm, theo đúng thứ tự:
-  1. **Trượt miễn phí** (chỉ khi bị động Thuận Phong của hệ Phong đang có hiệu lực).
+  1. **Xoay lốc xoáy miễn phí** (chỉ khi bị động Thuận Phong của hệ Phong đang có hiệu lực).
   2. **Tối đa 1 kỹ năng.**
-  3. **1 nước đổi ô.** Chỉ nước đổi ô mới kết thúc lượt; trượt và kỹ năng không bao giờ kết thúc lượt.
-- **Đồng hồ:** dùng xong một kỹ năng tốn năng lượng thì đồng hồ được đặt lại **30 giây** để còn đổi ô. Trượt miễn phí không đặt lại đồng hồ. Vì mỗi lần ra tay chỉ có 1 kỹ năng, một lượt dài tối đa khoảng 60 giây; mô phỏng cân thời lượng trận tính theo mức này.
-- **Hết giờ giữa lượt:** các bước server đã ghi nhận (trượt, kỹ năng) giữ nguyên, chỉ mất phần còn lại của lượt.
+  3. **1 nước đổi ô.** Chỉ nước đổi ô mới kết thúc lượt; xoay miễn phí và kỹ năng không bao giờ kết thúc lượt.
+- **Đồng hồ:** dùng xong một kỹ năng tốn năng lượng thì đồng hồ được đặt lại **30 giây** để còn đổi ô. Xoay miễn phí không đặt lại đồng hồ. Vì mỗi lần ra tay chỉ có 1 kỹ năng, một lượt dài tối đa khoảng 60 giây; mô phỏng cân thời lượng trận tính theo mức này.
+- **Hết giờ giữa lượt:** các bước server đã ghi nhận (xoay miễn phí, kỹ năng) giữ nguyên, chỉ mất phần còn lại của lượt.
 - **Lượt thêm:**
   - Là **phần nối dài của lượt hiện tại** trong cách đếm thời gian: không trừ thời hạn hiệu ứng, không chạy Thiêu đốt hay Hồi phục, không trừ lượt của kỹ năng bị động.
-  - Nhưng về hành động thì như một lần ra tay mới: được làm lại đủ 3 bước trên (trượt miễn phí nếu còn hiệu lực, 1 kỹ năng, 1 nước đổi ô) và có đồng hồ 30 giây mới. Câm lặng hay thiếu năng lượng vẫn chặn kỹ năng như thường.
+  - Nhưng về hành động thì như một lần ra tay mới: được làm lại đủ 3 bước trên (xoay miễn phí nếu còn hiệu lực, 1 kỹ năng, 1 nước đổi ô) và có đồng hồ 30 giây mới. Câm lặng hay thiếu năng lượng vẫn chặn kỹ năng như thường.

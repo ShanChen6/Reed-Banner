@@ -91,10 +91,11 @@ Bảng mẫu được duyệt thì ghi vào [Hình ảnh](13-hinh-anh.md) làm c
 
 Giá và điều khoản Spine, Rive kiểm tra lại lúc mua.
 
-### 3.2 Đề xuất (chờ chốt)
+### 3.2 Đã chốt sau bước thử Đ0 (Shan chốt 20/10/2026)
 
 - **Hoạt ảnh nhân vật: cắt mảnh có xương (B hoặc D)**, không vẽ từng khung. Lý do: hợp phong cách khắc gỗ ghép lớp, nhẹ gấp 5–10 lần, dùng chung động tác cho nhiều nhân vật (mục 4.3).
-- **Chọn công cụ bằng một lần thử (mục 9, bước Đ0):** dựng Đinh Bộ Lĩnh với 2 hoạt ảnh (đứng, chém) theo cả Spine và cách tự viết, đo dung lượng, độ mượt và thời gian làm. Nghiêng về **Spine** nếu Shan hoặc họa sĩ sẽ tự chỉnh động tác; về **cách tự viết** nếu muốn không tốn phí và để Claude dựng động tác từ mô tả.
+- **Tự viết bằng code (cách D), không mua Spine.** Bản thử Đ0 dựng pháp sư hệ Thủy từ PSD tách lớp: 15 lớp WebP, 282 KB, PixiJS `MeshPlane` uốn lưới cho tóc, vạt áo và dải lụa, xoay khớp cho đầu và tay, chớp mắt, hạt nước, động tác thi triển và trúng đòn. Shan duyệt chuyển động. Trang thử ở `public/prototypes/water-mage.html`.
+- Spine Professional chỉ cân nhắc lại khi cần động tác lớn mà chỉnh bằng số quá chậm.
 - **Hiệu ứng chiêu, hạt, chữ số bay:** vẽ bằng code (hạt, vệt, chớp) trên cùng lớp với nhân vật, cộng vài ảnh nhỏ (đốm lửa, lá, giọt nước) trong atlas hiệu ứng. Không dùng video.
 - **Hoạt ảnh giao diện** (nút, chuyển phân cảnh, bảng thưởng): CSS như hiện nay.
 
@@ -148,7 +149,8 @@ Bổ sung vào [Hình ảnh mục 2.4](13-hinh-anh.md#24-danh-sách-hình) khi c
 - Mỗi nhân vật giao một file nhiều lớp, **mỗi mảnh một lớp có tên**: `head`, `hair`, `torso`, `pelvis`, `arm-upper-l/r`, `arm-lower-l/r`, `hand-l/r`, `leg-upper-l/r`, `leg-lower-l/r`, `foot-l/r`, `weapon`, `cape`/`sash`, `accent` (vùng màu nguyên tố).
 - Mảnh vẽ **đầy đủ ở chỗ khuất** (vai, khuỷu, hông kéo dài thêm) để khi xoay không lộ khe hở.
 - Tư thế chuẩn chữ A nhẹ, quay sang phải, chân trên đường nền như [Hình ảnh 2.4](13-hinh-anh.md#24-danh-sách-hình).
-- Công cụ AI thường không tách lớp tốt: khi tự tạo, Shan tạo **toàn thân một hình** cho đúng phong cách, rồi tách mảnh bằng tay (Krita, Photopea) hoặc nhờ họa sĩ tách. Ước tính tách mảnh 1–2 giờ một nhân vật.
+- **Quy trình đã kiểm chứng (20/10/2026):** Shan tạo **toàn thân một hình** bằng Copilot trên nền trơn → tách lớp bằng [live2dlayer](https://live2dlayer.com/) (tự tách khoảng 25 lớp và vá chỗ bị che, xuất PSD) → sửa thêm trong Photopea nếu cần → gửi PSD; Claude gộp lớp, xuất WebP và dựng động tác. Hướng dẫn tách tay ở `/mnt/project-files/guides/tach-lop-photopea.md`.
+- Ba điểm cần kiểm tra trên PSD của live2dlayer: ảnh bị thu về 1024×1024 (đủ cho trong trận, tranh lớn dùng ảnh gốc); **bắp tay** dính vào lớp áo (cần tách thêm nếu nhân vật vung tay rộng, ví dụ tướng cầm đao); **vũ khí hoặc đồ cầm tay** nằm chung lớp `objects` với hiệu ứng (tách riêng trong Photopea).
 
 ## 5. Kiến trúc hiển thị
 
@@ -317,7 +319,7 @@ Mỗi bước là một hoặc vài PR vào develop. Cột "Ai" là phần việ
 
 | Bước | Việc | Ai | Xong khi |
 |---|---|---|---|
-| **Đ0. Thử nghiệm** | 1 nhân vật Đinh Bộ Lĩnh (hình tạm cắt mảnh) với `idle` + `attack`, dựng bằng Spine và bằng cách tự viết; một sân khấu PixiJS trên màn trận hiện tại; đo dung lượng và fps trên điện thoại | Claude, Shan tạo 1 hình | Chốt công cụ hoạt ảnh (mục 3.2) và kiến trúc lớp (5.2) |
+| **Đ0. Thử nghiệm** | 1 nhân vật Đinh Bộ Lĩnh (hình tạm cắt mảnh) với `idle` + `attack`, dựng bằng Spine và bằng cách tự viết; một sân khấu PixiJS trên màn trận hiện tại; đo dung lượng và fps trên điện thoại | Claude, Shan tạo 1 hình | Đã xong 20/10/2026: chốt tự viết bằng code (mục 3.2) |
 | **Đ1. Art bible + bảng mẫu** | 3 bảng mẫu mục 2.5, bảng linh vật 2.2, quy cách mảnh 4.4; cập nhật [Hình ảnh](13-hinh-anh.md) | Shan / họa sĩ, Claude viết docs | Shan duyệt bảng mẫu theo hai tầng chi tiết (2.4) |
 | **Đ2. Pipeline ảnh** | `pnpm art:build`, `art:check`, manifest có mã băm, cache immutable, `/demo/art` đọc manifest, ngân sách trong CI | Claude | CI đỏ khi vượt ngân sách |
 | **Đ3. Tách màn trận + đạo diễn** | Tách `DemoGame.tsx` (5.3), một vòng rAF, đạo diễn dòng thời gian, tốc độ ×1/×2/bỏ qua; AI Chơi thử chạy trong worker | Claude | Hành vi trận không đổi, test cũ xanh, không còn tác vụ > 50 ms khi AI nghĩ |
@@ -345,9 +347,7 @@ Mỗi bước là một hoặc vài PR vào develop. Cột "Ai" là phần việ
 
 ## 11. Việc cần Shan chốt
 
-> TODO (chờ chốt): công cụ hoạt ảnh nhân vật (Spine, Rive hay tự viết), sau bước thử Đ0. → mục 3.2
 > TODO (chờ chốt): dùng PixiJS cho lớp sân khấu, bàn cờ giữ DOM tới khi đo thấy cần chuyển. → mục 5.2
 > TODO (chờ chốt): ngân sách dung lượng và hiệu năng ở mục 6.1 và 7.1. → mục 6.1
 > TODO (chờ chốt): bảng linh vật 7 hệ và mức xuất hiện của linh vật. → mục 2.2
-> TODO (chờ chốt): người vẽ (họa sĩ hay Shan tự tạo bằng AI), ai tách mảnh và dựng xương. → mục 4.4
 > TODO (chờ chốt): 2 font tiêu đề và nội dung. → mục 8.3
