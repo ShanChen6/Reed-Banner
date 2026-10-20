@@ -42,6 +42,7 @@ import {
   tileAt,
   withGear,
   GRACE_MS,
+  TURN_MS,
   type BattleAction,
   type BattleRewards,
   type CampaignResult,
@@ -123,7 +124,10 @@ import { SceneLink } from "../SceneContext";
 const PLAYER = 0;
 const AI = 1;
 const AI_DELAY_MS = 700;
+/** Seed của bàn xem trước lúc mới vào (cố định để server và trình duyệt dựng cùng một bàn). */
 const DEMO_SEED = 2026;
+/** Seed mới cho mỗi trận chơi offline. */
+const randomSeed = () => crypto.getRandomValues(new Uint32Array(1))[0]!;
 const DIFFICULTIES: Difficulty[] = [
   "easy",
   "normal",
@@ -201,11 +205,10 @@ function demoSides({
   ];
 }
 
-function newBattle(round: number, setup: Setup): BattleState {
+function newBattle(seed: number, setup: Setup): BattleState {
   return createBattle({
     sides: demoSides(setup),
-    seed: DEMO_SEED + round,
-    timer: false,
+    seed,
     firstSide: PLAYER,
   }).state;
 }
@@ -247,12 +250,13 @@ interface Outcome {
 }
 
 function demoDrop(
+  seed: number,
   round: number,
   difficulty: Difficulty,
   won: boolean,
 ): GearItem | null {
   return rollDrop(
-    createRng(DEMO_SEED * 31 + round),
+    createRng(Math.imul(seed, 31) ^ 0x5bd1e995),
     difficulty,
     won,
     `drop-${round}`,
@@ -363,6 +367,56 @@ function WaveFoes({ preview }: { preview: WavePreview }) {
         </span>
       ))}
     </span>
+  );
+}
+
+/** Đồng hồ lượt trên bàn cờ: số giây còn lại và vạch cạn dần; đỏ khi còn dưới 10 giây. */
+function TurnClock({
+  seconds,
+  mine,
+  extra,
+  waiting,
+}: {
+  seconds: number | null;
+  mine: boolean;
+  extra: boolean;
+  waiting: boolean;
+}) {
+  const total = TURN_MS / 1000;
+  const left = seconds ?? total;
+  const urgent = mine && seconds !== null && left <= 10;
+  const label = waiting
+    ? "Đang chờ server…"
+    : mine
+      ? extra
+        ? "Lượt thêm của bạn"
+        : "Lượt của bạn"
+      : "Đối thủ đang đi";
+  return (
+    <div
+      className={`flex items-center gap-3 rounded-lg border bg-[var(--panel)] px-3 py-1.5 ${
+        urgent ? "border-rose-500" : "border-[var(--gold)]/60"
+      }`}
+      role="timer"
+      aria-label={seconds === null ? label : `${label}, còn ${seconds} giây`}
+    >
+      <span className="w-32 shrink-0 text-sm font-semibold">{label}</span>
+      <div className="h-2 min-w-0 flex-1 overflow-hidden rounded-full bg-black/30">
+        <div
+          className={`h-full rounded-full transition-[width] duration-300 ease-linear ${
+            !mine ? "bg-stone-400/60" : urgent ? "bg-rose-500" : "bg-amber-400"
+          }`}
+          style={{ width: `${(left / total) * 100}%` }}
+        />
+      </div>
+      <span
+        className={`w-12 shrink-0 text-right font-mono text-lg font-bold tabular-nums ${
+          urgent ? "animate-pulse text-rose-400" : ""
+        }`}
+      >
+        {seconds === null ? "--" : `${seconds}s`}
+      </span>
+    </div>
   );
 }
 
@@ -694,6 +748,7 @@ export default function DemoGame({
   autoResume?: boolean;
 }) {
   const [round, setRound] = useState(0);
+  const [seed, setSeed] = useState(DEMO_SEED);
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
   const [started, setStarted] = useState(false);
   const [element, setElement] = useState<Element>("moc");
@@ -720,7 +775,7 @@ export default function DemoGame({
     [element, profession, gear, mode, profile],
   );
   /** Bàn cờ xem trước khi chưa bắt đầu; dựng lại mỗi khi đổi lựa chọn trước trận. */
-  const preview = useMemo(() => newBattle(round, setup), [round, setup]);
+  const preview = useMemo(() => newBattle(seed, setup), [seed, setup]);
   const [live, setState] = useState<BattleState | null>(null);
   const state = live ?? preview;
   const [selected, setSelected] = useState<Pos | null>(null);
@@ -863,27 +918,42 @@ export default function DemoGame({
   const commit = useCallback(
     (
       before: BattleState,
-      next: BattleState,
+      after: BattleState,
       events: readonly BattleEvent[],
     ) => {
       play(eventFrames(before.board, events), () => {
-        pushLog(next, events);
-        setState(next);
+        // Chơi offline: đồng hồ lượt mới tính từ lúc hoạt ảnh xong, thời gian xem hoạt ảnh không bị trừ.
+        const shown =
+          !online &&
+          after.turn.deadline !== null &&
+          after.turn.deadline !== before.turn.deadline
+            ? {
+                ...after,
+                turn: { ...after.turn, deadline: Date.now() + TURN_MS },
+              }
+            : after;
+        pushLog(shown, events);
+        setState(shown);
         showNumbers(events);
         // Trận online: server cộng thưởng và gửi `outcome` (xem receive).
         if (
           !online &&
           mode === "progress" &&
           before.winner === null &&
-          next.winner !== null
+          after.winner !== null
         ) {
-          const rewards = battleRewards(next, PLAYER);
+          const rewards = battleRewards(after, PLAYER);
           const r = applyRewards(
             profile,
-            next.sides[PLAYER].fighters.map((f) => f.id),
+            after.sides[PLAYER].fighters.map((f) => f.id),
             rewards,
           );
-          const rolled = demoDrop(round, difficulty, next.winner === PLAYER);
+          const rolled = demoDrop(
+            seed,
+            round,
+            difficulty,
+            after.winner === PLAYER,
+          );
           const received = rolled
             ? receiveDrop(r.profile, rolled)
             : { profile: r.profile, item: null, soldFor: 0 };
@@ -898,7 +968,17 @@ export default function DemoGame({
         }
       });
     },
-    [play, pushLog, showNumbers, online, mode, profile, round, difficulty],
+    [
+      play,
+      pushLog,
+      showNumbers,
+      online,
+      mode,
+      profile,
+      seed,
+      round,
+      difficulty,
+    ],
   );
 
   /** Nhận trả lời của server: chạy hoạt ảnh các sự kiện rồi đồng bộ trạng thái và seq. */
@@ -950,11 +1030,7 @@ export default function DemoGame({
   const apply = useCallback(
     (action: BattleAction): boolean => {
       // Online: kiểm tra trước bằng core cho phản hồi tức thì; bàn cờ thật chỉ lấy từ server.
-      const r = act(
-        state,
-        action,
-        online ? Date.now() + clockOffset.current : 0,
-      );
+      const r = act(state, action, Date.now() + clockOffset.current);
       if (!r.ok) {
         let text = ERROR_TEXT[r.error];
         if (r.error === "notEnoughEnergy" && action.type === "skill") {
@@ -977,21 +1053,26 @@ export default function DemoGame({
     if (online || !started || state.winner !== null || state.turn.side !== AI)
       return;
     const t = window.setTimeout(() => {
-      const r = playAiTurn(state, difficulty);
+      const r = playAiTurn(state, difficulty, Date.now());
       commit(state, r.state, r.events);
     }, AI_DELAY_MS);
     return () => window.clearTimeout(t);
   }, [online, started, state, difficulty, commit]);
 
-  // Online: đồng hồ 30 giây. Quá hạn (cộng ân hạn) thì hỏi server để chạy bù lượt mất và lượt AI.
+  // Đồng hồ 30 giây mỗi lượt (online lẫn offline).
   const deadline =
-    online && started && state.winner === null ? state.turn.deadline : null;
+    started && state.winner === null ? state.turn.deadline : null;
   useEffect(() => {
-    if (deadline === null || !battleId) return;
+    if (deadline === null) return;
     const tick = window.setInterval(
       () => setClock(Date.now() + clockOffset.current),
       250,
     );
+    return () => window.clearInterval(tick);
+  }, [deadline]);
+  // Online: quá hạn (cộng ân hạn) thì hỏi server để chạy bù lượt mất và lượt AI.
+  useEffect(() => {
+    if (!online || deadline === null || !battleId) return;
     const wait = deadline + GRACE_MS + 200 - (Date.now() + clockOffset.current);
     const before = state;
     const t = window.setTimeout(
@@ -1004,15 +1085,29 @@ export default function DemoGame({
       },
       Math.max(0, wait),
     );
-    return () => {
-      window.clearInterval(tick);
-      window.clearTimeout(t);
-    };
-  }, [deadline, battleId, state, receive]);
+    return () => window.clearTimeout(t);
+  }, [online, deadline, battleId, state, receive]);
+  // Offline: quá hạn (cộng ân hạn) thì mất lượt ngay trên máy; chờ hoạt ảnh đang chạy xong.
+  useEffect(() => {
+    if (online || deadline === null || anim !== null) return;
+    if (state.turn.side !== PLAYER) return;
+    const wait = deadline + GRACE_MS + 50 - Date.now();
+    const t = window.setTimeout(
+      () => {
+        const r = act(state, { type: "timeout" }, Date.now());
+        if (r.ok) commit(state, r.state, r.events);
+      },
+      Math.max(0, wait),
+    );
+    return () => window.clearTimeout(t);
+  }, [online, deadline, anim, state, commit]);
   const secondsLeft =
     deadline === null
       ? null
-      : Math.max(0, Math.ceil((deadline - clock) / 1000));
+      : Math.min(
+          TURN_MS / 1000,
+          Math.max(0, Math.ceil((deadline - clock) / 1000)),
+        );
 
   // Báo chiều cao cho trang cha khi được nhúng bằng iframe (ShanVerse).
   useEffect(() => {
@@ -1283,13 +1378,14 @@ export default function DemoGame({
         ? (outcome?.drop ?? null)
         : state.winner === null
           ? null
-          : demoDrop(round, difficulty, state.winner === PLAYER),
-    [mode, outcome, state.winner, round, difficulty],
+          : demoDrop(seed, round, difficulty, state.winner === PLAYER),
+    [mode, outcome, state.winner, seed, round, difficulty],
   );
 
   /** Về màn chọn trước trận để đổi nguyên tố, nghề, trang bị hoặc nâng kỹ năng. */
   const restart = () => {
     setRound(round + 1);
+    setSeed(randomSeed());
     setAnim(null);
     afterAnim.current = null;
     setFloats([]);
@@ -1332,7 +1428,14 @@ export default function DemoGame({
 
   const start = () => {
     if (!online) {
-      setState(preview);
+      // Mỗi trận một bàn cờ mới; đồng hồ lượt đầu tính từ lúc bấm bắt đầu.
+      const fresh = randomSeed();
+      const battle = newBattle(fresh, setup);
+      setSeed(fresh);
+      setState({
+        ...battle,
+        turn: { ...battle.turn, deadline: Date.now() + TURN_MS },
+      });
       setStarted(true);
       return;
     }
@@ -1489,7 +1592,9 @@ export default function DemoGame({
                     : pending
                       ? "Đang chờ server…"
                       : playerTurn
-                        ? `${state.turn.extra ? "Lượt thêm của bạn" : "Lượt của bạn"}${secondsLeft === null ? "" : ` · còn ${secondsLeft} giây`}`
+                        ? state.turn.extra
+                          ? "Lượt thêm của bạn"
+                          : "Lượt của bạn"
                         : "Lượt đối thủ…"}
           </div>
           <label className="flex items-center gap-2 text-xs">
@@ -1516,6 +1621,14 @@ export default function DemoGame({
           {side(PLAYER)}
 
           <div className="flex min-w-0 flex-1 flex-col gap-2">
+            {started && state.winner === null && !atBreak && (
+              <TurnClock
+                seconds={playerTurn ? secondsLeft : null}
+                mine={playerTurn}
+                extra={state.turn.extra}
+                waiting={pending}
+              />
+            )}
             <div className="relative rounded-xl border-2 border-[var(--gold)] bg-[var(--frame)] p-1.5 shadow-lg">
               {CORNERS.map((c) => (
                 <CloudCorner
