@@ -5,7 +5,7 @@ import { isAlive, type Fighter } from "@/core";
 import { ELEMENT_COLOR } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import type { Cue, CueBus, CueKind } from "./director";
-import type { Puppet } from "./puppet";
+import type { Puppet } from "./kit";
 import { rigOf, type Rig } from "./rigs";
 
 /**
