@@ -3,9 +3,27 @@
 // Trang bị: --gear-tier 3 mặc đủ 9 món cùng hệ cho mọi nhân vật; --set coLau / --foe-set hoaLu chọn bộ
 // của phe 0 / phe 1 (bỏ trống thì không bộ nào đạt mốc, chỉ còn cộng hưởng).
 // Tiến trình: --level 10 dựng mọi nhân vật ở cấp 10 (kỹ năng mở theo cấp, điểm kỹ năng tiêu đều).
+// Chiến dịch: --stage tamDai (hoặc all) đánh màn đó với luật màn, đội người chơi ở cấp gợi ý (hoặc --level),
+// --team heroes|default; --sweep 0..6 thử người chơi hơn đối thủ 0 tới 6 cấp.
 
 import { parseArgs } from "node:util";
-import { buildMatchups, runBattle, summarize, type Difficulty, type Element, type SimGear, type SimMode, type Tier } from "../src/core";
+import {
+  buildMatchups,
+  CAMPAIGN,
+  recommendedLevel,
+  runBattle,
+  stageById,
+  stageMatchups,
+  stageTeamIds,
+  summarize,
+  type CampaignStage,
+  type Difficulty,
+  type Element,
+  type SimGear,
+  type SimMode,
+  type StageTeam,
+  type Tier,
+} from "../src/core";
 
 const { values } = parseArgs({
   // pnpm chuyển nguyên dấu "--" vào argv; bỏ nó đi để parseArgs đọc được các cờ phía sau.
@@ -15,12 +33,15 @@ const { values } = parseArgs({
     battles: { type: "string", default: "100" },
     difficulty: { type: "string", default: "normal" },
     seed: { type: "string", default: "1" },
-    element: { type: "string", default: "moc" },
+    element: { type: "string" },
     "max-turns": { type: "string" },
     "gear-tier": { type: "string" },
     set: { type: "string" },
     "foe-set": { type: "string" },
     level: { type: "string" },
+    stage: { type: "string" },
+    team: { type: "string", default: "heroes" },
+    sweep: { type: "string" },
     json: { type: "boolean", default: false },
   },
 });
@@ -29,7 +50,7 @@ const modes: SimMode[] = values.mode === "all" ? ["1v1", "3v3"] : [values.mode a
 const difficulty = values.difficulty as Difficulty;
 const battles = Number(values.battles);
 const seed = Number(values.seed);
-const element = values.element as Element;
+const element = (values.element ?? "moc") as Element;
 const maxTurns = values["max-turns"] ? Number(values["max-turns"]) : undefined;
 
 const gear: SimGear | undefined = values["gear-tier"]
@@ -41,6 +62,59 @@ const gearLabel = gear ? ` · đồ bậc ${gear.tier} (${gear.sets[0] ?? "khôn
 
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
 const num = (x: number) => x.toFixed(1);
+
+if (values.stage) {
+  runStages();
+  process.exit(0);
+}
+
+/** Tỉ lệ thắng của người chơi ở từng màn; --sweep in thêm một cột cho mỗi mức hơn cấp. */
+function runStages(): void {
+  const stages: CampaignStage[] =
+    values.stage === "all" ? [...CAMPAIGN] : [stageById(values.stage!) ?? fail(`Không có màn ${values.stage}`)];
+  const team = values.team as StageTeam;
+  const sweep = values.sweep?.split("..").map(Number);
+  const offsets = sweep ? range(sweep[0]!, sweep[1] ?? sweep[0]!) : null;
+  const rate = (stage: CampaignStage, lv: number) => {
+    const results = stageMatchups(stage, battles, seed, { level: lv, team, ...(values.element ? { element } : {}) }).map((m) =>
+      runBattle(m, { difficulty: ["normal", stage.difficulty], maxTurns }),
+    );
+    return summarize(results);
+  };
+  const json: Record<string, unknown> = {};
+  if (!values.json) {
+    console.log(`\n## Chiến dịch · ${battles} trận mỗi ô · người chơi AI normal, hệ ${values.element ?? "xoay vòng 7 hệ"}, đội ${team}`);
+    console.log(
+      offsets
+        ? `| Màn | Đối thủ | Khó | Đội kèm | ${offsets.map((o) => `+${o}`).join(" | ")} |\n|---|---|---|---|${offsets.map(() => "---|").join("")}`
+        : "| Màn | Đối thủ | Khó | Đội kèm | Cấp | Thắng | Lượt/phe (trung vị) |\n|---|---|---|---|---|---|---|",
+    );
+  }
+  for (const stage of stages) {
+    const mates = stage.mode === "3v3" ? stageTeamIds(stage, team).join("+") : "—";
+    const head = `| ${stage.id} | ${stage.level} | ${stage.difficulty} | ${mates} |`;
+    if (offsets) {
+      const rates = offsets.map((o) => rate(stage, stage.level + o).side0WinRate);
+      json[stage.id] = Object.fromEntries(offsets.map((o, i) => [`+${o}`, rates[i]]));
+      if (!values.json) console.log(`${head} ${rates.map(pct).join(" | ")} |`);
+    } else {
+      const lv = level ?? recommendedLevel(stage);
+      const s = rate(stage, lv);
+      json[stage.id] = { level: lv, ...s };
+      if (!values.json) console.log(`${head} ${lv} | ${pct(s.side0WinRate)} | ${num(s.turnsPerSide.median)} |`);
+    }
+  }
+  if (values.json) console.log(JSON.stringify(json, null, 2));
+}
+
+function range(a: number, b: number): number[] {
+  return Array.from({ length: b - a + 1 }, (_, i) => a + i);
+}
+
+function fail(message: string): never {
+  console.error(message);
+  process.exit(1);
+}
 
 const report: Record<string, ReturnType<typeof summarize>> = {};
 for (const mode of modes) {

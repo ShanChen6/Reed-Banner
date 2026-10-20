@@ -51,7 +51,25 @@ Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (tr
 - Luật màn đang dùng: thành bị vây (Tam Đái, đối thủ 25 lương), kho lương đầy (Tiên Du, Đỗ Động, 100 lương), đầm lầy/sông nước (Hồi Hồ, Tế Giang: bánh chưng 9%, âm dương 22%).
 - Lương: vào chiến dịch với 60; lương còn lại sau mỗi trận (thắng hay thua) mang sang trận sau, kẹp trong 20–100. Doanh trại đổi 3 vàng lấy 1 lương.
 - Thưởng: như trận thường (kinh nghiệm, vàng, đồ rơi), thêm vàng lần đầu qua màn (100 → 1 000).
-- Cấp gợi ý = cấp đối thủ + 3. Mô phỏng 19/10/2026 (60 trận mỗi màn, AI Thường đánh thay người chơi, đội mặc định, hơn đối thủ 3 cấp): tỉ lệ thắng 95% ở màn 1, 45–73% ở các màn Thường, 32–60% ở các màn Khó, 45% ở trùm cuối.
+- Cấp gợi ý đặt riêng từng màn (`recommended`), cân bằng `pnpm sim -- --stage all` ngày 20/10/2026: 140 trận mỗi màn, AI Thường đánh thay người chơi, Đinh Bộ Lĩnh xoay vòng đủ 7 hệ, cả đội ở cấp gợi ý. Mục tiêu: màn nào cũng thắng từ 50% trở lên, màn Dễ khoảng 80–90%, màn Thường 65–85%, màn Khó và trùm 50–75%.
+
+  | Màn | Cấp đối thủ | Cấp gợi ý | Thắng (đội 2 tướng lịch sử mới nhất) | Thắng (đội khởi đầu Hà Vân + Mai Thanh) |
+  |---|---|---|---|---|
+  | Cờ lau tập trận | 1 | 4 | 91% | 91% (1vs1) |
+  | Bố Hải Khẩu | 2 | 6 | 82% | 82% (1vs1) |
+  | Đằng Châu | 3 | 6 | 79% | 79% (1vs1) |
+  | Bình Kiều | 5 | 8 | 79% | 66% |
+  | Đường Lâm | 6 | 9 | 88% | 75% |
+  | Tam Đái | 8 | 11 | 75% | 70% |
+  | Phong Châu | 9 | 14 | 64% | 59% |
+  | Hồi Hồ | 10 | 14 | 84% | 48% |
+  | Siêu Loại | 12 | 16 | 56% | 62% |
+  | Tiên Du | 13 | 16 | 72% | 34% |
+  | Tế Giang | 15 | 18 | 72% | 50% |
+  | Tây Phù Liệt | 17 | 21 | 53% | 39% |
+  | Đỗ Động (trùm) | 20 | 24 | 59% | 53% |
+
+  Phong Châu trước đây chỉ 35% dù hơn đối thủ 6 cấp; nguyên nhân là chiêu riêng Phong Châu Lôi Kích (bỏ nó đi thì lên 52%). Đã giảm chiêu này, đổi phó tướng Kim thành Binh lính Thổ, hạ đối thủ xuống cấp 9. Đội khởi đầu yếu hơn hẳn ở các màn Khó, nên tướng lịch sử là phần thưởng có ý nghĩa. Cấp chênh lệch ảnh hưởng ít (thêm 1 cấp thường chỉ +2–5 điểm), đội hình và hệ khắc ảnh hưởng nhiều hơn.
 - Lời dẫn và thứ tự màn dựa theo sử sách phổ thông, chỉ để làm game; Shan duyệt lại trước khi phát hành.
 
 - **Tướng lịch sử gia nhập** (Claude đặt 20/10/2026, chờ Shan duyệt): lần đầu qua màn, một tướng vào hồ sơ ở cấp của màn (điểm kỹ năng còn nguyên để người chơi tự nâng). Xem [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#46-tướng-lịch-sử).
