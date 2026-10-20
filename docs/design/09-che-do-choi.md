@@ -87,6 +87,8 @@ Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (tr
 
 - **Chiêu riêng và thoại** (Claude đặt 20/10/2026, chờ Shan duyệt): mỗi sứ quân có một chiêu riêng thay ô 5 ([Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#47-chiêu-riêng-của-nhân-vật-lịch-sử)). Mỗi màn có 3 câu thoại của thủ lĩnh đối thủ: trước trận (hiện ở bản đồ chiến dịch), khi người chơi thắng và khi thua (hiện ở màn kết quả). Dữ liệu ở `lines` của từng màn trong `src/core/campaign/campaign.ts`.
 
+- **Bản đồ cổ** (Claude vẽ 20/10/2026, chờ Shan duyệt): trang `/campaign` có bản đồ Giao Châu thế kỷ X kiểu khắc gỗ trên giấy dó (`src/app/campaign/CampaignMap.tsx`). 13 màn đặt theo vị trí gần đúng của vùng đất ngày nay (dãn các màn quá sát nhau cho dễ bấm), có sông Hồng, Đà, Lô, Đáy, Đuống, Mã, bờ biển và núi Tản Viên, Tam Đảo, Hoa Lư. Đường hành quân nối các màn theo thứ tự: đoạn đã đi nét liền đỏ son, phần còn lại nét đứt. Màn đã qua cắm cờ lau, màn đang mở có vòng nhấp nháy, màn khóa mờ đi. Bấm (hoặc Enter) một màn đã mở để xem chi tiết như bấm trong danh sách bên dưới. Bản đồ là hình cách điệu, không phải bản đồ lịch sử đo đạc.
+
 > TODO: chương sau.
 
 ## 3. Leo tháp (Vô hạn)

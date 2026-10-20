@@ -31,6 +31,7 @@ import {
   sendProfileAction,
 } from "../demo/online";
 import { PROFILE_ERROR } from "../demo/ProgressPanel";
+import CampaignMap from "./CampaignMap";
 
 const FOOD_PACKS = [10, 30] as const;
 
@@ -292,52 +293,59 @@ export default function CampaignScreen() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-        <ol className="flex flex-col gap-1.5" aria-label="Các màn">
-          {CAMPAIGN.map((s, i) => {
-            const cleared = profile.campaign.cleared.includes(s.id);
-            const open = stageUnlocked(profile.campaign, s.id);
-            const leader = s.foes[0]!;
-            return (
-              <li key={s.id}>
-                <button
-                  type="button"
-                  disabled={!open}
-                  aria-current={stage.id === s.id}
-                  onClick={() => setPicked(s.id)}
-                  className={`flex w-full items-center gap-2 rounded-lg border px-2 py-1.5 text-left text-sm transition ${
-                    stage.id === s.id
-                      ? "border-amber-300 bg-amber-500/20"
-                      : "border-white/10 bg-black/25 hover:bg-black/40"
-                  } disabled:cursor-not-allowed disabled:opacity-40`}
-                >
-                  <span
-                    className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                      cleared
-                        ? "bg-emerald-600 text-white"
-                        : open
-                          ? "bg-amber-500 text-stone-950"
-                          : "bg-stone-700 text-stone-300"
-                    }`}
+        <div className="flex flex-col gap-3">
+          <CampaignMap
+            campaign={profile.campaign}
+            selected={stage.id}
+            onSelect={setPicked}
+          />
+          <ol className="flex flex-col gap-1.5" aria-label="Các màn">
+            {CAMPAIGN.map((s, i) => {
+              const cleared = profile.campaign.cleared.includes(s.id);
+              const open = stageUnlocked(profile.campaign, s.id);
+              const leader = s.foes[0]!;
+              return (
+                <li key={s.id}>
+                  <button
+                    type="button"
+                    disabled={!open}
+                    aria-current={stage.id === s.id}
+                    onClick={() => setPicked(s.id)}
+                    className={`flex w-full items-center gap-2 rounded-lg border px-2 py-1.5 text-left text-sm transition ${
+                      stage.id === s.id
+                        ? "border-amber-300 bg-amber-500/20"
+                        : "border-white/10 bg-black/25 hover:bg-black/40"
+                    } disabled:cursor-not-allowed disabled:opacity-40`}
                   >
-                    {cleared ? "✓" : open ? i + 1 : "🔒"}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate font-semibold">
-                      {s.title}
+                    <span
+                      className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                        cleared
+                          ? "bg-emerald-600 text-white"
+                          : open
+                            ? "bg-amber-500 text-stone-950"
+                            : "bg-stone-700 text-stone-300"
+                      }`}
+                    >
+                      {cleared ? "✓" : open ? i + 1 : "🔒"}
                     </span>
-                    <span className="block truncate text-xs text-stone-400">
-                      {leader.hero ? leader.name : s.place} · cấp {s.level}
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-semibold">
+                        {s.title}
+                      </span>
+                      <span className="block truncate text-xs text-stone-400">
+                        {leader.hero ? leader.name : s.place} · cấp {s.level}
+                      </span>
                     </span>
-                  </span>
-                  <ElementIcon
-                    element={leader.element}
-                    className="size-4 shrink-0"
-                  />
-                </button>
-              </li>
-            );
-          })}
-        </ol>
+                    <ElementIcon
+                      element={leader.element}
+                      className="size-4 shrink-0"
+                    />
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
 
         <section className="flex flex-col gap-4">
           <div className="rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4 shadow-[inset_0_0_24px_#0009]">
