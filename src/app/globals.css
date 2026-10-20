@@ -148,6 +148,25 @@
   animation: float-up 1100ms ease-out both;
 }
 
+/* Sân khấu trận (src/app/game/stage/BattleStage.tsx): chân dung nhân vật chưa có hình động thở nhẹ. */
+@keyframes stage-idle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+.stage-idle {
+  animation: stage-idle 2.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .stage-idle {
+    animation: none;
+  }
+}
+
 /* Nền /demo: hoa văn sóng nước rất mờ, dùng được cho cả nền sáng lẫn tối. */
 .demo-bg {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='24' viewBox='0 0 48 24'%3E%3Cpath d='M0 24a12 12 0 0 1 24 0a12 12 0 0 1 24 0M6 24a6 6 0 0 1 12 0M30 24a6 6 0 0 1 12 0M-12 12a12 12 0 0 1 24 0a12 12 0 0 1 24 0a12 12 0 0 1 24 0' fill='none' stroke='%23b48c50' stroke-opacity='0.09' stroke-width='1.5'/%3E%3C/svg%3E");
