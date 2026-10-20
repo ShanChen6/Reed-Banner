@@ -27,6 +27,7 @@
 | [16-prompt-nhan-vat.md](design/16-prompt-nhan-vat.md) | Prompt Copilot ráp sẵn cho 63 hình toàn thân: Đinh Bộ Lĩnh 3 thời kỳ, 6 tướng lịch sử, 12 sứ quân, 42 tướng thường |
 | [17-prompt-do-hoa.md](design/17-prompt-do-hoa.md) | Prompt Copilot ráp sẵn cho đồ họa ngoài nhân vật: 42 trang bị, 21 ô bàn cờ, 54 lớp nền trận, mẫu giao diện, tranh lớn, linh vật, hạt hiệu ứng |
 | [18-prompt-tu-the.md](design/18-prompt-tu-the.md) | Prompt ráp sẵn tranh tư thế ra chiêu, tuyệt chiêu và bị hạ gục cho 61 nhân vật đánh trận |
+| [19-codex-do-hoa.md](design/19-codex-do-hoa.md) | Prompt cho Codex dựng hình động nhân vật: tách nền, cắt lớp, vá chỗ bị che, rig, tranh tư thế, file xem trước cho Shan duyệt |
 
 **Kỹ thuật** (`tech/`)
 
