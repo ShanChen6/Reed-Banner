@@ -35,6 +35,7 @@ import {
   rollDrop,
   selectableActors,
   slideStep,
+  stageById,
   STARTER_COMPANIONS,
   TIERS,
   tileAt,
@@ -1584,6 +1585,15 @@ export default function DemoGame({
                     <p className="text-xl font-bold">
                       {state.winner === PLAYER ? "Bạn thắng!" : "Tianwu thắng"}
                     </p>
+                    {stage && stageById(stage) && (
+                      <p className="max-w-sm text-center text-sm text-amber-100 italic">
+                        {stageById(stage)!.foes[0]!.name}: “
+                        {state.winner === PLAYER
+                          ? stageById(stage)!.lines.win
+                          : stageById(stage)!.lines.lose}
+                        ”
+                      </p>
+                    )}
                     {(!online || outcome) && (
                       <p className="text-sm">
                         {drop ? (

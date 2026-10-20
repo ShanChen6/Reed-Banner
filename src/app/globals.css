@@ -99,10 +99,16 @@
     transform: none;
   }
   45% {
-    transform: translate(calc(var(--step-x) * 0.45), calc(var(--step-y) * 0.45));
+    transform: translate(
+      calc(var(--step-x) * 0.45),
+      calc(var(--step-y) * 0.45)
+    );
   }
   70% {
-    transform: translate(calc(var(--step-x) * -0.08), calc(var(--step-y) * -0.08));
+    transform: translate(
+      calc(var(--step-x) * -0.08),
+      calc(var(--step-y) * -0.08)
+    );
   }
 }
 
@@ -251,5 +257,82 @@
   /* Không chuyển động thì đàn chim đứng yên ở giữa đường bay. */
   .lac-fly {
     animation-play-state: paused !important;
+  }
+}
+
+/* Bản đồ chiến dịch: giấy dó, mực khắc gỗ, sông xanh chàm, đường hành quân đỏ son. */
+.campaign-map {
+  --map-paper: #e9d9b4;
+  --map-paper-dark: #cdb68a;
+  --map-ink: #3b2a1a;
+  --map-sea: #a9b9a8;
+  --map-sea-ink: #5e7468;
+  --map-river: #5f8a8b;
+  --map-route: #a8322b;
+  background: var(--map-paper);
+}
+.campaign-map text {
+  fill: var(--map-ink);
+  font-family: var(--font-serif, Georgia, serif);
+}
+.campaign-map .map-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+.campaign-map .map-label {
+  font-size: 14px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: var(--map-paper);
+  stroke-width: 3px;
+}
+.campaign-map .map-label-small {
+  font-size: 11px;
+  font-style: italic;
+}
+.campaign-map .map-label-river {
+  font-size: 12px;
+  font-style: italic;
+  fill: #2f5556;
+}
+.campaign-map .map-label-sea {
+  font-size: 16px;
+  font-style: italic;
+  letter-spacing: 0.2em;
+  fill: #34483f;
+}
+.campaign-map .map-num {
+  font-size: 11px;
+  font-weight: 800;
+  font-family: inherit;
+}
+.campaign-map .map-num-light {
+  fill: #f5f0e1;
+}
+.campaign-map .map-stage:focus-visible {
+  outline: none;
+}
+.campaign-map .map-stage:focus-visible circle:not(.map-pulse) {
+  stroke: #f2c14e;
+}
+.map-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: map-pulse 1.8s ease-out infinite;
+}
+@keyframes map-pulse {
+  from {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .map-pulse {
+    animation: none;
   }
 }

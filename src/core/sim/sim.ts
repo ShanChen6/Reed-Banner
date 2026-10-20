@@ -3,11 +3,14 @@
 
 import { playAiTurn, type Difficulty } from "../ai";
 import { createBattle, type BattleEvent, type SideConfig, type SideIndex } from "../battle";
+import type { SpawnWeights } from "../board";
 
 export interface Matchup {
   readonly sides: readonly [SideConfig, SideConfig];
   readonly seed: number;
   readonly firstSide: SideIndex;
+  /** Tỉ lệ ô riêng (luật màn chiến dịch); bỏ trống là tỉ lệ chuẩn. */
+  readonly weights?: SpawnWeights;
 }
 
 export interface BattleResult {
@@ -35,7 +38,13 @@ export const DEFAULT_MAX_TURNS = 400;
 export function runBattle(m: Matchup, options: SimOptions = {}): BattleResult {
   const difficulty = options.difficulty ?? ["normal", "normal"];
   const maxTurns = options.maxTurns ?? DEFAULT_MAX_TURNS;
-  let { state } = createBattle({ sides: [m.sides[0], m.sides[1]], seed: m.seed, timer: false, firstSide: m.firstSide });
+  let { state } = createBattle({
+    sides: [m.sides[0], m.sides[1]],
+    seed: m.seed,
+    timer: false,
+    firstSide: m.firstSide,
+    ...(m.weights ? { weights: m.weights } : {}),
+  });
   const skillUses: Record<string, number> = {};
   let passives = 0;
   const count = (events: readonly BattleEvent[]) => {

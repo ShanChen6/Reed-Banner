@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   applyCampaignResult,
+  autoProgress,
+  buildHero,
   applyProfileAction,
   BOSS_HP,
   CAMPAIGN,
@@ -10,16 +12,24 @@ import {
   createBattle,
   FOOD_PRICE,
   HERO_COMPANIONS,
+  heroSkills,
   isHero,
   mainSkills,
   newProfile,
   parseProfile,
+  RECOMMENDED_LEVEL_BONUS,
+  recommendedLevel,
+  runBattle,
+  stageMatchups,
+  stagePlayerTeam,
+  stageTeamIds,
   professionSkills,
   profileTeam,
   stageById,
   stageFighter,
   stageFoes,
   stageUnlocked,
+  signatureOf,
 } from "../../../src/core";
 
 describe("chiến dịch", () => {
@@ -41,12 +51,12 @@ describe("chiến dịch", () => {
     }
   });
 
-  it("sứ quân có bộ kỹ năng theo nguyên tố như nhân vật chính; trùm thêm máu", () => {
+  it("sứ quân có bộ kỹ năng theo nguyên tố như nhân vật chính (ô 5 là chiêu riêng); trùm thêm máu", () => {
     const tran = stageById("boHai")!.foes[0]!;
     const lv20 = stageFighter({ ...tran }, 20);
     assert.deepEqual(
       lv20.skills,
-      mainSkills(tran.element).map((s) => s.id),
+      heroSkills(tran.element, tran.id).map((s) => s.id),
     );
     assert.equal(lv20.name, "Trần Lãm");
     const boss = stageById("doDong")!;
@@ -173,6 +183,76 @@ describe("tướng lịch sử gia nhập", () => {
         character: "leHoan",
       }).ok,
       false,
+    );
+  });
+});
+
+describe("chiêu riêng và thoại", () => {
+  it("sứ quân luôn mang chiêu riêng thay ô 5, kể cả khi cấp chưa mở ô 5", () => {
+    const warlords = CAMPAIGN.flatMap((s) => s.foes.filter((f) => f.hero));
+    assert.equal(new Set(warlords.map((f) => f.id)).size, 12);
+    for (const f of warlords) {
+      const sig = signatureOf(f.id);
+      assert.ok(sig, f.id);
+      assert.equal(sig.slot, 5);
+      const fighter = stageFighter(f, 2);
+      assert.ok(fighter.skills!.includes(sig.id), f.id);
+      const slot5 = mainSkills(f.element).find((d) => d.slot === 5)!;
+      assert.ok(!stageFighter(f, 25).skills!.includes(slot5.id), f.id);
+    }
+  });
+
+  it("tướng lịch sử có chiêu riêng ở ô 5, mở ở cấp 20 như nhân vật chính", () => {
+    for (const h of HERO_COMPANIONS) {
+      const sig = signatureOf(h.id)!;
+      assert.ok(sig, h.id);
+      assert.ok(h.skills!.includes(sig.id));
+      assert.deepEqual(
+        heroSkills(h.element, h.id).map((d) => d.slot),
+        [1, 2, 3, 4, 5, 6],
+      );
+      assert.ok(!buildHero(h, autoProgress(19, null)).skills!.includes(sig.id));
+      const at20 = buildHero(h, autoProgress(20, null));
+      assert.ok(at20.skills!.includes(sig.id));
+      assert.equal(
+        at20.skillLevels![sig.id],
+        autoProgress(20, null).skillLevels.o5 ?? 1,
+      );
+    }
+  });
+
+  it("mỗi màn có thoại trước trận, khi thắng và khi thua; sứ quân có tước hiệu, màn có vùng đất ngày nay", () => {
+    for (const s of CAMPAIGN) {
+      assert.ok(s.region, s.id);
+      for (const f of s.foes.filter((x) => x.hero)) assert.ok(f.title, f.id);
+      assert.ok(s.lines.before && s.lines.win && s.lines.lose, s.id);
+    }
+  });
+});
+
+describe("mô phỏng theo màn", () => {
+  it("đội người chơi theo cấp gợi ý, đội kèm là 2 tướng gia nhập gần nhất; trận mang luật màn", () => {
+    const tamDai = stageById("tamDai")!;
+    assert.deepEqual(stageTeamIds(tamDai, "heroes"), ["luuCo", "trinhTu"]);
+    assert.deepEqual(stageTeamIds(stageById("binhKieu")!, "heroes"), [
+      "dinhDien",
+      "luuCo",
+    ]);
+    assert.deepEqual(stageTeamIds(tamDai, "default"), ["haVan", "maiThanh"]);
+    const team = stagePlayerTeam(tamDai);
+    assert.equal(team.length, 3);
+    assert.equal(stagePlayerTeam(stageById("boHai")!).length, 1);
+    const [m] = stageMatchups(tamDai, 1);
+    assert.equal(m!.sides[1].food, tamDai.foeFood);
+    assert.deepEqual(
+      stageMatchups(stageById("hoiHo")!, 1)[0]!.weights,
+      stageById("hoiHo")!.weights,
+    );
+    const r = runBattle(m!, { difficulty: ["normal", tamDai.difficulty] });
+    assert.ok(r.turns > 0);
+    assert.equal(
+      recommendedLevel(tamDai),
+      tamDai.recommended ?? tamDai.level + RECOMMENDED_LEVEL_BONUS,
     );
   });
 });

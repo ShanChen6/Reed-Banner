@@ -14,6 +14,7 @@ File này có hai phần. Phần 1 ghi phong cách của bộ hình dựng bằn
 - **Chân dung tạm** (`portraits.tsx`): huy hiệu tròn viền trống đồng, nền và đai áo theo nguyên tố; mỗi nhân vật khác nhau ở mũ/tóc, màu áo và đồ cầm tay theo nghề. Dùng tới khi có chân dung của họa sĩ (phần 2).
 - **Biểu tượng kỹ năng** (`skills.tsx`): huy hiệu vuông, nền theo nguyên tố (chiêu nhân vật chính) hoặc theo nghề (chiêu nhân vật kèm, tông tối hơn); hình giữa nói kỹ năng làm gì, dấu tròn ở góc nói tác dụng phụ (tăng, giảm, cả đội, đánh cả đội đối thủ, hồi máu, khiên, gỡ hiệu ứng, năng lượng, thiêu đốt, đóng băng, phản đòn). Tuyệt chiêu ô 5 có vòng tia vàng. Kỹ năng mới chưa vẽ tự lấy hình theo kiểu mục tiêu.
 - **Biểu tượng trang bị** (`gear.tsx`): 9 ô và vũ khí riêng 6 nghề, chi tiết nhấn màu theo nguyên tố. Khung phẩm khác nhau cả về hình: Trắng viền trơn, Lục thêm chấm góc, Lam viền đôi, Tím thêm hoa văn răng cưa, Cam tỏa tia. Họa sĩ **không** vẽ khung.
+- **Bản đồ chiến dịch** (`src/app/campaign/CampaignMap.tsx`): giấy dó vàng nhạt có thớ chéo, mực nâu đậm, sông xanh chàm, biển xanh rêu với sóng khắc, đường hành quân đỏ son, viền tối dần ở mép. Màu đặt bằng biến `--map-*` trong `globals.css`. Họa sĩ có thể vẽ lại thành tranh nền, giữ vị trí các màn.
 
 ### Bảng màu
 
