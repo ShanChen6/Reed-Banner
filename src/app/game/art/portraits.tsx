@@ -159,6 +159,7 @@ function HeldProp({ prop, accent }: { prop: Prop; accent: string }) {
 /** Nhân vật đã có tranh vẽ: mặt cắt từ tranh, vẽ trong khung tròn thay cho mặt dựng bằng SVG. */
 const PHOTOS: Readonly<Record<string, string>> = {
   dinhBoLinh: "/art/characters/dinh-bo-linh/portrait.webp",
+  nguyenBac: "/art/characters/nguyenBac/portrait.webp",
 };
 
 /**

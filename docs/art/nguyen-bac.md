@@ -2,7 +2,7 @@
 
 - Roster: `nguyenBac`, tướng sĩ Hỏa; không sửa `src/core/`.
 - Thư mục: `public/art/characters/nguyenBac/`.
-- **11 WebP, 303.450 byte** (303,5 KB thập phân), gồm cả hai tranh kỹ năng; dưới 350 KB.
+- **12 WebP, 329.886 byte** (329,9 KB thập phân), gồm hai tranh kỹ năng và avatar; dưới 350 KB.
 - Dùng bộ dựng `warrior.ts` có sẵn của Trần Cương/Đinh Bộ Lĩnh: tay cầm đao và đao cùng xoay quanh vai; giáp vai cố định che mối nối. Kỹ năng thường dùng tranh ra chiêu, ô 5 dùng tranh tuyệt chiêu.
 
 ## Giữ đúng thiết kế gốc
@@ -42,3 +42,7 @@ Hai tranh hành động từ `nguyenbacrachieu.png` và `nguyenbactuyetchieu.png
 Đã so sánh ba rig ở cùng cỡ và cùng góc lấy đà/chém trong Pixi thực tế, đồng thời kiểm tra đứng/đánh thường/ra chiêu/tuyệt chiêu ở `/game/practice` khung 844×390. Không tràn ngang, các ảnh nhân vật tải thành công. Console có lỗi `/favicon.ico` thiếu sẵn của repo.
 
 Chân giữ liền thân; hoạt ảnh là rối cắt mảnh và đổi tranh bằng crossfade. Vải uốn nhẹ vì ảnh phẳng không có đầy đủ phần vải bị tay/đao che. Nền alpha do AI phân đoạn có thể mất các sợi rất mảnh. Chưa đo FPS trên điện thoại thật.
+
+## Avatar
+
+`portrait.webp`: 256×256, 26.436 byte, cắt đầu và vai từ vùng `(425, -20)–(855, 410)` của ảnh đứng gốc, mặt ở giữa. Dùng RGB gốc cùng alpha đã tách nền; không vẽ lại khuôn mặt. Thêm vào `PHOTOS` trong `portraits.tsx` theo cách Đinh Bộ Lĩnh để mọi nơi dùng `Portrait` nhận ảnh này; nhân vật chưa có ảnh tiếp tục dùng SVG. Đã kiểm tra bảng đội trong trận, màn chờ, hồ sơ và cửa hàng bằng hồ sơ thử có Nguyễn Bặc.
