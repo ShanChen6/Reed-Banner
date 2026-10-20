@@ -28,7 +28,7 @@ export async function characterCatalog(): Promise<CharacterPreview[]> {
     ]);
     const cast = rig.skeleton === "warrior" ? rig.poses?.cast : undefined;
     const ultimate = rig.skeleton === "warrior" ? rig.poses?.ultimate : undefined;
-    const defeat = rig.skeleton === "warrior" ? rig.defeat : undefined;
+    const defeat = rig.skeleton === "warrior" ? rig.down : undefined;
     const files = [...layers, portrait, standing].filter((f): f is PreviewFile => f !== null);
     return {
       id, name: character.name, element: character.element, profession: character.profession,
