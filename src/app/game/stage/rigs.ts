@@ -98,6 +98,11 @@ export interface WarriorRig {
   readonly blade: readonly [Point, Point];
   readonly fxColor: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
+  /** Cẳng tay rời: đao đi theo khuỷu tay, bắp tay vẫn xoay quanh vai. */
+  readonly forearms?: {
+    readonly sword: { readonly box: PartBox; readonly joint: Point };
+    readonly free: { readonly box: PartBox; readonly joint: Point };
+  };
 }
 
 /**
@@ -130,6 +135,7 @@ export function partsOf(rig: Rig): readonly string[] {
         "sword",
         "arm",
         "head",
+        ...(rig.forearms ? ["forearm", "forearmR"] : []),
         ...rig.cloth.map((c) => c.name),
         ...rig.covers.map((c) => c.name),
         ...Object.values(rig.poses ?? {}).map((p) => p.name),
@@ -277,11 +283,54 @@ const DINH_BO_LINH: WarriorRig = {
   },
 };
 
+/** Nguyễn Bặc, tướng sĩ Hỏa. Mảnh vá từ ảnh phẳng; tọa độ ráp 1024×1536. */
+const NGUYEN_BAC: WarriorRig = {
+  skeleton: "warrior",
+  dir: "nguyenBac",
+  texScale: 0.5,
+  foot: { x: 650, y: 1518 },
+  height: 1518,
+  parts: {
+    body: { x: 340, y: 210, w: 654, h: 1308 },
+    head: { x: 565, y: 30, w: 224, h: 273 },
+    arm: { x: 395, y: 260, w: 200, h: 335 },
+    armR: { x: 745, y: 250, w: 185, h: 335 },
+    sword: { x: 110, y: 625, w: 402, h: 730 },
+  },
+  forearms: {
+    sword: { box: { x: 355, y: 545, w: 150, h: 260 }, joint: { x: 455, y: 565 } },
+    free: { box: { x: 780, y: 510, w: 150, h: 300 }, joint: { x: 825, y: 535 } },
+  },
+  joints: {
+    shoulder: { x: 550, y: 310 },
+    elbowR: { x: 805, y: 310 },
+    neck: { x: 685, y: 280 },
+  },
+  cloth: [
+    { name: "cape", box: { x: 110, y: 380, w: 450, h: 760 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 12, freq: 1.2, k: 3.2, phase: 1.4, reverse: true, vertical: true } },
+    { name: "ribbon", box: { x: 310, y: 70, w: 350, h: 250 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 10, freq: 1.8, k: 4.5, phase: 0.3, reverse: true, vertical: true } },
+    { name: "sash", box: { x: 500, y: 456, w: 300, h: 690 },
+      wind: { axis: "y", start: 0.25, amp: 5, freq: 1.3, k: 2.6, phase: 2.1 } },
+    { name: "feathers", box: { x: 640, y: 580, w: 265, h: 310 },
+      wind: { axis: "y", start: 0.2, amp: 4, freq: 1.5, k: 2.5, phase: 0.8 } },
+  ],
+  covers: [],
+  blade: [{ x: 395, y: 820 }, { x: 115, y: 1350 }],
+  fxColor: 0xff783d,
+  poses: {
+    cast: { name: "pose-cast", origin: { x: 13, y: 6 }, anchor: { x: 810, y: 1020 }, scale: 1.25, burst: { x: 1500, y: 245 } },
+    ultimate: { name: "pose-ultimate", origin: { x: 13, y: 10 }, anchor: { x: 650, y: 1006 }, scale: 1.25, burst: { x: 1500, y: 30 } },
+  },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
   tranCuong: TRAN_CUONG,
   dinhBoLinh: DINH_BO_LINH,
+  nguyenBac: NGUYEN_BAC,
 };
 
 export function rigOf(id: string): Rig | null {
