@@ -76,6 +76,7 @@ export function warrior(
 
   // Tranh tư thế: gốc tọa độ ở chân như hình động; bóng sáng sau lưng, ảnh sáng phóng ra lúc đổi tranh.
   const poses = (Object.entries(rig.poses ?? {}) as [PoseKind, PoseArt][]).map(([kind, p]) => {
+    const texScale = p.texScale ?? rig.texScale;
     const root = new Container();
     root.scale.set(p.scale);
     root.visible = false;
@@ -90,7 +91,7 @@ export function warrior(
     const art = (blend: boolean) => {
       const s = new Sprite(img(p.name));
       s.position.set(p.origin.x - p.anchor.x, p.origin.y - p.anchor.y);
-      s.scale.set(1 / rig.texScale);
+      s.scale.set(1 / texScale);
       if (blend) {
         s.tint = rig.fxColor;
         s.blendMode = "add";
@@ -102,9 +103,20 @@ export function warrior(
     const main = art(false);
     const burst = { x: p.burst.x - p.anchor.x, y: p.burst.y - p.anchor.y };
     const offset = { x: p.origin.x - p.anchor.x, y: p.origin.y - p.anchor.y };
-    return { kind, root, bloom, ghost, main, burst, offset, sparks: particles(root, rig.fxColor, 50, 260) };
+    return { kind, root, bloom, ghost, main, burst, offset, texScale, sparks: particles(root, rig.fxColor, 50, 260) };
   });
   const poseOf = (kind: CueKind) => poses.find((p) => p.kind === kind);
+  const defeated = rig.defeat ? new Container() : null;
+  if (defeated && rig.defeat) {
+    const p = rig.defeat;
+    const art = new Sprite(img(p.name));
+    art.position.set(p.origin.x - p.anchor.x, p.origin.y - p.anchor.y);
+    art.scale.set(1 / (p.texScale ?? rig.texScale));
+    defeated.scale.set(p.scale);
+    defeated.visible = false;
+    defeated.addChild(art);
+    view.addChild(defeated);
+  }
 
   const sx = joints.shoulder.x;
   const sy = joints.shoulder.y;
@@ -161,7 +173,7 @@ export function warrior(
       pose.ghost.alpha = 0.55 * flash;
       // Phóng quanh chân nhân vật để ảnh sáng tỏa đều ra mọi phía.
       const grow = 1 + 0.12 * (1 - flash);
-      pose.ghost.scale.set(grow / rig.texScale);
+      pose.ghost.scale.set(grow / pose.texScale);
       pose.ghost.position.set(pose.offset.x * grow, pose.offset.y * grow);
       pose.bloom.alpha = (0.35 + 0.5 * flash) * show;
       if (!action.fired && a >= B.hit) {
@@ -227,6 +239,11 @@ export function warrior(
     body.rotation = lean - 0.12 * ease(downT);
     body.tint = down ? 0x777777 : tint;
     body.alpha = (1 - 0.55 * ease(downT)) * rigVis;
+    if (defeated) {
+      defeated.visible = down;
+      defeated.alpha = ease(downT);
+      body.alpha *= 1 - ease(downT);
+    }
     shadow.alpha = 1 - 0.6 * ease(downT);
     arm.rotation = down ? 0.15 * ease(downT) : armRot;
     armR.rotation = armRRot;
@@ -256,6 +273,15 @@ export function warrior(
     view,
     height: rig.height,
     update,
+    reset() {
+      action = null;
+      down = false;
+      downT = 0;
+      trailA = 0;
+      sparks.clear();
+      for (const p of poses) p.sparks.clear();
+      update(0);
+    },
     play(kind) {
       if (down || still) return;
       action = { kind, t: 0, fired: false };

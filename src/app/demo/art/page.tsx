@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ELEMENTS, GEAR_SLOTS, mainCharacter, mainSkills, PROFESSIONS, professionSkills, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, SPECIAL_NAME, TIER_COLOR_NAME, TILE_NAME } from "@/app/game/battle/labels";
 import { GearIcon } from "@/app/game/art/gear";
@@ -21,6 +22,7 @@ export default function ArtPage() {
   return (
     <main className="demo-bg min-h-dvh bg-[#17110e] p-4 text-stone-100">
       <div className="mx-auto max-w-4xl space-y-6">
+        <Link href="/demo/characters" className="text-sm text-amber-300 underline">Xem thử nhân vật có hình động →</Link>
         <h1 className="flex items-center gap-2 text-xl font-bold">
           <LeaderFlag className="size-7" /> Bộ hình Cờ Lau
         </h1>
