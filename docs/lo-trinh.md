@@ -24,7 +24,7 @@ Mỗi dòng là một PR vào develop, làm theo thứ tự. Số liệu là đi
 | 4.2 | Tướng lịch sử gia nhập khi qua màn: Nguyễn Bặc, Đinh Điền, Lê Hoàn, Trịnh Tú, Lưu Cơ, Đinh Liễn | Đã làm (20/10/2026). Bộ 6 kỹ năng theo nguyên tố, nâng theo ô như nhân vật chính; ra trận như nhân vật kèm |
 | 4.3 | Chiêu riêng cho từng sứ quân (1 tuyệt chiêu mang dấu ấn lịch sử) và thoại trước/sau trận | Đã làm (20/10/2026). Chiêu riêng thay ô 5 cho 12 sứ quân và 6 tướng lịch sử; 3 câu thoại mỗi màn |
 | 4.4 | Cân độ khó chiến dịch bằng mô phỏng: người chơi cày bình thường qua được màn trước ở cấp gợi ý | Đã làm (20/10/2026). `pnpm sim -- --stage all`, thêm `--sweep 2..5` và `--team default` khi cần; cấp gợi ý riêng từng màn, mọi màn ≥50% thắng ở cấp gợi ý |
-| 4.5 | Đánh trùm: đánh lại sứ quân đã hạ ở mức khó cao hơn, luật "sân nhà", thưởng riêng | Dùng lại dữ liệu màn |
+| 4.5 | Đánh trùm: đánh lại sứ quân đã hạ ở mức khó cao hơn, luật "sân nhà", thưởng riêng | Đã làm (20/10/2026). 3 bậc cho 12 sứ quân, sân nhà theo nguyên tố, thưởng vàng và trang bị lần đầu; xem [Chế độ chơi](design/09-che-do-choi.md#22-đánh-trùm-claude-đặt-20102026-chờ-shan-duyệt) |
 | 4.6 | Bảng xếp hạng (BXH) | Theo số màn, lượt ít nhất mỗi màn |
 
 ### Giai đoạn 5: Chế độ thêm

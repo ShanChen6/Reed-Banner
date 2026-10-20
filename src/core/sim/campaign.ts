@@ -5,9 +5,12 @@
 import type { FighterConfig, SideIndex } from "../battle";
 import {
   CAMPAIGN,
+  raidRecommended,
+  raidSetup,
   recommendedLevel,
   stageFoes,
   type CampaignStage,
+  type RaidTier,
 } from "../campaign";
 import type { Element } from "../battle";
 import {
@@ -34,12 +37,19 @@ export interface StageSimOptions {
   readonly element?: Element;
   readonly team?: StageTeam;
   readonly food?: number;
+  /** Đánh trùm bậc này thay vì màn thường: luật sân nhà, cấp gợi ý của bậc. */
+  readonly raid?: RaidTier;
 }
 
-/** Id 2 nhân vật kèm người chơi mang vào màn theo `team`. */
-export function stageTeamIds(stage: CampaignStage, team: StageTeam): string[] {
+/** Id 2 nhân vật kèm người chơi mang vào màn theo `team`; đánh trùm thì tính cả tướng gia nhập ở chính màn đó. */
+export function stageTeamIds(
+  stage: CampaignStage,
+  team: StageTeam,
+  raid = false,
+): string[] {
   if (team === "default") return [...DEFAULT_TEAM];
-  const before = CAMPAIGN.slice(0, CAMPAIGN.indexOf(stage)).flatMap((s) =>
+  const end = CAMPAIGN.indexOf(stage) + (raid ? 1 : 0);
+  const before = CAMPAIGN.slice(0, end).flatMap((s) =>
     s.joins ? [s.joins] : [],
   );
   return [
@@ -60,7 +70,11 @@ export function stagePlayerTeam(
   stage: CampaignStage,
   options: StageSimOptions = {},
 ): FighterConfig[] {
-  const level = options.level ?? recommendedLevel(stage);
+  const level =
+    options.level ??
+    (options.raid
+      ? raidRecommended(stage, options.raid)
+      : recommendedLevel(stage));
   const main = buildMain(
     autoProgress(level, null),
     options.element ?? "moc",
@@ -69,7 +83,7 @@ export function stagePlayerTeam(
   if (stage.mode === "1v1") return [main];
   return [
     main,
-    ...stageTeamIds(stage, options.team ?? "heroes").map((id) =>
+    ...stageTeamIds(stage, options.team ?? "heroes", !!options.raid).map((id) =>
       companionAt(id, level),
     ),
   ];
@@ -83,7 +97,10 @@ export function stageMatchups(
   options: StageSimOptions = {},
 ): Matchup[] {
   const player = stagePlayerTeam(stage, options);
-  const foes = stageFoes(stage);
+  const raid = options.raid ? raidSetup(stage, options.raid) : undefined;
+  const foes = raid ? raid.foes : stageFoes(stage);
+  const foeFood = raid ? raid.foeFood : stage.foeFood;
+  const weights = raid ? raid.weights : stage.weights;
   return Array.from({ length: count }, (_, i) => ({
     sides: [
       {
@@ -94,11 +111,11 @@ export function stageMatchups(
       {
         fighters: foes,
         leader: 0,
-        ...(stage.foeFood !== undefined ? { food: stage.foeFood } : {}),
+        ...(foeFood !== undefined ? { food: foeFood } : {}),
       },
     ],
     seed: (seed + i * 7919) >>> 0,
     firstSide: (i % 2) as SideIndex,
-    ...(stage.weights ? { weights: stage.weights } : {}),
+    ...(weights ? { weights } : {}),
   }));
 }

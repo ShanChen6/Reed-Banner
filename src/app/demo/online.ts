@@ -5,6 +5,8 @@ import type {
   BattleEvent,
   BattleRewards,
   CampaignResult,
+  RaidResult,
+  RaidTier,
   GearItem,
   BattleState,
   Difficulty,
@@ -28,6 +30,7 @@ export interface OnlineResponse {
     readonly drop: GearItem | null;
     readonly soldFor: number;
     readonly campaign?: CampaignResult;
+    readonly raid?: RaidResult;
   };
   /** Giờ server lúc trả lời (ms). */
   readonly now: number;
@@ -65,6 +68,8 @@ export function createOnline(input: {
   difficulty: Difficulty;
   /** Màn chiến dịch; server lấy thể thức, độ khó và đối thủ theo màn. */
   stage?: string;
+  /** Đánh trùm: bậc trùm ở màn `stage`. */
+  raid?: RaidTier;
 }): Promise<OnlineResponse> {
   return call("/api/battles", { method: "POST", body: JSON.stringify(input) });
 }

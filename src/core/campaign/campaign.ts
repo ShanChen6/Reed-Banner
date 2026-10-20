@@ -536,6 +536,7 @@ export function applyCampaignResult(
     ? { ...profile.companions, [joined]: autoJoin(stage!.level) }
     : profile.companions;
   const campaign: CampaignState = {
+    ...profile.campaign,
     cleared: firstClear
       ? [...profile.campaign.cleared, stageId]
       : profile.campaign.cleared,
