@@ -1630,6 +1630,12 @@ export default function DemoGame({
                             Lương mang sang: {outcome.campaign.food}
                           </p>
                         )}
+                        {outcome.campaign?.joined && (
+                          <p className="font-semibold text-emerald-300">
+                            {fighterName(outcome.campaign.joined)} gia nhập đội!
+                            Chọn vào đội ở mục Đội hình.
+                          </p>
+                        )}
                         {outcome.levelUps.map((u) => (
                           <p
                             key={u.id}
