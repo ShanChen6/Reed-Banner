@@ -6,6 +6,7 @@ import { useId } from "react";
 import type { Element, Profession } from "@/core";
 import { ELEMENT_COLOR } from "./icons";
 import { INK } from "./tiles";
+import { portraitUrl } from "./portrait-data";
 
 const SKIN = "#e2b07f";
 const PAPER = "#f6ecd4";
@@ -156,12 +157,6 @@ function HeldProp({ prop, accent }: { prop: Prop; accent: string }) {
   }
 }
 
-/** Nhân vật đã có tranh vẽ: mặt cắt từ tranh, vẽ trong khung tròn thay cho mặt dựng bằng SVG. */
-const PHOTOS: Readonly<Record<string, string>> = {
-  dinhBoLinh: "/art/characters/dinh-bo-linh/portrait.webp",
-  nguyenBac: "/art/characters/nguyenBac/portrait.webp",
-};
-
 /**
  * Chân dung bán thân trong khung tròn hoa văn trống đồng. Nền khung theo nguyên tố, viền đai áo cũng theo
  * nguyên tố để nhân vật chính đổi hệ thì hình đổi theo.
@@ -180,6 +175,7 @@ export function Portrait({
   const clip = `portrait-${useId().replace(/[^\w-]/g, "")}`;
   const look = LOOKS[id] ?? PROFESSION_LOOK[profession];
   const accent = ELEMENT_COLOR[element];
+  const photo = portraitUrl(id);
   return (
     <svg viewBox="0 0 64 64" className={className} aria-hidden focusable="false">
       <defs>
@@ -190,10 +186,10 @@ export function Portrait({
       <circle cx={32} cy={32} r={31} fill={BRONZE} stroke={INK} strokeWidth={1.5} />
       <circle cx={32} cy={32} r={29} fill="none" stroke={INK} strokeWidth={1.2} strokeDasharray="2 2.2" />
       <circle cx={32} cy={32} r={27} fill={accent} />
-      {PHOTOS[id] ? (
+      {photo ? (
         <g clipPath={`url(#${clip})`}>
           <circle cx={32} cy={26} r={15} fill="#fff" opacity={0.14} />
-          <image href={PHOTOS[id]} x={5} y={5} width={54} height={54} preserveAspectRatio="xMidYMid slice" />
+          <image href={photo} x={5} y={5} width={54} height={54} preserveAspectRatio="xMidYMid slice" />
         </g>
       ) : (
         <g clipPath={`url(#${clip})`}>

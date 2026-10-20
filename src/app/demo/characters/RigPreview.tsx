@@ -1,0 +1,162 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import type { Application } from "pixi.js";
+import type { Puppet } from "@/app/game/stage/kit";
+import type { CueKind } from "@/app/game/stage/director";
+import { rigOf } from "@/app/game/stage/rigs";
+
+const ACTIONS = [
+  { kind: "idle", label: "Đứng", ms: 1000 },
+  { kind: "attack", label: "Đánh thường", ms: 1100 },
+  { kind: "cast", label: "Ra chiêu", ms: 1600 },
+  { kind: "ultimate", label: "Tuyệt chiêu", ms: 1850 },
+  { kind: "hit", label: "Trúng đòn", ms: 750 },
+  { kind: "heal", label: "Hồi máu", ms: 1000 },
+  { kind: "ko", label: "Bị hạ gục", ms: 1300 },
+] as const;
+type Action = CueKind | "idle" | "ko";
+const button = "rounded-lg border border-amber-800/70 bg-stone-900 px-3 py-2 text-sm font-medium hover:bg-amber-900/40 aria-pressed:border-amber-300 aria-pressed:bg-amber-900/60 disabled:opacity-40";
+
+export default function RigPreview({ id, size, onSnapshot }: {
+  id: string;
+  size: "battle" | "large";
+  onSnapshot: (url: string) => void;
+}) {
+  const host = useRef<HTMLDivElement>(null);
+  const puppet = useRef<Puppet | null>(null);
+  const layout = useRef<(() => void) | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [active, setActive] = useState<Action>("idle");
+  const [running, setRunning] = useState(false);
+
+  useEffect(() => {
+    const el = host.current;
+    const rig = rigOf(id);
+    if (!el || !rig) return;
+    let disposed = false;
+    let app: Application | null = null;
+    let initialized = false;
+    let observer: ResizeObserver | null = null;
+    let loaded: Puppet | null = null;
+    const destroy = () => {
+      observer?.disconnect();
+      if (app && initialized) {
+        app.destroy(true, { children: true });
+        initialized = false;
+      }
+    };
+    void (async () => {
+      try {
+        const [{ Application }, { loadPuppet }] = await Promise.all([
+          import("pixi.js"), import("@/app/game/stage/puppet"),
+        ]);
+        if (disposed) return;
+        app = new Application();
+        await app.init({
+          backgroundAlpha: 0, antialias: true, preference: "webgl",
+          resolution: Math.min(window.devicePixelRatio || 1, 2), autoDensity: true,
+          width: el.clientWidth, height: el.clientHeight,
+        });
+        initialized = true;
+        if (disposed) return destroy();
+        app.canvas.setAttribute("aria-hidden", "true");
+        el.appendChild(app.canvas);
+        loaded = await loadPuppet(rig, false);
+        if (disposed) {
+          loaded.destroy();
+          return destroy();
+        }
+        puppet.current = loaded;
+        app.stage.addChild(loaded.view);
+        const bounds = loaded.view.getLocalBounds();
+        const resize = () => {
+          if (!app || !loaded || disposed) return;
+          const width = el.clientWidth;
+          const height = el.clientHeight;
+          app.renderer.resize(width, height);
+          const target = el.dataset.size === "large" ? 400 : 160;
+          // Chừa quãng rộng cho cả tranh ra chiêu, tuyệt chiêu và đao vung.
+          const reach = rig.skeleton === "warrior" && rig.poses ? rig.height * 1.5 : bounds.width * 1.15;
+          const scale = Math.min(target / rig.height, (width - 32) / reach, (height - 48) / rig.height);
+          loaded.view.scale.set(scale);
+          loaded.view.position.set(width / 2 - (bounds.x + bounds.width / 2) * scale, height - 24);
+        };
+        layout.current = resize;
+        resize();
+        observer = new ResizeObserver(resize);
+        observer.observe(el);
+        loaded.reset();
+        app.render();
+        const snapshot = await app.renderer.extract.base64(loaded.view);
+        if (disposed) return;
+        onSnapshot(snapshot);
+        app.ticker.add((tick) => loaded?.update(Math.min(tick.deltaMS / 1000, 0.05)));
+        setReady(true);
+      } catch (cause) {
+        destroy();
+        if (!disposed) setError(cause instanceof Error ? cause.message : "Không dựng được sân khấu");
+      }
+    })();
+    return () => {
+      disposed = true;
+      if (timer.current) clearTimeout(timer.current);
+      puppet.current = null;
+      layout.current = null;
+      destroy();
+    };
+  }, [id, onSnapshot]);
+
+  useEffect(() => { layout.current?.(); }, [size]);
+
+  const cancel = () => {
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = null;
+    setRunning(false);
+  };
+  const apply = (kind: Action) => {
+    const p = puppet.current;
+    if (!p) return;
+    p.reset();
+    if (kind === "ko") p.setDown(true);
+    else if (kind !== "idle") p.play(kind);
+    setActive(kind);
+  };
+  const sequence = () => {
+    cancel();
+    setRunning(true);
+    const step = (index: number) => {
+      const action = ACTIONS[index];
+      if (!action) { setRunning(false); timer.current = null; return; }
+      apply(action.kind);
+      timer.current = setTimeout(() => step(index + 1), action.ms);
+    };
+    step(0);
+  };
+  return (
+    <section aria-label="Thử hoạt ảnh" className="overflow-hidden rounded-2xl border border-amber-900/70 bg-black/25">
+      <div className="flex items-center justify-between gap-3 border-b border-amber-900/50 px-4 py-2 text-sm">
+        <span role="status" aria-live="polite">
+          {error ? "Không tải được hình động" : !ready ? "Đang tải hình động…" : `${ACTIONS.find((a) => a.kind === active)!.label}${running ? " · Phát lần lượt" : ""}`}
+        </span>
+        <span className="text-xs text-stone-400">{size === "battle" ? "Cỡ trong trận · 160 px" : "Cỡ lớn · vừa khung"}</span>
+      </div>
+      <div ref={host} data-size={size} data-testid="rig-canvas" className={`relative w-full overflow-hidden bg-[radial-gradient(ellipse_at_bottom,#4a3021,transparent_70%)] ${size === "battle" ? "h-[260px]" : "h-[440px] sm:h-[520px]"}`} />
+      {error && <p role="alert" className="px-4 py-2 text-sm text-rose-300">{error}</p>}
+      <div className="flex flex-wrap gap-2 border-t border-amber-900/50 p-3">
+        {ACTIONS.map((action) => (
+          <button key={action.kind} type="button" disabled={!ready || !!error} aria-pressed={active === action.kind} data-action={action.kind}
+            className={button} onClick={() => { cancel(); apply(action.kind); }}>
+            {action.label}
+          </button>
+        ))}
+        <button type="button" disabled={!ready || !!error} onClick={running ? cancel : sequence}
+          className={`${button} border-amber-500 text-amber-200`}>
+          {running ? "Dừng phát" : "Phát lần lượt"}
+        </button>
+      </div>
+    </section>
+  );
+}

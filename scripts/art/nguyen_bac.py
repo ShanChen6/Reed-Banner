@@ -65,6 +65,10 @@ for name, part in layers.items():
 portrait = source.crop((425, -20, 855, 410)).resize((256, 256), Image.Resampling.LANCZOS)
 portrait.save(root/'portrait.webp', quality=86, method=6)
 assert (root/'portrait.webp').stat().st_size < 30_000
+# Ảnh đứng riêng để duyệt ở /demo/characters, không nằm trong phần tải rig.
+standing = source.copy()
+standing.thumbnail((360, 540))
+standing.save(root/'standing.webp', quality=66, method=6)
 # Đối chiếu trước nén: ráp các lớp phải khớp nguyên hình nguồn, không đổi tỷ lệ.
 assembled = Image.new('RGBA',source.size)
 for name in ['body','ribbon','cape','sash','head','armR','sword','arm']:

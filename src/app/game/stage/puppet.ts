@@ -221,6 +221,14 @@ function mage(
     view,
     height: rig.height,
     update,
+    reset() {
+      action = null;
+      down = false;
+      downT = 0;
+      ringA = 0;
+      drops.clear();
+      update(0);
+    },
     play(kind) {
       if (down || still) return;
       action = { kind: kind === "ultimate" ? "cast" : kind, t: 0, fired: false };

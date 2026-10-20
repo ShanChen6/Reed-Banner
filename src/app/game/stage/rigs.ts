@@ -98,7 +98,8 @@ export interface WarriorRig {
   readonly blade: readonly [Point, Point];
   readonly fxColor: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
-
+  /** Tranh bị hạ gục, chuyển từ rig và giữ lại tới khi hồi sinh. */
+  readonly defeat?: PoseArt;
 }
 
 /**
@@ -107,6 +108,8 @@ export interface WarriorRig {
  */
 export interface PoseArt {
   readonly name: string;
+  /** Tranh có thể thu nhỏ hơn các mảnh rig; tọa độ vẫn theo ảnh nguồn. */
+  readonly texScale?: number;
   /** Góc trên trái của phần đã cắt trong ảnh gốc. */
   readonly origin: Point;
   /** Điểm trong tranh đặt trùng chân nhân vật đứng (giữa hai bàn chân, mặt đất). */
@@ -134,6 +137,7 @@ export function partsOf(rig: Rig): readonly string[] {
         ...rig.cloth.map((c) => c.name),
         ...rig.covers.map((c) => c.name),
         ...Object.values(rig.poses ?? {}).map((p) => p.name),
+        ...(rig.defeat ? [rig.defeat.name] : []),
       ];
 }
 
@@ -308,9 +312,14 @@ const NGUYEN_BAC: WarriorRig = {
   covers: [{ name: "shoulder", box: { x: 335, y: 264, w: 146, h: 242 } }],
   blade: [{ x: 295, y: 825 }, { x: 20, y: 1350 }],
   fxColor: 0xff783d,
+  defeat: {
+    name: "pose-ko", texScale: 1 / 3,
+    origin: { x: 9, y: 63 }, anchor: { x: 850, y: 980 },
+    scale: 1, burst: { x: 1200, y: 820 },
+  },
   poses: {
-    cast: { name: "pose-cast", origin: { x: 13, y: 6 }, anchor: { x: 810, y: 1020 }, scale: 1.25, burst: { x: 1500, y: 245 } },
-    ultimate: { name: "pose-ultimate", origin: { x: 13, y: 10 }, anchor: { x: 650, y: 1006 }, scale: 1.25, burst: { x: 1500, y: 30 } },
+    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 13, y: 6 }, anchor: { x: 810, y: 1020 }, scale: 1.25, burst: { x: 1500, y: 245 } },
+    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 13, y: 10 }, anchor: { x: 650, y: 1006 }, scale: 1.25, burst: { x: 1500, y: 30 } },
   },
 };
 
@@ -324,6 +333,10 @@ const RIGS: Readonly<Record<string, Rig>> = {
 
 export function rigOf(id: string): Rig | null {
   return RIGS[id] ?? null;
+}
+
+export function rigIds(): readonly string[] {
+  return Object.keys(RIGS);
 }
 
 /** Đường dẫn ảnh của một lớp. */

@@ -11,6 +11,8 @@ export interface Puppet {
   readonly height: number;
   update(dt: number): void;
   play(kind: CueKind): void;
+  /** Về tư thế đứng ngay, dùng khi xem thử hoặc phát lại động tác. */
+  reset(): void;
   /** Gục: mờ, xám, ngả người, ngừng thở. */
   setDown(down: boolean): void;
   destroy(): void;
@@ -123,6 +125,12 @@ export function particles(parent: Container, color: number, count: number, gravi
     /** Còn hạt nào đang bay. */
     active() {
       return drops.some((d) => d.life > 0);
+    },
+    clear() {
+      for (const d of drops) {
+        d.life = 0;
+        d.s.visible = false;
+      }
     },
     spawn(x: number, y: number, vx: number, vy: number, size: number, life: number) {
       const d = drops.find((d) => d.life <= 0);
