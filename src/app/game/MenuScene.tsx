@@ -4,7 +4,8 @@
 // chỉ đổi phân cảnh, không tải lại trang.
 
 import { useSyncExternalStore } from "react";
-import { DongSonBand, LeaderFlag, ShieldIcon } from "./art/icons";
+import { DongSonBand, ShieldIcon } from "./art/icons";
+import { Logo } from "./art/logo";
 import { ONLINE_BATTLE_KEY } from "./battle/online";
 import type { ShellAccount } from "./GameShell";
 import type { Scene } from "./scene";
@@ -44,8 +45,9 @@ export default function MenuScene({ account }: { account: ShellAccount | null })
     <main className="demo-bg flex flex-1 flex-col items-center bg-[#17110e] px-4 py-8 text-stone-100 [--gold:#d4a24c] [--panel:#271d18]">
       <div className="flex w-full max-w-3xl flex-col items-center gap-6">
         <div className="text-center">
-          <LeaderFlag className="mx-auto size-12" />
-          <h1 className="mt-2 font-serif text-3xl font-bold">Cờ Lau</h1>
+          <h1 className="mx-auto w-72 max-w-full">
+            <Logo priority className="h-auto w-full" />
+          </h1>
           <DongSonBand className="mx-auto mt-3 w-40" />
           <p className="mt-3 text-sm text-stone-400">
             {account ? `Chào ${account.name}.` : "Đang chơi với tư cách khách, tiến độ gắn với trình duyệt này."}
