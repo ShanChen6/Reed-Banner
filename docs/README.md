@@ -26,7 +26,7 @@
 | [15-ke-hoach-do-hoa.md](design/15-ke-hoach-do-hoa.md) | Kế hoạch đồ họa và hoạt ảnh: art bible, kỹ thuật hoạt ảnh nhân vật, làm nhẹ ảnh, chống giật lag, trang trí, lộ trình Đ0–Đ9 (đề xuất) |
 | [16-prompt-nhan-vat.md](design/16-prompt-nhan-vat.md) | Prompt Copilot ráp sẵn cho 63 hình toàn thân: Đinh Bộ Lĩnh 3 thời kỳ, 6 tướng lịch sử, 12 sứ quân, 42 tướng thường |
 | [17-prompt-do-hoa.md](design/17-prompt-do-hoa.md) | Prompt Copilot ráp sẵn cho đồ họa ngoài nhân vật: 42 trang bị, 21 ô bàn cờ, 54 lớp nền trận, mẫu giao diện, tranh lớn, linh vật, hạt hiệu ứng |
-| [18-prompt-tu-the.md](design/18-prompt-tu-the.md) | Prompt ráp sẵn tranh tư thế ra chiêu và tuyệt chiêu cho 61 nhân vật đánh trận |
+| [18-prompt-tu-the.md](design/18-prompt-tu-the.md) | Prompt ráp sẵn tranh tư thế ra chiêu, tuyệt chiêu và bị hạ gục cho 61 nhân vật đánh trận |
 
 **Kỹ thuật** (`tech/`)
 
