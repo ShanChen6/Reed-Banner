@@ -46,8 +46,8 @@ function gearUp(side: SideConfig, set: string | null, tier: Tier): SideConfig {
  * - 3vs3: nhân vật chính + 2 nhân vật kèm, đấu 3 nhân vật kèm (như đội AI).
  * - 1vs1: nhân vật chính hoặc một nhân vật kèm, đấu một nhân vật kèm khác.
  * Phe đi trước luân phiên theo trận. `element` là nguyên tố của nhân vật chính; `gear` mặc đồ cho cả hai phe.
- * `level` dựng mọi nhân vật theo tiến trình tự dựng ở cấp đó (kỹ năng mở theo cấp, mỗi nhân vật kèm một
- * chiêu nhánh); bỏ trống là bản Luyện tập mở hết kỹ năng.
+ * `level` dựng mọi nhân vật theo tiến trình tự dựng ở cấp đó (ô kỹ năng mở theo cấp); bỏ trống là bản
+ * Luyện tập mở hết kỹ năng.
  */
 export function buildMatchups(
   mode: SimMode,

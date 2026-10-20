@@ -1,28 +1,21 @@
 "use client";
 
-// Bảng tiến trình của Chơi thử và Chơi online: cấp, kinh nghiệm, điểm kỹ năng, nâng kỹ năng, mua và chọn chiêu nhánh,
-// tuyệt chiêu nấc 3.
+// Bảng tiến trình của Chơi thử và Chơi online: cấp, kinh nghiệm, điểm kỹ năng, nâng kỹ năng theo ô.
 // Mọi luật nằm trong @/core/progress; ở đây chỉ hiển thị và gửi thao tác (Chơi thử áp tại chỗ, Chơi online gửi server).
 
 import { useState } from "react";
 import {
-  BRANCH_COST,
   companionById,
-  BRANCH_UNLOCK_LEVEL,
   heroSkills,
-  isHero,
   MAIN_ID,
   MAIN_SLOT_UNLOCK,
   mainSkills,
   mainSlotKey,
   MAX_LEVEL,
-  professionSkills,
   progressOf,
   scaleSkill,
   SKILL_MAX_LEVEL,
   totalXpFor,
-  ULTIMATE_UNLOCK_LEVEL,
-  ultimateOf,
   upgradeCost,
   xpToNext,
   type CharacterProgress,
@@ -152,7 +145,7 @@ function SkillRow({
 
 /**
  * `teamIds` là đội mang vào trận (nhân vật chính và nhân vật kèm). `locked` khi đang đánh: chỉ xem,
- * không nâng hay đổi chiêu nhánh. `onAction` trả về mã lỗi, hoặc null khi thành công. Không có `onReset`
+ * không nâng kỹ năng. `onAction` trả về mã lỗi, hoặc null khi thành công. Không có `onReset`
  * thì ẩn nút đặt lại (hồ sơ trên server).
  */
 export default function ProgressPanel({
@@ -213,23 +206,13 @@ export default function ProgressPanel({
       </div>
       {locked && (
         <p className="mb-2 opacity-70">
-          Đang trong trận: nâng kỹ năng và đổi chiêu nhánh sau khi trận kết
-          thúc.
+          Đang trong trận: nâng kỹ năng sau khi trận kết thúc.
         </p>
       )}
       <div className="grid gap-3 md:grid-cols-3">
         {teamIds.map((id) => {
           const p = progressOf(profile, id);
           const isMain = id === MAIN_ID;
-          // Nhân vật chính và tướng lịch sử nâng kỹ năng theo ô.
-          const slotKit = isMain || isHero(id);
-          const ultimate = slotKit ? undefined : ultimateOf(id);
-          const companion = slotKit
-            ? null
-            : [
-                ...professionSkills(companionProfession(id)),
-                ...(ultimate ? [ultimate] : []),
-              ];
           return (
             <div
               key={id}
@@ -243,116 +226,34 @@ export default function ProgressPanel({
               </div>
               <XpBar p={p} />
               <ul className="flex flex-col gap-1">
-                {slotKit
-                  ? (isMain
-                      ? mainSkills(profile.element)
-                      : heroSkills(companionOf(id)!.element, id)
-                    ).map((def) => {
-                      const slot = def.slot!;
-                      const key = mainSlotKey(slot);
-                      const unlock = MAIN_SLOT_UNLOCK[slot]!;
-                      return (
-                        <SkillRow
-                          key={def.id}
-                          def={def}
-                          level={p.skillLevels[key] ?? 1}
-                          lockedText={
-                            p.level < unlock ? `Mở ở cấp ${unlock}` : null
-                          }
-                          canUp={!locked && !busy}
-                          points={p.skillPoints}
-                          onUp={() =>
-                            commit({ type: "upgrade", character: id, key })
-                          }
-                        />
-                      );
-                    })
-                  : companion!.map((def) => {
-                      const owned =
-                        def.tier === 1 || p.branches.includes(def.id);
-                      const chosen = profile.branchChoice[id] ?? p.branches[0];
-                      return (
-                        <SkillRow
-                          key={def.id}
-                          def={def}
-                          level={p.skillLevels[def.id] ?? 1}
-                          lockedText={
-                            def.tier === 3
-                              ? p.level < ULTIMATE_UNLOCK_LEVEL
-                                ? `Tuyệt chiêu, mở ở cấp ${ULTIMATE_UNLOCK_LEVEL}`
-                                : null
-                              : owned
-                                ? null
-                                : p.level < BRANCH_UNLOCK_LEVEL
-                                  ? `Mở ở cấp ${BRANCH_UNLOCK_LEVEL}`
-                                  : null
-                          }
-                          canUp={!locked && !busy}
-                          points={p.skillPoints}
-                          onUp={() =>
-                            commit({
-                              type: "upgrade",
-                              character: id,
-                              key: def.id,
-                            })
-                          }
-                          extra={
-                            def.tier === 2 &&
-                            (owned ? (
-                              <button
-                                type="button"
-                                disabled={locked || busy}
-                                aria-pressed={chosen === def.id}
-                                onClick={() =>
-                                  commit({
-                                    type: "chooseBranch",
-                                    character: id,
-                                    skill: def.id,
-                                  })
-                                }
-                                className={`rounded px-1.5 py-0.5 text-[10px] ${chosen === def.id ? "bg-emerald-600 text-white" : "bg-black/15"}`}
-                                title="Mỗi trận mang 1 chiêu nhánh"
-                              >
-                                {chosen === def.id ? "Mang" : "Chọn"}
-                              </button>
-                            ) : (
-                              p.level >= BRANCH_UNLOCK_LEVEL && (
-                                <button
-                                  type="button"
-                                  disabled={
-                                    locked ||
-                                    busy ||
-                                    p.skillPoints < BRANCH_COST
-                                  }
-                                  onClick={() =>
-                                    commit({
-                                      type: "buyBranch",
-                                      character: id,
-                                      skill: def.id,
-                                    })
-                                  }
-                                  className="rounded bg-sky-700 px-1.5 py-0.5 text-[10px] text-white disabled:opacity-30"
-                                >
-                                  Mua ({BRANCH_COST})
-                                </button>
-                              )
-                            ))
-                          }
-                        />
-                      );
-                    })}
+                {(isMain
+                  ? mainSkills(profile.element)
+                  : heroSkills(companionOf(id)!.element, id)
+                ).map((def) => {
+                  const slot = def.slot!;
+                  const key = mainSlotKey(slot);
+                  const unlock = MAIN_SLOT_UNLOCK[slot]!;
+                  return (
+                    <SkillRow
+                      key={def.id}
+                      def={def}
+                      level={p.skillLevels[key] ?? 1}
+                      lockedText={
+                        p.level < unlock ? `Mở ở cấp ${unlock}` : null
+                      }
+                      canUp={!locked && !busy}
+                      points={p.skillPoints}
+                      onUp={() =>
+                        commit({ type: "upgrade", character: id, key })
+                      }
+                    />
+                  );
+                })}
               </ul>
-              {slotKit && !isMain && (
+              {!isMain && (
                 <p className="opacity-60">
-                  {PROFESSION_NAME[companionProfession(id)]} · tướng lịch sử, kỹ
-                  năng nâng theo ô như Đinh Bộ Lĩnh.
-                </p>
-              )}
-              {!slotKit && (
-                <p className="opacity-60">
-                  {PROFESSION_NAME[companionProfession(id)]} · chiêu nhánh nấc 2
-                  mua từ cấp {BRANCH_UNLOCK_LEVEL}, mỗi trận mang 1; tuyệt chiêu
-                  nấc 3 tự mở ở cấp {ULTIMATE_UNLOCK_LEVEL}.
+                  {PROFESSION_NAME[companionProfession(id)]} · kỹ năng nâng
+                  theo ô như Đinh Bộ Lĩnh, ô 5 là kỹ năng riêng.
                 </p>
               )}
             </div>
@@ -361,8 +262,8 @@ export default function ProgressPanel({
       </div>
       <p className="mt-2 opacity-60">
         Lên cấp nhận 1 điểm kỹ năng. Mỗi cấp kỹ năng +10% sức mạnh; cấp{" "}
-        {SKILL_MAX_LEVEL} giảm 10% năng lượng. Kỹ năng nhân vật chính nâng theo
-        ô nên giữ nguyên khi đổi nguyên tố. Đối thủ Tianwu cùng cấp với Đinh Bộ
+        {SKILL_MAX_LEVEL} giảm 10% năng lượng. Kỹ năng nâng theo ô nên nhân vật
+        chính giữ nguyên cấp kỹ năng khi đổi nguyên tố. Đối thủ Tianwu cùng cấp với Đinh Bộ
         Lĩnh.
       </p>
     </section>
