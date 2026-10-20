@@ -44,11 +44,11 @@ Từ 20/10/2026 mọi nhân vật kèm, dù là tướng thường, tướng l�
 
 | Nghề | Ô 5 thường làm gì | Sắc thái theo hệ (ví dụ) |
 |---|---|---|
-| Tướng sĩ | Dồn 240–300% ATK vào 1 đối thủ | Kim xuyên giáp, Mộc hút máu, Thủy đóng băng, Hỏa thiêu đốt, Thổ Khiên bản thân, Lôi xuyên Khiên và trừ năng lượng, Phong trượt ô |
-| Pháp sư | 110–150% ATK vào cả đội đối thủ | Kim giảm Thủ, Mộc hút máu, Thổ tăng Thủ đội mình, Phong Xua tan và trượt ô |
+| Tướng sĩ | Dồn 240–300% ATK vào 1 đối thủ | Kim xuyên giáp, Mộc hút máu, Thủy đóng băng, Hỏa thiêu đốt, Thổ Khiên bản thân, Lôi xuyên Khiên và trừ năng lượng, Phong tự xoay lốc xoáy |
+| Pháp sư | 110–150% ATK vào cả đội đối thủ | Kim giảm Thủ, Mộc hút máu, Thổ tăng Thủ đội mình, Phong Xua tan và tự xoay lốc xoáy |
 | Binh lính | Khiêu khích, Khiên, Phản đòn | Thủy đóng băng, Hỏa thiêu đốt kẻ đánh, Lôi trừ năng lượng, Phong cho năng lượng đội mình |
 | Y sư | Hồi 18–30% máu cả đội | Kim tăng Thủ, Hỏa tăng Công, Thổ thêm Khiên, Lôi cho năng lượng |
-| Mưu sĩ | Trừ năng lượng, lương, Câm lặng | Mộc hồi phục đội mình, Thổ phá ô, Lôi đánh thêm sát thương, Phong Xua tan và trượt ô |
+| Mưu sĩ | Trừ năng lượng, lương, Câm lặng | Mộc hồi phục đội mình, Thổ phá ô, Lôi đánh thêm sát thương, Phong Xua tan và tự xoay lốc xoáy |
 | Quân sư | Giảm Công/Thủ đối thủ hoặc tăng đội mình | Kim phá giáp, Mộc hồi phục, Thủy đóng băng, Hỏa thiêu đốt |
 
 ## 2. Bộ kỹ năng theo hệ
@@ -100,7 +100,7 @@ In đậm là 5 người khởi đầu (có sẵn, đội 3vs3 mặc định là
 | Lý Liệt | Hỏa | 3 000 | **Xích Hỏa Đoạt Kỳ** | 300% ATK 1 đối thủ, Thiêu đốt 15% ATK 3 lượt; phá chữ thập nhỏ |
 | Kha Sơn | Thổ | 1 500 | **Sơn Hà Trấn Kích** | 250% ATK 1 đối thủ; bản thân Khiên 20% máu; phá chữ thập nhỏ |
 | Tống Tấn | Lôi | 3 000 | **Lôi Đao Liên Trảm** | 270% ATK 1 đối thủ, xuyên Khiên, −30 năng lượng |
-| Hứa Lăng | Phong | 3 000 | **Truy Phong Đoạt Mệnh** | 240% ATK 1 đối thủ; cả đội +15 năng lượng; trượt 1 hàng/cột tối đa 2 ô |
+| Hứa Lăng | Phong | 3 000 | **Truy Phong Đoạt Mệnh** | 240% ATK 1 đối thủ; cả đội +15 năng lượng; tự xoay lốc xoáy tối đa 2 nấc |
 
 **☯️ Pháp sư**
 
@@ -112,7 +112,7 @@ In đậm là 5 người khởi đầu (có sẵn, đội 3vs3 mặc định là
 | Hà Vân | Hỏa | khởi đầu | **Hỏa Vũ Liệu Nguyên** | 150% ATK cả đội đối thủ, Thiêu đốt 15% ATK 2 lượt; phá vùng 3×3 |
 | Doãn Nham | Thổ | 3 000 | **Địa Mạch Bùng Phát** | 130% ATK cả đội đối thủ; đội mình Thủ +15% 2 lượt; phá vùng 3×3 |
 | Vũ Lôi | Lôi | 3 000 | **Thiên Lôi Giáng Thế** | 250% ATK 1 đối thủ, −30 năng lượng; phá 1 cột |
-| Liễu Yên | Phong | 3 000 | **Phong Ấn Cuồng Lưu** | 110% ATK cả đội đối thủ, Xua tan; trượt 1 hàng/cột tối đa 2 ô |
+| Liễu Yên | Phong | 3 000 | **Phong Ấn Cuồng Lưu** | 110% ATK cả đội đối thủ, Xua tan; tự xoay lốc xoáy tối đa 2 nấc |
 
 **🍙 Binh lính**
 
@@ -148,7 +148,7 @@ In đậm là 5 người khởi đầu (có sẵn, đội 3vs3 mặc định là
 | Ninh Hỏa | Hỏa | 1 500 | **Hỏa Thiêu Kho Lương** | Đối thủ −25 lương, mỗi người −25 năng lượng và Thiêu đốt 10% ATK 2 lượt |
 | Mã Nhạc | Thổ | 1 500 | **Đoạn Đạo Tuyệt Lương** | Đối thủ −30 lương, mỗi người −20 năng lượng; phá 6 ô ngẫu nhiên |
 | Từ Kinh | Lôi | 3 000 | **Kinh Lôi Đoạt Khí** | 150% ATK 1 đối thủ, −50 năng lượng, Câm lặng 1 lượt |
-| Bùi Phiêu | Phong | 3 000 | **Phiêu Phong Ly Gián** | Mỗi đối thủ −25 năng lượng, Xua tan; trượt 1 hàng/cột tối đa 2 ô |
+| Bùi Phiêu | Phong | 3 000 | **Phiêu Phong Ly Gián** | Mỗi đối thủ −25 năng lượng, Xua tan; tự xoay lốc xoáy tối đa 2 nấc |
 
 **📖 Quân sư**
 
@@ -160,7 +160,7 @@ In đậm là 5 người khởi đầu (có sẵn, đội 3vs3 mặc định là
 | Tôn Diệm | Hỏa | 3 000 | **Hỏa Công Liên Kế** | Cả đội đối thủ Công −20% và Thiêu đốt 12% ATK 2 lượt; đội mình +10 năng lượng |
 | Tạ Thạch | Thổ | 1 500 | **Bát Trận Thạch Lũy** | Cả đội Thủ +30% 2 lượt và Khiên 12% máu |
 | Mạc Vân | Lôi | 3 000 | **Lôi Trận Kinh Hồn** | Cả đội đối thủ Công −25% 2 lượt, −20 năng lượng; phá 6 ô ngẫu nhiên |
-| Phùng Phong | Phong | khởi đầu | **Phong Vân Biến Trận** | Xua tan và Công −30% cả đội đối thủ 2 lượt; đội mình +20 năng lượng; trượt 1 hàng/cột tối đa 2 ô |
+| Phùng Phong | Phong | khởi đầu | **Phong Vân Biến Trận** | Xua tan và Công −30% cả đội đối thủ 2 lượt; đội mình +20 năng lượng; tự xoay lốc xoáy tối đa 2 nấc |
 
 ## 5. Tướng lịch sử
 
@@ -186,7 +186,7 @@ Mười hai sứ quân là đối thủ thủ lĩnh của chiến dịch chươn
 | Trần Lãm | Trần Minh Công | Quân sư | Thủy | Bố Hải Khẩu | **Bố Hải Trấn Giang** | 60 | 80% ATK cả đội đối thủ, Công −30% 2 lượt, 35% Đóng băng; phá 4 ô |
 | Phạm Bạch Hổ | Phạm Phòng Át | Tướng sĩ | Hỏa | Đằng Châu | **Bạch Hổ Xuất Sơn** | 60 | 320% ATK 1 đối thủ, Thiêu đốt 20% ATK 2 lượt; bản thân Công +20% |
 | Ngô Xương Xí | Kiều công | Mưu sĩ | Kim | Bình Kiều | **Ngô Gia Di Mưu** | 60 | 240% ATK bỏ qua 40% Thủ, −50 năng lượng, Câm lặng 1 lượt; phá 6 ô |
-| Ngô Nhật Khánh | Ngô Nam công | Quân sư | Phong | Đường Lâm | **Đường Lâm Phong Khởi** | 60 | 60% ATK cả đội đối thủ, Xua tan, Công −25% 2 lượt; trượt 1 hàng/cột tối đa 2 ô |
+| Ngô Nhật Khánh | Ngô Nam công | Quân sư | Phong | Đường Lâm | **Đường Lâm Phong Khởi** | 60 | 60% ATK cả đội đối thủ, Xua tan, Công −25% 2 lượt; tự xoay lốc xoáy tối đa 2 nấc |
 | Nguyễn Khoan | Nguyễn Thái Bình | Binh lính | Thổ | Tam Đái | **Tam Đái Kiên Thành** | 60 | Cả đội Khiên 25% máu; bản thân Khiêu khích, Phản đòn 35% 2 lượt |
 | Kiều Công Hãn | Kiều Tam Chế | Pháp sư | Lôi | Phong Châu | **Phong Châu Lôi Kích** | 60 | 100% ATK cả đội đối thủ, −15 năng lượng; phá 4 ô |
 | Kiều Thuận | Kiều Lệnh công | Y sư | Mộc | Hồi Hồ | **Hồi Hồ Sinh Khí** | 60 | Hồi 25% máu và Hồi phục 6%/lượt 2 lượt cho cả đội |

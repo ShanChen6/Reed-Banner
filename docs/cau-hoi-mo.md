@@ -41,11 +41,11 @@
 
 - [ ] Người vẽ hoặc công cụ AI, ngân sách và thời điểm vẽ chân dung, trang bị; danh sách 12 sứ quân theo thứ tự chiến dịch. → [Hình ảnh](design/13-hinh-anh.md#25-định-dạng-giao-hàng)
 - [x] Hướng phong cách: lai hai tầng chi tiết, tranh lớn chi tiết và nhân vật trận gọn (Shan chốt 20/10/2026). → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#24-hai-tầng-chi-tiết-shan-chốt-20102026)
-- [ ] Công cụ hoạt ảnh nhân vật (Spine, Rive hay tự viết), chốt sau bước thử Đ0. → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#32-đề-xuất-chờ-chốt)
+- [x] Công cụ hoạt ảnh nhân vật: tự viết bằng code PixiJS, không mua Spine (Shan chốt sau bản thử Đ0, 20/10/2026). → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#32-đã-chốt-sau-bước-thử-đ0-shan-chốt-20102026)
 - [ ] Kiến trúc hiển thị: PixiJS cho nhân vật và hiệu ứng, bàn cờ giữ DOM tới khi đo thấy cần chuyển. → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#52-đề-xuất-ba-lớp-chồng-nhau-chờ-chốt)
 - [ ] Ngân sách dung lượng và mục tiêu hiệu năng. → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#61-ngân-sách-dung-lượng-điểm-xuất-phát)
 - [ ] Bảng linh vật 7 hệ và mức xuất hiện của linh vật trong hiệu ứng. → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#22-ngôn-ngữ-hình-ảnh-của-7-nguyên-tố)
-- [ ] Ai tách mảnh nhân vật và dựng xương hoạt ảnh. → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#44-quy-cách-mảnh-cắt-cho-họa-sĩ--công-cụ-ai)
+- [x] Ai tách mảnh và dựng xương: Shan tạo ảnh bằng Copilot và tách lớp bằng live2dlayer, Claude dựng động tác (20/10/2026). → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#44-quy-cách-mảnh-cắt-cho-họa-sĩ--công-cụ-ai)
 - [ ] Hai font tiêu đề và nội dung có đủ dấu tiếng Việt. → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#83-chữ)
 - [ ] Cho phép đổi phím trong cài đặt; phím tắt Túi đồ và xem chi tiết sát thương. → [Giao diện](design/11-giao-dien.md#23-bàn-phím)
 
