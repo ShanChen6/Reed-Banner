@@ -15,6 +15,12 @@ const SWING = {
   cast: { windup: 0.4, strike: -1.15, at: 0.45, hit: 0.6, back: [0.75, 1.35], end: 1.4 },
 } as const;
 
+/** Giáo dựng đứng đẩy tới nhẹ, tránh quay cả cán dài như kiếm. */
+const SPEAR_SWING = {
+  attack: { ...SWING.attack, windup: -0.06, strike: 0.22 },
+  cast: { ...SWING.cast, windup: -0.08, strike: 0.28 },
+} as const;
+
 /**
  * Nhịp của tranh tư thế (giây): `swap` đổi từ hình động sang tranh, `hit` tóe tia sáng, `out` bắt đầu đổi
  * về, `end` xong. `dash` là quãng lướt tới, `lift` là độ nhảy lên (tuyệt chiêu bổ từ trên xuống).
@@ -41,9 +47,9 @@ export function warrior(
   view.addChild(body);
 
   const L = layers(rig.texScale);
-  const cloth = (behind: boolean) => {
+  const cloth = (behind: boolean, overArms = false) => {
     for (const c of rig.cloth)
-      if (!!c.behind === behind) L.mesh(img(c.name), c.box, body, c.wind);
+      if (!!c.behind === behind && !!c.overArms === overArms) L.mesh(img(c.name), c.box, body, c.wind);
   };
   cloth(true);
   L.sprite(img("body"), parts.body, body);
@@ -66,6 +72,7 @@ export function warrior(
   });
   L.sprite(img("arm"), parts.arm, arm);
   for (const c of rig.covers) L.sprite(img(c.name), c.box, body);
+  cloth(false, true);
   const head = L.joint(joints.neck.x, joints.neck.y, body);
   L.sprite(img("head"), parts.head, head);
 
@@ -151,6 +158,7 @@ export function warrior(
     let headRot = Math.sin(t * 0.8 + 0.4) * 0.012 * life;
     let lean = 0;
     let shiftX = 0;
+    let thrust = 0;
     let tint = 0xffffff;
     let aura = 0.18 + Math.sin(t * 3) * 0.08 * life;
     let gust = 1;
@@ -197,7 +205,8 @@ export function warrior(
       const a = action.t;
       if (action.kind === "attack" || action.kind === "cast" || action.kind === "ultimate") {
         const swingKind = action.kind === "attack" ? "attack" : "cast";
-        const S = SWING[swingKind];
+        const spear = rig.weapon === "spear";
+        const S = (spear ? SPEAR_SWING : SWING)[swingKind];
         const wind = pulse(a, 0, S.at);
         const strike = pulse(a, S.at, S.hit);
         const back = pulse(a, S.back[0], S.back[1]);
@@ -207,11 +216,12 @@ export function warrior(
         headRot += -0.03 * strike * (1 - back);
         lean = (-0.015 * wind * (1 - strike) + 0.035 * strike) * (1 - back);
         shiftX = 28 * strike * (1 - back);
+        thrust = spear ? 12 * strike * (1 - back) : 0;
         gust = 1 + 1.4 * strike * (1 - back);
         if (swingKind === "cast") aura += 1.4 * wind * (1 - back);
         else aura += 0.5 * strike * (1 - back);
         // Vệt kiếm: cung từ góc kiếm hiện tại kéo ngược về chỗ bắt đầu chém.
-        if (a >= S.at && a <= S.hit + 0.05) {
+        if (!spear && a >= S.at && a <= S.hit + 0.05) {
           trailA = swingKind === "cast" ? 1 : 0.75;
           trailFrom = baseAngle + armRot;
           trailTo = baseAngle + S.windup;
@@ -220,7 +230,7 @@ export function warrior(
           action.fired = true;
           const big = swingKind === "cast";
           const ang = baseAngle + S.strike;
-          const tx = sx + Math.cos(ang) * reach;
+          const tx = sx + thrust + Math.cos(ang) * reach;
           const ty = sy + Math.sin(ang) * reach;
           for (let i = 0; i < (big ? 30 : 12); i++) {
             const d = (Math.random() - 0.5) * 1.4;
@@ -253,6 +263,7 @@ export function warrior(
       fallen.y = -30 * (1 - fall);
     }
     arm.rotation = down ? 0.15 * ease(downT) : armRot;
+    arm.x = joints.shoulder.x + thrust;
     armR.rotation = armRRot;
     head.rotation = headRot;
     auras.forEach((s, i) => {
