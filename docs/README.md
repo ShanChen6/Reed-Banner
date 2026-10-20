@@ -1,6 +1,6 @@
 # Tài liệu Cờ Lau (Reed Banner)
 
-> Cập nhật: 18/10/2026 · Trạng thái: thiết kế, chưa triển khai code.
+> Cập nhật: 20/10/2026
 
 ## Mục lục
 
@@ -23,6 +23,7 @@
 | [12-ky-nang-nhan-vat-chinh.md](design/12-ky-nang-nhan-vat-chinh.md) | 49 kỹ năng của nhân vật chính theo 7 nguyên tố |
 | [13-hinh-anh.md](design/13-hinh-anh.md) | Phong cách và bảng màu bộ hình SVG, bản yêu cầu cho họa sĩ |
 | [14-nhan-vat.md](design/14-nhan-vat.md) | Danh sách 61 nhân vật: 42 tướng thường, 6 tướng lịch sử, 12 sứ quân, kỹ năng riêng, cân bằng |
+| [15-ke-hoach-do-hoa.md](design/15-ke-hoach-do-hoa.md) | Kế hoạch đồ họa và hoạt ảnh: art bible, kỹ thuật hoạt ảnh nhân vật, làm nhẹ ảnh, chống giật lag, trang trí, lộ trình Đ0–Đ9 (đề xuất) |
 
 **Kỹ thuật** (`tech/`)
 

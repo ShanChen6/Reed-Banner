@@ -1,12 +1,14 @@
 # Hình ảnh & yêu cầu cho họa sĩ
 
-> Cập nhật: 19/10/2026
+> Cập nhật: 20/10/2026
+>
+> Kế hoạch đồ họa hoàn chỉnh (hoạt ảnh nhân vật, làm nhẹ ảnh, hiệu năng, trang trí) ở [Kế hoạch đồ họa](15-ke-hoach-do-hoa.md).
 
 File này có hai phần. Phần 1 ghi phong cách của bộ hình dựng bằng code (SVG) đang dùng trong game. Phần 2 là **bản yêu cầu gửi họa sĩ** (hoặc dùng làm đầu vào cho công cụ AI vẽ ảnh) cho phần code không vẽ được: chân dung nhân vật và hình trang bị.
 
 ## 1. Bộ hình dựng bằng code
 
-- Toàn bộ ô cờ, 7 ô đặc biệt mỗi bản, biểu tượng 7 nguyên tố, cờ lau thủ lĩnh, lương thực, khiên và khung giao diện được vẽ bằng SVG trong `src/app/demo/art/`.
+- Toàn bộ ô cờ, 7 ô đặc biệt mỗi bản, biểu tượng 7 nguyên tố, cờ lau thủ lĩnh, lương thực, khiên và khung giao diện được vẽ bằng SVG trong `src/app/game/art/`.
 - Xem toàn bộ tại trang `/demo/art`.
 - **Phong cách:** lấy cảm hứng từ tranh khắc gỗ dân gian và hoa văn trống đồng Đông Sơn: nét mực đậm, mảng màu phẳng, gần như không đổ bóng (tối đa một mảng sáng nhẹ ở mép trên).
 - **Đọc được bàn cờ:** mỗi loại ô khác nhau cả màu nền, độ sáng lẫn hình vẽ, để người khó phân biệt màu vẫn chơi được.
