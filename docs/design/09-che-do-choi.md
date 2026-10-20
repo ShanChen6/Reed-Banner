@@ -209,3 +209,40 @@ Trang `/daily`, code ở `src/core/daily/` (đề và điểm), `src/server/dail
   - Bảng hiện 20 người đầu, kèm hạng của mình. Khách hiện "Khách" kèm 4 ký tự cuối của id.
 - **Thưởng:** 150 vàng khi thắng, 50 vàng khi thua. Không có kinh nghiệm hay món rơi, vì đội là đội của đề.
 - Mô phỏng 60 đề: AI Thường thắng AI Khó 65%, trung bình 39 lượt (hai phe).
+
+### 5.2 Nhiệm vụ, thành tựu, điểm danh (Claude đặt 20/10/2026, chờ Shan duyệt)
+
+Trang `/quests`, code ở `src/core/progress/quests.ts` và `achievements.ts`, lưu trong hồ sơ (`quests`).
+
+- **Thời điểm đổi:** ngày đổi lúc 0 giờ giờ Việt Nam, tuần bắt đầu thứ Hai.
+- **Cách đếm:** server cộng tiến độ khi trận online kết thúc (cùng lúc cộng thưởng). Trận ở /demo không tính.
+- **Nhận thưởng:** người chơi bấm Nhận; server kiểm tra lại rồi mới cộng vàng.
+
+| Nhiệm vụ ngày | Mục tiêu | Vàng |
+|---|---|---|
+| Đánh trận | 3 | 60 |
+| Thắng trận | 2 | 80 |
+| Nhặt ô vàng trên bàn cờ | 30 | 60 |
+| Đánh thử thách ngày | 1 | 50 |
+
+| Nhiệm vụ tuần | Mục tiêu | Vàng |
+|---|---|---|
+| Thắng trận | 15 | 400 |
+| Thắng trận chiến dịch hoặc đánh trùm | 5 | 300 |
+| Qua tầng tháp | 10 | 300 |
+| Vượt đợt sinh tồn | 20 | 300 |
+| Đánh thử thách ngày (số hôm) | 5 | 300 |
+
+- **Thắng trận sinh tồn:** tính là thắng khi vượt qua ít nhất 1 đợt.
+- **Thành tựu (nhận một lần):**
+  - Thắng trận: 1 trận (50 vàng), 50 trận (300), 200 trận (1000).
+  - Qua hết chương 1 chiến dịch: 500.
+  - Tháp tầng 10 / 25: 300 / 800.
+  - Sinh tồn 10 / 20 đợt: 300 / 800.
+  - Thử thách ngày 7 hôm: 300.
+  - Điểm danh 7 ngày liền: 300.
+  - Đinh Bộ Lĩnh cấp 10 / 30: 200 / 1000.
+- **Điểm danh:**
+  - Mỗi ngày một lần.
+  - Chuỗi 7 ngày nhận lần lượt 50, 60, 80, 100, 120, 150, 300 vàng.
+  - Bỏ một ngày thì chuỗi về ngày 1. Đủ 7 ngày thì bắt đầu chuỗi mới.

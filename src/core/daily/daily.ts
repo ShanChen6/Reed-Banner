@@ -13,22 +13,24 @@ import {
 } from "../battle";
 import type { SpawnWeights } from "../board";
 import { HOME_TERRAIN, RAID_STAGES, stageFighter } from "../campaign";
-import { autoProgress, leveledFoe, newProfile, profileTeam } from "../progress";
+import {
+  autoProgress,
+  leveledFoe,
+  newProfile,
+  profileTeam,
+  vnDay,
+} from "../progress";
 import { createRng, type Rng } from "../rng";
 import { SHOP_COMPANIONS, STARTER_COMPANIONS } from "../roster";
 
-/** Ngày đổi lúc 0 giờ giờ Việt Nam (UTC+7). */
-export const DAILY_UTC_OFFSET_MS = 7 * 60 * 60 * 1000;
 /** Mọi người cùng cấp và không trang bị, để chỉ còn tài đánh. */
 export const DAILY_LEVEL = 10;
 export const DAILY_DIFFICULTY: Difficulty = "hard";
 /** Vàng thưởng khi đánh xong đề ngày. */
 export const DAILY_GOLD = { win: 150, loss: 50 } as const;
 
-/** Khóa ngày dạng YYYY-MM-DD theo giờ Việt Nam. */
-export function dailyKey(now: number): string {
-  return new Date(now + DAILY_UTC_OFFSET_MS).toISOString().slice(0, 10);
-}
+/** Khóa ngày dạng YYYY-MM-DD, đổi lúc 0 giờ giờ Việt Nam (cùng mốc với nhiệm vụ ngày). */
+export const dailyKey = vnDay;
 
 const POOL: readonly FighterConfig[] = [
   ...STARTER_COMPANIONS,
