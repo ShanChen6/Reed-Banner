@@ -1,6 +1,6 @@
 "use client";
 
-// Bảng xếp hạng: chiến dịch (số màn, rồi tổng lượt ít nhất), từng màn (ít lượt nhất), leo tháp, sinh tồn.
+// Bảng xếp hạng: chiến dịch (số màn, rồi tổng lượt ít nhất), từng màn (ít lượt nhất), leo tháp, sinh tồn, đấu trường.
 // Điểm do server ghi sau mỗi lần cộng thưởng.
 
 import Link from "next/link";
@@ -20,13 +20,14 @@ interface BoardResponse {
 }
 
 const TABS: readonly {
-  id: "campaign" | "stage" | "tower" | "survival";
+  id: "campaign" | "stage" | "tower" | "survival" | "arena";
   label: string;
 }[] = [
   { id: "campaign", label: "Chiến dịch" },
   { id: "stage", label: "Từng màn" },
   { id: "tower", label: "Leo tháp" },
   { id: "survival", label: "Sinh tồn" },
+  { id: "arena", label: "Đấu trường" },
 ];
 
 const NOTE: Record<(typeof TABS)[number]["id"], string> = {
@@ -35,12 +36,15 @@ const NOTE: Record<(typeof TABS)[number]["id"], string> = {
   stage: "Thắng màn này với ít lượt nhất (tính cả hai phe).",
   tower: "Tầng cao nhất đã qua.",
   survival: "Số đợt nhiều nhất đã vượt qua.",
+  arena:
+    "Điểm đấu trường bóng ma: thắng cộng, thua trừ, nhiều hơn khi gặp đối thủ mạnh hơn.",
 };
 
 function scoreText(board: BoardId, score: number): string {
   const d = describeScore(board, score);
   if (board === "campaign") return `${d.main} màn · ${d.turns} lượt`;
   if (board.startsWith("stage:")) return `${d.main} lượt`;
+  if (board === "arena") return `${d.main} điểm`;
   return board === "tower" ? `Tầng ${d.main}` : `${d.main} đợt`;
 }
 

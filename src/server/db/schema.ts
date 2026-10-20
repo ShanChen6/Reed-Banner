@@ -99,3 +99,25 @@ export const leaderboardScores = pgTable(
   },
   (t) => [primaryKey({ columns: [t.board, t.ownerId] }), index("leaderboard_rank_idx").on(t.board, t.score)],
 );
+
+/**
+ * Đấu trường bóng ma: điểm, thành tích, đội phòng thủ (bản chụp), các đối thủ đang bày ra và số trận đã đánh
+ * trong ngày. Điểm đổi bằng phép cộng trong SQL để hai trận cùng lúc không ghi đè nhau.
+ */
+export const arenaPlayers = pgTable(
+  "arena_players",
+  {
+    ownerId: text("owner_id").primaryKey(),
+    rating: integer("rating").notNull(),
+    defense: jsonb("defense"),
+    offers: jsonb("offers").notNull(),
+    wins: integer("wins").notNull().default(0),
+    losses: integer("losses").notNull().default(0),
+    defenseWins: integer("defense_wins").notNull().default(0),
+    defenseLosses: integer("defense_losses").notNull().default(0),
+    day: text("day").notNull().default(""),
+    attacks: integer("attacks").notNull().default(0),
+    updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+  },
+  (t) => [index("arena_players_rating_idx").on(t.rating)],
+);

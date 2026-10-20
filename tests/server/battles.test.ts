@@ -26,7 +26,15 @@ import {
 import { MemoryMatchStore } from "../../src/server/store";
 import { dailyBoard, MemoryDailyStore } from "../../src/server/daily";
 import { MemoryLeaderboardStore } from "../../src/server/leaderboard";
-import { DAILY_GOLD } from "../../src/core";
+import { arenaView, MemoryArenaStore } from "../../src/server/arena";
+import {
+  ARENA_ATTACKS_PER_DAY,
+  ARENA_OFFERS,
+  ARENA_START,
+  ARENA_WIN_GOLD,
+  arenaDay,
+  DAILY_GOLD,
+} from "../../src/core";
 
 const T0 = 5_000_000;
 const input = {
@@ -641,5 +649,134 @@ describe("thử thách hằng ngày", () => {
       board.top[0]!.name,
       "Khách g_b".replace("g_b", "g_b".slice(-4)),
     );
+  });
+});
+
+describe("đấu trường bóng ma", () => {
+  it("bày đối thủ, đánh đội phòng thủ của người khác, cộng điểm cả hai bên, hết lượt trong ngày", async () => {
+    const store = new MemoryMatchStore();
+    const profiles = new MemoryProfileStore();
+    const arena = new MemoryArenaStore();
+    const leaderboard = new MemoryLeaderboardStore();
+    const base = { arena, profiles, leaderboard, now: T0 };
+    // g_b mở đấu trường trước: có đội phòng thủ, lên bảng ở điểm khởi đầu.
+    await arenaView("g_b", "view", { ...base, seed: 1 });
+    const view = await arenaView("g_a", "view", { ...base, seed: 2 });
+    assert.equal(view.rating, ARENA_START);
+    assert.equal(view.attacksLeft, ARENA_ATTACKS_PER_DAY);
+    assert.equal(view.offers.length, ARENA_OFFERS);
+    const real = view.offers.findIndex((o) => !o.bot);
+    assert.ok(real >= 0);
+    assert.equal(view.offers.filter((o) => o.bot).length, ARENA_OFFERS - 1);
+    // Không lộ id chủ đội.
+    assert.ok(view.offers.every((o) => !("owner" in o)));
+
+    assert.equal(parseNewBattle({ arena: ARENA_OFFERS }), null);
+    assert.equal(parseNewBattle({ arena: "0" }), null);
+    const deps = {
+      store,
+      profiles,
+      arena,
+      leaderboard,
+      now: T0,
+      seed: 6,
+      newId: () => "m_a1",
+    };
+    const r = await createBattleFor(
+      "g_a",
+      parseNewBattle({ arena: real })!,
+      deps,
+    );
+    assert.ok(r.ok);
+    assert.equal(r.view.arena!.name, view.offers[real]!.name);
+    assert.equal(
+      r.view.battle.sides[1].fighters[0]!.name,
+      view.offers[real]!.name,
+    );
+    // Đối thủ đã bày bị xóa sau khi đánh.
+    assert.equal((await arena.get("g_a"))!.offers.length, 0);
+
+    const rec = (await store.get(r.id))!;
+    const battle = structuredClone(rec.match.battle);
+    battle.sides[1].fighters.forEach((f) => (f.hp = 0));
+    battle.winner = 0;
+    await store.save(
+      { ...rec, match: { ...rec.match, battle, seq: rec.match.seq + 1 } },
+      rec.match.seq,
+    );
+    const goldBefore = (await loadProfile(profiles, "g_a")).profile.gold;
+    const end = await getBattle(r.id, "g_a", {
+      store,
+      profiles,
+      arena,
+      leaderboard,
+      now: T0 + 1000,
+    });
+    assert.ok(end.ok && end.outcome?.arena);
+    assert.deepEqual(end.outcome.arena, {
+      won: true,
+      opponent: view.offers[real]!.name,
+      delta: 16,
+      rating: ARENA_START + 16,
+      gold: ARENA_WIN_GOLD,
+    });
+    const p = (await loadProfile(profiles, "g_a")).profile;
+    assert.equal(
+      p.gold,
+      goldBefore + end.outcome.rewards.gold + ARENA_WIN_GOLD,
+    );
+    const b = (await arena.get("g_b"))!;
+    assert.equal(b.rating, ARENA_START - 8);
+    assert.equal(b.defenseLosses, 1);
+    assert.deepEqual(await leaderboard.rankOf("arena", "g_a"), {
+      rank: 1,
+      score: ARENA_START + 16,
+    });
+    assert.deepEqual(await leaderboard.rankOf("arena", "g_b"), {
+      rank: 2,
+      score: ARENA_START - 8,
+    });
+
+    // Mở lại trang thì có đối thủ mới; dùng hết lượt trong ngày thì không đánh được nữa.
+    const again = await arenaView("g_a", "view", { ...base, seed: 3 });
+    assert.equal(again.offers.length, ARENA_OFFERS);
+    assert.equal(again.attacksLeft, ARENA_ATTACKS_PER_DAY - 1);
+    assert.equal(again.wins, 1);
+    for (let i = 1; i < ARENA_ATTACKS_PER_DAY; i++)
+      assert.ok(
+        await arena.useAttack("g_a", arenaDay(T0), ARENA_ATTACKS_PER_DAY, T0),
+      );
+    const limited = await createBattleFor(
+      "g_a",
+      parseNewBattle({ arena: 0 })!,
+      { ...deps, newId: () => "m_a2" },
+    );
+    assert.deepEqual(limited, { ok: false, error: "arenaLimit" });
+    assert.equal(httpStatus("arenaLimit"), 409);
+  });
+
+  it("chủ đội đã bị xóa thì báo và bày đối thủ mới", async () => {
+    const arena = new MemoryArenaStore();
+    const profiles = new MemoryProfileStore();
+    await arena.ensure("g_a", T0);
+    await arena.setOffers("g_a", [
+      {
+        owner: "g_xoa",
+        name: "Khách _xoa",
+        rating: 1000,
+        members: [],
+        power: 0,
+      },
+    ]);
+    const r = await createBattleFor("g_a", parseNewBattle({ arena: 0 })!, {
+      store: new MemoryMatchStore(),
+      profiles,
+      arena,
+      now: T0,
+      seed: 1,
+      newId: () => "m_g",
+    });
+    assert.deepEqual(r, { ok: false, error: "arenaGone" });
+    assert.equal((await arena.get("g_a"))!.offers.length, 0);
   });
 });
