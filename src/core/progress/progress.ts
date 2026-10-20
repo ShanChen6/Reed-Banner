@@ -336,9 +336,11 @@ export interface BattleRewards {
 export function battleRewards(
   state: BattleState,
   side: SideIndex,
+  /** Ghi đè thắng/thua (sinh tồn tính thắng khi vượt qua ít nhất một đợt). */
+  wonOverride?: boolean,
 ): BattleRewards {
   const own = state.sides[side];
-  const won = state.winner === side;
+  const won = wonOverride ?? state.winner === side;
   const n = own.fighters.length;
   const has = (prof: Profession) =>
     own.fighters.some((f) => f.profession === prof);

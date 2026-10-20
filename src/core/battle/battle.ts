@@ -156,6 +156,15 @@ export type BattleEvent =
       readonly effect: EffectKind;
     }
   | { readonly type: "ko"; readonly side: SideIndex; readonly fighter: number }
+  /** Sinh tồn: đợt đối thủ mới vào sân. */
+  | { readonly type: "wave"; readonly wave: number }
+  /** Sinh tồn: người đã gục đứng dậy giữa hai đợt. */
+  | {
+      readonly type: "revive";
+      readonly side: SideIndex;
+      readonly fighter: number;
+      readonly hp: number;
+    }
   | { readonly type: "timeout"; readonly side: SideIndex }
   | { readonly type: "end"; readonly winner: SideIndex };
 
@@ -209,6 +218,42 @@ export interface BattleConfig {
 
 const AI_SEED_SALT = 0x9e3779b9;
 
+function buildSide(s: SideConfig, solo: boolean): Side {
+  if (s.fighters.length === 0)
+    throw new RangeError("Mỗi phe cần ít nhất một nhân vật");
+  if (s.leader < 0 || s.leader >= s.fighters.length)
+    throw new RangeError("Thủ lĩnh không hợp lệ");
+  if (s.hpRatio && !(s.hpRatio[s.leader]! > 0))
+    throw new RangeError("Thủ lĩnh phải còn máu");
+  for (const f of s.fighters) {
+    for (const id of f.skills ?? [])
+      if (!getSkill(id)) throw new RangeError(`Kỹ năng không tồn tại: ${id}`);
+  }
+  return {
+    fighters: s.fighters.map((f, i) => {
+      const maxHp = solo ? Math.round(f.maxHp * R.SOLO_HP_MULTIPLIER) : f.maxHp;
+      const ratio = Math.max(0, Math.min(1, s.hpRatio?.[i] ?? 1));
+      // Còn chút máu thì không làm tròn thành 0 (đã ngã).
+      const hp = ratio > 0 ? Math.max(1, Math.round(maxHp * ratio)) : 0;
+      return {
+        ...f,
+        maxHp,
+        hp,
+        energy: 0,
+        spirit: R.SPIRIT_MAX,
+        effects: [],
+      };
+    }),
+    leader: s.leader,
+    food: s.food ?? R.FOOD_START,
+    rage: 0,
+    passiveTurns: 0,
+    freeSlides: 0,
+    gold: 0,
+    books: 0,
+  };
+}
+
 export function createBattle(config: BattleConfig): {
   state: BattleState;
   events: BattleEvent[];
@@ -218,43 +263,7 @@ export function createBattle(config: BattleConfig): {
   const rng = createRng(config.seed);
   const board = generateBoard(rng, weights);
   const solo = config.sides.every((s) => s.fighters.length === 1);
-  const sides = config.sides.map((s): Side => {
-    if (s.fighters.length === 0)
-      throw new RangeError("Mỗi phe cần ít nhất một nhân vật");
-    if (s.leader < 0 || s.leader >= s.fighters.length)
-      throw new RangeError("Thủ lĩnh không hợp lệ");
-    if (s.hpRatio && !(s.hpRatio[s.leader]! > 0))
-      throw new RangeError("Thủ lĩnh phải còn máu");
-    for (const f of s.fighters) {
-      for (const id of f.skills ?? [])
-        if (!getSkill(id)) throw new RangeError(`Kỹ năng không tồn tại: ${id}`);
-    }
-    return {
-      fighters: s.fighters.map((f, i) => {
-        const maxHp = solo
-          ? Math.round(f.maxHp * R.SOLO_HP_MULTIPLIER)
-          : f.maxHp;
-        const ratio = Math.max(0, Math.min(1, s.hpRatio?.[i] ?? 1));
-        // Còn chút máu thì không làm tròn thành 0 (đã ngã).
-        const hp = ratio > 0 ? Math.max(1, Math.round(maxHp * ratio)) : 0;
-        return {
-          ...f,
-          maxHp,
-          hp,
-          energy: 0,
-          spirit: R.SPIRIT_MAX,
-          effects: [],
-        };
-      }),
-      leader: s.leader,
-      food: s.food ?? R.FOOD_START,
-      rage: 0,
-      passiveTurns: 0,
-      freeSlides: 0,
-      gold: 0,
-      books: 0,
-    };
-  }) as [Side, Side];
+  const sides = config.sides.map((s) => buildSide(s, solo)) as [Side, Side];
   const first = config.firstSide ?? 0;
   const state: BattleState = {
     sides,
@@ -279,6 +288,57 @@ export function createBattle(config: BattleConfig): {
   };
   const ctx = new Ctx(state, config.now ?? 0);
   ctx.beginSideTurn(first);
+  return { state, events: ctx.events };
+}
+
+export interface WaveConfig {
+  /** Số thứ tự đợt mới. */
+  readonly wave: number;
+  /** Đội đối thủ của đợt, thay toàn bộ phe 1. */
+  readonly foes: SideConfig;
+  /** Người còn sống của phe 0 hồi thêm chừng này phần máu tối đa. */
+  readonly heal: number;
+  /** Lương phe 0 khi vào đợt (đã cộng hồi phục và trừ phí hồi sinh). */
+  readonly food: number;
+  /** Vị trí phe 0 đứng dậy, với `reviveHp` phần máu tối đa và 0 năng lượng. */
+  readonly revive: readonly number[];
+  readonly reviveHp: number;
+}
+
+/**
+ * Sinh tồn: phe 0 vừa thắng một đợt thì đợt kế vào sân trên cùng bàn cờ. Phe 0 giữ năng lượng và Nộ, hồi máu
+ * cố định, xóa hiệu ứng, tinh thần và đếm lượt bắt đầu lại; phe 0 đi trước.
+ */
+export function beginWave(
+  prev: BattleState,
+  config: WaveConfig,
+  now = 0,
+): { state: BattleState; events: BattleEvent[] } {
+  if (prev.winner !== 0)
+    throw new RangeError("Chỉ sang đợt mới khi phe 0 vừa thắng");
+  const state = structuredClone(prev);
+  const ctx = new Ctx(state, now);
+  const own = state.sides[0];
+  ctx.emit({ type: "wave", wave: config.wave });
+  own.fighters.forEach((f, i) => {
+    f.effects = [];
+    f.spirit = R.SPIRIT_MAX;
+    if (isAlive(f)) {
+      f.hp = Math.min(f.maxHp, f.hp + Math.round(f.maxHp * config.heal));
+    } else if (config.revive.includes(i)) {
+      f.hp = Math.max(1, Math.round(f.maxHp * config.reviveHp));
+      f.energy = 0;
+      ctx.emit({ type: "revive", side: 0, fighter: i, hp: f.hp });
+    }
+  });
+  own.food = Math.max(0, Math.min(R.FOOD_MAX, config.food));
+  own.passiveTurns = 0;
+  own.freeSlides = 0;
+  state.sides[1] = buildSide(config.foes, false);
+  state.lastActors = [state.lastActors[0], null];
+  state.turn = { ...state.turn, number: 0 };
+  state.winner = null;
+  ctx.beginSideTurn(0);
   return { state, events: ctx.events };
 }
 

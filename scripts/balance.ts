@@ -7,6 +7,7 @@
 // --team heroes|default; --sweep 0..6 thử người chơi hơn đối thủ 0 tới 6 cấp.
 // Đánh trùm: thêm --raid 1|2|3 (với --stage all chỉ chạy 12 màn có sứ quân).
 // Leo tháp: --tower [--level 10] --battles 50 in số tầng AI Thường leo được.
+// Sinh tồn: --survival [--level 10] --battles 50 in số đợt AI Thường vượt qua.
 
 import { parseArgs } from "node:util";
 import {
@@ -16,6 +17,7 @@ import {
   runBattle,
   stageById,
   simulateTower,
+  simulateSurvival,
   isRaidTier,
   RAID_STAGES,
   raidLevel,
@@ -53,6 +55,7 @@ const { values } = parseArgs({
     sweep: { type: "string" },
     raid: { type: "string" },
     tower: { type: "boolean", default: false },
+    survival: { type: "boolean", default: false },
     json: { type: "boolean", default: false },
   },
 });
@@ -77,6 +80,28 @@ const num = (x: number) => x.toFixed(1);
 if (values.tower) {
   runTower();
   process.exit(0);
+}
+
+if (values.survival) {
+  runSurvival();
+  process.exit(0);
+}
+
+/** Sinh tồn: --battles lượt chơi ở mỗi cấp, in số đợt vượt qua và số lượt trung bình mỗi đợt. */
+function runSurvival(): void {
+  const levels = level ? [level] : [5, 10, 20, 30];
+  console.log(`\n## Sinh tồn · ${battles} lượt chơi mỗi cấp · AI normal đánh thay người chơi, đội khởi đầu`);
+  console.log("| Cấp | Trung bình | p10 | Trung vị | p90 | Qua đợt 5 | Qua đợt 10 | Qua đợt 15 | Lượt/đợt |\n|---|---|---|---|---|---|---|---|---|");
+  for (const lv of levels) {
+    const runs = Array.from({ length: battles }, (_, i) => simulateSurvival(lv, (seed + i * 104729) >>> 0));
+    const waves = runs.map((r) => r.cleared).sort((a, b) => a - b);
+    const q = (x: number) => waves[Math.min(waves.length - 1, Math.floor(x * waves.length))]!;
+    const reach = (f: number) => pct(waves.filter((x) => x >= f).length / waves.length);
+    const avg = waves.reduce((a, b) => a + b, 0) / waves.length;
+    const t = runs.flatMap((r) => r.turns);
+    const perWave = t.reduce((a, b) => a + b, 0) / t.length;
+    console.log(`| ${lv} | ${num(avg)} | ${q(0.1)} | ${q(0.5)} | ${q(0.9)} | ${reach(5)} | ${reach(10)} | ${reach(15)} | ${num(perWave)} |`);
+  }
 }
 
 /** Leo tháp: --battles lượt leo ở mỗi cấp (--level, mặc định 5, 10, 20, 30), in số tầng qua được. */

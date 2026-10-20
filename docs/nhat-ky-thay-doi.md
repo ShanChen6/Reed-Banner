@@ -4,6 +4,9 @@
 
 ## 20/10/2026
 
+**Sinh tồn (lộ trình 5.3, Claude đặt, chờ Shan duyệt)**
+- Trang `/survival`: một trận 3vs3 không dừng trên cùng bàn cờ, đối thủ theo đợt (2 rồi 3 đối thủ, cứ 5 đợt một sứ quân), luôn báo trước đợt kế. Nghỉ giữa đợt: +20% máu, +25 lương, giữ năng lượng; người gục tự đứng dậy sau 2 đợt hoặc trả 40 lương. Mô phỏng AI Thường vượt qua trung vị 11–12 đợt, mỗi đợt khoảng 10 lượt mỗi bên. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#41-bản-đầu-claude-đặt-20102026-chờ-shan-duyệt).
+
 **Leo tháp (lộ trình 5.1, Claude đặt, chờ Shan duyệt)**
 - Trang `/tower`: chuỗi tầng 3vs3, máu và lương mang sang, thắng tầng chọn hồi máu, thêm lương hoặc một phúc cộng dồn; cứ 5 tầng một sứ quân làm trùm. Độ khó theo hệ số sức mạnh 0,45 + 0,03 mỗi tầng; mô phỏng AI Thường leo được trung vị 10 tầng ở mọi cấp. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#31-bản-đầu-claude-đặt-20102026-chờ-shan-duyệt).
 

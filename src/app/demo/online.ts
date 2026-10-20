@@ -1,13 +1,14 @@
 // Gọi API trận online (/api/battles). Server có thẩm quyền: client chỉ gửi ý định và hiển thị kết quả.
 
 import type {
-  BattleAction,
   BattleEvent,
   BattleRewards,
   CampaignResult,
   RaidResult,
   RaidTier,
   TowerResult,
+  SurvivalResult,
+  MatchAction,
   GearItem,
   BattleState,
   Difficulty,
@@ -33,6 +34,7 @@ export interface OnlineResponse {
     readonly campaign?: CampaignResult;
     readonly raid?: RaidResult;
     readonly tower?: TowerResult;
+    readonly survival?: SurvivalResult;
   };
   /** Giờ server lúc trả lời (ms). */
   readonly now: number;
@@ -74,6 +76,8 @@ export function createOnline(input: {
   raid?: RaidTier;
   /** Leo tháp: đánh tầng kế tiếp. */
   tower?: true;
+  /** Sinh tồn: bắt đầu lượt chơi mới. */
+  survival?: true;
 }): Promise<OnlineResponse> {
   return call("/api/battles", { method: "POST", body: JSON.stringify(input) });
 }
@@ -85,7 +89,7 @@ export function fetchOnline(id: string): Promise<OnlineResponse> {
 export function actOnline(
   id: string,
   seq: number,
-  action: BattleAction,
+  action: MatchAction,
 ): Promise<OnlineResponse> {
   return call(`/api/battles/${encodeURIComponent(id)}/actions`, {
     method: "POST",

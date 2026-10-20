@@ -474,3 +474,77 @@ describe("trận leo tháp", () => {
     );
   });
 });
+
+describe("trận sinh tồn", () => {
+  it("nghỉ giữa đợt chưa cộng thưởng, sang đợt kế, dừng lại thì ghi kỷ lục và vàng", async () => {
+    const store = new MemoryMatchStore();
+    const profiles = new MemoryProfileStore();
+    const deps = {
+      store,
+      profiles,
+      now: T0,
+      seed: 21,
+      newId: () => "m_s1",
+    };
+    const body = { ...input, survival: true };
+    assert.equal(parseNewBattle({ ...body, survival: 1 }), null);
+    assert.equal(parseNewBattle({ ...body, tower: true }), null);
+    const r = await createBattleFor("g_s", parseNewBattle(body)!, deps);
+    assert.ok(r.ok);
+    assert.equal(r.view.survival!.wave, 1);
+    assert.equal(r.view.survival!.next!.wave, 2);
+    assert.equal(r.view.battle.turn.side, 0);
+    assert.equal(r.view.battle.sides[1].fighters.length, 2);
+
+    // Phe người chơi vừa hạ hết đợt 1.
+    const win = async () => {
+      const rec = (await store.get(r.id))!;
+      const battle = structuredClone(rec.match.battle);
+      battle.sides[1].fighters.forEach((f) => (f.hp = 0));
+      battle.winner = 0;
+      assert.ok(
+        await store.save(
+          { ...rec, match: { ...rec.match, battle, seq: rec.match.seq + 1 } },
+          rec.match.seq,
+        ),
+      );
+      return rec.match.seq + 1;
+    };
+    let seq = await win();
+    const rest = await getBattle(r.id, "g_s", {
+      store,
+      profiles,
+      now: T0 + 1000,
+    });
+    assert.ok(rest.ok && !rest.outcome);
+    assert.equal(rest.view.survival!.cleared, 1);
+
+    const next = await actBattle(
+      r.id,
+      "g_s",
+      { seq, action: { type: "nextWave" } },
+      { store, profiles, now: T0 + 2000 },
+    );
+    assert.ok(next.ok && !next.outcome);
+    assert.equal(next.view.survival!.wave, 2);
+    assert.equal(next.view.battle.winner, null);
+
+    seq = await win();
+    const end = await actBattle(
+      r.id,
+      "g_s",
+      { seq, action: { type: "endRun" } },
+      { store, profiles, now: T0 + 3000 },
+    );
+    assert.ok(end.ok && end.outcome?.survival);
+    assert.deepEqual(end.outcome.survival, {
+      cleared: 2,
+      best: 2,
+      newBest: true,
+      gold: 20,
+    });
+    assert.equal(end.outcome.rewards.won, true);
+    const p = (await loadProfile(profiles, "g_s")).profile;
+    assert.equal(p.survival.best, 2);
+  });
+});

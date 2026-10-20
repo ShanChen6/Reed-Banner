@@ -31,6 +31,12 @@ export default async function AccountBar({
         Leo tháp
       </Link>
       <Link
+        href="/survival"
+        className="rounded bg-amber-500 px-2 py-1 font-semibold text-stone-950"
+      >
+        Sinh tồn
+      </Link>
+      <Link
         href="/profile"
         className="rounded bg-[var(--panel)] px-2 py-1 font-semibold"
       >
