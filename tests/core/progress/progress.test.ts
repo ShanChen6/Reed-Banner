@@ -20,6 +20,8 @@ import {
   leveledFoe,
   levelForXp,
   MAX_LEVEL,
+  maxProgress,
+  SKILL_MAX_LEVEL,
   NEW_PROGRESS,
   newProfile,
   ownsCompanion,
@@ -108,6 +110,19 @@ describe("nâng cấp kỹ năng", () => {
 });
 
 describe("mở khóa và dựng nhân vật", () => {
+  it("tiến trình tối đa: cấp 30, đủ 6 ô và mọi kỹ năng ở cấp tối đa, kèm có hai nhánh và tuyệt chiêu", () => {
+    const main = buildMain(maxProgress(null), "moc", "tuongSi");
+    assert.equal(main.skills!.length, 6);
+    assert.ok(main.skills!.every((id) => main.skillLevels?.[id] === SKILL_MAX_LEVEL));
+    assert.equal(main.atk, buildMain(at(MAX_LEVEL), "moc", "tuongSi").atk);
+    const haVan = STARTER_COMPANIONS[0]!;
+    const p = maxProgress(haVan.profession, haVan.id);
+    assert.equal(p.branches.length, 2);
+    const built = buildCompanion(haVan, p);
+    assert.ok(built.skills!.includes(ultimateOf(haVan.id)!.id));
+    assert.ok(built.skills!.every((id) => built.skillLevels?.[id] === SKILL_MAX_LEVEL));
+  });
+
   it("nhân vật chính cấp 1 có ô 1–2, cấp 5 thêm ô 3, cấp 20 đủ 6 ô", () => {
     const slots = (level: number) => buildMain(at(level), "moc", "tuongSi").skills!.map((id) => getSkill(id)!.slot);
     assert.deepEqual(slots(1), [1, 2]);

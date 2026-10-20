@@ -3,9 +3,10 @@
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { mailEnabled } from "@/server/mail";
 import { enabledProviders } from "@/server/oauth";
 import { currentUser } from "@/server/session";
-import { AccountScene, LoginScene, RegisterScene } from "../auth/AuthScenes";
+import { AccountScene, ForgotPasswordScene, LoginScene, RegisterScene, ResetPasswordScene } from "../auth/AuthScenes";
 import { readAuthParams, type AuthSearchParams } from "../auth/params";
 import GameShell from "../GameShell";
 import { sceneOfSlug, SCENE_TITLE } from "../scene";
@@ -38,6 +39,9 @@ export default async function GamePage({
   const auth = readAuthParams(q);
   const { id, account } = await currentUser();
   const providers = enabledProviders();
+  const mail = mailEnabled();
+  // Quên/đặt lại mật khẩu mở được cả khi đang đăng nhập (đường dẫn trong thư có thể mở ở máy đang đăng nhập).
+  const recovery = { FORGOT_PASSWORD: <ForgotPasswordScene q={auth} mail={mail} />, RESET_PASSWORD: <ResetPasswordScene q={auth} /> };
 
   return (
     <GameShell
@@ -45,10 +49,14 @@ export default async function GamePage({
       theme={q.theme === "light" ? "light" : "dark"}
       auth={
         account
-          ? { ACCOUNT: <AccountScene q={auth} account={account} linkable={providers.filter((p) => !account.providers.includes(p))} /> }
+          ? {
+              ACCOUNT: <AccountScene q={auth} account={account} linkable={providers.filter((p) => !account.providers.includes(p))} mail={mail} />,
+              ...recovery,
+            }
           : {
-              LOGIN: <LoginScene q={auth} providers={providers} guest={id !== null} />,
-              REGISTER: <RegisterScene q={auth} providers={providers} />,
+              LOGIN: <LoginScene q={auth} providers={providers} guest={id !== null} mail={mail} />,
+              REGISTER: <RegisterScene q={auth} providers={providers} mail={mail} />,
+              ...recovery,
             }
       }
     />

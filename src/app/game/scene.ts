@@ -17,6 +17,8 @@ export const SCENES = [
   "LOGIN",
   "REGISTER",
   "ACCOUNT",
+  "FORGOT_PASSWORD",
+  "RESET_PASSWORD",
 ] as const;
 
 export type Scene = (typeof SCENES)[number];
@@ -37,6 +39,8 @@ export const SCENE_SLUG: Record<Scene, string> = {
   LOGIN: "login",
   REGISTER: "register",
   ACCOUNT: "account",
+  FORGOT_PASSWORD: "forgot-password",
+  RESET_PASSWORD: "reset-password",
 };
 
 export const SCENE_TITLE: Record<Scene, string> = {
@@ -54,7 +58,12 @@ export const SCENE_TITLE: Record<Scene, string> = {
   LOGIN: "Đăng nhập",
   REGISTER: "Đăng ký",
   ACCOUNT: "Tài khoản",
+  FORGOT_PASSWORD: "Quên mật khẩu",
+  RESET_PASSWORD: "Đặt lại mật khẩu",
 };
+
+/** Phân cảnh tài khoản: dựng sẵn ở server (cần cookie, cấu hình) rồi truyền vào màn chơi. */
+export type AuthScene = Extract<Scene, "LOGIN" | "REGISTER" | "ACCOUNT" | "FORGOT_PASSWORD" | "RESET_PASSWORD">;
 
 export const GAME_PATH = "/game";
 

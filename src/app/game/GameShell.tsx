@@ -2,7 +2,7 @@
 
 // Màn chơi: một giao diện duy nhất, `currentScene` quyết định phân cảnh nào hiện ra. Phân cảnh lấy từ đường
 // dẫn (usePathname) nên thanh địa chỉ, nút Back và state luôn khớp nhau; đổi phân cảnh chỉ render lại phần
-// giữa, thanh trên (về màn chính, tài khoản) giữ nguyên. Ba phân cảnh tài khoản dựng sẵn ở server (cần
+// giữa, thanh trên (về màn chính, tài khoản) giữ nguyên. Các phân cảnh tài khoản dựng sẵn ở server (cần
 // cookie, nhà cung cấp OAuth) rồi truyền vào qua `auth`.
 
 import Link from "next/link";
@@ -17,7 +17,7 @@ import LeaderboardScreen from "./leaderboard/LeaderboardScreen";
 import MenuScene from "./MenuScene";
 import ProfileScreen from "./profile/ProfileScreen";
 import QuestsScreen from "./quests/QuestsScreen";
-import { resolveScene, sceneOfPath, scenePath, SCENE_TITLE, type Scene } from "./scene";
+import { resolveScene, sceneOfPath, scenePath, SCENE_TITLE, type AuthScene, type Scene } from "./scene";
 import { isScenePath, pushScenePath, SceneContext, SceneLink, type SceneApi } from "./SceneContext";
 import SurvivalScreen from "./survival/SurvivalScreen";
 import TowerScreen from "./tower/TowerScreen";
@@ -34,7 +34,7 @@ export default function GameShell({
 }: {
   account: ShellAccount | null;
   theme: "light" | "dark";
-  auth: Partial<Record<"LOGIN" | "REGISTER" | "ACCOUNT", React.ReactNode>>;
+  auth: Partial<Record<AuthScene, React.ReactNode>>;
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -94,8 +94,7 @@ export default function GameShell({
                 <span className="max-w-32 truncate font-semibold">{account.name}</span>
               </SceneLink>
             ) : (
-              currentScene !== "LOGIN" &&
-              currentScene !== "REGISTER" && (
+              !(currentScene in auth) && (
                 <SceneLink
                   scene="LOGIN"
                   params={{ returnTo: currentScene === "MENU" ? undefined : scenePath(currentScene) }}
@@ -130,7 +129,7 @@ function SceneView({
   scene: Scene;
   account: ShellAccount | null;
   theme: "light" | "dark";
-  auth: Partial<Record<"LOGIN" | "REGISTER" | "ACCOUNT", React.ReactNode>>;
+  auth: Partial<Record<AuthScene, React.ReactNode>>;
   resume: boolean;
 }) {
   switch (scene) {
@@ -159,6 +158,8 @@ function SceneView({
     case "LOGIN":
     case "REGISTER":
     case "ACCOUNT":
+    case "FORGOT_PASSWORD":
+    case "RESET_PASSWORD":
       return auth[scene] ?? null;
   }
 }
