@@ -21,6 +21,12 @@ const SPEAR_SWING = {
   cast: { ...SWING.cast, windup: -0.08, strike: 0.28 },
 } as const;
 
+/** Quạt phẩy nhẹ từ vai; tay áo dài vẫn giữ đầu nối dưới giáp vai. */
+const FAN_SWING = {
+  attack: { ...SWING.attack, windup: 0.06, strike: -0.2 },
+  cast: { ...SWING.cast, windup: 0.08, strike: -0.26 },
+} as const;
+
 /**
  * Nhịp của tranh tư thế (giây): `swap` đổi từ hình động sang tranh, `hit` tóe tia sáng, `out` bắt đầu đổi
  * về, `end` xong. `dash` là quãng lướt tới, `lift` là độ nhảy lên (tuyệt chiêu bổ từ trên xuống).
@@ -59,7 +65,7 @@ export function warrior(
   const arm = L.joint(joints.shoulder.x, joints.shoulder.y, body);
   L.sprite(img("sword"), parts.sword, arm);
   // Hào quang dọc lưỡi kiếm, theo tay khi chém.
-  const auras = Array.from({ length: 6 }, (_, i) => {
+  const auras = Array.from({ length: rig.weapon === "fan" ? 0 : 6 }, (_, i) => {
     const at = (i + 0.5) / 6;
     const s = new Sprite(glow());
     s.anchor.set(0.5);
@@ -70,7 +76,8 @@ export function warrior(
     arm.addChild(s);
     return s;
   });
-  L.sprite(img("arm"), parts.arm, arm);
+  if (rig.sleeveWind) L.mesh(img("arm"), parts.arm, arm, rig.sleeveWind);
+  else L.sprite(img("arm"), parts.arm, arm);
   for (const c of rig.covers) L.sprite(img(c.name), c.box, body);
   cloth(false, true);
   const head = L.joint(joints.neck.x, joints.neck.y, body);
@@ -206,7 +213,8 @@ export function warrior(
       if (action.kind === "attack" || action.kind === "cast" || action.kind === "ultimate") {
         const swingKind = action.kind === "attack" ? "attack" : "cast";
         const spear = rig.weapon === "spear";
-        const S = (spear ? SPEAR_SWING : SWING)[swingKind];
+        const fan = rig.weapon === "fan";
+        const S = (spear ? SPEAR_SWING : fan ? FAN_SWING : SWING)[swingKind];
         const wind = pulse(a, 0, S.at);
         const strike = pulse(a, S.at, S.hit);
         const back = pulse(a, S.back[0], S.back[1]);
@@ -221,7 +229,7 @@ export function warrior(
         if (swingKind === "cast") aura += 1.4 * wind * (1 - back);
         else aura += 0.5 * strike * (1 - back);
         // Vệt kiếm: cung từ góc kiếm hiện tại kéo ngược về chỗ bắt đầu chém.
-        if (!spear && a >= S.at && a <= S.hit + 0.05) {
+        if (!spear && !fan && a >= S.at && a <= S.hit + 0.05) {
           trailA = swingKind === "cast" ? 1 : 0.75;
           trailFrom = baseAngle + armRot;
           trailTo = baseAngle + S.windup;
