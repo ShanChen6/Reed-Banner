@@ -13,6 +13,7 @@ import {
   companionById,
   FOOD_PRICE,
   RECOMMENDED_LEVEL_BONUS,
+  signatureOf,
   stageFoes,
   stageUnlocked,
   type CampaignStage,
@@ -59,6 +60,20 @@ function StageDetail({
           {stage.story}
         </p>
       </div>
+      <figure className="flex items-start gap-2 rounded-md bg-black/25 p-2">
+        <Portrait
+          id={stage.foes[0]!.id}
+          element={stage.foes[0]!.element}
+          profession={stage.foes[0]!.profession}
+          className="size-10 shrink-0"
+        />
+        <blockquote className="text-sm text-amber-50">
+          <span className="font-semibold text-amber-300">
+            {stage.foes[0]!.name}:
+          </span>{" "}
+          “{stage.lines.before}”
+        </blockquote>
+      </figure>
       <dl className="grid grid-cols-2 gap-x-3 gap-y-1 rounded-md bg-black/25 p-2 text-sm sm:grid-cols-4">
         <dt className="text-stone-400">Thể thức</dt>
         <dd className="font-semibold">
@@ -125,6 +140,11 @@ function StageDetail({
                 {stage.foes[i]!.hero
                   ? `Sứ quân · ${f.skills?.length ?? 0} kỹ năng`
                   : "Tùy tướng"}
+                {signatureOf(f.id) && (
+                  <span className="block text-amber-200">
+                    Chiêu riêng: {signatureOf(f.id)!.name}
+                  </span>
+                )}
                 {stage.boss && i === 0 && (
                   <span className="text-rose-400"> · Trùm</span>
                 )}

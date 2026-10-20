@@ -5,6 +5,7 @@
 import { BASE_STATS } from "../roster";
 import {
   professionSkills,
+  signatureOf,
   type Element,
   type FighterConfig,
   type Profession,
@@ -58,6 +59,14 @@ export interface CampaignStage {
   readonly joins?: string;
   /** Câu kể khi tướng gia nhập. */
   readonly joinStory?: string;
+  /** Thoại của thủ lĩnh đối thủ: trước trận, khi người chơi thắng, khi người chơi thua. */
+  readonly lines: StageLines;
+}
+
+export interface StageLines {
+  readonly before: string;
+  readonly win: string;
+  readonly lose: string;
 }
 
 /** Trùm có thêm chừng này lần máu. */
@@ -91,6 +100,12 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     level: 1,
     foes: [aide("coLau-tre", "Trẻ chăn trâu xóm bên", "tho", "binhLinh")],
     firstClearGold: 100,
+    lines: {
+      before:
+        "Cờ lau thì làm gì nổi gậy tre! Xóm này chưa ai thắng được bọn ta.",
+      win: "Thôi, thua thì thua. Từ nay xóm ta theo cờ lau của anh.",
+      lose: "Về nhà chăn trâu đi! Mai lại đến mà thử.",
+    },
     joins: "nguyenBac",
     joinStory:
       "Nguyễn Bặc, bạn chăn trâu cùng xóm, phục tài Bộ Lĩnh và theo làm tướng.",
@@ -106,6 +121,11 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     level: 2,
     foes: [hero("tranLam", "Trần Lãm", "thuy", "quanSu")],
     firstClearGold: 150,
+    lines: {
+      before: "Người trẻ muốn cầm quân thì trước hết phải qua được tay lão.",
+      win: "Giỏi! Lão già rồi, binh quyền Bố Hải giao cả cho con.",
+      lose: "Còn non lắm. Ở lại luyện thêm rồi lão thử lần nữa.",
+    },
     joins: "dinhDien",
     joinStory:
       "Đinh Điền, bạn thuở nhỏ ở Hoa Lư, mang quân theo Bộ Lĩnh về Bố Hải Khẩu.",
@@ -121,6 +141,11 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     level: 3,
     foes: [hero("phamBachHo", "Phạm Bạch Hổ", "hoa", "tuongSi")],
     firstClearGold: 200,
+    lines: {
+      before: "Bạch Hổ này giữ Đằng Châu bằng gươm, không bằng lời hứa.",
+      win: "Hổ thua thì phục. Đằng Châu xin theo Hoa Lư.",
+      lose: "Gươm Đằng Châu chưa cùn đâu. Về mà mài lại gươm của mình đi.",
+    },
     joins: "luuCo",
     joinStory: "Lưu Cơ, người cùng quê Hoa Lư, về giúp Bộ Lĩnh bàn mưu.",
   },
@@ -139,6 +164,11 @@ export const CAMPAIGN: readonly CampaignStage[] = [
       aide("binhKieu-y", "Lang y Bình Kiều", "thuy", "ySu"),
     ],
     firstClearGold: 250,
+    lines: {
+      before: "Dòng dõi Ngô Vương há phải cúi đầu trước kẻ chăn trâu?",
+      win: "Ta thua mưu chứ không thua ý chí. Bình Kiều mở cổng.",
+      lose: "Bình Kiều vẫn là đất nhà Ngô. Lui quân đi.",
+    },
     joins: "trinhTu",
     joinStory: "Trịnh Tú theo Bộ Lĩnh từ buổi đầu, lo thuốc men và quân lương.",
   },
@@ -157,6 +187,11 @@ export const CAMPAIGN: readonly CampaignStage[] = [
       aide("duongLam-y", "Lang y Đường Lâm", "moc", "ySu"),
     ],
     firstClearGold: 300,
+    lines: {
+      before: "Đường Lâm đất thiêng, gió nơi này không thổi theo ai cả.",
+      win: "Gió đã đổi chiều. Đường Lâm xin quy phục.",
+      lose: "Gió Đường Lâm đẩy các ngươi về Hoa Lư rồi.",
+    },
   },
   {
     id: "tamDai",
@@ -175,6 +210,12 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     foeFood: 25,
     rule: "Thành bị vây: đối thủ vào trận chỉ có 25 lương.",
     firstClearGold: 350,
+    lines: {
+      before:
+        "Thành Tam Đái chưa từng bị phá. Lương cạn thì ta ăn rễ cây mà giữ.",
+      win: "Thành vỡ rồi... Mở cổng cho dân ra ngoài kiếm ăn.",
+      lose: "Thấy chưa? Đói bụng vẫn giữ được thành.",
+    },
     joins: "leHoan",
     joinStory:
       "Lê Hoàn, người Ái Châu, đến đầu quân và được Bộ Lĩnh giao cầm một cánh quân.",
@@ -194,6 +235,11 @@ export const CAMPAIGN: readonly CampaignStage[] = [
       aide("phongChau-muu", "Mưu thần Phong Châu", "phong", "muuSi"),
     ],
     firstClearGold: 400,
+    lines: {
+      before: "Đất vua Hùng có sấm sét che chở. Kẻ nào dám lên Phong Châu?",
+      win: "Sấm sét cũng phải nhường người có chí. Phong Châu nghe lệnh Hoa Lư.",
+      lose: "Trời Phong Châu đã ra oai. Về đi, đừng quay lại.",
+    },
     joins: "dinhLien",
     joinStory:
       "Đinh Liễn, con trưởng của Bộ Lĩnh, đã đủ tuổi theo cha ra trận.",
@@ -215,6 +261,11 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     weights: RIVER,
     rule: "Đầm lầy: ít ô bánh chưng, nhiều ô âm dương.",
     firstClearGold: 450,
+    lines: {
+      before: "Đầm Hồi Hồ bùn sâu nước đục, quân lạ vào là sa lầy.",
+      win: "Các ngươi qua được đầm này thì ta còn giữ làm gì nữa.",
+      lose: "Bùn Hồi Hồ giữ chân các ngươi rồi đấy.",
+    },
   },
   {
     id: "sieuLoai",
@@ -231,6 +282,11 @@ export const CAMPAIGN: readonly CampaignStage[] = [
       aide("sieuLoai-quan", "Quân sư Siêu Loại", "tho", "quanSu"),
     ],
     firstClearGold: 500,
+    lines: {
+      before: "Giáp Siêu Loại dày nhất vùng này. Kiếm nào chém nổi?",
+      win: "Giáp dày cũng có kẽ hở. Siêu Loại hàng.",
+      lose: "Kiếm các ngươi gãy cả rồi. Về rèn lại đi.",
+    },
   },
   {
     id: "tienDu",
@@ -248,6 +304,11 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     foeFood: 100,
     rule: "Kho lương đầy: đối thủ vào trận với 100 lương.",
     firstClearGold: 550,
+    lines: {
+      before: "Kho lương Tiên Du đầy ắp, đánh lâu bao nhiêu ta cũng chịu được.",
+      win: "Lương đầy mà người không đồng lòng thì cũng thua. Kho này giao cho ngươi.",
+      lose: "Đánh lâu thì ai đói trước? Các ngươi đấy.",
+    },
   },
   {
     id: "teGiang",
@@ -265,6 +326,11 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     weights: RIVER,
     rule: "Sông nước: ít ô bánh chưng, nhiều ô âm dương.",
     firstClearGold: 600,
+    lines: {
+      before: "Thủy quân Tế Giang thuộc từng khúc sông. Lên thuyền mà đánh!",
+      win: "Sông nước cũng có ngày cạn. Tế Giang xin theo.",
+      lose: "Sóng Tế Giang đánh dạt các ngươi rồi.",
+    },
   },
   {
     id: "tayPhuLiet",
@@ -281,6 +347,11 @@ export const CAMPAIGN: readonly CampaignStage[] = [
       aide("tayPhuLiet-muu", "Mưu thần Tây Phù Liệt", "loi", "muuSi"),
     ],
     firstClearGold: 700,
+    lines: {
+      before: "Lũy lửa Phù Liệt cháy ngày đêm. Đến gần là bỏng.",
+      win: "Lửa tắt rồi. Tây Phù Liệt không giữ nữa.",
+      lose: "Lửa còn cháy, các ngươi còn chưa qua được.",
+    },
   },
   {
     id: "doDong",
@@ -300,6 +371,12 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     foeFood: 100,
     rule: "Trùm cuối: Đỗ Cảnh Thạc thêm 50% máu, thành có lương đầy.",
     firstClearGold: 1000,
+    lines: {
+      before:
+        "Bộ Lĩnh! Mười một sứ quân đã hàng, nhưng Đỗ Động còn ta. Thành này chỉ mất khi ta ngã.",
+      win: "Thiên hạ về một mối rồi... Ngươi hãy giữ yên bờ cõi.",
+      lose: "Mười hai sứ quân chưa dẹp xong đâu. Đỗ Động còn đứng vững.",
+    },
   },
 ];
 
@@ -326,8 +403,19 @@ export function stageFighter(foe: StageFoe, level: number): FighterConfig {
       autoProgress(level, null),
       foe.element,
       foe.profession,
+      foe.id,
     );
-    return { ...kit, id: foe.id, name: foe.name };
+    // Sứ quân luôn mang chiêu riêng (ô 5), kể cả khi cấp chưa tới mốc mở ô 5, ở cấp kỹ năng cao nhất trong bộ.
+    const sig = signatureOf(foe.id);
+    const levels = kit.skillLevels ?? {};
+    const skills =
+      sig && !kit.skills!.includes(sig.id)
+        ? [...kit.skills!, sig.id]
+        : kit.skills!;
+    const skillLevels = sig
+      ? { ...levels, [sig.id]: Math.max(1, ...Object.values(levels)) }
+      : levels;
+    return { ...kit, skills, skillLevels, id: foe.id, name: foe.name };
   }
   const base: FighterConfig = {
     id: foe.id,

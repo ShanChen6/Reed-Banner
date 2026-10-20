@@ -52,7 +52,9 @@ Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (tr
 
 - Mô phỏng 20/10/2026 (80 trận mỗi màn 3vs3, hơn đối thủ 3 cấp, AI Thường): đội có 2 tướng lịch sử mới nhất thắng trung bình 65%, đội mặc định (Hà Vân, Mai Thanh) 54%. Tướng lịch sử mạnh hơn vì mang 6 kỹ năng, nhưng không vượt hẳn ở mọi màn (Phong Châu 38% so với 57%, Đỗ Động 48% so với 65%). Chưa đổi số, cân chung ở lộ trình 4.4.
 
-> TODO: chiêu riêng và thoại cho từng sứ quân (4.3), chương sau.
+- **Chiêu riêng và thoại** (Claude đặt 20/10/2026, chờ Shan duyệt): mỗi sứ quân có một chiêu riêng thay ô 5 ([Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#47-chiêu-riêng-của-nhân-vật-lịch-sử)). Mỗi màn có 3 câu thoại của thủ lĩnh đối thủ: trước trận (hiện ở bản đồ chiến dịch), khi người chơi thắng và khi thua (hiện ở màn kết quả). Dữ liệu ở `lines` của từng màn trong `src/core/campaign/campaign.ts`.
+
+> TODO: chương sau.
 
 ## 3. Leo tháp (Vô hạn)
 

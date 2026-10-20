@@ -60,7 +60,7 @@ export interface SkillDef {
   /** Chiêu nghề của nhân vật kèm. */
   readonly profession?: Profession;
   readonly tier?: 1 | 2 | 3;
-  /** Tuyệt chiêu nấc 3: id nhân vật kèm sở hữu. */
+  /** Tuyệt chiêu nấc 3 hoặc chiêu riêng: id nhân vật sở hữu. */
   readonly character?: string;
   /** Kỹ năng nhân vật chính theo nguyên tố, ô 1–6. */
   readonly element?: Element;
@@ -542,7 +542,160 @@ const PHONG: readonly SkillDef[] = [
   },
 ];
 
-export const SKILLS: Readonly<Record<string, SkillDef>> = Object.fromEntries([...DEFS, ...ULTIMATES, ...MAIN, ...PHONG].map((d) => [d.id, d]));
+// Chiêu riêng của nhân vật lịch sử: thay kỹ năng ô 5 trong bộ theo nguyên tố, mang dấu ấn từng người.
+// Sứ quân (đối thủ chiến dịch) luôn có chiêu riêng; tướng lịch sử phe người chơi mở ở ô 5 như thường.
+// Docs/design/06-nhan-vat-ky-nang.md mục 4.7. Tên tự đặt, số liệu là điểm xuất phát chờ mô phỏng.
+const SIGNATURES: readonly SkillDef[] = [
+  // Tướng lịch sử phe người chơi
+  {
+    id: "dinhQuocHoaKy", name: "Định Quốc Hỏa Kỳ", character: "nguyenBac", slot: 5, cost: 100, target: "enemy",
+    steps: [
+      { type: "damage", atk: 2.4 },
+      { type: "effect", to: "targets", effect: "burn", value: 0.15, ofAtk: true, turns: 2 },
+      { type: "effect", to: "team", effect: "atkUp", value: 0.15, turns: 2 },
+    ],
+  },
+  {
+    id: "ngoaiGiapHoQuan", name: "Ngoại Giáp Hộ Quân", character: "dinhDien", slot: 5, cost: 100, target: "team",
+    steps: [
+      { type: "effect", to: "targets", effect: "shield", value: 0.2, turns: null, ofMaxHp: true },
+      { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 },
+      { type: "effect", to: "self", effect: "reflect", value: 0.35, turns: 2 },
+    ],
+  },
+  {
+    id: "doHoPhuLenh", name: "Đô Hộ Phủ Lệnh", character: "luuCo", slot: 5, cost: 100, target: "allEnemies",
+    steps: [
+      { type: "energy", to: "targets", amount: -30 },
+      { type: "effect", to: "targets", effect: "silence", value: 0, turns: 1, chance: 0.5 },
+      { type: "effect", to: "targets", effect: "defDown", value: 0.15, turns: 2 },
+    ],
+  },
+  {
+    id: "hoaLuThaoDuoc", name: "Hoa Lư Thảo Dược", character: "trinhTu", slot: 5, cost: 100, target: "team",
+    steps: [
+      { type: "heal", to: "targets", ratio: 0.22 },
+      { type: "cleanse", to: "targets" },
+      { type: "effect", to: "targets", effect: "regen", value: 0.05, turns: 2, ofMaxHp: true },
+    ],
+  },
+  {
+    id: "thapDaoLoiBinh", name: "Thập Đạo Lôi Binh", character: "leHoan", slot: 5, cost: 100, target: "allEnemies",
+    steps: [
+      { type: "damage", atk: 1 },
+      { type: "effect", to: "targets", effect: "atkDown", value: 0.25, turns: 2 },
+      { type: "energy", to: "team", amount: 20 },
+    ],
+  },
+  {
+    id: "namVietVuongAn", name: "Nam Việt Vương Ấn", character: "dinhLien", slot: 5, cost: 100, target: "allEnemies",
+    steps: [
+      { type: "damage", atk: 1.3 },
+      { type: "effect", to: "targets", effect: "freeze", value: 0, turns: 1, chance: 0.3 },
+      { type: "destroy", area: { random: 6 } },
+    ],
+  },
+  // 12 sứ quân: giá 60 (trùm 80) để AI chịu dùng thay vì xài chiêu rẻ liên tục; mạnh hơn ô 4 cùng hệ.
+  {
+    id: "boHaiTranGiang", name: "Bố Hải Trấn Giang", character: "tranLam", slot: 5, cost: 60, target: "allEnemies",
+    steps: [
+      { type: "damage", atk: 0.8 },
+      { type: "effect", to: "targets", effect: "atkDown", value: 0.3, turns: 2 },
+      { type: "effect", to: "targets", effect: "freeze", value: 0, turns: 1, chance: 0.35 },
+      { type: "destroy", area: { random: 4 } },
+    ],
+  },
+  {
+    id: "bachHoXuatSon", name: "Bạch Hổ Xuất Sơn", character: "phamBachHo", slot: 5, cost: 60, target: "enemy",
+    steps: [
+      { type: "damage", atk: 3.2 },
+      { type: "effect", to: "targets", effect: "burn", value: 0.2, ofAtk: true, turns: 2 },
+      { type: "effect", to: "self", effect: "atkUp", value: 0.2, turns: 2 },
+    ],
+  },
+  {
+    id: "ngoGiaDiMuu", name: "Ngô Gia Di Mưu", character: "ngoXuongXi", slot: 5, cost: 60, target: "enemy",
+    steps: [
+      { type: "damage", atk: 2.4, pierce: 0.4 },
+      { type: "energy", to: "targets", amount: -50 },
+      { type: "effect", to: "targets", effect: "silence", value: 0, turns: 1 },
+      { type: "destroy", area: { random: 6 } },
+    ],
+  },
+  {
+    id: "duongLamPhongKhoi", name: "Đường Lâm Phong Khởi", character: "ngoNhatKhanh", slot: 5, cost: 60, target: "allEnemies",
+    steps: [
+      { type: "damage", atk: 0.6 },
+      { type: "dispel", to: "targets" },
+      { type: "effect", to: "targets", effect: "atkDown", value: 0.25, turns: 2 },
+      { type: "slide", distance: 2 },
+    ],
+  },
+  {
+    id: "tamDaiKienThanh", name: "Tam Đái Kiên Thành", character: "nguyenKhoan", slot: 5, cost: 60, target: "team",
+    steps: [
+      { type: "effect", to: "targets", effect: "shield", value: 0.25, turns: null, ofMaxHp: true },
+      { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 },
+      { type: "effect", to: "self", effect: "reflect", value: 0.35, turns: 2 },
+    ],
+  },
+  {
+    id: "phongChauLoiKich", name: "Phong Châu Lôi Kích", character: "kieuCongHan", slot: 5, cost: 60, target: "allEnemies",
+    steps: [{ type: "damage", atk: 1.4 }, { type: "energy", to: "targets", amount: -30 }, { type: "destroy", area: { random: 6 } }],
+  },
+  {
+    id: "hoiHoSinhKhi", name: "Hồi Hồ Sinh Khí", character: "kieuThuan", slot: 5, cost: 60, target: "team",
+    steps: [
+      { type: "heal", to: "targets", ratio: 0.25 },
+      { type: "effect", to: "targets", effect: "regen", value: 0.06, turns: 2, ofMaxHp: true },
+    ],
+  },
+  {
+    id: "sieuLoaiPhaGiap", name: "Siêu Loại Phá Giáp", character: "lyKhue", slot: 5, cost: 60, target: "enemy",
+    steps: [
+      { type: "damage", atk: 3.4, pierce: 0.5 },
+      { type: "effect", to: "targets", effect: "defDown", value: 0.3, turns: 2 },
+      { type: "destroy", area: { random: 6 } },
+    ],
+  },
+  {
+    id: "tienDuDoatLuong", name: "Tiên Du Đoạt Lương", character: "nguyenThuTiep", slot: 5, cost: 60, target: "allEnemies",
+    steps: [
+      { type: "damage", atk: 0.6 },
+      { type: "enemyFood", amount: -25 },
+      { type: "energy", to: "targets", amount: -30 },
+      { type: "effect", to: "targets", effect: "freeze", value: 0, turns: 1, chance: 0.25 },
+    ],
+  },
+  {
+    id: "teGiangThuyTran", name: "Tế Giang Thủy Trận", character: "laDuong", slot: 5, cost: 60, target: "allEnemies",
+    steps: [
+      { type: "damage", atk: 1.5 },
+      { type: "effect", to: "targets", effect: "freeze", value: 0, turns: 1, chance: 0.35 },
+      { type: "transform", kind: "amDuong", count: 4 },
+    ],
+  },
+  {
+    id: "phuLietHoaLuy", name: "Phù Liệt Hỏa Lũy", character: "nguyenSieu", slot: 5, cost: 60, target: "self",
+    steps: [
+      { type: "effect", to: "self", effect: "shield", value: 0.3, turns: null, ofMaxHp: true },
+      { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 },
+      { type: "effect", to: "enemies", effect: "burn", value: 0.15, ofAtk: true, turns: 2 },
+    ],
+  },
+  {
+    id: "doDongKienTam", name: "Đỗ Động Kiên Tâm", character: "doCanhThac", slot: 5, cost: 80, target: "enemy",
+    steps: [
+      { type: "damage", atk: 3.6 },
+      { type: "effect", to: "team", effect: "defUp", value: 0.3, turns: 2 },
+      { type: "destroy", area: { random: 8 } },
+    ],
+  },
+];
+
+export const SKILLS: Readonly<Record<string, SkillDef>> = Object.fromEntries(
+  [...DEFS, ...ULTIMATES, ...MAIN, ...PHONG, ...SIGNATURES].map((d) => [d.id, d]),
+);
 
 export function getSkill(id: string): SkillDef | undefined {
   return SKILLS[id];
@@ -599,6 +752,17 @@ export function ultimateOf(character: string): SkillDef | undefined {
 /** 6 kỹ năng chủ động của nhân vật chính theo nguyên tố. */
 export function mainSkills(element: Element): SkillDef[] {
   return [...MAIN, ...PHONG].filter((d) => d.element === element).sort((a, b) => (a.slot ?? 0) - (b.slot ?? 0));
+}
+
+/** Chiêu riêng của một nhân vật lịch sử (tướng phe người chơi hoặc sứ quân); undefined nếu không có. */
+export function signatureOf(character: string): SkillDef | undefined {
+  return SIGNATURES.find((d) => d.character === character);
+}
+
+/** Bộ 6 kỹ năng theo nguyên tố, ô 5 thay bằng chiêu riêng của `character` nếu có. */
+export function heroSkills(element: Element, character?: string): SkillDef[] {
+  const sig = character === undefined ? undefined : signatureOf(character);
+  return mainSkills(element).map((d) => (sig && d.slot === sig.slot ? sig : d));
 }
 
 /** Bước trượt của kỹ năng, nếu có (người chơi phải chọn hàng/cột và hướng). */
