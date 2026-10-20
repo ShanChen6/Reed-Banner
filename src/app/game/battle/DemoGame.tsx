@@ -2078,7 +2078,6 @@ export default function DemoGame({
             </div>
             {whirlAim && (
               <div className="flex flex-wrap items-center gap-1.5 text-xs">
-                <span className="opacity-80">{whirlHint(whirlAim)} Esc để hủy.</span>
                 {whirlAim.center &&
                   [-whirlAim.max, ...(whirlAim.max > 1 ? [-1, 1] : []), whirlAim.max]
                     .filter((t, i, list) => list.indexOf(t) === i)
@@ -2095,6 +2094,7 @@ export default function DemoGame({
                         {Math.abs(t) > 1 ? ` ×${Math.abs(t)}` : ""}
                       </button>
                     ))}
+                <span className="opacity-80">{whirlHint(whirlAim)} Esc để hủy.</span>
               </div>
             )}
             {aim && (
