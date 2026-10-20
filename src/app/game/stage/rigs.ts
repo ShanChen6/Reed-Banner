@@ -293,13 +293,13 @@ const NGUYEN_BAC: WarriorRig = {
   parts: {
     body: { x: 340, y: 210, w: 654, h: 1308 },
     head: { x: 565, y: 30, w: 224, h: 273 },
-    arm: { x: 395, y: 260, w: 200, h: 335 },
-    armR: { x: 745, y: 250, w: 185, h: 335 },
-    sword: { x: 110, y: 625, w: 402, h: 730 },
+    arm: { x: 345, y: 260, w: 270, h: 310 },
+    armR: { x: 750, y: 250, w: 230, h: 320 },
+    sword: { x: 55, y: 660, w: 402, h: 730 },
   },
   forearms: {
-    sword: { box: { x: 355, y: 545, w: 150, h: 260 }, joint: { x: 455, y: 565 } },
-    free: { box: { x: 780, y: 510, w: 150, h: 300 }, joint: { x: 825, y: 535 } },
+    sword: { box: { x: 345, y: 530, w: 270, h: 280 }, joint: { x: 475, y: 550 } },
+    free: { box: { x: 750, y: 530, w: 230, h: 300 }, joint: { x: 860, y: 550 } },
   },
   joints: {
     shoulder: { x: 550, y: 310 },
@@ -317,7 +317,7 @@ const NGUYEN_BAC: WarriorRig = {
       wind: { axis: "y", start: 0.2, amp: 4, freq: 1.5, k: 2.5, phase: 0.8 } },
   ],
   covers: [],
-  blade: [{ x: 395, y: 820 }, { x: 115, y: 1350 }],
+  blade: [{ x: 340, y: 855 }, { x: 60, y: 1385 }],
   fxColor: 0xff783d,
   poses: {
     cast: { name: "pose-cast", origin: { x: 13, y: 6 }, anchor: { x: 810, y: 1020 }, scale: 1.25, burst: { x: 1500, y: 245 } },
