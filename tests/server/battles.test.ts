@@ -24,6 +24,8 @@ import {
   updateProfile,
 } from "../../src/server/profiles";
 import { MemoryMatchStore } from "../../src/server/store";
+import { dailyBoard, MemoryDailyStore } from "../../src/server/daily";
+import { DAILY_GOLD } from "../../src/core";
 
 const T0 = 5_000_000;
 const input = {
@@ -546,5 +548,79 @@ describe("trận sinh tồn", () => {
     assert.equal(end.outcome.rewards.won, true);
     const p = (await loadProfile(profiles, "g_s")).profile;
     assert.equal(p.survival.best, 2);
+  });
+});
+
+describe("thử thách hằng ngày", () => {
+  it("mỗi người một lượt mỗi ngày, xong thì lên bảng xếp hạng và nhận vàng", async () => {
+    const store = new MemoryMatchStore();
+    const profiles = new MemoryProfileStore();
+    const daily = new MemoryDailyStore();
+    let n = 0;
+    const deps = (now: number) => ({
+      store,
+      profiles,
+      daily,
+      dailySecret: "bí mật",
+      now,
+      seed: 5,
+      newId: () => `m_d${++n}`,
+    });
+    const input = parseNewBattle({ daily: true })!;
+    assert.equal(parseNewBattle({ daily: 1 }), null);
+    const a = await createBattleFor("g_a", input, deps(T0));
+    const b = await createBattleFor("g_b", input, deps(T0 + 5));
+    assert.ok(a.ok && b.ok);
+    assert.equal(a.view.daily, b.view.daily);
+    // Cùng đề: cùng bàn cờ và cùng đối thủ.
+    assert.deepEqual(a.view.battle.board, b.view.battle.board);
+    assert.deepEqual(
+      a.view.battle.sides[1].fighters.map((f) => f.id),
+      b.view.battle.sides[1].fighters.map((f) => f.id),
+    );
+    assert.deepEqual(await createBattleFor("g_a", input, deps(T0 + 9)), {
+      ok: false,
+      error: "dailyDone",
+    });
+
+    const finish = async (id: string, winner: 0 | 1, turns: number) => {
+      const rec = (await store.get(id))!;
+      const battle = structuredClone(rec.match.battle);
+      battle.sides[winner === 0 ? 1 : 0].fighters.forEach((f) => (f.hp = 0));
+      battle.winner = winner;
+      battle.turn.number = turns;
+      assert.ok(
+        await store.save(
+          { ...rec, match: { ...rec.match, battle, seq: rec.match.seq + 1 } },
+          rec.match.seq,
+        ),
+      );
+    };
+    await finish(a.id, 0, 30);
+    await finish(b.id, 0, 20);
+    const ra = await getBattle(a.id, "g_a", deps(T0 + 100));
+    const rb = await getBattle(b.id, "g_b", deps(T0 + 200));
+    assert.ok(ra.ok && ra.outcome?.daily && rb.ok && rb.outcome?.daily);
+    assert.equal(ra.outcome.daily.rank, 1);
+    assert.equal(rb.outcome.daily.rank, 1);
+    assert.equal(ra.outcome.rewards.gold, DAILY_GOLD.win);
+    assert.equal(
+      (await loadProfile(profiles, "g_a")).profile.gold,
+      DAILY_GOLD.win,
+    );
+
+    const board = await dailyBoard(daily, a.view.daily!, "g_a");
+    assert.deepEqual(
+      board.top.map((r) => [r.rank, r.mine, r.score.turns]),
+      [
+        [1, false, 20],
+        [2, true, 30],
+      ],
+    );
+    assert.equal(board.mine?.rank, 2);
+    assert.equal(
+      board.top[0]!.name,
+      "Khách g_b".replace("g_b", "g_b".slice(-4)),
+    );
   });
 });

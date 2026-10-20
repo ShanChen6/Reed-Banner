@@ -6,7 +6,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { ABANDON_MS } from "@/core";
 import { settleAbandoned } from "@/server/battles";
 import { deleteGuests, staleGuestIds, staleMatchIds } from "@/server/db/maintenance";
-import { database, matchStore, profileStore } from "@/server/store";
+import { dailyStore, database, matchStore, profileStore } from "@/server/store";
 
 export const dynamic = "force-dynamic";
 // Gói Hobby cho hàm chạy tối đa 60 giây.
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
   const db = database();
   if (!db) return NextResponse.json({ ok: true, skipped: "memory" });
   const now = Date.now();
-  const deps = { store: matchStore(), profiles: profileStore(), now };
+  const deps = { store: matchStore(), profiles: profileStore(), daily: dailyStore(), now };
   const settled = await settleAbandoned(await staleMatchIds(db, now - ABANDON_MS, MATCH_BATCH), deps);
   const guests = await staleGuestIds(db, now - GUEST_TTL_MS, GUEST_BATCH);
   await deleteGuests(db, guests);
