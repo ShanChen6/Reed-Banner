@@ -3,8 +3,16 @@
 
 import type { Profile } from "./profile";
 
-/** Bảng: chiến dịch (số màn rồi tổng lượt), từng màn (ít lượt nhất), tháp, sinh tồn. */
-export type BoardId = "campaign" | "tower" | "survival" | `stage:${string}`;
+/**
+ * Bảng: chiến dịch (số màn rồi tổng lượt), từng màn (ít lượt nhất), tháp, sinh tồn, đấu trường (điểm đấu
+ * trường; server ghi từ kho đấu trường, không tính từ hồ sơ).
+ */
+export type BoardId =
+  | "campaign"
+  | "tower"
+  | "survival"
+  | "arena"
+  | `stage:${string}`;
 
 /** Màn đã qua từ trước khi có bảng xếp hạng (chưa ghi số lượt) tính như chừng này lượt, tới khi thắng lại. */
 export const UNKNOWN_STAGE_TURNS = 200;
@@ -59,6 +67,7 @@ export function isBoardId(x: unknown): x is BoardId {
     x === "campaign" ||
     x === "tower" ||
     x === "survival" ||
+    x === "arena" ||
     (typeof x === "string" && /^stage:[A-Za-z0-9]{1,40}$/.test(x))
   );
 }

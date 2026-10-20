@@ -195,7 +195,7 @@ Mỗi đợt khoảng 10 lượt mỗi bên, đúng mức trên của mục tiê
 
 - 🗓️ **Thử thách hằng ngày:** một seed chung cho mọi người chơi mỗi ngày, mỗi người chơi một lần, xếp hạng theo số lượt hoặc máu còn lại. Seed vẫn chỉ nằm trên server.
 - 🧩 **Thế cờ:** bàn cờ dựng sẵn, ô rơi cố định, hạ gục đối thủ trong đúng K nước.
-- ⚔️ **Đấu trường bóng ma:** PvP không đồng bộ, đánh với đội hình của người chơi khác do AI điều khiển (làm sau cùng).
+- ⚔️ **Đấu trường bóng ma:** PvP không đồng bộ, đánh với đội hình của người chơi khác do AI điều khiển. Bản đầu ở mục 5.3.
 - **Cơ chế giữ chân:** nhiệm vụ ngày/tuần, thành tựu, bộ sưu tập nhân vật.
 
 ### 5.1 Thử thách hằng ngày (Claude đặt 20/10/2026, chờ Shan duyệt)
@@ -255,3 +255,16 @@ Trang `/quests`, code ở `src/core/progress/quests.ts` và `achievements.ts`, l
   - Mỗi ngày một lần.
   - Chuỗi 7 ngày nhận lần lượt 50, 60, 80, 100, 120, 150, 300 vàng.
   - Bỏ một ngày thì chuỗi về ngày 1. Đủ 7 ngày thì bắt đầu chuỗi mới.
+
+### 5.3 Đấu trường bóng ma (Claude đặt 20/10/2026, chờ Shan duyệt)
+
+Trang `/arena`, code ở `src/core/arena/` (đội phòng thủ, bóng ma máy tạo, điểm), `src/server/arena.ts` (kho, bày đối thủ), bảng `arena_players`.
+
+- **Đội phòng thủ:** bản chụp đội 3vs3 đang chọn ở hồ sơ (chỉ số, kỹ năng, trang bị lúc chụp). Tự chụp khi mở đấu trường lần đầu; nâng cấp hay đổi đội xong thì bấm "Cập nhật theo đội hiện tại". Nhân vật chính của đội phòng thủ mang tên chủ đội.
+- **Đánh:** mỗi lần bày 3 đối thủ, ưu tiên người chơi thật có điểm gần mình nhất (chọn ngẫu nhiên trong 12 người gần nhất), thiếu thì thêm "bóng ma luyện tập" do máy tạo (đội ngẫu nhiên cùng cấp, không trang bị, 1000 điểm). Bấm "Đổi đối thủ" thì bày lại, miễn phí. Người đánh dùng đội 3vs3 đang chọn; đội phòng thủ do AI mức Khó điều khiển. Ai đi trước bốc ngẫu nhiên.
+- **Lượt:** 10 trận mỗi ngày, đổi lúc 0 giờ giờ Việt Nam. Đánh xong thì đối thủ đã bày bị xóa, mở lại trang có đối thủ mới.
+- **Điểm (kiểu Elo):** bắt đầu 1000. Người đánh đổi 32 × (kết quả − kỳ vọng), người phòng thủ đổi ngược dấu một nửa (16 ×). Ngang điểm thì thắng +16, thua −16, người phòng thủ −8/+8. Điểm không xuống dưới 0. Bóng ma máy tạo luôn 1000 điểm, nên càng lên cao đánh bóng ma càng ít điểm.
+- **Thưởng:** thưởng trận thường (kinh nghiệm, vàng nhặt, món rơi theo độ khó Khó) và thêm 50 vàng khi thắng.
+- **Bảng xếp hạng:** tab Đấu trường ở `/leaderboard`, theo điểm; lên bảng khi có đội phòng thủ.
+- **Chưa làm:** nhật ký bị đánh (chỉ có số trận giữ được và bị mất), mùa giải và thưởng theo hạng, chặn đánh lại cùng một người.
+

@@ -43,6 +43,12 @@ export default async function AccountBar({
         Thử thách ngày
       </Link>
       <Link
+        href="/arena"
+        className="rounded bg-amber-500 px-2 py-1 font-semibold text-stone-950"
+      >
+        Đấu trường
+      </Link>
+      <Link
         href="/quests"
         className="rounded bg-amber-500 px-2 py-1 font-semibold text-stone-950"
       >

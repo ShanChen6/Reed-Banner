@@ -4,6 +4,9 @@
 
 ## 20/10/2026
 
+**Đấu trường bóng ma (lộ trình 5.5, Claude đặt, chờ Shan duyệt)**
+- Trang `/arena`: mỗi người để lại một đội phòng thủ (bản chụp đội 3vs3), người khác đánh với đội đó do AI Khó điều khiển. 3 đối thủ gần điểm nhất, thiếu người thì thêm bóng ma luyện tập. 10 trận mỗi ngày, điểm kiểu Elo bắt đầu 1000 (ngang điểm thắng +16, người phòng thủ −8), thắng thêm 50 vàng. Có tab Đấu trường ở bảng xếp hạng. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#53-đấu-trường-bóng-ma-claude-đặt-20102026-chờ-shan-duyệt).
+
 **Bảng xếp hạng (lộ trình 4.6, Claude đặt, chờ Shan duyệt)**
 - Trang `/leaderboard` với 4 bảng: chiến dịch (số màn, rồi tổng lượt ít nhất), từng màn (ít lượt nhất), leo tháp (tầng cao nhất), sinh tồn (đợt nhiều nhất). Hồ sơ giờ lưu số lượt ít nhất mỗi màn. Server ghi điểm sau mỗi trận online. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#23-bảng-xếp-hạng-claude-đặt-20102026-chờ-shan-duyệt).
 
