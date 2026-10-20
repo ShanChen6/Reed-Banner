@@ -29,8 +29,9 @@ export const TOWER_FLOORS_PER_LEVEL = 5;
 /**
  * Sức mạnh đối thủ (nhân vào máu và công): tầng 1 là TOWER_POWER_START, mỗi tầng sau cộng TOWER_POWER_STEP.
  * Máu mang sang nên mỗi tầng phải thắng đậm; chênh cấp ít tác dụng (mô phỏng 20/10/2026), nên chỉnh bằng hệ số này.
+ * Hạ 0,45 → 0,38 khi nhân vật kèm lên bộ 6 ô (đối thủ mạnh hơn); AI Thường vẫn leo trung vị 10 tầng ở cấp 10.
  */
-export const TOWER_POWER_START = 0.45;
+export const TOWER_POWER_START = 0.38;
 export const TOWER_POWER_STEP = 0.03;
 /** Vàng thưởng khi lần đầu qua một tầng trùm (nhân số tầng). */
 export const TOWER_BOSS_GOLD = 40;

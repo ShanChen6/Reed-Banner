@@ -11,9 +11,7 @@ import {
   createRng,
   getSkill,
   isAdjacent,
-  isHero,
   buildCompanion,
-  buildHero,
   buildMain,
   maxProgress,
   MAX_TIER,
@@ -163,11 +161,9 @@ function gearUp(
     : withGear(f, presetLoadout(f.element, f.profession, gear.tier, set));
 }
 
-/** Nhân vật ở tiến trình tối đa: cấp 30, mọi kỹ năng cấp tối đa, nhân vật kèm mang chiêu nhánh đầu. */
+/** Nhân vật ở tiến trình tối đa: cấp 30, mọi kỹ năng cấp tối đa. */
 function maxed(base: FighterConfig): FighterConfig {
-  return isHero(base.id)
-    ? buildHero(base, maxProgress(null))
-    : buildCompanion(base, maxProgress(base.profession, base.id));
+  return buildCompanion(base, maxProgress(null));
 }
 
 /**
@@ -1546,7 +1542,7 @@ export default function DemoGame({
     saveProfile(p);
   };
 
-  /** Nâng kỹ năng, mua/chọn chiêu nhánh: Chơi thử áp tại chỗ rồi lưu trình duyệt, Chơi online gửi server. */
+  /** Thao tác hồ sơ (nâng kỹ năng, mua nhân vật…): Chơi thử áp tại chỗ rồi lưu trình duyệt, Chơi online gửi server. */
   const profileAction = async (a: ProfileAction): Promise<string | null> => {
     if (!online) {
       const r = applyProfileAction({ ...profile, element }, a);

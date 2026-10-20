@@ -1,6 +1,6 @@
 # Câu hỏi còn mở
 
-> Cập nhật: 19/10/2026
+> Cập nhật: 20/10/2026
 >
 > Mọi TODO trong docs đều có mặt ở đây. Chốt xong mục nào thì sửa file liên quan, đánh dấu ở đây và ghi vào [nhật ký thay đổi](nhat-ky-thay-doi.md).
 
@@ -16,8 +16,10 @@
 
 - [ ] Số điểm kỹ năng cần cho mỗi cấp nâng kỹ năng. Đã có điểm xuất phát (1, 1, 2, 2), chờ Shan duyệt. → [Bộ kỹ năng](design/12-ky-nang-nhan-vat-chinh.md#11-nâng-cấp)
 - [ ] Mô phỏng cân bằng 7 bộ kỹ năng với nhau và với nhân vật kèm. → [Bộ kỹ năng](design/12-ky-nang-nhan-vat-chinh.md#9-so-sánh-nhanh)
-- [x] Nguyên tố và tuyệt chiêu đặc trưng của 5 nhân vật kèm khởi đầu (Claude đặt 19/10/2026, chờ Shan duyệt). → [Nhân vật](design/06-nhan-vat-ky-nang.md#4-nhân-vật-kèm-nghề--chiêu-nghề)
+- [x] Nguyên tố và tuyệt chiêu đặc trưng của 5 nhân vật kèm khởi đầu (Claude đặt 19/10/2026, chờ Shan duyệt). → [Nhân vật](design/14-nhan-vat.md#4-tướng-thường)
 - [x] Danh sách nhân vật kèm trong cửa hàng (12 người) và giá 1 500/3 000 vàng (Claude đặt 19/10/2026, chờ Shan duyệt). → [Tiến trình](design/08-tien-trinh-kinh-te.md#3-cửa-hàng)
+- [ ] Duyệt 25 tướng thường mới (tên, tuyệt chiêu), giá sứ quân 3 000 vàng và việc bỏ chiêu nghề ở phe người chơi (Claude đặt 20/10/2026). → [Danh sách nhân vật](design/14-nhan-vat.md)
+- [ ] Kéo các tổ hợp nghề × hệ lệch nhiều (Cao Kiên 58%, Nguyễn Thủ Tiệp 41%, Tạ Thạch 42%): chỉnh nội tại nghề hay dạy AI dùng hiệu ứng suy yếu. → [Danh sách nhân vật](design/14-nhan-vat.md#8-cân-bằng)
 
 ## Trang bị & kinh tế
 

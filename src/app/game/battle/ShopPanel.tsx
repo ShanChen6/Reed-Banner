@@ -7,13 +7,20 @@ import { useState } from "react";
 import {
   ALL_COMPANIONS,
   CAMPAIGN,
+  ELEMENTS,
+  PROFESSIONS,
   HERO_COMPANIONS,
   isHero,
+  isWarlord,
   ownsCompanion,
+  personalSkillOf,
   shopPrice,
-  signatureOf,
-  ultimateOf,
+  shopUnlocked,
+  shopUnlockStage,
+  WARLORD_COMPANIONS,
+  type Element,
   type FighterConfig,
+  type Profession,
   type Profile,
   type ProfileAction,
 } from "@/core";
@@ -39,10 +46,17 @@ function CompanionCard({
 }) {
   const owned = ownsCompanion(profile, c.id);
   const price = shopPrice(c.id);
-  const ultimate = ultimateOf(c.id) ?? signatureOf(c.id);
+  const ultimate = personalSkillOf(c.id);
   const hero = isHero(c.id);
-  // Tướng lịch sử chưa gia nhập: không bán, chỉ báo màn chiến dịch sẽ mở.
-  const joinStage = hero && !owned ? CAMPAIGN.find((s) => s.joins === c.id) : undefined;
+  const warlord = isWarlord(c.id);
+  // Tướng lịch sử chưa gia nhập: không bán, chỉ báo màn chiến dịch sẽ mở. Sứ quân: mở bán khi qua màn của họ.
+  const lockStage = owned
+    ? undefined
+    : hero
+      ? CAMPAIGN.find((s) => s.joins === c.id)
+      : !shopUnlocked(profile, c.id)
+        ? CAMPAIGN.find((s) => s.id === shopUnlockStage(c.id))
+        : undefined;
   return (
     <li
       className={`flex items-center gap-2 rounded p-1.5 ${selected ? "bg-emerald-600/25 ring-1 ring-emerald-500" : "bg-black/5"} ${owned ? "" : "opacity-80"}`}
@@ -53,10 +67,11 @@ function CompanionCard({
           <span className="truncate">{c.name}</span>
           <ElementIcon element={c.element} className="size-3.5 shrink-0" />
         </div>
-        <div className="truncate opacity-70" title={ultimate ? `${hero ? "Chiêu riêng" : "Tuyệt chiêu"}: ${ultimate.name}` : undefined}>
+        <div className="truncate opacity-70" title={ultimate ? `${hero || warlord ? "Chiêu riêng" : "Tuyệt chiêu"}: ${ultimate.name}` : undefined}>
           {PROFESSION_NAME[c.profession]} · {ELEMENT_NAME[c.element]}
           {ultimate && <> · {ultimate.name}</>}
           {hero && <> · Tướng lịch sử</>}
+          {warlord && <> · Sứ quân</>}
         </div>
       </div>
       {owned ? (
@@ -69,8 +84,8 @@ function CompanionCard({
         >
           {selected ? "Ra trận" : "Chọn"}
         </button>
-      ) : joinStage ? (
-        <span className="shrink-0 text-[10px] opacity-70">Qua màn {joinStage.title}</span>
+      ) : lockStage ? (
+        <span className="shrink-0 text-[10px] opacity-70">Mở sau màn “{lockStage.title}”</span>
       ) : (
         <button
           type="button"
@@ -101,6 +116,10 @@ export default function ShopPanel({
 }) {
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [profFilter, setProfFilter] = useState<Profession | "all">("all");
+  const [elemFilter, setElemFilter] = useState<Element | "all">("all");
+  const shown = (c: FighterConfig) =>
+    (profFilter === "all" || c.profession === profFilter) && (elemFilter === "all" || c.element === elemFilter);
 
   const commit = (a: ProfileAction) => {
     setBusy(true);
@@ -115,8 +134,11 @@ export default function ShopPanel({
   };
 
   const owned = ALL_COMPANIONS.filter((c) => ownsCompanion(profile, c.id));
-  const forSale = ALL_COMPANIONS.filter((c) => !ownsCompanion(profile, c.id) && shopPrice(c.id) !== undefined);
-  const heroesLeft = HERO_COMPANIONS.filter((c) => !ownsCompanion(profile, c.id));
+  const forSale = ALL_COMPANIONS.filter(
+    (c) => !ownsCompanion(profile, c.id) && shopPrice(c.id) !== undefined && !isWarlord(c.id) && shown(c),
+  );
+  const warlordsLeft = WARLORD_COMPANIONS.map((w) => w.fighter).filter((c) => !ownsCompanion(profile, c.id) && shown(c));
+  const heroesLeft = HERO_COMPANIONS.filter((c) => !ownsCompanion(profile, c.id) && shown(c));
   const card = (c: FighterConfig) => (
     <CompanionCard
       key={c.id}
@@ -138,10 +160,45 @@ export default function ShopPanel({
       </div>
       {locked && <p className="mb-2 opacity-70">Đang trong trận: đổi đội và mua nhân vật sau khi trận kết thúc.</p>}
       <ul className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">{owned.map(card)}</ul>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <span className="font-semibold">Lọc nhân vật chưa có:</span>
+        <select
+          aria-label="Lọc theo nghề"
+          value={profFilter}
+          onChange={(e) => setProfFilter(e.target.value as Profession | "all")}
+          className="rounded bg-black/10 px-1 py-0.5"
+        >
+          <option value="all">Mọi nghề</option>
+          {PROFESSIONS.map((p) => (
+            <option key={p} value={p}>
+              {PROFESSION_NAME[p]}
+            </option>
+          ))}
+        </select>
+        <select
+          aria-label="Lọc theo hệ"
+          value={elemFilter}
+          onChange={(e) => setElemFilter(e.target.value as Element | "all")}
+          className="rounded bg-black/10 px-1 py-0.5"
+        >
+          <option value="all">Mọi hệ</option>
+          {ELEMENTS.map((el) => (
+            <option key={el} value={el}>
+              {ELEMENT_NAME[el]}
+            </option>
+          ))}
+        </select>
+      </div>
       {forSale.length > 0 && (
         <>
-          <h3 className="mt-3 mb-1.5 font-semibold">Cửa hàng nhân vật kèm</h3>
+          <h3 className="mt-3 mb-1.5 font-semibold">Cửa hàng tướng thường</h3>
           <ul className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">{forSale.map(card)}</ul>
+        </>
+      )}
+      {warlordsLeft.length > 0 && (
+        <>
+          <h3 className="mt-3 mb-1.5 font-semibold">Sứ quân (mở bán khi đánh bại ở chiến dịch)</h3>
+          <ul className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">{warlordsLeft.map(card)}</ul>
         </>
       )}
       {heroesLeft.length > 0 && (
@@ -151,7 +208,7 @@ export default function ShopPanel({
         </>
       )}
       <p className="mt-2 opacity-60">
-        Tướng lịch sử có 6 kỹ năng theo nguyên tố như Đinh Bộ Lĩnh, nâng theo ô. Chọn 2 nhân vật kèm ra trận cùng Đinh Bộ Lĩnh. Nhân vật mua về bắt đầu ở cấp 1, tuyệt chiêu mở ở cấp 10.
+        Mọi nhân vật kèm có 6 kỹ năng theo nguyên tố như Đinh Bộ Lĩnh, nâng theo ô; ô 5 là tuyệt chiêu (tướng thường) hoặc chiêu riêng (tướng lịch sử, sứ quân). Chọn 2 nhân vật kèm ra trận cùng Đinh Bộ Lĩnh. Nhân vật mua về bắt đầu ở cấp 1.
       </p>
     </section>
   );
