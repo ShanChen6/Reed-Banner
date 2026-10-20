@@ -1,0 +1,96 @@
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
+import {
+  createBattle,
+  mainCharacter,
+  playAiTurn,
+  STARTER_COMPANIONS,
+  type BattleEvent,
+  type BattleState,
+} from "../../src/core";
+import { createCueBus, HIT_DELAY_MS, stageCues } from "../../src/app/game/stage/director";
+
+const byId = (id: string) => STARTER_COMPANIONS.find((c) => c.id === id)!;
+
+function battle(seed: number): BattleState {
+  return createBattle({
+    sides: [
+      { fighters: [mainCharacter("thuy"), byId("haVan"), byId("maiThanh")], leader: 0 },
+      { fighters: [byId("leThach"), byId("toKim"), byId("phungPhong")], leader: 0 },
+    ],
+    seed,
+    timer: false,
+  }).state;
+}
+
+describe("đạo diễn trận", () => {
+  it("đòn kiếm: người hành động vung đòn, bên kia trúng đòn sau một nhịp, mỗi người một lần", () => {
+    const s = battle(1);
+    const events: BattleEvent[] = [
+      { type: "damage", side: 1, fighter: 0, amount: 30, absorbed: 0, source: "sword" },
+      { type: "damage", side: 1, fighter: 0, amount: 12, absorbed: 0, source: "sword" },
+    ];
+    const { start, end } = stageCues(s, events);
+    assert.deepEqual(start, []);
+    assert.deepEqual(end, [
+      { side: s.turn.side, fighter: s.turn.actor, kind: "attack", delay: 0 },
+      { side: 1, fighter: 0, kind: "hit", delay: HIT_DELAY_MS },
+    ]);
+  });
+
+  it("kỹ năng: người thi triển ra động tác ngay, đổi luôn người ra đòn kiếm sau đó", () => {
+    const s = battle(1);
+    const { start, end } = stageCues(s, [
+      { type: "skill", side: 0, fighter: 2, skill: "x" },
+      { type: "heal", side: 0, fighter: 1, amount: 40 },
+      { type: "heal", side: 0, fighter: 0, amount: 0 },
+      { type: "damage", side: 1, fighter: 1, amount: 20, absorbed: 0, source: "sword" },
+    ]);
+    assert.deepEqual(start, [{ side: 0, fighter: 2, kind: "cast", delay: 0 }]);
+    assert.deepEqual(end, [
+      { side: 0, fighter: 1, kind: "heal", delay: 0 },
+      { side: 0, fighter: 2, kind: "attack", delay: 0 },
+      { side: 1, fighter: 1, kind: "hit", delay: HIT_DELAY_MS },
+    ]);
+  });
+
+  it("lượt mới đổi phe ra đòn; bỏng không có người vung đòn", () => {
+    const s = battle(1);
+    const { end } = stageCues(s, [
+      { type: "turnStart", side: 1, actor: 2, extra: false },
+      { type: "damage", side: 1, fighter: 2, amount: 5, absorbed: 0, source: "burn" },
+      { type: "damage", side: 0, fighter: 0, amount: 25, absorbed: 0, source: "sword" },
+    ]);
+    assert.deepEqual(end, [
+      { side: 1, fighter: 2, kind: "hit", delay: 0 },
+      { side: 1, fighter: 2, kind: "attack", delay: 0 },
+      { side: 0, fighter: 0, kind: "hit", delay: HIT_DELAY_MS },
+    ]);
+  });
+
+  it("cả trận AI: mọi động tác trỏ tới nhân vật có thật", () => {
+    let s = battle(9);
+    let cues = 0;
+    for (let turn = 0; turn < 60 && s.winner === null; turn++) {
+      const r = playAiTurn(s, "hard");
+      const { start, end } = stageCues(s, r.events);
+      for (const c of [...start, ...end]) {
+        assert.ok(s.sides[c.side].fighters[c.fighter], `${c.side}:${c.fighter}`);
+        cues++;
+      }
+      s = r.state;
+    }
+    assert.ok(cues > 30);
+  });
+
+  it("kênh động tác: bỏ lô rỗng, gỡ người nghe được", () => {
+    const bus = createCueBus();
+    const got: number[] = [];
+    const off = bus.on((c) => got.push(c.length));
+    bus.emit([]);
+    bus.emit([{ side: 0, fighter: 0, kind: "hit", delay: 0 }]);
+    off();
+    bus.emit([{ side: 0, fighter: 0, kind: "hit", delay: 0 }]);
+    assert.deepEqual(got, [1]);
+  });
+});
