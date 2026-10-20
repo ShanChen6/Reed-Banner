@@ -36,7 +36,7 @@ import {
   type ProfileAction,
 } from "@/core";
 import { GearIcon } from "../art/gear";
-import { ElementIcon, ELEMENT_COLOR } from "../art/icons";
+import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { GearShop } from "../battle/GearPanel";
 import {
@@ -518,7 +518,11 @@ export default function ProfileScreen({
                     />{" "}
                     {ELEMENT_NAME[fighter.element]}
                   </span>
-                  <span className="absolute top-1.5 right-2 rounded bg-black/50 px-1.5 py-0.5 text-[11px] text-amber-100">
+                  <span className="absolute top-1.5 right-2 flex items-center gap-1 rounded bg-black/50 px-1.5 py-0.5 text-[11px] text-amber-100">
+                    <ProfessionIcon
+                      profession={fighter.profession}
+                      className="size-3.5"
+                    />{" "}
                     {PROFESSION_NAME[fighter.profession]}
                   </span>
                 </div>
