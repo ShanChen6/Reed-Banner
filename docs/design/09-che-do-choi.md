@@ -143,7 +143,44 @@ Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (tr
 - **Lưu điểm theo đợt:** bỏ dở quá 24 giờ thì không xử thua; lượt chơi kết thúc ở đợt cuối cùng đã hoàn thành, và điểm vẫn được ghi.
 - Điểm = số đợt đã vượt qua.
 
-> TODO: số đối thủ mỗi đợt, đường cong sức mạnh, cách đối thủ mới vào sân (lấp chỗ người đã gục).
+### 4.1 Bản đầu (Claude đặt 20/10/2026, chờ Shan duyệt)
+
+Trang `/survival`, code ở `src/core/survival/`. Cả lượt chơi là **một trận** trên server (`Match.survival`), nghỉ giữa đợt làm ngay trong trận.
+
+- **Đội:** đội 3vs3 đã chọn ở trang Hồ sơ. Người chơi luôn đi trước ở mỗi đợt.
+- **Đối thủ mỗi đợt:**
+  - Đợt 1–2 có 2 đối thủ, từ đợt 3 có 3. Đối thủ thay **toàn bộ** phe AI (không lấp chỗ từng người).
+  - Cứ 5 đợt có một đợt trùm: một sứ quân dẫn 2 tùy tướng, sứ quân máu ×1,5.
+  - Đối thủ lấy từ 14 nhân vật kèm (khởi đầu và cửa hàng), sinh theo seed riêng của lượt chơi (seed chỉ nằm trên server).
+  - Cấp: bằng cấp nhân vật chính lúc bắt đầu, cứ 4 đợt thêm 1 cấp (tối đa 30).
+  - Sức mạnh (nhân vào công): 0,45 ở đợt 1, mỗi đợt thêm 0,05. Máu nhân thêm 0,6 để mỗi đợt ngắn.
+  - Độ khó AI: đợt 1–2 Dễ, 3–6 Thường, 7–12 Khó, 13–20 Trùm, từ 21 Ác mộng.
+- **Đợt mới vào sân:** bàn cờ giữ nguyên. Phe người chơi giữ năng lượng và Nộ, xóa mọi hiệu ứng, tinh thần và đếm lượt bắt đầu lại.
+- **Báo trước:** trong lúc đánh luôn hiện đợt kế tiếp (số đối thủ, cấp, tên và hệ). Chưa làm kiểu đếm ngược "3 lượt nữa".
+- **Hồi sinh:**
+  - "Sau 2 đợt" tính cả đợt bị gục: gục ở đợt 3 thì nghỉ đợt 4, vào lại đợt 5.
+  - Mỗi lần nghỉ tối đa 1 người đứng dậy. Đã có người tự đứng dậy thì không trả lương được nữa.
+  - Lương để trả tính sau khi đã cộng +25.
+- **Dừng:**
+  - Lúc nghỉ giữa đợt có nút dừng để ghi điểm.
+  - Bỏ dở quá 24 giờ thì lượt chơi dừng ở đợt cuối đã vượt qua, không tính là thua.
+- **Thưởng khi kết thúc:**
+  - 10 vàng mỗi đợt vượt qua.
+  - Vàng và sách nhặt trên bàn cờ cả lượt chơi.
+  - Món rơi theo độ khó của đợt cuối.
+  - Vượt qua ít nhất 1 đợt thì tính là thắng (kinh nghiệm, món rơi).
+- **Kỷ lục:** hồ sơ lưu `survival.best`.
+
+Mô phỏng: `pnpm sim -- --survival --battles 50`. AI Thường đánh thay người chơi, đội khởi đầu, trả lương hồi sinh khi còn ít nhất 30 lương sau khi trả.
+
+| Cấp | Trung bình | Trung vị | p90 | Qua đợt 10 | Qua đợt 15 | Lượt mỗi đợt (2 phe) |
+|---|---|---|---|---|---|---|
+| 5 | 11,1 | 11 | 15 | 62% | 12% | 19,3 |
+| 10 | 11,3 | 12 | 15 | 66% | 12% | 19,2 |
+| 20 | 10,7 | 11 | 14 | 62% | 2% | 19,7 |
+| 30 | 12,4 | 12 | 17 | 86% | 18% | 20,0 |
+
+Mỗi đợt khoảng 10 lượt mỗi bên, đúng mức trên của mục tiêu 6–10.
 
 ## 5. Chế độ bổ sung
 

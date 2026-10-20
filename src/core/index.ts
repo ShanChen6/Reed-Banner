@@ -9,3 +9,4 @@ export * from "./roster";
 export * from "./sim";
 export * from "./campaign";
 export * from "./tower";
+export * from "./survival";

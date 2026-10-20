@@ -6,6 +6,7 @@ import {
   applyCampaignResult,
   applyRaidResult,
   applyTowerResult,
+  applySurvivalResult,
   applyRewards,
   battleRewards,
   createRng,
@@ -14,6 +15,10 @@ import {
   humanAct,
   isRaidTier,
   leveledFoe,
+  matchOver,
+  newSurvivalRun,
+  survivalCleared,
+  survivalWave,
   newTowerRun,
   ownsCompanion,
   PROFESSIONS,
@@ -31,7 +36,8 @@ import {
   towerFloor,
   towerTeam,
   viewOf,
-  type BattleAction,
+  type MatchAction,
+  type SurvivalResult,
   type BattleEvent,
   type Difficulty,
   type Element,
@@ -85,6 +91,8 @@ export interface NewBattleInput {
   readonly raid?: RaidTier;
   /** Leo tháp: đánh tầng kế tiếp của lượt leo (bắt đầu lượt mới nếu chưa có). */
   readonly tower?: true;
+  /** Sinh tồn: bắt đầu lượt chơi mới với đội đang chọn ở hồ sơ. */
+  readonly survival?: true;
 }
 
 export type ServiceError = MatchError | "badRequest" | "notFound" | "conflict";
@@ -103,6 +111,8 @@ export interface Outcome {
   readonly raid?: RaidResult;
   /** Chỉ có ở trận leo tháp. */
   readonly tower?: TowerResult;
+  /** Chỉ có ở sinh tồn. */
+  readonly survival?: SurvivalResult;
 }
 
 export type ServiceResult =
@@ -127,6 +137,21 @@ const oneOf = <T extends string>(list: readonly T[], x: unknown): x is T =>
 /** Kiểm tra body tạo trận; null khi không hợp lệ. */
 export function parseNewBattle(body: unknown): NewBattleInput | null {
   if (!isObj(body)) return null;
+  if (body.survival !== undefined) {
+    if (
+      body.survival !== true ||
+      body.stage !== undefined ||
+      body.tower !== undefined
+    )
+      return null;
+    const parsed = parseNewBattle({
+      ...body,
+      survival: undefined,
+      mode: "3v3",
+      difficulty: "easy",
+    });
+    return parsed && { ...parsed, survival: true };
+  }
   if (body.tower !== undefined) {
     if (body.tower !== true || body.stage !== undefined) return null;
     const parsed = parseNewBattle({
@@ -191,8 +216,15 @@ const toSlide = (s: unknown): Slide | null =>
     ? { axis: s.axis, index: s.index as number, offset: s.offset as number }
     : null;
 
-function toAction(a: Record<string, unknown>): BattleAction | null {
+function toAction(a: Record<string, unknown>): MatchAction | null {
   switch (a.type) {
+    case "nextWave":
+      if (a.revive === undefined) return { type: "nextWave" };
+      return Number.isInteger(a.revive)
+        ? { type: "nextWave", revive: a.revive as number }
+        : null;
+    case "endRun":
+      return { type: "endRun" };
     case "swap": {
       const from = toPos(a.from);
       const to = toPos(a.to);
@@ -230,7 +262,7 @@ function toAction(a: Record<string, unknown>): BattleAction | null {
 /** Kiểm tra hình dạng hành động `{ seq, action }`; luật chi tiết do core xét. */
 export function parseAction(
   body: unknown,
-): { action: BattleAction; seq: number } | null {
+): { action: MatchAction; seq: number } | null {
   if (!isObj(body) || !Number.isInteger(body.seq) || !isObj(body.action))
     return null;
   const action = toAction(body.action);
@@ -260,6 +292,7 @@ export async function createBattleFor(
   deps: Deps,
 ): Promise<ServiceResult> {
   if (input.tower) return createTowerBattle(ownerId, input, deps);
+  if (input.survival) return createSurvivalBattle(ownerId, input, deps);
   const { profile } = await loadProfile(deps.profiles, ownerId);
   // Chỉ ra trận nhân vật đã có (khởi đầu hoặc đã mua).
   if (!input.companions.every((id) => ownsCompanion(profile, id)))
@@ -401,6 +434,51 @@ async function createTowerBattle(
   return { ok: true, id: record.id, view: viewOf(match), events };
 }
 
+/** Sinh tồn: một trận cho cả lượt chơi; đợt 1 với đội đang chọn ở hồ sơ, người chơi đi trước. */
+async function createSurvivalBattle(
+  ownerId: string,
+  input: NewBattleInput,
+  deps: Deps,
+): Promise<ServiceResult> {
+  const u = await updateProfile(
+    deps.profiles,
+    ownerId,
+    (p) => ({
+      ok: true,
+      profile: { ...p, element: input.element, profession: input.profession },
+    }),
+    deps.now,
+  );
+  if (!u.ok) return { ok: false, error: "conflict" };
+  const profile = u.stored.profile;
+  // Seed đợt tách khỏi seed bàn cờ.
+  const run = newSurvivalRun(
+    profile,
+    Math.imul(deps.seed, 0x2c1b3c6d) ^ 0x5bd1e995,
+  );
+  const wave = survivalWave(run, 1);
+  const { match, events } = startMatch({
+    sides: [
+      { fighters: profileTeam(profile, profile.team), leader: 0 },
+      { fighters: wave.foes, leader: 0 },
+    ],
+    difficulty: wave.difficulty,
+    seed: deps.seed,
+    firstSide: 0,
+    now: deps.now,
+    survival: run,
+  });
+  const record: MatchRecord = {
+    id: deps.newId(),
+    ownerId,
+    match,
+    createdAt: deps.now,
+    updatedAt: deps.now,
+  };
+  await deps.store.create(record);
+  return { ok: true, id: record.id, view: viewOf(match), events };
+}
+
 async function load(
   id: string,
   ownerId: string,
@@ -428,12 +506,17 @@ async function reward(
   match: Match,
   deps: Omit<Deps, "seed" | "newId">,
 ): Promise<Outcome | undefined> {
-  if (
-    match.battle.winner === null ||
-    !(await deps.store.claimReward(r.id, deps.now))
-  )
+  if (!matchOver(match) || !(await deps.store.claimReward(r.id, deps.now)))
     return undefined;
-  const rewards = battleRewards(match.battle, HUMAN);
+  // Sinh tồn: vượt qua ít nhất một đợt tính là thắng (kinh nghiệm, món rơi).
+  const cleared = match.survival
+    ? survivalCleared(match.survival, match.battle)
+    : 0;
+  const rewards = battleRewards(
+    match.battle,
+    HUMAN,
+    match.survival ? cleared > 0 : undefined,
+  );
   const ids = match.battle.sides[HUMAN].fighters.map((f) => f.id);
   const rolled = rollDrop(
     createRng(dropSeed(r.id)),
@@ -447,6 +530,7 @@ async function reward(
   let campaign: CampaignResult | undefined;
   let raid: RaidResult | undefined;
   let tower: TowerResult | undefined;
+  let survival: SurvivalResult | undefined;
   const stage = match.stage;
   const u = await updateProfile(
     deps.profiles,
@@ -455,7 +539,11 @@ async function reward(
       const applied = applyRewards(p, ids, rewards);
       levelUps = applied.levelUps;
       let next = applied.profile;
-      if (match.tower) {
+      if (match.survival) {
+        const c = applySurvivalResult(next, cleared);
+        next = c.profile;
+        survival = c.result;
+      } else if (match.tower) {
         const side = match.battle.sides[HUMAN];
         const c = applyTowerResult(
           next,
@@ -503,6 +591,7 @@ async function reward(
     ...(campaign ? { campaign } : {}),
     ...(raid ? { raid } : {}),
     ...(tower ? { tower } : {}),
+    ...(survival ? { survival } : {}),
   };
 }
 
@@ -551,7 +640,7 @@ export async function settleAbandoned(
     const r = await deps.store.get(id);
     if (!r) continue;
     const res = await settleRecord(r, deps);
-    if (res.ok && res.view.battle.winner !== null) settled++;
+    if (res.ok && res.outcome) settled++;
   }
   return settled;
 }
