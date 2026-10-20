@@ -310,7 +310,7 @@
 .campaign-map .map-num-light {
   fill: #f5f0e1;
 }
-.campaign-map .map-stage:focus-visible {
+.campaign-map .map-stage:focus {
   outline: none;
 }
 .campaign-map .map-stage:focus-visible circle:not(.map-pulse) {

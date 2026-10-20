@@ -30,6 +30,7 @@ import {
   playAiTurn,
   presetLoadout,
   PROFESSIONS,
+  RAID_TIER_INFO,
   profileTeam,
   receiveDrop,
   rollDrop,
@@ -44,6 +45,7 @@ import {
   type BattleAction,
   type BattleRewards,
   type CampaignResult,
+  type RaidResult,
   type BattleEvent,
   type BattleState,
   type Difficulty,
@@ -220,6 +222,8 @@ interface Outcome {
   readonly soldFor: number;
   /** Chỉ có ở trận chiến dịch trên /play. */
   readonly campaign?: CampaignResult;
+  /** Chỉ có ở trận đánh trùm trên /play. */
+  readonly raid?: RaidResult;
 }
 
 function demoDrop(
@@ -1638,6 +1642,17 @@ export default function DemoGame({
                               </span>
                             )}
                             Lương mang sang: {outcome.campaign.food}
+                          </p>
+                        )}
+                        {outcome.raid?.firstClear && (
+                          <p className="font-semibold text-amber-300">
+                            Thắng {RAID_TIER_INFO[outcome.raid.tier].name} lần
+                            đầu: +{outcome.raid.bonusGold} vàng
+                            {outcome.raid.item
+                              ? ` · ${gearText(outcome.raid.item)}`
+                              : outcome.raid.soldFor > 0
+                                ? ` · túi đầy, món thưởng bán được ${outcome.raid.soldFor} vàng`
+                                : ""}
                           </p>
                         )}
                         {outcome.campaign?.joined && (

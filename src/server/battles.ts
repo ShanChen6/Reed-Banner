@@ -4,16 +4,20 @@
 import {
   ALL_COMPANIONS,
   applyCampaignResult,
+  applyRaidResult,
   applyRewards,
   battleRewards,
   createRng,
   ELEMENTS,
   HUMAN,
   humanAct,
+  isRaidTier,
   leveledFoe,
   ownsCompanion,
   PROFESSIONS,
   profileTeam,
+  raidSetup,
+  raidUnlocked,
   receiveDrop,
   rollDrop,
   settle,
@@ -29,6 +33,8 @@ import {
   type Element,
   type BattleRewards,
   type CampaignResult,
+  type RaidResult,
+  type RaidTier,
   type FighterConfig,
   type GearItem,
   type LevelUp,
@@ -69,6 +75,8 @@ export interface NewBattleInput {
   readonly difficulty: Difficulty;
   /** Màn chiến dịch: thể thức, độ khó và đối thủ lấy theo màn. */
   readonly stage?: string;
+  /** Đánh trùm: bậc của trùm ở màn `stage`. */
+  readonly raid?: RaidTier;
 }
 
 export type ServiceError = MatchError | "badRequest" | "notFound" | "conflict";
@@ -83,6 +91,8 @@ export interface Outcome {
   readonly soldFor: number;
   /** Chỉ có ở trận chiến dịch. */
   readonly campaign?: CampaignResult;
+  /** Chỉ có ở trận đánh trùm. */
+  readonly raid?: RaidResult;
 }
 
 export type ServiceResult =
@@ -111,13 +121,16 @@ export function parseNewBattle(body: unknown): NewBattleInput | null {
     const stage =
       typeof body.stage === "string" ? stageById(body.stage) : undefined;
     if (!stage) return null;
+    if (body.raid !== undefined && !isRaidTier(body.raid)) return null;
+    const raid = body.raid as RaidTier | undefined;
     const parsed = parseNewBattle({
       ...body,
       stage: undefined,
+      raid: undefined,
       mode: stage.mode,
-      difficulty: stage.difficulty,
+      difficulty: raid ? raidSetup(stage, raid).difficulty : stage.difficulty,
     });
-    return parsed && { ...parsed, stage: stage.id };
+    return parsed && { ...parsed, stage: stage.id, ...(raid ? { raid } : {}) };
   }
   const { mode, element, profession, difficulty } = body;
   const companions = Array.isArray(body.companions) ? body.companions : [];
@@ -252,23 +265,36 @@ export async function createBattleFor(
   }
   const team = profileTeam(chosen, input.companions);
   const stage = input.stage === undefined ? undefined : stageById(input.stage);
-  if (stage && !stageUnlocked(profile.campaign, stage.id))
+  if (
+    stage &&
+    !(input.raid
+      ? raidUnlocked(profile.campaign, stage.id, input.raid)
+      : stageUnlocked(profile.campaign, stage.id))
+  )
     return { ok: false, error: "badRequest" };
-  const foes = stage
-    ? stageFoes(stage)
-    : pickFoes(input, deps.seed).map((f) => leveledFoe(f, profile.main.level));
+  // Đánh trùm: luật sân nhà, không dùng lương chiến dịch.
+  const raid = stage && input.raid ? raidSetup(stage, input.raid) : undefined;
+  const foes = raid
+    ? raid.foes
+    : stage
+      ? stageFoes(stage)
+      : pickFoes(input, deps.seed).map((f) =>
+          leveledFoe(f, profile.main.level),
+        );
+  const foeFood = raid ? raid.foeFood : stage?.foeFood;
+  const weights = raid ? raid.weights : stage?.weights;
   const { match, events } = startMatch({
     sides: [
       // Chiến dịch: lương mang sang từ trận trước; phe AI theo luật màn.
       {
         fighters: team,
         leader: 0,
-        ...(stage ? { food: profile.campaign.food } : {}),
+        ...(stage && !raid ? { food: profile.campaign.food } : {}),
       },
       {
         fighters: foes,
         leader: 0,
-        ...(stage?.foeFood !== undefined ? { food: stage.foeFood } : {}),
+        ...(foeFood !== undefined ? { food: foeFood } : {}),
       },
     ],
     difficulty: input.difficulty,
@@ -278,7 +304,8 @@ export async function createBattleFor(
     ...(stage
       ? {
           stage: stage.id,
-          ...(stage.weights ? { weights: stage.weights } : {}),
+          ...(input.raid ? { raid: input.raid } : {}),
+          ...(weights ? { weights } : {}),
         }
       : {}),
   });
@@ -337,6 +364,7 @@ async function reward(
   let drop: GearItem | null = null;
   let soldFor = 0;
   let campaign: CampaignResult | undefined;
+  let raid: RaidResult | undefined;
   const stage = match.stage;
   const u = await updateProfile(
     deps.profiles,
@@ -345,7 +373,18 @@ async function reward(
       const applied = applyRewards(p, ids, rewards);
       levelUps = applied.levelUps;
       let next = applied.profile;
-      if (stage) {
+      if (stage && match.raid) {
+        // Rng riêng cho món thưởng, khác luồng món rơi thường.
+        const c = applyRaidResult(
+          next,
+          stage,
+          match.raid,
+          rewards.won,
+          createRng(dropSeed(`${r.id}:raid`)),
+        );
+        next = c.profile;
+        raid = c.result;
+      } else if (stage) {
         const c = applyCampaignResult(
           next,
           stage,
@@ -370,6 +409,7 @@ async function reward(
     drop,
     soldFor,
     ...(campaign ? { campaign } : {}),
+    ...(raid ? { raid } : {}),
   };
 }
 
