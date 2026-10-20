@@ -7,6 +7,7 @@ import {
   applyRaidResult,
   applyTowerResult,
   applySurvivalResult,
+  recordMatch,
   DAILY_GOLD,
   dailyKey,
   dailyScore,
@@ -43,6 +44,8 @@ import {
   type MatchAction,
   type SurvivalResult,
   type DailyScore,
+  type MatchMode,
+  type Profile,
   type BattleEvent,
   type Difficulty,
   type Element,
@@ -548,6 +551,13 @@ async function createDailyBattle(
   return { ok: true, id, view: viewOf(match), events };
 }
 
+function matchMode(m: Match): MatchMode {
+  if (m.survival) return "survival";
+  if (m.tower) return "tower";
+  if (m.stage) return m.raid ? "raid" : "campaign";
+  return m.daily ? "daily" : "normal";
+}
+
 /** Thử thách ngày xong: ghi điểm lên bảng xếp hạng, chỉ cộng vàng (đội là đội của đề, không nhận kinh nghiệm). */
 async function rewardDaily(
   r: MatchRecord,
@@ -560,7 +570,23 @@ async function rewardDaily(
   const u = await updateProfile(
     deps.profiles,
     r.ownerId,
-    (p) => ({ ok: true, profile: { ...p, gold: p.gold + gold } }),
+    (p) => ({
+      ok: true,
+      profile: {
+        ...p,
+        gold: p.gold + gold,
+        quests: recordMatch(
+          p.quests,
+          {
+            mode: "daily",
+            won: score.won,
+            coins: match.battle.sides[HUMAN].gold,
+            waves: 0,
+          },
+          deps.now,
+        ),
+      },
+    }),
     deps.now,
   );
   if (!u.ok) console.error("Không cộng được thưởng thử thách ngày", r.id);
@@ -642,7 +668,19 @@ async function reward(
     (p) => {
       const applied = applyRewards(p, ids, rewards);
       levelUps = applied.levelUps;
-      let next = applied.profile;
+      let next: Profile = {
+        ...applied.profile,
+        quests: recordMatch(
+          applied.profile.quests,
+          {
+            mode: matchMode(match),
+            won: rewards.won,
+            coins: match.battle.sides[HUMAN].gold,
+            waves: cleared,
+          },
+          deps.now,
+        ),
+      };
       if (match.survival) {
         const c = applySurvivalResult(next, cleared);
         next = c.profile;
