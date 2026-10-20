@@ -31,7 +31,7 @@ Mỗi dòng là một PR vào develop, làm theo thứ tự. Số liệu là đi
 
 | # | Việc |
 |---|---|
-| 5.1 | Leo tháp: máu và lương mang sang giữa các tầng, chọn 1 trong 3 phần thưởng |
+| 5.1 | Leo tháp: máu và lương mang sang giữa các tầng, chọn 1 trong 3 phần thưởng. Đã làm (20/10/2026), trang `/tower`, xem [Chế độ chơi](design/09-che-do-choi.md#31-bản-đầu-claude-đặt-20102026-chờ-shan-duyệt) |
 | 5.2 | Thử thách hằng ngày: seed chung mỗi ngày, xếp hạng |
 | 5.3 | Sinh tồn: đối thủ theo đợt, báo trước, hồi sinh |
 | 5.4 | Nhiệm vụ ngày/tuần, thành tựu |
