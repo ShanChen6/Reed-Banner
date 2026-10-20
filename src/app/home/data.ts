@@ -10,7 +10,7 @@ export const ELEMENT_TRAIT: Record<Element, { readonly role: string; readonly ta
   hoa: { role: "Sát thương lớn, thủ yếu", tags: ["Thiêu đốt", "Công+"] },
   tho: { role: "Trụ lâu, chịu đòn", tags: ["Khiên", "Phản đòn", "Thủ+"] },
   loi: { role: "Đánh nhanh, phá nhịp", tags: ["Trừ năng lượng", "Câm lặng"] },
-  phong: { role: "Linh hoạt, điều khiển bàn cờ", tags: ["Trượt hàng/cột", "Xua tan", "Công−"] },
+  phong: { role: "Linh hoạt, điều khiển bàn cờ", tags: ["Lốc xoáy", "Xua tan", "Công−"] },
 };
 
 /** Ô ghép được cho gì, theo docs/design/03-tai-nguyen-cong-thuc.md. */

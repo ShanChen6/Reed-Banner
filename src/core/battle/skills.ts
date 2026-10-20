@@ -50,10 +50,10 @@ export type SkillStep =
   | { readonly type: "destroy"; readonly area: { readonly random: number } | AreaShape }
   | { readonly type: "transform"; readonly kind: TileKind; readonly count: number }
   /**
-   * Trượt 1 hàng hoặc 1 cột do người chơi chọn, tối đa `distance` ô.
-   * axis: chỉ cho trượt hàng; exact: phải đi đúng `distance` ô.
+   * Lốc xoáy: xoay vòng 8 ô quanh một ô tâm, tối đa `turns` nấc mỗi chiều.
+   * auto: game tự chọn lần xoay tạo bộ ghép nhiều ô nhất (autoWhirl), người chơi không thao tác.
    */
-  | { readonly type: "slide"; readonly distance: number; readonly axis?: "row"; readonly exact?: boolean };
+  | { readonly type: "whirl"; readonly turns: number; readonly auto?: boolean };
 
 export interface SkillDef {
   readonly id: string;
@@ -189,7 +189,7 @@ const ULTIMATES: readonly SkillDef[] = ([
       { type: "dispel", to: "targets" },
       { type: "effect", to: "targets", effect: "atkDown", value: 0.3, turns: 2 },
       { type: "energy", to: "team", amount: 20 },
-      { type: "slide", distance: 2 },
+      { type: "whirl", turns: 2, auto: true },
     ],
   },
   // Tướng thường bán ở cửa hàng, docs/design/14-nhan-vat.md mục 4.
@@ -305,7 +305,7 @@ const ULTIMATES: readonly SkillDef[] = ([
   },
   {
     id: "truyPhongDoatMenh", name: "Truy Phong Đoạt Mệnh", profession: "tuongSi", tier: 3, character: "huaLang", cost: 100, target: "enemy",
-    steps: [{ type: "damage", atk: 2.4 }, { type: "energy", to: "team", amount: 15 }, { type: "slide", distance: 2 }],
+    steps: [{ type: "damage", atk: 2.4 }, { type: "energy", to: "team", amount: 15 }, { type: "whirl", turns: 2, auto: true }],
   },
   // Pháp sư: sát thương cả đội đối thủ.
   {
@@ -332,7 +332,7 @@ const ULTIMATES: readonly SkillDef[] = ([
   },
   {
     id: "phongAnCuongLuu", name: "Phong Ấn Cuồng Lưu", profession: "phapSu", tier: 3, character: "lieuYen", cost: 100, target: "allEnemies",
-    steps: [{ type: "damage", atk: 1.1 }, { type: "dispel", to: "targets" }, { type: "slide", distance: 2 }],
+    steps: [{ type: "damage", atk: 1.1 }, { type: "dispel", to: "targets" }, { type: "whirl", turns: 2, auto: true }],
   },
   // Binh lính: khiêu khích, chịu đòn, che chắn.
   {
@@ -415,7 +415,7 @@ const ULTIMATES: readonly SkillDef[] = ([
   },
   {
     id: "phieuPhongLyGian", name: "Phiêu Phong Ly Gián", profession: "muuSi", tier: 3, character: "buiPhieu", cost: 100, target: "allEnemies",
-    steps: [{ type: "energy", to: "targets", amount: -25 }, { type: "dispel", to: "targets" }, { type: "slide", distance: 2 }],
+    steps: [{ type: "energy", to: "targets", amount: -25 }, { type: "dispel", to: "targets" }, { type: "whirl", turns: 2, auto: true }],
   },
   // Quân sư: suy yếu đối thủ, cổ vũ đội mình.
   {
@@ -680,7 +680,7 @@ const MAIN: readonly SkillDef[] = [
 const PHONG: readonly SkillDef[] = [
   {
     id: "phongQuyenTanVan", name: "Phong Quyển Tàn Vân", element: "phong", slot: 1, cost: 40, target: "self",
-    steps: [{ type: "slide", distance: 2 }],
+    steps: [{ type: "whirl", turns: 2 }],
   },
   {
     id: "thanhPhongTuKhi", name: "Thanh Phong Tụ Khí", element: "phong", slot: 2, cost: 30, target: "self",
@@ -704,7 +704,7 @@ const PHONG: readonly SkillDef[] = [
       { type: "damage", atk: 3 },
       { type: "dispel", to: "targets" },
       { type: "effect", to: "targets", effect: "atkDown", value: 0.25, turns: 2 },
-      { type: "slide", distance: 2, axis: "row", exact: true },
+      { type: "whirl", turns: 2, auto: true },
       { type: "destroy", area: { square: 4 } },
     ],
   },
@@ -803,7 +803,7 @@ const SIGNATURES: readonly SkillDef[] = [
       { type: "damage", atk: 0.6 },
       { type: "dispel", to: "targets" },
       { type: "effect", to: "targets", effect: "atkDown", value: 0.25, turns: 2 },
-      { type: "slide", distance: 2 },
+      { type: "whirl", turns: 2, auto: true },
     ],
   },
   {
@@ -945,9 +945,9 @@ export function heroSkills(element: Element, character?: string): SkillDef[] {
   return mainSkills(element).map((d) => (sig && d.slot === sig.slot ? sig : d));
 }
 
-/** Bước trượt của kỹ năng, nếu có (người chơi phải chọn hàng/cột và hướng). */
-export function slideStep(def: SkillDef): Extract<SkillStep, { type: "slide" }> | undefined {
-  return def.steps.find((s): s is Extract<SkillStep, { type: "slide" }> => s.type === "slide");
+/** Bước lốc xoáy người chơi tự chọn tâm (không tính bước tự xoay). */
+export function whirlStep(def: SkillDef): Extract<SkillStep, { type: "whirl" }> | undefined {
+  return def.steps.find((s): s is Extract<SkillStep, { type: "whirl" }> => s.type === "whirl" && !s.auto);
 }
 
 /** Kỹ năng cần người chơi chạm một ô làm tâm hoặc góc vùng. */
@@ -987,12 +987,11 @@ export const PASSIVE = {
   loiDrain: 20,
   loiEnergyPerTile: 5,
   /**
-   * Phong: trong thời gian hiệu lực, phe được trượt miễn phí 1 ô trước kỹ năng và đổi ô, tối đa
-   * phongFreeSlides lần cho mỗi lần kích hoạt (mô phỏng: mỗi lần ra tay một lần thì phe Phong thắng
-   * khoảng 80%). Bỏ 15 năng lượng tức thì theo mô phỏng 19/10/2026.
+   * Phong: trong thời gian hiệu lực, phe được xoay lốc xoáy miễn phí phongFreeWhirlTurns nấc trước
+   * kỹ năng và đổi ô, tối đa phongFreeWhirls lần cho mỗi lần kích hoạt.
    */
-  phongFreeSlide: 1,
-  phongFreeSlides: 1,
+  phongFreeWhirlTurns: 1,
+  phongFreeWhirls: 1,
 } as const;
 
 /**

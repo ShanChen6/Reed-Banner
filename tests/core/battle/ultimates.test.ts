@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { act, companionById, createBattle, needsCell, SHOP_COMPANIONS, slideStep, STARTER_COMPANIONS, ultimateOf, type BattleState, type FighterConfig } from "../../../src/core";
+import { act, autoWhirl, companionById, createBattle, needsCell, SHOP_COMPANIONS, STARTER_COMPANIONS, ultimateOf, whirlStep, type BattleState, type FighterConfig } from "../../../src/core";
 
 const byId = (id: string) => companionById(id)!;
 const foe = (id: string): FighterConfig => ({ id, name: id, element: "moc", profession: "tuongSi", maxHp: 1000, atk: 50, def: 0 });
@@ -66,15 +66,17 @@ describe("tuyệt chiêu nấc 3", () => {
     assert.ok(t.effects.some((e) => e.kind === "silence"));
   });
 
-  it("Phong Vân Biến Trận: giảm công đối thủ, cả đội thêm năng lượng, trượt bàn", () => {
+  it("Phong Vân Biến Trận: giảm công đối thủ, cả đội thêm năng lượng, tự xoay lốc xoáy", () => {
     const start = setup("phungPhong");
     start.sides[0].fighters[1]!.energy = 0;
-    const r = act(start, { type: "skill", skill: "phongVanBienTran", slide: { axis: "row", index: 2, offset: 2 } });
+    const r = act(start, { type: "skill", skill: "phongVanBienTran" });
     assert.ok(r.ok, r.ok ? "" : r.error);
     const s = (r as { state: BattleState }).state;
     assert.ok(s.sides[1].fighters.every((f) => f.effects.some((e) => e.kind === "atkDown")));
     assert.equal(s.sides[0].fighters[1]!.energy, 20);
-    assert.ok(r.events.some((e) => e.type === "slide"));
+    const auto = autoWhirl(start.board, 2);
+    const whirl = r.events.find((e) => e.type === "whirl");
+    assert.deepEqual(whirl && whirl.type === "whirl" ? whirl.whirl : null, auto, "xoay đúng lần game tự chọn");
   });
 
   it("tuyệt chiêu của nhân vật cửa hàng dùng được trong trận", () => {
@@ -83,7 +85,7 @@ describe("tuyệt chiêu nấc 3", () => {
       const extra = {
         ...(def.target === "enemy" || def.target === "ally" ? { target: 0 } : {}),
         ...(needsCell(def) ? { cell: { row: 3, col: 3 } } : {}),
-        ...(slideStep(def) ? { slide: { axis: "row" as const, index: 2, offset: 2 } } : {}),
+        ...(whirlStep(def) ? { whirl: { center: { row: 2, col: 2 }, turns: 1 } } : {}),
       };
       const r = act(setup(fighter.id), { type: "skill", skill: def.id, ...extra });
       assert.ok(r.ok, `${def.id}: ${r.ok ? "" : r.error}`);

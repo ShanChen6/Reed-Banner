@@ -44,8 +44,8 @@ export interface Side {
   rage: number;
   /** Số lượt của phe còn lại của kỹ năng bị động; 0 là không có hiệu lực. */
   passiveTurns: number;
-  /** Số lần trượt miễn phí còn lại của bị động Phong đang có hiệu lực. */
-  freeSlides: number;
+  /** Số lần xoay lốc xoáy miễn phí còn lại của bị động Phong đang có hiệu lực. */
+  freeWhirls: number;
   /** Vàng và sách thu được, dùng cho phần thưởng ngoài trận. */
   gold: number;
   books: number;
@@ -65,8 +65,8 @@ export interface TurnState {
   extra: boolean;
   /** Đã dùng kỹ năng trong lần ra tay này (tối đa 1). */
   skillUsed: boolean;
-  /** Đã dùng lần trượt miễn phí của bị động Phong trong lần ra tay này. */
-  slideUsed: boolean;
+  /** Đã dùng lần xoay miễn phí của bị động Phong trong lần ra tay này. */
+  whirlUsed: boolean;
   /** Mốc hết giờ (ms); null khi tắt đồng hồ. */
   deadline: number | null;
   /** Số lượt đã bắt đầu của cả trận, tính từ 1. */
