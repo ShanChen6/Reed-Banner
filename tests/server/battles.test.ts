@@ -327,8 +327,10 @@ describe("trận chiến dịch", () => {
       firstClear: true,
       bonusGold: 100,
       food: 33,
+      joined: "nguyenBac",
     });
     const saved = (await loadProfile(profiles, "g_c")).profile;
     assert.deepEqual(saved.campaign, { cleared: ["coLau"], food: 33 });
+    assert.equal(saved.companions.nguyenBac?.level, 1);
   });
 });

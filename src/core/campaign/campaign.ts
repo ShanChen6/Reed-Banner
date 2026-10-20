@@ -16,7 +16,11 @@ import {
   buildMain,
   clampCampaignFood,
   leveledFoe,
+  NEW_PROGRESS,
+  SKILL_POINTS_PER_LEVEL,
+  totalXpFor,
   type CampaignState,
+  type CharacterProgress,
   type Profile,
 } from "../progress";
 
@@ -50,6 +54,10 @@ export interface CampaignStage {
   readonly rule?: string;
   /** Vàng thưởng thêm lần đầu qua màn. */
   readonly firstClearGold: number;
+  /** Tướng lịch sử gia nhập đội lần đầu qua màn (id trong HERO_COMPANIONS), ở cấp của màn. */
+  readonly joins?: string;
+  /** Câu kể khi tướng gia nhập. */
+  readonly joinStory?: string;
 }
 
 /** Trùm có thêm chừng này lần máu. */
@@ -83,6 +91,9 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     level: 1,
     foes: [aide("coLau-tre", "Trẻ chăn trâu xóm bên", "tho", "binhLinh")],
     firstClearGold: 100,
+    joins: "nguyenBac",
+    joinStory:
+      "Nguyễn Bặc, bạn chăn trâu cùng xóm, phục tài Bộ Lĩnh và theo làm tướng.",
   },
   {
     id: "boHai",
@@ -95,6 +106,9 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     level: 2,
     foes: [hero("tranLam", "Trần Lãm", "thuy", "quanSu")],
     firstClearGold: 150,
+    joins: "dinhDien",
+    joinStory:
+      "Đinh Điền, bạn thuở nhỏ ở Hoa Lư, mang quân theo Bộ Lĩnh về Bố Hải Khẩu.",
   },
   {
     id: "dangChau",
@@ -107,6 +121,8 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     level: 3,
     foes: [hero("phamBachHo", "Phạm Bạch Hổ", "hoa", "tuongSi")],
     firstClearGold: 200,
+    joins: "luuCo",
+    joinStory: "Lưu Cơ, người cùng quê Hoa Lư, về giúp Bộ Lĩnh bàn mưu.",
   },
   {
     id: "binhKieu",
@@ -123,6 +139,8 @@ export const CAMPAIGN: readonly CampaignStage[] = [
       aide("binhKieu-y", "Lang y Bình Kiều", "thuy", "ySu"),
     ],
     firstClearGold: 250,
+    joins: "trinhTu",
+    joinStory: "Trịnh Tú theo Bộ Lĩnh từ buổi đầu, lo thuốc men và quân lương.",
   },
   {
     id: "duongLam",
@@ -157,6 +175,9 @@ export const CAMPAIGN: readonly CampaignStage[] = [
     foeFood: 25,
     rule: "Thành bị vây: đối thủ vào trận chỉ có 25 lương.",
     firstClearGold: 350,
+    joins: "leHoan",
+    joinStory:
+      "Lê Hoàn, người Ái Châu, đến đầu quân và được Bộ Lĩnh giao cầm một cánh quân.",
   },
   {
     id: "phongChau",
@@ -173,6 +194,9 @@ export const CAMPAIGN: readonly CampaignStage[] = [
       aide("phongChau-muu", "Mưu thần Phong Châu", "phong", "muuSi"),
     ],
     firstClearGold: 400,
+    joins: "dinhLien",
+    joinStory:
+      "Đinh Liễn, con trưởng của Bộ Lĩnh, đã đủ tuổi theo cha ra trận.",
   },
   {
     id: "hoiHo",
@@ -332,6 +356,19 @@ export interface CampaignResult {
   readonly bonusGold: number;
   /** Lương mang sang trận sau. */
   readonly food: number;
+  /** Tướng lịch sử vừa gia nhập đội. */
+  readonly joined?: string;
+}
+
+/** Tướng gia nhập ở cấp `level`, giữ nguyên điểm kỹ năng để người chơi tự nâng. */
+function autoJoin(level: number): CharacterProgress {
+  const lv = Math.max(1, Math.floor(level));
+  return {
+    ...NEW_PROGRESS,
+    xp: totalXpFor(lv),
+    level: lv,
+    skillPoints: (lv - 1) * SKILL_POINTS_PER_LEVEL,
+  };
 }
 
 /**
@@ -349,6 +386,15 @@ export function applyCampaignResult(
     !!stage && won && !profile.campaign.cleared.includes(stageId);
   const bonusGold = firstClear ? stage!.firstClearGold : 0;
   const food = clampCampaignFood(foodLeft);
+  const joined =
+    firstClear &&
+    stage!.joins &&
+    !Object.hasOwn(profile.companions, stage!.joins)
+      ? stage!.joins
+      : undefined;
+  const companions = joined
+    ? { ...profile.companions, [joined]: autoJoin(stage!.level) }
+    : profile.companions;
   const campaign: CampaignState = {
     cleared: firstClear
       ? [...profile.campaign.cleared, stageId]
@@ -356,7 +402,12 @@ export function applyCampaignResult(
     food,
   };
   return {
-    profile: { ...profile, gold: profile.gold + bonusGold, campaign },
-    result: { firstClear, bonusGold, food },
+    profile: {
+      ...profile,
+      gold: profile.gold + bonusGold,
+      companions,
+      campaign,
+    },
+    result: { firstClear, bonusGold, food, ...(joined ? { joined } : {}) },
   };
 }

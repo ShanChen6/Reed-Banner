@@ -39,7 +39,20 @@ Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (tr
 - Cấp gợi ý = cấp đối thủ + 3. Mô phỏng 19/10/2026 (60 trận mỗi màn, AI Thường đánh thay người chơi, đội mặc định, hơn đối thủ 3 cấp): tỉ lệ thắng 95% ở màn 1, 45–73% ở các màn Thường, 32–60% ở các màn Khó, 45% ở trùm cuối.
 - Lời dẫn và thứ tự màn dựa theo sử sách phổ thông, chỉ để làm game; Shan duyệt lại trước khi phát hành.
 
-> TODO: tướng lịch sử gia nhập khi qua màn (lộ trình 4.2), chiêu riêng và thoại cho từng sứ quân (4.3), chương sau.
+- **Tướng lịch sử gia nhập** (Claude đặt 20/10/2026, chờ Shan duyệt): lần đầu qua màn, một tướng vào hồ sơ ở cấp của màn (điểm kỹ năng còn nguyên để người chơi tự nâng). Xem [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#46-tướng-lịch-sử).
+
+  | Màn | Tướng gia nhập | Nghề | Hệ |
+  |---|---|---|---|
+  | Cờ lau tập trận | Nguyễn Bặc | Tướng sĩ | Hỏa |
+  | Thử tài ở Bố Hải Khẩu | Đinh Điền | Binh lính | Thổ |
+  | Thu phục Đằng Châu | Lưu Cơ | Mưu sĩ | Kim |
+  | Đánh Bình Kiều | Trịnh Tú | Y sư | Mộc |
+  | Vây thành Tam Đái | Lê Hoàn | Quân sư | Lôi |
+  | Lên Phong Châu | Đinh Liễn | Pháp sư | Thủy |
+
+- Mô phỏng 20/10/2026 (80 trận mỗi màn 3vs3, hơn đối thủ 3 cấp, AI Thường): đội có 2 tướng lịch sử mới nhất thắng trung bình 65%, đội mặc định (Hà Vân, Mai Thanh) 54%. Tướng lịch sử mạnh hơn vì mang 6 kỹ năng, nhưng không vượt hẳn ở mọi màn (Phong Châu 38% so với 57%, Đỗ Động 48% so với 65%). Chưa đổi số, cân chung ở lộ trình 4.4.
+
+> TODO: chiêu riêng và thoại cho từng sứ quân (4.3), chương sau.
 
 ## 3. Leo tháp (Vô hạn)
 

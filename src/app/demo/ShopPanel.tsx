@@ -4,7 +4,18 @@
 // ở đây chỉ hiển thị và gửi thao tác, giống ProgressPanel.
 
 import { useState } from "react";
-import { ALL_COMPANIONS, ownsCompanion, shopPrice, ultimateOf, type FighterConfig, type Profile, type ProfileAction } from "@/core";
+import {
+  ALL_COMPANIONS,
+  CAMPAIGN,
+  HERO_COMPANIONS,
+  isHero,
+  ownsCompanion,
+  shopPrice,
+  ultimateOf,
+  type FighterConfig,
+  type Profile,
+  type ProfileAction,
+} from "@/core";
 import { ElementIcon } from "./art/icons";
 import { Portrait } from "./art/portraits";
 import { ELEMENT_NAME, PROFESSION_NAME } from "./labels";
@@ -28,6 +39,9 @@ function CompanionCard({
   const owned = ownsCompanion(profile, c.id);
   const price = shopPrice(c.id);
   const ultimate = ultimateOf(c.id);
+  const hero = isHero(c.id);
+  // Tướng lịch sử chưa gia nhập: không bán, chỉ báo màn chiến dịch sẽ mở.
+  const joinStage = hero && !owned ? CAMPAIGN.find((s) => s.joins === c.id) : undefined;
   return (
     <li
       className={`flex items-center gap-2 rounded p-1.5 ${selected ? "bg-emerald-600/25 ring-1 ring-emerald-500" : "bg-black/5"} ${owned ? "" : "opacity-80"}`}
@@ -41,6 +55,7 @@ function CompanionCard({
         <div className="truncate opacity-70" title={ultimate ? `Tuyệt chiêu: ${ultimate.name}` : undefined}>
           {PROFESSION_NAME[c.profession]} · {ELEMENT_NAME[c.element]}
           {ultimate && <> · {ultimate.name}</>}
+          {hero && <> · Tướng lịch sử</>}
         </div>
       </div>
       {owned ? (
@@ -53,6 +68,8 @@ function CompanionCard({
         >
           {selected ? "Ra trận" : "Chọn"}
         </button>
+      ) : joinStage ? (
+        <span className="shrink-0 text-[10px] opacity-70">Qua màn {joinStage.title}</span>
       ) : (
         <button
           type="button"
@@ -97,7 +114,8 @@ export default function ShopPanel({
   };
 
   const owned = ALL_COMPANIONS.filter((c) => ownsCompanion(profile, c.id));
-  const forSale = ALL_COMPANIONS.filter((c) => !ownsCompanion(profile, c.id));
+  const forSale = ALL_COMPANIONS.filter((c) => !ownsCompanion(profile, c.id) && shopPrice(c.id) !== undefined);
+  const heroesLeft = HERO_COMPANIONS.filter((c) => !ownsCompanion(profile, c.id));
   const card = (c: FighterConfig) => (
     <CompanionCard
       key={c.id}
@@ -125,8 +143,14 @@ export default function ShopPanel({
           <ul className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">{forSale.map(card)}</ul>
         </>
       )}
+      {heroesLeft.length > 0 && (
+        <>
+          <h3 className="mt-3 mb-1.5 font-semibold">Tướng lịch sử (gia nhập qua chiến dịch)</h3>
+          <ul className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">{heroesLeft.map(card)}</ul>
+        </>
+      )}
       <p className="mt-2 opacity-60">
-        Chọn 2 nhân vật kèm ra trận cùng Đinh Bộ Lĩnh. Nhân vật mua về bắt đầu ở cấp 1, tuyệt chiêu mở ở cấp 10.
+        Tướng lịch sử có 6 kỹ năng theo nguyên tố như Đinh Bộ Lĩnh, nâng theo ô. Chọn 2 nhân vật kèm ra trận cùng Đinh Bộ Lĩnh. Nhân vật mua về bắt đầu ở cấp 1, tuyệt chiêu mở ở cấp 10.
       </p>
     </section>
   );
