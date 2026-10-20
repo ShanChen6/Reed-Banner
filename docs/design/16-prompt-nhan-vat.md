@@ -2,7 +2,7 @@
 
 > Cập nhật: 20/10/2026
 >
-> Prompt ráp sẵn cho **mọi nhân vật chơi được**: Đinh Bộ Lĩnh (3 thời kỳ), 6 tướng lịch sử, 12 sứ quân và 42 tướng thường, tổng **63 hình toàn thân**. Danh sách, nghề và hệ lấy từ `src/core/roster/roster.ts`; mô tả nhân vật ở [Danh sách nhân vật](14-nhan-vat.md). Phong cách và quy tắc theo [Hình ảnh](13-hinh-anh.md) và [Kế hoạch đồ họa](15-ke-hoach-do-hoa.md). Phần giải thích viết tiếng Việt, prompt viết tiếng Anh vì Copilot hiểu tốt hơn.
+> Prompt ráp sẵn cho **mọi nhân vật chơi được**: Đinh Bộ Lĩnh (3 thời kỳ), 6 tướng lịch sử, 12 sứ quân và 42 tướng thường, tổng **63 hình toàn thân**. Danh sách, nghề và hệ lấy từ `src/core/roster/roster.ts`; mô tả nhân vật ở [Danh sách nhân vật](14-nhan-vat.md). Phong cách và quy tắc theo [Hình ảnh](13-hinh-anh.md) và [Kế hoạch đồ họa](15-ke-hoach-do-hoa.md). Phần giải thích viết tiếng Việt, prompt viết tiếng Anh vì Copilot hiểu tốt hơn. Đồ họa ngoài nhân vật ở [Prompt đồ họa game](17-prompt-do-hoa.md).
 
 ## 1. Cách dùng
 
