@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { ELEMENTS, GEAR_SLOTS, mainCharacter, mainSkills, PROFESSIONS, professionSkills, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
-import { ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, SPECIAL_NAME, TIER_COLOR_NAME, TILE_NAME } from "../labels";
-import { GearIcon } from "./gear";
-import { ElementIcon, FoodIcon, LeaderFlag, ShieldIcon } from "./icons";
-import { Portrait } from "./portraits";
-import { SkillIcon } from "./skills";
-import { TILE_COLOR, TileArt } from "./tiles";
+import { ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, SPECIAL_NAME, TIER_COLOR_NAME, TILE_NAME } from "@/app/game/battle/labels";
+import { GearIcon } from "@/app/game/art/gear";
+import { ElementIcon, FoodIcon, LeaderFlag, ShieldIcon } from "@/app/game/art/icons";
+import { Portrait } from "@/app/game/art/portraits";
+import { SkillIcon } from "@/app/game/art/skills";
+import { TILE_COLOR, TileArt } from "@/app/game/art/tiles";
 
 export const metadata: Metadata = {
   title: "Bộ hình · Cờ Lau",

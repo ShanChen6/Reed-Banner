@@ -4,6 +4,9 @@
 
 ## 20/10/2026
 
+**Hai màn: landing và màn chơi theo phân cảnh (Shan yêu cầu)**
+- Bỏ các trang riêng. `/` là landing có CTA, `/game` là màn chơi duy nhất: state `currentScene` (MENU, PLAYING, CAMPAIGN, …, LOGIN, ACCOUNT) quyết định phân cảnh, đổi phân cảnh không tải lại trang mà chỉ cập nhật URL (`/game/campaign`, …), nút Back vẫn chạy. Link cũ chuyển hướng về phân cảnh tương ứng. Chi tiết: [Kiến trúc](tech/kien-truc.md#41-hai-màn-landing-và-màn-chơi-shan-chốt-20102026).
+
 **Đấu trường bóng ma (lộ trình 5.5, Claude đặt, chờ Shan duyệt)**
 - Trang `/arena`: mỗi người để lại một đội phòng thủ (bản chụp đội 3vs3), người khác đánh với đội đó do AI Khó điều khiển. 3 đối thủ gần điểm nhất, thiếu người thì thêm bóng ma luyện tập. 10 trận mỗi ngày, điểm kiểu Elo bắt đầu 1000 (ngang điểm thắng +16, người phòng thủ −8), thắng thêm 50 vàng. Có tab Đấu trường ở bảng xếp hạng. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#53-đấu-trường-bóng-ma-claude-đặt-20102026-chờ-shan-duyệt).
 

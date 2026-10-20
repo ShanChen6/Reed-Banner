@@ -336,3 +336,19 @@
     animation: none;
   }
 }
+
+/* Đổi phân cảnh trong màn chơi /game: hiện dần, không tải lại trang. */
+@keyframes scene-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.scene-enter {
+  animation: scene-enter 180ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-enter {
+    animation: none;
+  }
+}
