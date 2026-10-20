@@ -1,4 +1,4 @@
-// Đọc tài khoản hiện tại trong server component (trang /login, khu tài khoản của /play).
+// Đọc tài khoản hiện tại trong server component (màn chơi /game dựng lần đầu).
 
 import { cookies } from "next/headers";
 import type { Account } from "./accounts";

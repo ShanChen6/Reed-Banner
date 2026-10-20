@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { type Element, ELEMENTS, elementRelation, mainSkills, PASSIVES } from "@/core";
-import { ELEMENT_NAME } from "../demo/labels";
-import { ELEMENT_COLOR, ElementIcon } from "../demo/art/icons";
-import { Portrait } from "../demo/art/portraits";
-import { SkillIcon } from "../demo/art/skills";
+import { ELEMENT_NAME } from "../game/battle/labels";
+import { ELEMENT_COLOR, ElementIcon } from "../game/art/icons";
+import { Portrait } from "../game/art/portraits";
+import { SkillIcon } from "../game/art/skills";
 import { ELEMENT_TRAIT } from "./data";
 
 function related(e: Element, test: (other: Element) => boolean) {
