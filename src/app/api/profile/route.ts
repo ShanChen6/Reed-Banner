@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
   if (!action) return NextResponse.json({ error: "badRequest" }, { status: 400 });
   const existing = guestOf(request);
   const owner = existing ?? newGuestId();
-  const r = await updateProfile(profileStore(), owner, (p) => applyProfileAction(p, action), Date.now());
+  const r = await updateProfile(profileStore(), owner, (p) => applyProfileAction(p, action, Date.now()), Date.now());
   const res = r.ok
     ? NextResponse.json(r.stored)
     : NextResponse.json({ error: r.error, ...(await loadProfile(profileStore(), owner)) }, { status: r.error === "conflict" ? 409 : 422 });

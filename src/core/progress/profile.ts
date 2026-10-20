@@ -35,6 +35,15 @@ import {
   type TowerState,
 } from "./towerState";
 import {
+  checkIn,
+  claimQuest,
+  NEW_QUESTS,
+  parseQuests,
+  type QuestError,
+  type QuestState,
+} from "./quests";
+import { achievementById, achievementProgress } from "./achievements";
+import {
   addXp,
   autoProgress,
   buildCompanion,
@@ -76,6 +85,8 @@ export interface Profile {
   readonly tower: TowerState;
   /** Sinh tồn: kỷ lục số đợt (lượt chơi nằm trong trận, không lưu ở hồ sơ). */
   readonly survival: SurvivalState;
+  /** Nhiệm vụ ngày/tuần, số đếm cho thành tựu, điểm danh. */
+  readonly quests: QuestState;
 }
 
 export interface SurvivalState {
@@ -107,6 +118,7 @@ export function newProfile(): Profile {
     campaign: NEW_CAMPAIGN,
     tower: NEW_TOWER,
     survival: NEW_SURVIVAL,
+    quests: NEW_QUESTS,
   };
 }
 
@@ -246,6 +258,7 @@ export function parseProfile(raw: unknown): Profile {
     campaign: parseCampaign(p.campaign),
     tower: parseTower(p.tower),
     survival: parseSurvival(p.survival),
+    quests: parseQuests(p.quests),
   };
   return Array.isArray(p.team) && validTeam(next, p.team)
     ? { ...next, team: p.team }
@@ -295,14 +308,20 @@ export type ProfileAction =
   /** Leo tháp: chọn phần thưởng thứ `index` sau khi thắng tầng. */
   | { readonly type: "towerPick"; readonly index: number }
   /** Leo tháp: bỏ lượt leo đang dở (không được lúc đang đánh). */
-  | { readonly type: "towerQuit" };
+  | { readonly type: "towerQuit" }
+  /** Điểm danh hôm nay. */
+  | { readonly type: "checkIn" }
+  /** Nhận thưởng nhiệm vụ ngày/tuần hoặc thành tựu đã xong. */
+  | { readonly type: "claimQuest"; readonly id: string }
+  | { readonly type: "claimAchievement"; readonly id: string };
 
 export type ProfileError =
   | ProgressError
   | InventoryError
   | "foodFull"
   | "noTowerOffer"
-  | "towerBusy";
+  | "towerBusy"
+  | QuestError;
 
 function towerPick(profile: Profile, index: number): ProfileActionResult {
   const run = profile.tower.run;
@@ -357,10 +376,48 @@ function buyCompanion(profile: Profile, id: string): ProfileActionResult {
   };
 }
 
+/**
+ * `now` là giờ server (ms), cần cho điểm danh và nhiệm vụ theo ngày; các thao tác khác không dùng.
+ */
 export function applyProfileAction(
   profile: Profile,
   action: ProfileAction,
+  now = 0,
 ): ProfileActionResult {
+  if (action.type === "checkIn" || action.type === "claimQuest") {
+    const r =
+      action.type === "checkIn"
+        ? checkIn(profile.quests, now)
+        : claimQuest(profile.quests, action.id, now);
+    return r.ok
+      ? {
+          ok: true,
+          profile: {
+            ...profile,
+            quests: r.quests,
+            gold: profile.gold + r.gold,
+          },
+        }
+      : r;
+  }
+  if (action.type === "claimAchievement") {
+    const def = achievementById(action.id);
+    if (!def) return { ok: false, error: "noQuest" };
+    const a = achievementProgress(profile, def);
+    if (a.claimed) return { ok: false, error: "questClaimed" };
+    if (!a.done) return { ok: false, error: "questNotDone" };
+    return {
+      ok: true,
+      profile: {
+        ...profile,
+        gold: profile.gold + def.gold,
+        quests: {
+          ...profile.quests,
+          achievements: [...profile.quests.achievements, def.id],
+        },
+      },
+    };
+  }
   if (action.type === "chooseTeam") {
     return validTeam(profile, action.companions)
       ? { ok: true, profile: { ...profile, team: [...action.companions] } }
@@ -463,6 +520,13 @@ export function parseProfileAction(x: unknown): ProfileAction | null {
       ? { type: "towerPick", index: a.index as number }
       : null;
   if (a.type === "towerQuit") return { type: "towerQuit" };
+  if (a.type === "checkIn") return { type: "checkIn" };
+  if (a.type === "claimQuest" || a.type === "claimAchievement")
+    return typeof a.id === "string"
+      ? a.type === "claimQuest"
+        ? { type: "claimQuest", id: a.id }
+        : { type: "claimAchievement", id: a.id }
+      : null;
   if (a.type === "buyFood")
     return Number.isInteger(a.amount)
       ? { type: "buyFood", amount: a.amount as number }
