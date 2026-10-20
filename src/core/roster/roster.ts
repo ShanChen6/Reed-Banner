@@ -82,8 +82,34 @@ export const SHOP_COMPANIONS: readonly ShopCompanion[] = [
   { fighter: companion("macVan", "Mạc Vân", "quanSu", "loi"), price: SHOP_PRICES.elite },
 ];
 
-/** Mọi nhân vật kèm: khởi đầu rồi cửa hàng. */
-export const ALL_COMPANIONS: readonly FighterConfig[] = [...STARTER_COMPANIONS, ...SHOP_COMPANIONS.map((c) => c.fighter)];
+/**
+ * Tướng lịch sử gia nhập đội qua chiến dịch: bộ 6 kỹ năng theo nguyên tố như nhân vật chính, nâng theo ô.
+ * Nghề và nguyên tố là điểm xuất phát, xem docs/design/09-che-do-choi.md mục 2.1.
+ */
+export const HERO_COMPANIONS: readonly FighterConfig[] = [
+  hero("nguyenBac", "Nguyễn Bặc", "tuongSi", "hoa"),
+  hero("dinhDien", "Đinh Điền", "binhLinh", "tho"),
+  hero("luuCo", "Lưu Cơ", "muuSi", "kim"),
+  hero("trinhTu", "Trịnh Tú", "ySu", "moc"),
+  hero("leHoan", "Lê Hoàn", "quanSu", "loi"),
+  hero("dinhLien", "Đinh Liễn", "phapSu", "thuy"),
+];
+
+function hero(id: string, name: string, profession: Profession, element: Element): FighterConfig {
+  return { ...mainCharacter(element, profession), id, name };
+}
+
+/** Tướng lịch sử: kỹ năng nâng theo ô như nhân vật chính, không có chiêu nhánh hay tuyệt chiêu riêng. */
+export function isHero(id: string): boolean {
+  return HERO_COMPANIONS.some((c) => c.id === id);
+}
+
+/** Mọi nhân vật kèm: khởi đầu, cửa hàng rồi tướng lịch sử. */
+export const ALL_COMPANIONS: readonly FighterConfig[] = [
+  ...STARTER_COMPANIONS,
+  ...SHOP_COMPANIONS.map((c) => c.fighter),
+  ...HERO_COMPANIONS,
+];
 
 export function companionById(id: string): FighterConfig | undefined {
   return ALL_COMPANIONS.find((c) => c.id === id);

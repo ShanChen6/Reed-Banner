@@ -160,6 +160,11 @@ export function buildMain(p: CharacterProgress, element: Element, profession: Pr
   };
 }
 
+/** Tướng lịch sử theo tiến trình: dựng như nhân vật chính với nghề và nguyên tố riêng. */
+export function buildHero(base: FighterConfig, p: CharacterProgress): FighterConfig {
+  return { ...buildMain(p, base.element, base.profession), id: base.id, name: base.name };
+}
+
 /**
  * Nhân vật kèm theo tiến trình: chiêu nấc 1, tối đa 1 chiêu nhánh nấc 2 đã mua (`branch`; bỏ trống thì
  * lấy chiêu nhánh mua đầu tiên) và tuyệt chiêu nấc 3 khi đủ cấp.

@@ -9,6 +9,7 @@ import {
   BRANCH_COST,
   companionById,
   BRANCH_UNLOCK_LEVEL,
+  isHero,
   MAIN_ID,
   MAIN_SLOT_UNLOCK,
   mainSkills,
@@ -213,8 +214,10 @@ export default function ProgressPanel({
         {teamIds.map((id) => {
           const p = progressOf(profile, id);
           const isMain = id === MAIN_ID;
-          const ultimate = isMain ? undefined : ultimateOf(id);
-          const companion = isMain
+          // Nhân vật chính và tướng lịch sử nâng kỹ năng theo ô.
+          const slotKit = isMain || isHero(id);
+          const ultimate = slotKit ? undefined : ultimateOf(id);
+          const companion = slotKit
             ? null
             : [
                 ...professionSkills(companionProfession(id)),
@@ -233,8 +236,10 @@ export default function ProgressPanel({
               </div>
               <XpBar p={p} />
               <ul className="flex flex-col gap-1">
-                {isMain
-                  ? mainSkills(profile.element).map((def) => {
+                {slotKit
+                  ? mainSkills(
+                      isMain ? profile.element : companionOf(id)!.element,
+                    ).map((def) => {
                       const slot = def.slot!;
                       const key = mainSlotKey(slot);
                       const unlock = MAIN_SLOT_UNLOCK[slot]!;
@@ -329,7 +334,13 @@ export default function ProgressPanel({
                       );
                     })}
               </ul>
-              {!isMain && (
+              {slotKit && !isMain && (
+                <p className="opacity-60">
+                  {PROFESSION_NAME[companionProfession(id)]} · tướng lịch sử, kỹ
+                  năng nâng theo ô như Đinh Bộ Lĩnh.
+                </p>
+              )}
+              {!slotKit && (
                 <p className="opacity-60">
                   {PROFESSION_NAME[companionProfession(id)]} · chiêu nhánh nấc 2
                   mua từ cấp {BRANCH_UNLOCK_LEVEL}, mỗi trận mang 1; tuyệt chiêu

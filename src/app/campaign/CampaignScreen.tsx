@@ -10,6 +10,7 @@ import {
   CAMPAIGN,
   CAMPAIGN_FOOD_MAX,
   CAMPAIGN_FOOD_MIN,
+  companionById,
   FOOD_PRICE,
   RECOMMENDED_LEVEL_BONUS,
   stageFoes,
@@ -78,6 +79,25 @@ function StageDetail({
           {cleared ? "Đã nhận" : `+${stage.firstClearGold} vàng`}
         </dd>
       </dl>
+      {stage.joins && (
+        <p className="flex items-center gap-2 rounded-md border border-emerald-500/40 bg-emerald-500/10 px-2 py-1 text-sm text-emerald-100">
+          <Portrait
+            id={stage.joins}
+            element={companionById(stage.joins)!.element}
+            profession={companionById(stage.joins)!.profession}
+            className="size-8 shrink-0"
+          />
+          <span>
+            <span className="font-semibold">
+              {Object.hasOwn(profile.companions, stage.joins)
+                ? "Đã gia nhập: "
+                : "Qua màn để chiêu mộ: "}
+              {companionById(stage.joins)!.name}
+            </span>{" "}
+            · {stage.joinStory}
+          </span>
+        </p>
+      )}
       {stage.rule && (
         <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-1 text-sm text-amber-100">
           ⚑ {stage.rule}

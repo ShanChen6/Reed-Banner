@@ -3,7 +3,12 @@
 
 import type { Element, FighterConfig, Profession } from "../battle";
 import { withGear, type GearItem, type GearSlot, type Tier } from "../gear";
-import { companionById, shopPrice, STARTER_COMPANIONS } from "../roster";
+import {
+  companionById,
+  isHero,
+  shopPrice,
+  STARTER_COMPANIONS,
+} from "../roster";
 import {
   buyGear,
   equipItem,
@@ -27,6 +32,7 @@ import {
   addXp,
   autoProgress,
   buildCompanion,
+  buildHero,
   buildMain,
   buyBranch,
   NEW_PROGRESS,
@@ -129,7 +135,13 @@ export function profileTeam(
     if (!base || !ownsCompanion(profile, id)) return [];
     return [
       withGear(
-        buildCompanion(base, progressOf(profile, id), profile.branchChoice[id]),
+        isHero(id)
+          ? buildHero(base, progressOf(profile, id))
+          : buildCompanion(
+              base,
+              progressOf(profile, id),
+              profile.branchChoice[id],
+            ),
         loadoutOf(profile, id),
       ),
     ];
@@ -316,11 +328,11 @@ export function applyProfileAction(
   if (action.type === "buyGear") return buyGear(profile, action);
   if (action.type === "buyFood") return buyFood(profile, action.amount);
   const isMain = action.character === MAIN_ID;
-  const profession = isMain
-    ? null
-    : (companionById(action.character)?.profession ?? null);
-  if (!isMain && profession === null)
-    return { ok: false, error: "invalidSkill" };
+  const base = isMain ? undefined : companionById(action.character);
+  if (!isMain && !base) return { ok: false, error: "invalidSkill" };
+  // Tướng lịch sử nâng theo ô như nhân vật chính (nghề null), không có chiêu nhánh.
+  const slotKit = isMain || isHero(action.character);
+  const profession = slotKit ? null : base!.profession;
   if (!isMain && !ownsCompanion(profile, action.character))
     return { ok: false, error: "notOwned" };
   const p = progressOf(profile, action.character);
@@ -330,7 +342,7 @@ export function applyProfileAction(
         p,
         action.key,
         profession,
-        isMain ? undefined : action.character,
+        slotKit ? undefined : action.character,
       );
       return r.ok
         ? {
