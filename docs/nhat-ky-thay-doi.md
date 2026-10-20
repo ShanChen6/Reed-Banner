@@ -4,6 +4,10 @@
 
 ## 20/10/2026
 
+**Bộ prompt đồ họa ngoài nhân vật (Shan yêu cầu)**
+- Thêm [Prompt đồ họa game](design/17-prompt-do-hoa.md): 140 prompt cho 42 trang bị (14 hình × 3 bộ, nguyên tố đổi màu bằng code qua chi tiết tô hồng), 21 ô bàn cờ (7 loại × 3 bản), 54 lớp nền trận (13 màn + 4 chế độ + nền chung, 3 lớp parallax), mẫu giao diện để Claude vẽ lại bằng SVG/CSS, tranh lớn, linh vật (chờ duyệt) và hạt hiệu ứng.
+- So với bản Shan gửi: không thêm ô nguyên tố hay ngọc 3D động (bàn cờ giữ 7 loại ô và dáng ô); trang bị chỉ là biểu tượng, không vẽ lên người vì không dùng DragonBones; khung sơn mài viền trống đồng thay gỗ mun mây Lê–Trần; thanh chỉ số màu phẳng thay neon.
+
 **Bộ prompt ảnh cho toàn bộ nhân vật (Shan yêu cầu)**
 - Thêm [Prompt nhân vật](design/16-prompt-nhan-vat.md): 63 prompt toàn thân ráp sẵn (Đinh Bộ Lĩnh 3 thời kỳ, 6 tướng lịch sử, 12 sứ quân, 42 tướng thường), khớp nghề và hệ trong `roster.ts`.
 - So với bản Shan gửi: bỏ chữ Spine; bỏ họa tiết rồng, phượng và giáp vai đầu rồng; vũ khí không kèm hiệu ứng để tách lớp sạch; tư thế ba phần tư quay phải, chừa khe giữa tay và thân; nền xanh lá (Mộc, Phong nền hồng tươi); Quân sư cầm thẻ tre và cờ lệnh. Giới tính tướng thường do Claude đặt, chưa có trong code.
