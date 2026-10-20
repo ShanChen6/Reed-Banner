@@ -1,10 +1,17 @@
 // Gọi API trận online (/api/battles). Server có thẩm quyền: client chỉ gửi ý định và hiển thị kết quả.
 
 import type {
-  BattleAction,
+  ArenaMember,
   BattleEvent,
   BattleRewards,
   CampaignResult,
+  RaidResult,
+  RaidTier,
+  TowerResult,
+  SurvivalResult,
+  DailyScore,
+  FighterConfig,
+  MatchAction,
   GearItem,
   BattleState,
   Difficulty,
@@ -28,6 +35,14 @@ export interface OnlineResponse {
     readonly drop: GearItem | null;
     readonly soldFor: number;
     readonly campaign?: CampaignResult;
+    readonly raid?: RaidResult;
+    readonly tower?: TowerResult;
+    readonly survival?: SurvivalResult;
+    readonly daily?: {
+      readonly score: DailyScore;
+      readonly rank: number | null;
+    };
+    readonly arena?: ArenaResult;
   };
   /** Giờ server lúc trả lời (ms). */
   readonly now: number;
@@ -65,6 +80,16 @@ export function createOnline(input: {
   difficulty: Difficulty;
   /** Màn chiến dịch; server lấy thể thức, độ khó và đối thủ theo màn. */
   stage?: string;
+  /** Đánh trùm: bậc trùm ở màn `stage`. */
+  raid?: RaidTier;
+  /** Leo tháp: đánh tầng kế tiếp. */
+  tower?: true;
+  /** Sinh tồn: bắt đầu lượt chơi mới. */
+  survival?: true;
+  /** Thử thách hằng ngày: đề của hôm nay. */
+  daily?: true;
+  /** Đấu trường: đánh đối thủ thứ mấy trong các đối thủ đang bày. */
+  arena?: number;
 }): Promise<OnlineResponse> {
   return call("/api/battles", { method: "POST", body: JSON.stringify(input) });
 }
@@ -76,12 +101,98 @@ export function fetchOnline(id: string): Promise<OnlineResponse> {
 export function actOnline(
   id: string,
   seq: number,
-  action: BattleAction,
+  action: MatchAction,
 ): Promise<OnlineResponse> {
   return call(`/api/battles/${encodeURIComponent(id)}/actions`, {
     method: "POST",
     body: JSON.stringify({ seq, action }),
   });
+}
+
+/** Đề thử thách hôm nay, lượt của mình và bảng xếp hạng (GET /api/daily). */
+export interface DailyResponse {
+  readonly day?: string;
+  readonly setup?: {
+    readonly team: readonly FighterConfig[];
+    readonly foes: readonly FighterConfig[];
+    readonly stage: string;
+    readonly difficulty: Difficulty;
+  };
+  readonly mine?: {
+    readonly matchId: string;
+    readonly result: DailyScore | null;
+    readonly rank: number | null;
+  } | null;
+  readonly top?: readonly {
+    readonly rank: number;
+    readonly name: string;
+    readonly mine: boolean;
+    readonly score: DailyScore;
+  }[];
+  readonly error?: string;
+}
+
+export async function fetchDaily(): Promise<DailyResponse> {
+  try {
+    const res = await fetch("/api/daily", { cache: "no-store" });
+    return (await res.json()) as DailyResponse;
+  } catch {
+    return { error: "network" };
+  }
+}
+
+/** Kết quả đấu trường kèm phần thưởng cuối trận. */
+export interface ArenaResult {
+  readonly won: boolean;
+  readonly opponent: string;
+  readonly delta: number;
+  readonly rating: number | null;
+  readonly gold: number;
+}
+
+/** Trang đấu trường (GET/POST /api/arena). */
+export interface ArenaResponse {
+  readonly rating?: number;
+  readonly rank?: number | null;
+  readonly wins?: number;
+  readonly losses?: number;
+  readonly defenseWins?: number;
+  readonly defenseLosses?: number;
+  readonly attacksLeft?: number;
+  readonly attacksPerDay?: number;
+  readonly defense?: {
+    readonly members: readonly ArenaMember[];
+    readonly power: number;
+  } | null;
+  readonly offers?: readonly {
+    readonly name: string;
+    readonly rating: number;
+    readonly members: readonly ArenaMember[];
+    readonly power: number;
+    readonly bot: boolean;
+  }[];
+  readonly error?: string;
+}
+
+/** Xem đấu trường; `action` đặt lại đội phòng thủ hoặc đổi đối thủ. */
+export async function fetchArena(
+  action?: "defend" | "refresh",
+): Promise<ArenaResponse> {
+  try {
+    const res = await fetch("/api/arena", {
+      cache: "no-store",
+      ...(action
+        ? {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ action }),
+          }
+        : {}),
+    });
+    return (await res.json()) as ArenaResponse;
+  } catch {
+    return { error: "network" };
+  }
 }
 
 export interface ProfileResponse {
@@ -121,4 +232,7 @@ export const ONLINE_ERROR_TEXT: Record<string, string> = {
   conflict: "Trận vừa được cập nhật ở nơi khác, đã tải lại",
   staleSeq: "Bàn cờ đã đổi (hết giờ?), đã tải lại",
   badRequest: "Yêu cầu không hợp lệ",
+  dailyDone: "Hôm nay bạn đã đánh thử thách ngày rồi",
+  arenaLimit: "Hôm nay bạn đã hết lượt đấu trường",
+  arenaGone: "Đối thủ này không còn, hãy chọn đối thủ khác",
 };

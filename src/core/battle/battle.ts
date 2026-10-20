@@ -60,7 +60,12 @@ import {
   type SideIndex,
 } from "./state";
 
-export type DamageSource = "sword" | "skill" | "burn" | "reflect" | "starvation";
+export type DamageSource =
+  | "sword"
+  | "skill"
+  | "burn"
+  | "reflect"
+  | "starvation";
 
 export interface FighterRef {
   readonly side: SideIndex;
@@ -68,14 +73,40 @@ export interface FighterRef {
 }
 
 export type BattleEvent =
-  | { readonly type: "turnStart"; readonly side: SideIndex; readonly actor: number; readonly extra: boolean }
+  | {
+      readonly type: "turnStart";
+      readonly side: SideIndex;
+      readonly actor: number;
+      readonly extra: boolean;
+    }
   | { readonly type: "upkeep"; readonly side: SideIndex; readonly food: number }
-  | { readonly type: "spirit"; readonly side: SideIndex; readonly fighter: number; readonly spirit: number }
+  | {
+      readonly type: "spirit";
+      readonly side: SideIndex;
+      readonly fighter: number;
+      readonly spirit: number;
+    }
   | { readonly type: "frozenSkip"; readonly side: SideIndex }
-  | { readonly type: "swap"; readonly from: Pos; readonly to: Pos; readonly steps: readonly CascadeStep[] }
-  | { readonly type: "skill"; readonly side: SideIndex; readonly fighter: number; readonly skill: string }
+  | {
+      readonly type: "swap";
+      readonly from: Pos;
+      readonly to: Pos;
+      readonly steps: readonly CascadeStep[];
+    }
+  | {
+      readonly type: "skill";
+      readonly side: SideIndex;
+      readonly fighter: number;
+      readonly skill: string;
+    }
   /** Trượt hàng/cột (kỹ năng hoặc lần trượt miễn phí của bị động Phong). */
-  | { readonly type: "slide"; readonly side: SideIndex; readonly fighter: number; readonly slide: Slide; readonly free: boolean }
+  | {
+      readonly type: "slide";
+      readonly side: SideIndex;
+      readonly fighter: number;
+      readonly slide: Slide;
+      readonly free: boolean;
+    }
   /**
    * Bàn cờ đổi do kỹ năng: phá, biến hoặc trượt ô, kèm cascade.
    * before: bàn ngay trước bước xóa đầu tiên (sau khi trượt hoặc biến ô), để giao diện dựng hoạt ảnh.
@@ -97,14 +128,43 @@ export type BattleEvent =
       readonly absorbed: number;
       readonly source: DamageSource;
     }
-  | { readonly type: "heal"; readonly side: SideIndex; readonly fighter: number; readonly amount: number }
-  | { readonly type: "energy"; readonly side: SideIndex; readonly fighter: number; readonly amount: number }
+  | {
+      readonly type: "heal";
+      readonly side: SideIndex;
+      readonly fighter: number;
+      readonly amount: number;
+    }
+  | {
+      readonly type: "energy";
+      readonly side: SideIndex;
+      readonly fighter: number;
+      readonly amount: number;
+    }
   | { readonly type: "food"; readonly side: SideIndex; readonly amount: number }
   | { readonly type: "rage"; readonly side: SideIndex; readonly amount: number }
   | { readonly type: "passive"; readonly side: SideIndex }
-  | { readonly type: "effect"; readonly side: SideIndex; readonly fighter: number; readonly effect: EffectKind }
-  | { readonly type: "effectEnd"; readonly side: SideIndex; readonly fighter: number; readonly effect: EffectKind }
+  | {
+      readonly type: "effect";
+      readonly side: SideIndex;
+      readonly fighter: number;
+      readonly effect: EffectKind;
+    }
+  | {
+      readonly type: "effectEnd";
+      readonly side: SideIndex;
+      readonly fighter: number;
+      readonly effect: EffectKind;
+    }
   | { readonly type: "ko"; readonly side: SideIndex; readonly fighter: number }
+  /** Sinh tồn: đợt đối thủ mới vào sân. */
+  | { readonly type: "wave"; readonly wave: number }
+  /** Sinh tồn: người đã gục đứng dậy giữa hai đợt. */
+  | {
+      readonly type: "revive";
+      readonly side: SideIndex;
+      readonly fighter: number;
+      readonly hp: number;
+    }
   | { readonly type: "timeout"; readonly side: SideIndex }
   | { readonly type: "end"; readonly winner: SideIndex };
 
@@ -139,7 +199,11 @@ export type BattleError =
   | "noFreeSlide";
 
 export type ActResult =
-  | { readonly ok: true; readonly state: BattleState; readonly events: readonly BattleEvent[] }
+  | {
+      readonly ok: true;
+      readonly state: BattleState;
+      readonly events: readonly BattleEvent[];
+    }
   | { readonly ok: false; readonly error: BattleError };
 
 export interface BattleConfig {
@@ -154,32 +218,52 @@ export interface BattleConfig {
 
 const AI_SEED_SALT = 0x9e3779b9;
 
-export function createBattle(config: BattleConfig): { state: BattleState; events: BattleEvent[] } {
+function buildSide(s: SideConfig, solo: boolean): Side {
+  if (s.fighters.length === 0)
+    throw new RangeError("Mỗi phe cần ít nhất một nhân vật");
+  if (s.leader < 0 || s.leader >= s.fighters.length)
+    throw new RangeError("Thủ lĩnh không hợp lệ");
+  if (s.hpRatio && !(s.hpRatio[s.leader]! > 0))
+    throw new RangeError("Thủ lĩnh phải còn máu");
+  for (const f of s.fighters) {
+    for (const id of f.skills ?? [])
+      if (!getSkill(id)) throw new RangeError(`Kỹ năng không tồn tại: ${id}`);
+  }
+  return {
+    fighters: s.fighters.map((f, i) => {
+      const maxHp = solo ? Math.round(f.maxHp * R.SOLO_HP_MULTIPLIER) : f.maxHp;
+      const ratio = Math.max(0, Math.min(1, s.hpRatio?.[i] ?? 1));
+      // Còn chút máu thì không làm tròn thành 0 (đã ngã).
+      const hp = ratio > 0 ? Math.max(1, Math.round(maxHp * ratio)) : 0;
+      return {
+        ...f,
+        maxHp,
+        hp,
+        energy: 0,
+        spirit: R.SPIRIT_MAX,
+        effects: [],
+      };
+    }),
+    leader: s.leader,
+    food: s.food ?? R.FOOD_START,
+    rage: 0,
+    passiveTurns: 0,
+    freeSlides: 0,
+    gold: 0,
+    books: 0,
+  };
+}
+
+export function createBattle(config: BattleConfig): {
+  state: BattleState;
+  events: BattleEvent[];
+} {
   const weights = config.weights ?? STANDARD_WEIGHTS;
   validateWeights(weights);
   const rng = createRng(config.seed);
   const board = generateBoard(rng, weights);
   const solo = config.sides.every((s) => s.fighters.length === 1);
-  const sides = config.sides.map((s): Side => {
-    if (s.fighters.length === 0) throw new RangeError("Mỗi phe cần ít nhất một nhân vật");
-    if (s.leader < 0 || s.leader >= s.fighters.length) throw new RangeError("Thủ lĩnh không hợp lệ");
-    for (const f of s.fighters) {
-      for (const id of f.skills ?? []) if (!getSkill(id)) throw new RangeError(`Kỹ năng không tồn tại: ${id}`);
-    }
-    return {
-      fighters: s.fighters.map((f) => {
-        const maxHp = solo ? Math.round(f.maxHp * R.SOLO_HP_MULTIPLIER) : f.maxHp;
-        return { ...f, maxHp, hp: maxHp, energy: 0, spirit: R.SPIRIT_MAX, effects: [] };
-      }),
-      leader: s.leader,
-      food: s.food ?? R.FOOD_START,
-      rage: 0,
-      passiveTurns: 0,
-      freeSlides: 0,
-      gold: 0,
-      books: 0,
-    };
-  }) as [Side, Side];
+  const sides = config.sides.map((s) => buildSide(s, solo)) as [Side, Side];
   const first = config.firstSide ?? 0;
   const state: BattleState = {
     sides,
@@ -207,7 +291,62 @@ export function createBattle(config: BattleConfig): { state: BattleState; events
   return { state, events: ctx.events };
 }
 
-export function act(prev: BattleState, action: BattleAction, now = 0): ActResult {
+export interface WaveConfig {
+  /** Số thứ tự đợt mới. */
+  readonly wave: number;
+  /** Đội đối thủ của đợt, thay toàn bộ phe 1. */
+  readonly foes: SideConfig;
+  /** Người còn sống của phe 0 hồi thêm chừng này phần máu tối đa. */
+  readonly heal: number;
+  /** Lương phe 0 khi vào đợt (đã cộng hồi phục và trừ phí hồi sinh). */
+  readonly food: number;
+  /** Vị trí phe 0 đứng dậy, với `reviveHp` phần máu tối đa và 0 năng lượng. */
+  readonly revive: readonly number[];
+  readonly reviveHp: number;
+}
+
+/**
+ * Sinh tồn: phe 0 vừa thắng một đợt thì đợt kế vào sân trên cùng bàn cờ. Phe 0 giữ năng lượng và Nộ, hồi máu
+ * cố định, xóa hiệu ứng, tinh thần và đếm lượt bắt đầu lại; phe 0 đi trước.
+ */
+export function beginWave(
+  prev: BattleState,
+  config: WaveConfig,
+  now = 0,
+): { state: BattleState; events: BattleEvent[] } {
+  if (prev.winner !== 0)
+    throw new RangeError("Chỉ sang đợt mới khi phe 0 vừa thắng");
+  const state = structuredClone(prev);
+  const ctx = new Ctx(state, now);
+  const own = state.sides[0];
+  ctx.emit({ type: "wave", wave: config.wave });
+  own.fighters.forEach((f, i) => {
+    f.effects = [];
+    f.spirit = R.SPIRIT_MAX;
+    if (isAlive(f)) {
+      f.hp = Math.min(f.maxHp, f.hp + Math.round(f.maxHp * config.heal));
+    } else if (config.revive.includes(i)) {
+      f.hp = Math.max(1, Math.round(f.maxHp * config.reviveHp));
+      f.energy = 0;
+      ctx.emit({ type: "revive", side: 0, fighter: i, hp: f.hp });
+    }
+  });
+  own.food = Math.max(0, Math.min(R.FOOD_MAX, config.food));
+  own.passiveTurns = 0;
+  own.freeSlides = 0;
+  state.sides[1] = buildSide(config.foes, false);
+  state.lastActors = [state.lastActors[0], null];
+  state.turn = { ...state.turn, number: 0 };
+  state.winner = null;
+  ctx.beginSideTurn(0);
+  return { state, events: ctx.events };
+}
+
+export function act(
+  prev: BattleState,
+  action: BattleAction,
+  now = 0,
+): ActResult {
   if (prev.winner !== null) return { ok: false, error: "battleOver" };
   const state = structuredClone(prev);
   const ctx = new Ctx(state, now);
@@ -216,7 +355,8 @@ export function act(prev: BattleState, action: BattleAction, now = 0): ActResult
 
   switch (action.type) {
     case "selectActor": {
-      if (!selectableActors(state).includes(action.fighter)) return { ok: false, error: "invalidActor" };
+      if (!selectableActors(state).includes(action.fighter))
+        return { ok: false, error: "invalidActor" };
       if (turn.skillUsed) return { ok: false, error: "skillUsed" };
       turn.actor = action.fighter;
       return { ok: true, state, events: [] };
@@ -227,11 +367,16 @@ export function act(prev: BattleState, action: BattleAction, now = 0): ActResult
       const def = fighterSkill(actor, action.skill);
       if (!def) return { ok: false, error: "invalidSkill" };
       if (turn.skillUsed) return { ok: false, error: "skillUsed" };
-      if (hasEffect(actor.effects, "silence")) return { ok: false, error: "silenced" };
-      if (actor.energy < def.cost) return { ok: false, error: "notEnoughEnergy" };
+      if (hasEffect(actor.effects, "silence"))
+        return { ok: false, error: "silenced" };
+      if (actor.energy < def.cost)
+        return { ok: false, error: "notEnoughEnergy" };
       const targets = skillTargets(state, def, action.target);
       if (!targets) return { ok: false, error: "invalidTarget" };
-      if (needsCell(def) && !(action.cell && inBounds(state.board, action.cell))) {
+      if (
+        needsCell(def) &&
+        !(action.cell && inBounds(state.board, action.cell))
+      ) {
         return { ok: false, error: "invalidTarget" };
       }
       const slide = slideStep(def);
@@ -252,16 +397,24 @@ export function act(prev: BattleState, action: BattleAction, now = 0): ActResult
     case "slide": {
       if (late) return { ok: false, error: "tooLate" };
       if (!canFreeSlide(state)) return { ok: false, error: "noFreeSlide" };
-      if (!isValidSlide(state.board, action.slide, PASSIVE.phongFreeSlide)) return { ok: false, error: "invalidTarget" };
+      if (!isValidSlide(state.board, action.slide, PASSIVE.phongFreeSlide))
+        return { ok: false, error: "invalidTarget" };
       ctx.freeSlide(action.slide);
       return { ok: true, state, events: ctx.events };
     }
     case "swap": {
       if (late) return { ok: false, error: "tooLate" };
-      const outcome = ctx.withBoardRng((rng) => swap(state.board, action.from, action.to, rng, state.weights));
+      const outcome = ctx.withBoardRng((rng) =>
+        swap(state.board, action.from, action.to, rng, state.weights),
+      );
       if (!outcome.valid) return { ok: false, error: "invalidMove" };
       state.board = outcome.board;
-      ctx.emit({ type: "swap", from: action.from, to: action.to, steps: outcome.steps });
+      ctx.emit({
+        type: "swap",
+        from: action.from,
+        to: action.to,
+        steps: outcome.steps,
+      });
       outcome.steps.forEach((step, i) => {
         if (state.winner === null) ctx.applyStep(step, i);
       });
@@ -314,7 +467,11 @@ function readyIndices(side: Side): number[] {
 }
 
 /** Người kế tiếp sau `after` theo thứ tự vị trí, bỏ qua người đã gục, bị Đóng băng và người vừa ra tay. */
-function nextActor(side: Side, after: number | null, lastActor: number | null): number | null {
+function nextActor(
+  side: Side,
+  after: number | null,
+  lastActor: number | null,
+): number | null {
   const n = side.fighters.length;
   const ready = readyIndices(side);
   if (ready.length === 0) return null;
@@ -327,13 +484,17 @@ function nextActor(side: Side, after: number | null, lastActor: number | null): 
 }
 
 function isDuel(state: BattleState): boolean {
-  return state.sides[0].fighters.length === 1 && state.sides[1].fighters.length === 1;
+  return (
+    state.sides[0].fighters.length === 1 && state.sides[1].fighters.length === 1
+  );
 }
 
 /** Người đang Khiêu khích của phe: còn sống, không bị Đóng băng. Chỉ có ở 3vs3. */
 function taunter(state: BattleState, side: Side): number | null {
   if (isDuel(state)) return null;
-  const i = side.fighters.findIndex((f) => canAct(f) && hasEffect(f.effects, "taunt"));
+  const i = side.fighters.findIndex(
+    (f) => canAct(f) && hasEffect(f.effects, "taunt"),
+  );
   return i < 0 ? null : i;
 }
 
@@ -341,7 +502,9 @@ function taunter(state: BattleState, side: Side): number | null {
 export function pickTarget(foe: Side, position: number): number | null {
   const alive = aliveIndices(foe);
   if (alive.length === 0) return null;
-  return alive.reduce((best, i) => (Math.abs(i - position) < Math.abs(best - position) ? i : best));
+  return alive.reduce((best, i) =>
+    Math.abs(i - position) < Math.abs(best - position) ? i : best,
+  );
 }
 
 /** Mục tiêu đơn của phe đang đánh: Khiêu khích ghi đè, rồi tới đối diện/gần nhất. */
@@ -350,11 +513,16 @@ function singleTarget(state: BattleState, position: number): number | null {
   return taunter(state, foe) ?? pickTarget(foe, position);
 }
 
-function skillTargets(state: BattleState, def: SkillDef, chosen: number | undefined): FighterRef[] | null {
+function skillTargets(
+  state: BattleState,
+  def: SkillDef,
+  chosen: number | undefined,
+): FighterRef[] | null {
   const own = state.turn.side;
   const foeIdx = otherSide(own);
   const foe = state.sides[foeIdx];
-  const refs = (side: SideIndex, list: number[]) => list.map((fighter) => ({ side, fighter }));
+  const refs = (side: SideIndex, list: number[]) =>
+    list.map((fighter) => ({ side, fighter }));
   switch (def.target) {
     case "self":
       return [{ side: own, fighter: state.turn.actor }];
@@ -370,7 +538,8 @@ function skillTargets(state: BattleState, def: SkillDef, chosen: number | undefi
     case "enemy": {
       const forced = taunter(state, foe);
       const i = chosen ?? forced ?? singleTarget(state, state.turn.actor);
-      if (i === null || !foe.fighters[i] || !isAlive(foe.fighters[i])) return null;
+      if (i === null || !foe.fighters[i] || !isAlive(foe.fighters[i]))
+        return null;
       if (forced !== null && i !== forced) return null;
       return [{ side: foeIdx, fighter: i }];
     }
@@ -382,8 +551,17 @@ function hpRatio(f: Fighter): number {
 }
 
 /** Bị động của thủ lĩnh `f` đang có hiệu lực, đúng nguyên tố. */
-function passiveOn(side: Side, f: Fighter, element: Fighter["element"]): boolean {
-  return side.passiveTurns > 0 && side.fighters[side.leader] === f && f.element === element && isAlive(f);
+function passiveOn(
+  side: Side,
+  f: Fighter,
+  element: Fighter["element"],
+): boolean {
+  return (
+    side.passiveTurns > 0 &&
+    side.fighters[side.leader] === f &&
+    f.element === element &&
+    isAlive(f)
+  );
 }
 
 /** Gộp hai tỉ lệ xuyên giáp: phần DEF còn lại nhân với nhau. */
@@ -392,15 +570,25 @@ function combinePierce(a: number, b: number): number {
 }
 
 function effectiveAtk(f: Fighter): number {
-  return f.atk * statModifier(f.effects, "atkUp", "atkDown") * R.spiritStatMultiplier(f.spirit);
+  return (
+    f.atk *
+    statModifier(f.effects, "atkUp", "atkDown") *
+    R.spiritStatMultiplier(f.spirit)
+  );
 }
 
 /** DEF sau hiệu ứng; Binh lính +5% mỗi bậc sĩ khí trên mức bình thường. */
 function effectiveDef(side: Side, f: Fighter): number {
   const tiers = R.moraleOf(side.food) === "eager" ? 1 : 0;
-  const bonus = f.profession === "binhLinh" ? R.BINH_LINH_DEF_PER_TIER * tiers : 0;
+  const bonus =
+    f.profession === "binhLinh" ? R.BINH_LINH_DEF_PER_TIER * tiers : 0;
   const passive = passiveOn(side, f, "hoa") ? PASSIVE.hoaDefDown : 0;
-  return Math.max(0, f.def * (statModifier(f.effects, "defUp", "defDown") + bonus - passive) * R.spiritStatMultiplier(f.spirit));
+  return Math.max(
+    0,
+    f.def *
+      (statModifier(f.effects, "defUp", "defDown") + bonus - passive) *
+      R.spiritStatMultiplier(f.spirit),
+  );
 }
 
 class Ctx {
@@ -444,8 +632,13 @@ class Ctx {
 
     if (own.passiveTurns > 0) own.passiveTurns--;
 
-    const hasBinhLinh = own.fighters.some((f) => isAlive(f) && f.profession === "binhLinh");
-    own.food = Math.max(0, own.food - (hasBinhLinh ? R.FOOD_UPKEEP_BINH_LINH : R.FOOD_UPKEEP));
+    const hasBinhLinh = own.fighters.some(
+      (f) => isAlive(f) && f.profession === "binhLinh",
+    );
+    own.food = Math.max(
+      0,
+      own.food - (hasBinhLinh ? R.FOOD_UPKEEP_BINH_LINH : R.FOOD_UPKEEP),
+    );
     this.emit({ type: "upkeep", side, food: own.food });
 
     if (Math.ceil(s.turn.number / 2) >= R.SPIRIT_DECAY_START_TURN) {
@@ -458,10 +651,15 @@ class Ctx {
 
     own.fighters.forEach((f, i) => {
       if (own.food === 0 && isAlive(f)) {
-        this.damage({ side, fighter: i }, Math.max(1, Math.round(f.maxHp * R.STARVATION_HP_RATIO)), "starvation");
+        this.damage(
+          { side, fighter: i },
+          Math.max(1, Math.round(f.maxHp * R.STARVATION_HP_RATIO)),
+          "starvation",
+        );
       }
       const burn = findEffect(f.effects, "burn");
-      if (burn && isAlive(f)) this.damage({ side, fighter: i }, burn.value, "burn");
+      if (burn && isAlive(f))
+        this.damage({ side, fighter: i }, burn.value, "burn");
       const regen = findEffect(f.effects, "regen");
       if (regen) this.heal({ side, fighter: i }, regen.value);
     });
@@ -480,7 +678,11 @@ class Ctx {
 
   beginExtraTurn(): void {
     const s = this.state;
-    const actor = nextActor(s.sides[s.turn.side], s.turn.actor, s.turn.lastActor);
+    const actor = nextActor(
+      s.sides[s.turn.side],
+      s.turn.actor,
+      s.turn.lastActor,
+    );
     if (actor === null) {
       this.endSideTurn();
       return;
@@ -499,11 +701,13 @@ class Ctx {
     // Tĩnh tâm: chỉ 3vs3, đồng đội không ra tay trong lượt này của phe.
     if (own.fighters.length > 1) {
       own.fighters.forEach((f, i) => {
-        if (isAlive(f) && !s.turn.acted.includes(i)) this.gainEnergy({ side, fighter: i }, R.ENERGY_IDLE_ALLY);
+        if (isAlive(f) && !s.turn.acted.includes(i))
+          this.gainEnergy({ side, fighter: i }, R.ENERGY_IDLE_ALLY);
       });
     }
     own.fighters.forEach((f, i) => {
-      for (const effect of tickDurations(f.effects)) this.emit({ type: "effectEnd", side, fighter: i, effect });
+      for (const effect of tickDurations(f.effects))
+        this.emit({ type: "effectEnd", side, fighter: i, effect });
     });
     this.beginSideTurn(otherSide(side));
   }
@@ -511,26 +715,51 @@ class Ctx {
   private startAction(extra: boolean): void {
     const s = this.state;
     s.turn.deadline = s.timer ? this.now + R.TURN_MS : null;
-    this.emit({ type: "turnStart", side: s.turn.side, actor: s.turn.actor, extra });
+    this.emit({
+      type: "turnStart",
+      side: s.turn.side,
+      actor: s.turn.actor,
+      extra,
+    });
   }
 
   freeSlide(slide: Slide): void {
     const s = this.state;
     s.turn.slideUsed = true;
     s.sides[s.turn.side].freeSlides--;
-    this.emit({ type: "slide", side: s.turn.side, fighter: s.turn.actor, slide, free: true });
+    this.emit({
+      type: "slide",
+      side: s.turn.side,
+      fighter: s.turn.actor,
+      slide,
+      free: true,
+    });
     const before = slideCells(s.board, slide);
-    this.applyBoardChange(this.withBoardRng((rng) => slideLine(s.board, slide, rng, s.weights)), [], before);
+    this.applyBoardChange(
+      this.withBoardRng((rng) => slideLine(s.board, slide, rng, s.weights)),
+      [],
+      before,
+    );
   }
 
-  useSkill(def: SkillDef, targets: readonly FighterRef[], cell?: Pos, slide?: Slide): void {
+  useSkill(
+    def: SkillDef,
+    targets: readonly FighterRef[],
+    cell?: Pos,
+    slide?: Slide,
+  ): void {
     const s = this.state;
     const self: FighterRef = { side: s.turn.side, fighter: s.turn.actor };
     const caster = this.fighter(self);
     caster.energy -= def.cost;
     s.turn.skillUsed = true;
     if (def.cost > 0 && s.timer) s.turn.deadline = this.now + R.TURN_MS;
-    this.emit({ type: "skill", side: self.side, fighter: self.fighter, skill: def.id });
+    this.emit({
+      type: "skill",
+      side: self.side,
+      fighter: self.fighter,
+      skill: def.id,
+    });
 
     const ownSide = s.sides[self.side];
     const morale = R.MORALE_DAMAGE[R.moraleOf(ownSide.food)];
@@ -544,14 +773,20 @@ class Ctx {
         if (to === "self") return [self];
         if (to === "targets") return [...targets];
         const side = to === "team" ? self.side : otherSide(self.side);
-        return aliveIndices(s.sides[side]).map((fighter) => ({ side, fighter }));
+        return aliveIndices(s.sides[side]).map((fighter) => ({
+          side,
+          fighter,
+        }));
       };
       switch (step.type) {
         case "damage":
           for (const t of targets) {
             const target = this.fighter(t);
             if (!isAlive(target)) continue;
-            const pierce = combinePierce(step.pierce ?? 0, kim ? PASSIVE.kimPierce : 0);
+            const pierce = combinePierce(
+              step.pierce ?? 0,
+              kim ? PASSIVE.kimPierce : 0,
+            );
             const amount = Math.round(
               step.atk *
                 effectiveAtk(caster) *
@@ -559,11 +794,25 @@ class Ctx {
                 spread *
                 hoa *
                 elementMultiplier(caster.element, target.element) *
-                R.defenseMultiplier(effectiveDef(s.sides[t.side], target), pierce),
+                R.defenseMultiplier(
+                  effectiveDef(s.sides[t.side], target),
+                  pierce,
+                ),
             );
-            const dealt = this.damage(t, amount, "skill", self, step.pierceShield || kim);
-            if (step.lifesteal && dealt > 0) this.heal(self, Math.round(dealt * step.lifesteal));
-            if (thuy && isAlive(target) && this.roll(PASSIVE.thuyFreezeChance)) {
+            const dealt = this.damage(
+              t,
+              amount,
+              "skill",
+              self,
+              step.pierceShield || kim,
+            );
+            if (step.lifesteal && dealt > 0)
+              this.heal(self, Math.round(dealt * step.lifesteal));
+            if (
+              thuy &&
+              isAlive(target) &&
+              this.roll(PASSIVE.thuyFreezeChance)
+            ) {
               this.applyEffect(t, { kind: "freeze", value: 0, turns: 1 });
             }
           }
@@ -572,23 +821,44 @@ class Ctx {
           const area = step.area;
           const before = s.board;
           const result = this.withBoardRng((rng) => {
-            const cells = "random" in area ? randomCells(s.board, area.random, rng) : areaCells(s.board, cell!, area);
+            const cells =
+              "random" in area
+                ? randomCells(s.board, area.random, rng)
+                : areaCells(s.board, cell!, area);
             return destroyCells(s.board, cells, rng, s.weights);
           });
           this.applyBoardChange(result, [], before);
           break;
         }
         case "slide": {
-          this.emit({ type: "slide", side: self.side, fighter: self.fighter, slide: slide!, free: false });
+          this.emit({
+            type: "slide",
+            side: self.side,
+            fighter: self.fighter,
+            slide: slide!,
+            free: false,
+          });
           const before = slideCells(s.board, slide!);
-          this.applyBoardChange(this.withBoardRng((rng) => slideLine(s.board, slide!, rng, s.weights)), [], before);
+          this.applyBoardChange(
+            this.withBoardRng((rng) =>
+              slideLine(s.board, slide!, rng, s.weights),
+            ),
+            [],
+            before,
+          );
           break;
         }
         case "transform": {
-          const result = this.withBoardRng((rng) => transformCells(s.board, step.kind, step.count, rng, s.weights));
+          const result = this.withBoardRng((rng) =>
+            transformCells(s.board, step.kind, step.count, rng, s.weights),
+          );
           const cells = [...s.board.cells];
-          for (const pos of result.transformed) cells[indexOf(s.board, pos)] = { kind: step.kind };
-          this.applyBoardChange(result, result.transformed, { ...s.board, cells });
+          for (const pos of result.transformed)
+            cells[indexOf(s.board, pos)] = { kind: step.kind };
+          this.applyBoardChange(result, result.transformed, {
+            ...s.board,
+            cells,
+          });
           break;
         }
         case "effect":
@@ -602,11 +872,16 @@ class Ctx {
               : step.ofAtk
                 ? Math.max(1, Math.round(caster.atk * step.value))
                 : step.value;
-            this.applyEffect(r, { kind: step.effect, value, turns: step.turns });
+            this.applyEffect(r, {
+              kind: step.effect,
+              value,
+              turns: step.turns,
+            });
           }
           break;
         case "heal":
-          for (const r of recipients(step.to)) this.heal(r, Math.round(this.fighter(r).maxHp * step.ratio));
+          for (const r of recipients(step.to))
+            this.heal(r, Math.round(this.fighter(r).maxHp * step.ratio));
           break;
         case "cleanse":
           for (const r of recipients(step.to)) this.strip(r, NEGATIVE_EFFECTS);
@@ -622,11 +897,21 @@ class Ctx {
           const foe = s.sides[foeIdx];
           const before = foe.food;
           foe.food = Math.max(0, Math.min(R.FOOD_MAX, foe.food + step.amount));
-          if (foe.food !== before) this.emit({ type: "food", side: foeIdx, amount: foe.food - before });
+          if (foe.food !== before)
+            this.emit({
+              type: "food",
+              side: foeIdx,
+              amount: foe.food - before,
+            });
           break;
         }
         case "mark":
-          this.applyMark(self, targets, step.enhanced, step.guaranteed ?? false);
+          this.applyMark(
+            self,
+            targets,
+            step.enhanced,
+            step.guaranteed ?? false,
+          );
           break;
       }
       if (s.winner !== null) return;
@@ -634,7 +919,11 @@ class Ctx {
   }
 
   /** Thu hoạch ô bị kỹ năng phá như một nước đi, nhưng không cho lượt thêm. */
-  private applyBoardChange(result: MoveResult, transformed: readonly Pos[], before: Board): void {
+  private applyBoardChange(
+    result: MoveResult,
+    transformed: readonly Pos[],
+    before: Board,
+  ): void {
     const s = this.state;
     s.board = result.board;
     this.emit({ type: "board", steps: result.steps, transformed, before });
@@ -644,14 +933,22 @@ class Ctx {
     if (result.shuffled) this.emit({ type: "shuffle", board: result.board });
   }
 
-  private applyMark(self: FighterRef, targets: readonly FighterRef[], enhanced: boolean, guaranteed: boolean): void {
+  private applyMark(
+    self: FighterRef,
+    targets: readonly FighterRef[],
+    enhanced: boolean,
+    guaranteed: boolean,
+  ): void {
     const caster = this.fighter(self);
     const audience = markAudience(caster.element, enhanced);
     const recipients =
       audience === "self"
         ? [self]
         : audience === "team"
-          ? aliveIndices(this.state.sides[self.side]).map((fighter) => ({ side: self.side, fighter }))
+          ? aliveIndices(this.state.sides[self.side]).map((fighter) => ({
+              side: self.side,
+              fighter,
+            }))
           : targets.filter((t) => t.side !== self.side);
 
     for (const r of recipients) {
@@ -685,15 +982,25 @@ class Ctx {
           });
           break;
         case "tho":
-          this.applyEffect(r, { kind: "shield", value: Math.round(f.maxHp * MARK.shieldMaxHp), turns: null });
+          this.applyEffect(r, {
+            kind: "shield",
+            value: Math.round(f.maxHp * MARK.shieldMaxHp),
+            turns: null,
+          });
           break;
         case "loi":
-          if (enhanced) this.applyEffect(r, { kind: "silence", value: 0, turns: 1 });
+          if (enhanced)
+            this.applyEffect(r, { kind: "silence", value: 0, turns: 1 });
           else this.gainEnergy(r, -MARK.energyDrain);
           break;
         case "phong":
           if (enhanced) this.strip(r, POSITIVE_EFFECTS);
-          else this.applyEffect(r, { kind: "atkDown", value: MARK.atkDown, turns: 1 });
+          else
+            this.applyEffect(r, {
+              kind: "atkDown",
+              value: MARK.atkDown,
+              turns: 1,
+            });
           break;
       }
     }
@@ -706,15 +1013,19 @@ class Ctx {
 
   private applyEffect(ref: FighterRef, effect: Effect): void {
     if (effect.kind === "shield") {
-      const value = Math.round(effect.value * R.spiritHealMultiplier(this.fighter(ref).spirit));
+      const value = Math.round(
+        effect.value * R.spiritHealMultiplier(this.fighter(ref).spirit),
+      );
       if (value <= 0) return;
       effect = { ...effect, value };
     }
-    if (addEffect(this.fighter(ref).effects, effect)) this.emit({ type: "effect", ...ref, effect: effect.kind });
+    if (addEffect(this.fighter(ref).effects, effect))
+      this.emit({ type: "effect", ...ref, effect: effect.kind });
   }
 
   private strip(ref: FighterRef, kinds: readonly EffectKind[]): void {
-    for (const effect of removeEffects(this.fighter(ref).effects, kinds)) this.emit({ type: "effectEnd", ...ref, effect });
+    for (const effect of removeEffects(this.fighter(ref).effects, kinds))
+      this.emit({ type: "effectEnd", ...ref, effect });
   }
 
   /** fromSkill: bàn cờ đổi do kỹ năng hoặc trượt miễn phí, thu hoạch giảm theo SKILL_BOARD_*. */
@@ -728,10 +1039,14 @@ class Ctx {
     const actor = this.fighter(self);
     const h = step.harvest;
     const count = (kind: string, grade: string) =>
-      step.activations.filter((a) => a.tile.kind === kind && a.tile.special === grade).length;
+      step.activations.filter(
+        (a) => a.tile.kind === kind && a.tile.special === grade,
+      ).length;
 
     // Lương
-    const food = h.banhChung * R.FOOD_PER_TILE + count("banhChung", "weak") * R.GIO_BANH_FOOD;
+    const food =
+      h.banhChung * R.FOOD_PER_TILE +
+      count("banhChung", "weak") * R.GIO_BANH_FOOD;
     if (food > 0) {
       const before = own.food;
       own.food = Math.min(R.FOOD_MAX, own.food + food);
@@ -744,40 +1059,61 @@ class Ctx {
     if (actor.profession === "phapSu") energy *= R.ENERGY_PHAP_SU;
     if (morale === "hungry" || morale === "starving") energy *= R.ENERGY_HUNGRY;
     energy += count("amDuong", "weak") * R.BUA_AM_DUONG_ENERGY;
-    if (passiveOn(own, own.fighters[own.leader]!, "loi")) energy += h.amDuong * PASSIVE.loiEnergyPerTile;
+    if (passiveOn(own, own.fighters[own.leader]!, "loi"))
+      energy += h.amDuong * PASSIVE.loiEnergyPerTile;
     if (fromSkill) energy *= R.SKILL_BOARD_ENERGY;
     if (energy > 0) this.gainEnergy(self, Math.round(energy));
 
     // Hồi máu; Y sư: hồi vượt máu tối đa thành Khiên tạm thời.
     if (h.tim > 0) {
       const ySu = actor.profession === "ySu";
-      const amount = Math.round(actor.maxHp * R.HEAL_PER_TILE_RATIO * h.tim * (ySu ? R.HEAL_Y_SU : 1));
+      const amount = Math.round(
+        actor.maxHp * R.HEAL_PER_TILE_RATIO * h.tim * (ySu ? R.HEAL_Y_SU : 1),
+      );
       const overflow = amount - (actor.maxHp - actor.hp);
       this.heal(self, amount);
-      if (ySu && overflow > 0) this.applyEffect(self, { kind: "shield", value: overflow, turns: R.Y_SU_SHIELD_TURNS });
+      if (ySu && overflow > 0)
+        this.applyEffect(self, {
+          kind: "shield",
+          value: overflow,
+          turns: R.Y_SU_SHIELD_TURNS,
+        });
     }
     for (let k = 0; k < count("tim", "weak"); k++) {
       const alive = aliveIndices(own);
-      const lowest = alive.reduce((a, b) => (hpRatio(own.fighters[b]!) < hpRatio(own.fighters[a]!) ? b : a));
-      this.heal({ side: sideIdx, fighter: lowest }, Math.round(own.fighters[lowest]!.maxHp * R.HEAL_TIM_BAC_RATIO));
+      const lowest = alive.reduce((a, b) =>
+        hpRatio(own.fighters[b]!) < hpRatio(own.fighters[a]!) ? b : a,
+      );
+      this.heal(
+        { side: sideIdx, fighter: lowest },
+        Math.round(own.fighters[lowest]!.maxHp * R.HEAL_TIM_BAC_RATIO),
+      );
     }
     for (let k = 0; k < count("tim", "strong"); k++) {
       for (const i of aliveIndices(own)) {
-        this.heal({ side: sideIdx, fighter: i }, Math.round(own.fighters[i]!.maxHp * R.HEAL_TIM_VANG_RATIO));
+        this.heal(
+          { side: sideIdx, fighter: i },
+          Math.round(own.fighters[i]!.maxHp * R.HEAL_TIM_VANG_RATIO),
+        );
       }
     }
 
     // Nộ; Trống đồng thêm Công+ cho cả đội.
     const rage =
-      h.trong * R.RAGE_PER_DRUM + count("trong", "weak") * R.TRONG_DA_RAGE + count("trong", "strong") * R.TRONG_DONG_RAGE;
+      h.trong * R.RAGE_PER_DRUM +
+      count("trong", "weak") * R.TRONG_DA_RAGE +
+      count("trong", "strong") * R.TRONG_DONG_RAGE;
     if (rage > 0) this.addRage(sideIdx, rage);
     if (count("trong", "strong") > 0) {
       for (const i of aliveIndices(own)) {
-        this.applyEffect({ side: sideIdx, fighter: i }, {
-          kind: "atkUp",
-          value: R.TRONG_DONG_ATK,
-          turns: R.TRONG_DONG_TURNS,
-        });
+        this.applyEffect(
+          { side: sideIdx, fighter: i },
+          {
+            kind: "atkUp",
+            value: R.TRONG_DONG_ATK,
+            turns: R.TRONG_DONG_TURNS,
+          },
+        );
       }
     }
 
@@ -785,12 +1121,16 @@ class Ctx {
     const weak = count("kiem", "weak");
     const strong = count("kiem", "strong");
     const units =
-      (h.kiem - weak - strong + R.SWORD_WEAK * weak + R.SWORD_STRONG * strong) * (fromSkill ? R.SKILL_BOARD_SWORD : 1);
+      (h.kiem - weak - strong + R.SWORD_WEAK * weak + R.SWORD_STRONG * strong) *
+      (fromSkill ? R.SKILL_BOARD_SWORD : 1);
     const target = singleTarget(s, s.turn.actor);
     if (units > 0 && target !== null) {
       const t = foe.fighters[target]!;
-      const bigSword = step.matches.some((m) => m.kind === "kiem" && m.cells.length >= 4);
-      const prof = actor.profession === "tuongSi" && bigSword ? R.TUONG_SI_BONUS : 1;
+      const bigSword = step.matches.some(
+        (m) => m.kind === "kiem" && m.cells.length >= 4,
+      );
+      const prof =
+        actor.profession === "tuongSi" && bigSword ? R.TUONG_SI_BONUS : 1;
       const hoa = passiveOn(own, actor, "hoa") ? 1 + PASSIVE.hoaDamage : 1;
       const pierce = passiveOn(own, actor, "kim") ? PASSIVE.kimPierce : 0;
       const amount = Math.round(
@@ -811,13 +1151,21 @@ class Ctx {
     const victim = singleTarget(s, s.turn.actor);
     if (victim !== null) {
       const ref = { side: foeIdx, fighter: victim };
-      if (actor.profession === "muuSi" && h.vang > 0) this.gainEnergy(ref, -h.vang * R.MUU_SI_DRAIN_PER_TILE);
+      if (actor.profession === "muuSi" && h.vang > 0)
+        this.gainEnergy(ref, -h.vang * R.MUU_SI_DRAIN_PER_TILE);
       if (actor.profession === "quanSu" && h.sach > 0) {
         const effects = foe.fighters[victim]!.effects;
         const current = findEffect(effects, "atkDown")?.value ?? 0;
-        const value = Math.min(R.QUAN_SU_MAX, current + h.sach * R.QUAN_SU_PER_TILE);
+        const value = Math.min(
+          R.QUAN_SU_MAX,
+          current + h.sach * R.QUAN_SU_PER_TILE,
+        );
         removeEffects(effects, ["atkDown"]);
-        this.applyEffect(ref, { kind: "atkDown", value, turns: R.QUAN_SU_TURNS });
+        this.applyEffect(ref, {
+          kind: "atkDown",
+          value,
+          turns: R.QUAN_SU_TURNS,
+        });
       }
     }
 
@@ -829,15 +1177,20 @@ class Ctx {
     const f = this.fighter(ref);
     const before = f.energy;
     f.energy = Math.min(R.ENERGY_MAX, Math.max(0, f.energy + amount));
-    if (f.energy !== before) this.emit({ type: "energy", ...ref, amount: f.energy - before });
+    if (f.energy !== before)
+      this.emit({ type: "energy", ...ref, amount: f.energy - before });
   }
 
   private heal(ref: FighterRef, amount: number): void {
     const f = this.fighter(ref);
     if (!isAlive(f)) return;
     const before = f.hp;
-    f.hp = Math.min(f.maxHp, f.hp + Math.round(amount * R.spiritHealMultiplier(f.spirit)));
-    if (f.hp !== before) this.emit({ type: "heal", ...ref, amount: f.hp - before });
+    f.hp = Math.min(
+      f.maxHp,
+      f.hp + Math.round(amount * R.spiritHealMultiplier(f.spirit)),
+    );
+    if (f.hp !== before)
+      this.emit({ type: "heal", ...ref, amount: f.hp - before });
   }
 
   private addRage(side: SideIndex, amount: number): void {
@@ -869,21 +1222,41 @@ class Ctx {
       case "moc":
         for (const i of aliveIndices(own)) {
           const f = own.fighters[i]!;
-          this.applyEffect({ side, fighter: i }, { kind: "regen", value: Math.round(f.maxHp * PASSIVE.mocTeamRegen), turns });
+          this.applyEffect(
+            { side, fighter: i },
+            {
+              kind: "regen",
+              value: Math.round(f.maxHp * PASSIVE.mocTeamRegen),
+              turns,
+            },
+          );
         }
         break;
       case "thuy": {
         const t = pickTarget(s.sides[foeIdx], own.leader);
         // Kích hoạt trong lượt đối thủ thì Đóng băng phải qua hết lượt đó mới có tác dụng.
-        if (t !== null) this.applyEffect({ side: foeIdx, fighter: t }, { kind: "freeze", value: 0, turns: ownTurn ? 1 : 2 });
+        if (t !== null)
+          this.applyEffect(
+            { side: foeIdx, fighter: t },
+            { kind: "freeze", value: 0, turns: ownTurn ? 1 : 2 },
+          );
         break;
       }
       case "tho":
-        this.applyEffect(leaderRef, { kind: "shield", value: Math.round(leader.maxHp * PASSIVE.thoShield), turns: null });
-        this.applyEffect(leaderRef, { kind: "reflect", value: PASSIVE.thoReflect, turns });
+        this.applyEffect(leaderRef, {
+          kind: "shield",
+          value: Math.round(leader.maxHp * PASSIVE.thoShield),
+          turns: null,
+        });
+        this.applyEffect(leaderRef, {
+          kind: "reflect",
+          value: PASSIVE.thoReflect,
+          turns,
+        });
         break;
       case "loi":
-        for (const i of aliveIndices(s.sides[foeIdx])) this.gainEnergy({ side: foeIdx, fighter: i }, -PASSIVE.loiDrain);
+        for (const i of aliveIndices(s.sides[foeIdx]))
+          this.gainEnergy({ side: foeIdx, fighter: i }, -PASSIVE.loiDrain);
         break;
       case "phong":
         // Trượt miễn phí: xem canFreeSlide.

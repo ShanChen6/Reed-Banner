@@ -29,6 +29,21 @@ import {
   type CampaignState,
 } from "./campaignState";
 import {
+  applyTowerReward,
+  NEW_TOWER,
+  parseTower,
+  type TowerState,
+} from "./towerState";
+import {
+  checkIn,
+  claimQuest,
+  NEW_QUESTS,
+  parseQuests,
+  type QuestError,
+  type QuestState,
+} from "./quests";
+import { achievementById, achievementProgress } from "./achievements";
+import {
   addXp,
   autoProgress,
   buildCompanion,
@@ -66,6 +81,23 @@ export interface Profile {
   readonly nextItemId: number;
   /** Tiến độ chiến dịch: màn đã qua, lương mang sang. */
   readonly campaign: CampaignState;
+  /** Leo tháp: kỷ lục và lượt leo đang dở. */
+  readonly tower: TowerState;
+  /** Sinh tồn: kỷ lục số đợt (lượt chơi nằm trong trận, không lưu ở hồ sơ). */
+  readonly survival: SurvivalState;
+  /** Nhiệm vụ ngày/tuần, số đếm cho thành tựu, điểm danh. */
+  readonly quests: QuestState;
+}
+
+export interface SurvivalState {
+  readonly best: number;
+}
+
+export const NEW_SURVIVAL: SurvivalState = { best: 0 };
+
+function parseSurvival(raw: unknown): SurvivalState {
+  const best = (raw as Partial<SurvivalState> | null)?.best;
+  return { best: Number.isInteger(best) && best! > 0 ? best! : 0 };
 }
 
 export function newProfile(): Profile {
@@ -84,6 +116,9 @@ export function newProfile(): Profile {
     loadouts: {},
     nextItemId: 1,
     campaign: NEW_CAMPAIGN,
+    tower: NEW_TOWER,
+    survival: NEW_SURVIVAL,
+    quests: NEW_QUESTS,
   };
 }
 
@@ -221,6 +256,9 @@ export function parseProfile(raw: unknown): Profile {
     branchChoice: p.branchChoice ?? {},
     ...parseInventory(p),
     campaign: parseCampaign(p.campaign),
+    tower: parseTower(p.tower),
+    survival: parseSurvival(p.survival),
+    quests: parseQuests(p.quests),
   };
   return Array.isArray(p.team) && validTeam(next, p.team)
     ? { ...next, team: p.team }
@@ -266,9 +304,40 @@ export type ProfileAction =
   | { readonly type: "sell"; readonly item: string }
   | ({ readonly type: "buyGear" } & GearOrder)
   /** Doanh trại chiến dịch: đổi vàng lấy lương mang vào trận kế tiếp. */
-  | { readonly type: "buyFood"; readonly amount: number };
+  | { readonly type: "buyFood"; readonly amount: number }
+  /** Leo tháp: chọn phần thưởng thứ `index` sau khi thắng tầng. */
+  | { readonly type: "towerPick"; readonly index: number }
+  /** Leo tháp: bỏ lượt leo đang dở (không được lúc đang đánh). */
+  | { readonly type: "towerQuit" }
+  /** Điểm danh hôm nay. */
+  | { readonly type: "checkIn" }
+  /** Nhận thưởng nhiệm vụ ngày/tuần hoặc thành tựu đã xong. */
+  | { readonly type: "claimQuest"; readonly id: string }
+  | { readonly type: "claimAchievement"; readonly id: string };
 
-export type ProfileError = ProgressError | InventoryError | "foodFull";
+export type ProfileError =
+  | ProgressError
+  | InventoryError
+  | "foodFull"
+  | "noTowerOffer"
+  | "towerBusy"
+  | QuestError;
+
+function towerPick(profile: Profile, index: number): ProfileActionResult {
+  const run = profile.tower.run;
+  const reward = run?.offer?.[index];
+  if (!run || !reward) return { ok: false, error: "noTowerOffer" };
+  return {
+    ok: true,
+    profile: {
+      ...profile,
+      tower: {
+        ...profile.tower,
+        run: { ...applyTowerReward(run, reward), offer: null },
+      },
+    },
+  };
+}
 
 /** Mua lương ở doanh trại; mua quá mức tối đa thì chỉ tính phần còn chứa được. */
 function buyFood(profile: Profile, amount: number): ProfileActionResult {
@@ -307,10 +376,48 @@ function buyCompanion(profile: Profile, id: string): ProfileActionResult {
   };
 }
 
+/**
+ * `now` là giờ server (ms), cần cho điểm danh và nhiệm vụ theo ngày; các thao tác khác không dùng.
+ */
 export function applyProfileAction(
   profile: Profile,
   action: ProfileAction,
+  now = 0,
 ): ProfileActionResult {
+  if (action.type === "checkIn" || action.type === "claimQuest") {
+    const r =
+      action.type === "checkIn"
+        ? checkIn(profile.quests, now)
+        : claimQuest(profile.quests, action.id, now);
+    return r.ok
+      ? {
+          ok: true,
+          profile: {
+            ...profile,
+            quests: r.quests,
+            gold: profile.gold + r.gold,
+          },
+        }
+      : r;
+  }
+  if (action.type === "claimAchievement") {
+    const def = achievementById(action.id);
+    if (!def) return { ok: false, error: "noQuest" };
+    const a = achievementProgress(profile, def);
+    if (a.claimed) return { ok: false, error: "questClaimed" };
+    if (!a.done) return { ok: false, error: "questNotDone" };
+    return {
+      ok: true,
+      profile: {
+        ...profile,
+        gold: profile.gold + def.gold,
+        quests: {
+          ...profile.quests,
+          achievements: [...profile.quests.achievements, def.id],
+        },
+      },
+    };
+  }
   if (action.type === "chooseTeam") {
     return validTeam(profile, action.companions)
       ? { ok: true, profile: { ...profile, team: [...action.companions] } }
@@ -327,6 +434,14 @@ export function applyProfileAction(
   if (action.type === "sell") return sellItem(profile, action.item);
   if (action.type === "buyGear") return buyGear(profile, action);
   if (action.type === "buyFood") return buyFood(profile, action.amount);
+  if (action.type === "towerPick") return towerPick(profile, action.index);
+  if (action.type === "towerQuit") {
+    if (profile.tower.run?.active) return { ok: false, error: "towerBusy" };
+    return {
+      ok: true,
+      profile: { ...profile, tower: { ...profile.tower, run: null } },
+    };
+  }
   const isMain = action.character === MAIN_ID;
   const base = isMain ? undefined : companionById(action.character);
   if (!isMain && !base) return { ok: false, error: "invalidSkill" };
@@ -400,6 +515,18 @@ export function parseProfileAction(x: unknown): ProfileAction | null {
   }
   if (a.type === "sell")
     return typeof a.item === "string" ? { type: "sell", item: a.item } : null;
+  if (a.type === "towerPick")
+    return Number.isInteger(a.index)
+      ? { type: "towerPick", index: a.index as number }
+      : null;
+  if (a.type === "towerQuit") return { type: "towerQuit" };
+  if (a.type === "checkIn") return { type: "checkIn" };
+  if (a.type === "claimQuest" || a.type === "claimAchievement")
+    return typeof a.id === "string"
+      ? a.type === "claimQuest"
+        ? { type: "claimQuest", id: a.id }
+        : { type: "claimAchievement", id: a.id }
+      : null;
   if (a.type === "buyFood")
     return Number.isInteger(a.amount)
       ? { type: "buyFood", amount: a.amount as number }

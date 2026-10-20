@@ -86,7 +86,7 @@ describe("chiến dịch", () => {
     const p = {
       ...newProfile(),
       gold: 1000,
-      campaign: { cleared: [], food: 90 },
+      campaign: { cleared: [], food: 90, raids: {}, bestTurns: {} },
     };
     const r = applyProfileAction(p, { type: "buyFood", amount: 30 });
     assert.ok(r.ok);

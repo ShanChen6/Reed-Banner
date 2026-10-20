@@ -3,8 +3,13 @@ import { describe, it } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
-import { mainCharacter, newProfile, startMatch, STARTER_COMPANIONS } from "../../src/core";
+import { botDefense, mainCharacter, newProfile, startMatch, STARTER_COMPANIONS } from "../../src/core";
 import { DrizzleAccountStore } from "../../src/server/db/accounts";
+import { DrizzleDailyStore } from "../../src/server/db/daily";
+import { DrizzleLeaderboardStore } from "../../src/server/db/leaderboard";
+import { DrizzleArenaStore } from "../../src/server/db/arena";
+import { MemoryArenaStore, type ArenaStore } from "../../src/server/arena";
+import { MemoryLeaderboardStore, type LeaderboardStore } from "../../src/server/leaderboard";
 import { DrizzleProfileStore } from "../../src/server/db/profiles";
 import { DrizzleMatchStore, type Db } from "../../src/server/db/store";
 import { signIn } from "../../src/server/accounts";
@@ -94,5 +99,98 @@ describe("lưu trận vào Postgres (PGlite, cùng migration với Neon)", () =>
     await store.link("g_3", { provider: "github", subject: "9", name: "Gh", avatarUrl: null }, 20);
     assert.equal(await store.createPassword("g_3", "gh_user", "h", 21), true);
     assert.equal((await store.get("g_3"))?.name, "Gh");
+  });
+
+  it("thử thách ngày: mỗi người một lượt, xếp hạng theo điểm rồi giờ xong, kèm tên tài khoản", async () => {
+    const db = drizzle(new PGlite());
+    await migrate(db, { migrationsFolder: "drizzle" });
+    const accounts = new DrizzleAccountStore(db as unknown as Db);
+    await signIn(accounts, { provider: "google", subject: "1", name: "Shan", avatarUrl: null }, "g_a", 1, () => "g_x");
+    const store = new DrizzleDailyStore(db as unknown as Db);
+    const day = "2026-10-20";
+    assert.equal(await store.start(day, "g_a", "m_a", 10), true);
+    assert.equal(await store.start(day, "g_a", "m_khac", 11), false);
+    assert.equal(await store.start(day, "g_b", "m_b", 12), true);
+    assert.equal(await store.start(day, "g_c", "m_c", 13), true);
+    assert.equal((await store.get(day, "g_a"))!.result, null);
+    const win = (turns: number) => ({ won: true, turns, permille: 500, score: 1_000_000 - turns * 1000 + 500 });
+    await store.finish(day, "g_a", win(30), 100);
+    await store.finish(day, "g_b", win(20), 200);
+    await store.finish(day, "g_c", win(30), 50);
+    // Ghi lần hai không đổi kết quả.
+    await store.finish(day, "g_b", win(40), 300);
+    const top = await store.top(day, 10);
+    assert.deepEqual(top.map((e) => e.ownerId), ["g_b", "g_c", "g_a"]);
+    assert.equal(top[2]!.name, "Shan");
+    assert.equal(top[0]!.name, null);
+    assert.equal(top[0]!.result!.turns, 20);
+    assert.equal(await store.rankOf(day, "g_a"), 3);
+    assert.equal(await store.rankOf(day, "g_b"), 1);
+    assert.equal(await store.rankOf("2026-10-21", "g_a"), null);
+  });
+
+  it("bảng xếp hạng: điểm cao trước, bằng điểm thì ai đạt trước; ghi lại cùng điểm không đổi mốc", async () => {
+    const db = drizzle(new PGlite());
+    await migrate(db, { migrationsFolder: "drizzle" });
+    const accounts = new DrizzleAccountStore(db as unknown as Db);
+    await signIn(accounts, { provider: "google", subject: "1", name: "Shan", avatarUrl: null }, "g_a", 1, () => "g_x");
+    for (const store of [new DrizzleLeaderboardStore(db as unknown as Db), new MemoryLeaderboardStore()] as LeaderboardStore[]) {
+      await store.submit("g_a", [{ board: "tower", score: 10 }], 100);
+      await store.submit("g_b", [{ board: "tower", score: 10 }], 200);
+      await store.submit("g_c", [{ board: "tower", score: 12 }, { board: "survival", score: 3 }], 300);
+      // Cùng điểm gửi lại sau: g_a vẫn đạt trước g_b.
+      await store.submit("g_a", [{ board: "tower", score: 10 }], 400);
+      const top = await store.top("tower", 10);
+      assert.deepEqual(top.map((e) => e.ownerId), ["g_c", "g_a", "g_b"]);
+      assert.deepEqual(await store.rankOf("tower", "g_b"), { rank: 3, score: 10 });
+      assert.equal(await store.rankOf("survival", "g_a"), null);
+      await store.submit("g_b", [{ board: "tower", score: 15 }], 500);
+      assert.deepEqual(await store.rankOf("tower", "g_b"), { rank: 1, score: 15 });
+    }
+    const top = await new DrizzleLeaderboardStore(db as unknown as Db).top("tower", 10);
+    assert.equal(top.find((e) => e.ownerId === "g_a")!.name, "Shan");
+  });
+
+  it("đấu trường: tạo hàng, đối thủ gần điểm nhất, giới hạn lượt trong ngày, cộng điểm không xuống dưới 0", async () => {
+    const db = drizzle(new PGlite());
+    await migrate(db, { migrationsFolder: "drizzle" });
+    const accounts = new DrizzleAccountStore(db as unknown as Db);
+    await signIn(accounts, { provider: "google", subject: "1", name: "Shan", avatarUrl: null }, "g_b", 1, () => "g_x");
+    for (const store of [new DrizzleArenaStore(db as unknown as Db), new MemoryArenaStore()] as ArenaStore[]) {
+      const a = await store.ensure("g_a", 10);
+      assert.equal(a.rating, 1000);
+      assert.equal(a.defense, null);
+      assert.deepEqual(a.offers, []);
+      // Gọi lại không tạo trùng, không đổi gì.
+      assert.deepEqual(await store.ensure("g_a", 20), a);
+      for (const [id, delta] of [["g_b", 100], ["g_c", -300], ["g_d", 20]] as const) {
+        await store.ensure(id, 10);
+        await store.setDefense(id, botDefense(1, 3), 10);
+        await store.record(id, delta, "win", 10);
+      }
+      // g_e chưa có đội phòng thủ thì không bị bày.
+      await store.ensure("g_e", 10);
+      const c = await store.candidates("g_a", 1000, 2);
+      assert.deepEqual(c.map((x) => x.ownerId), ["g_d", "g_b"]);
+      assert.deepEqual(c[0]!.defense, botDefense(1, 3));
+      const offers = [{ owner: "g_b", name: "Shan", rating: 1100, members: [], power: 0 }];
+      await store.setOffers("g_a", offers);
+      assert.deepEqual((await store.get("g_a"))!.offers, offers);
+
+      assert.equal(await store.useAttack("g_a", "d1", 2, 30), true);
+      assert.equal(await store.useAttack("g_a", "d1", 2, 30), true);
+      assert.equal(await store.useAttack("g_a", "d1", 2, 30), false);
+      assert.equal(await store.useAttack("g_a", "d2", 2, 40), true);
+      assert.equal((await store.get("g_a"))!.attacks, 1);
+      assert.equal(await store.useAttack("g_khong", "d2", 2, 40), false);
+
+      assert.equal(await store.record("g_a", -2000, "loss", 50), 0);
+      assert.equal(await store.record("g_a", 30, "defenseWin", 60), 30);
+      const after = (await store.get("g_a"))!;
+      assert.deepEqual([after.losses, after.defenseWins, after.wins], [1, 1, 0]);
+      assert.equal(await store.record("g_khong", 5, "win", 60), null);
+    }
+    const named = await new DrizzleArenaStore(db as unknown as Db).candidates("g_a", 1100, 1);
+    assert.equal(named[0]!.name, "Shan");
   });
 });

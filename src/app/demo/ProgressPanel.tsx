@@ -59,6 +59,12 @@ export const PROFILE_ERROR: Record<
   slotMismatch: "Ba món phải cùng loại ô",
   professionMismatch: "Ba vũ khí phải cùng nghề",
   foodFull: "Lương đã đầy",
+  noTowerOffer: "Không có phần thưởng để chọn",
+  towerBusy: "Đang có trận ở tầng này, đánh xong đã",
+  alreadyCheckedIn: "Hôm nay đã điểm danh rồi",
+  questNotDone: "Chưa xong",
+  questClaimed: "Đã nhận thưởng",
+  noQuest: "Không có nhiệm vụ này",
   network: "Mất kết nối tới server, thử lại",
   conflict: "Hồ sơ vừa đổi ở nơi khác, đã tải lại",
 };

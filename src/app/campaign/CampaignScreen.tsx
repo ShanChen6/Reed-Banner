@@ -12,6 +12,8 @@ import {
   CAMPAIGN_FOOD_MIN,
   companionById,
   FOOD_PRICE,
+  isRaidStage,
+  raidSetup,
   recommendedLevel,
   signatureOf,
   stageFoes,
@@ -19,6 +21,7 @@ import {
   type CampaignStage,
   type Profile,
   type ProfileAction,
+  type RaidTier,
 } from "@/core";
 import { ElementIcon } from "../demo/art/icons";
 import { Portrait } from "../demo/art/portraits";
@@ -32,6 +35,7 @@ import {
 } from "../demo/online";
 import { PROFILE_ERROR } from "../demo/ProgressPanel";
 import CampaignMap from "./CampaignMap";
+import RaidPanel from "./RaidPanel";
 
 const FOOD_PACKS = [10, 30] as const;
 
@@ -235,7 +239,7 @@ export default function CampaignScreen() {
     );
   };
 
-  const start = async () => {
+  const start = async (raid?: RaidTier) => {
     setBusy(true);
     setMessage(null);
     const res = await createOnline({
@@ -243,8 +247,9 @@ export default function CampaignScreen() {
       element: profile.element,
       profession: profile.profession,
       companions: stage.mode === "3v3" ? profile.team : [],
-      difficulty: stage.difficulty,
+      difficulty: raid ? raidSetup(stage, raid).difficulty : stage.difficulty,
       stage: stage.id,
+      ...(raid ? { raid } : {}),
     });
     if (!res.id) {
       setBusy(false);
@@ -356,6 +361,17 @@ export default function CampaignScreen() {
               onStart={() => void start()}
             />
           </div>
+
+          {isRaidStage(stage) && (
+            <div className="rounded-xl border-2 border-[#7a2c1d] bg-[#2a1719]/90 p-4 shadow-[inset_0_0_24px_#0009]">
+              <RaidPanel
+                stage={stage}
+                profile={profile}
+                busy={busy}
+                onStart={(tier) => void start(tier)}
+              />
+            </div>
+          )}
 
           <div className="rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4 text-sm">
             <h2 className="mb-2 font-bold text-amber-200">Doanh trại</h2>

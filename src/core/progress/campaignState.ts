@@ -13,11 +13,17 @@ export interface CampaignState {
   readonly cleared: readonly string[];
   /** Lương mang vào trận chiến dịch kế tiếp. */
   readonly food: number;
+  /** Đánh trùm: bậc cao nhất đã thắng theo id màn. */
+  readonly raids: Readonly<Record<string, number>>;
+  /** Số lượt (hai phe) ít nhất của các trận thắng theo id màn, cho bảng xếp hạng. */
+  readonly bestTurns: Readonly<Record<string, number>>;
 }
 
 export const NEW_CAMPAIGN: CampaignState = {
   cleared: [],
   food: CAMPAIGN_FOOD_START,
+  raids: {},
+  bestTurns: {},
 };
 
 export const clampCampaignFood = (food: number) =>
@@ -33,5 +39,18 @@ export function parseCampaign(raw: unknown): CampaignState {
     typeof c.food === "number" && Number.isFinite(c.food)
       ? clampCampaignFood(c.food)
       : CAMPAIGN_FOOD_START;
-  return { cleared, food };
+  const raids = Object.fromEntries(
+    Object.entries(
+      c.raids && typeof c.raids === "object" ? c.raids : {},
+    ).filter(
+      (e): e is [string, number] =>
+        Number.isInteger(e[1]) && e[1] >= 1 && e[1] <= 3,
+    ),
+  );
+  const bestTurns = Object.fromEntries(
+    Object.entries(
+      c.bestTurns && typeof c.bestTurns === "object" ? c.bestTurns : {},
+    ).filter((e): e is [string, number] => Number.isInteger(e[1]) && e[1] > 0),
+  );
+  return { cleared, food, raids, bestTurns };
 }

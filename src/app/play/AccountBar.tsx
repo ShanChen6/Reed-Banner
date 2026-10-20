@@ -25,6 +25,42 @@ export default async function AccountBar({
         Chiến dịch
       </Link>
       <Link
+        href="/tower"
+        className="rounded bg-amber-500 px-2 py-1 font-semibold text-stone-950"
+      >
+        Leo tháp
+      </Link>
+      <Link
+        href="/survival"
+        className="rounded bg-amber-500 px-2 py-1 font-semibold text-stone-950"
+      >
+        Sinh tồn
+      </Link>
+      <Link
+        href="/daily"
+        className="rounded bg-amber-500 px-2 py-1 font-semibold text-stone-950"
+      >
+        Thử thách ngày
+      </Link>
+      <Link
+        href="/arena"
+        className="rounded bg-amber-500 px-2 py-1 font-semibold text-stone-950"
+      >
+        Đấu trường
+      </Link>
+      <Link
+        href="/quests"
+        className="rounded bg-amber-500 px-2 py-1 font-semibold text-stone-950"
+      >
+        Nhiệm vụ
+      </Link>
+      <Link
+        href="/leaderboard"
+        className="rounded bg-amber-500 px-2 py-1 font-semibold text-stone-950"
+      >
+        Xếp hạng
+      </Link>
+      <Link
         href="/profile"
         className="rounded bg-[var(--panel)] px-2 py-1 font-semibold"
       >

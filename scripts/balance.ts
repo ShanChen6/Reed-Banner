@@ -5,6 +5,9 @@
 // Tiến trình: --level 10 dựng mọi nhân vật ở cấp 10 (kỹ năng mở theo cấp, điểm kỹ năng tiêu đều).
 // Chiến dịch: --stage tamDai (hoặc all) đánh màn đó với luật màn, đội người chơi ở cấp gợi ý (hoặc --level),
 // --team heroes|default; --sweep 0..6 thử người chơi hơn đối thủ 0 tới 6 cấp.
+// Đánh trùm: thêm --raid 1|2|3 (với --stage all chỉ chạy 12 màn có sứ quân).
+// Leo tháp: --tower [--level 10] --battles 50 in số tầng AI Thường leo được.
+// Sinh tồn: --survival [--level 10] --battles 50 in số đợt AI Thường vượt qua.
 
 import { parseArgs } from "node:util";
 import {
@@ -13,10 +16,18 @@ import {
   recommendedLevel,
   runBattle,
   stageById,
+  simulateTower,
+  simulateSurvival,
+  isRaidTier,
+  RAID_STAGES,
+  raidLevel,
+  raidRecommended,
+  raidSetup,
   stageMatchups,
   stageTeamIds,
   summarize,
   type CampaignStage,
+  type RaidTier,
   type Difficulty,
   type Element,
   type SimGear,
@@ -42,6 +53,9 @@ const { values } = parseArgs({
     stage: { type: "string" },
     team: { type: "string", default: "heroes" },
     sweep: { type: "string" },
+    raid: { type: "string" },
+    tower: { type: "boolean", default: false },
+    survival: { type: "boolean", default: false },
     json: { type: "boolean", default: false },
   },
 });
@@ -63,6 +77,47 @@ const gearLabel = gear ? ` · đồ bậc ${gear.tier} (${gear.sets[0] ?? "khôn
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
 const num = (x: number) => x.toFixed(1);
 
+if (values.tower) {
+  runTower();
+  process.exit(0);
+}
+
+if (values.survival) {
+  runSurvival();
+  process.exit(0);
+}
+
+/** Sinh tồn: --battles lượt chơi ở mỗi cấp, in số đợt vượt qua và số lượt trung bình mỗi đợt. */
+function runSurvival(): void {
+  const levels = level ? [level] : [5, 10, 20, 30];
+  console.log(`\n## Sinh tồn · ${battles} lượt chơi mỗi cấp · AI normal đánh thay người chơi, đội khởi đầu`);
+  console.log("| Cấp | Trung bình | p10 | Trung vị | p90 | Qua đợt 5 | Qua đợt 10 | Qua đợt 15 | Lượt/đợt |\n|---|---|---|---|---|---|---|---|---|");
+  for (const lv of levels) {
+    const runs = Array.from({ length: battles }, (_, i) => simulateSurvival(lv, (seed + i * 104729) >>> 0));
+    const waves = runs.map((r) => r.cleared).sort((a, b) => a - b);
+    const q = (x: number) => waves[Math.min(waves.length - 1, Math.floor(x * waves.length))]!;
+    const reach = (f: number) => pct(waves.filter((x) => x >= f).length / waves.length);
+    const avg = waves.reduce((a, b) => a + b, 0) / waves.length;
+    const t = runs.flatMap((r) => r.turns);
+    const perWave = t.reduce((a, b) => a + b, 0) / t.length;
+    console.log(`| ${lv} | ${num(avg)} | ${q(0.1)} | ${q(0.5)} | ${q(0.9)} | ${reach(5)} | ${reach(10)} | ${reach(15)} | ${num(perWave)} |`);
+  }
+}
+
+/** Leo tháp: --battles lượt leo ở mỗi cấp (--level, mặc định 5, 10, 20, 30), in số tầng qua được. */
+function runTower(): void {
+  const levels = level ? [level] : [5, 10, 20, 30];
+  console.log(`\n## Leo tháp · ${battles} lượt leo mỗi cấp · AI normal leo thay người chơi, đội khởi đầu`);
+  console.log("| Cấp | Trung bình | p10 | Trung vị | p90 | Qua tầng 5 | Qua tầng 10 | Qua tầng 15 | Qua tầng 20 |\n|---|---|---|---|---|---|---|---|---|");
+  for (const lv of levels) {
+    const floors = Array.from({ length: battles }, (_, i) => simulateTower(lv, (seed + i * 104729) >>> 0).cleared).sort((a, b) => a - b);
+    const q = (x: number) => floors[Math.min(floors.length - 1, Math.floor(x * floors.length))]!;
+    const reach = (f: number) => pct(floors.filter((x) => x >= f).length / floors.length);
+    const avg = floors.reduce((a, b) => a + b, 0) / floors.length;
+    console.log(`| ${lv} | ${num(avg)} | ${q(0.1)} | ${q(0.5)} | ${q(0.9)} | ${reach(5)} | ${reach(10)} | ${reach(15)} | ${reach(20)} |`);
+  }
+}
+
 if (values.stage) {
   runStages();
   process.exit(0);
@@ -70,20 +125,28 @@ if (values.stage) {
 
 /** Tỉ lệ thắng của người chơi ở từng màn; --sweep in thêm một cột cho mỗi mức hơn cấp. */
 function runStages(): void {
+  const raidArg = values.raid === undefined ? undefined : Number(values.raid);
+  if (raidArg !== undefined && !isRaidTier(raidArg)) fail(`--raid phải là 1, 2 hoặc 3`);
+  const raid = raidArg as RaidTier | undefined;
   const stages: CampaignStage[] =
-    values.stage === "all" ? [...CAMPAIGN] : [stageById(values.stage!) ?? fail(`Không có màn ${values.stage}`)];
+    values.stage === "all"
+      ? [...(raid ? RAID_STAGES : CAMPAIGN)]
+      : [stageById(values.stage!) ?? fail(`Không có màn ${values.stage}`)];
   const team = values.team as StageTeam;
   const sweep = values.sweep?.split("..").map(Number);
   const offsets = sweep ? range(sweep[0]!, sweep[1] ?? sweep[0]!) : null;
   const rate = (stage: CampaignStage, lv: number) => {
-    const results = stageMatchups(stage, battles, seed, { level: lv, team, ...(values.element ? { element } : {}) }).map((m) =>
-      runBattle(m, { difficulty: ["normal", stage.difficulty], maxTurns }),
-    );
+    const results = stageMatchups(stage, battles, seed, {
+      level: lv,
+      team,
+      ...(raid ? { raid } : {}),
+      ...(values.element ? { element } : {}),
+    }).map((m) => runBattle(m, { difficulty: ["normal", raid ? raidSetup(stage, raid).difficulty : stage.difficulty], maxTurns }));
     return summarize(results);
   };
   const json: Record<string, unknown> = {};
   if (!values.json) {
-    console.log(`\n## Chiến dịch · ${battles} trận mỗi ô · người chơi AI normal, hệ ${values.element ?? "xoay vòng 7 hệ"}, đội ${team}`);
+    console.log(`\n## ${raid ? `Đánh trùm bậc ${raid}` : "Chiến dịch"} · ${battles} trận mỗi ô · người chơi AI normal, hệ ${values.element ?? "xoay vòng 7 hệ"}, đội ${team}`);
     console.log(
       offsets
         ? `| Màn | Đối thủ | Khó | Đội kèm | ${offsets.map((o) => `+${o}`).join(" | ")} |\n|---|---|---|---|${offsets.map(() => "---|").join("")}`
@@ -91,14 +154,15 @@ function runStages(): void {
     );
   }
   for (const stage of stages) {
-    const mates = stage.mode === "3v3" ? stageTeamIds(stage, team).join("+") : "—";
-    const head = `| ${stage.id} | ${stage.level} | ${stage.difficulty} | ${mates} |`;
+    const mates = stage.mode === "3v3" ? stageTeamIds(stage, team, !!raid).join("+") : "—";
+    const foeLevel = raid ? raidLevel(stage, raid) : stage.level;
+    const head = `| ${stage.id} | ${foeLevel} | ${raid ? raidSetup(stage, raid).difficulty : stage.difficulty} | ${mates} |`;
     if (offsets) {
-      const rates = offsets.map((o) => rate(stage, stage.level + o).side0WinRate);
+      const rates = offsets.map((o) => rate(stage, foeLevel + o).side0WinRate);
       json[stage.id] = Object.fromEntries(offsets.map((o, i) => [`+${o}`, rates[i]]));
       if (!values.json) console.log(`${head} ${rates.map(pct).join(" | ")} |`);
     } else {
-      const lv = level ?? recommendedLevel(stage);
+      const lv = level ?? (raid ? raidRecommended(stage, raid) : recommendedLevel(stage));
       const s = rate(stage, lv);
       json[stage.id] = { level: lv, ...s };
       if (!values.json) console.log(`${head} ${lv} | ${pct(s.side0WinRate)} | ${num(s.turnsPerSide.median)} |`);

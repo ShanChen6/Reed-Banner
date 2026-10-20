@@ -24,6 +24,17 @@ import {
   updateProfile,
 } from "../../src/server/profiles";
 import { MemoryMatchStore } from "../../src/server/store";
+import { dailyBoard, MemoryDailyStore } from "../../src/server/daily";
+import { MemoryLeaderboardStore } from "../../src/server/leaderboard";
+import { arenaView, MemoryArenaStore } from "../../src/server/arena";
+import {
+  ARENA_ATTACKS_PER_DAY,
+  ARENA_OFFERS,
+  ARENA_START,
+  ARENA_WIN_GOLD,
+  arenaDay,
+  DAILY_GOLD,
+} from "../../src/core";
 
 const T0 = 5_000_000;
 const input = {
@@ -285,7 +296,10 @@ describe("trận chiến dịch", () => {
     assert.ok(
       await profiles.put(
         "g_c",
-        { ...cur.profile, campaign: { cleared: [], food: 42 } },
+        {
+          ...cur.profile,
+          campaign: { cleared: [], food: 42, raids: {}, bestTurns: {} },
+        },
         cur.version,
       ),
     );
@@ -330,7 +344,439 @@ describe("trận chiến dịch", () => {
       joined: "nguyenBac",
     });
     const saved = (await loadProfile(profiles, "g_c")).profile;
-    assert.deepEqual(saved.campaign, { cleared: ["coLau"], food: 33 });
+    assert.deepEqual(saved.campaign, {
+      cleared: ["coLau"],
+      food: 33,
+      raids: {},
+      bestTurns: { coLau: 1 },
+    });
     assert.equal(saved.companions.nguyenBac?.level, 1);
+  });
+});
+
+describe("trận đánh trùm", () => {
+  it("chỉ đánh được bậc đã mở; sân nhà; thắng lần đầu ghi bậc, thưởng vàng và món trang bị", async () => {
+    const store = new MemoryMatchStore();
+    const profiles = new MemoryProfileStore();
+    const deps = { store, profiles, now: T0, seed: 4, newId: () => "m_r" };
+    const body = { ...input, stage: "boHai", raid: 1 };
+    assert.equal(parseNewBattle({ ...body, raid: 4 }), null);
+    assert.equal(parseNewBattle(body)!.difficulty, "normal");
+    assert.equal(parseNewBattle({ ...body, raid: 3 })!.difficulty, "boss");
+    const locked = await createBattleFor("g_r", parseNewBattle(body)!, deps);
+    assert.deepEqual(locked, { ok: false, error: "badRequest" });
+
+    const cur = await loadProfile(profiles, "g_r");
+    const campaign = {
+      cleared: ["coLau", "boHai"],
+      food: 40,
+      raids: {},
+      bestTurns: {},
+    };
+    assert.ok(
+      await profiles.put(
+        "g_r",
+        { ...cur.profile, gold: 0, campaign },
+        cur.version,
+      ),
+    );
+    const tier2 = await createBattleFor(
+      "g_r",
+      parseNewBattle({ ...body, raid: 2 })!,
+      deps,
+    );
+    assert.deepEqual(tier2, { ok: false, error: "badRequest" });
+    const r = await createBattleFor("g_r", parseNewBattle(body)!, deps);
+    assert.ok(r.ok);
+    assert.equal(r.view.raid, 1);
+    assert.equal(r.view.stage, "boHai");
+    // Người chơi không mang lương chiến dịch.
+    assert.equal(r.view.battle.sides[1].fighters[0]!.id, "tranLam");
+    assert.ok(r.view.battle.sides[0].food !== 40);
+
+    const rec = (await store.get("m_r"))!;
+    const battle = { ...rec.match.battle, winner: 0 as const };
+    assert.ok(
+      await store.save(
+        { ...rec, match: { ...rec.match, battle, seq: rec.match.seq + 1 } },
+        rec.match.seq,
+      ),
+    );
+    const done = await getBattle("m_r", "g_r", {
+      store,
+      profiles,
+      now: T0 + 1000,
+    });
+    assert.ok(done.ok && done.outcome?.raid);
+    assert.equal(done.outcome.campaign, undefined);
+    assert.equal(done.outcome.raid.firstClear, true);
+    assert.equal(done.outcome.raid.bonusGold, 300);
+    assert.equal(done.outcome.raid.item?.tier, 3);
+    assert.equal(done.outcome.raid.item?.element, "thuy");
+    const saved = (await loadProfile(profiles, "g_r")).profile;
+    assert.deepEqual(saved.campaign, { ...campaign, raids: { boHai: 1 } });
+    assert.ok(saved.bag.some((i) => i.id === done.outcome!.raid!.item!.id));
+  });
+});
+
+describe("trận leo tháp", () => {
+  it("bắt đầu lượt leo, không mở hai trận một tầng, thắng thì chờ chọn thưởng", async () => {
+    const store = new MemoryMatchStore();
+    const profiles = new MemoryProfileStore();
+    let n = 0;
+    const deps = {
+      store,
+      profiles,
+      now: T0,
+      seed: 11,
+      newId: () => `m_t${++n}`,
+    };
+    const body = { ...input, tower: true };
+    assert.equal(parseNewBattle({ ...body, tower: 1 }), null);
+    assert.equal(parseNewBattle({ ...body, stage: "coLau" }), null);
+    const r = await createBattleFor("g_t", parseNewBattle(body)!, deps);
+    assert.ok(r.ok);
+    assert.equal(r.view.tower, 1);
+    assert.equal(r.view.battle.sides[1].fighters.length, 3);
+    const run = (await loadProfile(profiles, "g_t")).profile.tower.run!;
+    assert.equal(run.active, true);
+    assert.equal(run.floor, 1);
+    assert.deepEqual(
+      await createBattleFor("g_t", parseNewBattle(body)!, deps),
+      { ok: false, error: "badRequest" },
+    );
+
+    const rec = (await store.get(r.id))!;
+    const battle = { ...rec.match.battle, winner: 0 as const };
+    const f = battle.sides[0].fighters;
+    battle.sides = [
+      {
+        ...battle.sides[0],
+        food: 35,
+        fighters: [
+          { ...f[0]!, hp: Math.round(f[0]!.maxHp / 2) },
+          { ...f[1]!, hp: 0 },
+          f[2]!,
+        ],
+      },
+      battle.sides[1],
+    ];
+    assert.ok(
+      await store.save(
+        { ...rec, match: { ...rec.match, battle, seq: rec.match.seq + 1 } },
+        rec.match.seq,
+      ),
+    );
+    const done = await getBattle(r.id, "g_t", {
+      store,
+      profiles,
+      now: T0 + 1000,
+    });
+    assert.ok(done.ok && done.outcome?.tower);
+    assert.deepEqual(done.outcome.tower, {
+      floor: 1,
+      won: true,
+      best: 1,
+      newBest: true,
+      bonusGold: 0,
+    });
+    const after = (await loadProfile(profiles, "g_t")).profile.tower;
+    assert.equal(after.best, 1);
+    assert.equal(after.run!.floor, 2);
+    assert.equal(after.run!.active, false);
+    assert.equal(after.run!.food, 35);
+    assert.equal(after.run!.hp[1], 0);
+    assert.ok(Math.abs(after.run!.hp[0]! - 0.5) < 0.01);
+    // Còn thưởng chưa chọn thì chưa lên tầng được.
+    assert.deepEqual(
+      await createBattleFor("g_t", parseNewBattle(body)!, deps),
+      { ok: false, error: "badRequest" },
+    );
+  });
+});
+
+describe("trận sinh tồn", () => {
+  it("nghỉ giữa đợt chưa cộng thưởng, sang đợt kế, dừng lại thì ghi kỷ lục và vàng", async () => {
+    const store = new MemoryMatchStore();
+    const profiles = new MemoryProfileStore();
+    const deps = {
+      store,
+      profiles,
+      now: T0,
+      seed: 21,
+      newId: () => "m_s1",
+    };
+    const leaderboard = new MemoryLeaderboardStore();
+    const body = { ...input, survival: true };
+    assert.equal(parseNewBattle({ ...body, survival: 1 }), null);
+    assert.equal(parseNewBattle({ ...body, tower: true }), null);
+    const r = await createBattleFor("g_s", parseNewBattle(body)!, deps);
+    assert.ok(r.ok);
+    assert.equal(r.view.survival!.wave, 1);
+    assert.equal(r.view.survival!.next!.wave, 2);
+    assert.equal(r.view.battle.turn.side, 0);
+    assert.equal(r.view.battle.sides[1].fighters.length, 2);
+
+    // Phe người chơi vừa hạ hết đợt 1.
+    const win = async () => {
+      const rec = (await store.get(r.id))!;
+      const battle = structuredClone(rec.match.battle);
+      battle.sides[1].fighters.forEach((f) => (f.hp = 0));
+      battle.winner = 0;
+      assert.ok(
+        await store.save(
+          { ...rec, match: { ...rec.match, battle, seq: rec.match.seq + 1 } },
+          rec.match.seq,
+        ),
+      );
+      return rec.match.seq + 1;
+    };
+    let seq = await win();
+    const rest = await getBattle(r.id, "g_s", {
+      store,
+      profiles,
+      now: T0 + 1000,
+    });
+    assert.ok(rest.ok && !rest.outcome);
+    assert.equal(rest.view.survival!.cleared, 1);
+
+    const next = await actBattle(
+      r.id,
+      "g_s",
+      { seq, action: { type: "nextWave" } },
+      { store, profiles, now: T0 + 2000 },
+    );
+    assert.ok(next.ok && !next.outcome);
+    assert.equal(next.view.survival!.wave, 2);
+    assert.equal(next.view.battle.winner, null);
+
+    seq = await win();
+    const end = await actBattle(
+      r.id,
+      "g_s",
+      { seq, action: { type: "endRun" } },
+      { store, profiles, leaderboard, now: T0 + 3000 },
+    );
+    assert.ok(end.ok && end.outcome?.survival);
+    assert.deepEqual(end.outcome.survival, {
+      cleared: 2,
+      best: 2,
+      newBest: true,
+      gold: 20,
+    });
+    assert.equal(end.outcome.rewards.won, true);
+    const p = (await loadProfile(profiles, "g_s")).profile;
+    assert.equal(p.survival.best, 2);
+    // Nhiệm vụ: một trận sinh tồn, thắng, vượt 2 đợt.
+    assert.equal(p.quests.weekStats.waves, 2);
+    assert.equal(p.quests.totals.play, 1);
+    // Bảng xếp hạng sinh tồn ghi ngay khi cộng thưởng.
+    assert.deepEqual(await leaderboard.rankOf("survival", "g_s"), {
+      rank: 1,
+      score: 2,
+    });
+  });
+});
+
+describe("thử thách hằng ngày", () => {
+  it("mỗi người một lượt mỗi ngày, xong thì lên bảng xếp hạng và nhận vàng", async () => {
+    const store = new MemoryMatchStore();
+    const profiles = new MemoryProfileStore();
+    const daily = new MemoryDailyStore();
+    let n = 0;
+    const deps = (now: number) => ({
+      store,
+      profiles,
+      daily,
+      dailySecret: "bí mật",
+      now,
+      seed: 5,
+      newId: () => `m_d${++n}`,
+    });
+    const input = parseNewBattle({ daily: true })!;
+    assert.equal(parseNewBattle({ daily: 1 }), null);
+    const a = await createBattleFor("g_a", input, deps(T0));
+    const b = await createBattleFor("g_b", input, deps(T0 + 5));
+    assert.ok(a.ok && b.ok);
+    assert.equal(a.view.daily, b.view.daily);
+    // Cùng đề: cùng bàn cờ và cùng đối thủ.
+    assert.deepEqual(a.view.battle.board, b.view.battle.board);
+    assert.deepEqual(
+      a.view.battle.sides[1].fighters.map((f) => f.id),
+      b.view.battle.sides[1].fighters.map((f) => f.id),
+    );
+    assert.deepEqual(await createBattleFor("g_a", input, deps(T0 + 9)), {
+      ok: false,
+      error: "dailyDone",
+    });
+
+    const finish = async (id: string, winner: 0 | 1, turns: number) => {
+      const rec = (await store.get(id))!;
+      const battle = structuredClone(rec.match.battle);
+      battle.sides[winner === 0 ? 1 : 0].fighters.forEach((f) => (f.hp = 0));
+      battle.winner = winner;
+      battle.turn.number = turns;
+      assert.ok(
+        await store.save(
+          { ...rec, match: { ...rec.match, battle, seq: rec.match.seq + 1 } },
+          rec.match.seq,
+        ),
+      );
+    };
+    await finish(a.id, 0, 30);
+    await finish(b.id, 0, 20);
+    const ra = await getBattle(a.id, "g_a", deps(T0 + 100));
+    const rb = await getBattle(b.id, "g_b", deps(T0 + 200));
+    assert.ok(ra.ok && ra.outcome?.daily && rb.ok && rb.outcome?.daily);
+    assert.equal(ra.outcome.daily.rank, 1);
+    assert.equal(rb.outcome.daily.rank, 1);
+    assert.equal(ra.outcome.rewards.gold, DAILY_GOLD.win);
+    assert.equal(
+      (await loadProfile(profiles, "g_a")).profile.gold,
+      DAILY_GOLD.win,
+    );
+
+    const board = await dailyBoard(daily, a.view.daily!, "g_a");
+    assert.deepEqual(
+      board.top.map((r) => [r.rank, r.mine, r.score.turns]),
+      [
+        [1, false, 20],
+        [2, true, 30],
+      ],
+    );
+    assert.equal(board.mine?.rank, 2);
+    assert.equal(
+      board.top[0]!.name,
+      "Khách g_b".replace("g_b", "g_b".slice(-4)),
+    );
+  });
+});
+
+describe("đấu trường bóng ma", () => {
+  it("bày đối thủ, đánh đội phòng thủ của người khác, cộng điểm cả hai bên, hết lượt trong ngày", async () => {
+    const store = new MemoryMatchStore();
+    const profiles = new MemoryProfileStore();
+    const arena = new MemoryArenaStore();
+    const leaderboard = new MemoryLeaderboardStore();
+    const base = { arena, profiles, leaderboard, now: T0 };
+    // g_b mở đấu trường trước: có đội phòng thủ, lên bảng ở điểm khởi đầu.
+    await arenaView("g_b", "view", { ...base, seed: 1 });
+    const view = await arenaView("g_a", "view", { ...base, seed: 2 });
+    assert.equal(view.rating, ARENA_START);
+    assert.equal(view.attacksLeft, ARENA_ATTACKS_PER_DAY);
+    assert.equal(view.offers.length, ARENA_OFFERS);
+    const real = view.offers.findIndex((o) => !o.bot);
+    assert.ok(real >= 0);
+    assert.equal(view.offers.filter((o) => o.bot).length, ARENA_OFFERS - 1);
+    // Không lộ id chủ đội.
+    assert.ok(view.offers.every((o) => !("owner" in o)));
+
+    assert.equal(parseNewBattle({ arena: ARENA_OFFERS }), null);
+    assert.equal(parseNewBattle({ arena: "0" }), null);
+    const deps = {
+      store,
+      profiles,
+      arena,
+      leaderboard,
+      now: T0,
+      seed: 6,
+      newId: () => "m_a1",
+    };
+    const r = await createBattleFor(
+      "g_a",
+      parseNewBattle({ arena: real })!,
+      deps,
+    );
+    assert.ok(r.ok);
+    assert.equal(r.view.arena!.name, view.offers[real]!.name);
+    assert.equal(
+      r.view.battle.sides[1].fighters[0]!.name,
+      view.offers[real]!.name,
+    );
+    // Đối thủ đã bày bị xóa sau khi đánh.
+    assert.equal((await arena.get("g_a"))!.offers.length, 0);
+
+    const rec = (await store.get(r.id))!;
+    const battle = structuredClone(rec.match.battle);
+    battle.sides[1].fighters.forEach((f) => (f.hp = 0));
+    battle.winner = 0;
+    await store.save(
+      { ...rec, match: { ...rec.match, battle, seq: rec.match.seq + 1 } },
+      rec.match.seq,
+    );
+    const goldBefore = (await loadProfile(profiles, "g_a")).profile.gold;
+    const end = await getBattle(r.id, "g_a", {
+      store,
+      profiles,
+      arena,
+      leaderboard,
+      now: T0 + 1000,
+    });
+    assert.ok(end.ok && end.outcome?.arena);
+    assert.deepEqual(end.outcome.arena, {
+      won: true,
+      opponent: view.offers[real]!.name,
+      delta: 16,
+      rating: ARENA_START + 16,
+      gold: ARENA_WIN_GOLD,
+    });
+    const p = (await loadProfile(profiles, "g_a")).profile;
+    assert.equal(
+      p.gold,
+      goldBefore + end.outcome.rewards.gold + ARENA_WIN_GOLD,
+    );
+    const b = (await arena.get("g_b"))!;
+    assert.equal(b.rating, ARENA_START - 8);
+    assert.equal(b.defenseLosses, 1);
+    assert.deepEqual(await leaderboard.rankOf("arena", "g_a"), {
+      rank: 1,
+      score: ARENA_START + 16,
+    });
+    assert.deepEqual(await leaderboard.rankOf("arena", "g_b"), {
+      rank: 2,
+      score: ARENA_START - 8,
+    });
+
+    // Mở lại trang thì có đối thủ mới; dùng hết lượt trong ngày thì không đánh được nữa.
+    const again = await arenaView("g_a", "view", { ...base, seed: 3 });
+    assert.equal(again.offers.length, ARENA_OFFERS);
+    assert.equal(again.attacksLeft, ARENA_ATTACKS_PER_DAY - 1);
+    assert.equal(again.wins, 1);
+    for (let i = 1; i < ARENA_ATTACKS_PER_DAY; i++)
+      assert.ok(
+        await arena.useAttack("g_a", arenaDay(T0), ARENA_ATTACKS_PER_DAY, T0),
+      );
+    const limited = await createBattleFor(
+      "g_a",
+      parseNewBattle({ arena: 0 })!,
+      { ...deps, newId: () => "m_a2" },
+    );
+    assert.deepEqual(limited, { ok: false, error: "arenaLimit" });
+    assert.equal(httpStatus("arenaLimit"), 409);
+  });
+
+  it("chủ đội đã bị xóa thì báo và bày đối thủ mới", async () => {
+    const arena = new MemoryArenaStore();
+    const profiles = new MemoryProfileStore();
+    await arena.ensure("g_a", T0);
+    await arena.setOffers("g_a", [
+      {
+        owner: "g_xoa",
+        name: "Khách _xoa",
+        rating: 1000,
+        members: [],
+        power: 0,
+      },
+    ]);
+    const r = await createBattleFor("g_a", parseNewBattle({ arena: 0 })!, {
+      store: new MemoryMatchStore(),
+      profiles,
+      arena,
+      now: T0,
+      seed: 1,
+      newId: () => "m_g",
+    });
+    assert.deepEqual(r, { ok: false, error: "arenaGone" });
+    assert.equal((await arena.get("g_a"))!.offers.length, 0);
   });
 });
