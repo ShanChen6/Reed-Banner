@@ -175,14 +175,15 @@ export interface RaidSetup {
   readonly rule: string;
 }
 
-/** Luật và đội đối thủ của một bậc: cả đội lên cấp, thủ lĩnh máu ×BOSS_HP, sân nhà theo nguyên tố thủ lĩnh. */
+/** Luật và đội đối thủ của một bậc: cả đội lên cấp, thủ lĩnh 3vs3 máu ×BOSS_HP, sân nhà theo nguyên tố thủ lĩnh. */
 export function raidSetup(stage: CampaignStage, tier: RaidTier): RaidSetup {
   const level = raidLevel(stage, tier);
   const element = stage.foes[0]!.element;
   return {
     foes: stage.foes.map((f, i) => {
       const fighter = stageFighter(f, level);
-      return i === 0
+      // 1vs1 đã nhân máu cho cả hai phe; thêm máu trùm nữa thì quá khó (mô phỏng 20/10/2026: 20–25%).
+      return i === 0 && stage.mode === "3v3"
         ? { ...fighter, maxHp: Math.round(fighter.maxHp * BOSS_HP) }
         : fighter;
     }),

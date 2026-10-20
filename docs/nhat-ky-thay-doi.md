@@ -4,6 +4,9 @@
 
 ## 20/10/2026
 
+**Đánh trùm (lộ trình 4.5, Claude đặt, chờ Shan duyệt)**
+- Qua màn có sứ quân thì đánh lại sứ quân đó ở 3 bậc (+4/+8/+12 cấp, AI khó hơn 1/2/3 nấc), trên sân nhà (bàn cờ theo nguyên tố, sứ quân đầy lương). Thưởng lần đầu mỗi bậc: vàng và 1 món Tinh/Bảo/Thần phẩm. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#22-đánh-trùm-claude-đặt-20102026-chờ-shan-duyệt).
+
 **Bản đồ cổ trang chiến dịch (Claude, chờ Shan duyệt)**
 - Trang `/campaign` có bản đồ Giao Châu thế kỷ X kiểu khắc gỗ: 13 màn đặt theo vùng đất, sông, núi, bờ biển; đường hành quân đỏ son, màn đã qua cắm cờ lau, bấm màn để chọn. Mô tả ở [Chế độ chơi](design/09-che-do-choi.md#21-chương-1-cờ-lau-dẹp-loạn-claude-đặt-19102026-chờ-shan-duyệt).
 

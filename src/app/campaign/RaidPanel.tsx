@@ -44,7 +44,8 @@ export default function RaidPanel({
         </h2>
         <p className="mt-1 flex items-center gap-1.5 text-sm text-stone-300">
           <ElementIcon element={leader.element} className="size-4 shrink-0" />
-          {raidSetup(stage, 1).rule} Thủ lĩnh máu ×1,5.
+          {raidSetup(stage, 1).rule}
+          {stage.mode === "3v3" && " Thủ lĩnh máu ×1,5."}
         </p>
       </div>
       {!stageCleared && (

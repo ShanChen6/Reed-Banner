@@ -91,6 +91,16 @@ Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (tr
 
 > TODO: chương sau.
 
+### 2.2 Đánh trùm (Claude đặt 20/10/2026, chờ Shan duyệt)
+
+- Qua màn có sứ quân (12 màn, trừ màn tập trận) thì sứ quân đó thách đấu lại ở **3 bậc**, mở lần lượt: Bậc I mở khi qua màn, bậc sau mở khi thắng bậc trước. Code ở `src/core/campaign/raids.ts`, giao diện là khung "Đánh trùm" dưới chi tiết màn ở `/campaign`.
+- Đối thủ giống màn gốc nhưng hơn cấp màn **+4 / +8 / +12** (tối đa 30), AI khó hơn màn gốc **1 / 2 / 3 nấc** (Dễ → Thường → Khó → Trùm → Ác mộng). Thủ lĩnh máu ×1,5 ở màn 3vs3 (1vs1 đã nhân máu cả hai phe nên không thêm).
+- **Sân nhà:** bàn cờ nghiêng về loại ô hợp với nguyên tố sứ quân (Thủy nhiều âm dương ít bánh chưng, Thổ nhiều bánh chưng, Hỏa và Kim nhiều kiếm, Mộc nhiều tim, Lôi và Phong nhiều âm dương, trống trận) và sứ quân vào trận đầy lương (100). Người chơi vào trận với lương thường (60), không dùng lương chiến dịch.
+- **Thưởng lần đầu thắng mỗi bậc:** 300 / 600 / 1000 vàng và 1 món trang bị Tinh / Bảo / Thần phẩm theo nguyên tố sứ quân (vũ khí theo nghề sứ quân). Thắng lại chỉ nhận thưởng trận thường (độ khó cao nên rơi đồ tốt hơn).
+- Cấp gợi ý = cấp gợi ý của màn + 4 / 8 / 12.
+- Mô phỏng 20/10/2026 (`pnpm sim -- --stage all --raid 1|2|3`, 70 trận mỗi ô, AI Thường đánh thay người chơi ở cấp gợi ý, đội có 2 tướng lịch sử): thắng trung bình 46% ở Bậc I, 46% Bậc II, 39% Bậc III, dao động 14–73% theo màn. Bậc II chưa khó hơn Bậc I vì cấp gợi ý tăng cùng cấp đối thủ, còn AI ở cấp cao khác nhau ít. Khó nhất là Bình Kiều (14–26%), Siêu Loại (24–31%) và Bố Hải (27–34%); dễ nhất Hồi Hồ (63–73%). Đây là nội dung thử thách nên để khó hơn chiến dịch; cân từng màn để sau nếu cần.
+- Bản đầu cho sứ quân luôn đi trước và AI nhảy thẳng lên Trùm: thắng chỉ 6–36% ở Bậc I nên đã bỏ.
+
 ## 3. Leo tháp (Vô hạn)
 
 - Máu và lương **mang sang** giữa các tầng, không tự hồi.
