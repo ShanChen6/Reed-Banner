@@ -111,7 +111,7 @@ export function decodePending(value: string | undefined): PendingLogin | null {
 
 /** Chỉ cho quay về đường dẫn trong cùng trang web (chặn chuyển hướng sang trang khác). */
 export function safeReturnTo(v: string | null | undefined): string {
-  if (!v || !v.startsWith("/") || v.startsWith("//") || v.includes("\\")) return "/play";
+  if (!v || !v.startsWith("/") || v.startsWith("//") || v.includes("\\")) return "/game";
   return v;
 }
 
@@ -184,7 +184,7 @@ export type CallbackResult =
  * vào tài khoản. Người chơi bấm hủy hoặc có lỗi thì quay về trang cũ, không đổi tài khoản.
  */
 export async function completeLogin(i: CallbackInput): Promise<CallbackResult> {
-  const returnTo = i.pending?.returnTo ?? "/play";
+  const returnTo = i.pending?.returnTo ?? "/game";
   if (!i.pending || i.pending.provider !== i.provider || !i.code || !i.state || i.state !== i.pending.state) {
     return { ok: false, returnTo };
   }

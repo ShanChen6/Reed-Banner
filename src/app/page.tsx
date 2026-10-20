@@ -10,10 +10,10 @@ import {
   type Tile,
   TILE_KINDS,
 } from "@/core";
-import { ELEMENT_NAME, PROFESSION_NAME, SPECIAL_NAME, TILE_NAME } from "./demo/labels";
-import { CloudCorner, DongSonBand, ElementIcon, LeaderFlag } from "./demo/art/icons";
-import { Portrait } from "./demo/art/portraits";
-import { TileArt } from "./demo/art/tiles";
+import { ELEMENT_NAME, PROFESSION_NAME, SPECIAL_NAME, TILE_NAME } from "./game/battle/labels";
+import { CloudCorner, DongSonBand, ElementIcon, LeaderFlag } from "./game/art/icons";
+import { Portrait } from "./game/art/portraits";
+import { TileArt } from "./game/art/tiles";
 import { FAQ, PROFESSION_PERK, TILE_GIVES } from "./home/data";
 import ElementPicker from "./home/ElementPicker";
 import LacBirds from "./home/LacBirds";
@@ -88,7 +88,7 @@ function SectionTitle({ kicker, title, sub }: { kicker: string; title: string; s
 function PlayButton({ className = "", children = "Chơi ngay" }: { className?: string; children?: React.ReactNode }) {
   return (
     <Link
-      href="/demo"
+      href="/game"
       className={`inline-flex items-center justify-center gap-2 rounded-lg border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-5 py-2.5 font-bold uppercase tracking-wider text-amber-50 shadow-[0_0_24px_-6px_#c0392b] transition hover:brightness-110 ${className}`}
     >
       {children}
@@ -118,7 +118,7 @@ export default function Home() {
               </li>
             ))}
           </ul>
-          <Link href="/login" className="ml-auto text-sm text-stone-300 hover:text-[var(--gold)] md:ml-2">
+          <Link href="/game/login" className="ml-auto text-sm text-stone-300 hover:text-[var(--gold)] md:ml-2">
             Đăng nhập
           </Link>
           <PlayButton className="px-3 py-1.5 text-sm" />
@@ -373,22 +373,22 @@ export default function Home() {
               </li>
             ))}
             <li>
-              <Link href="/demo" className="hover:text-[var(--gold)]">
-                Chơi thử
+              <Link href="/game" className="hover:text-[var(--gold)]">
+                Vào game
               </Link>
             </li>
             <li>
-              <Link href="/play" className="hover:text-[var(--gold)]">
-                Chơi online
+              <Link href="/game/practice" className="hover:text-[var(--gold)]">
+                Chơi thử offline
               </Link>
             </li>
             <li>
-              <Link href="/login" className="hover:text-[var(--gold)]">
+              <Link href="/game/login" className="hover:text-[var(--gold)]">
                 Đăng nhập
               </Link>
             </li>
             <li>
-              <Link href="/register" className="hover:text-[var(--gold)]">
+              <Link href="/game/register" className="hover:text-[var(--gold)]">
                 Đăng ký
               </Link>
             </li>
