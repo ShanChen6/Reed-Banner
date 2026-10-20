@@ -5,6 +5,7 @@ import {
   ALL_COMPANIONS,
   applyCampaignResult,
   applyRaidResult,
+  applyTowerResult,
   applyRewards,
   battleRewards,
   createRng,
@@ -13,6 +14,7 @@ import {
   humanAct,
   isRaidTier,
   leveledFoe,
+  newTowerRun,
   ownsCompanion,
   PROFESSIONS,
   profileTeam,
@@ -26,6 +28,8 @@ import {
   stageUnlocked,
   startMatch,
   STARTER_COMPANIONS,
+  towerFloor,
+  towerTeam,
   viewOf,
   type BattleAction,
   type BattleEvent,
@@ -35,6 +39,8 @@ import {
   type CampaignResult,
   type RaidResult,
   type RaidTier,
+  type TowerResult,
+  type TowerRun,
   type FighterConfig,
   type GearItem,
   type LevelUp,
@@ -77,6 +83,8 @@ export interface NewBattleInput {
   readonly stage?: string;
   /** Đánh trùm: bậc của trùm ở màn `stage`. */
   readonly raid?: RaidTier;
+  /** Leo tháp: đánh tầng kế tiếp của lượt leo (bắt đầu lượt mới nếu chưa có). */
+  readonly tower?: true;
 }
 
 export type ServiceError = MatchError | "badRequest" | "notFound" | "conflict";
@@ -93,6 +101,8 @@ export interface Outcome {
   readonly campaign?: CampaignResult;
   /** Chỉ có ở trận đánh trùm. */
   readonly raid?: RaidResult;
+  /** Chỉ có ở trận leo tháp. */
+  readonly tower?: TowerResult;
 }
 
 export type ServiceResult =
@@ -117,6 +127,16 @@ const oneOf = <T extends string>(list: readonly T[], x: unknown): x is T =>
 /** Kiểm tra body tạo trận; null khi không hợp lệ. */
 export function parseNewBattle(body: unknown): NewBattleInput | null {
   if (!isObj(body)) return null;
+  if (body.tower !== undefined) {
+    if (body.tower !== true || body.stage !== undefined) return null;
+    const parsed = parseNewBattle({
+      ...body,
+      tower: undefined,
+      mode: "3v3",
+      difficulty: "normal",
+    });
+    return parsed && { ...parsed, tower: true };
+  }
   if (body.stage !== undefined) {
     const stage =
       typeof body.stage === "string" ? stageById(body.stage) : undefined;
@@ -239,6 +259,7 @@ export async function createBattleFor(
   input: NewBattleInput,
   deps: Deps,
 ): Promise<ServiceResult> {
+  if (input.tower) return createTowerBattle(ownerId, input, deps);
   const { profile } = await loadProfile(deps.profiles, ownerId);
   // Chỉ ra trận nhân vật đã có (khởi đầu hoặc đã mua).
   if (!input.companions.every((id) => ownsCompanion(profile, id)))
@@ -320,6 +341,66 @@ export async function createBattleFor(
   return { ok: true, id: record.id, view: viewOf(match), events };
 }
 
+/**
+ * Leo tháp: đánh tầng kế tiếp của lượt leo, bắt đầu lượt mới nếu chưa có. Đánh dấu lượt leo đang có trận ngay
+ * trong lần ghi hồ sơ để hai request không cùng mở hai trận một tầng. Còn phần thưởng chưa chọn thì không đánh.
+ */
+async function createTowerBattle(
+  ownerId: string,
+  input: NewBattleInput,
+  deps: Deps,
+): Promise<ServiceResult> {
+  let run: TowerRun | undefined;
+  const u = await updateProfile(
+    deps.profiles,
+    ownerId,
+    (p) => {
+      const cur = p.tower.run ?? newTowerRun(p, deps.seed);
+      if (cur.active || cur.offer)
+        return { ok: false, error: "badRequest" as const };
+      run = { ...cur, active: true };
+      return {
+        ok: true,
+        profile: {
+          ...p,
+          element: input.element,
+          profession: input.profession,
+          tower: { ...p.tower, run },
+        },
+      };
+    },
+    deps.now,
+  );
+  if (!u.ok || !run) return { ok: false, error: u.ok ? "badRequest" : u.error };
+  const floor = towerFloor(run, run.floor);
+  const { match, events } = startMatch({
+    sides: [
+      {
+        fighters: towerTeam(u.stored.profile, run),
+        leader: 0,
+        food: run.food,
+        hpRatio: run.hp,
+      },
+      { fighters: floor.foes, leader: 0 },
+    ],
+    difficulty: floor.difficulty,
+    seed: deps.seed,
+    firstSide: (deps.seed & 1) as SideIndex,
+    now: deps.now,
+    weights: floor.weights,
+    tower: floor.floor,
+  });
+  const record: MatchRecord = {
+    id: deps.newId(),
+    ownerId,
+    match,
+    createdAt: deps.now,
+    updatedAt: deps.now,
+  };
+  await deps.store.create(record);
+  return { ok: true, id: record.id, view: viewOf(match), events };
+}
+
 async function load(
   id: string,
   ownerId: string,
@@ -365,6 +446,7 @@ async function reward(
   let soldFor = 0;
   let campaign: CampaignResult | undefined;
   let raid: RaidResult | undefined;
+  let tower: TowerResult | undefined;
   const stage = match.stage;
   const u = await updateProfile(
     deps.profiles,
@@ -373,7 +455,17 @@ async function reward(
       const applied = applyRewards(p, ids, rewards);
       levelUps = applied.levelUps;
       let next = applied.profile;
-      if (stage && match.raid) {
+      if (match.tower) {
+        const side = match.battle.sides[HUMAN];
+        const c = applyTowerResult(
+          next,
+          rewards.won,
+          side.fighters.map((f) => f.hp / f.maxHp),
+          side.food,
+        );
+        next = c.profile;
+        tower = c.result;
+      } else if (stage && match.raid) {
         // Rng riêng cho món thưởng, khác luồng món rơi thường.
         const c = applyRaidResult(
           next,
@@ -410,6 +502,7 @@ async function reward(
     soldFor,
     ...(campaign ? { campaign } : {}),
     ...(raid ? { raid } : {}),
+    ...(tower ? { tower } : {}),
   };
 }
 

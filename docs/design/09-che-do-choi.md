@@ -108,7 +108,24 @@ Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (tr
 - Thua thì leo lại từ tầng 1. Mỗi lượt leo được sinh ngẫu nhiên khác nhau.
 - Điểm = tầng cao nhất đạt được.
 
-> TODO: danh sách phần thưởng giữa các tầng.
+### 3.1 Bản đầu (Claude đặt 20/10/2026, chờ Shan duyệt)
+
+- Trang `/tower`. Code ở `src/core/tower/` (dựng tầng), `src/core/progress/towerState.ts` (lượt leo lưu trong hồ sơ), server tạo trận khi gửi `tower: true`.
+- **Đội:** đội 3vs3 đang chọn ở hồ sơ, cố định cả lượt leo; chỉ số lấy theo hồ sơ lúc vào từng tầng (lên cấp, đổi đồ giữa chừng vẫn có tác dụng). Người đã ngã giữ 0 máu cho tới khi được hồi.
+- **Lương:** vào tầng 1 với 60; lương còn lại mang sang, luôn trong khoảng 20–100.
+- **Đối thủ:** 3 nhân vật kèm ngẫu nhiên theo seed của lượt leo. Tầng 1 cùng cấp nhân vật chính lúc bắt đầu leo, cứ 5 tầng thêm 1 cấp (tối đa 30). Máu và công nhân hệ số sức mạnh **0,45 ở tầng 1, +0,03 mỗi tầng** (tầng 10 là 0,72, tầng 20 là 1,02). AI: tầng 1–3 Dễ, 4–8 Thường, 9–15 Khó, 16–24 Trùm, từ 25 Ác mộng.
+- **Tầng trùm:** cứ 5 tầng, thủ lĩnh là một sứ quân ngẫu nhiên, máu ×1,5, đánh trên sân nhà của sứ quân (bảng ô theo nguyên tố như [Đánh trùm](#22-đánh-trùm-claude-đặt-20102026-chờ-shan-duyệt)). Lần đầu vượt kỷ lục ở tầng trùm được 40 vàng × số tầng.
+- **Phần thưởng giữa các tầng** (luôn đủ 3 lựa chọn): Hồi máu (người còn đứng +50% máu tối đa, người đã ngã đứng dậy với 30%), Thêm lương (+30), hoặc một phúc ngẫu nhiên cộng dồn: Hùng khí +10% công, Thiết giáp +15% thủ, Bền chí +10% máu tối đa.
+- Mỗi tầng thắng hay thua vẫn nhận kinh nghiệm, vàng và đồ rơi như trận thường. Không bỏ được lượt leo khi đang có trận.
+- **Vì sao dùng hệ số sức mạnh:** bản đầu tăng cấp đối thủ mỗi tầng thì AI leo thay người chơi chết ở tầng 1–2, vì người thắng thường còn ít máu và chênh cấp ít tác dụng. Hệ số nhân thẳng vào máu và công chỉnh được độ khó rõ ràng hơn.
+- Mô phỏng 20/10/2026 (`pnpm sim -- --tower --level N --battles 50`, AI Thường leo thay người chơi với đội khởi đầu, chọn thưởng: có người ngã hoặc máu dưới nửa thì hồi máu, lương dưới 40 thì thêm lương, còn lại lấy phúc):
+
+  | Cấp | Tầng trung bình | Trung vị | p90 | Qua tầng 5 | Qua tầng 10 | Qua tầng 15 |
+  |---|---|---|---|---|---|---|
+  | 5 | 10,5 | 10 | 14 | 94% | 60% | 8% |
+  | 10 | 9,7 | 10 | 14 | 78% | 54% | 6% |
+  | 20 | 9,1 | 10 | 14 | 78% | 50% | 8% |
+  | 30 | 10,6 | 11 | 19 | 82% | 56% | 16% |
 
 ## 4. Sinh tồn
 

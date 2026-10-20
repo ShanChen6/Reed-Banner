@@ -29,6 +29,12 @@ import {
   type CampaignState,
 } from "./campaignState";
 import {
+  applyTowerReward,
+  NEW_TOWER,
+  parseTower,
+  type TowerState,
+} from "./towerState";
+import {
   addXp,
   autoProgress,
   buildCompanion,
@@ -66,6 +72,8 @@ export interface Profile {
   readonly nextItemId: number;
   /** Tiến độ chiến dịch: màn đã qua, lương mang sang. */
   readonly campaign: CampaignState;
+  /** Leo tháp: kỷ lục và lượt leo đang dở. */
+  readonly tower: TowerState;
 }
 
 export function newProfile(): Profile {
@@ -84,6 +92,7 @@ export function newProfile(): Profile {
     loadouts: {},
     nextItemId: 1,
     campaign: NEW_CAMPAIGN,
+    tower: NEW_TOWER,
   };
 }
 
@@ -221,6 +230,7 @@ export function parseProfile(raw: unknown): Profile {
     branchChoice: p.branchChoice ?? {},
     ...parseInventory(p),
     campaign: parseCampaign(p.campaign),
+    tower: parseTower(p.tower),
   };
   return Array.isArray(p.team) && validTeam(next, p.team)
     ? { ...next, team: p.team }
@@ -266,9 +276,34 @@ export type ProfileAction =
   | { readonly type: "sell"; readonly item: string }
   | ({ readonly type: "buyGear" } & GearOrder)
   /** Doanh trại chiến dịch: đổi vàng lấy lương mang vào trận kế tiếp. */
-  | { readonly type: "buyFood"; readonly amount: number };
+  | { readonly type: "buyFood"; readonly amount: number }
+  /** Leo tháp: chọn phần thưởng thứ `index` sau khi thắng tầng. */
+  | { readonly type: "towerPick"; readonly index: number }
+  /** Leo tháp: bỏ lượt leo đang dở (không được lúc đang đánh). */
+  | { readonly type: "towerQuit" };
 
-export type ProfileError = ProgressError | InventoryError | "foodFull";
+export type ProfileError =
+  | ProgressError
+  | InventoryError
+  | "foodFull"
+  | "noTowerOffer"
+  | "towerBusy";
+
+function towerPick(profile: Profile, index: number): ProfileActionResult {
+  const run = profile.tower.run;
+  const reward = run?.offer?.[index];
+  if (!run || !reward) return { ok: false, error: "noTowerOffer" };
+  return {
+    ok: true,
+    profile: {
+      ...profile,
+      tower: {
+        ...profile.tower,
+        run: { ...applyTowerReward(run, reward), offer: null },
+      },
+    },
+  };
+}
 
 /** Mua lương ở doanh trại; mua quá mức tối đa thì chỉ tính phần còn chứa được. */
 function buyFood(profile: Profile, amount: number): ProfileActionResult {
@@ -327,6 +362,14 @@ export function applyProfileAction(
   if (action.type === "sell") return sellItem(profile, action.item);
   if (action.type === "buyGear") return buyGear(profile, action);
   if (action.type === "buyFood") return buyFood(profile, action.amount);
+  if (action.type === "towerPick") return towerPick(profile, action.index);
+  if (action.type === "towerQuit") {
+    if (profile.tower.run?.active) return { ok: false, error: "towerBusy" };
+    return {
+      ok: true,
+      profile: { ...profile, tower: { ...profile.tower, run: null } },
+    };
+  }
   const isMain = action.character === MAIN_ID;
   const base = isMain ? undefined : companionById(action.character);
   if (!isMain && !base) return { ok: false, error: "invalidSkill" };
@@ -400,6 +443,11 @@ export function parseProfileAction(x: unknown): ProfileAction | null {
   }
   if (a.type === "sell")
     return typeof a.item === "string" ? { type: "sell", item: a.item } : null;
+  if (a.type === "towerPick")
+    return Number.isInteger(a.index)
+      ? { type: "towerPick", index: a.index as number }
+      : null;
+  if (a.type === "towerQuit") return { type: "towerQuit" };
   if (a.type === "buyFood")
     return Number.isInteger(a.amount)
       ? { type: "buyFood", amount: a.amount as number }

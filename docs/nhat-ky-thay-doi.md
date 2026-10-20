@@ -4,6 +4,9 @@
 
 ## 20/10/2026
 
+**Leo tháp (lộ trình 5.1, Claude đặt, chờ Shan duyệt)**
+- Trang `/tower`: chuỗi tầng 3vs3, máu và lương mang sang, thắng tầng chọn hồi máu, thêm lương hoặc một phúc cộng dồn; cứ 5 tầng một sứ quân làm trùm. Độ khó theo hệ số sức mạnh 0,45 + 0,03 mỗi tầng; mô phỏng AI Thường leo được trung vị 10 tầng ở mọi cấp. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#31-bản-đầu-claude-đặt-20102026-chờ-shan-duyệt).
+
 **Đánh trùm (lộ trình 4.5, Claude đặt, chờ Shan duyệt)**
 - Qua màn có sứ quân thì đánh lại sứ quân đó ở 3 bậc (+4/+8/+12 cấp, AI khó hơn 1/2/3 nấc), trên sân nhà (bàn cờ theo nguyên tố, sứ quân đầy lương). Thưởng lần đầu mỗi bậc: vàng và 1 món Tinh/Bảo/Thần phẩm. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#22-đánh-trùm-claude-đặt-20102026-chờ-shan-duyệt).
 
