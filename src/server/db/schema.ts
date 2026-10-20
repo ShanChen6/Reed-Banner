@@ -1,6 +1,6 @@
 // Bảng Postgres (Neon) cho dữ liệu online. Đổi schema xong chạy `pnpm db:generate` để sinh migration.
 
-import { bigint, boolean, index, integer, jsonb, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
+import { bigint, boolean, index, integer, jsonb, pgTable, primaryKey, text, uniqueIndex } from "drizzle-orm/pg-core";
 import type { Match, Profile } from "@/core";
 
 /** Trận online. `state` là toàn bộ trạng thái trận (kể cả seed), chỉ server đọc. */
@@ -35,14 +35,39 @@ export const profiles = pgTable("profiles", {
  * Tài khoản đã đăng nhập ít nhất một lần. Id chính là id khách lúc liên kết (`g_...`), nên trận và dữ liệu
  * đã có của khách giữ nguyên. Khách chưa đăng nhập chưa có dòng ở đây.
  */
-export const accounts = pgTable("accounts", {
-  id: text("id").primaryKey(),
-  /** Tên và ảnh lấy từ nhà cung cấp lần đăng nhập gần nhất, chỉ để hiển thị. */
-  name: text("name").notNull(),
-  avatarUrl: text("avatar_url"),
-  createdAt: bigint("created_at", { mode: "number" }).notNull(),
-  lastLoginAt: bigint("last_login_at", { mode: "number" }).notNull(),
-});
+export const accounts = pgTable(
+  "accounts",
+  {
+    id: text("id").primaryKey(),
+    /** Tên và ảnh lấy từ nhà cung cấp lần đăng nhập gần nhất, chỉ để hiển thị. */
+    name: text("name").notNull(),
+    avatarUrl: text("avatar_url"),
+    createdAt: bigint("created_at", { mode: "number" }).notNull(),
+    lastLoginAt: bigint("last_login_at", { mode: "number" }).notNull(),
+    /** Email đã xác nhận (chữ thường), để lấy lại mật khẩu. Mỗi email thuộc tối đa một tài khoản. */
+    email: text("email"),
+  },
+  (t) => [uniqueIndex("accounts_email_idx").on(t.email)],
+);
+
+/**
+ * Mã một lần gửi qua email: xác nhận email (`verify`, kèm email đang chờ) hoặc đặt lại mật khẩu (`reset`).
+ * Chỉ lưu SHA-256 của mã; dùng xong thì xóa.
+ */
+export const emailTokens = pgTable(
+  "email_tokens",
+  {
+    tokenHash: text("token_hash").primaryKey(),
+    purpose: text("purpose").notNull(),
+    accountId: text("account_id")
+      .notNull()
+      .references(() => accounts.id, { onDelete: "cascade" }),
+    email: text("email").notNull(),
+    createdAt: bigint("created_at", { mode: "number" }).notNull(),
+    expiresAt: bigint("expires_at", { mode: "number" }).notNull(),
+  },
+  (t) => [index("email_tokens_account_idx").on(t.accountId, t.purpose)],
+);
 
 /**
  * Danh tính gắn với tài khoản: mỗi (nhà cung cấp, id bên đó) thuộc đúng một tài khoản. Tên đăng nhập + mật

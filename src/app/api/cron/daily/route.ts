@@ -1,11 +1,12 @@
 // GET /api/cron/daily: việc định kỳ mỗi ngày, Vercel Cron gọi theo lịch trong vercel.json.
-// Chốt trận bỏ dở quá 24 giờ (xử thua, cộng thưởng vào hồ sơ) và xóa khách không chơi quá 30 ngày.
+// Chốt trận bỏ dở quá 24 giờ (xử thua, cộng thưởng vào hồ sơ), xóa khách không chơi quá 30 ngày và mã email
+// đã hết hạn.
 // Vercel gửi `Authorization: Bearer <CRON_SECRET>`; thiếu CRON_SECRET thì từ chối mọi lời gọi.
 
 import { NextResponse, type NextRequest } from "next/server";
 import { ABANDON_MS } from "@/core";
 import { settleAbandoned } from "@/server/battles";
-import { deleteGuests, staleGuestIds, staleMatchIds } from "@/server/db/maintenance";
+import { deleteExpiredTokens, deleteGuests, staleGuestIds, staleMatchIds } from "@/server/db/maintenance";
 import { arenaStore, dailyStore, database, leaderboardStore, matchStore, profileStore } from "@/server/store";
 
 export const dynamic = "force-dynamic";
@@ -30,5 +31,6 @@ export async function GET(request: NextRequest) {
   const settled = await settleAbandoned(await staleMatchIds(db, now - ABANDON_MS, MATCH_BATCH), deps);
   const guests = await staleGuestIds(db, now - GUEST_TTL_MS, GUEST_BATCH);
   await deleteGuests(db, guests);
-  return NextResponse.json({ ok: true, settled, deletedGuests: guests.length });
+  const expiredTokens = await deleteExpiredTokens(db, now);
+  return NextResponse.json({ ok: true, settled, deletedGuests: guests.length, expiredTokens });
 }

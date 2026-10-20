@@ -9,18 +9,20 @@ import {
   canFreeSlide,
   createBattle,
   createRng,
-  GEAR_SETS,
-  GEAR_SLOTS,
-  getGearSet,
   getSkill,
   isAdjacent,
+  isHero,
+  buildCompanion,
+  buildHero,
+  buildMain,
+  maxProgress,
+  MAX_TIER,
   ELEMENTS,
   companionById,
   fighterSkill,
   isAlive,
   leveledFoe,
   MAIN_ID,
-  mainCharacter,
   mainSkills,
   needsCell,
   newProfile,
@@ -29,7 +31,6 @@ import {
   PASSIVES,
   playAiTurn,
   presetLoadout,
-  PROFESSIONS,
   RAID_TIER_INFO,
   profileTeam,
   receiveDrop,
@@ -38,10 +39,10 @@ import {
   slideStep,
   stageById,
   STARTER_COMPANIONS,
-  TIERS,
   tileAt,
   withGear,
   GRACE_MS,
+  TURN_MS,
   type BattleAction,
   type BattleRewards,
   type CampaignResult,
@@ -87,7 +88,6 @@ import {
   TILE_NAME,
   SPECIAL_NAME,
   TIER_CLASS,
-  TIER_COLOR_NAME,
 } from "./labels";
 import { bounceFrames, eventFrames, type Frame } from "./animation";
 import {
@@ -97,6 +97,7 @@ import {
   ElementIcon,
   FoodIcon,
   LeaderFlag,
+  ProfessionIcon,
   ShieldIcon,
 } from "../art/icons";
 import { GearIcon } from "../art/gear";
@@ -106,6 +107,7 @@ import { TileArt } from "../art/tiles";
 import ProgressPanel from "./ProgressPanel";
 import GearPanel from "./GearPanel";
 import ShopPanel from "./ShopPanel";
+import SetupLobby from "./SetupLobby";
 import {
   actOnline,
   createOnline,
@@ -123,7 +125,10 @@ import { SceneLink } from "../SceneContext";
 const PLAYER = 0;
 const AI = 1;
 const AI_DELAY_MS = 700;
+/** Seed của bàn xem trước lúc mới vào (cố định để server và trình duyệt dựng cùng một bàn). */
 const DEMO_SEED = 2026;
+/** Seed mới cho mỗi trận chơi offline. */
+const randomSeed = () => crypto.getRandomValues(new Uint32Array(1))[0]!;
 const DIFFICULTIES: Difficulty[] = [
   "easy",
   "normal",
@@ -144,6 +149,8 @@ interface DemoGear {
 }
 
 const NO_GEAR: DemoGear = { tier: 0, set: null };
+/** Chơi thử mặc định: đủ 9 món phẩm cao nhất, bộ Cờ Lau. */
+const MAX_GEAR: DemoGear = { tier: MAX_TIER, set: "coLau" };
 
 /** Mặc đủ 9 món cùng hệ với nhân vật. Đội Tianwu mặc cùng bậc nhưng không có thưởng bộ. */
 function gearUp(
@@ -156,8 +163,15 @@ function gearUp(
     : withGear(f, presetLoadout(f.element, f.profession, gear.tier, set));
 }
 
+/** Nhân vật ở tiến trình tối đa: cấp 30, mọi kỹ năng cấp tối đa, nhân vật kèm mang chiêu nhánh đầu. */
+function maxed(base: FighterConfig): FighterConfig {
+  return isHero(base.id)
+    ? buildHero(base, maxProgress(null))
+    : buildCompanion(base, maxProgress(base.profession, base.id));
+}
+
 /**
- * Luyện tập: mọi kỹ năng mở sẵn, cùng một cấp. Tiến trình: đội theo hồ sơ lưu trên trình duyệt, đối thủ
+ * Luyện tập: cả hai đội ở tiến trình tối đa. Tiến trình: đội theo hồ sơ lưu trên trình duyệt, đối thủ
  * cùng cấp với nhân vật chính.
  */
 type DemoMode = "practice" | "progress";
@@ -188,10 +202,13 @@ function demoSides({
   const team =
     mode === "progress"
       ? profileTeam(leveled, profile.team)
-      : [mainCharacter(element, profession), ...profile.team.map(byId)];
+      : [
+          buildMain(maxProgress(null), element, profession),
+          ...profile.team.map((id) => maxed(byId(id))),
+        ];
   const level = profile.main.level;
   const foes = foeIds(profile.team).map((id) =>
-    mode === "progress" ? leveledFoe(byId(id), level) : byId(id),
+    mode === "progress" ? leveledFoe(byId(id), level) : maxed(byId(id)),
   );
   // Tiến trình mặc đồ trong túi đồ của hồ sơ (profileTeam); đồ mẫu chỉ dùng ở Luyện tập.
   const preset = mode === "progress" ? NO_GEAR : gear;
@@ -201,11 +218,10 @@ function demoSides({
   ];
 }
 
-function newBattle(round: number, setup: Setup): BattleState {
+function newBattle(seed: number, setup: Setup): BattleState {
   return createBattle({
     sides: demoSides(setup),
-    seed: DEMO_SEED + round,
-    timer: false,
+    seed,
     firstSide: PLAYER,
   }).state;
 }
@@ -247,12 +263,13 @@ interface Outcome {
 }
 
 function demoDrop(
+  seed: number,
   round: number,
   difficulty: Difficulty,
   won: boolean,
 ): GearItem | null {
   return rollDrop(
-    createRng(DEMO_SEED * 31 + round),
+    createRng(Math.imul(seed, 31) ^ 0x5bd1e995),
     difficulty,
     won,
     `drop-${round}`,
@@ -363,6 +380,56 @@ function WaveFoes({ preview }: { preview: WavePreview }) {
         </span>
       ))}
     </span>
+  );
+}
+
+/** Đồng hồ lượt trên bàn cờ: số giây còn lại và vạch cạn dần; đỏ khi còn dưới 10 giây. */
+function TurnClock({
+  seconds,
+  mine,
+  extra,
+  waiting,
+}: {
+  seconds: number | null;
+  mine: boolean;
+  extra: boolean;
+  waiting: boolean;
+}) {
+  const total = TURN_MS / 1000;
+  const left = seconds ?? total;
+  const urgent = mine && seconds !== null && left <= 10;
+  const label = waiting
+    ? "Đang chờ server…"
+    : mine
+      ? extra
+        ? "Lượt thêm của bạn"
+        : "Lượt của bạn"
+      : "Đối thủ đang đi";
+  return (
+    <div
+      className={`flex items-center gap-3 rounded-lg border bg-[var(--panel)] px-3 py-1.5 ${
+        urgent ? "border-rose-500" : "border-[var(--gold)]/60"
+      }`}
+      role="timer"
+      aria-label={seconds === null ? label : `${label}, còn ${seconds} giây`}
+    >
+      <span className="w-32 shrink-0 text-sm font-semibold">{label}</span>
+      <div className="h-2 min-w-0 flex-1 overflow-hidden rounded-full bg-black/30">
+        <div
+          className={`h-full rounded-full transition-[width] duration-300 ease-linear ${
+            !mine ? "bg-stone-400/60" : urgent ? "bg-rose-500" : "bg-amber-400"
+          }`}
+          style={{ width: `${(left / total) * 100}%` }}
+        />
+      </div>
+      <span
+        className={`w-12 shrink-0 text-right font-mono text-lg font-bold tabular-nums ${
+          urgent ? "animate-pulse text-rose-400" : ""
+        }`}
+      >
+        {seconds === null ? "--" : `${seconds}s`}
+      </span>
+    </div>
   );
 }
 
@@ -609,7 +676,18 @@ function FighterCard({
             <span className="truncate">{fighter.name}</span>
           </span>
           <span className="flex items-center gap-1 text-[10px] opacity-75">
-            {PROFESSION_NAME[fighter.profession]}
+            <span
+              title={PROFESSION_NAME[fighter.profession]}
+              className="shrink-0"
+            >
+              <ProfessionIcon
+                profession={fighter.profession}
+                className="size-3.5"
+              />
+              <span className="sr-only">
+                {PROFESSION_NAME[fighter.profession]}
+              </span>
+            </span>
             <span title={ELEMENT_NAME[fighter.element]} className="shrink-0">
               <ElementIcon element={fighter.element} className="size-3.5" />
             </span>
@@ -694,10 +772,14 @@ export default function DemoGame({
   autoResume?: boolean;
 }) {
   const [round, setRound] = useState(0);
+  const [seed, setSeed] = useState(DEMO_SEED);
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
+  // Chơi thử vào trận ngay khi mở màn (xem replay); Chơi online chờ người chơi chọn rồi tạo trận trên server.
   const [started, setStarted] = useState(false);
+  /** Chơi thử chưa vào trận đầu: chưa hiện màn chờ. */
+  const [booting, setBooting] = useState(!online);
   const [element, setElement] = useState<Element>("moc");
-  const [gear, setGear] = useState<DemoGear>(NO_GEAR);
+  const [gear, setGear] = useState<DemoGear>(MAX_GEAR);
   const [profession, setProfession] = useState<Profession>("tuongSi");
   // Chơi online luôn chơi theo hồ sơ trên server.
   const [mode, setMode] = useState<DemoMode>(online ? "progress" : "practice");
@@ -720,7 +802,7 @@ export default function DemoGame({
     [element, profession, gear, mode, profile],
   );
   /** Bàn cờ xem trước khi chưa bắt đầu; dựng lại mỗi khi đổi lựa chọn trước trận. */
-  const preview = useMemo(() => newBattle(round, setup), [round, setup]);
+  const preview = useMemo(() => newBattle(seed, setup), [seed, setup]);
   const [live, setState] = useState<BattleState | null>(null);
   const state = live ?? preview;
   const [selected, setSelected] = useState<Pos | null>(null);
@@ -863,27 +945,42 @@ export default function DemoGame({
   const commit = useCallback(
     (
       before: BattleState,
-      next: BattleState,
+      after: BattleState,
       events: readonly BattleEvent[],
     ) => {
       play(eventFrames(before.board, events), () => {
-        pushLog(next, events);
-        setState(next);
+        // Chơi offline: đồng hồ lượt mới tính từ lúc hoạt ảnh xong, thời gian xem hoạt ảnh không bị trừ.
+        const shown =
+          !online &&
+          after.turn.deadline !== null &&
+          after.turn.deadline !== before.turn.deadline
+            ? {
+                ...after,
+                turn: { ...after.turn, deadline: Date.now() + TURN_MS },
+              }
+            : after;
+        pushLog(shown, events);
+        setState(shown);
         showNumbers(events);
         // Trận online: server cộng thưởng và gửi `outcome` (xem receive).
         if (
           !online &&
           mode === "progress" &&
           before.winner === null &&
-          next.winner !== null
+          after.winner !== null
         ) {
-          const rewards = battleRewards(next, PLAYER);
+          const rewards = battleRewards(after, PLAYER);
           const r = applyRewards(
             profile,
-            next.sides[PLAYER].fighters.map((f) => f.id),
+            after.sides[PLAYER].fighters.map((f) => f.id),
             rewards,
           );
-          const rolled = demoDrop(round, difficulty, next.winner === PLAYER);
+          const rolled = demoDrop(
+            seed,
+            round,
+            difficulty,
+            after.winner === PLAYER,
+          );
           const received = rolled
             ? receiveDrop(r.profile, rolled)
             : { profile: r.profile, item: null, soldFor: 0 };
@@ -898,7 +995,17 @@ export default function DemoGame({
         }
       });
     },
-    [play, pushLog, showNumbers, online, mode, profile, round, difficulty],
+    [
+      play,
+      pushLog,
+      showNumbers,
+      online,
+      mode,
+      profile,
+      seed,
+      round,
+      difficulty,
+    ],
   );
 
   /** Nhận trả lời của server: chạy hoạt ảnh các sự kiện rồi đồng bộ trạng thái và seq. */
@@ -950,11 +1057,7 @@ export default function DemoGame({
   const apply = useCallback(
     (action: BattleAction): boolean => {
       // Online: kiểm tra trước bằng core cho phản hồi tức thì; bàn cờ thật chỉ lấy từ server.
-      const r = act(
-        state,
-        action,
-        online ? Date.now() + clockOffset.current : 0,
-      );
+      const r = act(state, action, Date.now() + clockOffset.current);
       if (!r.ok) {
         let text = ERROR_TEXT[r.error];
         if (r.error === "notEnoughEnergy" && action.type === "skill") {
@@ -977,21 +1080,26 @@ export default function DemoGame({
     if (online || !started || state.winner !== null || state.turn.side !== AI)
       return;
     const t = window.setTimeout(() => {
-      const r = playAiTurn(state, difficulty);
+      const r = playAiTurn(state, difficulty, Date.now());
       commit(state, r.state, r.events);
     }, AI_DELAY_MS);
     return () => window.clearTimeout(t);
   }, [online, started, state, difficulty, commit]);
 
-  // Online: đồng hồ 30 giây. Quá hạn (cộng ân hạn) thì hỏi server để chạy bù lượt mất và lượt AI.
+  // Đồng hồ 30 giây mỗi lượt (online lẫn offline).
   const deadline =
-    online && started && state.winner === null ? state.turn.deadline : null;
+    started && state.winner === null ? state.turn.deadline : null;
   useEffect(() => {
-    if (deadline === null || !battleId) return;
+    if (deadline === null) return;
     const tick = window.setInterval(
       () => setClock(Date.now() + clockOffset.current),
       250,
     );
+    return () => window.clearInterval(tick);
+  }, [deadline]);
+  // Online: quá hạn (cộng ân hạn) thì hỏi server để chạy bù lượt mất và lượt AI.
+  useEffect(() => {
+    if (!online || deadline === null || !battleId) return;
     const wait = deadline + GRACE_MS + 200 - (Date.now() + clockOffset.current);
     const before = state;
     const t = window.setTimeout(
@@ -1004,15 +1112,29 @@ export default function DemoGame({
       },
       Math.max(0, wait),
     );
-    return () => {
-      window.clearInterval(tick);
-      window.clearTimeout(t);
-    };
-  }, [deadline, battleId, state, receive]);
+    return () => window.clearTimeout(t);
+  }, [online, deadline, battleId, state, receive]);
+  // Offline: quá hạn (cộng ân hạn) thì mất lượt ngay trên máy; chờ hoạt ảnh đang chạy xong.
+  useEffect(() => {
+    if (online || deadline === null || anim !== null) return;
+    if (state.turn.side !== PLAYER) return;
+    const wait = deadline + GRACE_MS + 50 - Date.now();
+    const t = window.setTimeout(
+      () => {
+        const r = act(state, { type: "timeout" }, Date.now());
+        if (r.ok) commit(state, r.state, r.events);
+      },
+      Math.max(0, wait),
+    );
+    return () => window.clearTimeout(t);
+  }, [online, deadline, anim, state, commit]);
   const secondsLeft =
     deadline === null
       ? null
-      : Math.max(0, Math.ceil((deadline - clock) / 1000));
+      : Math.min(
+          TURN_MS / 1000,
+          Math.max(0, Math.ceil((deadline - clock) / 1000)),
+        );
 
   // Báo chiều cao cho trang cha khi được nhúng bằng iframe (ShanVerse).
   useEffect(() => {
@@ -1283,13 +1405,14 @@ export default function DemoGame({
         ? (outcome?.drop ?? null)
         : state.winner === null
           ? null
-          : demoDrop(round, difficulty, state.winner === PLAYER),
-    [mode, outcome, state.winner, round, difficulty],
+          : demoDrop(seed, round, difficulty, state.winner === PLAYER),
+    [mode, outcome, state.winner, seed, round, difficulty],
   );
 
-  /** Về màn chọn trước trận để đổi nguyên tố, nghề, trang bị hoặc nâng kỹ năng. */
-  const restart = () => {
+  /** Dọn trận cũ; trận mới dùng bàn cờ xem trước của vòng kế. */
+  const reset = () => {
     setRound(round + 1);
+    setSeed(randomSeed());
     setAnim(null);
     afterAnim.current = null;
     setFloats([]);
@@ -1300,12 +1423,53 @@ export default function DemoGame({
     setSlideAim(null);
     setPendingSlide(null);
     setLog([]);
-    setStarted(false);
     setBattleId(null);
     setSurvival(null);
     setDailyDay(null);
     setArenaFoe(null);
   };
+
+  /** Về màn chờ trước trận để đổi nguyên tố, nghề, trang bị hoặc nâng kỹ năng. */
+  const restart = () => {
+    reset();
+    setStarted(false);
+  };
+
+  /**
+   * Chơi thử: vào trận mới ngay với lựa chọn hiện tại. Mỗi trận một bàn cờ mới; đồng hồ lượt đầu tính từ
+   * lúc vào trận.
+   */
+  const replay = () => {
+    reset();
+    const fresh = randomSeed();
+    const battle = newBattle(fresh, setup);
+    setSeed(fresh);
+    setState({
+      ...battle,
+      turn: { ...battle.turn, deadline: Date.now() + TURN_MS },
+    });
+    setStarted(true);
+    setBooting(false);
+  };
+
+  /** Chơi thử: quay lại trận đang đánh từ màn chờ; lượt đang đi được tính lại đủ 30 giây. */
+  const backToBattle = () => {
+    if (live && live.turn.deadline !== null)
+      setState({
+        ...live,
+        turn: { ...live.turn, deadline: Date.now() + TURN_MS },
+      });
+    setStarted(true);
+  };
+
+  // Chơi thử vào trận ngay khi mở màn (bàn cờ ngẫu nhiên nên dựng sau khi vào trình duyệt).
+  useEffect(() => {
+    if (!booting) return;
+    const t = window.setTimeout(replay, 0);
+    return () => window.clearTimeout(t);
+    // Chỉ chạy một lần khi vào màn.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [booting]);
 
   const beginOnline = (res: OnlineResponse) => {
     clockOffset.current = res.now - Date.now();
@@ -1331,11 +1495,7 @@ export default function DemoGame({
   };
 
   const start = () => {
-    if (!online) {
-      setState(preview);
-      setStarted(true);
-      return;
-    }
+    if (!online) return replay();
     setPending(true);
     void createOnline({
       mode: "3v3",
@@ -1477,7 +1637,7 @@ export default function DemoGame({
           </h1>
           <div className="text-sm font-semibold" aria-live="polite">
             {!started
-              ? "Chọn độ khó để bắt đầu"
+              ? "Chuẩn bị xuất trận"
               : atBreak
                 ? `Hạ hết đợt ${survival!.wave}, nghỉ giữa đợt`
                 : survival && state.winner !== null
@@ -1489,9 +1649,21 @@ export default function DemoGame({
                     : pending
                       ? "Đang chờ server…"
                       : playerTurn
-                        ? `${state.turn.extra ? "Lượt thêm của bạn" : "Lượt của bạn"}${secondsLeft === null ? "" : ` · còn ${secondsLeft} giây`}`
+                        ? state.turn.extra
+                          ? "Lượt thêm của bạn"
+                          : "Lượt của bạn"
                         : "Lượt đối thủ…"}
           </div>
+          {!online && started && (
+            <button
+              type="button"
+              onClick={() => setStarted(false)}
+              className="flex items-center gap-1.5 rounded bg-[var(--panel)] px-2.5 py-1 text-xs font-semibold"
+            >
+              <ProfessionIcon profession={profession} className="size-4" />
+              Đổi đội hình
+            </button>
+          )}
           <label className="flex items-center gap-2 text-xs">
             Độ khó
             <select
@@ -1512,10 +1684,49 @@ export default function DemoGame({
           <WaveBanner survival={survival} resting={atBreak} />
         )}
 
-        <div className="flex flex-col gap-3 md:flex-row md:items-start">
+        {!started && !booting && (
+          <SetupLobby
+            online={online}
+            mode={mode}
+            onMode={(m) => {
+              if (m === "progress" && mode !== "progress")
+                setProfile(loadProfile());
+              setMode(m);
+            }}
+            level={profile.main.level}
+            elements={MAIN_ELEMENTS}
+            element={element}
+            onElement={setElement}
+            profession={profession}
+            onProfession={setProfession}
+            gear={gear}
+            onGear={setGear}
+            difficulties={DIFFICULTIES}
+            difficulty={difficulty}
+            onDifficulty={setDifficulty}
+            teams={[preview.sides[PLAYER].fighters, preview.sides[AI].fighters]}
+            pending={pending}
+            canReturn={!online && live !== null && live.winner === null}
+            onStart={start}
+            onResume={online ? resume : undefined}
+            onReturn={backToBattle}
+          />
+        )}
+
+        <div
+          className={`flex flex-col gap-3 md:flex-row md:items-start ${started ? "" : "hidden"}`}
+        >
           {side(PLAYER)}
 
           <div className="flex min-w-0 flex-1 flex-col gap-2">
+            {started && state.winner === null && !atBreak && (
+              <TurnClock
+                seconds={playerTurn ? secondsLeft : null}
+                mine={playerTurn}
+                extra={state.turn.extra}
+                waiting={pending}
+              />
+            )}
             <div className="relative rounded-xl border-2 border-[var(--gold)] bg-[var(--frame)] p-1.5 shadow-lg">
               {CORNERS.map((c) => (
                 <CloudCorner
@@ -1599,176 +1810,6 @@ export default function DemoGame({
                 {toast && (
                   <div className="pointer-events-none absolute inset-x-0 top-1/2 mx-auto w-fit -translate-y-1/2 rounded bg-black/80 px-3 py-1.5 text-sm text-white">
                     {toast}
-                  </div>
-                )}
-                {!started && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center-safe gap-2 overflow-y-auto rounded-lg bg-black/60 p-2 text-white sm:gap-3">
-                    <p className="text-sm">
-                      Đinh Bộ Lĩnh, Hà Vân và Mai Thanh đấu đội Tianwu.
-                    </p>
-                    {online && (
-                      <p className="max-w-md text-center text-xs opacity-80">
-                        Server xử lý từng nước đi, mỗi lượt 30 giây. Hết giờ thì
-                        mất lượt; tải lại trang vẫn tiếp tục được trận. Đội theo
-                        hồ sơ của bạn (Đinh Bộ Lĩnh cấp {profile.main.level}),
-                        thưởng cuối trận lưu trên server.
-                      </p>
-                    )}
-                    {!online && (
-                      <div
-                        className="flex flex-wrap justify-center gap-1.5"
-                        role="radiogroup"
-                        aria-label="Chế độ"
-                      >
-                        {(["practice", "progress"] as const).map((m) => (
-                          <button
-                            key={m}
-                            type="button"
-                            role="radio"
-                            aria-checked={mode === m}
-                            onClick={() => {
-                              if (m === "progress" && mode !== "progress")
-                                setProfile(loadProfile());
-                              setMode(m);
-                            }}
-                            className={`rounded px-2.5 py-1 text-sm ${mode === m ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
-                          >
-                            {m === "practice"
-                              ? "Luyện tập (mở hết kỹ năng)"
-                              : `Tiến trình (cấp ${profile.main.level})`}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                    <div
-                      className="flex flex-wrap items-center justify-center gap-1.5"
-                      role="radiogroup"
-                      aria-label="Nghề nhân vật chính"
-                    >
-                      <span className="text-xs opacity-80">Nghề:</span>
-                      {PROFESSIONS.map((p) => (
-                        <button
-                          key={p}
-                          type="button"
-                          role="radio"
-                          aria-checked={profession === p}
-                          onClick={() => setProfession(p)}
-                          className={`rounded px-2 py-0.5 text-xs ${profession === p ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
-                        >
-                          {PROFESSION_NAME[p]}
-                        </button>
-                      ))}
-                    </div>
-                    <div
-                      className="flex flex-wrap justify-center gap-1.5"
-                      role="radiogroup"
-                      aria-label="Nguyên tố nhân vật chính"
-                    >
-                      {MAIN_ELEMENTS.map((e) => (
-                        <button
-                          key={e}
-                          type="button"
-                          role="radio"
-                          aria-checked={element === e}
-                          onClick={() => {
-                            setElement(e);
-                          }}
-                          className={`flex items-center gap-1.5 rounded px-2.5 py-1 text-sm ${element === e ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
-                        >
-                          <ElementIcon element={e} className="size-4" />
-                          {ELEMENT_NAME[e]}
-                        </button>
-                      ))}
-                    </div>
-                    {mode === "practice" && (
-                      <div
-                        className="flex flex-wrap items-center justify-center gap-1.5"
-                        role="radiogroup"
-                        aria-label="Trang bị"
-                      >
-                        <span className="text-xs opacity-80">Trang bị:</span>
-                        {([0, ...TIERS] as const).map((t) => (
-                          <button
-                            key={t}
-                            type="button"
-                            role="radio"
-                            aria-checked={gear.tier === t}
-                            onClick={() => {
-                              setGear({ ...gear, tier: t });
-                            }}
-                            className={`rounded px-2.5 py-1 text-sm ${gear.tier === t ? "bg-amber-500 font-semibold text-stone-950" : `bg-white/15 ${t === 0 ? "" : TIER_CLASS[t]}`}`}
-                          >
-                            {t === 0 ? "Không" : TIER_COLOR_NAME[t]}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                    {mode === "practice" && gear.tier !== 0 && (
-                      <div
-                        className="flex flex-wrap items-center justify-center gap-1.5"
-                        role="radiogroup"
-                        aria-label="Bộ trang bị"
-                      >
-                        <span className="text-xs opacity-80">Bộ:</span>
-                        {[null, ...GEAR_SETS.map((g) => g.id)].map((id) => (
-                          <button
-                            key={id ?? "none"}
-                            type="button"
-                            role="radio"
-                            aria-checked={gear.set === id}
-                            onClick={() => {
-                              setGear({ ...gear, set: id });
-                            }}
-                            className={`rounded px-2.5 py-1 text-sm ${gear.set === id ? "bg-amber-500 font-semibold text-stone-950" : "bg-white/15"}`}
-                          >
-                            {id ? getGearSet(id)!.name : "Không bộ"}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                    {mode === "practice" && gear.tier !== 0 && (
-                      <div
-                        className="flex flex-wrap justify-center gap-1"
-                        aria-hidden
-                      >
-                        {GEAR_SLOTS.map((slot) => (
-                          <GearIcon
-                            key={slot}
-                            slot={slot}
-                            element={element}
-                            tier={gear.tier as Tier}
-                            profession="tuongSi"
-                            className="size-8"
-                          />
-                        ))}
-                      </div>
-                    )}
-                    {mode === "practice" && gear.tier !== 0 && (
-                      <p className="max-w-md text-center text-xs opacity-80">
-                        Cả hai đội mặc đủ 9 món {TIER_COLOR_NAME[gear.tier]}{" "}
-                        cùng hệ với từng người; đội Tianwu không có thưởng bộ.
-                      </p>
-                    )}
-                    <div className="flex flex-wrap justify-center gap-2">
-                      <button
-                        type="button"
-                        onClick={start}
-                        disabled={pending}
-                        className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950 disabled:opacity-50"
-                      >
-                        Bắt đầu ({DIFFICULTY_NAME[difficulty]})
-                      </button>
-                      {online && (
-                        <button
-                          type="button"
-                          onClick={resume}
-                          disabled={pending}
-                          className="rounded bg-white/20 px-4 py-2 disabled:opacity-50"
-                        >
-                          Tiếp tục trận dở
-                        </button>
-                      )}
-                    </div>
                   </div>
                 )}
                 {atBreak && (
@@ -1978,6 +2019,15 @@ export default function DemoGame({
                           Về chiến dịch
                         </SceneLink>
                       )}
+                      {!online && mode === "practice" && (
+                        <button
+                          type="button"
+                          onClick={replay}
+                          className="rounded bg-white/20 px-4 py-2"
+                        >
+                          Chơi lại
+                        </button>
+                      )}
                       <button
                         type="button"
                         onClick={restart}
@@ -1985,7 +2035,7 @@ export default function DemoGame({
                       >
                         {mode === "progress"
                           ? "Nâng kỹ năng & đánh tiếp"
-                          : "Chơi lại"}
+                          : "Đổi đội hình"}
                       </button>
                     </div>
                   </div>
