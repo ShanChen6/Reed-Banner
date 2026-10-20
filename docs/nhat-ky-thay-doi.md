@@ -4,6 +4,10 @@
 
 ## 20/10/2026
 
+**Bộ prompt ảnh cho toàn bộ nhân vật (Shan yêu cầu)**
+- Thêm [Prompt nhân vật](design/16-prompt-nhan-vat.md): 63 prompt toàn thân ráp sẵn (Đinh Bộ Lĩnh 3 thời kỳ, 6 tướng lịch sử, 12 sứ quân, 42 tướng thường), khớp nghề và hệ trong `roster.ts`.
+- So với bản Shan gửi: bỏ chữ Spine; bỏ họa tiết rồng, phượng và giáp vai đầu rồng; vũ khí không kèm hiệu ứng để tách lớp sạch; tư thế ba phần tư quay phải, chừa khe giữa tay và thân; nền xanh lá (Mộc, Phong nền hồng tươi); Quân sư cầm thẻ tre và cờ lệnh. Giới tính tướng thường do Claude đặt, chưa có trong code.
+
 **Hoạt ảnh nhân vật tự viết bằng code, không mua Spine (Shan chốt sau bản thử Đ0)**
 - Bản thử pháp sư hệ Thủy (`/prototypes/water-mage.html`): ảnh Copilot, tách lớp bằng live2dlayer, 15 lớp WebP 282 KB, hoạt ảnh PixiJS uốn lưới và xoay khớp. Shan duyệt chuyển động; giữ cách này, tiết kiệm 379 USD Spine Professional.
 - Quy trình làm một nhân vật: Copilot (toàn thân, nền trơn) → live2dlayer → sửa trong Photopea (tách bắp tay, đồ cầm tay) → Claude dựng động tác.
