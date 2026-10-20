@@ -166,7 +166,7 @@ Claude đặt ngày 19/10/2026, điểm xuất phát chờ Shan duyệt. Hai ng�
 
 ### 4.6 Tướng lịch sử
 
-Claude đặt ngày 20/10/2026, điểm xuất phát chờ Shan duyệt. Sáu tướng lịch sử theo Đinh Bộ Lĩnh dẹp loạn, **không bán ở cửa hàng**, gia nhập khi qua màn chiến dịch lần đầu ([Chế độ chơi](09-che-do-choi.md#21-chương-1-cờ-lau-dẹp-loạn-claude-đặt-19102026-chờ-shan-duyệt)). Mỗi người mang **bộ 6 kỹ năng theo nguyên tố như nhân vật chính** (mục 2.2), mở ô theo cấp và nâng theo ô như Đinh Bộ Lĩnh; không có chiêu nhánh nấc 2 hay tuyệt chiêu riêng. Chỉ số theo nghề như mọi nhân vật; bị động ô 1 chỉ có tác dụng khi làm thủ lĩnh, mà thủ lĩnh phe người chơi luôn là Đinh Bộ Lĩnh.
+Claude đặt ngày 20/10/2026, điểm xuất phát chờ Shan duyệt. Sáu tướng lịch sử theo Đinh Bộ Lĩnh dẹp loạn, **không bán ở cửa hàng**, gia nhập khi qua màn chiến dịch lần đầu ([Chế độ chơi](09-che-do-choi.md#21-chương-1-cờ-lau-dẹp-loạn-claude-đặt-19102026-chờ-shan-duyệt)). Mỗi người mang **bộ 6 kỹ năng theo nguyên tố như nhân vật chính** (mục 2.2), mở ô theo cấp và nâng theo ô như Đinh Bộ Lĩnh, riêng ô 5 là chiêu riêng (mục 4.7); không có chiêu nhánh nấc 2. Chỉ số theo nghề như mọi nhân vật; bị động ô 1 chỉ có tác dụng khi làm thủ lĩnh, mà thủ lĩnh phe người chơi luôn là Đinh Bộ Lĩnh.
 
 | Tướng | Nghề | Hệ | Gia nhập |
 |---|---|---|---|
@@ -177,7 +177,35 @@ Claude đặt ngày 20/10/2026, điểm xuất phát chờ Shan duyệt. Sáu t�
 | Lê Hoàn | Quân sư | ⚡ Lôi | Vây thành Tam Đái |
 | Đinh Liễn | Pháp sư | 💧 Thủy | Lên Phong Châu |
 
-Lộ trình 4.3 sẽ thay một kỹ năng của mỗi tướng bằng chiêu riêng mang dấu ấn lịch sử.
+### 4.7 Chiêu riêng của nhân vật lịch sử
+
+Claude đặt ngày 20/10/2026, tên tự đặt (không lấy từ game khác), số liệu là điểm xuất phát chờ Shan duyệt. Chiêu riêng **thay kỹ năng ô 5** trong bộ theo nguyên tố, nâng cấp bằng khóa ô 5 như cũ.
+
+- **Tướng lịch sử phe người chơi**: giá 100 như ô 5, mở ở cấp 20.
+- **12 sứ quân** (đối thủ chiến dịch): luôn có chiêu riêng dù cấp chưa tới 20, cấp kỹ năng bằng kỹ năng cao nhất trong bộ. Giá 60 (trùm Đỗ Cảnh Thạc 80): bản giá 80 đầu tiên gần như không được AI dùng vì AI tiêu năng lượng vào chiêu rẻ ô 3 trước.
+
+| Nhân vật | Chiêu riêng | Giá | Tác dụng |
+|---|---|---|---|
+| Nguyễn Bặc | **Định Quốc Hỏa Kỳ** | 100 | 240% ATK vào 1 đối thủ, Thiêu đốt 15% ATK 2 lượt; cả đội +15% Công 2 lượt |
+| Đinh Điền | **Ngoại Giáp Hộ Quân** | 100 | Khiên 20% máu tối đa cả đội; bản thân Khiêu khích và Phản đòn 35% 2 lượt |
+| Lưu Cơ | **Đô Hộ Phủ Lệnh** | 100 | Cả đội đối thủ −30 năng lượng, 50% bị Câm lặng 1 lượt, −15% Thủ 2 lượt |
+| Trịnh Tú | **Hoa Lư Thảo Dược** | 100 | Hồi 22% máu, Thanh tẩy và Hồi phục 5%/lượt 2 lượt cho cả đội |
+| Lê Hoàn | **Thập Đạo Lôi Binh** | 100 | 100% ATK cả đội đối thủ, −25% Công 2 lượt; cả đội mình +20 năng lượng |
+| Đinh Liễn | **Nam Việt Vương Ấn** | 100 | 130% ATK cả đội đối thủ, 30% Đóng băng 1 lượt; phá 6 ô ngẫu nhiên |
+| Trần Lãm | **Bố Hải Trấn Giang** | 60 | 80% ATK cả đội đối thủ, −30% Công 2 lượt, 35% Đóng băng; phá 4 ô |
+| Phạm Bạch Hổ | **Bạch Hổ Xuất Sơn** | 60 | 320% ATK vào 1 đối thủ, Thiêu đốt 20% ATK 2 lượt; bản thân +20% Công |
+| Ngô Xương Xí | **Ngô Gia Di Mưu** | 60 | 240% ATK bỏ qua 40% Thủ, −50 năng lượng, Câm lặng 1 lượt; phá 6 ô |
+| Ngô Nhật Khánh | **Đường Lâm Phong Khởi** | 60 | 60% ATK cả đội đối thủ, Xua tan, −25% Công 2 lượt; trượt 1 hàng/cột tối đa 2 ô |
+| Nguyễn Khoan | **Tam Đái Kiên Thành** | 60 | Khiên 25% máu cả đội; bản thân Khiêu khích, Phản đòn 35% 2 lượt |
+| Kiều Công Hãn | **Phong Châu Lôi Kích** | 60 | 140% ATK cả đội đối thủ, −30 năng lượng; phá 6 ô |
+| Kiều Thuận | **Hồi Hồ Sinh Khí** | 60 | Hồi 25% máu và Hồi phục 6%/lượt 2 lượt cho cả đội |
+| Lý Khuê | **Siêu Loại Phá Giáp** | 60 | 340% ATK bỏ qua 50% Thủ, −30% Thủ 2 lượt; phá 6 ô |
+| Nguyễn Thủ Tiệp | **Tiên Du Đoạt Lương** | 60 | 60% ATK cả đội đối thủ, −25 lương, −30 năng lượng, 25% Đóng băng |
+| Lã Đường | **Tế Giang Thủy Trận** | 60 | 150% ATK cả đội đối thủ, 35% Đóng băng; biến 4 ô thành âm dương |
+| Nguyễn Siêu | **Phù Liệt Hỏa Lũy** | 60 | Khiên 30% máu và Khiêu khích cho bản thân; Thiêu đốt 15% ATK cả đội đối thủ |
+| Đỗ Cảnh Thạc | **Đỗ Động Kiên Tâm** | 80 | 360% ATK vào 1 đối thủ; cả đội +30% Thủ 2 lượt; phá 8 ô |
+
+- Mô phỏng 20/10/2026 (60 trận mỗi màn, người chơi hơn 3 cấp, AI Thường): 11/12 sứ quân dùng chiêu riêng 0,25–1,6 lần mỗi trận; Nguyễn Siêu gần như không dùng (chiêu thủ, AI chỉ dùng khi bị đánh mạnh). Tỉ lệ thắng của người chơi đổi trong mức nhiễu (Bố Hải Khẩu 87→75%, Tiên Du 32→37%, Tế Giang 60→52%, các màn khác lệch ≤5 điểm).
 
 ## 5. Kỹ năng tác động lên bàn cờ
 

@@ -4,7 +4,7 @@
 
 import {
   getSkill,
-  mainSkills,
+  heroSkills,
   professionSkills,
   SKILL_MAX_LEVEL,
   ultimateOf,
@@ -148,10 +148,13 @@ function scaleStats(f: FighterConfig, level: number): FighterConfig {
   return { ...f, maxHp: Math.round(base.maxHp * m), atk: Math.round(base.atk * m), def: Math.round(base.def * m) };
 }
 
-/** Nhân vật chính theo tiến trình: chỉ mang kỹ năng đã mở, chỉ số và cấp kỹ năng theo cấp. */
-export function buildMain(p: CharacterProgress, element: Element, profession: Profession): FighterConfig {
+/**
+ * Nhân vật chính theo tiến trình: chỉ mang kỹ năng đã mở, chỉ số và cấp kỹ năng theo cấp. `character` là
+ * tướng lịch sử: ô 5 thay bằng chiêu riêng của người đó.
+ */
+export function buildMain(p: CharacterProgress, element: Element, profession: Profession, character?: string): FighterConfig {
   const open = new Set(unlockedMainSlots(p.level));
-  const skills = mainSkills(element).filter((s) => open.has(s.slot ?? 0));
+  const skills = heroSkills(element, character).filter((s) => open.has(s.slot ?? 0));
   const skillLevels = Object.fromEntries(skills.map((s) => [s.id, p.skillLevels[mainSlotKey(s.slot!)] ?? 1]));
   return {
     ...scaleStats(mainCharacter(element, profession), p.level),
@@ -162,7 +165,7 @@ export function buildMain(p: CharacterProgress, element: Element, profession: Pr
 
 /** Tướng lịch sử theo tiến trình: dựng như nhân vật chính với nghề và nguyên tố riêng. */
 export function buildHero(base: FighterConfig, p: CharacterProgress): FighterConfig {
-  return { ...buildMain(p, base.element, base.profession), id: base.id, name: base.name };
+  return { ...buildMain(p, base.element, base.profession, base.id), id: base.id, name: base.name };
 }
 
 /**
