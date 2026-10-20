@@ -4,6 +4,19 @@
 
 ## 19/10/2026
 
+**AI để dành năng lượng cho tuyệt chiêu (Claude, giai đoạn 3)**
+- Khi so kỹ năng, AI cộng thêm 40 năng lượng vào giá cho lượt dùng (mỗi lượt chỉ 1 kỹ năng), nên giờ để dành và dùng kỹ năng 100. Khiên chấm theo lượng chặn được.
+- Mô phỏng 7 hệ: tỉ lệ thắng không đổi ngoài nhiễu, trận ngắn hơn khoảng 1 lượt ở vài hệ. Chưa đổi số liệu tuyệt chiêu.
+
+**Trang hồ sơ nhân vật `/profile` (Shan yêu cầu, bố cục học theo bảng nhân vật game khác, hình tự vẽ)**
+- Thẻ Nhân vật: chân dung giữa 9 ô trang bị, thanh máu, kinh nghiệm, vàng, bảng chỉ số (phần cộng từ trang bị ghi màu xanh), thưởng bộ và cộng hưởng đang có; bên phải túi đồ dạng lưới 8×5 có lọc, 5 trang, chi tiết món, mặc/tháo/bán và khay ghép 3 món.
+- Thẻ Kỹ năng và thẻ Đội hình & cửa hàng dùng lại bảng của `/play`. Có link Hồ sơ trên `/play` và `/account`; khách cũng xem được.
+
+**Túi đồ và 9 ô trang bị lưu trên server (giai đoạn 3, Claude đặt, chờ Shan duyệt)**
+- Hồ sơ có túi đồ (tối đa 200 món) và ô trang bị của từng nhân vật; mặc, tháo, ghép, bán đều là thao tác trên hồ sơ, `/play` lưu trên server, `/demo` lưu trên trình duyệt.
+- Món rơi sau trận vào túi đồ thay vì chỉ hiển thị. Đồ mẫu chọn theo phẩm chỉ còn ở chế độ Luyện tập.
+- Cửa hàng trang bị: tự chọn ô, hệ, bộ, nghề; Lục 400 vàng, Lam 1 200 vàng. Bán món: 5/15/50/150/500 vàng theo phẩm.
+
 **Cửa hàng nhân vật kèm (giai đoạn 3, Claude đặt, chờ Shan duyệt)**
 - 12 nhân vật kèm hư cấu, 2 người mỗi nghề, đủ 7 hệ, mỗi người một tuyệt chiêu riêng; giá 1 500 hoặc 3 000 vàng.
 - Hồ sơ lưu nhân vật đã có và đội 3vs3 đã chọn; `/demo` (Tiến trình) và `/play` có bảng Đội hình và cửa hàng. Server chỉ cho ra trận nhân vật đã có.

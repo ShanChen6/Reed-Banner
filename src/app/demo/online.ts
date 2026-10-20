@@ -4,6 +4,7 @@ import type {
   BattleAction,
   BattleEvent,
   BattleRewards,
+  GearItem,
   BattleState,
   Difficulty,
   Element,
@@ -20,7 +21,12 @@ export interface OnlineResponse {
   readonly events?: readonly BattleEvent[];
   readonly error?: string;
   /** Phần thưởng đã cộng vào hồ sơ trên server, chỉ có ở response làm trận kết thúc. */
-  readonly outcome?: { readonly rewards: BattleRewards; readonly levelUps: readonly LevelUp[] };
+  readonly outcome?: {
+    readonly rewards: BattleRewards;
+    readonly levelUps: readonly LevelUp[];
+    readonly drop: GearItem | null;
+    readonly soldFor: number;
+  };
   /** Giờ server lúc trả lời (ms). */
   readonly now: number;
 }

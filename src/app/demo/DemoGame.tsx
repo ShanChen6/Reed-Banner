@@ -31,11 +31,11 @@ import {
   presetLoadout,
   PROFESSIONS,
   profileTeam,
+  receiveDrop,
   rollDrop,
   selectableActors,
   slideStep,
   STARTER_COMPANIONS,
-  TIER_INFO,
   TIERS,
   tileAt,
   withGear,
@@ -64,11 +64,11 @@ import {
   EFFECT_NAME,
   ELEMENT_NAME,
   ERROR_TEXT,
+  gearText,
   GOOD_EFFECTS,
   PROFESSION_NAME,
   TILE_NAME,
   SPECIAL_NAME,
-  SLOT_NAME,
   TIER_CLASS,
   TIER_COLOR_NAME,
 } from "./labels";
@@ -79,6 +79,7 @@ import { Portrait } from "./art/portraits";
 import { SkillIcon } from "./art/skills";
 import { TileArt } from "./art/tiles";
 import ProgressPanel from "./ProgressPanel";
+import GearPanel from "./GearPanel";
 import ShopPanel from "./ShopPanel";
 import {
   actOnline,
@@ -108,6 +109,8 @@ interface DemoGear {
   readonly tier: 0 | Tier;
   readonly set: string | null;
 }
+
+const NO_GEAR: DemoGear = { tier: 0, set: null };
 
 /** Mặc đủ 9 món cùng hệ với nhân vật. Đội Tianwu mặc cùng bậc nhưng không có thưởng bộ. */
 function gearUp(f: FighterConfig, gear: DemoGear, set: string | null): FighterConfig {
@@ -140,9 +143,11 @@ function demoSides({ element, profession, gear, mode, profile }: Setup): [SideCo
   const team = mode === "progress" ? profileTeam(leveled, profile.team) : [mainCharacter(element, profession), ...profile.team.map(byId)];
   const level = profile.main.level;
   const foes = foeIds(profile.team).map((id) => (mode === "progress" ? leveledFoe(byId(id), level) : byId(id)));
+  // Tiến trình mặc đồ trong túi đồ của hồ sơ (profileTeam); đồ mẫu chỉ dùng ở Luyện tập.
+  const preset = mode === "progress" ? NO_GEAR : gear;
   return [
-    { fighters: team.map((f) => gearUp(f, gear, gear.set)), leader: 0 },
-    { fighters: foes.map((f) => gearUp(f, gear, null)), leader: 0 },
+    { fighters: team.map((f) => gearUp(f, preset, preset.set)), leader: 0 },
+    { fighters: foes.map((f) => gearUp(f, preset, null)), leader: 0 },
   ];
 }
 
@@ -172,17 +177,16 @@ function saveProfile(p: Profile): void {
 interface Outcome {
   readonly rewards: BattleRewards;
   readonly levelUps: readonly LevelUp[];
+  /** Món rơi đã vào túi đồ; null khi không rơi hoặc túi đầy (bán ngay được `soldFor` vàng). */
+  readonly drop: GearItem | null;
+  readonly soldFor: number;
+}
+
+function demoDrop(round: number, difficulty: Difficulty, won: boolean): GearItem | null {
+  return rollDrop(createRng(DEMO_SEED * 31 + round), difficulty, won, `drop-${round}`);
 }
 
 const fighterName = (id: string) => (id === MAIN_ID ? "Đinh Bộ Lĩnh" : (companionById(id)?.name ?? id));
-
-const NO_GEAR: DemoGear = { tier: 0, set: null };
-
-function dropText(item: GearItem): string {
-  const set = getGearSet(item.set)?.name ?? item.set;
-  const prof = item.profession ? ` (${PROFESSION_NAME[item.profession]})` : "";
-  return `${SLOT_NAME[item.slot]}${prof} ${TIER_INFO[item.tier].name} hệ ${ELEMENT_NAME[item.element]}, bộ ${set}`;
-}
 
 type Aim = { skill: SkillDef } | null;
 
@@ -545,13 +549,15 @@ export default function DemoGame({
         if (!online && mode === "progress" && before.winner === null && next.winner !== null) {
           const rewards = battleRewards(next, PLAYER);
           const r = applyRewards(profile, next.sides[PLAYER].fighters.map((f) => f.id), rewards);
-          setProfile(r.profile);
-          saveProfile(r.profile);
-          setOutcome({ rewards, levelUps: r.levelUps });
+          const rolled = demoDrop(round, difficulty, next.winner === PLAYER);
+          const received = rolled ? receiveDrop(r.profile, rolled) : { profile: r.profile, item: null, soldFor: 0 };
+          setProfile(received.profile);
+          saveProfile(received.profile);
+          setOutcome({ rewards, levelUps: r.levelUps, drop: received.item, soldFor: received.soldFor });
         }
       });
     },
-    [play, pushLog, showNumbers, online, mode, profile],
+    [play, pushLog, showNumbers, online, mode, profile, round, difficulty],
   );
 
   /** Nhận trả lời của server: chạy hoạt ảnh các sự kiện rồi đồng bộ trạng thái và seq. */
@@ -855,11 +861,11 @@ export default function DemoGame({
     return () => window.removeEventListener("keydown", onKey);
   }, [myTurn, aim, aimIndex, cursor, selected, state, skills, fireAim, onCell, trySwap, switchActor, castSkill]);
 
-  // Món rơi sau trận theo bảng rơi đồ của core; demo chỉ hiển thị, không lưu túi đồ.
+  // Món rơi sau trận theo bảng rơi đồ của core. Tiến trình (và /play) lấy món đã vào túi từ `outcome`;
+  // Luyện tập chỉ hiển thị.
   const drop = useMemo(
-    () =>
-      state.winner === null ? null : rollDrop(createRng(DEMO_SEED * 31 + round), difficulty, state.winner === PLAYER, `drop-${round}`),
-    [state.winner, round, difficulty],
+    () => (mode === "progress" ? (outcome?.drop ?? null) : state.winner === null ? null : demoDrop(round, difficulty, state.winner === PLAYER)),
+    [mode, outcome, state.winner, round, difficulty],
   );
 
   /** Về màn chọn trước trận để đổi nguyên tố, nghề, trang bị hoặc nâng kỹ năng. */
@@ -1167,7 +1173,7 @@ export default function DemoGame({
                       </button>
                     ))}
                   </div>
-                  {!online && (
+                  {mode === "practice" && (
                     <div className="flex flex-wrap items-center justify-center gap-1.5" role="radiogroup" aria-label="Trang bị">
                       <span className="text-xs opacity-80">Trang bị:</span>
                       {([0, ...TIERS] as const).map((t) => (
@@ -1186,7 +1192,7 @@ export default function DemoGame({
                       ))}
                     </div>
                   )}
-                  {gear.tier !== 0 && (
+                  {mode === "practice" && gear.tier !== 0 && (
                     <div className="flex flex-wrap items-center justify-center gap-1.5" role="radiogroup" aria-label="Bộ trang bị">
                       <span className="text-xs opacity-80">Bộ:</span>
                       {[null, ...GEAR_SETS.map((g) => g.id)].map((id) => (
@@ -1205,14 +1211,14 @@ export default function DemoGame({
                       ))}
                     </div>
                   )}
-                  {gear.tier !== 0 && (
+                  {mode === "practice" && gear.tier !== 0 && (
                     <div className="flex flex-wrap justify-center gap-1" aria-hidden>
                       {GEAR_SLOTS.map((slot) => (
                         <GearIcon key={slot} slot={slot} element={element} tier={gear.tier as Tier} profession="tuongSi" className="size-8" />
                       ))}
                     </div>
                   )}
-                  {gear.tier !== 0 && (
+                  {mode === "practice" && gear.tier !== 0 && (
                     <p className="max-w-md text-center text-xs opacity-80">
                       Cả hai đội mặc đủ 9 món {TIER_COLOR_NAME[gear.tier]} cùng hệ với từng người; đội Tianwu không có thưởng bộ.
                     </p>
@@ -1237,17 +1243,19 @@ export default function DemoGame({
               {state.winner !== null && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-black/70 text-white">
                   <p className="text-xl font-bold">{state.winner === PLAYER ? "Bạn thắng!" : "Tianwu thắng"}</p>
-                  {!online && (
+                  {(!online || outcome) && (
                     <p className="text-sm">
                       {drop ? (
                         <>
                           <span className="flex items-center gap-2">
                             <GearIcon slot={drop.slot} element={drop.element} tier={drop.tier} profession={drop.profession} className="size-12 shrink-0" />
                             <span>
-                              Chiến lợi phẩm: <span className={`font-semibold ${TIER_CLASS[drop.tier]}`}>{dropText(drop)}</span>
+                              Chiến lợi phẩm: <span className={`font-semibold ${TIER_CLASS[drop.tier]}`}>{gearText(drop)}</span>
                             </span>
                           </span>
                         </>
+                      ) : outcome && outcome.soldFor > 0 ? (
+                        `Túi đồ đầy: món rơi được bán ngay, +${outcome.soldFor} vàng.`
                       ) : (
                         "Không rơi trang bị."
                       )}
@@ -1347,6 +1355,15 @@ export default function DemoGame({
 
         {mode === "progress" && (
           <ShopPanel profile={profile} locked={started && state.winner === null} onAction={profileAction} />
+        )}
+
+        {mode === "progress" && (
+          <GearPanel
+            profile={{ ...profile, element, profession }}
+            teamIds={[MAIN_ID, ...profile.team]}
+            locked={started && state.winner === null}
+            onAction={profileAction}
+          />
         )}
 
         {mode === "progress" && (
