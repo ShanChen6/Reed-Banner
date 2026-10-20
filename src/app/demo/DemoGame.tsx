@@ -63,6 +63,17 @@ import {
   type SkillDef,
   type Slide,
   type Tier,
+  autoRevive,
+  downedAfterWave,
+  FOOD_MAX,
+  SURVIVAL_FOOD,
+  SURVIVAL_HEAL,
+  SURVIVAL_REVIVE_FOOD,
+  SURVIVAL_REVIVE_HP,
+  type MatchAction,
+  type SurvivalResult,
+  type SurvivalView,
+  type WavePreview,
 } from "@/core";
 import {
   DIFFICULTY_NAME,
@@ -227,6 +238,7 @@ interface Outcome {
   readonly raid?: RaidResult;
   /** Chỉ có ở trận leo tháp trên /play. */
   readonly tower?: TowerResult;
+  readonly survival?: SurvivalResult;
 }
 
 function demoDrop(
@@ -297,6 +309,10 @@ function describe(state: BattleState, e: BattleEvent): string | null {
       return `${name(e.side, e.fighter)} hồi ${e.amount} máu`;
     case "ko":
       return `${name(e.side, e.fighter)} bị hạ gục`;
+    case "wave":
+      return `Đợt ${e.wave} kéo đến`;
+    case "revive":
+      return `${name(e.side, e.fighter)} đứng dậy với ${e.hp} máu`;
     case "timeout":
       return e.side === PLAYER ? "Hết giờ, bạn mất lượt" : "Đối thủ hết giờ";
     case "passive": {
@@ -330,6 +346,139 @@ function describe(state: BattleState, e: BattleEvent): string | null {
     default:
       return null;
   }
+}
+
+function WaveFoes({ preview }: { preview: WavePreview }) {
+  return (
+    <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-0.5">
+      {preview.foes.map((f, i) => (
+        <span key={`${f.id}-${i}`} className="inline-flex items-center gap-1">
+          <ElementIcon element={f.element} className="size-3.5" />
+          {f.name}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/** Dải trên bàn cờ của sinh tồn: đợt đang đánh và báo trước đợt kế. */
+function WaveBanner({
+  survival,
+  resting,
+}: {
+  survival: SurvivalView;
+  resting: boolean;
+}) {
+  const { current, next } = survival;
+  return (
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 rounded-lg border border-[var(--gold)]/60 bg-[var(--panel)] px-3 py-1.5 text-sm">
+      <span className="font-bold">
+        Đợt {survival.wave}
+        {current.boss && <span className="text-rose-400"> · trùm</span>}
+      </span>
+      <span className="text-xs opacity-80">
+        Đã vượt qua {survival.cleared} đợt
+      </span>
+      {next && !resting && (
+        <span className="flex flex-wrap items-center gap-1 text-xs">
+          <span className="font-semibold">
+            Đợt kế ({next.foes.length} đối thủ cấp {next.level}
+            {next.boss ? ", có sứ quân" : ""}):
+          </span>
+          <WaveFoes preview={next} />
+        </span>
+      )}
+    </div>
+  );
+}
+
+/** Nghỉ giữa hai đợt: hồi phục, chọn trả lương hồi sinh, vào đợt kế hoặc dừng ghi điểm. */
+function BreakPanel({
+  survival,
+  state,
+  pending,
+  onNext,
+  onEnd,
+}: {
+  survival: SurvivalView;
+  state: BattleState;
+  pending: boolean;
+  onNext: (revive?: number) => void;
+  onEnd: () => void;
+}) {
+  const own = state.sides[PLAYER];
+  const downed = downedAfterWave(survival, state);
+  const auto = autoRevive(survival.wave, downed);
+  const food = Math.min(FOOD_MAX, own.food + SURVIVAL_FOOD);
+  const canPay = food >= SURVIVAL_REVIVE_FOOD;
+  const fallen = downed.flatMap((d, i) => (d === null ? [] : [i]));
+  const next = survival.next!;
+  return (
+    // Điện thoại: bàn cờ thấp, nên hiện thành tấm dưới đáy màn hình thay vì phủ lên bàn cờ.
+    <div className="fixed inset-x-2 bottom-2 z-30 flex max-h-[85dvh] flex-col items-center gap-3 overflow-y-auto rounded-xl border border-[var(--gold)] bg-black/90 p-3 text-center text-white shadow-2xl sm:absolute sm:inset-0 sm:max-h-none sm:justify-center sm:rounded-lg sm:border-0 sm:bg-black/75 sm:shadow-none">
+      <p className="text-xl font-bold">Hạ hết đợt {survival.wave}!</p>
+      <p className="max-w-md text-sm">
+        Người còn đứng hồi {Math.round(SURVIVAL_HEAL * 100)}% máu, cả đội thêm{" "}
+        {SURVIVAL_FOOD} lương (vào đợt với {food} lương), năng lượng giữ nguyên.
+      </p>
+      {fallen.length > 0 && (
+        <div className="flex flex-col items-center gap-1.5 text-sm">
+          {auto !== null && (
+            <p className="text-emerald-300">
+              {own.fighters[auto]!.name} tự đứng dậy với{" "}
+              {Math.round(SURVIVAL_REVIVE_HP * 100)}% máu.
+            </p>
+          )}
+          {auto === null && (
+            <>
+              <p>
+                Trả {SURVIVAL_REVIVE_FOOD} lương để một người đứng dậy ngay
+                {canPay ? "" : " (chưa đủ lương)"}:
+              </p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {fallen.map((i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    disabled={pending || !canPay}
+                    onClick={() => onNext(i)}
+                    className="rounded bg-emerald-600 px-3 py-1.5 font-semibold disabled:opacity-40"
+                  >
+                    Hồi sinh {own.fighters[i]!.name}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+      <div className="flex flex-col items-center gap-1 text-sm">
+        <p className="font-semibold">
+          Đợt {next.wave}: {next.foes.length} đối thủ cấp {next.level}
+          {next.boss ? ", có sứ quân dẫn quân" : ""}
+        </p>
+        <WaveFoes preview={next} />
+      </div>
+      <div className="flex flex-wrap justify-center gap-2">
+        <button
+          type="button"
+          disabled={pending}
+          onClick={() => onNext()}
+          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950 disabled:opacity-50"
+        >
+          Vào đợt {next.wave}
+        </button>
+        <button
+          type="button"
+          disabled={pending}
+          onClick={onEnd}
+          className="rounded bg-white/20 px-4 py-2 disabled:opacity-50"
+        >
+          Dừng, ghi {survival.cleared} đợt
+        </button>
+      </div>
+    </div>
+  );
 }
 
 function slideHint(a: NonNullable<SlideAim>): string {
@@ -555,6 +704,8 @@ export default function DemoGame({
   /** Màn chiến dịch của trận online đang chơi. */
   const [stage, setStage] = useState<string | null>(null);
   const [towerFloorNo, setTowerFloorNo] = useState<number | null>(null);
+  /** Sinh tồn: đợt, người gục, báo trước đợt kế. */
+  const [survival, setSurvival] = useState<SurvivalView | null>(null);
   const setup = useMemo<Setup>(
     () => ({ element, profession, gear, mode, profile }),
     [element, profession, gear, mode, profile],
@@ -593,6 +744,9 @@ export default function DemoGame({
 
   const playerTurn =
     started && state.winner === null && state.turn.side === PLAYER;
+  /** Sinh tồn: vừa hạ hết một đợt, chờ người chơi vào đợt kế (hoặc dừng). */
+  const atBreak =
+    survival !== null && !survival.done && state.winner === PLAYER;
   /** Đang chạy hoạt ảnh thì chưa nhận thao tác mới. */
   const myTurn = playerTurn && anim === null && !pending;
   const actor = state.sides[PLAYER].fighters[state.turn.actor]!;
@@ -750,6 +904,7 @@ export default function DemoGame({
         );
       if (!res.view) return;
       seq.current = res.view.seq;
+      setSurvival(res.view.survival ?? null);
       const next = toBattleState(res.view);
       if (res.events && res.events.length > 0) commit(before, next, res.events);
       else setState(next);
@@ -757,7 +912,9 @@ export default function DemoGame({
         setOutcome(res.outcome);
         void fetchProfile().then((r) => r.profile && setProfile(r.profile));
       }
-      if (next.winner !== null) {
+      const resting =
+        res.view.survival && !res.view.survival.done && next.winner === PLAYER;
+      if (next.winner !== null && !resting) {
         try {
           window.localStorage.removeItem(ONLINE_BATTLE_KEY);
         } catch {
@@ -769,7 +926,7 @@ export default function DemoGame({
   );
 
   const sendOnline = useCallback(
-    (action: BattleAction) => {
+    (action: MatchAction) => {
       if (!battleId) return;
       const before = state;
       setPending(true);
@@ -1136,6 +1293,7 @@ export default function DemoGame({
     setLog([]);
     setStarted(false);
     setBattleId(null);
+    setSurvival(null);
   };
 
   const beginOnline = (res: OnlineResponse) => {
@@ -1147,6 +1305,7 @@ export default function DemoGame({
     seq.current = res.view.seq;
     setStage(res.view.stage ?? null);
     setTowerFloorNo(res.view.tower ?? null);
+    setSurvival(res.view.survival ?? null);
     setBattleId(res.id);
     setClock(res.now);
     setState(toBattleState(res.view));
@@ -1303,15 +1462,19 @@ export default function DemoGame({
           <div className="text-sm font-semibold" aria-live="polite">
             {!started
               ? "Chọn độ khó để bắt đầu"
-              : state.winner !== null
-                ? state.winner === PLAYER
-                  ? "Bạn thắng!"
-                  : "Tianwu thắng"
-                : pending
-                  ? "Đang chờ server…"
-                  : playerTurn
-                    ? `${state.turn.extra ? "Lượt thêm của bạn" : "Lượt của bạn"}${secondsLeft === null ? "" : ` · còn ${secondsLeft} giây`}`
-                    : "Lượt đối thủ…"}
+              : atBreak
+                ? `Hạ hết đợt ${survival!.wave}, nghỉ giữa đợt`
+                : survival && state.winner !== null
+                  ? "Lượt sinh tồn kết thúc"
+                  : state.winner !== null
+                    ? state.winner === PLAYER
+                      ? "Bạn thắng!"
+                      : "Tianwu thắng"
+                    : pending
+                      ? "Đang chờ server…"
+                      : playerTurn
+                        ? `${state.turn.extra ? "Lượt thêm của bạn" : "Lượt của bạn"}${secondsLeft === null ? "" : ` · còn ${secondsLeft} giây`}`
+                        : "Lượt đối thủ…"}
           </div>
           <label className="flex items-center gap-2 text-xs">
             Độ khó
@@ -1329,6 +1492,9 @@ export default function DemoGame({
           </label>
         </header>
         <DongSonBand className="-mt-1 w-full opacity-70" />
+        {survival && started && (
+          <WaveBanner survival={survival} resting={atBreak} />
+        )}
 
         <div className="flex flex-col gap-3 md:flex-row md:items-start">
           {side(PLAYER)}
@@ -1589,10 +1755,31 @@ export default function DemoGame({
                     </div>
                   </div>
                 )}
-                {state.winner !== null && (
+                {atBreak && (
+                  <BreakPanel
+                    survival={survival!}
+                    state={state}
+                    pending={pending}
+                    onNext={(revive) =>
+                      sendOnline(
+                        revive === undefined
+                          ? { type: "nextWave" }
+                          : { type: "nextWave", revive },
+                      )
+                    }
+                    onEnd={() => sendOnline({ type: "endRun" })}
+                  />
+                )}
+                {state.winner !== null && !atBreak && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-black/70 text-white">
                     <p className="text-xl font-bold">
-                      {state.winner === PLAYER ? "Bạn thắng!" : "Tianwu thắng"}
+                      {survival
+                        ? state.winner === PLAYER
+                          ? "Dừng lại, ghi điểm"
+                          : "Cả đội đã gục"
+                        : state.winner === PLAYER
+                          ? "Bạn thắng!"
+                          : "Tianwu thắng"}
                     </p>
                     {stage && stageById(stage) && (
                       <p className="max-w-sm text-center text-sm text-amber-100 italic">
@@ -1661,6 +1848,14 @@ export default function DemoGame({
                               ` +${outcome.tower.bonusGold} vàng tầng trùm.`}
                           </p>
                         )}
+                        {outcome.survival && (
+                          <p className="font-semibold text-amber-300">
+                            Vượt qua {outcome.survival.cleared} đợt
+                            {outcome.survival.gold > 0 &&
+                              `, +${outcome.survival.gold} vàng theo đợt`}
+                            .{outcome.survival.newBest && " Kỷ lục mới!"}
+                          </p>
+                        )}
                         {outcome.raid?.firstClear && (
                           <p className="font-semibold text-amber-300">
                             Thắng {RAID_TIER_INFO[outcome.raid.tier].name} lần
@@ -1707,6 +1902,14 @@ export default function DemoGame({
                           {outcome?.tower?.won
                             ? "Chọn thưởng, lên tầng"
                             : "Về tháp"}
+                        </a>
+                      )}
+                      {survival && (
+                        <a
+                          href="/survival"
+                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                        >
+                          Về sinh tồn
                         </a>
                       )}
                       {stage && (

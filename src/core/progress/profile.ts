@@ -74,6 +74,19 @@ export interface Profile {
   readonly campaign: CampaignState;
   /** Leo tháp: kỷ lục và lượt leo đang dở. */
   readonly tower: TowerState;
+  /** Sinh tồn: kỷ lục số đợt (lượt chơi nằm trong trận, không lưu ở hồ sơ). */
+  readonly survival: SurvivalState;
+}
+
+export interface SurvivalState {
+  readonly best: number;
+}
+
+export const NEW_SURVIVAL: SurvivalState = { best: 0 };
+
+function parseSurvival(raw: unknown): SurvivalState {
+  const best = (raw as Partial<SurvivalState> | null)?.best;
+  return { best: Number.isInteger(best) && best! > 0 ? best! : 0 };
 }
 
 export function newProfile(): Profile {
@@ -93,6 +106,7 @@ export function newProfile(): Profile {
     nextItemId: 1,
     campaign: NEW_CAMPAIGN,
     tower: NEW_TOWER,
+    survival: NEW_SURVIVAL,
   };
 }
 
@@ -231,6 +245,7 @@ export function parseProfile(raw: unknown): Profile {
     ...parseInventory(p),
     campaign: parseCampaign(p.campaign),
     tower: parseTower(p.tower),
+    survival: parseSurvival(p.survival),
   };
   return Array.isArray(p.team) && validTeam(next, p.team)
     ? { ...next, team: p.team }
