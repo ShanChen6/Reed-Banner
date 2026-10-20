@@ -44,6 +44,7 @@ function portraitMove(
         380,
       ];
     case "cast":
+    case "ultimate":
       return [
         [
           { transform: "none", filter: "none" },
