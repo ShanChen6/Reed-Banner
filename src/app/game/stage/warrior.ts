@@ -49,16 +49,8 @@ export function warrior(
   cloth(false);
   const armR = L.joint(joints.elbowR.x, joints.elbowR.y, body);
   L.sprite(img("armR"), parts.armR, armR);
-  const freeForearm = rig.forearms
-    ? L.joint(rig.forearms.free.joint.x, rig.forearms.free.joint.y, armR)
-    : null;
-  if (freeForearm && rig.forearms) L.sprite(img("forearmR"), rig.forearms.free.box, freeForearm);
   const arm = L.joint(joints.shoulder.x, joints.shoulder.y, body);
-  const swordForearm = rig.forearms
-    ? L.joint(rig.forearms.sword.joint.x, rig.forearms.sword.joint.y, arm)
-    : null;
-  const grip = swordForearm ?? arm;
-  L.sprite(img("sword"), parts.sword, grip);
+  L.sprite(img("sword"), parts.sword, arm);
   // Hào quang dọc lưỡi kiếm, theo tay khi chém.
   const auras = Array.from({ length: 6 }, (_, i) => {
     const at = (i + 0.5) / 6;
@@ -68,15 +60,10 @@ export function warrior(
     s.blendMode = "add";
     s.position.set(blade[0].x + (blade[1].x - blade[0].x) * at, blade[0].y + (blade[1].y - blade[0].y) * at);
     s.scale.set(2.2);
-    grip.addChild(s);
+    arm.addChild(s);
     return s;
   });
   L.sprite(img("arm"), parts.arm, arm);
-  if (swordForearm && rig.forearms) {
-    // Cẳng tay phủ mép bắp tay và chuôi đao.
-    arm.addChild(swordForearm);
-    L.sprite(img("forearm"), rig.forearms.sword.box, swordForearm);
-  }
   for (const c of rig.covers) L.sprite(img(c.name), c.box, body);
   const head = L.joint(joints.neck.x, joints.neck.y, body);
   L.sprite(img("head"), parts.head, head);
@@ -243,8 +230,6 @@ export function warrior(
     shadow.alpha = 1 - 0.6 * ease(downT);
     arm.rotation = down ? 0.15 * ease(downT) : armRot;
     armR.rotation = armRRot;
-    if (swordForearm) swordForearm.rotation = down ? 0 : armRot * 0.12;
-    if (freeForearm) freeForearm.rotation = armRRot * 0.3;
     head.rotation = headRot;
     auras.forEach((s, i) => {
       s.alpha = down ? 0 : Math.max(0, aura * (0.7 + 0.3 * Math.sin(t * 5 + i)));

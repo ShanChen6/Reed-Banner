@@ -6,7 +6,6 @@ import { partsOf, partUrl, rigOf } from "../../src/app/game/stage/rigs";
 test("Nguyễn Bặc có đủ lớp WebP và hai tranh trong ngân sách 350 KB", () => {
   const rig = rigOf("nguyenBac");
   assert.ok(rig && rig.skeleton === "warrior");
-  assert.ok(rig.forearms);
   assert.equal(rig.poses?.cast?.name, "pose-cast");
   assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
   const names = partsOf(rig);
@@ -24,25 +23,20 @@ test("Nguyễn Bặc có đủ lớp WebP và hai tranh trong ngân sách 350 KB
 
 test("khớp Nguyễn Bặc nằm trong vùng chồng, kích thước texture khớp tọa độ rig", () => {
   const rig = rigOf("nguyenBac");
-  assert.ok(rig?.skeleton === "warrior" && rig.forearms);
+  assert.ok(rig?.skeleton === "warrior");
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) => {
     assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h,
       `khớp ${JSON.stringify(p)} ngoài lớp ${JSON.stringify(box)}`);
   };
-  for (const [upper, lower, shoulder, coverName] of [
-    [rig.parts.arm, rig.forearms.sword, rig.joints.shoulder, "shoulder"],
-    [rig.parts.armR, rig.forearms.free, rig.joints.elbowR, "shoulderR"],
-  ] as const) {
-    const cover = rig.covers.find((c) => c.name === coverName);
-    assert.ok(cover);
-    contains(shoulder, cover.box);
-    contains(shoulder, upper);
-    contains(lower.joint, upper);
-    contains(lower.joint, lower.box);
-  }
+  const cap = rig.covers.find((c) => c.name === "shoulder");
+  assert.ok(cap);
+  contains(rig.joints.shoulder, cap.box);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.elbowR, rig.parts.body);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
   const boxes = [
     ...Object.entries(rig.parts),
-    ["forearm", rig.forearms.sword.box], ["forearmR", rig.forearms.free.box],
     ...rig.covers.map((c) => [c.name, c.box] as const),
   ] as const;
   for (const [name, box] of boxes) {
