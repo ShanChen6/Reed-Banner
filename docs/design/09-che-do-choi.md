@@ -30,13 +30,46 @@
 
 Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (trận do server xử lý như `/play`).
 
-- 13 màn mở lần lượt: Cờ lau tập trận (Hoa Lư) → Thử tài ở Bố Hải Khẩu (Trần Lãm) → Thu phục Đằng Châu (Phạm Bạch Hổ) → Bình Kiều (Ngô Xương Xí) → Đường Lâm (Ngô Nhật Khánh) → Tam Đái (Nguyễn Khoan) → Phong Châu (Kiều Công Hãn) → Hồi Hồ (Kiều Thuận) → Siêu Loại (Lý Khuê) → Tiên Du (Nguyễn Thủ Tiệp) → Tế Giang (Lã Đường) → Tây Phù Liệt (Nguyễn Siêu) → thành Đỗ Động (Đỗ Cảnh Thạc, trùm cuối, máu ×1,5).
+- 13 màn mở lần lượt: Cờ lau tập trận ở Hoa Lư (Ninh Bình), rồi 12 sứ quân theo danh sách Shan chốt 20/10/2026; trùm cuối Đỗ Cảnh Thạc máu ×1,5.
+
+  | # | Màn | Sứ quân (tước hiệu) | Đất (ngày nay) |
+  |---|---|---|---|
+  | 2 | Thử tài ở Bố Hải Khẩu | Trần Lãm (Trần Minh Công) | Kỳ Bố, Thái Bình |
+  | 3 | Thu phục Đằng Châu | Phạm Bạch Hổ (Phạm Phòng Át) | Kim Động, Hưng Yên |
+  | 4 | Đánh Bình Kiều | Ngô Xương Xí (Kiều công) | Triệu Sơn, Thanh Hóa |
+  | 5 | Đường Lâm quy phục | Ngô Nhật Khánh, còn gọi Ngô Nam Chỉ (Ngô Nam công) | Sơn Tây, Hà Nội |
+  | 6 | Vây thành Tam Đái | Nguyễn Khoan (Nguyễn Thái Bình) | Vĩnh Tường, Vĩnh Phúc |
+  | 7 | Lên Phong Châu | Kiều Công Hãn (Kiều Tam Chế) | Bạch Hạc, Phú Thọ |
+  | 8 | Qua đầm Hồi Hồ | Kiều Thuận (Kiều Lệnh công) | Cẩm Khê, Phú Thọ |
+  | 9 | Đánh Siêu Loại | Lý Khuê (Lý Lãng công) | Thuận Thành, Bắc Ninh |
+  | 10 | Hạ Tiên Du | Nguyễn Thủ Tiệp (Nguyễn Lệnh công) | Tiên Du, Bắc Ninh |
+  | 11 | Thủy chiến Tế Giang | Lữ Đường (Lữ Tá công) | Văn Giang, Hưng Yên |
+  | 12 | Tây Phù Liệt | Nguyễn Siêu (Nguyễn Hữu công) | Thanh Trì, Hà Nội |
+  | 13 | Thành Đỗ Động | Đỗ Cảnh Thạc (Đỗ Lệnh công) | Thanh Oai, Hà Nội |
 - Ba màn đầu 1vs1, sau đó 3vs3 với sứ quân và hai tùy tướng. Độ khó Dễ → Thường → Khó → Trùm; cấp đối thủ 1 → 20.
 - **Sứ quân là nhân vật lịch sử có bộ kỹ năng như Đinh Bộ Lĩnh** (6 kỹ năng theo nguyên tố, mở theo cấp như nhân vật chính, có bị động khi làm thủ lĩnh). Tùy tướng dùng chiêu theo nghề.
 - Luật màn đang dùng: thành bị vây (Tam Đái, đối thủ 25 lương), kho lương đầy (Tiên Du, Đỗ Động, 100 lương), đầm lầy/sông nước (Hồi Hồ, Tế Giang: bánh chưng 9%, âm dương 22%).
 - Lương: vào chiến dịch với 60; lương còn lại sau mỗi trận (thắng hay thua) mang sang trận sau, kẹp trong 20–100. Doanh trại đổi 3 vàng lấy 1 lương.
 - Thưởng: như trận thường (kinh nghiệm, vàng, đồ rơi), thêm vàng lần đầu qua màn (100 → 1 000).
-- Cấp gợi ý = cấp đối thủ + 3. Mô phỏng 19/10/2026 (60 trận mỗi màn, AI Thường đánh thay người chơi, đội mặc định, hơn đối thủ 3 cấp): tỉ lệ thắng 95% ở màn 1, 45–73% ở các màn Thường, 32–60% ở các màn Khó, 45% ở trùm cuối.
+- Cấp gợi ý đặt riêng từng màn (`recommended`), cân bằng `pnpm sim -- --stage all` ngày 20/10/2026: 140 trận mỗi màn, AI Thường đánh thay người chơi, Đinh Bộ Lĩnh xoay vòng đủ 7 hệ, cả đội ở cấp gợi ý. Mục tiêu: màn nào cũng thắng từ 50% trở lên, màn Dễ khoảng 80–90%, màn Thường 65–85%, màn Khó và trùm 50–75%.
+
+  | Màn | Cấp đối thủ | Cấp gợi ý | Thắng (đội 2 tướng lịch sử mới nhất) | Thắng (đội khởi đầu Hà Vân + Mai Thanh) |
+  |---|---|---|---|---|
+  | Cờ lau tập trận | 1 | 4 | 91% | 91% (1vs1) |
+  | Bố Hải Khẩu | 2 | 6 | 82% | 82% (1vs1) |
+  | Đằng Châu | 3 | 6 | 79% | 79% (1vs1) |
+  | Bình Kiều | 5 | 8 | 79% | 66% |
+  | Đường Lâm | 6 | 9 | 88% | 75% |
+  | Tam Đái | 8 | 11 | 75% | 70% |
+  | Phong Châu | 9 | 14 | 64% | 59% |
+  | Hồi Hồ | 10 | 14 | 84% | 48% |
+  | Siêu Loại | 12 | 16 | 56% | 62% |
+  | Tiên Du | 13 | 16 | 72% | 34% |
+  | Tế Giang | 15 | 18 | 72% | 50% |
+  | Tây Phù Liệt | 17 | 21 | 53% | 39% |
+  | Đỗ Động (trùm) | 20 | 24 | 59% | 53% |
+
+  Phong Châu trước đây chỉ 35% dù hơn đối thủ 6 cấp; nguyên nhân là chiêu riêng Phong Châu Lôi Kích (bỏ nó đi thì lên 52%). Đã giảm chiêu này, đổi phó tướng Kim thành Binh lính Thổ, hạ đối thủ xuống cấp 9. Đội khởi đầu yếu hơn hẳn ở các màn Khó, nên tướng lịch sử là phần thưởng có ý nghĩa. Cấp chênh lệch ảnh hưởng ít (thêm 1 cấp thường chỉ +2–5 điểm), đội hình và hệ khắc ảnh hưởng nhiều hơn.
 - Lời dẫn và thứ tự màn dựa theo sử sách phổ thông, chỉ để làm game; Shan duyệt lại trước khi phát hành.
 
 - **Tướng lịch sử gia nhập** (Claude đặt 20/10/2026, chờ Shan duyệt): lần đầu qua màn, một tướng vào hồ sơ ở cấp của màn (điểm kỹ năng còn nguyên để người chơi tự nâng). Xem [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#46-tướng-lịch-sử).
@@ -52,7 +85,11 @@ Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (tr
 
 - Mô phỏng 20/10/2026 (80 trận mỗi màn 3vs3, hơn đối thủ 3 cấp, AI Thường): đội có 2 tướng lịch sử mới nhất thắng trung bình 65%, đội mặc định (Hà Vân, Mai Thanh) 54%. Tướng lịch sử mạnh hơn vì mang 6 kỹ năng, nhưng không vượt hẳn ở mọi màn (Phong Châu 38% so với 57%, Đỗ Động 48% so với 65%). Chưa đổi số, cân chung ở lộ trình 4.4.
 
-> TODO: chiêu riêng và thoại cho từng sứ quân (4.3), chương sau.
+- **Chiêu riêng và thoại** (Claude đặt 20/10/2026, chờ Shan duyệt): mỗi sứ quân có một chiêu riêng thay ô 5 ([Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#47-chiêu-riêng-của-nhân-vật-lịch-sử)). Mỗi màn có 3 câu thoại của thủ lĩnh đối thủ: trước trận (hiện ở bản đồ chiến dịch), khi người chơi thắng và khi thua (hiện ở màn kết quả). Dữ liệu ở `lines` của từng màn trong `src/core/campaign/campaign.ts`.
+
+- **Bản đồ cổ** (Claude vẽ 20/10/2026, chờ Shan duyệt): trang `/campaign` có bản đồ Giao Châu thế kỷ X kiểu khắc gỗ trên giấy dó (`src/app/campaign/CampaignMap.tsx`). 13 màn đặt theo vị trí gần đúng của vùng đất ngày nay (dãn các màn quá sát nhau cho dễ bấm), có sông Hồng, Đà, Lô, Đáy, Đuống, Mã, bờ biển và núi Tản Viên, Tam Đảo, Hoa Lư. Đường hành quân nối các màn theo thứ tự: đoạn đã đi nét liền đỏ son, phần còn lại nét đứt. Màn đã qua cắm cờ lau, màn đang mở có vòng nhấp nháy, màn khóa mờ đi. Bấm (hoặc Enter) một màn đã mở để xem chi tiết như bấm trong danh sách bên dưới. Bản đồ là hình cách điệu, không phải bản đồ lịch sử đo đạc.
+
+> TODO: chương sau.
 
 ## 3. Leo tháp (Vô hạn)
 

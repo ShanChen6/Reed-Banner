@@ -12,7 +12,8 @@ import {
   CAMPAIGN_FOOD_MIN,
   companionById,
   FOOD_PRICE,
-  RECOMMENDED_LEVEL_BONUS,
+  recommendedLevel,
+  signatureOf,
   stageFoes,
   stageUnlocked,
   type CampaignStage,
@@ -30,6 +31,7 @@ import {
   sendProfileAction,
 } from "../demo/online";
 import { PROFILE_ERROR } from "../demo/ProgressPanel";
+import CampaignMap from "./CampaignMap";
 
 const FOOD_PACKS = [10, 30] as const;
 
@@ -46,19 +48,33 @@ function StageDetail({
 }) {
   const foes = stageFoes(stage);
   const cleared = profile.campaign.cleared.includes(stage.id);
-  const recommended = stage.level + RECOMMENDED_LEVEL_BONUS;
+  const recommended = recommendedLevel(stage);
   const under = profile.main.level < recommended;
   return (
     <div className="flex flex-col gap-3">
       <div>
         <p className="text-xs tracking-widest text-amber-300/80 uppercase">
-          {stage.place}
+          {stage.place} · {stage.region}
         </p>
         <h2 className="text-xl font-bold text-amber-100">{stage.title}</h2>
         <p className="mt-1 text-sm leading-relaxed text-stone-300 italic">
           {stage.story}
         </p>
       </div>
+      <figure className="flex items-start gap-2 rounded-md bg-black/25 p-2">
+        <Portrait
+          id={stage.foes[0]!.id}
+          element={stage.foes[0]!.element}
+          profession={stage.foes[0]!.profession}
+          className="size-10 shrink-0"
+        />
+        <blockquote className="text-sm text-amber-50">
+          <span className="font-semibold text-amber-300">
+            {stage.foes[0]!.name}:
+          </span>{" "}
+          “{stage.lines.before}”
+        </blockquote>
+      </figure>
       <dl className="grid grid-cols-2 gap-x-3 gap-y-1 rounded-md bg-black/25 p-2 text-sm sm:grid-cols-4">
         <dt className="text-stone-400">Thể thức</dt>
         <dd className="font-semibold">
@@ -117,6 +133,11 @@ function StageDetail({
             />
             <div className="min-w-0 text-xs">
               <p className="truncate text-sm font-semibold">{f.name}</p>
+              {stage.foes[i]!.title && (
+                <p className="truncate text-amber-200/80">
+                  {stage.foes[i]!.title}
+                </p>
+              )}
               <p className="flex items-center gap-1 text-stone-300">
                 <ElementIcon element={f.element} className="size-3.5" />{" "}
                 {ELEMENT_NAME[f.element]} · {PROFESSION_NAME[f.profession]}
@@ -125,6 +146,11 @@ function StageDetail({
                 {stage.foes[i]!.hero
                   ? `Sứ quân · ${f.skills?.length ?? 0} kỹ năng`
                   : "Tùy tướng"}
+                {signatureOf(f.id) && (
+                  <span className="block text-amber-200">
+                    Chiêu riêng: {signatureOf(f.id)!.name}
+                  </span>
+                )}
                 {stage.boss && i === 0 && (
                   <span className="text-rose-400"> · Trùm</span>
                 )}
@@ -267,52 +293,59 @@ export default function CampaignScreen() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-        <ol className="flex flex-col gap-1.5" aria-label="Các màn">
-          {CAMPAIGN.map((s, i) => {
-            const cleared = profile.campaign.cleared.includes(s.id);
-            const open = stageUnlocked(profile.campaign, s.id);
-            const leader = s.foes[0]!;
-            return (
-              <li key={s.id}>
-                <button
-                  type="button"
-                  disabled={!open}
-                  aria-current={stage.id === s.id}
-                  onClick={() => setPicked(s.id)}
-                  className={`flex w-full items-center gap-2 rounded-lg border px-2 py-1.5 text-left text-sm transition ${
-                    stage.id === s.id
-                      ? "border-amber-300 bg-amber-500/20"
-                      : "border-white/10 bg-black/25 hover:bg-black/40"
-                  } disabled:cursor-not-allowed disabled:opacity-40`}
-                >
-                  <span
-                    className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                      cleared
-                        ? "bg-emerald-600 text-white"
-                        : open
-                          ? "bg-amber-500 text-stone-950"
-                          : "bg-stone-700 text-stone-300"
-                    }`}
+        <div className="flex flex-col gap-3">
+          <CampaignMap
+            campaign={profile.campaign}
+            selected={stage.id}
+            onSelect={setPicked}
+          />
+          <ol className="flex flex-col gap-1.5" aria-label="Các màn">
+            {CAMPAIGN.map((s, i) => {
+              const cleared = profile.campaign.cleared.includes(s.id);
+              const open = stageUnlocked(profile.campaign, s.id);
+              const leader = s.foes[0]!;
+              return (
+                <li key={s.id}>
+                  <button
+                    type="button"
+                    disabled={!open}
+                    aria-current={stage.id === s.id}
+                    onClick={() => setPicked(s.id)}
+                    className={`flex w-full items-center gap-2 rounded-lg border px-2 py-1.5 text-left text-sm transition ${
+                      stage.id === s.id
+                        ? "border-amber-300 bg-amber-500/20"
+                        : "border-white/10 bg-black/25 hover:bg-black/40"
+                    } disabled:cursor-not-allowed disabled:opacity-40`}
                   >
-                    {cleared ? "✓" : open ? i + 1 : "🔒"}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate font-semibold">
-                      {s.title}
+                    <span
+                      className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                        cleared
+                          ? "bg-emerald-600 text-white"
+                          : open
+                            ? "bg-amber-500 text-stone-950"
+                            : "bg-stone-700 text-stone-300"
+                      }`}
+                    >
+                      {cleared ? "✓" : open ? i + 1 : "🔒"}
                     </span>
-                    <span className="block truncate text-xs text-stone-400">
-                      {leader.hero ? leader.name : s.place} · cấp {s.level}
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-semibold">
+                        {s.title}
+                      </span>
+                      <span className="block truncate text-xs text-stone-400">
+                        {leader.hero ? leader.name : s.place} · cấp {s.level}
+                      </span>
                     </span>
-                  </span>
-                  <ElementIcon
-                    element={leader.element}
-                    className="size-4 shrink-0"
-                  />
-                </button>
-              </li>
-            );
-          })}
-        </ol>
+                    <ElementIcon
+                      element={leader.element}
+                      className="size-4 shrink-0"
+                    />
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
 
         <section className="flex flex-col gap-4">
           <div className="rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4 shadow-[inset_0_0_24px_#0009]">

@@ -9,6 +9,7 @@ import {
   BRANCH_COST,
   companionById,
   BRANCH_UNLOCK_LEVEL,
+  heroSkills,
   isHero,
   MAIN_ID,
   MAIN_SLOT_UNLOCK,
@@ -237,8 +238,9 @@ export default function ProgressPanel({
               <XpBar p={p} />
               <ul className="flex flex-col gap-1">
                 {slotKit
-                  ? mainSkills(
-                      isMain ? profile.element : companionOf(id)!.element,
+                  ? (isMain
+                      ? mainSkills(profile.element)
+                      : heroSkills(companionOf(id)!.element, id)
                     ).map((def) => {
                       const slot = def.slot!;
                       const key = mainSlotKey(slot);

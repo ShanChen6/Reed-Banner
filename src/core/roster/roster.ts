@@ -1,7 +1,7 @@
 // Đội hình khởi đầu: nhân vật chính và 5 nhân vật kèm hư cấu.
 // Chỉ số và nguyên tố của nhân vật kèm là điểm xuất phát, chờ mô phỏng cân bằng.
 
-import { mainSkills, professionSkills, ultimateOf } from "../battle/skills";
+import { heroSkills, mainSkills, professionSkills, ultimateOf } from "../battle/skills";
 import type { Element } from "../battle/elements";
 import type { Profession } from "../battle/rules";
 import type { FighterConfig } from "../battle/state";
@@ -96,7 +96,7 @@ export const HERO_COMPANIONS: readonly FighterConfig[] = [
 ];
 
 function hero(id: string, name: string, profession: Profession, element: Element): FighterConfig {
-  return { ...mainCharacter(element, profession), id, name };
+  return { ...mainCharacter(element, profession), id, name, skills: heroSkills(element, id).map((s) => s.id) };
 }
 
 /** Tướng lịch sử: kỹ năng nâng theo ô như nhân vật chính, không có chiêu nhánh hay tuyệt chiêu riêng. */
