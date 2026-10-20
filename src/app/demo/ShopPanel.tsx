@@ -11,6 +11,7 @@ import {
   isHero,
   ownsCompanion,
   shopPrice,
+  signatureOf,
   ultimateOf,
   type FighterConfig,
   type Profile,
@@ -38,7 +39,7 @@ function CompanionCard({
 }) {
   const owned = ownsCompanion(profile, c.id);
   const price = shopPrice(c.id);
-  const ultimate = ultimateOf(c.id);
+  const ultimate = ultimateOf(c.id) ?? signatureOf(c.id);
   const hero = isHero(c.id);
   // Tướng lịch sử chưa gia nhập: không bán, chỉ báo màn chiến dịch sẽ mở.
   const joinStage = hero && !owned ? CAMPAIGN.find((s) => s.joins === c.id) : undefined;
@@ -52,7 +53,7 @@ function CompanionCard({
           <span className="truncate">{c.name}</span>
           <ElementIcon element={c.element} className="size-3.5 shrink-0" />
         </div>
-        <div className="truncate opacity-70" title={ultimate ? `Tuyệt chiêu: ${ultimate.name}` : undefined}>
+        <div className="truncate opacity-70" title={ultimate ? `${hero ? "Chiêu riêng" : "Tuyệt chiêu"}: ${ultimate.name}` : undefined}>
           {PROFESSION_NAME[c.profession]} · {ELEMENT_NAME[c.element]}
           {ultimate && <> · {ultimate.name}</>}
           {hero && <> · Tướng lịch sử</>}

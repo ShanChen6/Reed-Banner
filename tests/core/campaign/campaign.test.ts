@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   applyCampaignResult,
+  autoProgress,
+  buildHero,
   applyProfileAction,
   BOSS_HP,
   CAMPAIGN,
@@ -10,6 +12,7 @@ import {
   createBattle,
   FOOD_PRICE,
   HERO_COMPANIONS,
+  heroSkills,
   isHero,
   mainSkills,
   newProfile,
@@ -20,6 +23,7 @@ import {
   stageFighter,
   stageFoes,
   stageUnlocked,
+  signatureOf,
 } from "../../../src/core";
 
 describe("chiến dịch", () => {
@@ -41,12 +45,12 @@ describe("chiến dịch", () => {
     }
   });
 
-  it("sứ quân có bộ kỹ năng theo nguyên tố như nhân vật chính; trùm thêm máu", () => {
+  it("sứ quân có bộ kỹ năng theo nguyên tố như nhân vật chính (ô 5 là chiêu riêng); trùm thêm máu", () => {
     const tran = stageById("boHai")!.foes[0]!;
     const lv20 = stageFighter({ ...tran }, 20);
     assert.deepEqual(
       lv20.skills,
-      mainSkills(tran.element).map((s) => s.id),
+      heroSkills(tran.element, tran.id).map((s) => s.id),
     );
     assert.equal(lv20.name, "Trần Lãm");
     const boss = stageById("doDong")!;
@@ -174,5 +178,46 @@ describe("tướng lịch sử gia nhập", () => {
       }).ok,
       false,
     );
+  });
+});
+
+describe("chiêu riêng và thoại", () => {
+  it("sứ quân luôn mang chiêu riêng thay ô 5, kể cả khi cấp chưa mở ô 5", () => {
+    const warlords = CAMPAIGN.flatMap((s) => s.foes.filter((f) => f.hero));
+    assert.equal(new Set(warlords.map((f) => f.id)).size, 12);
+    for (const f of warlords) {
+      const sig = signatureOf(f.id);
+      assert.ok(sig, f.id);
+      assert.equal(sig.slot, 5);
+      const fighter = stageFighter(f, 2);
+      assert.ok(fighter.skills!.includes(sig.id), f.id);
+      const slot5 = mainSkills(f.element).find((d) => d.slot === 5)!;
+      assert.ok(!stageFighter(f, 25).skills!.includes(slot5.id), f.id);
+    }
+  });
+
+  it("tướng lịch sử có chiêu riêng ở ô 5, mở ở cấp 20 như nhân vật chính", () => {
+    for (const h of HERO_COMPANIONS) {
+      const sig = signatureOf(h.id)!;
+      assert.ok(sig, h.id);
+      assert.ok(h.skills!.includes(sig.id));
+      assert.deepEqual(
+        heroSkills(h.element, h.id).map((d) => d.slot),
+        [1, 2, 3, 4, 5, 6],
+      );
+      assert.ok(!buildHero(h, autoProgress(19, null)).skills!.includes(sig.id));
+      const at20 = buildHero(h, autoProgress(20, null));
+      assert.ok(at20.skills!.includes(sig.id));
+      assert.equal(
+        at20.skillLevels![sig.id],
+        autoProgress(20, null).skillLevels.o5 ?? 1,
+      );
+    }
+  });
+
+  it("mỗi màn có thoại trước trận, khi thắng và khi thua", () => {
+    for (const s of CAMPAIGN) {
+      assert.ok(s.lines.before && s.lines.win && s.lines.lose, s.id);
+    }
   });
 });
