@@ -106,6 +106,8 @@ Mỗi nhân vật cần hai hình:
 
 ### 2.7 Câu lệnh mẫu cho công cụ AI vẽ ảnh
 
+> Prompt ráp sẵn cho từng nhân vật theo quy trình Copilot → live2dlayer đã kiểm chứng ở [Prompt nhân vật](16-prompt-nhan-vat.md). Khối dưới đây là bản gốc cho phong cách khắc gỗ.
+
 Mỗi lần chỉ tạo **một hình**, luôn dán khối phong cách chung lên đầu để cả bộ đồng nhất. Câu lệnh viết bằng tiếng Anh vì đa số công cụ hiểu tốt hơn. Kết quả vẫn phải qua bước duyệt ở mục 2.5 và 2.6.
 
 **Khối phong cách chung**
