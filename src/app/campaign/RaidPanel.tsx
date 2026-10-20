@@ -6,6 +6,7 @@ import {
   RAID_TIER_INFO,
   RAID_TIERS,
   raidCleared,
+  raidDifficulty,
   raidLevel,
   raidRecommended,
   raidSetup,
@@ -74,7 +75,7 @@ export default function RaidPanel({
               </p>
               <p className="text-stone-300">
                 Đối thủ cấp {raidLevel(stage, tier)} ·{" "}
-                {DIFFICULTY_NAME[info.difficulty]}
+                {DIFFICULTY_NAME[raidDifficulty(stage, tier)]}
               </p>
               <p
                 className={

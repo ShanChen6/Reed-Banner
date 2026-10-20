@@ -115,7 +115,7 @@ export function stageMatchups(
       },
     ],
     seed: (seed + i * 7919) >>> 0,
-    firstSide: raid ? raid.firstSide : ((i % 2) as SideIndex),
+    firstSide: (i % 2) as SideIndex,
     ...(weights ? { weights } : {}),
   }));
 }

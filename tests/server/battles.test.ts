@@ -346,8 +346,8 @@ describe("trận đánh trùm", () => {
     const deps = { store, profiles, now: T0, seed: 4, newId: () => "m_r" };
     const body = { ...input, stage: "boHai", raid: 1 };
     assert.equal(parseNewBattle({ ...body, raid: 4 }), null);
-    assert.equal(parseNewBattle(body)!.difficulty, "boss");
-    assert.equal(parseNewBattle({ ...body, raid: 2 })!.difficulty, "nightmare");
+    assert.equal(parseNewBattle(body)!.difficulty, "normal");
+    assert.equal(parseNewBattle({ ...body, raid: 3 })!.difficulty, "boss");
     const locked = await createBattleFor("g_r", parseNewBattle(body)!, deps);
     assert.deepEqual(locked, { ok: false, error: "badRequest" });
 
@@ -370,7 +370,7 @@ describe("trận đánh trùm", () => {
     assert.ok(r.ok);
     assert.equal(r.view.raid, 1);
     assert.equal(r.view.stage, "boHai");
-    // Sứ quân đi trước; người chơi không mang lương chiến dịch.
+    // Người chơi không mang lương chiến dịch.
     assert.equal(r.view.battle.sides[1].fighters[0]!.id, "tranLam");
     assert.ok(r.view.battle.sides[0].food !== 40);
 

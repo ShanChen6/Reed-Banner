@@ -299,7 +299,7 @@ export async function createBattleFor(
     ],
     difficulty: input.difficulty,
     seed: deps.seed,
-    firstSide: raid ? raid.firstSide : ((deps.seed & 1) as SideIndex),
+    firstSide: (deps.seed & 1) as SideIndex,
     now: deps.now,
     ...(stage
       ? {
