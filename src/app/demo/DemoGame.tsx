@@ -115,6 +115,7 @@ import {
   ONLINE_ERROR_TEXT,
   sendProfileAction,
   toBattleState,
+  type ArenaResult,
   type OnlineResponse,
 } from "./online";
 
@@ -241,6 +242,7 @@ interface Outcome {
   readonly tower?: TowerResult;
   readonly survival?: SurvivalResult;
   readonly daily?: { readonly score: DailyScore; readonly rank: number | null };
+  readonly arena?: ArenaResult;
 }
 
 function demoDrop(
@@ -710,6 +712,11 @@ export default function DemoGame({
   const [survival, setSurvival] = useState<SurvivalView | null>(null);
   /** Thử thách hằng ngày: khóa ngày của trận đang chơi. */
   const [dailyDay, setDailyDay] = useState<string | null>(null);
+  /** Đấu trường: tên và điểm đối thủ. */
+  const [arenaFoe, setArenaFoe] = useState<{
+    name: string;
+    rating: number;
+  } | null>(null);
   const setup = useMemo<Setup>(
     () => ({ element, profession, gear, mode, profile }),
     [element, profession, gear, mode, profile],
@@ -1299,6 +1306,7 @@ export default function DemoGame({
     setBattleId(null);
     setSurvival(null);
     setDailyDay(null);
+    setArenaFoe(null);
   };
 
   const beginOnline = (res: OnlineResponse) => {
@@ -1312,6 +1320,7 @@ export default function DemoGame({
     setTowerFloorNo(res.view.tower ?? null);
     setSurvival(res.view.survival ?? null);
     setDailyDay(res.view.daily ?? null);
+    setArenaFoe(res.view.arena ?? null);
     setBattleId(res.id);
     setClock(res.now);
     setState(toBattleState(res.view));
@@ -1411,7 +1420,11 @@ export default function DemoGame({
       <div className="flex w-full flex-col gap-2 md:w-40 md:shrink-0 lg:w-56">
         <div className="flex items-center justify-between text-xs opacity-80">
           <span className="font-semibold">
-            {s === PLAYER ? "Phe bạn" : "Tianwu"}
+            {s === PLAYER
+              ? "Phe bạn"
+              : arenaFoe
+                ? `Bóng ma · ${arenaFoe.rating} điểm`
+                : "Tianwu"}
           </span>
           <span
             title="Lương thực"
@@ -1865,6 +1878,21 @@ export default function DemoGame({
                             .
                           </p>
                         )}
+                        {outcome.arena && (
+                          <p
+                            className={`font-semibold ${outcome.arena.won ? "text-amber-300" : "text-rose-300"}`}
+                          >
+                            Đấu trường: {outcome.arena.won ? "thắng" : "thua"}{" "}
+                            {outcome.arena.opponent},{" "}
+                            {outcome.arena.delta >= 0 ? "+" : "−"}
+                            {Math.abs(outcome.arena.delta)} điểm
+                            {outcome.arena.rating !== null &&
+                              ` (còn ${outcome.arena.rating})`}
+                            {outcome.arena.gold > 0 &&
+                              `, +${outcome.arena.gold} vàng thắng trận`}
+                            .
+                          </p>
+                        )}
                         {outcome.survival && (
                           <p className="font-semibold text-amber-300">
                             Vượt qua {outcome.survival.cleared} đợt
@@ -1927,6 +1955,14 @@ export default function DemoGame({
                           className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
                         >
                           Xem bảng xếp hạng
+                        </a>
+                      )}
+                      {arenaFoe && (
+                        <a
+                          href="/arena"
+                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                        >
+                          Về đấu trường
                         </a>
                       )}
                       {survival && (

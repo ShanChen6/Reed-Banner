@@ -26,7 +26,8 @@ export type MatchMode =
   | "raid"
   | "tower"
   | "survival"
-  | "daily";
+  | "daily"
+  | "arena";
 
 /** Tóm tắt một trận vừa kết thúc, đủ để cộng tiến độ nhiệm vụ. */
 export interface MatchSummary {
