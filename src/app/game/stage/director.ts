@@ -1,7 +1,13 @@
-import type { BattleEvent, BattleState } from "@/core";
+import { SKILLS, type BattleEvent, type BattleState } from "@/core";
 
 /** Động tác một nhân vật trên sân khấu. */
-export type CueKind = "attack" | "cast" | "hit" | "heal";
+export type CueKind = "attack" | "cast" | "ultimate" | "hit" | "heal";
+
+/** Tuyệt chiêu hoặc chiêu riêng (ô 5): động tác lớn hơn kỹ năng thường. */
+export function isUltimate(skill: string): boolean {
+  const def = SKILLS[skill];
+  return def !== undefined && (def.character !== undefined || def.slot === 5);
+}
 
 export interface Cue {
   readonly side: 0 | 1;
@@ -53,7 +59,12 @@ export function stageCues(
       case "skill":
         side = e.side;
         actor = e.fighter;
-        add(start, { side: e.side, fighter: e.fighter, kind: "cast", delay: 0 });
+        add(start, {
+          side: e.side,
+          fighter: e.fighter,
+          kind: isUltimate(e.skill) ? "ultimate" : "cast",
+          delay: 0,
+        });
         break;
       case "damage":
         if (e.source === "sword" && e.side !== side)

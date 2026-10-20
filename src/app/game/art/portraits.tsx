@@ -6,6 +6,7 @@ import { useId } from "react";
 import type { Element, Profession } from "@/core";
 import { ELEMENT_COLOR } from "./icons";
 import { INK } from "./tiles";
+import { portraitUrl } from "./portrait-data";
 
 const SKIN = "#e2b07f";
 const PAPER = "#f6ecd4";
@@ -174,6 +175,7 @@ export function Portrait({
   const clip = `portrait-${useId().replace(/[^\w-]/g, "")}`;
   const look = LOOKS[id] ?? PROFESSION_LOOK[profession];
   const accent = ELEMENT_COLOR[element];
+  const photo = portraitUrl(id);
   return (
     <svg viewBox="0 0 64 64" className={className} aria-hidden focusable="false">
       <defs>
@@ -184,18 +186,24 @@ export function Portrait({
       <circle cx={32} cy={32} r={31} fill={BRONZE} stroke={INK} strokeWidth={1.5} />
       <circle cx={32} cy={32} r={29} fill="none" stroke={INK} strokeWidth={1.2} strokeDasharray="2 2.2" />
       <circle cx={32} cy={32} r={27} fill={accent} />
-      <g clipPath={`url(#${clip})`}>
-        {/* Tia mặt trời mờ sau đầu như tâm mặt trống đồng. */}
-        <circle cx={32} cy={26} r={15} fill="#fff" opacity={0.14} />
-        {/* Vai và áo giao lĩnh (cổ chéo). */}
-        <path d="M8 66 C8 50 17 42 32 42 C47 42 56 50 56 66 Z" fill={look.robe} {...ink} />
-        <path d="M26 42.5 L37 56 M38 42.5 L31.5 50" stroke={PAPER} strokeWidth={2.4} strokeLinecap="round" />
-        <path d="M10 60 Q32 55 54 60" fill="none" stroke={accent} strokeWidth={3} />
-        {look.armor && (
-          <g fill="#8c6a3a" {...ink} strokeWidth={1.3}>
-            <path d="M11 54 C12 47 17 44 22 43.5 L24 50 C19 51 15 53 11 54 Z" />
-            <path d="M53 54 C52 47 47 44 42 43.5 L40 50 C45 51 49 53 53 54 Z" />
-          </g>
+      {photo ? (
+        <g clipPath={`url(#${clip})`}>
+          <circle cx={32} cy={26} r={15} fill="#fff" opacity={0.14} />
+          <image href={photo} x={5} y={5} width={54} height={54} preserveAspectRatio="xMidYMid slice" />
+        </g>
+      ) : (
+        <g clipPath={`url(#${clip})`}>
+          {/* Tia mặt trời mờ sau đầu như tâm mặt trống đồng. */}
+          <circle cx={32} cy={26} r={15} fill="#fff" opacity={0.14} />
+          {/* Vai và áo giao lĩnh (cổ chéo). */}
+          <path d="M8 66 C8 50 17 42 32 42 C47 42 56 50 56 66 Z" fill={look.robe} {...ink} />
+          <path d="M26 42.5 L37 56 M38 42.5 L31.5 50" stroke={PAPER} strokeWidth={2.4} strokeLinecap="round" />
+          <path d="M10 60 Q32 55 54 60" fill="none" stroke={accent} strokeWidth={3} />
+          {look.armor && (
+            <g fill="#8c6a3a" {...ink} strokeWidth={1.3}>
+              <path d="M11 54 C12 47 17 44 22 43.5 L24 50 C19 51 15 53 11 54 Z" />
+              <path d="M53 54 C52 47 47 44 42 43.5 L40 50 C45 51 49 53 53 54 Z" />
+            </g>
         )}
         {/* Cổ và mặt. */}
         <path d="M28 36 V43 H36 V36" fill={SKIN} {...ink} strokeWidth={1.5} />
@@ -207,6 +215,7 @@ export function Portrait({
         <Headwear head={look.head} accent={accent} />
         <HeldProp prop={look.prop} accent={accent} />
       </g>
+      )}
       <circle cx={32} cy={32} r={27} fill="none" stroke={INK} strokeWidth={1.5} />
     </svg>
   );

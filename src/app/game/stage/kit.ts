@@ -1,7 +1,9 @@
 /** Đồ dùng chung cho các bộ xương hình động (puppet.ts, warrior.ts). */
 import { Container, MeshPlane, Sprite, Texture, type Buffer } from "pixi.js";
 import type { CueKind } from "./director";
-import type { PartBox } from "./rigs";
+import type { PartBox, Wind } from "./rigs";
+
+export type { Wind } from "./rigs";
 
 export interface Puppet {
   /** Gốc tọa độ đặt ở điểm giữa hai bàn chân. */
@@ -9,6 +11,8 @@ export interface Puppet {
   readonly height: number;
   update(dt: number): void;
   play(kind: CueKind): void;
+  /** Về tư thế đứng ngay, dùng khi xem thử hoặc phát lại động tác. */
+  reset(): void;
   /** Gục: mờ, xám, ngả người, ngừng thở. */
   setDown(down: boolean): void;
   destroy(): void;
@@ -33,18 +37,6 @@ export function glow(): Texture {
   g.fillRect(0, 0, 64, 64);
   glowTexture = Texture.from(c);
   return glowTexture;
-}
-
-export interface Wind {
-  readonly axis: "x" | "y";
-  /** Vị trí (0..1) dọc theo trục bắt đầu chịu gió. */
-  readonly start: number;
-  readonly amp: number;
-  readonly freq: number;
-  readonly k: number;
-  readonly phase: number;
-  /** Lượn theo chiều dọc thay vì ngang (dải lụa bay ngang). */
-  readonly vertical?: boolean;
 }
 
 interface Bend {
@@ -99,7 +91,8 @@ export function layers(texScale: number) {
         for (let i = 0; i < d.length; i += 2) {
           const ox = o[i]!;
           const oy = o[i + 1]!;
-          const n = w.axis === "y" ? oy / B.h : ox / B.w;
+          const along = w.axis === "y" ? oy / B.h : ox / B.w;
+          const n = w.reverse ? 1 - along : along;
           let wgt = (n - w.start) / (1 - w.start);
           wgt = wgt <= 0 ? 0 : wgt * wgt;
           const wave = Math.sin(t * w.freq * (gust > 1 ? 1.6 : 1) + n * w.k + w.phase) * w.amp * life * gust * wgt;
@@ -129,6 +122,16 @@ export function particles(parent: Container, color: number, count: number, gravi
     return { s, life: 0, max: 1, vx: 0, vy: 0 };
   });
   return {
+    /** Còn hạt nào đang bay. */
+    active() {
+      return drops.some((d) => d.life > 0);
+    },
+    clear() {
+      for (const d of drops) {
+        d.life = 0;
+        d.s.visible = false;
+      }
+    },
     spawn(x: number, y: number, vx: number, vy: number, size: number, life: number) {
       const d = drops.find((d) => d.life <= 0);
       if (!d) return;

@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 import {
   createBattle,
   mainCharacter,
+  mainSkills,
   playAiTurn,
   STARTER_COMPANIONS,
   type BattleEvent,
@@ -52,6 +53,16 @@ describe("đạo diễn trận", () => {
       { side: 0, fighter: 2, kind: "attack", delay: 0 },
       { side: 1, fighter: 1, kind: "hit", delay: HIT_DELAY_MS },
     ]);
+  });
+
+  it("tuyệt chiêu và chiêu riêng (ô 5) ra động tác lớn, kỹ năng thường vẫn là thi triển", () => {
+    const s = battle(1);
+    const big = stageCues(s, [{ type: "skill", side: 0, fighter: 1, skill: "hoaVuLieuNguyen" }]);
+    assert.equal(big.start[0]?.kind, "ultimate");
+    const main5 = mainSkills("moc").find((d) => d.slot === 5)!;
+    assert.equal(stageCues(s, [{ type: "skill", side: 0, fighter: 0, skill: main5.id }]).start[0]?.kind, "ultimate");
+    const main1 = mainSkills("moc").find((d) => d.slot === 1)!;
+    assert.equal(stageCues(s, [{ type: "skill", side: 0, fighter: 0, skill: main1.id }]).start[0]?.kind, "cast");
   });
 
   it("lượt mới đổi phe ra đòn; bỏng không có người vung đòn", () => {
