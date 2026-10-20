@@ -5,7 +5,7 @@
 import { Container, Graphics, Sprite, type Texture } from "pixi.js";
 import type { CueKind } from "./director";
 import { ease, glow, layers, particles, pulse, reaction, type Puppet } from "./kit";
-import type { WarriorPart, WarriorRig } from "./rigs";
+import type { WarriorRig } from "./rigs";
 
 /** Góc xoay (radian, dương là theo chiều kim đồng hồ) của tay kiếm ở từng pha. */
 const SWING = {
@@ -15,10 +15,11 @@ const SWING = {
 
 export function warrior(
   rig: WarriorRig,
-  tex: Record<WarriorPart, Texture>,
+  tex: Readonly<Record<string, Texture>>,
   still: boolean,
 ): Puppet {
   const { parts, joints, foot, blade } = rig;
+  const img = (name: string) => tex[name]!;
   const view = new Container();
   const shadow = new Graphics()
     .ellipse(0, -2, 190, 20)
@@ -29,28 +30,33 @@ export function warrior(
   view.addChild(body);
 
   const L = layers(rig.texScale);
-  L.sprite(tex.body, parts.body, body);
-  L.mesh(tex.apron, parts.apron, body, { axis: "y", start: 0.3, amp: 6, freq: 1.2, k: 2.4, phase: 0.8 });
+  const cloth = (behind: boolean) => {
+    for (const c of rig.cloth)
+      if (!!c.behind === behind) L.mesh(img(c.name), c.box, body, c.wind);
+  };
+  cloth(true);
+  L.sprite(img("body"), parts.body, body);
+  cloth(false);
   const armR = L.joint(joints.elbowR.x, joints.elbowR.y, body);
-  L.sprite(tex.armR, parts.armR, armR);
+  L.sprite(img("armR"), parts.armR, armR);
   const arm = L.joint(joints.shoulder.x, joints.shoulder.y, body);
-  L.sprite(tex.sword, parts.sword, arm);
+  L.sprite(img("sword"), parts.sword, arm);
   // Hào quang dọc lưỡi kiếm, theo tay khi chém.
   const auras = Array.from({ length: 6 }, (_, i) => {
-    const t = (i + 0.5) / 6;
+    const at = (i + 0.5) / 6;
     const s = new Sprite(glow());
     s.anchor.set(0.5);
     s.tint = rig.fxColor;
     s.blendMode = "add";
-    s.position.set(blade[0].x + (blade[1].x - blade[0].x) * t, blade[0].y + (blade[1].y - blade[0].y) * t);
+    s.position.set(blade[0].x + (blade[1].x - blade[0].x) * at, blade[0].y + (blade[1].y - blade[0].y) * at);
     s.scale.set(2.2);
     arm.addChild(s);
     return s;
   });
-  L.sprite(tex.arm, parts.arm, arm);
-  L.sprite(tex.pauldron, parts.pauldron, body);
+  L.sprite(img("arm"), parts.arm, arm);
+  for (const c of rig.covers) L.sprite(img(c.name), c.box, body);
   const head = L.joint(joints.neck.x, joints.neck.y, body);
-  L.sprite(tex.head, parts.head, head);
+  L.sprite(img("head"), parts.head, head);
 
   // Vệt kiếm và tia sáng vẽ trong hệ tọa độ của thân để lật và ngả theo người.
   const trail = new Graphics();
