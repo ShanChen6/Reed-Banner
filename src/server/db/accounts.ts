@@ -1,17 +1,19 @@
 // Lưu tài khoản và danh tính OAuth vào Postgres bằng Drizzle. Neon HTTP không có transaction tương tác,
 // nên mỗi bước là một câu lệnh tự đứng được: chạy song song thì người gắn danh tính trước thắng.
 
-import { and, eq } from "drizzle-orm";
+import { and, eq, gte, sql } from "drizzle-orm";
 import {
   PASSWORD_PROVIDER,
   type Account,
   type AccountStore,
+  type EmailToken,
   type OAuthProfile,
   type PasswordPatch,
   type PasswordRecord,
   type ProviderId,
+  type TokenPurpose,
 } from "../accounts";
-import { accounts, identities } from "./schema";
+import { accounts, emailTokens, identities } from "./schema";
 import type { Db } from "./store";
 
 export class DrizzleAccountStore implements AccountStore {
@@ -53,6 +55,7 @@ export class DrizzleAccountStore implements AccountStore {
       avatarUrl: row.avatarUrl,
       providers,
       username,
+      email: row.email,
       createdAt: row.createdAt,
       lastLoginAt: row.lastLoginAt,
     };
@@ -86,5 +89,53 @@ export class DrizzleAccountStore implements AccountStore {
       .update(identities)
       .set({ passwordHash: patch.hash, failedCount: patch.failedCount, lockedUntil: patch.lockedUntil })
       .where(and(eq(identities.provider, PASSWORD_PROVIDER), eq(identities.subject, username)));
+  }
+
+  async accountByEmail(email: string): Promise<string | null> {
+    const [row] = await this.db.select({ id: accounts.id }).from(accounts).where(eq(accounts.email, email)).limit(1);
+    return row?.id ?? null;
+  }
+
+  async setEmail(accountId: string, email: string): Promise<boolean> {
+    try {
+      const rows = await this.db
+        .update(accounts)
+        .set({ email })
+        .where(
+          and(
+            eq(accounts.id, accountId),
+            sql`not exists (select 1 from ${accounts} other where other.email = ${email} and other.id <> ${accountId})`,
+          ),
+        )
+        .returning({ id: accounts.id });
+      return rows.length > 0;
+    } catch {
+      // Hai tài khoản xác nhận cùng email cùng lúc: chỉ mục unique chặn người sau.
+      return false;
+    }
+  }
+
+  async addToken(token: EmailToken): Promise<void> {
+    await this.db.insert(emailTokens).values(token);
+  }
+
+  async takeToken(tokenHash: string, purpose: TokenPurpose, now: number): Promise<EmailToken | null> {
+    const [row] = await this.db
+      .delete(emailTokens)
+      .where(and(eq(emailTokens.tokenHash, tokenHash), eq(emailTokens.purpose, purpose)))
+      .returning();
+    return row && now < row.expiresAt ? { ...row, purpose } : null;
+  }
+
+  async countTokens(accountId: string, purpose: TokenPurpose, since: number): Promise<number> {
+    const [row] = await this.db
+      .select({ n: sql<number>`count(*)::int` })
+      .from(emailTokens)
+      .where(and(eq(emailTokens.accountId, accountId), eq(emailTokens.purpose, purpose), gte(emailTokens.createdAt, since)));
+    return row?.n ?? 0;
+  }
+
+  async deleteTokens(accountId: string, purpose: TokenPurpose): Promise<void> {
+    await this.db.delete(emailTokens).where(and(eq(emailTokens.accountId, accountId), eq(emailTokens.purpose, purpose)));
   }
 }

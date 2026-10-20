@@ -70,7 +70,13 @@
   - Tên đăng nhập 3–20 ký tự `a-z 0-9 . _`, không phân biệt hoa thường. Mật khẩu từ 8 ký tự, băm scrypt (N=16384, muối riêng), lưu kèm tham số để sau này đổi được.
   - Sai 5 lần liên tiếp thì khóa tên đó 15 phút. Tên không tồn tại báo lỗi giống sai mật khẩu.
   - Form gửi từ trang khác (khác Origin) bị chặn.
-  - Chưa có email nên **không lấy lại được mật khẩu**: form đăng ký cảnh báo và khuyên liên kết thêm Google/GitHub. Thêm dịch vụ email (ví dụ Resend) khi cần.
+- **Email và lấy lại mật khẩu** (20/10/2026; `src/server/recovery.ts`, gửi thư bằng nodemailer qua SMTP ở `src/server/mail.ts`):
+  - Email không bắt buộc, nhập lúc đăng ký hoặc ở Tài khoản. Chỉ lưu vào `accounts.email` sau khi bấm đường dẫn xác nhận gửi tới chính email đó (hạn 24 giờ). Mỗi email thuộc tối đa một tài khoản; trùng thì báo ở bước xác nhận, cho người đọc được thư.
+  - Quên mật khẩu (`/game/forgot-password`): nhập tên đăng nhập hoặc email. Màn hình luôn báo "nếu đúng thì đã gửi" và thư gửi sau khi đã trả lời, nên không dò được tên hay email nào có thật.
+  - Đường dẫn đặt lại (`/game/reset-password?token=…`) dùng một lần, hạn 30 phút; đặt xong thì mọi mã đặt lại khác hỏng, tên đăng nhập đang bị khóa được mở, và người dùng được đăng nhập luôn. Mã gửi tới email cũ hỏng khi đã đổi email.
+  - Bảng `email_tokens` chỉ lưu SHA-256 của mã. Tối đa 3 thư mỗi loại mỗi giờ cho một tài khoản. Cron hằng ngày xóa mã hết hạn.
+  - Cookie đăng nhập chỉ là id có chữ ký nên đặt lại mật khẩu không đăng xuất được máy khác.
+- **Cấu hình gửi thư** (Vercel, Production): `SMTP_HOST`, `SMTP_PORT` (mặc định 587; 465 thì tự dùng TLS, ép bằng `SMTP_SECURE=true|false`), `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` (ví dụ `Cờ Lau <no-reply@ten-mien>`). Thiếu `SMTP_HOST` hoặc `SMTP_FROM` thì ẩn ô email và nút "Quên mật khẩu?"; khi dev thì in thư ra console. `/api/health` báo `mail: true` khi đã cấu hình.
 - **Cấu hình** (Vercel, Production): `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` và `GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET`. Thiếu cặp nào thì nút đó ẩn đi. Địa chỉ chuyển về phải khai trước ở nhà cung cấp: `https://<tên miền>/api/auth/google/callback` (Google Cloud Console, OAuth client loại Web) và `https://<tên miền>/api/auth/github/callback` (GitHub OAuth App chỉ nhận một địa chỉ). Bản xem trước có tên miền đổi theo nhánh nên không đăng nhập được, trừ khi khai thêm địa chỉ đó.
 - Tài khoản khách **không hoạt động 30 ngày thì bị xóa**. Có cảnh báo mất dữ liệu nếu không đăng ký.
 - Tạo tài khoản (kể cả khách) là lúc người chơi chọn nguyên tố ban đầu cho nhân vật chính (nghề mặc định Tướng sĩ, đổi được trước mỗi trận).
