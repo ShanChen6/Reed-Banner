@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 import {
   act,
   ALL_COMPANIONS,
+  isHero,
   addXp,
   applyProfileAction,
   applyRewards,
@@ -272,7 +273,8 @@ describe("thao tác trên hồ sơ", () => {
     assert.equal(SHOP_COMPANIONS.length, 12);
     for (const p of PROFESSIONS) assert.equal(SHOP_COMPANIONS.filter((c) => c.fighter.profession === p).length, 2);
     assert.equal(new Set(SHOP_COMPANIONS.map((c) => c.fighter.element)).size, 7);
-    for (const c of ALL_COMPANIONS) {
+    // Tướng lịch sử dùng bộ kỹ năng theo nguyên tố, không có tuyệt chiêu riêng.
+    for (const c of ALL_COMPANIONS.filter((c) => !isHero(c.id))) {
       const ult = ultimateOf(c.id);
       assert.ok(ult, c.id);
       assert.equal(ult.profession, c.profession);
