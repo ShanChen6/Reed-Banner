@@ -641,7 +641,7 @@ const SIGNATURES: readonly SkillDef[] = [
   },
   {
     id: "phongChauLoiKich", name: "Phong Châu Lôi Kích", character: "kieuCongHan", slot: 5, cost: 60, target: "allEnemies",
-    steps: [{ type: "damage", atk: 1.4 }, { type: "energy", to: "targets", amount: -30 }, { type: "destroy", area: { random: 6 } }],
+    steps: [{ type: "damage", atk: 1 }, { type: "energy", to: "targets", amount: -15 }, { type: "destroy", area: { random: 4 } }],
   },
   {
     id: "hoiHoSinhKhi", name: "Hồi Hồ Sinh Khí", character: "kieuThuan", slot: 5, cost: 60, target: "team",

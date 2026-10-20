@@ -12,7 +12,7 @@ import {
   CAMPAIGN_FOOD_MIN,
   companionById,
   FOOD_PRICE,
-  RECOMMENDED_LEVEL_BONUS,
+  recommendedLevel,
   signatureOf,
   stageFoes,
   stageUnlocked,
@@ -47,7 +47,7 @@ function StageDetail({
 }) {
   const foes = stageFoes(stage);
   const cleared = profile.campaign.cleared.includes(stage.id);
-  const recommended = stage.level + RECOMMENDED_LEVEL_BONUS;
+  const recommended = recommendedLevel(stage);
   const under = profile.main.level < recommended;
   return (
     <div className="flex flex-col gap-3">
