@@ -4,6 +4,9 @@
 
 ## 20/10/2026
 
+**Tên, tước hiệu và đất của 12 sứ quân (Shan chốt)**
+- Theo danh sách Shan đưa: Lã Đường đổi thành Lữ Đường (Lữ Tá công); mỗi sứ quân có tước hiệu (Trần Minh Công, Phạm Phòng Át, …) và mỗi màn ghi vùng đất ngày nay. Ngô Nhật Khánh ghi thêm tên Ngô Nam Chỉ. Bảng ở [Chế độ chơi](design/09-che-do-choi.md#21-chương-1-cờ-lau-dẹp-loạn-claude-đặt-19102026-chờ-shan-duyệt).
+
 **Chiêu riêng và thoại sứ quân (lộ trình 4.3, Claude đặt, chờ Shan duyệt)**
 - 12 sứ quân và 6 tướng lịch sử mỗi người có một chiêu riêng thay kỹ năng ô 5. Sứ quân luôn mang chiêu riêng, giá 60 (trùm 80); tướng phe người chơi mở ở cấp 20 như ô 5. Chi tiết: [Nhân vật & kỹ năng](design/06-nhan-vat-ky-nang.md#47-chiêu-riêng-của-nhân-vật-lịch-sử).
 - Mỗi màn có thoại trước trận (bản đồ chiến dịch) và sau trận (thắng/thua, màn kết quả).

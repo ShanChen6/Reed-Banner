@@ -668,7 +668,7 @@ const SIGNATURES: readonly SkillDef[] = [
     ],
   },
   {
-    id: "teGiangThuyTran", name: "Tế Giang Thủy Trận", character: "laDuong", slot: 5, cost: 60, target: "allEnemies",
+    id: "teGiangThuyTran", name: "Tế Giang Thủy Trận", character: "luDuong", slot: 5, cost: 60, target: "allEnemies",
     steps: [
       { type: "damage", atk: 1.5 },
       { type: "effect", to: "targets", effect: "freeze", value: 0, turns: 1, chance: 0.35 },
