@@ -3,77 +3,22 @@
  * Module này chỉ được nạp động (import()) khi trận có nhân vật có hình động, để PixiJS không nằm trong
  * gói tải đầu của trang.
  */
-import {
-  Assets,
-  Container,
-  Graphics,
-  MeshPlane,
-  Sprite,
-  Texture,
-  type Buffer,
-} from "pixi.js";
+import { Assets, Container, Graphics, Sprite, type Texture } from "pixi.js";
 import type { CueKind } from "./director";
-import { MAGE_PARTS, partUrl, type MageRig, type Rig } from "./rigs";
+import { ease, glow, layers, particles, pulse, reaction, type Puppet } from "./kit";
+import { MAGE_PARTS, partsOf, partUrl, type MageRig, type Rig } from "./rigs";
+import { warrior } from "./warrior";
 
-export interface Puppet {
-  /** Gốc tọa độ đặt ở điểm giữa hai bàn chân. */
-  readonly view: Container;
-  readonly height: number;
-  update(dt: number): void;
-  play(kind: CueKind): void;
-  /** Gục: mờ, xám, ngả người, ngừng thở. */
-  setDown(down: boolean): void;
-  destroy(): void;
-}
-
-interface Wind {
-  readonly axis: "x" | "y";
-  /** Vị trí (0..1) dọc theo trục bắt đầu chịu gió. */
-  readonly start: number;
-  readonly amp: number;
-  readonly freq: number;
-  readonly k: number;
-  readonly phase: number;
-  /** Lượn theo chiều dọc thay vì ngang (dải lụa bay ngang). */
-  readonly vertical?: boolean;
-}
-
-interface Bend {
-  readonly buf: Buffer;
-  readonly orig: Float32Array;
-  readonly w: number;
-  readonly h: number;
-  readonly wind: Wind;
-}
-
-const ease = (t: number) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
-const pulse = (t: number, a: number, b: number) => ease((t - a) / (b - a));
-
-let glowTexture: Texture | null = null;
-
-/** Đốm sáng tròn mờ dùng cho hào quang và hạt nước. */
-function glow(): Texture {
-  if (glowTexture) return glowTexture;
-  const c = document.createElement("canvas");
-  c.width = c.height = 64;
-  const g = c.getContext("2d")!;
-  const r = g.createRadialGradient(32, 32, 0, 32, 32, 32);
-  r.addColorStop(0, "rgba(255,255,255,1)");
-  r.addColorStop(0.4, "rgba(255,255,255,0.45)");
-  r.addColorStop(1, "rgba(255,255,255,0)");
-  g.fillStyle = r;
-  g.fillRect(0, 0, 64, 64);
-  glowTexture = Texture.from(c);
-  return glowTexture;
-}
+export type { Puppet } from "./kit";
 
 export async function loadPuppet(rig: Rig, still: boolean): Promise<Puppet> {
-  const urls = MAGE_PARTS.map((p) => partUrl(rig, p));
+  const names = partsOf(rig);
+  const urls = names.map((p) => partUrl(rig, p));
   const loaded = await Assets.load<Texture>(urls);
-  const tex = Object.fromEntries(
-    MAGE_PARTS.map((p, i) => [p, loaded[urls[i]!]!]),
-  ) as Record<(typeof MAGE_PARTS)[number], Texture>;
-  return mage(rig, tex, still);
+  const tex = Object.fromEntries(names.map((p, i) => [p, loaded[urls[i]!]!]));
+  return rig.skeleton === "mage"
+    ? mage(rig, tex as Record<(typeof MAGE_PARTS)[number], Texture>, still)
+    : warrior(rig, tex as Parameters<typeof warrior>[1], still);
 }
 
 function mage(
@@ -82,7 +27,6 @@ function mage(
   still: boolean,
 ): Puppet {
   const { parts, joints, foot } = rig;
-  const up = 1 / rig.texScale;
   const view = new Container();
   const shadow = new Graphics()
     .ellipse(0, -2, 150, 18)
@@ -93,38 +37,13 @@ function mage(
   body.pivot.set(foot.x, foot.y);
   view.addChild(body);
 
-  const bends: Bend[] = [];
-  const sprite = (name: keyof typeof parts, parent: Container) => {
-    const p = parts[name];
-    const s = new Sprite(tex[name]);
-    s.position.set(p.x, p.y);
-    s.scale.set(up);
-    parent.addChild(s);
-  };
-  const mesh = (name: keyof typeof parts, parent: Container, wind: Wind) => {
-    const p = parts[name];
-    const m = new MeshPlane({ texture: tex[name], verticesX: 10, verticesY: 12 });
-    m.position.set(p.x, p.y);
-    m.scale.set(up);
-    parent.addChild(m);
-    const buf = m.geometry.attributes.aPosition!.buffer;
-    // Lưới tính theo điểm ảnh của texture, nên biên độ gió cũng chia theo tỉ lệ thu nhỏ.
-    bends.push({
-      buf,
-      orig: Float32Array.from(buf.data as Float32Array),
-      w: tex[name].width,
-      h: tex[name].height,
-      wind: { ...wind, amp: wind.amp * rig.texScale },
-    });
-  };
-  const joint = (name: keyof typeof joints, parent: Container) => {
-    const j = joints[name];
-    const c = new Container();
-    c.pivot.set(j.x, j.y);
-    c.position.set(j.x, j.y);
-    parent.addChild(c);
-    return c;
-  };
+  const L = layers(rig.texScale);
+  const sprite = (name: keyof typeof parts, parent: Container) =>
+    L.sprite(tex[name], parts[name], parent);
+  const mesh = (name: keyof typeof parts, parent: Container, wind: Parameters<typeof L.mesh>[3]) =>
+    L.mesh(tex[name], parts[name], parent, wind);
+  const joint = (name: keyof typeof joints, parent: Container) =>
+    L.joint(joints[name].x, joints[name].y, parent);
 
   mesh("backhair", body, { axis: "y", start: 0.18, amp: 9, freq: 1.3, k: 3.2, phase: 0 });
   sprite("legs", body);
@@ -143,10 +62,7 @@ function mage(
   const waterR = joint("waterR", upper);
   sprite("waterR", waterR);
   // Hồ lô theo tay phải (armR) rồi lắc nhẹ quanh điểm cầm.
-  const gourdArm = new Container();
-  gourdArm.pivot.set(joints.armR.x, joints.armR.y);
-  gourdArm.position.set(joints.armR.x, joints.armR.y);
-  upper.addChild(gourdArm);
+  const gourdArm = L.joint(joints.armR.x, joints.armR.y, upper);
   const gourd = joint("gourd", gourdArm);
   const gourdGlow = new Sprite(glow());
   gourdGlow.anchor.set(0.5);
@@ -173,23 +89,7 @@ function mage(
   const fx = new Container();
   fx.pivot.set(foot.x, foot.y);
   view.addChild(fx);
-  const drops = Array.from({ length: 40 }, () => {
-    const s = new Sprite(glow());
-    s.anchor.set(0.5);
-    s.tint = rig.fxColor;
-    s.blendMode = "add";
-    s.visible = false;
-    fx.addChild(s);
-    return { s, life: 0, max: 1, vx: 0, vy: 0 };
-  });
-  const spawn = (x: number, y: number, vx: number, vy: number, size: number, life: number) => {
-    const d = drops.find((d) => d.life <= 0);
-    if (!d) return;
-    Object.assign(d, { life, max: life, vx, vy });
-    d.s.position.set(x, y);
-    d.s.scale.set(size * 2);
-    d.s.visible = true;
-  };
+  const drops = particles(fx, rig.fxColor, 40);
   const ring = new Graphics();
   fx.addChild(ring);
   let ringA = 0;
@@ -247,24 +147,19 @@ function mage(
           for (let i = 0; i < n; i++) {
             const ang = (Math.random() - 0.5) * 0.9;
             const v = 380 + Math.random() * 420;
-            spawn(joints.waterR.x + 12, joints.waterR.y, Math.cos(ang) * v, Math.sin(ang) * v - 60, 0.12 + Math.random() * 0.22, 0.5 + Math.random() * 0.4);
+            drops.spawn(joints.waterR.x + 12, joints.waterR.y, Math.cos(ang) * v, Math.sin(ang) * v - 60, 0.12 + Math.random() * 0.22, 0.5 + Math.random() * 0.4);
           }
           ringA = big ? 1 : 0.6;
         }
         if (a > (big ? 1.25 : 0.85)) action = null;
-      } else if (action.kind === "hit") {
-        const k = pulse(a, 0, 0.06) * (1 - pulse(a, 0.12, 0.5));
-        shiftX = -22 * k + Math.sin(a * 70) * 5 * (1 - pulse(a, 0, 0.3));
-        upperRot += 0.05 * k;
-        headRot += 0.06 * k;
-        tint = a < 0.14 ? 0xff9a9a : 0xffffff;
-        if (a > 0.6) action = null;
       } else {
-        // Được hồi: sáng xanh lá rồi tắt dần.
-        const k = pulse(a, 0, 0.15) * (1 - pulse(a, 0.3, 0.7));
-        tint = k > 0.05 ? 0xb8ffcf : 0xffffff;
-        glowA += 0.8 * k;
-        if (a > 0.7) action = null;
+        const r = reaction(action.kind, a);
+        shiftX = r.shiftX;
+        upperRot += 0.05 * r.tilt;
+        headRot += 0.06 * r.tilt;
+        tint = r.tint;
+        glowA += 0.8 * r.glow;
+        if (r.done) action = null;
       }
     }
 
@@ -308,39 +203,8 @@ function mage(
     }
     eyeL.scale.y = eyeR.scale.y = Math.max(0.1, Math.min(1, eye));
 
-    // Lưới uốn theo gió.
-    for (const B of bends) {
-      const d = B.buf.data as Float32Array;
-      const o = B.orig;
-      const w = B.wind;
-      for (let i = 0; i < d.length; i += 2) {
-        const ox = o[i]!;
-        const oy = o[i + 1]!;
-        const n = w.axis === "y" ? oy / B.h : ox / B.w;
-        let wgt = (n - w.start) / (1 - w.start);
-        wgt = wgt <= 0 ? 0 : wgt * wgt;
-        const wave = Math.sin(t * w.freq * (gust > 1 ? 1.6 : 1) + n * w.k + w.phase) * w.amp * life * gust * wgt;
-        if (w.vertical) {
-          d[i] = ox;
-          d[i + 1] = oy + wave;
-        } else {
-          d[i] = ox + wave;
-          d[i + 1] = oy + Math.abs(wave) * 0.15;
-        }
-      }
-      B.buf.update();
-    }
-
-    for (const D of drops) {
-      if (D.life <= 0) continue;
-      D.life -= dt;
-      D.vy += 160 * dt;
-      D.s.x += D.vx * dt;
-      D.s.y += D.vy * dt;
-      D.vx *= 0.985;
-      D.s.alpha = Math.max(0, D.life / D.max);
-      if (D.life <= 0) D.s.visible = false;
-    }
+    L.bend(t, life, gust);
+    drops.update(dt);
     ring.clear();
     if (ringA > 0) {
       ringA = Math.max(0, ringA - dt * 2.2);
