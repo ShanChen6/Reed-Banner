@@ -215,8 +215,10 @@ describe("chiêu riêng và thoại", () => {
     }
   });
 
-  it("mỗi màn có thoại trước trận, khi thắng và khi thua", () => {
+  it("mỗi màn có thoại trước trận, khi thắng và khi thua; sứ quân có tước hiệu, màn có vùng đất ngày nay", () => {
     for (const s of CAMPAIGN) {
+      assert.ok(s.region, s.id);
+      for (const f of s.foes.filter((x) => x.hero)) assert.ok(f.title, f.id);
       assert.ok(s.lines.before && s.lines.win && s.lines.lose, s.id);
     }
   });
