@@ -41,14 +41,14 @@ describe("đăng nhập OAuth", () => {
 
   it("chỉ cho quay về đường dẫn trong trang", () => {
     assert.equal(safeReturnTo("/play?x=1"), "/play?x=1");
-    for (const bad of ["https://ac.com", "//ac.com", "/\\ac.com", "", null, undefined]) assert.equal(safeReturnTo(bad), "/play");
-    assert.equal(withLoginError("/play"), "/play?login=error");
+    for (const bad of ["https://ac.com", "//ac.com", "/\\ac.com", "", null, undefined]) assert.equal(safeReturnTo(bad), "/game");
+    assert.equal(withLoginError("/game"), "/game?login=error");
     assert.equal(withLoginError("/play?a=1"), "/play?a=1&login=error");
   });
 
   it("URL ủy quyền có state và PKCE S256; cookie chờ mã hóa và giải mã được", () => {
     const p = newPendingLogin("google", "//ac.com");
-    assert.equal(p.returnTo, "/play");
+    assert.equal(p.returnTo, "/game");
     const url = authorizationUrl(p, creds, redirectUri("https://co-lau.vercel.app", "google"));
     assert.equal(url.searchParams.get("state"), p.state);
     assert.equal(url.searchParams.get("redirect_uri"), "https://co-lau.vercel.app/api/auth/google/callback");
@@ -60,7 +60,7 @@ describe("đăng nhập OAuth", () => {
 
   it("khách đăng nhập lần đầu: danh tính gắn vào chính tài khoản khách", async () => {
     const store = new MemoryAccountStore();
-    const pending = newPendingLogin("github", "/play");
+    const pending = newPendingLogin("github", "/game");
     const { fetcher, calls } = fakeFetch({ id: 42, login: "shan", name: null, avatar_url: "https://a/x.png" });
     const r = await completeLogin({
       provider: "github",
@@ -75,7 +75,7 @@ describe("đăng nhập OAuth", () => {
       newId: () => "g_moi",
       fetcher,
     });
-    assert.deepEqual(r, { ok: true, accountId: "g_khach", returnTo: "/play" });
+    assert.deepEqual(r, { ok: true, accountId: "g_khach", returnTo: "/game" });
     assert.ok(calls[0]!.body!.includes(`code_verifier=${pending.verifier}`));
     const acc = await store.get("g_khach");
     assert.equal(acc?.name, "shan");
@@ -84,7 +84,7 @@ describe("đăng nhập OAuth", () => {
 
   it("state lệch, thiếu cookie, người chơi hủy hoặc đổi mã lỗi: không đăng nhập", async () => {
     const store = new MemoryAccountStore();
-    const pending = newPendingLogin("google", "/play");
+    const pending = newPendingLogin("google", "/game");
     const base = { provider: "google" as const, pending, code: "c", state: pending.state, current: null, creds, redirect: "r", store, now: 1, newId: () => "g_1" };
     assert.equal((await completeLogin({ ...base, state: "khac" })).ok, false);
     assert.equal((await completeLogin({ ...base, pending: null })).ok, false);
