@@ -686,6 +686,8 @@ dynamic but readable silhouette, empty margin around the figure so nothing touch
 
 ### 8.2 Bảng tư thế theo nghề
 
+Cột ra chiêu dùng chung cho các kỹ năng thường của nghề. Cột tuyệt chiêu chỉ là mẫu: prompt ráp sẵn ở file 18 đã viết tư thế tuyệt chiêu riêng theo đúng tuyệt chiêu hoặc chiêu riêng (ô 5) của từng người.
+
 | Nghề | Ra chiêu `[ACTION POSE]` | Tuyệt chiêu `[ACTION POSE]` |
 |---|---|---|
 | ⚔️ Tướng sĩ | `mid-swing horizontal slash, weight on the front right leg in a deep lunge, saber sweeping forward at chest height with both arms extended, cape and cloth ends flying back` | `leaping overhead strike, both feet off the ground, knees bent, saber raised high above the head in both hands about to cut down, body arched, cloth flying upward` |
