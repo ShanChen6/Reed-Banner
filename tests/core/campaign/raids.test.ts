@@ -45,6 +45,11 @@ describe("đánh trùm", () => {
     const plain = stageFighter(stage.foes[0]!, 24);
     assert.equal(setup.foes[0]!.maxHp, Math.round(plain.maxHp * BOSS_HP));
     assert.equal(setup.difficulty, "nightmare");
+    const solo = stageById("boHai")!;
+    assert.equal(
+      raidSetup(solo, 1).foes[0]!.maxHp,
+      stageFighter(solo.foes[0]!, raidLevel(solo, 1)).maxHp,
+    );
     assert.deepEqual(
       RAID_TIERS.map((t) => raidDifficulty(stageById("boHai")!, t)),
       ["normal", "hard", "boss"],
