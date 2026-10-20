@@ -49,6 +49,12 @@ export default async function AccountBar({
         Nhiệm vụ
       </Link>
       <Link
+        href="/leaderboard"
+        className="rounded bg-amber-500 px-2 py-1 font-semibold text-stone-950"
+      >
+        Xếp hạng
+      </Link>
+      <Link
         href="/profile"
         className="rounded bg-[var(--panel)] px-2 py-1 font-semibold"
       >

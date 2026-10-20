@@ -4,6 +4,9 @@
 
 ## 20/10/2026
 
+**Bảng xếp hạng (lộ trình 4.6, Claude đặt, chờ Shan duyệt)**
+- Trang `/leaderboard` với 4 bảng: chiến dịch (số màn, rồi tổng lượt ít nhất), từng màn (ít lượt nhất), leo tháp (tầng cao nhất), sinh tồn (đợt nhiều nhất). Hồ sơ giờ lưu số lượt ít nhất mỗi màn. Server ghi điểm sau mỗi trận online. Chi tiết: [Chế độ chơi](design/09-che-do-choi.md#23-bảng-xếp-hạng-claude-đặt-20102026-chờ-shan-duyệt).
+
 **Nhiệm vụ, thành tựu, điểm danh (lộ trình 5.4, Claude đặt, chờ Shan duyệt)**
 - Trang `/quests` có 3 phần:
   - Nhiệm vụ ngày (4 việc) và tuần (5 việc), đổi lúc 0 giờ giờ Việt Nam; tuần bắt đầu thứ Hai.

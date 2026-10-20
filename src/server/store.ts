@@ -7,6 +7,8 @@ import type { Match } from "@/core";
 import { MemoryAccountStore, type AccountStore } from "./accounts";
 import { DrizzleAccountStore } from "./db/accounts";
 import { DrizzleDailyStore } from "./db/daily";
+import { DrizzleLeaderboardStore } from "./db/leaderboard";
+import { MemoryLeaderboardStore, type LeaderboardStore } from "./leaderboard";
 import { DrizzleProfileStore } from "./db/profiles";
 import { DrizzleMatchStore, type Db } from "./db/store";
 import { MemoryProfileStore, type ProfileStore } from "./profiles";
@@ -66,7 +68,7 @@ export class MemoryMatchStore implements MatchStore {
   }
 }
 
-const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore };
+const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore };
 
 /**
  * Kho dùng chung của server: Postgres (Neon) khi có DATABASE_URL, ngược lại lưu trong bộ nhớ (dev).
@@ -99,6 +101,13 @@ export function dailyStore(): DailyStore {
   return globalStore.coLauDailyStore;
 }
 
+/** Kho bảng xếp hạng, cùng nguồn với kho trận. */
+export function leaderboardStore(): LeaderboardStore {
+  const url = process.env.DATABASE_URL;
+  globalStore.coLauLeaderboardStore ??= url ? new DrizzleLeaderboardStore(neonDb(url)) : new MemoryLeaderboardStore();
+  return globalStore.coLauLeaderboardStore;
+}
+
 /** Postgres cho việc định kỳ; null khi dev không có DATABASE_URL (lưu bộ nhớ, không cần dọn). */
 export function database(): Db | null {
   const url = process.env.DATABASE_URL;
@@ -108,7 +117,7 @@ export function database(): Db | null {
 export interface DatabaseCheck {
   readonly kind: "neon" | "memory";
   readonly ok: boolean;
-  /** Đã có bảng `daily_entries`, bảng của migration mới nhất (migration đã chạy hết). */
+  /** Đã có bảng `leaderboard_scores`, bảng của migration mới nhất (migration đã chạy hết). */
   readonly migrated?: boolean;
   readonly error?: string;
 }
@@ -118,7 +127,7 @@ export async function checkDatabase(): Promise<DatabaseCheck> {
   const url = process.env.DATABASE_URL;
   if (!url) return { kind: "memory", ok: process.env.NODE_ENV !== "production" };
   try {
-    const rows = (await neon(url)`select to_regclass('public.daily_entries') as t`) as { t: string | null }[];
+    const rows = (await neon(url)`select to_regclass('public.leaderboard_scores') as t`) as { t: string | null }[];
     const migrated = rows[0]?.t != null;
     return { kind: "neon", ok: migrated, migrated };
   } catch (e) {
