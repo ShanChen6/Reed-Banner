@@ -310,6 +310,32 @@ export function autoProgress(
   }
 }
 
+/**
+ * Tiến trình tối đa, cho chế độ chơi thử: cấp tối đa, mọi kỹ năng mở được đều ở cấp kỹ năng tối đa, nhân
+ * vật kèm có đủ hai chiêu nhánh. Không phải tiến trình kiếm được (vượt tổng điểm kỹ năng của cấp tối đa).
+ */
+export function maxProgress(
+  profession: Profession | null,
+  character?: string,
+): CharacterProgress {
+  const base: CharacterProgress = {
+    ...NEW_PROGRESS,
+    xp: totalXpFor(MAX_LEVEL),
+    level: MAX_LEVEL,
+    branches:
+      profession === null
+        ? []
+        : professionSkills(profession)
+            .filter((s) => s.tier === 2)
+            .map((s) => s.id),
+  };
+  const keys = upgradeKeys(base, profession, character);
+  return {
+    ...base,
+    skillLevels: Object.fromEntries(keys.map((k) => [k, SKILL_MAX_LEVEL])),
+  };
+}
+
 // ——— Phần thưởng cuối trận ———
 
 /** Kinh nghiệm mỗi ô sách ghép được, và vàng mỗi ô vàng. Điểm xuất phát. */

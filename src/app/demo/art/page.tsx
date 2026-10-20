@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ELEMENTS, GEAR_SLOTS, mainCharacter, mainSkills, PROFESSIONS, professionSkills, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, SPECIAL_NAME, TIER_COLOR_NAME, TILE_NAME } from "@/app/game/battle/labels";
 import { GearIcon } from "@/app/game/art/gear";
-import { ElementIcon, FoodIcon, LeaderFlag, ShieldIcon } from "@/app/game/art/icons";
+import { ElementIcon, FoodIcon, LeaderFlag, ProfessionIcon, ShieldIcon } from "@/app/game/art/icons";
 import { Portrait } from "@/app/game/art/portraits";
 import { SkillIcon } from "@/app/game/art/skills";
 import { TILE_COLOR, TileArt } from "@/app/game/art/tiles";
@@ -63,6 +63,19 @@ export default function ArtPage() {
                 <ElementIcon element={e} className="size-10" />
                 <ElementIcon element={e} className="size-4" />
                 {ELEMENT_NAME[e]}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="font-semibold">Nghề</h2>
+          <div className="flex flex-wrap gap-4 text-sm">
+            {PROFESSIONS.map((p) => (
+              <span key={p} className="flex items-center gap-2">
+                <ProfessionIcon profession={p} className="size-10" />
+                <ProfessionIcon profession={p} className="size-4" />
+                {PROFESSION_NAME[p]}
               </span>
             ))}
           </div>
