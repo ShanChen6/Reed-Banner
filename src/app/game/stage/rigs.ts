@@ -293,17 +293,17 @@ const NGUYEN_BAC: WarriorRig = {
   parts: {
     body: { x: 340, y: 210, w: 654, h: 1308 },
     head: { x: 565, y: 30, w: 224, h: 273 },
-    arm: { x: 345, y: 260, w: 270, h: 310 },
-    armR: { x: 750, y: 250, w: 230, h: 320 },
+    arm: { x: 345, y: 400, w: 270, h: 146 },
+    armR: { x: 750, y: 390, w: 230, h: 156 },
     sword: { x: 55, y: 660, w: 402, h: 730 },
   },
   forearms: {
-    sword: { box: { x: 345, y: 530, w: 270, h: 280 }, joint: { x: 475, y: 550 } },
-    free: { box: { x: 750, y: 530, w: 230, h: 300 }, joint: { x: 860, y: 550 } },
+    sword: { box: { x: 345, y: 505, w: 270, h: 306 }, joint: { x: 495, y: 525 } },
+    free: { box: { x: 750, y: 505, w: 230, h: 326 }, joint: { x: 870, y: 525 } },
   },
   joints: {
-    shoulder: { x: 550, y: 310 },
-    elbowR: { x: 805, y: 310 },
+    shoulder: { x: 550, y: 420 },
+    elbowR: { x: 800, y: 410 },
     neck: { x: 685, y: 280 },
   },
   cloth: [
@@ -316,7 +316,10 @@ const NGUYEN_BAC: WarriorRig = {
     { name: "feathers", box: { x: 640, y: 580, w: 265, h: 310 },
       wind: { axis: "y", start: 0.2, amp: 4, freq: 1.5, k: 2.5, phase: 0.8 } },
   ],
-  covers: [],
+  covers: [
+    { name: "shoulder", box: { x: 345, y: 260, w: 270, h: 200 } },
+    { name: "shoulderR", box: { x: 750, y: 250, w: 230, h: 200 } },
+  ],
   blade: [{ x: 340, y: 855 }, { x: 60, y: 1385 }],
   fxColor: 0xff783d,
   poses: {
