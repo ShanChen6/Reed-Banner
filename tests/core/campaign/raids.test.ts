@@ -10,6 +10,7 @@ import {
   parseProfile,
   RAID_STAGES,
   RAID_TIERS,
+  raidDifficulty,
   raidLevel,
   raidSetup,
   raidUnlocked,
@@ -34,7 +35,7 @@ describe("đánh trùm", () => {
     assert.ok(!raidUnlocked(c, "coLau", 1));
   });
 
-  it("đối thủ lên cấp theo bậc, thủ lĩnh máu trùm, sứ quân đi trước đầy lương", () => {
+  it("đối thủ lên cấp theo bậc, thủ lĩnh máu trùm, sứ quân đầy lương, AI khó hơn theo bậc", () => {
     const stage = stageById("doDong")!;
     assert.deepEqual(
       RAID_TIERS.map((t) => raidLevel(stage, t)),
@@ -43,7 +44,11 @@ describe("đánh trùm", () => {
     const setup = raidSetup(stage, 1);
     const plain = stageFighter(stage.foes[0]!, 24);
     assert.equal(setup.foes[0]!.maxHp, Math.round(plain.maxHp * BOSS_HP));
-    assert.equal(setup.firstSide, 1);
+    assert.equal(setup.difficulty, "nightmare");
+    assert.deepEqual(
+      RAID_TIERS.map((t) => raidDifficulty(stageById("boHai")!, t)),
+      ["normal", "hard", "boss"],
+    );
     assert.equal(setup.foeFood, 100);
     assert.equal(setup.weights, HOME_TERRAIN[stage.foes[0]!.element]);
   });

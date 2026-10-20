@@ -3,7 +3,7 @@
 
 import type { Difficulty } from "../ai";
 import { FOOD_MAX } from "../battle/rules";
-import type { Element, FighterConfig, SideIndex } from "../battle";
+import type { Element, FighterConfig } from "../battle";
 import { STANDARD_WEIGHTS, type SpawnWeights } from "../board";
 import { GEAR_SETS, GEAR_SLOTS, type GearItem, type Tier } from "../gear";
 import {
@@ -30,7 +30,8 @@ export interface RaidTierInfo {
   readonly name: string;
   /** Đối thủ hơn cấp màn chừng này (tối đa cấp 30). */
   readonly levelBonus: number;
-  readonly difficulty: Difficulty;
+  /** AI khó hơn màn gốc chừng này nấc (Dễ → Thường → Khó → Trùm → Ác mộng). */
+  readonly difficultySteps: number;
   /** Thưởng lần đầu thắng bậc: vàng và một món trang bị phẩm này theo nguyên tố của sứ quân. */
   readonly gold: number;
   readonly gearTier: Tier;
@@ -40,21 +41,21 @@ export const RAID_TIER_INFO: Readonly<Record<RaidTier, RaidTierInfo>> = {
   1: {
     name: "Bậc I",
     levelBonus: 4,
-    difficulty: "boss",
+    difficultySteps: 1,
     gold: 300,
     gearTier: 3,
   },
   2: {
     name: "Bậc II",
     levelBonus: 8,
-    difficulty: "nightmare",
+    difficultySteps: 2,
     gold: 600,
     gearTier: 4,
   },
   3: {
     name: "Bậc III",
     levelBonus: 12,
-    difficulty: "nightmare",
+    difficultySteps: 3,
     gold: 1000,
     gearTier: 5,
   },
@@ -63,9 +64,31 @@ export const RAID_TIER_INFO: Readonly<Record<RaidTier, RaidTierInfo>> = {
 export const isRaidTier = (x: unknown): x is RaidTier =>
   typeof x === "number" && (RAID_TIERS as readonly number[]).includes(x);
 
+const DIFFICULTY_ORDER: readonly Difficulty[] = [
+  "easy",
+  "normal",
+  "hard",
+  "boss",
+  "nightmare",
+];
+
+/** Độ khó AI của bậc: nâng từ độ khó màn gốc, tối đa Ác mộng. */
+export function raidDifficulty(
+  stage: CampaignStage,
+  tier: RaidTier,
+): Difficulty {
+  const i = DIFFICULTY_ORDER.indexOf(stage.difficulty);
+  return DIFFICULTY_ORDER[
+    Math.min(
+      DIFFICULTY_ORDER.length - 1,
+      i + RAID_TIER_INFO[tier].difficultySteps,
+    )
+  ]!;
+}
+
 /**
- * Sân nhà: bàn cờ nghiêng về loại ô hợp với nguyên tố của sứ quân. Cả hai phe cùng ăn ô, nhưng sứ quân quen
- * đất nên luôn đi trước và vào trận đầy lương (FOOD_MAX).
+ * Sân nhà: bàn cờ nghiêng về loại ô hợp với nguyên tố của sứ quân. Cả hai phe cùng ăn ô, nhưng sứ quân giữ
+ * kho nên vào trận đầy lương (FOOD_MAX). Bản đầu cho sứ quân luôn đi trước thì quá khó (mô phỏng 20/10/2026).
  */
 export const HOME_TERRAIN: Readonly<Record<Element, SpawnWeights>> = {
   kim: { ...STANDARD_WEIGHTS, kiem: 22, tim: 11 },
@@ -149,8 +172,6 @@ export interface RaidSetup {
   readonly difficulty: Difficulty;
   readonly weights: SpawnWeights;
   readonly foeFood: number;
-  /** Sứ quân trên sân nhà luôn đi trước. */
-  readonly firstSide: SideIndex;
   readonly rule: string;
 }
 
@@ -165,11 +186,10 @@ export function raidSetup(stage: CampaignStage, tier: RaidTier): RaidSetup {
         ? { ...fighter, maxHp: Math.round(fighter.maxHp * BOSS_HP) }
         : fighter;
     }),
-    difficulty: RAID_TIER_INFO[tier].difficulty,
+    difficulty: raidDifficulty(stage, tier),
     weights: HOME_TERRAIN[element],
     foeFood: FOOD_MAX,
-    firstSide: 1,
-    rule: `${HOME_RULE[element]} Sứ quân đi trước, vào trận đầy lương.`,
+    rule: `${HOME_RULE[element]} Sứ quân vào trận đầy lương.`,
   };
 }
 
