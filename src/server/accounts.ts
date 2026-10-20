@@ -4,7 +4,7 @@
 
 export type ProviderId = "google" | "github";
 
-/** Thông tin lấy từ nhà cung cấp sau khi đăng nhập. Không lưu email. */
+/** Thông tin lấy từ nhà cung cấp sau khi đăng nhập. Không lấy email của nhà cung cấp. */
 export interface OAuthProfile {
   readonly provider: ProviderId;
   /** Id người dùng bên nhà cung cấp (không đổi khi họ đổi tên). */
@@ -24,6 +24,8 @@ export interface Account {
   readonly providers: readonly ProviderId[];
   /** Tên đăng nhập (đã chuẩn hóa) nếu tài khoản có mật khẩu. */
   readonly username: string | null;
+  /** Email đã xác nhận, dùng để lấy lại mật khẩu (xem ./recovery). */
+  readonly email: string | null;
   readonly createdAt: number;
   readonly lastLoginAt: number;
 }
@@ -45,6 +47,29 @@ export interface AccountStore {
    */
   createPassword(accountId: string, username: string, hash: string, now: number): Promise<boolean>;
   updatePassword(username: string, patch: PasswordPatch): Promise<void>;
+  /** Tài khoản có email (đã xác nhận) này, nếu có. */
+  accountByEmail(email: string): Promise<string | null>;
+  /** Đặt email đã xác nhận cho tài khoản; false nếu email đang thuộc tài khoản khác hoặc tài khoản không có. */
+  setEmail(accountId: string, email: string): Promise<boolean>;
+  addToken(token: EmailToken): Promise<void>;
+  /** Lấy và xóa mã (mỗi mã chỉ dùng được một lần); null nếu không có, sai mục đích hoặc đã hết hạn. */
+  takeToken(tokenHash: string, purpose: TokenPurpose, now: number): Promise<EmailToken | null>;
+  /** Số mã đã tạo cho tài khoản từ `since` (giới hạn số thư gửi đi). */
+  countTokens(accountId: string, purpose: TokenPurpose, since: number): Promise<number>;
+  deleteTokens(accountId: string, purpose: TokenPurpose): Promise<void>;
+}
+
+export type TokenPurpose = "verify" | "reset";
+
+/** Mã một lần gửi qua email. Chỉ lưu SHA-256 của mã. */
+export interface EmailToken {
+  readonly tokenHash: string;
+  readonly purpose: TokenPurpose;
+  readonly accountId: string;
+  /** Email nhận thư (với `verify` là email đang chờ xác nhận). */
+  readonly email: string;
+  readonly createdAt: number;
+  readonly expiresAt: number;
 }
 
 export interface PasswordRecord {
@@ -74,7 +99,9 @@ export async function signIn(
 }
 
 export class MemoryAccountStore implements AccountStore {
-  private readonly accounts = new Map<string, Omit<Account, "providers" | "username">>();
+  private readonly accounts = new Map<string, Omit<Account, "providers" | "username" | "email">>();
+  private readonly emails = new Map<string, string>();
+  private readonly tokens = new Map<string, EmailToken>();
   private readonly identities = new Map<string, { provider: ProviderId; accountId: string }>();
   private readonly passwords = new Map<string, PasswordRecord>();
 
@@ -101,7 +128,7 @@ export class MemoryAccountStore implements AccountStore {
     if (!a) return null;
     const providers = [...this.identities.values()].filter((i) => i.accountId === id).map((i) => i.provider);
     const username = [...this.passwords.entries()].find(([, r]) => r.accountId === id)?.[0] ?? null;
-    return { ...a, providers: [...new Set(providers)].sort(), username };
+    return { ...a, providers: [...new Set(providers)].sort(), username, email: this.emails.get(id) ?? null };
   }
 
   async getPassword(username: string): Promise<PasswordRecord | null> {
@@ -120,5 +147,35 @@ export class MemoryAccountStore implements AccountStore {
   async updatePassword(username: string, patch: PasswordPatch): Promise<void> {
     const r = this.passwords.get(username);
     if (r) this.passwords.set(username, { ...r, ...patch });
+  }
+
+  async accountByEmail(email: string): Promise<string | null> {
+    return [...this.emails.entries()].find(([, e]) => e === email)?.[0] ?? null;
+  }
+
+  async setEmail(accountId: string, email: string): Promise<boolean> {
+    const owner = await this.accountByEmail(email);
+    if (!this.accounts.has(accountId) || (owner !== null && owner !== accountId)) return false;
+    this.emails.set(accountId, email);
+    return true;
+  }
+
+  async addToken(token: EmailToken): Promise<void> {
+    this.tokens.set(token.tokenHash, token);
+  }
+
+  async takeToken(tokenHash: string, purpose: TokenPurpose, now: number): Promise<EmailToken | null> {
+    const t = this.tokens.get(tokenHash);
+    if (!t || t.purpose !== purpose) return null;
+    this.tokens.delete(tokenHash);
+    return now < t.expiresAt ? t : null;
+  }
+
+  async countTokens(accountId: string, purpose: TokenPurpose, since: number): Promise<number> {
+    return [...this.tokens.values()].filter((t) => t.accountId === accountId && t.purpose === purpose && t.createdAt >= since).length;
+  }
+
+  async deleteTokens(accountId: string, purpose: TokenPurpose): Promise<void> {
+    for (const [k, t] of this.tokens) if (t.accountId === accountId && t.purpose === purpose) this.tokens.delete(k);
   }
 }

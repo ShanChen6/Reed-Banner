@@ -13,6 +13,7 @@ import { MemoryLeaderboardStore, type LeaderboardStore } from "../../src/server/
 import { DrizzleProfileStore } from "../../src/server/db/profiles";
 import { DrizzleMatchStore, type Db } from "../../src/server/db/store";
 import { signIn } from "../../src/server/accounts";
+import { deleteExpiredTokens } from "../../src/server/db/maintenance";
 
 describe("lưu trận vào Postgres (PGlite, cùng migration với Neon)", () => {
   it("tạo, đọc, ghi kèm điều kiện seq", async () => {
@@ -70,12 +71,48 @@ describe("lưu trận vào Postgres (PGlite, cùng migration với Neon)", () =>
       avatarUrl: "https://a",
       providers: ["github", "google"],
       username: null,
+      email: null,
       createdAt: 10,
       lastLoginAt: 30,
     });
     // Gắn thẳng danh tính đã có chủ vào tài khoản khác: vẫn thuộc chủ cũ.
     assert.equal(await store.link("g_3", google, 40), "g_1");
     assert.equal(await store.get("g_2"), null);
+  });
+
+  it("email và mã một lần: email duy nhất, lấy mã một lần, đếm, xóa, dọn mã hết hạn", async () => {
+    const db = drizzle(new PGlite());
+    await migrate(db, { migrationsFolder: "drizzle" });
+    const store = new DrizzleAccountStore(db as unknown as Db);
+    await store.createPassword("g_1", "shan", "h", 1);
+    await store.createPassword("g_2", "khac", "h", 1);
+    assert.equal(await store.setEmail("g_1", "shan@vi.du"), true);
+    assert.equal(await store.setEmail("g_1", "shan@vi.du"), true);
+    assert.equal(await store.setEmail("g_2", "shan@vi.du"), false);
+    assert.equal(await store.setEmail("g_khong", "a@vi.du"), false);
+    assert.equal((await store.get("g_1"))?.email, "shan@vi.du");
+    assert.equal((await store.get("g_2"))?.email, null);
+    assert.equal(await store.accountByEmail("shan@vi.du"), "g_1");
+    assert.equal(await store.accountByEmail("ai@vi.du"), null);
+
+    const t = { tokenHash: "a", purpose: "reset", accountId: "g_1", email: "shan@vi.du", createdAt: 100, expiresAt: 200 } as const;
+    await store.addToken(t);
+    await store.addToken({ ...t, tokenHash: "b", createdAt: 150 });
+    await store.addToken({ ...t, tokenHash: "c", purpose: "verify" });
+    assert.equal(await store.countTokens("g_1", "reset", 0), 2);
+    assert.equal(await store.countTokens("g_1", "reset", 120), 1);
+    assert.equal(await store.takeToken("a", "verify", 110), null);
+    assert.deepEqual(await store.takeToken("a", "reset", 110), t);
+    assert.equal(await store.takeToken("a", "reset", 110), null);
+    // Hết hạn: vẫn bị xóa, không trả về.
+    assert.equal(await store.takeToken("b", "reset", 200), null);
+    assert.equal(await store.countTokens("g_1", "reset", 0), 0);
+    await store.addToken({ ...t, tokenHash: "d" });
+    await store.deleteTokens("g_1", "reset");
+    assert.equal(await store.countTokens("g_1", "reset", 0), 0);
+    assert.equal(await store.countTokens("g_1", "verify", 0), 1);
+    assert.equal(await deleteExpiredTokens(db as unknown as Db, 201), 1);
+    assert.equal(await store.countTokens("g_1", "verify", 0), 0);
   });
 
   it("mật khẩu: tạo, trùng tên, cập nhật số lần sai và khóa, tên đăng nhập trong tài khoản", async () => {

@@ -55,11 +55,15 @@ export type PasswordError =
   | "hasPassword"
   | "wrong"
   | "locked"
-  | "noPassword";
+  | "noPassword"
+  | "badEmail"
+  | "emailTaken"
+  | "badToken"
+  | "tooMany";
 
 export type PasswordResult = { readonly ok: true; readonly accountId: string } | { readonly ok: false; readonly error: PasswordError };
 
-function checkNewPassword(password: string, confirm: string): PasswordError | null {
+export function checkNewPassword(password: string, confirm: string): PasswordError | null {
   if (password.length < PASSWORD_MIN || password.length > PASSWORD_MAX) return "badPassword";
   if (password !== confirm) return "mismatch";
   return null;
