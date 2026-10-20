@@ -697,53 +697,7 @@ dynamic but readable silhouette, empty margin around the figure so nothing touch
 
 ### 8.3 Prompt ráp sẵn
 
-#### Đinh Bộ Lĩnh tướng quân · ra chiêu
-
-- File: `dinhBoLinh-tuongQuan-chieu.png` · Tham chiếu: hình tướng quân đã dùng trong game
-
-```text
-Same character as the attached reference image: identical face, hairstyle, outfit, colors, decorations and weapon, same line art and shading style, same scale (figure about the same height in the frame). Only the pose changes. Full-body character art for a 2D game. Character: Dinh Bo Linh as a young general around twenty-eight, leader of the reed-flag army, short beard along the jaw, black topknot wrapped with a vermilion cloth whose ends trail behind; lamellar armor of bronze plates over a cross-collar tunic in vermilion red and moss green, short vermilion cape, white reed-flower tassel at the belt; a long broad single-edged saber (dao). Pose: mid-swing horizontal slash, weight on the front right leg in a deep lunge, saber sweeping forward at chest height with both arms extended, cape and cloth ends flying back. Full body head to feet including the weapon tip, three-quarter view facing the viewer's right, dynamic but readable silhouette, empty margin around the figure so nothing touches the edge. Style: semi-realistic anime-influenced 2D game splash art, clean bold dark-brown line art, cel shading with one or two shadow tones, natural adult proportions and eye size, grounded in 10th-century Vietnam. No glow, sparks, slash trails, particles or magic effects anywhere. One character only. Background: flat solid chroma green (#00b140), completely uniform. No text, watermark, frame, scenery, floor shadow or gradient.
-```
-
-#### Đinh Bộ Lĩnh tướng quân · tuyệt chiêu
-
-- File: `dinhBoLinh-tuongQuan-tuyetChieu.png` · Tham chiếu: hình tướng quân đã dùng trong game
-
-```text
-Same character as the attached reference image: identical face, hairstyle, outfit, colors, decorations and weapon, same line art and shading style, same scale (figure about the same height in the frame). Only the pose changes. Full-body character art for a 2D game. Character: Dinh Bo Linh as a young general around twenty-eight, leader of the reed-flag army, short beard along the jaw, black topknot wrapped with a vermilion cloth whose ends trail behind; lamellar armor of bronze plates over a cross-collar tunic in vermilion red and moss green, short vermilion cape, white reed-flower tassel at the belt; a long broad single-edged saber (dao). Pose: leaping overhead strike, both feet off the ground, knees bent, saber raised high above the head in both hands about to cut down, body arched, cape and cloth ends flying upward, fierce battle cry. Full body head to feet including the weapon tip, three-quarter view facing the viewer's right, dynamic but readable silhouette, empty margin around the figure so nothing touches the edge. Style: semi-realistic anime-influenced 2D game splash art, clean bold dark-brown line art, cel shading with one or two shadow tones, natural adult proportions and eye size, grounded in 10th-century Vietnam. No glow, sparks, slash trails, particles or magic effects anywhere. One character only. Background: flat solid chroma green (#00b140), completely uniform. No text, watermark, frame, scenery, floor shadow or gradient.
-```
-
-#### Trần Cương · ra chiêu
-
-- File: `tranCuong-chieu.png` · Tham chiếu: bản thiết kế Trần Cương đã dùng trong game (`/mnt/project-files/art/vanguard/`)
-
-```text
-Same character as the attached reference image: identical face, hairstyle, outfit, colors, decorations and weapon, same line art and shading style, same scale (figure about the same height in the frame). Only the pose changes. Full-body character art for a 2D game. Character: Tran Cuong, a vanguard warrior of the metal element, a young man in his mid-twenties, tall and athletic, black hair in a high topknot; platinum white, silver and royal gold armor; a large broad blade. Pose: mid-swing horizontal slash, weight on the front right leg in a deep lunge, blade sweeping forward at chest height with both arms extended, cloth ends flying back. Full body head to feet including the weapon tip, three-quarter view facing the viewer's right, dynamic but readable silhouette, empty margin around the figure so nothing touches the edge. Style: semi-realistic anime-influenced 2D game splash art, clean bold dark-brown line art, cel shading with one or two shadow tones, natural adult proportions and eye size, grounded in 10th-century Vietnam. No glow, sparks, slash trails, particles or magic effects anywhere. One character only. Background: flat solid chroma green (#00b140), completely uniform. No text, watermark, frame, scenery, floor shadow or gradient.
-```
-
-#### Trần Cương · tuyệt chiêu
-
-- File: `tranCuong-tuyetChieu.png` · Tham chiếu: như trên
-
-```text
-Same character as the attached reference image: identical face, hairstyle, outfit, colors, decorations and weapon, same line art and shading style, same scale (figure about the same height in the frame). Only the pose changes. Full-body character art for a 2D game. Character: Tran Cuong, a vanguard warrior of the metal element, a young man in his mid-twenties, tall and athletic, black hair in a high topknot; platinum white, silver and royal gold armor; a large broad blade. Pose: leaping overhead strike, both feet off the ground, knees bent, blade raised high above the head in both hands about to cut down, body arched, cloth ends flying upward. Full body head to feet including the weapon tip, three-quarter view facing the viewer's right, dynamic but readable silhouette, empty margin around the figure so nothing touches the edge. Style: semi-realistic anime-influenced 2D game splash art, clean bold dark-brown line art, cel shading with one or two shadow tones, natural adult proportions and eye size, grounded in 10th-century Vietnam. No glow, sparks, slash trails, particles or magic effects anywhere. One character only. Background: flat solid chroma green (#00b140), completely uniform. No text, watermark, frame, scenery, floor shadow or gradient.
-```
-
-#### Đào Lam · ra chiêu
-
-- File: `daoLam-chieu.png` · Tham chiếu: hình Đào Lam đã dùng trong game
-
-```text
-Same character as the attached reference image: identical face, hairstyle, outfit, colors, decorations and staff, same line art and shading style, same scale (figure about the same height in the frame). Only the pose changes. Full-body character art for a 2D game. Character: Dao Lam, a mystic sorcerer of the water element, a young woman with long dark hair, layered cross-collar ritual robe in sea blue, deep blue and white; a ritual staff topped with a water orb. Pose: casting stance, staff thrust forward in the right hand with the orb pointing at the enemy, left palm open beside it, feet planted wide, robe and sleeves blown back. Full body head to feet including the staff, three-quarter view facing the viewer's right, dynamic but readable silhouette, empty margin around the figure so nothing touches the edge. Style: semi-realistic anime-influenced 2D game splash art, clean bold dark-brown line art, cel shading with one or two shadow tones, natural adult proportions and eye size, grounded in 10th-century Vietnam. No glow, water splashes, particles or magic effects anywhere. One character only. Background: flat solid chroma green (#00b140), completely uniform. No text, watermark, frame, scenery, floor shadow or gradient.
-```
-
-#### Đào Lam · tuyệt chiêu
-
-- File: `daoLam-tuyetChieu.png` · Tham chiếu: như trên
-
-```text
-Same character as the attached reference image: identical face, hairstyle, outfit, colors, decorations and staff, same line art and shading style, same scale (figure about the same height in the frame). Only the pose changes. Full-body character art for a 2D game. Character: Dao Lam, a mystic sorcerer of the water element, a young woman with long dark hair, layered cross-collar ritual robe in sea blue, deep blue and white; a ritual staff topped with a water orb. Pose: channeling a great spell, staff raised high overhead in both hands, orb toward the sky, head tilted up, robe, sleeves and hair lifting as if from an updraft, feet slightly off the ground. Full body head to feet including the staff, three-quarter view facing the viewer's right, dynamic but readable silhouette, empty margin around the figure so nothing touches the edge. Style: semi-realistic anime-influenced 2D game splash art, clean bold dark-brown line art, cel shading with one or two shadow tones, natural adult proportions and eye size, grounded in 10th-century Vietnam. No glow, water splashes, particles or magic effects anywhere. One character only. Background: flat solid chroma green (#00b140), completely uniform. No text, watermark, frame, scenery, floor shadow or gradient.
-```
+Prompt ra chiêu và tuyệt chiêu ráp sẵn cho **từng nhân vật** nằm ở [Prompt tư thế ra chiêu](18-prompt-tu-the.md), sinh từ prompt toàn thân trong file này theo bảng 8.2. Sửa ngoại hình nhân vật ở đây thì cập nhật cả file đó.
 
 ## 9. Chân dung bán thân
 
