@@ -15,6 +15,7 @@ import {
   type SideIndex,
 } from "../battle";
 import type { SpawnWeights } from "../board";
+import type { RaidTier } from "../campaign";
 
 /** Trận dở không có hành động nào của người chơi quá mốc này thì xử thua. */
 export const ABANDON_MS = 24 * 60 * 60 * 1000;
@@ -37,6 +38,8 @@ export interface Match {
   readonly forfeited: boolean;
   /** Id màn chiến dịch; không có ở trận Thường. */
   readonly stage?: string;
+  /** Đánh trùm: bậc trùm ở màn `stage`. */
+  readonly raid?: RaidTier;
 }
 
 export interface MatchConfig {
@@ -47,6 +50,7 @@ export interface MatchConfig {
   readonly now: number;
   readonly weights?: SpawnWeights;
   readonly stage?: string;
+  readonly raid?: RaidTier;
 }
 
 export interface MatchStep {
@@ -72,6 +76,7 @@ export function startMatch(config: MatchConfig): MatchStep {
     lastHumanAt: config.now,
     forfeited: false,
     ...(config.stage ? { stage: config.stage } : {}),
+    ...(config.raid ? { raid: config.raid } : {}),
   };
   const ai = runAi(match, config.now, config.difficulty);
   return { match: ai.match, events: [...events, ...ai.events] };
@@ -191,6 +196,7 @@ export interface MatchView {
   readonly seq: number;
   readonly forfeited: boolean;
   readonly stage?: string;
+  readonly raid?: RaidTier;
 }
 
 export function viewOf(m: Match): MatchView {
@@ -202,5 +208,6 @@ export function viewOf(m: Match): MatchView {
     seq: m.seq,
     forfeited: m.forfeited,
     ...(m.stage ? { stage: m.stage } : {}),
+    ...(m.raid ? { raid: m.raid } : {}),
   };
 }

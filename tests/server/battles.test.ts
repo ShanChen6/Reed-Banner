@@ -285,7 +285,7 @@ describe("trận chiến dịch", () => {
     assert.ok(
       await profiles.put(
         "g_c",
-        { ...cur.profile, campaign: { cleared: [], food: 42 } },
+        { ...cur.profile, campaign: { cleared: [], food: 42, raids: {} } },
         cur.version,
       ),
     );
@@ -330,7 +330,71 @@ describe("trận chiến dịch", () => {
       joined: "nguyenBac",
     });
     const saved = (await loadProfile(profiles, "g_c")).profile;
-    assert.deepEqual(saved.campaign, { cleared: ["coLau"], food: 33 });
+    assert.deepEqual(saved.campaign, {
+      cleared: ["coLau"],
+      food: 33,
+      raids: {},
+    });
     assert.equal(saved.companions.nguyenBac?.level, 1);
+  });
+});
+
+describe("trận đánh trùm", () => {
+  it("chỉ đánh được bậc đã mở; sân nhà; thắng lần đầu ghi bậc, thưởng vàng và món trang bị", async () => {
+    const store = new MemoryMatchStore();
+    const profiles = new MemoryProfileStore();
+    const deps = { store, profiles, now: T0, seed: 4, newId: () => "m_r" };
+    const body = { ...input, stage: "boHai", raid: 1 };
+    assert.equal(parseNewBattle({ ...body, raid: 4 }), null);
+    assert.equal(parseNewBattle(body)!.difficulty, "boss");
+    assert.equal(parseNewBattle({ ...body, raid: 2 })!.difficulty, "nightmare");
+    const locked = await createBattleFor("g_r", parseNewBattle(body)!, deps);
+    assert.deepEqual(locked, { ok: false, error: "badRequest" });
+
+    const cur = await loadProfile(profiles, "g_r");
+    const campaign = { cleared: ["coLau", "boHai"], food: 40, raids: {} };
+    assert.ok(
+      await profiles.put(
+        "g_r",
+        { ...cur.profile, gold: 0, campaign },
+        cur.version,
+      ),
+    );
+    const tier2 = await createBattleFor(
+      "g_r",
+      parseNewBattle({ ...body, raid: 2 })!,
+      deps,
+    );
+    assert.deepEqual(tier2, { ok: false, error: "badRequest" });
+    const r = await createBattleFor("g_r", parseNewBattle(body)!, deps);
+    assert.ok(r.ok);
+    assert.equal(r.view.raid, 1);
+    assert.equal(r.view.stage, "boHai");
+    // Sứ quân đi trước; người chơi không mang lương chiến dịch.
+    assert.equal(r.view.battle.sides[1].fighters[0]!.id, "tranLam");
+    assert.ok(r.view.battle.sides[0].food !== 40);
+
+    const rec = (await store.get("m_r"))!;
+    const battle = { ...rec.match.battle, winner: 0 as const };
+    assert.ok(
+      await store.save(
+        { ...rec, match: { ...rec.match, battle, seq: rec.match.seq + 1 } },
+        rec.match.seq,
+      ),
+    );
+    const done = await getBattle("m_r", "g_r", {
+      store,
+      profiles,
+      now: T0 + 1000,
+    });
+    assert.ok(done.ok && done.outcome?.raid);
+    assert.equal(done.outcome.campaign, undefined);
+    assert.equal(done.outcome.raid.firstClear, true);
+    assert.equal(done.outcome.raid.bonusGold, 300);
+    assert.equal(done.outcome.raid.item?.tier, 3);
+    assert.equal(done.outcome.raid.item?.element, "thuy");
+    const saved = (await loadProfile(profiles, "g_r")).profile;
+    assert.deepEqual(saved.campaign, { ...campaign, raids: { boHai: 1 } });
+    assert.ok(saved.bag.some((i) => i.id === done.outcome!.raid!.item!.id));
   });
 });

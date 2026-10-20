@@ -5,6 +5,7 @@
 // Tiến trình: --level 10 dựng mọi nhân vật ở cấp 10 (kỹ năng mở theo cấp, điểm kỹ năng tiêu đều).
 // Chiến dịch: --stage tamDai (hoặc all) đánh màn đó với luật màn, đội người chơi ở cấp gợi ý (hoặc --level),
 // --team heroes|default; --sweep 0..6 thử người chơi hơn đối thủ 0 tới 6 cấp.
+// Đánh trùm: thêm --raid 1|2|3 (với --stage all chỉ chạy 12 màn có sứ quân).
 
 import { parseArgs } from "node:util";
 import {
@@ -13,10 +14,16 @@ import {
   recommendedLevel,
   runBattle,
   stageById,
+  isRaidTier,
+  RAID_STAGES,
+  raidLevel,
+  raidRecommended,
+  raidSetup,
   stageMatchups,
   stageTeamIds,
   summarize,
   type CampaignStage,
+  type RaidTier,
   type Difficulty,
   type Element,
   type SimGear,
@@ -42,6 +49,7 @@ const { values } = parseArgs({
     stage: { type: "string" },
     team: { type: "string", default: "heroes" },
     sweep: { type: "string" },
+    raid: { type: "string" },
     json: { type: "boolean", default: false },
   },
 });
@@ -70,20 +78,28 @@ if (values.stage) {
 
 /** Tỉ lệ thắng của người chơi ở từng màn; --sweep in thêm một cột cho mỗi mức hơn cấp. */
 function runStages(): void {
+  const raidArg = values.raid === undefined ? undefined : Number(values.raid);
+  if (raidArg !== undefined && !isRaidTier(raidArg)) fail(`--raid phải là 1, 2 hoặc 3`);
+  const raid = raidArg as RaidTier | undefined;
   const stages: CampaignStage[] =
-    values.stage === "all" ? [...CAMPAIGN] : [stageById(values.stage!) ?? fail(`Không có màn ${values.stage}`)];
+    values.stage === "all"
+      ? [...(raid ? RAID_STAGES : CAMPAIGN)]
+      : [stageById(values.stage!) ?? fail(`Không có màn ${values.stage}`)];
   const team = values.team as StageTeam;
   const sweep = values.sweep?.split("..").map(Number);
   const offsets = sweep ? range(sweep[0]!, sweep[1] ?? sweep[0]!) : null;
   const rate = (stage: CampaignStage, lv: number) => {
-    const results = stageMatchups(stage, battles, seed, { level: lv, team, ...(values.element ? { element } : {}) }).map((m) =>
-      runBattle(m, { difficulty: ["normal", stage.difficulty], maxTurns }),
-    );
+    const results = stageMatchups(stage, battles, seed, {
+      level: lv,
+      team,
+      ...(raid ? { raid } : {}),
+      ...(values.element ? { element } : {}),
+    }).map((m) => runBattle(m, { difficulty: ["normal", raid ? raidSetup(stage, raid).difficulty : stage.difficulty], maxTurns }));
     return summarize(results);
   };
   const json: Record<string, unknown> = {};
   if (!values.json) {
-    console.log(`\n## Chiến dịch · ${battles} trận mỗi ô · người chơi AI normal, hệ ${values.element ?? "xoay vòng 7 hệ"}, đội ${team}`);
+    console.log(`\n## ${raid ? `Đánh trùm bậc ${raid}` : "Chiến dịch"} · ${battles} trận mỗi ô · người chơi AI normal, hệ ${values.element ?? "xoay vòng 7 hệ"}, đội ${team}`);
     console.log(
       offsets
         ? `| Màn | Đối thủ | Khó | Đội kèm | ${offsets.map((o) => `+${o}`).join(" | ")} |\n|---|---|---|---|${offsets.map(() => "---|").join("")}`
@@ -91,14 +107,15 @@ function runStages(): void {
     );
   }
   for (const stage of stages) {
-    const mates = stage.mode === "3v3" ? stageTeamIds(stage, team).join("+") : "—";
-    const head = `| ${stage.id} | ${stage.level} | ${stage.difficulty} | ${mates} |`;
+    const mates = stage.mode === "3v3" ? stageTeamIds(stage, team, !!raid).join("+") : "—";
+    const foeLevel = raid ? raidLevel(stage, raid) : stage.level;
+    const head = `| ${stage.id} | ${foeLevel} | ${raid ? raidSetup(stage, raid).difficulty : stage.difficulty} | ${mates} |`;
     if (offsets) {
-      const rates = offsets.map((o) => rate(stage, stage.level + o).side0WinRate);
+      const rates = offsets.map((o) => rate(stage, foeLevel + o).side0WinRate);
       json[stage.id] = Object.fromEntries(offsets.map((o, i) => [`+${o}`, rates[i]]));
       if (!values.json) console.log(`${head} ${rates.map(pct).join(" | ")} |`);
     } else {
-      const lv = level ?? recommendedLevel(stage);
+      const lv = level ?? (raid ? raidRecommended(stage, raid) : recommendedLevel(stage));
       const s = rate(stage, lv);
       json[stage.id] = { level: lv, ...s };
       if (!values.json) console.log(`${head} ${lv} | ${pct(s.side0WinRate)} | ${num(s.turnsPerSide.median)} |`);
