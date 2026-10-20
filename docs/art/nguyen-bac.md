@@ -1,7 +1,7 @@
 # Nguyễn Bặc — hình động trong trận
 
 - Roster: `nguyenBac`, tướng sĩ hệ Hỏa; không sửa `src/core/`.
-- Asset: `public/art/characters/nguyenBac/`, 13 WebP, **334.792 byte** (334,8 KB thập phân; 327 KiB), gồm cả hai tranh tư thế. Sáu bản sao cùng nhân vật dùng chung texture; ngay cả tính sáu lần cũng dưới 3 MB ảnh nhân vật.
+- Asset: `public/art/characters/nguyenBac/`, 13 WebP, **332.382 byte** (332,4 KB thập phân; 324,6 KiB), gồm cả hai tranh tư thế. Sáu bản sao cùng nhân vật dùng chung texture; ngay cả tính sáu lần cũng dưới 3 MB ảnh nhân vật.
 - Rig: hệ tọa độ ráp 1024×1536, texture 0,5×; khớp vai, khuỷu hai tay và cổ. Áo choàng, khăn, vạt áo và bông lau dùng lưới gió.
 - Đánh thường dùng rig; kỹ năng thường dùng `pose-cast`, ô 5 dùng `pose-ultimate` qua director hiện có.
 - Luyện tập đặt Nguyễn Bặc trong đội Tianwu để mở `/game/practice` là thấy ngay.
@@ -19,3 +19,11 @@ Bộ prompt cuối (cùng các ảnh nguồn tương ứng):
 ## Hạn chế
 
 Mảnh được phục dựng từ ảnh phẳng bằng AI, không phải PSD tác giả: một số hoa văn, tỉ lệ thân và phần bị che khác ảnh đứng gốc. Tay có khớp khuỷu riêng nhưng chân giữ liền thân; chuyển động là rối cắt mảnh, hai tranh hành động đổi bằng crossfade, không phải hoạt ảnh vẽ từng khung. Vải chỉ uốn nhẹ để tránh lộ đường nối. Ngân sách trên là ảnh Nguyễn Bặc; không bao gồm JavaScript, âm thanh hoặc các tài sản khác của toàn trang.
+
+## Sửa hướng tay
+
+Hai tay được tách lại thành cánh tay hoàn chỉnh đúng hướng ảnh nguồn, sau đó chia ở khuỷu với vùng chồng 40 px. Không lật riêng bắp tay hay bàn tay. Chỉnh lại vị trí đao để chuôi nằm trong bàn tay phải.
+
+Prompt sửa (imagegen tích hợp, ảnh đứng gốc làm đầu vào):
+
+“Extract ONLY the two complete arms of this exact warrior as isolated transparent cutouts, side by side, preserving original anatomical handedness and original orientation. LEFT HALF: his anatomical RIGHT arm, the arm on viewer's LEFT in the source, including its shoulder armor, sleeve, exposed upper arm, elbow, bracer and gripping hand. Remove the sword but keep the hand curled exactly as in source, ready to grip the handle, correct thumb orientation. The shoulder is at upper right, hand at lower left, arm slants down toward left. RIGHT HALF: his anatomical LEFT arm, on viewer's RIGHT in source, from shoulder armor through sleeve upper arm elbow bracer to relaxed open hand. Shoulder upper left, hand lower right, slants down right. Keep BOTH arms as they actually appear in source, DO NOT MIRROR either arm. No sword, torso, head, cape, background, labels or other objects. Both arms complete shoulder-to-fingertips, side by side with ample transparent separation and margins, true alpha. Match source colors and illustration, correct elbows, hands and thumbs, no duplicate hands.”
