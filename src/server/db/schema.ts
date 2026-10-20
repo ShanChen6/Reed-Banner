@@ -84,3 +84,18 @@ export const dailyEntries = pgTable(
   },
   (t) => [primaryKey({ columns: [t.day, t.ownerId] }), index("daily_entries_rank_idx").on(t.day, t.score)],
 );
+
+/**
+ * Bảng xếp hạng: điểm hiện tại của mỗi người trên mỗi bảng (chiến dịch, từng màn, tháp, sinh tồn), tính từ hồ
+ * sơ sau mỗi lần cộng thưởng. `updatedAt` chỉ đổi khi điểm đổi, để bằng điểm thì ai đạt trước đứng trên.
+ */
+export const leaderboardScores = pgTable(
+  "leaderboard_scores",
+  {
+    board: text("board").notNull(),
+    ownerId: text("owner_id").notNull(),
+    score: integer("score").notNull(),
+    updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.board, t.ownerId] }), index("leaderboard_rank_idx").on(t.board, t.score)],
+);

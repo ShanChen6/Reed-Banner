@@ -27,7 +27,12 @@ describe("đánh trùm", () => {
   });
 
   it("bậc mở lần lượt sau khi qua màn", () => {
-    const c = { cleared: ["coLau", "boHai"], food: 60, raids: { boHai: 1 } };
+    const c = {
+      cleared: ["coLau", "boHai"],
+      food: 60,
+      raids: { boHai: 1 },
+      bestTurns: {},
+    };
     assert.ok(raidUnlocked(c, "boHai", 1));
     assert.ok(raidUnlocked(c, "boHai", 2));
     assert.ok(!raidUnlocked(c, "boHai", 3));
@@ -61,7 +66,12 @@ describe("đánh trùm", () => {
   it("chỉ thưởng lần đầu thắng mỗi bậc", () => {
     const p = {
       ...newProfile(),
-      campaign: { cleared: ["coLau", "boHai"], food: 60, raids: {} },
+      campaign: {
+        cleared: ["coLau", "boHai"],
+        food: 60,
+        raids: {},
+        bestTurns: {},
+      },
     };
     const lose = applyRaidResult(p, "boHai", 1, false, createRng(1));
     assert.equal(lose.profile, p);

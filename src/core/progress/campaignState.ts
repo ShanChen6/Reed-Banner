@@ -15,12 +15,15 @@ export interface CampaignState {
   readonly food: number;
   /** Đánh trùm: bậc cao nhất đã thắng theo id màn. */
   readonly raids: Readonly<Record<string, number>>;
+  /** Số lượt (hai phe) ít nhất của các trận thắng theo id màn, cho bảng xếp hạng. */
+  readonly bestTurns: Readonly<Record<string, number>>;
 }
 
 export const NEW_CAMPAIGN: CampaignState = {
   cleared: [],
   food: CAMPAIGN_FOOD_START,
   raids: {},
+  bestTurns: {},
 };
 
 export const clampCampaignFood = (food: number) =>
@@ -44,5 +47,10 @@ export function parseCampaign(raw: unknown): CampaignState {
         Number.isInteger(e[1]) && e[1] >= 1 && e[1] <= 3,
     ),
   );
-  return { cleared, food, raids };
+  const bestTurns = Object.fromEntries(
+    Object.entries(
+      c.bestTurns && typeof c.bestTurns === "object" ? c.bestTurns : {},
+    ).filter((e): e is [string, number] => Number.isInteger(e[1]) && e[1] > 0),
+  );
+  return { cleared, food, raids, bestTurns };
 }
