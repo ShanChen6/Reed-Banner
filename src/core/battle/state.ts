@@ -33,6 +33,8 @@ export interface SideConfig {
   /** Chỉ số thủ lĩnh: nhân vật chính, hoặc vị trí 1 của đội AI. */
   readonly leader: number;
   readonly food?: number;
+  /** Máu lúc vào trận theo tỉ lệ máu tối đa, theo vị trí (0 là đã ngã); bỏ trống là đầy máu. Leo tháp dùng. */
+  readonly hpRatio?: readonly number[];
 }
 
 export interface Side {
