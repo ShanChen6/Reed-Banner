@@ -8,11 +8,16 @@
 // Đánh trùm: thêm --raid 1|2|3 (với --stage all chỉ chạy 12 màn có sứ quân).
 // Leo tháp: --tower [--level 10] --battles 50 in số tầng AI Thường leo được.
 // Sinh tồn: --survival [--level 10] --battles 50 in số đợt AI Thường vượt qua.
+// Nhân vật kèm: --roster [--level 20] --battles 200 [--only haVan,tranLam] đo tỉ lệ thắng khi có từng người.
 
 import { parseArgs } from "node:util";
 import {
+  ALL_COMPANIONS,
   buildMatchups,
   CAMPAIGN,
+  isHero,
+  isWarlord,
+  rosterMatchups,
   recommendedLevel,
   runBattle,
   stageById,
@@ -56,6 +61,8 @@ const { values } = parseArgs({
     raid: { type: "string" },
     tower: { type: "boolean", default: false },
     survival: { type: "boolean", default: false },
+    roster: { type: "boolean", default: false },
+    only: { type: "string" },
     json: { type: "boolean", default: false },
   },
 });
@@ -115,6 +122,39 @@ function runTower(): void {
     const reach = (f: number) => pct(floors.filter((x) => x >= f).length / floors.length);
     const avg = floors.reduce((a, b) => a + b, 0) / floors.length;
     console.log(`| ${lv} | ${num(avg)} | ${q(0.1)} | ${q(0.5)} | ${q(0.9)} | ${reach(5)} | ${reach(10)} | ${reach(15)} | ${reach(20)} |`);
+  }
+}
+
+if (values.roster) {
+  runRoster();
+  process.exit(0);
+}
+
+/** Tỉ lệ thắng của phe có từng nhân vật kèm, bạn và đối thủ rút ngẫu nhiên từ cả kho. */
+function runRoster(): void {
+  const levels = level ? [level] : [10, 20, 30];
+  const only = values.only?.split(",");
+  const candidates = only ? ALL_COMPANIONS.filter((c) => only.includes(c.id)) : ALL_COMPANIONS;
+  const group = (id: string) => (isHero(id) ? "tướng lịch sử" : isWarlord(id) ? "sứ quân" : "tướng thường");
+  for (const lv of levels) {
+    if (!values.json) {
+      console.log(`\n## Nhân vật kèm · cấp ${lv} · ${battles} trận mỗi người · AI normal hai phe`);
+      console.log("| Nhân vật | Nhóm | Nghề | Hệ | Thắng | Lượt/phe (trung vị) |\n|---|---|---|---|---|---|");
+    }
+    const rows: { id: string; rate: number }[] = [];
+    for (const [id, ms] of rosterMatchups(candidates, ALL_COMPANIONS, battles, lv, seed)) {
+      const s = summarize(ms.map((m) => runBattle(m, { difficulty: ["normal", "normal"], maxTurns })));
+      const c = candidates.find((x) => x.id === id)!;
+      rows.push({ id, rate: s.side0WinRate });
+      if (values.json) console.log(JSON.stringify({ level: lv, id, group: group(id), rate: s.side0WinRate }));
+      else console.log(`| ${c.name} | ${group(id)} | ${c.profession} | ${c.element} | ${pct(s.side0WinRate)} | ${num(s.turnsPerSide.median)} |`);
+    }
+    if (!values.json) {
+      for (const g of ["tướng thường", "tướng lịch sử", "sứ quân"]) {
+        const r = rows.filter((x) => group(x.id) === g);
+        if (r.length) console.log(`Trung bình ${g}: ${pct(r.reduce((a, x) => a + x.rate, 0) / r.length)}`);
+      }
+    }
   }
 }
 

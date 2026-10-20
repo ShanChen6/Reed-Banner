@@ -14,7 +14,7 @@
 | [03-tai-nguyen-cong-thuc.md](design/03-tai-nguyen-cong-thuc.md) | Lương, sĩ khí, năng lượng, nộ, công thức sát thương |
 | [04-hieu-ung.md](design/04-hieu-ung.md) | Hiệu ứng trạng thái |
 | [05-nguyen-to.md](design/05-nguyen-to.md) | 7 nguyên tố, khắc chế, hệ số trang bị, dấu ấn |
-| [06-nhan-vat-ky-nang.md](design/06-nhan-vat-ky-nang.md) | Nhân vật chính, nhân vật kèm, nghề, kỹ năng |
+| [06-nhan-vat-ky-nang.md](design/06-nhan-vat-ky-nang.md) | Mô hình nhân vật, nghề & nội tại, luật dùng kỹ năng, chiêu nghề |
 | [07-trang-bi.md](design/07-trang-bi.md) | 9 ô trang bị, thưởng bộ, phẩm màu, ghép nâng bậc |
 | [08-tien-trinh-kinh-te.md](design/08-tien-trinh-kinh-te.md) | Kinh nghiệm, cấp, vàng, cửa hàng |
 | [09-che-do-choi.md](design/09-che-do-choi.md) | Luyện tập, Thường, Chiến dịch, Đánh trùm, Leo tháp, Sinh tồn |
@@ -22,6 +22,7 @@
 | [11-giao-dien.md](design/11-giao-dien.md) | Bố cục màn hình trận đấu, điều khiển (vuốt, click, bàn phím) |
 | [12-ky-nang-nhan-vat-chinh.md](design/12-ky-nang-nhan-vat-chinh.md) | 49 kỹ năng của nhân vật chính theo 7 nguyên tố |
 | [13-hinh-anh.md](design/13-hinh-anh.md) | Phong cách và bảng màu bộ hình SVG, bản yêu cầu cho họa sĩ |
+| [14-nhan-vat.md](design/14-nhan-vat.md) | Danh sách 61 nhân vật: 42 tướng thường, 6 tướng lịch sử, 12 sứ quân, kỹ năng riêng, cân bằng |
 
 **Kỹ thuật** (`tech/`)
 
@@ -61,7 +62,8 @@
 | **Nhân vật kèm** | Hai nhân vật đi cùng nhân vật chính ở 3vs3 |
 | **Nguyên tố** | Kim, Mộc, Thủy, Hỏa, Thổ, Lôi, Phong (trước đây gọi là ngũ hành) |
 | **Nghề** | Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư; mỗi nghề gắn với một loại ô |
-| **Chiêu nghề** | Kỹ năng nấc 1–2 của nhân vật kèm, chung theo nghề |
+| **Chiêu nghề** | Kỹ năng nấc 1–2 chung theo nghề, chỉ tùy tướng AI ở chiến dịch còn dùng |
+| **Tướng thường / Tướng lịch sử / Sứ quân** | Ba nhóm nhân vật kèm, xem [Danh sách nhân vật](design/14-nhan-vat.md) |
 | **Dấu ấn** | Hiệu ứng phụ theo nguyên tố cộng vào chiêu nghề |
 | **Nộ** | Thanh 0–100 của thủ lĩnh, tích từ ô Trống trận và khi mất máu; đầy thì kỹ năng bị động tự kích hoạt |
 | **Thủ lĩnh** | Nhân vật mang thanh Nộ và kỹ năng bị động: nhân vật chính, hoặc nhân vật vị trí 1 của đội AI |

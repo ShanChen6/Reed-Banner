@@ -1,4 +1,5 @@
-// Chiêu nghề nấc 1–2 và tuyệt chiêu nấc 3 của nhân vật kèm, xem docs/design/06-nhan-vat-ky-nang.md mục 4.
+// Kỹ năng không theo nguyên tố: chiêu nghề nấc 1–2 (tùy tướng AI, docs/design/06-nhan-vat-ky-nang.md mục 4.3),
+// tuyệt chiêu của tướng thường và chiêu riêng của nhân vật lịch sử (ô 5, docs/design/14-nhan-vat.md).
 // Kỹ năng là dữ liệu; battle.ts thực thi các bước theo thứ tự.
 
 import type { AreaShape, TileKind } from "../board";
@@ -146,9 +147,10 @@ const DEFS: readonly SkillDef[] = [
   },
 ];
 
-// Tuyệt chiêu nấc 3, riêng từng nhân vật kèm, mang đậm nguyên tố của người đó nên không có dấu ấn.
-// Docs/design/06-nhan-vat-ky-nang.md mục 4.4. Số liệu là điểm xuất phát, chờ mô phỏng.
-const ULTIMATES: readonly SkillDef[] = [
+// Tuyệt chiêu riêng từng tướng thường, mang đậm nguyên tố của người đó nên không có dấu ấn. Tướng thường
+// mang bộ 6 kỹ năng theo nguyên tố như Đinh Bộ Lĩnh, tuyệt chiêu thay ô 5 (như chiêu riêng của tướng lịch sử).
+// Docs/design/14-nhan-vat.md. Số liệu cân bằng bằng `pnpm sim -- --roster`.
+const ULTIMATES: readonly SkillDef[] = ([
   {
     id: "hoaVuLieuNguyen", name: "Hỏa Vũ Liệu Nguyên", profession: "phapSu", tier: 3, character: "haVan", cost: 100, target: "allEnemies",
     steps: [
@@ -168,7 +170,7 @@ const ULTIMATES: readonly SkillDef[] = [
   {
     id: "camLoHoiXuan", name: "Cam Lộ Hồi Xuân", profession: "ySu", tier: 3, character: "maiThanh", cost: 100, target: "team",
     steps: [
-      { type: "heal", to: "targets", ratio: 0.25 },
+      { type: "heal", to: "targets", ratio: 0.3 },
       { type: "cleanse", to: "targets" },
       { type: "effect", to: "enemies", effect: "freeze", value: 0, turns: 1, chance: 0.3 },
     ],
@@ -190,7 +192,7 @@ const ULTIMATES: readonly SkillDef[] = [
       { type: "slide", distance: 2 },
     ],
   },
-  // Nhân vật kèm bán ở cửa hàng, docs/design/06-nhan-vat-ky-nang.md mục 4.5.
+  // Tướng thường bán ở cửa hàng, docs/design/14-nhan-vat.md mục 4.
   {
     id: "kimQuaThietMa", name: "Kim Qua Thiết Mã", profession: "tuongSi", tier: 3, character: "tranCuong", cost: 100, target: "enemy",
     steps: [{ type: "damage", atk: 2.8, pierce: 0.4 }, { type: "effect", to: "targets", effect: "defDown", value: 0.3, turns: 2 }],
@@ -226,8 +228,8 @@ const ULTIMATES: readonly SkillDef[] = [
   {
     id: "thietBichDongThanh", name: "Thiết Bích Đồng Thành", profession: "binhLinh", tier: 3, character: "caoKien", cost: 100, target: "self",
     steps: [
-      { type: "effect", to: "self", effect: "defUp", value: 0.5, turns: 3 },
-      { type: "effect", to: "self", effect: "reflect", value: 0.5, turns: 2 },
+      { type: "effect", to: "self", effect: "defUp", value: 0.35, turns: 3 },
+      { type: "effect", to: "self", effect: "reflect", value: 0.35, turns: 2 },
       { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 },
     ],
   },
@@ -272,7 +274,180 @@ const ULTIMATES: readonly SkillDef[] = [
       { type: "destroy", area: { random: 6 } },
     ],
   },
-];
+  // 25 tướng thường thêm 20/10/2026 để phủ đủ 42 tổ hợp nghề × hệ. Vai trò theo nghề, sắc thái theo hệ.
+  // Tướng sĩ: dồn sát thương 1 đối thủ.
+  {
+    id: "trucLamPhaTran", name: "Trúc Lâm Phá Trận", profession: "tuongSi", tier: 3, character: "lamTung", cost: 100, target: "enemy",
+    steps: [
+      { type: "damage", atk: 2.6, lifesteal: 0.3 },
+      { type: "effect", to: "self", effect: "regen", value: 0.05, turns: 2, ofMaxHp: true },
+    ],
+  },
+  {
+    id: "langDaoTram", name: "Lãng Đào Trảm", profession: "tuongSi", tier: 3, character: "hoLang", cost: 100, target: "enemy",
+    steps: [
+      { type: "damage", atk: 2.6 },
+      { type: "effect", to: "targets", effect: "freeze", value: 0, turns: 1, chance: 0.4 },
+      { type: "energy", to: "targets", amount: -20 },
+    ],
+  },
+  {
+    id: "sonHaTranKich", name: "Sơn Hà Trấn Kích", profession: "tuongSi", tier: 3, character: "khaSon", cost: 100, target: "enemy",
+    steps: [
+      { type: "damage", atk: 2.5 },
+      { type: "effect", to: "self", effect: "shield", value: 0.2, turns: null, ofMaxHp: true },
+      { type: "destroy", area: { cross: "small" } },
+    ],
+  },
+  {
+    id: "loiDaoLienTram", name: "Lôi Đao Liên Trảm", profession: "tuongSi", tier: 3, character: "tongTan", cost: 100, target: "enemy",
+    steps: [{ type: "damage", atk: 2.7, pierceShield: true }, { type: "energy", to: "targets", amount: -30 }],
+  },
+  {
+    id: "truyPhongDoatMenh", name: "Truy Phong Đoạt Mệnh", profession: "tuongSi", tier: 3, character: "huaLang", cost: 100, target: "enemy",
+    steps: [{ type: "damage", atk: 2.4 }, { type: "energy", to: "team", amount: 15 }, { type: "slide", distance: 2 }],
+  },
+  // Pháp sư: sát thương cả đội đối thủ.
+  {
+    id: "nganChamTanXa", name: "Ngân Châm Tán Xạ", profession: "phapSu", tier: 3, character: "chuNgan", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "damage", atk: 1.2, pierce: 0.3 },
+      { type: "effect", to: "targets", effect: "defDown", value: 0.2, turns: 2 },
+    ],
+  },
+  {
+    id: "kinhCucTrienThan", name: "Kinh Cức Triền Thân", profession: "phapSu", tier: 3, character: "damThao", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "damage", atk: 1.1, lifesteal: 0.25 },
+      { type: "effect", to: "targets", effect: "atkDown", value: 0.15, turns: 2 },
+    ],
+  },
+  {
+    id: "diaMachBungPhat", name: "Địa Mạch Bùng Phát", profession: "phapSu", tier: 3, character: "doanNham", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "damage", atk: 1.3 },
+      { type: "effect", to: "team", effect: "defUp", value: 0.15, turns: 2 },
+      { type: "destroy", area: { square: 3 } },
+    ],
+  },
+  {
+    id: "phongAnCuongLuu", name: "Phong Ấn Cuồng Lưu", profession: "phapSu", tier: 3, character: "lieuYen", cost: 100, target: "allEnemies",
+    steps: [{ type: "damage", atk: 1.1 }, { type: "dispel", to: "targets" }, { type: "slide", distance: 2 }],
+  },
+  // Binh lính: khiêu khích, chịu đòn, che chắn.
+  {
+    id: "thuyTraiLienHoan", name: "Thủy Trại Liên Hoàn", profession: "binhLinh", tier: 3, character: "thaiHa", cost: 100, target: "team",
+    steps: [
+      { type: "effect", to: "targets", effect: "shield", value: 0.18, turns: null, ofMaxHp: true },
+      { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 },
+      { type: "effect", to: "enemies", effect: "freeze", value: 0, turns: 1, chance: 0.25 },
+    ],
+  },
+  {
+    id: "viemGiapHoDoanh", name: "Viêm Giáp Hộ Doanh", profession: "binhLinh", tier: 3, character: "truongViem", cost: 100, target: "self",
+    steps: [
+      { type: "effect", to: "self", effect: "shield", value: 0.25, turns: null, ofMaxHp: true },
+      { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 },
+      { type: "effect", to: "self", effect: "reflect", value: 0.3, turns: 2 },
+      { type: "effect", to: "enemies", effect: "burn", value: 0.1, ofAtk: true, turns: 2 },
+    ],
+  },
+  {
+    id: "chanLoiThietVe", name: "Chấn Lôi Thiết Vệ", profession: "binhLinh", tier: 3, character: "ongChan", cost: 100, target: "self",
+    steps: [
+      { type: "effect", to: "self", effect: "defUp", value: 0.4, turns: 2 },
+      { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 },
+      { type: "energy", to: "enemies", amount: -20 },
+    ],
+  },
+  {
+    id: "phongLuyHoKy", name: "Phong Lũy Hộ Kỳ", profession: "binhLinh", tier: 3, character: "manhTuong", cost: 100, target: "team",
+    steps: [
+      { type: "effect", to: "targets", effect: "shield", value: 0.15, turns: null, ofMaxHp: true },
+      { type: "energy", to: "targets", amount: 15 },
+      { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 },
+    ],
+  },
+  // Y sư: hồi máu cả đội.
+  {
+    id: "kimChamDoMenh", name: "Kim Châm Độ Mệnh", profession: "ySu", tier: 3, character: "chauNgoc", cost: 100, target: "team",
+    steps: [
+      { type: "heal", to: "targets", ratio: 0.22 },
+      { type: "cleanse", to: "targets" },
+      { type: "effect", to: "targets", effect: "defUp", value: 0.2, turns: 2 },
+    ],
+  },
+  {
+    id: "danHoaHoiNguyen", name: "Đan Hỏa Hồi Nguyên", profession: "ySu", tier: 3, character: "hongDan", cost: 100, target: "team",
+    steps: [{ type: "heal", to: "targets", ratio: 0.22 }, { type: "effect", to: "targets", effect: "atkUp", value: 0.15, turns: 2 }],
+  },
+  {
+    id: "hauThoDuongNguyen", name: "Hậu Thổ Dưỡng Nguyên", profession: "ySu", tier: 3, character: "beLien", cost: 100, target: "team",
+    steps: [
+      { type: "heal", to: "targets", ratio: 0.2 },
+      { type: "effect", to: "targets", effect: "shield", value: 0.1, turns: null, ofMaxHp: true },
+    ],
+  },
+  {
+    id: "loiChamKhoiTu", name: "Lôi Châm Khởi Tử", profession: "ySu", tier: 3, character: "tieuMinh", cost: 100, target: "team",
+    steps: [{ type: "heal", to: "targets", ratio: 0.22 }, { type: "energy", to: "targets", amount: 20 }],
+  },
+  // Mưu sĩ: phá năng lượng, lương, khống chế.
+  {
+    id: "trucDocMeHon", name: "Trúc Độc Mê Hồn", profession: "muuSi", tier: 3, character: "nhanTruc", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "energy", to: "targets", amount: -25 },
+      { type: "effect", to: "targets", effect: "silence", value: 0, turns: 1, chance: 0.4 },
+      { type: "effect", to: "team", effect: "regen", value: 0.04, turns: 2, ofMaxHp: true },
+    ],
+  },
+  {
+    id: "doanDaoTuyetLuong", name: "Đoạn Đạo Tuyệt Lương", profession: "muuSi", tier: 3, character: "maNhac", cost: 100, target: "allEnemies",
+    steps: [{ type: "enemyFood", amount: -30 }, { type: "energy", to: "targets", amount: -20 }, { type: "destroy", area: { random: 6 } }],
+  },
+  {
+    id: "kinhLoiDoatKhi", name: "Kinh Lôi Đoạt Khí", profession: "muuSi", tier: 3, character: "tuKinh", cost: 100, target: "enemy",
+    steps: [
+      { type: "damage", atk: 1.5 },
+      { type: "energy", to: "targets", amount: -50 },
+      { type: "effect", to: "targets", effect: "silence", value: 0, turns: 1 },
+    ],
+  },
+  {
+    id: "phieuPhongLyGian", name: "Phiêu Phong Ly Gián", profession: "muuSi", tier: 3, character: "buiPhieu", cost: 100, target: "allEnemies",
+    steps: [{ type: "energy", to: "targets", amount: -25 }, { type: "dispel", to: "targets" }, { type: "slide", distance: 2 }],
+  },
+  // Quân sư: suy yếu đối thủ, cổ vũ đội mình.
+  {
+    id: "thietTranPhaGiap", name: "Thiết Trận Phá Giáp", profession: "quanSu", tier: 3, character: "nghiemThiet", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "effect", to: "targets", effect: "defDown", value: 0.3, turns: 2 },
+      { type: "effect", to: "team", effect: "atkUp", value: 0.15, turns: 2 },
+    ],
+  },
+  {
+    id: "thanhLamBayTran", name: "Thanh Lâm Bày Trận", profession: "quanSu", tier: 3, character: "samTue", cost: 100, target: "team",
+    steps: [
+      { type: "effect", to: "targets", effect: "regen", value: 0.05, turns: 2, ofMaxHp: true },
+      { type: "effect", to: "targets", effect: "defUp", value: 0.2, turns: 2 },
+    ],
+  },
+  {
+    id: "trieuDangVayThanh", name: "Triều Dâng Vây Thành", profession: "quanSu", tier: 3, character: "viTrieu", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "effect", to: "targets", effect: "atkDown", value: 0.25, turns: 2 },
+      { type: "effect", to: "targets", effect: "freeze", value: 0, turns: 1, chance: 0.3 },
+    ],
+  },
+  {
+    id: "hoaCongLienKe", name: "Hỏa Công Liên Kế", profession: "quanSu", tier: 3, character: "tonDiem", cost: 100, target: "allEnemies",
+    steps: [
+      { type: "effect", to: "targets", effect: "atkDown", value: 0.2, turns: 2 },
+      { type: "effect", to: "targets", effect: "burn", value: 0.12, ofAtk: true, turns: 2 },
+      { type: "energy", to: "team", amount: 10 },
+    ],
+  },
+] satisfies SkillDef[]).map((d) => ({ ...d, slot: 5 }));
 
 // Bộ kỹ năng nhân vật chính theo nguyên tố, docs/design/12-ky-nang-nhan-vat-chinh.md mục 2–7.
 const MAIN: readonly SkillDef[] = [
@@ -544,7 +719,7 @@ const PHONG: readonly SkillDef[] = [
 
 // Chiêu riêng của nhân vật lịch sử: thay kỹ năng ô 5 trong bộ theo nguyên tố, mang dấu ấn từng người.
 // Sứ quân (đối thủ chiến dịch) luôn có chiêu riêng; tướng lịch sử phe người chơi mở ở ô 5 như thường.
-// Docs/design/06-nhan-vat-ky-nang.md mục 4.7. Tên tự đặt, số liệu là điểm xuất phát chờ mô phỏng.
+// Docs/design/14-nhan-vat.md mục 5–6. Tên tự đặt, số liệu là điểm xuất phát chờ mô phỏng.
 const SIGNATURES: readonly SkillDef[] = [
   // Tướng lịch sử phe người chơi
   {
@@ -574,7 +749,7 @@ const SIGNATURES: readonly SkillDef[] = [
   {
     id: "hoaLuThaoDuoc", name: "Hoa Lư Thảo Dược", character: "trinhTu", slot: 5, cost: 100, target: "team",
     steps: [
-      { type: "heal", to: "targets", ratio: 0.22 },
+      { type: "heal", to: "targets", ratio: 0.28 },
       { type: "cleanse", to: "targets" },
       { type: "effect", to: "targets", effect: "regen", value: 0.05, turns: 2, ofMaxHp: true },
     ],
@@ -744,7 +919,7 @@ export function professionSkills(profession: Profession): SkillDef[] {
   return DEFS.filter((d) => d.profession === profession);
 }
 
-/** Tuyệt chiêu nấc 3 của một nhân vật kèm; undefined nếu người đó chưa có. */
+/** Tuyệt chiêu (ô 5) của một tướng thường; undefined nếu người đó không có. */
 export function ultimateOf(character: string): SkillDef | undefined {
   return ULTIMATES.find((d) => d.character === character);
 }
@@ -759,9 +934,14 @@ export function signatureOf(character: string): SkillDef | undefined {
   return SIGNATURES.find((d) => d.character === character);
 }
 
-/** Bộ 6 kỹ năng theo nguyên tố, ô 5 thay bằng chiêu riêng của `character` nếu có. */
+/** Kỹ năng ô 5 riêng của một nhân vật: chiêu riêng (tướng lịch sử, sứ quân) hoặc tuyệt chiêu (tướng thường). */
+export function personalSkillOf(character: string): SkillDef | undefined {
+  return signatureOf(character) ?? ultimateOf(character);
+}
+
+/** Bộ 6 kỹ năng theo nguyên tố, ô 5 thay bằng kỹ năng riêng của `character` nếu có. */
 export function heroSkills(element: Element, character?: string): SkillDef[] {
-  const sig = character === undefined ? undefined : signatureOf(character);
+  const sig = character === undefined ? undefined : personalSkillOf(character);
   return mainSkills(element).map((d) => (sig && d.slot === sig.slot ? sig : d));
 }
 

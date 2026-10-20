@@ -16,12 +16,11 @@ import type { Element } from "../battle";
 import {
   autoProgress,
   buildCompanion,
-  buildHero,
   buildMain,
   CAMPAIGN_FOOD_START,
   DEFAULT_TEAM,
 } from "../progress";
-import { companionById, isHero } from "../roster";
+import { companionById } from "../roster";
 import type { Matchup } from "./sim";
 
 /**
@@ -59,10 +58,7 @@ export function stageTeamIds(
 }
 
 function companionAt(id: string, level: number): FighterConfig {
-  const base = companionById(id)!;
-  if (isHero(id)) return buildHero(base, autoProgress(level, null));
-  const p = autoProgress(level, base.profession, id);
-  return buildCompanion(base, p, p.branches[0]);
+  return buildCompanion(companionById(id)!, autoProgress(level, null));
 }
 
 /** Đội người chơi ở một màn. 1vs1 chỉ có Đinh Bộ Lĩnh. */

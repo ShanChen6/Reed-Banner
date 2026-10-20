@@ -5,8 +5,8 @@ import type { Element, FighterConfig, Profession } from "../battle";
 import { withGear, type GearItem, type GearSlot, type Tier } from "../gear";
 import {
   companionById,
-  isHero,
   shopPrice,
+  shopUnlockStage,
   STARTER_COMPANIONS,
 } from "../roster";
 import {
@@ -46,11 +46,12 @@ import { achievementById, achievementProgress } from "./achievements";
 import {
   addXp,
   autoProgress,
+  buildAide,
   buildCompanion,
-  buildHero,
   buildMain,
-  buyBranch,
+  mainSlotKey,
   NEW_PROGRESS,
+  SKILL_POINTS_PER_LEVEL,
   upgradeSkill,
   type BattleRewards,
   type CharacterProgress,
@@ -70,8 +71,6 @@ export interface Profile {
   readonly companions: Readonly<Record<string, CharacterProgress>>;
   /** 2 nhân vật kèm ra trận 3vs3, lấy trong số đã có. */
   readonly team: readonly string[];
-  /** Chiêu nhánh nấc 2 mang vào trận, theo id nhân vật kèm. */
-  readonly branchChoice: Readonly<Record<string, string>>;
   readonly gold: number;
   /** Túi đồ: mọi món đang có, kể cả món đang mặc. */
   readonly bag: readonly GearItem[];
@@ -110,7 +109,6 @@ export function newProfile(): Profile {
       STARTER_COMPANIONS.map((c) => [c.id, NEW_PROGRESS]),
     ),
     team: DEFAULT_TEAM,
-    branchChoice: {},
     gold: 0,
     bag: [],
     loadouts: {},
@@ -170,13 +168,7 @@ export function profileTeam(
     if (!base || !ownsCompanion(profile, id)) return [];
     return [
       withGear(
-        isHero(id)
-          ? buildHero(base, progressOf(profile, id))
-          : buildCompanion(
-              base,
-              progressOf(profile, id),
-              profile.branchChoice[id],
-            ),
+        buildCompanion(base, progressOf(profile, id)),
         loadoutOf(profile, id),
       ),
     ];
@@ -184,15 +176,19 @@ export function profileTeam(
   return [main, ...companions];
 }
 
-/** Đối thủ AI ở một cấp: tiến trình tự dựng (tiêu đều điểm kỹ năng, mua cả hai nhánh). */
+/**
+ * Đối thủ AI ở một cấp, tiến trình tự dựng (tiêu đều điểm kỹ năng). Nhân vật kèm dựng như của người chơi;
+ * tùy tướng chiến dịch dùng chiêu nghề, mua cả hai nhánh.
+ */
 export function leveledFoe(base: FighterConfig, level: number): FighterConfig {
-  const p = autoProgress(level, base.profession, base.id);
+  if (companionById(base.id)) return buildCompanion(base, autoProgress(level, null));
+  const p = autoProgress(level, base.profession);
   // Đối thủ AI luân phiên chiêu nhánh theo id để hai nhánh đều xuất hiện.
   const branch =
     p.branches.length > 1
       ? p.branches[(level + base.id.length) % p.branches.length]
       : undefined;
-  return buildCompanion(base, p, branch);
+  return buildAide(base, p, branch);
 }
 
 export interface LevelUp {
@@ -232,6 +228,25 @@ function isProgress(x: unknown): x is CharacterProgress {
   );
 }
 
+/**
+ * Tiến trình nhân vật kèm lưu từ trước khi mọi nhân vật kèm nâng theo ô (chiêu nghề, chiêu nhánh): đặt lại
+ * kỹ năng và hoàn đủ điểm kỹ năng của cấp để người chơi nâng lại. Cấp và kinh nghiệm giữ nguyên.
+ */
+function migrateCompanion(p: CharacterProgress): CharacterProgress {
+  const slotKeys = new Set([1, 2, 3, 4, 5, 6].map(mainSlotKey));
+  const legacy =
+    p.branches.length > 0 ||
+    Object.keys(p.skillLevels).some((k) => !slotKeys.has(k));
+  return legacy
+    ? {
+        ...p,
+        skillLevels: {},
+        branches: [],
+        skillPoints: (p.level - 1) * SKILL_POINTS_PER_LEVEL,
+      }
+    : p;
+}
+
 /** Đọc hồ sơ đã lưu; dữ liệu hỏng hoặc khác phiên bản thì trả về hồ sơ mới. */
 export function parseProfile(raw: unknown): Profile {
   const p = raw as Profile | null;
@@ -244,16 +259,18 @@ export function parseProfile(raw: unknown): Profile {
   )
     return fresh;
   // Nhân vật khởi đầu luôn có; nhân vật mua giữ lại nếu còn trong danh sách.
-  const saved = Object.entries(p.companions ?? {}).filter(
-    ([id, cp]) => companionById(id) && isProgress(cp),
+  const saved = Object.entries(p.companions ?? {}).flatMap(([id, cp]) =>
+    companionById(id) && isProgress(cp) ? [[id, migrateCompanion(cp)]] : [],
   );
+  // Bỏ trường cũ: chiêu nhánh mang vào trận của nhân vật kèm.
+  const rest: Partial<Profile> & { branchChoice?: unknown } = { ...p };
+  delete rest.branchChoice;
   const companions = { ...fresh.companions, ...Object.fromEntries(saved) };
   const next: Profile = {
     ...fresh,
-    ...p,
+    ...rest,
     companions,
     team: fresh.team,
-    branchChoice: p.branchChoice ?? {},
     ...parseInventory(p),
     campaign: parseCampaign(p.campaign),
     tower: parseTower(p.tower),
@@ -268,24 +285,13 @@ export function parseProfile(raw: unknown): Profile {
 // ——— Thao tác trên hồ sơ (client gửi ý định, server áp bằng chính các hàm này) ———
 
 export type ProfileAction =
-  /** Nâng kỹ năng: nhân vật chính theo ô ("o1".."o6"), nhân vật kèm theo id chiêu. */
+  /** Nâng kỹ năng theo ô ("o1".."o6"), nhân vật chính và nhân vật kèm như nhau. */
   | {
       readonly type: "upgrade";
       readonly character: string;
       readonly key: string;
     }
-  | {
-      readonly type: "buyBranch";
-      readonly character: string;
-      readonly skill: string;
-    }
-  /** Chọn chiêu nhánh nấc 2 đã mua để mang vào trận. */
-  | {
-      readonly type: "chooseBranch";
-      readonly character: string;
-      readonly skill: string;
-    }
-  /** Mua nhân vật kèm ở cửa hàng bằng vàng. */
+  /** Mua nhân vật kèm ở cửa hàng bằng vàng (sứ quân: sau khi qua màn của họ ở chiến dịch). */
   | { readonly type: "buyCompanion"; readonly character: string }
   /** Chọn 2 nhân vật kèm đã có ra trận 3vs3. */
   | { readonly type: "chooseTeam"; readonly companions: readonly string[] }
@@ -360,11 +366,18 @@ export type ProfileActionResult =
   | { readonly ok: true; readonly profile: Profile }
   | { readonly ok: false; readonly error: ProfileError };
 
-/** Mua nhân vật kèm ở cửa hàng: trừ vàng, nhân vật vào hồ sơ ở cấp 1. */
+/** Nhân vật `id` đã mở bán chưa: sứ quân mở khi đã qua màn chiến dịch của họ, còn lại mở sẵn. */
+export function shopUnlocked(profile: Profile, id: string): boolean {
+  const stage = shopUnlockStage(id);
+  return stage === undefined || profile.campaign.cleared.includes(stage);
+}
+
+/** Mua nhân vật kèm ở cửa hàng: trừ vàng, nhân vật vào hồ sơ ở cấp 1. Sứ quân cần qua màn của họ trước. */
 function buyCompanion(profile: Profile, id: string): ProfileActionResult {
   const price = shopPrice(id);
   if (price === undefined) return { ok: false, error: "invalidSkill" };
   if (ownsCompanion(profile, id)) return { ok: false, error: "owned" };
+  if (!shopUnlocked(profile, id)) return { ok: false, error: "locked" };
   if (profile.gold < price) return { ok: false, error: "notEnoughGold" };
   return {
     ok: true,
@@ -442,54 +455,21 @@ export function applyProfileAction(
       profile: { ...profile, tower: { ...profile.tower, run: null } },
     };
   }
+  // Còn lại là nâng kỹ năng: mọi nhân vật nâng theo ô.
+  if (action.type !== "upgrade") return { ok: false, error: "invalidItem" };
   const isMain = action.character === MAIN_ID;
-  const base = isMain ? undefined : companionById(action.character);
-  if (!isMain && !base) return { ok: false, error: "invalidSkill" };
-  // Tướng lịch sử nâng theo ô như nhân vật chính (nghề null), không có chiêu nhánh.
-  const slotKit = isMain || isHero(action.character);
-  const profession = slotKit ? null : base!.profession;
+  if (!isMain && !companionById(action.character))
+    return { ok: false, error: "invalidSkill" };
   if (!isMain && !ownsCompanion(profile, action.character))
     return { ok: false, error: "notOwned" };
-  const p = progressOf(profile, action.character);
-  switch (action.type) {
-    case "upgrade": {
-      const r = upgradeSkill(
-        p,
-        action.key,
-        profession,
-        slotKit ? undefined : action.character,
-      );
-      return r.ok
-        ? {
-            ok: true,
-            profile: withProgress(profile, action.character, r.progress),
-          }
-        : r;
-    }
-    case "buyBranch": {
-      if (profession === null) return { ok: false, error: "invalidSkill" };
-      const r = buyBranch(p, action.skill, profession);
-      return r.ok
-        ? {
-            ok: true,
-            profile: withProgress(profile, action.character, r.progress),
-          }
-        : r;
-    }
-    case "chooseBranch":
-      if (!p.branches.includes(action.skill))
-        return { ok: false, error: "locked" };
-      return {
-        ok: true,
-        profile: {
-          ...profile,
-          branchChoice: {
-            ...profile.branchChoice,
-            [action.character]: action.skill,
-          },
-        },
-      };
-  }
+  const r = upgradeSkill(
+    progressOf(profile, action.character),
+    action.key,
+    null,
+  );
+  return r.ok
+    ? { ok: true, profile: withProgress(profile, action.character, r.progress) }
+    : r;
 }
 
 /** Kiểm tra hình dạng thao tác gửi lên; null khi không hợp lệ. */
@@ -564,11 +544,5 @@ export function parseProfileAction(x: unknown): ProfileAction | null {
     return { type: "buyCompanion", character: a.character };
   if (a.type === "upgrade" && typeof a.key === "string")
     return { type: "upgrade", character: a.character, key: a.key };
-  if (
-    (a.type === "buyBranch" || a.type === "chooseBranch") &&
-    typeof a.skill === "string"
-  ) {
-    return { type: a.type, character: a.character, skill: a.skill };
-  }
   return null;
 }
