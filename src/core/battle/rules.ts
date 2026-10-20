@@ -86,7 +86,7 @@ export const BINH_LINH_DEF_PER_TIER = 0.05;
 export const MUU_SI_DRAIN_PER_TILE = 2;
 
 /**
- * Ô thu hoạch khi kỹ năng hoặc lần trượt miễn phí đổi bàn cờ (phá, biến, trượt rồi cascade), không phải
+ * Ô thu hoạch khi kỹ năng hoặc lần xoay miễn phí đổi bàn cờ (phá, biến, xoay rồi cascade), không phải
  * đổi ô. Không có hai hệ số này thì kỹ năng bàn cờ giá rẻ là một nước đi miễn phí: kiếm đánh đủ sát
  * thương và ô âm dương hoàn lại năng lượng để dùng tiếp (mô phỏng 19/10/2026).
  */

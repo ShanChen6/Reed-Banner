@@ -1,4 +1,4 @@
-import { slideCells, swapCells, type BattleEvent, type Board, type CascadeStep, type Pos } from "@/core";
+import { swapCells, whirlCells, whirlRing, type BattleEvent, type Board, type CascadeStep, type Pos } from "@/core";
 
 /**
  * Hoạt ảnh bàn cờ, dựng hoàn toàn từ sự kiện core trả về (core không biết gì về hoạt ảnh).
@@ -22,7 +22,7 @@ export interface Frame {
 }
 
 const SWAP_MS = 170;
-const SLIDE_MS = 240;
+const WHIRL_MS = 260;
 const CLEAR_MS = 260;
 const POP_MS = 180;
 const SHUFFLE_MS = 360;
@@ -117,19 +117,16 @@ export function eventFrames(start: Board, events: readonly BattleEvent[]): Frame
         board = e.steps.at(-1)?.boardAfter ?? swapped;
         break;
       }
-      case "slide": {
-        const slid = slideCells(board, e.slide);
-        const length = e.slide.axis === "row" ? board.cols : board.rows;
+      case "whirl": {
+        const turned = whirlCells(board, e.whirl);
+        const ring = whirlRing(e.whirl.center);
         const anims: Record<number, CellAnim> = {};
-        for (let k = 0; k < length; k++) {
-          const p = e.slide.axis === "row" ? { row: e.slide.index, col: k } : { row: k, col: e.slide.index };
-          anims[idx(board, p)] =
-            e.slide.axis === "row"
-              ? { kind: "move", dx: -e.slide.offset, dy: 0 }
-              : { kind: "move", dx: 0, dy: -e.slide.offset };
-        }
-        frames.push({ board: slid, anims, ms: SLIDE_MS });
-        board = slid;
+        ring.forEach((p, k) => {
+          const from = ring[(((k - e.whirl.turns) % 8) + 8) % 8]!;
+          anims[idx(board, p)] = { kind: "move", dx: from.col - p.col, dy: from.row - p.row };
+        });
+        frames.push({ board: turned, anims, ms: WHIRL_MS });
+        board = turned;
         break;
       }
       case "board": {

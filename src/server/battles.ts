@@ -72,7 +72,7 @@ import {
   type Pos,
   type Profession,
   type SideIndex,
-  type Slide,
+  type Whirl,
 } from "@/core";
 import { loadProfile, updateProfile, type ProfileStore } from "./profiles";
 import type { MatchRecord, MatchStore } from "./store";
@@ -291,13 +291,11 @@ const toPos = (p: unknown): Pos | null =>
     ? { row: p.row as number, col: p.col as number }
     : null;
 
-const toSlide = (s: unknown): Slide | null =>
-  isObj(s) &&
-  oneOf(["row", "col"] as const, s.axis) &&
-  Number.isInteger(s.index) &&
-  Number.isInteger(s.offset)
-    ? { axis: s.axis, index: s.index as number, offset: s.offset as number }
-    : null;
+const toWhirl = (w: unknown): Whirl | null => {
+  if (!isObj(w) || !Number.isInteger(w.turns)) return null;
+  const center = toPos(w.center);
+  return center ? { center, turns: w.turns as number } : null;
+};
 
 function toAction(a: Record<string, unknown>): MatchAction | null {
   switch (a.type) {
@@ -319,14 +317,14 @@ function toAction(a: Record<string, unknown>): MatchAction | null {
         : null;
     case "timeout":
       return { type: "timeout" };
-    case "slide": {
-      const slide = toSlide(a.slide);
-      return slide ? { type: "slide", slide } : null;
+    case "whirl": {
+      const whirl = toWhirl(a.whirl);
+      return whirl ? { type: "whirl", whirl } : null;
     }
     case "skill": {
       const cell = a.cell === undefined ? undefined : toPos(a.cell);
-      const slide = a.slide === undefined ? undefined : toSlide(a.slide);
-      if (typeof a.skill !== "string" || cell === null || slide === null)
+      const whirl = a.whirl === undefined ? undefined : toWhirl(a.whirl);
+      if (typeof a.skill !== "string" || cell === null || whirl === null)
         return null;
       if (a.target !== undefined && !Number.isInteger(a.target)) return null;
       return {
@@ -334,7 +332,7 @@ function toAction(a: Record<string, unknown>): MatchAction | null {
         skill: a.skill,
         ...(a.target === undefined ? {} : { target: a.target as number }),
         ...(cell ? { cell } : {}),
-        ...(slide ? { slide } : {}),
+        ...(whirl ? { whirl } : {}),
       };
     }
     default:
