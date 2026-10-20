@@ -2,7 +2,7 @@
 // Chỉ chạy với Postgres; bản bộ nhớ khi dev không cần dọn.
 
 import { and, inArray, isNull, lt, sql } from "drizzle-orm";
-import { arenaPlayers, dailyEntries, leaderboardScores, matches, profiles } from "./schema";
+import { arenaPlayers, dailyEntries, emailTokens, leaderboardScores, matches, profiles } from "./schema";
 import type { Db } from "./store";
 
 /** Trận chưa cộng thưởng và không có gì thay đổi từ trước `before` (cũ nhất trước). */
@@ -45,4 +45,10 @@ export async function deleteGuests(db: Db, ids: readonly string[]): Promise<void
   await db.delete(dailyEntries).where(inArray(dailyEntries.ownerId, [...ids]));
   await db.delete(leaderboardScores).where(inArray(leaderboardScores.ownerId, [...ids]));
   await db.delete(arenaPlayers).where(inArray(arenaPlayers.ownerId, [...ids]));
+}
+
+/** Xóa mã email (xác nhận, đặt lại mật khẩu) đã hết hạn mà chưa dùng; trả về số mã đã xóa. */
+export async function deleteExpiredTokens(db: Db, now: number): Promise<number> {
+  const rows = await db.delete(emailTokens).where(lt(emailTokens.expiresAt, now)).returning({ hash: emailTokens.tokenHash });
+  return rows.length;
 }
