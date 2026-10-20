@@ -3,6 +3,7 @@
 
 import {
   ALL_COMPANIONS,
+  applyCampaignResult,
   applyRewards,
   battleRewards,
   createRng,
@@ -16,6 +17,9 @@ import {
   receiveDrop,
   rollDrop,
   settle,
+  stageById,
+  stageFoes,
+  stageUnlocked,
   startMatch,
   STARTER_COMPANIONS,
   viewOf,
@@ -24,6 +28,7 @@ import {
   type Difficulty,
   type Element,
   type BattleRewards,
+  type CampaignResult,
   type FighterConfig,
   type GearItem,
   type LevelUp,
@@ -47,7 +52,13 @@ export interface Deps {
   readonly newId: () => string;
 }
 
-const DIFFICULTIES: readonly Difficulty[] = ["easy", "normal", "hard", "boss", "nightmare"];
+const DIFFICULTIES: readonly Difficulty[] = [
+  "easy",
+  "normal",
+  "hard",
+  "boss",
+  "nightmare",
+];
 
 export interface NewBattleInput {
   readonly mode: "1v1" | "3v3";
@@ -56,6 +67,8 @@ export interface NewBattleInput {
   /** 3vs3: đúng 2 id nhân vật kèm khởi đầu. */
   readonly companions: readonly string[];
   readonly difficulty: Difficulty;
+  /** Màn chiến dịch: thể thức, độ khó và đối thủ lấy theo màn. */
+  readonly stage?: string;
 }
 
 export type ServiceError = MatchError | "badRequest" | "notFound" | "conflict";
@@ -68,6 +81,8 @@ export interface Outcome {
   readonly drop: GearItem | null;
   /** Túi đầy: món rơi được bán ngay với giá này. */
   readonly soldFor: number;
+  /** Chỉ có ở trận chiến dịch. */
+  readonly campaign?: CampaignResult;
 }
 
 export type ServiceResult =
@@ -78,28 +93,68 @@ export type ServiceResult =
       readonly events: readonly BattleEvent[];
       readonly outcome?: Outcome;
     }
-  | { readonly ok: false; readonly error: ServiceError; readonly view?: MatchView };
+  | {
+      readonly ok: false;
+      readonly error: ServiceError;
+      readonly view?: MatchView;
+    };
 
-const isObj = (x: unknown): x is Record<string, unknown> => typeof x === "object" && x !== null;
-const oneOf = <T extends string>(list: readonly T[], x: unknown): x is T => typeof x === "string" && (list as readonly string[]).includes(x);
+const isObj = (x: unknown): x is Record<string, unknown> =>
+  typeof x === "object" && x !== null;
+const oneOf = <T extends string>(list: readonly T[], x: unknown): x is T =>
+  typeof x === "string" && (list as readonly string[]).includes(x);
 
 /** Kiểm tra body tạo trận; null khi không hợp lệ. */
 export function parseNewBattle(body: unknown): NewBattleInput | null {
   if (!isObj(body)) return null;
+  if (body.stage !== undefined) {
+    const stage =
+      typeof body.stage === "string" ? stageById(body.stage) : undefined;
+    if (!stage) return null;
+    const parsed = parseNewBattle({
+      ...body,
+      stage: undefined,
+      mode: stage.mode,
+      difficulty: stage.difficulty,
+    });
+    return parsed && { ...parsed, stage: stage.id };
+  }
   const { mode, element, profession, difficulty } = body;
   const companions = Array.isArray(body.companions) ? body.companions : [];
-  if (!oneOf(["1v1", "3v3"] as const, mode) || !oneOf(ELEMENTS, element) || !oneOf(PROFESSIONS, profession)) return null;
+  if (
+    !oneOf(["1v1", "3v3"] as const, mode) ||
+    !oneOf(ELEMENTS, element) ||
+    !oneOf(PROFESSIONS, profession)
+  )
+    return null;
   if (!oneOf(DIFFICULTIES, difficulty)) return null;
   const ids = ALL_COMPANIONS.map((c) => c.id);
-  if (mode === "3v3" && (companions.length !== 2 || new Set(companions).size !== 2 || !companions.every((c) => oneOf(ids, c)))) return null;
-  return { mode, element, profession, difficulty, companions: mode === "3v3" ? (companions as string[]) : [] };
+  if (
+    mode === "3v3" &&
+    (companions.length !== 2 ||
+      new Set(companions).size !== 2 ||
+      !companions.every((c) => oneOf(ids, c)))
+  )
+    return null;
+  return {
+    mode,
+    element,
+    profession,
+    difficulty,
+    companions: mode === "3v3" ? (companions as string[]) : [],
+  };
 }
 
 const toPos = (p: unknown): Pos | null =>
-  isObj(p) && Number.isInteger(p.row) && Number.isInteger(p.col) ? { row: p.row as number, col: p.col as number } : null;
+  isObj(p) && Number.isInteger(p.row) && Number.isInteger(p.col)
+    ? { row: p.row as number, col: p.col as number }
+    : null;
 
 const toSlide = (s: unknown): Slide | null =>
-  isObj(s) && oneOf(["row", "col"] as const, s.axis) && Number.isInteger(s.index) && Number.isInteger(s.offset)
+  isObj(s) &&
+  oneOf(["row", "col"] as const, s.axis) &&
+  Number.isInteger(s.index) &&
+  Number.isInteger(s.offset)
     ? { axis: s.axis, index: s.index as number, offset: s.offset as number }
     : null;
 
@@ -111,7 +166,9 @@ function toAction(a: Record<string, unknown>): BattleAction | null {
       return from && to ? { type: "swap", from, to } : null;
     }
     case "selectActor":
-      return Number.isInteger(a.fighter) ? { type: "selectActor", fighter: a.fighter as number } : null;
+      return Number.isInteger(a.fighter)
+        ? { type: "selectActor", fighter: a.fighter as number }
+        : null;
     case "timeout":
       return { type: "timeout" };
     case "slide": {
@@ -121,7 +178,8 @@ function toAction(a: Record<string, unknown>): BattleAction | null {
     case "skill": {
       const cell = a.cell === undefined ? undefined : toPos(a.cell);
       const slide = a.slide === undefined ? undefined : toSlide(a.slide);
-      if (typeof a.skill !== "string" || cell === null || slide === null) return null;
+      if (typeof a.skill !== "string" || cell === null || slide === null)
+        return null;
       if (a.target !== undefined && !Number.isInteger(a.target)) return null;
       return {
         type: "skill",
@@ -137,51 +195,109 @@ function toAction(a: Record<string, unknown>): BattleAction | null {
 }
 
 /** Kiểm tra hình dạng hành động `{ seq, action }`; luật chi tiết do core xét. */
-export function parseAction(body: unknown): { action: BattleAction; seq: number } | null {
-  if (!isObj(body) || !Number.isInteger(body.seq) || !isObj(body.action)) return null;
+export function parseAction(
+  body: unknown,
+): { action: BattleAction; seq: number } | null {
+  if (!isObj(body) || !Number.isInteger(body.seq) || !isObj(body.action))
+    return null;
   const action = toAction(body.action);
   return action ? { action, seq: body.seq as number } : null;
 }
 
 /** Đối thủ: các nhân vật kèm khởi đầu không có trong đội người chơi, chọn theo seed. */
 function pickFoes(input: NewBattleInput, seed: number): FighterConfig[] {
-  const pool = STARTER_COMPANIONS.filter((c) => !input.companions.includes(c.id));
+  const pool = STARTER_COMPANIONS.filter(
+    (c) => !input.companions.includes(c.id),
+  );
   const count = input.mode === "3v3" ? 3 : 1;
   const start = seed % pool.length;
-  return Array.from({ length: count }, (_, i) => pool[(start + i) % pool.length]!);
+  return Array.from(
+    { length: count },
+    (_, i) => pool[(start + i) % pool.length]!,
+  );
 }
 
 /**
  * Tạo trận theo hồ sơ trên server: đội người chơi mang cấp, kỹ năng và chiêu nhánh đã nâng; đối thủ cùng
  * cấp với nhân vật chính. Nguyên tố và nghề vừa chọn được lưu lại vào hồ sơ.
  */
-export async function createBattleFor(ownerId: string, input: NewBattleInput, deps: Deps): Promise<ServiceResult> {
+export async function createBattleFor(
+  ownerId: string,
+  input: NewBattleInput,
+  deps: Deps,
+): Promise<ServiceResult> {
   const { profile } = await loadProfile(deps.profiles, ownerId);
   // Chỉ ra trận nhân vật đã có (khởi đầu hoặc đã mua).
-  if (!input.companions.every((id) => ownsCompanion(profile, id))) return { ok: false, error: "badRequest" };
-  const chosen = { ...profile, element: input.element, profession: input.profession };
-  if (chosen.element !== profile.element || chosen.profession !== profile.profession) {
+  if (!input.companions.every((id) => ownsCompanion(profile, id)))
+    return { ok: false, error: "badRequest" };
+  const chosen = {
+    ...profile,
+    element: input.element,
+    profession: input.profession,
+  };
+  if (
+    chosen.element !== profile.element ||
+    chosen.profession !== profile.profession
+  ) {
     // Chỉ để lần sau mở trang chọn sẵn; ghi không được (hai tab cùng ghi) cũng không sao.
-    await updateProfile(deps.profiles, ownerId, (p) => ({ ok: true, profile: { ...p, element: input.element, profession: input.profession } }), deps.now);
+    await updateProfile(
+      deps.profiles,
+      ownerId,
+      (p) => ({
+        ok: true,
+        profile: { ...p, element: input.element, profession: input.profession },
+      }),
+      deps.now,
+    );
   }
   const team = profileTeam(chosen, input.companions);
-  const foes = pickFoes(input, deps.seed).map((f) => leveledFoe(f, profile.main.level));
+  const stage = input.stage === undefined ? undefined : stageById(input.stage);
+  if (stage && !stageUnlocked(profile.campaign, stage.id))
+    return { ok: false, error: "badRequest" };
+  const foes = stage
+    ? stageFoes(stage)
+    : pickFoes(input, deps.seed).map((f) => leveledFoe(f, profile.main.level));
   const { match, events } = startMatch({
     sides: [
-      { fighters: team, leader: 0 },
-      { fighters: foes, leader: 0 },
+      // Chiến dịch: lương mang sang từ trận trước; phe AI theo luật màn.
+      {
+        fighters: team,
+        leader: 0,
+        ...(stage ? { food: profile.campaign.food } : {}),
+      },
+      {
+        fighters: foes,
+        leader: 0,
+        ...(stage?.foeFood !== undefined ? { food: stage.foeFood } : {}),
+      },
     ],
     difficulty: input.difficulty,
     seed: deps.seed,
     firstSide: (deps.seed & 1) as SideIndex,
     now: deps.now,
+    ...(stage
+      ? {
+          stage: stage.id,
+          ...(stage.weights ? { weights: stage.weights } : {}),
+        }
+      : {}),
   });
-  const record: MatchRecord = { id: deps.newId(), ownerId, match, createdAt: deps.now, updatedAt: deps.now };
+  const record: MatchRecord = {
+    id: deps.newId(),
+    ownerId,
+    match,
+    createdAt: deps.now,
+    updatedAt: deps.now,
+  };
   await deps.store.create(record);
   return { ok: true, id: record.id, view: viewOf(match), events };
 }
 
-async function load(id: string, ownerId: string, store: MatchStore): Promise<MatchRecord | null> {
+async function load(
+  id: string,
+  ownerId: string,
+  store: MatchStore,
+): Promise<MatchRecord | null> {
   const r = await store.get(id);
   // Trận của người khác trả về như không tồn tại, để không lộ id.
   return r && r.ownerId === ownerId ? r : null;
@@ -194,26 +310,53 @@ async function load(id: string, ownerId: string, store: MatchStore): Promise<Mat
 /** Seed món rơi theo id trận: cộng thưởng chạy lại (lỗi ghi) vẫn ra cùng món. */
 function dropSeed(id: string): number {
   let h = 2166136261;
-  for (let i = 0; i < id.length; i++) h = Math.imul(h ^ id.charCodeAt(i), 16777619);
+  for (let i = 0; i < id.length; i++)
+    h = Math.imul(h ^ id.charCodeAt(i), 16777619);
   return h >>> 0;
 }
 
-async function reward(r: MatchRecord, match: Match, deps: Omit<Deps, "seed" | "newId">): Promise<Outcome | undefined> {
-  if (match.battle.winner === null || !(await deps.store.claimReward(r.id, deps.now))) return undefined;
+async function reward(
+  r: MatchRecord,
+  match: Match,
+  deps: Omit<Deps, "seed" | "newId">,
+): Promise<Outcome | undefined> {
+  if (
+    match.battle.winner === null ||
+    !(await deps.store.claimReward(r.id, deps.now))
+  )
+    return undefined;
   const rewards = battleRewards(match.battle, HUMAN);
   const ids = match.battle.sides[HUMAN].fighters.map((f) => f.id);
-  const rolled = rollDrop(createRng(dropSeed(r.id)), match.difficulty, rewards.won, "");
+  const rolled = rollDrop(
+    createRng(dropSeed(r.id)),
+    match.difficulty,
+    rewards.won,
+    "",
+  );
   let levelUps: readonly LevelUp[] = [];
   let drop: GearItem | null = null;
   let soldFor = 0;
+  let campaign: CampaignResult | undefined;
+  const stage = match.stage;
   const u = await updateProfile(
     deps.profiles,
     r.ownerId,
     (p) => {
       const applied = applyRewards(p, ids, rewards);
       levelUps = applied.levelUps;
-      if (!rolled) return { ok: true, profile: applied.profile };
-      const received = receiveDrop(applied.profile, rolled);
+      let next = applied.profile;
+      if (stage) {
+        const c = applyCampaignResult(
+          next,
+          stage,
+          rewards.won,
+          match.battle.sides[HUMAN].food,
+        );
+        next = c.profile;
+        campaign = c.result;
+      }
+      if (!rolled) return { ok: true, profile: next };
+      const received = receiveDrop(next, rolled);
       drop = received.item;
       soldFor = received.soldFor;
       return { ok: true, profile: received.profile };
@@ -221,21 +364,43 @@ async function reward(r: MatchRecord, match: Match, deps: Omit<Deps, "seed" | "n
     deps.now,
   );
   if (!u.ok) console.error("Không cộng được thưởng cuối trận", r.id, u.error);
-  return { rewards, levelUps, drop, soldFor };
+  return {
+    rewards,
+    levelUps,
+    drop,
+    soldFor,
+    ...(campaign ? { campaign } : {}),
+  };
 }
 
 /** Chạy bù tới `now`, lưu nếu có thay đổi, cộng thưởng nếu trận vừa kết thúc. */
-async function settleRecord(r: MatchRecord, deps: Omit<Deps, "seed" | "newId">): Promise<ServiceResult> {
+async function settleRecord(
+  r: MatchRecord,
+  deps: Omit<Deps, "seed" | "newId">,
+): Promise<ServiceResult> {
   const { match, events } = settle(r.match, deps.now);
-  if (match.seq !== r.match.seq && !(await deps.store.save({ ...r, match, updatedAt: deps.now }, r.match.seq))) {
+  if (
+    match.seq !== r.match.seq &&
+    !(await deps.store.save({ ...r, match, updatedAt: deps.now }, r.match.seq))
+  ) {
     return { ok: false, error: "conflict" };
   }
   const outcome = await reward(r, match, deps);
-  return { ok: true, id: r.id, view: viewOf(match), events, ...(outcome ? { outcome } : {}) };
+  return {
+    ok: true,
+    id: r.id,
+    view: viewOf(match),
+    events,
+    ...(outcome ? { outcome } : {}),
+  };
 }
 
 /** Xem trận: chạy bù tới `now` (hết giờ, AI, xử thua 24 giờ) rồi lưu nếu có thay đổi. */
-export async function getBattle(id: string, ownerId: string, deps: Omit<Deps, "seed" | "newId">): Promise<ServiceResult> {
+export async function getBattle(
+  id: string,
+  ownerId: string,
+  deps: Omit<Deps, "seed" | "newId">,
+): Promise<ServiceResult> {
   const r = await load(id, ownerId, deps.store);
   return r ? settleRecord(r, deps) : { ok: false, error: "notFound" };
 }
@@ -244,7 +409,10 @@ export async function getBattle(id: string, ownerId: string, deps: Omit<Deps, "s
  * Việc định kỳ: chốt các trận bỏ dở (xử thua sau 24 giờ không ra tay) và cộng thưởng còn treo, để hồ sơ
  * nhận thưởng kể cả khi người chơi không bao giờ mở lại trận.
  */
-export async function settleAbandoned(ids: readonly string[], deps: Omit<Deps, "seed" | "newId">): Promise<number> {
+export async function settleAbandoned(
+  ids: readonly string[],
+  deps: Omit<Deps, "seed" | "newId">,
+): Promise<number> {
   let settled = 0;
   for (const id of ids) {
     const r = await deps.store.get(id);
@@ -268,12 +436,25 @@ export async function actBattle(
   if (!r) return { ok: false, error: "notFound" };
   const result = humanAct(r.match, parsed.action, parsed.seq, deps.now);
   const changed = result.match.seq !== r.match.seq;
-  if (changed && !(await deps.store.save({ ...r, match: result.match, updatedAt: deps.now }, r.match.seq))) {
+  if (
+    changed &&
+    !(await deps.store.save(
+      { ...r, match: result.match, updatedAt: deps.now },
+      r.match.seq,
+    ))
+  ) {
     return { ok: false, error: "conflict" };
   }
-  if (!result.ok) return { ok: false, error: result.error, view: viewOf(result.match) };
+  if (!result.ok)
+    return { ok: false, error: result.error, view: viewOf(result.match) };
   const outcome = await reward(r, result.match, deps);
-  return { ok: true, id, view: viewOf(result.match), events: result.events, ...(outcome ? { outcome } : {}) };
+  return {
+    ok: true,
+    id,
+    view: viewOf(result.match),
+    events: result.events,
+    ...(outcome ? { outcome } : {}),
+  };
 }
 
 /** Mã HTTP cho từng lỗi. */

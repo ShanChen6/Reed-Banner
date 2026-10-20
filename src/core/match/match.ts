@@ -14,6 +14,7 @@ import {
   type SideConfig,
   type SideIndex,
 } from "../battle";
+import type { SpawnWeights } from "../board";
 
 /** Trận dở không có hành động nào của người chơi quá mốc này thì xử thua. */
 export const ABANDON_MS = 24 * 60 * 60 * 1000;
@@ -34,6 +35,8 @@ export interface Match {
   readonly lastHumanAt: number;
   /** Trận kết thúc vì người chơi bỏ dở quá ABANDON_MS. */
   readonly forfeited: boolean;
+  /** Id màn chiến dịch; không có ở trận Thường. */
+  readonly stage?: string;
 }
 
 export interface MatchConfig {
@@ -42,6 +45,8 @@ export interface MatchConfig {
   readonly seed: number;
   readonly firstSide: SideIndex;
   readonly now: number;
+  readonly weights?: SpawnWeights;
+  readonly stage?: string;
 }
 
 export interface MatchStep {
@@ -57,6 +62,7 @@ export function startMatch(config: MatchConfig): MatchStep {
     timer: true,
     firstSide: config.firstSide,
     now: config.now,
+    ...(config.weights ? { weights: config.weights } : {}),
   });
   const match: Match = {
     battle: state,
@@ -65,6 +71,7 @@ export function startMatch(config: MatchConfig): MatchStep {
     startedAt: config.now,
     lastHumanAt: config.now,
     forfeited: false,
+    ...(config.stage ? { stage: config.stage } : {}),
   };
   const ai = runAi(match, config.now, config.difficulty);
   return { match: ai.match, events: [...events, ...ai.events] };
@@ -79,7 +86,8 @@ export function catchUpDifficulty(d: Difficulty): Difficulty {
 }
 
 function runAi(m: Match, at: number, difficulty: Difficulty): MatchStep {
-  if (m.battle.winner !== null || m.battle.turn.side !== AI_SIDE) return { match: m, events: [] };
+  if (m.battle.winner !== null || m.battle.turn.side !== AI_SIDE)
+    return { match: m, events: [] };
   const r = playAiTurn(m.battle, difficulty, at);
   return { match: { ...m, battle: r.state, seq: m.seq + 1 }, events: r.events };
 }
@@ -97,7 +105,11 @@ export function settle(start: Match, now: number): MatchStep {
     battle.turn.deadline = null;
     return { match: { ...m, battle, seq: m.seq + 1, forfeited: true }, events };
   }
-  for (let turns = 0; turns < MAX_CATCH_UP_TURNS && m.battle.winner === null; turns++) {
+  for (
+    let turns = 0;
+    turns < MAX_CATCH_UP_TURNS && m.battle.winner === null;
+    turns++
+  ) {
     const { turn } = m.battle;
     if (turn.side === AI_SIDE) {
       // AI chỉ còn lượt dở khi lần chạy bù trước dừng ở giới hạn; đánh tiếp ngay.
@@ -124,16 +136,31 @@ export type MatchError = BattleError | "staleSeq" | "notYourTurn";
 
 export type MatchResult =
   | ({ readonly ok: true } & MatchStep)
-  | { readonly ok: false; readonly error: MatchError; readonly match: Match; readonly events: readonly BattleEvent[] };
+  | {
+      readonly ok: false;
+      readonly error: MatchError;
+      readonly match: Match;
+      readonly events: readonly BattleEvent[];
+    };
 
 /**
  * Một hành động của người chơi. Trước khi xử lý, trận được chạy bù tới `now`; `expectedSeq` (seq client
  * đang thấy) khác seq sau khi chạy bù thì từ chối. Nếu lượt chuyển sang AI, AI đánh luôn.
  * Khi lỗi, `match` vẫn là trạng thái đã chạy bù để server lưu lại.
  */
-export function humanAct(start: Match, action: BattleAction, expectedSeq: number, now: number): MatchResult {
+export function humanAct(
+  start: Match,
+  action: BattleAction,
+  expectedSeq: number,
+  now: number,
+): MatchResult {
   const settled = settle(start, now);
-  const fail = (error: MatchError): MatchResult => ({ ok: false, error, match: settled.match, events: settled.events });
+  const fail = (error: MatchError): MatchResult => ({
+    ok: false,
+    error,
+    match: settled.match,
+    events: settled.events,
+  });
   // Seq khác: client gửi lặp, hoặc vừa chạy bù hết giờ nên nước đi nhắm vào bàn cờ cũ.
   if (expectedSeq !== settled.match.seq) return fail("staleSeq");
   const m = settled.match;
@@ -141,9 +168,18 @@ export function humanAct(start: Match, action: BattleAction, expectedSeq: number
   if (m.battle.turn.side !== HUMAN) return fail("notYourTurn");
   const r = act(m.battle, action, now);
   if (!r.ok) return fail(r.error);
-  const next: Match = { ...m, battle: r.state, seq: m.seq + 1, lastHumanAt: now };
+  const next: Match = {
+    ...m,
+    battle: r.state,
+    seq: m.seq + 1,
+    lastHumanAt: now,
+  };
   const ai = runAi(next, now, m.difficulty);
-  return { ok: true, match: ai.match, events: [...settled.events, ...r.events, ...ai.events] };
+  return {
+    ok: true,
+    match: ai.match,
+    events: [...settled.events, ...r.events, ...ai.events],
+  };
 }
 
 /** Trạng thái gửi cho client: bỏ luồng ngẫu nhiên của bàn cờ và của AI. */
@@ -154,10 +190,17 @@ export interface MatchView {
   readonly difficulty: Difficulty;
   readonly seq: number;
   readonly forfeited: boolean;
+  readonly stage?: string;
 }
 
 export function viewOf(m: Match): MatchView {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { boardRng, aiRng, ...battle } = m.battle;
-  return { battle, difficulty: m.difficulty, seq: m.seq, forfeited: m.forfeited };
+  return {
+    battle,
+    difficulty: m.difficulty,
+    seq: m.seq,
+    forfeited: m.forfeited,
+    ...(m.stage ? { stage: m.stage } : {}),
+  };
 }
