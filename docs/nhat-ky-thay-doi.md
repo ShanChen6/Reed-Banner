@@ -4,6 +4,9 @@
 
 ## 20/10/2026
 
+**Kế hoạch đồ họa và hoạt ảnh (đề xuất, Shan yêu cầu, chưa triển khai code)**
+- Thêm [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md): phong cách fantasy lịch sử Việt Nam cách điệu trên nền khắc gỗ + trống đồng, nhân vật hoạt ảnh kiểu rối cắt mảnh có xương (nhẹ hơn vẽ từng khung nhiều lần, dùng chung 6 bộ xương theo nghề), lớp sân khấu PixiJS chồng lên bàn cờ DOM, ngân sách dung lượng và hiệu năng, pipeline ảnh có mã băm, lộ trình Đ0–Đ9. Các lựa chọn công cụ và ngân sách chờ Shan chốt.
+
 **Hệ thống nhân vật kèm: bộ 6 ô cho mọi người, 42 tướng thường, sứ quân ở cửa hàng (Shan yêu cầu)**
 - Mọi nhân vật kèm dùng bộ 6 kỹ năng theo nguyên tố như Đinh Bộ Lĩnh, mở ô theo cấp và nâng theo ô; ô 5 là tuyệt chiêu (tướng thường) hoặc chiêu riêng (tướng lịch sử, sứ quân). Bỏ chiêu nghề và chiêu nhánh ở phe người chơi; hồ sơ cũ được hoàn điểm kỹ năng. Lý do: mô phỏng cho thấy tướng lịch sử mạnh hơn tướng thường rõ (54% so với 48%), sau khi đổi ba nhóm còn 49–51%.
 - Thêm 25 tướng thường để phủ đủ 42 tổ hợp nghề × hệ, mỗi tổ hợp một người. 12 sứ quân mở bán 3 000 vàng sau khi qua màn của họ. Giảm Thiết Bích Đồng Thành, tăng hồi máu Cam Lộ Hồi Xuân và Hoa Lư Thảo Dược. Chi tiết: [Danh sách nhân vật](design/14-nhan-vat.md).
