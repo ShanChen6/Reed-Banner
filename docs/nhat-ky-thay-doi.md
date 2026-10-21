@@ -4,6 +4,11 @@
 
 ## 21/10/2026
 
+**Vũ khí đồng bộ giữa dáng đứng, ra chiêu, tuyệt chiêu, bị hạ gục (Shan báo lệch)**
+- 63 prompt toàn thân và 183 prompt tư thế thêm câu khóa vũ khí (Held item lock) tả đúng món của từng người; câu tư thế gọi món bằng tên riêng thay cho chữ chung (quạt lông cho người cầm quạt tre, quạt lá cọ, quạt sắt; cờ lệnh cho người cầm cờ đuôi nheo; gậy cho Hà Vân cầm quyền trượng; "weapon" cho búa, rìu, kiếm).
+- Đinh Bộ Lĩnh, Nguyễn Bặc, Đinh Điền, Lưu Cơ, Trịnh Tú: Holding tả chi tiết món đã vẽ trong `sword.webp`. Tuyệt chiêu Lưu Cơ bỏ cuộn chiếu chỉ (đồ thêm), chỉ cầm quạt.
+- Dáng đứng Pháp sư và Quân sư không còn cắm gậy/cán cờ xuống đất (mâu thuẫn với gậy ngắn, cán ngắn), cầm dựng bên người.
+
 **Dáng đứng riêng trong prompt toàn thân (Shan hỏi về việc đứng giống nhau)**
 - 56 prompt toàn thân thay dáng chữ A chung bằng dáng theo nghề và thái độ riêng từng người, vẫn giữ khe hở giữa tay và thân cho live2dlayer. Bảy nhân vật đã có hình giữ nguyên.
 
