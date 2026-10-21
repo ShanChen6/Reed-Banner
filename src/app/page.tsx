@@ -19,7 +19,6 @@ import { TileArt } from "./game/art/tiles";
 import { FAQ, PROFESSION_PERK, TILE_GIVES } from "./home/data";
 import DrumFace from "./home/DrumFace";
 import ElementPicker from "./home/ElementPicker";
-import LacBirds from "./home/LacBirds";
 import { Embers, GiltCorners, OrnateDivider } from "./home/Ornaments";
 
 const NAV = [
@@ -137,14 +136,22 @@ export default function Home() {
       </header>
 
       <main id="content">
-        {/* Hero: mặt trống đồng xoay chậm, đàn chim lạc bay vòng quanh, bàn cờ thật dựng bằng SVG làm hình chính. */}
+        {/* Hero: tranh trời trống đồng và chim lạc làm nền, mặt trống khắc vạch xoay chậm đè đúng lên trống trong tranh,
+            tâm sao sáng nhịp, bàn cờ thật dựng bằng SVG làm hình chính. */}
         <section className="relative overflow-hidden border-b border-[var(--gold)]/20">
-          <div aria-hidden className="fx-hero-glow pointer-events-none absolute inset-0" />
-          <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 w-[min(1000px,150vw)] -translate-x-1/2 -translate-y-1/2 opacity-[0.13]">
-            <DrumFace className="drum-spin h-auto w-full" />
+          <div aria-hidden className="pointer-events-none absolute inset-0 [container-type:size]">
+            {/* Khung giữ đúng tỉ lệ tranh và phủ kín phần mở đầu (như object-cover), để lớp trống xoay luôn trùng trống trong tranh. */}
+            <div className="hero-art absolute left-1/2 top-1/2 aspect-[1916/821] -translate-x-1/2 -translate-y-1/2">
+              <Image src="/art/hero/troi-trong-dong.webp" alt="" fill priority sizes="(min-width: 768px) 100vw, 250vw" className="object-cover" />
+              <div className="absolute left-[50.9%] top-[48%] w-[47%] -translate-x-1/2 -translate-y-1/2 opacity-40 mix-blend-screen">
+                <DrumFace className="drum-spin h-auto w-full" />
+              </div>
+              <div className="hero-star absolute left-[50.9%] top-[48%] aspect-square w-[22%] -translate-x-1/2 -translate-y-1/2 rounded-full" />
+            </div>
           </div>
+          {/* Lớp tối phía chữ để đọc rõ; trên điện thoại chữ phủ cả bề ngang nên tối đều. */}
+          <div aria-hidden className="hero-shade pointer-events-none absolute inset-0" />
           <Embers />
-          <LacBirds />
           <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 md:grid-cols-[1fr_1.1fr] md:py-20">
             <div>
               <h1 className="-mx-4 -mt-6 max-w-[520px] md:-mx-8">
@@ -175,9 +182,10 @@ export default function Home() {
               <p className="mt-5 text-sm text-stone-500">Chạy ngay trên trình duyệt · Máy tính và điện thoại xoay ngang · Không cần tài khoản</p>
             </div>
 
-            <div className="relative">
+            {/* Chân dung thủ lĩnh đè lên góc dưới trái bàn cờ (tâm đúng góc khung), hai đồng đội đứng dưới mép khung, không che ô nào. */}
+            <div className="relative mb-14 ml-8 md:mb-12 md:ml-6">
               <div className="fx-frame relative rounded-xl p-2">
-                <GiltCorners size="size-10 md:size-14" />
+                <GiltCorners size="size-10 md:size-14" skip="bottomLeft" />
                 <div className="grid gap-[2px]" style={{ gridTemplateColumns: `repeat(${BOARD_COLS}, minmax(0, 1fr))` }}>
                   {board.map((t, i) => (
                     <div key={i} className="aspect-square rounded-[3px] bg-[#3a2c24]">
@@ -186,10 +194,15 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-              <div className="absolute -bottom-6 -left-4 flex items-end gap-1 md:-left-8">
-                <Portrait id="dinhBoLinh" element="moc" profession="tuongSi" className="size-20 drop-shadow-lg md:size-24" />
+              <Portrait
+                id="dinhBoLinh"
+                element="moc"
+                profession="tuongSi"
+                className="absolute bottom-0 left-0 z-20 size-20 -translate-x-1/2 translate-y-1/2 drop-shadow-[0_6px_10px_#000c] md:size-28"
+              />
+              <div className="absolute left-12 top-full mt-2 flex gap-1.5 md:left-16">
                 {STARTER_COMPANIONS.filter((c) => c.id === "haVan" || c.id === "maiThanh").map((c) => (
-                  <Portrait key={c.id} id={c.id} element={c.element} profession={c.profession} className="size-12 drop-shadow-lg md:size-14" />
+                  <Portrait key={c.id} id={c.id} element={c.element} profession={c.profession} className="size-10 drop-shadow-lg md:size-12" />
                 ))}
               </div>
             </div>
