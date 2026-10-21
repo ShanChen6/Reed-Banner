@@ -331,11 +331,38 @@
     0 0 60px -10px #e2582b66,
     0 30px 60px -20px #000;
 }
-.fx-hero-glow {
+/* Tranh nền hero (src/app/page.tsx): khung theo tỉ lệ tranh, rộng đủ để phủ kín cả bề ngang lẫn bề cao phần mở đầu. */
+.hero-art {
+  width: max(100cqw, calc(100cqh * 1916 / 821));
+}
+.hero-shade {
   background:
-    radial-gradient(ellipse 60% 55% at 50% 45%, #e2582b33, transparent 70%),
-    radial-gradient(ellipse 40% 40% at 50% 45%, #f2c55e22, transparent 70%),
-    radial-gradient(ellipse at 50% 100%, #000a, transparent 60%);
+    linear-gradient(to bottom, #17110e99, #17110e55 25%, #17110e88 70%, #17110e),
+    linear-gradient(#0f0a07a6, #0f0a07a6);
+}
+@media (min-width: 768px) {
+  .hero-shade {
+    background:
+      linear-gradient(to bottom, #17110e66, transparent 20%, transparent 75%, #17110e),
+      linear-gradient(to right, #0f0a07f0, #0f0a07b3 32%, #0f0a0733 55%, #0f0a0700 75%);
+  }
+}
+/* Tâm sao mặt trống sáng lên rồi dịu xuống theo nhịp thở. */
+@keyframes hero-star {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+.hero-star {
+  background: radial-gradient(circle, #fff6d6 0, #ffd77acc 18%, #f2a93b55 45%, transparent 70%);
+  mix-blend-mode: screen;
+  animation: hero-star 4s ease-in-out infinite;
 }
 @keyframes drum-spin {
   to {
@@ -371,6 +398,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .drum-spin,
+  .hero-star,
   .ember {
     animation: none !important;
   }
