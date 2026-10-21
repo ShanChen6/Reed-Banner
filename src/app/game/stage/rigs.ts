@@ -681,6 +681,48 @@ const PHAM_BACH_HO: WarriorRig = {
     anchor: { x: 910, y: 965 }, scale: 1 },
 };
 
+/** Ngô Xương Xí, mưu sĩ hệ Kim. Quạt lông và tay áo dùng nhịp phẩy nhẹ, tọa độ tranh 1024×1536. */
+const NGO_XUONG_XI: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "fan",
+  sleeveWind: { axis: "y", start: 0.4, amp: 2, freq: 1.3, k: 2.7, phase: 0.4 },
+  dir: "ngo-xuong-xi",
+  texScale: 0.5,
+  foot: { x: 610, y: 1510 },
+  height: 1513,
+  parts: {
+    body: { x: 37, y: 11, w: 977, h: 1513 },
+    armR: { x: 813, y: 502, w: 118, h: 117 },
+    sword: { x: 15, y: 87, w: 358, h: 450 },
+    arm: { x: 140, y: 331, w: 434, h: 503 },
+    head: { x: 575, y: 11, w: 190, h: 205 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 408, y: 105, w: 211, h: 204 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 4, freq: 1.5, k: 3, phase: 0.3, vertical: true, reverse: true } },
+    { name: "train", box: { x: 27, y: 826, w: 327, h: 341 }, behind: true,
+      wind: { axis: "y", start: 0.2, amp: 3, freq: 1.2, k: 2.8, phase: 1.4 } },
+    { name: "sash", box: { x: 563, y: 674, w: 88, h: 190 },
+      wind: { axis: "y", start: 0.2, amp: 2, freq: 1.35, k: 2.6, phase: 2.1 } },
+  ],
+  covers: [{ name: "sleeve", box: { x: 400, y: 280, w: 195, h: 122 } }],
+  joints: {
+    shoulder: { x: 520, y: 365 },
+    elbowR: { x: 881, y: 546 },
+    neck: { x: 686, y: 200 },
+  },
+  blade: [{ x: 324, y: 385 }, { x: 130, y: 160 }],
+  fxColor: 0xf1d28c,
+  poses: {
+    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 11, y: 10 },
+      anchor: { x: 610, y: 1510 }, scale: 1, burst: { x: 190, y: 230 } },
+    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 11, y: 34 },
+      anchor: { x: 595, y: 1485 }, scale: 1.02, burst: { x: 965, y: 365 } },
+  },
+  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 13, y: 13 },
+    anchor: { x: 940, y: 985 }, scale: 1 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -694,6 +736,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   dinhLien: DINH_LIEN,
   tranLam: TRAN_LAM,
   phamBachHo: PHAM_BACH_HO,
+  ngoXuongXi: NGO_XUONG_XI,
 };
 
 export function rigOf(id: string): Rig | null {
