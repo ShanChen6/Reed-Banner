@@ -84,7 +84,9 @@ export type WarriorPart = "body" | "armR" | "sword" | "arm" | "head";
 export interface WarriorRig {
   readonly skeleton: "warrior";
   /** Nhịp vũ khí riêng; bỏ trống giữ nhát chém của các tướng sĩ cũ. */
-  readonly weapon?: "spear" | "fan";
+  readonly weapon?: "spear" | "fan" | "gourd";
+  /** Điểm cầm để hồ lô lắc nhẹ trong tay, cùng hệ tọa độ ảnh nguồn. */
+  readonly grip?: Point;
   /** Tay áo dài uốn theo gió trong cùng khớp với tay cầm quạt. */
   readonly sleeveWind?: Wind;
   readonly dir: string;
@@ -447,6 +449,118 @@ const LUU_CO: WarriorRig = {
   down: { name: "pose-down", texScale: 1 / 3, origin: { x: 40, y: 37 }, anchor: { x: 850, y: 1007 }, scale: 1 },
 };
 
+/** Trịnh Tú, y sư hệ Mộc. Khớp trong ảnh nguồn 1024×1536, hồ lô có điểm cầm riêng. */
+const TRINH_TU: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "gourd",
+  grip: { x: 167, y: 414 },
+  dir: "trinh-tu",
+  texScale: 0.5,
+  foot: { x: 583, y: 1510 },
+  height: 1509,
+  parts: {
+    body: { x: 263, y: 15, w: 691, h: 1509 },
+    armR: { x: 795, y: 483, w: 174, h: 347 },
+    sword: { x: 60, y: 276, w: 228, h: 394 },
+    arm: { x: 124, y: 366, w: 314, h: 177 },
+    head: { x: 553, y: 15, w: 177, h: 219 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 348, y: 70, w: 207, h: 194 }, wind: { axis: "x", start: 0.18, amp: 4, freq: 1.6, k: 3.0, phase: 0.2, reverse: true, vertical: true }, behind: true },
+    { name: "cape", box: { x: 106, y: 740, w: 327, h: 384 }, wind: { axis: "y", start: 0.2, amp: 4, freq: 1.2, k: 2.8, phase: 1.3 }, behind: true },
+    { name: "apron", box: { x: 354, y: 631, w: 263, h: 444 }, wind: { axis: "y", start: 0.2, amp: 2, freq: 1.4, k: 2.6, phase: 2.1 } },
+  ],
+  covers: [
+    { name: "sleeve", box: { x: 331, y: 356, w: 111, h: 92 } },
+    { name: "sleeveR", box: { x: 786, y: 488, w: 127, h: 102 } },
+  ],
+  joints: {
+    shoulder: { x: 416, y: 399 },
+    elbowR: { x: 849, y: 557 },
+    neck: { x: 613, y: 232 },
+  },
+  blade: [{ x: 167, y: 414 }, { x: 157, y: 285 }],
+  fxColor: 0x9bd777,
+  poses: {
+    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 43, y: 45 }, anchor: { x: 690, y: 1508 }, scale: 1, burst: { x: 170, y: 165 } },
+    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 12, y: 57 }, anchor: { x: 680, y: 1508 }, scale: 1, burst: { x: 220, y: 225 } },
+  },
+  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 23, y: 36 }, anchor: { x: 920, y: 1000 }, scale: 1 },
+};
+
+/** Lê Hoàn, quân sư hệ Lôi. Cờ lệnh và tay trái dùng nhịp đẩy của giáo; hai tà áo cùng dải buộc tóc bay phía sau. */
+const LE_HOAN: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "le-hoan",
+  texScale: 0.5,
+  foot: { x: 650, y: 1513 },
+  height: 1505,
+  parts: {
+    body: { x: 10, y: 9, w: 960, h: 1506 },
+    armR: { x: 744, y: 370, w: 266, h: 300 },
+    sword: { x: 51, y: 8, w: 484, h: 762 },
+    arm: { x: 190, y: 340, w: 415, h: 340 },
+    head: { x: 552, y: 9, w: 215, h: 226 },
+  },
+  cloth: [
+    {
+      name: "ribbon",
+      box: { x: 527, y: 83, w: 97, h: 146 },
+      wind: { axis: "x", start: 0.2, amp: 4, freq: 1.6, k: 3, phase: 0.2, reverse: true, vertical: true },
+      behind: true,
+    },
+    {
+      name: "cape",
+      box: { x: 9, y: 535, w: 495, h: 704 },
+      wind: { axis: "y", start: 0.18, amp: 4, freq: 1.2, k: 2.8, phase: 1.1 },
+      behind: true,
+    },
+    {
+      name: "capeR",
+      box: { x: 695, y: 432, w: 293, h: 786 },
+      wind: { axis: "y", start: 0.2, amp: 3, freq: 1.35, k: 2.7, phase: 2 },
+      behind: true,
+    },
+  ],
+  covers: [
+    { name: "sleeve", box: { x: 409, y: 245, w: 196, h: 175 } },
+    { name: "sleeveR", box: { x: 690, y: 225, w: 216, h: 230 } },
+  ],
+  joints: {
+    shoulder: { x: 520, y: 330 },
+    elbowR: { x: 820, y: 420 },
+    neck: { x: 650, y: 220 },
+  },
+  blade: [{ x: 235, y: 470 }, { x: 145, y: 12 }],
+  fxColor: 0xb98cff,
+  poses: {
+    cast: {
+      name: "pose-cast",
+      texScale: 1 / 3,
+      origin: { x: 0, y: 0 },
+      anchor: { x: 640, y: 1495 },
+      scale: 1,
+      burst: { x: 55, y: 25 },
+    },
+    ultimate: {
+      name: "pose-ultimate",
+      texScale: 1 / 3,
+      origin: { x: 0, y: 0 },
+      anchor: { x: 620, y: 1505 },
+      scale: 1,
+      burst: { x: 985, y: 380 },
+    },
+  },
+  down: {
+    name: "pose-down",
+    texScale: 1 / 3,
+    origin: { x: 11, y: 10 },
+    anchor: { x: 800, y: 1005 },
+    scale: 0.8,
+  },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -455,6 +569,8 @@ const RIGS: Readonly<Record<string, Rig>> = {
   nguyenBac: NGUYEN_BAC,
   dinhDien: DINH_DIEN,
   luuCo: LUU_CO,
+  trinhTu: TRINH_TU,
+  leHoan: LE_HOAN,
 };
 
 export function rigOf(id: string): Rig | null {

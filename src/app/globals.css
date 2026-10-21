@@ -279,6 +279,105 @@
   }
 }
 
+/* Trang giới thiệu kiểu fantasy theo logo: chữ mạ vàng, khung viền đồng, nút sơn mài đỏ. Viền dùng hai lớp nền
+   (padding-box + border-box) thay cho ảnh viền để giữ bo góc. */
+.fx-gilt-text {
+  background: linear-gradient(180deg, #fff6cc 0%, #f2c55e 38%, #b77a26 62%, #f3d48a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.fx-panel {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, #2b1f19, #1b1310) padding-box,
+    linear-gradient(160deg, #f3d48a99, #5a3a1a66 45%, #d4a24c88) border-box;
+  box-shadow:
+    inset 0 1px 0 #fff2,
+    0 14px 30px -20px #000;
+}
+.fx-panel-hi {
+  border: 1px solid transparent;
+  background:
+    radial-gradient(ellipse at 50% 0%, #7a2a1c, #3a1712 70%) padding-box,
+    linear-gradient(160deg, #fff4c4, #d4a24c 40%, #7a4d18 70%, #f3d48a) border-box;
+  box-shadow: 0 0 40px -14px #e2582b88;
+}
+.fx-btn {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(180deg, #e2523a, #a52c1a 55%, #6e1a0f) padding-box,
+    linear-gradient(180deg, #fff4c4, #e7b85a 35%, #8a5a1c 65%, #f6dc93) border-box;
+  color: #fff4d6;
+  text-shadow: 0 1px 0 #5c120b;
+  box-shadow:
+    0 0 26px -6px #e2582bcc,
+    inset 0 1px 0 #ffffff40;
+}
+.fx-btn-ghost {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, #2b1f19ee, #1b1310ee) padding-box,
+    linear-gradient(180deg, #f3d48a, #8a5a1c 60%, #d4a24c) border-box;
+}
+.fx-frame {
+  border: 3px solid transparent;
+  background:
+    linear-gradient(180deg, #4a1a12, #2a0f0b) padding-box,
+    linear-gradient(160deg, #fff4c4, #e7b85a 25%, #8a5a1c 55%, #f6dc93 80%, #b77a26) border-box;
+  box-shadow:
+    0 0 0 1px #2b1d14,
+    0 0 60px -10px #e2582b66,
+    0 30px 60px -20px #000;
+}
+.fx-hero-glow {
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 45%, #e2582b33, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 50% 45%, #f2c55e22, transparent 70%),
+    radial-gradient(ellipse at 50% 100%, #000a, transparent 60%);
+}
+@keyframes drum-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.drum-spin {
+  animation: drum-spin 240s linear infinite;
+  will-change: transform;
+}
+@keyframes ember-rise {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--sway, 0), -560px);
+    opacity: 0;
+  }
+}
+.ember {
+  position: absolute;
+  bottom: -8px;
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, #fff6cc 0%, #f2a93b 55%, transparent 72%);
+  animation: ember-rise linear infinite;
+  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  .drum-spin,
+  .ember {
+    animation: none !important;
+  }
+  .ember {
+    display: none;
+  }
+}
+
 /* Bản đồ chiến dịch: giấy dó, mực khắc gỗ, sông xanh chàm, đường hành quân đỏ son. */
 .campaign-map {
   --map-paper: #e9d9b4;

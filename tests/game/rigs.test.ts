@@ -50,3 +50,23 @@ test("khớp Nguyễn Bặc nằm trong vùng chồng, kích thước texture kh
     assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
   }
 });
+
+test("Lê Hoàn có đủ lớp WebP, ba tranh tư thế và nằm trong ngân sách 350 KB", () => {
+  const rig = rigOf("leHoan");
+  assert.ok(rig && rig.skeleton === "warrior");
+  assert.equal(rig.weapon, "spear");
+  assert.equal(rig.poses?.cast?.name, "pose-cast");
+  assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
+  assert.equal(rig.down?.name, "pose-down");
+  const names = partsOf(rig);
+  assert.equal(new Set(names).size, names.length);
+  let bytes = statSync("public/art/characters/le-hoan/portrait.webp").size;
+  for (const name of names) {
+    const assetPath: string = `public${partUrl(rig, name)}`;
+    const data: Buffer = readFileSync(assetPath);
+    assert.equal(data.toString("ascii", 0, 4), "RIFF", assetPath);
+    assert.equal(data.toString("ascii", 8, 12), "WEBP", assetPath);
+    bytes += statSync(assetPath).size;
+  }
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
