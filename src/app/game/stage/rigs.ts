@@ -84,7 +84,7 @@ export type WarriorPart = "body" | "armR" | "sword" | "arm" | "head";
 export interface WarriorRig {
   readonly skeleton: "warrior";
   /** Nhịp vũ khí riêng; bỏ trống giữ nhát chém của các tướng sĩ cũ. */
-  readonly weapon?: "spear" | "fan" | "gourd";
+  readonly weapon?: "spear" | "fan" | "gourd" | "staff";
   /** Điểm cầm để hồ lô lắc nhẹ trong tay, cùng hệ tọa độ ảnh nguồn. */
   readonly grip?: Point;
   /** Tay áo dài uốn theo gió trong cùng khớp với tay cầm quạt. */
@@ -561,6 +561,47 @@ const LE_HOAN: WarriorRig = {
   },
 };
 
+/** Đinh Liễn, pháp sư hệ Thủy. Tọa độ theo tranh 1024×1536; nâng pháp trượng nhẹ từ vai. */
+const DINH_LIEN: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "staff",
+  dir: "dinh-lien",
+  texScale: 0.5,
+  foot: { x: 625, y: 1508 },
+  height: 1513,
+  parts: {
+    body: { x: 251, y: 10, w: 770, h: 1513 },
+    armR: { x: 820, y: 518, w: 193, h: 101 },
+    sword: { x: 33, y: 91, w: 245, h: 445 },
+    arm: { x: 5, y: 314, w: 488, h: 556 },
+    head: { x: 546, y: 10, w: 203, h: 217 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 272, y: 81, w: 318, h: 204 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 5, freq: 1.6, k: 2.8, phase: 0.3, vertical: true, reverse: true } },
+    { name: "cape", box: { x: 10, y: 588, w: 553, h: 669 }, behind: true,
+      wind: { axis: "y", start: 0.2, amp: 4, freq: 1.2, k: 2.8, phase: 1.2 } },
+    { name: "sash", box: { x: 461, y: 551, w: 196, h: 268 },
+      wind: { axis: "y", start: 0.2, amp: 2, freq: 1.35, k: 2.8, phase: 2.1 } },
+  ],
+  covers: [{ name: "sleeve", box: { x: 400, y: 223, w: 138, h: 140 } }],
+  joints: {
+    shoulder: { x: 465, y: 330 },
+    elbowR: { x: 846, y: 550 },
+    neck: { x: 645, y: 211 },
+  },
+  blade: [{ x: 193, y: 369 }, { x: 95, y: 155 }],
+  fxColor: 0x9fe3ff,
+  poses: {
+    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 0, y: 66 },
+      anchor: { x: 555, y: 1465 }, scale: 1, burst: { x: 920, y: 174 } },
+    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 11, y: 10 },
+      anchor: { x: 620, y: 1505 }, scale: 1, burst: { x: 450, y: 75 } },
+  },
+  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 12, y: 12 },
+    anchor: { x: 930, y: 945 }, scale: 0.88 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -571,6 +612,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   luuCo: LUU_CO,
   trinhTu: TRINH_TU,
   leHoan: LE_HOAN,
+  dinhLien: DINH_LIEN,
 };
 
 export function rigOf(id: string): Rig | null {
