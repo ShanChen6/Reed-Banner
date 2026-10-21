@@ -21,6 +21,11 @@ export function slotX(side: 0 | 1, index: number): number {
 const GROUND = 0.94;
 /** Nhân vật cao bao nhiêu phần chiều cao sân. */
 const FIGURE = 0.9;
+/** Đến lượt: chờ chừng này (ms) sau khi đổi người hành động rồi mới vào thế. */
+const READY_DELAY_MS = 450;
+/** Cận cảnh tuyệt chiêu: độ phóng và thời lượng, khớp quãng 1,2–1,8 s của động tác. */
+const CLOSE_UP = 1.3;
+const CLOSE_UP_MS = 1500;
 
 const keyOf = (side: number, index: number) => `${side}:${index}`;
 
@@ -34,6 +39,16 @@ function portraitMove(
   color: string,
 ): [Keyframe[], number] {
   switch (kind) {
+    case "ready":
+      return [
+        [
+          { transform: "none" },
+          { transform: "translateY(2px) scaleY(0.96)", offset: 0.3 },
+          { transform: `translateX(${dir * 3}px) translateY(-3px)`, offset: 0.65 },
+          { transform: "none" },
+        ],
+        300,
+      ];
     case "attack":
       return [
         [
@@ -41,17 +56,66 @@ function portraitMove(
           { transform: `translateX(${dir * 18}px) rotate(${dir * 6}deg)`, offset: 0.35 },
           { transform: "none" },
         ],
-        380,
+        600,
       ];
     case "cast":
-    case "ultimate":
       return [
         [
           { transform: "none", filter: "none" },
           { transform: "translateY(-6px) scale(1.12)", filter: `drop-shadow(0 0 10px ${color})`, offset: 0.4 },
           { transform: "none", filter: "none" },
         ],
-        650,
+        800,
+      ];
+    case "ultimate":
+      return [
+        [
+          { transform: "none", filter: "none" },
+          { transform: "translateY(2px) scale(0.96)", filter: `drop-shadow(0 0 6px ${color})`, offset: 0.35 },
+          { transform: `translateX(${dir * 10}px) translateY(-10px) scale(1.2)`, filter: `drop-shadow(0 0 16px ${color}) brightness(1.25)`, offset: 0.5 },
+          { transform: `translateX(${dir * 6}px) scale(1.12)`, filter: `drop-shadow(0 0 10px ${color})`, offset: 0.8 },
+          { transform: "none", filter: "none" },
+        ],
+        1500,
+      ];
+    case "guard":
+      return [
+        [
+          { transform: "none", filter: "none" },
+          { transform: `translateX(${-dir * 4}px)`, filter: "drop-shadow(0 0 8px rgb(147 197 253)) brightness(1.15)", offset: 0.25 },
+          { transform: "none", filter: "none" },
+        ],
+        400,
+      ];
+    case "buff":
+      return [
+        [
+          { transform: "none", filter: "none" },
+          { transform: "translateY(-4px)", filter: "drop-shadow(0 0 10px rgb(252 211 77))", offset: 0.4 },
+          { transform: "none", filter: "none" },
+        ],
+        400,
+      ];
+    case "debuff":
+      return [
+        [
+          { transform: "none", filter: "none" },
+          { transform: "translateY(3px) scaleY(0.95)", filter: "drop-shadow(0 0 8px rgb(167 139 250)) saturate(0.6)", offset: 0.4 },
+          { transform: "none", filter: "none" },
+        ],
+        400,
+      ];
+    case "victory":
+      return [
+        [
+          { transform: "none", filter: "none" },
+          { transform: "translateY(2px) scaleY(0.95)", offset: 0.12 },
+          { transform: "translateY(-14px)", filter: `drop-shadow(0 0 12px ${color})`, offset: 0.35 },
+          { transform: "translateY(0)", offset: 0.55 },
+          { transform: "translateY(-6px)", filter: `drop-shadow(0 0 10px ${color})`, offset: 0.75 },
+          { transform: "none", filter: `drop-shadow(0 0 6px ${color})` },
+        ],
+        1200,
       ];
     case "hit":
       return [
@@ -62,7 +126,7 @@ function portraitMove(
           { transform: `translateX(${-dir * 2}px)` },
           { transform: "none", filter: "none" },
         ],
-        380,
+        300,
       ];
     case "heal":
       return [
@@ -71,7 +135,7 @@ function portraitMove(
           { filter: "drop-shadow(0 0 10px rgb(52 211 153))" },
           { filter: "none" },
         ],
-        600,
+        400,
       ];
   }
 }
@@ -99,6 +163,10 @@ export default function BattleStage({
   bus: CueBus;
 }) {
   const host = useRef<HTMLDivElement>(null);
+  /** Lớp chứa cả sân PixiJS lẫn chân dung, phóng to khi tuyệt chiêu để cận cảnh. */
+  const camera = useRef<HTMLDivElement>(null);
+  const vignette = useRef<HTMLDivElement>(null);
+  const runCue = useRef<((c: Cue) => void) | null>(null);
   const puppets = useRef(new Map<string, Puppet>());
   const portraits = useRef(new Map<string, HTMLDivElement>());
 
@@ -157,7 +225,7 @@ export default function BattleStage({
       app.canvas.style.position = "absolute";
       app.canvas.style.inset = "0";
       app.canvas.setAttribute("aria-hidden", "true");
-      el.prepend(app.canvas);
+      (camera.current ?? el).prepend(app.canvas);
       app.stage.sortableChildren = true;
 
       const entries = rigged.split(",").map((s) => {
@@ -216,11 +284,50 @@ export default function BattleStage({
     };
   }, [rigged]);
 
+  // Đến lượt: người hành động vào thế, đợi các cú trúng của lô trước diễn xong.
+  const actorKey = actor ? keyOf(actor.side, actor.fighter) : null;
+  useEffect(() => {
+    if (!actorKey) return;
+    const t = window.setTimeout(() => {
+      const [side, fighter] = actorKey.split(":").map(Number) as [0 | 1, number];
+      if (!latest.current.some((s) => s.key === actorKey && isAlive(s.fighter))) return;
+      runCue.current?.({ side, fighter, kind: "ready", delay: 0 });
+    }, READY_DELAY_MS);
+    return () => window.clearTimeout(t);
+  }, [actorKey]);
+
   // Nhận động tác từ đạo diễn trận.
   useEffect(() => {
     const timers = new Set<number>();
+    /** Cận cảnh: phóng to quanh người tung tuyệt chiêu, viền tối dần, rồi trả về. */
+    const closeUp = (c: Cue) => {
+      const cam = camera.current;
+      if (!cam || reducedMotion()) return;
+      const x = slotX(c.side, c.fighter) * 100;
+      const origin = `${x}% ${GROUND * 100 - 30}%`;
+      // Kéo người tung chiêu về phía giữa sân một chút.
+      const pan = (50 - x) * 0.25;
+      cam.animate(
+        [
+          { transform: "none", transformOrigin: origin },
+          { transform: `translateX(${pan}%) scale(${CLOSE_UP})`, transformOrigin: origin, offset: 0.18 },
+          { transform: `translateX(${pan}%) scale(${CLOSE_UP})`, transformOrigin: origin, offset: 0.8 },
+          { transform: "none", transformOrigin: origin },
+        ],
+        { duration: CLOSE_UP_MS, easing: "ease-in-out" },
+      );
+      const v = vignette.current;
+      if (v) {
+        v.style.setProperty("--x", `${x}%`);
+        v.animate(
+          [{ opacity: 0 }, { opacity: 1, offset: 0.18 }, { opacity: 1, offset: 0.8 }, { opacity: 0 }],
+          { duration: CLOSE_UP_MS, easing: "ease-in-out" },
+        );
+      }
+    };
     const run = (c: Cue) => {
       const key = keyOf(c.side, c.fighter);
+      if (c.kind === "ultimate") closeUp(c);
       const puppet = puppets.current.get(key);
       if (puppet) return puppet.play(c.kind);
       const node = portraits.current.get(key);
@@ -233,6 +340,7 @@ export default function BattleStage({
       );
       node.animate(frames, { duration, easing: "ease-out" });
     };
+    runCue.current = run;
     const off = bus.on((cues) => {
       for (const c of cues) {
         if (c.delay <= 0) {
@@ -248,6 +356,7 @@ export default function BattleStage({
     });
     return () => {
       off();
+      runCue.current = null;
       timers.forEach((t) => window.clearTimeout(t));
     };
   }, [bus]);
@@ -258,47 +367,55 @@ export default function BattleStage({
       aria-hidden
       className="relative h-32 w-full overflow-hidden rounded-xl border border-[var(--gold)]/40 bg-gradient-to-b from-transparent via-black/5 to-black/25 sm:h-40 md:h-44"
     >
-      {/* Mặt đất: dải mờ dưới chân hai đội. */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[14%] bg-black/15" />
-      {slots.map((s) => {
-        const left = `${slotX(s.side, s.index) * 100}%`;
-        const alive = isAlive(s.fighter);
-        const isActor =
-          actor !== null && actor.side === s.side && actor.fighter === s.index;
-        return (
-          <div key={s.key}>
-            {isActor && alive && (
-              <span
-                className="absolute h-2.5 w-14 -translate-x-1/2 rounded-[50%] border-2 border-amber-300/80 bg-amber-300/20 md:w-20"
-                style={{ left, bottom: `${(1 - GROUND) * 100 - 2}%` }}
-              />
-            )}
-            {!s.rig && (
-              <div
-                className="absolute z-10 -translate-x-1/2"
-                style={{ left, bottom: `${(1 - GROUND) * 100 + 4}%`, zIndex: 20 - s.index }}
-              >
-                <div className={alive ? "stage-idle" : ""}>
-                  <div
-                    ref={(n) => {
-                      if (n) portraits.current.set(s.key, n);
-                      else portraits.current.delete(s.key);
-                    }}
-                    className={`transition-[opacity,filter,transform] duration-500 ${alive ? "" : "translate-y-2 rotate-12 opacity-35 grayscale"}`}
-                  >
-                    <Portrait
-                      id={s.fighter.id}
-                      element={s.fighter.element}
-                      profession={s.fighter.profession}
-                      className="size-12 drop-shadow-md sm:size-16 md:size-20"
-                    />
+      <div ref={camera} className="absolute inset-0">
+        {/* Mặt đất: dải mờ dưới chân hai đội. */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[14%] bg-black/15" />
+        {slots.map((s) => {
+          const left = `${slotX(s.side, s.index) * 100}%`;
+          const alive = isAlive(s.fighter);
+          const isActor =
+            actor !== null && actor.side === s.side && actor.fighter === s.index;
+          return (
+            <div key={s.key}>
+              {isActor && alive && (
+                <span
+                  className="absolute h-2.5 w-14 -translate-x-1/2 rounded-[50%] border-2 border-amber-300/80 bg-amber-300/20 md:w-20"
+                  style={{ left, bottom: `${(1 - GROUND) * 100 - 2}%` }}
+                />
+              )}
+              {!s.rig && (
+                <div
+                  className="absolute z-10 -translate-x-1/2"
+                  style={{ left, bottom: `${(1 - GROUND) * 100 + 4}%`, zIndex: 20 - s.index }}
+                >
+                  <div className={alive ? "stage-idle" : ""}>
+                    <div
+                      ref={(n) => {
+                        if (n) portraits.current.set(s.key, n);
+                        else portraits.current.delete(s.key);
+                      }}
+                      className={`transition-[opacity,filter,transform] duration-500 ${alive ? "" : "translate-y-2 rotate-12 opacity-35 grayscale"}`}
+                    >
+                      <Portrait
+                        id={s.fighter.id}
+                        element={s.fighter.element}
+                        profession={s.fighter.profession}
+                        className="size-12 drop-shadow-md sm:size-16 md:size-20"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
-        );
-      })}
+              )}
+            </div>
+          );
+        })}
+      </div>
+      {/* Viền tối khi cận cảnh tuyệt chiêu, sáng quanh người tung chiêu. */}
+      <div
+        ref={vignette}
+        className="pointer-events-none absolute inset-0 z-30 opacity-0"
+        style={{ background: "radial-gradient(ellipse 45% 90% at var(--x, 50%) 60%, transparent 40%, rgb(0 0 0 / 0.55))" }}
+      />
     </div>
   );
 }

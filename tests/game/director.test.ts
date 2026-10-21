@@ -9,7 +9,13 @@ import {
   type BattleEvent,
   type BattleState,
 } from "../../src/core";
-import { createCueBus, HIT_DELAY_MS, stageCues } from "../../src/app/game/stage/director";
+import {
+  AFTER_HIT_MS,
+  createCueBus,
+  HIT_DELAY_MS,
+  stageCues,
+  VICTORY_DELAY_MS,
+} from "../../src/app/game/stage/director";
 
 const byId = (id: string) => STARTER_COMPANIONS.find((c) => c.id === id)!;
 
@@ -77,6 +83,54 @@ describe("đạo diễn trận", () => {
       { side: 1, fighter: 2, kind: "attack", delay: 0 },
       { side: 0, fighter: 0, kind: "hit", delay: HIT_DELAY_MS },
     ]);
+  });
+
+  it("khiên hút trọn đòn thì đỡ, còn lọt máu thì trúng đòn", () => {
+    const s = battle(1);
+    const { end } = stageCues(s, [
+      { type: "damage", side: 1, fighter: 0, amount: 0, absorbed: 30, source: "skill" },
+      { type: "damage", side: 1, fighter: 1, amount: 8, absorbed: 22, source: "skill" },
+    ]);
+    assert.deepEqual(end.map((c) => c.kind), ["guard", "hit"]);
+  });
+
+  it("hiệu ứng: khiên là đỡ, tăng là buff, giảm là debuff; phát sau cú trúng nếu vừa bị đánh", () => {
+    const s = battle(1);
+    const { end } = stageCues(s, [
+      { type: "effect", side: 0, fighter: 0, effect: "shield" },
+      { type: "effect", side: 0, fighter: 1, effect: "atkUp" },
+      { type: "damage", side: 1, fighter: 2, amount: 10, absorbed: 0, source: "skill" },
+      { type: "effect", side: 1, fighter: 2, effect: "burn" },
+      { type: "effect", side: 1, fighter: 1, effect: "freezeImmune" },
+    ]);
+    assert.deepEqual(end, [
+      { side: 0, fighter: 0, kind: "guard", delay: 0 },
+      { side: 0, fighter: 1, kind: "buff", delay: 0 },
+      { side: 1, fighter: 2, kind: "hit", delay: 0 },
+      { side: 1, fighter: 2, kind: "debuff", delay: AFTER_HIT_MS },
+    ]);
+  });
+
+  it("hết trận: người còn đứng của phe thắng ăn mừng, người vừa gục thì không", () => {
+    const s = battle(1);
+    const { end } = stageCues(s, [
+      { type: "damage", side: 0, fighter: 2, amount: 999, absorbed: 0, source: "skill" },
+      { type: "ko", side: 0, fighter: 2 },
+      { type: "end", winner: 0 },
+    ]);
+    assert.deepEqual(
+      end.filter((c) => c.kind === "victory"),
+      [
+        { side: 0, fighter: 0, kind: "victory", delay: VICTORY_DELAY_MS },
+        { side: 0, fighter: 1, kind: "victory", delay: VICTORY_DELAY_MS },
+      ],
+    );
+  });
+
+  it("đợt mới ở Sinh tồn: phe mình vào thế", () => {
+    const s = battle(1);
+    const { end } = stageCues(s, [{ type: "wave", wave: 2 }]);
+    assert.deepEqual(end.map((c) => `${c.side}:${c.fighter}:${c.kind}`), ["0:0:ready", "0:1:ready", "0:2:ready"]);
   });
 
   it("cả trận AI: mọi động tác trỏ tới nhân vật có thật", () => {

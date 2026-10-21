@@ -7,13 +7,18 @@ import type { CueKind } from "@/app/game/stage/director";
 import { rigOf } from "@/app/game/stage/rigs";
 
 const ACTIONS = [
-  { kind: "idle", label: "Đứng", ms: 1000 },
-  { kind: "attack", label: "Đánh thường", ms: 1100 },
-  { kind: "cast", label: "Ra chiêu", ms: 1600 },
-  { kind: "ultimate", label: "Tuyệt chiêu", ms: 1850 },
-  { kind: "hit", label: "Trúng đòn", ms: 750 },
-  { kind: "heal", label: "Hồi máu", ms: 1000 },
+  { kind: "idle", label: "Đứng", ms: 2000 },
+  { kind: "ready", label: "Vào thế", ms: 600 },
+  { kind: "attack", label: "Đánh thường", ms: 900 },
+  { kind: "cast", label: "Ra chiêu", ms: 1100 },
+  { kind: "ultimate", label: "Tuyệt chiêu", ms: 1800 },
+  { kind: "hit", label: "Trúng đòn", ms: 600 },
+  { kind: "guard", label: "Đỡ đòn", ms: 700 },
+  { kind: "buff", label: "Được tăng", ms: 700 },
+  { kind: "debuff", label: "Bị giảm", ms: 700 },
+  { kind: "heal", label: "Hồi máu", ms: 700 },
   { kind: "ko", label: "Bị hạ gục", ms: 1300 },
+  { kind: "victory", label: "Chiến thắng", ms: 2600 },
 ] as const;
 type Action = CueKind | "idle" | "ko";
 const button = "rounded-lg border border-amber-800/70 bg-stone-900 px-3 py-2 text-sm font-medium hover:bg-amber-900/40 aria-pressed:border-amber-300 aria-pressed:bg-amber-900/60 disabled:opacity-40";

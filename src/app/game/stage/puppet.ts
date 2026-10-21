@@ -5,7 +5,19 @@
  */
 import { Assets, Container, Graphics, Sprite, type Texture } from "pixi.js";
 import type { CueKind } from "./director";
-import { ease, glow, layers, particles, pulse, reaction, type Puppet } from "./kit";
+import {
+  BREATH,
+  cueFx,
+  ease,
+  glow,
+  KO_SECONDS,
+  layers,
+  particles,
+  pulse,
+  reaction,
+  victory,
+  type Puppet,
+} from "./kit";
 import { MAGE_PARTS, partsOf, partUrl, type MageRig, type Rig } from "./rigs";
 import { warrior } from "./warrior";
 
@@ -93,6 +105,7 @@ function mage(
   const ring = new Graphics();
   fx.addChild(ring);
   let ringA = 0;
+  const cue = cueFx(view, rig.height, rig.fxColor);
 
   let time = Math.random() * 10;
   let nextBlink = time + 1 + Math.random() * 3;
@@ -107,10 +120,10 @@ function mage(
     time += dt;
     const t = time;
     const life = down ? 0 : AMP;
-    body.scale.set(1, 1 + Math.sin(t * 2.1) * 0.006 * life);
-    let upperRot = Math.sin(t * 1.05) * 0.008 * life;
-    let armLRot = Math.sin(t * 1.4 + 0.5) * 0.025 * life;
-    let armRRot = Math.sin(t * 1.3) * 0.022 * life;
+    let squash = Math.sin(t * BREATH) * 0.006 * life;
+    let upperRot = Math.sin(t * BREATH * 0.5) * 0.008 * life;
+    let armLRot = Math.sin(t * BREATH + 0.5) * 0.025 * life;
+    let armRRot = Math.sin(t * BREATH + 1.1) * 0.022 * life;
     let headRot = Math.sin(t * 0.9 + 1) * 0.02 * life;
     let waterLRot = Math.sin(t * 1.6) * 0.06 * life;
     let waterRRot = Math.sin(t * 1.5 + 2) * 0.07 * life;
@@ -119,17 +132,20 @@ function mage(
     let palmA = 0.15 + Math.sin(t * 2.6) * 0.08 * life;
     let gust = 1;
     let shiftX = 0;
+    let lift = 0;
     let tint = 0xffffff;
 
     if (action) {
       action.t += dt;
       const a = action.t;
-      if (action.kind === "cast" || action.kind === "attack") {
-        // Đòn kiếm là bản ngắn của thi triển: không nâng hồ lô, chỉ đẩy tay và bắn ít hạt.
-        const big = action.kind === "cast";
-        const raise = big ? pulse(a, 0, 0.28) * (1 - pulse(a, 0.55, 1.2)) : 0;
-        const at = big ? 0.28 : 0;
-        const push = pulse(a, at, at + 0.14) * (1 - pulse(a, at + 0.27, at + 0.8));
+      if (action.kind === "cast" || action.kind === "attack" || action.kind === "ultimate") {
+        // Đòn kiếm là bản ngắn của thi triển: không nâng hồ lô, chỉ đẩy tay và bắn ít hạt. Tuyệt chiêu tụ
+        // nước lâu hơn rồi bung mạnh. Mốc kết thúc: đánh 0,65 s, thi triển 0,85 s, tuyệt chiêu 1,4 s.
+        const ult = action.kind === "ultimate";
+        const big = action.kind !== "attack";
+        const at = ult ? 0.6 : big ? 0.22 : 0;
+        const raise = big ? pulse(a, 0, at) * (1 - pulse(a, at + 0.2, ult ? 1.3 : 0.8)) : 0;
+        const push = pulse(a, at, at + 0.12) * (1 - pulse(a, at + 0.22, ult ? 1.35 : at + 0.6));
         upperRot += -0.03 * raise + 0.05 * push;
         armRRot += -0.09 * raise;
         armLRot += -0.12 * push;
@@ -141,9 +157,13 @@ function mage(
         waterRScale += 0.28 * push;
         gust = 1 + 1.6 * push;
         shiftX = big ? 0 : 26 * push;
+        if (ult) {
+          glowA += 1.2 * raise;
+          lift = 18 * push;
+        }
         if (!action.fired && a >= at + 0.02) {
           action.fired = true;
-          const n = big ? 26 : 12;
+          const n = ult ? 40 : big ? 26 : 12;
           for (let i = 0; i < n; i++) {
             const ang = (Math.random() - 0.5) * 0.9;
             const v = 380 + Math.random() * 420;
@@ -151,21 +171,39 @@ function mage(
           }
           ringA = big ? 1 : 0.6;
         }
-        if (a > (big ? 1.25 : 0.85)) action = null;
+        if (a > (ult ? 1.4 : big ? 0.85 : 0.65)) action = null;
+      } else if (action.kind === "victory") {
+        // Giơ hồ lô và tay trái lên cao, nước quanh người dâng lên.
+        const v = victory(a);
+        lift = v.lift;
+        squash += v.squash;
+        upperRot += 0.05 * v.tilt;
+        armRRot += -0.2 * v.raise;
+        armLRot += -0.25 * v.raise;
+        waterLRot += 0.2 * v.raise;
+        waterRScale += 0.15 * v.raise;
+        glowA += v.glow;
+        palmA += 0.6 * v.glow;
       } else {
         const r = reaction(action.kind, a);
         shiftX = r.shiftX;
+        lift = r.lift;
+        squash += r.squash;
         upperRot += 0.05 * r.tilt;
         headRot += 0.06 * r.tilt;
+        armRRot += -0.12 * r.raise;
         tint = r.tint;
         glowA += 0.8 * r.glow;
         if (r.done) action = null;
       }
     }
 
-    if (down) downT = Math.min(1, downT + dt * 2.5);
-    body.x = shiftX;
-    body.rotation = -0.12 * ease(downT);
+    if (down) downT = Math.min(1, downT + dt / KO_SECONDS);
+    const stagger = down ? pulse(downT, 0, 0.25) * (1 - pulse(downT, 0.25, 1)) : 0;
+    body.scale.set(1, 1 + squash);
+    body.x = shiftX - 16 * stagger;
+    body.y = -lift;
+    body.rotation = 0.05 * stagger - 0.12 * ease(downT);
     body.tint = down ? 0x777777 : tint;
     body.alpha = 1 - 0.55 * ease(downT);
     shadow.alpha = 1 - 0.6 * ease(downT);
@@ -204,6 +242,7 @@ function mage(
     eyeL.scale.y = eyeR.scale.y = Math.max(0.1, Math.min(1, eye));
 
     L.bend(t, life, gust);
+    cue.update(dt);
     drops.update(dt);
     ring.clear();
     if (ringA > 0) {
@@ -227,17 +266,23 @@ function mage(
       downT = 0;
       ringA = 0;
       drops.clear();
+      cue.clear();
       update(0);
     },
     play(kind) {
       if (down || still) return;
-      action = { kind: kind === "ultimate" ? "cast" : kind, t: 0, fired: false };
+      if (kind === "ready" && action && action.kind !== "victory" && action.kind !== "ready") return;
+      action = { kind, t: 0, fired: false };
+      cue.start(kind);
     },
     setDown(next) {
       if (next === down) return;
       down = next;
       downT = next ? (still ? 1 : 0) : 0;
-      if (next) action = null;
+      if (next) {
+        action = null;
+        cue.clear();
+      }
       update(0);
     },
     destroy() {

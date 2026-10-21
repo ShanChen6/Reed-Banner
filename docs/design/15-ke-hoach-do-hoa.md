@@ -131,6 +131,8 @@ Mỗi hoạt ảnh gắn với **sự kiện core** (`BattleEvent`) đang có, n
 | `ko` gục | Hết máu | 0,8 s, giữ khung cuối | Không |
 | `victory` thắng | Hết trận | 1,2 s rồi lặp đoạn cuối | Có |
 
+Đã làm đủ 10 hoạt ảnh trên cả hai bộ xương (21/10/2026), mọi nhân vật có hình động dùng chung: `src/app/game/stage/director.ts` dịch sự kiện core sang động tác (khiên hút trọn đòn là `guard`, hiệu ứng `shield` là `guard`, hiệu ứng tốt/xấu là `buff`/`debuff`, `end` cho người còn đứng của phe thắng ăn mừng, `wave` ở Sinh tồn cho phe mình vào thế); `ready` phát khi đổi người hành động (`BattleStage.tsx`), không cắt ngang động tác đang chạy; tuyệt chiêu phóng to sân 1,3 lần quanh người tung chiêu kèm viền tối trong 1,5 s; phản ứng và ăn mừng dùng chung ở `kit.ts` (`reaction`, `victory`, `cueFx`). Nhân vật chưa có hình động (chân dung) cũng có đủ các động tác bằng CSS. Xem thử từng động tác ở `/demo/characters`.
+
 Tổng mỗi lượt có hoạt ảnh nằm trong mục tiêu ở mục 1: đòn đánh và hoạt ảnh bàn cờ chạy **song song**, không nối đuôi; chỉ tuyệt chiêu được dừng bàn cờ.
 
 ### 4.3 Dùng chung để giảm công và dung lượng
