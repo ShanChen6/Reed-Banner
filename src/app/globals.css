@@ -228,7 +228,8 @@
 @supports (offset-path: ellipse(10% 10% at 50% 50%)) {
   .lac-fly {
     top: 0 !important;
-    offset-path: ellipse(46% 42% at 50% 50%);
+    /* Vòng bay ôm sát mép phần mở đầu (một phần ra ngoài khung, bị cắt) để chim không lượn ngang qua chữ và nút. */
+    offset-path: ellipse(52% 49% at 50% 50%);
     offset-anchor: center;
     offset-rotate: auto;
     animation-name: lac-orbit;

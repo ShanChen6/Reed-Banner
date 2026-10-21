@@ -49,13 +49,14 @@ export function GiltCorner({ className }: { className?: string }) {
 }
 
 /** Bốn góc mạ vàng cho một khung `relative`. */
-export function GiltCorners({ size = "size-9" }: { size?: string }) {
+/** `skip` bỏ góc dưới trái, nhường chỗ cho vật đè lên góc (như chân dung thủ lĩnh ở hero). */
+export function GiltCorners({ size = "size-9", skip }: { size?: string; skip?: "bottomLeft" }) {
   return (
     <>
       <GiltCorner className={`pointer-events-none absolute z-10 -left-3 -top-3 ${size}`} />
       <GiltCorner className={`pointer-events-none absolute z-10 -right-3 -top-3 rotate-90 ${size}`} />
       <GiltCorner className={`pointer-events-none absolute z-10 -bottom-3 -right-3 rotate-180 ${size}`} />
-      <GiltCorner className={`pointer-events-none absolute z-10 -bottom-3 -left-3 -rotate-90 ${size}`} />
+      {skip !== "bottomLeft" && <GiltCorner className={`pointer-events-none absolute z-10 -bottom-3 -left-3 -rotate-90 ${size}`} />}
     </>
   );
 }

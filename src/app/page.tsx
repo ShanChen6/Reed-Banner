@@ -175,9 +175,10 @@ export default function Home() {
               <p className="mt-5 text-sm text-stone-500">Chạy ngay trên trình duyệt · Máy tính và điện thoại xoay ngang · Không cần tài khoản</p>
             </div>
 
-            <div className="relative">
+            {/* Chân dung thủ lĩnh đè lên góc dưới trái bàn cờ (tâm đúng góc khung), hai đồng đội đứng dưới mép khung, không che ô nào. */}
+            <div className="relative mb-14 ml-8 md:mb-12 md:ml-6">
               <div className="fx-frame relative rounded-xl p-2">
-                <GiltCorners size="size-10 md:size-14" />
+                <GiltCorners size="size-10 md:size-14" skip="bottomLeft" />
                 <div className="grid gap-[2px]" style={{ gridTemplateColumns: `repeat(${BOARD_COLS}, minmax(0, 1fr))` }}>
                   {board.map((t, i) => (
                     <div key={i} className="aspect-square rounded-[3px] bg-[#3a2c24]">
@@ -186,10 +187,15 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-              <div className="absolute -bottom-6 -left-4 flex items-end gap-1 md:-left-8">
-                <Portrait id="dinhBoLinh" element="moc" profession="tuongSi" className="size-20 drop-shadow-lg md:size-24" />
+              <Portrait
+                id="dinhBoLinh"
+                element="moc"
+                profession="tuongSi"
+                className="absolute bottom-0 left-0 z-20 size-20 -translate-x-1/2 translate-y-1/2 drop-shadow-[0_6px_10px_#000c] md:size-28"
+              />
+              <div className="absolute left-12 top-full mt-2 flex gap-1.5 md:left-16">
                 {STARTER_COMPANIONS.filter((c) => c.id === "haVan" || c.id === "maiThanh").map((c) => (
-                  <Portrait key={c.id} id={c.id} element={c.element} profession={c.profession} className="size-12 drop-shadow-lg md:size-14" />
+                  <Portrait key={c.id} id={c.id} element={c.element} profession={c.profession} className="size-10 drop-shadow-lg md:size-12" />
                 ))}
               </div>
             </div>
