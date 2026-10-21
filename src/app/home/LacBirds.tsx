@@ -1,6 +1,7 @@
-// Đàn chim lạc bay vòng quanh phần mở đầu trang giới thiệu, nối đuôi nhau như vành chim trên mặt trống đồng.
-// Dáng chim vẽ mới bằng SVG: mỏ dài, cổ cong, mào lông, hai cánh giơ cao xòe ra sau, đuôi dài; mảng vàng phẳng
-// với chấm tròn và vạch khắc như hoa văn trống đồng.
+// Đàn chim lạc bay vòng quanh mặt trống đồng ở phần mở đầu trang giới thiệu, nối đuôi nhau như vành chim trên trống.
+// Dáng chim giữ nét trống đồng (mỏ dài, cổ cong, mào lông tròn đầu, cánh giơ cao, chấm tròn dọc thân) nhưng vẽ theo
+// phong cách fantasy của logo: lông mạ vàng, lớp lông trong đỏ lửa, đuôi dài có dải sáng, quầng sáng mờ sau lưng.
+// Quầng sáng là dải màu, không dùng filter, để bảy con chim cùng đập cánh vẫn nhẹ.
 
 type Point = readonly [number, number];
 
@@ -30,68 +31,111 @@ function arc(a: Point, b: Point, n: number, bulge: number): Point[] {
   });
 }
 
-const NEAR_WING = feathers(72, 104, 44, arc([40, 6], [104, 30], 8, 8), 2.2, 4.6);
-const FAR_WING = feathers(64, 94, 44, arc([30, 14], [90, 30], 7, 6), 2, 4);
-const TAIL = feathers(44, 46, 50, [[2, 38], [0, 46], [2, 54], [6, 61], [14, 67]], 2, 3.6);
-const CREST = feathers(128, 132, 24, [[112, 6], [118, 4], [124, 4]], 1.4, 2.4);
-const BODY_DOTS = [50, 58, 66, 74, 82, 90, 98, 106];
+const NEAR_WING = feathers(80, 116, 46, arc([42, 3], [116, 30], 9, 10), 2.4, 5.4);
+const NEAR_WING_INNER = feathers(84, 114, 46, arc([60, 14], [112, 34], 7, 6), 2, 4.4);
+const FAR_WING = feathers(70, 102, 46, arc([30, 11], [98, 30], 8, 7), 2, 4.2);
+const TAIL = feathers(48, 52, 54, [[8, 36], [3, 46], [4, 57], [10, 67], [20, 75]], 2, 4);
+const CREST_TIPS = [[118, 6], [125, 2], [133, 1.5], [141, 4]] as const;
+const CREST = feathers(139, 144, 23, CREST_TIPS, 1.4, 3);
+const BODY_DOTS = [56, 64, 72, 80, 88, 96, 104, 112];
 
-/** Một con chim lạc quay đầu sang phải, khung 180×72. Cánh đập bằng CSS (.lac-wing trong globals.css). */
-function LacBird({ className, style }: { className?: string; style?: React.CSSProperties }) {
+/** Dải màu dùng chung của mọi con chim, theo hệ tọa độ khung 200×90 của từng con. */
+function LacDefs() {
   return (
-    <svg viewBox="0 0 180 72" className={className} style={style} aria-hidden focusable="false">
-      <g fill="var(--gold)">
-        <g className="lac-wing lac-wing-far" opacity={0.5}>
-          <path d={FAR_WING} />
-        </g>
-        <path d={TAIL} />
-        {/* Thân, cổ cong, mào, đầu, mỏ dài. */}
-        <path d="M40 50 C56 44 90 42 112 43 C118 44 120 49 114 51 C92 56 60 57 40 50 Z" />
-        <path d="M108 44 C120 42 128 38 132 30 L140 33 C135 44 126 50 114 51 Z" />
-        <path d={CREST} />
-        <circle cx={137} cy={28} r={6.5} />
-        <path d="M142 25 L179 15 L143 29.5 Z" />
-        {/* Chân thu về sau. */}
-        <path d="M94 53 L78 62 M100 53 L84 63" stroke="var(--gold)" strokeWidth={2} strokeLinecap="round" />
-        {/* Cánh gần: chùm lông dài và mảng lông che ở gốc cánh. */}
-        <g className="lac-wing">
-          <path d={NEAR_WING} />
-          <path d="M66 46 L108 46 C104 38 100 33 94 30 C82 27 70 25 58 22 C60 32 62 40 66 46 Z" />
-          <path d="M64 30 C74 32 84 33 96 35 M68 38 C78 39 90 40 102 41" fill="none" stroke="var(--bg)" strokeWidth={1.4} strokeLinecap="round" />
-        </g>
-      </g>
-      {/* Chấm tròn dọc thân, mắt hai vòng. */}
-      <g fill="var(--bg)">
-        {BODY_DOTS.map((cx) => (
-          <circle key={cx} cx={cx} cy={50 - (cx - 50) * 0.05} r={1.6} />
-        ))}
-        <circle cx={137} cy={28} r={3.4} />
-      </g>
-      <circle cx={137} cy={28} r={1.6} fill="var(--gold)" />
+    <svg width={0} height={0} aria-hidden focusable="false" style={{ position: "absolute" }}>
+      <defs>
+        <linearGradient id="lac-gold" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="80">
+          <stop offset="0" stopColor="#fff6cc" />
+          <stop offset="0.35" stopColor="#f2c55e" />
+          <stop offset="0.7" stopColor="#b77a26" />
+          <stop offset="1" stopColor="#f0cf82" />
+        </linearGradient>
+        <linearGradient id="lac-ember" gradientUnits="userSpaceOnUse" x1="60" y1="10" x2="120" y2="50">
+          <stop offset="0" stopColor="#ffcf6b" />
+          <stop offset="0.5" stopColor="#e2582b" />
+          <stop offset="1" stopColor="#9b1f14" />
+        </linearGradient>
+        <linearGradient id="lac-trail" gradientUnits="userSpaceOnUse" x1="50" y1="0" x2="0" y2="0">
+          <stop offset="0" stopColor="#ffd77a" stopOpacity={0.9} />
+          <stop offset="1" stopColor="#ffd77a" stopOpacity={0} />
+        </linearGradient>
+        <radialGradient id="lac-halo" gradientUnits="userSpaceOnUse" cx="100" cy="44" r="96" gradientTransform="translate(100 44) scale(1 0.45) translate(-100 -44)">
+          <stop offset="0" stopColor="#ffcf6b" stopOpacity={0.35} />
+          <stop offset="0.5" stopColor="#e2582b" stopOpacity={0.12} />
+          <stop offset="1" stopColor="#e2582b" stopOpacity={0} />
+        </radialGradient>
+      </defs>
     </svg>
   );
 }
 
-/** Bảy con cùng một vòng bay, cách đều nhau; cỡ và nhịp cánh hơi khác để đàn chim không đều tăm tắp. */
-const LAP = 56;
+/** Một con chim lạc quay đầu sang phải, khung 200×90. Cánh đập bằng CSS (.lac-wing trong globals.css). */
+function LacBird({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg viewBox="0 0 200 90" className={className} style={style} aria-hidden focusable="false">
+      <ellipse cx={100} cy={44} rx={98} ry={44} fill="url(#lac-halo)" />
+      {/* Dải sáng kéo sau đuôi như vệt lửa. */}
+      <path d="M50 56 C34 60 18 70 2 86 M50 54 C30 52 14 56 0 64" fill="none" stroke="url(#lac-trail)" strokeWidth={2.2} strokeLinecap="round" />
+      <g className="lac-wing lac-wing-far" opacity={0.6}>
+        <path d={FAR_WING} fill="url(#lac-ember)" />
+      </g>
+      <g fill="url(#lac-gold)">
+        <path d={TAIL} />
+        {/* Thân, cổ cong, mào, đầu, mỏ dài. */}
+        <path d="M46 54 C62 46 98 44 122 45 C130 46 132 52 124 54 C100 60 64 60 46 54 Z" />
+        <path d="M118 46 C130 44 138 39 142 30 L151 33 C146 46 136 52 124 54 Z" />
+        <path d={CREST} />
+        <circle cx={147} cy={28} r={7} />
+        <path d="M152 25 L199 13 L153 31.5 Z" />
+        {/* Chân thu về sau. */}
+        <path d="M100 57 L84 67 M106 57 L90 68" stroke="url(#lac-gold)" strokeWidth={2} strokeLinecap="round" />
+      </g>
+      {/* Chấm tròn dọc thân, mắt hai vòng, mào có đầu đỏ. */}
+      <g fill="#3a1a0c">
+        {BODY_DOTS.map((cx) => (
+          <circle key={cx} cx={cx} cy={53 - (cx - 56) * 0.05} r={1.6} />
+        ))}
+        <circle cx={147} cy={28} r={3.8} />
+      </g>
+      <circle cx={147} cy={28} r={1.8} fill="#ffe08a" />
+      {CREST_TIPS.map(([x, y]) => (
+        <circle key={x} cx={x} cy={y} r={1.7} fill="#e2582b" />
+      ))}
+      {/* Cánh gần: lông ngoài mạ vàng, lông trong đỏ lửa, mảng che gốc cánh khắc vạch và chấm. */}
+      <g className="lac-wing">
+        <path d={NEAR_WING} fill="url(#lac-gold)" />
+        <path d={NEAR_WING_INNER} fill="url(#lac-ember)" />
+        <path d="M70 48 L118 48 C114 40 108 34 100 31 C86 28 74 26 60 22 C62 34 65 42 70 48 Z" fill="url(#lac-gold)" />
+        <path d="M66 30 C78 32 88 33 100 35 M70 39 C82 40 94 41 106 42" fill="none" stroke="#3a1a0c" strokeWidth={1.2} strokeLinecap="round" />
+        {[72, 80, 88, 96].map((cx) => (
+          <circle key={cx} cx={cx} cy={36 + (cx - 72) * 0.05} r={1.3} fill="#3a1a0c" />
+        ))}
+      </g>
+    </svg>
+  );
+}
+
+/** Bảy con cùng một vòng bay, cách đều nhau; con xa nhỏ và mờ hơn, nhịp cánh hơi khác để đàn chim không đều tăm tắp. */
+const LAP = 60;
 const FLOCK = [
-  { size: "w-28 md:w-40", flap: 0.9 },
-  { size: "w-24 md:w-32", flap: 0.8 },
-  { size: "w-28 md:w-36", flap: 0.85 },
-  { size: "w-20 md:w-28", flap: 0.75 },
-  { size: "w-28 md:w-40", flap: 0.95 },
-  { size: "w-24 md:w-32", flap: 0.8 },
-  { size: "w-20 md:w-28", flap: 0.7 },
+  { size: "w-36 md:w-60", flap: 0.9, opacity: 1 },
+  { size: "w-24 md:w-32", flap: 0.75, opacity: 0.6 },
+  { size: "w-32 md:w-48", flap: 0.85, opacity: 0.85 },
+  { size: "w-20 md:w-28", flap: 0.7, opacity: 0.55 },
+  { size: "w-36 md:w-52", flap: 0.95, opacity: 0.95 },
+  { size: "w-24 md:w-36", flap: 0.8, opacity: 0.7 },
+  { size: "w-20 md:w-28", flap: 0.7, opacity: 0.5 },
 ].map((b, i, all) => ({ ...b, delay: -(LAP * i) / all.length }));
 
 export default function LacBirds() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+      <LacDefs />
       {FLOCK.map((b, i) => (
         <div
           key={i}
-          className="lac-fly absolute left-0 opacity-75"
-          style={{ top: `${6 + i * 13}%`, animationDuration: `${LAP}s`, animationDelay: `${b.delay}s` }}
+          className="lac-fly absolute left-0"
+          style={{ top: `${6 + i * 13}%`, opacity: b.opacity, animationDuration: `${LAP}s`, animationDelay: `${b.delay}s` }}
         >
           <LacBird
             className={`lac-bob lac-upright ${b.size}`}

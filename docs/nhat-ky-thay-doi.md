@@ -2,6 +2,19 @@
 
 > Mới nhất ở trên cùng. Mỗi mục ghi quyết định và lý do nếu có.
 
+## 21/10/2026
+
+**Vũ khí đồng bộ giữa dáng đứng, ra chiêu, tuyệt chiêu, bị hạ gục (Shan báo lệch)**
+- 63 prompt toàn thân và 183 prompt tư thế thêm câu khóa vũ khí (Held item lock) tả đúng món của từng người; câu tư thế gọi món bằng tên riêng thay cho chữ chung (quạt lông cho người cầm quạt tre, quạt lá cọ, quạt sắt; cờ lệnh cho người cầm cờ đuôi nheo; gậy cho Hà Vân cầm quyền trượng; "weapon" cho búa, rìu, kiếm).
+- Đinh Bộ Lĩnh, Nguyễn Bặc, Đinh Điền, Lưu Cơ, Trịnh Tú: Holding tả chi tiết món đã vẽ trong `sword.webp`. Tuyệt chiêu Lưu Cơ bỏ cuộn chiếu chỉ (đồ thêm), chỉ cầm quạt.
+- Dáng đứng Pháp sư và Quân sư không còn cắm gậy/cán cờ xuống đất (mâu thuẫn với gậy ngắn, cán ngắn), cầm dựng bên người.
+
+**Dáng đứng riêng trong prompt toàn thân (Shan hỏi về việc đứng giống nhau)**
+- 56 prompt toàn thân thay dáng chữ A chung bằng dáng theo nghề và thái độ riêng từng người, vẫn giữ khe hở giữa tay và thân cho live2dlayer. Bảy nhân vật đã có hình giữ nguyên.
+
+**Tướng thường có nét riêng trong prompt ảnh (Shan đồng ý)**
+- 40 tướng thường (trừ Trần Cương, Đào Lam đã có hình) thêm tuổi, vóc dáng, tóc/râu, một dấu hiệu nhận diện riêng và kiểu đồ cầm tay riêng trong nghề, áp cho cả [Prompt nhân vật](design/16-prompt-nhan-vat.md) và [Prompt tư thế](design/18-prompt-tu-the.md). Sứ quân Phạm Bạch Hổ (đao bản rộng chuôi lông trắng) và Đỗ Cảnh Thạc (búa chiến cán dài) đổi vũ khí để khác Đinh Bộ Lĩnh, Nguyễn Bặc và Trần Cương cùng cầm đao.
+
 ## 20/10/2026
 
 **Bộ prompt đồ họa ngoài nhân vật (Shan yêu cầu)**

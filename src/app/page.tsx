@@ -11,13 +11,16 @@ import {
   TILE_KINDS,
 } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME, SPECIAL_NAME, TILE_NAME } from "./game/battle/labels";
-import { CloudCorner, DongSonBand, ElementIcon, LeaderFlag } from "./game/art/icons";
+import { ElementIcon, LeaderFlag } from "./game/art/icons";
+import { Logo, LogoMark } from "./game/art/logo";
 import Image from "next/image";
 import { Portrait } from "./game/art/portraits";
 import { TileArt } from "./game/art/tiles";
 import { FAQ, PROFESSION_PERK, TILE_GIVES } from "./home/data";
+import DrumFace from "./home/DrumFace";
 import ElementPicker from "./home/ElementPicker";
 import LacBirds from "./home/LacBirds";
+import { Embers, GiltCorners, OrnateDivider } from "./home/Ornaments";
 
 const NAV = [
   { href: "#how-to-play", label: "Cách chơi" },
@@ -78,9 +81,9 @@ const MODES = [
 function SectionTitle({ kicker, title, sub }: { kicker: string; title: string; sub?: string }) {
   return (
     <div className="mx-auto mb-10 max-w-2xl text-center">
-      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--gold)]">{kicker}</p>
-      <h2 className="mt-2 font-serif text-3xl font-bold md:text-4xl">{title}</h2>
-      <DongSonBand className="mx-auto mt-4 w-40" />
+      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#e9a25a]">{kicker}</p>
+      <h2 className="fx-gilt-text mt-2 font-serif text-3xl font-black md:text-4xl">{title}</h2>
+      <OrnateDivider className="mx-auto mt-4 w-56" />
       {sub && <p className="mt-4 text-stone-400">{sub}</p>}
     </div>
   );
@@ -90,7 +93,7 @@ function PlayButton({ className = "", children = "Chơi ngay" }: { className?: s
   return (
     <Link
       href="/game"
-      className={`inline-flex items-center justify-center gap-2 rounded-lg border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-5 py-2.5 font-bold uppercase tracking-wider text-amber-50 shadow-[0_0_24px_-6px_#c0392b] transition hover:brightness-110 ${className}`}
+      className={`fx-btn inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 font-bold uppercase tracking-wider transition hover:brightness-110 ${className}`}
     >
       {children}
     </Link>
@@ -112,10 +115,10 @@ export default function Home() {
         Bỏ qua tới nội dung
       </a>
 
-      <header className="sticky top-0 z-40 border-b border-[var(--gold)]/25 bg-[#17110e]/85 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-[var(--gold)]/40 bg-[#140e0b]/90 shadow-[0_8px_24px_-12px_#000] backdrop-blur">
         <nav className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-2.5">
-          <Link href="/" className="flex items-center gap-2 font-serif text-lg font-bold">
-            <LeaderFlag className="size-7" /> Cờ Lau
+          <Link href="/" className="flex items-center gap-2 font-serif text-lg font-black">
+            <LogoMark className="size-8" /> <span className="fx-gilt-text">Cờ Lau</span>
           </Link>
           <ul className="ml-auto hidden items-center gap-5 text-sm text-stone-300 md:flex">
             {NAV.map((n) => (
@@ -134,19 +137,19 @@ export default function Home() {
       </header>
 
       <main id="content">
-        {/* Hero: bàn cờ thật dựng bằng SVG làm hình chính. */}
-        <section className="relative overflow-hidden">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_70%_40%,#5a1e1499,transparent_60%),radial-gradient(ellipse_at_10%_90%,#d4a24c22,transparent_50%)]"
-          />
+        {/* Hero: mặt trống đồng xoay chậm, đàn chim lạc bay vòng quanh, bàn cờ thật dựng bằng SVG làm hình chính. */}
+        <section className="relative overflow-hidden border-b border-[var(--gold)]/20">
+          <div aria-hidden className="fx-hero-glow pointer-events-none absolute inset-0" />
+          <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 w-[min(1000px,150vw)] -translate-x-1/2 -translate-y-1/2 opacity-[0.13]">
+            <DrumFace className="drum-spin h-auto w-full" />
+          </div>
+          <Embers />
           <LacBirds />
-          <CloudCorner className="pointer-events-none absolute left-3 top-3 size-12 opacity-60" />
-          <CloudCorner className="pointer-events-none absolute bottom-3 right-3 size-12 rotate-180 opacity-60" />
           <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 md:grid-cols-[1fr_1.1fr] md:py-20">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[var(--gold)]">Loạn 12 Sứ Quân · Thế kỷ X</p>
-              <h1 className="mt-3 font-serif text-6xl font-black tracking-tight md:text-7xl">Cờ Lau</h1>
+              <h1 className="-mx-4 -mt-6 max-w-[520px] md:-mx-8">
+                <Logo priority className="h-auto w-full" />
+              </h1>
               <p className="mt-4 max-w-md text-lg text-stone-300">
                 Game ghép ô chiến đấu theo lượt. Cầm cờ lau như Đinh Bộ Lĩnh thuở chăn trâu, dẫn đồng đội và dẹp loạn bằng những
                 nước ghép khôn ngoan.
@@ -154,7 +157,7 @@ export default function Home() {
               <ul className="mt-5 flex flex-wrap gap-2 text-sm">
                 {NAV.slice(0, 4).map((n) => (
                   <li key={n.href}>
-                    <a href={n.href} className="rounded-full border border-stone-700 px-3 py-1 text-stone-300 hover:border-[var(--gold)] hover:text-[var(--gold)]">
+                    <a href={n.href} className="rounded-full border border-[var(--gold)]/35 bg-black/30 px-3 py-1 text-amber-100/80 hover:border-[var(--gold)] hover:text-[var(--gold)]">
                       {n.label}
                     </a>
                   </li>
@@ -164,7 +167,7 @@ export default function Home() {
                 <PlayButton className="text-base">Chơi thử miễn phí</PlayButton>
                 <a
                   href="#how-to-play"
-                  className="inline-flex items-center rounded-lg border border-stone-600 px-5 py-2.5 font-semibold text-stone-200 hover:border-[var(--gold)]"
+                  className="fx-btn-ghost inline-flex items-center rounded-lg px-5 py-2.5 font-semibold text-amber-100 transition hover:brightness-125"
                 >
                   Chơi thế nào?
                 </a>
@@ -173,7 +176,8 @@ export default function Home() {
             </div>
 
             <div className="relative">
-              <div className="rounded-xl border-2 border-[var(--gold)] bg-[var(--frame)] p-1.5 shadow-[0_20px_60px_-15px_#000]">
+              <div className="fx-frame relative rounded-xl p-2">
+                <GiltCorners size="size-10 md:size-14" />
                 <div className="grid gap-[2px]" style={{ gridTemplateColumns: `repeat(${BOARD_COLS}, minmax(0, 1fr))` }}>
                   {board.map((t, i) => (
                     <div key={i} className="aspect-square rounded-[3px] bg-[#3a2c24]">
@@ -197,7 +201,7 @@ export default function Home() {
           <SectionTitle kicker="Nhân vật chính" title="Đinh Bộ Lĩnh qua ba thời" sub="Từ cậu bé chăn trâu cầm cờ lau, thành vị tướng dẹp loạn sứ quân, rồi lên ngôi hoàng đế." />
           <ul className="mx-auto grid max-w-5xl grid-cols-3 gap-3 md:gap-6">
             {DBL_ERAS.map((e) => (
-              <li key={e.src} className="flex flex-col items-center justify-end rounded-2xl border border-[var(--gold)]/40 bg-[var(--frame)]/40 p-2 text-center md:p-4">
+              <li key={e.src} className="flex flex-col items-center justify-end rounded-2xl fx-panel-hi p-2 text-center md:p-4">
                 <Image src={e.src} alt={`Đinh Bộ Lĩnh ${e.title}`} width={e.w} height={900} sizes="(min-width: 768px) 300px, 30vw" className="h-auto w-full drop-shadow-[0_12px_20px_#000a]" />
                 <p className="mt-2 font-serif text-base font-bold md:text-lg">{e.title}</p>
                 <p className="hidden text-xs text-stone-400 sm:block">{e.note}</p>
@@ -210,14 +214,14 @@ export default function Home() {
           <SectionTitle kicker="Cách chơi" title="Ba bước một lượt" sub="Mỗi lượt có 30 giây. Đánh sai không bị phạt, chỉ là nước đổi bị trả lại." />
           <ol className="mx-auto grid max-w-6xl gap-4 md:grid-cols-3">
             {STEPS.map((s) => (
-              <li key={s.n} className="relative rounded-2xl border border-stone-700/70 bg-[var(--panel)] p-6">
-                <span className="font-serif text-4xl font-black text-[var(--gold)]">{s.n}</span>
+              <li key={s.n} className="relative rounded-2xl fx-panel p-6">
+                <span className="fx-gilt-text font-serif text-4xl font-black">{s.n}</span>
                 <h3 className="mt-2 text-lg font-bold">{s.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-stone-400">{s.body}</p>
               </li>
             ))}
           </ol>
-          <div className="mx-auto mt-8 flex max-w-3xl flex-col items-center gap-3 rounded-2xl border border-[var(--gold)]/40 bg-[var(--frame)]/40 p-6 text-center">
+          <div className="mx-auto mt-8 flex max-w-3xl flex-col items-center gap-3 rounded-2xl fx-panel-hi p-6 text-center">
             <LeaderFlag className="size-10" />
             <p className="font-serif text-xl font-bold">Chọn hệ cho Đinh Bộ Lĩnh rồi vào trận</p>
             <p className="text-sm text-stone-400">Bản chơi thử chưa bật đồng hồ 30 giây, cứ thong thả tính nước.</p>
@@ -229,7 +233,7 @@ export default function Home() {
           <SectionTitle kicker="Điểm nhấn" title="Không chỉ là ghép ô" />
           <ul className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map((f) => (
-              <li key={f.title} className="flex gap-4 rounded-2xl border border-stone-700/70 bg-[var(--panel)] p-5">
+              <li key={f.title} className="flex gap-4 rounded-2xl fx-panel p-5">
                 <TileArt kind={f.tile.kind} special={f.tile.special} className="size-12 shrink-0" />
                 <div>
                   <h3 className="font-bold">{f.title}</h3>
@@ -242,7 +246,7 @@ export default function Home() {
 
         <section className="px-4 py-16">
           <SectionTitle kicker="Bàn cờ" title="Bảy loại ô" sub="Ô thường, bản yếu (chữ L, chữ T) và bản mạnh (thẳng 5)." />
-          <div className="mx-auto max-w-4xl overflow-x-auto rounded-2xl border border-stone-700/70 bg-[var(--panel)]">
+          <div className="mx-auto max-w-4xl overflow-x-auto rounded-2xl fx-panel">
             <table className="w-full min-w-[520px] text-left text-sm">
               <thead className="text-xs uppercase tracking-wider text-stone-500">
                 <tr>
@@ -297,9 +301,9 @@ export default function Home() {
               { k: "Tương sinh", v: "×1.1", body: "Đánh vào hệ mình sinh ra, sát thương nhỉnh hơn một chút." },
               { k: "Trang bị cùng hệ", v: "×1.5", body: "Mặc đồ đúng hệ nhân vật, chỉ số trang bị tăng một nửa." },
             ].map((c) => (
-              <li key={c.k} className="rounded-2xl border border-stone-700/70 bg-[var(--panel)] p-5">
+              <li key={c.k} className="rounded-2xl fx-panel p-5">
                 <p className="text-xs uppercase tracking-wider text-stone-500">{c.k}</p>
-                <p className="font-serif text-3xl font-black text-[var(--gold)]">{c.v}</p>
+                <p className="fx-gilt-text font-serif text-3xl font-black">{c.v}</p>
                 <p className="mt-1 text-sm text-stone-400">{c.body}</p>
               </li>
             ))}
@@ -309,14 +313,14 @@ export default function Home() {
         <section id="roster" className="scroll-mt-16 px-4 py-16">
           <SectionTitle kicker="Đội hình" title="Thủ lĩnh và năm đồng đội" sub="Đánh 1vs1 một mình, hoặc 3vs3 cùng hai đồng đội. Chân dung hiện tại là hình tạm, sẽ thay bằng tranh vẽ." />
           <ul className="mx-auto grid max-w-6xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-            <li className="flex flex-col items-center rounded-2xl border border-[var(--gold)]/60 bg-[var(--frame)]/40 p-4 text-center">
+            <li className="flex flex-col items-center rounded-2xl fx-panel-hi p-4 text-center">
               <Portrait id="dinhBoLinh" element="moc" profession="tuongSi" className="size-20" />
               <p className="mt-2 font-bold">Đinh Bộ Lĩnh</p>
               <p className="text-xs text-[var(--gold)]">Thủ lĩnh · đổi được hệ</p>
               <p className="mt-2 text-xs text-stone-400">Chọn nghề trước trận, 7 kỹ năng theo nguyên tố.</p>
             </li>
             {STARTER_COMPANIONS.map((c) => (
-              <li key={c.id} className="flex flex-col items-center rounded-2xl border border-stone-700/70 bg-[var(--panel)] p-4 text-center">
+              <li key={c.id} className="flex flex-col items-center rounded-2xl fx-panel p-4 text-center">
                 <Portrait id={c.id} element={c.element} profession={c.profession} className="size-20" />
                 <p className="mt-2 font-bold">{c.name}</p>
                 <p className="flex items-center gap-1 text-xs text-stone-400">
@@ -335,7 +339,7 @@ export default function Home() {
             {MODES.map((m) => (
               <li
                 key={m.name}
-                className={`flex flex-col rounded-2xl border p-5 ${m.open ? "border-[var(--gold)] bg-[var(--frame)]/40" : "border-stone-700/70 bg-[var(--panel)]"}`}
+                className={`flex flex-col rounded-2xl p-5 ${m.open ? "fx-panel-hi" : "fx-panel"}`}
               >
                 <span
                   className={`self-start rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider ${m.open ? "bg-[var(--gold)] text-stone-950" : "bg-stone-800 text-stone-400"}`}
@@ -354,7 +358,7 @@ export default function Home() {
           <SectionTitle kicker="Hỏi đáp" title="Câu hỏi thường gặp" />
           <div className="mx-auto max-w-3xl space-y-3">
             {FAQ.map((f) => (
-              <details key={f.q} className="group rounded-xl border border-stone-700/70 bg-[var(--panel)] px-5 py-4">
+              <details key={f.q} className="group rounded-xl fx-panel px-5 py-4">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold">
                   {f.q}
                   <span aria-hidden className="text-[var(--gold)] transition group-open:rotate-45">
@@ -368,12 +372,13 @@ export default function Home() {
         </section>
 
         <section className="px-4 pb-20 pt-6">
-          <div className="relative mx-auto max-w-4xl overflow-hidden rounded-3xl border-2 border-[var(--gold)] bg-gradient-to-br from-[#5a1e14] to-[#271d18] px-6 py-12 text-center">
-            <CloudCorner className="absolute left-3 top-3 size-10 opacity-70" />
-            <CloudCorner className="absolute bottom-3 right-3 size-10 rotate-180 opacity-70" />
-            <h2 className="font-serif text-3xl font-black md:text-4xl">Phất cờ lau, ra trận</h2>
-            <p className="mx-auto mt-3 max-w-md text-stone-300">Một trận chơi thử chỉ mất vài phút, ngay trên trình duyệt.</p>
-            <PlayButton className="mt-6 text-base">Chơi thử miễn phí</PlayButton>
+          <div className="fx-panel-hi relative mx-auto max-w-4xl overflow-hidden rounded-3xl px-6 py-12 text-center">
+            <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 w-[640px] -translate-x-1/2 -translate-y-1/2 opacity-[0.12]">
+              <DrumFace className="h-auto w-full" />
+            </div>
+            <h2 className="fx-gilt-text relative font-serif text-3xl font-black md:text-4xl">Phất cờ lau, ra trận</h2>
+            <p className="relative mx-auto mt-3 max-w-md text-stone-300">Một trận chơi thử chỉ mất vài phút, ngay trên trình duyệt.</p>
+            <PlayButton className="relative mt-6 text-base">Chơi thử miễn phí</PlayButton>
           </div>
         </section>
       </main>
@@ -382,7 +387,7 @@ export default function Home() {
         <div className="mx-auto flex max-w-6xl flex-col gap-6 md:flex-row md:items-start md:justify-between">
           <div>
             <p className="flex items-center gap-2 font-serif text-lg font-bold text-stone-200">
-              <LeaderFlag className="size-6" /> Cờ Lau
+              <LogoMark className="size-7" /> Cờ Lau
             </p>
             <p className="mt-1">Mini game thuộc ShanVerse.</p>
           </div>

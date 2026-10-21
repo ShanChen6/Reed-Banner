@@ -44,7 +44,7 @@ export default function ElementPicker() {
 
       <div
         role="tabpanel"
-        className="grid gap-6 rounded-2xl border border-stone-700/70 bg-[var(--panel)] p-5 md:grid-cols-[auto_1fr] md:p-7"
+        className="grid gap-6 fx-panel rounded-2xl p-5 md:grid-cols-[auto_1fr] md:p-7"
         style={{ boxShadow: `inset 0 0 0 1px ${ELEMENT_COLOR[element]}33, 0 0 60px -20px ${ELEMENT_COLOR[element]}` }}
       >
         <div className="flex flex-col items-center gap-2 text-center">

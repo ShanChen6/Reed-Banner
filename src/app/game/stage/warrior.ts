@@ -27,6 +27,12 @@ const FAN_SWING = {
   cast: { ...SWING.cast, windup: 0.08, strike: -0.26 },
 } as const;
 
+/** Y sư nâng hồ lô nhẹ, giữ cổ tay và ống tay áo sát nhau. */
+const GOURD_SWING = {
+  attack: { ...SWING.attack, windup: -0.04, strike: 0.14 },
+  cast: { ...SWING.cast, windup: -0.06, strike: 0.18 },
+} as const;
+
 /**
  * Nhịp của tranh tư thế (giây): `swap` đổi từ hình động sang tranh, `hit` tóe tia sáng, `out` bắt đầu đổi
  * về, `end` xong. `dash` là quãng lướt tới, `lift` là độ nhảy lên (tuyệt chiêu bổ từ trên xuống).
@@ -63,9 +69,10 @@ export function warrior(
   const armR = L.joint(joints.elbowR.x, joints.elbowR.y, body);
   L.sprite(img("armR"), parts.armR, armR);
   const arm = L.joint(joints.shoulder.x, joints.shoulder.y, body);
-  L.sprite(img("sword"), parts.sword, arm);
+  const held = rig.grip ? L.joint(rig.grip.x, rig.grip.y, arm) : arm;
+  L.sprite(img("sword"), parts.sword, held);
   // Hào quang dọc lưỡi kiếm, theo tay khi chém.
-  const auras = Array.from({ length: rig.weapon === "fan" ? 0 : 6 }, (_, i) => {
+  const auras = Array.from({ length: rig.weapon === "fan" || rig.weapon === "gourd" ? 0 : 6 }, (_, i) => {
     const at = (i + 0.5) / 6;
     const s = new Sprite(glow());
     s.anchor.set(0.5);
@@ -214,7 +221,8 @@ export function warrior(
         const swingKind = action.kind === "attack" ? "attack" : "cast";
         const spear = rig.weapon === "spear";
         const fan = rig.weapon === "fan";
-        const S = (spear ? SPEAR_SWING : fan ? FAN_SWING : SWING)[swingKind];
+        const gourd = rig.weapon === "gourd";
+        const S = (spear ? SPEAR_SWING : fan ? FAN_SWING : gourd ? GOURD_SWING : SWING)[swingKind];
         const wind = pulse(a, 0, S.at);
         const strike = pulse(a, S.at, S.hit);
         const back = pulse(a, S.back[0], S.back[1]);
@@ -229,7 +237,7 @@ export function warrior(
         if (swingKind === "cast") aura += 1.4 * wind * (1 - back);
         else aura += 0.5 * strike * (1 - back);
         // Vệt kiếm: cung từ góc kiếm hiện tại kéo ngược về chỗ bắt đầu chém.
-        if (!spear && !fan && a >= S.at && a <= S.hit + 0.05) {
+        if (!spear && !fan && !gourd && a >= S.at && a <= S.hit + 0.05) {
           trailA = swingKind === "cast" ? 1 : 0.75;
           trailFrom = baseAngle + armRot;
           trailTo = baseAngle + S.windup;
@@ -271,6 +279,7 @@ export function warrior(
       fallen.y = -30 * (1 - fall);
     }
     arm.rotation = down ? 0.15 * ease(downT) : armRot;
+    if (held !== arm) held.rotation = Math.sin(t * 1.7 + 0.6) * 0.012 * life;
     arm.x = joints.shoulder.x + thrust;
     armR.rotation = armRRot;
     head.rotation = headRot;

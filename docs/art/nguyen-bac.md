@@ -23,13 +23,7 @@ Tọa độ đều trong khung nguồn 1024×1536, không phải pixel WebP. Kh�
 
 ## Tái xuất
 
-Cần Pillow, ảnh nguồn `nguyễn bặc.png` và ảnh tách nền có alpha đúng khung nguồn:
-
-```sh
-python3 scripts/art/nguyen_bac.py '/đường/dẫn/nguyễn bặc.png' '/đường/dẫn/alpha.png'
-```
-
-Script từ chối ảnh khác kích thước 1024×1536, cắt lớp, kiểm tra ảnh ráp, ghi WebP và metadata. Sau khi đổi đường cắt phải đồng bộ PartBox trong `rigs.ts`; test sẽ bắt tọa độ không khớp.
+Dự án không giữ file Python. Khi cần tái xuất, cắt lớp từ ảnh nguồn `nguyễn bặc.png` (1024×1536) cùng ảnh tách nền có alpha đúng khung nguồn, theo tọa độ trong `nguyen-bac-boxes.json`, chạy Python nội tuyến (`python3 - <<'EOF' ... EOF`) như quy ước ở `docs/design/19-codex-do-hoa.md`: từ chối ảnh khác kích thước, cắt lớp, kiểm tra ảnh ráp, ghi WebP và metadata. Sau khi đổi đường cắt phải đồng bộ PartBox trong `rigs.ts`; test sẽ bắt tọa độ không khớp.
 
 Prompt alpha cuối, dùng công cụ imagegen tích hợp:
 
@@ -59,6 +53,6 @@ Nhân vật cũ thiếu ảnh riêng hiển thị SVG/ảnh ghép rig hoặc ghi
 
 Ba tranh hành động thu nhỏ đều về 1/3 nguồn; mỗi `PoseArt` khai báo `texScale=1/3` để giữ nguyên cỡ người và vị trí trong trận. Ảnh đứng đối chiếu 360×540 có 43.956 byte, chỉ dùng trên trang xem thử. Rig trong trận tải 246.512 byte; tổng tất cả file của Nguyễn Bặc là 316.904 byte, dưới 350 KB. Avatar vẫn 256×256, 26.436 byte.
 
-Tái xuất ba tranh với `scripts/art/nguyen_bac_poses.py SOURCE_DIR CAST_ALPHA ULTIMATE_ALPHA KO_ALPHA`. Prompt alpha cho tranh gục:
+Tái xuất ba tranh cũng bằng Python nội tuyến: lấy RGB từ tranh gốc, ghép alpha đã tách, thu nhỏ 1/3 rồi ghi WebP. Prompt alpha cho tranh gục:
 
 > Use case: background-extraction. Remove ONLY the painted gray-white checkerboard background from this defeated kneeling Nguyen Bac warrior. Produce genuine transparent alpha, not a painted checkerboard. Preserve EXACT original 1536x1024 canvas and all pixel locations: full kneeling body, face, hands, armor, white feathers, flowing red fabric, entire sword including tip. Do not crop, reposition, rescale, mirror, redraw or change proportions. Clean edges and transparent gaps. No added effects, floor or shadow. Exact source registration is required: alpha will be applied to ORIGINAL RGB pixels.
