@@ -19,7 +19,6 @@ import { TileArt } from "./game/art/tiles";
 import { FAQ, PROFESSION_PERK, TILE_GIVES } from "./home/data";
 import DrumFace from "./home/DrumFace";
 import ElementPicker from "./home/ElementPicker";
-import LacBirds from "./home/LacBirds";
 import { Embers, GiltCorners, OrnateDivider } from "./home/Ornaments";
 
 const NAV = [
@@ -137,8 +136,8 @@ export default function Home() {
       </header>
 
       <main id="content">
-        {/* Hero: tranh trời trống đồng làm nền, mặt trống khắc vạch xoay chậm đè đúng lên trống trong tranh, tâm sao sáng nhịp,
-            đàn chim lạc bay vòng quanh, bàn cờ thật dựng bằng SVG làm hình chính. */}
+        {/* Hero: tranh trời trống đồng và chim lạc làm nền, mặt trống khắc vạch xoay chậm đè đúng lên trống trong tranh,
+            tâm sao sáng nhịp, bàn cờ thật dựng bằng SVG làm hình chính. */}
         <section className="relative overflow-hidden border-b border-[var(--gold)]/20">
           <div aria-hidden className="pointer-events-none absolute inset-0 [container-type:size]">
             {/* Khung giữ đúng tỉ lệ tranh và phủ kín phần mở đầu (như object-cover), để lớp trống xoay luôn trùng trống trong tranh. */}
@@ -153,7 +152,6 @@ export default function Home() {
           {/* Lớp tối phía chữ để đọc rõ; trên điện thoại chữ phủ cả bề ngang nên tối đều. */}
           <div aria-hidden className="hero-shade pointer-events-none absolute inset-0" />
           <Embers />
-          <LacBirds />
           <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 md:grid-cols-[1fr_1.1fr] md:py-20">
             <div>
               <h1 className="-mx-4 -mt-6 max-w-[520px] md:-mx-8">
