@@ -186,96 +186,12 @@
   animation: tile-strong 1.8s ease-in-out infinite;
 }
 
-/* Chim lạc bay vòng quanh phần mở đầu trang giới thiệu (src/app/home/LacBirds.tsx), theo chiều kim đồng hồ.
-   Trình duyệt chưa hỗ trợ offset-path hình elip thì chim bay ngang từ trái sang phải. */
-@keyframes lac-fly {
-  from {
-    transform: translateX(-20vw);
-  }
-  to {
-    transform: translateX(110vw);
-  }
-}
-@keyframes lac-orbit {
-  from {
-    offset-distance: 0%;
-  }
-  to {
-    offset-distance: 100%;
-  }
-}
-@keyframes lac-bob {
-  0%,
-  100% {
-    translate: 0 0;
-  }
-  50% {
-    translate: 0 -8px;
-  }
-}
-@keyframes lac-flap {
-  0%,
-  100% {
-    transform: scaleY(1);
-  }
-  50% {
-    transform: scaleY(0.35);
-  }
-}
-.lac-fly {
-  animation: lac-fly linear infinite;
-}
-@supports (offset-path: ellipse(10% 10% at 50% 50%)) {
-  .lac-fly {
-    top: 0 !important;
-    offset-path: ellipse(46% 42% at 50% 50%);
-    offset-anchor: center;
-    offset-rotate: auto;
-    animation-name: lac-orbit;
-  }
-  /* Vòng bay bắt đầu ở mép phải và đi xuống; nửa đầu vòng chim bay sang trái nên lật dọc để không ngửa bụng. */
-  .lac-bob.lac-upright {
-    animation-name: lac-bob, lac-upright;
-    animation-timing-function: ease-in-out, step-end;
-    animation-iteration-count: infinite;
-  }
-}
-@keyframes lac-upright {
-  0% {
-    transform: scaleY(-1);
-  }
-  50% {
-    transform: none;
-  }
-  100% {
-    transform: scaleY(-1);
-  }
-}
-.lac-bob {
-  animation: lac-bob 3.2s ease-in-out infinite;
-}
-/* Cánh co về phía thân (mép dưới) rồi giơ lại. */
-.lac-wing {
-  transform-box: fill-box;
-  transform-origin: 50% 100%;
-  animation: lac-flap var(--flap, 0.8s) ease-in-out infinite;
-}
-.lac-wing-far {
-  animation-delay: calc(var(--flap, 0.8s) * -0.15);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .tile-anim,
   .tile-strong,
   .chain-pop,
-  .float-up,
-  .lac-bob,
-  .lac-wing {
+  .float-up {
     animation: none !important;
-  }
-  /* Không chuyển động thì đàn chim đứng yên ở giữa đường bay. */
-  .lac-fly {
-    animation-play-state: paused !important;
   }
 }
 
@@ -330,11 +246,38 @@
     0 0 60px -10px #e2582b66,
     0 30px 60px -20px #000;
 }
-.fx-hero-glow {
+/* Tranh nền hero (src/app/page.tsx): khung theo tỉ lệ tranh, rộng đủ để phủ kín cả bề ngang lẫn bề cao phần mở đầu. */
+.hero-art {
+  width: max(100cqw, calc(100cqh * 1916 / 821));
+}
+.hero-shade {
   background:
-    radial-gradient(ellipse 60% 55% at 50% 45%, #e2582b33, transparent 70%),
-    radial-gradient(ellipse 40% 40% at 50% 45%, #f2c55e22, transparent 70%),
-    radial-gradient(ellipse at 50% 100%, #000a, transparent 60%);
+    linear-gradient(to bottom, #17110e99, #17110e55 25%, #17110e88 70%, #17110e),
+    linear-gradient(#0f0a07a6, #0f0a07a6);
+}
+@media (min-width: 768px) {
+  .hero-shade {
+    background:
+      linear-gradient(to bottom, #17110e66, transparent 20%, transparent 75%, #17110e),
+      linear-gradient(to right, #0f0a07f0, #0f0a07b3 32%, #0f0a0733 55%, #0f0a0700 75%);
+  }
+}
+/* Tâm sao mặt trống sáng lên rồi dịu xuống theo nhịp thở. */
+@keyframes hero-star {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+.hero-star {
+  background: radial-gradient(circle, #fff6d6 0, #ffd77acc 18%, #f2a93b55 45%, transparent 70%);
+  mix-blend-mode: screen;
+  animation: hero-star 4s ease-in-out infinite;
 }
 @keyframes drum-spin {
   to {
@@ -370,6 +313,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .drum-spin,
+  .hero-star,
   .ember {
     animation: none !important;
   }
