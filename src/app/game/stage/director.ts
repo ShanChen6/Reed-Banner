@@ -1,7 +1,29 @@
-import { SKILLS, type BattleEvent, type BattleState } from "@/core";
+import {
+  isAlive,
+  NEGATIVE_EFFECTS,
+  POSITIVE_EFFECTS,
+  SKILLS,
+  type BattleEvent,
+  type BattleState,
+} from "@/core";
 
-/** Động tác một nhân vật trên sân khấu. */
-export type CueKind = "attack" | "cast" | "ultimate" | "hit" | "heal";
+/**
+ * Động tác một nhân vật trên sân khấu, thời lượng theo bảng hoạt ảnh ở docs/design/15-ke-hoach-do-hoa.md:
+ * ready 0,3 s (đến lượt), attack 0,5–0,7 s, cast 0,6–0,9 s, ultimate 1,2–1,8 s kèm cận cảnh, hit 0,3 s,
+ * guard 0,4 s (khiên đỡ), buff/debuff/heal 0,4 s, victory 1,2 s rồi lặp đoạn cuối. Gục (ko) đi qua
+ * `setDown` vì theo máu chứ không theo sự kiện.
+ */
+export type CueKind =
+  | "ready"
+  | "attack"
+  | "cast"
+  | "ultimate"
+  | "hit"
+  | "guard"
+  | "buff"
+  | "debuff"
+  | "heal"
+  | "victory";
 
 /** Tuyệt chiêu hoặc chiêu riêng (ô 5): động tác lớn hơn kỹ năng thường. */
 export function isUltimate(skill: string): boolean {
@@ -28,6 +50,10 @@ export interface StageCues {
 
 /** Độ trễ từ lúc vung đòn tới lúc bên kia rung người. */
 export const HIT_DELAY_MS = 180;
+/** Hiệu ứng (khiên, tăng, giảm) trên người vừa trúng đòn hiện sau cú trúng, để hai động tác không đè nhau. */
+export const AFTER_HIT_MS = HIT_DELAY_MS + 320;
+/** Phe thắng ăn mừng sau khi người cuối cùng bên kia gục xong. */
+export const VICTORY_DELAY_MS = 900;
 
 /**
  * Đạo diễn trận: đọc chuỗi sự kiện của core rồi dựng động tác cho từng nhân vật. Người ra đòn kiếm là người
@@ -42,6 +68,8 @@ export function stageCues(
   let side = before.turn.side;
   let actor = before.turn.actor;
   const seen = new Set<string>();
+  /** Người gục trong lô này, không ăn mừng dù phe thắng. */
+  const fallen = new Set<string>();
   /** Thêm mỗi động tác một lần cho mỗi nhân vật trong cả lô, để chuỗi combo không làm nhân vật giật liên tục. */
   const add = (list: Cue[], cue: Cue) => {
     const key = `${cue.side}:${cue.fighter}:${cue.kind}`;
@@ -72,7 +100,8 @@ export function stageCues(
         add(end, {
           side: e.side,
           fighter: e.fighter,
-          kind: "hit",
+          // Khiên hút trọn đòn thì đỡ, không rung người.
+          kind: e.amount === 0 && e.absorbed > 0 ? "guard" : "hit",
           delay: e.source === "sword" ? HIT_DELAY_MS : 0,
         });
         break;
@@ -80,12 +109,50 @@ export function stageCues(
         if (e.amount > 0)
           add(end, { side: e.side, fighter: e.fighter, kind: "heal", delay: 0 });
         break;
+      case "effect": {
+        const kind =
+          e.effect === "shield"
+            ? "guard"
+            : POSITIVE_EFFECTS.includes(e.effect) || e.effect === "taunt"
+              ? "buff"
+              : NEGATIVE_EFFECTS.includes(e.effect)
+                ? "debuff"
+                : null;
+        if (kind) add(end, { side: e.side, fighter: e.fighter, kind, delay: 0 });
+        break;
+      }
+      case "ko":
+        fallen.add(`${e.side}:${e.fighter}`);
+        break;
+      case "wave":
+        // Sinh tồn: đợt mới vào sân, phe mình thôi ăn mừng và vào thế.
+        before.sides[0].fighters.forEach((_, i) =>
+          add(end, { side: 0, fighter: i, kind: "ready", delay: 0 }),
+        );
+        break;
+      case "end":
+        before.sides[e.winner].fighters.forEach((f, i) => {
+          if (isAlive(f) && !fallen.has(`${e.winner}:${i}`))
+            add(end, { side: e.winner, fighter: i, kind: "victory", delay: VICTORY_DELAY_MS });
+        });
+        break;
       default:
         break;
     }
   }
-  return { start, end };
+  // Ai vừa trúng đòn thì khiên, tăng, giảm, hồi phát sau cú trúng.
+  const struck = new Set(
+    end.filter((c) => c.kind === "hit").map((c) => `${c.side}:${c.fighter}`),
+  );
+  const after = end.map((c) =>
+    AFTER_HIT.has(c.kind) && struck.has(`${c.side}:${c.fighter}`)
+      ? { ...c, delay: Math.max(c.delay, AFTER_HIT_MS) }
+      : c,
+  );
+  return { start, end: after };
 }
+
+const AFTER_HIT = new Set<CueKind>(["guard", "buff", "debuff", "heal"]);
 
 export type CueListener = (cues: readonly Cue[]) => void;
 
