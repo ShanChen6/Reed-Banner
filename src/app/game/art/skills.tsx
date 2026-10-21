@@ -498,7 +498,33 @@ function fallbackSpec(def: SkillDef): IconSpec {
   }
 }
 
+/** Kỹ năng của nhân vật chính có ảnh vẽ tay ở public/art/skills/<mã>.webp (7 hệ × 6 ô). */
+const SKILL_ART = new Set([
+  "luyenKimThanhKiem", "kimYNgungThan", "doanKimNhatTuyen", "thietKyTungHoanh", "kimAnPhaThien", "giapDongHoThe",
+  "lucDiepPhong", "linhMocHoiSinh", "thanhMocHoPhap", "cuongVuThienDiep", "coThuTranThien", "thanhTrucBaoPhu",
+  "thuyNguyetTuLinh", "thanhLuuTayTran", "hanBangTien", "bachDangTrieuDang", "thuyKiepVanTrung", "linhThuyHoMenh",
+  "phongHoaThieuDoanh", "noHoaThieuThan", "xichDiemTien", "hoaThieuLienTrai", "lietDiemPhanThanh", "ducHoaTrungSinh",
+  "hauThoTichLuong", "thachGiap", "sonBangDiaLiet", "diaChanTamQuan", "thaiSonApDinh", "kienThanhBatDong",
+  "loiTruGiangThe", "tinhDienHoThan", "loiTienXuyenVan", "loiVongThienLa", "cuuTieuLoiPhat", "loiDinhHieuLenh",
+  "phongQuyenTanVan", "thanhPhongTuKhi", "phongNhanLietKhong", "cuongPhongQuetTran", "baoTapCanKhon", "phongHanhVanLy",
+]);
+
+/** Ô kỹ năng có ảnh vẽ tay: nền sơn mài thẫm viền màu hệ, tuyệt chiêu viền vàng có hào quang. */
+function SkillArtIcon({ def, className }: { def: SkillDef; className: string }) {
+  const edge = def.element ? ELEMENT_COLOR[def.element] : "#b98a3e";
+  const ultimate = def.slot === 5;
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden focusable="false">
+      <rect x={1.5} y={1.5} width={45} height={45} rx={9} fill="#17120d" stroke={ultimate ? "#ffe08a" : edge} strokeWidth={2.4} />
+      <rect x={4} y={4} width={40} height={40} rx={7} fill={edge} opacity={0.18} />
+      {ultimate && <polygon points={starPoints(24, 24, 22, 17, 16)} fill="#ffe08a" opacity={0.3} />}
+      <image href={`/art/skills/${def.id}.webp`} x={4} y={4} width={40} height={40} />
+    </svg>
+  );
+}
+
 export function SkillIcon({ def, className = "size-8" }: { def: SkillDef; className?: string }) {
+  if (SKILL_ART.has(def.id)) return <SkillArtIcon def={def} className={className} />;
   const spec = SKILL_ICON[def.id] ?? fallbackSpec(def);
   const bg = def.element ? (SKILL_ELEMENT_BG[def.element] ?? ELEMENT_COLOR[def.element]) : def.profession ? PROFESSION_COLOR[def.profession] : "#5a4a3a";
   const ultimate = def.slot === 5;
