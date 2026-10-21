@@ -165,7 +165,7 @@ export function LeaderFlag({ className = "size-4" }: { className?: string }) {
 /** Lương thực: bánh chưng nhỏ, cùng hình với ô bánh chưng. */
 export function FoodIcon({ className = "size-4" }: { className?: string }) {
   return (
-    <svg viewBox="10 10 44 44" className={className} aria-hidden focusable="false">
+    <svg viewBox="7 7 50 50" className={className} aria-hidden focusable="false">
       {TILE_GLYPH.banhChung}
     </svg>
   );
