@@ -172,6 +172,13 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='24' viewBox='0 0 48 24'%3E%3Cpath d='M0 24a12 12 0 0 1 24 0a12 12 0 0 1 24 0M6 24a6 6 0 0 1 12 0M30 24a6 6 0 0 1 12 0M-12 12a12 12 0 0 1 24 0a12 12 0 0 1 24 0a12 12 0 0 1 24 0' fill='none' stroke='%23b48c50' stroke-opacity='0.09' stroke-width='1.5'/%3E%3C/svg%3E");
 }
 
+/* Nút hoa đồng ở giao điểm ô của bàn cờ trong trận: mỗi ô nền lặp lại một bước ô, bốn góc mỗi ô là một phần tư nút hoa
+   nên ghép lại thành nút trọn ở các giao điểm bên trong. Cỡ bước ô đặt bằng style theo số cột/hàng. */
+.board-knots {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='%23d9a74e' stroke='%232b1d14' stroke-width='0.7'%3E%3Crect x='-3.2' y='-3.2' width='6.4' height='6.4' transform='rotate(45)'/%3E%3Crect x='36.8' y='-3.2' width='6.4' height='6.4' transform='rotate(45 40 0)'/%3E%3Crect x='-3.2' y='36.8' width='6.4' height='6.4' transform='rotate(45 0 40)'/%3E%3Crect x='36.8' y='36.8' width='6.4' height='6.4' transform='rotate(45 40 40)'/%3E%3C/g%3E%3Cg fill='%23fff1b8'%3E%3Ccircle r='1.4'/%3E%3Ccircle cx='40' r='1.4'/%3E%3Ccircle cy='40' r='1.4'/%3E%3Ccircle cx='40' cy='40' r='1.4'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
 /* Ô đặc biệt bản mạnh tỏa sáng nhẹ. */
 @keyframes tile-strong {
   0%,
