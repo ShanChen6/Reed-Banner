@@ -641,6 +641,46 @@ const TRAN_LAM: WarriorRig = {
     anchor: { x: 955, y: 910 }, scale: 1 },
 };
 
+/** Phạm Bạch Hổ, tướng sĩ hệ Hỏa. Tách lớp từ tranh 1024×1536, áo choàng lông hổ bay sau tay đao. */
+const PHAM_BACH_HO: WarriorRig = {
+  skeleton: "warrior",
+  dir: "pham-bach-ho",
+  texScale: 0.5,
+  foot: { x: 650, y: 1510 },
+  height: 1511,
+  parts: {
+    body: { x: 93, y: 10, w: 929, h: 1511 },
+    armR: { x: 819, y: 403, w: 146, h: 222 },
+    sword: { x: 3, y: 580, w: 481, h: 757 },
+    arm: { x: 272, y: 382, w: 234, h: 385 },
+    head: { x: 573, y: 10, w: 206, h: 226 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 219, y: 62, w: 433, h: 306 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 6, freq: 1.6, k: 3, phase: 0.3, vertical: true, reverse: true } },
+    { name: "cape", box: { x: 151, y: 312, w: 415, h: 844 }, behind: true,
+      wind: { axis: "y", start: 0.2, amp: 4, freq: 1.2, k: 2.8, phase: 1.4 } },
+    { name: "apron", box: { x: 315, y: 850, w: 321, h: 193 },
+      wind: { axis: "y", start: 0.3, amp: 2, freq: 1.35, k: 2.6, phase: 2.1 } },
+  ],
+  covers: [{ name: "sleeve", box: { x: 353, y: 301, w: 183, h: 126 } }],
+  joints: {
+    shoulder: { x: 440, y: 400 },
+    elbowR: { x: 905, y: 450 },
+    neck: { x: 685, y: 207 },
+  },
+  blade: [{ x: 315, y: 780 }, { x: 10, y: 1330 }],
+  fxColor: 0xff913f,
+  poses: {
+    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 29, y: 67 },
+      anchor: { x: 710, y: 1006 }, scale: 1.12, burst: { x: 1500, y: 90 } },
+    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 37, y: 9 },
+      anchor: { x: 800, y: 1010 }, scale: 1, burst: { x: 1440, y: 430 } },
+  },
+  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 21, y: 61 },
+    anchor: { x: 910, y: 965 }, scale: 1 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -653,6 +693,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   leHoan: LE_HOAN,
   dinhLien: DINH_LIEN,
   tranLam: TRAN_LAM,
+  phamBachHo: PHAM_BACH_HO,
 };
 
 export function rigOf(id: string): Rig | null {

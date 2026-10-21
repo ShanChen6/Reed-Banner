@@ -1,5 +1,6 @@
 /** Ánh xạ dùng chung cho giao diện và bảng file xem thử trên server. */
 const PHOTOS: Readonly<Record<string, string>> = {
+  phamBachHo: "/art/characters/pham-bach-ho/portrait.webp",
   tranLam: "/art/characters/tran-lam/portrait.webp",
   dinhLien: "/art/characters/dinh-lien/portrait.webp",
   dinhBoLinh: "/art/characters/dinh-bo-linh/portrait.webp",
