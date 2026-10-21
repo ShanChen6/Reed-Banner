@@ -1,5 +1,5 @@
 /** Đồ dùng chung cho các bộ xương hình động (puppet.ts, warrior.ts). */
-import { Container, MeshPlane, Sprite, Texture, type Buffer } from "pixi.js";
+import { Container, Graphics, MeshPlane, Sprite, Texture, type Buffer } from "pixi.js";
 import type { CueKind } from "./director";
 import type { PartBox, Wind } from "./rigs";
 
@@ -155,18 +155,156 @@ export function particles(parent: Container, color: number, count: number, gravi
   };
 }
 
-/** Phản ứng chung của mọi bộ xương: trúng đòn (giật lùi, ửng đỏ) và được hồi (sáng xanh lá). */
-export function reaction(kind: CueKind, a: number): { shiftX: number; tilt: number; tint: number; glow: number; done: boolean } {
-  if (kind === "hit") {
-    const k = pulse(a, 0, 0.06) * (1 - pulse(a, 0.12, 0.5));
-    return {
-      shiftX: -22 * k + Math.sin(a * 70) * 5 * (1 - pulse(a, 0, 0.3)),
-      tilt: k,
-      tint: a < 0.14 ? 0xff9a9a : 0xffffff,
-      glow: 0,
-      done: a > 0.6,
-    };
+/** Chu kỳ thở lúc đứng (giây), trong khoảng 1,6–2,4 s của bảng hoạt ảnh. */
+export const IDLE_PERIOD = 2;
+/** Tần số góc của nhịp thở, dùng cho sin(t * BREATH). */
+export const BREATH = (2 * Math.PI) / IDLE_PERIOD;
+/** Gục: ngả người trong 0,8 s rồi giữ khung cuối. */
+export const KO_SECONDS = 0.8;
+/** Ăn mừng: 1,2 s vào thế rồi lặp đoạn cuối. */
+export const VICTORY_INTRO = 1.2;
+
+/** Động tác phản ứng dùng chung, không theo vũ khí. */
+export type ReactionKind = "ready" | "hit" | "guard" | "buff" | "debuff" | "heal";
+
+export interface Reaction {
+  /** Lùi (âm) hoặc tiến (dương) theo hướng mặt. */
+  readonly shiftX: number;
+  /** Nhấc người lên (đơn vị hệ tọa độ rig). */
+  readonly lift: number;
+  /** Ngả người ra sau (dương) hoặc chúi tới (âm), 0..1. */
+  readonly tilt: number;
+  /** Co (âm) hoặc vươn (dương) theo chiều dọc. */
+  readonly squash: number;
+  /** Nâng vũ khí / tay, 0..1. */
+  readonly raise: number;
+  readonly tint: number;
+  readonly glow: number;
+  readonly done: boolean;
+}
+
+const still = { shiftX: 0, lift: 0, tilt: 0, squash: 0, raise: 0, tint: 0xffffff, glow: 0 };
+
+/**
+ * Phản ứng chung của mọi bộ xương: vào thế khi đến lượt, trúng đòn (giật lùi, ửng đỏ), đỡ bằng khiên (ghì
+ * người, ánh lam), được tăng (vươn lên, ánh vàng), bị giảm (chùng xuống, ánh tím), được hồi (ánh xanh lá).
+ */
+export function reaction(kind: ReactionKind, a: number): Reaction {
+  switch (kind) {
+    case "ready": {
+      // Nhún xuống rồi bật lên, nâng vũ khí vào thế trong 0,3 s.
+      const dip = pulse(a, 0, 0.08) * (1 - pulse(a, 0.08, 0.2));
+      const up = pulse(a, 0.08, 0.18) * (1 - pulse(a, 0.18, 0.3));
+      return { ...still, squash: -0.025 * dip + 0.015 * up, shiftX: 8 * up, tilt: -0.4 * up, raise: 0.5 * up, glow: 0.8 * up, done: a > 0.3 };
+    }
+    case "hit": {
+      const k = pulse(a, 0, 0.05) * (1 - pulse(a, 0.1, 0.3));
+      return {
+        ...still,
+        shiftX: -22 * k + Math.sin(a * 70) * 5 * (1 - pulse(a, 0, 0.25)),
+        tilt: k,
+        squash: -0.015 * k,
+        tint: a < 0.1 ? 0xff9a9a : 0xffffff,
+        done: a > 0.3,
+      };
+    }
+    case "guard": {
+      // Ghì người đỡ đòn, lùi nửa bước, giữ thế 0,4 s.
+      const k = pulse(a, 0, 0.06) * (1 - pulse(a, 0.22, 0.4));
+      return { ...still, shiftX: -9 * k, tilt: -0.5 * k, squash: -0.02 * k, raise: 0.5 * k, tint: k > 0.05 ? 0xcfe4ff : 0xffffff, glow: 0.6 * k, done: a > 0.4 };
+    }
+    case "buff": {
+      const k = pulse(a, 0, 0.12) * (1 - pulse(a, 0.24, 0.4));
+      return { ...still, lift: 10 * k, squash: 0.02 * k, raise: 0.35 * k, tint: k > 0.05 ? 0xfff0b8 : 0xffffff, glow: 1.2 * k, done: a > 0.4 };
+    }
+    case "debuff": {
+      const k = pulse(a, 0, 0.1) * (1 - pulse(a, 0.24, 0.4));
+      return { ...still, tilt: 0.6 * k, squash: -0.03 * k, shiftX: -4 * k, tint: k > 0.05 ? 0xc6a8ff : 0xffffff, done: a > 0.4 };
+    }
+    case "heal": {
+      const k = pulse(a, 0, 0.1) * (1 - pulse(a, 0.22, 0.4));
+      return { ...still, lift: 4 * k, tint: k > 0.05 ? 0xb8ffcf : 0xffffff, glow: k, done: a > 0.4 };
+    }
   }
-  const k = pulse(a, 0, 0.15) * (1 - pulse(a, 0.3, 0.7));
-  return { shiftX: 0, tilt: 0, tint: k > 0.05 ? 0xb8ffcf : 0xffffff, glow: k, done: a > 0.7 };
+}
+
+/**
+ * Ăn mừng: 1,2 s đầu nhảy lên, nâng vũ khí lên cao; sau đó lặp nhịp đung đưa, vũ khí vẫn giơ cao. Không bao
+ * giờ xong, động tác khác (hoặc đợt mới) mới thay.
+ */
+export function victory(a: number): Omit<Reaction, "done" | "tint"> {
+  const raise = pulse(a, 0.1, 0.5);
+  const hop = pulse(a, 0.15, 0.35) * (1 - pulse(a, 0.35, 0.6));
+  const crouch = pulse(a, 0, 0.15) * (1 - pulse(a, 0.15, 0.3)) + pulse(a, 0.55, 0.65) * (1 - pulse(a, 0.65, 0.8));
+  const loop = pulse(a, 0.8, VICTORY_INTRO);
+  const sway = Math.sin((a - VICTORY_INTRO) * BREATH) * loop;
+  return {
+    shiftX: 0,
+    lift: 34 * hop + 4 * Math.max(0, sway) * loop,
+    tilt: -0.25 * raise + 0.12 * sway,
+    squash: -0.03 * crouch + 0.01 * sway,
+    raise: raise * (0.92 + 0.08 * sway),
+    glow: 0.4 + 0.9 * hop + 0.3 * loop * (0.5 + 0.5 * Math.sin(a * 5)),
+  };
+}
+
+/**
+ * Hiệu ứng phản ứng vẽ quanh người, gốc tọa độ ở chân, hướng mặt là +x: vòng sáng dưới chân khi vào thế, vòm
+ * khiên phía trước khi đỡ, hạt vàng bay lên khi được tăng, hạt tím rơi khi bị giảm, hạt xanh khi được hồi, và
+ * tia sáng lấp lánh lúc ăn mừng.
+ */
+export function cueFx(parent: Container, height: number, color: number) {
+  const root = new Container();
+  parent.addChild(root);
+  const g = new Graphics();
+  g.blendMode = "add";
+  root.addChild(g);
+  const up = particles(root, 0xffd76b, 30, -260);
+  const down = particles(root, 0x9b6bff, 24, 220);
+  const green = particles(root, 0x6bffa8, 24, -200);
+  const sparkle = particles(root, color, 24, -120);
+  let kind: CueKind | null = null;
+  let t = 0;
+  let nextSparkle = 0;
+  const w = height * 0.22;
+  const spray = (p: ReturnType<typeof particles>, n: number, vy: number) => {
+    for (let i = 0; i < n; i++) {
+      const x = (Math.random() - 0.5) * w * 1.6;
+      const y = -height * (0.15 + Math.random() * 0.7);
+      p.spawn(x, y, (Math.random() - 0.5) * 60, vy * (0.5 + Math.random()), 0.12 + Math.random() * 0.16, 0.35 + Math.random() * 0.3);
+    }
+  };
+  return {
+    start(next: CueKind) {
+      kind = next;
+      t = 0;
+      nextSparkle = 0;
+      if (next === "buff") spray(up, 14, -160);
+      else if (next === "debuff") spray(down, 12, 40);
+      else if (next === "heal") spray(green, 12, -120);
+    },
+    clear() {
+      kind = null;
+      for (const p of [up, down, green, sparkle]) p.clear();
+      g.clear();
+    },
+    update(dt: number) {
+      t += dt;
+      g.clear();
+      if (kind === "ready" && t < 0.35) {
+        const k = t / 0.35;
+        g.ellipse(0, -4, w * (0.6 + k), w * 0.18 * (0.6 + k)).stroke({ color, width: 10, alpha: 0.9 * (1 - k) });
+      } else if (kind === "guard" && t < 0.45) {
+        // Vòm khiên cong trước mặt, lóe rồi tan.
+        const k = Math.min(1, t / 0.08) * (1 - pulse(t, 0.2, 0.45));
+        const cy = -height * 0.5;
+        g.ellipse(w * 0.6, cy, w * 0.9, height * 0.52).stroke({ color: 0xbfe1ff, width: 14, alpha: 0.75 * k });
+        g.ellipse(w * 0.6, cy, w * 0.9, height * 0.52).fill({ color: 0x8fc8ff, alpha: 0.12 * k });
+      } else if (kind === "victory" && t >= nextSparkle) {
+        nextSparkle = t + 0.18;
+        spray(sparkle, 2, -80);
+      }
+      for (const p of [up, down, green, sparkle]) p.update(dt);
+    },
+  };
 }
