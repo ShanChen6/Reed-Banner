@@ -53,7 +53,7 @@ const GOURD_SWING = {
 } as const;
 
 /** Góc nâng vũ khí khi vào thế, đỡ đòn và ăn mừng (ứng với `raise` = 1). */
-const RAISE = { sword: -0.8, spear: 0.12, fan: -0.3, gourd: 0.16 } as const;
+const RAISE = { sword: -0.8, spear: 0.12, fan: -0.3, gourd: 0.16, staff: 0.14 } as const;
 
 /**
  * Nhịp của tranh tư thế (giây): `swap` đổi từ hình động sang tranh, `hit` tóe tia sáng, `out` bắt đầu đổi
@@ -247,7 +247,9 @@ export function warrior(
         const spear = rig.weapon === "spear";
         const fan = rig.weapon === "fan";
         const gourd = rig.weapon === "gourd";
-        const S = (spear ? SPEAR_SWING : fan ? FAN_SWING : gourd ? GOURD_SWING : SWING)[swingKind];
+        // Pháp trượng nâng nhẹ như hồ lô, giữ tay áo dài sát vai.
+        const staff = rig.weapon === "staff";
+        const S = (spear ? SPEAR_SWING : fan ? FAN_SWING : gourd || staff ? GOURD_SWING : SWING)[swingKind];
         const wind = pulse(a, 0, S.at);
         const strike = pulse(a, S.at, S.hit);
         const back = pulse(a, S.back[0], S.back[1]);
@@ -267,7 +269,7 @@ export function warrior(
         } else if (swingKind === "cast") aura += 1.4 * wind * (1 - back);
         else aura += 0.5 * strike * (1 - back);
         // Vệt kiếm: cung từ góc kiếm hiện tại kéo ngược về chỗ bắt đầu chém.
-        if (!spear && !fan && !gourd && a >= S.at && a <= S.hit + 0.05) {
+        if (!spear && !fan && !gourd && !staff && a >= S.at && a <= S.hit + 0.05) {
           trailA = swingKind === "attack" ? 0.75 : 1;
           trailFrom = baseAngle + armRot;
           trailTo = baseAngle + S.windup;
