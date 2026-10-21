@@ -1,6 +1,7 @@
 // Đàn chim lạc bay vòng quanh mặt trống đồng ở phần mở đầu trang giới thiệu, nối đuôi nhau như vành chim trên trống.
 // Dáng chim giữ nét trống đồng (mỏ dài, cổ cong, mào lông tròn đầu, cánh giơ cao, chấm tròn dọc thân) nhưng vẽ theo
-// phong cách fantasy của logo: lông mạ vàng, lớp lông trong đỏ lửa, đuôi dài có dải sáng, quầng sáng mờ sau lưng.
+// phong cách fantasy của logo và tranh nền hero: lông mạ vàng, lớp lông trong đỏ lửa, đuôi kéo dải lụa đỏ và vệt sáng,
+// quầng sáng mờ sau lưng.
 // Quầng sáng là dải màu, không dùng filter, để bảy con chim cùng đập cánh vẫn nhẹ.
 
 type Point = readonly [number, number];
@@ -59,6 +60,11 @@ function LacDefs() {
           <stop offset="0" stopColor="#ffd77a" stopOpacity={0.9} />
           <stop offset="1" stopColor="#ffd77a" stopOpacity={0} />
         </linearGradient>
+        <linearGradient id="lac-ribbon" gradientUnits="userSpaceOnUse" x1="52" y1="0" x2="0" y2="0">
+          <stop offset="0" stopColor="#e0321f" stopOpacity={0.95} />
+          <stop offset="0.6" stopColor="#a8141a" stopOpacity={0.6} />
+          <stop offset="1" stopColor="#a8141a" stopOpacity={0} />
+        </linearGradient>
         <radialGradient id="lac-halo" gradientUnits="userSpaceOnUse" cx="100" cy="44" r="96" gradientTransform="translate(100 44) scale(1 0.45) translate(-100 -44)">
           <stop offset="0" stopColor="#ffcf6b" stopOpacity={0.35} />
           <stop offset="0.5" stopColor="#e2582b" stopOpacity={0.12} />
@@ -74,8 +80,10 @@ function LacBird({ className, style }: { className?: string; style?: React.CSSPr
   return (
     <svg viewBox="0 0 200 90" className={className} style={style} aria-hidden focusable="false">
       <ellipse cx={100} cy={44} rx={98} ry={44} fill="url(#lac-halo)" />
-      {/* Dải sáng kéo sau đuôi như vệt lửa. */}
-      <path d="M50 56 C34 60 18 70 2 86 M50 54 C30 52 14 56 0 64" fill="none" stroke="url(#lac-trail)" strokeWidth={2.2} strokeLinecap="round" />
+      {/* Hai dải lụa đỏ bay sau đuôi, vệt sáng kéo theo như vệt lửa. */}
+      <path d="M50 52 C40 47 30 54 20 50 C12 47 6 51 0 48 L0 53 C7 56 12 52 20 56 C31 60 40 54 50 57 Z" fill="url(#lac-ribbon)" />
+      <path d="M48 57 C38 62 30 72 20 72 C12 72 6 78 0 82 L1 86 C8 82 13 77 21 77 C32 77 40 66 50 60 Z" fill="url(#lac-ribbon)" opacity={0.8} />
+      <path d="M50 56 C34 60 18 70 2 86 M50 54 C30 52 14 56 0 64 M52 50 C36 44 20 42 4 44" fill="none" stroke="url(#lac-trail)" strokeWidth={2.2} strokeLinecap="round" />
       <g className="lac-wing lac-wing-far" opacity={0.6}>
         <path d={FAR_WING} fill="url(#lac-ember)" />
       </g>

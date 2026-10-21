@@ -137,12 +137,21 @@ export default function Home() {
       </header>
 
       <main id="content">
-        {/* Hero: mặt trống đồng xoay chậm, đàn chim lạc bay vòng quanh, bàn cờ thật dựng bằng SVG làm hình chính. */}
+        {/* Hero: tranh trời trống đồng làm nền, mặt trống khắc vạch xoay chậm đè đúng lên trống trong tranh, tâm sao sáng nhịp,
+            đàn chim lạc bay vòng quanh, bàn cờ thật dựng bằng SVG làm hình chính. */}
         <section className="relative overflow-hidden border-b border-[var(--gold)]/20">
-          <div aria-hidden className="fx-hero-glow pointer-events-none absolute inset-0" />
-          <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 w-[min(1000px,150vw)] -translate-x-1/2 -translate-y-1/2 opacity-[0.13]">
-            <DrumFace className="drum-spin h-auto w-full" />
+          <div aria-hidden className="pointer-events-none absolute inset-0 [container-type:size]">
+            {/* Khung giữ đúng tỉ lệ tranh và phủ kín phần mở đầu (như object-cover), để lớp trống xoay luôn trùng trống trong tranh. */}
+            <div className="hero-art absolute left-1/2 top-1/2 aspect-[1916/821] -translate-x-1/2 -translate-y-1/2">
+              <Image src="/art/hero/troi-trong-dong.webp" alt="" fill priority sizes="(min-width: 768px) 100vw, 250vw" className="object-cover" />
+              <div className="absolute left-[50.9%] top-[48%] w-[47%] -translate-x-1/2 -translate-y-1/2 opacity-40 mix-blend-screen">
+                <DrumFace className="drum-spin h-auto w-full" />
+              </div>
+              <div className="hero-star absolute left-[50.9%] top-[48%] aspect-square w-[22%] -translate-x-1/2 -translate-y-1/2 rounded-full" />
+            </div>
           </div>
+          {/* Lớp tối phía chữ để đọc rõ; trên điện thoại chữ phủ cả bề ngang nên tối đều. */}
+          <div aria-hidden className="hero-shade pointer-events-none absolute inset-0" />
           <Embers />
           <LacBirds />
           <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 md:grid-cols-[1fr_1.1fr] md:py-20">
