@@ -84,7 +84,7 @@ export type WarriorPart = "body" | "armR" | "sword" | "arm" | "head";
 export interface WarriorRig {
   readonly skeleton: "warrior";
   /** Nhịp vũ khí riêng; bỏ trống giữ nhát chém của các tướng sĩ cũ. */
-  readonly weapon?: "spear" | "fan" | "gourd";
+  readonly weapon?: "spear" | "fan" | "gourd" | "staff";
   /** Điểm cầm để hồ lô lắc nhẹ trong tay, cùng hệ tọa độ ảnh nguồn. */
   readonly grip?: Point;
   /** Tay áo dài uốn theo gió trong cùng khớp với tay cầm quạt. */
@@ -561,6 +561,168 @@ const LE_HOAN: WarriorRig = {
   },
 };
 
+/** Đinh Liễn, pháp sư hệ Thủy. Tọa độ theo tranh 1024×1536; nâng pháp trượng nhẹ từ vai. */
+const DINH_LIEN: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "staff",
+  dir: "dinh-lien",
+  texScale: 0.5,
+  foot: { x: 625, y: 1508 },
+  height: 1513,
+  parts: {
+    body: { x: 251, y: 10, w: 770, h: 1513 },
+    armR: { x: 820, y: 518, w: 193, h: 101 },
+    sword: { x: 33, y: 91, w: 245, h: 445 },
+    arm: { x: 5, y: 314, w: 488, h: 556 },
+    head: { x: 546, y: 10, w: 203, h: 217 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 272, y: 81, w: 318, h: 204 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 5, freq: 1.6, k: 2.8, phase: 0.3, vertical: true, reverse: true } },
+    { name: "cape", box: { x: 10, y: 588, w: 553, h: 669 }, behind: true,
+      wind: { axis: "y", start: 0.2, amp: 4, freq: 1.2, k: 2.8, phase: 1.2 } },
+    { name: "sash", box: { x: 461, y: 551, w: 196, h: 268 },
+      wind: { axis: "y", start: 0.2, amp: 2, freq: 1.35, k: 2.8, phase: 2.1 } },
+  ],
+  covers: [{ name: "sleeve", box: { x: 400, y: 223, w: 138, h: 140 } }],
+  joints: {
+    shoulder: { x: 465, y: 330 },
+    elbowR: { x: 846, y: 550 },
+    neck: { x: 645, y: 211 },
+  },
+  blade: [{ x: 193, y: 369 }, { x: 95, y: 155 }],
+  fxColor: 0x9fe3ff,
+  poses: {
+    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 0, y: 66 },
+      anchor: { x: 555, y: 1465 }, scale: 1, burst: { x: 920, y: 174 } },
+    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 11, y: 10 },
+      anchor: { x: 620, y: 1505 }, scale: 1, burst: { x: 450, y: 75 } },
+  },
+  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 12, y: 12 },
+    anchor: { x: 930, y: 945 }, scale: 0.88 },
+};
+
+/** Trần Lãm, quân sư hệ Thủy. Cờ lệnh đẩy nhẹ; tọa độ theo tranh 1024×1536. */
+const TRAN_LAM: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "tran-lam",
+  texScale: 0.5,
+  foot: { x: 610, y: 1508 },
+  height: 1505,
+  parts: {
+    body: { x: 27, y: 43, w: 980, h: 1472 },
+    armR: { x: 817, y: 435, w: 190, h: 222 },
+    sword: { x: 15, y: 12, w: 332, h: 1393 },
+    arm: { x: 256, y: 502, w: 115, h: 133 },
+    head: { x: 457, y: 43, w: 225, h: 305 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 321, y: 86, w: 187, h: 182 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 4, freq: 1.6, k: 2.8, phase: 0.3, vertical: true, reverse: true } },
+    { name: "sash", box: { x: 505, y: 575, w: 88, h: 368 },
+      wind: { axis: "y", start: 0.2, amp: 2, freq: 1.3, k: 2.6, phase: 1.4 } },
+  ],
+  covers: [{ name: "sleeve", box: { x: 296, y: 344, w: 148, h: 197 } }],
+  joints: {
+    shoulder: { x: 365, y: 505 },
+    elbowR: { x: 825, y: 545 },
+    neck: { x: 554, y: 270 },
+  },
+  blade: [{ x: 300, y: 550 }, { x: 287, y: 18 }],
+  fxColor: 0x7fcaff,
+  poses: {
+    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 13, y: 3 },
+      anchor: { x: 650, y: 1510 }, scale: 1, burst: { x: 100, y: 50 } },
+    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 7, y: 18 },
+      anchor: { x: 645, y: 1510 }, scale: 1, burst: { x: 960, y: 220 } },
+  },
+  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 36, y: 99 },
+    anchor: { x: 955, y: 910 }, scale: 1 },
+};
+
+/** Phạm Bạch Hổ, tướng sĩ hệ Hỏa. Tách lớp từ tranh 1024×1536, áo choàng lông hổ bay sau tay đao. */
+const PHAM_BACH_HO: WarriorRig = {
+  skeleton: "warrior",
+  dir: "pham-bach-ho",
+  texScale: 0.5,
+  foot: { x: 650, y: 1510 },
+  height: 1511,
+  parts: {
+    body: { x: 93, y: 10, w: 929, h: 1511 },
+    armR: { x: 819, y: 403, w: 146, h: 222 },
+    sword: { x: 3, y: 580, w: 481, h: 757 },
+    arm: { x: 272, y: 382, w: 234, h: 385 },
+    head: { x: 573, y: 10, w: 206, h: 226 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 219, y: 62, w: 433, h: 306 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 6, freq: 1.6, k: 3, phase: 0.3, vertical: true, reverse: true } },
+    { name: "cape", box: { x: 151, y: 312, w: 415, h: 844 }, behind: true,
+      wind: { axis: "y", start: 0.2, amp: 4, freq: 1.2, k: 2.8, phase: 1.4 } },
+    { name: "apron", box: { x: 315, y: 850, w: 321, h: 193 },
+      wind: { axis: "y", start: 0.3, amp: 2, freq: 1.35, k: 2.6, phase: 2.1 } },
+  ],
+  covers: [{ name: "sleeve", box: { x: 353, y: 301, w: 183, h: 126 } }],
+  joints: {
+    shoulder: { x: 440, y: 400 },
+    elbowR: { x: 905, y: 450 },
+    neck: { x: 685, y: 207 },
+  },
+  blade: [{ x: 315, y: 780 }, { x: 10, y: 1330 }],
+  fxColor: 0xff913f,
+  poses: {
+    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 29, y: 67 },
+      anchor: { x: 710, y: 1006 }, scale: 1.12, burst: { x: 1500, y: 90 } },
+    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 37, y: 9 },
+      anchor: { x: 800, y: 1010 }, scale: 1, burst: { x: 1440, y: 430 } },
+  },
+  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 21, y: 61 },
+    anchor: { x: 910, y: 965 }, scale: 1 },
+};
+
+/** Ngô Xương Xí, mưu sĩ hệ Kim. Quạt lông và tay áo dùng nhịp phẩy nhẹ, tọa độ tranh 1024×1536. */
+const NGO_XUONG_XI: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "fan",
+  sleeveWind: { axis: "y", start: 0.4, amp: 2, freq: 1.3, k: 2.7, phase: 0.4 },
+  dir: "ngo-xuong-xi",
+  texScale: 0.5,
+  foot: { x: 610, y: 1510 },
+  height: 1513,
+  parts: {
+    body: { x: 37, y: 11, w: 977, h: 1513 },
+    armR: { x: 813, y: 502, w: 118, h: 117 },
+    sword: { x: 15, y: 87, w: 358, h: 450 },
+    arm: { x: 140, y: 331, w: 434, h: 503 },
+    head: { x: 575, y: 11, w: 190, h: 205 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 408, y: 105, w: 211, h: 204 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 4, freq: 1.5, k: 3, phase: 0.3, vertical: true, reverse: true } },
+    { name: "train", box: { x: 27, y: 826, w: 327, h: 341 }, behind: true,
+      wind: { axis: "y", start: 0.2, amp: 3, freq: 1.2, k: 2.8, phase: 1.4 } },
+    { name: "sash", box: { x: 563, y: 674, w: 88, h: 190 },
+      wind: { axis: "y", start: 0.2, amp: 2, freq: 1.35, k: 2.6, phase: 2.1 } },
+  ],
+  covers: [{ name: "sleeve", box: { x: 400, y: 280, w: 195, h: 122 } }],
+  joints: {
+    shoulder: { x: 520, y: 365 },
+    elbowR: { x: 881, y: 546 },
+    neck: { x: 686, y: 200 },
+  },
+  blade: [{ x: 324, y: 385 }, { x: 130, y: 160 }],
+  fxColor: 0xf1d28c,
+  poses: {
+    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 11, y: 10 },
+      anchor: { x: 610, y: 1510 }, scale: 1, burst: { x: 190, y: 230 } },
+    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 11, y: 34 },
+      anchor: { x: 595, y: 1485 }, scale: 1.02, burst: { x: 965, y: 365 } },
+  },
+  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 13, y: 13 },
+    anchor: { x: 940, y: 985 }, scale: 1 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -571,6 +733,10 @@ const RIGS: Readonly<Record<string, Rig>> = {
   luuCo: LUU_CO,
   trinhTu: TRINH_TU,
   leHoan: LE_HOAN,
+  dinhLien: DINH_LIEN,
+  tranLam: TRAN_LAM,
+  phamBachHo: PHAM_BACH_HO,
+  ngoXuongXi: NGO_XUONG_XI,
 };
 
 export function rigOf(id: string): Rig | null {
