@@ -190,7 +190,7 @@ const foeIds = (team: readonly string[]) =>
     .map((c) => c.id);
 
 /** Nhân vật đã có hình động (src/app/game/stage/rigs.ts), cho đứng đầu đội Tianwu ở Luyện tập để xem thử. */
-const SHOWCASE_FOES = ["luuCo", "dinhDien", "nguyenBac", "tranCuong", "daoLam"];
+const SHOWCASE_FOES = ["trinhTu", "luuCo", "dinhDien", "nguyenBac", "tranCuong", "daoLam"];
 const practiceFoeIds = (team: readonly string[]) => {
   const shown = SHOWCASE_FOES.filter((id) => !team.includes(id));
   return [...shown, ...foeIds(team)].slice(0, 3);
