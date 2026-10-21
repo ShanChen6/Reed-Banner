@@ -257,6 +257,11 @@ function StrongFire() {
   );
 }
 
+/** Đường dẫn ảnh vật phẩm của một ô (public/art/tiles/<loại>[-weak|-strong].webp). */
+export function tileImage(kind: TileKind, special?: SpecialGrade): string {
+  return `/art/tiles/${kind}${special ? `-${special}` : ""}.webp`;
+}
+
 export function TileArt({ kind, special, className }: { kind: TileKind; special?: SpecialGrade; className?: string }) {
   return (
     <svg viewBox="0 0 64 64" className={className} aria-hidden focusable="false">
@@ -265,7 +270,8 @@ export function TileArt({ kind, special, className }: { kind: TileKind; special?
       <rect x={3.5} y={3.5} width={57} height={57} rx={6} fill="none" stroke="#000" strokeOpacity={0.35} strokeWidth={1} />
       {special === "weak" && <WeakAura />}
       {special === "strong" && <StrongFire />}
-      <g transform={`translate(32 ${special ? 33 : 32}) scale(${special ? 0.8 : 0.92}) translate(-32 -32)`}>{TILE_GLYPH[kind]}</g>
+      {/* Vật phẩm là ảnh vẽ tay ở public/art/tiles/, mỗi loại có bản thường, bản yếu và bản mạnh. */}
+      <image href={tileImage(kind, special)} x={special ? 7 : 5} y={special ? 7 : 5} width={special ? 50 : 54} height={special ? 50 : 54} preserveAspectRatio="xMidYMid meet" />
       {special && <Sparks />}
     </svg>
   );
