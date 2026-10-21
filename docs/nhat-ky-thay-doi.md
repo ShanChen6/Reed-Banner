@@ -2,6 +2,11 @@
 
 > Mới nhất ở trên cùng. Mỗi mục ghi quyết định và lý do nếu có.
 
+## 21/10/2026
+
+**Tướng thường có nét riêng trong prompt ảnh (Shan đồng ý)**
+- 40 tướng thường (trừ Trần Cương, Đào Lam đã có hình) thêm tuổi, vóc dáng, tóc/râu, một dấu hiệu nhận diện riêng và kiểu đồ cầm tay riêng trong nghề, áp cho cả [Prompt nhân vật](design/16-prompt-nhan-vat.md) và [Prompt tư thế](design/18-prompt-tu-the.md). Sứ quân Phạm Bạch Hổ (đao bản rộng chuôi lông trắng) và Đỗ Cảnh Thạc (búa chiến cán dài) đổi vũ khí để khác Đinh Bộ Lĩnh, Nguyễn Bặc và Trần Cương cùng cầm đao.
+
 ## 20/10/2026
 
 **Bộ prompt đồ họa ngoài nhân vật (Shan yêu cầu)**
