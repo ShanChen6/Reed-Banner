@@ -602,6 +602,45 @@ const DINH_LIEN: WarriorRig = {
     anchor: { x: 930, y: 945 }, scale: 0.88 },
 };
 
+/** Trần Lãm, quân sư hệ Thủy. Cờ lệnh đẩy nhẹ; tọa độ theo tranh 1024×1536. */
+const TRAN_LAM: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "tran-lam",
+  texScale: 0.5,
+  foot: { x: 610, y: 1508 },
+  height: 1505,
+  parts: {
+    body: { x: 27, y: 43, w: 980, h: 1472 },
+    armR: { x: 817, y: 435, w: 190, h: 222 },
+    sword: { x: 15, y: 12, w: 332, h: 1393 },
+    arm: { x: 256, y: 502, w: 115, h: 133 },
+    head: { x: 457, y: 43, w: 225, h: 305 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 321, y: 86, w: 187, h: 182 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 4, freq: 1.6, k: 2.8, phase: 0.3, vertical: true, reverse: true } },
+    { name: "sash", box: { x: 505, y: 575, w: 88, h: 368 },
+      wind: { axis: "y", start: 0.2, amp: 2, freq: 1.3, k: 2.6, phase: 1.4 } },
+  ],
+  covers: [{ name: "sleeve", box: { x: 296, y: 344, w: 148, h: 197 } }],
+  joints: {
+    shoulder: { x: 365, y: 505 },
+    elbowR: { x: 825, y: 545 },
+    neck: { x: 554, y: 270 },
+  },
+  blade: [{ x: 300, y: 550 }, { x: 287, y: 18 }],
+  fxColor: 0x7fcaff,
+  poses: {
+    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 13, y: 3 },
+      anchor: { x: 650, y: 1510 }, scale: 1, burst: { x: 100, y: 50 } },
+    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 7, y: 18 },
+      anchor: { x: 645, y: 1510 }, scale: 1, burst: { x: 960, y: 220 } },
+  },
+  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 36, y: 99 },
+    anchor: { x: 955, y: 910 }, scale: 1 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -613,6 +652,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   trinhTu: TRINH_TU,
   leHoan: LE_HOAN,
   dinhLien: DINH_LIEN,
+  tranLam: TRAN_LAM,
 };
 
 export function rigOf(id: string): Rig | null {
