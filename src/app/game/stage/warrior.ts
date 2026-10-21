@@ -6,39 +6,61 @@
  */
 import { Container, Graphics, Sprite, type Texture } from "pixi.js";
 import type { CueKind } from "./director";
-import { ease, glow, layers, particles, pulse, reaction, type Puppet } from "./kit";
+import {
+  BREATH,
+  cueFx,
+  ease,
+  glow,
+  KO_SECONDS,
+  layers,
+  particles,
+  pulse,
+  reaction,
+  victory,
+  type Puppet,
+} from "./kit";
 import type { PoseArt, PoseKind, WarriorRig } from "./rigs";
 
-/** Góc xoay (radian, dương là theo chiều kim đồng hồ) của tay kiếm ở từng pha. */
+/**
+ * Góc xoay (radian, dương là theo chiều kim đồng hồ) của tay kiếm ở từng pha, mốc thời gian tính bằng giây:
+ * đánh thường 0,65 s, ra chiêu 0,85 s, tuyệt chiêu (khi không có tranh) 1,45 s với quãng tụ lực dài.
+ */
 const SWING = {
-  attack: { windup: 0.2, strike: -0.95, at: 0.2, hit: 0.32, back: [0.45, 0.9], end: 0.95 },
-  cast: { windup: 0.4, strike: -1.15, at: 0.45, hit: 0.6, back: [0.75, 1.35], end: 1.4 },
+  attack: { windup: 0.2, strike: -0.95, at: 0.14, hit: 0.22, back: [0.32, 0.6], end: 0.65 },
+  cast: { windup: 0.4, strike: -1.15, at: 0.28, hit: 0.38, back: [0.5, 0.82], end: 0.85 },
+  ultimate: { windup: 0.5, strike: -1.3, at: 0.6, hit: 0.72, back: [1.0, 1.4], end: 1.45 },
 } as const;
 
 /** Giáo dựng đứng đẩy tới nhẹ, tránh quay cả cán dài như kiếm. */
 const SPEAR_SWING = {
   attack: { ...SWING.attack, windup: -0.06, strike: 0.22 },
   cast: { ...SWING.cast, windup: -0.08, strike: 0.28 },
+  ultimate: { ...SWING.ultimate, windup: -0.1, strike: 0.32 },
 } as const;
 
 /** Quạt phẩy nhẹ từ vai; tay áo dài vẫn giữ đầu nối dưới giáp vai. */
 const FAN_SWING = {
   attack: { ...SWING.attack, windup: 0.06, strike: -0.2 },
   cast: { ...SWING.cast, windup: 0.08, strike: -0.26 },
+  ultimate: { ...SWING.ultimate, windup: 0.1, strike: -0.3 },
 } as const;
 
 /** Y sư nâng hồ lô nhẹ, giữ cổ tay và ống tay áo sát nhau. */
 const GOURD_SWING = {
   attack: { ...SWING.attack, windup: -0.04, strike: 0.14 },
   cast: { ...SWING.cast, windup: -0.06, strike: 0.18 },
+  ultimate: { ...SWING.ultimate, windup: -0.07, strike: 0.2 },
 } as const;
+
+/** Góc nâng vũ khí khi vào thế, đỡ đòn và ăn mừng (ứng với `raise` = 1). */
+const RAISE = { sword: -0.8, spear: 0.12, fan: -0.3, gourd: 0.16 } as const;
 
 /**
  * Nhịp của tranh tư thế (giây): `swap` đổi từ hình động sang tranh, `hit` tóe tia sáng, `out` bắt đầu đổi
  * về, `end` xong. `dash` là quãng lướt tới, `lift` là độ nhảy lên (tuyệt chiêu bổ từ trên xuống).
  */
 const POSE_BEAT = {
-  cast: { swap: 0.12, hit: 0.32, out: 0.85, end: 1.05, dash: 60, lift: 0 },
+  cast: { swap: 0.1, hit: 0.28, out: 0.66, end: 0.85, dash: 60, lift: 0 },
   ultimate: { swap: 0.16, hit: 0.7, out: 1.25, end: 1.5, dash: 90, lift: 110 },
 } as const;
 
@@ -95,6 +117,8 @@ export function warrior(
   trail.blendMode = "add";
   body.addChild(trail);
   const sparks = particles(body, rig.fxColor, 40, 220);
+  const fx = cueFx(view, rig.height, rig.fxColor);
+  const raiseAngle = RAISE[rig.weapon ?? "sword"];
 
   // Tranh tư thế: gốc tọa độ ở chân như hình động; bóng sáng sau lưng, ảnh sáng phóng ra lúc đổi tranh.
   const poses = (Object.entries(rig.poses ?? {}) as [PoseKind, PoseArt][]).map(([kind, p]) => {
@@ -166,12 +190,13 @@ export function warrior(
     time += dt;
     const t = time;
     const life = down ? 0 : AMP;
-    body.scale.set(1, 1 + Math.sin(t * 2) * 0.005 * life);
-    let armRot = Math.sin(t * 1.2) * 0.02 * life;
-    let armRRot = Math.sin(t * 1.4 + 1) * 0.03 * life;
-    let headRot = Math.sin(t * 0.8 + 0.4) * 0.012 * life;
+    let squash = Math.sin(t * BREATH) * 0.005 * life;
+    let armRot = Math.sin(t * BREATH + 0.6) * 0.02 * life;
+    let armRRot = Math.sin(t * BREATH + 1.2) * 0.03 * life;
+    let headRot = Math.sin(t * BREATH * 0.5 + 0.4) * 0.012 * life;
     let lean = 0;
     let shiftX = 0;
+    let lift = 0;
     let thrust = 0;
     let tint = 0xffffff;
     let aura = 0.18 + Math.sin(t * 3) * 0.08 * life;
@@ -218,7 +243,7 @@ export function warrior(
       action.t += dt;
       const a = action.t;
       if (action.kind === "attack" || action.kind === "cast" || action.kind === "ultimate") {
-        const swingKind = action.kind === "attack" ? "attack" : "cast";
+        const swingKind = action.kind;
         const spear = rig.weapon === "spear";
         const fan = rig.weapon === "fan";
         const gourd = rig.weapon === "gourd";
@@ -234,42 +259,63 @@ export function warrior(
         shiftX = 28 * strike * (1 - back);
         thrust = spear ? 12 * strike * (1 - back) : 0;
         gust = 1 + 1.4 * strike * (1 - back);
-        if (swingKind === "cast") aura += 1.4 * wind * (1 - back);
+        if (swingKind === "ultimate") {
+          // Tụ lực lâu: ghì người, hào quang dâng dần rồi bùng lúc chém.
+          aura += 2.2 * wind * (1 - back);
+          squash -= 0.02 * wind * (1 - strike);
+          lift = 24 * strike * (1 - back);
+        } else if (swingKind === "cast") aura += 1.4 * wind * (1 - back);
         else aura += 0.5 * strike * (1 - back);
         // Vệt kiếm: cung từ góc kiếm hiện tại kéo ngược về chỗ bắt đầu chém.
         if (!spear && !fan && !gourd && a >= S.at && a <= S.hit + 0.05) {
-          trailA = swingKind === "cast" ? 1 : 0.75;
+          trailA = swingKind === "attack" ? 0.75 : 1;
           trailFrom = baseAngle + armRot;
           trailTo = baseAngle + S.windup;
         }
         if (!action.fired && a >= S.hit) {
           action.fired = true;
-          const big = swingKind === "cast";
+          const big = swingKind !== "attack";
           const ang = baseAngle + S.strike;
           const tx = sx + thrust + Math.cos(ang) * reach;
           const ty = sy + Math.sin(ang) * reach;
-          for (let i = 0; i < (big ? 30 : 12); i++) {
+          for (let i = 0; i < (swingKind === "ultimate" ? 44 : big ? 30 : 12); i++) {
             const d = (Math.random() - 0.5) * 1.4;
             const v = 250 + Math.random() * (big ? 600 : 300);
             sparks.spawn(tx, ty, Math.cos(d) * v, Math.sin(d) * v - 120, 0.1 + Math.random() * (big ? 0.3 : 0.18), 0.4 + Math.random() * 0.4);
           }
         }
         if (a > S.end) action = null;
+      } else if (action.kind === "victory") {
+        const v = victory(a);
+        lift = v.lift;
+        lean = -0.03 * v.tilt;
+        squash += v.squash;
+        armRot += raiseAngle * v.raise;
+        armRRot += -0.1 * v.raise;
+        headRot += -0.04 * v.raise;
+        aura += v.glow;
       } else {
         const r = reaction(action.kind, a);
         shiftX = r.shiftX;
+        lift = r.lift;
+        squash += r.squash;
         lean = -0.03 * r.tilt;
         headRot += 0.06 * r.tilt;
+        armRot += raiseAngle * r.raise;
         tint = r.tint;
         aura += 0.6 * r.glow;
         if (r.done) action = null;
       }
     }
 
-    if (down) downT = Math.min(1, downT + dt * 2.5);
+    if (down) downT = Math.min(1, downT + dt / KO_SECONDS);
     const fall = ease(downT);
-    body.x = shiftX;
-    body.rotation = lean - (fallen ? 0 : 0.12 * fall);
+    // Gục: loạng choạng lùi một nhịp rồi ngã, giữ khung cuối.
+    const stagger = down ? pulse(downT, 0, 0.25) * (1 - pulse(downT, 0.25, 1)) : 0;
+    body.scale.set(1, 1 + squash);
+    body.x = shiftX - 16 * stagger;
+    body.y = -lift;
+    body.rotation = lean + 0.05 * stagger - (fallen ? 0 : 0.12 * fall);
     body.tint = down ? 0x777777 : tint;
     body.alpha = (fallen ? 1 - fall : 1 - 0.55 * fall) * rigVis;
     shadow.alpha = fallen ? 1 : 1 - 0.6 * fall;
@@ -298,6 +344,7 @@ export function warrior(
     }
 
     L.bend(t, life, gust);
+    fx.update(dt);
     sparks.update(dt);
     for (const p of poses) p.sparks.update(dt);
   };
@@ -314,19 +361,26 @@ export function warrior(
       downT = 0;
       trailA = 0;
       sparks.clear();
+      fx.clear();
       for (const p of poses) p.sparks.clear();
       update(0);
     },
     play(kind) {
       if (down || still) return;
+      // Vào thế không cắt ngang động tác đang chạy, trừ lúc đang ăn mừng.
+      if (kind === "ready" && action && action.kind !== "victory" && action.kind !== "ready") return;
       action = { kind, t: 0, fired: false };
+      fx.start(kind);
     },
     setDown(next) {
       if (next === down) return;
       if (next) for (const p of poses) p.root.visible = false;
       down = next;
       downT = next ? (still ? 1 : 0) : 0;
-      if (next) action = null;
+      if (next) {
+        action = null;
+        fx.clear();
+      }
       update(0);
     },
     destroy() {
