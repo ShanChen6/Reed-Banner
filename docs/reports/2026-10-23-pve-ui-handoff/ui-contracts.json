@@ -1,0 +1,815 @@
+{
+  "rule": "F",
+  "spirit": [
+    {
+      "turn": 24,
+      "spirit": 100,
+      "statMultiplier": 1,
+      "healShieldMultiplier": 1
+    },
+    {
+      "turn": 25,
+      "spirit": 95,
+      "statMultiplier": 1,
+      "healShieldMultiplier": 0.96
+    },
+    {
+      "turn": 30,
+      "spirit": 70,
+      "statMultiplier": 1,
+      "healShieldMultiplier": 0.76
+    },
+    {
+      "turn": 44,
+      "spirit": 0,
+      "statMultiplier": 1,
+      "healShieldMultiplier": 0.2
+    }
+  ],
+  "loadouts": [
+    {
+      "profession": "tuongSi",
+      "element": "kim",
+      "actives": [
+        "role_tramKich",
+        "element_luyenKimThanhKiem",
+        "role_phaTran",
+        "dbl_tuongSi_kim",
+        "role_doatMenh",
+        "element_kimYNgungThan"
+      ],
+      "prepared": "pursuit",
+      "reactions": [
+        "martial",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "profession": "tuongSi",
+      "element": "moc",
+      "actives": [
+        "role_tramKich",
+        "element_lucDiepPhong",
+        "role_phaTran",
+        "dbl_tuongSi_moc",
+        "role_doatMenh",
+        "element_linhMocHoiSinh"
+      ],
+      "prepared": "pursuit",
+      "reactions": [
+        "martial",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "profession": "tuongSi",
+      "element": "thuy",
+      "actives": [
+        "role_tramKich",
+        "element_thuyNguyetTuLinh",
+        "role_phaTran",
+        "dbl_tuongSi_thuy",
+        "role_doatMenh",
+        "element_thanhLuuTayTran"
+      ],
+      "prepared": "pursuit",
+      "reactions": [
+        "martial",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "profession": "tuongSi",
+      "element": "hoa",
+      "actives": [
+        "role_tramKich",
+        "element_phongHoaThieuDoanh",
+        "role_phaTran",
+        "dbl_tuongSi_hoa",
+        "role_doatMenh",
+        "element_noHoaThieuThan"
+      ],
+      "prepared": "pursuit",
+      "reactions": [
+        "martial",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "profession": "tuongSi",
+      "element": "tho",
+      "actives": [
+        "role_tramKich",
+        "element_hauThoTichLuong",
+        "role_phaTran",
+        "dbl_tuongSi_tho",
+        "role_doatMenh",
+        "element_thachGiap"
+      ],
+      "prepared": "pursuit",
+      "reactions": [
+        "martial",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "profession": "tuongSi",
+      "element": "loi",
+      "actives": [
+        "role_tramKich",
+        "element_loiTruGiangThe",
+        "role_phaTran",
+        "dbl_tuongSi_loi",
+        "role_doatMenh",
+        "element_tinhDienHoThan"
+      ],
+      "prepared": "pursuit",
+      "reactions": [
+        "martial",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "profession": "tuongSi",
+      "element": "phong",
+      "actives": [
+        "role_tramKich",
+        "element_phongQuyenTanVan",
+        "role_phaTran",
+        "dbl_tuongSi_phong",
+        "role_doatMenh",
+        "element_thanhPhongTuKhi"
+      ],
+      "prepared": "pursuit",
+      "reactions": [
+        "martial",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "profession": "phapSu",
+      "element": "kim",
+      "actives": [
+        "role_phepLan",
+        "element_luyenKimThanhKiem",
+        "role_nguHanhAn",
+        "dbl_phapSu_kim",
+        "role_thienDiaCong",
+        "element_kimYNgungThan"
+      ],
+      "prepared": "resonance",
+      "reactions": [
+        "arcane",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "profession": "phapSu",
+      "element": "moc",
+      "actives": [
+        "role_phepLan",
+        "element_lucDiepPhong",
+        "role_nguHanhAn",
+        "dbl_phapSu_moc",
+        "role_thienDiaCong",
+        "element_linhMocHoiSinh"
+      ],
+      "prepared": "resonance",
+      "reactions": [
+        "arcane",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "profession": "phapSu",
+      "element": "thuy",
+      "actives": [
+        "role_phepLan",
+        "element_thuyNguyetTuLinh",
+        "role_nguHanhAn",
+        "dbl_phapSu_thuy",
+        "role_thienDiaCong",
+        "element_thanhLuuTayTran"
+      ],
+      "prepared": "resonance",
+      "reactions": [
+        "arcane",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "profession": "phapSu",
+      "element": "hoa",
+      "actives": [
+        "role_phepLan",
+        "element_phongHoaThieuDoanh",
+        "role_nguHanhAn",
+        "dbl_phapSu_hoa",
+        "role_thienDiaCong",
+        "element_noHoaThieuThan"
+      ],
+      "prepared": "resonance",
+      "reactions": [
+        "arcane",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "profession": "phapSu",
+      "element": "tho",
+      "actives": [
+        "role_phepLan",
+        "element_hauThoTichLuong",
+        "role_nguHanhAn",
+        "dbl_phapSu_tho",
+        "role_thienDiaCong",
+        "element_thachGiap"
+      ],
+      "prepared": "resonance",
+      "reactions": [
+        "arcane",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "profession": "phapSu",
+      "element": "loi",
+      "actives": [
+        "role_phepLan",
+        "element_loiTruGiangThe",
+        "role_nguHanhAn",
+        "dbl_phapSu_loi",
+        "role_thienDiaCong",
+        "element_tinhDienHoThan"
+      ],
+      "prepared": "resonance",
+      "reactions": [
+        "arcane",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "profession": "phapSu",
+      "element": "phong",
+      "actives": [
+        "role_phepLan",
+        "element_phongQuyenTanVan",
+        "role_nguHanhAn",
+        "dbl_phapSu_phong",
+        "role_thienDiaCong",
+        "element_thanhPhongTuKhi"
+      ],
+      "prepared": "resonance",
+      "reactions": [
+        "arcane",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "profession": "binhLinh",
+      "element": "kim",
+      "actives": [
+        "role_thuThanh",
+        "element_luyenKimThanhKiem",
+        "role_tuongKhien",
+        "dbl_binhLinh_kim",
+        "role_phanKich",
+        "element_kimYNgungThan"
+      ],
+      "prepared": "retaliation",
+      "reactions": [
+        "guardian",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "profession": "binhLinh",
+      "element": "moc",
+      "actives": [
+        "role_thuThanh",
+        "element_lucDiepPhong",
+        "role_tuongKhien",
+        "dbl_binhLinh_moc",
+        "role_phanKich",
+        "element_linhMocHoiSinh"
+      ],
+      "prepared": "retaliation",
+      "reactions": [
+        "guardian",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "profession": "binhLinh",
+      "element": "thuy",
+      "actives": [
+        "role_thuThanh",
+        "element_thuyNguyetTuLinh",
+        "role_tuongKhien",
+        "dbl_binhLinh_thuy",
+        "role_phanKich",
+        "element_thanhLuuTayTran"
+      ],
+      "prepared": "retaliation",
+      "reactions": [
+        "guardian",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "profession": "binhLinh",
+      "element": "hoa",
+      "actives": [
+        "role_thuThanh",
+        "element_phongHoaThieuDoanh",
+        "role_tuongKhien",
+        "dbl_binhLinh_hoa",
+        "role_phanKich",
+        "element_noHoaThieuThan"
+      ],
+      "prepared": "retaliation",
+      "reactions": [
+        "guardian",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "profession": "binhLinh",
+      "element": "tho",
+      "actives": [
+        "role_thuThanh",
+        "element_hauThoTichLuong",
+        "role_tuongKhien",
+        "dbl_binhLinh_tho",
+        "role_phanKich",
+        "element_thachGiap"
+      ],
+      "prepared": "retaliation",
+      "reactions": [
+        "guardian",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "profession": "binhLinh",
+      "element": "loi",
+      "actives": [
+        "role_thuThanh",
+        "element_loiTruGiangThe",
+        "role_tuongKhien",
+        "dbl_binhLinh_loi",
+        "role_phanKich",
+        "element_tinhDienHoThan"
+      ],
+      "prepared": "retaliation",
+      "reactions": [
+        "guardian",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "profession": "binhLinh",
+      "element": "phong",
+      "actives": [
+        "role_thuThanh",
+        "element_phongQuyenTanVan",
+        "role_tuongKhien",
+        "dbl_binhLinh_phong",
+        "role_phanKich",
+        "element_thanhPhongTuKhi"
+      ],
+      "prepared": "retaliation",
+      "reactions": [
+        "guardian",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "profession": "ySu",
+      "element": "kim",
+      "actives": [
+        "role_linhDuoc",
+        "element_luyenKimThanhKiem",
+        "role_duongSinh",
+        "dbl_ySu_kim",
+        "role_teDo",
+        "element_kimYNgungThan"
+      ],
+      "prepared": "renewal",
+      "reactions": [
+        "medic",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "profession": "ySu",
+      "element": "moc",
+      "actives": [
+        "role_linhDuoc",
+        "element_lucDiepPhong",
+        "role_duongSinh",
+        "dbl_ySu_moc",
+        "role_teDo",
+        "element_linhMocHoiSinh"
+      ],
+      "prepared": "renewal",
+      "reactions": [
+        "medic",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "profession": "ySu",
+      "element": "thuy",
+      "actives": [
+        "role_linhDuoc",
+        "element_thuyNguyetTuLinh",
+        "role_duongSinh",
+        "dbl_ySu_thuy",
+        "role_teDo",
+        "element_thanhLuuTayTran"
+      ],
+      "prepared": "renewal",
+      "reactions": [
+        "medic",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "profession": "ySu",
+      "element": "hoa",
+      "actives": [
+        "role_linhDuoc",
+        "element_phongHoaThieuDoanh",
+        "role_duongSinh",
+        "dbl_ySu_hoa",
+        "role_teDo",
+        "element_noHoaThieuThan"
+      ],
+      "prepared": "renewal",
+      "reactions": [
+        "medic",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "profession": "ySu",
+      "element": "tho",
+      "actives": [
+        "role_linhDuoc",
+        "element_hauThoTichLuong",
+        "role_duongSinh",
+        "dbl_ySu_tho",
+        "role_teDo",
+        "element_thachGiap"
+      ],
+      "prepared": "renewal",
+      "reactions": [
+        "medic",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "profession": "ySu",
+      "element": "loi",
+      "actives": [
+        "role_linhDuoc",
+        "element_loiTruGiangThe",
+        "role_duongSinh",
+        "dbl_ySu_loi",
+        "role_teDo",
+        "element_tinhDienHoThan"
+      ],
+      "prepared": "renewal",
+      "reactions": [
+        "medic",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "profession": "ySu",
+      "element": "phong",
+      "actives": [
+        "role_linhDuoc",
+        "element_phongQuyenTanVan",
+        "role_duongSinh",
+        "dbl_ySu_phong",
+        "role_teDo",
+        "element_thanhPhongTuKhi"
+      ],
+      "prepared": "renewal",
+      "reactions": [
+        "medic",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "profession": "muuSi",
+      "element": "kim",
+      "actives": [
+        "role_muaChuoc",
+        "element_luyenKimThanhKiem",
+        "role_lyGian",
+        "dbl_muuSi_kim",
+        "role_catQuanLuong",
+        "element_kimYNgungThan"
+      ],
+      "prepared": "interdiction",
+      "reactions": [
+        "strategist",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "profession": "muuSi",
+      "element": "moc",
+      "actives": [
+        "role_muaChuoc",
+        "element_lucDiepPhong",
+        "role_lyGian",
+        "dbl_muuSi_moc",
+        "role_catQuanLuong",
+        "element_linhMocHoiSinh"
+      ],
+      "prepared": "interdiction",
+      "reactions": [
+        "strategist",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "profession": "muuSi",
+      "element": "thuy",
+      "actives": [
+        "role_muaChuoc",
+        "element_thuyNguyetTuLinh",
+        "role_lyGian",
+        "dbl_muuSi_thuy",
+        "role_catQuanLuong",
+        "element_thanhLuuTayTran"
+      ],
+      "prepared": "interdiction",
+      "reactions": [
+        "strategist",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "profession": "muuSi",
+      "element": "hoa",
+      "actives": [
+        "role_muaChuoc",
+        "element_phongHoaThieuDoanh",
+        "role_lyGian",
+        "dbl_muuSi_hoa",
+        "role_catQuanLuong",
+        "element_noHoaThieuThan"
+      ],
+      "prepared": "interdiction",
+      "reactions": [
+        "strategist",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "profession": "muuSi",
+      "element": "tho",
+      "actives": [
+        "role_muaChuoc",
+        "element_hauThoTichLuong",
+        "role_lyGian",
+        "dbl_muuSi_tho",
+        "role_catQuanLuong",
+        "element_thachGiap"
+      ],
+      "prepared": "interdiction",
+      "reactions": [
+        "strategist",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "profession": "muuSi",
+      "element": "loi",
+      "actives": [
+        "role_muaChuoc",
+        "element_loiTruGiangThe",
+        "role_lyGian",
+        "dbl_muuSi_loi",
+        "role_catQuanLuong",
+        "element_tinhDienHoThan"
+      ],
+      "prepared": "interdiction",
+      "reactions": [
+        "strategist",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "profession": "muuSi",
+      "element": "phong",
+      "actives": [
+        "role_muaChuoc",
+        "element_phongQuyenTanVan",
+        "role_lyGian",
+        "dbl_muuSi_phong",
+        "role_catQuanLuong",
+        "element_thanhPhongTuKhi"
+      ],
+      "prepared": "interdiction",
+      "reactions": [
+        "strategist",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "profession": "quanSu",
+      "element": "kim",
+      "actives": [
+        "role_nghiBinh",
+        "element_luyenKimThanhKiem",
+        "role_hieuLenh",
+        "dbl_quanSu_kim",
+        "role_phaKe",
+        "element_kimYNgungThan"
+      ],
+      "prepared": "coordination",
+      "reactions": [
+        "commander",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "profession": "quanSu",
+      "element": "moc",
+      "actives": [
+        "role_nghiBinh",
+        "element_lucDiepPhong",
+        "role_hieuLenh",
+        "dbl_quanSu_moc",
+        "role_phaKe",
+        "element_linhMocHoiSinh"
+      ],
+      "prepared": "coordination",
+      "reactions": [
+        "commander",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "profession": "quanSu",
+      "element": "thuy",
+      "actives": [
+        "role_nghiBinh",
+        "element_thuyNguyetTuLinh",
+        "role_hieuLenh",
+        "dbl_quanSu_thuy",
+        "role_phaKe",
+        "element_thanhLuuTayTran"
+      ],
+      "prepared": "coordination",
+      "reactions": [
+        "commander",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "profession": "quanSu",
+      "element": "hoa",
+      "actives": [
+        "role_nghiBinh",
+        "element_phongHoaThieuDoanh",
+        "role_hieuLenh",
+        "dbl_quanSu_hoa",
+        "role_phaKe",
+        "element_noHoaThieuThan"
+      ],
+      "prepared": "coordination",
+      "reactions": [
+        "commander",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "profession": "quanSu",
+      "element": "tho",
+      "actives": [
+        "role_nghiBinh",
+        "element_hauThoTichLuong",
+        "role_hieuLenh",
+        "dbl_quanSu_tho",
+        "role_phaKe",
+        "element_thachGiap"
+      ],
+      "prepared": "coordination",
+      "reactions": [
+        "commander",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "profession": "quanSu",
+      "element": "loi",
+      "actives": [
+        "role_nghiBinh",
+        "element_loiTruGiangThe",
+        "role_hieuLenh",
+        "dbl_quanSu_loi",
+        "role_phaKe",
+        "element_tinhDienHoThan"
+      ],
+      "prepared": "coordination",
+      "reactions": [
+        "commander",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "profession": "quanSu",
+      "element": "phong",
+      "actives": [
+        "role_nghiBinh",
+        "element_phongQuyenTanVan",
+        "role_hieuLenh",
+        "dbl_quanSu_phong",
+        "role_phaKe",
+        "element_thanhPhongTuKhi"
+      ],
+      "prepared": "coordination",
+      "reactions": [
+        "commander",
+        "phong1",
+        "phong2"
+      ]
+    }
+  ],
+  "campaignStages": [
+    "coLau",
+    "boHai",
+    "dangChau",
+    "binhKieu",
+    "duongLam",
+    "tamDai",
+    "phongChau",
+    "hoiHo",
+    "sieuLoai",
+    "tienDu",
+    "teGiang",
+    "tayPhuLiet",
+    "doDong"
+  ],
+  "sourceSHA256": {
+    "src/core/ai/ai.ts": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "src/core/battle/rules.ts": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "src/core/battle/skills.ts": "a19c76ad1ee93e5df64216aa6afa82c520e2f7d5dc86720cf3e3679750fdba8c",
+    "src/core/campaign/campaign.ts": "eb5301adc03b21d2d449ad64a86507060f1d10d1a553d21d4dae13c56a79afed",
+    "src/core/tower/tower.ts": "9a1369dacbcab2117b0f72eb32e456b1464b9a09415b38f20212655d082abaa3",
+    "src/core/survival/survival.ts": "b410c0a30c45404f708aacc4b98fee4b92b3fc1555893d8e62b550e05ba41e3e",
+    "src/core/daily/daily.ts": "785e8f4424d0359fa989acc5cd4233ee734216115bd99e7374ba6eff63565ace",
+    "src/app/game/battle/SkillDetails.tsx": "1e02d41a45b0dd7097291793d24be17847cc1422106c1ba2f10369e650677b3e",
+    "src/app/game/battle/DemoGame.tsx": "729b884099414864595aa8848d1eb888ad7ff46ceacc79e06daef5f7c48acd74",
+    "src/app/game/battle/labels.ts": "9d69b2fc0c1461cdc670238298831778dc197e616d06a27c929ffeac50add0ea",
+    "scripts/task4-audit.ts": "67812cad6f95182373fd1fc3976ec77d8c7fe514e3012165ef7833b577122979"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "checked": 48,
+  "exactReplayTask2Expanded": true,
+  "fields": [
+    "turns",
+    "won",
+    "totals",
+    "skills",
+    "passive",
+    "limits",
+    "contribution",
+    "trajectory"
+  ]
+}

@@ -5,6 +5,8 @@
 > Thiết kế triển khai 22/10/2026. Số liệu khởi đầu, chưa kết luận cân bằng.
 > Tài liệu này thay khung 6 chiêu hệ cũ ở 06, 12 và 14 cho nhân vật chơi được.
 
+> Thông số lịch sử ở bảng dưới: giá `role_thuThanh` hiện hành được cập nhật tại [thiết kế23](23-can-bang-f.md).
+
 ## Khung và nguồn dữ liệu
 
 Một hàm `characterSkills(profession, element, characterId)` lắp danh sách; `buildMain` / `buildCompanion` lọc theo tiến trình và áp cấp kỹ năng. Không tạo 42 bộ riêng.

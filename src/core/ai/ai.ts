@@ -383,7 +383,7 @@ function scoreSkillTarget(view: AiView, def: SkillDef, selected?: number): { sco
         break;
     }
   }
-  if (score > 0) score += comboSetupValue(view,def,hit);
+  if (score > 0) score += comboSetupValue(view,def,hit,list);
   if (score <= 0) return null;
   const target = def.target === "enemy" ? lowestEnemy : def.target === "ally" ? lowestAlly : undefined;
   return { score, ...(target === undefined ? {} : { target }), ...(whirl ? { whirl } : {}), ...(cell ? { cell } : {}) };
@@ -472,7 +472,7 @@ export function playAiTurn(
 }
 
 /** Small preparation credit, only for a reachable useful event and a living eligible teammate. */
-function comboSetupValue(view:AiView,def:SkillDef,hit:readonly Fighter[]):number {
+function comboSetupValue(view:AiView,def:SkillDef,hit:readonly Fighter[],recipients:(to:StepRecipient)=>readonly Fighter[]):number {
  const side=view.turn.side,own=view.sides[side],caster=own.fighters[view.turn.actor]!;
  // Prepared opportunities and immediate chase are evaluated separately.
  const kinds=new Set<string>();
@@ -481,7 +481,7 @@ function comboSetupValue(view:AiView,def:SkillDef,hit:readonly Fighter[]):number
   if(step.type==='effect'&&step.effect==='defDown'&&hit.some(f=>(findEffect(f.effects,'defDown')?.value??0)<step.value))kinds.add('armorBroken');
   if(step.type==='effect'&&(step.effect==='freeze'||step.effect==='silence')&&hit.some(f=>!hasEffect(f.effects,step.effect)&&!(step.effect==='freeze'&&hasEffect(f.effects,'freezeImmune'))))kinds.add('controlled');
   if(step.type==='dispel'&&hit.some(f=>f.comboReady||f.effects.some(e=>POSITIVE_EFFECTS.includes(e.kind))))kinds.add('dispelled');
-  if(step.type==='heal'&&own.fighters.some(f=>isAlive(f)&&f.hp<f.maxHp&&spiritHealMultiplier(f.spirit,view.experimentalSpirit)>0))kinds.add('healed');
+  if(step.type==='heal'&&recipients(step.to).some(f=>isAlive(f)&&f.hp<f.maxHp&&Math.round(Math.round(f.maxHp*step.ratio)*spiritHealMultiplier(f.spirit,view.experimentalSpirit))>0))kinds.add('healed');
  }
  const preparation=caster.comboReady?0:own.fighters.reduce((sum,f,i)=>{if(i===view.turn.actor||!isAlive(f)||!f.comboPassive||f.comboReady||hasEffect(f.effects,'silence')||hasEffect(f.effects,'freeze')||f.comboOpenedAt===view.comboState?.sideTurns[side])return sum;const p=COMBO_PASSIVES[f.comboPassive];return sum+(p.triggers.some(k=>kinds.has(k))?Math.min(f.atk*.3,caster.atk*.3):0);},0);
  // Visible first-hop estimate only. No future-board reads or attempt to price the whole chain.

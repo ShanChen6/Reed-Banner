@@ -1,0 +1,26 @@
+{
+  "candidateLocked": "shield35",
+  "change": "role_thuThanh cost30->35, existing max-level discount gives25->30",
+  "aiSHA256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+  "rule": "F",
+  "validationRunsPerVariant": 1680,
+  "newSeedClusters": 141,
+  "allNewSeedsDisjointFromTuning": true,
+  "broadScreenEvidence": {
+    "cap": [
+      23,
+      20
+    ],
+    "over44Counts": [
+      186,
+      187
+    ],
+    "3v3Median": [
+      19.5,
+      19.0
+    ],
+    "decision": "mixed, weak tail evidence; advance unchanged candidate to independent confirmation, no retuning"
+  },
+  "acceptanceUnchangedFromRoundPlan": true,
+  "fallback": "rollback if independent gates fail; never choose another number using this holdout"
+}

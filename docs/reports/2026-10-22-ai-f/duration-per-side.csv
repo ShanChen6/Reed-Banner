@@ -1,0 +1,7 @@
+mode,side,n,medianKM,p90KM
+all,focal,1680,18.0,46.0
+all,opponent,1680,18.0,46.0
+1v1,focal,840,15.0,48.0
+1v1,opponent,840,15.0,48.0
+3v3,focal,840,19.0,42.0
+3v3,opponent,840,19.0,42.0

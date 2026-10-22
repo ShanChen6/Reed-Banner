@@ -1,6 +1,8 @@
 # Chốt Tinh thần F và bộ kỹ năng 6 chủ động + 4 bị động
 
-Tiếp nối [phiên bản phối hợp trước](21-combo-dong-doi.md). Quyết định của người dùng trong phiên này thay thế trạng thái “A mặc định, F chỉ thử nghiệm” của các tài liệu cũ. Chỉ triển khai mới; chưa chạy lại test, trình duyệt, build hoặc mô phỏng/cân bằng.
+> Thông số cập nhật sau kiểm chứng: [giá Thủ thành, task3](23-can-bang-f.md).
+
+Tiếp nối [phiên bản phối hợp trước](21-combo-dong-doi.md). Quyết định của người dùng trong phiên này thay thế trạng thái “A mặc định, F chỉ thử nghiệm” của các tài liệu cũ. Kiểm chứng baseline tiếp theo: [task1 — F, bản đồ kỹ năng và công thức](../reports/2026-10-22-baseline-f/README.md). Các giới hạn kiểm chứng của phiên triển khai gốc bên dưới giữ làm lịch sử.
 
 ## Luật Tinh thần đã chốt
 

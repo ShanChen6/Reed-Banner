@@ -1,5 +1,5 @@
 import { ENERGY_MAX, spiritHealMultiplier } from "./rules";
-import { CHASE_PASSIVES, CHASE_LIMITS, type ChasePassiveDef, type ChaseEvent } from "./chase";
+import { CHASE_PASSIVES, CHASE_LIMITS, type ChasePassiveDef, type ChaseEvent, type ChaseAuditEvent, type ChasePassiveId } from "./chase";
 import { COMBO_PASSIVES, comboReady, type ComboEvent, type ComboRef, type ComboSignalKind, type ComboOpportunity, type ComboPassiveDef, comboMultiplier, } from "./combos";
 import type { BattleState, SideIndex } from "./state";
 interface Signal {
@@ -30,7 +30,7 @@ export class ComboEngine {
     } | undefined;
     private suppressed = 0;
     private drainSpent = false;
-    constructor(private state: BattleState, private emit: (e: ComboEvent | ChaseEvent) => void, private react: (passive: ChasePassiveDef, source: ComboRef, target: ComboRef, opener: ComboRef) => void) { }
+    constructor(private state: BattleState, private emit: (e: ComboEvent | ChaseEvent | ChaseAuditEvent) => void, private react: (passive: ChasePassiveDef, source: ComboRef, target: ComboRef, opener: ComboRef) => void) { }
     private fighter(r: ComboRef) {
         return this.state.sides[r.side].fighters[r.fighter]!;
     }
@@ -81,7 +81,8 @@ export class ComboEngine {
     signal(kind: ComboSignalKind, target: ComboRef) {
         if (this.skill && !this.suppressed)
             this.chaseQueue.push({ kind, source: this.skill.source, target, action: this.skill.action, depth: this.chaseDepth });
-        if (this.skill && !this.skill.combo && !this.suppressed)
+        // Chase may continue the reaction queue, but cannot create prepared opportunities.
+        if (this.skill && !this.skill.combo && !this.suppressed && !this.chasing)
             this.queue.push({
                 kind,
                 source: this.skill.source,
@@ -166,7 +167,7 @@ export class ComboEngine {
         const f = this.fighter(target);
         const q = f.comboShield ?? (f.comboShield = []);
         if (this.skill && !this.skill.combo && !this.suppressed)
-            q.push({ amount, source: this.skill.source, action: this.skill.action });
+            q.push({ amount, source: this.skill.source, action: this.skill.action, ...(this.chasing ? { reaction: true } : {}) });
         else
             q.push({ amount, source: target, action: 0 }); // Non-skill/self grants cannot open retaliation.
     }
@@ -184,7 +185,8 @@ export class ComboEngine {
                 grant.source.side === target.side &&
                 grant.source.fighter !== target.fighter) {
                 const event: Signal = { kind: "shieldAbsorbed", source: grant.source, target, action: grant.action, depth: this.chaseDepth };
-                this.queue.push(event);
+                if (!grant.reaction)
+                    this.queue.push(event);
                 this.chaseQueue.push(event);
             }
             if (grant.amount === 0)
@@ -220,6 +222,9 @@ export class ComboEngine {
                 this.breakReady({ side: side as SideIndex, fighter }, "targetDown");
         }));
     }
+    private audit(stage: ChaseAuditEvent['stage'], reason: string, e: Signal, fighter = e.source.fighter, passive?: ChasePassiveId) {
+        if (this.state.audit) this.emit({ type: 'chaseAudit', stage, reason, side: e.source.side, fighter, passive, signal: e.kind, action: this.chaseAction ?? e.action, depth: e.depth ?? 0 });
+    }
     flush() {
         if (this.flushing)
             return;
@@ -229,37 +234,34 @@ export class ComboEngine {
         try {
             while (this.chaseQueue.length && this.chaseCount < CHASE_LIMITS.maxReactions && this.state.winner === null) {
                 const e = this.chaseQueue.shift()!;
-                if ((e.depth ?? 0) >= CHASE_LIMITS.maxDepth || this.fighter(e.source).hp <= 0)
+                if ((e.depth ?? 0) >= CHASE_LIMITS.maxDepth || this.fighter(e.source).hp <= 0) {
+                    this.audit('limit', (e.depth ?? 0) >= CHASE_LIMITS.maxDepth ? 'depthLimit' : 'sourceDown', e);
                     continue;
+                }
                 this.state.sides[e.source.side].fighters.forEach((f, i) => {
-                    if (this.state.winner !== null || f.hp <= 0 || f.effects.some(x => x.kind === 'silence' || x.kind === 'freeze'))
-                        return;
                     for (const id of f.chasePassives ?? []) {
                         const p: ChasePassiveDef = CHASE_PASSIVES[id];
                         const key = `${e.source.side}:${i}:${id}`;
-                        if (this.chaseCount >= CHASE_LIMITS.maxReactions || this.state.winner !== null || f.hp <= 0 || f.effects.some(x => x.kind === 'silence' || x.kind === 'freeze'))
-                            break;
-                        if (this.chaseUsed.has(key) || !p.triggers.includes(e.kind) || (p.alliesOnly && i === e.source.fighter))
-                            continue;
+                        if (!p.triggers.includes(e.kind)) continue;
+                        const skip = (reason: string) => this.audit('candidate', reason, e, i, id);
+                        if (this.chaseCount >= CHASE_LIMITS.maxReactions || this.state.winner !== null) break;
+                        if (f.hp <= 0 || f.effects.some(x => x.kind === 'silence' || x.kind === 'freeze')) { skip('blocked'); continue; }
+                        if (this.chaseUsed.has(key)) { skip('alreadyUsed'); continue; }
+                        if (p.alliesOnly && i === e.source.fighter) { skip('selfSource'); continue; }
                         const hostile = p.effect === 'damage' || p.effect === 'armor' || p.effect === 'drain';
                         const enemy = e.target.side !== e.source.side ? e.target : { side: (1 - e.source.side) as SideIndex, fighter: this.state.sides[(1 - e.source.side) as SideIndex].fighters.findIndex(x => x.hp > 0) };
                         let target = hostile ? enemy : e.target.side === e.source.side ? e.target : e.source;
                         if (p.effect === 'heal') {
                             const candidates = this.state.sides[e.source.side].fighters.map((x, j) => ({ x, j })).filter(({ x }) => x.hp > 0 && x.hp < x.maxHp).sort((a, b) => a.x.hp / a.x.maxHp - b.x.hp / b.x.maxHp || a.j - b.j);
-                            if (!candidates.length)
-                                continue;
+                            if (!candidates.length) { skip('fullHealth'); continue; }
                             target = { side: e.source.side, fighter: candidates[0]!.j };
                         }
-                        if (target.fighter < 0 || this.fighter(target).hp <= 0)
-                            continue;
-                        if (p.effect === 'drain' && this.fighter(target).energy <= 0)
-                            continue;
-                        if (p.effect === 'energy' && this.fighter(target).energy >= ENERGY_MAX)
-                            continue;
-                        if (p.effect === 'shield' && Math.round(this.fighter(target).maxHp * p.value * spiritHealMultiplier(this.fighter(target).spirit, this.state.experimentalSpirit)) <= (this.fighter(target).effects.find(x => x.kind === 'shield')?.value ?? 0))
-                            continue;
-                        if (p.effect === 'armor' && this.fighter(target).effects.some(x => x.kind === 'defDown' && x.value >= p.value && (x.turns === null || x.turns >= 1)))
-                            continue;
+                        if (target.fighter < 0 || this.fighter(target).hp <= 0) { skip('targetDown'); continue; }
+                        if (p.effect === 'drain' && this.fighter(target).energy <= 0) { skip('emptyEnergy'); continue; }
+                        if (p.effect === 'energy' && this.fighter(target).energy >= ENERGY_MAX) { skip('fullEnergy'); continue; }
+                        if (p.effect === 'shield' && Math.round(this.fighter(target).maxHp * p.value * spiritHealMultiplier(this.fighter(target).spirit, this.state.experimentalSpirit)) <= (this.fighter(target).effects.find(x => x.kind === 'shield')?.value ?? 0)) { skip('existingShield'); continue; }
+                        if (p.effect === 'armor' && this.fighter(target).effects.some(x => x.kind === 'defDown' && x.value >= p.value && (x.turns === null || x.turns >= 1))) { skip('existingArmor'); continue; }
+                        skip('triggered');
                         this.chaseUsed.add(key);
                         this.chaseCount++;
                         const prior = this.skill;
@@ -273,6 +275,7 @@ export class ComboEngine {
                             this.react(p, actor, target, e.source);
                         }
                         finally {
+                            this.audit('end', 'resolved', e, i, id);
                             this.skill = prior;
                             this.chaseDepth = depth;
                             this.chasing = false;
@@ -280,6 +283,7 @@ export class ComboEngine {
                     }
                 });
             }
+            for (const e of this.chaseQueue) this.audit('limit', this.state.winner === null ? 'reactionLimit' : 'battleEnded', e);
             this.chaseQueue = [];
             const signals = this.queue;
             this.queue = [];

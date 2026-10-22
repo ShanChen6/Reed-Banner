@@ -1,0 +1,16 @@
+{
+  "group": "identity",
+  "variant": "baseline",
+  "rule": "F",
+  "aiSHA": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+  "sourceHashes": {
+    "src/core/ai/ai.ts": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "src/core/battle/skills.ts": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "src/core/gear/gear.ts": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "scripts/task3-interactions.ts": "b868f38fe94d379fe873d2c04e108d0d7652d38fdc5e6433b0ee265a96071224",
+    "scripts/lib/task2-runner.ts": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414"
+  },
+  "n": 24,
+  "kind": "same profession/element, different character ultimate, ordinary focal gear; supports and foe held fixed",
+  "fingerprint": "8b4b74de86475d927f9606f9b904e92d0f73e9c26a539cd82d559ea16f4b3e6a"
+}

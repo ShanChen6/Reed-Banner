@@ -1,4 +1,4 @@
-import { CHASE_PASSIVES, type ChaseEvent } from "./chase";
+import { CHASE_PASSIVES, type ChaseEvent, type ChaseAuditEvent } from "./chase";
 // Luồng trận đấu: lượt, người hành động, kỹ năng, áp kết quả bàn cờ lên hai phe.
 // Xem docs/design/02-tran-dau.md, 03-tai-nguyen-cong-thuc.md, 04-hieu-ung.md, 06-nhan-vat-ky-nang.md.
 // Hàm thuần: nhận trạng thái cũ, trả trạng thái mới; thời gian do bên gọi truyền vào.
@@ -78,6 +78,8 @@ export interface FighterRef {
 
 export type BattleEvent =
   | ChaseEvent
+  | ChaseAuditEvent
+  | { readonly type: "sourceAudit"; readonly source: "rage"; readonly phase: "begin" | "end" }
   | ComboEvent
   | {
       readonly type: "turnStart";
@@ -1243,7 +1245,9 @@ class Ctx {
       // +1 vì lượt đang diễn ra không tính; bị động có hiệu lực 3 lượt tiếp theo của phe.
       own.passiveTurns = R.PASSIVE_TURNS + 1;
       this.emit({ type: "passive", side });
-      this.combo.withoutTriggers(() => this.triggerPassive(side));
+      if (this.state.audit) this.emit({ type: 'sourceAudit', source: 'rage', phase: 'begin' });
+      try { this.combo.withoutTriggers(() => this.triggerPassive(side)); }
+      finally { if (this.state.audit) this.emit({ type: 'sourceAudit', source: 'rage', phase: 'end' }); }
     }
   }
 

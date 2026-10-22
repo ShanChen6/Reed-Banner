@@ -64,3 +64,16 @@ export interface ChaseEvent {
     readonly action: number;
     readonly depth: number;
 }
+
+/** Audit-only boundaries and rejected trigger candidates; never consumed by gameplay. */
+export interface ChaseAuditEvent {
+ readonly type: 'chaseAudit';
+ readonly stage: 'candidate' | 'end' | 'limit';
+ readonly reason: string;
+ readonly side: 0 | 1;
+ readonly fighter: number;
+ readonly passive?: ChasePassiveId;
+ readonly signal: ComboSignalKind;
+ readonly action: number;
+ readonly depth: number;
+}

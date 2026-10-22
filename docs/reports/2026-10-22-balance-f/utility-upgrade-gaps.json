@@ -1,0 +1,257 @@
+[
+  {
+    "id": "role_muaChuoc",
+    "name": "Mua chuộc",
+    "costByLevel": [
+      30,
+      30,
+      30,
+      30,
+      25
+    ],
+    "unchangedMidLevels": [
+      2,
+      3,
+      4
+    ],
+    "source": "existing upgrade rules; design proposal only, not changed"
+  },
+  {
+    "id": "role_lyGian",
+    "name": "Ly gián",
+    "costByLevel": [
+      45,
+      45,
+      45,
+      45,
+      40
+    ],
+    "unchangedMidLevels": [
+      2,
+      3,
+      4
+    ],
+    "source": "existing upgrade rules; design proposal only, not changed"
+  },
+  {
+    "id": "role_catQuanLuong",
+    "name": "Cắt quân lương",
+    "costByLevel": [
+      55,
+      55,
+      55,
+      55,
+      45
+    ],
+    "unchangedMidLevels": [
+      2,
+      3,
+      4
+    ],
+    "source": "existing upgrade rules; design proposal only, not changed"
+  },
+  {
+    "id": "role_phaKe",
+    "name": "Phá kế",
+    "costByLevel": [
+      55,
+      55,
+      55,
+      55,
+      45
+    ],
+    "unchangedMidLevels": [
+      2,
+      3,
+      4
+    ],
+    "source": "existing upgrade rules; design proposal only, not changed"
+  },
+  {
+    "id": "element_luyenKimThanhKiem",
+    "name": "Luyện Kim Thành Kiếm",
+    "costByLevel": [
+      20,
+      20,
+      20,
+      20,
+      15
+    ],
+    "unchangedMidLevels": [
+      2,
+      3,
+      4
+    ],
+    "source": "existing upgrade rules; design proposal only, not changed"
+  },
+  {
+    "id": "element_lucDiepPhong",
+    "name": "Lục Diệp Phong",
+    "costByLevel": [
+      35,
+      35,
+      35,
+      35,
+      30
+    ],
+    "unchangedMidLevels": [
+      2,
+      3,
+      4
+    ],
+    "source": "existing upgrade rules; design proposal only, not changed"
+  },
+  {
+    "id": "element_thuyNguyetTuLinh",
+    "name": "Thủy Nguyệt Tụ Linh",
+    "costByLevel": [
+      20,
+      20,
+      20,
+      20,
+      15
+    ],
+    "unchangedMidLevels": [
+      2,
+      3,
+      4
+    ],
+    "source": "existing upgrade rules; design proposal only, not changed"
+  },
+  {
+    "id": "element_phongHoaThieuDoanh",
+    "name": "Phóng Hỏa Thiêu Doanh",
+    "costByLevel": [
+      35,
+      35,
+      35,
+      35,
+      30
+    ],
+    "unchangedMidLevels": [
+      2,
+      3,
+      4
+    ],
+    "source": "existing upgrade rules; design proposal only, not changed"
+  },
+  {
+    "id": "element_hauThoTichLuong",
+    "name": "Hậu Thổ Tích Lương",
+    "costByLevel": [
+      20,
+      20,
+      20,
+      20,
+      15
+    ],
+    "unchangedMidLevels": [
+      2,
+      3,
+      4
+    ],
+    "source": "existing upgrade rules; design proposal only, not changed"
+  },
+  {
+    "id": "element_loiTruGiangThe",
+    "name": "Lôi Trụ Giáng Thế",
+    "costByLevel": [
+      40,
+      40,
+      40,
+      40,
+      35
+    ],
+    "unchangedMidLevels": [
+      2,
+      3,
+      4
+    ],
+    "source": "existing upgrade rules; design proposal only, not changed"
+  },
+  {
+    "id": "element_tinhDienHoThan",
+    "name": "Tĩnh Điện Hộ Thân",
+    "costByLevel": [
+      30,
+      30,
+      30,
+      30,
+      25
+    ],
+    "unchangedMidLevels": [
+      2,
+      3,
+      4
+    ],
+    "source": "existing upgrade rules; design proposal only, not changed"
+  },
+  {
+    "id": "element_phongQuyenTanVan",
+    "name": "Phong Quyển Tàn Vân",
+    "costByLevel": [
+      40,
+      40,
+      40,
+      40,
+      35
+    ],
+    "unchangedMidLevels": [
+      2,
+      3,
+      4
+    ],
+    "source": "existing upgrade rules; design proposal only, not changed"
+  },
+  {
+    "id": "thuyDonLyGian",
+    "name": "Thủy Độn Ly Gián",
+    "costByLevel": [
+      100,
+      100,
+      100,
+      100,
+      90
+    ],
+    "unchangedMidLevels": [
+      2,
+      3,
+      4
+    ],
+    "source": "existing upgrade rules; design proposal only, not changed"
+  },
+  {
+    "id": "doanDaoTuyetLuong",
+    "name": "Đoạn Đạo Tuyệt Lương",
+    "costByLevel": [
+      100,
+      100,
+      100,
+      100,
+      90
+    ],
+    "unchangedMidLevels": [
+      2,
+      3,
+      4
+    ],
+    "source": "existing upgrade rules; design proposal only, not changed"
+  },
+  {
+    "id": "phieuPhongLyGian",
+    "name": "Phiêu Phong Ly Gián",
+    "costByLevel": [
+      100,
+      100,
+      100,
+      100,
+      90
+    ],
+    "unchangedMidLevels": [
+      2,
+      3,
+      4
+    ],
+    "source": "existing upgrade rules; design proposal only, not changed"
+  }
+]

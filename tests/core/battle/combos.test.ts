@@ -178,7 +178,7 @@ describe("combo chủ động–bị động", () => {
     s.sides[0].fighters[2]!.spirit = 40;
     assert.equal(
       skill(s, "role_linhDuoc", 2).state.sides[0].fighters[2]!.hp,
-      210,
+      243,
     );
     const full = structuredClone(s);
     full.sides[0].fighters[2]!.hp = 1000;

@@ -110,6 +110,8 @@ export interface ShieldGrant {
   amount: number;
   readonly source: ComboRef;
   readonly action: number;
+  /** Reaction shields retain chase provenance but cannot open prepared opportunities. */
+  readonly reaction?: boolean;
 }
 export interface ComboState {
   readonly version: 1;

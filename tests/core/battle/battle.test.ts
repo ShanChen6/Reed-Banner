@@ -230,9 +230,9 @@ describe("áp kết quả bàn cờ", () => {
       s.turn.number = 49;
       const r = play(s);
       if (r.state.turn.side !== 1 || r.state.winner !== null) continue;
-      assert.equal(r.state.sides[1].fighters[0]!.spirit, 90);
+      assert.equal(r.state.sides[1].fighters[0]!.spirit, 95);
       assert.equal(r.state.sides[0].fighters[0]!.spirit, 100);
-      assert.ok(r.events.some((e) => e.type === "spirit" && e.side === 1 && e.spirit === 90));
+      assert.ok(r.events.some((e) => e.type === "spirit" && e.side === 1 && e.spirit === 95));
       return;
     }
     assert.fail("không tìm được seed không có lượt thêm");

@@ -196,7 +196,7 @@ describe("mở khóa và dựng nhân vật", () => {
   it("kỹ năng nâng cấp có tác dụng trong trận và giảm chi phí năng lượng", () => {
     const main = buildMain(at(1, 0, { skillLevels: { o1: 5 } }), "moc", "binhLinh");
     const { state } = createBattle({ sides: [{ fighters: [main], leader: 0 }, { fighters: [STARTER_COMPANIONS[0]!], leader: 0 }], seed: 3, timer: false, firstSide: 0 });
-    state.sides[0].fighters[0]!.energy = 25; // giá gốc 30, cấp 5 còn 25
+    state.sides[0].fighters[0]!.energy = 30; // giá nghề35, cấp5 còn30 theo luật giảm/bội5 hiện hành
     const r = act(state, { type: "skill", skill: "role_thuThanh" });
     assert.ok(r.ok);
     const s = (r as { state: BattleState }).state;
