@@ -1,0 +1,32 @@
+{
+  "group": "tuning",
+  "variant": "heal20",
+  "shard": 0,
+  "shards": 1,
+  "ai": "ai-f-task2-b5b468f48b72",
+  "aiSHA256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+  "rule": "F",
+  "cap": 120,
+  "cases": 48,
+  "sourceHashes": {
+    "src/core/ai/ai.ts": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "src/core/battle/rules.ts": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "src/core/battle/battle.ts": "b01152728ca6e4fdecaf1a084857b14b199741b454aa1f2730a601a34d59aef7",
+    "src/core/battle/skills.ts": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "src/core/battle/chase.ts": "4e77ed4574f7fae5bd94b6919fcee85d7684e3737e741a634f86341654725b7c",
+    "src/core/battle/combos.ts": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+    "src/core/battle/combo-engine.ts": "b91a166d68b36cb2c1f67ec1c1db96ee09e4b98d86eabb6f801d879eae0dc3fe",
+    "src/core/gear/gear.ts": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "src/core/progress/progress.ts": "98d4a7cc80ffb118d22be39b08954d2e30b94207cabaf55745c6e401f235ca08",
+    "src/core/roster/roster.ts": "4b5c26034970b4eb0f88ffb5bf466a6cc5966dbf71d6c274b8edfe62502a72ad",
+    "scripts/lib/task2-cases.ts": "d469c37d855898278e2e845272982e66d5c3d76a16a626eb5909e3e2b9964944",
+    "scripts/lib/task2-runner.ts": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "scripts/task3-audit.ts": "5a1ff80d75475e4b5f268f7ff445f88945c42bc4fe64cea2d4e73d39afd4cad7"
+  },
+  "parameters": {
+    "shield": 0.2,
+    "heal": 0.2
+  },
+  "seedPolicy": "task2 expanded seeds3119/4567",
+  "fingerprint": "389bad2a8c1d80809857ab8349d520e802f036e6d4038cb07ab902994f23e7d6"
+}

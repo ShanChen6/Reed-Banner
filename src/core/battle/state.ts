@@ -1,11 +1,14 @@
 // Trạng thái trận đấu: dữ liệu thuần, tuần tự hóa được (lưu DB, gửi client).
 
+import type { ComboPassiveId, ComboOpportunity, ShieldGrant, ComboState } from "./combos";
 import type { Board, SpawnWeights } from "../board";
 import type { Effect } from "./effects";
 import type { Element } from "./elements";
 import type { SpiritExperiment, Profession } from "./rules";
 
 export interface FighterConfig {
+  /** Three immediate reactions; fourth passive is comboPassive. Explicit list freezes battle snapshots. */
+  readonly chasePassives?: readonly import("./chase").ChasePassiveId[];
   readonly id: string;
   readonly name: string;
   readonly element: Element;
@@ -14,12 +17,16 @@ export interface FighterConfig {
   readonly atk: number;
   readonly def: number;
   /** Kỹ năng chủ động mang vào trận (id trong SKILLS). */
+  readonly comboPassive?: ComboPassiveId;
   readonly skills?: readonly string[];
   /** Cấp của từng kỹ năng (id → 1..5); bỏ trống là cấp 1. */
   readonly skillLevels?: Readonly<Record<string, number>>;
 }
 
 export interface Fighter extends FighterConfig {
+  comboReady?: ComboOpportunity;
+  comboOpenedAt?: number;
+  comboShield?: ShieldGrant[];
   hp: number;
   energy: number;
   /** Tinh thần chiến đấu, 0..SPIRIT_MAX; giảm khi trận kéo dài. */
@@ -74,6 +81,7 @@ export interface TurnState {
 }
 
 export interface BattleState {
+  comboState?: ComboState;
   /** Chỉ thiết lập nội bộ bởi harness, không nhận từ payload tạo trận của ứng dụng. */
   readonly experimentalSpirit?: SpiritExperiment;
   readonly audit?: boolean;

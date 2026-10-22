@@ -1,0 +1,14 @@
+group,variant,n,baseCastEnergy,coordinationSaved,paidCastEnergy
+tuning,baseline,48,63120,0,63120
+tuning,shield18,48,62240,0,62240
+tuning,heal20,48,62070,0,62070
+tuning,shield35,48,61060,0,61060
+screen,shield35,1680,867955,1990,865965
+validation,baseline,1680,911635,2210,909425
+validation,shield35,1680,895585,2170,893415
+identity,baseline,24,17230,0,17230
+identity,shield35,24,15290,0,15290
+gear,baseline,96,66475,170,66305
+gear,shield35,96,65595,200,65395
+sets,baseline,108,95820,290,95530
+sets,shield35,108,96730,290,96440

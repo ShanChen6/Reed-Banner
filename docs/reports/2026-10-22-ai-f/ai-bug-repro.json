@@ -1,0 +1,861 @@
+{
+  "state": {
+    "sides": [
+      {
+        "fighters": [
+          {
+            "id": "caster",
+            "name": "caster",
+            "profession": "ySu",
+            "element": "thuy",
+            "maxHp": 1000,
+            "atk": 100,
+            "def": 0,
+            "skills": [
+              "element_thanhLuuTayTran"
+            ],
+            "hp": 1000,
+            "energy": 100,
+            "spirit": 100,
+            "effects": [
+              {
+                "kind": "atkDown",
+                "value": 0.1,
+                "turns": 2
+              }
+            ]
+          },
+          {
+            "id": "ally",
+            "name": "ally",
+            "profession": "ySu",
+            "element": "thuy",
+            "maxHp": 1000,
+            "atk": 100,
+            "def": 0,
+            "skills": [],
+            "comboPassive": "coordination",
+            "chasePassives": [
+              "commander",
+              "tho1",
+              "thuy2"
+            ],
+            "hp": 100,
+            "energy": 0,
+            "spirit": 100,
+            "effects": []
+          }
+        ],
+        "leader": 0,
+        "food": 55,
+        "rage": 0,
+        "passiveTurns": 0,
+        "freeWhirls": 0,
+        "gold": 0,
+        "books": 0
+      },
+      {
+        "fighters": [
+          {
+            "id": "enemy",
+            "name": "enemy",
+            "profession": "ySu",
+            "element": "thuy",
+            "maxHp": 1000,
+            "atk": 100,
+            "def": 0,
+            "skills": [],
+            "hp": 1000,
+            "energy": 0,
+            "spirit": 100,
+            "effects": []
+          }
+        ],
+        "leader": 0,
+        "food": 60,
+        "rage": 0,
+        "passiveTurns": 0,
+        "freeWhirls": 0,
+        "gold": 0,
+        "books": 0
+      }
+    ],
+    "audit": true,
+    "board": {
+      "cols": 12,
+      "rows": 8,
+      "cells": [
+        {
+          "kind": "vang"
+        },
+        {
+          "kind": "sach"
+        },
+        {
+          "kind": "vang"
+        },
+        {
+          "kind": "kiem"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "kiem"
+        },
+        {
+          "kind": "trong"
+        },
+        {
+          "kind": "sach"
+        },
+        {
+          "kind": "vang"
+        },
+        {
+          "kind": "amDuong"
+        },
+        {
+          "kind": "vang"
+        },
+        {
+          "kind": "tim"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "vang"
+        },
+        {
+          "kind": "kiem"
+        },
+        {
+          "kind": "vang"
+        },
+        {
+          "kind": "sach"
+        },
+        {
+          "kind": "sach"
+        },
+        {
+          "kind": "amDuong"
+        },
+        {
+          "kind": "trong"
+        },
+        {
+          "kind": "sach"
+        },
+        {
+          "kind": "sach"
+        },
+        {
+          "kind": "vang"
+        },
+        {
+          "kind": "trong"
+        },
+        {
+          "kind": "vang"
+        },
+        {
+          "kind": "tim"
+        },
+        {
+          "kind": "amDuong"
+        },
+        {
+          "kind": "kiem"
+        },
+        {
+          "kind": "kiem"
+        },
+        {
+          "kind": "sach"
+        },
+        {
+          "kind": "amDuong"
+        },
+        {
+          "kind": "amDuong"
+        },
+        {
+          "kind": "vang"
+        },
+        {
+          "kind": "vang"
+        },
+        {
+          "kind": "trong"
+        },
+        {
+          "kind": "sach"
+        },
+        {
+          "kind": "sach"
+        },
+        {
+          "kind": "trong"
+        },
+        {
+          "kind": "amDuong"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "kiem"
+        },
+        {
+          "kind": "trong"
+        },
+        {
+          "kind": "kiem"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "kiem"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "trong"
+        },
+        {
+          "kind": "trong"
+        },
+        {
+          "kind": "tim"
+        },
+        {
+          "kind": "sach"
+        },
+        {
+          "kind": "tim"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "kiem"
+        },
+        {
+          "kind": "trong"
+        },
+        {
+          "kind": "vang"
+        },
+        {
+          "kind": "trong"
+        },
+        {
+          "kind": "sach"
+        },
+        {
+          "kind": "amDuong"
+        },
+        {
+          "kind": "sach"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "trong"
+        },
+        {
+          "kind": "sach"
+        },
+        {
+          "kind": "trong"
+        },
+        {
+          "kind": "tim"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "vang"
+        },
+        {
+          "kind": "amDuong"
+        },
+        {
+          "kind": "sach"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "sach"
+        },
+        {
+          "kind": "kiem"
+        },
+        {
+          "kind": "trong"
+        },
+        {
+          "kind": "kiem"
+        },
+        {
+          "kind": "vang"
+        },
+        {
+          "kind": "tim"
+        },
+        {
+          "kind": "trong"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "tim"
+        },
+        {
+          "kind": "amDuong"
+        },
+        {
+          "kind": "kiem"
+        },
+        {
+          "kind": "tim"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "tim"
+        },
+        {
+          "kind": "tim"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "amDuong"
+        },
+        {
+          "kind": "tim"
+        },
+        {
+          "kind": "trong"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "banhChung"
+        },
+        {
+          "kind": "sach"
+        },
+        {
+          "kind": "tim"
+        },
+        {
+          "kind": "kiem"
+        }
+      ]
+    },
+    "boardRng": 4031626239,
+    "aiRng": 2654435750,
+    "weights": {
+      "kiem": 18,
+      "amDuong": 16,
+      "banhChung": 15,
+      "tim": 15,
+      "vang": 11,
+      "sach": 11,
+      "trong": 14
+    },
+    "timer": false,
+    "turn": {
+      "side": 0,
+      "actor": 0,
+      "lastActor": null,
+      "acted": [],
+      "extra": false,
+      "skillUsed": false,
+      "whirlUsed": false,
+      "deadline": null,
+      "number": 1
+    },
+    "lastActors": [
+      null,
+      null
+    ],
+    "winner": null,
+    "comboState": {
+      "version": 1,
+      "sequence": 0,
+      "sideTurns": [
+        1,
+        0
+      ]
+    }
+  },
+  "action": {
+    "type": "skill",
+    "skill": "element_thanhLuuTayTran"
+  },
+  "before": {
+    "score": 156.5
+  },
+  "after": {
+    "score": 100
+  },
+  "engine": {
+    "ok": true,
+    "state": {
+      "sides": [
+        {
+          "fighters": [
+            {
+              "id": "caster",
+              "name": "caster",
+              "profession": "ySu",
+              "element": "thuy",
+              "maxHp": 1000,
+              "atk": 100,
+              "def": 0,
+              "skills": [
+                "element_thanhLuuTayTran"
+              ],
+              "hp": 1000,
+              "energy": 70,
+              "spirit": 100,
+              "effects": []
+            },
+            {
+              "id": "ally",
+              "name": "ally",
+              "profession": "ySu",
+              "element": "thuy",
+              "maxHp": 1000,
+              "atk": 100,
+              "def": 0,
+              "skills": [],
+              "comboPassive": "coordination",
+              "chasePassives": [
+                "commander",
+                "tho1",
+                "thuy2"
+              ],
+              "hp": 100,
+              "energy": 0,
+              "spirit": 100,
+              "effects": []
+            }
+          ],
+          "leader": 0,
+          "food": 55,
+          "rage": 0,
+          "passiveTurns": 0,
+          "freeWhirls": 0,
+          "gold": 0,
+          "books": 0
+        },
+        {
+          "fighters": [
+            {
+              "id": "enemy",
+              "name": "enemy",
+              "profession": "ySu",
+              "element": "thuy",
+              "maxHp": 1000,
+              "atk": 100,
+              "def": 0,
+              "skills": [],
+              "hp": 1000,
+              "energy": 0,
+              "spirit": 100,
+              "effects": []
+            }
+          ],
+          "leader": 0,
+          "food": 60,
+          "rage": 0,
+          "passiveTurns": 0,
+          "freeWhirls": 0,
+          "gold": 0,
+          "books": 0
+        }
+      ],
+      "audit": true,
+      "board": {
+        "cols": 12,
+        "rows": 8,
+        "cells": [
+          {
+            "kind": "vang"
+          },
+          {
+            "kind": "sach"
+          },
+          {
+            "kind": "vang"
+          },
+          {
+            "kind": "kiem"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "kiem"
+          },
+          {
+            "kind": "trong"
+          },
+          {
+            "kind": "sach"
+          },
+          {
+            "kind": "vang"
+          },
+          {
+            "kind": "amDuong"
+          },
+          {
+            "kind": "vang"
+          },
+          {
+            "kind": "tim"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "vang"
+          },
+          {
+            "kind": "kiem"
+          },
+          {
+            "kind": "vang"
+          },
+          {
+            "kind": "sach"
+          },
+          {
+            "kind": "sach"
+          },
+          {
+            "kind": "amDuong"
+          },
+          {
+            "kind": "trong"
+          },
+          {
+            "kind": "sach"
+          },
+          {
+            "kind": "sach"
+          },
+          {
+            "kind": "vang"
+          },
+          {
+            "kind": "trong"
+          },
+          {
+            "kind": "vang"
+          },
+          {
+            "kind": "tim"
+          },
+          {
+            "kind": "amDuong"
+          },
+          {
+            "kind": "kiem"
+          },
+          {
+            "kind": "kiem"
+          },
+          {
+            "kind": "sach"
+          },
+          {
+            "kind": "amDuong"
+          },
+          {
+            "kind": "amDuong"
+          },
+          {
+            "kind": "vang"
+          },
+          {
+            "kind": "vang"
+          },
+          {
+            "kind": "trong"
+          },
+          {
+            "kind": "sach"
+          },
+          {
+            "kind": "sach"
+          },
+          {
+            "kind": "trong"
+          },
+          {
+            "kind": "amDuong"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "kiem"
+          },
+          {
+            "kind": "trong"
+          },
+          {
+            "kind": "kiem"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "kiem"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "trong"
+          },
+          {
+            "kind": "trong"
+          },
+          {
+            "kind": "tim"
+          },
+          {
+            "kind": "sach"
+          },
+          {
+            "kind": "tim"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "kiem"
+          },
+          {
+            "kind": "trong"
+          },
+          {
+            "kind": "vang"
+          },
+          {
+            "kind": "trong"
+          },
+          {
+            "kind": "sach"
+          },
+          {
+            "kind": "amDuong"
+          },
+          {
+            "kind": "sach"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "trong"
+          },
+          {
+            "kind": "sach"
+          },
+          {
+            "kind": "trong"
+          },
+          {
+            "kind": "tim"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "vang"
+          },
+          {
+            "kind": "amDuong"
+          },
+          {
+            "kind": "sach"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "sach"
+          },
+          {
+            "kind": "kiem"
+          },
+          {
+            "kind": "trong"
+          },
+          {
+            "kind": "kiem"
+          },
+          {
+            "kind": "vang"
+          },
+          {
+            "kind": "tim"
+          },
+          {
+            "kind": "trong"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "tim"
+          },
+          {
+            "kind": "amDuong"
+          },
+          {
+            "kind": "kiem"
+          },
+          {
+            "kind": "tim"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "tim"
+          },
+          {
+            "kind": "tim"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "amDuong"
+          },
+          {
+            "kind": "tim"
+          },
+          {
+            "kind": "trong"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "banhChung"
+          },
+          {
+            "kind": "sach"
+          },
+          {
+            "kind": "tim"
+          },
+          {
+            "kind": "kiem"
+          }
+        ]
+      },
+      "boardRng": 4031626239,
+      "aiRng": 2654435750,
+      "weights": {
+        "kiem": 18,
+        "amDuong": 16,
+        "banhChung": 15,
+        "tim": 15,
+        "vang": 11,
+        "sach": 11,
+        "trong": 14
+      },
+      "timer": false,
+      "turn": {
+        "side": 0,
+        "actor": 0,
+        "lastActor": null,
+        "acted": [],
+        "extra": false,
+        "skillUsed": true,
+        "whirlUsed": false,
+        "deadline": null,
+        "number": 1
+      },
+      "lastActors": [
+        null,
+        null
+      ],
+      "winner": null,
+      "comboState": {
+        "version": 1,
+        "sequence": 1,
+        "sideTurns": [
+          1,
+          0
+        ]
+      }
+    },
+    "events": [
+      {
+        "type": "skill",
+        "side": 0,
+        "fighter": 0,
+        "skill": "element_thanhLuuTayTran"
+      },
+      {
+        "type": "effectEnd",
+        "side": 0,
+        "fighter": 0,
+        "effect": "atkDown"
+      },
+      {
+        "type": "sustain",
+        "side": 0,
+        "fighter": 0,
+        "kind": "heal",
+        "raw": 100,
+        "spiritLost": 0,
+        "effective": 0,
+        "overflow": 100,
+        "nonStackLost": 0,
+        "converted": 0
+      }
+    ]
+  }
+}

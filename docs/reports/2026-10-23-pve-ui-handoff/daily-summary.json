@@ -1,0 +1,2285 @@
+{
+  "aggregate": {
+    "battles": 28,
+    "draws": 0,
+    "side0WinRate": 0.2857142857142857,
+    "firstSideWinRate": 0.7142857142857143,
+    "turnsPerSide": {
+      "mean": 13.839285714285714,
+      "p10": 6.5,
+      "median": 13.5,
+      "p90": 21
+    },
+    "minutes": {
+      "mean": 6.919642857142857,
+      "p10": 3.25,
+      "p90": 10.5
+    },
+    "winnerHpRatio": 0.616654113199285,
+    "passivesPerBattle": 2,
+    "fighters": [
+      {
+        "id": "kieuThuan",
+        "battles": 2,
+        "wins": 2,
+        "winRate": 1
+      },
+      {
+        "id": "caoKien",
+        "battles": 2,
+        "wins": 2,
+        "winRate": 1
+      },
+      {
+        "id": "luDuong",
+        "battles": 2,
+        "wins": 2,
+        "winRate": 1
+      },
+      {
+        "id": "haVan",
+        "battles": 2,
+        "wins": 2,
+        "winRate": 1
+      },
+      {
+        "id": "ngoXuongXi",
+        "battles": 2,
+        "wins": 2,
+        "winRate": 1
+      },
+      {
+        "id": "quachAn",
+        "battles": 2,
+        "wins": 2,
+        "winRate": 1
+      },
+      {
+        "id": "damThao",
+        "battles": 6,
+        "wins": 5,
+        "winRate": 0.8333333333333334
+      },
+      {
+        "id": "vuLoi",
+        "battles": 4,
+        "wins": 3,
+        "winRate": 0.75
+      },
+      {
+        "id": "lyKhue",
+        "battles": 8,
+        "wins": 6,
+        "winRate": 0.75
+      },
+      {
+        "id": "taThach",
+        "battles": 4,
+        "wins": 3,
+        "winRate": 0.75
+      },
+      {
+        "id": "lucDiep",
+        "battles": 6,
+        "wins": 4,
+        "winRate": 0.6666666666666666
+      },
+      {
+        "id": "manhTuong",
+        "battles": 6,
+        "wins": 4,
+        "winRate": 0.6666666666666666
+      },
+      {
+        "id": "ngoNhatKhanh",
+        "battles": 6,
+        "wins": 4,
+        "winRate": 0.6666666666666666
+      },
+      {
+        "id": "truongViem",
+        "battles": 4,
+        "wins": 2,
+        "winRate": 0.5
+      },
+      {
+        "id": "khaSon",
+        "battles": 4,
+        "wins": 2,
+        "winRate": 0.5
+      },
+      {
+        "id": "tongTan",
+        "battles": 6,
+        "wins": 3,
+        "winRate": 0.5
+      },
+      {
+        "id": "nguyenThuTiep",
+        "battles": 4,
+        "wins": 2,
+        "winRate": 0.5
+      },
+      {
+        "id": "thaiHa",
+        "battles": 2,
+        "wins": 1,
+        "winRate": 0.5
+      },
+      {
+        "id": "lamTung",
+        "battles": 2,
+        "wins": 1,
+        "winRate": 0.5
+      },
+      {
+        "id": "tranCuong",
+        "battles": 2,
+        "wins": 1,
+        "winRate": 0.5
+      },
+      {
+        "id": "samTue",
+        "battles": 4,
+        "wins": 2,
+        "winRate": 0.5
+      },
+      {
+        "id": "doCanhThac",
+        "battles": 2,
+        "wins": 1,
+        "winRate": 0.5
+      },
+      {
+        "id": "maiThanh",
+        "battles": 2,
+        "wins": 1,
+        "winRate": 0.5
+      },
+      {
+        "id": "maNhac",
+        "battles": 4,
+        "wins": 2,
+        "winRate": 0.5
+      },
+      {
+        "id": "daoLam",
+        "battles": 2,
+        "wins": 1,
+        "winRate": 0.5
+      },
+      {
+        "id": "bachSuong",
+        "battles": 2,
+        "wins": 1,
+        "winRate": 0.5
+      },
+      {
+        "id": "macVan",
+        "battles": 8,
+        "wins": 4,
+        "winRate": 0.5
+      },
+      {
+        "id": "leThach",
+        "battles": 2,
+        "wins": 1,
+        "winRate": 0.5
+      },
+      {
+        "id": "toKim",
+        "battles": 2,
+        "wins": 1,
+        "winRate": 0.5
+      },
+      {
+        "id": "tuKinh",
+        "battles": 2,
+        "wins": 1,
+        "winRate": 0.5
+      },
+      {
+        "id": "kieuCongHan",
+        "battles": 2,
+        "wins": 1,
+        "winRate": 0.5
+      },
+      {
+        "id": "viTrieu",
+        "battles": 2,
+        "wins": 1,
+        "winRate": 0.5
+      },
+      {
+        "id": "doanNham",
+        "battles": 2,
+        "wins": 1,
+        "winRate": 0.5
+      },
+      {
+        "id": "dinhBoLinh",
+        "battles": 28,
+        "wins": 8,
+        "winRate": 0.2857142857142857
+      },
+      {
+        "id": "beLien",
+        "battles": 4,
+        "wins": 1,
+        "winRate": 0.25
+      },
+      {
+        "id": "lieuYen",
+        "battles": 4,
+        "wins": 1,
+        "winRate": 0.25
+      },
+      {
+        "id": "hongDan",
+        "battles": 4,
+        "wins": 1,
+        "winRate": 0.25
+      },
+      {
+        "id": "chuNgan",
+        "battles": 4,
+        "wins": 1,
+        "winRate": 0.25
+      },
+      {
+        "id": "buiPhieu",
+        "battles": 6,
+        "wins": 1,
+        "winRate": 0.16666666666666666
+      },
+      {
+        "id": "phungPhong",
+        "battles": 2,
+        "wins": 0,
+        "winRate": 0
+      },
+      {
+        "id": "ninhHoa",
+        "battles": 2,
+        "wins": 0,
+        "winRate": 0
+      },
+      {
+        "id": "nhanTruc",
+        "battles": 2,
+        "wins": 0,
+        "winRate": 0
+      }
+    ],
+    "skillsPerBattle": {
+      "role_phepLan": 1.3928571428571428,
+      "role_linhDuoc": 1.1785714285714286,
+      "role_hieuLenh": 0.5714285714285714,
+      "element_hauThoTichLuong": 0.5714285714285714,
+      "role_tramKich": 0.5357142857142857,
+      "element_phongQuyenTanVan": 0.5357142857142857,
+      "role_phaTran": 0.42857142857142855,
+      "role_thuThanh": 0.42857142857142855,
+      "hanBangTien": 0.35714285714285715,
+      "role_muaChuoc": 0.32142857142857145,
+      "element_phongHoaThieuDoanh": 0.2857142857142857,
+      "doanKimNhatTuyen": 0.2857142857142857,
+      "role_nguHanhAn": 0.2857142857142857,
+      "role_lyGian": 0.25,
+      "role_tuongKhien": 0.21428571428571427,
+      "sonBangDiaLiet": 0.17857142857142858,
+      "phongNhanLietKhong": 0.14285714285714285,
+      "tienDuDoatLuong": 0.10714285714285714,
+      "element_loiTruGiangThe": 0.10714285714285714,
+      "role_nghiBinh": 0.10714285714285714,
+      "duongLamPhongKhoi": 0.10714285714285714,
+      "thanhMocHoPhap": 0.07142857142857142,
+      "diaChanTamQuan": 0.07142857142857142,
+      "kinhCucTrienThan": 0.07142857142857142,
+      "sieuLoaiPhaGiap": 0.07142857142857142,
+      "hoiHoSinhKhi": 0.03571428571428571,
+      "dbl_quanSu_tho": 0.03571428571428571,
+      "thienLoiGiangThe": 0.03571428571428571,
+      "dbl_phapSu_phong": 0.03571428571428571,
+      "dbl_tuongSi_thuy": 0.03571428571428571,
+      "doDongKienTam": 0.03571428571428571,
+      "role_duongSinh": 0.03571428571428571,
+      "tranSonHoQuan": 0.03571428571428571,
+      "doanDaoTuyetLuong": 0.03571428571428571,
+      "loiVongThienLa": 0.03571428571428571,
+      "kinhLoiDoatKhi": 0.03571428571428571,
+      "teGiangThuyTran": 0.03571428571428571,
+      "diaMachBungPhat": 0.03571428571428571,
+      "dbl_ySu_moc": 0.03571428571428571,
+      "cuongPhongQuetTran": 0.03571428571428571
+    }
+  },
+  "byProfession": {
+    "binhLinh": {
+      "battles": 2,
+      "draws": 0,
+      "side0WinRate": 0,
+      "firstSideWinRate": 0.5,
+      "turnsPerSide": {
+        "mean": 8.25,
+        "p10": 5.5,
+        "median": 11,
+        "p90": 11
+      },
+      "minutes": {
+        "mean": 4.125,
+        "p10": 2.75,
+        "p90": 5.5
+      },
+      "winnerHpRatio": 0.874585635359116,
+      "passivesPerBattle": 1.5,
+      "fighters": [
+        {
+          "id": "luDuong",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "tongTan",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "macVan",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "dinhBoLinh",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "chuNgan",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "buiPhieu",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        }
+      ],
+      "skillsPerBattle": {
+        "hanBangTien": 2.5,
+        "role_tramKich": 1,
+        "role_hieuLenh": 0.5,
+        "teGiangThuyTran": 0.5
+      }
+    },
+    "muuSi": {
+      "battles": 2,
+      "draws": 0,
+      "side0WinRate": 0,
+      "firstSideWinRate": 0.5,
+      "turnsPerSide": {
+        "mean": 18.25,
+        "p10": 15.5,
+        "median": 21,
+        "p90": 21
+      },
+      "minutes": {
+        "mean": 9.125,
+        "p10": 7.75,
+        "p90": 10.5
+      },
+      "winnerHpRatio": 0.161,
+      "passivesPerBattle": 1.5,
+      "fighters": [
+        {
+          "id": "lyKhue",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "taThach",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "manhTuong",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "dinhBoLinh",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "hongDan",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "lieuYen",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        }
+      ],
+      "skillsPerBattle": {
+        "element_hauThoTichLuong": 2,
+        "element_phongQuyenTanVan": 2,
+        "role_hieuLenh": 1.5,
+        "role_lyGian": 1.5,
+        "role_phepLan": 1,
+        "doanKimNhatTuyen": 1,
+        "role_nguHanhAn": 0.5,
+        "role_muaChuoc": 0.5,
+        "role_linhDuoc": 0.5,
+        "sieuLoaiPhaGiap": 0.5
+      }
+    },
+    "phapSu": {
+      "battles": 2,
+      "draws": 0,
+      "side0WinRate": 0.5,
+      "firstSideWinRate": 1,
+      "turnsPerSide": {
+        "mean": 15.5,
+        "p10": 14.5,
+        "median": 16.5,
+        "p90": 16.5
+      },
+      "minutes": {
+        "mean": 7.75,
+        "p10": 7.25,
+        "p90": 8.25
+      },
+      "winnerHpRatio": 0.9009229098805647,
+      "passivesPerBattle": 1,
+      "fighters": [
+        {
+          "id": "dinhBoLinh",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "khaSon",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "tongTan",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "nguyenThuTiep",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "lucDiep",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "thaiHa",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        }
+      ],
+      "skillsPerBattle": {
+        "role_linhDuoc": 4,
+        "role_phaTran": 3,
+        "role_thuThanh": 2,
+        "hanBangTien": 1.5,
+        "tienDuDoatLuong": 1,
+        "dbl_phapSu_phong": 0.5,
+        "role_tramKich": 0.5,
+        "role_tuongKhien": 0.5
+      }
+    },
+    "quanSu": {
+      "battles": 4,
+      "draws": 0,
+      "side0WinRate": 0,
+      "firstSideWinRate": 0.5,
+      "turnsPerSide": {
+        "mean": 13,
+        "p10": 4.5,
+        "median": 16,
+        "p90": 19
+      },
+      "minutes": {
+        "mean": 6.5,
+        "p10": 2.25,
+        "p90": 9.5
+      },
+      "winnerHpRatio": 0.7611256438133193,
+      "passivesPerBattle": 2.25,
+      "fighters": [
+        {
+          "id": "kieuThuan",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "damThao",
+          "battles": 4,
+          "wins": 4,
+          "winRate": 1
+        },
+        {
+          "id": "vuLoi",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "ngoNhatKhanh",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "caoKien",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "dinhBoLinh",
+          "battles": 4,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "beLien",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "truongViem",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "macVan",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "phungPhong",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        }
+      ],
+      "skillsPerBattle": {
+        "role_phepLan": 3.75,
+        "element_phongHoaThieuDoanh": 0.75,
+        "thanhMocHoPhap": 0.5,
+        "role_hieuLenh": 0.5,
+        "role_tuongKhien": 0.5,
+        "phongNhanLietKhong": 0.5,
+        "hoiHoSinhKhi": 0.25,
+        "dbl_quanSu_tho": 0.25,
+        "thienLoiGiangThe": 0.25,
+        "duongLamPhongKhoi": 0.25,
+        "role_nguHanhAn": 0.25
+      }
+    },
+    "tuongSi": {
+      "battles": 8,
+      "draws": 0,
+      "side0WinRate": 0.375,
+      "firstSideWinRate": 0.875,
+      "turnsPerSide": {
+        "mean": 14.3125,
+        "p10": 6.5,
+        "median": 13.5,
+        "p90": 30.5
+      },
+      "minutes": {
+        "mean": 7.15625,
+        "p10": 3.25,
+        "p90": 15.25
+      },
+      "winnerHpRatio": 0.4692491746480374,
+      "passivesPerBattle": 2,
+      "fighters": [
+        {
+          "id": "haVan",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "lucDiep",
+          "battles": 4,
+          "wins": 3,
+          "winRate": 0.75
+        },
+        {
+          "id": "lyKhue",
+          "battles": 6,
+          "wins": 4,
+          "winRate": 0.6666666666666666
+        },
+        {
+          "id": "buiPhieu",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "lamTung",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "tranCuong",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "samTue",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "damThao",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "doCanhThac",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "manhTuong",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "maiThanh",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "lieuYen",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "taThach",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "vuLoi",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "hongDan",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "dinhBoLinh",
+          "battles": 8,
+          "wins": 3,
+          "winRate": 0.375
+        },
+        {
+          "id": "ninhHoa",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "tongTan",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        }
+      ],
+      "skillsPerBattle": {
+        "role_linhDuoc": 1.625,
+        "role_phepLan": 1.5,
+        "role_tramKich": 1,
+        "element_phongQuyenTanVan": 0.75,
+        "sonBangDiaLiet": 0.625,
+        "role_phaTran": 0.5,
+        "doanKimNhatTuyen": 0.5,
+        "role_thuThanh": 0.5,
+        "role_hieuLenh": 0.5,
+        "role_nguHanhAn": 0.375,
+        "diaChanTamQuan": 0.25,
+        "kinhCucTrienThan": 0.25,
+        "element_phongHoaThieuDoanh": 0.25,
+        "role_muaChuoc": 0.125,
+        "dbl_tuongSi_thuy": 0.125,
+        "doDongKienTam": 0.125,
+        "role_tuongKhien": 0.125,
+        "element_loiTruGiangThe": 0.125,
+        "role_nghiBinh": 0.125,
+        "sieuLoaiPhaGiap": 0.125
+      }
+    },
+    "ySu": {
+      "battles": 10,
+      "draws": 0,
+      "side0WinRate": 0.4,
+      "firstSideWinRate": 0.7,
+      "turnsPerSide": {
+        "mean": 13.7,
+        "p10": 8.5,
+        "median": 12.5,
+        "p90": 26
+      },
+      "minutes": {
+        "mean": 6.85,
+        "p10": 4.25,
+        "p90": 13
+      },
+      "winnerHpRatio": 0.659480210666304,
+      "passivesPerBattle": 2.3,
+      "fighters": [
+        {
+          "id": "ngoXuongXi",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "truongViem",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "quachAn",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "maNhac",
+          "battles": 4,
+          "wins": 2,
+          "winRate": 0.5
+        },
+        {
+          "id": "beLien",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "nguyenThuTiep",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "daoLam",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "bachSuong",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "macVan",
+          "battles": 4,
+          "wins": 2,
+          "winRate": 0.5
+        },
+        {
+          "id": "khaSon",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "ngoNhatKhanh",
+          "battles": 4,
+          "wins": 2,
+          "winRate": 0.5
+        },
+        {
+          "id": "leThach",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "toKim",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "samTue",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "tuKinh",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "kieuCongHan",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "chuNgan",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "viTrieu",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "manhTuong",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "doanNham",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "dinhBoLinh",
+          "battles": 10,
+          "wins": 4,
+          "winRate": 0.4
+        },
+        {
+          "id": "buiPhieu",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "nhanTruc",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        }
+      ],
+      "skillsPerBattle": {
+        "element_hauThoTichLuong": 1.2,
+        "role_linhDuoc": 1.1,
+        "role_phepLan": 1,
+        "role_muaChuoc": 0.7,
+        "role_hieuLenh": 0.6,
+        "element_phongQuyenTanVan": 0.5,
+        "role_lyGian": 0.4,
+        "role_tramKich": 0.4,
+        "role_thuThanh": 0.4,
+        "role_nguHanhAn": 0.3,
+        "element_phongHoaThieuDoanh": 0.3,
+        "hanBangTien": 0.2,
+        "phongNhanLietKhong": 0.2,
+        "duongLamPhongKhoi": 0.2,
+        "role_phaTran": 0.2,
+        "element_loiTruGiangThe": 0.2,
+        "role_tuongKhien": 0.2,
+        "doanKimNhatTuyen": 0.2,
+        "role_nghiBinh": 0.2,
+        "tienDuDoatLuong": 0.1,
+        "role_duongSinh": 0.1,
+        "tranSonHoQuan": 0.1,
+        "doanDaoTuyetLuong": 0.1,
+        "loiVongThienLa": 0.1,
+        "kinhLoiDoatKhi": 0.1,
+        "diaMachBungPhat": 0.1,
+        "dbl_ySu_moc": 0.1,
+        "cuongPhongQuetTran": 0.1
+      }
+    }
+  },
+  "byElement": {
+    "hoa": {
+      "battles": 6,
+      "draws": 0,
+      "side0WinRate": 0.3333333333333333,
+      "firstSideWinRate": 0.5,
+      "turnsPerSide": {
+        "mean": 12.416666666666666,
+        "p10": 5.5,
+        "median": 12,
+        "p90": 26
+      },
+      "minutes": {
+        "mean": 6.208333333333333,
+        "p10": 2.75,
+        "p90": 13
+      },
+      "winnerHpRatio": 0.6614659747550372,
+      "passivesPerBattle": 2,
+      "fighters": [
+        {
+          "id": "luDuong",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "tongTan",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "macVan",
+          "battles": 4,
+          "wins": 3,
+          "winRate": 0.75
+        },
+        {
+          "id": "lieuYen",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "taThach",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "lyKhue",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "vuLoi",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "hongDan",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "khaSon",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "ngoNhatKhanh",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "leThach",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "toKim",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "dinhBoLinh",
+          "battles": 6,
+          "wins": 2,
+          "winRate": 0.3333333333333333
+        },
+        {
+          "id": "chuNgan",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "buiPhieu",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        }
+      ],
+      "skillsPerBattle": {
+        "role_linhDuoc": 1.3333333333333333,
+        "role_tramKich": 1.1666666666666667,
+        "element_hauThoTichLuong": 1.1666666666666667,
+        "hanBangTien": 0.8333333333333334,
+        "role_hieuLenh": 0.6666666666666666,
+        "role_phaTran": 0.5,
+        "element_phongQuyenTanVan": 0.3333333333333333,
+        "phongNhanLietKhong": 0.3333333333333333,
+        "role_muaChuoc": 0.3333333333333333,
+        "role_thuThanh": 0.3333333333333333,
+        "role_nguHanhAn": 0.16666666666666666,
+        "element_loiTruGiangThe": 0.16666666666666666,
+        "role_nghiBinh": 0.16666666666666666,
+        "doanKimNhatTuyen": 0.16666666666666666,
+        "duongLamPhongKhoi": 0.16666666666666666,
+        "tranSonHoQuan": 0.16666666666666666,
+        "teGiangThuyTran": 0.16666666666666666
+      }
+    },
+    "kim": {
+      "battles": 2,
+      "draws": 0,
+      "side0WinRate": 0.5,
+      "firstSideWinRate": 1,
+      "turnsPerSide": {
+        "mean": 13.5,
+        "p10": 8.5,
+        "median": 18.5,
+        "p90": 18.5
+      },
+      "minutes": {
+        "mean": 6.75,
+        "p10": 4.25,
+        "p90": 9.25
+      },
+      "winnerHpRatio": 0.5488840855823914,
+      "passivesPerBattle": 2,
+      "fighters": [
+        {
+          "id": "dinhBoLinh",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "samTue",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "tuKinh",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "kieuCongHan",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "maNhac",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "chuNgan",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        }
+      ],
+      "skillsPerBattle": {
+        "role_phepLan": 2.5,
+        "element_loiTruGiangThe": 1,
+        "role_linhDuoc": 1,
+        "role_nguHanhAn": 1,
+        "role_lyGian": 0.5,
+        "doanDaoTuyetLuong": 0.5,
+        "role_hieuLenh": 0.5,
+        "element_hauThoTichLuong": 0.5,
+        "role_muaChuoc": 0.5,
+        "loiVongThienLa": 0.5,
+        "kinhLoiDoatKhi": 0.5
+      }
+    },
+    "moc": {
+      "battles": 6,
+      "draws": 0,
+      "side0WinRate": 0.16666666666666666,
+      "firstSideWinRate": 0.6666666666666666,
+      "turnsPerSide": {
+        "mean": 12.916666666666666,
+        "p10": 7,
+        "median": 14.5,
+        "p90": 19
+      },
+      "minutes": {
+        "mean": 6.458333333333333,
+        "p10": 3.5,
+        "p90": 9.5
+      },
+      "winnerHpRatio": 0.5265291615286053,
+      "passivesPerBattle": 2.1666666666666665,
+      "fighters": [
+        {
+          "id": "caoKien",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "damThao",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "lyKhue",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "lucDiep",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "haVan",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "ngoNhatKhanh",
+          "battles": 4,
+          "wins": 3,
+          "winRate": 0.75
+        },
+        {
+          "id": "viTrieu",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "manhTuong",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "doanNham",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "macVan",
+          "battles": 4,
+          "wins": 1,
+          "winRate": 0.25
+        },
+        {
+          "id": "dinhBoLinh",
+          "battles": 6,
+          "wins": 1,
+          "winRate": 0.16666666666666666
+        },
+        {
+          "id": "phungPhong",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "ninhHoa",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "tongTan",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        }
+      ],
+      "skillsPerBattle": {
+        "role_phepLan": 1.6666666666666667,
+        "role_hieuLenh": 0.8333333333333334,
+        "role_linhDuoc": 0.6666666666666666,
+        "role_tuongKhien": 0.5,
+        "element_hauThoTichLuong": 0.5,
+        "duongLamPhongKhoi": 0.3333333333333333,
+        "role_nguHanhAn": 0.3333333333333333,
+        "phongNhanLietKhong": 0.3333333333333333,
+        "role_tramKich": 0.3333333333333333,
+        "element_phongHoaThieuDoanh": 0.3333333333333333,
+        "role_nghiBinh": 0.3333333333333333,
+        "role_phaTran": 0.16666666666666666,
+        "doanKimNhatTuyen": 0.16666666666666666,
+        "sieuLoaiPhaGiap": 0.16666666666666666,
+        "diaMachBungPhat": 0.16666666666666666,
+        "dbl_ySu_moc": 0.16666666666666666,
+        "cuongPhongQuetTran": 0.16666666666666666
+      }
+    },
+    "phong": {
+      "battles": 6,
+      "draws": 0,
+      "side0WinRate": 0.3333333333333333,
+      "firstSideWinRate": 0.8333333333333334,
+      "turnsPerSide": {
+        "mean": 13.416666666666666,
+        "p10": 10.5,
+        "median": 14.5,
+        "p90": 16.5
+      },
+      "minutes": {
+        "mean": 6.708333333333333,
+        "p10": 5.25,
+        "p90": 8.25
+      },
+      "winnerHpRatio": 0.8250195432271519,
+      "passivesPerBattle": 1.5,
+      "fighters": [
+        {
+          "id": "ngoXuongXi",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "truongViem",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "quachAn",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "khaSon",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "tongTan",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "nguyenThuTiep",
+          "battles": 4,
+          "wins": 2,
+          "winRate": 0.5
+        },
+        {
+          "id": "lucDiep",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "thaiHa",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "maNhac",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "beLien",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "daoLam",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "bachSuong",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "dinhBoLinh",
+          "battles": 6,
+          "wins": 2,
+          "winRate": 0.3333333333333333
+        },
+        {
+          "id": "buiPhieu",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "nhanTruc",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        }
+      ],
+      "skillsPerBattle": {
+        "role_linhDuoc": 2.1666666666666665,
+        "role_phaTran": 1,
+        "role_thuThanh": 1,
+        "hanBangTien": 0.8333333333333334,
+        "element_phongQuyenTanVan": 0.8333333333333334,
+        "role_muaChuoc": 0.6666666666666666,
+        "tienDuDoatLuong": 0.5,
+        "role_phepLan": 0.5,
+        "role_lyGian": 0.5,
+        "element_phongHoaThieuDoanh": 0.5,
+        "role_tuongKhien": 0.3333333333333333,
+        "doanKimNhatTuyen": 0.3333333333333333,
+        "dbl_phapSu_phong": 0.16666666666666666,
+        "role_tramKich": 0.16666666666666666,
+        "role_duongSinh": 0.16666666666666666,
+        "element_hauThoTichLuong": 0.16666666666666666,
+        "role_nguHanhAn": 0.16666666666666666
+      }
+    },
+    "tho": {
+      "battles": 4,
+      "draws": 0,
+      "side0WinRate": 0,
+      "firstSideWinRate": 0.5,
+      "turnsPerSide": {
+        "mean": 14.25,
+        "p10": 4.5,
+        "median": 16,
+        "p90": 21
+      },
+      "minutes": {
+        "mean": 7.125,
+        "p10": 2.25,
+        "p90": 10.5
+      },
+      "winnerHpRatio": 0.493923010875787,
+      "passivesPerBattle": 1.5,
+      "fighters": [
+        {
+          "id": "kieuThuan",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "damThao",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "vuLoi",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "lyKhue",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "taThach",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "manhTuong",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "dinhBoLinh",
+          "battles": 4,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "beLien",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "truongViem",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "hongDan",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "lieuYen",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        }
+      ],
+      "skillsPerBattle": {
+        "role_phepLan": 2.25,
+        "element_hauThoTichLuong": 1,
+        "element_phongQuyenTanVan": 1,
+        "element_phongHoaThieuDoanh": 0.75,
+        "role_hieuLenh": 0.75,
+        "role_lyGian": 0.75,
+        "thanhMocHoPhap": 0.5,
+        "doanKimNhatTuyen": 0.5,
+        "hoiHoSinhKhi": 0.25,
+        "dbl_quanSu_tho": 0.25,
+        "thienLoiGiangThe": 0.25,
+        "role_nguHanhAn": 0.25,
+        "role_muaChuoc": 0.25,
+        "role_linhDuoc": 0.25,
+        "sieuLoaiPhaGiap": 0.25
+      }
+    },
+    "thuy": {
+      "battles": 4,
+      "draws": 0,
+      "side0WinRate": 0.5,
+      "firstSideWinRate": 1,
+      "turnsPerSide": {
+        "mean": 17.75,
+        "p10": 9.5,
+        "median": 17.5,
+        "p90": 30.5
+      },
+      "minutes": {
+        "mean": 8.875,
+        "p10": 4.75,
+        "p90": 15.25
+      },
+      "winnerHpRatio": 0.5286917194618208,
+      "passivesPerBattle": 3,
+      "fighters": [
+        {
+          "id": "dinhBoLinh",
+          "battles": 4,
+          "wins": 2,
+          "winRate": 0.5
+        },
+        {
+          "id": "lucDiep",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "buiPhieu",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "lyKhue",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "lamTung",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "tranCuong",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "samTue",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "damThao",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "doCanhThac",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "manhTuong",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "maiThanh",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        }
+      ],
+      "skillsPerBattle": {
+        "role_phepLan": 3,
+        "role_linhDuoc": 1.25,
+        "role_tramKich": 1.25,
+        "sonBangDiaLiet": 1.25,
+        "role_thuThanh": 1,
+        "element_phongQuyenTanVan": 1,
+        "role_hieuLenh": 0.75,
+        "role_phaTran": 0.5,
+        "doanKimNhatTuyen": 0.5,
+        "diaChanTamQuan": 0.5,
+        "kinhCucTrienThan": 0.5,
+        "role_muaChuoc": 0.25,
+        "dbl_tuongSi_thuy": 0.25,
+        "role_nguHanhAn": 0.25,
+        "doDongKienTam": 0.25,
+        "role_tuongKhien": 0.25
+      }
+    }
+  },
+  "byStage": {
+    "binhKieu": {
+      "battles": 2,
+      "draws": 0,
+      "side0WinRate": 0,
+      "firstSideWinRate": 0.5,
+      "turnsPerSide": {
+        "mean": 13.25,
+        "p10": 11,
+        "median": 15.5,
+        "p90": 15.5
+      },
+      "minutes": {
+        "mean": 6.625,
+        "p10": 5.5,
+        "p90": 7.75
+      },
+      "winnerHpRatio": 0.6895325203252033,
+      "passivesPerBattle": 2,
+      "fighters": [
+        {
+          "id": "ngoXuongXi",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "truongViem",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "quachAn",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "dinhBoLinh",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "buiPhieu",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "nhanTruc",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        }
+      ],
+      "skillsPerBattle": {
+        "role_muaChuoc": 2,
+        "element_phongHoaThieuDoanh": 1.5,
+        "doanKimNhatTuyen": 1,
+        "role_thuThanh": 1,
+        "role_tuongKhien": 0.5,
+        "role_lyGian": 0.5
+      }
+    },
+    "doDong": {
+      "battles": 2,
+      "draws": 0,
+      "side0WinRate": 0.5,
+      "firstSideWinRate": 1,
+      "turnsPerSide": {
+        "mean": 24,
+        "p10": 17.5,
+        "median": 30.5,
+        "p90": 30.5
+      },
+      "minutes": {
+        "mean": 12,
+        "p10": 8.75,
+        "p90": 15.25
+      },
+      "winnerHpRatio": 0.3823176795580111,
+      "passivesPerBattle": 4.5,
+      "fighters": [
+        {
+          "id": "dinhBoLinh",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "samTue",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "damThao",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "doCanhThac",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "manhTuong",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "maiThanh",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        }
+      ],
+      "skillsPerBattle": {
+        "role_phepLan": 6,
+        "sonBangDiaLiet": 2.5,
+        "role_thuThanh": 2,
+        "element_phongQuyenTanVan": 2,
+        "role_hieuLenh": 1.5,
+        "role_linhDuoc": 1.5,
+        "diaChanTamQuan": 1,
+        "kinhCucTrienThan": 1,
+        "role_tramKich": 0.5,
+        "dbl_tuongSi_thuy": 0.5,
+        "role_nguHanhAn": 0.5,
+        "doDongKienTam": 0.5,
+        "role_tuongKhien": 0.5
+      }
+    },
+    "duongLam": {
+      "battles": 6,
+      "draws": 0,
+      "side0WinRate": 0.3333333333333333,
+      "firstSideWinRate": 0.5,
+      "turnsPerSide": {
+        "mean": 15.333333333333334,
+        "p10": 7,
+        "median": 15.5,
+        "p90": 26
+      },
+      "minutes": {
+        "mean": 7.666666666666667,
+        "p10": 3.5,
+        "p90": 13
+      },
+      "winnerHpRatio": 0.6232621712744344,
+      "passivesPerBattle": 3,
+      "fighters": [
+        {
+          "id": "caoKien",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "damThao",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "ngoNhatKhanh",
+          "battles": 6,
+          "wins": 4,
+          "winRate": 0.6666666666666666
+        },
+        {
+          "id": "khaSon",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "leThach",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "toKim",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "viTrieu",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "manhTuong",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "doanNham",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "dinhBoLinh",
+          "battles": 6,
+          "wins": 2,
+          "winRate": 0.3333333333333333
+        },
+        {
+          "id": "macVan",
+          "battles": 6,
+          "wins": 2,
+          "winRate": 0.3333333333333333
+        },
+        {
+          "id": "phungPhong",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        }
+      ],
+      "skillsPerBattle": {
+        "element_hauThoTichLuong": 1.6666666666666667,
+        "role_phepLan": 1.6666666666666667,
+        "role_hieuLenh": 1.1666666666666667,
+        "role_tramKich": 0.6666666666666666,
+        "phongNhanLietKhong": 0.6666666666666666,
+        "role_linhDuoc": 0.6666666666666666,
+        "duongLamPhongKhoi": 0.5,
+        "role_tuongKhien": 0.5,
+        "role_phaTran": 0.3333333333333333,
+        "role_muaChuoc": 0.3333333333333333,
+        "role_thuThanh": 0.3333333333333333,
+        "role_nghiBinh": 0.3333333333333333,
+        "tranSonHoQuan": 0.16666666666666666,
+        "role_nguHanhAn": 0.16666666666666666,
+        "diaMachBungPhat": 0.16666666666666666,
+        "dbl_ySu_moc": 0.16666666666666666,
+        "cuongPhongQuetTran": 0.16666666666666666
+      }
+    },
+    "hoiHo": {
+      "battles": 2,
+      "draws": 0,
+      "side0WinRate": 0,
+      "firstSideWinRate": 0.5,
+      "turnsPerSide": {
+        "mean": 10.25,
+        "p10": 4.5,
+        "median": 16,
+        "p90": 16
+      },
+      "minutes": {
+        "mean": 5.125,
+        "p10": 2.25,
+        "p90": 8
+      },
+      "winnerHpRatio": 0.8268460217515741,
+      "passivesPerBattle": 1.5,
+      "fighters": [
+        {
+          "id": "kieuThuan",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "damThao",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "vuLoi",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "dinhBoLinh",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "beLien",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "truongViem",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        }
+      ],
+      "skillsPerBattle": {
+        "role_phepLan": 3.5,
+        "element_phongHoaThieuDoanh": 1.5,
+        "thanhMocHoPhap": 1,
+        "hoiHoSinhKhi": 0.5,
+        "dbl_quanSu_tho": 0.5,
+        "thienLoiGiangThe": 0.5
+      }
+    },
+    "phongChau": {
+      "battles": 2,
+      "draws": 0,
+      "side0WinRate": 0.5,
+      "firstSideWinRate": 1,
+      "turnsPerSide": {
+        "mean": 13.5,
+        "p10": 8.5,
+        "median": 18.5,
+        "p90": 18.5
+      },
+      "minutes": {
+        "mean": 6.75,
+        "p10": 4.25,
+        "p90": 9.25
+      },
+      "winnerHpRatio": 0.5488840855823914,
+      "passivesPerBattle": 2,
+      "fighters": [
+        {
+          "id": "dinhBoLinh",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "samTue",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "tuKinh",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "kieuCongHan",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "maNhac",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "chuNgan",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        }
+      ],
+      "skillsPerBattle": {
+        "role_phepLan": 2.5,
+        "element_loiTruGiangThe": 1,
+        "role_linhDuoc": 1,
+        "role_nguHanhAn": 1,
+        "role_lyGian": 0.5,
+        "doanDaoTuyetLuong": 0.5,
+        "role_hieuLenh": 0.5,
+        "element_hauThoTichLuong": 0.5,
+        "role_muaChuoc": 0.5,
+        "loiVongThienLa": 0.5,
+        "kinhLoiDoatKhi": 0.5
+      }
+    },
+    "sieuLoai": {
+      "battles": 8,
+      "draws": 0,
+      "side0WinRate": 0.25,
+      "firstSideWinRate": 0.75,
+      "turnsPerSide": {
+        "mean": 12.875,
+        "p10": 6.5,
+        "median": 13.5,
+        "p90": 21
+      },
+      "minutes": {
+        "mean": 6.4375,
+        "p10": 3.25,
+        "p90": 10.5
+      },
+      "winnerHpRatio": 0.4139197547585347,
+      "passivesPerBattle": 1.25,
+      "fighters": [
+        {
+          "id": "manhTuong",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "haVan",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "lucDiep",
+          "battles": 4,
+          "wins": 3,
+          "winRate": 0.75
+        },
+        {
+          "id": "lyKhue",
+          "battles": 8,
+          "wins": 6,
+          "winRate": 0.75
+        },
+        {
+          "id": "taThach",
+          "battles": 4,
+          "wins": 3,
+          "winRate": 0.75
+        },
+        {
+          "id": "buiPhieu",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "lamTung",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "tranCuong",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "vuLoi",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "dinhBoLinh",
+          "battles": 8,
+          "wins": 2,
+          "winRate": 0.25
+        },
+        {
+          "id": "lieuYen",
+          "battles": 4,
+          "wins": 1,
+          "winRate": 0.25
+        },
+        {
+          "id": "hongDan",
+          "battles": 4,
+          "wins": 1,
+          "winRate": 0.25
+        },
+        {
+          "id": "ninhHoa",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "tongTan",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        }
+      ],
+      "skillsPerBattle": {
+        "role_linhDuoc": 1.375,
+        "role_tramKich": 0.875,
+        "doanKimNhatTuyen": 0.75,
+        "element_phongQuyenTanVan": 0.75,
+        "role_phaTran": 0.5,
+        "role_hieuLenh": 0.5,
+        "element_hauThoTichLuong": 0.5,
+        "role_nguHanhAn": 0.375,
+        "role_lyGian": 0.375,
+        "role_muaChuoc": 0.25,
+        "role_phepLan": 0.25,
+        "sieuLoaiPhaGiap": 0.25,
+        "element_phongHoaThieuDoanh": 0.25,
+        "element_loiTruGiangThe": 0.125,
+        "role_nghiBinh": 0.125
+      }
+    },
+    "teGiang": {
+      "battles": 2,
+      "draws": 0,
+      "side0WinRate": 0,
+      "firstSideWinRate": 0.5,
+      "turnsPerSide": {
+        "mean": 8.25,
+        "p10": 5.5,
+        "median": 11,
+        "p90": 11
+      },
+      "minutes": {
+        "mean": 4.125,
+        "p10": 2.75,
+        "p90": 5.5
+      },
+      "winnerHpRatio": 0.874585635359116,
+      "passivesPerBattle": 1.5,
+      "fighters": [
+        {
+          "id": "luDuong",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "tongTan",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "macVan",
+          "battles": 2,
+          "wins": 2,
+          "winRate": 1
+        },
+        {
+          "id": "dinhBoLinh",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "chuNgan",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        },
+        {
+          "id": "buiPhieu",
+          "battles": 2,
+          "wins": 0,
+          "winRate": 0
+        }
+      ],
+      "skillsPerBattle": {
+        "hanBangTien": 2.5,
+        "role_tramKich": 1,
+        "role_hieuLenh": 0.5,
+        "teGiangThuyTran": 0.5
+      }
+    },
+    "tienDu": {
+      "battles": 4,
+      "draws": 0,
+      "side0WinRate": 0.5,
+      "firstSideWinRate": 1,
+      "turnsPerSide": {
+        "mean": 13.5,
+        "p10": 10.5,
+        "median": 14.5,
+        "p90": 16.5
+      },
+      "minutes": {
+        "mean": 6.75,
+        "p10": 5.25,
+        "p90": 8.25
+      },
+      "winnerHpRatio": 0.8927630546781261,
+      "passivesPerBattle": 1.25,
+      "fighters": [
+        {
+          "id": "dinhBoLinh",
+          "battles": 4,
+          "wins": 2,
+          "winRate": 0.5
+        },
+        {
+          "id": "khaSon",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "tongTan",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "nguyenThuTiep",
+          "battles": 4,
+          "wins": 2,
+          "winRate": 0.5
+        },
+        {
+          "id": "lucDiep",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "thaiHa",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "maNhac",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "beLien",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "daoLam",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        },
+        {
+          "id": "bachSuong",
+          "battles": 2,
+          "wins": 1,
+          "winRate": 0.5
+        }
+      ],
+      "skillsPerBattle": {
+        "role_linhDuoc": 3.25,
+        "role_phaTran": 1.5,
+        "hanBangTien": 1.25,
+        "element_phongQuyenTanVan": 1.25,
+        "role_thuThanh": 1,
+        "tienDuDoatLuong": 0.75,
+        "role_phepLan": 0.75,
+        "role_lyGian": 0.5,
+        "dbl_phapSu_phong": 0.25,
+        "role_tramKich": 0.25,
+        "role_tuongKhien": 0.25,
+        "role_duongSinh": 0.25,
+        "element_hauThoTichLuong": 0.25,
+        "role_nguHanhAn": 0.25
+      }
+    }
+  }
+}

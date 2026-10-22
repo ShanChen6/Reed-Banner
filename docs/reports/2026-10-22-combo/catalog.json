@@ -1,0 +1,4679 @@
+{
+  "roster": [
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "tuongSi",
+      "element": "moc",
+      "passive": "pursuit",
+      "passiveName": "Thừa thắng",
+      "triggers": [
+        "armorBroken",
+        "dispelled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_tramKich",
+          "name": "Trảm kích",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_lucDiepPhong",
+          "name": "Lục Diệp Phong",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_phaTran",
+          "name": "Phá trận",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage",
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "coThuTranThien",
+          "name": "Cổ Thụ Trấn Thiên",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "role_doatMenh",
+          "name": "Đoạt mệnh",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_linhMocHoiSinh",
+          "name": "Linh Mộc Hồi Sinh",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "haVan",
+      "name": "Hà Vân",
+      "profession": "phapSu",
+      "element": "hoa",
+      "passive": "resonance",
+      "passiveName": "Hội tụ",
+      "triggers": [
+        "controlled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_phepLan",
+          "name": "Phép lan",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_phongHoaThieuDoanh",
+          "name": "Phóng Hỏa Thiêu Doanh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_nguHanhAn",
+          "name": "Ngũ hành ấn",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "hoaVuLieuNguyen",
+          "name": "Hỏa Vũ Liệu Nguyên",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "role_thienDiaCong",
+          "name": "Thiên địa cộng hưởng",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_noHoaThieuThan",
+          "name": "Nộ Hỏa Thiêu Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "armorBroken"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "leThach",
+      "name": "Lê Thạch",
+      "profession": "binhLinh",
+      "element": "tho",
+      "passive": "retaliation",
+      "passiveName": "Hộ vệ phản kích",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_thuThanh",
+          "name": "Thủ thành",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_hauThoTichLuong",
+          "name": "Hậu Thổ Tích Lương",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_tuongKhien",
+          "name": "Tường khiên",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "shieldAbsorbed"
+          ]
+        },
+        {
+          "id": "tranSonHoQuan",
+          "name": "Trấn Sơn Hộ Quân",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "shieldAbsorbed"
+          ]
+        },
+        {
+          "id": "role_phanKich",
+          "name": "Phản kích",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_thachGiap",
+          "name": "Thạch Giáp",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "maiThanh",
+      "name": "Mai Thanh",
+      "profession": "ySu",
+      "element": "thuy",
+      "passive": "renewal",
+      "passiveName": "Tiếp sức",
+      "triggers": [
+        "skillDamage"
+      ],
+      "payoff": "sustain",
+      "skills": [
+        {
+          "id": "role_linhDuoc",
+          "name": "Linh dược",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_thuyNguyetTuLinh",
+          "name": "Thủy Nguyệt Tụ Linh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_duongSinh",
+          "name": "Dưỡng sinh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "camLoHoiXuan",
+          "name": "Cam Lộ Hồi Xuân",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "healed",
+            "controlled"
+          ]
+        },
+        {
+          "id": "role_teDo",
+          "name": "Tế độ",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_thanhLuuTayTran",
+          "name": "Thanh Lưu Tẩy Trần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "toKim",
+      "name": "Tô Kim",
+      "profession": "muuSi",
+      "element": "kim",
+      "passive": "interdiction",
+      "passiveName": "Đoạn tiếp tế",
+      "triggers": [
+        "controlled",
+        "dispelled"
+      ],
+      "payoff": "drain",
+      "skills": [
+        {
+          "id": "role_muaChuoc",
+          "name": "Mua chuộc",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_luyenKimThanhKiem",
+          "name": "Luyện Kim Thành Kiếm",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_lyGian",
+          "name": "Ly gián",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "controlled"
+          ]
+        },
+        {
+          "id": "kimNganLyTan",
+          "name": "Kim Ngân Ly Tán",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage",
+            "controlled"
+          ]
+        },
+        {
+          "id": "role_catQuanLuong",
+          "name": "Cắt quân lương",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_kimYNgungThan",
+          "name": "Kim Ý Ngưng Thần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 35,
+          "openers": [
+            "skillDamage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phungPhong",
+      "name": "Phùng Phong",
+      "profession": "quanSu",
+      "element": "phong",
+      "passive": "coordination",
+      "passiveName": "Hiệp lực",
+      "triggers": [
+        "healed",
+        "shieldAbsorbed"
+      ],
+      "payoff": "discount",
+      "skills": [
+        {
+          "id": "role_nghiBinh",
+          "name": "Nghi binh",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_phongQuyenTanVan",
+          "name": "Phong Quyển Tàn Vân",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 40,
+          "openers": []
+        },
+        {
+          "id": "role_hieuLenh",
+          "name": "Hiệu lệnh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "phongVanBienTran",
+          "name": "Phong Vân Biến Trận",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "dispelled"
+          ]
+        },
+        {
+          "id": "role_phaKe",
+          "name": "Phá kế",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "dispelled"
+          ]
+        },
+        {
+          "id": "element_thanhPhongTuKhi",
+          "name": "Thanh Phong Tụ Khí",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "tranCuong",
+      "name": "Trần Cương",
+      "profession": "tuongSi",
+      "element": "kim",
+      "passive": "pursuit",
+      "passiveName": "Thừa thắng",
+      "triggers": [
+        "armorBroken",
+        "dispelled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_tramKich",
+          "name": "Trảm kích",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_luyenKimThanhKiem",
+          "name": "Luyện Kim Thành Kiếm",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_phaTran",
+          "name": "Phá trận",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage",
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "kimQuaThietMa",
+          "name": "Kim Qua Thiết Mã",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage",
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "role_doatMenh",
+          "name": "Đoạt mệnh",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_kimYNgungThan",
+          "name": "Kim Ý Ngưng Thần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 35,
+          "openers": [
+            "skillDamage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lyLiet",
+      "name": "Lý Liệt",
+      "profession": "tuongSi",
+      "element": "hoa",
+      "passive": "pursuit",
+      "passiveName": "Thừa thắng",
+      "triggers": [
+        "armorBroken",
+        "dispelled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_tramKich",
+          "name": "Trảm kích",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_phongHoaThieuDoanh",
+          "name": "Phóng Hỏa Thiêu Doanh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_phaTran",
+          "name": "Phá trận",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage",
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "xichHoaDoatKy",
+          "name": "Xích Hỏa Đoạt Kỳ",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "role_doatMenh",
+          "name": "Đoạt mệnh",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_noHoaThieuThan",
+          "name": "Nộ Hỏa Thiêu Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "armorBroken"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "daoLam",
+      "name": "Đào Lam",
+      "profession": "phapSu",
+      "element": "thuy",
+      "passive": "resonance",
+      "passiveName": "Hội tụ",
+      "triggers": [
+        "controlled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_phepLan",
+          "name": "Phép lan",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_thuyNguyetTuLinh",
+          "name": "Thủy Nguyệt Tụ Linh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_nguHanhAn",
+          "name": "Ngũ hành ấn",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "bangHaPhongToa",
+          "name": "Băng Hà Phong Tỏa",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage",
+            "controlled"
+          ]
+        },
+        {
+          "id": "role_thienDiaCong",
+          "name": "Thiên địa cộng hưởng",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_thanhLuuTayTran",
+          "name": "Thanh Lưu Tẩy Trần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vuLoi",
+      "name": "Vũ Lôi",
+      "profession": "phapSu",
+      "element": "loi",
+      "passive": "resonance",
+      "passiveName": "Hội tụ",
+      "triggers": [
+        "controlled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_phepLan",
+          "name": "Phép lan",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_loiTruGiangThe",
+          "name": "Lôi Trụ Giáng Thế",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 40,
+          "openers": []
+        },
+        {
+          "id": "role_nguHanhAn",
+          "name": "Ngũ hành ấn",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "thienLoiGiangThe",
+          "name": "Thiên Lôi Giáng Thế",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "role_thienDiaCong",
+          "name": "Thiên địa cộng hưởng",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_tinhDienHoThan",
+          "name": "Tĩnh Điện Hộ Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "hoangMoc",
+      "name": "Hoàng Mộc",
+      "profession": "binhLinh",
+      "element": "moc",
+      "passive": "retaliation",
+      "passiveName": "Hộ vệ phản kích",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_thuThanh",
+          "name": "Thủ thành",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_lucDiepPhong",
+          "name": "Lục Diệp Phong",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_tuongKhien",
+          "name": "Tường khiên",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "shieldAbsorbed"
+          ]
+        },
+        {
+          "id": "reGiaGiuThanh",
+          "name": "Rễ Già Giữ Thành",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": []
+        },
+        {
+          "id": "role_phanKich",
+          "name": "Phản kích",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_linhMocHoiSinh",
+          "name": "Linh Mộc Hồi Sinh",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "caoKien",
+      "name": "Cao Kiên",
+      "profession": "binhLinh",
+      "element": "kim",
+      "passive": "retaliation",
+      "passiveName": "Hộ vệ phản kích",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_thuThanh",
+          "name": "Thủ thành",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_luyenKimThanhKiem",
+          "name": "Luyện Kim Thành Kiếm",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_tuongKhien",
+          "name": "Tường khiên",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "shieldAbsorbed"
+          ]
+        },
+        {
+          "id": "thietBichDongThanh",
+          "name": "Thiết Bích Đồng Thành",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": []
+        },
+        {
+          "id": "role_phanKich",
+          "name": "Phản kích",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_kimYNgungThan",
+          "name": "Kim Ý Ngưng Thần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 35,
+          "openers": [
+            "skillDamage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lucDiep",
+      "name": "Lục Diệp",
+      "profession": "ySu",
+      "element": "moc",
+      "passive": "renewal",
+      "passiveName": "Tiếp sức",
+      "triggers": [
+        "skillDamage"
+      ],
+      "payoff": "sustain",
+      "skills": [
+        {
+          "id": "role_linhDuoc",
+          "name": "Linh dược",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_lucDiepPhong",
+          "name": "Lục Diệp Phong",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_duongSinh",
+          "name": "Dưỡng sinh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "xuanMocVanSinh",
+          "name": "Xuân Mộc Vạn Sinh",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "role_teDo",
+          "name": "Tế độ",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_linhMocHoiSinh",
+          "name": "Linh Mộc Hồi Sinh",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bachSuong",
+      "name": "Bạch Sương",
+      "profession": "ySu",
+      "element": "phong",
+      "passive": "renewal",
+      "passiveName": "Tiếp sức",
+      "triggers": [
+        "skillDamage"
+      ],
+      "payoff": "sustain",
+      "skills": [
+        {
+          "id": "role_linhDuoc",
+          "name": "Linh dược",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_phongQuyenTanVan",
+          "name": "Phong Quyển Tàn Vân",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 40,
+          "openers": []
+        },
+        {
+          "id": "role_duongSinh",
+          "name": "Dưỡng sinh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "gioLanhTayUe",
+          "name": "Gió Lành Tẩy Uế",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "role_teDo",
+          "name": "Tế độ",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_thanhPhongTuKhi",
+          "name": "Thanh Phong Tụ Khí",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "ninhHoa",
+      "name": "Ninh Hỏa",
+      "profession": "muuSi",
+      "element": "hoa",
+      "passive": "interdiction",
+      "passiveName": "Đoạn tiếp tế",
+      "triggers": [
+        "controlled",
+        "dispelled"
+      ],
+      "payoff": "drain",
+      "skills": [
+        {
+          "id": "role_muaChuoc",
+          "name": "Mua chuộc",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_phongHoaThieuDoanh",
+          "name": "Phóng Hỏa Thiêu Doanh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_lyGian",
+          "name": "Ly gián",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "controlled"
+          ]
+        },
+        {
+          "id": "hoaThieuKhoLuong",
+          "name": "Hỏa Thiêu Kho Lương",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": []
+        },
+        {
+          "id": "role_catQuanLuong",
+          "name": "Cắt quân lương",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_noHoaThieuThan",
+          "name": "Nộ Hỏa Thiêu Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "armorBroken"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "quachAn",
+      "name": "Quách Ẩn",
+      "profession": "muuSi",
+      "element": "thuy",
+      "passive": "interdiction",
+      "passiveName": "Đoạn tiếp tế",
+      "triggers": [
+        "controlled",
+        "dispelled"
+      ],
+      "payoff": "drain",
+      "skills": [
+        {
+          "id": "role_muaChuoc",
+          "name": "Mua chuộc",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_thuyNguyetTuLinh",
+          "name": "Thủy Nguyệt Tụ Linh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_lyGian",
+          "name": "Ly gián",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "controlled"
+          ]
+        },
+        {
+          "id": "thuyDonLyGian",
+          "name": "Thủy Độn Ly Gián",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "controlled"
+          ]
+        },
+        {
+          "id": "role_catQuanLuong",
+          "name": "Cắt quân lương",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_thanhLuuTayTran",
+          "name": "Thanh Lưu Tẩy Trần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "taThach",
+      "name": "Tạ Thạch",
+      "profession": "quanSu",
+      "element": "tho",
+      "passive": "coordination",
+      "passiveName": "Hiệp lực",
+      "triggers": [
+        "healed",
+        "shieldAbsorbed"
+      ],
+      "payoff": "discount",
+      "skills": [
+        {
+          "id": "role_nghiBinh",
+          "name": "Nghi binh",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_hauThoTichLuong",
+          "name": "Hậu Thổ Tích Lương",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_hieuLenh",
+          "name": "Hiệu lệnh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "batTranThachLuy",
+          "name": "Bát Trận Thạch Lũy",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "shieldAbsorbed"
+          ]
+        },
+        {
+          "id": "role_phaKe",
+          "name": "Phá kế",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "dispelled"
+          ]
+        },
+        {
+          "id": "element_thachGiap",
+          "name": "Thạch Giáp",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "macVan",
+      "name": "Mạc Vân",
+      "profession": "quanSu",
+      "element": "loi",
+      "passive": "coordination",
+      "passiveName": "Hiệp lực",
+      "triggers": [
+        "healed",
+        "shieldAbsorbed"
+      ],
+      "payoff": "discount",
+      "skills": [
+        {
+          "id": "role_nghiBinh",
+          "name": "Nghi binh",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_loiTruGiangThe",
+          "name": "Lôi Trụ Giáng Thế",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 40,
+          "openers": []
+        },
+        {
+          "id": "role_hieuLenh",
+          "name": "Hiệu lệnh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "loiTranKinhHon",
+          "name": "Lôi Trận Kinh Hồn",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": []
+        },
+        {
+          "id": "role_phaKe",
+          "name": "Phá kế",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "dispelled"
+          ]
+        },
+        {
+          "id": "element_tinhDienHoThan",
+          "name": "Tĩnh Điện Hộ Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "lamTung",
+      "name": "Lâm Tùng",
+      "profession": "tuongSi",
+      "element": "moc",
+      "passive": "pursuit",
+      "passiveName": "Thừa thắng",
+      "triggers": [
+        "armorBroken",
+        "dispelled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_tramKich",
+          "name": "Trảm kích",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_lucDiepPhong",
+          "name": "Lục Diệp Phong",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_phaTran",
+          "name": "Phá trận",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage",
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "trucLamPhaTran",
+          "name": "Trúc Lâm Phá Trận",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "role_doatMenh",
+          "name": "Đoạt mệnh",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_linhMocHoiSinh",
+          "name": "Linh Mộc Hồi Sinh",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hoLang",
+      "name": "Hồ Lãng",
+      "profession": "tuongSi",
+      "element": "thuy",
+      "passive": "pursuit",
+      "passiveName": "Thừa thắng",
+      "triggers": [
+        "armorBroken",
+        "dispelled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_tramKich",
+          "name": "Trảm kích",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_thuyNguyetTuLinh",
+          "name": "Thủy Nguyệt Tụ Linh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_phaTran",
+          "name": "Phá trận",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage",
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "langDaoTram",
+          "name": "Lãng Đào Trảm",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage",
+            "controlled"
+          ]
+        },
+        {
+          "id": "role_doatMenh",
+          "name": "Đoạt mệnh",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_thanhLuuTayTran",
+          "name": "Thanh Lưu Tẩy Trần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "khaSon",
+      "name": "Kha Sơn",
+      "profession": "tuongSi",
+      "element": "tho",
+      "passive": "pursuit",
+      "passiveName": "Thừa thắng",
+      "triggers": [
+        "armorBroken",
+        "dispelled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_tramKich",
+          "name": "Trảm kích",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_hauThoTichLuong",
+          "name": "Hậu Thổ Tích Lương",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_phaTran",
+          "name": "Phá trận",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage",
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "sonHaTranKich",
+          "name": "Sơn Hà Trấn Kích",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "role_doatMenh",
+          "name": "Đoạt mệnh",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_thachGiap",
+          "name": "Thạch Giáp",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "tongTan",
+      "name": "Tống Tấn",
+      "profession": "tuongSi",
+      "element": "loi",
+      "passive": "pursuit",
+      "passiveName": "Thừa thắng",
+      "triggers": [
+        "armorBroken",
+        "dispelled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_tramKich",
+          "name": "Trảm kích",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_loiTruGiangThe",
+          "name": "Lôi Trụ Giáng Thế",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 40,
+          "openers": []
+        },
+        {
+          "id": "role_phaTran",
+          "name": "Phá trận",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage",
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "loiDaoLienTram",
+          "name": "Lôi Đao Liên Trảm",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "role_doatMenh",
+          "name": "Đoạt mệnh",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_tinhDienHoThan",
+          "name": "Tĩnh Điện Hộ Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "huaLang",
+      "name": "Hứa Lăng",
+      "profession": "tuongSi",
+      "element": "phong",
+      "passive": "pursuit",
+      "passiveName": "Thừa thắng",
+      "triggers": [
+        "armorBroken",
+        "dispelled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_tramKich",
+          "name": "Trảm kích",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_phongQuyenTanVan",
+          "name": "Phong Quyển Tàn Vân",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 40,
+          "openers": []
+        },
+        {
+          "id": "role_phaTran",
+          "name": "Phá trận",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage",
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "truyPhongDoatMenh",
+          "name": "Truy Phong Đoạt Mệnh",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "role_doatMenh",
+          "name": "Đoạt mệnh",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_thanhPhongTuKhi",
+          "name": "Thanh Phong Tụ Khí",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "chuNgan",
+      "name": "Chu Ngân",
+      "profession": "phapSu",
+      "element": "kim",
+      "passive": "resonance",
+      "passiveName": "Hội tụ",
+      "triggers": [
+        "controlled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_phepLan",
+          "name": "Phép lan",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_luyenKimThanhKiem",
+          "name": "Luyện Kim Thành Kiếm",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_nguHanhAn",
+          "name": "Ngũ hành ấn",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "nganChamTanXa",
+          "name": "Ngân Châm Tán Xạ",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage",
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "role_thienDiaCong",
+          "name": "Thiên địa cộng hưởng",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_kimYNgungThan",
+          "name": "Kim Ý Ngưng Thần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 35,
+          "openers": [
+            "skillDamage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "damThao",
+      "name": "Đàm Thảo",
+      "profession": "phapSu",
+      "element": "moc",
+      "passive": "resonance",
+      "passiveName": "Hội tụ",
+      "triggers": [
+        "controlled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_phepLan",
+          "name": "Phép lan",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_lucDiepPhong",
+          "name": "Lục Diệp Phong",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_nguHanhAn",
+          "name": "Ngũ hành ấn",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "kinhCucTrienThan",
+          "name": "Kinh Cức Triền Thân",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "role_thienDiaCong",
+          "name": "Thiên địa cộng hưởng",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_linhMocHoiSinh",
+          "name": "Linh Mộc Hồi Sinh",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "doanNham",
+      "name": "Doãn Nham",
+      "profession": "phapSu",
+      "element": "tho",
+      "passive": "resonance",
+      "passiveName": "Hội tụ",
+      "triggers": [
+        "controlled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_phepLan",
+          "name": "Phép lan",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_hauThoTichLuong",
+          "name": "Hậu Thổ Tích Lương",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_nguHanhAn",
+          "name": "Ngũ hành ấn",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "diaMachBungPhat",
+          "name": "Địa Mạch Bùng Phát",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "role_thienDiaCong",
+          "name": "Thiên địa cộng hưởng",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_thachGiap",
+          "name": "Thạch Giáp",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "lieuYen",
+      "name": "Liễu Yên",
+      "profession": "phapSu",
+      "element": "phong",
+      "passive": "resonance",
+      "passiveName": "Hội tụ",
+      "triggers": [
+        "controlled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_phepLan",
+          "name": "Phép lan",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_phongQuyenTanVan",
+          "name": "Phong Quyển Tàn Vân",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 40,
+          "openers": []
+        },
+        {
+          "id": "role_nguHanhAn",
+          "name": "Ngũ hành ấn",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "phongAnCuongLuu",
+          "name": "Phong Ấn Cuồng Lưu",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage",
+            "dispelled"
+          ]
+        },
+        {
+          "id": "role_thienDiaCong",
+          "name": "Thiên địa cộng hưởng",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_thanhPhongTuKhi",
+          "name": "Thanh Phong Tụ Khí",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "thaiHa",
+      "name": "Thái Hà",
+      "profession": "binhLinh",
+      "element": "thuy",
+      "passive": "retaliation",
+      "passiveName": "Hộ vệ phản kích",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_thuThanh",
+          "name": "Thủ thành",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_thuyNguyetTuLinh",
+          "name": "Thủy Nguyệt Tụ Linh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_tuongKhien",
+          "name": "Tường khiên",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "shieldAbsorbed"
+          ]
+        },
+        {
+          "id": "thuyTraiLienHoan",
+          "name": "Thủy Trại Liên Hoàn",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "shieldAbsorbed",
+            "controlled"
+          ]
+        },
+        {
+          "id": "role_phanKich",
+          "name": "Phản kích",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_thanhLuuTayTran",
+          "name": "Thanh Lưu Tẩy Trần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "truongViem",
+      "name": "Trương Viêm",
+      "profession": "binhLinh",
+      "element": "hoa",
+      "passive": "retaliation",
+      "passiveName": "Hộ vệ phản kích",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_thuThanh",
+          "name": "Thủ thành",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_phongHoaThieuDoanh",
+          "name": "Phóng Hỏa Thiêu Doanh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_tuongKhien",
+          "name": "Tường khiên",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "shieldAbsorbed"
+          ]
+        },
+        {
+          "id": "viemGiapHoDoanh",
+          "name": "Viêm Giáp Hộ Doanh",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": []
+        },
+        {
+          "id": "role_phanKich",
+          "name": "Phản kích",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_noHoaThieuThan",
+          "name": "Nộ Hỏa Thiêu Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "armorBroken"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ongChan",
+      "name": "Ông Chấn",
+      "profession": "binhLinh",
+      "element": "loi",
+      "passive": "retaliation",
+      "passiveName": "Hộ vệ phản kích",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_thuThanh",
+          "name": "Thủ thành",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_loiTruGiangThe",
+          "name": "Lôi Trụ Giáng Thế",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 40,
+          "openers": []
+        },
+        {
+          "id": "role_tuongKhien",
+          "name": "Tường khiên",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "shieldAbsorbed"
+          ]
+        },
+        {
+          "id": "chanLoiThietVe",
+          "name": "Chấn Lôi Thiết Vệ",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": []
+        },
+        {
+          "id": "role_phanKich",
+          "name": "Phản kích",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_tinhDienHoThan",
+          "name": "Tĩnh Điện Hộ Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "manhTuong",
+      "name": "Mạnh Tường",
+      "profession": "binhLinh",
+      "element": "phong",
+      "passive": "retaliation",
+      "passiveName": "Hộ vệ phản kích",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_thuThanh",
+          "name": "Thủ thành",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_phongQuyenTanVan",
+          "name": "Phong Quyển Tàn Vân",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 40,
+          "openers": []
+        },
+        {
+          "id": "role_tuongKhien",
+          "name": "Tường khiên",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "shieldAbsorbed"
+          ]
+        },
+        {
+          "id": "phongLuyHoKy",
+          "name": "Phong Lũy Hộ Kỳ",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "shieldAbsorbed"
+          ]
+        },
+        {
+          "id": "role_phanKich",
+          "name": "Phản kích",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_thanhPhongTuKhi",
+          "name": "Thanh Phong Tụ Khí",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "chauNgoc",
+      "name": "Châu Ngọc",
+      "profession": "ySu",
+      "element": "kim",
+      "passive": "renewal",
+      "passiveName": "Tiếp sức",
+      "triggers": [
+        "skillDamage"
+      ],
+      "payoff": "sustain",
+      "skills": [
+        {
+          "id": "role_linhDuoc",
+          "name": "Linh dược",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_luyenKimThanhKiem",
+          "name": "Luyện Kim Thành Kiếm",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_duongSinh",
+          "name": "Dưỡng sinh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "kimChamDoMenh",
+          "name": "Kim Châm Độ Mệnh",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "role_teDo",
+          "name": "Tế độ",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_kimYNgungThan",
+          "name": "Kim Ý Ngưng Thần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 35,
+          "openers": [
+            "skillDamage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hongDan",
+      "name": "Hồng Đan",
+      "profession": "ySu",
+      "element": "hoa",
+      "passive": "renewal",
+      "passiveName": "Tiếp sức",
+      "triggers": [
+        "skillDamage"
+      ],
+      "payoff": "sustain",
+      "skills": [
+        {
+          "id": "role_linhDuoc",
+          "name": "Linh dược",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_phongHoaThieuDoanh",
+          "name": "Phóng Hỏa Thiêu Doanh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_duongSinh",
+          "name": "Dưỡng sinh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "danHoaHoiNguyen",
+          "name": "Đan Hỏa Hồi Nguyên",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "role_teDo",
+          "name": "Tế độ",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_noHoaThieuThan",
+          "name": "Nộ Hỏa Thiêu Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "armorBroken"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "beLien",
+      "name": "Bế Liên",
+      "profession": "ySu",
+      "element": "tho",
+      "passive": "renewal",
+      "passiveName": "Tiếp sức",
+      "triggers": [
+        "skillDamage"
+      ],
+      "payoff": "sustain",
+      "skills": [
+        {
+          "id": "role_linhDuoc",
+          "name": "Linh dược",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_hauThoTichLuong",
+          "name": "Hậu Thổ Tích Lương",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_duongSinh",
+          "name": "Dưỡng sinh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "hauThoDuongNguyen",
+          "name": "Hậu Thổ Dưỡng Nguyên",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "healed",
+            "shieldAbsorbed"
+          ]
+        },
+        {
+          "id": "role_teDo",
+          "name": "Tế độ",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_thachGiap",
+          "name": "Thạch Giáp",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "tieuMinh",
+      "name": "Tiêu Minh",
+      "profession": "ySu",
+      "element": "loi",
+      "passive": "renewal",
+      "passiveName": "Tiếp sức",
+      "triggers": [
+        "skillDamage"
+      ],
+      "payoff": "sustain",
+      "skills": [
+        {
+          "id": "role_linhDuoc",
+          "name": "Linh dược",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_loiTruGiangThe",
+          "name": "Lôi Trụ Giáng Thế",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 40,
+          "openers": []
+        },
+        {
+          "id": "role_duongSinh",
+          "name": "Dưỡng sinh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "loiChamKhoiTu",
+          "name": "Lôi Châm Khởi Tử",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "role_teDo",
+          "name": "Tế độ",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_tinhDienHoThan",
+          "name": "Tĩnh Điện Hộ Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "nhanTruc",
+      "name": "Nhan Trúc",
+      "profession": "muuSi",
+      "element": "moc",
+      "passive": "interdiction",
+      "passiveName": "Đoạn tiếp tế",
+      "triggers": [
+        "controlled",
+        "dispelled"
+      ],
+      "payoff": "drain",
+      "skills": [
+        {
+          "id": "role_muaChuoc",
+          "name": "Mua chuộc",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_lucDiepPhong",
+          "name": "Lục Diệp Phong",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_lyGian",
+          "name": "Ly gián",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "controlled"
+          ]
+        },
+        {
+          "id": "trucDocMeHon",
+          "name": "Trúc Độc Mê Hồn",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "controlled"
+          ]
+        },
+        {
+          "id": "role_catQuanLuong",
+          "name": "Cắt quân lương",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_linhMocHoiSinh",
+          "name": "Linh Mộc Hồi Sinh",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "maNhac",
+      "name": "Mã Nhạc",
+      "profession": "muuSi",
+      "element": "tho",
+      "passive": "interdiction",
+      "passiveName": "Đoạn tiếp tế",
+      "triggers": [
+        "controlled",
+        "dispelled"
+      ],
+      "payoff": "drain",
+      "skills": [
+        {
+          "id": "role_muaChuoc",
+          "name": "Mua chuộc",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_hauThoTichLuong",
+          "name": "Hậu Thổ Tích Lương",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_lyGian",
+          "name": "Ly gián",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "controlled"
+          ]
+        },
+        {
+          "id": "doanDaoTuyetLuong",
+          "name": "Đoạn Đạo Tuyệt Lương",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": []
+        },
+        {
+          "id": "role_catQuanLuong",
+          "name": "Cắt quân lương",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_thachGiap",
+          "name": "Thạch Giáp",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "tuKinh",
+      "name": "Từ Kinh",
+      "profession": "muuSi",
+      "element": "loi",
+      "passive": "interdiction",
+      "passiveName": "Đoạn tiếp tế",
+      "triggers": [
+        "controlled",
+        "dispelled"
+      ],
+      "payoff": "drain",
+      "skills": [
+        {
+          "id": "role_muaChuoc",
+          "name": "Mua chuộc",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_loiTruGiangThe",
+          "name": "Lôi Trụ Giáng Thế",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 40,
+          "openers": []
+        },
+        {
+          "id": "role_lyGian",
+          "name": "Ly gián",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "controlled"
+          ]
+        },
+        {
+          "id": "kinhLoiDoatKhi",
+          "name": "Kinh Lôi Đoạt Khí",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage",
+            "controlled"
+          ]
+        },
+        {
+          "id": "role_catQuanLuong",
+          "name": "Cắt quân lương",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_tinhDienHoThan",
+          "name": "Tĩnh Điện Hộ Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "buiPhieu",
+      "name": "Bùi Phiêu",
+      "profession": "muuSi",
+      "element": "phong",
+      "passive": "interdiction",
+      "passiveName": "Đoạn tiếp tế",
+      "triggers": [
+        "controlled",
+        "dispelled"
+      ],
+      "payoff": "drain",
+      "skills": [
+        {
+          "id": "role_muaChuoc",
+          "name": "Mua chuộc",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_phongQuyenTanVan",
+          "name": "Phong Quyển Tàn Vân",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 40,
+          "openers": []
+        },
+        {
+          "id": "role_lyGian",
+          "name": "Ly gián",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "controlled"
+          ]
+        },
+        {
+          "id": "phieuPhongLyGian",
+          "name": "Phiêu Phong Ly Gián",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "dispelled"
+          ]
+        },
+        {
+          "id": "role_catQuanLuong",
+          "name": "Cắt quân lương",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_thanhPhongTuKhi",
+          "name": "Thanh Phong Tụ Khí",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "nghiemThiet",
+      "name": "Nghiêm Thiết",
+      "profession": "quanSu",
+      "element": "kim",
+      "passive": "coordination",
+      "passiveName": "Hiệp lực",
+      "triggers": [
+        "healed",
+        "shieldAbsorbed"
+      ],
+      "payoff": "discount",
+      "skills": [
+        {
+          "id": "role_nghiBinh",
+          "name": "Nghi binh",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_luyenKimThanhKiem",
+          "name": "Luyện Kim Thành Kiếm",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_hieuLenh",
+          "name": "Hiệu lệnh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "thietTranPhaGiap",
+          "name": "Thiết Trận Phá Giáp",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "role_phaKe",
+          "name": "Phá kế",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "dispelled"
+          ]
+        },
+        {
+          "id": "element_kimYNgungThan",
+          "name": "Kim Ý Ngưng Thần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 35,
+          "openers": [
+            "skillDamage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "samTue",
+      "name": "Sầm Tuệ",
+      "profession": "quanSu",
+      "element": "moc",
+      "passive": "coordination",
+      "passiveName": "Hiệp lực",
+      "triggers": [
+        "healed",
+        "shieldAbsorbed"
+      ],
+      "payoff": "discount",
+      "skills": [
+        {
+          "id": "role_nghiBinh",
+          "name": "Nghi binh",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_lucDiepPhong",
+          "name": "Lục Diệp Phong",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_hieuLenh",
+          "name": "Hiệu lệnh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "thanhLamBayTran",
+          "name": "Thanh Lâm Bày Trận",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": []
+        },
+        {
+          "id": "role_phaKe",
+          "name": "Phá kế",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "dispelled"
+          ]
+        },
+        {
+          "id": "element_linhMocHoiSinh",
+          "name": "Linh Mộc Hồi Sinh",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "viTrieu",
+      "name": "Vi Triều",
+      "profession": "quanSu",
+      "element": "thuy",
+      "passive": "coordination",
+      "passiveName": "Hiệp lực",
+      "triggers": [
+        "healed",
+        "shieldAbsorbed"
+      ],
+      "payoff": "discount",
+      "skills": [
+        {
+          "id": "role_nghiBinh",
+          "name": "Nghi binh",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_thuyNguyetTuLinh",
+          "name": "Thủy Nguyệt Tụ Linh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_hieuLenh",
+          "name": "Hiệu lệnh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "trieuDangVayThanh",
+          "name": "Triều Dâng Vây Thành",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "controlled"
+          ]
+        },
+        {
+          "id": "role_phaKe",
+          "name": "Phá kế",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "dispelled"
+          ]
+        },
+        {
+          "id": "element_thanhLuuTayTran",
+          "name": "Thanh Lưu Tẩy Trần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tonDiem",
+      "name": "Tôn Diệm",
+      "profession": "quanSu",
+      "element": "hoa",
+      "passive": "coordination",
+      "passiveName": "Hiệp lực",
+      "triggers": [
+        "healed",
+        "shieldAbsorbed"
+      ],
+      "payoff": "discount",
+      "skills": [
+        {
+          "id": "role_nghiBinh",
+          "name": "Nghi binh",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_phongHoaThieuDoanh",
+          "name": "Phóng Hỏa Thiêu Doanh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_hieuLenh",
+          "name": "Hiệu lệnh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "hoaCongLienKe",
+          "name": "Hỏa Công Liên Kế",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": []
+        },
+        {
+          "id": "role_phaKe",
+          "name": "Phá kế",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "dispelled"
+          ]
+        },
+        {
+          "id": "element_noHoaThieuThan",
+          "name": "Nộ Hỏa Thiêu Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "armorBroken"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nguyenBac",
+      "name": "Nguyễn Bặc",
+      "profession": "tuongSi",
+      "element": "hoa",
+      "passive": "pursuit",
+      "passiveName": "Thừa thắng",
+      "triggers": [
+        "armorBroken",
+        "dispelled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_tramKich",
+          "name": "Trảm kích",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_phongHoaThieuDoanh",
+          "name": "Phóng Hỏa Thiêu Doanh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_phaTran",
+          "name": "Phá trận",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage",
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "dinhQuocHoaKy",
+          "name": "Định Quốc Hỏa Kỳ",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "role_doatMenh",
+          "name": "Đoạt mệnh",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_noHoaThieuThan",
+          "name": "Nộ Hỏa Thiêu Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "armorBroken"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dinhDien",
+      "name": "Đinh Điền",
+      "profession": "binhLinh",
+      "element": "tho",
+      "passive": "retaliation",
+      "passiveName": "Hộ vệ phản kích",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_thuThanh",
+          "name": "Thủ thành",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_hauThoTichLuong",
+          "name": "Hậu Thổ Tích Lương",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_tuongKhien",
+          "name": "Tường khiên",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "shieldAbsorbed"
+          ]
+        },
+        {
+          "id": "ngoaiGiapHoQuan",
+          "name": "Ngoại Giáp Hộ Quân",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "shieldAbsorbed"
+          ]
+        },
+        {
+          "id": "role_phanKich",
+          "name": "Phản kích",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_thachGiap",
+          "name": "Thạch Giáp",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "luuCo",
+      "name": "Lưu Cơ",
+      "profession": "muuSi",
+      "element": "kim",
+      "passive": "interdiction",
+      "passiveName": "Đoạn tiếp tế",
+      "triggers": [
+        "controlled",
+        "dispelled"
+      ],
+      "payoff": "drain",
+      "skills": [
+        {
+          "id": "role_muaChuoc",
+          "name": "Mua chuộc",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_luyenKimThanhKiem",
+          "name": "Luyện Kim Thành Kiếm",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_lyGian",
+          "name": "Ly gián",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "controlled"
+          ]
+        },
+        {
+          "id": "doHoPhuLenh",
+          "name": "Đô Hộ Phủ Lệnh",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "controlled",
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "role_catQuanLuong",
+          "name": "Cắt quân lương",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_kimYNgungThan",
+          "name": "Kim Ý Ngưng Thần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 35,
+          "openers": [
+            "skillDamage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trinhTu",
+      "name": "Trịnh Tú",
+      "profession": "ySu",
+      "element": "moc",
+      "passive": "renewal",
+      "passiveName": "Tiếp sức",
+      "triggers": [
+        "skillDamage"
+      ],
+      "payoff": "sustain",
+      "skills": [
+        {
+          "id": "role_linhDuoc",
+          "name": "Linh dược",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_lucDiepPhong",
+          "name": "Lục Diệp Phong",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_duongSinh",
+          "name": "Dưỡng sinh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "hoaLuThaoDuoc",
+          "name": "Hoa Lư Thảo Dược",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "role_teDo",
+          "name": "Tế độ",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_linhMocHoiSinh",
+          "name": "Linh Mộc Hồi Sinh",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "leHoan",
+      "name": "Lê Hoàn",
+      "profession": "quanSu",
+      "element": "loi",
+      "passive": "coordination",
+      "passiveName": "Hiệp lực",
+      "triggers": [
+        "healed",
+        "shieldAbsorbed"
+      ],
+      "payoff": "discount",
+      "skills": [
+        {
+          "id": "role_nghiBinh",
+          "name": "Nghi binh",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_loiTruGiangThe",
+          "name": "Lôi Trụ Giáng Thế",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 40,
+          "openers": []
+        },
+        {
+          "id": "role_hieuLenh",
+          "name": "Hiệu lệnh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "thapDaoLoiBinh",
+          "name": "Thập Đạo Lôi Binh",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "role_phaKe",
+          "name": "Phá kế",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "dispelled"
+          ]
+        },
+        {
+          "id": "element_tinhDienHoThan",
+          "name": "Tĩnh Điện Hộ Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "dinhLien",
+      "name": "Đinh Liễn",
+      "profession": "phapSu",
+      "element": "thuy",
+      "passive": "resonance",
+      "passiveName": "Hội tụ",
+      "triggers": [
+        "controlled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_phepLan",
+          "name": "Phép lan",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_thuyNguyetTuLinh",
+          "name": "Thủy Nguyệt Tụ Linh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_nguHanhAn",
+          "name": "Ngũ hành ấn",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "namVietVuongAn",
+          "name": "Nam Việt Vương Ấn",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 100,
+          "openers": [
+            "skillDamage",
+            "controlled"
+          ]
+        },
+        {
+          "id": "role_thienDiaCong",
+          "name": "Thiên địa cộng hưởng",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_thanhLuuTayTran",
+          "name": "Thanh Lưu Tẩy Trần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tranLam",
+      "name": "Trần Lãm",
+      "profession": "quanSu",
+      "element": "thuy",
+      "passive": "coordination",
+      "passiveName": "Hiệp lực",
+      "triggers": [
+        "healed",
+        "shieldAbsorbed"
+      ],
+      "payoff": "discount",
+      "skills": [
+        {
+          "id": "role_nghiBinh",
+          "name": "Nghi binh",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_thuyNguyetTuLinh",
+          "name": "Thủy Nguyệt Tụ Linh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_hieuLenh",
+          "name": "Hiệu lệnh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "boHaiTranGiang",
+          "name": "Bố Hải Trấn Giang",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 60,
+          "openers": [
+            "skillDamage",
+            "controlled"
+          ]
+        },
+        {
+          "id": "role_phaKe",
+          "name": "Phá kế",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "dispelled"
+          ]
+        },
+        {
+          "id": "element_thanhLuuTayTran",
+          "name": "Thanh Lưu Tẩy Trần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phamBachHo",
+      "name": "Phạm Bạch Hổ",
+      "profession": "tuongSi",
+      "element": "hoa",
+      "passive": "pursuit",
+      "passiveName": "Thừa thắng",
+      "triggers": [
+        "armorBroken",
+        "dispelled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_tramKich",
+          "name": "Trảm kích",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_phongHoaThieuDoanh",
+          "name": "Phóng Hỏa Thiêu Doanh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_phaTran",
+          "name": "Phá trận",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage",
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "bachHoXuatSon",
+          "name": "Bạch Hổ Xuất Sơn",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "role_doatMenh",
+          "name": "Đoạt mệnh",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_noHoaThieuThan",
+          "name": "Nộ Hỏa Thiêu Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "armorBroken"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ngoXuongXi",
+      "name": "Ngô Xương Xí",
+      "profession": "muuSi",
+      "element": "kim",
+      "passive": "interdiction",
+      "passiveName": "Đoạn tiếp tế",
+      "triggers": [
+        "controlled",
+        "dispelled"
+      ],
+      "payoff": "drain",
+      "skills": [
+        {
+          "id": "role_muaChuoc",
+          "name": "Mua chuộc",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_luyenKimThanhKiem",
+          "name": "Luyện Kim Thành Kiếm",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_lyGian",
+          "name": "Ly gián",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "controlled"
+          ]
+        },
+        {
+          "id": "ngoGiaDiMuu",
+          "name": "Ngô Gia Di Mưu",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 60,
+          "openers": [
+            "skillDamage",
+            "controlled"
+          ]
+        },
+        {
+          "id": "role_catQuanLuong",
+          "name": "Cắt quân lương",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_kimYNgungThan",
+          "name": "Kim Ý Ngưng Thần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 35,
+          "openers": [
+            "skillDamage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ngoNhatKhanh",
+      "name": "Ngô Nhật Khánh",
+      "profession": "quanSu",
+      "element": "phong",
+      "passive": "coordination",
+      "passiveName": "Hiệp lực",
+      "triggers": [
+        "healed",
+        "shieldAbsorbed"
+      ],
+      "payoff": "discount",
+      "skills": [
+        {
+          "id": "role_nghiBinh",
+          "name": "Nghi binh",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_phongQuyenTanVan",
+          "name": "Phong Quyển Tàn Vân",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 40,
+          "openers": []
+        },
+        {
+          "id": "role_hieuLenh",
+          "name": "Hiệu lệnh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "duongLamPhongKhoi",
+          "name": "Đường Lâm Phong Khởi",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 60,
+          "openers": [
+            "skillDamage",
+            "dispelled"
+          ]
+        },
+        {
+          "id": "role_phaKe",
+          "name": "Phá kế",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "dispelled"
+          ]
+        },
+        {
+          "id": "element_thanhPhongTuKhi",
+          "name": "Thanh Phong Tụ Khí",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "nguyenKhoan",
+      "name": "Nguyễn Khoan",
+      "profession": "binhLinh",
+      "element": "tho",
+      "passive": "retaliation",
+      "passiveName": "Hộ vệ phản kích",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_thuThanh",
+          "name": "Thủ thành",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_hauThoTichLuong",
+          "name": "Hậu Thổ Tích Lương",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_tuongKhien",
+          "name": "Tường khiên",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "shieldAbsorbed"
+          ]
+        },
+        {
+          "id": "tamDaiKienThanh",
+          "name": "Tam Đái Kiên Thành",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 60,
+          "openers": [
+            "shieldAbsorbed"
+          ]
+        },
+        {
+          "id": "role_phanKich",
+          "name": "Phản kích",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_thachGiap",
+          "name": "Thạch Giáp",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "kieuCongHan",
+      "name": "Kiều Công Hãn",
+      "profession": "phapSu",
+      "element": "loi",
+      "passive": "resonance",
+      "passiveName": "Hội tụ",
+      "triggers": [
+        "controlled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_phepLan",
+          "name": "Phép lan",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_loiTruGiangThe",
+          "name": "Lôi Trụ Giáng Thế",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 40,
+          "openers": []
+        },
+        {
+          "id": "role_nguHanhAn",
+          "name": "Ngũ hành ấn",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "phongChauLoiKich",
+          "name": "Phong Châu Lôi Kích",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "role_thienDiaCong",
+          "name": "Thiên địa cộng hưởng",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_tinhDienHoThan",
+          "name": "Tĩnh Điện Hộ Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    },
+    {
+      "id": "kieuThuan",
+      "name": "Kiều Thuận",
+      "profession": "ySu",
+      "element": "moc",
+      "passive": "renewal",
+      "passiveName": "Tiếp sức",
+      "triggers": [
+        "skillDamage"
+      ],
+      "payoff": "sustain",
+      "skills": [
+        {
+          "id": "role_linhDuoc",
+          "name": "Linh dược",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_lucDiepPhong",
+          "name": "Lục Diệp Phong",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_duongSinh",
+          "name": "Dưỡng sinh",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": []
+        },
+        {
+          "id": "hoiHoSinhKhi",
+          "name": "Hồi Hồ Sinh Khí",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 60,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "role_teDo",
+          "name": "Tế độ",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": [
+            "healed"
+          ]
+        },
+        {
+          "id": "element_linhMocHoiSinh",
+          "name": "Linh Mộc Hồi Sinh",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lyKhue",
+      "name": "Lý Khuê",
+      "profession": "tuongSi",
+      "element": "kim",
+      "passive": "pursuit",
+      "passiveName": "Thừa thắng",
+      "triggers": [
+        "armorBroken",
+        "dispelled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_tramKich",
+          "name": "Trảm kích",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_luyenKimThanhKiem",
+          "name": "Luyện Kim Thành Kiếm",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_phaTran",
+          "name": "Phá trận",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage",
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "sieuLoaiPhaGiap",
+          "name": "Siêu Loại Phá Giáp",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 60,
+          "openers": [
+            "skillDamage",
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "role_doatMenh",
+          "name": "Đoạt mệnh",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_kimYNgungThan",
+          "name": "Kim Ý Ngưng Thần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 35,
+          "openers": [
+            "skillDamage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nguyenThuTiep",
+      "name": "Nguyễn Thủ Tiệp",
+      "profession": "muuSi",
+      "element": "thuy",
+      "passive": "interdiction",
+      "passiveName": "Đoạn tiếp tế",
+      "triggers": [
+        "controlled",
+        "dispelled"
+      ],
+      "payoff": "drain",
+      "skills": [
+        {
+          "id": "role_muaChuoc",
+          "name": "Mua chuộc",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_thuyNguyetTuLinh",
+          "name": "Thủy Nguyệt Tụ Linh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_lyGian",
+          "name": "Ly gián",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "controlled"
+          ]
+        },
+        {
+          "id": "tienDuDoatLuong",
+          "name": "Tiên Du Đoạt Lương",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 60,
+          "openers": [
+            "skillDamage",
+            "controlled"
+          ]
+        },
+        {
+          "id": "role_catQuanLuong",
+          "name": "Cắt quân lương",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_thanhLuuTayTran",
+          "name": "Thanh Lưu Tẩy Trần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "luDuong",
+      "name": "Lữ Đường",
+      "profession": "phapSu",
+      "element": "thuy",
+      "passive": "resonance",
+      "passiveName": "Hội tụ",
+      "triggers": [
+        "controlled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_phepLan",
+          "name": "Phép lan",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_thuyNguyetTuLinh",
+          "name": "Thủy Nguyệt Tụ Linh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_nguHanhAn",
+          "name": "Ngũ hành ấn",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "teGiangThuyTran",
+          "name": "Tế Giang Thủy Trận",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 60,
+          "openers": [
+            "skillDamage",
+            "controlled"
+          ]
+        },
+        {
+          "id": "role_thienDiaCong",
+          "name": "Thiên địa cộng hưởng",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_thanhLuuTayTran",
+          "name": "Thanh Lưu Tẩy Trần",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "healed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nguyenSieu",
+      "name": "Nguyễn Siêu",
+      "profession": "binhLinh",
+      "element": "hoa",
+      "passive": "retaliation",
+      "passiveName": "Hộ vệ phản kích",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_thuThanh",
+          "name": "Thủ thành",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        },
+        {
+          "id": "element_phongHoaThieuDoanh",
+          "name": "Phóng Hỏa Thiêu Doanh",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 35,
+          "openers": []
+        },
+        {
+          "id": "role_tuongKhien",
+          "name": "Tường khiên",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "shieldAbsorbed"
+          ]
+        },
+        {
+          "id": "phuLietHoaLuy",
+          "name": "Phù Liệt Hỏa Lũy",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 60,
+          "openers": []
+        },
+        {
+          "id": "role_phanKich",
+          "name": "Phản kích",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 55,
+          "openers": []
+        },
+        {
+          "id": "element_noHoaThieuThan",
+          "name": "Nộ Hỏa Thiêu Thân",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "armorBroken"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "doCanhThac",
+      "name": "Đỗ Cảnh Thạc",
+      "profession": "tuongSi",
+      "element": "tho",
+      "passive": "pursuit",
+      "passiveName": "Thừa thắng",
+      "triggers": [
+        "armorBroken",
+        "dispelled"
+      ],
+      "payoff": "damage",
+      "skills": [
+        {
+          "id": "role_tramKich",
+          "name": "Trảm kích",
+          "slot": 1,
+          "ultimate": false,
+          "cost": 30,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_hauThoTichLuong",
+          "name": "Hậu Thổ Tích Lương",
+          "slot": 2,
+          "ultimate": false,
+          "cost": 20,
+          "openers": []
+        },
+        {
+          "id": "role_phaTran",
+          "name": "Phá trận",
+          "slot": 3,
+          "ultimate": false,
+          "cost": 45,
+          "openers": [
+            "skillDamage",
+            "armorBroken"
+          ]
+        },
+        {
+          "id": "doDongKienTam",
+          "name": "Đỗ Động Kiên Tâm",
+          "slot": 4,
+          "ultimate": true,
+          "cost": 80,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "role_doatMenh",
+          "name": "Đoạt mệnh",
+          "slot": 5,
+          "ultimate": false,
+          "cost": 60,
+          "openers": [
+            "skillDamage"
+          ]
+        },
+        {
+          "id": "element_thachGiap",
+          "name": "Thạch Giáp",
+          "slot": 6,
+          "ultimate": false,
+          "cost": 30,
+          "openers": []
+        }
+      ]
+    }
+  ],
+  "campaign": [
+    {
+      "stage": "coLau",
+      "foes": [
+        {
+          "id": "coLau-tre",
+          "profession": "binhLinh",
+          "element": "tho",
+          "passive": "retaliation",
+          "skills": [
+            "thuThanh"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "boHai",
+      "foes": [
+        {
+          "id": "tranLam",
+          "profession": "quanSu",
+          "element": "thuy",
+          "passive": "coordination",
+          "skills": [
+            "thuyNguyetTuLinh",
+            "thanhLuuTayTran",
+            "boHaiTranGiang"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "dangChau",
+      "foes": [
+        {
+          "id": "phamBachHo",
+          "profession": "tuongSi",
+          "element": "hoa",
+          "passive": "pursuit",
+          "skills": [
+            "phongHoaThieuDoanh",
+            "noHoaThieuThan",
+            "bachHoXuatSon"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "binhKieu",
+      "foes": [
+        {
+          "id": "ngoXuongXi",
+          "profession": "muuSi",
+          "element": "kim",
+          "passive": "interdiction",
+          "skills": [
+            "luyenKimThanhKiem",
+            "kimYNgungThan",
+            "doanKimNhatTuyen",
+            "ngoGiaDiMuu"
+          ]
+        },
+        {
+          "id": "binhKieu-pho",
+          "profession": "binhLinh",
+          "element": "kim",
+          "passive": "retaliation",
+          "skills": [
+            "thuThanh",
+            "tuongKhien"
+          ]
+        },
+        {
+          "id": "binhKieu-y",
+          "profession": "ySu",
+          "element": "thuy",
+          "passive": "renewal",
+          "skills": [
+            "linhDuoc",
+            "teDo"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "duongLam",
+      "foes": [
+        {
+          "id": "ngoNhatKhanh",
+          "profession": "quanSu",
+          "element": "phong",
+          "passive": "coordination",
+          "skills": [
+            "phongQuyenTanVan",
+            "thanhPhongTuKhi",
+            "phongNhanLietKhong",
+            "duongLamPhongKhoi"
+          ]
+        },
+        {
+          "id": "duongLam-pho",
+          "profession": "tuongSi",
+          "element": "tho",
+          "passive": "pursuit",
+          "skills": [
+            "tramKich",
+            "hieuLenh"
+          ]
+        },
+        {
+          "id": "duongLam-y",
+          "profession": "ySu",
+          "element": "moc",
+          "passive": "renewal",
+          "skills": [
+            "linhDuoc",
+            "duongSinh"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "tamDai",
+      "foes": [
+        {
+          "id": "nguyenKhoan",
+          "profession": "binhLinh",
+          "element": "tho",
+          "passive": "retaliation",
+          "skills": [
+            "hauThoTichLuong",
+            "thachGiap",
+            "sonBangDiaLiet",
+            "tamDaiKienThanh"
+          ]
+        },
+        {
+          "id": "tamDai-pho",
+          "profession": "binhLinh",
+          "element": "tho",
+          "passive": "retaliation",
+          "skills": [
+            "thuThanh",
+            "phanKich"
+          ]
+        },
+        {
+          "id": "tamDai-phap",
+          "profession": "phapSu",
+          "element": "hoa",
+          "passive": "resonance",
+          "skills": [
+            "phepCong",
+            "phepLan"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "phongChau",
+      "foes": [
+        {
+          "id": "kieuCongHan",
+          "profession": "phapSu",
+          "element": "loi",
+          "passive": "resonance",
+          "skills": [
+            "loiTruGiangThe",
+            "tinhDienHoThan",
+            "loiTienXuyenVan",
+            "phongChauLoiKich"
+          ]
+        },
+        {
+          "id": "phongChau-pho",
+          "profession": "binhLinh",
+          "element": "tho",
+          "passive": "retaliation",
+          "skills": [
+            "thuThanh",
+            "phanKich"
+          ]
+        },
+        {
+          "id": "phongChau-muu",
+          "profession": "muuSi",
+          "element": "phong",
+          "passive": "interdiction",
+          "skills": [
+            "muaChuoc",
+            "lyGian"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "hoiHo",
+      "foes": [
+        {
+          "id": "kieuThuan",
+          "profession": "ySu",
+          "element": "moc",
+          "passive": "renewal",
+          "skills": [
+            "lucDiepPhong",
+            "linhMocHoiSinh",
+            "thanhMocHoPhap",
+            "cuongVuThienDiep",
+            "hoiHoSinhKhi"
+          ]
+        },
+        {
+          "id": "hoiHo-pho",
+          "profession": "binhLinh",
+          "element": "thuy",
+          "passive": "retaliation",
+          "skills": [
+            "thuThanh",
+            "tuongKhien"
+          ]
+        },
+        {
+          "id": "hoiHo-phap",
+          "profession": "phapSu",
+          "element": "moc",
+          "passive": "resonance",
+          "skills": [
+            "phepCong",
+            "nguHanhAn"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "sieuLoai",
+      "foes": [
+        {
+          "id": "lyKhue",
+          "profession": "tuongSi",
+          "element": "kim",
+          "passive": "pursuit",
+          "skills": [
+            "luyenKimThanhKiem",
+            "kimYNgungThan",
+            "doanKimNhatTuyen",
+            "thietKyTungHoanh",
+            "sieuLoaiPhaGiap"
+          ]
+        },
+        {
+          "id": "sieuLoai-pho",
+          "profession": "binhLinh",
+          "element": "kim",
+          "passive": "retaliation",
+          "skills": [
+            "thuThanh",
+            "phanKich"
+          ]
+        },
+        {
+          "id": "sieuLoai-quan",
+          "profession": "quanSu",
+          "element": "tho",
+          "passive": "coordination",
+          "skills": [
+            "nghiBinh",
+            "bayTran"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "tienDu",
+      "foes": [
+        {
+          "id": "nguyenThuTiep",
+          "profession": "muuSi",
+          "element": "thuy",
+          "passive": "interdiction",
+          "skills": [
+            "thuyNguyetTuLinh",
+            "thanhLuuTayTran",
+            "hanBangTien",
+            "bachDangTrieuDang",
+            "tienDuDoatLuong"
+          ]
+        },
+        {
+          "id": "tienDu-pho",
+          "profession": "tuongSi",
+          "element": "thuy",
+          "passive": "pursuit",
+          "skills": [
+            "tramKich",
+            "phaTran"
+          ]
+        },
+        {
+          "id": "tienDu-y",
+          "profession": "ySu",
+          "element": "moc",
+          "passive": "renewal",
+          "skills": [
+            "linhDuoc",
+            "teDo"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "teGiang",
+      "foes": [
+        {
+          "id": "luDuong",
+          "profession": "phapSu",
+          "element": "thuy",
+          "passive": "resonance",
+          "skills": [
+            "thuyNguyetTuLinh",
+            "thanhLuuTayTran",
+            "hanBangTien",
+            "bachDangTrieuDang",
+            "linhThuyHoMenh",
+            "teGiangThuyTran"
+          ]
+        },
+        {
+          "id": "teGiang-pho",
+          "profession": "binhLinh",
+          "element": "thuy",
+          "passive": "retaliation",
+          "skills": [
+            "thuThanh",
+            "phanKich"
+          ]
+        },
+        {
+          "id": "teGiang-quan",
+          "profession": "quanSu",
+          "element": "phong",
+          "passive": "coordination",
+          "skills": [
+            "nghiBinh",
+            "bayTran"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "tayPhuLiet",
+      "foes": [
+        {
+          "id": "nguyenSieu",
+          "profession": "binhLinh",
+          "element": "hoa",
+          "passive": "retaliation",
+          "skills": [
+            "phongHoaThieuDoanh",
+            "noHoaThieuThan",
+            "xichDiemTien",
+            "hoaThieuLienTrai",
+            "ducHoaTrungSinh",
+            "phuLietHoaLuy"
+          ]
+        },
+        {
+          "id": "tayPhuLiet-pho",
+          "profession": "tuongSi",
+          "element": "hoa",
+          "passive": "pursuit",
+          "skills": [
+            "tramKich",
+            "phaTran"
+          ]
+        },
+        {
+          "id": "tayPhuLiet-muu",
+          "profession": "muuSi",
+          "element": "loi",
+          "passive": "interdiction",
+          "skills": [
+            "muaChuoc",
+            "catQuanLuong"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "doDong",
+      "foes": [
+        {
+          "id": "doCanhThac",
+          "profession": "tuongSi",
+          "element": "tho",
+          "passive": "pursuit",
+          "skills": [
+            "hauThoTichLuong",
+            "thachGiap",
+            "sonBangDiaLiet",
+            "diaChanTamQuan",
+            "doDongKienTam",
+            "kienThanhBatDong"
+          ]
+        },
+        {
+          "id": "doDong-pho",
+          "profession": "binhLinh",
+          "element": "kim",
+          "passive": "retaliation",
+          "skills": [
+            "thuThanh",
+            "phanKich"
+          ]
+        },
+        {
+          "id": "doDong-quan",
+          "profession": "quanSu",
+          "element": "thuy",
+          "passive": "coordination",
+          "skills": [
+            "nghiBinh",
+            "bayTran"
+          ]
+        }
+      ]
+    }
+  ]
+}

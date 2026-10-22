@@ -1,0 +1,134 @@
+[
+  {
+    "pair": "b0:ySu:thuy:30:1v1:invested",
+    "mode": "1v1",
+    "equipment": "invested",
+    "level": 30,
+    "profile": "defense",
+    "opponentProfile": "attack",
+    "capped": 2,
+    "maxSideTurns": 60,
+    "healing": 19520
+  },
+  {
+    "pair": "b0:muuSi:moc:30:3v3:invested",
+    "mode": "3v3",
+    "equipment": "invested",
+    "level": 30,
+    "profile": "defense",
+    "opponentProfile": "defense",
+    "capped": 2,
+    "maxSideTurns": 60,
+    "healing": 13791
+  },
+  {
+    "pair": "b0:binhLinh:phong:15:1v1:invested",
+    "mode": "1v1",
+    "equipment": "invested",
+    "level": 15,
+    "profile": "defense",
+    "opponentProfile": "defense",
+    "capped": 2,
+    "maxSideTurns": 60,
+    "healing": 9368
+  },
+  {
+    "pair": "b0:ySu:moc:30:1v1:ordinary",
+    "mode": "1v1",
+    "equipment": "ordinary",
+    "level": 30,
+    "profile": "balanced",
+    "opponentProfile": "resources",
+    "capped": 1,
+    "maxSideTurns": 60,
+    "healing": 15489
+  },
+  {
+    "pair": "b0:binhLinh:hoa:30:3v3:invested",
+    "mode": "3v3",
+    "equipment": "invested",
+    "level": 30,
+    "profile": "defense",
+    "opponentProfile": "defense",
+    "capped": 1,
+    "maxSideTurns": 60,
+    "healing": 16077
+  },
+  {
+    "pair": "b0:ySu:phong:20:1v1:invested",
+    "mode": "1v1",
+    "equipment": "invested",
+    "level": 20,
+    "profile": "balanced",
+    "opponentProfile": "resources",
+    "capped": 1,
+    "maxSideTurns": 60,
+    "healing": 11567
+  },
+  {
+    "pair": "b0:binhLinh:tho:20:3v3:invested",
+    "mode": "3v3",
+    "equipment": "invested",
+    "level": 20,
+    "profile": "defense",
+    "opponentProfile": "defense",
+    "capped": 1,
+    "maxSideTurns": 60,
+    "healing": 13156
+  },
+  {
+    "pair": "b0:binhLinh:thuy:30:1v1:ordinary",
+    "mode": "1v1",
+    "equipment": "ordinary",
+    "level": 30,
+    "profile": "balanced",
+    "opponentProfile": "balanced",
+    "capped": 1,
+    "maxSideTurns": 60,
+    "healing": 4916
+  },
+  {
+    "pair": "b0:muuSi:tho:15:3v3:invested",
+    "mode": "3v3",
+    "equipment": "invested",
+    "level": 15,
+    "profile": "defense",
+    "opponentProfile": "defense",
+    "capped": 1,
+    "maxSideTurns": 60,
+    "healing": 11352
+  },
+  {
+    "pair": "b0:binhLinh:phong:15:3v3:invested",
+    "mode": "3v3",
+    "equipment": "invested",
+    "level": 15,
+    "profile": "defense",
+    "opponentProfile": "defense",
+    "capped": 1,
+    "maxSideTurns": 60,
+    "healing": 10961
+  },
+  {
+    "pair": "b0:quanSu:moc:20:1v1:invested",
+    "mode": "1v1",
+    "equipment": "invested",
+    "level": 20,
+    "profile": "defense",
+    "opponentProfile": "attack",
+    "capped": 1,
+    "maxSideTurns": 60,
+    "healing": 16160
+  },
+  {
+    "pair": "b0:binhLinh:kim:19:1v1:none",
+    "mode": "1v1",
+    "equipment": "none",
+    "level": 19,
+    "profile": "balanced",
+    "opponentProfile": "balanced",
+    "capped": 1,
+    "maxSideTurns": 60,
+    "healing": 4276
+  }
+]

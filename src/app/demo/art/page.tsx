@@ -111,7 +111,7 @@ export default function ArtPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-semibold">Bộ Tướng sĩ theo hệ (3 nghề + 2 hệ + tuyệt chiêu ô 5)</h2>
+          <h2 className="font-semibold">Bộ Tướng sĩ theo hệ (3 nghề + 2 hệ + tuyệt chiêu ô 4)</h2>
           <div className="space-y-3">
             {SKILL_ELEMENTS.map((e) => (
               <div key={e} className="flex flex-wrap items-start gap-3">

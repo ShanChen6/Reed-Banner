@@ -1,0 +1,25 @@
+{
+  "adopt": true,
+  "variant": "shield35",
+  "gates": {
+    "capNotIncreased": true,
+    "over44NotIncreased": true,
+    "teamMedianNotShortenedMoreThan1": true,
+    "professionShiftBelow15pp": true
+  },
+  "maxProfessionObservedWinShift": 0.03214285714285714,
+  "change": {
+    "id": "role_thuThanh",
+    "field": "cost",
+    "before": 30,
+    "after": 35
+  },
+  "rejected": [
+    "shield18",
+    "heal20"
+  ],
+  "allOtherParametersUnchanged": true,
+  "rule": "F",
+  "ai": "ai-f-task2-b5b468f48b72",
+  "interpretation": "modest duration evidence; cap-rate CI includes zero, not a proof all defensive loops are solved"
+}
