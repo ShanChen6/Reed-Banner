@@ -67,7 +67,7 @@
 | **Nhân vật kèm** | Hai nhân vật đi cùng nhân vật chính ở 3vs3 |
 | **Nguyên tố** | Kim, Mộc, Thủy, Hỏa, Thổ, Lôi, Phong (trước đây gọi là ngũ hành) |
 | **Nghề** | Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư; mỗi nghề gắn với một loại ô |
-| **Chiêu nghề** | Kỹ năng nấc 1–2 chung theo nghề, chỉ tùy tướng AI ở chiến dịch còn dùng |
+| **Chiêu nghề** | 3 chiêu ô 1/3/4 theo nghề; tùy tướng AI chiến dịch giữ bộ cũ nấc 1–2 |
 | **Tướng thường / Tướng lịch sử / Sứ quân** | Ba nhóm nhân vật kèm, xem [Danh sách nhân vật](design/14-nhan-vat.md) |
 | **Dấu ấn** | Hiệu ứng phụ theo nguyên tố cộng vào chiêu nghề |
 | **Nộ** | Thanh 0–100 của thủ lĩnh, tích từ ô Trống trận và khi mất máu; đầy thì kỹ năng bị động tự kích hoạt |
@@ -75,3 +75,13 @@
 | **Lương / Sĩ khí** | Tài nguyên chung của phe và mức hệ số sát thương suy ra từ nó |
 | **Tianwu** | AI điều khiển phe đối thủ |
 | **Seed** | Số khởi tạo bộ sinh ngẫu nhiên của trận, chỉ nằm trên server |
+
+- [Cải tổ kỹ năng nghề + hệ, ánh xạ hồ sơ và kiểm chứng](design/20-cai-to-ky-nang.md)
+
+- [Báo cáo kiểm thử và 2.784 trận mô phỏng trước/sau cải tổ](reports/2026-10-22-ky-nang.md)
+
+- [Kiểm chứng AI, Tinh thần A–E, chiến dịch và trình duyệt sau cải tổ](reports/2026-10-22-tinh-than-ai.md)
+
+- [Bổ sung phương án F: sàn hồi/Khiên 20%, giảm 5 Tinh thần/lượt](reports/2026-10-22-tinh-than-F.md)
+
+- [Mốc bàn giao và kế hoạch xây lại kỹ năng toàn bộ nhân vật theo combo đồng đội](plans/2026-10-22-combo-handoff.md)

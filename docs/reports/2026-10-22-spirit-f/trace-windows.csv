@@ -1,0 +1,57 @@
+file,reason,caseId,rule,window,damage,heal,netHpDrain,initialTeamHp,absorbed,newShield,ko,ordinaryTurns,skills,capHit
+trace-0-typicalLongDefense-F,typicalLongDefense,screen:binhLinh:tho:20:1v1:1907:side0,F,25to33,518,518,0,3376,825,1005,0,18,"{""element_thachGiap"": 2, ""element_hauThoTichLuong"": 2, ""thaiSonApDinh"": 1}",False
+trace-0-typicalLongDefense-F,typicalLongDefense,screen:binhLinh:tho:20:1v1:1907:side0,F,34to43,1979,419,1560,3376,777,309,0,20,"{""role_linhDuoc"": 2, ""element_hauThoTichLuong"": 4, ""thaiSonApDinh"": 1}",False
+trace-0-typicalLongDefense-F,typicalLongDefense,screen:binhLinh:tho:20:1v1:1907:side0,F,44plus,1023,153,870,3376,0,90,1,5,"{""element_hauThoTichLuong"": 2, ""thaiSonApDinh"": 1}",False
+trace-0-typicalLongDefense-F,typicalLongDefense,screen:binhLinh:tho:20:1v1:1907:side0,F,last10,0,0,0,3376,0,0,0,0,{},False
+trace-0-typicalLongDefense-D,typicalLongDefense,screen:binhLinh:tho:20:1v1:1907:side0,D,25to33,1275,986,289,3376,987,847,0,18,"{""element_thachGiap"": 1, ""element_hauThoTichLuong"": 3, ""thaiSonApDinh"": 1, ""role_linhDuoc"": 2}",False
+trace-0-typicalLongDefense-D,typicalLongDefense,screen:binhLinh:tho:20:1v1:1907:side0,D,34to43,3073,724,2349,3376,613,465,1,19,"{""element_hauThoTichLuong"": 7, ""role_linhDuoc"": 2, ""thaiSonApDinh"": 2}",False
+trace-0-typicalLongDefense-D,typicalLongDefense,screen:binhLinh:tho:20:1v1:1907:side0,D,44plus,0,0,0,3376,0,0,0,0,{},False
+trace-0-typicalLongDefense-D,typicalLongDefense,screen:binhLinh:tho:20:1v1:1907:side0,D,last10,0,0,0,3376,0,0,0,0,{},False
+trace-1-maxLongDefense-F,maxLongDefense,pressure:healersMirror:9:4567:side0,F,25to33,1187,687,500,3534,138,486,0,18,"{""role_linhDuoc"": 4, ""element_phongHoaThieuDoanh"": 3}",False
+trace-1-maxLongDefense-F,maxLongDefense,pressure:healersMirror:9:4567:side0,F,34to43,1102,653,449,3534,0,0,0,20,"{""role_linhDuoc"": 4, ""element_phongHoaThieuDoanh"": 3, ""role_duongSinh"": 1}",False
+trace-1-maxLongDefense-F,maxLongDefense,pressure:healersMirror:9:4567:side0,F,44plus,1830,169,1661,3534,0,0,3,34,"{""element_phongHoaThieuDoanh"": 6}",False
+trace-1-maxLongDefense-F,maxLongDefense,pressure:healersMirror:9:4567:side0,F,last10,790,95,695,3534,0,0,2,20,"{""element_phongHoaThieuDoanh"": 3}",False
+trace-1-maxLongDefense-D,maxLongDefense,pressure:healersMirror:9:4567:side0,D,25to33,741,657,84,3534,126,458,0,18,"{""role_linhDuoc"": 4, ""element_phongHoaThieuDoanh"": 2}",False
+trace-1-maxLongDefense-D,maxLongDefense,pressure:healersMirror:9:4567:side0,D,34to43,1768,164,1604,3534,7,23,1,20,"{""element_phongHoaThieuDoanh"": 3}",False
+trace-1-maxLongDefense-D,maxLongDefense,pressure:healersMirror:9:4567:side0,D,44plus,1121,0,1121,3534,0,0,3,24,"{""element_phongHoaThieuDoanh"": 2}",False
+trace-1-maxLongDefense-D,maxLongDefense,pressure:healersMirror:9:4567:side0,D,last10,431,0,431,3534,0,0,2,10,"{""element_phongHoaThieuDoanh"": 1}",False
+trace-2-largestFminusD-F,largestFminusD,screen:binhLinh:loi:15:1v1:1907:side0,F,25to33,493,389,104,3054,449,709,0,18,"{""role_thuThanh"": 2, ""cuuTieuLoiPhat"": 1, ""boHaiTranGiang"": 1}",False
+trace-2-largestFminusD-F,largestFminusD,screen:binhLinh:loi:15:1v1:1907:side0,F,34to43,1220,392,828,3054,301,0,0,20,"{""boHaiTranGiang"": 4}",False
+trace-2-largestFminusD-F,largestFminusD,screen:binhLinh:loi:15:1v1:1907:side0,F,44plus,1206,154,1052,3054,0,0,1,12,"{""boHaiTranGiang"": 1}",False
+trace-2-largestFminusD-F,largestFminusD,screen:binhLinh:loi:15:1v1:1907:side0,F,last10,0,0,0,3054,0,0,0,0,{},False
+trace-2-largestFminusD-D,largestFminusD,screen:binhLinh:loi:15:1v1:1907:side0,D,25to33,567,489,78,3054,359,399,0,18,"{""role_thuThanh"": 1, ""cuuTieuLoiPhat"": 1}",False
+trace-2-largestFminusD-D,largestFminusD,screen:binhLinh:loi:15:1v1:1907:side0,D,34to43,923,0,923,3054,0,0,1,3,"{""cuuTieuLoiPhat"": 1}",False
+trace-2-largestFminusD-D,largestFminusD,screen:binhLinh:loi:15:1v1:1907:side0,D,44plus,0,0,0,3054,0,0,0,0,{},False
+trace-2-largestFminusD-D,largestFminusD,screen:binhLinh:loi:15:1v1:1907:side0,D,last10,0,0,0,3054,0,0,0,0,{},False
+trace-3-completedOutcomeFlip-F,completedOutcomeFlip,screen:binhLinh:moc:9:3v3:1907:side1,F,25to33,612,432,180,3999,876,941,0,18,"{""role_thuThanh"": 5, ""role_linhDuoc"": 1, ""role_tuongKhien"": 1, ""element_hauThoTichLuong"": 2, ""role_phaTran"": 1}",False
+trace-3-completedOutcomeFlip-F,completedOutcomeFlip,screen:binhLinh:moc:9:3v3:1907:side1,F,34to43,1366,307,1059,3999,258,108,0,20,"{""role_linhDuoc"": 1, ""role_thuThanh"": 1, ""element_hauThoTichLuong"": 1}",False
+trace-3-completedOutcomeFlip-F,completedOutcomeFlip,screen:binhLinh:moc:9:3v3:1907:side1,F,44plus,1831,170,1661,3999,338,37,4,32,"{""role_tramKich"": 1}",False
+trace-3-completedOutcomeFlip-F,completedOutcomeFlip,screen:binhLinh:moc:9:3v3:1907:side1,F,last10,1303,126,1177,3999,32,0,1,18,{},False
+trace-3-completedOutcomeFlip-D,completedOutcomeFlip,screen:binhLinh:moc:9:3v3:1907:side1,D,25to33,643,408,235,3999,845,879,0,18,"{""role_thuThanh"": 5, ""role_linhDuoc"": 1, ""role_tuongKhien"": 1, ""element_hauThoTichLuong"": 2, ""role_phaTran"": 1}",False
+trace-3-completedOutcomeFlip-D,completedOutcomeFlip,screen:binhLinh:moc:9:3v3:1907:side1,D,34to43,1222,209,1013,3999,227,87,1,20,"{""role_linhDuoc"": 1, ""role_thuThanh"": 1, ""element_hauThoTichLuong"": 1, ""role_phaTran"": 1}",False
+trace-3-completedOutcomeFlip-D,completedOutcomeFlip,screen:binhLinh:moc:9:3v3:1907:side1,D,44plus,1010,0,1010,3999,87,0,2,25,{},False
+trace-3-completedOutcomeFlip-D,completedOutcomeFlip,screen:binhLinh:moc:9:3v3:1907:side1,D,last10,622,0,622,3999,0,0,1,11,{},False
+trace-4-cap-F,cap,pressure:healersMirror:10:4567:side1,F,25to33,846,953,-107,3618,133,320,0,18,"{""role_linhDuoc"": 2, ""element_hauThoTichLuong"": 1, ""element_phongQuyenTanVan"": 1, ""xuanMocVanSinh"": 1, ""hoiHoSinhKhi"": 2}",True
+trace-4-cap-F,cap,pressure:healersMirror:10:4567:side1,F,34to43,820,162,658,3618,234,187,0,20,"{""thaiSonApDinh"": 1, ""element_hauThoTichLuong"": 3, ""element_phongQuyenTanVan"": 2}",True
+trace-4-cap-F,cap,pressure:healersMirror:10:4567:side1,F,44plus,2938,601,2337,3618,89,119,4,34,"{""element_hauThoTichLuong"": 6, ""hoiHoSinhKhi"": 2, ""element_phongQuyenTanVan"": 1, ""thaiSonApDinh"": 1}",True
+trace-4-cap-F,cap,pressure:healersMirror:10:4567:side1,F,last10,1316,227,1089,3618,30,30,3,20,"{""element_hauThoTichLuong"": 4}",True
+trace-4-cap-D,cap,pressure:healersMirror:10:4567:side1,D,25to33,856,885,-29,3618,123,297,0,18,"{""role_linhDuoc"": 2, ""element_hauThoTichLuong"": 1, ""element_phongQuyenTanVan"": 1, ""xuanMocVanSinh"": 1, ""hoiHoSinhKhi"": 2}",False
+trace-4-cap-D,cap,pressure:healersMirror:10:4567:side1,D,34to43,2114,294,1820,3618,295,187,1,20,"{""thaiSonApDinh"": 1, ""element_hauThoTichLuong"": 4, ""element_phongQuyenTanVan"": 2}",False
+trace-4-cap-D,cap,pressure:healersMirror:10:4567:side1,D,44plus,1401,0,1401,3618,0,0,3,24,"{""element_phongQuyenTanVan"": 3, ""thaiSonApDinh"": 1}",False
+trace-4-cap-D,cap,pressure:healersMirror:10:4567:side1,D,last10,1081,0,1081,3618,0,0,2,10,"{""element_phongQuyenTanVan"": 1, ""thaiSonApDinh"": 1}",False
+trace-5-leastProgressCapped-F,leastProgressCapped,screen:quanSu:moc:9:3v3:701:side1,F,25to33,1325,982,343,3999,555,494,0,18,"{""role_linhDuoc"": 4, ""role_thuThanh"": 3, ""element_phongQuyenTanVan"": 2, ""element_loiTruGiangThe"": 1}",True
+trace-5-leastProgressCapped-F,leastProgressCapped,screen:quanSu:moc:9:3v3:701:side1,F,34to43,876,360,516,3999,389,245,1,20,"{""role_linhDuoc"": 2, ""role_thuThanh"": 3, ""role_hieuLenh"": 3, ""element_phongQuyenTanVan"": 1}",True
+trace-5-leastProgressCapped-F,leastProgressCapped,screen:quanSu:moc:9:3v3:701:side1,F,44plus,1160,135,1025,3999,193,39,0,34,"{""element_loiTruGiangThe"": 2, ""role_hieuLenh"": 1, ""element_phongQuyenTanVan"": 1, ""role_thuThanh"": 1}",True
+trace-5-leastProgressCapped-F,leastProgressCapped,screen:quanSu:moc:9:3v3:701:side1,F,last10,533,60,473,3999,193,39,0,20,"{""role_hieuLenh"": 1, ""element_phongQuyenTanVan"": 1, ""role_thuThanh"": 1, ""element_loiTruGiangThe"": 1}",True
+trace-5-leastProgressCapped-D,leastProgressCapped,screen:quanSu:moc:9:3v3:701:side1,D,25to33,1394,820,574,3999,550,473,0,18,"{""role_linhDuoc"": 4, ""role_thuThanh"": 3, ""element_phongQuyenTanVan"": 1, ""element_loiTruGiangThe"": 1, ""role_hieuLenh"": 1}",False
+trace-5-leastProgressCapped-D,leastProgressCapped,screen:quanSu:moc:9:3v3:701:side1,D,34to43,1379,243,1136,3999,422,97,1,20,"{""role_thuThanh"": 1, ""role_linhDuoc"": 2, ""element_loiTruGiangThe"": 4}",False
+trace-5-leastProgressCapped-D,leastProgressCapped,screen:quanSu:moc:9:3v3:701:side1,D,44plus,1061,0,1061,3999,3,0,2,12,"{""role_hieuLenh"": 1, ""element_phongQuyenTanVan"": 2}",False
+trace-5-leastProgressCapped-D,leastProgressCapped,screen:quanSu:moc:9:3v3:701:side1,D,last10,0,0,0,3999,0,0,0,0,{},False
+trace-2-largestFminusD-A,largestFminusD,screen:binhLinh:loi:15:1v1:1907:side0,A,25to33,1093,410,683,3054,41,0,0,18,"{""cuuTieuLoiPhat"": 2, ""role_nghiBinh"": 1}",False
+trace-2-largestFminusD-A,largestFminusD,screen:binhLinh:loi:15:1v1:1907:side0,A,34to43,441,0,441,3054,0,0,1,1,{},False
+trace-2-largestFminusD-A,largestFminusD,screen:binhLinh:loi:15:1v1:1907:side0,A,44plus,0,0,0,3054,0,0,0,0,{},False
+trace-2-largestFminusD-A,largestFminusD,screen:binhLinh:loi:15:1v1:1907:side0,A,last10,0,0,0,3054,0,0,0,0,{},False
+trace-2-largestFminusD-E,largestFminusD,screen:binhLinh:loi:15:1v1:1907:side0,E,25to33,1341,361,980,3054,41,0,0,18,"{""cuuTieuLoiPhat"": 1, ""boHaiTranGiang"": 1}",False
+trace-2-largestFminusD-E,largestFminusD,screen:binhLinh:loi:15:1v1:1907:side0,E,34to43,1545,191,1354,3054,0,0,0,20,"{""boHaiTranGiang"": 4}",False
+trace-2-largestFminusD-E,largestFminusD,screen:binhLinh:loi:15:1v1:1907:side0,E,44plus,185,31,154,3054,0,0,1,3,"{""boHaiTranGiang"": 1}",False
+trace-2-largestFminusD-E,largestFminusD,screen:binhLinh:loi:15:1v1:1907:side0,E,last10,0,0,0,3054,0,0,0,0,{},False

@@ -51,7 +51,8 @@ import {
   buildMain,
   mainSlotKey,
   NEW_PROGRESS,
-  SKILL_POINTS_PER_LEVEL,
+  UPGRADE_COST,
+  BRANCH_COST,
   upgradeSkill,
   type BattleRewards,
   type CharacterProgress,
@@ -230,7 +231,7 @@ function isProgress(x: unknown): x is CharacterProgress {
 
 /**
  * Tiến trình nhân vật kèm lưu từ trước khi mọi nhân vật kèm nâng theo ô (chiêu nghề, chiêu nhánh): đặt lại
- * kỹ năng và hoàn đủ điểm kỹ năng của cấp để người chơi nâng lại. Cấp và kinh nghiệm giữ nguyên.
+ * kỹ năng cũ và hoàn đúng điểm đã chi để người chơi nâng lại. Cấp và kinh nghiệm giữ nguyên.
  */
 function migrateCompanion(p: CharacterProgress): CharacterProgress {
   const slotKeys = new Set([1, 2, 3, 4, 5, 6].map(mainSlotKey));
@@ -240,9 +241,12 @@ function migrateCompanion(p: CharacterProgress): CharacterProgress {
   return legacy
     ? {
         ...p,
-        skillLevels: {},
+        skillLevels: Object.fromEntries(Object.entries(p.skillLevels).filter(([k]) => slotKeys.has(k))),
         branches: [],
-        skillPoints: (p.level - 1) * SKILL_POINTS_PER_LEVEL,
+        skillPoints: p.skillPoints + Object.entries(p.skillLevels)
+          .filter(([k]) => !slotKeys.has(k))
+          .reduce((sum, [, lv]) => sum + [1, 2, 3, 4].filter(i => i < lv).reduce((n, i) => n + UPGRADE_COST[i]!, 0), 0)
+          + new Set(p.branches).size * BRANCH_COST,
       }
     : p;
 }

@@ -166,6 +166,10 @@ export type BattleEvent =
       readonly fighter: number;
       readonly hp: number;
     }
+  /** Chỉ phát khi audit:true; tách mất do Tinh thần, hồi dư và không cộng dồn. */
+  | { readonly type: "sustain"; readonly side: SideIndex; readonly fighter: number; readonly kind: "heal" | "shield";
+      readonly raw: number; readonly spiritLost: number; readonly effective: number; readonly overflow: number; readonly nonStackLost: number; readonly converted: number }
+  | { readonly type: "auditTurn"; readonly side: SideIndex; readonly number: number; readonly living: readonly number[]; readonly food: number }
   | { readonly type: "timeout"; readonly side: SideIndex }
   | { readonly type: "end"; readonly winner: SideIndex };
 
@@ -208,6 +212,8 @@ export type ActResult =
   | { readonly ok: false; readonly error: BattleError };
 
 export interface BattleConfig {
+  readonly experimentalSpirit?: R.SpiritExperiment;
+  readonly audit?: boolean;
   readonly sides: readonly [SideConfig, SideConfig];
   readonly seed: number;
   readonly weights?: SpawnWeights;
@@ -268,6 +274,8 @@ export function createBattle(config: BattleConfig): {
   const first = config.firstSide ?? 0;
   const state: BattleState = {
     sides,
+    ...(config.experimentalSpirit ? { experimentalSpirit: config.experimentalSpirit } : {}),
+    ...(config.audit ? { audit: true } : {}),
     board,
     boardRng: rng.state(),
     aiRng: (config.seed ^ AI_SEED_SALT) >>> 0,
@@ -459,7 +467,7 @@ function readyIndices(side: Side): number[] {
 }
 
 /** Người kế tiếp sau `after` theo thứ tự vị trí, bỏ qua người đã gục, bị Đóng băng và người vừa ra tay. */
-function nextActor(
+export function nextActor(
   side: Side,
   after: number | null,
   lastActor: number | null,
@@ -543,7 +551,7 @@ function hpRatio(f: Fighter): number {
 }
 
 /** Bị động của thủ lĩnh `f` đang có hiệu lực, đúng nguyên tố. */
-function passiveOn(
+export function passiveOn(
   side: Side,
   f: Fighter,
   element: Fighter["element"],
@@ -561,16 +569,16 @@ function combinePierce(a: number, b: number): number {
   return 1 - (1 - a) * (1 - b);
 }
 
-function effectiveAtk(f: Fighter): number {
+export function effectiveAtk(f: Fighter, experiment?: R.SpiritExperiment): number {
   return (
     f.atk *
     statModifier(f.effects, "atkUp", "atkDown") *
-    R.spiritStatMultiplier(f.spirit)
+    R.spiritStatMultiplier(f.spirit, experiment)
   );
 }
 
 /** DEF sau hiệu ứng; Binh lính +5% mỗi bậc sĩ khí trên mức bình thường. */
-function effectiveDef(side: Side, f: Fighter): number {
+export function effectiveDef(side: Side, f: Fighter, experiment?: R.SpiritExperiment): number {
   const tiers = R.moraleOf(side.food) === "eager" ? 1 : 0;
   const bonus =
     f.profession === "binhLinh" ? R.BINH_LINH_DEF_PER_TIER * tiers : 0;
@@ -579,7 +587,7 @@ function effectiveDef(side: Side, f: Fighter): number {
     0,
     f.def *
       (statModifier(f.effects, "defUp", "defDown") + bonus - passive) *
-      R.spiritStatMultiplier(f.spirit),
+      R.spiritStatMultiplier(f.spirit, experiment),
   );
 }
 
@@ -636,11 +644,14 @@ class Ctx {
     if (Math.ceil(s.turn.number / 2) >= R.SPIRIT_DECAY_START_TURN) {
       own.fighters.forEach((f, i) => {
         if (!isAlive(f) || f.spirit === 0) return;
-        f.spirit = Math.max(0, f.spirit - R.SPIRIT_DECAY);
+        const next = Math.max(0, f.spirit - R.SPIRIT_EXPERIMENTS[s.experimentalSpirit ?? "A"].decay);
+        if (next === f.spirit) return;
+        f.spirit = next;
         this.emit({ type: "spirit", side, fighter: i, spirit: f.spirit });
       });
     }
 
+    if (s.audit) this.emit({ type: "auditTurn", side, number: s.turn.number, living: aliveIndices(own), food: own.food });
     own.fighters.forEach((f, i) => {
       if (own.food === 0 && isAlive(f)) {
         this.damage(
@@ -786,13 +797,14 @@ class Ctx {
             );
             const amount = Math.round(
               step.atk *
-                effectiveAtk(caster) *
+                (step.execute && target.hp / target.maxHp <= step.execute.threshold ? step.execute.multiplier : 1) *
+                effectiveAtk(caster, s.experimentalSpirit) *
                 morale *
                 spread *
                 hoa *
                 elementMultiplier(caster.element, target.element) *
                 R.defenseMultiplier(
-                  effectiveDef(s.sides[t.side], target),
+                  effectiveDef(s.sides[t.side], target, s.experimentalSpirit),
                   pierce,
                 ),
             );
@@ -996,11 +1008,13 @@ class Ctx {
     return this.withBoardRng((rng) => rng.next() < chance);
   }
 
-  private applyEffect(ref: FighterRef, effect: Effect): void {
+  private applyEffect(ref: FighterRef, effect: Effect, alreadyScaled = false): void {
     if (effect.kind === "shield") {
-      const value = Math.round(
-        effect.value * R.spiritHealMultiplier(this.fighter(ref).spirit),
-      );
+      const raw = effect.value;
+      const value = alreadyScaled ? raw : Math.round(raw * R.spiritHealMultiplier(this.fighter(ref).spirit, this.state.experimentalSpirit));
+      const prior = findEffect(this.fighter(ref).effects, "shield")?.value ?? 0;
+      const effective = Math.max(0, value - prior);
+      if (this.state.audit) this.emit({ type: "sustain", ...ref, kind: "shield", raw, spiritLost: raw - value, effective, overflow: 0, nonStackLost: value - effective, converted: alreadyScaled ? value : 0 });
       if (value <= 0) return;
       effect = { ...effect, value };
     }
@@ -1055,14 +1069,7 @@ class Ctx {
       const amount = Math.round(
         actor.maxHp * R.HEAL_PER_TILE_RATIO * h.tim * (ySu ? R.HEAL_Y_SU : 1),
       );
-      const overflow = amount - (actor.maxHp - actor.hp);
-      this.heal(self, amount);
-      if (ySu && overflow > 0)
-        this.applyEffect(self, {
-          kind: "shield",
-          value: overflow,
-          turns: R.Y_SU_SHIELD_TURNS,
-        });
+      this.heal(self, amount, ySu);
     }
     for (let k = 0; k < count("tim", "weak"); k++) {
       const alive = aliveIndices(own);
@@ -1119,14 +1126,14 @@ class Ctx {
       const hoa = passiveOn(own, actor, "hoa") ? 1 + PASSIVE.hoaDamage : 1;
       const pierce = passiveOn(own, actor, "kim") ? PASSIVE.kimPierce : 0;
       const amount = Math.round(
-        effectiveAtk(actor) *
+        effectiveAtk(actor, s.experimentalSpirit) *
           units *
           R.MORALE_DAMAGE[morale] *
           elementMultiplier(actor.element, t.element) *
           R.cascadeMultiplier(index) *
           prof *
           hoa *
-          R.defenseMultiplier(effectiveDef(foe, t), pierce),
+          R.defenseMultiplier(effectiveDef(foe, t, s.experimentalSpirit), pierce),
       );
       this.damage({ side: foeIdx, fighter: target }, amount, "sword", self);
       if (s.winner !== null) return;
@@ -1166,16 +1173,17 @@ class Ctx {
       this.emit({ type: "energy", ...ref, amount: f.energy - before });
   }
 
-  private heal(ref: FighterRef, amount: number): void {
+  private heal(ref: FighterRef, amount: number, convertOverflow = false): void {
     const f = this.fighter(ref);
     if (!isAlive(f)) return;
-    const before = f.hp;
-    f.hp = Math.min(
-      f.maxHp,
-      f.hp + Math.round(amount * R.spiritHealMultiplier(f.spirit)),
-    );
-    if (f.hp !== before)
-      this.emit({ type: "heal", ...ref, amount: f.hp - before });
+    const scaled = Math.round(amount * R.spiritHealMultiplier(f.spirit, this.state.experimentalSpirit));
+    const actual = Math.min(f.maxHp - f.hp, scaled);
+    const overflow = scaled - actual;
+    f.hp += actual;
+    if (this.state.audit) this.emit({ type: "sustain", ...ref, kind: "heal", raw: amount, spiritLost: amount - scaled, effective: actual, overflow, nonStackLost: 0, converted: convertOverflow ? overflow : 0 });
+    if (actual > 0) this.emit({ type: "heal", ...ref, amount: actual });
+    // Hồi dư đã chịu Tinh thần của người nhận; không nhân lần thứ hai khi chuyển thành Khiên.
+    if (convertOverflow && overflow > 0) this.applyEffect(ref, { kind: "shield", value: overflow, turns: R.Y_SU_SHIELD_TURNS }, true);
   }
 
   private addRage(side: SideIndex, amount: number): void {

@@ -3,7 +3,7 @@
 import type { Board, SpawnWeights } from "../board";
 import type { Effect } from "./effects";
 import type { Element } from "./elements";
-import type { Profession } from "./rules";
+import type { SpiritExperiment, Profession } from "./rules";
 
 export interface FighterConfig {
   readonly id: string;
@@ -74,6 +74,9 @@ export interface TurnState {
 }
 
 export interface BattleState {
+  /** Chỉ thiết lập nội bộ bởi harness, không nhận từ payload tạo trận của ứng dụng. */
+  readonly experimentalSpirit?: SpiritExperiment;
+  readonly audit?: boolean;
   readonly sides: [Side, Side];
   board: Board;
   /** Trạng thái luồng ngẫu nhiên của bàn cờ (bàn khởi đầu và ô rơi). */

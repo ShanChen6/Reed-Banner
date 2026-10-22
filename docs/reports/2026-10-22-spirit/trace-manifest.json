@@ -1,0 +1,38 @@
+[
+  {
+    "criterion": "long-defense",
+    "caseId": "spirit:defense:9:3v3:701:side1",
+    "rule": "A",
+    "file": "trace-long-defense.jsonl"
+  },
+  {
+    "criterion": "censored",
+    "caseId": "spirit:defense:10:1v1:1907:side1",
+    "rule": "B",
+    "file": "trace-censored.jsonl"
+  },
+  {
+    "criterion": "flip-A",
+    "caseId": "spirit:balanced:10:3v3:701:side1",
+    "rule": "A",
+    "file": "trace-flip-A.jsonl"
+  },
+  {
+    "criterion": "flip-C",
+    "caseId": "spirit:balanced:10:3v3:701:side1",
+    "rule": "C",
+    "file": "trace-flip-C.jsonl"
+  },
+  {
+    "criterion": "support-A",
+    "caseId": "spirit:defense:15:1v1:1907:side0",
+    "rule": "A",
+    "file": "trace-support-A.jsonl"
+  },
+  {
+    "criterion": "support-C",
+    "caseId": "spirit:defense:15:1v1:1907:side0",
+    "rule": "C",
+    "file": "trace-support-C.jsonl"
+  }
+]

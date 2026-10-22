@@ -30,20 +30,28 @@ export const SPIRIT_DECAY = 10;
 /** ATK và DEF còn tỉ lệ này khi Tinh thần về 0. */
 export const SPIRIT_STAT_FLOOR = 0.7;
 
-/** Tinh thần sau khi phe đã bắt đầu `sideTurn` lượt (tính từ 1). */
-export function spiritAt(sideTurn: number): number {
-  if (sideTurn < SPIRIT_DECAY_START_TURN) return SPIRIT_MAX;
-  return Math.max(0, SPIRIT_MAX - SPIRIT_DECAY * (sideTurn - SPIRIT_DECAY_START_TURN + 1));
-}
+/** Chỉ harness mô phỏng truyền lựa chọn này; API ứng dụng không nhận cấu hình thử nghiệm. */
+export type SpiritExperiment = "A" | "B" | "C" | "D" | "E" | "F";
+export const SPIRIT_EXPERIMENTS = {
+  A: { decay: SPIRIT_DECAY, statFloor: SPIRIT_STAT_FLOOR, healFloor: 0 },
+  B: { decay: 0, statFloor: 1, healFloor: 0 },
+  C: { decay: SPIRIT_DECAY, statFloor: 1, healFloor: 0 },
+  D: { decay: 5, statFloor: 1, healFloor: 0 },
+  E: { decay: SPIRIT_DECAY, statFloor: 1, healFloor: 0.2 },
+  F: { decay: 5, statFloor: 1, healFloor: 0.2 },
+} as const;
 
-/** Hệ số ATK và DEF theo Tinh thần. */
-export function spiritStatMultiplier(spirit: number): number {
-  return SPIRIT_STAT_FLOOR + (1 - SPIRIT_STAT_FLOOR) * (spirit / SPIRIT_MAX);
+/** Tinh thần sau khi phe bắt đầu sideTurn lượt thường; lượt thêm không tăng bộ đếm. */
+export function spiritAt(sideTurn: number, experiment: SpiritExperiment = "A"): number {
+  return Math.max(0, SPIRIT_MAX - SPIRIT_EXPERIMENTS[experiment].decay * Math.max(0, sideTurn - SPIRIT_DECAY_START_TURN + 1));
 }
-
-/** Hệ số hồi máu và Khiên nhận được theo Tinh thần. */
-export function spiritHealMultiplier(spirit: number): number {
-  return spirit / SPIRIT_MAX;
+export function spiritStatMultiplier(spirit: number, experiment: SpiritExperiment = "A"): number {
+  const floor = SPIRIT_EXPERIMENTS[experiment].statFloor;
+  return floor + (1 - floor) * (Math.max(0, Math.min(100, spirit)) / SPIRIT_MAX);
+}
+export function spiritHealMultiplier(spirit: number, experiment: SpiritExperiment = "A"): number {
+  const floor = SPIRIT_EXPERIMENTS[experiment].healFloor;
+  return floor + (1 - floor) * (Math.max(0, Math.min(100, spirit)) / SPIRIT_MAX);
 }
 
 export const TURN_MS = 30_000;
