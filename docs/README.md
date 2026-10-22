@@ -91,3 +91,5 @@
 - [Triển khai combo toàn bộ nhân vật: kiểm chứng, dữ liệu và giới hạn](reports/2026-10-22-combo.md)
 
 - [Chốt F, 42 bộ Đinh Bộ Lĩnh và 4 bị động nối chase](design/22-ky-nang-chase.md)
+
+- [Kế hoạch cân bằng chase: chủ động tạo lợi thế và kết thúc ván](plans/2026-10-22-can-bang-chase.md)
