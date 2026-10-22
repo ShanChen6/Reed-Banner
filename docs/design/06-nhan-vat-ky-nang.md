@@ -16,12 +16,12 @@
 
 - Có ngay từ lúc tạo game, **luôn ra trận** ở cả 1vs1 và 3vs3.
 - **Nghề:** chọn 1 trong 6 nghề **trước mỗi trận** (mặc định Tướng sĩ khi tạo game). Nhân vật chính hưởng nội tại của nghề đang chọn (xem mục 4.1). Trong trận không đổi được.
-  - Nghề **không** đổi bộ kỹ năng: 6 kỹ năng chủ động và kỹ năng bị động đi theo nguyên tố. Nghề chỉ quyết định nội tại nghề, loại ô gắn với nghề và loại vũ khí.
+  - Nghề quyết định 3 kỹ năng chủ động, nội tại nghề, loại ô và vũ khí. Hệ quyết định 2 kỹ năng bổ trợ/bàn cờ; ô 5 riêng theo nhân vật.
   - 6 nghề × 7 nguyên tố cho 42 cách dựng nhân vật chính.
   - Đội được phép có nhiều người cùng nghề (ví dụ hai Y sư). Nội tại tác động lên cả phe, như lương của Binh lính, không cộng dồn.
 - **Nguyên tố:** chọn 1 trong 7 (Kim, Mộc, Thủy, Hỏa, Thổ, Lôi, Phong) khi tạo game, và được **đổi trước mỗi trận**. Trong trận không đổi được.
-- **7 kỹ năng theo nguyên tố:** 1 bị động + 6 chủ động. Đổi nguyên tố thì đổi cả bộ kỹ năng. Mỗi nguyên tố có bộ kỹ năng riêng, tổng cộng 7 bộ.
-- Kỹ năng của nhân vật chính đã mang sẵn màu nguyên tố, nên không cộng dấu ấn nguyên tố như chiêu nghề.
+- **6 kỹ năng chủ động:** 3 nghề + 2 hệ + 1 tuyệt chiêu; thêm bị động theo hệ của thủ lĩnh. Đổi nghề/hệ giữ cấp nâng theo ô.
+- Chiêu nghề mới chỉ Ngũ hành ấn cộng dấu ấn cường hóa; các chiêu khác không tự cộng dấu ấn.
 
 ### 2.1 Ba loại kỹ năng chủ động
 
@@ -33,23 +33,20 @@
 
 Một kỹ năng có thể thuộc nhiều loại, ví dụ vừa gây sát thương vừa phá một vùng ô.
 
-### 2.2 Bộ kỹ năng theo nguyên tố
+### 2.2 Bộ kỹ năng hiện hành
 
-Chi tiết 7 bộ (49 kỹ năng), chi phí năng lượng, mốc mở khóa, nâng cấp và vùng phá ô: xem [Bộ kỹ năng nhân vật chính](12-ky-nang-nhan-vat-chinh.md).
+Danh sách đầy đủ 18 chiêu nghề, 14 chiêu hệ và ánh xạ hồ sơ ở [Cải tổ kỹ năng](20-cai-to-ky-nang.md).
 
-Tóm tắt khung chung, áp cho cả 7 nguyên tố:
+| Ô | Nguồn | Mở khóa |
+|---|---|---|
+| 1 | Nghề cơ bản | 1 |
+| 2 | Hệ bàn cờ | 1 |
+| 3 | Nghề vai trò chính | 5 |
+| 5 | Tuyệt chiêu riêng; Đinh Bộ Lĩnh mặc định theo hệ | 10 |
+| 4 | Nghề chiến thuật | 15 |
+| 6 | Hệ bổ trợ | 20 |
 
-| Ô | Vai trò | Năng lượng | Mở khóa |
-|---|---|---|---|
-| Bị động | Tự kích hoạt khi đầy Nộ | 100 nộ | Cấp 1 |
-| 1 | Bàn cờ: phá hoặc biến ô | 20 | Cấp 1 |
-| 2 | Hỗ trợ nhỏ | 30 | Cấp 1 |
-| 3 | Đơn mục tiêu + phá vùng nhỏ | 40 | Cấp 5 |
-| 4 | Toàn bộ kẻ địch + phá vùng | 60 | Cấp 10 |
-| 5 | Tuyệt kỹ đơn mục tiêu + phá vùng rộng | 100 | Cấp 20 |
-| 6 | Hỗ trợ lớn | 50 | Cấp 15 |
-
-> Tên kỹ năng phải tự đặt, không trùng tên chiêu của game khác (nguyên tắc clean-room). "Cổ Thụ Trấn Thiên" thay cho tên cũ vì tên cũ trùng một game đang phát hành.
+Thứ tự hiển thị 1,2,3,5,4,6; ID ô lưu không đổi. Số liệu hệ cũ ở [12](12-ky-nang-nhan-vat-chinh.md) chỉ áp cho preset thủ lĩnh AI chiến dịch và lịch sử.
 
 ## 3. Luật dùng kỹ năng chủ động (mọi nhân vật)
 
@@ -62,7 +59,7 @@ Tóm tắt khung chung, áp cho cả 7 nguyên tố:
 ## 4. Nhân vật kèm, nghề & chiêu nghề
 
 - Ở 3vs3, người chơi chọn **2 nhân vật kèm** cùng ra trận với nhân vật chính; hồ sơ lưu đội đã chọn.
-- Mỗi nhân vật kèm = **Nghề + Nguyên tố cố định + 1 kỹ năng riêng ở ô 5**. Từ 20/10/2026 mọi nhân vật kèm dùng **bộ 6 kỹ năng theo nguyên tố như nhân vật chính** (mục 2.2), mở ô theo cấp và nâng theo ô; ô 5 là tuyệt chiêu (tướng thường) hoặc chiêu riêng (tướng lịch sử, sứ quân).
+- Mỗi nhân vật kèm = **Nghề + Nguyên tố cố định + 1 kỹ năng riêng ở ô 5**. Từ 22/10/2026 mọi nhân vật kèm dùng **3 chiêu nghề + 2 chiêu hệ + 1 tuyệt chiêu riêng như nhân vật chính** (mục 2.2), mở ô theo cấp và nâng theo ô; ô 5 là tuyệt chiêu (tướng thường) hoặc chiêu riêng (tướng lịch sử, sứ quân).
 - Ba nhóm: **42 tướng thường** hư cấu (mỗi tổ hợp nghề × hệ một người; 5 khởi đầu, 37 ở cửa hàng), **6 tướng lịch sử** gia nhập qua chiến dịch, **12 sứ quân** mở bán sau khi đánh bại ở chiến dịch. Chi tiết: [Danh sách nhân vật](14-nhan-vat.md).
 - **Khởi đầu:** nhân vật chính (mặc định Tướng sĩ) và 5 tướng thường, mỗi người một nghề còn lại (Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư). Khi nhân vật chính đổi sang nghề khác, nhân vật kèm cùng nghề vẫn ra trận được.
 
@@ -85,9 +82,9 @@ Xem [Danh sách nhân vật, mục 1](14-nhan-vat.md#1-khung-chung-của-nhân-v
 
 ### 4.3 Bộ chiêu nghề
 
-Từ 20/10/2026 chỉ **tùy tướng AI** ở chiến dịch dùng bộ này (nấc 1 và một chiêu nhánh nấc 2, cộng [dấu ấn nguyên tố](05-nguyen-to.md#5-dấu-ấn-nguyên-tố-trên-chiêu-nghề)); nhân vật phe người chơi dùng bộ theo hệ.
+**Preset nghề cũ, chỉ tùy tướng AI** ở chiến dịch dùng bộ này (nấc 1 và một chiêu nhánh nấc 2, cộng [dấu ấn nguyên tố](05-nguyen-to.md#5-dấu-ấn-nguyên-tố-trên-chiêu-nghề)); nhân vật phe người chơi dùng bộ nghề + hệ mới ở [20](20-cai-to-ky-nang.md). Các chiêu dưới giữ nguyên để không đổi độ khó chiến dịch.
 
-**⚔️ Tướng sĩ: dồn sát thương, cổ vũ cả đội**
+**⚔️ Tướng sĩ AI cũ: dồn sát thương, cổ vũ cả đội**
 - Nấc 1, **Trảm kích:** 210% ATK vào 1 đối thủ.
 - Nấc 2A, **Hiệu lệnh:** Công +25% cho cả đội, 2 lượt.
 - Nấc 2B, **Phá trận:** 300% ATK vào 1 đối thủ, kèm Thủ −30% trong 2 lượt.

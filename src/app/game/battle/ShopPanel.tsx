@@ -59,7 +59,7 @@ function CompanionCard({
         : undefined;
   return (
     <li
-      className={`flex items-center gap-2 rounded p-1.5 ${selected ? "bg-emerald-600/25 ring-1 ring-emerald-500" : "bg-black/5"} ${owned ? "" : "opacity-80"}`}
+      className={`flex min-w-0 items-center gap-2 rounded p-1.5 ${selected ? "bg-emerald-600/25 ring-1 ring-emerald-500" : "bg-black/5"} ${owned ? "" : "opacity-80"}`}
     >
       <Portrait id={c.id} element={c.element} profession={c.profession} className="size-9 shrink-0" />
       <div className="min-w-0 flex-1">
@@ -85,7 +85,7 @@ function CompanionCard({
           {selected ? "Ra trận" : "Chọn"}
         </button>
       ) : lockStage ? (
-        <span className="shrink-0 text-[10px] opacity-70">Mở sau màn “{lockStage.title}”</span>
+        <span className="min-w-0 max-w-[45%] text-right text-[10px] opacity-70">Mở sau màn “{lockStage.title}”</span>
       ) : (
         <button
           type="button"
@@ -159,7 +159,7 @@ export default function ShopPanel({
         {message && <span className="text-rose-500">{message}</span>}
       </div>
       {locked && <p className="mb-2 opacity-70">Đang trong trận: đổi đội và mua nhân vật sau khi trận kết thúc.</p>}
-      <ul className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">{owned.map(card)}</ul>
+      <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 lg:grid-cols-3">{owned.map(card)}</ul>
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <span className="font-semibold">Lọc nhân vật chưa có:</span>
         <select
@@ -192,23 +192,24 @@ export default function ShopPanel({
       {forSale.length > 0 && (
         <>
           <h3 className="mt-3 mb-1.5 font-semibold">Cửa hàng tướng thường</h3>
-          <ul className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">{forSale.map(card)}</ul>
+          <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 lg:grid-cols-3">{forSale.map(card)}</ul>
         </>
       )}
       {warlordsLeft.length > 0 && (
         <>
           <h3 className="mt-3 mb-1.5 font-semibold">Sứ quân (mở bán khi đánh bại ở chiến dịch)</h3>
-          <ul className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">{warlordsLeft.map(card)}</ul>
+          <p className="mb-2 text-xs opacity-75">Khi tuyển về, sứ quân dùng 3 chiêu nghề + 2 chiêu hệ + chiêu riêng ô 5 mở cấp 10. Khi làm đối thủ chiến dịch, họ giữ bộ hệ của màn và luôn có chiêu riêng; bộ chiêu có thể khác.</p>
+          <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 lg:grid-cols-3">{warlordsLeft.map(card)}</ul>
         </>
       )}
       {heroesLeft.length > 0 && (
         <>
           <h3 className="mt-3 mb-1.5 font-semibold">Tướng lịch sử (gia nhập qua chiến dịch)</h3>
-          <ul className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">{heroesLeft.map(card)}</ul>
+          <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 lg:grid-cols-3">{heroesLeft.map(card)}</ul>
         </>
       )}
       <p className="mt-2 opacity-60">
-        Mọi nhân vật kèm có 6 kỹ năng theo nguyên tố như Đinh Bộ Lĩnh, nâng theo ô; ô 5 là tuyệt chiêu (tướng thường) hoặc chiêu riêng (tướng lịch sử, sứ quân). Chọn 2 nhân vật kèm ra trận cùng Đinh Bộ Lĩnh. Nhân vật mua về bắt đầu ở cấp 1.
+        Mọi nhân vật kèm có 3 chiêu nghề, 2 chiêu hệ và 1 tuyệt chiêu như Đinh Bộ Lĩnh, nâng theo ô; ô 5 là tuyệt chiêu (tướng thường) hoặc chiêu riêng (tướng lịch sử, sứ quân). Chọn 2 nhân vật kèm ra trận cùng Đinh Bộ Lĩnh. Nhân vật mua về bắt đầu ở cấp 1.
       </p>
     </section>
   );

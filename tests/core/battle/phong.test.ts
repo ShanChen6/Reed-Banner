@@ -9,7 +9,7 @@ import {
   findMatches,
   generateBoard,
   isValidWhirl,
-  mainSkills,
+  legacyElementSkills,
   PASSIVE,
   STANDARD_WEIGHTS,
   tileAt,
@@ -24,7 +24,7 @@ function fighter(id: string, extra: Partial<FighterConfig> = {}): FighterConfig 
   return { id, name: id, element: "kim", profession: "tuongSi", maxHp: 1000, atk: 100, def: 0, ...extra };
 }
 
-const hero = () => fighter("dbl", { element: "phong", skills: mainSkills("phong").map((d) => d.id) });
+const hero = () => fighter("dbl", { element: "phong", skills: legacyElementSkills("phong").map((d) => d.id) });
 const solo = (f: FighterConfig): SideConfig => ({ fighters: [f], leader: 0 });
 
 function setup(energy = 100): BattleState {
@@ -76,7 +76,7 @@ describe("lốc xoáy", () => {
 
 describe("bộ kỹ năng hệ Phong", () => {
   it("đủ 6 ô", () => {
-    assert.deepEqual(mainSkills("phong").map((d) => d.slot), [1, 2, 3, 4, 5, 6]);
+    assert.deepEqual(legacyElementSkills("phong").map((d) => d.slot), [1, 2, 3, 4, 5, 6]);
   });
 
   it("Phong Quyển Tàn Vân cần chọn tâm, tối đa 2 nấc", () => {

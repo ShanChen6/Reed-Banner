@@ -1,5 +1,17 @@
 # Nhật ký thay đổi thiết kế
 
+## 22/10/2026 — thử nghiệm Tinh thần F
+
+- Thêm F vào cấu hình thử nghiệm chung: giảm 5/lượt từ25, giữ hệ số ATK/DEF 100%, hồi/Khiên mới có sàn20% theo người nhận. Mặc định vẫn A.
+- Bổ sung telemetry Khiên hữu ích, test tương tác và [báo cáo đối chứng A/D/E/F](reports/2026-10-22-tinh-than-F.md); giữ nguyên kỹ năng, lương, tiến trình và preset.
+
+## 22/10/2026 — kỹ năng theo vai trò nghề
+
+- Nhân vật chơi được: 3 chiêu nghề, 2 chiêu hệ và 1 tuyệt chiêu riêng; mở theo ô 1/2/3/5/4/6 ở cấp 1/1/5/10/15/20.
+- Giữ khóa nâng theo ô và tiến trình; hồ sơ nghề cổ hoàn điểm thực chi một lần. AI chiến dịch giữ preset cũ tường minh.
+- Thiết kế và kiểm chứng: [20](design/20-cai-to-ky-nang.md). Các mục ghi bộ 6 chiêu hệ dưới đây là lịch sử trước cải tổ.
+
+
 > Mới nhất ở trên cùng. Mỗi mục ghi quyết định và lý do nếu có.
 
 ## 21/10/2026

@@ -4,7 +4,10 @@
 
 import {
   getSkill,
-  heroSkills,
+  characterSkills,
+  legacyHeroSkills,
+  SKILL_SLOT_ORDER,
+  SKILL_SLOT_UNLOCK,
   professionSkills,
   SKILL_MAX_LEVEL,
   type BattleState,
@@ -51,14 +54,7 @@ export const UPGRADE_COST: Readonly<Record<number, number>> = {
 export const BRANCH_UNLOCK_LEVEL = 5;
 export const BRANCH_COST = 1;
 /** Cấp mở khóa từng ô kỹ năng của nhân vật chính và nhân vật kèm (ô 1–6). Bị động có từ cấp 1. */
-export const MAIN_SLOT_UNLOCK: Readonly<Record<number, number>> = {
-  1: 1,
-  2: 1,
-  3: 5,
-  4: 10,
-  5: 20,
-  6: 15,
-};
+export const MAIN_SLOT_UNLOCK = SKILL_SLOT_UNLOCK;
 
 /**
  * Tiến trình của một nhân vật. Nhân vật chính và nhân vật kèm nâng kỹ năng theo ô ("o1".."o6") nên giữ
@@ -84,9 +80,9 @@ export const NEW_PROGRESS: CharacterProgress = {
 /** Khóa nâng cấp của ô kỹ năng nhân vật chính. */
 export const mainSlotKey = (slot: number) => `o${slot}`;
 
-/** Ô kỹ năng nhân vật chính đã mở ở `level`, theo thứ tự ô. */
+/** Ô kỹ năng nhân vật chính đã mở ở `level`, theo thứ tự mở khóa. */
 export function unlockedMainSlots(level: number): number[] {
-  return [1, 2, 3, 4, 5, 6].filter((slot) => level >= MAIN_SLOT_UNLOCK[slot]!);
+  return SKILL_SLOT_ORDER.filter((slot) => level >= MAIN_SLOT_UNLOCK[slot]!);
 }
 
 export interface XpGain {
@@ -209,7 +205,7 @@ export function buildMain(
   character?: string,
 ): FighterConfig {
   const open = new Set(unlockedMainSlots(p.level));
-  const skills = heroSkills(element, character).filter((s) =>
+  const skills = characterSkills(profession, element, character).filter((s) =>
     open.has(s.slot ?? 0),
   );
   const skillLevels = Object.fromEntries(
@@ -220,6 +216,25 @@ export function buildMain(
     skills: skills.map((s) => s.id),
     skillLevels,
   };
+}
+
+/** Preset thủ lĩnh chiến dịch cũ: mốc và phân bổ điểm cũ, chiêu riêng được campaign mở thêm. */
+export function buildCampaignLeader(level: number, element: Element, profession: Profession, character: string): FighterConfig {
+  level = Math.max(1, Math.min(MAX_LEVEL, Math.floor(level)));
+  const unlock: Record<number, number> = { 1: 1, 2: 1, 3: 5, 4: 10, 5: 20, 6: 15 };
+  const keys = [1, 2, 3, 4, 5, 6].filter(slot => level >= unlock[slot]!).map(mainSlotKey);
+  const levels: Record<string, number> = {};
+  let points = Math.max(0, level - 1);
+  for (;;) {
+    const key = [...keys].sort((a, b) => (levels[a] ?? 1) - (levels[b] ?? 1))
+      .find(k => (upgradeCost(levels[k] ?? 1) ?? Infinity) <= points);
+    if (!key) break;
+    points -= upgradeCost(levels[key] ?? 1)!;
+    levels[key] = (levels[key] ?? 1) + 1;
+  }
+  const defs = legacyHeroSkills(element, character).filter(d => level >= unlock[d.slot!]!);
+  return { ...scaleStats(mainCharacter(element, profession), level),
+    skills: defs.map(d => d.id), skillLevels: Object.fromEntries(defs.map(d => [d.id, levels[mainSlotKey(d.slot!)] ?? 1])) };
 }
 
 /**

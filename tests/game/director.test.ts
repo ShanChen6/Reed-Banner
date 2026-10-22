@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import {
   createBattle,
   mainCharacter,
-  mainSkills,
+  legacyElementSkills,
   playAiTurn,
   STARTER_COMPANIONS,
   type BattleEvent,
@@ -65,9 +65,9 @@ describe("đạo diễn trận", () => {
     const s = battle(1);
     const big = stageCues(s, [{ type: "skill", side: 0, fighter: 1, skill: "hoaVuLieuNguyen" }]);
     assert.equal(big.start[0]?.kind, "ultimate");
-    const main5 = mainSkills("moc").find((d) => d.slot === 5)!;
+    const main5 = legacyElementSkills("moc").find((d) => d.slot === 5)!;
     assert.equal(stageCues(s, [{ type: "skill", side: 0, fighter: 0, skill: main5.id }]).start[0]?.kind, "ultimate");
-    const main1 = mainSkills("moc").find((d) => d.slot === 1)!;
+    const main1 = legacyElementSkills("moc").find((d) => d.slot === 1)!;
     assert.equal(stageCues(s, [{ type: "skill", side: 0, fighter: 0, skill: main1.id }]).start[0]?.kind, "cast");
   });
 

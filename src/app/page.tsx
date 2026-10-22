@@ -330,7 +330,7 @@ export default function Home() {
               <Portrait id="dinhBoLinh" element="moc" profession="tuongSi" className="size-20" />
               <p className="mt-2 font-bold">Đinh Bộ Lĩnh</p>
               <p className="text-xs text-[var(--gold)]">Thủ lĩnh · đổi được hệ</p>
-              <p className="mt-2 text-xs text-stone-400">Chọn nghề trước trận, 7 kỹ năng theo nguyên tố.</p>
+              <p className="mt-2 text-xs text-stone-400">Chọn nghề và hệ trước trận: 3 chiêu nghề, 2 chiêu hệ, 1 tuyệt chiêu và bị động thủ lĩnh.</p>
             </li>
             {STARTER_COMPANIONS.map((c) => (
               <li key={c.id} className="flex flex-col items-center rounded-2xl fx-panel p-4 text-center">

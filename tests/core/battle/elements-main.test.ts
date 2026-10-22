@@ -9,7 +9,7 @@ import {
   generateBoard,
   createRng,
   getSkill,
-  mainSkills,
+  legacyElementSkills,
   PASSIVE,
   STANDARD_WEIGHTS,
   type BattleState,
@@ -23,7 +23,7 @@ function fighter(id: string, extra: Partial<FighterConfig> = {}): FighterConfig 
 }
 
 const hero = (element: Element, extra: Partial<FighterConfig> = {}) =>
-  fighter("dbl", { element, skills: mainSkills(element).map((d) => d.id), ...extra });
+  fighter("dbl", { element, skills: legacyElementSkills(element).map((d) => d.id), ...extra });
 const solo = (f: FighterConfig): SideConfig => ({ fighters: [f], leader: 0 });
 const trio = (first: FighterConfig, p: string): SideConfig => ({
   fighters: [first, fighter(`${p}2`), fighter(`${p}3`)],
@@ -90,7 +90,7 @@ describe("vùng phá ô theo hình", () => {
 describe("bộ kỹ năng các nguyên tố", () => {
   it("Kim, Thủy, Hỏa, Thổ, Lôi đủ 6 ô theo thứ tự", () => {
     for (const e of ["kim", "thuy", "hoa", "tho", "loi"] as const) {
-      assert.deepEqual(mainSkills(e).map((d) => d.slot), [1, 2, 3, 4, 5, 6], e);
+      assert.deepEqual(legacyElementSkills(e).map((d) => d.slot), [1, 2, 3, 4, 5, 6], e);
     }
   });
 

@@ -4,7 +4,7 @@ import {
   act,
   createBattle,
   findValidMoves,
-  mainSkills,
+  legacyElementSkills,
   type BattleState,
   type FighterConfig,
   type SideConfig,
@@ -14,7 +14,7 @@ function fighter(id: string, extra: Partial<FighterConfig> = {}): FighterConfig 
   return { id, name: id, element: "kim", profession: "tuongSi", maxHp: 1000, atk: 100, def: 0, ...extra };
 }
 
-const MOC = mainSkills("moc").map((d) => d.id);
+const MOC = legacyElementSkills("moc").map((d) => d.id);
 const hero = (extra: Partial<FighterConfig> = {}) => fighter("dbl", { element: "moc", skills: MOC, ...extra });
 const solo = (f: FighterConfig): SideConfig => ({ fighters: [f], leader: 0 });
 
@@ -34,7 +34,7 @@ const me = (s: BattleState) => s.sides[0].fighters[0]!;
 
 describe("bộ kỹ năng hệ Mộc", () => {
   it("đủ 6 ô với chi phí theo khung chung", () => {
-    assert.deepEqual(mainSkills("moc").map((d) => [d.slot, d.cost]), [[1, 35], [2, 30], [3, 40], [4, 60], [5, 100], [6, 50]]);
+    assert.deepEqual(legacyElementSkills("moc").map((d) => [d.slot, d.cost]), [[1, 35], [2, 30], [3, 40], [4, 60], [5, 100], [6, 50]]);
   });
 
   it("Lục Diệp Phong phá 5 ô ngẫu nhiên và thu hoạch chúng", () => {
