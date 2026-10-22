@@ -1,5 +1,6 @@
 "use client";
 
+import { comboDescription } from "@/core";
 import { skillText } from "../battle/labels";
 
 // Màn hồ sơ nhân vật kiểu bảng nhân vật trong game: bên trái chân dung với 9 ô trang bị xung quanh, thanh
@@ -608,9 +609,10 @@ export default function ProfileScreen({
                 </div>
               ))}
             </dl>
+            <p className="mt-3 text-xs text-amber-200" aria-label="Bị động phối hợp">{comboDescription(fighter)}</p>
             <ul className="mt-3 grid gap-2 text-xs sm:grid-cols-2" aria-label="Bộ kỹ năng nhân vật">
               {characterSkills(fighter.profession, fighter.element, character).map(def => <li key={def.id} title={skillText(scaleSkill(def, progress.skillLevels[mainSlotKey(def.slot!)] ?? 1))}>
-                {def.name} · ô {def.slot} · {def.slot === 5 ? "Tuyệt chiêu nhân vật" : def.profession ? "Nghề" : "Hệ"} · mở cấp {MAIN_SLOT_UNLOCK[def.slot!]}
+                {def.name} · ô {def.slot} · {def.ultimate === true ? "Tuyệt chiêu nhân vật" : def.profession ? "Nghề" : "Hệ"} · mở cấp {MAIN_SLOT_UNLOCK[def.slot!]}
               </li>)}
             </ul>
             {(bonuses.length > 0 || ultimate) && (
@@ -625,14 +627,14 @@ export default function ProfileScreen({
                 ))}
                 {ultimate && (
                   <li>
-                    Kỹ năng riêng (ô 5):{" "}
+                    Kỹ năng riêng (ô 4):{" "}
                     <span className="font-semibold text-amber-200">
                       {ultimate.name}
                     </span>
-                    {progress.level < MAIN_SLOT_UNLOCK[5]! && (
+                    {progress.level < MAIN_SLOT_UNLOCK[4]! && (
                       <span className="opacity-70">
                         {" "}
-                        (mở ở cấp {MAIN_SLOT_UNLOCK[5]})
+                        (mở ở cấp {MAIN_SLOT_UNLOCK[4]})
                       </span>
                     )}
                   </li>

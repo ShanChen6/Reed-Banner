@@ -1,5 +1,11 @@
 # Nhật ký thay đổi thiết kế
 
+## 22/10/2026 — kỹ năng phiên bản 2 và phối hợp đồng đội
+
+- Đổi tuyệt chiêu sang ô4/cấp10, nghề nâng cao sang ô5/cấp15; chuyển khóa đầu tư o4/o5 có marker, không mất điểm.
+- Bổ sung sáu mẫu bị động phối hợp cho 61 nhân vật và builder NPC; mở điều kiện thực, người chơi tự chọn hành động tận dụng, giới hạn cơ hội và không tạo chuỗi tự động.
+- UI/AI đọc cấu hình chung; giữ nguyên Tinh thần A, lương, chỉ số và preset trùm. [Thiết kế](design/21-combo-dong-doi.md).
+
 ## 22/10/2026 — thử nghiệm Tinh thần F
 
 - Thêm F vào cấu hình thử nghiệm chung: giảm 5/lượt từ25, giữ hệ số ATK/DEF 100%, hồi/Khiên mới có sàn20% theo người nhận. Mặc định vẫn A.

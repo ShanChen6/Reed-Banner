@@ -1,3 +1,11 @@
+# Historical replay requires its original gameplay/AI; never mix the combo revision with archived outcomes.
+import hashlib
+import json
+from pathlib import Path
+_archived=json.loads(Path('docs/reports/2026-10-22-spirit/source-sha256.json').read_text())
+for _path in ['src/core/battle/battle.ts','src/core/battle/rules.ts','src/core/ai/ai.ts','src/core/sim/audit.ts']:
+    if hashlib.sha256(Path(_path).read_bytes()).hexdigest()!=_archived[_path]:
+        raise RuntimeError('Archived A-E trace source mismatch: use PR #108 to reproduce old gameplay, or scripts/combo-traces.ts for the new system.')
 import json,pathlib,subprocess,sys
 root=pathlib.Path(sys.argv[1] if len(sys.argv)>1 else '/workspace/spirit-audit');rows={r: [json.loads(x) for x in (root/f'spirit-{r}.jsonl').read_text().splitlines()] for r in 'ABCDE'}
 a={r['caseId']:r for r in rows['A']};c={r['caseId']:r for r in rows['C']}

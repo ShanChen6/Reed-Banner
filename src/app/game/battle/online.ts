@@ -1,5 +1,6 @@
 // Gọi API trận online (/api/battles). Server có thẩm quyền: client chỉ gửi ý định và hiển thị kết quả.
 
+import { profileActionPayload } from "@/core";
 import type {
   ArenaMember,
   BattleEvent,
@@ -223,7 +224,7 @@ export function fetchProfile(): Promise<ProfileResponse> {
 export function sendProfileAction(
   action: ProfileAction,
 ): Promise<ProfileResponse> {
-  return callProfile({ method: "POST", body: JSON.stringify({ action }) });
+  return callProfile({ method: "POST", body: JSON.stringify({ action: profileActionPayload(action) }) });
 }
 
 export const ONLINE_ERROR_TEXT: Record<string, string> = {

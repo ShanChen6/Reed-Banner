@@ -1,0 +1,17 @@
+dataset,passive,opened,used,expired,broken,pending
+screen-on,coordination,291,119,150,16,6
+screen-on,interdiction,152,20,101,31,0
+screen-on,pursuit,51,18,22,11,0
+screen-on,renewal,644,167,376,60,41
+screen-on,resonance,20,11,7,2,0
+screen-on,retaliation,174,43,124,5,2
+focused-on,coordination,15,5,8,2,0
+focused-on,interdiction,21,1,8,12,0
+focused-on,pursuit,25,11,7,7,0
+focused-on,renewal,109,19,73,6,11
+focused-on,resonance,1,1,0,0,0
+focused-on,retaliation,25,10,15,0,0
+campaign-on,coordination,7,3,4,0,0
+campaign-on,renewal,17,6,6,3,2
+campaign-on,resonance,2,0,2,0,0
+campaign-on,retaliation,2,2,0,0,0

@@ -4,6 +4,7 @@
 
 import type { Difficulty } from "../ai";
 import {
+  withComboPassive,
   ELEMENTS,
   PROFESSIONS,
   type Element,
@@ -134,7 +135,7 @@ export function ghostTeam(
   defense: ArenaDefense,
   name: string,
 ): FighterConfig[] {
-  return defense.team.map((f, i) => (i === 0 ? { ...f, name } : f));
+  return defense.team.map((f, i) => withComboPassive(i === 0 ? { ...f, name } : f));
 }
 
 /** Điểm thay đổi sau một trận: người đánh theo ARENA_K, người phòng thủ ngược dấu theo ARENA_DEFENDER_K. */

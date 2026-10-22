@@ -1,5 +1,7 @@
 # Nhân vật, nghề & kỹ năng
 
+> Cập nhật tiếp theo: [kỹ năng phiên bản 2 và combo đồng đội](21-combo-dong-doi.md). Layout mới đổi tuyệt chiêu sang ô 4, nghề nâng cao sang ô 5, có chuyển hồ sơ giữ điểm. Các định nghĩa legacy/lịch sử bên dưới cần đọc cùng tài liệu phiên bản 2.
+
 > Cập nhật: 20/10/2026
 >
 > Các con số là **điểm xuất phát**. Script cân bằng sẽ chỉnh lại.

@@ -4,6 +4,7 @@
 
 import {
   getSkill,
+  PROFESSION_COMBO,
   characterSkills,
   legacyHeroSkills,
   SKILL_SLOT_ORDER,
@@ -196,7 +197,7 @@ function scaleStats(f: FighterConfig, level: number): FighterConfig {
 
 /**
  * Nhân vật chính theo tiến trình: chỉ mang kỹ năng đã mở, chỉ số và cấp kỹ năng theo cấp. `character` là
- * tướng lịch sử: ô 5 thay bằng chiêu riêng của người đó.
+ * tướng lịch sử: ô 4 thay bằng chiêu riêng của người đó.
  */
 export function buildMain(
   p: CharacterProgress,
@@ -239,7 +240,7 @@ export function buildCampaignLeader(level: number, element: Element, profession:
 
 /**
  * Nhân vật kèm theo tiến trình (tướng thường, tướng lịch sử, sứ quân): dựng như nhân vật chính với nghề,
- * nguyên tố và kỹ năng ô 5 riêng.
+ * nguyên tố và kỹ năng ô 4 riêng.
  */
 export function buildCompanion(
   base: FighterConfig,
@@ -249,6 +250,7 @@ export function buildCompanion(
     ...buildMain(p, base.element, base.profession, base.id),
     id: base.id,
     name: base.name,
+    comboPassive: base.comboPassive ?? PROFESSION_COMBO[base.profession],
   };
 }
 
@@ -269,7 +271,7 @@ export function buildAide(
   const skillLevels = Object.fromEntries(
     skills.map((id) => [id, p.skillLevels[id] ?? 1]),
   );
-  return { ...scaleStats(base, p.level), skills, skillLevels };
+  return { ...scaleStats(base, p.level), comboPassive: base.comboPassive ?? PROFESSION_COMBO[base.profession], skills, skillLevels };
 }
 
 /**
