@@ -1,0 +1,3709 @@
+{
+  "version": 3,
+  "defaultSpirit": "F",
+  "professionOpportunities": {
+    "pursuit": {
+      "id": "pursuit",
+      "name": "Thừa thắng",
+      "triggers": [
+        "armorBroken",
+        "dispelled"
+      ],
+      "payoff": "damage",
+      "value": 0.2,
+      "targeted": true,
+      "description": "Đồng đội phá giáp hoặc xua tan thành công: đòn kiếm/kỹ năng sát thương tiếp theo vào mục tiêu đó tăng 20% sát thương."
+    },
+    "resonance": {
+      "id": "resonance",
+      "name": "Hội tụ",
+      "triggers": [
+        "controlled"
+      ],
+      "payoff": "damage",
+      "value": 0.2,
+      "targeted": true,
+      "description": "Đồng đội áp Đóng băng/Câm lặng thành công: đòn kiếm/kỹ năng sát thương tiếp theo vào mục tiêu đó tăng 20% sát thương."
+    },
+    "retaliation": {
+      "id": "retaliation",
+      "name": "Hộ vệ phản kích",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "payoff": "damage",
+      "value": 0.2,
+      "targeted": false,
+      "receiverOnly": true,
+      "description": "Khiên do đồng đội chủ động cấp cho mình thực sự đỡ đòn kiếm/kỹ năng: đòn kiếm/kỹ năng sát thương tiếp theo tăng 20% sát thương."
+    },
+    "renewal": {
+      "id": "renewal",
+      "name": "Tiếp sức",
+      "triggers": [
+        "skillDamage"
+      ],
+      "payoff": "sustain",
+      "value": 0.25,
+      "targeted": false,
+      "description": "Đồng đội dùng kỹ năng gây mất HP thực: kỹ năng hồi/cấp Khiên hữu hiệu tiếp theo tăng 25% lượng gốc của các bước hồi/Khiên trực tiếp, trước hệ số Tinh thần của người nhận."
+    },
+    "interdiction": {
+      "id": "interdiction",
+      "name": "Đoạn tiếp tế",
+      "triggers": [
+        "controlled",
+        "dispelled"
+      ],
+      "payoff": "drain",
+      "value": 10,
+      "targeted": true,
+      "description": "Đồng đội khống chế hoặc xua tan thành công: kỹ năng trừ năng lượng tiếp theo vào mục tiêu đó trừ thêm 10, tối đa năng lượng đang có."
+    },
+    "coordination": {
+      "id": "coordination",
+      "name": "Hiệp lực",
+      "triggers": [
+        "healed",
+        "shieldAbsorbed"
+      ],
+      "payoff": "discount",
+      "value": 10,
+      "targeted": false,
+      "description": "Đồng đội dùng kỹ năng hồi HP thực hoặc Khiên do đồng đội cấp cho người khác đỡ đòn chủ động: kỹ năng tiếp theo giảm 10 năng lượng, không thấp hơn 0."
+    }
+  },
+  "chasePassives": {
+    "martial": {
+      "id": "martial",
+      "name": "Liên trảm",
+      "triggers": [
+        "armorBroken"
+      ],
+      "effect": "damage",
+      "value": 0.55,
+      "description": "Đồng đội phá giáp: truy kích mục tiêu bằng 55% ATK.",
+      "alliesOnly": true
+    },
+    "arcane": {
+      "id": "arcane",
+      "name": "Chú kích",
+      "triggers": [
+        "controlled"
+      ],
+      "effect": "damage",
+      "value": 0.5,
+      "description": "Đồng đội khống chế: truy kích mục tiêu bằng 50% ATK.",
+      "alliesOnly": true
+    },
+    "guardian": {
+      "id": "guardian",
+      "name": "Tiếp phòng",
+      "triggers": [
+        "healed"
+      ],
+      "effect": "shield",
+      "value": 0.06,
+      "description": "Đồng đội hồi HP thực: cấp Khiên bằng 6% HP tối đa người vừa được hồi.",
+      "alliesOnly": true
+    },
+    "medic": {
+      "id": "medic",
+      "name": "Cứu viện",
+      "triggers": [
+        "skillDamage"
+      ],
+      "effect": "heal",
+      "value": 0.05,
+      "description": "Đồng đội gây mất HP bằng kỹ năng: hồi người bị thương nặng nhất 5% HP tối đa.",
+      "alliesOnly": true
+    },
+    "strategist": {
+      "id": "strategist",
+      "name": "Thừa hư",
+      "triggers": [
+        "dispelled"
+      ],
+      "effect": "drain",
+      "value": 8,
+      "description": "Đồng đội xua tan: trừ thêm 8 năng lượng mục tiêu.",
+      "alliesOnly": true
+    },
+    "commander": {
+      "id": "commander",
+      "name": "Tiếp lệnh",
+      "triggers": [
+        "healed"
+      ],
+      "effect": "energy",
+      "value": 8,
+      "description": "Đồng đội hồi HP thực: cấp người vừa được hồi 8 năng lượng.",
+      "alliesOnly": true
+    },
+    "kim1": {
+      "id": "kim1",
+      "name": "Kim phá",
+      "triggers": [
+        "skillDamage"
+      ],
+      "effect": "armor",
+      "value": 0.1,
+      "description": "Kỹ năng gây mất HP: giảm DEF mục tiêu 10% trong 1 lượt.",
+      "alliesOnly": false
+    },
+    "kim2": {
+      "id": "kim2",
+      "name": "Kim truy",
+      "triggers": [
+        "armorBroken"
+      ],
+      "effect": "damage",
+      "value": 0.35,
+      "description": "Phá giáp thành công: truy kích bằng 35% ATK.",
+      "alliesOnly": false
+    },
+    "moc1": {
+      "id": "moc1",
+      "name": "Mộc sinh",
+      "triggers": [
+        "skillDamage"
+      ],
+      "effect": "heal",
+      "value": 0.04,
+      "description": "Kỹ năng gây mất HP: hồi người bị thương nặng nhất 4% HP tối đa.",
+      "alliesOnly": false
+    },
+    "moc2": {
+      "id": "moc2",
+      "name": "Mộc hộ",
+      "triggers": [
+        "healed"
+      ],
+      "effect": "shield",
+      "value": 0.04,
+      "description": "Hồi HP thực: cấp Khiên bằng 4% HP tối đa người được hồi.",
+      "alliesOnly": false
+    },
+    "thuy1": {
+      "id": "thuy1",
+      "name": "Thủy tiếp",
+      "triggers": [
+        "controlled"
+      ],
+      "effect": "heal",
+      "value": 0.05,
+      "description": "Khống chế thành công: hồi người bị thương nặng nhất 5% HP tối đa.",
+      "alliesOnly": false
+    },
+    "thuy2": {
+      "id": "thuy2",
+      "name": "Thủy dẫn",
+      "triggers": [
+        "healed"
+      ],
+      "effect": "energy",
+      "value": 6,
+      "description": "Hồi HP thực: cấp người được hồi 6 năng lượng.",
+      "alliesOnly": false
+    },
+    "hoa1": {
+      "id": "hoa1",
+      "name": "Hỏa truy",
+      "triggers": [
+        "armorBroken"
+      ],
+      "effect": "damage",
+      "value": 0.4,
+      "description": "Phá giáp thành công: truy kích bằng 40% ATK.",
+      "alliesOnly": false
+    },
+    "hoa2": {
+      "id": "hoa2",
+      "name": "Hỏa phá",
+      "triggers": [
+        "skillDamage"
+      ],
+      "effect": "armor",
+      "value": 0.12,
+      "description": "Kỹ năng gây mất HP: giảm DEF mục tiêu 12% trong 1 lượt.",
+      "alliesOnly": false
+    },
+    "tho1": {
+      "id": "tho1",
+      "name": "Thổ hộ",
+      "triggers": [
+        "healed"
+      ],
+      "effect": "shield",
+      "value": 0.05,
+      "description": "Hồi HP thực: cấp Khiên bằng 5% HP tối đa người được hồi.",
+      "alliesOnly": false
+    },
+    "tho2": {
+      "id": "tho2",
+      "name": "Thổ chấn",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "effect": "damage",
+      "value": 0.35,
+      "description": "Khiên đồng đội thực sự đỡ đòn: truy kích một địch bằng 35% ATK.",
+      "alliesOnly": false
+    },
+    "loi1": {
+      "id": "loi1",
+      "name": "Lôi truy",
+      "triggers": [
+        "controlled"
+      ],
+      "effect": "damage",
+      "value": 0.45,
+      "description": "Khống chế thành công: truy kích bằng 45% ATK.",
+      "alliesOnly": false
+    },
+    "loi2": {
+      "id": "loi2",
+      "name": "Lôi đoạt",
+      "triggers": [
+        "skillDamage"
+      ],
+      "effect": "drain",
+      "value": 6,
+      "description": "Kỹ năng gây mất HP: trừ mục tiêu 6 năng lượng.",
+      "alliesOnly": false
+    },
+    "phong1": {
+      "id": "phong1",
+      "name": "Phong tiếp",
+      "triggers": [
+        "dispelled"
+      ],
+      "effect": "damage",
+      "value": 0.4,
+      "description": "Xua tan thành công: truy kích bằng 40% ATK.",
+      "alliesOnly": false
+    },
+    "phong2": {
+      "id": "phong2",
+      "name": "Phong dẫn",
+      "triggers": [
+        "skillDamage"
+      ],
+      "effect": "energy",
+      "value": 5,
+      "description": "Kỹ năng gây mất HP: cấp người tạo tín hiệu 5 năng lượng.",
+      "alliesOnly": false
+    }
+  },
+  "dinhBoLinhUltimates": [
+    {
+      "id": "dbl_tuongSi_kim",
+      "name": "Bình định · Kim",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "tuongSi",
+      "element": "kim",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_tuongSi_moc",
+      "name": "Bình định · Mộc",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "tuongSi",
+      "element": "moc",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "heal",
+          "to": "team",
+          "ratio": 0.1
+        }
+      ]
+    },
+    {
+      "id": "dbl_tuongSi_thuy",
+      "name": "Bình định · Thủy",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "tuongSi",
+      "element": "thuy",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "cleanse",
+          "to": "team"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.08,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_tuongSi_hoa",
+      "name": "Bình định · Hỏa",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "tuongSi",
+      "element": "hoa",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_tuongSi_tho",
+      "name": "Bình định · Thổ",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "tuongSi",
+      "element": "tho",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.12,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_tuongSi_loi",
+      "name": "Bình định · Lôi",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "tuongSi",
+      "element": "loi",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "enemies",
+          "amount": -15
+        }
+      ]
+    },
+    {
+      "id": "dbl_tuongSi_phong",
+      "name": "Bình định · Phong",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "tuongSi",
+      "element": "phong",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 15
+        }
+      ]
+    },
+    {
+      "id": "dbl_phapSu_kim",
+      "name": "Thiên uy · Kim",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "phapSu",
+      "element": "kim",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_phapSu_moc",
+      "name": "Thiên uy · Mộc",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "phapSu",
+      "element": "moc",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "heal",
+          "to": "team",
+          "ratio": 0.1
+        }
+      ]
+    },
+    {
+      "id": "dbl_phapSu_thuy",
+      "name": "Thiên uy · Thủy",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "phapSu",
+      "element": "thuy",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "cleanse",
+          "to": "team"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.08,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_phapSu_hoa",
+      "name": "Thiên uy · Hỏa",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "phapSu",
+      "element": "hoa",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_phapSu_tho",
+      "name": "Thiên uy · Thổ",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "phapSu",
+      "element": "tho",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.12,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_phapSu_loi",
+      "name": "Thiên uy · Lôi",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "phapSu",
+      "element": "loi",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "energy",
+          "to": "enemies",
+          "amount": -15
+        }
+      ]
+    },
+    {
+      "id": "dbl_phapSu_phong",
+      "name": "Thiên uy · Phong",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "phapSu",
+      "element": "phong",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 15
+        }
+      ]
+    },
+    {
+      "id": "dbl_binhLinh_kim",
+      "name": "Trấn quốc · Kim",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "binhLinh",
+      "element": "kim",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.15,
+          "ofMaxHp": true,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_binhLinh_moc",
+      "name": "Trấn quốc · Mộc",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "binhLinh",
+      "element": "moc",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.15,
+          "ofMaxHp": true,
+          "turns": 2
+        },
+        {
+          "type": "heal",
+          "to": "team",
+          "ratio": 0.1
+        }
+      ]
+    },
+    {
+      "id": "dbl_binhLinh_thuy",
+      "name": "Trấn quốc · Thủy",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "binhLinh",
+      "element": "thuy",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.15,
+          "ofMaxHp": true,
+          "turns": 2
+        },
+        {
+          "type": "cleanse",
+          "to": "team"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.08,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_binhLinh_hoa",
+      "name": "Trấn quốc · Hỏa",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "binhLinh",
+      "element": "hoa",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.15,
+          "ofMaxHp": true,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_binhLinh_tho",
+      "name": "Trấn quốc · Thổ",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "binhLinh",
+      "element": "tho",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.15,
+          "ofMaxHp": true,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.12,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_binhLinh_loi",
+      "name": "Trấn quốc · Lôi",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "binhLinh",
+      "element": "loi",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.15,
+          "ofMaxHp": true,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "enemies",
+          "amount": -15
+        }
+      ]
+    },
+    {
+      "id": "dbl_binhLinh_phong",
+      "name": "Trấn quốc · Phong",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "binhLinh",
+      "element": "phong",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.15,
+          "ofMaxHp": true,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 15
+        }
+      ]
+    },
+    {
+      "id": "dbl_ySu_kim",
+      "name": "Hưng sinh · Kim",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "ySu",
+      "element": "kim",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.28
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_ySu_moc",
+      "name": "Hưng sinh · Mộc",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "ySu",
+      "element": "moc",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.28
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "heal",
+          "to": "team",
+          "ratio": 0.1
+        }
+      ]
+    },
+    {
+      "id": "dbl_ySu_thuy",
+      "name": "Hưng sinh · Thủy",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "ySu",
+      "element": "thuy",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.28
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "cleanse",
+          "to": "team"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.08,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_ySu_hoa",
+      "name": "Hưng sinh · Hỏa",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "ySu",
+      "element": "hoa",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.28
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_ySu_tho",
+      "name": "Hưng sinh · Thổ",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "ySu",
+      "element": "tho",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.28
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.12,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_ySu_loi",
+      "name": "Hưng sinh · Lôi",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "ySu",
+      "element": "loi",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.28
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "energy",
+          "to": "enemies",
+          "amount": -15
+        }
+      ]
+    },
+    {
+      "id": "dbl_ySu_phong",
+      "name": "Hưng sinh · Phong",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "ySu",
+      "element": "phong",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.28
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 15
+        }
+      ]
+    },
+    {
+      "id": "dbl_muuSi_kim",
+      "name": "Định kế · Kim",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "muuSi",
+      "element": "kim",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "damage",
+          "atk": 2.3
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_muuSi_moc",
+      "name": "Định kế · Mộc",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "muuSi",
+      "element": "moc",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "damage",
+          "atk": 2.3
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "heal",
+          "to": "team",
+          "ratio": 0.1
+        }
+      ]
+    },
+    {
+      "id": "dbl_muuSi_thuy",
+      "name": "Định kế · Thủy",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "muuSi",
+      "element": "thuy",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "damage",
+          "atk": 2.3
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "cleanse",
+          "to": "team"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.08,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_muuSi_hoa",
+      "name": "Định kế · Hỏa",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "muuSi",
+      "element": "hoa",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "damage",
+          "atk": 2.3
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_muuSi_tho",
+      "name": "Định kế · Thổ",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "muuSi",
+      "element": "tho",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "damage",
+          "atk": 2.3
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.12,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_muuSi_loi",
+      "name": "Định kế · Lôi",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "muuSi",
+      "element": "loi",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "damage",
+          "atk": 2.3
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "energy",
+          "to": "enemies",
+          "amount": -15
+        }
+      ]
+    },
+    {
+      "id": "dbl_muuSi_phong",
+      "name": "Định kế · Phong",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "muuSi",
+      "element": "phong",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "damage",
+          "atk": 2.3
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 15
+        }
+      ]
+    },
+    {
+      "id": "dbl_quanSu_kim",
+      "name": "Nhất thống · Kim",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "quanSu",
+      "element": "kim",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 20
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_quanSu_moc",
+      "name": "Nhất thống · Mộc",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "quanSu",
+      "element": "moc",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 20
+        },
+        {
+          "type": "heal",
+          "to": "team",
+          "ratio": 0.1
+        }
+      ]
+    },
+    {
+      "id": "dbl_quanSu_thuy",
+      "name": "Nhất thống · Thủy",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "quanSu",
+      "element": "thuy",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 20
+        },
+        {
+          "type": "cleanse",
+          "to": "team"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.08,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_quanSu_hoa",
+      "name": "Nhất thống · Hỏa",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "quanSu",
+      "element": "hoa",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 20
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_quanSu_tho",
+      "name": "Nhất thống · Thổ",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "quanSu",
+      "element": "tho",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 20
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.12,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_quanSu_loi",
+      "name": "Nhất thống · Lôi",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "quanSu",
+      "element": "loi",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 20
+        },
+        {
+          "type": "energy",
+          "to": "enemies",
+          "amount": -15
+        }
+      ]
+    },
+    {
+      "id": "dbl_quanSu_phong",
+      "name": "Nhất thống · Phong",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "quanSu",
+      "element": "phong",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 20
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 15
+        }
+      ]
+    }
+  ],
+  "dinhBoLinh": [
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "tuongSi",
+      "element": "kim",
+      "active": [
+        "role_tramKich",
+        "element_luyenKimThanhKiem",
+        "role_phaTran",
+        "dbl_tuongSi_kim",
+        "role_doatMenh",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "tuongSi",
+      "element": "moc",
+      "active": [
+        "role_tramKich",
+        "element_lucDiepPhong",
+        "role_phaTran",
+        "dbl_tuongSi_moc",
+        "role_doatMenh",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "tuongSi",
+      "element": "thuy",
+      "active": [
+        "role_tramKich",
+        "element_thuyNguyetTuLinh",
+        "role_phaTran",
+        "dbl_tuongSi_thuy",
+        "role_doatMenh",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "tuongSi",
+      "element": "hoa",
+      "active": [
+        "role_tramKich",
+        "element_phongHoaThieuDoanh",
+        "role_phaTran",
+        "dbl_tuongSi_hoa",
+        "role_doatMenh",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "tuongSi",
+      "element": "tho",
+      "active": [
+        "role_tramKich",
+        "element_hauThoTichLuong",
+        "role_phaTran",
+        "dbl_tuongSi_tho",
+        "role_doatMenh",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "tuongSi",
+      "element": "loi",
+      "active": [
+        "role_tramKich",
+        "element_loiTruGiangThe",
+        "role_phaTran",
+        "dbl_tuongSi_loi",
+        "role_doatMenh",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "tuongSi",
+      "element": "phong",
+      "active": [
+        "role_tramKich",
+        "element_phongQuyenTanVan",
+        "role_phaTran",
+        "dbl_tuongSi_phong",
+        "role_doatMenh",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "phapSu",
+      "element": "kim",
+      "active": [
+        "role_phepLan",
+        "element_luyenKimThanhKiem",
+        "role_nguHanhAn",
+        "dbl_phapSu_kim",
+        "role_thienDiaCong",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "phapSu",
+      "element": "moc",
+      "active": [
+        "role_phepLan",
+        "element_lucDiepPhong",
+        "role_nguHanhAn",
+        "dbl_phapSu_moc",
+        "role_thienDiaCong",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "phapSu",
+      "element": "thuy",
+      "active": [
+        "role_phepLan",
+        "element_thuyNguyetTuLinh",
+        "role_nguHanhAn",
+        "dbl_phapSu_thuy",
+        "role_thienDiaCong",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "phapSu",
+      "element": "hoa",
+      "active": [
+        "role_phepLan",
+        "element_phongHoaThieuDoanh",
+        "role_nguHanhAn",
+        "dbl_phapSu_hoa",
+        "role_thienDiaCong",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "phapSu",
+      "element": "tho",
+      "active": [
+        "role_phepLan",
+        "element_hauThoTichLuong",
+        "role_nguHanhAn",
+        "dbl_phapSu_tho",
+        "role_thienDiaCong",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "phapSu",
+      "element": "loi",
+      "active": [
+        "role_phepLan",
+        "element_loiTruGiangThe",
+        "role_nguHanhAn",
+        "dbl_phapSu_loi",
+        "role_thienDiaCong",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "phapSu",
+      "element": "phong",
+      "active": [
+        "role_phepLan",
+        "element_phongQuyenTanVan",
+        "role_nguHanhAn",
+        "dbl_phapSu_phong",
+        "role_thienDiaCong",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "binhLinh",
+      "element": "kim",
+      "active": [
+        "role_thuThanh",
+        "element_luyenKimThanhKiem",
+        "role_tuongKhien",
+        "dbl_binhLinh_kim",
+        "role_phanKich",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "binhLinh",
+      "element": "moc",
+      "active": [
+        "role_thuThanh",
+        "element_lucDiepPhong",
+        "role_tuongKhien",
+        "dbl_binhLinh_moc",
+        "role_phanKich",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "binhLinh",
+      "element": "thuy",
+      "active": [
+        "role_thuThanh",
+        "element_thuyNguyetTuLinh",
+        "role_tuongKhien",
+        "dbl_binhLinh_thuy",
+        "role_phanKich",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "binhLinh",
+      "element": "hoa",
+      "active": [
+        "role_thuThanh",
+        "element_phongHoaThieuDoanh",
+        "role_tuongKhien",
+        "dbl_binhLinh_hoa",
+        "role_phanKich",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "binhLinh",
+      "element": "tho",
+      "active": [
+        "role_thuThanh",
+        "element_hauThoTichLuong",
+        "role_tuongKhien",
+        "dbl_binhLinh_tho",
+        "role_phanKich",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "binhLinh",
+      "element": "loi",
+      "active": [
+        "role_thuThanh",
+        "element_loiTruGiangThe",
+        "role_tuongKhien",
+        "dbl_binhLinh_loi",
+        "role_phanKich",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "binhLinh",
+      "element": "phong",
+      "active": [
+        "role_thuThanh",
+        "element_phongQuyenTanVan",
+        "role_tuongKhien",
+        "dbl_binhLinh_phong",
+        "role_phanKich",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "ySu",
+      "element": "kim",
+      "active": [
+        "role_linhDuoc",
+        "element_luyenKimThanhKiem",
+        "role_duongSinh",
+        "dbl_ySu_kim",
+        "role_teDo",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "renewal",
+        "medic",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "ySu",
+      "element": "moc",
+      "active": [
+        "role_linhDuoc",
+        "element_lucDiepPhong",
+        "role_duongSinh",
+        "dbl_ySu_moc",
+        "role_teDo",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "renewal",
+        "medic",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "ySu",
+      "element": "thuy",
+      "active": [
+        "role_linhDuoc",
+        "element_thuyNguyetTuLinh",
+        "role_duongSinh",
+        "dbl_ySu_thuy",
+        "role_teDo",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "renewal",
+        "medic",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "ySu",
+      "element": "hoa",
+      "active": [
+        "role_linhDuoc",
+        "element_phongHoaThieuDoanh",
+        "role_duongSinh",
+        "dbl_ySu_hoa",
+        "role_teDo",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "renewal",
+        "medic",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "ySu",
+      "element": "tho",
+      "active": [
+        "role_linhDuoc",
+        "element_hauThoTichLuong",
+        "role_duongSinh",
+        "dbl_ySu_tho",
+        "role_teDo",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "renewal",
+        "medic",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "ySu",
+      "element": "loi",
+      "active": [
+        "role_linhDuoc",
+        "element_loiTruGiangThe",
+        "role_duongSinh",
+        "dbl_ySu_loi",
+        "role_teDo",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "renewal",
+        "medic",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "ySu",
+      "element": "phong",
+      "active": [
+        "role_linhDuoc",
+        "element_phongQuyenTanVan",
+        "role_duongSinh",
+        "dbl_ySu_phong",
+        "role_teDo",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "renewal",
+        "medic",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "muuSi",
+      "element": "kim",
+      "active": [
+        "role_muaChuoc",
+        "element_luyenKimThanhKiem",
+        "role_lyGian",
+        "dbl_muuSi_kim",
+        "role_catQuanLuong",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "muuSi",
+      "element": "moc",
+      "active": [
+        "role_muaChuoc",
+        "element_lucDiepPhong",
+        "role_lyGian",
+        "dbl_muuSi_moc",
+        "role_catQuanLuong",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "muuSi",
+      "element": "thuy",
+      "active": [
+        "role_muaChuoc",
+        "element_thuyNguyetTuLinh",
+        "role_lyGian",
+        "dbl_muuSi_thuy",
+        "role_catQuanLuong",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "muuSi",
+      "element": "hoa",
+      "active": [
+        "role_muaChuoc",
+        "element_phongHoaThieuDoanh",
+        "role_lyGian",
+        "dbl_muuSi_hoa",
+        "role_catQuanLuong",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "muuSi",
+      "element": "tho",
+      "active": [
+        "role_muaChuoc",
+        "element_hauThoTichLuong",
+        "role_lyGian",
+        "dbl_muuSi_tho",
+        "role_catQuanLuong",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "muuSi",
+      "element": "loi",
+      "active": [
+        "role_muaChuoc",
+        "element_loiTruGiangThe",
+        "role_lyGian",
+        "dbl_muuSi_loi",
+        "role_catQuanLuong",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "muuSi",
+      "element": "phong",
+      "active": [
+        "role_muaChuoc",
+        "element_phongQuyenTanVan",
+        "role_lyGian",
+        "dbl_muuSi_phong",
+        "role_catQuanLuong",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "quanSu",
+      "element": "kim",
+      "active": [
+        "role_nghiBinh",
+        "element_luyenKimThanhKiem",
+        "role_hieuLenh",
+        "dbl_quanSu_kim",
+        "role_phaKe",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "quanSu",
+      "element": "moc",
+      "active": [
+        "role_nghiBinh",
+        "element_lucDiepPhong",
+        "role_hieuLenh",
+        "dbl_quanSu_moc",
+        "role_phaKe",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "quanSu",
+      "element": "thuy",
+      "active": [
+        "role_nghiBinh",
+        "element_thuyNguyetTuLinh",
+        "role_hieuLenh",
+        "dbl_quanSu_thuy",
+        "role_phaKe",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "quanSu",
+      "element": "hoa",
+      "active": [
+        "role_nghiBinh",
+        "element_phongHoaThieuDoanh",
+        "role_hieuLenh",
+        "dbl_quanSu_hoa",
+        "role_phaKe",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "quanSu",
+      "element": "tho",
+      "active": [
+        "role_nghiBinh",
+        "element_hauThoTichLuong",
+        "role_hieuLenh",
+        "dbl_quanSu_tho",
+        "role_phaKe",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "quanSu",
+      "element": "loi",
+      "active": [
+        "role_nghiBinh",
+        "element_loiTruGiangThe",
+        "role_hieuLenh",
+        "dbl_quanSu_loi",
+        "role_phaKe",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "quanSu",
+      "element": "phong",
+      "active": [
+        "role_nghiBinh",
+        "element_phongQuyenTanVan",
+        "role_hieuLenh",
+        "dbl_quanSu_phong",
+        "role_phaKe",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "phong1",
+        "phong2"
+      ]
+    }
+  ],
+  "companions": [
+    {
+      "id": "haVan",
+      "name": "Hà Vân",
+      "profession": "phapSu",
+      "element": "hoa",
+      "active": [
+        "role_phepLan",
+        "element_phongHoaThieuDoanh",
+        "role_nguHanhAn",
+        "hoaVuLieuNguyen",
+        "role_thienDiaCong",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "leThach",
+      "name": "Lê Thạch",
+      "profession": "binhLinh",
+      "element": "tho",
+      "active": [
+        "role_thuThanh",
+        "element_hauThoTichLuong",
+        "role_tuongKhien",
+        "tranSonHoQuan",
+        "role_phanKich",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "id": "maiThanh",
+      "name": "Mai Thanh",
+      "profession": "ySu",
+      "element": "thuy",
+      "active": [
+        "role_linhDuoc",
+        "element_thuyNguyetTuLinh",
+        "role_duongSinh",
+        "camLoHoiXuan",
+        "role_teDo",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "renewal",
+        "medic",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "toKim",
+      "name": "Tô Kim",
+      "profession": "muuSi",
+      "element": "kim",
+      "active": [
+        "role_muaChuoc",
+        "element_luyenKimThanhKiem",
+        "role_lyGian",
+        "kimNganLyTan",
+        "role_catQuanLuong",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "phungPhong",
+      "name": "Phùng Phong",
+      "profession": "quanSu",
+      "element": "phong",
+      "active": [
+        "role_nghiBinh",
+        "element_phongQuyenTanVan",
+        "role_hieuLenh",
+        "phongVanBienTran",
+        "role_phaKe",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "id": "tranCuong",
+      "name": "Trần Cương",
+      "profession": "tuongSi",
+      "element": "kim",
+      "active": [
+        "role_tramKich",
+        "element_luyenKimThanhKiem",
+        "role_phaTran",
+        "kimQuaThietMa",
+        "role_doatMenh",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "lyLiet",
+      "name": "Lý Liệt",
+      "profession": "tuongSi",
+      "element": "hoa",
+      "active": [
+        "role_tramKich",
+        "element_phongHoaThieuDoanh",
+        "role_phaTran",
+        "xichHoaDoatKy",
+        "role_doatMenh",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "daoLam",
+      "name": "Đào Lam",
+      "profession": "phapSu",
+      "element": "thuy",
+      "active": [
+        "role_phepLan",
+        "element_thuyNguyetTuLinh",
+        "role_nguHanhAn",
+        "bangHaPhongToa",
+        "role_thienDiaCong",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "vuLoi",
+      "name": "Vũ Lôi",
+      "profession": "phapSu",
+      "element": "loi",
+      "active": [
+        "role_phepLan",
+        "element_loiTruGiangThe",
+        "role_nguHanhAn",
+        "thienLoiGiangThe",
+        "role_thienDiaCong",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "id": "hoangMoc",
+      "name": "Hoàng Mộc",
+      "profession": "binhLinh",
+      "element": "moc",
+      "active": [
+        "role_thuThanh",
+        "element_lucDiepPhong",
+        "role_tuongKhien",
+        "reGiaGiuThanh",
+        "role_phanKich",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "id": "caoKien",
+      "name": "Cao Kiên",
+      "profession": "binhLinh",
+      "element": "kim",
+      "active": [
+        "role_thuThanh",
+        "element_luyenKimThanhKiem",
+        "role_tuongKhien",
+        "thietBichDongThanh",
+        "role_phanKich",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "lucDiep",
+      "name": "Lục Diệp",
+      "profession": "ySu",
+      "element": "moc",
+      "active": [
+        "role_linhDuoc",
+        "element_lucDiepPhong",
+        "role_duongSinh",
+        "xuanMocVanSinh",
+        "role_teDo",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "renewal",
+        "medic",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "id": "bachSuong",
+      "name": "Bạch Sương",
+      "profession": "ySu",
+      "element": "phong",
+      "active": [
+        "role_linhDuoc",
+        "element_phongQuyenTanVan",
+        "role_duongSinh",
+        "gioLanhTayUe",
+        "role_teDo",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "renewal",
+        "medic",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "id": "ninhHoa",
+      "name": "Ninh Hỏa",
+      "profession": "muuSi",
+      "element": "hoa",
+      "active": [
+        "role_muaChuoc",
+        "element_phongHoaThieuDoanh",
+        "role_lyGian",
+        "hoaThieuKhoLuong",
+        "role_catQuanLuong",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "quachAn",
+      "name": "Quách Ẩn",
+      "profession": "muuSi",
+      "element": "thuy",
+      "active": [
+        "role_muaChuoc",
+        "element_thuyNguyetTuLinh",
+        "role_lyGian",
+        "thuyDonLyGian",
+        "role_catQuanLuong",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "taThach",
+      "name": "Tạ Thạch",
+      "profession": "quanSu",
+      "element": "tho",
+      "active": [
+        "role_nghiBinh",
+        "element_hauThoTichLuong",
+        "role_hieuLenh",
+        "batTranThachLuy",
+        "role_phaKe",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "id": "macVan",
+      "name": "Mạc Vân",
+      "profession": "quanSu",
+      "element": "loi",
+      "active": [
+        "role_nghiBinh",
+        "element_loiTruGiangThe",
+        "role_hieuLenh",
+        "loiTranKinhHon",
+        "role_phaKe",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "id": "lamTung",
+      "name": "Lâm Tùng",
+      "profession": "tuongSi",
+      "element": "moc",
+      "active": [
+        "role_tramKich",
+        "element_lucDiepPhong",
+        "role_phaTran",
+        "trucLamPhaTran",
+        "role_doatMenh",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "id": "hoLang",
+      "name": "Hồ Lãng",
+      "profession": "tuongSi",
+      "element": "thuy",
+      "active": [
+        "role_tramKich",
+        "element_thuyNguyetTuLinh",
+        "role_phaTran",
+        "langDaoTram",
+        "role_doatMenh",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "khaSon",
+      "name": "Kha Sơn",
+      "profession": "tuongSi",
+      "element": "tho",
+      "active": [
+        "role_tramKich",
+        "element_hauThoTichLuong",
+        "role_phaTran",
+        "sonHaTranKich",
+        "role_doatMenh",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "id": "tongTan",
+      "name": "Tống Tấn",
+      "profession": "tuongSi",
+      "element": "loi",
+      "active": [
+        "role_tramKich",
+        "element_loiTruGiangThe",
+        "role_phaTran",
+        "loiDaoLienTram",
+        "role_doatMenh",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "id": "huaLang",
+      "name": "Hứa Lăng",
+      "profession": "tuongSi",
+      "element": "phong",
+      "active": [
+        "role_tramKich",
+        "element_phongQuyenTanVan",
+        "role_phaTran",
+        "truyPhongDoatMenh",
+        "role_doatMenh",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "id": "chuNgan",
+      "name": "Chu Ngân",
+      "profession": "phapSu",
+      "element": "kim",
+      "active": [
+        "role_phepLan",
+        "element_luyenKimThanhKiem",
+        "role_nguHanhAn",
+        "nganChamTanXa",
+        "role_thienDiaCong",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "damThao",
+      "name": "Đàm Thảo",
+      "profession": "phapSu",
+      "element": "moc",
+      "active": [
+        "role_phepLan",
+        "element_lucDiepPhong",
+        "role_nguHanhAn",
+        "kinhCucTrienThan",
+        "role_thienDiaCong",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "id": "doanNham",
+      "name": "Doãn Nham",
+      "profession": "phapSu",
+      "element": "tho",
+      "active": [
+        "role_phepLan",
+        "element_hauThoTichLuong",
+        "role_nguHanhAn",
+        "diaMachBungPhat",
+        "role_thienDiaCong",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "id": "lieuYen",
+      "name": "Liễu Yên",
+      "profession": "phapSu",
+      "element": "phong",
+      "active": [
+        "role_phepLan",
+        "element_phongQuyenTanVan",
+        "role_nguHanhAn",
+        "phongAnCuongLuu",
+        "role_thienDiaCong",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "id": "thaiHa",
+      "name": "Thái Hà",
+      "profession": "binhLinh",
+      "element": "thuy",
+      "active": [
+        "role_thuThanh",
+        "element_thuyNguyetTuLinh",
+        "role_tuongKhien",
+        "thuyTraiLienHoan",
+        "role_phanKich",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "truongViem",
+      "name": "Trương Viêm",
+      "profession": "binhLinh",
+      "element": "hoa",
+      "active": [
+        "role_thuThanh",
+        "element_phongHoaThieuDoanh",
+        "role_tuongKhien",
+        "viemGiapHoDoanh",
+        "role_phanKich",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "ongChan",
+      "name": "Ông Chấn",
+      "profession": "binhLinh",
+      "element": "loi",
+      "active": [
+        "role_thuThanh",
+        "element_loiTruGiangThe",
+        "role_tuongKhien",
+        "chanLoiThietVe",
+        "role_phanKich",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "id": "manhTuong",
+      "name": "Mạnh Tường",
+      "profession": "binhLinh",
+      "element": "phong",
+      "active": [
+        "role_thuThanh",
+        "element_phongQuyenTanVan",
+        "role_tuongKhien",
+        "phongLuyHoKy",
+        "role_phanKich",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "id": "chauNgoc",
+      "name": "Châu Ngọc",
+      "profession": "ySu",
+      "element": "kim",
+      "active": [
+        "role_linhDuoc",
+        "element_luyenKimThanhKiem",
+        "role_duongSinh",
+        "kimChamDoMenh",
+        "role_teDo",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "renewal",
+        "medic",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "hongDan",
+      "name": "Hồng Đan",
+      "profession": "ySu",
+      "element": "hoa",
+      "active": [
+        "role_linhDuoc",
+        "element_phongHoaThieuDoanh",
+        "role_duongSinh",
+        "danHoaHoiNguyen",
+        "role_teDo",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "renewal",
+        "medic",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "beLien",
+      "name": "Bế Liên",
+      "profession": "ySu",
+      "element": "tho",
+      "active": [
+        "role_linhDuoc",
+        "element_hauThoTichLuong",
+        "role_duongSinh",
+        "hauThoDuongNguyen",
+        "role_teDo",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "renewal",
+        "medic",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "id": "tieuMinh",
+      "name": "Tiêu Minh",
+      "profession": "ySu",
+      "element": "loi",
+      "active": [
+        "role_linhDuoc",
+        "element_loiTruGiangThe",
+        "role_duongSinh",
+        "loiChamKhoiTu",
+        "role_teDo",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "renewal",
+        "medic",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "id": "nhanTruc",
+      "name": "Nhan Trúc",
+      "profession": "muuSi",
+      "element": "moc",
+      "active": [
+        "role_muaChuoc",
+        "element_lucDiepPhong",
+        "role_lyGian",
+        "trucDocMeHon",
+        "role_catQuanLuong",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "id": "maNhac",
+      "name": "Mã Nhạc",
+      "profession": "muuSi",
+      "element": "tho",
+      "active": [
+        "role_muaChuoc",
+        "element_hauThoTichLuong",
+        "role_lyGian",
+        "doanDaoTuyetLuong",
+        "role_catQuanLuong",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "id": "tuKinh",
+      "name": "Từ Kinh",
+      "profession": "muuSi",
+      "element": "loi",
+      "active": [
+        "role_muaChuoc",
+        "element_loiTruGiangThe",
+        "role_lyGian",
+        "kinhLoiDoatKhi",
+        "role_catQuanLuong",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "id": "buiPhieu",
+      "name": "Bùi Phiêu",
+      "profession": "muuSi",
+      "element": "phong",
+      "active": [
+        "role_muaChuoc",
+        "element_phongQuyenTanVan",
+        "role_lyGian",
+        "phieuPhongLyGian",
+        "role_catQuanLuong",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "id": "nghiemThiet",
+      "name": "Nghiêm Thiết",
+      "profession": "quanSu",
+      "element": "kim",
+      "active": [
+        "role_nghiBinh",
+        "element_luyenKimThanhKiem",
+        "role_hieuLenh",
+        "thietTranPhaGiap",
+        "role_phaKe",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "samTue",
+      "name": "Sầm Tuệ",
+      "profession": "quanSu",
+      "element": "moc",
+      "active": [
+        "role_nghiBinh",
+        "element_lucDiepPhong",
+        "role_hieuLenh",
+        "thanhLamBayTran",
+        "role_phaKe",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "id": "viTrieu",
+      "name": "Vi Triều",
+      "profession": "quanSu",
+      "element": "thuy",
+      "active": [
+        "role_nghiBinh",
+        "element_thuyNguyetTuLinh",
+        "role_hieuLenh",
+        "trieuDangVayThanh",
+        "role_phaKe",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "tonDiem",
+      "name": "Tôn Diệm",
+      "profession": "quanSu",
+      "element": "hoa",
+      "active": [
+        "role_nghiBinh",
+        "element_phongHoaThieuDoanh",
+        "role_hieuLenh",
+        "hoaCongLienKe",
+        "role_phaKe",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "nguyenBac",
+      "name": "Nguyễn Bặc",
+      "profession": "tuongSi",
+      "element": "hoa",
+      "active": [
+        "role_tramKich",
+        "element_phongHoaThieuDoanh",
+        "role_phaTran",
+        "dinhQuocHoaKy",
+        "role_doatMenh",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "dinhDien",
+      "name": "Đinh Điền",
+      "profession": "binhLinh",
+      "element": "tho",
+      "active": [
+        "role_thuThanh",
+        "element_hauThoTichLuong",
+        "role_tuongKhien",
+        "ngoaiGiapHoQuan",
+        "role_phanKich",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "id": "luuCo",
+      "name": "Lưu Cơ",
+      "profession": "muuSi",
+      "element": "kim",
+      "active": [
+        "role_muaChuoc",
+        "element_luyenKimThanhKiem",
+        "role_lyGian",
+        "doHoPhuLenh",
+        "role_catQuanLuong",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "trinhTu",
+      "name": "Trịnh Tú",
+      "profession": "ySu",
+      "element": "moc",
+      "active": [
+        "role_linhDuoc",
+        "element_lucDiepPhong",
+        "role_duongSinh",
+        "hoaLuThaoDuoc",
+        "role_teDo",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "renewal",
+        "medic",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "id": "leHoan",
+      "name": "Lê Hoàn",
+      "profession": "quanSu",
+      "element": "loi",
+      "active": [
+        "role_nghiBinh",
+        "element_loiTruGiangThe",
+        "role_hieuLenh",
+        "thapDaoLoiBinh",
+        "role_phaKe",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "id": "dinhLien",
+      "name": "Đinh Liễn",
+      "profession": "phapSu",
+      "element": "thuy",
+      "active": [
+        "role_phepLan",
+        "element_thuyNguyetTuLinh",
+        "role_nguHanhAn",
+        "namVietVuongAn",
+        "role_thienDiaCong",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "tranLam",
+      "name": "Trần Lãm",
+      "profession": "quanSu",
+      "element": "thuy",
+      "active": [
+        "role_nghiBinh",
+        "element_thuyNguyetTuLinh",
+        "role_hieuLenh",
+        "boHaiTranGiang",
+        "role_phaKe",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "phamBachHo",
+      "name": "Phạm Bạch Hổ",
+      "profession": "tuongSi",
+      "element": "hoa",
+      "active": [
+        "role_tramKich",
+        "element_phongHoaThieuDoanh",
+        "role_phaTran",
+        "bachHoXuatSon",
+        "role_doatMenh",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "ngoXuongXi",
+      "name": "Ngô Xương Xí",
+      "profession": "muuSi",
+      "element": "kim",
+      "active": [
+        "role_muaChuoc",
+        "element_luyenKimThanhKiem",
+        "role_lyGian",
+        "ngoGiaDiMuu",
+        "role_catQuanLuong",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "ngoNhatKhanh",
+      "name": "Ngô Nhật Khánh",
+      "profession": "quanSu",
+      "element": "phong",
+      "active": [
+        "role_nghiBinh",
+        "element_phongQuyenTanVan",
+        "role_hieuLenh",
+        "duongLamPhongKhoi",
+        "role_phaKe",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "coordination",
+        "commander",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "id": "nguyenKhoan",
+      "name": "Nguyễn Khoan",
+      "profession": "binhLinh",
+      "element": "tho",
+      "active": [
+        "role_thuThanh",
+        "element_hauThoTichLuong",
+        "role_tuongKhien",
+        "tamDaiKienThanh",
+        "role_phanKich",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "id": "kieuCongHan",
+      "name": "Kiều Công Hãn",
+      "profession": "phapSu",
+      "element": "loi",
+      "active": [
+        "role_phepLan",
+        "element_loiTruGiangThe",
+        "role_nguHanhAn",
+        "phongChauLoiKich",
+        "role_thienDiaCong",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "id": "kieuThuan",
+      "name": "Kiều Thuận",
+      "profession": "ySu",
+      "element": "moc",
+      "active": [
+        "role_linhDuoc",
+        "element_lucDiepPhong",
+        "role_duongSinh",
+        "hoiHoSinhKhi",
+        "role_teDo",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "renewal",
+        "medic",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "id": "lyKhue",
+      "name": "Lý Khuê",
+      "profession": "tuongSi",
+      "element": "kim",
+      "active": [
+        "role_tramKich",
+        "element_luyenKimThanhKiem",
+        "role_phaTran",
+        "sieuLoaiPhaGiap",
+        "role_doatMenh",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "nguyenThuTiep",
+      "name": "Nguyễn Thủ Tiệp",
+      "profession": "muuSi",
+      "element": "thuy",
+      "active": [
+        "role_muaChuoc",
+        "element_thuyNguyetTuLinh",
+        "role_lyGian",
+        "tienDuDoatLuong",
+        "role_catQuanLuong",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "interdiction",
+        "strategist",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "luDuong",
+      "name": "Lữ Đường",
+      "profession": "phapSu",
+      "element": "thuy",
+      "active": [
+        "role_phepLan",
+        "element_thuyNguyetTuLinh",
+        "role_nguHanhAn",
+        "teGiangThuyTran",
+        "role_thienDiaCong",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "resonance",
+        "arcane",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "nguyenSieu",
+      "name": "Nguyễn Siêu",
+      "profession": "binhLinh",
+      "element": "hoa",
+      "active": [
+        "role_thuThanh",
+        "element_phongHoaThieuDoanh",
+        "role_tuongKhien",
+        "phuLietHoaLuy",
+        "role_phanKich",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "retaliation",
+        "guardian",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "doCanhThac",
+      "name": "Đỗ Cảnh Thạc",
+      "profession": "tuongSi",
+      "element": "tho",
+      "active": [
+        "role_tramKich",
+        "element_hauThoTichLuong",
+        "role_phaTran",
+        "doDongKienTam",
+        "role_doatMenh",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "pursuit",
+        "martial",
+        "tho1",
+        "tho2"
+      ]
+    }
+  ]
+}

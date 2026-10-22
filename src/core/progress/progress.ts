@@ -1,3 +1,4 @@
+import { chasePassives } from "../battle/chase";
 // Tiến trình nhân vật: kinh nghiệm, cấp, điểm kỹ năng, nâng cấp kỹ năng, mở khóa theo cấp, nhánh nấc 2
 // và phần thưởng cuối trận. Dữ liệu thuần, tuần tự hóa được (lưu DB hoặc trình duyệt).
 // Xem docs/design/08-tien-trinh-kinh-te.md. Số liệu là điểm xuất phát, chờ mô phỏng cân bằng.
@@ -251,6 +252,7 @@ export function buildCompanion(
     id: base.id,
     name: base.name,
     comboPassive: base.comboPassive ?? PROFESSION_COMBO[base.profession],
+    chasePassives: chasePassives(base),
   };
 }
 
@@ -271,7 +273,7 @@ export function buildAide(
   const skillLevels = Object.fromEntries(
     skills.map((id) => [id, p.skillLevels[id] ?? 1]),
   );
-  return { ...scaleStats(base, p.level), comboPassive: base.comboPassive ?? PROFESSION_COMBO[base.profession], skills, skillLevels };
+  return { ...scaleStats(base, p.level), chasePassives: chasePassives(base), comboPassive: base.comboPassive ?? PROFESSION_COMBO[base.profession], skills, skillLevels };
 }
 
 /**

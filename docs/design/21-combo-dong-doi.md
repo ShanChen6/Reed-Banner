@@ -1,5 +1,7 @@
 # Kỹ năng phiên bản 2: phối hợp chủ động–bị động đồng đội
 
+> Cập nhật tiếp theo: [chốt F và bộ 6 chủ động + 4 bị động truy kích](22-ky-nang-chase.md). Các kết quả/luật mặc định bên dưới thuộc phiên bản trước, không phải kiểm chứng chase mới.
+
 Triển khai trên nhánh `feat/team-skill-combos`, kế tiếp [mốc PR #108](https://github.com/ShanChen6/Reed-Banner/pull/108). Mục tiêu là tạo cơ hội để người chơi chọn người hành động, mục tiêu và thời điểm tận dụng, thay vì chờ đối phương tự gục. Các thông số mới là giá trị khởi đầu cần chơi thử, chưa phải kết luận cân bằng.
 
 ## Bộ kỹ năng và thứ tự ô

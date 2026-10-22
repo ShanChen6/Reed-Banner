@@ -1,5 +1,13 @@
 # Nhật ký thay đổi thiết kế
 
+## 22/10/2026 — Chốt F và mở rộng truy kích trong hành động
+
+- Tinh thần F thành mặc định: giảm5 từ lượt25, sàn hồi/Khiên20%, không giảm ATK/DEF.
+- ĐBL có42 tuyệt chiêu theo6 nghề ×7 hệ, giữ tuyệt chiêu ô4 và điểm nâng cũ.
+- Mỗi tướng có6 chủ động +4 bị động (2 nghề +2 hệ); truy kích tự nối có giới hạn12 phản ứng/sâu4.
+- Danh mục và hợp đồng: [thiết kế22](design/22-ky-nang-chase.md). Chưa test lại, mô phỏng hoặc cân bằng theo yêu cầu.
+
+
 ## 22/10/2026 — kỹ năng phiên bản 2 và phối hợp đồng đội
 
 - Đổi tuyệt chiêu sang ô4/cấp10, nghề nâng cao sang ô5/cấp15; chuyển khóa đầu tư o4/o5 có marker, không mất điểm.

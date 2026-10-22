@@ -2,6 +2,7 @@
 // Mọi nhân vật kèm mang bộ 3 chiêu nghề + 2 chiêu hệ + 1 chiêu riêng như Đinh Bộ Lĩnh, nâng theo ô; ô 4 là kỹ năng riêng.
 // Xem docs/design/14-nhan-vat.md; cân bằng bằng `pnpm sim -- --roster`.
 
+import { chasePassives } from "../battle/chase";
 import { PROFESSION_COMBO, type ComboPassiveId } from "../battle/combos";
 import { characterSkills } from "../battle/skills";
 import type { Element } from "../battle/elements";
@@ -32,6 +33,7 @@ export function mainCharacter(element: Element = "moc", profession: Profession =
     element,
     profession,
     comboPassive: PROFESSION_COMBO[profession],
+    chasePassives: chasePassives({profession,element}),
     ...BASE_STATS[profession],
     skills: characterSkills(profession, element).map((s) => s.id),
   };

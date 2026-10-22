@@ -236,7 +236,7 @@ export default function SetupLobby({
           </ul>
         </Section>
 
-        <SkillDetails skills={characterSkills(profession, element)} passive={PROFESSION_COMBO[profession]} />
+        <SkillDetails fighter={{profession,element}} skills={characterSkills(profession, element)} passive={PROFESSION_COMBO[profession]} />
 
         {practice && !online && (
           <Section title="Trang bị mẫu" hint="cả hai đội mặc đủ 9 món cùng hệ; Tianwu không có thưởng bộ">
