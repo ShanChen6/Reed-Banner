@@ -486,6 +486,12 @@ const SKILL_ICON: Readonly<Record<string, IconSpec>> = {
 
 /** Kỹ năng không có trong bảng (thêm mới mà chưa vẽ) dùng hình theo kiểu mục tiêu. */
 function fallbackSpec(def: SkillDef): IconSpec {
+  if (def.steps.some(s => s.type === "heal")) return { glyph: "heart" };
+  if (def.steps.some(s => s.type === "energy")) return { glyph: "bolt", badge: "energy" };
+  if (def.steps.some(s => s.type === "dispel")) return { glyph: "tornScroll", badge: "cleanse" };
+  if (def.steps.some(s => s.type === "whirl")) return { glyph: "swirl" };
+  if (def.steps.some(s => s.type === "effect" && s.effect === "silence")) return { glyph: "mute" };
+  if (def.steps.some(s => s.type === "effect" && s.effect === "shield")) return { glyph: "shield" };
   switch (def.target) {
     case "enemy":
       return { glyph: "burst" };
@@ -525,7 +531,7 @@ function SkillArtIcon({ def, className }: { def: SkillDef; className: string }) 
 
 export function SkillIcon({ def, className = "size-8" }: { def: SkillDef; className?: string }) {
   if (SKILL_ART.has(def.id)) return <SkillArtIcon def={def} className={className} />;
-  const spec = SKILL_ICON[def.id] ?? fallbackSpec(def);
+  const spec = SKILL_ICON[def.id] ?? (def.id.startsWith("role_") ? SKILL_ICON[def.id.slice(5)] : undefined) ?? fallbackSpec(def);
   const bg = def.element ? (SKILL_ELEMENT_BG[def.element] ?? ELEMENT_COLOR[def.element]) : def.profession ? PROFESSION_COLOR[def.profession] : "#5a4a3a";
   const ultimate = def.slot === 5;
   const glyph = G[spec.glyph];

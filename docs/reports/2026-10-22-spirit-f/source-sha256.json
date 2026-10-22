@@ -1,0 +1,16 @@
+{
+  "src/core/battle/rules.ts": "c50476055359606268ecc34079f0fcffe22b03be15957ec1950d182949a157f5",
+  "src/core/battle/battle.ts": "7f6f17391272942d537f4a01468fdd627dd4df26564f501cb673be547bc5527c",
+  "src/core/ai/ai.ts": "5720bd9f7fcb8dfa1bb3a5411df3723848e07919e2aa7495bef5daabcdb8b4c6",
+  "src/core/sim/audit.ts": "f86a41b5717383f53a8e16485344c273b37c2d4e00331c25d6988be97d10cbdb",
+  "scripts/lib/spirit-runner.ts": "b8f1f7b6853b583e13b279756992bc518f77810424301eb5b83d9b0a282d47b5",
+  "scripts/spirit-f-audit.ts": "9db82868850c30e4704e62e1ba43c01b1b347ae811df75efe98c90040f6d626f",
+  "scripts/spirit-audit.ts": "a3faa08cc2fc0af5fec71bf8ed95950086486759c7a3641facae1be9c7fdc84a",
+  "scripts/analyze-spirit-f.py": "3bf8ef73efabf84f7f1e004e7039fc0c9be37d6f700f600d73b249f6048c99b2",
+  "scripts/trace-spirit-f.py": "53b7f1df1c254f66e6027c0229d35e635ddb3ef316bb4b34f1af2f57c19eebf0",
+  "scripts/plot-spirit-f.py": "200a44a725a91051be9b4a1dcdc2ede14b0e1b87e72f3700672d68bf180a5a00",
+  "scripts/browser-spirit-audit.cjs": "7d2ca61086ea51b2b1c24bc40698192653008612bd8fedcaddb17a579f136340",
+  "src/app/game/battle/DemoGame.tsx": "8bdbfd3e1c699a1f2b0fdefbcbf223595e30a1fbb3567d2d1d59a94b9035eac8",
+  "tests/core/battle/spirit-audit.test.ts": "346d46095fba1edcf56fc1f5595145b588ef9b650ef6a785d36eb8d2c43731da",
+  "scripts/receiver-spirit-f.py": "304cc7ac597ca9dbdfd9898f5308b42823646fb5b3d93be234c67541790a426c"
+}

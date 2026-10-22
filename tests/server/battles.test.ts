@@ -780,3 +780,10 @@ describe("đấu trường bóng ma", () => {
     assert.equal((await arena.get("g_a"))!.offers.length, 0);
   });
 });
+
+it('API tạo trận không chuyển cấu hình Tinh thần thử nghiệm hoặc audit vào cấu hình ứng dụng', () => {
+  const input = parseNewBattle({ mode: '3v3', element: 'moc', profession: 'ySu', companions: ['haVan', 'leThach'], difficulty: 'normal', experimentalSpirit: 'B', audit: true });
+  assert.ok(input);
+  assert.equal('experimentalSpirit' in input, false);
+  assert.equal('audit' in input, false);
+});

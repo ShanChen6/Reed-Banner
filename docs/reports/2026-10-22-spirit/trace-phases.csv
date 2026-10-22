@@ -1,0 +1,13 @@
+criterion,caseId,rule,phase,heal,shield,absorbed,damage,spiritLost,decisions
+long-defense,spirit:defense:9:3v3:701:side1,A,before25,1895,1715,846,1907,0,61
+long-defense,spirit:defense:9:3v3:701:side1,A,from25,282,391,1028,3104,2722,105
+censored,spirit:defense:10:1v1:1907:side1,B,before25,5097,891,783,5456,0,75
+censored,spirit:defense:10:1v1:1907:side1,B,from25,5148,2593,1543,5382,0,99
+flip-A,spirit:balanced:10:3v3:701:side1,A,before25,1462,375,213,4180,0,64
+flip-A,spirit:balanced:10:3v3:701:side1,A,from25,587,127,127,1425,669,29
+flip-C,spirit:balanced:10:3v3:701:side1,C,before25,1462,375,213,4180,0,64
+flip-C,spirit:balanced:10:3v3:701:side1,C,from25,479,127,127,988,223,11
+support-A,spirit:defense:15:1v1:1907:side0,A,before25,5084,2268,1192,5318,0,64
+support-A,spirit:defense:15:1v1:1907:side0,A,from25,1459,46,0,2656,836,19
+support-C,spirit:defense:15:1v1:1907:side0,C,before25,5084,2268,1192,5318,0,64
+support-C,spirit:defense:15:1v1:1907:side0,C,from25,222,216,0,1338,90,6

@@ -1,0 +1,32 @@
+[
+  {
+    "group": "spirit",
+    "rule": "A",
+    "n": 128,
+    "exactOutcomeAndTelemetryMatch": true
+  },
+  {
+    "group": "spirit",
+    "rule": "D",
+    "n": 128,
+    "exactOutcomeAndTelemetryMatch": true
+  },
+  {
+    "group": "spirit",
+    "rule": "E",
+    "n": 128,
+    "exactOutcomeAndTelemetryMatch": true
+  },
+  {
+    "group": "focused",
+    "rule": "A",
+    "n": 64,
+    "exactOutcomeAndTelemetryMatch": true
+  },
+  {
+    "group": "focused",
+    "rule": "E",
+    "n": 64,
+    "exactOutcomeAndTelemetryMatch": true
+  }
+]

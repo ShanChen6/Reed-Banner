@@ -1,5 +1,7 @@
 "use client";
 
+import { skillText } from "../battle/labels";
+
 // Màn hồ sơ nhân vật kiểu bảng nhân vật trong game: bên trái chân dung với 9 ô trang bị xung quanh, thanh
 // máu/kinh nghiệm và bảng chỉ số; bên phải túi đồ dạng lưới có lọc và trang. Mọi luật nằm trong @/core
 // (applyProfileAction), server kiểm tra lại; ở đây chỉ hiển thị và gửi thao tác.
@@ -25,6 +27,9 @@ import {
   totalXpFor,
   MAIN_SLOT_UNLOCK,
   personalSkillOf,
+  characterSkills,
+  scaleSkill,
+  mainSlotKey,
   wearerOf,
   xpToNext,
   type ActiveBonus,
@@ -603,6 +608,11 @@ export default function ProfileScreen({
                 </div>
               ))}
             </dl>
+            <ul className="mt-3 grid gap-2 text-xs sm:grid-cols-2" aria-label="Bộ kỹ năng nhân vật">
+              {characterSkills(fighter.profession, fighter.element, character).map(def => <li key={def.id} title={skillText(scaleSkill(def, progress.skillLevels[mainSlotKey(def.slot!)] ?? 1))}>
+                {def.name} · ô {def.slot} · {def.slot === 5 ? "Tuyệt chiêu nhân vật" : def.profession ? "Nghề" : "Hệ"} · mở cấp {MAIN_SLOT_UNLOCK[def.slot!]}
+              </li>)}
+            </ul>
             {(bonuses.length > 0 || ultimate) && (
               <ul className="mt-2 flex flex-col gap-0.5 text-xs text-stone-300">
                 {bonuses.map((b) => (

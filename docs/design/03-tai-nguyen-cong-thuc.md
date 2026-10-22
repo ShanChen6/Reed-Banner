@@ -88,3 +88,7 @@ Shan yêu cầu 19/10/2026: trận kéo dài thì tinh thần chiến đấu gi�
 - Mô phỏng 19/10/2026 (150 trận, AI Thường, seed 7): không trận nào chạm giới hạn lượt. 1vs1 trung vị 20 lượt mỗi bên, 90% xong trong 48.5 lượt; 3vs3 trung vị 27, 90% xong trong 46.5 lượt (trước đó 58), tỉ lệ thắng của phe nhân vật chính 64% (trước đó 68%).
 
 > TODO: kỹ năng, trang bị hoặc sự kiện hồi Tinh thần (ví dụ hạ gục đối thủ) nếu cần thêm chiều sâu.
+
+## Kiểm chứng 22/10/2026
+
+Luật mặc định ở mục5 giữ nguyên. Sửa bug Y sư: tính hồi dư từ lượng hồi đã chịu Tinh thần, rồi chuyển dư thành Khiên mà không giảm Tinh thần lần nữa. Khiên đang có không co theo Tinh thần; chỉ lượng mới chịu hệ số. Thiêu đốt (ATK gốc lúc tạo), Phản đòn (đầu vào đòn nhận), mất máu hết lương không nhân Tinh thần lần thứ hai. Các nhánh mô phỏng B–E không phải luật hiện hành. Xem [báo cáo kiểm chứng](../reports/2026-10-22-tinh-than-ai.md).

@@ -1,5 +1,8 @@
 "use client";
 
+import SkillDetails from "./SkillDetails";
+import { skillText } from "./labels";
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   act,
@@ -22,7 +25,6 @@ import {
   isAlive,
   leveledFoe,
   MAIN_ID,
-  mainSkills,
   needsCell,
   newProfile,
   parseProfile,
@@ -35,6 +37,10 @@ import {
   receiveDrop,
   rollDrop,
   selectableActors,
+  SPIRIT_EXPERIMENTS,
+  type SpiritExperiment,
+  spiritStatMultiplier,
+  spiritHealMultiplier,
   whirlStep,
   stageById,
   STARTER_COMPANIONS,
@@ -139,7 +145,7 @@ const DIFFICULTIES: Difficulty[] = [
 ];
 
 /** Nguyên tố đã có bộ kỹ năng nhân vật chính. */
-const MAIN_ELEMENTS = ELEMENTS.filter((e) => mainSkills(e).length > 0);
+const MAIN_ELEMENTS = ELEMENTS;
 
 const byId = (id: string) => companionById(id)!;
 
@@ -359,7 +365,7 @@ function describe(state: BattleState, e: BattleEvent): string | null {
       const firstAlive = state.sides[e.side].fighters.findIndex(
         (f) => f.hp > 0,
       );
-      if (e.spirit !== 90 || e.fighter !== firstAlive) return null;
+      if (e.spirit !== 100 - SPIRIT_EXPERIMENTS[state.experimentalSpirit ?? "A"].decay || e.fighter !== firstAlive) return null;
       return e.side === PLAYER
         ? "Trận kéo dài, tinh thần phe bạn bắt đầu giảm"
         : "Trận kéo dài, tinh thần đối thủ bắt đầu giảm";
@@ -602,6 +608,7 @@ function Bar({
 
 function FighterCard({
   fighter,
+  experimentalSpirit = "A",
   leader,
   rage,
   active,
@@ -611,6 +618,7 @@ function FighterCard({
   onClick,
 }: {
   fighter: Fighter;
+  experimentalSpirit?: SpiritExperiment;
   leader: boolean;
   rage: number | null;
   active: boolean;
@@ -721,6 +729,9 @@ function FighterCard({
           <Bar label="Nộ" value={rage} max={100} color="bg-orange-500" />
         )}
       </div>
+      <p className="mt-1 text-[10px] opacity-75" title={`Từ lượt 25 của phe, Tinh thần giảm ${SPIRIT_EXPERIMENTS[experimentalSpirit].decay} mỗi lượt; không giảm thêm ở lượt thêm. Khiên đã có giữ nguyên.`}>
+        Tinh thần: Công/Thủ {Math.round(spiritStatMultiplier(fighter.spirit, experimentalSpirit)*100)}% · Hồi/Khiên mới {Math.round(spiritHealMultiplier(fighter.spirit, experimentalSpirit)*100)}%
+      </p>
       {fighter.effects.length > 0 && (
         <div className="mt-1.5 flex flex-wrap gap-1">
           {fighter.effects.map((e) => (
@@ -1435,6 +1446,7 @@ export default function DemoGame({
 
   /** Về màn chờ trước trận để đổi nguyên tố, nghề, trang bị hoặc nâng kỹ năng. */
   const restart = () => {
+    if (!online) setProfile(loadProfile());
     reset();
     setStarted(false);
   };
@@ -1608,6 +1620,7 @@ export default function DemoGame({
             <FighterCard
               key={f.id}
               fighter={f}
+              experimentalSpirit={state.experimentalSpirit}
               leader={own.leader === i}
               rage={own.leader === i ? own.rage : null}
               active={isActor}
@@ -1661,7 +1674,7 @@ export default function DemoGame({
           {!online && started && (
             <button
               type="button"
-              onClick={() => setStarted(false)}
+              onClick={() => { setProfile(loadProfile()); setStarted(false); }}
               className="flex items-center gap-1.5 rounded bg-[var(--panel)] px-2.5 py-1 text-xs font-semibold"
             >
               <ProfessionIcon profession={profession} className="size-4" />
@@ -2092,7 +2105,7 @@ export default function DemoGame({
                     className={`relative flex w-[4.25rem] flex-col items-center gap-0.5 rounded p-1 text-[10px] leading-tight ${aiming ? "bg-rose-500 text-white" : "bg-[var(--panel)]"} ${
                       disabled && !aiming ? "opacity-40 grayscale" : ""
                     }`}
-                    title={`${def.name} · ${def.cost} năng lượng · phím ${i + 1}`}
+                    title={`${skillText(def)} · phím ${i + 1}`}
                   >
                     <SkillIcon def={def} className="size-10" />
                     <span className="absolute left-1 top-1 rounded-br bg-black/60 px-1 font-bold text-white">
@@ -2105,6 +2118,7 @@ export default function DemoGame({
                   </button>
                 );
               })}
+              <SkillDetails skills={skills} />
               {myTurn && canFreeWhirl(state) && (
                 <button
                   type="button"

@@ -12,9 +12,10 @@ import {
   createBattle,
   FOOD_PRICE,
   HERO_COMPANIONS,
-  heroSkills,
+  legacyHeroSkills,
+  characterSkills,
   isHero,
-  mainSkills,
+  legacyElementSkills,
   newProfile,
   parseProfile,
   RECOMMENDED_LEVEL_BONUS,
@@ -55,7 +56,7 @@ describe("chiến dịch", () => {
     const lv20 = stageFighter({ ...tran }, 20);
     assert.deepEqual(
       lv20.skills,
-      heroSkills(tran.element, tran.id).map((s) => s.id),
+      legacyHeroSkills(tran.element, tran.id).map((s) => s.id),
     );
     assert.equal(lv20.name, "Trần Lãm");
     const boss = stageById("doDong")!;
@@ -138,9 +139,9 @@ describe("tướng lịch sử gia nhập", () => {
     );
   });
 
-  it("tướng lịch sử mang bộ kỹ năng theo nguyên tố, nâng theo ô, không mua chiêu nhánh", () => {
+  it("tướng lịch sử mang bộ nghề + hệ, nâng theo ô, không mua chiêu nhánh", () => {
     let profile = applyCampaignResult(newProfile(), "tamDai", true, 50).profile;
-    const kit = mainSkills("loi");
+    const kit = characterSkills("quanSu", "loi", "leHoan");
     let r = applyProfileAction(profile, {
       type: "chooseTeam",
       companions: ["haVan", "leHoan"],
@@ -184,21 +185,21 @@ describe("chiêu riêng và thoại", () => {
       assert.equal(sig.slot, 5);
       const fighter = stageFighter(f, 2);
       assert.ok(fighter.skills!.includes(sig.id), f.id);
-      const slot5 = mainSkills(f.element).find((d) => d.slot === 5)!;
+      const slot5 = legacyElementSkills(f.element).find((d) => d.slot === 5)!;
       assert.ok(!stageFighter(f, 25).skills!.includes(slot5.id), f.id);
     }
   });
 
-  it("tướng lịch sử có chiêu riêng ở ô 5, mở ở cấp 20 như nhân vật chính", () => {
+  it("tướng lịch sử có chiêu riêng ở ô 5, mở ở cấp 10 như nhân vật chính", () => {
     for (const h of HERO_COMPANIONS) {
       const sig = signatureOf(h.id)!;
       assert.ok(sig, h.id);
       assert.ok(h.skills!.includes(sig.id));
       assert.deepEqual(
-        heroSkills(h.element, h.id).map((d) => d.slot),
+        legacyHeroSkills(h.element, h.id).map((d) => d.slot),
         [1, 2, 3, 4, 5, 6],
       );
-      assert.ok(!buildCompanion(h, autoProgress(19, null)).skills!.includes(sig.id));
+      assert.ok(!buildCompanion(h, autoProgress(9, null)).skills!.includes(sig.id));
       const at20 = buildCompanion(h, autoProgress(20, null));
       assert.ok(at20.skills!.includes(sig.id));
       assert.equal(

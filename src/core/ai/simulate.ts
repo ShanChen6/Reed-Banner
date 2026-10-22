@@ -62,7 +62,7 @@ export function simulateKnown(start: Board, from: Pos, to: Pos): KnownOutcome {
 }
 
 /** Chạy cascade biết chắc từ một bàn; moved là ô vừa kéo (nơi sinh ô đặc biệt ở bước đầu). */
-export function simulateFrom(initial: Board, moved: readonly Pos[]): KnownOutcome {
+export function simulateFrom(initial: Board, moved: readonly Pos[], destroyed: readonly Pos[] = []): KnownOutcome {
   let board = initial;
   const harvest = emptyHarvest();
   const swordsByStep: number[] = [];
@@ -72,7 +72,8 @@ export function simulateFrom(initial: Board, moved: readonly Pos[]): KnownOutcom
 
   for (; steps < MAX_KNOWN_STEPS; steps++) {
     const matches: MatchGroup[] = findMatches(board);
-    if (matches.length === 0) break;
+    const initialClear = steps === 0 ? destroyed : [];
+    if (matches.length === 0 && initialClear.length === 0) break;
     const cleared = new Set<number>();
     const queue: { pos: Pos; dir: "row" | "col" }[] = [];
     const clear = (pos: Pos, dir: "row" | "col") => {
@@ -81,6 +82,7 @@ export function simulateFrom(initial: Board, moved: readonly Pos[]): KnownOutcom
       cleared.add(idx);
       if (board.cells[idx]?.special) queue.push({ pos, dir });
     };
+    for (const p of initialClear) clear(p, "row");
     for (const g of matches) {
       if (g.cells.length >= 4) extraTurn = true;
       for (const p of g.cells) clear(p, mainDirection(g));

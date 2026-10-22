@@ -1,8 +1,8 @@
 // Nhân vật: Đinh Bộ Lĩnh, tướng thường (khởi đầu và cửa hàng), tướng lịch sử và sứ quân.
-// Mọi nhân vật kèm mang bộ 6 kỹ năng theo nguyên tố như Đinh Bộ Lĩnh, nâng theo ô; ô 5 là kỹ năng riêng.
+// Mọi nhân vật kèm mang bộ 3 chiêu nghề + 2 chiêu hệ + 1 chiêu riêng như Đinh Bộ Lĩnh, nâng theo ô; ô 5 là kỹ năng riêng.
 // Xem docs/design/14-nhan-vat.md; cân bằng bằng `pnpm sim -- --roster`.
 
-import { heroSkills, mainSkills } from "../battle/skills";
+import { characterSkills } from "../battle/skills";
 import type { Element } from "../battle/elements";
 import type { Profession } from "../battle/rules";
 import type { FighterConfig } from "../battle/state";
@@ -23,7 +23,7 @@ export const BASE_STATS: Readonly<Record<Profession, BaseStats>> = {
   quanSu: { maxHp: 475, atk: 50, def: 10 },
 };
 
-/** Nhân vật chính mặc định: Đinh Bộ Lĩnh, Tướng sĩ, bộ kỹ năng theo nguyên tố đã chọn. */
+/** Nhân vật chính mặc định: Đinh Bộ Lĩnh, Tướng sĩ; lắp bộ theo nghề và nguyên tố đã chọn. */
 export function mainCharacter(element: Element = "moc", profession: Profession = "tuongSi"): FighterConfig {
   return {
     id: "dinhBoLinh",
@@ -31,16 +31,16 @@ export function mainCharacter(element: Element = "moc", profession: Profession =
     element,
     profession,
     ...BASE_STATS[profession],
-    skills: mainSkills(element).map((s) => s.id),
+    skills: characterSkills(profession, element).map((s) => s.id),
   };
 }
 
 /**
- * Nhân vật kèm: bộ 6 kỹ năng theo nguyên tố như nhân vật chính, ô 5 thay bằng kỹ năng riêng (tuyệt chiêu
+ * Nhân vật kèm: bộ 3 chiêu nghề + 2 chiêu hệ + 1 chiêu riêng như nhân vật chính, ô 5 thay bằng kỹ năng riêng (tuyệt chiêu
  * của tướng thường, chiêu riêng của tướng lịch sử và sứ quân). Bản mở hết; tiến trình lọc theo cấp ở buildHero.
  */
 function companion(id: string, name: string, profession: Profession, element: Element): FighterConfig {
-  return { ...mainCharacter(element, profession), id, name, skills: heroSkills(element, id).map((s) => s.id) };
+  return { ...mainCharacter(element, profession), id, name, skills: characterSkills(profession, element, id).map((s) => s.id) };
 }
 
 /** 5 tướng thường khởi đầu, mỗi người một nghề còn lại. */

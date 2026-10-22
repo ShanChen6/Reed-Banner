@@ -65,7 +65,7 @@ Mỗi nhân vật mang đúng một nguyên tố. Nhân vật chính được đ
 
 ## 5. Dấu ấn nguyên tố trên chiêu nghề
 
-Áp cho **chiêu nghề của nhân vật kèm** (xem [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#4-nhân-vật-kèm-nghề--chiêu-nghề)).
+Áp cho **preset chiêu nghề cũ của tùy tướng AI chiến dịch** và **Ngũ hành ấn mới** (xem [Nhân vật & kỹ năng](06-nhan-vat-ky-nang.md#4-nhân-vật-kèm-nghề--chiêu-nghề)).
 
 **Nguyên tắc: lõi chiêu nghề hoàn toàn trung tính. Mọi hiệu ứng mang màu nguyên tố chỉ đến từ dấu ấn theo nguyên tố của người tung chiêu.**
 
@@ -79,4 +79,4 @@ Mỗi nhân vật mang đúng một nguyên tố. Nhân vật chính được đ
 | ⚡ Lôi | Trừ 10 năng lượng mục tiêu | Câm lặng mục tiêu 1 lượt |
 | 🌪️ Phong | Công −10% mục tiêu 1 lượt | Xua tan mục tiêu |
 
-- Kỹ năng của **nhân vật chính** đã mang sẵn nguyên tố (mỗi nguyên tố một bộ kỹ năng riêng), nên không cộng thêm dấu ấn.
+- Bộ mới của mọi nhân vật chơi được chỉ Ngũ hành ấn có bước dấu ấn cường hóa; các chiêu nghề khác không tự cộng. Xem [20](20-cai-to-ky-nang.md).

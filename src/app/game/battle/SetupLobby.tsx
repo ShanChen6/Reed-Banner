@@ -4,6 +4,8 @@
 // sơn mài tối (không theo giao diện sáng/tối) để chữ màu phẩm trang bị đọc được.
 
 import {
+  characterSkills,
+  MAIN_SLOT_UNLOCK,
   GEAR_SETS,
   GEAR_SLOTS,
   getGearSet,
@@ -20,7 +22,9 @@ import { ELEMENT_TRAIT, PROFESSION_PERK } from "../../home/data";
 import { GearIcon } from "../art/gear";
 import { DongSonBand, ELEMENT_COLOR, ElementIcon, LeaderFlag, PROFESSION_COLOR, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
-import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME, TIER_CLASS, TIER_COLOR_NAME } from "./labels";
+import SkillDetails from "./SkillDetails";
+import { SkillIcon } from "../art/skills";
+import { skillText, DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME, TIER_CLASS, TIER_COLOR_NAME } from "./labels";
 
 export type LobbyMode = "practice" | "progress";
 
@@ -218,6 +222,20 @@ export default function SetupLobby({
             })}
           </div>
         </Section>
+
+        <Section title="Bộ kỹ năng" hint="3 nghề · 2 hệ · 1 tuyệt chiêu">
+          <ul className="grid gap-2 sm:grid-cols-3">
+            {characterSkills(profession, element).map(def => {
+              const locked = !practice && level < MAIN_SLOT_UNLOCK[def.slot!]!;
+              return <li key={def.id} title={skillText(def)} className={`flex gap-2 text-xs ${locked ? "opacity-50" : ""}`}>
+                <SkillIcon def={def} className="size-8 shrink-0" />
+                <span>{def.name}<br />Ô {def.slot} · {def.cost} NL · cấp {MAIN_SLOT_UNLOCK[def.slot!]}</span>
+              </li>;
+            })}
+          </ul>
+        </Section>
+
+        <SkillDetails skills={characterSkills(profession, element)} />
 
         {practice && !online && (
           <Section title="Trang bị mẫu" hint="cả hai đội mặc đủ 9 món cùng hệ; Tianwu không có thưởng bộ">
