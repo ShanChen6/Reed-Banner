@@ -66,4 +66,6 @@ Kết thúc bằng báo cáo thiết kế toàn roster, kiểm tra migration, d�
 
 ## Trạng thái công bố
 
+Nhánh lưu mốc: `checkpoint/skills-spirit-before-team-combos`, base `main`. [Nội dung PR đã chuẩn bị](2026-10-22-checkpoint-pr.md).
+
 PR lưu mốc là để review và tiếp tục phát triển. Không merge hoặc deploy tự động. Không coi việc chấp thuận hướng combo là chấp thuận mọi hệ số, kiểu bị động hoặc chuyển luật production.
