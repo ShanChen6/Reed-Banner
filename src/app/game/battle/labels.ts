@@ -5,6 +5,7 @@ import {
   TIER_INFO,
   SKILL_SLOT_UNLOCK,
   skillSource,
+  skillComboPartners,
   type SkillDef,
   type BattleError,
   type Difficulty,
@@ -160,5 +161,6 @@ export function skillText(def: SkillDef): string {
       case "whirl": return `${s.auto ? "Tự xoay" : "Chọn tâm xoay"} lốc xoáy ±1${s.turns > 1 ? `..${s.turns}` : ""} nấc`;
     }
   });
-  return `${def.name} · ${source} · ô ${def.slot ?? "—"} · mở cấp ${SKILL_SLOT_UNLOCK[def.slot ?? 0] ?? 1} · ${def.cost} NL · ${target[def.target]}: ${steps.join("; ")}`;
+  const partners=skillComboPartners(def);
+  return `${def.name} · ${source} · ô ${def.slot ?? "—"} · mở cấp ${SKILL_SLOT_UNLOCK[def.slot ?? 0] ?? 1} · ${def.cost} NL · ${target[def.target]}: ${steps.join("; ")}${partners.length ? `. Có thể mở: ${partners.join(", ")} (cần tác dụng thực)` : ""}`;
 }

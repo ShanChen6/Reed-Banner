@@ -1,6 +1,6 @@
 // Biểu tượng kỹ năng vẽ bằng SVG: huy hiệu vuông màu theo nguyên tố (nhân vật chính) hoặc theo nghề
 // (nhân vật kèm), hình giữa nói kỹ năng làm gì, dấu nhỏ ở góc nói thêm tác dụng phụ (tăng, giảm, cả đội…).
-// Tuyệt chiêu ô 5 có vòng tia vàng như ô đặc biệt bản mạnh.
+// Tuyệt chiêu ô 4 có vòng tia vàng như ô đặc biệt bản mạnh.
 
 import type { Element, Profession, SkillDef } from "@/core";
 import { ELEMENT_COLOR } from "./icons";
@@ -518,7 +518,7 @@ const SKILL_ART = new Set([
 /** Ô kỹ năng có ảnh vẽ tay: nền sơn mài thẫm viền màu hệ, tuyệt chiêu viền vàng có hào quang. */
 function SkillArtIcon({ def, className }: { def: SkillDef; className: string }) {
   const edge = def.element ? ELEMENT_COLOR[def.element] : "#b98a3e";
-  const ultimate = def.slot === 5;
+  const ultimate = def.ultimate === true;
   return (
     <svg viewBox="0 0 48 48" className={className} aria-hidden focusable="false">
       <rect x={1.5} y={1.5} width={45} height={45} rx={9} fill="#17120d" stroke={ultimate ? "#ffe08a" : edge} strokeWidth={2.4} />
@@ -533,7 +533,7 @@ export function SkillIcon({ def, className = "size-8" }: { def: SkillDef; classN
   if (SKILL_ART.has(def.id)) return <SkillArtIcon def={def} className={className} />;
   const spec = SKILL_ICON[def.id] ?? (def.id.startsWith("role_") ? SKILL_ICON[def.id.slice(5)] : undefined) ?? fallbackSpec(def);
   const bg = def.element ? (SKILL_ELEMENT_BG[def.element] ?? ELEMENT_COLOR[def.element]) : def.profession ? PROFESSION_COLOR[def.profession] : "#5a4a3a";
-  const ultimate = def.slot === 5;
+  const ultimate = def.ultimate === true;
   const glyph = G[spec.glyph];
   return (
     <svg viewBox="0 0 48 48" className={className} aria-hidden focusable="false">

@@ -1,0 +1,86 @@
+{
+  "screen": {
+    "n": 1344,
+    "clusters": 150,
+    "completedFlips": 55,
+    "newCaps": 2,
+    "removedCaps": 2,
+    "restrictedDuration": {
+      "delta": -0.057291666666666664,
+      "ci95": [
+        -0.2226123595505618,
+        0.09154411764705882
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.0,
+      "ci95": [
+        -0.002976190476190476,
+        0.0029411764705882353
+      ]
+    },
+    "observedWinByCap": {
+      "delta": -0.001488095238095238,
+      "ci95": [
+        -0.01300578034682081,
+        0.008746355685131196
+      ]
+    }
+  },
+  "focused": {
+    "n": 192,
+    "clusters": 40,
+    "completedFlips": 4,
+    "newCaps": 1,
+    "removedCaps": 1,
+    "restrictedDuration": {
+      "delta": 0.2734375,
+      "ci95": [
+        -0.2760416666666667,
+        0.8611111111111112
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.0,
+      "ci95": [
+        -0.015,
+        0.015957446808510637
+      ]
+    },
+    "observedWinByCap": {
+      "delta": -0.005208333333333333,
+      "ci95": [
+        -0.02717391304347826,
+        0.016666666666666666
+      ]
+    }
+  },
+  "campaign": {
+    "n": 24,
+    "clusters": 3,
+    "completedFlips": 0,
+    "newCaps": 0,
+    "removedCaps": 0,
+    "restrictedDuration": {
+      "delta": 1.5,
+      "ci95": [
+        0.125,
+        3.25
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "observedWinByCap": {
+      "delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  }
+}

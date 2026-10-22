@@ -1,4 +1,4 @@
-import { chooseMove, createBattle, fighterSkill, hasEffect, inspectSkillChoices, isAlive, playAiTurn, stageById, type AiView, type BattleAction, type BattleEvent, type SkillChoice, type SpiritExperiment } from '../../src/core';
+import { comboSkillCost, chooseMove, createBattle, fighterSkill, hasEffect, inspectSkillChoices, isAlive, playAiTurn, stageById, type AiView, type BattleAction, type BattleEvent, type SkillChoice, type SpiritExperiment } from '../../src/core';
 import type { AuditCase } from '../../src/core/sim/audit';
 import * as before from '../fixtures/2026-10-22-ai-before';
 
@@ -17,6 +17,7 @@ export function runMeasured(c:AuditCase,ai:'before'|'after',rule:SpiritExperimen
  const counts={turns:[0,0],hungry:[0,0],starving:[0,0],foodSum:[0,0],damage:0,absorbed:0,starvationDamage:0,heal:0,shield:0,healSpiritLost:0,shieldSpiritLost:0,overheal:0,nonStackLost:0,converted:0};
  const sources:Record<string,number>={};const skills:Record<string,Opportunity>={};const spent:Record<string,number>={};
  const trace:unknown[]=[];
+ const combos={opened:0,used:0,expired:0,broken:0,byPassive:{} as Record<string,{opened:number;used:number;expired:number;broken:number}>};
  // Incremental grants are attributed FIFO when consumed; refresh keeps existing points.
  // This is measurement only. Expiration and dispel share effectEnd; no replacement loss under max stacking.
  const bins=['before25','25to33','34to43','44plus'] as const;
@@ -46,7 +47,7 @@ export function runMeasured(c:AuditCase,ai:'before'|'after',rule:SpiritExperimen
   if(e.type!=='damage')flushEnds();
   if(e.type==='upkeep'){finishCast();atTurn++;}
   if(e.type==='auditTurn'&&e.number>cap)beyond=true;
-  if(beyond)continue;
+  if(beyond||(e.type==='combo'&&(e.turn??0)>cap))continue;
   const ph=phases[phase()]!;
   if(e.type==='swap'||e.type==='turnStart')finishCast();
   if(e.type==='skill'){finishCast();cast=e.skill;dstat(cast).uses++;}
@@ -68,6 +69,7 @@ export function runMeasured(c:AuditCase,ai:'before'|'after',rule:SpiritExperimen
   if(e.type==='ko'){
    const key=`${e.side}:${e.fighter}`;const n=(shieldLedger[key]??[]).reduce((a,g)=>a+g.amount,0);ph.stranded+=n;drain(key,n,'stranded');
   }
+  if(e.type==='combo'){combos[e.outcome]++;const p=combos.byPassive[e.passive]??(combos.byPassive[e.passive]={opened:0,used:0,expired:0,broken:0});p[e.outcome]++;}
   if(e.type==='food')food[e.side]=Math.max(0,Math.min(100,food[e.side]!+e.amount));
   if(e.type==='auditTurn'){
    food[e.side]=e.food;
@@ -96,7 +98,7 @@ export function runMeasured(c:AuditCase,ai:'before'|'after',rule:SpiritExperimen
    if(r.id==='role_lyGian')suitable=enemies.fighters.some(f=>isAlive(f)&&!hasEffect(f.effects,'freeze')&&!hasEffect(f.effects,'silence')&&(f.skills??[]).some(id=>f.energy>=(fighterSkill(f,id)?.cost??Infinity)));
    if(legal&&me.energy>=r.cost&&suitable){s.suitable++;if(s.energyBeforeFirstOpportunity===null)s.energyBeforeFirstOpportunity=spent[`${view.turn.side}:${view.turn.actor}`]??0;}
   }
-  if(choice?.type==='skill'){const key=`${view.turn.side}:${view.turn.actor}`;spent[key]=(spent[key]??0)+(fighterSkill(me,choice.skill)?.cost??0);}
+  if(choice?.type==='skill'){const key=`${view.turn.side}:${view.turn.actor}`;spent[key]=(spent[key]??0)+(fighterSkill(me,choice.skill)?comboSkillCost(me,fighterSkill(me,choice.skill)!):0);}
   if(capture)trace.push({turn:view.turn.number,side:view.turn.side,actor:view.turn.actor,spirit:me.spirit,energy:me.energy,food:view.sides.map(s=>s.food),hp:view.sides.map(s=>s.fighters.map(f=>f.hp)),choice,rows:rows.map(({id,cost,score,ratio,reason})=>({id,cost,score,ratio,reason}))});
   return choice;
  };
@@ -106,12 +108,12 @@ export function runMeasured(c:AuditCase,ai:'before'|'after',rule:SpiritExperimen
   const oldNumber=state.turn.number;
   const r=playAiTurn(state,c.group==='campaign'&&state.turn.side!==c.focalSide?stageById(c.stage!)!.difficulty:'normal',0,{chooseSkill:choose,chooseMove:ai==='before'?before.chooseMove:chooseMove,...(ai==='before'?{bestWhirl:before.bestWhirl}:{})});
   events(r.events);state=r.state;chunks++;
-  if(capture){let atTurn=oldNumber;const observed=[];for(const e of r.events){if(e.type==='upkeep')atTurn++;if(atTurn<=cap&&['damage','sustain','spirit','auditTurn','ko','end','effectEnd','skill','food'].includes(e.type))observed.push({...e,atTurn});}trace.push({turn:oldNumber,events:observed});}
+  if(capture){let atTurn=oldNumber;const observed=[];for(const e of r.events){if(e.type==='combo'&&(e.turn??0)>cap)continue;if(e.type==='upkeep')atTurn++;if(atTurn<=cap&&['combo','damage','sustain','spirit','auditTurn','ko','end','effectEnd','skill','food'].includes(e.type))observed.push({...e,atTurn});}trace.push({turn:oldNumber,events:observed});}
   if(state.turn.number===oldNumber&&state.winner===null)throw new Error('Non-advancing simulation');
  }
  finishCast();
  const shieldRemaining=Object.values(shieldLedger).flat().reduce((a,g)=>a+g.amount,0);
  const winner=state.turn.number>cap?null:state.winner;
  const capHit=winner===null;
- return {caseId:c.id,pair:c.pair,group:c.group,stage:c.stage,team:c.team,level:c.level,profession:c.profession,element:c.element,profile:c.profile,focalSide:c.focalSide,seed:c.matchup.seed,equipment:c.equipment,ai,rule,cap,winner,won:winner===null?null:winner===c.focalSide,capHit,counts,sources,skills,measurementVersion:2,phases,support,defensive,shieldRemaining,finalFood:food,participants:c.matchup.sides.map(s=>s.fighters.map(f=>({id:f.id,profession:f.profession,element:f.element,skillLevels:f.skillLevels,maxHp:f.maxHp,atk:f.atk,def:f.def,skills:f.skills}))),elapsedMs:performance.now()-start,...(capture?{trace}:{})};
+ return {caseId:c.id,pair:c.pair,group:c.group,stage:c.stage,team:c.team,level:c.level,profession:c.profession,element:c.element,profile:c.profile,focalSide:c.focalSide,seed:c.matchup.seed,equipment:c.equipment,ai,rule,cap,winner,won:winner===null?null:winner===c.focalSide,capHit,counts,sources,skills,combos:{...combos,pending:combos.opened-combos.used-combos.expired-combos.broken},measurementVersion:2,phases,support,defensive,shieldRemaining,finalFood:food,participants:c.matchup.sides.map(s=>s.fighters.map(f=>({id:f.id,profession:f.profession,element:f.element,skillLevels:f.skillLevels,maxHp:f.maxHp,atk:f.atk,def:f.def,skills:f.skills}))),elapsedMs:performance.now()-start,...(capture?{trace}:{})};
 }

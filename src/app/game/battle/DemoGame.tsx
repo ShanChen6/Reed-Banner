@@ -37,6 +37,12 @@ import {
   receiveDrop,
   rollDrop,
   selectableActors,
+  COMBO_PASSIVES,
+  comboDescription,
+  CHASE_PASSIVES,
+  DEFAULT_SPIRIT_EXPERIMENT,
+  chasePassives,
+  comboSkillCost,
   SPIRIT_EXPERIMENTS,
   type SpiritExperiment,
   spiritStatMultiplier,
@@ -361,11 +367,16 @@ function describe(state: BattleState, e: BattleEvent): string | null {
         : null;
     case "shuffle":
       return "Hết nước đi, bàn cờ được xáo lại";
+    case "chase": return `${name(e.side,e.fighter)} · ${CHASE_PASSIVES[e.passive].name}: truy kích → ${name(e.target.side,e.target.fighter)} (nhịp ${e.depth})`;
+    case "combo": {
+      const passive=COMBO_PASSIVES[e.passive].name;
+      return `${name(e.side,e.fighter)} · ${passive}: ${e.outcome==='opened'?'sẵn sàng phối hợp':e.outcome==='used'?'đã tận dụng':e.outcome==='expired'?'cơ hội hết hạn':'cơ hội bị phá'}`;
+    }
     case "spirit": {
       const firstAlive = state.sides[e.side].fighters.findIndex(
         (f) => f.hp > 0,
       );
-      if (e.spirit !== 100 - SPIRIT_EXPERIMENTS[state.experimentalSpirit ?? "A"].decay || e.fighter !== firstAlive) return null;
+      if (e.spirit !== 100 - SPIRIT_EXPERIMENTS[state.experimentalSpirit ?? DEFAULT_SPIRIT_EXPERIMENT].decay || e.fighter !== firstAlive) return null;
       return e.side === PLAYER
         ? "Trận kéo dài, tinh thần phe bạn bắt đầu giảm"
         : "Trận kéo dài, tinh thần đối thủ bắt đầu giảm";
@@ -608,7 +619,8 @@ function Bar({
 
 function FighterCard({
   fighter,
-  experimentalSpirit = "A",
+  experimentalSpirit = DEFAULT_SPIRIT_EXPERIMENT,
+  comboTurns, comboSource, comboTarget,
   leader,
   rage,
   active,
@@ -619,6 +631,7 @@ function FighterCard({
 }: {
   fighter: Fighter;
   experimentalSpirit?: SpiritExperiment;
+  comboTurns?: number; comboSource?: string; comboTarget?: string;
   leader: boolean;
   rage: number | null;
   active: boolean;
@@ -628,6 +641,7 @@ function FighterCard({
   onClick?: () => void;
 }) {
   const alive = isAlive(fighter);
+  const comboBlocked = fighter.effects.some(e => e.kind === "silence" || e.kind === "freeze");
   const ref = useRef<HTMLButtonElement>(null);
   const lastFloat = floats.at(-1)?.id;
 
@@ -729,6 +743,11 @@ function FighterCard({
           <Bar label="Nộ" value={rage} max={100} color="bg-orange-500" />
         )}
       </div>
+      {fighter.comboPassive && <p className="mt-1 text-[10px] text-amber-200" title={comboDescription(fighter)}>
+        4 bị động · {COMBO_PASSIVES[fighter.comboPassive].name}{fighter.comboReady ? comboBlocked ? ' · Đang bị chặn' : ' · Sẵn sàng' : ''}
+      </p>}
+      {fighter.comboReady && <p className="text-[10px] text-amber-200">Do {comboSource} mở{comboTarget ? ` · mục tiêu ${comboTarget}` : ''} · {comboTurns ? `${comboTurns} lượt thường kế tiếp` : 'lượt hiện tại'}. Chọn hành động để tận dụng.</p>}
+      {fighter.chasePassives && <details className="mt-1 text-[10px]"><summary className="cursor-pointer">Truy kích: {chasePassives(fighter).map(id=>CHASE_PASSIVES[id].name).join(" · ")}</summary>{chasePassives(fighter).map(id=><p key={id}>{CHASE_PASSIVES[id].description}</p>)}</details>}
       <p className="mt-1 text-[10px] opacity-75" title={`Từ lượt 25 của phe, Tinh thần giảm ${SPIRIT_EXPERIMENTS[experimentalSpirit].decay} mỗi lượt; không giảm thêm ở lượt thêm. Khiên đã có giữ nguyên.`}>
         Tinh thần: Công/Thủ {Math.round(spiritStatMultiplier(fighter.spirit, experimentalSpirit)*100)}% · Hồi/Khiên mới {Math.round(spiritHealMultiplier(fighter.spirit, experimentalSpirit)*100)}%
       </p>
@@ -1222,9 +1241,9 @@ export default function DemoGame({
     (def: SkillDef) => {
       if (!myTurn) return;
       if (state.turn.skillUsed) return flash(ERROR_TEXT.skillUsed);
-      if (actor.energy < def.cost)
+      if (actor.energy < comboSkillCost(actor,def))
         return flash(
-          `${ERROR_TEXT.notEnoughEnergy} (${actor.energy}/${def.cost})`,
+          `${ERROR_TEXT.notEnoughEnergy} (${actor.energy}/${comboSkillCost(actor,def)})`,
         );
       const whirl = whirlStep(def);
       if (whirl) {
@@ -1235,7 +1254,7 @@ export default function DemoGame({
       }
       aimOrCast(def);
     },
-    [myTurn, state, actor.energy, aimOrCast, flash],
+    [myTurn, state, actor, aimOrCast, flash],
   );
 
   const fireAim = useCallback(
@@ -1621,6 +1640,9 @@ export default function DemoGame({
               key={f.id}
               fighter={f}
               experimentalSpirit={state.experimentalSpirit}
+              comboTurns={f.comboReady ? Math.max(0,f.comboReady.expiresAt-(state.comboState?.sideTurns[s]??0)-1) : undefined}
+              comboSource={f.comboReady ? state.sides[f.comboReady.source.side].fighters[f.comboReady.source.fighter]?.name : undefined}
+              comboTarget={f.comboReady?.target ? state.sides[f.comboReady.target.side].fighters[f.comboReady.target.fighter]?.name : undefined}
               leader={own.leader === i}
               rage={own.leader === i ? own.rage : null}
               active={isActor}
@@ -2089,7 +2111,7 @@ export default function DemoGame({
               </span>
               {skills.map((def, i) => {
                 const disabled =
-                  !myTurn || state.turn.skillUsed || actor.energy < def.cost;
+                  !myTurn || state.turn.skillUsed || actor.energy < comboSkillCost(actor,def);
                 const aiming =
                   aim?.skill.id === def.id || whirlAim?.skill?.id === def.id;
                 return (
@@ -2112,13 +2134,13 @@ export default function DemoGame({
                       {i + 1}
                     </span>
                     <span className="absolute right-1 top-1 rounded-bl bg-sky-700/90 px-1 tabular-nums text-white">
-                      {def.cost}
+                      {comboSkillCost(actor,def)}
                     </span>
                     <span className="text-center">{def.name}</span>
                   </button>
                 );
               })}
-              <SkillDetails skills={skills} />
+              <SkillDetails skills={skills} passive={actor.comboPassive} fighter={actor} />
               {myTurn && canFreeWhirl(state) && (
                 <button
                   type="button"

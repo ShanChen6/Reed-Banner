@@ -1,0 +1,53 @@
+[WARN] The "pnpm" field in package.json is no longer read by pnpm. The following keys were ignored: "pnpm.onlyBuiltDependencies". See https://pnpm.io/settings for the new home of each setting.
+
+> co-lau@0.0.0 build /home/shan/moshaB/co-lau/Reed-Banner
+> tsx scripts/migrate.mts && next build
+
+Không có DATABASE_URL, bỏ qua migration.
+▲ Next.js 16.4.2 (Turbopack)
+✓ Running next.config.ts took 31ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.5s
+  Running TypeScript ...
+  Finished TypeScript in 14.5s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/21) ...
+  Generating static pages using 11 workers (5/21) 
+  Generating static pages using 11 workers (10/21) 
+  Generating static pages using 11 workers (15/21) 
+✓ Generating static pages using 11 workers (21/21) in 1226ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/arena
+├ ƒ /api/auth/[provider]
+├ ƒ /api/auth/[provider]/callback
+├ ƒ /api/auth/email
+├ ƒ /api/auth/email/verify
+├ ƒ /api/auth/logout
+├ ƒ /api/auth/password/change
+├ ƒ /api/auth/password/forgot
+├ ƒ /api/auth/password/login
+├ ƒ /api/auth/password/register
+├ ƒ /api/auth/password/reset
+├ ƒ /api/battles
+├ ƒ /api/battles/[id]
+├ ƒ /api/battles/[id]/actions
+├ ƒ /api/cron/daily
+├ ƒ /api/daily
+├ ƒ /api/health
+├ ƒ /api/leaderboard
+├ ƒ /api/profile
+├ ○ /apple-icon.png
+├ ○ /demo/art
+├ ○ /demo/characters
+├ ƒ /game/[[...scene]]
+└ ○ /icon.svg
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

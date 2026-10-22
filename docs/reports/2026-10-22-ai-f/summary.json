@@ -1,0 +1,47 @@
+{
+  "n": 1680,
+  "pairs": 840,
+  "seedClusters": 141,
+  "wins": 914,
+  "losses": 743,
+  "draws": 0,
+  "capped": 23,
+  "medianKM": 18.0,
+  "p90KM": 45.5,
+  "over25": 0.3351190476190476,
+  "over34": 0.20952380952380953,
+  "over44": 0.11071428571428571,
+  "damage": 4784.8,
+  "absorbed": 732.6732142857143,
+  "heal": 2117.644047619048,
+  "shield": 991.0345238095238,
+  "healSpiritLost": 416.8315476190476,
+  "shieldSpiritLost": 90.86666666666666,
+  "overheal": 686.972619047619,
+  "nonStackLost": 214.33869047619046,
+  "starvation": 13.285714285714286,
+  "expired": 201.59761904761905,
+  "stranded": 0.3119047619047619,
+  "foodPerTurn": 62.53829330636012,
+  "starvingTurns": 492,
+  "clusterBootstrap95": {
+    "observedWinByCap": [
+      0.517512077294686,
+      0.5706521739130435
+    ],
+    "capRate": [
+      0.00702576112412178,
+      0.02107728337236534
+    ]
+  },
+  "durationBootstrap95": {
+    "medianKM": [
+      16.5,
+      19.5
+    ],
+    "p90KM": [
+      43.5,
+      47.5
+    ]
+  }
+}

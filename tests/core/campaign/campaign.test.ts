@@ -182,7 +182,7 @@ describe("chiêu riêng và thoại", () => {
     for (const f of warlords) {
       const sig = signatureOf(f.id);
       assert.ok(sig, f.id);
-      assert.equal(sig.slot, 5);
+      assert.equal(sig.slot, 4);
       const fighter = stageFighter(f, 2);
       assert.ok(fighter.skills!.includes(sig.id), f.id);
       const slot5 = legacyElementSkills(f.element).find((d) => d.slot === 5)!;
@@ -204,7 +204,7 @@ describe("chiêu riêng và thoại", () => {
       assert.ok(at20.skills!.includes(sig.id));
       assert.equal(
         at20.skillLevels![sig.id],
-        autoProgress(20, null).skillLevels.o5 ?? 1,
+        autoProgress(20, null).skillLevels.o4 ?? 1,
       );
     }
   });

@@ -1,9 +1,11 @@
+import { chasePassives } from "../battle/chase";
 // Tiến trình nhân vật: kinh nghiệm, cấp, điểm kỹ năng, nâng cấp kỹ năng, mở khóa theo cấp, nhánh nấc 2
 // và phần thưởng cuối trận. Dữ liệu thuần, tuần tự hóa được (lưu DB hoặc trình duyệt).
 // Xem docs/design/08-tien-trinh-kinh-te.md. Số liệu là điểm xuất phát, chờ mô phỏng cân bằng.
 
 import {
   getSkill,
+  PROFESSION_COMBO,
   characterSkills,
   legacyHeroSkills,
   SKILL_SLOT_ORDER,
@@ -196,7 +198,7 @@ function scaleStats(f: FighterConfig, level: number): FighterConfig {
 
 /**
  * Nhân vật chính theo tiến trình: chỉ mang kỹ năng đã mở, chỉ số và cấp kỹ năng theo cấp. `character` là
- * tướng lịch sử: ô 5 thay bằng chiêu riêng của người đó.
+ * tướng lịch sử: ô 4 thay bằng chiêu riêng của người đó.
  */
 export function buildMain(
   p: CharacterProgress,
@@ -239,7 +241,7 @@ export function buildCampaignLeader(level: number, element: Element, profession:
 
 /**
  * Nhân vật kèm theo tiến trình (tướng thường, tướng lịch sử, sứ quân): dựng như nhân vật chính với nghề,
- * nguyên tố và kỹ năng ô 5 riêng.
+ * nguyên tố và kỹ năng ô 4 riêng.
  */
 export function buildCompanion(
   base: FighterConfig,
@@ -249,6 +251,8 @@ export function buildCompanion(
     ...buildMain(p, base.element, base.profession, base.id),
     id: base.id,
     name: base.name,
+    comboPassive: base.comboPassive ?? PROFESSION_COMBO[base.profession],
+    chasePassives: chasePassives(base),
   };
 }
 
@@ -269,7 +273,7 @@ export function buildAide(
   const skillLevels = Object.fromEntries(
     skills.map((id) => [id, p.skillLevels[id] ?? 1]),
   );
-  return { ...scaleStats(base, p.level), skills, skillLevels };
+  return { ...scaleStats(base, p.level), chasePassives: chasePassives(base), comboPassive: base.comboPassive ?? PROFESSION_COMBO[base.profession], skills, skillLevels };
 }
 
 /**

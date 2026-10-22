@@ -1,0 +1,11 @@
+{
+  "screenRuns": 1680,
+  "orientationPairs": 840,
+  "seedClusters": 141,
+  "sourceHash": "57a2ac804045975fc237b1e9f1e44f63c8929679ae9734a3cbc311cab872bb09",
+  "shieldAndContributionReconciliation": true,
+  "skillChoiceUseReconciliation": true,
+  "diagnosticAfterReplayMatchesScreen": 72,
+  "traceReplayMatchesScreen": 2,
+  "expandedRuns": 48
+}

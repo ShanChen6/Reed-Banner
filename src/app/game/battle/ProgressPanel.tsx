@@ -3,6 +3,7 @@
 // Bảng tiến trình của Chơi thử và Chơi online: cấp, kinh nghiệm, điểm kỹ năng, nâng kỹ năng theo ô.
 // Mọi luật nằm trong @/core/progress; ở đây chỉ hiển thị và gửi thao tác (Chơi thử áp tại chỗ, Chơi online gửi server).
 
+import { PROFESSION_COMBO } from "@/core";
 import SkillDetails from "./SkillDetails";
 import { useState } from "react";
 import {
@@ -250,11 +251,11 @@ export default function ProgressPanel({
                   );
                 })}
               </ul>
-              <SkillDetails skills={(isMain ? characterSkills(profile.profession, profile.element) : characterSkills(companionOf(id)!.profession, companionOf(id)!.element, id)).map(d => scaleSkill(d,p.skillLevels[mainSlotKey(d.slot!)] ?? 1))} />
+              <SkillDetails fighter={isMain ? {profession:profile.profession,element:profile.element} : companionOf(id)!} passive={PROFESSION_COMBO[isMain ? profile.profession : companionOf(id)!.profession]} skills={(isMain ? characterSkills(profile.profession, profile.element) : characterSkills(companionOf(id)!.profession, companionOf(id)!.element, id)).map(d => scaleSkill(d,p.skillLevels[mainSlotKey(d.slot!)] ?? 1))} />
               {!isMain && (
                 <p className="opacity-60">
                   {PROFESSION_NAME[companionProfession(id)]} · kỹ năng nâng
-                  theo ô như Đinh Bộ Lĩnh, ô 5 là kỹ năng riêng.
+                  theo ô như Đinh Bộ Lĩnh, ô 4 là kỹ năng riêng.
                 </p>
               )}
             </div>

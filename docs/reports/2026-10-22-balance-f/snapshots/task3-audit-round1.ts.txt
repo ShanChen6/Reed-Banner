@@ -1,0 +1,45 @@
+import { parseArgs } from 'node:util';
+import { readFileSync,writeFileSync,appendFileSync,existsSync,mkdirSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { gzipSync,gunzipSync } from 'node:zlib';
+import { SKILLS, CHASE_PASSIVES, BASE_STATS, GEAR_SETS, ELEMENT_RESONANCE, STAT_BASE, TIER_INFO, DEFAULT_SPIRIT_EXPERIMENT, type SkillDef } from '../src/core';
+import { task2Cases } from './lib/task2-cases';
+import { measured } from './lib/task2-runner';
+const {values:v}=parseArgs({options:{group:{type:'string',default:'tuning'},variant:{type:'string',default:'baseline'},shard:{type:'string',default:'0'},shards:{type:'string',default:'1'},trace:{type:'string'}}});
+const out='docs/reports/2026-10-22-balance-f';mkdirSync(out,{recursive:true});
+const baselinePath=`${out}/parameters-before.json`;
+if(!existsSync(baselinePath))writeFileSync(baselinePath,JSON.stringify({skills:SKILLS,chase:CHASE_PASSIVES,baseStats:BASE_STATS,sets:GEAR_SETS,resonance:ELEMENT_RESONANCE,flat:STAT_BASE,tiers:TIER_INFO},null,2)+'\n');
+const baseline=JSON.parse(readFileSync(baselinePath,'utf8')) as {skills:Record<string,SkillDef>};
+const aiVersion=JSON.parse(readFileSync('docs/reports/2026-10-22-ai-f/ai-version.json','utf8'));
+const hash=(p:string)=>createHash('sha256').update(readFileSync(p)).digest('hex');
+if(hash(aiVersion.canonicalAI)!==aiVersion.canonicalSHA256||DEFAULT_SPIRIT_EXPERIMENT!=='F')throw Error('AI or Spirit changed');
+if(!['baseline','shield18','heal20','both'].includes(v.variant)||!['tuning','screen','validation'].includes(v.group))throw Error('invalid option');
+// Harness-only overrides restore the archived values even after production adopts a candidate.
+for(const id of ['role_thuThanh','role_linhDuoc']){
+ const d=structuredClone(baseline.skills[id]!);
+ const shield=v.variant==='shield18'||v.variant==='both',heal=v.variant==='heal20'||v.variant==='both';
+ Object.assign(SKILLS[id]!,{...d,steps:d.steps.map(s=>id==='role_thuThanh'&&shield&&s.type==='effect'&&s.effect==='shield'?{...s,value:.18}:id==='role_linhDuoc'&&heal&&s.type==='heal'?{...s,ratio:.20}:s)});
+}
+const original=task2Cases();
+let cases=original;
+if(v.group==='tuning'){
+ const ids=new Set<string>(JSON.parse(readFileSync('docs/reports/2026-10-22-ai-f/expand-pairs.json','utf8')));
+ cases=original.filter(c=>ids.has(c.pair)).flatMap(c=>[3119,4567].map(seed=>({...c,id:`${c.id}:expand${seed}`,pair:`${c.pair}:expand${seed}`,matchup:{...c.matchup,seed:(c.matchup.seed+seed)>>>0}})));
+}
+if(v.group==='validation')cases=original.map(c=>({...c,id:`${c.id}:holdout`,pair:`${c.pair}:holdout`,matchup:{...c.matchup,seed:c.matchup.seed+10000019}}));
+if(v.trace)cases=cases.filter(c=>c.id===v.trace);
+const shard=Number(v.shard),shards=Number(v.shards);if(!Number.isInteger(shard)||!Number.isInteger(shards)||shards<1||shard<0||shard>=shards)throw Error('invalid shard');
+const name=`${v.group}-${v.variant}${v.trace?'-trace':''}-${shard}`;
+const sourcePaths=['src/core/ai/ai.ts','src/core/battle/rules.ts','src/core/battle/battle.ts','src/core/battle/skills.ts','src/core/battle/chase.ts','src/core/battle/combos.ts','src/core/battle/combo-engine.ts','src/core/gear/gear.ts','src/core/progress/progress.ts','src/core/roster/roster.ts','scripts/lib/task2-cases.ts','scripts/lib/task2-runner.ts','scripts/task3-audit.ts'];
+const sourceHashes=Object.fromEntries(sourcePaths.map(p=>[p,hash(p)]));
+const manifest={group:v.group,variant:v.variant,shard,shards,ai:aiVersion.id,aiSHA256:aiVersion.canonicalSHA256,rule:'F',cap:120,cases:cases.length,sourceHashes,parameters:{shield:(SKILLS.role_thuThanh!.steps.find(s=>s.type==='effect'&&s.effect==='shield') as {value:number}).value,heal:(SKILLS.role_linhDuoc!.steps.find(s=>s.type==='heal') as {ratio:number}).ratio},seedPolicy:v.group==='validation'?'original board seed +10000019, never used for tuning':v.group==='tuning'?'task2 expanded seeds3119/4567':'task2 screen seeds, broad regression only'};
+const fingerprint=createHash('sha256').update(JSON.stringify(manifest)).digest('hex');
+const manifestPath=`${out}/${name}-manifest.json`;
+if(existsSync(manifestPath)&&JSON.parse(readFileSync(manifestPath,'utf8')).fingerprint!==fingerprint)throw Error('configuration/source changed');
+writeFileSync(manifestPath,JSON.stringify({...manifest,fingerprint},null,2)+'\n');writeFileSync(`${out}/${name}-cases.json.gz`,gzipSync(JSON.stringify(cases)));
+const path=`${out}/${name}.jsonl`;const done=new Set<string>();
+if(existsSync(path))for(const line of readFileSync(path,'utf8').trim().split('\n').filter(Boolean))done.add(JSON.parse(line).id);
+else if(existsSync(path+'.gz')){const data=gunzipSync(readFileSync(path+'.gz'));writeFileSync(path,data);for(const line of data.toString().trim().split('\n').filter(Boolean))done.add(JSON.parse(line).id);}
+const selected=cases.filter((_,i)=>i%shards===shard);
+for(const c of selected){if(done.has(c.id))continue;appendFileSync(path,JSON.stringify({...measured(c,'after',120,Boolean(v.trace)),variant:v.variant,fingerprint})+'\n');done.add(c.id);if(done.size%20===0)process.stderr.write(`${name}: ${done.size}/${selected.length}\n`);}
+console.log(`${name}: ${done.size}/${selected.length} complete`);

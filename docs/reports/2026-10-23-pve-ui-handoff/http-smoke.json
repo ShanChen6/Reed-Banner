@@ -1,0 +1,15 @@
+{
+  "server": "production build on localhost:3104",
+  "root": { "status": 200, "bytes": 462256 },
+  "practice": {
+    "status": 500,
+    "bytes": 10984,
+    "reason": "SESSION_SECRET is absent in the local verification environment"
+  },
+  "health": {
+    "status": 503,
+    "bytes": 92,
+    "reason": "runtime service configuration is absent in the local verification environment"
+  },
+  "serverStoppedAfterCheck": true
+}

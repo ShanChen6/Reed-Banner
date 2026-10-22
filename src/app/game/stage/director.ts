@@ -25,10 +25,10 @@ export type CueKind =
   | "heal"
   | "victory";
 
-/** Tuyệt chiêu hoặc chiêu riêng (ô 5): động tác lớn hơn kỹ năng thường. */
+/** Tuyệt chiêu hoặc chiêu riêng (ô 4): động tác lớn hơn kỹ năng thường. */
 export function isUltimate(skill: string): boolean {
   const def = SKILLS[skill];
-  return def !== undefined && (def.character !== undefined || def.slot === 5);
+  return def !== undefined && (def.character !== undefined || def.ultimate === true);
 }
 
 export interface Cue {
@@ -83,6 +83,9 @@ export function stageCues(
       case "turnStart":
         side = e.side;
         actor = e.actor;
+        break;
+      case "chase":
+        add(start,{side:e.side,fighter:e.fighter,kind:"cast",delay:e.depth*100});
         break;
       case "skill":
         side = e.side;

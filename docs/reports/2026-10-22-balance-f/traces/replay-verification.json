@@ -1,0 +1,650 @@
+{
+  "checked": 4,
+  "allGameplayAndTelemetryMatchValidation": true,
+  "examples": [
+    {
+      "kind": "removed-cap",
+      "variant": "baseline",
+      "id": "b0:binhLinh:hoa:4:3v3:none:side1:holdout",
+      "turns": [
+        60,
+        60
+      ],
+      "capped": true,
+      "watchedUses": {
+        "role_thuThanh": 16
+      },
+      "lastProgress": [
+        {
+          "turn": 115,
+          "food": [
+            97,
+            94
+          ],
+          "hp": [
+            [
+              0,
+              191,
+              130
+            ],
+            [
+              276,
+              0,
+              132
+            ]
+          ],
+          "shield": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "damage": 5570,
+          "heal": 2647
+        },
+        {
+          "turn": 116,
+          "food": [
+            94,
+            94
+          ],
+          "hp": [
+            [
+              0,
+              191,
+              130
+            ],
+            [
+              276,
+              0,
+              132
+            ]
+          ],
+          "shield": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "damage": 5570,
+          "heal": 2647
+        },
+        {
+          "turn": 117,
+          "food": [
+            94,
+            91
+          ],
+          "hp": [
+            [
+              0,
+              191,
+              130
+            ],
+            [
+              276,
+              0,
+              0
+            ]
+          ],
+          "shield": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "damage": 5702,
+          "heal": 2647
+        },
+        {
+          "turn": 118,
+          "food": [
+            91,
+            91
+          ],
+          "hp": [
+            [
+              0,
+              191,
+              130
+            ],
+            [
+              288,
+              0,
+              0
+            ]
+          ],
+          "shield": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "damage": 5702,
+          "heal": 2659
+        },
+        {
+          "turn": 119,
+          "food": [
+            91,
+            88
+          ],
+          "hp": [
+            [
+              0,
+              191,
+              130
+            ],
+            [
+              288,
+              0,
+              0
+            ]
+          ],
+          "shield": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "damage": 5702,
+          "heal": 2659
+        }
+      ]
+    },
+    {
+      "kind": "removed-cap",
+      "variant": "shield35",
+      "id": "b0:binhLinh:hoa:4:3v3:none:side1:holdout",
+      "turns": [
+        42,
+        41
+      ],
+      "capped": false,
+      "watchedUses": {
+        "role_thuThanh": 14
+      },
+      "lastProgress": [
+        {
+          "turn": 79,
+          "food": [
+            95,
+            97
+          ],
+          "hp": [
+            [
+              461,
+              317,
+              333
+            ],
+            [
+              19,
+              180,
+              0
+            ]
+          ],
+          "shield": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "damage": 4262,
+          "heal": 1920
+        },
+        {
+          "turn": 80,
+          "food": [
+            92,
+            97
+          ],
+          "hp": [
+            [
+              461,
+              317,
+              333
+            ],
+            [
+              19,
+              180,
+              0
+            ]
+          ],
+          "shield": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "damage": 4262,
+          "heal": 1920
+        },
+        {
+          "turn": 81,
+          "food": [
+            92,
+            94
+          ],
+          "hp": [
+            [
+              461,
+              317,
+              352
+            ],
+            [
+              19,
+              180,
+              0
+            ]
+          ],
+          "shield": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "damage": 4262,
+          "heal": 1939
+        },
+        {
+          "turn": 82,
+          "food": [
+            89,
+            100
+          ],
+          "hp": [
+            [
+              412,
+              317,
+              352
+            ],
+            [
+              31,
+              180,
+              0
+            ]
+          ],
+          "shield": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "damage": 4311,
+          "heal": 1951
+        },
+        {
+          "turn": 83,
+          "food": [
+            97,
+            100
+          ],
+          "hp": [
+            [
+              440,
+              317,
+              352
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "shield": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "damage": 4522,
+          "heal": 1979
+        }
+      ]
+    },
+    {
+      "kind": "new-cap",
+      "variant": "baseline",
+      "id": "b0:binhLinh:tho:20:1v1:invested:side0:holdout",
+      "turns": [
+        44,
+        43
+      ],
+      "capped": false,
+      "watchedUses": {
+        "role_thuThanh": 5,
+        "role_phanKich": 0,
+        "element_thachGiap": 0
+      },
+      "lastProgress": [
+        {
+          "turn": 83,
+          "food": [
+            82,
+            82
+          ],
+          "hp": [
+            [
+              2404
+            ],
+            [
+              638
+            ]
+          ],
+          "shield": [
+            [
+              0
+            ],
+            [
+              0
+            ]
+          ],
+          "damage": 8089,
+          "heal": 6169
+        },
+        {
+          "turn": 84,
+          "food": [
+            79,
+            82
+          ],
+          "hp": [
+            [
+              2133
+            ],
+            [
+              697
+            ]
+          ],
+          "shield": [
+            [
+              0
+            ],
+            [
+              0
+            ]
+          ],
+          "damage": 8360,
+          "heal": 6228
+        },
+        {
+          "turn": 85,
+          "food": [
+            100,
+            77
+          ],
+          "hp": [
+            [
+              2133
+            ],
+            [
+              362
+            ]
+          ],
+          "shield": [
+            [
+              0
+            ],
+            [
+              0
+            ]
+          ],
+          "damage": 8695,
+          "heal": 6228
+        },
+        {
+          "turn": 86,
+          "food": [
+            97,
+            89
+          ],
+          "hp": [
+            [
+              2133
+            ],
+            [
+              362
+            ]
+          ],
+          "shield": [
+            [
+              0
+            ],
+            [
+              0
+            ]
+          ],
+          "damage": 8695,
+          "heal": 6228
+        },
+        {
+          "turn": 87,
+          "food": [
+            100,
+            89
+          ],
+          "hp": [
+            [
+              2212
+            ],
+            [
+              0
+            ]
+          ],
+          "shield": [
+            [
+              0
+            ],
+            [
+              0
+            ]
+          ],
+          "damage": 9057,
+          "heal": 6307
+        }
+      ]
+    },
+    {
+      "kind": "new-cap",
+      "variant": "shield35",
+      "id": "b0:binhLinh:tho:20:1v1:invested:side0:holdout",
+      "turns": [
+        60,
+        60
+      ],
+      "capped": true,
+      "watchedUses": {
+        "role_thuThanh": 3,
+        "role_phanKich": 0,
+        "element_thachGiap": 2
+      },
+      "lastProgress": [
+        {
+          "turn": 115,
+          "food": [
+            94,
+            75
+          ],
+          "hp": [
+            [
+              868
+            ],
+            [
+              9
+            ]
+          ],
+          "shield": [
+            [
+              0
+            ],
+            [
+              0
+            ]
+          ],
+          "damage": 9730,
+          "heal": 5645
+        },
+        {
+          "turn": 116,
+          "food": [
+            91,
+            75
+          ],
+          "hp": [
+            [
+              868
+            ],
+            [
+              9
+            ]
+          ],
+          "shield": [
+            [
+              0
+            ],
+            [
+              0
+            ]
+          ],
+          "damage": 9730,
+          "heal": 5645
+        },
+        {
+          "turn": 117,
+          "food": [
+            91,
+            70
+          ],
+          "hp": [
+            [
+              915
+            ],
+            [
+              9
+            ]
+          ],
+          "shield": [
+            [
+              0
+            ],
+            [
+              0
+            ]
+          ],
+          "damage": 9730,
+          "heal": 5692
+        },
+        {
+          "turn": 118,
+          "food": [
+            88,
+            70
+          ],
+          "hp": [
+            [
+              712
+            ],
+            [
+              9
+            ]
+          ],
+          "shield": [
+            [
+              0
+            ],
+            [
+              0
+            ]
+          ],
+          "damage": 9933,
+          "heal": 5692
+        },
+        {
+          "turn": 119,
+          "food": [
+            88,
+            65
+          ],
+          "hp": [
+            [
+              759
+            ],
+            [
+              9
+            ]
+          ],
+          "shield": [
+            [
+              0
+            ],
+            [
+              0
+            ]
+          ],
+          "damage": 9933,
+          "heal": 5739
+        }
+      ]
+    }
+  ]
+}
