@@ -20,6 +20,8 @@ export type SkillStep =
   | {
       readonly type: "damage";
       readonly atk: number;
+      /** Nhân sát thương khi máu trước đòn không vượt ngưỡng. */
+      readonly execute?: { readonly threshold: number; readonly multiplier: number };
       /** Hồi cho người tung chiêu theo tỉ lệ sát thương gây ra. */
       readonly lifesteal?: number;
       /** Tỉ lệ DEF bỏ qua (xuyên giáp). */
@@ -58,12 +60,12 @@ export type SkillStep =
 export interface SkillDef {
   readonly id: string;
   readonly name: string;
-  /** Chiêu nghề của nhân vật kèm. */
+  /** Nguồn nghề (cả preset AI cũ và chiêu nghề mới). */
   readonly profession?: Profession;
   readonly tier?: 1 | 2 | 3;
   /** Tuyệt chiêu nấc 3 hoặc chiêu riêng: id nhân vật sở hữu. */
   readonly character?: string;
-  /** Kỹ năng nhân vật chính theo nguyên tố, ô 1–6. */
+  /** Ô bộ kỹ năng: 1/3/4 nghề, 2/6 hệ, 5 riêng; preset AI cũ giữ ô cũ. */
   readonly element?: Element;
   readonly slot?: number;
   readonly cost: number;
@@ -868,8 +870,60 @@ const SIGNATURES: readonly SkillDef[] = [
   },
 ];
 
+/** Thứ tự hiển thị theo tiến trình, độc lập ID ô lưu. */
+export const SKILL_SLOT_ORDER = [1, 2, 3, 5, 4, 6] as const;
+export const SKILL_SLOT_UNLOCK: Readonly<Record<number, number>> = { 1: 1, 2: 1, 3: 5, 5: 10, 4: 15, 6: 20 };
+
+// Dữ liệu mới tách ID khỏi chiêu AI cũ để preset chiến dịch không đổi ngầm.
+function role(id: string, profession: Profession, slot: number, cost?: number): SkillDef {
+  const old = DEFS.find(d => d.id === id)!;
+  return { ...old, id: `role_${id}`, profession, slot, tier: undefined, cost: cost ?? old.cost,
+    steps: old.steps.filter(s => s.type !== "mark") };
+}
+export const ROLE_SKILLS: readonly SkillDef[] = [
+  role("tramKich", "tuongSi", 1),
+  { ...role("phaTran", "tuongSi", 3), steps: [{ type: "damage", atk: 2.5, pierce: 0.3 }, { type: "effect", to: "targets", effect: "defDown", value: 0.3, turns: 2 }] },
+  { id: "role_doatMenh", name: "Đoạt mệnh", profession: "tuongSi", slot: 4, cost: 60, target: "enemy", steps: [{ type: "damage", atk: 2.6, execute: { threshold: 0.35, multiplier: 1.5 } }] },
+  { ...role("phepLan", "phapSu", 1, 30), steps: [{ type: "damage", atk: 0.9 }] },
+  { ...role("nguHanhAn", "phapSu", 3), steps: [{ type: "damage", atk: 1.4 }, { type: "mark", enhanced: true, guaranteed: true }] },
+  { id: "role_thienDiaCong", name: "Thiên địa cộng hưởng", profession: "phapSu", slot: 4, cost: 60, target: "allEnemies", steps: [{ type: "damage", atk: 1.1 }, { type: "destroy", area: { square: 3 } }] },
+  role("thuThanh", "binhLinh", 1), role("tuongKhien", "binhLinh", 3),
+  { ...role("phanKich", "binhLinh", 4, 55), steps: [...role("phanKich", "binhLinh", 4).steps, { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 }] },
+  role("linhDuoc", "ySu", 1), role("duongSinh", "ySu", 3), role("teDo", "ySu", 4, 55),
+  role("muaChuoc", "muuSi", 1), role("lyGian", "muuSi", 3), role("catQuanLuong", "muuSi", 4, 55),
+  role("nghiBinh", "quanSu", 1), role("hieuLenh", "quanSu", 3), role("phaKe", "quanSu", 4, 55),
+];
+function elemental(id: string, slot: number): SkillDef {
+  const old = [...MAIN, ...PHONG].find(d => d.id === id)!;
+  return { ...old, id: `element_${id}`, slot };
+}
+export const ELEMENT_SKILLS: readonly SkillDef[] = [
+  elemental("luyenKimThanhKiem", 2),
+  { ...elemental("kimYNgungThan", 6), cost: 35, target: "enemy", steps: [{ type: "damage", atk: 1.3, pierce: 0.5 }] },
+  elemental("lucDiepPhong", 2), elemental("linhMocHoiSinh", 6),
+  elemental("thuyNguyetTuLinh", 2), elemental("thanhLuuTayTran", 6),
+  elemental("phongHoaThieuDoanh", 2), elemental("noHoaThieuThan", 6),
+  elemental("hauThoTichLuong", 2), elemental("thachGiap", 6),
+  elemental("loiTruGiangThe", 2),
+  { ...elemental("tinhDienHoThan", 6), target: "enemy", steps: [{ type: "energy", to: "targets", amount: -20 }, { type: "energy", to: "self", amount: 10 }] },
+  elemental("phongQuyenTanVan", 2),
+  { ...elemental("thanhPhongTuKhi", 6), target: "team", steps: [{ type: "energy", to: "targets", amount: 10 }, { type: "effect", to: "targets", effect: "defUp", value: 0.1, turns: 2 }] },
+];
+
+/** Ô 5 là nguồn nhân vật kể cả tuyệt chiêu mặc định theo hệ của Đinh Bộ Lĩnh. */
+export function skillSource(def: SkillDef): "profession" | "element" | "character" {
+  return def.slot === 5 || def.character !== undefined ? "character" : def.profession !== undefined ? "profession" : "element";
+}
+
+/** Nguồn thống nhất cho mọi nhân vật chơi được; tiến trình lọc sau khi lắp bộ. */
+export function characterSkills(profession: Profession, element: Element, character?: string): SkillDef[] {
+  const ultimate = (character ? personalSkillOf(character) : undefined) ?? legacyElementSkills(element).find(d => d.slot === 5)!;
+  const defs = [...ROLE_SKILLS.filter(d => d.profession === profession), ...ELEMENT_SKILLS.filter(d => d.element === element), ultimate];
+  return SKILL_SLOT_ORDER.map(slot => defs.find(d => d.slot === slot)!);
+}
+
 export const SKILLS: Readonly<Record<string, SkillDef>> = Object.fromEntries(
-  [...DEFS, ...ULTIMATES, ...MAIN, ...PHONG, ...SIGNATURES].map((d) => [d.id, d]),
+  [...DEFS, ...ULTIMATES, ...MAIN, ...PHONG, ...SIGNATURES, ...ROLE_SKILLS, ...ELEMENT_SKILLS].map((d) => [d.id, d]),
 );
 
 export function getSkill(id: string): SkillDef | undefined {
@@ -924,8 +978,8 @@ export function ultimateOf(character: string): SkillDef | undefined {
   return ULTIMATES.find((d) => d.character === character);
 }
 
-/** 6 kỹ năng chủ động của nhân vật chính theo nguyên tố. */
-export function mainSkills(element: Element): SkillDef[] {
+/** Preset hệ cũ: chỉ AI chiến dịch và kiểm thử hồi quy. Player dùng characterSkills. */
+export function legacyElementSkills(element: Element): SkillDef[] {
   return [...MAIN, ...PHONG].filter((d) => d.element === element).sort((a, b) => (a.slot ?? 0) - (b.slot ?? 0));
 }
 
@@ -939,10 +993,10 @@ export function personalSkillOf(character: string): SkillDef | undefined {
   return signatureOf(character) ?? ultimateOf(character);
 }
 
-/** Bộ 6 kỹ năng theo nguyên tố, ô 5 thay bằng kỹ năng riêng của `character` nếu có. */
-export function heroSkills(element: Element, character?: string): SkillDef[] {
+/** Preset AI chiến dịch cũ; player dùng characterSkills. */
+export function legacyHeroSkills(element: Element, character?: string): SkillDef[] {
   const sig = character === undefined ? undefined : personalSkillOf(character);
-  return mainSkills(element).map((d) => (sig && d.slot === sig.slot ? sig : d));
+  return legacyElementSkills(element).map((d) => (sig && d.slot === sig.slot ? sig : d));
 }
 
 /** Bước lốc xoáy người chơi tự chọn tâm (không tính bước tự xoay). */

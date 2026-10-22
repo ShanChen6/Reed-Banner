@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import {
   act,
   createBattle,
-  mainSkills,
+  legacyElementSkills,
   parseBoard,
   SKILL_BOARD_ENERGY,
   SKILL_BOARD_SWORD,
@@ -27,7 +27,7 @@ function board() {
 }
 
 function setup(): BattleState {
-  const hero = fighter("dbl", { profession: "tuongSi", skills: mainSkills("hoa").map((d) => d.id) });
+  const hero = fighter("dbl", { profession: "tuongSi", skills: legacyElementSkills("hoa").map((d) => d.id) });
   const { state } = createBattle({ sides: [solo(hero), solo(fighter("b"))], seed: 1, timer: false });
   const s = structuredClone(state);
   s.board = board();

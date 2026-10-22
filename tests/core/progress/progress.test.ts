@@ -5,7 +5,7 @@ import {
   ALL_COMPANIONS,
   isHero,
   isWarlord,
-  mainSkills,
+  characterSkills,
   personalSkillOf,
   signatureOf,
   WARLORD_COMPANIONS,
@@ -131,17 +131,17 @@ describe("mở khóa và dựng nhân vật", () => {
     const slots = (level: number) => buildMain(at(level), "moc", "tuongSi").skills!.map((id) => getSkill(id)!.slot);
     assert.deepEqual(slots(1), [1, 2]);
     assert.deepEqual(slots(5), [1, 2, 3]);
-    assert.deepEqual(slots(15), [1, 2, 3, 4, 6]);
-    assert.deepEqual(slots(20), [1, 2, 3, 4, 5, 6]);
+    assert.deepEqual(slots(15), [1, 2, 3, 5, 4]);
+    assert.deepEqual(slots(20), [1, 2, 3, 5, 4, 6]);
   });
 
   it("cấp kỹ năng theo ô giữ nguyên khi đổi nguyên tố; chỉ số tăng theo cấp", () => {
     const p = at(20, 0, { skillLevels: { o3: 4 } });
     const moc = buildMain(p, "moc", "tuongSi");
     const kim = buildMain(p, "kim", "phapSu");
-    assert.equal(moc.skillLevels?.thanhMocHoPhap, 4);
-    assert.equal(kim.skillLevels?.doanKimNhatTuyen, 4);
-    assert.equal(fighterSkill(kim, "doanKimNhatTuyen")!.steps[0]!.type, "damage");
+    assert.equal(moc.skillLevels?.role_phaTran, 4);
+    assert.equal(kim.skillLevels?.role_nguHanhAn, 4);
+    assert.equal(fighterSkill(kim, "role_nguHanhAn")!.steps[0]!.type, "damage");
     assert.ok(buildMain(p, "moc", "tuongSi").atk > buildMain(at(1), "moc", "tuongSi").atk);
     assert.equal(buildMain(at(1), "moc", "tuongSi").atk, 55);
   });
@@ -160,12 +160,12 @@ describe("mở khóa và dựng nhân vật", () => {
     assert.deepEqual(buildAide(aide, NEW_PROGRESS).skills, ["phepCong"]);
   });
 
-  it("tướng thường: bộ 6 kỹ năng theo nguyên tố, tuyệt chiêu ở ô 5 mở ở cấp 20 như nhân vật chính", () => {
+  it("tướng thường: bộ nghề + hệ, tuyệt chiêu ở ô 5 mở ở cấp 10 như nhân vật chính", () => {
     const leThach = STARTER_COMPANIONS[1]!;
     const slots = (level: number) => buildCompanion(leThach, at(level)).skills!.map((id) => getSkill(id)!.slot);
     assert.deepEqual(slots(1), [1, 2]);
-    assert.deepEqual(slots(20), [1, 2, 3, 4, 5, 6]);
-    assert.ok(!buildCompanion(leThach, at(19, 3)).skills!.includes("tranSonHoQuan"));
+    assert.deepEqual(slots(20), [1, 2, 3, 5, 4, 6]);
+    assert.ok(!buildCompanion(leThach, at(9, 3)).skills!.includes("tranSonHoQuan"));
     assert.ok(buildCompanion(leThach, at(20, 3)).skills!.includes("tranSonHoQuan"));
     const r = upgradeSkill(at(20, 3), "o5", null);
     assert.ok(r.ok);
@@ -177,7 +177,7 @@ describe("mở khóa và dựng nhân vật", () => {
       assert.equal(ult.profession, c.profession);
       assert.deepEqual(
         c.skills,
-        mainSkills(c.element).map((d) => (d.slot === 5 ? ult.id : d.id)),
+        characterSkills(c.profession, c.element, c.id).map((d) => (d.slot === 5 ? ult.id : d.id)),
       );
     }
   });
@@ -194,15 +194,15 @@ describe("mở khóa và dựng nhân vật", () => {
   });
 
   it("kỹ năng nâng cấp có tác dụng trong trận và giảm chi phí năng lượng", () => {
-    const main = buildMain(at(1, 0, { skillLevels: { o2: 5 } }), "kim", "tuongSi");
+    const main = buildMain(at(1, 0, { skillLevels: { o1: 5 } }), "moc", "binhLinh");
     const { state } = createBattle({ sides: [{ fighters: [main], leader: 0 }, { fighters: [STARTER_COMPANIONS[0]!], leader: 0 }], seed: 3, timer: false, firstSide: 0 });
     state.sides[0].fighters[0]!.energy = 25; // giá gốc 30, cấp 5 còn 25
-    const r = act(state, { type: "skill", skill: "kimYNgungThan" });
+    const r = act(state, { type: "skill", skill: "role_thuThanh" });
     assert.ok(r.ok);
     const s = (r as { state: BattleState }).state;
     assert.equal(s.sides[0].fighters[0]!.energy, 0);
-    const atkUp = s.sides[0].fighters[0]!.effects.find((e) => e.kind === "atkUp");
-    assert.equal(atkUp?.value, 0.35);
+    const shield = s.sides[0].fighters[0]!.effects.find((e) => e.kind === "shield");
+    assert.equal(shield?.value, Math.round(s.sides[0].fighters[0]!.maxHp * 0.28));
   });
 });
 
@@ -275,7 +275,7 @@ describe("thao tác trên hồ sơ", () => {
       },
     };
     const p = parseProfile(JSON.parse(JSON.stringify(old)));
-    assert.deepEqual(p.companions.haVan, { ...at(12, 0), skillPoints: 11 });
+    assert.deepEqual(p.companions.haVan, { ...at(12, 0), skillPoints: 7 });
     assert.deepEqual(p.companions.maiThanh, at(6, 1, { skillLevels: { o1: 3 } }));
     assert.ok(!("branchChoice" in p));
   });

@@ -1,0 +1,18 @@
+import { parseArgs } from 'node:util';
+import { screeningCases, spiritCases, campaignAuditCases, AUDIT_PROFILES } from '../src/core/sim/audit';
+import type { SpiritExperiment } from '../src/core';
+import { runMeasured } from './lib/spirit-runner';
+const {values}=parseArgs({options:{group:{type:'string',default:'pilot'},ai:{type:'string',default:'after'},rule:{type:'string',default:'A'},shard:{type:'string',default:'0'},shards:{type:'string',default:'1'},cap:{type:'string',default:'120'},trace:{type:'string'},seeds:{type:'string'},profile:{type:'string'},equipment:{type:'string',default:'none'}}});
+if(!['pilot','screen','spirit','campaign'].includes(values.group)||!['before','after'].includes(values.ai)||!['A','B','C','D','E','F'].includes(values.rule))throw new Error('invalid group/ai/rule');
+const shard=Number(values.shard),shards=Number(values.shards),cap=Number(values.cap);
+if(![shard,shards,cap].every(Number.isSafeInteger)||shard<0||shards<1||shard>=shards||cap<2)throw new Error('invalid shard/cap');
+if(!['none','white3'].includes(values.equipment)||(values.equipment!=='none'&&values.group!=='campaign'))throw new Error('invalid equipment');
+if(values.profile&&!AUDIT_PROFILES.some(p=>p===values.profile))throw new Error('invalid profile');
+if(values.seeds&&!/^\d+(,\d+)*$/.test(values.seeds))throw new Error('invalid seeds');
+const seeds=values.seeds?.split(',').map(Number);
+if(seeds?.some(s=>!Number.isSafeInteger(s)||s<0))throw new Error('invalid seeds');
+const cases=values.group==='campaign'?campaignAuditCases(seeds,values.equipment as 'none'|'white3'):values.group==='spirit'?spiritCases(seeds):screeningCases(seeds);
+const selected=values.group==='pilot'?[cases[0]!,cases[4]!,...spiritCases(seeds).filter(c=>c.level===20).slice(0,4)]:cases;
+const matches=selected.filter((c,i)=>i%shards===shard&&(!values.trace||c.id===values.trace)&&(!values.profile||c.profile===values.profile));
+if(!matches.length)throw new Error('No cases selected');
+for(const c of matches)console.log(JSON.stringify(runMeasured(c,values.ai as 'before'|'after',values.rule as SpiritExperiment,cap,Boolean(values.trace))));

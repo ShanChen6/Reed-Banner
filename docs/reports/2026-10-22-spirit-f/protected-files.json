@@ -1,0 +1,30 @@
+{
+  "src/core/battle/skills.ts": {
+    "sha256": "f94d4f519d12da69b8385822ab303f6e70d760b4fede89cfc103178b00869e16",
+    "matchesPrecedingAuditBaseline": true
+  },
+  "src/core/roster/roster.ts": {
+    "sha256": "405def9804b07b643f603e5120debc9e8d80564ba4bedaf054f01964761d7510",
+    "matchesPrecedingAuditBaseline": true
+  },
+  "src/core/progress/progress.ts": {
+    "sha256": "cf89f478dc7086a1b07c598b9ba63a5c9668b381349cd196bd177038d89b0dea",
+    "matchesPrecedingAuditBaseline": true
+  },
+  "src/core/progress/profile.ts": {
+    "sha256": "e054f046f9ea8da039ec674c9f529078c4175fb4d9bb6832a3644ec5da44c410",
+    "matchesPrecedingAuditBaseline": true
+  },
+  "src/core/campaign/campaign.ts": {
+    "sha256": "eb5301adc03b21d2d449ad64a86507060f1d10d1a553d21d4dae13c56a79afed",
+    "matchesPrecedingAuditBaseline": true
+  },
+  "package.json": {
+    "sha256": "7fa5a8cc046aec6d03bcb2aa1d821e8b78679bd6002d02ea32d8b40712b5790c",
+    "matchesPrecedingAuditBaseline": true
+  },
+  "pnpm-lock.yaml": {
+    "sha256": "9da7a32d65ffed7ce5f7dc14c470a317f769ac18e6d2cd0199635e0d43311fe5",
+    "matchesPrecedingAuditBaseline": true
+  }
+}
