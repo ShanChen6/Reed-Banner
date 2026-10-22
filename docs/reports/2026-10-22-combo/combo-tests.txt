@@ -1,0 +1,36 @@
+▶ combo chủ động–bị động
+  ✔ phá giáp mở cơ hội; phải tự chọn người/đòn/mục tiêu để tận dụng (7.02963ms)
+  ✔ combo gameplay hoạt động khi audit:false; không đổi RNG hoặc lộ boardRng cho AI (5.97721ms)
+  ✔ khống chế miễn nhiễm/không đổi hiệu ứng không mở cơ hội, người mở không tự kích hoạt (1.781532ms)
+  ✔ hồi đầy máu không mở combo; hồi hữu hiệu mở giảm giá, core và AI cùng tính giá (4.06397ms)
+  ✔ Tiếp sức tăng raw trước hệ số người nhận; không nhân TT hoặc hồi dư hai lần (1.900872ms)
+  ✔ Khiên đồng đội phải hấp thụ đòn chủ động; cấp/refresh không tự mở phản công (2.064009ms)
+  ✔ Khiên tự cấp không mở Hộ vệ; mất Khiên không để lại nguồn giả (1.460706ms)
+  ✔ Đoạn tiếp tế chỉ trừ thêm mục tiêu đã mở, không sinh năng lượng âm (1.916486ms)
+  ✔ thời hạn theo lượt phe, qua đúng hai lượt tiếp theo rồi hết; freeze/silence chặn tận dụng (3.8395ms)
+  ✔ xua tan phá cơ hội; hạ mục tiêu hoặc người hưởng dọn sạch cơ hội (2.323049ms)
+  ✔ một combo không mở tiếp combo khác; không refresh/stack trên cơ hội đang có (1.345903ms)
+  ✔ sang đợt sinh tồn xóa cơ hội, nguồn Khiên và cooldown cũ (2.176018ms)
+✔ combo chủ động–bị động (37.326931ms)
+▶ layout 2 và mở rộng roster
+  ✔ đổi ô 4/5 giữ cấp, XP, điểm đã tiêu và điểm dư; chỉ một lần cho main lẫn tướng (1.54202ms)
+  ✔ đủ mọi nhân vật và 42 tổ hợp: thứ tự 1..6, tuyệt chiêu4/cấp10, nghề5/cấp15 (11.861345ms)
+  ✔ tướng mới khai báo bằng dữ liệu, có thể chọn bị động khác mẫu nghề mà không sửa engine (0.223347ms)
+✔ layout 2 và mở rộng roster (13.78462ms)
+✔ lượt thêm giữ bộ đếm và cho người chơi tận dụng ngay; không mở chuỗi từ đòn combo (4.526568ms)
+✔ toàn bộ preset chiến dịch, gồm tùy tướng legacy, có bị động cấu hình được (2.305863ms)
+✔ registry chặn trùng ID và key prototype; không âm thầm ghi đè khi thêm tướng (0.769793ms)
+✔ Tiếp sức không tăng regen hoặc bị tiêu bởi tick hồi; regen không mở Hiệp lực (2.279654ms)
+✔ bóng ma phòng thủ cũ nhận bị động khi dựng trận mới, không đổi chỉ số/đầu tư (0.374636ms)
+✔ AI định giá Xua tan cơ hội nguy hiểm ngay cả khi mục tiêu không có buff thường (1.678786ms)
+✔ chuẩn bị combo tạo cửa sổ hạ gục mà cùng đòn đánh thường chưa đủ (2.041083ms)
+✔ nguồn chiêu riêng canonical mở rộng mà không qua chuyển ô legacy (0.237409ms)
+✔ API nâng ô 4/5 yêu cầu layout2, chặn client cache cũ nâng nhầm chiêu (0.269537ms)
+ℹ tests 24
+ℹ suites 2
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 393.813385

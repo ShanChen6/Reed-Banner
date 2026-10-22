@@ -198,7 +198,7 @@ export default function ShopPanel({
       {warlordsLeft.length > 0 && (
         <>
           <h3 className="mt-3 mb-1.5 font-semibold">Sứ quân (mở bán khi đánh bại ở chiến dịch)</h3>
-          <p className="mb-2 text-xs opacity-75">Khi tuyển về, sứ quân dùng 3 chiêu nghề + 2 chiêu hệ + chiêu riêng ô 5 mở cấp 10. Khi làm đối thủ chiến dịch, họ giữ bộ hệ của màn và luôn có chiêu riêng; bộ chiêu có thể khác.</p>
+          <p className="mb-2 text-xs opacity-75">Khi tuyển về, sứ quân dùng 3 chiêu nghề + 2 chiêu hệ + chiêu riêng ô 4 mở cấp 10. Khi làm đối thủ chiến dịch, họ giữ bộ hệ của màn và luôn có chiêu riêng; bộ chiêu có thể khác.</p>
           <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 lg:grid-cols-3">{warlordsLeft.map(card)}</ul>
         </>
       )}
@@ -209,7 +209,7 @@ export default function ShopPanel({
         </>
       )}
       <p className="mt-2 opacity-60">
-        Mọi nhân vật kèm có 3 chiêu nghề, 2 chiêu hệ và 1 tuyệt chiêu như Đinh Bộ Lĩnh, nâng theo ô; ô 5 là tuyệt chiêu (tướng thường) hoặc chiêu riêng (tướng lịch sử, sứ quân). Chọn 2 nhân vật kèm ra trận cùng Đinh Bộ Lĩnh. Nhân vật mua về bắt đầu ở cấp 1.
+        Mọi nhân vật kèm có 3 chiêu nghề, 2 chiêu hệ và 1 tuyệt chiêu như Đinh Bộ Lĩnh, nâng theo ô; ô 4 là tuyệt chiêu (tướng thường) hoặc chiêu riêng (tướng lịch sử, sứ quân). Chọn 2 nhân vật kèm ra trận cùng Đinh Bộ Lĩnh. Nhân vật mua về bắt đầu ở cấp 1.
       </p>
     </section>
   );

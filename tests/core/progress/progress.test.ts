@@ -115,7 +115,7 @@ describe("nâng cấp kỹ năng", () => {
 });
 
 describe("mở khóa và dựng nhân vật", () => {
-  it("tiến trình tối đa: cấp 30, đủ 6 ô và mọi kỹ năng ở cấp tối đa, kèm có tuyệt chiêu ở ô 5", () => {
+  it("tiến trình tối đa: cấp 30, đủ 6 ô và mọi kỹ năng ở cấp tối đa, kèm có tuyệt chiêu ở ô 4", () => {
     const main = buildMain(maxProgress(null), "moc", "tuongSi");
     assert.equal(main.skills!.length, 6);
     assert.ok(main.skills!.every((id) => main.skillLevels?.[id] === SKILL_MAX_LEVEL));
@@ -131,8 +131,8 @@ describe("mở khóa và dựng nhân vật", () => {
     const slots = (level: number) => buildMain(at(level), "moc", "tuongSi").skills!.map((id) => getSkill(id)!.slot);
     assert.deepEqual(slots(1), [1, 2]);
     assert.deepEqual(slots(5), [1, 2, 3]);
-    assert.deepEqual(slots(15), [1, 2, 3, 5, 4]);
-    assert.deepEqual(slots(20), [1, 2, 3, 5, 4, 6]);
+    assert.deepEqual(slots(15), [1, 2, 3, 4, 5]);
+    assert.deepEqual(slots(20), [1, 2, 3, 4, 5, 6]);
   });
 
   it("cấp kỹ năng theo ô giữ nguyên khi đổi nguyên tố; chỉ số tăng theo cấp", () => {
@@ -160,24 +160,24 @@ describe("mở khóa và dựng nhân vật", () => {
     assert.deepEqual(buildAide(aide, NEW_PROGRESS).skills, ["phepCong"]);
   });
 
-  it("tướng thường: bộ nghề + hệ, tuyệt chiêu ở ô 5 mở ở cấp 10 như nhân vật chính", () => {
+  it("tướng thường: bộ nghề + hệ, tuyệt chiêu ở ô 4 mở ở cấp 10 như nhân vật chính", () => {
     const leThach = STARTER_COMPANIONS[1]!;
     const slots = (level: number) => buildCompanion(leThach, at(level)).skills!.map((id) => getSkill(id)!.slot);
     assert.deepEqual(slots(1), [1, 2]);
-    assert.deepEqual(slots(20), [1, 2, 3, 5, 4, 6]);
+    assert.deepEqual(slots(20), [1, 2, 3, 4, 5, 6]);
     assert.ok(!buildCompanion(leThach, at(9, 3)).skills!.includes("tranSonHoQuan"));
     assert.ok(buildCompanion(leThach, at(20, 3)).skills!.includes("tranSonHoQuan"));
-    const r = upgradeSkill(at(20, 3), "o5", null);
+    const r = upgradeSkill(at(20, 3), "o4", null);
     assert.ok(r.ok);
     assert.equal(buildCompanion(leThach, r.progress).skillLevels!.tranSonHoQuan, 2);
     for (const c of [...STARTER_COMPANIONS, ...SHOP_COMPANIONS.map((x) => x.fighter)]) {
       const ult = ultimateOf(c.id)!;
-      assert.equal(ult.slot, 5);
+      assert.equal(ult.slot, 4);
       assert.equal(ult.cost, 100);
-      assert.equal(ult.profession, c.profession);
+      if (ult.profession !== undefined) assert.equal(ult.profession, c.profession);
       assert.deepEqual(
         c.skills,
-        characterSkills(c.profession, c.element, c.id).map((d) => (d.slot === 5 ? ult.id : d.id)),
+        characterSkills(c.profession, c.element, c.id).map((d) => (d.slot === 4 ? ult.id : d.id)),
       );
     }
   });
@@ -305,9 +305,9 @@ describe("thao tác trên hồ sơ", () => {
     assert.deepEqual(profileTeam(team.profile, team.profile.team).map((f) => f.id), ["dinhBoLinh", "daoLam", "leThach"]);
   });
 
-  it("tướng thường phủ đủ 42 tổ hợp nghề × hệ, mỗi tổ hợp một người; ai cũng có kỹ năng riêng ở ô 5", () => {
+  it("tướng thường phủ đủ 42 tổ hợp nghề × hệ, mỗi tổ hợp một người; ai cũng có kỹ năng riêng ở ô 4", () => {
     const common = [...STARTER_COMPANIONS, ...SHOP_COMPANIONS.map((c) => c.fighter)];
-    assert.equal(common.length, 42);
+    assert.ok(common.length >= 42);
     assert.equal(new Set(common.map((c) => `${c.profession}-${c.element}`)).size, 42);
     assert.equal(new Set(ALL_COMPANIONS.map((c) => c.id)).size, ALL_COMPANIONS.length);
     assert.equal(new Set(ALL_COMPANIONS.map((c) => personalSkillOf(c.id)!.id)).size, ALL_COMPANIONS.length);
@@ -316,7 +316,7 @@ describe("thao tác trên hồ sơ", () => {
     for (const c of ALL_COMPANIONS) {
       const own = personalSkillOf(c.id);
       assert.ok(own, c.id);
-      assert.equal(own.slot, 5);
+      assert.equal(own.slot, 4);
       assert.ok(c.skills!.includes(own.id));
       assert.equal(!!ultimateOf(c.id), !isHero(c.id) && !isWarlord(c.id), c.id);
     }

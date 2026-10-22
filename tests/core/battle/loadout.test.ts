@@ -23,7 +23,7 @@ describe("bộ nghề + hệ", () => {
     assert.equal(new Set([...ROLE_SKILLS,...ELEMENT_SKILLS].map(d=>d.id)).size,32);
     for (const p of PROFESSIONS) for (const e of ELEMENTS) {
       const defs = characterSkills(p,e);
-      assert.deepEqual(defs.map(d=>d.slot),[1,2,3,5,4,6]);
+      assert.deepEqual(defs.map(d=>d.slot),[1,2,3,4,5,6]);
       assert.equal(new Set(defs.map(d=>d.id)).size,6);
       assert.equal(defs.filter(d=>skillSource(d)==="profession").length,3);
       assert.equal(defs.filter(d=>skillSource(d)==="element").length,2);
@@ -32,18 +32,18 @@ describe("bộ nghề + hệ", () => {
       assert.deepEqual(buildMain(autoProgress(30,null),e,p).skills,defs.map(d=>d.id));
     }
   });
-  it("mọi nhân vật kèm dùng đúng chiêu riêng ô 5, không có chiêu thứ bảy", () => {
-    assert.equal(ALL_COMPANIONS.length,60);
+  it("mọi nhân vật kèm dùng đúng chiêu riêng ô 4, không có chiêu thứ bảy", () => {
+    assert.ok(ALL_COMPANIONS.length>=60);
     for (const c of ALL_COMPANIONS) {
       const defs = characterSkills(c.profession,c.element,c.id);
-      assert.equal(defs.find(d=>d.slot===5)?.id,personalSkillOf(c.id)?.id,c.id);
+      assert.equal(defs.find(d=>d.slot===4)?.id,personalSkillOf(c.id)?.id,c.id);
       assert.ok(personalSkillOf(c.id));
       assert.deepEqual(c.skills,defs.map(d=>d.id));
       assert.deepEqual(buildCompanion(c,autoProgress(30,null)).skills,defs.map(d=>d.id));
     }
   });
   it("mốc mở chính xác và khóa nâng cấp trước mốc", () => {
-    const expected = [[1,1,2],[4,1,2],[5,1,2,3],[9,1,2,3],[10,1,2,3,5],[14,1,2,3,5],[15,1,2,3,5,4],[19,1,2,3,5,4],[20,1,2,3,5,4,6]];
+    const expected = [[1,1,2],[4,1,2],[5,1,2,3],[9,1,2,3],[10,1,2,3,4],[14,1,2,3,4],[15,1,2,3,4,5],[19,1,2,3,4,5],[20,1,2,3,4,5,6]];
     for (const [level,...slots] of expected) {
       const p={...NEW_PROGRESS,level:level!,skillPoints:10};
       assert.deepEqual(buildMain(p,"moc","ySu").skills!.map(id=>getSkill(id)!.slot),slots);

@@ -1,5 +1,7 @@
 # Danh sách nhân vật
 
+> Cập nhật tiếp theo: [kỹ năng phiên bản 2 và combo đồng đội](21-combo-dong-doi.md). Layout mới đổi tuyệt chiêu sang ô 4, nghề nâng cao sang ô 5, có chuyển hồ sơ giữ điểm. Các định nghĩa legacy/lịch sử bên dưới cần đọc cùng tài liệu phiên bản 2.
+
 > Cập nhật: 20/10/2026
 >
 > Danh sách đầy đủ mọi nhân vật chơi được: Đinh Bộ Lĩnh, 42 tướng thường, 6 tướng lịch sử và 12 sứ quân. Luật chung về nghề, nội tại và cách dùng kỹ năng ở [Nhân vật, nghề & kỹ năng](06-nhan-vat-ky-nang.md); bộ kỹ năng hiện hành ở [Cải tổ kỹ năng](20-cai-to-ky-nang.md). Tên nhân vật hư cấu và tên chiêu do Claude tự đặt (clean-room), số liệu đã qua mô phỏng `pnpm sim -- --roster` ngày 20/10/2026 (mục 8), chờ Shan duyệt. Dữ liệu nằm trong `src/core/roster/roster.ts` và `src/core/battle/skills.ts`.

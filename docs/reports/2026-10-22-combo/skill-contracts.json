@@ -1,0 +1,3811 @@
+{
+  "checkpoint": "32f87aa1410c14ad35627d6075819f85fe27c23d",
+  "skills": 152,
+  "levelsChecked": 5,
+  "numericContractsEqual": true,
+  "spiritAndFoodRulesByteIdentical": true,
+  "campaignPresetsByteIdentical": true,
+  "baseStatsByteIdentical": true,
+  "checks": [
+    {
+      "id": "tramKich",
+      "level": 1,
+      "sha256": "3e8c9efbbef57b5265d1113943dcb2ebfc91de08de6baa896ee704e7fd5944da"
+    },
+    {
+      "id": "tramKich",
+      "level": 2,
+      "sha256": "c336fa229c15b7e1ee5bb1362d8800ca95503b4fd70b455d3da7cf6a679249b3"
+    },
+    {
+      "id": "tramKich",
+      "level": 3,
+      "sha256": "6e81e014d6d322c70a4fdbaf402d69396adbcd2dd1c958a9cca02c77774521a5"
+    },
+    {
+      "id": "tramKich",
+      "level": 4,
+      "sha256": "652474e17ad1d4c4c487c2bf546131b8f0745a3e1db7aef4b8e332efdb205d79"
+    },
+    {
+      "id": "tramKich",
+      "level": 5,
+      "sha256": "5e0e3dfeeb985f4fc6803f70b1b309f7d79221c2680d5d57f22919ff00e1c0d9"
+    },
+    {
+      "id": "hieuLenh",
+      "level": 1,
+      "sha256": "a9a2fa7e42c5b5588bf6695a2751aa77ac846ba636931ccd3c1985f4ecfd6b23"
+    },
+    {
+      "id": "hieuLenh",
+      "level": 2,
+      "sha256": "63ae3eb832c0725cbcf1fd2e02f49fa0534164aed97ae4371a7ba53fbce79ae5"
+    },
+    {
+      "id": "hieuLenh",
+      "level": 3,
+      "sha256": "7dba783b77c938e6156428c19380138fca0ee804ccc09eba637cf5c960f815ba"
+    },
+    {
+      "id": "hieuLenh",
+      "level": 4,
+      "sha256": "5be8694686dacdd7569f039d704eaaefd4a1895b08b81411f088de631beef186"
+    },
+    {
+      "id": "hieuLenh",
+      "level": 5,
+      "sha256": "36009a00b5ad5ce97797da5d51d55220a1e5d7eecb7cd034b09be398a717b294"
+    },
+    {
+      "id": "phaTran",
+      "level": 1,
+      "sha256": "3448eaa211461dc69d4ac8b146061d570b3b39bbde98b1c7fe14afe59632265c"
+    },
+    {
+      "id": "phaTran",
+      "level": 2,
+      "sha256": "e0c17f12c3fb5cb56943ce838af2acc9ebc1bd9dbe52522a6eca14a32feb8ff9"
+    },
+    {
+      "id": "phaTran",
+      "level": 3,
+      "sha256": "c18adda623560cc4a4d4b3478733be29c29e8992561f17835c59f936f38d11b5"
+    },
+    {
+      "id": "phaTran",
+      "level": 4,
+      "sha256": "28985461183b071f5f92501612b75722c7e34b3d4122eee9fa199510b8cc87ff"
+    },
+    {
+      "id": "phaTran",
+      "level": 5,
+      "sha256": "e6f06f7290334c4b1896f761a2f4a1c4787cff8d4df17b37cd769735506ac1bc"
+    },
+    {
+      "id": "thuThanh",
+      "level": 1,
+      "sha256": "71e9cc594ec9384a92a25b33777e61be8d974234ff6f6d1dddaa52a45c44a972"
+    },
+    {
+      "id": "thuThanh",
+      "level": 2,
+      "sha256": "255cdfa3fa78b631d51e16f771d4d65238cb642f17b5d72a22a1eca12dbaf34d"
+    },
+    {
+      "id": "thuThanh",
+      "level": 3,
+      "sha256": "b7d45b1cace552655d691a05bce7c6b09a28b4b2075b36904dabb9439137d485"
+    },
+    {
+      "id": "thuThanh",
+      "level": 4,
+      "sha256": "0b5b6d9f78666fc66de77f157d1e4824c1d1e1dafe2467b50cd6107dc1bdeb38"
+    },
+    {
+      "id": "thuThanh",
+      "level": 5,
+      "sha256": "7d42643f6db0ddaea62a05bff107f5aefbc6171d7bbe69ec30e1761e8f56d0db"
+    },
+    {
+      "id": "phanKich",
+      "level": 1,
+      "sha256": "37c31de6126c6612f52e341333e80ce93314b26a26f42f0d6a3743374352aa3c"
+    },
+    {
+      "id": "phanKich",
+      "level": 2,
+      "sha256": "a56964e5775173d158b78e621dd716dd34b6192f95f07fbe9ce21624b407596c"
+    },
+    {
+      "id": "phanKich",
+      "level": 3,
+      "sha256": "42e5d221bf7bee88ad52c12b0fdf4da241625ffc08b2a7e0922334c76950586c"
+    },
+    {
+      "id": "phanKich",
+      "level": 4,
+      "sha256": "bf009262a17c5e2a83c54d916ac9d374ee8f7c7faf39fee9022c6d2680182b9a"
+    },
+    {
+      "id": "phanKich",
+      "level": 5,
+      "sha256": "70700fbb6f9cb5d2cce86822e5457f5473e13cbc408d84168ab158725abd51fa"
+    },
+    {
+      "id": "tuongKhien",
+      "level": 1,
+      "sha256": "4c9e3133d6c885a7a154eac98831cd7598446dc3eaa4a6acc4c33326bfd28a07"
+    },
+    {
+      "id": "tuongKhien",
+      "level": 2,
+      "sha256": "95481294072851d6012b994d13321a37241dddfeb89daa00c8a3516c3081c853"
+    },
+    {
+      "id": "tuongKhien",
+      "level": 3,
+      "sha256": "8516e8d36edcb4e320dc7561cac551388771a316965ade3b50eb04a6574ea624"
+    },
+    {
+      "id": "tuongKhien",
+      "level": 4,
+      "sha256": "4d358c221613f9949a9bf968625bd4fea23bbf2e5ceb7776f1dd0bae81329385"
+    },
+    {
+      "id": "tuongKhien",
+      "level": 5,
+      "sha256": "dc26e4c794aca4027b1324fb89f51a16580edaa351c81392ab2fe2da1502343f"
+    },
+    {
+      "id": "phepCong",
+      "level": 1,
+      "sha256": "e871ccbaa3c526883c5573b69f5bf2180e5a48c8d202c01a4273fb398aedd15f"
+    },
+    {
+      "id": "phepCong",
+      "level": 2,
+      "sha256": "305d6e941e5ed208a482e4ce863d1ec661f82a4cf537b79c6e759147deea402e"
+    },
+    {
+      "id": "phepCong",
+      "level": 3,
+      "sha256": "7791a50725dd42a6e736b3871eed72df5b6a26c006f0fc9ed6e7825c0c6c5e84"
+    },
+    {
+      "id": "phepCong",
+      "level": 4,
+      "sha256": "dd2128e05ce310fb9942780ff146ae9770fbd8aabbf9d0798424519988d63150"
+    },
+    {
+      "id": "phepCong",
+      "level": 5,
+      "sha256": "38b387a0219db179f9c9937f7af002c118e64310846603ecafd7f616270cdaf9"
+    },
+    {
+      "id": "nguHanhAn",
+      "level": 1,
+      "sha256": "0a6736f5d92d6c4cb1b7df4cd320ba667ac999364515537984449c7baad273c6"
+    },
+    {
+      "id": "nguHanhAn",
+      "level": 2,
+      "sha256": "f31b8318053cf3880358d864fc95d067021917a6f31a5de7388165ef4b66088a"
+    },
+    {
+      "id": "nguHanhAn",
+      "level": 3,
+      "sha256": "f727ff4dea6e34a59b3d5cc5b2befa4f9863a24aa82b495be9243c3daf438261"
+    },
+    {
+      "id": "nguHanhAn",
+      "level": 4,
+      "sha256": "55ab54f16e04b95230c3dd60c6899f9f20eded883d106c6d7e360869e9ec9d82"
+    },
+    {
+      "id": "nguHanhAn",
+      "level": 5,
+      "sha256": "c3edee7bbeb2d0cc908896008dbc8e7153cc1c265375dfad2193bd3e14577840"
+    },
+    {
+      "id": "phepLan",
+      "level": 1,
+      "sha256": "2858edf4cd8f51df06f02e1a31abee5b87525626a9a584ddec25721b54f085a6"
+    },
+    {
+      "id": "phepLan",
+      "level": 2,
+      "sha256": "1a67030fdf6b31bf48595b461b19cb7926244b3543dcd5793923063a15aeec9e"
+    },
+    {
+      "id": "phepLan",
+      "level": 3,
+      "sha256": "1e0726b3674620116e1afd547df7b656c078b9d3225069ed6f3929fa781d8bbc"
+    },
+    {
+      "id": "phepLan",
+      "level": 4,
+      "sha256": "3e9aead5eef0deb0555aacdabf18513c5928aadb540c3fec2bd55911e3f1a544"
+    },
+    {
+      "id": "phepLan",
+      "level": 5,
+      "sha256": "428814ffbaeff8080fe455b8b0b951a2109aef819689a24bceb5180f915c46ee"
+    },
+    {
+      "id": "linhDuoc",
+      "level": 1,
+      "sha256": "8b225d64f7c7f6ff549ab6e826172b2a669af189ef0dc8239604ce08dd8f1e4e"
+    },
+    {
+      "id": "linhDuoc",
+      "level": 2,
+      "sha256": "c836e22b67ae6a7f51d8e534f9ff723c150b7705847f006b3f0533a04b0e0a08"
+    },
+    {
+      "id": "linhDuoc",
+      "level": 3,
+      "sha256": "aa2d5bdb60aeb3346a288573805dd9be3b21a97387ac64ff6c9941fd1311d84d"
+    },
+    {
+      "id": "linhDuoc",
+      "level": 4,
+      "sha256": "7ee672d0861820920cc20b7b7a83d51553b7129e9639fe61c7e9991948ab170c"
+    },
+    {
+      "id": "linhDuoc",
+      "level": 5,
+      "sha256": "0b8c2c98c68f87e555bdbff5c5b16757daa287ef4f9b14539ce0ca1867b7c988"
+    },
+    {
+      "id": "duongSinh",
+      "level": 1,
+      "sha256": "34eab721ebd19263c107f6827c68243c90bcb79badfeb4d0db6f70f9fe29033c"
+    },
+    {
+      "id": "duongSinh",
+      "level": 2,
+      "sha256": "0be98fcdb15c8e77ab09f0841553223452a553dc8616e37913372376ab54486f"
+    },
+    {
+      "id": "duongSinh",
+      "level": 3,
+      "sha256": "3f04b52ede30f2d5fee514bf4159c11c7375cf6d76cab376df1b710e1700115a"
+    },
+    {
+      "id": "duongSinh",
+      "level": 4,
+      "sha256": "57bbc566d3cd879d6375d4b91425780bcda516a756c868f1467aeab0575ede04"
+    },
+    {
+      "id": "duongSinh",
+      "level": 5,
+      "sha256": "db00b8188912cf07af922cb8a375c88feb7bd01e42955b69e98fb30f18456c33"
+    },
+    {
+      "id": "teDo",
+      "level": 1,
+      "sha256": "8f67441abd8c63fb13b0c50f2a391d62d801995c62ea96fcc16bfe3907c1b75e"
+    },
+    {
+      "id": "teDo",
+      "level": 2,
+      "sha256": "364ca175a44a50a837ccc9b7afdd4f60dc8a8917587f1da2bd7fa993dd8bb197"
+    },
+    {
+      "id": "teDo",
+      "level": 3,
+      "sha256": "271bed2183fe10a0d97c4a93c8a17d8ca346e0c87f2f6c63fdd0ab37b145a6f7"
+    },
+    {
+      "id": "teDo",
+      "level": 4,
+      "sha256": "9634a30a62913380fe11002a95e4293a7854d9192bdcb0f6d019dbba35ae351c"
+    },
+    {
+      "id": "teDo",
+      "level": 5,
+      "sha256": "29eee5382c2d9ea238ec7eabfbd60a6c33b9c68f6532fb13868989738d4af6a9"
+    },
+    {
+      "id": "muaChuoc",
+      "level": 1,
+      "sha256": "575b33e32962b2c5df3d67a4ee840b77b3ba7bcc8379539372cb722975d6e286"
+    },
+    {
+      "id": "muaChuoc",
+      "level": 2,
+      "sha256": "575b33e32962b2c5df3d67a4ee840b77b3ba7bcc8379539372cb722975d6e286"
+    },
+    {
+      "id": "muaChuoc",
+      "level": 3,
+      "sha256": "575b33e32962b2c5df3d67a4ee840b77b3ba7bcc8379539372cb722975d6e286"
+    },
+    {
+      "id": "muaChuoc",
+      "level": 4,
+      "sha256": "575b33e32962b2c5df3d67a4ee840b77b3ba7bcc8379539372cb722975d6e286"
+    },
+    {
+      "id": "muaChuoc",
+      "level": 5,
+      "sha256": "8efaac809aa6c6653f06e8ff5134fc721f8a4763b9c94dda72e23ef6f2cef8a7"
+    },
+    {
+      "id": "lyGian",
+      "level": 1,
+      "sha256": "b94076015dbf4da8eb2d4df6752acd62139aeb4c87584a7122efb65ab2c35243"
+    },
+    {
+      "id": "lyGian",
+      "level": 2,
+      "sha256": "b94076015dbf4da8eb2d4df6752acd62139aeb4c87584a7122efb65ab2c35243"
+    },
+    {
+      "id": "lyGian",
+      "level": 3,
+      "sha256": "b94076015dbf4da8eb2d4df6752acd62139aeb4c87584a7122efb65ab2c35243"
+    },
+    {
+      "id": "lyGian",
+      "level": 4,
+      "sha256": "b94076015dbf4da8eb2d4df6752acd62139aeb4c87584a7122efb65ab2c35243"
+    },
+    {
+      "id": "lyGian",
+      "level": 5,
+      "sha256": "0a45501739eefd935a3bd9e3715f3bcb807c2efa1ce0604c90374266363ee8d4"
+    },
+    {
+      "id": "catQuanLuong",
+      "level": 1,
+      "sha256": "ee67a11db58e0edc1595498d95500a02d808bdec218be7b06a9e091665c9d377"
+    },
+    {
+      "id": "catQuanLuong",
+      "level": 2,
+      "sha256": "ee67a11db58e0edc1595498d95500a02d808bdec218be7b06a9e091665c9d377"
+    },
+    {
+      "id": "catQuanLuong",
+      "level": 3,
+      "sha256": "ee67a11db58e0edc1595498d95500a02d808bdec218be7b06a9e091665c9d377"
+    },
+    {
+      "id": "catQuanLuong",
+      "level": 4,
+      "sha256": "ee67a11db58e0edc1595498d95500a02d808bdec218be7b06a9e091665c9d377"
+    },
+    {
+      "id": "catQuanLuong",
+      "level": 5,
+      "sha256": "3ee8dcf48735bd2174b22c543552027c734b89fd2485d207878df285da31c3c7"
+    },
+    {
+      "id": "nghiBinh",
+      "level": 1,
+      "sha256": "de571c180b47d950810807661a2196d36e75fdfaca6e40dee68bae4db8485328"
+    },
+    {
+      "id": "nghiBinh",
+      "level": 2,
+      "sha256": "d5f5eedbcbb186f4d414c531d19a0a9ec9f23476dff499ef11203059683265a7"
+    },
+    {
+      "id": "nghiBinh",
+      "level": 3,
+      "sha256": "1f870a003ab3c5d4ceb02ab58e1505f623ac34dfa58561e02724b38d65cf805d"
+    },
+    {
+      "id": "nghiBinh",
+      "level": 4,
+      "sha256": "76a1703cfdcc3cf2e1a771fde9c87a7e34c79c868ea631f5c7dca0b7d4d5ee7c"
+    },
+    {
+      "id": "nghiBinh",
+      "level": 5,
+      "sha256": "a9941be11e3d9f9fd2f33a1149968a2398d60f2fbd070e464b0163809e8ff439"
+    },
+    {
+      "id": "phaKe",
+      "level": 1,
+      "sha256": "8832a13c617dd4f0ed5049d83bb98e60e6c9aecc5f30503bd2ac083fc23c11d8"
+    },
+    {
+      "id": "phaKe",
+      "level": 2,
+      "sha256": "8832a13c617dd4f0ed5049d83bb98e60e6c9aecc5f30503bd2ac083fc23c11d8"
+    },
+    {
+      "id": "phaKe",
+      "level": 3,
+      "sha256": "8832a13c617dd4f0ed5049d83bb98e60e6c9aecc5f30503bd2ac083fc23c11d8"
+    },
+    {
+      "id": "phaKe",
+      "level": 4,
+      "sha256": "8832a13c617dd4f0ed5049d83bb98e60e6c9aecc5f30503bd2ac083fc23c11d8"
+    },
+    {
+      "id": "phaKe",
+      "level": 5,
+      "sha256": "b3eb2d8eb1ea3bb8de70234ff9c9a1d02605e0238e53388a74f8264f71e63bb3"
+    },
+    {
+      "id": "bayTran",
+      "level": 1,
+      "sha256": "5cf775f276ba8be66a8c9d3ba63a3b4aff297694a11cd2bafb503aa839a22fd5"
+    },
+    {
+      "id": "bayTran",
+      "level": 2,
+      "sha256": "a639be629bfb7d430aca766bc2c2acb432e89029187c34f26dd5bd29f0be3ba6"
+    },
+    {
+      "id": "bayTran",
+      "level": 3,
+      "sha256": "2de2c6e500328705268051b82d123fd933c8ca1395336efeda370e15b429b8b3"
+    },
+    {
+      "id": "bayTran",
+      "level": 4,
+      "sha256": "d0539f6eb494a6856f766ab3eae2bae76ff423c324afcd8640acd0240463dc02"
+    },
+    {
+      "id": "bayTran",
+      "level": 5,
+      "sha256": "5e2f0a22fbfdbf7362ab5dd855ec006a7471d97b697e83d985596a4cb252ead5"
+    },
+    {
+      "id": "lucDiepPhong",
+      "level": 1,
+      "sha256": "185b35c6c4c8a55c4a9673f972bfc83591b9106b022db1e90ee09b1b4f37264c"
+    },
+    {
+      "id": "lucDiepPhong",
+      "level": 2,
+      "sha256": "185b35c6c4c8a55c4a9673f972bfc83591b9106b022db1e90ee09b1b4f37264c"
+    },
+    {
+      "id": "lucDiepPhong",
+      "level": 3,
+      "sha256": "185b35c6c4c8a55c4a9673f972bfc83591b9106b022db1e90ee09b1b4f37264c"
+    },
+    {
+      "id": "lucDiepPhong",
+      "level": 4,
+      "sha256": "185b35c6c4c8a55c4a9673f972bfc83591b9106b022db1e90ee09b1b4f37264c"
+    },
+    {
+      "id": "lucDiepPhong",
+      "level": 5,
+      "sha256": "9d73f51e8da6b615617764f4f51a0fd99b7e253381a418a284c5041e0f174bbc"
+    },
+    {
+      "id": "linhMocHoiSinh",
+      "level": 1,
+      "sha256": "eb65b17f1b6851958319edf648406f94d0b50862e15e2fece37c1e82f7ee4f09"
+    },
+    {
+      "id": "linhMocHoiSinh",
+      "level": 2,
+      "sha256": "b912b3bd5e314afc60e0151cca6894fb02e881e76cfc4a02d4248a7503ec5024"
+    },
+    {
+      "id": "linhMocHoiSinh",
+      "level": 3,
+      "sha256": "22afe8d2ba696f79367bf724244b8b2b4ccc83a6f81bdd483f0f3d2a443ae6d3"
+    },
+    {
+      "id": "linhMocHoiSinh",
+      "level": 4,
+      "sha256": "51f4b1722e673cf9921bc74ffd6924042863362a731addd9b376c6a5c4a6f756"
+    },
+    {
+      "id": "linhMocHoiSinh",
+      "level": 5,
+      "sha256": "b424afb9fb436cb211d5bf20a610eda5704bd0378a6c1fea49ef08b3f772dc7f"
+    },
+    {
+      "id": "thanhMocHoPhap",
+      "level": 1,
+      "sha256": "34cff1244e4ae185bc9cd1c5d91e62331d1c6a73c7d6bd4ef590728f43a929e0"
+    },
+    {
+      "id": "thanhMocHoPhap",
+      "level": 2,
+      "sha256": "adadf433bade6f54874aa45b3c818efe92182a53b9a89eb61b702d628c339ea8"
+    },
+    {
+      "id": "thanhMocHoPhap",
+      "level": 3,
+      "sha256": "19aba08c5fa9d9599344476362aae2b76b12028f631e3c82030ea5c71b9820f8"
+    },
+    {
+      "id": "thanhMocHoPhap",
+      "level": 4,
+      "sha256": "e02fc057974932f58241cc2b5ddc6985a26341bfca082968b5aab735db0f3cf0"
+    },
+    {
+      "id": "thanhMocHoPhap",
+      "level": 5,
+      "sha256": "3383bc560881974a4f11859be1463f74e9b2e78ce2fc44f407c711c0a9f151e9"
+    },
+    {
+      "id": "cuongVuThienDiep",
+      "level": 1,
+      "sha256": "798563d880e37233955dac0945efd8915c6579800958c50f36d4415352078e26"
+    },
+    {
+      "id": "cuongVuThienDiep",
+      "level": 2,
+      "sha256": "d1fb8d613bc4a8f371fab8f6e230b33ebbae57e00b6598dc77c1acca171f200c"
+    },
+    {
+      "id": "cuongVuThienDiep",
+      "level": 3,
+      "sha256": "c0fecb9e17d9e7558596a537bb6095398ad7a0947e6b3d0fa2a12da104b5c044"
+    },
+    {
+      "id": "cuongVuThienDiep",
+      "level": 4,
+      "sha256": "f527d0f4da6544d9a897941609bb40363b2be3f4263504cfa15f27be8a3fa0d3"
+    },
+    {
+      "id": "cuongVuThienDiep",
+      "level": 5,
+      "sha256": "ee5c37299c80dfb2500ea692079a695529d671d2cc421bdbfcf5134df1c9cc10"
+    },
+    {
+      "id": "coThuTranThien",
+      "level": 1,
+      "sha256": "022d08246efe37232230f62d068ba90d16fdc20e2ff74edc1a2816fbaf7f3e4b"
+    },
+    {
+      "id": "coThuTranThien",
+      "level": 2,
+      "sha256": "c9214f2e028de6b05a0ba73a2d0f2c2746cb11d9179482cf5504215abb49cccd"
+    },
+    {
+      "id": "coThuTranThien",
+      "level": 3,
+      "sha256": "00117da905382f779097dd4dbc1184518c8e238b2c202b4a3efb3b0d8a340cda"
+    },
+    {
+      "id": "coThuTranThien",
+      "level": 4,
+      "sha256": "b7926a6b14d6ab322a8242e98e90bd211cd9513b4158d53625179c00f0e1dfb1"
+    },
+    {
+      "id": "coThuTranThien",
+      "level": 5,
+      "sha256": "e274dd67d24c4349c0f283864011c66e68e25fb70edf5a845fb8704bbee1fa2b"
+    },
+    {
+      "id": "thanhTrucBaoPhu",
+      "level": 1,
+      "sha256": "df859d011e74947fd0ddf100c61abbd5787c69d84fd81ca1e2ccddb76a42c42f"
+    },
+    {
+      "id": "thanhTrucBaoPhu",
+      "level": 2,
+      "sha256": "9eda8de854b1b6388badaac2c3e182a77615444b376a300e27a977345d796f60"
+    },
+    {
+      "id": "thanhTrucBaoPhu",
+      "level": 3,
+      "sha256": "3a3cddd8c6fca0617e34b8aeed304365025898a47f907afe023d56dcf5e7dfb3"
+    },
+    {
+      "id": "thanhTrucBaoPhu",
+      "level": 4,
+      "sha256": "3272dd7549cce3edc5330ba751e5811feff264022fbb32f6b76f1235c92b0a01"
+    },
+    {
+      "id": "thanhTrucBaoPhu",
+      "level": 5,
+      "sha256": "7bd10613e82cf488139cc5a510b12a29ee0954d6145d8963ffe6263f694615ba"
+    },
+    {
+      "id": "luyenKimThanhKiem",
+      "level": 1,
+      "sha256": "2dfa288a185be1752cc1039ac939a024623921c3c21c750f3ac9ad3c57bcb0ad"
+    },
+    {
+      "id": "luyenKimThanhKiem",
+      "level": 2,
+      "sha256": "2dfa288a185be1752cc1039ac939a024623921c3c21c750f3ac9ad3c57bcb0ad"
+    },
+    {
+      "id": "luyenKimThanhKiem",
+      "level": 3,
+      "sha256": "2dfa288a185be1752cc1039ac939a024623921c3c21c750f3ac9ad3c57bcb0ad"
+    },
+    {
+      "id": "luyenKimThanhKiem",
+      "level": 4,
+      "sha256": "2dfa288a185be1752cc1039ac939a024623921c3c21c750f3ac9ad3c57bcb0ad"
+    },
+    {
+      "id": "luyenKimThanhKiem",
+      "level": 5,
+      "sha256": "3743345f754fc5d1442a7061de1c0cdc61bcd0ea7dbe64f10893f326ee3f97ac"
+    },
+    {
+      "id": "kimYNgungThan",
+      "level": 1,
+      "sha256": "45eba0abbc28d58ed3219b7e262b0456470037c28140b260594fd9431c3b60b6"
+    },
+    {
+      "id": "kimYNgungThan",
+      "level": 2,
+      "sha256": "3ad1803a4c04dcf4a226eaf41fe19b9b24ad20bed2d3eb9d1a8d2c98ad2fd2d9"
+    },
+    {
+      "id": "kimYNgungThan",
+      "level": 3,
+      "sha256": "f29836eacac3c40aa6e96a3563905c4be8919f0c402077eab7af5d799221d6c9"
+    },
+    {
+      "id": "kimYNgungThan",
+      "level": 4,
+      "sha256": "60172f6477ff1de46bafa6eda5c546f3f9d63db285f05e644ec7943287e39d7d"
+    },
+    {
+      "id": "kimYNgungThan",
+      "level": 5,
+      "sha256": "06c838624aa7a0e2705cc577849e81bab3c62867c13d16bfcde8d725d4e48244"
+    },
+    {
+      "id": "doanKimNhatTuyen",
+      "level": 1,
+      "sha256": "eb523a6c2b53ff1ee3e781a5789f31cc9426598e65ba625515cceaf833314f75"
+    },
+    {
+      "id": "doanKimNhatTuyen",
+      "level": 2,
+      "sha256": "723d53ca57498483f86385acd123b01ae762139a06ad0e34875064985986f0e5"
+    },
+    {
+      "id": "doanKimNhatTuyen",
+      "level": 3,
+      "sha256": "825aaa84742f95253ab6376f8bf809555d38e79466384026560e602a1dc0788b"
+    },
+    {
+      "id": "doanKimNhatTuyen",
+      "level": 4,
+      "sha256": "af4c4709f39660b775747bf8545dafed5e5fe2fdc10b00a913d169841008efe4"
+    },
+    {
+      "id": "doanKimNhatTuyen",
+      "level": 5,
+      "sha256": "9abf1a2af61bc3207a1720d75f547c53d1b79e2a7d9b3839d723a735ed22db4e"
+    },
+    {
+      "id": "thietKyTungHoanh",
+      "level": 1,
+      "sha256": "aac037ef94142bc4f8714db6361c1e038a60b946d67f02e5693bcd1e51edf932"
+    },
+    {
+      "id": "thietKyTungHoanh",
+      "level": 2,
+      "sha256": "ca9ac50cf68a4a0af930107a442a7880f0f6b922360642f37024de24dcf36336"
+    },
+    {
+      "id": "thietKyTungHoanh",
+      "level": 3,
+      "sha256": "2b9042c628aa4dfa3350bc46e9aa54c0c7c924b16b74dcc252b68f779b03d0ae"
+    },
+    {
+      "id": "thietKyTungHoanh",
+      "level": 4,
+      "sha256": "5dda8c887cf74635bf4d5091c6a2725bc73b5cdbf5352911a2fdfd0a73a5accf"
+    },
+    {
+      "id": "thietKyTungHoanh",
+      "level": 5,
+      "sha256": "e38bfd75a0c818a1708b7ef701b7b8cadd87223bd3e6dbeab6b6a260aede37e5"
+    },
+    {
+      "id": "kimAnPhaThien",
+      "level": 1,
+      "sha256": "46d7bf03fc460d763383808aa9dc859211f7247795f7148281a1b630c13797b6"
+    },
+    {
+      "id": "kimAnPhaThien",
+      "level": 2,
+      "sha256": "6d6288cc990583fe0b0089ed614ab272234f87de2aa422128b5f66d40f9f33e6"
+    },
+    {
+      "id": "kimAnPhaThien",
+      "level": 3,
+      "sha256": "5dfbfe69d47fdbfa1a7abc70d0aa61d7f2df363590145f4788fd497e638dccc0"
+    },
+    {
+      "id": "kimAnPhaThien",
+      "level": 4,
+      "sha256": "50e27c71afcb11b184306c07dd4b71be7672a6f2627056da5acf95a5dd5efd40"
+    },
+    {
+      "id": "kimAnPhaThien",
+      "level": 5,
+      "sha256": "6a6e02465ffac72bbda162da523a72b2c0a17f902448cacdeeec9bd0a7252e39"
+    },
+    {
+      "id": "giapDongHoThe",
+      "level": 1,
+      "sha256": "cef773f68df8a1b5d99f73c64168a9a40c1e001d62d61a4e370bca720d26b76d"
+    },
+    {
+      "id": "giapDongHoThe",
+      "level": 2,
+      "sha256": "72bc0e462b9f7272919298ce71a98691069e0d7b110d0bcb0e1503c34e0fc81a"
+    },
+    {
+      "id": "giapDongHoThe",
+      "level": 3,
+      "sha256": "c2faf868f16fec219f40fb2f20504bb2dd1fb3ef0105659d9e9d465d3fd4de44"
+    },
+    {
+      "id": "giapDongHoThe",
+      "level": 4,
+      "sha256": "86c8602aca3bf1fb7e75dd111f183fb178684746eedab9a14a6b3fa0fbb3fc35"
+    },
+    {
+      "id": "giapDongHoThe",
+      "level": 5,
+      "sha256": "becb08011f569feb9dcc85360ea3a418ddf2754d8764a9e7bf0b989336297836"
+    },
+    {
+      "id": "thuyNguyetTuLinh",
+      "level": 1,
+      "sha256": "52acaa0a3bb9a76162e770278e8685062756641b89a0779132d04079bdfc6593"
+    },
+    {
+      "id": "thuyNguyetTuLinh",
+      "level": 2,
+      "sha256": "52acaa0a3bb9a76162e770278e8685062756641b89a0779132d04079bdfc6593"
+    },
+    {
+      "id": "thuyNguyetTuLinh",
+      "level": 3,
+      "sha256": "52acaa0a3bb9a76162e770278e8685062756641b89a0779132d04079bdfc6593"
+    },
+    {
+      "id": "thuyNguyetTuLinh",
+      "level": 4,
+      "sha256": "52acaa0a3bb9a76162e770278e8685062756641b89a0779132d04079bdfc6593"
+    },
+    {
+      "id": "thuyNguyetTuLinh",
+      "level": 5,
+      "sha256": "63dd3435ceee95d7c739516dc7f7409b85362b0b4422a1af72f8db56958f3398"
+    },
+    {
+      "id": "thanhLuuTayTran",
+      "level": 1,
+      "sha256": "e2f91397db9fe380f37bab3bbe47942f0e1e7f0063c83a039745e887317e877b"
+    },
+    {
+      "id": "thanhLuuTayTran",
+      "level": 2,
+      "sha256": "ff526f2ae16afa5aa7b5860b5e0269194b0cdb9bcdcc66960abb7077e04fa003"
+    },
+    {
+      "id": "thanhLuuTayTran",
+      "level": 3,
+      "sha256": "0d6f22d65e2a472f2ab305e6a3640a07631ed9daa9a1741daecadcc488a50a51"
+    },
+    {
+      "id": "thanhLuuTayTran",
+      "level": 4,
+      "sha256": "f2dcca3ab2bf0a40de1165b71730d3f5d1fbcfb9b69b260a0db45db70c8ec171"
+    },
+    {
+      "id": "thanhLuuTayTran",
+      "level": 5,
+      "sha256": "c2499b8d210439fb5ecf260f2efd79e990778821430585b07c547673624af307"
+    },
+    {
+      "id": "hanBangTien",
+      "level": 1,
+      "sha256": "fa61f6edb16e6529cdb327b6cc7c0a1b38381af6ada2029fb79c609bf48b6764"
+    },
+    {
+      "id": "hanBangTien",
+      "level": 2,
+      "sha256": "8f64f21b260eab6232081802dbeaed17ef423a0287ff8f1787f8b64211c9ccf5"
+    },
+    {
+      "id": "hanBangTien",
+      "level": 3,
+      "sha256": "e9aecc040cddb9533e381f87c33825e648c3e07348472800434a6d75ec2b05d5"
+    },
+    {
+      "id": "hanBangTien",
+      "level": 4,
+      "sha256": "9f47ca9ab85f2aeef37bc931356d42cca8738d59bef66efbb405997800d2f63d"
+    },
+    {
+      "id": "hanBangTien",
+      "level": 5,
+      "sha256": "74007549f311832bbf100b62435a12ba87ee966118c24c746968789f5de243f9"
+    },
+    {
+      "id": "bachDangTrieuDang",
+      "level": 1,
+      "sha256": "c31c337485b6c02a5089e918521e7b9c3fb72dfd9865a015bac0cc31d99f25a0"
+    },
+    {
+      "id": "bachDangTrieuDang",
+      "level": 2,
+      "sha256": "2cbfb0ce007483fec40194a7d85fb03a94a3dc58ad7bb99190392861ed4f5b57"
+    },
+    {
+      "id": "bachDangTrieuDang",
+      "level": 3,
+      "sha256": "0dfb0e6c9badc206126058187cbf6a26b91a10d6ea162bd39cbe4a72dd19d768"
+    },
+    {
+      "id": "bachDangTrieuDang",
+      "level": 4,
+      "sha256": "c492e5568b818e912f79bca4fe33970d3977292e8d21b34279087766554722f4"
+    },
+    {
+      "id": "bachDangTrieuDang",
+      "level": 5,
+      "sha256": "98fe8266197d2d33ddd09f821951f5e2c6a54a61e202419c3c8a4c0aed0b0240"
+    },
+    {
+      "id": "thuyKiepVanTrung",
+      "level": 1,
+      "sha256": "9c903639bad0a292aac38633d20dceae716ea12a636d4d63e0c4f6573ec7d9a5"
+    },
+    {
+      "id": "thuyKiepVanTrung",
+      "level": 2,
+      "sha256": "aa30bd96faba11e057189339437d94c4265a1f1b5a4748d2b202c1c9ad01297a"
+    },
+    {
+      "id": "thuyKiepVanTrung",
+      "level": 3,
+      "sha256": "5593f7ef4c70ee50f5d7e721f5bd0c846b836ddfe5e62c1231b42d6aaff04d1d"
+    },
+    {
+      "id": "thuyKiepVanTrung",
+      "level": 4,
+      "sha256": "9b167138c2bdcbb272df1615c71b6c91a567dee2c2b7fc491b3b329944eadc7b"
+    },
+    {
+      "id": "thuyKiepVanTrung",
+      "level": 5,
+      "sha256": "c2ab744d59d3fc0a7ce928d557ac401983afcbcb47ff8e581d904800bd7f8bca"
+    },
+    {
+      "id": "linhThuyHoMenh",
+      "level": 1,
+      "sha256": "c1d12331bfcb980e78326f8ed57b1052acb68184931d58539ca27e858cda5f39"
+    },
+    {
+      "id": "linhThuyHoMenh",
+      "level": 2,
+      "sha256": "3120dcf8029566dc4b9055397c22fdf2811cc2438a39a1ea799c07dad9d0fbc7"
+    },
+    {
+      "id": "linhThuyHoMenh",
+      "level": 3,
+      "sha256": "7d7fdee178e1874dbcf2744c7a501fdbc7164f74bbd33dc20e7cf88b65540540"
+    },
+    {
+      "id": "linhThuyHoMenh",
+      "level": 4,
+      "sha256": "c06c20b28e586d22414beccbc75c5d4b981a3e098916eef63cce0653729428d0"
+    },
+    {
+      "id": "linhThuyHoMenh",
+      "level": 5,
+      "sha256": "e791681d4034179d5165764bffa9eec12b68ea5a6d128caa3c10fcf1e25dc125"
+    },
+    {
+      "id": "phongHoaThieuDoanh",
+      "level": 1,
+      "sha256": "c4725e753158c8e1832949ca97cc75d89f1828261cd6413d673caf99fd3aaca4"
+    },
+    {
+      "id": "phongHoaThieuDoanh",
+      "level": 2,
+      "sha256": "c4725e753158c8e1832949ca97cc75d89f1828261cd6413d673caf99fd3aaca4"
+    },
+    {
+      "id": "phongHoaThieuDoanh",
+      "level": 3,
+      "sha256": "c4725e753158c8e1832949ca97cc75d89f1828261cd6413d673caf99fd3aaca4"
+    },
+    {
+      "id": "phongHoaThieuDoanh",
+      "level": 4,
+      "sha256": "c4725e753158c8e1832949ca97cc75d89f1828261cd6413d673caf99fd3aaca4"
+    },
+    {
+      "id": "phongHoaThieuDoanh",
+      "level": 5,
+      "sha256": "ee86fc4f09e7ae893d42803ad0fb22c6d0894c857d5bcc89e84632548b9e643b"
+    },
+    {
+      "id": "noHoaThieuThan",
+      "level": 1,
+      "sha256": "04ae552b9134c9769c49141c52d86d9fc433910f567a8d575c26cea556862a13"
+    },
+    {
+      "id": "noHoaThieuThan",
+      "level": 2,
+      "sha256": "cf20f3ae0918a4ac65546f1c440f6f737b98056c156936013b88d8e1a247bd64"
+    },
+    {
+      "id": "noHoaThieuThan",
+      "level": 3,
+      "sha256": "635ecf4ca0a7c80c78685cc6efa50e83f51fd40e7e2f927680b245a91142b459"
+    },
+    {
+      "id": "noHoaThieuThan",
+      "level": 4,
+      "sha256": "eca24fdebaf1932155b08acdd97a31daadaf06e3891cff1bd84411f4cb4ae675"
+    },
+    {
+      "id": "noHoaThieuThan",
+      "level": 5,
+      "sha256": "8644a5632089f991cdc2b6643238e3c0667f0ec9f9f69ef303191d48f563b52a"
+    },
+    {
+      "id": "xichDiemTien",
+      "level": 1,
+      "sha256": "2b53063c5c90d99398f6edb2848701ee439834b7983f7bcc6d888be532568f05"
+    },
+    {
+      "id": "xichDiemTien",
+      "level": 2,
+      "sha256": "916013985cbe95937653b37e5886584be991586c4cef9fd073072a32eb366709"
+    },
+    {
+      "id": "xichDiemTien",
+      "level": 3,
+      "sha256": "c21e8bf8bceb86888a227a2f0cf063ca1326ad5550020db990031a989058723e"
+    },
+    {
+      "id": "xichDiemTien",
+      "level": 4,
+      "sha256": "2d890b5979db29179cb31bb70b29ac704410176c63826fa2b8d0a388cc422084"
+    },
+    {
+      "id": "xichDiemTien",
+      "level": 5,
+      "sha256": "218536d483db31c5991a0d33f2aca684975f6db5d44bdf91dd85cf4e37e866ce"
+    },
+    {
+      "id": "hoaThieuLienTrai",
+      "level": 1,
+      "sha256": "01174c0b3e33cdf366e0a40d0d43f4b107161d13ae3e3484681720fc05a6f544"
+    },
+    {
+      "id": "hoaThieuLienTrai",
+      "level": 2,
+      "sha256": "f536338578d09147b2d22103a4093fe1244556bdf3668c7b5544fce32f34570e"
+    },
+    {
+      "id": "hoaThieuLienTrai",
+      "level": 3,
+      "sha256": "e2522f5268bc6ab2d266cfce641b1dc3469b451e02c72ff1edba28c2089ce197"
+    },
+    {
+      "id": "hoaThieuLienTrai",
+      "level": 4,
+      "sha256": "faf707a16dc97626ba3016feaabd6484aa6fba768123307fced5a7e1b95389cc"
+    },
+    {
+      "id": "hoaThieuLienTrai",
+      "level": 5,
+      "sha256": "745d0c33087205471d04a90b3b7cccdbac716e9fb364a56644c288f6843cdf16"
+    },
+    {
+      "id": "lietDiemPhanThanh",
+      "level": 1,
+      "sha256": "8163059c0255f668ed39fc89afa4a637c14201533bfc72a454c0507f4f4135fb"
+    },
+    {
+      "id": "lietDiemPhanThanh",
+      "level": 2,
+      "sha256": "934049c9940f423f841b78a5764ee6613dd0866a85d99087d287708d2968d214"
+    },
+    {
+      "id": "lietDiemPhanThanh",
+      "level": 3,
+      "sha256": "b788e0cc28f96fe88f69b8931a9f634c1b527fcd421aa4bd57d1156118aa3169"
+    },
+    {
+      "id": "lietDiemPhanThanh",
+      "level": 4,
+      "sha256": "d908ea1ba6a790f01a30ef7ac9451651450a70a4891ad6cb3b567abaf2fcd2e2"
+    },
+    {
+      "id": "lietDiemPhanThanh",
+      "level": 5,
+      "sha256": "888551a6038a22382cf390363587728d37fd45e8e99f5d54a93456c489eed191"
+    },
+    {
+      "id": "ducHoaTrungSinh",
+      "level": 1,
+      "sha256": "1f97095606d8f65218f1fe4dcda873a3a7f43111b13e8eaeabe0df722b7263ce"
+    },
+    {
+      "id": "ducHoaTrungSinh",
+      "level": 2,
+      "sha256": "5d4c73577d1958727f068413d611327b2931c5f2ca3d6faf1a000fd76f217855"
+    },
+    {
+      "id": "ducHoaTrungSinh",
+      "level": 3,
+      "sha256": "b585be6a455ffc7b9575b26f14e0e814a9120a904b69c4ec15f54bad19d11cd4"
+    },
+    {
+      "id": "ducHoaTrungSinh",
+      "level": 4,
+      "sha256": "9efad8d183c754e127d567a0871bb13a28b8a1722ee06dd08796ddc95f5eeb81"
+    },
+    {
+      "id": "ducHoaTrungSinh",
+      "level": 5,
+      "sha256": "19d22be9eb6d193661996ccef7aeaa49b1cb3cab71baf1bf56cd131e0853c89d"
+    },
+    {
+      "id": "hauThoTichLuong",
+      "level": 1,
+      "sha256": "22a8964890734acf2a052a371d7e8a32f6bc6f7f3006337e47ca63882045215a"
+    },
+    {
+      "id": "hauThoTichLuong",
+      "level": 2,
+      "sha256": "22a8964890734acf2a052a371d7e8a32f6bc6f7f3006337e47ca63882045215a"
+    },
+    {
+      "id": "hauThoTichLuong",
+      "level": 3,
+      "sha256": "22a8964890734acf2a052a371d7e8a32f6bc6f7f3006337e47ca63882045215a"
+    },
+    {
+      "id": "hauThoTichLuong",
+      "level": 4,
+      "sha256": "22a8964890734acf2a052a371d7e8a32f6bc6f7f3006337e47ca63882045215a"
+    },
+    {
+      "id": "hauThoTichLuong",
+      "level": 5,
+      "sha256": "dfcdd7a5523cac69d3728ccfb673ae91983f0f027f95b890ce77daedb463b022"
+    },
+    {
+      "id": "thachGiap",
+      "level": 1,
+      "sha256": "209b3d30366999d5b6e1096217788b41b2b650d771e4832fc3d4bac6d6228b4f"
+    },
+    {
+      "id": "thachGiap",
+      "level": 2,
+      "sha256": "20eeb79143bbb37e1334b423c5f9ed6d3694351d2678175a95d5d4ffbfb0c44b"
+    },
+    {
+      "id": "thachGiap",
+      "level": 3,
+      "sha256": "46e7a9fa03e176f319e57ff192cf0734889e16701070eefe8a8587e402538de6"
+    },
+    {
+      "id": "thachGiap",
+      "level": 4,
+      "sha256": "8e022c1201c4f81b431fb73bd2c9731a58151989b6c3f7b4c4f41a28ae0c3c12"
+    },
+    {
+      "id": "thachGiap",
+      "level": 5,
+      "sha256": "c464244e375a1301e09dc4df4313dedc9d5267d6ea761b7853ab6c5d80bc1d25"
+    },
+    {
+      "id": "sonBangDiaLiet",
+      "level": 1,
+      "sha256": "729a0d11b0553d28bb8c0c842eb1e87ac5030a295aafe940b9c9d15b1e6ebba0"
+    },
+    {
+      "id": "sonBangDiaLiet",
+      "level": 2,
+      "sha256": "a4b6becb5089a2ff88bb1413c40c5c36077616b73cb0d2de8839bdcbaa097023"
+    },
+    {
+      "id": "sonBangDiaLiet",
+      "level": 3,
+      "sha256": "f073df1e0be6f287fcf44950ab7e69250d6f475c9f5a3c1747c7a6301992e3eb"
+    },
+    {
+      "id": "sonBangDiaLiet",
+      "level": 4,
+      "sha256": "03f2efec3140027907e5014ff07508300034dc9b88f50ec70ea4406c34f6acc7"
+    },
+    {
+      "id": "sonBangDiaLiet",
+      "level": 5,
+      "sha256": "bda238f23543a4c9314548e8149204ac6b8ce6667572975ce16d974cc78e4c27"
+    },
+    {
+      "id": "diaChanTamQuan",
+      "level": 1,
+      "sha256": "1714e13094f71d8e4ca713dffec0b375680a28e54e49a2499114a7f436867148"
+    },
+    {
+      "id": "diaChanTamQuan",
+      "level": 2,
+      "sha256": "63f029db1807f99824e916a18d5482b7239e377d97f19ee957a7c2813a81b4ca"
+    },
+    {
+      "id": "diaChanTamQuan",
+      "level": 3,
+      "sha256": "d2bae831ef532f1c14cf1d4100fd8afde59ddf4cbc93783850188e3975cff15f"
+    },
+    {
+      "id": "diaChanTamQuan",
+      "level": 4,
+      "sha256": "78b018887a6babe9201ee9276d7b7e23fd874a289f688c5c2299c75faf4f59f1"
+    },
+    {
+      "id": "diaChanTamQuan",
+      "level": 5,
+      "sha256": "04cb1045e71360c2009e0152708414d6e29eeb6dbddab497e178763bf401d4cb"
+    },
+    {
+      "id": "thaiSonApDinh",
+      "level": 1,
+      "sha256": "ee3a90f17fb4a4fe1bfaae408d15277ab13652cfb1a962855b7a92d6e615eb51"
+    },
+    {
+      "id": "thaiSonApDinh",
+      "level": 2,
+      "sha256": "7687840ba52cbf8148c38b677be3f02a7d90b1a954a7e209e9ed8d886a47643e"
+    },
+    {
+      "id": "thaiSonApDinh",
+      "level": 3,
+      "sha256": "4e6ab6f83e194910a77af123c998aa8261a4c64f470cb0d25184d6641a0148ae"
+    },
+    {
+      "id": "thaiSonApDinh",
+      "level": 4,
+      "sha256": "cbbba564bc6f59d8705884cf2559d982ec6b882e6a3040df7a8aa750d7ca9d58"
+    },
+    {
+      "id": "thaiSonApDinh",
+      "level": 5,
+      "sha256": "f29879beea4294b9d6d4934627d4ee6ae734fffc15c987b436b5ca129b3cd390"
+    },
+    {
+      "id": "kienThanhBatDong",
+      "level": 1,
+      "sha256": "2302a2aa49a6aabb300e5eed55add7ccc44e24e3b1b428544d21e904868548a0"
+    },
+    {
+      "id": "kienThanhBatDong",
+      "level": 2,
+      "sha256": "c40df74b77a090ca0dd96b0e55390523cc13da7c059220bc84494e5aa1518efb"
+    },
+    {
+      "id": "kienThanhBatDong",
+      "level": 3,
+      "sha256": "eea23caf95399fb4281e6b6ddfa1eb307186f38d2aea3a4192d06a310c821585"
+    },
+    {
+      "id": "kienThanhBatDong",
+      "level": 4,
+      "sha256": "404621c6818cc649e337582c4e32e4a5069be1a6cff589d148df1fe0974ba3dc"
+    },
+    {
+      "id": "kienThanhBatDong",
+      "level": 5,
+      "sha256": "5088cb1b5764cfbc214a56c4460ab117a9ffa522254fe5ca0f18c38eca1454c2"
+    },
+    {
+      "id": "loiTruGiangThe",
+      "level": 1,
+      "sha256": "7e045c1856701bcc3db30be7eea71c5d1a606f174b4cac899fb89621bc5260e5"
+    },
+    {
+      "id": "loiTruGiangThe",
+      "level": 2,
+      "sha256": "7e045c1856701bcc3db30be7eea71c5d1a606f174b4cac899fb89621bc5260e5"
+    },
+    {
+      "id": "loiTruGiangThe",
+      "level": 3,
+      "sha256": "7e045c1856701bcc3db30be7eea71c5d1a606f174b4cac899fb89621bc5260e5"
+    },
+    {
+      "id": "loiTruGiangThe",
+      "level": 4,
+      "sha256": "7e045c1856701bcc3db30be7eea71c5d1a606f174b4cac899fb89621bc5260e5"
+    },
+    {
+      "id": "loiTruGiangThe",
+      "level": 5,
+      "sha256": "d474119699feec09c063b403d271150df1e846af445f08fc2f43f840172cda09"
+    },
+    {
+      "id": "tinhDienHoThan",
+      "level": 1,
+      "sha256": "63e62c33135c34bbffe5e76c55a2421dda99cc824d45d60fe1704b7910581d64"
+    },
+    {
+      "id": "tinhDienHoThan",
+      "level": 2,
+      "sha256": "fb2ad2a88f018f4e4f539fd56a592e5c67166d8c4cbed5d60af8aafa9a9cd452"
+    },
+    {
+      "id": "tinhDienHoThan",
+      "level": 3,
+      "sha256": "4a06823f4be136210d135cd2ddea5b3571c9b0658f58a76d3a436f43641f3629"
+    },
+    {
+      "id": "tinhDienHoThan",
+      "level": 4,
+      "sha256": "adc91e07811eb44455c53f7ff5a4021c2886bcefbff00ae964d6fa44dcaf52e9"
+    },
+    {
+      "id": "tinhDienHoThan",
+      "level": 5,
+      "sha256": "471a1a364db6880532d863514b4a26e76c2800d79942c6329171ae07db2e550f"
+    },
+    {
+      "id": "loiTienXuyenVan",
+      "level": 1,
+      "sha256": "2cca26332ec8fd02f850260ed4852fd10446875aeebad373a43df697a487c536"
+    },
+    {
+      "id": "loiTienXuyenVan",
+      "level": 2,
+      "sha256": "2a62f98c0824dbf32644465c35a891c0622eff6da037c724faefea8aca45ba3c"
+    },
+    {
+      "id": "loiTienXuyenVan",
+      "level": 3,
+      "sha256": "aa242b5b3a16571e544112c9088473e6c0daae0d6579a33d4acecb582941548e"
+    },
+    {
+      "id": "loiTienXuyenVan",
+      "level": 4,
+      "sha256": "0a43cb71947f688b7e101a77088efa6d976c3224909f5472785680c0d5ceab2d"
+    },
+    {
+      "id": "loiTienXuyenVan",
+      "level": 5,
+      "sha256": "4de5063bb8ddfce9b85d12167eb36f7b8fa4ebc1b5f645b69a2ea3633742ed27"
+    },
+    {
+      "id": "loiVongThienLa",
+      "level": 1,
+      "sha256": "be62961de205cc455ad7201dd8f7a8efa07187383616884eee400f4a703e8bcf"
+    },
+    {
+      "id": "loiVongThienLa",
+      "level": 2,
+      "sha256": "c20ba38945b54cd4e10759be0e0200322c348a2699a7f3e2bf3e1f95a5a53c6b"
+    },
+    {
+      "id": "loiVongThienLa",
+      "level": 3,
+      "sha256": "ca4213ce42fa89f31a4ba9c5868bc8af06977595dda48383f7f784b7afe89be0"
+    },
+    {
+      "id": "loiVongThienLa",
+      "level": 4,
+      "sha256": "b00dc31bcc13f124233cd5a89d6b26ad1c52a7ae18c31c8b04b28ee14db866b3"
+    },
+    {
+      "id": "loiVongThienLa",
+      "level": 5,
+      "sha256": "a173ee05d18e8c1dd2f4a7aa0a7fe2a3905b27bb0bf2320d6a77ccfceec3facc"
+    },
+    {
+      "id": "cuuTieuLoiPhat",
+      "level": 1,
+      "sha256": "66e9646cec16b1a477d5f27757c67f2472cf8f21cc0b8c62906e1ac0e8154f54"
+    },
+    {
+      "id": "cuuTieuLoiPhat",
+      "level": 2,
+      "sha256": "a6f3530c2aafb6550c3259268f33fb05d6e3b4663a55f069ea5b1367949dac05"
+    },
+    {
+      "id": "cuuTieuLoiPhat",
+      "level": 3,
+      "sha256": "729f81577f099c5f44cd3310c6a8eab4e486851d23c99d2424126a23e51ba7f9"
+    },
+    {
+      "id": "cuuTieuLoiPhat",
+      "level": 4,
+      "sha256": "28a7ecfa1f95d2572e20fc47a30b7e1e9171775a49b1924e168ab70a5e06a565"
+    },
+    {
+      "id": "cuuTieuLoiPhat",
+      "level": 5,
+      "sha256": "f7ef3488d28aa0fa70d36dd4af4d20d1fbd21b00f57cac59e5778e3555891f08"
+    },
+    {
+      "id": "loiDinhHieuLenh",
+      "level": 1,
+      "sha256": "75b05e77836a8e98145f7b4f391fd8a4ceead4e94ffedb8b61217c13f97a0282"
+    },
+    {
+      "id": "loiDinhHieuLenh",
+      "level": 2,
+      "sha256": "2d6df825ffa9532023e07e8f26a670d0e85b560de18a2391546a4509713d0296"
+    },
+    {
+      "id": "loiDinhHieuLenh",
+      "level": 3,
+      "sha256": "dc7faa4a5e3d6e49b569757ae6a72a3b398d41fb6d27c3b0b4aad0fd71ba0dec"
+    },
+    {
+      "id": "loiDinhHieuLenh",
+      "level": 4,
+      "sha256": "c66d2283fa3f3f69f402c4bed8faa5868334e8b54d35a43fc9ee10ada0b50b16"
+    },
+    {
+      "id": "loiDinhHieuLenh",
+      "level": 5,
+      "sha256": "4b01b0273deb24a6a6f5d902a5a1652f5872aa1e391aa2ac4fb9cf8d6c889fa4"
+    },
+    {
+      "id": "phongQuyenTanVan",
+      "level": 1,
+      "sha256": "c378b514ebc27e4bae39897a0b8b6117493809b0def20d85c27ba09bcb315647"
+    },
+    {
+      "id": "phongQuyenTanVan",
+      "level": 2,
+      "sha256": "c378b514ebc27e4bae39897a0b8b6117493809b0def20d85c27ba09bcb315647"
+    },
+    {
+      "id": "phongQuyenTanVan",
+      "level": 3,
+      "sha256": "c378b514ebc27e4bae39897a0b8b6117493809b0def20d85c27ba09bcb315647"
+    },
+    {
+      "id": "phongQuyenTanVan",
+      "level": 4,
+      "sha256": "c378b514ebc27e4bae39897a0b8b6117493809b0def20d85c27ba09bcb315647"
+    },
+    {
+      "id": "phongQuyenTanVan",
+      "level": 5,
+      "sha256": "276d25f6c8808b94432277456feb18bb6bdc497b67c5de812a8eb591b48bdaba"
+    },
+    {
+      "id": "thanhPhongTuKhi",
+      "level": 1,
+      "sha256": "b7dece141d1e969de55e45f1744c90e5f7c61777beeb8be1f1004f9c73cc87da"
+    },
+    {
+      "id": "thanhPhongTuKhi",
+      "level": 2,
+      "sha256": "2ad988ea8df5c736942543a799b043a1e082cf4f93ef6c176d6206004d333dba"
+    },
+    {
+      "id": "thanhPhongTuKhi",
+      "level": 3,
+      "sha256": "ec8fe00c5a0e5406873f5e7987bdb5aa9f8d69ece82aea54c849bc3579a22001"
+    },
+    {
+      "id": "thanhPhongTuKhi",
+      "level": 4,
+      "sha256": "aa7f8654edc3925d7d9e8f6f152e2b3603befb3280fbb5c28fe73cfdf4868a3c"
+    },
+    {
+      "id": "thanhPhongTuKhi",
+      "level": 5,
+      "sha256": "ca1f59f0c125d062d96f38291647f6e69092362ad4a81b1fcf91496a1756de8a"
+    },
+    {
+      "id": "phongNhanLietKhong",
+      "level": 1,
+      "sha256": "7b76af48e3dfadc99541f5d9de356161526321b5b481868cc7a3c587ae25345d"
+    },
+    {
+      "id": "phongNhanLietKhong",
+      "level": 2,
+      "sha256": "876bbdbc2b62149f3bc9fba411ed9b3498ae3388ca987e2b1dad955cc60f5681"
+    },
+    {
+      "id": "phongNhanLietKhong",
+      "level": 3,
+      "sha256": "17b6964ba638484f23d852c4f9feb3494d738ad2a4d4443b0498f4fd8d37ecd1"
+    },
+    {
+      "id": "phongNhanLietKhong",
+      "level": 4,
+      "sha256": "49513e130ce6163551b3a72c294fe3cfc41904ddfd700a9afbd7d865d7cf1c1a"
+    },
+    {
+      "id": "phongNhanLietKhong",
+      "level": 5,
+      "sha256": "5f780586610bdb1e1be674d28c64adaac1cb186dc2fb04ac9ee35fd22e20904d"
+    },
+    {
+      "id": "cuongPhongQuetTran",
+      "level": 1,
+      "sha256": "bec85e1b677e77f42a419027c24c13a50b6b949cbb48f73717c273e119acce1f"
+    },
+    {
+      "id": "cuongPhongQuetTran",
+      "level": 2,
+      "sha256": "0c879ffe57f27a81151c7be8fd0846d7fb8ae30bccc6f76e5874feeb6eb65cdb"
+    },
+    {
+      "id": "cuongPhongQuetTran",
+      "level": 3,
+      "sha256": "d7764becf5afe9c3901467a37164a23134e1f94add5771105a7f16597c644215"
+    },
+    {
+      "id": "cuongPhongQuetTran",
+      "level": 4,
+      "sha256": "a107955d898270186f067ffa4f093304cfe8af01e958e9dd50c1b5037545fc3a"
+    },
+    {
+      "id": "cuongPhongQuetTran",
+      "level": 5,
+      "sha256": "a4fa0b58cd6243292cede271401322971e2e30d840e5be4c956dfd2f12390484"
+    },
+    {
+      "id": "baoTapCanKhon",
+      "level": 1,
+      "sha256": "3eaecabb6f706be7fb8615125d1402cf4c096bad1b4a85b1721870c9c0e634f2"
+    },
+    {
+      "id": "baoTapCanKhon",
+      "level": 2,
+      "sha256": "5c20914237970599a5040e2931065046b97fdb8917434840baba4409a98ae8f7"
+    },
+    {
+      "id": "baoTapCanKhon",
+      "level": 3,
+      "sha256": "80f41c66c140b927cbc96a00e0e3aa89b90ee8977a6d6936d16c211b9691981c"
+    },
+    {
+      "id": "baoTapCanKhon",
+      "level": 4,
+      "sha256": "a50b689dd640223db113ae34f67122c138f4fc515e44866161dfa5b2ac4eea27"
+    },
+    {
+      "id": "baoTapCanKhon",
+      "level": 5,
+      "sha256": "7a561a89180e5caf1443f1c6034a1749a88c1d6f3220db161a7ce181e58ba00c"
+    },
+    {
+      "id": "phongHanhVanLy",
+      "level": 1,
+      "sha256": "642f0cf7a9a7db2e3386290e960a30185f92bee45822c3f3ab82b11deeae2737"
+    },
+    {
+      "id": "phongHanhVanLy",
+      "level": 2,
+      "sha256": "2c297088dd7fd8c77971c3d498b388cbe1b7effc6859feb3b6d6c012e72c418e"
+    },
+    {
+      "id": "phongHanhVanLy",
+      "level": 3,
+      "sha256": "2d49e57c4abf26423afd0b22c00eed40b6ca51e7fcecde250bf08b0fcaa0a176"
+    },
+    {
+      "id": "phongHanhVanLy",
+      "level": 4,
+      "sha256": "ddd927183b6057b160ba29b881a4fbf3b5d1b434c62432a3d73b87cc21333e81"
+    },
+    {
+      "id": "phongHanhVanLy",
+      "level": 5,
+      "sha256": "2244f42c15d4cf95403a858651a391ee64ca97cfdc6295057dd651acba6e484a"
+    },
+    {
+      "id": "hoaVuLieuNguyen",
+      "level": 1,
+      "sha256": "e7ca170c3421286de03c71459fcd7df7b920063be079ee00ad670ef97afb4873"
+    },
+    {
+      "id": "hoaVuLieuNguyen",
+      "level": 2,
+      "sha256": "8caa71c19e58764180a618df8d5a47c796dd2c6c17d957a172e6f0fada9267db"
+    },
+    {
+      "id": "hoaVuLieuNguyen",
+      "level": 3,
+      "sha256": "a56541dc9e8637b0a46870f5affd7910339341b534faa72990ada32ee143d9aa"
+    },
+    {
+      "id": "hoaVuLieuNguyen",
+      "level": 4,
+      "sha256": "f2567e4c1780af22282f91fe7aab54de03e6f221f5530a9108ec36f7c856132d"
+    },
+    {
+      "id": "hoaVuLieuNguyen",
+      "level": 5,
+      "sha256": "513e690f435d06327cbb5e15f3ac60edf1ee57b000a30c0b2f14ac5bb384c187"
+    },
+    {
+      "id": "tranSonHoQuan",
+      "level": 1,
+      "sha256": "843072f545053dc7549f107f4ae61d4291d964d61d39407550bc3a5d7cb9d9ab"
+    },
+    {
+      "id": "tranSonHoQuan",
+      "level": 2,
+      "sha256": "748b12187923f09fcf28fa1e5ac3085512406293936a845fa4b9943991eaaed9"
+    },
+    {
+      "id": "tranSonHoQuan",
+      "level": 3,
+      "sha256": "57bf4f01d0f58b94ebc1b00ae62c86368f47defe9483463788219ee722bce4e1"
+    },
+    {
+      "id": "tranSonHoQuan",
+      "level": 4,
+      "sha256": "2738a1369483757756626602767db09562c2b292774bf6cdfb7522f46daff4da"
+    },
+    {
+      "id": "tranSonHoQuan",
+      "level": 5,
+      "sha256": "4721b9715761457d20568f479ef84c10010dc0cbf2fb6aa979965aa3dcc7dc3f"
+    },
+    {
+      "id": "camLoHoiXuan",
+      "level": 1,
+      "sha256": "44b83a2b5a91452c6d2a28d55cc925ed05f0992bf1d9e8cf0f1b3dd4c12c775a"
+    },
+    {
+      "id": "camLoHoiXuan",
+      "level": 2,
+      "sha256": "970b2d70db1de7a550d771d64209372ea0283805ffe396d01589a2365275df69"
+    },
+    {
+      "id": "camLoHoiXuan",
+      "level": 3,
+      "sha256": "9125141535573516fd30a95ac3cc1714f573747b9ed87c999676e06311ace010"
+    },
+    {
+      "id": "camLoHoiXuan",
+      "level": 4,
+      "sha256": "56b212bbd190c3ac5b04e6dcffefb8d43410a2837210508280b27b982869966e"
+    },
+    {
+      "id": "camLoHoiXuan",
+      "level": 5,
+      "sha256": "9e543df8eca17b81bf6c0b224f5e7698f5e1a37a08c261a014b2e0ee14ae18f7"
+    },
+    {
+      "id": "kimNganLyTan",
+      "level": 1,
+      "sha256": "2b5181ad127f52f9971217565cedbcda09058ccd45c43fe90c2970a202e4bc1f"
+    },
+    {
+      "id": "kimNganLyTan",
+      "level": 2,
+      "sha256": "587bcc5cc27d123e45bf352fd37136b946b5ff7e710b04cad81827d901a69720"
+    },
+    {
+      "id": "kimNganLyTan",
+      "level": 3,
+      "sha256": "41592ff5b717374272f6fa18bcd7738829a3f92812d63d070f37c687971c68c5"
+    },
+    {
+      "id": "kimNganLyTan",
+      "level": 4,
+      "sha256": "c8fb14c11d8bb99eb61886c2a9cd2716b9e511f7e59be484b66a49e7100ac078"
+    },
+    {
+      "id": "kimNganLyTan",
+      "level": 5,
+      "sha256": "803660c4811c9fa79e108457e58f93e04fe939a3992ec200791f62c0ebf7d39b"
+    },
+    {
+      "id": "phongVanBienTran",
+      "level": 1,
+      "sha256": "fb44e116a5837b23978b0fee0c16e2a4b3e9a6b85e9908bbc66bf5e216696b63"
+    },
+    {
+      "id": "phongVanBienTran",
+      "level": 2,
+      "sha256": "3bf5635adfa76752d69eb406cdd3f62098cf3bf768164e1bc099db4f88cf22cf"
+    },
+    {
+      "id": "phongVanBienTran",
+      "level": 3,
+      "sha256": "4e5064f8d4a57e8e823f6018b652ecf85800e9e777a18a825cfe5de1444e975a"
+    },
+    {
+      "id": "phongVanBienTran",
+      "level": 4,
+      "sha256": "df492b75fded9a0ab5578474ca5855d5dcc63a73ab2aefaf6198d5a9987ba05b"
+    },
+    {
+      "id": "phongVanBienTran",
+      "level": 5,
+      "sha256": "8c19128983e75a49cfdc2b091b05f171eff0e55acedd1a87cc02c55c9aae0817"
+    },
+    {
+      "id": "kimQuaThietMa",
+      "level": 1,
+      "sha256": "33ee3cf0a6f107c71be9bd4180728b7ac99bf90a37a308928c2813ffd6762f3e"
+    },
+    {
+      "id": "kimQuaThietMa",
+      "level": 2,
+      "sha256": "924c7451c093b07bbe7e0ad7a2c8de2330f3c75a072980157d52985f661a5ee2"
+    },
+    {
+      "id": "kimQuaThietMa",
+      "level": 3,
+      "sha256": "eb42105db898621323ace027d8233bd1ce02f8e8c8a43dcb9a99b841fa9b931d"
+    },
+    {
+      "id": "kimQuaThietMa",
+      "level": 4,
+      "sha256": "af1bb5d4a951c648a9c77b5fb8829b822814dfc1a81c64a0db0182332a4f59ec"
+    },
+    {
+      "id": "kimQuaThietMa",
+      "level": 5,
+      "sha256": "97263f15dd71786a84e8f7c86a5227c2b5a97353a71ae3770c395ca345b2c2dd"
+    },
+    {
+      "id": "xichHoaDoatKy",
+      "level": 1,
+      "sha256": "f9f6cb62060b8c6830fef679670c09222d067294e00ff9cf20e786155df702a3"
+    },
+    {
+      "id": "xichHoaDoatKy",
+      "level": 2,
+      "sha256": "fd4345bd9456df3b6e2818f6851dabf0e50713b2b874b7d3f50f3264dbfe7d21"
+    },
+    {
+      "id": "xichHoaDoatKy",
+      "level": 3,
+      "sha256": "22ef5644a306f01fde51a19a9f67132b07fc9c5b6b342030e97902501601b621"
+    },
+    {
+      "id": "xichHoaDoatKy",
+      "level": 4,
+      "sha256": "9492fed0b2619bd57323da35f68846a7ff1f2e63d0c1659e64b337213cda9e19"
+    },
+    {
+      "id": "xichHoaDoatKy",
+      "level": 5,
+      "sha256": "d9439bbbe5d4eca617cd517b8760f72f221846fcc34ef60ba0e9fb131ecb1d32"
+    },
+    {
+      "id": "bangHaPhongToa",
+      "level": 1,
+      "sha256": "f8c6949f39135acba1bb04f1e504df892c9149aa88bb420b0af68823235e7eec"
+    },
+    {
+      "id": "bangHaPhongToa",
+      "level": 2,
+      "sha256": "975f1af62ce96547c5c7215a8ea97b98857bb5e817007bedde3bbc1f4100d348"
+    },
+    {
+      "id": "bangHaPhongToa",
+      "level": 3,
+      "sha256": "fbece20e1bfc9e784e6ddeaa8707c1fa56e770f7022a32788f59d890c18f513d"
+    },
+    {
+      "id": "bangHaPhongToa",
+      "level": 4,
+      "sha256": "608bb9cca2301f480ba78f8b1474892ccf9d0e4dc09e3b12c68f46ddb9df74e5"
+    },
+    {
+      "id": "bangHaPhongToa",
+      "level": 5,
+      "sha256": "6b7b3f5a8cf7529321978913d4f766e85ff19ac9beae1d03f13d108a3368d56b"
+    },
+    {
+      "id": "thienLoiGiangThe",
+      "level": 1,
+      "sha256": "c9ebc1c98efc4fb37b8e81094ed7ab419e330d32cc5355fc9a490608177e74a3"
+    },
+    {
+      "id": "thienLoiGiangThe",
+      "level": 2,
+      "sha256": "3ce1e04edde1d13f3750878276051fe7dcf30a8ae3f558d6e7a732def2215c38"
+    },
+    {
+      "id": "thienLoiGiangThe",
+      "level": 3,
+      "sha256": "73d1ffb8062acac156d2b8827b3409afa85764913ba9465cb71c37e0d2026cdc"
+    },
+    {
+      "id": "thienLoiGiangThe",
+      "level": 4,
+      "sha256": "16f83d5d08af60d2cd618026727842c3e6ef702ebd875ab17e1693b0d3ddc88c"
+    },
+    {
+      "id": "thienLoiGiangThe",
+      "level": 5,
+      "sha256": "af90a51e7fb3dcbae01dad8a11706655fbc65a0a746359fef30b44b65cf78dbb"
+    },
+    {
+      "id": "reGiaGiuThanh",
+      "level": 1,
+      "sha256": "aca7759f35772efaafdb493891b3efcbb035fd41f00352a0085fd3b14f03eaa1"
+    },
+    {
+      "id": "reGiaGiuThanh",
+      "level": 2,
+      "sha256": "131ca6d85aac9d96d1d3fbeed13d6c62079e5ac6f09c51078e65c15f6d1acac1"
+    },
+    {
+      "id": "reGiaGiuThanh",
+      "level": 3,
+      "sha256": "6d338a5688c6f738286383a64481f01545c7c890d0ca8f89fd06a71f3a7ba3c6"
+    },
+    {
+      "id": "reGiaGiuThanh",
+      "level": 4,
+      "sha256": "408c0126609acce22387c7d516e0ad54167a695faa66d6196a11a09262493ae4"
+    },
+    {
+      "id": "reGiaGiuThanh",
+      "level": 5,
+      "sha256": "c453cecb144922ace6e320cd13aad2c1d012ea9b872c886e65097ce6ff7e37ab"
+    },
+    {
+      "id": "thietBichDongThanh",
+      "level": 1,
+      "sha256": "f11f61cc9855efdc2bf9ac36867a6f1b07e7b0a266ddac0467587423fde1e2af"
+    },
+    {
+      "id": "thietBichDongThanh",
+      "level": 2,
+      "sha256": "275e4adfe82e6601510351ba92d6ec69bf7e4ee312086544fb7b21e428db1624"
+    },
+    {
+      "id": "thietBichDongThanh",
+      "level": 3,
+      "sha256": "509978bc0eaf5a8ad619d252e289841ceb6ea2b2896f5a3fe6ce352288259705"
+    },
+    {
+      "id": "thietBichDongThanh",
+      "level": 4,
+      "sha256": "20394cf416bb289709f1f8c0096d7426aa3efe1951cd5802de226bb72bfa311f"
+    },
+    {
+      "id": "thietBichDongThanh",
+      "level": 5,
+      "sha256": "65528de28eecfd3705555805af5670600e9301f9d489d08a6c375fc560c130b2"
+    },
+    {
+      "id": "xuanMocVanSinh",
+      "level": 1,
+      "sha256": "32271dc9de1c76ee52d95aa737fd8cbb4f5c462c1b0bb1185348528d98551da4"
+    },
+    {
+      "id": "xuanMocVanSinh",
+      "level": 2,
+      "sha256": "058ed6becee4e7168465f6337a4de63c4ce7b1b5898c491c37d143221c076839"
+    },
+    {
+      "id": "xuanMocVanSinh",
+      "level": 3,
+      "sha256": "847a4c1669c5d4ac881037934c82a7a59e31ebefed3559dc4f8e039b3ec8244e"
+    },
+    {
+      "id": "xuanMocVanSinh",
+      "level": 4,
+      "sha256": "3cdea691bebce961599fbf824c2e520be3d2c4573d43f9ae35a424cfa3c527bd"
+    },
+    {
+      "id": "xuanMocVanSinh",
+      "level": 5,
+      "sha256": "f64abab175be8cc14baf76fe3e5e3de40c1decb61be489e08dd2add066cd6694"
+    },
+    {
+      "id": "gioLanhTayUe",
+      "level": 1,
+      "sha256": "52c1303ae1aca4a3727f22a6b7a8280427b85d9018ae07ea4cb178e2963d92af"
+    },
+    {
+      "id": "gioLanhTayUe",
+      "level": 2,
+      "sha256": "4f980cc70a5e8407cb22fde1557384480f379bc41bcc6e8c38488dc4e9b0866b"
+    },
+    {
+      "id": "gioLanhTayUe",
+      "level": 3,
+      "sha256": "11b18c6b9799be382b1a8a48324c64c8d2c049571afbbbaf8a5dc96f2be9156f"
+    },
+    {
+      "id": "gioLanhTayUe",
+      "level": 4,
+      "sha256": "9ee9963b03a900846382121cfa563a3cfa56544622ea7f1084db0fc918ba35d8"
+    },
+    {
+      "id": "gioLanhTayUe",
+      "level": 5,
+      "sha256": "400f2c2f17f0a11ed1f84f1d499d7f685cba91ed7dc91cdd4a6091874b6abbdf"
+    },
+    {
+      "id": "hoaThieuKhoLuong",
+      "level": 1,
+      "sha256": "e8a813fea6e40e357ff739bfaeb3f7f133a33064b5323e64a0ee588dcc5993d9"
+    },
+    {
+      "id": "hoaThieuKhoLuong",
+      "level": 2,
+      "sha256": "1d25e724653b75ab214c914101e951d3be83299f8b6964196868620c318ff6a5"
+    },
+    {
+      "id": "hoaThieuKhoLuong",
+      "level": 3,
+      "sha256": "828dc6de7dc576a1bfab3dcf32930a1458607afca3b8cda6e578fe16ac56788c"
+    },
+    {
+      "id": "hoaThieuKhoLuong",
+      "level": 4,
+      "sha256": "3d219acc3feb2575fdee34f07c49e7dfcf335b475ca5a48882af8b013633e9e3"
+    },
+    {
+      "id": "hoaThieuKhoLuong",
+      "level": 5,
+      "sha256": "6f1b8dfe3a043feb5b5dc05bda38b7528526fc5cf07a6c91e9452ffa443b1391"
+    },
+    {
+      "id": "thuyDonLyGian",
+      "level": 1,
+      "sha256": "e70b44d45ae5e44e2c7158ec7522db9d5d5530dc1d1a24b625f05c277b105cc9"
+    },
+    {
+      "id": "thuyDonLyGian",
+      "level": 2,
+      "sha256": "e70b44d45ae5e44e2c7158ec7522db9d5d5530dc1d1a24b625f05c277b105cc9"
+    },
+    {
+      "id": "thuyDonLyGian",
+      "level": 3,
+      "sha256": "e70b44d45ae5e44e2c7158ec7522db9d5d5530dc1d1a24b625f05c277b105cc9"
+    },
+    {
+      "id": "thuyDonLyGian",
+      "level": 4,
+      "sha256": "e70b44d45ae5e44e2c7158ec7522db9d5d5530dc1d1a24b625f05c277b105cc9"
+    },
+    {
+      "id": "thuyDonLyGian",
+      "level": 5,
+      "sha256": "bcb85a100112c5511a8b29e57a0c238b9ec7686a35b3ba829f09957c5a833aa3"
+    },
+    {
+      "id": "batTranThachLuy",
+      "level": 1,
+      "sha256": "a70c96e72cec524fd3a5eedee5c2fc9007a5b2e03c8598fca2483dd553f8b8f8"
+    },
+    {
+      "id": "batTranThachLuy",
+      "level": 2,
+      "sha256": "338d403c05b760b150cf52ba08fcdcc4d666ecd405bbad6e8d88fb3fd21a9c47"
+    },
+    {
+      "id": "batTranThachLuy",
+      "level": 3,
+      "sha256": "d81f2dc4c69bfc3d04b1d8537b29e2e0d65363875d521a596b4d3cadc3fb27a5"
+    },
+    {
+      "id": "batTranThachLuy",
+      "level": 4,
+      "sha256": "634c76eaac3ebc7044a565fb6cba47c9effa4d0708cd71f00c0acb2bdec7acb8"
+    },
+    {
+      "id": "batTranThachLuy",
+      "level": 5,
+      "sha256": "a494f80a3c4bdd9ac746bd923b2e439fdab3369940a4827f9bcba254d0afa6dc"
+    },
+    {
+      "id": "loiTranKinhHon",
+      "level": 1,
+      "sha256": "6f052aafdece428fad2c0da609e44c0cede17a1d780d1f36ce29121b3f87e4d1"
+    },
+    {
+      "id": "loiTranKinhHon",
+      "level": 2,
+      "sha256": "015708718c12aad84e8cd2717d8da6f1230d6fa89162e5a003f2277e2dc8debc"
+    },
+    {
+      "id": "loiTranKinhHon",
+      "level": 3,
+      "sha256": "a8131ce2b350a804d5450b83b6288e0466939b74f485825a73b1d7424654bbe3"
+    },
+    {
+      "id": "loiTranKinhHon",
+      "level": 4,
+      "sha256": "7dbde466f28cbc1e7084e5e941fff69fff59a2d5e20683f7d618b8fe3d0f27d5"
+    },
+    {
+      "id": "loiTranKinhHon",
+      "level": 5,
+      "sha256": "c1e08c7c66230fcc74f2c383988a23490c17c864a6792414109c34ac6578c9c9"
+    },
+    {
+      "id": "trucLamPhaTran",
+      "level": 1,
+      "sha256": "b4f3f1d5f81ba114590a1ca4cb7c72b866c3f893fd2e35bb8cb703e96e8527be"
+    },
+    {
+      "id": "trucLamPhaTran",
+      "level": 2,
+      "sha256": "c06146768409c867729c6aced82a995545e65a1044e57dedd817af260fac3446"
+    },
+    {
+      "id": "trucLamPhaTran",
+      "level": 3,
+      "sha256": "1d64b64b0307353490e73c20a9c43eb101f9b283fdd7ec8d845b749a64229788"
+    },
+    {
+      "id": "trucLamPhaTran",
+      "level": 4,
+      "sha256": "1689f70078e600380d729162e1171f6292e96354459a3458d6dcd10cc41c502b"
+    },
+    {
+      "id": "trucLamPhaTran",
+      "level": 5,
+      "sha256": "2e4a8821ebdff52e7120518820faff13eb577e2c3d0505f8c06804d107499ab1"
+    },
+    {
+      "id": "langDaoTram",
+      "level": 1,
+      "sha256": "3d88d317963f893385861a87679c2f99fb6614b946d0e32f3b7de468a56139d3"
+    },
+    {
+      "id": "langDaoTram",
+      "level": 2,
+      "sha256": "63ca062a2bf6d603bc598fad18dc35990e1d073b86db05ed2d129c7949e47b61"
+    },
+    {
+      "id": "langDaoTram",
+      "level": 3,
+      "sha256": "a95dbb4d6ed03ffb56b3b1b3cc17da8c6a5eea3f147a272f8013d0c7e8cc671a"
+    },
+    {
+      "id": "langDaoTram",
+      "level": 4,
+      "sha256": "f5f9a12c79643e0690a78d5c770f3e564e5b5ab71187e46702cfb9760e91355d"
+    },
+    {
+      "id": "langDaoTram",
+      "level": 5,
+      "sha256": "62db4a36f1e37bfdfa396d03ca7c36d6a9c2c340ee6e3dcc810c931163ebd034"
+    },
+    {
+      "id": "sonHaTranKich",
+      "level": 1,
+      "sha256": "d3bf614ae768b6aa83d778929a7b828ba5aad9a857b0002a2c0a3eb58ad4791d"
+    },
+    {
+      "id": "sonHaTranKich",
+      "level": 2,
+      "sha256": "c50ffa204277835e1d17ba23d76f2a755b0674546ba617ca9aba4b30aec73983"
+    },
+    {
+      "id": "sonHaTranKich",
+      "level": 3,
+      "sha256": "ecc34e2ecc6a6c6c6a066fb6d73abcd1aeac303147764de6c286fc55d37ca4b4"
+    },
+    {
+      "id": "sonHaTranKich",
+      "level": 4,
+      "sha256": "01bed96d53af504e158d4f273cedc3691fc850a98fec8da00d8c0a117c49f607"
+    },
+    {
+      "id": "sonHaTranKich",
+      "level": 5,
+      "sha256": "f838f4d839ab520b0a47187247ca2735f96f61a8a9fa29bcdb33232cfe7e5f45"
+    },
+    {
+      "id": "loiDaoLienTram",
+      "level": 1,
+      "sha256": "e8ace66083bdf4f3f9c2e73834283ff2460b3ac9f34d9107235f83c4df073d02"
+    },
+    {
+      "id": "loiDaoLienTram",
+      "level": 2,
+      "sha256": "e823a87ed8eb9e5ad5b66311e7d99f4262f8720b59484ad585f899c15e32accb"
+    },
+    {
+      "id": "loiDaoLienTram",
+      "level": 3,
+      "sha256": "4932e124522c966119e614a6871fb8675da1619c17813f3836cfdd0094e40936"
+    },
+    {
+      "id": "loiDaoLienTram",
+      "level": 4,
+      "sha256": "d0fd1eeb4ddd04cf3c713973aaf1e3556b9c7b82777708b6be2c9e677a9e79c8"
+    },
+    {
+      "id": "loiDaoLienTram",
+      "level": 5,
+      "sha256": "c8affdcb07cfc3cb1ca0bfddf056093779fdf36fd3b2ca1bd0a86fbe964e4d96"
+    },
+    {
+      "id": "truyPhongDoatMenh",
+      "level": 1,
+      "sha256": "ec671f60eea62df78c0eb45258a04e3333f1b0a1e2776f3d2a69ea23ed3e87b1"
+    },
+    {
+      "id": "truyPhongDoatMenh",
+      "level": 2,
+      "sha256": "bcbf4b51349793428a131eaa00d5c030e138250391aecbedae86c8e6936002cd"
+    },
+    {
+      "id": "truyPhongDoatMenh",
+      "level": 3,
+      "sha256": "099229b8e0ccb98bfa2ef5346f5f15a663a9cbd847880b6132ae899901091dec"
+    },
+    {
+      "id": "truyPhongDoatMenh",
+      "level": 4,
+      "sha256": "ba55a2544b68bba3af690790faf53e47954a3145442144d4e711d7deb44c54f6"
+    },
+    {
+      "id": "truyPhongDoatMenh",
+      "level": 5,
+      "sha256": "221b79dc95c1e84618a8003354b64058f3a2e6da8d2bd346d991c22a4b57b8fd"
+    },
+    {
+      "id": "nganChamTanXa",
+      "level": 1,
+      "sha256": "d827fb237acadd27bf9f54cb0423c6f8009904be13159376192f8a89a0b6e536"
+    },
+    {
+      "id": "nganChamTanXa",
+      "level": 2,
+      "sha256": "0c247adca57e91a4249b6c0a507df6313be30e3e9b85a88e76e9687ac93530ad"
+    },
+    {
+      "id": "nganChamTanXa",
+      "level": 3,
+      "sha256": "9e1d43b0f8f008f4c489804b417527ad70a8241d9d4de496af64eb98ce44ba86"
+    },
+    {
+      "id": "nganChamTanXa",
+      "level": 4,
+      "sha256": "f2ac7a630148129131cfee668c698dac0f7de48f5b7c838b5642ebfef54e269d"
+    },
+    {
+      "id": "nganChamTanXa",
+      "level": 5,
+      "sha256": "c3a07629360aff9e3c8cab0d7d55c4bcb1a5916168b20e89a1d30d308f2a2e12"
+    },
+    {
+      "id": "kinhCucTrienThan",
+      "level": 1,
+      "sha256": "13b2f3a90d38402a56b35eb07ea5c858540c77feec8adc5013ba965dd5b0ed78"
+    },
+    {
+      "id": "kinhCucTrienThan",
+      "level": 2,
+      "sha256": "6c1065ce596f58803cc7b28419c252d892f3074734be0d2efb76904d60a5232e"
+    },
+    {
+      "id": "kinhCucTrienThan",
+      "level": 3,
+      "sha256": "cbae40860760957a99b4f9e0b3800ef76352a6402a41c071279565a92c7b7b9d"
+    },
+    {
+      "id": "kinhCucTrienThan",
+      "level": 4,
+      "sha256": "6ad2d50574e493674ca3db086fa8355654fc6b81473d7180917938c732e7af1b"
+    },
+    {
+      "id": "kinhCucTrienThan",
+      "level": 5,
+      "sha256": "2be117ec9ceb8589c1f30f70b54cfc25fb886446f94ca072d44ae0609cc884aa"
+    },
+    {
+      "id": "diaMachBungPhat",
+      "level": 1,
+      "sha256": "03efcd9230563866890afdfb3a4568c77a735e74e86c2b6b961f1283b77ebf84"
+    },
+    {
+      "id": "diaMachBungPhat",
+      "level": 2,
+      "sha256": "c1d48c4f624ef2d581ea90fd7e50e4058451c61deea36e4c4f8e23cf548c5c74"
+    },
+    {
+      "id": "diaMachBungPhat",
+      "level": 3,
+      "sha256": "b3685ba5e73308d59bae3e3e4450eeea166908eb082b94eaa8c9e5be9c71da60"
+    },
+    {
+      "id": "diaMachBungPhat",
+      "level": 4,
+      "sha256": "73d3610dad67aa9469ab7eb2422a7dc8efa30a59595103db3036a450fa2cd0a5"
+    },
+    {
+      "id": "diaMachBungPhat",
+      "level": 5,
+      "sha256": "bb3aecf4be89c0066fb1c87758e9deddc5b47e4698b0a5a2987484d7f2d767cd"
+    },
+    {
+      "id": "phongAnCuongLuu",
+      "level": 1,
+      "sha256": "e6d88ee9192ec61e234dd7badaeeb0a111f93ee7fc886b23fee043ebe3743be0"
+    },
+    {
+      "id": "phongAnCuongLuu",
+      "level": 2,
+      "sha256": "efd16a49f1cf89d9839c3c62e0c5f0e650b703a6854a97f97d92ac1577b47057"
+    },
+    {
+      "id": "phongAnCuongLuu",
+      "level": 3,
+      "sha256": "24928d3ff04ac4e48b158eeede896f52e35e085bfb58f774e8c5c2566b5a635e"
+    },
+    {
+      "id": "phongAnCuongLuu",
+      "level": 4,
+      "sha256": "f635b1b4779d233a783fcb6f98851c4b443e59819ad7ad0a08c9d8c2e468e82b"
+    },
+    {
+      "id": "phongAnCuongLuu",
+      "level": 5,
+      "sha256": "1454e39b223222b8d1ba856287235eacfb2c8a72ff166047a20c0459b954f5df"
+    },
+    {
+      "id": "thuyTraiLienHoan",
+      "level": 1,
+      "sha256": "39f230168b9bb51105f8d1a2450c39e5a4acaedbb897e805391e92e489abf7a9"
+    },
+    {
+      "id": "thuyTraiLienHoan",
+      "level": 2,
+      "sha256": "6a5f43cb19f4fe0d58e168bbb6030bfcb802379377e0ba81e9566e1991f9f2dd"
+    },
+    {
+      "id": "thuyTraiLienHoan",
+      "level": 3,
+      "sha256": "dd177833839953701a6e09f8f4a8131e3b958f6b68b689496e8a96e0bebbd2ac"
+    },
+    {
+      "id": "thuyTraiLienHoan",
+      "level": 4,
+      "sha256": "42b93a1e238c6a2ce3db4d8a66cb869d9a2d9bfc58cafb02f5f155d2b25b26d0"
+    },
+    {
+      "id": "thuyTraiLienHoan",
+      "level": 5,
+      "sha256": "fb6eae6adab20b9f8c80f16dfd826c54638d11286110d5415433097e67467c89"
+    },
+    {
+      "id": "viemGiapHoDoanh",
+      "level": 1,
+      "sha256": "31f35fa1bd4f10fe9d962e61bb493c7ac1eacc820f0ed3c522f2ee134e6dd890"
+    },
+    {
+      "id": "viemGiapHoDoanh",
+      "level": 2,
+      "sha256": "23ec33111c3cef6dcaa785dcb4079e9686d817a08acd0a5477e6987df463d8da"
+    },
+    {
+      "id": "viemGiapHoDoanh",
+      "level": 3,
+      "sha256": "53fb9ea4cdbb6e849605efaebbcf673a2b9ffb99a63eeba9cc23d6031445fbe1"
+    },
+    {
+      "id": "viemGiapHoDoanh",
+      "level": 4,
+      "sha256": "91db68df1ce8a31fe5389116d4886165be6cb70b3c9b94c6f2ffbbc46b28a27b"
+    },
+    {
+      "id": "viemGiapHoDoanh",
+      "level": 5,
+      "sha256": "b8acdcdecd96f3cf8b84233bb916866450abc2e8c7c305c2df55593d5ff82090"
+    },
+    {
+      "id": "chanLoiThietVe",
+      "level": 1,
+      "sha256": "520c9525420af1da7cdea24e8d9f75dc4756bd329d47f20310c42cd3b4fa197e"
+    },
+    {
+      "id": "chanLoiThietVe",
+      "level": 2,
+      "sha256": "43bf3573aacb1faa18b643d115d52e9405b2d8deb100d5bedfa565d4f8c75307"
+    },
+    {
+      "id": "chanLoiThietVe",
+      "level": 3,
+      "sha256": "05b1e9edd2cae8899ea485e34bde093152756bd21d04e23875851dcafaa9af0d"
+    },
+    {
+      "id": "chanLoiThietVe",
+      "level": 4,
+      "sha256": "e0094422a6ccb2064882ee7a76846f1bbea759d468f37593d51aaeb7dadc65c4"
+    },
+    {
+      "id": "chanLoiThietVe",
+      "level": 5,
+      "sha256": "6529db88fe899b625f2612a40ddf9406fd780a42e0b4fe2997ced2fdfea48e65"
+    },
+    {
+      "id": "phongLuyHoKy",
+      "level": 1,
+      "sha256": "a3fb4418b759ea371a5b8998b2bcb2bf39c1e894c8912b3de69c8075ac27b164"
+    },
+    {
+      "id": "phongLuyHoKy",
+      "level": 2,
+      "sha256": "c5e566273f2d92eab903d23aa3f2a26a68da0b9b67dd382f32802b54c4e5f188"
+    },
+    {
+      "id": "phongLuyHoKy",
+      "level": 3,
+      "sha256": "ec239b41f3d615e8f5260d6301689cb3383446db5236bf4513b8835d5be5eb6f"
+    },
+    {
+      "id": "phongLuyHoKy",
+      "level": 4,
+      "sha256": "1dd74e255f93e2f371936fa783a1bd28b3ef4698701839cb1a98568f2e21a282"
+    },
+    {
+      "id": "phongLuyHoKy",
+      "level": 5,
+      "sha256": "97711b432675447e246757041c86e98f69e978fb38316101b99d8cf183fdad11"
+    },
+    {
+      "id": "kimChamDoMenh",
+      "level": 1,
+      "sha256": "8837482862851513500fbee4779a2161486dc006325b43410e3685ac200200a6"
+    },
+    {
+      "id": "kimChamDoMenh",
+      "level": 2,
+      "sha256": "9db20b0735a7619f381a38626210a9bd179cdc4709adcbad18910d37334890bb"
+    },
+    {
+      "id": "kimChamDoMenh",
+      "level": 3,
+      "sha256": "fca9e6747b7cb765cd2f617b993f55c0871340a334baa28d62d8014a6f113824"
+    },
+    {
+      "id": "kimChamDoMenh",
+      "level": 4,
+      "sha256": "fde86293824834e5322ec6fa8303b80f567b4ff9faa52dd20a09b07f6e8f1a42"
+    },
+    {
+      "id": "kimChamDoMenh",
+      "level": 5,
+      "sha256": "621af5334f12532437619dcb7e652fb95e4b7b8d31c6adbc08527b4b6c744f8f"
+    },
+    {
+      "id": "danHoaHoiNguyen",
+      "level": 1,
+      "sha256": "07d1a0686474c90b45f6583279609ad9acf72695b757ec56ec38392571f712a7"
+    },
+    {
+      "id": "danHoaHoiNguyen",
+      "level": 2,
+      "sha256": "6fcdcd0427071281cd210522700d3877d49f12610516bf5c8a9711a251b18a93"
+    },
+    {
+      "id": "danHoaHoiNguyen",
+      "level": 3,
+      "sha256": "5d9f08f520b4ffa90319192b81585b725327d13baff7e7eef9ba305935d607eb"
+    },
+    {
+      "id": "danHoaHoiNguyen",
+      "level": 4,
+      "sha256": "235776b1938cac6645842ef3cd66e24de94f481b292dac4bc256b52fc55136ce"
+    },
+    {
+      "id": "danHoaHoiNguyen",
+      "level": 5,
+      "sha256": "7c72c34eac0af79ed610949a06fbf03eb5bc799f37ac1f91ec27000781cb12bd"
+    },
+    {
+      "id": "hauThoDuongNguyen",
+      "level": 1,
+      "sha256": "1b16cafa42ecc2b07ccd7302e6fd77f3be25f7d29993d0ec2e326ca80ee4ab96"
+    },
+    {
+      "id": "hauThoDuongNguyen",
+      "level": 2,
+      "sha256": "84c1069f0162d31fca5a9ab75786df08916fd28c620f07e6c21ee94e0b3f18b6"
+    },
+    {
+      "id": "hauThoDuongNguyen",
+      "level": 3,
+      "sha256": "d7c801ae4b6b00f16d2417422d4c69443fa8c1357425a02bb9c7362bd68d8e30"
+    },
+    {
+      "id": "hauThoDuongNguyen",
+      "level": 4,
+      "sha256": "0ddbe3543cef57d680b0f30a3c735727489ced76f533894d64bac69d3a96d427"
+    },
+    {
+      "id": "hauThoDuongNguyen",
+      "level": 5,
+      "sha256": "59062d7efee8db886703b6f55664ee43085c69c2751fa77b377d81b33abde756"
+    },
+    {
+      "id": "loiChamKhoiTu",
+      "level": 1,
+      "sha256": "0d17b5ad1ed358d2996d92f5b57421af1c0a0a31a86796507a6af590fb7b9e83"
+    },
+    {
+      "id": "loiChamKhoiTu",
+      "level": 2,
+      "sha256": "08493372f807214cba79f5e330206ba3f824a1ed2f482923738e1c3731d9d136"
+    },
+    {
+      "id": "loiChamKhoiTu",
+      "level": 3,
+      "sha256": "176fd190cd70774742d1dba031cabbb561f845cd09fb93ea84bd3629322e3eb2"
+    },
+    {
+      "id": "loiChamKhoiTu",
+      "level": 4,
+      "sha256": "182d14e029656740272f7a54a20a2b22693e8c32700c5e342198de18784212b4"
+    },
+    {
+      "id": "loiChamKhoiTu",
+      "level": 5,
+      "sha256": "32c031b8d1e5307d51aad2e9100355feb4eccc235f74a0a45a917b6c385370e4"
+    },
+    {
+      "id": "trucDocMeHon",
+      "level": 1,
+      "sha256": "782105a73810ccbcafbd5b79c7c638d7ad3bc0eba26ebf545447d115f4a0dc62"
+    },
+    {
+      "id": "trucDocMeHon",
+      "level": 2,
+      "sha256": "cbdb627cc97be8b2f1da36c56cc81253d92ab455bd64ca460831fcb3e06b775c"
+    },
+    {
+      "id": "trucDocMeHon",
+      "level": 3,
+      "sha256": "7e5991dd3973b0eb4140c30813a2f6f10222aeb17195c5bac3cf6d5f8986914a"
+    },
+    {
+      "id": "trucDocMeHon",
+      "level": 4,
+      "sha256": "69e73a320e7ba3e6b656bdd5fd8562d4a540a522a16f147c87aa3d1861fab8cc"
+    },
+    {
+      "id": "trucDocMeHon",
+      "level": 5,
+      "sha256": "ffe045b96c8c0ac7732461f760a3bae0914ebd7182f529657c24fed43b5814e6"
+    },
+    {
+      "id": "doanDaoTuyetLuong",
+      "level": 1,
+      "sha256": "66838966c34ccc0faa6443f87c985dce4fcb8b65b9b27c945a0396096085ecd7"
+    },
+    {
+      "id": "doanDaoTuyetLuong",
+      "level": 2,
+      "sha256": "66838966c34ccc0faa6443f87c985dce4fcb8b65b9b27c945a0396096085ecd7"
+    },
+    {
+      "id": "doanDaoTuyetLuong",
+      "level": 3,
+      "sha256": "66838966c34ccc0faa6443f87c985dce4fcb8b65b9b27c945a0396096085ecd7"
+    },
+    {
+      "id": "doanDaoTuyetLuong",
+      "level": 4,
+      "sha256": "66838966c34ccc0faa6443f87c985dce4fcb8b65b9b27c945a0396096085ecd7"
+    },
+    {
+      "id": "doanDaoTuyetLuong",
+      "level": 5,
+      "sha256": "f1103984ac03555f60a944cbdd9b629aa17926eb53de25d7883f76121b66de4f"
+    },
+    {
+      "id": "kinhLoiDoatKhi",
+      "level": 1,
+      "sha256": "4699ab2b4d77cf1bc9ed51084fac34f0e152b78cbf4d3cd8713304dce1a31981"
+    },
+    {
+      "id": "kinhLoiDoatKhi",
+      "level": 2,
+      "sha256": "1e4eb7ea4bc2fc3503943ab5fe4c944c0418ff3ac8f7b962778154ed31baf7e0"
+    },
+    {
+      "id": "kinhLoiDoatKhi",
+      "level": 3,
+      "sha256": "e857f050bdb30de13e1c982c1cdfeaf6c4dc42205ac79da56f4467c494fcd09f"
+    },
+    {
+      "id": "kinhLoiDoatKhi",
+      "level": 4,
+      "sha256": "5feb76cbf6ee460035935c1f4e33cf652ab6a84e112d43115fa89296d99ff8f3"
+    },
+    {
+      "id": "kinhLoiDoatKhi",
+      "level": 5,
+      "sha256": "b37b4cd28923f1bd70bd6dcc0e73ec5a14cee9f973ec42ca6373751fe287f256"
+    },
+    {
+      "id": "phieuPhongLyGian",
+      "level": 1,
+      "sha256": "db51055b9a900526a23b104a85bab9aa584634b3ec8ecdd2174a309495f3e2e3"
+    },
+    {
+      "id": "phieuPhongLyGian",
+      "level": 2,
+      "sha256": "db51055b9a900526a23b104a85bab9aa584634b3ec8ecdd2174a309495f3e2e3"
+    },
+    {
+      "id": "phieuPhongLyGian",
+      "level": 3,
+      "sha256": "db51055b9a900526a23b104a85bab9aa584634b3ec8ecdd2174a309495f3e2e3"
+    },
+    {
+      "id": "phieuPhongLyGian",
+      "level": 4,
+      "sha256": "db51055b9a900526a23b104a85bab9aa584634b3ec8ecdd2174a309495f3e2e3"
+    },
+    {
+      "id": "phieuPhongLyGian",
+      "level": 5,
+      "sha256": "04fed9be336da2f1ad0835b47e773b1050499a026d1eed41285c2e9ae2b4072f"
+    },
+    {
+      "id": "thietTranPhaGiap",
+      "level": 1,
+      "sha256": "6a3e80f47928ddfa64d8f22c86ef57bc79c8bdc6af4183474ce73e3488172eae"
+    },
+    {
+      "id": "thietTranPhaGiap",
+      "level": 2,
+      "sha256": "0018f208afdf73fa6bf72f294f96288fcaa44f0733539c515cd7b60827d0f46e"
+    },
+    {
+      "id": "thietTranPhaGiap",
+      "level": 3,
+      "sha256": "4e97185082982b1edaec77d1b7213e5026c2c095670e03ca2ea38c74d5c28e1e"
+    },
+    {
+      "id": "thietTranPhaGiap",
+      "level": 4,
+      "sha256": "d71f3e8444e7417295cae7c0913c04f6e1e1b064041e9def1010fa7f0c18df11"
+    },
+    {
+      "id": "thietTranPhaGiap",
+      "level": 5,
+      "sha256": "82396bea85fc4043c922e631f03b042dd731b3bd4ec52ead824281116d2f383c"
+    },
+    {
+      "id": "thanhLamBayTran",
+      "level": 1,
+      "sha256": "7386c745af854edf281a8f3d9925ec2611f81e002ea5fde0694f18eb272c7c9e"
+    },
+    {
+      "id": "thanhLamBayTran",
+      "level": 2,
+      "sha256": "298f64c510f44a077fd2b47e5f0412cc1d3855e5963e9734cd61b9a89f2519ef"
+    },
+    {
+      "id": "thanhLamBayTran",
+      "level": 3,
+      "sha256": "bfefa884b0ed4c78f9199331f7c4c5be31dfbee3a8c9bf8307da9420fcad5f85"
+    },
+    {
+      "id": "thanhLamBayTran",
+      "level": 4,
+      "sha256": "d036545c11b0dacc008f4ea028fe2bfd20e9a370a1b741b71c4004a317307cf4"
+    },
+    {
+      "id": "thanhLamBayTran",
+      "level": 5,
+      "sha256": "a683b3a4f6b6d9a425a4161b443a272b95e6b5153d4a260d369b7e609f827705"
+    },
+    {
+      "id": "trieuDangVayThanh",
+      "level": 1,
+      "sha256": "9fc1e4e63b33ffb1f2de78d8605a1b1907b2f381f6f2745b7db1671450d10845"
+    },
+    {
+      "id": "trieuDangVayThanh",
+      "level": 2,
+      "sha256": "c636e139d85301fecf091878ccd74f0fd8fcdcf006e35ecfed2cf770e353282e"
+    },
+    {
+      "id": "trieuDangVayThanh",
+      "level": 3,
+      "sha256": "d3f1395ba6669636818378a01cab9c604917e4ef1092bfd66e39d766ef7da482"
+    },
+    {
+      "id": "trieuDangVayThanh",
+      "level": 4,
+      "sha256": "51f498206150fe6f15ad26b7cc02b1453881fe076d743cdeb0d772bec6045f49"
+    },
+    {
+      "id": "trieuDangVayThanh",
+      "level": 5,
+      "sha256": "68e137d417eb46c1481c278f1ca4d3c5ff63f7d62cae7b9a8dc94a894b79bc6c"
+    },
+    {
+      "id": "hoaCongLienKe",
+      "level": 1,
+      "sha256": "1dc79d6af211e7fea328af7c48ff4b88f798f8d018774d0e76eb98f180d112d1"
+    },
+    {
+      "id": "hoaCongLienKe",
+      "level": 2,
+      "sha256": "9217847085445bb45c4737c590007615ef721b17a8a1e2d5ea5b4a99cf36a8cc"
+    },
+    {
+      "id": "hoaCongLienKe",
+      "level": 3,
+      "sha256": "1b77fb048f5be9eb28d45384ed8477f197373985e33ed0e48c0644b13a7ec75f"
+    },
+    {
+      "id": "hoaCongLienKe",
+      "level": 4,
+      "sha256": "78e529a36364140b656dab293c664b99c4e6ba17678572e9c833237e857d6ad3"
+    },
+    {
+      "id": "hoaCongLienKe",
+      "level": 5,
+      "sha256": "7aca0cc6b39a27a3627a450eeae0363b8c63b589ea2bc0fed71239442b707d29"
+    },
+    {
+      "id": "dinhQuocHoaKy",
+      "level": 1,
+      "sha256": "f4febfa592176df226647f8e01189307d14bec5a1208ad26e6df14e049809a8d"
+    },
+    {
+      "id": "dinhQuocHoaKy",
+      "level": 2,
+      "sha256": "0feafb10b3c39e396bff82dfc8546b7fa711718880e8159dd275ff12167b9734"
+    },
+    {
+      "id": "dinhQuocHoaKy",
+      "level": 3,
+      "sha256": "fd2291dab18ea0d3c04dba02bc2dc3bd119c12307e3bec86424818cfcb7b46bf"
+    },
+    {
+      "id": "dinhQuocHoaKy",
+      "level": 4,
+      "sha256": "f671f35c7b5ebd88848b063369fb837981b5208920afd493d79617f9ff568295"
+    },
+    {
+      "id": "dinhQuocHoaKy",
+      "level": 5,
+      "sha256": "a9751a95f920c922ca8adf5c4ab6c18c3db64fabe685fe3b73a6cada423b1f14"
+    },
+    {
+      "id": "ngoaiGiapHoQuan",
+      "level": 1,
+      "sha256": "0c96b8d963fb681c8ee743f799e8502d5948941c13f51a3b8be31d959d13c8df"
+    },
+    {
+      "id": "ngoaiGiapHoQuan",
+      "level": 2,
+      "sha256": "d7a98f017d428c56886ab679dcfa7e4d4205619a271c74939d5708afd1600a76"
+    },
+    {
+      "id": "ngoaiGiapHoQuan",
+      "level": 3,
+      "sha256": "09a5b132ec9de05577fd348db909a2d2af503aed231629c1e4da1d72a0a218ad"
+    },
+    {
+      "id": "ngoaiGiapHoQuan",
+      "level": 4,
+      "sha256": "564deb312f5713a2e2fcfb6b3779fe44b1006f3d1fbd1eefc5eb1d56f08e687e"
+    },
+    {
+      "id": "ngoaiGiapHoQuan",
+      "level": 5,
+      "sha256": "15f6cb545883f46c3d8d3d20833635f9ba42e08bb617876692aed166d9a58477"
+    },
+    {
+      "id": "doHoPhuLenh",
+      "level": 1,
+      "sha256": "5b1bfc5bfd7b07152c61c57ed18e638b6c2d12324990e047a67a124cc9adaac2"
+    },
+    {
+      "id": "doHoPhuLenh",
+      "level": 2,
+      "sha256": "9e1f3718ad84947dc0bb65be99b2826bd7d3127fa7d8cec32e09fbc4751f32cb"
+    },
+    {
+      "id": "doHoPhuLenh",
+      "level": 3,
+      "sha256": "28bf23167ffae2b929b872c551266202bffb76607caa53a009e9f0a2005ae220"
+    },
+    {
+      "id": "doHoPhuLenh",
+      "level": 4,
+      "sha256": "38c5aa7c3eecea3dfd8cae617eac096e7d5b5ac3e67e0fd72d7b12f3d5fdf93d"
+    },
+    {
+      "id": "doHoPhuLenh",
+      "level": 5,
+      "sha256": "2491a833d2992f5a203505dcf0dc58d411e6be7969322f5a3f39c076ed9fcf47"
+    },
+    {
+      "id": "hoaLuThaoDuoc",
+      "level": 1,
+      "sha256": "cae8f44c6936e839cfd839f09588258eacb14c8130d84540bec9d9aa64dbcef4"
+    },
+    {
+      "id": "hoaLuThaoDuoc",
+      "level": 2,
+      "sha256": "9593eb3d9d89ee6d9973fa32cd5d1d1d87e2b83f45feb42b9e302081c2602a8a"
+    },
+    {
+      "id": "hoaLuThaoDuoc",
+      "level": 3,
+      "sha256": "539bf139400833a3358e9cf7de94ba1c31521a217950391ebecd37dd3b9a8689"
+    },
+    {
+      "id": "hoaLuThaoDuoc",
+      "level": 4,
+      "sha256": "df59ed750e62101b6ec7545a996145c1fa1d0e23a75bad7c7247a9439e929f4e"
+    },
+    {
+      "id": "hoaLuThaoDuoc",
+      "level": 5,
+      "sha256": "c3749d21ec763febca0b29580f56fc4a964f1ba73b1c542359868d46d8f7dbcc"
+    },
+    {
+      "id": "thapDaoLoiBinh",
+      "level": 1,
+      "sha256": "5ad611ceb57ae62a0277a9d46fa564d90e29a509425af66182ae7c1bac0bfc5d"
+    },
+    {
+      "id": "thapDaoLoiBinh",
+      "level": 2,
+      "sha256": "cd9a4c76c90e828856e51a00c5cfdca547b6a68065dc6aa094503bdf67acff6e"
+    },
+    {
+      "id": "thapDaoLoiBinh",
+      "level": 3,
+      "sha256": "6255a5cad555c557c73ec6ac544723178e647561937f7b6499917b3f52f160ef"
+    },
+    {
+      "id": "thapDaoLoiBinh",
+      "level": 4,
+      "sha256": "04331ee1256936587e1300961c7f49f735d47c12a0ecdf93033755b18f4f0508"
+    },
+    {
+      "id": "thapDaoLoiBinh",
+      "level": 5,
+      "sha256": "8e3dc18cf7c2acbec65d57c8d48951007688862242a59ab6560b153daf4b93bf"
+    },
+    {
+      "id": "namVietVuongAn",
+      "level": 1,
+      "sha256": "68b1d227a6f6f16daeede0e8ba1016581821f50cdec0f57cb919b862b367bc8c"
+    },
+    {
+      "id": "namVietVuongAn",
+      "level": 2,
+      "sha256": "2177e6f80dea59fbb76bc367448773db72ec7840b3f8416496490039b6e1176b"
+    },
+    {
+      "id": "namVietVuongAn",
+      "level": 3,
+      "sha256": "c3b50335f56dd3f1867c90d90c1eedc7065929f9553c2f28120333f2b19d6ee1"
+    },
+    {
+      "id": "namVietVuongAn",
+      "level": 4,
+      "sha256": "a2a3eb56343cfd3eee5407f2168cf2da050266efa7a0144a329258632cda7eae"
+    },
+    {
+      "id": "namVietVuongAn",
+      "level": 5,
+      "sha256": "4c4f196b6e5b86f54a61948c64e8be91ee034f0d6ecd040d0eb0ec57788c3bde"
+    },
+    {
+      "id": "boHaiTranGiang",
+      "level": 1,
+      "sha256": "f58135e112be337dd04567e1d820ce577212de80875fa60fb1b89f1f549b4f76"
+    },
+    {
+      "id": "boHaiTranGiang",
+      "level": 2,
+      "sha256": "695e59e6def3da109fb4dec25182b77099a62a73bb0b489d8da5f09fffe017ab"
+    },
+    {
+      "id": "boHaiTranGiang",
+      "level": 3,
+      "sha256": "fdcd756707daca907fa707802cb580a1bd69e2eeda3178eceb981928baf2e5b3"
+    },
+    {
+      "id": "boHaiTranGiang",
+      "level": 4,
+      "sha256": "cd50a3a531030465de44671b5cd5dd8581d35dffaac319e95cd8355327d98df8"
+    },
+    {
+      "id": "boHaiTranGiang",
+      "level": 5,
+      "sha256": "0b93f997d81a78b09be9932e5787bdeb185b7573c5dfcb6874a0311e2919d70f"
+    },
+    {
+      "id": "bachHoXuatSon",
+      "level": 1,
+      "sha256": "db3333bc8348b66bc5fdb46b3f6e1c4c989fb767051f21508e34b820836f4990"
+    },
+    {
+      "id": "bachHoXuatSon",
+      "level": 2,
+      "sha256": "cab1e6261ac06fc015174d3391ea3607d0d1323edd223d683f3d740f6c71f97a"
+    },
+    {
+      "id": "bachHoXuatSon",
+      "level": 3,
+      "sha256": "74d86ac4fbe771ffec42d418b73e57334c22549bdfb7dcf991cdc5bc4170178a"
+    },
+    {
+      "id": "bachHoXuatSon",
+      "level": 4,
+      "sha256": "61edde1b74b80a5ff8cb0d0b757a64adb1696d7612b105e815a0678ad2a21b54"
+    },
+    {
+      "id": "bachHoXuatSon",
+      "level": 5,
+      "sha256": "e897ef087929b755ecf9ff20bd2cd5a16a6c072d7827dc0b67bfd5f75b360743"
+    },
+    {
+      "id": "ngoGiaDiMuu",
+      "level": 1,
+      "sha256": "8e0f2d54ead33b09899a43f79b9ed7b03915c33e6bde526d6d2cf49f2f764981"
+    },
+    {
+      "id": "ngoGiaDiMuu",
+      "level": 2,
+      "sha256": "aef86123e8de5a93913e9e441dba03a8cabbdb57fb48981de3c7b57d2a409a3c"
+    },
+    {
+      "id": "ngoGiaDiMuu",
+      "level": 3,
+      "sha256": "f8bb7ff9ee4e789c817c0d65d259931341e523efebb996c23dabd764bde2006c"
+    },
+    {
+      "id": "ngoGiaDiMuu",
+      "level": 4,
+      "sha256": "519497fea2fa0582db2fd34570179da98fdbe4dea8f2903cf2573141f6c03cff"
+    },
+    {
+      "id": "ngoGiaDiMuu",
+      "level": 5,
+      "sha256": "b4bcbccae6813694cec27d91d6da8b4da7d32f14e03bdb752a3a292b816ce815"
+    },
+    {
+      "id": "duongLamPhongKhoi",
+      "level": 1,
+      "sha256": "7a59cc60d3560dc27d30c1aab126f025c8d20d47d5779521b60c0dbddded2d5c"
+    },
+    {
+      "id": "duongLamPhongKhoi",
+      "level": 2,
+      "sha256": "11b094d6e68a38b264e93e9416ca8df4adbcd8325c2c8f02e227057ab85a50f6"
+    },
+    {
+      "id": "duongLamPhongKhoi",
+      "level": 3,
+      "sha256": "90f73133dcfbb38aa4169284977f302623689f95fa1dc66e7248eaeac983c9ab"
+    },
+    {
+      "id": "duongLamPhongKhoi",
+      "level": 4,
+      "sha256": "f78d7dd9d5e729a2acfa64d7b76d01e7f6e24d788026e4529759c8d6ed7e04ca"
+    },
+    {
+      "id": "duongLamPhongKhoi",
+      "level": 5,
+      "sha256": "97b7c3ffc4cfdf5aa3a6d0acd4a77bcabeb2a5189a7140c9cbda5279ea4119a7"
+    },
+    {
+      "id": "tamDaiKienThanh",
+      "level": 1,
+      "sha256": "658f640763f0442babd2b7e3352d0e8410c5e92598a8a3586eea413197ee9cf2"
+    },
+    {
+      "id": "tamDaiKienThanh",
+      "level": 2,
+      "sha256": "26d8fe2392c27b67e155e1086a95d232f1a337b66b1706529b0052f90d3fbc33"
+    },
+    {
+      "id": "tamDaiKienThanh",
+      "level": 3,
+      "sha256": "086eb7538ddf2e1daa764696d92a0c77c5692739f09fd1015c6de7fe63b87e13"
+    },
+    {
+      "id": "tamDaiKienThanh",
+      "level": 4,
+      "sha256": "fa56d61a8e6c7d93480a33675ea8b2709769a51755ab8ac6a5f56d67cc8ac82a"
+    },
+    {
+      "id": "tamDaiKienThanh",
+      "level": 5,
+      "sha256": "7ec3ba0be185b261d1a042b176287d996631e7959f9e7bc5b2b52b7bc042a6a2"
+    },
+    {
+      "id": "phongChauLoiKich",
+      "level": 1,
+      "sha256": "23ca199c82a4040dd8830a18a51454a0ed07d3fdec3271835b306154953fb462"
+    },
+    {
+      "id": "phongChauLoiKich",
+      "level": 2,
+      "sha256": "d035b3a35babe2913e16669ac046da1c4611d44d38631d7f63bb7cbedd7a92cd"
+    },
+    {
+      "id": "phongChauLoiKich",
+      "level": 3,
+      "sha256": "5072cfac2dfd11e0303d05f7e31f4a954901bf0e215c20854652e39440fca18d"
+    },
+    {
+      "id": "phongChauLoiKich",
+      "level": 4,
+      "sha256": "eacd9d8b4b156467f0b14ffe5b28a959baad053cb8a65ffb31b3fea3cc5f49a5"
+    },
+    {
+      "id": "phongChauLoiKich",
+      "level": 5,
+      "sha256": "025ca957e525b354a2e17e69f6035111ff1ee71cb7a59ccb6b081dbeae8f8fd0"
+    },
+    {
+      "id": "hoiHoSinhKhi",
+      "level": 1,
+      "sha256": "ba7b8475e0651c75b1e546cb07e5432f0dae9d9a8d8e00027afea98e9c720d15"
+    },
+    {
+      "id": "hoiHoSinhKhi",
+      "level": 2,
+      "sha256": "d319151bf03196c8c7aa3670ffa04db8f203acae25d3ff83d7bfbde616714f30"
+    },
+    {
+      "id": "hoiHoSinhKhi",
+      "level": 3,
+      "sha256": "0b64d17f6462689a19637fd5cffe72a9a7b6c663c0007fa718e263e3b480f640"
+    },
+    {
+      "id": "hoiHoSinhKhi",
+      "level": 4,
+      "sha256": "40672e938fe2841de3ead09798b309df167b7977ce6d7204e854b821586dcffa"
+    },
+    {
+      "id": "hoiHoSinhKhi",
+      "level": 5,
+      "sha256": "bc7b43141d4ee6ecb0e2e976292538c7f7038bf8f48d88aaa0c3e570cfc6b1bc"
+    },
+    {
+      "id": "sieuLoaiPhaGiap",
+      "level": 1,
+      "sha256": "cad8833a7d6f9ee803cfbda366b8fbd01654cf21aba9298992332588682c76f1"
+    },
+    {
+      "id": "sieuLoaiPhaGiap",
+      "level": 2,
+      "sha256": "31e472936d8a7751116923d20dcd37c1395a2d7d3147da7d5e795d86482f5c02"
+    },
+    {
+      "id": "sieuLoaiPhaGiap",
+      "level": 3,
+      "sha256": "385952d6a2d2f5a595198c181575e9681c719cb1c1eb73491373daa5c505e8eb"
+    },
+    {
+      "id": "sieuLoaiPhaGiap",
+      "level": 4,
+      "sha256": "ee44f93d76dbc5c735af24fce715e42deda2c69f58beee736755796229365bd7"
+    },
+    {
+      "id": "sieuLoaiPhaGiap",
+      "level": 5,
+      "sha256": "d29783b753eaed7bb2b014843b2f195edc40361a3a9963497ed54f033f9fe8f4"
+    },
+    {
+      "id": "tienDuDoatLuong",
+      "level": 1,
+      "sha256": "ab7237e7bf775ae36c2cc21065b7166543334af4153d4c69fe071ccc02ef58c0"
+    },
+    {
+      "id": "tienDuDoatLuong",
+      "level": 2,
+      "sha256": "5c485bf276fe8744dd5135d7406f57aa1941082e3618008be36d2d69b523984f"
+    },
+    {
+      "id": "tienDuDoatLuong",
+      "level": 3,
+      "sha256": "24ba53510995a008d34574934badbbdf74eed35719ae4f18670348b7414f4d8f"
+    },
+    {
+      "id": "tienDuDoatLuong",
+      "level": 4,
+      "sha256": "dde0e89643e967cf3f687c1ca7ec46fe44c4b874c74dd9ecd099b337b419b536"
+    },
+    {
+      "id": "tienDuDoatLuong",
+      "level": 5,
+      "sha256": "336d0a8926f7a20c8ed641b0e0aa5fc14346d2ce24c4390fa263bdbb685a537e"
+    },
+    {
+      "id": "teGiangThuyTran",
+      "level": 1,
+      "sha256": "10dd08233c16d1829e9f3e695352e1e4020a8d5c2f066c8abfb1cfe86aa9506b"
+    },
+    {
+      "id": "teGiangThuyTran",
+      "level": 2,
+      "sha256": "fba3337910262bf45323a86618ff3f6a1bb374ec828ef1768a6fcff4bad0290a"
+    },
+    {
+      "id": "teGiangThuyTran",
+      "level": 3,
+      "sha256": "3e1ec57a6791058808f72af793da5e359810214ae2ed379d7410e28d4e11446c"
+    },
+    {
+      "id": "teGiangThuyTran",
+      "level": 4,
+      "sha256": "66f34d98215154a2c11b0d88ddf63d520797529e6bd35b120530b25fb8ffaaa4"
+    },
+    {
+      "id": "teGiangThuyTran",
+      "level": 5,
+      "sha256": "56b1401e72758a3515eeb659f18760da73d94d099100da509da29b91ac7f0e94"
+    },
+    {
+      "id": "phuLietHoaLuy",
+      "level": 1,
+      "sha256": "00fd6d63dc22b9b892740b9fbd26334860e24bf939934588598c92a4cc94692a"
+    },
+    {
+      "id": "phuLietHoaLuy",
+      "level": 2,
+      "sha256": "c1eb6a8925ca4d11592de31411163b738bb0934a25b1082c02bd8516fd2a2993"
+    },
+    {
+      "id": "phuLietHoaLuy",
+      "level": 3,
+      "sha256": "9448e8c6f3b143526abf4aa4a65812c89bb6e9fbea10d128f5fda69460ab8003"
+    },
+    {
+      "id": "phuLietHoaLuy",
+      "level": 4,
+      "sha256": "a06d9c022ae50a42e9737ca3bfddf900e0a9ed1fb5dadfc4743bfb719affc304"
+    },
+    {
+      "id": "phuLietHoaLuy",
+      "level": 5,
+      "sha256": "72d524f9ca9bce8a2866cf45e5f60d8af15626fb1dd961acba1566ea04e3118f"
+    },
+    {
+      "id": "doDongKienTam",
+      "level": 1,
+      "sha256": "d2dc7a99de7bed177bc1ee411bd8f2e52bff96dc446a536ede8e72e4a62b859c"
+    },
+    {
+      "id": "doDongKienTam",
+      "level": 2,
+      "sha256": "4f7df5468879d23589fec4fa518d945e5a09efb415068faaf716d99cb7076c5d"
+    },
+    {
+      "id": "doDongKienTam",
+      "level": 3,
+      "sha256": "f3a745c28f262c93af8324b497d26b393e0e2b2c694219d5f8f9f955eb966b37"
+    },
+    {
+      "id": "doDongKienTam",
+      "level": 4,
+      "sha256": "f9d50ad5969a452a0dcd2981c2680143e838641638b2cb71b6cd186fbadf9911"
+    },
+    {
+      "id": "doDongKienTam",
+      "level": 5,
+      "sha256": "23e98b656542da42c4cfa8ea10feaef9f9a92968674e509c6957880dcbd09bc8"
+    },
+    {
+      "id": "role_tramKich",
+      "level": 1,
+      "sha256": "e93073eef3a846fc538e977cffc0b51933e434576fabbee3fc40aa09d94eee38"
+    },
+    {
+      "id": "role_tramKich",
+      "level": 2,
+      "sha256": "bfcc1e022de6065161b104fe4b9794bad67f9413e2bc2126300038249213d2c6"
+    },
+    {
+      "id": "role_tramKich",
+      "level": 3,
+      "sha256": "56aa22efec9ef72b3290fc162dffb6a8854bbe0d58fccdc726036e2f75c591b5"
+    },
+    {
+      "id": "role_tramKich",
+      "level": 4,
+      "sha256": "7e23602fc84653bed84c7ca48f73607183b9bfc02b6690ce28b9862b8466e581"
+    },
+    {
+      "id": "role_tramKich",
+      "level": 5,
+      "sha256": "e3490560959c4ff2de1b86da20d5bcd289ecb29e48e90267ba84d366181baef2"
+    },
+    {
+      "id": "role_phaTran",
+      "level": 1,
+      "sha256": "5985e26ef9cbbc9ca169a2fb29988bb8920e357cb616bf45c726142dfb15ebb7"
+    },
+    {
+      "id": "role_phaTran",
+      "level": 2,
+      "sha256": "725229569038e4c8e9f3121c55a686a7ff195a5c2aa0190bd907ba6f8cddcf2f"
+    },
+    {
+      "id": "role_phaTran",
+      "level": 3,
+      "sha256": "a0ae93a7240626d42d0f5ba4af41c2352ece05a395422ed35f9ea97c7a46b9e5"
+    },
+    {
+      "id": "role_phaTran",
+      "level": 4,
+      "sha256": "a313666175f322d026371706b641cdd5fa29f932365b14a7c8724ddba411ea2b"
+    },
+    {
+      "id": "role_phaTran",
+      "level": 5,
+      "sha256": "a386346f26ff236ea33397df0dfc28ae4f9dc86a840448e7928825ae7500af39"
+    },
+    {
+      "id": "role_doatMenh",
+      "level": 1,
+      "sha256": "3bfac07e11ebbb24bf2f0a38b90b1bfd58ae39116c9f8c0235580dbf2a15a166"
+    },
+    {
+      "id": "role_doatMenh",
+      "level": 2,
+      "sha256": "ca449e1850f2c22df437fc0649e4d5360ef301b463268b1eb25970d196406dd3"
+    },
+    {
+      "id": "role_doatMenh",
+      "level": 3,
+      "sha256": "87b86d45d6c72acf22c23d976257f172b38e08150b22bed5af9f125139c5cefd"
+    },
+    {
+      "id": "role_doatMenh",
+      "level": 4,
+      "sha256": "6dd72d0f3af4404c490e232b3dc5a8bd21956c17566a52750557300fbfb3db68"
+    },
+    {
+      "id": "role_doatMenh",
+      "level": 5,
+      "sha256": "f27b0ac78dc2e2ac27c16d9b443159cd8530d5adad6979eaec11f1a0ec653eb9"
+    },
+    {
+      "id": "role_phepLan",
+      "level": 1,
+      "sha256": "cceb77e397dc04074ba3a7aea38d6cb80568c40ef445fe95fdb1be21640fc706"
+    },
+    {
+      "id": "role_phepLan",
+      "level": 2,
+      "sha256": "f2e9cf8b81b1b61c24953a93cf3a41415510d251ba1196016ae99af9badf9ff2"
+    },
+    {
+      "id": "role_phepLan",
+      "level": 3,
+      "sha256": "a0bb66e7a4ec181c5852d4fd9f2e4c3e4bee0ab8e56061be2b3b71397b22bb89"
+    },
+    {
+      "id": "role_phepLan",
+      "level": 4,
+      "sha256": "e5e70110566e4c17202e9fdc82331ee33b6d49694d6cff3e40da240671219481"
+    },
+    {
+      "id": "role_phepLan",
+      "level": 5,
+      "sha256": "aaff81701a16c7f9d60d3e780efd86300c4d9f1412dc3dcba0fabc75b9989614"
+    },
+    {
+      "id": "role_nguHanhAn",
+      "level": 1,
+      "sha256": "235b0ada51ae5b84da623836280ac898bda7c689aafcfa6a85b972a8645b68e6"
+    },
+    {
+      "id": "role_nguHanhAn",
+      "level": 2,
+      "sha256": "f37b5cd50b7b38ce8430599c39327157fe49c460dfb53f80e8c73750dd8afd2d"
+    },
+    {
+      "id": "role_nguHanhAn",
+      "level": 3,
+      "sha256": "5d0792b93253c2c82f0c70da1853a4dff1e0422813e9a40207e8f9570352865f"
+    },
+    {
+      "id": "role_nguHanhAn",
+      "level": 4,
+      "sha256": "2466033636d22f42459bde76cd70a3a19d31b421075b692c66a5cd32cfa0c832"
+    },
+    {
+      "id": "role_nguHanhAn",
+      "level": 5,
+      "sha256": "af29e3aea1fbabf14d368f5b147df0ee1cd2a579a8903ae3aacdaa5307a0c192"
+    },
+    {
+      "id": "role_thienDiaCong",
+      "level": 1,
+      "sha256": "546e5659ec6f14affeae55694fe35c3ca5d8a6c726d79da3e395a2da91ad3225"
+    },
+    {
+      "id": "role_thienDiaCong",
+      "level": 2,
+      "sha256": "28dad32ca055d0d93579820ff264158471c6504e82c73d8c5f04d7a7e3cb2ef5"
+    },
+    {
+      "id": "role_thienDiaCong",
+      "level": 3,
+      "sha256": "e21f69adc93dcea02e4179443082f96c6f237a55792e0f1e8158df87b8d30242"
+    },
+    {
+      "id": "role_thienDiaCong",
+      "level": 4,
+      "sha256": "ed61b46734d952db91541b58bc79cb9ab1ab26f604b2d63e99a6dc59345bc9c2"
+    },
+    {
+      "id": "role_thienDiaCong",
+      "level": 5,
+      "sha256": "cfacae07cc342f7e0cf027e6361f969e65bc5a0ede3b4212bc34d6ffb731b908"
+    },
+    {
+      "id": "role_thuThanh",
+      "level": 1,
+      "sha256": "1950f4f388c68b72dbd208e9db7339336764678b79aea503b60e80bf916ea470"
+    },
+    {
+      "id": "role_thuThanh",
+      "level": 2,
+      "sha256": "ded3efa17e708fac79f827e07816813c56bbc54b23354b31cbc502a353920fd6"
+    },
+    {
+      "id": "role_thuThanh",
+      "level": 3,
+      "sha256": "060c5d682e90af8c21f0d009c4c450a52747aa66f86568014525c949a0e3979c"
+    },
+    {
+      "id": "role_thuThanh",
+      "level": 4,
+      "sha256": "b0829842225b70ccfa289db1f765c9e15b3b47110cecbb80a7224ec4430ab0f4"
+    },
+    {
+      "id": "role_thuThanh",
+      "level": 5,
+      "sha256": "2db6c7ea86d7d88dff1b44a9cadb9843fe3f578d885c0131fc4cb64c53c849db"
+    },
+    {
+      "id": "role_tuongKhien",
+      "level": 1,
+      "sha256": "f57e9830d76c77a466d1933c9cba4f39bee2952ed0074c372300e8ad764341d4"
+    },
+    {
+      "id": "role_tuongKhien",
+      "level": 2,
+      "sha256": "0df50b953b04b6f0a01a2aeb6e733ad591b46ec25f38133b1f11826d6d613c94"
+    },
+    {
+      "id": "role_tuongKhien",
+      "level": 3,
+      "sha256": "fb50891e9eb4d2c8dcf0f8e34a96ac2ee5649e8b403135b4671fcfa1d78c59a6"
+    },
+    {
+      "id": "role_tuongKhien",
+      "level": 4,
+      "sha256": "8229340987d45a7ae8d623781160da9cbb47f584144e49c38a743353bdf09839"
+    },
+    {
+      "id": "role_tuongKhien",
+      "level": 5,
+      "sha256": "facbed90b45559c248791fd525ca2575d79866a23f55e6fcc61ea16a7567b053"
+    },
+    {
+      "id": "role_phanKich",
+      "level": 1,
+      "sha256": "b204837326dca7e7800f8f4658cd23ceb18362bd1433925df9786c3866564470"
+    },
+    {
+      "id": "role_phanKich",
+      "level": 2,
+      "sha256": "58c0fe60359b3dc859c3580dc320749efad49f795d3869dfcc968c4b252b0a21"
+    },
+    {
+      "id": "role_phanKich",
+      "level": 3,
+      "sha256": "89b4d64ac094f28232af740ed2287ccaa37952edcfdf835c91e37d5b69fe091e"
+    },
+    {
+      "id": "role_phanKich",
+      "level": 4,
+      "sha256": "1646eb85e6cb8472ed74d9f4c85a042f9b8df9ad48406cdb2483026efe6f49f9"
+    },
+    {
+      "id": "role_phanKich",
+      "level": 5,
+      "sha256": "8c62a15776c894bc8f10dd9e932cda3e3837af249d4baa658cf892458fa86be5"
+    },
+    {
+      "id": "role_linhDuoc",
+      "level": 1,
+      "sha256": "f126404332a33edfd4557b1b14d20607b0de0f5cd04b9026c25f3be880363161"
+    },
+    {
+      "id": "role_linhDuoc",
+      "level": 2,
+      "sha256": "ff03b3e8222327be271d24e37ab74e31c189231a77fb5d77e86e3272d7de6a80"
+    },
+    {
+      "id": "role_linhDuoc",
+      "level": 3,
+      "sha256": "77d477aa0c60860340a411fe5f2b92f33fecb863ad3a2f4c9f60dfacddad9068"
+    },
+    {
+      "id": "role_linhDuoc",
+      "level": 4,
+      "sha256": "01b083005055a7bf4c3326e98f042567a4777cee8578d96478e157a9862942f7"
+    },
+    {
+      "id": "role_linhDuoc",
+      "level": 5,
+      "sha256": "c812835e5cfaad84ee1af32fdba4ac626eeaffafd2a2529c4abc814ca643583e"
+    },
+    {
+      "id": "role_duongSinh",
+      "level": 1,
+      "sha256": "16a0860c85fa56e1d09491ef0d10539bed175c14dc73e265f008fa1832b8bd9e"
+    },
+    {
+      "id": "role_duongSinh",
+      "level": 2,
+      "sha256": "3b463a5de35e9bb1795b187c8fbfe230e38ee698c3ab40e2afe55005cbd0c80a"
+    },
+    {
+      "id": "role_duongSinh",
+      "level": 3,
+      "sha256": "d545f36982129f7189002da2d624ec3cf2548f7c735fffa3f1202c80ae55a0c4"
+    },
+    {
+      "id": "role_duongSinh",
+      "level": 4,
+      "sha256": "222e580198d5934e093dc4d235fa311b4b9aba19cc8edab321aee7327279dcb8"
+    },
+    {
+      "id": "role_duongSinh",
+      "level": 5,
+      "sha256": "57577d2908aa2305e1b7a595931e8ff0e87f2ea4e71ceff0f32b5dd6391cdea1"
+    },
+    {
+      "id": "role_teDo",
+      "level": 1,
+      "sha256": "0943f50dad21aae8f6099c295b4575f98d2b55cedc444092a10019037d46db35"
+    },
+    {
+      "id": "role_teDo",
+      "level": 2,
+      "sha256": "7a86b966150b2ca918a2a97ae67cebc5b3456b4756598464f22d292109606f5e"
+    },
+    {
+      "id": "role_teDo",
+      "level": 3,
+      "sha256": "466f696e06dffc0fc85c9095f4e4539c5b181e1848d054616391033fa2b94a15"
+    },
+    {
+      "id": "role_teDo",
+      "level": 4,
+      "sha256": "b8252e23f7ccece1a54d2d8dea948cca2726a96c384372571c9babbf11bdccee"
+    },
+    {
+      "id": "role_teDo",
+      "level": 5,
+      "sha256": "a5ffa2a91a06704bb878c1005b1132f03f75a921f15a46140b1f2088f8906e5e"
+    },
+    {
+      "id": "role_muaChuoc",
+      "level": 1,
+      "sha256": "668baadea3aad991c9a3af35ae7867d5e930af1b62a2aa376b81580e5674c9b9"
+    },
+    {
+      "id": "role_muaChuoc",
+      "level": 2,
+      "sha256": "668baadea3aad991c9a3af35ae7867d5e930af1b62a2aa376b81580e5674c9b9"
+    },
+    {
+      "id": "role_muaChuoc",
+      "level": 3,
+      "sha256": "668baadea3aad991c9a3af35ae7867d5e930af1b62a2aa376b81580e5674c9b9"
+    },
+    {
+      "id": "role_muaChuoc",
+      "level": 4,
+      "sha256": "668baadea3aad991c9a3af35ae7867d5e930af1b62a2aa376b81580e5674c9b9"
+    },
+    {
+      "id": "role_muaChuoc",
+      "level": 5,
+      "sha256": "ee200fe4ffbe2280e919cd515f0b4b04c3fc6c5c3f2aef206928f74be5e4a180"
+    },
+    {
+      "id": "role_lyGian",
+      "level": 1,
+      "sha256": "0aca6ac4a19187fddc02cdb9aa6970c0b01b9f298e3926dcbd2effaac9f9cf70"
+    },
+    {
+      "id": "role_lyGian",
+      "level": 2,
+      "sha256": "0aca6ac4a19187fddc02cdb9aa6970c0b01b9f298e3926dcbd2effaac9f9cf70"
+    },
+    {
+      "id": "role_lyGian",
+      "level": 3,
+      "sha256": "0aca6ac4a19187fddc02cdb9aa6970c0b01b9f298e3926dcbd2effaac9f9cf70"
+    },
+    {
+      "id": "role_lyGian",
+      "level": 4,
+      "sha256": "0aca6ac4a19187fddc02cdb9aa6970c0b01b9f298e3926dcbd2effaac9f9cf70"
+    },
+    {
+      "id": "role_lyGian",
+      "level": 5,
+      "sha256": "a5cf92e1385ef5b8bf7735eab8624b9ed32572c42977c406683e1b2a0daa3ad6"
+    },
+    {
+      "id": "role_catQuanLuong",
+      "level": 1,
+      "sha256": "0a167aaaf3dae6523ac3cc7b20161484bf26d609b582328db2e4167459270337"
+    },
+    {
+      "id": "role_catQuanLuong",
+      "level": 2,
+      "sha256": "0a167aaaf3dae6523ac3cc7b20161484bf26d609b582328db2e4167459270337"
+    },
+    {
+      "id": "role_catQuanLuong",
+      "level": 3,
+      "sha256": "0a167aaaf3dae6523ac3cc7b20161484bf26d609b582328db2e4167459270337"
+    },
+    {
+      "id": "role_catQuanLuong",
+      "level": 4,
+      "sha256": "0a167aaaf3dae6523ac3cc7b20161484bf26d609b582328db2e4167459270337"
+    },
+    {
+      "id": "role_catQuanLuong",
+      "level": 5,
+      "sha256": "c2be19eaaea878d454f8b6b1c14edcf9d34cfbf6531c3903035af0646df6a1c0"
+    },
+    {
+      "id": "role_nghiBinh",
+      "level": 1,
+      "sha256": "eec244bddbc841a0c6028a3e57992c1f023d723cd6b88b2395bcdb20ea4caa81"
+    },
+    {
+      "id": "role_nghiBinh",
+      "level": 2,
+      "sha256": "1cd419ad6b6f5b7cdd1679ea58643097e1d25b3e9e192a6a82dd7b344d60cbb8"
+    },
+    {
+      "id": "role_nghiBinh",
+      "level": 3,
+      "sha256": "85f867af31e94056f80315683239cf4ad027577a4d1915227da14bf6607e97e2"
+    },
+    {
+      "id": "role_nghiBinh",
+      "level": 4,
+      "sha256": "13efc026e41814303f09a9311f4ef2949300709f1b75606c9c98199eb1b00e9e"
+    },
+    {
+      "id": "role_nghiBinh",
+      "level": 5,
+      "sha256": "30926ff258e8ebfbc7df0c5148f364c5e05884199332450428565f4d727642ab"
+    },
+    {
+      "id": "role_hieuLenh",
+      "level": 1,
+      "sha256": "1ba67579bc646fb7b4a1523421ee8d659b1c249f8f61f735a921e58418134d21"
+    },
+    {
+      "id": "role_hieuLenh",
+      "level": 2,
+      "sha256": "67f01398bf9fda3fd290cb89885f3a856b1af56d025aaa02c1c93112df63e231"
+    },
+    {
+      "id": "role_hieuLenh",
+      "level": 3,
+      "sha256": "0d21e0aedb7fa68105989e0ae36ea7b009574c8c87b947034efd86ba5d053ed7"
+    },
+    {
+      "id": "role_hieuLenh",
+      "level": 4,
+      "sha256": "9685e688bfd44aee30f1abfe067dc41f956c6d2392c8409683c9c95ee9fbeda3"
+    },
+    {
+      "id": "role_hieuLenh",
+      "level": 5,
+      "sha256": "3fbbf8d6a53796609a7b7d3e3abc6f21b932b255b06240fd150b69355595426e"
+    },
+    {
+      "id": "role_phaKe",
+      "level": 1,
+      "sha256": "c82edbc078aa165e8324914a0a1b89d0334962e55df05b8478fbe7bcfbae8542"
+    },
+    {
+      "id": "role_phaKe",
+      "level": 2,
+      "sha256": "c82edbc078aa165e8324914a0a1b89d0334962e55df05b8478fbe7bcfbae8542"
+    },
+    {
+      "id": "role_phaKe",
+      "level": 3,
+      "sha256": "c82edbc078aa165e8324914a0a1b89d0334962e55df05b8478fbe7bcfbae8542"
+    },
+    {
+      "id": "role_phaKe",
+      "level": 4,
+      "sha256": "c82edbc078aa165e8324914a0a1b89d0334962e55df05b8478fbe7bcfbae8542"
+    },
+    {
+      "id": "role_phaKe",
+      "level": 5,
+      "sha256": "a259eda341051f967f1ec245c66ab6ca16c16cbcda099d9fd3c7d1cb729d62c0"
+    },
+    {
+      "id": "element_luyenKimThanhKiem",
+      "level": 1,
+      "sha256": "317407b7c87fe9a8c48ef1c44e8383df7d52d8c63e7760be168c5ec1c81cf3ae"
+    },
+    {
+      "id": "element_luyenKimThanhKiem",
+      "level": 2,
+      "sha256": "317407b7c87fe9a8c48ef1c44e8383df7d52d8c63e7760be168c5ec1c81cf3ae"
+    },
+    {
+      "id": "element_luyenKimThanhKiem",
+      "level": 3,
+      "sha256": "317407b7c87fe9a8c48ef1c44e8383df7d52d8c63e7760be168c5ec1c81cf3ae"
+    },
+    {
+      "id": "element_luyenKimThanhKiem",
+      "level": 4,
+      "sha256": "317407b7c87fe9a8c48ef1c44e8383df7d52d8c63e7760be168c5ec1c81cf3ae"
+    },
+    {
+      "id": "element_luyenKimThanhKiem",
+      "level": 5,
+      "sha256": "3fea10c2786054026fc91f5c202383cb3d60bbf7ae466f2802a5b788f3fc1994"
+    },
+    {
+      "id": "element_kimYNgungThan",
+      "level": 1,
+      "sha256": "b6d15336508f39bed5921bd00dfac431f7e5d802ed4ac41ceb61037f0e05ce4c"
+    },
+    {
+      "id": "element_kimYNgungThan",
+      "level": 2,
+      "sha256": "3bb0eab6a763b951a5c0b9084bf295dee6dcba8a4c39a1f9aa88457c7e5e284e"
+    },
+    {
+      "id": "element_kimYNgungThan",
+      "level": 3,
+      "sha256": "55fd97e14a5a918d851a70603c700641431f8fa0acaf95454f5ba5dda91cbb23"
+    },
+    {
+      "id": "element_kimYNgungThan",
+      "level": 4,
+      "sha256": "8e99943a3b6a75d84333495fa07a71c691910c268b0f511dab6b88d6aaf37b19"
+    },
+    {
+      "id": "element_kimYNgungThan",
+      "level": 5,
+      "sha256": "80557a609b1775c8566b8601338a1e3876169d7da09c36a947c93c965e44cc09"
+    },
+    {
+      "id": "element_lucDiepPhong",
+      "level": 1,
+      "sha256": "b93814ac39f5305479e3d109306e259cefa94a5568564d0f8ef8ff3ba2e03066"
+    },
+    {
+      "id": "element_lucDiepPhong",
+      "level": 2,
+      "sha256": "b93814ac39f5305479e3d109306e259cefa94a5568564d0f8ef8ff3ba2e03066"
+    },
+    {
+      "id": "element_lucDiepPhong",
+      "level": 3,
+      "sha256": "b93814ac39f5305479e3d109306e259cefa94a5568564d0f8ef8ff3ba2e03066"
+    },
+    {
+      "id": "element_lucDiepPhong",
+      "level": 4,
+      "sha256": "b93814ac39f5305479e3d109306e259cefa94a5568564d0f8ef8ff3ba2e03066"
+    },
+    {
+      "id": "element_lucDiepPhong",
+      "level": 5,
+      "sha256": "8a9e235f12e426b49c9d583921ab946f673af6d296cd3117449141d21ef9e6ca"
+    },
+    {
+      "id": "element_linhMocHoiSinh",
+      "level": 1,
+      "sha256": "080555a05e54ad562a89cc356fc6efc469fd38ac556bd12329984cf81dbf2f6e"
+    },
+    {
+      "id": "element_linhMocHoiSinh",
+      "level": 2,
+      "sha256": "b83e394330acb7d70af6a87f279e8e065c0d0f4414c5f491d08d4f9a71feae5a"
+    },
+    {
+      "id": "element_linhMocHoiSinh",
+      "level": 3,
+      "sha256": "d41e3215a35ce148374e63a586c643a1fd61a6adb0411e15a71815cd93559726"
+    },
+    {
+      "id": "element_linhMocHoiSinh",
+      "level": 4,
+      "sha256": "a96ac9dc8098227b44266ba9012546a33cdd2f402b52f7a8259dcc6978811d63"
+    },
+    {
+      "id": "element_linhMocHoiSinh",
+      "level": 5,
+      "sha256": "8621b68bb31296cccb2a9ccf25456fa5d898c3111b4f8a8f45869d3885f5fad0"
+    },
+    {
+      "id": "element_thuyNguyetTuLinh",
+      "level": 1,
+      "sha256": "d43ac9c8bd1446fb1054e7315a607bd285ea09d5490627e42970ec059caec5ea"
+    },
+    {
+      "id": "element_thuyNguyetTuLinh",
+      "level": 2,
+      "sha256": "d43ac9c8bd1446fb1054e7315a607bd285ea09d5490627e42970ec059caec5ea"
+    },
+    {
+      "id": "element_thuyNguyetTuLinh",
+      "level": 3,
+      "sha256": "d43ac9c8bd1446fb1054e7315a607bd285ea09d5490627e42970ec059caec5ea"
+    },
+    {
+      "id": "element_thuyNguyetTuLinh",
+      "level": 4,
+      "sha256": "d43ac9c8bd1446fb1054e7315a607bd285ea09d5490627e42970ec059caec5ea"
+    },
+    {
+      "id": "element_thuyNguyetTuLinh",
+      "level": 5,
+      "sha256": "ef6c84a2f2ce84c6fb76ff6375760e770b5ed4dd636fdae56dbee45b2f9e48b1"
+    },
+    {
+      "id": "element_thanhLuuTayTran",
+      "level": 1,
+      "sha256": "7a1544605c1350b6b20bad66e49428bc2f65c42fc94f162182328d2185615acb"
+    },
+    {
+      "id": "element_thanhLuuTayTran",
+      "level": 2,
+      "sha256": "edbf95a406ef63bee085f202ae31b954517c8fd4ae25ea0ca626857e2a96bc75"
+    },
+    {
+      "id": "element_thanhLuuTayTran",
+      "level": 3,
+      "sha256": "d28f6cc1af575c74f3930531fd924c2ff2e47ae6debee95c91cb2036891729d5"
+    },
+    {
+      "id": "element_thanhLuuTayTran",
+      "level": 4,
+      "sha256": "76bfd9d08ae8e73531f813da6a1d0133632e4836a0de1427662eb33c1d09917c"
+    },
+    {
+      "id": "element_thanhLuuTayTran",
+      "level": 5,
+      "sha256": "645369dbc6910b66f6e47ecf1b878de067728711ccfc8cb0435946b952ab7bb5"
+    },
+    {
+      "id": "element_phongHoaThieuDoanh",
+      "level": 1,
+      "sha256": "9b7d5f950637e97ae99d0a004ee256783fc61daec57e1bc71df1881730b231f5"
+    },
+    {
+      "id": "element_phongHoaThieuDoanh",
+      "level": 2,
+      "sha256": "9b7d5f950637e97ae99d0a004ee256783fc61daec57e1bc71df1881730b231f5"
+    },
+    {
+      "id": "element_phongHoaThieuDoanh",
+      "level": 3,
+      "sha256": "9b7d5f950637e97ae99d0a004ee256783fc61daec57e1bc71df1881730b231f5"
+    },
+    {
+      "id": "element_phongHoaThieuDoanh",
+      "level": 4,
+      "sha256": "9b7d5f950637e97ae99d0a004ee256783fc61daec57e1bc71df1881730b231f5"
+    },
+    {
+      "id": "element_phongHoaThieuDoanh",
+      "level": 5,
+      "sha256": "eb5354dc0f4159d51cb10c066d1f388005641c36f5e3f397f3671a7c64b77bed"
+    },
+    {
+      "id": "element_noHoaThieuThan",
+      "level": 1,
+      "sha256": "dd135769914a0a50b29aaba1786a8f37697236a79aad05676442149b0b2708fc"
+    },
+    {
+      "id": "element_noHoaThieuThan",
+      "level": 2,
+      "sha256": "04e2edcd8545cc6c8e348310e922aab08d495ff5793bfbbef795ede6bb1ba987"
+    },
+    {
+      "id": "element_noHoaThieuThan",
+      "level": 3,
+      "sha256": "a0fa56390d244068d8994e5d09f5c4d30ead61ed72dc0921f0a8baf0c2c95cb7"
+    },
+    {
+      "id": "element_noHoaThieuThan",
+      "level": 4,
+      "sha256": "d3df223bb47e85037a5fb0c8e7bac6bb145214fd511ece24801ee55f5dfacee8"
+    },
+    {
+      "id": "element_noHoaThieuThan",
+      "level": 5,
+      "sha256": "aaed3b51e92758c52bbe43d0f29a8b172deec69e30ccc7bc353e754e0f804633"
+    },
+    {
+      "id": "element_hauThoTichLuong",
+      "level": 1,
+      "sha256": "b77b9b1b456245b1f675aede832d6f7cf69f61bd6272a8e46198e25e1b896706"
+    },
+    {
+      "id": "element_hauThoTichLuong",
+      "level": 2,
+      "sha256": "b77b9b1b456245b1f675aede832d6f7cf69f61bd6272a8e46198e25e1b896706"
+    },
+    {
+      "id": "element_hauThoTichLuong",
+      "level": 3,
+      "sha256": "b77b9b1b456245b1f675aede832d6f7cf69f61bd6272a8e46198e25e1b896706"
+    },
+    {
+      "id": "element_hauThoTichLuong",
+      "level": 4,
+      "sha256": "b77b9b1b456245b1f675aede832d6f7cf69f61bd6272a8e46198e25e1b896706"
+    },
+    {
+      "id": "element_hauThoTichLuong",
+      "level": 5,
+      "sha256": "4b6d01acfa9a1731a5645a99bc01b7c23cb7e118f2a55eab6b0d20f7fe9dbd1f"
+    },
+    {
+      "id": "element_thachGiap",
+      "level": 1,
+      "sha256": "ad799945502be2783c7a84f5d1cb01424988bd605df6c800cd5607b36d72ea23"
+    },
+    {
+      "id": "element_thachGiap",
+      "level": 2,
+      "sha256": "e361acafc3e7f53a7554a41fe51b46a15bfb091acf49f38057b2e46dfa37ef8f"
+    },
+    {
+      "id": "element_thachGiap",
+      "level": 3,
+      "sha256": "dc238a38c494bb25b5a2776aec9517bfb40d494046a11e6603e7d0fc302011fa"
+    },
+    {
+      "id": "element_thachGiap",
+      "level": 4,
+      "sha256": "e87655d567d06c1b064a8d729e628c6826541a1b509e0babdcea895219f35d9d"
+    },
+    {
+      "id": "element_thachGiap",
+      "level": 5,
+      "sha256": "626a62a738e8eeb420fdc465e39df290f646f047d5761d12b36b176a9552600e"
+    },
+    {
+      "id": "element_loiTruGiangThe",
+      "level": 1,
+      "sha256": "8db931bd8adca1463a9b93fe195b4a9e982c4aea262df19d2a0541a9f92049ad"
+    },
+    {
+      "id": "element_loiTruGiangThe",
+      "level": 2,
+      "sha256": "8db931bd8adca1463a9b93fe195b4a9e982c4aea262df19d2a0541a9f92049ad"
+    },
+    {
+      "id": "element_loiTruGiangThe",
+      "level": 3,
+      "sha256": "8db931bd8adca1463a9b93fe195b4a9e982c4aea262df19d2a0541a9f92049ad"
+    },
+    {
+      "id": "element_loiTruGiangThe",
+      "level": 4,
+      "sha256": "8db931bd8adca1463a9b93fe195b4a9e982c4aea262df19d2a0541a9f92049ad"
+    },
+    {
+      "id": "element_loiTruGiangThe",
+      "level": 5,
+      "sha256": "ea028d8f735ab153789fad16f21f8612a4daff2ed3dee258e41e5393d12e56da"
+    },
+    {
+      "id": "element_tinhDienHoThan",
+      "level": 1,
+      "sha256": "539f40900812d03ed8babef0d7e80d6db834cad6865d435b9205c4307c55af64"
+    },
+    {
+      "id": "element_tinhDienHoThan",
+      "level": 2,
+      "sha256": "539f40900812d03ed8babef0d7e80d6db834cad6865d435b9205c4307c55af64"
+    },
+    {
+      "id": "element_tinhDienHoThan",
+      "level": 3,
+      "sha256": "539f40900812d03ed8babef0d7e80d6db834cad6865d435b9205c4307c55af64"
+    },
+    {
+      "id": "element_tinhDienHoThan",
+      "level": 4,
+      "sha256": "539f40900812d03ed8babef0d7e80d6db834cad6865d435b9205c4307c55af64"
+    },
+    {
+      "id": "element_tinhDienHoThan",
+      "level": 5,
+      "sha256": "d75ad2c784f11e5628f194ad565b2a4b5f1e26ff76966921d6dceefe8ec21e5f"
+    },
+    {
+      "id": "element_phongQuyenTanVan",
+      "level": 1,
+      "sha256": "d23614755fec3e06983ff1e56c51bde0ee5d69381f8f8b82cc7c11a871814a54"
+    },
+    {
+      "id": "element_phongQuyenTanVan",
+      "level": 2,
+      "sha256": "d23614755fec3e06983ff1e56c51bde0ee5d69381f8f8b82cc7c11a871814a54"
+    },
+    {
+      "id": "element_phongQuyenTanVan",
+      "level": 3,
+      "sha256": "d23614755fec3e06983ff1e56c51bde0ee5d69381f8f8b82cc7c11a871814a54"
+    },
+    {
+      "id": "element_phongQuyenTanVan",
+      "level": 4,
+      "sha256": "d23614755fec3e06983ff1e56c51bde0ee5d69381f8f8b82cc7c11a871814a54"
+    },
+    {
+      "id": "element_phongQuyenTanVan",
+      "level": 5,
+      "sha256": "20659c2d9c6de2917bb2630c92174a08a1b25cd6d2213c57b5ae9f5e602245f7"
+    },
+    {
+      "id": "element_thanhPhongTuKhi",
+      "level": 1,
+      "sha256": "2a690a9f2049e95c3bb285c5f45a6f6972ee465e674efce50408bf54a0d38234"
+    },
+    {
+      "id": "element_thanhPhongTuKhi",
+      "level": 2,
+      "sha256": "890f61beba2680bbed80760daa0d206967fede0a5a1edd21aab0036a0be58821"
+    },
+    {
+      "id": "element_thanhPhongTuKhi",
+      "level": 3,
+      "sha256": "231a5d0ad52d33cf8e536df581eeb033d0376e06b08eb645c6a449d005fe1923"
+    },
+    {
+      "id": "element_thanhPhongTuKhi",
+      "level": 4,
+      "sha256": "12e286e1431161af114c78ca2abbd52904a0d7c23fec49636099c54b76398312"
+    },
+    {
+      "id": "element_thanhPhongTuKhi",
+      "level": 5,
+      "sha256": "334460a4c92192d47c84a375bee3861263c5435a587f3dd3f55704b10aef2ae0"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "reason": "earlierCompletedFlip",
+    "group": "screen",
+    "caseId": "screen:ySu:tho:9:3v3:701:side1",
+    "onTurns": 31.5,
+    "offTurns": 42.0,
+    "onWon": false,
+    "offWon": true,
+    "onCap": false
+  },
+  {
+    "reason": "mostRetaliations",
+    "group": "screen",
+    "caseId": "screen:binhLinh:kim:9:3v3:701:side0",
+    "onTurns": 51.5,
+    "offTurns": 51.5,
+    "onWon": true,
+    "offWon": true,
+    "onCap": false
+  },
+  {
+    "reason": "mostRenewals",
+    "group": "screen",
+    "caseId": "screen:phapSu:moc:15:3v3:1907:side1",
+    "onTurns": 26.5,
+    "offTurns": 34.0,
+    "onWon": false,
+    "offWon": true,
+    "onCap": false
+  },
+  {
+    "reason": "longTailRisk",
+    "group": "screen",
+    "caseId": "screen:binhLinh:moc:20:3v3:701:side0",
+    "onTurns": 60.0,
+    "offTurns": 47.5,
+    "onWon": null,
+    "offWon": true,
+    "onCap": true
+  }
+]

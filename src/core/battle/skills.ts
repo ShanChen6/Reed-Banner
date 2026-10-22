@@ -1,5 +1,5 @@
 // Kỹ năng không theo nguyên tố: chiêu nghề nấc 1–2 (tùy tướng AI, docs/design/06-nhan-vat-ky-nang.md mục 4.3),
-// tuyệt chiêu của tướng thường và chiêu riêng của nhân vật lịch sử (ô 5, docs/design/14-nhan-vat.md).
+// Dữ liệu raw legacy giữ số ô lịch sử; registry xuất layout2: tuyệt chiêu ô4, nghề nâng cao ô5.
 // Kỹ năng là dữ liệu; battle.ts thực thi các bước theo thứ tự.
 
 import type { AreaShape, TileKind } from "../board";
@@ -65,9 +65,11 @@ export interface SkillDef {
   readonly tier?: 1 | 2 | 3;
   /** Tuyệt chiêu nấc 3 hoặc chiêu riêng: id nhân vật sở hữu. */
   readonly character?: string;
-  /** Ô bộ kỹ năng: 1/3/4 nghề, 2/6 hệ, 5 riêng; preset AI cũ giữ ô cũ. */
+  /** Ô bộ kỹ năng: 1/3/5 nghề, 2/6 hệ, 4 riêng; preset AI cũ giữ ô cũ. */
   readonly element?: Element;
   readonly slot?: number;
+  readonly ultimate?: boolean;
+  readonly characterKind?: "ultimate" | "signature";
   readonly cost: number;
   readonly target: SkillTarget;
   readonly steps: readonly SkillStep[];
@@ -720,7 +722,7 @@ const PHONG: readonly SkillDef[] = [
 ];
 
 // Chiêu riêng của nhân vật lịch sử: thay kỹ năng ô 5 trong bộ theo nguyên tố, mang dấu ấn từng người.
-// Sứ quân (đối thủ chiến dịch) luôn có chiêu riêng; tướng lịch sử phe người chơi mở ở ô 5 như thường.
+// Raw legacy giữ ô5; registry/layout hồ sơ mới dùng ô4 cho tuyệt chiêu.
 // Docs/design/14-nhan-vat.md mục 5–6. Tên tự đặt, số liệu là điểm xuất phát chờ mô phỏng.
 const SIGNATURES: readonly SkillDef[] = [
   // Tướng lịch sử phe người chơi
@@ -871,8 +873,8 @@ const SIGNATURES: readonly SkillDef[] = [
 ];
 
 /** Thứ tự hiển thị theo tiến trình, độc lập ID ô lưu. */
-export const SKILL_SLOT_ORDER = [1, 2, 3, 5, 4, 6] as const;
-export const SKILL_SLOT_UNLOCK: Readonly<Record<number, number>> = { 1: 1, 2: 1, 3: 5, 5: 10, 4: 15, 6: 20 };
+export const SKILL_SLOT_ORDER = [1, 2, 3, 4, 5, 6] as const;
+export const SKILL_SLOT_UNLOCK: Readonly<Record<number, number>> = { 1: 1, 2: 1, 3: 5, 4: 10, 5: 15, 6: 20 };
 
 // Dữ liệu mới tách ID khỏi chiêu AI cũ để preset chiến dịch không đổi ngầm.
 function role(id: string, profession: Profession, slot: number, cost?: number): SkillDef {
@@ -880,7 +882,7 @@ function role(id: string, profession: Profession, slot: number, cost?: number): 
   return { ...old, id: `role_${id}`, profession, slot, tier: undefined, cost: cost ?? old.cost,
     steps: old.steps.filter(s => s.type !== "mark") };
 }
-export const ROLE_SKILLS: readonly SkillDef[] = [
+const RAW_ROLE_SKILLS: readonly SkillDef[] = [
   role("tramKich", "tuongSi", 1),
   { ...role("phaTran", "tuongSi", 3), steps: [{ type: "damage", atk: 2.5, pierce: 0.3 }, { type: "effect", to: "targets", effect: "defDown", value: 0.3, turns: 2 }] },
   { id: "role_doatMenh", name: "Đoạt mệnh", profession: "tuongSi", slot: 4, cost: 60, target: "enemy", steps: [{ type: "damage", atk: 2.6, execute: { threshold: 0.35, multiplier: 1.5 } }] },
@@ -893,6 +895,7 @@ export const ROLE_SKILLS: readonly SkillDef[] = [
   role("muaChuoc", "muuSi", 1), role("lyGian", "muuSi", 3), role("catQuanLuong", "muuSi", 4, 55),
   role("nghiBinh", "quanSu", 1), role("hieuLenh", "quanSu", 3), role("phaKe", "quanSu", 4, 55),
 ];
+export const ROLE_SKILLS = RAW_ROLE_SKILLS.map(d => d.slot === 4 ? { ...d, slot: 5 } : d);
 function elemental(id: string, slot: number): SkillDef {
   const old = [...MAIN, ...PHONG].find(d => d.id === id)!;
   return { ...old, id: `element_${id}`, slot };
@@ -910,24 +913,49 @@ export const ELEMENT_SKILLS: readonly SkillDef[] = [
   { ...elemental("thanhPhongTuKhi", 6), target: "team", steps: [{ type: "energy", to: "targets", amount: 10 }, { type: "effect", to: "targets", effect: "defUp", value: 0.1, turns: 2 }] },
 ];
 
-/** Ô 5 là nguồn nhân vật kể cả tuyệt chiêu mặc định theo hệ của Đinh Bộ Lĩnh. */
+/** Canonical personal skills. New heroes add layout2 records here, never legacy slot transforms. */
+export function defineCharacterSkills(defs:readonly SkillDef[]):readonly SkillDef[]{
+ const owners=new Set<string>();
+ for(const def of defs){
+  if(!def.character||def.slot!==4||!def.ultimate)throw new RangeError(`Chiêu riêng cần character, ultimate và ô4: ${def.id}`);
+  if(owners.has(def.character))throw new RangeError(`Trùng chiêu riêng nhân vật: ${def.character}`);
+  owners.add(def.character);
+ }
+ return defs;
+}
+export const CHARACTER_SKILLS:readonly SkillDef[]=defineCharacterSkills([
+ ...ULTIMATES.map((d):SkillDef=>({...d,slot:4,ultimate:true,characterKind:'ultimate'})),
+ ...SIGNATURES.map((d):SkillDef=>({...d,slot:4,ultimate:true,characterKind:'signature'})),
+ // Future personal skills are canonical records: slot4, ultimate:true, stable ID + character.
+]);
+
+/** Tuyệt chiêu là nguồn nhân vật kể cả tuyệt chiêu mặc định theo hệ của Đinh Bộ Lĩnh. */
 export function skillSource(def: SkillDef): "profession" | "element" | "character" {
-  return def.slot === 5 || def.character !== undefined ? "character" : def.profession !== undefined ? "profession" : "element";
+  return def.ultimate || def.character !== undefined ? "character" : def.profession !== undefined ? "profession" : "element";
 }
 
 /** Nguồn thống nhất cho mọi nhân vật chơi được; tiến trình lọc sau khi lắp bộ. */
 export function characterSkills(profession: Profession, element: Element, character?: string): SkillDef[] {
-  const ultimate = (character ? personalSkillOf(character) : undefined) ?? legacyElementSkills(element).find(d => d.slot === 5)!;
+  const ultimate = (character ? personalSkillOf(character) : undefined) ?? getSkill(legacyElementSkills(element).find(d => d.slot === 5)!.id)!;
   const defs = [...ROLE_SKILLS.filter(d => d.profession === profession), ...ELEMENT_SKILLS.filter(d => d.element === element), ultimate];
   return SKILL_SLOT_ORDER.map(slot => defs.find(d => d.slot === slot)!);
 }
 
-export const SKILLS: Readonly<Record<string, SkillDef>> = Object.fromEntries(
-  [...DEFS, ...ULTIMATES, ...MAIN, ...PHONG, ...SIGNATURES, ...ROLE_SKILLS, ...ELEMENT_SKILLS].map((d) => [d.id, d]),
+export function defineSkillRegistry(defs:readonly SkillDef[]):Readonly<Record<string,SkillDef>> {
+  const seen=new Set<string>();
+  for(const def of defs){if(seen.has(def.id))throw new RangeError(`Trùng ID kỹ năng: ${def.id}`);seen.add(def.id);}
+  return Object.fromEntries(defs.map(d=>[d.id,d]));
+}
+export const SKILLS: Readonly<Record<string, SkillDef>> = defineSkillRegistry(
+  [
+    ...DEFS,
+    ...[...MAIN,...PHONG].map((d):SkillDef=>d.slot===5?{...d,slot:4,ultimate:true}:d.slot===4?{...d,slot:5}:d),
+    ...CHARACTER_SKILLS,...ROLE_SKILLS,...ELEMENT_SKILLS,
+  ],
 );
 
 export function getSkill(id: string): SkillDef | undefined {
-  return SKILLS[id];
+  return Object.hasOwn(SKILLS,id) ? SKILLS[id] : undefined;
 }
 
 /** Cấp kỹ năng: 1 đến SKILL_MAX_LEVEL, nâng bằng điểm kỹ năng. Xem docs/design/12-ky-nang-nhan-vat-chinh.md mục 1.1. */
@@ -973,9 +1001,9 @@ export function professionSkills(profession: Profession): SkillDef[] {
   return DEFS.filter((d) => d.profession === profession);
 }
 
-/** Tuyệt chiêu (ô 5) của một tướng thường; undefined nếu người đó không có. */
+/** Tuyệt chiêu (ô 4) của một tướng thường; undefined nếu người đó không có. */
 export function ultimateOf(character: string): SkillDef | undefined {
-  return ULTIMATES.find((d) => d.character === character);
+  return CHARACTER_SKILLS.find(d=>d.character===character&&d.characterKind!=='signature');
 }
 
 /** Preset hệ cũ: chỉ AI chiến dịch và kiểm thử hồi quy. Player dùng characterSkills. */
@@ -985,18 +1013,18 @@ export function legacyElementSkills(element: Element): SkillDef[] {
 
 /** Chiêu riêng của một nhân vật lịch sử (tướng phe người chơi hoặc sứ quân); undefined nếu không có. */
 export function signatureOf(character: string): SkillDef | undefined {
-  return SIGNATURES.find((d) => d.character === character);
+  return CHARACTER_SKILLS.find(d=>d.character===character&&d.characterKind==='signature');
 }
 
-/** Kỹ năng ô 5 riêng của một nhân vật: chiêu riêng (tướng lịch sử, sứ quân) hoặc tuyệt chiêu (tướng thường). */
+/** Kỹ năng ô 4 riêng của một nhân vật: chiêu riêng (tướng lịch sử, sứ quân) hoặc tuyệt chiêu (tướng thường). */
 export function personalSkillOf(character: string): SkillDef | undefined {
-  return signatureOf(character) ?? ultimateOf(character);
+  return CHARACTER_SKILLS.find(d=>d.character===character);
 }
 
 /** Preset AI chiến dịch cũ; player dùng characterSkills. */
 export function legacyHeroSkills(element: Element, character?: string): SkillDef[] {
   const sig = character === undefined ? undefined : personalSkillOf(character);
-  return legacyElementSkills(element).map((d) => (sig && d.slot === sig.slot ? sig : d));
+  return legacyElementSkills(element).map((d) => (sig && d.slot === 5 ? { ...sig, slot: 5 } : d));
 }
 
 /** Bước lốc xoáy người chơi tự chọn tâm (không tính bước tự xoay). */

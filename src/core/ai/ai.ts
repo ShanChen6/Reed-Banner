@@ -16,6 +16,11 @@ import {
 } from "../board";
 import {
   act,
+  comboMultiplier,
+  comboOpportunityValue,
+  comboSkillCost,
+  comboReady,
+  COMBO_PASSIVES,
   canFreeWhirl,
   cascadeMultiplier,
   defenseMultiplier,
@@ -111,7 +116,7 @@ function swordDamage({ view, me, target }: Context): number {
   const morale = MORALE_DAMAGE[moraleOf(view.sides[view.turn.side].food)];
   const own = view.sides[view.turn.side];
   const foe = view.sides[otherSide(view.turn.side)];
-  return effectiveAtk(me, view.experimentalSpirit) * morale * (passiveOn(own, me, "hoa") ? 1 + PASSIVE.hoaDamage : 1) * elementMultiplier(me.element, target.element) * defenseMultiplier(effectiveDef(foe, target, view.experimentalSpirit), passiveOn(own, me, "kim") ? PASSIVE.kimPierce : 0);
+  return comboMultiplier(view,{side:view.turn.side,fighter:view.turn.actor},"damage",{side:otherSide(view.turn.side),fighter:foe.fighters.indexOf(target)}) * effectiveAtk(me, view.experimentalSpirit) * morale * (passiveOn(own, me, "hoa") ? 1 + PASSIVE.hoaDamage : 1) * elementMultiplier(me.element, target.element) * defenseMultiplier(effectiveDef(foe, target, view.experimentalSpirit), passiveOn(own, me, "kim") ? PASSIVE.kimPierce : 0);
 }
 
 /** fromSkill: bàn cờ đổi do kỹ năng hoặc xoay miễn phí, thu hoạch giảm như trong battle.ts. */
@@ -274,7 +279,8 @@ function scoreSkillTarget(view: AiView, def: SkillDef, selected?: number): { sco
           const ownSide = view.sides[view.turn.side];
           const pierce = 1 - (1 - (step.pierce ?? 0)) * (1 - (passiveOn(ownSide, ctx.me, "kim") ? PASSIVE.kimPierce : 0));
           const defense = defenseMultiplier(effectiveDef(foe, t, view.experimentalSpirit), pierce);
-          const raw = Math.round(step.atk * (step.execute && t.hp / t.maxHp <= step.execute.threshold ? step.execute.multiplier : 1) * (def.target === "allEnemies" && view.sides.every(s => s.fighters.length === 1) ? 1.5 : 1) * effectiveAtk(ctx.me, view.experimentalSpirit) * MORALE_DAMAGE[moraleOf(ownSide.food)] * (passiveOn(ownSide, ctx.me, "hoa") ? 1 + PASSIVE.hoaDamage : 1) * elementMultiplier(ctx.me.element, t.element) * defense);
+          const baseRaw = Math.round(step.atk * (step.execute && t.hp / t.maxHp <= step.execute.threshold ? step.execute.multiplier : 1) * (def.target === "allEnemies" && view.sides.every(s => s.fighters.length === 1) ? 1.5 : 1) * effectiveAtk(ctx.me, view.experimentalSpirit) * MORALE_DAMAGE[moraleOf(ownSide.food)] * (passiveOn(ownSide, ctx.me, "hoa") ? 1 + PASSIVE.hoaDamage : 1) * elementMultiplier(ctx.me.element, t.element) * defense);
+          const raw = Math.round(baseRaw * comboMultiplier(view,{side:view.turn.side,fighter:view.turn.actor},"damage",{side:otherSide(view.turn.side),fighter:foe.fighters.indexOf(t)}));
           const shield = step.pierceShield || passiveOn(ownSide, ctx.me, "kim") ? 0 : findEffect(t.effects, "shield")?.value ?? 0;
           const dealt = Math.min(t.hp + shield, raw);
           score += dealt;
@@ -284,7 +290,7 @@ function scoreSkillTarget(view: AiView, def: SkillDef, selected?: number): { sco
         break;
       }
       case "heal":
-        for (const r of list(step.to)) score += Math.min(r.maxHp - r.hp, Math.round(Math.round(r.maxHp * step.ratio) * spiritHealMultiplier(r.spirit, view.experimentalSpirit)));
+        for (const r of list(step.to)) score += Math.min(r.maxHp - r.hp, Math.round(Math.round(Math.round(r.maxHp * step.ratio) * comboMultiplier(view,{side:view.turn.side,fighter:view.turn.actor},"sustain")) * spiritHealMultiplier(r.spirit, view.experimentalSpirit)));
         break;
       case "effect": {
         for (const r of list(step.to)) {
@@ -301,7 +307,7 @@ function scoreSkillTarget(view: AiView, def: SkillDef, selected?: number): { sco
           }
           if (step.effect === "burn") worth = (step.ofAtk ? ctx.me.atk * step.value : step.value) * (step.turns ?? 1);
           if (step.effect === "freeze" && hasEffect(r.effects, "freezeImmune")) worth = 0;
-          if (step.effect === "shield") worth = Math.max(0, Math.round((step.ofMaxHp ? Math.round(r.maxHp * step.value) : step.ofAtk ? Math.round(ctx.me.atk * step.value) : step.value) * spiritHealMultiplier(r.spirit, view.experimentalSpirit)) - (existing?.value ?? 0)) * SHIELD_WORTH;
+          if (step.effect === "shield") worth = Math.max(0, Math.round(Math.round((step.ofMaxHp ? Math.round(r.maxHp * step.value) : step.ofAtk ? Math.round(ctx.me.atk * step.value) : step.value) * comboMultiplier(view,{side:view.turn.side,fighter:view.turn.actor},"sustain")) * spiritHealMultiplier(r.spirit, view.experimentalSpirit)) - (existing?.value ?? 0)) * SHIELD_WORTH;
           if (step.effect === "regen") worth = Math.min(r.maxHp - r.hp, Math.max(0, Math.round(Math.round(r.maxHp * step.value) * spiritHealMultiplier(r.spirit, view.experimentalSpirit)) * (step.turns ?? 1) - Math.round((existing?.value ?? 0) * spiritHealMultiplier(r.spirit, view.experimentalSpirit)) * (existing?.turns ?? 0))) * 0.7;
           if (step.effect === "taunt") worth = own.fighters.filter(f => isAlive(f) && f !== r).length ? ctx.me.atk * (r.hp / r.maxHp) : 0;
           if (step.effect === "silence") {
@@ -330,11 +336,11 @@ function scoreSkillTarget(view: AiView, def: SkillDef, selected?: number): { sco
         for (const r of list(step.to)) score += r.effects.some(e => NEGATIVE_EFFECTS.includes(e.kind)) ? ctx.me.atk : 0;
         break;
       case "dispel":
-        for (const r of hit) score += r.effects.filter(e => POSITIVE_EFFECTS.includes(e.kind)).reduce((sum, e) => sum + (e.kind === "shield" ? e.value * SHIELD_WORTH : ctx.me.atk * 2), 0);
+        for (const r of hit) score += r.effects.filter(e => POSITIVE_EFFECTS.includes(e.kind)).reduce((sum, e) => sum + (e.kind === "shield" ? e.value * SHIELD_WORTH : ctx.me.atk * 2), 0) + comboOpportunityValue(view,{side:otherSide(view.turn.side),fighter:foe.fighters.indexOf(r)});
         break;
       case "energy":
         for (const r of list(step.to)) {
-          score += (step.amount < 0 ? Math.min(r.energy, -step.amount) : Math.min(100 - r.energy + (r === ctx.me ? def.cost : 0), step.amount)) * ctx.me.atk * 0.05;
+          score += (step.amount < 0 ? Math.min(r.energy, -step.amount + ((()=>{const ready=comboReady(view,{side:view.turn.side,fighter:view.turn.actor});return ready&&COMBO_PASSIVES[ready.passive].payoff==="drain"&&ready.target?.side===otherSide(view.turn.side)&&ready.target.fighter===foe.fighters.indexOf(r)?COMBO_PASSIVES[ready.passive].value:0;})())) : Math.min(100 - r.energy + (r === ctx.me ? def.cost : 0), step.amount)) * ctx.me.atk * 0.05;
         }
         break;
       case "enemyFood":
@@ -376,6 +382,7 @@ function scoreSkillTarget(view: AiView, def: SkillDef, selected?: number): { sco
         break;
     }
   }
+  if (score > 0) score += comboSetupValue(view,def,hit);
   if (score <= 0) return null;
   const target = def.target === "enemy" ? lowestEnemy : def.target === "ally" ? lowestAlly : undefined;
   return { score, ...(target === undefined ? {} : { target }), ...(whirl ? { whirl } : {}), ...(cell ? { cell } : {}) };
@@ -390,7 +397,8 @@ export interface SkillChoice {
 export function inspectSkillChoices(view: AiView): SkillChoice[] {
   const me = view.sides[view.turn.side].fighters[view.turn.actor]!;
   const options = (me.skills ?? []).map(id => {
-    const def = fighterSkill(me,id)!;
+    const base = fighterSkill(me,id)!;
+    const def = { ...base, cost: comboSkillCost(me,base) };
     const scored = scoreSkill(view,def);
     const score = scored?.score ?? 0;
     const ratio = score / Math.max(1,(def.cost + TURN_SLOT_ENERGY)*me.atk*0.02);
@@ -460,4 +468,19 @@ export function playAiTurn(
     if (!apply({ type: "swap", from: move.from, to: move.to })) throw new Error("AI chọn nước đi không hợp lệ");
   }
   return { state, events };
+}
+
+/** Small preparation credit, only for a reachable useful event and a living eligible teammate. */
+function comboSetupValue(view:AiView,def:SkillDef,hit:readonly Fighter[]):number {
+ const side=view.turn.side,own=view.sides[side],caster=own.fighters[view.turn.actor]!;
+ if(caster.comboReady)return 0; // Combo-enhanced actions never open a chain.
+ const kinds=new Set<string>();
+ for(const step of def.steps){
+  if(step.type==='damage'&&hit.some(f=>f.hp>0))kinds.add('skillDamage');
+  if(step.type==='effect'&&step.effect==='defDown'&&hit.some(f=>(findEffect(f.effects,'defDown')?.value??0)<step.value))kinds.add('armorBroken');
+  if(step.type==='effect'&&(step.effect==='freeze'||step.effect==='silence')&&hit.some(f=>!hasEffect(f.effects,step.effect)&&!(step.effect==='freeze'&&hasEffect(f.effects,'freezeImmune'))))kinds.add('controlled');
+  if(step.type==='dispel'&&hit.some(f=>f.comboReady||f.effects.some(e=>POSITIVE_EFFECTS.includes(e.kind))))kinds.add('dispelled');
+  if(step.type==='heal'&&own.fighters.some(f=>isAlive(f)&&f.hp<f.maxHp&&spiritHealMultiplier(f.spirit,view.experimentalSpirit)>0))kinds.add('healed');
+ }
+ return own.fighters.reduce((sum,f,i)=>{if(i===view.turn.actor||!isAlive(f)||!f.comboPassive||f.comboReady||hasEffect(f.effects,'silence')||hasEffect(f.effects,'freeze')||f.comboOpenedAt===view.comboState?.sideTurns[side])return sum;const p=COMBO_PASSIVES[f.comboPassive];return sum+(p.triggers.some(k=>kinds.has(k))?Math.min(f.atk*.3,caster.atk*.3):0);},0);
 }

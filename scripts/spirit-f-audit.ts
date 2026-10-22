@@ -1,10 +1,16 @@
 // Follow-up runner. Historical short screening cases are reused by the analysis script.
+import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { gunzipSync } from 'node:zlib';
 import { parseArgs } from 'node:util';
 import { screeningCases,spiritCases,campaignAuditCases,pressureCases } from '../src/core/sim/audit';
 import { runMeasured } from './lib/spirit-runner';
 import type { SpiritExperiment } from '../src/core';
+// Archived short-case reuse is invalid after a gameplay/AI change. Fail rather than mix versions.
+const archived=JSON.parse(readFileSync('docs/reports/2026-10-22-spirit-f/source-sha256.json','utf8')) as Record<string,string>;
+for(const path of ['src/core/battle/battle.ts','src/core/battle/rules.ts','src/core/ai/ai.ts','src/core/sim/audit.ts']){
+ if(createHash('sha256').update(readFileSync(path)).digest('hex')!==archived[path])throw new Error('Historical F audit source mismatch: do not reuse archived outcomes with new gameplay. Use scripts/combo-audit.ts for fresh matched controls.');
+}
 const {values:v}=parseArgs({options:{group:{type:'string',default:'pilot'},rule:{type:'string',default:'F'},shard:{type:'string',default:'0'},shards:{type:'string',default:'1'},trace:{type:'string'}}});
 if(!['A','D','E','F'].includes(v.rule))throw new Error('invalid rule');
 const shard=Number(v.shard),shards=Number(v.shards);

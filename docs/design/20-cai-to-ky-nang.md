@@ -1,5 +1,7 @@
 # Kỹ năng theo nghề, hệ và nhân vật
 
+> Cập nhật tiếp theo: [kỹ năng phiên bản 2 và combo đồng đội](21-combo-dong-doi.md). Layout mới đổi tuyệt chiêu sang ô 4, nghề nâng cao sang ô 5, có chuyển hồ sơ giữ điểm. Các định nghĩa legacy/lịch sử bên dưới cần đọc cùng tài liệu phiên bản 2.
+
 > Thiết kế triển khai 22/10/2026. Số liệu khởi đầu, chưa kết luận cân bằng.
 > Tài liệu này thay khung 6 chiêu hệ cũ ở 06, 12 và 14 cho nhân vật chơi được.
 

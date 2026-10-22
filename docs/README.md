@@ -85,3 +85,7 @@
 - [Bổ sung phương án F: sàn hồi/Khiên 20%, giảm 5 Tinh thần/lượt](reports/2026-10-22-tinh-than-F.md)
 
 - [Mốc bàn giao và kế hoạch xây lại kỹ năng toàn bộ nhân vật theo combo đồng đội](plans/2026-10-22-combo-handoff.md)
+
+- [Kỹ năng phiên bản 2: combo đồng đội, tuyệt chiêu ô 4 và chuyển hồ sơ](design/21-combo-dong-doi.md)
+
+- [Triển khai combo toàn bộ nhân vật: kiểm chứng, dữ liệu và giới hạn](reports/2026-10-22-combo.md)

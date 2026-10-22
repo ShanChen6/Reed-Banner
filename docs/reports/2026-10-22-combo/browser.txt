@@ -1,0 +1,15 @@
+{
+  "results": [
+    "desktop: six profession previews, slots 1..6, ultimate at4; shared passive and skill opener details",
+    "desktop: real upgrade persists migrated o4=2/o5=5, layout2, points7; reload does not swap again",
+    "desktop: silence visibly blocks prepared combo; clearing silence restores availability before expiry",
+    "desktop: real skill -> passive -> chosen follow-up; target/source visible, cancel sends no action; damage 209 -> 251",
+    "desktop: online ultimate upgrade sends layout2/o4; server parser upgrades correct skill and preserves o5",
+    "mobile: six profession previews, slots 1..6, ultimate at4; shared passive and skill opener details",
+    "mobile: real upgrade persists migrated o4=2/o5=5, layout2, points7; reload does not swap again",
+    "mobile: silence visibly blocks prepared combo; clearing silence restores availability before expiry",
+    "mobile: real skill -> passive -> chosen follow-up; target/source visible, cancel sends no action; damage 209 -> 251",
+    "mobile: online ultimate upgrade sends layout2/o4; server parser upgrades correct skill and preserves o5"
+  ],
+  "errors": []
+}

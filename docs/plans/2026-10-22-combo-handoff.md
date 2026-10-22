@@ -66,6 +66,8 @@ Kết thúc bằng báo cáo thiết kế toàn roster, kiểm tra migration, d�
 
 ## Trạng thái công bố
 
-Nhánh lưu mốc: `checkpoint/skills-spirit-before-team-combos`, base `main`. [Nội dung PR đã chuẩn bị](2026-10-22-checkpoint-pr.md).
+PR lưu mốc do người dùng tạo: [#108](https://github.com/ShanChen6/Reed-Banner/pull/108). Nhánh `checkpoint/skills-spirit-before-team-combos`, base `main`; commit bàn giao `32f87aa`. [Nội dung PR](2026-10-22-checkpoint-pr.md).
+
+Nhánh phát triển kế tiếp: `feat/team-skill-combos`, tách từ mốc trên. Không thêm các thay đổi combo mới vào PR #108. Khi tạo PR cho combo, đối chiếu với nhánh mốc nếu #108 chưa merge; sau khi #108 merge, dùng base thích hợp để tránh lẫn lại toàn bộ đợt kiểm chứng cũ.
 
 PR lưu mốc là để review và tiếp tục phát triển. Không merge hoặc deploy tự động. Không coi việc chấp thuận hướng combo là chấp thuận mọi hệ số, kiểu bị động hoặc chuyển luật production.
