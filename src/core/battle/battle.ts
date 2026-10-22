@@ -1,3 +1,4 @@
+import { CHASE_PASSIVES, type ChaseEvent } from "./chase";
 // Luồng trận đấu: lượt, người hành động, kỹ năng, áp kết quả bàn cờ lên hai phe.
 // Xem docs/design/02-tran-dau.md, 03-tai-nguyen-cong-thuc.md, 04-hieu-ung.md, 06-nhan-vat-ky-nang.md.
 // Hàm thuần: nhận trạng thái cũ, trả trạng thái mới; thời gian do bên gọi truyền vào.
@@ -76,6 +77,7 @@ export interface FighterRef {
 }
 
 export type BattleEvent =
+  | ChaseEvent
   | ComboEvent
   | {
       readonly type: "turnStart";
@@ -237,6 +239,7 @@ function buildSide(s: SideConfig, solo: boolean): Side {
     throw new RangeError("Thủ lĩnh phải còn máu");
   for (const f of s.fighters) {
     if(f.comboPassive && !Object.hasOwn(COMBO_PASSIVES,f.comboPassive))throw new RangeError(`Bị động phối hợp không tồn tại: ${f.comboPassive}`);
+    if(f.chasePassives && (f.chasePassives.length!==3 || new Set(f.chasePassives).size!==3 || f.chasePassives.some(id=>!Object.hasOwn(CHASE_PASSIVES,id))))throw new RangeError("Cần ba bị động truy kích hợp lệ, không trùng");
     for (const id of f.skills ?? [])
       if (!getSkill(id)) throw new RangeError(`Kỹ năng không tồn tại: ${id}`);
   }
@@ -605,7 +608,17 @@ class Ctx {
   constructor(
     private readonly state: BattleState,
     private readonly now: number,
-  ) { this.combo = new ComboEngine(state, e => this.emit({...e,turn:state.turn.number})); }
+  ) { this.combo = new ComboEngine(state, e => this.emit(e.type==='combo'?{...e,turn:state.turn.number}:e), (p,source,target) => {
+      const caster=this.fighter(source);const receiver=this.fighter(target);
+      switch(p.effect){
+        case 'damage': this.damage(target,Math.round(p.value*effectiveAtk(caster,state.experimentalSpirit)*R.MORALE_DAMAGE[R.moraleOf(state.sides[source.side].food)]*elementMultiplier(caster.element,receiver.element)*R.defenseMultiplier(effectiveDef(state.sides[target.side],receiver,state.experimentalSpirit),0)),"skill",source);break;
+        case 'heal':this.heal(target,Math.round(receiver.maxHp*p.value),false,true);break;
+        case 'shield':this.applyEffect(target,{kind:'shield',value:Math.round(receiver.maxHp*p.value),turns:2});break;
+        case 'armor':this.applyEffect(target,{kind:'defDown',value:p.value,turns:1});break;
+        case 'drain':this.gainEnergy(target,-p.value);break;
+        case 'energy':this.gainEnergy(target,p.value);break;
+      }
+    }); }
 
   emit(event: BattleEvent): void {
     this.events.push(event);
@@ -654,7 +667,7 @@ class Ctx {
     if (Math.ceil(s.turn.number / 2) >= R.SPIRIT_DECAY_START_TURN) {
       own.fighters.forEach((f, i) => {
         if (!isAlive(f) || f.spirit === 0) return;
-        const next = Math.max(0, f.spirit - R.SPIRIT_EXPERIMENTS[s.experimentalSpirit ?? "A"].decay);
+        const next = Math.max(0, f.spirit - R.SPIRIT_EXPERIMENTS[s.experimentalSpirit ?? R.DEFAULT_SPIRIT_EXPERIMENT].decay);
         if (next === f.spirit) return;
         f.spirit = next;
         this.emit({ type: "spirit", side, fighter: i, spirit: f.spirit });

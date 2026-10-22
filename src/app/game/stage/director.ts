@@ -84,6 +84,9 @@ export function stageCues(
         side = e.side;
         actor = e.actor;
         break;
+      case "chase":
+        add(start,{side:e.side,fighter:e.fighter,kind:"cast",delay:e.depth*100});
+        break;
       case "skill":
         side = e.side;
         actor = e.fighter;

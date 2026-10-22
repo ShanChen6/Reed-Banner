@@ -1,0 +1,11 @@
+/** Data export only; no battle, simulation or balance evaluation. Does not overwrite historical reports. */
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { ALL_COMPANIONS, mainCharacter, characterSkills, COMBO_PASSIVES, CHASE_PASSIVES, chasePassives, DBL_ULTIMATES, DEFAULT_SPIRIT_EXPERIMENT, PROFESSIONS, ELEMENTS } from '../src/core';
+const dir = 'docs/design/data';
+mkdirSync(dir, { recursive: true });
+const loadout = (f: ReturnType<typeof mainCharacter>) => ({ id: f.id, name: f.name, profession: f.profession, element: f.element, active: characterSkills(f.profession, f.element, f.id).map(d => d.id), passives: [f.comboPassive!, ...chasePassives(f)] });
+const dbl = PROFESSIONS.flatMap(p => ELEMENTS.map(e => loadout(mainCharacter(e, p))));
+writeFileSync(`${dir}/skill-chase-v3.json`, JSON.stringify({ version: 3, defaultSpirit: DEFAULT_SPIRIT_EXPERIMENT, professionOpportunities: COMBO_PASSIVES, chasePassives: CHASE_PASSIVES, dinhBoLinhUltimates: DBL_ULTIMATES, dinhBoLinh: dbl, companions: ALL_COMPANIONS.map(loadout) }, null, 2) + '\n');
+const rows = Object.values(CHASE_PASSIVES).map(p => `| ${p.name} | ${p.description} |`).join('\n');
+writeFileSync(`${dir}/skill-chase-v3.md`, `# Danh mục bị động truy kích và tuyệt chiêu Đinh Bộ Lĩnh\n\nSinh từ dữ liệu code bằng \`pnpm exec tsx scripts/export-skill-chase.ts\`. Đây là xuất dữ liệu, không phải báo cáo test hoặc cân bằng.\n\n## Ba bị động phản ứng theo nghề/hệ\n\nMỗi người lấy một phản ứng nghề + hai phản ứng hệ trong bảng, ngoài bị động nghề mở cơ hội đã có. Tổng cộng bốn bị động.\n\n| Bị động | Điều kiện và hiệu ứng |\n|---|---|\n${rows}\n\n## Đinh Bộ Lĩnh: 42 tuyệt chiêu ô4\n\nBa chiêu nghề (ô1/3/5), hai chiêu hệ (ô2/6), một tuyệt chiêu nghề × hệ (ô4). Tuyệt chiêu mở cấp10, kỹ năng nghề nâng cao cấp15.\n\n| Nghề | Hệ | Tuyệt chiêu | Năng lượng gốc |\n|---|---|---|---:|\n${DBL_ULTIMATES.map(d => `| ${d.profession} | ${d.element} | ${d.name} | ${d.cost} |`).join('\n')}\n\nDữ liệu chi tiết sáu ô, bốn bị động và từng bước tuyệt chiêu: [JSON](skill-chase-v3.json).\n`);
+console.log(`Exported ${dbl.length} DBL loadouts, ${ALL_COMPANIONS.length} companions, ${Object.keys(CHASE_PASSIVES).length} chase definitions; no battles executed.`);

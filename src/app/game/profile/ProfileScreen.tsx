@@ -28,6 +28,7 @@ import {
   totalXpFor,
   MAIN_SLOT_UNLOCK,
   personalSkillOf,
+  dinhBoLinhUltimate,
   characterSkills,
   scaleSkill,
   mainSlotKey,
@@ -301,7 +302,7 @@ export default function ProfileScreen({
   const xpNow =
     progress.level >= MAX_LEVEL ? 1 : progress.xp - totalXpFor(progress.level);
   const ultimate =
-    character === MAIN_ID ? undefined : personalSkillOf(character);
+    character === MAIN_ID ? dinhBoLinhUltimate(profile.profession,profile.element) : personalSkillOf(character);
 
   const shelf = FILTERS.find((f) => f.id === filter)!;
   const bag = [...profile.bag]

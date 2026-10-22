@@ -929,6 +929,33 @@ export const CHARACTER_SKILLS:readonly SkillDef[]=defineCharacterSkills([
  // Future personal skills are canonical records: slot4, ultimate:true, stable ID + character.
 ]);
 
+/** ĐBL: one personal ultimate for every profession × element loadout. */
+const DBL_ROLE_FINISHERS: Record<Profession, { name: string; target: SkillTarget; steps: readonly SkillStep[] }> = {
+ tuongSi: {name:"Bình định",target:"enemy",steps:[{type:"damage",atk:3.2,pierce:0.3},{type:"effect",to:"targets",effect:"defDown",value:0.25,turns:2}]},
+ phapSu: {name:"Thiên uy",target:"allEnemies",steps:[{type:"damage",atk:2.2},{type:"effect",to:"targets",effect:"silence",value:0,turns:1}]},
+ binhLinh: {name:"Trấn quốc",target:"enemy",steps:[{type:"damage",atk:2.4},{type:"effect",to:"team",effect:"shield",value:0.15,ofMaxHp:true,turns:2}]},
+ ySu: {name:"Hưng sinh",target:"team",steps:[{type:"heal",to:"targets",ratio:0.28},{type:"cleanse",to:"targets"}]},
+ muuSi: {name:"Định kế",target:"enemy",steps:[{type:"dispel",to:"targets"},{type:"damage",atk:2.3},{type:"energy",to:"targets",amount:-25}]},
+ quanSu: {name:"Nhất thống",target:"team",steps:[{type:"effect",to:"targets",effect:"atkUp",value:0.25,turns:2},{type:"energy",to:"targets",amount:20}]},
+};
+const DBL_ELEMENT_FINISHERS:Record<Element,{name:string;steps:readonly SkillStep[]}>= {
+ kim:{name:"Kim",steps:[{type:"effect",to:"team",effect:"atkUp",value:0.15,turns:2}]},
+ moc:{name:"Mộc",steps:[{type:"heal",to:"team",ratio:0.1}]},
+ thuy:{name:"Thủy",steps:[{type:"cleanse",to:"team"},{type:"effect",to:"team",effect:"shield",value:0.08,ofMaxHp:true,turns:2}]},
+ hoa:{name:"Hỏa",steps:[{type:"effect",to:"enemies",effect:"defDown",value:0.15,turns:2}]},
+ tho:{name:"Thổ",steps:[{type:"effect",to:"team",effect:"shield",value:0.12,ofMaxHp:true,turns:2}]},
+ loi:{name:"Lôi",steps:[{type:"energy",to:"enemies",amount:-15}]},
+ phong:{name:"Phong",steps:[{type:"energy",to:"team",amount:15}]},
+};
+export const DBL_ULTIMATES:readonly SkillDef[]=Object.entries(DBL_ROLE_FINISHERS).flatMap(([profession,role])=>
+ Object.entries(DBL_ELEMENT_FINISHERS).map(([element,flavor])=>({
+ id:`dbl_${profession}_${element}`,name:`${role.name} · ${flavor.name}`,character:"dinhBoLinh",characterKind:"ultimate" as const,
+ profession:profession as Profession,element:element as Element,slot:4,ultimate:true,cost:80,target:role.target,steps:[...role.steps,...flavor.steps],
+ })));
+export function dinhBoLinhUltimate(profession:Profession,element:Element):SkillDef {
+ return DBL_ULTIMATES.find(d=>d.profession===profession&&d.element===element)!;
+}
+
 /** Tuyệt chiêu là nguồn nhân vật kể cả tuyệt chiêu mặc định theo hệ của Đinh Bộ Lĩnh. */
 export function skillSource(def: SkillDef): "profession" | "element" | "character" {
   return def.ultimate || def.character !== undefined ? "character" : def.profession !== undefined ? "profession" : "element";
@@ -936,7 +963,7 @@ export function skillSource(def: SkillDef): "profession" | "element" | "characte
 
 /** Nguồn thống nhất cho mọi nhân vật chơi được; tiến trình lọc sau khi lắp bộ. */
 export function characterSkills(profession: Profession, element: Element, character?: string): SkillDef[] {
-  const ultimate = (character ? personalSkillOf(character) : undefined) ?? getSkill(legacyElementSkills(element).find(d => d.slot === 5)!.id)!;
+  const ultimate = !character || character === "dinhBoLinh" ? dinhBoLinhUltimate(profession,element) : personalSkillOf(character) ?? getSkill(legacyElementSkills(element).find(d => d.slot === 5)!.id)!;
   const defs = [...ROLE_SKILLS.filter(d => d.profession === profession), ...ELEMENT_SKILLS.filter(d => d.element === element), ultimate];
   return SKILL_SLOT_ORDER.map(slot => defs.find(d => d.slot === slot)!);
 }
@@ -950,7 +977,7 @@ export const SKILLS: Readonly<Record<string, SkillDef>> = defineSkillRegistry(
   [
     ...DEFS,
     ...[...MAIN,...PHONG].map((d):SkillDef=>d.slot===5?{...d,slot:4,ultimate:true}:d.slot===4?{...d,slot:5}:d),
-    ...CHARACTER_SKILLS,...ROLE_SKILLS,...ELEMENT_SKILLS,
+    ...CHARACTER_SKILLS,...DBL_ULTIMATES,...ROLE_SKILLS,...ELEMENT_SKILLS,
   ],
 );
 

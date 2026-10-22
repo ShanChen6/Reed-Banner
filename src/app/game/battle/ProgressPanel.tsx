@@ -251,7 +251,7 @@ export default function ProgressPanel({
                   );
                 })}
               </ul>
-              <SkillDetails passive={PROFESSION_COMBO[isMain ? profile.profession : companionOf(id)!.profession]} skills={(isMain ? characterSkills(profile.profession, profile.element) : characterSkills(companionOf(id)!.profession, companionOf(id)!.element, id)).map(d => scaleSkill(d,p.skillLevels[mainSlotKey(d.slot!)] ?? 1))} />
+              <SkillDetails fighter={isMain ? {profession:profile.profession,element:profile.element} : companionOf(id)!} passive={PROFESSION_COMBO[isMain ? profile.profession : companionOf(id)!.profession]} skills={(isMain ? characterSkills(profile.profession, profile.element) : characterSkills(companionOf(id)!.profession, companionOf(id)!.element, id)).map(d => scaleSkill(d,p.skillLevels[mainSlotKey(d.slot!)] ?? 1))} />
               {!isMain && (
                 <p className="opacity-60">
                   {PROFESSION_NAME[companionProfession(id)]} · kỹ năng nâng

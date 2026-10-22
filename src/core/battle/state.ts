@@ -7,6 +7,8 @@ import type { Element } from "./elements";
 import type { SpiritExperiment, Profession } from "./rules";
 
 export interface FighterConfig {
+  /** Three immediate reactions; fourth passive is comboPassive. Explicit list freezes battle snapshots. */
+  readonly chasePassives?: readonly import("./chase").ChasePassiveId[];
   readonly id: string;
   readonly name: string;
   readonly element: Element;

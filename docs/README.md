@@ -89,3 +89,5 @@
 - [Kỹ năng phiên bản 2: combo đồng đội, tuyệt chiêu ô 4 và chuyển hồ sơ](design/21-combo-dong-doi.md)
 
 - [Triển khai combo toàn bộ nhân vật: kiểm chứng, dữ liệu và giới hạn](reports/2026-10-22-combo.md)
+
+- [Chốt F, 42 bộ Đinh Bộ Lĩnh và 4 bị động nối chase](design/22-ky-nang-chase.md)

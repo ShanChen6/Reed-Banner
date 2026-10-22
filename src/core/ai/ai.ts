@@ -1,3 +1,4 @@
+import { CHASE_PASSIVES, type ChasePassiveDef } from "../battle/chase";
 // AI Tianwu, xem docs/design/10-ai.md.
 // Ngang bằng thông tin: AI chỉ nhận AiView (không có luồng ngẫu nhiên của bàn cờ),
 // chỉ mô phỏng phần biết chắc, và dùng luồng ngẫu nhiên riêng (aiRng).
@@ -473,7 +474,7 @@ export function playAiTurn(
 /** Small preparation credit, only for a reachable useful event and a living eligible teammate. */
 function comboSetupValue(view:AiView,def:SkillDef,hit:readonly Fighter[]):number {
  const side=view.turn.side,own=view.sides[side],caster=own.fighters[view.turn.actor]!;
- if(caster.comboReady)return 0; // Combo-enhanced actions never open a chain.
+ // Prepared opportunities and immediate chase are evaluated separately.
  const kinds=new Set<string>();
  for(const step of def.steps){
   if(step.type==='damage'&&hit.some(f=>f.hp>0))kinds.add('skillDamage');
@@ -482,5 +483,18 @@ function comboSetupValue(view:AiView,def:SkillDef,hit:readonly Fighter[]):number
   if(step.type==='dispel'&&hit.some(f=>f.comboReady||f.effects.some(e=>POSITIVE_EFFECTS.includes(e.kind))))kinds.add('dispelled');
   if(step.type==='heal'&&own.fighters.some(f=>isAlive(f)&&f.hp<f.maxHp&&spiritHealMultiplier(f.spirit,view.experimentalSpirit)>0))kinds.add('healed');
  }
- return own.fighters.reduce((sum,f,i)=>{if(i===view.turn.actor||!isAlive(f)||!f.comboPassive||f.comboReady||hasEffect(f.effects,'silence')||hasEffect(f.effects,'freeze')||f.comboOpenedAt===view.comboState?.sideTurns[side])return sum;const p=COMBO_PASSIVES[f.comboPassive];return sum+(p.triggers.some(k=>kinds.has(k))?Math.min(f.atk*.3,caster.atk*.3):0);},0);
+ const preparation=caster.comboReady?0:own.fighters.reduce((sum,f,i)=>{if(i===view.turn.actor||!isAlive(f)||!f.comboPassive||f.comboReady||hasEffect(f.effects,'silence')||hasEffect(f.effects,'freeze')||f.comboOpenedAt===view.comboState?.sideTurns[side])return sum;const p=COMBO_PASSIVES[f.comboPassive];return sum+(p.triggers.some(k=>kinds.has(k))?Math.min(f.atk*.3,caster.atk*.3):0);},0);
+ // Visible first-hop estimate only. No future-board reads or attempt to price the whole chain.
+ const chase=own.fighters.reduce((sum,f,i)=>{
+   if(!isAlive(f)||hasEffect(f.effects,'silence')||hasEffect(f.effects,'freeze'))return sum;
+   return sum+(f.chasePassives??[]).reduce((value,id)=>{
+     const p:ChasePassiveDef=CHASE_PASSIVES[id];
+     if((p.alliesOnly&&i===view.turn.actor)||!p.triggers.some(k=>kinds.has(k)))return value;
+     if(p.effect==='damage')return value+f.atk*p.value*.5;
+     if(p.effect==='heal')return value+Math.max(0,...own.fighters.filter(isAlive).map(x=>Math.min(x.maxHp-x.hp,Math.round(x.maxHp*p.value*spiritHealMultiplier(x.spirit,view.experimentalSpirit)))))*.5;
+     if(p.effect==='shield')return value+Math.max(0,...own.fighters.filter(isAlive).map(x=>Math.max(0,Math.round(x.maxHp*p.value*spiritHealMultiplier(x.spirit,view.experimentalSpirit))-(findEffect(x.effects,'shield')?.value??0))))*.25;
+     return value+Math.min(f.atk*.1,p.value);
+   },0);
+ },0);
+ return preparation+chase;
 }
