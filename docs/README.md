@@ -93,3 +93,11 @@
 - [Chốt F, 42 bộ Đinh Bộ Lĩnh và 4 bị động nối chase](design/22-ky-nang-chase.md)
 
 - [Kế hoạch cân bằng chase: chủ động tạo lợi thế và kết thúc ván](plans/2026-10-22-can-bang-chase.md)
+
+- [Baseline task1: bốn bị động, sáu chủ động, Tinh thần F và công thức](reports/2026-10-22-baseline-f/README.md) — nguồn bàn giao cho task2.
+
+- [Task2: mô phỏng F, chẩn đoán và đóng phiên bản AI](reports/2026-10-22-ai-f/README.md) — dữ liệu/manifest/counters và bàn giao task3.
+
+- [Task3: đối chứng cân bằng F và giá Thủ thành](reports/2026-10-22-balance-f/README.md) — dữ liệu seed mới, thông số giữ/hoàn tác và bàn giao task4.
+
+- [Task4: kiểm chứng PvE, giao diện và bàn giao F](reports/2026-10-23-pve-ui-handoff/README.md) — smoke tiến trình, contract UI, giới hạn và checklist review.

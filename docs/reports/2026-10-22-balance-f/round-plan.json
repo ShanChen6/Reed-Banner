@@ -1,0 +1,14 @@
+{
+  "rule": "F",
+  "frozenAI": "ai-f-task2-b5b468f48b72",
+  "target": "Reduce repeated sustain tails without shortening ordinary3v3 globally; duration goal20-30 side turns from design02, solo target unspecified",
+  "round1": [
+    {"variant":"shield18","change":"role_thuThanh shield0.20->0.18 only","decision":"rejected after48 tuning battles: cap18->19, mixed paired outcomes"},
+    {"variant":"heal20","change":"role_linhDuoc heal0.22->0.20 only","decision":"rejected after48 tuning battles: cap18->19, weak duration signal"}
+  ],
+  "candidate": {"variant":"shield35","change":"role_thuThanh cost30->35 only; max-level cost25->30 under existing rounding","status":"provisional, before broad screening and holdout","evidence":"48 tuning battles: cap18->17; over44 95.83%->83.33%; uncertainty remains wide"},
+  "broadScreen": {"n":1680,"baseline":"reuse task2 after exact source and48 expanded replay checks","purpose":"training regression, not independent confirmation"},
+  "interactionChecks": {"identities":"two professions, same element cohorts with distinct character ultimates, both modes, common ordinary gear","gear":"same flat loadouts, separate set/resonance/full projections; no new production gear mechanics"},
+  "holdout": {"nPerVariant":1680,"boardSeedOffset":10000019,"status":"not inspected or used to choose numeric values","acceptance":"no cap-rate or over44 increase;3v3 median not shortened by more than1 side turn; investigate any profession observed-win change beyond15 percentage points; otherwise roll back, never retune on holdout"},
+  "unchanged": ["AI policy and weights","Spirit F","food","HP/ATK/DEF and growth","four passive definitions and limits","six active slots, sources and unlocks","gear slots, tiers, set and resonance thresholds","progress economy"]
+}

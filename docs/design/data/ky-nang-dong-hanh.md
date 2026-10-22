@@ -1,6 +1,6 @@
 # Kỹ năng 60 nhân vật đồng hành — không gồm Đinh Bộ Lĩnh
 
-Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thông số dưới đây là cấp kỹ năng1, chưa qua đợt cân bằng mới. Mỗi người có6 chủ động và4 bị động (2 nghề +2 hệ). Các tướng cùng nghề/hệ dùng chung phần nghề/hệ; tuyệt chiêu ô4 là phần riêng của nhân vật.
+Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thông số dưới đây là cấp kỹ năng1, đã đồng bộ giá Thủ thành theo [task3](../23-can-bang-f.md). Mỗi người có6 chủ động và4 bị động (2 nghề +2 hệ). Các tướng cùng nghề/hệ dùng chung phần nghề/hệ; tuyệt chiêu ô4 là phần riêng của nhân vật.
 
 Ô1/3/5: nghề; ô2/6: hệ; ô4: tuyệt chiêu. Mốc mở tương ứng1/1/5/10/15/20. Bị động nghề1 mở cơ hội để người chơi tận dụng; nghề2 và hai bị động hệ là phản ứng truy kích trong cùng hành động. Mỗi bị động phản ứng tối đa một lần/hành động; toàn chuỗi tối đa12 phản ứng, sâu4. Tinh thần F áp dụng cho hồi/Khiên mới theo người nhận.
 
@@ -93,7 +93,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 30 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
+- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 35 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
 - **Ô2** — Hậu Thổ Tích Lương · Hệ Thổ · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Bánh chưng
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Trấn Sơn Hộ Quân · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Khiên 25% máu tối đa mục tiêu đến khi hết; Khiêu khích  bản thân 2 lượt; Phản đòn 35% bản thân 2 lượt
@@ -253,7 +253,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 30 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
+- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 35 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
 - **Ô2** — Lục Diệp Phong · Hệ Mộc · ô 2 · mở cấp 1 · 35 NL · bản thân: Phá 5 ô ngẫu nhiên
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Rễ Già Giữ Thành · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Hồi phục 6% máu tối đa mục tiêu 3 lượt; Khiên 25% máu tối đa bản thân đến khi hết; Khiêu khích  bản thân 2 lượt
@@ -273,7 +273,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 30 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
+- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 35 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
 - **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 4 ô thường ngẫu nhiên thành Kiếm
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Thiết Bích Đồng Thành · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · bản thân: Thủ+ 35% bản thân 3 lượt; Phản đòn 35% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
@@ -593,7 +593,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 30 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
+- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 35 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
 - **Ô2** — Thủy Nguyệt Tụ Linh · Hệ Thủy · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Âm dương
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Thủy Trại Liên Hoàn · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Khiên 18% máu tối đa mục tiêu đến khi hết; Khiêu khích  bản thân 2 lượt; Đóng băng  mọi địch 1 lượt, xác suất 25%
@@ -613,7 +613,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 30 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
+- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 35 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
 - **Ô2** — Phóng Hỏa Thiêu Doanh · Hệ Hỏa · ô 2 · mở cấp 1 · 35 NL · bản thân: Phá vùng 3×3
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Viêm Giáp Hộ Doanh · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · bản thân: Khiên 25% máu tối đa bản thân đến khi hết; Khiêu khích  bản thân 2 lượt; Phản đòn 30% bản thân 2 lượt; Thiêu đốt 10% Công người thi triển, áp lên mọi địch 2 lượt
@@ -633,7 +633,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 30 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
+- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 35 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
 - **Ô2** — Lôi Trụ Giáng Thế · Hệ Lôi · ô 2 · mở cấp 1 · 40 NL · bản thân: Phá 1 cột
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Chấn Lôi Thiết Vệ · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · bản thân: Thủ+ 40% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt; -20 năng lượng mọi địch
@@ -653,7 +653,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 30 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
+- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 35 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
 - **Ô2** — Phong Quyển Tàn Vân · Hệ Phong · ô 2 · mở cấp 1 · 40 NL · bản thân: Chọn tâm xoay lốc xoáy ±1..2 nấc
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Phong Lũy Hộ Kỳ · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết; +15 năng lượng mục tiêu; Khiêu khích  bản thân 2 lượt
@@ -933,7 +933,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 30 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
+- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 35 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
 - **Ô2** — Hậu Thổ Tích Lương · Hệ Thổ · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Bánh chưng
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Ngoại Giáp Hộ Quân · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Khiên 20% máu tối đa mục tiêu đến khi hết; Khiêu khích  bản thân 2 lượt; Phản đòn 35% bản thân 2 lượt
@@ -1113,7 +1113,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 30 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
+- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 35 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
 - **Ô2** — Hậu Thổ Tích Lương · Hệ Thổ · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Bánh chưng
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Tam Đái Kiên Thành · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 60 NL · cả đội: Khiên 25% máu tối đa mục tiêu đến khi hết; Khiêu khích  bản thân 2 lượt; Phản đòn 35% bản thân 2 lượt
@@ -1233,7 +1233,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 30 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
+- **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 35 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
 - **Ô2** — Phóng Hỏa Thiêu Doanh · Hệ Hỏa · ô 2 · mở cấp 1 · 35 NL · bản thân: Phá vùng 3×3
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Phù Liệt Hỏa Lũy · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 60 NL · bản thân: Khiên 30% máu tối đa bản thân đến khi hết; Khiêu khích  bản thân 2 lượt; Thiêu đốt 15% Công người thi triển, áp lên mọi địch 2 lượt

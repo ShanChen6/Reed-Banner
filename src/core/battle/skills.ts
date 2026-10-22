@@ -889,7 +889,7 @@ const RAW_ROLE_SKILLS: readonly SkillDef[] = [
   { ...role("phepLan", "phapSu", 1, 30), steps: [{ type: "damage", atk: 0.9 }] },
   { ...role("nguHanhAn", "phapSu", 3), steps: [{ type: "damage", atk: 1.4 }, { type: "mark", enhanced: true, guaranteed: true }] },
   { id: "role_thienDiaCong", name: "Thiên địa cộng hưởng", profession: "phapSu", slot: 4, cost: 60, target: "allEnemies", steps: [{ type: "damage", atk: 1.1 }, { type: "destroy", area: { square: 3 } }] },
-  role("thuThanh", "binhLinh", 1), role("tuongKhien", "binhLinh", 3),
+  role("thuThanh", "binhLinh", 1, 35), role("tuongKhien", "binhLinh", 3),
   { ...role("phanKich", "binhLinh", 4, 55), steps: [...role("phanKich", "binhLinh", 4).steps, { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 }] },
   role("linhDuoc", "ySu", 1), role("duongSinh", "ySu", 3), role("teDo", "ySu", 4, 55),
   role("muaChuoc", "muuSi", 1), role("lyGian", "muuSi", 3), role("catQuanLuong", "muuSi", 4, 55),

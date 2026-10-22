@@ -1,0 +1,1352 @@
+[
+  {
+    "manifest": "gear-baseline-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "gear-baseline-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "gear-baseline-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "gear-baseline-0-manifest.json",
+    "path": "scripts/task3-interactions.ts",
+    "sha256": "f45cad914cf4ff24ed12e2d2675d30bab58049882781bbeb1acf85c546aee3b7",
+    "resolvedTo": "snapshots/task3-interactions.ts.txt"
+  },
+  {
+    "manifest": "gear-baseline-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "gear-shield35-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "gear-shield35-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "gear-shield35-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "gear-shield35-0-manifest.json",
+    "path": "scripts/task3-interactions.ts",
+    "sha256": "f45cad914cf4ff24ed12e2d2675d30bab58049882781bbeb1acf85c546aee3b7",
+    "resolvedTo": "snapshots/task3-interactions.ts.txt"
+  },
+  {
+    "manifest": "gear-shield35-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "identity-baseline-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "identity-baseline-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "identity-baseline-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "identity-baseline-0-manifest.json",
+    "path": "scripts/task3-interactions.ts",
+    "sha256": "f45cad914cf4ff24ed12e2d2675d30bab58049882781bbeb1acf85c546aee3b7",
+    "resolvedTo": "snapshots/task3-interactions.ts.txt"
+  },
+  {
+    "manifest": "identity-baseline-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "identity-shield35-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "identity-shield35-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "identity-shield35-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "identity-shield35-0-manifest.json",
+    "path": "scripts/task3-interactions.ts",
+    "sha256": "f45cad914cf4ff24ed12e2d2675d30bab58049882781bbeb1acf85c546aee3b7",
+    "resolvedTo": "snapshots/task3-interactions.ts.txt"
+  },
+  {
+    "manifest": "identity-shield35-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "screen-shield35-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "screen-shield35-0-manifest.json",
+    "path": "src/core/battle/rules.ts",
+    "sha256": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "resolvedTo": "src/core/battle/rules.ts"
+  },
+  {
+    "manifest": "screen-shield35-0-manifest.json",
+    "path": "src/core/battle/battle.ts",
+    "sha256": "b01152728ca6e4fdecaf1a084857b14b199741b454aa1f2730a601a34d59aef7",
+    "resolvedTo": "src/core/battle/battle.ts"
+  },
+  {
+    "manifest": "screen-shield35-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "screen-shield35-0-manifest.json",
+    "path": "src/core/battle/chase.ts",
+    "sha256": "4e77ed4574f7fae5bd94b6919fcee85d7684e3737e741a634f86341654725b7c",
+    "resolvedTo": "src/core/battle/chase.ts"
+  },
+  {
+    "manifest": "screen-shield35-0-manifest.json",
+    "path": "src/core/battle/combos.ts",
+    "sha256": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+    "resolvedTo": "src/core/battle/combos.ts"
+  },
+  {
+    "manifest": "screen-shield35-0-manifest.json",
+    "path": "src/core/battle/combo-engine.ts",
+    "sha256": "b91a166d68b36cb2c1f67ec1c1db96ee09e4b98d86eabb6f801d879eae0dc3fe",
+    "resolvedTo": "src/core/battle/combo-engine.ts"
+  },
+  {
+    "manifest": "screen-shield35-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "screen-shield35-0-manifest.json",
+    "path": "src/core/progress/progress.ts",
+    "sha256": "98d4a7cc80ffb118d22be39b08954d2e30b94207cabaf55745c6e401f235ca08",
+    "resolvedTo": "src/core/progress/progress.ts"
+  },
+  {
+    "manifest": "screen-shield35-0-manifest.json",
+    "path": "src/core/roster/roster.ts",
+    "sha256": "4b5c26034970b4eb0f88ffb5bf466a6cc5966dbf71d6c274b8edfe62502a72ad",
+    "resolvedTo": "src/core/roster/roster.ts"
+  },
+  {
+    "manifest": "screen-shield35-0-manifest.json",
+    "path": "scripts/lib/task2-cases.ts",
+    "sha256": "d469c37d855898278e2e845272982e66d5c3d76a16a626eb5909e3e2b9964944",
+    "resolvedTo": "scripts/lib/task2-cases.ts"
+  },
+  {
+    "manifest": "screen-shield35-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "screen-shield35-0-manifest.json",
+    "path": "scripts/task3-audit.ts",
+    "sha256": "75a7f34ec4dc2fe9a62c5697daa3ebe189d3b80e3fa742236fe11c78014e29fe",
+    "resolvedTo": "snapshots/task3-audit-final.ts.txt"
+  },
+  {
+    "manifest": "screen-shield35-1-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "screen-shield35-1-manifest.json",
+    "path": "src/core/battle/rules.ts",
+    "sha256": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "resolvedTo": "src/core/battle/rules.ts"
+  },
+  {
+    "manifest": "screen-shield35-1-manifest.json",
+    "path": "src/core/battle/battle.ts",
+    "sha256": "b01152728ca6e4fdecaf1a084857b14b199741b454aa1f2730a601a34d59aef7",
+    "resolvedTo": "src/core/battle/battle.ts"
+  },
+  {
+    "manifest": "screen-shield35-1-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "screen-shield35-1-manifest.json",
+    "path": "src/core/battle/chase.ts",
+    "sha256": "4e77ed4574f7fae5bd94b6919fcee85d7684e3737e741a634f86341654725b7c",
+    "resolvedTo": "src/core/battle/chase.ts"
+  },
+  {
+    "manifest": "screen-shield35-1-manifest.json",
+    "path": "src/core/battle/combos.ts",
+    "sha256": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+    "resolvedTo": "src/core/battle/combos.ts"
+  },
+  {
+    "manifest": "screen-shield35-1-manifest.json",
+    "path": "src/core/battle/combo-engine.ts",
+    "sha256": "b91a166d68b36cb2c1f67ec1c1db96ee09e4b98d86eabb6f801d879eae0dc3fe",
+    "resolvedTo": "src/core/battle/combo-engine.ts"
+  },
+  {
+    "manifest": "screen-shield35-1-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "screen-shield35-1-manifest.json",
+    "path": "src/core/progress/progress.ts",
+    "sha256": "98d4a7cc80ffb118d22be39b08954d2e30b94207cabaf55745c6e401f235ca08",
+    "resolvedTo": "src/core/progress/progress.ts"
+  },
+  {
+    "manifest": "screen-shield35-1-manifest.json",
+    "path": "src/core/roster/roster.ts",
+    "sha256": "4b5c26034970b4eb0f88ffb5bf466a6cc5966dbf71d6c274b8edfe62502a72ad",
+    "resolvedTo": "src/core/roster/roster.ts"
+  },
+  {
+    "manifest": "screen-shield35-1-manifest.json",
+    "path": "scripts/lib/task2-cases.ts",
+    "sha256": "d469c37d855898278e2e845272982e66d5c3d76a16a626eb5909e3e2b9964944",
+    "resolvedTo": "scripts/lib/task2-cases.ts"
+  },
+  {
+    "manifest": "screen-shield35-1-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "screen-shield35-1-manifest.json",
+    "path": "scripts/task3-audit.ts",
+    "sha256": "75a7f34ec4dc2fe9a62c5697daa3ebe189d3b80e3fa742236fe11c78014e29fe",
+    "resolvedTo": "snapshots/task3-audit-final.ts.txt"
+  },
+  {
+    "manifest": "screen-shield35-2-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "screen-shield35-2-manifest.json",
+    "path": "src/core/battle/rules.ts",
+    "sha256": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "resolvedTo": "src/core/battle/rules.ts"
+  },
+  {
+    "manifest": "screen-shield35-2-manifest.json",
+    "path": "src/core/battle/battle.ts",
+    "sha256": "b01152728ca6e4fdecaf1a084857b14b199741b454aa1f2730a601a34d59aef7",
+    "resolvedTo": "src/core/battle/battle.ts"
+  },
+  {
+    "manifest": "screen-shield35-2-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "screen-shield35-2-manifest.json",
+    "path": "src/core/battle/chase.ts",
+    "sha256": "4e77ed4574f7fae5bd94b6919fcee85d7684e3737e741a634f86341654725b7c",
+    "resolvedTo": "src/core/battle/chase.ts"
+  },
+  {
+    "manifest": "screen-shield35-2-manifest.json",
+    "path": "src/core/battle/combos.ts",
+    "sha256": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+    "resolvedTo": "src/core/battle/combos.ts"
+  },
+  {
+    "manifest": "screen-shield35-2-manifest.json",
+    "path": "src/core/battle/combo-engine.ts",
+    "sha256": "b91a166d68b36cb2c1f67ec1c1db96ee09e4b98d86eabb6f801d879eae0dc3fe",
+    "resolvedTo": "src/core/battle/combo-engine.ts"
+  },
+  {
+    "manifest": "screen-shield35-2-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "screen-shield35-2-manifest.json",
+    "path": "src/core/progress/progress.ts",
+    "sha256": "98d4a7cc80ffb118d22be39b08954d2e30b94207cabaf55745c6e401f235ca08",
+    "resolvedTo": "src/core/progress/progress.ts"
+  },
+  {
+    "manifest": "screen-shield35-2-manifest.json",
+    "path": "src/core/roster/roster.ts",
+    "sha256": "4b5c26034970b4eb0f88ffb5bf466a6cc5966dbf71d6c274b8edfe62502a72ad",
+    "resolvedTo": "src/core/roster/roster.ts"
+  },
+  {
+    "manifest": "screen-shield35-2-manifest.json",
+    "path": "scripts/lib/task2-cases.ts",
+    "sha256": "d469c37d855898278e2e845272982e66d5c3d76a16a626eb5909e3e2b9964944",
+    "resolvedTo": "scripts/lib/task2-cases.ts"
+  },
+  {
+    "manifest": "screen-shield35-2-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "screen-shield35-2-manifest.json",
+    "path": "scripts/task3-audit.ts",
+    "sha256": "75a7f34ec4dc2fe9a62c5697daa3ebe189d3b80e3fa742236fe11c78014e29fe",
+    "resolvedTo": "snapshots/task3-audit-final.ts.txt"
+  },
+  {
+    "manifest": "sets-baseline-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "sets-baseline-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "sets-baseline-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "sets-baseline-0-manifest.json",
+    "path": "scripts/task3-sets.ts",
+    "sha256": "fcff18c9649174161c0657631059e73a2598485217a4da95ad1f151e8d853de1",
+    "resolvedTo": "scripts/task3-sets.ts"
+  },
+  {
+    "manifest": "sets-baseline-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "sets-shield35-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "sets-shield35-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "sets-shield35-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "sets-shield35-0-manifest.json",
+    "path": "scripts/task3-sets.ts",
+    "sha256": "fcff18c9649174161c0657631059e73a2598485217a4da95ad1f151e8d853de1",
+    "resolvedTo": "scripts/task3-sets.ts"
+  },
+  {
+    "manifest": "sets-shield35-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/battle/rules.ts",
+    "sha256": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "resolvedTo": "src/core/battle/rules.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/battle/battle.ts",
+    "sha256": "b01152728ca6e4fdecaf1a084857b14b199741b454aa1f2730a601a34d59aef7",
+    "resolvedTo": "src/core/battle/battle.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "a19c76ad1ee93e5df64216aa6afa82c520e2f7d5dc86720cf3e3679750fdba8c",
+    "resolvedTo": "src/core/battle/skills.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/battle/chase.ts",
+    "sha256": "4e77ed4574f7fae5bd94b6919fcee85d7684e3737e741a634f86341654725b7c",
+    "resolvedTo": "src/core/battle/chase.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/battle/combos.ts",
+    "sha256": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+    "resolvedTo": "src/core/battle/combos.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/battle/combo-engine.ts",
+    "sha256": "b91a166d68b36cb2c1f67ec1c1db96ee09e4b98d86eabb6f801d879eae0dc3fe",
+    "resolvedTo": "src/core/battle/combo-engine.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/progress/progress.ts",
+    "sha256": "98d4a7cc80ffb118d22be39b08954d2e30b94207cabaf55745c6e401f235ca08",
+    "resolvedTo": "src/core/progress/progress.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/roster/roster.ts",
+    "sha256": "4b5c26034970b4eb0f88ffb5bf466a6cc5966dbf71d6c274b8edfe62502a72ad",
+    "resolvedTo": "src/core/roster/roster.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-baseline-trace-0-manifest.json",
+    "path": "scripts/lib/task2-cases.ts",
+    "sha256": "d469c37d855898278e2e845272982e66d5c3d76a16a626eb5909e3e2b9964944",
+    "resolvedTo": "scripts/lib/task2-cases.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-baseline-trace-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-baseline-trace-0-manifest.json",
+    "path": "scripts/task3-audit.ts",
+    "sha256": "a59f2e2befb2729fce30d83b084d90cdfde2eb02e8922425e68c5e6ec2c168b4",
+    "resolvedTo": "scripts/task3-audit.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/battle/rules.ts",
+    "sha256": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "resolvedTo": "src/core/battle/rules.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/battle/battle.ts",
+    "sha256": "b01152728ca6e4fdecaf1a084857b14b199741b454aa1f2730a601a34d59aef7",
+    "resolvedTo": "src/core/battle/battle.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "a19c76ad1ee93e5df64216aa6afa82c520e2f7d5dc86720cf3e3679750fdba8c",
+    "resolvedTo": "src/core/battle/skills.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/battle/chase.ts",
+    "sha256": "4e77ed4574f7fae5bd94b6919fcee85d7684e3737e741a634f86341654725b7c",
+    "resolvedTo": "src/core/battle/chase.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/battle/combos.ts",
+    "sha256": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+    "resolvedTo": "src/core/battle/combos.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/battle/combo-engine.ts",
+    "sha256": "b91a166d68b36cb2c1f67ec1c1db96ee09e4b98d86eabb6f801d879eae0dc3fe",
+    "resolvedTo": "src/core/battle/combo-engine.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/progress/progress.ts",
+    "sha256": "98d4a7cc80ffb118d22be39b08954d2e30b94207cabaf55745c6e401f235ca08",
+    "resolvedTo": "src/core/progress/progress.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/roster/roster.ts",
+    "sha256": "4b5c26034970b4eb0f88ffb5bf466a6cc5966dbf71d6c274b8edfe62502a72ad",
+    "resolvedTo": "src/core/roster/roster.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-shield35-trace-0-manifest.json",
+    "path": "scripts/lib/task2-cases.ts",
+    "sha256": "d469c37d855898278e2e845272982e66d5c3d76a16a626eb5909e3e2b9964944",
+    "resolvedTo": "scripts/lib/task2-cases.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-shield35-trace-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "traces/new-cap/validation-shield35-trace-0-manifest.json",
+    "path": "scripts/task3-audit.ts",
+    "sha256": "a59f2e2befb2729fce30d83b084d90cdfde2eb02e8922425e68c5e6ec2c168b4",
+    "resolvedTo": "scripts/task3-audit.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/battle/rules.ts",
+    "sha256": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "resolvedTo": "src/core/battle/rules.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/battle/battle.ts",
+    "sha256": "b01152728ca6e4fdecaf1a084857b14b199741b454aa1f2730a601a34d59aef7",
+    "resolvedTo": "src/core/battle/battle.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "a19c76ad1ee93e5df64216aa6afa82c520e2f7d5dc86720cf3e3679750fdba8c",
+    "resolvedTo": "src/core/battle/skills.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/battle/chase.ts",
+    "sha256": "4e77ed4574f7fae5bd94b6919fcee85d7684e3737e741a634f86341654725b7c",
+    "resolvedTo": "src/core/battle/chase.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/battle/combos.ts",
+    "sha256": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+    "resolvedTo": "src/core/battle/combos.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/battle/combo-engine.ts",
+    "sha256": "b91a166d68b36cb2c1f67ec1c1db96ee09e4b98d86eabb6f801d879eae0dc3fe",
+    "resolvedTo": "src/core/battle/combo-engine.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/progress/progress.ts",
+    "sha256": "98d4a7cc80ffb118d22be39b08954d2e30b94207cabaf55745c6e401f235ca08",
+    "resolvedTo": "src/core/progress/progress.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-baseline-trace-0-manifest.json",
+    "path": "src/core/roster/roster.ts",
+    "sha256": "4b5c26034970b4eb0f88ffb5bf466a6cc5966dbf71d6c274b8edfe62502a72ad",
+    "resolvedTo": "src/core/roster/roster.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-baseline-trace-0-manifest.json",
+    "path": "scripts/lib/task2-cases.ts",
+    "sha256": "d469c37d855898278e2e845272982e66d5c3d76a16a626eb5909e3e2b9964944",
+    "resolvedTo": "scripts/lib/task2-cases.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-baseline-trace-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-baseline-trace-0-manifest.json",
+    "path": "scripts/task3-audit.ts",
+    "sha256": "a59f2e2befb2729fce30d83b084d90cdfde2eb02e8922425e68c5e6ec2c168b4",
+    "resolvedTo": "scripts/task3-audit.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/battle/rules.ts",
+    "sha256": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "resolvedTo": "src/core/battle/rules.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/battle/battle.ts",
+    "sha256": "b01152728ca6e4fdecaf1a084857b14b199741b454aa1f2730a601a34d59aef7",
+    "resolvedTo": "src/core/battle/battle.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "a19c76ad1ee93e5df64216aa6afa82c520e2f7d5dc86720cf3e3679750fdba8c",
+    "resolvedTo": "src/core/battle/skills.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/battle/chase.ts",
+    "sha256": "4e77ed4574f7fae5bd94b6919fcee85d7684e3737e741a634f86341654725b7c",
+    "resolvedTo": "src/core/battle/chase.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/battle/combos.ts",
+    "sha256": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+    "resolvedTo": "src/core/battle/combos.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/battle/combo-engine.ts",
+    "sha256": "b91a166d68b36cb2c1f67ec1c1db96ee09e4b98d86eabb6f801d879eae0dc3fe",
+    "resolvedTo": "src/core/battle/combo-engine.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/progress/progress.ts",
+    "sha256": "98d4a7cc80ffb118d22be39b08954d2e30b94207cabaf55745c6e401f235ca08",
+    "resolvedTo": "src/core/progress/progress.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-shield35-trace-0-manifest.json",
+    "path": "src/core/roster/roster.ts",
+    "sha256": "4b5c26034970b4eb0f88ffb5bf466a6cc5966dbf71d6c274b8edfe62502a72ad",
+    "resolvedTo": "src/core/roster/roster.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-shield35-trace-0-manifest.json",
+    "path": "scripts/lib/task2-cases.ts",
+    "sha256": "d469c37d855898278e2e845272982e66d5c3d76a16a626eb5909e3e2b9964944",
+    "resolvedTo": "scripts/lib/task2-cases.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-shield35-trace-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "traces/removed-cap/validation-shield35-trace-0-manifest.json",
+    "path": "scripts/task3-audit.ts",
+    "sha256": "a59f2e2befb2729fce30d83b084d90cdfde2eb02e8922425e68c5e6ec2c168b4",
+    "resolvedTo": "scripts/task3-audit.ts"
+  },
+  {
+    "manifest": "tuning-baseline-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "tuning-baseline-0-manifest.json",
+    "path": "src/core/battle/rules.ts",
+    "sha256": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "resolvedTo": "src/core/battle/rules.ts"
+  },
+  {
+    "manifest": "tuning-baseline-0-manifest.json",
+    "path": "src/core/battle/battle.ts",
+    "sha256": "b01152728ca6e4fdecaf1a084857b14b199741b454aa1f2730a601a34d59aef7",
+    "resolvedTo": "src/core/battle/battle.ts"
+  },
+  {
+    "manifest": "tuning-baseline-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "tuning-baseline-0-manifest.json",
+    "path": "src/core/battle/chase.ts",
+    "sha256": "4e77ed4574f7fae5bd94b6919fcee85d7684e3737e741a634f86341654725b7c",
+    "resolvedTo": "src/core/battle/chase.ts"
+  },
+  {
+    "manifest": "tuning-baseline-0-manifest.json",
+    "path": "src/core/battle/combos.ts",
+    "sha256": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+    "resolvedTo": "src/core/battle/combos.ts"
+  },
+  {
+    "manifest": "tuning-baseline-0-manifest.json",
+    "path": "src/core/battle/combo-engine.ts",
+    "sha256": "b91a166d68b36cb2c1f67ec1c1db96ee09e4b98d86eabb6f801d879eae0dc3fe",
+    "resolvedTo": "src/core/battle/combo-engine.ts"
+  },
+  {
+    "manifest": "tuning-baseline-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "tuning-baseline-0-manifest.json",
+    "path": "src/core/progress/progress.ts",
+    "sha256": "98d4a7cc80ffb118d22be39b08954d2e30b94207cabaf55745c6e401f235ca08",
+    "resolvedTo": "src/core/progress/progress.ts"
+  },
+  {
+    "manifest": "tuning-baseline-0-manifest.json",
+    "path": "src/core/roster/roster.ts",
+    "sha256": "4b5c26034970b4eb0f88ffb5bf466a6cc5966dbf71d6c274b8edfe62502a72ad",
+    "resolvedTo": "src/core/roster/roster.ts"
+  },
+  {
+    "manifest": "tuning-baseline-0-manifest.json",
+    "path": "scripts/lib/task2-cases.ts",
+    "sha256": "d469c37d855898278e2e845272982e66d5c3d76a16a626eb5909e3e2b9964944",
+    "resolvedTo": "scripts/lib/task2-cases.ts"
+  },
+  {
+    "manifest": "tuning-baseline-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "tuning-baseline-0-manifest.json",
+    "path": "scripts/task3-audit.ts",
+    "sha256": "5a1ff80d75475e4b5f268f7ff445f88945c42bc4fe64cea2d4e73d39afd4cad7",
+    "resolvedTo": "snapshots/task3-audit-round1.ts.txt"
+  },
+  {
+    "manifest": "tuning-heal20-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "tuning-heal20-0-manifest.json",
+    "path": "src/core/battle/rules.ts",
+    "sha256": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "resolvedTo": "src/core/battle/rules.ts"
+  },
+  {
+    "manifest": "tuning-heal20-0-manifest.json",
+    "path": "src/core/battle/battle.ts",
+    "sha256": "b01152728ca6e4fdecaf1a084857b14b199741b454aa1f2730a601a34d59aef7",
+    "resolvedTo": "src/core/battle/battle.ts"
+  },
+  {
+    "manifest": "tuning-heal20-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "tuning-heal20-0-manifest.json",
+    "path": "src/core/battle/chase.ts",
+    "sha256": "4e77ed4574f7fae5bd94b6919fcee85d7684e3737e741a634f86341654725b7c",
+    "resolvedTo": "src/core/battle/chase.ts"
+  },
+  {
+    "manifest": "tuning-heal20-0-manifest.json",
+    "path": "src/core/battle/combos.ts",
+    "sha256": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+    "resolvedTo": "src/core/battle/combos.ts"
+  },
+  {
+    "manifest": "tuning-heal20-0-manifest.json",
+    "path": "src/core/battle/combo-engine.ts",
+    "sha256": "b91a166d68b36cb2c1f67ec1c1db96ee09e4b98d86eabb6f801d879eae0dc3fe",
+    "resolvedTo": "src/core/battle/combo-engine.ts"
+  },
+  {
+    "manifest": "tuning-heal20-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "tuning-heal20-0-manifest.json",
+    "path": "src/core/progress/progress.ts",
+    "sha256": "98d4a7cc80ffb118d22be39b08954d2e30b94207cabaf55745c6e401f235ca08",
+    "resolvedTo": "src/core/progress/progress.ts"
+  },
+  {
+    "manifest": "tuning-heal20-0-manifest.json",
+    "path": "src/core/roster/roster.ts",
+    "sha256": "4b5c26034970b4eb0f88ffb5bf466a6cc5966dbf71d6c274b8edfe62502a72ad",
+    "resolvedTo": "src/core/roster/roster.ts"
+  },
+  {
+    "manifest": "tuning-heal20-0-manifest.json",
+    "path": "scripts/lib/task2-cases.ts",
+    "sha256": "d469c37d855898278e2e845272982e66d5c3d76a16a626eb5909e3e2b9964944",
+    "resolvedTo": "scripts/lib/task2-cases.ts"
+  },
+  {
+    "manifest": "tuning-heal20-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "tuning-heal20-0-manifest.json",
+    "path": "scripts/task3-audit.ts",
+    "sha256": "5a1ff80d75475e4b5f268f7ff445f88945c42bc4fe64cea2d4e73d39afd4cad7",
+    "resolvedTo": "snapshots/task3-audit-round1.ts.txt"
+  },
+  {
+    "manifest": "tuning-shield18-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "tuning-shield18-0-manifest.json",
+    "path": "src/core/battle/rules.ts",
+    "sha256": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "resolvedTo": "src/core/battle/rules.ts"
+  },
+  {
+    "manifest": "tuning-shield18-0-manifest.json",
+    "path": "src/core/battle/battle.ts",
+    "sha256": "b01152728ca6e4fdecaf1a084857b14b199741b454aa1f2730a601a34d59aef7",
+    "resolvedTo": "src/core/battle/battle.ts"
+  },
+  {
+    "manifest": "tuning-shield18-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "tuning-shield18-0-manifest.json",
+    "path": "src/core/battle/chase.ts",
+    "sha256": "4e77ed4574f7fae5bd94b6919fcee85d7684e3737e741a634f86341654725b7c",
+    "resolvedTo": "src/core/battle/chase.ts"
+  },
+  {
+    "manifest": "tuning-shield18-0-manifest.json",
+    "path": "src/core/battle/combos.ts",
+    "sha256": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+    "resolvedTo": "src/core/battle/combos.ts"
+  },
+  {
+    "manifest": "tuning-shield18-0-manifest.json",
+    "path": "src/core/battle/combo-engine.ts",
+    "sha256": "b91a166d68b36cb2c1f67ec1c1db96ee09e4b98d86eabb6f801d879eae0dc3fe",
+    "resolvedTo": "src/core/battle/combo-engine.ts"
+  },
+  {
+    "manifest": "tuning-shield18-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "tuning-shield18-0-manifest.json",
+    "path": "src/core/progress/progress.ts",
+    "sha256": "98d4a7cc80ffb118d22be39b08954d2e30b94207cabaf55745c6e401f235ca08",
+    "resolvedTo": "src/core/progress/progress.ts"
+  },
+  {
+    "manifest": "tuning-shield18-0-manifest.json",
+    "path": "src/core/roster/roster.ts",
+    "sha256": "4b5c26034970b4eb0f88ffb5bf466a6cc5966dbf71d6c274b8edfe62502a72ad",
+    "resolvedTo": "src/core/roster/roster.ts"
+  },
+  {
+    "manifest": "tuning-shield18-0-manifest.json",
+    "path": "scripts/lib/task2-cases.ts",
+    "sha256": "d469c37d855898278e2e845272982e66d5c3d76a16a626eb5909e3e2b9964944",
+    "resolvedTo": "scripts/lib/task2-cases.ts"
+  },
+  {
+    "manifest": "tuning-shield18-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "tuning-shield18-0-manifest.json",
+    "path": "scripts/task3-audit.ts",
+    "sha256": "5a1ff80d75475e4b5f268f7ff445f88945c42bc4fe64cea2d4e73d39afd4cad7",
+    "resolvedTo": "snapshots/task3-audit-round1.ts.txt"
+  },
+  {
+    "manifest": "tuning-shield35-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "tuning-shield35-0-manifest.json",
+    "path": "src/core/battle/rules.ts",
+    "sha256": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "resolvedTo": "src/core/battle/rules.ts"
+  },
+  {
+    "manifest": "tuning-shield35-0-manifest.json",
+    "path": "src/core/battle/battle.ts",
+    "sha256": "b01152728ca6e4fdecaf1a084857b14b199741b454aa1f2730a601a34d59aef7",
+    "resolvedTo": "src/core/battle/battle.ts"
+  },
+  {
+    "manifest": "tuning-shield35-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "tuning-shield35-0-manifest.json",
+    "path": "src/core/battle/chase.ts",
+    "sha256": "4e77ed4574f7fae5bd94b6919fcee85d7684e3737e741a634f86341654725b7c",
+    "resolvedTo": "src/core/battle/chase.ts"
+  },
+  {
+    "manifest": "tuning-shield35-0-manifest.json",
+    "path": "src/core/battle/combos.ts",
+    "sha256": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+    "resolvedTo": "src/core/battle/combos.ts"
+  },
+  {
+    "manifest": "tuning-shield35-0-manifest.json",
+    "path": "src/core/battle/combo-engine.ts",
+    "sha256": "b91a166d68b36cb2c1f67ec1c1db96ee09e4b98d86eabb6f801d879eae0dc3fe",
+    "resolvedTo": "src/core/battle/combo-engine.ts"
+  },
+  {
+    "manifest": "tuning-shield35-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "tuning-shield35-0-manifest.json",
+    "path": "src/core/progress/progress.ts",
+    "sha256": "98d4a7cc80ffb118d22be39b08954d2e30b94207cabaf55745c6e401f235ca08",
+    "resolvedTo": "src/core/progress/progress.ts"
+  },
+  {
+    "manifest": "tuning-shield35-0-manifest.json",
+    "path": "src/core/roster/roster.ts",
+    "sha256": "4b5c26034970b4eb0f88ffb5bf466a6cc5966dbf71d6c274b8edfe62502a72ad",
+    "resolvedTo": "src/core/roster/roster.ts"
+  },
+  {
+    "manifest": "tuning-shield35-0-manifest.json",
+    "path": "scripts/lib/task2-cases.ts",
+    "sha256": "d469c37d855898278e2e845272982e66d5c3d76a16a626eb5909e3e2b9964944",
+    "resolvedTo": "scripts/lib/task2-cases.ts"
+  },
+  {
+    "manifest": "tuning-shield35-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "tuning-shield35-0-manifest.json",
+    "path": "scripts/task3-audit.ts",
+    "sha256": "75a7f34ec4dc2fe9a62c5697daa3ebe189d3b80e3fa742236fe11c78014e29fe",
+    "resolvedTo": "snapshots/task3-audit-final.ts.txt"
+  },
+  {
+    "manifest": "validation-baseline-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "validation-baseline-0-manifest.json",
+    "path": "src/core/battle/rules.ts",
+    "sha256": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "resolvedTo": "src/core/battle/rules.ts"
+  },
+  {
+    "manifest": "validation-baseline-0-manifest.json",
+    "path": "src/core/battle/battle.ts",
+    "sha256": "b01152728ca6e4fdecaf1a084857b14b199741b454aa1f2730a601a34d59aef7",
+    "resolvedTo": "src/core/battle/battle.ts"
+  },
+  {
+    "manifest": "validation-baseline-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "validation-baseline-0-manifest.json",
+    "path": "src/core/battle/chase.ts",
+    "sha256": "4e77ed4574f7fae5bd94b6919fcee85d7684e3737e741a634f86341654725b7c",
+    "resolvedTo": "src/core/battle/chase.ts"
+  },
+  {
+    "manifest": "validation-baseline-0-manifest.json",
+    "path": "src/core/battle/combos.ts",
+    "sha256": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+    "resolvedTo": "src/core/battle/combos.ts"
+  },
+  {
+    "manifest": "validation-baseline-0-manifest.json",
+    "path": "src/core/battle/combo-engine.ts",
+    "sha256": "b91a166d68b36cb2c1f67ec1c1db96ee09e4b98d86eabb6f801d879eae0dc3fe",
+    "resolvedTo": "src/core/battle/combo-engine.ts"
+  },
+  {
+    "manifest": "validation-baseline-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "validation-baseline-0-manifest.json",
+    "path": "src/core/progress/progress.ts",
+    "sha256": "98d4a7cc80ffb118d22be39b08954d2e30b94207cabaf55745c6e401f235ca08",
+    "resolvedTo": "src/core/progress/progress.ts"
+  },
+  {
+    "manifest": "validation-baseline-0-manifest.json",
+    "path": "src/core/roster/roster.ts",
+    "sha256": "4b5c26034970b4eb0f88ffb5bf466a6cc5966dbf71d6c274b8edfe62502a72ad",
+    "resolvedTo": "src/core/roster/roster.ts"
+  },
+  {
+    "manifest": "validation-baseline-0-manifest.json",
+    "path": "scripts/lib/task2-cases.ts",
+    "sha256": "d469c37d855898278e2e845272982e66d5c3d76a16a626eb5909e3e2b9964944",
+    "resolvedTo": "scripts/lib/task2-cases.ts"
+  },
+  {
+    "manifest": "validation-baseline-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "validation-baseline-0-manifest.json",
+    "path": "scripts/task3-audit.ts",
+    "sha256": "75a7f34ec4dc2fe9a62c5697daa3ebe189d3b80e3fa742236fe11c78014e29fe",
+    "resolvedTo": "snapshots/task3-audit-final.ts.txt"
+  },
+  {
+    "manifest": "validation-baseline-1-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "validation-baseline-1-manifest.json",
+    "path": "src/core/battle/rules.ts",
+    "sha256": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "resolvedTo": "src/core/battle/rules.ts"
+  },
+  {
+    "manifest": "validation-baseline-1-manifest.json",
+    "path": "src/core/battle/battle.ts",
+    "sha256": "b01152728ca6e4fdecaf1a084857b14b199741b454aa1f2730a601a34d59aef7",
+    "resolvedTo": "src/core/battle/battle.ts"
+  },
+  {
+    "manifest": "validation-baseline-1-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "validation-baseline-1-manifest.json",
+    "path": "src/core/battle/chase.ts",
+    "sha256": "4e77ed4574f7fae5bd94b6919fcee85d7684e3737e741a634f86341654725b7c",
+    "resolvedTo": "src/core/battle/chase.ts"
+  },
+  {
+    "manifest": "validation-baseline-1-manifest.json",
+    "path": "src/core/battle/combos.ts",
+    "sha256": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+    "resolvedTo": "src/core/battle/combos.ts"
+  },
+  {
+    "manifest": "validation-baseline-1-manifest.json",
+    "path": "src/core/battle/combo-engine.ts",
+    "sha256": "b91a166d68b36cb2c1f67ec1c1db96ee09e4b98d86eabb6f801d879eae0dc3fe",
+    "resolvedTo": "src/core/battle/combo-engine.ts"
+  },
+  {
+    "manifest": "validation-baseline-1-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "validation-baseline-1-manifest.json",
+    "path": "src/core/progress/progress.ts",
+    "sha256": "98d4a7cc80ffb118d22be39b08954d2e30b94207cabaf55745c6e401f235ca08",
+    "resolvedTo": "src/core/progress/progress.ts"
+  },
+  {
+    "manifest": "validation-baseline-1-manifest.json",
+    "path": "src/core/roster/roster.ts",
+    "sha256": "4b5c26034970b4eb0f88ffb5bf466a6cc5966dbf71d6c274b8edfe62502a72ad",
+    "resolvedTo": "src/core/roster/roster.ts"
+  },
+  {
+    "manifest": "validation-baseline-1-manifest.json",
+    "path": "scripts/lib/task2-cases.ts",
+    "sha256": "d469c37d855898278e2e845272982e66d5c3d76a16a626eb5909e3e2b9964944",
+    "resolvedTo": "scripts/lib/task2-cases.ts"
+  },
+  {
+    "manifest": "validation-baseline-1-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "validation-baseline-1-manifest.json",
+    "path": "scripts/task3-audit.ts",
+    "sha256": "75a7f34ec4dc2fe9a62c5697daa3ebe189d3b80e3fa742236fe11c78014e29fe",
+    "resolvedTo": "snapshots/task3-audit-final.ts.txt"
+  },
+  {
+    "manifest": "validation-shield35-0-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "validation-shield35-0-manifest.json",
+    "path": "src/core/battle/rules.ts",
+    "sha256": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "resolvedTo": "src/core/battle/rules.ts"
+  },
+  {
+    "manifest": "validation-shield35-0-manifest.json",
+    "path": "src/core/battle/battle.ts",
+    "sha256": "b01152728ca6e4fdecaf1a084857b14b199741b454aa1f2730a601a34d59aef7",
+    "resolvedTo": "src/core/battle/battle.ts"
+  },
+  {
+    "manifest": "validation-shield35-0-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "validation-shield35-0-manifest.json",
+    "path": "src/core/battle/chase.ts",
+    "sha256": "4e77ed4574f7fae5bd94b6919fcee85d7684e3737e741a634f86341654725b7c",
+    "resolvedTo": "src/core/battle/chase.ts"
+  },
+  {
+    "manifest": "validation-shield35-0-manifest.json",
+    "path": "src/core/battle/combos.ts",
+    "sha256": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+    "resolvedTo": "src/core/battle/combos.ts"
+  },
+  {
+    "manifest": "validation-shield35-0-manifest.json",
+    "path": "src/core/battle/combo-engine.ts",
+    "sha256": "b91a166d68b36cb2c1f67ec1c1db96ee09e4b98d86eabb6f801d879eae0dc3fe",
+    "resolvedTo": "src/core/battle/combo-engine.ts"
+  },
+  {
+    "manifest": "validation-shield35-0-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "validation-shield35-0-manifest.json",
+    "path": "src/core/progress/progress.ts",
+    "sha256": "98d4a7cc80ffb118d22be39b08954d2e30b94207cabaf55745c6e401f235ca08",
+    "resolvedTo": "src/core/progress/progress.ts"
+  },
+  {
+    "manifest": "validation-shield35-0-manifest.json",
+    "path": "src/core/roster/roster.ts",
+    "sha256": "4b5c26034970b4eb0f88ffb5bf466a6cc5966dbf71d6c274b8edfe62502a72ad",
+    "resolvedTo": "src/core/roster/roster.ts"
+  },
+  {
+    "manifest": "validation-shield35-0-manifest.json",
+    "path": "scripts/lib/task2-cases.ts",
+    "sha256": "d469c37d855898278e2e845272982e66d5c3d76a16a626eb5909e3e2b9964944",
+    "resolvedTo": "scripts/lib/task2-cases.ts"
+  },
+  {
+    "manifest": "validation-shield35-0-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "validation-shield35-0-manifest.json",
+    "path": "scripts/task3-audit.ts",
+    "sha256": "75a7f34ec4dc2fe9a62c5697daa3ebe189d3b80e3fa742236fe11c78014e29fe",
+    "resolvedTo": "snapshots/task3-audit-final.ts.txt"
+  },
+  {
+    "manifest": "validation-shield35-1-manifest.json",
+    "path": "src/core/ai/ai.ts",
+    "sha256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+    "resolvedTo": "src/core/ai/ai.ts"
+  },
+  {
+    "manifest": "validation-shield35-1-manifest.json",
+    "path": "src/core/battle/rules.ts",
+    "sha256": "44a707c087c7c1e987fab6297de7b735d60b3d183e0c0de8568e67d8da44c73f",
+    "resolvedTo": "src/core/battle/rules.ts"
+  },
+  {
+    "manifest": "validation-shield35-1-manifest.json",
+    "path": "src/core/battle/battle.ts",
+    "sha256": "b01152728ca6e4fdecaf1a084857b14b199741b454aa1f2730a601a34d59aef7",
+    "resolvedTo": "src/core/battle/battle.ts"
+  },
+  {
+    "manifest": "validation-shield35-1-manifest.json",
+    "path": "src/core/battle/skills.ts",
+    "sha256": "447b82ad28c4d6750f41ceaa2e580cbce289e0a12579a9af412a0394cd48b906",
+    "resolvedTo": "snapshots/skills-before.ts.txt"
+  },
+  {
+    "manifest": "validation-shield35-1-manifest.json",
+    "path": "src/core/battle/chase.ts",
+    "sha256": "4e77ed4574f7fae5bd94b6919fcee85d7684e3737e741a634f86341654725b7c",
+    "resolvedTo": "src/core/battle/chase.ts"
+  },
+  {
+    "manifest": "validation-shield35-1-manifest.json",
+    "path": "src/core/battle/combos.ts",
+    "sha256": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+    "resolvedTo": "src/core/battle/combos.ts"
+  },
+  {
+    "manifest": "validation-shield35-1-manifest.json",
+    "path": "src/core/battle/combo-engine.ts",
+    "sha256": "b91a166d68b36cb2c1f67ec1c1db96ee09e4b98d86eabb6f801d879eae0dc3fe",
+    "resolvedTo": "src/core/battle/combo-engine.ts"
+  },
+  {
+    "manifest": "validation-shield35-1-manifest.json",
+    "path": "src/core/gear/gear.ts",
+    "sha256": "6bac89424a585f95be0fce2113ea23e36f673d071d09c837d4cb2fa8e8f5e299",
+    "resolvedTo": "src/core/gear/gear.ts"
+  },
+  {
+    "manifest": "validation-shield35-1-manifest.json",
+    "path": "src/core/progress/progress.ts",
+    "sha256": "98d4a7cc80ffb118d22be39b08954d2e30b94207cabaf55745c6e401f235ca08",
+    "resolvedTo": "src/core/progress/progress.ts"
+  },
+  {
+    "manifest": "validation-shield35-1-manifest.json",
+    "path": "src/core/roster/roster.ts",
+    "sha256": "4b5c26034970b4eb0f88ffb5bf466a6cc5966dbf71d6c274b8edfe62502a72ad",
+    "resolvedTo": "src/core/roster/roster.ts"
+  },
+  {
+    "manifest": "validation-shield35-1-manifest.json",
+    "path": "scripts/lib/task2-cases.ts",
+    "sha256": "d469c37d855898278e2e845272982e66d5c3d76a16a626eb5909e3e2b9964944",
+    "resolvedTo": "scripts/lib/task2-cases.ts"
+  },
+  {
+    "manifest": "validation-shield35-1-manifest.json",
+    "path": "scripts/lib/task2-runner.ts",
+    "sha256": "343389dcc2eef64e1731280fbf9f2d2a828cde25a9f5d43fe8221daf2e635414",
+    "resolvedTo": "scripts/lib/task2-runner.ts"
+  },
+  {
+    "manifest": "validation-shield35-1-manifest.json",
+    "path": "scripts/task3-audit.ts",
+    "sha256": "75a7f34ec4dc2fe9a62c5697daa3ebe189d3b80e3fa742236fe11c78014e29fe",
+    "resolvedTo": "snapshots/task3-audit-final.ts.txt"
+  }
+]

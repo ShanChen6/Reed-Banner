@@ -1,0 +1,27 @@
+{
+  "role_doatMenh": {
+    "capturedDecisions": 5181,
+    "allActorDecisions": 5341,
+    "medianEnergySpentBefore": 45,
+    "soloChosen": 10,
+    "teamChosen": 12,
+    "executeTarget": 967,
+    "executeAffordable": 95,
+    "executeChosen": 22,
+    "savingWithExecute": 53
+  },
+  "role_lyGian": {
+    "capturedDecisions": 11126,
+    "allActorDecisions": 11369,
+    "medianEnergySpentBefore": 45.0,
+    "soloChosen": 431,
+    "teamChosen": 289
+  },
+  "role_phanKich": {
+    "capturedDecisions": 8698,
+    "allActorDecisions": 9704,
+    "medianEnergySpentBefore": 105.0,
+    "soloChosen": 0,
+    "teamChosen": 318
+  }
+}
