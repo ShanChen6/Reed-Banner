@@ -35,6 +35,12 @@ import {
   type TowerState,
 } from "./towerState";
 import {
+  NEW_DUAL_TOWER,
+  parseDualTower,
+  parseStones,
+  type DualTowerState,
+} from "./dualTowerState";
+import {
   checkIn,
   claimQuest,
   NEW_QUESTS,
@@ -84,6 +90,10 @@ export interface Profile {
   readonly campaign: CampaignState;
   /** Leo tháp: kỷ lục và lượt leo đang dở. */
   readonly tower: TowerState;
+  /** Đá Cường Hóa của tài khoản: số nguyên không âm. */
+  readonly stones: number;
+  /** Song Tháp (Trial/Destiny), tách khỏi `tower` Legacy. */
+  readonly dualTower: DualTowerState;
   /** Sinh tồn: kỷ lục số đợt (lượt chơi nằm trong trận, không lưu ở hồ sơ). */
   readonly survival: SurvivalState;
   /** Nhiệm vụ ngày/tuần, số đếm cho thành tựu, điểm danh. */
@@ -118,6 +128,8 @@ export function newProfile(): Profile {
     nextItemId: 1,
     campaign: NEW_CAMPAIGN,
     tower: NEW_TOWER,
+    stones: 0,
+    dualTower: NEW_DUAL_TOWER,
     survival: NEW_SURVIVAL,
     quests: NEW_QUESTS,
   };
@@ -289,6 +301,8 @@ export function parseProfile(raw: unknown): Profile {
     ...parseInventory(p),
     campaign: parseCampaign(p.campaign),
     tower: parseTower(p.tower),
+    stones: parseStones(p.stones),
+    dualTower: parseDualTower(p.dualTower),
     survival: parseSurvival(p.survival),
     quests: parseQuests(p.quests),
   };

@@ -270,6 +270,7 @@ interface Outcome {
   readonly raid?: RaidResult;
   /** Chỉ có ở trận leo tháp online. */
   readonly tower?: TowerResult;
+  readonly destiny?: { readonly floor: number; readonly won: boolean; readonly phase: "reward" | "done" };
   readonly survival?: SurvivalResult;
   readonly daily?: { readonly score: DailyScore; readonly rank: number | null };
   readonly arena?: ArenaResult;
@@ -746,6 +747,7 @@ export default function DemoGame({
   /** Màn chiến dịch của trận online đang chơi. */
   const [stage, setStage] = useState<string | null>(null);
   const [towerFloorNo, setTowerFloorNo] = useState<number | null>(null);
+  const [destinyFloorNo, setDestinyFloorNo] = useState<number | null>(null);
   /** Sinh tồn: đợt, người gục, báo trước đợt kế. */
   const [survival, setSurvival] = useState<SurvivalView | null>(null);
   /** Thử thách hằng ngày: khóa ngày của trận đang chơi. */
@@ -1431,6 +1433,7 @@ export default function DemoGame({
     seq.current = res.view.seq;
     setStage(res.view.stage ?? null);
     setTowerFloorNo(res.view.tower ?? null);
+    setDestinyFloorNo(res.view.destiny?.floor ?? null);
     setSurvival(res.view.survival ?? null);
     setDailyDay(res.view.daily ?? null);
     setArenaFoe(res.view.arena ?? null);
@@ -1882,6 +1885,13 @@ export default function DemoGame({
                               ` +${outcome.tower.bonusGold} vàng tầng trùm.`}
                           </p>
                         )}
+                        {outcome.destiny && (
+                          <p className={`font-semibold ${outcome.destiny.won ? "text-amber-300" : "text-rose-300"}`}>
+                            {outcome.destiny.won
+                              ? `Vận Mệnh: đã vượt tầng ${outcome.destiny.floor}. Hãy chọn một phần thưởng.`
+                              : `Vận Mệnh: đội hình gục ở tầng ${outcome.destiny.floor}. Run đã kết thúc.`}
+                          </p>
+                        )}
                         {outcome.daily && (
                           <p className="font-semibold text-amber-300">
                             Thử thách ngày:{" "}
@@ -1962,6 +1972,14 @@ export default function DemoGame({
                           {outcome?.tower?.won
                             ? "Chọn thưởng, lên tầng"
                             : "Về tháp"}
+                        </SceneLink>
+                      )}
+                      {destinyFloorNo !== null && (
+                        <SceneLink
+                          scene="DESTINY"
+                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                        >
+                          {outcome?.destiny?.won ? "Chọn thưởng Vận Mệnh" : "Về Tháp Vận Mệnh"}
                         </SceneLink>
                       )}
                       {dailyDay && (
