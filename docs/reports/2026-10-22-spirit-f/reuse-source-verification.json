@@ -1,0 +1,30 @@
+{
+  "src/core/battle/rules.ts": {
+    "expected": "2753266d96297852ef10f01271d7295e36de3923cb9f481fb790bff33d061598",
+    "actual": "2753266d96297852ef10f01271d7295e36de3923cb9f481fb790bff33d061598"
+  },
+  "src/core/battle/battle.ts": {
+    "expected": "7f6f17391272942d537f4a01468fdd627dd4df26564f501cb673be547bc5527c",
+    "actual": "7f6f17391272942d537f4a01468fdd627dd4df26564f501cb673be547bc5527c"
+  },
+  "src/core/ai/ai.ts": {
+    "expected": "5720bd9f7fcb8dfa1bb3a5411df3723848e07919e2aa7495bef5daabcdb8b4c6",
+    "actual": "5720bd9f7fcb8dfa1bb3a5411df3723848e07919e2aa7495bef5daabcdb8b4c6"
+  },
+  "src/core/sim/audit.ts": {
+    "expected": "bed7a33ad1911f75401140cca323578225c6cfb6f7b0c04d7fc5bfcfa20f8e74",
+    "actual": "bed7a33ad1911f75401140cca323578225c6cfb6f7b0c04d7fc5bfcfa20f8e74"
+  },
+  "scripts/lib/spirit-runner.ts": {
+    "expected": "f5dfab238bb71a2d464867e7a767259537056b0a8ec8ed0cd0f480db7f0cabc6",
+    "actual": "f5dfab238bb71a2d464867e7a767259537056b0a8ec8ed0cd0f480db7f0cabc6"
+  },
+  "scripts/fixtures/2026-10-22-ai-before.ts": {
+    "expected": "fc9af2995f12287411343350760f0d9f70b3247ffedc5563fb2f77d852f30963",
+    "actual": "fc9af2995f12287411343350760f0d9f70b3247ffedc5563fb2f77d852f30963"
+  },
+  "scripts/spirit-audit.ts": {
+    "expected": "a0b0fdd2f5700c24da846e9a079db5e42b6021b638e1bd6fd019a55e6b7a002b",
+    "actual": "a0b0fdd2f5700c24da846e9a079db5e42b6021b638e1bd6fd019a55e6b7a002b"
+  }
+}

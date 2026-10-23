@@ -1,0 +1,5142 @@
+{
+  "role_doatMenh:energy": [
+    {
+      "case": "b0:tuongSi:kim:15:1v1:none:side0",
+      "decision": {
+        "turn": 1,
+        "side": 0,
+        "actor": 0,
+        "energy": 0,
+        "spentBefore": 0,
+        "food": 55,
+        "rows": [
+          {
+            "id": "role_tramKich",
+            "cost": 30,
+            "score": 211.1,
+            "ratio": 1.933150183150183,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 20,
+            "score": 46.8,
+            "ratio": 0.49999999999999994,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phaTran",
+            "cost": 45,
+            "score": 268.3481093200824,
+            "ratio": 2.0237413975873486,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "dbl_tuongSi_kim",
+            "cost": 80,
+            "score": 408.48476835052327,
+            "ratio": 2.182076754009205,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_doatMenh",
+            "cost": 60,
+            "score": 241.1,
+            "ratio": 1.5455128205128206,
+            "reason": "energy",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1420,
+              "energy": 0,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 1278,
+              "energy": 0,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:15:1v1:none:side0",
+      "decision": {
+        "turn": 1,
+        "side": 0,
+        "actor": 0,
+        "energy": 0,
+        "spentBefore": 0,
+        "food": 55,
+        "rows": [
+          {
+            "id": "role_tramKich",
+            "cost": 30,
+            "score": 211.1,
+            "ratio": 1.933150183150183,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 20,
+            "score": 46.8,
+            "ratio": 0.49999999999999994,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phaTran",
+            "cost": 45,
+            "score": 268.3481093200824,
+            "ratio": 2.0237413975873486,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "dbl_tuongSi_kim",
+            "cost": 80,
+            "score": 408.48476835052327,
+            "ratio": 2.182076754009205,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_doatMenh",
+            "cost": 60,
+            "score": 241.1,
+            "ratio": 1.5455128205128206,
+            "reason": "energy",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1420,
+              "energy": 0,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 1278,
+              "energy": 0,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:15:1v1:none:side0",
+      "decision": {
+        "turn": 3,
+        "side": 0,
+        "actor": 0,
+        "energy": 0,
+        "spentBefore": 0,
+        "food": 50,
+        "rows": [
+          {
+            "id": "role_tramKich",
+            "cost": 30,
+            "score": 211.1,
+            "ratio": 1.933150183150183,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 20,
+            "score": 46.8,
+            "ratio": 0.49999999999999994,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phaTran",
+            "cost": 45,
+            "score": 268.3481093200824,
+            "ratio": 2.0237413975873486,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "dbl_tuongSi_kim",
+            "cost": 80,
+            "score": 408.48476835052327,
+            "ratio": 2.182076754009205,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_doatMenh",
+            "cost": 60,
+            "score": 241.1,
+            "ratio": 1.5455128205128206,
+            "reason": "energy",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1215,
+              "energy": 0,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 791,
+              "energy": 0,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    }
+  ],
+  "role_doatMenh:saving": [
+    {
+      "case": "b0:tuongSi:kim:15:1v1:none:side1",
+      "decision": {
+        "turn": 6,
+        "side": 1,
+        "actor": 0,
+        "energy": 60,
+        "spentBefore": 0,
+        "food": 57,
+        "rows": [
+          {
+            "id": "role_tramKich",
+            "cost": 30,
+            "score": 211.1,
+            "ratio": 1.933150183150183,
+            "reason": "dominated:role_phaTran",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 20,
+            "score": 46.8,
+            "ratio": 0.49999999999999994,
+            "reason": "saving"
+          },
+          {
+            "id": "role_phaTran",
+            "cost": 45,
+            "score": 268.3481093200824,
+            "ratio": 2.0237413975873486,
+            "reason": "chosen",
+            "target": 0
+          },
+          {
+            "id": "dbl_tuongSi_kim",
+            "cost": 80,
+            "score": 408.48476835052327,
+            "ratio": 2.182076754009205,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_doatMenh",
+            "cost": 60,
+            "score": 241.1,
+            "ratio": 1.5455128205128206,
+            "reason": "saving",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1046,
+              "energy": 0,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 912,
+              "energy": 60,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_phaTran",
+          "target": 0
+        }
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:15:3v3:none:side1",
+      "decision": {
+        "turn": 8,
+        "side": 1,
+        "actor": 0,
+        "energy": 64,
+        "spentBefore": 0,
+        "food": 60,
+        "rows": [
+          {
+            "id": "role_tramKich",
+            "cost": 30,
+            "score": 280.8,
+            "ratio": 2.5714285714285716,
+            "reason": "saving",
+            "target": 2
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 20,
+            "score": 46.8,
+            "ratio": 0.49999999999999994,
+            "reason": "saving"
+          },
+          {
+            "id": "role_phaTran",
+            "cost": 45,
+            "score": 355.22603189220064,
+            "ratio": 2.6789293506199146,
+            "reason": "chosen",
+            "target": 2
+          },
+          {
+            "id": "dbl_tuongSi_kim",
+            "cost": 80,
+            "score": 621.9260646458242,
+            "ratio": 3.3222546188345308,
+            "reason": "energy",
+            "target": 2
+          },
+          {
+            "id": "role_doatMenh",
+            "cost": 60,
+            "score": 311.8,
+            "ratio": 1.9987179487179487,
+            "reason": "saving",
+            "target": 2
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 852,
+              "energy": 8,
+              "effects": []
+            },
+            {
+              "hp": 305,
+              "energy": 8,
+              "effects": []
+            },
+            {
+              "hp": 852,
+              "energy": 8,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 525,
+              "energy": 64,
+              "effects": []
+            },
+            {
+              "hp": 518,
+              "energy": 4,
+              "effects": []
+            },
+            {
+              "hp": 675,
+              "energy": 8,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_phaTran",
+          "target": 2
+        }
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:20:1v1:invested:side1",
+      "decision": {
+        "turn": 2,
+        "side": 1,
+        "actor": 0,
+        "energy": 65,
+        "spentBefore": 45,
+        "food": 55,
+        "rows": [
+          {
+            "id": "role_tramKich",
+            "cost": 30,
+            "score": 209.1,
+            "ratio": 1.0901981230448383,
+            "reason": "dominated:role_phaTran",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 20,
+            "score": 82.2,
+            "ratio": 0.5,
+            "reason": "saving"
+          },
+          {
+            "id": "role_phaTran",
+            "cost": 45,
+            "score": 265.1,
+            "ratio": 1.1382567625590383,
+            "reason": "chosen",
+            "target": 0
+          },
+          {
+            "id": "dbl_tuongSi_kim",
+            "cost": 80,
+            "score": 406.3148,
+            "ratio": 1.235750608272506,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_doatMenh",
+            "cost": 60,
+            "score": 239.1,
+            "ratio": 0.8726277372262774,
+            "reason": "saving",
+            "target": 0
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 133.1,
+            "ratio": 0.6476885644768856,
+            "reason": "saving",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1320,
+              "energy": 45,
+              "effects": [
+                {
+                  "kind": "defDown",
+                  "value": 0.39,
+                  "turns": 2
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "hp": 1569,
+              "energy": 65,
+              "effects": [
+                {
+                  "kind": "atkDown",
+                  "value": 0.3,
+                  "turns": 3
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_phaTran",
+          "target": 0
+        }
+      }
+    }
+  ],
+  "role_phanKich:energy": [
+    {
+      "case": "b0:tuongSi:kim:15:3v3:none:side0",
+      "decision": {
+        "turn": 1,
+        "side": 0,
+        "actor": 1,
+        "energy": 0,
+        "spentBefore": 0,
+        "food": 57,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 197.2,
+            "ratio": 2.2008928571428568,
+            "reason": "energy"
+          },
+          {
+            "id": "element_phongQuyenTanVan",
+            "cost": 40,
+            "score": 282.3859649122807,
+            "ratio": 2.757675438596491,
+            "reason": "energy"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 241.8,
+            "ratio": 2.2224264705882355,
+            "reason": "energy"
+          },
+          {
+            "id": "phongLuyHoKy",
+            "cost": 100,
+            "score": 449.8,
+            "ratio": 2.510044642857143,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 266.98215472596644,
+            "ratio": 2.1955769303122237,
+            "reason": "energy"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 710,
+              "energy": 0,
+              "effects": []
+            },
+            {
+              "hp": 852,
+              "energy": 0,
+              "effects": []
+            },
+            {
+              "hp": 675,
+              "energy": 0,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 852,
+              "energy": 0,
+              "effects": []
+            },
+            {
+              "hp": 675,
+              "energy": 0,
+              "effects": []
+            },
+            {
+              "hp": 852,
+              "energy": 0,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:15:3v3:none:side0",
+      "decision": {
+        "turn": 2,
+        "side": 1,
+        "actor": 0,
+        "energy": 0,
+        "spentBefore": 0,
+        "food": 57,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 197.2,
+            "ratio": 2.2008928571428568,
+            "reason": "energy"
+          },
+          {
+            "id": "element_hauThoTichLuong",
+            "cost": 20,
+            "score": 96,
+            "ratio": 1.25,
+            "reason": "energy"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 256.8,
+            "ratio": 2.360294117647059,
+            "reason": "energy"
+          },
+          {
+            "id": "ngoaiGiapHoQuan",
+            "cost": 100,
+            "score": 579.04,
+            "ratio": 3.2312499999999993,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 280.42215472596644,
+            "ratio": 2.3061032461016975,
+            "reason": "energy"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 710,
+              "energy": 0,
+              "effects": []
+            },
+            {
+              "hp": 852,
+              "energy": 0,
+              "effects": []
+            },
+            {
+              "hp": 675,
+              "energy": 4,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 852,
+              "energy": 0,
+              "effects": []
+            },
+            {
+              "hp": 286,
+              "energy": 0,
+              "effects": []
+            },
+            {
+              "hp": 852,
+              "energy": 0,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:15:3v3:none:side0",
+      "decision": {
+        "turn": 2,
+        "side": 1,
+        "actor": 2,
+        "energy": 0,
+        "spentBefore": 0,
+        "food": 57,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 197.2,
+            "ratio": 2.2008928571428568,
+            "reason": "energy"
+          },
+          {
+            "id": "element_lucDiepPhong",
+            "cost": 35,
+            "score": 59.091812865497076,
+            "ratio": 0.6155397173489279,
+            "reason": "energy"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 256.8,
+            "ratio": 2.360294117647059,
+            "reason": "energy"
+          },
+          {
+            "id": "reGiaGiuThanh",
+            "cost": 100,
+            "score": 320.5,
+            "ratio": 1.7885044642857142,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 280.42215472596644,
+            "ratio": 2.3061032461016975,
+            "reason": "energy"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 710,
+              "energy": 0,
+              "effects": []
+            },
+            {
+              "hp": 852,
+              "energy": 0,
+              "effects": []
+            },
+            {
+              "hp": 675,
+              "energy": 4,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 852,
+              "energy": 0,
+              "effects": []
+            },
+            {
+              "hp": 286,
+              "energy": 0,
+              "effects": []
+            },
+            {
+              "hp": 852,
+              "energy": 0,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    }
+  ],
+  "role_phanKich:dominated:role_thuThanh": [
+    {
+      "case": "b0:tuongSi:kim:15:3v3:none:side0",
+      "decision": {
+        "turn": 31,
+        "side": 0,
+        "actor": 1,
+        "energy": 62,
+        "spentBefore": 0,
+        "food": 84,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 197.2,
+            "ratio": 2.2008928571428568,
+            "reason": "chosen"
+          },
+          {
+            "id": "element_phongQuyenTanVan",
+            "cost": 40,
+            "score": 159.41894736842104,
+            "ratio": 1.5568256578947366,
+            "reason": "saving"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 216,
+            "ratio": 1.9852941176470589,
+            "reason": "dominated:role_thuThanh"
+          },
+          {
+            "id": "phongLuyHoKy",
+            "cost": 100,
+            "score": 424,
+            "ratio": 2.3660714285714284,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 266.98215472596644,
+            "ratio": 2.1955769303122237,
+            "reason": "dominated:role_thuThanh"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 668,
+              "energy": 8,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 43,
+                  "turns": 1
+                }
+              ]
+            },
+            {
+              "hp": 852,
+              "energy": 62,
+              "effects": []
+            },
+            {
+              "hp": 568,
+              "energy": 32,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 537,
+              "energy": 62,
+              "effects": []
+            },
+            {
+              "hp": 387,
+              "energy": 11,
+              "effects": []
+            },
+            {
+              "hp": 447,
+              "energy": 21,
+              "effects": [
+                {
+                  "kind": "defDown",
+                  "value": 0.36,
+                  "turns": 1
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_thuThanh"
+        }
+      }
+    }
+  ],
+  "role_phanKich:saving": [
+    {
+      "case": "b0:tuongSi:kim:15:3v3:none:side0",
+      "decision": {
+        "turn": 34,
+        "side": 1,
+        "actor": 0,
+        "energy": 66,
+        "spentBefore": 0,
+        "food": 57,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 173.53802816901407,
+            "ratio": 1.9368083501006033,
+            "reason": "saving"
+          },
+          {
+            "id": "element_hauThoTichLuong",
+            "cost": 20,
+            "score": 96,
+            "ratio": 1.25,
+            "reason": "saving"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 256.8,
+            "ratio": 2.360294117647059,
+            "reason": "saving"
+          },
+          {
+            "id": "ngoaiGiapHoQuan",
+            "cost": 100,
+            "score": 555.3780281690141,
+            "ratio": 3.099207746478873,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 256.7601828949805,
+            "ratio": 2.1115146619653,
+            "reason": "saving"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 668,
+              "energy": 12,
+              "effects": []
+            },
+            {
+              "hp": 852,
+              "energy": 32,
+              "effects": [
+                {
+                  "kind": "taunt",
+                  "value": 0,
+                  "turns": 1
+                },
+                {
+                  "kind": "shield",
+                  "value": 222,
+                  "turns": null
+                }
+              ]
+            },
+            {
+              "hp": 675,
+              "energy": 6,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 537,
+              "energy": 66,
+              "effects": []
+            },
+            {
+              "hp": 387,
+              "energy": 11,
+              "effects": []
+            },
+            {
+              "hp": 447,
+              "energy": 25,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:15:3v3:none:side0",
+      "decision": {
+        "turn": 36,
+        "side": 1,
+        "actor": 0,
+        "energy": 66,
+        "spentBefore": 0,
+        "food": 54,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 173.53802816901407,
+            "ratio": 1.9368083501006033,
+            "reason": "saving"
+          },
+          {
+            "id": "element_hauThoTichLuong",
+            "cost": 20,
+            "score": 96,
+            "ratio": 1.25,
+            "reason": "saving"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 256.8,
+            "ratio": 2.360294117647059,
+            "reason": "saving"
+          },
+          {
+            "id": "ngoaiGiapHoQuan",
+            "cost": 100,
+            "score": 555.3780281690141,
+            "ratio": 3.099207746478873,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 256.7601828949805,
+            "ratio": 2.1115146619653,
+            "reason": "saving"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 668,
+              "energy": 16,
+              "effects": []
+            },
+            {
+              "hp": 627,
+              "energy": 36,
+              "effects": []
+            },
+            {
+              "hp": 675,
+              "energy": 36,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 537,
+              "energy": 66,
+              "effects": []
+            },
+            {
+              "hp": 387,
+              "energy": 11,
+              "effects": []
+            },
+            {
+              "hp": 524,
+              "energy": 55,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:15:3v3:none:side0",
+      "decision": {
+        "turn": 38,
+        "side": 1,
+        "actor": 2,
+        "energy": 59,
+        "spentBefore": 75,
+        "food": 51,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 172.56150234741784,
+            "ratio": 1.9259096244131453,
+            "reason": "saving"
+          },
+          {
+            "id": "element_lucDiepPhong",
+            "cost": 35,
+            "score": 65.74312440256729,
+            "ratio": 0.6848242125267426,
+            "reason": "saving"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 256.8,
+            "ratio": 2.360294117647059,
+            "reason": "saving"
+          },
+          {
+            "id": "reGiaGiuThanh",
+            "cost": 100,
+            "score": 552.0615023474179,
+            "ratio": 3.0807003479208586,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 255.7836570733843,
+            "ratio": 2.103484021985068,
+            "reason": "saving"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 668,
+              "energy": 16,
+              "effects": []
+            },
+            {
+              "hp": 547,
+              "energy": 6,
+              "effects": [
+                {
+                  "kind": "taunt",
+                  "value": 0,
+                  "turns": 1
+                },
+                {
+                  "kind": "shield",
+                  "value": 222,
+                  "turns": null
+                }
+              ]
+            },
+            {
+              "hp": 675,
+              "energy": 40,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 639,
+              "energy": 66,
+              "effects": []
+            },
+            {
+              "hp": 387,
+              "energy": 11,
+              "effects": []
+            },
+            {
+              "hp": 524,
+              "energy": 59,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    }
+  ],
+  "role_phanKich:chosen": [
+    {
+      "case": "b0:tuongSi:kim:15:3v3:none:side0",
+      "decision": {
+        "turn": 42,
+        "side": 1,
+        "actor": 0,
+        "energy": 70,
+        "spentBefore": 0,
+        "food": 45,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 95.18403755868545,
+            "ratio": 1.0623218477531857,
+            "reason": "saving"
+          },
+          {
+            "id": "element_hauThoTichLuong",
+            "cost": 20,
+            "score": 96,
+            "ratio": 1.25,
+            "reason": "saving"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 0,
+            "ratio": 0,
+            "reason": "noValue"
+          },
+          {
+            "id": "ngoaiGiapHoQuan",
+            "cost": 100,
+            "score": 312.02403755868545,
+            "ratio": 1.7412055667337356,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 270.2061922846519,
+            "ratio": 2.222090397077729,
+            "reason": "chosen"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 668,
+              "energy": 20,
+              "effects": []
+            },
+            {
+              "hp": 799,
+              "energy": 10,
+              "effects": []
+            },
+            {
+              "hp": 675,
+              "energy": 40,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 716,
+              "energy": 70,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 153,
+                  "turns": null
+                }
+              ]
+            },
+            {
+              "hp": 153,
+              "energy": 15,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 122,
+                  "turns": null
+                }
+              ]
+            },
+            {
+              "hp": 524,
+              "energy": 18,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 153,
+                  "turns": null
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_phanKich"
+        }
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:15:3v3:none:side0",
+      "decision": {
+        "turn": 64,
+        "side": 1,
+        "actor": 2,
+        "energy": 68,
+        "spentBefore": 120,
+        "food": 91,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 132.2150234741784,
+            "ratio": 1.4756141012743123,
+            "reason": "saving"
+          },
+          {
+            "id": "element_lucDiepPhong",
+            "cost": 35,
+            "score": 52.22733918128661,
+            "ratio": 0.5440347831384021,
+            "reason": "saving"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 124.8,
+            "ratio": 1.1470588235294117,
+            "reason": "saving"
+          },
+          {
+            "id": "reGiaGiuThanh",
+            "cost": 100,
+            "score": 232.1150234741784,
+            "ratio": 1.2952847292085847,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 258.0371782001448,
+            "ratio": 2.122016268093296,
+            "reason": "chosen"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 494,
+              "energy": 24,
+              "effects": []
+            },
+            {
+              "hp": 653,
+              "energy": 64,
+              "effects": []
+            },
+            {
+              "hp": 390,
+              "energy": 38,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 28,
+                  "turns": 1
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "hp": 852,
+              "energy": 35,
+              "effects": []
+            },
+            {
+              "hp": 0,
+              "energy": 49,
+              "effects": []
+            },
+            {
+              "hp": 554,
+              "energy": 68,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_phanKich"
+        }
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:15:3v3:none:side0",
+      "decision": {
+        "turn": 67,
+        "side": 0,
+        "actor": 1,
+        "energy": 68,
+        "spentBefore": 90,
+        "food": 79,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 128.85164319248827,
+            "ratio": 1.4380763749161636,
+            "reason": "saving"
+          },
+          {
+            "id": "element_phongQuyenTanVan",
+            "cost": 40,
+            "score": 48,
+            "ratio": 0.46875,
+            "reason": "saving"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 145.2,
+            "ratio": 1.3345588235294117,
+            "reason": "saving"
+          },
+          {
+            "id": "phongLuyHoKy",
+            "cost": 100,
+            "score": 338.25164319248825,
+            "ratio": 1.8875649731723672,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 190.5937979184547,
+            "ratio": 1.5673832065662392,
+            "reason": "chosen"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 494,
+              "energy": 28,
+              "effects": []
+            },
+            {
+              "hp": 653,
+              "energy": 68,
+              "effects": []
+            },
+            {
+              "hp": 448,
+              "energy": 38,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 852,
+              "energy": 39,
+              "effects": []
+            },
+            {
+              "hp": 0,
+              "energy": 49,
+              "effects": []
+            },
+            {
+              "hp": 606,
+              "energy": 17,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_phanKich"
+        }
+      }
+    }
+  ],
+  "role_doatMenh:dominated:role_phaTran": [
+    {
+      "case": "b0:tuongSi:kim:15:3v3:none:side0",
+      "decision": {
+        "turn": 63,
+        "side": 0,
+        "actor": 0,
+        "energy": 64,
+        "spentBefore": 135,
+        "food": 73,
+        "rows": [
+          {
+            "id": "role_tramKich",
+            "cost": 30,
+            "score": 301.3,
+            "ratio": 2.759157509157509,
+            "reason": "saving",
+            "target": 2
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 20,
+            "score": 46.8,
+            "ratio": 0.49999999999999994,
+            "reason": "saving"
+          },
+          {
+            "id": "role_phaTran",
+            "cost": 45,
+            "score": 1041.939102712729,
+            "ratio": 7.857760955601274,
+            "reason": "chosen",
+            "target": 1
+          },
+          {
+            "id": "dbl_tuongSi_kim",
+            "cost": 80,
+            "score": 1238.8851924072478,
+            "ratio": 6.617976455166922,
+            "reason": "energy",
+            "target": 1
+          },
+          {
+            "id": "role_doatMenh",
+            "cost": 60,
+            "score": 1009.3,
+            "ratio": 6.4698717948717945,
+            "reason": "dominated:role_phaTran",
+            "target": 1
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 494,
+              "energy": 64,
+              "effects": []
+            },
+            {
+              "hp": 653,
+              "energy": 34,
+              "effects": []
+            },
+            {
+              "hp": 349,
+              "energy": 34,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 852,
+              "energy": 35,
+              "effects": []
+            },
+            {
+              "hp": 179,
+              "energy": 49,
+              "effects": []
+            },
+            {
+              "hp": 554,
+              "energy": 68,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_phaTran",
+          "target": 1
+        }
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:20:1v1:invested:side0",
+      "decision": {
+        "turn": 1,
+        "side": 0,
+        "actor": 0,
+        "energy": 80,
+        "spentBefore": 0,
+        "food": 67,
+        "rows": [
+          {
+            "id": "role_tramKich",
+            "cost": 30,
+            "score": 265.1,
+            "ratio": 1.3821689259645464,
+            "reason": "saving",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 20,
+            "score": 82.2,
+            "ratio": 0.5,
+            "reason": "saving"
+          },
+          {
+            "id": "role_phaTran",
+            "cost": 45,
+            "score": 444.64367280404804,
+            "ratio": 1.9091613259083213,
+            "reason": "chosen",
+            "target": 0
+          },
+          {
+            "id": "dbl_tuongSi_kim",
+            "cost": 80,
+            "score": 621.9549152903835,
+            "ratio": 1.8915903749707526,
+            "reason": "dominated:role_phaTran",
+            "target": 0
+          },
+          {
+            "id": "role_doatMenh",
+            "cost": 60,
+            "score": 455.1,
+            "ratio": 1.6609489051094892,
+            "reason": "dominated:role_phaTran",
+            "target": 0
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 177.1,
+            "ratio": 0.8618004866180048,
+            "reason": "saving",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 2294,
+              "energy": 80,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 482,
+              "energy": 0,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_phaTran",
+          "target": 0
+        }
+      }
+    },
+    {
+      "case": "b0:binhLinh:kim:15:3v3:invested:side1",
+      "decision": {
+        "turn": 17,
+        "side": 0,
+        "actor": 0,
+        "energy": 88,
+        "spentBefore": 60,
+        "food": 79,
+        "rows": [
+          {
+            "id": "role_tramKich",
+            "cost": 30,
+            "score": 272,
+            "ratio": 1.7662337662337662,
+            "reason": "saving",
+            "target": 0
+          },
+          {
+            "id": "element_lucDiepPhong",
+            "cost": 35,
+            "score": 66.7899223663522,
+            "ratio": 0.4047874082809224,
+            "reason": "saving"
+          },
+          {
+            "id": "role_phaTran",
+            "cost": 45,
+            "score": 1460.1168056299243,
+            "ratio": 7.808111260053071,
+            "reason": "chosen",
+            "target": 0
+          },
+          {
+            "id": "trucLamPhaTran",
+            "cost": 100,
+            "score": 438.6,
+            "ratio": 1.4240259740259742,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_doatMenh",
+            "cost": 60,
+            "score": 1409,
+            "ratio": 6.404545454545454,
+            "reason": "dominated:role_phaTran",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 157,
+              "energy": 88,
+              "effects": [
+                {
+                  "kind": "regen",
+                  "value": 33,
+                  "turns": 2
+                },
+                {
+                  "kind": "atkUp",
+                  "value": 0.3,
+                  "turns": 1
+                }
+              ]
+            },
+            {
+              "hp": 835,
+              "energy": 100,
+              "effects": [
+                {
+                  "kind": "regen",
+                  "value": 29,
+                  "turns": 2
+                },
+                {
+                  "kind": "atkUp",
+                  "value": 0.3,
+                  "turns": 1
+                }
+              ]
+            },
+            {
+              "hp": 1015,
+              "energy": 1,
+              "effects": [
+                {
+                  "kind": "regen",
+                  "value": 30,
+                  "turns": 2
+                },
+                {
+                  "kind": "atkUp",
+                  "value": 0.3,
+                  "turns": 1
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "hp": 281,
+              "energy": 36,
+              "effects": []
+            },
+            {
+              "hp": 0,
+              "energy": 18,
+              "effects": []
+            },
+            {
+              "hp": 0,
+              "energy": 100,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_phaTran",
+          "target": 0
+        }
+      }
+    }
+  ],
+  "role_doatMenh:chosen": [
+    {
+      "case": "b0:tuongSi:kim:20:1v1:invested:side1",
+      "decision": {
+        "turn": 26,
+        "side": 1,
+        "actor": 0,
+        "energy": 65,
+        "spentBefore": 135,
+        "food": 31,
+        "rows": [
+          {
+            "id": "role_tramKich",
+            "cost": 30,
+            "score": 265.1,
+            "ratio": 1.3821689259645464,
+            "reason": "saving",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 20,
+            "score": 82.2,
+            "ratio": 0.5,
+            "reason": "saving"
+          },
+          {
+            "id": "role_phaTran",
+            "cost": 45,
+            "score": 444.64367280404804,
+            "ratio": 1.9091613259083213,
+            "reason": "saving",
+            "target": 0
+          },
+          {
+            "id": "dbl_tuongSi_kim",
+            "cost": 80,
+            "score": 621.9549152903835,
+            "ratio": 1.8915903749707526,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_doatMenh",
+            "cost": 60,
+            "score": 1795.1,
+            "ratio": 6.551459854014598,
+            "reason": "chosen",
+            "target": 0
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 177.1,
+            "ratio": 0.8618004866180048,
+            "reason": "saving",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 425,
+              "energy": 65,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 403,
+              "energy": 65,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_doatMenh",
+          "target": 0
+        }
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:30:1v1:none:side0",
+      "decision": {
+        "turn": 5,
+        "side": 0,
+        "actor": 0,
+        "energy": 65,
+        "spentBefore": 45,
+        "food": 57,
+        "rows": [
+          {
+            "id": "role_tramKich",
+            "cost": 25,
+            "score": 254.1,
+            "ratio": 1.8976848394324122,
+            "reason": "dominated:role_doatMenh",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 15,
+            "score": 61.8,
+            "ratio": 0.5454545454545454,
+            "reason": "saving"
+          },
+          {
+            "id": "role_phaTran",
+            "cost": 45,
+            "score": 347.61033459445247,
+            "ratio": 1.9852103631893345,
+            "reason": "dominated:role_doatMenh",
+            "target": 0
+          },
+          {
+            "id": "dbl_tuongSi_kim",
+            "cost": 80,
+            "score": 533.0072106314717,
+            "ratio": 2.1561780365350796,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_doatMenh",
+            "cost": 60,
+            "score": 439.1,
+            "ratio": 2.1315533980582524,
+            "reason": "chosen",
+            "target": 0
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 159.1,
+            "ratio": 1.0297734627831714,
+            "reason": "saving",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1870,
+              "energy": 65,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 572,
+              "energy": 30,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_doatMenh",
+          "target": 0
+        }
+      }
+    }
+  ],
+  "role_lyGian:energy": [
+    {
+      "case": "b0:tuongSi:kim:30:1v1:none:side0",
+      "decision": {
+        "turn": 2,
+        "side": 1,
+        "actor": 0,
+        "energy": 0,
+        "spentBefore": 0,
+        "food": 55,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 25,
+            "score": 164.5,
+            "ratio": 1.346153846153846,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 15,
+            "score": 56.4,
+            "ratio": 0.5454545454545454,
+            "reason": "energy"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 412,
+            "ratio": 2.578222778473091,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "kimNganLyTan",
+            "cost": 100,
+            "score": 571.6,
+            "ratio": 2.171732522796353,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 131.6,
+            "ratio": 0.7368421052631579,
+            "reason": "energy"
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 145.1,
+            "ratio": 1.0290780141843971,
+            "reason": "energy",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1870,
+              "energy": 35,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 252,
+              "energy": 0,
+              "effects": [
+                {
+                  "kind": "defDown",
+                  "value": 0.39,
+                  "turns": 2
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:30:1v1:none:side0",
+      "decision": {
+        "turn": 4,
+        "side": 1,
+        "actor": 0,
+        "energy": 30,
+        "spentBefore": 0,
+        "food": 50,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 25,
+            "score": 188,
+            "ratio": 1.5384615384615383,
+            "reason": "saving",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 15,
+            "score": 56.4,
+            "ratio": 0.5454545454545454,
+            "reason": "saving"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 412,
+            "ratio": 2.578222778473091,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "kimNganLyTan",
+            "cost": 100,
+            "score": 642.1,
+            "ratio": 2.4395896656534957,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 131.6,
+            "ratio": 0.7368421052631579,
+            "reason": "energy"
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 145.1,
+            "ratio": 1.0290780141843971,
+            "reason": "energy",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1870,
+              "energy": 65,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 412,
+              "energy": 30,
+              "effects": [
+                {
+                  "kind": "defDown",
+                  "value": 0.39,
+                  "turns": 1
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:30:1v1:none:side1",
+      "decision": {
+        "turn": 5,
+        "side": 0,
+        "actor": 0,
+        "energy": 30,
+        "spentBefore": 80,
+        "food": 57,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 25,
+            "score": 141,
+            "ratio": 1.1538461538461537,
+            "reason": "saving",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 15,
+            "score": 56.4,
+            "ratio": 0.5454545454545454,
+            "reason": "saving"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 412,
+            "ratio": 2.578222778473091,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "kimNganLyTan",
+            "cost": 100,
+            "score": 342.1,
+            "ratio": 1.2997720364741643,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 131.6,
+            "ratio": 0.7368421052631579,
+            "reason": "energy"
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 145.1,
+            "ratio": 1.0290780141843971,
+            "reason": "energy",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1776,
+              "energy": 30,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 1045,
+              "energy": 30,
+              "effects": [
+                {
+                  "kind": "silence",
+                  "value": 0,
+                  "turns": 1
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    }
+  ],
+  "role_lyGian:noValue": [
+    {
+      "case": "b0:tuongSi:kim:30:1v1:none:side1",
+      "decision": {
+        "turn": 1,
+        "side": 0,
+        "actor": 0,
+        "energy": 0,
+        "spentBefore": 0,
+        "food": 55,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 25,
+            "score": 0,
+            "ratio": 0,
+            "reason": "noValue"
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 15,
+            "score": 56.4,
+            "ratio": 0.5454545454545454,
+            "reason": "energy"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 0,
+            "ratio": 0,
+            "reason": "noValue"
+          },
+          {
+            "id": "kimNganLyTan",
+            "cost": 100,
+            "score": 201.1,
+            "ratio": 0.7640577507598785,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 84.6,
+            "ratio": 0.47368421052631576,
+            "reason": "energy"
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 145.1,
+            "ratio": 1.0290780141843971,
+            "reason": "energy",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1776,
+              "energy": 0,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 1870,
+              "energy": 0,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:30:1v1:none:side1",
+      "decision": {
+        "turn": 1,
+        "side": 0,
+        "actor": 0,
+        "energy": 0,
+        "spentBefore": 0,
+        "food": 67,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 25,
+            "score": 0,
+            "ratio": 0,
+            "reason": "noValue"
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 15,
+            "score": 56.4,
+            "ratio": 0.5454545454545454,
+            "reason": "energy"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 0,
+            "ratio": 0,
+            "reason": "noValue"
+          },
+          {
+            "id": "kimNganLyTan",
+            "cost": 100,
+            "score": 201.1,
+            "ratio": 0.7640577507598785,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 84.6,
+            "ratio": 0.47368421052631576,
+            "reason": "energy"
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 145.1,
+            "ratio": 1.0290780141843971,
+            "reason": "energy",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1776,
+              "energy": 0,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 882,
+              "energy": 0,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:30:1v1:none:side1",
+      "decision": {
+        "turn": 1,
+        "side": 0,
+        "actor": 0,
+        "energy": 50,
+        "spentBefore": 0,
+        "food": 67,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 25,
+            "score": 0,
+            "ratio": 0,
+            "reason": "noValue"
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 15,
+            "score": 56.4,
+            "ratio": 0.5454545454545454,
+            "reason": "saving"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 0,
+            "ratio": 0,
+            "reason": "noValue"
+          },
+          {
+            "id": "kimNganLyTan",
+            "cost": 100,
+            "score": 201.1,
+            "ratio": 0.7640577507598785,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 84.6,
+            "ratio": 0.47368421052631576,
+            "reason": "energy"
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 145.1,
+            "ratio": 1.0290780141843971,
+            "reason": "chosen",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1776,
+              "energy": 50,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 882,
+              "energy": 0,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "element_kimYNgungThan",
+          "target": 0
+        }
+      }
+    }
+  ],
+  "role_lyGian:chosen": [
+    {
+      "case": "b0:tuongSi:kim:30:1v1:none:side1",
+      "decision": {
+        "turn": 3,
+        "side": 0,
+        "actor": 0,
+        "energy": 45,
+        "spentBefore": 35,
+        "food": 62,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 25,
+            "score": 141,
+            "ratio": 1.1538461538461537,
+            "reason": "saving",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 15,
+            "score": 56.4,
+            "ratio": 0.5454545454545454,
+            "reason": "saving"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 412,
+            "ratio": 2.578222778473091,
+            "reason": "chosen",
+            "target": 0
+          },
+          {
+            "id": "kimNganLyTan",
+            "cost": 100,
+            "score": 548.1,
+            "ratio": 2.0824468085106385,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 131.6,
+            "ratio": 0.7368421052631579,
+            "reason": "energy"
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 145.1,
+            "ratio": 1.0290780141843971,
+            "reason": "saving",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1776,
+              "energy": 45,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 877,
+              "energy": 30,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_lyGian",
+          "target": 0
+        }
+      }
+    },
+    {
+      "case": "b0:phapSu:kim:15:3v3:ordinary:side0",
+      "decision": {
+        "turn": 29,
+        "side": 0,
+        "actor": 1,
+        "energy": 54,
+        "spentBefore": 30,
+        "food": 45,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 30,
+            "score": 131.75,
+            "ratio": 1.1071428571428572,
+            "reason": "saving",
+            "target": 0
+          },
+          {
+            "id": "element_lucDiepPhong",
+            "cost": 35,
+            "score": 68.40252976190476,
+            "ratio": 0.5364904295051354,
+            "reason": "saving"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 239.20000000000002,
+            "ratio": 1.655363321799308,
+            "reason": "chosen",
+            "target": 0
+          },
+          {
+            "id": "trucDocMeHon",
+            "cost": 100,
+            "score": 301.93,
+            "ratio": 1.2686134453781512,
+            "reason": "energy"
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 161.5,
+            "ratio": 1,
+            "reason": "energy"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 0,
+              "energy": 4,
+              "effects": []
+            },
+            {
+              "hp": 399,
+              "energy": 54,
+              "effects": []
+            },
+            {
+              "hp": 0,
+              "energy": 88,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 160,
+              "energy": 31,
+              "effects": [
+                {
+                  "kind": "atkUp",
+                  "value": 0.3,
+                  "turns": 1
+                }
+              ]
+            },
+            {
+              "hp": 0,
+              "energy": 70,
+              "effects": []
+            },
+            {
+              "hp": 277,
+              "energy": 12,
+              "effects": [
+                {
+                  "kind": "atkUp",
+                  "value": 0.3,
+                  "turns": 1
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_lyGian",
+          "target": 0
+        }
+      }
+    },
+    {
+      "case": "b0:phapSu:kim:15:3v3:ordinary:side1",
+      "decision": {
+        "turn": 16,
+        "side": 1,
+        "actor": 1,
+        "energy": 46,
+        "spentBefore": 0,
+        "food": 44,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 30,
+            "score": 170,
+            "ratio": 1.4285714285714286,
+            "reason": "saving",
+            "target": 1
+          },
+          {
+            "id": "element_lucDiepPhong",
+            "cost": 35,
+            "score": 85.32886904761904,
+            "ratio": 0.6692460317460317,
+            "reason": "saving"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 360.25,
+            "ratio": 2.4930795847750864,
+            "reason": "chosen",
+            "target": 1
+          },
+          {
+            "id": "trucDocMeHon",
+            "cost": 100,
+            "score": 359.70000000000005,
+            "ratio": 1.5113445378151262,
+            "reason": "energy"
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 119,
+            "ratio": 0.7368421052631579,
+            "reason": "energy"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 0,
+              "energy": 30,
+              "effects": [
+                {
+                  "kind": "defDown",
+                  "value": 0.1,
+                  "turns": 1
+                }
+              ]
+            },
+            {
+              "hp": 423,
+              "energy": 80,
+              "effects": []
+            },
+            {
+              "hp": 0,
+              "energy": 64,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 356,
+              "energy": 20,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 27,
+                  "turns": 2
+                }
+              ]
+            },
+            {
+              "hp": 539,
+              "energy": 46,
+              "effects": []
+            },
+            {
+              "hp": 340,
+              "energy": 20,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_lyGian",
+          "target": 1
+        }
+      }
+    }
+  ],
+  "role_doatMenh:silenced": [
+    {
+      "case": "b0:tuongSi:kim:30:1v1:none:side1",
+      "decision": {
+        "turn": 4,
+        "side": 1,
+        "actor": 0,
+        "energy": 30,
+        "spentBefore": 0,
+        "food": 50,
+        "rows": [
+          {
+            "id": "role_tramKich",
+            "cost": 25,
+            "score": 254,
+            "ratio": 1.8969380134428677,
+            "reason": "silenced",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 15,
+            "score": 61.8,
+            "ratio": 0.5454545454545454,
+            "reason": "silenced"
+          },
+          {
+            "id": "role_phaTran",
+            "cost": 45,
+            "score": 329.48533459445247,
+            "ratio": 1.8816980844914477,
+            "reason": "silenced",
+            "target": 0
+          },
+          {
+            "id": "dbl_tuongSi_kim",
+            "cost": 80,
+            "score": 514.8822106314717,
+            "ratio": 2.0828568391240765,
+            "reason": "silenced",
+            "target": 0
+          },
+          {
+            "id": "role_doatMenh",
+            "cost": 60,
+            "score": 293,
+            "ratio": 1.4223300970873787,
+            "reason": "silenced",
+            "target": 0
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 159,
+            "ratio": 1.029126213592233,
+            "reason": "silenced",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1776,
+              "energy": 30,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 877,
+              "energy": 30,
+              "effects": [
+                {
+                  "kind": "silence",
+                  "value": 0,
+                  "turns": 2
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:tuongSi:kim:30:1v1:none:side1",
+      "decision": {
+        "turn": 6,
+        "side": 1,
+        "actor": 0,
+        "energy": 30,
+        "spentBefore": 0,
+        "food": 57,
+        "rows": [
+          {
+            "id": "role_tramKich",
+            "cost": 25,
+            "score": 254,
+            "ratio": 1.8969380134428677,
+            "reason": "silenced",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 15,
+            "score": 61.8,
+            "ratio": 0.5454545454545454,
+            "reason": "silenced"
+          },
+          {
+            "id": "role_phaTran",
+            "cost": 45,
+            "score": 329.48533459445247,
+            "ratio": 1.8816980844914477,
+            "reason": "silenced",
+            "target": 0
+          },
+          {
+            "id": "dbl_tuongSi_kim",
+            "cost": 80,
+            "score": 514.8822106314717,
+            "ratio": 2.0828568391240765,
+            "reason": "silenced",
+            "target": 0
+          },
+          {
+            "id": "role_doatMenh",
+            "cost": 60,
+            "score": 293,
+            "ratio": 1.4223300970873787,
+            "reason": "silenced",
+            "target": 0
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 159,
+            "ratio": 1.029126213592233,
+            "reason": "silenced",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1776,
+              "energy": 30,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 808,
+              "energy": 30,
+              "effects": [
+                {
+                  "kind": "silence",
+                  "value": 0,
+                  "turns": 1
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:phapSu:kim:15:3v3:ordinary:side0",
+      "decision": {
+        "turn": 30,
+        "side": 1,
+        "actor": 0,
+        "energy": 31,
+        "spentBefore": 150,
+        "food": 41,
+        "rows": [
+          {
+            "id": "role_tramKich",
+            "cost": 30,
+            "score": 204,
+            "ratio": 1.5838509316770184,
+            "reason": "silenced",
+            "target": 1
+          },
+          {
+            "id": "element_phongQuyenTanVan",
+            "cost": 40,
+            "score": 137.13750000000002,
+            "ratio": 0.931640625,
+            "reason": "silenced"
+          },
+          {
+            "id": "role_phaTran",
+            "cost": 45,
+            "score": 265.36170212765956,
+            "ratio": 1.6966860749850354,
+            "reason": "silenced",
+            "target": 1
+          },
+          {
+            "id": "truyPhongDoatMenh",
+            "cost": 100,
+            "score": 366.8,
+            "ratio": 1.4239130434782608,
+            "reason": "silenced",
+            "target": 1
+          },
+          {
+            "id": "role_doatMenh",
+            "cost": 60,
+            "score": 233,
+            "ratio": 1.266304347826087,
+            "reason": "silenced",
+            "target": 1
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 0,
+              "energy": 4,
+              "effects": []
+            },
+            {
+              "hp": 399,
+              "energy": 39,
+              "effects": []
+            },
+            {
+              "hp": 0,
+              "energy": 88,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 160,
+              "energy": 31,
+              "effects": [
+                {
+                  "kind": "atkUp",
+                  "value": 0.3,
+                  "turns": 1
+                },
+                {
+                  "kind": "silence",
+                  "value": 0,
+                  "turns": 2
+                }
+              ]
+            },
+            {
+              "hp": 0,
+              "energy": 70,
+              "effects": []
+            },
+            {
+              "hp": 277,
+              "energy": 12,
+              "effects": [
+                {
+                  "kind": "atkUp",
+                  "value": 0.3,
+                  "turns": 1
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    }
+  ],
+  "role_lyGian:saving": [
+    {
+      "case": "b0:tuongSi:kim:30:1v1:none:side1",
+      "decision": {
+        "turn": 9,
+        "side": 0,
+        "actor": 0,
+        "energy": 100,
+        "spentBefore": 80,
+        "food": 87,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 25,
+            "score": 4.7,
+            "ratio": 0.038461538461538464,
+            "reason": "saving",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 15,
+            "score": 56.4,
+            "ratio": 0.5454545454545454,
+            "reason": "saving"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 13.733333333333333,
+            "ratio": 0.08594075928243637,
+            "reason": "saving",
+            "target": 0
+          },
+          {
+            "id": "kimNganLyTan",
+            "cost": 100,
+            "score": 250.66666666666666,
+            "ratio": 0.9523809523809524,
+            "reason": "saving",
+            "target": 0
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 89.3,
+            "ratio": 0.5,
+            "reason": "saving"
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 173.1,
+            "ratio": 1.2276595744680852,
+            "reason": "chosen",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1776,
+              "energy": 100,
+              "effects": [
+                {
+                  "kind": "defDown",
+                  "value": 0.39,
+                  "turns": 2
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "hp": 433,
+              "energy": 1,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "element_kimYNgungThan",
+          "target": 0
+        }
+      }
+    },
+    {
+      "case": "b0:phapSu:kim:15:3v3:ordinary:side0",
+      "decision": {
+        "turn": 15,
+        "side": 0,
+        "actor": 1,
+        "energy": 46,
+        "spentBefore": 0,
+        "food": 44,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 30,
+            "score": 170,
+            "ratio": 1.4285714285714286,
+            "reason": "chosen",
+            "target": 0
+          },
+          {
+            "id": "element_lucDiepPhong",
+            "cost": 35,
+            "score": 68.52306547619047,
+            "ratio": 0.5374358076563959,
+            "reason": "saving"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 184,
+            "ratio": 1.273356401384083,
+            "reason": "saving",
+            "target": 0
+          },
+          {
+            "id": "trucDocMeHon",
+            "cost": 100,
+            "score": 418.70000000000005,
+            "ratio": 1.7592436974789918,
+            "reason": "energy"
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 204,
+            "ratio": 1.263157894736842,
+            "reason": "energy"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 0,
+              "energy": 4,
+              "effects": []
+            },
+            {
+              "hp": 724,
+              "energy": 46,
+              "effects": []
+            },
+            {
+              "hp": 288,
+              "energy": 46,
+              "effects": [
+                {
+                  "kind": "defDown",
+                  "value": 0.36,
+                  "turns": 1
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "hp": 749,
+              "energy": 61,
+              "effects": []
+            },
+            {
+              "hp": 319,
+              "energy": 20,
+              "effects": []
+            },
+            {
+              "hp": 714,
+              "energy": 26,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_muaChuoc",
+          "target": 0
+        }
+      }
+    },
+    {
+      "case": "b0:phapSu:kim:15:3v3:ordinary:side1",
+      "decision": {
+        "turn": 14,
+        "side": 1,
+        "actor": 1,
+        "energy": 46,
+        "spentBefore": 0,
+        "food": 37,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 30,
+            "score": 170,
+            "ratio": 1.4285714285714286,
+            "reason": "saving",
+            "target": 1
+          },
+          {
+            "id": "element_lucDiepPhong",
+            "cost": 35,
+            "score": 85.57738095238095,
+            "ratio": 0.6711951447245564,
+            "reason": "saving"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 192.75,
+            "ratio": 1.333910034602076,
+            "reason": "saving",
+            "target": 2
+          },
+          {
+            "id": "trucDocMeHon",
+            "cost": 100,
+            "score": 556.55,
+            "ratio": 2.33844537815126,
+            "reason": "energy"
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 246.5,
+            "ratio": 1.5263157894736843,
+            "reason": "energy"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 286,
+              "energy": 26,
+              "effects": []
+            },
+            {
+              "hp": 512,
+              "energy": 76,
+              "effects": []
+            },
+            {
+              "hp": 78,
+              "energy": 34,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 268,
+              "energy": 33,
+              "effects": [
+                {
+                  "kind": "atkUp",
+                  "value": 0.18,
+                  "turns": 1
+                },
+                {
+                  "kind": "shield",
+                  "value": 27,
+                  "turns": 1
+                }
+              ]
+            },
+            {
+              "hp": 539,
+              "energy": 46,
+              "effects": [
+                {
+                  "kind": "atkUp",
+                  "value": 0.18,
+                  "turns": 1
+                }
+              ]
+            },
+            {
+              "hp": 254,
+              "energy": 16,
+              "effects": [
+                {
+                  "kind": "atkUp",
+                  "value": 0.18,
+                  "turns": 1
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    }
+  ],
+  "role_phanKich:silenced": [
+    {
+      "case": "b0:phapSu:kim:15:1v1:ordinary:side1",
+      "decision": {
+        "turn": 11,
+        "side": 0,
+        "actor": 0,
+        "energy": 30,
+        "spentBefore": 30,
+        "food": 66,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 277.8,
+            "ratio": 2.480357142857143,
+            "reason": "silenced"
+          },
+          {
+            "id": "element_phongHoaThieuDoanh",
+            "cost": 35,
+            "score": 266.6051282051282,
+            "ratio": 2.221709401709402,
+            "reason": "silenced"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 192.6,
+            "ratio": 1.4161764705882351,
+            "reason": "silenced"
+          },
+          {
+            "id": "viemGiapHoDoanh",
+            "cost": 100,
+            "score": 417.5136,
+            "ratio": 1.8639,
+            "reason": "silenced"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 129.95505151698052,
+            "ratio": 0.8549674441906613,
+            "reason": "silenced"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1681,
+              "energy": 30,
+              "effects": [
+                {
+                  "kind": "silence",
+                  "value": 0,
+                  "turns": 1
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "hp": 792,
+              "energy": 10,
+              "effects": [
+                {
+                  "kind": "atkUp",
+                  "value": 0.18,
+                  "turns": 1
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:binhLinh:kim:30:3v3:invested:side0",
+      "decision": {
+        "turn": 37,
+        "side": 0,
+        "actor": 0,
+        "energy": 0,
+        "spentBefore": 0,
+        "food": 85,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 25,
+            "score": 368.34169240271774,
+            "ratio": 1.9016091502463486,
+            "reason": "silenced"
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 15,
+            "score": 89.39999999999999,
+            "ratio": 0.5454545454545454,
+            "reason": "silenced"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 528.5999999999999,
+            "ratio": 2.086853533359652,
+            "reason": "silenced"
+          },
+          {
+            "id": "dbl_binhLinh_kim",
+            "cost": 80,
+            "score": 1407.0029999999997,
+            "ratio": 3.934572147651006,
+            "reason": "silenced",
+            "target": 2
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 333.056775721578,
+            "ratio": 1.176463354721222,
+            "reason": "silenced"
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 272.5,
+            "ratio": 1.2192393736017897,
+            "reason": "silenced",
+            "target": 2
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1049,
+              "energy": 0,
+              "effects": [
+                {
+                  "kind": "silence",
+                  "value": 0,
+                  "turns": 1
+                },
+                {
+                  "kind": "defDown",
+                  "value": 0.1,
+                  "turns": 1
+                }
+              ]
+            },
+            {
+              "hp": 1424,
+              "energy": 28,
+              "effects": []
+            },
+            {
+              "hp": 493,
+              "energy": 21,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 0,
+              "energy": 100,
+              "effects": []
+            },
+            {
+              "hp": 0,
+              "energy": 53,
+              "effects": []
+            },
+            {
+              "hp": 1371,
+              "energy": 19,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:muuSi:kim:30:1v1:ordinary:side0",
+      "decision": {
+        "turn": 6,
+        "side": 1,
+        "actor": 0,
+        "energy": 30,
+        "spentBefore": 0,
+        "food": 68,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 25,
+            "score": 432.59999999999997,
+            "ratio": 3.262443438914027,
+            "reason": "silenced"
+          },
+          {
+            "id": "element_hauThoTichLuong",
+            "cost": 15,
+            "score": 153,
+            "ratio": 1.3636363636363635,
+            "reason": "silenced"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 301.2,
+            "ratio": 1.7370242214532872,
+            "reason": "silenced"
+          },
+          {
+            "id": "tamDaiKienThanh",
+            "cost": 60,
+            "score": 603.21,
+            "ratio": 2.9569117647058825,
+            "reason": "silenced"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 158.86634704894152,
+            "ratio": 0.8197437928221957,
+            "reason": "silenced"
+          },
+          {
+            "id": "element_thachGiap",
+            "cost": 30,
+            "score": 402,
+            "ratio": 2.815126050420168,
+            "reason": "silenced"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1974,
+              "energy": 20,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 1203,
+              "energy": 30,
+              "effects": [
+                {
+                  "kind": "silence",
+                  "value": 0,
+                  "turns": 2
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    }
+  ],
+  "role_lyGian:dominated:element_thanhPhongTuKhi": [
+    {
+      "case": "b0:phapSu:kim:20:3v3:none:side0",
+      "decision": {
+        "turn": 16,
+        "side": 1,
+        "actor": 0,
+        "energy": 46,
+        "spentBefore": 0,
+        "food": 56,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 30,
+            "score": 78,
+            "ratio": 0.7142857142857143,
+            "reason": "saving",
+            "target": 2
+          },
+          {
+            "id": "element_phongQuyenTanVan",
+            "cost": 40,
+            "score": 111.30000000000001,
+            "ratio": 0.8918269230769232,
+            "reason": "saving"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 165.4,
+            "ratio": 1.2473604826546003,
+            "reason": "dominated:element_thanhPhongTuKhi",
+            "target": 2
+          },
+          {
+            "id": "phieuPhongLyGian",
+            "cost": 100,
+            "score": 214.5,
+            "ratio": 0.9821428571428571,
+            "reason": "energy"
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 187.2,
+            "ratio": 1.2631578947368418,
+            "reason": "energy"
+          },
+          {
+            "id": "element_thanhPhongTuKhi",
+            "cost": 30,
+            "score": 136.70710709774005,
+            "ratio": 1.2518965851441397,
+            "reason": "chosen"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 598,
+              "energy": 16,
+              "effects": []
+            },
+            {
+              "hp": 785,
+              "energy": 15,
+              "effects": []
+            },
+            {
+              "hp": 746,
+              "energy": 20,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 302,
+              "energy": 46,
+              "effects": []
+            },
+            {
+              "hp": 49,
+              "energy": 46,
+              "effects": []
+            },
+            {
+              "hp": 611,
+              "energy": 16,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "element_thanhPhongTuKhi"
+        }
+      }
+    }
+  ],
+  "role_lyGian:dominated:role_muaChuoc": [
+    {
+      "case": "b0:phapSu:kim:20:3v3:none:side0",
+      "decision": {
+        "turn": 38,
+        "side": 1,
+        "actor": 2,
+        "energy": 54,
+        "spentBefore": 30,
+        "food": 37,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 30,
+            "score": 156,
+            "ratio": 1.4285714285714286,
+            "reason": "chosen",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 20,
+            "score": 46.8,
+            "ratio": 0.49999999999999994,
+            "reason": "saving"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 172,
+            "ratio": 1.297134238310709,
+            "reason": "dominated:role_muaChuoc",
+            "target": 0
+          },
+          {
+            "id": "kimNganLyTan",
+            "cost": 100,
+            "score": 329.70000000000005,
+            "ratio": 1.5096153846153848,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 187.2,
+            "ratio": 1.2631578947368418,
+            "reason": "energy"
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 114.1,
+            "ratio": 0.9752136752136752,
+            "reason": "saving",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 706,
+              "energy": 44,
+              "effects": []
+            },
+            {
+              "hp": 785,
+              "energy": 39,
+              "effects": []
+            },
+            {
+              "hp": 746,
+              "energy": 18,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 0,
+              "energy": 50,
+              "effects": []
+            },
+            {
+              "hp": 0,
+              "energy": 5,
+              "effects": []
+            },
+            {
+              "hp": 611,
+              "energy": 54,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_muaChuoc",
+          "target": 0
+        }
+      }
+    },
+    {
+      "case": "b0:phapSu:kim:20:3v3:none:side0",
+      "decision": {
+        "turn": 44,
+        "side": 1,
+        "actor": 2,
+        "energy": 69,
+        "spentBefore": 105,
+        "food": 34,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 30,
+            "score": 144.3,
+            "ratio": 1.3214285714285714,
+            "reason": "chosen",
+            "target": 1
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 20,
+            "score": 46.8,
+            "ratio": 0.49999999999999994,
+            "reason": "saving"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 172,
+            "ratio": 1.297134238310709,
+            "reason": "dominated:role_muaChuoc",
+            "target": 1
+          },
+          {
+            "id": "kimNganLyTan",
+            "cost": 100,
+            "score": 261.40000000000003,
+            "ratio": 1.196886446886447,
+            "reason": "energy",
+            "target": 1
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 179.4,
+            "ratio": 1.2105263157894737,
+            "reason": "dominated:role_muaChuoc"
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 114.1,
+            "ratio": 0.9752136752136752,
+            "reason": "saving",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 706,
+              "energy": 8,
+              "effects": []
+            },
+            {
+              "hp": 785,
+              "energy": 37,
+              "effects": [
+                {
+                  "kind": "silence",
+                  "value": 0,
+                  "turns": 1
+                }
+              ]
+            },
+            {
+              "hp": 746,
+              "energy": 22,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 0,
+              "energy": 50,
+              "effects": []
+            },
+            {
+              "hp": 0,
+              "energy": 5,
+              "effects": []
+            },
+            {
+              "hp": 217,
+              "energy": 69,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_muaChuoc",
+          "target": 1
+        }
+      }
+    },
+    {
+      "case": "b0:quanSu:kim:15:3v3:invested:side0",
+      "decision": {
+        "turn": 15,
+        "side": 0,
+        "actor": 1,
+        "energy": 46,
+        "spentBefore": 0,
+        "food": 72,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 30,
+            "score": 228,
+            "ratio": 1.4285714285714286,
+            "reason": "chosen",
+            "target": 0
+          },
+          {
+            "id": "element_phongHoaThieuDoanh",
+            "cost": 35,
+            "score": 229.2218604651163,
+            "ratio": 1.3404787161702707,
+            "reason": "dominated:role_muaChuoc"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 269.5,
+            "ratio": 1.390608875128999,
+            "reason": "dominated:role_muaChuoc",
+            "target": 0
+          },
+          {
+            "id": "hoaThieuKhoLuong",
+            "cost": 100,
+            "score": 436.62,
+            "ratio": 1.3678571428571429,
+            "reason": "energy"
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 216.6,
+            "ratio": 1,
+            "reason": "energy"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 0,
+              "energy": 42,
+              "effects": []
+            },
+            {
+              "hp": 658,
+              "energy": 46,
+              "effects": []
+            },
+            {
+              "hp": 627,
+              "energy": 46,
+              "effects": [
+                {
+                  "kind": "atkDown",
+                  "value": 0.15000000000000002,
+                  "turns": 2
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "hp": 802,
+              "energy": 42,
+              "effects": []
+            },
+            {
+              "hp": 0,
+              "energy": 4,
+              "effects": []
+            },
+            {
+              "hp": 705,
+              "energy": 12,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_muaChuoc",
+          "target": 0
+        }
+      }
+    }
+  ],
+  "role_phanKich:dominated:role_tuongKhien": [
+    {
+      "case": "b0:binhLinh:kim:20:3v3:ordinary:side0",
+      "decision": {
+        "turn": 35,
+        "side": 0,
+        "actor": 1,
+        "energy": 71,
+        "spentBefore": 55,
+        "food": 62,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 251.92785388127854,
+            "ratio": 2.0448689438415464,
+            "reason": "dominated:role_tuongKhien"
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 20,
+            "score": 52.8,
+            "ratio": 0.49999999999999994,
+            "reason": "saving"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 363.6,
+            "ratio": 2.43048128342246,
+            "reason": "chosen"
+          },
+          {
+            "id": "thietBichDongThanh",
+            "cost": 100,
+            "score": 365.15397663530337,
+            "ratio": 1.4819560740069129,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 372.9455754962403,
+            "ratio": 2.230535738613877,
+            "reason": "dominated:role_tuongKhien"
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 204.1,
+            "ratio": 1.5462121212121211,
+            "reason": "saving",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1088,
+              "energy": 22,
+              "effects": []
+            },
+            {
+              "hp": 1007,
+              "energy": 71,
+              "effects": []
+            },
+            {
+              "hp": 632,
+              "energy": 25,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 515,
+              "energy": 54,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 70,
+                  "turns": null
+                }
+              ]
+            },
+            {
+              "hp": 875,
+              "energy": 6,
+              "effects": []
+            },
+            {
+              "hp": 860,
+              "energy": 25,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 216,
+                  "turns": null
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_tuongKhien"
+        }
+      }
+    },
+    {
+      "case": "b0:binhLinh:kim:20:3v3:ordinary:side1",
+      "decision": {
+        "turn": 10,
+        "side": 1,
+        "actor": 1,
+        "energy": 68,
+        "spentBefore": 0,
+        "food": 94,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 252.0082191780822,
+            "ratio": 2.0455212595623555,
+            "reason": "dominated:role_tuongKhien"
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 20,
+            "score": 52.8,
+            "ratio": 0.49999999999999994,
+            "reason": "saving"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 363.6,
+            "ratio": 2.43048128342246,
+            "reason": "chosen"
+          },
+          {
+            "id": "thietBichDongThanh",
+            "cost": 100,
+            "score": 365.23434193210704,
+            "ratio": 1.4822822318673174,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 373.02594079304396,
+            "ratio": 2.231016392302894,
+            "reason": "dominated:role_tuongKhien"
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 223.1,
+            "ratio": 1.6901515151515152,
+            "reason": "saving",
+            "target": 0
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 861,
+              "energy": 58,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 41,
+                  "turns": null
+                }
+              ]
+            },
+            {
+              "hp": 498,
+              "energy": 42,
+              "effects": []
+            },
+            {
+              "hp": 787,
+              "energy": 42,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 621,
+              "energy": 4,
+              "effects": []
+            },
+            {
+              "hp": 1008,
+              "energy": 68,
+              "effects": []
+            },
+            {
+              "hp": 731,
+              "energy": 12,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_tuongKhien"
+        }
+      }
+    },
+    {
+      "case": "b0:binhLinh:kim:20:3v3:ordinary:side1",
+      "decision": {
+        "turn": 13,
+        "side": 0,
+        "actor": 0,
+        "energy": 62,
+        "spentBefore": 30,
+        "food": 79,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 216.38082191780822,
+            "ratio": 1.7366037072055234,
+            "reason": "saving"
+          },
+          {
+            "id": "element_thuyNguyetTuLinh",
+            "cost": 20,
+            "score": 66.75,
+            "ratio": 0.625,
+            "reason": "saving"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 337.2,
+            "ratio": 2.228684732319894,
+            "reason": "chosen"
+          },
+          {
+            "id": "thuyTraiLienHoan",
+            "cost": 100,
+            "score": 481.18082191780826,
+            "ratio": 1.930902174630049,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 358.14775958718485,
+            "ratio": 2.117964279048994,
+            "reason": "dominated:role_tuongKhien"
+          },
+          {
+            "id": "element_thanhLuuTayTran",
+            "cost": 30,
+            "score": 167.25,
+            "ratio": 1.3422953451043338,
+            "reason": "saving"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 861,
+              "energy": 62,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 41,
+                  "turns": null
+                }
+              ]
+            },
+            {
+              "hp": 498,
+              "energy": 42,
+              "effects": []
+            },
+            {
+              "hp": 506,
+              "energy": 72,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 621,
+              "energy": 12,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 214,
+                  "turns": null
+                },
+                {
+                  "kind": "freezeImmune",
+                  "value": 0,
+                  "turns": 1
+                }
+              ]
+            },
+            {
+              "hp": 1095,
+              "energy": 27,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 214,
+                  "turns": null
+                }
+              ]
+            },
+            {
+              "hp": 731,
+              "energy": 16,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 178,
+                  "turns": null
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "role_tuongKhien"
+        }
+      }
+    }
+  ],
+  "role_phanKich:noValue": [
+    {
+      "case": "b0:binhLinh:kim:20:3v3:ordinary:side0",
+      "decision": {
+        "turn": 80,
+        "side": 1,
+        "actor": 2,
+        "energy": 16,
+        "spentBefore": 220,
+        "food": 100,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 62.4,
+            "ratio": 0.5008025682182985,
+            "reason": "energy"
+          },
+          {
+            "id": "element_hauThoTichLuong",
+            "cost": 20,
+            "score": 133.5,
+            "ratio": 1.25,
+            "reason": "energy"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 130.2,
+            "ratio": 0.8605419695968274,
+            "reason": "energy"
+          },
+          {
+            "id": "ngoaiGiapHoQuan",
+            "cost": 100,
+            "score": 160.79999999999998,
+            "ratio": 0.6452648475120384,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 0,
+            "ratio": 0,
+            "reason": "noValue"
+          },
+          {
+            "id": "element_thachGiap",
+            "cost": 30,
+            "score": 57.599999999999994,
+            "ratio": 0.46227929373996784,
+            "reason": "energy"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 338,
+              "energy": 28,
+              "effects": []
+            },
+            {
+              "hp": 904,
+              "energy": 12,
+              "effects": []
+            },
+            {
+              "hp": 407,
+              "energy": 56,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 664,
+              "energy": 6,
+              "effects": [
+                {
+                  "kind": "reflect",
+                  "value": 0.48,
+                  "turns": 1
+                },
+                {
+                  "kind": "defUp",
+                  "value": 0.36,
+                  "turns": 1
+                },
+                {
+                  "kind": "taunt",
+                  "value": 0,
+                  "turns": 1
+                }
+              ]
+            },
+            {
+              "hp": 414,
+              "energy": 92,
+              "effects": []
+            },
+            {
+              "hp": 440,
+              "energy": 16,
+              "effects": [
+                {
+                  "kind": "reflect",
+                  "value": 0.48,
+                  "turns": 2
+                },
+                {
+                  "kind": "defUp",
+                  "value": 0.36,
+                  "turns": 2
+                },
+                {
+                  "kind": "taunt",
+                  "value": 0,
+                  "turns": 2
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    }
+  ],
+  "role_lyGian:silenced": [
+    {
+      "case": "b0:binhLinh:kim:30:3v3:invested:side0",
+      "decision": {
+        "turn": 14,
+        "side": 1,
+        "actor": 0,
+        "energy": 31,
+        "spentBefore": 0,
+        "food": 57,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 25,
+            "score": 294,
+            "ratio": 1.5384615384615385,
+            "reason": "silenced",
+            "target": 2
+          },
+          {
+            "id": "element_hauThoTichLuong",
+            "cost": 15,
+            "score": 220.5,
+            "ratio": 1.3636363636363635,
+            "reason": "silenced"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 310,
+            "ratio": 1.2404961984793916,
+            "reason": "silenced",
+            "target": 2
+          },
+          {
+            "id": "doanDaoTuyetLuong",
+            "cost": 100,
+            "score": 695.6186143026941,
+            "ratio": 1.6900355060804035,
+            "reason": "silenced"
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 279.29999999999995,
+            "ratio": 0.9999999999999998,
+            "reason": "silenced"
+          },
+          {
+            "id": "element_thachGiap",
+            "cost": 30,
+            "score": 213.6,
+            "ratio": 1.0379008746355685,
+            "reason": "silenced"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1619,
+              "energy": 16,
+              "effects": [
+                {
+                  "kind": "regen",
+                  "value": 84,
+                  "turns": 1
+                }
+              ]
+            },
+            {
+              "hp": 1480,
+              "energy": 0,
+              "effects": [
+                {
+                  "kind": "regen",
+                  "value": 79,
+                  "turns": 1
+                }
+              ]
+            },
+            {
+              "hp": 1371,
+              "energy": 46,
+              "effects": [
+                {
+                  "kind": "regen",
+                  "value": 71,
+                  "turns": 1
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "hp": 138,
+              "energy": 31,
+              "effects": [
+                {
+                  "kind": "silence",
+                  "value": 0,
+                  "turns": 1
+                }
+              ]
+            },
+            {
+              "hp": 535,
+              "energy": 21,
+              "effects": []
+            },
+            {
+              "hp": 1371,
+              "energy": 0,
+              "effects": [
+                {
+                  "kind": "silence",
+                  "value": 0,
+                  "turns": 1
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:binhLinh:kim:30:3v3:invested:side0",
+      "decision": {
+        "turn": 52,
+        "side": 1,
+        "actor": 2,
+        "energy": 38,
+        "spentBefore": 95,
+        "food": 46,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 25,
+            "score": 320,
+            "ratio": 1.5384615384615385,
+            "reason": "silenced",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 15,
+            "score": 96,
+            "ratio": 0.5454545454545454,
+            "reason": "silenced"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 298,
+            "ratio": 1.0955882352941178,
+            "reason": "silenced",
+            "target": 0
+          },
+          {
+            "id": "ngoGiaDiMuu",
+            "cost": 60,
+            "score": 1235.7931506849316,
+            "ratio": 3.861853595890411,
+            "reason": "silenced",
+            "target": 0
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 304,
+            "ratio": 1,
+            "reason": "silenced"
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 275,
+            "ratio": 1.1458333333333333,
+            "reason": "silenced",
+            "target": 1
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1195,
+              "energy": 76,
+              "effects": []
+            },
+            {
+              "hp": 1526,
+              "energy": 29,
+              "effects": []
+            },
+            {
+              "hp": 0,
+              "energy": 21,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 0,
+              "energy": 100,
+              "effects": []
+            },
+            {
+              "hp": 0,
+              "energy": 53,
+              "effects": []
+            },
+            {
+              "hp": 704,
+              "energy": 38,
+              "effects": [
+                {
+                  "kind": "silence",
+                  "value": 0,
+                  "turns": 2
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:binhLinh:kim:30:3v3:invested:side0",
+      "decision": {
+        "turn": 54,
+        "side": 1,
+        "actor": 2,
+        "energy": 38,
+        "spentBefore": 95,
+        "food": 41,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 25,
+            "score": 320,
+            "ratio": 1.5384615384615385,
+            "reason": "silenced",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 15,
+            "score": 96,
+            "ratio": 0.5454545454545454,
+            "reason": "silenced"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 298,
+            "ratio": 1.0955882352941178,
+            "reason": "silenced",
+            "target": 0
+          },
+          {
+            "id": "ngoGiaDiMuu",
+            "cost": 60,
+            "score": 1200.150684931507,
+            "ratio": 3.750470890410959,
+            "reason": "silenced",
+            "target": 1
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 304,
+            "ratio": 1,
+            "reason": "silenced"
+          },
+          {
+            "id": "element_kimYNgungThan",
+            "cost": 35,
+            "score": 275,
+            "ratio": 1.1458333333333333,
+            "reason": "silenced",
+            "target": 1
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 1323,
+              "energy": 76,
+              "effects": []
+            },
+            {
+              "hp": 1115,
+              "energy": 33,
+              "effects": []
+            },
+            {
+              "hp": 0,
+              "energy": 21,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 0,
+              "energy": 100,
+              "effects": []
+            },
+            {
+              "hp": 0,
+              "energy": 53,
+              "effects": []
+            },
+            {
+              "hp": 261,
+              "energy": 38,
+              "effects": [
+                {
+                  "kind": "silence",
+                  "value": 0,
+                  "turns": 1
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    }
+  ],
+  "role_lyGian:belowThreshold": [
+    {
+      "case": "b0:muuSi:kim:15:1v1:ordinary:side1",
+      "decision": {
+        "turn": 68,
+        "side": 1,
+        "actor": 0,
+        "energy": 65,
+        "spentBefore": 295,
+        "food": 6,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 30,
+            "score": 67.2,
+            "ratio": 0.5714285714285714,
+            "reason": "saving",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 20,
+            "score": 50.4,
+            "ratio": 0.5,
+            "reason": "saving"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 136,
+            "ratio": 0.9523809523809523,
+            "reason": "belowThreshold",
+            "target": 0
+          },
+          {
+            "id": "dbl_muuSi_kim",
+            "cost": 80,
+            "score": 237.45359999999997,
+            "ratio": 1.177845238095238,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 62.16,
+            "ratio": 0.3894736842105263,
+            "reason": "saving"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 325,
+              "energy": 16,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 718,
+              "energy": 65,
+              "effects": [
+                {
+                  "kind": "atkDown",
+                  "value": 0.3,
+                  "turns": 3
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    },
+    {
+      "case": "b0:muuSi:kim:15:1v1:ordinary:side1",
+      "decision": {
+        "turn": 70,
+        "side": 1,
+        "actor": 0,
+        "energy": 65,
+        "spentBefore": 295,
+        "food": 13,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 30,
+            "score": 67.2,
+            "ratio": 0.5714285714285714,
+            "reason": "saving",
+            "target": 0
+          },
+          {
+            "id": "element_luyenKimThanhKiem",
+            "cost": 20,
+            "score": 50.4,
+            "ratio": 0.5,
+            "reason": "saving"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 136,
+            "ratio": 0.9523809523809523,
+            "reason": "belowThreshold",
+            "target": 0
+          },
+          {
+            "id": "dbl_muuSi_kim",
+            "cost": 80,
+            "score": 237.45359999999997,
+            "ratio": 1.177845238095238,
+            "reason": "energy",
+            "target": 0
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 42,
+            "ratio": 0.2631578947368421,
+            "reason": "saving"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 282,
+              "energy": 16,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 612,
+              "energy": 65,
+              "effects": [
+                {
+                  "kind": "atkDown",
+                  "value": 0.3,
+                  "turns": 2
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": null
+      }
+    }
+  ],
+  "role_phanKich:dominated:element_phongHoaThieuDoanh": [
+    {
+      "case": "b0:muuSi:kim:15:3v3:ordinary:side0",
+      "decision": {
+        "turn": 57,
+        "side": 0,
+        "actor": 1,
+        "energy": 69,
+        "spentBefore": 275,
+        "food": 100,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 0,
+            "ratio": 0,
+            "reason": "noValue"
+          },
+          {
+            "id": "element_phongHoaThieuDoanh",
+            "cost": 35,
+            "score": 155.67900272691858,
+            "ratio": 1.2973250227243216,
+            "reason": "chosen"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 0,
+            "ratio": 0,
+            "reason": "noValue"
+          },
+          {
+            "id": "viemGiapHoDoanh",
+            "cost": 100,
+            "score": 158.15999999999997,
+            "ratio": 0.7060714285714285,
+            "reason": "energy"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 178.55025151698055,
+            "ratio": 1.1746727073485563,
+            "reason": "dominated:element_phongHoaThieuDoanh"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 0,
+              "energy": 14,
+              "effects": []
+            },
+            {
+              "hp": 233,
+              "energy": 69,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 204,
+                  "turns": null
+                }
+              ]
+            },
+            {
+              "hp": 0,
+              "energy": 2,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 240,
+              "energy": 46,
+              "effects": []
+            },
+            {
+              "hp": 0,
+              "energy": 0,
+              "effects": []
+            },
+            {
+              "hp": 891,
+              "energy": 12,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 201,
+                  "turns": null
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "element_phongHoaThieuDoanh",
+          "cell": {
+            "row": 2,
+            "col": 10
+          }
+        }
+      }
+    }
+  ],
+  "role_phanKich:dominated:phuLietHoaLuy": [
+    {
+      "case": "b0:muuSi:kim:15:3v3:ordinary:side1",
+      "decision": {
+        "turn": 49,
+        "side": 0,
+        "actor": 2,
+        "energy": 90,
+        "spentBefore": 65,
+        "food": 50,
+        "rows": [
+          {
+            "id": "role_thuThanh",
+            "cost": 30,
+            "score": 176.35892255892253,
+            "ratio": 1.5746332371332368,
+            "reason": "dominated:phuLietHoaLuy"
+          },
+          {
+            "id": "element_phongHoaThieuDoanh",
+            "cost": 35,
+            "score": 206.4268907563025,
+            "ratio": 1.720224089635854,
+            "reason": "dominated:phuLietHoaLuy"
+          },
+          {
+            "id": "role_tuongKhien",
+            "cost": 45,
+            "score": 230.39999999999998,
+            "ratio": 1.6941176470588233,
+            "reason": "dominated:phuLietHoaLuy"
+          },
+          {
+            "id": "phuLietHoaLuy",
+            "cost": 60,
+            "score": 313.75892255892256,
+            "ratio": 1.960993265993266,
+            "reason": "chosen"
+          },
+          {
+            "id": "role_phanKich",
+            "cost": 55,
+            "score": 296.9491740759031,
+            "ratio": 1.9536129873414678,
+            "reason": "dominated:phuLietHoaLuy"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 517,
+              "energy": 47,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 48,
+                  "turns": null
+                }
+              ]
+            },
+            {
+              "hp": 490,
+              "energy": 26,
+              "effects": []
+            },
+            {
+              "hp": 474,
+              "energy": 90,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 300,
+              "energy": 63,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 129,
+                  "turns": null
+                }
+              ]
+            },
+            {
+              "hp": 499,
+              "energy": 17,
+              "effects": []
+            },
+            {
+              "hp": 411,
+              "energy": 36,
+              "effects": [
+                {
+                  "kind": "shield",
+                  "value": 129,
+                  "turns": null
+                }
+              ]
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "phuLietHoaLuy"
+        }
+      }
+    }
+  ],
+  "role_lyGian:dominated:doanDaoTuyetLuong": [
+    {
+      "case": "b0:quanSu:kim:20:3v3:ordinary:side0",
+      "decision": {
+        "turn": 8,
+        "side": 1,
+        "actor": 0,
+        "energy": 100,
+        "spentBefore": 0,
+        "food": 88,
+        "rows": [
+          {
+            "id": "role_muaChuoc",
+            "cost": 30,
+            "score": 192,
+            "ratio": 1.4285714285714286,
+            "reason": "dominated:doanDaoTuyetLuong",
+            "target": 2
+          },
+          {
+            "id": "element_hauThoTichLuong",
+            "cost": 20,
+            "score": 144,
+            "ratio": 1.25,
+            "reason": "saving"
+          },
+          {
+            "id": "role_lyGian",
+            "cost": 45,
+            "score": 210.5,
+            "ratio": 1.289828431372549,
+            "reason": "dominated:doanDaoTuyetLuong",
+            "target": 2
+          },
+          {
+            "id": "doanDaoTuyetLuong",
+            "cost": 100,
+            "score": 422.54149606299205,
+            "ratio": 1.5719549704724407,
+            "reason": "chosen"
+          },
+          {
+            "id": "role_catQuanLuong",
+            "cost": 55,
+            "score": 182.39999999999998,
+            "ratio": 0.9999999999999999,
+            "reason": "saving"
+          },
+          {
+            "id": "element_thachGiap",
+            "cost": 30,
+            "score": 0,
+            "ratio": 0,
+            "reason": "noValue"
+          }
+        ],
+        "hp": [
+          [
+            {
+              "hp": 0,
+              "energy": 28,
+              "effects": []
+            },
+            {
+              "hp": 736,
+              "energy": 38,
+              "effects": [
+                {
+                  "kind": "atkDown",
+                  "value": 0.15000000000000002,
+                  "turns": 2
+                }
+              ]
+            },
+            {
+              "hp": 692,
+              "energy": 42,
+              "effects": []
+            }
+          ],
+          [
+            {
+              "hp": 418,
+              "energy": 100,
+              "effects": [
+                {
+                  "kind": "atkDown",
+                  "value": 0.15000000000000002,
+                  "turns": 2
+                },
+                {
+                  "kind": "shield",
+                  "value": 228,
+                  "turns": null
+                },
+                {
+                  "kind": "reflect",
+                  "value": 0.25,
+                  "turns": 3
+                }
+              ]
+            },
+            {
+              "hp": 769,
+              "energy": 44,
+              "effects": []
+            },
+            {
+              "hp": 714,
+              "energy": 8,
+              "effects": []
+            }
+          ]
+        ],
+        "chosen": {
+          "type": "skill",
+          "skill": "doanDaoTuyetLuong"
+        }
+      }
+    }
+  ]
+}

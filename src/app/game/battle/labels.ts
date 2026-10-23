@@ -3,6 +3,10 @@
 import {
   getGearSet,
   TIER_INFO,
+  SKILL_SLOT_UNLOCK,
+  skillSource,
+  skillComboPartners,
+  type SkillDef,
   type BattleError,
   type Difficulty,
   type EffectKind,
@@ -134,4 +138,29 @@ export function gearText(item: GearItem): string {
   const set = getGearSet(item.set)?.name ?? item.set;
   const prof = item.profession ? ` (${PROFESSION_NAME[item.profession]})` : "";
   return `${SLOT_NAME[item.slot]}${prof} ${TIER_INFO[item.tier].name} hệ ${ELEMENT_NAME[item.element]}, bộ ${set}`;
+}
+
+/** Mô tả lấy từ các bước thực thi, dùng chung ở trước trận, quản lý và trong trận. */
+export function skillText(def: SkillDef): string {
+  const pct = (n: number) => `${Math.round(n * 100)}%`;
+  const to = { targets: "mục tiêu", self: "bản thân", team: "cả đội", enemies: "mọi địch" };
+  const target = { enemy: "địch đơn", ally: "đồng minh đơn", self: "bản thân", team: "cả đội", allEnemies: "mọi địch" };
+  const source = skillSource(def) === "character" ? "Tuyệt chiêu nhân vật" : def.profession ? `Nghề ${PROFESSION_NAME[def.profession]}` : def.element ? `Hệ ${ELEMENT_NAME[def.element]}` : "Kỹ năng";
+  const steps = def.steps.map(s => {
+    switch (s.type) {
+      case "damage": return `${pct(s.atk)} Công${s.pierce ? `, bỏ ${pct(s.pierce)} DEF` : ""}${s.pierceShield ? ", xuyên Khiên" : ""}${s.lifesteal ? `, hút máu ${pct(s.lifesteal)}` : ""}${s.execute ? `, ×${s.execute.multiplier} khi địch ≤${pct(s.execute.threshold)} máu` : ""}`;
+      case "heal": return `Hồi ${pct(s.ratio)} máu ${to[s.to]}`;
+      case "cleanse": return `Thanh tẩy ${to[s.to]}`;
+      case "dispel": return "Xua tan hiệu ứng có lợi mục tiêu";
+      case "energy": return `${s.amount >= 0 ? "+" : ""}${s.amount} năng lượng ${to[s.to]}`;
+      case "enemyFood": return `${s.amount} lương địch`;
+      case "mark": return `Dấu ấn nguyên tố${s.enhanced ? " cường hóa" : ""}${s.guaranteed ? " chắc chắn" : ""}`;
+      case "effect": return `${EFFECT_NAME[s.effect]} ${s.value ? pct(s.value) : ""}${s.ofMaxHp ? " máu tối đa" : s.ofAtk ? " Công" : ""} ${to[s.to]}${s.turns === null ? " đến khi hết" : ` ${s.turns} lượt`}${s.chance === undefined ? "" : `, xác suất ${pct(s.chance)}`}`;
+      case "transform": return `Biến ${s.count} ô thường ngẫu nhiên thành ${TILE_NAME[s.kind]}`;
+      case "destroy": return `Phá ${"random" in s.area ? `${s.area.random} ô ngẫu nhiên` : "square" in s.area ? `vùng ${s.area.square}×${s.area.square}` : "columns" in s.area ? `${s.area.columns} cột` : JSON.stringify(s.area)}`;
+      case "whirl": return `${s.auto ? "Tự xoay" : "Chọn tâm xoay"} lốc xoáy ±1${s.turns > 1 ? `..${s.turns}` : ""} nấc`;
+    }
+  });
+  const partners=skillComboPartners(def);
+  return `${def.name} · ${source} · ô ${def.slot ?? "—"} · mở cấp ${SKILL_SLOT_UNLOCK[def.slot ?? 0] ?? 1} · ${def.cost} NL · ${target[def.target]}: ${steps.join("; ")}${partners.length ? `. Có thể mở: ${partners.join(", ")} (cần tác dụng thực)` : ""}`;
 }

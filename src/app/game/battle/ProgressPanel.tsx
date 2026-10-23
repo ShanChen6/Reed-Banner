@@ -3,13 +3,14 @@
 // Bảng tiến trình của Chơi thử và Chơi online: cấp, kinh nghiệm, điểm kỹ năng, nâng kỹ năng theo ô.
 // Mọi luật nằm trong @/core/progress; ở đây chỉ hiển thị và gửi thao tác (Chơi thử áp tại chỗ, Chơi online gửi server).
 
+import { PROFESSION_COMBO } from "@/core";
+import SkillDetails from "./SkillDetails";
 import { useState } from "react";
 import {
   companionById,
-  heroSkills,
+  characterSkills,
   MAIN_ID,
   MAIN_SLOT_UNLOCK,
-  mainSkills,
   mainSlotKey,
   MAX_LEVEL,
   progressOf,
@@ -24,7 +25,7 @@ import {
   type ProfileError,
   type SkillDef,
 } from "@/core";
-import { PROFESSION_NAME } from "./labels";
+import { PROFESSION_NAME, skillText } from "./labels";
 import { SkillIcon } from "../art/skills";
 
 /** Thông báo lỗi của thao tác hồ sơ, dùng chung với ShopPanel. */
@@ -109,7 +110,7 @@ function SkillRow({
   return (
     <li className={`flex items-center gap-2 ${lockedText ? "opacity-45" : ""}`}>
       <SkillIcon def={def} className="size-7 shrink-0" />
-      <span className="min-w-0 flex-1 truncate" title={def.name}>
+      <span className="min-w-0 flex-1 truncate" title={skillText(scaled)}>
         {def.name}
         <span className="ml-1 opacity-60">· {scaled.cost} NL</span>
       </span>
@@ -227,8 +228,8 @@ export default function ProgressPanel({
               <XpBar p={p} />
               <ul className="flex flex-col gap-1">
                 {(isMain
-                  ? mainSkills(profile.element)
-                  : heroSkills(companionOf(id)!.element, id)
+                  ? characterSkills(profile.profession, profile.element)
+                  : characterSkills(companionOf(id)!.profession, companionOf(id)!.element, id)
                 ).map((def) => {
                   const slot = def.slot!;
                   const key = mainSlotKey(slot);
@@ -250,10 +251,11 @@ export default function ProgressPanel({
                   );
                 })}
               </ul>
+              <SkillDetails fighter={isMain ? {profession:profile.profession,element:profile.element} : companionOf(id)!} passive={PROFESSION_COMBO[isMain ? profile.profession : companionOf(id)!.profession]} skills={(isMain ? characterSkills(profile.profession, profile.element) : characterSkills(companionOf(id)!.profession, companionOf(id)!.element, id)).map(d => scaleSkill(d,p.skillLevels[mainSlotKey(d.slot!)] ?? 1))} />
               {!isMain && (
                 <p className="opacity-60">
                   {PROFESSION_NAME[companionProfession(id)]} · kỹ năng nâng
-                  theo ô như Đinh Bộ Lĩnh, ô 5 là kỹ năng riêng.
+                  theo ô như Đinh Bộ Lĩnh, ô 4 là kỹ năng riêng.
                 </p>
               )}
             </div>
@@ -261,9 +263,9 @@ export default function ProgressPanel({
         })}
       </div>
       <p className="mt-2 opacity-60">
-        Lên cấp nhận 1 điểm kỹ năng. Mỗi cấp kỹ năng +10% sức mạnh; cấp{" "}
+        Lên cấp nhận 1 điểm kỹ năng. Mỗi cấp kỹ năng +10% hệ số sát thương, hồi và hiệu ứng có hệ số; tiện ích như trừ năng lượng, Câm lặng, Xua tan giữ nguyên tác dụng. Cấp{" "}
         {SKILL_MAX_LEVEL} giảm 10% năng lượng. Kỹ năng nâng theo ô nên nhân vật
-        chính giữ nguyên cấp kỹ năng khi đổi nguyên tố. Đối thủ Tianwu cùng cấp với Đinh Bộ
+        chính giữ nguyên cấp kỹ năng khi đổi nghề/nguyên tố. Đối thủ Tianwu cùng cấp với Đinh Bộ
         Lĩnh.
       </p>
     </section>

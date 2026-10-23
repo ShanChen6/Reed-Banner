@@ -1,0 +1,149 @@
+{
+  "source": "src/core/battle/combos.ts",
+  "sourceSHA256": "853a43de36e1dae68f9ebeec26e1f4be1582ea5528ee69da0de65e5e1146a496",
+  "before": {
+    "pursuit": {
+      "id": "pursuit",
+      "name": "Thừa thắng",
+      "triggers": [
+        "armorBroken",
+        "dispelled"
+      ],
+      "payoff": "damage",
+      "value": 0.2,
+      "targeted": true,
+      "description": "Đồng đội phá giáp hoặc xua tan thành công: đòn kiếm/kỹ năng sát thương tiếp theo vào mục tiêu đó tăng 20% sát thương."
+    },
+    "resonance": {
+      "id": "resonance",
+      "name": "Hội tụ",
+      "triggers": [
+        "controlled"
+      ],
+      "payoff": "damage",
+      "value": 0.2,
+      "targeted": true,
+      "description": "Đồng đội áp Đóng băng/Câm lặng thành công: đòn kiếm/kỹ năng sát thương tiếp theo vào mục tiêu đó tăng 20% sát thương."
+    },
+    "retaliation": {
+      "id": "retaliation",
+      "name": "Hộ vệ phản kích",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "payoff": "damage",
+      "value": 0.2,
+      "targeted": false,
+      "receiverOnly": true,
+      "description": "Khiên do đồng đội chủ động cấp cho mình thực sự đỡ đòn kiếm/kỹ năng: đòn kiếm/kỹ năng sát thương tiếp theo tăng 20% sát thương."
+    },
+    "renewal": {
+      "id": "renewal",
+      "name": "Tiếp sức",
+      "triggers": [
+        "skillDamage"
+      ],
+      "payoff": "sustain",
+      "value": 0.25,
+      "targeted": false,
+      "description": "Đồng đội dùng kỹ năng gây mất HP thực: kỹ năng hồi/cấp Khiên hữu hiệu tiếp theo tăng 25% lượng gốc của các bước hồi/Khiên trực tiếp, trước hệ số Tinh thần của người nhận."
+    },
+    "interdiction": {
+      "id": "interdiction",
+      "name": "Đoạn tiếp tế",
+      "triggers": [
+        "controlled",
+        "dispelled"
+      ],
+      "payoff": "drain",
+      "value": 10,
+      "targeted": true,
+      "description": "Đồng đội khống chế hoặc xua tan thành công: kỹ năng trừ năng lượng tiếp theo vào mục tiêu đó trừ thêm 10, tối đa năng lượng đang có."
+    },
+    "coordination": {
+      "id": "coordination",
+      "name": "Hiệp lực",
+      "triggers": [
+        "healed",
+        "shieldAbsorbed"
+      ],
+      "payoff": "discount",
+      "value": 10,
+      "targeted": false,
+      "description": "Đồng đội dùng kỹ năng hồi HP thực hoặc Khiên do đồng đội cấp cho người khác đỡ đòn chủ động: kỹ năng tiếp theo giảm 10 năng lượng, không thấp hơn 0."
+    }
+  },
+  "after": {
+    "pursuit": {
+      "id": "pursuit",
+      "name": "Thừa thắng",
+      "triggers": [
+        "armorBroken",
+        "dispelled"
+      ],
+      "payoff": "damage",
+      "value": 0.2,
+      "targeted": true,
+      "description": "Đồng đội phá giáp hoặc xua tan thành công: đòn kiếm/kỹ năng sát thương tiếp theo vào mục tiêu đó tăng 20% sát thương."
+    },
+    "resonance": {
+      "id": "resonance",
+      "name": "Hội tụ",
+      "triggers": [
+        "controlled"
+      ],
+      "payoff": "damage",
+      "value": 0.2,
+      "targeted": true,
+      "description": "Đồng đội áp Đóng băng/Câm lặng thành công: đòn kiếm/kỹ năng sát thương tiếp theo vào mục tiêu đó tăng 20% sát thương."
+    },
+    "retaliation": {
+      "id": "retaliation",
+      "name": "Hộ vệ phản kích",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "payoff": "damage",
+      "value": 0.2,
+      "targeted": false,
+      "receiverOnly": true,
+      "description": "Khiên do đồng đội chủ động cấp cho mình thực sự đỡ đòn kiếm/kỹ năng: đòn kiếm/kỹ năng sát thương tiếp theo tăng 20% sát thương."
+    },
+    "renewal": {
+      "id": "renewal",
+      "name": "Tiếp sức",
+      "triggers": [
+        "skillDamage"
+      ],
+      "payoff": "sustain",
+      "value": 0.25,
+      "targeted": false,
+      "description": "Đồng đội dùng kỹ năng gây mất HP thực: kỹ năng hồi/cấp Khiên hữu hiệu tiếp theo tăng 25% lượng gốc của các bước hồi/Khiên trực tiếp, trước hệ số Tinh thần của người nhận."
+    },
+    "interdiction": {
+      "id": "interdiction",
+      "name": "Đoạn tiếp tế",
+      "triggers": [
+        "controlled",
+        "dispelled"
+      ],
+      "payoff": "drain",
+      "value": 10,
+      "targeted": true,
+      "description": "Đồng đội khống chế hoặc xua tan thành công: kỹ năng trừ năng lượng tiếp theo vào mục tiêu đó trừ thêm 10, tối đa năng lượng đang có."
+    },
+    "coordination": {
+      "id": "coordination",
+      "name": "Hiệp lực",
+      "triggers": [
+        "healed",
+        "shieldAbsorbed"
+      ],
+      "payoff": "discount",
+      "value": 10,
+      "targeted": false,
+      "description": "Đồng đội dùng kỹ năng hồi HP thực hoặc Khiên do đồng đội cấp cho người khác đỡ đòn chủ động: kỹ năng tiếp theo giảm 10 năng lượng, không thấp hơn 0."
+    }
+  },
+  "unchanged": true
+}

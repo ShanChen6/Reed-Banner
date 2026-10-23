@@ -1,0 +1,2 @@
+# Generated audit CSV uses the standard CRLF record separator; preserve archived bytes.
+docs/reports/**/*.csv whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

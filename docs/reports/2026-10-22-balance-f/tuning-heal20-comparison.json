@@ -1,0 +1,74 @@
+{
+  "before": {
+    "n": 48,
+    "pairs": 24,
+    "seedClusters": 20,
+    "wins": 16,
+    "losses": 14,
+    "cap": 18,
+    "medianKM": 57.0,
+    "p90KM": null,
+    "over25": 0.9791666666666666,
+    "over34": 0.9791666666666666,
+    "over44": 0.9583333333333334,
+    "damage": 10152.958333333334,
+    "heal": 5992.541666666667,
+    "shield": 5313.833333333333,
+    "absorbed": 4054.9791666666665,
+    "expired": 1237.2916666666667,
+    "healSpiritLost": 4990.875,
+    "shieldSpiritLost": 1048.375,
+    "overheal": 4853.166666666667,
+    "nonStackLost": 1775.1458333333333,
+    "starvation": 184.35416666666666
+  },
+  "after": {
+    "n": 48,
+    "pairs": 24,
+    "seedClusters": 20,
+    "wins": 13,
+    "losses": 16,
+    "cap": 19,
+    "medianKM": 57.5,
+    "p90KM": null,
+    "over25": 0.9791666666666666,
+    "over34": 0.9583333333333334,
+    "over44": 0.9375,
+    "damage": 9857.770833333334,
+    "heal": 5759.0625,
+    "shield": 5288.9375,
+    "absorbed": 3986.2083333333335,
+    "expired": 1239.7291666666667,
+    "healSpiritLost": 4556.458333333333,
+    "shieldSpiritLost": 1100.1666666666667,
+    "overheal": 4703.9375,
+    "nonStackLost": 1736.375,
+    "starvation": 157.27083333333334
+  },
+  "newCaps": 5,
+  "removedCaps": 4,
+  "completedWinnerFlips": 3,
+  "paired": {
+    "restrictedDuration": {
+      "delta": -0.4166666666666667,
+      "ci95": [
+        -2.4375,
+        1.5092592592592593
+      ]
+    },
+    "capRate": {
+      "delta": 0.020833333333333332,
+      "ci95": [
+        -0.13636363636363635,
+        0.22
+      ]
+    },
+    "observedWinsByCap": {
+      "delta": -0.0625,
+      "ci95": [
+        -0.2037037037037037,
+        0.06521739130434782
+      ]
+    }
+  }
+}

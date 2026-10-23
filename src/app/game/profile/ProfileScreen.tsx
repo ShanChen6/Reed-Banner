@@ -1,5 +1,8 @@
 "use client";
 
+import { comboDescription } from "@/core";
+import { skillText } from "../battle/labels";
+
 // Màn hồ sơ nhân vật kiểu bảng nhân vật trong game: bên trái chân dung với 9 ô trang bị xung quanh, thanh
 // máu/kinh nghiệm và bảng chỉ số; bên phải túi đồ dạng lưới có lọc và trang. Mọi luật nằm trong @/core
 // (applyProfileAction), server kiểm tra lại; ở đây chỉ hiển thị và gửi thao tác.
@@ -25,6 +28,10 @@ import {
   totalXpFor,
   MAIN_SLOT_UNLOCK,
   personalSkillOf,
+  dinhBoLinhUltimate,
+  characterSkills,
+  scaleSkill,
+  mainSlotKey,
   wearerOf,
   xpToNext,
   type ActiveBonus,
@@ -295,7 +302,7 @@ export default function ProfileScreen({
   const xpNow =
     progress.level >= MAX_LEVEL ? 1 : progress.xp - totalXpFor(progress.level);
   const ultimate =
-    character === MAIN_ID ? undefined : personalSkillOf(character);
+    character === MAIN_ID ? dinhBoLinhUltimate(profile.profession,profile.element) : personalSkillOf(character);
 
   const shelf = FILTERS.find((f) => f.id === filter)!;
   const bag = [...profile.bag]
@@ -603,6 +610,12 @@ export default function ProfileScreen({
                 </div>
               ))}
             </dl>
+            <p className="mt-3 text-xs text-amber-200" aria-label="Bị động phối hợp">{comboDescription(fighter)}</p>
+            <ul className="mt-3 grid gap-2 text-xs sm:grid-cols-2" aria-label="Bộ kỹ năng nhân vật">
+              {characterSkills(fighter.profession, fighter.element, character).map(def => <li key={def.id} title={skillText(scaleSkill(def, progress.skillLevels[mainSlotKey(def.slot!)] ?? 1))}>
+                {def.name} · ô {def.slot} · {def.ultimate === true ? "Tuyệt chiêu nhân vật" : def.profession ? "Nghề" : "Hệ"} · mở cấp {MAIN_SLOT_UNLOCK[def.slot!]}
+              </li>)}
+            </ul>
             {(bonuses.length > 0 || ultimate) && (
               <ul className="mt-2 flex flex-col gap-0.5 text-xs text-stone-300">
                 {bonuses.map((b) => (
@@ -615,14 +628,14 @@ export default function ProfileScreen({
                 ))}
                 {ultimate && (
                   <li>
-                    Kỹ năng riêng (ô 5):{" "}
+                    Kỹ năng riêng (ô 4):{" "}
                     <span className="font-semibold text-amber-200">
                       {ultimate.name}
                     </span>
-                    {progress.level < MAIN_SLOT_UNLOCK[5]! && (
+                    {progress.level < MAIN_SLOT_UNLOCK[4]! && (
                       <span className="opacity-70">
                         {" "}
-                        (mở ở cấp {MAIN_SLOT_UNLOCK[5]})
+                        (mở ở cấp {MAIN_SLOT_UNLOCK[4]})
                       </span>
                     )}
                   </li>

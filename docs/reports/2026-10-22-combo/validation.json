@@ -1,0 +1,12 @@
+{
+  "newPrimaryRuns": 3120,
+  "noArchivedSpiritOutcomesUsed": true,
+  "matchedSoloCasesExactlyEqual": 736,
+  "comboConservation": true,
+  "sameParticipantsSeedsAndCap": true,
+  "primaryObservations": 3120,
+  "initialFreshRuns": 3120,
+  "aiCorrectionReruns": 271,
+  "measuredRunsExcludingPilotAndTrace": 3391,
+  "archivedABaselineRegressionCases": 1344
+}

@@ -1,0 +1,62 @@
+▶ bộ nghề + hệ
+  ✔ đủ 42 tổ hợp: 3 nghề, 2 hệ, 1 tuyệt chiêu; ID không trùng và thứ tự theo mốc (9.163666ms)
+  ✔ mọi nhân vật kèm dùng đúng chiêu riêng ô 4, không có chiêu thứ bảy (6.523517ms)
+  ✔ mốc mở chính xác và khóa nâng cấp trước mốc (0.576281ms)
+  ✔ đổi nghề/hệ và đọc hồ sơ nhiều lần giữ nguyên mọi điểm, kể cả ô tạm khóa (2.625206ms)
+  ✔ hồ sơ nghề cổ hoàn đúng số thực chi, giữ cấp/XP/tài nguyên/đồ; không hoàn lần hai (0.457261ms)
+  ✔ preset thủ lĩnh chiến dịch giữ mốc cũ; người sở hữu dùng khung mới (0.916074ms)
+✔ bộ nghề + hệ (21.343059ms)
+▶ thực thi chiêu mới
+  ✔ cả 32 chiêu mới thực thi được ở 1vs1 và 3vs3, giữ luật Câm lặng (67.291135ms)
+  ✔ Đoạt mệnh xét ngưỡng trước đòn, nâng hệ số nhưng giữ ngưỡng (1.697465ms)
+  ✔ Phép lan có hệ số 1vs1 ×1.5 và không nhân trong 3vs3 (1.517003ms)
+  ✔ Thủ thành chuyển đòn sang Binh lính; mỗi lượt chỉ dùng một chiêu (1.246954ms)
+  ✔ Linh dược hồi + Thanh tẩy, Phá kế xóa buff nhưng giữ debuff (1.205672ms)
+✔ thực thi chiêu mới (73.417673ms)
+▶ AI với vai trò mới
+  ✔ không phí hồi/Thanh tẩy vào đội đầy máu chỉ có buff (2.186213ms)
+  ✔ phá năng lượng/Câm lặng nhắm người có năng lượng, Xua tan bỏ qua debuff (1.950728ms)
+  ✔ đánh giá buff/debuff theo hệ số, không triệt tiêu Công Hỏa với tự giảm Thủ (1.110869ms)
+  ✔ chiêu bàn cờ không đọc RNG ô rơi và chọn vùng hợp lệ (9.403418ms)
+✔ AI với vai trò mới (14.871471ms)
+▶ kinh nghiệm và cấp
+  ✔ đường cong kinh nghiệm tăng dần và khớp với levelForXp (2.583413ms)
+  ✔ lên nhiều cấp một lúc thì nhận đủ điểm kỹ năng, kinh nghiệm không mất (0.242807ms)
+✔ kinh nghiệm và cấp (3.697487ms)
+▶ nâng cấp kỹ năng
+  ✔ cấp 2–4 tăng 10% mỗi cấp hệ số chính; cấp 5 giảm 10% chi phí (bội số của 5) (0.379864ms)
+  ✔ thời lượng, số ô và cơ hội không đổi; Khiên và Công+ tăng (0.600307ms)
+  ✔ tốn điểm 1, 1, 2, 2; chặn khi thiếu điểm, chưa mở hoặc đã tối đa (0.734941ms)
+✔ nâng cấp kỹ năng (1.947302ms)
+▶ mở khóa và dựng nhân vật
+  ✔ tiến trình tối đa: cấp 30, đủ 6 ô và mọi kỹ năng ở cấp tối đa, kèm có tuyệt chiêu ở ô 4 (0.979339ms)
+  ✔ nhân vật chính cấp 1 có ô 1–2, cấp 5 thêm ô 3, cấp 20 đủ 6 ô (0.377811ms)
+  ✔ cấp kỹ năng theo ô giữ nguyên khi đổi nguyên tố; chỉ số tăng theo cấp (0.383359ms)
+  ✔ tùy tướng AI: mua nhánh từ cấp 5, mang 1 nhánh vào trận (0.374987ms)
+  ✔ tướng thường: bộ nghề + hệ, tuyệt chiêu ở ô 4 mở ở cấp 10 như nhân vật chính (0.863555ms)
+  ✔ tiến trình tự dựng tiêu hết điểm có thể tiêu (0.937056ms)
+  ✔ kỹ năng nâng cấp có tác dụng trong trận và giảm chi phí năng lượng (5.056891ms)
+✔ mở khóa và dựng nhân vật (9.4314ms)
+▶ phần thưởng và hồ sơ
+  ✔ thắng/thua đều giữ sách và vàng; 3vs3 chia đều; Quân sư và Mưu sĩ cộng 10% (4.530035ms)
+  ✔ cộng thưởng vào hồ sơ, báo lên cấp; đọc hồ sơ hỏng thì về hồ sơ mới (1.604475ms)
+✔ phần thưởng và hồ sơ (6.33376ms)
+▶ thao tác trên hồ sơ
+  ✔ nâng kỹ năng theo ô cho nhân vật chính và nhân vật kèm qua cùng một hàm cho /demo và server (0.593226ms)
+  ✔ hồ sơ cũ: nhân vật kèm nâng chiêu nghề được đặt lại kỹ năng và hoàn điểm, giữ cấp (0.443901ms)
+  ✔ mua nhân vật kèm bằng vàng và chọn đội 3vs3 (0.762432ms)
+  ✔ tướng thường phủ đủ 42 tổ hợp nghề × hệ, mỗi tổ hợp một người; ai cũng có kỹ năng riêng ở ô 4 (0.707969ms)
+  ✔ sứ quân mở bán sau khi qua màn của họ ở chiến dịch (0.576621ms)
+  ✔ kiểm tra hình dạng thao tác gửi lên (0.39726ms)
+✔ thao tác trên hồ sơ (3.796706ms)
+▶ mô phỏng theo cấp
+  ✔ --level dựng mọi nhân vật theo tiến trình tự dựng (0.842564ms)
+✔ mô phỏng theo cấp (0.948753ms)
+ℹ tests 36
+ℹ suites 9
+ℹ pass 36
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 405.02443

@@ -7,23 +7,42 @@ import {
   act,
   beginWave,
   createBattle,
+  FOOD_MAX,
   GRACE_MS,
   type BattleAction,
   type BattleError,
   type BattleEvent,
   type BattleState,
+  type Element,
+  type Profession,
   type SideConfig,
   type SideIndex,
 } from "../battle";
 import type { SpawnWeights } from "../board";
 import type { RaidTier } from "../campaign";
+import type { GearItem } from "../gear";
+import type { CharacterProgress } from "../progress";
 import {
   planBreak,
+  autoReviveFighterId,
+  applySurvivalLeaderBuild,
+  downedFightersAfterWave,
+  recoverSurvivalRoster,
+  SURVIVAL_FOOD,
+  SURVIVAL_REVIVE_FOOD,
+  SURVIVAL_REVIVE_WAVES,
+  proposeSurvivalLeaderBuild,
+  syncSurvivalRosterState,
   survivalBreak,
   survivalCleared,
+  proposeSurvivalLineup,
   wavePreview,
+  type SurvivalRotationError,
   type SurvivalError,
+  type SurvivalLeaderBuildChoice,
+  type SurvivalLeaderBuildError,
   type SurvivalRun,
+  type SurvivalDownedFighter,
   type WavePreview,
 } from "../survival";
 
@@ -197,13 +216,20 @@ export function settle(start: Match, now: number): MatchStep {
 export type MatchError =
   | BattleError
   | SurvivalError
+  | SurvivalRotationError
+  | SurvivalLeaderBuildError
   | "staleSeq"
   | "notYourTurn";
 
 /** Hành động ngoài bàn cờ của sinh tồn, chỉ làm được lúc nghỉ giữa đợt. */
 export type SurvivalAction =
-  /** Vào đợt kế; `revive` là vị trí trả lương để hồi sinh ngay. */
-  | { readonly type: "nextWave"; readonly revive?: number }
+  /** Vào đợt kế; lineup và revive được xác nhận atomically ở BREAK. */
+  | {
+      readonly type: "nextWave";
+      readonly revive?: string | number;
+      readonly activeIds?: readonly string[];
+      readonly leaderBuild?: Partial<SurvivalLeaderBuildChoice>;
+    }
   /** Dừng lượt chơi, ghi điểm theo số đợt đã vượt qua. */
   | { readonly type: "endRun" };
 
@@ -215,11 +241,19 @@ const isSurvivalAction = (a: MatchAction): a is SurvivalAction =>
 /** Sinh tồn: phe người chơi gục hết thì lượt chơi kết thúc. */
 function closeLost(m: Match): Match {
   return m.survival && !m.survival.done && m.battle.winner === AI_SIDE
-    ? { ...m, survival: { ...m.survival, done: true } }
+    ? {
+        ...m,
+        seq: m.seq + 1,
+        survival: { ...m.survival, done: true },
+      }
     : m;
 }
 
-function survivalAct(
+/**
+ * Commits the single BREAK -> FIGHTING/FINISHED transition.
+ * All recovery, supply, revive, and next-wave state is produced atomically before Match persistence.
+ */
+export function coordinateSurvivalRoundTransition(
   m: Match,
   action: SurvivalAction,
   now: number,
@@ -231,6 +265,8 @@ function survivalAct(
     events: [],
   });
   const run = m.survival;
+  if (run?.done || m.battle.winner === AI_SIDE)
+    return fail("finished");
   if (!run || !survivalBreak(run, m.battle)) return fail("noBreak");
   if (action.type === "endRun")
     return {
@@ -245,7 +281,58 @@ function survivalAct(
     };
   const plan = planBreak(run, m.battle, action.revive);
   if (!plan.ok) return fail(plan.error);
-  const r = beginWave(m.battle, plan.config, now);
+  let nextRun = plan.run;
+  let nextBattle = plan.battle;
+  let config = plan.config;
+  const main = plan.run.roster.entries["dinhBoLinh"]!;
+  const requestedBuild = action.leaderBuild
+    ? proposeSurvivalLeaderBuild(plan.run, plan.battle, action.leaderBuild)
+    : null;
+  if (requestedBuild && !requestedBuild.ok)
+    return fail(requestedBuild.error);
+  if (requestedBuild?.ok) nextRun = requestedBuild.run;
+  const choice = nextRun.roster.entries["dinhBoLinh"]!.snapshot
+    .leaderBuildChoice;
+  const needsLeaderBuild =
+    choice !== undefined &&
+    (choice.profession !== main.snapshot.config.profession ||
+      choice.element !== main.snapshot.config.element);
+  if (action.activeIds !== undefined || needsLeaderBuild) {
+    const battleForLineup = structuredClone(plan.battle);
+    for (const slot of plan.config.revive) {
+      const fighter = battleForLineup.sides[0].fighters[slot];
+      if (!fighter) return fail("invalidState");
+      fighter.hp = Math.max(
+        1,
+        Math.round(fighter.maxHp * plan.config.reviveHp),
+      );
+      fighter.energy = 0;
+    }
+    const synced = syncSurvivalRosterState(nextRun, battleForLineup);
+    if (!synced.ok) return fail("invalidRoster");
+    nextRun = synced.value;
+    nextBattle = battleForLineup;
+    if (action.activeIds !== undefined) {
+      const rotation = proposeSurvivalLineup(
+        nextRun,
+        nextBattle,
+        action.activeIds,
+      );
+      if (!rotation.ok) return fail(rotation.error);
+      nextRun = rotation.value.run;
+      nextBattle = rotation.value.battle;
+    }
+    const built = applySurvivalLeaderBuild(nextRun, nextBattle);
+    if (!built.ok) return fail(built.error);
+    nextRun = built.value.run;
+    nextBattle = built.value.battle;
+    config = {
+      ...plan.config,
+      playerFighters: nextBattle.sides[0].fighters,
+      revive: [],
+    };
+  }
+  const r = beginWave(nextBattle, config, now);
   return {
     ok: true,
     match: {
@@ -254,7 +341,7 @@ function survivalAct(
       difficulty: plan.wave.difficulty,
       seq: m.seq + 1,
       lastHumanAt: now,
-      survival: plan.run,
+      survival: nextRun,
     },
     events: r.events,
   };
@@ -291,7 +378,7 @@ export function humanAct(
   if (expectedSeq !== settled.match.seq) return fail("staleSeq");
   const m = settled.match;
   if (isSurvivalAction(action)) {
-    const r = survivalAct(m, action, now);
+    const r = coordinateSurvivalRoundTransition(m, action, now);
     return { ...r, events: [...settled.events, ...r.events] };
   }
   if (m.battle.winner !== null) return fail("battleOver");
@@ -334,20 +421,182 @@ export interface SurvivalView {
   readonly wave: number;
   readonly cleared: number;
   readonly downed: readonly (number | null)[];
+  readonly downedFighters: readonly {
+    readonly id: string;
+    readonly name: string;
+    readonly downedAtWave: number;
+    readonly location: "active" | "reserve";
+  }[];
+  readonly autoReviveId: string | null;
   readonly done: boolean;
   /** Đợt đang đánh. */
   readonly current: WavePreview;
   /** Đợt kế tiếp; không có khi lượt chơi đã kết thúc. */
   readonly next?: WavePreview;
+  /** Server-calculated read-only preview of recovery, supplies, and revive choices at BREAK. */
+  readonly break?: SurvivalBreakView;
+}
+
+export interface SurvivalBreakView {
+  readonly activeIds: readonly [string, string, string];
+  readonly reserveIds: readonly string[];
+  readonly leaderBuildBasis?: {
+    readonly profession: Profession;
+    readonly element: Element;
+    readonly hp: number;
+    readonly maxHp: number;
+    readonly hpRatio: number;
+    readonly progress: CharacterProgress;
+    readonly equipment: readonly GearItem[];
+  };
+  readonly foodCurrent: number;
+  readonly foodAfterSupply: number;
+  readonly reviveCost: number;
+  readonly foodAfterPaidRevive: number | null;
+  readonly canPayRevive: boolean;
+  readonly autoReviveId: string | null;
+  readonly fighters: readonly {
+    readonly id: string;
+    readonly name: string;
+    readonly element: Element;
+    readonly profession: Profession;
+    readonly location: "active" | "reserve";
+    readonly hpBeforeRecovery: number;
+    readonly hp: number;
+    readonly hpAfterRecovery: number;
+    readonly maxHp: number;
+    readonly energy: number;
+    readonly downedAtWave: number | null;
+    readonly revivedAtWave: number | null;
+    readonly roundsUntilAutoRevive: number | null;
+    readonly autoRevive: boolean;
+  }[];
+}
+
+function survivalBreakView(
+  run: SurvivalRun,
+  battle: BattleState,
+): SurvivalBreakView | undefined {
+  if (!survivalBreak(run, battle)) return undefined;
+  const recovery = recoverSurvivalRoster(run, battle);
+  if (!recovery.ok) return undefined;
+
+  const recoveredRun = recovery.value.run;
+  const recoveredBattle = recovery.value.battle;
+  const downed = downedFightersAfterWave(recoveredRun, recoveredBattle);
+  const autoReviveId = autoReviveFighterId(run.wave, downed);
+  const foodCurrent = battle.sides[0].food;
+  const foodAfterSupply = Math.min(FOOD_MAX, foodCurrent + SURVIVAL_FOOD);
+  const canPayRevive =
+    autoReviveId === null &&
+    downed.length > 0 &&
+    foodAfterSupply >= SURVIVAL_REVIVE_FOOD;
+  const downedById = new Map<string, SurvivalDownedFighter>(
+    downed.map((fighter) => [fighter.id, fighter]),
+  );
+  const fighters = recoveredRun.roster.orderIds.flatMap((id) => {
+    const entry = recoveredRun.roster.entries[id];
+    if (!entry) return [];
+    const location = entry.location.kind;
+    const fighter =
+      location === "active"
+        ? recoveredBattle.sides[0].fighters[entry.location.slot]
+        : null;
+    const hp =
+      location === "active" ? (fighter?.hp ?? 0) : entry.location.runtime.hp;
+    const originalEntry = run.roster.entries[id]!;
+    const originalFighter =
+      originalEntry.location.kind === "active"
+        ? battle.sides[0].fighters[originalEntry.location.slot]
+        : null;
+    const hpBeforeRecovery =
+      originalEntry.location.kind === "active"
+        ? (originalFighter?.hp ?? 0)
+        : originalEntry.location.runtime.hp;
+    const maxHp = entry.snapshot.config.maxHp;
+    const energy =
+      location === "active"
+        ? (fighter?.energy ?? 0)
+        : entry.location.runtime.energy;
+    const downedFighter = downedById.get(id);
+    const downedAtWave = downedFighter?.downedAtWave ?? null;
+    const wavesElapsed =
+      downedAtWave === null ? null : run.wave - downedAtWave;
+    const roundsUntilAutoRevive =
+      wavesElapsed === null
+        ? null
+        : Math.max(0, SURVIVAL_REVIVE_WAVES - 1 - wavesElapsed);
+    return [
+      {
+        id,
+        name: entry.snapshot.config.name,
+        element: entry.snapshot.config.element,
+        profession: entry.snapshot.config.profession,
+        location,
+        hpBeforeRecovery,
+        hp,
+        hpAfterRecovery: hp,
+        maxHp,
+        energy,
+        downedAtWave,
+        revivedAtWave: entry.revivedAtWave ?? null,
+        roundsUntilAutoRevive,
+        autoRevive: id === autoReviveId,
+      },
+    ];
+  });
+  const leaderEntry = recoveredRun.roster.entries["dinhBoLinh"];
+  const leader = recoveredBattle.sides[0].fighters[0];
+  const mainBuild = leaderEntry?.snapshot.mainBuild;
+  const leaderBuildBasis =
+    leaderEntry?.snapshot.equipment.kind === "snapshot" &&
+    mainBuild?.kind === "snapshot" &&
+    leader
+      ? {
+          profession: leaderEntry.snapshot.config.profession,
+          element: leaderEntry.snapshot.config.element,
+          hp: leader.hp,
+          maxHp: leader.maxHp,
+          hpRatio:
+            leaderEntry.snapshot.leaderHpProjection?.hp === leader.hp &&
+            leaderEntry.snapshot.leaderHpProjection.maxHp === leader.maxHp
+              ? (leaderEntry.snapshot.leaderHpRatio ??
+                leader.hp / leader.maxHp)
+              : leader.hp / leader.maxHp,
+          progress: mainBuild.progress,
+          equipment: leaderEntry.snapshot.equipment.value.items,
+        }
+      : undefined;
+  return {
+    activeIds: recoveredRun.roster.activeIds,
+    reserveIds: recoveredRun.roster.reserveIds,
+    ...(leaderBuildBasis ? { leaderBuildBasis } : {}),
+    foodCurrent,
+    foodAfterSupply,
+    reviveCost: SURVIVAL_REVIVE_FOOD,
+    foodAfterPaidRevive: canPayRevive
+      ? foodAfterSupply - SURVIVAL_REVIVE_FOOD
+      : null,
+    canPayRevive,
+    autoReviveId,
+    fighters,
+  };
 }
 
 function survivalView(run: SurvivalRun, battle: BattleState): SurvivalView {
+  const breakView = survivalBreakView(run, battle);
   return {
     wave: run.wave,
     cleared: survivalCleared(run, battle),
     downed: run.downed,
+    downedFighters: downedFightersAfterWave(run, battle),
+    autoReviveId: autoReviveFighterId(
+      run.wave,
+      downedFightersAfterWave(run, battle),
+    ),
     done: run.done,
     current: wavePreview(run, run.wave),
+    ...(breakView ? { break: breakView } : {}),
     ...(run.done ? {} : { next: wavePreview(run, run.wave + 1) }),
   };
 }

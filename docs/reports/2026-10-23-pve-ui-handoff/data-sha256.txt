@@ -1,0 +1,13 @@
+8eb461c09c5fece158d4c758092cf4a610a0814562ecda0e630b2050d1453d49  docs/reports/2026-10-23-pve-ui-handoff/README.md
+b4e1bbd122d7be406ea3fcd6f9de43ca7f1490f2a204712b11494bc124ff440b  docs/reports/2026-10-23-pve-ui-handoff/checks/audit.log
+02686baa7f2a8674a0b5505b77b485cc436e1acd3659a226d76e51f57ac60a6d  docs/reports/2026-10-23-pve-ui-handoff/checks/build.log
+b1ff9383a3d5f91b719736ed1ce5b56bf38c43c65b272ffd7b1ef463087fee50  docs/reports/2026-10-23-pve-ui-handoff/checks/lint.log
+1c76dbab407e126b6b0521aaed8c87f689ca5791e103471566431c13a17c2144  docs/reports/2026-10-23-pve-ui-handoff/checks/tests.log
+091a9c0730e6fd39accf222a882eb215a8117f86e07235212385a391cc4a1adc  docs/reports/2026-10-23-pve-ui-handoff/checks/typecheck.log
+36a655b15d27de41c3ccf25a08b5453d0e3e783971d72b3623d59a10d2609fb0  docs/reports/2026-10-23-pve-ui-handoff/daily-summary.json
+98d2ec394eae65e425bf56e18830be79e32f5ca7bccd242ef3464eed45732a6d  docs/reports/2026-10-23-pve-ui-handoff/http-smoke.json
+9277da98f719685ed434af79e2f9c8aa5143c7bee0d4f19024a1ded473517b99  docs/reports/2026-10-23-pve-ui-handoff/raw/campaign-default.json
+2718590a65999090a18a7f88136ece835f5bee7f2ed9a8145efd9ef9f00eb78c  docs/reports/2026-10-23-pve-ui-handoff/raw/campaign-heroes.json
+386e7729fa70ed79fb23a4718f02ae47a94fd734c6d4f11f28f3c90a1dc17112  docs/reports/2026-10-23-pve-ui-handoff/raw/daily.jsonl
+7c6b91a6fe1623602404658d5430c726e26f764865f23fb460e8407a885f4a5a  docs/reports/2026-10-23-pve-ui-handoff/sequence-summary.json
+03dd04bb1ef88c2bd33841b0028f33db13ed863aef8cc11f4edd8b27b8713c10  docs/reports/2026-10-23-pve-ui-handoff/ui-contracts.json

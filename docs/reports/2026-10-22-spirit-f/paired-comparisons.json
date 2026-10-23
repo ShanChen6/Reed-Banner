@@ -1,0 +1,524 @@
+{
+  "screen:F-A": {
+    "clusters": 150,
+    "n": 1344,
+    "completedFlips": 98,
+    "censorChanges": 14,
+    "longerAtLeast5": 102,
+    "longerAtLeast10": 37,
+    "observedWinByCap": {
+      "delta": -0.012648809523809524,
+      "ci95": [
+        -0.028528528528528527,
+        0.003115264797507788
+      ]
+    },
+    "restrictedDuration": {
+      "delta": 0.4185267857142857,
+      "ci95": [
+        0.2285610465116279,
+        0.6300287356321839
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.002976190476190476,
+      "ci95": [
+        -0.0029585798816568047,
+        0.009789156626506024
+      ]
+    }
+  },
+  "screen:F-D": {
+    "clusters": 150,
+    "n": 1344,
+    "completedFlips": 60,
+    "censorChanges": 11,
+    "longerAtLeast5": 79,
+    "longerAtLeast10": 20,
+    "observedWinByCap": {
+      "delta": -0.012648809523809524,
+      "ci95": [
+        -0.025222551928783383,
+        0.0
+      ]
+    },
+    "restrictedDuration": {
+      "delta": 0.4382440476190476,
+      "ci95": [
+        0.3135653409090909,
+        0.5803303303303303
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.006696428571428571,
+      "ci95": [
+        0.0015151515151515152,
+        0.013198757763975156
+      ]
+    }
+  },
+  "screen:F-E": {
+    "clusters": 150,
+    "n": 1344,
+    "completedFlips": 80,
+    "censorChanges": 14,
+    "longerAtLeast5": 132,
+    "longerAtLeast10": 48,
+    "observedWinByCap": {
+      "delta": -0.010416666666666666,
+      "ci95": [
+        -0.024853801169590642,
+        0.003720238095238095
+      ]
+    },
+    "restrictedDuration": {
+      "delta": 0.9252232142857143,
+      "ci95": [
+        0.7280505952380952,
+        1.131578947368421
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.010416666666666666,
+      "ci95": [
+        0.0046875,
+        0.017699115044247787
+      ]
+    }
+  },
+  "spirit:F-A": {
+    "clusters": 32,
+    "n": 128,
+    "completedFlips": 8,
+    "censorChanges": 3,
+    "longerAtLeast5": 14,
+    "longerAtLeast10": 6,
+    "observedWinByCap": {
+      "delta": -0.0234375,
+      "ci95": [
+        -0.09375,
+        0.03125
+      ]
+    },
+    "restrictedDuration": {
+      "delta": 0.61328125,
+      "ci95": [
+        -0.00390625,
+        1.3203125
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.0078125,
+      "ci95": [
+        -0.015625,
+        0.0390625
+      ]
+    }
+  },
+  "spirit:F-D": {
+    "clusters": 32,
+    "n": 128,
+    "completedFlips": 6,
+    "censorChanges": 1,
+    "longerAtLeast5": 7,
+    "longerAtLeast10": 2,
+    "observedWinByCap": {
+      "delta": -0.0546875,
+      "ci95": [
+        -0.109375,
+        -0.015625
+      ]
+    },
+    "restrictedDuration": {
+      "delta": 0.6484375,
+      "ci95": [
+        0.2578125,
+        1.09375
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.0078125,
+      "ci95": [
+        0.0,
+        0.0234375
+      ]
+    }
+  },
+  "spirit:F-E": {
+    "clusters": 32,
+    "n": 128,
+    "completedFlips": 12,
+    "censorChanges": 2,
+    "longerAtLeast5": 17,
+    "longerAtLeast10": 3,
+    "observedWinByCap": {
+      "delta": -0.0703125,
+      "ci95": [
+        -0.1328125,
+        -0.015625
+      ]
+    },
+    "restrictedDuration": {
+      "delta": 0.90625,
+      "ci95": [
+        0.28515625,
+        1.70703125
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.015625,
+      "ci95": [
+        0.0,
+        0.0390625
+      ]
+    }
+  },
+  "focused:F-A": {
+    "clusters": 16,
+    "n": 64,
+    "completedFlips": 18,
+    "censorChanges": 3,
+    "longerAtLeast5": 19,
+    "longerAtLeast10": 10,
+    "observedWinByCap": {
+      "delta": 0.0,
+      "ci95": [
+        -0.109375,
+        0.109375
+      ]
+    },
+    "restrictedDuration": {
+      "delta": 1.6015625,
+      "ci95": [
+        -0.6640625,
+        3.8671875
+      ]
+    },
+    "cappedRate": {
+      "delta": -0.046875,
+      "ci95": [
+        -0.09375,
+        0.0
+      ]
+    }
+  },
+  "focused:F-D": {
+    "clusters": 16,
+    "n": 64,
+    "completedFlips": 19,
+    "censorChanges": 0,
+    "longerAtLeast5": 11,
+    "longerAtLeast10": 5,
+    "observedWinByCap": {
+      "delta": 0.015625,
+      "ci95": [
+        -0.125,
+        0.140625
+      ]
+    },
+    "restrictedDuration": {
+      "delta": 1.578125,
+      "ci95": [
+        0.4921875,
+        2.8203125
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "focused:F-E": {
+    "clusters": 16,
+    "n": 64,
+    "completedFlips": 17,
+    "censorChanges": 0,
+    "longerAtLeast5": 27,
+    "longerAtLeast10": 13,
+    "observedWinByCap": {
+      "delta": -0.015625,
+      "ci95": [
+        -0.171875,
+        0.125
+      ]
+    },
+    "restrictedDuration": {
+      "delta": 4.421875,
+      "ci95": [
+        2.8203125,
+        6.1796875
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "pressure:F-A": {
+    "clusters": 8,
+    "n": 64,
+    "completedFlips": 6,
+    "censorChanges": 3,
+    "longerAtLeast5": 3,
+    "longerAtLeast10": 0,
+    "observedWinByCap": {
+      "delta": -0.03125,
+      "ci95": [
+        -0.09375,
+        0.03125
+      ]
+    },
+    "restrictedDuration": {
+      "delta": -0.75,
+      "ci95": [
+        -1.46875,
+        -0.046875
+      ]
+    },
+    "cappedRate": {
+      "delta": -0.015625,
+      "ci95": [
+        -0.046875,
+        0.0
+      ]
+    }
+  },
+  "pressure:F-D": {
+    "clusters": 8,
+    "n": 64,
+    "completedFlips": 5,
+    "censorChanges": 1,
+    "longerAtLeast5": 4,
+    "longerAtLeast10": 0,
+    "observedWinByCap": {
+      "delta": -0.0625,
+      "ci95": [
+        -0.140625,
+        0.015625
+      ]
+    },
+    "restrictedDuration": {
+      "delta": 0.28125,
+      "ci95": [
+        -0.296875,
+        0.8203125
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.015625,
+      "ci95": [
+        0.0,
+        0.046875
+      ]
+    }
+  },
+  "pressure:F-E": {
+    "clusters": 8,
+    "n": 64,
+    "completedFlips": 4,
+    "censorChanges": 2,
+    "longerAtLeast5": 8,
+    "longerAtLeast10": 0,
+    "observedWinByCap": {
+      "delta": 0.0,
+      "ci95": [
+        -0.0625,
+        0.078125
+      ]
+    },
+    "restrictedDuration": {
+      "delta": 0.65625,
+      "ci95": [
+        -0.1015625,
+        1.3046875
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.0,
+      "ci95": [
+        -0.046875,
+        0.046875
+      ]
+    }
+  },
+  "campaign:F-A": {
+    "clusters": 3,
+    "n": 24,
+    "completedFlips": 3,
+    "censorChanges": 0,
+    "longerAtLeast5": 3,
+    "longerAtLeast10": 0,
+    "observedWinByCap": {
+      "delta": 0.041666666666666664,
+      "ci95": [
+        0.0,
+        0.125
+      ]
+    },
+    "restrictedDuration": {
+      "delta": 0.6041666666666666,
+      "ci95": [
+        -0.875,
+        1.375
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "campaign:F-D": {
+    "clusters": 3,
+    "n": 24,
+    "completedFlips": 2,
+    "censorChanges": 0,
+    "longerAtLeast5": 2,
+    "longerAtLeast10": 0,
+    "observedWinByCap": {
+      "delta": -0.08333333333333333,
+      "ci95": [
+        -0.125,
+        0.0
+      ]
+    },
+    "restrictedDuration": {
+      "delta": 0.875,
+      "ci95": [
+        0.125,
+        1.8125
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "campaign:F-E": {
+    "clusters": 3,
+    "n": 24,
+    "completedFlips": 4,
+    "censorChanges": 0,
+    "longerAtLeast5": 2,
+    "longerAtLeast10": 0,
+    "observedWinByCap": {
+      "delta": 0.0,
+      "ci95": [
+        -0.125,
+        0.125
+      ]
+    },
+    "restrictedDuration": {
+      "delta": 0.5416666666666666,
+      "ci95": [
+        -0.5625,
+        1.9375
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "campaign-gear:F-A": {
+    "clusters": 3,
+    "n": 24,
+    "completedFlips": 1,
+    "censorChanges": 0,
+    "longerAtLeast5": 3,
+    "longerAtLeast10": 0,
+    "observedWinByCap": {
+      "delta": 0.041666666666666664,
+      "ci95": [
+        0.0,
+        0.125
+      ]
+    },
+    "restrictedDuration": {
+      "delta": -0.8333333333333334,
+      "ci95": [
+        -3.25,
+        1.0
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "campaign-gear:F-D": {
+    "clusters": 3,
+    "n": 24,
+    "completedFlips": 2,
+    "censorChanges": 0,
+    "longerAtLeast5": 1,
+    "longerAtLeast10": 0,
+    "observedWinByCap": {
+      "delta": 0.0,
+      "ci95": [
+        -0.125,
+        0.125
+      ]
+    },
+    "restrictedDuration": {
+      "delta": 0.4791666666666667,
+      "ci95": [
+        0.125,
+        1.0625
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "campaign-gear:F-E": {
+    "clusters": 3,
+    "n": 24,
+    "completedFlips": 1,
+    "censorChanges": 0,
+    "longerAtLeast5": 2,
+    "longerAtLeast10": 0,
+    "observedWinByCap": {
+      "delta": 0.041666666666666664,
+      "ci95": [
+        0.0,
+        0.125
+      ]
+    },
+    "restrictedDuration": {
+      "delta": 0.4375,
+      "ci95": [
+        -0.5,
+        1.9375
+      ]
+    },
+    "cappedRate": {
+      "delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  }
+}

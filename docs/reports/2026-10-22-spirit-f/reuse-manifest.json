@@ -1,0 +1,38 @@
+{
+  "historicalScreen": 1344,
+  "shortReusedPerVariant": 838,
+  "replayed": {
+    "screen-A": 0,
+    "screen-D": 506,
+    "screen-E": 506,
+    "screen-F": 506,
+    "spirit-A": 128,
+    "spirit-D": 128,
+    "spirit-E": 128,
+    "spirit-F": 128,
+    "focused-A": 64,
+    "focused-D": 64,
+    "focused-E": 64,
+    "focused-F": 64,
+    "pressure-A": 64,
+    "pressure-D": 64,
+    "pressure-E": 64,
+    "pressure-F": 64,
+    "campaign-A": 0,
+    "campaign-D": 0,
+    "campaign-E": 0,
+    "campaign-F": 24,
+    "campaign-gear-A": 0,
+    "campaign-gear-D": 24,
+    "campaign-gear-E": 0,
+    "campaign-gear-F": 24
+  },
+  "historicalSources": {
+    "campaign-A": "campaign-after-A",
+    "campaign-D": "campaign-after-D",
+    "campaign-E": "campaign-after-E",
+    "campaign-gear-A": "campaign-gear-after-A",
+    "campaign-gear-E": "campaign-gear-after-E"
+  },
+  "newPrimaryRuns": 2614
+}

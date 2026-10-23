@@ -1,0 +1,42 @@
+[
+  {
+    "kind": "removed-cap",
+    "id": "b0:binhLinh:hoa:4:3v3:none:side1:holdout",
+    "before": {
+      "turns": [
+        60,
+        60
+      ],
+      "capped": true,
+      "won": null
+    },
+    "after": {
+      "turns": [
+        42,
+        41
+      ],
+      "capped": false,
+      "won": false
+    }
+  },
+  {
+    "kind": "new-cap",
+    "id": "b0:binhLinh:tho:20:1v1:invested:side0:holdout",
+    "before": {
+      "turns": [
+        44,
+        43
+      ],
+      "capped": false,
+      "won": true
+    },
+    "after": {
+      "turns": [
+        60,
+        60
+      ],
+      "capped": true,
+      "won": null
+    }
+  }
+]

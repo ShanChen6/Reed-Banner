@@ -1,8 +1,10 @@
 // Nhân vật: Đinh Bộ Lĩnh, tướng thường (khởi đầu và cửa hàng), tướng lịch sử và sứ quân.
-// Mọi nhân vật kèm mang bộ 6 kỹ năng theo nguyên tố như Đinh Bộ Lĩnh, nâng theo ô; ô 5 là kỹ năng riêng.
+// Mọi nhân vật kèm mang bộ 3 chiêu nghề + 2 chiêu hệ + 1 chiêu riêng như Đinh Bộ Lĩnh, nâng theo ô; ô 4 là kỹ năng riêng.
 // Xem docs/design/14-nhan-vat.md; cân bằng bằng `pnpm sim -- --roster`.
 
-import { heroSkills, mainSkills } from "../battle/skills";
+import { chasePassives } from "../battle/chase";
+import { PROFESSION_COMBO, type ComboPassiveId } from "../battle/combos";
+import { characterSkills } from "../battle/skills";
 import type { Element } from "../battle/elements";
 import type { Profession } from "../battle/rules";
 import type { FighterConfig } from "../battle/state";
@@ -23,24 +25,26 @@ export const BASE_STATS: Readonly<Record<Profession, BaseStats>> = {
   quanSu: { maxHp: 475, atk: 50, def: 10 },
 };
 
-/** Nhân vật chính mặc định: Đinh Bộ Lĩnh, Tướng sĩ, bộ kỹ năng theo nguyên tố đã chọn. */
+/** Nhân vật chính mặc định: Đinh Bộ Lĩnh, Tướng sĩ; lắp bộ theo nghề và nguyên tố đã chọn. */
 export function mainCharacter(element: Element = "moc", profession: Profession = "tuongSi"): FighterConfig {
   return {
     id: "dinhBoLinh",
     name: "Đinh Bộ Lĩnh",
     element,
     profession,
+    comboPassive: PROFESSION_COMBO[profession],
+    chasePassives: chasePassives({profession,element}),
     ...BASE_STATS[profession],
-    skills: mainSkills(element).map((s) => s.id),
+    skills: characterSkills(profession, element).map((s) => s.id),
   };
 }
 
 /**
- * Nhân vật kèm: bộ 6 kỹ năng theo nguyên tố như nhân vật chính, ô 5 thay bằng kỹ năng riêng (tuyệt chiêu
+ * Nhân vật kèm: bộ 3 chiêu nghề + 2 chiêu hệ + 1 chiêu riêng như nhân vật chính, ô 4 thay bằng kỹ năng riêng (tuyệt chiêu
  * của tướng thường, chiêu riêng của tướng lịch sử và sứ quân). Bản mở hết; tiến trình lọc theo cấp ở buildHero.
  */
-function companion(id: string, name: string, profession: Profession, element: Element): FighterConfig {
-  return { ...mainCharacter(element, profession), id, name, skills: heroSkills(element, id).map((s) => s.id) };
+function companion(id: string, name: string, profession: Profession, element: Element, comboPassive: ComboPassiveId = PROFESSION_COMBO[profession]): FighterConfig {
+  return { ...mainCharacter(element, profession), id, name, comboPassive, skills: characterSkills(profession, element, id).map((s) => s.id) };
 }
 
 /** 5 tướng thường khởi đầu, mỗi người một nghề còn lại. */
@@ -106,7 +110,7 @@ export const SHOP_COMPANIONS: readonly ShopCompanion[] = [
 ];
 
 /**
- * Tướng lịch sử gia nhập đội qua chiến dịch, ô 5 là chiêu riêng.
+ * Tướng lịch sử gia nhập đội qua chiến dịch, ô 4 là chiêu riêng.
  * Nghề và nguyên tố là điểm xuất phát, xem docs/design/09-che-do-choi.md mục 2.1.
  */
 export const HERO_COMPANIONS: readonly FighterConfig[] = [
@@ -130,7 +134,7 @@ export interface WarlordCompanion extends ShopCompanion {
 
 /**
  * 12 sứ quân bán ở cửa hàng sau khi người chơi đánh bại họ ở chiến dịch. Nghề, nguyên tố và chiêu riêng
- * (ô 5) giống hệt khi làm đối thủ ở chiến dịch. Giá theo mô phỏng `pnpm sim -- --roster`.
+ * (ô 4) giống hệt khi làm đối thủ ở chiến dịch. Giá theo mô phỏng `pnpm sim -- --roster`.
  */
 export const WARLORD_COMPANIONS: readonly WarlordCompanion[] = [
   warlord("tranLam", "Trần Lãm", "quanSu", "thuy", "boHai", 3000),

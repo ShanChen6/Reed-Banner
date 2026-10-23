@@ -1,0 +1,38 @@
+{
+  "primary": {
+    "runs": 1680,
+    "orientationPairs": 840,
+    "seedClusters": 141
+  },
+  "conditionalExpansion": {
+    "runs": 48,
+    "orientationPairs": 24,
+    "notPooledWithPrimary": true
+  },
+  "aiDiagnostic": {
+    "before": 72,
+    "after": 72,
+    "afterReplaysPrimary": true
+  },
+  "fullTraceReplays": 2,
+  "costPilotExcluded": 72,
+  "initialMeasurementExcluded": 800,
+  "storedRunsByFile": {
+    "diagnostic-after-0.jsonl.gz": 72,
+    "diagnostic-before-0.jsonl.gz": 72,
+    "expanded-after-0.jsonl.gz": 48,
+    "measurement-initial/diagnostic-after-0.jsonl.gz": 72,
+    "measurement-initial/diagnostic-before-0.jsonl.gz": 72,
+    "measurement-initial/screen-after-0.jsonl.gz": 205,
+    "measurement-initial/screen-after-1.jsonl.gz": 230,
+    "measurement-initial/screen-after-2.jsonl.gz": 221,
+    "pilot-initial/pilot-after-0.jsonl.gz": 72,
+    "screen-after-0.jsonl.gz": 560,
+    "screen-after-1.jsonl.gz": 560,
+    "screen-after-2.jsonl.gz": 560,
+    "traces/high-healing/screen-after-trace-0.jsonl.gz": 1,
+    "traces/long-completed/screen-after-trace-0.jsonl.gz": 1
+  },
+  "reasonForInitialExclusion": "Measurement revised to separate rage scopes and discard post-cap opportunity expiration; final primary fully rerun",
+  "rule": "F"
+}

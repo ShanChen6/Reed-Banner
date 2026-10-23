@@ -1,0 +1,58 @@
+{
+  "AI before\u2192after": {
+    "delta": 0.03571428571428571,
+    "low": 0.01283987915407855,
+    "high": 0.05952380952380952,
+    "clusters": 150,
+    "flips": 279,
+    "censorChanges": 25
+  },
+  "A\u2192B": {
+    "delta": -0.078125,
+    "low": -0.15625,
+    "high": -0.015625,
+    "clusters": 32,
+    "flips": 3,
+    "censorChanges": 25
+  },
+  "A\u2192C": {
+    "delta": 0.046875,
+    "low": 0.0,
+    "high": 0.1015625,
+    "clusters": 32,
+    "flips": 11,
+    "censorChanges": 1
+  },
+  "C\u2192D": {
+    "delta": -0.015625,
+    "low": -0.046875,
+    "high": 0.015625,
+    "clusters": 32,
+    "flips": 5,
+    "censorChanges": 1
+  },
+  "C\u2192E": {
+    "delta": 0.0,
+    "low": -0.0390625,
+    "high": 0.0390625,
+    "clusters": 32,
+    "flips": 8,
+    "censorChanges": 0
+  },
+  "focused A\u2192C": {
+    "delta": 0.046875,
+    "low": -0.09375,
+    "high": 0.171875,
+    "clusters": 16,
+    "flips": 11,
+    "censorChanges": 3
+  },
+  "focused C\u2192E": {
+    "delta": -0.03125,
+    "low": -0.15625,
+    "high": 0.09375,
+    "clusters": 16,
+    "flips": 12,
+    "censorChanges": 0
+  }
+}

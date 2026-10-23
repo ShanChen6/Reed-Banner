@@ -1,0 +1,13 @@
+✔ AI: self-heal đầy máu không nhận điểm phối hợp từ đồng đội bị thương (19.806454ms)
+✔ kịch bản:42 nghề/hệ, hai mode, cấp trước/sau mốc,3 mức đồ, đảo bên giữ cùng config/seed (408.170122ms)
+✔ telemetry F: attribution và Khiên bảo toàn, ứng viên kích hoạt khớp số reaction (386.409628ms)
+✔ audit Nộ có biên nguồn riêng và không đổi tác dụng khi tắt audit (4.568954ms)
+✔ harness cap chỉ ghi lượt đã chơi, không coi lượt kế tiếp là kết thúc thật (348.928622ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1559.444384
