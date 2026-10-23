@@ -2,6 +2,10 @@
 // Chỉ định danh và parse/serialize; luật tầng, thưởng và UI nằm ở task sau.
 // Xem docs/dual-tower/00-03-migration-plan.md.
 
+import { ELEMENTS, ENERGY_MAX, PROFESSIONS, type FighterConfig } from "../battle";
+import { GEAR_SLOTS, TIERS, type GearItem } from "../gear";
+import type { CharacterProgress } from "./progress";
+
 export const TOWER_MODES = ["legacy", "trial", "destiny"] as const;
 export type TowerMode = (typeof TOWER_MODES)[number];
 export const DEFAULT_TOWER_MODE: TowerMode = "legacy";
@@ -68,14 +72,39 @@ export interface TrialProgress {
   readonly lastSweep: TrialSweepClaim | null;
 }
 
+export type DestinyRunPhase = "prepare" | "battle" | "reward" | "done";
+export type DestinyBoon = "atk" | "def" | "hp";
+
+export interface DestinyFighterSnapshot {
+  readonly id: string;
+  readonly kind: "main" | "companion";
+  readonly level: number;
+  readonly config: FighterConfig;
+  readonly equipment: readonly GearItem[];
+  readonly hp: number;
+  readonly energy: number;
+  readonly downed: boolean;
+  /** Tiến trình kỹ năng của Đinh Bộ Lĩnh, khóa theo run để server dựng lại build miễn phí. */
+  readonly mainProgress?: CharacterProgress;
+}
+
 export interface DestinyRun {
+  /** Thiếu ở run prototype cũ; run mới luôn là 1. */
+  readonly stateVersion?: 1;
+  readonly cycleId?: string;
   /** Roster khóa đầu run (tối đa DESTINY_ROSTER_MAX), thủ lĩnh ở đầu. */
   readonly roster: readonly string[];
+  /** Snapshot bất biến và runtime theo fighter ID. */
+  readonly fighters?: Readonly<Record<string, DestinyFighterSnapshot>>;
   /** Tầng sắp đánh, từ 1. */
   readonly floor: number;
   /** Máu theo tỉ lệ, theo id roster; 0 là đã ngã. */
   readonly hp: Readonly<Record<string, number>>;
   readonly food: number;
+  /** Nộ khí xuyên tầng; thiếu ở dữ liệu cũ được hiểu là 0. */
+  readonly rage?: number;
+  readonly boons?: readonly DestinyBoon[];
+  readonly phase?: DestinyRunPhase;
   readonly active: boolean;
 }
 
@@ -228,12 +257,67 @@ function parseDestinyRun(raw: unknown): DestinyRun | null {
       return [id, isNum(h) ? Math.max(0, Math.min(1, h)) : 1];
     }),
   );
-  return {
+  const base: DestinyRun = {
     roster: [...(roster as string[])],
     floor: uint(raw.floor),
     hp,
     food: Math.max(0, Math.round(raw.food as number)),
     active: raw.active === true,
+  };
+  // Prototype cũ chỉ có roster/hp/food/active; giữ nguyên để không phá dữ liệu đã lưu.
+  if (raw.stateVersion === undefined) return base;
+  if (
+    raw.stateVersion !== 1 ||
+    !validDay(raw.cycleId) ||
+    !isObj(raw.fighters) ||
+    !Array.isArray(raw.boons) ||
+    !raw.boons.every((b) => b === "atk" || b === "def" || b === "hp") ||
+    !["prepare", "battle", "reward", "done"].includes(raw.phase as string) ||
+    (raw.rage !== undefined && (!Number.isInteger(raw.rage) || (raw.rage as number) < 0 || (raw.rage as number) > 100))
+  ) return null;
+  const fighters: Record<string, DestinyFighterSnapshot> = {};
+  for (const id of roster as string[]) {
+    const f = raw.fighters[id];
+    const config = isObj(f) && isObj(f.config) ? f.config : null;
+    if (
+      !isObj(f) || f.id !== id ||
+      f.kind !== (id === "dinhBoLinh" ? "main" : "companion") ||
+      !Number.isInteger(f.level) || (f.level as number) < 1 ||
+      !config || config.id !== id || typeof config.name !== "string" ||
+      !(ELEMENTS as readonly unknown[]).includes(config.element) ||
+      !(PROFESSIONS as readonly unknown[]).includes(config.profession) ||
+      !Number.isInteger(config.maxHp) || (config.maxHp as number) < 1 ||
+      !Number.isInteger(config.atk) || (config.atk as number) < 0 ||
+      !Number.isInteger(config.def) || (config.def as number) < 0 ||
+      !Array.isArray(f.equipment) || !f.equipment.every((gear) =>
+        isObj(gear) && typeof gear.id === "string" &&
+        (GEAR_SLOTS as readonly unknown[]).includes(gear.slot) &&
+        (ELEMENTS as readonly unknown[]).includes(gear.element) &&
+        (TIERS as readonly unknown[]).includes(gear.tier) && typeof gear.set === "string") ||
+      !Number.isInteger(f.hp) || (f.hp as number) < 0 ||
+      (f.hp as number) > (config.maxHp as number) ||
+      !Number.isInteger(f.energy) || (f.energy as number) < 0 || (f.energy as number) > ENERGY_MAX ||
+      typeof f.downed !== "boolean" || ((f.hp as number) === 0) !== f.downed
+    ) return null;
+    if (id === "dinhBoLinh") {
+      const p = f.mainProgress;
+      if (p !== undefined && (!isObj(p) || !Number.isInteger(p.level) || (p.level as number) < 1 ||
+        !Number.isInteger(p.xp) || (p.xp as number) < 0 ||
+        !Number.isInteger(p.skillPoints) || (p.skillPoints as number) < 0 ||
+        !isObj(p.skillLevels) || !Array.isArray(p.branches) ||
+        !p.branches.every((branch) => typeof branch === "string"))) return null;
+    }
+    fighters[id] = structuredClone(f) as unknown as DestinyFighterSnapshot;
+  }
+  if (Object.keys(raw.fighters).length !== roster.length) return null;
+  return {
+    ...base,
+    stateVersion: 1,
+    cycleId: raw.cycleId,
+    fighters,
+    boons: [...raw.boons] as DestinyBoon[],
+    phase: raw.phase as DestinyRunPhase,
+    rage: raw.rage === undefined ? 0 : raw.rage as number,
   };
 }
 
