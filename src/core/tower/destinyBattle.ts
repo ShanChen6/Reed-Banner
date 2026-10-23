@@ -187,6 +187,7 @@ export function settleDestinyFloor(run: DestinyRun, battle: BattleState): Destin
         RAGE_MAX,
         Math.round(battle.sides[0].rage) - destinyAppliedRageBonus(run),
       )),
+      totalTurns: (run.totalTurns ?? 0) + Math.max(0, Math.round(battle.turn.number)),
       settledFloor: run.floor,
       phase: won ? "reward" : "done",
       active: won,

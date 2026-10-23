@@ -126,6 +126,8 @@ export interface DestinyRun {
   /** Thiếu ở run prototype cũ; run mới luôn là 1. */
   readonly stateVersion?: 1;
   readonly cycleId?: string;
+  /** Version catalog luật dùng để tái dựng cycle; run cũ có thể chưa có. */
+  readonly rulesVersion?: number;
   /** Roster khóa đầu run (tối đa DESTINY_ROSTER_MAX), thủ lĩnh ở đầu. */
   readonly roster: readonly string[];
   /** Snapshot bất biến và runtime theo fighter ID. */
@@ -137,6 +139,8 @@ export interface DestinyRun {
   readonly food: number;
   /** Nộ khí xuyên tầng; thiếu ở dữ liệu cũ được hiểu là 0. */
   readonly rage?: number;
+  /** Tổng lượt các tầng đã đánh trong run, dùng tie-break BXH cycle. */
+  readonly totalTurns?: number;
   readonly boons?: readonly DestinyBoonStack[];
   readonly phase?: DestinyRunPhase;
   /** Tầng đã đồng bộ kết quả battle vào runtime; receipt chống settle lặp sau reload. */
@@ -158,7 +162,21 @@ export interface DestinyProgress {
   readonly run: DestinyRun | null;
   readonly claimedMilestones: readonly string[];
   readonly cycleRewardClaimed: boolean;
+  /** Thành tích các cycle đã đóng, mới nhất ở cuối. */
+  readonly history?: readonly DestinyCycleHistory[];
 }
+
+export interface DestinyCycleHistory {
+  readonly cycleId: string;
+  readonly bestFloor: number;
+  readonly clearedFloor: number;
+  readonly closedAt: number;
+  readonly phaseAtClose: DestinyRunPhase | "none";
+  readonly pendingRewardDropped: boolean;
+  readonly cycleRewardClaimed: boolean;
+}
+
+export const DESTINY_HISTORY_MAX = 52;
 
 export interface DualTowerV1 {
   readonly schema: typeof DUAL_TOWER_SCHEMA;
@@ -194,6 +212,7 @@ export const NEW_DESTINY: DestinyProgress = {
   run: null,
   claimedMilestones: [],
   cycleRewardClaimed: false,
+  history: [],
 };
 
 export const NEW_DUAL_TOWER: DualTowerV1 = {
@@ -311,10 +330,12 @@ function parseDestinyRun(raw: unknown): DestinyRun | null {
   if (
     raw.stateVersion !== 1 ||
     !validDay(raw.cycleId) ||
+    (raw.rulesVersion !== undefined && (!Number.isInteger(raw.rulesVersion) || (raw.rulesVersion as number) < 1)) ||
     !isObj(raw.fighters) ||
     !Array.isArray(raw.boons) ||
     !["prepare", "battle", "reward", "done"].includes(raw.phase as string) ||
     (raw.rage !== undefined && (!Number.isInteger(raw.rage) || (raw.rage as number) < 0 || (raw.rage as number) > 100)) ||
+    (raw.totalTurns !== undefined && (!Number.isInteger(raw.totalTurns) || (raw.totalTurns as number) < 0)) ||
     (raw.settledFloor !== undefined &&
       (!Number.isInteger(raw.settledFloor) || (raw.settledFloor as number) < 0 || (raw.settledFloor as number) > uint(raw.floor))) ||
     (raw.rewardedFloor !== undefined &&
@@ -397,10 +418,12 @@ function parseDestinyRun(raw: unknown): DestinyRun | null {
     ...base,
     stateVersion: 1,
     cycleId: raw.cycleId,
+    ...(raw.rulesVersion === undefined ? {} : { rulesVersion: raw.rulesVersion as number }),
     fighters,
     boons,
     phase: raw.phase as DestinyRunPhase,
     rage: raw.rage === undefined ? 0 : raw.rage as number,
+    totalTurns: raw.totalTurns === undefined ? 0 : raw.totalTurns as number,
     settledFloor: raw.settledFloor === undefined ? 0 : raw.settledFloor as number,
     rewardedFloor: raw.rewardedFloor === undefined ? 0 : raw.rewardedFloor as number,
     ...(matchId ? { matchId } : {}),
@@ -410,6 +433,25 @@ function parseDestinyRun(raw: unknown): DestinyRun | null {
 
 function parseDestiny(raw: unknown): DestinyProgress {
   if (!isObj(raw)) return NEW_DESTINY;
+  const history: DestinyCycleHistory[] = [];
+  if (Array.isArray(raw.history)) {
+    for (const entry of raw.history.slice(-DESTINY_HISTORY_MAX)) {
+      if (!isObj(entry) || !validDay(entry.cycleId) ||
+          !Number.isInteger(entry.bestFloor) || (entry.bestFloor as number) < 0 ||
+          !Number.isInteger(entry.clearedFloor) || (entry.clearedFloor as number) < 0 ||
+          !Number.isSafeInteger(entry.closedAt) || (entry.closedAt as number) < 0 ||
+          !["prepare", "battle", "reward", "done", "none"].includes(entry.phaseAtClose as string)) continue;
+      history.push({
+        cycleId: entry.cycleId,
+        bestFloor: entry.bestFloor as number,
+        clearedFloor: entry.clearedFloor as number,
+        closedAt: entry.closedAt as number,
+        phaseAtClose: entry.phaseAtClose as DestinyCycleHistory["phaseAtClose"],
+        pendingRewardDropped: entry.pendingRewardDropped === true,
+        cycleRewardClaimed: entry.cycleRewardClaimed === true,
+      });
+    }
+  }
   return {
     cycleId:
       typeof raw.cycleId === "string" && DAY_RE.test(raw.cycleId)
@@ -427,6 +469,7 @@ function parseDestiny(raw: unknown): DestinyProgress {
         ]
       : [],
     cycleRewardClaimed: raw.cycleRewardClaimed === true,
+    ...(Array.isArray(raw.history) ? { history } : {}),
   };
 }
 

@@ -5,6 +5,7 @@ import {
   type FloorDefinition,
   type LineupMember,
 } from "@/core";
+import { destinyCycleById, destinyCycleSeed } from "./destinyCycle";
 
 export type DestinyContentError = "invalid_run" | "invalid_secret" | "floor_not_found";
 
@@ -13,11 +14,16 @@ export function destinyCycleSnapshot(run: DestinyRun, secret: string) {
   if (run.stateVersion !== 1 || !run.cycleId || !run.fighters)
     return { ok: false as const, error: "invalid_run" as const };
   const cycleId = run.cycleId;
+  const cycle = destinyCycleById(cycleId);
+  if (!cycle || (run.rulesVersion !== undefined && run.rulesVersion !== cycle.rulesVersion))
+    return { ok: false as const, error: "invalid_run" as const };
+  const seed = destinyCycleSeed(cycle, secret, "rules");
+  if (!seed) return { ok: false as const, error: "invalid_secret" as const };
   const roster: LineupMember[] = run.roster.slice(1).flatMap((id) => {
     const fighter = run.fighters![id];
     return fighter ? [{ id, element: fighter.config.element, profession: fighter.config.profession }] : [];
   });
-  const generated = generateDestinyCycleRules(cycleId, secret, roster);
+  const generated = generateDestinyCycleRules(cycleId, seed, roster);
   return generated.ok ? generated : { ok: false as const, error: generated.error === "invalid_secret" ? "invalid_secret" as const : "invalid_run" as const };
 }
 

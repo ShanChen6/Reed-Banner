@@ -86,6 +86,9 @@ import { submitProfile, type LeaderboardStore } from "./leaderboard";
 import { offerDefense, type ArenaStore } from "./arena";
 import { settleTrial, type TrialResult } from "./trialSettle";
 import { settleDestinyMatch, type DestinyResult } from "./destinySettle";
+import { activeDestinyCycle } from "./destinyCycle";
+import { reconcileDestinyCycle } from "./destinyExpire";
+import type { DestinyLeaderboardStore } from "./destinyLeaderboard";
 
 export interface Deps {
   readonly store: MatchStore;
@@ -101,6 +104,7 @@ export interface Deps {
   readonly destinySecret?: string;
   /** Bảng xếp hạng: ghi điểm sau mỗi lần cộng thưởng. */
   readonly leaderboard?: LeaderboardStore;
+  readonly destinyLeaderboard?: DestinyLeaderboardStore;
   /** Đấu trường bóng ma. Không có thì không mở được. */
   readonly arena?: ArenaStore;
 }
@@ -146,7 +150,9 @@ export type ServiceError =
   /** Hôm nay đã hết trận đấu trường. */
   | "arenaLimit"
   /** Đối thủ đấu trường không còn. */
-  | "arenaGone";
+  | "arenaGone"
+  /** Trận Destiny thuộc chu kỳ đã đóng. */
+  | "cycleExpired";
 
 /** Phần thưởng cuối trận đã cộng vào hồ sơ, gửi kèm đúng một lần (response làm trận kết thúc). */
 export interface Outcome {
@@ -1063,6 +1069,20 @@ async function settleRecord(
   };
 }
 
+async function destinyMatchCurrent(
+  r: MatchRecord,
+  deps: Omit<Deps, "seed" | "newId">,
+): Promise<boolean> {
+  const tag = r.match.destiny?.tag;
+  if (!tag) return true;
+  const scheduled = activeDestinyCycle(deps.now);
+  if (!scheduled.ok || tag.cycleId !== scheduled.cycle.cycleId) {
+    await reconcileDestinyCycle(deps.profiles, r.ownerId, deps.now);
+    return false;
+  }
+  return true;
+}
+
 /** Xem trận: chạy bù tới `now` (hết giờ, AI, xử thua 24 giờ) rồi lưu nếu có thay đổi. */
 export async function getBattle(
   id: string,
@@ -1070,7 +1090,9 @@ export async function getBattle(
   deps: Omit<Deps, "seed" | "newId">,
 ): Promise<ServiceResult> {
   const r = await load(id, ownerId, deps.store);
-  return r ? settleRecord(r, deps) : { ok: false, error: "notFound" };
+  if (!r) return { ok: false, error: "notFound" };
+  if (!(await destinyMatchCurrent(r, deps))) return { ok: false, error: "cycleExpired" };
+  return settleRecord(r, deps);
 }
 
 /**
@@ -1085,6 +1107,7 @@ export async function settleAbandoned(
   for (const id of ids) {
     const r = await deps.store.get(id);
     if (!r) continue;
+    if (!(await destinyMatchCurrent(r, deps))) continue;
     const res = await settleRecord(r, deps);
     if (res.ok && res.outcome) settled++;
   }
@@ -1102,6 +1125,7 @@ export async function actBattle(
   if (!parsed) return { ok: false, error: "badRequest" };
   const r = await load(id, ownerId, deps.store);
   if (!r) return { ok: false, error: "notFound" };
+  if (!(await destinyMatchCurrent(r, deps))) return { ok: false, error: "cycleExpired" };
   const result = humanAct(r.match, parsed.action, parsed.seq, deps.now);
   let match = result.match;
   if (
@@ -1142,7 +1166,8 @@ export function httpStatus(error: ServiceError): number {
     error === "conflict" ||
     error === "staleSeq" ||
     error === "dailyDone" ||
-    error === "arenaLimit"
+    error === "arenaLimit" ||
+    error === "cycleExpired"
   )
     return 409;
   return error === "badRequest" ? 400 : 422;

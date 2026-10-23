@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   DESTINY_BOON_CATALOG,
   DESTINY_ROSTER_MAX,
+  DESTINY_ROSTER_MIN,
   MAIN_ID,
   companionById,
   type DestinyLeaderBuild,
@@ -182,7 +183,7 @@ export default function DestinyScreen() {
         <header className="rounded-xl border border-amber-500/30 bg-black/20 p-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div><p className="text-xs uppercase tracking-[.2em] text-amber-400">Chu kỳ {overview.cycleId ?? "—"}</p><h1 className="font-serif text-3xl font-bold text-amber-100">Tháp Vận Mệnh</h1><p className="mt-1 text-sm text-stone-400">HP, năng lượng và lương được giữ xuyên tầng. Roster khóa cho cả run.</p></div>
-            <div className="text-right text-sm"><p>Đá Cường Hóa: <strong className="text-amber-300">{overview.stones}</strong></p><p>Kỷ lục chu kỳ: tầng {overview.progress?.cycleBest ?? 0}</p><SceneLink scene="LEADERBOARD" className="text-amber-300 underline">Bảng xếp hạng</SceneLink></div>
+            <div className="text-right text-sm"><p>Đá Cường Hóa: <strong className="text-amber-300">{overview.stones}</strong></p><p>Kỷ lục chu kỳ: tầng {overview.progress?.cycleBest ?? 0}</p><SceneLink scene="LEADERBOARD" params={{ board: "destiny" }} className="text-amber-300 underline">BXH Vận Mệnh</SceneLink></div>
           </div>
         </header>
 
@@ -192,7 +193,7 @@ export default function DestinyScreen() {
           <section className="rounded-xl border border-white/10 bg-black/20 p-5">
             <h2 className="font-serif text-xl font-bold">Khóa roster mới</h2>
             {run?.phase === "done" && <p className="mt-1 text-sm text-stone-400">Run trước đã kết thúc ở tầng {run.floor}.</p>}
-            <p className="mt-2 text-sm text-stone-300">Chọn 2–7 tướng sở hữu; Đinh Bộ Lĩnh luôn là thủ lĩnh. Tối đa {DESTINY_ROSTER_MAX} người.</p>
+            <p className="mt-2 text-sm text-stone-300">Chỉ cần tổng cộng tối thiểu {DESTINY_ROSTER_MIN} tướng: Đinh Bộ Lĩnh và ít nhất 2 tướng sở hữu. Tối đa {DESTINY_ROSTER_MAX} người.</p>
             <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {Object.keys(profile.companions).sort().map((id) => {
                 const companion = companionById(id);
@@ -201,7 +202,7 @@ export default function DestinyScreen() {
                 return <button key={id} type="button" disabled={!selected && roster.length >= DESTINY_ROSTER_MAX} onClick={() => setRoster(selected ? roster.filter((x) => x !== id) : [...roster, id])} className={`rounded-lg border p-3 text-left ${selected ? "border-amber-400 bg-amber-500/15" : "border-white/10 bg-white/5"} disabled:opacity-40`}><strong>{companion.name}</strong><span className="block text-xs text-stone-400">{ELEMENT_NAME[companion.element]} · {PROFESSION_NAME[companion.profession]}</span></button>;
               })}
             </div>
-            <button disabled={busy || roster.length < 3} onClick={() => void startRun()} className="mt-4 rounded-lg bg-amber-500 px-5 py-2.5 font-bold text-stone-950 disabled:opacity-40">{busy ? "Đang bắt đầu…" : `Bắt đầu với ${roster.length} tướng`}</button>
+            <button disabled={busy || roster.length < DESTINY_ROSTER_MIN} onClick={() => void startRun()} className="mt-4 rounded-lg bg-amber-500 px-5 py-2.5 font-bold text-stone-950 disabled:opacity-40">{busy ? "Đang bắt đầu…" : `Bắt đầu với ${roster.length} tướng`}</button>
           </section>
         )}
 
