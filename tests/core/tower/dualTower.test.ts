@@ -29,7 +29,7 @@ describe("song tháp: dữ liệu", () => {
       stones: 7,
       dualTower: {
         schema: 1 as const,
-        trial: { cleared: 3, claimedFloors: [1, 2, 3], lastSweepDay: "2026-10-23" },
+        trial: { cleared: 3, claimedFloors: [1, 2, 3], lastSweep: { dateKey: "2026-10-23", tier: 1 as const, claimedAt: 1_761_235_140_000 } },
         destiny: {
           cycleId: "2026-10-19",
           cycleBest: 4,
@@ -104,7 +104,7 @@ describe("song tháp: dữ liệu", () => {
     if (isDualTowerV1(s)) {
       assert.equal(s.trial.cleared, TRIAL_FLOORS);
       assert.deepEqual(s.trial.claimedFloors, [1, 3]);
-      assert.equal(s.trial.lastSweepDay, null);
+      assert.equal(s.trial.lastSweep, null);
       assert.equal(s.destiny.cycleId, null);
       assert.equal(s.destiny.cycleBest, 0);
       assert.equal(s.destiny.run, null);

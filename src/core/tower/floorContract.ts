@@ -265,32 +265,6 @@ export function planTrialSettle(
   return { ok: true, next, events };
 }
 
-/** Trial: quét một lần mỗi ngày VN; `day` do server tính, không tin client. */
-export function planTrialSweep(
-  progress: TrialProgress,
-  input: { day: string; stones: number },
-): SettleResult<TrialProgress> {
-  if (!DAY_RE.test(input.day)) return bad("invalid_day");
-  if (!validAmount(input.stones)) return bad("invalid_amount");
-  if (progress.lastSweepDay === input.day) return { ok: true, next: progress, events: [] };
-  return {
-    ok: true,
-    next: { ...progress, lastSweepDay: input.day },
-    events:
-      input.stones > 0
-        ? [
-            {
-              kind: "stone",
-              mode: "trial",
-              source: "trial_sweep",
-              amount: input.stones,
-              key: stoneKeys.trialSweep(input.day),
-            },
-          ]
-        : [],
-  };
-}
-
 export interface DestinyMilestone {
   readonly id: string;
   /** Tầng cần đạt trong chu kỳ. */

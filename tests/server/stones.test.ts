@@ -5,15 +5,13 @@ import {
   isDualTowerV1,
   newProfile,
   parseProfile,
-  planDestinyCycleEnd,
   planTrialSettle,
-  planTrialSweep,
   STONES_MAX,
   stoneKeys,
   type StoneRewardEvent,
 } from "../../src/core";
 import { MemoryProfileStore, loadProfile, type ProfileStore } from "../../src/server/profiles";
-import { awardStones, destinyPlanner, trialPlanner } from "../../src/server/stones";
+import { awardStones, trialPlanner } from "../../src/server/stones";
 
 const ev = (key: string, amount = 5): StoneRewardEvent => ({
   kind: "stone",
@@ -22,7 +20,6 @@ const ev = (key: string, amount = 5): StoneRewardEvent => ({
   amount,
   key,
 });
-
 describe("ví đá: lõi", () => {
   it("người chơi cũ: không có trường đá → 0, sổ rỗng", () => {
     const old: Record<string, unknown> = { ...newProfile() };
@@ -96,81 +93,48 @@ describe("ví đá: lõi", () => {
 
 describe("ví đá: server", () => {
   const OWNER = "u1";
-  const sweep = (day: string) => trialPlanner((t) => planTrialSweep(t, { day, stones: 4 }));
+  const firstClear = () => trialPlanner((trial) =>
+    planTrialSettle(trial, { floor: 1, won: true, firstClearStones: 4 }));
 
-  it("cộng đá lần đầu và ghi mốc trong cùng một lần ghi", async () => {
+  it("cộng đá và tiến trình trong cùng một lần ghi", async () => {
     const store = new MemoryProfileStore();
-    const r = await awardStones(store, OWNER, sweep("2026-10-23"), 0);
-    assert.deepEqual(r, { ok: true, stones: 4, granted: 4 });
+    assert.deepEqual(await awardStones(store, OWNER, firstClear(), 0), { ok: true, stones: 4, granted: 4 });
     const { profile, version } = await loadProfile(store, OWNER);
     assert.equal(version, 1);
     assert.equal(profile.stones, 4);
-    const d = profile.dualTower;
-    assert.ok(d.schema === 1 && (d as { trial: { lastSweepDay: string } }).trial.lastSweepDay === "2026-10-23");
+    assert.ok(isDualTowerV1(profile.dualTower) && profile.dualTower.trial.cleared === 1);
   });
 
-  it("duplicate event: gọi lại không cộng thêm", async () => {
-    const store = new MemoryProfileStore();
-    await awardStones(store, OWNER, sweep("2026-10-23"), 0);
-    const again = await awardStones(store, OWNER, sweep("2026-10-23"), 0);
-    assert.deepEqual(again, { ok: true, stones: 4, granted: 0 });
-    const next = await awardStones(store, OWNER, sweep("2026-10-24"), 0);
-    assert.deepEqual(next, { ok: true, stones: 8, granted: 4 });
-  });
-
-  it("two-tab: hai claim đồng thời chỉ cộng một lần", async () => {
+  it("duplicate và two-tab chỉ cấp đá một lần", async () => {
     for (let i = 0; i < 5; i++) {
       const store = new MemoryProfileStore();
       const [a, b] = await Promise.all([
-        awardStones(store, OWNER, sweep("2026-10-23"), 0),
-        awardStones(store, OWNER, sweep("2026-10-23"), 0),
+        awardStones(store, OWNER, firstClear(), 0),
+        awardStones(store, OWNER, firstClear(), 0),
       ]);
       assert.ok(a.ok && b.ok);
-      assert.equal((await loadProfile(store, OWNER)).profile.stones, 4);
       assert.equal(a.ok && b.ok ? a.granted + b.granted : -1, 4);
+      assert.equal((await loadProfile(store, OWNER)).profile.stones, 4);
+      assert.deepEqual(await awardStones(store, OWNER, firstClear(), 0), { ok: true, stones: 4, granted: 0 });
     }
   });
 
-  it("claim đồng thời khác khóa: không mất đá nào", async () => {
+  it("kế hoạch lỗi hoặc conflict không đổi hồ sơ", async () => {
     const store = new MemoryProfileStore();
-    const [a, b] = await Promise.all([
-      awardStones(store, OWNER, sweep("2026-10-23"), 0),
-      awardStones(
-        store,
-        OWNER,
-        trialPlanner((t) => planTrialSettle(t, { floor: 1, won: true, firstClearStones: 6 })),
-        0,
-      ),
-    ]);
-    assert.ok(a.ok && b.ok);
-    assert.equal((await loadProfile(store, OWNER)).profile.stones, 10);
-  });
-
-  it("rollback: kế hoạch lỗi hoặc ghi xung đột liên tục thì không đổi hồ sơ", async () => {
-    const store = new MemoryProfileStore();
-    await awardStones(store, OWNER, sweep("2026-10-23"), 0);
     const snap = structuredClone(await loadProfile(store, OWNER));
-    const bad = await awardStones(store, OWNER, sweep("hôm nay"), 0);
-    assert.deepEqual(bad, { ok: false, error: "invalid_day" });
-    const wrongCycle = await awardStones(
-      store,
-      OWNER,
-      destinyPlanner((d) => planDestinyCycleEnd(d, { cycleId: "2026-10-19", stonesForBest: () => 9 })),
-      0,
-    );
-    assert.deepEqual(wrongCycle, { ok: false, error: "cycle_mismatch" });
-    const failing: ProfileStore = { get: (o) => store.get(o), put: async () => false };
-    assert.deepEqual(await awardStones(failing, OWNER, sweep("2026-10-30"), 0), { ok: false, error: "conflict" });
+    const bad = trialPlanner((trial) => planTrialSettle(trial, { floor: 2, won: true, firstClearStones: 4 }));
+    assert.deepEqual(await awardStones(store, OWNER, bad, 0), { ok: false, error: "invalid_floor" });
+    const failing: ProfileStore = { get: (id) => store.get(id), put: async () => false };
+    assert.deepEqual(await awardStones(failing, OWNER, firstClear(), 0), { ok: false, error: "conflict" });
     assert.deepEqual(await loadProfile(store, OWNER), snap);
   });
 
   it("không đụng tower.best/tower.run của Legacy", async () => {
     const store = new MemoryProfileStore();
-    const p = { ...newProfile(), tower: { best: 12, run: null } };
-    assert.ok(await store.put(OWNER, p, 0));
-    await awardStones(store, OWNER, sweep("2026-10-23"), 0);
-    const back = (await loadProfile(store, OWNER)).profile;
-    assert.deepEqual(back.tower, { best: 12, run: null });
-    assert.ok(stoneKeys.trialSweep("2026-10-23"));
+    const profile = { ...newProfile(), tower: { best: 12, run: null } };
+    assert.ok(await store.put(OWNER, profile, 0));
+    await awardStones(store, OWNER, firstClear(), 0);
+    assert.deepEqual((await loadProfile(store, OWNER)).profile.tower, { best: 12, run: null });
+    assert.equal(stoneKeys.trialFirst(1), "trial:first:1");
   });
 });

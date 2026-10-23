@@ -33,7 +33,42 @@ export interface TrialOverview {
   readonly cleared: number;
   readonly stones: number;
   readonly active: { readonly matchId: string; readonly floor: number } | null;
+  readonly sweep: {
+    readonly eligible: boolean;
+    readonly tier: number;
+    readonly amount: number;
+    readonly claimedToday: boolean;
+    readonly nextAt: number;
+    readonly lastClaim: {
+      readonly dateKey: string;
+      readonly tier: number;
+      readonly amount: number;
+      readonly claimedAt: number;
+    } | null;
+    readonly history: readonly {
+      readonly dateKey: string;
+      readonly amount: number | null;
+      readonly claimedAt: number | null;
+    }[];
+  };
   readonly floors: readonly TrialFloorEntry[];
+}
+
+export const formatSweepTime = (time: number): string =>
+  new Intl.DateTimeFormat("vi-VN", {
+    timeZone: "Asia/Ho_Chi_Minh",
+    dateStyle: "short",
+    timeStyle: "short",
+  }).format(new Date(time));
+
+export function sweepButtonState(
+  sweep: TrialOverview["sweep"],
+  busy: boolean,
+): { readonly disabled: boolean; readonly text: string } {
+  if (busy) return { disabled: true, text: "Đang quét…" };
+  if (!sweep.eligible) return { disabled: true, text: "Cần vượt ít nhất tầng 1" };
+  if (sweep.claimedToday) return { disabled: true, text: "Đã nhận hôm nay" };
+  return { disabled: false, text: `Quét nhận ${sweep.amount} đá` };
 }
 
 const list = (xs: readonly string[]) => xs.join(", ");
@@ -236,6 +271,8 @@ export const TRIAL_ERROR_TEXT: Record<string, string> = {
   unsupported_schema: "Dữ liệu Song Tháp của bạn thuộc phiên bản mới hơn, chưa chơi được ở bản này",
   active_elsewhere: "Bạn đang có một trận Thí Luyện ở tầng khác, hãy tiếp tục hoặc bỏ trận đó",
   conflict: "Dữ liệu vừa đổi ở nơi khác, thử lại",
+  no_cleared_floors: "Cần vượt ít nhất tầng 1 để quét",
+  overflow: "Ví đá đã đạt giới hạn an toàn",
 };
 
 export const FLOOR_STATE_TEXT: Record<FloorState, string> = {

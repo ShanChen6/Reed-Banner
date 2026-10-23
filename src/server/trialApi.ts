@@ -4,12 +4,18 @@
 import {
   createTrialRegistry,
   isDualTowerV1,
+  nextTrialSweepResetAt,
+  stoneKeys,
+  trialDateKey,
+  trialSweepStoneAmount,
+  trialSweepTier,
   type TrialFloorPublic,
   type TrialFloorRecord,
   type TrialRegistry,
 } from "@/core";
 import { loadProfile, type ProfileStore } from "./profiles";
 import { TRIAL_FLOOR_DATA } from "./trialContent";
+import { settleTrialSweep, type TrialSweepSettlementResult } from "./trialSweep";
 import {
   abandonTrialBattle,
   startTrialBattle,
@@ -35,6 +41,24 @@ export interface TrialOverview {
   readonly cleared: number;
   readonly stones: number;
   readonly active: { readonly matchId: string; readonly floor: number } | null;
+  readonly sweep: {
+    readonly eligible: boolean;
+    readonly tier: number;
+    readonly amount: number;
+    readonly claimedToday: boolean;
+    readonly nextAt: number;
+    readonly lastClaim: {
+      readonly dateKey: string;
+      readonly tier: number;
+      readonly amount: number;
+      readonly claimedAt: number;
+    } | null;
+    readonly history: readonly {
+      readonly dateKey: string;
+      readonly amount: number | null;
+      readonly claimedAt: number | null;
+    }[];
+  };
   readonly floors: readonly TrialFloorEntry[];
 }
 
@@ -63,11 +87,34 @@ export async function trialOverview(
   profiles: ProfileStore,
   ownerId: string | null,
   floors: TrialRegistry,
+  now = Date.now(),
 ): Promise<TrialOverview> {
   const profile = ownerId ? (await loadProfile(profiles, ownerId)).profile : null;
   const tower = profile && isDualTowerV1(profile.dualTower) ? profile.dualTower : null;
   const trial = tower?.trial;
   const cleared = trial?.cleared ?? 0;
+  const tier = trialSweepTier(cleared);
+  const today = trialDateKey(now);
+  const lastSweep = trial?.lastSweep ?? null;
+  const claimedToday = !!tower && tower.stoneLedger.includes(stoneKeys.trialSweep(today));
+  const confirmedLastSweep = lastSweep && tower?.stoneLedger.includes(stoneKeys.trialSweep(lastSweep.dateKey))
+    ? lastSweep
+    : null;
+  const history = tower
+    ? tower.stoneLedger
+        .filter((key) => key.startsWith("trial:sweep:"))
+        .slice(-7)
+        .reverse()
+        .map((key) => {
+          const dateKey = key.slice("trial:sweep:".length);
+          const detailed = confirmedLastSweep?.dateKey === dateKey;
+          return {
+            dateKey,
+            amount: detailed ? trialSweepStoneAmount(confirmedLastSweep.tier) : null,
+            claimedAt: detailed ? confirmedLastSweep.claimedAt : null,
+          };
+        })
+    : [];
   const entries: TrialFloorEntry[] = floors.all().map((spec) => {
     const open =
       spec.floor <= cleared + 1 &&
@@ -85,8 +132,46 @@ export async function trialOverview(
     cleared,
     stones: profile?.stones ?? 0,
     active: trial?.active ? { ...trial.active } : null,
+    sweep: {
+      eligible: tier > 0 && tower !== null,
+      tier,
+      amount: trialSweepStoneAmount(tier),
+      claimedToday,
+      nextAt: claimedToday ? nextTrialSweepResetAt(now) : now,
+      lastClaim: confirmedLastSweep
+        ? {
+            dateKey: confirmedLastSweep.dateKey,
+            tier: confirmedLastSweep.tier,
+            amount: trialSweepStoneAmount(confirmedLastSweep.tier),
+            claimedAt: confirmedLastSweep.claimedAt,
+          }
+        : null,
+      history,
+    },
     floors: entries,
   };
+}
+
+const SWEEP_STATUS: Record<Exclude<TrialSweepSettlementResult, { readonly ok: true }>["error"], number> = {
+  unsupported_schema: 409,
+  invalid_time: 400,
+  no_cleared_floors: 403,
+  conflict: 409,
+  invalid_event: 422,
+  duplicate_in_batch: 409,
+  overflow: 409,
+};
+
+export async function settleTrialSweepRequest(
+  profiles: ProfileStore,
+  ownerId: string | null,
+  now: number,
+): Promise<ApiReply> {
+  if (!ownerId) return { status: 403, body: { error: "no_cleared_floors" } };
+  const result = await settleTrialSweep(profiles, ownerId, now);
+  return result.ok
+    ? { status: 200, body: result }
+    : { status: SWEEP_STATUS[result.error], body: result };
 }
 
 const START_STATUS: Record<TrialStartError, number> = {
