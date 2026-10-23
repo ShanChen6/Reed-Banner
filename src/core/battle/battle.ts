@@ -314,6 +314,8 @@ export interface WaveConfig {
   readonly wave: number;
   /** Đội đối thủ của đợt, thay toàn bộ phe 1. */
   readonly foes: SideConfig;
+  /** Optional persistent player lineup for wave transitions; generic callers retain the current team. */
+  readonly playerFighters?: readonly Fighter[];
   /** Người còn sống của phe 0 hồi thêm chừng này phần máu tối đa. */
   readonly heal: number;
   /** Lương phe 0 khi vào đợt (đã cộng hồi phục và trừ phí hồi sinh). */
@@ -324,8 +326,9 @@ export interface WaveConfig {
 }
 
 /**
- * Sinh tồn: phe 0 vừa thắng một đợt thì đợt kế vào sân trên cùng bàn cờ. Phe 0 giữ năng lượng và Nộ, hồi máu
- * cố định, xóa hiệu ứng, tinh thần và đếm lượt bắt đầu lại; phe 0 đi trước.
+ * Phe 0 vừa thắng một đợt thì đợt kế vào sân trên cùng bàn cờ. Caller settles roster recovery before this
+ * transition; `heal` remains for generic wave callers. Begin-wave preserves energy and rage, clears effects,
+ * resets spirit/turn count, and lets side 0 act first.
  */
 export function beginWave(
   prev: BattleState,
@@ -336,18 +339,32 @@ export function beginWave(
     throw new RangeError("Chỉ sang đợt mới khi phe 0 vừa thắng");
   const state = structuredClone(prev);
   const ctx = new Ctx(state, now);
-  const own = state.sides[0];
+  let own = state.sides[0];
+  if (config.playerFighters) {
+    if (config.playerFighters.length !== own.fighters.length)
+      throw new RangeError("Đội hình người chơi sang đợt mới không hợp lệ");
+    state.sides[0] = {
+      ...own,
+      fighters: [...structuredClone(config.playerFighters)],
+      leader: 0,
+    };
+    own = state.sides[0];
+    state.lastActors[0] = null;
+  }
   ctx.emit({ type: "wave", wave: config.wave });
   own.fighters.forEach((f, i) => {
     f.effects = [];
     delete f.comboReady;delete f.comboOpenedAt;delete f.comboShield;
     f.spirit = R.SPIRIT_MAX;
-    if (isAlive(f)) {
-      f.hp = Math.min(f.maxHp, f.hp + Math.round(f.maxHp * config.heal));
-    } else if (config.revive.includes(i)) {
+    if (
+      config.revive.includes(i) &&
+      (config.playerFighters !== undefined || !isAlive(f))
+    ) {
       f.hp = Math.max(1, Math.round(f.maxHp * config.reviveHp));
       f.energy = 0;
       ctx.emit({ type: "revive", side: 0, fighter: i, hp: f.hp });
+    } else if (isAlive(f)) {
+      f.hp = Math.min(f.maxHp, f.hp + Math.round(f.maxHp * config.heal));
     }
   });
   own.food = Math.max(0, Math.min(R.FOOD_MAX, config.food));

@@ -75,13 +75,6 @@ import {
   type SkillDef,
   type Whirl,
   type Tier,
-  autoRevive,
-  downedAfterWave,
-  FOOD_MAX,
-  SURVIVAL_FOOD,
-  SURVIVAL_HEAL,
-  SURVIVAL_REVIVE_FOOD,
-  SURVIVAL_REVIVE_HP,
   type MatchAction,
   type SurvivalResult,
   type DailyScore,
@@ -114,6 +107,7 @@ import {
 import { GearIcon } from "../art/gear";
 import { Portrait } from "../art/portraits";
 import { SkillIcon } from "../art/skills";
+import SurvivalBreakScreen from "../survival/SurvivalBreakScreen";
 import { INK, starPoints, TileArt } from "../art/tiles";
 import ProgressPanel from "./ProgressPanel";
 import GearPanel from "./GearPanel";
@@ -482,95 +476,6 @@ function WaveBanner({
           <WaveFoes preview={next} />
         </span>
       )}
-    </div>
-  );
-}
-
-/** Nghỉ giữa hai đợt: hồi phục, chọn trả lương hồi sinh, vào đợt kế hoặc dừng ghi điểm. */
-function BreakPanel({
-  survival,
-  state,
-  pending,
-  onNext,
-  onEnd,
-}: {
-  survival: SurvivalView;
-  state: BattleState;
-  pending: boolean;
-  onNext: (revive?: number) => void;
-  onEnd: () => void;
-}) {
-  const own = state.sides[PLAYER];
-  const downed = downedAfterWave(survival, state);
-  const auto = autoRevive(survival.wave, downed);
-  const food = Math.min(FOOD_MAX, own.food + SURVIVAL_FOOD);
-  const canPay = food >= SURVIVAL_REVIVE_FOOD;
-  const fallen = downed.flatMap((d, i) => (d === null ? [] : [i]));
-  const next = survival.next!;
-  return (
-    // Điện thoại: bàn cờ thấp, nên hiện thành tấm dưới đáy màn hình thay vì phủ lên bàn cờ.
-    <div className="fixed inset-x-2 bottom-2 z-30 flex max-h-[85dvh] flex-col items-center gap-3 overflow-y-auto rounded-xl border border-[var(--gold)] bg-black/90 p-3 text-center text-white shadow-2xl sm:absolute sm:inset-0 sm:max-h-none sm:justify-center sm:rounded-lg sm:border-0 sm:bg-black/75 sm:shadow-none">
-      <p className="text-xl font-bold">Hạ hết đợt {survival.wave}!</p>
-      <p className="max-w-md text-sm">
-        Người còn đứng hồi {Math.round(SURVIVAL_HEAL * 100)}% máu, cả đội thêm{" "}
-        {SURVIVAL_FOOD} lương (vào đợt với {food} lương), năng lượng giữ nguyên.
-      </p>
-      {fallen.length > 0 && (
-        <div className="flex flex-col items-center gap-1.5 text-sm">
-          {auto !== null && (
-            <p className="text-emerald-300">
-              {own.fighters[auto]!.name} tự đứng dậy với{" "}
-              {Math.round(SURVIVAL_REVIVE_HP * 100)}% máu.
-            </p>
-          )}
-          {auto === null && (
-            <>
-              <p>
-                Trả {SURVIVAL_REVIVE_FOOD} lương để một người đứng dậy ngay
-                {canPay ? "" : " (chưa đủ lương)"}:
-              </p>
-              <div className="flex flex-wrap justify-center gap-2">
-                {fallen.map((i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    disabled={pending || !canPay}
-                    onClick={() => onNext(i)}
-                    className="rounded bg-emerald-600 px-3 py-1.5 font-semibold disabled:opacity-40"
-                  >
-                    Hồi sinh {own.fighters[i]!.name}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-      )}
-      <div className="flex flex-col items-center gap-1 text-sm">
-        <p className="font-semibold">
-          Đợt {next.wave}: {next.foes.length} đối thủ cấp {next.level}
-          {next.boss ? ", có sứ quân dẫn quân" : ""}
-        </p>
-        <WaveFoes preview={next} />
-      </div>
-      <div className="flex flex-wrap justify-center gap-2">
-        <button
-          type="button"
-          disabled={pending}
-          onClick={() => onNext()}
-          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950 disabled:opacity-50"
-        >
-          Vào đợt {next.wave}
-        </button>
-        <button
-          type="button"
-          disabled={pending}
-          onClick={onEnd}
-          className="rounded bg-white/20 px-4 py-2 disabled:opacity-50"
-        >
-          Dừng, ghi {survival.cleared} đợt
-        </button>
-      </div>
     </div>
   );
 }
@@ -1078,6 +983,7 @@ export default function DemoGame({
             res.error,
         );
       if (!res.view) return;
+      if (res.view.seq < seq.current) return;
       seq.current = res.view.seq;
       setSurvival(res.view.survival ?? null);
       const next = toBattleState(res.view);
@@ -1105,12 +1011,22 @@ export default function DemoGame({
       if (!battleId) return;
       const before = state;
       setPending(true);
-      void actOnline(battleId, seq.current, action).then((res) => {
+      const requestedSeq = seq.current;
+      void actOnline(battleId, requestedSeq, action).then(async (res) => {
+        let response = res;
+        if (
+          !res.view &&
+          ["network", "conflict", "staleSeq"].includes(res.error ?? "")
+        ) {
+          const refreshed = await fetchOnline(battleId);
+          if (refreshed.view)
+            response = { ...refreshed, error: res.error };
+        }
         setPending(false);
-        receive(before, res);
+        receive(before, response);
       });
     },
-    [battleId, state, receive],
+    [battleId, state, receive, setPending],
   );
 
   const apply = useCallback(
@@ -1872,17 +1788,19 @@ export default function DemoGame({
                   </div>
                 )}
                 {atBreak && (
-                  <BreakPanel
+                  <SurvivalBreakScreen
                     survival={survival!}
-                    state={state}
                     pending={pending}
-                    onNext={(revive) =>
-                      sendOnline(
-                        revive === undefined
-                          ? { type: "nextWave" }
-                          : { type: "nextWave", revive },
-                      )
-                    }
+                    error={toast}
+                    onRefresh={() => {
+                      if (!battleId) return;
+                      setPending(true);
+                      void fetchOnline(battleId).then((res) => {
+                        setPending(false);
+                        receive(state, res);
+                      });
+                    }}
+                    onNext={(action) => sendOnline(action)}
                     onEnd={() => sendOnline({ type: "endRun" })}
                   />
                 )}
