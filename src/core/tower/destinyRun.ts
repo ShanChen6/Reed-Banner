@@ -99,6 +99,7 @@ export function createDestinyRun(
       hp: Object.fromEntries(rosterIds.map((id) => [id, 1])),
       food: DESTINY_STARTING_FOOD,
       rage: 0,
+      totalTurns: 0,
       boons: [],
       phase: "prepare",
       settledFloor: 0,

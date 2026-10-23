@@ -5,7 +5,6 @@ import {
   applyDestinyRecovery,
   createDestinyFloorBattle,
   createDestinyRun,
-  destinyCycleId,
   generateDestinyCycleRules,
   hashString,
   isDualTowerV1,
@@ -24,6 +23,8 @@ import { getBattle, type Deps } from "./battles";
 import { loadProfile, updateProfile } from "./profiles";
 import type { MatchRecord } from "./store";
 import { resolveDestinyFloor } from "./destinyContent";
+import { activeDestinyCycle, destinyCycleSeed, publicDestinyCycle } from "./destinyCycle";
+import { hasExpiredDestinyRun, reconcileDestinyCycle } from "./destinyExpire";
 
 export type DestinyError =
   | "bad_request"
@@ -45,16 +46,15 @@ export type DestinyDeps = Deps & { readonly destinySecret: string };
 const secretValid = (deps: Deps): deps is DestinyDeps =>
   typeof deps.destinySecret === "string" && deps.destinySecret.length >= 16;
 
-function currentCycle(now: number): string | null {
-  return destinyCycleId(now);
-}
-
 export async function destinyOverview(ownerId: string | null, deps: Deps) {
-  const cycleId = currentCycle(deps.now);
-  if (!ownerId) return { supported: true, cycleId, stones: 0, progress: null, floor: null };
-  const { profile } = await loadProfile(deps.profiles, ownerId);
+  const scheduled = activeDestinyCycle(deps.now);
+  const cycle = scheduled.ok ? publicDestinyCycle(scheduled.cycle) : null;
+  const cycleId = cycle?.cycleId ?? null;
+  if (!ownerId) return { supported: true, cycleId, cycle, stones: 0, progress: null, floor: null };
+  const reconciled = await reconcileDestinyCycle(deps.profiles, ownerId, deps.now);
+  const profile = reconciled.ok ? reconciled.profile : (await loadProfile(deps.profiles, ownerId)).profile;
   if (!isDualTowerV1(profile.dualTower))
-    return { supported: false, cycleId, stones: profile.stones, progress: null, floor: null };
+    return { supported: false, cycleId, cycle, stones: profile.stones, progress: null, floor: null };
   const progress = profile.dualTower.destiny;
   const run = progress.run;
   const resolved = run && secretValid(deps) && run.cycleId === cycleId
@@ -63,6 +63,7 @@ export async function destinyOverview(ownerId: string | null, deps: Deps) {
   return {
     supported: true,
     cycleId,
+    cycle,
     stones: profile.stones,
     progress,
     floor: resolved?.ok
@@ -81,8 +82,14 @@ export async function startDestinyRun(
   const rosterIds = (raw as Record<string, unknown>).rosterIds;
   if (!Array.isArray(rosterIds) || !rosterIds.every((id) => typeof id === "string"))
     return { ok: false, error: "bad_request" };
-  const cycleId = currentCycle(deps.now);
-  if (!cycleId) return { ok: false, error: "bad_request" };
+  const reconciled = await reconcileDestinyCycle(deps.profiles, ownerId, deps.now);
+  if (!reconciled.ok) return { ok: false, error: reconciled.error === "unsupported_schema" ? "unsupported_schema" : "conflict" };
+  const scheduled = activeDestinyCycle(deps.now);
+  if (!scheduled.ok) return { ok: false, error: "bad_request" };
+  const cycle = scheduled.cycle;
+  const cycleId = cycle.cycleId;
+  const rulesSeed = destinyCycleSeed(cycle, deps.destinySecret, "rules");
+  if (!rulesSeed) return { ok: false, error: "invalid_secret" };
   let created: DestinyRun | undefined;
   const updated = await updateProfile(
     deps.profiles,
@@ -95,11 +102,11 @@ export async function startDestinyRun(
         return { ok: false as const, error: "run_exists" as const };
       const configs = profileTeam(profile, rosterIds.slice(1));
       const members = configs.slice(1).map(({ id, element, profession }) => ({ id, element, profession }));
-      const rules = generateDestinyCycleRules(cycleId, deps.destinySecret, members);
+      const rules = generateDestinyCycleRules(cycleId, rulesSeed, members);
       if (!rules.ok) return { ok: false as const, error: "invalid_roster" as const };
       const made = createDestinyRun(profile, deps.now, rosterIds, rules.snapshot.floors.map(({ rules: floorRules }) => floorRules));
       if (!made.ok) return { ok: false as const, error: "invalid_roster" as const };
-      created = made.run;
+      created = { ...made.run, rulesVersion: cycle.rulesVersion };
       const sameCycle = current.cycleId === cycleId;
       return {
         ok: true as const,
@@ -110,9 +117,10 @@ export async function startDestinyRun(
             destiny: {
               cycleId,
               cycleBest: sameCycle ? current.cycleBest : 0,
-              run: made.run,
+              run: created,
               claimedMilestones: sameCycle ? current.claimedMilestones : [],
               cycleRewardClaimed: sameCycle && current.cycleRewardClaimed,
+              history: current.history ?? [],
             },
           },
         },
@@ -151,11 +159,18 @@ export async function startDestinyBattle(
   if (!secretValid(deps)) return { ok: false, error: "invalid_secret" };
   const input = parseBattleInput(raw);
   if (!input) return { ok: false, error: "bad_request" };
+  const reconciled = await reconcileDestinyCycle(deps.profiles, ownerId, deps.now);
+  if (!reconciled.ok) return { ok: false, error: reconciled.error === "unsupported_schema" ? "unsupported_schema" : "conflict" };
+  if (reconciled.value.expired || hasExpiredDestinyRun(reconciled.profile, reconciled.value.cycleId))
+    return { ok: false, error: "cycle_expired" };
   let stored = await loadProfile(deps.profiles, ownerId);
   if (!isDualTowerV1(stored.profile.dualTower)) return { ok: false, error: "unsupported_schema" };
   let run = stored.profile.dualTower.destiny.run;
   if (!run) return { ok: false, error: "no_run" };
-  if (run.cycleId !== currentCycle(deps.now)) return { ok: false, error: "cycle_expired" };
+  const scheduled = activeDestinyCycle(deps.now);
+  if (!scheduled.ok || run.cycleId !== scheduled.cycle.cycleId ||
+      (run.rulesVersion !== undefined && run.rulesVersion !== scheduled.cycle.rulesVersion))
+    return { ok: false, error: "cycle_expired" };
   if (run.phase === "battle" && run.matchId) {
     const resumed = await getBattle(run.matchId, ownerId, deps);
     if (resumed.ok) return { ok: true, id: resumed.id, view: resumed.view, events: resumed.events, resumed: true };
@@ -166,12 +181,14 @@ export async function startDestinyBattle(
   if (run.phase !== "prepare") return { ok: false, error: "invalid_phase" };
   const resolved = resolveDestinyFloor(run, deps.destinySecret);
   if (!resolved.ok) return { ok: false, error: resolved.error === "floor_not_found" ? "floor_not_found" : "bad_request" };
+  const battleSeed = destinyCycleSeed(scheduled.cycle, deps.destinySecret, "battle");
+  if (!battleSeed) return { ok: false, error: "invalid_secret" };
   const made = createDestinyFloorBattle(run, {
     activeIds: input.activeIds,
     leaderBuild: input.leaderBuild,
     rules: resolved.floor.rules,
     foes: { fighters: resolved.floor.foes, leader: 0 },
-    seed: hashString(`battle|${run.cycleId}|${run.floor}|${deps.destinySecret}`),
+    seed: hashString(`${battleSeed}|${run.floor}`),
     now: deps.now,
     timer: true,
     firstSide: HUMAN,
@@ -226,6 +243,10 @@ export async function claimDestinyReward(
   if (!raw || typeof raw !== "object") return { ok: false, error: "bad_request" };
   const input = raw as Record<string, unknown>;
   if (!Number.isInteger(input.floor) || !Number.isInteger(input.index)) return { ok: false, error: "bad_request" };
+  const reconciled = await reconcileDestinyCycle(deps.profiles, ownerId, deps.now);
+  if (!reconciled.ok) return { ok: false, error: reconciled.error === "unsupported_schema" ? "unsupported_schema" : "conflict" };
+  if (reconciled.value.expired || hasExpiredDestinyRun(reconciled.profile, reconciled.value.cycleId))
+    return { ok: false, error: "cycle_expired" };
   let next: DestinyRun | undefined;
   let changed = false;
   const updated = await updateProfile(
@@ -274,6 +295,10 @@ export async function stopDestinyRun(
   ownerId: string,
   deps: Deps,
 ): Promise<{ readonly ok: true; readonly stopped: boolean } | { readonly ok: false; readonly error: DestinyError }> {
+  const reconciled = await reconcileDestinyCycle(deps.profiles, ownerId, deps.now);
+  if (!reconciled.ok) return { ok: false, error: reconciled.error === "unsupported_schema" ? "unsupported_schema" : "conflict" };
+  if (reconciled.value.expired || hasExpiredDestinyRun(reconciled.profile, reconciled.value.cycleId))
+    return { ok: false, error: "cycle_expired" };
   const { profile } = await loadProfile(deps.profiles, ownerId);
   if (!isDualTowerV1(profile.dualTower)) return { ok: false, error: "unsupported_schema" };
   const run = profile.dualTower.destiny.run;

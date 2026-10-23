@@ -8,6 +8,9 @@ import {
 } from "@/core";
 import { updateProfile, type ProfileStore } from "./profiles";
 import { resolveDestinyFloor } from "./destinyContent";
+import { activeDestinyCycle } from "./destinyCycle";
+import { reconcileDestinyCycle } from "./destinyExpire";
+import type { DestinyLeaderboardStore, DestinyLeaderboardSubmission } from "./destinyLeaderboard";
 
 export interface DestinyResult {
   readonly floor: number;
@@ -19,11 +22,17 @@ export async function settleDestinyMatch(
   ownerId: string,
   matchId: string,
   match: Match,
-  deps: { readonly profiles: ProfileStore; readonly now: number; readonly destinySecret?: string },
+  deps: { readonly profiles: ProfileStore; readonly now: number; readonly destinySecret?: string; readonly destinyLeaderboard?: DestinyLeaderboardStore },
 ): Promise<DestinyResult | undefined> {
   const tag = match.destiny?.tag;
   if (!tag || !deps.destinySecret) return undefined;
+  const scheduled = activeDestinyCycle(deps.now);
+  if (!scheduled.ok || scheduled.cycle.cycleId !== tag.cycleId) {
+    await reconcileDestinyCycle(deps.profiles, ownerId, deps.now);
+    return undefined;
+  }
   let result: DestinyResult | undefined;
+  let leaderboard: DestinyLeaderboardSubmission | undefined;
   const updated = await updateProfile(
     deps.profiles,
     ownerId,
@@ -46,6 +55,14 @@ export async function settleDestinyMatch(
       if (settled.won && (!nextRun.offer || nextRun.offer.length !== 3))
         return { ok: false as const, error: "invalid_offer" as const };
       result = { floor: tag.floor, won: match.battle.winner === HUMAN, phase: nextRun.phase === "reward" ? "reward" : "done" };
+      leaderboard = settled.won ? {
+        eventId: matchId,
+        cycleId: tag.cycleId,
+        ownerId,
+        clearedFloor: tag.floor,
+        totalTurns: nextRun.totalTurns ?? 0,
+        completedAt: deps.now,
+      } : undefined;
       return {
         ok: true as const,
         profile: {
@@ -66,6 +83,13 @@ export async function settleDestinyMatch(
   if (!updated.ok) {
     console.error("Không chốt được trận Destiny", matchId, updated.error);
     return undefined;
+  }
+  if (leaderboard && deps.destinyLeaderboard) {
+    try {
+      await deps.destinyLeaderboard.submit(leaderboard);
+    } catch (error) {
+      console.error("Không ghi được BXH Destiny", matchId, error);
+    }
   }
   return result;
 }
