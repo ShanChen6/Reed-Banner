@@ -6,6 +6,7 @@
 import { useEffect, useState } from "react";
 import { CAMPAIGN, describeScore, type BoardId } from "@/core";
 import { SceneLink } from "../SceneContext";
+import { useScene } from "../SceneContext";
 
 interface BoardResponse {
   readonly board?: BoardId;
@@ -19,8 +20,23 @@ interface BoardResponse {
   readonly error?: string;
 }
 
+interface DestinyBoardResponse {
+  readonly cycle?: { readonly cycleId: string; readonly startAt: number; readonly endAt: number };
+  readonly entries?: readonly {
+    readonly rank: number;
+    readonly name: string;
+    readonly mine: boolean;
+    readonly clearedFloor: number;
+    readonly totalTurns: number;
+    readonly completedAt: number;
+  }[];
+  readonly mine?: { readonly rank: number; readonly clearedFloor: number; readonly totalTurns: number } | null;
+  readonly nextCursor?: string | null;
+  readonly error?: string;
+}
+
 const TABS: readonly {
-  id: "campaign" | "stage" | "tower" | "survival" | "arena";
+  id: "campaign" | "stage" | "tower" | "survival" | "arena" | "destiny";
   label: string;
 }[] = [
   { id: "campaign", label: "Chiến dịch" },
@@ -28,6 +44,7 @@ const TABS: readonly {
   { id: "tower", label: "Leo tháp" },
   { id: "survival", label: "Sinh tồn" },
   { id: "arena", label: "Đấu trường" },
+  { id: "destiny", label: "Vận Mệnh" },
 ];
 
 const NOTE: Record<(typeof TABS)[number]["id"], string> = {
@@ -38,6 +55,7 @@ const NOTE: Record<(typeof TABS)[number]["id"], string> = {
   survival: "Số đợt nhiều nhất đã vượt qua.",
   arena:
     "Điểm đấu trường bóng ma: thắng cộng, thua trừ, nhiều hơn khi gặp đối thủ mạnh hơn.",
+  destiny: "Tầng clear cao hơn; hòa thì tổng lượt ít hơn, sau đó người hoàn thành sớm hơn.",
 };
 
 function scoreText(board: BoardId, score: number): string {
@@ -49,12 +67,26 @@ function scoreText(board: BoardId, score: number): string {
 }
 
 export default function LeaderboardScreen() {
-  const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("campaign");
+  const { params } = useScene();
+  const [tab, setTab] = useState<(typeof TABS)[number]["id"]>(() => params.get("board") === "destiny" ? "destiny" : "campaign");
   const [stage, setStage] = useState(CAMPAIGN[0]!.id);
   const [data, setData] = useState<BoardResponse | null>(null);
-  const board: BoardId = tab === "stage" ? `stage:${stage}` : tab;
+  const [destiny, setDestiny] = useState<DestinyBoardResponse | null>(null);
+  const [cycle, setCycle] = useState("");
+  const [cursor, setCursor] = useState("0");
+  const board: BoardId = tab === "stage" ? `stage:${stage}` : tab === "destiny" ? "campaign" : tab;
 
   useEffect(() => {
+    if (tab === "destiny") {
+      let live = true;
+      const query = new URLSearchParams({ cursor, limit: "20" });
+      if (cycle) query.set("cycle", cycle);
+      void fetch(`/api/destiny/leaderboard?${query}`, { cache: "no-store" })
+        .then((r) => r.json() as Promise<DestinyBoardResponse>)
+        .catch((): DestinyBoardResponse => ({ error: "network" }))
+        .then((value) => live && setDestiny(value));
+      return () => { live = false; };
+    }
     let live = true;
     void fetch(`/api/leaderboard?board=${encodeURIComponent(board)}`, {
       cache: "no-store",
@@ -65,7 +97,7 @@ export default function LeaderboardScreen() {
     return () => {
       live = false;
     };
-  }, [board]);
+  }, [board, tab, cycle, cursor]);
 
   const shown = data?.board === board ? data : null;
 
@@ -105,7 +137,18 @@ export default function LeaderboardScreen() {
           ))}
         </div>
 
-        <section className="flex flex-col gap-2 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4">
+        {tab === "destiny" ? (
+          <section className="flex flex-col gap-3 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4">
+            <label className="flex flex-wrap items-center gap-2 text-sm">Cycle lịch sử
+              <input type="date" value={cycle || destiny?.cycle?.cycleId || ""} onChange={(event) => { setCycle(event.target.value); setCursor("0"); }} className="rounded bg-black/40 px-2 py-1" />
+              {cycle && <button type="button" onClick={() => { setCycle(""); setCursor("0"); }} className="rounded bg-white/10 px-2 py-1">Cycle hiện tại</button>}
+            </label>
+            <p className="text-xs text-stone-400">{NOTE.destiny}</p>
+            {!destiny?.entries ? <p className="py-6 text-center text-sm text-stone-400">{destiny?.error ? "Cycle hoặc truy vấn không hợp lệ." : "Đang tải…"}</p> : destiny.entries.length === 0 ? <p className="py-6 text-center text-sm text-stone-400">Chưa có thành tích trong cycle này.</p> : <ol className="flex flex-col gap-1 text-sm">{destiny.entries.map((entry) => <li key={entry.rank} className={`flex items-center gap-2 rounded px-2 py-1.5 ${entry.mine ? "bg-amber-500/20 font-semibold" : "bg-black/20"}`}><span className="w-7 text-right tabular-nums text-amber-300">{entry.rank}</span><span className="min-w-0 flex-1 truncate">{entry.name}{entry.mine && " (bạn)"}</span><span className="text-xs tabular-nums text-stone-300">Tầng {entry.clearedFloor} · {entry.totalTurns} lượt</span></li>)}</ol>}
+            {destiny?.mine && !destiny.entries?.some((entry) => entry.mine) && <p className="text-sm text-amber-200">Hạng của bạn: {destiny.mine.rank} · tầng {destiny.mine.clearedFloor} · {destiny.mine.totalTurns} lượt</p>}
+            <div className="flex justify-end gap-2"><button type="button" disabled={cursor === "0"} onClick={() => setCursor(String(Math.max(0, Number(cursor) - 20)))} className="rounded bg-white/10 px-3 py-1.5 disabled:opacity-30">Trang trước</button><button type="button" disabled={!destiny?.nextCursor} onClick={() => destiny?.nextCursor && setCursor(destiny.nextCursor)} className="rounded bg-white/10 px-3 py-1.5 disabled:opacity-30">Trang sau</button></div>
+          </section>
+        ) : <section className="flex flex-col gap-2 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4">
           {tab === "stage" && (
             <label className="flex flex-wrap items-center gap-2 text-sm">
               Màn
@@ -160,7 +203,7 @@ export default function LeaderboardScreen() {
               {scoreText(board, shown.mine.score)}
             </p>
           )}
-        </section>
+        </section>}
       </div>
     </main>
   );

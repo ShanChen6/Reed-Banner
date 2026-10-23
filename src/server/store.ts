@@ -15,6 +15,8 @@ import { DrizzleProfileStore } from "./db/profiles";
 import { DrizzleMatchStore, type Db } from "./db/store";
 import { MemoryProfileStore, type ProfileStore } from "./profiles";
 import { MemoryDailyStore, type DailyStore } from "./daily";
+import { DrizzleDestinyLeaderboardStore } from "./db/destinyLeaderboard";
+import { MemoryDestinyLeaderboardStore, type DestinyLeaderboardStore } from "./destinyLeaderboard";
 
 function neonDb(url: string): Db {
   return drizzle(neon(url)) as unknown as Db;
@@ -70,7 +72,7 @@ export class MemoryMatchStore implements MatchStore {
   }
 }
 
-const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore; coLauArenaStore?: ArenaStore };
+const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore; coLauDestinyLeaderboardStore?: DestinyLeaderboardStore; coLauArenaStore?: ArenaStore };
 
 /**
  * Kho dùng chung của server: Postgres (Neon) khi có DATABASE_URL, ngược lại lưu trong bộ nhớ (dev).
@@ -108,6 +110,15 @@ export function leaderboardStore(): LeaderboardStore {
   const url = process.env.DATABASE_URL;
   globalStore.coLauLeaderboardStore ??= url ? new DrizzleLeaderboardStore(neonDb(url)) : new MemoryLeaderboardStore();
   return globalStore.coLauLeaderboardStore;
+}
+
+/** Kho BXH Destiny tách theo cycle, không dùng board `tower` legacy. */
+export function destinyLeaderboardStore(): DestinyLeaderboardStore {
+  const url = process.env.DATABASE_URL;
+  globalStore.coLauDestinyLeaderboardStore ??= url
+    ? new DrizzleDestinyLeaderboardStore(neonDb(url))
+    : new MemoryDestinyLeaderboardStore();
+  return globalStore.coLauDestinyLeaderboardStore;
 }
 
 /** Kho đấu trường bóng ma, cùng nguồn với kho trận. */
