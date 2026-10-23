@@ -14,6 +14,7 @@ import { SceneLink } from "./SceneContext";
 const MODES: readonly { scene: Scene; title: string; text: string }[] = [
   { scene: "CAMPAIGN", title: "Chiến dịch", text: "Bản đồ 12 sứ quân, đánh từng màn, đánh trùm." },
   { scene: "TOWER", title: "Leo tháp", text: "Chuỗi trận mạnh dần, máu và lương mang sang." },
+  { scene: "TRIAL", title: "Tháp Thí Luyện", text: "20 tầng cố định, tự chọn đội và luật riêng từng tầng." },
   { scene: "SURVIVAL", title: "Sinh tồn", text: "Đối thủ kéo đến theo đợt trên cùng bàn cờ." },
   { scene: "DAILY", title: "Thử thách ngày", text: "Một đề chung cho mọi người, mỗi ngày một lần." },
   { scene: "ARENA", title: "Đấu trường", text: "Đánh đội phòng thủ của người chơi khác." },
