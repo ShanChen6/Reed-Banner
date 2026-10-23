@@ -1,0 +1,208 @@
+// Song Tháp (Trial / Destiny) lưu trong hồ sơ, tách hẳn khỏi Legacy `profile.tower` (best/run).
+// Chỉ định danh và parse/serialize; luật tầng, thưởng và UI nằm ở task sau.
+// Xem docs/dual-tower/00-03-migration-plan.md.
+
+export const TOWER_MODES = ["legacy", "trial", "destiny"] as const;
+export type TowerMode = (typeof TOWER_MODES)[number];
+export const DEFAULT_TOWER_MODE: TowerMode = "legacy";
+
+/** Mode lạ/thiếu → null (để nơi gọi từ chối). */
+export function parseTowerMode(raw: unknown): TowerMode | null {
+  return (TOWER_MODES as readonly unknown[]).includes(raw)
+    ? (raw as TowerMode)
+    : null;
+}
+
+/** Mode lạ/thiếu → Legacy, giữ hành vi cũ của các request không mang mode. */
+export const towerModeOrLegacy = (raw: unknown): TowerMode =>
+  parseTowerMode(raw) ?? DEFAULT_TOWER_MODE;
+
+export const TRIAL_FLOORS = 20;
+/** Giới hạn thử nghiệm của roster khóa trong một run Destiny. */
+export const DESTINY_ROSTER_MAX = 8;
+export const DUAL_TOWER_SCHEMA = 1;
+/** Trần an toàn của đá tài khoản. */
+export const STONES_MAX = Number.MAX_SAFE_INTEGER;
+
+/** Ngày theo giờ Việt Nam, dạng YYYY-MM-DD. */
+const DAY_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+export interface TrialProgress {
+  /** Tầng Trial cao nhất đã qua (0..TRIAL_FLOORS). */
+  readonly cleared: number;
+  /** Tầng đã nhận đá lần đầu, tăng dần, không trùng. */
+  readonly claimedFloors: readonly number[];
+  /** Ngày VN của lần quét gần nhất. */
+  readonly lastSweepDay: string | null;
+}
+
+export interface DestinyRun {
+  /** Roster khóa đầu run (tối đa DESTINY_ROSTER_MAX), thủ lĩnh ở đầu. */
+  readonly roster: readonly string[];
+  /** Tầng sắp đánh, từ 1. */
+  readonly floor: number;
+  /** Máu theo tỉ lệ, theo id roster; 0 là đã ngã. */
+  readonly hp: Readonly<Record<string, number>>;
+  readonly food: number;
+  readonly active: boolean;
+}
+
+export interface DestinyProgress {
+  /** Chu kỳ hiện tại (ngày thứ Hai VN, YYYY-MM-DD); null khi chưa tham gia. */
+  readonly cycleId: string | null;
+  /** Tầng cao nhất trong chu kỳ này; reset khi sang chu kỳ, không là best vĩnh viễn. */
+  readonly cycleBest: number;
+  readonly run: DestinyRun | null;
+  readonly claimedMilestones: readonly string[];
+  readonly cycleRewardClaimed: boolean;
+}
+
+export interface DualTowerV1 {
+  readonly schema: typeof DUAL_TOWER_SCHEMA;
+  readonly trial: TrialProgress;
+  readonly destiny: DestinyProgress;
+  /** Khóa các khoản thưởng đá đã cộng (mới nhất ở cuối, giới hạn STONE_LEDGER_MAX). */
+  readonly stoneLedger: readonly string[];
+}
+
+export const STONE_LEDGER_MAX = 500;
+/** Định danh ổn định của vật liệu; dữ liệu cũ/mới dùng chung, không đổi tên. */
+export const ENHANCEMENT_STONE_ID = "enhancementStone";
+
+/** Schema mới hơn bản code này hiểu: giữ nguyên, không ghi đè. */
+export type DualTowerFuture = Readonly<Record<string, unknown>> & {
+  readonly schema: number;
+};
+
+export type DualTowerState = DualTowerV1 | DualTowerFuture;
+
+export const isDualTowerV1 = (s: DualTowerState): s is DualTowerV1 =>
+  s.schema === DUAL_TOWER_SCHEMA;
+
+export const NEW_TRIAL: TrialProgress = {
+  cleared: 0,
+  claimedFloors: [],
+  lastSweepDay: null,
+};
+
+export const NEW_DESTINY: DestinyProgress = {
+  cycleId: null,
+  cycleBest: 0,
+  run: null,
+  claimedMilestones: [],
+  cycleRewardClaimed: false,
+};
+
+export const NEW_DUAL_TOWER: DualTowerV1 = {
+  schema: DUAL_TOWER_SCHEMA,
+  trial: NEW_TRIAL,
+  destiny: NEW_DESTINY,
+  stoneLedger: [],
+};
+
+const isNum = (x: unknown): x is number =>
+  typeof x === "number" && Number.isFinite(x);
+const isObj = (x: unknown): x is Record<string, unknown> =>
+  !!x && typeof x === "object" && !Array.isArray(x);
+const uint = (x: unknown) => (Number.isInteger(x) && (x as number) > 0 ? (x as number) : 0);
+
+/** Đá: số nguyên không âm; âm/NaN/không nguyên/không phải số → 0. */
+export function parseStones(raw: unknown): number {
+  return Number.isInteger(raw) && (raw as number) > 0
+    ? Math.min(raw as number, STONES_MAX)
+    : 0;
+}
+
+function parseTrial(raw: unknown): TrialProgress {
+  if (!isObj(raw)) return NEW_TRIAL;
+  const claimed = Array.isArray(raw.claimedFloors)
+    ? [
+        ...new Set(
+          raw.claimedFloors.filter(
+            (f): f is number =>
+              Number.isInteger(f) && f >= 1 && f <= TRIAL_FLOORS,
+          ),
+        ),
+      ].sort((a, b) => a - b)
+    : [];
+  return {
+    cleared: Math.min(uint(raw.cleared), TRIAL_FLOORS),
+    claimedFloors: claimed,
+    lastSweepDay:
+      typeof raw.lastSweepDay === "string" && DAY_RE.test(raw.lastSweepDay)
+        ? raw.lastSweepDay
+        : null,
+  };
+}
+
+function parseDestinyRun(raw: unknown): DestinyRun | null {
+  if (!isObj(raw)) return null;
+  const roster = raw.roster;
+  if (
+    !Array.isArray(roster) ||
+    roster.length < 1 ||
+    roster.length > DESTINY_ROSTER_MAX ||
+    !roster.every((id) => typeof id === "string") ||
+    new Set(roster).size !== roster.length ||
+    uint(raw.floor) < 1 ||
+    !isNum(raw.food)
+  )
+    return null;
+  const hpRaw = isObj(raw.hp) ? raw.hp : {};
+  const hp = Object.fromEntries(
+    (roster as string[]).map((id) => {
+      const h = hpRaw[id];
+      return [id, isNum(h) ? Math.max(0, Math.min(1, h)) : 1];
+    }),
+  );
+  return {
+    roster: [...(roster as string[])],
+    floor: uint(raw.floor),
+    hp,
+    food: Math.max(0, Math.round(raw.food as number)),
+    active: raw.active === true,
+  };
+}
+
+function parseDestiny(raw: unknown): DestinyProgress {
+  if (!isObj(raw)) return NEW_DESTINY;
+  return {
+    cycleId:
+      typeof raw.cycleId === "string" && DAY_RE.test(raw.cycleId)
+        ? raw.cycleId
+        : null,
+    cycleBest: uint(raw.cycleBest),
+    run: parseDestinyRun(raw.run),
+    claimedMilestones: Array.isArray(raw.claimedMilestones)
+      ? [
+          ...new Set(
+            raw.claimedMilestones.filter(
+              (m): m is string => typeof m === "string" && m.length > 0,
+            ),
+          ),
+        ]
+      : [],
+    cycleRewardClaimed: raw.cycleRewardClaimed === true,
+  };
+}
+
+/** Thiếu/hỏng → rỗng; schema mới hơn → giữ nguyên bản gốc. */
+export function parseDualTower(raw: unknown): DualTowerState {
+  if (!isObj(raw)) return NEW_DUAL_TOWER;
+  if (isNum(raw.schema) && raw.schema > DUAL_TOWER_SCHEMA)
+    return raw as DualTowerFuture;
+  return {
+    schema: DUAL_TOWER_SCHEMA,
+    trial: parseTrial(raw.trial),
+    destiny: parseDestiny(raw.destiny),
+    stoneLedger: Array.isArray(raw.stoneLedger)
+      ? [
+          ...new Set(
+            raw.stoneLedger.filter(
+              (k): k is string => typeof k === "string" && k.length > 0 && k.length <= 100,
+            ),
+          ),
+        ].slice(-STONE_LEDGER_MAX)
+      : [],
+  };
+}
