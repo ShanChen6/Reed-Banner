@@ -87,6 +87,8 @@ export function createOnline(input: {
   tower?: true;
   /** Sinh tồn: bắt đầu lượt chơi mới. */
   survival?: true;
+  /** Sinh tồn: tối đa hai companion dự bị đã được chọn trước khi tạo run. */
+  reserveCompanions?: readonly string[];
   /** Thử thách hằng ngày: đề của hôm nay. */
   daily?: true;
   /** Đấu trường: đánh đối thủ thứ mấy trong các đối thủ đang bày. */
