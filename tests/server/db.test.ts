@@ -3,7 +3,22 @@ import { describe, it } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
-import { botDefense, mainCharacter, newProfile, startMatch, STARTER_COMPANIONS } from "../../src/core";
+import { eq } from "drizzle-orm";
+import {
+  botDefense,
+  createSurvivalRoster,
+  mainCharacter,
+  MAIN_ID,
+  type Match,
+  newProfile,
+  newSurvivalRun,
+  startMatch,
+  STARTER_COMPANIONS,
+  survivalActiveSideConfig,
+  survivalWave,
+  syncSurvivalRosterState,
+  updateSurvivalFighterRuntime,
+} from "../../src/core";
 import { DrizzleAccountStore } from "../../src/server/db/accounts";
 import { DrizzleDailyStore } from "../../src/server/db/daily";
 import { DrizzleLeaderboardStore } from "../../src/server/db/leaderboard";
@@ -14,6 +29,7 @@ import { DrizzleProfileStore } from "../../src/server/db/profiles";
 import { DrizzleMatchStore, type Db } from "../../src/server/db/store";
 import { signIn } from "../../src/server/accounts";
 import { deleteExpiredTokens } from "../../src/server/db/maintenance";
+import { matches } from "../../src/server/db/schema";
 
 describe("lưu trận vào Postgres (PGlite, cùng migration với Neon)", () => {
   it("tạo, đọc, ghi kèm điều kiện seq", async () => {
@@ -30,17 +46,205 @@ describe("lưu trận vào Postgres (PGlite, cùng migration với Neon)", () =>
       firstSide: 0,
       now: 1000,
     });
+
     const record = { id: "m_1", ownerId: "g_1", match, createdAt: 1000, updatedAt: 1000 };
     await store.create(record);
     assert.deepEqual(await store.get("m_1"), record);
     assert.equal(await store.get("m_khong"), null);
     const next = { ...record, match: { ...match, seq: match.seq + 1 }, updatedAt: 2000 };
-    assert.equal(await store.save(next, match.seq), true);
-    assert.equal(await store.save(next, match.seq), false);
+    const competing = {
+      ...next,
+      updatedAt: 2500,
+      match: { ...next.match, lastHumanAt: 2500 },
+    };
+    const writes = await Promise.all([
+      store.save(next, match.seq),
+      store.save(competing, match.seq),
+    ]);
+    assert.deepEqual(writes.sort(), [false, true]);
     assert.equal((await store.get("m_1"))!.match.seq, match.seq + 1);
-    assert.equal(await store.claimReward("m_1", 3000), true);
-    assert.equal(await store.claimReward("m_1", 4000), false);
+    assert.deepEqual(
+      (
+        await Promise.all([
+        store.claimReward("m_1", 3000),
+        store.claimReward("m_1", 4000),
+        ])
+      ).sort(),
+      [false, true],
+    );
     assert.equal(await store.claimReward("m_khong", 4000), false);
+  });
+
+  it("Survival V2 được resume giữa round và break, legacy chỉ active được nâng cấp", async () => {
+    const db = drizzle(new PGlite());
+    await migrate(db, { migrationsFolder: "drizzle" });
+    const store = new DrizzleMatchStore(db as unknown as Db);
+    const originalProfile = newProfile();
+    const profile = {
+      ...originalProfile,
+      profession: "phapSu" as const,
+      element: "hoa" as const,
+    };
+    const rosterResult = createSurvivalRoster(
+      profile,
+      [MAIN_ID, "haVan", "maiThanh"],
+      ["leThach", "toKim"],
+    );
+    assert.ok(rosterResult.ok);
+    const run = {
+      ...newSurvivalRun(profile, 1234, rosterResult.roster),
+      wave: 2,
+    };
+    const side = survivalActiveSideConfig(run.roster);
+    assert.ok(side.ok);
+    const { match: started } = startMatch({
+      sides: [
+        side.value,
+        { fighters: survivalWave(run, 2).foes, leader: 0 },
+      ],
+      difficulty: "easy",
+      seed: 99,
+      firstSide: 0,
+      now: 100,
+      survival: run,
+    });
+    const activeUpdate = updateSurvivalFighterRuntime(
+      run,
+      started.battle,
+      "haVan",
+      { hp: 41, energy: 62 },
+      2,
+    );
+    assert.ok(activeUpdate.ok);
+    const reserveUpdate = updateSurvivalFighterRuntime(
+      activeUpdate.value.run,
+      activeUpdate.value.battle,
+      "leThach",
+      { hp: 0, energy: 27 },
+      2,
+    );
+    assert.ok(reserveUpdate.ok);
+    const sync = syncSurvivalRosterState(
+      reserveUpdate.value.run,
+      reserveUpdate.value.battle,
+    );
+    assert.ok(sync.ok);
+
+    const midRound = {
+      ...started,
+      battle: reserveUpdate.value.battle,
+      survival: sync.value,
+    };
+    const record = {
+      id: "m_survival_v2",
+      ownerId: "g_1",
+      match: midRound,
+      createdAt: 100,
+      updatedAt: 100,
+    };
+    await store.create(record);
+    const resumed = await store.get(record.id);
+    assert.ok(resumed);
+    assert.deepEqual(resumed.match.survival, sync.value);
+    assert.deepEqual(
+      resumed.match.survival.roster.activeIds,
+      [MAIN_ID, "haVan", "maiThanh"],
+    );
+    assert.deepEqual(
+      resumed.match.survival.roster.reserveIds,
+      ["leThach", "toKim"],
+    );
+    assert.equal(
+      resumed.match.survival.roster.entries[MAIN_ID]!.snapshot.config.profession,
+      profile.profession,
+    );
+    assert.equal(
+      resumed.match.survival.roster.entries[MAIN_ID]!.snapshot.config.element,
+      profile.element,
+    );
+    assert.equal(resumed.match.battle.sides[0].fighters[1]!.hp, 41);
+    assert.equal(resumed.match.battle.sides[0].fighters[1]!.energy, 62);
+    assert.equal(
+      resumed.match.survival.roster.entries["leThach"]!.location.kind === "reserve"
+        ? resumed.match.survival.roster.entries["leThach"]!.location.runtime.energy
+        : -1,
+      27,
+    );
+    assert.equal(
+      resumed.match.survival.roster.entries["leThach"]!.downedAtWave,
+      2,
+    );
+    assert.deepEqual(originalProfile, newProfile());
+
+    const atBreak = {
+      ...midRound,
+      battle: { ...midRound.battle, winner: 0 as const },
+    };
+    const breakRecord = {
+      ...record,
+      id: "m_survival_break",
+      match: atBreak,
+    };
+    await store.create(breakRecord);
+    const resumedBreak = await store.get(breakRecord.id);
+    assert.ok(resumedBreak);
+    assert.equal(resumedBreak.match.battle.winner, 0);
+    assert.deepEqual(resumedBreak.match.survival!.roster, sync.value.roster);
+    assert.equal(resumedBreak.match.survival!.seed, 1234);
+
+    const legacy = {
+      ...midRound,
+      survival: {
+        seed: 4321,
+        baseLevel: run.baseLevel,
+        wave: 2,
+        downed: [null, 2, null],
+        done: false,
+      },
+      battle: {
+        ...midRound.battle,
+        sides: [
+          {
+            ...midRound.battle.sides[0],
+            fighters: midRound.battle.sides[0].fighters.map((fighter, i) =>
+              i === 1 ? { ...fighter, hp: 0 } : fighter,
+            ),
+          },
+          midRound.battle.sides[1],
+        ],
+      },
+    };
+    await db
+      .update(matches)
+      .set({ state: legacy as unknown as Match })
+      .where(eq(matches.id, record.id));
+    const upgraded = await store.get(record.id);
+    assert.ok(upgraded);
+    assert.equal(upgraded.match.survival!.stateVersion, 2);
+    assert.deepEqual(
+      upgraded.match.survival!.roster.activeIds,
+      [MAIN_ID, "haVan", "maiThanh"],
+    );
+    assert.deepEqual(upgraded.match.survival!.roster.reserveIds, []);
+    assert.equal(upgraded.match.survival!.roster.entries["haVan"]!.snapshot.config.id, "haVan");
+    assert.equal(upgraded.match.survival!.roster.entries["haVan"]!.downedAtWave, 2);
+    assert.equal(upgraded.match.survival!.roster.entries["haVan"]!.snapshot.equipment.kind, "legacyEmbedded");
+    assert.equal(upgraded.match.battle.sides[0].fighters[1]!.hp, 0);
+    assert.equal(upgraded.match.survival!.seed, 4321);
+
+    await db
+      .update(matches)
+      .set({
+        state: {
+          ...upgraded.match,
+          survival: { ...upgraded.match.survival!, stateVersion: 99 },
+        } as unknown as Match,
+      })
+      .where(eq(matches.id, record.id));
+    await assert.rejects(
+      store.get(record.id),
+      /Invalid stored Survival state/,
+    );
   });
 
   it("hồ sơ: tạo lần đầu, ghi kèm điều kiện version", async () => {

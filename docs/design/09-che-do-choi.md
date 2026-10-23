@@ -141,26 +141,32 @@ Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (tr
 - Cùng một bàn cờ trong suốt lượt chơi. Đối thủ kéo đến theo **đợt**, mạnh dần.
 - **Đợt ≠ lượt.** Một đợt là một nhóm đối thủ kéo vào sân; đợt kết thúc khi toàn bộ đối thủ của đợt bị hạ gục. Mục tiêu tạm thời: 2–3 đối thủ mỗi đợt, khoảng 6–10 lượt mỗi bên (2–3 phút).
 - **Báo trước** đợt kế tiếp, ví dụ "3 lượt nữa: 2 Tướng sĩ hệ Hỏa", để người chơi chuẩn bị phòng thủ.
-- **Hồi phục cố định giữa các đợt:**
-  - Người còn sống: +20% máu tối đa.
-  - Lương chung: +25.
+- **Đội hình của một lượt Sinh tồn:** roster khóa lúc bắt đầu gồm Đinh Bộ Lĩnh, hai active companions và tối đa hai reserve companions đã sở hữu. Tổng roster từ 3–5 fighter; battle luôn có đúng ba active. Đinh Bộ Lĩnh cố định ở active slot 0 và luôn là thủ lĩnh. Reserve không xuất hiện trong battle, không hành động và không thể bị nhắm mục tiêu.
+- **Đổi tướng giữa các đợt:** chỉ sau khi thắng, tại BREAK; không đổi trong round. Có thể thay một hoặc cả hai active companion bằng reserve còn sống. Active bị thay (dù còn sống hay đã gục) chuyển về reserve, giữ nguyên HP, energy và lịch sử `downedAtWave`; reserve đưa vào active giữ nguyên state. Không thể đưa fighter gục vào active, chuyển Đinh Bộ Lĩnh khỏi vị trí thủ lĩnh, hoặc thay đổi roster ID đã khóa. Nếu có reserve sống, fighter active gục phải được thay để bắt đầu round kế; nếu không có reserve sống thì giữ nguyên slot gục. Lựa chọn rotation chỉ được áp dụng khi server xác nhận bắt đầu round kế tiếp.
+- **Hồi phục đúng một lần sau khi thắng round**, theo vai trò fighter đảm nhiệm trong wave vừa kết thúc: active còn sống +20% max HP; reserve còn sống +10% max HP (mức production hiện tại, chưa được phê duyệt điều chỉnh qua balance sign-off). HP bị giới hạn ở max HP; fighter gục không được hồi. Đổi vị trí trong BREAK không làm đổi tỷ lệ hồi đã được xác định cho round vừa thắng.
+- **Lương:** cộng +25 ở BREAK, tối đa 100; nếu dừng lượt chơi thì không chạy settlement của round kế. Khi bắt đầu round, lương và các khoản tiêu hao theo battle rules hiện hành được giữ nguyên.
 - **Hồi sinh người đã gục:**
   - **Tự động** sau **2 đợt** kể từ lúc gục (đếm riêng từng người), với 30% máu và 0 năng lượng.
   - **Hoặc** tiêu **40 lương** ở lần nghỉ giữa đợt để hồi sinh ngay, với 30% máu và 0 năng lượng.
   - Mỗi lần nghỉ giữa đợt chỉ hồi sinh tối đa **1 người**.
+  - Lương được cộng trước khi kiểm tra chi phí. Nếu auto-revive đã đến hạn thì ưu tiên auto và không nhận thêm paid revive trong cùng BREAK. Reserve hồi sinh vẫn ở reserve, không tự vào active.
   - Nhân vật chính gục thì vẫn chơi tiếp bằng hai nhân vật kèm và chờ hồi sinh như trên.
+- **Đinh Bộ Lĩnh:** run ban đầu snapshot nghề/nguyên tố đang lưu trong Profile; trong Survival V1.1 chỉ đổi nghề/hệ tại BREAK. Lựa chọn BREAK miễn phí và chỉ thuộc snapshot Survival, không sửa Profile. Build mới dùng progression, gear và builder hiện hành; khi max HP thay đổi, HP ratio được giữ theo baseline xác nhận, fighter HP 0 vẫn 0. Bộ kỹ năng nghề/hệ và passive hợp lệ theo cấp được dựng lại cho round kế; không mở khóa hoặc cấp điểm kỹ năng mới. Energy và Nộ không được tạo thêm bởi thao tác build.
+- **Tinh thần / round kế:** dùng luật battle hiện hành; khi bắt đầu wave mới, tinh thần reset theo luật hiện tại, hiệu ứng tạm thời bị xóa, energy của fighter sống và Nộ phe được giữ, bàn cờ/RNG bàn cờ được bảo toàn. Fighter vừa hồi sinh vào trận có 0 energy.
+- **Thất bại:** nếu cả ba active gục trong wave thì lượt Sinh tồn kết thúc ngay, kể cả khi còn reserve sống. Reserve không tự động nhảy vào trận. Người chơi cũng có thể dừng ở BREAK; bỏ dở quá 24 giờ chốt ở wave đã vượt qua theo luật cũ.
+- **Luồng chuyển round:** server xác nhận battle thắng → đồng bộ fighter state theo ID và đánh dấu gục → áp recovery active/reserve một lần → cộng lương → xử lý tối đa một auto/paid revive → xác thực rotation và build Đinh Bộ Lĩnh → dựng đúng ba active và opponent kế → giữ board/rage, áp dụng reset turn/spirit/effects hiện hành → lưu transition atomically theo Match sequence. Client không tự tính hoặc cấp recovery/reward.
 - **Lưu điểm theo đợt:** bỏ dở quá 24 giờ thì không xử thua; lượt chơi kết thúc ở đợt cuối cùng đã hoàn thành, và điểm vẫn được ghi.
 - Điểm = số đợt đã vượt qua.
 
-### 4.1 Bản đầu (Claude đặt 20/10/2026, chờ Shan duyệt)
+### 4.1 Bản đầu (Claude đặt 20/10/2026, chờ Shan duyệt; baseline trước V1.1)
 
 Trang `/survival`, code ở `src/core/survival/`. Cả lượt chơi là **một trận** trên server (`Match.survival`), nghỉ giữa đợt làm ngay trong trận.
 
-- **Đội:** đội 3vs3 đã chọn ở trang Hồ sơ. Người chơi luôn đi trước ở mỗi đợt.
+- **Đội:** ở baseline trước V1.1 là đội 3vs3 đã chọn ở trang Hồ sơ. V1.1 thay bằng roster snapshot 3 active + tối đa 2 reserve mô tả ở mục 4; người chơi luôn đi trước ở mỗi đợt.
 - **Đối thủ mỗi đợt:**
   - Đợt 1–2 có 2 đối thủ, từ đợt 3 có 3. Đối thủ thay **toàn bộ** phe AI (không lấp chỗ từng người).
   - Cứ 5 đợt có một đợt trùm: một sứ quân dẫn 2 tùy tướng, sứ quân máu ×1,5.
-  - Đối thủ lấy từ 14 nhân vật kèm (khởi đầu và cửa hàng), sinh theo seed riêng của lượt chơi (seed chỉ nằm trên server).
+  - Baseline ban đầu lấy đối thủ từ 14 nhân vật kèm. Implementation hiện tại sinh theo seed riêng từ pool 42 nhân vật kèm (5 khởi đầu + 37 cửa hàng); seed chỉ nằm trên server.
   - Cấp: bằng cấp nhân vật chính lúc bắt đầu, cứ 4 đợt thêm 1 cấp (tối đa 30).
   - Sức mạnh (nhân vào công): 0,45 ở đợt 1, mỗi đợt thêm 0,05. Máu nhân thêm 0,6 để mỗi đợt ngắn.
   - Độ khó AI: đợt 1–2 Dễ, 3–6 Thường, 7–12 Khó, 13–20 Trùm, từ 21 Ác mộng.
@@ -180,7 +186,7 @@ Trang `/survival`, code ở `src/core/survival/`. Cả lượt chơi là **một
   - Vượt qua ít nhất 1 đợt thì tính là thắng (kinh nghiệm, món rơi).
 - **Kỷ lục:** hồ sơ lưu `survival.best`.
 
-Mô phỏng: `pnpm sim -- --survival --battles 50`. AI Thường đánh thay người chơi, đội khởi đầu, trả lương hồi sinh khi còn ít nhất 30 lương sau khi trả.
+Mô phỏng baseline lịch sử: `pnpm sim -- --survival --battles 50`. AI Thường đánh thay người chơi, đội khởi đầu, trả lương hồi sinh khi còn ít nhất 30 lương sau khi trả. Các số dưới đây được lưu từ bản cũ; xem [báo cáo simulation V1.1](../survival-v1.1/23-balance-report.md) để biết baseline mới có seed và giới hạn so sánh.
 
 | Cấp | Trung bình | Trung vị | p90 | Qua đợt 10 | Qua đợt 15 | Lượt mỗi đợt (2 phe) |
 |---|---|---|---|---|---|---|
@@ -267,4 +273,3 @@ Trang `/arena`, code ở `src/core/arena/` (đội phòng thủ, bóng ma máy t
 - **Thưởng:** thưởng trận thường (kinh nghiệm, vàng nhặt, món rơi theo độ khó Khó) và thêm 50 vàng khi thắng.
 - **Bảng xếp hạng:** tab Đấu trường ở `/leaderboard`, theo điểm; lên bảng khi có đội phòng thủ.
 - **Chưa làm:** nhật ký bị đánh (chỉ có số trận giữ được và bị mất), mùa giải và thưởng theo hạng, chặn đánh lại cùng một người.
-
