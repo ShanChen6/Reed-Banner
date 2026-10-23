@@ -23,6 +23,7 @@ import { DrizzleAccountStore } from "../../src/server/db/accounts";
 import { DrizzleDailyStore } from "../../src/server/db/daily";
 import { DrizzleLeaderboardStore } from "../../src/server/db/leaderboard";
 import { DrizzleArenaStore } from "../../src/server/db/arena";
+import { DrizzleDestinyLeaderboardStore } from "../../src/server/db/destinyLeaderboard";
 import { MemoryArenaStore, type ArenaStore } from "../../src/server/arena";
 import { MemoryLeaderboardStore, type LeaderboardStore } from "../../src/server/leaderboard";
 import { DrizzleProfileStore } from "../../src/server/db/profiles";
@@ -390,6 +391,23 @@ describe("lưu trận vào Postgres (PGlite, cùng migration với Neon)", () =>
     }
     const top = await new DrizzleLeaderboardStore(db as unknown as Db).top("tower", 10);
     assert.equal(top.find((e) => e.ownerId === "g_a")!.name, "Shan");
+  });
+
+  it("BXH Destiny: migration, tie order, dedup và cycle isolation", async () => {
+    const db = drizzle(new PGlite());
+    await migrate(db, { migrationsFolder: "drizzle" });
+    const store = new DrizzleDestinyLeaderboardStore(db as unknown as Db);
+    const submit = (eventId: string, cycleId: string, ownerId: string, clearedFloor: number, totalTurns: number, completedAt: number) =>
+      store.submit({ eventId, cycleId, ownerId, clearedFloor, totalTurns, completedAt });
+    assert.equal(await submit("e1", "2026-10-19", "g_a", 5, 30, 100), true);
+    assert.equal(await submit("e2", "2026-10-19", "g_b", 5, 20, 200), true);
+    assert.equal(await submit("e3", "2026-10-19", "g_c", 6, 99, 300), true);
+    assert.equal(await submit("e1", "2026-10-19", "g_a", 5, 30, 100), false);
+    assert.equal(await submit("bad", "2026-10-19", "g_x", 0, 0, 0), false);
+    assert.equal(await submit("next", "2026-10-26", "g_a", 1, 5, 400), true);
+    assert.deepEqual((await store.page("2026-10-19", 0, 10)).map(({ ownerId }) => ownerId), ["g_c", "g_b", "g_a"]);
+    assert.equal((await store.rankOf("2026-10-19", "g_a"))?.rank, 3);
+    assert.equal((await store.rankOf("2026-10-26", "g_a"))?.rank, 1);
   });
 
   it("đấu trường: tạo hàng, đối thủ gần điểm nhất, giới hạn lượt trong ngày, cộng điểm không xuống dưới 0", async () => {

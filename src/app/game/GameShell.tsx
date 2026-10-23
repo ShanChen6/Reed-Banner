@@ -21,6 +21,8 @@ import { resolveScene, sceneOfPath, scenePath, SCENE_TITLE, type AuthScene, type
 import { isScenePath, pushScenePath, SceneContext, SceneLink, type SceneApi } from "./SceneContext";
 import SurvivalScreen from "./survival/SurvivalScreen";
 import TowerScreen from "./tower/TowerScreen";
+import TrialScreen from "./trial/TrialScreen";
+import DestinyScreen from "./destiny/DestinyScreen";
 
 export interface ShellAccount {
   readonly name: string;
@@ -143,6 +145,10 @@ function SceneView({
       return <CampaignScreen />;
     case "TOWER":
       return <TowerScreen />;
+    case "TRIAL":
+      return <TrialScreen />;
+    case "DESTINY":
+      return <DestinyScreen />;
     case "SURVIVAL":
       return <SurvivalScreen />;
     case "DAILY":

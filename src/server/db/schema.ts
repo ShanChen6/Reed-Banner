@@ -125,6 +125,23 @@ export const leaderboardScores = pgTable(
   (t) => [primaryKey({ columns: [t.board, t.ownerId] }), index("leaderboard_rank_idx").on(t.board, t.score)],
 );
 
+/** BXH Destiny tách theo cycle; index khớp thứ tự floor ↓, turns ↑, completion ↑. */
+export const destinyLeaderboardScores = pgTable(
+  "destiny_leaderboard_scores",
+  {
+    cycleId: text("cycle_id").notNull(),
+    ownerId: text("owner_id").notNull(),
+    clearedFloor: integer("cleared_floor").notNull(),
+    totalTurns: integer("total_turns").notNull(),
+    completedAt: bigint("completed_at", { mode: "number" }).notNull(),
+    eventId: text("event_id").notNull().unique(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.cycleId, t.ownerId] }),
+    index("destiny_leaderboard_rank_idx").on(t.cycleId, t.clearedFloor, t.totalTurns, t.completedAt, t.ownerId),
+  ],
+);
+
 /**
  * Đấu trường bóng ma: điểm, thành tích, đội phòng thủ (bản chụp), các đối thủ đang bày ra và số trận đã đánh
  * trong ngày. Điểm đổi bằng phép cộng trong SQL để hai trận cùng lúc không ghi đè nhau.
