@@ -38,6 +38,7 @@ export interface OnlineResponse {
     readonly campaign?: CampaignResult;
     readonly raid?: RaidResult;
     readonly tower?: TowerResult;
+    readonly destiny?: { readonly floor: number; readonly won: boolean; readonly phase: "reward" | "done" };
     readonly survival?: SurvivalResult;
     readonly daily?: {
       readonly score: DailyScore;

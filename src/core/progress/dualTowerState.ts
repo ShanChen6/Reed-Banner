@@ -73,7 +73,41 @@ export interface TrialProgress {
 }
 
 export type DestinyRunPhase = "prepare" | "battle" | "reward" | "done";
-export type DestinyBoon = "atk" | "def" | "hp";
+export const DESTINY_BOON_IDS = [
+  "atk",
+  "def",
+  "hp",
+  "elementalEdge",
+  "armoredFormation",
+  "supplyCache",
+  "battleDrum",
+] as const;
+export type DestinyBoon = (typeof DESTINY_BOON_IDS)[number];
+export interface DestinyBoonStack {
+  readonly id: DestinyBoon;
+  readonly stacks: number;
+  readonly effectVersion: number;
+}
+
+export type DestinyRewardOffer =
+  | { readonly kind: "targeted_heal" }
+  | { readonly kind: "field_medic" }
+  | { readonly kind: "rescue" }
+  | { readonly kind: "boon"; readonly boonId: DestinyBoon };
+
+/** Ràng buộc lưu trữ; catalog hiệu ứng đầy đủ nằm ở tower/destinyBoons.ts. */
+export const DESTINY_BOON_STATE_RULES: Readonly<Record<DestinyBoon, {
+  readonly maxStacks: number;
+  readonly effectVersion: number;
+}>> = {
+  atk: { maxStacks: 3, effectVersion: 1 },
+  def: { maxStacks: 3, effectVersion: 1 },
+  hp: { maxStacks: 3, effectVersion: 1 },
+  elementalEdge: { maxStacks: 2, effectVersion: 1 },
+  armoredFormation: { maxStacks: 2, effectVersion: 1 },
+  supplyCache: { maxStacks: 2, effectVersion: 1 },
+  battleDrum: { maxStacks: 2, effectVersion: 1 },
+};
 
 export interface DestinyFighterSnapshot {
   readonly id: string;
@@ -103,8 +137,16 @@ export interface DestinyRun {
   readonly food: number;
   /** Nộ khí xuyên tầng; thiếu ở dữ liệu cũ được hiểu là 0. */
   readonly rage?: number;
-  readonly boons?: readonly DestinyBoon[];
+  readonly boons?: readonly DestinyBoonStack[];
   readonly phase?: DestinyRunPhase;
+  /** Tầng đã đồng bộ kết quả battle vào runtime; receipt chống settle lặp sau reload. */
+  readonly settledFloor?: number;
+  /** Tầng đã nhận reward nội bộ; dùng cùng floor trong payload để retry an toàn. */
+  readonly rewardedFloor?: number;
+  /** Trận Destiny đang mở; chỉ có ở phase battle. */
+  readonly matchId?: string;
+  /** Ba lựa chọn authoritative của tầng vừa thắng; null ngoài phase reward. */
+  readonly offer?: readonly DestinyRewardOffer[] | null;
   readonly active: boolean;
 }
 
@@ -271,10 +313,51 @@ function parseDestinyRun(raw: unknown): DestinyRun | null {
     !validDay(raw.cycleId) ||
     !isObj(raw.fighters) ||
     !Array.isArray(raw.boons) ||
-    !raw.boons.every((b) => b === "atk" || b === "def" || b === "hp") ||
     !["prepare", "battle", "reward", "done"].includes(raw.phase as string) ||
-    (raw.rage !== undefined && (!Number.isInteger(raw.rage) || (raw.rage as number) < 0 || (raw.rage as number) > 100))
+    (raw.rage !== undefined && (!Number.isInteger(raw.rage) || (raw.rage as number) < 0 || (raw.rage as number) > 100)) ||
+    (raw.settledFloor !== undefined &&
+      (!Number.isInteger(raw.settledFloor) || (raw.settledFloor as number) < 0 || (raw.settledFloor as number) > uint(raw.floor))) ||
+    (raw.rewardedFloor !== undefined &&
+      (!Number.isInteger(raw.rewardedFloor) || (raw.rewardedFloor as number) < 0 || (raw.rewardedFloor as number) >= uint(raw.floor)))
   ) return null;
+  const boonCounts = new Map<DestinyBoon, number>();
+  for (const rawBoon of raw.boons) {
+    const id = typeof rawBoon === "string"
+      ? rawBoon
+      : isObj(rawBoon) ? rawBoon.id : undefined;
+    if (!(DESTINY_BOON_IDS as readonly unknown[]).includes(id)) return null;
+    const boonId = id as DestinyBoon;
+    const rule = DESTINY_BOON_STATE_RULES[boonId];
+    const stacks = typeof rawBoon === "string" ? 1 : rawBoon.stacks;
+    const effectVersion = typeof rawBoon === "string" ? rule.effectVersion : rawBoon.effectVersion;
+    if (
+      !Number.isInteger(stacks) || (stacks as number) < 1 ||
+      !Number.isInteger(effectVersion) || effectVersion !== rule.effectVersion
+    ) return null;
+    boonCounts.set(boonId, (boonCounts.get(boonId) ?? 0) + stacks as number);
+    if (boonCounts.get(boonId)! > rule.maxStacks) return null;
+  }
+  const boons: DestinyBoonStack[] = DESTINY_BOON_IDS.flatMap((id) => {
+    const stacks = boonCounts.get(id);
+    return stacks ? [{ id, stacks, effectVersion: DESTINY_BOON_STATE_RULES[id].effectVersion }] : [];
+  });
+  const offer = raw.offer === null || raw.offer === undefined
+    ? null
+    : Array.isArray(raw.offer) && raw.offer.length === 3
+      ? raw.offer.flatMap((entry): DestinyRewardOffer[] => {
+          if (!isObj(entry)) return [];
+          if (entry.kind === "targeted_heal" || entry.kind === "field_medic" || entry.kind === "rescue")
+            return [{ kind: entry.kind }];
+          if (entry.kind === "boon" && (DESTINY_BOON_IDS as readonly unknown[]).includes(entry.boonId))
+            return [{ kind: "boon", boonId: entry.boonId as DestinyBoon }];
+          return [];
+        })
+      : [];
+  if (raw.offer !== null && raw.offer !== undefined && (!offer || offer.length !== 3)) return null;
+  const matchId = typeof raw.matchId === "string" && raw.matchId.length > 0 && raw.matchId.length <= 64
+    ? raw.matchId
+    : undefined;
+  if (raw.matchId !== undefined && !matchId) return null;
   const fighters: Record<string, DestinyFighterSnapshot> = {};
   for (const id of roster as string[]) {
     const f = raw.fighters[id];
@@ -315,9 +398,13 @@ function parseDestinyRun(raw: unknown): DestinyRun | null {
     stateVersion: 1,
     cycleId: raw.cycleId,
     fighters,
-    boons: [...raw.boons] as DestinyBoon[],
+    boons,
     phase: raw.phase as DestinyRunPhase,
     rage: raw.rage === undefined ? 0 : raw.rage as number,
+    settledFloor: raw.settledFloor === undefined ? 0 : raw.settledFloor as number,
+    rewardedFloor: raw.rewardedFloor === undefined ? 0 : raw.rewardedFloor as number,
+    ...(matchId ? { matchId } : {}),
+    offer,
   };
 }
 

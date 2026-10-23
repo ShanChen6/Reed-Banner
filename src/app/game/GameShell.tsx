@@ -22,6 +22,7 @@ import { isScenePath, pushScenePath, SceneContext, SceneLink, type SceneApi } fr
 import SurvivalScreen from "./survival/SurvivalScreen";
 import TowerScreen from "./tower/TowerScreen";
 import TrialScreen from "./trial/TrialScreen";
+import DestinyScreen from "./destiny/DestinyScreen";
 
 export interface ShellAccount {
   readonly name: string;
@@ -146,6 +147,8 @@ function SceneView({
       return <TowerScreen />;
     case "TRIAL":
       return <TrialScreen />;
+    case "DESTINY":
+      return <DestinyScreen />;
     case "SURVIVAL":
       return <SurvivalScreen />;
     case "DAILY":

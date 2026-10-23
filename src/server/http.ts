@@ -42,6 +42,7 @@ export function serverDeps(): Deps {
     leaderboard: leaderboardStore(),
     arena: arenaStore(),
     dailySecret: process.env.SESSION_SECRET,
+    destinySecret: process.env.SESSION_SECRET,
   };
 }
 

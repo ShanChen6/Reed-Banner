@@ -22,7 +22,7 @@ import type { SpawnWeights } from "../board";
 import type { RaidTier } from "../campaign";
 import type { GearItem } from "../gear";
 import type { CharacterProgress } from "../progress";
-import type { TowerMatchTag } from "../tower";
+import type { DestinyMatchTag, TowerMatchTag } from "../tower";
 import {
   planBreak,
   autoReviveFighterId,
@@ -80,6 +80,8 @@ export interface Match {
   readonly arena?: ArenaOpponent;
   /** Tháp Thí Luyện (Song Tháp). Tách khỏi `tower` của Legacy để không đụng tower.run/best. */
   readonly trial?: TrialMatch;
+  /** Tháp Vận Mệnh; tách hoàn toàn khỏi `tower` legacy. */
+  readonly destiny?: DestinyMatch;
 }
 
 /** Danh tính tầng của trận Trial và giới hạn lượt của người chơi. */
@@ -88,6 +90,10 @@ export interface TrialMatch {
   readonly turnLimit: number;
   /** Đá lần đầu của tầng lúc server mở trận; không có ở trận cũ thì chỉ nâng tiến trình, chưa chốt quyền nhận. */
   readonly firstClearStones?: number;
+}
+
+export interface DestinyMatch {
+  readonly tag: DestinyMatchTag;
 }
 
 /** Đối thủ đấu trường: chủ đội phòng thủ (null là bóng ma do máy tạo), tên và điểm lúc vào trận. */
@@ -111,6 +117,7 @@ export interface MatchConfig {
   readonly daily?: string;
   readonly arena?: ArenaOpponent;
   readonly trial?: TrialMatch;
+  readonly destiny?: DestinyMatch;
 }
 
 export interface MatchStep {
@@ -142,6 +149,7 @@ export function startMatch(config: MatchConfig): MatchStep {
     ...(config.daily ? { daily: config.daily } : {}),
     ...(config.arena ? { arena: config.arena } : {}),
     ...(config.trial ? { trial: config.trial } : {}),
+    ...(config.destiny ? { destiny: config.destiny } : {}),
   };
   const ai = runAi(match, config.now, config.difficulty);
   return { match: ai.match, events: [...events, ...ai.events] };
@@ -440,6 +448,7 @@ export interface MatchView {
   readonly daily?: string;
   /** Trial: tầng đang đánh và giới hạn lượt; không lộ seed hay dấu vân tay. */
   readonly trial?: { readonly floor: number; readonly turnLimit: number };
+  readonly destiny?: { readonly cycleId: string; readonly floor: number };
   /** Đấu trường: tên đối thủ (không lộ id chủ đội). */
   readonly arena?: { readonly name: string; readonly rating: number };
 }
@@ -644,6 +653,9 @@ export function viewOf(m: Match): MatchView {
     ...(m.daily ? { daily: m.daily } : {}),
     ...(m.trial
       ? { trial: { floor: m.trial.tag.floor, turnLimit: m.trial.turnLimit } }
+      : {}),
+    ...(m.destiny
+      ? { destiny: { cycleId: m.destiny.tag.cycleId, floor: m.destiny.tag.floor } }
       : {}),
     ...(m.arena
       ? { arena: { name: m.arena.name, rating: m.arena.rating } }

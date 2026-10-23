@@ -85,6 +85,7 @@ import { dailySeed, type DailyStore } from "./daily";
 import { submitProfile, type LeaderboardStore } from "./leaderboard";
 import { offerDefense, type ArenaStore } from "./arena";
 import { settleTrial, type TrialResult } from "./trialSettle";
+import { settleDestinyMatch, type DestinyResult } from "./destinySettle";
 
 export interface Deps {
   readonly store: MatchStore;
@@ -96,6 +97,8 @@ export interface Deps {
   /** Thử thách hằng ngày: kho lượt đánh và khóa bí mật sinh seed của ngày. Không có thì không mở được. */
   readonly daily?: DailyStore;
   readonly dailySecret?: string;
+  /** Secret server-only để khóa luật Destiny theo cycle. */
+  readonly destinySecret?: string;
   /** Bảng xếp hạng: ghi điểm sau mỗi lần cộng thưởng. */
   readonly leaderboard?: LeaderboardStore;
   /** Đấu trường bóng ma. Không có thì không mở được. */
@@ -161,6 +164,8 @@ export interface Outcome {
   readonly tower?: TowerResult;
   /** Chỉ có ở trận Tháp Thí Luyện. */
   readonly trial?: TrialResult;
+  /** Chỉ có ở trận Destiny; không kèm vàng/EXP/drop. */
+  readonly destiny?: DestinyResult;
   /** Chỉ có ở sinh tồn. */
   readonly survival?: SurvivalResult;
   /** Chỉ có ở thử thách hằng ngày: điểm và hạng lúc vừa xong. */
@@ -811,6 +816,25 @@ async function rewardTrial(
   };
 }
 
+async function rewardDestiny(
+  r: MatchRecord,
+  match: Match,
+  deps: Omit<Deps, "seed" | "newId">,
+): Promise<Outcome> {
+  const destiny = await settleDestinyMatch(r.ownerId, r.id, match, deps);
+  return {
+    rewards: {
+      won: match.battle.winner === HUMAN,
+      xp: match.battle.sides[HUMAN].fighters.map(() => 0),
+      gold: 0,
+    },
+    levelUps: [],
+    drop: null,
+    soldFor: 0,
+    ...(destiny ? { destiny } : {}),
+  };
+}
+
 /** Thử thách ngày xong: ghi điểm lên bảng xếp hạng, chỉ cộng vàng (đội là đội của đề, không nhận kinh nghiệm). */
 async function rewardDaily(
   r: MatchRecord,
@@ -890,6 +914,7 @@ async function reward(
 ): Promise<Outcome | undefined> {
   if (!matchOver(match) || !(await deps.store.claimReward(r.id, deps.now)))
     return undefined;
+  if (match.destiny) return rewardDestiny(r, match, deps);
   if (match.trial) return rewardTrial(r, match, deps);
   if (match.daily) return rewardDaily(r, match, match.daily, deps);
   // Sinh tồn: vượt qua ít nhất một đợt tính là thắng (kinh nghiệm, món rơi).

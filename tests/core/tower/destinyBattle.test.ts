@@ -8,6 +8,7 @@ import {
   findValidMoves,
   newProfile,
   profileTeam,
+  settleDestinyFloor,
   type DestinyRun,
   type DestinyFighterSnapshot,
   type SideConfig,
@@ -52,6 +53,67 @@ describe("Destiny chọn đội và dựng trận", () => {
     assert.equal(result.state.sides[0].fighters[0]!.profession, "phapSu");
     assert.ok(Object.values(result.state.sides[0].fighters[0]!.skillLevels ?? {}).every((level) => level === 1));
     assert.equal(changed.fighters![reserve]!.hp, wounded, "hàm dựng trận không sửa/heal snapshot run");
+  });
+
+  it("đồng bộ HP/energy theo ID, giữ reserve và food xuyên tầng, rồi settle idempotent", () => {
+    const { run, foes, companionIds } = fixture();
+    const activeIds = [MAIN_ID, companionIds[0]!, companionIds[1]!] as const;
+    const reserveId = companionIds[2]!;
+    const reserveBefore = structuredClone(run.fighters![reserveId]!);
+    const made = createDestinyFloorBattle(run, {
+      activeIds,
+      leaderBuild: { element: "moc", profession: "tuongSi" }, rules: {}, foes, seed: 19, timer: false,
+    });
+    assert.ok(made.ok);
+    if (!made.ok) return;
+    made.state.sides[0].fighters[0]!.hp = Math.floor(made.state.sides[0].fighters[0]!.maxHp / 2);
+    made.state.sides[0].fighters[0]!.energy = 73;
+    made.state.sides[0].fighters[1]!.hp = 0;
+    made.state.sides[0].fighters[1]!.energy = 29;
+    made.state.sides[0].fighters[2]!.hp = made.state.sides[0].fighters[2]!.maxHp - 1;
+    made.state.sides[0].food = 7;
+    made.state.sides[0].rage = 41;
+    made.state.winner = 0;
+
+    const settled = settleDestinyFloor(made.run, made.state);
+    assert.ok(settled.ok);
+    if (!settled.ok) return;
+    assert.equal(settled.changed, true);
+    assert.equal(settled.run.fighters![activeIds[0]]!.energy, 73);
+    assert.equal(settled.run.fighters![activeIds[1]]!.hp, 0);
+    assert.equal(settled.run.fighters![activeIds[1]]!.downed, true);
+    assert.deepEqual(settled.run.fighters![reserveId], reserveBefore, "reserve không tự heal hay đổi energy");
+    assert.equal(settled.run.food, 20, "food dùng clamp Tower legacy 20–100");
+    assert.equal(settled.run.rage, 41);
+    assert.equal(settled.run.phase, "reward");
+
+    const replay = settleDestinyFloor(settled.run, made.state);
+    assert.ok(replay.ok);
+    if (!replay.ok) return;
+    assert.equal(replay.changed, false);
+    assert.strictEqual(replay.run, settled.run, "reload/retry không áp kết quả lần hai");
+  });
+
+  it("không settle trận chưa xong và kết thúc run khi cả ba active gục dù reserve còn sống", () => {
+    const { run, foes, companionIds } = fixture();
+    const made = createDestinyFloorBattle(run, {
+      activeIds: [MAIN_ID, companionIds[0]!, companionIds[1]!],
+      leaderBuild: { element: "moc", profession: "tuongSi" }, rules: {}, foes, seed: 23, timer: false,
+    });
+    assert.ok(made.ok);
+    if (!made.ok) return;
+    assert.deepEqual(settleDestinyFloor(made.run, made.state), { ok: false, error: "battle_not_finished" });
+    made.state.sides[0].fighters.forEach((fighter) => { fighter.hp = 0; });
+    made.state.winner = 1;
+    const settled = settleDestinyFloor(made.run, made.state);
+    assert.ok(settled.ok);
+    if (!settled.ok) return;
+    assert.equal(settled.run.active, false);
+    assert.equal(settled.run.phase, "done");
+    assert.equal(settled.won, false);
+    assert.ok(settled.run.fighters![companionIds[2]!]!.hp > 0, "reserve sống không ngăn kết thúc run");
+    const replay = settleDestinyFloor(structuredClone(settled.run), made.state);
+    assert.ok(replay.ok && !replay.changed && !replay.won, "finish sau reload vẫn idempotent");
   });
 
   it("từ chối tướng đã ngã, ngoài roster, sai slot leader và nghề bị cấm", () => {

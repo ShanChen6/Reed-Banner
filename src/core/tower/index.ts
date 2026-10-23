@@ -7,5 +7,8 @@ export * from "./trialFloors";
 export * from "./puzzleValidator";
 export * from "./trialSweep";
 export * from "./destinyRun";
+export * from "./destinyReward";
+export * from "./destinyBoons";
+export * from "./destinyOffer";
 export * from "./destinyRules";
 export * from "./destinyBattle";
