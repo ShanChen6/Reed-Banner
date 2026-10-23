@@ -22,6 +22,7 @@ import type { SpawnWeights } from "../board";
 import type { RaidTier } from "../campaign";
 import type { GearItem } from "../gear";
 import type { CharacterProgress } from "../progress";
+import type { TowerMatchTag } from "../tower";
 import {
   planBreak,
   autoReviveFighterId,
@@ -77,6 +78,16 @@ export interface Match {
   readonly daily?: string;
   /** Đấu trường bóng ma: đối thủ lúc vào trận. */
   readonly arena?: ArenaOpponent;
+  /** Tháp Thí Luyện (Song Tháp). Tách khỏi `tower` của Legacy để không đụng tower.run/best. */
+  readonly trial?: TrialMatch;
+}
+
+/** Danh tính tầng của trận Trial và giới hạn lượt của người chơi. */
+export interface TrialMatch {
+  readonly tag: TowerMatchTag;
+  readonly turnLimit: number;
+  /** Đá lần đầu của tầng lúc server mở trận; không có ở trận cũ thì chỉ nâng tiến trình, chưa chốt quyền nhận. */
+  readonly firstClearStones?: number;
 }
 
 /** Đối thủ đấu trường: chủ đội phòng thủ (null là bóng ma do máy tạo), tên và điểm lúc vào trận. */
@@ -99,6 +110,7 @@ export interface MatchConfig {
   readonly survival?: SurvivalRun;
   readonly daily?: string;
   readonly arena?: ArenaOpponent;
+  readonly trial?: TrialMatch;
 }
 
 export interface MatchStep {
@@ -129,6 +141,7 @@ export function startMatch(config: MatchConfig): MatchStep {
     ...(config.survival ? { survival: config.survival } : {}),
     ...(config.daily ? { daily: config.daily } : {}),
     ...(config.arena ? { arena: config.arena } : {}),
+    ...(config.trial ? { trial: config.trial } : {}),
   };
   const ai = runAi(match, config.now, config.difficulty);
   return { match: ai.match, events: [...events, ...ai.events] };
@@ -238,8 +251,21 @@ export type MatchAction = BattleAction | SurvivalAction;
 const isSurvivalAction = (a: MatchAction): a is SurvivalAction =>
   a.type === "nextWave" || a.type === "endRun";
 
-/** Sinh tồn: phe người chơi gục hết thì lượt chơi kết thúc. */
+/**
+ * Sinh tồn: phe người chơi gục hết thì lượt chơi kết thúc.
+ * Trial: quá `turnLimit` lượt của người chơi mà chưa thắng thì thua (số lượt tính theo lượt phe của engine).
+ */
 function closeLost(m: Match): Match {
+  if (
+    m.trial &&
+    m.battle.winner === null &&
+    m.battle.turn.number > 2 * m.trial.turnLimit
+  ) {
+    const battle = structuredClone(m.battle);
+    battle.winner = AI_SIDE;
+    battle.turn.deadline = null;
+    return { ...m, battle, seq: m.seq + 1 };
+  }
   return m.survival && !m.survival.done && m.battle.winner === AI_SIDE
     ? {
         ...m,
@@ -412,6 +438,8 @@ export interface MatchView {
   readonly tower?: number;
   readonly survival?: SurvivalView;
   readonly daily?: string;
+  /** Trial: tầng đang đánh và giới hạn lượt; không lộ seed hay dấu vân tay. */
+  readonly trial?: { readonly floor: number; readonly turnLimit: number };
   /** Đấu trường: tên đối thủ (không lộ id chủ đội). */
   readonly arena?: { readonly name: string; readonly rating: number };
 }
@@ -614,6 +642,9 @@ export function viewOf(m: Match): MatchView {
     ...(m.tower ? { tower: m.tower } : {}),
     ...(m.survival ? { survival: survivalView(m.survival, m.battle) } : {}),
     ...(m.daily ? { daily: m.daily } : {}),
+    ...(m.trial
+      ? { trial: { floor: m.trial.tag.floor, turnLimit: m.trial.turnLimit } }
+      : {}),
     ...(m.arena
       ? { arena: { name: m.arena.name, rating: m.arena.rating } }
       : {}),

@@ -27,9 +27,26 @@ export const STONES_MAX = Number.MAX_SAFE_INTEGER;
 /** Ngày theo giờ Việt Nam, dạng YYYY-MM-DD. */
 const DAY_RE = /^\d{4}-\d{2}-\d{2}$/;
 
+/** Trận Trial đang mở của người chơi; chỉ để tìm lại trận sau khi tải lại và chặn mở hai trận. */
+export interface TrialActive {
+  readonly matchId: string;
+  readonly floor: number;
+}
+
+/** Kỷ lục vĩnh viễn của một tầng Trial: số lần thắng và số lượt ít nhất (nhỏ hơn là tốt hơn). */
+export interface TrialFloorRecord {
+  readonly floor: number;
+  readonly clears: number;
+  readonly bestTurns: number;
+}
+
 export interface TrialProgress {
   /** Tầng Trial cao nhất đã qua (0..TRIAL_FLOORS). */
   readonly cleared: number;
+  /** Kỷ lục theo tầng, tăng dần theo tầng; không có khi chưa thắng tầng nào. Không bao giờ giảm/xóa. */
+  readonly records?: readonly TrialFloorRecord[];
+  /** Chỉ có khi đang có trận; dữ liệu cũ không có trường này. */
+  readonly active?: TrialActive;
   /** Tầng đã nhận đá lần đầu, tăng dần, không trùng. */
   readonly claimedFloors: readonly number[];
   /** Ngày VN của lần quét gần nhất. */
@@ -125,8 +142,38 @@ function parseTrial(raw: unknown): TrialProgress {
         ),
       ].sort((a, b) => a - b)
     : [];
+  const a = raw.active;
+  const active =
+    isObj(a) &&
+    typeof a.matchId === "string" &&
+    a.matchId.length > 0 &&
+    a.matchId.length <= 64 &&
+    Number.isInteger(a.floor) &&
+    (a.floor as number) >= 1 &&
+    (a.floor as number) <= TRIAL_FLOORS
+      ? { matchId: a.matchId, floor: a.floor as number }
+      : undefined;
+  const byFloor = new Map<number, TrialFloorRecord>();
+  if (Array.isArray(raw.records)) {
+    for (const r of raw.records) {
+      if (!isObj(r)) continue;
+      const floor = uint(r.floor);
+      const clears = uint(r.clears);
+      const bestTurns = uint(r.bestTurns);
+      if (floor < 1 || floor > TRIAL_FLOORS || clears < 1 || bestTurns < 1) continue;
+      const prev = byFloor.get(floor);
+      byFloor.set(floor, {
+        floor,
+        clears: Math.max(clears, prev?.clears ?? 0),
+        bestTurns: Math.min(bestTurns, prev?.bestTurns ?? Infinity),
+      });
+    }
+  }
+  const records = [...byFloor.values()].sort((a, b) => a.floor - b.floor);
   return {
     cleared: Math.min(uint(raw.cleared), TRIAL_FLOORS),
+    ...(records.length ? { records } : {}),
+    ...(active ? { active } : {}),
     claimedFloors: claimed,
     lastSweepDay:
       typeof raw.lastSweepDay === "string" && DAY_RE.test(raw.lastSweepDay)
