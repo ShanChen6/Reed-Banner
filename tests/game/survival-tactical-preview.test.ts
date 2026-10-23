@@ -93,6 +93,34 @@ const fighters: SurvivalBreakView["fighters"] = [
 const activeIds = ["dinhBoLinh", "haVan", "maiThanh"] as const;
 
 describe("bản nháp chiến thuật Sinh tồn", () => {
+  it("cho phép giữ active hoặc đưa dự bị được chọn hồi sinh vào đội hình", () => {
+    assert.equal(validTacticalLineup(activeIds, activeIds, fighters), false);
+    assert.equal(validTacticalLineup(activeIds, activeIds, fighters, "haVan"), true);
+    const rotated = ["dinhBoLinh", "toKim", "maiThanh"];
+    assert.equal(validTacticalLineup(rotated, activeIds, fighters, "toKim"), true);
+    // Bỏ chọn hoặc đổi mục tiêu hồi sinh phải vô hiệu hóa đội hình cũ.
+    assert.equal(validTacticalLineup(rotated, activeIds, fighters), false);
+    assert.equal(validTacticalLineup(rotated, activeIds, fighters, "haVan"), false);
+    assert.equal(
+      validTacticalLineup(["dinhBoLinh", "toKim", "haVan"], activeIds, fighters, "toKim"),
+      false,
+    );
+  });
+
+  it("tướng tự hồi sinh có thể vào active trước khi HP được áp dụng ở server", () => {
+    const autoRevive = fighters.map((fighter) =>
+      fighter.id === "toKim" ? { ...fighter, autoRevive: true } : fighter,
+    );
+    assert.equal(
+      validTacticalLineup(["dinhBoLinh", "toKim", "maiThanh"], activeIds, autoRevive),
+      true,
+    );
+    const autoReviveActive = fighters.map((fighter) =>
+      fighter.id === "haVan" ? { ...fighter, autoRevive: true } : fighter,
+    );
+    assert.equal(validTacticalLineup(activeIds, activeIds, autoReviveActive), true);
+  });
+
   it("cho phép thay một hoặc hai vị trí bằng dự bị sống, nhưng không đưa tướng gục vào active", () => {
     assert.equal(
       validTacticalLineup(
