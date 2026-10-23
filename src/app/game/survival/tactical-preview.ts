@@ -37,10 +37,18 @@ export function previewLeaderBuild(
   return { config, hp };
 }
 
+export function availableNextWave(
+  fighter: SurvivalBreakView["fighters"][number],
+  paidReviveId?: string,
+): boolean {
+  return fighter.hpAfterRecovery > 0 || fighter.autoRevive || fighter.id === paidReviveId;
+}
+
 export function validTacticalLineup(
   activeIds: readonly string[],
   originalActiveIds: readonly string[],
   fighters: SurvivalBreakView["fighters"],
+  paidReviveId?: string,
 ): boolean {
   if (
     activeIds.length !== 3 ||
@@ -53,12 +61,12 @@ export function validTacticalLineup(
   const livingReserveRemains = fighters.some(
     (fighter) =>
       !activeIds.includes(fighter.id) &&
-      fighter.hpAfterRecovery > 0,
+      availableNextWave(fighter, paidReviveId),
   );
   return activeIds.slice(1).every((id, index) => {
     const fighter = byId.get(id);
     if (!fighter) return false;
-    if (fighter.hpAfterRecovery > 0) return true;
+    if (availableNextWave(fighter, paidReviveId)) return true;
     return (
       originalActiveIds[index + 1] === id &&
       !livingReserveRemains

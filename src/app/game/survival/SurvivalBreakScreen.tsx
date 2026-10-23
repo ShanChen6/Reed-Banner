@@ -17,6 +17,7 @@ import { SkillIcon } from "../art/skills";
 import { ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
 import { useState } from "react";
 import {
+  availableNextWave,
   buildSurvivalNextWaveAction,
   previewLeaderBuild,
   validTacticalLineup,
@@ -86,6 +87,9 @@ function SurvivalBreakReady({
     () => preview.leaderBuildBasis?.element ?? leaderFighter?.element ?? "moc",
   );
   const [draftReviveId, setDraftReviveId] = useState<string | undefined>();
+  const paidReviveId = preview.canPayRevive && !preview.autoReviveId
+    ? draftReviveId
+    : undefined;
   const leaderPreview =
     preview.leaderBuildBasis
       ? previewLeaderBuild(
@@ -98,6 +102,7 @@ function SurvivalBreakReady({
     draftActiveIds,
     originalActiveIds,
     preview.fighters,
+    paidReviveId,
   );
   const leaderSkills = leaderPreview
     ? characterSkills(draftProfession, draftElement).map((skill) => ({
@@ -124,7 +129,10 @@ function SurvivalBreakReady({
   );
   const fightersById = new Map(preview.fighters.map((fighter) => [fighter.id, fighter]));
   const livingReserveIds = preview.reserveIds.filter(
-    (id) => (fightersById.get(id)?.hpAfterRecovery ?? 0) > 0,
+    (id) => {
+      const fighter = fightersById.get(id);
+      return fighter !== undefined && availableNextWave(fighter, paidReviveId);
+    },
   );
   const currentProfession =
     preview.leaderBuildBasis?.profession ?? leaderFighter?.profession ?? "tuongSi";
@@ -135,7 +143,7 @@ function SurvivalBreakReady({
       activeIds: draftActiveIds,
       profession: draftProfession,
       element: draftElement,
-      ...(draftReviveId ? { reviveId: draftReviveId } : {}),
+      ...(paidReviveId ? { reviveId: paidReviveId } : {}),
     },
     originalActiveIds,
     currentProfession,
@@ -144,7 +152,7 @@ function SurvivalBreakReady({
   const livingReserveRemains = preview.fighters.some(
     (fighter) =>
       !draftActiveIds.includes(fighter.id) &&
-      fighter.hpAfterRecovery > 0,
+      availableNextWave(fighter, paidReviveId),
   );
   const slotOptions = (slot: 1 | 2) => {
     const selectedId = draftActiveIds[slot];
@@ -169,10 +177,12 @@ function SurvivalBreakReady({
         <option
           key={id}
           value={id}
-          disabled={!fighter || (fighter.hpAfterRecovery === 0 && !mayKeepDowned)}
+          disabled={!fighter || (!availableNextWave(fighter, paidReviveId) && !mayKeepDowned)}
         >
           {fighter?.name ?? id}
-          {fighter?.hpAfterRecovery === 0 ? " · đã gục" : ""}
+          {fighter?.hpAfterRecovery === 0
+            ? availableNextWave(fighter, paidReviveId) ? " · sẽ hồi sinh" : " · đã gục"
+            : ""}
         </option>
       );
     });
