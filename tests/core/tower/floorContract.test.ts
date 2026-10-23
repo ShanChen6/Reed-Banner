@@ -10,7 +10,6 @@ import {
   planDestinyCycleEnd,
   planDestinyFloorClear,
   planTrialSettle,
-  planTrialSweep,
   resolveFloor,
   stoneKeys,
   validateTowerMatch,
@@ -86,17 +85,6 @@ describe("thưởng Trial", () => {
     assert.deepEqual(planTrialSettle(NEW_TRIAL, { floor: 2, won: true, firstClearStones: 5 }), { ok: false, error: "invalid_floor" });
     assert.deepEqual(planTrialSettle(NEW_TRIAL, { floor: 1, won: true, firstClearStones: -1 }), { ok: false, error: "invalid_amount" });
     assert.deepEqual(planTrialSettle(NEW_TRIAL, { floor: 1, won: true, firstClearStones: 1.5 }), { ok: false, error: "invalid_amount" });
-  });
-
-  it("quét một lần mỗi ngày VN, ngày mới quét lại được", () => {
-    const s1 = planTrialSweep(NEW_TRIAL, { day: "2026-10-23", stones: 3 });
-    assert.ok(s1.ok && s1.events[0]?.key === stoneKeys.trialSweep("2026-10-23"));
-    if (!s1.ok) return;
-    const again = planTrialSweep(s1.next, { day: "2026-10-23", stones: 3 });
-    assert.ok(again.ok && again.events.length === 0);
-    const next = planTrialSweep(s1.next, { day: "2026-10-24", stones: 3 });
-    assert.ok(next.ok && next.events.length === 1);
-    assert.deepEqual(planTrialSweep(NEW_TRIAL, { day: "hôm nay", stones: 3 }), { ok: false, error: "invalid_day" });
   });
 
   it("sự kiện chỉ chứa đá: không vàng/EXP/trang bị", () => {

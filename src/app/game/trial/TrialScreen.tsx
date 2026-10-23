@@ -22,6 +22,13 @@ interface StartResponse {
   readonly error?: string;
 }
 
+interface SweepResponse {
+  readonly ok?: boolean;
+  readonly granted?: number;
+  readonly stones?: number;
+  readonly error?: string;
+}
+
 async function json<T>(url: string, init?: RequestInit): Promise<T | null> {
   try {
     const response = await fetch(url, { ...init, cache: "no-store" });
@@ -47,6 +54,7 @@ export default function TrialScreen() {
   const [companions, setCompanions] = useState<readonly string[]>([]);
   const [build, setBuild] = useState<LeaderBuild | null>(null);
   const [busy, setBusy] = useState(false);
+  const [sweepBusy, setSweepBusy] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -147,6 +155,22 @@ export default function TrialScreen() {
     setBusy(false);
   };
 
+  const sweep = async () => {
+    setSweepBusy(true);
+    setMessage(null);
+    const result = await json<SweepResponse>("/api/trial/sweep", { method: "POST" });
+    if (!result?.ok) {
+      setSweepBusy(false);
+      setMessage(TRIAL_ERROR_TEXT[result?.error ?? "network"] ?? "Không quét được tháp, hãy thử lại");
+      return;
+    }
+    await load();
+    setSweepBusy(false);
+    setMessage(result.granted
+      ? `Đã nhận ${result.granted} Đá Cường Hóa. Số dư: ${result.stones}.`
+      : "Lượt quét hôm nay đã được nhận trước đó; không cộng thêm đá.");
+  };
+
   return (
     <Shell>
       <TrialView
@@ -156,6 +180,7 @@ export default function TrialScreen() {
         companions={companions}
         build={build}
         busy={busy}
+        sweepBusy={sweepBusy}
         message={message}
         onSelectFloor={(next) => {
           setFloor(next);
@@ -174,6 +199,7 @@ export default function TrialScreen() {
         onBuild={setBuild}
         onStart={() => void start()}
         onAbandon={() => void abandon()}
+        onSweep={() => void sweep()}
       />
     </Shell>
   );

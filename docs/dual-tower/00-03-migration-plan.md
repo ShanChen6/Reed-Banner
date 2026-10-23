@@ -32,7 +32,7 @@ Thêm hai trường optional vào `Profile`:
 | Trường | Kiểu | Ghi chú |
 |---|---|---|
 | `stones` | `number` (nguyên ≥ 0, mặc định 0) | Đá tài khoản; parse ép về nguyên không âm, `NaN`/âm → 0. Không có đường trừ trong V1.0 (C7, C10). |
-| `dualTower` | `DualTowerState` | Chứa: `trial { cleared, claimedFloors[], lastSweepDay }`, `destiny { cycleId, run|null, claimedMilestones[], cycleRewardClaimed }`, `schema: 1` (phiên bản con của riêng trạng thái này). |
+| `dualTower` | `DualTowerState` | Chứa: `trial { cleared, claimedFloors[], lastSweep }`, trong đó `lastSweep = { dateKey, tier, claimedAt } | null`; parser nâng mềm `lastSweepDay` cũ. `destiny { cycleId, run|null, claimedMilestones[], cycleRewardClaimed }`, `schema: 1` (phiên bản con của riêng trạng thái này). |
 
 Lý do chọn: ghi nguyên tử cùng số dư đá và mốc đã nhận trong **một** `put` có version → thưởng + khóa idempotent không thể lệch nhau. Bảng SQL riêng sẽ cần hai lần ghi (không có transaction trên Neon HTTP, xem comment `server/profiles.ts`) nên dễ cộng đá nhưng mất mốc, hoặc ngược lại.
 

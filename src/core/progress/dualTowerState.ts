@@ -26,6 +26,11 @@ export const STONES_MAX = Number.MAX_SAFE_INTEGER;
 
 /** Ngày theo giờ Việt Nam, dạng YYYY-MM-DD. */
 const DAY_RE = /^\d{4}-\d{2}-\d{2}$/;
+const validDay = (x: unknown): x is string => {
+  if (typeof x !== "string" || !DAY_RE.test(x)) return false;
+  const d = new Date(`${x}T00:00:00.000Z`);
+  return !Number.isNaN(d.valueOf()) && d.toISOString().slice(0, 10) === x;
+};
 
 /** Trận Trial đang mở của người chơi; chỉ để tìm lại trận sau khi tải lại và chặn mở hai trận. */
 export interface TrialActive {
@@ -40,6 +45,16 @@ export interface TrialFloorRecord {
   readonly bestTurns: number;
 }
 
+export type TrialSweepTier = 1 | 2 | 3 | 4;
+
+/** Receipt authoritative của lần quét gần nhất; tier được chụp từ `cleared` tại lúc claim. */
+export interface TrialSweepClaim {
+  readonly dateKey: string;
+  readonly tier: TrialSweepTier;
+  /** Epoch milliseconds do server ghi. 0 chỉ dành cho dữ liệu legacy nâng từ `lastSweepDay`. */
+  readonly claimedAt: number;
+}
+
 export interface TrialProgress {
   /** Tầng Trial cao nhất đã qua (0..TRIAL_FLOORS). */
   readonly cleared: number;
@@ -49,8 +64,8 @@ export interface TrialProgress {
   readonly active?: TrialActive;
   /** Tầng đã nhận đá lần đầu, tăng dần, không trùng. */
   readonly claimedFloors: readonly number[];
-  /** Ngày VN của lần quét gần nhất. */
-  readonly lastSweepDay: string | null;
+  /** Chỉ giữ receipt gần nhất: bỏ ngày không tích lượt. */
+  readonly lastSweep: TrialSweepClaim | null;
 }
 
 export interface DestinyRun {
@@ -99,7 +114,7 @@ export const isDualTowerV1 = (s: DualTowerState): s is DualTowerV1 =>
 export const NEW_TRIAL: TrialProgress = {
   cleared: 0,
   claimedFloors: [],
-  lastSweepDay: null,
+  lastSweep: null,
 };
 
 export const NEW_DESTINY: DestinyProgress = {
@@ -170,15 +185,26 @@ function parseTrial(raw: unknown): TrialProgress {
     }
   }
   const records = [...byFloor.values()].sort((a, b) => a.floor - b.floor);
+  const cleared = Math.min(uint(raw.cleared), TRIAL_FLOORS);
+  const sweep = raw.lastSweep;
+  const parsedSweep =
+    isObj(sweep) &&
+    validDay(sweep.dateKey) &&
+    Number.isInteger(sweep.tier) &&
+    (sweep.tier as number) >= 1 &&
+    (sweep.tier as number) <= 4 &&
+    Number.isSafeInteger(sweep.claimedAt) &&
+    (sweep.claimedAt as number) >= 0
+      ? { dateKey: sweep.dateKey, tier: sweep.tier as TrialSweepTier, claimedAt: sweep.claimedAt as number }
+      : validDay(raw.lastSweepDay) && cleared > 0
+        ? { dateKey: raw.lastSweepDay, tier: Math.min(4, Math.ceil(cleared / 5)) as TrialSweepTier, claimedAt: 0 }
+        : null;
   return {
-    cleared: Math.min(uint(raw.cleared), TRIAL_FLOORS),
+    cleared,
     ...(records.length ? { records } : {}),
     ...(active ? { active } : {}),
     claimedFloors: claimed,
-    lastSweepDay:
-      typeof raw.lastSweepDay === "string" && DAY_RE.test(raw.lastSweepDay)
-        ? raw.lastSweepDay
-        : null,
+    lastSweep: parsedSweep,
   };
 }
 

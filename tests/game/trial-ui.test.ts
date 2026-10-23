@@ -8,6 +8,7 @@ import {
   leaderChoices,
   navigateIndex,
   previewLineup,
+  sweepButtonState,
   toggleCompanion,
   type TrialFloorEntry,
 } from "../../src/app/game/trial/trial-ui";
@@ -54,5 +55,24 @@ describe("UI Tháp Thí Luyện", () => {
     assert.match(firstClearText(entry(false)), /Lần đầu qua/);
     assert.doesNotMatch(firstClearText(entry(false)), /Đã nhận/);
     assert.match(firstClearText(entry(true)), /Đã nhận 5/);
+  });
+
+  it("nút quét: eligible, claimed, no floor và delayed response", () => {
+    const sweep = {
+      eligible: true,
+      tier: 2,
+      amount: 2,
+      claimedToday: false,
+      nextAt: 0,
+      lastClaim: null,
+      history: [],
+    };
+    assert.deepEqual(sweepButtonState(sweep, false), { disabled: false, text: "Quét nhận 2 đá" });
+    assert.deepEqual(sweepButtonState(sweep, true), { disabled: true, text: "Đang quét…" });
+    assert.deepEqual(sweepButtonState({ ...sweep, claimedToday: true }, false), { disabled: true, text: "Đã nhận hôm nay" });
+    assert.deepEqual(sweepButtonState({ ...sweep, eligible: false, tier: 0, amount: 0 }, false), {
+      disabled: true,
+      text: "Cần vượt ít nhất tầng 1",
+    });
   });
 });

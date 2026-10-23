@@ -15,12 +15,14 @@ import {
   describeRules,
   describeWin,
   firstClearText,
+  formatSweepTime,
   FLOOR_STATE_TEXT,
   leaderChoices,
   lockedHint,
   navigateIndex,
   NAV_KEYS,
   previewLineup,
+  sweepButtonState,
   type LeaderBuild,
   type TrialFloorEntry,
   type TrialOverview,
@@ -37,12 +39,14 @@ export interface TrialViewProps {
   /** null = giữ build hiện tại của hồ sơ. */
   readonly build: LeaderBuild | null;
   readonly busy: boolean;
+  readonly sweepBusy: boolean;
   readonly message: string | null;
   readonly onSelectFloor: (floor: number) => void;
   readonly onToggleCompanion: (id: string) => void;
   readonly onBuild: (build: LeaderBuild) => void;
   readonly onStart: () => void;
   readonly onAbandon: () => void;
+  readonly onSweep: () => void;
 }
 
 const btn =
@@ -346,6 +350,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
 export default function TrialView(props: TrialViewProps) {
   const { overview, floor } = props;
   const entry = overview.floors.find((f) => f.floor.floor === floor) ?? null;
+  const sweepButton = sweepButtonState(overview.sweep, props.sweepBusy);
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -370,6 +375,54 @@ export default function TrialView(props: TrialViewProps) {
           Dữ liệu Song Tháp của bạn thuộc phiên bản mới hơn bản này. Hãy tải lại trang hoặc chờ cập nhật; tiến trình không bị ghi đè.
         </p>
       )}
+
+      <section
+        aria-labelledby="trial-sweep-title"
+        className="grid gap-4 rounded-xl border-2 border-amber-500/40 bg-gradient-to-br from-amber-950/60 to-[#2a1f19] p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
+      >
+        <div className="min-w-0">
+          <h2 id="trial-sweep-title" className="font-bold text-amber-200">Quét Tháp Thí Luyện</h2>
+          {overview.sweep.eligible ? (
+            <p className="text-sm text-stone-200">
+              Tier {overview.sweep.tier} · dự kiến nhận <strong>{overview.sweep.amount} Đá Cường Hóa</strong>
+            </p>
+          ) : (
+            <p className="text-sm text-stone-300">Vượt tầng 1 để mở quyền quét hằng ngày.</p>
+          )}
+          <p className="mt-1 text-xs text-stone-400">
+            {overview.sweep.claimedToday ? "Lượt tiếp theo: " : "Có thể quét: "}
+            <time dateTime={new Date(overview.sweep.nextAt).toISOString()}>{formatSweepTime(overview.sweep.nextAt)}</time> (giờ Việt Nam)
+          </p>
+          {overview.sweep.lastClaim && (
+            <p className="mt-1 text-xs text-emerald-300" data-testid="last-sweep">
+              Lần quét cuối: {overview.sweep.lastClaim.dateKey} · +{overview.sweep.lastClaim.amount} đá · tier {overview.sweep.lastClaim.tier}
+            </p>
+          )}
+        </div>
+        <button
+          type="button"
+          disabled={sweepButton.disabled || !overview.supported}
+          onClick={props.onSweep}
+          aria-describedby="trial-sweep-history"
+          className={`${btn} min-h-12 w-full border-2 border-amber-400 bg-amber-700 px-5 text-amber-50 hover:bg-amber-600 sm:w-auto`}
+        >
+          {sweepButton.text}
+        </button>
+        <div id="trial-sweep-history" className="sm:col-span-2">
+          <h3 className="text-xs font-semibold tracking-wide text-stone-300 uppercase">Lịch sử nhận gần đây</h3>
+          {overview.sweep.history.length ? (
+            <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-stone-400">
+              {overview.sweep.history.map((item) => (
+                <li key={item.dateKey}>
+                  {item.dateKey}{item.amount === null ? " · đã nhận" : ` · +${item.amount} đá`}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-1 text-xs text-stone-500">Chưa có lượt quét nào được server xác nhận.</p>
+          )}
+        </div>
+      </section>
 
       {!overview.available ? (
         <p role="status" className="rounded-xl border border-stone-600 bg-black/30 p-6 text-center text-stone-300">

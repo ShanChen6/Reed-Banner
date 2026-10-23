@@ -1,17 +1,20 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { createTrialRegistry, trialFloorId } from "../../src/core";
+import { createTrialRegistry, isDualTowerV1, nextTrialSweepResetAt, trialFloorId } from "../../src/core";
 import { getBattle } from "../../src/server/battles";
 import { loadProfile, MemoryProfileStore, updateProfile } from "../../src/server/profiles";
 import { MemoryMatchStore } from "../../src/server/store";
+import { claimTrialSweepState } from "../../src/server/trialSweep";
 import {
   abandonTrialRequest,
   startTrialRequest,
+  settleTrialSweepRequest,
   trialOverview,
   trialRegistry,
 } from "../../src/server/trialApi";
 
 const T0 = 5_000_000;
+const SWEEP_NOW = Date.UTC(2026, 9, 23, 17, 0, 0); // 00:00 VN ngày 24
 
 const fixture = (floor: number, over: Record<string, unknown> = {}) => ({
   schema: 1,
@@ -159,5 +162,72 @@ describe("API Tháp Thí Luyện", () => {
     assert.equal(r.body.error, "unsupported_schema");
     const { profile } = await loadProfile(s.profiles, "g_1");
     assert.deepEqual(profile.dualTower, { schema: 99, x: 1 });
+  });
+
+  it("overview sweep: no floor, eligible, claimed, lịch sử và mốc 00:00 VN", async () => {
+    const s = setup();
+    const empty = await trialOverview(s.profiles, "g_1", s.floors, SWEEP_NOW);
+    assert.deepEqual(empty.sweep, {
+      eligible: false,
+      tier: 0,
+      amount: 0,
+      claimedToday: false,
+      nextAt: SWEEP_NOW,
+      lastClaim: null,
+      history: [],
+    });
+    await updateProfile(s.profiles, "g_1", (profile) => {
+      assert.ok(isDualTowerV1(profile.dualTower));
+      if (!isDualTowerV1(profile.dualTower)) return { ok: false as const, error: "schema" };
+      return {
+        ok: true as const,
+        profile: {
+          ...profile,
+          dualTower: { ...profile.dualTower, trial: { ...profile.dualTower.trial, cleared: 6 } },
+        },
+      };
+    }, SWEEP_NOW);
+    const eligible = await trialOverview(s.profiles, "g_1", s.floors, SWEEP_NOW);
+    assert.equal(eligible.sweep.eligible, true);
+    assert.equal(eligible.sweep.tier, 2);
+    assert.equal(eligible.sweep.amount, 2);
+    assert.equal(eligible.sweep.claimedToday, false);
+
+    await claimTrialSweepState(s.profiles, "g_1", SWEEP_NOW);
+    const receiptOnly = await trialOverview(s.profiles, "g_1", s.floors, SWEEP_NOW);
+    assert.equal(receiptOnly.sweep.claimedToday, false);
+    assert.equal(receiptOnly.sweep.lastClaim, null);
+    assert.deepEqual(receiptOnly.sweep.history, []);
+
+    assert.equal((await settleTrialSweepRequest(s.profiles, "g_1", SWEEP_NOW)).status, 200);
+    const claimed = await trialOverview(s.profiles, "g_1", s.floors, SWEEP_NOW);
+    assert.equal(claimed.stones, 2);
+    assert.equal(claimed.sweep.claimedToday, true);
+    assert.equal(claimed.sweep.nextAt, nextTrialSweepResetAt(SWEEP_NOW));
+    assert.deepEqual(claimed.sweep.history, [{ dateKey: "2026-10-24", amount: 2, claimedAt: SWEEP_NOW }]);
+  });
+
+  it("sweep request retry không cộng trùng và request không có owner bị từ chối", async () => {
+    const s = setup();
+    await updateProfile(s.profiles, "g_1", (profile) => {
+      assert.ok(isDualTowerV1(profile.dualTower));
+      if (!isDualTowerV1(profile.dualTower)) return { ok: false as const, error: "schema" };
+      return {
+        ok: true as const,
+        profile: {
+          ...profile,
+          dualTower: { ...profile.dualTower, trial: { ...profile.dualTower.trial, cleared: 20 } },
+        },
+      };
+    }, SWEEP_NOW);
+    const first = await settleTrialSweepRequest(s.profiles, "g_1", SWEEP_NOW);
+    const retry = await settleTrialSweepRequest(s.profiles, "g_1", SWEEP_NOW);
+    assert.equal(first.body.granted, 4);
+    assert.equal(retry.body.granted, 0);
+    assert.equal((await loadProfile(s.profiles, "g_1")).profile.stones, 4);
+    assert.deepEqual(await settleTrialSweepRequest(s.profiles, null, SWEEP_NOW), {
+      status: 403,
+      body: { error: "no_cleared_floors" },
+    });
   });
 });

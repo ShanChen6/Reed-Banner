@@ -6,6 +6,7 @@ import {
   type Profile,
   type SettleError,
   type SettlePlan,
+  type SettleResult,
   type StoneAwardError,
   type StoneAwardPatch,
   type TrialProgress,
@@ -28,7 +29,7 @@ export type AwardOutcome =
 
 /** Kế hoạch từ trạng thái Trial: bọc kết quả `planTrial*` của core. */
 export const trialPlanner =
-  (plan: (t: TrialProgress) => ReturnType<typeof import("@/core").planTrialSweep>): StonePlanner =>
+  (plan: (t: TrialProgress) => SettleResult<TrialProgress>): StonePlanner =>
   ({ trial }) => {
     const r = plan(trial);
     return r.ok ? { ok: true, patch: { trial: r.next }, plan: r } : r;
