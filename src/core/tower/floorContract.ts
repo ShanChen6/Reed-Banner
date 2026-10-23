@@ -382,6 +382,45 @@ export interface TowerMatchTag {
   readonly lineupIds: readonly string[];
 }
 
+/** Danh tính riêng của trận Destiny; không dùng field `tower` legacy. */
+export interface DestinyMatchTag {
+  readonly cycleId: string;
+  readonly floor: number;
+  readonly fingerprint: string;
+  readonly lineupIds: readonly string[];
+}
+
+export function makeDestinyMatchTag(
+  floor: ResolvedFloor,
+  lineupIds: readonly string[],
+): DestinyMatchTag {
+  return {
+    cycleId: floor.scopeId,
+    floor: floor.floor,
+    fingerprint: floor.fingerprint,
+    lineupIds: [...lineupIds],
+  };
+}
+
+export function validateDestinyMatchTag(
+  tag: DestinyMatchTag,
+  expected: ResolvedFloor,
+  battle: { readonly sides: readonly { readonly fighters: readonly { readonly id: string }[] }[] },
+  roster: readonly string[],
+): MatchTagError | null {
+  if (expected.mode !== "destiny") return "mode_mismatch";
+  if (tag.cycleId !== expected.scopeId) return "scope_mismatch";
+  if (tag.floor !== expected.floor) return "floor_mismatch";
+  if (tag.fingerprint !== expected.fingerprint) return "fingerprint_mismatch";
+  if (
+    battle.sides.length !== 2 ||
+    tag.lineupIds.length !== 3 ||
+    !sameIds(battle.sides[0]!.fighters.map(({ id }) => id), tag.lineupIds)
+  ) return "lineup_mismatch";
+  if (tag.lineupIds.some((id) => !roster.includes(id))) return "roster_mismatch";
+  return null;
+}
+
 export type MatchTagError =
   | "mode_mismatch"
   | "scope_mismatch"

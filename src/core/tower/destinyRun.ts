@@ -101,6 +101,9 @@ export function createDestinyRun(
       rage: 0,
       boons: [],
       phase: "prepare",
+      settledFloor: 0,
+      rewardedFloor: 0,
+      offer: null,
       active: true,
     },
   };

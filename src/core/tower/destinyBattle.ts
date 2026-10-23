@@ -2,7 +2,9 @@ import {
   ELEMENTS,
   PROFESSIONS,
   RAGE_MAX,
+  ENERGY_MAX,
   createBattle,
+  type BattleState,
   type BattleConfig,
   type Element,
   type Profession,
@@ -10,7 +12,13 @@ import {
 } from "../battle";
 import { EMPTY_LOADOUT, equip, withGear, type Loadout } from "../gear";
 import { MAIN_ID, buildMain, type DestinyRun } from "../progress";
+import { clampTowerFood } from "../progress/towerState";
 import { LINEUP_SIZE, validateLineup, type FloorRules, type LineupError } from "./floorRules";
+import {
+  applyDestinyBoonStats,
+  destinyAppliedEnergyBonus,
+  destinyAppliedRageBonus,
+} from "./destinyBoons";
 
 export interface DestinyLeaderBuild {
   readonly element: Element;
@@ -42,7 +50,7 @@ export type DestinyBattleError =
   | "foes_must_be_three";
 
 export type DestinyBattleResult =
-  | { readonly ok: true; readonly state: ReturnType<typeof createBattle>["state"]; readonly events: ReturnType<typeof createBattle>["events"] }
+  | { readonly ok: true; readonly run: DestinyRun; readonly state: ReturnType<typeof createBattle>["state"]; readonly events: ReturnType<typeof createBattle>["events"] }
   | { readonly ok: false; readonly error: DestinyBattleError; readonly fighterId?: string; readonly ruleErrors?: readonly LineupError[] };
 
 function snapshotLoadout(run: DestinyRun): Loadout | null {
@@ -78,9 +86,10 @@ export function createDestinyFloorBattle(run: DestinyRun, input: DestinyBattleIn
   const main = run.fighters[MAIN_ID]!;
   const loadout = snapshotLoadout(run);
   if (!main.mainProgress || !loadout) return { ok: false, error: "invalid_run" };
-  const configs = input.activeIds.map((id) => id === MAIN_ID
+  const equippedConfigs = input.activeIds.map((id) => id === MAIN_ID
     ? withGear(buildMain(main.mainProgress!, input.leaderBuild.element, input.leaderBuild.profession), loadout)
     : structuredClone(run.fighters![id]!.config));
+  const configs = applyDestinyBoonStats(run, equippedConfigs);
   const legality = validateLineup(input.rules, configs.map(({ id, element, profession }) => ({ id, element, profession })));
   if (!legality.ok) return { ok: false, error: "rules_violation", ruleErrors: legality.errors };
 
@@ -97,8 +106,90 @@ export function createDestinyFloorBattle(run: DestinyRun, input: DestinyBattleIn
     ...(input.weights === undefined ? {} : { weights: input.weights }),
   });
   input.activeIds.forEach((id, index) => {
-    created.state.sides[0].fighters[index]!.energy = run.fighters![id]!.energy;
+    created.state.sides[0].fighters[index]!.energy = Math.min(
+      ENERGY_MAX,
+      run.fighters![id]!.energy + destinyAppliedEnergyBonus(run, id),
+    );
   });
-  created.state.sides[0].rage = Math.min(RAGE_MAX, Math.max(0, run.rage ?? 0));
-  return { ok: true, ...created };
+  created.state.sides[0].rage = Math.min(
+    RAGE_MAX,
+    Math.max(0, run.rage ?? 0) + destinyAppliedRageBonus(run),
+  );
+  return { ok: true, run: { ...run, phase: "battle" }, ...created };
+}
+
+export type DestinyFloorSettleError =
+  | "invalid_run"
+  | "invalid_phase"
+  | "battle_not_finished"
+  | "invalid_active_team";
+
+export type DestinyFloorSettleResult =
+  | { readonly ok: true; readonly run: DestinyRun; readonly changed: boolean; readonly won: boolean }
+  | { readonly ok: false; readonly error: DestinyFloorSettleError };
+
+/**
+ * Đồng bộ đúng một kết quả tầng vào run Destiny. Runtime được nối bằng fighter ID để
+ * không phụ thuộc vị trí đội hình; reserve không xuất hiện trong battle không bị sửa.
+ */
+export function settleDestinyFloor(run: DestinyRun, battle: BattleState): DestinyFloorSettleResult {
+  if (run.stateVersion !== 1 || !run.fighters)
+    return { ok: false, error: "invalid_run" };
+  if ((run.settledFloor ?? 0) >= run.floor) {
+    const won = run.phase === "reward";
+    return { ok: true, run, changed: false, won };
+  }
+  if (!run.active) return { ok: false, error: "invalid_run" };
+  if ((run.phase ?? "prepare") !== "battle") return { ok: false, error: "invalid_phase" };
+  if (battle.winner === null) return { ok: false, error: "battle_not_finished" };
+
+  const active = battle.sides[0].fighters;
+  if (
+    active.length !== LINEUP_SIZE ||
+    active[0]?.id !== MAIN_ID ||
+    new Set(active.map(({ id }) => id)).size !== LINEUP_SIZE ||
+    active.some(({ id }) => !run.roster.includes(id) || !run.fighters![id])
+  ) return { ok: false, error: "invalid_active_team" };
+
+  const fighters = { ...run.fighters };
+  for (const current of active) {
+    const previous = run.fighters[current.id]!;
+    const hp = current.hp <= 0
+      ? 0
+      : Math.max(1, Math.min(previous.config.maxHp,
+          Math.round(previous.config.maxHp * current.hp / Math.max(1, current.maxHp))));
+    fighters[current.id] = {
+      ...previous,
+      hp,
+      energy: Math.max(0, Math.min(
+        ENERGY_MAX,
+        Math.round(current.energy) - destinyAppliedEnergyBonus(run, current.id),
+      )),
+      downed: hp === 0,
+    };
+  }
+
+  const allActiveDown = active.every(({ id }) => fighters[id]!.hp === 0);
+  const won = battle.winner === 0 && !allActiveDown;
+  return {
+    ok: true,
+    changed: true,
+    won,
+    run: {
+      ...run,
+      fighters,
+      hp: Object.fromEntries(run.roster.map((id) => {
+        const fighter = fighters[id]!;
+        return [id, fighter.hp / fighter.config.maxHp];
+      })),
+      food: clampTowerFood(battle.sides[0].food),
+      rage: Math.max(0, Math.min(
+        RAGE_MAX,
+        Math.round(battle.sides[0].rage) - destinyAppliedRageBonus(run),
+      )),
+      settledFloor: run.floor,
+      phase: won ? "reward" : "done",
+      active: won,
+    },
+  };
 }
