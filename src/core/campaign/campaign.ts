@@ -1,6 +1,6 @@
 // Chiến dịch chương 1 "Cờ lau dẹp loạn": Đinh Bộ Lĩnh từ thuở chăn trâu ở Hoa Lư tới khi dẹp xong 12 sứ quân.
 // Thứ tự màn, lời dẫn và số liệu là điểm xuất phát do Claude đặt, chờ Shan duyệt. Xem docs/design/09-che-do-choi.md.
-// Sứ quân là nhân vật lịch sử có bộ 6 kỹ năng theo nguyên tố như Đinh Bộ Lĩnh; tùy tướng đi kèm dùng chiêu theo nghề.
+// Sứ quân AI giữ preset hệ cũ, khác bản người chơi sở hữu; tùy tướng đi kèm dùng chiêu theo nghề.
 
 import { BASE_STATS } from "../roster";
 import {
@@ -13,8 +13,7 @@ import {
 import { STANDARD_WEIGHTS, type SpawnWeights } from "../board";
 import type { Difficulty } from "../ai";
 import {
-  autoProgress,
-  buildMain,
+  buildCampaignLeader,
   clampCampaignFood,
   leveledFoe,
   NEW_PROGRESS,
@@ -30,7 +29,7 @@ export interface StageFoe {
   readonly name: string;
   readonly element: Element;
   readonly profession: Profession;
-  /** Nhân vật lịch sử: bộ 6 kỹ năng theo nguyên tố như nhân vật chính. Tùy tướng: chiêu theo nghề. */
+  /** Thủ lĩnh AI: preset 6 chiêu hệ cũ. Tùy tướng: chiêu theo nghề. */
   readonly hero: boolean;
   /** Tước hiệu của sứ quân, ví dụ Trần Minh Công. */
   readonly title?: string;
@@ -451,8 +450,8 @@ export function stageUnlocked(campaign: CampaignState, id: string): boolean {
 /** Dựng một đối thủ của màn ở cấp của màn. */
 export function stageFighter(foe: StageFoe, level: number): FighterConfig {
   if (foe.hero) {
-    const kit = buildMain(
-      autoProgress(level, null),
+    const kit = buildCampaignLeader(
+      level,
       foe.element,
       foe.profession,
       foe.id,

@@ -1,0 +1,9 @@
+{
+  "src/core/battle/skills.ts": true,
+  "src/core/roster/roster.ts": true,
+  "src/core/progress/progress.ts": true,
+  "src/core/progress/profile.ts": true,
+  "src/core/campaign/campaign.ts": true,
+  "package.json": true,
+  "pnpm-lock.yaml": true
+}

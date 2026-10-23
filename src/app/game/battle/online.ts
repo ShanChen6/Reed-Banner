@@ -1,5 +1,6 @@
 // Gọi API trận online (/api/battles). Server có thẩm quyền: client chỉ gửi ý định và hiển thị kết quả.
 
+import { profileActionPayload } from "@/core";
 import type {
   ArenaMember,
   BattleEvent,
@@ -86,6 +87,8 @@ export function createOnline(input: {
   tower?: true;
   /** Sinh tồn: bắt đầu lượt chơi mới. */
   survival?: true;
+  /** Sinh tồn: tối đa hai companion dự bị đã được chọn trước khi tạo run. */
+  reserveCompanions?: readonly string[];
   /** Thử thách hằng ngày: đề của hôm nay. */
   daily?: true;
   /** Đấu trường: đánh đối thủ thứ mấy trong các đối thủ đang bày. */
@@ -223,7 +226,7 @@ export function fetchProfile(): Promise<ProfileResponse> {
 export function sendProfileAction(
   action: ProfileAction,
 ): Promise<ProfileResponse> {
-  return callProfile({ method: "POST", body: JSON.stringify({ action }) });
+  return callProfile({ method: "POST", body: JSON.stringify({ action: profileActionPayload(action) }) });
 }
 
 export const ONLINE_ERROR_TEXT: Record<string, string> = {

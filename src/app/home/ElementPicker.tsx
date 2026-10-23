@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { type Element, ELEMENTS, elementRelation, mainSkills, PASSIVES } from "@/core";
-import { ELEMENT_NAME } from "../game/battle/labels";
+import { type Element, ELEMENTS, elementRelation, characterSkills, PROFESSIONS, type Profession, PASSIVES } from "@/core";
+import { ELEMENT_NAME, PROFESSION_NAME, skillText } from "../game/battle/labels";
 import { ELEMENT_COLOR, ElementIcon } from "../game/art/icons";
 import { Portrait } from "../game/art/portraits";
 import { SkillIcon } from "../game/art/skills";
@@ -15,6 +15,7 @@ function related(e: Element, test: (other: Element) => boolean) {
 /** Chọn một nguyên tố để xem Đinh Bộ Lĩnh đổi hệ: chân dung, bị động, 6 kỹ năng và quan hệ khắc chế. */
 export default function ElementPicker() {
   const [element, setElement] = useState<Element>("moc");
+  const [profession, setProfession] = useState<Profession>("tuongSi");
   const trait = ELEMENT_TRAIT[element];
   const counters = related(element, (o) => elementRelation(element, o) === "counter");
   const counteredBy = related(element, (o) => elementRelation(o, element) === "counter");
@@ -22,6 +23,11 @@ export default function ElementPicker() {
 
   return (
     <div className="space-y-5">
+      <label className="flex justify-center gap-2 text-sm">Nghề
+        <select className="rounded bg-stone-900 p-1" value={profession} onChange={e => setProfession(e.target.value as Profession)}>
+          {PROFESSIONS.map(p => <option key={p} value={p}>{PROFESSION_NAME[p]}</option>)}
+        </select>
+      </label>
       <div role="tablist" aria-label="Chọn nguyên tố" className="flex flex-wrap justify-center gap-2">
         {ELEMENTS.map((e) => (
           <button
@@ -48,7 +54,7 @@ export default function ElementPicker() {
         style={{ boxShadow: `inset 0 0 0 1px ${ELEMENT_COLOR[element]}33, 0 0 60px -20px ${ELEMENT_COLOR[element]}` }}
       >
         <div className="flex flex-col items-center gap-2 text-center">
-          <Portrait id="dinhBoLinh" element={element} profession="tuongSi" className="size-36 md:size-44" />
+          <Portrait id="dinhBoLinh" element={element} profession={profession} className="size-36 md:size-44" />
           <p className="font-serif text-xl font-bold">Đinh Bộ Lĩnh</p>
           <p className="text-sm text-stone-400">Hệ {ELEMENT_NAME[element]}</p>
         </div>
@@ -95,8 +101,8 @@ export default function ElementPicker() {
           </div>
 
           <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-            {mainSkills(element).map((s) => (
-              <li key={s.id} className="flex items-center gap-2 rounded-lg bg-stone-900/60 p-2 text-xs">
+            {characterSkills(profession, element).map((s) => (
+              <li key={s.id} title={skillText(s)} className="flex items-center gap-2 rounded-lg bg-stone-900/60 p-2 text-xs">
                 <SkillIcon def={s} className="size-9 shrink-0" />
                 <span className="leading-tight">
                   <span className="block font-semibold text-stone-100">{s.name}</span>

@@ -1,0 +1,18 @@
+Task1 baseline F — 2026-10-22, Asia/Ho_Chi_Minh
+Branch: feat/team-skill-combos
+Base commit: 9e786f1b93dd658617e78f5e048d25d070b629f3 + current task1 diff
+Node: v25.9.0; pnpm: 10.28.0
+
+PASS node --import tsx scripts/baseline-skills.ts: 102 owned loadouts, 13 campaign stages, 26 passive definitions.
+PASS pnpm typecheck
+PASS pnpm lint
+PASS pnpm test: 365 tests, 85 suites, 365 pass, 0 fail/cancelled/skipped/todo.
+PASS pnpm build: optimized production build, static generation21/21.
+PASS git diff --check
+
+Build: DATABASE_URL absent; migration skipped by project script. DB production not verified.
+Browser interaction/animation: not run for task1. F UI helpers inspected; no component changed.
+No balance parameter or AI weight changes; no A comparison run; no push/merge/deploy.
+
+Reproduction: run commands above from repo root. Source hashes: inventory.json.
+Detailed outputs: tests.txt, typecheck.txt, lint.txt, build.txt.

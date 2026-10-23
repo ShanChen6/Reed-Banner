@@ -1,0 +1,62 @@
+[
+  {
+    "reason": "typicalLongDefense",
+    "group": "screen",
+    "caseId": "screen:binhLinh:tho:20:1v1:1907:side0",
+    "Fturns": 45.5,
+    "Dturns": 42.5,
+    "Fwon": true,
+    "Dwon": true,
+    "capHit": false
+  },
+  {
+    "reason": "maxLongDefense",
+    "group": "pressure",
+    "caseId": "pressure:healersMirror:9:4567:side0",
+    "Fturns": 60.0,
+    "Dturns": 55.0,
+    "Fwon": false,
+    "Dwon": false,
+    "capHit": false
+  },
+  {
+    "reason": "largestFminusD",
+    "group": "screen",
+    "caseId": "screen:binhLinh:loi:15:1v1:1907:side0",
+    "Fturns": 49.0,
+    "Dturns": 34.5,
+    "Fwon": false,
+    "Dwon": true,
+    "capHit": false
+  },
+  {
+    "reason": "completedOutcomeFlip",
+    "group": "screen",
+    "caseId": "screen:binhLinh:moc:9:3v3:1907:side1",
+    "Fturns": 59.0,
+    "Dturns": 55.5,
+    "Fwon": true,
+    "Dwon": false,
+    "capHit": false
+  },
+  {
+    "reason": "cap",
+    "group": "pressure",
+    "caseId": "pressure:healersMirror:10:4567:side1",
+    "Fturns": 60.0,
+    "Dturns": 55.0,
+    "Fwon": null,
+    "Dwon": true,
+    "capHit": true
+  },
+  {
+    "reason": "leastProgressCapped",
+    "group": "screen",
+    "caseId": "screen:quanSu:moc:9:3v3:701:side1",
+    "Fturns": 60.0,
+    "Dturns": 49.0,
+    "Fwon": null,
+    "Dwon": true,
+    "capHit": true
+  }
+]

@@ -51,7 +51,7 @@
 Sát thương kiếm = round( ATK
                          × (ô kiếm thường + 1.5 × ô kiếm đồng + 2 × ô kiếm lửa)
                          × Sĩ khí × Nguyên tố × Cascade × Nội tại nghề
-                         (ATK và DEF đã nhân hệ số Tinh thần)
+                         (F giữ nguyên ATK và DEF theo Tinh thần)
                          × 100 / (100 + DEF hiệu lực) )
 
 Sát thương kỹ năng = round( Sát thương gốc của kỹ năng
@@ -75,7 +75,22 @@ DEF hiệu lực = DEF đối thủ × (1 − Xuyên giáp)
 - Tổng hệ số nằm trong khoảng 0.375× đến khoảng 2.16× (chưa tính nội tại nghề và kỹ năng bị động).
 - **Hiển thị:** con số lớn ở giữa màn hình, kèm biểu tượng nhỏ cho từng hệ số đang có hiệu lực. Chạm giữ hoặc rê chuột để xem bảng chi tiết.
 
-## 5. Tinh thần (riêng từng tướng)
+## 5. Tinh thần F (riêng từng tướng, hiện hành)
+
+Chốt theo [thiết kế22](22-ky-nang-chase.md), kiểm chứng tại [baseline task1](../reports/2026-10-22-baseline-f/README.md).
+
+- Bắt đầu100; đầu lượt thường25 của mỗi phe giảm5/lượt, về0 ở lượt44. Người gục không suy giảm; lượt thêm không giảm thêm. Đóng băng vẫn đếm lượt thường.
+- ATK/DEF không giảm theo Tinh thần; buff/debuff, nội tại, quân lương và xuyên giáp giữ luật riêng.
+- Hồi trực tiếp, tim, Hồi phục, hút máu và Khiên mới nhân `0.2 + 0.8 × Tinh thần/100` của **người nhận**. Khiên đã có không co hồi tố. Hồi dư Y sư chuyển Khiên sau hệ số, không nhân lần hai.
+- Mốc lượt24/25/30/35/40/44+: hồi/Khiên100%/96%/76%/56%/36%/20%.
+- Sang trận mới reset100; sinh tồn reset100 mỗi đợt theo `beginWave`, kể cả người đang gục. Hồi nghỉ giữa đợt là luật ngoài chiến đấu, không nhân hệ số này.
+- F là mặc định chung trong rules, engine, AI và UI; không thêm tùy chọn luật vào API.
+
+### Lịch sử trước khi chốt F
+
+Phần dưới chỉ lưu lịch sử, không dùng để dựng trận hoặc tính tooltip hiện hành.
+
+### Thiết kế cũ
 
 Shan yêu cầu 19/10/2026: trận kéo dài thì tinh thần chiến đấu giảm, kéo các chỉ số xuống theo.
 
@@ -88,3 +103,7 @@ Shan yêu cầu 19/10/2026: trận kéo dài thì tinh thần chiến đấu gi�
 - Mô phỏng 19/10/2026 (150 trận, AI Thường, seed 7): không trận nào chạm giới hạn lượt. 1vs1 trung vị 20 lượt mỗi bên, 90% xong trong 48.5 lượt; 3vs3 trung vị 27, 90% xong trong 46.5 lượt (trước đó 58), tỉ lệ thắng của phe nhân vật chính 64% (trước đó 68%).
 
 > TODO: kỹ năng, trang bị hoặc sự kiện hồi Tinh thần (ví dụ hạ gục đối thủ) nếu cần thêm chiều sâu.
+
+### Kiểm chứng cũ 22/10/2026
+
+Luật mặc định ở mục5 giữ nguyên. Sửa bug Y sư: tính hồi dư từ lượng hồi đã chịu Tinh thần, rồi chuyển dư thành Khiên mà không giảm Tinh thần lần nữa. Khiên đang có không co theo Tinh thần; chỉ lượng mới chịu hệ số. Thiêu đốt (ATK gốc lúc tạo), Phản đòn (đầu vào đòn nhận), mất máu hết lương không nhân Tinh thần lần thứ hai. Các nhánh mô phỏng B–E không phải luật hiện hành. Xem [báo cáo kiểm chứng](../reports/2026-10-22-tinh-than-ai.md).

@@ -51,7 +51,8 @@ import {
   buildMain,
   mainSlotKey,
   NEW_PROGRESS,
-  SKILL_POINTS_PER_LEVEL,
+  UPGRADE_COST,
+  BRANCH_COST,
   upgradeSkill,
   type BattleRewards,
   type CharacterProgress,
@@ -64,6 +65,7 @@ export const DEFAULT_TEAM: readonly string[] = ["haVan", "maiThanh"];
 
 export interface Profile {
   readonly version: 1;
+  readonly skillLayout: 2;
   readonly element: Element;
   readonly profession: Profession;
   readonly main: CharacterProgress;
@@ -102,6 +104,7 @@ function parseSurvival(raw: unknown): SurvivalState {
 export function newProfile(): Profile {
   return {
     version: 1,
+    skillLayout: 2,
     element: "moc",
     profession: "tuongSi",
     main: NEW_PROGRESS,
@@ -230,7 +233,7 @@ function isProgress(x: unknown): x is CharacterProgress {
 
 /**
  * Tiến trình nhân vật kèm lưu từ trước khi mọi nhân vật kèm nâng theo ô (chiêu nghề, chiêu nhánh): đặt lại
- * kỹ năng và hoàn đủ điểm kỹ năng của cấp để người chơi nâng lại. Cấp và kinh nghiệm giữ nguyên.
+ * kỹ năng cũ và hoàn đúng điểm đã chi để người chơi nâng lại. Cấp và kinh nghiệm giữ nguyên.
  */
 function migrateCompanion(p: CharacterProgress): CharacterProgress {
   const slotKeys = new Set([1, 2, 3, 4, 5, 6].map(mainSlotKey));
@@ -240,13 +243,23 @@ function migrateCompanion(p: CharacterProgress): CharacterProgress {
   return legacy
     ? {
         ...p,
-        skillLevels: {},
+        skillLevels: Object.fromEntries(Object.entries(p.skillLevels).filter(([k]) => slotKeys.has(k))),
         branches: [],
-        skillPoints: (p.level - 1) * SKILL_POINTS_PER_LEVEL,
+        skillPoints: p.skillPoints + Object.entries(p.skillLevels)
+          .filter(([k]) => !slotKeys.has(k))
+          .reduce((sum, [, lv]) => sum + [1, 2, 3, 4].filter(i => i < lv).reduce((n, i) => n + UPGRADE_COST[i]!, 0), 0)
+          + new Set(p.branches).size * BRANCH_COST,
       }
     : p;
 }
 
+/** Layout 1: o5 ultimate/o4 advanced role. Swap keys, not levels or points. */
+export function migrateSkillSlots(p: CharacterProgress): CharacterProgress {
+ const levels={...p.skillLevels};delete levels.o4;delete levels.o5;
+ if(p.skillLevels.o4!==undefined)levels.o5=p.skillLevels.o4;
+ if(p.skillLevels.o5!==undefined)levels.o4=p.skillLevels.o5;
+ return {...p,skillLevels:levels};
+}
 /** Đọc hồ sơ đã lưu; dữ liệu hỏng hoặc khác phiên bản thì trả về hồ sơ mới. */
 export function parseProfile(raw: unknown): Profile {
   const p = raw as Profile | null;
@@ -260,7 +273,7 @@ export function parseProfile(raw: unknown): Profile {
     return fresh;
   // Nhân vật khởi đầu luôn có; nhân vật mua giữ lại nếu còn trong danh sách.
   const saved = Object.entries(p.companions ?? {}).flatMap(([id, cp]) =>
-    companionById(id) && isProgress(cp) ? [[id, migrateCompanion(cp)]] : [],
+    companionById(id) && isProgress(cp) ? [[id, p.skillLayout === 2 ? migrateCompanion(cp) : migrateSkillSlots(migrateCompanion(cp))]] : [],
   );
   // Bỏ trường cũ: chiêu nhánh mang vào trận của nhân vật kèm.
   const rest: Partial<Profile> & { branchChoice?: unknown } = { ...p };
@@ -269,6 +282,8 @@ export function parseProfile(raw: unknown): Profile {
   const next: Profile = {
     ...fresh,
     ...rest,
+    skillLayout: 2,
+    main: p.skillLayout === 2 ? p.main : migrateSkillSlots(p.main),
     companions,
     team: fresh.team,
     ...parseInventory(p),
@@ -473,6 +488,11 @@ export function applyProfileAction(
 }
 
 /** Kiểm tra hình dạng thao tác gửi lên; null khi không hợp lệ. */
+/** Current clients explicitly version slot upgrades so an old cached UI cannot upgrade the wrong skill. */
+export function profileActionPayload(action:ProfileAction){
+ return action.type==='upgrade'?{...action,skillLayout:2 as const}:action;
+}
+
 export function parseProfileAction(x: unknown): ProfileAction | null {
   const a = x as Record<string, unknown> | null;
   if (!a || typeof a !== "object") return null;
@@ -542,7 +562,10 @@ export function parseProfileAction(x: unknown): ProfileAction | null {
   }
   if (a.type === "buyCompanion")
     return { type: "buyCompanion", character: a.character };
-  if (a.type === "upgrade" && typeof a.key === "string")
+  if (a.type === "upgrade" && typeof a.key === "string") {
+    if(a.skillLayout!==undefined&&a.skillLayout!==2)return null;
+    if((a.key==='o4'||a.key==='o5')&&a.skillLayout!==2)return null;
     return { type: "upgrade", character: a.character, key: a.key };
+  }
   return null;
 }

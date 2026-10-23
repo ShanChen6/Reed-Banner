@@ -21,29 +21,38 @@ export const SOLO_HP_MULTIPLIER = 2;
 
 /**
  * Tinh thần: mỗi tướng bắt đầu với SPIRIT_MAX. Từ lượt thứ SPIRIT_DECAY_START_TURN của phe, đầu mỗi
- * lượt của phe mọi tướng còn sống mất SPIRIT_DECAY. Tinh thần thấp kéo ATK, DEF, hồi máu và Khiên
- * xuống, để trận kéo dài (nhất là giữa hai bên thiên phòng thủ) vẫn kết thúc bằng hạ gục.
+ * lượt thường giảm5; về0 ở lượt44. ATK/DEF không giảm theo Tinh thần.
+ * Hồi/Khiên mới theo người nhận: 0.2 + 0.8 × Tinh thần/100 (phương án F).
  */
 export const SPIRIT_MAX = 100;
 export const SPIRIT_DECAY_START_TURN = 25;
-export const SPIRIT_DECAY = 10;
+export const SPIRIT_DECAY = 5;
 /** ATK và DEF còn tỉ lệ này khi Tinh thần về 0. */
-export const SPIRIT_STAT_FLOOR = 0.7;
+export const SPIRIT_STAT_FLOOR = 1;
 
-/** Tinh thần sau khi phe đã bắt đầu `sideTurn` lượt (tính từ 1). */
-export function spiritAt(sideTurn: number): number {
-  if (sideTurn < SPIRIT_DECAY_START_TURN) return SPIRIT_MAX;
-  return Math.max(0, SPIRIT_MAX - SPIRIT_DECAY * (sideTurn - SPIRIT_DECAY_START_TURN + 1));
+/** Chỉ harness mô phỏng truyền lựa chọn này; API ứng dụng không nhận cấu hình thử nghiệm. */
+export type SpiritExperiment = "A" | "B" | "C" | "D" | "E" | "F";
+export const DEFAULT_SPIRIT_EXPERIMENT: SpiritExperiment = "F";
+export const SPIRIT_EXPERIMENTS = {
+  A: { decay: 10, statFloor: 0.7, healFloor: 0 },
+  B: { decay: 0, statFloor: 1, healFloor: 0 },
+  C: { decay: 10, statFloor: 1, healFloor: 0 },
+  D: { decay: 5, statFloor: 1, healFloor: 0 },
+  E: { decay: 10, statFloor: 1, healFloor: 0.2 },
+  F: { decay: 5, statFloor: 1, healFloor: 0.2 },
+} as const;
+
+/** Tinh thần sau khi phe bắt đầu sideTurn lượt thường; lượt thêm không tăng bộ đếm. */
+export function spiritAt(sideTurn: number, experiment: SpiritExperiment = DEFAULT_SPIRIT_EXPERIMENT): number {
+  return Math.max(0, SPIRIT_MAX - SPIRIT_EXPERIMENTS[experiment].decay * Math.max(0, sideTurn - SPIRIT_DECAY_START_TURN + 1));
 }
-
-/** Hệ số ATK và DEF theo Tinh thần. */
-export function spiritStatMultiplier(spirit: number): number {
-  return SPIRIT_STAT_FLOOR + (1 - SPIRIT_STAT_FLOOR) * (spirit / SPIRIT_MAX);
+export function spiritStatMultiplier(spirit: number, experiment: SpiritExperiment = DEFAULT_SPIRIT_EXPERIMENT): number {
+  const floor = SPIRIT_EXPERIMENTS[experiment].statFloor;
+  return floor + (1 - floor) * (Math.max(0, Math.min(100, spirit)) / SPIRIT_MAX);
 }
-
-/** Hệ số hồi máu và Khiên nhận được theo Tinh thần. */
-export function spiritHealMultiplier(spirit: number): number {
-  return spirit / SPIRIT_MAX;
+export function spiritHealMultiplier(spirit: number, experiment: SpiritExperiment = DEFAULT_SPIRIT_EXPERIMENT): number {
+  const floor = SPIRIT_EXPERIMENTS[experiment].healFloor;
+  return floor + (1 - floor) * (Math.max(0, Math.min(100, spirit)) / SPIRIT_MAX);
 }
 
 export const TURN_MS = 30_000;

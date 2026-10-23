@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ELEMENTS, GEAR_SLOTS, mainCharacter, mainSkills, PROFESSIONS, professionSkills, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
+import { ELEMENTS, GEAR_SLOTS, mainCharacter, characterSkills, PROFESSIONS, professionSkills, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, SPECIAL_NAME, TIER_COLOR_NAME, TILE_NAME } from "@/app/game/battle/labels";
 import { GearIcon } from "@/app/game/art/gear";
 import { ElementIcon, FoodIcon, LeaderFlag, ProfessionIcon, ShieldIcon } from "@/app/game/art/icons";
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 const ROSTER = [mainCharacter("moc"), ...STARTER_COMPANIONS];
-const SKILL_ELEMENTS = ELEMENTS.filter((e) => mainSkills(e).length > 0);
+const SKILL_ELEMENTS = ELEMENTS.filter((e) => characterSkills("tuongSi", e).length > 0);
 
 /** Bảng xem nhanh mọi hình SVG của /demo, để duyệt art mà không phải chờ ô đặc biệt xuất hiện trong trận. */
 export default function ArtPage() {
@@ -111,7 +111,7 @@ export default function ArtPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-semibold">Kỹ năng nhân vật chính (ô 1–6, ô 5 là tuyệt chiêu)</h2>
+          <h2 className="font-semibold">Bộ Tướng sĩ theo hệ (3 nghề + 2 hệ + tuyệt chiêu ô 4)</h2>
           <div className="space-y-3">
             {SKILL_ELEMENTS.map((e) => (
               <div key={e} className="flex flex-wrap items-start gap-3">
@@ -119,7 +119,7 @@ export default function ArtPage() {
                   <ElementIcon element={e} className="size-4" />
                   {ELEMENT_NAME[e]}
                 </span>
-                {mainSkills(e).map((d) => (
+                {characterSkills("tuongSi", e).map((d) => (
                   <figure key={d.id} className="flex w-20 flex-col items-center gap-1">
                     <SkillIcon def={d} className="size-12" />
                     <figcaption className="text-center text-[11px] leading-tight opacity-80">{d.name}</figcaption>

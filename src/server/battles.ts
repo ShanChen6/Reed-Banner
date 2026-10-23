@@ -23,14 +23,18 @@ import {
   applyRewards,
   battleRewards,
   createRng,
+  createSurvivalRoster,
   ELEMENTS,
   HUMAN,
   humanAct,
   isRaidTier,
   leveledFoe,
   matchOver,
+  MAIN_ID,
   newSurvivalRun,
   survivalCleared,
+  survivalActiveSideConfig,
+  syncSurvivalRosterState,
   survivalWave,
   newTowerRun,
   ownsCompanion,
@@ -51,6 +55,7 @@ import {
   viewOf,
   type MatchAction,
   type SurvivalResult,
+  type SurvivalLeaderBuildChoice,
   type DailyScore,
   type MatchMode,
   type Profile,
@@ -119,6 +124,8 @@ export interface NewBattleInput {
   readonly tower?: true;
   /** Sinh tồn: bắt đầu lượt chơi mới với đội đang chọn ở hồ sơ. */
   readonly survival?: true;
+  /** Sinh tồn: tối đa 2 reserve IDs; active vẫn lấy theo `companions` của request. */
+  readonly reserveCompanions?: readonly string[];
   /** Thử thách hằng ngày: đề chung của hôm nay, mỗi người một lượt. */
   readonly daily?: true;
   /** Đấu trường: đánh đối thủ thứ mấy trong các đối thủ đang bày. */
@@ -227,14 +234,30 @@ export function parseNewBattle(body: unknown): NewBattleInput | null {
       body.tower !== undefined
     )
       return null;
+    const reserves =
+      body.reserveCompanions === undefined ? [] : body.reserveCompanions;
+    const knownIds = new Set(ALL_COMPANIONS.map((c) => c.id));
+    if (
+      !Array.isArray(reserves) ||
+      reserves.length > 2 ||
+      reserves.some((id) => typeof id !== "string" || !knownIds.has(id)) ||
+      new Set(reserves).size !== reserves.length
+    )
+      return null;
     const parsed = parseNewBattle({
       ...body,
       survival: undefined,
+      reserveCompanions: undefined,
       mode: "3v3",
       difficulty: "easy",
     });
-    return parsed && { ...parsed, survival: true };
+    return parsed && {
+      ...parsed,
+      survival: true,
+      ...(reserves.length > 0 ? { reserveCompanions: reserves as string[] } : {}),
+    };
   }
+  if (body.reserveCompanions !== undefined) return null;
   if (body.tower !== undefined) {
     if (body.tower !== true || body.stage !== undefined) return null;
     const parsed = parseNewBattle({
@@ -300,11 +323,62 @@ const toWhirl = (w: unknown): Whirl | null => {
 function toAction(a: Record<string, unknown>): MatchAction | null {
   switch (a.type) {
     case "nextWave":
-      if (a.revive === undefined) return { type: "nextWave" };
-      return Number.isInteger(a.revive)
-        ? { type: "nextWave", revive: a.revive as number }
-        : null;
+      if (
+        Object.keys(a).some(
+          (key) =>
+            key !== "type" &&
+            key !== "revive" &&
+            key !== "activeIds" &&
+            key !== "leaderBuild",
+        )
+      )
+        return null;
+      if (a.activeIds !== undefined) {
+        if (
+          !Array.isArray(a.activeIds) ||
+          !a.activeIds.every(
+            (fighterId) =>
+              typeof fighterId === "string" && fighterId.length > 0,
+          )
+        )
+          return null;
+      }
+      if (a.leaderBuild !== undefined) {
+        if (
+          !isObj(a.leaderBuild) ||
+          Object.keys(a.leaderBuild).some(
+            (key) => key !== "profession" && key !== "element",
+          ) ||
+          (a.leaderBuild.profession !== undefined &&
+            typeof a.leaderBuild.profession !== "string") ||
+          (a.leaderBuild.element !== undefined &&
+            typeof a.leaderBuild.element !== "string")
+        )
+          return null;
+      }
+      const revive =
+        a.revive === undefined
+          ? undefined
+          : Number.isInteger(a.revive)
+            ? (a.revive as number)
+            : typeof a.revive === "string" && a.revive.length > 0
+              ? a.revive
+              : null;
+      if (revive === null) return null;
+      return {
+        type: "nextWave",
+        ...(revive === undefined ? {} : { revive }),
+        ...(a.activeIds === undefined
+          ? {}
+          : { activeIds: a.activeIds as string[] }),
+        ...(a.leaderBuild === undefined
+          ? {}
+          : {
+              leaderBuild: a.leaderBuild as Partial<SurvivalLeaderBuildChoice>,
+            }),
+      };
     case "endRun":
+      if (Object.keys(a).some((key) => key !== "type")) return null;
       return { type: "endRun" };
     case "swap": {
       const from = toPos(a.from);
@@ -524,26 +598,25 @@ async function createSurvivalBattle(
   input: NewBattleInput,
   deps: Deps,
 ): Promise<ServiceResult> {
-  const u = await updateProfile(
-    deps.profiles,
-    ownerId,
-    (p) => ({
-      ok: true,
-      profile: { ...p, element: input.element, profession: input.profession },
-    }),
-    deps.now,
+  const { profile } = await loadProfile(deps.profiles, ownerId);
+  const roster = createSurvivalRoster(
+    profile,
+    [MAIN_ID, ...input.companions],
+    input.reserveCompanions ?? [],
   );
-  if (!u.ok) return { ok: false, error: "conflict" };
-  const profile = u.stored.profile;
+  if (!roster.ok) return { ok: false, error: "badRequest" };
   // Seed đợt tách khỏi seed bàn cờ.
   const run = newSurvivalRun(
     profile,
     Math.imul(deps.seed, 0x2c1b3c6d) ^ 0x5bd1e995,
+    roster.roster,
   );
   const wave = survivalWave(run, 1);
+  const activeSide = survivalActiveSideConfig(run.roster);
+  if (!activeSide.ok) return { ok: false, error: "badRequest" };
   const { match, events } = startMatch({
     sides: [
-      { fighters: profileTeam(profile, profile.team), leader: 0 },
+      activeSide.value,
       { fighters: wave.foes, leader: 0 },
     ],
     difficulty: wave.difficulty,
@@ -913,7 +986,18 @@ async function settleRecord(
   r: MatchRecord,
   deps: Omit<Deps, "seed" | "newId">,
 ): Promise<ServiceResult> {
-  const { match, events } = settle(r.match, deps.now);
+  const settled = settle(r.match, deps.now);
+  let match = settled.match;
+  if (
+    match.survival?.stateVersion === 2 &&
+    match.survival.roster &&
+    match.seq !== r.match.seq
+  ) {
+    const synced = syncSurvivalRosterState(match.survival, match.battle);
+    if (!synced.ok) return { ok: false, error: "badRequest" };
+    match = { ...match, survival: synced.value };
+  }
+  const { events } = settled;
   if (
     match.seq !== r.match.seq &&
     !(await deps.store.save({ ...r, match, updatedAt: deps.now }, r.match.seq))
@@ -970,23 +1054,33 @@ export async function actBattle(
   const r = await load(id, ownerId, deps.store);
   if (!r) return { ok: false, error: "notFound" };
   const result = humanAct(r.match, parsed.action, parsed.seq, deps.now);
-  const changed = result.match.seq !== r.match.seq;
+  let match = result.match;
+  if (
+    match.survival?.stateVersion === 2 &&
+    match.survival.roster &&
+    match.seq !== r.match.seq
+  ) {
+    const synced = syncSurvivalRosterState(match.survival, match.battle);
+    if (!synced.ok) return { ok: false, error: "badRequest" };
+    match = { ...match, survival: synced.value };
+  }
+  const changed = match.seq !== r.match.seq;
   if (
     changed &&
     !(await deps.store.save(
-      { ...r, match: result.match, updatedAt: deps.now },
+      { ...r, match, updatedAt: deps.now },
       r.match.seq,
     ))
   ) {
     return { ok: false, error: "conflict" };
   }
   if (!result.ok)
-    return { ok: false, error: result.error, view: viewOf(result.match) };
-  const outcome = await reward(r, result.match, deps);
+    return { ok: false, error: result.error, view: viewOf(match) };
+  const outcome = await reward(r, match, deps);
   return {
     ok: true,
     id,
-    view: viewOf(result.match),
+    view: viewOf(match),
     events: result.events,
     ...(outcome ? { outcome } : {}),
   };

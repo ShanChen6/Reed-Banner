@@ -1,24 +1,26 @@
 # Danh sách nhân vật
 
+> Cập nhật tiếp theo: [kỹ năng phiên bản 2 và combo đồng đội](21-combo-dong-doi.md). Layout mới đổi tuyệt chiêu sang ô 4, nghề nâng cao sang ô 5, có chuyển hồ sơ giữ điểm. Các định nghĩa legacy/lịch sử bên dưới cần đọc cùng tài liệu phiên bản 2.
+
 > Cập nhật: 20/10/2026
 >
-> Danh sách đầy đủ mọi nhân vật chơi được: Đinh Bộ Lĩnh, 42 tướng thường, 6 tướng lịch sử và 12 sứ quân. Luật chung về nghề, nội tại và cách dùng kỹ năng ở [Nhân vật, nghề & kỹ năng](06-nhan-vat-ky-nang.md); bộ kỹ năng theo nguyên tố ở [Bộ kỹ năng nhân vật chính](12-ky-nang-nhan-vat-chinh.md). Tên nhân vật hư cấu và tên chiêu do Claude tự đặt (clean-room), số liệu đã qua mô phỏng `pnpm sim -- --roster` ngày 20/10/2026 (mục 8), chờ Shan duyệt. Dữ liệu nằm trong `src/core/roster/roster.ts` và `src/core/battle/skills.ts`.
+> Danh sách đầy đủ mọi nhân vật chơi được: Đinh Bộ Lĩnh, 42 tướng thường, 6 tướng lịch sử và 12 sứ quân. Luật chung về nghề, nội tại và cách dùng kỹ năng ở [Nhân vật, nghề & kỹ năng](06-nhan-vat-ky-nang.md); bộ kỹ năng hiện hành ở [Cải tổ kỹ năng](20-cai-to-ky-nang.md). Tên nhân vật hư cấu và tên chiêu do Claude tự đặt (clean-room), số liệu đã qua mô phỏng `pnpm sim -- --roster` ngày 20/10/2026 (mục 8), chờ Shan duyệt. Dữ liệu nằm trong `src/core/roster/roster.ts` và `src/core/battle/skills.ts`.
 
 ## 1. Khung chung của nhân vật kèm
 
-Từ 20/10/2026 mọi nhân vật kèm, dù là tướng thường, tướng lịch sử hay sứ quân, dùng **cùng một khung kỹ năng như Đinh Bộ Lĩnh**: bộ 6 kỹ năng chủ động theo nguyên tố của mình, mở ô theo cấp và nâng theo ô. Chỉ **ô 5** là kỹ năng riêng của từng người, nên hai nhân vật cùng hệ khác nhau ở nghề (nội tại, loại ô, vũ khí, chỉ số) và ở ô 5.
+Từ 22/10/2026 mọi nhân vật chơi được dùng **3 kỹ năng nghề + 2 kỹ năng hệ + 1 tuyệt chiêu riêng**. Thiết kế và danh sách ở [Cải tổ kỹ năng](20-cai-to-ky-nang.md). Cùng hệ nhưng khác nghề có 3 chiêu khác nhau.
 
-| Ô | Vai trò | Mở ở cấp | Ghi chú |
-|---|---|---|---|
-| 1 | Bàn cờ: phá hoặc biến ô | 1 | Theo hệ |
-| 2 | Hỗ trợ nhỏ | 1 | Theo hệ |
-| 3 | Đơn mục tiêu + phá vùng nhỏ | 5 | Theo hệ |
-| 4 | Toàn bộ kẻ địch + phá vùng | 10 | Theo hệ |
-| 6 | Hỗ trợ lớn | 15 | Theo hệ |
-| 5 | **Kỹ năng riêng** | 20 | Tuyệt chiêu (tướng thường) hoặc chiêu riêng (tướng lịch sử, sứ quân) |
+| Ô | Vai trò | Mở ở cấp |
+|---|---|---|
+| 1 | Nghề cơ bản | 1 |
+| 2 | Hệ bàn cờ | 1 |
+| 3 | Nghề chính | 5 |
+| 5 | Tuyệt chiêu riêng | 10 |
+| 4 | Nghề chiến thuật | 15 |
+| 6 | Hệ bổ trợ | 20 |
 
 - **Nâng kỹ năng:** khóa theo ô `o1`–`o6`, giá điểm như nhân vật chính ([Tiến trình](08-tien-trinh-kinh-te.md#11-số-liệu-điểm-xuất-phát-19102026)). Mỗi cấp kỹ năng +10% hệ số chính, cấp 5 giảm 10% năng lượng.
-- **Không còn chiêu nghề nấc 1–2 và chiêu nhánh** cho nhân vật phe người chơi. Chiêu nghề chỉ còn ở tùy tướng AI của chiến dịch (mục 7).
+- Bộ nghề mới ở ô 1/3/4; không mua nhánh. Bộ nghề cũ chỉ dùng cho tùy tướng AI chiến dịch (mục 7).
 - **Kỹ năng bị động** theo hệ chỉ có tác dụng khi nhân vật làm thủ lĩnh. Thủ lĩnh phe người chơi luôn là Đinh Bộ Lĩnh, nên với người chơi bị động của nhân vật kèm không dùng tới; đội AI lấy người vị trí 1 làm thủ lĩnh.
 - **Chỉ số gốc theo nghề**, +3% mỗi cấp trên 1:
 
@@ -51,25 +53,13 @@ Từ 20/10/2026 mọi nhân vật kèm, dù là tướng thường, tướng l�
 | Mưu sĩ | Trừ năng lượng, lương, Câm lặng | Mộc hồi phục đội mình, Thổ phá ô, Lôi đánh thêm sát thương, Phong Xua tan và tự xoay lốc xoáy |
 | Quân sư | Giảm Công/Thủ đối thủ hoặc tăng đội mình | Kim phá giáp, Mộc hồi phục, Thủy đóng băng, Hỏa thiêu đốt |
 
-## 2. Bộ kỹ năng theo hệ
+## 2. Hai kỹ năng theo hệ
 
-Mọi nhân vật cùng hệ dùng chung 5 ô này (giá năng lượng trong ngoặc). Chi tiết tác dụng ở [Bộ kỹ năng nhân vật chính](12-ky-nang-nhan-vat-chinh.md).
-
-| Hệ | Bị động (thủ lĩnh) | Ô 1 | Ô 2 | Ô 3 | Ô 4 | Ô 6 |
-|---|---|---|---|---|---|---|
-| ⚙️ Kim | Kim Cốt Thiết Thân | Luyện Kim Thành Kiếm (20) | Kim Ý Ngưng Thần (30) | Đoạn Kim Nhất Tuyến (35) | Thiết Kỵ Tung Hoành (60) | Giáp Đồng Hộ Thể (50) |
-| 🌿 Mộc | Sinh Sôi Bất Tận | Lục Diệp Phong (35) | Linh Mộc Hồi Sinh (30) | Thanh Mộc Hộ Pháp (40) | Cuồng Vũ Thiên Diệp (60) | Thanh Trúc Bảo Phù (50) |
-| 💧 Thủy | Hàn Tuyền | Thủy Nguyệt Tụ Linh (20) | Thanh Lưu Tẩy Trần (30) | Hàn Băng Tiễn (40) | Bạch Đằng Triều Dâng (60) | Linh Thủy Hộ Mệnh (50) |
-| 🔥 Hỏa | Liệt Hỏa Tâm | Phóng Hỏa Thiêu Doanh (35) | Nộ Hỏa Thiêu Thân (30) | Xích Diễm Tiễn (40) | Hỏa Thiêu Liên Trại (60) | Dục Hỏa Trùng Sinh (50) |
-| ⛰️ Thổ | Bàn Thạch | Hậu Thổ Tích Lương (20) | Thạch Giáp (30) | Sơn Băng Địa Liệt (40) | Địa Chấn Tam Quân (60) | Kiên Thành Bất Động (50) |
-| ⚡ Lôi | Điện Quang Tốc Kích | Lôi Trụ Giáng Thế (40) | Tĩnh Điện Hộ Thân (30) | Lôi Tiễn Xuyên Vân (40) | Lôi Võng Thiên La (60) | Lôi Đình Hiệu Lệnh (50) |
-| 🌪️ Phong | Thuận Phong | Phong Quyển Tàn Vân (40) | Thanh Phong Tụ Khí (30) | Phong Nhận Liệt Không (40) | Cuồng Phong Quét Trận (60) | Phong Hành Vạn Lý (50) |
-
-Ô 5 mặc định của từng hệ (Kim Ấn Phá Thiên, Cổ Thụ Trấn Thiên, Thủy Kiếp Vạn Trùng, Liệt Diễm Phần Thành, Thái Sơn Áp Đỉnh, Cửu Tiêu Lôi Phạt, Bão Táp Càn Khôn; 100 năng lượng) chỉ Đinh Bộ Lĩnh dùng.
+Mỗi hệ có chiêu bàn cờ ô 2 và bổ trợ ô 6; danh sách, giá và cơ chế đầy đủ ở [20 §14 chiêu hệ](20-cai-to-ky-nang.md#14-chiêu-hệ). Bị động thủ lĩnh giữ nguyên. Ô 5 mặc định của hệ chỉ Đinh Bộ Lĩnh dùng; nhân vật kèm thay bằng kỹ năng riêng ở các bảng dưới.
 
 ## 3. Đinh Bộ Lĩnh
 
-Nhân vật chính, luôn ra trận và luôn là thủ lĩnh phe người chơi. Chọn nghề (6) và hệ (7) trước mỗi trận, nên có 42 cách dựng; mang đủ 6 ô theo hệ kể cả ô 5 mặc định và bị động của hệ. Chi tiết ở [Nhân vật, nghề & kỹ năng](06-nhan-vat-ky-nang.md#2-nhân-vật-chính-đinh-bộ-lĩnh).
+Nhân vật chính, luôn ra trận và luôn là thủ lĩnh phe người chơi. Chọn nghề (6) và hệ (7) trước mỗi trận, nên có 42 cách dựng; mang 3 chiêu nghề, 2 chiêu hệ, ô 5 mặc định theo hệ và bị động thủ lĩnh. Chi tiết ở [Nhân vật, nghề & kỹ năng](06-nhan-vat-ky-nang.md#2-nhân-vật-chính-đinh-bộ-lĩnh).
 
 ## 4. Tướng thường
 
@@ -164,7 +154,7 @@ In đậm là 5 người khởi đầu (có sẵn, đội 3vs3 mặc định là
 
 ## 5. Tướng lịch sử
 
-Sáu tướng theo Đinh Bộ Lĩnh dẹp loạn, nhân vật lịch sử được hư cấu hóa. Gia nhập khi qua màn chiến dịch lần đầu ([Chế độ chơi](09-che-do-choi.md#21-chương-1-cờ-lau-dẹp-loạn-claude-đặt-19102026-chờ-shan-duyệt)), không bán. Chiêu riêng 100 năng lượng, mở ở cấp 20.
+Sáu tướng theo Đinh Bộ Lĩnh dẹp loạn, nhân vật lịch sử được hư cấu hóa. Gia nhập khi qua màn chiến dịch lần đầu ([Chế độ chơi](09-che-do-choi.md#21-chương-1-cờ-lau-dẹp-loạn-claude-đặt-19102026-chờ-shan-duyệt)), không bán. Chiêu riêng 100 năng lượng, mở ở cấp 10.
 
 | Tướng | Nghề | Hệ | Gia nhập | Chiêu riêng | Tác dụng |
 |---|---|---|---|---|---|
@@ -179,7 +169,7 @@ Tên chiêu gợi tới chức tước lịch sử: Nguyễn Bặc là Định Q
 
 ## 6. Sứ quân
 
-Mười hai sứ quân là đối thủ thủ lĩnh của chiến dịch chương 1. Sau khi người chơi **qua màn có sứ quân đó lần đầu**, sứ quân mở bán ở cửa hàng giá **3 000 vàng**, mua về ở cấp 1. Nghề, hệ và chiêu riêng giống hệt khi làm đối thủ; riêng phe người chơi thì chiêu riêng mở ở cấp 20 như mọi ô 5 (làm đối thủ thì sứ quân luôn mang chiêu riêng). Giá năng lượng 60 (trùm 80) giữ như ở chiến dịch vì chiêu được chỉnh cho AI dùng; mô phỏng mục 8 cho thấy sứ quân phe người chơi không mạnh hơn hai nhóm kia nên không tăng giá.
+Mười hai sứ quân là đối thủ thủ lĩnh của chiến dịch chương 1. Sau khi người chơi **qua màn có sứ quân đó lần đầu**, sứ quân mở bán ở cửa hàng giá **3 000 vàng**, mua về ở cấp 1. Nghề, hệ và chiêu riêng giống hệt khi làm đối thủ; riêng phe người chơi thì chiêu riêng mở ở cấp 10 như mọi ô 5 (làm đối thủ thì sứ quân luôn mang chiêu riêng). Giá năng lượng 60 (trùm 80) giữ như ở chiến dịch vì chiêu được chỉnh cho AI dùng; mô phỏng mục 8 cho thấy sứ quân phe người chơi không mạnh hơn hai nhóm kia nên không tăng giá.
 
 | Sứ quân | Tước hiệu | Nghề | Hệ | Đất (màn mở bán) | Chiêu riêng | NL | Tác dụng |
 |---|---|---|---|---|---|---|---|
@@ -198,9 +188,9 @@ Mười hai sứ quân là đối thủ thủ lĩnh của chiến dịch chươn
 
 ## 7. Tùy tướng chiến dịch (chỉ AI)
 
-Phó tướng, thầy pháp, lang y… đi kèm sứ quân ở chiến dịch không có bộ theo hệ: họ dùng **chiêu nghề nấc 1 và một chiêu nhánh nấc 2** ([Bộ chiêu nghề](06-nhan-vat-ky-nang.md#43-bộ-chiêu-nghề)) cộng dấu ấn nguyên tố, dựng bằng `buildAide`. Người chơi không sở hữu được tùy tướng. Đối thủ AI ở Leo tháp, Sinh tồn, Thử thách ngày và Đấu trường bóng ma rút từ tướng thường nên dùng bộ theo hệ như người chơi.
+Phó tướng, thầy pháp, lang y… đi kèm sứ quân ở chiến dịch không có bộ theo hệ: họ dùng **chiêu nghề nấc 1 và một chiêu nhánh nấc 2** ([Bộ chiêu nghề](06-nhan-vat-ky-nang.md#43-bộ-chiêu-nghề)) cộng dấu ấn nguyên tố, dựng bằng `buildAide`. Người chơi không sở hữu được tùy tướng. Đối thủ AI ở Leo tháp, Sinh tồn, Thử thách ngày và Đấu trường bóng ma rút từ tướng thường nên dùng bộ nghề + hệ mới như người chơi. Thủ lĩnh chiến dịch giữ bộ hệ cũ theo preset riêng.
 
-## 8. Cân bằng
+## 8. Cân bằng lịch sử trước cải tổ 22/10/2026
 
 **Cách đo** (`pnpm sim -- --roster --level N --battles 200`): mỗi trận 3vs3, phe 0 là Đinh Bộ Lĩnh + nhân vật cần đo + một bạn rút ngẫu nhiên, phe 1 là Đinh Bộ Lĩnh + 2 nhân vật rút ngẫu nhiên; hai Đinh Bộ Lĩnh cùng hệ (xoay đủ 7 hệ), cùng cấp, AI Thường cả hai phe, đi trước luân phiên. Bạn và đối thủ rút từ cả kho nhân vật kèm, nên 50% là đúng mức trung bình. 200 trận mỗi người cho nhiễu khoảng ±3,5 điểm.
 
@@ -223,4 +213,4 @@ Phó tướng, thầy pháp, lang y… đi kèm sứ quân ở chiến dịch kh
 
 ## 9. Hồ sơ cũ
 
-Hồ sơ lưu trước 20/10/2026 có nhân vật kèm nâng chiêu nghề theo id hoặc đã mua chiêu nhánh. Khi đọc hồ sơ, những nhân vật này được **đặt lại kỹ năng và hoàn đủ điểm kỹ năng** của cấp (cấp − 1 điểm), cấp và kinh nghiệm giữ nguyên; trường `branchChoice` bị bỏ. Tướng lịch sử vốn đã nâng theo ô nên không đổi.
+Hồ sơ lưu trước 20/10/2026 có nhân vật kèm nâng chiêu nghề theo id hoặc đã mua chiêu nhánh. Khi đọc hồ sơ, những nhân vật này được **xóa khóa chiêu nghề/nhánh cũ và hoàn đúng điểm đã chi** (giá nâng 1,1,2,2 và giá nhánh 1), cộng vào điểm chưa chi; giữ cấp, kinh nghiệm và khóa ô nếu có. Xóa khóa/nhánh cũ là dấu hiệu đã chuyển, nên đọc lại không hoàn lặp; trường `branchChoice` bị bỏ. Hồ sơ khóa ô của mọi nhân vật giữ nguyên, kể cả cấp nâng của ô 4/6 tạm khóa theo mốc mới. Chi tiết ở [20](20-cai-to-ky-nang.md#ánh-xạ-cũ--mới-và-lưu-trữ).

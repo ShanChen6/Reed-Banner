@@ -1,5 +1,8 @@
 "use client";
 
+import SkillDetails from "./SkillDetails";
+import { skillText } from "./labels";
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   act,
@@ -22,7 +25,6 @@ import {
   isAlive,
   leveledFoe,
   MAIN_ID,
-  mainSkills,
   needsCell,
   newProfile,
   parseProfile,
@@ -35,6 +37,16 @@ import {
   receiveDrop,
   rollDrop,
   selectableActors,
+  COMBO_PASSIVES,
+  comboDescription,
+  CHASE_PASSIVES,
+  DEFAULT_SPIRIT_EXPERIMENT,
+  chasePassives,
+  comboSkillCost,
+  SPIRIT_EXPERIMENTS,
+  type SpiritExperiment,
+  spiritStatMultiplier,
+  spiritHealMultiplier,
   whirlStep,
   stageById,
   STARTER_COMPANIONS,
@@ -63,13 +75,6 @@ import {
   type SkillDef,
   type Whirl,
   type Tier,
-  autoRevive,
-  downedAfterWave,
-  FOOD_MAX,
-  SURVIVAL_FOOD,
-  SURVIVAL_HEAL,
-  SURVIVAL_REVIVE_FOOD,
-  SURVIVAL_REVIVE_HP,
   type MatchAction,
   type SurvivalResult,
   type DailyScore,
@@ -102,6 +107,7 @@ import {
 import { GearIcon } from "../art/gear";
 import { Portrait } from "../art/portraits";
 import { SkillIcon } from "../art/skills";
+import SurvivalBreakScreen from "../survival/SurvivalBreakScreen";
 import { INK, starPoints, TileArt } from "../art/tiles";
 import ProgressPanel from "./ProgressPanel";
 import GearPanel from "./GearPanel";
@@ -139,7 +145,7 @@ const DIFFICULTIES: Difficulty[] = [
 ];
 
 /** Nguyên tố đã có bộ kỹ năng nhân vật chính. */
-const MAIN_ELEMENTS = ELEMENTS.filter((e) => mainSkills(e).length > 0);
+const MAIN_ELEMENTS = ELEMENTS;
 
 const byId = (id: string) => companionById(id)!;
 
@@ -355,11 +361,16 @@ function describe(state: BattleState, e: BattleEvent): string | null {
         : null;
     case "shuffle":
       return "Hết nước đi, bàn cờ được xáo lại";
+    case "chase": return `${name(e.side,e.fighter)} · ${CHASE_PASSIVES[e.passive].name}: truy kích → ${name(e.target.side,e.target.fighter)} (nhịp ${e.depth})`;
+    case "combo": {
+      const passive=COMBO_PASSIVES[e.passive].name;
+      return `${name(e.side,e.fighter)} · ${passive}: ${e.outcome==='opened'?'sẵn sàng phối hợp':e.outcome==='used'?'đã tận dụng':e.outcome==='expired'?'cơ hội hết hạn':'cơ hội bị phá'}`;
+    }
     case "spirit": {
       const firstAlive = state.sides[e.side].fighters.findIndex(
         (f) => f.hp > 0,
       );
-      if (e.spirit !== 90 || e.fighter !== firstAlive) return null;
+      if (e.spirit !== 100 - SPIRIT_EXPERIMENTS[state.experimentalSpirit ?? DEFAULT_SPIRIT_EXPERIMENT].decay || e.fighter !== firstAlive) return null;
       return e.side === PLAYER
         ? "Trận kéo dài, tinh thần phe bạn bắt đầu giảm"
         : "Trận kéo dài, tinh thần đối thủ bắt đầu giảm";
@@ -469,95 +480,6 @@ function WaveBanner({
   );
 }
 
-/** Nghỉ giữa hai đợt: hồi phục, chọn trả lương hồi sinh, vào đợt kế hoặc dừng ghi điểm. */
-function BreakPanel({
-  survival,
-  state,
-  pending,
-  onNext,
-  onEnd,
-}: {
-  survival: SurvivalView;
-  state: BattleState;
-  pending: boolean;
-  onNext: (revive?: number) => void;
-  onEnd: () => void;
-}) {
-  const own = state.sides[PLAYER];
-  const downed = downedAfterWave(survival, state);
-  const auto = autoRevive(survival.wave, downed);
-  const food = Math.min(FOOD_MAX, own.food + SURVIVAL_FOOD);
-  const canPay = food >= SURVIVAL_REVIVE_FOOD;
-  const fallen = downed.flatMap((d, i) => (d === null ? [] : [i]));
-  const next = survival.next!;
-  return (
-    // Điện thoại: bàn cờ thấp, nên hiện thành tấm dưới đáy màn hình thay vì phủ lên bàn cờ.
-    <div className="fixed inset-x-2 bottom-2 z-30 flex max-h-[85dvh] flex-col items-center gap-3 overflow-y-auto rounded-xl border border-[var(--gold)] bg-black/90 p-3 text-center text-white shadow-2xl sm:absolute sm:inset-0 sm:max-h-none sm:justify-center sm:rounded-lg sm:border-0 sm:bg-black/75 sm:shadow-none">
-      <p className="text-xl font-bold">Hạ hết đợt {survival.wave}!</p>
-      <p className="max-w-md text-sm">
-        Người còn đứng hồi {Math.round(SURVIVAL_HEAL * 100)}% máu, cả đội thêm{" "}
-        {SURVIVAL_FOOD} lương (vào đợt với {food} lương), năng lượng giữ nguyên.
-      </p>
-      {fallen.length > 0 && (
-        <div className="flex flex-col items-center gap-1.5 text-sm">
-          {auto !== null && (
-            <p className="text-emerald-300">
-              {own.fighters[auto]!.name} tự đứng dậy với{" "}
-              {Math.round(SURVIVAL_REVIVE_HP * 100)}% máu.
-            </p>
-          )}
-          {auto === null && (
-            <>
-              <p>
-                Trả {SURVIVAL_REVIVE_FOOD} lương để một người đứng dậy ngay
-                {canPay ? "" : " (chưa đủ lương)"}:
-              </p>
-              <div className="flex flex-wrap justify-center gap-2">
-                {fallen.map((i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    disabled={pending || !canPay}
-                    onClick={() => onNext(i)}
-                    className="rounded bg-emerald-600 px-3 py-1.5 font-semibold disabled:opacity-40"
-                  >
-                    Hồi sinh {own.fighters[i]!.name}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-      )}
-      <div className="flex flex-col items-center gap-1 text-sm">
-        <p className="font-semibold">
-          Đợt {next.wave}: {next.foes.length} đối thủ cấp {next.level}
-          {next.boss ? ", có sứ quân dẫn quân" : ""}
-        </p>
-        <WaveFoes preview={next} />
-      </div>
-      <div className="flex flex-wrap justify-center gap-2">
-        <button
-          type="button"
-          disabled={pending}
-          onClick={() => onNext()}
-          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950 disabled:opacity-50"
-        >
-          Vào đợt {next.wave}
-        </button>
-        <button
-          type="button"
-          disabled={pending}
-          onClick={onEnd}
-          className="rounded bg-white/20 px-4 py-2 disabled:opacity-50"
-        >
-          Dừng, ghi {survival.cleared} đợt
-        </button>
-      </div>
-    </div>
-  );
-}
-
 function whirlHint(a: NonNullable<WhirlAim>): string {
   const name = a.skill ? a.skill.name : "Xoay miễn phí";
   return a.center
@@ -602,6 +524,8 @@ function Bar({
 
 function FighterCard({
   fighter,
+  experimentalSpirit = DEFAULT_SPIRIT_EXPERIMENT,
+  comboTurns, comboSource, comboTarget,
   leader,
   rage,
   active,
@@ -611,6 +535,8 @@ function FighterCard({
   onClick,
 }: {
   fighter: Fighter;
+  experimentalSpirit?: SpiritExperiment;
+  comboTurns?: number; comboSource?: string; comboTarget?: string;
   leader: boolean;
   rage: number | null;
   active: boolean;
@@ -620,6 +546,7 @@ function FighterCard({
   onClick?: () => void;
 }) {
   const alive = isAlive(fighter);
+  const comboBlocked = fighter.effects.some(e => e.kind === "silence" || e.kind === "freeze");
   const ref = useRef<HTMLButtonElement>(null);
   const lastFloat = floats.at(-1)?.id;
 
@@ -721,6 +648,14 @@ function FighterCard({
           <Bar label="Nộ" value={rage} max={100} color="bg-orange-500" />
         )}
       </div>
+      {fighter.comboPassive && <p className="mt-1 text-[10px] text-amber-200" title={comboDescription(fighter)}>
+        4 bị động · {COMBO_PASSIVES[fighter.comboPassive].name}{fighter.comboReady ? comboBlocked ? ' · Đang bị chặn' : ' · Sẵn sàng' : ''}
+      </p>}
+      {fighter.comboReady && <p className="text-[10px] text-amber-200">Do {comboSource} mở{comboTarget ? ` · mục tiêu ${comboTarget}` : ''} · {comboTurns ? `${comboTurns} lượt thường kế tiếp` : 'lượt hiện tại'}. Chọn hành động để tận dụng.</p>}
+      {fighter.chasePassives && <details className="mt-1 text-[10px]"><summary className="cursor-pointer">Truy kích: {chasePassives(fighter).map(id=>CHASE_PASSIVES[id].name).join(" · ")}</summary>{chasePassives(fighter).map(id=><p key={id}>{CHASE_PASSIVES[id].description}</p>)}</details>}
+      <p className="mt-1 text-[10px] opacity-75" title={`Từ lượt 25 của phe, Tinh thần giảm ${SPIRIT_EXPERIMENTS[experimentalSpirit].decay} mỗi lượt; không giảm thêm ở lượt thêm. Khiên đã có giữ nguyên.`}>
+        Tinh thần: Công/Thủ {Math.round(spiritStatMultiplier(fighter.spirit, experimentalSpirit)*100)}% · Hồi/Khiên mới {Math.round(spiritHealMultiplier(fighter.spirit, experimentalSpirit)*100)}%
+      </p>
       {fighter.effects.length > 0 && (
         <div className="mt-1.5 flex flex-wrap gap-1">
           {fighter.effects.map((e) => (
@@ -1048,6 +983,7 @@ export default function DemoGame({
             res.error,
         );
       if (!res.view) return;
+      if (res.view.seq < seq.current) return;
       seq.current = res.view.seq;
       setSurvival(res.view.survival ?? null);
       const next = toBattleState(res.view);
@@ -1075,12 +1011,22 @@ export default function DemoGame({
       if (!battleId) return;
       const before = state;
       setPending(true);
-      void actOnline(battleId, seq.current, action).then((res) => {
+      const requestedSeq = seq.current;
+      void actOnline(battleId, requestedSeq, action).then(async (res) => {
+        let response = res;
+        if (
+          !res.view &&
+          ["network", "conflict", "staleSeq"].includes(res.error ?? "")
+        ) {
+          const refreshed = await fetchOnline(battleId);
+          if (refreshed.view)
+            response = { ...refreshed, error: res.error };
+        }
         setPending(false);
-        receive(before, res);
+        receive(before, response);
       });
     },
-    [battleId, state, receive],
+    [battleId, state, receive, setPending],
   );
 
   const apply = useCallback(
@@ -1211,9 +1157,9 @@ export default function DemoGame({
     (def: SkillDef) => {
       if (!myTurn) return;
       if (state.turn.skillUsed) return flash(ERROR_TEXT.skillUsed);
-      if (actor.energy < def.cost)
+      if (actor.energy < comboSkillCost(actor,def))
         return flash(
-          `${ERROR_TEXT.notEnoughEnergy} (${actor.energy}/${def.cost})`,
+          `${ERROR_TEXT.notEnoughEnergy} (${actor.energy}/${comboSkillCost(actor,def)})`,
         );
       const whirl = whirlStep(def);
       if (whirl) {
@@ -1224,7 +1170,7 @@ export default function DemoGame({
       }
       aimOrCast(def);
     },
-    [myTurn, state, actor.energy, aimOrCast, flash],
+    [myTurn, state, actor, aimOrCast, flash],
   );
 
   const fireAim = useCallback(
@@ -1435,6 +1381,7 @@ export default function DemoGame({
 
   /** Về màn chờ trước trận để đổi nguyên tố, nghề, trang bị hoặc nâng kỹ năng. */
   const restart = () => {
+    if (!online) setProfile(loadProfile());
     reset();
     setStarted(false);
   };
@@ -1608,6 +1555,10 @@ export default function DemoGame({
             <FighterCard
               key={f.id}
               fighter={f}
+              experimentalSpirit={state.experimentalSpirit}
+              comboTurns={f.comboReady ? Math.max(0,f.comboReady.expiresAt-(state.comboState?.sideTurns[s]??0)-1) : undefined}
+              comboSource={f.comboReady ? state.sides[f.comboReady.source.side].fighters[f.comboReady.source.fighter]?.name : undefined}
+              comboTarget={f.comboReady?.target ? state.sides[f.comboReady.target.side].fighters[f.comboReady.target.fighter]?.name : undefined}
               leader={own.leader === i}
               rage={own.leader === i ? own.rage : null}
               active={isActor}
@@ -1661,7 +1612,7 @@ export default function DemoGame({
           {!online && started && (
             <button
               type="button"
-              onClick={() => setStarted(false)}
+              onClick={() => { setProfile(loadProfile()); setStarted(false); }}
               className="flex items-center gap-1.5 rounded bg-[var(--panel)] px-2.5 py-1 text-xs font-semibold"
             >
               <ProfessionIcon profession={profession} className="size-4" />
@@ -1837,17 +1788,19 @@ export default function DemoGame({
                   </div>
                 )}
                 {atBreak && (
-                  <BreakPanel
+                  <SurvivalBreakScreen
                     survival={survival!}
-                    state={state}
                     pending={pending}
-                    onNext={(revive) =>
-                      sendOnline(
-                        revive === undefined
-                          ? { type: "nextWave" }
-                          : { type: "nextWave", revive },
-                      )
-                    }
+                    error={toast}
+                    onRefresh={() => {
+                      if (!battleId) return;
+                      setPending(true);
+                      void fetchOnline(battleId).then((res) => {
+                        setPending(false);
+                        receive(state, res);
+                      });
+                    }}
+                    onNext={(action) => sendOnline(action)}
                     onEnd={() => sendOnline({ type: "endRun" })}
                   />
                 )}
@@ -2076,7 +2029,7 @@ export default function DemoGame({
               </span>
               {skills.map((def, i) => {
                 const disabled =
-                  !myTurn || state.turn.skillUsed || actor.energy < def.cost;
+                  !myTurn || state.turn.skillUsed || actor.energy < comboSkillCost(actor,def);
                 const aiming =
                   aim?.skill.id === def.id || whirlAim?.skill?.id === def.id;
                 return (
@@ -2092,19 +2045,20 @@ export default function DemoGame({
                     className={`relative flex w-[4.25rem] flex-col items-center gap-0.5 rounded p-1 text-[10px] leading-tight ${aiming ? "bg-rose-500 text-white" : "bg-[var(--panel)]"} ${
                       disabled && !aiming ? "opacity-40 grayscale" : ""
                     }`}
-                    title={`${def.name} · ${def.cost} năng lượng · phím ${i + 1}`}
+                    title={`${skillText(def)} · phím ${i + 1}`}
                   >
                     <SkillIcon def={def} className="size-10" />
                     <span className="absolute left-1 top-1 rounded-br bg-black/60 px-1 font-bold text-white">
                       {i + 1}
                     </span>
                     <span className="absolute right-1 top-1 rounded-bl bg-sky-700/90 px-1 tabular-nums text-white">
-                      {def.cost}
+                      {comboSkillCost(actor,def)}
                     </span>
                     <span className="text-center">{def.name}</span>
                   </button>
                 );
               })}
+              <SkillDetails skills={skills} passive={actor.comboPassive} fighter={actor} />
               {myTurn && canFreeWhirl(state) && (
                 <button
                   type="button"

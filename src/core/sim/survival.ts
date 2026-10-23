@@ -3,14 +3,14 @@
 
 import { playAiTurn } from "../ai";
 import { beginWave, createBattle, FOOD_MAX } from "../battle";
-import { profileTeam } from "../progress";
 import {
-  autoRevive,
-  downedAfterWave,
+  autoReviveFighterId,
+  downedFightersAfterWave,
   newSurvivalRun,
   planBreak,
   SURVIVAL_FOOD,
   SURVIVAL_REVIVE_FOOD,
+  survivalActiveSideConfig,
   survivalWave,
   type SurvivalRun,
 } from "../survival";
@@ -25,14 +25,13 @@ const SIM_REVIVE_FOOD_LEFT = 30;
 export function pickRevive(
   run: SurvivalRun,
   battle: BattleState,
-): number | undefined {
+): string | undefined {
   const food = Math.min(FOOD_MAX, battle.sides[0].food + SURVIVAL_FOOD);
   if (food - SURVIVAL_REVIVE_FOOD < SIM_REVIVE_FOOD_LEFT) return undefined;
-  const downed = downedAfterWave(run, battle);
+  const downed = downedFightersAfterWave(run, battle);
   // Đã có người tự đứng dậy lần nghỉ này thì không trả lương.
-  if (autoRevive(run.wave, downed) !== null) return undefined;
-  const i = downed.findIndex((d) => d !== null);
-  return i < 0 ? undefined : i;
+  if (autoReviveFighterId(run.wave, downed) !== null) return undefined;
+  return downed[0]?.id;
 }
 
 export interface SurvivalSimResult {
@@ -51,10 +50,12 @@ export function simulateSurvival(
   const profile = simProfile(level);
   let run = newSurvivalRun(profile, seed);
   const first = survivalWave(run, 1);
+  const activeSide = survivalActiveSideConfig(run.roster);
+  if (!activeSide.ok) throw new Error(activeSide.error);
   let difficulty = first.difficulty;
   let { state } = createBattle({
     sides: [
-      { fighters: profileTeam(profile, profile.team), leader: 0 },
+      activeSide.value,
       { fighters: first.foes, leader: 0 },
     ],
     seed,
@@ -77,6 +78,6 @@ export function simulateSurvival(
     if (!plan.ok) throw new Error(plan.error);
     run = plan.run;
     difficulty = plan.wave.difficulty;
-    state = beginWave(state, plan.config).state;
+    state = beginWave(plan.battle, plan.config).state;
   }
 }

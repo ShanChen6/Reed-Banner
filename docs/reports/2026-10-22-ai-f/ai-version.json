@@ -1,0 +1,29 @@
+{
+  "id": "ai-f-task2-b5b468f48b72",
+  "canonicalAI": "src/core/ai/ai.ts",
+  "canonicalSHA256": "b5b468f48b72bb8ee2aac61b975e3397a70914ccb76b4812c1f57c6b2935e2d0",
+  "sourceHash": "57a2ac804045975fc237b1e9f1e44f63c8929679ae9734a3cbc311cab872bb09",
+  "baseCommit": "9e786f1b93dd658617e78f5e048d25d070b629f3",
+  "rule": "F",
+  "change": "Bug fix: only actual useful healing recipients open setup-value signals; no weight or battle parameter changes",
+  "frozenBefore": "scripts/fixtures/2026-10-22-ai-task2-before.ts",
+  "frozenAfter": "scripts/fixtures/2026-10-22-ai-task2-after.ts",
+  "protectedMatchesTask1": [
+    "src/core/battle/rules.ts",
+    "src/core/battle/skills.ts",
+    "src/core/gear/gear.ts",
+    "src/core/roster/roster.ts",
+    "src/core/progress/progress.ts",
+    "src/core/progress/profile.ts"
+  ],
+  "toolHashes": {
+    "scripts/fixtures/2026-10-22-ai-task2-after.ts": "5d6b9feddd01805b53115b75e6c15ca4f420a993a8820977dd5a7478359937ab",
+    "scripts/analyze-task2.py": "13c6e345eba8f74a7e8465fd167f0b0299d0bbb764afc5e2ecf5d07009b288cc",
+    "scripts/task2-probe.ts": "975547849ce76d92cb0e1f16b599a96f403f0634dcd6acff740a740cac98d271",
+    "tests/core/ai/task2.test.ts": "edc5953d2ff624c478ebdbba2c606705850ba56d7f9504e3af035780d894de57"
+  },
+  "frozenBeforeSHA256": "53552e6f7e50f800745a4c18104aeff7a9f891ad4d81b5322c7a3b44ac994e49",
+  "frozenAfterSHA256": "5d6b9feddd01805b53115b75e6c15ca4f420a993a8820977dd5a7478359937ab",
+  "frozenBeforeMatchesTask1": true,
+  "frozenAfterMatchesCanonical": true
+}

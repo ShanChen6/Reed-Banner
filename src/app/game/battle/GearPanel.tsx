@@ -10,7 +10,10 @@ import {
   ELEMENTS,
   GEAR_SETS,
   GEAR_SLOTS,
+  equip,
+  getGearSet,
   gearStats,
+  itemStat,
   loadoutOf,
   MAIN_ID,
   mergeCost,
@@ -50,6 +53,46 @@ const byShelf = (a: GearItem, b: GearItem) =>
   SLOT_ORDER[a.slot] - SLOT_ORDER[b.slot] ||
   b.tier - a.tier ||
   a.element.localeCompare(b.element);
+
+const signed = (value: number, suffix = "") =>
+  `${value >= 0 ? "+" : ""}${value}${suffix}`;
+
+export function activeBonusText(
+  bonus: ReturnType<typeof gearStats>["bonuses"][number],
+): string {
+  const name = bonus.kind === "set"
+    ? `Bộ ${getGearSet(bonus.id)?.name ?? bonus.id}`
+    : `Cộng hưởng ${ELEMENT_NAME[bonus.id as Element]}`;
+  const stats = Object.entries(bonus.bonus)
+    .map(([stat, value]) => `${stat === "maxHp" ? "Máu" : stat.toUpperCase()} +${Math.round(value * 100)}%`)
+    .join(" · ");
+  return `${name} ${bonus.level}: ${stats}`;
+}
+
+/** So sánh đúng kết quả trang bị sau khi thay món cùng ô, kể cả mốc bộ/cộng hưởng. */
+export function gearComparison(
+  profile: Profile,
+  character: string,
+  item: GearItem,
+): string | null {
+  const profession = professionOf(profile, character);
+  const element = elementOf(profile, character);
+  const before = gearStats(loadoutOf(profile, character), element, profession);
+  const next = equip(
+    loadoutOf(profile, character),
+    item,
+    character === MAIN_ID ? undefined : profession,
+  );
+  if (!next.ok) return null;
+  const after = gearStats(next.loadout, element, profession);
+  const parts = (["atk", "maxHp", "def"] as const).flatMap((stat) => {
+    const flat = after.flat[stat] - before.flat[stat];
+    const percent = Math.round((after.percent[stat] - before.percent[stat]) * 100);
+    const name = stat === "maxHp" ? "Máu" : stat.toUpperCase();
+    return [flat ? `${name} ${signed(flat)}` : null, percent ? `${name} ${signed(percent, "%")}` : null].filter(Boolean);
+  });
+  return parts.length ? `So với đang mặc: ${parts.join(" · ")}` : "So với đang mặc: không đổi tổng chỉ số";
+}
 
 const SHOP_TIERS = Object.keys(SHOP_GEAR_PRICE).map(Number) as Tier[];
 
@@ -208,10 +251,14 @@ export default function GearPanel({
         })}
         <span className="ml-1 tabular-nums opacity-80">
           +{stats.flat.atk} ATK · +{stats.flat.maxHp} Máu · +{stats.flat.def}{" "}
-          DEF
-          {stats.bonuses.length > 0 && ` · ${stats.bonuses.length} thưởng mốc`}
+          DEF · +{Math.round(stats.percent.atk * 100)}% ATK · +{Math.round(stats.percent.maxHp * 100)}% Máu · +{Math.round(stats.percent.def * 100)}% DEF
         </span>
       </div>
+      {stats.bonuses.length > 0 && (
+        <ul className="mt-1 space-y-0.5 opacity-80" aria-label="Thưởng bộ và cộng hưởng đang kích hoạt">
+          {stats.bonuses.map((bonus) => <li key={`${bonus.kind}-${bonus.id}-${bonus.level}`}>{activeBonusText(bonus)}</li>)}
+        </ul>
+      )}
 
       <h3 className="mt-3 mb-1 font-semibold">Túi đồ</h3>
       {profile.bag.length === 0 ? (
@@ -264,6 +311,9 @@ export default function GearPanel({
                     · {nameOf(wearer)} đang mặc
                   </span>
                 )}
+                <span className="block opacity-70">
+                  +{itemStat(one, elementOf(profile, character))} chỉ số · {gearComparison(profile, character, one)}
+                </span>
               </span>
               {wearer !== character && (
                 <button

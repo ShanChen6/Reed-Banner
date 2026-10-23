@@ -1,0 +1,5553 @@
+{
+  "skills": {
+    "tramKich": {
+      "id": "tramKich",
+      "name": "Trảm kích",
+      "profession": "tuongSi",
+      "tier": 1,
+      "cost": 30,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.1
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "hieuLenh": {
+      "id": "hieuLenh",
+      "name": "Hiệu lệnh",
+      "profession": "tuongSi",
+      "tier": 2,
+      "cost": 45,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "phaTran": {
+      "id": "phaTran",
+      "name": "Phá trận",
+      "profession": "tuongSi",
+      "tier": 2,
+      "cost": 45,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.3,
+          "turns": 2
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "thuThanh": {
+      "id": "thuThanh",
+      "name": "Thủ thành",
+      "profession": "binhLinh",
+      "tier": 1,
+      "cost": 30,
+      "target": "self",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "taunt",
+          "value": 0,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "shield",
+          "value": 0.2,
+          "turns": null,
+          "ofMaxHp": true
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "phanKich": {
+      "id": "phanKich",
+      "name": "Phản kích",
+      "profession": "binhLinh",
+      "tier": 2,
+      "cost": 45,
+      "target": "self",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "reflect",
+          "value": 0.4,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "defUp",
+          "value": 0.3,
+          "turns": 2
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "tuongKhien": {
+      "id": "tuongKhien",
+      "name": "Tường khiên",
+      "profession": "binhLinh",
+      "tier": 2,
+      "cost": 45,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "shield",
+          "value": 0.15,
+          "turns": null,
+          "ofMaxHp": true
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "phepCong": {
+      "id": "phepCong",
+      "name": "Phép công",
+      "profession": "phapSu",
+      "tier": 1,
+      "cost": 30,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.8
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "nguHanhAn": {
+      "id": "nguHanhAn",
+      "name": "Ngũ hành ấn",
+      "profession": "phapSu",
+      "tier": 2,
+      "cost": 45,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.4
+        },
+        {
+          "type": "mark",
+          "enhanced": true,
+          "guaranteed": true
+        }
+      ]
+    },
+    "phepLan": {
+      "id": "phepLan",
+      "name": "Phép lan",
+      "profession": "phapSu",
+      "tier": 2,
+      "cost": 45,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "linhDuoc": {
+      "id": "linhDuoc",
+      "name": "Linh dược",
+      "profession": "ySu",
+      "tier": 1,
+      "cost": 30,
+      "target": "ally",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.22
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "duongSinh": {
+      "id": "duongSinh",
+      "name": "Dưỡng sinh",
+      "profession": "ySu",
+      "tier": 2,
+      "cost": 45,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "regen",
+          "value": 0.07,
+          "turns": 3,
+          "ofMaxHp": true
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "teDo": {
+      "id": "teDo",
+      "name": "Tế độ",
+      "profession": "ySu",
+      "tier": 2,
+      "cost": 45,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.15
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "muaChuoc": {
+      "id": "muaChuoc",
+      "name": "Mua chuộc",
+      "profession": "muuSi",
+      "tier": 1,
+      "cost": 30,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -40
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "lyGian": {
+      "id": "lyGian",
+      "name": "Ly gián",
+      "profession": "muuSi",
+      "tier": 2,
+      "cost": 45,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 2
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "catQuanLuong": {
+      "id": "catQuanLuong",
+      "name": "Cắt quân lương",
+      "profession": "muuSi",
+      "tier": 2,
+      "cost": 45,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "enemyFood",
+          "amount": -15
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -10
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "nghiBinh": {
+      "id": "nghiBinh",
+      "name": "Nghi binh",
+      "profession": "quanSu",
+      "tier": 1,
+      "cost": 30,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkDown",
+          "value": 0.3,
+          "turns": 2
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "phaKe": {
+      "id": "phaKe",
+      "name": "Phá kế",
+      "profession": "quanSu",
+      "tier": 2,
+      "cost": 45,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "bayTran": {
+      "id": "bayTran",
+      "name": "Bày trận",
+      "profession": "quanSu",
+      "tier": 2,
+      "cost": 45,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defUp",
+          "value": 0.3,
+          "turns": 2
+        },
+        {
+          "type": "mark",
+          "enhanced": false
+        }
+      ]
+    },
+    "lucDiepPhong": {
+      "id": "lucDiepPhong",
+      "name": "Lục Diệp Phong",
+      "element": "moc",
+      "slot": 1,
+      "cost": 35,
+      "target": "self",
+      "steps": [
+        {
+          "type": "destroy",
+          "area": {
+            "random": 5
+          }
+        }
+      ]
+    },
+    "linhMocHoiSinh": {
+      "id": "linhMocHoiSinh",
+      "name": "Linh Mộc Hồi Sinh",
+      "element": "moc",
+      "slot": 2,
+      "cost": 30,
+      "target": "self",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "self",
+          "ratio": 0.11
+        },
+        {
+          "type": "transform",
+          "kind": "tim",
+          "count": 3
+        }
+      ]
+    },
+    "thanhMocHoPhap": {
+      "id": "thanhMocHoPhap",
+      "name": "Thanh Mộc Hộ Pháp",
+      "element": "moc",
+      "slot": 3,
+      "cost": 40,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.5,
+          "lifesteal": 0.3
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "square": 2
+          }
+        }
+      ]
+    },
+    "cuongVuThienDiep": {
+      "id": "cuongVuThienDiep",
+      "name": "Cuồng Vũ Thiên Diệp",
+      "element": "moc",
+      "slot": 5,
+      "cost": 60,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 0.65
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "square": 3
+          }
+        }
+      ]
+    },
+    "coThuTranThien": {
+      "id": "coThuTranThien",
+      "name": "Cổ Thụ Trấn Thiên",
+      "element": "moc",
+      "slot": 4,
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.25
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "regen",
+          "value": 0.05,
+          "turns": 2,
+          "ofMaxHp": true
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "square": 4
+          }
+        }
+      ],
+      "ultimate": true
+    },
+    "thanhTrucBaoPhu": {
+      "id": "thanhTrucBaoPhu",
+      "name": "Thanh Trúc Bảo Phù",
+      "element": "moc",
+      "slot": 6,
+      "cost": 50,
+      "target": "self",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "regen",
+          "value": 0.06,
+          "turns": 3,
+          "ofMaxHp": true
+        },
+        {
+          "type": "cleanse",
+          "to": "self"
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "defUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    "luyenKimThanhKiem": {
+      "id": "luyenKimThanhKiem",
+      "name": "Luyện Kim Thành Kiếm",
+      "element": "kim",
+      "slot": 1,
+      "cost": 20,
+      "target": "self",
+      "steps": [
+        {
+          "type": "transform",
+          "kind": "kiem",
+          "count": 4
+        }
+      ]
+    },
+    "kimYNgungThan": {
+      "id": "kimYNgungThan",
+      "name": "Kim Ý Ngưng Thần",
+      "element": "kim",
+      "slot": 2,
+      "cost": 30,
+      "target": "self",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        }
+      ]
+    },
+    "doanKimNhatTuyen": {
+      "id": "doanKimNhatTuyen",
+      "name": "Đoạn Kim Nhất Tuyến",
+      "element": "kim",
+      "slot": 3,
+      "cost": 35,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.2,
+          "turns": 2
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "line": 4
+          }
+        }
+      ]
+    },
+    "thietKyTungHoanh": {
+      "id": "thietKyTungHoanh",
+      "name": "Thiết Kỵ Tung Hoành",
+      "element": "kim",
+      "slot": 5,
+      "cost": 60,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 0.9
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "columns": 1
+          }
+        }
+      ]
+    },
+    "kimAnPhaThien": {
+      "id": "kimAnPhaThien",
+      "name": "Kim Ấn Phá Thiên",
+      "element": "kim",
+      "slot": 4,
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2,
+          "pierce": 0.5,
+          "pierceShield": true
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "cross": "big"
+          }
+        }
+      ],
+      "ultimate": true
+    },
+    "giapDongHoThe": {
+      "id": "giapDongHoThe",
+      "name": "Giáp Đồng Hộ Thể",
+      "element": "kim",
+      "slot": 6,
+      "cost": 50,
+      "target": "self",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "defUp",
+          "value": 0.3,
+          "turns": 3
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 3
+        }
+      ]
+    },
+    "thuyNguyetTuLinh": {
+      "id": "thuyNguyetTuLinh",
+      "name": "Thủy Nguyệt Tụ Linh",
+      "element": "thuy",
+      "slot": 1,
+      "cost": 20,
+      "target": "self",
+      "steps": [
+        {
+          "type": "transform",
+          "kind": "amDuong",
+          "count": 5
+        }
+      ]
+    },
+    "thanhLuuTayTran": {
+      "id": "thanhLuuTayTran",
+      "name": "Thanh Lưu Tẩy Trần",
+      "element": "thuy",
+      "slot": 2,
+      "cost": 30,
+      "target": "self",
+      "steps": [
+        {
+          "type": "cleanse",
+          "to": "self"
+        },
+        {
+          "type": "heal",
+          "to": "self",
+          "ratio": 0.1
+        }
+      ]
+    },
+    "hanBangTien": {
+      "id": "hanBangTien",
+      "name": "Hàn Băng Tiễn",
+      "element": "thuy",
+      "slot": 3,
+      "cost": 40,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.75
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "freeze",
+          "value": 0,
+          "turns": 1,
+          "chance": 0.3
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "square": 2
+          }
+        }
+      ]
+    },
+    "bachDangTrieuDang": {
+      "id": "bachDangTrieuDang",
+      "name": "Bạch Đằng Triều Dâng",
+      "element": "thuy",
+      "slot": 5,
+      "cost": 60,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 0.8
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "freeze",
+          "value": 0,
+          "turns": 1,
+          "chance": 0.2
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 9
+          }
+        }
+      ]
+    },
+    "thuyKiepVanTrung": {
+      "id": "thuyKiepVanTrung",
+      "name": "Thủy Kiếp Vạn Trùng",
+      "element": "thuy",
+      "slot": 4,
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.9
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "freeze",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "columns": 2
+          }
+        }
+      ],
+      "ultimate": true
+    },
+    "linhThuyHoMenh": {
+      "id": "linhThuyHoMenh",
+      "name": "Linh Thủy Hộ Mệnh",
+      "element": "thuy",
+      "slot": 6,
+      "cost": 50,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.12
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        }
+      ]
+    },
+    "phongHoaThieuDoanh": {
+      "id": "phongHoaThieuDoanh",
+      "name": "Phóng Hỏa Thiêu Doanh",
+      "element": "hoa",
+      "slot": 1,
+      "cost": 35,
+      "target": "self",
+      "steps": [
+        {
+          "type": "destroy",
+          "area": {
+            "square": 3
+          }
+        }
+      ]
+    },
+    "noHoaThieuThan": {
+      "id": "noHoaThieuThan",
+      "name": "Nộ Hỏa Thiêu Thân",
+      "element": "hoa",
+      "slot": 2,
+      "cost": 30,
+      "target": "self",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "atkUp",
+          "value": 0.35,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    "xichDiemTien": {
+      "id": "xichDiemTien",
+      "name": "Xích Diễm Tiễn",
+      "element": "hoa",
+      "slot": 3,
+      "cost": 40,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "burn",
+          "value": 0.1,
+          "ofAtk": true,
+          "turns": 2
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "cross": "small"
+          }
+        }
+      ]
+    },
+    "hoaThieuLienTrai": {
+      "id": "hoaThieuLienTrai",
+      "name": "Hỏa Thiêu Liên Trại",
+      "element": "hoa",
+      "slot": 5,
+      "cost": 60,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "burn",
+          "value": 0.1,
+          "ofAtk": true,
+          "turns": 1
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "square": 3
+          }
+        }
+      ]
+    },
+    "lietDiemPhanThanh": {
+      "id": "lietDiemPhanThanh",
+      "name": "Liệt Diễm Phần Thành",
+      "element": "hoa",
+      "slot": 4,
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.6
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "burn",
+          "value": 0.1,
+          "ofAtk": true,
+          "turns": 3
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "rect": [
+              5,
+              3
+            ]
+          }
+        }
+      ],
+      "ultimate": true
+    },
+    "ducHoaTrungSinh": {
+      "id": "ducHoaTrungSinh",
+      "name": "Dục Hỏa Trùng Sinh",
+      "element": "hoa",
+      "slot": 6,
+      "cost": 50,
+      "target": "self",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "self",
+          "ratio": 0.2
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "atkUp",
+          "value": 0.2,
+          "turns": 2
+        }
+      ]
+    },
+    "hauThoTichLuong": {
+      "id": "hauThoTichLuong",
+      "name": "Hậu Thổ Tích Lương",
+      "element": "tho",
+      "slot": 1,
+      "cost": 20,
+      "target": "self",
+      "steps": [
+        {
+          "type": "transform",
+          "kind": "banhChung",
+          "count": 5
+        }
+      ]
+    },
+    "thachGiap": {
+      "id": "thachGiap",
+      "name": "Thạch Giáp",
+      "element": "tho",
+      "slot": 2,
+      "cost": 30,
+      "target": "self",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "shield",
+          "value": 0.2,
+          "turns": null,
+          "ofMaxHp": true
+        }
+      ]
+    },
+    "sonBangDiaLiet": {
+      "id": "sonBangDiaLiet",
+      "name": "Sơn Băng Địa Liệt",
+      "element": "tho",
+      "slot": 3,
+      "cost": 40,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.5
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "shield",
+          "value": 0.1,
+          "turns": null,
+          "ofMaxHp": true
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "square": 2
+          }
+        }
+      ]
+    },
+    "diaChanTamQuan": {
+      "id": "diaChanTamQuan",
+      "name": "Địa Chấn Tam Quân",
+      "element": "tho",
+      "slot": 5,
+      "cost": 60,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 0.75
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "square": 3
+          }
+        }
+      ]
+    },
+    "thaiSonApDinh": {
+      "id": "thaiSonApDinh",
+      "name": "Thái Sơn Áp Đỉnh",
+      "element": "tho",
+      "slot": 4,
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.6
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "shield",
+          "value": 0.2,
+          "turns": null,
+          "ofMaxHp": true
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "square": 4
+          }
+        }
+      ],
+      "ultimate": true
+    },
+    "kienThanhBatDong": {
+      "id": "kienThanhBatDong",
+      "name": "Kiên Thành Bất Động",
+      "element": "tho",
+      "slot": 6,
+      "cost": 50,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "shield",
+          "value": 0.15,
+          "turns": null,
+          "ofMaxHp": true
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "reflect",
+          "value": 0.3,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "taunt",
+          "value": 0,
+          "turns": 2
+        }
+      ]
+    },
+    "loiTruGiangThe": {
+      "id": "loiTruGiangThe",
+      "name": "Lôi Trụ Giáng Thế",
+      "element": "loi",
+      "slot": 1,
+      "cost": 40,
+      "target": "self",
+      "steps": [
+        {
+          "type": "destroy",
+          "area": {
+            "columns": 1
+          }
+        }
+      ]
+    },
+    "tinhDienHoThan": {
+      "id": "tinhDienHoThan",
+      "name": "Tĩnh Điện Hộ Thân",
+      "element": "loi",
+      "slot": 2,
+      "cost": 30,
+      "target": "self",
+      "steps": [
+        {
+          "type": "cleanse",
+          "to": "self"
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "defUp",
+          "value": 0.2,
+          "turns": 2
+        }
+      ]
+    },
+    "loiTienXuyenVan": {
+      "id": "loiTienXuyenVan",
+      "name": "Lôi Tiễn Xuyên Vân",
+      "element": "loi",
+      "slot": 3,
+      "cost": 40,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -15
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 4
+          }
+        }
+      ]
+    },
+    "loiVongThienLa": {
+      "id": "loiVongThienLa",
+      "name": "Lôi Võng Thiên La",
+      "element": "loi",
+      "slot": 5,
+      "cost": 60,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 0.9
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -10
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 9
+          }
+        }
+      ]
+    },
+    "cuuTieuLoiPhat": {
+      "id": "cuuTieuLoiPhat",
+      "name": "Cửu Tiêu Lôi Phạt",
+      "element": "loi",
+      "slot": 4,
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "columns": 1
+          }
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 8
+          }
+        }
+      ],
+      "ultimate": true
+    },
+    "loiDinhHieuLenh": {
+      "id": "loiDinhHieuLenh",
+      "name": "Lôi Đình Hiệu Lệnh",
+      "element": "loi",
+      "slot": 6,
+      "cost": 50,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "enemies",
+          "amount": -15
+        }
+      ]
+    },
+    "phongQuyenTanVan": {
+      "id": "phongQuyenTanVan",
+      "name": "Phong Quyển Tàn Vân",
+      "element": "phong",
+      "slot": 1,
+      "cost": 40,
+      "target": "self",
+      "steps": [
+        {
+          "type": "whirl",
+          "turns": 2
+        }
+      ]
+    },
+    "thanhPhongTuKhi": {
+      "id": "thanhPhongTuKhi",
+      "name": "Thanh Phong Tụ Khí",
+      "element": "phong",
+      "slot": 2,
+      "cost": 30,
+      "target": "self",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "atkUp",
+          "value": 0.2,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "self",
+          "amount": 10
+        }
+      ]
+    },
+    "phongNhanLietKhong": {
+      "id": "phongNhanLietKhong",
+      "name": "Phong Nhận Liệt Không",
+      "element": "phong",
+      "slot": 3,
+      "cost": 40,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.75
+        },
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "square": 2
+          }
+        }
+      ]
+    },
+    "cuongPhongQuetTran": {
+      "id": "cuongPhongQuetTran",
+      "name": "Cuồng Phong Quét Trận",
+      "element": "phong",
+      "slot": 5,
+      "cost": 60,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 0.6
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkDown",
+          "value": 0.1,
+          "turns": 2
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "diagonal": 2
+          }
+        }
+      ]
+    },
+    "baoTapCanKhon": {
+      "id": "baoTapCanKhon",
+      "name": "Bão Táp Càn Khôn",
+      "element": "phong",
+      "slot": 4,
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3
+        },
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "whirl",
+          "turns": 2,
+          "auto": true
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "square": 4
+          }
+        }
+      ],
+      "ultimate": true
+    },
+    "phongHanhVanLy": {
+      "id": "phongHanhVanLy",
+      "name": "Phong Hành Vạn Lý",
+      "element": "phong",
+      "slot": 6,
+      "cost": 50,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defUp",
+          "value": 0.15,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 15
+        }
+      ]
+    },
+    "hoaVuLieuNguyen": {
+      "id": "hoaVuLieuNguyen",
+      "name": "Hỏa Vũ Liệu Nguyên",
+      "profession": "phapSu",
+      "tier": 3,
+      "character": "haVan",
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.5
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "burn",
+          "value": 0.15,
+          "ofAtk": true,
+          "turns": 2
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "square": 3
+          }
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "tranSonHoQuan": {
+      "id": "tranSonHoQuan",
+      "name": "Trấn Sơn Hộ Quân",
+      "profession": "binhLinh",
+      "tier": 3,
+      "character": "leThach",
+      "cost": 100,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "shield",
+          "value": 0.25,
+          "turns": null,
+          "ofMaxHp": true
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "taunt",
+          "value": 0,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "reflect",
+          "value": 0.35,
+          "turns": 2
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "camLoHoiXuan": {
+      "id": "camLoHoiXuan",
+      "name": "Cam Lộ Hồi Xuân",
+      "profession": "ySu",
+      "tier": 3,
+      "character": "maiThanh",
+      "cost": 100,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.3
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "freeze",
+          "value": 0,
+          "turns": 1,
+          "chance": 0.3
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "kimNganLyTan": {
+      "id": "kimNganLyTan",
+      "name": "Kim Ngân Ly Tán",
+      "profession": "muuSi",
+      "tier": 3,
+      "character": "toKim",
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.8,
+          "pierce": 0.5,
+          "pierceShield": true
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -50
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "phongVanBienTran": {
+      "id": "phongVanBienTran",
+      "name": "Phong Vân Biến Trận",
+      "profession": "quanSu",
+      "tier": 3,
+      "character": "phungPhong",
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkDown",
+          "value": 0.3,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 20
+        },
+        {
+          "type": "whirl",
+          "turns": 2,
+          "auto": true
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "kimQuaThietMa": {
+      "id": "kimQuaThietMa",
+      "name": "Kim Qua Thiết Mã",
+      "profession": "tuongSi",
+      "tier": 3,
+      "character": "tranCuong",
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.8,
+          "pierce": 0.4
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.3,
+          "turns": 2
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "xichHoaDoatKy": {
+      "id": "xichHoaDoatKy",
+      "name": "Xích Hỏa Đoạt Kỳ",
+      "profession": "tuongSi",
+      "tier": 3,
+      "character": "lyLiet",
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "burn",
+          "value": 0.15,
+          "ofAtk": true,
+          "turns": 3
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "cross": "small"
+          }
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "bangHaPhongToa": {
+      "id": "bangHaPhongToa",
+      "name": "Băng Hà Phong Tỏa",
+      "profession": "phapSu",
+      "tier": 3,
+      "character": "daoLam",
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "freeze",
+          "value": 0,
+          "turns": 1,
+          "chance": 0.35
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 8
+          }
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "thienLoiGiangThe": {
+      "id": "thienLoiGiangThe",
+      "name": "Thiên Lôi Giáng Thế",
+      "profession": "phapSu",
+      "tier": 3,
+      "character": "vuLoi",
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.5
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -30
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "columns": 1
+          }
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "reGiaGiuThanh": {
+      "id": "reGiaGiuThanh",
+      "name": "Rễ Già Giữ Thành",
+      "profession": "binhLinh",
+      "tier": 3,
+      "character": "hoangMoc",
+      "cost": 100,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "regen",
+          "value": 0.06,
+          "turns": 3,
+          "ofMaxHp": true
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "shield",
+          "value": 0.25,
+          "turns": null,
+          "ofMaxHp": true
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "taunt",
+          "value": 0,
+          "turns": 2
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "thietBichDongThanh": {
+      "id": "thietBichDongThanh",
+      "name": "Thiết Bích Đồng Thành",
+      "profession": "binhLinh",
+      "tier": 3,
+      "character": "caoKien",
+      "cost": 100,
+      "target": "self",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "defUp",
+          "value": 0.35,
+          "turns": 3
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "reflect",
+          "value": 0.35,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "taunt",
+          "value": 0,
+          "turns": 2
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "xuanMocVanSinh": {
+      "id": "xuanMocVanSinh",
+      "name": "Xuân Mộc Vạn Sinh",
+      "profession": "ySu",
+      "tier": 3,
+      "character": "lucDiep",
+      "cost": 100,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "regen",
+          "value": 0.06,
+          "turns": 2,
+          "ofMaxHp": true
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "gioLanhTayUe": {
+      "id": "gioLanhTayUe",
+      "name": "Gió Lành Tẩy Uế",
+      "profession": "ySu",
+      "tier": 3,
+      "character": "bachSuong",
+      "cost": 100,
+      "target": "team",
+      "steps": [
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.18
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 15
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "hoaThieuKhoLuong": {
+      "id": "hoaThieuKhoLuong",
+      "name": "Hỏa Thiêu Kho Lương",
+      "profession": "muuSi",
+      "tier": 3,
+      "character": "ninhHoa",
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "enemyFood",
+          "amount": -25
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "burn",
+          "value": 0.1,
+          "ofAtk": true,
+          "turns": 2
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "thuyDonLyGian": {
+      "id": "thuyDonLyGian",
+      "name": "Thủy Độn Ly Gián",
+      "profession": "muuSi",
+      "tier": 3,
+      "character": "quachAn",
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1,
+          "chance": 0.5
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -20
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "batTranThachLuy": {
+      "id": "batTranThachLuy",
+      "name": "Bát Trận Thạch Lũy",
+      "profession": "quanSu",
+      "tier": 3,
+      "character": "taThach",
+      "cost": 100,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defUp",
+          "value": 0.3,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "shield",
+          "value": 0.12,
+          "turns": null,
+          "ofMaxHp": true
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "loiTranKinhHon": {
+      "id": "loiTranKinhHon",
+      "name": "Lôi Trận Kinh Hồn",
+      "profession": "quanSu",
+      "tier": 3,
+      "character": "macVan",
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -20
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 6
+          }
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "trucLamPhaTran": {
+      "id": "trucLamPhaTran",
+      "name": "Trúc Lâm Phá Trận",
+      "profession": "tuongSi",
+      "tier": 3,
+      "character": "lamTung",
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.6,
+          "lifesteal": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "regen",
+          "value": 0.05,
+          "turns": 2,
+          "ofMaxHp": true
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "langDaoTram": {
+      "id": "langDaoTram",
+      "name": "Lãng Đào Trảm",
+      "profession": "tuongSi",
+      "tier": 3,
+      "character": "hoLang",
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.6
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "freeze",
+          "value": 0,
+          "turns": 1,
+          "chance": 0.4
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -20
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "sonHaTranKich": {
+      "id": "sonHaTranKich",
+      "name": "Sơn Hà Trấn Kích",
+      "profession": "tuongSi",
+      "tier": 3,
+      "character": "khaSon",
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.5
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "shield",
+          "value": 0.2,
+          "turns": null,
+          "ofMaxHp": true
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "cross": "small"
+          }
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "loiDaoLienTram": {
+      "id": "loiDaoLienTram",
+      "name": "Lôi Đao Liên Trảm",
+      "profession": "tuongSi",
+      "tier": 3,
+      "character": "tongTan",
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.7,
+          "pierceShield": true
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -30
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "truyPhongDoatMenh": {
+      "id": "truyPhongDoatMenh",
+      "name": "Truy Phong Đoạt Mệnh",
+      "profession": "tuongSi",
+      "tier": 3,
+      "character": "huaLang",
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 15
+        },
+        {
+          "type": "whirl",
+          "turns": 2,
+          "auto": true
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "nganChamTanXa": {
+      "id": "nganChamTanXa",
+      "name": "Ngân Châm Tán Xạ",
+      "profession": "phapSu",
+      "tier": 3,
+      "character": "chuNgan",
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.2,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.2,
+          "turns": 2
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "kinhCucTrienThan": {
+      "id": "kinhCucTrienThan",
+      "name": "Kinh Cức Triền Thân",
+      "profession": "phapSu",
+      "tier": 3,
+      "character": "damThao",
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.1,
+          "lifesteal": 0.25
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "diaMachBungPhat": {
+      "id": "diaMachBungPhat",
+      "name": "Địa Mạch Bùng Phát",
+      "profession": "phapSu",
+      "tier": 3,
+      "character": "doanNham",
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.3
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "defUp",
+          "value": 0.15,
+          "turns": 2
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "square": 3
+          }
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "phongAnCuongLuu": {
+      "id": "phongAnCuongLuu",
+      "name": "Phong Ấn Cuồng Lưu",
+      "profession": "phapSu",
+      "tier": 3,
+      "character": "lieuYen",
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.1
+        },
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "whirl",
+          "turns": 2,
+          "auto": true
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "thuyTraiLienHoan": {
+      "id": "thuyTraiLienHoan",
+      "name": "Thủy Trại Liên Hoàn",
+      "profession": "binhLinh",
+      "tier": 3,
+      "character": "thaiHa",
+      "cost": 100,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "shield",
+          "value": 0.18,
+          "turns": null,
+          "ofMaxHp": true
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "taunt",
+          "value": 0,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "freeze",
+          "value": 0,
+          "turns": 1,
+          "chance": 0.25
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "viemGiapHoDoanh": {
+      "id": "viemGiapHoDoanh",
+      "name": "Viêm Giáp Hộ Doanh",
+      "profession": "binhLinh",
+      "tier": 3,
+      "character": "truongViem",
+      "cost": 100,
+      "target": "self",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "shield",
+          "value": 0.25,
+          "turns": null,
+          "ofMaxHp": true
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "taunt",
+          "value": 0,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "reflect",
+          "value": 0.3,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "burn",
+          "value": 0.1,
+          "ofAtk": true,
+          "turns": 2
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "chanLoiThietVe": {
+      "id": "chanLoiThietVe",
+      "name": "Chấn Lôi Thiết Vệ",
+      "profession": "binhLinh",
+      "tier": 3,
+      "character": "ongChan",
+      "cost": 100,
+      "target": "self",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "defUp",
+          "value": 0.4,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "taunt",
+          "value": 0,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "enemies",
+          "amount": -20
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "phongLuyHoKy": {
+      "id": "phongLuyHoKy",
+      "name": "Phong Lũy Hộ Kỳ",
+      "profession": "binhLinh",
+      "tier": 3,
+      "character": "manhTuong",
+      "cost": 100,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "shield",
+          "value": 0.15,
+          "turns": null,
+          "ofMaxHp": true
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 15
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "taunt",
+          "value": 0,
+          "turns": 2
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "kimChamDoMenh": {
+      "id": "kimChamDoMenh",
+      "name": "Kim Châm Độ Mệnh",
+      "profession": "ySu",
+      "tier": 3,
+      "character": "chauNgoc",
+      "cost": 100,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.22
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defUp",
+          "value": 0.2,
+          "turns": 2
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "danHoaHoiNguyen": {
+      "id": "danHoaHoiNguyen",
+      "name": "Đan Hỏa Hồi Nguyên",
+      "profession": "ySu",
+      "tier": 3,
+      "character": "hongDan",
+      "cost": 100,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.22
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "hauThoDuongNguyen": {
+      "id": "hauThoDuongNguyen",
+      "name": "Hậu Thổ Dưỡng Nguyên",
+      "profession": "ySu",
+      "tier": 3,
+      "character": "beLien",
+      "cost": 100,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "shield",
+          "value": 0.1,
+          "turns": null,
+          "ofMaxHp": true
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "loiChamKhoiTu": {
+      "id": "loiChamKhoiTu",
+      "name": "Lôi Châm Khởi Tử",
+      "profession": "ySu",
+      "tier": 3,
+      "character": "tieuMinh",
+      "cost": 100,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.22
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 20
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "trucDocMeHon": {
+      "id": "trucDocMeHon",
+      "name": "Trúc Độc Mê Hồn",
+      "profession": "muuSi",
+      "tier": 3,
+      "character": "nhanTruc",
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1,
+          "chance": 0.4
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "regen",
+          "value": 0.04,
+          "turns": 2,
+          "ofMaxHp": true
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "doanDaoTuyetLuong": {
+      "id": "doanDaoTuyetLuong",
+      "name": "Đoạn Đạo Tuyệt Lương",
+      "profession": "muuSi",
+      "tier": 3,
+      "character": "maNhac",
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "enemyFood",
+          "amount": -30
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -20
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 6
+          }
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "kinhLoiDoatKhi": {
+      "id": "kinhLoiDoatKhi",
+      "name": "Kinh Lôi Đoạt Khí",
+      "profession": "muuSi",
+      "tier": 3,
+      "character": "tuKinh",
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.5
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -50
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "phieuPhongLyGian": {
+      "id": "phieuPhongLyGian",
+      "name": "Phiêu Phong Ly Gián",
+      "profession": "muuSi",
+      "tier": 3,
+      "character": "buiPhieu",
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "whirl",
+          "turns": 2,
+          "auto": true
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "thietTranPhaGiap": {
+      "id": "thietTranPhaGiap",
+      "name": "Thiết Trận Phá Giáp",
+      "profession": "quanSu",
+      "tier": 3,
+      "character": "nghiemThiet",
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.3,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "thanhLamBayTran": {
+      "id": "thanhLamBayTran",
+      "name": "Thanh Lâm Bày Trận",
+      "profession": "quanSu",
+      "tier": 3,
+      "character": "samTue",
+      "cost": 100,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "regen",
+          "value": 0.05,
+          "turns": 2,
+          "ofMaxHp": true
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defUp",
+          "value": 0.2,
+          "turns": 2
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "trieuDangVayThanh": {
+      "id": "trieuDangVayThanh",
+      "name": "Triều Dâng Vây Thành",
+      "profession": "quanSu",
+      "tier": 3,
+      "character": "viTrieu",
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "freeze",
+          "value": 0,
+          "turns": 1,
+          "chance": 0.3
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "hoaCongLienKe": {
+      "id": "hoaCongLienKe",
+      "name": "Hỏa Công Liên Kế",
+      "profession": "quanSu",
+      "tier": 3,
+      "character": "tonDiem",
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkDown",
+          "value": 0.2,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "burn",
+          "value": 0.12,
+          "ofAtk": true,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 10
+        }
+      ],
+      "slot": 4,
+      "ultimate": true,
+      "characterKind": "ultimate"
+    },
+    "dinhQuocHoaKy": {
+      "id": "dinhQuocHoaKy",
+      "name": "Định Quốc Hỏa Kỳ",
+      "character": "nguyenBac",
+      "slot": 4,
+      "cost": 100,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "burn",
+          "value": 0.15,
+          "ofAtk": true,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "ngoaiGiapHoQuan": {
+      "id": "ngoaiGiapHoQuan",
+      "name": "Ngoại Giáp Hộ Quân",
+      "character": "dinhDien",
+      "slot": 4,
+      "cost": 100,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "shield",
+          "value": 0.2,
+          "turns": null,
+          "ofMaxHp": true
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "taunt",
+          "value": 0,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "reflect",
+          "value": 0.35,
+          "turns": 2
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "doHoPhuLenh": {
+      "id": "doHoPhuLenh",
+      "name": "Đô Hộ Phủ Lệnh",
+      "character": "luuCo",
+      "slot": 4,
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -30
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1,
+          "chance": 0.5
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "hoaLuThaoDuoc": {
+      "id": "hoaLuThaoDuoc",
+      "name": "Hoa Lư Thảo Dược",
+      "character": "trinhTu",
+      "slot": 4,
+      "cost": 100,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.28
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "regen",
+          "value": 0.05,
+          "turns": 2,
+          "ofMaxHp": true
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "thapDaoLoiBinh": {
+      "id": "thapDaoLoiBinh",
+      "name": "Thập Đạo Lôi Binh",
+      "character": "leHoan",
+      "slot": 4,
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 20
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "namVietVuongAn": {
+      "id": "namVietVuongAn",
+      "name": "Nam Việt Vương Ấn",
+      "character": "dinhLien",
+      "slot": 4,
+      "cost": 100,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "freeze",
+          "value": 0,
+          "turns": 1,
+          "chance": 0.3
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 6
+          }
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "boHaiTranGiang": {
+      "id": "boHaiTranGiang",
+      "name": "Bố Hải Trấn Giang",
+      "character": "tranLam",
+      "slot": 4,
+      "cost": 60,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 0.8
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkDown",
+          "value": 0.3,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "freeze",
+          "value": 0,
+          "turns": 1,
+          "chance": 0.35
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 4
+          }
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "bachHoXuatSon": {
+      "id": "bachHoXuatSon",
+      "name": "Bạch Hổ Xuất Sơn",
+      "character": "phamBachHo",
+      "slot": 4,
+      "cost": 60,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "burn",
+          "value": 0.2,
+          "ofAtk": true,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "atkUp",
+          "value": 0.2,
+          "turns": 2
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "ngoGiaDiMuu": {
+      "id": "ngoGiaDiMuu",
+      "name": "Ngô Gia Di Mưu",
+      "character": "ngoXuongXi",
+      "slot": 4,
+      "cost": 60,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4,
+          "pierce": 0.4
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -50
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 6
+          }
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "duongLamPhongKhoi": {
+      "id": "duongLamPhongKhoi",
+      "name": "Đường Lâm Phong Khởi",
+      "character": "ngoNhatKhanh",
+      "slot": 4,
+      "cost": 60,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 0.6
+        },
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "whirl",
+          "turns": 2,
+          "auto": true
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "tamDaiKienThanh": {
+      "id": "tamDaiKienThanh",
+      "name": "Tam Đái Kiên Thành",
+      "character": "nguyenKhoan",
+      "slot": 4,
+      "cost": 60,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "shield",
+          "value": 0.25,
+          "turns": null,
+          "ofMaxHp": true
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "taunt",
+          "value": 0,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "reflect",
+          "value": 0.35,
+          "turns": 2
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "phongChauLoiKich": {
+      "id": "phongChauLoiKich",
+      "name": "Phong Châu Lôi Kích",
+      "character": "kieuCongHan",
+      "slot": 4,
+      "cost": 60,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -15
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 4
+          }
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "hoiHoSinhKhi": {
+      "id": "hoiHoSinhKhi",
+      "name": "Hồi Hồ Sinh Khí",
+      "character": "kieuThuan",
+      "slot": 4,
+      "cost": 60,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.25
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "regen",
+          "value": 0.06,
+          "turns": 2,
+          "ofMaxHp": true
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "sieuLoaiPhaGiap": {
+      "id": "sieuLoaiPhaGiap",
+      "name": "Siêu Loại Phá Giáp",
+      "character": "lyKhue",
+      "slot": 4,
+      "cost": 60,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.4,
+          "pierce": 0.5
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.3,
+          "turns": 2
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 6
+          }
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "tienDuDoatLuong": {
+      "id": "tienDuDoatLuong",
+      "name": "Tiên Du Đoạt Lương",
+      "character": "nguyenThuTiep",
+      "slot": 4,
+      "cost": 60,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 0.6
+        },
+        {
+          "type": "enemyFood",
+          "amount": -25
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -30
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "freeze",
+          "value": 0,
+          "turns": 1,
+          "chance": 0.25
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "teGiangThuyTran": {
+      "id": "teGiangThuyTran",
+      "name": "Tế Giang Thủy Trận",
+      "character": "luDuong",
+      "slot": 4,
+      "cost": 60,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.5
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "freeze",
+          "value": 0,
+          "turns": 1,
+          "chance": 0.35
+        },
+        {
+          "type": "transform",
+          "kind": "amDuong",
+          "count": 4
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "phuLietHoaLuy": {
+      "id": "phuLietHoaLuy",
+      "name": "Phù Liệt Hỏa Lũy",
+      "character": "nguyenSieu",
+      "slot": 4,
+      "cost": 60,
+      "target": "self",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "shield",
+          "value": 0.3,
+          "turns": null,
+          "ofMaxHp": true
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "taunt",
+          "value": 0,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "burn",
+          "value": 0.15,
+          "ofAtk": true,
+          "turns": 2
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "doDongKienTam": {
+      "id": "doDongKienTam",
+      "name": "Đỗ Động Kiên Tâm",
+      "character": "doCanhThac",
+      "slot": 4,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.6
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "defUp",
+          "value": 0.3,
+          "turns": 2
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 8
+          }
+        }
+      ],
+      "ultimate": true,
+      "characterKind": "signature"
+    },
+    "dbl_tuongSi_kim": {
+      "id": "dbl_tuongSi_kim",
+      "name": "Bình định · Kim",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "tuongSi",
+      "element": "kim",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_tuongSi_moc": {
+      "id": "dbl_tuongSi_moc",
+      "name": "Bình định · Mộc",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "tuongSi",
+      "element": "moc",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "heal",
+          "to": "team",
+          "ratio": 0.1
+        }
+      ]
+    },
+    "dbl_tuongSi_thuy": {
+      "id": "dbl_tuongSi_thuy",
+      "name": "Bình định · Thủy",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "tuongSi",
+      "element": "thuy",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "cleanse",
+          "to": "team"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.08,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_tuongSi_hoa": {
+      "id": "dbl_tuongSi_hoa",
+      "name": "Bình định · Hỏa",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "tuongSi",
+      "element": "hoa",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_tuongSi_tho": {
+      "id": "dbl_tuongSi_tho",
+      "name": "Bình định · Thổ",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "tuongSi",
+      "element": "tho",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.12,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_tuongSi_loi": {
+      "id": "dbl_tuongSi_loi",
+      "name": "Bình định · Lôi",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "tuongSi",
+      "element": "loi",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "enemies",
+          "amount": -15
+        }
+      ]
+    },
+    "dbl_tuongSi_phong": {
+      "id": "dbl_tuongSi_phong",
+      "name": "Bình định · Phong",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "tuongSi",
+      "element": "phong",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 3.2,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 15
+        }
+      ]
+    },
+    "dbl_phapSu_kim": {
+      "id": "dbl_phapSu_kim",
+      "name": "Thiên uy · Kim",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "phapSu",
+      "element": "kim",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_phapSu_moc": {
+      "id": "dbl_phapSu_moc",
+      "name": "Thiên uy · Mộc",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "phapSu",
+      "element": "moc",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "heal",
+          "to": "team",
+          "ratio": 0.1
+        }
+      ]
+    },
+    "dbl_phapSu_thuy": {
+      "id": "dbl_phapSu_thuy",
+      "name": "Thiên uy · Thủy",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "phapSu",
+      "element": "thuy",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "cleanse",
+          "to": "team"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.08,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_phapSu_hoa": {
+      "id": "dbl_phapSu_hoa",
+      "name": "Thiên uy · Hỏa",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "phapSu",
+      "element": "hoa",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_phapSu_tho": {
+      "id": "dbl_phapSu_tho",
+      "name": "Thiên uy · Thổ",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "phapSu",
+      "element": "tho",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.12,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_phapSu_loi": {
+      "id": "dbl_phapSu_loi",
+      "name": "Thiên uy · Lôi",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "phapSu",
+      "element": "loi",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "energy",
+          "to": "enemies",
+          "amount": -15
+        }
+      ]
+    },
+    "dbl_phapSu_phong": {
+      "id": "dbl_phapSu_phong",
+      "name": "Thiên uy · Phong",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "phapSu",
+      "element": "phong",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.2
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 1
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 15
+        }
+      ]
+    },
+    "dbl_binhLinh_kim": {
+      "id": "dbl_binhLinh_kim",
+      "name": "Trấn quốc · Kim",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "binhLinh",
+      "element": "kim",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.15,
+          "ofMaxHp": true,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_binhLinh_moc": {
+      "id": "dbl_binhLinh_moc",
+      "name": "Trấn quốc · Mộc",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "binhLinh",
+      "element": "moc",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.15,
+          "ofMaxHp": true,
+          "turns": 2
+        },
+        {
+          "type": "heal",
+          "to": "team",
+          "ratio": 0.1
+        }
+      ]
+    },
+    "dbl_binhLinh_thuy": {
+      "id": "dbl_binhLinh_thuy",
+      "name": "Trấn quốc · Thủy",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "binhLinh",
+      "element": "thuy",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.15,
+          "ofMaxHp": true,
+          "turns": 2
+        },
+        {
+          "type": "cleanse",
+          "to": "team"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.08,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_binhLinh_hoa": {
+      "id": "dbl_binhLinh_hoa",
+      "name": "Trấn quốc · Hỏa",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "binhLinh",
+      "element": "hoa",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.15,
+          "ofMaxHp": true,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_binhLinh_tho": {
+      "id": "dbl_binhLinh_tho",
+      "name": "Trấn quốc · Thổ",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "binhLinh",
+      "element": "tho",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.15,
+          "ofMaxHp": true,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.12,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_binhLinh_loi": {
+      "id": "dbl_binhLinh_loi",
+      "name": "Trấn quốc · Lôi",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "binhLinh",
+      "element": "loi",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.15,
+          "ofMaxHp": true,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "enemies",
+          "amount": -15
+        }
+      ]
+    },
+    "dbl_binhLinh_phong": {
+      "id": "dbl_binhLinh_phong",
+      "name": "Trấn quốc · Phong",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "binhLinh",
+      "element": "phong",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.4
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.15,
+          "ofMaxHp": true,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 15
+        }
+      ]
+    },
+    "dbl_ySu_kim": {
+      "id": "dbl_ySu_kim",
+      "name": "Hưng sinh · Kim",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "ySu",
+      "element": "kim",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.28
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_ySu_moc": {
+      "id": "dbl_ySu_moc",
+      "name": "Hưng sinh · Mộc",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "ySu",
+      "element": "moc",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.28
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "heal",
+          "to": "team",
+          "ratio": 0.1
+        }
+      ]
+    },
+    "dbl_ySu_thuy": {
+      "id": "dbl_ySu_thuy",
+      "name": "Hưng sinh · Thủy",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "ySu",
+      "element": "thuy",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.28
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "cleanse",
+          "to": "team"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.08,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_ySu_hoa": {
+      "id": "dbl_ySu_hoa",
+      "name": "Hưng sinh · Hỏa",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "ySu",
+      "element": "hoa",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.28
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_ySu_tho": {
+      "id": "dbl_ySu_tho",
+      "name": "Hưng sinh · Thổ",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "ySu",
+      "element": "tho",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.28
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.12,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_ySu_loi": {
+      "id": "dbl_ySu_loi",
+      "name": "Hưng sinh · Lôi",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "ySu",
+      "element": "loi",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.28
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "energy",
+          "to": "enemies",
+          "amount": -15
+        }
+      ]
+    },
+    "dbl_ySu_phong": {
+      "id": "dbl_ySu_phong",
+      "name": "Hưng sinh · Phong",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "ySu",
+      "element": "phong",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.28
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 15
+        }
+      ]
+    },
+    "dbl_muuSi_kim": {
+      "id": "dbl_muuSi_kim",
+      "name": "Định kế · Kim",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "muuSi",
+      "element": "kim",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "damage",
+          "atk": 2.3
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_muuSi_moc": {
+      "id": "dbl_muuSi_moc",
+      "name": "Định kế · Mộc",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "muuSi",
+      "element": "moc",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "damage",
+          "atk": 2.3
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "heal",
+          "to": "team",
+          "ratio": 0.1
+        }
+      ]
+    },
+    "dbl_muuSi_thuy": {
+      "id": "dbl_muuSi_thuy",
+      "name": "Định kế · Thủy",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "muuSi",
+      "element": "thuy",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "damage",
+          "atk": 2.3
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "cleanse",
+          "to": "team"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.08,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_muuSi_hoa": {
+      "id": "dbl_muuSi_hoa",
+      "name": "Định kế · Hỏa",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "muuSi",
+      "element": "hoa",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "damage",
+          "atk": 2.3
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_muuSi_tho": {
+      "id": "dbl_muuSi_tho",
+      "name": "Định kế · Thổ",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "muuSi",
+      "element": "tho",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "damage",
+          "atk": 2.3
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.12,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_muuSi_loi": {
+      "id": "dbl_muuSi_loi",
+      "name": "Định kế · Lôi",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "muuSi",
+      "element": "loi",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "damage",
+          "atk": 2.3
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "energy",
+          "to": "enemies",
+          "amount": -15
+        }
+      ]
+    },
+    "dbl_muuSi_phong": {
+      "id": "dbl_muuSi_phong",
+      "name": "Định kế · Phong",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "muuSi",
+      "element": "phong",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        },
+        {
+          "type": "damage",
+          "atk": 2.3
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -25
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 15
+        }
+      ]
+    },
+    "dbl_quanSu_kim": {
+      "id": "dbl_quanSu_kim",
+      "name": "Nhất thống · Kim",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "quanSu",
+      "element": "kim",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 20
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_quanSu_moc": {
+      "id": "dbl_quanSu_moc",
+      "name": "Nhất thống · Mộc",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "quanSu",
+      "element": "moc",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 20
+        },
+        {
+          "type": "heal",
+          "to": "team",
+          "ratio": 0.1
+        }
+      ]
+    },
+    "dbl_quanSu_thuy": {
+      "id": "dbl_quanSu_thuy",
+      "name": "Nhất thống · Thủy",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "quanSu",
+      "element": "thuy",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 20
+        },
+        {
+          "type": "cleanse",
+          "to": "team"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.08,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_quanSu_hoa": {
+      "id": "dbl_quanSu_hoa",
+      "name": "Nhất thống · Hỏa",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "quanSu",
+      "element": "hoa",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 20
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_quanSu_tho": {
+      "id": "dbl_quanSu_tho",
+      "name": "Nhất thống · Thổ",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "quanSu",
+      "element": "tho",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 20
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.12,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    "dbl_quanSu_loi": {
+      "id": "dbl_quanSu_loi",
+      "name": "Nhất thống · Lôi",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "quanSu",
+      "element": "loi",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 20
+        },
+        {
+          "type": "energy",
+          "to": "enemies",
+          "amount": -15
+        }
+      ]
+    },
+    "dbl_quanSu_phong": {
+      "id": "dbl_quanSu_phong",
+      "name": "Nhất thống · Phong",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "quanSu",
+      "element": "phong",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 20
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 15
+        }
+      ]
+    },
+    "role_tramKich": {
+      "id": "role_tramKich",
+      "name": "Trảm kích",
+      "profession": "tuongSi",
+      "cost": 30,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.1
+        }
+      ],
+      "slot": 1
+    },
+    "role_phaTran": {
+      "id": "role_phaTran",
+      "name": "Phá trận",
+      "profession": "tuongSi",
+      "cost": 45,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.5,
+          "pierce": 0.3
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.3,
+          "turns": 2
+        }
+      ],
+      "slot": 3
+    },
+    "role_doatMenh": {
+      "id": "role_doatMenh",
+      "name": "Đoạt mệnh",
+      "profession": "tuongSi",
+      "slot": 5,
+      "cost": 60,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.6,
+          "execute": {
+            "threshold": 0.35,
+            "multiplier": 1.5
+          }
+        }
+      ]
+    },
+    "role_phepLan": {
+      "id": "role_phepLan",
+      "name": "Phép lan",
+      "profession": "phapSu",
+      "cost": 30,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 0.9
+        }
+      ],
+      "slot": 1
+    },
+    "role_nguHanhAn": {
+      "id": "role_nguHanhAn",
+      "name": "Ngũ hành ấn",
+      "profession": "phapSu",
+      "cost": 45,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.4
+        },
+        {
+          "type": "mark",
+          "enhanced": true,
+          "guaranteed": true
+        }
+      ],
+      "slot": 3
+    },
+    "role_thienDiaCong": {
+      "id": "role_thienDiaCong",
+      "name": "Thiên địa cộng hưởng",
+      "profession": "phapSu",
+      "slot": 5,
+      "cost": 60,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.1
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "square": 3
+          }
+        }
+      ]
+    },
+    "role_thuThanh": {
+      "id": "role_thuThanh",
+      "name": "Thủ thành",
+      "profession": "binhLinh",
+      "cost": 35,
+      "target": "self",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "taunt",
+          "value": 0,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "shield",
+          "value": 0.2,
+          "turns": null,
+          "ofMaxHp": true
+        }
+      ],
+      "slot": 1
+    },
+    "role_tuongKhien": {
+      "id": "role_tuongKhien",
+      "name": "Tường khiên",
+      "profession": "binhLinh",
+      "cost": 45,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "shield",
+          "value": 0.15,
+          "turns": null,
+          "ofMaxHp": true
+        }
+      ],
+      "slot": 3
+    },
+    "role_phanKich": {
+      "id": "role_phanKich",
+      "name": "Phản kích",
+      "profession": "binhLinh",
+      "cost": 55,
+      "target": "self",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "reflect",
+          "value": 0.4,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "defUp",
+          "value": 0.3,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "taunt",
+          "value": 0,
+          "turns": 2
+        }
+      ],
+      "slot": 5
+    },
+    "role_linhDuoc": {
+      "id": "role_linhDuoc",
+      "name": "Linh dược",
+      "profession": "ySu",
+      "cost": 30,
+      "target": "ally",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.22
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        }
+      ],
+      "slot": 1
+    },
+    "role_duongSinh": {
+      "id": "role_duongSinh",
+      "name": "Dưỡng sinh",
+      "profession": "ySu",
+      "cost": 45,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "regen",
+          "value": 0.07,
+          "turns": 3,
+          "ofMaxHp": true
+        }
+      ],
+      "slot": 3
+    },
+    "role_teDo": {
+      "id": "role_teDo",
+      "name": "Tế độ",
+      "profession": "ySu",
+      "cost": 55,
+      "target": "team",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "targets",
+          "ratio": 0.15
+        },
+        {
+          "type": "cleanse",
+          "to": "targets"
+        }
+      ],
+      "slot": 5
+    },
+    "role_muaChuoc": {
+      "id": "role_muaChuoc",
+      "name": "Mua chuộc",
+      "profession": "muuSi",
+      "cost": 30,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -40
+        }
+      ],
+      "slot": 1
+    },
+    "role_lyGian": {
+      "id": "role_lyGian",
+      "name": "Ly gián",
+      "profession": "muuSi",
+      "cost": 45,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "silence",
+          "value": 0,
+          "turns": 2
+        }
+      ],
+      "slot": 3
+    },
+    "role_catQuanLuong": {
+      "id": "role_catQuanLuong",
+      "name": "Cắt quân lương",
+      "profession": "muuSi",
+      "cost": 55,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "enemyFood",
+          "amount": -15
+        },
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -10
+        }
+      ],
+      "slot": 5
+    },
+    "role_nghiBinh": {
+      "id": "role_nghiBinh",
+      "name": "Nghi binh",
+      "profession": "quanSu",
+      "cost": 30,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkDown",
+          "value": 0.3,
+          "turns": 2
+        }
+      ],
+      "slot": 1
+    },
+    "role_hieuLenh": {
+      "id": "role_hieuLenh",
+      "name": "Hiệu lệnh",
+      "profession": "quanSu",
+      "cost": 45,
+      "target": "team",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "atkUp",
+          "value": 0.25,
+          "turns": 2
+        }
+      ],
+      "slot": 3
+    },
+    "role_phaKe": {
+      "id": "role_phaKe",
+      "name": "Phá kế",
+      "profession": "quanSu",
+      "cost": 55,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "dispel",
+          "to": "targets"
+        }
+      ],
+      "slot": 5
+    },
+    "element_luyenKimThanhKiem": {
+      "id": "element_luyenKimThanhKiem",
+      "name": "Luyện Kim Thành Kiếm",
+      "element": "kim",
+      "slot": 2,
+      "cost": 20,
+      "target": "self",
+      "steps": [
+        {
+          "type": "transform",
+          "kind": "kiem",
+          "count": 4
+        }
+      ]
+    },
+    "element_kimYNgungThan": {
+      "id": "element_kimYNgungThan",
+      "name": "Kim Ý Ngưng Thần",
+      "element": "kim",
+      "slot": 6,
+      "cost": 35,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.3,
+          "pierce": 0.5
+        }
+      ]
+    },
+    "element_lucDiepPhong": {
+      "id": "element_lucDiepPhong",
+      "name": "Lục Diệp Phong",
+      "element": "moc",
+      "slot": 2,
+      "cost": 35,
+      "target": "self",
+      "steps": [
+        {
+          "type": "destroy",
+          "area": {
+            "random": 5
+          }
+        }
+      ]
+    },
+    "element_linhMocHoiSinh": {
+      "id": "element_linhMocHoiSinh",
+      "name": "Linh Mộc Hồi Sinh",
+      "element": "moc",
+      "slot": 6,
+      "cost": 30,
+      "target": "self",
+      "steps": [
+        {
+          "type": "heal",
+          "to": "self",
+          "ratio": 0.11
+        },
+        {
+          "type": "transform",
+          "kind": "tim",
+          "count": 3
+        }
+      ]
+    },
+    "element_thuyNguyetTuLinh": {
+      "id": "element_thuyNguyetTuLinh",
+      "name": "Thủy Nguyệt Tụ Linh",
+      "element": "thuy",
+      "slot": 2,
+      "cost": 20,
+      "target": "self",
+      "steps": [
+        {
+          "type": "transform",
+          "kind": "amDuong",
+          "count": 5
+        }
+      ]
+    },
+    "element_thanhLuuTayTran": {
+      "id": "element_thanhLuuTayTran",
+      "name": "Thanh Lưu Tẩy Trần",
+      "element": "thuy",
+      "slot": 6,
+      "cost": 30,
+      "target": "self",
+      "steps": [
+        {
+          "type": "cleanse",
+          "to": "self"
+        },
+        {
+          "type": "heal",
+          "to": "self",
+          "ratio": 0.1
+        }
+      ]
+    },
+    "element_phongHoaThieuDoanh": {
+      "id": "element_phongHoaThieuDoanh",
+      "name": "Phóng Hỏa Thiêu Doanh",
+      "element": "hoa",
+      "slot": 2,
+      "cost": 35,
+      "target": "self",
+      "steps": [
+        {
+          "type": "destroy",
+          "area": {
+            "square": 3
+          }
+        }
+      ]
+    },
+    "element_noHoaThieuThan": {
+      "id": "element_noHoaThieuThan",
+      "name": "Nộ Hỏa Thiêu Thân",
+      "element": "hoa",
+      "slot": 6,
+      "cost": 30,
+      "target": "self",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "atkUp",
+          "value": 0.35,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    "element_hauThoTichLuong": {
+      "id": "element_hauThoTichLuong",
+      "name": "Hậu Thổ Tích Lương",
+      "element": "tho",
+      "slot": 2,
+      "cost": 20,
+      "target": "self",
+      "steps": [
+        {
+          "type": "transform",
+          "kind": "banhChung",
+          "count": 5
+        }
+      ]
+    },
+    "element_thachGiap": {
+      "id": "element_thachGiap",
+      "name": "Thạch Giáp",
+      "element": "tho",
+      "slot": 6,
+      "cost": 30,
+      "target": "self",
+      "steps": [
+        {
+          "type": "effect",
+          "to": "self",
+          "effect": "shield",
+          "value": 0.2,
+          "turns": null,
+          "ofMaxHp": true
+        }
+      ]
+    },
+    "element_loiTruGiangThe": {
+      "id": "element_loiTruGiangThe",
+      "name": "Lôi Trụ Giáng Thế",
+      "element": "loi",
+      "slot": 2,
+      "cost": 40,
+      "target": "self",
+      "steps": [
+        {
+          "type": "destroy",
+          "area": {
+            "columns": 1
+          }
+        }
+      ]
+    },
+    "element_tinhDienHoThan": {
+      "id": "element_tinhDienHoThan",
+      "name": "Tĩnh Điện Hộ Thân",
+      "element": "loi",
+      "slot": 6,
+      "cost": 30,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": -20
+        },
+        {
+          "type": "energy",
+          "to": "self",
+          "amount": 10
+        }
+      ]
+    },
+    "element_phongQuyenTanVan": {
+      "id": "element_phongQuyenTanVan",
+      "name": "Phong Quyển Tàn Vân",
+      "element": "phong",
+      "slot": 2,
+      "cost": 40,
+      "target": "self",
+      "steps": [
+        {
+          "type": "whirl",
+          "turns": 2
+        }
+      ]
+    },
+    "element_thanhPhongTuKhi": {
+      "id": "element_thanhPhongTuKhi",
+      "name": "Thanh Phong Tụ Khí",
+      "element": "phong",
+      "slot": 6,
+      "cost": 30,
+      "target": "team",
+      "steps": [
+        {
+          "type": "energy",
+          "to": "targets",
+          "amount": 10
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defUp",
+          "value": 0.1,
+          "turns": 2
+        }
+      ]
+    }
+  },
+  "chase": {
+    "martial": {
+      "id": "martial",
+      "name": "Liên trảm",
+      "triggers": [
+        "armorBroken"
+      ],
+      "effect": "damage",
+      "value": 0.55,
+      "description": "Đồng đội phá giáp: truy kích mục tiêu bằng 55% ATK.",
+      "alliesOnly": true
+    },
+    "arcane": {
+      "id": "arcane",
+      "name": "Chú kích",
+      "triggers": [
+        "controlled"
+      ],
+      "effect": "damage",
+      "value": 0.5,
+      "description": "Đồng đội khống chế: truy kích mục tiêu bằng 50% ATK.",
+      "alliesOnly": true
+    },
+    "guardian": {
+      "id": "guardian",
+      "name": "Tiếp phòng",
+      "triggers": [
+        "healed"
+      ],
+      "effect": "shield",
+      "value": 0.06,
+      "description": "Đồng đội hồi HP thực: cấp Khiên bằng 6% HP tối đa người vừa được hồi.",
+      "alliesOnly": true
+    },
+    "medic": {
+      "id": "medic",
+      "name": "Cứu viện",
+      "triggers": [
+        "skillDamage"
+      ],
+      "effect": "heal",
+      "value": 0.05,
+      "description": "Đồng đội gây mất HP bằng kỹ năng: hồi người bị thương nặng nhất 5% HP tối đa.",
+      "alliesOnly": true
+    },
+    "strategist": {
+      "id": "strategist",
+      "name": "Thừa hư",
+      "triggers": [
+        "dispelled"
+      ],
+      "effect": "drain",
+      "value": 8,
+      "description": "Đồng đội xua tan: trừ thêm 8 năng lượng mục tiêu.",
+      "alliesOnly": true
+    },
+    "commander": {
+      "id": "commander",
+      "name": "Tiếp lệnh",
+      "triggers": [
+        "healed"
+      ],
+      "effect": "energy",
+      "value": 8,
+      "description": "Đồng đội hồi HP thực: cấp người vừa được hồi 8 năng lượng.",
+      "alliesOnly": true
+    },
+    "kim1": {
+      "id": "kim1",
+      "name": "Kim phá",
+      "triggers": [
+        "skillDamage"
+      ],
+      "effect": "armor",
+      "value": 0.1,
+      "description": "Kỹ năng gây mất HP: giảm DEF mục tiêu 10% trong 1 lượt.",
+      "alliesOnly": false
+    },
+    "kim2": {
+      "id": "kim2",
+      "name": "Kim truy",
+      "triggers": [
+        "armorBroken"
+      ],
+      "effect": "damage",
+      "value": 0.35,
+      "description": "Phá giáp thành công: truy kích bằng 35% ATK.",
+      "alliesOnly": false
+    },
+    "moc1": {
+      "id": "moc1",
+      "name": "Mộc sinh",
+      "triggers": [
+        "skillDamage"
+      ],
+      "effect": "heal",
+      "value": 0.04,
+      "description": "Kỹ năng gây mất HP: hồi người bị thương nặng nhất 4% HP tối đa.",
+      "alliesOnly": false
+    },
+    "moc2": {
+      "id": "moc2",
+      "name": "Mộc hộ",
+      "triggers": [
+        "healed"
+      ],
+      "effect": "shield",
+      "value": 0.04,
+      "description": "Hồi HP thực: cấp Khiên bằng 4% HP tối đa người được hồi.",
+      "alliesOnly": false
+    },
+    "thuy1": {
+      "id": "thuy1",
+      "name": "Thủy tiếp",
+      "triggers": [
+        "controlled"
+      ],
+      "effect": "heal",
+      "value": 0.05,
+      "description": "Khống chế thành công: hồi người bị thương nặng nhất 5% HP tối đa.",
+      "alliesOnly": false
+    },
+    "thuy2": {
+      "id": "thuy2",
+      "name": "Thủy dẫn",
+      "triggers": [
+        "healed"
+      ],
+      "effect": "energy",
+      "value": 6,
+      "description": "Hồi HP thực: cấp người được hồi 6 năng lượng.",
+      "alliesOnly": false
+    },
+    "hoa1": {
+      "id": "hoa1",
+      "name": "Hỏa truy",
+      "triggers": [
+        "armorBroken"
+      ],
+      "effect": "damage",
+      "value": 0.4,
+      "description": "Phá giáp thành công: truy kích bằng 40% ATK.",
+      "alliesOnly": false
+    },
+    "hoa2": {
+      "id": "hoa2",
+      "name": "Hỏa phá",
+      "triggers": [
+        "skillDamage"
+      ],
+      "effect": "armor",
+      "value": 0.12,
+      "description": "Kỹ năng gây mất HP: giảm DEF mục tiêu 12% trong 1 lượt.",
+      "alliesOnly": false
+    },
+    "tho1": {
+      "id": "tho1",
+      "name": "Thổ hộ",
+      "triggers": [
+        "healed"
+      ],
+      "effect": "shield",
+      "value": 0.05,
+      "description": "Hồi HP thực: cấp Khiên bằng 5% HP tối đa người được hồi.",
+      "alliesOnly": false
+    },
+    "tho2": {
+      "id": "tho2",
+      "name": "Thổ chấn",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "effect": "damage",
+      "value": 0.35,
+      "description": "Khiên đồng đội thực sự đỡ đòn: truy kích một địch bằng 35% ATK.",
+      "alliesOnly": false
+    },
+    "loi1": {
+      "id": "loi1",
+      "name": "Lôi truy",
+      "triggers": [
+        "controlled"
+      ],
+      "effect": "damage",
+      "value": 0.45,
+      "description": "Khống chế thành công: truy kích bằng 45% ATK.",
+      "alliesOnly": false
+    },
+    "loi2": {
+      "id": "loi2",
+      "name": "Lôi đoạt",
+      "triggers": [
+        "skillDamage"
+      ],
+      "effect": "drain",
+      "value": 6,
+      "description": "Kỹ năng gây mất HP: trừ mục tiêu 6 năng lượng.",
+      "alliesOnly": false
+    },
+    "phong1": {
+      "id": "phong1",
+      "name": "Phong tiếp",
+      "triggers": [
+        "dispelled"
+      ],
+      "effect": "damage",
+      "value": 0.4,
+      "description": "Xua tan thành công: truy kích bằng 40% ATK.",
+      "alliesOnly": false
+    },
+    "phong2": {
+      "id": "phong2",
+      "name": "Phong dẫn",
+      "triggers": [
+        "skillDamage"
+      ],
+      "effect": "energy",
+      "value": 5,
+      "description": "Kỹ năng gây mất HP: cấp người tạo tín hiệu 5 năng lượng.",
+      "alliesOnly": false
+    }
+  },
+  "baseStats": {
+    "tuongSi": {
+      "maxHp": 500,
+      "atk": 55,
+      "def": 10
+    },
+    "phapSu": {
+      "maxHp": 450,
+      "atk": 55,
+      "def": 8
+    },
+    "binhLinh": {
+      "maxHp": 600,
+      "atk": 45,
+      "def": 15
+    },
+    "ySu": {
+      "maxHp": 475,
+      "atk": 45,
+      "def": 10
+    },
+    "muuSi": {
+      "maxHp": 475,
+      "atk": 50,
+      "def": 10
+    },
+    "quanSu": {
+      "maxHp": 475,
+      "atk": 50,
+      "def": 10
+    }
+  },
+  "sets": [
+    {
+      "id": "coLau",
+      "name": "Cờ Lau",
+      "six": {
+        "atk": 0.04,
+        "maxHp": 0.03
+      },
+      "nine": {
+        "atk": 0.04,
+        "maxHp": 0.03
+      }
+    },
+    {
+      "id": "hoaLu",
+      "name": "Hoa Lư",
+      "six": {
+        "def": 0.12,
+        "maxHp": 0.04
+      },
+      "nine": {
+        "def": 0.12,
+        "maxHp": 0.04
+      }
+    },
+    {
+      "id": "dongCo",
+      "name": "Đồng Cổ",
+      "six": {
+        "atk": 0.07
+      },
+      "nine": {
+        "atk": 0.07
+      }
+    }
+  ],
+  "resonance": {
+    "kim": {
+      "six": {
+        "atk": 0.05
+      },
+      "nine": {
+        "atk": 0.05
+      }
+    },
+    "moc": {
+      "six": {
+        "maxHp": 0.06
+      },
+      "nine": {
+        "maxHp": 0.06
+      }
+    },
+    "thuy": {
+      "six": {
+        "maxHp": 0.03,
+        "def": 0.05
+      },
+      "nine": {
+        "maxHp": 0.03,
+        "def": 0.05
+      }
+    },
+    "hoa": {
+      "six": {
+        "atk": 0.06
+      },
+      "nine": {
+        "atk": 0.06
+      }
+    },
+    "tho": {
+      "six": {
+        "def": 0.1
+      },
+      "nine": {
+        "def": 0.1
+      }
+    },
+    "loi": {
+      "six": {
+        "atk": 0.03,
+        "maxHp": 0.03
+      },
+      "nine": {
+        "atk": 0.03,
+        "maxHp": 0.03
+      }
+    },
+    "phong": {
+      "six": {
+        "atk": 0.03,
+        "def": 0.05
+      },
+      "nine": {
+        "atk": 0.03,
+        "def": 0.05
+      }
+    }
+  },
+  "flat": {
+    "atk": 3,
+    "maxHp": 30,
+    "def": 2
+  },
+  "tiers": {
+    "1": {
+      "color": "trang",
+      "name": "Phàm phẩm",
+      "multiplier": 1
+    },
+    "2": {
+      "color": "luc",
+      "name": "Lương phẩm",
+      "multiplier": 1.3
+    },
+    "3": {
+      "color": "lam",
+      "name": "Tinh phẩm",
+      "multiplier": 1.7
+    },
+    "4": {
+      "color": "tim",
+      "name": "Bảo phẩm",
+      "multiplier": 2.2
+    },
+    "5": {
+      "color": "cam",
+      "name": "Thần phẩm",
+      "multiplier": 3
+    }
+  }
+}
