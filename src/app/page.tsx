@@ -15,7 +15,7 @@ import { ElementIcon, LeaderFlag } from "./game/art/icons";
 import { Logo, LogoMark } from "./game/art/logo";
 import Image from "next/image";
 import { Portrait } from "./game/art/portraits";
-import { TileArt } from "./game/art/tiles";
+import { BoardCrest, TileArt } from "./game/art/tiles";
 import { FAQ, PROFESSION_PERK, TILE_GIVES } from "./home/data";
 import DrumFace from "./home/DrumFace";
 import ElementPicker from "./home/ElementPicker";
@@ -186,12 +186,19 @@ export default function Home() {
             <div className="relative mb-14 ml-8 md:mb-12 md:ml-6">
               <div className="fx-frame relative rounded-xl p-2">
                 <GiltCorners size="size-10 md:size-14" skip="bottomLeft" />
-                <div className="grid gap-[2px]" style={{ gridTemplateColumns: `repeat(${BOARD_COLS}, minmax(0, 1fr))` }}>
+                <BoardCrest className="pointer-events-none absolute left-1/2 top-0 z-10 h-9 w-44 -translate-x-1/2 -translate-y-[62%] md:h-12 md:w-60" />
+                {/* Lòng bàn cờ như trong trận: nền đá phiến sẫm dưới ô xanh đá phiến, nút hoa đồng ở giao điểm. */}
+                <div className="fx-board-well relative grid gap-0.5 overflow-hidden rounded-md p-0.5" style={{ gridTemplateColumns: `repeat(${BOARD_COLS}, minmax(0, 1fr))` }}>
                   {board.map((t, i) => (
-                    <div key={i} className="aspect-square rounded-[3px] bg-[#3a2c24]">
+                    <div key={i} className="aspect-square rounded-md">
                       {t && <TileArt kind={t.kind} special={t.special} className={`size-full ${t.special === "strong" ? "tile-strong" : ""}`} />}
                     </div>
                   ))}
+                  <div
+                    aria-hidden
+                    className="board-knots pointer-events-none absolute inset-px"
+                    style={{ backgroundSize: `calc(100% / ${BOARD_COLS}) calc(100% / ${BOARD_ROWS})` }}
+                  />
                 </div>
               </div>
               <Portrait
@@ -274,20 +281,20 @@ export default function Home() {
                   <tr key={k} className="border-t border-stone-800">
                     <td className="px-4 py-2">
                       <span className="flex items-center gap-2 font-semibold">
-                        <TileArt kind={k} className="size-9" />
+                        <TileArt kind={k} className="size-10" />
                         {TILE_NAME[k]}
                       </span>
                     </td>
                     <td className="px-4 py-2 text-stone-300">{TILE_GIVES[k]}</td>
                     <td className="px-4 py-2">
                       <span className="flex items-center gap-2 text-stone-400">
-                        <TileArt kind={k} special="weak" className="size-7" />
+                        <TileArt kind={k} special="weak" className="size-10" />
                         {SPECIAL_NAME.weak[k]}
                       </span>
                     </td>
                     <td className="px-4 py-2">
                       <span className="flex items-center gap-2 text-stone-400">
-                        <TileArt kind={k} special="strong" className="size-7" />
+                        <TileArt kind={k} special="strong" className="tile-strong size-10" />
                         {SPECIAL_NAME.strong[k]}
                       </span>
                     </td>
