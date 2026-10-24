@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -216,6 +216,7 @@ export default function BattleStage({
         import("./bloom"),
         import("./pierce"),
         import("./drain"),
+        import("./pillar"),
       ]);
       const app = new Application();
       await app.init({
@@ -264,7 +265,7 @@ export default function BattleStage({
       layout();
       app.renderer.on("resize", layout);
       // Hiệu ứng vẽ trên cả sân, đè lên mọi nhân vật: sét hệ Lôi, vòm khiên đất hệ Thổ, vòng lá hồi sinh hệ Mộc,
-      // mũi sáng phá giáp hệ Kim, đoạt lương hệ Thủy.
+      // mũi sáng phá giáp hệ Kim, đoạt lương và cột nước đóng băng hệ Thủy.
       const sky = new Container();
       sky.zIndex = 100;
       app.stage.addChild(sky);
@@ -282,6 +283,15 @@ export default function BattleStage({
           loaded[i]!.onStrike?.((kind) => {
             if (kind !== "ultimate") return;
             alive(true).forEach((s, n) => fx.cover(spot(s, 0), app.screen.height * FIGURE, n * 0.08));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "waterPillar") {
+          const fx = waterPillar(sky, rig.fxColor);
+          // Tuyệt chiêu trận nước: cột nước phun lên rồi đóng băng dưới chân từng đối thủ còn đứng.
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            alive(false).forEach((s, n) => fx.cover(spot(s, 0), app.screen.height * FIGURE, n * 0.1));
           });
           return [fx];
         }
