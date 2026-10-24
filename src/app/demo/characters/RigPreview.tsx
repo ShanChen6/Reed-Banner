@@ -55,9 +55,10 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/ward"), import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
+          import("@/app/game/stage/drain"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -119,12 +120,21 @@ export default function RigPreview({ id, size, onSnapshot }: {
         if (pierce) loaded.onStrike?.((kind, at) => {
           if (kind === "ultimate") pierce.pierce(at, { x: el.clientWidth - 24, y: at.y }, el.dataset.size === "large" ? 5 : 3);
         });
+        // Đoạt lương hệ Thủy: hút hạt sáng từ mép phải khung về nhân vật.
+        const drain = team === "supplyDrain" ? supplyDrain(app.stage, rig.fxColor) : null;
+        if (drain) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          const me = { x: loaded.view.x, y: loaded.view.y - size * 0.55 };
+          [0.25, 0.5].forEach((k, n) => drain.drain({ x: el.clientWidth - 40, y: el.clientHeight * k + size * 0.2 }, me, size, n * 0.1));
+        });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
           loaded?.update(dt);
           bolts?.update(dt);
           wards?.update(dt);
           pierce?.update(dt);
+          drain?.update(dt);
         });
         setReady(true);
       } catch (cause) {
