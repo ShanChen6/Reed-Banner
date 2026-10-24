@@ -1,6 +1,6 @@
-// Hình ô cờ vẽ bằng SVG, phong cách bàn ngọc: mọi ô chung một nền gỗ nâu viền vàng mảnh, vật phẩm to, bóng, đủ màu.
+// Hình ô cờ vẽ bằng SVG, phong cách bàn ngọc: mọi ô chung một nền xanh đá phiến viền vàng mảnh, vật phẩm to, bóng, đủ màu.
 // Loại ô nhận ra nhờ màu và dáng của chính vật phẩm (kiếm thép tua đỏ, âm dương lam, bánh chưng xanh, tim đỏ, nén vàng,
-// sách bìa lam, trống đỏ), không nhờ màu nền; nền gỗ nâu trung tính đậm vừa để vật phẩm nổi rõ ở cỡ ~40 px.
+// sách bìa lam, trống đỏ), không nhờ màu nền; nền xanh đá phiến đậm vừa để vật phẩm nổi rõ ở cỡ ~40 px.
 // Chỉ ô đặc biệt mới có hào quang (bản yếu) hoặc lửa (bản mạnh), kèm khung mạ vàng.
 // Dải màu dùng chung nằm trong <TileDefs /> (gắn một lần ở layout gốc), nên mỗi ô chỉ tham chiếu url(#...), không lặp defs.
 // Không dùng filter (blur, bóng đổ) để cả bàn 96 ô vẫn vẽ nhẹ trên điện thoại.
@@ -29,11 +29,11 @@ export function TileDefs() {
   return (
     <svg width={0} height={0} aria-hidden focusable="false" style={{ position: "absolute", overflow: "hidden" }}>
       <defs>
-        {/* Nền chung màu gỗ nâu trung tính: không trùng màu vật phẩm nào (xanh, lam, đỏ, vàng, bạc) nên ô nào cũng nổi; sáng nhẹ ở giữa. */}
+        {/* Nền chung màu xanh đá phiến: hợp viền vàng, đậm vừa để vật phẩm nổi; sáng nhẹ ở giữa. */}
         <radialGradient id="tile-jade" cx="50%" cy="42%" r="72%">
-          <stop offset="0" stopColor="#6b5340" />
-          <stop offset="0.55" stopColor="#4e3b2c" />
-          <stop offset="1" stopColor="#33261c" />
+          <stop offset="0" stopColor="#5d7088" />
+          <stop offset="0.55" stopColor="#475a71" />
+          <stop offset="1" stopColor="#33445a" />
         </radialGradient>
         {/* Hào quang mịn của ô bản yếu: vàng trắng ở lõi, nhạt dần trong suốt ra mép. */}
         <radialGradient id="tile-halo" cx="50%" cy="50%" r="50%">
