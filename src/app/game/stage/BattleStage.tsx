@@ -208,11 +208,12 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
         import("./ward"),
+        import("./bloom"),
       ]);
       const app = new Application();
       await app.init({
@@ -260,7 +261,7 @@ export default function BattleStage({
       });
       layout();
       app.renderer.on("resize", layout);
-      // Hiệu ứng vẽ trên cả sân, đè lên mọi nhân vật: sét hệ Lôi, vòm khiên đất hệ Thổ.
+      // Hiệu ứng vẽ trên cả sân, đè lên mọi nhân vật: sét hệ Lôi, vòm khiên đất hệ Thổ, vòng lá hồi sinh hệ Mộc.
       const sky = new Container();
       sky.zIndex = 100;
       app.stage.addChild(sky);
@@ -272,12 +273,12 @@ export default function BattleStage({
           return { x: slotX(s.side, s.index) * width, y: height * (GROUND - FIGURE * k) };
         };
         const alive = (mine: boolean) => latest.current.filter((s) => (s.side === e.side) === mine && isAlive(s.fighter));
-        if (rig.strikeFx === "earthWard") {
-          const fx = earthWard(sky, rig.fxColor);
-          // Tuyệt chiêu trấn thủ: vòm đá mọc quanh từng đồng đội còn đứng.
+        if (rig.strikeFx === "earthWard" || rig.strikeFx === "leafBloom") {
+          const fx = (rig.strikeFx === "earthWard" ? earthWard : leafBloom)(sky, rig.fxColor);
+          // Tuyệt chiêu cho cả đội: hiệu ứng nở quanh từng đồng đội còn đứng.
           loaded[i]!.onStrike?.((kind) => {
             if (kind !== "ultimate") return;
-            alive(true).forEach((s, n) => fx.ward(spot(s, 0), app.screen.height * FIGURE, n * 0.08));
+            alive(true).forEach((s, n) => fx.cover(spot(s, 0), app.screen.height * FIGURE, n * 0.08));
           });
           return [fx];
         }
