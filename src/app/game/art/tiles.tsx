@@ -1,6 +1,6 @@
-// Hình ô cờ vẽ bằng SVG, phong cách bàn ngọc: mọi ô chung một nền ngọc xanh thẫm viền vàng mảnh, vật phẩm to, bóng, đủ màu.
+// Hình ô cờ vẽ bằng SVG, phong cách bàn ngọc: mọi ô chung một nền gỗ nâu viền vàng mảnh, vật phẩm to, bóng, đủ màu.
 // Loại ô nhận ra nhờ màu và dáng của chính vật phẩm (kiếm thép tua đỏ, âm dương lam, bánh chưng xanh, tim đỏ, nén vàng,
-// sách bìa lam, trống đỏ), không nhờ màu nền; nền ngọc bích dịu, sáng vừa đủ để vật phẩm nổi mà không lóa ở cỡ ~40 px.
+// sách bìa lam, trống đỏ), không nhờ màu nền; nền gỗ nâu trung tính đậm vừa để vật phẩm nổi rõ ở cỡ ~40 px.
 // Chỉ ô đặc biệt mới có hào quang (bản yếu) hoặc lửa (bản mạnh), kèm khung mạ vàng.
 // Dải màu dùng chung nằm trong <TileDefs /> (gắn một lần ở layout gốc), nên mỗi ô chỉ tham chiếu url(#...), không lặp defs.
 // Không dùng filter (blur, bóng đổ) để cả bàn 96 ô vẫn vẽ nhẹ trên điện thoại.
@@ -29,11 +29,11 @@ export function TileDefs() {
   return (
     <svg width={0} height={0} aria-hidden focusable="false" style={{ position: "absolute", overflow: "hidden" }}>
       <defs>
-        {/* Nền ngọc chung màu ngọc bích dịu: sáng ở giữa cho vật phẩm nổi, chỉ sẫm nhẹ ra mép để ô còn tách nhau. */}
+        {/* Nền chung màu gỗ nâu trung tính: không trùng màu vật phẩm nào (xanh, lam, đỏ, vàng, bạc) nên ô nào cũng nổi; sáng nhẹ ở giữa. */}
         <radialGradient id="tile-jade" cx="50%" cy="42%" r="72%">
-          <stop offset="0" stopColor="#9cc9b1" />
-          <stop offset="0.55" stopColor="#6d9e86" />
-          <stop offset="1" stopColor="#456f5c" />
+          <stop offset="0" stopColor="#6b5340" />
+          <stop offset="0.55" stopColor="#4e3b2c" />
+          <stop offset="1" stopColor="#33261c" />
         </radialGradient>
         {/* Hào quang mịn của ô bản yếu: vàng trắng ở lõi, nhạt dần trong suốt ra mép. */}
         <radialGradient id="tile-halo" cx="50%" cy="50%" r="50%">
@@ -273,7 +273,7 @@ export function TileArt({ kind, special, className }: { kind: TileKind; special?
     <svg viewBox="0 0 64 64" className={className} aria-hidden focusable="false">
       {/* Nền ngọc chung, viền vàng mảnh; ô đặc biệt viền mạ vàng dày hơn. */}
       <rect x={1} y={1} width={62} height={62} rx={8} fill={url("jade")} stroke={special ? url("gilt") : "#b98a3e"} strokeWidth={special ? 3.5 : 1.6} />
-      <rect x={3.5} y={3.5} width={57} height={57} rx={6} fill="none" stroke="#1f3a2e" strokeOpacity={0.45} strokeWidth={1} />
+      <rect x={3.5} y={3.5} width={57} height={57} rx={6} fill="none" stroke="#000" strokeOpacity={0.3} strokeWidth={1} />
       {special === "weak" && <WeakAura />}
       {special === "strong" && <StrongFire />}
       {/* Vật phẩm là ảnh vẽ tay ở public/art/tiles/, mỗi loại có bản thường, bản yếu và bản mạnh. */}
