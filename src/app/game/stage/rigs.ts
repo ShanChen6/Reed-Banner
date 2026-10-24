@@ -107,9 +107,10 @@ export interface WarriorRig {
   readonly orb?: Point;
   /**
    * Hiệu ứng lúc đòn trúng vẽ trên cả sân: `lightning` phóng sét tới đối thủ, tuyệt chiêu giáng sét xuống cả đội;
-   * `earthWard` và `leafBloom` chỉ ở tuyệt chiêu, dựng vòm khiên đất hoặc nở vòng lá hồi sinh quanh từng đồng đội.
+   * `earthWard` và `leafBloom` chỉ ở tuyệt chiêu, dựng vòm khiên đất hoặc nở vòng lá hồi sinh quanh từng đồng đội;
+   * `armorPierce` chỉ ở tuyệt chiêu, phóng mũi sáng xuyên giáp tới đối thủ đứng đầu.
    */
-  readonly strikeFx?: "lightning" | "earthWard" | "leafBloom";
+  readonly strikeFx?: "lightning" | "earthWard" | "leafBloom" | "armorPierce";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -876,6 +877,50 @@ const KIEU_THUAN: WarriorRig = {
     anchor: { x: 800, y: 930 }, scale: 0.9 },
 };
 
+/**
+ * Lý Khuê, sứ quân Siêu Loại, tướng sĩ hệ Kim. Bộ tranh Shan gửi 24/10 (nền đã trong suốt, trừ tranh phong thái
+ * có nền ca-rô vẽ sẵn đã tách bằng code): ảnh đứng tách lớp bằng code. Cẳng tay và kiếm đồng xoay quanh khuỷu,
+ * phần thân sau lưỡi kiếm vá bằng inpaint. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const LY_KHUE: WarriorRig = {
+  skeleton: "warrior",
+  dir: "ly-khue",
+  texScale: 0.5,
+  foot: { x: 600, y: 1500 },
+  height: 1495,
+  parts: {
+    body: { x: 10, y: 3, w: 1014, h: 1525 },
+    armR: { x: 895, y: 557, w: 110, h: 264 },
+    sword: { x: 184, y: 634, w: 624, h: 592 },
+    arm: { x: 255, y: 506, w: 171, h: 290 },
+    head: { x: 610, y: 11, w: 172, h: 252 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 148, y: 85, w: 473, h: 326 }, behind: true,
+      wind: { axis: "x", start: 0.15, amp: 8, freq: 1.5, k: 3.2, phase: 0.4, vertical: true, reverse: true } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 350, y: 545 },
+    elbowR: { x: 930, y: 590 },
+    neck: { x: 715, y: 250 },
+  },
+  blade: [{ x: 380, y: 800 }, { x: 772, y: 1190 }],
+  strikeFx: "armorPierce",
+  fxColor: 0x9ea4ad,
+  // Thế thủ thấp chém chéo (đánh thường), đâm vươn tay (ra chiêu), lao người đâm xuyên giáp (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 16, y: 3 },
+      anchor: { x: 730, y: 1175 }, scale: 1.05, burst: { x: 1150, y: 1000 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 16, y: 7 },
+      anchor: { x: 640, y: 985 }, scale: 1.15, burst: { x: 1505, y: 300 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 6, y: 13 },
+      anchor: { x: 620, y: 960 }, scale: 1.15, burst: { x: 1505, y: 400 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 6, y: 73 },
+    anchor: { x: 780, y: 950 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -893,6 +938,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   kieuCongHan: KIEU_CONG_HAN,
   nguyenKhoan: NGUYEN_KHOAN,
   kieuThuan: KIEU_THUAN,
+  lyKhue: LY_KHUE,
 };
 
 export function rigOf(id: string): Rig | null {

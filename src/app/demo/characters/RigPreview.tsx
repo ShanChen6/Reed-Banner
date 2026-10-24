@@ -55,9 +55,9 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
-          import("@/app/game/stage/ward"), import("@/app/game/stage/bloom"),
+          import("@/app/game/stage/ward"), import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -114,11 +114,17 @@ export default function RigPreview({ id, size, onSnapshot }: {
         if (wards) loaded.onStrike?.((kind) => {
           if (kind === "ultimate" && loaded) wards.cover({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y);
         });
+        // Mũi sáng phá giáp hệ Kim: phóng tới mép phải khung.
+        const pierce = team === "armorPierce" ? armorPierce(app.stage, rig.fxColor) : null;
+        if (pierce) loaded.onStrike?.((kind, at) => {
+          if (kind === "ultimate") pierce.pierce(at, { x: el.clientWidth - 24, y: at.y }, el.dataset.size === "large" ? 5 : 3);
+        });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
           loaded?.update(dt);
           bolts?.update(dt);
           wards?.update(dt);
+          pierce?.update(dt);
         });
         setReady(true);
       } catch (cause) {
