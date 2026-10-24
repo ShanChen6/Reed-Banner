@@ -55,11 +55,11 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/ward"), import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
-          import("@/app/game/stage/flame"),
+          import("@/app/game/stage/flame"), import("@/app/game/stage/slam"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -144,6 +144,15 @@ export default function RigPreview({ id, size, onSnapshot }: {
           fire.wall({ x: loaded.view.x, y: loaded.view.y }, size);
           fire.burn({ x: el.clientWidth - 40, y: loaded.view.y }, size * 0.8, 0.15);
         });
+        // Đập đất hệ Thổ: nứt đất ở mép phải khung, vòm khiên quanh nhân vật.
+        const slam = team === "groundSlam" ? groundSlam(app.stage, rig.fxColor) : null;
+        const slamWard = slam ? earthWard(app.stage, rig.fxColor) : null;
+        if (slam) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          slam.slam({ x: el.clientWidth - 60, y: loaded.view.y }, size * 0.8);
+          slamWard?.cover({ x: loaded.view.x, y: loaded.view.y }, size, 0.2);
+        });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
           loaded?.update(dt);
@@ -153,6 +162,8 @@ export default function RigPreview({ id, size, onSnapshot }: {
           drain?.update(dt);
           pillar?.update(dt);
           fire?.update(dt);
+          slam?.update(dt);
+          slamWard?.update(dt);
         });
         setReady(true);
       } catch (cause) {
