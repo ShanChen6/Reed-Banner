@@ -144,6 +144,26 @@
 .chain-pop {
   animation: chain-pop 700ms ease-out both;
 }
+
+/* Banner đổi phe: overlay tuyệt đối nên không làm dịch bố cục bàn cờ. */
+@keyframes turn-banner {
+  0% {
+    opacity: 0;
+    transform: translateY(calc(-50% + 5px)) scale(0.98);
+  }
+  18%,
+  76% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(calc(-50% - 3px)) scale(0.99);
+  }
+}
+.turn-banner {
+  animation: turn-banner var(--turn-banner-ms, 600ms) ease-in-out both;
+}
 .float-up {
   animation: float-up 1100ms ease-out both;
 }
@@ -179,6 +199,12 @@
   background-repeat: repeat;
 }
 
+/* Lòng bàn cờ trang giới thiệu: đá phiến sẫm cùng tông nền ô, tối dần ra mép như mặt bàn khảm. */
+.fx-board-well {
+  background: radial-gradient(ellipse at 50% 40%, #2c3a4b, #18212c 75%);
+  box-shadow: inset 0 0 0 1px #0b1118, inset 0 0 18px #000a;
+}
+
 /* Ô đặc biệt bản mạnh tỏa sáng nhẹ. */
 @keyframes tile-strong {
   0%,
@@ -197,6 +223,7 @@
   .tile-anim,
   .tile-strong,
   .chain-pop,
+  .turn-banner,
   .float-up {
     animation: none !important;
   }

@@ -17,7 +17,7 @@ Working copy được kiểm tra trên nhánh `update/tower`, không phải `dev
 | Hạng mục | Quyết định | Bằng chứng / điều kiện |
 |---|---|---|
 | Trial | **GO có điều kiện** | 20/20 tầng có legal team và deterministic seed; tầng 16/19/20 đã tune theo QA; first-clear/sweep idempotent; cần staging migration, browser/device smoke và flag riêng trước public launch. |
-| Destiny | **ADJUST / limited beta** | Run/cycle/roster/settlement đã có integration coverage; simulation ưu tiên roster onboarding 5 thay vì mặc định 8, cần telemetry recovery/HP/food và thêm mẫu cycle. |
+| Destiny | **ADJUST / limited beta** | Run/cycle/roster/settlement đã có integration coverage; roster cho phép toàn bộ tướng sở hữu, cần telemetry recovery/HP/food và thêm mẫu cycle. |
 | Stone issuance | **GO để tích lũy** | Wallet không âm, ledger receipt chống lặp; replay không farm; Trial tối đa 77 first-clear + 1–4/ngày, Destiny tối đa 23/cycle. |
 | Stone spending / gear enhancement | **NO-GO** | Không có `enhanceLevel`, stat bonus, API tiêu đá hay luật merge mới. GEAR-01–08 vẫn là FUTURE TODO. |
 | Public release đồng thời | **ADJUST** | Chưa có runtime feature flag riêng, chưa dry-run Neon staging/remote, chưa browser E2E mobile/desktop và chưa CI post-merge `develop`. |
@@ -66,7 +66,7 @@ nằm ở [T03.02](03-02-stone-economy.md) và [T06.03](06-03-balance.md). Khôn
 1. Deploy compatibility/migration với cả hai flag tắt.
 2. Bật Trial cho cohort nhỏ; theo dõi settlement lỗi, duplicate receipt, claim rate, số dư p50/p90 và dữ liệu legacy.
 3. Mở rộng Trial nếu metric ổn định.
-4. Bật Destiny limited beta riêng; mặc định/onboarding roster 5 nhưng giữ trần kỹ thuật 8 cho thử nghiệm.
+4. Bật Destiny limited beta riêng; cho phép khóa toàn bộ tướng sở hữu vào roster của run.
 5. Không bật stone spending cho đến khi GEAR-01–08 được duyệt, triển khai và nghiệm thu riêng.
 
 ### Rollback
@@ -101,10 +101,10 @@ bảng này để giả nhận migration production hoặc browser E2E.
 
 ## Open risks
 
-1. Không có feature flag server-authoritative riêng cho từng tháp.
+1. Feature flag server-authoritative đã triển khai ở RH-02; còn cần xác minh cấu hình trên staging/deployment thật.
 2. Chưa chạy migration trên Neon staging/production hoặc kiểm thử restore snapshot thật.
 3. Chưa có browser E2E/touch/device matrix trong automated suite.
-4. Destiny balance có mẫu cycle nhỏ; cap 8 tăng tải chọn đội và chưa chứng minh tốt hơn roster 5.
+4. Destiny balance có mẫu cycle nhỏ; roster lớn có thể tăng tải chọn đội và chưa được mô phỏng sau khi bỏ trần 8.
 5. Chưa có stone sink nên số dư tăng tuyến tính; đây là accumulation có chủ ý, không phải economy bền vững.
 6. Nhánh nghiệm thu là `update/tower`; xung đột khi vào `develop` chưa được kiểm chứng.
 
@@ -136,3 +136,10 @@ trong môi trường CI trước release. T06.04 không sửa bundler/config vì
 
 **PARTIAL / ADJUST** — tài liệu và ranh giới sản phẩm đã sẵn sàng; Trial có thể đi tiếp sau release gates, Destiny
 cần limited beta/điều chỉnh, và full public launch chưa đạt GO.
+
+## Post-merge verification
+
+HEAD `develop` `5c0a8247d276a2f4b1cfc3051e9cce3ba54ffdd7` đã được GitHub Actions CI run #261 xác minh
+PASS trên Node 22/Linux, gồm cả `pnpm build` mặc định bằng Turbopack. Lỗi Turbopack local Windows/Node 24 vẫn tái
+hiện, trong khi webpack fallback PASS; vì lỗi không tái hiện trên CI nên không đổi production build command.
+Chi tiết lệnh, exit code và giới hạn working copy xem [post-merge verification](06-07-post-merge-verification.md).

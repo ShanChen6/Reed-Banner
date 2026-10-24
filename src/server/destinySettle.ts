@@ -14,6 +14,7 @@ import { resolveDestinyFloor } from "./destinyContent";
 import { activeDestinyCycle } from "./destinyCycle";
 import { reconcileDestinyCycle } from "./destinyExpire";
 import type { DestinyLeaderboardStore, DestinyLeaderboardSubmission } from "./destinyLeaderboard";
+import { destinyEnabled } from "./featureFlags";
 
 export interface DestinyResult {
   readonly floor: number;
@@ -25,8 +26,9 @@ export async function settleDestinyMatch(
   ownerId: string,
   matchId: string,
   match: Match,
-  deps: { readonly profiles: ProfileStore; readonly now: number; readonly destinySecret?: string; readonly destinyLeaderboard?: DestinyLeaderboardStore },
+  deps: { readonly profiles: ProfileStore; readonly now: number; readonly destinySecret?: string; readonly destinyLeaderboard?: DestinyLeaderboardStore; readonly destinyEnabled?: boolean },
 ): Promise<DestinyResult | undefined> {
+  if (!destinyEnabled(deps)) return undefined;
   const tag = match.destiny?.tag;
   if (!tag || !deps.destinySecret) return undefined;
   const scheduled = activeDestinyCycle(deps.now);

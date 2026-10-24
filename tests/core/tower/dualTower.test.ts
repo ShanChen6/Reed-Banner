@@ -90,13 +90,14 @@ describe("song tháp: dữ liệu", () => {
   it("dualTower hỏng: làm sạch, không ném lỗi", () => {
     for (const bad of [null, 5, "x", [], { schema: "?" }])
       assert.deepEqual(parseDualTower(bad), NEW_DUAL_TOWER);
+    const roster = Array.from({ length: 9 }, (_, i) => `c${i}`);
     const s = parseDualTower({
       schema: 1,
       trial: { cleared: 99, claimedFloors: [3, 3, 1, 0, 21, "a"], lastSweepDay: "hôm nay" },
       destiny: {
         cycleId: "bad",
         cycleBest: -2,
-        run: { roster: Array.from({ length: 9 }, (_, i) => `c${i}`), floor: 1, food: 1 },
+        run: { roster, floor: 1, food: 1 },
         claimedMilestones: ["a", "a", 1],
       },
     });
@@ -107,9 +108,22 @@ describe("song tháp: dữ liệu", () => {
       assert.equal(s.trial.lastSweep, null);
       assert.equal(s.destiny.cycleId, null);
       assert.equal(s.destiny.cycleBest, 0);
-      assert.equal(s.destiny.run, null);
+      assert.deepEqual(s.destiny.run, {
+        roster,
+        floor: 1,
+        hp: Object.fromEntries(roster.map((id) => [id, 1])),
+        food: 1,
+        active: false,
+      });
       assert.deepEqual(s.destiny.claimedMilestones, ["a"]);
     }
+
+    const duplicate = parseDualTower({
+      schema: 1,
+      destiny: { run: { roster: ["c0", "c0", "c1"], floor: 1, food: 1 } },
+    });
+    assert.ok(isDualTowerV1(duplicate));
+    if (isDualTowerV1(duplicate)) assert.equal(duplicate.destiny.run, null);
   });
 
   it("schema mới hơn được giữ nguyên qua parseProfile (idempotent)", () => {

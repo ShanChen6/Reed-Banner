@@ -22,8 +22,6 @@ export const towerModeOrLegacy = (raw: unknown): TowerMode =>
   parseTowerMode(raw) ?? DEFAULT_TOWER_MODE;
 
 export const TRIAL_FLOORS = 20;
-/** Giới hạn thử nghiệm của roster khóa trong một run Destiny. */
-export const DESTINY_ROSTER_MAX = 8;
 export const DUAL_TOWER_SCHEMA = 1;
 /** Trần an toàn của đá tài khoản. */
 export const STONES_MAX = Number.MAX_SAFE_INTEGER;
@@ -128,7 +126,7 @@ export interface DestinyRun {
   readonly cycleId?: string;
   /** Version catalog luật dùng để tái dựng cycle; run cũ có thể chưa có. */
   readonly rulesVersion?: number;
-  /** Roster khóa đầu run (tối đa DESTINY_ROSTER_MAX), thủ lĩnh ở đầu. */
+  /** Roster sở hữu được khóa đầu run, thủ lĩnh ở đầu. */
   readonly roster: readonly string[];
   /** Snapshot bất biến và runtime theo fighter ID. */
   readonly fighters?: Readonly<Record<string, DestinyFighterSnapshot>>;
@@ -304,7 +302,6 @@ function parseDestinyRun(raw: unknown): DestinyRun | null {
   if (
     !Array.isArray(roster) ||
     roster.length < 1 ||
-    roster.length > DESTINY_ROSTER_MAX ||
     !roster.every((id) => typeof id === "string") ||
     new Set(roster).size !== roster.length ||
     uint(raw.floor) < 1 ||

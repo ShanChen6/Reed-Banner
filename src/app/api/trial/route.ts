@@ -5,6 +5,9 @@ import { guestOf, serverDeps } from "@/server/http";
 import { trialOverview, trialRegistry } from "@/server/trialApi";
 
 export async function GET(request: NextRequest) {
-  const overview = await trialOverview(serverDeps().profiles, guestOf(request), trialRegistry());
+  const deps = serverDeps();
+  if (!deps.trialEnabled)
+    return NextResponse.json({ enabled: false, error: "featureDisabled" }, { headers: { "cache-control": "no-store" } });
+  const overview = await trialOverview(deps.profiles, guestOf(request), trialRegistry());
   return NextResponse.json(overview, { headers: { "cache-control": "no-store" } });
 }

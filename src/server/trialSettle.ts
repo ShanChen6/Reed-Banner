@@ -13,6 +13,7 @@ import {
   type TrialProgress,
 } from "@/core";
 import { updateProfile, type ProfileStore } from "./profiles";
+import { trialEnabled } from "./featureFlags";
 
 export interface TrialResult {
   readonly floor: number;
@@ -49,8 +50,9 @@ export async function settleTrial(
   ownerId: string,
   matchId: string,
   match: Match,
-  deps: { readonly profiles: ProfileStore; readonly now: number },
+  deps: { readonly profiles: ProfileStore; readonly now: number; readonly trialEnabled?: boolean },
 ): Promise<TrialResult | undefined> {
+  if (!trialEnabled(deps)) return undefined;
   const tm = match.trial;
   if (!tm) return undefined;
   const floor = tm.tag.floor;
