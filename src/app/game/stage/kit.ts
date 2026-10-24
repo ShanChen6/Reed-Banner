@@ -15,8 +15,12 @@ export interface Puppet {
   reset(): void;
   /** Gục: mờ, xám, ngả người, ngừng thở. */
   setDown(down: boolean): void;
+  /** Nghe lúc đòn trúng (điểm tóe sáng, tọa độ stage), để sân vẽ hiệu ứng tới đối thủ. */
+  onStrike?(listener: StrikeListener | null): void;
   destroy(): void;
 }
+
+export type StrikeListener = (kind: "attack" | "cast" | "ultimate", at: { x: number; y: number }) => void;
 
 export const ease = (t: number) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
 export const pulse = (t: number, a: number, b: number) => ease((t - a) / (b - a));
