@@ -6,6 +6,7 @@ import {
   createDestinyFloorBattle,
   createDestinyRun,
   generateDestinyCycleRules,
+  generateDestinyOffer,
   hashString,
   isDualTowerV1,
   makeDestinyMatchTag,
@@ -57,6 +58,10 @@ export async function destinyOverview(ownerId: string | null, deps: Deps) {
     return { supported: false, cycleId, cycle, stones: profile.stones, progress: null, floor: null };
   const progress = profile.dualTower.destiny;
   const run = progress.run;
+  const visibleRun = run?.phase === "reward" && run.fighters?.dinhBoLinh?.downed &&
+      !run.offer?.some(({ kind }) => kind === "rescue")
+    ? { ...run, offer: generateDestinyOffer(run) }
+    : run;
   const resolved = run && secretValid(deps) && run.cycleId === cycleId
     ? resolveDestinyFloor(run, deps.destinySecret)
     : null;
@@ -65,7 +70,7 @@ export async function destinyOverview(ownerId: string | null, deps: Deps) {
     cycleId,
     cycle,
     stones: profile.stones,
-    progress,
+    progress: { ...progress, run: visibleRun },
     floor: resolved?.ok
       ? { floor: resolved.floor.floor, rules: resolved.floor.rules, difficulty: resolved.floor.difficulty, foes: resolved.floor.foes }
       : null,
@@ -265,7 +270,11 @@ export async function claimDestinyReward(
       }
       if (run.phase !== "reward" || run.floor !== input.floor || !run.offer)
         return { ok: false as const, error: "stale_reward" as const };
-      const offer = run.offer[input.index as number] as DestinyRewardOffer | undefined;
+      const leader = run.fighters?.dinhBoLinh;
+      const effectiveOffer = (leader?.downed || leader?.hp === 0)
+        ? generateDestinyOffer(run)
+        : run.offer;
+      const offer = effectiveOffer[input.index as number] as DestinyRewardOffer | undefined;
       if (!offer) return { ok: false as const, error: "invalid_reward" as const };
       const applied = offer.kind === "boon"
         ? applyDestinyBoonReward(run, { floor: input.floor as number, boonId: offer.boonId })
