@@ -111,9 +111,18 @@ export interface WarriorRig {
    * `armorPierce` chỉ ở tuyệt chiêu, phóng mũi sáng xuyên giáp tới đối thủ đứng đầu; `supplyDrain` chỉ ở tuyệt
    * chiêu, phủ sương băng lên cả đội đối thủ và hút hạt sáng từ họ về người tung chiêu; `waterPillar` chỉ ở tuyệt
    * chiêu, phun cột nước rồi đóng băng dưới chân từng đối thủ; `flameWall` chỉ ở tuyệt chiêu, dựng tường lửa
-   * quanh chính mình và bén lửa lên từng đối thủ.
+   * quanh chính mình và bén lửa lên từng đối thủ; `groundSlam` chỉ ở tuyệt chiêu, nứt đất dưới chân đối thủ đứng
+   * đầu và dựng vòm khiên đất quanh cả đội mình.
    */
-  readonly strikeFx?: "lightning" | "earthWard" | "leafBloom" | "armorPierce" | "supplyDrain" | "waterPillar" | "flameWall";
+  readonly strikeFx?:
+    | "lightning"
+    | "earthWard"
+    | "leafBloom"
+    | "armorPierce"
+    | "supplyDrain"
+    | "waterPillar"
+    | "flameWall"
+    | "groundSlam";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1063,6 +1072,51 @@ const NGUYEN_SIEU: WarriorRig = {
     anchor: { x: 760, y: 900 }, scale: 0.9 },
 };
 
+/**
+ * Đỗ Cảnh Thạc, sứ quân Đỗ Động (trùm chiến dịch), tướng sĩ hệ Thổ. Bộ tranh Shan gửi 24/10 (ảnh đứng nền trong
+ * suốt sẵn; bốn tranh ra đòn, tranh gục và tranh phong thái trên thuyền có nền ca-rô vẽ sẵn, tách bằng code). Ảnh
+ * đứng tách lớp bằng code: cẳng tay bọc giáp cùng chùy vuông xoay quanh khuỷu theo nhịp chém, cẳng tay trái, đầu và
+ * dải khăn tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const DO_CANH_THAC: WarriorRig = {
+  skeleton: "warrior",
+  dir: "do-canh-thac",
+  texScale: 0.5,
+  foot: { x: 630, y: 1480 },
+  height: 1440,
+  parts: {
+    body: { x: 11, y: 18, w: 997, h: 1500 },
+    armR: { x: 866, y: 598, w: 148, h: 281 },
+    sword: { x: 19, y: 351, w: 407, h: 1045 },
+    arm: { x: 168, y: 500, w: 211, h: 323 },
+    head: { x: 578, y: 48, w: 162, h: 219 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 345, y: 79, w: 244, h: 127 }, behind: true,
+      wind: { axis: "x", start: 0.15, amp: 7, freq: 1.5, k: 3, phase: 1.3, vertical: true, reverse: true } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 285, y: 525 },
+    elbowR: { x: 890, y: 615 },
+    neck: { x: 660, y: 262 },
+  },
+  blade: [{ x: 240, y: 780 }, { x: 240, y: 1200 }],
+  strikeFx: "groundSlam",
+  fxColor: 0xa5772f,
+  // Quét chùy thấp hai tay (đánh thường), một tay vung chùy ngang (ra chiêu), giơ chùy qua vai bổ xuống (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 22, y: 29 },
+      anchor: { x: 650, y: 1150 }, scale: 1.2, burst: { x: 1152, y: 948 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 4, y: 3 },
+      anchor: { x: 850, y: 965 }, scale: 1.25, burst: { x: 154, y: 461 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 33, y: 3 },
+      anchor: { x: 715, y: 1130 }, scale: 1.2, burst: { x: 219, y: 204 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 11, y: 17 },
+    anchor: { x: 850, y: 880 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1084,6 +1138,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   nguyenThuTiep: NGUYEN_THU_TIEP,
   luDuong: LU_DUONG,
   nguyenSieu: NGUYEN_SIEU,
+  doCanhThac: DO_CANH_THAC,
 };
 
 export function rigOf(id: string): Rig | null {

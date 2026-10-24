@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -218,6 +218,7 @@ export default function BattleStage({
         import("./drain"),
         import("./pillar"),
         import("./flame"),
+        import("./slam"),
       ]);
       const app = new Application();
       await app.init({
@@ -266,7 +267,7 @@ export default function BattleStage({
       layout();
       app.renderer.on("resize", layout);
       // Hiệu ứng vẽ trên cả sân, đè lên mọi nhân vật: sét hệ Lôi, vòm khiên đất hệ Thổ, vòng lá hồi sinh hệ Mộc,
-      // mũi sáng phá giáp hệ Kim, đoạt lương và cột nước đóng băng hệ Thủy, tường lửa hệ Hỏa.
+      // mũi sáng phá giáp hệ Kim, đoạt lương và cột nước đóng băng hệ Thủy, tường lửa hệ Hỏa, đập đất hệ Thổ.
       const sky = new Container();
       sky.zIndex = 100;
       app.stage.addChild(sky);
@@ -286,6 +287,19 @@ export default function BattleStage({
             alive(true).forEach((s, n) => fx.cover(spot(s, 0), app.screen.height * FIGURE, n * 0.08));
           });
           return [fx];
+        }
+        if (rig.strikeFx === "groundSlam") {
+          const slam = groundSlam(sky, rig.fxColor);
+          const ward = earthWard(sky, rig.fxColor);
+          // Tuyệt chiêu bổ chùy: nứt đất dưới chân đối thủ đứng đầu, vòm khiên đất quanh cả đội mình (Thủ +30%).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            const foe = alive(false)[0];
+            if (foe) slam.slam(spot(foe, 0), size);
+            alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, 0.2 + n * 0.08));
+          });
+          return [slam, ward];
         }
         if (rig.strikeFx === "flameWall") {
           const fx = flameWall(sky, rig.fxColor);
