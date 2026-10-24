@@ -2,9 +2,11 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   MAIN_ID,
+  applyDestinyBoonReward,
   applyDestinyRecovery,
   createDestinyRun,
   destinyRecoveryCandidates,
+  generateDestinyOffer,
   newProfile,
   type DestinyFighterSnapshot,
   type DestinyRun,
@@ -31,6 +33,27 @@ function rewardRun(): DestinyRun {
 }
 
 describe("Destiny reward hồi phục theo mục tiêu", () => {
+  it("thủ lĩnh gục luôn có Cứu viện và bắt buộc hồi sinh trước tầng kế", () => {
+    const base = rewardRun();
+    const fighters = {
+      ...base.fighters,
+      [MAIN_ID]: { ...base.fighters![MAIN_ID]!, hp: 0, energy: 0, downed: true },
+    };
+    const run = { ...base, fighters };
+    const offer = generateDestinyOffer(run);
+    assert.equal(offer.length, 3);
+    assert.deepEqual(offer[0], { kind: "rescue" });
+    const boon = offer.find((entry) => entry.kind === "boon");
+    assert.ok(boon?.kind === "boon");
+    if (boon?.kind === "boon")
+      assert.deepEqual(applyDestinyBoonReward(run, { floor: 1, boonId: boon.boonId }),
+        { ok: false, error: "leader_requires_rescue" });
+    assert.deepEqual(applyDestinyRecovery(run, { floor: 1, kind: "rescue", targetIds: ["maiThanh"] }),
+      { ok: false, error: "leader_requires_rescue" });
+    const rescued = applyDestinyRecovery(run, { floor: 1, kind: "rescue", targetIds: [MAIN_ID] });
+    assert.ok(rescued.ok && rescued.run.floor === 2 && rescued.run.fighters![MAIN_ID]!.hp > 0);
+  });
+
   it("chữa +50% đúng một tướng sống, clamp max HP và không sửa energy/người khác", () => {
     const run = rewardRun();
     const untouched = structuredClone(run.fighters!.haVan!);
