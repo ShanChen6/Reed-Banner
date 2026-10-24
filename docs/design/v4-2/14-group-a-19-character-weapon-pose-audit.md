@@ -2,6 +2,21 @@
 
 > **Ngày:** 25/10/2026 · **Hình thức:** kiểm định nội dung Markdown trên nhánh `develop`; **không sinh ảnh, không thay gameplay, chưa ghi đè file prompt V4.2**. Chỉ các 2 nhân vật đã được sửa trước đó được coi là "đã chỉnh prompt"; những dòng còn lại là khuyến nghị chờ triển khai.
 
+## Cập nhật triển khai prompt — 25/10/2026
+
+**ĐÃ ÁP DỤNG** vào [file prompt nhóm A](./01-chinh-lich-su-su-quan.md), commit `3eab176b13566869af9371c6fd98da99a54a47ed`:
+
+- Thay **48 chỉ dẫn tư thế** ở khung 2, 3 và 4 của **16 nhân vật** (RB-001, RB-003–011, RB-014–019).
+- **Nguyễn Bặc RB-002:** giữ nguyên 100% nội dung sáu prompt và vũ khí, theo quyết định người dùng. Ba câu pose chung còn lại là chủ ý, không phải phần bị bỏ sót.
+- **Nguyễn Khoan RB-012 và Kiều Công Hãn RB-013:** giữ nguyên bản đã sửa trước đó; chưa nghiệm thu ảnh.
+- **Trần Cương:** thuộc nhóm tướng thường, nằm ngoài file nhóm A; không sửa.
+- **Không sửa mô tả Weapon DNA, trang phục, kỹ năng thực thi hoặc gameplay**; chỉ thay các đoạn `POSE:` của khung 2/3/4.
+- **Kiểm chứng văn bản:** 19 hồ sơ, 114 khung còn đầy đủ; còn đúng 1 câu pose chung ở mỗi khung 2/3/4 của Nguyễn Bặc. 48 prompt mới mô tả hành động khác nhau và gắn tên/ID kỹ năng; chưa có kiểm duyệt ảnh thực tế.
+
+> Các dòng bên dưới là **kết quả audit trước khi triển khai** và phương án đã sử dụng, không phải danh sách 51 prompt còn chờ sửa. Các đề xuất thay vũ khí nhóm MEDIUM vẫn chưa được áp dụng.
+
+---
+
 ## Bản nguồn và chuẩn hiệu lực
 
 1. **Nguồn prompt mới nhất cho nhóm A:** [01-chinh-lich-su-su-quan.md](./01-chinh-lich-su-su-quan.md), đọc từ `develop` trực tiếp, không đọc tài liệu V3.1 đã xóa.
