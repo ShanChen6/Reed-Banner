@@ -4,6 +4,8 @@
 
 ### RB-062 — Bạch Nỏ Lang · Cung thủ / Kim
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** UNVERIFIED · CHƯA ĐỦ DỮ LIỆU. Chiêu tham chiếu: **Chưa có skill registry** (`chưa có`). 14 nghề mới chưa có skill registry; không thể khẳng định vũ khí phù hợp chiêu. Cần thiết kế kỹ năng trước khi khóa Weapon DNA. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Bạch Nỏ Lang được hình dung như một xạ thủ chiến trường từng trưởng thành từ môi trường trấn nhỏ giáp rừng. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên lạnh lùng, tập trung vào trách nhiệm, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là giữ khoảng cách và đọc nhịp kéo cung. Ở thời điểm game bắt đầu, điều thôi thúc họ là coi lời hứa với gia đình là thứ không thể đánh mất. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
@@ -67,6 +69,8 @@ POSE: PERSONAL VIGNETTE: ngồi nghỉ cạnh vũ khí xem một vật kỷ ni�
 ---
 
 ### RB-063 — Thanh Lâm Xạ · Cung thủ / Mộc
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** UNVERIFIED · CHƯA ĐỦ DỮ LIỆU. Chiêu tham chiếu: **Chưa có skill registry** (`chưa có`). 14 nghề mới chưa có skill registry; không thể khẳng định vũ khí phù hợp chiêu. Cần thiết kế kỹ năng trước khi khóa Weapon DNA. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -132,6 +136,8 @@ POSE: PERSONAL VIGNETTE: đứng cạnh voi chiến (chỉ là đề xuất, c�
 
 ### RB-064 — Lam Giang Nỗ · Cung thủ / Thủy
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** UNVERIFIED · CHƯA ĐỦ DỮ LIỆU. Chiêu tham chiếu: **Chưa có skill registry** (`chưa có`). 14 nghề mới chưa có skill registry; không thể khẳng định vũ khí phù hợp chiêu. Cần thiết kế kỹ năng trước khi khóa Weapon DNA. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Lam Giang Nỗ được hình dung như một xạ thủ chiến trường từng trưởng thành từ môi trường trại quân dã chiến. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên điềm đạm nhưng kiên quyết, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là giữ khoảng cách và đọc nhịp kéo cung. Ở thời điểm game bắt đầu, điều thôi thúc họ là luôn tìm cách kết thúc giao tranh với tổn thất ít nhất. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
@@ -195,6 +201,8 @@ POSE: PERSONAL VIGNETTE: ngồi ghế gỗ thấp lau vũ khí. Character reveal
 ---
 
 ### RB-065 — Xích Diệm Tiễn · Cung thủ / Hỏa
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** UNVERIFIED · CHƯA ĐỦ DỮ LIỆU. Chiêu tham chiếu: **Chưa có skill registry** (`chưa có`). 14 nghề mới chưa có skill registry; không thể khẳng định vũ khí phù hợp chiêu. Cần thiết kế kỹ năng trước khi khóa Weapon DNA. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -260,6 +268,8 @@ POSE: PERSONAL VIGNETTE: đứng cạnh ngựa chiến buộc dây cương. Char
 
 ### RB-066 — Trấn Sơn Cung · Cung thủ / Thổ
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** UNVERIFIED · CHƯA ĐỦ DỮ LIỆU. Chiêu tham chiếu: **Chưa có skill registry** (`chưa có`). 14 nghề mới chưa có skill registry; không thể khẳng định vũ khí phù hợp chiêu. Cần thiết kế kỹ năng trước khi khóa Weapon DNA. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Trấn Sơn Cung được hình dung như một xạ thủ chiến trường từng trưởng thành từ môi trường bến sông nhiều thương thuyền. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên kiêu hãnh mà kín đáo, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là giữ khoảng cách và đọc nhịp kéo cung. Ở thời điểm game bắt đầu, điều thôi thúc họ là không ưa phô trương và trọng kết quả thực tế. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
@@ -323,6 +333,8 @@ POSE: PERSONAL VIGNETTE: ngồi vắt chân đọc thẻ tre. Character reveals 
 ---
 
 ### RB-067 — Lôi Minh Xạ · Cung thủ / Lôi
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** UNVERIFIED · CHƯA ĐỦ DỮ LIỆU. Chiêu tham chiếu: **Chưa có skill registry** (`chưa có`). 14 nghề mới chưa có skill registry; không thể khẳng định vũ khí phù hợp chiêu. Cần thiết kế kỹ năng trước khi khóa Weapon DNA. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -388,6 +400,8 @@ POSE: PERSONAL VIGNETTE: đứng tựa cờ quan sát doanh trại. Character re
 
 ### RB-068 — Tật Phong Tiễn · Cung thủ / Phong
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** UNVERIFIED · CHƯA ĐỦ DỮ LIỆU. Chiêu tham chiếu: **Chưa có skill registry** (`chưa có`). 14 nghề mới chưa có skill registry; không thể khẳng định vũ khí phù hợp chiêu. Cần thiết kế kỹ năng trước khi khóa Weapon DNA. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Tật Phong Tiễn được hình dung như một xạ thủ chiến trường từng trưởng thành từ môi trường vùng đồi xen ruộng nước. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên bình tĩnh và nhiều mưu trí, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là giữ khoảng cách và đọc nhịp kéo cung. Ở thời điểm game bắt đầu, điều thôi thúc họ là quyết không để đồng đội lặp lại một thất bại cũ. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
@@ -451,6 +465,8 @@ POSE: PERSONAL VIGNETTE: ngồi ở mũi thuyền sửa túi hành trang. Charac
 ---
 
 ### RB-069 — Bạch Phong Đao · Sát thủ / Kim
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** UNVERIFIED · CHƯA ĐỦ DỮ LIỆU. Chiêu tham chiếu: **Chưa có skill registry** (`chưa có`). 14 nghề mới chưa có skill registry; không thể khẳng định vũ khí phù hợp chiêu. Cần thiết kế kỹ năng trước khi khóa Weapon DNA. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -516,6 +532,8 @@ POSE: PERSONAL VIGNETTE: ngồi nghỉ cạnh vũ khí xem một vật kỷ ni�
 
 ### RB-070 — Độc Ảnh · Sát thủ / Mộc
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** UNVERIFIED · CHƯA ĐỦ DỮ LIỆU. Chiêu tham chiếu: **Chưa có skill registry** (`chưa có`). 14 nghề mới chưa có skill registry; không thể khẳng định vũ khí phù hợp chiêu. Cần thiết kế kỹ năng trước khi khóa Weapon DNA. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Độc Ảnh được hình dung như một chiến binh đột kích kín đáo từng trưởng thành từ môi trường đường trạm liên lạc chiến tuyến. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên linh hoạt và nhạy cảm với tình thế, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là quan sát khe hở và kết thúc nhanh. Ở thời điểm game bắt đầu, điều thôi thúc họ là giấu nỗi day dứt sau dáng vẻ bình thản. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
@@ -579,6 +597,8 @@ POSE: PERSONAL VIGNETTE: đứng cạnh voi chiến (chỉ là đề xuất, c�
 ---
 
 ### RB-071 — Hàn Giang Khách · Sát thủ / Thủy
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** UNVERIFIED · CHƯA ĐỦ DỮ LIỆU. Chiêu tham chiếu: **Chưa có skill registry** (`chưa có`). 14 nghề mới chưa có skill registry; không thể khẳng định vũ khí phù hợp chiêu. Cần thiết kế kỹ năng trước khi khóa Weapon DNA. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -644,6 +664,8 @@ POSE: PERSONAL VIGNETTE: ngồi ghế gỗ thấp lau vũ khí. Character reveal
 
 ### RB-072 — Xích Dạ · Sát thủ / Hỏa
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** UNVERIFIED · CHƯA ĐỦ DỮ LIỆU. Chiêu tham chiếu: **Chưa có skill registry** (`chưa có`). 14 nghề mới chưa có skill registry; không thể khẳng định vũ khí phù hợp chiêu. Cần thiết kế kỹ năng trước khi khóa Weapon DNA. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Xích Dạ được hình dung như một chiến binh đột kích kín đáo từng trưởng thành từ môi trường miền trung du rừng thưa. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên thận trọng và giàu nghị lực, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là quan sát khe hở và kết thúc nhanh. Ở thời điểm game bắt đầu, điều thôi thúc họ là muốn chứng minh năng lực không cần xuất thân cao quý. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
@@ -707,6 +729,8 @@ POSE: PERSONAL VIGNETTE: đứng cạnh ngựa chiến buộc dây cương. Char
 ---
 
 ### RB-073 — Địa Ẩn · Sát thủ / Thổ
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** UNVERIFIED · CHƯA ĐỦ DỮ LIỆU. Chiêu tham chiếu: **Chưa có skill registry** (`chưa có`). 14 nghề mới chưa có skill registry; không thể khẳng định vũ khí phù hợp chiêu. Cần thiết kế kỹ năng trước khi khóa Weapon DNA. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -772,6 +796,8 @@ POSE: PERSONAL VIGNETTE: ngồi vắt chân đọc thẻ tre. Character reveals 
 
 ### RB-074 — Lôi Ảnh · Sát thủ / Lôi
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** UNVERIFIED · CHƯA ĐỦ DỮ LIỆU. Chiêu tham chiếu: **Chưa có skill registry** (`chưa có`). 14 nghề mới chưa có skill registry; không thể khẳng định vũ khí phù hợp chiêu. Cần thiết kế kỹ năng trước khi khóa Weapon DNA. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Lôi Ảnh được hình dung như một chiến binh đột kích kín đáo từng trưởng thành từ môi trường trang trại ven núi. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên nóng tính nhưng trọng chữ tín, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là quan sát khe hở và kết thúc nhanh. Ở thời điểm game bắt đầu, điều thôi thúc họ là học cách tin tưởng đồng đội sau những năm sống độc lập. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
@@ -835,6 +861,8 @@ POSE: PERSONAL VIGNETTE: đứng tựa cờ quan sát doanh trại. Character re
 ---
 
 ### RB-075 — Vô Ảnh · Sát thủ / Phong
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** UNVERIFIED · CHƯA ĐỦ DỮ LIỆU. Chiêu tham chiếu: **Chưa có skill registry** (`chưa có`). 14 nghề mới chưa có skill registry; không thể khẳng định vũ khí phù hợp chiêu. Cần thiết kế kỹ năng trước khi khóa Weapon DNA. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
