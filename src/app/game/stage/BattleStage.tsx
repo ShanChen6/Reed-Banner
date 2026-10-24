@@ -208,13 +208,14 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
         import("./ward"),
         import("./bloom"),
         import("./pierce"),
+        import("./drain"),
       ]);
       const app = new Application();
       await app.init({
@@ -263,7 +264,7 @@ export default function BattleStage({
       layout();
       app.renderer.on("resize", layout);
       // Hiệu ứng vẽ trên cả sân, đè lên mọi nhân vật: sét hệ Lôi, vòm khiên đất hệ Thổ, vòng lá hồi sinh hệ Mộc,
-      // mũi sáng phá giáp hệ Kim.
+      // mũi sáng phá giáp hệ Kim, đoạt lương hệ Thủy.
       const sky = new Container();
       sky.zIndex = 100;
       app.stage.addChild(sky);
@@ -290,6 +291,18 @@ export default function BattleStage({
           loaded[i]!.onStrike?.((kind, at) => {
             const foe = alive(false)[0];
             if (kind === "ultimate" && foe) fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "supplyDrain") {
+          const fx = supplyDrain(sky, rig.fxColor);
+          // Tuyệt chiêu đoạt lương cả đội đối thủ: hút hạt sáng từ từng người về người tung chiêu.
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (!me) return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => fx.drain(spot(s, 0.5), spot(me, 0.55), size, n * 0.1));
           });
           return [fx];
         }

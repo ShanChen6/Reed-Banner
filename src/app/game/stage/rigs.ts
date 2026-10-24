@@ -108,9 +108,10 @@ export interface WarriorRig {
   /**
    * Hiệu ứng lúc đòn trúng vẽ trên cả sân: `lightning` phóng sét tới đối thủ, tuyệt chiêu giáng sét xuống cả đội;
    * `earthWard` và `leafBloom` chỉ ở tuyệt chiêu, dựng vòm khiên đất hoặc nở vòng lá hồi sinh quanh từng đồng đội;
-   * `armorPierce` chỉ ở tuyệt chiêu, phóng mũi sáng xuyên giáp tới đối thủ đứng đầu.
+   * `armorPierce` chỉ ở tuyệt chiêu, phóng mũi sáng xuyên giáp tới đối thủ đứng đầu; `supplyDrain` chỉ ở tuyệt
+   * chiêu, phủ sương băng lên cả đội đối thủ và hút hạt sáng từ họ về người tung chiêu.
    */
-  readonly strikeFx?: "lightning" | "earthWard" | "leafBloom" | "armorPierce";
+  readonly strikeFx?: "lightning" | "earthWard" | "leafBloom" | "armorPierce" | "supplyDrain";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -921,6 +922,53 @@ const LY_KHUE: WarriorRig = {
     anchor: { x: 780, y: 950 }, scale: 0.9 },
 };
 
+/**
+ * Nguyễn Thủ Tiệp, sứ quân Tiên Du, mưu sĩ hệ Thủy. Bộ tranh Shan gửi 24/10 (ảnh đứng và tranh đánh thường nền
+ * trong suốt sẵn; ra chiêu, tuyệt chiêu, tranh gục và tranh phong thái có nền ca-rô vẽ sẵn, đã tách bằng code).
+ * Ảnh đứng tách lớp bằng code: bàn tay cầm quạt lông phẩy quanh cổ tay, bàn tay kết ấn, đầu và dải khăn tách
+ * riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const NGUYEN_THU_TIEP: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "fan",
+  dir: "nguyen-thu-tiep",
+  texScale: 0.5,
+  foot: { x: 650, y: 1505 },
+  height: 1500,
+  parts: {
+    body: { x: 27, y: 10, w: 982, h: 1510 },
+    armR: { x: 768, y: 232, w: 111, h: 147 },
+    sword: { x: 11, y: 108, w: 338, h: 583 },
+    arm: { x: 252, y: 345, w: 87, h: 88 },
+    head: { x: 568, y: 10, w: 160, h: 259 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 345, y: 140, w: 226, h: 189 }, behind: true,
+      wind: { axis: "x", start: 0.15, amp: 7, freq: 1.5, k: 3, phase: 0.7, vertical: true, reverse: true } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 318, y: 395 },
+    elbowR: { x: 850, y: 360 },
+    neck: { x: 660, y: 262 },
+  },
+  blade: [{ x: 280, y: 370 }, { x: 120, y: 230 }],
+  strikeFx: "supplyDrain",
+  fxColor: 0x2f7fc1,
+  // Vung quạt thế tấn (đánh thường), thu quạt sát người tay kia đánh lạc hướng (ra chiêu), chỉ tay về tuyến lương
+  // đối phương, quạt giữ ngang hông (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 12, y: 2 },
+      anchor: { x: 760, y: 1170 }, scale: 1.05, burst: { x: 130, y: 380 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 11, y: 2 },
+      anchor: { x: 530, y: 1170 }, scale: 1.05, burst: { x: 1080, y: 290 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 11, y: 5 },
+      anchor: { x: 600, y: 1170 }, scale: 1.05, burst: { x: 1170, y: 255 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 14, y: 21 },
+    anchor: { x: 800, y: 940 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -939,6 +987,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   nguyenKhoan: NGUYEN_KHOAN,
   kieuThuan: KIEU_THUAN,
   lyKhue: LY_KHUE,
+  nguyenThuTiep: NGUYEN_THU_TIEP,
 };
 
 export function rigOf(id: string): Rig | null {
