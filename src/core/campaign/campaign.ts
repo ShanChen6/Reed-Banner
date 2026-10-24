@@ -1,3 +1,6 @@
+// Compatibility catalog for legacy Campaign, Raid and shared PvE consumers.
+// Campaign V2 runtime identity lives in storyNodes.ts. Keep these exports until
+// Raid/Tower/Survival/Daily/Arena have migrated to a standalone encounter catalog.
 // Chiến dịch chương 1 "Cờ lau dẹp loạn": Đinh Bộ Lĩnh từ thuở chăn trâu ở Hoa Lư tới khi dẹp xong 12 sứ quân.
 // Thứ tự màn, lời dẫn và số liệu là điểm xuất phát do Claude đặt, chờ Shan duyệt. Xem docs/design/09-che-do-choi.md.
 // Sứ quân AI giữ preset hệ cũ, khác bản người chơi sở hữu; tùy tướng đi kèm dùng chiêu theo nghề.
@@ -35,6 +38,7 @@ export interface StageFoe {
   readonly title?: string;
 }
 
+/** @deprecated Use StoryNode and BattleScenario for Campaign V2. */
 export interface CampaignStage {
   readonly id: string;
   readonly title: string;
@@ -94,6 +98,7 @@ const aide = (
 /** Sông nước: ít bánh chưng (khó giữ lương), nhiều âm dương. */
 const RIVER: SpawnWeights = { ...STANDARD_WEIGHTS, banhChung: 9, amDuong: 22 };
 
+/** @deprecated Compatibility adapter for legacy Campaign and shared PvE modes. */
 export const CAMPAIGN: readonly CampaignStage[] = [
   {
     id: "coLau",
@@ -437,6 +442,7 @@ export function recommendedLevel(stage: CampaignStage): number {
   return stage.recommended ?? stage.level + RECOMMENDED_LEVEL_BONUS;
 }
 
+/** @deprecated Compatibility adapter; use storyNodeById for Campaign V2. */
 export function stageById(id: string): CampaignStage | undefined {
   return CAMPAIGN.find((s) => s.id === id);
 }
@@ -444,10 +450,14 @@ export function stageById(id: string): CampaignStage | undefined {
 /** Màn mở khi là màn đầu hoặc màn trước đã qua. */
 export function stageUnlocked(campaign: CampaignState, id: string): boolean {
   const i = CAMPAIGN.findIndex((s) => s.id === id);
-  return i === 0 || (i > 0 && campaign.cleared.includes(CAMPAIGN[i - 1]!.id));
+  return (
+    i === 0 ||
+    (i > 0 && campaign.legacy.cleared.includes(CAMPAIGN[i - 1]!.id))
+  );
 }
 
 /** Dựng một đối thủ của màn ở cấp của màn. */
+/** @deprecated Shared PvE compatibility helper pending encounter-catalog extraction. */
 export function stageFighter(foe: StageFoe, level: number): FighterConfig {
   if (foe.hero) {
     const kit = buildCampaignLeader(
@@ -524,7 +534,7 @@ export function applyCampaignResult(
 ): { profile: Profile; result: CampaignResult } {
   const stage = stageById(stageId);
   const firstClear =
-    !!stage && won && !profile.campaign.cleared.includes(stageId);
+    !!stage && won && !profile.campaign.legacy.cleared.includes(stageId);
   const bonusGold = firstClear ? stage!.firstClearGold : 0;
   const food = clampCampaignFood(foodLeft);
   const joined =
@@ -538,16 +548,22 @@ export function applyCampaignResult(
     : profile.companions;
   let campaign: CampaignState = {
     ...profile.campaign,
-    cleared: firstClear
-      ? [...profile.campaign.cleared, stageId]
-      : profile.campaign.cleared,
-    food,
+    supply: food,
+    legacy: {
+      ...profile.campaign.legacy,
+      cleared: firstClear
+        ? [...profile.campaign.legacy.cleared, stageId]
+        : profile.campaign.legacy.cleared,
+    },
   };
-  const prevBest = campaign.bestTurns[stageId];
+  const prevBest = campaign.legacy.bestTurns[stageId];
   if (stage && won && turns && turns > 0 && !(prevBest! <= turns))
     campaign = {
       ...campaign,
-      bestTurns: { ...campaign.bestTurns, [stageId]: turns },
+      legacy: {
+        ...campaign.legacy,
+        bestTurns: { ...campaign.legacy.bestTurns, [stageId]: turns },
+      },
     };
   return {
     profile: {

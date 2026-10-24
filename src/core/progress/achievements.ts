@@ -3,8 +3,8 @@
 
 import type { Profile } from "./profile";
 
-/** Số màn chương 1 (test kiểm tra khớp với CAMPAIGN; progress không nhập được campaign vì vòng phụ thuộc). */
-export const CHAPTER1_STAGES = 13;
+/** Campaign V2 has four nodes in Chapter I. */
+export const CHAPTER1_STAGES = 4;
 
 export interface AchievementDef {
   readonly id: string;
@@ -37,7 +37,7 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
     title: "Qua hết chương 1 chiến dịch",
     target: CHAPTER1_STAGES,
     gold: 500,
-    value: (p) => p.campaign.cleared.length,
+    value: (p) => p.campaign.completed.length,
   },
   {
     id: "a.tower10",
