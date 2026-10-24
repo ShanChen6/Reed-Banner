@@ -41,7 +41,7 @@ export const FAQ: readonly { readonly q: string; readonly a: string }[] = [
   },
   {
     q: "Có mất tiền không?",
-    a: "Bản chơi thử hiện tại miễn phí và chạy offline: không cần tài khoản, không lưu tiến trình.",
+    a: "Không. Cờ Lau miễn phí. Bạn chơi ngay bằng tài khoản khách, tiến trình gắn với trình duyệt; đăng nhập hoặc tạo tài khoản để giữ tiến trình trên mọi máy.",
   },
   {
     q: "Đánh sai nước có bị phạt không?",
@@ -56,7 +56,7 @@ export const FAQ: readonly { readonly q: string; readonly a: string }[] = [
     a: "Bối cảnh Loạn 12 Sứ Quân và tên các nhân vật lịch sử là lịch sử chung. Tính cách, kỹ năng và lời thoại gán cho họ là hư cấu; các đồng đội đi cùng Đinh Bộ Lĩnh là nhân vật hư cấu.",
   },
   {
-    q: "Khi nào có chiến dịch?",
-    a: "Chiến dịch theo trình tự dẹp loạn, từ thuở chăn trâu tới lúc lên ngôi, đang được thiết kế. Trước mắt bạn có thể chơi thử trận 3vs3 với Tianwu.",
+    q: "Có những chế độ nào?",
+    a: "Chơi thử offline, trận thường online, chiến dịch dẹp 12 sứ quân kèm đánh trùm, leo tháp, sinh tồn, thử thách ngày và đấu trường. Thêm nhiệm vụ, điểm danh và bảng xếp hạng.",
   },
 ];
