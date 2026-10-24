@@ -1,13 +1,18 @@
-# Reed Banner — Bốn nhân vật lịch sử bổ sung: 4 × (6 chủ động + 4 bị động)
+# Reed Banner — Ba nhân vật bổ sung cho chiến dịch loạn 12 sứ quân: 3 × (6 chủ động + 4 bị động)
 
-> **24/10/2026 · Design proposal only.** Không sửa code, không kích hoạt roster, không tạo asset. Mã mới **RB-076 → RB-079**, nâng tổng nhân vật thiết kế lên **79**.
+> **24/10/2026 · Design proposal only.** Không sửa code, không kích hoạt roster, không tạo asset. Mã mới **RB-076 → RB-078**, nâng tổng nhân vật thiết kế lên **79**.
+
+## Quyết định roster và mốc truyện
+
+- Danh sách mới gồm **Khuông Việt Đại sư, Thiền sư Đỗ Pháp Thuận và Hào trưởng Ninh Hữu Hưng**. Đây là nhân vật chiến dịch được **hư cấu hóa** trong bối cảnh loạn 12 sứ quân; không có nghĩa mọi hoạt động được ghi nhận của họ đều xảy ra trong giai đoạn 965–968.
+- **Nguyễn Minh Không đã bị loại khỏi bộ mở rộng này** vì thuộc thời Lý, không đồng đại với loạn 12 sứ quân. RB-078 được cấp lại cho Ninh Hữu Hưng khi hồ sơ vẫn chỉ ở giai đoạn tài liệu.
+- Danh xưng “Khuông Việt” được dùng như tên nhân vật nhận diện trong game; đối với cảnh đặt trước năm 971, tên Ngô Chân Lưu phù hợp niên đại hơn.
 
 ## Nguyên tắc nguồn và niên đại
 
 - Khuông Việt (Ngô Chân Lưu): hoạt động thời Đinh/Tiền Lê; tư liệu: https://scov.gov.vn/dat-nuoc-con-nguoi/con-nguoi-viet-nam/quoc-su-khuong-viet.html và https://baotanglichsu.vn/VI/Articles/3096/7883/giai-ma-bi-an-giac-mo-cua-quoc-su-khuong-viet.html.
 - Đỗ Pháp Thuận: cố vấn bang giao thời Tiền Lê, gắn với giai thoại chèo đò tiếp sứ; tư liệu: https://tapchinghiencuuphathoc.vn/do-phap-thuan-mot-tang-si-tieu-bieu-thoi-tien-le.html.
 - Ninh Hữu Hưng: chức tước, tiểu sử nghề mộc chủ yếu theo **thần tích địa phương**, không mặc định là chi tiết chính sử; tư liệu: https://baonamdinh.vn/channel/5093/201203/Lang-nghe-cham-khac-La-Xuyen-2159351/.
-- Nguyễn Minh Không: cao tăng và danh y triều **Lý**, không đồng thời với cuộc dẹp loạn 12 sứ quân; năm sinh còn khác nhau giữa nguồn (1065/1073), năm mất thường ghi 1141; tư liệu: https://nhandan.vn/nghien-cuu-ve-thien-su-nguyen-minh-khong-post370106.html và https://vov2.vov.vn/van-hoa-giai-tri/dau-an-cua-thien-su-nguyen-minh-khong-duoi-trieu-nha-ly-53668.vov2.
 - Tất cả tuyệt chiêu và hiện tượng siêu nhiên bên dưới là **diễn giải gameplay giả tưởng**, không được ghi thành sự kiện lịch sử thực tế.
 
 ## Chuẩn 10 kỹ năng
@@ -106,51 +111,7 @@ energy to team amount 8
 
 ---
 
-## RB-078 — Thần y Nguyễn Minh Không (Y sư / Mộc)
-
-**Xếp tuyến:** Tuyến truyền kỳ mở rộng thời Lý; nhân vật sống vào thế kỷ XI–XII, không tham chiến với các sứ quân của thập niên 960 ở cốt truyện lịch sử.
-
-**Định hướng chiến đấu:** Thiền sư, danh y được dân gian tôn kính; ưu tiên chữa trị, cứu người và dược lý, không biến thành pháp sư chiến đấu.
-
-### Sáu kỹ năng chủ động
-
-| Slot | Chiêu | ID | Cơ sở |
-|---|---|---|---|
-| 1 | **Linh dược** | `role_linhDuoc` | Kế thừa chiêu nghề hiện có |
-| 2 | **Lục Diệp Phong** | `element_lucDiepPhong` | Kế thừa hệ hiện có |
-| 3 | **Dưỡng sinh** | `role_duongSinh` | Kế thừa chiêu nghề hiện có |
-| 4 | **Linh Dược Tế Sinh** | `rb_nmk_linhDuocTeSinh` | Tuyệt chiêu đề xuất riêng |
-| 5 | **Tế độ** | `role_teDo` | Kế thừa chiêu nghề hiện có |
-| 6 | **Linh Mộc Hồi Sinh** | `element_linhMocHoiSinh` | Kế thừa hệ hiện có |
-
-**Chi tiết tuyệt chiêu ô 4:** `rb_nmk_linhDuocTeSinh` — **Linh Dược Tế Sinh**, **100** năng lượng, target `team`.
-
-```yaml
-heal to targets ratio 0.24
-cleanse to targets
-effect regen to targets value 0.045 ofMaxHp true turns 2
-```
-
-**Ý nghĩa chiến thuật:** Chiêu toàn đội hồi phục và thanh tẩy, không hồi sinh đồng minh đã chết; không phát minh trạng thái hồi sinh.
-
-### Bốn kỹ năng bị động
-
-| Ô | Tên | ID | Trigger / tác động |
-|---|---|---|---|
-| P1 | **Cứu viện** | `medic` | skillDamage → hồi người yếu nhất theo luật nghề |
-| P2 | **Mộc sinh** | `moc1` | skillDamage → hồi theo luật hành |
-| P3 | **Mộc hộ** | `moc2` | healed → cấp khiên theo luật hành |
-| P4 | **Y Tâm Không Vướng** | `rb_nmk_yTam` | controlled → heal 0.025 max HP cho đồng minh yếu nhất, giới hạn lượt phản ứng |
-
-**Vũ khí/đạo cụ phục vụ kỹ năng:** Một bát thuốc đồng cổ miệng rộng tròn với một quai nhỏ và một chày thuốc gỗ ngắn thon, buộc cùng dải vải trên đai khi không dùng; bát và chày là hai chi tiết không đổi, không sinh trượng hay kiếm.
-
-**Điểm phải đối chiếu:** Các tín hiệu hồi trùng lớp với Mộc/Y sư; cần kiểm thử heal loop, giới hạn phản ứng và tác dụng Tinh thần.
-
-**Hình dùng cho art:** frame 3 biểu đạt nghề ô 3 (Dưỡng sinh); frame 4 biểu đạt tuyệt chiêu riêng ô 4 (Linh Dược Tế Sinh). Không vẽ đồ vật mới xuất hiện riêng ở frame 4.
-
----
-
-## RB-079 — Hào trưởng Ninh Hữu Hưng (Binh lính / Thổ)
+## RB-078 — Hào trưởng Ninh Hữu Hưng (Binh lính / Thổ)
 
 **Xếp tuyến:** Tuyến cuối Đinh–Tiền Lê, dựa trên thần tích tổ nghề mộc La Xuyên; truyền thống nêu năm sinh 936 và mất năm 1020, cần phân biệt thần tích với sự kiện được chính sử xác nhận.
 
@@ -200,5 +161,4 @@ destroy random 3 tiles
 - Các ID mới `rb_*` đang là đề xuất cho registry tương lai; trước khi triển khai phải kiểm tra trùng ID, slot 4, target và cost. Kỹ năng nghề & hệ được tham chiếu theo luật layout2; tên chính thức phải kiểm chứng một lần nữa khi lập PR.
 - Bị động P4 không có trong code hiện tại, vì vậy không được ghi là tính năng đã hoàn thành.
 - Công thức regen/shield/heal, hiệu ứng mất năng lượng, số lần chase cần mô phỏng phương án F và giới hạn phản ứng (maxReactions=12, maxDepth=4).
-- Minh Không không được đưa vào campaign lịch sử 960s nếu không có cơ chế chapter truyền kỳ rõ ràng.
-- Cả 4 nhóm vũ khí/pháp khí tách biệt: thủ bản, mái chèo, bát thuốc, rìu thợ + khiên gỗ. Không tự phát sinh chung một 'trượng tu sĩ' cho hai nhà sư.
+- Cả 3 nhóm vũ khí/pháp khí tách biệt: thủ bản, mái chèo, rìu thợ + khiên gỗ. Không tự phát sinh chung một trượng nghi lễ cho hai thiền sư.
