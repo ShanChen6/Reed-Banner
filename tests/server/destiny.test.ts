@@ -85,6 +85,47 @@ async function finishMatch(deps: DestinyDeps, id: string, winner: 0 | 1) {
 }
 
 describe("Destiny server lifecycle", () => {
+  it("khôi phục run cũ bị kẹt khi thủ lĩnh gục nhưng offer không có Cứu viện", async () => {
+    const deps = setup();
+    const owner = "leader-stuck";
+    const initial = await loadProfile(deps.profiles, owner);
+    const roster = [MAIN_ID, ...Object.keys(initial.profile.companions).slice(0, 3)];
+    assert.ok((await startDestinyRun(owner, { rosterIds: roster }, deps)).ok);
+    const stored = await loadProfile(deps.profiles, owner);
+    assert.ok(isDualTowerV1(stored.profile.dualTower));
+    if (!isDualTowerV1(stored.profile.dualTower) || !stored.profile.dualTower.destiny.run) return;
+    const run = stored.profile.dualTower.destiny.run;
+    const fighters = {
+      ...run.fighters,
+      [MAIN_ID]: { ...run.fighters![MAIN_ID]!, hp: 0, energy: 0, downed: true },
+    };
+    const stuck = {
+      ...run,
+      fighters,
+      hp: { ...run.hp, [MAIN_ID]: 0 },
+      phase: "reward" as const,
+      settledFloor: 1,
+      offer: [
+        { kind: "boon" as const, boonId: "atk" as const },
+        { kind: "boon" as const, boonId: "def" as const },
+        { kind: "boon" as const, boonId: "hp" as const },
+      ],
+    };
+    const profile = {
+      ...stored.profile,
+      dualTower: {
+        ...stored.profile.dualTower,
+        destiny: { ...stored.profile.dualTower.destiny, run: stuck },
+      },
+    };
+    assert.equal(await deps.profiles.put(owner, profile, stored.version, deps.now), true);
+
+    const overview = await destinyOverview(owner, deps);
+    assert.deepEqual(overview.progress?.run?.offer?.[0], { kind: "rescue" });
+    const claimed = await claimDestinyReward(owner, { floor: 1, index: 0, targetIds: [MAIN_ID] }, deps);
+    assert.ok(claimed.ok && claimed.run.floor === 2 && claimed.run.fighters![MAIN_ID]!.hp > 0);
+  });
+
   it("nhận roster tối thiểu 3 và cả Đinh Bộ Lĩnh + 5 tướng khởi đầu", async () => {
     const deps = setup();
     const profile = (await loadProfile(deps.profiles, "roster-min")).profile;
