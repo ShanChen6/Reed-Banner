@@ -16,6 +16,7 @@ import {
 import { loadProfile, type ProfileStore } from "./profiles";
 import { TRIAL_FLOOR_DATA } from "./trialContent";
 import { settleTrialSweep, type TrialSweepSettlementResult } from "./trialSweep";
+import { FEATURE_DISABLED_ERROR } from "./featureFlags";
 import {
   abandonTrialBattle,
   startTrialBattle,
@@ -166,7 +167,9 @@ export async function settleTrialSweepRequest(
   profiles: ProfileStore,
   ownerId: string | null,
   now: number,
+  enabled = true,
 ): Promise<ApiReply> {
+  if (!enabled) return { status: 503, body: { error: FEATURE_DISABLED_ERROR } };
   if (!ownerId) return { status: 403, body: { error: "no_cleared_floors" } };
   const result = await settleTrialSweep(profiles, ownerId, now);
   return result.ok
@@ -175,6 +178,7 @@ export async function settleTrialSweepRequest(
 }
 
 const START_STATUS: Record<TrialStartError, number> = {
+  featureDisabled: 503,
   bad_request: 400,
   floor_not_found: 404,
   floor_locked: 403,

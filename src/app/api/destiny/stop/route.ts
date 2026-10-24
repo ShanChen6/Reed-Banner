@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
   if (!owner) return NextResponse.json({ stopped: false });
   const result = await stopDestinyRun(owner, serverDeps());
   return NextResponse.json(result, {
-    status: result.ok ? 200 : result.error === "conflict" ? 409 : 422,
+    status: result.ok ? 200 : result.error === "featureDisabled" ? 503 : result.error === "conflict" ? 409 : 422,
     headers: { "cache-control": "no-store" },
   });
 }

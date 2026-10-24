@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { mailEnabled } from "@/server/mail";
 import { enabledProviders } from "@/server/oauth";
 import { currentUser } from "@/server/session";
+import { towerFeatureFlags } from "@/server/featureFlags";
 import { AccountScene, ForgotPasswordScene, LoginScene, RegisterScene, ResetPasswordScene } from "../auth/AuthScenes";
 import { readAuthParams, type AuthSearchParams } from "../auth/params";
 import GameShell from "../GameShell";
@@ -40,6 +41,7 @@ export default async function GamePage({
   const { id, account } = await currentUser();
   const providers = enabledProviders();
   const mail = mailEnabled();
+  const towerFeatures = towerFeatureFlags();
   // Quên/đặt lại mật khẩu mở được cả khi đang đăng nhập (đường dẫn trong thư có thể mở ở máy đang đăng nhập).
   const recovery = { FORGOT_PASSWORD: <ForgotPasswordScene q={auth} mail={mail} />, RESET_PASSWORD: <ResetPasswordScene q={auth} /> };
 
@@ -47,6 +49,7 @@ export default async function GamePage({
     <GameShell
       account={account && { name: account.name, avatarUrl: account.avatarUrl }}
       theme={q.theme === "light" ? "light" : "dark"}
+      towerFeatures={towerFeatures}
       auth={
         account
           ? {

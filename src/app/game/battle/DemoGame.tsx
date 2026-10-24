@@ -94,6 +94,7 @@ import {
   TIER_CLASS,
 } from "./labels";
 import { bounceFrames, eventFrames, type Frame } from "./animation";
+import { COMBAT_PACING } from "./pacing";
 import {
   CloudCorner,
   DongSonBand,
@@ -131,7 +132,6 @@ import { createCueBus, stageCues } from "../stage/director";
 
 const PLAYER = 0;
 const AI = 1;
-const AI_DELAY_MS = 700;
 /** Seed của bàn xem trước lúc mới vào (cố định để server và trình duyệt dựng cùng một bàn). */
 const DEMO_SEED = 2026;
 /** Seed mới cho mỗi trận chơi offline. */
@@ -724,11 +724,13 @@ export default function DemoGame({
   theme,
   online = false,
   autoResume = false,
+  towerFeatures = { trial: true, destiny: true },
 }: {
   theme: "light" | "dark";
   online?: boolean;
   /** Vào phân cảnh là tiếp tục ngay trận online đã lưu (Chiến dịch, Leo tháp, … vừa tạo trận rồi chuyển sang). */
   autoResume?: boolean;
+  towerFeatures?: { readonly trial: boolean; readonly destiny: boolean };
 }) {
   const [round, setRound] = useState(0);
   const [seed, setSeed] = useState(DEMO_SEED);
@@ -782,6 +784,13 @@ export default function DemoGame({
   } | null>(null);
   const animId = useRef(0);
   const afterAnim = useRef<(() => void) | null>(null);
+  const pacingTimeouts = useRef<Set<number>>(new Set());
+  const turnBannerId = useRef(0);
+  const [pacing, setPacing] = useState(false);
+  const [turnBanner, setTurnBanner] = useState<{
+    readonly id: number;
+    readonly side: 0 | 1;
+  } | null>(null);
   const [floats, setFloats] = useState<Float[]>([]);
   /** Kênh động tác cho sân khấu trận. */
   const [cueBus] = useState(createCueBus);
@@ -801,7 +810,7 @@ export default function DemoGame({
   const atBreak =
     survival !== null && !survival.done && state.winner === PLAYER;
   /** Đang chạy hoạt ảnh thì chưa nhận thao tác mới. */
-  const myTurn = playerTurn && anim === null && !pending;
+  const myTurn = playerTurn && anim === null && !pending && !pacing;
   const actor = state.sides[PLAYER].fighters[state.turn.actor]!;
   const selectable = useMemo(
     () => (myTurn ? selectableActors(state) : []),
@@ -863,14 +872,16 @@ export default function DemoGame({
         };
       });
     });
-    if (next.length === 0) return;
+    if (next.length === 0) return 0;
     const ids = new Set(next.map((f) => f.id));
     setFloats((f) => [...f, ...next]);
     const last = Math.max(...next.map((f) => f.order));
+    const duration = FLOAT_MS + last * FLOAT_STAGGER_MS + 100;
     window.setTimeout(
       () => setFloats((f) => f.filter((x) => !ids.has(x.id))),
-      FLOAT_MS + last * FLOAT_STAGGER_MS + 100,
+      duration,
     );
+    return prefersReducedMotion() ? 0 : duration;
   }, []);
 
   /** Chạy các khung hoạt ảnh rồi mới cập nhật trạng thái trận (máu, nhật ký, lượt). */
@@ -878,6 +889,19 @@ export default function DemoGame({
     if (frames.length === 0 || prefersReducedMotion()) return done();
     afterAnim.current = done;
     setAnim({ frames, i: 0, id: animId.current++ });
+  }, []);
+
+  const afterPacingDelay = useCallback((ms: number, done: () => void) => {
+    const id = window.setTimeout(() => {
+      pacingTimeouts.current.delete(id);
+      done();
+    }, ms);
+    pacingTimeouts.current.add(id);
+  }, []);
+
+  useEffect(() => () => {
+    for (const id of pacingTimeouts.current) window.clearTimeout(id);
+    pacingTimeouts.current.clear();
   }, []);
 
   // Chơi online: tải hồ sơ trên server, chọn sẵn nguyên tố và nghề đã dùng lần trước.
@@ -910,9 +934,37 @@ export default function DemoGame({
       after: BattleState,
       events: readonly BattleEvent[],
     ) => {
-      const cues = stageCues(before, events);
-      cueBus.emit(cues.start);
-      play(eventFrames(before.board, events), () => {
+      const batches: { side: 0 | 1; events: BattleEvent[] }[] = [];
+      let side = before.turn.side;
+      let batch: BattleEvent[] = [];
+      for (const event of events) {
+        if (event.type === "turnStart" && event.side !== side) {
+          if (batch.length > 0) batches.push({ side, events: batch });
+          side = event.side;
+          batch = [];
+        }
+        batch.push(event);
+      }
+      if (batch.length > 0) batches.push({ side, events: batch });
+      if (batches.length === 0) batches.push({ side, events: [] });
+      if (
+        after.winner === null &&
+        after.turn.side !== batches[batches.length - 1]!.side
+      ) batches.push({ side: after.turn.side, events: [] });
+
+      const hasTurnTransition = batches.some((item, index) =>
+        index > 0 && item.side !== batches[index - 1]!.side,
+      );
+      if (hasTurnTransition) {
+        setPacing(true);
+        setSelected(null);
+        setAim(null);
+        setWhirlAim(null);
+        setPendingWhirl(null);
+      }
+
+      let board = before.board;
+      const finish = () => {
         // Chơi offline: đồng hồ lượt mới tính từ lúc hoạt ảnh xong, thời gian xem hoạt ảnh không bị trừ.
         const shown =
           !online &&
@@ -923,10 +975,7 @@ export default function DemoGame({
                 turn: { ...after.turn, deadline: Date.now() + TURN_MS },
               }
             : after;
-        pushLog(shown, events);
         setState(shown);
-        showNumbers(events);
-        cueBus.emit(cues.end);
         // Trận online: server cộng thưởng và gửi `outcome` (xem receive).
         if (
           !online &&
@@ -958,7 +1007,39 @@ export default function DemoGame({
             soldFor: received.soldFor,
           });
         }
-      });
+        setTurnBanner(null);
+        setPacing(false);
+      };
+
+      const present = (index: number) => {
+        const current = batches[index];
+        if (!current) return finish();
+        const cues = stageCues(before, current.events);
+        const frames = eventFrames(board, current.events);
+        cueBus.emit(cues.start);
+        play(frames, () => {
+          board = frames.at(-1)?.board ?? board;
+          pushLog(after, current.events);
+          const effectMs = showNumbers(current.events);
+          cueBus.emit(cues.end);
+          const next = batches[index + 1];
+          if (!next || next.side === current.side) return present(index + 1);
+          const beginPause = () => afterPacingDelay(COMBAT_PACING.turnPauseMs, () => {
+            setTurnBanner({ id: turnBannerId.current++, side: next.side });
+            const bannerMs = next.side === AI
+              ? COMBAT_PACING.enemyTurnBannerMs
+              : COMBAT_PACING.playerTurnBannerMs;
+            afterPacingDelay(bannerMs, () => {
+              setTurnBanner(null);
+              present(index + 1);
+            });
+          });
+          if (effectMs > 0) afterPacingDelay(effectMs, beginPause);
+          else beginPause();
+        });
+      };
+
+      present(0);
     },
     [
       play,
@@ -971,6 +1052,7 @@ export default function DemoGame({
       seed,
       round,
       difficulty,
+      afterPacingDelay,
     ],
   );
 
@@ -1052,16 +1134,16 @@ export default function DemoGame({
     [state, actor, flash, play, commit, online, sendOnline],
   );
 
-  // Lượt của Tianwu: chạy trọn lượt sau một nhịp nghỉ ngắn để người chơi kịp nhìn.
+  // Offline: transition player → AI đã được queue trình diễn xử lý trước khi state đổi phe.
   useEffect(() => {
-    if (online || !started || state.winner !== null || state.turn.side !== AI)
+    if (online || pacing || !started || state.winner !== null || state.turn.side !== AI)
       return;
-    const t = window.setTimeout(() => {
+    const timer = window.setTimeout(() => {
       const r = playAiTurn(state, difficulty, Date.now());
       commit(state, r.state, r.events);
-    }, AI_DELAY_MS);
-    return () => window.clearTimeout(t);
-  }, [online, started, state, difficulty, commit]);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [online, pacing, started, state, difficulty, commit]);
 
   // Đồng hồ 30 giây mỗi lượt (online lẫn offline).
   const deadline =
@@ -1785,6 +1867,21 @@ export default function DemoGame({
                     Chuỗi ×{frame.chain}
                   </div>
                 )}
+                {turnBanner && (
+                  <div
+                    key={turnBanner.id}
+                    role="status"
+                    aria-live="polite"
+                    className={`turn-banner pointer-events-none absolute inset-x-3 top-1/2 z-20 rounded border px-3 py-2 text-center font-serif text-base font-black tracking-[0.16em] shadow-lg sm:inset-x-10 sm:text-lg ${
+                      turnBanner.side === AI
+                        ? "border-red-500/70 bg-red-950/90 text-red-100 shadow-red-950/60"
+                        : "border-amber-400/70 bg-emerald-950/90 text-amber-200 shadow-emerald-950/60"
+                    }`}
+                    style={{ "--turn-banner-ms": `${turnBanner.side === AI ? COMBAT_PACING.enemyTurnBannerMs : COMBAT_PACING.playerTurnBannerMs}ms` } as React.CSSProperties}
+                  >
+                    {turnBanner.side === AI ? "LƯỢT ĐỐI THỦ" : "ĐẾN LƯỢT BẠN"}
+                  </div>
+                )}
                 {toast && (
                   <div className="pointer-events-none absolute inset-x-0 top-1/2 mx-auto w-fit -translate-y-1/2 rounded bg-black/80 px-3 py-1.5 text-sm text-white">
                     {toast}
@@ -1974,7 +2071,7 @@ export default function DemoGame({
                             : "Về tháp"}
                         </SceneLink>
                       )}
-                      {destinyFloorNo !== null && (
+                      {destinyFloorNo !== null && towerFeatures.destiny && (
                         <SceneLink
                           scene="DESTINY"
                           className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
