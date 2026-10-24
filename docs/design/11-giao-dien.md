@@ -1,6 +1,6 @@
 # Giao diện
 
-> Cập nhật: 18/10/2026
+> Cập nhật: 24/10/2026
 
 ## 1. Bố cục màn hình trận đấu
 
@@ -69,3 +69,13 @@ Ba cách điều khiển dùng song song; người chơi đổi qua lại bất 
 - Tỉ lệ ô của màn hiển thị trước trận bằng thanh màu nhỏ.
 - Phong cách hình ảnh, bảng màu và yêu cầu cho họa sĩ: xem [Hình ảnh](13-hinh-anh.md).
 - Danh mục trên `/games` của ShanVerse: **Puzzle & Logic**.
+
+## 4. Trợ giúp Song Tháp
+
+Màn Trial/Destiny phải giải thích luật cấm/bắt buộc trước khi khóa đội, disable tướng không hợp lệ kèm lý do,
+và giữ Đinh Bộ Lĩnh ở active slot thủ lĩnh. Trạng thái loading/error/locked/claimed phải đọc được bằng bàn phím,
+touch và screen reader; nút settlement bị khóa trong lúc request đang chờ. UI chỉ đổi số dư hoặc hiện “đã nhận”
+sau response thành công từ server.
+
+Nội dung trợ giúp, reset giờ Việt Nam và bảng đá canonical cho người chơi nằm tại
+[Song Tháp cho người chơi](../dual-tower/player-help.md).
