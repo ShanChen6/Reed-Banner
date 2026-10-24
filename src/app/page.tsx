@@ -16,6 +16,7 @@ import { Logo, LogoMark } from "./game/art/logo";
 import Image from "next/image";
 import { Portrait } from "./game/art/portraits";
 import { BoardCrest, TileArt } from "./game/art/tiles";
+import { towerFeatureFlags, type TowerFeatureFlags } from "@/server/featureFlags";
 import { FAQ, PROFESSION_PERK, TILE_GIVES } from "./home/data";
 import DrumFace from "./home/DrumFace";
 import ElementPicker from "./home/ElementPicker";
@@ -69,13 +70,19 @@ const FEATURES: { tile: Tile; title: string; body: string }[] = [
   { tile: { kind: "sach" }, title: "AI Tianwu", body: "Từ Dễ tới Ác mộng. AI chỉ thấy những gì bạn thấy và chịu cùng luật, không ăn gian." },
 ];
 
-const MODES = [
-  { name: "Chơi thử", body: "Offline, 3vs3 đấu Tianwu. Chọn hệ, độ khó và trang bị.", open: true },
-  { name: "Thường", body: "Trận sinh ngẫu nhiên, chọn độ khó, nhận vàng và chiến lợi phẩm.", open: false },
-  { name: "Chiến dịch", body: "Theo chân Đinh Bộ Lĩnh từ thuở cờ lau tập trận tới khi dẹp loạn 12 sứ quân.", open: false },
-  { name: "Leo tháp", body: "Chuỗi trận khó dần, máu và lương mang sang tầng sau.", open: false },
-  { name: "Sinh tồn", body: "Một bàn cờ, đối thủ kéo đến theo đợt, có báo trước đợt kế tiếp.", open: false },
+/** Các chế độ đang có trong màn chơi /game (cùng danh sách với MenuScene). `flag`: chế độ bật bằng biến môi trường lúc build. */
+const MODES: readonly { slug: string; name: string; body: string; tile: Tile; flag?: keyof TowerFeatureFlags }[] = [
+  { slug: "practice", name: "Chơi thử", body: "Vào trận ngay, offline, 3vs3 đấu Tianwu với đội cấp tối đa. Không cần tài khoản.", tile: { kind: "amDuong" } },
+  { slug: "play", name: "Trận thường", body: "Trận online có đồng hồ 30 giây, nhận vàng, kinh nghiệm và chiến lợi phẩm.", tile: { kind: "kiem" } },
+  { slug: "campaign", name: "Chiến dịch", body: "Bản đồ 12 sứ quân: đánh từng màn, tướng lịch sử gia nhập, rồi đánh trùm 3 bậc.", tile: { kind: "trong" } },
+  { slug: "tower", name: "Leo tháp", body: "Chuỗi trận mạnh dần, máu và lương mang sang tầng sau, trùm mỗi 5 tầng.", tile: { kind: "sach" } },
+  { slug: "trial", name: "Tháp Thí Luyện", body: "20 tầng cố định, tự chọn đội và luật riêng từng tầng.", tile: { kind: "vang", special: "weak" }, flag: "trial" },
+  { slug: "destiny", name: "Tháp Vận Mệnh", body: "Khóa đội hình theo chu kỳ, giữ máu và lương xuyên tầng.", tile: { kind: "amDuong", special: "weak" }, flag: "destiny" },
+  { slug: "survival", name: "Sinh tồn", body: "Một bàn cờ, đối thủ kéo đến theo đợt, nghỉ giữa đợt để tính tiếp.", tile: { kind: "tim" } },
+  { slug: "daily", name: "Thử thách ngày", body: "Một đề chung cho mọi người, mỗi ngày một lần, có bảng xếp hạng.", tile: { kind: "banhChung" } },
+  { slug: "arena", name: "Đấu trường", body: "Đánh đội phòng thủ của người chơi khác, leo điểm mỗi ngày.", tile: { kind: "kiem", special: "strong" } },
 ];
+
 
 function SectionTitle({ kicker, title, sub }: { kicker: string; title: string; sub?: string }) {
   return (
@@ -108,6 +115,7 @@ const DBL_ERAS = [
 
 export default function Home() {
   const board = heroBoard();
+  const flags = towerFeatureFlags();
   return (
     <div className="demo-bg min-h-dvh bg-[var(--bg)] text-stone-100 [--bg:#17110e] [--frame:#5a1e14] [--gold:#d4a24c] [--panel:#271d18]">
       <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-stone-900 focus:p-2">
@@ -354,24 +362,60 @@ export default function Home() {
         </section>
 
         <section id="modes" className="scroll-mt-16 px-4 py-16">
-          <SectionTitle kicker="Chế độ chơi" title="Từ trận thử tới chiến dịch" />
-          <ul className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {MODES.map((m) => (
-              <li
-                key={m.name}
-                className={`flex flex-col rounded-2xl p-5 ${m.open ? "fx-panel-hi" : "fx-panel"}`}
-              >
-                <span
-                  className={`self-start rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider ${m.open ? "bg-[var(--gold)] text-stone-950" : "bg-stone-800 text-stone-400"}`}
-                >
-                  {m.open ? "Đang mở" : "Sắp có"}
-                </span>
-                <h3 className="mt-3 font-serif text-xl font-bold">{m.name}</h3>
-                <p className="mt-1 flex-1 text-sm text-stone-400">{m.body}</p>
-                {m.open && <PlayButton className="mt-4 px-3 py-1.5 text-sm">Vào trận</PlayButton>}
-              </li>
-            ))}
+          <SectionTitle
+            kicker="Chế độ chơi"
+            title="Từ trận thử tới chiến dịch"
+            sub="Chơi bằng tài khoản khách ngay, tiến trình gắn với trình duyệt. Đăng nhập để giữ tiến trình trên mọi máy."
+          />
+          <ul className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {MODES.map((m) => {
+              const open = !m.flag || flags[m.flag];
+              const body = (
+                <>
+                  <span className="flex items-center gap-3">
+                    <TileArt kind={m.tile.kind} special={m.tile.special} className="size-10 shrink-0" />
+                    <span className="font-serif text-xl font-bold">{m.name}</span>
+                    {!open && (
+                      <span className="ml-auto rounded-full bg-stone-800 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-stone-400">Sắp có</span>
+                    )}
+                  </span>
+                  <span className="mt-2 flex-1 text-sm text-stone-400">{m.body}</span>
+                  {open && <span className="mt-3 text-sm font-semibold text-[var(--gold)] group-hover:brightness-125">Vào chơi ›</span>}
+                </>
+              );
+              return (
+                <li key={m.slug}>
+                  {open ? (
+                    <Link
+                      href={`/game/${m.slug}`}
+                      className={`group flex h-full flex-col rounded-2xl p-5 transition hover:brightness-110 ${m.slug === "practice" ? "fx-panel-hi" : "fx-panel"}`}
+                    >
+                      {body}
+                    </Link>
+                  ) : (
+                    <div aria-disabled="true" className="flex h-full flex-col rounded-2xl fx-panel p-5 opacity-70">
+                      {body}
+                    </div>
+                  )}
+                </li>
+              );
+            })}
           </ul>
+          <p className="mt-6 text-center text-sm text-stone-400">
+            Kèm theo:{" "}
+            {[
+              ["quests", "Nhiệm vụ và điểm danh"],
+              ["leaderboard", "Bảng xếp hạng"],
+              ["profile", "Hồ sơ, trang bị, cửa hàng"],
+            ].map(([slug, label], i) => (
+              <span key={slug}>
+                {i > 0 && " · "}
+                <Link href={`/game/${slug}`} className="text-amber-100/80 underline-offset-4 hover:text-[var(--gold)] hover:underline">
+                  {label}
+                </Link>
+              </span>
+            ))}
+          </p>
         </section>
 
         <section id="faq" className="scroll-mt-16 px-4 py-16">
