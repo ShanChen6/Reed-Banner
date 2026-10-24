@@ -50,7 +50,7 @@ function StageDetail({
   onStart: () => void;
 }) {
   const foes = stageFoes(stage);
-  const cleared = profile.campaign.cleared.includes(stage.id);
+  const cleared = profile.campaign.legacy.cleared.includes(stage.id);
   const recommended = recommendedLevel(stage);
   const under = profile.main.level < recommended;
   return (
@@ -216,15 +216,15 @@ export default function CampaignScreen() {
 
   const nextOpen = CAMPAIGN.find(
     (s) =>
-      !profile.campaign.cleared.includes(s.id) &&
+      !profile.campaign.legacy.cleared.includes(s.id) &&
       stageUnlocked(profile.campaign, s.id),
   );
   const stage =
     CAMPAIGN.find((s) => s.id === picked) ??
     nextOpen ??
     CAMPAIGN[CAMPAIGN.length - 1]!;
-  const food = profile.campaign.food;
-  const done = profile.campaign.cleared.length;
+  const food = profile.campaign.supply;
+  const done = profile.campaign.legacy.cleared.length;
 
   const act = async (a: ProfileAction) => {
     setBusy(true);
@@ -305,7 +305,7 @@ export default function CampaignScreen() {
           />
           <ol className="flex flex-col gap-1.5" aria-label="Các màn">
             {CAMPAIGN.map((s, i) => {
-              const cleared = profile.campaign.cleared.includes(s.id);
+              const cleared = profile.campaign.legacy.cleared.includes(s.id);
               const open = stageUnlocked(profile.campaign, s.id);
               const leader = s.foes[0]!;
               return (

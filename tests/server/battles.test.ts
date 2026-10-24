@@ -350,7 +350,7 @@ describe("trận chiến dịch", () => {
         "g_c",
         {
           ...cur.profile,
-          campaign: { cleared: [], food: 42, raids: {}, bestTurns: {} },
+          campaign: { ...cur.profile.campaign, supply: 42 },
         },
         cur.version,
       ),
@@ -397,10 +397,13 @@ describe("trận chiến dịch", () => {
     });
     const saved = (await loadProfile(profiles, "g_c")).profile;
     assert.deepEqual(saved.campaign, {
-      cleared: ["coLau"],
-      food: 33,
-      raids: {},
-      bestTurns: { coLau: 1 },
+      ...cur.profile.campaign,
+      supply: 33,
+      legacy: {
+        cleared: ["coLau"],
+        raids: {},
+        bestTurns: { coLau: 1 },
+      },
     });
     assert.equal(saved.companions.nguyenBac?.level, 1);
   });
@@ -420,10 +423,13 @@ describe("trận đánh trùm", () => {
 
     const cur = await loadProfile(profiles, "g_r");
     const campaign = {
-      cleared: ["coLau", "boHai"],
-      food: 40,
-      raids: {},
-      bestTurns: {},
+      ...cur.profile.campaign,
+      supply: 40,
+      legacy: {
+        cleared: ["coLau", "boHai"],
+        raids: {},
+        bestTurns: {},
+      },
     };
     assert.ok(
       await profiles.put(
@@ -466,7 +472,10 @@ describe("trận đánh trùm", () => {
     assert.equal(done.outcome.raid.item?.tier, 3);
     assert.equal(done.outcome.raid.item?.element, "thuy");
     const saved = (await loadProfile(profiles, "g_r")).profile;
-    assert.deepEqual(saved.campaign, { ...campaign, raids: { boHai: 1 } });
+    assert.deepEqual(saved.campaign, {
+      ...campaign,
+      legacy: { ...campaign.legacy, raids: { boHai: 1 } },
+    });
     assert.ok(saved.bag.some((i) => i.id === done.outcome!.raid!.item!.id));
   });
 });
