@@ -47,6 +47,7 @@
 - [ ] Bảng linh vật 7 hệ và mức xuất hiện của linh vật trong hiệu ứng. → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#22-ngôn-ngữ-hình-ảnh-của-7-nguyên-tố)
 - [x] Ai tách mảnh và dựng xương: Shan tạo ảnh bằng Copilot và tách lớp bằng live2dlayer, Claude dựng động tác (20/10/2026). → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#44-quy-cách-mảnh-cắt-cho-họa-sĩ--công-cụ-ai)
 - [ ] Hai font tiêu đề và nội dung có đủ dấu tiếng Việt. → [Kế hoạch đồ họa](design/15-ke-hoach-do-hoa.md#83-chữ)
+- [ ] Chỗ dùng tranh "phong thái" của nhân vật (hiện chỉ hiện ở `/demo/characters`, bản đầu là Kiều Công Hãn ngồi bên rương xem lệnh bài): thẻ hoặc hồ sơ chi tiết tướng, hay cảnh truyện chiến dịch khi sứ quân xuất hiện hoặc quy hàng (Claude ghi 24/10/2026). → `public/art/characters/kieu-cong-han/style.webp`
 - [ ] Cho phép đổi phím trong cài đặt; phím tắt Túi đồ và xem chi tiết sát thương. → [Giao diện](design/11-giao-dien.md#23-bàn-phím)
 
 ## AI
