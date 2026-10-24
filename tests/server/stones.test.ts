@@ -2,10 +2,14 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   applyStoneAward,
+  DESTINY_STONE_MILESTONES,
+  destinyCycleStoneReward,
   isDualTowerV1,
   newProfile,
   parseProfile,
   planTrialSettle,
+  planDestinyCycleEnd,
+  planDestinyFloorClear,
   STONES_MAX,
   stoneKeys,
   type StoneRewardEvent,
@@ -136,5 +140,83 @@ describe("ví đá: server", () => {
     await awardStones(store, OWNER, firstClear(), 0);
     assert.deepEqual((await loadProfile(store, OWNER)).profile.tower, { best: 12, run: null });
     assert.equal(stoneKeys.trialFirst(1), "trial:first:1");
+  });
+});
+
+describe("đá Destiny theo cycle", () => {
+  it("mốc 3/5/10 có policy cố định và replay cùng cycle không cộng lại", () => {
+    let profile = newProfile();
+    assert.ok(isDualTowerV1(profile.dualTower));
+    if (!isDualTowerV1(profile.dualTower)) return;
+    profile = {
+      ...profile,
+      dualTower: {
+        ...profile.dualTower,
+        destiny: { ...profile.dualTower.destiny, cycleId: "2026-10-19" },
+      },
+    };
+    for (const [floor, balance] of [[3, 3], [5, 8], [10, 18]] as const) {
+      assert.ok(isDualTowerV1(profile.dualTower));
+      if (!isDualTowerV1(profile.dualTower)) return;
+      const plan = planDestinyFloorClear(profile.dualTower.destiny, {
+        cycleId: "2026-10-19",
+        floor,
+        milestones: DESTINY_STONE_MILESTONES,
+      });
+      assert.ok(plan.ok);
+      if (!plan.ok) return;
+      const award = applyStoneAward(profile, plan.events, { destiny: plan.next });
+      assert.ok(award.ok);
+      if (!award.ok) return;
+      profile = award.profile;
+      assert.equal(profile.stones, balance);
+    }
+    assert.ok(isDualTowerV1(profile.dualTower));
+    if (!isDualTowerV1(profile.dualTower)) return;
+    const replay = planDestinyFloorClear(profile.dualTower.destiny, {
+      cycleId: "2026-10-19",
+      floor: 10,
+      milestones: DESTINY_STONE_MILESTONES,
+    });
+    assert.ok(replay.ok && replay.events.length === 0);
+  });
+
+  it("cycle kế tiếp có entitlement riêng; thưởng tuần không phụ thuộc BXH", () => {
+    let profile = newProfile();
+    assert.ok(isDualTowerV1(profile.dualTower));
+    if (!isDualTowerV1(profile.dualTower)) return;
+    let progress = {
+      ...profile.dualTower.destiny,
+      cycleId: "2026-10-19",
+      cycleBest: 5,
+    };
+    const weekly = planDestinyCycleEnd(progress, {
+      cycleId: "2026-10-19",
+      stonesForBest: destinyCycleStoneReward,
+    });
+    assert.ok(weekly.ok);
+    if (!weekly.ok) return;
+    let award = applyStoneAward(profile, weekly.events, { destiny: weekly.next });
+    assert.ok(award.ok && award.granted === 3);
+    if (!award.ok) return;
+    profile = award.profile;
+
+    progress = {
+      ...weekly.next,
+      cycleId: "2026-10-26",
+      cycleBest: 0,
+      claimedMilestones: [],
+      cycleRewardClaimed: false,
+    };
+    const next = planDestinyFloorClear(progress, {
+      cycleId: "2026-10-26",
+      floor: 3,
+      milestones: DESTINY_STONE_MILESTONES,
+    });
+    assert.ok(next.ok);
+    if (!next.ok) return;
+    award = applyStoneAward(profile, next.events, { destiny: next.next });
+    assert.ok(award.ok && award.granted === 3 && award.profile.stones === 6);
+    assert.deepEqual([0, 1, 2, 3, 5, 9, 10].map(destinyCycleStoneReward), [0, 1, 1, 2, 3, 3, 5]);
   });
 });
