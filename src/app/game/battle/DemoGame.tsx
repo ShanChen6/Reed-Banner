@@ -109,7 +109,7 @@ import { GearIcon } from "../art/gear";
 import { Portrait } from "../art/portraits";
 import { SkillIcon } from "../art/skills";
 import SurvivalBreakScreen from "../survival/SurvivalBreakScreen";
-import { INK, starPoints, TileArt } from "../art/tiles";
+import { BoardCrest, TileArt } from "../art/tiles";
 import ProgressPanel from "./ProgressPanel";
 import GearPanel from "./GearPanel";
 import ShopPanel from "./ShopPanel";
@@ -692,23 +692,6 @@ function FighterCard({
 const SWIPE_PX = 12;
 
 /** Vị trí bốn họa tiết mây ở góc khung bàn cờ (hình gốc đặt ở góc trên trái). */
-/** Huy hiệu giữa mép trên khung bàn cờ: mặt trống đồng mạ vàng, hai bên là dải mây cuộn. */
-function BoardCrest({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 160 32" className={className} aria-hidden focusable="false">
-      <g fill="none" stroke="url(#tile-gilt)" strokeWidth={3} strokeLinecap="round">
-        <path d="M62 18 C50 18 44 10 34 12 C26 14 26 24 34 24 C40 24 40 17 35 17" />
-        <path d="M98 18 C110 18 116 10 126 12 C134 14 134 24 126 24 C120 24 120 17 125 17" />
-        <path d="M30 21 C20 23 12 22 4 26 M130 21 C140 23 148 22 156 26" strokeWidth={2} />
-      </g>
-      <circle cx={80} cy={16} r={15} fill="url(#tile-gilt)" stroke={INK} strokeWidth={1.2} />
-      <circle cx={80} cy={16} r={11.5} fill="#5e3b1f" stroke={INK} strokeWidth={0.8} />
-      <polygon points={starPoints(80, 16, 10, 3.8, 14)} fill="url(#tile-gold)" />
-      <circle cx={80} cy={16} r={2.4} fill="#c2410c" />
-    </svg>
-  );
-}
-
 const CORNERS = [
   "-left-0.5 -top-0.5",
   "-right-0.5 -top-0.5 -scale-x-100",
