@@ -27,7 +27,7 @@ export function earthWard(parent: Container, color: number) {
   let wards: Ward[] = [];
   return {
     /** Dựng vòm quanh người đứng ở `at`, chờ `wait` giây. */
-    ward(at: Point, size: number, wait = 0) {
+    cover(at: Point, size: number, wait = 0) {
       const dust = Array.from({ length: 10 }, () => ({
         x: (Math.random() - 0.5) * size * 0.6,
         vx: (Math.random() - 0.5) * size * 0.5,

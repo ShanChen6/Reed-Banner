@@ -107,9 +107,9 @@ export interface WarriorRig {
   readonly orb?: Point;
   /**
    * Hiệu ứng lúc đòn trúng vẽ trên cả sân: `lightning` phóng sét tới đối thủ, tuyệt chiêu giáng sét xuống cả đội;
-   * `earthWard` chỉ ở tuyệt chiêu, dựng vòm khiên đất quanh từng đồng đội.
+   * `earthWard` và `leafBloom` chỉ ở tuyệt chiêu, dựng vòm khiên đất hoặc nở vòng lá hồi sinh quanh từng đồng đội.
    */
-  readonly strikeFx?: "lightning" | "earthWard";
+  readonly strikeFx?: "lightning" | "earthWard" | "leafBloom";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -830,6 +830,52 @@ const NGUYEN_KHOAN: WarriorRig = {
     anchor: { x: 640, y: 930 }, scale: 0.9 },
 };
 
+/**
+ * Kiều Thuận, sứ quân Hồi Hồ, y sư hệ Mộc. Bộ tranh Shan gửi 24/10 (nền đã trong suốt): ảnh đứng tách lớp bằng
+ * code. Bàn tay cầm hồ lô xoay quanh cổ tay, hồ lô treo dây lắc quanh nắm tay; bàn tay phải, đầu và dải khăn
+ * tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const KIEU_THUAN: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "gourd",
+  grip: { x: 150, y: 205 },
+  dir: "kieu-thuan",
+  texScale: 0.5,
+  foot: { x: 560, y: 1500 },
+  height: 1490,
+  parts: {
+    body: { x: 49, y: 0, w: 927, h: 1536 },
+    armR: { x: 892, y: 679, w: 116, h: 154 },
+    sword: { x: 19, y: 168, w: 182, h: 460 },
+    arm: { x: 108, y: 175, w: 163, h: 181 },
+    head: { x: 558, y: 12, w: 165, h: 251 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 270, y: 101, w: 291, h: 160 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 6, freq: 1.6, k: 3, phase: 0.6, vertical: true, reverse: true } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 240, y: 315 },
+    elbowR: { x: 910, y: 705 },
+    neck: { x: 640, y: 245 },
+  },
+  blade: [{ x: 150, y: 205 }, { x: 110, y: 470 }],
+  strikeFx: "leafBloom",
+  fxColor: 0x4f9a4a,
+  // Hồ lô buông thấp kết ấn (đánh thường), ôm hồ lô mở tay (ra chiêu), thế tấn rộng vươn tay về đồng minh (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 62, y: 10 },
+      anchor: { x: 680, y: 1165 }, scale: 1.05, burst: { x: 910, y: 340 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 15, y: 5 },
+      anchor: { x: 430, y: 1500 }, scale: 1, burst: { x: 930, y: 300 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 17, y: 2 },
+      anchor: { x: 665, y: 1170 }, scale: 1.05, burst: { x: 620, y: 410 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 16, y: 75 },
+    anchor: { x: 800, y: 930 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -846,6 +892,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   ngoXuongXi: NGO_XUONG_XI,
   kieuCongHan: KIEU_CONG_HAN,
   nguyenKhoan: NGUYEN_KHOAN,
+  kieuThuan: KIEU_THUAN,
 };
 
 export function rigOf(id: string): Rig | null {
