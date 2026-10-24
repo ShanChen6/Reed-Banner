@@ -2,7 +2,6 @@
 import { loadoutOf, MAIN_ID, ownsCompanion, profileTeam, progressOf, type Profile } from "../progress";
 import type { GearItem } from "../gear";
 import {
-  DESTINY_ROSTER_MAX,
   type DestinyFighterSnapshot,
   type DestinyRun,
 } from "../progress/dualTowerState";
@@ -56,7 +55,7 @@ export function createDestinyRun(
 ): DestinyRunCreateResult {
   const cycleId = destinyCycleId(now);
   if (!cycleId) return { ok: false, error: "invalid_time" };
-  if (!Array.isArray(rosterIds) || rosterIds.length < DESTINY_ROSTER_MIN || rosterIds.length > DESTINY_ROSTER_MAX)
+  if (!Array.isArray(rosterIds) || rosterIds.length < DESTINY_ROSTER_MIN)
     return { ok: false, error: "invalid_roster_size" };
   if (rosterIds[0] !== MAIN_ID) return { ok: false, error: "leader_must_be_first" };
   if (new Set(rosterIds).size !== rosterIds.length) return { ok: false, error: "duplicate_fighter" };

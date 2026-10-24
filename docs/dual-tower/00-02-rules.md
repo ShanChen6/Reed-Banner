@@ -81,7 +81,7 @@ Settle phải idempotent: settle lặp cùng trận không cộng đá lần hai
 | Chu kỳ | Mặc định 7 ngày, bắt đầu thứ Hai 00:00 VN. Độ dài **[TEST]** (cấu hình được). |
 | Luật tầng | Cố định trong cả chu kỳ, sinh xác định từ id chu kỳ (không đổi giữa chừng). Nội dung luật **[TBD]**. |
 | Run | Một run hoạt động mỗi người mỗi chu kỳ [giả định, xem D-04]. |
-| Roster khóa | Lúc bắt đầu run chọn roster từ tướng sở hữu, tối đa **8** **[TEST]**, bắt buộc có Đinh Bộ Lĩnh. Khóa suốt run, không thêm/bớt. |
+| Roster khóa | Lúc bắt đầu run chọn từ toàn bộ tướng sở hữu, bắt buộc có Đinh Bộ Lĩnh. Không giới hạn tối đa; khóa suốt run, không thêm/bớt. |
 | Active | Mỗi tầng chọn 3 active từ roster (thủ lĩnh bắt buộc), hợp luật tầng. Được thay tướng **giữa các tầng**, không trong trận. |
 | HP / lương | Xuyên tầng, HP theo **id tướng** (không theo vị trí). Tướng ở dự bị giữ nguyên HP, **không hồi tự động**. |
 | Tướng ngã | HP 0 = ngã, không thể ra trận cho tới khi được hồi bằng lựa chọn trong run. |
@@ -108,7 +108,7 @@ Giống Trial (C2–C5) cộng điều kiện: mọi active phải còn sống (
 
 | Từ | Sự kiện | Điều kiện | Đến | Hiệu ứng |
 |---|---|---|---|---|
-| NoRun | bắt đầu | chu kỳ đang mở, roster hợp lệ (≤8, có thủ lĩnh, sở hữu) | RosterSelect → Prep | khóa roster, HP/lương khởi đầu, tầng 1 |
+| NoRun | bắt đầu | chu kỳ đang mở, roster hợp lệ (có thủ lĩnh, chỉ gồm tướng sở hữu, không trùng ID) | RosterSelect → Prep | khóa roster, HP/lương khởi đầu, tầng 1 |
 | Prep | đổi active/nghề/hệ | hợp luật, tướng còn sống | Prep | — |
 | Prep | bắt đầu trận | đội hợp luật | InBattle | ghi nghề/hệ; tạo trận với HP theo id |
 | InBattle | thắng | — | Reward | ghi HP/lương theo id; ghi mốc tầng; phát đá mốc nếu đạt (một lần) |
@@ -181,7 +181,7 @@ Quy tắc chung: mọi action kiểm tra ở server, xác thực chủ sở hữ
 
 | Tham số | Giá trị | Trạng thái |
 |---|---|---|
-| Giới hạn roster Destiny | 8 | [TEST] đề xuất |
+| Giới hạn roster Destiny | Không giới hạn tối đa; có thể mang toàn bộ tướng sở hữu | Đã chốt |
 | Độ dài chu kỳ | 7 ngày, thứ Hai 00:00 VN | Mặc định, cấu hình được |
 | Số tầng Trial | 20 | Cố định ở bản đầu |
 | Mọi lượng đá, mốc, mức HP/lương khởi đầu, lượng hồi, giá trị Phúc, số tầng Destiny | — | [TBD] — cần simulation + duyệt |
