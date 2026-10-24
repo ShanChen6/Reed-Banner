@@ -110,9 +110,10 @@ export interface WarriorRig {
    * `earthWard` và `leafBloom` chỉ ở tuyệt chiêu, dựng vòm khiên đất hoặc nở vòng lá hồi sinh quanh từng đồng đội;
    * `armorPierce` chỉ ở tuyệt chiêu, phóng mũi sáng xuyên giáp tới đối thủ đứng đầu; `supplyDrain` chỉ ở tuyệt
    * chiêu, phủ sương băng lên cả đội đối thủ và hút hạt sáng từ họ về người tung chiêu; `waterPillar` chỉ ở tuyệt
-   * chiêu, phun cột nước rồi đóng băng dưới chân từng đối thủ.
+   * chiêu, phun cột nước rồi đóng băng dưới chân từng đối thủ; `flameWall` chỉ ở tuyệt chiêu, dựng tường lửa
+   * quanh chính mình và bén lửa lên từng đối thủ.
    */
-  readonly strikeFx?: "lightning" | "earthWard" | "leafBloom" | "armorPierce" | "supplyDrain" | "waterPillar";
+  readonly strikeFx?: "lightning" | "earthWard" | "leafBloom" | "armorPierce" | "supplyDrain" | "waterPillar" | "flameWall";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1017,6 +1018,51 @@ const LU_DUONG: WarriorRig = {
     anchor: { x: 1000, y: 870 }, scale: 0.85 },
 };
 
+/**
+ * Nguyễn Siêu, sứ quân Tây Phù Liệt, binh lính hệ Hỏa. Bộ tranh Shan gửi 24/10 (nền trong suốt sẵn, trừ tranh gục
+ * và tranh phong thái cạnh cột cờ có nền ca-rô vẽ sẵn, tách bằng code). Ảnh đứng tách lớp như Nguyễn Khoan: giáo
+ * có cờ đuôi nheo cùng nắm tay xoay quanh cổ tay, khiên mây là lớp tay không nâng lên khi vào thế và đỡ đòn.
+ * Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const NGUYEN_SIEU: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "nguyen-sieu",
+  texScale: 0.5,
+  foot: { x: 530, y: 1490 },
+  height: 1340,
+  parts: {
+    body: { x: 151, y: 172, w: 786, h: 1351 },
+    armR: { x: 760, y: 515, w: 253, h: 566 },
+    sword: { x: 66, y: 8, w: 242, h: 1480 },
+    arm: { x: 184, y: 598, w: 101, h: 119 },
+    head: { x: 480, y: 172, w: 195, h: 231 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 288, y: 260, w: 209, h: 180 }, behind: true,
+      wind: { axis: "x", start: 0.15, amp: 7, freq: 1.6, k: 3, phase: 1.1, vertical: true, reverse: true } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 262, y: 655 },
+    elbowR: { x: 790, y: 640 },
+    neck: { x: 560, y: 395 },
+  },
+  blade: [{ x: 230, y: 650 }, { x: 282, y: 20 }],
+  shieldRaise: -0.35,
+  strikeFx: "flameWall",
+  fxColor: 0xd9502a,
+  // Đâm giáo sau khiên (đánh thường), thế thủ giơ khiên trấn lũy (tuyệt chiêu); ra chiêu dùng nhịp đẩy giáo.
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 17, y: 14 },
+      anchor: { x: 680, y: 955 }, scale: 1.1, burst: { x: 1495, y: 110 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 99, y: 2 },
+      anchor: { x: 680, y: 1120 }, scale: 1.1, burst: { x: 1120, y: 510 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 17, y: 87 },
+    anchor: { x: 760, y: 900 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1037,6 +1083,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   lyKhue: LY_KHUE,
   nguyenThuTiep: NGUYEN_THU_TIEP,
   luDuong: LU_DUONG,
+  nguyenSieu: NGUYEN_SIEU,
 };
 
 export function rigOf(id: string): Rig | null {

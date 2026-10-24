@@ -55,10 +55,11 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/ward"), import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
+          import("@/app/game/stage/flame"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -135,6 +136,14 @@ export default function RigPreview({ id, size, onSnapshot }: {
           const size = rig.height * loaded.view.scale.y;
           [0.78, 0.92].forEach((k, n) => pillar.cover({ x: el.clientWidth * k, y: loaded!.view.y }, size * 0.8, n * 0.1));
         });
+        // Tường lửa hệ Hỏa: quanh nhân vật, lửa bén ở mép phải khung.
+        const fire = team === "flameWall" ? flameWall(app.stage, rig.fxColor) : null;
+        if (fire) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          fire.wall({ x: loaded.view.x, y: loaded.view.y }, size);
+          fire.burn({ x: el.clientWidth - 40, y: loaded.view.y }, size * 0.8, 0.15);
+        });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
           loaded?.update(dt);
@@ -143,6 +152,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           pierce?.update(dt);
           drain?.update(dt);
           pillar?.update(dt);
+          fire?.update(dt);
         });
         setReady(true);
       } catch (cause) {

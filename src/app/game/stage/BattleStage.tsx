@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -217,6 +217,7 @@ export default function BattleStage({
         import("./pierce"),
         import("./drain"),
         import("./pillar"),
+        import("./flame"),
       ]);
       const app = new Application();
       await app.init({
@@ -265,7 +266,7 @@ export default function BattleStage({
       layout();
       app.renderer.on("resize", layout);
       // Hiệu ứng vẽ trên cả sân, đè lên mọi nhân vật: sét hệ Lôi, vòm khiên đất hệ Thổ, vòng lá hồi sinh hệ Mộc,
-      // mũi sáng phá giáp hệ Kim, đoạt lương và cột nước đóng băng hệ Thủy.
+      // mũi sáng phá giáp hệ Kim, đoạt lương và cột nước đóng băng hệ Thủy, tường lửa hệ Hỏa.
       const sky = new Container();
       sky.zIndex = 100;
       app.stage.addChild(sky);
@@ -283,6 +284,18 @@ export default function BattleStage({
           loaded[i]!.onStrike?.((kind) => {
             if (kind !== "ultimate") return;
             alive(true).forEach((s, n) => fx.cover(spot(s, 0), app.screen.height * FIGURE, n * 0.08));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "flameWall") {
+          const fx = flameWall(sky, rig.fxColor);
+          // Tuyệt chiêu hỏa lũy: tường lửa quanh chính mình, lửa bén lên từng đối thủ còn đứng.
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            const size = app.screen.height * FIGURE;
+            if (me) fx.wall(spot(me, 0), size);
+            alive(false).forEach((s, n) => fx.burn(spot(s, 0), size, 0.15 + n * 0.08));
           });
           return [fx];
         }
