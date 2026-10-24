@@ -109,7 +109,7 @@ export interface WarriorRig {
 }
 
 /**
- * Tranh tư thế vẽ riêng (ra chiêu, tuyệt chiêu): game thay hình động bằng tranh này trong khoảnh khắc ra
+ * Tranh tư thế vẽ riêng (đánh thường, ra chiêu, tuyệt chiêu): game thay hình động bằng tranh này trong khoảnh khắc ra
  * đòn. Tọa độ theo ảnh gốc của tranh; ảnh xuất ra đã cắt sát và thu nhỏ theo texScale của rig.
  */
 export interface PoseArt {
@@ -126,7 +126,8 @@ export interface PoseArt {
   readonly burst: Point;
 }
 
-export type PoseKind = "cast" | "ultimate";
+/** `attack`: tranh đánh thường, thay nhát chém của hình động nếu nhân vật có. */
+export type PoseKind = "attack" | "cast" | "ultimate";
 
 export type Rig = MageRig | WarriorRig;
 
@@ -186,40 +187,46 @@ const DAO_LAM: MageRig = {
 };
 
 /**
- * Trần Cương, tướng sĩ hệ Kim. Tách lớp bằng code từ bản thiết kế phẳng (không có PSD): phần bị tay, kiếm
- * và vạt áo che được vá tạm, nên động tác giữ biên độ vừa phải. Hệ tọa độ: ảnh toàn thân 628×1035.
+ * Trần Cương, tướng sĩ hệ Kim. Bộ tranh Shan gửi 24/10 (nền đã trong suốt): ảnh đứng tách lớp bằng code, lưỡi đao
+ * tách bằng GrabCut, phần thân sau lưỡi vá theo màu áo; ba tranh ra đòn thay cho nhát chém của hình động.
+ * Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const TRAN_CUONG: WarriorRig = {
   skeleton: "warrior",
   dir: "tran-cuong",
   texScale: 0.5,
-  foot: { x: 400, y: 1018 },
-  height: 1035,
+  foot: { x: 530, y: 1508 },
+  height: 1518,
   parts: {
-    body: { x: 2, y: 0, w: 626, h: 1035 },
-    armR: { x: 518, y: 340, w: 103, h: 245 },
-    sword: { x: 1, y: 373, w: 249, h: 662 },
-    arm: { x: 158, y: 284, w: 159, h: 235 },
-    head: { x: 339, y: 8, w: 124, h: 145 },
+    body: { x: 56, y: 7, w: 912, h: 1518 },
+    armR: { x: 716, y: 538, w: 123, h: 288 },
+    sword: { x: 57, y: 661, w: 845, h: 628 },
+    arm: { x: 122, y: 346, w: 225, h: 484 },
+    head: { x: 418, y: 10, w: 210, h: 239 },
   },
   cloth: [
-    {
-      name: "apron",
-      box: { x: 392, y: 538, w: 120, h: 270 },
-      wind: { axis: "y", start: 0.3, amp: 6, freq: 1.2, k: 2.4, phase: 0.8 },
-    },
+    { name: "ribbon", box: { x: 299, y: 93, w: 147, h: 133 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 6, freq: 1.7, k: 3.6, phase: 0.4, vertical: true, reverse: true } },
   ],
-  covers: [{ name: "pauldron", box: { x: 204, y: 114, w: 145, h: 189 } }],
+  covers: [{ name: "pauldron", box: { x: 223, y: 262, w: 168, h: 103 } }],
   joints: {
-    shoulder: { x: 268, y: 262 },
-    elbowR: { x: 540, y: 385 },
-    neck: { x: 402, y: 150 },
+    shoulder: { x: 282, y: 358 },
+    elbowR: { x: 775, y: 555 },
+    neck: { x: 530, y: 240 },
   },
-  blade: [
-    { x: 225, y: 530 },
-    { x: 30, y: 1020 },
-  ],
+  blade: [{ x: 290, y: 860 }, { x: 905, y: 1288 }],
   fxColor: 0xffd27a,
+  // Ba tranh ra đòn: chém ngang thấp (đánh thường), chém vươn (ra chiêu), giơ đao bổ xuống (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 1 / 3, origin: { x: 18, y: 10 },
+      anchor: { x: 660, y: 1100 }, scale: 1.06, burst: { x: 1355, y: 1000 } },
+    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 31, y: 7 },
+      anchor: { x: 620, y: 1100 }, scale: 1, burst: { x: 1382, y: 555 } },
+    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 10, y: 5 },
+      anchor: { x: 640, y: 1190 }, scale: 1.1, burst: { x: 1273, y: 482 } },
+  },
+  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 8, y: 40 },
+    anchor: { x: 780, y: 940 }, scale: 1 },
 };
 
 /**

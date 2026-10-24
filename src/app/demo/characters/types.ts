@@ -14,7 +14,7 @@ export interface CharacterPreview {
   readonly files: readonly PreviewFile[];
   readonly rigBytes: number;
   readonly assets: readonly {
-    readonly kind: "portrait" | "standing" | "cast" | "ultimate" | "defeat";
+    readonly kind: "portrait" | "standing" | "attack" | "cast" | "ultimate" | "defeat";
     readonly label: string;
     readonly file: PreviewFile | null;
   }[];

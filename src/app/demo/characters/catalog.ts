@@ -26,6 +26,7 @@ export async function characterCatalog(): Promise<CharacterPreview[]> {
     const [portrait, standing] = await Promise.all([
       file(portraitUrl(id)), file(partUrl(rig, "standing")),
     ]);
+    const attack = rig.skeleton === "warrior" ? rig.poses?.attack : undefined;
     const cast = rig.skeleton === "warrior" ? rig.poses?.cast : undefined;
     const ultimate = rig.skeleton === "warrior" ? rig.poses?.ultimate : undefined;
     const defeat = rig.skeleton === "warrior" ? rig.down : undefined;
@@ -36,6 +37,7 @@ export async function characterCatalog(): Promise<CharacterPreview[]> {
       assets: [
         { kind: "portrait", label: "Avatar", file: portrait },
         { kind: "standing", label: "Ảnh đứng", file: standing },
+        { kind: "attack", label: "Đánh thường", file: attack ? await file(partUrl(rig, attack.name)) : null },
         { kind: "cast", label: "Ra chiêu", file: cast ? await file(partUrl(rig, cast.name)) : null },
         { kind: "ultimate", label: "Tuyệt chiêu", file: ultimate ? await file(partUrl(rig, ultimate.name)) : null },
         { kind: "defeat", label: "Bị hạ gục", file: defeat ? await file(partUrl(rig, defeat.name)) : null },
