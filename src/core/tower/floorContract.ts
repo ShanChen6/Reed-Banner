@@ -5,7 +5,6 @@ import type { Difficulty } from "../ai";
 import type { FighterConfig } from "../battle";
 import { STANDARD_WEIGHTS, type SpawnWeights } from "../board";
 import {
-  DESTINY_ROSTER_MAX,
   leveledFoe,
   MAX_LEVEL,
   TRIAL_FLOORS,
@@ -479,7 +478,6 @@ export function validateTowerMatch(
   if (
     expected.mode === "destiny" &&
     (!roster ||
-      roster.length > DESTINY_ROSTER_MAX ||
       !tag.lineupIds.every((id) => roster.includes(id)))
   )
     return "roster_mismatch";

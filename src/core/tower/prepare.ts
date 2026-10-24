@@ -16,7 +16,6 @@ import {
   MAIN_ID,
   ownsCompanion,
   profileTeam,
-  DESTINY_ROSTER_MAX,
   type Profile,
 } from "../progress";
 import {
@@ -153,7 +152,6 @@ export function prepareTowerLineup(
     if (
       !Array.isArray(roster) ||
       roster[0] !== MAIN_ID ||
-      roster.length > DESTINY_ROSTER_MAX ||
       new Set(roster).size !== roster.length ||
       !isRecord(hp)
     )

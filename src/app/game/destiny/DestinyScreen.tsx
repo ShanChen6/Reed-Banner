@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   DESTINY_BOON_CATALOG,
-  DESTINY_ROSTER_MAX,
   DESTINY_ROSTER_MIN,
   MAIN_ID,
   companionById,
@@ -104,7 +103,7 @@ export default function DestinyScreen() {
       const alive = aliveIds(run);
       setActive([MAIN_ID, ...alive.filter((id) => id !== MAIN_ID).slice(0, 2)]);
     } else {
-      setRoster([MAIN_ID, ...Object.keys(stored.profile.companions).sort().slice(0, DESTINY_ROSTER_MAX - 1)]);
+      setRoster([MAIN_ID, ...Object.keys(stored.profile.companions).sort()]);
     }
     setBuild(null);
     setOfferIndex(null);
@@ -195,13 +194,13 @@ export default function DestinyScreen() {
           <section className="rounded-xl border border-white/10 bg-black/20 p-5">
             <h2 className="font-serif text-xl font-bold">Khóa roster mới</h2>
             {run?.phase === "done" && <p className="mt-1 text-sm text-stone-400">Run trước đã kết thúc ở tầng {run.floor}.</p>}
-            <p className="mt-2 text-sm text-stone-300">Chỉ cần tổng cộng tối thiểu {DESTINY_ROSTER_MIN} tướng: Đinh Bộ Lĩnh và ít nhất 2 tướng sở hữu. Tối đa {DESTINY_ROSTER_MAX} người.</p>
+            <p className="mt-2 text-sm text-stone-300">Chỉ cần tổng cộng tối thiểu {DESTINY_ROSTER_MIN} tướng: Đinh Bộ Lĩnh và ít nhất 2 tướng sở hữu. Có thể mang toàn bộ tướng đã sở hữu.</p>
             <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {Object.keys(profile.companions).sort().map((id) => {
                 const companion = companionById(id);
                 if (!companion) return null;
                 const selected = roster.includes(id);
-                return <button key={id} type="button" disabled={!selected && roster.length >= DESTINY_ROSTER_MAX} onClick={() => setRoster(selected ? roster.filter((x) => x !== id) : [...roster, id])} className={`rounded-lg border p-3 text-left ${selected ? "border-amber-400 bg-amber-500/15" : "border-white/10 bg-white/5"} disabled:opacity-40`}><strong>{companion.name}</strong><span className="block text-xs text-stone-400">{ELEMENT_NAME[companion.element]} · {PROFESSION_NAME[companion.profession]}</span></button>;
+                return <button key={id} type="button" onClick={() => setRoster(selected ? roster.filter((x) => x !== id) : [...roster, id])} className={`rounded-lg border p-3 text-left ${selected ? "border-amber-400 bg-amber-500/15" : "border-white/10 bg-white/5"}`}><strong>{companion.name}</strong><span className="block text-xs text-stone-400">{ELEMENT_NAME[companion.element]} · {PROFESSION_NAME[companion.profession]}</span></button>;
               })}
             </div>
             <button disabled={busy || roster.length < DESTINY_ROSTER_MIN} onClick={() => void startRun()} className="mt-4 rounded-lg bg-amber-500 px-5 py-2.5 font-bold text-stone-950 disabled:opacity-40">{busy ? "Đang bắt đầu…" : `Bắt đầu với ${roster.length} tướng`}</button>
