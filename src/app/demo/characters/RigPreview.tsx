@@ -55,8 +55,8 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }] = await Promise.all([
-          import("pixi.js"), import("@/app/game/stage/puppet"),
+        const [{ Application }, { loadPuppet }, { lightning }] = await Promise.all([
+          import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -98,7 +98,20 @@ export default function RigPreview({ id, size, onSnapshot }: {
         const snapshot = await app.renderer.extract.base64(loaded.view);
         if (disposed) return;
         onSnapshot(snapshot);
-        app.ticker.add((tick) => loaded?.update(Math.min(tick.deltaMS / 1000, 0.05)));
+        // Sét hệ Lôi: không có đối thủ nên phóng tới mép phải khung, tuyệt chiêu giáng xuống ba điểm.
+        const bolts = rig.skeleton === "warrior" && rig.strikeFx === "lightning" ? lightning(app.stage, rig.fxColor) : null;
+        if (bolts) loaded.onStrike?.((kind, at) => {
+          const width = el.clientWidth;
+          const height = el.clientHeight;
+          const w = el.dataset.size === "large" ? 5 : 3;
+          if (kind === "ultimate") [0.74, 0.84, 0.94].forEach((k, n) => bolts.strike({ x: width * k, y: height * 0.55 }, w * 1.6, n * 0.08));
+          else bolts.bolt(at, { x: width - 12, y: height * 0.55 }, kind === "cast" ? w * 1.4 : w);
+        });
+        app.ticker.add((tick) => {
+          const dt = Math.min(tick.deltaMS / 1000, 0.05);
+          loaded?.update(dt);
+          bolts?.update(dt);
+        });
         setReady(true);
       } catch (cause) {
         destroy();

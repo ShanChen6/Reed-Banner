@@ -100,3 +100,36 @@ test("Trần Cương có tranh đánh thường, ra chiêu, tuyệt chiêu, bị
   for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
+
+test("Kiều Công Hãn có đủ bốn tranh, sét hệ Lôi, khớp nằm trong lớp và texture khớp tọa độ", () => {
+  const rig = rigOf("kieuCongHan");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "staff");
+  assert.equal(rig.strikeFx, "lightning");
+  assert.equal(rig.fxColor, 0xb98cff);
+  assert.equal(rig.poses?.attack?.name, "pose-attack");
+  assert.equal(rig.poses?.cast?.name, "pose-cast");
+  assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.elbowR, rig.parts.body);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  contains(rig.orb!, rig.parts.sword);
+  for (const [name, box] of [...Object.entries(rig.parts), ...rig.cloth.map((c) => [c.name, c.box] as const)]) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  for (const art of [rig.down!, ...Object.values(rig.poses!)]) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, art.name)}`);
+    assert.ok(data[20]! & 0x10, `${art.name} cần alpha thật`);
+  }
+  let bytes = statSync("public/art/characters/kieu-cong-han/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});

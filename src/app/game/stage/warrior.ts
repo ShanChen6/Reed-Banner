@@ -18,6 +18,7 @@ import {
   reaction,
   victory,
   type Puppet,
+  type StrikeListener,
 } from "./kit";
 import type { PoseArt, PoseKind, WarriorRig } from "./rigs";
 
@@ -106,6 +107,18 @@ export function warrior(
     arm.addChild(s);
     return s;
   });
+  // Quả cầu đầu trượng sáng riêng, nhịp nhanh hơn hào quang.
+  const orb = rig.orb
+    ? (() => {
+        const s = new Sprite(glow());
+        s.anchor.set(0.5);
+        s.tint = rig.fxColor;
+        s.blendMode = "add";
+        s.position.set(rig.orb.x, rig.orb.y);
+        arm.addChild(s);
+        return s;
+      })()
+    : null;
   if (rig.sleeveWind) L.mesh(img("arm"), parts.arm, arm, rig.sleeveWind);
   else L.sprite(img("arm"), parts.arm, arm);
   for (const c of rig.covers) L.sprite(img(c.name), c.box, body);
@@ -184,6 +197,7 @@ export function warrior(
   let trailA = 0;
   let trailFrom = 0;
   let trailTo = 0;
+  let onStrike: StrikeListener | null = null;
 
   const AMP = still ? 0 : 1;
 
@@ -232,6 +246,7 @@ export function warrior(
       pose.bloom.alpha = (0.35 + 0.5 * flash) * show;
       if (!action.fired && a >= B.hit) {
         action.fired = true;
+        onStrike?.(pose.kind, pose.root.toGlobal(pose.burst));
         const big = pose.kind === "ultimate";
         for (let i = 0; i < (big ? 44 : pose.kind === "cast" ? 26 : 14); i++) {
           const d = (Math.random() - 0.5) * (big ? 2.6 : 1.4) - (big ? Math.PI / 2 : 0);
@@ -281,6 +296,7 @@ export function warrior(
           const ang = baseAngle + S.strike;
           const tx = sx + thrust + Math.cos(ang) * reach;
           const ty = sy + Math.sin(ang) * reach;
+          onStrike?.(swingKind, body.toGlobal({ x: tx, y: ty }));
           for (let i = 0; i < (swingKind === "ultimate" ? 44 : big ? 30 : 12); i++) {
             const d = (Math.random() - 0.5) * 1.4;
             const v = 250 + Math.random() * (big ? 600 : 300);
@@ -335,6 +351,10 @@ export function warrior(
     auras.forEach((s, i) => {
       s.alpha = down ? 0 : Math.max(0, aura * (0.7 + 0.3 * Math.sin(t * 5 + i)));
     });
+    if (orb) {
+      orb.alpha = down ? 0 : Math.min(1, 0.45 + aura * 0.6 + 0.15 * Math.sin(t * 7));
+      orb.scale.set(2.6 + 0.4 * Math.sin(t * 4.3) + aura * 0.8);
+    }
 
     trail.clear();
     if (trailA > 0) {
@@ -374,6 +394,9 @@ export function warrior(
       if (kind === "ready" && action && action.kind !== "victory" && action.kind !== "ready") return;
       action = { kind, t: 0, fired: false };
       fx.start(kind);
+    },
+    onStrike(listener) {
+      onStrike = listener;
     },
     setDown(next) {
       if (next === down) return;
