@@ -112,7 +112,7 @@ export interface WarriorRig {
    * chiêu, phủ sương băng lên cả đội đối thủ và hút hạt sáng từ họ về người tung chiêu; `waterPillar` chỉ ở tuyệt
    * chiêu, phun cột nước rồi đóng băng dưới chân từng đối thủ; `flameWall` chỉ ở tuyệt chiêu, dựng tường lửa
    * quanh chính mình và bén lửa lên từng đối thủ; `groundSlam` chỉ ở tuyệt chiêu, nứt đất dưới chân đối thủ đứng
-   * đầu và dựng vòm khiên đất quanh cả đội mình.
+   * đầu và dựng vòm khiên đất quanh cả đội mình; `needleVolley` chỉ ở tuyệt chiêu, bắn tỏa kim bạc tới từng đối thủ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -122,7 +122,8 @@ export interface WarriorRig {
     | "supplyDrain"
     | "waterPillar"
     | "flameWall"
-    | "groundSlam";
+    | "groundSlam"
+    | "needleVolley";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1117,6 +1118,50 @@ const DO_CANH_THAC: WarriorRig = {
     anchor: { x: 850, y: 880 }, scale: 0.9 },
 };
 
+/**
+ * Chu Ngân, pháp sư hệ Kim (tướng cửa hàng). Bộ tranh Shan gửi 24/10 (ảnh đứng, đánh thường, ra chiêu nền trong
+ * suốt sẵn; tuyệt chiêu, tranh gục và tranh phong thái bên voi có nền ca-rô vẽ sẵn, tách bằng code). Tranh đánh
+ * thường vẽ quay sang trái nên được lật ngang cho cùng hướng các tranh khác. Ảnh đứng tách lớp: trượng đồng ba chuông
+ * cùng nắm tay xoay quanh cổ tay, cầu bạc sáng riêng; bàn tay bắt ấn và đầu tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const CHU_NGAN: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "staff",
+  dir: "chu-ngan",
+  texScale: 0.5,
+  foot: { x: 600, y: 1505 },
+  height: 1480,
+  parts: {
+    body: { x: 7, y: 24, w: 1011, h: 1502 },
+    armR: { x: 710, y: 343, w: 109, h: 120 },
+    sword: { x: 84, y: 6, w: 250, h: 1511 },
+    arm: { x: 170, y: 478, w: 86, h: 95 },
+    head: { x: 524, y: 24, w: 180, h: 279 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 240, y: 528 },
+    elbowR: { x: 800, y: 440 },
+    neck: { x: 625, y: 295 },
+  },
+  blade: [{ x: 215, y: 520 }, { x: 120, y: 60 }],
+  orb: { x: 120, y: 60 },
+  strikeFx: "needleVolley",
+  fxColor: 0x9ea4ad,
+  // Chĩa trượng tới (đánh thường), dựng trượng xòe tay bắt ấn (ra chiêu), hai tay đẩy trượng hướng ống kim (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 11, y: 11 },
+      anchor: { x: 540, y: 985 }, scale: 1.25, burst: { x: 1468, y: 85 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 7, y: 9 },
+      anchor: { x: 510, y: 1490 }, scale: 1, burst: { x: 930, y: 384 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 67, y: 11 },
+      anchor: { x: 730, y: 960 }, scale: 1.25, burst: { x: 1450, y: 77 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 17, y: 51 },
+    anchor: { x: 820, y: 900 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1139,6 +1184,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   luDuong: LU_DUONG,
   nguyenSieu: NGUYEN_SIEU,
   doCanhThac: DO_CANH_THAC,
+  chuNgan: CHU_NGAN,
 };
 
 export function rigOf(id: string): Rig | null {

@@ -55,11 +55,12 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/ward"), import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
           import("@/app/game/stage/flame"), import("@/app/game/stage/slam"),
+          import("@/app/game/stage/needle"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -153,9 +154,17 @@ export default function RigPreview({ id, size, onSnapshot }: {
           slam.slam({ x: el.clientWidth - 60, y: loaded.view.y }, size * 0.8);
           slamWard?.cover({ x: loaded.view.x, y: loaded.view.y }, size, 0.2);
         });
+        // Ngân châm hệ Kim: bắn tới ba điểm ở mép phải khung.
+        const needles = team === "needleVolley" ? needleVolley(app.stage, rig.fxColor) : null;
+        if (needles) loaded.onStrike?.((kind, at) => {
+          if (kind !== "ultimate") return;
+          const w = el.dataset.size === "large" ? 3 : 2;
+          [0.35, 0.55, 0.75].forEach((k, n) => needles.volley(at, { x: el.clientWidth - 30, y: el.clientHeight * k }, w, n * 0.06));
+        });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
           loaded?.update(dt);
+          needles?.update(dt);
           bolts?.update(dt);
           wards?.update(dt);
           pierce?.update(dt);
