@@ -2,6 +2,25 @@
 
 > **Ngày:** 24/10/2026 · **Nhánh:** develop · **Trạng thái:** Đề xuất thay đổi, KHÔNG ghi đè asset/Weapon DNA đã được duyệt.
 
+## Quyết định thiết kế đã áp dụng — 24/10/2026
+
+**Chỉ đạo:** thay đổi năm trường hợp HIGH, **ngoại trừ Nguyễn Bặc phải giữ nguyên vũ khí**. Đã đồng bộ các điều chỉnh vào cả sáu prompt V4.2 của mỗi nhân vật dưới đây (30 prompt), không tác động code gameplay hay các hình ảnh đã render.
+
+| Nhân vật | Quyết định | Vũ khí và đạo cụ mới | Lưu ý bảo toàn |
+|---|---|---|---|
+| Nguyễn Bặc | **GIỮ NGUYÊN** | Đại đao hiện hữu, không thêm cờ | Chữ “Kỳ” trong tên chiêu không bắt buộc nhân vật phải cầm cờ |
+| Chu Ngân | **ĐIỀU CHỈNH** | Trượng đồng gắn bộ phóng 6 ngân châm bên dưới quả cầu bạc | Trượng và đầu trượng không biến hình |
+| Châu Ngọc | **BỔ SUNG** | Hồ lô sứ trắng + ống 4 kim châm ở hông trái | Kim y thuật, không sử dụng như ám khí |
+| Lý Liệt | **ĐIỀU CHỈNH** | Trường đao cán thẳng có móc gài cố định ở sống lưỡi và dải vải đỏ | Không tự thêm cờ; không uốn cán |
+| Tiêu Minh | **BỔ SUNG** | Cặp hồ lô men tím + hộp 5 kim ở cẳng tay phải | Hiệu ứng Lôi do game render, không thành vũ khí điện |
+| Mạnh Tường | **CHUẨN HÓA** | Giáo mảnh có cờ Phong nhỏ + khiên mây bầu dục với nẹp đồng | Cờ đã có sẵn, tuyệt đối không thêm cờ thứ hai |
+
+**Trạng thái phê duyệt:** người dùng đã duyệt hướng thay đổi đối với năm nhân vật và giữ nguyên Nguyễn Bặc; **chưa có Weapon Reference Sheet/ảnh Master mới được nghiệm thu**, nên thông số hình học là đặc tả thiết kế để sản xuất, không phải asset cuối cùng đã duyệt.
+
+**Ghi chú:** bảng audit ban đầu phía dưới phản ánh kết quả *trước khi xử lý xung đột*; không xem sáu nhãn HIGH lịch sử là trạng thái hiện tại. Các mục MEDIUM/LOW vẫn chờ rà soát sau.
+
+---
+
 ## Nguồn và phạm vi
 
 - Source code `src/core/battle/skills.ts`: chiêu riêng/ultimate và tên kỹ năng làm bằng chứng chức năng.
