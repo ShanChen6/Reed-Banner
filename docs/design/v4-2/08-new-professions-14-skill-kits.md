@@ -40,8 +40,8 @@
 |---|---|---|---|
 | Kim | **Luyện Kim Thành Kiếm** (`element_luyenKimThanhKiem`) | **Kim Ý Ngưng Thần** (`element_kimYNgungThan`) | `kim1`, `kim2` |
 | Mộc | **Lục Diệp Phong** (`element_lucDiepPhong`) | **Linh Mộc Hồi Sinh** (`element_linhMocHoiSinh`) | `moc1`, `moc2` |
-| Thủy | **Thủy Nguyệt Tư Linh** (`element_thuyNguyetTuLinh`) | **Thanh Lưu Tẩy Trần** (`element_thanhLuuTayTran`) | `thuy1`, `thuy2` |
-| Hỏa | **Phong Hỏa Thiêu Doanh** (`element_phongHoaThieuDoanh`) | **Nộ Hỏa Thiêu Thân** (`element_noHoaThieuThan`) | `hoa1`, `hoa2` |
+| Thủy | **Thủy Nguyệt Tụ Linh** (`element_thuyNguyetTuLinh`) | **Thanh Lưu Tẩy Trần** (`element_thanhLuuTayTran`) | `thuy1`, `thuy2` |
+| Hỏa | **Phóng Hỏa Thiêu Doanh** (`element_phongHoaThieuDoanh`) | **Nộ Hỏa Thiêu Thân** (`element_noHoaThieuThan`) | `hoa1`, `hoa2` |
 | Thổ | **Hậu Thổ Tích Lương** (`element_hauThoTichLuong`) | **Thạch Giáp** (`element_thachGiap`) | `tho1`, `tho2` |
 | Lôi | **Lôi Trụ Giáng Thế** (`element_loiTruGiangThe`) | **Tĩnh Điện Hộ Thân** (`element_tinhDienHoThan`) | `loi1`, `loi2` |
 | Phong | **Phong Quyển Tàn Vân** (`element_phongQuyenTanVan`) | **Thanh Phong Tụ Khí** (`element_thanhPhongTuKhi`) | `phong1`, `phong2` |
@@ -119,7 +119,7 @@
 | Ô | Chiêu | ID | Chức năng / mục tiêu |
 |---|---|---|---|
 | 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | damage atk 1.6; mark normal |
-| 2 | **Thủy Nguyệt Tư Linh** | `element_thuyNguyetTuLinh` | Chiêu hệ theo registry: xem steps chính thức khi triển khai |
+| 2 | **Thủy Nguyệt Tụ Linh** | `element_thuyNguyetTuLinh` | Chiêu hệ theo registry: xem steps chính thức khi triển khai |
 | 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns |
 | 4 | **Thủy Tiễn Khóa Thuyền** | `rb_lgn_thuyTienKhoaThuyen` | damage 2.05× ATK; effect freeze chance 0.35 for 1 turn; energy targets -15 |
 | 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | damage atk 0.75 to each enemy; destroy random 3 tiles |
@@ -149,7 +149,7 @@
 | Ô | Chiêu | ID | Chức năng / mục tiêu |
 |---|---|---|---|
 | 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | damage atk 1.6; mark normal |
-| 2 | **Phong Hỏa Thiêu Doanh** | `element_phongHoaThieuDoanh` | Chiêu Hỏa theo registry hiện tại |
+| 2 | **Phóng Hỏa Thiêu Doanh** | `element_phongHoaThieuDoanh` | Chiêu Hỏa theo registry hiện tại |
 | 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns |
 | 4 | **Hỏa Vũ Tiễn Trận** | `rb_xdt_hoaVuTienTran` | damage 1.15× ATK to enemies; burn value 0.12 ofAtk 2 turns; destroy square 3 |
 | 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | damage atk 0.75 to each enemy; destroy random 3 tiles |
@@ -329,7 +329,7 @@
 | Ô | Chiêu | ID | Chức năng / mục tiêu |
 |---|---|---|---|
 | 1 | **Lướt Sát** | `role_satThu_luotSat` | damage atk 1.65; energy self +5 |
-| 2 | **Thủy Nguyệt Tư Linh** | `element_thuyNguyetTuLinh` | Chiêu hệ theo registry: xem steps chính thức khi triển khai |
+| 2 | **Thủy Nguyệt Tụ Linh** | `element_thuyNguyetTuLinh` | Chiêu hệ theo registry: xem steps chính thức khi triển khai |
 | 3 | **Cắt Mạch** | `role_satThu_catMach` | damage atk 2.0 pierce 0.20; energy targets -10 |
 | 4 | **Hàn Giang Bế Khí** | `rb_hgk_hanGiangBeKhi` | damage 2.00× ATK; freeze chance 0.40 for 1 turn; energy targets -20 |
 | 5 | **Truy Mệnh** | `role_satThu_truyMenh` | damage atk 2.35; execute threshold 0.35 multiplier 1.30 |
@@ -359,7 +359,7 @@
 | Ô | Chiêu | ID | Chức năng / mục tiêu |
 |---|---|---|---|
 | 1 | **Lướt Sát** | `role_satThu_luotSat` | damage atk 1.65; energy self +5 |
-| 2 | **Phong Hỏa Thiêu Doanh** | `element_phongHoaThieuDoanh` | Chiêu Hỏa theo registry hiện tại |
+| 2 | **Phóng Hỏa Thiêu Doanh** | `element_phongHoaThieuDoanh` | Chiêu Hỏa theo registry hiện tại |
 | 3 | **Cắt Mạch** | `role_satThu_catMach` | damage atk 2.0 pierce 0.20; energy targets -10 |
 | 4 | **Xích Dạ Liên Trảm** | `rb_xd_xichDaLienTram` | damage 2.60× ATK; burn targets 0.16 ofAtk for 2 turns; execute threshold 0.30 multiplier 1.25 |
 | 5 | **Truy Mệnh** | `role_satThu_truyMenh` | damage atk 2.35; execute threshold 0.35 multiplier 1.30 |
