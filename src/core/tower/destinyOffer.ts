@@ -23,5 +23,10 @@ export function generateDestinyOffer(run: DestinyRun): readonly DestinyRewardOff
     const j = rng.int(0, i);
     [candidates[i], candidates[j]] = [candidates[j]!, candidates[i]!];
   }
+  const leader = run.fighters["dinhBoLinh"];
+  if (leader?.downed || leader?.hp === 0) {
+    const rescue: DestinyRewardOffer = { kind: "rescue" };
+    return [rescue, ...candidates.filter(({ kind }) => kind !== "rescue").slice(0, DESTINY_OFFER_SIZE - 1)];
+  }
   return candidates.slice(0, DESTINY_OFFER_SIZE);
 }

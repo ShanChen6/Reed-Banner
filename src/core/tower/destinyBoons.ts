@@ -160,7 +160,8 @@ export type DestinyBoonRewardError =
   | "invalid_run"
   | "invalid_phase"
   | "wrong_floor"
-  | "not_offered";
+  | "not_offered"
+  | "leader_requires_rescue";
 
 export type DestinyBoonRewardResult =
   | { readonly ok: true; readonly run: DestinyRun; readonly changed: boolean }
@@ -178,6 +179,9 @@ export function applyDestinyBoonReward(
     return { ok: false, error: "invalid_phase" };
   if (!Number.isInteger(input.floor) || input.floor !== run.floor)
     return { ok: false, error: "wrong_floor" };
+  const leader = run.fighters["dinhBoLinh"];
+  if (leader?.downed || leader?.hp === 0)
+    return { ok: false, error: "leader_requires_rescue" };
   if (!(DESTINY_BOON_IDS as readonly unknown[]).includes(input.boonId))
     return { ok: false, error: "unknown_boon" };
   if (!destinyBoonOffer(run).includes(input.boonId)) return { ok: false, error: "not_offered" };
