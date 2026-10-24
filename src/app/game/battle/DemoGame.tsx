@@ -1138,8 +1138,11 @@ export default function DemoGame({
   useEffect(() => {
     if (online || pacing || !started || state.winner !== null || state.turn.side !== AI)
       return;
-    const r = playAiTurn(state, difficulty, Date.now());
-    commit(state, r.state, r.events);
+    const timer = window.setTimeout(() => {
+      const r = playAiTurn(state, difficulty, Date.now());
+      commit(state, r.state, r.events);
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, [online, pacing, started, state, difficulty, commit]);
 
   // Đồng hồ 30 giây mỗi lượt (online lẫn offline).
