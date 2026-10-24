@@ -3,8 +3,35 @@
 
 import type { TileKind } from "../board";
 
+/** Nghề đã có đầy đủ luật chiến đấu, ô match-3 và kỹ năng đang chạy. */
 export const PROFESSIONS = ["tuongSi", "phapSu", "binhLinh", "ySu", "muuSi", "quanSu"] as const;
 export type Profession = (typeof PROFESSIONS)[number];
+
+/**
+ * Hai nghề mở rộng CHÍNH THỨC trong danh mục thiết kế Reed Banner.
+ * Chưa kích hoạt trong matchmaking/roster cho đến khi có TileKind,
+ * kỹ năng nghề, combo/passive, base stats, UI và kiểm thử end-to-end.
+ * Không gán ô kiếm giả cho Cung thủ/Sát thủ vì sẽ làm sai gameplay.
+ */
+export const EXPANSION_PROFESSIONS = ["cungThu", "satThu"] as const;
+export type ExpansionProfession = (typeof EXPANSION_PROFESSIONS)[number];
+/** Danh mục tám nghề của sản phẩm, bao gồm nghề chưa mở khóa gameplay. */
+export const ALL_PROFESSIONS = [...PROFESSIONS, ...EXPANSION_PROFESSIONS] as const;
+export type GameProfession = (typeof ALL_PROFESSIONS)[number];
+export const PROFESSION_DISPLAY_NAME: Readonly<Record<GameProfession, string>> = {
+  tuongSi: "Tướng sĩ",
+  phapSu: "Pháp sư",
+  binhLinh: "Binh lính",
+  ySu: "Y sư",
+  muuSi: "Mưu sĩ",
+  quanSu: "Quân sư",
+  cungThu: "Cung thủ",
+  satThu: "Sát thủ",
+};
+/** Ranh giới chủ động tránh dùng nghề chưa có kỹ năng trong trận. */
+export function isActiveProfession(profession: GameProfession): profession is Profession {
+  return (PROFESSIONS as readonly string[]).includes(profession);
+}
 
 /** Loại ô gắn với mỗi nghề. Trống trận không gắn nghề nào. */
 export const PROFESSION_TILE: Record<Profession, TileKind> = {

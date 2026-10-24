@@ -26,6 +26,7 @@ import type { MatchRecord } from "./store";
 import { resolveDestinyFloor } from "./destinyContent";
 import { activeDestinyCycle, destinyCycleSeed, publicDestinyCycle } from "./destinyCycle";
 import { hasExpiredDestinyRun, reconcileDestinyCycle } from "./destinyExpire";
+import { FEATURE_DISABLED_ERROR, destinyEnabled } from "./featureFlags";
 
 export type DestinyError =
   | "bad_request"
@@ -40,6 +41,7 @@ export type DestinyError =
   | "floor_not_found"
   | "stale_reward"
   | "invalid_reward"
+  | typeof FEATURE_DISABLED_ERROR
   | "conflict";
 
 export type DestinyDeps = Deps & { readonly destinySecret: string };
@@ -48,6 +50,7 @@ const secretValid = (deps: Deps): deps is DestinyDeps =>
   typeof deps.destinySecret === "string" && deps.destinySecret.length >= 16;
 
 export async function destinyOverview(ownerId: string | null, deps: Deps) {
+  if (!destinyEnabled(deps)) return { enabled: false, error: FEATURE_DISABLED_ERROR };
   const scheduled = activeDestinyCycle(deps.now);
   const cycle = scheduled.ok ? publicDestinyCycle(scheduled.cycle) : null;
   const cycleId = cycle?.cycleId ?? null;
@@ -82,6 +85,7 @@ export async function startDestinyRun(
   raw: unknown,
   deps: Deps,
 ): Promise<{ readonly ok: true; readonly run: DestinyRun } | { readonly ok: false; readonly error: DestinyError }> {
+  if (!destinyEnabled(deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
   if (!secretValid(deps)) return { ok: false, error: "invalid_secret" };
   if (!raw || typeof raw !== "object") return { ok: false, error: "bad_request" };
   const rosterIds = (raw as Record<string, unknown>).rosterIds;
@@ -161,6 +165,7 @@ export async function startDestinyBattle(
   raw: unknown,
   deps: Deps,
 ): Promise<DestinyBattleStartResult> {
+  if (!destinyEnabled(deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
   if (!secretValid(deps)) return { ok: false, error: "invalid_secret" };
   const input = parseBattleInput(raw);
   if (!input) return { ok: false, error: "bad_request" };
@@ -245,6 +250,7 @@ export async function claimDestinyReward(
   raw: unknown,
   deps: Deps,
 ): Promise<{ readonly ok: true; readonly run: DestinyRun; readonly changed: boolean } | { readonly ok: false; readonly error: DestinyError }> {
+  if (!destinyEnabled(deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
   if (!raw || typeof raw !== "object") return { ok: false, error: "bad_request" };
   const input = raw as Record<string, unknown>;
   if (!Number.isInteger(input.floor) || !Number.isInteger(input.index)) return { ok: false, error: "bad_request" };
@@ -304,6 +310,7 @@ export async function stopDestinyRun(
   ownerId: string,
   deps: Deps,
 ): Promise<{ readonly ok: true; readonly stopped: boolean } | { readonly ok: false; readonly error: DestinyError }> {
+  if (!destinyEnabled(deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
   const reconciled = await reconcileDestinyCycle(deps.profiles, ownerId, deps.now);
   if (!reconciled.ok) return { ok: false, error: reconciled.error === "unsupported_schema" ? "unsupported_schema" : "conflict" };
   if (reconciled.value.expired || hasExpiredDestinyRun(reconciled.profile, reconciled.value.cycleId))

@@ -148,7 +148,7 @@ Song Tháp là hai mode mới, độc lập với **Leo tháp (Vô hạn)** ở 
   đánh lại nhưng đá first-clear chỉ nhận một lần. Quét dùng tiến độ phía server, nhận 1/2/3/4 đá mỗi ngày theo
   mốc tầng 1–5/6–10/11–15/16–20, đổi ngày lúc 00:00 Việt Nam và không tích lượt bỏ lỡ.
 - **Destiny — Tháp Vận Mệnh:** chu kỳ 7 ngày từ thứ Hai 00:00 Việt Nam; luật được snapshot và không đổi trong
-  chu kỳ. Run khóa roster đã sở hữu (trần kỹ thuật 8, khuyến nghị onboarding 5), giữ HP, energy và lương qua
+  chu kỳ. Run khóa roster từ toàn bộ tướng đã sở hữu, không giới hạn tối đa, giữ HP, energy và lương qua
   tầng; dự bị không tự hồi. Sau tầng chọn hồi phục, Phúc hoặc tài nguyên theo offer; không có đá trong reward
   giữa tầng. Đá tài khoản chỉ đến từ mốc và settlement cuối chu kỳ.
 - Cả hai mode giữ battle 3vs3 và không cho đổi tướng trong combat. Không phát vàng, EXP hay trang bị riêng từ

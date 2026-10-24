@@ -66,9 +66,9 @@ function scoreText(board: BoardId, score: number): string {
   return board === "tower" ? `Tầng ${d.main}` : `${d.main} đợt`;
 }
 
-export default function LeaderboardScreen() {
+export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEnabled?: boolean }) {
   const { params } = useScene();
-  const [tab, setTab] = useState<(typeof TABS)[number]["id"]>(() => params.get("board") === "destiny" ? "destiny" : "campaign");
+  const [tab, setTab] = useState<(typeof TABS)[number]["id"]>(() => params.get("board") === "destiny" && destinyEnabled ? "destiny" : "campaign");
   const [stage, setStage] = useState(CAMPAIGN[0]!.id);
   const [data, setData] = useState<BoardResponse | null>(null);
   const [destiny, setDestiny] = useState<DestinyBoardResponse | null>(null);
@@ -123,7 +123,7 @@ export default function LeaderboardScreen() {
         </div>
 
         <div role="tablist" className="mb-3 flex flex-wrap gap-1.5">
-          {TABS.map((t) => (
+          {TABS.filter((t) => t.id !== "destiny" || destinyEnabled).map((t) => (
             <button
               key={t.id}
               type="button"

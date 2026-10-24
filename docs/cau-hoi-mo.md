@@ -56,7 +56,7 @@
 ## Kỹ thuật
 
 - [ ] Chốt tên miền (đề xuất `colau.vercel.app`). → [Kiến trúc](tech/kien-truc.md#3-sơ-đồ)
-- [ ] Triển khai hai feature flag server-authoritative, mặc định tắt, để bật/tắt Trial và Destiny độc lập; chặn cả write API và entry UI. → [Nghiệm thu Song Tháp](dual-tower/06-04-final-acceptance.md#gate-bắt-buộc-trước-public-launch)
+- [x] Triển khai hai feature flag server-authoritative, mặc định tắt, để bật/tắt Trial và Destiny độc lập; chặn cả write API và entry UI. → [RH-02](dual-tower/06-05-feature-flags.md)
 - [ ] Chạy Neon staging migration + restore drill và browser smoke mobile/desktop trước public launch Song Tháp. → [Nghiệm thu Song Tháp](dual-tower/06-04-final-acceptance.md#gate-bắt-buộc-trước-public-launch)
 
 ## Đã chốt ngày 18/10/2026

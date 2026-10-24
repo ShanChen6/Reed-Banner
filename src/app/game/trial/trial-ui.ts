@@ -262,6 +262,7 @@ export function navigateIndex(index: number, key: string, count: number, columns
 
 /** Mã lỗi từ API mở trận. */
 export const TRIAL_ERROR_TEXT: Record<string, string> = {
+  featureDisabled: "Tháp Thí Luyện đang tạm đóng; tiến trình và trận dở được giữ nguyên",
   network: "Mất kết nối tới server, thử lại",
   bad_request: "Yêu cầu không hợp lệ",
   floor_not_found: "Tầng này chưa có",

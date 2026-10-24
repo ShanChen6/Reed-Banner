@@ -24,6 +24,7 @@ import {
   type TrialRegistry,
 } from "@/core";
 import { getBattle, type Deps } from "./battles";
+import { FEATURE_DISABLED_ERROR, trialEnabled } from "./featureFlags";
 import { loadProfile, updateProfile } from "./profiles";
 import type { MatchRecord } from "./store";
 
@@ -44,6 +45,7 @@ export type TrialStartError =
   | "unsupported_schema"
   /** Đang có trận Trial khác chưa xong. */
   | "active_elsewhere"
+  | typeof FEATURE_DISABLED_ERROR
   | "conflict";
 
 export type TrialStartResult =
@@ -108,6 +110,7 @@ export async function startTrialBattle(
   rawInput: unknown,
   deps: TrialDeps,
 ): Promise<TrialStartResult> {
+  if (!trialEnabled(deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
   const input = parseStart(rawInput);
   if (!input) return { ok: false, error: "bad_request" };
   const spec = deps.floors.get(input.floor);
@@ -222,6 +225,7 @@ export async function abandonTrialBattle(
   ownerId: string,
   deps: TrialDeps,
 ): Promise<{ readonly ok: true; readonly abandoned: boolean } | { readonly ok: false; readonly error: TrialStartError }> {
+  if (!trialEnabled(deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
   const { profile } = await loadProfile(deps.profiles, ownerId);
   if (!isDualTowerV1(profile.dualTower)) return { ok: false, error: "unsupported_schema" };
   const active = profile.dualTower.trial.active;

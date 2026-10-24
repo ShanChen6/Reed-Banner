@@ -29,14 +29,21 @@ export interface ShellAccount {
   readonly avatarUrl: string | null;
 }
 
+export interface TowerFeatures {
+  readonly trial: boolean;
+  readonly destiny: boolean;
+}
+
 export default function GameShell({
   account,
   theme,
   auth,
+  towerFeatures,
 }: {
   account: ShellAccount | null;
   theme: "light" | "dark";
   auth: Partial<Record<AuthScene, React.ReactNode>>;
+  towerFeatures: TowerFeatures;
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -114,7 +121,7 @@ export default function GameShell({
           </p>
         )}
         <div key={currentScene} className="scene-enter flex flex-1 flex-col">
-          <SceneView scene={currentScene} account={account} theme={theme} auth={auth} resume={api.params.get("resume") === "1"} />
+          <SceneView scene={currentScene} account={account} theme={theme} auth={auth} resume={api.params.get("resume") === "1"} towerFeatures={towerFeatures} />
         </div>
       </div>
     </SceneContext.Provider>
@@ -127,18 +134,20 @@ function SceneView({
   theme,
   auth,
   resume,
+  towerFeatures,
 }: {
   scene: Scene;
   account: ShellAccount | null;
   theme: "light" | "dark";
   auth: Partial<Record<AuthScene, React.ReactNode>>;
   resume: boolean;
+  towerFeatures: TowerFeatures;
 }) {
   switch (scene) {
     case "MENU":
-      return <MenuScene account={account} />;
+      return <MenuScene account={account} towerFeatures={towerFeatures} />;
     case "PLAYING":
-      return <DemoGame theme={theme} online autoResume={resume} />;
+      return <DemoGame theme={theme} online autoResume={resume} towerFeatures={towerFeatures} />;
     case "PRACTICE":
       return <DemoGame theme={theme} />;
     case "CAMPAIGN":
@@ -146,9 +155,9 @@ function SceneView({
     case "TOWER":
       return <TowerScreen />;
     case "TRIAL":
-      return <TrialScreen />;
+      return towerFeatures.trial ? <TrialScreen /> : <DisabledTowerMode name="Tháp Thí Luyện" />;
     case "DESTINY":
-      return <DestinyScreen />;
+      return towerFeatures.destiny ? <DestinyScreen /> : <DisabledTowerMode name="Tháp Vận Mệnh" />;
     case "SURVIVAL":
       return <SurvivalScreen />;
     case "DAILY":
@@ -158,7 +167,7 @@ function SceneView({
     case "QUESTS":
       return <QuestsScreen />;
     case "LEADERBOARD":
-      return <LeaderboardScreen />;
+      return <LeaderboardScreen destinyEnabled={towerFeatures.destiny} />;
     case "PROFILE":
       return <ProfileScreen playerName={account?.name ?? null} />;
     case "LOGIN":
@@ -168,4 +177,16 @@ function SceneView({
     case "RESET_PASSWORD":
       return auth[scene] ?? null;
   }
+}
+
+function DisabledTowerMode({ name }: { name: string }) {
+  return (
+    <main className="flex flex-1 items-center justify-center bg-[#17110e] px-4 text-stone-100">
+      <section role="status" className="max-w-md rounded-xl border border-amber-600/40 bg-[#271d18] p-6 text-center">
+        <h1 className="font-serif text-2xl font-bold text-amber-100">{name}</h1>
+        <p className="mt-2 text-stone-300">Chế độ này chưa mở. Tiến trình và trận đang dở được giữ nguyên cho đến khi mở lại.</p>
+        <SceneLink scene="MENU" className="mt-4 inline-block rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950">Về màn chính</SceneLink>
+      </section>
+    </main>
+  );
 }
