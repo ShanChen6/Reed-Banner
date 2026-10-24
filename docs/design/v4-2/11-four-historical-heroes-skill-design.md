@@ -1,6 +1,6 @@
 # Reed Banner — Ba nhân vật bổ sung cho chiến dịch loạn 12 sứ quân: 3 × (6 chủ động + 4 bị động)
 
-> **24/10/2026 · Design proposal only.** Không sửa code, không kích hoạt roster, không tạo asset. Mã mới **RB-076 → RB-078**, nâng tổng nhân vật thiết kế lên **79**.
+> **24/10/2026 · Design proposal only.** Không sửa code, không kích hoạt roster, không tạo asset. Mã mới **RB-076 → RB-078**, nâng tổng nhân vật thiết kế lên **78**.
 
 ## Quyết định roster và mốc truyện
 
@@ -155,6 +155,18 @@ destroy random 3 tiles
 **Hình dùng cho art:** frame 3 biểu đạt nghề ô 3 (Tường khiên); frame 4 biểu đạt tuyệt chiêu riêng ô 4 (Công Tượng Trấn Lũy). Không vẽ đồ vật mới xuất hiện riêng ở frame 4.
 
 ---
+
+## Character / Weapon / Skill Identity Lock — đồng bộ V4.4
+
+Tài liệu [hồ sơ và 18 prompt độc lập](./12-four-historical-heroes-character-prompts.md) ghi đầy đủ tuổi, diện mạo, trang phục, màu và tỷ lệ H/L của vũ khí. Khóa kỹ năng cho các frame như sau:
+
+| Nhân vật | Master/Idle | Frame 3 — ô 3 (nghề) | Frame 4 — ô 4 (riêng) | Trang bị cố định |
+|---|---|---|---|---|
+| Khuông Việt Đại sư | Dáng đứng riêng trong hồ sơ | Hiệu lệnh — `role_hieuLenh` | Hộ Quốc Thiền Âm — `rb_kv_hoQuocThienAm` | `RB-076-W01` |
+| Thiền sư Đỗ Pháp Thuận | Dáng đứng riêng trong hồ sơ | Ly gián — `role_lyGian` | Quốc Tộ An Dân — `rb_dpt_quocToAnDan` | `RB-077-W01` |
+| Hào trưởng Ninh Hữu Hưng | Dáng đứng riêng trong hồ sơ | Tường khiên — `role_tuongKhien` | Công Tượng Trấn Lũy — `rb_nhh_congTuongTranLuy` | `RB-078-W01` |
+
+**Tình trạng:** thiết kế và prompt hoàn thiện để kiểm duyệt bằng văn bản; tỷ lệ vũ khí mới là đề xuất art, chưa được duyệt bằng ảnh. Với trận loạn sứ quân 965–968, tuổi tạo hình và danh xưng đã được đưa về giai đoạn tương ứng; mọi vai trò chiến đấu của các thiền sư hoặc công tượng trong chiến dịch đều hư cấu hóa.
 
 ## Ghi chú tương thích và QA
 
