@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     floors: trialRegistry(),
   });
   const res = NextResponse.json(reply.body, { status: reply.status, headers: noStore });
-  if (!existing) setAccountCookie(res, owner);
+  if (!existing && reply.status === 200) setAccountCookie(res, owner);
   return res;
 }
 

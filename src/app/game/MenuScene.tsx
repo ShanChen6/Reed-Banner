@@ -7,7 +7,7 @@ import { useSyncExternalStore } from "react";
 import { DongSonBand, ShieldIcon } from "./art/icons";
 import { Logo } from "./art/logo";
 import { ONLINE_BATTLE_KEY } from "./battle/online";
-import type { ShellAccount } from "./GameShell";
+import type { ShellAccount, TowerFeatures } from "./GameShell";
 import type { Scene } from "./scene";
 import { SceneLink } from "./SceneContext";
 
@@ -36,7 +36,7 @@ function hasSavedBattle(): boolean {
   }
 }
 
-export default function MenuScene({ account }: { account: ShellAccount | null }) {
+export default function MenuScene({ account, towerFeatures }: { account: ShellAccount | null; towerFeatures: TowerFeatures }) {
   const saved = useSyncExternalStore(
     () => () => {},
     hasSavedBattle,
@@ -75,9 +75,14 @@ export default function MenuScene({ account }: { account: ShellAccount | null })
         </div>
 
         <ul className="grid w-full gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {MODES.map((m) => (
+          {MODES.map((m) => {
+            const disabled = m.scene === "TRIAL" ? !towerFeatures.trial : m.scene === "DESTINY" ? !towerFeatures.destiny : false;
+            return (
             <li key={m.scene}>
-              <SceneLink
+              {disabled ? <div aria-disabled="true" className="flex h-full flex-col gap-1 rounded-xl border border-stone-700 bg-[var(--panel)]/60 p-4 opacity-70">
+                <span className="flex items-center gap-2 font-serif text-lg font-bold text-stone-300"><ShieldIcon className="size-4" /> {m.title}</span>
+                <span className="text-sm text-stone-400">Chưa mở · tiến trình được giữ nguyên.</span>
+              </div> : <SceneLink
                 scene={m.scene}
                 className="flex h-full flex-col gap-1 rounded-xl border border-[var(--gold)]/30 bg-[var(--panel)]/90 p-4 transition hover:border-[var(--gold)] hover:bg-[var(--panel)]"
               >
@@ -85,9 +90,9 @@ export default function MenuScene({ account }: { account: ShellAccount | null })
                   <ShieldIcon className="size-4 text-[var(--gold)]" /> {m.title}
                 </span>
                 <span className="text-sm text-stone-400">{m.text}</span>
-              </SceneLink>
+              </SceneLink>}
             </li>
-          ))}
+          )})}
         </ul>
 
         <ul className="flex flex-wrap justify-center gap-2 text-sm">

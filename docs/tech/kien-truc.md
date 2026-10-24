@@ -95,9 +95,8 @@ Cờ Lau viết mới hoàn toàn bằng **TypeScript**. Không dùng Java và k
   còn đi qua match reward claim. Client không quyết định entitlement và không được báo nhận trước response thành công.
 - Destiny cần `SESSION_SECRET` ở production để HMAC cycle/rule seed. Snapshot run giữ cycle/rule version nên luật
   không đổi giữa chu kỳ.
-- Hiện code **chưa có runtime feature flag riêng** cho Trial/Destiny: route, scene và menu được build cùng nhau.
-  Vì vậy kiến trúc cho phép tách theo route nhưng chưa đủ để bật/tắt an toàn từng mode bằng cấu hình. Hai cờ
-  server/client đồng bộ, mặc định tắt, là release gate trước public rollout; không dùng ẩn nút client làm biện pháp duy nhất.
+- Hai runtime flag server-authoritative `TRIAL_ENABLED` và `DESTINY_ENABLED` điều khiển độc lập route, battle
+  settlement/cron và entry UI; chỉ exact `true` mới bật, thiếu cấu hình mặc định tắt. Xem [RH-02](../dual-tower/06-05-feature-flags.md).
 
 Kế hoạch migration/rollback: [T00.03](../dual-tower/00-03-migration-plan.md). Nghiệm thu hiện tại:
 [T06.04](../dual-tower/06-04-final-acceptance.md).

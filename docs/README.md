@@ -43,6 +43,8 @@
 |---|---|
 | [player-help.md](dual-tower/player-help.md) | Hướng dẫn Trial/Destiny, reset và bảng thưởng cho người chơi |
 | [06-04-final-acceptance.md](dual-tower/06-04-final-acceptance.md) | Nghiệm thu, release gates, rollback và kết luận GO/ADJUST |
+| [06-05-feature-flags.md](dual-tower/06-05-feature-flags.md) | RH-02: cấu hình, endpoint matrix, freeze và rollback Trial/Destiny |
+| [06-06-neon-staging-runbook.md](dual-tower/06-06-neon-staging-runbook.md) | RH-03: preflight, migration staging, backup/restore drill và evidence |
 
 **Quản lý**
 

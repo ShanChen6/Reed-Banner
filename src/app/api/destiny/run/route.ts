@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
   const owner = existing ?? newGuestId();
   const result = await startDestinyRun(owner, await readJson(request), serverDeps());
   const response = NextResponse.json(result, {
-    status: result.ok ? 200 : result.error === "run_exists" || result.error === "conflict" ? 409 : 422,
+    status: result.ok ? 200 : result.error === "featureDisabled" ? 503 : result.error === "run_exists" || result.error === "conflict" ? 409 : 422,
     headers: { "cache-control": "no-store" },
   });
   if (!existing && result.ok) setAccountCookie(response, owner);

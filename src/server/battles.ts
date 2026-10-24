@@ -89,6 +89,7 @@ import { settleDestinyMatch, type DestinyResult } from "./destinySettle";
 import { activeDestinyCycle } from "./destinyCycle";
 import { reconcileDestinyCycle } from "./destinyExpire";
 import type { DestinyLeaderboardStore } from "./destinyLeaderboard";
+import { FEATURE_DISABLED_ERROR, destinyEnabled, trialEnabled } from "./featureFlags";
 
 export interface Deps {
   readonly store: MatchStore;
@@ -107,6 +108,9 @@ export interface Deps {
   readonly destinyLeaderboard?: DestinyLeaderboardStore;
   /** Đấu trường bóng ma. Không có thì không mở được. */
   readonly arena?: ArenaStore;
+  /** Route production luôn truyền giá trị từ env; thiếu chỉ dành cho compatibility của caller nội bộ/test cũ. */
+  readonly trialEnabled?: boolean;
+  readonly destinyEnabled?: boolean;
 }
 
 const DIFFICULTIES: readonly Difficulty[] = [
@@ -152,7 +156,8 @@ export type ServiceError =
   /** Đối thủ đấu trường không còn. */
   | "arenaGone"
   /** Trận Destiny thuộc chu kỳ đã đóng. */
-  | "cycleExpired";
+  | "cycleExpired"
+  | typeof FEATURE_DISABLED_ERROR;
 
 /** Phần thưởng cuối trận đã cộng vào hồ sơ, gửi kèm đúng một lần (response làm trận kết thúc). */
 export interface Outcome {
@@ -802,6 +807,12 @@ function matchMode(m: Match): MatchMode {
   return m.daily ? "daily" : "normal";
 }
 
+function matchFeatureEnabled(match: Match, deps: Pick<Deps, "trialEnabled" | "destinyEnabled">): boolean {
+  if (match.trial) return trialEnabled(deps);
+  if (match.destiny) return destinyEnabled(deps);
+  return true;
+}
+
 /** Trial: không vàng/EXP/món rơi; chỉ ghi tiến trình Trial. Đá do bước thưởng riêng cấp. */
 async function rewardTrial(
   r: MatchRecord,
@@ -1091,6 +1102,7 @@ export async function getBattle(
 ): Promise<ServiceResult> {
   const r = await load(id, ownerId, deps.store);
   if (!r) return { ok: false, error: "notFound" };
+  if (!matchFeatureEnabled(r.match, deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
   if (!(await destinyMatchCurrent(r, deps))) return { ok: false, error: "cycleExpired" };
   return settleRecord(r, deps);
 }
@@ -1107,6 +1119,7 @@ export async function settleAbandoned(
   for (const id of ids) {
     const r = await deps.store.get(id);
     if (!r) continue;
+    if (!matchFeatureEnabled(r.match, deps)) continue;
     if (!(await destinyMatchCurrent(r, deps))) continue;
     const res = await settleRecord(r, deps);
     if (res.ok && res.outcome) settled++;
@@ -1125,6 +1138,7 @@ export async function actBattle(
   if (!parsed) return { ok: false, error: "badRequest" };
   const r = await load(id, ownerId, deps.store);
   if (!r) return { ok: false, error: "notFound" };
+  if (!matchFeatureEnabled(r.match, deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
   if (!(await destinyMatchCurrent(r, deps))) return { ok: false, error: "cycleExpired" };
   const result = humanAct(r.match, parsed.action, parsed.seq, deps.now);
   let match = result.match;
@@ -1161,6 +1175,7 @@ export async function actBattle(
 
 /** Mã HTTP cho từng lỗi. */
 export function httpStatus(error: ServiceError): number {
+  if (error === FEATURE_DISABLED_ERROR) return 503;
   if (error === "notFound" || error === "arenaGone") return 404;
   if (
     error === "conflict" ||
