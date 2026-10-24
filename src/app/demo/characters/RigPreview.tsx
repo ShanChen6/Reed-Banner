@@ -55,8 +55,9 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
+          import("@/app/game/stage/ward"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -107,10 +108,16 @@ export default function RigPreview({ id, size, onSnapshot }: {
           if (kind === "ultimate") [0.74, 0.84, 0.94].forEach((k, n) => bolts.strike({ x: width * k, y: height * 0.55 }, w * 1.6, n * 0.08));
           else bolts.bolt(at, { x: width - 12, y: height * 0.55 }, kind === "cast" ? w * 1.4 : w);
         });
+        // Vòm khiên đất hệ Thổ: dựng quanh chính nhân vật khi tuyệt chiêu.
+        const wards = rig.skeleton === "warrior" && rig.strikeFx === "earthWard" ? earthWard(app.stage, rig.fxColor) : null;
+        if (wards) loaded.onStrike?.((kind) => {
+          if (kind === "ultimate" && loaded) wards.ward({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y);
+        });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
           loaded?.update(dt);
           bolts?.update(dt);
+          wards?.update(dt);
         });
         setReady(true);
       } catch (cause) {
