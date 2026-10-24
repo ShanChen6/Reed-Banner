@@ -103,6 +103,10 @@ export interface WarriorRig {
   /** Chuôi và mũi kiếm lúc đứng yên, để đặt hào quang dọc lưỡi. */
   readonly blade: readonly [Point, Point];
   readonly fxColor: number;
+  /** Tâm quả cầu đầu trượng: đốm sáng riêng nhấp nháy theo tay. */
+  readonly orb?: Point;
+  /** Hiệu ứng lúc đòn trúng vẽ trên cả sân: `lightning` phóng sét tới đối thủ, tuyệt chiêu giáng sét xuống cả đội. */
+  readonly strikeFx?: "lightning";
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
   /** Tranh bị hạ gục: hết máu thì hình động mờ dần sang tranh này. */
   readonly down?: Omit<PoseArt, "burst">;
@@ -730,6 +734,53 @@ const NGO_XUONG_XI: WarriorRig = {
     anchor: { x: 940, y: 985 }, scale: 1 },
 };
 
+/**
+ * Kiều Công Hãn, sứ quân Phong Châu, pháp sư hệ Lôi. Bộ tranh Shan gửi 24/10: ảnh đứng tách lớp bằng code (trượng
+ * cùng bàn tay cầm, bàn tay vươn, đầu, dải khăn), phần thân sau trượng vá bằng inpaint. Tranh đánh thường và tuyệt
+ * chiêu có nền ca-rô vẽ sẵn, đã tách nền bằng code. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const KIEU_CONG_HAN: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "staff",
+  dir: "kieu-cong-han",
+  texScale: 0.5,
+  foot: { x: 560, y: 1476 },
+  height: 1390,
+  parts: {
+    body: { x: 55, y: 79, w: 959, h: 1409 },
+    armR: { x: 812, y: 149, w: 194, h: 230 },
+    sword: { x: 104, y: 140, w: 183, h: 661 },
+    arm: { x: 196, y: 440, w: 107, h: 155 },
+    head: { x: 454, y: 90, w: 174, h: 217 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 57, y: 210, w: 279, h: 184 }, behind: true,
+      wind: { axis: "x", start: 0.15, amp: 7, freq: 1.6, k: 3.2, phase: 0.5, vertical: true, reverse: true } },
+  ],
+  covers: [],
+  // Tay và trượng xoay quanh cổ tay, chỗ ống tay áo che.
+  joints: {
+    shoulder: { x: 262, y: 575 },
+    elbowR: { x: 840, y: 350 },
+    neck: { x: 545, y: 290 },
+  },
+  blade: [{ x: 240, y: 470 }, { x: 226, y: 199 }],
+  orb: { x: 226, y: 199 },
+  strikeFx: "lightning",
+  fxColor: 0xb98cff,
+  // Đẩy trượng phóng sét (đánh thường), thế tấn vung trượng (ra chiêu), giơ trượng qua đầu gọi sét (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 36, y: 10 },
+      anchor: { x: 640, y: 1185 }, scale: 1, burst: { x: 1238, y: 368 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 8, y: 9 },
+      anchor: { x: 735, y: 1170 }, scale: 1, burst: { x: 62, y: 72 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 16, y: 5 },
+      anchor: { x: 490, y: 1505 }, scale: 1.05, burst: { x: 812, y: 62 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 21, y: 67 },
+    anchor: { x: 760, y: 960 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -744,6 +795,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   tranLam: TRAN_LAM,
   phamBachHo: PHAM_BACH_HO,
   ngoXuongXi: NGO_XUONG_XI,
+  kieuCongHan: KIEU_CONG_HAN,
 };
 
 export function rigOf(id: string): Rig | null {

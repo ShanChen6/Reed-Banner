@@ -208,9 +208,10 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application }, { loadPuppet }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
+        import("./lightning"),
       ]);
       const app = new Application();
       await app.init({
@@ -258,9 +259,30 @@ export default function BattleStage({
       });
       layout();
       app.renderer.on("resize", layout);
+      // Sét của pháp sư hệ Lôi vẽ trên cả sân, đè lên mọi nhân vật.
+      const sky = new Container();
+      sky.zIndex = 100;
+      app.stage.addChild(sky);
+      const bolts = entries.flatMap((e, i) => {
+        const rig = e.rig;
+        if (rig.skeleton !== "warrior" || rig.strikeFx !== "lightning") return [];
+        const fx = lightning(sky, rig.fxColor);
+        loaded[i]!.onStrike?.((kind, at) => {
+          const { width, height } = app.screen;
+          const foes = latest.current.filter((s) => s.side !== e.side && isAlive(s.fighter));
+          if (foes.length === 0) return;
+          const w = Math.max(3, height * 0.022);
+          const spot = (s: Slot, k: number) => ({ x: slotX(s.side, s.index) * width, y: height * (GROUND - FIGURE * k) });
+          // Tuyệt chiêu giáng sét xuống cả đội đối thủ, còn lại phóng tới người đứng đầu.
+          if (kind === "ultimate") foes.forEach((s, n) => fx.strike(spot(s, 0.55), w * 1.6, n * 0.08));
+          else fx.bolt(at, spot(foes[0]!, 0.5), kind === "cast" ? w * 1.4 : w);
+        });
+        return [fx];
+      });
       app.ticker.add((tk) => {
         const dt = Math.min(tk.deltaMS / 1000, 0.05);
         for (const p of map.values()) p.update(dt);
+        for (const b of bolts) b.update(dt);
       });
       // Giảm chuyển động: hình đứng yên, chỉ vẽ lại thưa để cập nhật lúc gục.
       if (still) app.ticker.maxFPS = 4;

@@ -27,7 +27,7 @@ function CharacterDetails({ character, size }: { character: CharacterPreview; si
       <RigPreview id={character.id} size={size} onSnapshot={setSnapshot} />
       <section aria-label="Tranh nhân vật" className="space-y-3">
         <h2 className="text-lg font-semibold">Đối chiếu hình ảnh</h2>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
           {character.assets.map((asset) => (
             <figure key={asset.kind} data-art={asset.kind} className="min-w-0 overflow-hidden rounded-xl border border-stone-700 bg-stone-900/60">
               <div className="relative flex aspect-[4/5] items-center justify-center bg-[radial-gradient(ellipse_at_center,#40372d,transparent)] p-2">
@@ -50,7 +50,7 @@ function CharacterDetails({ character, size }: { character: CharacterPreview; si
                     <p className="text-stone-400">{bytes(asset.file.bytes)}</p>
                   </>
                 ) : (
-                  <p className="text-stone-400">{asset.kind === "standing" ? `Ghép từ lớp rig · ${bytes(character.rigBytes)}` : asset.kind === "portrait" ? "Chân dung SVG mặc định" : "Dùng hoạt ảnh của rig"}</p>
+                  <p className="text-stone-400">{asset.kind === "standing" ? `Ghép từ lớp rig · ${bytes(character.rigBytes)}` : asset.kind === "portrait" ? "Chân dung SVG mặc định" : asset.kind === "style" ? "Chưa có tranh phong thái" : "Dùng hoạt ảnh của rig"}</p>
                 )}
               </figcaption>
             </figure>

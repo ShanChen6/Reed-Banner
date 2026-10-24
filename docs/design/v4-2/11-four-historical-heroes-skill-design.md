@@ -18,7 +18,7 @@
 ## Chuẩn 10 kỹ năng
 
 - 6 active = nghề ô 1/3/5 + hệ ô 2/6 + riêng ô 4.
-- 4 passive = 1 chase nghề + 2 chase nguyên tố + 1 chase riêng **đề xuất mới**. Hệ thống hiện mới mặc định 3 chase, cần mở rộng code sau khi duyệt.
+- 4 passive = 1 chase nghề + 2 chase nguyên tố + 1 chase riêng **đề xuất mới**. Hệ thống trả mặc định 3 chase ID; P4 cá nhân cần duyệt và triển khai riêng. Lưu ý kỹ thuật (đối chiếu `src/core/battle/chase.ts` ngày 25/10/2026): `chasePassives()` mặc định trả **3 chase ID** (1 nghề + 2 hệ), nhưng mô tả kiến trúc trong code gọi đây là four-passive loadout do tính riêng một cơ chế cơ hội chuẩn bị. **P4 cá nhân trong tài liệu này chưa có ID/runtime**, không được nhầm với 4 passive đã chạy. Cần duyệt lại cách đếm và mô phỏng stacking trước khi thêm P4.
 - Dùng nghề đã có trong `rules.ts`; không đổi chỉ số và không thêm nghề. Mức năng lượng/hệ số của tuyệt chiêu là mốc gợi ý để mô phỏng, không phải số liệu cân bằng.
 - VFX (thiền âm, thư tín, dược khí, dựng lũy) tạo bởi engine, **không bake** vào body asset hoặc làm biến hình vũ khí.
 
