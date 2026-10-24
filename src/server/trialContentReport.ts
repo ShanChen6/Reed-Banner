@@ -28,8 +28,11 @@ export function trialTestProfile(level: number): Profile {
   };
 }
 
-export function evaluateTrialFloor(spec: TrialFloorSpec, sampleTeams = 12): TrialContentResult {
-  const profile = trialTestProfile(spec.enemy.level);
+export function evaluateTrialFloor(
+  spec: TrialFloorSpec,
+  sampleTeams = 12,
+  profile: Profile = trialTestProfile(spec.enemy.level),
+): TrialContentResult {
   const feasibility = analyzeFeasibility(spec.rules, profileCandidates(profile), { maxSamples: sampleTeams });
   const resolved = resolveFloor(toFloorDefinition(spec), "trial", trialEnemyBuilder(spec));
   if (feasibility.status !== "feasible" || !resolved.ok)
