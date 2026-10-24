@@ -149,7 +149,7 @@ export function raidRecommended(stage: CampaignStage, tier: RaidTier): number {
 
 /** Bậc cao nhất đã thắng của trùm ở màn này (0 là chưa). */
 export function raidCleared(campaign: CampaignState, stageId: string): number {
-  return campaign.raids[stageId] ?? 0;
+  return campaign.legacy.raids[stageId] ?? 0;
 }
 
 /** Bậc 1 mở khi đã qua màn; bậc sau mở khi đã thắng bậc trước. */
@@ -162,7 +162,7 @@ export function raidUnlocked(
   return (
     !!stage &&
     isRaidStage(stage) &&
-    campaign.cleared.includes(stageId) &&
+    campaign.legacy.cleared.includes(stageId) &&
     raidCleared(campaign, stageId) >= tier - 1
   );
 }
@@ -244,7 +244,10 @@ export function applyRaidResult(
     gold: profile.gold + gold,
     campaign: {
       ...profile.campaign,
-      raids: { ...profile.campaign.raids, [stageId]: tier },
+      legacy: {
+        ...profile.campaign.legacy,
+        raids: { ...profile.campaign.legacy.raids, [stageId]: tier },
+      },
     },
   };
   const received = receiveDrop(next, raidRewardItem(rng, stage!, tier));
