@@ -85,6 +85,11 @@ Kết luận: phương án mặc định **không cần SQL migration**. Nếu S
 
 Thứ tự P1 trước P2 giải quyết rủi ro "instance cũ ghi đè hồ sơ" khi deploy cuốn chiếu.
 
+> Cập nhật readiness 24/10/2026: P1/compatibility đã có test, nhưng runtime flag ở P2 **chưa được triển khai**.
+> Trial và Destiny có route/scene riêng nhưng hiện cùng được build và hiện trên menu. Không được coi “ẩn nút” là
+> rollback server. Trước public launch cần cờ server-authoritative riêng cho từng mode, mặc định tắt, chặn cả API
+> ghi và entry UI; việc triển khai cờ nằm ngoài T06.04.
+
 ### 6.2 Rollback
 
 | Tình huống | Hành động | Mất dữ liệu? |
