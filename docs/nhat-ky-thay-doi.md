@@ -1,5 +1,10 @@
 # Nhật ký thay đổi thiết kế
 
+## 24/10/2026 — Nghiệm thu Song Tháp
+
+- Trial **GO có điều kiện**, Destiny **ADJUST/limited beta**, public release tổng thể **ADJUST** cho đến khi có feature flag độc lập, staging migration/restore drill, browser/device smoke và CI sau merge `develop`.
+- Đá Cường Hóa V1.0 chỉ được tích trong tài khoản; không có `enhanceLevel`, tăng ATK/DEF/HP, API tiêu đá hoặc thay luật ghép. GEAR-01–08 tiếp tục là FUTURE TODO độc lập.
+
 ## 22/10/2026 — Chốt F và mở rộng truy kích trong hành động
 
 - Tinh thần F thành mặc định: giảm5 từ lượt25, sàn hồi/Khiên20%, không giảm ATK/DEF.

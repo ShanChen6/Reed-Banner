@@ -1,6 +1,6 @@
 # Chế độ chơi
 
-> Cập nhật: 19/10/2026
+> Cập nhật: 24/10/2026
 
 ## 1. Tổng quan
 
@@ -11,6 +11,8 @@
 | **Chiến dịch (Campaign)** | Theo cốt truyện; lương mang sang; luật màn; tỉ lệ ô theo màn | Mỗi màn quy định | 4 |
 | **Đánh trùm** | Đánh lại trùm đã gặp trong chiến dịch ở mức khó cao hơn, có luật "sân nhà" và phần thưởng riêng | Mỗi trùm quy định | 4 |
 | **Vô hạn = Leo tháp** | Chuỗi trận riêng biệt, độ khó tăng dần | 3vs3 | Sau giai đoạn 4 |
+| **Tháp Thí Luyện (Trial)** | 20 tầng cố định, luật đội hình/bàn cờ và thưởng đá lần đầu | 3vs3 | Song Tháp V1.0 |
+| **Tháp Vận Mệnh (Destiny)** | Run 10 tầng theo chu kỳ tuần, roster khóa và tài nguyên xuyên tầng | 3vs3 | Song Tháp V1.0 |
 | **Sinh tồn** | Một trận không kết thúc, đối thủ theo đợt, báo trước đợt kế tiếp | 3vs3 | Sau giai đoạn 4 |
 
 ## 2. Chiến dịch
@@ -135,6 +137,27 @@ Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (tr
   | 10 | 9,7 | 10 | 14 | 78% | 54% | 6% |
   | 20 | 9,1 | 10 | 14 | 78% | 50% | 8% |
   | 30 | 10,6 | 11 | 19 | 82% | 56% | 16% |
+
+### 3.2 Song Tháp V1.0
+
+Song Tháp là hai mode mới, độc lập với **Leo tháp (Vô hạn)** ở mục 3.1. Thành tích và run cũ trong
+`tower.best`/`tower.run` không mở tầng, không cấp đá và không bị migration sửa.
+
+- **Trial — Tháp Thí Luyện:** 20 tầng cố định; mỗi lần thử reset HP/lương; chọn ba active từ tướng đã sở hữu.
+  Đinh Bộ Lĩnh bắt buộc ở slot thủ lĩnh, được đổi nghề/hệ miễn phí trước tầng và phải hợp luật. Tầng đã qua được
+  đánh lại nhưng đá first-clear chỉ nhận một lần. Quét dùng tiến độ phía server, nhận 1/2/3/4 đá mỗi ngày theo
+  mốc tầng 1–5/6–10/11–15/16–20, đổi ngày lúc 00:00 Việt Nam và không tích lượt bỏ lỡ.
+- **Destiny — Tháp Vận Mệnh:** chu kỳ 7 ngày từ thứ Hai 00:00 Việt Nam; luật được snapshot và không đổi trong
+  chu kỳ. Run khóa roster đã sở hữu (trần kỹ thuật 8, khuyến nghị onboarding 5), giữ HP, energy và lương qua
+  tầng; dự bị không tự hồi. Sau tầng chọn hồi phục, Phúc hoặc tài nguyên theo offer; không có đá trong reward
+  giữa tầng. Đá tài khoản chỉ đến từ mốc và settlement cuối chu kỳ.
+- Cả hai mode giữ battle 3vs3 và không cho đổi tướng trong combat. Không phát vàng, EXP hay trang bị riêng từ
+  Trial; mọi số đá và receipt do server xác nhận trước khi UI hiển thị đã nhận.
+- Đá Cường Hóa là số nguyên không âm ở tài khoản và **chưa có công dụng production**. Thiết kế cường hóa nằm ở
+  [FUTURE TODO](equipment-enhancement-todo.md), không phải tính năng V1.0.
+
+Hướng dẫn người chơi và bảng thưởng: [Song Tháp cho người chơi](../dual-tower/player-help.md). Bằng chứng QA,
+balance và release: [T06.04](../dual-tower/06-04-final-acceptance.md).
 
 ## 4. Sinh tồn
 

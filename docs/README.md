@@ -1,6 +1,6 @@
 # Tài liệu Cờ Lau (Reed Banner)
 
-> Cập nhật: 20/10/2026
+> Cập nhật: 24/10/2026
 
 ## Mục lục
 
@@ -17,7 +17,8 @@
 | [06-nhan-vat-ky-nang.md](design/06-nhan-vat-ky-nang.md) | Mô hình nhân vật, nghề & nội tại, luật dùng kỹ năng, chiêu nghề |
 | [07-trang-bi.md](design/07-trang-bi.md) | 9 ô trang bị, thưởng bộ, phẩm màu, ghép nâng bậc |
 | [08-tien-trinh-kinh-te.md](design/08-tien-trinh-kinh-te.md) | Kinh nghiệm, cấp, vàng, cửa hàng |
-| [09-che-do-choi.md](design/09-che-do-choi.md) | Luyện tập, Thường, Chiến dịch, Đánh trùm, Leo tháp, Sinh tồn |
+| [09-che-do-choi.md](design/09-che-do-choi.md) | Luyện tập, Chiến dịch, Leo tháp cũ, Trial, Destiny, Sinh tồn |
+| [equipment-enhancement-todo.md](design/equipment-enhancement-todo.md) | GEAR-01–08 cho cường hóa tương lai; chưa triển khai |
 | [10-ai.md](design/10-ai.md) | AI Tianwu |
 | [11-giao-dien.md](design/11-giao-dien.md) | Bố cục màn hình trận đấu, điều khiển (vuốt, click, bàn phím) |
 | [12-ky-nang-nhan-vat-chinh.md](design/12-ky-nang-nhan-vat-chinh.md) | 49 kỹ năng của nhân vật chính theo 7 nguyên tố |
@@ -35,6 +36,13 @@
 |---|---|
 | [kien-truc.md](tech/kien-truc.md) | Công nghệ, sơ đồ, tích hợp ShanVerse |
 | [ha-tang.md](tech/ha-tang.md) | Server có thẩm quyền, database, tài khoản, BXH, chống gian lận |
+
+**Song Tháp** (`dual-tower/`)
+
+| File | Nội dung |
+|---|---|
+| [player-help.md](dual-tower/player-help.md) | Hướng dẫn Trial/Destiny, reset và bảng thưởng cho người chơi |
+| [06-04-final-acceptance.md](dual-tower/06-04-final-acceptance.md) | Nghiệm thu, release gates, rollback và kết luận GO/ADJUST |
 
 **Quản lý**
 

@@ -1,6 +1,6 @@
 # Kiến trúc & tích hợp ShanVerse
 
-> Cập nhật: 18/10/2026
+> Cập nhật: 24/10/2026
 
 ## 1. Repo
 
@@ -84,3 +84,20 @@ Cờ Lau viết mới hoàn toàn bằng **TypeScript**. Không dùng Java và k
 - Trang `/games/co-lau`: iframe nhúng `/demo` (chuyển về `/game/practice`) + nút "Chơi bản đầy đủ" mở trang chủ Cờ Lau.
 - Địa chỉ game đặt trong biến môi trường (ví dụ `NEXT_PUBLIC_COLAU_URL`). Đổi tên miền chỉ cần đổi biến này.
 - ShanVerse **không** chứa database, đăng nhập hay code game.
+
+## 7. Song Tháp
+
+- Trial và Destiny là hai scene/API tách biệt (`/game/trial`, `/api/trial/*`; `/game/destiny`,
+  `/api/destiny/*`). Cả hai dựng trận qua battle core 3vs3 hiện có; server dựng stats, seed và settlement.
+- Hồ sơ mới nằm trong `stones` và `dualTower`; namespace legacy `tower.best`/`tower.run`, BXH tower và settlement
+  cũ vẫn độc lập. Parser hỗ trợ hồ sơ legacy thiếu các trường mới và giữ schema Song Tháp mới hơn.
+- Stone award dùng ledger key idempotent trong cùng optimistic profile update với wallet; Trial battle settlement
+  còn đi qua match reward claim. Client không quyết định entitlement và không được báo nhận trước response thành công.
+- Destiny cần `SESSION_SECRET` ở production để HMAC cycle/rule seed. Snapshot run giữ cycle/rule version nên luật
+  không đổi giữa chu kỳ.
+- Hiện code **chưa có runtime feature flag riêng** cho Trial/Destiny: route, scene và menu được build cùng nhau.
+  Vì vậy kiến trúc cho phép tách theo route nhưng chưa đủ để bật/tắt an toàn từng mode bằng cấu hình. Hai cờ
+  server/client đồng bộ, mặc định tắt, là release gate trước public rollout; không dùng ẩn nút client làm biện pháp duy nhất.
+
+Kế hoạch migration/rollback: [T00.03](../dual-tower/00-03-migration-plan.md). Nghiệm thu hiện tại:
+[T06.04](../dual-tower/06-04-final-acceptance.md).

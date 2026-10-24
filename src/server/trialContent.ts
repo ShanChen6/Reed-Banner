@@ -12,10 +12,11 @@ interface FloorInput {
   readonly foes: readonly [string, string, string]; readonly level: number; readonly power: number;
   readonly difficulty: TrialFloorSpec["difficulty"]; readonly turnLimit: number; readonly stones: number;
   readonly weights?: TrialFloorSpec["board"]["weights"];
+  readonly contentVersion?: number;
 }
 
 const floor = (index: number, input: FloorInput): TrialFloorSpec => ({
-  schema: 1, id: trialFloorId(index), floor: index, contentVersion: 1,
+  schema: 1, id: trialFloorId(index), floor: index, contentVersion: input.contentVersion ?? 1,
   narrative: { title: input.title, intro: input.intro }, difficulty: input.difficulty, rules: input.rules,
   enemy: { foeIds: input.foes, level: input.level, power: input.power },
   board: { publicSeed: 0x5a17_0000 + index * 7919, weights: input.weights ?? STANDARD },
@@ -40,11 +41,11 @@ export const TRIAL_FLOOR_DATA: readonly TrialFloorSpec[] = [
   floor(13, { title: "Thế Cờ Cân Não", intro: "Năng lượng và trống xuất hiện nhiều hơn trên bàn cố định.", rules: {}, foes: ["phungPhong", "haVan", "maiThanh"], level: 7, power: 0.66, difficulty: "hard", turnLimit: 27, stones: 4, weights: TACTICAL }),
   floor(14, { title: "Đánh Nhanh", intro: "Tận dụng bàn nhiều kiếm để hạ đội hình cứng trong 26 lượt.", rules: {}, foes: ["leThach", "toKim", "phungPhong"], level: 7, power: 0.68, difficulty: "hard", turnLimit: 26, stones: 4, weights: OFFENSE }),
   floor(15, { title: "Cạn Nguồn", intro: "Ít hồi phục và giới hạn 26 lượt thử khả năng điều phối.", rules: {}, foes: ["maiThanh", "leThach", "haVan"], level: 8, power: 0.68, difficulty: "hard", turnLimit: 26, stones: 5, weights: LOW_HEAL }),
-  floor(16, { title: "Thủy Khắc Hỏa", intro: "Cấm Hỏa và bắt buộc ít nhất một tướng Thủy.", rules: { bannedElements: ["hoa"], minElements: { thuy: 1 } }, foes: ["haVan", "toKim", "leThach"], level: 8, power: 0.70, difficulty: "boss", turnLimit: 28, stones: 5, weights: STANDARD }),
+  floor(16, { title: "Thủy Khắc Hỏa", intro: "Cấm Hỏa và bắt buộc ít nhất một tướng Thủy.", rules: { bannedElements: ["hoa"], minElements: { thuy: 1 } }, foes: ["haVan", "toKim", "leThach"], level: 8, power: 0.62, difficulty: "boss", turnLimit: 28, stones: 5, weights: STANDARD, contentVersion: 2 }),
   floor(17, { title: "Không Trùng Hành", intro: "Không dùng Y sư và ba active phải khác hệ.", rules: { bannedProfessions: ["ySu"], maxSameElement: 1 }, foes: ["maiThanh", "phungPhong", "toKim"], level: 9, power: 0.72, difficulty: "boss", turnLimit: 28, stones: 5, weights: TACTICAL }),
   floor(18, { title: "Quân Trận Phân Minh", intro: "Cần một Binh lính và ba active khác nghề.", rules: { minProfessions: { binhLinh: 1 }, maxSameProfession: 1 }, foes: ["leThach", "haVan", "phungPhong"], level: 9, power: 0.74, difficulty: "boss", turnLimit: 27, stones: 5, weights: OFFENSE }),
-  floor(19, { title: "Neo Đất", intro: "Cấm Phong và bắt buộc ít nhất một tướng hệ Thổ.", rules: { bannedElements: ["phong"], minElements: { tho: 1 } }, foes: ["phungPhong", "toKim", "maiThanh"], level: 10, power: 0.76, difficulty: "boss", turnLimit: 27, stones: 6, weights: LOW_HEAL }),
-  floor(20, { title: "Cửa Ải Song Tháp", intro: "Không dùng Pháp sư; ba active phải khác hệ để hạ thủ lĩnh cuối.", rules: { bannedProfessions: ["phapSu"], maxSameElement: 1 }, foes: ["haVan", "leThach", "phungPhong"], level: 10, power: 0.78, difficulty: "nightmare", turnLimit: 28, stones: 8, weights: TACTICAL }),
+  floor(19, { title: "Neo Đất", intro: "Cấm Phong và bắt buộc ít nhất một tướng hệ Thổ.", rules: { bannedElements: ["phong"], minElements: { tho: 1 } }, foes: ["phungPhong", "toKim", "maiThanh"], level: 10, power: 0.70, difficulty: "boss", turnLimit: 27, stones: 6, weights: LOW_HEAL, contentVersion: 2 }),
+  floor(20, { title: "Cửa Ải Song Tháp", intro: "Không dùng Pháp sư; ba active phải khác hệ để hạ thủ lĩnh cuối.", rules: { bannedProfessions: ["phapSu"], maxSameElement: 1 }, foes: ["haVan", "leThach", "phungPhong"], level: 10, power: 0.60, difficulty: "nightmare", turnLimit: 28, stones: 8, weights: TACTICAL, contentVersion: 2 }),
 ];
 
 export const TRIAL_DESIGN_REASON: readonly string[] = [
