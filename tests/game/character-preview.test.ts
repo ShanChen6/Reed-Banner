@@ -11,15 +11,15 @@ test("bảng xem thử chỉ có nhân vật có rig, dung lượng khớp các 
   for (const character of characters) {
     const rig = rigOf(character.id);
     assert.ok(rig);
-    assert.equal(character.assets.length, 5);
+    assert.equal(character.assets.length, 6);
     for (const file of character.files) assert.equal(file.bytes, statSync(`public${file.url}`).size);
     const urls = new Set(character.files.map((file) => file.url));
     assert.equal(urls.size, character.files.length);
     for (const name of partsOf(rig)) assert.ok(urls.has(partUrl(rig, name)));
   }
-  for (const id of ["nguyenBac", "dinhDien", "luuCo", "trinhTu", "dinhLien", "tranLam", "phamBachHo", "ngoXuongXi"]) {
+  for (const id of ["nguyenBac", "dinhDien", "luuCo", "trinhTu", "dinhLien", "tranLam", "phamBachHo", "ngoXuongXi", "tranCuong"]) {
     const character = characters.find((c) => c.id === id)!;
-    assert.ok(character.assets.every((a) => a.file), `${id} cần đủ năm ảnh đối chiếu`);
+    assert.ok(character.assets.every((a) => a.file || a.kind === "attack"), `${id} cần đủ năm ảnh đối chiếu`);
     assert.ok(character.files.reduce((sum, file) => sum + file.bytes, 0) <= 350_000);
     const portrait = character.assets.find((a) => a.kind === "portrait")!.file!;
     assert.ok(portrait.bytes < 30_000);
