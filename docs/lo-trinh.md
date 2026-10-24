@@ -1,6 +1,6 @@
 # Lộ trình
 
-> Cập nhật: 20/10/2026
+> Cập nhật: 24/10/2026
 
 | Giai đoạn | Nội dung | Mục đích |
 |---|---|---|
@@ -36,6 +36,7 @@ Mỗi dòng là một PR vào develop, làm theo thứ tự. Số liệu là đi
 | 5.3 | Sinh tồn: đối thủ theo đợt, báo trước, hồi sinh. Đã làm (20/10/2026), trang `/survival`, xem [Chế độ chơi](design/09-che-do-choi.md#41-bản-đầu-claude-đặt-20102026-chờ-shan-duyệt) |
 | 5.4 | Nhiệm vụ ngày/tuần, thành tựu, điểm danh. Đã làm (20/10/2026), trang `/quests`, xem [Chế độ chơi](design/09-che-do-choi.md#52-nhiệm-vụ-thành-tựu-điểm-danh-claude-đặt-20102026-chờ-shan-duyệt) |
 | 5.5 | Đấu trường bóng ma (PvP không đồng bộ). Đã làm (20/10/2026), trang `/arena`, xem [Chế độ chơi](design/09-che-do-choi.md#53-đấu-trường-bóng-ma-claude-đặt-20102026-chờ-shan-duyệt) |
+| 5.6 | Song Tháp: Trial 20 tầng, quét ngày, Destiny theo chu kỳ và Đá Cường Hóa. Code/automated QA đã hoàn tất trên `update/tower`; trạng thái release là **Trial GO có điều kiện, Destiny ADJUST**. Xem [nghiệm thu T06.04](dual-tower/06-04-final-acceptance.md). |
 
 ### Giai đoạn 6: Đánh bóng và phát hành
 
@@ -45,6 +46,7 @@ Mỗi dòng là một PR vào develop, làm theo thứ tự. Số liệu là đi
 | 6.2 | Âm thanh, nhạc nền, hiệu ứng đánh |
 | 6.3 | Hướng dẫn chơi lần đầu (màn cờ lau làm màn hướng dẫn) |
 | 6.4 | Kiểm tra trên điện thoại, hiệu năng, chốt tên miền, đưa develop lên main |
+| 6.5 | Gate Song Tháp: staging migration có backup, browser/device smoke, CI sau merge `develop`, bổ sung cờ bật riêng Trial/Destiny; chưa mở cường hóa trang bị |
 
 ### Cách làm để không mất việc
 

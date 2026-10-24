@@ -54,8 +54,38 @@ describe("nội dung 20 tầng Trial V1", () => {
     assert.equal(results.length, 20);
     for (const result of results) {
       assert.ok(result.sampleTeams > 0, `tầng ${result.floor}: không có đội mẫu`);
-      assert.ok(result.wins > 0, `tầng ${result.floor}: không có sample run thắng`);
+      assert.ok(result.wins >= 10, `tầng ${result.floor}: tỷ lệ chuẩn dưới 10/12`);
       assert.ok(result.sampleTurns !== null, `tầng ${result.floor}: thiếu số lượt`);
     }
+  });
+
+  it("QA deterministic và mỗi tầng có ít nhất một cặp starter tối thiểu hợp luật", () => {
+    for (const spec of TRIAL_FLOOR_DATA) {
+      const profile = trialTestProfile(spec.enemy.level);
+      const ids = Object.keys(profile.companions);
+      let legalPairs = 0;
+      for (let a = 0; a < ids.length; a++) {
+        for (let b = a + 1; b < ids.length; b++) {
+          const minimal = {
+            ...profile,
+            companions: { [ids[a]!]: profile.companions[ids[a]!]!, [ids[b]!]: profile.companions[ids[b]!]! },
+          };
+          if (analyzeFeasibility(spec.rules, profileCandidates(minimal), { maxSamples: 1 }).status === "feasible")
+            legalPairs++;
+        }
+      }
+      assert.ok(legalPairs > 0, `tầng ${spec.floor}: starter pair`);
+    }
+    const representative = TRIAL_FLOOR_DATA[19]!;
+    assert.deepEqual(
+      evaluateTrialContent([representative]),
+      evaluateTrialContent(structuredClone([representative])),
+      "simulator tầng cuối deterministic",
+    );
+  });
+
+  it("tầng cân bằng lại tăng contentVersion để không đối chiếu sai trận cũ", () => {
+    for (const floor of [16, 19, 20])
+      assert.equal(TRIAL_FLOOR_DATA[floor - 1]!.contentVersion, 2);
   });
 });
