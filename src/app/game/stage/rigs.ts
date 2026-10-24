@@ -109,9 +109,10 @@ export interface WarriorRig {
    * Hiệu ứng lúc đòn trúng vẽ trên cả sân: `lightning` phóng sét tới đối thủ, tuyệt chiêu giáng sét xuống cả đội;
    * `earthWard` và `leafBloom` chỉ ở tuyệt chiêu, dựng vòm khiên đất hoặc nở vòng lá hồi sinh quanh từng đồng đội;
    * `armorPierce` chỉ ở tuyệt chiêu, phóng mũi sáng xuyên giáp tới đối thủ đứng đầu; `supplyDrain` chỉ ở tuyệt
-   * chiêu, phủ sương băng lên cả đội đối thủ và hút hạt sáng từ họ về người tung chiêu.
+   * chiêu, phủ sương băng lên cả đội đối thủ và hút hạt sáng từ họ về người tung chiêu; `waterPillar` chỉ ở tuyệt
+   * chiêu, phun cột nước rồi đóng băng dưới chân từng đối thủ.
    */
-  readonly strikeFx?: "lightning" | "earthWard" | "leafBloom" | "armorPierce" | "supplyDrain";
+  readonly strikeFx?: "lightning" | "earthWard" | "leafBloom" | "armorPierce" | "supplyDrain" | "waterPillar";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -969,6 +970,53 @@ const NGUYEN_THU_TIEP: WarriorRig = {
     anchor: { x: 800, y: 940 }, scale: 0.9 },
 };
 
+/**
+ * Lữ Đường, sứ quân Tế Giang, pháp sư hệ Thủy. Bộ tranh Shan gửi 24/10 (nền trong suốt sẵn, trừ tranh tuyệt chiêu
+ * và tranh phong thái có nền ca-rô vẽ sẵn, đã tách bằng code). Không có ảnh đứng khổ dọc nên rig tách từ tranh thế
+ * tấn 1312×1199: trượng cầu nước cùng nắm tay xoay quanh cổ tay, cầu nước sáng riêng; bàn tay xòe, đầu và dải khăn
+ * tách riêng. Hệ tọa độ: ảnh đứng 1312×1199.
+ */
+const LU_DUONG: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "staff",
+  dir: "lu-duong",
+  texScale: 0.5,
+  foot: { x: 710, y: 1180 },
+  height: 1180,
+  parts: {
+    body: { x: 34, y: 3, w: 1277, h: 1194 },
+    armR: { x: 1142, y: 202, w: 137, h: 119 },
+    sword: { x: 45, y: 25, w: 441, h: 758 },
+    arm: { x: 272, y: 398, w: 81, h: 85 },
+    head: { x: 705, y: 19, w: 118, h: 212 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 470, y: 45, w: 231, h: 166 }, behind: true,
+      wind: { axis: "x", start: 0.15, amp: 7, freq: 1.5, k: 3, phase: 0.9, vertical: true, reverse: true } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 330, y: 440 },
+    elbowR: { x: 1150, y: 265 },
+    neck: { x: 760, y: 220 },
+  },
+  blade: [{ x: 300, y: 440 }, { x: 135, y: 100 }],
+  orb: { x: 135, y: 100 },
+  strikeFx: "waterPillar",
+  fxColor: 0x2f7fc1,
+  // Chĩa trượng thẳng tới (đánh thường), dựng trượng đẩy ấn (ra chiêu), vung trượng ngang chỉ thế nước (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 41, y: 33 },
+      anchor: { x: 680, y: 1150 }, scale: 1.05, burst: { x: 1240, y: 150 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 8, y: 3 },
+      anchor: { x: 650, y: 1165 }, scale: 1, burst: { x: 1166, y: 146 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 19, y: 95 },
+      anchor: { x: 670, y: 1090 }, scale: 1.12, burst: { x: 66, y: 204 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 15, y: 63 },
+    anchor: { x: 1000, y: 870 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -988,6 +1036,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   kieuThuan: KIEU_THUAN,
   lyKhue: LY_KHUE,
   nguyenThuTiep: NGUYEN_THU_TIEP,
+  luDuong: LU_DUONG,
 };
 
 export function rigOf(id: string): Rig | null {
