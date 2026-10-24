@@ -25,7 +25,8 @@ export type DestinyRecoveryError =
   | "fighter_not_in_roster"
   | "target_downed"
   | "target_alive"
-  | "target_full_hp";
+  | "target_full_hp"
+  | "leader_requires_rescue";
 
 export type DestinyRecoveryResult =
   | { readonly ok: true; readonly run: DestinyRun; readonly changed: boolean }
@@ -68,6 +69,10 @@ export function applyDestinyRecovery(
     return { ok: false, error: "invalid_phase" };
   if (!Number.isInteger(input.floor) || input.floor !== run.floor)
     return { ok: false, error: "wrong_floor" };
+  const leader = run.fighters["dinhBoLinh"];
+  if ((leader?.downed || leader?.hp === 0) &&
+      (input.kind !== "rescue" || input.targetIds.length !== 1 || input.targetIds[0] !== "dinhBoLinh"))
+    return { ok: false, error: "leader_requires_rescue" };
   if (!targetCountValid(input.kind, input.targetIds.length))
     return { ok: false, error: "invalid_target_count" };
   if (new Set(input.targetIds).size !== input.targetIds.length)

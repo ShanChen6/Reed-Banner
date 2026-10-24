@@ -85,6 +85,47 @@ async function finishMatch(deps: DestinyDeps, id: string, winner: 0 | 1) {
 }
 
 describe("Destiny server lifecycle", () => {
+  it("khôi phục run cũ bị kẹt khi thủ lĩnh gục nhưng offer không có Cứu viện", async () => {
+    const deps = setup();
+    const owner = "leader-stuck";
+    const initial = await loadProfile(deps.profiles, owner);
+    const roster = [MAIN_ID, ...Object.keys(initial.profile.companions).slice(0, 3)];
+    assert.ok((await startDestinyRun(owner, { rosterIds: roster }, deps)).ok);
+    const stored = await loadProfile(deps.profiles, owner);
+    assert.ok(isDualTowerV1(stored.profile.dualTower));
+    if (!isDualTowerV1(stored.profile.dualTower) || !stored.profile.dualTower.destiny.run) return;
+    const run = stored.profile.dualTower.destiny.run;
+    const fighters = {
+      ...run.fighters,
+      [MAIN_ID]: { ...run.fighters![MAIN_ID]!, hp: 0, energy: 0, downed: true },
+    };
+    const stuck = {
+      ...run,
+      fighters,
+      hp: { ...run.hp, [MAIN_ID]: 0 },
+      phase: "reward" as const,
+      settledFloor: 1,
+      offer: [
+        { kind: "boon" as const, boonId: "atk" as const },
+        { kind: "boon" as const, boonId: "def" as const },
+        { kind: "boon" as const, boonId: "hp" as const },
+      ],
+    };
+    const profile = {
+      ...stored.profile,
+      dualTower: {
+        ...stored.profile.dualTower,
+        destiny: { ...stored.profile.dualTower.destiny, run: stuck },
+      },
+    };
+    assert.equal(await deps.profiles.put(owner, profile, stored.version, deps.now), true);
+
+    const overview = await destinyOverview(owner, deps);
+    assert.deepEqual(overview.progress?.run?.offer?.[0], { kind: "rescue" });
+    const claimed = await claimDestinyReward(owner, { floor: 1, index: 0, targetIds: [MAIN_ID] }, deps);
+    assert.ok(claimed.ok && claimed.run.floor === 2 && claimed.run.fighters![MAIN_ID]!.hp > 0);
+  });
+
   it("nhận roster tối thiểu 3 và cả Đinh Bộ Lĩnh + 5 tướng khởi đầu", async () => {
     const deps = setup();
     const profile = (await loadProfile(deps.profiles, "roster-min")).profile;
@@ -142,6 +183,9 @@ describe("Destiny server lifecycle", () => {
       const afterBattle = await currentRun(deps);
       assert.equal(afterBattle.settledFloor, floor);
       assert.equal(afterBattle.matchId, undefined);
+      const settledProfile = (await loadProfile(deps.profiles, "u1")).profile;
+      const expectedStones = floor >= 5 ? 8 : floor >= 3 ? 3 : 0;
+      assert.equal(settledProfile.stones, expectedStones, "mốc chỉ cấp đá một lần khi clear");
       if (floor < 10)
         assert.equal((await deps.destinyLeaderboard!.rankOf(run.cycleId!, "u1"))?.entry.clearedFloor, floor);
       if (floor === 10) {
@@ -171,6 +215,7 @@ describe("Destiny server lifecycle", () => {
     const finalProfile = (await loadProfile(deps.profiles, "u1")).profile;
     assert.ok(isDualTowerV1(finalProfile.dualTower));
     if (isDualTowerV1(finalProfile.dualTower)) assert.equal(finalProfile.dualTower.destiny.cycleBest, 9);
+    assert.equal(finalProfile.stones, 8);
     assert.deepEqual(finalProfile.tower, legacyTower, "Destiny không sửa Tower legacy");
   });
 
@@ -310,12 +355,28 @@ describe("Destiny server lifecycle", () => {
       closedAt: cycle.cycle.endAt,
       phaseAtClose: "reward",
       pendingRewardDropped: true,
-      cycleRewardClaimed: false,
+      cycleRewardClaimed: true,
     });
     assert.equal(after.dualTower.destiny.run?.offer, null);
     assert.equal(after.gold, before.gold);
-    assert.equal(after.stones, before.stones);
+    assert.equal(after.stones, before.stones + 1);
+    assert.ok(isDualTowerV1(after.dualTower) &&
+      after.dualTower.stoneLedger.includes(`destiny:${cycle.cycle.cycleId}:cycle`));
     assert.deepEqual(after.bag, before.bag);
+
+    const laterDeps: DestinyDeps = { ...deps, now: cycle.cycle.endAt + 7 * 24 * 60 * 60 * 1000 };
+    await Promise.all([
+      destinyOverview("reward-expire", laterDeps),
+      destinyOverview("reward-expire", laterDeps),
+    ]);
+    const delayed = (await loadProfile(deps.profiles, "reward-expire")).profile;
+    assert.ok(isDualTowerV1(delayed.dualTower));
+    if (!isDualTowerV1(delayed.dualTower)) return;
+    assert.equal(delayed.stones, before.stones + 1, "đóng trễ/hai tab không cấp lại cycle cũ");
+    assert.deepEqual(delayed.dualTower.destiny.history?.map(({ cycleId }) => cycleId), [
+      cycle.cycle.cycleId,
+      "2026-10-26",
+    ]);
   });
 });
 
