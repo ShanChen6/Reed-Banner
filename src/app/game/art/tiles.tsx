@@ -282,3 +282,20 @@ export function TileArt({ kind, special, className }: { kind: TileKind; special?
     </svg>
   );
 }
+
+/** Huy hiệu giữa mép trên khung bàn cờ: mặt trống đồng mạ vàng, hai bên là dải mây cuộn. */
+export function BoardCrest({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 160 32" className={className} aria-hidden focusable="false">
+      <g fill="none" stroke={url("gilt")} strokeWidth={3} strokeLinecap="round">
+        <path d="M62 18 C50 18 44 10 34 12 C26 14 26 24 34 24 C40 24 40 17 35 17" />
+        <path d="M98 18 C110 18 116 10 126 12 C134 14 134 24 126 24 C120 24 120 17 125 17" />
+        <path d="M30 21 C20 23 12 22 4 26 M130 21 C140 23 148 22 156 26" strokeWidth={2} />
+      </g>
+      <circle cx={80} cy={16} r={15} fill={url("gilt")} stroke={INK} strokeWidth={1.2} />
+      <circle cx={80} cy={16} r={11.5} fill="#5e3b1f" stroke={INK} strokeWidth={0.8} />
+      <polygon points={starPoints(80, 16, 10, 3.8, 14)} fill={url("gold")} />
+      <circle cx={80} cy={16} r={2.4} fill="#c2410c" />
+    </svg>
+  );
+}
