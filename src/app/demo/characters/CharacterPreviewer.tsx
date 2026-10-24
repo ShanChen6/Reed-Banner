@@ -27,7 +27,7 @@ function CharacterDetails({ character, size }: { character: CharacterPreview; si
       <RigPreview id={character.id} size={size} onSnapshot={setSnapshot} />
       <section aria-label="Tranh nhân vật" className="space-y-3">
         <h2 className="text-lg font-semibold">Đối chiếu hình ảnh</h2>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {character.assets.map((asset) => (
             <figure key={asset.kind} data-art={asset.kind} className="min-w-0 overflow-hidden rounded-xl border border-stone-700 bg-stone-900/60">
               <div className="relative flex aspect-[4/5] items-center justify-center bg-[radial-gradient(ellipse_at_center,#40372d,transparent)] p-2">

@@ -1,7 +1,7 @@
 /**
  * Bộ xương tướng sĩ: cả tay cầm kiếm và thanh kiếm xoay quanh vai. Đòn kiếm là một nhát chém vòng ra
  * phía trước, thi triển thì tụ sáng vào kiếm trước khi chém, kèm vệt kiếm và tia sáng ở mũi. Nhân vật có
- * tranh tư thế thì lúc ra chiêu và tuyệt chiêu đổi sang tranh đó, kèm bóng sáng và tia lửa; có tranh bị hạ gục
+ * tranh tư thế thì lúc đánh thường, ra chiêu và tuyệt chiêu đổi sang tranh đó, kèm bóng sáng và tia lửa; có tranh bị hạ gục
  * thì hết máu mờ dần sang tranh đó.
  */
 import { Container, Graphics, Sprite, type Texture } from "pixi.js";
@@ -60,6 +60,7 @@ const RAISE = { sword: -0.8, spear: 0.12, fan: -0.3, gourd: 0.16, staff: 0.14 } 
  * về, `end` xong. `dash` là quãng lướt tới, `lift` là độ nhảy lên (tuyệt chiêu bổ từ trên xuống).
  */
 const POSE_BEAT = {
+  attack: { swap: 0.06, hit: 0.2, out: 0.46, end: 0.65, dash: 40, lift: 0 },
   cast: { swap: 0.1, hit: 0.28, out: 0.66, end: 0.85, dash: 60, lift: 0 },
   ultimate: { swap: 0.16, hit: 0.7, out: 1.25, end: 1.5, dash: 90, lift: 110 },
 } as const;
@@ -132,7 +133,7 @@ export function warrior(
     bloom.tint = rig.fxColor;
     bloom.blendMode = "add";
     bloom.position.set(0, -500);
-    bloom.scale.set(kind === "ultimate" ? 26 : 20);
+    bloom.scale.set(kind === "ultimate" ? 26 : kind === "cast" ? 20 : 15);
     root.addChild(bloom);
     const art = (blend: boolean) => {
       const s = new Sprite(img(p.name));
@@ -232,7 +233,7 @@ export function warrior(
       if (!action.fired && a >= B.hit) {
         action.fired = true;
         const big = pose.kind === "ultimate";
-        for (let i = 0; i < (big ? 44 : 26); i++) {
+        for (let i = 0; i < (big ? 44 : pose.kind === "cast" ? 26 : 14); i++) {
           const d = (Math.random() - 0.5) * (big ? 2.6 : 1.4) - (big ? Math.PI / 2 : 0);
           const v = 350 + Math.random() * (big ? 900 : 600);
           pose.sparks.spawn(pose.burst.x, pose.burst.y, Math.cos(d) * v, Math.sin(d) * v - 150, 0.15 + Math.random() * (big ? 0.45 : 0.3), 0.4 + Math.random() * 0.5);
