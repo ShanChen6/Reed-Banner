@@ -1,6 +1,6 @@
-// Hình ô cờ vẽ bằng SVG, phong cách bàn ngọc: mọi ô chung một nền ngọc xanh thẫm viền vàng mảnh, vật phẩm to, bóng, đủ màu.
+// Hình ô cờ vẽ bằng SVG, phong cách bàn ngọc: mọi ô chung một nền xanh đá phiến viền vàng mảnh, vật phẩm to, bóng, đủ màu.
 // Loại ô nhận ra nhờ màu và dáng của chính vật phẩm (kiếm thép tua đỏ, âm dương lam, bánh chưng xanh, tim đỏ, nén vàng,
-// sách bìa lam, trống đỏ), không nhờ màu nền, nên nền tối làm vật phẩm nổi lên rõ ở cỡ ~40 px trên điện thoại.
+// sách bìa lam, trống đỏ), không nhờ màu nền; nền xanh đá phiến đậm vừa để vật phẩm nổi rõ ở cỡ ~40 px.
 // Chỉ ô đặc biệt mới có hào quang (bản yếu) hoặc lửa (bản mạnh), kèm khung mạ vàng.
 // Dải màu dùng chung nằm trong <TileDefs /> (gắn một lần ở layout gốc), nên mỗi ô chỉ tham chiếu url(#...), không lặp defs.
 // Không dùng filter (blur, bóng đổ) để cả bàn 96 ô vẫn vẽ nhẹ trên điện thoại.
@@ -29,11 +29,18 @@ export function TileDefs() {
   return (
     <svg width={0} height={0} aria-hidden focusable="false" style={{ position: "absolute", overflow: "hidden" }}>
       <defs>
-        {/* Nền ngọc chung: sáng nhẹ ở giữa, sẫm dần ra mép. */}
-        <radialGradient id="tile-jade" cx="50%" cy="40%" r="70%">
-          <stop offset="0" stopColor="#2f5242" />
-          <stop offset="0.6" stopColor="#1c3328" />
-          <stop offset="1" stopColor="#0f1d16" />
+        {/* Nền chung màu xanh đá phiến: hợp viền vàng, đậm vừa để vật phẩm nổi; sáng nhẹ ở giữa. */}
+        <radialGradient id="tile-jade" cx="50%" cy="42%" r="72%">
+          <stop offset="0" stopColor="#5d7088" />
+          <stop offset="0.55" stopColor="#475a71" />
+          <stop offset="1" stopColor="#33445a" />
+        </radialGradient>
+        {/* Hào quang mịn của ô bản yếu: vàng trắng ở lõi, nhạt dần trong suốt ra mép. */}
+        <radialGradient id="tile-halo" cx="50%" cy="50%" r="50%">
+          <stop offset="0" stopColor="#fff8dc" stopOpacity={0.95} />
+          <stop offset="0.45" stopColor="#ffe08a" stopOpacity={0.7} />
+          <stop offset="0.8" stopColor="#f2b544" stopOpacity={0.25} />
+          <stop offset="1" stopColor="#f2a93b" stopOpacity={0} />
         </radialGradient>
         {/* Đồng mạ vàng như chữ logo: sáng ở trên, sẫm ở giữa, ánh lại ở dưới. Dùng cho khung ô đặc biệt và trang trí trang. */}
         <linearGradient id="tile-gilt" x1="0" y1="0" x2="0.35" y2="1">
@@ -222,13 +229,12 @@ export function starPoints(cx: number, cy: number, outer: number, inner: number,
 const FLAME =
   "M5 60 C3 46 8 38 8 28 C13 33 14.5 37 16 40 C15 29 18 19 24 10 C24.5 20 27 25 29 28 C29 19 32 10 36 3 C37.5 13 40 19 42 25 C43 19 46 14 51 10 C49.5 21 52 29 53 34 C55 30 57 28 59 23 C60 36 61 47 59 60 Z";
 
-/** Bản yếu (từ chữ L/T): hào quang vàng, hai dải sáng cuộn quanh vật phẩm. */
+/** Bản yếu (từ chữ L/T): hào quang vàng tỏa mịn sau vật phẩm, viền sáng mảnh trong khung. */
 function WeakAura() {
   return (
     <g>
-      <circle cx={32} cy={32} r={26} fill={url("sun")} opacity={0.55} />
-      <path d="M9 46 C11 22 36 6 55 15 M55 18 C53 42 28 58 9 49" fill="none" stroke="#ffb627" strokeWidth={5} strokeLinecap="round" opacity={0.55} />
-      <path d="M9 46 C11 22 36 6 55 15 M55 18 C53 42 28 58 9 49" fill="none" stroke="#fff6cf" strokeWidth={1.8} strokeLinecap="round" />
+      <circle cx={32} cy={32} r={30} fill={url("halo")} />
+      <rect x={4.5} y={4.5} width={55} height={55} rx={5.5} fill="none" stroke="#fff3c2" strokeOpacity={0.6} strokeWidth={1} />
     </g>
   );
 }
@@ -267,7 +273,7 @@ export function TileArt({ kind, special, className }: { kind: TileKind; special?
     <svg viewBox="0 0 64 64" className={className} aria-hidden focusable="false">
       {/* Nền ngọc chung, viền vàng mảnh; ô đặc biệt viền mạ vàng dày hơn. */}
       <rect x={1} y={1} width={62} height={62} rx={8} fill={url("jade")} stroke={special ? url("gilt") : "#b98a3e"} strokeWidth={special ? 3.5 : 1.6} />
-      <rect x={3.5} y={3.5} width={57} height={57} rx={6} fill="none" stroke="#000" strokeOpacity={0.35} strokeWidth={1} />
+      <rect x={3.5} y={3.5} width={57} height={57} rx={6} fill="none" stroke="#000" strokeOpacity={0.3} strokeWidth={1} />
       {special === "weak" && <WeakAura />}
       {special === "strong" && <StrongFire />}
       {/* Vật phẩm là ảnh vẽ tay ở public/art/tiles/, mỗi loại có bản thường, bản yếu và bản mạnh. */}
