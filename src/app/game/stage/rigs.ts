@@ -105,8 +105,13 @@ export interface WarriorRig {
   readonly fxColor: number;
   /** Tâm quả cầu đầu trượng: đốm sáng riêng nhấp nháy theo tay. */
   readonly orb?: Point;
-  /** Hiệu ứng lúc đòn trúng vẽ trên cả sân: `lightning` phóng sét tới đối thủ, tuyệt chiêu giáng sét xuống cả đội. */
-  readonly strikeFx?: "lightning";
+  /**
+   * Hiệu ứng lúc đòn trúng vẽ trên cả sân: `lightning` phóng sét tới đối thủ, tuyệt chiêu giáng sét xuống cả đội;
+   * `earthWard` chỉ ở tuyệt chiêu, dựng vòm khiên đất quanh từng đồng đội.
+   */
+  readonly strikeFx?: "lightning" | "earthWard";
+  /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
+  readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
   /** Tranh bị hạ gục: hết máu thì hình động mờ dần sang tranh này. */
   readonly down?: Omit<PoseArt, "burst">;
@@ -781,6 +786,50 @@ const KIEU_CONG_HAN: WarriorRig = {
     anchor: { x: 760, y: 960 }, scale: 0.9 },
 };
 
+/**
+ * Nguyễn Khoan, sứ quân Tam Đái, binh lính hệ Thổ. Bộ tranh Shan gửi 24/10 (nền đã trong suốt): ảnh đứng tách lớp
+ * bằng code. Giáo cùng nắm tay xoay quanh cổ tay; khiên mây là lớp tay không, nâng lên khi vào thế và đỡ đòn,
+ * phần thân sau khiên vá bằng ảnh đối xứng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const NGUYEN_KHOAN: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "nguyen-khoan",
+  texScale: 0.5,
+  foot: { x: 560, y: 1480 },
+  height: 1375,
+  parts: {
+    body: { x: 144, y: 110, w: 799, h: 1380 },
+    armR: { x: 700, y: 435, w: 290, h: 524 },
+    sword: { x: 53, y: 9, w: 100, h: 1489 },
+    arm: { x: 82, y: 543, w: 97, h: 112 },
+    head: { x: 392, y: 113, w: 187, h: 236 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 247, y: 205, w: 154, h: 136 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 6, freq: 1.5, k: 3, phase: 0.8, vertical: true, reverse: true } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 165, y: 600 },
+    elbowR: { x: 722, y: 650 },
+    neck: { x: 500, y: 330 },
+  },
+  blade: [{ x: 128, y: 600 }, { x: 122, y: 12 }],
+  shieldRaise: -0.35,
+  strikeFx: "earthWard",
+  fxColor: 0xa5772f,
+  // Đâm giáo sau khiên (đánh thường), giơ giáo qua đầu trấn thủ (tuyệt chiêu); ra chiêu dùng nhịp đẩy giáo.
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 4, y: 6 },
+      anchor: { x: 640, y: 1145 }, scale: 1, burst: { x: 1300, y: 145 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 18, y: 10 },
+      anchor: { x: 650, y: 1185 }, scale: 1, burst: { x: 1290, y: 320 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 0, y: 16 },
+    anchor: { x: 640, y: 930 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -796,6 +845,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   phamBachHo: PHAM_BACH_HO,
   ngoXuongXi: NGO_XUONG_XI,
   kieuCongHan: KIEU_CONG_HAN,
+  nguyenKhoan: NGUYEN_KHOAN,
 };
 
 export function rigOf(id: string): Rig | null {
