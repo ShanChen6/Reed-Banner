@@ -6,19 +6,21 @@
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
-**Bối cảnh:** Nhân vật hư cấu đề xuất cho nghề mở rộng, chưa được xác nhận tích hợp gameplay. **Vai trò chiến đấu:** physically plausible aimed shot with correct string grip. **Tính cách định hướng:** quả quyết, có kỷ luật; trong ảnh phải toát lên qua ánh mắt, tỷ lệ dáng, cách đặt trọng tâm và cầm vũ khí.
+**Tiểu sử (lore đề xuất):** Bạch Nỏ Lang được hình dung như một xạ thủ chiến trường từng trưởng thành từ môi trường trấn nhỏ giáp rừng. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên lạnh lùng, tập trung vào trách nhiệm, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là giữ khoảng cách và đọc nhịp kéo cung. Ở thời điểm game bắt đầu, điều thôi thúc họ là coi lời hứa với gia đình là thứ không thể đánh mất. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
 
-**Chân dung / dấu hiệu nhận dạng nguồn (trích mô tả gốc, chưa biên dịch):** square-built old border marksman with a carved bolt case. Đây là các thuộc tính cần kiểm tra trực tiếp trên ảnh, không tự thay bằng mẫu nhân vật cùng nghề.
+**Chân dung đối chiếu asset:** Gương mặt và vóc dáng cần giữ các dấu hiệu đã định ở bản nguồn: diện mạo và kiểu tóc riêng cần được đối chiếu với ảnh tham chiếu gốc. Ánh mắt, tư thế nghỉ và cách giữ đạo cụ phải truyền tải nét lạnh lùng, tập trung vào trách nhiệm; không tạo một khuôn mẫu ngoại hình cho tất cả nhân vật cùng nghề.
 
-**Trang phục / dáng hình cần đối chiếu:** square-built old border marksman with a carved bolt case, practical cross-collar layered linen and leather equipment. Lưu ý sự khác nhau về lớp áo, khối vai, đai, đồ mang theo, chất liệu và mật độ giáp. Không thay đổi ảnh đã duyệt nếu chưa có phê duyệt.
+**Y phục và địa vị:** Áo vận động linh hoạt, bảo vệ cẳng tay, bao tên phù hợp đúng loại cung/nỏ; không được tự đổi vũ khí giữa các ảnh. Các chất liệu phù hợp thẩm mỹ game gồm vải dệt, mây tre, da, đồng và sắt; không khẳng định là tái dựng chính xác trang phục thế kỷ X.
 
-**Vũ khí chuẩn (RB-062-W01):** heavy bronze-fitted crossbow. Hiện chưa có tỷ lệ lưỡi/cán hoặc chiều dài chính thức được duyệt cho mọi nhân vật; khóa kích thước theo Weapon Reference Sheet sau khi được duyệt. Không tự lấy thanh đại đao Trần Cương làm vũ khí mẫu cho người khác.
+**Vũ khí và đồ dùng (RB-062-W01):** Giữ đúng vũ khí và phụ kiện đã ghi trong prompt gốc tiếng Anh ngay dưới hồ sơ. Chỉ khóa chiều dài tuyệt đối sau khi có ảnh Weapon Reference Sheet được duyệt; chiều dài, tỷ lệ lưỡi/cán và độ cong phải đồng nhất suốt sáu khung hình.
 
-**Màu hệ Kim:** ivory #F1E9D8, silver #AAB1B8, steel gray #707982, bronze #A68B54. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.
+**Bản sắc hành Kim:** ivory #F1E9D8, silver #AAB1B8, steel gray #707982, bronze #A68B54. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.. Mỗi sắc có vai trò cố định; tuyệt đối không thay bằng bảng màu hành Thổ của Đỗ Cảnh Thạc.
 
-**Đặc điểm riêng / lore dự kiến:** Giữ các dấu vết, kiểu tóc, đồ kỷ niệm và sẹo đã thể hiện trong mô tả/ảnh nguồn. Dấu xăm hay sẹo mới chỉ thêm khi duyệt riêng. **Phong cách sinh hoạt đề xuất:** ngồi nghỉ cạnh vũ khí xem một vật kỷ niệm; không phải tình tiết lịch sử đã được xác minh.
+**Dấu tích và vật kỷ niệm:** Không tự áp dụng hình xăm hay sẹo mới; dùng chính dấu hiệu đã có trong bản tạo hình duyệt. Kỷ vật được thể hiện qua phụ kiện hiện có và cách nhân vật trân trọng vật dụng, tránh tự thêm đạo cụ giống người khác.
 
-**Tiêu chuẩn kiểm tra:** mặt – dấu riêng – màu hệ – giáp – vật phẩm – kích thước và hình dạng vũ khí bất biến – silhouette khác đồng nghiệp.
+**Gợi ý khung đời thường:** ngồi trên thuyền bên bến nước. Đây là đề xuất phong cách cá nhân, không phải lời khẳng định lịch sử.
+
+**Điểm kiểm định:** nhận diện đúng gương mặt và dáng người; đúng Kim; vũ khí RB-062-W01 có hình học bất biến; dấu sẹo/xăm chỉ xuất hiện nếu đã được phê duyệt; hành động đúng nghề và tính cách.
 
 #### Khung 1 — Master / Idle
 
@@ -68,19 +70,21 @@ POSE: PERSONAL VIGNETTE: ngồi nghỉ cạnh vũ khí xem một vật kỷ ni�
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
-**Bối cảnh:** Nhân vật hư cấu đề xuất cho nghề mở rộng, chưa được xác nhận tích hợp gameplay. **Vai trò chiến đấu:** physically plausible aimed shot with correct string grip. **Tính cách định hướng:** kiên nhẫn và kín đáo; trong ảnh phải toát lên qua ánh mắt, tỷ lệ dáng, cách đặt trọng tâm và cầm vũ khí.
+**Tiểu sử (lore đề xuất):** Thanh Lâm Xạ được hình dung như một xạ thủ chiến trường từng trưởng thành từ môi trường đội thuyền tuần tra. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên linh hoạt và nhạy cảm với tình thế, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là giữ khoảng cách và đọc nhịp kéo cung. Ở thời điểm game bắt đầu, điều thôi thúc họ là học cách tin tưởng đồng đội sau những năm sống độc lập. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
 
-**Chân dung / dấu hiệu nhận dạng nguồn (trích mô tả gốc, chưa biên dịch):** lean upland huntress with a seed whistle. Đây là các thuộc tính cần kiểm tra trực tiếp trên ảnh, không tự thay bằng mẫu nhân vật cùng nghề.
+**Chân dung đối chiếu asset:** Gương mặt và vóc dáng cần giữ các dấu hiệu đã định ở bản nguồn: thân hình gọn, dẻo dai. Ánh mắt, tư thế nghỉ và cách giữ đạo cụ phải truyền tải nét linh hoạt và nhạy cảm với tình thế; không tạo một khuôn mẫu ngoại hình cho tất cả nhân vật cùng nghề.
 
-**Trang phục / dáng hình cần đối chiếu:** lean upland huntress with a seed whistle, practical cross-collar layered linen and leather equipment. Lưu ý sự khác nhau về lớp áo, khối vai, đai, đồ mang theo, chất liệu và mật độ giáp. Không thay đổi ảnh đã duyệt nếu chưa có phê duyệt.
+**Y phục và địa vị:** Áo vận động linh hoạt, bảo vệ cẳng tay, bao tên phù hợp đúng loại cung/nỏ; không được tự đổi vũ khí giữa các ảnh. Các chất liệu phù hợp thẩm mỹ game gồm vải dệt, mây tre, da, đồng và sắt; không khẳng định là tái dựng chính xác trang phục thế kỷ X.
 
-**Vũ khí chuẩn (RB-063-W01):** long asymmetrical bamboo bow. Hiện chưa có tỷ lệ lưỡi/cán hoặc chiều dài chính thức được duyệt cho mọi nhân vật; khóa kích thước theo Weapon Reference Sheet sau khi được duyệt. Không tự lấy thanh đại đao Trần Cương làm vũ khí mẫu cho người khác.
+**Vũ khí và đồ dùng (RB-063-W01):** Giữ đúng vũ khí và phụ kiện đã ghi trong prompt gốc tiếng Anh ngay dưới hồ sơ. Chỉ khóa chiều dài tuyệt đối sau khi có ảnh Weapon Reference Sheet được duyệt; chiều dài, tỷ lệ lưỡi/cán và độ cong phải đồng nhất suốt sáu khung hình.
 
-**Màu hệ Mộc:** forest green #2D6542, moss #608651, bark brown #6B5038, linen #E9DFC4. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.
+**Bản sắc hành Mộc:** forest green #2D6542, moss #608651, bark brown #6B5038, linen #E9DFC4. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.. Mỗi sắc có vai trò cố định; tuyệt đối không thay bằng bảng màu hành Thổ của Đỗ Cảnh Thạc.
 
-**Đặc điểm riêng / lore dự kiến:** Giữ các dấu vết, kiểu tóc, đồ kỷ niệm và sẹo đã thể hiện trong mô tả/ảnh nguồn. Dấu xăm hay sẹo mới chỉ thêm khi duyệt riêng. **Phong cách sinh hoạt đề xuất:** đứng cạnh voi chiến (chỉ là đề xuất, cần duyệt phù hợp xuất thân); không phải tình tiết lịch sử đã được xác minh.
+**Dấu tích và vật kỷ niệm:** Không tự áp dụng hình xăm hay sẹo mới; dùng chính dấu hiệu đã có trong bản tạo hình duyệt. Kỷ vật được thể hiện qua phụ kiện hiện có và cách nhân vật trân trọng vật dụng, tránh tự thêm đạo cụ giống người khác.
 
-**Tiêu chuẩn kiểm tra:** mặt – dấu riêng – màu hệ – giáp – vật phẩm – kích thước và hình dạng vũ khí bất biến – silhouette khác đồng nghiệp.
+**Gợi ý khung đời thường:** đứng cạnh ngựa chiến siết lại dây buộc. Đây là đề xuất phong cách cá nhân, không phải lời khẳng định lịch sử.
+
+**Điểm kiểm định:** nhận diện đúng gương mặt và dáng người; đúng Mộc; vũ khí RB-063-W01 có hình học bất biến; dấu sẹo/xăm chỉ xuất hiện nếu đã được phê duyệt; hành động đúng nghề và tính cách.
 
 #### Khung 1 — Master / Idle
 
@@ -130,19 +134,21 @@ POSE: PERSONAL VIGNETTE: đứng cạnh voi chiến (chỉ là đề xuất, c�
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
-**Bối cảnh:** Nhân vật hư cấu đề xuất cho nghề mở rộng, chưa được xác nhận tích hợp gameplay. **Vai trò chiến đấu:** physically plausible aimed shot with correct string grip. **Tính cách định hướng:** kiệm lời và cương nghị; trong ảnh phải toát lên qua ánh mắt, tỷ lệ dáng, cách đặt trọng tâm và cầm vũ khí.
+**Tiểu sử (lore đề xuất):** Lam Giang Nỗ được hình dung như một xạ thủ chiến trường từng trưởng thành từ môi trường trại quân dã chiến. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên điềm đạm nhưng kiên quyết, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là giữ khoảng cách và đọc nhịp kéo cung. Ở thời điểm game bắt đầu, điều thôi thúc họ là luôn tìm cách kết thúc giao tranh với tổn thất ít nhất. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
 
-**Chân dung / dấu hiệu nhận dạng nguồn (trích mô tả gốc, chưa biên dịch):** quiet river scout in wrapped indigo linen. Đây là các thuộc tính cần kiểm tra trực tiếp trên ảnh, không tự thay bằng mẫu nhân vật cùng nghề.
+**Chân dung đối chiếu asset:** Gương mặt và vóc dáng cần giữ các dấu hiệu đã định ở bản nguồn: diện mạo và kiểu tóc riêng cần được đối chiếu với ảnh tham chiếu gốc. Ánh mắt, tư thế nghỉ và cách giữ đạo cụ phải truyền tải nét điềm đạm nhưng kiên quyết; không tạo một khuôn mẫu ngoại hình cho tất cả nhân vật cùng nghề.
 
-**Trang phục / dáng hình cần đối chiếu:** quiet river scout in wrapped indigo linen, practical cross-collar layered linen and leather equipment. Lưu ý sự khác nhau về lớp áo, khối vai, đai, đồ mang theo, chất liệu và mật độ giáp. Không thay đổi ảnh đã duyệt nếu chưa có phê duyệt.
+**Y phục và địa vị:** Áo vận động linh hoạt, bảo vệ cẳng tay, bao tên phù hợp đúng loại cung/nỏ; không được tự đổi vũ khí giữa các ảnh. Các chất liệu phù hợp thẩm mỹ game gồm vải dệt, mây tre, da, đồng và sắt; không khẳng định là tái dựng chính xác trang phục thế kỷ X.
 
-**Vũ khí chuẩn (RB-064-W01):** short river crossbow. Hiện chưa có tỷ lệ lưỡi/cán hoặc chiều dài chính thức được duyệt cho mọi nhân vật; khóa kích thước theo Weapon Reference Sheet sau khi được duyệt. Không tự lấy thanh đại đao Trần Cương làm vũ khí mẫu cho người khác.
+**Vũ khí và đồ dùng (RB-064-W01):** Giữ đúng vũ khí và phụ kiện đã ghi trong prompt gốc tiếng Anh ngay dưới hồ sơ. Chỉ khóa chiều dài tuyệt đối sau khi có ảnh Weapon Reference Sheet được duyệt; chiều dài, tỷ lệ lưỡi/cán và độ cong phải đồng nhất suốt sáu khung hình.
 
-**Màu hệ Thủy:** river blue #2F7FC1, indigo #253F61, aqua #A4D7D8, linen #E9E6D9. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.
+**Bản sắc hành Thủy:** river blue #2F7FC1, indigo #253F61, aqua #A4D7D8, linen #E9E6D9. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.. Mỗi sắc có vai trò cố định; tuyệt đối không thay bằng bảng màu hành Thổ của Đỗ Cảnh Thạc.
 
-**Đặc điểm riêng / lore dự kiến:** Giữ các dấu vết, kiểu tóc, đồ kỷ niệm và sẹo đã thể hiện trong mô tả/ảnh nguồn. Dấu xăm hay sẹo mới chỉ thêm khi duyệt riêng. **Phong cách sinh hoạt đề xuất:** ngồi ghế gỗ thấp lau vũ khí; không phải tình tiết lịch sử đã được xác minh.
+**Dấu tích và vật kỷ niệm:** Không tự áp dụng hình xăm hay sẹo mới; dùng chính dấu hiệu đã có trong bản tạo hình duyệt. Kỷ vật được thể hiện qua phụ kiện hiện có và cách nhân vật trân trọng vật dụng, tránh tự thêm đạo cụ giống người khác.
 
-**Tiêu chuẩn kiểm tra:** mặt – dấu riêng – màu hệ – giáp – vật phẩm – kích thước và hình dạng vũ khí bất biến – silhouette khác đồng nghiệp.
+**Gợi ý khung đời thường:** vắt chân đọc thẻ tre hoặc lau vũ khí. Đây là đề xuất phong cách cá nhân, không phải lời khẳng định lịch sử.
+
+**Điểm kiểm định:** nhận diện đúng gương mặt và dáng người; đúng Thủy; vũ khí RB-064-W01 có hình học bất biến; dấu sẹo/xăm chỉ xuất hiện nếu đã được phê duyệt; hành động đúng nghề và tính cách.
 
 #### Khung 1 — Master / Idle
 
@@ -192,19 +198,21 @@ POSE: PERSONAL VIGNETTE: ngồi ghế gỗ thấp lau vũ khí. Character reveal
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
-**Bối cảnh:** Nhân vật hư cấu đề xuất cho nghề mở rộng, chưa được xác nhận tích hợp gameplay. **Vai trò chiến đấu:** physically plausible aimed shot with correct string grip. **Tính cách định hướng:** điềm tĩnh, hay quan sát; trong ảnh phải toát lên qua ánh mắt, tỷ lệ dáng, cách đặt trọng tâm và cầm vũ khí.
+**Tiểu sử (lore đề xuất):** Xích Diệm Tiễn được hình dung như một xạ thủ chiến trường từng trưởng thành từ môi trường đồn lũy ven đồng bằng. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên thận trọng và giàu nghị lực, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là giữ khoảng cách và đọc nhịp kéo cung. Ở thời điểm game bắt đầu, điều thôi thúc họ là vừa khát khao lập công vừa sợ sự liều lĩnh của chính mình. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
 
-**Chân dung / dấu hiệu nhận dạng nguồn (trích mô tả gốc, chưa biên dịch):** broad-shouldered young fire archer with a scorched wrist wrap. Đây là các thuộc tính cần kiểm tra trực tiếp trên ảnh, không tự thay bằng mẫu nhân vật cùng nghề.
+**Chân dung đối chiếu asset:** Gương mặt và vóc dáng cần giữ các dấu hiệu đã định ở bản nguồn: đôi vai rộng. Ánh mắt, tư thế nghỉ và cách giữ đạo cụ phải truyền tải nét thận trọng và giàu nghị lực; không tạo một khuôn mẫu ngoại hình cho tất cả nhân vật cùng nghề.
 
-**Trang phục / dáng hình cần đối chiếu:** broad-shouldered young fire archer with a scorched wrist wrap, practical cross-collar layered linen and leather equipment. Lưu ý sự khác nhau về lớp áo, khối vai, đai, đồ mang theo, chất liệu và mật độ giáp. Không thay đổi ảnh đã duyệt nếu chưa có phê duyệt.
+**Y phục và địa vị:** Áo vận động linh hoạt, bảo vệ cẳng tay, bao tên phù hợp đúng loại cung/nỏ; không được tự đổi vũ khí giữa các ảnh. Các chất liệu phù hợp thẩm mỹ game gồm vải dệt, mây tre, da, đồng và sắt; không khẳng định là tái dựng chính xác trang phục thế kỷ X.
 
-**Vũ khí chuẩn (RB-065-W01):** long war bow. Hiện chưa có tỷ lệ lưỡi/cán hoặc chiều dài chính thức được duyệt cho mọi nhân vật; khóa kích thước theo Weapon Reference Sheet sau khi được duyệt. Không tự lấy thanh đại đao Trần Cương làm vũ khí mẫu cho người khác.
+**Vũ khí và đồ dùng (RB-065-W01):** Giữ đúng vũ khí và phụ kiện đã ghi trong prompt gốc tiếng Anh ngay dưới hồ sơ. Chỉ khóa chiều dài tuyệt đối sau khi có ảnh Weapon Reference Sheet được duyệt; chiều dài, tỷ lệ lưỡi/cán và độ cong phải đồng nhất suốt sáu khung hình.
 
-**Màu hệ Hỏa:** cinnabar #C84231, brick red #903C32, amber #E38B38, charcoal #343236. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.
+**Bản sắc hành Hỏa:** cinnabar #C84231, brick red #903C32, amber #E38B38, charcoal #343236. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.. Mỗi sắc có vai trò cố định; tuyệt đối không thay bằng bảng màu hành Thổ của Đỗ Cảnh Thạc.
 
-**Đặc điểm riêng / lore dự kiến:** Giữ các dấu vết, kiểu tóc, đồ kỷ niệm và sẹo đã thể hiện trong mô tả/ảnh nguồn. Dấu xăm hay sẹo mới chỉ thêm khi duyệt riêng. **Phong cách sinh hoạt đề xuất:** đứng cạnh ngựa chiến buộc dây cương; không phải tình tiết lịch sử đã được xác minh.
+**Dấu tích và vật kỷ niệm:** Không tự áp dụng hình xăm hay sẹo mới; dùng chính dấu hiệu đã có trong bản tạo hình duyệt. Kỷ vật được thể hiện qua phụ kiện hiện có và cách nhân vật trân trọng vật dụng, tránh tự thêm đạo cụ giống người khác.
 
-**Tiêu chuẩn kiểm tra:** mặt – dấu riêng – màu hệ – giáp – vật phẩm – kích thước và hình dạng vũ khí bất biến – silhouette khác đồng nghiệp.
+**Gợi ý khung đời thường:** đứng tựa cờ lệnh trong khoảng nghỉ. Đây là đề xuất phong cách cá nhân, không phải lời khẳng định lịch sử.
+
+**Điểm kiểm định:** nhận diện đúng gương mặt và dáng người; đúng Hỏa; vũ khí RB-065-W01 có hình học bất biến; dấu sẹo/xăm chỉ xuất hiện nếu đã được phê duyệt; hành động đúng nghề và tính cách.
 
 #### Khung 1 — Master / Idle
 
@@ -254,19 +262,21 @@ POSE: PERSONAL VIGNETTE: đứng cạnh ngựa chiến buộc dây cương. Char
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
-**Bối cảnh:** Nhân vật hư cấu đề xuất cho nghề mở rộng, chưa được xác nhận tích hợp gameplay. **Vai trò chiến đấu:** physically plausible aimed shot with correct string grip. **Tính cách định hướng:** tự tôn nhưng thận trọng; trong ảnh phải toát lên qua ánh mắt, tỷ lệ dáng, cách đặt trọng tâm và cầm vũ khí.
+**Tiểu sử (lore đề xuất):** Trấn Sơn Cung được hình dung như một xạ thủ chiến trường từng trưởng thành từ môi trường bến sông nhiều thương thuyền. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên kiêu hãnh mà kín đáo, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là giữ khoảng cách và đọc nhịp kéo cung. Ở thời điểm game bắt đầu, điều thôi thúc họ là không ưa phô trương và trọng kết quả thực tế. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
 
-**Chân dung / dấu hiệu nhận dạng nguồn (trích mô tả gốc, chưa biên dịch):** stocky hill archer with stone tally. Đây là các thuộc tính cần kiểm tra trực tiếp trên ảnh, không tự thay bằng mẫu nhân vật cùng nghề.
+**Chân dung đối chiếu asset:** Gương mặt và vóc dáng cần giữ các dấu hiệu đã định ở bản nguồn: thân hình chắc, thấp trọng tâm. Ánh mắt, tư thế nghỉ và cách giữ đạo cụ phải truyền tải nét kiêu hãnh mà kín đáo; không tạo một khuôn mẫu ngoại hình cho tất cả nhân vật cùng nghề.
 
-**Trang phục / dáng hình cần đối chiếu:** stocky hill archer with stone tally, practical cross-collar layered linen and leather equipment. Lưu ý sự khác nhau về lớp áo, khối vai, đai, đồ mang theo, chất liệu và mật độ giáp. Không thay đổi ảnh đã duyệt nếu chưa có phê duyệt.
+**Y phục và địa vị:** Áo vận động linh hoạt, bảo vệ cẳng tay, bao tên phù hợp đúng loại cung/nỏ; không được tự đổi vũ khí giữa các ảnh. Các chất liệu phù hợp thẩm mỹ game gồm vải dệt, mây tre, da, đồng và sắt; không khẳng định là tái dựng chính xác trang phục thế kỷ X.
 
-**Vũ khí chuẩn (RB-066-W01):** heavy broad-limbed bow. Hiện chưa có tỷ lệ lưỡi/cán hoặc chiều dài chính thức được duyệt cho mọi nhân vật; khóa kích thước theo Weapon Reference Sheet sau khi được duyệt. Không tự lấy thanh đại đao Trần Cương làm vũ khí mẫu cho người khác.
+**Vũ khí và đồ dùng (RB-066-W01):** Giữ đúng vũ khí và phụ kiện đã ghi trong prompt gốc tiếng Anh ngay dưới hồ sơ. Chỉ khóa chiều dài tuyệt đối sau khi có ảnh Weapon Reference Sheet được duyệt; chiều dài, tỷ lệ lưỡi/cán và độ cong phải đồng nhất suốt sáu khung hình.
 
-**Màu hệ Thổ:** ochre #B48642, brown #76543B, terracotta #A65E42, sandstone #D8BF8B. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.
+**Bản sắc hành Thổ:** ochre #B48642, brown #76543B, terracotta #A65E42, sandstone #D8BF8B. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.. Mỗi sắc có vai trò cố định; tuyệt đối không thay bằng bảng màu hành Thổ của Đỗ Cảnh Thạc.
 
-**Đặc điểm riêng / lore dự kiến:** Giữ các dấu vết, kiểu tóc, đồ kỷ niệm và sẹo đã thể hiện trong mô tả/ảnh nguồn. Dấu xăm hay sẹo mới chỉ thêm khi duyệt riêng. **Phong cách sinh hoạt đề xuất:** ngồi vắt chân đọc thẻ tre; không phải tình tiết lịch sử đã được xác minh.
+**Dấu tích và vật kỷ niệm:** Không tự áp dụng hình xăm hay sẹo mới; dùng chính dấu hiệu đã có trong bản tạo hình duyệt. Kỷ vật được thể hiện qua phụ kiện hiện có và cách nhân vật trân trọng vật dụng, tránh tự thêm đạo cụ giống người khác.
 
-**Tiêu chuẩn kiểm tra:** mặt – dấu riêng – màu hệ – giáp – vật phẩm – kích thước và hình dạng vũ khí bất biến – silhouette khác đồng nghiệp.
+**Gợi ý khung đời thường:** kiểm tra lại túi đồ trước trận. Đây là đề xuất phong cách cá nhân, không phải lời khẳng định lịch sử.
+
+**Điểm kiểm định:** nhận diện đúng gương mặt và dáng người; đúng Thổ; vũ khí RB-066-W01 có hình học bất biến; dấu sẹo/xăm chỉ xuất hiện nếu đã được phê duyệt; hành động đúng nghề và tính cách.
 
 #### Khung 1 — Master / Idle
 
@@ -316,19 +326,21 @@ POSE: PERSONAL VIGNETTE: ngồi vắt chân đọc thẻ tre. Character reveals 
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
-**Bối cảnh:** Nhân vật hư cấu đề xuất cho nghề mở rộng, chưa được xác nhận tích hợp gameplay. **Vai trò chiến đấu:** physically plausible aimed shot with correct string grip. **Tính cách định hướng:** nóng nảy, trung thành; trong ảnh phải toát lên qua ánh mắt, tỷ lệ dáng, cách đặt trọng tâm và cầm vũ khí.
+**Tiểu sử (lore đề xuất):** Lôi Minh Xạ được hình dung như một xạ thủ chiến trường từng trưởng thành từ môi trường xóm thợ rèn và đúc đồng. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên nóng tính nhưng trọng chữ tín, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là giữ khoảng cách và đọc nhịp kéo cung. Ở thời điểm game bắt đầu, điều thôi thúc họ là muốn bảo vệ người từng cưu mang mình. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
 
-**Chân dung / dấu hiệu nhận dạng nguồn (trích mô tả gốc, chưa biên dịch):** slender swift woman with a signal bell. Đây là các thuộc tính cần kiểm tra trực tiếp trên ảnh, không tự thay bằng mẫu nhân vật cùng nghề.
+**Chân dung đối chiếu asset:** Gương mặt và vóc dáng cần giữ các dấu hiệu đã định ở bản nguồn: diện mạo và kiểu tóc riêng cần được đối chiếu với ảnh tham chiếu gốc. Ánh mắt, tư thế nghỉ và cách giữ đạo cụ phải truyền tải nét nóng tính nhưng trọng chữ tín; không tạo một khuôn mẫu ngoại hình cho tất cả nhân vật cùng nghề.
 
-**Trang phục / dáng hình cần đối chiếu:** slender swift woman with a signal bell, practical cross-collar layered linen and leather equipment. Lưu ý sự khác nhau về lớp áo, khối vai, đai, đồ mang theo, chất liệu và mật độ giáp. Không thay đổi ảnh đã duyệt nếu chưa có phê duyệt.
+**Y phục và địa vị:** Áo vận động linh hoạt, bảo vệ cẳng tay, bao tên phù hợp đúng loại cung/nỏ; không được tự đổi vũ khí giữa các ảnh. Các chất liệu phù hợp thẩm mỹ game gồm vải dệt, mây tre, da, đồng và sắt; không khẳng định là tái dựng chính xác trang phục thế kỷ X.
 
-**Vũ khí chuẩn (RB-067-W01):** light recurved war bow. Hiện chưa có tỷ lệ lưỡi/cán hoặc chiều dài chính thức được duyệt cho mọi nhân vật; khóa kích thước theo Weapon Reference Sheet sau khi được duyệt. Không tự lấy thanh đại đao Trần Cương làm vũ khí mẫu cho người khác.
+**Vũ khí và đồ dùng (RB-067-W01):** Giữ đúng vũ khí và phụ kiện đã ghi trong prompt gốc tiếng Anh ngay dưới hồ sơ. Chỉ khóa chiều dài tuyệt đối sau khi có ảnh Weapon Reference Sheet được duyệt; chiều dài, tỷ lệ lưỡi/cán và độ cong phải đồng nhất suốt sáu khung hình.
 
-**Màu hệ Lôi:** amethyst #7656A4, violet #9B81C8, storm slate #39465A, yellow gold #D6B75B. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.
+**Bản sắc hành Lôi:** amethyst #7656A4, violet #9B81C8, storm slate #39465A, yellow gold #D6B75B. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.. Mỗi sắc có vai trò cố định; tuyệt đối không thay bằng bảng màu hành Thổ của Đỗ Cảnh Thạc.
 
-**Đặc điểm riêng / lore dự kiến:** Giữ các dấu vết, kiểu tóc, đồ kỷ niệm và sẹo đã thể hiện trong mô tả/ảnh nguồn. Dấu xăm hay sẹo mới chỉ thêm khi duyệt riêng. **Phong cách sinh hoạt đề xuất:** đứng tựa cờ quan sát doanh trại; không phải tình tiết lịch sử đã được xác minh.
+**Dấu tích và vật kỷ niệm:** Không tự áp dụng hình xăm hay sẹo mới; dùng chính dấu hiệu đã có trong bản tạo hình duyệt. Kỷ vật được thể hiện qua phụ kiện hiện có và cách nhân vật trân trọng vật dụng, tránh tự thêm đạo cụ giống người khác.
 
-**Tiêu chuẩn kiểm tra:** mặt – dấu riêng – màu hệ – giáp – vật phẩm – kích thước và hình dạng vũ khí bất biến – silhouette khác đồng nghiệp.
+**Gợi ý khung đời thường:** ngồi trên ghế gỗ thấp kiểm tra hành trang. Đây là đề xuất phong cách cá nhân, không phải lời khẳng định lịch sử.
+
+**Điểm kiểm định:** nhận diện đúng gương mặt và dáng người; đúng Lôi; vũ khí RB-067-W01 có hình học bất biến; dấu sẹo/xăm chỉ xuất hiện nếu đã được phê duyệt; hành động đúng nghề và tính cách.
 
 #### Khung 1 — Master / Idle
 
@@ -378,19 +390,21 @@ POSE: PERSONAL VIGNETTE: đứng tựa cờ quan sát doanh trại. Character re
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
-**Bối cảnh:** Nhân vật hư cấu đề xuất cho nghề mở rộng, chưa được xác nhận tích hợp gameplay. **Vai trò chiến đấu:** physically plausible aimed shot with correct string grip. **Tính cách định hướng:** tinh tế và khó đoán; trong ảnh phải toát lên qua ánh mắt, tỷ lệ dáng, cách đặt trọng tâm và cầm vũ khí.
+**Tiểu sử (lore đề xuất):** Tật Phong Tiễn được hình dung như một xạ thủ chiến trường từng trưởng thành từ môi trường vùng đồi xen ruộng nước. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên bình tĩnh và nhiều mưu trí, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là giữ khoảng cách và đọc nhịp kéo cung. Ở thời điểm game bắt đầu, điều thôi thúc họ là quyết không để đồng đội lặp lại một thất bại cũ. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
 
-**Chân dung / dấu hiệu nhận dạng nguồn (trích mô tả gốc, chưa biên dịch):** long-legged outrider with reed charm. Đây là các thuộc tính cần kiểm tra trực tiếp trên ảnh, không tự thay bằng mẫu nhân vật cùng nghề.
+**Chân dung đối chiếu asset:** Gương mặt và vóc dáng cần giữ các dấu hiệu đã định ở bản nguồn: phụ kiện kỷ niệm riêng. Ánh mắt, tư thế nghỉ và cách giữ đạo cụ phải truyền tải nét bình tĩnh và nhiều mưu trí; không tạo một khuôn mẫu ngoại hình cho tất cả nhân vật cùng nghề.
 
-**Trang phục / dáng hình cần đối chiếu:** long-legged outrider with reed charm, practical cross-collar layered linen and leather equipment. Lưu ý sự khác nhau về lớp áo, khối vai, đai, đồ mang theo, chất liệu và mật độ giáp. Không thay đổi ảnh đã duyệt nếu chưa có phê duyệt.
+**Y phục và địa vị:** Áo vận động linh hoạt, bảo vệ cẳng tay, bao tên phù hợp đúng loại cung/nỏ; không được tự đổi vũ khí giữa các ảnh. Các chất liệu phù hợp thẩm mỹ game gồm vải dệt, mây tre, da, đồng và sắt; không khẳng định là tái dựng chính xác trang phục thế kỷ X.
 
-**Vũ khí chuẩn (RB-068-W01):** short quick-draw bow. Hiện chưa có tỷ lệ lưỡi/cán hoặc chiều dài chính thức được duyệt cho mọi nhân vật; khóa kích thước theo Weapon Reference Sheet sau khi được duyệt. Không tự lấy thanh đại đao Trần Cương làm vũ khí mẫu cho người khác.
+**Vũ khí và đồ dùng (RB-068-W01):** Giữ đúng vũ khí và phụ kiện đã ghi trong prompt gốc tiếng Anh ngay dưới hồ sơ. Chỉ khóa chiều dài tuyệt đối sau khi có ảnh Weapon Reference Sheet được duyệt; chiều dài, tỷ lệ lưỡi/cán và độ cong phải đồng nhất suốt sáu khung hình.
 
-**Màu hệ Phong:** jade teal #2E9E90, deep teal #176A72, mist white #E9EDE7, soft grey #A9B7B8, bronze #B49A69. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.
+**Bản sắc hành Phong:** jade teal #2E9E90, deep teal #176A72, mist white #E9EDE7, soft grey #A9B7B8, bronze #B49A69. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.. Mỗi sắc có vai trò cố định; tuyệt đối không thay bằng bảng màu hành Thổ của Đỗ Cảnh Thạc.
 
-**Đặc điểm riêng / lore dự kiến:** Giữ các dấu vết, kiểu tóc, đồ kỷ niệm và sẹo đã thể hiện trong mô tả/ảnh nguồn. Dấu xăm hay sẹo mới chỉ thêm khi duyệt riêng. **Phong cách sinh hoạt đề xuất:** ngồi ở mũi thuyền sửa túi hành trang; không phải tình tiết lịch sử đã được xác minh.
+**Dấu tích và vật kỷ niệm:** Không tự áp dụng hình xăm hay sẹo mới; dùng chính dấu hiệu đã có trong bản tạo hình duyệt. Kỷ vật được thể hiện qua phụ kiện hiện có và cách nhân vật trân trọng vật dụng, tránh tự thêm đạo cụ giống người khác.
 
-**Tiêu chuẩn kiểm tra:** mặt – dấu riêng – màu hệ – giáp – vật phẩm – kích thước và hình dạng vũ khí bất biến – silhouette khác đồng nghiệp.
+**Gợi ý khung đời thường:** ngồi trên thuyền bên bến nước. Đây là đề xuất phong cách cá nhân, không phải lời khẳng định lịch sử.
+
+**Điểm kiểm định:** nhận diện đúng gương mặt và dáng người; đúng Phong; vũ khí RB-068-W01 có hình học bất biến; dấu sẹo/xăm chỉ xuất hiện nếu đã được phê duyệt; hành động đúng nghề và tính cách.
 
 #### Khung 1 — Master / Idle
 
@@ -440,19 +454,21 @@ POSE: PERSONAL VIGNETTE: ngồi ở mũi thuyền sửa túi hành trang. Charac
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
-**Bối cảnh:** Nhân vật hư cấu đề xuất cho nghề mở rộng, chưa được xác nhận tích hợp gameplay. **Vai trò chiến đấu:** short close-range attack and controlled repositioning. **Tính cách định hướng:** quả quyết, có kỷ luật; trong ảnh phải toát lên qua ánh mắt, tỷ lệ dáng, cách đặt trọng tâm và cầm vũ khí.
+**Tiểu sử (lore đề xuất):** Bạch Phong Đao được hình dung như một chiến binh đột kích kín đáo từng trưởng thành từ môi trường làng ven đầm lầy. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên lạnh lùng, tập trung vào trách nhiệm, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là quan sát khe hở và kết thúc nhanh. Ở thời điểm game bắt đầu, điều thôi thúc họ là đặt danh dự tập thể cao hơn chiến công cá nhân. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
 
-**Chân dung / dấu hiệu nhận dạng nguồn (trích mô tả gốc, chưa biên dịch):** severe female household guard carrying a broken seal. Đây là các thuộc tính cần kiểm tra trực tiếp trên ảnh, không tự thay bằng mẫu nhân vật cùng nghề.
+**Chân dung đối chiếu asset:** Gương mặt và vóc dáng cần giữ các dấu hiệu đã định ở bản nguồn: diện mạo và kiểu tóc riêng cần được đối chiếu với ảnh tham chiếu gốc. Ánh mắt, tư thế nghỉ và cách giữ đạo cụ phải truyền tải nét lạnh lùng, tập trung vào trách nhiệm; không tạo một khuôn mẫu ngoại hình cho tất cả nhân vật cùng nghề.
 
-**Trang phục / dáng hình cần đối chiếu:** severe female household guard carrying a broken seal, practical cross-collar layered linen and leather equipment. Lưu ý sự khác nhau về lớp áo, khối vai, đai, đồ mang theo, chất liệu và mật độ giáp. Không thay đổi ảnh đã duyệt nếu chưa có phê duyệt.
+**Y phục và địa vị:** Nhiều lớp vải ngắn gọn để luồn lách, ít chi tiết gây vướng; khác biệt bằng nếp áo, phụ kiện, thế đứng và lưỡi ngắn riêng. Các chất liệu phù hợp thẩm mỹ game gồm vải dệt, mây tre, da, đồng và sắt; không khẳng định là tái dựng chính xác trang phục thế kỷ X.
 
-**Vũ khí chuẩn (RB-069-W01):** straight iron dagger. Hiện chưa có tỷ lệ lưỡi/cán hoặc chiều dài chính thức được duyệt cho mọi nhân vật; khóa kích thước theo Weapon Reference Sheet sau khi được duyệt. Không tự lấy thanh đại đao Trần Cương làm vũ khí mẫu cho người khác.
+**Vũ khí và đồ dùng (RB-069-W01):** Giữ đúng vũ khí và phụ kiện đã ghi trong prompt gốc tiếng Anh ngay dưới hồ sơ. Chỉ khóa chiều dài tuyệt đối sau khi có ảnh Weapon Reference Sheet được duyệt; chiều dài, tỷ lệ lưỡi/cán và độ cong phải đồng nhất suốt sáu khung hình.
 
-**Màu hệ Kim:** ivory #F1E9D8, silver #AAB1B8, steel gray #707982, bronze #A68B54. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.
+**Bản sắc hành Kim:** ivory #F1E9D8, silver #AAB1B8, steel gray #707982, bronze #A68B54. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.. Mỗi sắc có vai trò cố định; tuyệt đối không thay bằng bảng màu hành Thổ của Đỗ Cảnh Thạc.
 
-**Đặc điểm riêng / lore dự kiến:** Giữ các dấu vết, kiểu tóc, đồ kỷ niệm và sẹo đã thể hiện trong mô tả/ảnh nguồn. Dấu xăm hay sẹo mới chỉ thêm khi duyệt riêng. **Phong cách sinh hoạt đề xuất:** ngồi nghỉ cạnh vũ khí xem một vật kỷ niệm; không phải tình tiết lịch sử đã được xác minh.
+**Dấu tích và vật kỷ niệm:** Không tự áp dụng hình xăm hay sẹo mới; dùng chính dấu hiệu đã có trong bản tạo hình duyệt. Kỷ vật được thể hiện qua phụ kiện hiện có và cách nhân vật trân trọng vật dụng, tránh tự thêm đạo cụ giống người khác.
 
-**Tiêu chuẩn kiểm tra:** mặt – dấu riêng – màu hệ – giáp – vật phẩm – kích thước và hình dạng vũ khí bất biến – silhouette khác đồng nghiệp.
+**Gợi ý khung đời thường:** đứng cạnh ngựa chiến siết lại dây buộc. Đây là đề xuất phong cách cá nhân, không phải lời khẳng định lịch sử.
+
+**Điểm kiểm định:** nhận diện đúng gương mặt và dáng người; đúng Kim; vũ khí RB-069-W01 có hình học bất biến; dấu sẹo/xăm chỉ xuất hiện nếu đã được phê duyệt; hành động đúng nghề và tính cách.
 
 #### Khung 1 — Master / Idle
 
@@ -502,19 +518,21 @@ POSE: PERSONAL VIGNETTE: ngồi nghỉ cạnh vũ khí xem một vật kỷ ni�
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
-**Bối cảnh:** Nhân vật hư cấu đề xuất cho nghề mở rộng, chưa được xác nhận tích hợp gameplay. **Vai trò chiến đấu:** short close-range attack and controlled repositioning. **Tính cách định hướng:** kiên nhẫn và kín đáo; trong ảnh phải toát lên qua ánh mắt, tỷ lệ dáng, cách đặt trọng tâm và cầm vũ khí.
+**Tiểu sử (lore đề xuất):** Độc Ảnh được hình dung như một chiến binh đột kích kín đáo từng trưởng thành từ môi trường đường trạm liên lạc chiến tuyến. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên linh hoạt và nhạy cảm với tình thế, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là quan sát khe hở và kết thúc nhanh. Ở thời điểm game bắt đầu, điều thôi thúc họ là giấu nỗi day dứt sau dáng vẻ bình thản. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
 
-**Chân dung / dấu hiệu nhận dạng nguồn (trích mô tả gốc, chưa biên dịch):** lean forest infiltrator with herb vial. Đây là các thuộc tính cần kiểm tra trực tiếp trên ảnh, không tự thay bằng mẫu nhân vật cùng nghề.
+**Chân dung đối chiếu asset:** Gương mặt và vóc dáng cần giữ các dấu hiệu đã định ở bản nguồn: thân hình gọn, dẻo dai. Ánh mắt, tư thế nghỉ và cách giữ đạo cụ phải truyền tải nét linh hoạt và nhạy cảm với tình thế; không tạo một khuôn mẫu ngoại hình cho tất cả nhân vật cùng nghề.
 
-**Trang phục / dáng hình cần đối chiếu:** lean forest infiltrator with herb vial, practical cross-collar layered linen and leather equipment. Lưu ý sự khác nhau về lớp áo, khối vai, đai, đồ mang theo, chất liệu và mật độ giáp. Không thay đổi ảnh đã duyệt nếu chưa có phê duyệt.
+**Y phục và địa vị:** Nhiều lớp vải ngắn gọn để luồn lách, ít chi tiết gây vướng; khác biệt bằng nếp áo, phụ kiện, thế đứng và lưỡi ngắn riêng. Các chất liệu phù hợp thẩm mỹ game gồm vải dệt, mây tre, da, đồng và sắt; không khẳng định là tái dựng chính xác trang phục thế kỷ X.
 
-**Vũ khí chuẩn (RB-070-W01):** two curved woodland knives. Hiện chưa có tỷ lệ lưỡi/cán hoặc chiều dài chính thức được duyệt cho mọi nhân vật; khóa kích thước theo Weapon Reference Sheet sau khi được duyệt. Không tự lấy thanh đại đao Trần Cương làm vũ khí mẫu cho người khác.
+**Vũ khí và đồ dùng (RB-070-W01):** Giữ đúng vũ khí và phụ kiện đã ghi trong prompt gốc tiếng Anh ngay dưới hồ sơ. Chỉ khóa chiều dài tuyệt đối sau khi có ảnh Weapon Reference Sheet được duyệt; chiều dài, tỷ lệ lưỡi/cán và độ cong phải đồng nhất suốt sáu khung hình.
 
-**Màu hệ Mộc:** forest green #2D6542, moss #608651, bark brown #6B5038, linen #E9DFC4. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.
+**Bản sắc hành Mộc:** forest green #2D6542, moss #608651, bark brown #6B5038, linen #E9DFC4. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.. Mỗi sắc có vai trò cố định; tuyệt đối không thay bằng bảng màu hành Thổ của Đỗ Cảnh Thạc.
 
-**Đặc điểm riêng / lore dự kiến:** Giữ các dấu vết, kiểu tóc, đồ kỷ niệm và sẹo đã thể hiện trong mô tả/ảnh nguồn. Dấu xăm hay sẹo mới chỉ thêm khi duyệt riêng. **Phong cách sinh hoạt đề xuất:** đứng cạnh voi chiến (chỉ là đề xuất, cần duyệt phù hợp xuất thân); không phải tình tiết lịch sử đã được xác minh.
+**Dấu tích và vật kỷ niệm:** Không tự áp dụng hình xăm hay sẹo mới; dùng chính dấu hiệu đã có trong bản tạo hình duyệt. Kỷ vật được thể hiện qua phụ kiện hiện có và cách nhân vật trân trọng vật dụng, tránh tự thêm đạo cụ giống người khác.
 
-**Tiêu chuẩn kiểm tra:** mặt – dấu riêng – màu hệ – giáp – vật phẩm – kích thước và hình dạng vũ khí bất biến – silhouette khác đồng nghiệp.
+**Gợi ý khung đời thường:** vắt chân đọc thẻ tre hoặc lau vũ khí. Đây là đề xuất phong cách cá nhân, không phải lời khẳng định lịch sử.
+
+**Điểm kiểm định:** nhận diện đúng gương mặt và dáng người; đúng Mộc; vũ khí RB-070-W01 có hình học bất biến; dấu sẹo/xăm chỉ xuất hiện nếu đã được phê duyệt; hành động đúng nghề và tính cách.
 
 #### Khung 1 — Master / Idle
 
@@ -564,19 +582,21 @@ POSE: PERSONAL VIGNETTE: đứng cạnh voi chiến (chỉ là đề xuất, c�
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
-**Bối cảnh:** Nhân vật hư cấu đề xuất cho nghề mở rộng, chưa được xác nhận tích hợp gameplay. **Vai trò chiến đấu:** short close-range attack and controlled repositioning. **Tính cách định hướng:** kiệm lời và cương nghị; trong ảnh phải toát lên qua ánh mắt, tỷ lệ dáng, cách đặt trọng tâm và cầm vũ khí.
+**Tiểu sử (lore đề xuất):** Hàn Giang Khách được hình dung như một chiến binh đột kích kín đáo từng trưởng thành từ môi trường bờ thành đất lâu năm. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên điềm đạm nhưng kiên quyết, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là quan sát khe hở và kết thúc nhanh. Ở thời điểm game bắt đầu, điều thôi thúc họ là luôn tính đường lui cho những người đi theo. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
 
-**Chân dung / dấu hiệu nhận dạng nguồn (trích mô tả gốc, chưa biên dịch):** quiet woman river infiltrator with a shell pendant. Đây là các thuộc tính cần kiểm tra trực tiếp trên ảnh, không tự thay bằng mẫu nhân vật cùng nghề.
+**Chân dung đối chiếu asset:** Gương mặt và vóc dáng cần giữ các dấu hiệu đã định ở bản nguồn: phụ kiện kỷ niệm riêng. Ánh mắt, tư thế nghỉ và cách giữ đạo cụ phải truyền tải nét điềm đạm nhưng kiên quyết; không tạo một khuôn mẫu ngoại hình cho tất cả nhân vật cùng nghề.
 
-**Trang phục / dáng hình cần đối chiếu:** quiet woman river infiltrator with a shell pendant, practical cross-collar layered linen and leather equipment. Lưu ý sự khác nhau về lớp áo, khối vai, đai, đồ mang theo, chất liệu và mật độ giáp. Không thay đổi ảnh đã duyệt nếu chưa có phê duyệt.
+**Y phục và địa vị:** Nhiều lớp vải ngắn gọn để luồn lách, ít chi tiết gây vướng; khác biệt bằng nếp áo, phụ kiện, thế đứng và lưỡi ngắn riêng. Các chất liệu phù hợp thẩm mỹ game gồm vải dệt, mây tre, da, đồng và sắt; không khẳng định là tái dựng chính xác trang phục thế kỷ X.
 
-**Vũ khí chuẩn (RB-071-W01):** thin river dagger. Hiện chưa có tỷ lệ lưỡi/cán hoặc chiều dài chính thức được duyệt cho mọi nhân vật; khóa kích thước theo Weapon Reference Sheet sau khi được duyệt. Không tự lấy thanh đại đao Trần Cương làm vũ khí mẫu cho người khác.
+**Vũ khí và đồ dùng (RB-071-W01):** Giữ đúng vũ khí và phụ kiện đã ghi trong prompt gốc tiếng Anh ngay dưới hồ sơ. Chỉ khóa chiều dài tuyệt đối sau khi có ảnh Weapon Reference Sheet được duyệt; chiều dài, tỷ lệ lưỡi/cán và độ cong phải đồng nhất suốt sáu khung hình.
 
-**Màu hệ Thủy:** river blue #2F7FC1, indigo #253F61, aqua #A4D7D8, linen #E9E6D9. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.
+**Bản sắc hành Thủy:** river blue #2F7FC1, indigo #253F61, aqua #A4D7D8, linen #E9E6D9. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.. Mỗi sắc có vai trò cố định; tuyệt đối không thay bằng bảng màu hành Thổ của Đỗ Cảnh Thạc.
 
-**Đặc điểm riêng / lore dự kiến:** Giữ các dấu vết, kiểu tóc, đồ kỷ niệm và sẹo đã thể hiện trong mô tả/ảnh nguồn. Dấu xăm hay sẹo mới chỉ thêm khi duyệt riêng. **Phong cách sinh hoạt đề xuất:** ngồi ghế gỗ thấp lau vũ khí; không phải tình tiết lịch sử đã được xác minh.
+**Dấu tích và vật kỷ niệm:** Không tự áp dụng hình xăm hay sẹo mới; dùng chính dấu hiệu đã có trong bản tạo hình duyệt. Kỷ vật được thể hiện qua phụ kiện hiện có và cách nhân vật trân trọng vật dụng, tránh tự thêm đạo cụ giống người khác.
 
-**Tiêu chuẩn kiểm tra:** mặt – dấu riêng – màu hệ – giáp – vật phẩm – kích thước và hình dạng vũ khí bất biến – silhouette khác đồng nghiệp.
+**Gợi ý khung đời thường:** đứng tựa cờ lệnh trong khoảng nghỉ. Đây là đề xuất phong cách cá nhân, không phải lời khẳng định lịch sử.
+
+**Điểm kiểm định:** nhận diện đúng gương mặt và dáng người; đúng Thủy; vũ khí RB-071-W01 có hình học bất biến; dấu sẹo/xăm chỉ xuất hiện nếu đã được phê duyệt; hành động đúng nghề và tính cách.
 
 #### Khung 1 — Master / Idle
 
@@ -626,19 +646,21 @@ POSE: PERSONAL VIGNETTE: ngồi ghế gỗ thấp lau vũ khí. Character reveal
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
-**Bối cảnh:** Nhân vật hư cấu đề xuất cho nghề mở rộng, chưa được xác nhận tích hợp gameplay. **Vai trò chiến đấu:** short close-range attack and controlled repositioning. **Tính cách định hướng:** điềm tĩnh, hay quan sát; trong ảnh phải toát lên qua ánh mắt, tỷ lệ dáng, cách đặt trọng tâm và cầm vũ khí.
+**Tiểu sử (lore đề xuất):** Xích Dạ được hình dung như một chiến binh đột kích kín đáo từng trưởng thành từ môi trường miền trung du rừng thưa. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên thận trọng và giàu nghị lực, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là quan sát khe hở và kết thúc nhanh. Ở thời điểm game bắt đầu, điều thôi thúc họ là muốn chứng minh năng lực không cần xuất thân cao quý. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
 
-**Chân dung / dấu hiệu nhận dạng nguồn (trích mô tả gốc, chưa biên dịch):** compact night raider with a burnt cloth emblem. Đây là các thuộc tính cần kiểm tra trực tiếp trên ảnh, không tự thay bằng mẫu nhân vật cùng nghề.
+**Chân dung đối chiếu asset:** Gương mặt và vóc dáng cần giữ các dấu hiệu đã định ở bản nguồn: diện mạo và kiểu tóc riêng cần được đối chiếu với ảnh tham chiếu gốc. Ánh mắt, tư thế nghỉ và cách giữ đạo cụ phải truyền tải nét thận trọng và giàu nghị lực; không tạo một khuôn mẫu ngoại hình cho tất cả nhân vật cùng nghề.
 
-**Trang phục / dáng hình cần đối chiếu:** compact night raider with a burnt cloth emblem, practical cross-collar layered linen and leather equipment. Lưu ý sự khác nhau về lớp áo, khối vai, đai, đồ mang theo, chất liệu và mật độ giáp. Không thay đổi ảnh đã duyệt nếu chưa có phê duyệt.
+**Y phục và địa vị:** Nhiều lớp vải ngắn gọn để luồn lách, ít chi tiết gây vướng; khác biệt bằng nếp áo, phụ kiện, thế đứng và lưỡi ngắn riêng. Các chất liệu phù hợp thẩm mỹ game gồm vải dệt, mây tre, da, đồng và sắt; không khẳng định là tái dựng chính xác trang phục thế kỷ X.
 
-**Vũ khí chuẩn (RB-072-W01):** inward-curved short saber. Hiện chưa có tỷ lệ lưỡi/cán hoặc chiều dài chính thức được duyệt cho mọi nhân vật; khóa kích thước theo Weapon Reference Sheet sau khi được duyệt. Không tự lấy thanh đại đao Trần Cương làm vũ khí mẫu cho người khác.
+**Vũ khí và đồ dùng (RB-072-W01):** Giữ đúng vũ khí và phụ kiện đã ghi trong prompt gốc tiếng Anh ngay dưới hồ sơ. Chỉ khóa chiều dài tuyệt đối sau khi có ảnh Weapon Reference Sheet được duyệt; chiều dài, tỷ lệ lưỡi/cán và độ cong phải đồng nhất suốt sáu khung hình.
 
-**Màu hệ Hỏa:** cinnabar #C84231, brick red #903C32, amber #E38B38, charcoal #343236. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.
+**Bản sắc hành Hỏa:** cinnabar #C84231, brick red #903C32, amber #E38B38, charcoal #343236. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.. Mỗi sắc có vai trò cố định; tuyệt đối không thay bằng bảng màu hành Thổ của Đỗ Cảnh Thạc.
 
-**Đặc điểm riêng / lore dự kiến:** Giữ các dấu vết, kiểu tóc, đồ kỷ niệm và sẹo đã thể hiện trong mô tả/ảnh nguồn. Dấu xăm hay sẹo mới chỉ thêm khi duyệt riêng. **Phong cách sinh hoạt đề xuất:** đứng cạnh ngựa chiến buộc dây cương; không phải tình tiết lịch sử đã được xác minh.
+**Dấu tích và vật kỷ niệm:** Không tự áp dụng hình xăm hay sẹo mới; dùng chính dấu hiệu đã có trong bản tạo hình duyệt. Kỷ vật được thể hiện qua phụ kiện hiện có và cách nhân vật trân trọng vật dụng, tránh tự thêm đạo cụ giống người khác.
 
-**Tiêu chuẩn kiểm tra:** mặt – dấu riêng – màu hệ – giáp – vật phẩm – kích thước và hình dạng vũ khí bất biến – silhouette khác đồng nghiệp.
+**Gợi ý khung đời thường:** kiểm tra lại túi đồ trước trận. Đây là đề xuất phong cách cá nhân, không phải lời khẳng định lịch sử.
+
+**Điểm kiểm định:** nhận diện đúng gương mặt và dáng người; đúng Hỏa; vũ khí RB-072-W01 có hình học bất biến; dấu sẹo/xăm chỉ xuất hiện nếu đã được phê duyệt; hành động đúng nghề và tính cách.
 
 #### Khung 1 — Master / Idle
 
@@ -688,19 +710,21 @@ POSE: PERSONAL VIGNETTE: đứng cạnh ngựa chiến buộc dây cương. Char
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
-**Bối cảnh:** Nhân vật hư cấu đề xuất cho nghề mở rộng, chưa được xác nhận tích hợp gameplay. **Vai trò chiến đấu:** short close-range attack and controlled repositioning. **Tính cách định hướng:** tự tôn nhưng thận trọng; trong ảnh phải toát lên qua ánh mắt, tỷ lệ dáng, cách đặt trọng tâm và cầm vũ khí.
+**Tiểu sử (lore đề xuất):** Địa Ẩn được hình dung như một chiến binh đột kích kín đáo từng trưởng thành từ môi trường bến đò trọng yếu. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên kiêu hãnh mà kín đáo, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là quan sát khe hở và kết thúc nhanh. Ở thời điểm game bắt đầu, điều thôi thúc họ là coi lời hứa với gia đình là thứ không thể đánh mất. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
 
-**Chân dung / dấu hiệu nhận dạng nguồn (trích mô tả gốc, chưa biên dịch):** short strong earthworks scout with clay token. Đây là các thuộc tính cần kiểm tra trực tiếp trên ảnh, không tự thay bằng mẫu nhân vật cùng nghề.
+**Chân dung đối chiếu asset:** Gương mặt và vóc dáng cần giữ các dấu hiệu đã định ở bản nguồn: diện mạo và kiểu tóc riêng cần được đối chiếu với ảnh tham chiếu gốc. Ánh mắt, tư thế nghỉ và cách giữ đạo cụ phải truyền tải nét kiêu hãnh mà kín đáo; không tạo một khuôn mẫu ngoại hình cho tất cả nhân vật cùng nghề.
 
-**Trang phục / dáng hình cần đối chiếu:** short strong earthworks scout with clay token, practical cross-collar layered linen and leather equipment. Lưu ý sự khác nhau về lớp áo, khối vai, đai, đồ mang theo, chất liệu và mật độ giáp. Không thay đổi ảnh đã duyệt nếu chưa có phê duyệt.
+**Y phục và địa vị:** Nhiều lớp vải ngắn gọn để luồn lách, ít chi tiết gây vướng; khác biệt bằng nếp áo, phụ kiện, thế đứng và lưỡi ngắn riêng. Các chất liệu phù hợp thẩm mỹ game gồm vải dệt, mây tre, da, đồng và sắt; không khẳng định là tái dựng chính xác trang phục thế kỷ X.
 
-**Vũ khí chuẩn (RB-073-W01):** short working axe. Hiện chưa có tỷ lệ lưỡi/cán hoặc chiều dài chính thức được duyệt cho mọi nhân vật; khóa kích thước theo Weapon Reference Sheet sau khi được duyệt. Không tự lấy thanh đại đao Trần Cương làm vũ khí mẫu cho người khác.
+**Vũ khí và đồ dùng (RB-073-W01):** Giữ đúng vũ khí và phụ kiện đã ghi trong prompt gốc tiếng Anh ngay dưới hồ sơ. Chỉ khóa chiều dài tuyệt đối sau khi có ảnh Weapon Reference Sheet được duyệt; chiều dài, tỷ lệ lưỡi/cán và độ cong phải đồng nhất suốt sáu khung hình.
 
-**Màu hệ Thổ:** ochre #B48642, brown #76543B, terracotta #A65E42, sandstone #D8BF8B. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.
+**Bản sắc hành Thổ:** ochre #B48642, brown #76543B, terracotta #A65E42, sandstone #D8BF8B. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.. Mỗi sắc có vai trò cố định; tuyệt đối không thay bằng bảng màu hành Thổ của Đỗ Cảnh Thạc.
 
-**Đặc điểm riêng / lore dự kiến:** Giữ các dấu vết, kiểu tóc, đồ kỷ niệm và sẹo đã thể hiện trong mô tả/ảnh nguồn. Dấu xăm hay sẹo mới chỉ thêm khi duyệt riêng. **Phong cách sinh hoạt đề xuất:** ngồi vắt chân đọc thẻ tre; không phải tình tiết lịch sử đã được xác minh.
+**Dấu tích và vật kỷ niệm:** Không tự áp dụng hình xăm hay sẹo mới; dùng chính dấu hiệu đã có trong bản tạo hình duyệt. Kỷ vật được thể hiện qua phụ kiện hiện có và cách nhân vật trân trọng vật dụng, tránh tự thêm đạo cụ giống người khác.
 
-**Tiêu chuẩn kiểm tra:** mặt – dấu riêng – màu hệ – giáp – vật phẩm – kích thước và hình dạng vũ khí bất biến – silhouette khác đồng nghiệp.
+**Gợi ý khung đời thường:** ngồi trên ghế gỗ thấp kiểm tra hành trang. Đây là đề xuất phong cách cá nhân, không phải lời khẳng định lịch sử.
+
+**Điểm kiểm định:** nhận diện đúng gương mặt và dáng người; đúng Thổ; vũ khí RB-073-W01 có hình học bất biến; dấu sẹo/xăm chỉ xuất hiện nếu đã được phê duyệt; hành động đúng nghề và tính cách.
 
 #### Khung 1 — Master / Idle
 
@@ -750,19 +774,21 @@ POSE: PERSONAL VIGNETTE: ngồi vắt chân đọc thẻ tre. Character reveals 
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
-**Bối cảnh:** Nhân vật hư cấu đề xuất cho nghề mở rộng, chưa được xác nhận tích hợp gameplay. **Vai trò chiến đấu:** short close-range attack and controlled repositioning. **Tính cách định hướng:** nóng nảy, trung thành; trong ảnh phải toát lên qua ánh mắt, tỷ lệ dáng, cách đặt trọng tâm và cầm vũ khí.
+**Tiểu sử (lore đề xuất):** Lôi Ảnh được hình dung như một chiến binh đột kích kín đáo từng trưởng thành từ môi trường trang trại ven núi. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên nóng tính nhưng trọng chữ tín, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là quan sát khe hở và kết thúc nhanh. Ở thời điểm game bắt đầu, điều thôi thúc họ là học cách tin tưởng đồng đội sau những năm sống độc lập. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
 
-**Chân dung / dấu hiệu nhận dạng nguồn (trích mô tả gốc, chưa biên dịch):** sharp-eyed messenger raider with cracked badge. Đây là các thuộc tính cần kiểm tra trực tiếp trên ảnh, không tự thay bằng mẫu nhân vật cùng nghề.
+**Chân dung đối chiếu asset:** Gương mặt và vóc dáng cần giữ các dấu hiệu đã định ở bản nguồn: diện mạo và kiểu tóc riêng cần được đối chiếu với ảnh tham chiếu gốc. Ánh mắt, tư thế nghỉ và cách giữ đạo cụ phải truyền tải nét nóng tính nhưng trọng chữ tín; không tạo một khuôn mẫu ngoại hình cho tất cả nhân vật cùng nghề.
 
-**Trang phục / dáng hình cần đối chiếu:** sharp-eyed messenger raider with cracked badge, practical cross-collar layered linen and leather equipment. Lưu ý sự khác nhau về lớp áo, khối vai, đai, đồ mang theo, chất liệu và mật độ giáp. Không thay đổi ảnh đã duyệt nếu chưa có phê duyệt.
+**Y phục và địa vị:** Nhiều lớp vải ngắn gọn để luồn lách, ít chi tiết gây vướng; khác biệt bằng nếp áo, phụ kiện, thế đứng và lưỡi ngắn riêng. Các chất liệu phù hợp thẩm mỹ game gồm vải dệt, mây tre, da, đồng và sắt; không khẳng định là tái dựng chính xác trang phục thế kỷ X.
 
-**Vũ khí chuẩn (RB-074-W01):** paired narrow daggers. Hiện chưa có tỷ lệ lưỡi/cán hoặc chiều dài chính thức được duyệt cho mọi nhân vật; khóa kích thước theo Weapon Reference Sheet sau khi được duyệt. Không tự lấy thanh đại đao Trần Cương làm vũ khí mẫu cho người khác.
+**Vũ khí và đồ dùng (RB-074-W01):** Giữ đúng vũ khí và phụ kiện đã ghi trong prompt gốc tiếng Anh ngay dưới hồ sơ. Chỉ khóa chiều dài tuyệt đối sau khi có ảnh Weapon Reference Sheet được duyệt; chiều dài, tỷ lệ lưỡi/cán và độ cong phải đồng nhất suốt sáu khung hình.
 
-**Màu hệ Lôi:** amethyst #7656A4, violet #9B81C8, storm slate #39465A, yellow gold #D6B75B. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.
+**Bản sắc hành Lôi:** amethyst #7656A4, violet #9B81C8, storm slate #39465A, yellow gold #D6B75B. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.. Mỗi sắc có vai trò cố định; tuyệt đối không thay bằng bảng màu hành Thổ của Đỗ Cảnh Thạc.
 
-**Đặc điểm riêng / lore dự kiến:** Giữ các dấu vết, kiểu tóc, đồ kỷ niệm và sẹo đã thể hiện trong mô tả/ảnh nguồn. Dấu xăm hay sẹo mới chỉ thêm khi duyệt riêng. **Phong cách sinh hoạt đề xuất:** đứng tựa cờ quan sát doanh trại; không phải tình tiết lịch sử đã được xác minh.
+**Dấu tích và vật kỷ niệm:** Không tự áp dụng hình xăm hay sẹo mới; dùng chính dấu hiệu đã có trong bản tạo hình duyệt. Kỷ vật được thể hiện qua phụ kiện hiện có và cách nhân vật trân trọng vật dụng, tránh tự thêm đạo cụ giống người khác.
 
-**Tiêu chuẩn kiểm tra:** mặt – dấu riêng – màu hệ – giáp – vật phẩm – kích thước và hình dạng vũ khí bất biến – silhouette khác đồng nghiệp.
+**Gợi ý khung đời thường:** ngồi trên thuyền bên bến nước. Đây là đề xuất phong cách cá nhân, không phải lời khẳng định lịch sử.
+
+**Điểm kiểm định:** nhận diện đúng gương mặt và dáng người; đúng Lôi; vũ khí RB-074-W01 có hình học bất biến; dấu sẹo/xăm chỉ xuất hiện nếu đã được phê duyệt; hành động đúng nghề và tính cách.
 
 #### Khung 1 — Master / Idle
 
@@ -812,19 +838,21 @@ POSE: PERSONAL VIGNETTE: đứng tựa cờ quan sát doanh trại. Character re
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
-**Bối cảnh:** Nhân vật hư cấu đề xuất cho nghề mở rộng, chưa được xác nhận tích hợp gameplay. **Vai trò chiến đấu:** short close-range attack and controlled repositioning. **Tính cách định hướng:** tinh tế và khó đoán; trong ảnh phải toát lên qua ánh mắt, tỷ lệ dáng, cách đặt trọng tâm và cầm vũ khí.
+**Tiểu sử (lore đề xuất):** Vô Ảnh được hình dung như một chiến binh đột kích kín đáo từng trưởng thành từ môi trường phường thủ công gần doanh trại. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên bình tĩnh và nhiều mưu trí, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là quan sát khe hở và kết thúc nhanh. Ở thời điểm game bắt đầu, điều thôi thúc họ là luôn tìm cách kết thúc giao tranh với tổn thất ít nhất. Nhân vật hư cấu mở rộng nghề mới, chưa xác nhận có mặt trong roster hiện hành.
 
-**Chân dung / dấu hiệu nhận dạng nguồn (trích mô tả gốc, chưa biên dịch):** tall female courier with a reed-thread ring. Đây là các thuộc tính cần kiểm tra trực tiếp trên ảnh, không tự thay bằng mẫu nhân vật cùng nghề.
+**Chân dung đối chiếu asset:** Gương mặt và vóc dáng cần giữ các dấu hiệu đã định ở bản nguồn: diện mạo và kiểu tóc riêng cần được đối chiếu với ảnh tham chiếu gốc. Ánh mắt, tư thế nghỉ và cách giữ đạo cụ phải truyền tải nét bình tĩnh và nhiều mưu trí; không tạo một khuôn mẫu ngoại hình cho tất cả nhân vật cùng nghề.
 
-**Trang phục / dáng hình cần đối chiếu:** tall female courier with a reed-thread ring, practical cross-collar layered linen and leather equipment. Lưu ý sự khác nhau về lớp áo, khối vai, đai, đồ mang theo, chất liệu và mật độ giáp. Không thay đổi ảnh đã duyệt nếu chưa có phê duyệt.
+**Y phục và địa vị:** Nhiều lớp vải ngắn gọn để luồn lách, ít chi tiết gây vướng; khác biệt bằng nếp áo, phụ kiện, thế đứng và lưỡi ngắn riêng. Các chất liệu phù hợp thẩm mỹ game gồm vải dệt, mây tre, da, đồng và sắt; không khẳng định là tái dựng chính xác trang phục thế kỷ X.
 
-**Vũ khí chuẩn (RB-075-W01):** single long narrow dagger. Hiện chưa có tỷ lệ lưỡi/cán hoặc chiều dài chính thức được duyệt cho mọi nhân vật; khóa kích thước theo Weapon Reference Sheet sau khi được duyệt. Không tự lấy thanh đại đao Trần Cương làm vũ khí mẫu cho người khác.
+**Vũ khí và đồ dùng (RB-075-W01):** Giữ đúng vũ khí và phụ kiện đã ghi trong prompt gốc tiếng Anh ngay dưới hồ sơ. Chỉ khóa chiều dài tuyệt đối sau khi có ảnh Weapon Reference Sheet được duyệt; chiều dài, tỷ lệ lưỡi/cán và độ cong phải đồng nhất suốt sáu khung hình.
 
-**Màu hệ Phong:** jade teal #2E9E90, deep teal #176A72, mist white #E9EDE7, soft grey #A9B7B8, bronze #B49A69. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.
+**Bản sắc hành Phong:** jade teal #2E9E90, deep teal #176A72, mist white #E9EDE7, soft grey #A9B7B8, bronze #B49A69. Mỗi sắc dùng cho một số mảnh trang phục hoặc phụ kiện rõ ràng, không nhuộm nguyên bộ và không lấy màu Thổ của Đỗ Cảnh Thạc.. Mỗi sắc có vai trò cố định; tuyệt đối không thay bằng bảng màu hành Thổ của Đỗ Cảnh Thạc.
 
-**Đặc điểm riêng / lore dự kiến:** Giữ các dấu vết, kiểu tóc, đồ kỷ niệm và sẹo đã thể hiện trong mô tả/ảnh nguồn. Dấu xăm hay sẹo mới chỉ thêm khi duyệt riêng. **Phong cách sinh hoạt đề xuất:** ngồi ở mũi thuyền sửa túi hành trang; không phải tình tiết lịch sử đã được xác minh.
+**Dấu tích và vật kỷ niệm:** Không tự áp dụng hình xăm hay sẹo mới; dùng chính dấu hiệu đã có trong bản tạo hình duyệt. Kỷ vật được thể hiện qua phụ kiện hiện có và cách nhân vật trân trọng vật dụng, tránh tự thêm đạo cụ giống người khác.
 
-**Tiêu chuẩn kiểm tra:** mặt – dấu riêng – màu hệ – giáp – vật phẩm – kích thước và hình dạng vũ khí bất biến – silhouette khác đồng nghiệp.
+**Gợi ý khung đời thường:** đứng cạnh ngựa chiến siết lại dây buộc. Đây là đề xuất phong cách cá nhân, không phải lời khẳng định lịch sử.
+
+**Điểm kiểm định:** nhận diện đúng gương mặt và dáng người; đúng Phong; vũ khí RB-075-W01 có hình học bất biến; dấu sẹo/xăm chỉ xuất hiện nếu đã được phê duyệt; hành động đúng nghề và tính cách.
 
 #### Khung 1 — Master / Idle
 
