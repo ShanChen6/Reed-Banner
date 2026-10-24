@@ -26,8 +26,8 @@ export interface BoardScore {
 
 /** Tổng lượt ít nhất của các màn đã qua. */
 export function campaignTurns(p: Profile): number {
-  return p.campaign.cleared.reduce(
-    (a, id) => a + (p.campaign.bestTurns[id] ?? UNKNOWN_STAGE_TURNS),
+  return p.campaign.completed.reduce(
+    (a, id) => a + (p.campaign.bestBattleTurns[id] ?? UNKNOWN_STAGE_TURNS),
     0,
   );
 }
@@ -35,13 +35,13 @@ export function campaignTurns(p: Profile): number {
 /** Điểm của hồ sơ trên mọi bảng có tham gia. */
 export function boardScores(p: Profile): BoardScore[] {
   const out: BoardScore[] = [];
-  const n = p.campaign.cleared.length;
+  const n = p.campaign.completed.length;
   if (n > 0)
     out.push({
       board: "campaign",
       score: n * STAGE_WEIGHT - Math.min(STAGE_WEIGHT - 1, campaignTurns(p)),
     });
-  for (const [id, turns] of Object.entries(p.campaign.bestTurns))
+  for (const [id, turns] of Object.entries(p.campaign.bestBattleTurns))
     out.push({ board: `stage:${id}`, score: -turns });
   if (p.tower.best > 0) out.push({ board: "tower", score: p.tower.best });
   if (p.survival.best > 0)

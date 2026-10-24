@@ -328,7 +328,13 @@ describe("thao tác trên hồ sơ", () => {
     for (const w of WARLORD_COMPANIONS) {
       const id = w.fighter.id;
       assert.deepEqual(applyProfileAction(rich, { type: "buyCompanion", character: id }), { ok: false, error: "locked" });
-      const cleared = { ...rich, campaign: { ...rich.campaign, cleared: [w.stage] } };
+      const cleared = {
+        ...rich,
+        campaign: {
+          ...rich.campaign,
+          legacy: { ...rich.campaign.legacy, cleared: [w.stage] },
+        },
+      };
       const r = applyProfileAction(cleared, { type: "buyCompanion", character: id });
       assert.ok(r.ok, id);
       assert.equal(r.profile.gold, 100000 - w.price);

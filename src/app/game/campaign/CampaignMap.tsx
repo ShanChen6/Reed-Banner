@@ -197,7 +197,7 @@ export default function CampaignMap({
     at: px(...(STAGE_POS[s.id] ?? [105.8, 20.9])),
   }));
   const lastCleared = CAMPAIGN.reduce(
-    (n, s, i) => (campaign.cleared.includes(s.id) ? i : n),
+    (n, s, i) => (campaign.legacy.cleared.includes(s.id) ? i : n),
     -1,
   );
   const route = (from: number, to: number) =>
@@ -324,7 +324,7 @@ export default function CampaignMap({
         )}
 
         {points.map(({ stage, at: [x, y] }, i) => {
-          const cleared = campaign.cleared.includes(stage.id);
+          const cleared = campaign.legacy.cleared.includes(stage.id);
           const open = stageUnlocked(campaign, stage.id);
           const current = open && !cleared;
           const isSelected = stage.id === selected;

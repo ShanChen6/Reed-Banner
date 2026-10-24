@@ -86,7 +86,7 @@ export interface Profile {
   readonly loadouts: Readonly<Record<string, SavedLoadout>>;
   /** Số dùng cho id món kế tiếp (`g<n>`), để server và /demo cấp id giống nhau. */
   readonly nextItemId: number;
-  /** Tiến độ chiến dịch: màn đã qua, lương mang sang. */
+  /** Campaign V2 graph progress and temporary legacy adapters. */
   readonly campaign: CampaignState;
   /** Leo tháp: kỷ lục và lượt leo đang dở. */
   readonly tower: TowerState;
@@ -376,7 +376,7 @@ function towerPick(profile: Profile, index: number): ProfileActionResult {
 
 /** Mua lương ở doanh trại; mua quá mức tối đa thì chỉ tính phần còn chứa được. */
 function buyFood(profile: Profile, amount: number): ProfileActionResult {
-  const room = CAMPAIGN_FOOD_MAX - profile.campaign.food;
+  const room = CAMPAIGN_FOOD_MAX - profile.campaign.supply;
   const n = Math.min(Math.floor(amount), room);
   if (room <= 0) return { ok: false, error: "foodFull" };
   if (n <= 0) return { ok: false, error: "invalidItem" };
@@ -387,7 +387,7 @@ function buyFood(profile: Profile, amount: number): ProfileActionResult {
     profile: {
       ...profile,
       gold: profile.gold - cost,
-      campaign: { ...profile.campaign, food: profile.campaign.food + n },
+      campaign: { ...profile.campaign, supply: profile.campaign.supply + n },
     },
   };
 }
@@ -398,7 +398,39 @@ export type ProfileActionResult =
 /** Nhân vật `id` đã mở bán chưa: sứ quân mở khi đã qua màn chiến dịch của họ, còn lại mở sẵn. */
 export function shopUnlocked(profile: Profile, id: string): boolean {
   const stage = shopUnlockStage(id);
-  return stage === undefined || profile.campaign.cleared.includes(stage);
+  return (
+    stage === undefined || profile.campaign.legacy.cleared.includes(stage)
+  );
+}
+
+export type CampaignResetEnvironment = "development" | "test" | "production";
+export type CampaignResetResult =
+  | { readonly ok: true; readonly profile: Profile }
+  | { readonly ok: false; readonly error: "campaignResetForbidden" };
+
+/**
+ * Explicit development-only reset. Raid tiers and every non-Campaign profile
+ * field survive; calling it repeatedly produces the same profile.
+ */
+export function resetCampaignProgressForDev(
+  profile: Profile,
+  environment: CampaignResetEnvironment | string,
+): CampaignResetResult {
+  if (environment !== "development" && environment !== "test")
+    return { ok: false, error: "campaignResetForbidden" };
+  return {
+    ok: true,
+    profile: {
+      ...profile,
+      campaign: {
+        ...NEW_CAMPAIGN,
+        legacy: {
+          ...NEW_CAMPAIGN.legacy,
+          raids: profile.campaign.legacy.raids,
+        },
+      },
+    },
+  };
 }
 
 /** Mua nhân vật kèm ở cửa hàng: trừ vàng, nhân vật vào hồ sơ ở cấp 1. Sứ quân cần qua màn của họ trước. */

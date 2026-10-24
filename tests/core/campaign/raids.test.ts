@@ -28,10 +28,12 @@ describe("đánh trùm", () => {
 
   it("bậc mở lần lượt sau khi qua màn", () => {
     const c = {
-      cleared: ["coLau", "boHai"],
-      food: 60,
-      raids: { boHai: 1 },
-      bestTurns: {},
+      ...newProfile().campaign,
+      legacy: {
+        cleared: ["coLau", "boHai"],
+        raids: { boHai: 1 },
+        bestTurns: {},
+      },
     };
     assert.ok(raidUnlocked(c, "boHai", 1));
     assert.ok(raidUnlocked(c, "boHai", 2));
@@ -67,10 +69,12 @@ describe("đánh trùm", () => {
     const p = {
       ...newProfile(),
       campaign: {
-        cleared: ["coLau", "boHai"],
-        food: 60,
-        raids: {},
-        bestTurns: {},
+        ...newProfile().campaign,
+        legacy: {
+          cleared: ["coLau", "boHai"],
+          raids: {},
+          bestTurns: {},
+        },
       },
     };
     const lose = applyRaidResult(p, "boHai", 1, false, createRng(1));
@@ -78,7 +82,7 @@ describe("đánh trùm", () => {
     const win = applyRaidResult(p, "boHai", 1, true, createRng(1));
     assert.equal(win.profile.gold, p.gold + 300);
     assert.equal(win.profile.bag.length, 1);
-    assert.equal(win.profile.campaign.raids.boHai, 1);
+    assert.equal(win.profile.campaign.legacy.raids.boHai, 1);
     const again = applyRaidResult(win.profile, "boHai", 1, true, createRng(1));
     assert.equal(again.result.firstClear, false);
     assert.equal(again.profile, win.profile);
@@ -89,11 +93,11 @@ describe("đánh trùm", () => {
       ...newProfile(),
       campaign: { cleared: [], food: 50 },
     });
-    assert.deepEqual(p.campaign.raids, {});
+    assert.deepEqual(p.campaign.legacy.raids, {});
     const q = parseProfile({
       ...newProfile(),
       campaign: { cleared: [], food: 50, raids: { boHai: 2, x: 9, y: "1" } },
     });
-    assert.deepEqual(q.campaign.raids, { boHai: 2 });
+    assert.deepEqual(q.campaign.legacy.raids, { boHai: 2 });
   });
 });
