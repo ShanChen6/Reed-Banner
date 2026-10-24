@@ -4,6 +4,8 @@
 
 ### RB-038 — Lý Liệt · Tướng sĩ / Hỏa
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** HIGH · ĐIỀU CHỈNH. Chiêu tham chiếu: **Xích Hỏa Đoạt Kỳ** (`xichHoaDoatKy`). Thêm một thẻ lệnh/cờ lệnh phù hợp xuất thân, xác định trong Master và Weapon Sheet; không biến vũ khí gốc thành cờ khi ra tuyệt chiêu. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Lý Liệt được hình dung như một võ tướng tiền tuyến từng trưởng thành từ môi trường đường trạm liên lạc chiến tuyến. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên kiêu hãnh mà kín đáo, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là chịu sức ép trực diện mà không lùi bước. Ở thời điểm game bắt đầu, điều thôi thúc họ là luôn tính đường lui cho những người đi theo. Nhân vật hư cấu trong không gian loạn sứ quân, xây dựng bằng tiểu sử game.
@@ -67,6 +69,8 @@ POSE: PERSONAL VIGNETTE: ngồi vắt chân đọc thẻ tre. Character reveals 
 ---
 
 ### RB-039 — Hà Vân · Pháp sư / Hỏa
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ + CHUẨN HÓA. Chiêu tham chiếu: **Hỏa Vũ Liệu Nguyên** (`hoaVuLieuNguyen`). Giữ pháp khí, quy định đầu pháp khí, họa tiết theo hệ và chiều dài cố định; hiệu ứng nguyên tố render bằng code, không bake ảnh. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -132,6 +136,8 @@ POSE: PERSONAL VIGNETTE: đứng tựa cờ quan sát doanh trại. Character re
 
 ### RB-040 — Trương Viêm · Binh lính / Hỏa
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ / TINH CHỈNH. Chiêu tham chiếu: **Viêm Giáp Hộ Doanh** (`viemGiapHoDoanh`). Chưa thấy xung đột trực tiếp ở cấp mô tả; chuẩn hóa Weapon Geometry Sheet và kiểm tra động tác có thật dùng đạo cụ. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Trương Viêm được hình dung như một chiến binh giữ tuyến từng trưởng thành từ môi trường miền trung du rừng thưa. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên bình tĩnh và nhiều mưu trí, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là chịu sức ép trực diện mà không lùi bước. Ở thời điểm game bắt đầu, điều thôi thúc họ là coi lời hứa với gia đình là thứ không thể đánh mất. Nhân vật hư cấu trong không gian loạn sứ quân, xây dựng bằng tiểu sử game.
@@ -195,6 +201,8 @@ POSE: PERSONAL VIGNETTE: ngồi ở mũi thuyền sửa túi hành trang. Charac
 ---
 
 ### RB-041 — Hồng Đan · Y sư / Hỏa
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ / TINH CHỈNH. Chiêu tham chiếu: **Đan Hỏa Hồi Nguyên** (`danHoaHoiNguyen`). Chưa thấy xung đột trực tiếp ở cấp mô tả; chuẩn hóa Weapon Geometry Sheet và kiểm tra động tác có thật dùng đạo cụ. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -260,6 +268,8 @@ POSE: PERSONAL VIGNETTE: ngồi nghỉ cạnh vũ khí xem một vật kỷ ni�
 
 ### RB-042 — Ninh Hỏa · Mưu sĩ / Hỏa
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** MEDIUM · CÂN NHẮC. Chiêu tham chiếu: **Hỏa Thiêu Kho Lương** (`hoaThieuKhoLuong`). Quạt dễ trùng với mưu sĩ khác; giữ hình quạt nếu skill phù hợp, bổ sung dấu hiệu cá nhân và ấn/thẻ nếu chiêu yêu cầu. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Ninh Hỏa được hình dung như một người bày kế và nghi binh từng trưởng thành từ môi trường trang trại ven núi. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên linh hoạt và nhạy cảm với tình thế, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là đọc người và tạo ra đường vòng. Ở thời điểm game bắt đầu, điều thôi thúc họ là luôn tìm cách kết thúc giao tranh với tổn thất ít nhất. Nhân vật hư cấu trong không gian loạn sứ quân, xây dựng bằng tiểu sử game.
@@ -323,6 +333,8 @@ POSE: PERSONAL VIGNETTE: đứng cạnh voi chiến (chỉ là đề xuất, c�
 ---
 
 ### RB-043 — Tôn Diệm · Quân sư / Hỏa
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ + ĐỘC BẢN. Chiêu tham chiếu: **Hỏa Công Liên Kế** (`hoaCongLienKe`). Bộ cờ và thẻ tre phù hợp kỹ năng điều trận nhưng đang lặp kiểu; tùy biến dáng cờ, đầu cán, nút buộc và cách mang theo riêng để phân biệt, phải duyệt trước sửa. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -388,6 +400,8 @@ POSE: PERSONAL VIGNETTE: ngồi ghế gỗ thấp lau vũ khí. Character reveal
 
 ### RB-044 — Kha Sơn · Tướng sĩ / Thổ
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** MEDIUM · BỔ SUNG. Chiêu tham chiếu: **Sơn Hà Trấn Kích** (`sonHaTranKich`). Thêm một ấn đồng cố định ở thắt lưng hoặc cổ tay, làm đạo cụ thật cho động tác đóng ấn; tuyệt đối không đổi đầu trượng thành ấn. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Kha Sơn được hình dung như một võ tướng tiền tuyến từng trưởng thành từ môi trường vùng sông nước mùa lũ. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên thận trọng và giàu nghị lực, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là chịu sức ép trực diện mà không lùi bước. Ở thời điểm game bắt đầu, điều thôi thúc họ là không ưa phô trương và trọng kết quả thực tế. Nhân vật hư cấu trong không gian loạn sứ quân, xây dựng bằng tiểu sử game.
@@ -451,6 +465,8 @@ POSE: PERSONAL VIGNETTE: đứng cạnh ngựa chiến buộc dây cương. Char
 ---
 
 ### RB-045 — Doãn Nham · Pháp sư / Thổ
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ / TINH CHỈNH. Chiêu tham chiếu: **Địa Mạch Bùng Phát** (`diaMachBungPhat`). Chưa thấy xung đột trực tiếp ở cấp mô tả; chuẩn hóa Weapon Geometry Sheet và kiểm tra động tác có thật dùng đạo cụ. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -516,6 +532,8 @@ POSE: PERSONAL VIGNETTE: ngồi vắt chân đọc thẻ tre. Character reveals 
 
 ### RB-046 — Lê Thạch · Binh lính / Thổ
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** MEDIUM · BỔ SUNG. Chiêu tham chiếu: **Trấn Sơn Hộ Quân** (`tranSonHoQuan`). Thêm một ấn đồng cố định ở thắt lưng hoặc cổ tay, làm đạo cụ thật cho động tác đóng ấn; tuyệt đối không đổi đầu trượng thành ấn. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Lê Thạch được hình dung như một chiến binh giữ tuyến từng trưởng thành từ môi trường trấn nhỏ giáp rừng. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên nóng tính nhưng trọng chữ tín, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là chịu sức ép trực diện mà không lùi bước. Ở thời điểm game bắt đầu, điều thôi thúc họ là quyết không để đồng đội lặp lại một thất bại cũ. Nhân vật hư cấu trong không gian loạn sứ quân, xây dựng bằng tiểu sử game.
@@ -579,6 +597,8 @@ POSE: PERSONAL VIGNETTE: đứng tựa cờ quan sát doanh trại. Character re
 ---
 
 ### RB-047 — Bế Liên · Y sư / Thổ
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ / TINH CHỈNH. Chiêu tham chiếu: **Hậu Thổ Dưỡng Nguyên** (`hauThoDuongNguyen`). Chưa thấy xung đột trực tiếp ở cấp mô tả; chuẩn hóa Weapon Geometry Sheet và kiểm tra động tác có thật dùng đạo cụ. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -644,6 +664,8 @@ POSE: PERSONAL VIGNETTE: ngồi ở mũi thuyền sửa túi hành trang. Charac
 
 ### RB-048 — Mã Nhạc · Mưu sĩ / Thổ
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** MEDIUM · CÂN NHẮC. Chiêu tham chiếu: **Đoạn Đạo Tuyệt Lương** (`doanDaoTuyetLuong`). Quạt dễ trùng với mưu sĩ khác; giữ hình quạt nếu skill phù hợp, bổ sung dấu hiệu cá nhân và ấn/thẻ nếu chiêu yêu cầu. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Mã Nhạc được hình dung như một người bày kế và nghi binh từng trưởng thành từ môi trường trại quân dã chiến. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên lạnh lùng, tập trung vào trách nhiệm, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là đọc người và tạo ra đường vòng. Ở thời điểm game bắt đầu, điều thôi thúc họ là giấu nỗi day dứt sau dáng vẻ bình thản. Nhân vật hư cấu trong không gian loạn sứ quân, xây dựng bằng tiểu sử game.
@@ -707,6 +729,8 @@ POSE: PERSONAL VIGNETTE: ngồi nghỉ cạnh vũ khí xem một vật kỷ ni�
 ---
 
 ### RB-049 — Tạ Thạch · Quân sư / Thổ
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ + ĐỘC BẢN. Chiêu tham chiếu: **Bát Trận Thạch Lũy** (`batTranThachLuy`). Bộ cờ và thẻ tre phù hợp kỹ năng điều trận nhưng đang lặp kiểu; tùy biến dáng cờ, đầu cán, nút buộc và cách mang theo riêng để phân biệt, phải duyệt trước sửa. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -772,6 +796,8 @@ POSE: PERSONAL VIGNETTE: đứng cạnh voi chiến (chỉ là đề xuất, c�
 
 ### RB-050 — Tống Tấn · Tướng sĩ / Lôi
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ / TINH CHỈNH. Chiêu tham chiếu: **Lôi Đao Liên Trảm** (`loiDaoLienTram`). Chưa thấy xung đột trực tiếp ở cấp mô tả; chuẩn hóa Weapon Geometry Sheet và kiểm tra động tác có thật dùng đạo cụ. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Tống Tấn được hình dung như một võ tướng tiền tuyến từng trưởng thành từ môi trường bến sông nhiều thương thuyền. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên điềm đạm nhưng kiên quyết, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là chịu sức ép trực diện mà không lùi bước. Ở thời điểm game bắt đầu, điều thôi thúc họ là muốn chứng minh năng lực không cần xuất thân cao quý. Nhân vật hư cấu trong không gian loạn sứ quân, xây dựng bằng tiểu sử game.
@@ -835,6 +861,8 @@ POSE: PERSONAL VIGNETTE: ngồi ghế gỗ thấp lau vũ khí. Character reveal
 ---
 
 ### RB-051 — Vũ Lôi · Pháp sư / Lôi
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ + CHUẨN HÓA. Chiêu tham chiếu: **Thiên Lôi Giáng Thế** (`thienLoiGiangThe`). Giữ pháp khí, quy định đầu pháp khí, họa tiết theo hệ và chiều dài cố định; hiệu ứng nguyên tố render bằng code, không bake ảnh. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -900,6 +928,8 @@ POSE: PERSONAL VIGNETTE: đứng cạnh ngựa chiến buộc dây cương. Char
 
 ### RB-052 — Ông Chấn · Binh lính / Lôi
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** MEDIUM · BỔ SUNG. Chiêu tham chiếu: **Chấn Lôi Thiết Vệ** (`chanLoiThietVe`). Thêm một ấn đồng cố định ở thắt lưng hoặc cổ tay, làm đạo cụ thật cho động tác đóng ấn; tuyệt đối không đổi đầu trượng thành ấn. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Ông Chấn được hình dung như một chiến binh giữ tuyến từng trưởng thành từ môi trường vùng đồi xen ruộng nước. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên kiêu hãnh mà kín đáo, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là chịu sức ép trực diện mà không lùi bước. Ở thời điểm game bắt đầu, điều thôi thúc họ là học cách tin tưởng đồng đội sau những năm sống độc lập. Nhân vật hư cấu trong không gian loạn sứ quân, xây dựng bằng tiểu sử game.
@@ -963,6 +993,8 @@ POSE: PERSONAL VIGNETTE: ngồi vắt chân đọc thẻ tre. Character reveals 
 ---
 
 ### RB-053 — Tiêu Minh · Y sư / Lôi
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** HIGH · BỔ SUNG. Chiêu tham chiếu: **Lôi Châm Khởi Tử** (`loiChamKhoiTu`). Bổ sung ống kim/châm bạc có số lượng cố định gắn trong túi phụ, vật đang cầm vẫn giữ như cũ; khung ra chiêu phải dùng kim thực, không biến hồ lô/gậy thành kim. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -1028,6 +1060,8 @@ POSE: PERSONAL VIGNETTE: đứng tựa cờ quan sát doanh trại. Character re
 
 ### RB-054 — Từ Kinh · Mưu sĩ / Lôi
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** MEDIUM · CÂN NHẮC. Chiêu tham chiếu: **Kinh Lôi Đoạt Khí** (`kinhLoiDoatKhi`). Quạt dễ trùng với mưu sĩ khác; giữ hình quạt nếu skill phù hợp, bổ sung dấu hiệu cá nhân và ấn/thẻ nếu chiêu yêu cầu. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Từ Kinh được hình dung như một người bày kế và nghi binh từng trưởng thành từ môi trường đường trạm liên lạc chiến tuyến. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên bình tĩnh và nhiều mưu trí, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là đọc người và tạo ra đường vòng. Ở thời điểm game bắt đầu, điều thôi thúc họ là vừa khát khao lập công vừa sợ sự liều lĩnh của chính mình. Nhân vật hư cấu trong không gian loạn sứ quân, xây dựng bằng tiểu sử game.
@@ -1091,6 +1125,8 @@ POSE: PERSONAL VIGNETTE: ngồi ở mũi thuyền sửa túi hành trang. Charac
 ---
 
 ### RB-055 — Mạc Vân · Quân sư / Lôi
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ + ĐỘC BẢN. Chiêu tham chiếu: **Lôi Trận Kinh Hồn** (`loiTranKinhHon`). Bộ cờ và thẻ tre phù hợp kỹ năng điều trận nhưng đang lặp kiểu; tùy biến dáng cờ, đầu cán, nút buộc và cách mang theo riêng để phân biệt, phải duyệt trước sửa. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -1156,6 +1192,8 @@ POSE: PERSONAL VIGNETTE: ngồi nghỉ cạnh vũ khí xem một vật kỷ ni�
 
 ### RB-056 — Hứa Lăng · Tướng sĩ / Phong
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ / TINH CHỈNH. Chiêu tham chiếu: **Truy Phong Đoạt Mệnh** (`truyPhongDoatMenh`). Chưa thấy xung đột trực tiếp ở cấp mô tả; chuẩn hóa Weapon Geometry Sheet và kiểm tra động tác có thật dùng đạo cụ. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Hứa Lăng được hình dung như một võ tướng tiền tuyến từng trưởng thành từ môi trường miền trung du rừng thưa. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên linh hoạt và nhạy cảm với tình thế, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là chịu sức ép trực diện mà không lùi bước. Ở thời điểm game bắt đầu, điều thôi thúc họ là muốn bảo vệ người từng cưu mang mình. Nhân vật hư cấu trong không gian loạn sứ quân, xây dựng bằng tiểu sử game.
@@ -1219,6 +1257,8 @@ POSE: PERSONAL VIGNETTE: đứng cạnh voi chiến (chỉ là đề xuất, c�
 ---
 
 ### RB-057 — Liễu Yên · Pháp sư / Phong
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** MEDIUM · BỔ SUNG. Chiêu tham chiếu: **Phong Ấn Cuồng Lưu** (`phongAnCuongLuu`). Thêm một ấn đồng cố định ở thắt lưng hoặc cổ tay, làm đạo cụ thật cho động tác đóng ấn; tuyệt đối không đổi đầu trượng thành ấn. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -1284,6 +1324,8 @@ POSE: PERSONAL VIGNETTE: ngồi ghế gỗ thấp lau vũ khí. Character reveal
 
 ### RB-058 — Mạnh Tường · Binh lính / Phong
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** HIGH · ĐIỀU CHỈNH. Chiêu tham chiếu: **Phong Lũy Hộ Kỳ** (`phongLuyHoKy`). Thêm một thẻ lệnh/cờ lệnh phù hợp xuất thân, xác định trong Master và Weapon Sheet; không biến vũ khí gốc thành cờ khi ra tuyệt chiêu. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Mạnh Tường được hình dung như một chiến binh giữ tuyến từng trưởng thành từ môi trường trang trại ven núi. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên thận trọng và giàu nghị lực, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là chịu sức ép trực diện mà không lùi bước. Ở thời điểm game bắt đầu, điều thôi thúc họ là đặt danh dự tập thể cao hơn chiến công cá nhân. Nhân vật hư cấu trong không gian loạn sứ quân, xây dựng bằng tiểu sử game.
@@ -1347,6 +1389,8 @@ POSE: PERSONAL VIGNETTE: đứng cạnh ngựa chiến buộc dây cương. Char
 ---
 
 ### RB-059 — Bạch Sương · Y sư / Phong
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ / TINH CHỈNH. Chiêu tham chiếu: **Gió Lành Tẩy Uế** (`gioLanhTayUe`). Chưa thấy xung đột trực tiếp ở cấp mô tả; chuẩn hóa Weapon Geometry Sheet và kiểm tra động tác có thật dùng đạo cụ. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
@@ -1412,6 +1456,8 @@ POSE: PERSONAL VIGNETTE: ngồi vắt chân đọc thẻ tre. Character reveals 
 
 ### RB-060 — Bùi Phiêu · Mưu sĩ / Phong
 
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** MEDIUM · CÂN NHẮC. Chiêu tham chiếu: **Phiêu Phong Ly Gián** (`phieuPhongLyGian`). Quạt dễ trùng với mưu sĩ khác; giữ hình quạt nếu skill phù hợp, bổ sung dấu hiệu cá nhân và ấn/thẻ nếu chiêu yêu cầu. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
+
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
 **Tiểu sử (lore đề xuất):** Bùi Phiêu được hình dung như một người bày kế và nghi binh từng trưởng thành từ môi trường vùng sông nước mùa lũ. Trải nghiệm giữa các cuộc tranh chấp khiến nhân vật trở nên nóng tính nhưng trọng chữ tín, ít khi bộc lộ trọn vẹn suy nghĩ trước người lạ. Thế mạnh khi bước vào chiến trận là đọc người và tạo ra đường vòng. Ở thời điểm game bắt đầu, điều thôi thúc họ là luôn tính đường lui cho những người đi theo. Nhân vật hư cấu trong không gian loạn sứ quân, xây dựng bằng tiểu sử game.
@@ -1475,6 +1521,8 @@ POSE: PERSONAL VIGNETTE: đứng tựa cờ quan sát doanh trại. Character re
 ---
 
 ### RB-061 — Phùng Phong · Quân sư / Phong
+
+> **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ + ĐỘC BẢN. Chiêu tham chiếu: **Phong Vân Biến Trận** (`phongVanBienTran`). Bộ cờ và thẻ tre phù hợp kỹ năng điều trận nhưng đang lặp kiểu; tùy biến dáng cờ, đầu cán, nút buộc và cách mang theo riêng để phân biệt, phải duyệt trước sửa. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
 
