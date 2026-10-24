@@ -70,27 +70,27 @@ describe("chiến dịch", () => {
     assert.ok(!stageUnlocked(p.campaign, "boHai"));
     const lost = applyCampaignResult(p, "coLau", false, 3);
     assert.equal(lost.result.firstClear, false);
-    assert.equal(lost.profile.campaign.food, CAMPAIGN_FOOD_MIN);
+    assert.equal(lost.profile.campaign.supply, CAMPAIGN_FOOD_MIN);
     const won = applyCampaignResult(p, "coLau", true, 140);
     p = won.profile;
     assert.equal(won.result.bonusGold, stageById("coLau")!.firstClearGold);
     assert.equal(p.gold, won.result.bonusGold);
-    assert.equal(p.campaign.food, CAMPAIGN_FOOD_MAX);
+    assert.equal(p.campaign.supply, CAMPAIGN_FOOD_MAX);
     assert.ok(stageUnlocked(p.campaign, "boHai"));
     const again = applyCampaignResult(p, "coLau", true, 50);
     assert.equal(again.result.bonusGold, 0);
-    assert.deepEqual(again.profile.campaign.cleared, ["coLau"]);
+    assert.deepEqual(again.profile.campaign.legacy.cleared, ["coLau"]);
   });
 
   it("doanh trại: mua lương bằng vàng, không quá mức tối đa", () => {
     const p = {
       ...newProfile(),
       gold: 1000,
-      campaign: { cleared: [], food: 90, raids: {}, bestTurns: {} },
+      campaign: { ...newProfile().campaign, supply: 90 },
     };
     const r = applyProfileAction(p, { type: "buyFood", amount: 30 });
     assert.ok(r.ok);
-    assert.equal(r.profile.campaign.food, CAMPAIGN_FOOD_MAX);
+    assert.equal(r.profile.campaign.supply, CAMPAIGN_FOOD_MAX);
     assert.equal(r.profile.gold, 1000 - 10 * FOOD_PRICE);
     const full = applyProfileAction(r.profile, { type: "buyFood", amount: 10 });
     assert.deepEqual(full, { ok: false, error: "foodFull" });
@@ -104,13 +104,13 @@ describe("chiến dịch", () => {
     const old = { ...newProfile() } as Record<string, unknown>;
     delete old.campaign;
     assert.deepEqual(parseProfile(old).campaign, newProfile().campaign);
-    assert.equal(
-      parseProfile({
-        ...newProfile(),
-        campaign: { cleared: ["coLau", 3], food: 999 },
-      }).campaign.food,
-      CAMPAIGN_FOOD_MAX,
-    );
+    const migrated = parseProfile({
+      ...newProfile(),
+      campaign: { cleared: ["coLau", 3], food: 999, raids: { boHai: 2 } },
+    }).campaign;
+    assert.equal(migrated.supply, 60);
+    assert.deepEqual(migrated.completed, []);
+    assert.deepEqual(migrated.legacy.raids, { boHai: 2 });
   });
 });
 

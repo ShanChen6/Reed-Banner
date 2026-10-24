@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   applyProfileAction,
-  CAMPAIGN,
   CHAPTER1_STAGES,
   CHECKIN_GOLD,
   DAILY_QUESTS,
@@ -10,6 +9,7 @@ import {
   parseProfile,
   questProgress,
   recordMatch,
+  STORY_NODES,
   vnDay,
   vnWeek,
   WEEKLY_QUESTS,
@@ -105,7 +105,10 @@ describe("nhiệm vụ, thành tựu, điểm danh", () => {
   });
 
   it("thành tựu đọc từ hồ sơ, nhận một lần; hồ sơ cũ đọc ra nhiệm vụ trống", () => {
-    assert.equal(CHAPTER1_STAGES, CAMPAIGN.length);
+    assert.equal(
+      CHAPTER1_STAGES,
+      STORY_NODES.filter((node) => node.chapter === 1).length,
+    );
     const p = played(newProfile(), [win]);
     const r = applyProfileAction(p, { type: "claimAchievement", id: "a.win1" });
     assert.ok(r.ok);

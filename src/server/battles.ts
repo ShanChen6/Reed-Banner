@@ -12,6 +12,8 @@ import {
   defenseOf,
   ghostTeam,
   applyCampaignResult,
+  applyCampaignFirstClear,
+  clampCampaignFood,
   applyRaidResult,
   applyTowerResult,
   applySurvivalResult,
@@ -45,6 +47,7 @@ import {
   receiveDrop,
   rollDrop,
   settle,
+  settleCampaignScenario as evaluateCampaignScenario,
   stageById,
   stageFoes,
   stageUnlocked,
@@ -64,6 +67,8 @@ import {
   type Element,
   type BattleRewards,
   type CampaignResult,
+  type CampaignFirstClearReward,
+  type CampaignScenarioSettlement,
   type RaidResult,
   type RaidTier,
   type TowerResult,
@@ -169,6 +174,8 @@ export interface Outcome {
   readonly soldFor: number;
   /** Chỉ có ở trận chiến dịch. */
   readonly campaign?: CampaignResult;
+  /** Campaign V2 completion and milestone reward; separate from battle loot. */
+  readonly campaignV2?: CampaignFirstClearReward;
   /** Chỉ có ở trận đánh trùm. */
   readonly raid?: RaidResult;
   /** Chỉ có ở trận leo tháp. */
@@ -213,6 +220,18 @@ const isObj = (x: unknown): x is Record<string, unknown> =>
   typeof x === "object" && x !== null;
 const oneOf = <T extends string>(list: readonly T[], x: unknown): x is T =>
   typeof x === "string" && (list as readonly string[]).includes(x);
+
+/** One guarded server entrypoint for every Campaign V2 battle objective. */
+export function settleCampaignScenarioMatch(
+  match: Match,
+  events: readonly BattleEvent[] = [],
+): CampaignScenarioSettlement {
+  return evaluateCampaignScenario(
+    match.campaignScenario,
+    match.battle,
+    events,
+  );
+}
 
 /** Kiểm tra body tạo trận; null khi không hợp lệ. */
 export function parseNewBattle(body: unknown): NewBattleInput | null {
@@ -520,7 +539,7 @@ export async function createBattleFor(
       {
         fighters: team,
         leader: 0,
-        ...(stage && !raid ? { food: profile.campaign.food } : {}),
+        ...(stage && !raid ? { food: profile.campaign.supply } : {}),
       },
       {
         fighters: foes,
@@ -803,8 +822,95 @@ function matchMode(m: Match): MatchMode {
   if (m.arena) return "arena";
   if (m.survival) return "survival";
   if (m.tower) return "tower";
+  if (m.campaignScenario) return "campaign";
   if (m.stage) return m.raid ? "raid" : "campaign";
   return m.daily ? "daily" : "normal";
+}
+
+async function rewardCampaignV2(
+  r: MatchRecord,
+  match: Match,
+  settlement: Extract<CampaignScenarioSettlement, { readonly ok: true }>,
+  deps: Omit<Deps, "seed" | "newId">,
+): Promise<Outcome | undefined> {
+  const completed =
+    settlement.verdict.status === "advance" ||
+    settlement.verdict.status === "succeeded";
+  const rewards = battleRewards(match.battle, HUMAN, completed);
+  const ids = match.battle.sides[HUMAN].fighters.map((fighter) => fighter.id);
+  const rolled = rollDrop(
+    createRng(dropSeed(r.id)),
+    match.difficulty,
+    rewards.won,
+    "",
+  );
+  let levelUps: readonly LevelUp[] = [];
+  let drop: GearItem | null = null;
+  let soldFor = 0;
+  let campaignV2: CampaignFirstClearReward | undefined;
+  const updated = await updateProfile(
+    deps.profiles,
+    r.ownerId,
+    (profile) => {
+      const applied = applyRewards(profile, ids, rewards);
+      levelUps = applied.levelUps;
+      let next: Profile = {
+        ...applied.profile,
+        campaign: {
+          ...applied.profile.campaign,
+          supply: clampCampaignFood(settlement.verdict.playerFood),
+        },
+        quests: recordMatch(
+          applied.profile.quests,
+          {
+            mode: "campaign",
+            won: completed,
+            coins: match.battle.sides[HUMAN].gold,
+            waves: 0,
+          },
+          deps.now,
+        ),
+      };
+      if (settlement.verdict.status === "succeeded") {
+        const campaign = applyCampaignFirstClear(next, {
+          nodeId: settlement.verdict.nodeId,
+          source: "battle",
+          // A first-action victory has zero fully completed player turns in
+          // the adapter counter, but persisted best-turn records are positive.
+          turns: Math.max(1, settlement.verdict.playerTurns),
+          supply: settlement.verdict.playerFood,
+        });
+        if (!campaign.ok) return campaign;
+        next = campaign.profile;
+        campaignV2 = campaign.reward;
+      }
+      if (rolled) {
+        const received = receiveDrop(next, rolled);
+        next = received.profile;
+        drop = received.item;
+        soldFor = received.soldFor;
+      }
+      return { ok: true as const, profile: next };
+    },
+    deps.now,
+  );
+  if (!updated.ok) {
+    console.error("Không cộng được thưởng Campaign V2", r.id, updated.error);
+    return undefined;
+  }
+  await submitProfile(
+    deps.leaderboard,
+    r.ownerId,
+    updated.stored.profile,
+    deps.now,
+  );
+  return {
+    rewards,
+    levelUps,
+    drop,
+    soldFor,
+    ...(campaignV2 ? { campaignV2 } : {}),
+  };
 }
 
 function matchFeatureEnabled(match: Match, deps: Pick<Deps, "trialEnabled" | "destinyEnabled">): boolean {
@@ -929,8 +1035,16 @@ async function reward(
   match: Match,
   deps: Omit<Deps, "seed" | "newId">,
 ): Promise<Outcome | undefined> {
-  if (!matchOver(match) || !(await deps.store.claimReward(r.id, deps.now)))
+  let campaignScenario: Extract<CampaignScenarioSettlement, { readonly ok: true }> | undefined;
+  if (match.campaignScenario) {
+    const scenario = settleCampaignScenarioMatch(match);
+    if (!scenario.ok || scenario.verdict.status === "pending") return undefined;
+    campaignScenario = scenario;
+  }
+  if ((!campaignScenario && !matchOver(match)) || !(await deps.store.claimReward(r.id, deps.now)))
     return undefined;
+  if (campaignScenario)
+    return rewardCampaignV2(r, match, campaignScenario, deps);
   if (match.destiny) return rewardDestiny(r, match, deps);
   if (match.trial) return rewardTrial(r, match, deps);
   if (match.daily) return rewardDaily(r, match, match.daily, deps);
@@ -1140,6 +1254,16 @@ export async function actBattle(
   if (!r) return { ok: false, error: "notFound" };
   if (!matchFeatureEnabled(r.match, deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
   if (!(await destinyMatchCurrent(r, deps))) return { ok: false, error: "cycleExpired" };
+  if (r.match.campaignScenario) {
+    const scenario = settleCampaignScenarioMatch(r.match);
+    if (
+      !scenario.ok ||
+      scenario.verdict.status === "advance" ||
+      scenario.verdict.status === "succeeded" ||
+      scenario.verdict.status === "failed"
+    )
+      return { ok: false, error: "battleOver", view: viewOf(r.match) };
+  }
   const result = humanAct(r.match, parsed.action, parsed.seq, deps.now);
   let match = result.match;
   if (
