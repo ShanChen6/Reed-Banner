@@ -20,6 +20,7 @@ import {
 } from "../battle";
 import type { SpawnWeights } from "../board";
 import type { RaidTier } from "../campaign";
+import type { CampaignScenarioTag } from "../campaign/scenarios";
 import type { GearItem } from "../gear";
 import type { CharacterProgress } from "../progress";
 import type { DestinyMatchTag, TowerMatchTag } from "../tower";
@@ -68,6 +69,8 @@ export interface Match {
   readonly forfeited: boolean;
   /** Id màn chiến dịch; không có ở trận Thường. */
   readonly stage?: string;
+  /** Campaign V2 objective identity; never inferred from a legacy stage ID. */
+  readonly campaignScenario?: CampaignScenarioTag;
   /** Đánh trùm: bậc trùm ở màn `stage`. */
   readonly raid?: RaidTier;
   /** Leo tháp: số tầng. */
@@ -111,6 +114,7 @@ export interface MatchConfig {
   readonly now: number;
   readonly weights?: SpawnWeights;
   readonly stage?: string;
+  readonly campaignScenario?: CampaignScenarioTag;
   readonly raid?: RaidTier;
   readonly tower?: number;
   readonly survival?: SurvivalRun;
@@ -143,6 +147,9 @@ export function startMatch(config: MatchConfig): MatchStep {
     lastHumanAt: config.now,
     forfeited: false,
     ...(config.stage ? { stage: config.stage } : {}),
+    ...(config.campaignScenario
+      ? { campaignScenario: config.campaignScenario }
+      : {}),
     ...(config.raid ? { raid: config.raid } : {}),
     ...(config.tower ? { tower: config.tower } : {}),
     ...(config.survival ? { survival: config.survival } : {}),
@@ -442,6 +449,7 @@ export interface MatchView {
   readonly seq: number;
   readonly forfeited: boolean;
   readonly stage?: string;
+  readonly campaignScenario?: CampaignScenarioTag;
   readonly raid?: RaidTier;
   readonly tower?: number;
   readonly survival?: SurvivalView;
@@ -647,6 +655,7 @@ export function viewOf(m: Match): MatchView {
     seq: m.seq,
     forfeited: m.forfeited,
     ...(m.stage ? { stage: m.stage } : {}),
+    ...(m.campaignScenario ? { campaignScenario: m.campaignScenario } : {}),
     ...(m.raid ? { raid: m.raid } : {}),
     ...(m.tower ? { tower: m.tower } : {}),
     ...(m.survival ? { survival: survivalView(m.survival, m.battle) } : {}),

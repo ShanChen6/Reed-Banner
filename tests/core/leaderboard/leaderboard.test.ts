@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
-  applyCampaignResult,
   boardScores,
+  completeCampaignNode,
   describeScore,
   isBoardId,
   newProfile,
@@ -10,40 +10,56 @@ import {
 } from "../../../src/core";
 
 describe("bảng xếp hạng", () => {
-  it("chiến dịch giữ số lượt ít nhất mỗi màn khi thắng", () => {
-    let p = applyCampaignResult(newProfile(), "coLau", true, 50, 40).profile;
-    p = applyCampaignResult(p, "coLau", true, 50, 52).profile;
-    assert.equal(p.campaign.bestTurns.coLau, 40);
-    p = applyCampaignResult(p, "coLau", true, 50, 31).profile;
-    assert.equal(p.campaign.bestTurns.coLau, 31);
-    p = applyCampaignResult(p, "boHai", false, 50, 10).profile;
-    assert.equal(p.campaign.bestTurns.boHai, undefined);
+  it("chiến dịch giữ số lượt ít nhất cho node battle", () => {
+    let p = newProfile();
+    for (const id of ["M01", "M02"] as const) {
+      const result = completeCampaignNode(p.campaign, id);
+      assert.ok(result.ok);
+      p = { ...p, campaign: result.campaign };
+    }
+    let result = completeCampaignNode(p.campaign, "M03", { turns: 40 });
+    assert.ok(result.ok);
+    p = { ...p, campaign: result.campaign };
+    result = completeCampaignNode(p.campaign, "M03", { turns: 52 });
+    assert.ok(result.ok);
+    p = { ...p, campaign: result.campaign };
+    assert.equal(p.campaign.bestBattleTurns.M03, 40);
+    result = completeCampaignNode(p.campaign, "M03", { turns: 31 });
+    assert.ok(result.ok);
+    assert.equal(result.campaign.bestBattleTurns.M03, 31);
   });
 
   it("điểm: nhiều màn hơn luôn đứng trên, cùng số màn thì ít lượt hơn đứng trên", () => {
-    const a = applyCampaignResult(newProfile(), "coLau", true, 50, 40).profile;
-    const b = applyCampaignResult(a, "boHai", true, 50, 300).profile;
-    const fast = applyCampaignResult(
-      newProfile(),
-      "coLau",
-      true,
-      50,
-      20,
-    ).profile;
+    const withNodes = (turns: number) => {
+      let p = newProfile();
+      for (const id of ["M01", "M02"] as const) {
+        const result = completeCampaignNode(p.campaign, id);
+        assert.ok(result.ok);
+        p = { ...p, campaign: result.campaign };
+      }
+      const result = completeCampaignNode(p.campaign, "M03", { turns });
+      assert.ok(result.ok);
+      return { ...p, campaign: result.campaign };
+    };
+    const a = withNodes(40);
+    const bResult = completeCampaignNode(a.campaign, "M04", { turns: 300 });
+    assert.ok(bResult.ok);
+    const b = { ...a, campaign: bResult.campaign };
+    const fast = withNodes(20);
     const score = (p: typeof a, board: string) =>
       boardScores(p).find((s) => s.board === board)!.score;
     assert.ok(score(b, "campaign") > score(a, "campaign"));
     assert.ok(score(fast, "campaign") > score(a, "campaign"));
-    assert.ok(score(fast, "stage:coLau") > score(a, "stage:coLau"));
+    assert.ok(score(fast, "stage:M03") > score(a, "stage:M03"));
     assert.deepEqual(describeScore("campaign", score(b, "campaign")), {
-      main: 2,
-      turns: 340,
+      main: 4,
+      turns: 740,
     });
     assert.deepEqual(describeScore("stage:coLau", -20), { main: 20 });
     // Màn qua từ trước khi có bảng (chưa có số lượt) tính như UNKNOWN_STAGE_TURNS.
     const old = {
       ...newProfile(),
-      campaign: { ...newProfile().campaign, cleared: ["coLau"] },
+      campaign: { ...newProfile().campaign, completed: ["M01"] as const },
     };
     assert.deepEqual(describeScore("campaign", score(old, "campaign")), {
       main: 1,
@@ -53,7 +69,7 @@ describe("bảng xếp hạng", () => {
   });
 
   it("tên bảng hợp lệ", () => {
-    assert.ok(isBoardId("campaign") && isBoardId("stage:coLau"));
+    assert.ok(isBoardId("campaign") && isBoardId("stage:M03"));
     assert.ok(
       !isBoardId("stage:") && !isBoardId("stage:a;drop") && !isBoardId(1),
     );

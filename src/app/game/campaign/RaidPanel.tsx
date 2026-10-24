@@ -32,7 +32,7 @@ export default function RaidPanel({
 }) {
   const leader = stage.foes[0]!;
   const best = raidCleared(profile.campaign, stage.id);
-  const stageCleared = profile.campaign.cleared.includes(stage.id);
+  const stageCleared = profile.campaign.legacy.cleared.includes(stage.id);
   return (
     <div className="flex flex-col gap-3">
       <div>
