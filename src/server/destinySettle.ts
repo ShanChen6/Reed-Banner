@@ -1,7 +1,10 @@
 import {
   HUMAN,
+  applyStoneAward,
+  DESTINY_STONE_MILESTONES,
   generateDestinyOffer,
   isDualTowerV1,
+  planDestinyFloorClear,
   settleDestinyFloor,
   validateDestinyMatchTag,
   type Match,
@@ -54,6 +57,18 @@ export async function settleDestinyMatch(
         : { ...withoutMatch, offer: null };
       if (settled.won && (!nextRun.offer || nextRun.offer.length !== 3))
         return { ok: false as const, error: "invalid_offer" as const };
+      const planned = settled.won
+        ? planDestinyFloorClear(progress, {
+            cycleId: tag.cycleId,
+            floor: tag.floor,
+            milestones: DESTINY_STONE_MILESTONES,
+          })
+        : { ok: true as const, next: progress, events: [] };
+      if (!planned.ok) return { ok: false as const, error: planned.error };
+      const awarded = applyStoneAward(profile, planned.events, {
+        destiny: { ...planned.next, run: nextRun },
+      });
+      if (!awarded.ok) return { ok: false as const, error: awarded.error };
       result = { floor: tag.floor, won: match.battle.winner === HUMAN, phase: nextRun.phase === "reward" ? "reward" : "done" };
       leaderboard = settled.won ? {
         eventId: matchId,
@@ -65,17 +80,7 @@ export async function settleDestinyMatch(
       } : undefined;
       return {
         ok: true as const,
-        profile: {
-          ...profile,
-          dualTower: {
-            ...profile.dualTower,
-            destiny: {
-              ...progress,
-              cycleBest: settled.won ? Math.max(progress.cycleBest, tag.floor) : progress.cycleBest,
-              run: nextRun,
-            },
-          },
-        },
+        profile: awarded.profile,
       };
     },
     deps.now,

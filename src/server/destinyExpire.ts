@@ -1,6 +1,9 @@
 import {
+  applyStoneAward,
   DESTINY_HISTORY_MAX,
+  destinyCycleStoneReward,
   isDualTowerV1,
+  planDestinyCycleEnd,
   type DestinyCycleHistory,
   type DestinyProgress,
   type Profile,
@@ -19,7 +22,7 @@ export const hasExpiredDestinyRun = (profile: Profile, cycleId: string): boolean
 
 function closeProgress(progress: DestinyProgress, cycleId: string, now: number): DestinyProgress {
   const run = progress.run;
-  const oldCycleId = run?.cycleId ?? progress.cycleId;
+  const oldCycleId = run?.active ? run.cycleId : progress.cycleId;
   if (!oldCycleId || oldCycleId === cycleId) return progress;
   const phase = run?.phase ?? "none";
   // settledFloor chỉ nói kết quả đã xử lý (kể cả thua); cycleBest mới là receipt tầng đã clear.
@@ -45,13 +48,13 @@ function closeProgress(progress: DestinyProgress, cycleId: string, now: number):
   };
 }
 
-/** Đồng bộ cycle bằng CAS. Không cấp thưởng và không chạm inventory/stone/Tower/Trial. */
+/** Đồng bộ cycle bằng CAS; tự nhận thưởng cycle cũ cùng lần ghi, không cần cron hay claim thủ công. */
 export async function reconcileDestinyCycle(
   profiles: ProfileStore,
   ownerId: string,
   now: number,
 ): Promise<{ readonly ok: true; readonly value: DestinyExpireResult; readonly profile: Profile } |
-  { readonly ok: false; readonly error: "invalid_time" | "unsupported_schema" | "conflict" }> {
+  { readonly ok: false; readonly error: "invalid_time" | "unsupported_schema" | "invalid_reward" | "conflict" }> {
   const scheduled = activeDestinyCycle(now);
   if (!scheduled.ok) return { ok: false, error: "invalid_time" };
   const loaded = await loadProfile(profiles, ownerId);
@@ -76,18 +79,22 @@ export async function reconcileDestinyCycle(
       const currentEffective = current.run?.active ? current.run.cycleId : current.cycleId;
       if (currentEffective === scheduled.cycle.cycleId)
         return { ok: true as const, profile };
-      const next = closeProgress(current, scheduled.cycle.cycleId, now);
+      const oldCycleId = current.run?.active ? current.run.cycleId : current.cycleId;
+      const planned = oldCycleId
+        ? planDestinyCycleEnd(current, {
+            cycleId: oldCycleId,
+            stonesForBest: destinyCycleStoneReward,
+          })
+        : { ok: true as const, next: current, events: [] };
+      if (!planned.ok) return { ok: false as const, error: "invalid_reward" as const };
+      const next = closeProgress(planned.next, scheduled.cycle.cycleId, now);
       expired = next !== current;
-      return {
-        ok: true as const,
-        profile: {
-          ...profile,
-          dualTower: {
-            ...profile.dualTower,
-            destiny: expired ? next : { ...current, cycleId: scheduled.cycle.cycleId },
-          },
-        },
-      };
+      const awarded = applyStoneAward(profile, planned.events, {
+        destiny: expired ? next : { ...planned.next, cycleId: scheduled.cycle.cycleId },
+      });
+      return awarded.ok
+        ? { ok: true as const, profile: awarded.profile }
+        : { ok: false as const, error: awarded.error === "unsupported_schema" ? awarded.error : "invalid_reward" as const };
     },
     now,
   );
