@@ -50,28 +50,45 @@ describe("bảng xếp hạng", () => {
       boardScores(p).find((s) => s.board === board)!.score;
     assert.ok(score(b, "campaign") > score(a, "campaign"));
     assert.ok(score(fast, "campaign") > score(a, "campaign"));
-    assert.ok(score(fast, "stage:M03") > score(a, "stage:M03"));
+    assert.ok(score(fast, "mission:M03") > score(a, "mission:M03"));
+    // 4 nhiệm vụ; chỉ M03 (40) và M04 (300) là trận nên cộng lượt, sự kiện M01/M02 không cộng.
     assert.deepEqual(describeScore("campaign", score(b, "campaign")), {
       main: 4,
-      turns: 740,
+      turns: 340,
     });
-    assert.deepEqual(describeScore("stage:coLau", -20), { main: 20 });
-    // Màn qua từ trước khi có bảng (chưa có số lượt) tính như UNKNOWN_STAGE_TURNS.
+    assert.deepEqual(describeScore("mission:M03", -20), { main: 20 });
+    // Bảng từng trận chỉ có nhiệm vụ có trận, không có bảng của sự kiện.
+    assert.deepEqual(
+      boardScores(b)
+        .map((s) => s.board)
+        .filter((x) => x.startsWith("mission:")),
+      ["mission:M03", "mission:M04"],
+    );
+    // Nhiệm vụ có trận đã xong mà chưa có số lượt tính như UNKNOWN_STAGE_TURNS; sự kiện không tính lượt.
     const old = {
       ...newProfile(),
-      campaign: { ...newProfile().campaign, completed: ["M01"] as const },
+      campaign: {
+        ...newProfile().campaign,
+        completed: ["M01", "M02", "M03"] as const,
+      },
     };
     assert.deepEqual(describeScore("campaign", score(old, "campaign")), {
-      main: 1,
+      main: 3,
       turns: UNKNOWN_STAGE_TURNS,
     });
     assert.deepEqual(boardScores(newProfile()), []);
   });
 
   it("tên bảng hợp lệ", () => {
-    assert.ok(isBoardId("campaign") && isBoardId("stage:M03"));
+    assert.ok(isBoardId("campaign") && isBoardId("mission:M03"));
+    // Bảng màn cũ, nhiệm vụ sự kiện và id lạ bị từ chối.
     assert.ok(
-      !isBoardId("stage:") && !isBoardId("stage:a;drop") && !isBoardId(1),
+      !isBoardId("stage:M03") &&
+        !isBoardId("stage:coLau") &&
+        !isBoardId("mission:M01") &&
+        !isBoardId("mission:") &&
+        !isBoardId("mission:a;drop") &&
+        !isBoardId(1),
     );
   });
 });

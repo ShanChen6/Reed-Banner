@@ -42,7 +42,10 @@ export type QuestStat =
   | "play"
   | "win"
   | "coins"
-  /** Thắng trận chiến dịch hoặc đánh trùm. */
+  /**
+   * Thắng trận của nhiệm vụ chiến dịch có trận (kể cả qua một phase công thành) hoặc trận đánh trùm. Hoàn thành
+   * sự kiện, chuẩn bị hay ngoại giao không phải trận nên không tính (không gọi recordMatch).
+   */
   | "campaign"
   | "waves"
   | "daily";

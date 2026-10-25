@@ -44,6 +44,7 @@ describe("Campaign V2 first-clear rewards", () => {
       totalGold: 500,
       supply: 47,
       unlockedHeroes: ["dinhLien"],
+      factionRecorded: false,
     });
     assert.deepEqual(result.profile.campaign.rewardReceipts, [
       "node:M04",

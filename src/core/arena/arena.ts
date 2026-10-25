@@ -11,7 +11,7 @@ import {
   type FighterConfig,
   type Profession,
 } from "../battle";
-import { RAID_STAGES } from "../campaign";
+import { WARLORD_ENCOUNTERS } from "../campaign";
 import {
   autoProgress,
   leveledFoe,
@@ -103,7 +103,7 @@ function pickDistinct<T>(rng: Rng, items: readonly T[], n: number): T[] {
 /** Tên bóng ma do máy tạo: theo vùng đất của các sứ quân. */
 export function botName(seed: number): string {
   const rng = createRng(seed >>> 0);
-  return `Bóng ma ${RAID_STAGES[rng.int(0, RAID_STAGES.length - 1)]!.region.split(",")[0]}`;
+  return `Bóng ma ${WARLORD_ENCOUNTERS[rng.int(0, WARLORD_ENCOUNTERS.length - 1)]!.modernRegion.split(",")[0]}`;
 }
 
 /**

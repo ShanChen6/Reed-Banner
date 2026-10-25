@@ -595,6 +595,7 @@ export default function BattleStage({
                         id={s.fighter.id}
                         element={s.fighter.element}
                         profession={s.fighter.profession}
+                        level={s.fighter.level}
                         className="size-12 drop-shadow-md sm:size-16 md:size-20"
                       />
                     </div>

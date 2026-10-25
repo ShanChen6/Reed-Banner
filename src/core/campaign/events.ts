@@ -4,6 +4,10 @@ import {
   isCombatStoryNode,
   type CampaignMissionId,
 } from "./storyNodes";
+import {
+  factionResolutionOfMission,
+  type CampaignFactionResolution,
+} from "./factions";
 
 export type CampaignEventPhase =
   | "meeting"
@@ -16,10 +20,7 @@ export type CampaignHistoricalOutcome =
   | "submitted"
   | "dispersed"
   | "defeated";
-export type CampaignChoiceTone =
-  | "protective"
-  | "pragmatic"
-  | "resolute";
+export type CampaignChoiceTone = "protective" | "pragmatic" | "resolute";
 
 export interface CampaignEventChoice {
   readonly id: string;
@@ -35,6 +36,8 @@ export interface CampaignEventDefinition {
   readonly participants: readonly string[];
   readonly choices: readonly CampaignEventChoice[];
   readonly outcome?: CampaignHistoricalOutcome;
+  /** Sứ quân mà sự kiện giải quyết và kết cục ghi vào thế cục (FactionState). */
+  readonly faction?: CampaignFactionResolution;
 }
 
 const OUTCOMES: Readonly<
@@ -71,6 +74,25 @@ const PARTICIPANTS: Readonly<
   M24: ["dinhBoLinh", "dinhLien"],
 };
 
+/** Giọng điệu đặt riêng khi thứ tự lựa chọn không khớp vòng mặc định. */
+const TONE_OF: Readonly<
+  Partial<
+    Record<CampaignMissionId, Readonly<Record<string, CampaignChoiceTone>>>
+  >
+> = {
+  M11: { retainForces: "pragmatic", protectPeople: "protective" },
+  M12: { showStrength: "resolute", privateMeeting: "pragmatic" },
+  M13: { publicTerms: "resolute", privatePledge: "protective" },
+  M19: { leHoanObserves: "pragmatic", anonymousEnvoy: "protective" },
+  M22: { reviewDossiers: "pragmatic", hearTheRegions: "protective" },
+  M23: { livelihood: "protective", army: "resolute", law: "pragmatic" },
+  M24: {
+    armyView: "resolute",
+    hoaLuView: "protective",
+    dinhLienView: "pragmatic",
+  },
+};
+
 const TONES: readonly CampaignChoiceTone[] = [
   "protective",
   "pragmatic",
@@ -92,9 +114,8 @@ function phasesFor(kind: CampaignEventKind): readonly CampaignEventPhase[] {
 }
 
 /** Non-combat event registry. No definition owns a BattleState or foe list. */
-export const CAMPAIGN_EVENTS: readonly CampaignEventDefinition[] = STORY_NODES
-  .filter((node) => !isCombatStoryNode(node))
-  .map((node) => {
+export const CAMPAIGN_EVENTS: readonly CampaignEventDefinition[] =
+  STORY_NODES.filter((node) => !isCombatStoryNode(node)).map((node) => {
     const kind = eventKind(node.id);
     return {
       nodeId: node.id,
@@ -103,10 +124,13 @@ export const CAMPAIGN_EVENTS: readonly CampaignEventDefinition[] = STORY_NODES
       participants: PARTICIPANTS[node.id] ?? ["dinhBoLinh"],
       choices: (CAMPAIGN_CHOICE_IDS[node.id] ?? []).map((id, index) => ({
         id,
-        tone: TONES[index % TONES.length]!,
+        tone: TONE_OF[node.id]?.[id] ?? TONES[index % TONES.length]!,
         narrationKey: `campaign.${node.id}.${id}`,
       })),
       ...(OUTCOMES[node.id] ? { outcome: OUTCOMES[node.id] } : {}),
+      ...(factionResolutionOfMission(node.id)
+        ? { faction: factionResolutionOfMission(node.id)! }
+        : {}),
     };
   });
 
@@ -129,7 +153,20 @@ const EVENT_ERRORS = CAMPAIGN_EVENTS.flatMap((event) => {
     return [`${event.nodeId}: duplicate event choice`];
   if (event.phases.at(-1) !== "completion")
     return [`${event.nodeId}: event does not end in completion`];
+  if (event.faction) {
+    const expected =
+      event.faction.status === "allied" ? "allianced" : event.faction.status;
+    if (event.outcome !== expected)
+      return [`${event.nodeId}: outcome differs from faction table`];
+    if (
+      event.faction.status !== "dispersed" &&
+      !event.participants.includes(event.faction.faction)
+    )
+      return [`${event.nodeId}: faction is not a participant`];
+  }
   return [];
 });
 if (EVENT_ERRORS.length > 0)
-  throw new Error(`Invalid Campaign event registry: ${EVENT_ERRORS.join("; ")}`);
+  throw new Error(
+    `Invalid Campaign event registry: ${EVENT_ERRORS.join("; ")}`,
+  );
