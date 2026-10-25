@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -221,6 +221,11 @@ export default function BattleStage({
         import("./slam"),
         import("./needle"),
         import("./bulwark"),
+        import("./silver"),
+        import("./coins"),
+        import("./banner"),
+        import("./sap"),
+        import("./thorn"),
       ]);
       const app = new Application();
       await app.init({
@@ -270,7 +275,9 @@ export default function BattleStage({
       app.renderer.on("resize", layout);
       // Hiệu ứng vẽ trên cả sân, đè lên mọi nhân vật: sét hệ Lôi, vòm khiên đất hệ Thổ, vòng lá hồi sinh hệ Mộc,
       // mũi sáng phá giáp hệ Kim, đoạt lương và cột nước đóng băng hệ Thủy, tường lửa hệ Hỏa, đập đất hệ Thổ,
-      // ngân châm và tường thép hệ Kim.
+      // ngân châm, tường thép, mưa kim bạc, tiền vàng ly tán và
+      // thiết trận hệ Kim, trúc lâm hút sinh khí và dây gai
+      // quấn thân hệ Mộc.
       const sky = new Container();
       sky.zIndex = 100;
       app.stage.addChild(sky);
@@ -282,12 +289,67 @@ export default function BattleStage({
           return { x: slotX(s.side, s.index) * width, y: height * (GROUND - FIGURE * k) };
         };
         const alive = (mine: boolean) => latest.current.filter((s) => (s.side === e.side) === mine && isAlive(s.fighter));
-        if (rig.strikeFx === "earthWard" || rig.strikeFx === "leafBloom") {
-          const fx = (rig.strikeFx === "earthWard" ? earthWard : leafBloom)(sky, rig.fxColor);
+        if (rig.strikeFx === "earthWard" || rig.strikeFx === "leafBloom" || rig.strikeFx === "silverGrace") {
+          const make = rig.strikeFx === "earthWard" ? earthWard : rig.strikeFx === "leafBloom" ? leafBloom : silverGrace;
+          const fx = make(sky, rig.fxColor);
           // Tuyệt chiêu cho cả đội: hiệu ứng nở quanh từng đồng đội còn đứng.
           loaded[i]!.onStrike?.((kind) => {
             if (kind !== "ultimate") return;
             alive(true).forEach((s, n) => fx.cover(spot(s, 0), app.screen.height * FIGURE, n * 0.08));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "rootGuard") {
+          const bloom = leafBloom(sky, rig.fxColor);
+          const ward = earthWard(sky, rig.fxColor);
+          // Tuyệt chiêu giữ thành: vòng lá hồi phục quanh cả đội, vòm khiên quanh chính mình (Khiên, Khiêu khích).
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            alive(true).forEach((s, n) => bloom.cover(spot(s, 0), size, n * 0.08));
+            ward.cover(spot(me, 0), size, 0.25);
+          });
+          return [bloom, ward];
+        }
+        if (rig.strikeFx === "thornBind") {
+          const fx = thornBind(sky, rig.fxColor);
+          // Tuyệt chiêu cả đội đối thủ hút máu: dây gai quấn từng người, sinh khí bay về chính mình.
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => fx.bind(spot(s, 0), spot(me, 0.55), size, n * 0.08));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "bambooSap") {
+          const fx = bambooSap(sky, rig.fxColor);
+          // Tuyệt chiêu một người hút máu: chém lá trúc lên đối thủ đứng đầu, sinh khí bay về chính mình.
+          loaded[i]!.onStrike?.((kind) => {
+            const foe = alive(false)[0];
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind === "ultimate" && foe && me) fx.drain(spot(foe, 0.5), spot(me, 0.55), app.screen.height * FIGURE);
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "ironFormation") {
+          const fx = ironFormation(sky, rig.fxColor);
+          // Tuyệt chiêu thiết trận: khiên nứt trên từng đối thủ (Thủ giảm), mũi tên vàng ở từng đồng đội (Công tăng).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => fx.shatter(spot(s, 0.5), size, n * 0.08));
+            alive(true).forEach((s, n) => fx.rally(spot(s, 0), size, 0.2 + n * 0.08));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "coinScatter") {
+          const fx = coinScatter(sky, rig.fxColor);
+          // Tuyệt chiêu một người: tiền vàng bật khỏi đối thủ đứng đầu, ấn câm lặng trên đầu họ.
+          loaded[i]!.onStrike?.((kind) => {
+            const foe = alive(false)[0];
+            if (kind === "ultimate" && foe) fx.scatter(spot(foe, 0.5), app.screen.height * FIGURE);
           });
           return [fx];
         }
