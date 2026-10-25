@@ -435,46 +435,18 @@
   fill: var(--map-ink);
   font-family: var(--font-serif, Georgia, serif);
 }
-.campaign-map .map-title {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-}
-.campaign-map .map-label {
-  font-size: 14px;
-  font-weight: 700;
-  paint-order: stroke;
-  stroke: var(--map-paper);
-  stroke-width: 3px;
-}
-.campaign-map .map-label-small {
-  font-size: 11px;
-  font-style: italic;
-}
-.campaign-map .map-label-river {
-  font-size: 12px;
-  font-style: italic;
-  fill: #2f5556;
-}
 .campaign-map .map-label-sea {
-  font-size: 16px;
+  font-size: 34px;
   font-style: italic;
   letter-spacing: 0.2em;
   fill: #34483f;
 }
-.campaign-map .map-num {
-  font-size: 11px;
-  font-weight: 800;
-  font-family: inherit;
-}
-.campaign-map .map-num-light {
-  fill: #f5f0e1;
-}
 .campaign-map .map-stage:focus {
   outline: none;
 }
-.campaign-map .map-stage:focus-visible circle:not(.map-pulse) {
+.campaign-map .map-stage:focus-visible > rect:first-of-type {
   stroke: #f2c14e;
+  stroke-width: 5px;
 }
 .map-pulse {
   transform-box: fill-box;
