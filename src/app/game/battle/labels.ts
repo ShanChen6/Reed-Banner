@@ -6,6 +6,11 @@ import {
   SKILL_SLOT_UNLOCK,
   skillSource,
   skillComboPartners,
+  scaleSkill,
+  SKILL_MAX_LEVEL,
+  PASSIVE,
+  PASSIVE_TURNS,
+  RAGE_MAX,
   type SkillDef,
   type BattleError,
   type Difficulty,
@@ -141,12 +146,20 @@ export function gearText(item: GearItem): string {
 }
 
 /** Mô tả lấy từ các bước thực thi, dùng chung ở trước trận, quản lý và trong trận. */
-export function skillText(def: SkillDef): string {
-  const pct = (n: number) => `${Math.round(n * 100)}%`;
+const pct = (n: number) => `${Math.round(n * 100)}%`;
+
+export const SKILL_TARGET_NAME: Record<SkillDef["target"], string> = { enemy: "địch đơn", ally: "đồng minh đơn", self: "bản thân", team: "cả đội", allEnemies: "mọi địch" };
+
+/** Nguồn kỹ năng: nghề, hệ hay tuyệt chiêu/chiêu riêng của nhân vật. */
+export function skillSourceName(def: SkillDef): string {
+  if (skillSource(def) === "character") return def.characterKind === "signature" ? "Chiêu riêng" : "Tuyệt chiêu nhân vật";
+  return def.profession ? `Nghề ${PROFESSION_NAME[def.profession]}` : def.element ? `Hệ ${ELEMENT_NAME[def.element]}` : "Kỹ năng";
+}
+
+/** Từng bước tác dụng của kỹ năng, theo đúng thứ tự core chạy. */
+export function skillStepTexts(def: SkillDef): string[] {
   const to = { targets: "mục tiêu", self: "bản thân", team: "cả đội", enemies: "mọi địch" };
-  const target = { enemy: "địch đơn", ally: "đồng minh đơn", self: "bản thân", team: "cả đội", allEnemies: "mọi địch" };
-  const source = skillSource(def) === "character" ? "Tuyệt chiêu nhân vật" : def.profession ? `Nghề ${PROFESSION_NAME[def.profession]}` : def.element ? `Hệ ${ELEMENT_NAME[def.element]}` : "Kỹ năng";
-  const steps = def.steps.map(s => {
+  return def.steps.map(s => {
     switch (s.type) {
       case "damage": return `${pct(s.atk)} Công${s.pierce ? `, bỏ ${pct(s.pierce)} DEF` : ""}${s.pierceShield ? ", xuyên Khiên" : ""}${s.lifesteal ? `, hút máu ${pct(s.lifesteal)}` : ""}${s.execute ? `, ×${s.execute.multiplier} khi địch ≤${pct(s.execute.threshold)} máu` : ""}`;
       case "heal": return `Hồi ${pct(s.ratio)} máu ${to[s.to]}`;
@@ -161,6 +174,41 @@ export function skillText(def: SkillDef): string {
       case "whirl": return `${s.auto ? "Tự xoay" : "Chọn tâm xoay"} lốc xoáy ±1${s.turns > 1 ? `..${s.turns}` : ""} nấc`;
     }
   });
+}
+
+export function skillText(def: SkillDef): string {
   const partners=skillComboPartners(def);
-  return `${def.name} · ${source} · ô ${def.slot ?? "—"} · mở cấp ${SKILL_SLOT_UNLOCK[def.slot ?? 0] ?? 1} · ${def.cost} NL · ${target[def.target]}: ${steps.join("; ")}${partners.length ? `. Có thể mở: ${partners.join(", ")} (cần tác dụng thực)` : ""}`;
+  return `${def.name} · ${skillSourceName(def)} · ô ${def.slot ?? "—"} · mở cấp ${SKILL_SLOT_UNLOCK[def.slot ?? 0] ?? 1} · ${def.cost} NL · ${SKILL_TARGET_NAME[def.target]}: ${skillStepTexts(def).join("; ")}${partners.length ? `. Có thể mở: ${partners.join(", ")} (cần tác dụng thực)` : ""}`;
+}
+
+/**
+ * Bảng số liệu theo cấp kỹ năng 1..SKILL_MAX_LEVEL, dựng bằng scaleSkill để khớp đúng core:
+ * hàng năng lượng và mỗi hệ số tăng theo cấp (sát thương, hồi máu, hệ số hiệu ứng).
+ */
+export function skillLevelTable(def: SkillDef): { readonly label: string; readonly values: readonly string[] }[] {
+  const levels = Array.from({ length: SKILL_MAX_LEVEL }, (_, i) => scaleSkill(def, i + 1));
+  const rows = [{ label: "Năng lượng", values: levels.map(d => String(d.cost)) }];
+  def.steps.forEach((step, i) => {
+    const at = (d: SkillDef) => d.steps[i]!;
+    if (step.type === "damage") rows.push({ label: "Sát thương (% Công)", values: levels.map(d => pct((at(d) as typeof step).atk)) });
+    else if (step.type === "heal") rows.push({ label: `Hồi máu (% máu tối đa)`, values: levels.map(d => pct((at(d) as typeof step).ratio)) });
+    else if (step.type === "effect" && step.value && levels.at(-1)!.steps[i] !== step)
+      rows.push({ label: `${EFFECT_NAME[step.effect]}${step.ofMaxHp ? " (% máu tối đa)" : step.ofAtk ? " (% Công)" : ""}`, values: levels.map(d => pct((at(d) as typeof step).value)) });
+  });
+  return rows;
+}
+
+/** Tác dụng bị động của thủ lĩnh khi đầy Nộ, đọc số từ PASSIVE trong core. */
+export function passiveText(element: Element): string {
+  const P = PASSIVE;
+  const effect: Record<Element, string> = {
+    moc: `Cả đội Hồi phục ${pct(P.mocTeamRegen)} máu tối đa mỗi lượt.`,
+    kim: `Đánh thường và kỹ năng của thủ lĩnh bỏ qua ${pct(P.kimPierce)} DEF; kỹ năng xuyên Khiên.`,
+    thuy: `Đóng băng ngay 1 đối thủ; kỹ năng sát thương của thủ lĩnh có ${pct(P.thuyFreezeChance)} cơ hội Đóng băng thêm.`,
+    hoa: `Mọi sát thương của thủ lĩnh +${pct(P.hoaDamage)}, đổi lại DEF bản thân −${pct(P.hoaDefDown)}.`,
+    tho: `Thủ lĩnh nhận Khiên ${pct(P.thoShield)} máu tối đa và Phản đòn ${pct(P.thoReflect)}.`,
+    loi: `Trừ ${P.loiDrain} năng lượng mọi đối thủ; mỗi ô âm dương ghép được thêm ${P.loiEnergyPerTile} năng lượng.`,
+    phong: `Được xoay lốc xoáy miễn phí ${P.phongFreeWhirlTurns} nấc trước kỹ năng và đổi ô, ${P.phongFreeWhirls} lần mỗi lần kích hoạt.`,
+  };
+  return `${effect[element]} Tự kích hoạt khi Nộ đạt ${RAGE_MAX}, hiệu lực ${PASSIVE_TURNS} lượt của phe.`;
 }

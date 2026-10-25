@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { type Element, ELEMENTS, elementRelation, characterSkills, PROFESSIONS, type Profession, PASSIVES } from "@/core";
-import { ELEMENT_NAME, PROFESSION_NAME, skillText } from "../game/battle/labels";
+import { type Element, ELEMENTS, elementRelation, characterSkills, PROFESSIONS, type Profession, PASSIVES, PROFESSION_COMBO, COMBO_PASSIVES, CHASE_PASSIVES, chasePassives } from "@/core";
+import { ELEMENT_NAME, PROFESSION_NAME, passiveText } from "../game/battle/labels";
 import { ELEMENT_COLOR, ElementIcon } from "../game/art/icons";
 import { Portrait } from "../game/art/portraits";
 import { SkillIcon } from "../game/art/skills";
+import SkillInfo from "../game/battle/SkillInfo";
 import { ELEMENT_TRAIT } from "./data";
 
 function related(e: Element, test: (other: Element) => boolean) {
@@ -16,6 +17,11 @@ function related(e: Element, test: (other: Element) => boolean) {
 export default function ElementPicker() {
   const [element, setElement] = useState<Element>("moc");
   const [profession, setProfession] = useState<Profession>("tuongSi");
+  const [slot, setSlot] = useState(1);
+  const skills = characterSkills(profession, element);
+  const skill = skills.find((s) => s.slot === slot) ?? skills[0]!;
+  const combo = COMBO_PASSIVES[PROFESSION_COMBO[profession]];
+  const chase = chasePassives({ profession, element });
   const trait = ELEMENT_TRAIT[element];
   const counters = related(element, (o) => elementRelation(element, o) === "counter");
   const counteredBy = related(element, (o) => elementRelation(o, element) === "counter");
@@ -98,19 +104,46 @@ export default function ElementPicker() {
           <div className="rounded-lg border border-[var(--gold)]/40 bg-[var(--gold)]/5 px-3 py-2 text-sm">
             <span className="text-xs uppercase tracking-wider text-[var(--gold)]">Bị động khi đầy Nộ</span>
             <p className="font-semibold">{PASSIVES[element].name}</p>
+            <p className="mt-0.5 text-stone-300">{passiveText(element)}</p>
           </div>
 
-          <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-            {characterSkills(profession, element).map((s) => (
-              <li key={s.id} title={skillText(s)} className="flex items-center gap-2 rounded-lg bg-stone-900/60 p-2 text-xs">
-                <SkillIcon def={s} className="size-9 shrink-0" />
-                <span className="leading-tight">
-                  <span className="block font-semibold text-stone-100">{s.name}</span>
-                  <span className="text-stone-500">{s.cost} năng lượng</span>
-                </span>
-              </li>
-            ))}
-          </ul>
+          <div>
+            <p className="mb-2 text-xs uppercase tracking-wider text-stone-500">6 kỹ năng chủ động · chạm để xem chi tiết</p>
+            <ul role="tablist" aria-label="Chọn kỹ năng" className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {skills.map((s) => (
+                <li key={s.id}>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={s.id === skill.id}
+                    onClick={() => setSlot(s.slot!)}
+                    className={`flex w-full items-center gap-2 rounded-lg p-2 text-left text-xs transition ${
+                      s.id === skill.id ? "bg-[var(--gold)]/15 ring-1 ring-[var(--gold)]/60" : "bg-stone-900/60 hover:bg-stone-800/80"
+                    }`}
+                  >
+                    <SkillIcon def={s} className="size-9 shrink-0" />
+                    <span className="leading-tight">
+                      <span className="block font-semibold text-stone-100">{s.name}</span>
+                      <span className="text-stone-500">{s.cost} năng lượng</span>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <div role="tabpanel" className="mt-2 rounded-lg bg-stone-900/70 p-3">
+              <SkillInfo def={skill} />
+            </div>
+          </div>
+
+          <div className="text-sm">
+            <p className="mb-2 text-xs uppercase tracking-wider text-stone-500">4 bị động phối hợp</p>
+            <ul className="space-y-1.5 text-stone-300">
+              <li><span className="font-semibold text-stone-100">Nghề · {combo.name}:</span> {combo.description}</li>
+              {chase.map((id, i) => (
+                <li key={id}><span className="font-semibold text-stone-100">{i === 0 ? "Nghề" : "Hệ"} · {CHASE_PASSIVES[id].name}:</span> {CHASE_PASSIVES[id].description}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
