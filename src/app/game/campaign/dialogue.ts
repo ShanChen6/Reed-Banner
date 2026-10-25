@@ -100,3 +100,50 @@ export function markViewed(
 ): ViewedMap {
   return (map[sequence] ?? -1) >= index ? map : { ...map, [sequence]: index };
 }
+
+/** Ảnh nền khung thoại (Shan vẽ, public/art/campaign/bg/). Chỉ là trang trí: thiếu ảnh thì nền CSS vẫn đọc được. */
+export type DialogueBackdrop =
+  | "hoalu"
+  | "bohaikhau"
+  | "quannghi"
+  | "damnuoc"
+  | "dangquang"
+  | "thanhluy"
+  | "chung";
+
+const BACKDROP_OF: Readonly<Record<string, DialogueBackdrop>> = {
+  M01: "hoalu",
+  M02: "hoalu",
+  M03: "hoalu",
+  M04: "hoalu",
+  M05: "bohaikhau",
+  M06: "bohaikhau",
+  M07: "bohaikhau",
+  M08: "bohaikhau",
+  M09: "hoalu",
+  // Bàn việc, hội kiến và tổng kết: trong nhà quân nghị.
+  M10: "quannghi",
+  M11: "quannghi",
+  M12: "quannghi",
+  M13: "quannghi",
+  // Thành lũy của sứ quân: rời thành, đánh trùm, công thành.
+  M14: "thanhluy",
+  M15: "thanhluy",
+  M17: "thanhluy",
+  M18: "thanhluy",
+  M20: "thanhluy",
+  // Vùng sông nước, đầm lầy.
+  M16: "damnuoc",
+  M19: "damnuoc",
+  M21: "damnuoc",
+  M22: "quannghi",
+  M23: "hoalu",
+  M24: "dangquang",
+};
+
+export function missionBackdrop(missionId: string): DialogueBackdrop {
+  return BACKDROP_OF[missionId] ?? "chung";
+}
+
+export const backdropUrl = (b: DialogueBackdrop) =>
+  `/art/campaign/bg/${b}.webp`;

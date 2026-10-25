@@ -10,7 +10,9 @@ import { Portrait } from "../art/portraits";
 import { BasisBadge } from "./StoryBeats";
 import {
   MAIN_SPEAKER,
+  backdropUrl,
   dialogueLines,
+  missionBackdrop,
   markViewed,
   speakerLook,
   speakerSide,
@@ -78,7 +80,7 @@ function StagePortrait({
           {speaker.charAt(0).toUpperCase()}
         </span>
       )}
-      <figcaption className="max-w-24 truncate text-[11px] text-stone-300">
+      <figcaption className="max-w-28 truncate rounded bg-black/55 px-1.5 text-[11px] text-stone-100">
         {speaker}
       </figcaption>
     </figure>
@@ -215,7 +217,7 @@ export default function DialoguePlayer({
   /** Hết phần trình diễn. KHÔNG hoàn thành nhiệm vụ, không gửi gì lên server. */
   onFinished?: () => void;
   label?: string;
-  /** Ảnh nền tùy chọn (đường dẫn trong public/). Không có thì dùng nền CSS; thoại luôn đọc được không cần ảnh. */
+  /** Ảnh nền (đường dẫn trong public/). Mặc định theo nhiệm vụ; ảnh lỗi thì nền CSS vẫn đọc được. */
   background?: string;
 }) {
   const lines = dialogueLines(missionId, segments);
@@ -262,35 +264,36 @@ export default function DialoguePlayer({
   const activeSide = line.beat.speaker ? speakerSide(line.beat.speaker) : null;
   const hasPortraits = !!(stage.left || stage.right);
   const canSkip = viewed > index;
+  const art = background ?? backdropUrl(missionBackdrop(missionId));
 
   return (
     <section
       aria-label={label ?? "Thoại"}
-      className="flex flex-col gap-2 rounded-xl border border-amber-500/40 bg-[radial-gradient(ellipse_at_top,#5b3a22_0%,#2a1b12_60%,#140d09_100%)] bg-cover bg-center p-3"
-      style={
-        background
-          ? {
-              backgroundImage: `linear-gradient(#140d0966, #140d09dd), url(${background})`,
-            }
-          : undefined
-      }
+      className="flex flex-col gap-2 rounded-xl border border-amber-500/40 bg-cover bg-center p-3"
+      style={{
+        // Tranh nền sáng ở trên cho thấy cảnh, tối dần xuống khung chữ; ảnh chưa tải hay lỗi thì còn lớp nâu cuối.
+        backgroundImage: `linear-gradient(#140d0914 0%, #140d0955 45%, #140d09e6 100%), url(${art}), radial-gradient(ellipse at top, #5b3a22 0%, #2a1b12 60%, #140d09 100%)`,
+      }}
     >
-      {hasPortraits && (
-        <div className="flex items-end justify-between gap-2 px-1">
-          <StagePortrait
-            speaker={stage.left}
-            active={activeSide === "left"}
-            main={main}
-            align="left"
-          />
-          <StagePortrait
-            speaker={stage.right}
-            active={activeSide === "right"}
-            main={main}
-            align="right"
-          />
-        </div>
-      )}
+      {/* Sân khấu: chừa chỗ để tranh nền hiện ra; chân dung đứng hai bên. */}
+      <div className="flex min-h-24 items-end justify-between gap-2 px-1 sm:min-h-40">
+        {hasPortraits && (
+          <>
+            <StagePortrait
+              speaker={stage.left}
+              active={activeSide === "left"}
+              main={main}
+              align="left"
+            />
+            <StagePortrait
+              speaker={stage.right}
+              active={activeSide === "right"}
+              main={main}
+              align="right"
+            />
+          </>
+        )}
+      </div>
       <div
         ref={stageRef}
         tabIndex={0}
