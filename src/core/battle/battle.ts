@@ -576,6 +576,26 @@ function skillTargets(
   }
 }
 
+/**
+ * Vị trí được chọn cho kỹ năng đơn mục tiêu của nhân vật đang đánh: đối thủ còn sống (Khiêu khích thì chỉ kẻ khiêu khích)
+ * hoặc đồng đội còn sống. Kỹ năng không chọn mục tiêu trả mảng rỗng.
+ */
+export function skillTargetOptions(state: BattleState, def: SkillDef): number[] {
+  const own = state.sides[state.turn.side];
+  const foe = state.sides[otherSide(state.turn.side)];
+  if (def.target === "ally") return aliveIndices(own);
+  if (def.target !== "enemy") return [];
+  const forced = taunter(state, foe);
+  return forced === null ? aliveIndices(foe) : [forced];
+}
+
+/** Mục tiêu core tự chọn khi hành động kỹ năng không kèm `target`. */
+export function defaultSkillTarget(state: BattleState, def: SkillDef): number | null {
+  if (def.target === "ally") return state.turn.actor;
+  if (def.target !== "enemy") return null;
+  return singleTarget(state, state.turn.actor);
+}
+
 function hpRatio(f: Fighter): number {
   return f.hp / f.maxHp;
 }
