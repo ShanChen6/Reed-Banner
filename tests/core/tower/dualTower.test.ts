@@ -4,12 +4,10 @@ import {
   isDualTowerV1,
   newProfile,
   NEW_DUAL_TOWER,
-  newTowerRun,
   parseDualTower,
   parseProfile,
   parseStones,
   parseTowerMode,
-  towerModeOrLegacy,
   TRIAL_FLOORS,
 } from "../../../src/core";
 
@@ -52,32 +50,29 @@ describe("song tháp: dữ liệu", () => {
     assert.deepEqual(parseProfile(roundtrip(back)), back);
   });
 
-  it("legacy: hồ sơ cũ không có trường mới, tower.best/run giữ nguyên", () => {
+  it("hồ sơ cũ: không có trường mới thì song tháp rỗng, bỏ dữ liệu leo tháp cũ", () => {
     const p = newProfile();
-    const run = { ...newTowerRun({ ...p, main: { ...p.main, level: 10 } }, 9), floor: 3 };
-    const old: Record<string, unknown> = { ...p, tower: { best: 12, run } };
+    const old: Record<string, unknown> = { ...p, tower: { best: 12, run: null } };
     delete old.stones;
     delete old.dualTower;
     const back = parseProfile(old);
-    assert.equal(back.tower.best, 12);
-    assert.deepEqual(back.tower.run, run);
+    assert.equal("tower" in back, false);
     assert.equal(back.stones, 0);
     assert.deepEqual(back.dualTower, NEW_DUAL_TOWER);
   });
 
-  it("cô lập: tower.best không mở Trial, dualTower không đụng tower", () => {
+  it("leo tháp cũ không mở Trial, không làm mất dữ liệu song tháp", () => {
     const p = newProfile();
-    const back = parseProfile({
+    const fresh = parseProfile({ ...p, tower: { best: 30, run: null } });
+    assert.ok(isDualTowerV1(fresh.dualTower));
+    if (isDualTowerV1(fresh.dualTower)) assert.equal(fresh.dualTower.trial.cleared, 0);
+    const kept = parseProfile({
       ...p,
       tower: { best: 30, run: null },
       dualTower: { schema: 1, trial: { cleared: 2 } },
     });
-    assert.equal(back.tower.best, 30);
-    assert.equal(parseProfile({ ...p, tower: { best: 30, run: null } }).dualTower.schema, 1);
-    const fresh = parseProfile({ ...p, tower: { best: 30, run: null } });
-    assert.ok(isDualTowerV1(fresh.dualTower));
-    if (isDualTowerV1(fresh.dualTower)) assert.equal(fresh.dualTower.trial.cleared, 0);
-    assert.equal(back.tower.run, null);
+    assert.ok(isDualTowerV1(kept.dualTower));
+    if (isDualTowerV1(kept.dualTower)) assert.equal(kept.dualTower.trial.cleared, 2);
   });
 
   it("stones: âm/NaN/không nguyên/chuỗi → 0; trần an toàn", () => {
@@ -133,12 +128,9 @@ describe("song tháp: dữ liệu", () => {
     assert.deepEqual(parseProfile(roundtrip(back)).dualTower, future);
   });
 
-  it("mode: hỗ trợ, không hỗ trợ và fallback", () => {
-    for (const m of ["legacy", "trial", "destiny"]) assert.equal(parseTowerMode(m), m);
-    for (const bad of ["survival", "", null, undefined, 1, "TRIAL"]) {
+  it("mode: chỉ Trial và Destiny", () => {
+    for (const m of ["trial", "destiny"]) assert.equal(parseTowerMode(m), m);
+    for (const bad of ["legacy", "survival", "", null, undefined, 1, "TRIAL"])
       assert.equal(parseTowerMode(bad), null);
-      assert.equal(towerModeOrLegacy(bad), "legacy");
-    }
-    assert.equal(towerModeOrLegacy("destiny"), "destiny");
   });
 });

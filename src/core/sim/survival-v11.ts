@@ -26,7 +26,7 @@ import {
 } from "../survival";
 import { DEFAULT_MAX_TURNS } from "./sim";
 import { pickRevive, simulateSurvival } from "./survival";
-import { simProfile } from "./tower";
+import { simProfile } from "./profile";
 
 export const SURVIVAL_V11_RESERVE_RATES = [0, 0.05, 0.1, 0.15, 0.2] as const;
 

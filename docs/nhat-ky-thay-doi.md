@@ -1,5 +1,10 @@
 # Nhật ký thay đổi thiết kế
 
+## 25/10/2026 — Gỡ leo tháp cũ
+
+- Shan yêu cầu xóa chế độ leo tháp cũ (`/tower`, lộ trình 5.1). Giữ Tháp Thí Luyện và Tháp Vận Mệnh.
+- Bỏ theo: bảng xếp hạng "Leo tháp", nhiệm vụ tuần "Qua 10 tầng tháp", thành tựu "Leo tới tầng 10/25", `pnpm sim -- --tower`. Hồ sơ cũ mất trường `tower` khi lưu lại; dữ liệu Song Tháp (`dualTower`, đá) giữ nguyên.
+
 ## 24/10/2026 — Nghiệm thu Song Tháp
 
 - Trial **GO có điều kiện**, Destiny **ADJUST/limited beta**, public release tổng thể **ADJUST** cho đến khi có feature flag độc lập, staging migration/restore drill, browser/device smoke và CI sau merge `develop`.

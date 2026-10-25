@@ -480,79 +480,9 @@ describe("trận đánh trùm", () => {
   });
 });
 
-describe("trận leo tháp", () => {
-  it("bắt đầu lượt leo, không mở hai trận một tầng, thắng thì chờ chọn thưởng", async () => {
-    const store = new MemoryMatchStore();
-    const profiles = new MemoryProfileStore();
-    let n = 0;
-    const deps = {
-      store,
-      profiles,
-      now: T0,
-      seed: 11,
-      newId: () => `m_t${++n}`,
-    };
-    const body = { ...input, tower: true };
-    assert.equal(parseNewBattle({ ...body, tower: 1 }), null);
-    assert.equal(parseNewBattle({ ...body, stage: "coLau" }), null);
-    const r = await createBattleFor("g_t", parseNewBattle(body)!, deps);
-    assert.ok(r.ok);
-    assert.equal(r.view.tower, 1);
-    assert.equal(r.view.battle.sides[1].fighters.length, 3);
-    const run = (await loadProfile(profiles, "g_t")).profile.tower.run!;
-    assert.equal(run.active, true);
-    assert.equal(run.floor, 1);
-    assert.deepEqual(
-      await createBattleFor("g_t", parseNewBattle(body)!, deps),
-      { ok: false, error: "badRequest" },
-    );
-
-    const rec = (await store.get(r.id))!;
-    const battle = { ...rec.match.battle, winner: 0 as const };
-    const f = battle.sides[0].fighters;
-    battle.sides = [
-      {
-        ...battle.sides[0],
-        food: 35,
-        fighters: [
-          { ...f[0]!, hp: Math.round(f[0]!.maxHp / 2) },
-          { ...f[1]!, hp: 0 },
-          f[2]!,
-        ],
-      },
-      battle.sides[1],
-    ];
-    assert.ok(
-      await store.save(
-        { ...rec, match: { ...rec.match, battle, seq: rec.match.seq + 1 } },
-        rec.match.seq,
-      ),
-    );
-    const done = await getBattle(r.id, "g_t", {
-      store,
-      profiles,
-      now: T0 + 1000,
-    });
-    assert.ok(done.ok && done.outcome?.tower);
-    assert.deepEqual(done.outcome.tower, {
-      floor: 1,
-      won: true,
-      best: 1,
-      newBest: true,
-      bonusGold: 0,
-    });
-    const after = (await loadProfile(profiles, "g_t")).profile.tower;
-    assert.equal(after.best, 1);
-    assert.equal(after.run!.floor, 2);
-    assert.equal(after.run!.active, false);
-    assert.equal(after.run!.food, 35);
-    assert.equal(after.run!.hp[1], 0);
-    assert.ok(Math.abs(after.run!.hp[0]! - 0.5) < 0.01);
-    // Còn thưởng chưa chọn thì chưa lên tầng được.
-    assert.deepEqual(
-      await createBattleFor("g_t", parseNewBattle(body)!, deps),
-      { ok: false, error: "badRequest" },
-    );
+describe("leo tháp cũ đã gỡ", () => {
+  it("từ chối yêu cầu tạo trận còn mang `tower`", () => {
+    assert.equal(parseNewBattle({ ...input, tower: true }), null);
   });
 });
 

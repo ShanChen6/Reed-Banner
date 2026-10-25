@@ -5,12 +5,11 @@ import {
   isDualTowerV1,
   trialFloorId,
   FOOD_UPKEEP,
-  TOWER_FOOD_START,
 } from "../../src/core";
 import { getBattle } from "../../src/server/battles";
 import { loadProfile, MemoryProfileStore, updateProfile } from "../../src/server/profiles";
 import { MemoryMatchStore } from "../../src/server/store";
-import { abandonTrialBattle, startTrialBattle, trialBattleSeed } from "../../src/server/trial";
+import { abandonTrialBattle, startTrialBattle, TRIAL_FOOD, trialBattleSeed } from "../../src/server/trial";
 
 const T0 = 5_000_000;
 
@@ -79,7 +78,7 @@ describe("vòng đời trận Trial", () => {
     assert.equal(r.resumed, false);
     const rec = await deps.store.get(r.id);
     assert.ok(rec?.match.trial);
-    assert.equal(rec.match.battle.sides[0].food, TOWER_FOOD_START - FOOD_UPKEEP);
+    assert.equal(rec.match.battle.sides[0].food, TRIAL_FOOD - FOOD_UPKEEP);
     for (const f of rec.match.battle.sides[0].fighters) assert.equal(f.hp, f.maxHp);
     const { profile, trial } = await dual(profiles);
     assert.deepEqual(trial.active, { matchId: r.id, floor: 1 });
@@ -153,7 +152,6 @@ describe("vòng đời trận Trial", () => {
     assert.equal(profile.stones, before.stones + 3);
     assert.equal(profile.gold, before.gold);
     assert.equal(profile.main.xp, before.main.xp);
-    assert.deepEqual(profile.tower, before.tower);
     const next = await startTrialBattle("g_1", input(2), deps);
     assert.ok(next.ok);
   });
