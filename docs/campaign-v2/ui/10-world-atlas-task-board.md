@@ -14,7 +14,7 @@
 | 5 | MAP-ART-02 place approved image under SVG | Claude/Codex | MAP-ART-00, MAP-03 | Image fallback and dynamic hotspots |
 | 6 | MAP-QA-01 | Claude/Codex | MAP-ART-02 | Lint/typecheck/test/build + historical audit |
 
-**Tiến độ:** MAP-00 DONE (`11-map-00-audit.md`), MAP-01 DONE (khung ba cột, Noto Serif trong `.campaign-atlas`). MAP-02, MAP-03, MAP-ART-02, MAP-QA-01 chưa làm.
+**Tiến độ:** MAP-00 DONE (`11-map-00-audit.md`), MAP-01 DONE (khung ba cột, Noto Serif trong `.campaign-atlas`). MAP-ART-00 DONE (Shan gửi tranh 1536×1024 không chữ, 12 thành). MAP-02 + MAP-ART-02 DONE (`WorldMap.tsx`, `StrongholdPanel`, bản đồ 24 điểm cũ đã gỡ). MAP-03, MAP-QA-01 chưa làm.
 
 **Không cản UI code vì thiếu ảnh**: MAP-01..03 dùng SVG/CSS fallback, chỉ MAP-ART-02 chờ hình duyệt. BG-01 seven scene backdrops DONE và không phải asset world map.
 

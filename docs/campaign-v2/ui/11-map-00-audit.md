@@ -37,7 +37,7 @@ interface WorldStronghold {
 - Hoa Lư gắn M01–M04, M09, M10, M23, M24. Bố Hải Khẩu gắn M05–M08. Mỗi sứ quân còn lại gắn đúng nhiệm vụ kết cục của mình.
 - Bình Kiều (Ngô Xương Xí, M12) có `at: null` vì sử chép "nay không rõ chỗ nào". Bản đồ hiện nó trong danh sách riêng.
 - M22 không gắn đất nào (`UNANCHORED_MISSIONS`), chỉ hiện trong danh sách nhiệm vụ của Chương VI.
-- Tọa độ là bố cục minh họa: lấy kinh/vĩ độ gần đúng như `mapLayout.ts` rồi dãn ra khung 3:2. Thứ tự đông/tây/bắc/nam giữ đúng. Không suy ra nơi giao chiến.
+- Tọa độ là bố cục minh họa: lấy kinh/vĩ độ gần đúng như bản đồ 24 điểm cũ rồi dãn ra khung 3:2. Thứ tự đông/tây/bắc/nam giữ đúng. Không suy ra nơi giao chiến. Từ MAP-ART-02, tọa độ được đo lại theo tâm các thành trong tranh Shan vẽ (`public/art/campaign/world-map.webp`), và test kiểm thứ tự vùng vẫn giữ đúng.
 - Test: `tests/game/campaign-world-atlas.test.ts`.
 
 ## 4. Ảnh mẫu Shan gửi (26/10)
