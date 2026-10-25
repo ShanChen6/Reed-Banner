@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { describe, it } from "node:test";
 import { STORY_NODES, missionCopy, type StoryBeat } from "../../src/core";
 import {
   MAIN_SPEAKER,
   dialogueLines,
+  backdropUrl,
   markViewed,
+  missionBackdrop,
   speakerLook,
   speakerSide,
   stageSpeakers,
@@ -102,5 +105,14 @@ describe("Trình phát thoại Chiến dịch", () => {
     assert.deepEqual(a, { "M01:intro": 3 });
     assert.equal(markViewed(a, "M01:intro", 1), a);
     assert.deepEqual(markViewed(a, "M01:intro", 5), { "M01:intro": 5 });
+  });
+
+  it("mọi nhiệm vụ có ảnh nền thoại tồn tại trong public/", () => {
+    for (const node of STORY_NODES) {
+      const url = backdropUrl(missionBackdrop(node.id));
+      assert.ok(existsSync(`public${url}`), `${node.id} ${url}`);
+    }
+    assert.equal(missionBackdrop("M06"), "bohaikhau");
+    assert.equal(missionBackdrop("M24"), "dangquang");
   });
 });
