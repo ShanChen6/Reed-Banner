@@ -75,7 +75,6 @@ import CampaignEnding from "./CampaignEnding";
 import WarlordCodex, { MissionSources } from "./HistoricalCodex";
 import {
   BasisBadge,
-  Beats,
   FACTION_STATUS_TEXT,
   SourceNotes,
   TONE_TEXT,
@@ -149,9 +148,38 @@ function nextMission(
   return null;
 }
 
-function ChoiceBeats({ nodeId, choice }: { nodeId: string; choice?: string }) {
-  const picked = missionCopy(nodeId)?.choices.find((c) => c.id === choice);
-  return picked ? <Beats beats={picked.beats} /> : null;
+/** Lời đáp đã chọn rồi (nếu có) kết thúc nhiệm vụ, phát từng câu. Chỉ trình diễn, không gửi gì lên server. */
+function StoryLines({
+  profile,
+  nodeId,
+  choice,
+  outro,
+}: {
+  profile: Profile;
+  nodeId: string;
+  choice?: string;
+  outro?: boolean;
+}) {
+  const copy = missionCopy(nodeId);
+  const picked = copy?.choices.find((c) => c.id === choice);
+  const segments = [
+    ...(picked
+      ? [{ section: `choice:${picked.id}`, beats: picked.beats }]
+      : []),
+    ...(outro && copy ? [{ section: "outro", beats: copy.outro }] : []),
+  ];
+  if (segments.length === 0) return null;
+  const sequence = segments.map((s) => s.section).join("+");
+  return (
+    <DialoguePlayer
+      key={`${nodeId}:${sequence}`}
+      missionId={nodeId}
+      sequence={sequence}
+      label={outro ? `Kết thúc ${nodeId}` : `Lời đáp ${nodeId}`}
+      segments={segments}
+      main={profile}
+    />
+  );
 }
 
 function RewardModal({
@@ -189,13 +217,12 @@ function RewardModal({
         </h2>
         {copy && (
           <div className="mt-3">
-            <ChoiceBeats
+            <StoryLines
+              profile={profile}
               nodeId={node.id}
               choice={profile.campaign.storyChoices[node.id]}
+              outro
             />
-            <div className="mt-2">
-              <Beats beats={copy.outro} />
-            </div>
           </div>
         )}
         <ul className="mt-3 flex flex-col gap-1 rounded-md bg-black/30 p-2 text-sm">
@@ -1099,8 +1126,12 @@ export default function ChapterOne({
                     Lựa chọn chỉ đổi lời kể; kết quả nhiệm vụ và phần thưởng như
                     nhau.
                   </p>
-                  <ChoiceBeats nodeId={step.nodeId} choice={choice} />
-                  {done && <Beats beats={copy.outro} />}
+                  <StoryLines
+                    profile={profile}
+                    nodeId={step.nodeId}
+                    choice={choice}
+                    outro={done}
+                  />
                   {!isBattle && !done && (
                     <button
                       type="button"
