@@ -55,13 +55,14 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/ward"), import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
           import("@/app/game/stage/flame"), import("@/app/game/stage/slam"),
           import("@/app/game/stage/needle"), import("@/app/game/stage/bulwark"),
           import("@/app/game/stage/silver"), import("@/app/game/stage/coins"),
+          import("@/app/game/stage/banner"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -173,10 +174,19 @@ export default function RigPreview({ id, size, onSnapshot }: {
         if (coins) loaded.onStrike?.((kind) => {
           if (kind === "ultimate" && loaded) coins.scatter({ x: el.clientWidth - 60, y: el.clientHeight * 0.5 }, rig.height * loaded.view.scale.y);
         });
+        // Thiết trận hệ Kim: khiên nứt ở mép phải khung, mũi tên vàng quanh nhân vật.
+        const formation = team === "ironFormation" ? ironFormation(app.stage, rig.fxColor) : null;
+        if (formation) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          formation.shatter({ x: el.clientWidth - 60, y: el.clientHeight * 0.5 }, size);
+          formation.rally({ x: loaded.view.x, y: loaded.view.y }, size, 0.2);
+        });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
           loaded?.update(dt);
           coins?.update(dt);
+          formation?.update(dt);
           needles?.update(dt);
           bulwark?.update(dt);
           bolts?.update(dt);

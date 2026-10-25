@@ -115,7 +115,8 @@ export interface WarriorRig {
    * đầu và dựng vòm khiên đất quanh cả đội mình; `needleVolley` chỉ ở tuyệt chiêu, bắn tỏa kim bạc tới từng đối thủ;
    * `steelBulwark` chỉ ở tuyệt chiêu, dựng tường thép trước mặt chính mình; `silverGrace` chỉ ở tuyệt chiêu, rải kim
    * bạc và vòng sáng hồi máu quanh từng đồng đội; `coinScatter` chỉ ở tuyệt chiêu, tung tiền vàng khỏi đối thủ đứng
-   * đầu kèm ấn câm lặng.
+   * đầu kèm ấn câm lặng; `ironFormation` chỉ ở tuyệt chiêu, khiên nứt trên từng đối thủ và mũi tên vàng ở từng đồng
+   * đội.
    */
   readonly strikeFx?:
     | "lightning"
@@ -129,7 +130,8 @@ export interface WarriorRig {
     | "needleVolley"
     | "steelBulwark"
     | "silverGrace"
-    | "coinScatter";
+    | "coinScatter"
+    | "ironFormation";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1303,6 +1305,47 @@ const TO_KIM: WarriorRig = {
     anchor: { x: 800, y: 900 }, scale: 0.85 },
 };
 
+/**
+ * Nghiêm Thiết, quân sư hệ Kim (tướng cửa hàng). Bộ tranh Shan gửi 25/10 (nền trong suốt sẵn; tranh ra chiêu gửi trùng
+ * tranh đánh thường nên ra chiêu dùng nhịp đẩy cờ của rig). Tranh đánh thường vẽ cờ chĩa sang trái nên được lật ngang.
+ * Ảnh đứng tách lớp bằng code: cờ lệnh cùng nắm tay xoay quanh cổ tay theo nhịp giáo như Lê Hoàn, bàn tay cầm thẻ tre
+ * và đầu tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const NGHIEM_THIET: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "nghiem-thiet",
+  texScale: 0.5,
+  foot: { x: 560, y: 1500 },
+  height: 1400,
+  parts: {
+    body: { x: 207, y: 113, w: 798, h: 1409 },
+    armR: { x: 745, y: 650, w: 181, h: 225 },
+    sword: { x: 25, y: 1, w: 354, h: 1495 },
+    arm: { x: 301, y: 568, w: 105, h: 88 },
+    head: { x: 521, y: 113, w: 147, h: 223 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 360, y: 610 },
+    elbowR: { x: 790, y: 700 },
+    neck: { x: 590, y: 330 },
+  },
+  blade: [{ x: 362, y: 600 }, { x: 362, y: 20 }],
+  strikeFx: "ironFormation",
+  fxColor: 0x9ea4ad,
+  // Chĩa cờ lệnh về phía đối thủ (đánh thường), giơ cao cờ đẩy thẻ tre ra lệnh (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 0, y: 145 },
+      anchor: { x: 308, y: 1450 }, scale: 1, burst: { x: 994, y: 440 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 26, y: 4 },
+      anchor: { x: 450, y: 1480 }, scale: 1, burst: { x: 930, y: 560 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 34, y: 48 },
+    anchor: { x: 1000, y: 820 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1329,6 +1372,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   caoKien: CAO_KIEN,
   chauNgoc: CHAU_NGOC,
   toKim: TO_KIM,
+  nghiemThiet: NGHIEM_THIET,
 };
 
 export function rigOf(id: string): Rig | null {
