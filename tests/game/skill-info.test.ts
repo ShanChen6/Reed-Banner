@@ -25,3 +25,14 @@ describe("mô tả kỹ năng trang giới thiệu", () => {
     for (const e of ELEMENTS) assert.ok(passiveText(e).length > 20);
   });
 });
+
+describe("điều kiện kích hoạt bị động", () => {
+  it("mọi bị động phối hợp/truy kích và bị động Nộ đều có điều kiện", async () => {
+    const { COMBO_PASSIVES, CHASE_PASSIVES, RAGE_MAX, RAGE_PER_DRUM } = await import("../../src/core");
+    const { chaseTriggerText, comboTriggerText, rageTriggerText } = await import("../../src/app/game/battle/labels");
+    for (const p of Object.values(COMBO_PASSIVES)) assert.equal(comboTriggerText(p).length, 3);
+    for (const p of Object.values(CHASE_PASSIVES)) assert.equal(chaseTriggerText(p).length, 2);
+    const rage = rageTriggerText().join(" ");
+    assert.ok(rage.includes(`+${RAGE_PER_DRUM}`) && rage.includes(String(RAGE_MAX)));
+  });
+});
