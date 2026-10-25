@@ -38,8 +38,8 @@ Từ 22/10/2026 mọi nhân vật chơi được dùng **3 kỹ năng nghề + 2
 | Nhóm | Số người | Có được | Ô 5 |
 |---|---|---|---|
 | Tướng thường | 42 (5 khởi đầu + 37 ở cửa hàng) | Có sẵn hoặc mua 1 500 / 3 000 vàng | Tuyệt chiêu, 100 năng lượng |
-| Tướng lịch sử | 6 | Gia nhập khi qua màn chiến dịch lần đầu, không bán | Chiêu riêng, 100 năng lượng |
-| Sứ quân | 12 | Mở bán ở cửa hàng sau khi qua màn có sứ quân đó, 3 000 vàng | Chiêu riêng, 60 năng lượng (Đỗ Cảnh Thạc 80) |
+| Tướng lịch sử | 6 | Gia nhập theo mốc chương Campaign V2, không bán | Chiêu riêng, 100 năng lượng |
+| Sứ quân | 12 | Mở bán ở cửa hàng sau nhiệm vụ mốc Campaign V2 của sứ quân đó (M08–M21), 3 000 vàng | Chiêu riêng, 60 năng lượng (Đỗ Cảnh Thạc 80) |
 
 - Mua về hoặc gia nhập đều vào hồ sơ: mua ở cấp 1, tướng lịch sử gia nhập ở cấp của màn với đủ điểm kỹ năng để tự nâng.
 - **Vai trò ô 5 theo nghề** (khung chung khi đặt tuyệt chiêu; sắc thái lấy từ hệ):
@@ -154,12 +154,12 @@ In đậm là 5 người khởi đầu (có sẵn, đội 3vs3 mặc định là
 
 ## 5. Tướng lịch sử
 
-Sáu tướng theo Đinh Bộ Lĩnh dẹp loạn, nhân vật lịch sử được hư cấu hóa. Gia nhập khi qua màn chiến dịch lần đầu ([Chế độ chơi](09-che-do-choi.md#21-chương-1-cờ-lau-dẹp-loạn-claude-đặt-19102026-chờ-shan-duyệt)), không bán. Chiêu riêng 100 năng lượng, mở ở cấp 10.
+Sáu tướng theo Đinh Bộ Lĩnh dẹp loạn, nhân vật lịch sử được hư cấu hóa. Gia nhập theo mốc chương Campaign V2 (`docs/campaign-v2/recruits.md`), không bán. Chiêu riêng 100 năng lượng, mở ở cấp 10.
 
 | Tướng | Nghề | Hệ | Gia nhập | Chiêu riêng | Tác dụng |
 |---|---|---|---|---|---|
 | Nguyễn Bặc | Tướng sĩ | 🔥 Hỏa | Cờ lau tập trận | **Định Quốc Hỏa Kỳ** | 240% ATK 1 đối thủ, Thiêu đốt 15% ATK 2 lượt; cả đội Công +15% 2 lượt |
-| Đinh Điền | Binh lính | ⛰️ Thổ | Thử tài ở Bố Hải Khẩu | **Ngoại Giáp Hộ Quân** | Cả đội Khiên 20% máu; bản thân Khiêu khích và Phản đòn 35% 2 lượt |
+| Đinh Điền | Binh lính | ⛰️ Thổ | Luyện binh ở Bố Hải Khẩu | **Ngoại Giáp Hộ Quân** | Cả đội Khiên 20% máu; bản thân Khiêu khích và Phản đòn 35% 2 lượt |
 | Lưu Cơ | Mưu sĩ | ⚙️ Kim | Thu phục Đằng Châu | **Đô Hộ Phủ Lệnh** | Cả đội đối thủ −30 năng lượng, 50% Câm lặng 1 lượt, Thủ −15% 2 lượt |
 | Trịnh Tú | Y sư | 🌿 Mộc | Đánh Bình Kiều | **Hoa Lư Thảo Dược** | Hồi 28% máu, Thanh tẩy và Hồi phục 5%/lượt 2 lượt cho cả đội (tăng 20/10/2026 từ 22%) |
 | Lê Hoàn | Quân sư | ⚡ Lôi | Vây thành Tam Đái | **Thập Đạo Lôi Binh** | 100% ATK cả đội đối thủ, Công −25% 2 lượt; đội mình +20 năng lượng |
@@ -169,7 +169,7 @@ Tên chiêu gợi tới chức tước lịch sử: Nguyễn Bặc là Định Q
 
 ## 6. Sứ quân
 
-Mười hai sứ quân là đối thủ thủ lĩnh của chiến dịch chương 1. Sau khi người chơi **qua màn có sứ quân đó lần đầu**, sứ quân mở bán ở cửa hàng giá **3 000 vàng**, mua về ở cấp 1. Nghề, hệ và chiêu riêng giống hệt khi làm đối thủ; riêng phe người chơi thì chiêu riêng mở ở cấp 10 như mọi ô 5 (làm đối thủ thì sứ quân luôn mang chiêu riêng). Giá năng lượng 60 (trùm 80) giữ như ở chiến dịch vì chiêu được chỉnh cho AI dùng; mô phỏng mục 8 cho thấy sứ quân phe người chơi không mạnh hơn hai nhóm kia nên không tăng giá.
+Mười hai sứ quân nằm trong danh mục 12 sứ quân dùng chung (`src/core/campaign/warlords.ts`). Sau khi server ghi **nhiệm vụ mốc Campaign V2 của sứ quân đó** (mốc gặp sứ quân, M08–M21, cùng mốc mở Đánh trùm với 6 sứ quân bị đánh dẹp; không phân biệt sứ quân liên minh, quy phục hay bị đánh dẹp trong cốt truyện), sứ quân mở bán ở cửa hàng giá **3 000 vàng**, mua về ở cấp 1. Nghề, hệ và chiêu riêng giống hệt khi làm đối thủ; riêng phe người chơi thì chiêu riêng mở ở cấp 10 như mọi ô 5 (làm đối thủ thì sứ quân luôn mang chiêu riêng). Giá năng lượng 60 (trùm 80) giữ như ở chiến dịch vì chiêu được chỉnh cho AI dùng; mô phỏng mục 8 cho thấy sứ quân phe người chơi không mạnh hơn hai nhóm kia nên không tăng giá.
 
 | Sứ quân | Tước hiệu | Nghề | Hệ | Đất (màn mở bán) | Chiêu riêng | NL | Tác dụng |
 |---|---|---|---|---|---|---|---|

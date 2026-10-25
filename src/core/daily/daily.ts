@@ -12,7 +12,7 @@ import {
   type Profession,
 } from "../battle";
 import type { SpawnWeights } from "../board";
-import { HOME_TERRAIN, RAID_STAGES, stageFighter } from "../campaign";
+import { HOME_TERRAIN, WARLORD_ENCOUNTERS, warlordLeader } from "../campaign";
 import {
   autoProgress,
   leveledFoe,
@@ -53,8 +53,8 @@ export interface DailySetup {
   readonly team: FighterConfig[];
   /** Đối thủ: một sứ quân dẫn 2 tùy tướng, đánh trên sân nhà của sứ quân. */
   readonly foes: FighterConfig[];
-  /** Màn của sứ quân (để hiện tên đất). */
-  readonly stage: string;
+  /** Sứ quân dẫn đội đối thủ (id trong danh mục 12 sứ quân, để hiện tên đất). */
+  readonly warlord: string;
   readonly weights: SpawnWeights;
   readonly difficulty: Difficulty;
 }
@@ -63,7 +63,8 @@ export function dailySetup(seed: number): DailySetup {
   const rng = createRng(seed >>> 0);
   const element = ELEMENTS[rng.int(0, ELEMENTS.length - 1)]!;
   const profession = PROFESSIONS[rng.int(0, PROFESSIONS.length - 1)]!;
-  const stage = RAID_STAGES[rng.int(0, RAID_STAGES.length - 1)]!;
+  const warlord =
+    WARLORD_ENCOUNTERS[rng.int(0, WARLORD_ENCOUNTERS.length - 1)]!;
   const picks = pickDistinct(rng, POOL, 4);
   const p = newProfile();
   const [main] = profileTeam({
@@ -72,13 +73,13 @@ export function dailySetup(seed: number): DailySetup {
     profession,
     main: autoProgress(DAILY_LEVEL, null),
   });
-  const leader = stageFighter(stage.foes[0]!, DAILY_LEVEL);
+  const leader = warlordLeader(warlord, DAILY_LEVEL);
   return {
     element,
     profession,
     team: [main!, ...picks.slice(0, 2).map((f) => leveledFoe(f, DAILY_LEVEL))],
     foes: [leader, ...picks.slice(2).map((f) => leveledFoe(f, DAILY_LEVEL))],
-    stage: stage.id,
+    warlord: warlord.id,
     weights: HOME_TERRAIN[leader.element],
     difficulty: DAILY_DIFFICULTY,
   };

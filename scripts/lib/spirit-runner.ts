@@ -1,4 +1,4 @@
-import { comboSkillCost, chooseMove, createBattle, fighterSkill, hasEffect, inspectSkillChoices, isAlive, playAiTurn, stageById, type AiView, type BattleAction, type BattleEvent, type SkillChoice, type SpiritExperiment } from '../../src/core';
+import { comboSkillCost, chooseMove, createBattle, fighterSkill, hasEffect, inspectSkillChoices, isAlive, playAiTurn, type AiView, type BattleAction, type BattleEvent, type SkillChoice, type SpiritExperiment } from '../../src/core';
 import type { AuditCase } from '../../src/core/sim/audit';
 import * as before from '../fixtures/2026-10-22-ai-before';
 
@@ -106,7 +106,7 @@ export function runMeasured(c:AuditCase,ai:'before'|'after',rule:SpiritExperimen
  // Cap counts ordinary side turns, not extra actions. A chunk includes every extra action in that same turn.
  while(state.winner===null&&state.turn.number<=cap&&chunks<cap*2){
   const oldNumber=state.turn.number;
-  const r=playAiTurn(state,c.group==='campaign'&&state.turn.side!==c.focalSide?stageById(c.stage!)!.difficulty:'normal',0,{chooseSkill:choose,chooseMove:ai==='before'?before.chooseMove:chooseMove,...(ai==='before'?{bestWhirl:before.bestWhirl}:{})});
+  const r=playAiTurn(state,c.group==='campaign'&&state.turn.side!==c.focalSide?c.foeDifficulty!:'normal',0,{chooseSkill:choose,chooseMove:ai==='before'?before.chooseMove:chooseMove,...(ai==='before'?{bestWhirl:before.bestWhirl}:{})});
   events(r.events);state=r.state;chunks++;
   if(capture){let atTurn=oldNumber;const observed=[];for(const e of r.events){if(e.type==='combo'&&(e.turn??0)>cap)continue;if(e.type==='upkeep')atTurn++;if(atTurn<=cap&&['combo','damage','sustain','spirit','auditTurn','ko','end','effectEnd','skill','food'].includes(e.type))observed.push({...e,atTurn});}trace.push({turn:oldNumber,events:observed});}
   if(state.turn.number===oldNumber&&state.winner===null)throw new Error('Non-advancing simulation');

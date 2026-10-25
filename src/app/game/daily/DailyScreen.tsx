@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import {
   DAILY_GOLD,
   DAILY_LEVEL,
-  stageById,
+  warlordEncounter,
   type DailyScore,
   type FighterConfig,
 } from "@/core";
@@ -80,7 +80,7 @@ export default function DailyScreen() {
   }
 
   const { setup, mine, top = [] } = data;
-  const stage = stageById(setup.stage);
+  const warlord = warlordEncounter(setup.warlord);
 
   const play = async () => {
     if (mine && !mine.result) {
@@ -152,7 +152,10 @@ export default function DailyScreen() {
           <p className="text-sm text-stone-300">
             Đội cho sẵn, cấp {DAILY_LEVEL}, không trang bị. Đối thủ đánh ở mức{" "}
             {DIFFICULTY_NAME[setup.difficulty]}
-            {stage ? `, trên sân nhà ${stage.region}` : ""}. Bạn đi trước. Ai đi
+            {warlord
+              ? `, trên sân nhà ${warlord.place} của ${warlord.foes[0]!.name}`
+              : ""}
+            . Bạn đi trước. Ai đi
             cùng nước sẽ gặp cùng ô rơi.
           </p>
           <div className="grid gap-3 sm:grid-cols-2">

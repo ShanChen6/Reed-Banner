@@ -10,7 +10,7 @@ import {
 
 describe("Campaign non-combat event registry", () => {
   it("contains only non-combat nodes and no BattleState/foe payload", () => {
-    assert.equal(CAMPAIGN_EVENTS.length, 14);
+    assert.equal(CAMPAIGN_EVENTS.length, 15);
     for (const event of CAMPAIGN_EVENTS) {
       const node = storyNodeById(event.nodeId)!;
       assert.ok(!isCombatStoryNode(node), event.nodeId);
