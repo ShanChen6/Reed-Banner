@@ -13,6 +13,7 @@
 | MAP-01 | Sử ký 6 chương | Shan tự làm (bản đồ + ảnh nền), Claude ghép sau | UI-00 |
 | MAP-02 | Bản đồ theo vùng, panel nhiệm vụ | Shan tự làm (bản đồ + ảnh nền), Claude ghép sau | MAP-01 |
 | MAP-03 | Tích hợp atlas/map/mission | Shan tự làm (bản đồ + ảnh nền), Claude ghép sau | UI-04, MAP-02 |
+| BG-01 | Ảnh nền khung thoại | DONE: 7 tranh Shan vẽ ở `public/art/campaign/bg/`, chọn theo nhiệm vụ (`missionBackdrop`); `atlas.webp` để dành cho MAP-01 | UI-01 |
 | UI-05 | Sử liệu, mobile và optional art | TODO | MAP-03 |
 | QA-01 | Nghiệm thu toàn UI | TODO | UI-05 |
 | AUD-01…07 | Âm thanh, SFX, BGM, Voice | **TODO — DEFERRED** | Chỉ thực hiện khi UI hoàn thành, có yêu cầu mới |
