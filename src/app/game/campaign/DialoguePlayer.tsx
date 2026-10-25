@@ -43,7 +43,7 @@ function writeViewed(map: ViewedMap) {
 
 const FOCUS =
   "focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1c140f] focus-visible:outline-none";
-const BTN = `min-h-11 rounded-lg px-4 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40 ${FOCUS}`;
+const BTN = `min-h-11 rounded-lg px-3 text-sm sm:px-4 font-semibold disabled:cursor-not-allowed disabled:opacity-40 ${FOCUS}`;
 
 function StagePortrait({
   speaker,
