@@ -45,6 +45,7 @@ import {
   xpToNext,
   type BattleState,
   type CharacterProgress,
+  warlordUnlockMission,
 } from "../../../src/core";
 
 const at = (level: number, points = 0, extra: Partial<CharacterProgress> = {}): CharacterProgress => ({
@@ -322,18 +323,18 @@ describe("thao tác trên hồ sơ", () => {
     }
   });
 
-  it("sứ quân mở bán sau khi qua màn của họ ở chiến dịch", () => {
+  it("sứ quân mở bán sau nhiệm vụ Campaign V2 của họ (M08–M21), không theo màn cũ", () => {
     assert.equal(WARLORD_COMPANIONS.length, 12);
     const rich = { ...newProfile(), gold: 100000 };
     for (const w of WARLORD_COMPANIONS) {
       const id = w.fighter.id;
       assert.deepEqual(applyProfileAction(rich, { type: "buyCompanion", character: id }), { ok: false, error: "locked" });
+      // Hồ sơ còn màn cũ đã qua (trước CAMP-08.04) vẫn khóa: parser bỏ màn cũ, không quy đổi sang V2.
+      const legacyOnly = parseProfile({ ...rich, campaign: { version: 2, legacy: { cleared: ["boHai", "dangChau", "tamDai", "doDong"] } } });
+      assert.deepEqual(applyProfileAction(legacyOnly, { type: "buyCompanion", character: id }), { ok: false, error: "locked" });
       const cleared = {
         ...rich,
-        campaign: {
-          ...rich.campaign,
-          legacy: { ...rich.campaign.legacy, cleared: [w.stage] },
-        },
+        campaign: { ...rich.campaign, completed: [warlordUnlockMission(id)!] },
       };
       const r = applyProfileAction(cleared, { type: "buyCompanion", character: id });
       assert.ok(r.ok, id);

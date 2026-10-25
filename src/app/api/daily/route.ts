@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     {
       ...board,
       // Chỉ phần người chơi cần xem trước; seed không rời server.
-      setup: { team: setup.team, foes: setup.foes, stage: setup.stage, difficulty: setup.difficulty },
+      setup: { team: setup.team, foes: setup.foes, warlord: setup.warlord, difficulty: setup.difficulty },
       now,
     },
     { headers: { "cache-control": "no-store" } },

@@ -48,7 +48,15 @@ import {
   spiritStatMultiplier,
   spiritHealMultiplier,
   whirlStep,
-  stageById,
+  raidBossById,
+  settleCampaignScenario,
+  storyNodeById,
+  missionCopy,
+  campaignSurviveTurns,
+  campaignPhaseLabels,
+  campaignScenarioByNode,
+  completedPlayerTurns,
+  type CampaignScenarioTag,
   STARTER_COMPANIONS,
   tileAt,
   withGear,
@@ -57,7 +65,6 @@ import {
   type BattleAction,
   type Board,
   type BattleRewards,
-  type CampaignResult,
   type RaidResult,
   type BattleEvent,
   type BattleState,
@@ -264,8 +271,11 @@ interface Outcome {
   /** Món rơi đã vào túi đồ; null khi không rơi hoặc túi đầy (bán ngay được `soldFor` vàng). */
   readonly drop: GearItem | null;
   readonly soldFor: number;
-  /** Chỉ có ở trận chiến dịch online. */
-  readonly campaign?: CampaignResult;
+  /** Campaign V2: hoàn thành và thưởng lần đầu đã ghi trên server. */
+  readonly campaignV2?: {
+    readonly firstClear: boolean;
+    readonly totalGold: number;
+  };
   /** Chỉ có ở trận đánh trùm online. */
   readonly raid?: RaidResult;
   readonly destiny?: { readonly floor: number; readonly won: boolean; readonly phase: "reward" | "done" };
@@ -728,8 +738,10 @@ export default function DemoGame({
   const [mode, setMode] = useState<DemoMode>(online ? "progress" : "practice");
   const [profile, setProfile] = useState<Profile>(newProfile);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
-  /** Màn chiến dịch của trận online đang chơi. */
-  const [stage, setStage] = useState<string | null>(null);
+  /** Đánh trùm: sứ quân của trận online đang chơi. */
+  const [raidBoss, setRaidBoss] = useState<string | null>(null);
+  /** Campaign V2: mục tiêu nhiệm vụ (có thể xong trước khi phân thắng bại, ví dụ cầm cự đủ lượt). */
+  const [scenario, setScenario] = useState<CampaignScenarioTag | null>(null);
   const [destinyFloorNo, setDestinyFloorNo] = useState<number | null>(null);
   /** Sinh tồn: đợt, người gục, báo trước đợt kế. */
   const [survival, setSurvival] = useState<SurvivalView | null>(null);
@@ -787,8 +799,36 @@ export default function DemoGame({
   const [clock, setClock] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
 
+  /** Campaign V2: trạng thái mục tiêu, tính từ trạng thái server bằng chính hàm chốt của server. */
+  const scenarioStatus = useMemo(() => {
+    if (!scenario || !live) return null;
+    const r = settleCampaignScenario(scenario, live);
+    return r.ok ? r.verdict.status : null;
+  }, [scenario, live]);
+  const scenarioOver = scenarioStatus !== null && scenarioStatus !== "pending";
+  const labels = scenario ? campaignPhaseLabels(scenario.nodeId) : [];
+  const phaseObjective = scenario
+    ? campaignScenarioByNode(scenario.nodeId)?.phases[scenario.phaseIndex]
+        ?.objective
+    : undefined;
+  const bossThreshold =
+    phaseObjective?.type === "bossPhases"
+      ? phaseObjective.hpThreshold
+      : undefined;
+  const phaseBoss =
+    live && phaseObjective?.type === "bossPhases"
+      ? live.sides[1].fighters.find((f) => f.id === phaseObjective.bossTarget)
+      : undefined;
+  const phaseTurns = scenario
+    ? campaignSurviveTurns(scenario.nodeId, scenario.phaseIndex)
+    : undefined;
+  const phaseAdvanced = scenarioStatus === "advance";
+  const scenarioFailed = scenarioStatus === "failed" || state.winner === AI;
   const playerTurn =
-    started && state.winner === null && state.turn.side === PLAYER;
+    started &&
+    state.winner === null &&
+    !scenarioOver &&
+    state.turn.side === PLAYER;
   /** Sinh tồn: vừa hạ hết một đợt, chờ người chơi vào đợt kế (hoặc dừng). */
   const atBreak =
     survival !== null && !survival.done && state.winner === PLAYER;
@@ -1064,7 +1104,11 @@ export default function DemoGame({
       }
       const resting =
         res.view.survival && !res.view.survival.done && next.winner === PLAYER;
-      if (next.winner !== null && !resting) {
+      const tag = res.view.campaignScenario;
+      const verdict = tag ? settleCampaignScenario(tag, next) : null;
+      const objectiveDone =
+        verdict !== null && verdict.ok && verdict.verdict.status !== "pending";
+      if ((next.winner !== null || objectiveDone) && !resting) {
         try {
           window.localStorage.removeItem(ONLINE_BATTLE_KEY);
         } catch {
@@ -1132,7 +1176,9 @@ export default function DemoGame({
 
   // Đồng hồ 30 giây mỗi lượt (online lẫn offline).
   const deadline =
-    started && state.winner === null ? state.turn.deadline : null;
+    started && state.winner === null && !scenarioOver
+      ? state.turn.deadline
+      : null;
   useEffect(() => {
     if (deadline === null) return;
     const tick = window.setInterval(
@@ -1444,6 +1490,7 @@ export default function DemoGame({
     setPendingWhirl(null);
     setLog([]);
     setBattleId(null);
+    setScenario(null);
     setSurvival(null);
     setDailyDay(null);
     setArenaFoe(null);
@@ -1499,7 +1546,8 @@ export default function DemoGame({
         ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Không tạo được trận",
       );
     seq.current = res.view.seq;
-    setStage(res.view.stage ?? null);
+    setRaidBoss(res.view.raidBoss ?? null);
+    setScenario(res.view.campaignScenario ?? null);
     setDestinyFloorNo(res.view.destiny?.floor ?? null);
     setSurvival(res.view.survival ?? null);
     setDailyDay(res.view.daily ?? null);
@@ -1665,7 +1713,11 @@ export default function DemoGame({
               ? "Chuẩn bị xuất trận"
               : atBreak
                 ? `Hạ hết đợt ${survival!.wave}, nghỉ giữa đợt`
-                : survival && state.winner !== null
+                : scenarioOver && state.winner === null
+                  ? scenarioFailed
+                    ? "Phòng tuyến chưa giữ được"
+                    : "Hoàn thành mục tiêu"
+                  : survival && state.winner !== null
                   ? "Lượt sinh tồn kết thúc"
                   : state.winner !== null
                     ? state.winner === PLAYER
@@ -1704,6 +1756,34 @@ export default function DemoGame({
             </select>
           </label>
         </header>
+        {scenario && live && !scenarioOver && (phaseTurns || labels.length > 1) && (
+          <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-sm text-amber-100">
+            ⚑ {storyNodeById(scenario.nodeId)?.title}
+            {labels.length > 1 &&
+              ` · phase ${scenario.phaseIndex + 1}/${labels.length}: ${labels[scenario.phaseIndex]}`}
+            {phaseTurns ? (
+              <>
+                : {labels.length > 1 ? "đã giữ" : "cầm cự"}{" "}
+                {Math.min(completedPlayerTurns(live), phaseTurns)}/{phaseTurns}{" "}
+                lượt của bạn hoặc hạ{" "}
+                {live.sides[1].fighters.length > 1 ? "hết đối thủ" : "thủ lĩnh"}.
+              </>
+            ) : bossThreshold && phaseBoss ? (
+              `: đẩy ${phaseBoss.name} xuống ${Math.round(bossThreshold * 100)}% máu (đang ${Math.round((Math.max(0, phaseBoss.hp) / phaseBoss.maxHp) * 100)}%).`
+            ) : phaseBoss && labels.length > 1 ? (
+              `: hạ ${phaseBoss.name}; máu mất ở phase trước không hồi.`
+            ) : (
+              ": hạ hết đối thủ."
+            )}
+            {phaseObjective?.type === "breakSiege" &&
+              phaseObjective.stage === "escort" && (
+                <span className="block text-xs text-violet-200">
+                  Tình tiết phục vụ gameplay: đoàn lương và toán chặn đường do
+                  game sáng tác.
+                </span>
+              )}
+          </p>
+        )}
         <DongSonBand className="-mt-1 w-full opacity-70" />
         {survival && started && (
           <WaveBanner survival={survival} resting={atBreak} />
@@ -1889,7 +1969,43 @@ export default function DemoGame({
                     onEnd={() => sendOnline({ type: "endRun" })}
                   />
                 )}
-                {state.winner !== null && !atBreak && (
+                {scenario && (scenarioOver || state.winner !== null) && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-black/75 p-4 text-center text-white">
+                    <p className="text-xs tracking-widest text-amber-300/80 uppercase">
+                      {scenario.nodeId} · {storyNodeById(scenario.nodeId)?.title}
+                    </p>
+                    <p className="text-xl font-bold">
+                      {scenarioFailed
+                        ? "Phòng tuyến chưa giữ được"
+                        : phaseAdvanced
+                          ? `Qua phase ${scenario.phaseIndex + 1}/${labels.length}: ${labels[scenario.phaseIndex]}`
+                          : "Hoàn thành mục tiêu!"}
+                    </p>
+                    <p className="max-w-sm text-sm text-amber-100 italic">
+                      {phaseAdvanced
+                        ? `${bossThreshold ? `${phaseBoss?.name ?? "Trùm"} lui về tuyến trong với ${Math.round((Math.max(0, phaseBoss?.hp ?? 0) / (phaseBoss?.maxHp ?? 1)) * 100)}% máu. ` : ""}Trận chưa kết thúc, nhiệm vụ chưa hoàn thành. Phase tiếp theo: ${labels[scenario.phaseIndex + 1]}. Lương còn lại mang sang trận sau.`
+                        : (scenarioFailed
+                            ? missionCopy(scenario.nodeId)?.defeat
+                            : missionCopy(scenario.nodeId)?.outro
+                          )?.[0]?.text}
+                    </p>
+                    {outcome && (
+                      <p className="text-sm">
+                        +{outcome.rewards.xp[0]} kinh nghiệm mỗi người · +
+                        {outcome.rewards.gold} vàng
+                        {outcome.campaignV2?.firstClear &&
+                          ` · thưởng lần đầu +${outcome.campaignV2.totalGold} vàng`}
+                      </p>
+                    )}
+                    <SceneLink
+                      scene="CAMPAIGN"
+                      className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                    >
+                      {phaseAdvanced ? "Chuẩn bị phase tiếp" : "Về Chiến dịch"}
+                    </SceneLink>
+                  </div>
+                )}
+                {!scenario && state.winner !== null && !atBreak && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-black/70 text-white">
                     <p className="text-xl font-bold">
                       {survival
@@ -1900,12 +2016,12 @@ export default function DemoGame({
                           ? "Bạn thắng!"
                           : "Tianwu thắng"}
                     </p>
-                    {stage && stageById(stage) && (
+                    {raidBoss && raidBossById(raidBoss) && (
                       <p className="max-w-sm text-center text-sm text-amber-100 italic">
-                        {stageById(stage)!.foes[0]!.name}: “
+                        {raidBossById(raidBoss)!.foes[0]!.name}: “
                         {state.winner === PLAYER
-                          ? stageById(stage)!.lines.win
-                          : stageById(stage)!.lines.lose}
+                          ? raidBossById(raidBoss)!.lines.win
+                          : raidBossById(raidBoss)!.lines.lose}
                         ”
                       </p>
                     )}
@@ -1944,17 +2060,6 @@ export default function DemoGame({
                           +{outcome.rewards.xp[0]} kinh nghiệm mỗi người · +
                           {outcome.rewards.gold} vàng
                         </p>
-                        {outcome.campaign && (
-                          <p>
-                            {outcome.campaign.firstClear && (
-                              <span className="font-semibold text-amber-300">
-                                Qua màn lần đầu: +{outcome.campaign.bonusGold}{" "}
-                                vàng ·{" "}
-                              </span>
-                            )}
-                            Lương mang sang: {outcome.campaign.food}
-                          </p>
-                        )}
                         {outcome.destiny && (
                           <p className={`font-semibold ${outcome.destiny.won ? "text-amber-300" : "text-rose-300"}`}>
                             {outcome.destiny.won
@@ -2005,12 +2110,6 @@ export default function DemoGame({
                               : outcome.raid.soldFor > 0
                                 ? ` · túi đầy, món thưởng bán được ${outcome.raid.soldFor} vàng`
                                 : ""}
-                          </p>
-                        )}
-                        {outcome.campaign?.joined && (
-                          <p className="font-semibold text-emerald-300">
-                            {fighterName(outcome.campaign.joined)} gia nhập đội!
-                            Chọn vào đội ở mục Đội hình.
                           </p>
                         )}
                         {outcome.levelUps.map((u) => (
@@ -2066,7 +2165,7 @@ export default function DemoGame({
                           Về sinh tồn
                         </SceneLink>
                       )}
-                      {stage && (
+                      {raidBoss && (
                         <SceneLink
                           scene="CAMPAIGN"
                           className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"

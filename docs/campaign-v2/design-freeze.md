@@ -1,6 +1,6 @@
 # CAMP-00.04 — Campaign V2 Design Freeze
 
-> Phiên bản khóa: 1.0 — 24/10/2026
+> Phiên bản khóa: 1.1 — 25/10/2026 (1.0 — 24/10/2026; xem mục 11)
 >
 > Trạng thái: **FROZEN** cho implementation Campaign V2
 >
@@ -242,3 +242,30 @@ Mỗi task triển khai MUST:
 3. Chứng minh server-authoritative/idempotent nếu task chạm completion, reward, recruit hoặc choice.
 4. Chứng minh Campaign reward không làm tăng Đá Cường Hóa.
 5. Dừng và đề xuất amendment nếu cần đổi graph, reward table, recruit map, Raid role, history classification hoặc non-goal. Amendment phải tăng phiên bản freeze và ghi lý do trước khi code phụ thuộc được merge.
+
+## 11. Amendments
+
+### 1.1 — 25/10/2026 (CAMP-07.01)
+
+- M22 đổi tên hiển thị thành **Giang Sơn Một Mối** và dùng nhánh `story` transaction của category `aftermath` (mục 3), không còn trận phòng thủ. Lý do: task CAMP-07.01 yêu cầu M22 là chương chuyển tiếp tổng kết 12 vùng, không gọi là trận match-3, không tạo đối thủ giả.
+- Choice allowlist M22 đổi từ `disarmFirst`/`rescueFirst` sang `reviewDossiers`/`hearTheRegions`; cùng outcome, chỉ khác vignette.
+- Không đổi: graph M21 → M22 → M23, thưởng lần đầu 150 vàng, recruit map, Raid role, phân loại lịch sử. Ngoài graph, M22 chỉ mở khi đủ 12 sứ quân có kết cục (CAMP-06.04).
+
+### 1.1 — 25/10/2026 (CAMP-07.02)
+
+- M23 đổi tên hiển thị thành **Kiến thiết kinh đô Hoa Lư**; vẫn là cảnh council không có trận, slug `hoi-quan-hoa-lu` giữ nguyên. Ba lựa chọn giữ allowlist `livelihood`/`army`/`law`, hiển thị là ưu tiên dân, quân, triều nghi; mỗi lựa chọn chỉ cho một câu kết quả bằng chữ.
+- Nguồn M23 thêm S04, S08 (nguồn của E00: Đinh Bộ Lĩnh gắn Hoa Lư). UI ghi "Trích đoạn xây dựng quốc gia"; không dùng tranh kiến trúc, và nếu có thì phải ghi là tái dựng.
+- Không đổi: graph M22 → M23 → M24, thưởng lần đầu 50 vàng, không timer, không tài nguyên mới.
+
+### 1.1 — 25/10/2026 (CAMP-07.03)
+
+- M24 đổi tên hiển thị thành **Đại Lễ Đăng Quang năm 968**; slug `dai-co-viet-968`, allowlist `armyView`/`hoaLuView`/`dinhLienView`, thưởng 300 vàng, phiếu chương VI và recruit Lê Hoàn giữ nguyên.
+- Chiến dịch hoàn thành = server đã ghi M24 (`campaignCompleted`), không đếm số trận thắng. Thêm thành tựu một lần `a.campaign` (500 vàng, số đặt tạm chờ duyệt) và khung kết (biên niên, sổ thế cục, nguồn và ghi công, nút xem lại). Xem lại đại lễ không cộng thưởng.
+- 970 (Thái Bình, E11) và khoảng 971 (đặt quan chức, chưa có trong ledger) chỉ là ghi chú nguồn, không nằm trong cảnh 968.
+
+### 1.1 — 25/10/2026 (CAMP-08.04)
+
+- Gỡ hẳn chiến dịch 13 màn cũ theo yêu cầu của Shan (không phải kiểm lại hai chiến dịch). Mục 1 (audit runtime) và mục 7 (giữ legacy `stage + raid` trong giai đoạn chuyển tiếp) là ảnh chụp trước khi gỡ: nay server từ chối mọi payload `stage`, không còn adapter màn cũ.
+- `WarlordEncounterCatalog` của mục 5 là `src/core/campaign/warlords.ts` (đủ 12 sứ quân). Raid giữ 3 tier, level bonus, AI difficulty, home terrain, gold/gear reward và luật chiến đấu; Raid ID đổi từ id màn cũ sang id sứ quân (id màn cũ còn làm encounter ID nội bộ), bậc đã thắng chuyển theo. Tower, Survival, Daily, Arena giữ nguyên hành vi (cùng thứ tự, cùng seed ra cùng đối thủ).
+- **Đổi Raid role của mục 5 (Shan chốt 25/10/2026): Raid chỉ còn 6 boss**, là 6 sứ quân bị đánh dẹp theo tổng thuật (nhóm `military` của sổ thế cục): Kiều Công Hãn M15, Kiều Thuận M16, Lý Khuê M17, Nguyễn Thủ Tiệp M18, Nguyễn Siêu M20, Đỗ Cảnh Thạc M21. Mỗi trận là tái đấu. Trần Lãm (liên minh), nhóm quy phục (Phạm Bạch Hổ, Ngô Xương Xí, Ngô Nhật Khánh) và nhóm tan rã/chưa chắc (Nguyễn Khoan, Lữ Đường) không có trận Raid, để game không dựng trận đánh với người không bị đánh dẹp. Dòng "Trần Lãm … Raid là sparring/what-if" và các dòng Raid khác của 6 người này trong bảng mục 5 hết hiệu lực; cột Unlock của họ chỉ còn là mốc mở bán ở cửa hàng (`unlockedContent` kind `raid` vẫn giữ làm mốc gặp sứ quân). Thoại nhóm đánh dẹp bỏ các câu khẳng định thêm (ví dụ "mười một sứ quân đã hàng"). Bậc Raid đã lưu của 6 người kia còn trong hồ sơ nhưng không được đọc.
+- Bảng xếp hạng chiến dịch tính số nhiệm vụ V2 hoàn thành, tổng lượt chỉ của nhiệm vụ có trận; bảng từng trận là `mission:<M..>`. Nhiệm vụ tuần "thắng trận chiến dịch hoặc đánh trùm" chỉ đếm trận thắng, không đếm hoàn thành sự kiện. Thành tựu Chương I đếm 4 nhiệm vụ Chương I.

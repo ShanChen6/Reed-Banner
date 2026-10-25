@@ -1,9 +1,16 @@
 import {
+  CAMPAIGN_FINAL_NODE,
+  CAMPAIGN_UNIFICATION_NODE,
+  campaignCompleted,
   campaignEventByNode,
+  campaignWorldLedger,
+  type CampaignLedgerGroup,
   campaignNodeUnlocked,
   applyCampaignFirstClear,
   isCampaignMissionId,
   type CampaignEventDefinition,
+  type CampaignFactionSettlement,
+  type CampaignFactionStatus,
   type CampaignHistoricalOutcome,
   type CampaignMissionId,
   type Profile,
@@ -24,6 +31,21 @@ export interface CampaignEventOutcome {
   readonly historicalOutcome?: CampaignHistoricalOutcome;
   readonly firstClear: boolean;
   readonly rewardGold: number;
+  /** Kết cục sứ quân; `recorded` chỉ đúng ở lần server ghi vào thế cục. */
+  readonly faction?: {
+    readonly id: string;
+    readonly status: CampaignFactionStatus;
+    /** Cách kết cục được kể, theo phân loại ledger (warlord-matrix). */
+    readonly resolutionMethod: CampaignFactionSettlement;
+    readonly recorded: boolean;
+  };
+  /** M22: sổ thế cục 12 vùng đọc từ hồ sơ server lúc hoàn thành (đếm theo nhóm kết cục, không theo trận). */
+  readonly worldLedger?: {
+    readonly resolved: Readonly<Record<CampaignLedgerGroup, number>>;
+    readonly resolvedCount: number;
+  };
+  /** M24: chiến dịch đã khép (đọc từ hồ sơ server sau khi ghi; đúng cả khi xem lại). */
+  readonly campaignCompleted?: boolean;
 }
 
 export type CampaignEventError =
@@ -123,6 +145,34 @@ export async function completeCampaignEvent(
         ...(event.outcome ? { historicalOutcome: event.outcome } : {}),
         firstClear,
         rewardGold,
+        ...(completion.reward.faction
+          ? {
+              faction: {
+                id: completion.reward.faction.faction,
+                status: completion.reward.faction.status,
+                resolutionMethod: completion.reward.faction.settlement,
+                recorded: completion.reward.factionRecorded,
+              },
+            }
+          : {}),
+        ...(input.nodeId === CAMPAIGN_UNIFICATION_NODE
+          ? (() => {
+              const ledger = campaignWorldLedger(
+                completion.profile.campaign.factions,
+              );
+              return {
+                worldLedger: {
+                  resolved: ledger.resolved,
+                  resolvedCount: ledger.resolvedCount,
+                },
+              };
+            })()
+          : {}),
+        ...(input.nodeId === CAMPAIGN_FINAL_NODE
+          ? {
+              campaignCompleted: campaignCompleted(completion.profile.campaign),
+            }
+          : {}),
       };
       return {
         ok: true as const,

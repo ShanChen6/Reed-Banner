@@ -4,7 +4,9 @@ Game match-3 chiến đấu theo lượt, lấy cảm hứng từ thời kỳ Lo
 
 Mini game thuộc ShanVerse.
 
-**Trạng thái:** giai đoạn 0, đã dựng khung Next.js.
+**Trạng thái:** đã có lõi trận, server và tài khoản, tiến trình, Campaign V2 (6 chương, 24 nhiệm vụ), Đánh trùm, leo tháp, Song Tháp, sinh tồn, thử thách ngày, nhiệm vụ và đấu trường. Xem [Lộ trình](docs/lo-trinh.md).
+
+**Campaign V2:** 6 chương, 24 nhiệm vụ M01–M24 (965–968). Lời kể mang nhãn nguồn theo [sổ nguồn](docs/campaign-v2/history-sources.md). Thưởng lần đầu chỉ có vàng, Campaign không phát Đá Cường Hóa. Chi tiết ở [Chế độ chơi](docs/design/09-che-do-choi.md#2-chiến-dịch) và [nghiệm thu](docs/campaign-v2/final-acceptance.md).
 
 ## Phát triển
 
@@ -18,11 +20,12 @@ pnpm lint
 pnpm typecheck
 pnpm build
 pnpm sim -- --mode all --battles 200   # mô phỏng cân bằng AI đấu AI
+pnpm exec tsx scripts/campaign-balance.ts --runs 200   # mô phỏng 9 nhiệm vụ có trận của Campaign V2
 ```
 
 - `src/app/`: giao diện Next.js (App Router).
 - `src/core/`: logic trận đấu, TypeScript thuần, xác định theo seed. ESLint chặn import React/Next, `Math.random()`, `Date.now()` và API trình duyệt trong thư mục này ([kiến trúc](docs/tech/kien-truc.md)).
-- `tests/`: test cho `src/core/`.
+- `tests/`: test cho `src/core/`, `src/server/` và một phần giao diện.
 
 ## Tài liệu
 
