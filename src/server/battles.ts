@@ -11,9 +11,18 @@ import {
   arenaDelta,
   defenseOf,
   ghostTeam,
-  applyCampaignResult,
   applyCampaignFirstClear,
+  beginCampaignNode,
+  CAMPAIGN_CHOICE_IDS,
+  campaignBattleScenario,
+  campaignEncounter,
+  campaignEncounterFoes,
+  campaignNodeUnlocked,
+  campaignPhaseCount,
+  campaignScenarioByNode,
+  campaignScenarioTag,
   clampCampaignFood,
+  isCampaignMissionId,
   applyRaidResult,
   applyTowerResult,
   applySurvivalResult,
@@ -42,15 +51,13 @@ import {
   ownsCompanion,
   PROFESSIONS,
   profileTeam,
+  raidBossById,
   raidSetup,
   raidUnlocked,
   receiveDrop,
   rollDrop,
   settle,
   settleCampaignScenario as evaluateCampaignScenario,
-  stageById,
-  stageFoes,
-  stageUnlocked,
   startMatch,
   STARTER_COMPANIONS,
   towerFloor,
@@ -66,8 +73,8 @@ import {
   type Difficulty,
   type Element,
   type BattleRewards,
-  type CampaignResult,
   type CampaignFirstClearReward,
+  type CampaignMissionId,
   type CampaignScenarioSettlement,
   type RaidResult,
   type RaidTier,
@@ -133,10 +140,14 @@ export interface NewBattleInput {
   /** 3vs3: đúng 2 id nhân vật kèm khởi đầu. */
   readonly companions: readonly string[];
   readonly difficulty: Difficulty;
-  /** Màn chiến dịch: thể thức, độ khó và đối thủ lấy theo màn. */
-  readonly stage?: string;
-  /** Đánh trùm: bậc của trùm ở màn `stage`. */
+  /** Đánh trùm: id sứ quân (danh mục 12 sứ quân); thể thức, độ khó và đối thủ lấy theo sứ quân và bậc. */
+  readonly raidBoss?: string;
+  /** Đánh trùm: bậc của sứ quân `raidBoss`. */
   readonly raid?: RaidTier;
+  /** Campaign V2: nhiệm vụ có trận; thể thức, độ khó và đối thủ lấy theo nhiệm vụ. */
+  readonly campaignMission?: CampaignMissionId;
+  /** Campaign V2: lựa chọn trình diễn trước trận (chỉ đổi lời dẫn). */
+  readonly campaignChoice?: string;
   /** Leo tháp: đánh tầng kế tiếp của lượt leo (bắt đầu lượt mới nếu chưa có). */
   readonly tower?: true;
   /** Sinh tồn: bắt đầu lượt chơi mới với đội đang chọn ở hồ sơ. */
@@ -172,8 +183,6 @@ export interface Outcome {
   readonly drop: GearItem | null;
   /** Túi đầy: món rơi được bán ngay với giá này. */
   readonly soldFor: number;
-  /** Chỉ có ở trận chiến dịch. */
-  readonly campaign?: CampaignResult;
   /** Campaign V2 completion and milestone reward; separate from battle loot. */
   readonly campaignV2?: CampaignFirstClearReward;
   /** Chỉ có ở trận đánh trùm. */
@@ -236,6 +245,48 @@ export function settleCampaignScenarioMatch(
 /** Kiểm tra body tạo trận; null khi không hợp lệ. */
 export function parseNewBattle(body: unknown): NewBattleInput | null {
   if (!isObj(body)) return null;
+  if (body.campaignMission !== undefined) {
+    // Payload Campaign V2 không được trộn với đánh trùm hay chế độ khác.
+    const mixed = [
+      "stage",
+      "raidBoss",
+      "raid",
+      "tower",
+      "survival",
+      "reserveCompanions",
+      "daily",
+      "arena",
+    ];
+    if (mixed.some((key) => body[key] !== undefined)) return null;
+    const id = body.campaignMission;
+    if (typeof id !== "string" || !isCampaignMissionId(id)) return null;
+    const scenario = campaignBattleScenario(id);
+    if (!scenario) return null;
+    const choice = body.campaignChoice;
+    if (
+      choice !== undefined &&
+      (typeof choice !== "string" ||
+        !(CAMPAIGN_CHOICE_IDS[id] ?? []).includes(choice))
+    )
+      return null;
+    const parsed = parseNewBattle({
+      ...body,
+      campaignMission: undefined,
+      campaignChoice: undefined,
+      mode: scenario.mode,
+      difficulty: scenario.difficulty,
+    });
+    return (
+      parsed && {
+        ...parsed,
+        campaignMission: id,
+        ...(choice !== undefined ? { campaignChoice: choice } : {}),
+      }
+    );
+  }
+  if (body.campaignChoice !== undefined) return null;
+  // Chiến dịch 13 màn cũ đã gỡ (CAMP-08.04): id màn cũ không còn mở trận nào, kể cả đánh trùm.
+  if (body.stage !== undefined) return null;
   if (body.arena !== undefined) {
     if (
       !Number.isInteger(body.arena) ||
@@ -268,7 +319,7 @@ export function parseNewBattle(body: unknown): NewBattleInput | null {
   if (body.survival !== undefined) {
     if (
       body.survival !== true ||
-      body.stage !== undefined ||
+      body.raidBoss !== undefined ||
       body.tower !== undefined
     )
       return null;
@@ -297,7 +348,7 @@ export function parseNewBattle(body: unknown): NewBattleInput | null {
   }
   if (body.reserveCompanions !== undefined) return null;
   if (body.tower !== undefined) {
-    if (body.tower !== true || body.stage !== undefined) return null;
+    if (body.tower !== true || body.raidBoss !== undefined) return null;
     const parsed = parseNewBattle({
       ...body,
       tower: undefined,
@@ -306,20 +357,21 @@ export function parseNewBattle(body: unknown): NewBattleInput | null {
     });
     return parsed && { ...parsed, tower: true };
   }
-  if (body.stage !== undefined) {
-    const stage =
-      typeof body.stage === "string" ? stageById(body.stage) : undefined;
-    if (!stage) return null;
-    if (body.raid !== undefined && !isRaidTier(body.raid)) return null;
-    const raid = body.raid as RaidTier | undefined;
+  if (body.raidBoss !== undefined || body.raid !== undefined) {
+    const boss =
+      typeof body.raidBoss === "string"
+        ? raidBossById(body.raidBoss)
+        : undefined;
+    if (!boss || !isRaidTier(body.raid)) return null;
+    const raid = body.raid;
     const parsed = parseNewBattle({
       ...body,
-      stage: undefined,
+      raidBoss: undefined,
       raid: undefined,
-      mode: stage.mode,
-      difficulty: raid ? raidSetup(stage, raid).difficulty : stage.difficulty,
+      mode: boss.mode,
+      difficulty: raidSetup(boss, raid).difficulty,
     });
-    return parsed && { ...parsed, stage: stage.id, ...(raid ? { raid } : {}) };
+    return parsed && { ...parsed, raidBoss: boss.id, raid };
   }
   const { mode, element, profession, difficulty } = body;
   const companions = Array.isArray(body.companions) ? body.companions : [];
@@ -489,6 +541,13 @@ export async function createBattleFor(
   if (input.daily) return createDailyBattle(ownerId, deps);
   if (input.arena !== undefined)
     return createArenaBattle(ownerId, input.arena, deps);
+  if (input.campaignMission)
+    return createCampaignMissionBattle(
+      ownerId,
+      input,
+      input.campaignMission,
+      deps,
+    );
   const { profile } = await loadProfile(deps.profiles, ownerId);
   // Chỉ ra trận nhân vật đã có (khởi đầu hoặc đã mua).
   if (!input.companions.every((id) => ownsCompanion(profile, id)))
@@ -514,50 +573,141 @@ export async function createBattleFor(
     );
   }
   const team = profileTeam(chosen, input.companions);
-  const stage = input.stage === undefined ? undefined : stageById(input.stage);
-  if (
-    stage &&
-    !(input.raid
-      ? raidUnlocked(profile.campaign, stage.id, input.raid)
-      : stageUnlocked(profile.campaign, stage.id))
-  )
-    return { ok: false, error: "badRequest" };
+  const boss =
+    input.raidBoss === undefined ? undefined : raidBossById(input.raidBoss);
+  if (input.raidBoss !== undefined || input.raid !== undefined) {
+    // Đánh trùm mở theo mốc Campaign V2 server đã ghi; bậc sau cần thắng bậc trước.
+    if (
+      !boss ||
+      !input.raid ||
+      !raidUnlocked(profile.campaign, boss.id, input.raid)
+    )
+      return { ok: false, error: "badRequest" };
+  }
   // Đánh trùm: luật sân nhà, không dùng lương chiến dịch.
-  const raid = stage && input.raid ? raidSetup(stage, input.raid) : undefined;
+  const raid = boss && input.raid ? raidSetup(boss, input.raid) : undefined;
   const foes = raid
     ? raid.foes
-    : stage
-      ? stageFoes(stage)
-      : pickFoes(input, deps.seed).map((f) =>
-          leveledFoe(f, profile.main.level),
-        );
-  const foeFood = raid ? raid.foeFood : stage?.foeFood;
-  const weights = raid ? raid.weights : stage?.weights;
+    : pickFoes(input, deps.seed).map((f) => leveledFoe(f, profile.main.level));
   const { match, events } = startMatch({
     sides: [
-      // Chiến dịch: lương mang sang từ trận trước; phe AI theo luật màn.
-      {
-        fighters: team,
-        leader: 0,
-        ...(stage && !raid ? { food: profile.campaign.supply } : {}),
-      },
+      { fighters: team, leader: 0 },
       {
         fighters: foes,
         leader: 0,
-        ...(foeFood !== undefined ? { food: foeFood } : {}),
+        ...(raid ? { food: raid.foeFood } : {}),
       },
     ],
     difficulty: input.difficulty,
     seed: deps.seed,
     firstSide: (deps.seed & 1) as SideIndex,
     now: deps.now,
-    ...(stage
-      ? {
-          stage: stage.id,
-          ...(input.raid ? { raid: input.raid } : {}),
-          ...(weights ? { weights } : {}),
-        }
+    ...(boss && raid
+      ? { raidBoss: boss.id, raid: input.raid, weights: raid.weights }
       : {}),
+  });
+  const record: MatchRecord = {
+    id: deps.newId(),
+    ownerId,
+    match,
+    createdAt: deps.now,
+    updatedAt: deps.now,
+  };
+  await deps.store.create(record);
+  return { ok: true, id: record.id, view: viewOf(match), events };
+}
+
+/**
+ * Campaign V2: trận của một nhiệm vụ đã mở. Ghi nhiệm vụ đang dở, lựa chọn trình diễn và lựa chọn hệ/nghề
+ * trong cùng một lần ghi hồ sơ, để tải lại trang vẫn biết người chơi đang ở đâu. Hoàn thành và thưởng lần
+ * đầu chỉ ghi khi server chốt trận (rewardCampaignV2).
+ */
+async function createCampaignMissionBattle(
+  ownerId: string,
+  input: NewBattleInput,
+  nodeId: CampaignMissionId,
+  deps: Deps,
+): Promise<ServiceResult> {
+  if (!campaignEncounterFoes(nodeId) || !campaignScenarioTag(nodeId))
+    return { ok: false, error: "badRequest" };
+  const updated = await updateProfile(
+    deps.profiles,
+    ownerId,
+    (p) => {
+      if (
+        !campaignNodeUnlocked(p.campaign, nodeId) ||
+        !input.companions.every((id) => ownsCompanion(p, id))
+      )
+        return { ok: false as const, error: "badRequest" as const };
+      const done = p.campaign.completed.includes(nodeId);
+      let campaign = beginCampaignNode(p.campaign, nodeId);
+      // Lựa chọn đã ghi lúc hoàn thành thì giữ nguyên khi đánh lại.
+      if (!done && input.campaignChoice !== undefined)
+        campaign = {
+          ...campaign,
+          storyChoices: {
+            ...campaign.storyChoices,
+            [nodeId]: input.campaignChoice,
+          },
+          storyFlags: {
+            ...campaign.storyFlags,
+            [nodeId]: ["introViewed", "historyNoteViewed"],
+          },
+        };
+      return {
+        ok: true as const,
+        profile: {
+          ...p,
+          element: input.element,
+          profession: input.profession,
+          campaign,
+        },
+      };
+    },
+    deps.now,
+  );
+  if (!updated.ok)
+    return {
+      ok: false,
+      error: updated.error === "conflict" ? "conflict" : "badRequest",
+    };
+  const profile = updated.stored.profile;
+  // Công thành nhiều trận: phase kế tiếp lấy từ hồ sơ server đã ghi, client không chọn được phase.
+  const phaseIndex = profile.campaign.siegePhases[nodeId] ?? 0;
+  const foes = campaignEncounterFoes(nodeId, phaseIndex);
+  const tag = campaignScenarioTag(nodeId, phaseIndex);
+  if (!foes || !tag) return { ok: false, error: "badRequest" };
+  const weights = campaignScenarioByNode(nodeId)?.phases[tag.phaseIndex]?.weights;
+  const foeFood = campaignEncounter(nodeId, phaseIndex)?.foeFood;
+  const bossHp =
+    campaignScenarioByNode(nodeId)?.phases[phaseIndex]?.objective.type ===
+    "bossPhases"
+      ? profile.campaign.phaseBossHp[nodeId]
+      : undefined;
+  const { match, events } = startMatch({
+    sides: [
+      // Lương mang từ hồ sơ Campaign (cũng là lương còn lại sau phase trước); phe đối thủ theo encounter.
+      {
+        fighters: profileTeam(profile, input.companions),
+        leader: 0,
+        food: profile.campaign.supply,
+      },
+      {
+        fighters: foes,
+        leader: 0,
+        ...(foeFood !== undefined ? { food: foeFood } : {}),
+        // Trùm nhiều phase: thủ lĩnh (trùm) vào trận với máu còn lại của phase trước; tùy tướng là quân mới.
+        ...(bossHp !== undefined
+          ? { hpRatio: foes.map((_, i) => (i === 0 ? bossHp : 1)) }
+          : {}),
+      },
+    ],
+    difficulty: input.difficulty,
+    seed: deps.seed,
+    firstSide: (deps.seed & 1) as SideIndex,
+    now: deps.now,
+    campaignScenario: { ...tag, startFood: profile.campaign.supply },
+    ...(weights ? { weights } : {}),
   });
   const record: MatchRecord = {
     id: deps.newId(),
@@ -823,7 +973,7 @@ function matchMode(m: Match): MatchMode {
   if (m.survival) return "survival";
   if (m.tower) return "tower";
   if (m.campaignScenario) return "campaign";
-  if (m.stage) return m.raid ? "raid" : "campaign";
+  if (m.raidBoss && m.raid) return "raid";
   return m.daily ? "daily" : "normal";
 }
 
@@ -854,11 +1004,26 @@ async function rewardCampaignV2(
     (profile) => {
       const applied = applyRewards(profile, ids, rewards);
       levelUps = applied.levelUps;
+      const verdictNode = settlement.verdict.nodeId;
+      // Trận công thành của phase đã qua (trận trùng, trận cũ) không được nạp lại lương cho hồ sơ.
+      const stalePhase =
+        campaignPhaseCount(verdictNode) > 1 &&
+        (applied.profile.campaign.siegePhases[verdictNode] ?? 0) !==
+          settlement.verdict.phaseIndex;
+      // Lương: cộng phần chênh của chính trận này vào lương hiện có (trận cũ chưa ghi lương lúc vào thì lấy lương
+      // cuối trận). Hai trận mở song song không hoàn lương cho nhau; lương mua giữa chừng không bị ghi đè.
+      const current = applied.profile.campaign.supply;
+      const startFood = match.campaignScenario?.startFood;
+      const ended = settlement.verdict.playerFood;
+      const after = clampCampaignFood(
+        startFood === undefined ? ended : current + (ended - startFood),
+      );
+      const supply = stalePhase ? Math.min(current, after) : after;
       let next: Profile = {
         ...applied.profile,
         campaign: {
           ...applied.profile.campaign,
-          supply: clampCampaignFood(settlement.verdict.playerFood),
+          supply,
         },
         quests: recordMatch(
           applied.profile.quests,
@@ -871,14 +1036,74 @@ async function rewardCampaignV2(
           deps.now,
         ),
       };
-      if (settlement.verdict.status === "succeeded") {
+      const nodeId = verdictNode;
+      const stored = next.campaign.siegePhases[nodeId] ?? 0;
+      if (settlement.verdict.status === "advance") {
+        // Qua một phase công thành: chỉ tiến khi đúng phase hồ sơ đang chờ, để trận cũ hay trận trùng không
+        // nhảy phase. Không hoàn thành nhiệm vụ, không thưởng lần đầu.
+        if (stored === settlement.verdict.phaseIndex) {
+          // Trùm nhiều phase: ghi máu trùm còn lại để phase sau vào trận đúng mức đó, không hồi máu.
+          const objective = campaignScenarioByNode(nodeId)?.phases[stored]
+            ?.objective;
+          const boss =
+            objective?.type === "bossPhases"
+              ? match.battle.sides[1].fighters.find(
+                  (f) => f.id === objective.bossTarget,
+                )
+              : undefined;
+          const phaseBossHp = Object.fromEntries(
+            Object.entries(next.campaign.phaseBossHp).filter(
+              ([id]) => id !== nodeId,
+            ),
+          );
+          if (boss && boss.hp > 0)
+            phaseBossHp[nodeId] = Math.max(
+              0.01,
+              Math.ceil((boss.hp / boss.maxHp) * 100) / 100,
+            );
+          next = {
+            ...next,
+            campaign: {
+              ...next.campaign,
+              siegePhases: {
+                ...next.campaign.siegePhases,
+                [nodeId]: stored + 1,
+              },
+              phaseBossHp,
+            },
+          };
+        }
+      }
+      if (
+        settlement.verdict.status === "succeeded" &&
+        settlement.verdict.phaseIndex > 0 &&
+        stored !== settlement.verdict.phaseIndex
+      ) {
+        // Phase cuối của một lượt đã chốt rồi: chỉ còn thưởng trận thường.
+      } else if (settlement.verdict.status === "succeeded") {
+        if (settlement.verdict.phaseIndex > 0) {
+          const siegePhases = Object.fromEntries(
+            Object.entries(next.campaign.siegePhases).filter(
+              ([id]) => id !== nodeId,
+            ),
+          );
+          const phaseBossHp = Object.fromEntries(
+            Object.entries(next.campaign.phaseBossHp).filter(
+              ([id]) => id !== nodeId,
+            ),
+          );
+          next = {
+            ...next,
+            campaign: { ...next.campaign, siegePhases, phaseBossHp },
+          };
+        }
         const campaign = applyCampaignFirstClear(next, {
           nodeId: settlement.verdict.nodeId,
           source: "battle",
           // A first-action victory has zero fully completed player turns in
           // the adapter counter, but persisted best-turn records are positive.
           turns: Math.max(1, settlement.verdict.playerTurns),
-          supply: settlement.verdict.playerFood,
+          supply,
         });
         if (!campaign.ok) return campaign;
         next = campaign.profile;
@@ -1067,11 +1292,10 @@ async function reward(
   let levelUps: readonly LevelUp[] = [];
   let drop: GearItem | null = null;
   let soldFor = 0;
-  let campaign: CampaignResult | undefined;
   let raid: RaidResult | undefined;
   let tower: TowerResult | undefined;
   let survival: SurvivalResult | undefined;
-  const stage = match.stage;
+  const raidBoss = match.raidBoss;
   const u = await updateProfile(
     deps.profiles,
     r.ownerId,
@@ -1109,27 +1333,17 @@ async function reward(
         );
         next = c.profile;
         tower = c.result;
-      } else if (stage && match.raid) {
+      } else if (raidBoss && match.raid) {
         // Rng riêng cho món thưởng, khác luồng món rơi thường.
         const c = applyRaidResult(
           next,
-          stage,
+          raidBoss,
           match.raid,
           rewards.won,
           createRng(dropSeed(`${r.id}:raid`)),
         );
         next = c.profile;
         raid = c.result;
-      } else if (stage) {
-        const c = applyCampaignResult(
-          next,
-          stage,
-          rewards.won,
-          match.battle.sides[HUMAN].food,
-          match.battle.turn.number,
-        );
-        next = c.profile;
-        campaign = c.result;
       }
       if (!rolled) return { ok: true, profile: next };
       const received = receiveDrop(next, rolled);
@@ -1153,7 +1367,6 @@ async function reward(
     levelUps,
     drop,
     soldFor,
-    ...(campaign ? { campaign } : {}),
     ...(raid ? { raid } : {}),
     ...(tower ? { tower } : {}),
     ...(survival ? { survival } : {}),

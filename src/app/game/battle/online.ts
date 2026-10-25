@@ -5,7 +5,8 @@ import type {
   ArenaMember,
   BattleEvent,
   BattleRewards,
-  CampaignResult,
+  CampaignFirstClearReward,
+  CampaignMissionId,
   RaidResult,
   RaidTier,
   TowerResult,
@@ -35,10 +36,15 @@ export interface OnlineResponse {
     readonly levelUps: readonly LevelUp[];
     readonly drop: GearItem | null;
     readonly soldFor: number;
-    readonly campaign?: CampaignResult;
+    /** Campaign V2: hoàn thành và thưởng lần đầu đã ghi trên server. */
+    readonly campaignV2?: CampaignFirstClearReward;
     readonly raid?: RaidResult;
     readonly tower?: TowerResult;
-    readonly destiny?: { readonly floor: number; readonly won: boolean; readonly phase: "reward" | "done" };
+    readonly destiny?: {
+      readonly floor: number;
+      readonly won: boolean;
+      readonly phase: "reward" | "done";
+    };
     readonly survival?: SurvivalResult;
     readonly daily?: {
       readonly score: DailyScore;
@@ -80,10 +86,14 @@ export function createOnline(input: {
   profession: Profession;
   companions: readonly string[];
   difficulty: Difficulty;
-  /** Màn chiến dịch; server lấy thể thức, độ khó và đối thủ theo màn. */
-  stage?: string;
-  /** Đánh trùm: bậc trùm ở màn `stage`. */
+  /** Đánh trùm: id sứ quân; server lấy thể thức, độ khó và đối thủ theo sứ quân và bậc. */
+  raidBoss?: string;
+  /** Đánh trùm: bậc của sứ quân `raidBoss`. */
   raid?: RaidTier;
+  /** Campaign V2: nhiệm vụ có trận; server lấy thể thức, độ khó và đối thủ theo nhiệm vụ. */
+  campaignMission?: CampaignMissionId;
+  /** Campaign V2: lựa chọn trình diễn trước trận. */
+  campaignChoice?: string;
   /** Leo tháp: đánh tầng kế tiếp. */
   tower?: true;
   /** Sinh tồn: bắt đầu lượt chơi mới. */
@@ -119,7 +129,7 @@ export interface DailyResponse {
   readonly setup?: {
     readonly team: readonly FighterConfig[];
     readonly foes: readonly FighterConfig[];
-    readonly stage: string;
+    readonly warlord: string;
     readonly difficulty: Difficulty;
   };
   readonly mine?: {
@@ -223,11 +233,64 @@ export function fetchProfile(): Promise<ProfileResponse> {
   return callProfile();
 }
 
+export interface CampaignEventResponse {
+  readonly profile?: Profile;
+  readonly outcome?: {
+    readonly nodeId: CampaignMissionId;
+    readonly choice: string;
+    readonly historicalOutcome?: string;
+    readonly firstClear: boolean;
+    readonly rewardGold: number;
+    readonly faction?: {
+      readonly id: string;
+      readonly status: string;
+      readonly resolutionMethod: string;
+      readonly recorded: boolean;
+    };
+    readonly worldLedger?: {
+      readonly resolved: Readonly<Record<string, number>>;
+      readonly resolvedCount: number;
+    };
+    readonly campaignCompleted?: boolean;
+  };
+  readonly error?: string;
+}
+
+/** Hoàn thành nhiệm vụ không có trận (story/diplomacy); server kiểm tra mở khóa, lựa chọn và chống nhận hai lần. */
+/**
+ * Gửi hoàn thành nhiệm vụ không có trận. `eventId` nên giữ nguyên khi thử lại cùng một lần trao lời; server vẫn
+ * tự chống nhận hai lần theo nhiệm vụ.
+ */
+export async function completeCampaignEventOnline(
+  nodeId: CampaignMissionId,
+  choice: string,
+  eventId: string = `${nodeId}-${crypto.randomUUID()}`,
+): Promise<CampaignEventResponse> {
+  try {
+    const res = await fetch("/api/campaign/events", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      cache: "no-store",
+      body: JSON.stringify({
+        eventId,
+        nodeId,
+        choice,
+      }),
+    });
+    return (await res.json()) as CampaignEventResponse;
+  } catch {
+    return { error: "network" };
+  }
+}
+
 /** Gửi một thao tác (nâng kỹ năng, mua nhân vật, trang bị…); server kiểm tra luật và trả hồ sơ mới. */
 export function sendProfileAction(
   action: ProfileAction,
 ): Promise<ProfileResponse> {
-  return callProfile({ method: "POST", body: JSON.stringify({ action: profileActionPayload(action) }) });
+  return callProfile({
+    method: "POST",
+    body: JSON.stringify({ action: profileActionPayload(action) }),
+  });
 }
 
 export const ONLINE_ERROR_TEXT: Record<string, string> = {
@@ -239,4 +302,7 @@ export const ONLINE_ERROR_TEXT: Record<string, string> = {
   dailyDone: "Hôm nay bạn đã đánh thử thách ngày rồi",
   arenaLimit: "Hôm nay bạn đã hết lượt đấu trường",
   arenaGone: "Đối thủ này không còn, hãy chọn đối thủ khác",
+  locked: "Nhiệm vụ này chưa mở",
+  invalidChoice: "Lựa chọn không hợp lệ cho nhiệm vụ này",
+  notEvent: "Nhiệm vụ này cần xuất quân",
 };

@@ -3,35 +3,40 @@
 // Trang bị: --gear-tier 3 mặc đủ 9 món cùng hệ cho mọi nhân vật; --set coLau / --foe-set hoaLu chọn bộ
 // của phe 0 / phe 1 (bỏ trống thì không bộ nào đạt mốc, chỉ còn cộng hưởng).
 // Tiến trình: --level 10 dựng mọi nhân vật ở cấp 10 (kỹ năng mở theo cấp, điểm kỹ năng tiêu đều).
-// Chiến dịch: --stage tamDai (hoặc all) đánh màn đó với luật màn, đội người chơi ở cấp gợi ý (hoặc --level),
-// --team heroes|default; --sweep 0..6 thử người chơi hơn đối thủ 0 tới 6 cấp.
-// Đánh trùm: thêm --raid 1|2|3 (với --stage all chỉ chạy 12 màn có sứ quân).
+// Đánh trùm: --raid 1|2|3 [--boss kieuCongHan | all] đánh sứ quân ở bậc đó với luật sân nhà, đội người chơi ở cấp
+// gợi ý của bậc (hoặc --level), --team heroes|default; --sweep 0..6 thử người chơi hơn đối thủ 0 tới 6 cấp.
+// (`--stage` của chiến dịch 13 màn cũ đã gỡ ở CAMP-08.04.)
 // Leo tháp: --tower [--level 10] --battles 50 in số tầng AI Thường leo được.
 // Sinh tồn: --survival [--level 10] --battles 50 in số đợt AI Thường vượt qua.
+// Campaign V2: --mission M15 (hoặc M15,M16 / west / east) đánh nhiệm vụ có encounter với đúng tham số server
+// (cấp, độ khó, địa hình, lương đối thủ, lương gợi ý); --level, --team, --sweep=-2..3 (lệch so với cấp gợi ý).
 // Nhân vật kèm: --roster [--level 20] --battles 200 [--only haVan,tranLam] đo tỉ lệ thắng khi có từng người.
 
 import { parseArgs } from "node:util";
 import {
   ALL_COMPANIONS,
   buildMatchups,
-  CAMPAIGN,
+  CAMPAIGN_ROUTES,
+  campaignEncounter,
+  isCampaignMissionId,
+  missionMatchups,
+  missionTeamIds,
   isHero,
   isWarlord,
   rosterMatchups,
-  recommendedLevel,
   runBattle,
-  stageById,
   simulateTower,
   simulateSurvival,
   isRaidTier,
-  RAID_STAGES,
+  RAID_BOSSES,
+  raidBossById,
   raidLevel,
+  raidMatchups,
   raidRecommended,
-  raidSetup,
-  stageMatchups,
-  stageTeamIds,
+  raidTeamIds,
   summarize,
-  type CampaignStage,
+  type CampaignMissionId,
+  type WarlordEncounter,
   type RaidTier,
   type Difficulty,
   type Element,
@@ -55,7 +60,8 @@ const { values } = parseArgs({
     set: { type: "string" },
     "foe-set": { type: "string" },
     level: { type: "string" },
-    stage: { type: "string" },
+    boss: { type: "string" },
+    mission: { type: "string" },
     team: { type: "string", default: "heroes" },
     sweep: { type: "string" },
     raid: { type: "string" },
@@ -158,53 +164,93 @@ function runRoster(): void {
   }
 }
 
-if (values.stage) {
-  runStages();
+if (values.raid !== undefined) {
+  runRaids();
   process.exit(0);
 }
 
-/** Tỉ lệ thắng của người chơi ở từng màn; --sweep in thêm một cột cho mỗi mức hơn cấp. */
-function runStages(): void {
-  const raidArg = values.raid === undefined ? undefined : Number(values.raid);
-  if (raidArg !== undefined && !isRaidTier(raidArg)) fail(`--raid phải là 1, 2 hoặc 3`);
-  const raid = raidArg as RaidTier | undefined;
-  const stages: CampaignStage[] =
-    values.stage === "all"
-      ? [...(raid ? RAID_STAGES : CAMPAIGN)]
-      : [stageById(values.stage!) ?? fail(`Không có màn ${values.stage}`)];
+if (values.mission) {
+  runMissions();
+  process.exit(0);
+}
+
+/** Campaign V2: tỉ lệ thắng, số lượt và số trận hòa (chạm giới hạn lượt) của từng nhiệm vụ có trận. */
+function runMissions(): void {
+  const ids: CampaignMissionId[] = values.mission!.split(",").flatMap((x) => {
+    const route = CAMPAIGN_ROUTES.find((r) => r.id === x);
+    if (route) return route.missions.filter((id) => campaignEncounter(id));
+    if (!isCampaignMissionId(x) || !campaignEncounter(x)) fail(`Không có trận cho nhiệm vụ ${x}`);
+    return [x];
+  });
+  const team = values.team as StageTeam;
+  const sweep = values.sweep?.split("..").map(Number);
+  const offsets = sweep ? range(sweep[0]!, sweep[1] ?? sweep[0]!) : [0];
+  const json: Record<string, unknown> = {};
+  if (!values.json) {
+    console.log(`\n## Campaign V2 · ${battles} trận mỗi ô · người chơi AI normal, hệ ${values.element ?? "xoay vòng 7 hệ"}, đội ${team}`);
+    console.log("| Nhiệm vụ | Đối thủ | Khó | Đội kèm | Cấp | Thắng | Hòa | Lượt/phe trung vị | p90 |\n|---|---|---|---|---|---|---|---|---|");
+  }
+  for (const id of ids) {
+    const enc = campaignEncounter(id)!;
+    for (const o of offsets) {
+      const lv = (level ?? enc.recommendedLevel) + o;
+      const { matchups, difficulty: foeDifficulty } = missionMatchups(id, battles, seed, {
+        level: lv,
+        team,
+        ...(values.element ? { element } : {}),
+      });
+      const s = summarize(matchups.map((m) => runBattle(m, { difficulty: ["normal", foeDifficulty], maxTurns })));
+      json[`${id}@${lv}`] = s;
+      if (!values.json)
+        console.log(
+          `| ${id} | ${enc.level} | ${foeDifficulty} | ${missionTeamIds(id, team).join("+")} | ${lv} | ${pct(s.side0WinRate)} | ${s.draws} | ${num(s.turnsPerSide.median)} | ${num(s.turnsPerSide.p90)} |`,
+        );
+    }
+  }
+  if (values.json) console.log(JSON.stringify(json, null, 2));
+}
+
+/** Tỉ lệ thắng của người chơi ở từng sứ quân Đánh trùm; --sweep in thêm một cột cho mỗi mức hơn cấp. */
+function runRaids(): void {
+  const raidArg = Number(values.raid);
+  if (!isRaidTier(raidArg)) fail(`--raid phải là 1, 2 hoặc 3`);
+  const raid = raidArg as RaidTier;
+  const bosses: WarlordEncounter[] =
+    values.boss === undefined || values.boss === "all"
+      ? [...RAID_BOSSES]
+      : [raidBossById(values.boss) ?? fail(`Không có sứ quân ${values.boss}`)];
   const team = values.team as StageTeam;
   const sweep = values.sweep?.split("..").map(Number);
   const offsets = sweep ? range(sweep[0]!, sweep[1] ?? sweep[0]!) : null;
-  const rate = (stage: CampaignStage, lv: number) => {
-    const results = stageMatchups(stage, battles, seed, {
+  const rate = (boss: WarlordEncounter, lv: number) => {
+    const { matchups, difficulty: foeDifficulty } = raidMatchups(boss, raid, battles, seed, {
       level: lv,
       team,
-      ...(raid ? { raid } : {}),
       ...(values.element ? { element } : {}),
-    }).map((m) => runBattle(m, { difficulty: ["normal", raid ? raidSetup(stage, raid).difficulty : stage.difficulty], maxTurns }));
-    return summarize(results);
+    });
+    return summarize(matchups.map((m) => runBattle(m, { difficulty: ["normal", foeDifficulty], maxTurns })));
   };
   const json: Record<string, unknown> = {};
   if (!values.json) {
-    console.log(`\n## ${raid ? `Đánh trùm bậc ${raid}` : "Chiến dịch"} · ${battles} trận mỗi ô · người chơi AI normal, hệ ${values.element ?? "xoay vòng 7 hệ"}, đội ${team}`);
+    console.log(`\n## Đánh trùm bậc ${raid} · ${battles} trận mỗi ô · người chơi AI normal, hệ ${values.element ?? "xoay vòng 7 hệ"}, đội ${team}`);
     console.log(
       offsets
-        ? `| Màn | Đối thủ | Khó | Đội kèm | ${offsets.map((o) => `+${o}`).join(" | ")} |\n|---|---|---|---|${offsets.map(() => "---|").join("")}`
-        : "| Màn | Đối thủ | Khó | Đội kèm | Cấp | Thắng | Lượt/phe (trung vị) |\n|---|---|---|---|---|---|---|",
+        ? `| Sứ quân | Đối thủ | Đội kèm | ${offsets.map((o) => `+${o}`).join(" | ")} |\n|---|---|---|${offsets.map(() => "---|").join("")}`
+        : "| Sứ quân | Đối thủ | Đội kèm | Cấp | Thắng | Lượt/phe (trung vị) |\n|---|---|---|---|---|---|",
     );
   }
-  for (const stage of stages) {
-    const mates = stage.mode === "3v3" ? stageTeamIds(stage, team, !!raid).join("+") : "—";
-    const foeLevel = raid ? raidLevel(stage, raid) : stage.level;
-    const head = `| ${stage.id} | ${foeLevel} | ${raid ? raidSetup(stage, raid).difficulty : stage.difficulty} | ${mates} |`;
+  for (const boss of bosses) {
+    const mates = boss.mode === "3v3" ? raidTeamIds(boss, team).join("+") : "—";
+    const foeLevel = raidLevel(boss, raid);
+    const head = `| ${boss.id} | ${foeLevel} | ${mates} |`;
     if (offsets) {
-      const rates = offsets.map((o) => rate(stage, foeLevel + o).side0WinRate);
-      json[stage.id] = Object.fromEntries(offsets.map((o, i) => [`+${o}`, rates[i]]));
+      const rates = offsets.map((o) => rate(boss, foeLevel + o).side0WinRate);
+      json[boss.id] = Object.fromEntries(offsets.map((o, i) => [`+${o}`, rates[i]]));
       if (!values.json) console.log(`${head} ${rates.map(pct).join(" | ")} |`);
     } else {
-      const lv = level ?? (raid ? raidRecommended(stage, raid) : recommendedLevel(stage));
-      const s = rate(stage, lv);
-      json[stage.id] = { level: lv, ...s };
+      const lv = level ?? raidRecommended(boss, raid);
+      const s = rate(boss, lv);
+      json[boss.id] = { level: lv, ...s };
       if (!values.json) console.log(`${head} ${lv} | ${pct(s.side0WinRate)} | ${num(s.turnsPerSide.median)} |`);
     }
   }

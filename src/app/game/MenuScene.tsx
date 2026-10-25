@@ -12,7 +12,7 @@ import type { Scene } from "./scene";
 import { SceneLink } from "./SceneContext";
 
 const MODES: readonly { scene: Scene; title: string; text: string }[] = [
-  { scene: "CAMPAIGN", title: "Chiến dịch", text: "Bản đồ 12 sứ quân, đánh từng màn, đánh trùm." },
+  { scene: "CAMPAIGN", title: "Chiến dịch", text: "Sáu chương dẹp loạn 12 sứ quân, rồi tái đấu các sứ quân bị đánh dẹp." },
   { scene: "TOWER", title: "Leo tháp", text: "Chuỗi trận mạnh dần, máu và lương mang sang." },
   { scene: "TRIAL", title: "Tháp Thí Luyện", text: "20 tầng cố định, tự chọn đội và luật riêng từng tầng." },
   { scene: "DESTINY", title: "Tháp Vận Mệnh", text: "Khóa roster theo chu kỳ, giữ máu và lương xuyên tầng." },

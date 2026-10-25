@@ -1,6 +1,6 @@
 # Chế độ chơi
 
-> Cập nhật: 24/10/2026
+> Cập nhật: 25/10/2026 (CAMP-08.04: gỡ chiến dịch 13 màn cũ, tách Đánh trùm/BXH/nhiệm vụ khỏi màn cũ)
 
 ## 1. Tổng quan
 
@@ -8,8 +8,8 @@
 |---|---|---|---|
 | **Luyện tập / Chơi thử** | Offline, không thưởng, không lưu (gồm trang `/demo`); có thể tắt đồng hồ 30 giây | 1vs1 hoặc 3vs3 | 1 |
 | **Thường (Normal)** | Trận sinh ngẫu nhiên đấu Tianwu; chọn độ khó; lương reset mỗi trận | Người chơi chọn 1vs1 hoặc 3vs3 | 2–3 |
-| **Chiến dịch (Campaign)** | Theo cốt truyện; lương mang sang; luật màn; tỉ lệ ô theo màn | Mỗi màn quy định | 4 |
-| **Đánh trùm** | Đánh lại trùm đã gặp trong chiến dịch ở mức khó cao hơn, có luật "sân nhà" và phần thưởng riêng | Mỗi trùm quy định | 4 |
+| **Chiến dịch (Campaign V2)** | 6 chương, 24 nhiệm vụ (sự kiện, ngoại giao, trận); lương mang sang; địa hình theo nhiệm vụ | Mỗi nhiệm vụ có trận quy định | 4 |
+| **Đánh trùm** | Tái đấu 6 sứ quân bị đánh dẹp ở mức khó cao hơn, mở theo mốc chiến dịch, có luật "sân nhà" và phần thưởng riêng | Mỗi sứ quân quy định | 4 |
 | **Vô hạn = Leo tháp** | Chuỗi trận riêng biệt, độ khó tăng dần | 3vs3 | Sau giai đoạn 4 |
 | **Tháp Thí Luyện (Trial)** | 20 tầng cố định, luật đội hình/bàn cờ và thưởng đá lần đầu | 3vs3 | Song Tháp V1.0 |
 | **Tháp Vận Mệnh (Destiny)** | Run 10 tầng theo chu kỳ tuần, roster khóa và tài nguyên xuyên tầng | 3vs3 | Song Tháp V1.0 |
@@ -17,100 +17,56 @@
 
 ## 2. Chiến dịch
 
-- Chuỗi màn thử thách, có trùm là sứ quân lịch sử.
-- **Cốt truyện (đã chốt hướng):**
-  - Người chơi đóng vai **Đinh Bộ Lĩnh** (nhân vật chính).
-  - Chiến dịch đi theo **trình tự lịch sử dẹp loạn 12 sứ quân**, mở đầu từ **thuở nhỏ** cho tới khi **lên ngôi**.
-  - **Tianwu** không xuất hiện như một nhân vật trong truyện; chỉ đóng vai AI điều khiển các nhân vật đối thủ.
-- **Lương mang sang trận sau:**
-  - Lương vào trận được giới hạn trong khoảng **20 đến 100**, nên không bao giờ vào trận ở mức hết lương.
-  - Giữa các trận có **doanh trại** để đổi vàng lấy lương.
-  - Một số màn đặc biệt đặt **lương theo kịch bản** cho phe AI (ví dụ thành bị vây: AI vào trận chỉ có 25 lương).
-- **Luật màn** tùy chọn: bảng tỉ lệ ô riêng, lương theo kịch bản. (Đồng hồ 30 giây mỗi lượt luôn bật, không phải luật màn.)
+- **Campaign V2** là chiến dịch duy nhất: 6 chương, 24 nhiệm vụ M01–M24, từ thuở nhỏ ở Hoa Lư tới Đại lễ đăng quang năm 968. Phạm vi, đồ thị mở khóa, thưởng và quy tắc nguồn sử ở `docs/campaign-v2/` (`design-freeze.md`, `mission-matrix.md`, `history-sources.md`). Code ở `src/core/campaign/` (`storyNodes.ts`, `encounters.ts`, `scenarios.ts`, `rewards.ts`), chơi ở `/game/campaign`.
+- Người chơi đóng vai **Đinh Bộ Lĩnh**. **Tianwu** không xuất hiện như một nhân vật trong truyện; chỉ đóng vai AI điều khiển các nhân vật đối thủ.
+- **Loại nhiệm vụ:** sự kiện, chuẩn bị và ngoại giao hoàn thành qua `completeCampaignEvent` (không phải trận, không tính lượt); trận, phòng thủ, công thành và trùm hoàn thành khi server chốt trận đạt mục tiêu.
+- **Lương mang sang trận sau:** kẹp trong **20 đến 100**, bắt đầu 60, doanh trại đổi 3 vàng lấy 1 lương (mua ở màn chuẩn bị trận). Lương chốt theo phần chênh của chính trận đó (CAMP-08.03). Sự kiện và ngoại giao không trừ, không nạp lương.
+- Thưởng: như trận thường (kinh nghiệm, vàng, đồ rơi), thêm vàng lần đầu hoàn thành nhiệm vụ và mốc chương; tướng lịch sử mở theo mốc chương. Chiến dịch không phát Đá Cường Hóa.
+  - Vàng lần đầu cả 24 nhiệm vụ là 3 975 (50–300 mỗi nhiệm vụ, `storyNodes.ts`), cộng 6 × 250 vàng chương
+    (`CAMPAIGN_CHAPTER_FIRST_CLEAR_GOLD`) và thành tựu "Chương I" và "Hoàn thành chiến dịch" (500 mỗi cái). Tổng là
+    6 475 vàng một lần.
+  - Thưởng nhiệm vụ chỉ có trường `firstClearGold`: không có đá, không có trang bị cố định.
+  - Mọi thưởng lần đầu ghi biên nhận `node:<M..>` / `chapter:<n>` do server chốt, nên đánh lại hay gửi lại chỉ nhận
+    thưởng trận thường.
+- **Sử liệu:** mỗi đoạn lời kể mang nhãn `recorded` / `reconstructed` / `disputed` / `fictional` và mã nguồn theo
+  `docs/campaign-v2/history-sources.md`. Tình tiết game sáng tác ghi rõ là hư cấu. Hậu truyện 970 (Thái Bình) và 971
+  chỉ là ghi chú nguồn, không có cảnh chơi.
+- **Độ khó** (CAMP-09.02, `docs/campaign-v2/balance-report.md`): đo bằng
+  `pnpm exec tsx scripts/campaign-balance.ts --runs 200`. Mô phỏng chốt đúng mục tiêu server (phòng thủ đủ lượt,
+  ngưỡng máu trùm, công thành nhiều phase). Với đội tướng lịch sử ở cấp gợi ý, không đồ, AI Thường đánh thay:
+  - M03/M04 khoảng 100%; M07 66%;
+  - trùm Chương IV–V 54–74%;
+  - M20 30% trong một lượt (khoảng 4.7 trận);
+  - M21 18% (khoảng 5.5 trận), vì server giữ phase đã qua.
+- Kiểm thử E2E M01 → M24 và hồi quy các chế độ: `docs/campaign-v2/regression-report.md`. Nghiệm thu phát hành:
+  `docs/campaign-v2/final-acceptance.md`.
 
-### 2.1 Chương 1 "Cờ lau dẹp loạn" (Claude đặt 19/10/2026, chờ Shan duyệt)
+### 2.1 Chiến dịch 13 màn cũ (đã gỡ ở CAMP-08.04, 25/10/2026)
 
-Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (trận do server xử lý như `/play`).
+- Bản 13 màn "Cờ lau dẹp loạn" (19–20/10/2026, `src/core/campaign/campaign.ts`) đã gỡ hẳn theo yêu cầu của Shan, để không phải kiểm lại hai chiến dịch khi xây tính năng mới. Server từ chối mọi payload `stage`; trang chiến dịch không còn khu "Bản đồ cũ 13 màn"; `pnpm sim -- --stage` không còn.
+- Dữ liệu 12 sứ quân của bản cũ (nghề, hệ, cấp, tùy tướng, độ khó) chuyển sang **danh mục 12 sứ quân dùng chung** `src/core/campaign/warlords.ts` (`WARLORD_ENCOUNTERS`, design-freeze mục 5). Leo tháp, Sinh tồn, Thử thách ngày và Đấu trường đọc danh mục này, theo đúng thứ tự cũ, nên cùng seed vẫn ra cùng đối thủ (đã so 1080 mẫu trước/sau).
+- Hồ sơ: `campaign.legacy` (màn cũ đã qua, số lượt màn cũ) bị bỏ khi đọc hồ sơ; chỉ bậc Đánh trùm được chuyển sang khóa mới theo id sứ quân. Màn cũ không quy đổi thành tiến độ V2. Bảng `stage:<màn>` cũ không còn được ghi hay đọc; dòng cũ trong kho để nguyên.
 
-- 13 màn mở lần lượt: Cờ lau tập trận ở Hoa Lư (Ninh Bình), rồi 12 sứ quân theo danh sách Shan chốt 20/10/2026; trùm cuối Đỗ Cảnh Thạc máu ×1,5.
+### 2.2 Đánh trùm (Claude đặt 20/10/2026, chuyển sang Campaign V2 ở CAMP-08.04)
 
-  | # | Màn | Sứ quân (tước hiệu) | Đất (ngày nay) |
-  |---|---|---|---|
-  | 2 | Thử tài ở Bố Hải Khẩu | Trần Lãm (Trần Minh Công) | Kỳ Bố, Thái Bình |
-  | 3 | Thu phục Đằng Châu | Phạm Bạch Hổ (Phạm Phòng Át) | Kim Động, Hưng Yên |
-  | 4 | Đánh Bình Kiều | Ngô Xương Xí (Kiều công) | Triệu Sơn, Thanh Hóa |
-  | 5 | Đường Lâm quy phục | Ngô Nhật Khánh, còn gọi Ngô Nam Chỉ (Ngô Nam công) | Sơn Tây, Hà Nội |
-  | 6 | Vây thành Tam Đái | Nguyễn Khoan (Nguyễn Thái Bình) | Vĩnh Tường, Vĩnh Phúc |
-  | 7 | Lên Phong Châu | Kiều Công Hãn (Kiều Tam Chế) | Bạch Hạc, Phú Thọ |
-  | 8 | Qua đầm Hồi Hồ | Kiều Thuận (Kiều Lệnh công) | Cẩm Khê, Phú Thọ |
-  | 9 | Đánh Siêu Loại | Lý Khuê (Lý Lãng công) | Thuận Thành, Bắc Ninh |
-  | 10 | Hạ Tiên Du | Nguyễn Thủ Tiệp (Nguyễn Lệnh công) | Tiên Du, Bắc Ninh |
-  | 11 | Thủy chiến Tế Giang | Lữ Đường (Lữ Tá công) | Văn Giang, Hưng Yên |
-  | 12 | Tây Phù Liệt | Nguyễn Siêu (Nguyễn Hữu công) | Thanh Trì, Hà Nội |
-  | 13 | Thành Đỗ Động | Đỗ Cảnh Thạc (Đỗ Lệnh công) | Thanh Oai, Hà Nội |
-- Ba màn đầu 1vs1, sau đó 3vs3 với sứ quân và hai tùy tướng. Độ khó Dễ → Thường → Khó → Trùm; cấp đối thủ 1 → 20.
-- **Sứ quân là nhân vật lịch sử có bộ kỹ năng như Đinh Bộ Lĩnh** (6 kỹ năng theo nguyên tố, mở theo cấp như nhân vật chính, có bị động khi làm thủ lĩnh). Tùy tướng dùng chiêu theo nghề.
-- Luật màn đang dùng: thành bị vây (Tam Đái, đối thủ 25 lương), kho lương đầy (Tiên Du, Đỗ Động, 100 lương), đầm lầy/sông nước (Hồi Hồ, Tế Giang: bánh chưng 9%, âm dương 22%).
-- Lương: vào chiến dịch với 60; lương còn lại sau mỗi trận (thắng hay thua) mang sang trận sau, kẹp trong 20–100. Doanh trại đổi 3 vàng lấy 1 lương.
-- Thưởng: như trận thường (kinh nghiệm, vàng, đồ rơi), thêm vàng lần đầu qua màn (100 → 1 000).
-- Cấp gợi ý đặt riêng từng màn (`recommended`), cân bằng `pnpm sim -- --stage all` ngày 20/10/2026: 140 trận mỗi màn, AI Thường đánh thay người chơi, Đinh Bộ Lĩnh xoay vòng đủ 7 hệ, cả đội ở cấp gợi ý. Mục tiêu: màn nào cũng thắng từ 50% trở lên, màn Dễ khoảng 80–90%, màn Thường 65–85%, màn Khó và trùm 50–75%.
+- Chế độ lặp lại riêng, không phải nhiệm vụ chiến dịch và không chặn kết thúc chiến dịch. **Chỉ 6 sứ quân bị đánh dẹp trong cốt truyện là trùm** (nhóm `military` của sổ thế cục `factions.ts`; Shan chốt 25/10/2026, design-freeze bổ sung 1.1), mỗi trận là **tái đấu**. Mỗi người mở sau nhiệm vụ mốc (`unlockedContent` của nhiệm vụ): Kiều Công Hãn M15, Kiều Thuận M16, Lý Khuê M17, Nguyễn Thủ Tiệp M18, Nguyễn Siêu M20, Đỗ Cảnh Thạc M21. Server chỉ mở khi nhiệm vụ đó đã có trong `campaign.completed`.
+- Trần Lãm (đồng minh), Phạm Bạch Hổ, Ngô Xương Xí, Ngô Nhật Khánh (quy phục), Nguyễn Khoan và Lữ Đường (tan rã/chưa chắc) không có trận Đánh trùm; mốc của họ (M08, M11–M14, M19) chỉ mở bán ở cửa hàng. Tất cả trùm đều đánh 3vs3.
+- **3 bậc**, mở lần lượt: Bậc I mở khi qua mốc, bậc sau mở khi thắng bậc trước. Bậc lưu ở `campaign.raids[idSứQuân]`, giữ qua mọi lần đặt lại tiến độ chiến dịch. Code ở `src/core/campaign/raids.ts`, giao diện là khu "Đánh trùm" dưới chiến dịch (`src/app/game/campaign/RaidPanel.tsx`); sứ quân chưa mở không lộ tên.
+- Payload tạo trận: `{ raidBoss: <id sứ quân>, raid: 1|2|3 }`. Thiếu một trong hai, id lạ, id màn cũ hay trộn với chế độ khác đều bị từ chối.
+- Đối thủ là sứ quân và tùy tướng của danh mục ở cấp gốc **+4 / +8 / +12** (tối đa 30), AI khó hơn mức gốc **1 / 2 / 3 nấc** (Dễ → Thường → Khó → Trùm → Ác mộng). Thủ lĩnh máu ×1,5 (cả 6 trùm đều đánh 3vs3).
+- **Sân nhà:** bàn cờ nghiêng về loại ô hợp với nguyên tố sứ quân (`HOME_TERRAIN`) và sứ quân vào trận đầy lương (100). Người chơi vào trận với lương thường, không dùng và không đổi lương chiến dịch.
+- **Thưởng lần đầu thắng mỗi bậc:** 300 / 600 / 1000 vàng và 1 món trang bị Tinh / Bảo / Thần phẩm theo nguyên tố sứ quân (vũ khí theo nghề sứ quân). Thắng lại chỉ nhận thưởng trận thường. Đánh trùm không đổi tiến độ, lương hay thế cục chiến dịch.
+- Cấp gợi ý = cấp gợi ý gốc của sứ quân + 4 / 8 / 12.
+- Mô phỏng: `pnpm sim -- --raid 1|2|3 [--boss <id> | all] [--team heroes|default] [--sweep 0..6]`. Đội "heroes" là 2 tướng lịch sử mở muộn nhất tính tới nhiệm vụ mốc của sứ quân. Số liệu 20/10/2026 (đo theo màn cũ, AI Thường đánh thay người chơi ở cấp gợi ý): thắng trung bình 46% Bậc I, 46% Bậc II, 39% Bậc III; chưa đo lại vì luật trận không đổi.
 
-  | Màn | Cấp đối thủ | Cấp gợi ý | Thắng (đội 2 tướng lịch sử mới nhất) | Thắng (đội khởi đầu Hà Vân + Mai Thanh) |
-  |---|---|---|---|---|
-  | Cờ lau tập trận | 1 | 4 | 91% | 91% (1vs1) |
-  | Bố Hải Khẩu | 2 | 6 | 82% | 82% (1vs1) |
-  | Đằng Châu | 3 | 6 | 79% | 79% (1vs1) |
-  | Bình Kiều | 5 | 8 | 79% | 66% |
-  | Đường Lâm | 6 | 9 | 88% | 75% |
-  | Tam Đái | 8 | 11 | 75% | 70% |
-  | Phong Châu | 9 | 14 | 64% | 59% |
-  | Hồi Hồ | 10 | 14 | 84% | 48% |
-  | Siêu Loại | 12 | 16 | 56% | 62% |
-  | Tiên Du | 13 | 16 | 72% | 34% |
-  | Tế Giang | 15 | 18 | 72% | 50% |
-  | Tây Phù Liệt | 17 | 21 | 53% | 39% |
-  | Đỗ Động (trùm) | 20 | 24 | 59% | 53% |
+### 2.3 Bảng xếp hạng (Claude đặt 20/10/2026, chuyển sang Campaign V2 ở CAMP-08.04)
 
-  Phong Châu trước đây chỉ 35% dù hơn đối thủ 6 cấp; nguyên nhân là chiêu riêng Phong Châu Lôi Kích (bỏ nó đi thì lên 52%). Đã giảm chiêu này, đổi phó tướng Kim thành Binh lính Thổ, hạ đối thủ xuống cấp 9. Đội khởi đầu yếu hơn hẳn ở các màn Khó, nên tướng lịch sử là phần thưởng có ý nghĩa. Cấp chênh lệch ảnh hưởng ít (thêm 1 cấp thường chỉ +2–5 điểm), đội hình và hệ khắc ảnh hưởng nhiều hơn.
-- Lời dẫn và thứ tự màn dựa theo sử sách phổ thông, chỉ để làm game; Shan duyệt lại trước khi phát hành.
-
-- **Tướng lịch sử gia nhập** (Claude đặt 20/10/2026, chờ Shan duyệt): lần đầu qua màn, một tướng vào hồ sơ ở cấp của màn (điểm kỹ năng còn nguyên để người chơi tự nâng). Xem [Nhân vật & kỹ năng](14-nhan-vat.md#5-tướng-lịch-sử).
-
-  | Màn | Tướng gia nhập | Nghề | Hệ |
-  |---|---|---|---|
-  | Cờ lau tập trận | Nguyễn Bặc | Tướng sĩ | Hỏa |
-  | Thử tài ở Bố Hải Khẩu | Đinh Điền | Binh lính | Thổ |
-  | Thu phục Đằng Châu | Lưu Cơ | Mưu sĩ | Kim |
-  | Đánh Bình Kiều | Trịnh Tú | Y sư | Mộc |
-  | Vây thành Tam Đái | Lê Hoàn | Quân sư | Lôi |
-  | Lên Phong Châu | Đinh Liễn | Pháp sư | Thủy |
-
-- Mô phỏng 20/10/2026 (80 trận mỗi màn 3vs3, hơn đối thủ 3 cấp, AI Thường): đội có 2 tướng lịch sử mới nhất thắng trung bình 65%, đội mặc định (Hà Vân, Mai Thanh) 54%. Tướng lịch sử mạnh hơn vì mang 6 kỹ năng, nhưng không vượt hẳn ở mọi màn (Phong Châu 38% so với 57%, Đỗ Động 48% so với 65%). Chưa đổi số, cân chung ở lộ trình 4.4.
-
-- **Chiêu riêng và thoại** (Claude đặt 20/10/2026, chờ Shan duyệt): mỗi sứ quân có một chiêu riêng thay ô 5 ([Nhân vật & kỹ năng](14-nhan-vat.md#6-sứ-quân)). Mỗi màn có 3 câu thoại của thủ lĩnh đối thủ: trước trận (hiện ở bản đồ chiến dịch), khi người chơi thắng và khi thua (hiện ở màn kết quả). Dữ liệu ở `lines` của từng màn trong `src/core/campaign/campaign.ts`.
-
-- **Bản đồ cổ** (Claude vẽ 20/10/2026, chờ Shan duyệt): trang `/campaign` có bản đồ Giao Châu thế kỷ X kiểu khắc gỗ trên giấy dó (`src/app/campaign/CampaignMap.tsx`). 13 màn đặt theo vị trí gần đúng của vùng đất ngày nay (dãn các màn quá sát nhau cho dễ bấm), có sông Hồng, Đà, Lô, Đáy, Đuống, Mã, bờ biển và núi Tản Viên, Tam Đảo, Hoa Lư. Đường hành quân nối các màn theo thứ tự: đoạn đã đi nét liền đỏ son, phần còn lại nét đứt. Màn đã qua cắm cờ lau, màn đang mở có vòng nhấp nháy, màn khóa mờ đi. Bấm (hoặc Enter) một màn đã mở để xem chi tiết như bấm trong danh sách bên dưới. Bản đồ là hình cách điệu, không phải bản đồ lịch sử đo đạc.
-
-> TODO: chương sau.
-
-### 2.2 Đánh trùm (Claude đặt 20/10/2026, chờ Shan duyệt)
-
-- Qua màn có sứ quân (12 màn, trừ màn tập trận) thì sứ quân đó thách đấu lại ở **3 bậc**, mở lần lượt: Bậc I mở khi qua màn, bậc sau mở khi thắng bậc trước. Code ở `src/core/campaign/raids.ts`, giao diện là khung "Đánh trùm" dưới chi tiết màn ở `/campaign`.
-- Đối thủ giống màn gốc nhưng hơn cấp màn **+4 / +8 / +12** (tối đa 30), AI khó hơn màn gốc **1 / 2 / 3 nấc** (Dễ → Thường → Khó → Trùm → Ác mộng). Thủ lĩnh máu ×1,5 ở màn 3vs3 (1vs1 đã nhân máu cả hai phe nên không thêm).
-- **Sân nhà:** bàn cờ nghiêng về loại ô hợp với nguyên tố sứ quân (Thủy nhiều âm dương ít bánh chưng, Thổ nhiều bánh chưng, Hỏa và Kim nhiều kiếm, Mộc nhiều tim, Lôi và Phong nhiều âm dương, trống trận) và sứ quân vào trận đầy lương (100). Người chơi vào trận với lương thường (60), không dùng lương chiến dịch.
-- **Thưởng lần đầu thắng mỗi bậc:** 300 / 600 / 1000 vàng và 1 món trang bị Tinh / Bảo / Thần phẩm theo nguyên tố sứ quân (vũ khí theo nghề sứ quân). Thắng lại chỉ nhận thưởng trận thường (độ khó cao nên rơi đồ tốt hơn).
-- Cấp gợi ý = cấp gợi ý của màn + 4 / 8 / 12.
-- Mô phỏng 20/10/2026 (`pnpm sim -- --stage all --raid 1|2|3`, 70 trận mỗi ô, AI Thường đánh thay người chơi ở cấp gợi ý, đội có 2 tướng lịch sử): thắng trung bình 46% ở Bậc I, 46% Bậc II, 39% Bậc III, dao động 14–73% theo màn. Bậc II chưa khó hơn Bậc I vì cấp gợi ý tăng cùng cấp đối thủ, còn AI ở cấp cao khác nhau ít. Khó nhất là Bình Kiều (14–26%), Siêu Loại (24–31%) và Bố Hải (27–34%); dễ nhất Hồi Hồ (63–73%). Đây là nội dung thử thách nên để khó hơn chiến dịch; cân từng màn để sau nếu cần.
-- Bản đầu cho sứ quân luôn đi trước và AI nhảy thẳng lên Trùm: thắng chỉ 6–36% ở Bậc I nên đã bỏ.
-
-### 2.3 Bảng xếp hạng (Claude đặt 20/10/2026, chờ Shan duyệt)
-
-- Trang `/leaderboard` có 4 bảng: **Chiến dịch**, **Từng màn** (chọn màn), **Leo tháp**, **Sinh tồn**. Mỗi bảng hiện 50 người đứng đầu và hạng của người đang xem. Thử thách hằng ngày giữ bảng riêng ở `/daily`.
-- **Chiến dịch:** qua nhiều màn hơn đứng trên; bằng số màn thì tổng số lượt ít nhất của các màn đã qua ít hơn đứng trên. Màn qua trước khi có bảng (chưa lưu số lượt) tính 200 lượt.
-- **Từng màn:** thắng màn đó với ít lượt nhất (đếm lượt của cả hai phe). Hồ sơ lưu số lượt ít nhất mỗi màn (`campaign.bestTurns`), chỉ tính trận thắng màn chiến dịch, không tính đánh trùm.
+- Trang bảng xếp hạng có các bảng: **Chiến dịch**, **Từng trận** (chọn nhiệm vụ có trận), **Leo tháp**, **Sinh tồn**, **Đấu trường**, **Vận Mệnh**. Mỗi bảng hiện 50 người đứng đầu và hạng của người đang xem. Thử thách hằng ngày giữ bảng riêng.
+- **Chiến dịch:** hoàn thành nhiều nhiệm vụ V2 hơn đứng trên (sự kiện và ngoại giao cũng tính là hoàn thành); bằng số nhiệm vụ thì tổng số lượt ít nhất của các **nhiệm vụ có trận** ít hơn đứng trên. Sự kiện không có lượt nên không cộng gì; nhiệm vụ có trận đã xong mà chưa có số lượt tính 200 lượt.
+- **Từng trận** (`mission:<M..>`): hoàn thành nhiệm vụ có trận đó với ít lượt nhất (đếm lượt của cả hai phe), lấy từ `campaign.bestBattleTurns`. Chỉ nhiệm vụ trận, phòng thủ, công thành, trùm có bảng; không tính đánh trùm.
 - **Leo tháp:** tầng cao nhất đã qua. **Sinh tồn:** số đợt nhiều nhất đã vượt.
 - Bằng điểm thì người đạt điểm đó trước đứng trên. Khách hiện là "Khách" kèm 4 ký tự cuối mã.
-- Server ghi điểm vào bảng `leaderboard_scores` sau mỗi lần cộng thưởng trận online; người chơi có thành tích từ trước được ghi khi mở trang. Điểm tính từ hồ sơ nên trận ở `/demo` không lên bảng. Code ở `src/core/progress/leaderboard.ts` và `src/server/leaderboard.ts`.
+- Server ghi điểm vào bảng `leaderboard_scores` sau mỗi lần cộng thưởng trận online; người chơi có thành tích từ trước được ghi khi mở trang. Code ở `src/core/progress/leaderboard.ts` và `src/server/leaderboard.ts`.
 
 ## 3. Leo tháp (Vô hạn)
 
@@ -125,7 +81,7 @@ Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (tr
 - **Đội:** đội 3vs3 đang chọn ở hồ sơ, cố định cả lượt leo; chỉ số lấy theo hồ sơ lúc vào từng tầng (lên cấp, đổi đồ giữa chừng vẫn có tác dụng). Người đã ngã giữ 0 máu cho tới khi được hồi.
 - **Lương:** vào tầng 1 với 60; lương còn lại mang sang, luôn trong khoảng 20–100.
 - **Đối thủ:** 3 nhân vật kèm ngẫu nhiên theo seed của lượt leo. Tầng 1 cùng cấp nhân vật chính lúc bắt đầu leo, cứ 5 tầng thêm 1 cấp (tối đa 30). Máu và công nhân hệ số sức mạnh **0,38 ở tầng 1, +0,03 mỗi tầng** (tầng 10 là 0,65, tầng 20 là 0,95). Hạ từ 0,45 ngày 20/10/2026 khi nhân vật kèm lên bộ 6 ô (đối thủ mạnh hơn, trung vị tụt từ 10 xuống 8 tầng); với 0,38 AI Thường lại leo trung vị 10 tầng ở cấp 10. AI: tầng 1–3 Dễ, 4–8 Thường, 9–15 Khó, 16–24 Trùm, từ 25 Ác mộng.
-- **Tầng trùm:** cứ 5 tầng, thủ lĩnh là một sứ quân ngẫu nhiên, máu ×1,5, đánh trên sân nhà của sứ quân (bảng ô theo nguyên tố như [Đánh trùm](#22-đánh-trùm-claude-đặt-20102026-chờ-shan-duyệt)). Lần đầu vượt kỷ lục ở tầng trùm được 40 vàng × số tầng.
+- **Tầng trùm:** cứ 5 tầng, thủ lĩnh là một sứ quân ngẫu nhiên trong danh mục 12 sứ quân (`warlords.ts`), máu ×1,5, đánh trên sân nhà của sứ quân (bảng ô theo nguyên tố như [Đánh trùm](#22-đánh-trùm-claude-đặt-20102026-chuyển-sang-campaign-v2-ở-camp-0804)). Lần đầu vượt kỷ lục ở tầng trùm được 40 vàng × số tầng.
 - **Phần thưởng giữa các tầng** (luôn đủ 3 lựa chọn): Hồi máu (người còn đứng +50% máu tối đa, người đã ngã đứng dậy với 30%), Thêm lương (+30), hoặc một phúc ngẫu nhiên cộng dồn: Hùng khí +10% công, Thiết giáp +15% thủ, Bền chí +10% máu tối đa.
 - Mỗi tầng thắng hay thua vẫn nhận kinh nghiệm, vàng và đồ rơi như trận thường. Không bỏ được lượt leo khi đang có trận.
 - **Vì sao dùng hệ số sức mạnh:** bản đầu tăng cấp đối thủ mỗi tầng thì AI leo thay người chơi chết ở tầng 1–2, vì người thắng thường còn ít máu và chênh cấp ít tác dụng. Hệ số nhân thẳng vào máu và công chỉnh được độ khó rõ ràng hơn.
@@ -235,7 +191,7 @@ Trang `/daily`, code ở `src/core/daily/` (đề và điểm), `src/server/dail
 - **Seed:** HMAC của khóa bí mật server (`SESSION_SECRET`) với ngày, nên không đoán trước được đề ngày mai. Bàn cờ, ô rơi và AI dùng cùng seed: ai đi cùng nước thì gặp cùng ô rơi.
 - **Đề như nhau với mọi người:**
   - Đội cho sẵn: Đinh Bộ Lĩnh với nguyên tố và nghề theo đề, cùng 2 nhân vật kèm.
-  - Đối thủ: một sứ quân dẫn 2 tùy tướng, đánh trên sân nhà của sứ quân.
+  - Đối thủ: một sứ quân (danh mục 12 sứ quân `warlords.ts`) dẫn 2 tùy tướng, đánh trên sân nhà của sứ quân.
   - Mọi nhân vật cấp 10, không trang bị.
   - AI mức Khó, người chơi đi trước. Hồ sơ người chơi không ảnh hưởng gì tới đề.
 - **Một lượt mỗi ngày:** server ghi chỗ trong `daily_entries` trước khi tạo trận (khóa chính ngày + người chơi). Tải lại trang vẫn tiếp tục được trận đang dở.
@@ -266,7 +222,7 @@ Trang `/quests`, code ở `src/core/progress/quests.ts` và `achievements.ts`, l
 | Nhiệm vụ tuần | Mục tiêu | Vàng |
 |---|---|---|
 | Thắng trận | 15 | 400 |
-| Thắng trận chiến dịch hoặc đánh trùm | 5 | 300 |
+| Thắng trận chiến dịch hoặc đánh trùm (chỉ trận thắng của nhiệm vụ có trận, kể cả qua một phase công thành; hoàn thành sự kiện/ngoại giao không tính) | 5 | 300 |
 | Qua tầng tháp | 10 | 300 |
 | Vượt đợt sinh tồn | 20 | 300 |
 | Đánh thử thách ngày (số hôm) | 5 | 300 |
@@ -274,7 +230,7 @@ Trang `/quests`, code ở `src/core/progress/quests.ts` và `achievements.ts`, l
 - **Thắng trận sinh tồn:** tính là thắng khi vượt qua ít nhất 1 đợt.
 - **Thành tựu (nhận một lần):**
   - Thắng trận: 1 trận (50 vàng), 50 trận (300), 200 trận (1000).
-  - Qua hết chương 1 chiến dịch: 500.
+  - Qua hết chương 1 chiến dịch: 500 (đếm 4 nhiệm vụ của Chương I V2, CAMP-08.04).
   - Tháp tầng 10 / 25: 300 / 800.
   - Sinh tồn 10 / 20 đợt: 300 / 800.
   - Thử thách ngày 7 hôm: 300.

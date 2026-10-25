@@ -152,7 +152,7 @@ describe("server-authoritative Campaign events", () => {
     assert.equal((await loadProfile(store, "owner-b")).profile.gold, 0);
   });
 
-  it("validates request shape and requires an authenticated route owner", async () => {
+  it("validates request shape and issues a guest owner like the profile route", async () => {
     assert.deepEqual(
       parseCampaignEventInput({
         eventId: "evt_valid_001",
@@ -180,7 +180,9 @@ describe("server-authoritative Campaign events", () => {
         }),
       }),
     );
-    assert.equal(response.status, 401);
-    assert.deepEqual(await response.json(), { error: "unauthorized" });
+    // Không có cookie: tạo khách mới như /api/profile; hồ sơ mới chưa mở M05.
+    assert.equal(response.status, 422);
+    assert.deepEqual(await response.json(), { error: "locked" });
+    assert.match(response.headers.get("set-cookie") ?? "", /colau_guest/);
   });
 });

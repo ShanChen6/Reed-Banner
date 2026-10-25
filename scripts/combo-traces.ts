@@ -12,7 +12,6 @@ import {
   toView,
   createRng,
   PASSIVE,
-  stageById,
   type BattleAction,
   type BattleEvent,
 } from "../src/core";
@@ -159,7 +158,7 @@ for (const [i, selected] of manifest.entries())
         number = state.turn.number;
       const difficulty =
         c.group === "campaign" && side !== c.focalSide
-          ? stageById(c.stage!)!.difficulty
+          ? c.foeDifficulty!
           : "normal";
       while (
         state.winner === null &&

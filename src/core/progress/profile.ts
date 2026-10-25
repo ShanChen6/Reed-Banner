@@ -6,9 +6,9 @@ import { withGear, type GearItem, type GearSlot, type Tier } from "../gear";
 import {
   companionById,
   shopPrice,
-  shopUnlockStage,
   STARTER_COMPANIONS,
 } from "../roster";
+import { warlordUnlockMission } from "../campaign/recruits";
 import {
   buyGear,
   equipItem,
@@ -86,7 +86,7 @@ export interface Profile {
   readonly loadouts: Readonly<Record<string, SavedLoadout>>;
   /** Số dùng cho id món kế tiếp (`g<n>`), để server và /demo cấp id giống nhau. */
   readonly nextItemId: number;
-  /** Campaign V2 graph progress and temporary legacy adapters. */
+  /** Campaign V2 graph progress, kèm bậc Đánh trùm. */
   readonly campaign: CampaignState;
   /** Leo tháp: kỷ lục và lượt leo đang dở. */
   readonly tower: TowerState;
@@ -320,7 +320,7 @@ export type ProfileAction =
       readonly character: string;
       readonly key: string;
     }
-  /** Mua nhân vật kèm ở cửa hàng bằng vàng (sứ quân: sau khi qua màn của họ ở chiến dịch). */
+  /** Mua nhân vật kèm ở cửa hàng bằng vàng (sứ quân: sau nhiệm vụ mốc Campaign V2 của họ). */
   | { readonly type: "buyCompanion"; readonly character: string }
   /** Chọn 2 nhân vật kèm đã có ra trận 3vs3. */
   | { readonly type: "chooseTeam"; readonly companions: readonly string[] }
@@ -395,12 +395,13 @@ export type ProfileActionResult =
   | { readonly ok: true; readonly profile: Profile }
   | { readonly ok: false; readonly error: ProfileError };
 
-/** Nhân vật `id` đã mở bán chưa: sứ quân mở khi đã qua màn chiến dịch của họ, còn lại mở sẵn. */
+/**
+ * Nhân vật `id` đã mở bán chưa: sứ quân mở khi đã xong nhiệm vụ Campaign V2 tương ứng (freeze mục 5,
+ * M08–M21), không còn theo màn 13 màn cũ; còn lại mở sẵn.
+ */
 export function shopUnlocked(profile: Profile, id: string): boolean {
-  const stage = shopUnlockStage(id);
-  return (
-    stage === undefined || profile.campaign.legacy.cleared.includes(stage)
-  );
+  const mission = warlordUnlockMission(id);
+  return mission === undefined || profile.campaign.completed.includes(mission);
 }
 
 export type CampaignResetEnvironment = "development" | "test" | "production";
@@ -422,18 +423,12 @@ export function resetCampaignProgressForDev(
     ok: true,
     profile: {
       ...profile,
-      campaign: {
-        ...NEW_CAMPAIGN,
-        legacy: {
-          ...NEW_CAMPAIGN.legacy,
-          raids: profile.campaign.legacy.raids,
-        },
-      },
+      campaign: { ...NEW_CAMPAIGN, raids: profile.campaign.raids },
     },
   };
 }
 
-/** Mua nhân vật kèm ở cửa hàng: trừ vàng, nhân vật vào hồ sơ ở cấp 1. Sứ quân cần qua màn của họ trước. */
+/** Mua nhân vật kèm ở cửa hàng: trừ vàng, nhân vật vào hồ sơ ở cấp 1. Sứ quân cần qua nhiệm vụ mốc V2 của họ trước. */
 function buyCompanion(profile: Profile, id: string): ProfileActionResult {
   const price = shopPrice(id);
   if (price === undefined) return { ok: false, error: "invalidSkill" };
