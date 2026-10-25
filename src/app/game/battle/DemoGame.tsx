@@ -2008,14 +2008,34 @@ export default function DemoGame({
                           ? `Qua phase ${scenario.phaseIndex + 1}/${labels.length}: ${labels[scenario.phaseIndex]}`
                           : "Hoàn thành mục tiêu!"}
                     </p>
-                    <p className="max-w-sm text-sm text-amber-100 italic">
-                      {phaseAdvanced
-                        ? `${bossThreshold ? `${phaseBoss?.name ?? "Trùm"} lui về tuyến trong với ${Math.round((Math.max(0, phaseBoss?.hp ?? 0) / (phaseBoss?.maxHp ?? 1)) * 100)}% máu. ` : ""}Trận chưa kết thúc, nhiệm vụ chưa hoàn thành. Phase tiếp theo: ${labels[scenario.phaseIndex + 1]}. Lương còn lại mang sang trận sau.`
-                        : (scenarioFailed
+                    {phaseAdvanced ? (
+                      <p className="max-w-sm text-sm text-amber-100 italic">
+                        {`${bossThreshold ? `${phaseBoss?.name ?? "Trùm"} lui về tuyến trong với ${Math.round((Math.max(0, phaseBoss?.hp ?? 0) / (phaseBoss?.maxHp ?? 1)) * 100)}% máu. ` : ""}Trận chưa kết thúc, nhiệm vụ chưa hoàn thành. Phase tiếp theo: ${labels[scenario.phaseIndex + 1]}. Lương còn lại mang sang trận sau.`}
+                      </p>
+                    ) : (
+                      // Thắng thì lời kết, thua thì lời thua: đọc đủ mọi câu, không chiếu lời thắng sau trận thua.
+                      <div className="flex max-h-[40vh] max-w-md flex-col gap-1.5 overflow-y-auto text-sm">
+                        {(
+                          (scenarioFailed
                             ? missionCopy(scenario.nodeId)?.defeat
-                            : missionCopy(scenario.nodeId)?.outro
-                          )?.[0]?.text}
-                    </p>
+                            : missionCopy(scenario.nodeId)?.outro) ?? []
+                        ).map((b, i) => (
+                          <p
+                            key={i}
+                            className={
+                              b.speaker ? "text-amber-50" : "text-amber-100 italic"
+                            }
+                          >
+                            {b.speaker && (
+                              <span className="font-semibold text-amber-300">
+                                {b.speaker}:{" "}
+                              </span>
+                            )}
+                            {b.speaker ? `“${b.text}”` : b.text}
+                          </p>
+                        ))}
+                      </div>
+                    )}
                     {outcome && (
                       <p className="text-sm">
                         +{outcome.rewards.xp[0]} kinh nghiệm mỗi người · +
