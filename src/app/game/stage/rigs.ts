@@ -116,7 +116,7 @@ export interface WarriorRig {
    * `steelBulwark` chỉ ở tuyệt chiêu, dựng tường thép trước mặt chính mình; `silverGrace` chỉ ở tuyệt chiêu, rải kim
    * bạc và vòng sáng hồi máu quanh từng đồng đội; `coinScatter` chỉ ở tuyệt chiêu, tung tiền vàng khỏi đối thủ đứng
    * đầu kèm ấn câm lặng; `ironFormation` chỉ ở tuyệt chiêu, khiên nứt trên từng đối thủ và mũi tên vàng ở từng đồng
-   * đội.
+   * đội; `bambooSap` chỉ ở tuyệt chiêu, chém lá trúc lên đối thủ đứng đầu và hút sinh khí về chính mình.
    */
   readonly strikeFx?:
     | "lightning"
@@ -131,7 +131,8 @@ export interface WarriorRig {
     | "steelBulwark"
     | "silverGrace"
     | "coinScatter"
-    | "ironFormation";
+    | "ironFormation"
+    | "bambooSap";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1346,6 +1347,50 @@ const NGHIEM_THIET: WarriorRig = {
     anchor: { x: 1000, y: 820 }, scale: 0.85 },
 };
 
+/**
+ * Lâm Tùng, tướng sĩ hệ Mộc (tướng cửa hàng). Bộ tranh Shan gửi 25/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
+ * code: cẳng tay xăm tùng cùng kiếm thẳng xoay quanh khuỷu theo nhịp chém, bàn tay trái, đầu và dải khăn xanh tách
+ * riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const LAM_TUNG: WarriorRig = {
+  skeleton: "warrior",
+  dir: "lam-tung",
+  texScale: 0.5,
+  foot: { x: 590, y: 1500 },
+  height: 1500,
+  parts: {
+    body: { x: 336, y: 0, w: 635, h: 1525 },
+    armR: { x: 785, y: 750, w: 100, h: 131 },
+    sword: { x: 12, y: 699, w: 389, h: 623 },
+    arm: { x: 282, y: 540, w: 114, h: 291 },
+    head: { x: 560, y: 36, w: 143, h: 200 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 455, y: 23, w: 141, h: 162 }, behind: true,
+      wind: { axis: "x", start: 0.15, amp: 7, freq: 1.6, k: 3, phase: 0.3, vertical: true, reverse: true } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 340, y: 560 },
+    elbowR: { x: 800, y: 770 },
+    neck: { x: 625, y: 230 },
+  },
+  blade: [{ x: 300, y: 800 }, { x: 20, y: 1300 }],
+  strikeFx: "bambooSap",
+  fxColor: 0x4f9a4a,
+  // Đâm kiếm thẳng (đánh thường), thế tấn chĩa kiếm chéo lên (ra chiêu), giơ kiếm qua đầu bổ xuống (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 12, y: 5 },
+      anchor: { x: 460, y: 985 }, scale: 1.35, burst: { x: 1500, y: 260 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 161, y: 11 },
+      anchor: { x: 780, y: 985 }, scale: 1.35, burst: { x: 1290, y: 20 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 259, y: 12 },
+      anchor: { x: 850, y: 985 }, scale: 1.35, burst: { x: 940, y: 25 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 57, y: 139 },
+    anchor: { x: 800, y: 900 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1373,6 +1418,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   chauNgoc: CHAU_NGOC,
   toKim: TO_KIM,
   nghiemThiet: NGHIEM_THIET,
+  lamTung: LAM_TUNG,
 };
 
 export function rigOf(id: string): Rig | null {

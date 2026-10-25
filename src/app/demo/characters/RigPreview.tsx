@@ -55,14 +55,14 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/ward"), import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
           import("@/app/game/stage/flame"), import("@/app/game/stage/slam"),
           import("@/app/game/stage/needle"), import("@/app/game/stage/bulwark"),
           import("@/app/game/stage/silver"), import("@/app/game/stage/coins"),
-          import("@/app/game/stage/banner"),
+          import("@/app/game/stage/banner"), import("@/app/game/stage/sap"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -182,9 +182,17 @@ export default function RigPreview({ id, size, onSnapshot }: {
           formation.shatter({ x: el.clientWidth - 60, y: el.clientHeight * 0.5 }, size);
           formation.rally({ x: loaded.view.x, y: loaded.view.y }, size, 0.2);
         });
+        // Trúc lâm hệ Mộc: chém ở mép phải khung, sinh khí bay về nhân vật.
+        const sap = team === "bambooSap" ? bambooSap(app.stage, rig.fxColor) : null;
+        if (sap) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          sap.drain({ x: el.clientWidth - 60, y: el.clientHeight * 0.5 }, { x: loaded.view.x, y: loaded.view.y - size * 0.55 }, size);
+        });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
           loaded?.update(dt);
+          sap?.update(dt);
           coins?.update(dt);
           formation?.update(dt);
           needles?.update(dt);
