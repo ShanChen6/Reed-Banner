@@ -27,7 +27,7 @@ import {
   proposeSurvivalLeaderBuild,
   proposeSurvivalLineup,
   rescaleSurvivalHp,
-  RAID_STAGES,
+  WARLORD_ENCOUNTERS,
   readSurvivalFighterState,
   settle,
   selectableActors,
@@ -1665,7 +1665,7 @@ describe("sinh tồn", () => {
     const boss = survivalWave(run, 5);
     assert.ok(boss.boss);
     assert.equal(boss.foes.length, 3);
-    const leaders = RAID_STAGES.map((s) => s.foes[0]!.id);
+    const leaders: string[] = WARLORD_ENCOUNTERS.map((w) => w.id);
     assert.ok(leaders.includes(boss.foes[0]!.id));
     assert.ok(boss.foes[0]!.maxHp > boss.foes[1]!.maxHp * (BOSS_HP - 0.5));
   });

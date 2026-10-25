@@ -17,7 +17,7 @@ import {
   type WaveConfig,
   SPIRIT_MAX,
 } from "../battle";
-import { BOSS_HP, RAID_STAGES, stageFighter } from "../campaign";
+import { BOSS_HP, WARLORD_ENCOUNTERS, warlordLeader } from "../campaign";
 import {
   EMPTY_LOADOUT,
   equip,
@@ -1751,8 +1751,9 @@ export function survivalWave(
   );
   const difficulty = survivalDifficulty(wave);
   if (!boss) return { wave, level, boss, difficulty, foes: aides };
-  const stage = RAID_STAGES[rng.int(0, RAID_STAGES.length - 1)]!;
-  const leader = scaled(stageFighter(stage.foes[0]!, level), k);
+  const warlord =
+    WARLORD_ENCOUNTERS[rng.int(0, WARLORD_ENCOUNTERS.length - 1)]!;
+  const leader = scaled(warlordLeader(warlord, level), k);
   return {
     wave,
     level,

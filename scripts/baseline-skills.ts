@@ -5,7 +5,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import {
   ALL_COMPANIONS, PROFESSIONS, ELEMENTS, mainCharacter, characterSkills,
   chasePassives, COMBO_PASSIVES, CHASE_PASSIVES, CHASE_LIMITS,
-  SKILL_SLOT_UNLOCK, CAMPAIGN, stageFoes, DEFAULT_SPIRIT_EXPERIMENT,
+  SKILL_SLOT_UNLOCK, STORY_NODES, campaignEncounterFoes, DEFAULT_SPIRIT_EXPERIMENT,
   SPIRIT_EXPERIMENTS, spiritAt, spiritHealMultiplier, getSkill,
   type FighterConfig,
 } from "../src/core";
@@ -24,7 +24,8 @@ const owned = [
     upgradeCosts: [1, 1, 2, 2], source: d.ultimate ? "character" : d.profession ? "profession" : "element",
   })),
 }));
-const campaign = CAMPAIGN.map(stage => ({ stage: stage.id, fighters: stageFoes(stage).map(f => ({
+// Campaign V2: đối thủ phase đầu của mọi nhiệm vụ có trận (chiến dịch 13 màn cũ đã gỡ ở CAMP-08.04).
+const campaign = STORY_NODES.flatMap(n => { const foes = campaignEncounterFoes(n.id); return foes ? [{ stage: n.id, foes }] : []; }).map(({ stage, foes }) => ({ stage, fighters: foes.map(f => ({
   id: f.id, profession: f.profession, element: f.element, passives: passiveIds(f),
   active: f.skills?.map(id => ({ ...getSkill(id), level: f.skillLevels?.[id] ?? 1 })),
 })) }));

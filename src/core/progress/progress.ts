@@ -187,9 +187,11 @@ export function buyBranch(
 
 function scaleStats(f: FighterConfig, level: number): FighterConfig {
   const base = BASE_STATS[f.profession];
-  const m = 1 + STAT_GROWTH * (Math.min(MAX_LEVEL, Math.max(1, level)) - 1);
+  const lv = Math.min(MAX_LEVEL, Math.max(1, level));
+  const m = 1 + STAT_GROWTH * (lv - 1);
   return {
     ...f,
+    level: lv,
     maxHp: Math.round(base.maxHp * m),
     atk: Math.round(base.atk * m),
     def: Math.round(base.def * m),
