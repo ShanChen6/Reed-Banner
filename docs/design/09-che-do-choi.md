@@ -40,13 +40,7 @@
 - Kiểm thử E2E M01 → M24 và hồi quy các chế độ: `docs/campaign-v2/regression-report.md`. Nghiệm thu phát hành:
   `docs/campaign-v2/final-acceptance.md`.
 
-### 2.1 Chiến dịch 13 màn cũ (đã gỡ ở CAMP-08.04, 25/10/2026)
-
-- Bản 13 màn "Cờ lau dẹp loạn" (19–20/10/2026, `src/core/campaign/campaign.ts`) đã gỡ hẳn theo yêu cầu của Shan, để không phải kiểm lại hai chiến dịch khi xây tính năng mới. Server từ chối mọi payload `stage`; trang chiến dịch không còn khu "Bản đồ cũ 13 màn"; `pnpm sim -- --stage` không còn.
-- Dữ liệu 12 sứ quân của bản cũ (nghề, hệ, cấp, tùy tướng, độ khó) chuyển sang **danh mục 12 sứ quân dùng chung** `src/core/campaign/warlords.ts` (`WARLORD_ENCOUNTERS`, design-freeze mục 5). Sinh tồn, Thử thách ngày và Đấu trường đọc danh mục này, theo đúng thứ tự cũ, nên cùng seed vẫn ra cùng đối thủ (đã so 1080 mẫu trước/sau).
-- Hồ sơ: `campaign.legacy` (màn cũ đã qua, số lượt màn cũ) bị bỏ khi đọc hồ sơ; chỉ bậc Đánh trùm được chuyển sang khóa mới theo id sứ quân. Màn cũ không quy đổi thành tiến độ V2. Bảng `stage:<màn>` cũ không còn được ghi hay đọc; dòng cũ trong kho để nguyên.
-
-### 2.2 Đánh trùm (Claude đặt 20/10/2026, chuyển sang Campaign V2 ở CAMP-08.04)
+### 2.1 Đánh trùm (Claude đặt 20/10/2026, chuyển sang Campaign V2 ở CAMP-08.04)
 
 - Chế độ lặp lại riêng, không phải nhiệm vụ chiến dịch và không chặn kết thúc chiến dịch. **Chỉ 6 sứ quân bị đánh dẹp trong cốt truyện là trùm** (nhóm `military` của sổ thế cục `factions.ts`; Shan chốt 25/10/2026, design-freeze bổ sung 1.1), mỗi trận là **tái đấu**. Mỗi người mở sau nhiệm vụ mốc (`unlockedContent` của nhiệm vụ): Kiều Công Hãn M15, Kiều Thuận M16, Lý Khuê M17, Nguyễn Thủ Tiệp M18, Nguyễn Siêu M20, Đỗ Cảnh Thạc M21. Server chỉ mở khi nhiệm vụ đó đã có trong `campaign.completed`.
 - Trần Lãm (đồng minh), Phạm Bạch Hổ, Ngô Xương Xí, Ngô Nhật Khánh (quy phục), Nguyễn Khoan và Lữ Đường (tan rã/chưa chắc) không có trận Đánh trùm; mốc của họ (M08, M11–M14, M19) chỉ mở bán ở cửa hàng. Tất cả trùm đều đánh 3vs3.
@@ -58,7 +52,7 @@
 - Cấp gợi ý = cấp gợi ý gốc của sứ quân + 4 / 8 / 12.
 - Mô phỏng: `pnpm sim -- --raid 1|2|3 [--boss <id> | all] [--team heroes|default] [--sweep 0..6]`. Đội "heroes" là 2 tướng lịch sử mở muộn nhất tính tới nhiệm vụ mốc của sứ quân. Số liệu 20/10/2026 (đo theo màn cũ, AI Thường đánh thay người chơi ở cấp gợi ý): thắng trung bình 46% Bậc I, 46% Bậc II, 39% Bậc III; chưa đo lại vì luật trận không đổi.
 
-### 2.3 Bảng xếp hạng (Claude đặt 20/10/2026, chuyển sang Campaign V2 ở CAMP-08.04)
+### 2.2 Bảng xếp hạng (Claude đặt 20/10/2026, chuyển sang Campaign V2 ở CAMP-08.04)
 
 - Trang bảng xếp hạng có các bảng: **Chiến dịch**, **Từng trận** (chọn nhiệm vụ có trận), **Sinh tồn**, **Đấu trường**, **Vận Mệnh**. Mỗi bảng hiện 50 người đứng đầu và hạng của người đang xem. Thử thách hằng ngày giữ bảng riêng.
 - **Chiến dịch:** hoàn thành nhiều nhiệm vụ V2 hơn đứng trên (sự kiện và ngoại giao cũng tính là hoàn thành); bằng số nhiệm vụ thì tổng số lượt ít nhất của các **nhiệm vụ có trận** ít hơn đứng trên. Sự kiện không có lượt nên không cộng gì; nhiệm vụ có trận đã xong mà chưa có số lượt tính 200 lượt.
@@ -69,15 +63,9 @@
 
 ## 3. Tháp
 
-### 3.1 Leo tháp (Vô hạn) — đã gỡ 25/10/2026
+### 3.1 Song Tháp V1.0
 
-Shan yêu cầu bỏ chế độ leo tháp cũ (bản 20/10/2026: trang `/tower`, chuỗi tầng sinh ngẫu nhiên, máu/lương mang sang,
-chọn 1 trong 3 phần thưởng). Chỉ giữ Song Tháp ở mục 3.2. Hồ sơ cũ bỏ trường `tower` khi đọc lại; link `/tower` và
-`/game/tower` chuyển về màn chính; server từ chối yêu cầu tạo trận còn mang `tower`.
-
-### 3.2 Song Tháp V1.0
-
-Song Tháp là hai chế độ tháp còn lại sau khi gỡ leo tháp cũ (mục 3.1).
+Song Tháp gồm hai chế độ hiện hành: Tháp Thí Luyện và Tháp Vận Mệnh.
 
 - **Trial — Tháp Thí Luyện:** 20 tầng cố định; mỗi lần thử reset HP/lương; chọn ba active từ tướng đã sở hữu.
   Đinh Bộ Lĩnh bắt buộc ở slot thủ lĩnh, được đổi nghề/hệ miễn phí trước tầng và phải hợp luật. Tầng đã qua được
