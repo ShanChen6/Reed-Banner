@@ -1,7 +1,7 @@
 "use client";
 
-// Bảng xếp hạng: chiến dịch (số nhiệm vụ, rồi tổng lượt ít nhất), từng nhiệm vụ có trận (ít lượt nhất), leo tháp,
-// sinh tồn, đấu trường.
+// Bảng xếp hạng: chiến dịch (số nhiệm vụ, rồi tổng lượt ít nhất), từng nhiệm vụ có trận (ít lượt nhất), sinh tồn, đấu
+// trường.
 // Điểm do server ghi sau mỗi lần cộng thưởng.
 
 import { useEffect, useState } from "react";
@@ -46,12 +46,11 @@ interface DestinyBoardResponse {
 const COMBAT_MISSIONS = STORY_NODES.filter(isCombatStoryNode);
 
 const TABS: readonly {
-  id: "campaign" | "mission" | "tower" | "survival" | "arena" | "destiny";
+  id: "campaign" | "mission" | "survival" | "arena" | "destiny";
   label: string;
 }[] = [
   { id: "campaign", label: "Chiến dịch" },
   { id: "mission", label: "Từng trận" },
-  { id: "tower", label: "Leo tháp" },
   { id: "survival", label: "Sinh tồn" },
   { id: "arena", label: "Đấu trường" },
   { id: "destiny", label: "Vận Mệnh" },
@@ -62,7 +61,6 @@ const NOTE: Record<(typeof TABS)[number]["id"], string> = {
     "Hoàn thành nhiều nhiệm vụ chiến dịch hơn đứng trên (sự kiện và ngoại giao cũng tính); bằng nhau thì tổng số lượt ít nhất của các nhiệm vụ có trận ít hơn đứng trên.",
   mission:
     "Hoàn thành nhiệm vụ có trận này với ít lượt nhất (tính cả hai phe).",
-  tower: "Tầng cao nhất đã qua.",
   survival: "Số đợt nhiều nhất đã vượt qua.",
   arena:
     "Điểm đấu trường bóng ma: thắng cộng, thua trừ, nhiều hơn khi gặp đối thủ mạnh hơn.",
@@ -74,7 +72,7 @@ function scoreText(board: BoardId, score: number): string {
   if (board === "campaign") return `${d.main} nhiệm vụ · ${d.turns} lượt`;
   if (board.startsWith("mission:")) return `${d.main} lượt`;
   if (board === "arena") return `${d.main} điểm`;
-  return board === "tower" ? `Tầng ${d.main}` : `${d.main} đợt`;
+  return `${d.main} đợt`;
 }
 
 export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEnabled?: boolean }) {

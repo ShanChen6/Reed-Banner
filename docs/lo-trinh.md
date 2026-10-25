@@ -9,7 +9,7 @@
 | **2. Server + tài khoản** | [Hạ tầng](tech/ha-tang.md): Postgres, OAuth và khách, xử lý từng nước đi trên server, đồng hồ phía server, tiếp tục trận dở. Đã có (19/10/2026): Neon + Drizzle, trận do server xử lý, chạy bù hết giờ, xử thua 24 giờ, tài khoản khách bằng cookie, API `/api/battles`; trang `/play`; đăng nhập Google/GitHub và tên đăng nhập; hồ sơ tiến trình trên server; việc định kỳ Vercel Cron | Đưa lõi lên online an toàn |
 | **3. Tiến trình** | Cấp và điểm kỹ năng, nhánh nấc 2, **tuyệt chiêu nấc 3**, cửa hàng nhân vật, 9 ô trang bị. Đã làm sớm phần logic (19/10/2026): trang bị, cấp, kinh nghiệm, điểm kỹ năng, nâng kỹ năng, mở khóa theo cấp, mua và chọn nhánh nấc 2, phần thưởng cuối trận; hồ sơ lưu trên server (giai đoạn 2); tuyệt chiêu nấc 3, cửa hàng 12 nhân vật kèm, túi đồ và 9 ô trang bị lưu trên server, cửa hàng trang bị (19/10/2026). Đã xong (19/10/2026), gồm AI để dành năng lượng cho tuyệt chiêu | Lý do quay lại chơi |
 | **4. Chiến dịch** | Campaign V2: 6 chương, 24 nhiệm vụ, nhân vật lịch sử, lương mang sang, địa hình, Đánh trùm, BXH (chi tiết bên dưới) | Nội dung dài hạn |
-| **5. Chế độ thêm** | Leo tháp, thử thách hằng ngày, sinh tồn, nhiệm vụ | Giữ chân người chơi |
+| **5. Chế độ thêm** | Song Tháp (Thí Luyện, Vận Mệnh), thử thách hằng ngày, sinh tồn, nhiệm vụ | Giữ chân người chơi |
 | **6. Đánh bóng** | Art, âm thanh, hướng dẫn, phát hành (art làm song song từ giai đoạn 1) | Hoàn thiện |
 
 ## Kế hoạch chi tiết từ giai đoạn 4
@@ -25,7 +25,7 @@ Mỗi dòng là một PR vào develop, làm theo thứ tự. Số liệu là đi
 | 4.3 | Chiêu riêng cho từng sứ quân (1 tuyệt chiêu mang dấu ấn lịch sử) và thoại trước/sau trận | Đã làm (20/10/2026). Chiêu riêng thay ô 5 cho 12 sứ quân và 6 tướng lịch sử; 3 câu thoại mỗi màn |
 | 4.4 | (Bản 13 màn, đã gỡ; Campaign V2 cân ở CAMP-09.02) Cân độ khó chiến dịch bằng mô phỏng: người chơi cày bình thường qua được màn trước ở cấp gợi ý | Đã làm (20/10/2026). `pnpm sim -- --stage all`, thêm `--sweep 2..5` và `--team default` khi cần; cấp gợi ý riêng từng màn, mọi màn ≥50% thắng ở cấp gợi ý |
 | 4.5 | Đánh trùm: đánh lại sứ quân đã hạ ở mức khó cao hơn, luật "sân nhà", thưởng riêng | Đã làm (20/10/2026). 3 bậc, sân nhà theo nguyên tố, thưởng vàng và trang bị lần đầu. Từ 25/10/2026 chỉ 6 sứ quân bị đánh dẹp, mở theo mốc Campaign V2 (Shan chốt); xem [Chế độ chơi](design/09-che-do-choi.md#22-đánh-trùm-claude-đặt-20102026-chuyển-sang-campaign-v2-ở-camp-0804) |
-| 4.6 | Bảng xếp hạng (BXH) | Đã làm (20/10/2026). Từ CAMP-08.04: chiến dịch theo số nhiệm vụ V2 rồi tổng lượt nhiệm vụ có trận, bảng `mission:<M..>` cho từng nhiệm vụ có trận, leo tháp, sinh tồn, đấu trường; xem [Chế độ chơi](design/09-che-do-choi.md#23-bảng-xếp-hạng-claude-đặt-20102026-chuyển-sang-campaign-v2-ở-camp-0804) |
+| 4.6 | Bảng xếp hạng (BXH) | Đã làm (20/10/2026). Từ CAMP-08.04: chiến dịch theo số nhiệm vụ V2 rồi tổng lượt nhiệm vụ có trận, bảng `mission:<M..>` cho từng nhiệm vụ có trận, sinh tồn, đấu trường; xem [Chế độ chơi](design/09-che-do-choi.md#23-bảng-xếp-hạng-claude-đặt-20102026-chuyển-sang-campaign-v2-ở-camp-0804) |
 | 4.7 | Campaign V2: 6 chương, 24 nhiệm vụ M01–M24 (965–968), sự kiện/ngoại giao/trận, sử liệu có nhãn nguồn, thưởng vàng lần đầu (không đá) | Code và QA xong (chuỗi CAMP-02.03 → CAMP-09.04, 24–25/10/2026, chưa commit). [Cân bằng](campaign-v2/balance-report.md) GO, [hồi quy](campaign-v2/regression-report.md) không có P0/P1, [nghiệm thu cuối](campaign-v2/final-acceptance.md) |
 | 4.8 | (Ngoài phạm vi, để sau) Hậu truyện 970–971: niên hiệu Thái Bình (970), đặt quan chức (khoảng 971) | Chưa làm. Hiện chỉ là ghi chú nguồn ở M24; cần nguồn và freeze riêng trước khi dựng cảnh |
 
@@ -33,7 +33,7 @@ Mỗi dòng là một PR vào develop, làm theo thứ tự. Số liệu là đi
 
 | # | Việc |
 |---|---|
-| 5.1 | Leo tháp: máu và lương mang sang giữa các tầng, chọn 1 trong 3 phần thưởng. Đã làm (20/10/2026), trang `/tower`, xem [Chế độ chơi](design/09-che-do-choi.md#31-bản-đầu-claude-đặt-20102026-chờ-shan-duyệt) |
+| 5.1 | Leo tháp: máu và lương mang sang giữa các tầng, chọn 1 trong 3 phần thưởng. Làm 20/10/2026, **đã gỡ 25/10/2026** (Shan yêu cầu), thay bằng Song Tháp; xem [Chế độ chơi](design/09-che-do-choi.md#3-tháp) |
 | 5.2 | Thử thách hằng ngày: seed chung mỗi ngày, xếp hạng. Đã làm (20/10/2026), trang `/daily`, xem [Chế độ chơi](design/09-che-do-choi.md#51-thử-thách-hằng-ngày-claude-đặt-20102026-chờ-shan-duyệt) |
 | 5.3 | Sinh tồn: đối thủ theo đợt, báo trước, hồi sinh. Đã làm (20/10/2026), trang `/survival`, xem [Chế độ chơi](design/09-che-do-choi.md#41-bản-đầu-claude-đặt-20102026-chờ-shan-duyệt) |
 | 5.4 | Nhiệm vụ ngày/tuần, thành tựu, điểm danh. Đã làm (20/10/2026), trang `/quests`, xem [Chế độ chơi](design/09-che-do-choi.md#52-nhiệm-vụ-thành-tựu-điểm-danh-claude-đặt-20102026-chờ-shan-duyệt) |

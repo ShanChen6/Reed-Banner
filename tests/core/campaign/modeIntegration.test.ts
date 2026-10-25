@@ -39,7 +39,7 @@ describe("chế độ dùng chung với Campaign V2", () => {
       { mode: "campaign", won: true },
       { mode: "campaign", won: false },
       { mode: "raid", won: true },
-      { mode: "tower", won: true },
+      { mode: "survival", won: true },
       { mode: "normal", won: true },
     ].reduce(
       (acc, m) =>

@@ -12,7 +12,7 @@ import {
 } from "../battle";
 import { EMPTY_LOADOUT, equip, withGear, type Loadout } from "../gear";
 import { MAIN_ID, buildMain, type DestinyRun } from "../progress";
-import { clampTowerFood } from "../progress/towerState";
+import { clampDestinyFood } from "./destinyRun";
 import { LINEUP_SIZE, validateLineup, type FloorRules, type LineupError } from "./floorRules";
 import {
   applyDestinyBoonStats,
@@ -182,7 +182,7 @@ export function settleDestinyFloor(run: DestinyRun, battle: BattleState): Destin
         const fighter = fighters[id]!;
         return [id, fighter.hp / fighter.config.maxHp];
       })),
-      food: clampTowerFood(battle.sides[0].food),
+      food: clampDestinyFood(battle.sides[0].food),
       rage: Math.max(0, Math.min(
         RAGE_MAX,
         Math.round(battle.sides[0].rage) - destinyAppliedRageBonus(run),

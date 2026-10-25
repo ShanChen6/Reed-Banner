@@ -36,7 +36,7 @@ Các test có sẵn vẫn đạt:
 | Bảng xếp hạng | `tests/core/leaderboard/leaderboard.test.ts`; `campaignChapterThree` (boardScores) | `/game/leaderboard` |
 | Cửa hàng sứ quân | `tests/core/campaign/recruits.test.ts`; `campaign.test.ts` | `/game/profile` |
 | Nhiệm vụ, thành tựu | `tests/core/quests/*`; `tests/core/campaign/modeIntegration.test.ts` | `/game/quests` |
-| Leo tháp cũ | `tests/core/tower/*`; `battles.test.ts` ("trận leo tháp"); `towerFeatureFlags` ("OFF/OFF không chặn battle legacy/normal") | `/game/tower` |
+| Leo tháp cũ | Đã gỡ ở `develop` (25/10/2026, sau khi chạy hồi quy này); khi gộp, server vẫn từ chối payload `tower` (`battles.test.ts` "leo tháp cũ đã gỡ") | không còn phân cảnh |
 | Tháp Thí Luyện (Trial) | `tests/server/trial*.test.ts`, 5 file | `/game/trial` (bật `TRIAL_ENABLED`) |
 | Tháp Vận Mệnh (Destiny) | `tests/server/destiny*.test.ts`, 4 file | `/game/destiny` (bật `DESTINY_ENABLED`) |
 | Sinh tồn | `tests/core/survival/*`; `tests/game/survival-*.test.ts` | `/game/survival` |

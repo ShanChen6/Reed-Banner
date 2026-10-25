@@ -100,3 +100,479 @@ test("Trần Cương có tranh đánh thường, ra chiêu, tuyệt chiêu, bị
   for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
+
+test("Kiều Công Hãn có đủ bốn tranh, sét hệ Lôi, khớp nằm trong lớp và texture khớp tọa độ", () => {
+  const rig = rigOf("kieuCongHan");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "staff");
+  assert.equal(rig.strikeFx, "lightning");
+  assert.equal(rig.fxColor, 0xb98cff);
+  assert.equal(rig.poses?.attack?.name, "pose-attack");
+  assert.equal(rig.poses?.cast?.name, "pose-cast");
+  assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.elbowR, rig.parts.body);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  contains(rig.orb!, rig.parts.sword);
+  for (const [name, box] of [...Object.entries(rig.parts), ...rig.cloth.map((c) => [c.name, c.box] as const)]) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  for (const art of [rig.down!, ...Object.values(rig.poses!)]) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, art.name)}`);
+    assert.ok(data[20]! & 0x10, `${art.name} cần alpha thật`);
+  }
+  let bytes = statSync("public/art/characters/kieu-cong-han/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Nguyễn Khoan có tranh đánh thường, tuyệt chiêu, bị hạ gục; khiên nâng được, khớp nằm trong lớp", () => {
+  const rig = rigOf("nguyenKhoan");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "spear");
+  assert.equal(rig.strikeFx, "earthWard");
+  assert.equal(rig.fxColor, 0xa5772f);
+  assert.ok((rig.shieldRaise ?? 0) < 0, "khiên nâng lên ngược chiều kim đồng hồ quanh khuỷu");
+  assert.equal(rig.poses?.attack?.name, "pose-attack");
+  assert.equal(rig.poses?.cast, undefined);
+  assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.elbowR, rig.parts.body);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  for (const [name, box] of [...Object.entries(rig.parts), ...rig.cloth.map((c) => [c.name, c.box] as const)]) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/nguyen-khoan/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Kiều Thuận có bốn tranh, vòng lá hệ Mộc, hồ lô lắc quanh nắm tay và khớp nằm trong lớp", () => {
+  const rig = rigOf("kieuThuan");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "gourd");
+  assert.equal(rig.strikeFx, "leafBloom");
+  assert.equal(rig.fxColor, 0x4f9a4a);
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.grip!, rig.parts.arm);
+  contains(rig.grip!, rig.parts.sword);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.elbowR, rig.parts.body);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  for (const [name, box] of [...Object.entries(rig.parts), ...rig.cloth.map((c) => [c.name, c.box] as const)]) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/kieu-thuan/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Lý Khuê có bốn tranh, mũi sáng phá giáp hệ Kim, khớp nằm trong lớp và texture khớp tọa độ", () => {
+  const rig = rigOf("lyKhue");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, undefined);
+  assert.equal(rig.strikeFx, "armorPierce");
+  assert.equal(rig.fxColor, 0x9ea4ad);
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.elbowR, rig.parts.body);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  contains(rig.blade[0], rig.parts.sword);
+  for (const [name, box] of [...Object.entries(rig.parts), ...rig.cloth.map((c) => [c.name, c.box] as const)]) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/ly-khue/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Nguyễn Thủ Tiệp có bốn tranh, đoạt lương hệ Thủy, khớp nằm trong lớp và texture khớp tọa độ", () => {
+  const rig = rigOf("nguyenThuTiep");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "fan");
+  assert.equal(rig.strikeFx, "supplyDrain");
+  assert.equal(rig.fxColor, 0x2f7fc1);
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  for (const [name, box] of [...Object.entries(rig.parts), ...rig.cloth.map((c) => [c.name, c.box] as const)]) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/nguyen-thu-tiep/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Lữ Đường có bốn tranh, cột nước hệ Thủy, cầu nước nằm trên trượng và texture khớp tọa độ", () => {
+  const rig = rigOf("luDuong");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "staff");
+  assert.equal(rig.strikeFx, "waterPillar");
+  assert.equal(rig.fxColor, 0x2f7fc1);
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.orb!, rig.parts.sword);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  for (const [name, box] of [...Object.entries(rig.parts), ...rig.cloth.map((c) => [c.name, c.box] as const)]) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/lu-duong/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Nguyễn Siêu có tranh đánh thường, tuyệt chiêu, bị hạ gục; tường lửa hệ Hỏa, khiên nâng được", () => {
+  const rig = rigOf("nguyenSieu");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "spear");
+  assert.equal(rig.strikeFx, "flameWall");
+  assert.equal(rig.fxColor, 0xd9502a);
+  assert.ok((rig.shieldRaise ?? 0) < 0);
+  assert.equal(rig.poses?.attack?.name, "pose-attack");
+  assert.equal(rig.poses?.cast, undefined);
+  assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.elbowR, rig.parts.body);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  for (const [name, box] of [...Object.entries(rig.parts), ...rig.cloth.map((c) => [c.name, c.box] as const)]) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/nguyen-sieu/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Đỗ Cảnh Thạc có bốn tranh, đập đất hệ Thổ, khớp nằm trong lớp và texture khớp tọa độ", () => {
+  const rig = rigOf("doCanhThac");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, undefined);
+  assert.equal(rig.strikeFx, "groundSlam");
+  assert.equal(rig.fxColor, 0xa5772f);
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  contains(rig.blade[1], rig.parts.sword);
+  for (const [name, box] of [...Object.entries(rig.parts), ...rig.cloth.map((c) => [c.name, c.box] as const)]) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/do-canh-thac/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Chu Ngân có bốn tranh, ngân châm hệ Kim, cầu bạc nằm trên trượng và texture khớp tọa độ", () => {
+  const rig = rigOf("chuNgan");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "staff");
+  assert.equal(rig.strikeFx, "needleVolley");
+  assert.equal(rig.fxColor, 0x9ea4ad);
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.orb!, rig.parts.sword);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  for (const [name, box] of Object.entries(rig.parts)) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/chu-ngan/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Cao Kiên có bốn tranh, tường thép hệ Kim, khiên nâng được và texture khớp tọa độ", () => {
+  const rig = rigOf("caoKien");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "spear");
+  assert.equal(rig.strikeFx, "steelBulwark");
+  assert.ok((rig.shieldRaise ?? 0) < 0);
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.elbowR, rig.parts.body);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  for (const [name, box] of [...Object.entries(rig.parts), ...rig.cloth.map((c) => [c.name, c.box] as const)]) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/cao-kien/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Châu Ngọc có bốn tranh, mưa kim bạc hệ Kim, hồ lô lắc quanh nắm tay và texture khớp tọa độ", () => {
+  const rig = rigOf("chauNgoc");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "gourd");
+  assert.equal(rig.strikeFx, "silverGrace");
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.grip!, rig.parts.arm);
+  contains(rig.grip!, rig.parts.sword);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  for (const [name, box] of Object.entries(rig.parts)) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/chau-ngoc/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Tô Kim có bốn tranh, tiền vàng ly tán hệ Kim, khớp nằm trong lớp và texture khớp tọa độ", () => {
+  const rig = rigOf("toKim");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "fan");
+  assert.equal(rig.strikeFx, "coinScatter");
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  for (const [name, box] of [...Object.entries(rig.parts), ...rig.cloth.map((c) => [c.name, c.box] as const)]) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/to-kim/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Nghiêm Thiết có tranh đánh thường, tuyệt chiêu, bị hạ gục; thiết trận hệ Kim và texture khớp tọa độ", () => {
+  const rig = rigOf("nghiemThiet");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "spear");
+  assert.equal(rig.strikeFx, "ironFormation");
+  assert.equal(rig.poses?.attack?.name, "pose-attack");
+  assert.equal(rig.poses?.cast, undefined);
+  assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  for (const [name, box] of Object.entries(rig.parts)) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/nghiem-thiet/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Lâm Tùng có bốn tranh, trúc lâm hút sinh khí hệ Mộc, khớp nằm trong lớp và texture khớp tọa độ", () => {
+  const rig = rigOf("lamTung");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, undefined);
+  assert.equal(rig.strikeFx, "bambooSap");
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  contains(rig.blade[0], rig.parts.sword);
+  for (const [name, box] of [...Object.entries(rig.parts), ...rig.cloth.map((c) => [c.name, c.box] as const)]) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/lam-tung/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Đàm Thảo có ba tranh ra đòn, dây gai hệ Mộc, cầu ngọc nằm trên trượng và texture khớp tọa độ", () => {
+  const rig = rigOf("damThao");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "staff");
+  assert.equal(rig.strikeFx, "thornBind");
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.orb!, rig.parts.sword);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  for (const [name, box] of Object.entries(rig.parts)) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/dam-thao/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Hoàng Mộc có bốn tranh, rễ già giữ thành hệ Mộc, khiên nâng được và texture khớp tọa độ", () => {
+  const rig = rigOf("hoangMoc");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "spear");
+  assert.equal(rig.strikeFx, "rootGuard");
+  assert.ok((rig.shieldRaise ?? 0) < 0);
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.elbowR, rig.parts.body);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  for (const [name, box] of Object.entries(rig.parts)) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/hoang-moc/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Lục Diệp có bốn tranh, vòng lá hồi sinh hệ Mộc, hồ lô lắc quanh nắm tay và texture khớp tọa độ", () => {
+  const rig = rigOf("lucDiep");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "gourd");
+  assert.equal(rig.strikeFx, "leafBloom");
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.grip!, rig.parts.arm);
+  contains(rig.grip!, rig.parts.sword);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  for (const [name, box] of Object.entries(rig.parts)) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/luc-diep/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
+test("Nhan Trúc có bốn tranh, sương độc hệ Mộc, khớp nằm trong lớp và texture khớp tọa độ", () => {
+  const rig = rigOf("nhanTruc");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "fan");
+  assert.equal(rig.strikeFx, "poisonMist");
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  for (const [name, box] of Object.entries(rig.parts)) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  let bytes = statSync("public/art/characters/nhan-truc/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});

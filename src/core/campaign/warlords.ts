@@ -1,6 +1,6 @@
 // Danh mục trận 12 sứ quân dùng chung (WarlordEncounterCatalog, design-freeze mục 5), tách khỏi chiến dịch 13 màn
-// cũ đã gỡ ở CAMP-08.04. Đánh trùm, Leo tháp, Sinh tồn, Thử thách ngày và Đấu trường đọc danh mục này, không
-// đọc nhiệm vụ Campaign V2. Thứ tự, nguyên tố, nghề, cấp và tùy tướng giữ đúng bản cũ để các chế độ đó chọn
+// cũ đã gỡ ở CAMP-08.04. Đánh trùm, Sinh tồn, Thử thách ngày và Đấu trường đọc danh mục này, không đọc
+// nhiệm vụ Campaign V2. Thứ tự, nguyên tố, nghề, cấp và tùy tướng giữ đúng bản cũ để các chế độ đó chọn
 // đối thủ y như trước với cùng seed. `encounterId` là id màn cũ, chỉ còn làm id nội bộ của trận.
 // Thoại là lời game sáng tác cho trận Đánh trùm (chỉ 6 sứ quân bị đánh dẹp dùng, raids.ts), không phải lời nhân vật
 // lịch sử.

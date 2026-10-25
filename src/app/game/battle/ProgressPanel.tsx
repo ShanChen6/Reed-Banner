@@ -53,8 +53,6 @@ export const PROFILE_ERROR: Record<
   slotMismatch: "Ba món phải cùng loại ô",
   professionMismatch: "Ba vũ khí phải cùng nghề",
   foodFull: "Lương đã đầy",
-  noTowerOffer: "Không có phần thưởng để chọn",
-  towerBusy: "Đang có trận ở tầng này, đánh xong đã",
   alreadyCheckedIn: "Hôm nay đã điểm danh rồi",
   questNotDone: "Chưa xong",
   questClaimed: "Đã nhận thưởng",

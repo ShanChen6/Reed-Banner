@@ -6,7 +6,7 @@
 ## Kiến trúc và ràng buộc tương thích
 
 - **Chủ động:** ô 1/3/5 là chiêu nghề, ô 2/6 là chiêu hệ đã có (tái dùng `ELEMENT_SKILLS`), ô 4 là tuyệt chiêu cá nhân mới. Mỗi tướng đúng sáu ô.
-- **Bị động:** 1 chase theo nghề + 2 chase theo hệ có sẵn + **1 chase cá nhân mới**. Runtime hiện tại trả 3 chase mặc định, vì thế **bị động thứ tư là đặc tả cần code mới**, không được xem đã hoạt động.
+- **Bị động:** 1 chase theo nghề + 2 chase theo hệ có sẵn + **1 chase cá nhân mới**. Runtime trả mặc định 3 chase ID; P4 cá nhân là đặc tả chưa triển khai, đồng thời cần phân biệt với mô tả four-passive loadout trong code. Lưu ý kỹ thuật (đối chiếu `src/core/battle/chase.ts` ngày 25/10/2026): `chasePassives()` mặc định trả **3 chase ID** (1 nghề + 2 hệ), nhưng mô tả kiến trúc trong code gọi đây là four-passive loadout do tính riêng một cơ chế cơ hội chuẩn bị. **P4 cá nhân trong tài liệu này chưa có ID/runtime**, không được nhầm với 4 passive đã chạy. Cần duyệt lại cách đếm và mô phỏng stacking trước khi thêm P4.
 - **Combo đồng đội:** lớp `comboPassive` hiện có là hệ thống khác; không cộng nhầm thành bị động thứ năm. Hai nghề mới chưa có mapping combo, tile nghề, base stats, AI và UI.
 - **Giá trị:** hệ số ATK, hồi và năng lượng trong tài liệu là *điểm xuất phát để mô phỏng*, không phải giá trị đã cân bằng hay đã triển khai. Dùng các loại step có trong `SkillStep` như `damage/effect/heal/energy/destroy/transform/whirl`; tránh trạng thái 'độc', 'tàng hình', 'trói' chưa được định nghĩa.
 - **Phản ứng:** chỉ dùng tín hiệu `armorBroken/controlled/dispelled/skillDamage/healed/shieldAbsorbed`; phải áp dụng giới hạn `CHASE_LIMITS.maxReactions=12, maxDepth=4`, có guard chống phản ứng tự lặp.
