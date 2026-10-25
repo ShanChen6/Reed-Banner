@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -225,6 +225,7 @@ export default function BattleStage({
         import("./coins"),
         import("./banner"),
         import("./sap"),
+        import("./thorn"),
       ]);
       const app = new Application();
       await app.init({
@@ -275,7 +276,8 @@ export default function BattleStage({
       // Hiệu ứng vẽ trên cả sân, đè lên mọi nhân vật: sét hệ Lôi, vòm khiên đất hệ Thổ, vòng lá hồi sinh hệ Mộc,
       // mũi sáng phá giáp hệ Kim, đoạt lương và cột nước đóng băng hệ Thủy, tường lửa hệ Hỏa, đập đất hệ Thổ,
       // ngân châm, tường thép, mưa kim bạc, tiền vàng ly tán và
-      // thiết trận hệ Kim, trúc lâm hút sinh khí hệ Mộc.
+      // thiết trận hệ Kim, trúc lâm hút sinh khí và dây gai
+      // quấn thân hệ Mộc.
       const sky = new Container();
       sky.zIndex = 100;
       app.stage.addChild(sky);
@@ -294,6 +296,17 @@ export default function BattleStage({
           loaded[i]!.onStrike?.((kind) => {
             if (kind !== "ultimate") return;
             alive(true).forEach((s, n) => fx.cover(spot(s, 0), app.screen.height * FIGURE, n * 0.08));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "thornBind") {
+          const fx = thornBind(sky, rig.fxColor);
+          // Tuyệt chiêu cả đội đối thủ hút máu: dây gai quấn từng người, sinh khí bay về chính mình.
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => fx.bind(spot(s, 0), spot(me, 0.55), size, n * 0.08));
           });
           return [fx];
         }
