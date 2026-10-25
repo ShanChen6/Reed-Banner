@@ -321,6 +321,8 @@ export function warrior(
         lean = -0.03 * r.tilt;
         headRot += 0.06 * r.tilt;
         armRot += raiseAngle * r.raise;
+        // Nâng khiên che người khi vào thế, đỡ đòn.
+        armRRot += (rig.shieldRaise ?? 0) * r.raise;
         tint = r.tint;
         aura += 0.6 * r.glow;
         if (r.done) action = null;
