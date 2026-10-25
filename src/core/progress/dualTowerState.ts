@@ -1,4 +1,4 @@
-// Song Tháp (Trial / Destiny) lưu trong hồ sơ, tách hẳn khỏi Legacy `profile.tower` (best/run).
+// Song Tháp (Trial / Destiny) lưu trong hồ sơ.
 // Chỉ định danh và parse/serialize; luật tầng, thưởng và UI nằm ở task sau.
 // Xem docs/dual-tower/00-03-migration-plan.md.
 
@@ -6,9 +6,8 @@ import { ELEMENTS, ENERGY_MAX, PROFESSIONS, type FighterConfig } from "../battle
 import { GEAR_SLOTS, TIERS, type GearItem } from "../gear";
 import type { CharacterProgress } from "./progress";
 
-export const TOWER_MODES = ["legacy", "trial", "destiny"] as const;
+export const TOWER_MODES = ["trial", "destiny"] as const;
 export type TowerMode = (typeof TOWER_MODES)[number];
-export const DEFAULT_TOWER_MODE: TowerMode = "legacy";
 
 /** Mode lạ/thiếu → null (để nơi gọi từ chối). */
 export function parseTowerMode(raw: unknown): TowerMode | null {
@@ -16,10 +15,6 @@ export function parseTowerMode(raw: unknown): TowerMode | null {
     ? (raw as TowerMode)
     : null;
 }
-
-/** Mode lạ/thiếu → Legacy, giữ hành vi cũ của các request không mang mode. */
-export const towerModeOrLegacy = (raw: unknown): TowerMode =>
-  parseTowerMode(raw) ?? DEFAULT_TOWER_MODE;
 
 export const TRIAL_FLOORS = 20;
 export const DUAL_TOWER_SCHEMA = 1;

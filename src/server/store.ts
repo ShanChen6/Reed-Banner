@@ -112,7 +112,7 @@ export function leaderboardStore(): LeaderboardStore {
   return globalStore.coLauLeaderboardStore;
 }
 
-/** Kho BXH Destiny tách theo cycle, không dùng board `tower` legacy. */
+/** Kho BXH Destiny tách theo cycle, không dùng bảng chung `leaderboard_scores`. */
 export function destinyLeaderboardStore(): DestinyLeaderboardStore {
   const url = process.env.DATABASE_URL;
   globalStore.coLauDestinyLeaderboardStore ??= url
