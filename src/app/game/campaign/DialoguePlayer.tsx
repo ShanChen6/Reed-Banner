@@ -2,10 +2,11 @@
 
 // Trình phát thoại từng câu cho Campaign V2 (UI-01): mỗi bước một câu, chân dung người nói sáng lên, Trước/Tiếp,
 // Nhật ký các câu đã đọc, bỏ qua phần đã xem. Chỉ là trình diễn: kết thúc phát không hoàn thành nhiệm vụ, không
-// gọi server; việc ấy luôn qua nút xác nhận riêng của màn gọi. Không âm thanh, không ảnh nền bắt buộc.
+// gọi server; việc ấy luôn qua nút xác nhận riêng của màn gọi. Mã nguồn sử không hiện trong khung thoại (Shan
+// chốt 25/10); xem ở mục Sử liệu. Không âm thanh, không ảnh nền bắt buộc.
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { SOURCE_TITLE, type Element, type Profession } from "@/core";
+import type { Element, Profession } from "@/core";
 import { Portrait } from "../art/portraits";
 import { BasisBadge } from "./StoryBeats";
 import {
@@ -89,7 +90,6 @@ function StagePortrait({
 
 function LineText({ line }: { line: DialogueLine }) {
   const { beat } = line;
-  const sources = (beat.refs ?? []).filter((r) => r.startsWith("S"));
   return (
     <>
       <div className="mb-1 flex flex-wrap items-center gap-1.5">
@@ -120,13 +120,6 @@ function LineText({ line }: { line: DialogueLine }) {
       >
         {beat.speaker ? `“${beat.text}”` : beat.text}
       </p>
-      {beat.refs && beat.refs.length > 0 && (
-        <p className="mt-1 text-[11px] text-stone-400">
-          Nguồn: {beat.refs.join(", ")}
-          {sources.length > 0 &&
-            ` · ${sources.map((s) => SOURCE_TITLE[s] ?? s).join("; ")}`}
-        </p>
-      )}
     </>
   );
 }
