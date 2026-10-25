@@ -1,47 +1,43 @@
-# Campaign V2 — triển khai thoại và bản đồ từng bước
+# Reed Banner — Campaign V2 UI: Thoại và Sử ký/Bản đồ
 
-> Cập nhật: 26/10/2026
-> Trạng thái: UI thoại/bản đồ READY; audio/voice TODO — DEFERRED.
+> Cập nhật: 26/10/2026  
+> Tình trạng: **READY FOR IMPLEMENTATION (UI only)**; Audio/Voice: **TODO — DEFERRED**.
 
-## Hiện trạng chính xác
+## ĐỌC TRANG NÀY TRƯỚC
 
-Campaign V2 đã có sáu chương và 24 nhiệm vụ. `src/app/game/campaign/ChapterOne.tsx`, `DiplomacyScene.tsx`, `StoryBeats.tsx`, `CampaignMap.tsx`, `mapLayout.ts` đang hoạt động. Bản đồ đã có SVG 24 điểm, zoom/pan, chapter selection. Không xây lại từ đầu, không khôi phục Campaign 13 màn.
+Bộ này thay thế các prompt UI/audio chưa khớp code cũ. Code `develop` đã triển khai Campaign V2 **6 chương, 24 nhiệm vụ M01–M24**; không xây lại hệ thống Campaign và không khôi phục bản 13 màn. Tham chiếu mã nguồn kiểm tra: `b5867dd6805ec2111f470b31bab723b872e358c6` (26/10/2026, nhánh `develop`, có thể thay đổi khi bạn chạy).
 
-## Bước làm ngay (mỗi bước một Codex task)
+### Việc sẽ làm ngay
 
-| Thứ tự | Task | Phạm vi | Kết quả mong đợi |
-|---|---|---|---|
-| 0 | DOC-00 | docs cũ | Bỏ hướng dẫn Campaign 13 màn và Tower vô hạn, giữ docs Boss Raid/Song Tháp |
-| 1 | UI-00 | audit code | Có sơ đồ entry → story beats/choice → server và map V2 |
-| 2 | UI-01 | DialoguePlayer | Một beat mỗi lần, Next/Back, backlog; không phát audio |
-| 3 | UI-02 | M06 diplomacy | Hội thoại → chọn đáp → API kết quả; chặn submit trùng |
-| 4 | UI-03 | noncombat | Dùng player với content M01–M24 từ `missionCopy` |
-| 5 | UI-04 | combat intro/outro | Trước/sau battle, không tự thưởng hoặc lặp phase |
-| 6 | MAP-01 | CampaignAtlas | Sáu chương, bốn mission/chương, IV/V song song |
-| 7 | MAP-02 | RegionalPanel & SVG | List mission tại một vùng, zoom/pan cũ giữ nguyên |
-| 8 | MAP-03 | tích hợp | Atlas → map → mission → story/battle → return |
-| 9 | UI-05 | sử liệu/mobile | Nhãn lịch sử, Portrait fallback, responsive |
-| 10 | QA-01 | kiểm tra scope hẹp | Typecheck/lint/tests mục tiêu, không chạy balance mô phỏng vô cớ |
+1. Dọn các đoạn tài liệu đã lỗi thời về **Campaign 13 màn** và **Leo tháp vô hạn cũ** (không xóa docs các mode đang hoạt động).
+2. Hoàn thiện **Visual Novel text-only** bằng cách nâng cấp `StoryBeats`, `DiplomacyScene`, `ChapterOne`, dùng chính `missionCopy` và `StoryBeat` đang có.
+3. Nâng cấp **Sử ký sáu chương + bản đồ từng vùng + danh sách bốn nhiệm vụ/chương** trên `CampaignMap` V2 đang có.
+4. Tích hợp câu chuyện trước/sau trận, nguồn sử, replay, điện thoại, bàn phím và trạng thái server.
 
-## Ví dụ user journey M06
+### Việc CHƯA làm
 
-1. Vào Campaign → chọn Chương II → M06.
-2. Xem từng câu thoại/đoạn kể bằng nút Tiếp và Trước; Backlog chỉ hiển thị câu đã xem.
-3. Đọc hết → chọn lời đáp nằm trong allowlist hiện có.
-4. Bấm Xác nhận → dùng `completeCampaignEventOnline`; server quyết định hoàn thành, lựa chọn và thưởng.
-5. Xem kết quả → trở lại chapter/map. Replay chỉ xem lại, không cấp thưởng mới.
+Không tạo MP3/WAV, không tích hợp TTS, không cài audio engine, không tạo SFX/BGM, không thêm voice autoplay, không tạo AI image bắt buộc. Tất cả ở `audio-todo/` để dành.
 
-## Đường dẫn code chính
+### Mở docs theo thứ tự
 
-- Core/story: `src/core/campaign/storyNodes.ts`, `chapterOne.ts` … `chapterSix.ts`, `events.ts`.
-- UI: `src/app/game/campaign/StoryBeats.tsx`, `DiplomacyScene.tsx`, `ChapterOne.tsx`, `CampaignMap.tsx`, `mapLayout.ts`.
-- Server: `src/server/campaignEvents.ts`; client `src/app/game/battle/online.ts`.
-- Canon: `docs/campaign-v2/design-freeze.md`, `mission-matrix.md`, `narrative-bible.md`, `history-sources.md`.
+| Bước | File | Mục đích |
+|---|---|---|
+| 0 | [01-hien-trang.md](01-hien-trang.md) | Hiểu code đã có, tránh làm lại |
+| 1 | [02-giao-dien-nguoi-choi.md](02-giao-dien-nguoi-choi.md) | Xem luồng UI đơn giản, ví dụ M06 |
+| 2 | [03-contract-va-kien-truc.md](03-contract-va-kien-truc.md) | Cách ghép vào code hiện tại |
+| 3 | [04-lo-trinh-tung-buoc.md](04-lo-trinh-tung-buoc.md) | Thứ tự task, mục tiêu, checkpoint |
+| 4 | [05-asset-prompts.md](05-asset-prompts.md) | Ảnh **tùy chọn** khi UI cơ bản chạy tốt |
+| 5 | [06-nghiem-thu.md](06-nghiem-thu.md) | Kiểm tra đầu ra trước khi chuyển task |
+| 6 | [07-don-dep-docs-cu.md](07-don-dep-docs-cu.md) | Danh sách xóa/sửa docs và không được xóa |
+| Để sau | [audio-todo/README.md](audio-todo/README.md) | Quy hoạch âm thanh/voice, tất cả đều TODO |
 
-## Bất biến
+### Cách chạy từng task bằng Codex
 
-Không đổi M01–M24, chapter graph, historical outcomes, battle/rewards, Quest, Raid, Trial/Destiny, Arena, Survival. Chọn câu trả lời chỉ đổi diễn đạt, không đổi kết cục lịch sử. UI chỉ điều khiển trình diễn, không tự cộng tài nguyên.
+1. Checkout nhánh công việc từ `develop` mới nhất; mở một task ở `prompts/`.
+2. Dán nguyên prompt cho Codex. Mỗi prompt yêu cầu audit trước, chỉ chỉnh phần thuộc task, không commit/push/deploy.
+3. Đọc mục `Nghiệm thu` của task rồi xem UI hoặc chạy kiểm tra mục tiêu đã nêu.
+4. Chỉ chuyển task khi checkpoint đạt. Không gộp tất cả vào một prompt vì dễ gây sửa chồng chéo.
 
-## Audio/Voice
+**Không đổi:** `STORY_NODES`, M01–M24, progression DAG, historical outcomes, rewards, recruit, Raid, các mode khác, server-authoritative completion.
 
-**TODO — DEFERRED.** Chưa làm audio engine, nhạc, SFX, TTS, voice playback và chưa đòi hỏi asset mới. Đặc tả hậu kỳ xem [audio-todo/README.md](audio-todo/README.md). Bộ Markdown và prompt Codex đầy đủ được phát hành kèm bộ tài liệu triển khai ngoài repository.
+**Ghi chú:** tài liệu mới không khẳng định ảnh nền đã có. Bản đầu phải chạy với nền SVG/CSS và chân dung hiện hữu (`Portrait`), ngay cả khi chưa tạo một ảnh mới.
