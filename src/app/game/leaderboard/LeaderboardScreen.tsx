@@ -1,10 +1,17 @@
 "use client";
 
-// Bảng xếp hạng: chiến dịch (số màn, rồi tổng lượt ít nhất), từng màn (ít lượt nhất), sinh tồn, đấu trường.
+// Bảng xếp hạng: chiến dịch (số nhiệm vụ, rồi tổng lượt ít nhất), từng nhiệm vụ có trận (ít lượt nhất), sinh tồn, đấu
+// trường.
 // Điểm do server ghi sau mỗi lần cộng thưởng.
 
 import { useEffect, useState } from "react";
-import { CAMPAIGN, describeScore, type BoardId } from "@/core";
+import {
+  STORY_NODES,
+  describeScore,
+  isCombatStoryNode,
+  type BoardId,
+  type CampaignMissionId,
+} from "@/core";
 import { SceneLink } from "../SceneContext";
 import { useScene } from "../SceneContext";
 
@@ -35,12 +42,15 @@ interface DestinyBoardResponse {
   readonly error?: string;
 }
 
+/** Nhiệm vụ có trận của Campaign V2; sự kiện và ngoại giao không có bảng lượt. */
+const COMBAT_MISSIONS = STORY_NODES.filter(isCombatStoryNode);
+
 const TABS: readonly {
-  id: "campaign" | "stage" | "survival" | "arena" | "destiny";
+  id: "campaign" | "mission" | "survival" | "arena" | "destiny";
   label: string;
 }[] = [
   { id: "campaign", label: "Chiến dịch" },
-  { id: "stage", label: "Từng màn" },
+  { id: "mission", label: "Từng trận" },
   { id: "survival", label: "Sinh tồn" },
   { id: "arena", label: "Đấu trường" },
   { id: "destiny", label: "Vận Mệnh" },
@@ -48,8 +58,9 @@ const TABS: readonly {
 
 const NOTE: Record<(typeof TABS)[number]["id"], string> = {
   campaign:
-    "Qua nhiều màn hơn đứng trên; bằng nhau thì tổng số lượt ít nhất của các màn ít hơn đứng trên.",
-  stage: "Thắng màn này với ít lượt nhất (tính cả hai phe).",
+    "Hoàn thành nhiều nhiệm vụ chiến dịch hơn đứng trên (sự kiện và ngoại giao cũng tính); bằng nhau thì tổng số lượt ít nhất của các nhiệm vụ có trận ít hơn đứng trên.",
+  mission:
+    "Hoàn thành nhiệm vụ có trận này với ít lượt nhất (tính cả hai phe).",
   survival: "Số đợt nhiều nhất đã vượt qua.",
   arena:
     "Điểm đấu trường bóng ma: thắng cộng, thua trừ, nhiều hơn khi gặp đối thủ mạnh hơn.",
@@ -58,8 +69,8 @@ const NOTE: Record<(typeof TABS)[number]["id"], string> = {
 
 function scoreText(board: BoardId, score: number): string {
   const d = describeScore(board, score);
-  if (board === "campaign") return `${d.main} màn · ${d.turns} lượt`;
-  if (board.startsWith("stage:")) return `${d.main} lượt`;
+  if (board === "campaign") return `${d.main} nhiệm vụ · ${d.turns} lượt`;
+  if (board.startsWith("mission:")) return `${d.main} lượt`;
   if (board === "arena") return `${d.main} điểm`;
   return `${d.main} đợt`;
 }
@@ -67,12 +78,14 @@ function scoreText(board: BoardId, score: number): string {
 export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEnabled?: boolean }) {
   const { params } = useScene();
   const [tab, setTab] = useState<(typeof TABS)[number]["id"]>(() => params.get("board") === "destiny" && destinyEnabled ? "destiny" : "campaign");
-  const [stage, setStage] = useState(CAMPAIGN[0]!.id);
+  const [mission, setMission] = useState<CampaignMissionId>(
+    COMBAT_MISSIONS[0]!.id,
+  );
   const [data, setData] = useState<BoardResponse | null>(null);
   const [destiny, setDestiny] = useState<DestinyBoardResponse | null>(null);
   const [cycle, setCycle] = useState("");
   const [cursor, setCursor] = useState("0");
-  const board: BoardId = tab === "stage" ? `stage:${stage}` : tab === "destiny" ? "campaign" : tab;
+  const board: BoardId = tab === "mission" ? `mission:${mission}` : tab === "destiny" ? "campaign" : tab;
 
   useEffect(() => {
     if (tab === "destiny") {
@@ -147,17 +160,19 @@ export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEn
             <div className="flex justify-end gap-2"><button type="button" disabled={cursor === "0"} onClick={() => setCursor(String(Math.max(0, Number(cursor) - 20)))} className="rounded bg-white/10 px-3 py-1.5 disabled:opacity-30">Trang trước</button><button type="button" disabled={!destiny?.nextCursor} onClick={() => destiny?.nextCursor && setCursor(destiny.nextCursor)} className="rounded bg-white/10 px-3 py-1.5 disabled:opacity-30">Trang sau</button></div>
           </section>
         ) : <section className="flex flex-col gap-2 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4">
-          {tab === "stage" && (
+          {tab === "mission" && (
             <label className="flex flex-wrap items-center gap-2 text-sm">
-              Màn
+              Nhiệm vụ
               <select
-                value={stage}
-                onChange={(e) => setStage(e.target.value)}
+                value={mission}
+                onChange={(e) =>
+                  setMission(e.target.value as CampaignMissionId)
+                }
                 className="rounded bg-black/40 px-2 py-1"
               >
-                {CAMPAIGN.map((s, i) => (
-                  <option key={s.id} value={s.id}>
-                    {i + 1}. {s.title}
+                {COMBAT_MISSIONS.map((n) => (
+                  <option key={n.id} value={n.id}>
+                    {n.id} · {n.title}
                   </option>
                 ))}
               </select>

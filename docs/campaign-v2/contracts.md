@@ -48,9 +48,15 @@ Non-combat nodes never contain `foes` or a placeholder `BattleScenario`. `Battle
 
 The canonical registry is validated at module initialization. Tests additionally lock the exact progression graph, six chapters, reward total, node-type coverage, boss targets and the absence of combat fields on non-combat nodes.
 
-## Compatibility period
+## Warlord encounter catalog (CAMP-08.04)
 
-`CampaignStage`, `CAMPAIGN`, `stageById` and `stageFighter` remain exported as deprecated adapters. `RAID_STAGES` and `HOME_TERRAIN` remain unchanged. This preserves Raid, Tower, Survival, Daily, Arena, current Campaign UI/server flow and balance simulations until their consumers move to a standalone warlord encounter catalog.
+The old 13-stage Campaign (`CampaignStage`, `CAMPAIGN`, `stageById`, `stageUnlocked`, `stageFoes`, `applyCampaignResult`, `RAID_STAGES`) was removed. `src/core/campaign/warlords.ts` is the standalone `WarlordEncounterCatalog` required by design-freeze section 5:
+
+- `WARLORD_ENCOUNTERS`: 12 entries keyed by faction ID (`tranLam` … `doCanhThac`), in the old Raid order, with the old stage ID kept only as the internal `encounterId`; leader + aides, mode, base difficulty, base level, recommended level, place, modern region and Raid dialogue.
+- `EncounterFoe` / `encounterFighter` replace `StageFoe` / `stageFighter`; `warlordLeader`, `BOSS_HP`, `HOME_TERRAIN`, `HOME_RULE` live here.
+- Tower, Survival, Daily and Arena read this catalog by index exactly as they read `RAID_STAGES`, so the same seed yields the same opponents. They do not read V2 missions.
+- Raid (`raids.ts`) is keyed by faction ID. A boss opens when the server has recorded its unlock mission (`unlockedContent` kind `raid`); Only the six `military` factions of the ledger are Raid bosses (rematches); `raidBossById` returns undefined for the other six, whose `raid` unlock entry only gates the shop. Battle payload: `{ raidBoss, raid }`; any `stage` payload is rejected.
+- Leaderboard boards are `campaign` and `mission:<combat mission ID>`; `stage:<id>` boards are no longer written or accepted.
 
 The V2 registry does not read or mutate progress. Completion, choice, reward and recruit settlement remain server-authoritative work for later CAMP-01 tasks.
 
@@ -68,7 +74,7 @@ The V2 registry does not read or mutate progress. Completion, choice, reward and
 
 Unlock uses node prerequisites plus chapter gates. Chapters IV and V open in parallel after Chapter III; Chapter VI requires both routes. `completeCampaignNode` can complete story and diplomacy events without a battle result. It is a pure transition intended to be called only after server authorization. `recordCampaignRewardReceipt` is idempotent and never grants currency itself.
 
-The nested `legacy` field is a temporary adapter for the old 13-stage UI and Raid progress. Old stage completion is never converted into M IDs. Parsing a V1 Campaign starts V2 clean while retaining valid Raid tiers.
+`raids` stores the best Raid tier (1–3) per faction ID. The former nested `legacy` field (old stage clears, old best turns, Raid tiers by old stage ID) is dropped by the parser; only Raid tiers are carried over, mapped from old stage ID to faction ID. Old stage completion is never converted into M IDs. Parsing a V1 Campaign starts V2 clean while retaining valid Raid tiers.
 
 `resetCampaignProgressForDev` accepts only explicit `development` or `test` environments, resets Campaign fields and preserves Raid tiers plus every shared Profile field. Production and unknown environments fail closed. The reset function does not execute database operations.
 
@@ -86,8 +92,8 @@ M05 represents the opening audience with Trần Lãm at Bố Hải and completes
 
 - `defeatEnemies`: succeeds only when the Battle Engine records the human side as winner and the enemy team has no HP.
 - `surviveTurns`: succeeds when the configured number of player turns is complete and the human team remains alive; defeating the enemy earlier also succeeds. An AI winner always fails the objective.
-- `breakSiege`: uses explicit `breach` and `assault` phases. The current engine has fighter shields but no independently targetable structure/shield, so M20 is two sequential battles rather than a hidden global combat rule.
-- `bossPhases`: requires the named boss fighter to exist and be at zero HP before accepting a human winner. The contract supports multiple phases; current boss nodes contain one phase.
+- `breakSiege`: uses explicit `breach`, optional `escort` and `assault` phases. The current engine has fighter shields but no independently targetable structure/shield, so M20 is three sequential battles (breach → escort → assault; CAMP-06.02 merged the supply-escort beat into M20 without a new mission or reward) rather than a hidden global combat rule. `escort` succeeds after its configured player turns while the human team is alive, or by defeating the raiders; it is a fictional gameplay beat. The next phase is chosen by the server from `campaign.siegePhases`, which only advances when the settled match is the phase the profile is waiting for; a stale phase match keeps battle rewards but never advances the phase, refills Campaign food or grants first-clear rewards.
+- `bossPhases`: requires the named boss fighter to exist and be at zero HP before accepting a human winner. The contract supports multiple phases. M21 (CAMP-06.03) is three sequential battles: an opening `breakSiege` breach phase (road), a boss phase that ends when the boss is alive at or below `hpThreshold` of max HP, and a final boss phase. The boss HP ratio left after a threshold phase is stored server-side in `campaign.phaseBossHp` and applied as the boss's starting `hpRatio` in the next phase, so damage is never reset; aides are fresh. Other boss nodes keep one phase.
 
 `turn.number` is the number of side turns started, beginning at one. Completed player turns are `floor((turn.number - 1) / 2)` in server matches because AI turns execute immediately and extra actions do not increment the side-turn counter. Timeout therefore advances the objective through the same engine transition; abandonment still produces an AI winner and failure.
 
