@@ -1,5 +1,11 @@
 # Nhật ký thay đổi thiết kế
 
+## 26/10/2026 — Chọn đối thủ nhận kỹ năng
+
+- Kỹ năng đơn mục tiêu cho chọn đối thủ (hoặc đồng đội) khi có từ hai lựa chọn: bấm thẻ, hoặc ←/→ rồi Enter (Shan yêu cầu).
+  Kỹ năng phá vùng đơn mục tiêu chọn đối thủ trước rồi chọn tâm. Khiêu khích vẫn buộc nhắm kẻ khiêu khích.
+- Đánh thường (ô kiếm) và kỹ năng diện rộng/lên bản thân/cả đội giữ nguyên. Không truyền `target` thì core chọn như cũ.
+
 ## 25/10/2026 — Campaign V2: gỡ chiến dịch cũ, Đánh trùm 6 trùm, nghiệm thu
 
 - Gỡ hẳn chiến dịch 13 màn cũ (Shan yêu cầu); sứ quân chuyển sang danh mục dùng chung `warlords.ts`.
