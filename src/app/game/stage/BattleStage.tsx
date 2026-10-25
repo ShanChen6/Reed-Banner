@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -222,6 +222,7 @@ export default function BattleStage({
         import("./needle"),
         import("./bulwark"),
         import("./silver"),
+        import("./coins"),
       ]);
       const app = new Application();
       await app.init({
@@ -271,7 +272,7 @@ export default function BattleStage({
       app.renderer.on("resize", layout);
       // Hiệu ứng vẽ trên cả sân, đè lên mọi nhân vật: sét hệ Lôi, vòm khiên đất hệ Thổ, vòng lá hồi sinh hệ Mộc,
       // mũi sáng phá giáp hệ Kim, đoạt lương và cột nước đóng băng hệ Thủy, tường lửa hệ Hỏa, đập đất hệ Thổ,
-      // ngân châm, tường thép và mưa kim bạc hệ Kim.
+      // ngân châm, tường thép, mưa kim bạc và tiền vàng ly tán hệ Kim.
       const sky = new Container();
       sky.zIndex = 100;
       app.stage.addChild(sky);
@@ -290,6 +291,15 @@ export default function BattleStage({
           loaded[i]!.onStrike?.((kind) => {
             if (kind !== "ultimate") return;
             alive(true).forEach((s, n) => fx.cover(spot(s, 0), app.screen.height * FIGURE, n * 0.08));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "coinScatter") {
+          const fx = coinScatter(sky, rig.fxColor);
+          // Tuyệt chiêu một người: tiền vàng bật khỏi đối thủ đứng đầu, ấn câm lặng trên đầu họ.
+          loaded[i]!.onStrike?.((kind) => {
+            const foe = alive(false)[0];
+            if (kind === "ultimate" && foe) fx.scatter(spot(foe, 0.5), app.screen.height * FIGURE);
           });
           return [fx];
         }
