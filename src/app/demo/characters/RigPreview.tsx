@@ -197,9 +197,19 @@ export default function RigPreview({ id, size, onSnapshot }: {
           const size = rig.height * loaded.view.scale.y;
           thorns.bind({ x: el.clientWidth - 60, y: loaded.view.y }, { x: loaded.view.x, y: loaded.view.y - size * 0.55 }, size * 0.8);
         });
+        // Rễ già giữ thành hệ Mộc: vòng lá và vòm khiên quanh nhân vật.
+        const roots = team === "rootGuard" ? [leafBloom(app.stage, rig.fxColor), earthWard(app.stage, rig.fxColor)] as const : null;
+        if (roots) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const at = { x: loaded.view.x, y: loaded.view.y };
+          const size = rig.height * loaded.view.scale.y;
+          roots[0].cover(at, size);
+          roots[1].cover(at, size, 0.25);
+        });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
           loaded?.update(dt);
+          roots?.forEach((r) => r.update(dt));
           thorns?.update(dt);
           sap?.update(dt);
           coins?.update(dt);

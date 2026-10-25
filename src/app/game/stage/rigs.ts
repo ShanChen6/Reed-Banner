@@ -117,7 +117,8 @@ export interface WarriorRig {
    * bạc và vòng sáng hồi máu quanh từng đồng đội; `coinScatter` chỉ ở tuyệt chiêu, tung tiền vàng khỏi đối thủ đứng
    * đầu kèm ấn câm lặng; `ironFormation` chỉ ở tuyệt chiêu, khiên nứt trên từng đối thủ và mũi tên vàng ở từng đồng
    * đội; `bambooSap` chỉ ở tuyệt chiêu, chém lá trúc lên đối thủ đứng đầu và hút sinh khí về chính mình;
-   * `thornBind` chỉ ở tuyệt chiêu, dây gai quấn từng đối thủ và hút sinh khí về chính mình.
+   * `thornBind` chỉ ở tuyệt chiêu, dây gai quấn từng đối thủ và hút sinh khí về chính mình; `rootGuard` chỉ ở tuyệt
+   * chiêu, vòng lá hồi phục quanh cả đội và vòm khiên đất quanh chính mình.
    */
   readonly strikeFx?:
     | "lightning"
@@ -134,7 +135,8 @@ export interface WarriorRig {
     | "coinScatter"
     | "ironFormation"
     | "bambooSap"
-    | "thornBind";
+    | "thornBind"
+    | "rootGuard";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1434,6 +1436,49 @@ const DAM_THAO: WarriorRig = {
   },
 };
 
+/**
+ * Hoàng Mộc, binh lính hệ Mộc (tướng cửa hàng). Bộ tranh Shan gửi 25/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
+ * code như Nguyễn Khoan: giáo tre cùng nắm tay xoay quanh cổ tay, khiên mây lá trúc cùng cẳng tay là lớp tay không,
+ * nâng lên khi vào thế và đỡ đòn; đầu đội nón lá tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const HOANG_MOC: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "hoang-moc",
+  texScale: 0.5,
+  foot: { x: 520, y: 1450 },
+  height: 1300,
+  parts: {
+    body: { x: 248, y: 150, w: 586, h: 1334 },
+    armR: { x: 685, y: 604, w: 297, h: 462 },
+    sword: { x: 174, y: 8, w: 72, h: 1431 },
+    arm: { x: 163, y: 506, w: 93, h: 105 },
+    head: { x: 362, y: 150, w: 319, h: 251 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 210, y: 560 },
+    elbowR: { x: 720, y: 650 },
+    neck: { x: 500, y: 390 },
+  },
+  blade: [{ x: 210, y: 560 }, { x: 205, y: 20 }],
+  shieldRaise: -0.35,
+  strikeFx: "rootGuard",
+  fxColor: 0x4f9a4a,
+  // Đâm giáo tre (đánh thường), giơ khiên che người (ra chiêu), thụp thấp núp sau khiên giữ thành (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 18, y: 11 },
+      anchor: { x: 770, y: 960 }, scale: 1.3, burst: { x: 1500, y: 212 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 78, y: 16 },
+      anchor: { x: 600, y: 1440 }, scale: 1.05, burst: { x: 842, y: 637 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 76, y: 12 },
+      anchor: { x: 600, y: 1420 }, scale: 1.1, burst: { x: 802, y: 787 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 47, y: 118 },
+    anchor: { x: 760, y: 880 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1463,6 +1508,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   nghiemThiet: NGHIEM_THIET,
   lamTung: LAM_TUNG,
   damThao: DAM_THAO,
+  hoangMoc: HOANG_MOC,
 };
 
 export function rigOf(id: string): Rig | null {

@@ -299,6 +299,19 @@ export default function BattleStage({
           });
           return [fx];
         }
+        if (rig.strikeFx === "rootGuard") {
+          const bloom = leafBloom(sky, rig.fxColor);
+          const ward = earthWard(sky, rig.fxColor);
+          // Tuyệt chiêu giữ thành: vòng lá hồi phục quanh cả đội, vòm khiên quanh chính mình (Khiên, Khiêu khích).
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            alive(true).forEach((s, n) => bloom.cover(spot(s, 0), size, n * 0.08));
+            ward.cover(spot(me, 0), size, 0.25);
+          });
+          return [bloom, ward];
+        }
         if (rig.strikeFx === "thornBind") {
           const fx = thornBind(sky, rig.fxColor);
           // Tuyệt chiêu cả đội đối thủ hút máu: dây gai quấn từng người, sinh khí bay về chính mình.
