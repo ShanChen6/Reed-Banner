@@ -55,7 +55,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/ward"), import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -63,7 +63,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           import("@/app/game/stage/needle"), import("@/app/game/stage/bulwark"),
           import("@/app/game/stage/silver"), import("@/app/game/stage/coins"),
           import("@/app/game/stage/banner"), import("@/app/game/stage/sap"),
-          import("@/app/game/stage/thorn"),
+          import("@/app/game/stage/thorn"), import("@/app/game/stage/miasma"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -206,9 +206,18 @@ export default function RigPreview({ id, size, onSnapshot }: {
           roots[0].cover(at, size);
           roots[1].cover(at, size, 0.25);
         });
+        // Trúc độc hệ Mộc: sương độc ở mép phải khung, vòng lá quanh nhân vật.
+        const mist = team === "poisonMist" ? [poisonMist(app.stage, rig.fxColor), leafBloom(app.stage, rig.fxColor)] as const : null;
+        if (mist) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          mist[0].cover({ x: el.clientWidth - 70, y: loaded.view.y }, size * 0.8);
+          mist[1].cover({ x: loaded.view.x, y: loaded.view.y }, size, 0.3);
+        });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
           loaded?.update(dt);
+          mist?.forEach((m) => m.update(dt));
           roots?.forEach((r) => r.update(dt));
           thorns?.update(dt);
           sap?.update(dt);

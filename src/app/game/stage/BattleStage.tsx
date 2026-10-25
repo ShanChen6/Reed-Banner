@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -226,6 +226,7 @@ export default function BattleStage({
         import("./banner"),
         import("./sap"),
         import("./thorn"),
+        import("./miasma"),
       ]);
       const app = new Application();
       await app.init({
@@ -298,6 +299,18 @@ export default function BattleStage({
             alive(true).forEach((s, n) => fx.cover(spot(s, 0), app.screen.height * FIGURE, n * 0.08));
           });
           return [fx];
+        }
+        if (rig.strikeFx === "poisonMist") {
+          const mist = poisonMist(sky, rig.fxColor);
+          const bloom = leafBloom(sky, rig.fxColor);
+          // Tuyệt chiêu trúc độc: sương độc quanh từng đối thủ (rút năng lượng, câm lặng), vòng lá hồi phục cho đội mình.
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => mist.cover(spot(s, 0), size, n * 0.08));
+            alive(true).forEach((s, n) => bloom.cover(spot(s, 0), size, 0.3 + n * 0.08));
+          });
+          return [mist, bloom];
         }
         if (rig.strikeFx === "rootGuard") {
           const bloom = leafBloom(sky, rig.fxColor);
