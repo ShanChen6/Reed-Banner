@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -221,6 +221,7 @@ export default function BattleStage({
         import("./slam"),
         import("./needle"),
         import("./bulwark"),
+        import("./silver"),
       ]);
       const app = new Application();
       await app.init({
@@ -270,7 +271,7 @@ export default function BattleStage({
       app.renderer.on("resize", layout);
       // Hiệu ứng vẽ trên cả sân, đè lên mọi nhân vật: sét hệ Lôi, vòm khiên đất hệ Thổ, vòng lá hồi sinh hệ Mộc,
       // mũi sáng phá giáp hệ Kim, đoạt lương và cột nước đóng băng hệ Thủy, tường lửa hệ Hỏa, đập đất hệ Thổ,
-      // ngân châm và tường thép hệ Kim.
+      // ngân châm, tường thép và mưa kim bạc hệ Kim.
       const sky = new Container();
       sky.zIndex = 100;
       app.stage.addChild(sky);
@@ -282,8 +283,9 @@ export default function BattleStage({
           return { x: slotX(s.side, s.index) * width, y: height * (GROUND - FIGURE * k) };
         };
         const alive = (mine: boolean) => latest.current.filter((s) => (s.side === e.side) === mine && isAlive(s.fighter));
-        if (rig.strikeFx === "earthWard" || rig.strikeFx === "leafBloom") {
-          const fx = (rig.strikeFx === "earthWard" ? earthWard : leafBloom)(sky, rig.fxColor);
+        if (rig.strikeFx === "earthWard" || rig.strikeFx === "leafBloom" || rig.strikeFx === "silverGrace") {
+          const make = rig.strikeFx === "earthWard" ? earthWard : rig.strikeFx === "leafBloom" ? leafBloom : silverGrace;
+          const fx = make(sky, rig.fxColor);
           // Tuyệt chiêu cho cả đội: hiệu ứng nở quanh từng đồng đội còn đứng.
           loaded[i]!.onStrike?.((kind) => {
             if (kind !== "ultimate") return;

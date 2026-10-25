@@ -55,12 +55,13 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/ward"), import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
           import("@/app/game/stage/flame"), import("@/app/game/stage/slam"),
           import("@/app/game/stage/needle"), import("@/app/game/stage/bulwark"),
+          import("@/app/game/stage/silver"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -113,7 +114,8 @@ export default function RigPreview({ id, size, onSnapshot }: {
         });
         // Vòm khiên đất hệ Thổ, vòng lá hệ Mộc: nở quanh chính nhân vật khi tuyệt chiêu.
         const team = rig.skeleton === "warrior" ? rig.strikeFx : undefined;
-        const wards = team === "earthWard" ? earthWard(app.stage, rig.fxColor) : team === "leafBloom" ? leafBloom(app.stage, rig.fxColor) : null;
+        const wards = team === "earthWard" ? earthWard(app.stage, rig.fxColor) : team === "leafBloom" ? leafBloom(app.stage, rig.fxColor)
+          : team === "silverGrace" ? silverGrace(app.stage, rig.fxColor) : null;
         if (wards) loaded.onStrike?.((kind) => {
           if (kind === "ultimate" && loaded) wards.cover({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y);
         });
