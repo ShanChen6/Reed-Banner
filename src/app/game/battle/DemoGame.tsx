@@ -584,6 +584,18 @@ function FighterCard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastFloat]);
 
+  // Nội tại chỉ nằm trong tooltip; thẻ chỉ hiện buff/debuff.
+  const cardTitle = [
+    `ATK ${fighter.atk} · DEF ${fighter.def} · Máu tối đa ${fighter.maxHp}`,
+    fighter.comboPassive &&
+      `Nội tại · ${comboDescription(fighter)}`,
+    fighter.chasePassives &&
+      `Truy kích: ${chasePassives(fighter).map((id) => CHASE_PASSIVES[id].name).join(" · ")}`,
+    `Tinh thần: Công/Thủ ${Math.round(spiritStatMultiplier(fighter.spirit, experimentalSpirit) * 100)}% · Hồi/Khiên mới ${Math.round(spiritHealMultiplier(fighter.spirit, experimentalSpirit) * 100)}%`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
   const ring = targetable
     ? "ring-2 ring-rose-400"
     : active
@@ -599,7 +611,7 @@ function FighterCard({
       disabled={!onClick || !alive}
       className={`relative w-full rounded-lg border-l-4 bg-[var(--panel)] p-2 text-left ${ring} ${alive ? "" : "opacity-40 grayscale"} disabled:cursor-default`}
       style={{ borderLeftColor: ELEMENT_COLOR[fighter.element] }}
-      title={`ATK ${fighter.atk} · DEF ${fighter.def} · Máu tối đa ${fighter.maxHp}`}
+      title={cardTitle}
     >
       <div className="mb-1 flex items-center gap-2">
         <Portrait
@@ -658,16 +670,17 @@ function FighterCard({
           <Bar label="Nộ" value={rage} max={100} color="bg-orange-500" />
         )}
       </div>
-      {fighter.comboPassive && <p className="mt-1 text-[10px] text-amber-200" title={comboDescription(fighter)}>
-        4 bị động · {COMBO_PASSIVES[fighter.comboPassive].name}{fighter.comboReady ? comboBlocked ? ' · Đang bị chặn' : ' · Sẵn sàng' : ''}
-      </p>}
-      {fighter.comboReady && <p className="text-[10px] text-amber-200">Do {comboSource} mở{comboTarget ? ` · mục tiêu ${comboTarget}` : ''} · {comboTurns ? `${comboTurns} lượt thường kế tiếp` : 'lượt hiện tại'}. Chọn hành động để tận dụng.</p>}
-      {fighter.chasePassives && <details className="mt-1 text-[10px]"><summary className="cursor-pointer">Truy kích: {chasePassives(fighter).map(id=>CHASE_PASSIVES[id].name).join(" · ")}</summary>{chasePassives(fighter).map(id=><p key={id}>{CHASE_PASSIVES[id].description}</p>)}</details>}
-      <p className="mt-1 text-[10px] opacity-75" title={`Từ lượt 25 của phe, Tinh thần giảm ${SPIRIT_EXPERIMENTS[experimentalSpirit].decay} mỗi lượt; không giảm thêm ở lượt thêm. Khiên đã có giữ nguyên.`}>
-        Tinh thần: Công/Thủ {Math.round(spiritStatMultiplier(fighter.spirit, experimentalSpirit)*100)}% · Hồi/Khiên mới {Math.round(spiritHealMultiplier(fighter.spirit, experimentalSpirit)*100)}%
-      </p>
-      {fighter.effects.length > 0 && (
+      {(fighter.effects.length > 0 || fighter.comboReady) && (
         <div className="mt-1.5 flex flex-wrap gap-1">
+          {fighter.comboReady && fighter.comboPassive && (
+            <span
+              className={`rounded px-1 py-0.5 text-[10px] ${comboBlocked ? "bg-zinc-600/50" : "bg-amber-600/40"}`}
+              title={`Do ${comboSource} mở${comboTarget ? ` · mục tiêu ${comboTarget}` : ""} · ${comboTurns ? `${comboTurns} lượt thường kế tiếp` : "lượt hiện tại"}. Chọn hành động để tận dụng.`}
+            >
+              {COMBO_PASSIVES[fighter.comboPassive].name}
+              {comboBlocked ? " · bị chặn" : ""}
+            </span>
+          )}
           {fighter.effects.map((e) => (
             <span
               key={e.kind}
