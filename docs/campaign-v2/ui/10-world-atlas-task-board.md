@@ -14,6 +14,8 @@
 | 5 | MAP-ART-02 place approved image under SVG | Claude/Codex | MAP-ART-00, MAP-03 | Image fallback and dynamic hotspots |
 | 6 | MAP-QA-01 | Claude/Codex | MAP-ART-02 | Lint/typecheck/test/build + historical audit |
 
+**Tiến độ:** MAP-00 DONE (`11-map-00-audit.md`), MAP-01 DONE (khung ba cột, Noto Serif trong `.campaign-atlas`). MAP-02, MAP-03, MAP-ART-02, MAP-QA-01 chưa làm.
+
 **Không cản UI code vì thiếu ảnh**: MAP-01..03 dùng SVG/CSS fallback, chỉ MAP-ART-02 chờ hình duyệt. BG-01 seven scene backdrops DONE và không phải asset world map.
 
 **Asset visual target:** concept trong hội thoại (sử ký trái, bản đồ giữa, panel thông tin phải), chỉ dùng làm style/layout reference. AI-rendered labels contain inaccuracies and MUST NOT be used as canonical map text.
