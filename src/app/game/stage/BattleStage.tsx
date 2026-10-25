@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -220,6 +220,7 @@ export default function BattleStage({
         import("./flame"),
         import("./slam"),
         import("./needle"),
+        import("./bulwark"),
       ]);
       const app = new Application();
       await app.init({
@@ -269,7 +270,7 @@ export default function BattleStage({
       app.renderer.on("resize", layout);
       // Hiệu ứng vẽ trên cả sân, đè lên mọi nhân vật: sét hệ Lôi, vòm khiên đất hệ Thổ, vòng lá hồi sinh hệ Mộc,
       // mũi sáng phá giáp hệ Kim, đoạt lương và cột nước đóng băng hệ Thủy, tường lửa hệ Hỏa, đập đất hệ Thổ,
-      // ngân châm hệ Kim.
+      // ngân châm và tường thép hệ Kim.
       const sky = new Container();
       sky.zIndex = 100;
       app.stage.addChild(sky);
@@ -287,6 +288,16 @@ export default function BattleStage({
           loaded[i]!.onStrike?.((kind) => {
             if (kind !== "ultimate") return;
             alive(true).forEach((s, n) => fx.cover(spot(s, 0), app.screen.height * FIGURE, n * 0.08));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "steelBulwark") {
+          const fx = steelBulwark(sky, rig.fxColor);
+          // Tuyệt chiêu tự thủ: tường thép dựng trước mặt chính mình, quay về phía đối thủ.
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (me) fx.raise(spot(me, 0), app.screen.height * FIGURE, e.side === 0 ? 1 : -1);
           });
           return [fx];
         }

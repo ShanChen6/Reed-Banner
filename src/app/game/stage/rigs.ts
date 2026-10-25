@@ -112,7 +112,8 @@ export interface WarriorRig {
    * chiêu, phủ sương băng lên cả đội đối thủ và hút hạt sáng từ họ về người tung chiêu; `waterPillar` chỉ ở tuyệt
    * chiêu, phun cột nước rồi đóng băng dưới chân từng đối thủ; `flameWall` chỉ ở tuyệt chiêu, dựng tường lửa
    * quanh chính mình và bén lửa lên từng đối thủ; `groundSlam` chỉ ở tuyệt chiêu, nứt đất dưới chân đối thủ đứng
-   * đầu và dựng vòm khiên đất quanh cả đội mình; `needleVolley` chỉ ở tuyệt chiêu, bắn tỏa kim bạc tới từng đối thủ.
+   * đầu và dựng vòm khiên đất quanh cả đội mình; `needleVolley` chỉ ở tuyệt chiêu, bắn tỏa kim bạc tới từng đối thủ;
+   * `steelBulwark` chỉ ở tuyệt chiêu, dựng tường thép trước mặt chính mình.
    */
   readonly strikeFx?:
     | "lightning"
@@ -123,7 +124,8 @@ export interface WarriorRig {
     | "waterPillar"
     | "flameWall"
     | "groundSlam"
-    | "needleVolley";
+    | "needleVolley"
+    | "steelBulwark";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1162,6 +1164,53 @@ const CHU_NGAN: WarriorRig = {
     anchor: { x: 820, y: 900 }, scale: 0.9 },
 };
 
+/**
+ * Cao Kiên, binh lính hệ Kim (tướng cửa hàng). Bộ tranh Shan gửi 25/10 (ảnh đứng, ra chiêu, đánh thường nền trong
+ * suốt sẵn; tuyệt chiêu và tranh gục có nền ca-rô vẽ sẵn, tách bằng code). Tranh đánh thường vẽ mũi giáo chĩa sang
+ * trái nên được lật ngang cho đâm về phía đối thủ. Ảnh đứng tách lớp như Nguyễn Khoan: giáo cùng nắm tay xoay quanh
+ * cổ tay, khiên mây nâng lên khi vào thế và đỡ đòn, đầu và dải khăn tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const CAO_KIEN: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "cao-kien",
+  texScale: 0.5,
+  foot: { x: 560, y: 1470 },
+  height: 1330,
+  parts: {
+    body: { x: 63, y: 144, w: 906, h: 1377 },
+    armR: { x: 681, y: 538, w: 327, h: 538 },
+    sword: { x: 47, y: 9, w: 216, h: 1466 },
+    arm: { x: 92, y: 868, w: 108, h: 153 },
+    head: { x: 405, y: 144, w: 177, h: 212 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 330, y: 227, w: 101, h: 139 }, behind: true,
+      wind: { axis: "x", start: 0.15, amp: 6, freq: 1.6, k: 3, phase: 0.2, vertical: true, reverse: true } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 145, y: 945 },
+    elbowR: { x: 700, y: 700 },
+    neck: { x: 535, y: 352 },
+  },
+  blade: [{ x: 150, y: 940 }, { x: 210, y: 15 }],
+  shieldRaise: -0.35,
+  strikeFx: "steelBulwark",
+  fxColor: 0x9ea4ad,
+  // Đâm giáo (đánh thường), giơ khiên thế thủ (ra chiêu), núp sau khiên giáo chĩa thấp (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 14, y: 17 },
+      anchor: { x: 656, y: 965 }, scale: 1.35, burst: { x: 1485, y: 179 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 177, y: 7 },
+      anchor: { x: 805, y: 1075 }, scale: 1.3, burst: { x: 1168, y: 405 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 28, y: 15 },
+      anchor: { x: 900, y: 970 }, scale: 1.35, burst: { x: 1271, y: 452 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 25, y: 86 },
+    anchor: { x: 820, y: 880 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1185,6 +1234,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   nguyenSieu: NGUYEN_SIEU,
   doCanhThac: DO_CANH_THAC,
   chuNgan: CHU_NGAN,
+  caoKien: CAO_KIEN,
 };
 
 export function rigOf(id: string): Rig | null {
