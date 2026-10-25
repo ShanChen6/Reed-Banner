@@ -66,6 +66,7 @@ import {
 } from "../battle/online";
 import CampaignMap from "./CampaignMap";
 import DiplomacyScene from "./DiplomacyScene";
+import DialoguePlayer from "./DialoguePlayer";
 import MusterPanel from "./MusterPanel";
 import RouteSummary from "./RouteSummary";
 import WorldLedger from "./WorldLedger";
@@ -75,7 +76,6 @@ import WarlordCodex, { MissionSources } from "./HistoricalCodex";
 import {
   BasisBadge,
   Beats,
-  Cinematic,
   FACTION_STATUS_TEXT,
   SourceNotes,
   TONE_TEXT,
@@ -1010,27 +1010,50 @@ export default function ChapterOne({
                   tế trong game.
                 </p>
               )}
-              <Cinematic nodeId={step.nodeId} />
-              <Beats beats={copy.intro} />
-              {step.nodeId === CAMPAIGN_UNIFICATION_NODE && (
-                <FactionDossiers campaign={campaign} />
-              )}
-              <SourceNotes nodeId={step.nodeId} />
               {step.phase === "intro" ? (
+                <DialoguePlayer
+                  key={`${step.nodeId}:intro`}
+                  missionId={step.nodeId}
+                  sequence="intro"
+                  label={`Lời dẫn ${node.id}`}
+                  segments={[
+                    {
+                      section: "cinematic",
+                      beats: copy.cinematic ?? [],
+                      cinematic: true,
+                    },
+                    { section: "intro", beats: copy.intro },
+                  ]}
+                  main={profile}
+                  finishLabel="Tiếp tục"
+                  onFinished={() =>
+                    move({
+                      nodeId: step.nodeId,
+                      phase: "choice",
+                      choice: choice ?? recorded,
+                    })
+                  }
+                />
+              ) : inProgress === step.nodeId ? null : (
                 <button
                   type="button"
                   onClick={() =>
                     move({
                       nodeId: step.nodeId,
-                      phase: "choice",
-                      choice: recorded,
+                      phase: "intro",
+                      ...(step.choice ? { choice: step.choice } : {}),
                     })
                   }
-                  className="self-start rounded bg-amber-500 px-4 py-1.5 font-semibold text-stone-950"
+                  className="min-h-11 self-start rounded-lg bg-white/10 px-4 text-sm hover:bg-white/15"
                 >
-                  Tiếp tục
+                  ↺ Xem lại lời dẫn
                 </button>
-              ) : (
+              )}
+              {step.nodeId === CAMPAIGN_UNIFICATION_NODE && (
+                <FactionDossiers campaign={campaign} />
+              )}
+              <SourceNotes nodeId={step.nodeId} />
+              {step.phase !== "intro" && (
                 <div className="flex flex-col gap-2">
                   <p className="font-semibold text-amber-200">{copy.prompt}</p>
                   <div className="flex flex-wrap gap-2">

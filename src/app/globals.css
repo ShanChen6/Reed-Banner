@@ -448,3 +448,27 @@
     animation: none;
   }
 }
+
+/* Trình phát thoại Chiến dịch: câu mới hiện dần, chân dung đổi độ sáng theo người nói. */
+.dialogue-line {
+  animation: dialogue-in 150ms ease-out;
+}
+.dialogue-portrait {
+  transition:
+    opacity 150ms ease-out,
+    filter 150ms ease-out;
+}
+@keyframes dialogue-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dialogue-line {
+    animation: none;
+  }
+  .dialogue-portrait {
+    transition: none;
+  }
+}
