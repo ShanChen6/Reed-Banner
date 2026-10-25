@@ -114,7 +114,8 @@ export interface WarriorRig {
    * quanh chính mình và bén lửa lên từng đối thủ; `groundSlam` chỉ ở tuyệt chiêu, nứt đất dưới chân đối thủ đứng
    * đầu và dựng vòm khiên đất quanh cả đội mình; `needleVolley` chỉ ở tuyệt chiêu, bắn tỏa kim bạc tới từng đối thủ;
    * `steelBulwark` chỉ ở tuyệt chiêu, dựng tường thép trước mặt chính mình; `silverGrace` chỉ ở tuyệt chiêu, rải kim
-   * bạc và vòng sáng hồi máu quanh từng đồng đội.
+   * bạc và vòng sáng hồi máu quanh từng đồng đội; `coinScatter` chỉ ở tuyệt chiêu, tung tiền vàng khỏi đối thủ đứng
+   * đầu kèm ấn câm lặng.
    */
   readonly strikeFx?:
     | "lightning"
@@ -127,7 +128,8 @@ export interface WarriorRig {
     | "groundSlam"
     | "needleVolley"
     | "steelBulwark"
-    | "silverGrace";
+    | "silverGrace"
+    | "coinScatter";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1256,6 +1258,51 @@ const CHAU_NGOC: WarriorRig = {
     anchor: { x: 800, y: 900 }, scale: 0.85 },
 };
 
+/**
+ * Tô Kim, mưu sĩ hệ Kim (tướng khởi đầu). Bộ tranh Shan gửi 25/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code:
+ * quạt lông đen cùng nắm tay phẩy quanh cổ tay theo nhịp quạt, bàn tay chống hông, đầu và đuôi khăn đen tách riêng.
+ * Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const TO_KIM: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "fan",
+  dir: "to-kim",
+  texScale: 0.5,
+  foot: { x: 540, y: 1500 },
+  height: 1490,
+  parts: {
+    body: { x: 186, y: 10, w: 709, h: 1514 },
+    armR: { x: 645, y: 585, w: 101, h: 126 },
+    sword: { x: 94, y: 221, w: 312, h: 390 },
+    arm: { x: 255, y: 478, w: 64, h: 98 },
+    head: { x: 465, y: 11, w: 160, h: 252 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 370, y: 102, w: 121, h: 229 }, behind: true,
+      wind: { axis: "y", start: 0.2, amp: 5, freq: 1.4, k: 2.8, phase: 0.6 } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 285, y: 540 },
+    elbowR: { x: 665, y: 610 },
+    neck: { x: 560, y: 255 },
+  },
+  blade: [{ x: 280, y: 500 }, { x: 180, y: 300 }],
+  strikeFx: "coinScatter",
+  fxColor: 0x9ea4ad,
+  // Phẩy quạt thấp ra sau (đánh thường), chỉ tay quạt kề ngực (ra chiêu), thế tấn rộng chỉ tay quạt giơ cao (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 8, y: 8 },
+      anchor: { x: 640, y: 1480 }, scale: 1, burst: { x: 90, y: 620 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 2, y: 8 },
+      anchor: { x: 400, y: 1480 }, scale: 1, burst: { x: 1006, y: 300 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 1, y: 8 },
+      anchor: { x: 510, y: 1490 }, scale: 1, burst: { x: 1012, y: 270 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 13, y: 23 },
+    anchor: { x: 800, y: 900 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1281,6 +1328,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   chuNgan: CHU_NGAN,
   caoKien: CAO_KIEN,
   chauNgoc: CHAU_NGOC,
+  toKim: TO_KIM,
 };
 
 export function rigOf(id: string): Rig | null {
