@@ -45,7 +45,8 @@ import {
 } from "@/core";
 import { GearIcon } from "../art/gear";
 import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
-import { Portrait } from "../art/portraits";
+import { LevelEmblem, Portrait } from "../art/portraits";
+import { ProfileArt } from "../art/ProfileArt";
 import { GearShop } from "../battle/GearPanel";
 import {
   ELEMENT_NAME,
@@ -514,12 +515,19 @@ export default function ProfileScreen({
                       );
                     })}
                   </svg>
-                  <Portrait
+                  <ProfileArt
                     id={character}
                     element={fighter.element}
                     profession={fighter.profession}
-                    className="relative size-32 drop-shadow-[0_6px_10px_#000c] sm:size-36"
+                    className="relative h-[88%] max-w-[92%] object-contain drop-shadow-[0_6px_10px_#000c]"
+                    fallbackClassName="relative size-32 drop-shadow-[0_6px_10px_#000c] sm:size-36"
                   />
+                  {fighter.level !== undefined && (
+                    <span className="absolute bottom-1.5 left-2 flex items-center gap-1 rounded bg-black/50 py-0.5 pr-0.5 pl-1.5 text-[11px] font-semibold text-amber-100">
+                      Cấp
+                      <LevelEmblem level={fighter.level} className="size-6" />
+                    </span>
+                  )}
                   <span className="absolute top-1.5 left-2 flex items-center gap-1 rounded bg-black/50 px-1.5 py-0.5 text-[11px] text-amber-100">
                     <ElementIcon
                       element={fighter.element}

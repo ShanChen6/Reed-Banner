@@ -21,6 +21,8 @@ export interface FighterConfig {
   readonly skills?: readonly string[];
   /** Cấp của từng kỹ năng (id → 1..5); bỏ trống là cấp 1. */
   readonly skillLevels?: Readonly<Record<string, number>>;
+  /** Cấp nhân vật (1..30) để giao diện hiển thị; luật trận không đọc. Bỏ trống là chưa dựng theo cấp. */
+  readonly level?: number;
 }
 
 export interface Fighter extends FighterConfig {
