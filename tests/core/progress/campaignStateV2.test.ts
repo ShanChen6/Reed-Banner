@@ -133,11 +133,9 @@ describe("CampaignProgressV2", () => {
       "hero:dinhLien",
     ]);
     assert.deepEqual(parsed.unlockedHeroes, ["dinhLien"]);
-    assert.deepEqual(parsed.legacy, {
-      cleared: ["coLau"],
-      raids: { boHai: 2 },
-      bestTurns: { coLau: 12 },
-    });
+    // Màn cũ bị bỏ (CAMP-08.04); bậc Đánh trùm hợp lệ chuyển sang id sứ quân, bậc sai bị bỏ.
+    assert.ok(!("legacy" in parsed));
+    assert.deepEqual(parsed.raids, { tranLam: 2 });
   });
 
   it("resets development Campaign idempotently and preserves shared profile data", () => {
@@ -151,7 +149,7 @@ describe("CampaignProgressV2", () => {
         ...progressed,
         supply: 91,
         rewardReceipts: ["node:M01" as const],
-        legacy: { ...progressed.legacy, raids: { boHai: 2 } },
+        raids: { tranLam: 2 },
       },
     };
     const denied = resetCampaignProgressForDev(profile, "production");
@@ -164,7 +162,7 @@ describe("CampaignProgressV2", () => {
     assert.ok(first.ok);
     assert.deepEqual(first.profile.campaign.completed, []);
     assert.equal(first.profile.campaign.supply, CAMPAIGN_FOOD_START);
-    assert.deepEqual(first.profile.campaign.legacy.raids, { boHai: 2 });
+    assert.deepEqual(first.profile.campaign.raids, { tranLam: 2 });
     assert.equal(first.profile.gold, profile.gold);
     assert.equal(first.profile.stones, profile.stones);
     assert.equal(first.profile.bag, profile.bag);
@@ -186,7 +184,7 @@ describe("CampaignProgressV2", () => {
     assert.equal(parsed.version, 2);
     assert.deepEqual(parsed.completed, []);
     assert.equal(parsed.supply, CAMPAIGN_FOOD_START);
-    assert.deepEqual(parsed.legacy.cleared, []);
-    assert.deepEqual(parsed.legacy.raids, { boHai: 2 });
+    assert.ok(!("legacy" in parsed));
+    assert.deepEqual(parsed.raids, { tranLam: 2 });
   });
 });

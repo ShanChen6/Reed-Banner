@@ -3,8 +3,9 @@ import { ELEMENTS, PROFESSIONS, type Profession, type SideIndex } from '../battl
 import { autoProgress, buildCompanion, buildMain } from '../progress';
 import { withGear, presetLoadout } from '../gear';
 import { ALL_COMPANIONS } from '../roster';
-import { stageById, recommendedLevel } from '../campaign';
-import { stageMatchups, stageTeamIds } from './campaign';
+import { campaignEncounter } from '../campaign';
+import type { Difficulty } from '../ai';
+import { missionMatchups, missionTeamIds } from './campaign';
 import type { Matchup } from './sim';
 
 export const AUDIT_PROFILES = ['attack','balanced','defense','resources'] as const;
@@ -12,7 +13,8 @@ export type AuditProfile = typeof AUDIT_PROFILES[number];
 export interface AuditCase {
  readonly id:string; readonly group:'screen'|'spirit'|'campaign'; readonly level:number;
  readonly profession:Profession; readonly element:typeof ELEMENTS[number]; readonly profile:AuditProfile;
- readonly pair:string; readonly focalSide:SideIndex; readonly matchup:Matchup; readonly stage?:string;
+ readonly pair:string; readonly focalSide:SideIndex; readonly matchup:Matchup;
+ /** Nhóm campaign: nhiệm vụ Campaign V2 và độ khó AI phe đối thủ của nhiệm vụ đó. */ readonly stage?:string; readonly foeDifficulty?:Difficulty;
  readonly team?:string; readonly equipment:'none'|'white3';
 }
 const roles:Record<AuditProfile,readonly Profession[]>={attack:['tuongSi','phapSu','quanSu'],balanced:['tuongSi','ySu','quanSu'],defense:['binhLinh','ySu','binhLinh'],resources:['muuSi','quanSu','muuSi']};
@@ -52,19 +54,19 @@ export function spiritCases(seeds:readonly number[]=[701,1907]):AuditCase[]{
  }
  return out;
 }
-/** Only starter/previously joined heroes, never a not-yet-defeated warlord. */
+/** Only starter/previously joined heroes, never a not-yet-defeated warlord. Nhiệm vụ V2 thay màn cũ phongChau/tamDai (CAMP-08.04). */
 export function campaignAuditCases(seeds:readonly number[]=[701,1907,3119],equipment:'none'|'white3'='none'):AuditCase[]{
  const out:AuditCase[]=[];
- for(const id of ['phongChau','tamDai']) for(const team of ['default','heroes'] as const) for(const [si,seed] of seeds.entries()){
-  const stage=stageById(id)!;const level=recommendedLevel(stage);const element=ELEMENTS[(si+2)%7]!;
-  let m=stageMatchups(stage,1,seed,{level,element,team})[0]!;
+ for(const id of ['M15','M17'] as const) for(const team of ['default','heroes'] as const) for(const [si,seed] of seeds.entries()){
+  const level=campaignEncounter(id)!.recommendedLevel;const element=ELEMENTS[(si+2)%7]!;
+  const sim=missionMatchups(id,1,seed,{level,element,team});let m=sim.matchups[0]!;
   if(equipment==='white3') {
    const side=m.sides[0];
    const fighters=side.fighters.map(f=>{const all=presetLoadout(f.element,f.profession,1,null);return withGear(f,{weapons:{[f.profession]:all.weapons[f.profession]!},slots:{dinhMao:all.slots.dinhMao!,yPhuc:all.slots.yPhuc!}});});
    m={...m,sides:[{...side,fighters},m.sides[1]]};
   }
   const key=`campaign:${id}:${team}:${seed}${equipment==='none'?'':':white3'}`;
-  out.push(...pair({pair:key,group:'campaign',level,profession:'tuongSi',element,profile:'balanced',stage:id,team:stageTeamIds(stage,team).join('+'),equipment},m));
+  out.push(...pair({pair:key,group:'campaign',level,profession:'tuongSi',element,profile:'balanced',stage:id,foeDifficulty:sim.difficulty,team:missionTeamIds(id,team).join('+'),equipment},m));
  }
  return out;
 }

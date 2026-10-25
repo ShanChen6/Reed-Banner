@@ -21,8 +21,10 @@ import {
   buildCompanion,
   buildMain,
   ALL_COMPANIONS,
-  CAMPAIGN,
-  stageFoes,
+  STORY_NODES,
+  WARLORD_ENCOUNTERS,
+  campaignEncounterFoes,
+  encounterFighter,
   PROFESSIONS,
   ELEMENTS,
   PROFESSION_COMBO,
@@ -380,10 +382,13 @@ it("lượt thêm giữ bộ đếm và cho người chơi tận dụng ngay; kh
     used.events.some((e) => e.type === "combo" && e.outcome === "used"),
   );
 });
-it("toàn bộ preset chiến dịch, gồm tùy tướng legacy, có bị động cấu hình được", () => {
-  for (const stage of CAMPAIGN)
-    for (const f of stageFoes(stage))
-      assert.ok(f.comboPassive, `${stage.id}:${f.id}`);
+it("toàn bộ đối thủ chiến dịch V2 và 12 sứ quân, gồm tùy tướng, có bị động cấu hình được", () => {
+  for (const node of STORY_NODES)
+    for (const f of campaignEncounterFoes(node.id) ?? [])
+      assert.ok(f.comboPassive, `${node.id}:${f.id}`);
+  for (const w of WARLORD_ENCOUNTERS)
+    for (const foe of w.foes)
+      assert.ok(encounterFighter(foe, w.level).comboPassive, `${w.id}:${foe.id}`);
 });
 
 it("registry chặn trùng ID và key prototype; không âm thầm ghi đè khi thêm tướng", () => {

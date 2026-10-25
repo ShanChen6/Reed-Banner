@@ -1,10 +1,16 @@
 // Thành tựu (lộ trình 5.4): mốc trọn đời, nhận thưởng vàng một lần. Tiến độ đọc thẳng từ hồ sơ.
 // Số liệu là điểm xuất phát do Claude đặt, chờ Shan duyệt.
 
+import { STORY_NODES } from "../campaign/storyNodes";
+import { campaignCompleted } from "./campaignState";
 import type { Profile } from "./profile";
 
+const CHAPTER1_NODES: readonly string[] = STORY_NODES.filter(
+  (node) => node.chapter === 1,
+).map((node) => node.id);
+
 /** Campaign V2 has four nodes in Chapter I. */
-export const CHAPTER1_STAGES = 4;
+export const CHAPTER1_STAGES = CHAPTER1_NODES.length;
 
 export interface AchievementDef {
   readonly id: string;
@@ -37,7 +43,17 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
     title: "Qua hết chương 1 chiến dịch",
     target: CHAPTER1_STAGES,
     gold: 500,
-    value: (p) => p.campaign.completed.length,
+    // Chỉ đếm nhiệm vụ của Chương I (sự kiện hay trận đều là hoàn thành nhiệm vụ), không đếm nhiệm vụ chương sau.
+    value: (p) =>
+      p.campaign.completed.filter((id) => CHAPTER1_NODES.includes(id)).length,
+  },
+  {
+    // Chiến dịch V2 khép ở M24 (Đại lễ đăng quang 968), không đếm số trận thắng.
+    id: "a.campaign",
+    title: "Đại Cồ Việt: hoàn thành chiến dịch",
+    target: 1,
+    gold: 500,
+    value: (p) => (campaignCompleted(p.campaign) ? 1 : 0),
   },
   {
     id: "a.survival10",

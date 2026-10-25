@@ -5,8 +5,8 @@ import {
   characterSkills,
   COMBO_PASSIVES,
   skillComboOpeners,
-  CAMPAIGN,
-  stageFoes,
+  STORY_NODES,
+  campaignEncounterFoes,
 } from "../src/core";
 const out = "docs/reports/2026-10-22-combo";
 mkdirSync(out, { recursive: true });
@@ -32,9 +32,13 @@ const roster = [mainCharacter(), ...ALL_COMPANIONS].map((f) => {
     })),
   };
 });
-const campaign = CAMPAIGN.map((s) => ({
+// Campaign V2: đối thủ phase đầu của mọi nhiệm vụ có trận (chiến dịch 13 màn cũ đã gỡ ở CAMP-08.04).
+const campaign = STORY_NODES.flatMap((n) => {
+  const foes = campaignEncounterFoes(n.id);
+  return foes ? [{ id: n.id, foes }] : [];
+}).map((s) => ({
   stage: s.id,
-  foes: stageFoes(s).map((f) => ({
+  foes: s.foes.map((f) => ({
     id: f.id,
     profession: f.profession,
     element: f.element,

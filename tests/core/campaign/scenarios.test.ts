@@ -2,7 +2,9 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   CAMPAIGN_SCENARIOS,
+  campaignPhaseTurns,
   campaignScenarioByNode,
+  campaignSiegeStages,
   campaignScenarioTag,
   completedPlayerTurns,
   createBattle,
@@ -36,7 +38,7 @@ function battle(enemyId: string, seed = 7): BattleState {
 
 describe("Campaign battle scenario adapter", () => {
   it("defines every combat node and all four objective contracts", () => {
-    assert.equal(CAMPAIGN_SCENARIOS.length, 10);
+    assert.equal(CAMPAIGN_SCENARIOS.length, 9);
     assert.deepEqual(
       [...new Set(
         CAMPAIGN_SCENARIOS.flatMap((plan) =>
@@ -80,18 +82,59 @@ describe("Campaign battle scenario adapter", () => {
     );
   });
 
-  it("splits siege into deterministic breach and assault phases", () => {
+  it("splits M20 siege into breach, escort and assault phases", () => {
     const plan = campaignScenarioByNode("M20")!;
-    assert.equal(plan.phases.length, 2);
+    assert.equal(plan.phases.length, 3);
+    assert.deepEqual(campaignSiegeStages("M20"), [
+      "breach",
+      "escort",
+      "assault",
+    ]);
     const state = battle("nguyenSieu");
     state.sides[1].fighters[0]!.hp = 0;
     state.winner = 0;
-    const breach = settleCampaignScenario(campaignScenarioTag("M20", 0)!, state);
-    const assault = settleCampaignScenario(campaignScenarioTag("M20", 1)!, state);
-    assert.ok(breach.ok && assault.ok);
+    const breach = settleCampaignScenario(
+      campaignScenarioTag("M20", 0)!,
+      state,
+    );
+    const escort = settleCampaignScenario(
+      campaignScenarioTag("M20", 1)!,
+      state,
+    );
+    const assault = settleCampaignScenario(
+      campaignScenarioTag("M20", 2)!,
+      state,
+    );
+    assert.ok(breach.ok && escort.ok && assault.ok);
     assert.equal(breach.verdict.status, "advance");
+    assert.equal(escort.verdict.status, "advance");
     assert.equal(assault.verdict.status, "succeeded");
-    assert.notEqual(plan.phases[0]!.encounterKey, plan.phases[1]!.encounterKey);
+    assert.equal(
+      new Set(plan.phases.map((p) => p.encounterKey)).size,
+      plan.phases.length,
+    );
+  });
+
+  it("escort phase advances after the planned turns without a combat winner", () => {
+    const tag = campaignScenarioTag("M20", 1)!;
+    const turns = campaignPhaseTurns("M20", 1)!;
+    assert.equal(turns, 5);
+    const state = battle("phu-liet-raid-leader");
+    state.turn.number = 2 * turns;
+    const early = settleCampaignScenario(tag, state);
+    assert.ok(early.ok);
+    assert.equal(early.verdict.status, "pending");
+    state.turn.number = 2 * turns + 1;
+    const held = settleCampaignScenario(tag, state);
+    assert.ok(held.ok);
+    assert.equal(held.verdict.status, "advance");
+    state.winner = 1;
+    const lost = settleCampaignScenario(tag, state);
+    assert.ok(lost.ok);
+    assert.equal(lost.verdict.status, "failed");
+    // Phase phá lũy và đối đầu quân vẫn phải hạ hết đối thủ, đủ lượt không tính.
+    assert.equal(campaignPhaseTurns("M20", 0), undefined);
+    assert.equal(campaignPhaseTurns("M20", 2), undefined);
   });
 
   it("requires the named boss to be defeated before accepting a boss winner", () => {

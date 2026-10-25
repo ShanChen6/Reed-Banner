@@ -1,87 +1,73 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
-  applyCampaignResult,
   autoProgress,
   buildCompanion,
   applyProfileAction,
-  BOSS_HP,
-  CAMPAIGN,
+  CAMPAIGN_FACTION_IDS,
   CAMPAIGN_FOOD_MAX,
-  CAMPAIGN_FOOD_MIN,
   createBattle,
+  encounterFighter,
   FOOD_PRICE,
   HERO_COMPANIONS,
+  HOME_TERRAIN,
   legacyHeroSkills,
   characterSkills,
-  isHero,
   legacyElementSkills,
   newProfile,
   parseProfile,
-  RECOMMENDED_LEVEL_BONUS,
-  recommendedLevel,
-  runBattle,
-  stageMatchups,
-  stagePlayerTeam,
-  stageTeamIds,
   profileTeam,
-  stageById,
-  stageFighter,
-  stageFoes,
-  stageUnlocked,
   signatureOf,
+  NEW_PROGRESS,
+  SKILL_POINTS_PER_LEVEL,
+  totalXpFor,
+  WARLORD_ENCOUNTERS,
+  warlordEncounter,
+  warlordLeader,
+  type Profile,
 } from "../../../src/core";
 
-describe("chiến dịch", () => {
-  it("dữ liệu màn hợp lệ: id không trùng, số đối thủ đúng thể thức, dựng được trận", () => {
-    assert.equal(new Set(CAMPAIGN.map((s) => s.id)).size, CAMPAIGN.length);
-    for (const s of CAMPAIGN) {
-      assert.equal(s.foes.length, s.mode === "3v3" ? 3 : 1, s.id);
-      const foes = stageFoes(s);
+// Chiến dịch 13 màn cũ đã gỡ ở CAMP-08.04. Ở đây còn: danh mục 12 sứ quân dùng chung, doanh trại, chuyển hồ sơ
+// cũ, tướng lịch sử và chiêu riêng.
+describe("danh mục 12 sứ quân", () => {
+  it("đủ 12 sứ quân theo id thế cục, không trùng, số đối thủ đúng thể thức, dựng được trận", () => {
+    assert.deepEqual(
+      WARLORD_ENCOUNTERS.map((w) => w.id),
+      [...CAMPAIGN_FACTION_IDS],
+    );
+    assert.equal(new Set(WARLORD_ENCOUNTERS.map((w) => w.encounterId)).size, 12);
+    for (const w of WARLORD_ENCOUNTERS) {
+      assert.equal(w.foes.length, w.mode === "3v3" ? 3 : 1, w.id);
+      assert.equal(w.foes[0]!.id, w.id);
+      assert.ok(w.foes[0]!.hero && w.foes.slice(1).every((f) => !f.hero));
+      const foes = w.foes.map((f) => encounterFighter(f, w.level));
       assert.equal(new Set(foes.map((f) => f.id)).size, foes.length);
-      // Tỉ lệ ô của luật màn phải hợp lệ (createBattle kiểm tra).
       createBattle({
         sides: [
           { fighters: foes, leader: 0 },
           { fighters: foes, leader: 0 },
         ],
         seed: 1,
-        ...(s.weights ? { weights: s.weights } : {}),
+        weights: HOME_TERRAIN[w.foes[0]!.element],
       });
+      assert.ok(w.place && w.modernRegion && w.foes[0]!.title, w.id);
+      assert.ok(w.lines.before && w.lines.win && w.lines.lose, w.id);
+      assert.ok(w.recommended >= w.level, w.id);
     }
   });
 
-  it("sứ quân có bộ kỹ năng theo nguyên tố như nhân vật chính (ô 5 là chiêu riêng); trùm thêm máu", () => {
-    const tran = stageById("boHai")!.foes[0]!;
-    const lv20 = stageFighter({ ...tran }, 20);
+  it("sứ quân có bộ kỹ năng theo nguyên tố như nhân vật chính (ô 5 là chiêu riêng)", () => {
+    const tran = warlordEncounter("tranLam")!;
+    const lv20 = warlordLeader(tran, 20);
     assert.deepEqual(
       lv20.skills,
-      legacyHeroSkills(tran.element, tran.id).map((s) => s.id),
+      legacyHeroSkills(tran.foes[0]!.element, "tranLam").map((s) => s.id),
     );
     assert.equal(lv20.name, "Trần Lãm");
-    const boss = stageById("doDong")!;
-    const plain = stageFighter(boss.foes[0]!, boss.level);
-    assert.equal(stageFoes(boss)[0]!.maxHp, Math.round(plain.maxHp * BOSS_HP));
   });
+});
 
-  it("mở màn lần lượt; qua màn lần đầu thưởng vàng, lương mang sang trong khoảng cho phép", () => {
-    let p = newProfile();
-    assert.ok(stageUnlocked(p.campaign, "coLau"));
-    assert.ok(!stageUnlocked(p.campaign, "boHai"));
-    const lost = applyCampaignResult(p, "coLau", false, 3);
-    assert.equal(lost.result.firstClear, false);
-    assert.equal(lost.profile.campaign.supply, CAMPAIGN_FOOD_MIN);
-    const won = applyCampaignResult(p, "coLau", true, 140);
-    p = won.profile;
-    assert.equal(won.result.bonusGold, stageById("coLau")!.firstClearGold);
-    assert.equal(p.gold, won.result.bonusGold);
-    assert.equal(p.campaign.supply, CAMPAIGN_FOOD_MAX);
-    assert.ok(stageUnlocked(p.campaign, "boHai"));
-    const again = applyCampaignResult(p, "coLau", true, 50);
-    assert.equal(again.result.bonusGold, 0);
-    assert.deepEqual(again.profile.campaign.legacy.cleared, ["coLau"]);
-  });
-
+describe("chiến dịch: doanh trại và hồ sơ cũ", () => {
   it("doanh trại: mua lương bằng vàng, không quá mức tối đa", () => {
     const p = {
       ...newProfile(),
@@ -110,37 +96,27 @@ describe("chiến dịch", () => {
     }).campaign;
     assert.equal(migrated.supply, 60);
     assert.deepEqual(migrated.completed, []);
-    assert.deepEqual(migrated.legacy.raids, { boHai: 2 });
+    // Bậc Đánh trùm theo id màn cũ chuyển sang id sứ quân.
+    assert.deepEqual(migrated.raids, { tranLam: 2 });
   });
 });
 
-describe("tướng lịch sử gia nhập", () => {
-  it("mỗi tướng lịch sử gia nhập ở đúng một màn, màn đó có câu kể", () => {
-    for (const h of HERO_COMPANIONS) {
-      const stages = CAMPAIGN.filter((s) => s.joins === h.id);
-      assert.equal(stages.length, 1, h.id);
-      assert.ok(stages[0]!.joinStory, h.id);
-    }
-    assert.ok(CAMPAIGN.every((s) => !s.joins || isHero(s.joins)));
-  });
-
-  it("qua màn lần đầu thì tướng gia nhập ở cấp của màn, đánh lại không cộng nữa", () => {
-    const stage = CAMPAIGN.find((s) => s.joins === "leHoan")!;
-    const first = applyCampaignResult(newProfile(), stage.id, true, 50);
-    assert.equal(first.result.joined, "leHoan");
-    const p = first.profile.companions.leHoan!;
-    assert.equal(p.level, stage.level);
-    assert.equal(p.skillPoints, stage.level - 1);
-    const again = applyCampaignResult(first.profile, stage.id, true, 50);
-    assert.equal(again.result.joined, undefined);
-    assert.equal(
-      applyCampaignResult(newProfile(), stage.id, false, 50).result.joined,
-      undefined,
-    );
-  });
-
+describe("tướng lịch sử", () => {
   it("tướng lịch sử mang bộ nghề + hệ, nâng theo ô, không mua chiêu nhánh", () => {
-    let profile = applyCampaignResult(newProfile(), "tamDai", true, 50).profile;
+    // Lê Hoàn mở theo mốc V2 (M24); ở đây dựng sẵn ở cấp 8 như mở khóa ở cấp nhân vật chính.
+    const base = newProfile();
+    let profile: Profile = {
+      ...base,
+      companions: {
+        ...base.companions,
+        leHoan: {
+          ...NEW_PROGRESS,
+          level: 8,
+          xp: totalXpFor(8),
+          skillPoints: 7 * SKILL_POINTS_PER_LEVEL,
+        },
+      },
+    };
     const kit = characterSkills("quanSu", "loi", "leHoan");
     let r = applyProfileAction(profile, {
       type: "chooseTeam",
@@ -175,18 +151,18 @@ describe("tướng lịch sử gia nhập", () => {
   });
 });
 
-describe("chiêu riêng và thoại", () => {
+describe("chiêu riêng", () => {
   it("sứ quân luôn mang chiêu riêng thay ô 5, kể cả khi cấp chưa mở ô 5", () => {
-    const warlords = CAMPAIGN.flatMap((s) => s.foes.filter((f) => f.hero));
+    const warlords = WARLORD_ENCOUNTERS.map((w) => w.foes[0]!);
     assert.equal(new Set(warlords.map((f) => f.id)).size, 12);
     for (const f of warlords) {
       const sig = signatureOf(f.id);
       assert.ok(sig, f.id);
       assert.equal(sig.slot, 4);
-      const fighter = stageFighter(f, 2);
+      const fighter = encounterFighter(f, 2);
       assert.ok(fighter.skills!.includes(sig.id), f.id);
       const slot5 = legacyElementSkills(f.element).find((d) => d.slot === 5)!;
-      assert.ok(!stageFighter(f, 25).skills!.includes(slot5.id), f.id);
+      assert.ok(!encounterFighter(f, 25).skills!.includes(slot5.id), f.id);
     }
   });
 
@@ -209,38 +185,4 @@ describe("chiêu riêng và thoại", () => {
     }
   });
 
-  it("mỗi màn có thoại trước trận, khi thắng và khi thua; sứ quân có tước hiệu, màn có vùng đất ngày nay", () => {
-    for (const s of CAMPAIGN) {
-      assert.ok(s.region, s.id);
-      for (const f of s.foes.filter((x) => x.hero)) assert.ok(f.title, f.id);
-      assert.ok(s.lines.before && s.lines.win && s.lines.lose, s.id);
-    }
-  });
-});
-
-describe("mô phỏng theo màn", () => {
-  it("đội người chơi theo cấp gợi ý, đội kèm là 2 tướng gia nhập gần nhất; trận mang luật màn", () => {
-    const tamDai = stageById("tamDai")!;
-    assert.deepEqual(stageTeamIds(tamDai, "heroes"), ["luuCo", "trinhTu"]);
-    assert.deepEqual(stageTeamIds(stageById("binhKieu")!, "heroes"), [
-      "dinhDien",
-      "luuCo",
-    ]);
-    assert.deepEqual(stageTeamIds(tamDai, "default"), ["haVan", "maiThanh"]);
-    const team = stagePlayerTeam(tamDai);
-    assert.equal(team.length, 3);
-    assert.equal(stagePlayerTeam(stageById("boHai")!).length, 1);
-    const [m] = stageMatchups(tamDai, 1);
-    assert.equal(m!.sides[1].food, tamDai.foeFood);
-    assert.deepEqual(
-      stageMatchups(stageById("hoiHo")!, 1)[0]!.weights,
-      stageById("hoiHo")!.weights,
-    );
-    const r = runBattle(m!, { difficulty: ["normal", tamDai.difficulty] });
-    assert.ok(r.turns > 0);
-    assert.equal(
-      recommendedLevel(tamDai),
-      tamDai.recommended ?? tamDai.level + RECOMMENDED_LEVEL_BONUS,
-    );
-  });
 });

@@ -8,6 +8,13 @@ import {
   type CampaignCompanionId,
   type CampaignMissionId,
 } from "../campaign/storyNodes";
+import {
+  CAMPAIGN_FACTION_IDS,
+  CAMPAIGN_FACTION_RESOLUTIONS,
+  factionStateFromCompleted,
+  type CampaignFactionId,
+  type CampaignFactionState,
+} from "../campaign/factions";
 
 export const CAMPAIGN_FOOD_MIN = 20;
 export const CAMPAIGN_FOOD_MAX = 100;
@@ -61,7 +68,7 @@ export const CAMPAIGN_CHOICE_IDS: Readonly<
   M19: ["leHoanObserves", "anonymousEnvoy"],
   M20: ["breachGate", "drawOutForces"],
   M21: ["callOpenGate", "declareAdvance"],
-  M22: ["disarmFirst", "rescueFirst"],
+  M22: ["reviewDossiers", "hearTheRegions"],
   M23: ["livelihood", "army", "law"],
   M24: ["armyView", "hoaLuView", "dinhLienView"],
 };
@@ -71,12 +78,11 @@ export type CampaignRewardReceiptId =
   | `chapter:${CampaignChapter}`
   | `hero:${CampaignCompanionId}`;
 
-/** Temporary state for the old 13-stage and Raid adapters. */
-export interface LegacyCampaignAdapterState {
-  readonly cleared: readonly string[];
-  readonly raids: Readonly<Record<string, number>>;
-  readonly bestTurns: Readonly<Record<string, number>>;
-}
+/**
+ * Bậc Đánh trùm cao nhất đã thắng của từng sứ quân (1–3), theo id sứ quân của danh mục 12 sứ quân
+ * (campaign/warlords.ts). Không phải tiến độ chiến dịch và không mở nhiệm vụ nào.
+ */
+export type RaidProgress = Readonly<Partial<Record<CampaignFactionId, number>>>;
 
 export interface CampaignProgressV2 {
   readonly version: 2;
@@ -93,30 +99,45 @@ export interface CampaignProgressV2 {
     Partial<Record<CampaignMissionId, number>>
   >;
   readonly supply: number;
+  /**
+   * Nhiệm vụ nhiều trận (công thành M20, trùm M21): số phase đã qua của lượt đánh hiện tại, tức phase kế tiếp
+   * server sẽ tạo. Chỉ server ghi khi chốt trận; xong phase cuối thì xóa. Thiếu là phase đầu.
+   */
+  readonly siegePhases: Readonly<Partial<Record<CampaignMissionId, number>>>;
+  /** Trùm nhiều phase: tỉ lệ máu trùm còn lại sau phase trùm trước, để phase sau không hồi máu. */
+  readonly phaseBossHp: Readonly<Partial<Record<CampaignMissionId, number>>>;
   readonly rewardReceipts: readonly CampaignRewardReceiptId[];
   readonly unlockedHeroes: readonly CampaignCompanionId[];
-  /** @deprecated Remove after old Campaign/Raid callers migrate. */
-  readonly legacy: LegacyCampaignAdapterState;
+  /**
+   * Thế cục 12 sứ quân (FactionState): kết cục do nhiệm vụ giải quyết ghi, mỗi sứ quân một lần
+   * (campaign/factions.ts). Không phải số trận thắng.
+   */
+  readonly factions: CampaignFactionState;
+  /** Đánh trùm: giữ qua mọi lần đặt lại tiến độ chiến dịch. */
+  readonly raids: RaidProgress;
 }
 
 export type CampaignState = CampaignProgressV2;
 
-const LEGACY_STAGE_IDS = [
-  "coLau",
-  "boHai",
-  "dangChau",
-  "binhKieu",
-  "duongLam",
-  "tamDai",
-  "phongChau",
-  "hoiHo",
-  "sieuLoai",
-  "tienDu",
-  "teGiang",
-  "tayPhuLiet",
-  "doDong",
-] as const;
-const LEGACY_STAGE_SET = new Set<string>(LEGACY_STAGE_IDS);
+/**
+ * Id màn của chiến dịch 13 màn cũ (đã gỡ ở CAMP-08.04) ứng với sứ quân, chỉ để chuyển bậc Đánh trùm đã thắng
+ * sang khóa mới. Tiến độ màn cũ không quy đổi thành tiến độ V2.
+ */
+const LEGACY_RAID_IDS: Readonly<Record<string, CampaignFactionId>> = {
+  boHai: "tranLam",
+  dangChau: "phamBachHo",
+  binhKieu: "ngoXuongXi",
+  duongLam: "ngoNhatKhanh",
+  tamDai: "nguyenKhoan",
+  phongChau: "kieuCongHan",
+  hoiHo: "kieuThuan",
+  sieuLoai: "lyKhue",
+  tienDu: "nguyenThuTiep",
+  teGiang: "luDuong",
+  tayPhuLiet: "nguyenSieu",
+  doDong: "doCanhThac",
+};
+const FACTION_SET = new Set<string>(CAMPAIGN_FACTION_IDS);
 const STORY_FLAG_SET = new Set<string>(CAMPAIGN_STORY_FLAGS);
 const REGION_SET = new Set<string>(CAMPAIGN_REGIONS);
 const HERO_IDS = [
@@ -138,14 +159,8 @@ const OUTCOME_BY_REGION: Readonly<
   unification: ["unified"],
 };
 
-const emptyLegacy = (): LegacyCampaignAdapterState => ({
-  cleared: [],
-  raids: {},
-  bestTurns: {},
-});
-
 export function newCampaignProgressV2(
-  raids: Readonly<Record<string, number>> = {},
+  raids: RaidProgress = {},
 ): CampaignProgressV2 {
   return {
     version: 2,
@@ -156,19 +171,19 @@ export function newCampaignProgressV2(
     regionalOutcomes: {},
     bestBattleTurns: {},
     supply: CAMPAIGN_FOOD_START,
+    siegePhases: {},
+    phaseBossHp: {},
     rewardReceipts: [],
     unlockedHeroes: [],
-    legacy: { ...emptyLegacy(), raids },
+    factions: {},
+    raids,
   };
 }
 
 export const NEW_CAMPAIGN: CampaignProgressV2 = newCampaignProgressV2();
 
 export const clampCampaignFood = (supply: number) =>
-  Math.max(
-    CAMPAIGN_FOOD_MIN,
-    Math.min(CAMPAIGN_FOOD_MAX, Math.round(supply)),
-  );
+  Math.max(CAMPAIGN_FOOD_MIN, Math.min(CAMPAIGN_FOOD_MAX, Math.round(supply)));
 
 export function chapterCompleted(
   campaign: CampaignProgressV2,
@@ -199,8 +214,34 @@ export function campaignNodeUnlocked(
   return (
     !!node &&
     chapterUnlocked(campaign, node.chapter) &&
-    node.prereqs.every((prereq) => campaign.completed.includes(prereq))
+    node.prereqs.every((prereq) => campaign.completed.includes(prereq)) &&
+    (id !== CAMPAIGN_UNIFICATION_NODE || campaignAllFactionsResolved(campaign))
   );
+}
+
+/**
+ * Nút đầu tiên sau giai đoạn đánh dẹp (M22): chỉ mở khi đủ 12 sứ quân có kết cục, ngoài điều kiện graph. Server
+ * kiểm tra hàm này ở mọi cổng (sự kiện, tạo trận, hoàn thành), nên URL hay API không vượt được.
+ */
+export const CAMPAIGN_UNIFICATION_NODE: CampaignMissionId = "M22";
+
+/** Node kết chiến dịch (Đại lễ đăng quang 968). */
+export const CAMPAIGN_FINAL_NODE: CampaignMissionId = "M24";
+
+/**
+ * Chiến dịch hoàn thành khi server đã ghi xong M24, không đếm số trận thắng. M24 chỉ mở theo graph sau M22
+ * (cổng 12 vùng) và M23, nên trạng thái này kéo theo đủ 24/24 node.
+ */
+export function campaignCompleted(campaign: CampaignProgressV2): boolean {
+  return campaign.completed.includes(CAMPAIGN_FINAL_NODE);
+}
+
+/** Đủ 12 sứ quân có kết cục, suy từ nhiệm vụ đã hoàn thành (giống parser), không tin dữ liệu sửa tay. */
+export function campaignAllFactionsResolved(
+  campaign: Pick<CampaignProgressV2, "completed">,
+): boolean {
+  const factions = factionStateFromCompleted(campaign.completed);
+  return CAMPAIGN_FACTION_RESOLUTIONS.every((r) => factions[r.faction]);
 }
 
 export type CompleteCampaignNodeResult =
@@ -306,6 +347,12 @@ export function recordCampaignRewardReceipt(
   };
 }
 
+/** Node có thể chia nhiều trận: công thành, hoặc trùm (số phase thật do server đối chiếu kế hoạch scenario). */
+function multiPhaseNode(id: string): boolean {
+  const type = storyNodeById(id)?.type;
+  return type === "siege" || type === "boss";
+}
+
 function uniqueStrings(raw: unknown): string[] {
   return Array.isArray(raw)
     ? [
@@ -316,36 +363,25 @@ function uniqueStrings(raw: unknown): string[] {
     : [];
 }
 
-function parseLegacy(raw: unknown): LegacyCampaignAdapterState {
-  const value = raw as Partial<LegacyCampaignAdapterState> | null;
-  const source = value && typeof value === "object" ? value : {};
-  const cleared = uniqueStrings(source.cleared).filter((id) =>
-    LEGACY_STAGE_SET.has(id),
-  );
-  const raids = Object.fromEntries(
-    Object.entries(
-      source.raids && typeof source.raids === "object" ? source.raids : {},
-    ).filter(
-      ([id, tier]) =>
-        LEGACY_STAGE_SET.has(id) &&
-        Number.isInteger(tier) &&
-        Number(tier) >= 1 &&
-        Number(tier) <= 3,
-    ),
-  ) as Readonly<Record<string, number>>;
-  const bestTurns = Object.fromEntries(
-    Object.entries(
-      source.bestTurns && typeof source.bestTurns === "object"
-        ? source.bestTurns
-        : {},
-    ).filter(
-      ([id, turns]) =>
-        LEGACY_STAGE_SET.has(id) &&
-        Number.isSafeInteger(turns) &&
-        Number(turns) > 0,
-    ),
-  ) as Readonly<Record<string, number>>;
-  return { cleared, raids, bestTurns };
+const validRaidTier = (tier: unknown): tier is number =>
+  Number.isInteger(tier) && Number(tier) >= 1 && Number(tier) <= 3;
+
+/**
+ * Bậc Đánh trùm: khóa mới theo id sứ quân, cộng thêm bậc lưu theo id màn cũ (`legacy.raids` của bản V2 trước
+ * CAMP-08.04, hoặc `raids` của hồ sơ V1). Cùng một sứ quân thì giữ bậc cao hơn.
+ */
+function parseRaids(...sources: unknown[]): RaidProgress {
+  const out: Partial<Record<CampaignFactionId, number>> = {};
+  for (const source of sources) {
+    if (!source || typeof source !== "object") continue;
+    for (const [key, tier] of Object.entries(source)) {
+      const id = FACTION_SET.has(key)
+        ? (key as CampaignFactionId)
+        : LEGACY_RAID_IDS[key];
+      if (id && validRaidTier(tier)) out[id] = Math.max(out[id] ?? 0, tier);
+    }
+  }
+  return out;
 }
 
 function normalizeCompleted(raw: unknown): CampaignMissionId[] {
@@ -374,16 +410,14 @@ function validReceipt(value: string): value is CampaignRewardReceiptId {
 }
 
 export function parseCampaign(raw: unknown): CampaignProgressV2 {
-  const value = raw as Partial<CampaignProgressV2> & {
+  const value = raw as Omit<Partial<CampaignProgressV2>, "raids"> & {
     readonly raids?: unknown;
+    readonly legacy?: { readonly raids?: unknown };
   };
   if (!value || typeof value !== "object") return newCampaignProgressV2();
 
   // V1 completion is intentionally reset. Raid tiers survive the transition.
-  if (value.version !== 2) {
-    const old = parseLegacy(value);
-    return newCampaignProgressV2(old.raids);
-  }
+  if (value.version !== 2) return newCampaignProgressV2(parseRaids(value.raids));
 
   const completed = normalizeCompleted(value.completed);
   const supply =
@@ -394,6 +428,7 @@ export function parseCampaign(raw: unknown): CampaignProgressV2 {
     ...newCampaignProgressV2(),
     completed,
     supply,
+    factions: factionStateFromCompleted(completed),
   };
   const inProgress = uniqueStrings(value.inProgress).filter(
     (id): id is CampaignMissionId =>
@@ -455,7 +490,39 @@ export function parseCampaign(raw: unknown): CampaignProgressV2 {
       );
     }),
   );
-  const rewardReceipts = uniqueStrings(value.rewardReceipts).filter(validReceipt);
+  // Phase công thành chỉ giữ cho node công thành đã mở; số phase thật do server đối chiếu kế hoạch scenario.
+  const siegePhases = Object.fromEntries(
+    Object.entries(
+      value.siegePhases && typeof value.siegePhases === "object"
+        ? value.siegePhases
+        : {},
+    ).filter(
+      ([id, phase]) =>
+        isCampaignMissionId(id) &&
+        multiPhaseNode(id) &&
+        campaignNodeUnlocked(provisional, id) &&
+        Number.isSafeInteger(phase) &&
+        Number(phase) > 0 &&
+        Number(phase) < 10,
+    ),
+  );
+  const phaseBossHp = Object.fromEntries(
+    Object.entries(
+      value.phaseBossHp && typeof value.phaseBossHp === "object"
+        ? value.phaseBossHp
+        : {},
+    ).filter(
+      ([id, ratio]) =>
+        siegePhases[id] !== undefined &&
+        storyNodeById(id)?.type === "boss" &&
+        typeof ratio === "number" &&
+        ratio > 0 &&
+        ratio <= 1,
+    ),
+  );
+  const rewardReceipts = uniqueStrings(value.rewardReceipts).filter(
+    validReceipt,
+  );
   const unlockedHeroes = uniqueStrings(value.unlockedHeroes).filter(
     (id): id is CampaignCompanionId => HERO_SET.has(id),
   );
@@ -469,8 +536,13 @@ export function parseCampaign(raw: unknown): CampaignProgressV2 {
     regionalOutcomes,
     bestBattleTurns,
     supply,
+    siegePhases,
+    phaseBossHp,
     rewardReceipts,
     unlockedHeroes,
-    legacy: parseLegacy(value.legacy),
+    // Suy ra từ nhiệm vụ đã hoàn thành thay vì tin dữ liệu lưu: luôn khớp bảng, không trùng.
+    factions: factionStateFromCompleted(completed),
+    // Màn cũ (`legacy.cleared`, `legacy.bestTurns`) bị bỏ; chỉ bậc Đánh trùm được chuyển sang.
+    raids: parseRaids(value.legacy?.raids, value.raids),
   };
 }

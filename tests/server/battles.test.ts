@@ -5,6 +5,7 @@ import {
   applyProfileAction,
   autoProgress,
   buildMain,
+  CAMPAIGN_MISSION_IDS,
   findValidMoves,
   fighterSkill,
   FOOD_MAX,
@@ -333,79 +334,30 @@ describe("kiểm tra cấu hình", () => {
   });
 });
 
-describe("trận chiến dịch", () => {
-  it("chỉ đánh được màn đã mở; lương mang sang, thắng lần đầu ghi màn và thưởng vàng", async () => {
+describe("chiến dịch 13 màn cũ đã gỡ", () => {
+  it("id màn cũ không mở trận nào, kể cả đánh trùm theo id màn cũ; trận lưu kiểu cũ không phát thưởng chiến dịch", async () => {
+    for (const stage of ["coLau", "boHai", "doDong", "khong-co"]) {
+      assert.equal(parseNewBattle({ ...input, stage }), null, stage);
+      assert.equal(parseNewBattle({ ...input, stage, raid: 1 }), null, stage);
+    }
+    assert.equal(parseNewBattle({ ...input, raidBoss: "boHai", raid: 1 }), null);
+    // Trận lưu trước CAMP-08.04 còn trường `stage`: chốt như trận thường, không ghi gì vào tiến độ chiến dịch.
     const store = new MemoryMatchStore();
     const profiles = new MemoryProfileStore();
-    const deps = { store, profiles, now: T0, seed: 4, newId: () => "m_c" };
-    const body = { ...input, stage: "boHai" };
-    assert.equal(parseNewBattle({ ...input, stage: "khong-co" }), null);
-    assert.equal(parseNewBattle(body)!.mode, "1v1");
-    const locked = await createBattleFor("g_c", parseNewBattle(body)!, deps);
-    assert.deepEqual(locked, { ok: false, error: "badRequest" });
-
-    const cur = await loadProfile(profiles, "g_c");
-    assert.ok(
-      await profiles.put(
-        "g_c",
-        {
-          ...cur.profile,
-          campaign: { ...cur.profile.campaign, supply: 42 },
-        },
-        cur.version,
-      ),
-    );
-    const r = await createBattleFor(
-      "g_c",
-      parseNewBattle({ ...input, stage: "coLau" })!,
-      deps,
-    );
+    const deps = { store, profiles, now: T0, seed: 4, newId: () => "m_old" };
+    const r = await createBattleFor("g_old", parseNewBattle(input)!, deps);
     assert.ok(r.ok);
-    assert.equal(r.view.stage, "coLau");
-    assert.equal(r.view.difficulty, "easy");
-    // Vào trận với 42 lương; lượt đầu có thể đã trừ tiền nuôi quân.
-    const upkeep = r.events.filter(
-      (e) => e.type === "upkeep" && e.side === 0,
-    ).length;
-    assert.ok(
-      r.view.battle.sides[0].food <= 42 &&
-        r.view.battle.sides[0].food >= 42 - 10 * upkeep,
-    );
-    assert.equal(r.view.battle.sides[1].fighters.length, 1);
-
-    // Ép trận kết thúc với phe người chơi thắng rồi xem: cộng kết quả chiến dịch.
-    const rec = (await store.get("m_c"))!;
+    const before = (await loadProfile(profiles, "g_old")).profile;
+    const rec = (await store.get("m_old"))!;
     const battle = { ...rec.match.battle, winner: 0 as const };
-    battle.sides = [{ ...battle.sides[0], food: 33 }, battle.sides[1]];
-    assert.ok(
-      await store.save(
-        { ...rec, match: { ...rec.match, battle, seq: rec.match.seq + 1 } },
-        rec.match.seq,
-      ),
-    );
-    const done = await getBattle("m_c", "g_c", {
-      store,
-      profiles,
-      now: T0 + 1000,
-    });
-    assert.ok(done.ok && done.outcome?.campaign);
-    assert.deepEqual(done.outcome.campaign, {
-      firstClear: true,
-      bonusGold: 100,
-      food: 33,
-      joined: "nguyenBac",
-    });
-    const saved = (await loadProfile(profiles, "g_c")).profile;
-    assert.deepEqual(saved.campaign, {
-      ...cur.profile.campaign,
-      supply: 33,
-      legacy: {
-        cleared: ["coLau"],
-        raids: {},
-        bestTurns: { coLau: 1 },
-      },
-    });
-    assert.equal(saved.companions.nguyenBac?.level, 1);
+    const legacyMatch = { ...rec.match, battle, seq: rec.match.seq + 1, stage: "coLau" };
+    assert.ok(await store.save({ ...rec, match: legacyMatch }, rec.match.seq));
+    const done = await getBattle("m_old", "g_old", { store, profiles, now: T0 + 1000 });
+    assert.ok(done.ok && done.outcome);
+    assert.equal(done.outcome.raid, undefined);
+    assert.equal(done.outcome.campaignV2, undefined);
+    const after = (await loadProfile(profiles, "g_old")).profile;
+    assert.deepEqual(after.campaign, before.campaign);
   });
 });
 
@@ -414,22 +366,27 @@ describe("trận đánh trùm", () => {
     const store = new MemoryMatchStore();
     const profiles = new MemoryProfileStore();
     const deps = { store, profiles, now: T0, seed: 4, newId: () => "m_r" };
-    const body = { ...input, stage: "boHai", raid: 1 };
+    const body = { ...input, raidBoss: "kieuCongHan", raid: 1 };
     assert.equal(parseNewBattle({ ...body, raid: 4 }), null);
-    assert.equal(parseNewBattle(body)!.difficulty, "normal");
-    assert.equal(parseNewBattle({ ...body, raid: 3 })!.difficulty, "boss");
+    assert.equal(parseNewBattle({ ...body, raid: undefined }), null);
+    assert.equal(parseNewBattle({ ...input, raid: 1 }), null);
+    assert.equal(parseNewBattle({ ...body, raidBoss: "khongCo" }), null);
+    assert.equal(parseNewBattle({ ...body, tower: true }), null);
+    assert.equal(parseNewBattle(body)!.difficulty, "hard");
+    assert.equal(parseNewBattle({ ...body, raid: 3 })!.difficulty, "nightmare");
+    // Chỉ sứ quân bị đánh dẹp mới là trùm (Shan chốt 25/10/2026): đồng minh, quy phục, tan rã bị từ chối.
+    for (const id of ["tranLam", "phamBachHo", "ngoXuongXi", "ngoNhatKhanh", "nguyenKhoan", "luDuong"])
+      assert.equal(parseNewBattle({ ...body, raidBoss: id }), null, id);
     const locked = await createBattleFor("g_r", parseNewBattle(body)!, deps);
     assert.deepEqual(locked, { ok: false, error: "badRequest" });
 
     const cur = await loadProfile(profiles, "g_r");
+    // Kiều Công Hãn mở theo mốc cốt truyện M15, không theo màn phongChau cũ.
     const campaign = {
       ...cur.profile.campaign,
+      completed: CAMPAIGN_MISSION_IDS.slice(0, 15),
+      factions: { tranLam: { status: "allied", mission: "M06" } } as const,
       supply: 40,
-      legacy: {
-        cleared: ["coLau", "boHai"],
-        raids: {},
-        bestTurns: {},
-      },
     };
     assert.ok(
       await profiles.put(
@@ -444,12 +401,13 @@ describe("trận đánh trùm", () => {
       deps,
     );
     assert.deepEqual(tier2, { ok: false, error: "badRequest" });
+    const opened = (await loadProfile(profiles, "g_r")).profile.campaign;
     const r = await createBattleFor("g_r", parseNewBattle(body)!, deps);
     assert.ok(r.ok);
     assert.equal(r.view.raid, 1);
-    assert.equal(r.view.stage, "boHai");
+    assert.equal(r.view.raidBoss, "kieuCongHan");
     // Người chơi không mang lương chiến dịch.
-    assert.equal(r.view.battle.sides[1].fighters[0]!.id, "tranLam");
+    assert.equal(r.view.battle.sides[1].fighters[0]!.id, "kieuCongHan");
     assert.ok(r.view.battle.sides[0].food !== 40);
 
     const rec = (await store.get("m_r"))!;
@@ -466,16 +424,21 @@ describe("trận đánh trùm", () => {
       now: T0 + 1000,
     });
     assert.ok(done.ok && done.outcome?.raid);
-    assert.equal(done.outcome.campaign, undefined);
+    assert.equal(done.outcome.campaignV2, undefined);
     assert.equal(done.outcome.raid.firstClear, true);
     assert.equal(done.outcome.raid.bonusGold, 300);
     assert.equal(done.outcome.raid.item?.tier, 3);
-    assert.equal(done.outcome.raid.item?.element, "thuy");
+    assert.equal(done.outcome.raid.item?.element, "loi");
     const saved = (await loadProfile(profiles, "g_r")).profile;
     assert.deepEqual(saved.campaign, {
-      ...campaign,
-      legacy: { ...campaign.legacy, raids: { boHai: 1 } },
+      ...opened,
+      raids: { kieuCongHan: 1 },
     });
+    // Đánh trùm không đổi tiến độ chiến dịch: hoàn thành, lương, thế cục giữ nguyên.
+    assert.deepEqual(saved.campaign.completed, campaign.completed);
+    assert.equal(saved.campaign.supply, 40);
+    // Thắng trận đánh trùm đếm vào nhiệm vụ "thắng trận chiến dịch hoặc đánh trùm".
+    assert.equal(saved.quests.weekStats.campaign, 1);
     assert.ok(saved.bag.some((i) => i.id === done.outcome!.raid!.item!.id));
   });
 });

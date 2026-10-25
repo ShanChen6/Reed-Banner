@@ -111,7 +111,7 @@ Hồ sơ hiện dùng `version: 1` và khóa ô, không cần chuyển dữ li�
 
 ## AI chiến dịch và kiểm chứng
 
-Sứ quân/thủ lĩnh chiến dịch giữ khung hệ cũ với mốc cũ và chiêu riêng luôn mở; tùy tướng giữ nấc 1 + một nhánh. Đây là preset chiến dịch tường minh, khác với sứ quân người chơi sở hữu. Tháp/sinh tồn giữ sứ quân trùm theo preset chiến dịch nếu gọi stageFighter; tướng thường và đội người chơi nhận khung mới. Thử thách ngày giữ thủ lĩnh sứ quân preset chiến dịch, hai tùy tướng rút từ kho tướng thường nhận khung mới. Đấu trường dựng từ đội sở hữu nên dùng khung mới.
+Sứ quân/thủ lĩnh chiến dịch giữ khung hệ cũ với mốc cũ và chiêu riêng luôn mở; tùy tướng giữ nấc 1 + một nhánh. Đây là preset chiến dịch tường minh, khác với sứ quân người chơi sở hữu. Tháp/sinh tồn giữ sứ quân trùm theo preset chiến dịch qua `encounterFighter` của danh mục 12 sứ quân (`warlords.ts`, trước CAMP-08.04 là `stageFighter`); tướng thường và đội người chơi nhận khung mới. Thử thách ngày giữ thủ lĩnh sứ quân preset chiến dịch, hai tùy tướng rút từ kho tướng thường nhận khung mới. Đấu trường dựng từ đội sở hữu nên dùng khung mới.
 
 AI xét từng mục tiêu hợp lệ để chọn giá trị cao nhất: hồi không vượt máu thiếu, Thanh tẩy chỉ tính debuff, Xua tan chỉ tính buff, Câm lặng ưu tiên người có chiêu và năng lượng; tránh lãng phí hiệu ứng đã có. Hiệu ứng tự hại trừ điểm, Khiêu khích chỉ có giá trị khi bảo vệ người khác. Chấm bàn cờ theo thu hoạch giảm hiện hành, không nhìn RNG ô rơi. Phá vùng chấm nhanh mọi vùng khác nhau rồi mô phỏng cascade cho 6 vùng triển vọng nhất; không tối ưu tuyệt đối mọi cascade.
 
