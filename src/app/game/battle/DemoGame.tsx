@@ -55,6 +55,7 @@ import {
   GRACE_MS,
   TURN_MS,
   type BattleAction,
+  type Board,
   type BattleRewards,
   type CampaignResult,
   type RaidResult,
@@ -766,6 +767,8 @@ export default function DemoGame({
     readonly id: number;
   } | null>(null);
   const animId = useRef(0);
+  /** Bàn cờ đã diễn xong nhưng state chưa commit (lúc nghỉ chuyển phe), để không hiện lại bàn cũ. */
+  const [heldBoard, setHeldBoard] = useState<Board | null>(null);
   const afterAnim = useRef<(() => void) | null>(null);
   const pacingTimeouts = useRef<Set<number>>(new Set());
   const turnBannerId = useRef(0);
@@ -959,6 +962,7 @@ export default function DemoGame({
               }
             : after;
         setState(shown);
+        setHeldBoard(null);
         // Trận online: server cộng thưởng và gửi `outcome` (xem receive).
         if (
           !online &&
@@ -1002,6 +1006,7 @@ export default function DemoGame({
         cueBus.emit(cues.start);
         play(frames, () => {
           board = frames.at(-1)?.board ?? board;
+          setHeldBoard(board);
           pushLog(after, current.events);
           const effectMs = showNumbers(current.events);
           cueBus.emit(cues.end);
@@ -1432,6 +1437,7 @@ export default function DemoGame({
     setSeed(randomSeed());
     setAnim(null);
     afterAnim.current = null;
+    setHeldBoard(null);
     setFloats([]);
     setState(null);
     setOutcome(null);
@@ -1584,7 +1590,7 @@ export default function DemoGame({
       : "[--bg:#17110e] [--panel:#271d18] [--cell:#14251c] [--frame:#1b2a21] [--gold:#d4a24c] text-stone-100";
 
   const frame = anim ? anim.frames[anim.i] : undefined;
-  const board = frame?.board ?? state.board;
+  const board = frame?.board ?? heldBoard ?? state.board;
 
   const aimingFoe =
     aim && !needsCell(aim.skill) && aim.skill.target === "enemy";
