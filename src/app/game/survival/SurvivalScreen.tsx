@@ -276,12 +276,6 @@ export default function SurvivalScreen() {
           >
             Hồ sơ
           </SceneLink>
-          <SceneLink
-            scene="TOWER"
-            className="rounded bg-white/10 px-3 py-1.5 hover:bg-white/15"
-          >
-            Leo tháp
-          </SceneLink>
         </div>
       </div>
 

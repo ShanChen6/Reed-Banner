@@ -6,7 +6,6 @@
 // Chiến dịch: --stage tamDai (hoặc all) đánh màn đó với luật màn, đội người chơi ở cấp gợi ý (hoặc --level),
 // --team heroes|default; --sweep 0..6 thử người chơi hơn đối thủ 0 tới 6 cấp.
 // Đánh trùm: thêm --raid 1|2|3 (với --stage all chỉ chạy 12 màn có sứ quân).
-// Leo tháp: --tower [--level 10] --battles 50 in số tầng AI Thường leo được.
 // Sinh tồn: --survival [--level 10] --battles 50 in số đợt AI Thường vượt qua.
 // Nhân vật kèm: --roster [--level 20] --battles 200 [--only haVan,tranLam] đo tỉ lệ thắng khi có từng người.
 
@@ -21,7 +20,6 @@ import {
   recommendedLevel,
   runBattle,
   stageById,
-  simulateTower,
   simulateSurvival,
   isRaidTier,
   RAID_STAGES,
@@ -59,7 +57,6 @@ const { values } = parseArgs({
     team: { type: "string", default: "heroes" },
     sweep: { type: "string" },
     raid: { type: "string" },
-    tower: { type: "boolean", default: false },
     survival: { type: "boolean", default: false },
     roster: { type: "boolean", default: false },
     only: { type: "string" },
@@ -84,11 +81,6 @@ const gearLabel = gear ? ` · đồ bậc ${gear.tier} (${gear.sets[0] ?? "khôn
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
 const num = (x: number) => x.toFixed(1);
 
-if (values.tower) {
-  runTower();
-  process.exit(0);
-}
-
 if (values.survival) {
   runSurvival();
   process.exit(0);
@@ -108,20 +100,6 @@ function runSurvival(): void {
     const t = runs.flatMap((r) => r.turns);
     const perWave = t.reduce((a, b) => a + b, 0) / t.length;
     console.log(`| ${lv} | ${num(avg)} | ${q(0.1)} | ${q(0.5)} | ${q(0.9)} | ${reach(5)} | ${reach(10)} | ${reach(15)} | ${num(perWave)} |`);
-  }
-}
-
-/** Leo tháp: --battles lượt leo ở mỗi cấp (--level, mặc định 5, 10, 20, 30), in số tầng qua được. */
-function runTower(): void {
-  const levels = level ? [level] : [5, 10, 20, 30];
-  console.log(`\n## Leo tháp · ${battles} lượt leo mỗi cấp · AI normal leo thay người chơi, đội khởi đầu`);
-  console.log("| Cấp | Trung bình | p10 | Trung vị | p90 | Qua tầng 5 | Qua tầng 10 | Qua tầng 15 | Qua tầng 20 |\n|---|---|---|---|---|---|---|---|---|");
-  for (const lv of levels) {
-    const floors = Array.from({ length: battles }, (_, i) => simulateTower(lv, (seed + i * 104729) >>> 0).cleared).sort((a, b) => a - b);
-    const q = (x: number) => floors[Math.min(floors.length - 1, Math.floor(x * floors.length))]!;
-    const reach = (f: number) => pct(floors.filter((x) => x >= f).length / floors.length);
-    const avg = floors.reduce((a, b) => a + b, 0) / floors.length;
-    console.log(`| ${lv} | ${num(avg)} | ${q(0.1)} | ${q(0.5)} | ${q(0.9)} | ${reach(5)} | ${reach(10)} | ${reach(15)} | ${reach(20)} |`);
   }
 }
 

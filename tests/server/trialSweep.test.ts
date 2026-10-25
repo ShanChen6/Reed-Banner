@@ -19,13 +19,12 @@ import { claimTrialSweepState, settleTrialSweep } from "../../src/server/trialSw
 const beforeMidnight = Date.UTC(2026, 9, 23, 16, 59, 59, 999); // 23:59:59.999 VN
 const midnight = Date.UTC(2026, 9, 23, 17, 0, 0, 0); // 00:00 VN ngày 24
 
-async function seeded(cleared: number, tower = { best: 0, run: null }) {
+async function seeded(cleared: number) {
   const store = new MemoryProfileStore();
   const p = newProfile();
   assert.ok(isDualTowerV1(p.dualTower));
   await store.put("u1", {
     ...p,
-    tower,
     dualTower: { ...p.dualTower, trial: { ...p.dualTower.trial, cleared } },
   }, 0);
   return store;
@@ -55,12 +54,11 @@ describe("trạng thái quét Trial hằng ngày", () => {
   });
 
   it("claim một bước lưu date/tier/claimedAt nhưng không phát đá", async () => {
-    const store = await seeded(7, { best: 12, run: null });
+    const store = await seeded(7);
     const result = await claimTrialSweepState(store, "u1", beforeMidnight);
     assert.deepEqual(result, { ok: true, claimed: true, dateKey: "2026-10-23", tier: 2, claimedAt: beforeMidnight });
     const { profile } = await loadProfile(store, "u1");
     assert.equal(profile.stones, 0);
-    assert.deepEqual(profile.tower, { best: 12, run: null });
     assert.ok(isDualTowerV1(profile.dualTower));
     if (isDualTowerV1(profile.dualTower)) {
       assert.deepEqual(profile.dualTower.trial.lastSweep, { dateKey: "2026-10-23", tier: 2, claimedAt: beforeMidnight });
@@ -119,7 +117,7 @@ describe("trạng thái quét Trial hằng ngày", () => {
 describe("settlement đá quét Trial", () => {
   it("đủ bốn tier thì nhận đúng 1/2/3/4 đá từ progress server", async () => {
     for (const [cleared, amount] of [[1, 1], [6, 2], [11, 3], [16, 4]] as const) {
-      const store = await seeded(cleared, { best: 99, run: null });
+      const store = await seeded(cleared);
       const result = await settleTrialSweep(store, "u1", midnight);
       assert.ok(result.ok);
       if (!result.ok) continue;
@@ -129,7 +127,6 @@ describe("settlement đá quét Trial", () => {
       assert.equal(profile.gold, 0);
       assert.deepEqual(profile.bag, []);
       assert.equal(profile.main.xp, 0);
-      assert.deepEqual(profile.tower, { best: 99, run: null });
       assert.ok(isDualTowerV1(profile.dualTower));
       if (isDualTowerV1(profile.dualTower)) {
         assert.deepEqual(profile.dualTower.stoneLedger, ["trial:sweep:2026-10-24"]);
@@ -182,12 +179,11 @@ describe("settlement đá quét Trial", () => {
     assert.deepEqual(await settleTrialSweep(source, "another-owner", midnight), { ok: false, error: "no_cleared_floors" });
 
     const legacy = new MemoryProfileStore();
-    const raw = { ...newProfile(), tower: { best: 20, run: null } } as Record<string, unknown>;
+    const raw = { ...newProfile() } as Record<string, unknown>;
     delete raw.stones;
     delete raw.dualTower;
     await legacy.put("legacy", raw as unknown as ReturnType<typeof newProfile>, 0);
     assert.deepEqual(await settleTrialSweep(legacy, "legacy", midnight), { ok: false, error: "no_cleared_floors" });
-    assert.deepEqual((await loadProfile(legacy, "legacy")).profile.tower, { best: 20, run: null });
   });
 
   it("replay count không tăng entitlement và qua ngày mới mới cấp tiếp", async () => {

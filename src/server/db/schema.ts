@@ -111,7 +111,7 @@ export const dailyEntries = pgTable(
 );
 
 /**
- * Bảng xếp hạng: điểm hiện tại của mỗi người trên mỗi bảng (chiến dịch, từng màn, tháp, sinh tồn), tính từ hồ
+ * Bảng xếp hạng: điểm hiện tại của mỗi người trên mỗi bảng (chiến dịch, từng màn, sinh tồn, đấu trường), tính từ hồ
  * sơ sau mỗi lần cộng thưởng. `updatedAt` chỉ đổi khi điểm đổi, để bằng điểm thì ai đạt trước đứng trên.
  */
 export const leaderboardScores = pgTable(

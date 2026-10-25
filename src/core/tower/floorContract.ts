@@ -19,7 +19,7 @@ import { validateFloorRules, type FloorRules, type RuleIssue } from "./floorRule
 /** Đổi khi thuật toán sinh tầng đổi, để tầng đã lưu/so khớp không âm thầm lệch. */
 export const FLOOR_RNG_VERSION = 1;
 
-export type StoneMode = Exclude<TowerMode, "legacy">;
+export type StoneMode = TowerMode;
 
 // ——— Định nghĩa và dựng tầng ———
 

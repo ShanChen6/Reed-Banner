@@ -6,7 +6,9 @@ const OLD_PAGES: Record<string, string> = {
   "/play": "/game/play",
   "/demo": "/game/practice",
   "/campaign": "/game/campaign",
-  "/tower": "/game/tower",
+  // Leo tháp cũ đã gỡ (còn Tháp Thí Luyện và Tháp Vận Mệnh): link cũ về màn chính.
+  "/tower": "/game",
+  "/game/tower": "/game",
   "/survival": "/game/survival",
   "/daily": "/game/daily",
   "/arena": "/game/arena",
