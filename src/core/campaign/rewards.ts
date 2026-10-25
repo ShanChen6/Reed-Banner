@@ -20,6 +20,10 @@ import {
   type CampaignCompanionId,
   type CampaignMissionId,
 } from "./storyNodes";
+import {
+  recordFactionResolution,
+  type CampaignFactionResolution,
+} from "./factions";
 
 export const CAMPAIGN_CHAPTER_FIRST_CLEAR_GOLD = 250;
 
@@ -43,6 +47,9 @@ export interface CampaignFirstClearReward {
   readonly totalGold: number;
   readonly supply: number;
   readonly unlockedHeroes: readonly CampaignCompanionId[];
+  /** Sứ quân nhiệm vụ này giải quyết; `factionRecorded` chỉ đúng ở lần ghi đầu tiên. */
+  readonly faction?: CampaignFactionResolution;
+  readonly factionRecorded: boolean;
 }
 
 export type CampaignFirstClearResult =
@@ -115,6 +122,8 @@ export function applyCampaignFirstClear(
       regionalOutcomes: { ...campaign.regionalOutcomes, [region]: outcome },
     };
   }
+  const faction = recordFactionResolution(campaign.factions, input.nodeId);
+  if (faction.recorded) campaign = { ...campaign, factions: faction.factions };
   if (input.source === "battle" && input.supply !== undefined)
     campaign = { ...campaign, supply: clampCampaignFood(input.supply) };
 
@@ -168,6 +177,8 @@ export function applyCampaignFirstClear(
       totalGold,
       supply: campaign.supply,
       unlockedHeroes,
+      ...(faction.resolution ? { faction: faction.resolution } : {}),
+      factionRecorded: faction.recorded,
     },
   };
 }

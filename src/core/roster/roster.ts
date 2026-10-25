@@ -127,28 +127,26 @@ export function isHero(id: string): boolean {
   return HERO_COMPANIONS.some((c) => c.id === id);
 }
 
-export interface WarlordCompanion extends ShopCompanion {
-  /** Màn chiến dịch có sứ quân làm thủ lĩnh; qua màn này mới mở bán. */
-  readonly stage: string;
-}
+export type WarlordCompanion = ShopCompanion;
 
 /**
- * 12 sứ quân bán ở cửa hàng sau khi người chơi đánh bại họ ở chiến dịch. Nghề, nguyên tố và chiêu riêng
- * (ô 4) giống hệt khi làm đối thủ ở chiến dịch. Giá theo mô phỏng `pnpm sim -- --roster`.
+ * 12 sứ quân bán ở cửa hàng sau nhiệm vụ mốc Campaign V2 của họ (warlordUnlockMission, campaign/recruits.ts),
+ * dù trong cốt truyện họ liên minh, quy phục, tan rã hay bị đánh dẹp. Nghề, nguyên tố và chiêu riêng (ô 4)
+ * giống hệt khi làm đối thủ ở danh mục 12 sứ quân. Giá theo mô phỏng `pnpm sim -- --roster`.
  */
 export const WARLORD_COMPANIONS: readonly WarlordCompanion[] = [
-  warlord("tranLam", "Trần Lãm", "quanSu", "thuy", "boHai", 3000),
-  warlord("phamBachHo", "Phạm Bạch Hổ", "tuongSi", "hoa", "dangChau", 3000),
-  warlord("ngoXuongXi", "Ngô Xương Xí", "muuSi", "kim", "binhKieu", 3000),
-  warlord("ngoNhatKhanh", "Ngô Nhật Khánh", "quanSu", "phong", "duongLam", 3000),
-  warlord("nguyenKhoan", "Nguyễn Khoan", "binhLinh", "tho", "tamDai", 3000),
-  warlord("kieuCongHan", "Kiều Công Hãn", "phapSu", "loi", "phongChau", 3000),
-  warlord("kieuThuan", "Kiều Thuận", "ySu", "moc", "hoiHo", 3000),
-  warlord("lyKhue", "Lý Khuê", "tuongSi", "kim", "sieuLoai", 3000),
-  warlord("nguyenThuTiep", "Nguyễn Thủ Tiệp", "muuSi", "thuy", "tienDu", 3000),
-  warlord("luDuong", "Lữ Đường", "phapSu", "thuy", "teGiang", 3000),
-  warlord("nguyenSieu", "Nguyễn Siêu", "binhLinh", "hoa", "tayPhuLiet", 3000),
-  warlord("doCanhThac", "Đỗ Cảnh Thạc", "tuongSi", "tho", "doDong", 3000),
+  warlord("tranLam", "Trần Lãm", "quanSu", "thuy", 3000),
+  warlord("phamBachHo", "Phạm Bạch Hổ", "tuongSi", "hoa", 3000),
+  warlord("ngoXuongXi", "Ngô Xương Xí", "muuSi", "kim", 3000),
+  warlord("ngoNhatKhanh", "Ngô Nhật Khánh", "quanSu", "phong", 3000),
+  warlord("nguyenKhoan", "Nguyễn Khoan", "binhLinh", "tho", 3000),
+  warlord("kieuCongHan", "Kiều Công Hãn", "phapSu", "loi", 3000),
+  warlord("kieuThuan", "Kiều Thuận", "ySu", "moc", 3000),
+  warlord("lyKhue", "Lý Khuê", "tuongSi", "kim", 3000),
+  warlord("nguyenThuTiep", "Nguyễn Thủ Tiệp", "muuSi", "thuy", 3000),
+  warlord("luDuong", "Lữ Đường", "phapSu", "thuy", 3000),
+  warlord("nguyenSieu", "Nguyễn Siêu", "binhLinh", "hoa", 3000),
+  warlord("doCanhThac", "Đỗ Cảnh Thạc", "tuongSi", "tho", 3000),
 ];
 
 function warlord(
@@ -156,19 +154,13 @@ function warlord(
   name: string,
   profession: Profession,
   element: Element,
-  stage: string,
   price: number,
 ): WarlordCompanion {
-  return { fighter: companion(id, name, profession, element), price, stage };
+  return { fighter: companion(id, name, profession, element), price };
 }
 
 export function isWarlord(id: string): boolean {
   return WARLORD_COMPANIONS.some((c) => c.fighter.id === id);
-}
-
-/** Màn chiến dịch phải qua để mở bán nhân vật `id`; undefined nếu bán ngay từ đầu. */
-export function shopUnlockStage(id: string): string | undefined {
-  return WARLORD_COMPANIONS.find((c) => c.fighter.id === id)?.stage;
 }
 
 /** Mọi nhân vật kèm: khởi đầu, cửa hàng, tướng lịch sử rồi sứ quân. */

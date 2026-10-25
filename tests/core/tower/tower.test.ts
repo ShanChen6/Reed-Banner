@@ -8,8 +8,9 @@ import {
   newProfile,
   newTowerRun,
   parseProfile,
-  stageFighter,
-  RAID_STAGES,
+  warlordEncounter,
+  warlordLeader,
+  WARLORD_ENCOUNTERS,
   TOWER_FOOD_START,
   towerFloor,
   towerPower,
@@ -32,10 +33,10 @@ describe("leo tháp", () => {
     assert.equal(towerFloor(run, 1).foes.length, 3);
     const boss = towerFloor(run, 5);
     assert.ok(boss.boss);
-    const leaders = RAID_STAGES.map((s) => s.foes[0]!.id);
+    const leaders: string[] = WARLORD_ENCOUNTERS.map((w) => w.id);
     assert.ok(leaders.includes(boss.foes[0]!.id));
-    const stage = RAID_STAGES.find((s) => s.foes[0]!.id === boss.foes[0]!.id)!;
-    const plain = stageFighter(stage.foes[0]!, boss.level).maxHp;
+    const warlord = warlordEncounter(boss.foes[0]!.id)!;
+    const plain = warlordLeader(warlord, boss.level).maxHp;
     assert.equal(
       boss.foes[0]!.maxHp,
       Math.round(Math.round(plain * towerPower(5)) * BOSS_HP),

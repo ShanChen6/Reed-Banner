@@ -74,7 +74,7 @@ const FEATURES: { tile: Tile; title: string; body: string }[] = [
 const MODES: readonly { slug: string; name: string; body: string; tile: Tile; flag?: keyof TowerFeatureFlags }[] = [
   { slug: "practice", name: "Chơi thử", body: "Vào trận ngay, offline, 3vs3 đấu Tianwu với đội cấp tối đa. Không cần tài khoản.", tile: { kind: "amDuong" } },
   { slug: "play", name: "Trận thường", body: "Trận online có đồng hồ 30 giây, nhận vàng, kinh nghiệm và chiến lợi phẩm.", tile: { kind: "kiem" } },
-  { slug: "campaign", name: "Chiến dịch", body: "Bản đồ 12 sứ quân: đánh từng màn, tướng lịch sử gia nhập, rồi đánh trùm 3 bậc.", tile: { kind: "trong" } },
+  { slug: "campaign", name: "Chiến dịch", body: "Sáu chương dẹp loạn 12 sứ quân, tướng lịch sử gia nhập, rồi tái đấu sứ quân bị đánh dẹp ở 3 bậc.", tile: { kind: "trong" } },
   { slug: "tower", name: "Leo tháp", body: "Chuỗi trận mạnh dần, máu và lương mang sang tầng sau, trùm mỗi 5 tầng.", tile: { kind: "sach" } },
   { slug: "trial", name: "Tháp Thí Luyện", body: "20 tầng cố định, tự chọn đội và luật riêng từng tầng.", tile: { kind: "vang", special: "weak" }, flag: "trial" },
   { slug: "destiny", name: "Tháp Vận Mệnh", body: "Khóa đội hình theo chu kỳ, giữ máu và lương xuyên tầng.", tile: { kind: "amDuong", special: "weak" }, flag: "destiny" },

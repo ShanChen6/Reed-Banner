@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import {
-  CAMPAIGN,
+  WARLORD_ENCOUNTERS,
   CHASE_PASSIVES,
   COMBO_PASSIVES,
   DEFAULT_SPIRIT_EXPERIMENT,
@@ -46,7 +46,7 @@ const rows = Array.from({ length: 14 }, (_, day) => {
       seed,
       profession: setup.profession,
       element: setup.element,
-      stage: setup.stage,
+      stage: setup.warlord,
       ...result,
     };
   });
@@ -119,7 +119,7 @@ writeFileSync(
 );
 writeFileSync(
   `${out}/ui-contracts.json`,
-  JSON.stringify({ rule: DEFAULT_SPIRIT_EXPERIMENT, spirit, loadouts: uiContracts, campaignStages: CAMPAIGN.map((s) => s.id), sourceSHA256: sha256 }, null, 2) + "\n",
+  JSON.stringify({ rule: DEFAULT_SPIRIT_EXPERIMENT, spirit, loadouts: uiContracts, warlords: WARLORD_ENCOUNTERS.map((w) => w.id), sourceSHA256: sha256 }, null, 2) + "\n",
 );
 const sequenceLevels = [5, 10, 20, 30];
 const sequence = Object.fromEntries(sequenceLevels.map((level) => {

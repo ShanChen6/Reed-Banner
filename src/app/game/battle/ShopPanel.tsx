@@ -6,7 +6,6 @@
 import { useState } from "react";
 import {
   ALL_COMPANIONS,
-  CAMPAIGN,
   ELEMENTS,
   PROFESSIONS,
   HERO_COMPANIONS,
@@ -16,7 +15,9 @@ import {
   personalSkillOf,
   shopPrice,
   shopUnlocked,
-  shopUnlockStage,
+  recruitMilestone,
+  storyNodeById,
+  warlordUnlockMission,
   WARLORD_COMPANIONS,
   type Element,
   type FighterConfig,
@@ -49,14 +50,15 @@ function CompanionCard({
   const ultimate = personalSkillOf(c.id);
   const hero = isHero(c.id);
   const warlord = isWarlord(c.id);
-  // Tướng lịch sử chưa gia nhập: không bán, chỉ báo màn chiến dịch sẽ mở. Sứ quân: mở bán khi qua màn của họ.
-  const lockStage = owned
+  // Tướng lịch sử chưa mở: không bán, chỉ báo mốc chương Campaign V2. Sứ quân: mở bán sau nhiệm vụ của họ.
+  const lockMission = owned
     ? undefined
     : hero
-      ? CAMPAIGN.find((s) => s.joins === c.id)
+      ? recruitMilestone(c.id)
       : !shopUnlocked(profile, c.id)
-        ? CAMPAIGN.find((s) => s.id === shopUnlockStage(c.id))
+        ? warlordUnlockMission(c.id)
         : undefined;
+  const lockNode = lockMission && storyNodeById(lockMission);
   return (
     <li
       className={`flex min-w-0 items-center gap-2 rounded p-1.5 ${selected ? "bg-emerald-600/25 ring-1 ring-emerald-500" : "bg-black/5"} ${owned ? "" : "opacity-80"}`}
@@ -84,8 +86,10 @@ function CompanionCard({
         >
           {selected ? "Ra trận" : "Chọn"}
         </button>
-      ) : lockStage ? (
-        <span className="min-w-0 max-w-[45%] text-right text-[10px] opacity-70">Mở sau màn “{lockStage.title}”</span>
+      ) : lockNode ? (
+        <span className="min-w-0 max-w-[45%] text-right text-[10px] opacity-70">
+          {hero ? "Mở khóa đồng hành sau" : "Mở bán sau"} {lockNode.id} “{lockNode.title}”
+        </span>
       ) : (
         <button
           type="button"

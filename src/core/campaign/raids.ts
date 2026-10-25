@@ -1,10 +1,13 @@
-// Đánh trùm (lộ trình 4.5): đánh lại sứ quân đã hạ ở 3 bậc khó hơn, trên "sân nhà" của sứ quân, thưởng riêng.
+// Đánh trùm (lộ trình 4.5): đấu lại sứ quân ở 3 bậc khó hơn, trên "sân nhà" của sứ quân, thưởng riêng.
 // Số liệu là điểm xuất phát do Claude đặt, chờ Shan duyệt. Xem docs/design/09-che-do-choi.md mục 2.2.
+// CAMP-08.04: đối thủ đọc từ danh mục sứ quân (warlords.ts), mở theo mốc Campaign V2 (design-freeze mục 5), bậc
+// lưu theo id sứ quân. Chỉ 6 sứ quân bị đánh dẹp trong cốt truyện (nhóm "military" của sổ thế cục) là trùm, mỗi
+// trận là tái đấu (Shan chốt 25/10/2026); đồng minh, sứ quân quy phục hay tan rã không có trận Đánh trùm.
 
 import type { Difficulty } from "../ai";
 import { FOOD_MAX } from "../battle/rules";
-import type { Element, FighterConfig } from "../battle";
-import { STANDARD_WEIGHTS, type SpawnWeights } from "../board";
+import type { FighterConfig } from "../battle";
+import type { SpawnWeights } from "../board";
 import { GEAR_SETS, GEAR_SLOTS, type GearItem, type Tier } from "../gear";
 import {
   MAX_LEVEL,
@@ -13,14 +16,17 @@ import {
   type Profile,
 } from "../progress";
 import type { Rng } from "../rng";
+import { factionResolutionOf, type CampaignFactionId } from "./factions";
+import { STORY_NODES, type CampaignMissionId } from "./storyNodes";
 import {
   BOSS_HP,
-  CAMPAIGN,
-  recommendedLevel,
-  stageById,
-  stageFighter,
-  type CampaignStage,
-} from "./campaign";
+  HOME_RULE,
+  HOME_TERRAIN,
+  WARLORD_ENCOUNTERS,
+  encounterFighter,
+  warlordEncounter,
+  type WarlordEncounter,
+} from "./warlords";
 
 export const RAID_TIERS = [1, 2, 3] as const;
 export type RaidTier = (typeof RAID_TIERS)[number];
@@ -72,12 +78,24 @@ const DIFFICULTY_ORDER: readonly Difficulty[] = [
   "nightmare",
 ];
 
-/** Độ khó AI của bậc: nâng từ độ khó màn gốc, tối đa Ác mộng. */
+/** Trùm đánh lại được: 6 sứ quân bị đánh dẹp trong cốt truyện, theo thứ tự danh mục, mỗi người mở theo mốc riêng. */
+export const RAID_BOSSES: readonly WarlordEncounter[] =
+  WARLORD_ENCOUNTERS.filter(
+    (w) => factionResolutionOf(w.id)?.group === "military",
+  );
+
+const RAID_BOSS_IDS = new Set<string>(RAID_BOSSES.map((b) => b.id));
+
+export function raidBossById(id: string): WarlordEncounter | undefined {
+  return RAID_BOSS_IDS.has(id) ? warlordEncounter(id) : undefined;
+}
+
+/** Độ khó AI của bậc: nâng từ độ khó gốc của sứ quân, tối đa Ác mộng. */
 export function raidDifficulty(
-  stage: CampaignStage,
+  boss: WarlordEncounter,
   tier: RaidTier,
 ): Difficulty {
-  const i = DIFFICULTY_ORDER.indexOf(stage.difficulty);
+  const i = DIFFICULTY_ORDER.indexOf(boss.difficulty);
   return DIFFICULTY_ORDER[
     Math.min(
       DIFFICULTY_ORDER.length - 1,
@@ -86,84 +104,53 @@ export function raidDifficulty(
   ]!;
 }
 
-/**
- * Sân nhà: bàn cờ nghiêng về loại ô hợp với nguyên tố của sứ quân. Cả hai phe cùng ăn ô, nhưng sứ quân giữ
- * kho nên vào trận đầy lương (FOOD_MAX). Bản đầu cho sứ quân luôn đi trước thì quá khó (mô phỏng 20/10/2026).
- */
-export const HOME_TERRAIN: Readonly<Record<Element, SpawnWeights>> = {
-  kim: { ...STANDARD_WEIGHTS, kiem: 22, tim: 11 },
-  moc: { ...STANDARD_WEIGHTS, tim: 19, vang: 9, sach: 9 },
-  thuy: { ...STANDARD_WEIGHTS, banhChung: 9, amDuong: 22 },
-  hoa: { ...STANDARD_WEIGHTS, kiem: 24, banhChung: 12, tim: 12 },
-  tho: { ...STANDARD_WEIGHTS, banhChung: 21, vang: 9, sach: 10, kiem: 15 },
-  loi: {
-    ...STANDARD_WEIGHTS,
-    amDuong: 22,
-    trong: 17,
-    banhChung: 12,
-    tim: 12,
-    vang: 9,
-    sach: 10,
-  },
-  phong: {
-    ...STANDARD_WEIGHTS,
-    trong: 20,
-    amDuong: 19,
-    banhChung: 12,
-    tim: 12,
-    vang: 9,
-    sach: 10,
-  },
-};
-
-export const HOME_RULE: Readonly<Record<Element, string>> = {
-  kim: "Sân nhà Kim: nhiều ô kiếm, ít ô tim.",
-  moc: "Sân nhà Mộc: nhiều ô tim, ít vàng và sách.",
-  thuy: "Sân nhà Thủy: sông nước, nhiều âm dương, ít bánh chưng.",
-  hoa: "Sân nhà Hỏa: nhiều ô kiếm, ít bánh chưng và tim.",
-  tho: "Sân nhà Thổ: kho lương đầy, nhiều bánh chưng.",
-  loi: "Sân nhà Lôi: nhiều âm dương và trống trận.",
-  phong: "Sân nhà Phong: nhiều trống trận và âm dương.",
-};
-
-/** Màn có trùm để đánh lại: thủ lĩnh là sứ quân (bỏ màn tập trận). */
-export const RAID_STAGES: readonly CampaignStage[] = CAMPAIGN.filter(
-  (s) => s.foes[0]!.hero,
-);
-
-export function isRaidStage(stage: CampaignStage): boolean {
-  return RAID_STAGES.includes(stage);
+export function raidLevel(boss: WarlordEncounter, tier: RaidTier): number {
+  return Math.min(MAX_LEVEL, boss.level + RAID_TIER_INFO[tier].levelBonus);
 }
 
-export function raidLevel(stage: CampaignStage, tier: RaidTier): number {
-  return Math.min(MAX_LEVEL, stage.level + RAID_TIER_INFO[tier].levelBonus);
-}
-
-/** Cấp gợi ý: cấp gợi ý của màn cộng cùng mức tăng của bậc. */
-export function raidRecommended(stage: CampaignStage, tier: RaidTier): number {
+/** Cấp gợi ý: cấp gợi ý gốc cộng cùng mức tăng của bậc. */
+export function raidRecommended(
+  boss: WarlordEncounter,
+  tier: RaidTier,
+): number {
   return Math.min(
     MAX_LEVEL,
-    recommendedLevel(stage) + RAID_TIER_INFO[tier].levelBonus,
+    boss.recommended + RAID_TIER_INFO[tier].levelBonus,
   );
 }
 
-/** Bậc cao nhất đã thắng của trùm ở màn này (0 là chưa). */
-export function raidCleared(campaign: CampaignState, stageId: string): number {
-  return campaign.legacy.raids[stageId] ?? 0;
+/** Bậc cao nhất đã thắng của sứ quân này (0 là chưa). */
+export function raidCleared(campaign: CampaignState, bossId: string): number {
+  return campaign.raids[bossId as CampaignFactionId] ?? 0;
 }
 
-/** Bậc 1 mở khi đã qua màn; bậc sau mở khi đã thắng bậc trước. */
+/**
+ * Nhiệm vụ Campaign V2 mở Đánh trùm của trùm `id` (unlockedContent kind "raid" của node, design-freeze mục 5).
+ * Mốc đó cũng mở bán sứ quân ở cửa hàng (warlordUnlockMission), kể cả sứ quân không phải trùm.
+ */
+export function raidUnlockMission(id: string): CampaignMissionId | undefined {
+  if (!RAID_BOSS_IDS.has(id)) return undefined;
+  return STORY_NODES.find((node) =>
+    node.unlockedContent.some((u) => u.kind === "raid" && u.target === id),
+  )?.id;
+}
+
+/** Đã qua nhiệm vụ mở khóa của sứ quân (server ghi completion). */
+export function raidBossOpen(campaign: CampaignState, bossId: string): boolean {
+  const gate = raidUnlockMission(bossId);
+  return !!gate && campaign.completed.includes(gate);
+}
+
+/** Bậc 1 mở khi đã qua mốc; bậc sau mở khi đã thắng bậc trước. */
 export function raidUnlocked(
   campaign: CampaignState,
-  stageId: string,
+  bossId: string,
   tier: RaidTier,
 ): boolean {
-  const stage = stageById(stageId);
   return (
-    !!stage &&
-    isRaidStage(stage) &&
-    campaign.legacy.cleared.includes(stageId) &&
-    raidCleared(campaign, stageId) >= tier - 1
+    !!raidBossById(bossId) &&
+    raidBossOpen(campaign, bossId) &&
+    raidCleared(campaign, bossId) >= tier - 1
   );
 }
 
@@ -176,18 +163,18 @@ export interface RaidSetup {
 }
 
 /** Luật và đội đối thủ của một bậc: cả đội lên cấp, thủ lĩnh 3vs3 máu ×BOSS_HP, sân nhà theo nguyên tố thủ lĩnh. */
-export function raidSetup(stage: CampaignStage, tier: RaidTier): RaidSetup {
-  const level = raidLevel(stage, tier);
-  const element = stage.foes[0]!.element;
+export function raidSetup(boss: WarlordEncounter, tier: RaidTier): RaidSetup {
+  const level = raidLevel(boss, tier);
+  const element = boss.foes[0]!.element;
   return {
-    foes: stage.foes.map((f, i) => {
-      const fighter = stageFighter(f, level);
+    foes: boss.foes.map((f, i) => {
+      const fighter = encounterFighter(f, level);
       // 1vs1 đã nhân máu cho cả hai phe; thêm máu trùm nữa thì quá khó (mô phỏng 20/10/2026: 20–25%).
-      return i === 0 && stage.mode === "3v3"
+      return i === 0 && boss.mode === "3v3"
         ? { ...fighter, maxHp: Math.round(fighter.maxHp * BOSS_HP) }
         : fighter;
     }),
-    difficulty: raidDifficulty(stage, tier),
+    difficulty: raidDifficulty(boss, tier),
     weights: HOME_TERRAIN[element],
     foeFood: FOOD_MAX,
     rule: `${HOME_RULE[element]} Sứ quân vào trận đầy lương.`,
@@ -207,10 +194,10 @@ export interface RaidResult {
 /** Món thưởng lần đầu: phẩm theo bậc, nguyên tố của sứ quân; vũ khí theo nghề của sứ quân. */
 export function raidRewardItem(
   rng: Rng,
-  stage: CampaignStage,
+  boss: WarlordEncounter,
   tier: RaidTier,
 ): GearItem {
-  const leader = stage.foes[0]!;
+  const leader = boss.foes[0]!;
   const slot = GEAR_SLOTS[rng.int(0, GEAR_SLOTS.length - 1)]!;
   const item: GearItem = {
     id: "",
@@ -222,17 +209,20 @@ export function raidRewardItem(
   return slot === "vuKhi" ? { ...item, profession: leader.profession } : item;
 }
 
-/** Cộng kết quả trận đánh trùm: thắng lần đầu bậc này thì ghi bậc, thưởng vàng và một món trang bị. */
+/**
+ * Cộng kết quả trận đánh trùm: thắng lần đầu bậc này thì ghi bậc, thưởng vàng và một món trang bị. Bậc đã ghi
+ * thì thắng lại không thưởng nữa, nên chốt cùng một trận hai lần không nhận hai lần.
+ */
 export function applyRaidResult(
   profile: Profile,
-  stageId: string,
+  bossId: string,
   tier: RaidTier,
   won: boolean,
   rng: Rng,
 ): { profile: Profile; result: RaidResult } {
-  const stage = stageById(stageId);
+  const boss = raidBossById(bossId);
   const firstClear =
-    !!stage && won && raidCleared(profile.campaign, stageId) < tier;
+    !!boss && won && raidCleared(profile.campaign, bossId) < tier;
   if (!firstClear)
     return {
       profile,
@@ -244,13 +234,10 @@ export function applyRaidResult(
     gold: profile.gold + gold,
     campaign: {
       ...profile.campaign,
-      legacy: {
-        ...profile.campaign.legacy,
-        raids: { ...profile.campaign.legacy.raids, [stageId]: tier },
-      },
+      raids: { ...profile.campaign.raids, [boss!.id]: tier },
     },
   };
-  const received = receiveDrop(next, raidRewardItem(rng, stage!, tier));
+  const received = receiveDrop(next, raidRewardItem(rng, boss!, tier));
   return {
     profile: received.profile,
     result: {

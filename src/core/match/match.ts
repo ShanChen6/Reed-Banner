@@ -67,11 +67,14 @@ export interface Match {
   readonly lastHumanAt: number;
   /** Trận kết thúc vì người chơi bỏ dở quá ABANDON_MS. */
   readonly forfeited: boolean;
-  /** Id màn chiến dịch; không có ở trận Thường. */
-  readonly stage?: string;
+  /**
+   * Đánh trùm: id sứ quân trong danh mục 12 sứ quân (campaign/warlords.ts). Trận lưu từ trước CAMP-08.04 có thể
+   * còn trường `stage` của chiến dịch 13 màn cũ; trường đó không còn được đọc và không mở thưởng nào.
+   */
+  readonly raidBoss?: string;
   /** Campaign V2 objective identity; never inferred from a legacy stage ID. */
   readonly campaignScenario?: CampaignScenarioTag;
-  /** Đánh trùm: bậc trùm ở màn `stage`. */
+  /** Đánh trùm: bậc của sứ quân `raidBoss`. */
   readonly raid?: RaidTier;
   /** Leo tháp: số tầng. */
   readonly tower?: number;
@@ -113,7 +116,7 @@ export interface MatchConfig {
   readonly firstSide: SideIndex;
   readonly now: number;
   readonly weights?: SpawnWeights;
-  readonly stage?: string;
+  readonly raidBoss?: string;
   readonly campaignScenario?: CampaignScenarioTag;
   readonly raid?: RaidTier;
   readonly tower?: number;
@@ -146,7 +149,7 @@ export function startMatch(config: MatchConfig): MatchStep {
     startedAt: config.now,
     lastHumanAt: config.now,
     forfeited: false,
-    ...(config.stage ? { stage: config.stage } : {}),
+    ...(config.raidBoss ? { raidBoss: config.raidBoss } : {}),
     ...(config.campaignScenario
       ? { campaignScenario: config.campaignScenario }
       : {}),
@@ -448,7 +451,7 @@ export interface MatchView {
   readonly difficulty: Difficulty;
   readonly seq: number;
   readonly forfeited: boolean;
-  readonly stage?: string;
+  readonly raidBoss?: string;
   readonly campaignScenario?: CampaignScenarioTag;
   readonly raid?: RaidTier;
   readonly tower?: number;
@@ -654,7 +657,7 @@ export function viewOf(m: Match): MatchView {
     difficulty: m.difficulty,
     seq: m.seq,
     forfeited: m.forfeited,
-    ...(m.stage ? { stage: m.stage } : {}),
+    ...(m.raidBoss ? { raidBoss: m.raidBoss } : {}),
     ...(m.campaignScenario ? { campaignScenario: m.campaignScenario } : {}),
     ...(m.raid ? { raid: m.raid } : {}),
     ...(m.tower ? { tower: m.tower } : {}),

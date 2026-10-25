@@ -1,5 +1,13 @@
 # Nhật ký thay đổi thiết kế
 
+## 25/10/2026 — Campaign V2: gỡ chiến dịch cũ, Đánh trùm 6 trùm, nghiệm thu
+
+- Gỡ hẳn chiến dịch 13 màn cũ (Shan yêu cầu); sứ quân chuyển sang danh mục dùng chung `warlords.ts`.
+- Đánh trùm chỉ còn 6 sứ quân bị đánh dẹp, đều là tái đấu (Shan chốt; design-freeze 1.1).
+- Cân bằng CAMP-09.02: M07 AI Dễ, đối thủ cấp 2; M21 phase mở đường cấp 6 (`docs/campaign-v2/balance-report.md`).
+- Nghiệm thu CAMP-09.04: **GO có điều kiện** vào `develop`, chờ CI trên PR, smoke Neon preview và Shan duyệt số
+  (`docs/campaign-v2/final-acceptance.md`).
+
 ## 24/10/2026 — Nghiệm thu Song Tháp
 
 - Trial **GO có điều kiện**, Destiny **ADJUST/limited beta**, public release tổng thể **ADJUST** cho đến khi có feature flag độc lập, staging migration/restore drill, browser/device smoke và CI sau merge `develop`.

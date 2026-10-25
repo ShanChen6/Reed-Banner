@@ -132,7 +132,7 @@ Nhân vật lịch sử được hư cấu hóa; nét mặt và trang phục do 
 | Tướng | Nghề | Hệ | Gia nhập ở màn | Ghi chú tạo hình |
 |---|---|---|---|---|
 | Nguyễn Bặc | ⚔️ Tướng sĩ | 🔥 Hỏa | Cờ lau tập trận (Hoa Lư) | Bạn thuở nhỏ của Đinh Bộ Lĩnh, Định Quốc công. Dáng tướng trung thành, chắc nịch. |
-| Đinh Điền | 🍙 Binh lính | ⛰️ Thổ | Thử tài ở Bố Hải Khẩu | Bạn thuở nhỏ, Ngoại giáp (chỉ huy quân bảo vệ). Lá chắn của đội. |
+| Đinh Điền | 🍙 Binh lính | ⛰️ Thổ | Luyện binh ở Bố Hải Khẩu | Bạn thuở nhỏ, Ngoại giáp (chỉ huy quân bảo vệ). Lá chắn của đội. |
 | Lưu Cơ | 💰 Mưu sĩ | ⚙️ Kim | Thu phục Đằng Châu | Đô hộ phủ sĩ sư (quan coi việc hình án). Dáng nho sĩ sắc sảo. |
 | Trịnh Tú | ❤️ Y sư | 🌿 Mộc | Đánh Bình Kiều | Một trong nhóm bạn cờ lau. Đặt làm Y sư (hư cấu hóa). |
 | Lê Hoàn | 📖 Quân sư | ⚡ Lôi | Vây thành Tam Đái | Thập đạo tướng quân, sau này lên ngôi. Trẻ, tự tin, có nét tướng. |

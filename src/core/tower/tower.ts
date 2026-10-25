@@ -5,7 +5,12 @@
 import type { Difficulty } from "../ai";
 import type { FighterConfig } from "../battle";
 import { STANDARD_WEIGHTS, type SpawnWeights } from "../board";
-import { BOSS_HP, HOME_TERRAIN, RAID_STAGES, stageFighter } from "../campaign";
+import {
+  BOSS_HP,
+  HOME_TERRAIN,
+  WARLORD_ENCOUNTERS,
+  warlordLeader,
+} from "../campaign";
 import {
   BOON_BONUS,
   clampTowerFood,
@@ -106,8 +111,9 @@ export function towerFloor(
       weights: STANDARD_WEIGHTS,
       foes: aides,
     };
-  const stage = RAID_STAGES[rng.int(0, RAID_STAGES.length - 1)]!;
-  const leader = scaled(stageFighter(stage.foes[0]!, level), k);
+  const warlord =
+    WARLORD_ENCOUNTERS[rng.int(0, WARLORD_ENCOUNTERS.length - 1)]!;
+  const leader = scaled(warlordLeader(warlord, level), k);
   return {
     floor,
     level,
