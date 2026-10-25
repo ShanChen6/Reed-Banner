@@ -29,12 +29,6 @@ import {
   type CampaignState,
 } from "./campaignState";
 import {
-  applyTowerReward,
-  NEW_TOWER,
-  parseTower,
-  type TowerState,
-} from "./towerState";
-import {
   NEW_DUAL_TOWER,
   parseDualTower,
   parseStones,
@@ -88,11 +82,9 @@ export interface Profile {
   readonly nextItemId: number;
   /** Campaign V2 graph progress and temporary legacy adapters. */
   readonly campaign: CampaignState;
-  /** Leo tháp: kỷ lục và lượt leo đang dở. */
-  readonly tower: TowerState;
   /** Đá Cường Hóa của tài khoản: số nguyên không âm. */
   readonly stones: number;
-  /** Song Tháp (Trial/Destiny), tách khỏi `tower` Legacy. */
+  /** Song Tháp (Trial/Destiny). */
   readonly dualTower: DualTowerState;
   /** Sinh tồn: kỷ lục số đợt (lượt chơi nằm trong trận, không lưu ở hồ sơ). */
   readonly survival: SurvivalState;
@@ -127,7 +119,6 @@ export function newProfile(): Profile {
     loadouts: {},
     nextItemId: 1,
     campaign: NEW_CAMPAIGN,
-    tower: NEW_TOWER,
     stones: 0,
     dualTower: NEW_DUAL_TOWER,
     survival: NEW_SURVIVAL,
@@ -287,9 +278,10 @@ export function parseProfile(raw: unknown): Profile {
   const saved = Object.entries(p.companions ?? {}).flatMap(([id, cp]) =>
     companionById(id) && isProgress(cp) ? [[id, p.skillLayout === 2 ? migrateCompanion(cp) : migrateSkillSlots(migrateCompanion(cp))]] : [],
   );
-  // Bỏ trường cũ: chiêu nhánh mang vào trận của nhân vật kèm.
-  const rest: Partial<Profile> & { branchChoice?: unknown } = { ...p };
+  // Bỏ trường cũ: chiêu nhánh mang vào trận của nhân vật kèm, leo tháp cũ (đã gỡ, song tháp ở `dualTower`).
+  const rest: Partial<Profile> & { branchChoice?: unknown; tower?: unknown } = { ...p };
   delete rest.branchChoice;
+  delete rest.tower;
   const companions = { ...fresh.companions, ...Object.fromEntries(saved) };
   const next: Profile = {
     ...fresh,
@@ -300,7 +292,6 @@ export function parseProfile(raw: unknown): Profile {
     team: fresh.team,
     ...parseInventory(p),
     campaign: parseCampaign(p.campaign),
-    tower: parseTower(p.tower),
     stones: parseStones(p.stones),
     dualTower: parseDualTower(p.dualTower),
     survival: parseSurvival(p.survival),
@@ -340,10 +331,6 @@ export type ProfileAction =
   | ({ readonly type: "buyGear" } & GearOrder)
   /** Doanh trại chiến dịch: đổi vàng lấy lương mang vào trận kế tiếp. */
   | { readonly type: "buyFood"; readonly amount: number }
-  /** Leo tháp: chọn phần thưởng thứ `index` sau khi thắng tầng. */
-  | { readonly type: "towerPick"; readonly index: number }
-  /** Leo tháp: bỏ lượt leo đang dở (không được lúc đang đánh). */
-  | { readonly type: "towerQuit" }
   /** Điểm danh hôm nay. */
   | { readonly type: "checkIn" }
   /** Nhận thưởng nhiệm vụ ngày/tuần hoặc thành tựu đã xong. */
@@ -354,25 +341,7 @@ export type ProfileError =
   | ProgressError
   | InventoryError
   | "foodFull"
-  | "noTowerOffer"
-  | "towerBusy"
   | QuestError;
-
-function towerPick(profile: Profile, index: number): ProfileActionResult {
-  const run = profile.tower.run;
-  const reward = run?.offer?.[index];
-  if (!run || !reward) return { ok: false, error: "noTowerOffer" };
-  return {
-    ok: true,
-    profile: {
-      ...profile,
-      tower: {
-        ...profile.tower,
-        run: { ...applyTowerReward(run, reward), offer: null },
-      },
-    },
-  };
-}
 
 /** Mua lương ở doanh trại; mua quá mức tối đa thì chỉ tính phần còn chứa được. */
 function buyFood(profile: Profile, amount: number): ProfileActionResult {
@@ -508,14 +477,6 @@ export function applyProfileAction(
   if (action.type === "sell") return sellItem(profile, action.item);
   if (action.type === "buyGear") return buyGear(profile, action);
   if (action.type === "buyFood") return buyFood(profile, action.amount);
-  if (action.type === "towerPick") return towerPick(profile, action.index);
-  if (action.type === "towerQuit") {
-    if (profile.tower.run?.active) return { ok: false, error: "towerBusy" };
-    return {
-      ok: true,
-      profile: { ...profile, tower: { ...profile.tower, run: null } },
-    };
-  }
   // Còn lại là nâng kỹ năng: mọi nhân vật nâng theo ô.
   if (action.type !== "upgrade") return { ok: false, error: "invalidItem" };
   const isMain = action.character === MAIN_ID;
@@ -561,11 +522,6 @@ export function parseProfileAction(x: unknown): ProfileAction | null {
   }
   if (a.type === "sell")
     return typeof a.item === "string" ? { type: "sell", item: a.item } : null;
-  if (a.type === "towerPick")
-    return Number.isInteger(a.index)
-      ? { type: "towerPick", index: a.index as number }
-      : null;
-  if (a.type === "towerQuit") return { type: "towerQuit" };
   if (a.type === "checkIn") return { type: "checkIn" };
   if (a.type === "claimQuest" || a.type === "claimAchievement")
     return typeof a.id === "string"

@@ -59,7 +59,6 @@ import {
   type BattleRewards,
   type CampaignResult,
   type RaidResult,
-  type TowerResult,
   type BattleEvent,
   type BattleState,
   type Difficulty,
@@ -269,8 +268,6 @@ interface Outcome {
   readonly campaign?: CampaignResult;
   /** Chỉ có ở trận đánh trùm online. */
   readonly raid?: RaidResult;
-  /** Chỉ có ở trận leo tháp online. */
-  readonly tower?: TowerResult;
   readonly destiny?: { readonly floor: number; readonly won: boolean; readonly phase: "reward" | "done" };
   readonly survival?: SurvivalResult;
   readonly daily?: { readonly score: DailyScore; readonly rank: number | null };
@@ -712,7 +709,7 @@ export default function DemoGame({
 }: {
   theme: "light" | "dark";
   online?: boolean;
-  /** Vào phân cảnh là tiếp tục ngay trận online đã lưu (Chiến dịch, Leo tháp, … vừa tạo trận rồi chuyển sang). */
+  /** Vào phân cảnh là tiếp tục ngay trận online đã lưu (Chiến dịch, Sinh tồn, … vừa tạo trận rồi chuyển sang). */
   autoResume?: boolean;
   towerFeatures?: { readonly trial: boolean; readonly destiny: boolean };
 }) {
@@ -732,7 +729,6 @@ export default function DemoGame({
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   /** Màn chiến dịch của trận online đang chơi. */
   const [stage, setStage] = useState<string | null>(null);
-  const [towerFloorNo, setTowerFloorNo] = useState<number | null>(null);
   const [destinyFloorNo, setDestinyFloorNo] = useState<number | null>(null);
   /** Sinh tồn: đợt, người gục, báo trước đợt kế. */
   const [survival, setSurvival] = useState<SurvivalView | null>(null);
@@ -1503,7 +1499,6 @@ export default function DemoGame({
       );
     seq.current = res.view.seq;
     setStage(res.view.stage ?? null);
-    setTowerFloorNo(res.view.tower ?? null);
     setDestinyFloorNo(res.view.destiny?.floor ?? null);
     setSurvival(res.view.survival ?? null);
     setDailyDay(res.view.daily ?? null);
@@ -1959,18 +1954,6 @@ export default function DemoGame({
                             Lương mang sang: {outcome.campaign.food}
                           </p>
                         )}
-                        {outcome.tower && (
-                          <p
-                            className={`font-semibold ${outcome.tower.won ? "text-amber-300" : "text-rose-300"}`}
-                          >
-                            {outcome.tower.won
-                              ? `Qua tầng ${outcome.tower.floor}!`
-                              : `Dừng ở tầng ${outcome.tower.floor}. Lượt leo kết thúc.`}
-                            {outcome.tower.newBest && " Kỷ lục mới!"}
-                            {outcome.tower.bonusGold > 0 &&
-                              ` +${outcome.tower.bonusGold} vàng tầng trùm.`}
-                          </p>
-                        )}
                         {outcome.destiny && (
                           <p className={`font-semibold ${outcome.destiny.won ? "text-amber-300" : "text-rose-300"}`}>
                             {outcome.destiny.won
@@ -2049,16 +2032,6 @@ export default function DemoGame({
                         >
                           Lưu tiến độ &amp; chơi chiến dịch
                         </a>
-                      )}
-                      {towerFloorNo !== null && (
-                        <SceneLink
-                          scene="TOWER"
-                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
-                        >
-                          {outcome?.tower?.won
-                            ? "Chọn thưởng, lên tầng"
-                            : "Về tháp"}
-                        </SceneLink>
                       )}
                       {destinyFloorNo !== null && towerFeatures.destiny && (
                         <SceneLink

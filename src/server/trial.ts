@@ -12,7 +12,6 @@ import {
   resolveFloor,
   startMatch,
   toFloorDefinition,
-  TOWER_FOOD_START,
   trialEnemyBuilder,
   viewOf,
   type BattleEvent,
@@ -66,7 +65,7 @@ export type TrialStartResult =
 export type TrialDeps = Deps & { readonly floors: TrialRegistry };
 
 /** Lương vào mỗi lần thử Trial, không phụ thuộc lương mang từ chế độ khác. */
-export const TRIAL_FOOD = TOWER_FOOD_START;
+export const TRIAL_FOOD = 60;
 
 /**
  * Seed của tầng: cùng tầng/nội dung luôn ra cùng bàn cờ và AI, qua mọi lần thử lại. Muối server-only được

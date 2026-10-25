@@ -10,7 +10,13 @@ import type { FloorRules, LineupMember } from "./floorRules";
 
 export const DESTINY_CYCLE_DAYS = 7;
 export const DESTINY_STARTING_FOOD = 60;
+/** Lương mang sang giữa các tầng luôn nằm trong khoảng này. */
+export const DESTINY_FOOD_MIN = 20;
+export const DESTINY_FOOD_MAX = 100;
 export const DESTINY_ROSTER_MIN = 3;
+
+export const clampDestinyFood = (food: number) =>
+  Math.max(DESTINY_FOOD_MIN, Math.min(DESTINY_FOOD_MAX, Math.round(food)));
 
 export type DestinyRunCreateError =
   | "invalid_time"
