@@ -17,6 +17,7 @@ import {
   type ChapterContent,
   type ChapterMissionStatus,
 } from "@/core";
+import { SceneLink } from "../SceneContext";
 import { BasisBadge } from "./StoryBeats";
 import { backdropUrl, missionBackdrop } from "./dialogue";
 import { METHOD_TEXT } from "./RouteSummary";
@@ -402,5 +403,137 @@ export function StrongholdPanel({
         </p>
       )}
     </aside>
+  );
+}
+
+export type AtlasView = "atlas" | "mission" | "codex";
+
+/** Biểu tượng nét mảnh cho thanh header (bản đồ, cuộn nhiệm vụ, sách sử, binh lính). */
+function TabIcon({ kind }: { kind: AtlasView | "army" }) {
+  const p = {
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.8,
+    strokeLinejoin: "round" as const,
+    strokeLinecap: "round" as const,
+  };
+  return (
+    <svg viewBox="0 0 24 24" className="size-5 shrink-0" aria-hidden>
+      {kind === "atlas" && (
+        <>
+          <path {...p} d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z" />
+          <path {...p} d="M9 4v14M15 6v14" />
+        </>
+      )}
+      {kind === "mission" && (
+        <>
+          <path {...p} d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8l-3-3V5" />
+          <path {...p} d="M9 8h7M9 12h7M9 16h4" />
+        </>
+      )}
+      {kind === "codex" && (
+        <>
+          <path
+            {...p}
+            d="M12 6c-2-1.5-5-2-8-1.5V19c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V4.5C17 4 14 4.5 12 6z"
+          />
+          <path {...p} d="M12 6v14.5" />
+        </>
+      )}
+      {kind === "army" && (
+        <>
+          <circle {...p} cx="8" cy="7" r="2.5" />
+          <circle {...p} cx="16" cy="7" r="2.5" />
+          <path
+            {...p}
+            d="M3 20v-3a5 5 0 0 1 10 0v3M11 20v-3a5 5 0 0 1 10 0v3"
+          />
+        </>
+      )}
+    </svg>
+  );
+}
+
+/**
+ * Thanh header của màn Sử ký: Bản đồ, Nhiệm vụ (nhiệm vụ đang xem), Sử ký (sổ thế cục và hồ sơ sứ quân), Binh lực
+ * (đội hình ở trang Hồ sơ). Đổi thẻ chỉ đổi màn đang xem, không gọi API.
+ */
+export function AtlasHeader({
+  view,
+  mission,
+  level,
+  gold,
+  supply,
+  onView,
+}: {
+  view: AtlasView;
+  mission: CampaignMissionId;
+  level: number;
+  gold: number;
+  supply: number;
+  onView: (v: AtlasView) => void;
+}) {
+  const tabs: readonly { v: AtlasView; label: string; hint?: string }[] = [
+    { v: "atlas", label: "Bản đồ" },
+    { v: "mission", label: "Nhiệm vụ", hint: mission },
+    { v: "codex", label: "Sử ký" },
+  ];
+  const tabClass = (active: boolean) =>
+    `atlas-tab flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-md border px-1 py-1.5 text-xs font-bold tracking-wide whitespace-nowrap uppercase sm:flex-row sm:gap-1.5 sm:px-2 sm:text-sm xl:px-4 ${
+      active ? "atlas-tab-active" : ""
+    }`;
+  return (
+    <header className="atlas-bar flex flex-col gap-2 rounded-xl border-2 p-2 lg:flex-row lg:items-center">
+      <div className="px-2 lg:w-56 lg:shrink-0">
+        <h1
+          id="chapter-one-title"
+          className="atlas-title text-xl leading-tight font-black tracking-wide uppercase sm:text-2xl"
+        >
+          Sử ký Đại Việt
+        </h1>
+        <p className="text-xs text-amber-100/70">Loạn 12 sứ quân · thế kỷ X</p>
+      </div>
+      <nav
+        aria-label="Màn Sử ký"
+        className="grid flex-1 grid-cols-4 gap-1.5 lg:flex lg:justify-center"
+      >
+        {tabs.map((t) => (
+          <button
+            key={t.v}
+            type="button"
+            aria-current={view === t.v ? "page" : undefined}
+            onClick={() => onView(t.v)}
+            className={tabClass(view === t.v)}
+          >
+            <TabIcon kind={t.v} />
+            {t.label}
+            {t.hint && (
+              <span className="hidden text-xs font-normal normal-case opacity-75 xl:inline">
+                {t.hint}
+              </span>
+            )}
+          </button>
+        ))}
+        <SceneLink scene="PROFILE" className={tabClass(false)}>
+          <TabIcon kind="army" />
+          Binh lực
+        </SceneLink>
+      </nav>
+      <dl className="flex flex-wrap items-center justify-end gap-1.5 px-1 text-sm">
+        {[
+          { k: "Cấp", v: level },
+          { k: "Vàng", v: gold },
+          { k: "Lương", v: supply },
+        ].map((x) => (
+          <div
+            key={x.k}
+            className="atlas-stat flex items-baseline gap-1 rounded-md border px-2.5 py-1"
+          >
+            <dt className="text-xs opacity-75">{x.k}</dt>
+            <dd className="font-bold">{x.v.toLocaleString("vi-VN")}</dd>
+          </div>
+        ))}
+      </dl>
+    </header>
   );
 }
