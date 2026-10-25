@@ -16,14 +16,11 @@
 
 Mỗi dòng là một PR vào develop, làm theo thứ tự. Số liệu là điểm xuất phát do Claude đặt, cân lại bằng mô phỏng.
 
-### Giai đoạn 4: Chiến dịch (Campaign V2 xong phần code và QA, chờ Shan duyệt phát hành)
+### Giai đoạn 4: Chiến dịch (Campaign V2 đã có core và nội dung; tiếp tục nâng UI)
 
 | # | Việc | Ghi chú |
 |---|---|---|
-| 4.1 | Chương 1 "Cờ lau dẹp loạn": 13 màn, lương mang sang, doanh trại, luật màn, trang `/campaign` | **Đã thay bằng Campaign V2 (4.7) và gỡ ở CAMP-08.04 (25/10/2026).** Đã làm (19/10/2026). Sứ quân là nhân vật lịch sử có bộ 6 kỹ năng như Đinh Bộ Lĩnh |
 | 4.2 | Tướng lịch sử gia nhập khi qua màn: Nguyễn Bặc, Đinh Điền, Lê Hoàn, Trịnh Tú, Lưu Cơ, Đinh Liễn | Đã làm (20/10/2026). Bộ 3 nghề + 2 hệ + 1 chiêu riêng từ 22/10/2026, nâng theo ô như nhân vật chính; ra trận như nhân vật kèm |
-| 4.3 | Chiêu riêng cho từng sứ quân (1 tuyệt chiêu mang dấu ấn lịch sử) và thoại trước/sau trận | Đã làm (20/10/2026). Chiêu riêng thay ô 5 cho 12 sứ quân và 6 tướng lịch sử; 3 câu thoại mỗi màn |
-| 4.4 | (Bản 13 màn, đã gỡ; Campaign V2 cân ở CAMP-09.02) Cân độ khó chiến dịch bằng mô phỏng: người chơi cày bình thường qua được màn trước ở cấp gợi ý | Đã làm (20/10/2026). `pnpm sim -- --stage all`, thêm `--sweep 2..5` và `--team default` khi cần; cấp gợi ý riêng từng màn, mọi màn ≥50% thắng ở cấp gợi ý |
 | 4.5 | Đánh trùm: đánh lại sứ quân đã hạ ở mức khó cao hơn, luật "sân nhà", thưởng riêng | Đã làm (20/10/2026). 3 bậc, sân nhà theo nguyên tố, thưởng vàng và trang bị lần đầu. Từ 25/10/2026 chỉ 6 sứ quân bị đánh dẹp, mở theo mốc Campaign V2 (Shan chốt); xem [Chế độ chơi](design/09-che-do-choi.md#22-đánh-trùm-claude-đặt-20102026-chuyển-sang-campaign-v2-ở-camp-0804) |
 | 4.6 | Bảng xếp hạng (BXH) | Đã làm (20/10/2026). Từ CAMP-08.04: chiến dịch theo số nhiệm vụ V2 rồi tổng lượt nhiệm vụ có trận, bảng `mission:<M..>` cho từng nhiệm vụ có trận, sinh tồn, đấu trường; xem [Chế độ chơi](design/09-che-do-choi.md#23-bảng-xếp-hạng-claude-đặt-20102026-chuyển-sang-campaign-v2-ở-camp-0804) |
 | 4.7 | Campaign V2: 6 chương, 24 nhiệm vụ M01–M24 (965–968), sự kiện/ngoại giao/trận, sử liệu có nhãn nguồn, thưởng vàng lần đầu (không đá) | Code và QA xong (chuỗi CAMP-02.03 → CAMP-09.04, 24–25/10/2026, chưa commit). [Cân bằng](campaign-v2/balance-report.md) GO, [hồi quy](campaign-v2/regression-report.md) không có P0/P1, [nghiệm thu cuối](campaign-v2/final-acceptance.md) |
@@ -54,3 +51,10 @@ Mỗi dòng là một PR vào develop, làm theo thứ tự. Số liệu là đi
 
 - Mỗi PR nhỏ, đẩy commit sớm; phần đang làm dở luôn nằm trên nhánh, không chỉ trên máy.
 - Mô phỏng dài chạy nền và ghi kết quả vào tài liệu, không dán cả bảng vào trò chuyện.
+
+## UI Campaign V2 — công việc hiện tại (26/10/2026)
+
+- **Thực hiện ngay:** `DOC-00` → `UI-00` → `UI-01` → `UI-02` → `UI-03` → `UI-04` → `MAP-01` → `MAP-02` → `MAP-03` → `UI-05` → `QA-01`.
+- Thoại theo Visual Novel từng câu, giữ dữ liệu `missionCopy`/`StoryBeat` và server settlement; Sử ký sáu chương + bản đồ vùng tận dụng SVG 24 nhiệm vụ.
+- **TODO — DEFERRED:** Audio Engine, SFX, BGM, Voice/TTS, voice assets; chỉ lập tài liệu, không triển khai trong đợt này.
+- [Hướng dẫn từng bước](campaign-v2/ui/README.md).
