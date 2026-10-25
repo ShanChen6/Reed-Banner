@@ -230,13 +230,31 @@ export function Portrait({
 
 /** Huy hiệu cấp: lục giác nền ngọc viền đồng mạ vàng đè lên góc dưới phải khung chân dung. */
 function LevelBadge({ level, scale }: { level: number; scale: number }) {
+  return (
+    <g transform={`translate(63 63) scale(${scale}) translate(-63 -63)`}>
+      <LevelHex level={level} />
+    </g>
+  );
+}
+
+/** Huy hiệu cấp đứng riêng, cho chỗ không vẽ khung chân dung tròn (tranh phong thái ở hồ sơ). */
+export function LevelEmblem({ level, className = "size-8" }: { level: number; className?: string }) {
+  return (
+    <svg viewBox="37.5 37.5 27 27" className={className} role="img" aria-label={`Cấp ${level}`}>
+      <LevelHex level={level} />
+    </svg>
+  );
+}
+
+/** Lục giác tâm (51, 51) bán kính ~13 trong hệ tọa độ 64×64 của chân dung. */
+function LevelHex({ level }: { level: number }) {
   const r = 12.5;
   const hex = Array.from({ length: 6 }, (_, i) => {
     const a = (Math.PI / 3) * i + Math.PI / 6;
     return `${51 + r * Math.cos(a)},${51 + r * Math.sin(a)}`;
   }).join(" ");
   return (
-    <g transform={`translate(63 63) scale(${scale}) translate(-63 -63)`}>
+    <g>
       <title>{`Cấp ${level}`}</title>
       <polygon points={hex} fill="url(#tile-gilt)" stroke={INK} strokeWidth={1.4} strokeLinejoin="round" transform="translate(51 51) scale(1.04) translate(-51 -51)" />
       <polygon points={hex} fill="url(#tile-jade)" stroke={INK} strokeWidth={0.8} strokeLinejoin="round" transform="translate(51 51) scale(0.8) translate(-51 -51)" />
