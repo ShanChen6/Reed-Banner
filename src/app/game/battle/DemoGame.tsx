@@ -11,6 +11,8 @@ import {
   battleRewards,
   canFreeWhirl,
   createBattle,
+  defaultSkillTarget,
+  skillTargetOptions,
   createRng,
   getSkill,
   isAdjacent,
@@ -301,7 +303,11 @@ function demoDrop(
 const fighterName = (id: string) =>
   id === MAIN_ID ? "Đinh Bộ Lĩnh" : (companionById(id)?.name ?? id);
 
-type Aim = { skill: SkillDef } | null;
+/**
+ * Đang ngắm kỹ năng. `choose`: có nhiều mục tiêu để chọn (bấm thẻ, mũi tên trái/phải); `target`: mục tiêu đã chọn.
+ * Kỹ năng phá vùng còn chọn tâm trên bàn cờ sau khi có mục tiêu.
+ */
+type Aim = { skill: SkillDef; choose: boolean; target?: number } | null;
 
 /** Đang chọn tâm lốc xoáy: cho kỹ năng Phong, hoặc lần xoay miễn phí (skill null). */
 type WhirlAim = {
@@ -1262,18 +1268,18 @@ export default function DemoGame({
     [apply],
   );
 
-  /** Bắt đầu chọn mục tiêu (đối thủ, đồng đội hoặc ô) cho kỹ năng; không cần thì dùng luôn. */
+  /**
+   * Bắt đầu chọn mục tiêu cho kỹ năng: đối thủ/đồng đội khi có từ hai lựa chọn, rồi ô làm tâm nếu kỹ năng phá vùng.
+   * Không cần chọn gì thì dùng luôn.
+   */
   const aimOrCast = useCallback(
     (def: SkillDef, whirl?: Whirl) => {
-      if (def.target === "enemy" || def.target === "ally" || needsCell(def)) {
+      const choose = skillTargetOptions(state, def).length > 1;
+      if (choose || needsCell(def)) {
         setPendingWhirl(whirl ?? null);
-        setAim({ skill: def });
+        setAim({ skill: def, choose });
         setSelected(null);
-        const side = def.target === "ally" ? PLAYER : AI;
-        const first = state.sides[side].fighters.findIndex(isAlive);
-        setAimIndex(
-          def.target === "ally" ? state.turn.actor : Math.max(0, first),
-        );
+        setAimIndex(defaultSkillTarget(state, def) ?? 0);
         return;
       }
       apply({ type: "skill", skill: def.id, ...(whirl ? { whirl } : {}) });
@@ -1302,11 +1308,15 @@ export default function DemoGame({
   );
 
   const fireAim = useCallback(
-    (target?: number, cell?: Pos) => {
+    (picked?: number, cell?: Pos) => {
       if (!aim) return;
       const def = aim.skill;
-      if (needsCell(def) && !cell)
+      const target = picked ?? aim.target;
+      if (needsCell(def) && !cell) {
+        // Kỹ năng phá vùng: giữ mục tiêu vừa chọn, chờ chọn tâm.
+        if (picked !== undefined) setAim({ ...aim, target: picked });
         return flash("Chọn một ô trên bàn cờ làm tâm");
+      }
       const ok = apply({
         type: "skill",
         skill: def.id,
@@ -1345,6 +1355,10 @@ export default function DemoGame({
         return setWhirlAim({ ...whirlAim, center: pos });
       }
       if (aim) {
+        if (aim.choose && aim.target === undefined)
+          return flash(
+            aim.skill.target === "ally" ? "Chọn đồng đội trước" : "Chọn đối thủ trước",
+          );
         if (needsCell(aim.skill)) fireAim(undefined, pos);
         return;
       }
@@ -1414,12 +1428,12 @@ export default function DemoGame({
         if (Math.abs(turns) <= whirlAim.max) spinWhirl(turns);
         return;
       }
-      if (aim && !needsCell(aim.skill)) {
-        const side = aim.skill.target === "ally" ? PLAYER : AI;
-        const n = state.sides[side].fighters.length;
+      if (aim?.choose && aim.target === undefined) {
+        const options = skillTargetOptions(state, aim.skill);
+        const n = options.length;
         if (dir && dir[1] !== 0) {
           e.preventDefault();
-          setAimIndex((i) => (i + dir[1] + n) % n);
+          setAimIndex((i) => options[(options.indexOf(i) + dir[1] + n) % n] ?? options[0]!);
         } else if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           fireAim(aimIndex);
@@ -1649,10 +1663,10 @@ export default function DemoGame({
   const frame = anim ? anim.frames[anim.i] : undefined;
   const board = frame?.board ?? heldBoard ?? state.board;
 
-  const aimingFoe =
-    aim && !needsCell(aim.skill) && aim.skill.target === "enemy";
-  const aimingAlly =
-    aim && !needsCell(aim.skill) && aim.skill.target === "ally";
+  // Thẻ bấm được để chọn (hoặc đổi) mục tiêu; mục tiêu đã chọn được đánh dấu trong lúc chọn tâm.
+  const aimingFoe = aim?.choose && aim.skill.target === "enemy";
+  const aimingAlly = aim?.choose && aim.skill.target === "ally";
+  const aimMark = aim?.target ?? aimIndex;
 
   const side = (s: 0 | 1) => {
     const own = state.sides[s];
@@ -1694,10 +1708,10 @@ export default function DemoGame({
               rage={own.leader === i ? own.rage : null}
               active={isActor}
               selectable={canPick && !aim}
-              targetable={!!target && aimIndex === i && isAlive(f)}
+              targetable={!!target && aimMark === i && isAlive(f)}
               floats={floats.filter((x) => x.side === s && x.fighter === i)}
               onClick={
-                target
+                target && isAlive(f)
                   ? () => fireAim(i)
                   : canPick && !aim && !isActor
                     ? () => apply({ type: "selectActor", fighter: i })
@@ -2295,11 +2309,15 @@ export default function DemoGame({
             )}
             {aim && (
               <p className="text-xs opacity-80">
-                {needsCell(aim.skill)
-                  ? `Chọn ô trên bàn cờ làm tâm cho ${aim.skill.name}. Esc để hủy.`
-                  : aim.skill.target === "ally"
-                    ? `Chọn đồng đội cho ${aim.skill.name}. Esc để hủy.`
-                    : `Chọn đối thủ cho ${aim.skill.name}. Esc để hủy.`}
+                {aim.choose && aim.target === undefined
+                  ? aim.skill.target === "ally"
+                    ? `Chọn đồng đội cho ${aim.skill.name} (bấm thẻ hoặc ←/→ rồi Enter). Esc để hủy.`
+                    : `Chọn đối thủ nhận ${aim.skill.name} (bấm thẻ hoặc ←/→ rồi Enter). Esc để hủy.`
+                  : `Chọn ô trên bàn cờ làm tâm cho ${aim.skill.name}${
+                      aim.target === undefined
+                        ? ""
+                        : ` (nhắm ${state.sides[aim.skill.target === "ally" ? PLAYER : AI].fighters[aim.target]?.name ?? ""}; bấm thẻ khác để đổi)`
+                    }. Esc để hủy.`}
               </p>
             )}
             <p className="text-[11px] opacity-60">
