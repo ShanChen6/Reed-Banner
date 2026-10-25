@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -224,6 +224,7 @@ export default function BattleStage({
         import("./silver"),
         import("./coins"),
         import("./banner"),
+        import("./sap"),
       ]);
       const app = new Application();
       await app.init({
@@ -274,7 +275,7 @@ export default function BattleStage({
       // Hiệu ứng vẽ trên cả sân, đè lên mọi nhân vật: sét hệ Lôi, vòm khiên đất hệ Thổ, vòng lá hồi sinh hệ Mộc,
       // mũi sáng phá giáp hệ Kim, đoạt lương và cột nước đóng băng hệ Thủy, tường lửa hệ Hỏa, đập đất hệ Thổ,
       // ngân châm, tường thép, mưa kim bạc, tiền vàng ly tán và
-      // thiết trận hệ Kim.
+      // thiết trận hệ Kim, trúc lâm hút sinh khí hệ Mộc.
       const sky = new Container();
       sky.zIndex = 100;
       app.stage.addChild(sky);
@@ -293,6 +294,16 @@ export default function BattleStage({
           loaded[i]!.onStrike?.((kind) => {
             if (kind !== "ultimate") return;
             alive(true).forEach((s, n) => fx.cover(spot(s, 0), app.screen.height * FIGURE, n * 0.08));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "bambooSap") {
+          const fx = bambooSap(sky, rig.fxColor);
+          // Tuyệt chiêu một người hút máu: chém lá trúc lên đối thủ đứng đầu, sinh khí bay về chính mình.
+          loaded[i]!.onStrike?.((kind) => {
+            const foe = alive(false)[0];
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind === "ultimate" && foe && me) fx.drain(spot(foe, 0.5), spot(me, 0.55), app.screen.height * FIGURE);
           });
           return [fx];
         }
