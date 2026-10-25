@@ -20,7 +20,6 @@ import QuestsScreen from "./quests/QuestsScreen";
 import { resolveScene, sceneOfPath, scenePath, SCENE_TITLE, type AuthScene, type Scene } from "./scene";
 import { isScenePath, pushScenePath, SceneContext, SceneLink, type SceneApi } from "./SceneContext";
 import SurvivalScreen from "./survival/SurvivalScreen";
-import TowerScreen from "./tower/TowerScreen";
 import TrialScreen from "./trial/TrialScreen";
 import DestinyScreen from "./destiny/DestinyScreen";
 
@@ -152,8 +151,6 @@ function SceneView({
       return <DemoGame theme={theme} />;
     case "CAMPAIGN":
       return <CampaignScreen />;
-    case "TOWER":
-      return <TowerScreen />;
     case "TRIAL":
       return towerFeatures.trial ? <TrialScreen /> : <DisabledTowerMode name="Tháp Thí Luyện" />;
     case "DESTINY":

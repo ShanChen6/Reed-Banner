@@ -144,7 +144,6 @@ describe("Destiny server lifecycle", () => {
     const deps = setup();
     const initial = await loadProfile(deps.profiles, "u1");
     const roster = [MAIN_ID, ...Object.keys(initial.profile.companions).slice(0, 5)];
-    const legacyTower = structuredClone(initial.profile.tower);
     const started = await startDestinyRun("u1", { rosterIds: roster }, deps);
     assert.ok(started.ok);
     const overview = await destinyOverview("u1", deps);
@@ -216,7 +215,6 @@ describe("Destiny server lifecycle", () => {
     assert.ok(isDualTowerV1(finalProfile.dualTower));
     if (isDualTowerV1(finalProfile.dualTower)) assert.equal(finalProfile.dualTower.destiny.cycleBest, 9);
     assert.equal(finalProfile.stones, 8);
-    assert.deepEqual(finalProfile.tower, legacyTower, "Destiny không sửa Tower legacy");
   });
 
   it("stop idempotent ở prepare và battle", async () => {
@@ -316,7 +314,6 @@ describe("Destiny server lifecycle", () => {
     assert.equal(after.gold, before.gold);
     assert.equal(after.stones, before.stones);
     assert.deepEqual(after.bag, before.bag);
-    assert.deepEqual(after.tower, before.tower);
     assert.deepEqual(after.dualTower.trial, before.dualTower.trial);
   });
 

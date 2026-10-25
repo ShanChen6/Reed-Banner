@@ -11,7 +11,6 @@ import {
   destinyBoonOffer,
   isDualTowerV1,
   newProfile,
-  newTowerRun,
   parseDualTower,
   profileTeam,
   removeDestinyBoon,
@@ -167,10 +166,5 @@ describe("Destiny boon catalog", () => {
       { id: "atk", stacks: 2, effectVersion: 1 },
       { id: "hp", stacks: 1, effectVersion: 1 },
     ]);
-
-    const profile = newProfile();
-    const towerBefore = newTowerRun(profile, 7);
-    addDestinyBoon(stacked, "def");
-    assert.deepEqual(newTowerRun(profile, 7), towerBefore);
   });
 });

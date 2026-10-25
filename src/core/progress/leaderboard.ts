@@ -4,12 +4,11 @@
 import type { Profile } from "./profile";
 
 /**
- * Bảng: chiến dịch (số màn rồi tổng lượt), từng màn (ít lượt nhất), tháp, sinh tồn, đấu trường (điểm đấu
+ * Bảng: chiến dịch (số màn rồi tổng lượt), từng màn (ít lượt nhất), sinh tồn, đấu trường (điểm đấu
  * trường; server ghi từ kho đấu trường, không tính từ hồ sơ).
  */
 export type BoardId =
   | "campaign"
-  | "tower"
   | "survival"
   | "arena"
   | `stage:${string}`;
@@ -43,7 +42,6 @@ export function boardScores(p: Profile): BoardScore[] {
     });
   for (const [id, turns] of Object.entries(p.campaign.bestBattleTurns))
     out.push({ board: `stage:${id}`, score: -turns });
-  if (p.tower.best > 0) out.push({ board: "tower", score: p.tower.best });
   if (p.survival.best > 0)
     out.push({ board: "survival", score: p.survival.best });
   return out;
@@ -65,7 +63,6 @@ export function describeScore(
 export function isBoardId(x: unknown): x is BoardId {
   return (
     x === "campaign" ||
-    x === "tower" ||
     x === "survival" ||
     x === "arena" ||
     (typeof x === "string" && /^stage:[A-Za-z0-9]{1,40}$/.test(x))

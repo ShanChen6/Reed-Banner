@@ -377,19 +377,19 @@ describe("lưu trận vào Postgres (PGlite, cùng migration với Neon)", () =>
     const accounts = new DrizzleAccountStore(db as unknown as Db);
     await signIn(accounts, { provider: "google", subject: "1", name: "Shan", avatarUrl: null }, "g_a", 1, () => "g_x");
     for (const store of [new DrizzleLeaderboardStore(db as unknown as Db), new MemoryLeaderboardStore()] as LeaderboardStore[]) {
-      await store.submit("g_a", [{ board: "tower", score: 10 }], 100);
-      await store.submit("g_b", [{ board: "tower", score: 10 }], 200);
-      await store.submit("g_c", [{ board: "tower", score: 12 }, { board: "survival", score: 3 }], 300);
+      await store.submit("g_a", [{ board: "survival", score: 10 }], 100);
+      await store.submit("g_b", [{ board: "survival", score: 10 }], 200);
+      await store.submit("g_c", [{ board: "survival", score: 12 }, { board: "arena", score: 3 }], 300);
       // Cùng điểm gửi lại sau: g_a vẫn đạt trước g_b.
-      await store.submit("g_a", [{ board: "tower", score: 10 }], 400);
-      const top = await store.top("tower", 10);
+      await store.submit("g_a", [{ board: "survival", score: 10 }], 400);
+      const top = await store.top("survival", 10);
       assert.deepEqual(top.map((e) => e.ownerId), ["g_c", "g_a", "g_b"]);
-      assert.deepEqual(await store.rankOf("tower", "g_b"), { rank: 3, score: 10 });
-      assert.equal(await store.rankOf("survival", "g_a"), null);
-      await store.submit("g_b", [{ board: "tower", score: 15 }], 500);
-      assert.deepEqual(await store.rankOf("tower", "g_b"), { rank: 1, score: 15 });
+      assert.deepEqual(await store.rankOf("survival", "g_b"), { rank: 3, score: 10 });
+      assert.equal(await store.rankOf("arena", "g_a"), null);
+      await store.submit("g_b", [{ board: "survival", score: 15 }], 500);
+      assert.deepEqual(await store.rankOf("survival", "g_b"), { rank: 1, score: 15 });
     }
-    const top = await new DrizzleLeaderboardStore(db as unknown as Db).top("tower", 10);
+    const top = await new DrizzleLeaderboardStore(db as unknown as Db).top("survival", 10);
     assert.equal(top.find((e) => e.ownerId === "g_a")!.name, "Shan");
   });
 

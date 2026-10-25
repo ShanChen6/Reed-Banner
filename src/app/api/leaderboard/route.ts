@@ -1,4 +1,4 @@
-// GET /api/leaderboard?board=campaign|tower|survival|stage:<id>: top 50 và hạng của người đang xem.
+// GET /api/leaderboard?board=campaign|survival|stage:<id>: top 50 và hạng của người đang xem.
 
 import { NextResponse, type NextRequest } from "next/server";
 import { isBoardId } from "@/core";
