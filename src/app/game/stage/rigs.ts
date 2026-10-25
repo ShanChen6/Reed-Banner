@@ -1398,8 +1398,7 @@ const LAM_TUNG: WarriorRig = {
 };
 
 /**
- * Đàm Thảo, pháp sư hệ Mộc (tướng cửa hàng). Bộ tranh Shan gửi 25/10 (nền trong suốt sẵn; chưa có tranh gục nên hết máu
- * dùng kiểu ngả người của rig). Ảnh đứng tách lớp bằng code: trượng dây leo cùng nắm tay xoay quanh cổ tay, cầu ngọc
+ * Đàm Thảo, pháp sư hệ Mộc (tướng cửa hàng). Bộ tranh Shan gửi 25/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: trượng dây leo cùng nắm tay xoay quanh cổ tay, cầu ngọc
  * xanh sáng riêng; bàn tay phải và đầu tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const DAM_THAO: WarriorRig = {
@@ -1436,6 +1435,8 @@ const DAM_THAO: WarriorRig = {
     ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 7, y: 2 },
       anchor: { x: 700, y: 1160 }, scale: 1.25, burst: { x: 1190, y: 212 } },
   },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 13, y: 77 },
+    anchor: { x: 820, y: 900 }, scale: 0.85 },
 };
 
 /**
