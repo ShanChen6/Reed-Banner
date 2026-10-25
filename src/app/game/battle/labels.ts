@@ -11,6 +11,14 @@ import {
   PASSIVE,
   PASSIVE_TURNS,
   RAGE_MAX,
+  RAGE_PER_DRUM,
+  RAGE_PER_HP_RATIO,
+  TRONG_DA_RAGE,
+  TRONG_DONG_RAGE,
+  CHASE_LIMITS,
+  type ChasePassiveDef,
+  type ComboPassiveDef,
+  type ComboSignalKind,
   type SkillDef,
   type BattleError,
   type Difficulty,
@@ -211,4 +219,52 @@ export function passiveText(element: Element): string {
     phong: `Được xoay lốc xoáy miễn phí ${P.phongFreeWhirlTurns} nấc trước kỹ năng và đổi ô, ${P.phongFreeWhirls} lần mỗi lần kích hoạt.`,
   };
   return `${effect[element]} Tự kích hoạt khi Nộ đạt ${RAGE_MAX}, hiệu lực ${PASSIVE_TURNS} lượt của phe.`;
+}
+
+/** Cách tích Nộ và luật kích hoạt bị động thủ lĩnh, theo addRage trong battle.ts. */
+export function rageTriggerText(): string[] {
+  return [
+    `Chỉ thủ lĩnh còn sống mới tích Nộ: mỗi ô trống trận ghép +${RAGE_PER_DRUM}, Trống da +${TRONG_DA_RAGE}, Trống đồng +${TRONG_DONG_RAGE}; thủ lĩnh mất ${Math.round(100 / RAGE_PER_HP_RATIO)}% máu tối đa +1.`,
+    `Nộ đạt ${RAGE_MAX} thì tự kích hoạt ngay, Nộ về 0. Trong ${PASSIVE_TURNS} lượt hiệu lực không tích thêm Nộ.`,
+    "Tác dụng của bị động này không mở cơ hội phối hợp hay truy kích.",
+  ];
+}
+
+/** Tín hiệu phối hợp: chỉ kỹ năng (kể cả truy kích) tạo ra, đọc theo battle.ts và combo-engine.ts. */
+export const COMBO_SIGNAL_TEXT: Record<ComboSignalKind, string> = {
+  armorBroken: "kỹ năng áp Thủ− lên mục tiêu (mới, mạnh hơn hoặc lâu hơn)",
+  controlled: "kỹ năng áp Đóng băng hoặc Câm lặng lên mục tiêu",
+  dispelled: "kỹ năng xua tan hiệu ứng có lợi của mục tiêu",
+  skillDamage: "kỹ năng làm mục tiêu mất HP thực (phần Khiên đỡ không tính)",
+  healed: "kỹ năng hồi HP thực (phần hồi tràn không tính)",
+  shieldAbsorbed: "kỹ năng cấp Khiên cho đồng đội và Khiên đó thực sự đỡ đòn kiếm/kỹ năng của địch",
+};
+
+const signals = (kinds: readonly ComboSignalKind[]) => kinds.map((k) => COMBO_SIGNAL_TEXT[k]).join(" hoặc ");
+
+/** Điều kiện mở và dùng cơ hội của bị động nghề 1 (COMBO_PASSIVES). */
+export function comboTriggerText(p: ComboPassiveDef): string[] {
+  return [
+    p.receiverOnly
+      ? "Mở khi Khiên do một đồng đội khác chủ động cấp cho chính mình đỡ đòn kiếm/kỹ năng của địch."
+      : `Mở khi một đồng đội khác dùng ${signals(p.triggers)}${p.triggers.some((k) => k !== "healed" && k !== "shieldAbsorbed") ? " (tín hiệu phải nhắm vào địch)" : ""}.`,
+    `Không mở khi bản thân đã gục, đang bị Câm lặng/Đóng băng hoặc đang giữ một cơ hội; mỗi lượt của phe mở tối đa 1 lần.`,
+    `Cơ hội không tự tung chiêu: ${p.targeted ? "chỉ dùng được lên đúng mục tiêu vừa nhận tín hiệu, " : ""}hết hạn sau hai lượt thường kế tiếp; bị xua tan${p.targeted ? " hoặc mục tiêu gục" : ""} thì mất.`,
+  ];
+}
+
+/** Điều kiện phản ứng của bị động truy kích (CHASE_PASSIVES), theo combo-engine.ts flush. */
+export function chaseTriggerText(p: ChasePassiveDef): string[] {
+  const skipped: Record<ChasePassiveDef["effect"], string> = {
+    damage: "không còn địch sống",
+    heal: "cả đội đầy máu",
+    shield: "người nhận đã có Khiên lớn hơn",
+    armor: "mục tiêu đã có Thủ− bằng hoặc mạnh hơn",
+    drain: "mục tiêu hết năng lượng",
+    energy: "người nhận đầy năng lượng",
+  };
+  return [
+    `Tự phản ứng ngay khi ${p.alliesOnly ? "một đồng đội khác" : "bất kỳ ai trong phe, kể cả bản thân,"} dùng ${signals(p.triggers)}; không tốn lượt hay năng lượng.`,
+    `Không phản ứng khi bản thân bị Câm lặng/Đóng băng hoặc ${skipped[p.effect]}. Mỗi bị động một lần mỗi chuỗi; cả chuỗi tối đa ${CHASE_LIMITS.maxReactions} phản ứng, sâu ${CHASE_LIMITS.maxDepth}.`,
+  ];
 }

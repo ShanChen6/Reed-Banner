@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { type Element, ELEMENTS, elementRelation, characterSkills, PROFESSIONS, type Profession, PASSIVES, PROFESSION_COMBO, COMBO_PASSIVES, CHASE_PASSIVES, chasePassives } from "@/core";
-import { ELEMENT_NAME, PROFESSION_NAME, passiveText } from "../game/battle/labels";
+import { chaseTriggerText, comboTriggerText, ELEMENT_NAME, PROFESSION_NAME, passiveText, rageTriggerText } from "../game/battle/labels";
 import { ELEMENT_COLOR, ElementIcon } from "../game/art/icons";
 import { Portrait } from "../game/art/portraits";
 import { SkillIcon } from "../game/art/skills";
@@ -11,6 +11,16 @@ import { ELEMENT_TRAIT } from "./data";
 
 function related(e: Element, test: (other: Element) => boolean) {
   return ELEMENTS.filter((o) => o !== e && test(o));
+}
+
+/** Điều kiện kích hoạt của một bị động. */
+function Trigger({ lines }: { lines: readonly string[] }) {
+  return (
+    <div className="mt-1 border-l-2 border-[var(--gold)]/40 pl-2 text-xs text-stone-400">
+      <span className="text-[0.65rem] uppercase tracking-wider text-[var(--gold)]/80">Điều kiện kích hoạt</span>
+      <ul className="list-disc space-y-0.5 pl-4">{lines.map((l, i) => <li key={i}>{l}</li>)}</ul>
+    </div>
+  );
 }
 
 /** Chọn một nguyên tố để xem Đinh Bộ Lĩnh đổi hệ: chân dung, bị động, 6 kỹ năng và quan hệ khắc chế. */
@@ -105,6 +115,7 @@ export default function ElementPicker() {
             <span className="text-xs uppercase tracking-wider text-[var(--gold)]">Bị động khi đầy Nộ</span>
             <p className="font-semibold">{PASSIVES[element].name}</p>
             <p className="mt-0.5 text-stone-300">{passiveText(element)}</p>
+            <Trigger lines={rageTriggerText()} />
           </div>
 
           <div>
@@ -137,10 +148,16 @@ export default function ElementPicker() {
 
           <div className="text-sm">
             <p className="mb-2 text-xs uppercase tracking-wider text-stone-500">4 bị động phối hợp</p>
-            <ul className="space-y-1.5 text-stone-300">
-              <li><span className="font-semibold text-stone-100">Nghề · {combo.name}:</span> {combo.description}</li>
+            <ul className="space-y-2 text-stone-300">
+              <li>
+                <span className="font-semibold text-stone-100">Nghề · {combo.name}:</span> {combo.description}
+                <Trigger lines={comboTriggerText(combo)} />
+              </li>
               {chase.map((id, i) => (
-                <li key={id}><span className="font-semibold text-stone-100">{i === 0 ? "Nghề" : "Hệ"} · {CHASE_PASSIVES[id].name}:</span> {CHASE_PASSIVES[id].description}</li>
+                <li key={id}>
+                  <span className="font-semibold text-stone-100">{i === 0 ? "Nghề" : "Hệ"} · {CHASE_PASSIVES[id].name}:</span> {CHASE_PASSIVES[id].description}
+                  <Trigger lines={chaseTriggerText(CHASE_PASSIVES[id])} />
+                </li>
               ))}
             </ul>
           </div>
