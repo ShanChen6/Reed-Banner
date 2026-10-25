@@ -49,6 +49,17 @@ describe("Trình phát thoại Chiến dịch", () => {
     }
   });
 
+  it("mọi nhiệm vụ có lời dẫn, kết thúc và lời đáp để phát, không có chỗ trống", () => {
+    for (const node of STORY_NODES) {
+      const copy = missionCopy(node.id);
+      assert.ok(copy, node.id);
+      assert.ok(copy.intro.length > 0, `${node.id} intro`);
+      assert.ok(copy.outro.length > 0, `${node.id} outro`);
+      for (const c of copy.choices)
+        assert.ok(c.beats.length > 0, `${node.id} ${c.id}`);
+    }
+  });
+
   it("chân dung theo tên, kể cả sứ quân gọi theo tước hiệu", () => {
     assert.equal(speakerLook("Trần Minh Công")?.id, "tranLam");
     assert.equal(speakerLook("Phạm Phòng Át")?.id, "phamBachHo");
