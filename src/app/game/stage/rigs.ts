@@ -118,7 +118,8 @@ export interface WarriorRig {
    * đầu kèm ấn câm lặng; `ironFormation` chỉ ở tuyệt chiêu, khiên nứt trên từng đối thủ và mũi tên vàng ở từng đồng
    * đội; `bambooSap` chỉ ở tuyệt chiêu, chém lá trúc lên đối thủ đứng đầu và hút sinh khí về chính mình;
    * `thornBind` chỉ ở tuyệt chiêu, dây gai quấn từng đối thủ và hút sinh khí về chính mình; `rootGuard` chỉ ở tuyệt
-   * chiêu, vòng lá hồi phục quanh cả đội và vòm khiên đất quanh chính mình.
+   * chiêu, vòng lá hồi phục quanh cả đội và vòm khiên đất quanh chính mình; `poisonMist` chỉ ở tuyệt chiêu, sương độc
+   * quanh từng đối thủ và vòng lá hồi phục quanh đội mình.
    */
   readonly strikeFx?:
     | "lightning"
@@ -136,7 +137,8 @@ export interface WarriorRig {
     | "ironFormation"
     | "bambooSap"
     | "thornBind"
-    | "rootGuard";
+    | "rootGuard"
+    | "poisonMist";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1479,6 +1481,91 @@ const HOANG_MOC: WarriorRig = {
     anchor: { x: 760, y: 880 }, scale: 0.9 },
 };
 
+/**
+ * Lục Diệp, y sư hệ Mộc (tướng cửa hàng). Bộ tranh Shan gửi 25/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code:
+ * bàn tay cầm hồ lô xoay quanh cổ tay, hồ lô đan mây lắc quanh nắm tay như các y sư khác; bàn tay buông và đầu tách
+ * riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const LUC_DIEP: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "gourd",
+  grip: { x: 205, y: 400 },
+  dir: "luc-diep",
+  texScale: 0.5,
+  foot: { x: 520, y: 1500 },
+  height: 1490,
+  parts: {
+    body: { x: 275, y: 9, w: 622, h: 1515 },
+    armR: { x: 771, y: 685, w: 66, h: 97 },
+    sword: { x: 136, y: 298, w: 189, h: 283 },
+    arm: { x: 170, y: 365, w: 121, h: 91 },
+    head: { x: 417, y: 10, w: 224, h: 231 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 280, y: 420 },
+    elbowR: { x: 790, y: 700 },
+    neck: { x: 530, y: 230 },
+  },
+  blade: [{ x: 205, y: 400 }, { x: 200, y: 330 }],
+  strikeFx: "leafBloom",
+  fxColor: 0x4f9a4a,
+  // Đẩy chưởng, hồ lô giữ bên hông (đánh thường), mở nắp hồ lô (ra chiêu), nâng hồ lô trao thuốc cho đồng đội (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 60, y: 20 },
+      anchor: { x: 560, y: 1500 }, scale: 1, burst: { x: 690, y: 380 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 62, y: 15 },
+      anchor: { x: 500, y: 1505 }, scale: 1, burst: { x: 650, y: 330 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 25, y: 7 },
+      anchor: { x: 590, y: 1490 }, scale: 1, burst: { x: 900, y: 450 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 13, y: 61 },
+    anchor: { x: 800, y: 900 }, scale: 0.85 },
+};
+
+/**
+ * Nhan Trúc, mưu sĩ hệ Mộc (tướng cửa hàng). Bộ tranh Shan gửi 25/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
+ * code: quạt nan lá trúc cùng nắm tay phẩy theo nhịp quạt, bàn tay buông và đầu tách riêng. Hệ tọa độ: ảnh đứng
+ * 1024×1536.
+ */
+const NHAN_TRUC: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "fan",
+  dir: "nhan-truc",
+  texScale: 0.5,
+  foot: { x: 540, y: 1500 },
+  height: 1490,
+  parts: {
+    body: { x: 255, y: 9, w: 686, h: 1513 },
+    armR: { x: 685, y: 695, w: 66, h: 96 },
+    sword: { x: 146, y: 192, w: 228, h: 525 },
+    arm: { x: 196, y: 400, w: 73, h: 86 },
+    head: { x: 451, y: 12, w: 174, h: 244 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 255, y: 450 },
+    elbowR: { x: 700, y: 710 },
+    neck: { x: 545, y: 250 },
+  },
+  blade: [{ x: 230, y: 440 }, { x: 260, y: 260 }],
+  strikeFx: "poisonMist",
+  fxColor: 0x4f9a4a,
+  // Phẩy quạt thấp chống hông (đánh thường), chỉ tay giơ quạt (ra chiêu), đẩy chưởng giơ quạt (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 41, y: 12 },
+      anchor: { x: 580, y: 1490 }, scale: 1, burst: { x: 120, y: 820 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 33, y: 12 },
+      anchor: { x: 500, y: 1510 }, scale: 1, burst: { x: 990, y: 330 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 3, y: 12 },
+      anchor: { x: 560, y: 1495 }, scale: 1, burst: { x: 975, y: 350 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 10, y: 4 },
+    anchor: { x: 800, y: 950 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1509,6 +1596,8 @@ const RIGS: Readonly<Record<string, Rig>> = {
   lamTung: LAM_TUNG,
   damThao: DAM_THAO,
   hoangMoc: HOANG_MOC,
+  lucDiep: LUC_DIEP,
+  nhanTruc: NHAN_TRUC,
 };
 
 export function rigOf(id: string): Rig | null {
