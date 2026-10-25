@@ -8,7 +8,6 @@ import type {
   CampaignResult,
   RaidResult,
   RaidTier,
-  TowerResult,
   SurvivalResult,
   DailyScore,
   FighterConfig,
@@ -37,7 +36,6 @@ export interface OnlineResponse {
     readonly soldFor: number;
     readonly campaign?: CampaignResult;
     readonly raid?: RaidResult;
-    readonly tower?: TowerResult;
     readonly destiny?: { readonly floor: number; readonly won: boolean; readonly phase: "reward" | "done" };
     readonly survival?: SurvivalResult;
     readonly daily?: {
@@ -84,8 +82,6 @@ export function createOnline(input: {
   stage?: string;
   /** Đánh trùm: bậc trùm ở màn `stage`. */
   raid?: RaidTier;
-  /** Leo tháp: đánh tầng kế tiếp. */
-  tower?: true;
   /** Sinh tồn: bắt đầu lượt chơi mới. */
   survival?: true;
   /** Sinh tồn: tối đa hai companion dự bị đã được chọn trước khi tạo run. */

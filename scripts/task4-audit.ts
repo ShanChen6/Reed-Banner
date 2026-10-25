@@ -14,7 +14,6 @@ import {
   dailySetup,
   runBattle,
   simulateSurvival,
-  simulateTower,
   spiritAt,
   spiritHealMultiplier,
   spiritStatMultiplier,
@@ -100,7 +99,6 @@ const sources = [
   "src/core/battle/rules.ts",
   "src/core/battle/skills.ts",
   "src/core/campaign/campaign.ts",
-  "src/core/tower/tower.ts",
   "src/core/survival/survival.ts",
   "src/core/daily/daily.ts",
   "src/app/game/battle/SkillDetails.tsx",
@@ -123,9 +121,8 @@ writeFileSync(
 );
 const sequenceLevels = [5, 10, 20, 30];
 const sequence = Object.fromEntries(sequenceLevels.map((level) => {
-  const tower = [simulateTower(level, 35_000_019 + level * 1009, 8).cleared];
   const survival = [simulateSurvival(level, 36_000_019 + level * 1009, 8)];
-  return [level, { tower, survival }];
+  return [level, { survival }];
 }));
 writeFileSync(`${out}/sequence-summary.json`, JSON.stringify(sequence, null, 2) + "\n");
-console.log(`Audited ${rows.length} daily battles, ${uiContracts.length} UI contracts, and ${sequenceLevels.length * 2} sequence runs.`);
+console.log(`Audited ${rows.length} daily battles, ${uiContracts.length} UI contracts, and ${sequenceLevels.length} sequence runs.`);

@@ -10,7 +10,6 @@
 | **Thường (Normal)** | Trận sinh ngẫu nhiên đấu Tianwu; chọn độ khó; lương reset mỗi trận | Người chơi chọn 1vs1 hoặc 3vs3 | 2–3 |
 | **Chiến dịch (Campaign)** | Theo cốt truyện; lương mang sang; luật màn; tỉ lệ ô theo màn | Mỗi màn quy định | 4 |
 | **Đánh trùm** | Đánh lại trùm đã gặp trong chiến dịch ở mức khó cao hơn, có luật "sân nhà" và phần thưởng riêng | Mỗi trùm quy định | 4 |
-| **Vô hạn = Leo tháp** | Chuỗi trận riêng biệt, độ khó tăng dần | 3vs3 | Sau giai đoạn 4 |
 | **Tháp Thí Luyện (Trial)** | 20 tầng cố định, luật đội hình/bàn cờ và thưởng đá lần đầu | 3vs3 | Song Tháp V1.0 |
 | **Tháp Vận Mệnh (Destiny)** | Run 10 tầng theo chu kỳ tuần, roster khóa và tài nguyên xuyên tầng | 3vs3 | Song Tháp V1.0 |
 | **Sinh tồn** | Một trận không kết thúc, đối thủ theo đợt, báo trước đợt kế tiếp | 3vs3 | Sau giai đoạn 4 |
@@ -105,43 +104,24 @@ Dữ liệu ở `src/core/campaign/campaign.ts`, chơi ở trang `/campaign` (tr
 
 ### 2.3 Bảng xếp hạng (Claude đặt 20/10/2026, chờ Shan duyệt)
 
-- Trang `/leaderboard` có 4 bảng: **Chiến dịch**, **Từng màn** (chọn màn), **Leo tháp**, **Sinh tồn**. Mỗi bảng hiện 50 người đứng đầu và hạng của người đang xem. Thử thách hằng ngày giữ bảng riêng ở `/daily`.
+- Trang `/leaderboard` có các bảng: **Chiến dịch**, **Từng màn** (chọn màn), **Sinh tồn**, **Đấu trường**, **Vận Mệnh**. Mỗi bảng hiện 50 người đứng đầu và hạng của người đang xem. Thử thách hằng ngày giữ bảng riêng ở `/daily`.
 - **Chiến dịch:** qua nhiều màn hơn đứng trên; bằng số màn thì tổng số lượt ít nhất của các màn đã qua ít hơn đứng trên. Màn qua trước khi có bảng (chưa lưu số lượt) tính 200 lượt.
 - **Từng màn:** thắng màn đó với ít lượt nhất (đếm lượt của cả hai phe). Hồ sơ lưu số lượt ít nhất mỗi màn (`campaign.bestTurns`), chỉ tính trận thắng màn chiến dịch, không tính đánh trùm.
-- **Leo tháp:** tầng cao nhất đã qua. **Sinh tồn:** số đợt nhiều nhất đã vượt.
+- **Sinh tồn:** số đợt nhiều nhất đã vượt.
 - Bằng điểm thì người đạt điểm đó trước đứng trên. Khách hiện là "Khách" kèm 4 ký tự cuối mã.
 - Server ghi điểm vào bảng `leaderboard_scores` sau mỗi lần cộng thưởng trận online; người chơi có thành tích từ trước được ghi khi mở trang. Điểm tính từ hồ sơ nên trận ở `/demo` không lên bảng. Code ở `src/core/progress/leaderboard.ts` và `src/server/leaderboard.ts`.
 
-## 3. Leo tháp (Vô hạn)
+## 3. Tháp
 
-- Máu và lương **mang sang** giữa các tầng, không tự hồi.
-- Giữa các tầng chọn **1 trong 3 phần thưởng**: hồi máu, thêm lương, hoặc một "phúc" có hiệu lực đến hết lượt leo (ví dụ +10% ATK cả đội).
-- Thua thì leo lại từ tầng 1. Mỗi lượt leo được sinh ngẫu nhiên khác nhau.
-- Điểm = tầng cao nhất đạt được.
+### 3.1 Leo tháp (Vô hạn) — đã gỡ 25/10/2026
 
-### 3.1 Bản đầu (Claude đặt 20/10/2026, chờ Shan duyệt)
-
-- Trang `/tower`. Code ở `src/core/tower/` (dựng tầng), `src/core/progress/towerState.ts` (lượt leo lưu trong hồ sơ), server tạo trận khi gửi `tower: true`.
-- **Đội:** đội 3vs3 đang chọn ở hồ sơ, cố định cả lượt leo; chỉ số lấy theo hồ sơ lúc vào từng tầng (lên cấp, đổi đồ giữa chừng vẫn có tác dụng). Người đã ngã giữ 0 máu cho tới khi được hồi.
-- **Lương:** vào tầng 1 với 60; lương còn lại mang sang, luôn trong khoảng 20–100.
-- **Đối thủ:** 3 nhân vật kèm ngẫu nhiên theo seed của lượt leo. Tầng 1 cùng cấp nhân vật chính lúc bắt đầu leo, cứ 5 tầng thêm 1 cấp (tối đa 30). Máu và công nhân hệ số sức mạnh **0,38 ở tầng 1, +0,03 mỗi tầng** (tầng 10 là 0,65, tầng 20 là 0,95). Hạ từ 0,45 ngày 20/10/2026 khi nhân vật kèm lên bộ 6 ô (đối thủ mạnh hơn, trung vị tụt từ 10 xuống 8 tầng); với 0,38 AI Thường lại leo trung vị 10 tầng ở cấp 10. AI: tầng 1–3 Dễ, 4–8 Thường, 9–15 Khó, 16–24 Trùm, từ 25 Ác mộng.
-- **Tầng trùm:** cứ 5 tầng, thủ lĩnh là một sứ quân ngẫu nhiên, máu ×1,5, đánh trên sân nhà của sứ quân (bảng ô theo nguyên tố như [Đánh trùm](#22-đánh-trùm-claude-đặt-20102026-chờ-shan-duyệt)). Lần đầu vượt kỷ lục ở tầng trùm được 40 vàng × số tầng.
-- **Phần thưởng giữa các tầng** (luôn đủ 3 lựa chọn): Hồi máu (người còn đứng +50% máu tối đa, người đã ngã đứng dậy với 30%), Thêm lương (+30), hoặc một phúc ngẫu nhiên cộng dồn: Hùng khí +10% công, Thiết giáp +15% thủ, Bền chí +10% máu tối đa.
-- Mỗi tầng thắng hay thua vẫn nhận kinh nghiệm, vàng và đồ rơi như trận thường. Không bỏ được lượt leo khi đang có trận.
-- **Vì sao dùng hệ số sức mạnh:** bản đầu tăng cấp đối thủ mỗi tầng thì AI leo thay người chơi chết ở tầng 1–2, vì người thắng thường còn ít máu và chênh cấp ít tác dụng. Hệ số nhân thẳng vào máu và công chỉnh được độ khó rõ ràng hơn.
-- Mô phỏng 20/10/2026 (`pnpm sim -- --tower --level N --battles 50`, AI Thường leo thay người chơi với đội khởi đầu, chọn thưởng: có người ngã hoặc máu dưới nửa thì hồi máu, lương dưới 40 thì thêm lương, còn lại lấy phúc):
-
-  | Cấp | Tầng trung bình | Trung vị | p90 | Qua tầng 5 | Qua tầng 10 | Qua tầng 15 |
-  |---|---|---|---|---|---|---|
-  | 5 | 10,5 | 10 | 14 | 94% | 60% | 8% |
-  | 10 | 9,7 | 10 | 14 | 78% | 54% | 6% |
-  | 20 | 9,1 | 10 | 14 | 78% | 50% | 8% |
-  | 30 | 10,6 | 11 | 19 | 82% | 56% | 16% |
+Shan yêu cầu bỏ chế độ leo tháp cũ (bản 20/10/2026: trang `/tower`, chuỗi tầng sinh ngẫu nhiên, máu/lương mang sang,
+chọn 1 trong 3 phần thưởng). Chỉ giữ Song Tháp ở mục 3.2. Hồ sơ cũ bỏ trường `tower` khi đọc lại; link `/tower` và
+`/game/tower` chuyển về màn chính; server từ chối yêu cầu tạo trận còn mang `tower`.
 
 ### 3.2 Song Tháp V1.0
 
-Song Tháp là hai mode mới, độc lập với **Leo tháp (Vô hạn)** ở mục 3.1. Thành tích và run cũ trong
-`tower.best`/`tower.run` không mở tầng, không cấp đá và không bị migration sửa.
+Song Tháp là hai chế độ tháp còn lại sau khi gỡ leo tháp cũ (mục 3.1).
 
 - **Trial — Tháp Thí Luyện:** 20 tầng cố định; mỗi lần thử reset HP/lương; chọn ba active từ tướng đã sở hữu.
   Đinh Bộ Lĩnh bắt buộc ở slot thủ lĩnh, được đổi nghề/hệ miễn phí trước tầng và phải hợp luật. Tầng đã qua được

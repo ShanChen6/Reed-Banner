@@ -66,19 +66,17 @@ describe("nhiệm vụ, thành tựu, điểm danh", () => {
     assert.equal(p.quests.totals.win, 2);
   });
 
-  it("nhiệm vụ chiến dịch, tháp, sinh tồn đếm đúng chế độ", () => {
+  it("nhiệm vụ chiến dịch, sinh tồn đếm đúng chế độ", () => {
     const p = played(newProfile(), [
       { mode: "raid", won: true, coins: 0, waves: 0 },
       { mode: "campaign", won: false, coins: 0, waves: 0 },
-      { mode: "tower", won: true, coins: 0, waves: 0 },
       { mode: "survival", won: true, coins: 0, waves: 7 },
       { mode: "daily", won: false, coins: 0, waves: 0 },
     ]);
     assert.deepEqual(p.quests.weekStats, {
-      play: 5,
-      win: 3,
+      play: 4,
+      win: 2,
       campaign: 1,
-      tower: 1,
       waves: 7,
       daily: 1,
     });
@@ -118,7 +116,7 @@ describe("nhiệm vụ, thành tựu, điểm danh", () => {
       { ok: false, error: "questClaimed" },
     );
     assert.deepEqual(
-      applyProfileAction(p, { type: "claimAchievement", id: "a.tower10" }),
+      applyProfileAction(p, { type: "claimAchievement", id: "a.survival10" }),
       { ok: false, error: "questNotDone" },
     );
     const old = JSON.parse(JSON.stringify(newProfile()));

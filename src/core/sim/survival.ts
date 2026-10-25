@@ -16,7 +16,7 @@ import {
 } from "../survival";
 import type { BattleState } from "../battle";
 import { DEFAULT_MAX_TURNS } from "./sim";
-import { simProfile } from "./tower";
+import { simProfile } from "./profile";
 
 /** Lương còn lại sau khi trả phí hồi sinh phải từ mức này, để không đói ngay đợt sau. */
 const SIM_REVIVE_FOOD_LEFT = 30;
