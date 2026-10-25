@@ -8,7 +8,7 @@
 
 - Mini game thuộc ShanVerse.
 - Repo: [`ShanChen6/Reed-Banner`](https://github.com/ShanChen6/Reed-Banner).
-- Trạng thái: **thiết kế, chưa triển khai code**.
+- Trạng thái: **đã triển khai nhiều chế độ chơi trên web; Campaign V2 gồm 6 chương/24 nhiệm vụ; UI thoại và Sử ký đang được nâng cấp**.
 
 Mỗi lượt, người chơi đổi chỗ hai ô kề nhau trên bàn cờ 12 cột × 8 hàng để ghép từ 3 ô cùng loại trở lên. Ô ghép được biến thành sát thương, máu, năng lượng và tài nguyên cho nhân vật đang hành động. Người chơi luôn điều khiển **Đinh Bộ Lĩnh** (nhân vật chính), đấu 1vs1 hoặc 3vs3 cùng hai nhân vật kèm, với đối thủ do AI **Tianwu** điều khiển.
 
