@@ -518,6 +518,7 @@ export default function ProfileScreen({
                     id={character}
                     element={fighter.element}
                     profession={fighter.profession}
+                    level={fighter.level}
                     className="relative size-32 drop-shadow-[0_6px_10px_#000c] sm:size-36"
                   />
                   <span className="absolute top-1.5 left-2 flex items-center gap-1 rounded bg-black/50 px-1.5 py-0.5 text-[11px] text-amber-100">

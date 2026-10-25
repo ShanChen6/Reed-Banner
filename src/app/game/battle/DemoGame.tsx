@@ -596,6 +596,7 @@ function FighterCard({
           id={fighter.id}
           element={fighter.element}
           profession={fighter.profession}
+          level={fighter.level}
           className="size-9 shrink-0 md:size-7 lg:size-11"
         />
         <div className="min-w-0 flex-1">

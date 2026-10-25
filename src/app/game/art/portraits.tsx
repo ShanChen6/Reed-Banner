@@ -166,11 +166,14 @@ export function Portrait({
   element,
   profession,
   className = "size-10",
+  level,
 }: {
   id: string;
   element: Element;
   profession: Profession;
   className?: string;
+  /** Cấp nhân vật: có thì vẽ huy hiệu cấp ở góc dưới phải. */
+  level?: number;
 }) {
   const clip = `portrait-${useId().replace(/[^\w-]/g, "")}`;
   const look = LOOKS[id] ?? PROFESSION_LOOK[profession];
@@ -217,6 +220,38 @@ export function Portrait({
       </g>
       )}
       <circle cx={32} cy={32} r={27} fill="none" stroke={INK} strokeWidth={1.5} />
+      {level !== undefined && <LevelBadge level={level} />}
     </svg>
+  );
+}
+
+/** Huy hiệu cấp: lục giác nền ngọc viền đồng mạ vàng đè lên góc dưới phải khung chân dung. */
+function LevelBadge({ level }: { level: number }) {
+  const r = 12.5;
+  const hex = Array.from({ length: 6 }, (_, i) => {
+    const a = (Math.PI / 3) * i + Math.PI / 6;
+    return `${51 + r * Math.cos(a)},${51 + r * Math.sin(a)}`;
+  }).join(" ");
+  return (
+    <g>
+      <title>{`Cấp ${level}`}</title>
+      <polygon points={hex} fill="url(#tile-gilt)" stroke={INK} strokeWidth={1.4} strokeLinejoin="round" transform="translate(51 51) scale(1.04) translate(-51 -51)" />
+      <polygon points={hex} fill="url(#tile-jade)" stroke={INK} strokeWidth={0.8} strokeLinejoin="round" transform="translate(51 51) scale(0.8) translate(-51 -51)" />
+      <text
+        x={51}
+        y={51.5}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontSize={level >= 10 ? 11.5 : 13}
+        fontWeight={800}
+        fill="#fff2b3"
+        stroke={INK}
+        strokeWidth={2.2}
+        paintOrder="stroke"
+        style={{ fontVariantNumeric: "tabular-nums" }}
+      >
+        {level}
+      </text>
+    </g>
   );
 }
