@@ -93,7 +93,7 @@ Không ảnh hưởng người chơi thật vì chưa có ai. Với hồ sơ dev
 
 - **Đánh trùm.** Mở theo `unlockedContent` kind `raid` của nhiệm vụ M15–M18, M20, M21. Đối thủ lấy từ
   `WARLORD_ENCOUNTERS` (`warlords.ts`), không đọc encounter nhiệm vụ.
-- **Leo tháp, Sinh tồn, Thử thách ngày, Đấu trường.** Đọc `WARLORD_ENCOUNTERS` theo thứ tự cũ, nên cùng seed vẫn ra
+- **Sinh tồn, Thử thách ngày, Đấu trường.** (Leo tháp cũ đã gỡ ở develop 25/10/2026.) Đọc `WARLORD_ENCOUNTERS` theo thứ tự cũ, nên cùng seed vẫn ra
   cùng đối thủ. CAMP-08.04 đã so 1 080 mẫu. Không đọc tiến độ Campaign.
 - **Song Tháp (Trial/Destiny).** Không phụ thuộc Campaign. Cờ `TRIAL_ENABLED` / `DESTINY_ENABLED` giữ nguyên; smoke
   với cả hai cờ bật đạt.

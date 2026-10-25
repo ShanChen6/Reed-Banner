@@ -55,8 +55,15 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }] = await Promise.all([
-          import("pixi.js"), import("@/app/game/stage/puppet"),
+        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist }] = await Promise.all([
+          import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
+          import("@/app/game/stage/ward"), import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
+          import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
+          import("@/app/game/stage/flame"), import("@/app/game/stage/slam"),
+          import("@/app/game/stage/needle"), import("@/app/game/stage/bulwark"),
+          import("@/app/game/stage/silver"), import("@/app/game/stage/coins"),
+          import("@/app/game/stage/banner"), import("@/app/game/stage/sap"),
+          import("@/app/game/stage/thorn"), import("@/app/game/stage/miasma"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -98,7 +105,135 @@ export default function RigPreview({ id, size, onSnapshot }: {
         const snapshot = await app.renderer.extract.base64(loaded.view);
         if (disposed) return;
         onSnapshot(snapshot);
-        app.ticker.add((tick) => loaded?.update(Math.min(tick.deltaMS / 1000, 0.05)));
+        // Sét hệ Lôi: không có đối thủ nên phóng tới mép phải khung, tuyệt chiêu giáng xuống ba điểm.
+        const bolts = rig.skeleton === "warrior" && rig.strikeFx === "lightning" ? lightning(app.stage, rig.fxColor) : null;
+        if (bolts) loaded.onStrike?.((kind, at) => {
+          const width = el.clientWidth;
+          const height = el.clientHeight;
+          const w = el.dataset.size === "large" ? 5 : 3;
+          if (kind === "ultimate") [0.74, 0.84, 0.94].forEach((k, n) => bolts.strike({ x: width * k, y: height * 0.55 }, w * 1.6, n * 0.08));
+          else bolts.bolt(at, { x: width - 12, y: height * 0.55 }, kind === "cast" ? w * 1.4 : w);
+        });
+        // Vòm khiên đất hệ Thổ, vòng lá hệ Mộc: nở quanh chính nhân vật khi tuyệt chiêu.
+        const team = rig.skeleton === "warrior" ? rig.strikeFx : undefined;
+        const wards = team === "earthWard" ? earthWard(app.stage, rig.fxColor) : team === "leafBloom" ? leafBloom(app.stage, rig.fxColor)
+          : team === "silverGrace" ? silverGrace(app.stage, rig.fxColor) : null;
+        if (wards) loaded.onStrike?.((kind) => {
+          if (kind === "ultimate" && loaded) wards.cover({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y);
+        });
+        // Mũi sáng phá giáp hệ Kim: phóng tới mép phải khung.
+        const pierce = team === "armorPierce" ? armorPierce(app.stage, rig.fxColor) : null;
+        if (pierce) loaded.onStrike?.((kind, at) => {
+          if (kind === "ultimate") pierce.pierce(at, { x: el.clientWidth - 24, y: at.y }, el.dataset.size === "large" ? 5 : 3);
+        });
+        // Đoạt lương hệ Thủy: hút hạt sáng từ mép phải khung về nhân vật.
+        const drain = team === "supplyDrain" ? supplyDrain(app.stage, rig.fxColor) : null;
+        if (drain) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          const me = { x: loaded.view.x, y: loaded.view.y - size * 0.55 };
+          [0.25, 0.5].forEach((k, n) => drain.drain({ x: el.clientWidth - 40, y: el.clientHeight * k + size * 0.2 }, me, size, n * 0.1));
+        });
+        // Cột nước hệ Thủy: phun lên ở hai điểm bên phải khung.
+        const pillar = team === "waterPillar" ? waterPillar(app.stage, rig.fxColor) : null;
+        if (pillar) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          [0.78, 0.92].forEach((k, n) => pillar.cover({ x: el.clientWidth * k, y: loaded!.view.y }, size * 0.8, n * 0.1));
+        });
+        // Tường lửa hệ Hỏa: quanh nhân vật, lửa bén ở mép phải khung.
+        const fire = team === "flameWall" ? flameWall(app.stage, rig.fxColor) : null;
+        if (fire) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          fire.wall({ x: loaded.view.x, y: loaded.view.y }, size);
+          fire.burn({ x: el.clientWidth - 40, y: loaded.view.y }, size * 0.8, 0.15);
+        });
+        // Đập đất hệ Thổ: nứt đất ở mép phải khung, vòm khiên quanh nhân vật.
+        const slam = team === "groundSlam" ? groundSlam(app.stage, rig.fxColor) : null;
+        const slamWard = slam ? earthWard(app.stage, rig.fxColor) : null;
+        if (slam) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          slam.slam({ x: el.clientWidth - 60, y: loaded.view.y }, size * 0.8);
+          slamWard?.cover({ x: loaded.view.x, y: loaded.view.y }, size, 0.2);
+        });
+        // Ngân châm hệ Kim: bắn tới ba điểm ở mép phải khung.
+        const needles = team === "needleVolley" ? needleVolley(app.stage, rig.fxColor) : null;
+        if (needles) loaded.onStrike?.((kind, at) => {
+          if (kind !== "ultimate") return;
+          const w = el.dataset.size === "large" ? 3 : 2;
+          [0.35, 0.55, 0.75].forEach((k, n) => needles.volley(at, { x: el.clientWidth - 30, y: el.clientHeight * k }, w, n * 0.06));
+        });
+        // Tường thép hệ Kim: dựng trước mặt nhân vật.
+        const bulwark = team === "steelBulwark" ? steelBulwark(app.stage, rig.fxColor) : null;
+        if (bulwark) loaded.onStrike?.((kind) => {
+          if (kind === "ultimate" && loaded) bulwark.raise({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y, 1);
+        });
+        // Tiền vàng ly tán hệ Kim: bật ra ở mép phải khung.
+        const coins = team === "coinScatter" ? coinScatter(app.stage, rig.fxColor) : null;
+        if (coins) loaded.onStrike?.((kind) => {
+          if (kind === "ultimate" && loaded) coins.scatter({ x: el.clientWidth - 60, y: el.clientHeight * 0.5 }, rig.height * loaded.view.scale.y);
+        });
+        // Thiết trận hệ Kim: khiên nứt ở mép phải khung, mũi tên vàng quanh nhân vật.
+        const formation = team === "ironFormation" ? ironFormation(app.stage, rig.fxColor) : null;
+        if (formation) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          formation.shatter({ x: el.clientWidth - 60, y: el.clientHeight * 0.5 }, size);
+          formation.rally({ x: loaded.view.x, y: loaded.view.y }, size, 0.2);
+        });
+        // Trúc lâm hệ Mộc: chém ở mép phải khung, sinh khí bay về nhân vật.
+        const sap = team === "bambooSap" ? bambooSap(app.stage, rig.fxColor) : null;
+        if (sap) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          sap.drain({ x: el.clientWidth - 60, y: el.clientHeight * 0.5 }, { x: loaded.view.x, y: loaded.view.y - size * 0.55 }, size);
+        });
+        // Dây gai hệ Mộc: quấn ở mép phải khung, sinh khí bay về nhân vật.
+        const thorns = team === "thornBind" ? thornBind(app.stage, rig.fxColor) : null;
+        if (thorns) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          thorns.bind({ x: el.clientWidth - 60, y: loaded.view.y }, { x: loaded.view.x, y: loaded.view.y - size * 0.55 }, size * 0.8);
+        });
+        // Rễ già giữ thành hệ Mộc: vòng lá và vòm khiên quanh nhân vật.
+        const roots = team === "rootGuard" ? [leafBloom(app.stage, rig.fxColor), earthWard(app.stage, rig.fxColor)] as const : null;
+        if (roots) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const at = { x: loaded.view.x, y: loaded.view.y };
+          const size = rig.height * loaded.view.scale.y;
+          roots[0].cover(at, size);
+          roots[1].cover(at, size, 0.25);
+        });
+        // Trúc độc hệ Mộc: sương độc ở mép phải khung, vòng lá quanh nhân vật.
+        const mist = team === "poisonMist" ? [poisonMist(app.stage, rig.fxColor), leafBloom(app.stage, rig.fxColor)] as const : null;
+        if (mist) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          mist[0].cover({ x: el.clientWidth - 70, y: loaded.view.y }, size * 0.8);
+          mist[1].cover({ x: loaded.view.x, y: loaded.view.y }, size, 0.3);
+        });
+        app.ticker.add((tick) => {
+          const dt = Math.min(tick.deltaMS / 1000, 0.05);
+          loaded?.update(dt);
+          mist?.forEach((m) => m.update(dt));
+          roots?.forEach((r) => r.update(dt));
+          thorns?.update(dt);
+          sap?.update(dt);
+          coins?.update(dt);
+          formation?.update(dt);
+          needles?.update(dt);
+          bulwark?.update(dt);
+          bolts?.update(dt);
+          wards?.update(dt);
+          pierce?.update(dt);
+          drain?.update(dt);
+          pillar?.update(dt);
+          fire?.update(dt);
+          slam?.update(dt);
+          slamWard?.update(dt);
+        });
         setReady(true);
       } catch (cause) {
         destroy();

@@ -208,9 +208,25 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application }, { loadPuppet }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
+        import("./lightning"),
+        import("./ward"),
+        import("./bloom"),
+        import("./pierce"),
+        import("./drain"),
+        import("./pillar"),
+        import("./flame"),
+        import("./slam"),
+        import("./needle"),
+        import("./bulwark"),
+        import("./silver"),
+        import("./coins"),
+        import("./banner"),
+        import("./sap"),
+        import("./thorn"),
+        import("./miasma"),
       ]);
       const app = new Application();
       await app.init({
@@ -258,9 +274,188 @@ export default function BattleStage({
       });
       layout();
       app.renderer.on("resize", layout);
+      // Hiệu ứng vẽ trên cả sân, đè lên mọi nhân vật: sét hệ Lôi, vòm khiên đất hệ Thổ, vòng lá hồi sinh hệ Mộc,
+      // mũi sáng phá giáp hệ Kim, đoạt lương và cột nước đóng băng hệ Thủy, tường lửa hệ Hỏa, đập đất hệ Thổ,
+      // ngân châm, tường thép, mưa kim bạc, tiền vàng ly tán và
+      // thiết trận hệ Kim, trúc lâm hút sinh khí và dây gai
+      // quấn thân hệ Mộc.
+      const sky = new Container();
+      sky.zIndex = 100;
+      app.stage.addChild(sky);
+      const fieldFx = entries.flatMap((e, i): { update(dt: number): void }[] => {
+        const rig = e.rig;
+        if (rig.skeleton !== "warrior" || !rig.strikeFx) return [];
+        const spot = (s: Slot, k: number) => {
+          const { width, height } = app.screen;
+          return { x: slotX(s.side, s.index) * width, y: height * (GROUND - FIGURE * k) };
+        };
+        const alive = (mine: boolean) => latest.current.filter((s) => (s.side === e.side) === mine && isAlive(s.fighter));
+        if (rig.strikeFx === "earthWard" || rig.strikeFx === "leafBloom" || rig.strikeFx === "silverGrace") {
+          const make = rig.strikeFx === "earthWard" ? earthWard : rig.strikeFx === "leafBloom" ? leafBloom : silverGrace;
+          const fx = make(sky, rig.fxColor);
+          // Tuyệt chiêu cho cả đội: hiệu ứng nở quanh từng đồng đội còn đứng.
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            alive(true).forEach((s, n) => fx.cover(spot(s, 0), app.screen.height * FIGURE, n * 0.08));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "poisonMist") {
+          const mist = poisonMist(sky, rig.fxColor);
+          const bloom = leafBloom(sky, rig.fxColor);
+          // Tuyệt chiêu trúc độc: sương độc quanh từng đối thủ (rút năng lượng, câm lặng), vòng lá hồi phục cho đội mình.
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => mist.cover(spot(s, 0), size, n * 0.08));
+            alive(true).forEach((s, n) => bloom.cover(spot(s, 0), size, 0.3 + n * 0.08));
+          });
+          return [mist, bloom];
+        }
+        if (rig.strikeFx === "rootGuard") {
+          const bloom = leafBloom(sky, rig.fxColor);
+          const ward = earthWard(sky, rig.fxColor);
+          // Tuyệt chiêu giữ thành: vòng lá hồi phục quanh cả đội, vòm khiên quanh chính mình (Khiên, Khiêu khích).
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            alive(true).forEach((s, n) => bloom.cover(spot(s, 0), size, n * 0.08));
+            ward.cover(spot(me, 0), size, 0.25);
+          });
+          return [bloom, ward];
+        }
+        if (rig.strikeFx === "thornBind") {
+          const fx = thornBind(sky, rig.fxColor);
+          // Tuyệt chiêu cả đội đối thủ hút máu: dây gai quấn từng người, sinh khí bay về chính mình.
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => fx.bind(spot(s, 0), spot(me, 0.55), size, n * 0.08));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "bambooSap") {
+          const fx = bambooSap(sky, rig.fxColor);
+          // Tuyệt chiêu một người hút máu: chém lá trúc lên đối thủ đứng đầu, sinh khí bay về chính mình.
+          loaded[i]!.onStrike?.((kind) => {
+            const foe = alive(false)[0];
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind === "ultimate" && foe && me) fx.drain(spot(foe, 0.5), spot(me, 0.55), app.screen.height * FIGURE);
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "ironFormation") {
+          const fx = ironFormation(sky, rig.fxColor);
+          // Tuyệt chiêu thiết trận: khiên nứt trên từng đối thủ (Thủ giảm), mũi tên vàng ở từng đồng đội (Công tăng).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => fx.shatter(spot(s, 0.5), size, n * 0.08));
+            alive(true).forEach((s, n) => fx.rally(spot(s, 0), size, 0.2 + n * 0.08));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "coinScatter") {
+          const fx = coinScatter(sky, rig.fxColor);
+          // Tuyệt chiêu một người: tiền vàng bật khỏi đối thủ đứng đầu, ấn câm lặng trên đầu họ.
+          loaded[i]!.onStrike?.((kind) => {
+            const foe = alive(false)[0];
+            if (kind === "ultimate" && foe) fx.scatter(spot(foe, 0.5), app.screen.height * FIGURE);
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "steelBulwark") {
+          const fx = steelBulwark(sky, rig.fxColor);
+          // Tuyệt chiêu tự thủ: tường thép dựng trước mặt chính mình, quay về phía đối thủ.
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (me) fx.raise(spot(me, 0), app.screen.height * FIGURE, e.side === 0 ? 1 : -1);
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "needleVolley") {
+          const fx = needleVolley(sky, rig.fxColor);
+          // Tuyệt chiêu ngân châm: chùm kim bạc từ đầu trượng tới từng đối thủ còn đứng.
+          loaded[i]!.onStrike?.((kind, at) => {
+            if (kind !== "ultimate") return;
+            const w = Math.max(2, app.screen.height * 0.012);
+            alive(false).forEach((s, n) => fx.volley(at, spot(s, 0.5), w, n * 0.06));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "groundSlam") {
+          const slam = groundSlam(sky, rig.fxColor);
+          const ward = earthWard(sky, rig.fxColor);
+          // Tuyệt chiêu bổ chùy: nứt đất dưới chân đối thủ đứng đầu, vòm khiên đất quanh cả đội mình (Thủ +30%).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            const foe = alive(false)[0];
+            if (foe) slam.slam(spot(foe, 0), size);
+            alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, 0.2 + n * 0.08));
+          });
+          return [slam, ward];
+        }
+        if (rig.strikeFx === "flameWall") {
+          const fx = flameWall(sky, rig.fxColor);
+          // Tuyệt chiêu hỏa lũy: tường lửa quanh chính mình, lửa bén lên từng đối thủ còn đứng.
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            const size = app.screen.height * FIGURE;
+            if (me) fx.wall(spot(me, 0), size);
+            alive(false).forEach((s, n) => fx.burn(spot(s, 0), size, 0.15 + n * 0.08));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "waterPillar") {
+          const fx = waterPillar(sky, rig.fxColor);
+          // Tuyệt chiêu trận nước: cột nước phun lên rồi đóng băng dưới chân từng đối thủ còn đứng.
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            alive(false).forEach((s, n) => fx.cover(spot(s, 0), app.screen.height * FIGURE, n * 0.1));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "armorPierce") {
+          const fx = armorPierce(sky, rig.fxColor);
+          // Tuyệt chiêu xuyên giáp một người: mũi sáng từ mũi kiếm tới đối thủ đứng đầu.
+          loaded[i]!.onStrike?.((kind, at) => {
+            const foe = alive(false)[0];
+            if (kind === "ultimate" && foe) fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
+          });
+          return [fx];
+        }
+        if (rig.strikeFx === "supplyDrain") {
+          const fx = supplyDrain(sky, rig.fxColor);
+          // Tuyệt chiêu đoạt lương cả đội đối thủ: hút hạt sáng từ từng người về người tung chiêu.
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (!me) return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => fx.drain(spot(s, 0.5), spot(me, 0.55), size, n * 0.1));
+          });
+          return [fx];
+        }
+        const fx = lightning(sky, rig.fxColor);
+        loaded[i]!.onStrike?.((kind, at) => {
+          const foes = alive(false);
+          if (foes.length === 0) return;
+          const w = Math.max(3, app.screen.height * 0.022);
+          // Tuyệt chiêu giáng sét xuống cả đội đối thủ, còn lại phóng tới người đứng đầu.
+          if (kind === "ultimate") foes.forEach((s, n) => fx.strike(spot(s, 0.55), w * 1.6, n * 0.08));
+          else fx.bolt(at, spot(foes[0]!, 0.5), kind === "cast" ? w * 1.4 : w);
+        });
+        return [fx];
+      });
       app.ticker.add((tk) => {
         const dt = Math.min(tk.deltaMS / 1000, 0.05);
         for (const p of map.values()) p.update(dt);
+        for (const f of fieldFx) f.update(dt);
       });
       // Giảm chuyển động: hình đứng yên, chỉ vẽ lại thưa để cập nhật lúc gục.
       if (still) app.ticker.maxFPS = 4;

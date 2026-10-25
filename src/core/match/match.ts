@@ -76,17 +76,15 @@ export interface Match {
   readonly campaignScenario?: CampaignScenarioTag;
   /** Đánh trùm: bậc của sứ quân `raidBoss`. */
   readonly raid?: RaidTier;
-  /** Leo tháp: số tầng. */
-  readonly tower?: number;
   /** Sinh tồn: lượt chơi (đợt, người gục); trận chỉ kết thúc khi `done`. */
   readonly survival?: SurvivalRun;
   /** Thử thách hằng ngày: khóa ngày (YYYY-MM-DD). */
   readonly daily?: string;
   /** Đấu trường bóng ma: đối thủ lúc vào trận. */
   readonly arena?: ArenaOpponent;
-  /** Tháp Thí Luyện (Song Tháp). Tách khỏi `tower` của Legacy để không đụng tower.run/best. */
+  /** Tháp Thí Luyện (Song Tháp). */
   readonly trial?: TrialMatch;
-  /** Tháp Vận Mệnh; tách hoàn toàn khỏi `tower` legacy. */
+  /** Tháp Vận Mệnh (Song Tháp). */
   readonly destiny?: DestinyMatch;
 }
 
@@ -119,7 +117,6 @@ export interface MatchConfig {
   readonly raidBoss?: string;
   readonly campaignScenario?: CampaignScenarioTag;
   readonly raid?: RaidTier;
-  readonly tower?: number;
   readonly survival?: SurvivalRun;
   readonly daily?: string;
   readonly arena?: ArenaOpponent;
@@ -154,7 +151,6 @@ export function startMatch(config: MatchConfig): MatchStep {
       ? { campaignScenario: config.campaignScenario }
       : {}),
     ...(config.raid ? { raid: config.raid } : {}),
-    ...(config.tower ? { tower: config.tower } : {}),
     ...(config.survival ? { survival: config.survival } : {}),
     ...(config.daily ? { daily: config.daily } : {}),
     ...(config.arena ? { arena: config.arena } : {}),
@@ -454,7 +450,6 @@ export interface MatchView {
   readonly raidBoss?: string;
   readonly campaignScenario?: CampaignScenarioTag;
   readonly raid?: RaidTier;
-  readonly tower?: number;
   readonly survival?: SurvivalView;
   readonly daily?: string;
   /** Trial: tầng đang đánh và giới hạn lượt; không lộ seed hay dấu vân tay. */
@@ -660,7 +655,6 @@ export function viewOf(m: Match): MatchView {
     ...(m.raidBoss ? { raidBoss: m.raidBoss } : {}),
     ...(m.campaignScenario ? { campaignScenario: m.campaignScenario } : {}),
     ...(m.raid ? { raid: m.raid } : {}),
-    ...(m.tower ? { tower: m.tower } : {}),
     ...(m.survival ? { survival: survivalView(m.survival, m.battle) } : {}),
     ...(m.daily ? { daily: m.daily } : {}),
     ...(m.trial

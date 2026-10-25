@@ -56,20 +56,6 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
     value: (p) => (campaignCompleted(p.campaign) ? 1 : 0),
   },
   {
-    id: "a.tower10",
-    title: "Leo tới tầng 10",
-    target: 10,
-    gold: 300,
-    value: (p) => p.tower.best,
-  },
-  {
-    id: "a.tower25",
-    title: "Leo tới tầng 25",
-    target: 25,
-    gold: 800,
-    value: (p) => p.tower.best,
-  },
-  {
     id: "a.survival10",
     title: "Sinh tồn qua 10 đợt",
     target: 10,

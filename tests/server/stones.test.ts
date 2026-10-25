@@ -133,12 +133,7 @@ describe("ví đá: server", () => {
     assert.deepEqual(await loadProfile(store, OWNER), snap);
   });
 
-  it("không đụng tower.best/tower.run của Legacy", async () => {
-    const store = new MemoryProfileStore();
-    const profile = { ...newProfile(), tower: { best: 12, run: null } };
-    assert.ok(await store.put(OWNER, profile, 0));
-    await awardStones(store, OWNER, firstClear(), 0);
-    assert.deepEqual((await loadProfile(store, OWNER)).profile.tower, { best: 12, run: null });
+  it("khóa đá theo tầng Trial", () => {
     assert.equal(stoneKeys.trialFirst(1), "trial:first:1");
   });
 });

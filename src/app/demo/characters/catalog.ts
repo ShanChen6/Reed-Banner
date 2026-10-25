@@ -23,14 +23,14 @@ export async function characterCatalog(): Promise<CharacterPreview[]> {
     };
     const layers = await Promise.all(partsOf(rig).map((name) => file(partUrl(rig, name))));
     if (layers.some((f) => !f)) throw new Error(`Thiếu lớp ảnh của ${id}`);
-    const [portrait, standing] = await Promise.all([
-      file(portraitUrl(id)), file(partUrl(rig, "standing")),
+    const [portrait, standing, style] = await Promise.all([
+      file(portraitUrl(id)), file(partUrl(rig, "standing")), file(partUrl(rig, "style")),
     ]);
     const attack = rig.skeleton === "warrior" ? rig.poses?.attack : undefined;
     const cast = rig.skeleton === "warrior" ? rig.poses?.cast : undefined;
     const ultimate = rig.skeleton === "warrior" ? rig.poses?.ultimate : undefined;
     const defeat = rig.skeleton === "warrior" ? rig.down : undefined;
-    const files = [...layers, portrait, standing].filter((f): f is PreviewFile => f !== null);
+    const files = [...layers, portrait, standing, style].filter((f): f is PreviewFile => f !== null);
     return {
       id, name: character.name, element: character.element, profession: character.profession,
       files, rigBytes: layers.reduce((sum, f) => sum + f!.bytes, 0),
@@ -41,6 +41,7 @@ export async function characterCatalog(): Promise<CharacterPreview[]> {
         { kind: "cast", label: "Ra chiêu", file: cast ? await file(partUrl(rig, cast.name)) : null },
         { kind: "ultimate", label: "Tuyệt chiêu", file: ultimate ? await file(partUrl(rig, ultimate.name)) : null },
         { kind: "defeat", label: "Bị hạ gục", file: defeat ? await file(partUrl(rig, defeat.name)) : null },
+        { kind: "style", label: "Phong thái", file: style },
       ],
     };
   }));

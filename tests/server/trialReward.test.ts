@@ -182,14 +182,13 @@ describe("tiến trình vĩnh viễn và đá lần đầu của Trial", () => {
     assert.deepEqual(st.ledger, []);
   });
 
-  it("không đụng vàng/EXP/tower.best/tower.run", async () => {
+  it("không đụng vàng/EXP", async () => {
     const s = setup();
     const before = (await loadProfile(s.profiles, "g_1")).profile;
     await play(s, 1, 0);
     const { profile } = await state(s.profiles);
     assert.equal(profile.gold, before.gold);
     assert.deepEqual(profile.main, before.main);
-    assert.deepEqual(profile.tower, before.tower);
   });
 
   it("lưu vĩnh viễn: roundtrip JSON giữ records, claimed, active; dữ liệu hỏng bị lọc", async () => {

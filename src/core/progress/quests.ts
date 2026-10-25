@@ -24,7 +24,6 @@ export type MatchMode =
   | "normal"
   | "campaign"
   | "raid"
-  | "tower"
   | "survival"
   | "daily"
   | "arena";
@@ -48,8 +47,6 @@ export type QuestStat =
    * sự kiện, chuẩn bị hay ngoại giao không phải trận nên không tính (không gọi recordMatch).
    */
   | "campaign"
-  /** Qua tầng tháp. */
-  | "tower"
   | "waves"
   | "daily";
 
@@ -87,13 +84,6 @@ export const WEEKLY_QUESTS: readonly QuestDef[] = [
     title: "Thắng 5 trận chiến dịch hoặc đánh trùm",
     stat: "campaign",
     target: 5,
-    gold: 300,
-  },
-  {
-    id: "w.tower10",
-    title: "Qua 10 tầng tháp",
-    stat: "tower",
-    target: 10,
     gold: 300,
   },
   {
@@ -186,7 +176,6 @@ export function recordMatch(
     win: m.won ? 1 : 0,
     coins: m.coins,
     campaign: m.won && (m.mode === "campaign" || m.mode === "raid") ? 1 : 0,
-    tower: m.won && m.mode === "tower" ? 1 : 0,
     waves: m.mode === "survival" ? m.waves : 0,
     daily: m.mode === "daily" ? 1 : 0,
   };

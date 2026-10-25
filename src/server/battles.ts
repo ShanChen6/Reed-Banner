@@ -24,7 +24,6 @@ import {
   clampCampaignFood,
   isCampaignMissionId,
   applyRaidResult,
-  applyTowerResult,
   applySurvivalResult,
   recordMatch,
   DAILY_GOLD,
@@ -47,7 +46,6 @@ import {
   survivalActiveSideConfig,
   syncSurvivalRosterState,
   survivalWave,
-  newTowerRun,
   ownsCompanion,
   PROFESSIONS,
   profileTeam,
@@ -60,8 +58,6 @@ import {
   settleCampaignScenario as evaluateCampaignScenario,
   startMatch,
   STARTER_COMPANIONS,
-  towerFloor,
-  towerTeam,
   viewOf,
   type MatchAction,
   type SurvivalResult,
@@ -78,8 +74,6 @@ import {
   type CampaignScenarioSettlement,
   type RaidResult,
   type RaidTier,
-  type TowerResult,
-  type TowerRun,
   type FighterConfig,
   type GearItem,
   type LevelUp,
@@ -148,8 +142,6 @@ export interface NewBattleInput {
   readonly campaignMission?: CampaignMissionId;
   /** Campaign V2: lựa chọn trình diễn trước trận (chỉ đổi lời dẫn). */
   readonly campaignChoice?: string;
-  /** Leo tháp: đánh tầng kế tiếp của lượt leo (bắt đầu lượt mới nếu chưa có). */
-  readonly tower?: true;
   /** Sinh tồn: bắt đầu lượt chơi mới với đội đang chọn ở hồ sơ. */
   readonly survival?: true;
   /** Sinh tồn: tối đa 2 reserve IDs; active vẫn lấy theo `companions` của request. */
@@ -187,8 +179,6 @@ export interface Outcome {
   readonly campaignV2?: CampaignFirstClearReward;
   /** Chỉ có ở trận đánh trùm. */
   readonly raid?: RaidResult;
-  /** Chỉ có ở trận leo tháp. */
-  readonly tower?: TowerResult;
   /** Chỉ có ở trận Tháp Thí Luyện. */
   readonly trial?: TrialResult;
   /** Chỉ có ở trận Destiny; không kèm vàng/EXP/drop. */
@@ -287,6 +277,8 @@ export function parseNewBattle(body: unknown): NewBattleInput | null {
   if (body.campaignChoice !== undefined) return null;
   // Chiến dịch 13 màn cũ đã gỡ (CAMP-08.04): id màn cũ không còn mở trận nào, kể cả đánh trùm.
   if (body.stage !== undefined) return null;
+  // Leo tháp cũ đã gỡ: client cũ còn gửi `tower` thì từ chối, không mở nhầm trận thường.
+  if (body.tower !== undefined) return null;
   if (body.arena !== undefined) {
     if (
       !Number.isInteger(body.arena) ||
@@ -317,12 +309,7 @@ export function parseNewBattle(body: unknown): NewBattleInput | null {
     };
   }
   if (body.survival !== undefined) {
-    if (
-      body.survival !== true ||
-      body.raidBoss !== undefined ||
-      body.tower !== undefined
-    )
-      return null;
+    if (body.survival !== true || body.raidBoss !== undefined) return null;
     const reserves =
       body.reserveCompanions === undefined ? [] : body.reserveCompanions;
     const knownIds = new Set(ALL_COMPANIONS.map((c) => c.id));
@@ -347,16 +334,6 @@ export function parseNewBattle(body: unknown): NewBattleInput | null {
     };
   }
   if (body.reserveCompanions !== undefined) return null;
-  if (body.tower !== undefined) {
-    if (body.tower !== true || body.raidBoss !== undefined) return null;
-    const parsed = parseNewBattle({
-      ...body,
-      tower: undefined,
-      mode: "3v3",
-      difficulty: "normal",
-    });
-    return parsed && { ...parsed, tower: true };
-  }
   if (body.raidBoss !== undefined || body.raid !== undefined) {
     const boss =
       typeof body.raidBoss === "string"
@@ -536,7 +513,6 @@ export async function createBattleFor(
   input: NewBattleInput,
   deps: Deps,
 ): Promise<ServiceResult> {
-  if (input.tower) return createTowerBattle(ownerId, input, deps);
   if (input.survival) return createSurvivalBattle(ownerId, input, deps);
   if (input.daily) return createDailyBattle(ownerId, deps);
   if (input.arena !== undefined)
@@ -708,66 +684,6 @@ async function createCampaignMissionBattle(
     now: deps.now,
     campaignScenario: { ...tag, startFood: profile.campaign.supply },
     ...(weights ? { weights } : {}),
-  });
-  const record: MatchRecord = {
-    id: deps.newId(),
-    ownerId,
-    match,
-    createdAt: deps.now,
-    updatedAt: deps.now,
-  };
-  await deps.store.create(record);
-  return { ok: true, id: record.id, view: viewOf(match), events };
-}
-
-/**
- * Leo tháp: đánh tầng kế tiếp của lượt leo, bắt đầu lượt mới nếu chưa có. Đánh dấu lượt leo đang có trận ngay
- * trong lần ghi hồ sơ để hai request không cùng mở hai trận một tầng. Còn phần thưởng chưa chọn thì không đánh.
- */
-async function createTowerBattle(
-  ownerId: string,
-  input: NewBattleInput,
-  deps: Deps,
-): Promise<ServiceResult> {
-  let run: TowerRun | undefined;
-  const u = await updateProfile(
-    deps.profiles,
-    ownerId,
-    (p) => {
-      const cur = p.tower.run ?? newTowerRun(p, deps.seed);
-      if (cur.active || cur.offer)
-        return { ok: false, error: "badRequest" as const };
-      run = { ...cur, active: true };
-      return {
-        ok: true,
-        profile: {
-          ...p,
-          element: input.element,
-          profession: input.profession,
-          tower: { ...p.tower, run },
-        },
-      };
-    },
-    deps.now,
-  );
-  if (!u.ok || !run) return { ok: false, error: u.ok ? "badRequest" : u.error };
-  const floor = towerFloor(run, run.floor);
-  const { match, events } = startMatch({
-    sides: [
-      {
-        fighters: towerTeam(u.stored.profile, run),
-        leader: 0,
-        food: run.food,
-        hpRatio: run.hp,
-      },
-      { fighters: floor.foes, leader: 0 },
-    ],
-    difficulty: floor.difficulty,
-    seed: deps.seed,
-    firstSide: (deps.seed & 1) as SideIndex,
-    now: deps.now,
-    weights: floor.weights,
-    tower: floor.floor,
   });
   const record: MatchRecord = {
     id: deps.newId(),
@@ -971,7 +887,6 @@ async function settleArena(
 function matchMode(m: Match): MatchMode {
   if (m.arena) return "arena";
   if (m.survival) return "survival";
-  if (m.tower) return "tower";
   if (m.campaignScenario) return "campaign";
   if (m.raidBoss && m.raid) return "raid";
   return m.daily ? "daily" : "normal";
@@ -1293,7 +1208,6 @@ async function reward(
   let drop: GearItem | null = null;
   let soldFor = 0;
   let raid: RaidResult | undefined;
-  let tower: TowerResult | undefined;
   let survival: SurvivalResult | undefined;
   const raidBoss = match.raidBoss;
   const u = await updateProfile(
@@ -1323,16 +1237,6 @@ async function reward(
         const c = applySurvivalResult(next, cleared);
         next = c.profile;
         survival = c.result;
-      } else if (match.tower) {
-        const side = match.battle.sides[HUMAN];
-        const c = applyTowerResult(
-          next,
-          rewards.won,
-          side.fighters.map((f) => f.hp / f.maxHp),
-          side.food,
-        );
-        next = c.profile;
-        tower = c.result;
       } else if (raidBoss && match.raid) {
         // Rng riêng cho món thưởng, khác luồng món rơi thường.
         const c = applyRaidResult(
@@ -1368,7 +1272,6 @@ async function reward(
     drop,
     soldFor,
     ...(raid ? { raid } : {}),
-    ...(tower ? { tower } : {}),
     ...(survival ? { survival } : {}),
     ...(arena ? { arena } : {}),
   };

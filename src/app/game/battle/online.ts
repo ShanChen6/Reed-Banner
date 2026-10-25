@@ -9,7 +9,6 @@ import type {
   CampaignMissionId,
   RaidResult,
   RaidTier,
-  TowerResult,
   SurvivalResult,
   DailyScore,
   FighterConfig,
@@ -39,12 +38,7 @@ export interface OnlineResponse {
     /** Campaign V2: hoàn thành và thưởng lần đầu đã ghi trên server. */
     readonly campaignV2?: CampaignFirstClearReward;
     readonly raid?: RaidResult;
-    readonly tower?: TowerResult;
-    readonly destiny?: {
-      readonly floor: number;
-      readonly won: boolean;
-      readonly phase: "reward" | "done";
-    };
+    readonly destiny?: { readonly floor: number; readonly won: boolean; readonly phase: "reward" | "done" };
     readonly survival?: SurvivalResult;
     readonly daily?: {
       readonly score: DailyScore;
@@ -94,8 +88,6 @@ export function createOnline(input: {
   campaignMission?: CampaignMissionId;
   /** Campaign V2: lựa chọn trình diễn trước trận. */
   campaignChoice?: string;
-  /** Leo tháp: đánh tầng kế tiếp. */
-  tower?: true;
   /** Sinh tồn: bắt đầu lượt chơi mới. */
   survival?: true;
   /** Sinh tồn: tối đa hai companion dự bị đã được chọn trước khi tạo run. */

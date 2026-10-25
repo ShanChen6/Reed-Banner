@@ -11,12 +11,11 @@ import type { Profile } from "./profile";
 
 /**
  * Bảng: chiến dịch (số nhiệm vụ V2 đã hoàn thành, rồi tổng lượt của các nhiệm vụ có trận), từng nhiệm vụ có trận
- * (ít lượt nhất), tháp, sinh tồn, đấu trường (điểm đấu trường; server ghi từ kho đấu trường, không tính từ hồ sơ).
+ * (ít lượt nhất), sinh tồn, đấu trường (điểm đấu trường; server ghi từ kho đấu trường, không tính từ hồ sơ).
  * Bảng `stage:<id>` của chiến dịch 13 màn cũ không còn được ghi hay đọc (CAMP-08.04); dòng cũ trong kho để nguyên.
  */
 export type BoardId =
   | "campaign"
-  | "tower"
   | "survival"
   | "arena"
   | `mission:${CampaignMissionId}`;
@@ -61,7 +60,6 @@ export function boardScores(p: Profile): BoardScore[] {
   for (const [id, turns] of Object.entries(p.campaign.bestBattleTurns))
     if (isCampaignMissionId(id) && combatMission(id) && turns)
       out.push({ board: `mission:${id}`, score: -turns });
-  if (p.tower.best > 0) out.push({ board: "tower", score: p.tower.best });
   if (p.survival.best > 0)
     out.push({ board: "survival", score: p.survival.best });
   return out;
@@ -83,7 +81,6 @@ export function describeScore(
 export function isBoardId(x: unknown): x is BoardId {
   return (
     x === "campaign" ||
-    x === "tower" ||
     x === "survival" ||
     x === "arena" ||
     (typeof x === "string" &&
