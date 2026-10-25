@@ -116,7 +116,8 @@ export interface WarriorRig {
    * `steelBulwark` chỉ ở tuyệt chiêu, dựng tường thép trước mặt chính mình; `silverGrace` chỉ ở tuyệt chiêu, rải kim
    * bạc và vòng sáng hồi máu quanh từng đồng đội; `coinScatter` chỉ ở tuyệt chiêu, tung tiền vàng khỏi đối thủ đứng
    * đầu kèm ấn câm lặng; `ironFormation` chỉ ở tuyệt chiêu, khiên nứt trên từng đối thủ và mũi tên vàng ở từng đồng
-   * đội; `bambooSap` chỉ ở tuyệt chiêu, chém lá trúc lên đối thủ đứng đầu và hút sinh khí về chính mình.
+   * đội; `bambooSap` chỉ ở tuyệt chiêu, chém lá trúc lên đối thủ đứng đầu và hút sinh khí về chính mình;
+   * `thornBind` chỉ ở tuyệt chiêu, dây gai quấn từng đối thủ và hút sinh khí về chính mình.
    */
   readonly strikeFx?:
     | "lightning"
@@ -132,7 +133,8 @@ export interface WarriorRig {
     | "silverGrace"
     | "coinScatter"
     | "ironFormation"
-    | "bambooSap";
+    | "bambooSap"
+    | "thornBind";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1391,6 +1393,47 @@ const LAM_TUNG: WarriorRig = {
     anchor: { x: 800, y: 900 }, scale: 0.9 },
 };
 
+/**
+ * Đàm Thảo, pháp sư hệ Mộc (tướng cửa hàng). Bộ tranh Shan gửi 25/10 (nền trong suốt sẵn; chưa có tranh gục nên hết máu
+ * dùng kiểu ngả người của rig). Ảnh đứng tách lớp bằng code: trượng dây leo cùng nắm tay xoay quanh cổ tay, cầu ngọc
+ * xanh sáng riêng; bàn tay phải và đầu tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const DAM_THAO: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "staff",
+  dir: "dam-thao",
+  texScale: 0.5,
+  foot: { x: 520, y: 1500 },
+  height: 1450,
+  parts: {
+    body: { x: 281, y: 67, w: 684, h: 1455 },
+    armR: { x: 773, y: 730, w: 58, h: 79 },
+    sword: { x: 87, y: 6, w: 232, h: 1476 },
+    arm: { x: 192, y: 478, w: 91, h: 88 },
+    head: { x: 420, y: 70, w: 201, h: 201 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 240, y: 520 },
+    elbowR: { x: 790, y: 745 },
+    neck: { x: 520, y: 265 },
+  },
+  blade: [{ x: 215, y: 510 }, { x: 200, y: 90 }],
+  orb: { x: 200, y: 90 },
+  strikeFx: "thornBind",
+  fxColor: 0x4f9a4a,
+  // Quét trượng ngang về phía đối thủ (đánh thường), dựng trượng xòe tay (ra chiêu), thế tấn giơ trượng chéo (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 104, y: 10 },
+      anchor: { x: 680, y: 985 }, scale: 1.35, burst: { x: 1390, y: 712 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 40, y: 9 },
+      anchor: { x: 575, y: 1460 }, scale: 1.05, burst: { x: 805, y: 350 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 7, y: 2 },
+      anchor: { x: 700, y: 1160 }, scale: 1.25, burst: { x: 1190, y: 212 } },
+  },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1419,6 +1462,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   toKim: TO_KIM,
   nghiemThiet: NGHIEM_THIET,
   lamTung: LAM_TUNG,
+  damThao: DAM_THAO,
 };
 
 export function rigOf(id: string): Rig | null {
