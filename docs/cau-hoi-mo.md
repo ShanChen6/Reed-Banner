@@ -34,8 +34,10 @@
 
 ## Chế độ chơi
 
-- [ ] Cấu trúc các màn chiến dịch, phe phái, danh sách trùm, phần thưởng, lời thoại. → [Chế độ chơi](design/09-che-do-choi.md#2-chiến-dịch)
-- [ ] Chi tiết Sinh tồn (số đối thủ mỗi đợt, đường cong sức mạnh) và Leo tháp (phần thưởng giữa các tầng). → [Chế độ chơi](design/09-che-do-choi.md#3-leo-tháp-vô-hạn)
+- [x] Cấu trúc 6 chương/24 nhiệm vụ, phe phái, Boss Raid và thưởng Campaign V2 → [Design Freeze](campaign-v2/design-freeze.md).
+- [ ] Nâng cấp trình diễn lời thoại từng câu và atlas theo chương/vùng → [Campaign UI roadmap](campaign-v2/ui/README.md).
+- [ ] **TODO — DEFERRED:** âm thanh và giọng đọc nhân vật → [Audio todo](campaign-v2/ui/audio-todo/README.md).
+- [ ] Rà soát cân bằng Sinh tồn theo luật đang áp dụng → [Sinh tồn](design/09-che-do-choi.md#4-sinh-tồn).
 
 ## Giao diện
 
