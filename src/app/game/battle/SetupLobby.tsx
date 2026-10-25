@@ -59,8 +59,8 @@ function TeamRow({ fighters, label, align }: { fighters: readonly Fighter[]; lab
         {fighters.map((f, i) => (
           <div key={f.id} className="flex w-16 flex-col items-center gap-0.5 text-center sm:w-20">
             <div className="relative">
-              <Portrait id={f.id} element={f.element} profession={f.profession} className="size-12 sm:size-14" />
-              <span className="absolute -bottom-1 -right-1 flex" title={PROFESSION_NAME[f.profession]}>
+              <Portrait id={f.id} element={f.element} profession={f.profession} level={f.level} className="size-12 sm:size-14" />
+              <span className="absolute -top-1 -right-1 flex" title={PROFESSION_NAME[f.profession]}>
                 <ProfessionIcon profession={f.profession} className="size-5" />
               </span>
               <span className="absolute -bottom-1 -left-1 flex" title={ELEMENT_NAME[f.element]}>
