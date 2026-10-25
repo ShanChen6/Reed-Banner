@@ -45,7 +45,7 @@ import {
 } from "@/core";
 import { GearIcon } from "../art/gear";
 import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
-import { LevelEmblem, Portrait } from "../art/portraits";
+import { LevelEmblem } from "../art/portraits";
 import { ProfileArt } from "../art/ProfileArt";
 import { GearShop } from "../battle/GearPanel";
 import {
@@ -59,6 +59,7 @@ import { fetchProfile, sendProfileAction } from "../battle/online";
 import ProgressPanel, { PROFILE_ERROR } from "../battle/ProgressPanel";
 import ShopPanel from "../battle/ShopPanel";
 import { SceneLink } from "../SceneContext";
+import RosterPicker from "./RosterPicker";
 
 type Tab = "character" | "skills" | "shop";
 const TABS: readonly { id: Tab; name: string }[] = [
@@ -419,48 +420,15 @@ export default function ProfileScreen({
             aria-label="Nhân vật"
             className="rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-3 shadow-[inset_0_0_24px_#0009]"
           >
-            <div
-              className="mb-3 flex flex-wrap gap-1"
-              role="tablist"
-              aria-label="Chọn nhân vật"
-            >
-              {owned.map((id) => (
-                <button
-                  key={id}
-                  type="button"
-                  role="tab"
-                  aria-selected={character === id}
-                  onClick={() => {
-                    setWho(id);
-                    setSelected(null);
-                  }}
-                  className={`flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 text-xs ${
-                    character === id
-                      ? "bg-amber-500 font-semibold text-stone-950"
-                      : "bg-black/30 text-stone-200 hover:bg-black/50"
-                  }`}
-                >
-                  <Portrait
-                    id={id}
-                    element={
-                      id === MAIN_ID
-                        ? profile.element
-                        : companionById(id)!.element
-                    }
-                    profession={
-                      id === MAIN_ID
-                        ? profile.profession
-                        : companionById(id)!.profession
-                    }
-                    className="size-6"
-                  />
-                  {nameOf(id)}
-                  {profile.team.includes(id) && (
-                    <span title="Đang ra trận">⚑</span>
-                  )}
-                </button>
-              ))}
-            </div>
+            <RosterPicker
+              profile={profile}
+              ids={owned}
+              selected={character}
+              onSelect={(id) => {
+                setWho(id);
+                setSelected(null);
+              }}
+            />
 
             <div className="flex items-stretch justify-center gap-2 sm:gap-3">
               <div className="flex flex-col justify-between gap-1.5">
