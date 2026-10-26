@@ -64,7 +64,7 @@ export default function RouteSummary({
             >
               <span className="font-semibold">
                 {r.state === "completed" ? "✓ " : ""}
-                {r.place} · {r.mission}
+                {r.place} · {missionLabel(r.mission)}
               </span>
               <span className="atlas-muted text-xs">
                 {r.faction?.resolved
