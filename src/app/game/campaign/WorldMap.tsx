@@ -269,7 +269,7 @@ export default function WorldMap({
   };
 
   return (
-    <figure className="campaign-map flex flex-col self-start overflow-hidden rounded-xl border-2 border-[#8a6a3b] shadow-[inset_0_0_24px_#0009]">
+    <figure className="campaign-map flex flex-col self-start overflow-hidden rounded-xl border-2 border-[#6b4a22] shadow-[0_0_0_2px_#c9a25a66]">
       <div className="relative">
         <svg
           {...svgProps}
@@ -511,7 +511,7 @@ export default function WorldMap({
       </div>
 
       {/* Bình Kiều: sử chép "nay không rõ chỗ nào", nên ở ô riêng chứ không cắm cờ lên bản đồ. */}
-      <div className="flex flex-wrap gap-1.5 border-t-2 border-[#8a6a3b] bg-[#2a1f19] px-3 pt-2">
+      <div className="flex flex-wrap gap-1.5 world-strip border-t-2 border-[#6b4a22] px-3 pt-2">
         {UNPLACED_STRONGHOLDS.map((s) => (
           <button
             key={s.id}
@@ -546,7 +546,7 @@ export default function WorldMap({
         ))}
       </div>
       {/* Bản đồ nhỏ trên điện thoại: chọn cứ điểm từ danh sách, không cần chạm trúng lá cờ. */}
-      <details className="border-t-2 border-[#8a6a3b] bg-[#2a1f19] px-3 py-2 text-sm text-stone-200 md:hidden">
+      <details className="world-strip border-t-2 border-[#6b4a22] px-3 py-2 text-sm md:hidden">
         <summary className="flex min-h-11 cursor-pointer items-center font-semibold">
           Danh sách cứ điểm ({WORLD_STRONGHOLDS.length})
         </summary>
@@ -559,8 +559,8 @@ export default function WorldMap({
                 onClick={() => onSelect(s.id)}
                 className={`flex min-h-11 w-full items-center gap-2 rounded-lg border px-2 py-1 text-left ${
                   s.id === selected
-                    ? "border-amber-300 bg-amber-500/20"
-                    : "border-white/10 bg-black/25"
+                    ? "border-[#b8862f] bg-[#fff0c9]"
+                    : "border-[#9c784580] bg-[#f3e3bc]"
                 }`}
               >
                 <span
@@ -575,7 +575,7 @@ export default function WorldMap({
                   <span className="block truncate font-semibold">
                     {s.place}
                   </span>
-                  <span className="block truncate text-xs text-stone-400">
+                  <span className="block truncate text-xs opacity-75">
                     {strongholdLeader(s)}
                   </span>
                 </span>
@@ -587,7 +587,7 @@ export default function WorldMap({
 
       <figcaption
         id="world-map-legend"
-        className="flex flex-wrap items-center gap-x-3 gap-y-1 bg-[#2a1f19] px-3 py-2 text-xs text-stone-300"
+        className="world-strip flex flex-wrap items-center gap-x-3 gap-y-1 px-3 py-2 text-xs"
       >
         {(Object.keys(STATE_COLOR) as StrongholdState[]).map((st) => (
           <span key={st} className="flex items-center gap-1">
@@ -599,7 +599,7 @@ export default function WorldMap({
             {STATE_TEXT[st]}
           </span>
         ))}
-        <span className="basis-full text-stone-400">
+        <span className="basis-full opacity-75">
           Màu cờ theo thế cục đã ghi trong hồ sơ của bạn. Vị trí là bố cục minh
           họa để định hướng, không phải tọa độ chiến trường.
         </span>
