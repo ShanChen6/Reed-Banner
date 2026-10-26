@@ -33,6 +33,7 @@ Toàn bộ thiết kế nằm trong [`docs/`](docs/README.md):
 
 - [Tổng quan](docs/00-overview/tong-quan.md)
 - [Mục lục đầy đủ](docs/README.md)
+- [Quy định viết tài liệu](docs/00-overview/quy-dinh-tai-lieu.md)
 - [Lộ trình](docs/09-roadmap/lo-trinh.md)
 - [Câu hỏi còn mở](docs/09-roadmap/cau-hoi-mo.md)
 

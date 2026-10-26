@@ -10,6 +10,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 |---|---|
 | ★ [tong-quan.md](00-overview/tong-quan.md) | Ý tưởng, ngoài phạm vi, nguồn gốc và nguyên tắc clean-room |
 | ★ [thuat-ngu.md](00-overview/thuat-ngu.md) | Thuật ngữ dùng chung |
+| ★ [quy-dinh-tai-lieu.md](00-overview/quy-dinh-tai-lieu.md) | Quy định viết docs, nhãn trạng thái, chuyển/gộp file, kiểm tra CI, hướng dẫn cho Claude/Codex |
 
 ## 01 · Luật trận (`01-gameplay/`)
 
@@ -101,10 +102,10 @@ Theo dòng thời gian cải tổ kỹ năng 22–23/10/2026:
 
 ## Quy ước viết docs
 
-- Viết bằng tiếng Việt. Tên biến, đường dẫn, lệnh giữ nguyên.
-- Mỗi file một tiêu đề `#`, ngay dưới là dòng `> Cập nhật: dd/mm/yyyy`.
-- Số liệu chưa qua mô phỏng cân bằng ghi rõ là **điểm xuất phát**.
-- Việc chưa chốt ghi dạng `> TODO: ...` ngay tại chỗ, và **phải** có mặt trong [cau-hoi-mo.md](09-roadmap/cau-hoi-mo.md). Đề xuất chưa được duyệt ghi rõ "đề xuất" hoặc "chờ chốt".
-- Mỗi quyết định mới ghi một dòng vào [changelog.md](decisions/changelog.md).
-- Một khái niệm chỉ định nghĩa ở **một** file (★ ở trên); các file khác link tới đó thay vì chép lại.
-- Đổi tên hoặc chuyển file: dùng `git mv` và thêm một dòng vào [MOVED.md](MOVED.md).
+Đầy đủ ở [quy-dinh-tai-lieu.md](00-overview/quy-dinh-tai-lieu.md). Tóm tắt:
+
+- Viết tiếng Việt; mỗi file một tiêu đề `#`, dưới là `> Cập nhật: dd/mm/yyyy` và `> Trạng thái: **...**`.
+- Một khái niệm chỉ định nghĩa ở **một** file (★ ở trên); file khác link tới đó.
+- Việc chưa chốt ghi `> TODO:` tại chỗ và trong [cau-hoi-mo.md](09-roadmap/cau-hoi-mo.md); quyết định mới ghi vào [changelog.md](decisions/changelog.md).
+- Chuyển/đổi tên file: `git mv` + thêm dòng vào [MOVED.md](MOVED.md).
+- Chạy `pnpm docs:check` trước khi commit.

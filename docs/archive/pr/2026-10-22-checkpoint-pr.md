@@ -1,3 +1,5 @@
+# Mô tả PR checkpoint kỹ năng và Tinh thần (22/10/2026)
+
 > Trạng thái: **ARCHIVED** — lưu để truy vết, không phải tài liệu hiện hành.
 
 ## Thay đổi

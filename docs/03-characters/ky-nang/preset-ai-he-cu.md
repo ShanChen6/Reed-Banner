@@ -1,6 +1,6 @@
 # Bộ kỹ năng hệ cũ — preset AI chiến dịch và lịch sử
 
-> Trạng thái: **REFERENCE** — chỉ còn dùng cho preset AI chiến dịch; nhân vật chơi được dùng [Kỹ năng hiện hành](README.md).
+> Trạng thái: **IMPLEMENTED** — chỉ còn dùng cho preset AI chiến dịch; nhân vật chơi được dùng [Kỹ năng hiện hành](README.md).
 
 > Cập nhật tiếp theo: [kỹ năng phiên bản 2 và combo đồng đội](lich-su/21-combo-dong-doi.md). Layout mới đổi tuyệt chiêu sang ô 4, nghề nâng cao sang ô 5, có chuyển hồ sơ giữ điểm. Các định nghĩa legacy/lịch sử bên dưới cần đọc cùng tài liệu phiên bản 2.
 
