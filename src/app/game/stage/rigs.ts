@@ -1663,11 +1663,11 @@ const HO_LANG: WarriorRig = {
   // Đâm giáo ngang tầm ngực (đánh thường), thế tấn hất giáo chéo lên (ra chiêu), tấn rộng kéo giáo ngang hông (tuyệt chiêu).
   poses: {
     attack: { name: "pose-attack", texScale: 0.3, origin: { x: 23, y: 15 },
-      anchor: { x: 600, y: 990 }, scale: 1.35, burst: { x: 1515, y: 280 } },
+      anchor: { x: 600, y: 990 }, scale: 1.05, burst: { x: 1515, y: 280 } },
     cast: { name: "pose-cast", texScale: 0.3, origin: { x: 35, y: 30 },
-      anchor: { x: 640, y: 960 }, scale: 1.35, burst: { x: 1515, y: 45 } },
+      anchor: { x: 640, y: 960 }, scale: 1.05, burst: { x: 1515, y: 45 } },
     ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 14, y: 41 },
-      anchor: { x: 720, y: 955 }, scale: 1.35, burst: { x: 1525, y: 465 } },
+      anchor: { x: 720, y: 955 }, scale: 1.05, burst: { x: 1525, y: 465 } },
   },
   down: { name: "pose-down", texScale: 0.3, origin: { x: 17, y: 125 },
     anchor: { x: 760, y: 880 }, scale: 0.9 },
@@ -1709,11 +1709,11 @@ const THAI_HA: WarriorRig = {
   // Đâm chĩa ba ngang (đánh thường), giơ khiên che người (ra chiêu), lao tới núp khiên đâm chéo (tuyệt chiêu).
   poses: {
     attack: { name: "pose-attack", texScale: 0.3, origin: { x: 12, y: 17 },
-      anchor: { x: 600, y: 1000 }, scale: 1.35, burst: { x: 1515, y: 270 } },
+      anchor: { x: 600, y: 1000 }, scale: 1.1, burst: { x: 1515, y: 270 } },
     cast: { name: "pose-cast", texScale: 0.3, origin: { x: 35, y: 6 },
-      anchor: { x: 560, y: 1510 }, scale: 1, burst: { x: 830, y: 650 } },
+      anchor: { x: 560, y: 1510 }, scale: 0.9, burst: { x: 830, y: 650 } },
     ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 42, y: 8 },
-      anchor: { x: 700, y: 1010 }, scale: 1.3, burst: { x: 1470, y: 70 } },
+      anchor: { x: 700, y: 1010 }, scale: 1.1, burst: { x: 1470, y: 70 } },
   },
   down: { name: "pose-down", texScale: 0.3, origin: { x: 13, y: 64 },
     anchor: { x: 800, y: 900 }, scale: 0.9 },
@@ -1837,11 +1837,11 @@ const VI_TRIEU: WarriorRig = {
   // (tuyệt chiêu).
   poses: {
     attack: { name: "pose-attack", texScale: 0.3, origin: { x: 39, y: 9 },
-      anchor: { x: 515, y: 1005 }, scale: 1.33, burst: { x: 1500, y: 155 } },
+      anchor: { x: 515, y: 1005 }, scale: 1, burst: { x: 1500, y: 155 } },
     cast: { name: "pose-cast", texScale: 0.3, origin: { x: 8, y: 5 },
       anchor: { x: 610, y: 1510 }, scale: 1, burst: { x: 720, y: 620 } },
     ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 43, y: 8 },
-      anchor: { x: 640, y: 1000 }, scale: 1.33, burst: { x: 1180, y: 230 } },
+      anchor: { x: 640, y: 1000 }, scale: 0.95, burst: { x: 1180, y: 230 } },
   },
   down: { name: "pose-down", texScale: 0.3, origin: { x: 37, y: 61 },
     anchor: { x: 800, y: 900 }, scale: 0.9 },
@@ -1922,14 +1922,57 @@ const LY_LIET: WarriorRig = {
   // Tấn rộng đâm đại đao ngang (đánh thường), hất đao chéo lên (ra chiêu), hai tay ghì đao chém chéo (tuyệt chiêu).
   poses: {
     attack: { name: "pose-attack", texScale: 0.3, origin: { x: 26, y: 5 },
-      anchor: { x: 710, y: 1000 }, scale: 1.42, burst: { x: 1510, y: 410 } },
+      anchor: { x: 710, y: 1000 }, scale: 1.03, burst: { x: 1510, y: 410 } },
     cast: { name: "pose-cast", texScale: 0.3, origin: { x: 16, y: 14 },
-      anchor: { x: 770, y: 1005 }, scale: 1.45, burst: { x: 1505, y: 40 } },
+      anchor: { x: 770, y: 1005 }, scale: 0.9, burst: { x: 1505, y: 40 } },
     ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 54, y: 25 },
-      anchor: { x: 750, y: 990 }, scale: 1.45, burst: { x: 1500, y: 60 } },
+      anchor: { x: 750, y: 990 }, scale: 1, burst: { x: 1500, y: 60 } },
   },
   down: { name: "pose-down", texScale: 0.3, origin: { x: 12, y: 34 },
     anchor: { x: 760, y: 880 }, scale: 0.9 },
+};
+
+/**
+ * Trương Viêm, binh lính hệ Hỏa (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
+ * code như Thái Hà: kích cùng nắm tay xoay quanh cổ tay, khiên mây cùng bàn tay nâng lên khi vào thế và đỡ đòn, đầu
+ * tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const TRUONG_VIEM: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "truong-viem",
+  texScale: 0.5,
+  foot: { x: 550, y: 1500 },
+  height: 1340,
+  parts: {
+    body: { x: 175, y: 167, w: 653, h: 1336 },
+    armR: { x: 705, y: 562, w: 282, h: 520 },
+    sword: { x: 123, y: 3, w: 134, h: 1423 },
+    arm: { x: 197, y: 513, w: 96, h: 96 },
+    head: { x: 373, y: 167, w: 211, h: 191 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 250, y: 600 },
+    elbowR: { x: 760, y: 640 },
+    neck: { x: 515, y: 340 },
+  },
+  blade: [{ x: 240, y: 560 }, { x: 235, y: 20 }],
+  shieldRaise: -0.35,
+  strikeFx: "flameWall",
+  fxColor: 0xd9502a,
+  // Đâm kích ngang núp khiên (đánh thường), tấn rộng đẩy khiên ra (ra chiêu), hạ thấp người ghì khiên che thân (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 21, y: 11 },
+      anchor: { x: 535, y: 995 }, scale: 1.1, burst: { x: 1525, y: 215 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 299, y: 2 },
+      anchor: { x: 800, y: 1000 }, scale: 1.1, burst: { x: 1130, y: 350 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 347, y: 4 },
+      anchor: { x: 875, y: 995 }, scale: 1.1, burst: { x: 1030, y: 560 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 19, y: 99 },
+    anchor: { x: 800, y: 900 }, scale: 0.9 },
 };
 
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
@@ -1972,6 +2015,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   viTrieu: VI_TRIEU,
   haVan: HA_VAN,
   lyLiet: LY_LIET,
+  truongViem: TRUONG_VIEM,
 };
 
 export function rigOf(id: string): Rig | null {
