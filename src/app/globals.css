@@ -557,6 +557,9 @@
   background: var(--atlas-wood-lo);
   color: var(--atlas-title);
 }
+.campaign-atlas .atlas-stat-icon {
+  color: var(--atlas-gold-hi);
+}
 .campaign-atlas .atlas-panel-heading {
   margin-bottom: 0.375rem;
   border-bottom: 1px solid #8a6a3b66;
