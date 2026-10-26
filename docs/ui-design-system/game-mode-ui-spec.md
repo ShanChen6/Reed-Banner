@@ -225,3 +225,72 @@ Component chỉ **trình bày dữ liệu server**, không nhập business rules
 ## 13. Non-goals
 
 Không đụng Campaign, battle engine, mode balance, rewards, routing contracts, DB, feature flag defaults; không bật mode mới, không thêm microtransaction, không đổi Sinh tồn thành mode có máu thành. Tài liệu này là spec để review và implement riêng sau.
+
+## 14. Home V2 — Visual direction đã chọn (27/10/2026)
+
+> **APPROVED DESIGN DIRECTION — DOCS ONLY.** Bổ sung và làm rõ mục 4, không thay thế các ràng buộc gameplay/server. Đây là wireframe tham chiếu, **chưa phải UI đã triển khai** hay bộ asset được duyệt.
+
+### 14.1 Quyết định so sánh phương án
+
+- Home hiện tại (logo giữa + `Vào Trận` + 6 thẻ chữ) chưa có sức hút thị giác; vẫn giữ các đường điều hướng hợp lệ của nó.
+- Phương án wireframe mới (hero trái, hình Hoa Lư phải, lưới sáu ô giấy dó) cải thiện hierarchy nhưng **chưa đạt chất lượng mỹ thuật tương đương Campaign**: hình quá nhỏ, mode card còn giống dashboard/admin UI.
+- **Chọn Home V2**: giữ cấu trúc rõ của phương án mới, biến hero thành cảnh Đại Việt giàu cảm xúc, card mode dựa trên artwork, giảm văn bản, đề cao lựa chọn chơi. **Không chọn** một màn dashboard dày KPI hoặc một bản sao layout ba cột của Campaign.
+- “Đại bản doanh / Cổng Đại Việt” là tên gọi concept nội bộ, **không bắt buộc đổi tên sản phẩm hoặc UI text đang dùng**.
+
+### 14.2 Desktop composition (thứ tự nội dung)
+
+```text
+[GLOBAL GAME HEADER — REUSE, NO REDESIGN]
+┌──────────────────────────────────────────────────────────────────┐
+│ FULL-WIDTH ENVIRONMENT HERO: Hoa Lư thế kỷ X                    │
+│ Logo gốc Cờ Lau + tagline ngắn + [VÀO TRẬN]                   │
+│ Secondary: [CHIẾN DỊCH] khi không trùng affordance mode card    │
+│ Optional RESUME only with genuine resumable battle state        │
+├──────────────────────────────────────────────────────────────────┤
+│ CHẾ ĐỘ CHƠI — CHỌN CHIẾN TRƯỜNG                                 │
+│ [CHIẾN DỊCH] [THÁP THÍ LUYỆN] [THÁP VẬN MỆNH]                    │
+│ [SINH TỒN]   [THỬ THÁCH NGÀY] [ĐẤU TRƯỜNG BÓNG MA]              │
+│ 6 illustration-led mode cards, each with concise progress/state │
+├──────────────────────────────────────────────────────────────────┤
+│ Hồ sơ & Trang bị · Nhiệm vụ · Xếp hạng · Tài khoản (if live)    │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+- Hero là **một vùng ảnh pano chính**, không đặt ảnh thành trì trong thẻ nhỏ tách rời. Dùng overlay chuyển sắc để logo/tagline/CTA đọc rõ và dùng lại logo game chính thức, không thay hình tự tạo.
+- `VÀO TRẬN` giữ đúng hành vi điều hướng trận thường hiện có; nút `CHIẾN DỊCH` (nếu có) mở scene Campaign đang tồn tại; không đổi semantics của action để chạy tới trận gần nhất. `Tiếp tục` chỉ hiện khi backend/runtime thực sự hỗ trợ resume.
+- Sáu card có tên mode, **một câu mô tả**, thumbnail riêng, tối đa một chỉ số tiến trình/trạng thái có nguồn dữ liệu thật, và affordance click/locked/disabled/pending rõ. Campaign có thể nhấn mạnh nhẹ bằng prominence/diện tích nhưng phải giữ khả năng quét đều cả sáu.
+- Nhóm Trial/Destiny có thể mang nhãn phụ `Song Tháp`, song vẫn là **hai card độc lập** với feature flags độc lập. Không tự thêm card Liệt Truyện, Binh Pháp, Viễn Chinh vào sáu card live; mode tương lai cần approval và route/feature flag riêng.
+- Thanh tiện ích phía dưới chỉ chứa liên kết thực sự khả dụng, tránh lặp lại Hồ sơ hoặc Trận thường nếu đã dễ truy cập ở Header; ưu tiên `Hồ sơ & Trang bị`, `Nhiệm vụ`, `Xếp hạng`, `Tài khoản` theo routing đã kiểm tra.
+
+### 14.3 Art direction cho sáu card
+
+| Mode | Tranh chủ đề | Ý nghĩa gameplay cần nhận ra | Không được ngụ ý sai |
+|---|---|---|---|
+| Chiến dịch | atlas/thành Hoa Lư, vùng đất Đại Việt | tuyến sử, chiếm cứ, tiến trình chương | không thiết kế lại atlas |
+| Tháp Thí Luyện | tháp cổ ban ngày, núi mây, các mốc tầng | thử luật/puzzle và leo tầng | không hardcode hết ở tầng 20 vĩnh viễn |
+| Tháp Vận Mệnh | tháp dưới trăng, chi tiết vận mệnh, sắc tím phụ | chu kỳ, khóa roster, tài nguyên xuyên tầng | không tô thành endless hoặc chế độ 20 tầng live |
+| Sinh tồn | cổng trại, lũy đất, cờ son, đội phòng thủ | chống các đợt quân tấn công | không vẽ thanh HP thành hoặc đổi gameplay sang thủ thành |
+| Thử thách ngày | chiếu thư, dấu triện, thao trường | đề giống nhau, đội cố định, thành tích/ngày | không cho sửa đội hoặc trang bị |
+| Đấu trường bóng ma | võ đài, trống đồng, cờ và huy hiệu hạng | cạnh tranh rating với snapshot phòng thủ | không mô tả real-time PvP |
+
+- Mỗi thumbnail dùng **cùng một art bible**, texture đồng cổ, giấy dó, gỗ sẫm và họa tiết Đông Sơn; ảnh **chủ đề khác nhau**, không dùng sáu màu nền trơn hoặc icon generic thay cho cảnh.
+- Tranh nên dựa trên kiến trúc bản địa thế kỷ X, không dùng kiến trúc Trung Hoa/Nhật Bản hay hiệp sĩ châu Âu. Artwork mẫu và ảnh tìm kiếm chỉ là **visual reference**, không phải asset đã được duyệt hoặc tự động cấp quyền sử dụng.
+- Ưu tiên tái sử dụng asset trong repo; artwork thiếu phải được kiểm kê và duyệt riêng. Không bake chữ/CTA vào ảnh. Dùng gradient overlay ở hero, alt/fallback cho thumbnail và variants mobile.
+
+### 14.4 Quy tắc trình bày và responsive
+
+- Giữ ornamental frame cấp A cho hero/game container, cấp B cho khối mode, cấp C cho item. Không lồng nhiều viền chạm khắc dày trong một card.
+- Desktop: pano hero + grid 3×2; tablet grid 2 cột; mobile một cột, tối ưu crop và chiều cao ảnh, CTA rõ. Không để logo đè vào điểm nhấn của ảnh hoặc scroll màn hình quá dài chỉ vì hình minh họa.
+- Đảm bảo ảnh không che trạng thái / mô tả; text trên lớp phủ đạt contrast, hover/focus/active/locked rõ bằng cả chữ hoặc biểu tượng.
+- Không dùng dashboard KPI dày trên Home: chỉ hiển thị số liệu gắn trực tiếp với quyết định chọn mode. Khi không có dữ liệu/ảnh: fallback có ý nghĩa, không hiển thị progress giả.
+- Hiệu ứng ambient (mây, lửa, ánh sáng) chỉ là optional polish, hỗ trợ reduced motion và không cản LCP/interactivity.
+
+### 14.5 Acceptance cho Home V2
+
+- [ ] Hero Hoa Lư chiếm vùng kể chuyện chính, dùng artwork/brand asset đã kiểm kê và duyệt.
+- [ ] Sáu mode có thumbnail riêng, nhận diện được khi không đọc mô tả; trạng thái live/locked và navigation đúng nguồn dữ liệu.
+- [ ] CTA không đổi chức năng `Vào Trận`; chỉ có resume khi thật sự hỗ trợ.
+- [ ] Header và Campaign không có thay đổi hình thức/hành vi.
+- [ ] Ở desktop/tablet/mobile: không overflow, crop ảnh đúng trọng tâm, text/CTA có độ tương phản và focus rõ.
+- [ ] Screenshot QA đối chiếu độ hoàn thiện (hoa văn, hệ viền, font, vật liệu, tone) với Campaign, không sao chép bố cục atlas.
+- [ ] Không thêm route/API/logic/reward hoặc artwork chưa duyệt.
