@@ -40,7 +40,7 @@ export function Beats({ beats }: { beats: readonly StoryBeat[] }) {
             <div className="mb-1 flex flex-wrap items-center gap-1.5">
               <BasisBadge basis={b.basis} />
               {b.speaker && (
-                <span className="text-xs text-stone-400">
+                <span className="text-xs text-muted">
                   Thoại của {b.speaker}, không phải trích dẫn sử
                 </span>
               )}
@@ -56,7 +56,7 @@ export function Beats({ beats }: { beats: readonly StoryBeat[] }) {
               {b.speaker ? `“${b.text}”` : b.text}
             </p>
             {b.refs && b.refs.length > 0 && (
-              <p className="mt-1 text-[11px] text-stone-400">
+              <p className="mt-1 text-[11px] text-muted">
                 Nguồn: {b.refs.join(", ")}
                 {sources.length > 0 &&
                   ` · ${sources.map((s) => SOURCE_TITLE[s] ?? s).join("; ")}`}

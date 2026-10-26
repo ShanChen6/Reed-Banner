@@ -1,5 +1,7 @@
 "use client";
 
+import { Input, Select } from "@/components/ui";
+
 import { useState } from "react";
 import {
   companionById,
@@ -95,27 +97,27 @@ export default function RosterPicker({
   return (
     <div className="mb-3 flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-1.5">
-        <input
+        <Input
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Tìm nhân vật…"
           aria-label="Tìm nhân vật theo tên"
-          className="min-w-0 flex-1 basis-32 rounded-md border border-white/10 bg-black/30 px-2 py-1 text-xs text-stone-100 placeholder:text-stone-500"
+          className="min-w-0 flex-1 basis-32 text-xs"
         />
-        <select
+        <Select
           value={sort}
           onChange={(e) => setSort(e.target.value as Sort)}
           aria-label="Sắp xếp nhân vật"
-          className="rounded-md border border-white/10 bg-black/30 px-1.5 py-1 text-xs text-stone-100"
+          className="text-xs"
         >
           {(Object.keys(SORT_NAME) as Sort[]).map((s) => (
             <option key={s} value={s}>
               {SORT_NAME[s]}
             </option>
           ))}
-        </select>
-        <span className="text-[11px] text-stone-400">
+        </Select>
+        <span className="text-[11px] text-muted">
           {shown.length}/{entries.length}
         </span>
       </div>
@@ -197,7 +199,7 @@ export default function RosterPicker({
           </li>
         ))}
         {shown.length === 0 && (
-          <li className="col-span-full py-3 text-center text-xs text-stone-400">Không có nhân vật nào khớp.</li>
+          <li className="col-span-full py-3 text-center text-xs text-muted">Không có nhân vật nào khớp.</li>
         )}
       </ul>
       {entries.length > 10 && (

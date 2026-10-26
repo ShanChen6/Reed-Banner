@@ -1,5 +1,7 @@
 "use client";
 
+import { Select } from "@/components/ui";
+
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -82,13 +84,13 @@ export default function CharacterPreviewer({ characters }: { characters: readonl
       <div className="flex flex-wrap items-end justify-between gap-3 rounded-xl border border-amber-900/70 bg-black/20 p-3">
         <label className="flex min-w-0 flex-col gap-1 text-sm font-medium">
           Nhân vật
-          <select value={character.id} onChange={(event) => {
+          <Select value={character.id} onChange={(event) => {
             const url = new URL(window.location.href);
             url.searchParams.set("id", event.target.value);
             window.history.pushState(null, "", `${url.pathname}${url.search}`);
-          }} className="min-w-0 rounded-lg border border-stone-600 bg-stone-900 px-3 py-2">
+          }} className="min-w-0">
             {characters.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </select>
+          </Select>
         </label>
         <div className="flex flex-wrap gap-2" role="group" aria-label="Kích cỡ hình động">
           {(["battle", "large"] as const).map((value) => (

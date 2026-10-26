@@ -1,4 +1,6 @@
 "use client";
+import { Button } from "@/components/ui";
+
 
 // Kết chiến dịch (M24 "Đại Lễ Đăng Quang năm 968"): biên niên, sổ thế cục, người đồng hành, mốc không thuộc lễ 968
 // và nguồn. Chỉ hiện khi server đã ghi M24; mọi số đọc từ hồ sơ, không có thưởng hay nút nhận ở đây.
@@ -43,7 +45,7 @@ export default function CampaignEnding({
         >
           Đại Cồ Việt, kinh đô Hoa Lư, năm 968
         </h2>
-        <p className="text-stone-300">
+        <p className="text-foreground-secondary">
           Kết thúc đã lưu trên hồ sơ. Xem lại đại lễ vẫn được, nhưng không nhận
           thưởng lần nữa.
         </p>
@@ -62,7 +64,7 @@ export default function CampaignEnding({
                   <span className="font-semibold text-amber-50">
                     Chương {ROMAN[c.chapter]} · {c.title}
                   </span>{" "}
-                  <span className="text-xs text-stone-400">
+                  <span className="text-xs text-muted">
                     {done}/{c.missions.length}
                   </span>
                 </li>
@@ -88,7 +90,7 @@ export default function CampaignEnding({
 
       <div>
         <h3 className="font-semibold text-amber-200">Mốc không thuộc lễ 968</h3>
-        <ul className="mt-1 list-disc pl-5 text-stone-300">
+        <ul className="mt-1 list-disc pl-5 text-foreground-secondary">
           <li>
             970: niên hiệu Thái Bình bắt đầu (sử chép, E11). Không dùng trong
             cảnh năm 968.
@@ -104,27 +106,27 @@ export default function CampaignEnding({
         <summary className="flex min-h-11 cursor-pointer items-center font-semibold text-sky-200">
           Nguồn và ghi công
         </summary>
-        <ul className="mt-1 flex flex-col gap-0.5 text-xs text-stone-300">
+        <ul className="mt-1 flex flex-col gap-0.5 text-xs text-foreground-secondary">
           {sources.map(([id, title]) => (
             <li key={id}>
               <span className="text-stone-500">{id}</span> · {title}
             </li>
           ))}
         </ul>
-        <p className="mt-2 text-xs text-stone-400">
+        <p className="mt-2 text-xs text-muted">
           Cờ Lau, mini game của ShanVerse. Lời kể là game sáng tác trên khung sử
           liệu; nhãn ở từng đoạn (sử chép, game tái dựng, hư cấu, truyền thuyết,
           còn tranh luận) cho biết đoạn đó thuộc loại nào.
         </p>
       </details>
 
-      <button
+      <Button variant="primary"
         type="button"
         onClick={onReplay}
-        className="self-start rounded bg-amber-500 px-4 py-1.5 font-semibold text-stone-950"
+        className="self-start"
       >
         Xem lại đại lễ
-      </button>
+      </Button>
     </section>
   );
 }

@@ -1,0 +1,12 @@
+/* Cờ Lau brand palette. Components consume semantic tokens in theme.css. */
+@theme static {
+  --color-brand-ink: #17110e;
+  --color-brand-wood: #271d18;
+  --color-brand-bronze: #8a6a3b;
+  --color-brand-gold: #d4a24c;
+  --color-brand-gold-light: #f3d48a;
+  --color-brand-lacquer: #c0392b;
+  --color-brand-lacquer-deep: #7a2c1d;
+  --color-brand-parchment: #f3ebdc;
+  --color-brand-paper: #fffaf0;
+}
