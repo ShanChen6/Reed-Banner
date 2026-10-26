@@ -71,6 +71,7 @@ import {
   type AtlasView,
 } from "./AtlasShell";
 import { strongholdById, type StrongholdId } from "./worldAtlas";
+import { AtlasCorners } from "./AtlasFrame";
 import { atlasSerif } from "./atlasFont";
 import DiplomacyScene from "./DiplomacyScene";
 import DialoguePlayer from "./DialoguePlayer";
@@ -850,90 +851,97 @@ export default function ChapterOne({
           if (next) openMission(next);
         }}
       />
+      {/* Đại card Sử ký (Polish V2 P02): header, ba cột và tuyến dưới nằm trong một khung gỗ. Màn nhiệm vụ và
+          Sử ký chỉ giữ header trong khung, nội dung của chúng nằm dưới. */}
       <div className={`campaign-atlas ${atlasSerif.variable}`}>
-        <AtlasHeader
-          view={atlas.view}
-          mission={step.nodeId}
-          level={profile.main.level}
-          gold={profile.gold}
-          supply={campaign.supply}
-          onView={(view) => updateAtlas({ ...atlas, view })}
-        />
+        <div className="atlas-frame atlas-frame-wood atlas-shell flex flex-col gap-3 p-2 sm:p-3">
+          <AtlasCorners />
+          <AtlasHeader
+            view={atlas.view}
+            mission={step.nodeId}
+            level={profile.main.level}
+            gold={profile.gold}
+            supply={campaign.supply}
+            onView={(view) => updateAtlas({ ...atlas, view })}
+          />
+          {atlas.view === "atlas" && (
+            <div ref={mapRef} className="flex flex-col gap-3">
+              {/* Ba cột cùng hàng cao bằng nhau; panel phải dài thì cuộn bên trong thay vì kéo dài hàng. */}
+              <div className="grid grid-cols-[minmax(0,1fr)] gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)] xl:grid-cols-[minmax(260px,0.22fr)_minmax(0,1fr)_minmax(300px,0.3fr)]">
+                <div className="md:col-span-2 xl:col-span-1">
+                  <ChapterRail
+                    campaign={campaign}
+                    current={chapter}
+                    onPick={(c) => {
+                      updateAtlas({ view: "atlas", stronghold: null });
+                      move({
+                        nodeId: chapterFocus(campaign, c),
+                        phase: "intro",
+                      });
+                    }}
+                  />
+                </div>
+                <WorldMap
+                  campaign={campaign}
+                  chapter={chapter}
+                  selected={strongholdId}
+                  onSelect={setStronghold}
+                />
+                <div className="min-w-0 xl:relative">
+                  <div className="xl:absolute xl:inset-0">
+                    {stronghold ? (
+                      <StrongholdPanel
+                        campaign={campaign}
+                        stronghold={stronghold}
+                        current={step.nodeId}
+                        onPick={openMission}
+                        onClose={() => setStronghold(null)}
+                      />
+                    ) : (
+                      <ChapterPanel
+                        campaign={campaign}
+                        chapter={chapter}
+                        current={step.nodeId}
+                        onPick={openMission}
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {chapter.chapter === 6 && campaignCompleted(campaign) && (
+                <CampaignEnding
+                  campaign={campaign}
+                  onReplay={() => openMission(CAMPAIGN_FINAL_NODE)}
+                />
+              )}
+
+              {chapter.chapter === 3 && campaignMusterReady(campaign) && (
+                <MusterPanel
+                  profile={profile}
+                  busy={actionBusy}
+                  onAction={onAction}
+                  onPick={openMission}
+                />
+              )}
+
+              {routeId && (
+                <RouteSummary
+                  campaign={campaign}
+                  routeId={routeId}
+                  onPick={openMission}
+                />
+              )}
+            </div>
+          )}
+        </div>
       </div>
       {atlas.view === "codex" ? (
         <>
           <WorldLedger campaign={profile.campaign} />
           <WarlordCodex campaign={campaign} />
         </>
-      ) : atlas.view === "atlas" ? (
-        <>
-          <div
-            ref={mapRef}
-            className={`campaign-atlas ${atlasSerif.variable} flex flex-col gap-3`}
-          >
-            <div className="grid grid-cols-[minmax(0,1fr)] gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)] xl:grid-cols-[250px_minmax(0,1fr)_340px]">
-              <div className="md:col-span-2 xl:col-span-1">
-                <ChapterRail
-                  campaign={campaign}
-                  current={chapter}
-                  onPick={(c) => {
-                    updateAtlas({ view: "atlas", stronghold: null });
-                    move({ nodeId: chapterFocus(campaign, c), phase: "intro" });
-                  }}
-                />
-              </div>
-              <WorldMap
-                campaign={campaign}
-                chapter={chapter}
-                selected={strongholdId}
-                onSelect={setStronghold}
-              />
-              {stronghold ? (
-                <StrongholdPanel
-                  campaign={campaign}
-                  stronghold={stronghold}
-                  current={step.nodeId}
-                  onPick={openMission}
-                  onClose={() => setStronghold(null)}
-                />
-              ) : (
-                <ChapterPanel
-                  campaign={campaign}
-                  chapter={chapter}
-                  current={step.nodeId}
-                  onPick={openMission}
-                />
-              )}
-            </div>
-          </div>
-
-          {chapter.chapter === 6 && campaignCompleted(campaign) && (
-            <CampaignEnding
-              campaign={campaign}
-              onReplay={() => openMission(CAMPAIGN_FINAL_NODE)}
-            />
-          )}
-
-          {chapter.chapter === 3 && campaignMusterReady(campaign) && (
-            <MusterPanel
-              profile={profile}
-              busy={actionBusy}
-              onAction={onAction}
-              onPick={openMission}
-            />
-          )}
-
-          {routeId && (
-            <div className={`campaign-atlas ${atlasSerif.variable}`}>
-              <RouteSummary
-                campaign={campaign}
-                routeId={routeId}
-                onPick={openMission}
-              />
-            </div>
-          )}
-        </>
-      ) : (
+      ) : atlas.view === "atlas" ? null : (
         <>
           <nav
             aria-label="Đường dẫn"

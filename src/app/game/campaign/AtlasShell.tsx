@@ -53,7 +53,7 @@ export function ChapterRail({
   return (
     <nav
       aria-label="Sử ký sáu chương"
-      className="atlas-frame atlas-frame-paper p-2"
+      className="atlas-frame atlas-frame-paper flex flex-col p-2 xl:h-full"
     >
       <AtlasCorners />
       <h2 className="mb-2 hidden px-1 text-center text-sm font-bold tracking-widest text-[#3b2a1a] uppercase xl:block">
@@ -113,7 +113,7 @@ export function ChapterRail({
         })}
       </div>
       {/* Tranh trang trí cuối cột (Shan vẽ), chỉ hiện khi cột đứng dọc. */}
-      <figure className="mt-3 hidden xl:block">
+      <figure className="mt-auto hidden pt-3 xl:block">
         <Image
           src="/art/campaign/rail-ink.webp"
           alt=""
@@ -213,48 +213,50 @@ export function ChapterPanel({
   return (
     <aside
       aria-labelledby="atlas-panel-title"
-      className="atlas-frame atlas-frame-paper flex flex-col gap-3 p-3"
+      className="atlas-frame atlas-frame-paper flex flex-col p-3 xl:h-full"
     >
       <AtlasCorners />
-      <header>
-        <p className="text-xs font-semibold tracking-widest uppercase opacity-75">
-          Chương {roman} · {finished}/{chapter.missions.length} nhiệm vụ
-        </p>
-        <h2 id="atlas-panel-title" className="text-2xl font-black">
-          {chapter.title}
-        </h2>
-        <p className="mt-1 text-[15px] leading-relaxed">{chapter.question}</p>
-      </header>
+      <div className="atlas-scroll flex min-h-0 flex-1 flex-col gap-3 xl:overflow-y-auto xl:pr-1">
+        <header>
+          <p className="text-xs font-semibold tracking-widest uppercase opacity-75">
+            Chương {roman} · {finished}/{chapter.missions.length} nhiệm vụ
+          </p>
+          <h2 id="atlas-panel-title" className="text-2xl font-black">
+            {chapter.title}
+          </h2>
+          <p className="mt-1 text-[15px] leading-relaxed">{chapter.question}</p>
+        </header>
 
-      {chapterCompleted(campaign, chapter.chapter) && (
-        <p className="rounded-lg border border-emerald-800/40 bg-emerald-800/10 p-2 text-sm leading-relaxed">
-          <span className="font-bold">Hoàn thành Chương {roman}.</span>{" "}
-          {chapter.completeLine}
-        </p>
-      )}
+        {chapterCompleted(campaign, chapter.chapter) && (
+          <p className="rounded-lg border border-emerald-800/40 bg-emerald-800/10 p-2 text-sm leading-relaxed">
+            <span className="font-bold">Hoàn thành Chương {roman}.</span>{" "}
+            {chapter.completeLine}
+          </p>
+        )}
 
-      <div>
-        <h3 className="atlas-panel-heading">Nhiệm vụ chương</h3>
-        <MissionList
-          label={`Nhiệm vụ Chương ${roman}`}
-          missions={statuses}
-          current={current}
-          onPick={onPick}
-        />
-      </div>
-
-      <p className="text-sm leading-relaxed opacity-85">
-        {chapter.region.note}
-      </p>
-
-      <div className="grid gap-2 text-sm leading-relaxed">
         <div>
-          <BasisBadge basis="legend" />
-          <p className="mt-1">{chapter.legendVsRecord.legend}</p>
+          <h3 className="atlas-panel-heading">Nhiệm vụ chương</h3>
+          <MissionList
+            label={`Nhiệm vụ Chương ${roman}`}
+            missions={statuses}
+            current={current}
+            onPick={onPick}
+          />
         </div>
-        <div>
-          <BasisBadge basis="recorded" />
-          <p className="mt-1">{chapter.legendVsRecord.record}</p>
+
+        <p className="text-sm leading-relaxed opacity-85">
+          {chapter.region.note}
+        </p>
+
+        <div className="grid gap-2 text-sm leading-relaxed">
+          <div>
+            <BasisBadge basis="legend" />
+            <p className="mt-1">{chapter.legendVsRecord.legend}</p>
+          </div>
+          <div>
+            <BasisBadge basis="recorded" />
+            <p className="mt-1">{chapter.legendVsRecord.record}</p>
+          </div>
         </div>
       </div>
     </aside>
@@ -310,118 +312,120 @@ export function StrongholdPanel({
   return (
     <aside
       aria-labelledby="atlas-panel-title"
-      className="atlas-frame atlas-frame-paper flex flex-col gap-3 p-3"
+      className="atlas-frame atlas-frame-paper flex flex-col p-3 xl:h-full"
     >
       <AtlasCorners />
-      <header className="flex items-start gap-3">
-        <span
-          aria-hidden
-          className="mt-1 h-12 w-8 shrink-0 rounded-sm border-2 border-[#d4a24c] [clip-path:polygon(0_0,100%_0,100%_100%,50%_85%,0_100%)]"
-          style={{ background: STATE_COLOR[state] }}
-        />
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-semibold tracking-widest uppercase opacity-75">
-            {s.faction ? "Cứ điểm sứ quân" : "Đầu não"} · {STATE_TEXT[state]}
-          </p>
-          <h2
-            id="atlas-panel-title"
-            className="text-2xl leading-tight font-black"
+      <div className="atlas-scroll flex min-h-0 flex-1 flex-col gap-3 xl:overflow-y-auto xl:pr-1">
+        <header className="flex items-start gap-3">
+          <span
+            aria-hidden
+            className="mt-1 h-12 w-8 shrink-0 rounded-sm border-2 border-[#d4a24c] [clip-path:polygon(0_0,100%_0,100%_100%,50%_85%,0_100%)]"
+            style={{ background: STATE_COLOR[state] }}
+          />
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-semibold tracking-widest uppercase opacity-75">
+              {s.faction ? "Cứ điểm sứ quân" : "Đầu não"} · {STATE_TEXT[state]}
+            </p>
+            <h2
+              id="atlas-panel-title"
+              className="text-2xl leading-tight font-black"
+            >
+              {s.place}
+            </h2>
+            <p className="text-[15px] italic">
+              {strongholdLeader(s)}
+              {record ? ` · ${record.title}` : ""}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Đóng thông tin cứ điểm, về thông tin chương"
+            className="flex size-11 shrink-0 items-center justify-center rounded-lg border border-[#8a6a3b80] bg-[#f6ead0] text-xl font-bold hover:bg-[#fff4dc]"
           >
-            {s.place}
-          </h2>
-          <p className="text-[15px] italic">
-            {strongholdLeader(s)}
-            {record ? ` · ${record.title}` : ""}
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Đóng thông tin cứ điểm, về thông tin chương"
-          className="flex size-11 shrink-0 items-center justify-center rounded-lg border border-[#8a6a3b80] bg-[#f6ead0] text-xl font-bold hover:bg-[#fff4dc]"
-        >
-          ×
-        </button>
-      </header>
+            ×
+          </button>
+        </header>
 
-      {/* Ảnh minh họa lấy từ ảnh nền thoại của vùng; ảnh lỗi thì chỉ còn màu nền. */}
-      <div
-        aria-hidden
-        className="aspect-[16/8] rounded-lg border border-[#8a6a3b80] bg-[#cdb68a] bg-cover bg-center"
-        style={{ backgroundImage: `url(${backdrop})` }}
-      />
-
-      <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm leading-relaxed">
-        <dt className="opacity-70">Địa danh</dt>
-        <dd>
-          {CERTAINTY_TEXT[s.certainty]}
-          {s.modernRegion ? ` · ngày nay: ${s.modernRegion}` : ""}
-        </dd>
-        {record && record.aliases.length > 0 && (
-          <>
-            <dt className="opacity-70">Còn chép</dt>
-            <dd>{record.aliases.join(", ")}</dd>
-          </>
-        )}
-        {resolution && (
-          <>
-            <dt className="opacity-70">Kết cục</dt>
-            <dd>
-              {state === "unresolved" ? (
-                <>Hiện khi bạn đi qua {resolution.mission}.</>
-              ) : (
-                <>
-                  {record?.outcome}{" "}
-                  <span className="opacity-70">
-                    (game kể: {METHOD_TEXT[resolution.settlement]})
-                  </span>
-                </>
-              )}
-            </dd>
-          </>
-        )}
-      </dl>
-
-      {!s.faction && (
-        <p className="text-sm leading-relaxed">
-          Căn cứ của Đinh Bộ Lĩnh, không tính là một trong 12 sứ quân. Các nhiệm
-          vụ ở đây mở đầu và khép lại chiến dịch.
-        </p>
-      )}
-      {!s.at && (
-        <p className="text-sm leading-relaxed">
-          Sử chép “nay không rõ chỗ nào”, các bản tổng thuật đặt ở hai vùng khác
-          nhau, nên bản đồ không cắm cờ cho Bình Kiều.
-        </p>
-      )}
-
-      <div>
-        <h3 className="atlas-panel-heading">Nhiệm vụ ở {s.place}</h3>
-        <MissionList
-          label={`Nhiệm vụ ở ${s.place}`}
-          missions={missions}
-          current={current}
-          onPick={onPick}
+        {/* Ảnh minh họa lấy từ ảnh nền thoại của vùng; ảnh lỗi thì chỉ còn màu nền. */}
+        <div
+          aria-hidden
+          className="aspect-[16/8] rounded-lg border border-[#8a6a3b80] bg-[#cdb68a] bg-cover bg-center"
+          style={{ backgroundImage: `url(${backdrop})` }}
         />
-      </div>
 
-      {focus ? (
-        <button
-          type="button"
-          onClick={() => onPick(focus.id)}
-          className="min-h-12 rounded-lg border-2 border-[#d4a24c] bg-gradient-to-b from-[#b4382c] to-[#7a2c1d] px-4 text-base font-bold tracking-wide text-amber-50 uppercase shadow"
-        >
-          {focus.status === "completed"
-            ? `Xem lại ${focus.id}`
-            : focus.status === "inProgress"
-              ? `Tiếp tục ${focus.id}`
-              : `Bắt đầu ${focus.id}`}
-        </button>
-      ) : (
-        <p className="rounded-lg border border-[#8a6a3b66] p-2 text-center text-sm opacity-80">
-          🔒 Chưa mở nhiệm vụ nào ở đây.
-        </p>
-      )}
+        <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm leading-relaxed">
+          <dt className="opacity-70">Địa danh</dt>
+          <dd>
+            {CERTAINTY_TEXT[s.certainty]}
+            {s.modernRegion ? ` · ngày nay: ${s.modernRegion}` : ""}
+          </dd>
+          {record && record.aliases.length > 0 && (
+            <>
+              <dt className="opacity-70">Còn chép</dt>
+              <dd>{record.aliases.join(", ")}</dd>
+            </>
+          )}
+          {resolution && (
+            <>
+              <dt className="opacity-70">Kết cục</dt>
+              <dd>
+                {state === "unresolved" ? (
+                  <>Hiện khi bạn đi qua {resolution.mission}.</>
+                ) : (
+                  <>
+                    {record?.outcome}{" "}
+                    <span className="opacity-70">
+                      (game kể: {METHOD_TEXT[resolution.settlement]})
+                    </span>
+                  </>
+                )}
+              </dd>
+            </>
+          )}
+        </dl>
+
+        {!s.faction && (
+          <p className="text-sm leading-relaxed">
+            Căn cứ của Đinh Bộ Lĩnh, không tính là một trong 12 sứ quân. Các
+            nhiệm vụ ở đây mở đầu và khép lại chiến dịch.
+          </p>
+        )}
+        {!s.at && (
+          <p className="text-sm leading-relaxed">
+            Sử chép “nay không rõ chỗ nào”, các bản tổng thuật đặt ở hai vùng
+            khác nhau, nên bản đồ không cắm cờ cho Bình Kiều.
+          </p>
+        )}
+
+        <div>
+          <h3 className="atlas-panel-heading">Nhiệm vụ ở {s.place}</h3>
+          <MissionList
+            label={`Nhiệm vụ ở ${s.place}`}
+            missions={missions}
+            current={current}
+            onPick={onPick}
+          />
+        </div>
+
+        {focus ? (
+          <button
+            type="button"
+            onClick={() => onPick(focus.id)}
+            className="min-h-12 rounded-lg border-2 border-[#d4a24c] bg-gradient-to-b from-[#b4382c] to-[#7a2c1d] px-4 text-base font-bold tracking-wide text-amber-50 uppercase shadow"
+          >
+            {focus.status === "completed"
+              ? `Xem lại ${focus.id}`
+              : focus.status === "inProgress"
+                ? `Tiếp tục ${focus.id}`
+                : `Bắt đầu ${focus.id}`}
+          </button>
+        ) : (
+          <p className="rounded-lg border border-[#8a6a3b66] p-2 text-center text-sm opacity-80">
+            🔒 Chưa mở nhiệm vụ nào ở đây.
+          </p>
+        )}
+      </div>
     </aside>
   );
 }
@@ -503,8 +507,7 @@ export function AtlasHeader({
       active ? "atlas-tab-active" : ""
     }`;
   return (
-    <header className="atlas-frame atlas-frame-wood flex flex-col gap-2 p-3 lg:flex-row lg:items-center">
-      <AtlasCorners />
+    <header className="atlas-header flex flex-col gap-2 px-1 pt-1 pb-3 lg:flex-row lg:items-center">
       <div className="px-3 lg:w-60 lg:shrink-0">
         <h1
           id="chapter-one-title"
