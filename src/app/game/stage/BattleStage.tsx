@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }, { fireRain }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -227,6 +227,7 @@ export default function BattleStage({
         import("./sap"),
         import("./thorn"),
         import("./miasma"),
+        import("./meteor"),
       ]);
       const app = new Application();
       await app.init({
@@ -426,6 +427,21 @@ export default function BattleStage({
             alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, 0.2 + n * 0.08));
           });
           return [slam, ward];
+        }
+        if (rig.strikeFx === "fireRain") {
+          const rain = fireRain(sky, rig.fxColor);
+          const fire = flameWall(sky, rig.fxColor);
+          // Tuyệt chiêu mưa lửa: cầu lửa rơi chéo xuống từng đối thủ từ phía người tung chiêu, chạm đất thì lửa bén (Thiêu đốt).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            const dir = e.side === 0 ? 1 : -1;
+            alive(false).forEach((s, n) => {
+              rain.fall(spot(s, 0), size, dir, n * 0.12);
+              fire.burn(spot(s, 0), size, 0.35 + n * 0.12);
+            });
+          });
+          return [rain, fire];
         }
         if (rig.strikeFx === "flameWall") {
           const fx = flameWall(sky, rig.fxColor);

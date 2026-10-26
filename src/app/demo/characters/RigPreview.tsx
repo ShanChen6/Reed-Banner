@@ -55,7 +55,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }, { fireRain }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/ward"), import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -64,6 +64,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           import("@/app/game/stage/silver"), import("@/app/game/stage/coins"),
           import("@/app/game/stage/banner"), import("@/app/game/stage/sap"),
           import("@/app/game/stage/thorn"), import("@/app/game/stage/miasma"),
+          import("@/app/game/stage/meteor"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -149,6 +150,17 @@ export default function RigPreview({ id, size, onSnapshot }: {
           fire.wall({ x: loaded.view.x, y: loaded.view.y }, size);
           fire.burn({ x: el.clientWidth - 40, y: loaded.view.y }, size * 0.8, 0.15);
         });
+        // Mưa lửa hệ Hỏa: cầu lửa rơi xuống hai điểm bên phải khung, lửa bén khi chạm đất.
+        const rain = team === "fireRain" ? [fireRain(app.stage, rig.fxColor), flameWall(app.stage, rig.fxColor)] as const : null;
+        if (rain) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y * 0.8;
+          [0.78, 0.92].forEach((k, n) => {
+            const at = { x: el.clientWidth * k, y: loaded!.view.y };
+            rain[0].fall(at, size, 1, n * 0.12);
+            rain[1].burn(at, size, 0.35 + n * 0.12);
+          });
+        });
         // Đập đất hệ Thổ: nứt đất ở mép phải khung, vòm khiên quanh nhân vật.
         const slam = team === "groundSlam" ? groundSlam(app.stage, rig.fxColor) : null;
         const slamWard = slam ? earthWard(app.stage, rig.fxColor) : null;
@@ -229,6 +241,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           loaded?.update(dt);
           mist?.forEach((m) => m.update(dt));
           tide?.update(dt);
+          rain?.forEach((r) => r.update(dt));
           siege?.update(dt);
           roots?.forEach((r) => r.update(dt));
           thorns?.update(dt);
