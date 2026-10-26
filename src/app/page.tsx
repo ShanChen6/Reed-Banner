@@ -1,3 +1,4 @@
+import { Badge, buttonClassName } from "@/components/ui";
 import Link from "next/link";
 import {
   BOARD_COLS,
@@ -86,8 +87,8 @@ const MODES: readonly { slug: string; name: string; body: string; tile: Tile; fl
 function SectionTitle({ kicker, title, sub }: { kicker: string; title: string; sub?: string }) {
   return (
     <div className="mx-auto mb-10 max-w-2xl text-center">
-      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#e9a25a]">{kicker}</p>
-      <h2 className="fx-gilt-text mt-2 font-serif text-3xl font-black md:text-4xl">{title}</h2>
+      <p className="text-xs font-semibold uppercase tracking-widest text-[#e9a25a]">{kicker}</p>
+      <h2 className="fx-gilt-text mt-2 text-heading">{title}</h2>
       <OrnateDivider className="mx-auto mt-4 w-56" />
       {sub && <p className="mt-4 text-stone-400">{sub}</p>}
     </div>
@@ -98,7 +99,7 @@ function PlayButton({ className = "", children = "Chơi ngay" }: { className?: s
   return (
     <Link
       href="/game"
-      className={`fx-btn inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 font-bold uppercase tracking-wider transition hover:brightness-110 ${className}`}
+      className={buttonClassName({ variant: "ornate", className: `fx-btn uppercase tracking-wider ${className}` })}
     >
       {children}
     </Link>
@@ -116,7 +117,7 @@ export default function Home() {
   const board = heroBoard();
   const flags = towerFeatureFlags();
   return (
-    <div className="demo-bg min-h-dvh bg-[var(--bg)] text-stone-100 [--bg:#17110e] [--frame:#5a1e14] [--gold:#d4a24c] [--panel:#271d18]">
+    <div className="demo-bg min-h-dvh bg-[var(--bg)] text-stone-100">
       <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-stone-900 focus:p-2">
         Bỏ qua tới nội dung
       </a>
@@ -375,7 +376,7 @@ export default function Home() {
                     <TileArt kind={m.tile.kind} special={m.tile.special} className="size-10 shrink-0" />
                     <span className="font-serif text-xl font-bold">{m.name}</span>
                     {!open && (
-                      <span className="ml-auto rounded-full bg-stone-800 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-stone-400">Sắp có</span>
+                      <Badge className="ml-auto uppercase tracking-wider">Sắp có</Badge>
                     )}
                   </span>
                   <span className="mt-2 flex-1 text-sm text-stone-400">{m.body}</span>
@@ -439,7 +440,7 @@ export default function Home() {
             <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 w-[640px] -translate-x-1/2 -translate-y-1/2 opacity-[0.12]">
               <DrumFace className="h-auto w-full" />
             </div>
-            <h2 className="fx-gilt-text relative font-serif text-3xl font-black md:text-4xl">Phất cờ lau, ra trận</h2>
+            <h2 className="fx-gilt-text relative text-heading">Phất cờ lau, ra trận</h2>
             <p className="relative mx-auto mt-3 max-w-md text-stone-300">Một trận chơi thử chỉ mất vài phút, ngay trên trình duyệt.</p>
             <PlayButton className="relative mt-6 text-base">Chơi thử miễn phí</PlayButton>
           </div>

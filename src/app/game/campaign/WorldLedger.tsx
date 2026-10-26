@@ -54,7 +54,7 @@ export default function WorldLedger({
             <span className="font-bold text-amber-50">
               {ledger.resolved[group]}/{CAMPAIGN_LEDGER_EXPECTED[group]}
             </span>{" "}
-            <span className="text-stone-300">{GROUP_NAME[group]}</span>
+            <span className="text-foreground-secondary">{GROUP_NAME[group]}</span>
           </li>
         ))}
       </ul>
@@ -74,7 +74,7 @@ export default function WorldLedger({
                   <span className="shrink-0">
                     {companionById(r.faction)?.name ?? r.faction}
                   </span>
-                  <span className="text-right text-stone-400">
+                  <span className="text-right text-muted">
                     {view.resolved
                       ? `${METHOD_TEXT[view.resolutionMethod] ?? view.status} · ${CONFIDENCE_TEXT[view.confidence]} · ${view.mission}`
                       : `chưa có kết cục · ${r.mission}`}
@@ -84,7 +84,7 @@ export default function WorldLedger({
           </ul>
         </div>
       ))}
-      <p className="mt-2 text-xs text-stone-300">
+      <p className="mt-2 text-xs text-foreground-secondary">
         {ledger.allResolved
           ? `Đủ 12 vùng có kết cục; ${CAMPAIGN_UNIFICATION_NODE} đã có thể mở. Đây là bốn loại kết cục khác nhau, không phải mười hai trận thắng.`
           : `${CAMPAIGN_UNIFICATION_NODE} chỉ mở khi đủ 12 vùng có kết cục. Còn thiếu: ${ledger.missingMissions.join(", ")}.`}

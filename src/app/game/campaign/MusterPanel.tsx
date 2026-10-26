@@ -55,7 +55,7 @@ export default function MusterPanel({
         <h2 id="muster-title" className="text-xl font-black text-amber-100">
           Giai đoạn hội kiến khép lại
         </h2>
-        <p className="mt-1 flex flex-wrap items-center gap-1.5 text-sm text-stone-300">
+        <p className="mt-1 flex flex-wrap items-center gap-1.5 text-sm text-foreground-secondary">
           <BasisBadge basis="reconstructed" />
           Cảnh hội quân do game dựng để tổng kết, không phải sự kiện có ngày
           tháng trong sử. Đây không phải nhiệm vụ: không có trận, không có
@@ -83,13 +83,13 @@ export default function MusterPanel({
             >
               <span className="block text-lg font-black text-amber-50">
                 {n}
-                <span className="text-xs font-normal text-stone-400">/12</span>
+                <span className="text-xs font-normal text-muted">/12</span>
               </span>
-              <span className="text-xs text-stone-300">{label}</span>
+              <span className="text-xs text-foreground-secondary">{label}</span>
             </li>
           ))}
         </ul>
-        <p className="mt-1 text-xs text-stone-300">
+        <p className="mt-1 text-xs text-foreground-secondary">
           {resolved
             .map(
               (r) =>
@@ -105,7 +105,7 @@ export default function MusterPanel({
           <p className="text-stone-200">
             Đinh Bộ Lĩnh cấp {profile.main.level}
           </p>
-          <ul className="text-stone-300">
+          <ul className="text-foreground-secondary">
             {profile.team.map((id) => (
               <li key={id}>
                 {companionById(id)?.name ?? id} cấp{" "}
@@ -121,7 +121,7 @@ export default function MusterPanel({
                 .join(", ")}
             </p>
           )}
-          <p className="mt-1 text-xs text-stone-400">
+          <p className="mt-1 text-xs text-muted">
             Đổi đội ở mục Đội hình & cửa hàng.
           </p>
         </div>
@@ -147,7 +147,7 @@ export default function MusterPanel({
         <h3 className="text-sm font-semibold text-amber-200">
           Hai tuyến đã mở
         </h3>
-        <p className="text-xs text-stone-400">
+        <p className="text-xs text-muted">
           Đi tuyến nào trước là lựa chọn chơi, không phải thứ tự lịch sử. Sử
           không ghi trình tự giải quyết từng nơi. Cả hai tuyến phải xong mới tới
           Đỗ Động.
@@ -163,7 +163,7 @@ export default function MusterPanel({
                 <p className="font-bold text-amber-50">
                   {route.name} · Chương {route.chapter === 4 ? "IV" : "V"}
                 </p>
-                <p className="text-stone-300">
+                <p className="text-foreground-secondary">
                   {done}/{route.missions.length} nhiệm vụ ·{" "}
                   {open ? "đã mở" : "chưa mở"}
                 </p>
@@ -190,7 +190,7 @@ export default function MusterPanel({
         >
           Còn {remaining.length}/24 nhiệm vụ cho chiến dịch toàn quốc
         </summary>
-        <ul className="mt-1 grid gap-0.5 text-xs text-stone-300 sm:grid-cols-2">
+        <ul className="mt-1 grid gap-0.5 text-xs text-foreground-secondary sm:grid-cols-2">
           {remaining.map((id) => (
             <li key={id}>{missionLabel(id)}</li>
           ))}
