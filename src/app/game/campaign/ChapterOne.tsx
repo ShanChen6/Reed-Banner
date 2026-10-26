@@ -29,11 +29,9 @@ import {
   campaignScenarioByNode,
   campaignFocusChapter,
   campaignMusterReady,
-  chapterCompleted,
   chapterContentOf,
   chapterFocus,
   chapterStatus,
-  chapterUnlocked,
   companionById,
   factionResolutionOfMission,
   missionCopy,
@@ -42,7 +40,6 @@ import {
   storyNodeById,
   type CampaignMissionId,
   type ChapterContent,
-  type ChapterMissionStatus,
   type Element,
   type Profession,
   type Profile,
@@ -65,6 +62,8 @@ import {
   toBattleState,
 } from "../battle/online";
 import CampaignMap from "./CampaignMap";
+import { ChapterPanel, ChapterRail } from "./AtlasShell";
+import { atlasSerif } from "./atlasFont";
 import DiplomacyScene from "./DiplomacyScene";
 import DialoguePlayer from "./DialoguePlayer";
 import MusterPanel from "./MusterPanel";
@@ -111,22 +110,12 @@ function writeJson(key: string, value: unknown) {
   }
 }
 
-const STATUS_TEXT: Record<ChapterMissionStatus, string> = {
-  completed: "Đã hoàn thành",
-  inProgress: "Đang xuất quân",
-  open: "Đang mở",
-  locked: "Chưa mở",
-  comingSoon: "Sắp có",
-};
-
 const CERTAINTY_TEXT = {
   recorded: "vị trí có sử chép",
   traditional: "định vị truyền thống",
   disputed: "vị trí còn tranh luận",
   fictional: "địa điểm hư cấu",
 } as const;
-
-const ROMAN = ["", "I", "II", "III", "IV", "V", "VI"] as const;
 
 /** Nhiệm vụ kế tiếp sau khi hoàn thành: trong chương, hết chương thì sang chương sau nếu đã mở. */
 function nextMission(
@@ -728,9 +717,6 @@ export default function ChapterOne({
   const recorded = campaign.storyChoices[step.nodeId];
   const choice = step.choice ?? recorded;
   const done = status === "completed";
-  const chapterDone = chapterCompleted(campaign, chapter.chapter);
-  const roman = ROMAN[chapter.chapter];
-  const finished = statuses.filter((m) => m.status === "completed").length;
   const routeId = CAMPAIGN_ROUTES.find(
     (r) => r.chapter === chapter.chapter,
   )?.id;
@@ -799,58 +785,49 @@ export default function ChapterOne({
         }}
       />
       <div
-        className="flex flex-wrap gap-2"
-        role="tablist"
-        aria-label="Chương Chiến dịch"
+        className={`campaign-atlas ${atlasSerif.variable} flex flex-col gap-3`}
       >
-        {CAMPAIGN_CHAPTERS.map((c) => {
-          const open = chapterUnlocked(campaign, c.chapter);
-          return (
-            <button
-              key={c.chapter}
-              type="button"
-              role="tab"
-              aria-selected={c === chapter}
-              disabled={!open}
-              onClick={() =>
+        <header className="flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <h1
+              id="chapter-one-title"
+              className="atlas-title text-2xl font-black tracking-wide uppercase sm:text-3xl"
+            >
+              Sử ký Đại Việt
+            </h1>
+            <p className="text-sm text-amber-100/70">
+              Loạn 12 sứ quân · cục diện thế kỷ X
+            </p>
+          </div>
+          <p className="text-sm text-stone-300">
+            Đinh Bộ Lĩnh cấp {profile.main.level} · {profile.gold} vàng ·{" "}
+            {campaign.supply} lương
+          </p>
+        </header>
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)] xl:grid-cols-[250px_minmax(0,1fr)_340px]">
+          <div className="md:col-span-2 xl:col-span-1">
+            <ChapterRail
+              campaign={campaign}
+              current={chapter}
+              onPick={(c) =>
                 move({ nodeId: chapterFocus(campaign, c), phase: "intro" })
               }
-              className={`rounded-lg border px-3 py-1.5 text-sm font-semibold ${
-                c === chapter
-                  ? "border-amber-300 bg-amber-500/20 text-amber-100"
-                  : "border-white/10 bg-black/25 text-stone-300"
-              } disabled:cursor-not-allowed disabled:opacity-45`}
-            >
-              {open ? "" : "🔒 "}Chương {ROMAN[c.chapter]} · {c.title}
-            </button>
-          );
-        })}
-      </div>
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="text-xs tracking-widest text-amber-300/80 uppercase">
-            Chương {roman} · {finished}/{chapter.missions.length} nhiệm vụ
-          </p>
-          <h1
-            id="chapter-one-title"
-            className="text-2xl font-black text-amber-100"
-          >
-            {chapter.title}
-          </h1>
-          <p className="text-sm text-stone-400">{chapter.question}</p>
+            />
+          </div>
+          <CampaignMap
+            campaign={campaign}
+            selected={step.nodeId}
+            chapter={chapter.chapter}
+            onOpen={(id) => move({ nodeId: id, phase: "intro" })}
+          />
+          <ChapterPanel
+            campaign={campaign}
+            chapter={chapter}
+            current={step.nodeId}
+            onPick={(id) => move({ nodeId: id, phase: "intro" })}
+          />
         </div>
-        <p className="text-sm text-stone-400">
-          Đinh Bộ Lĩnh cấp {profile.main.level} · {profile.gold} vàng ·{" "}
-          {campaign.supply} lương
-        </p>
       </div>
-
-      {chapterDone && (
-        <p className="rounded-xl border-2 border-emerald-500/50 bg-emerald-500/10 p-3 text-emerald-100">
-          <span className="font-bold">Hoàn thành Chương {roman}.</span>{" "}
-          {chapter.completeLine}
-        </p>
-      )}
 
       {chapter.chapter === 6 && campaignCompleted(campaign) && (
         <CampaignEnding
@@ -876,305 +853,229 @@ export default function ChapterOne({
         />
       )}
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-        <div className="flex flex-col gap-3">
-          <CampaignMap
-            campaign={campaign}
-            selected={step.nodeId}
-            chapter={chapter.chapter}
-            onOpen={(id) => move({ nodeId: id, phase: "intro" })}
-          />
-          <p className="text-xs text-stone-400">{chapter.region.note}</p>
-          <WorldLedger campaign={profile.campaign} />
-          <div className="grid gap-2 rounded-xl border border-white/10 bg-black/25 p-3 text-sm sm:grid-cols-2">
-            <div>
-              <BasisBadge basis="legend" />
-              <p className="mt-1 text-stone-300">
-                {chapter.legendVsRecord.legend}
-              </p>
-            </div>
-            <div>
-              <BasisBadge basis="recorded" />
-              <p className="mt-1 text-stone-300">
-                {chapter.legendVsRecord.record}
-              </p>
-            </div>
+      <article className="flex flex-col gap-3 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4 shadow-[inset_0_0_24px_#0009]">
+        <header>
+          <p className="text-xs tracking-widest text-amber-300/80 uppercase">
+            {node.id} · {node.location.name} ·{" "}
+            {CERTAINTY_TEXT[node.location.certainty]}
+            {node.location.modernRegion && (
+              <span className="text-stone-400 normal-case">
+                {" "}
+                (ngày nay: {node.location.modernRegion})
+              </span>
+            )}
+          </p>
+          <h2 className="text-xl font-bold text-amber-100">{node.title}</h2>
+          <div className="mt-1 flex flex-wrap gap-1">
+            {node.historicalBasis.map((b) => (
+              <BasisBadge key={b} basis={b} />
+            ))}
           </div>
-          <ol
-            className="flex flex-col gap-1.5"
-            aria-label={`Nhiệm vụ Chương ${roman}`}
-          >
-            {statuses.map(({ id, status: s }) => {
-              const n = storyNodeById(id)!;
-              const usable = s !== "locked" && s !== "comingSoon";
-              return (
-                <li key={id}>
+          {node.type === "diplomacy" && !copy && (
+            <p className="mt-2 text-xs text-stone-400">
+              Hội kiến: không có trận, không có thanh máu. Hoàn thành bằng lựa
+              chọn lời đáp; server ghi kết quả.
+            </p>
+          )}
+          {!event &&
+            isBattle &&
+            (() => {
+              const fate = factionResolutionOfMission(node.id);
+              return fate ? (
+                <p className="mt-1 text-xs text-sky-200">
+                  Kết cục cố định của{" "}
+                  {companionById(fate.faction)?.name ?? fate.faction}:{" "}
+                  {FACTION_STATUS_TEXT[fate.status].toLowerCase()} theo tổng
+                  thuật. Trận là cách game kể việc ấy.{" "}
+                  {campaign.factions[fate.faction]
+                    ? "Đã ghi vào thế cục sứ quân."
+                    : "Thắng lần đầu sẽ ghi vào thế cục sứ quân một lần."}
+                </p>
+              ) : null;
+            })()}
+          {event?.faction && node.type !== "diplomacy" && (
+            <p className="mt-1 text-xs text-sky-200">
+              Kết cục cố định:{" "}
+              {companionById(event.faction.faction)?.name ??
+                event.faction.faction}{" "}
+              {FACTION_STATUS_TEXT[event.faction.status].toLowerCase()}.{" "}
+              {campaign.factions[event.faction.faction]
+                ? "Đã ghi vào thế cục sứ quân."
+                : "Hoàn thành sẽ ghi vào thế cục sứ quân một lần."}
+            </p>
+          )}
+        </header>
+
+        {!copy ? (
+          <p className="text-stone-300">
+            Nội dung nhiệm vụ này sẽ mở ở bản sau.
+          </p>
+        ) : node.type === "diplomacy" ? (
+          <DiplomacyScene
+            profile={profile}
+            nodeId={step.nodeId}
+            phase={step.phase === "intro" ? "intro" : "choice"}
+            {...(step.choice ? { choice: step.choice } : {})}
+            onMove={(phase, c) =>
+              move({
+                nodeId: step.nodeId,
+                phase,
+                ...(c ? { choice: c } : {}),
+              })
+            }
+            onProfile={onProfile}
+          />
+        ) : (
+          <>
+            {step.nodeId === "M23" && (
+              <p className="rounded-xl border border-amber-500/30 bg-black/30 p-3 text-sm text-amber-100">
+                <span className="font-semibold text-amber-200">
+                  Trích đoạn xây dựng quốc gia.
+                </span>{" "}
+                Chọn một việc ưu tiên rồi đọc kết quả. Không có trận, đồng hồ
+                hay tài nguyên mới; lựa chọn không đổi lịch sử chính hay kinh tế
+                trong game.
+              </p>
+            )}
+            {step.phase === "intro" ? (
+              <DialoguePlayer
+                key={`${step.nodeId}:intro`}
+                missionId={step.nodeId}
+                sequence="intro"
+                label={`Lời dẫn ${node.id}`}
+                segments={[
+                  {
+                    section: "cinematic",
+                    beats: copy.cinematic ?? [],
+                    cinematic: true,
+                  },
+                  { section: "intro", beats: copy.intro },
+                ]}
+                main={profile}
+                finishLabel="Tiếp tục"
+                onFinished={() =>
+                  move({
+                    nodeId: step.nodeId,
+                    phase: "choice",
+                    choice: choice ?? recorded,
+                  })
+                }
+              />
+            ) : inProgress === step.nodeId ? null : (
+              <button
+                type="button"
+                onClick={() =>
+                  move({
+                    nodeId: step.nodeId,
+                    phase: "intro",
+                    ...(step.choice ? { choice: step.choice } : {}),
+                  })
+                }
+                className="min-h-11 self-start rounded-lg bg-white/10 px-4 text-sm hover:bg-white/15"
+              >
+                ↺ Xem lại lời dẫn
+              </button>
+            )}
+            {step.nodeId === CAMPAIGN_UNIFICATION_NODE && (
+              <FactionDossiers campaign={campaign} />
+            )}
+            <SourceNotes nodeId={step.nodeId} />
+            {step.phase !== "intro" && (
+              <div className="flex flex-col gap-2">
+                <p className="font-semibold text-amber-200">{copy.prompt}</p>
+                <div className="flex flex-wrap gap-2">
+                  {copy.choices.map((c) => {
+                    // Đã hoàn thành thì lựa chọn đã ghi trên server là cố định.
+                    const locked =
+                      done && recorded !== undefined && recorded !== c.id;
+                    return (
+                      <button
+                        key={c.id}
+                        type="button"
+                        disabled={locked || step.phase === "prep"}
+                        aria-pressed={choice === c.id}
+                        onClick={() =>
+                          move({
+                            nodeId: step.nodeId,
+                            phase: "choice",
+                            choice: c.id,
+                          })
+                        }
+                        className={`rounded border px-3 py-1.5 text-sm ${
+                          choice === c.id
+                            ? "border-amber-300 bg-amber-500/25"
+                            : "border-white/15 bg-black/30"
+                        } disabled:opacity-40`}
+                      >
+                        {c.label}
+                        {(() => {
+                          const tone = event?.choices.find(
+                            (x) => x.id === c.id,
+                          )?.tone;
+                          return tone ? (
+                            <span className="ml-1.5 text-[10px] text-stone-400 uppercase">
+                              {TONE_TEXT[tone]}
+                            </span>
+                          ) : null;
+                        })()}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-xs text-stone-400">
+                  Lựa chọn chỉ đổi lời kể; kết quả nhiệm vụ và phần thưởng như
+                  nhau.
+                </p>
+                <StoryLines
+                  profile={profile}
+                  nodeId={step.nodeId}
+                  choice={choice}
+                  outro={done}
+                />
+                {!isBattle && !done && (
                   <button
                     type="button"
-                    disabled={!usable}
-                    aria-current={step.nodeId === id}
-                    onClick={() => move({ nodeId: id, phase: "intro" })}
-                    className={`flex w-full items-center gap-2 rounded-lg border px-2 py-1.5 text-left text-sm transition ${
-                      step.nodeId === id
-                        ? "border-amber-300 bg-amber-500/20"
-                        : "border-white/10 bg-black/25 hover:bg-black/40"
-                    } disabled:cursor-not-allowed disabled:opacity-45`}
+                    disabled={!choice || busy}
+                    onClick={() => void submitEvent()}
+                    className="self-start rounded-lg border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-5 py-2 font-bold text-amber-50 disabled:opacity-50"
                   >
-                    <span
-                      className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                        s === "completed"
-                          ? "bg-emerald-600 text-white"
-                          : usable
-                            ? "bg-amber-500 text-stone-950"
-                            : "bg-stone-700 text-stone-300"
-                      }`}
-                    >
-                      {s === "completed"
-                        ? "✓"
-                        : usable
-                          ? id.slice(1)
-                          : s === "comingSoon"
-                            ? "…"
-                            : "🔒"}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate font-semibold">
-                        {n.title}
-                      </span>
-                      <span className="block truncate text-xs text-stone-400">
-                        {STATUS_TEXT[s]} · {n.rewards.firstClearGold} vàng lần
-                        đầu
-                      </span>
-                    </span>
+                    {busy ? "Đang ghi…" : "Hoàn thành nhiệm vụ"}
                   </button>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
-
-        <article className="flex flex-col gap-3 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4 shadow-[inset_0_0_24px_#0009]">
-          <header>
-            <p className="text-xs tracking-widest text-amber-300/80 uppercase">
-              {node.id} · {node.location.name} ·{" "}
-              {CERTAINTY_TEXT[node.location.certainty]}
-              {node.location.modernRegion && (
-                <span className="text-stone-400 normal-case">
-                  {" "}
-                  (ngày nay: {node.location.modernRegion})
-                </span>
-              )}
-            </p>
-            <h2 className="text-xl font-bold text-amber-100">{node.title}</h2>
-            <div className="mt-1 flex flex-wrap gap-1">
-              {node.historicalBasis.map((b) => (
-                <BasisBadge key={b} basis={b} />
-              ))}
-            </div>
-            {node.type === "diplomacy" && !copy && (
-              <p className="mt-2 text-xs text-stone-400">
-                Hội kiến: không có trận, không có thanh máu. Hoàn thành bằng lựa
-                chọn lời đáp; server ghi kết quả.
-              </p>
-            )}
-            {!event &&
-              isBattle &&
-              (() => {
-                const fate = factionResolutionOfMission(node.id);
-                return fate ? (
-                  <p className="mt-1 text-xs text-sky-200">
-                    Kết cục cố định của{" "}
-                    {companionById(fate.faction)?.name ?? fate.faction}:{" "}
-                    {FACTION_STATUS_TEXT[fate.status].toLowerCase()} theo tổng
-                    thuật. Trận là cách game kể việc ấy.{" "}
-                    {campaign.factions[fate.faction]
-                      ? "Đã ghi vào thế cục sứ quân."
-                      : "Thắng lần đầu sẽ ghi vào thế cục sứ quân một lần."}
-                  </p>
-                ) : null;
-              })()}
-            {event?.faction && node.type !== "diplomacy" && (
-              <p className="mt-1 text-xs text-sky-200">
-                Kết cục cố định:{" "}
-                {companionById(event.faction.faction)?.name ??
-                  event.faction.faction}{" "}
-                {FACTION_STATUS_TEXT[event.faction.status].toLowerCase()}.{" "}
-                {campaign.factions[event.faction.faction]
-                  ? "Đã ghi vào thế cục sứ quân."
-                  : "Hoàn thành sẽ ghi vào thế cục sứ quân một lần."}
-              </p>
-            )}
-          </header>
-
-          {!copy ? (
-            <p className="text-stone-300">
-              Nội dung nhiệm vụ này sẽ mở ở bản sau.
-            </p>
-          ) : node.type === "diplomacy" ? (
-            <DiplomacyScene
-              profile={profile}
-              nodeId={step.nodeId}
-              phase={step.phase === "intro" ? "intro" : "choice"}
-              {...(step.choice ? { choice: step.choice } : {})}
-              onMove={(phase, c) =>
-                move({
-                  nodeId: step.nodeId,
-                  phase,
-                  ...(c ? { choice: c } : {}),
-                })
-              }
-              onProfile={onProfile}
-            />
-          ) : (
-            <>
-              {step.nodeId === "M23" && (
-                <p className="rounded-xl border border-amber-500/30 bg-black/30 p-3 text-sm text-amber-100">
-                  <span className="font-semibold text-amber-200">
-                    Trích đoạn xây dựng quốc gia.
-                  </span>{" "}
-                  Chọn một việc ưu tiên rồi đọc kết quả. Không có trận, đồng hồ
-                  hay tài nguyên mới; lựa chọn không đổi lịch sử chính hay kinh
-                  tế trong game.
-                </p>
-              )}
-              {step.phase === "intro" ? (
-                <DialoguePlayer
-                  key={`${step.nodeId}:intro`}
-                  missionId={step.nodeId}
-                  sequence="intro"
-                  label={`Lời dẫn ${node.id}`}
-                  segments={[
-                    {
-                      section: "cinematic",
-                      beats: copy.cinematic ?? [],
-                      cinematic: true,
-                    },
-                    { section: "intro", beats: copy.intro },
-                  ]}
-                  main={profile}
-                  finishLabel="Tiếp tục"
-                  onFinished={() =>
-                    move({
-                      nodeId: step.nodeId,
-                      phase: "choice",
-                      choice: choice ?? recorded,
-                    })
-                  }
-                />
-              ) : inProgress === step.nodeId ? null : (
-                <button
-                  type="button"
-                  onClick={() =>
-                    move({
-                      nodeId: step.nodeId,
-                      phase: "intro",
-                      ...(step.choice ? { choice: step.choice } : {}),
-                    })
-                  }
-                  className="min-h-11 self-start rounded-lg bg-white/10 px-4 text-sm hover:bg-white/15"
-                >
-                  ↺ Xem lại lời dẫn
-                </button>
-              )}
-              {step.nodeId === CAMPAIGN_UNIFICATION_NODE && (
-                <FactionDossiers campaign={campaign} />
-              )}
-              <SourceNotes nodeId={step.nodeId} />
-              {step.phase !== "intro" && (
-                <div className="flex flex-col gap-2">
-                  <p className="font-semibold text-amber-200">{copy.prompt}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {copy.choices.map((c) => {
-                      // Đã hoàn thành thì lựa chọn đã ghi trên server là cố định.
-                      const locked =
-                        done && recorded !== undefined && recorded !== c.id;
-                      return (
-                        <button
-                          key={c.id}
-                          type="button"
-                          disabled={locked || step.phase === "prep"}
-                          aria-pressed={choice === c.id}
-                          onClick={() =>
-                            move({
-                              nodeId: step.nodeId,
-                              phase: "choice",
-                              choice: c.id,
-                            })
-                          }
-                          className={`rounded border px-3 py-1.5 text-sm ${
-                            choice === c.id
-                              ? "border-amber-300 bg-amber-500/25"
-                              : "border-white/15 bg-black/30"
-                          } disabled:opacity-40`}
-                        >
-                          {c.label}
-                          {(() => {
-                            const tone = event?.choices.find(
-                              (x) => x.id === c.id,
-                            )?.tone;
-                            return tone ? (
-                              <span className="ml-1.5 text-[10px] text-stone-400 uppercase">
-                                {TONE_TEXT[tone]}
-                              </span>
-                            ) : null;
-                          })()}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  <p className="text-xs text-stone-400">
-                    Lựa chọn chỉ đổi lời kể; kết quả nhiệm vụ và phần thưởng như
-                    nhau.
-                  </p>
-                  <StoryLines
+                )}
+                {isBattle && step.phase === "choice" && (
+                  <button
+                    type="button"
+                    disabled={!choice}
+                    onClick={() =>
+                      move({ nodeId: step.nodeId, phase: "prep", choice })
+                    }
+                    className="self-start rounded bg-amber-500 px-4 py-1.5 font-semibold text-stone-950 disabled:opacity-40"
+                  >
+                    Chuẩn bị xuất quân
+                  </button>
+                )}
+                {isBattle && step.phase === "prep" && (
+                  <BattlePrep
                     profile={profile}
                     nodeId={step.nodeId}
-                    choice={choice}
-                    outro={done}
+                    busy={busy || actionBusy}
+                    resumeId={
+                      resumable?.nodeId === step.nodeId ? resumable.id : null
+                    }
+                    onAction={onAction}
+                    onStart={(c) => void startBattle(c)}
+                    onResume={resumeBattle}
                   />
-                  {!isBattle && !done && (
-                    <button
-                      type="button"
-                      disabled={!choice || busy}
-                      onClick={() => void submitEvent()}
-                      className="self-start rounded-lg border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-5 py-2 font-bold text-amber-50 disabled:opacity-50"
-                    >
-                      {busy ? "Đang ghi…" : "Hoàn thành nhiệm vụ"}
-                    </button>
-                  )}
-                  {isBattle && step.phase === "choice" && (
-                    <button
-                      type="button"
-                      disabled={!choice}
-                      onClick={() =>
-                        move({ nodeId: step.nodeId, phase: "prep", choice })
-                      }
-                      className="self-start rounded bg-amber-500 px-4 py-1.5 font-semibold text-stone-950 disabled:opacity-40"
-                    >
-                      Chuẩn bị xuất quân
-                    </button>
-                  )}
-                  {isBattle && step.phase === "prep" && (
-                    <BattlePrep
-                      profile={profile}
-                      nodeId={step.nodeId}
-                      busy={busy || actionBusy}
-                      resumeId={
-                        resumable?.nodeId === step.nodeId ? resumable.id : null
-                      }
-                      onAction={onAction}
-                      onStart={(c) => void startBattle(c)}
-                      onResume={resumeBattle}
-                    />
-                  )}
-                </div>
-              )}
-            </>
-          )}
-          {copy && <MissionSources nodeId={step.nodeId} />}
-          {message && <p className="text-sm text-rose-400">{message}</p>}
-        </article>
-      </div>
+                )}
+              </div>
+            )}
+          </>
+        )}
+        {copy && <MissionSources nodeId={step.nodeId} />}
+        {message && <p className="text-sm text-rose-400">{message}</p>}
+      </article>
+
+      <WorldLedger campaign={profile.campaign} />
 
       <WarlordCodex campaign={campaign} />
     </section>
