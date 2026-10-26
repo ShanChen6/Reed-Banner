@@ -40,7 +40,7 @@ test("khớp Nguyễn Bặc nằm trong vùng chồng, kích thước texture kh
     ...rig.covers.map((c) => [c.name, c.box] as const),
     ...rig.cloth.map((c) => [c.name, c.box] as const),
   ] as const;
-  const sourceBoxes = JSON.parse(readFileSync("docs/art/nguyen-bac-boxes.json", "utf8"));
+  const sourceBoxes = JSON.parse(readFileSync("docs/06-art/nhan-vat/nguyen-bac-boxes.json", "utf8"));
   for (const [name, box] of boxes) {
     assert.deepEqual(box, sourceBoxes[name], `${name} lệch tọa độ cắt từ ảnh nguồn`);
     const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);

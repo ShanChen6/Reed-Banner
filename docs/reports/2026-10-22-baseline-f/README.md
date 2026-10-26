@@ -8,7 +8,7 @@ Bàn giao cho task2. Nguồn thực tế là nhánh `feat/team-skill-combos`, HE
 
 Ban đầu checkout ở `checkpoint/skills-spirit-before-team-combos`, HEAD `32f87aa`, sạch. Sau khi người dùng chỉ nhánh chứa bốn bị động, chuyển sang `feat/team-skill-combos`; bản sửa thử tại checkpoint được lưu `/tmp/reed-task1-checkpoint.patch`, không đưa code checkpoint vào nhánh mới. Đã đọc AGENTS.md và hướng dẫn Next cục bộ trước sửa.
 
-Thứ tự nguồn: [thiết kế22](../../design/22-ky-nang-chase.md) và `chase.ts`/`combos.ts`/`skills.ts` hiện hành; [thiết kế21](../../design/21-combo-dong-doi.md) cho cơ hội chuẩn bị/layout2; thiết kế20/06/12/14 chỉ dùng đúng phần còn hiệu lực. Đã đối chiếu thiết kế02/03/04/05/07/08/09/10, roster, progress/profile/inventory, gear, arena, các báo cáo kỹ năng/AI/Tinh thần/F và bàn giao combo. Dữ liệu trận cũ là lịch sử, không dùng chứng minh cân bằng chase mới.
+Thứ tự nguồn: [thiết kế22](../../03-characters/ky-nang/README.md) và `chase.ts`/`combos.ts`/`skills.ts` hiện hành; [thiết kế21](../../03-characters/ky-nang/lich-su/21-combo-dong-doi.md) cho cơ hội chuẩn bị/layout2; thiết kế20/06/12/14 chỉ dùng đúng phần còn hiệu lực. Đã đối chiếu thiết kế02/03/04/05/07/08/09/10, roster, progress/profile/inventory, gear, arena, các báo cáo kỹ năng/AI/Tinh thần/F và bàn giao combo. Dữ liệu trận cũ là lịch sử, không dùng chứng minh cân bằng chase mới.
 
 F đã được nhánh này triển khai trước task1: `DEFAULT_SPIRIT_EXPERIMENT='F'`, decay5 từ lượt25, statFloor1, healFloor0.2. Engine, scorer AI, tooltip và thẻ tướng đọc cùng rules/helper; request tạo trận không nhận tùy chọn thử nghiệm. Task1 xác nhận và cập nhật các test/docs còn giả định cũ.
 

@@ -4,7 +4,7 @@
 // - MissionSources: panel "Sử liệu" ở khung chi tiết nhiệm vụ — nhãn, mốc có ghi chép, điểm còn tranh luận, sứ quân
 //   liên quan, nguồn kèm đường dẫn, và phần nào là cơ chế game.
 // - WarlordCodex: "Sứ quân ký" 12 hồ sơ, mở dần theo tiến độ server ghi để không lộ nội dung chưa tới.
-// Mọi câu ở đây là tóm tắt của sổ nguồn (docs/campaign-v2/history-sources.md), không phải lời nhân vật hay trích
+// Mọi câu ở đây là tóm tắt của sổ nguồn (docs/02-game-modes/campaign/history-sources.md), không phải lời nhân vật hay trích
 // nguyên văn.
 
 import {

@@ -1,4 +1,4 @@
-// Hiệu ứng trạng thái, xem docs/design/04-hieu-ung.md.
+// Hiệu ứng trạng thái, xem docs/01-gameplay/hieu-ung.md.
 
 export const EFFECT_KINDS = [
   "shield",

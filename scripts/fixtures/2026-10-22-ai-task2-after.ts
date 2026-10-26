@@ -1,6 +1,6 @@
 // Frozen task2 AI after recipient fix; only import paths adjusted.
 import { CHASE_PASSIVES, type ChasePassiveDef } from "../../src/core/battle/chase";
-// AI Tianwu, xem docs/design/10-ai.md.
+// AI Tianwu, xem docs/01-gameplay/ai.md.
 // Ngang bằng thông tin: AI chỉ nhận AiView (không có luồng ngẫu nhiên của bàn cờ),
 // chỉ mô phỏng phần biết chắc, và dùng luồng ngẫu nhiên riêng (aiRng).
 

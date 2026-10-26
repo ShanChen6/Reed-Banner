@@ -1,5 +1,5 @@
 // Gửi email qua SMTP bằng nodemailer (thư xác nhận email, thư đặt lại mật khẩu). Cấu hình bằng biến môi
-// trường SMTP_*; xem docs/tech/ha-tang.md mục 4. Khi dev chưa cấu hình thì in thư ra console thay vì gửi.
+// trường SMTP_*; xem docs/07-architecture/ha-tang.md mục 4. Khi dev chưa cấu hình thì in thư ra console thay vì gửi.
 
 import nodemailer, { type Transporter } from "nodemailer";
 

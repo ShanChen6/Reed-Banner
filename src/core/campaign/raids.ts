@@ -1,5 +1,5 @@
 // Đánh trùm (lộ trình 4.5): đấu lại sứ quân ở 3 bậc khó hơn, trên "sân nhà" của sứ quân, thưởng riêng.
-// Số liệu là điểm xuất phát do Claude đặt, chờ Shan duyệt. Xem docs/design/09-che-do-choi.md mục 2.2.
+// Số liệu là điểm xuất phát do Claude đặt, chờ Shan duyệt. Xem docs/02-game-modes/README.md mục 2.2.
 // CAMP-08.04: đối thủ đọc từ danh mục sứ quân (warlords.ts), mở theo mốc Campaign V2 (design-freeze mục 5), bậc
 // lưu theo id sứ quân. Chỉ 6 sứ quân bị đánh dẹp trong cốt truyện (nhóm "military" của sổ thế cục) là trùm, mỗi
 // trận là tái đấu (Shan chốt 25/10/2026); đồng minh, sứ quân quy phục hay tan rã không có trận Đánh trùm.

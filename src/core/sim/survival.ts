@@ -1,5 +1,5 @@
 // Mô phỏng sinh tồn: AI Thường đánh thay người chơi qua các đợt trên cùng một trận, tự quyết hồi sinh bằng lương.
-// Dùng để cân đường cong sức mạnh của đợt, xem docs/design/09-che-do-choi.md mục 4.
+// Dùng để cân đường cong sức mạnh của đợt, xem docs/02-game-modes/README.md mục 4.
 
 import { playAiTurn } from "../ai";
 import { beginWave, createBattle, FOOD_MAX } from "../battle";

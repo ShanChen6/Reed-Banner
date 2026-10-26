@@ -1,5 +1,5 @@
 // Xử lý một nước đổi ô: ghép, kích hoạt ô đặc biệt, rơi, sinh ô, cascade, xáo bàn.
-// Xem docs/design/01-ban-co.md mục 2–4.
+// Xem docs/01-gameplay/ban-co.md mục 2–4.
 
 import type { Rng } from "../rng";
 import { applyGravity, inBounds, indexOf, posOf, swapCells, type Board, type Pos } from "./grid";
@@ -181,7 +181,7 @@ function mergeResults(first: CascadeStep | null, rest: MoveResult): MoveResult {
 
 /**
  * Kỹ năng phá ô: ô bị phá được thu hoạch, ô đặc biệt bị phá thì kích hoạt, rồi cascade như thường.
- * Cascade sau kỹ năng không cho lượt thêm (docs/design/06-nhan-vat-ky-nang.md mục 5).
+ * Cascade sau kỹ năng không cho lượt thêm (docs/03-characters/ky-nang/mo-hinh-nhan-vat.md mục 5).
  */
 export function destroyCells(board: Board, cells: readonly Pos[], rng: Rng, weights: SpawnWeights): MoveResult {
   const valid = cells.filter((p) => inBounds(board, p));
@@ -190,7 +190,7 @@ export function destroyCells(board: Board, cells: readonly Pos[], rng: Rng, weig
 }
 
 /**
- * Lốc xoáy (hệ Phong): xoay vòng 8 ô quanh một ô tâm, xem docs/design/12-ky-nang-nhan-vat-chinh.md mục 1.2.
+ * Lốc xoáy (hệ Phong): xoay vòng 8 ô quanh một ô tâm, xem docs/03-characters/ky-nang/preset-ai-he-cu.md mục 1.2.
  * Ô tâm đứng yên; tâm phải cách mép bàn ít nhất 1 ô để đủ 8 ô quanh.
  */
 export interface Whirl {

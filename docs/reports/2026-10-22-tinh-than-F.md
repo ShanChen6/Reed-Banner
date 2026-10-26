@@ -121,11 +121,11 @@ Mẫu cap cuối được chọn có chủ đích để tìm tiến triển yế
 
 F không đồ: Phong Châu 7 thắng/5 thua, Tam Đái 5/7; cả hai n 12, không cap. F trắng× 3: Phong Châu 10/2, Tam Đái 6/6, không cap. Mẫu nhỏ, khác biệt tổng A/D/E/F trong bảng trên chưa biện minh sửa boss/preset hay luật lương.
 
-Playwright dùng Chromium thật trên 1440 × 1000 và 390 × 844. Fixture browser gọi engine thật, chặn route chỉ trong context test, không thêm endpoint ứng dụng. F hiển thị đúng 100/96/76/56/36/20/20% tại 24/25/30/35/40/44/50; ATK/DEF do TT luôn 100%. Hồi mục tiêu khác TT khớp engine; ở lượt 50 TT 0, Linh dược thực sự hồi 69 HP. Đã thao tác chọn/hủy mục tiêu, kỹ năng vùng, kiểm tra không tràn ngang và không có pageerror. [Log](2026-10-22-spirit-f/browser.log), [desktop](2026-10-22-spirit-f/desktop-late-floor.png), [mobile](2026-10-22-spirit-f/mobile-late-floor.png).
+Playwright dùng Chromium thật trên 1440 × 1000 và 390 × 844. Fixture browser gọi engine thật, chặn route chỉ trong context test, không thêm endpoint ứng dụng. F hiển thị đúng 100/96/76/56/36/20/20% tại 24/25/30/35/40/44/50; ATK/DEF do TT luôn 100%. Hồi mục tiêu khác TT khớp engine; ở lượt 50 TT 0, Linh dược thực sự hồi 69 HP. Đã thao tác chọn/hủy mục tiêu, kỹ năng vùng, kiểm tra không tràn ngang và không có pageerror. Log `2026-10-22-spirit-f/browser.log` (không lưu trong git), [desktop](2026-10-22-spirit-f/desktop-late-floor.png), [mobile](2026-10-22-spirit-f/mobile-late-floor.png).
 
 Đây là kiểm chứng thao tác, hiển thị và giá trị số bằng trình duyệt, **chưa phải đánh giá cảm giác của người chơi**. Chưa có người chơi tự quyết định đổi giữa đánh/hồi/phòng thủ cuối trận.
 
-Toàn bộ 333 test/83 suite pass,0 fail/skip; test audit 17/17; lint,typecheck,build production pass. Build không có DATABASE_URL nên script bỏ migration theo thiết kế; không tuyên bố kiểm chứng DB production. Các phép đối soát phase/tổng và bảo toàn Khiên đều pass trên mọi record telemetry mới. [Log kiểm tra](2026-10-22-spirit-f/tests-final.log), [hướng tái lập và giới hạn telemetry](2026-10-22-spirit-f/README.md).
+Toàn bộ 333 test/83 suite pass,0 fail/skip; test audit 17/17; lint,typecheck,build production pass. Build không có DATABASE_URL nên script bỏ migration theo thiết kế; không tuyên bố kiểm chứng DB production. Các phép đối soát phase/tổng và bảo toàn Khiên đều pass trên mọi record telemetry mới. Log kiểm tra `2026-10-22-spirit-f/tests-final.log` (không lưu trong git), [hướng tái lập và giới hạn telemetry](2026-10-22-spirit-f/README.md).
 
 ## Quyết định đề xuất
 

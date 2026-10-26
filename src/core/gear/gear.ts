@@ -1,5 +1,5 @@
 // Trang bị: 9 ô, phẩm màu, nguyên tố, thưởng bộ, cộng hưởng nguyên tố và ghép nâng bậc.
-// Xem docs/design/07-trang-bi.md. Số liệu là điểm xuất phát, chờ mô phỏng cân bằng.
+// Xem docs/04-equipment/trang-bi.md. Số liệu là điểm xuất phát, chờ mô phỏng cân bằng.
 
 import { elementRelation, type Element } from "../battle/elements";
 import type { Profession } from "../battle/rules";
@@ -61,7 +61,7 @@ export const TIER_INFO: Readonly<Record<Tier, TierInfo>> = {
   5: { color: "cam", name: "Thần phẩm", multiplier: 3 },
 };
 
-/** Hệ số chỉ số theo quan hệ nguyên tố trang bị → nhân vật, xem docs/design/05-nguyen-to.md mục 3. */
+/** Hệ số chỉ số theo quan hệ nguyên tố trang bị → nhân vật, xem docs/01-gameplay/nguyen-to.md mục 3. */
 export function gearElementMultiplier(gear: Element, wearer: Element): number {
   if (gear === wearer) return 1.5;
   switch (elementRelation(gear, wearer)) {

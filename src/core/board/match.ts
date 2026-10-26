@@ -1,4 +1,4 @@
-// Tìm bộ ghép và nước đi hợp lệ, xem docs/design/01-ban-co.md mục 2.
+// Tìm bộ ghép và nước đi hợp lệ, xem docs/01-gameplay/ban-co.md mục 2.
 
 import { indexOf, inBounds, isAdjacent, posOf, swapCells, tileAt, type Board, type Pos } from "./grid";
 import { sameKind, type SpecialGrade, type TileKind } from "./tiles";
