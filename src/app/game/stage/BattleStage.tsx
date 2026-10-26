@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }, { fireRain }, { flameCleave }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }, { fireRain }, { flameCleave }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -456,6 +456,20 @@ export default function BattleStage({
             fire.burn(spot(foe, 0), size, 0.2);
           });
           return [cut, fire];
+        }
+        if (rig.strikeFx === "emberMend") {
+          const bloom = leafBloom(sky, rig.fxColor, EMBER);
+          const rally = ironFormation(sky, rig.fxColor);
+          // Tuyệt chiêu đan hỏa: vòng than hồng hồi phục quanh từng đồng đội (Hồi máu), mũi tên vàng dâng lên (Công tăng).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(true).forEach((s, n) => {
+              bloom.cover(spot(s, 0), size, n * 0.08);
+              rally.rally(spot(s, 0), size, 0.35 + n * 0.08);
+            });
+          });
+          return [bloom, rally];
         }
         if (rig.strikeFx === "flameWall") {
           const fx = flameWall(sky, rig.fxColor);

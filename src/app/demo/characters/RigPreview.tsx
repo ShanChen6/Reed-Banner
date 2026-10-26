@@ -55,7 +55,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }, { fireRain }, { flameCleave }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }, { fireRain }, { flameCleave }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/ward"), import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -170,6 +170,15 @@ export default function RigPreview({ id, size, onSnapshot }: {
           cleave[0].slash(at, size, 1);
           cleave[1].burn(at, size, 0.2);
         });
+        // Đan hỏa hệ Hỏa: vòng than hồng và mũi tên vàng quanh nhân vật.
+        const mend = team === "emberMend" ? [leafBloom(app.stage, rig.fxColor, EMBER), ironFormation(app.stage, rig.fxColor)] as const : null;
+        if (mend) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const at = { x: loaded.view.x, y: loaded.view.y };
+          const size = rig.height * loaded.view.scale.y;
+          mend[0].cover(at, size);
+          mend[1].rally(at, size, 0.35);
+        });
         // Đập đất hệ Thổ: nứt đất ở mép phải khung, vòm khiên quanh nhân vật.
         const slam = team === "groundSlam" ? groundSlam(app.stage, rig.fxColor) : null;
         const slamWard = slam ? earthWard(app.stage, rig.fxColor) : null;
@@ -252,6 +261,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           tide?.update(dt);
           rain?.forEach((r) => r.update(dt));
           cleave?.forEach((c) => c.update(dt));
+          mend?.forEach((m) => m.update(dt));
           siege?.update(dt);
           roots?.forEach((r) => r.update(dt));
           thorns?.update(dt);

@@ -1,6 +1,7 @@
 /**
  * Vòng lá hồi sinh vẽ trên cả sân (hệ tọa độ của stage PixiJS): tuyệt chiêu hồi máu của y sư hệ Mộc nở một vòng
- * sáng dưới chân từng đồng đội, lá xoay vòng quanh người rồi bay lên cùng hạt sáng, sau đó tan dần.
+ * sáng dưới chân từng đồng đội, lá xoay vòng quanh người rồi bay lên cùng hạt sáng, sau đó tan dần. Màu viền và hạt
+ * sáng đổi được: y sư hệ Hỏa dùng than hồng thay lá non.
  */
 import { Container, Graphics } from "pixi.js";
 import type { Point } from "./rigs";
@@ -24,7 +25,18 @@ interface Bloom {
   readonly leaves: readonly Leaf[];
 }
 
-export function leafBloom(parent: Container, color: number) {
+/** Màu viền vòng, gân lá và hạt sáng. */
+export interface BloomGlow {
+  readonly line: number;
+  readonly spark: number;
+}
+
+const SPRING: BloomGlow = { line: 0xc9f5b0, spark: 0xeaffd8 };
+
+/** Than hồng của y sư hệ Hỏa. */
+export const EMBER: BloomGlow = { line: 0xffd8a0, spark: 0xfff2c4 };
+
+export function leafBloom(parent: Container, color: number, glow: BloomGlow = SPRING) {
   const g = new Graphics();
   parent.addChild(g);
   let blooms: Bloom[] = [];
@@ -54,7 +66,7 @@ export function leafBloom(parent: Container, color: number) {
         // Vòng sáng dưới chân nở rộng rồi nhạt.
         const ring = Math.min(1, k * 4);
         g.ellipse(x, y, rx * (0.4 + 0.8 * ring), rx * 0.2 * (0.4 + 0.8 * ring)).fill({ color, alpha: 0.25 * fade });
-        g.ellipse(x, y, rx * (0.4 + 0.8 * ring), rx * 0.2 * (0.4 + 0.8 * ring)).stroke({ color: 0xc9f5b0, width: b.size * 0.012, alpha: 0.8 * fade });
+        g.ellipse(x, y, rx * (0.4 + 0.8 * ring), rx * 0.2 * (0.4 + 0.8 * ring)).stroke({ color: glow.line, width: b.size * 0.012, alpha: 0.8 * fade });
         // Cột sáng mờ dâng lên quanh người.
         g.ellipse(x, y - b.size * 0.45 * ring, rx * 0.8, b.size * 0.45 * ring).fill({ color, alpha: 0.1 * fade });
         // Lá xoay quanh người và bay lên; lá phía sau mờ hơn.
@@ -65,8 +77,8 @@ export function leafBloom(parent: Container, color: number) {
           const depth = 0.55 + 0.45 * Math.sin(ang);
           const s = b.size * 0.022 * l.size;
           g.ellipse(lx, ly, s * 1.8, s * 0.8).fill({ color, alpha: 0.9 * fade * depth });
-          g.moveTo(lx - s * 1.6, ly).lineTo(lx + s * 1.6, ly).stroke({ color: 0xc9f5b0, width: s * 0.25, alpha: 0.7 * fade * depth });
-          g.circle(lx, ly - s * 3, s * 0.45).fill({ color: 0xeaffd8, alpha: 0.8 * fade * depth });
+          g.moveTo(lx - s * 1.6, ly).lineTo(lx + s * 1.6, ly).stroke({ color: glow.line, width: s * 0.25, alpha: 0.7 * fade * depth });
+          g.circle(lx, ly - s * 3, s * 0.45).fill({ color: glow.spark, alpha: 0.8 * fade * depth });
         }
       }
       blooms = blooms.filter((b) => b.wait > 0 || b.t < LIFE);

@@ -125,7 +125,8 @@ export interface WarriorRig {
    * đội và cột băng dưới chân từng đối thủ; `tideMist` chỉ ở tuyệt chiêu, sương nước quanh từng đối thủ và hạt năng
    * lượng bay về chính mình; `tideSiege` chỉ ở tuyệt chiêu, cột băng dưới chân và vết nứt trên từng đối thủ; `fireRain` chỉ ở
    * tuyệt chiêu, cầu lửa rơi xuống và lửa bén trên từng đối thủ; `flameCleave` chỉ ở tuyệt chiêu, nhát chém lửa và lửa
-   * bén trên đối thủ đứng đầu.
+   * bén trên đối thủ đứng đầu; `emberMend` chỉ ở tuyệt chiêu, vòng than hồng hồi phục và mũi tên vàng quanh
+   * từng đồng đội.
    */
   readonly strikeFx?:
     | "lightning"
@@ -152,7 +153,8 @@ export interface WarriorRig {
     | "tideMist"
     | "tideSiege"
     | "fireRain"
-    | "flameCleave";
+    | "flameCleave"
+    | "emberMend";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1975,6 +1977,47 @@ const TRUONG_VIEM: WarriorRig = {
     anchor: { x: 800, y: 900 }, scale: 0.9 },
 };
 
+/**
+ * Hồng Đan, y sư hệ Hỏa (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn; tranh ra chiêu gửi trùng tranh
+ * tuyệt chiêu nên ra chiêu dùng nhịp lắc hồ lô của rig). Ảnh đứng tách lớp bằng code như Mai Thanh: bàn tay xách hồ lô
+ * xoay quanh cổ tay, hồ lô lắc quanh nắm tay; bàn tay buông và đầu tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const HONG_DAN: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "gourd",
+  grip: { x: 290, y: 690 },
+  dir: "hong-dan",
+  texScale: 0.5,
+  foot: { x: 560, y: 1510 },
+  height: 1500,
+  parts: {
+    body: { x: 284, y: 10, w: 541, h: 1510 },
+    armR: { x: 735, y: 697, w: 54, h: 92 },
+    sword: { x: 199, y: 642, w: 164, h: 257 },
+    arm: { x: 252, y: 662, w: 76, h: 84 },
+    head: { x: 390, y: 10, w: 217, h: 194 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 290, y: 680 },
+    elbowR: { x: 758, y: 712 },
+    neck: { x: 520, y: 195 },
+  },
+  blade: [{ x: 290, y: 690 }, { x: 270, y: 850 }],
+  strikeFx: "emberMend",
+  fxColor: 0xd9502a,
+  // Phẩy tay rắc thuốc, hồ lô xách thấp (đánh thường), ôm hồ lô mở nút trao thuốc cho cả đội (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 145, y: 12 },
+      anchor: { x: 590, y: 1510 }, scale: 1, burst: { x: 430, y: 300 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 137, y: 15 },
+      anchor: { x: 585, y: 1515 }, scale: 1, burst: { x: 680, y: 600 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 39, y: 38 },
+    anchor: { x: 800, y: 900 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -2016,6 +2059,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   haVan: HA_VAN,
   lyLiet: LY_LIET,
   truongViem: TRUONG_VIEM,
+  hongDan: HONG_DAN,
 };
 
 export function rigOf(id: string): Rig | null {
