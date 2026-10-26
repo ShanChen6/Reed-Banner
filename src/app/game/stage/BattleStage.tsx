@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }, { fireRain }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }, { fireRain }, { flameCleave }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -228,6 +228,7 @@ export default function BattleStage({
         import("./thorn"),
         import("./miasma"),
         import("./meteor"),
+        import("./cleave"),
       ]);
       const app = new Application();
       await app.init({
@@ -442,6 +443,19 @@ export default function BattleStage({
             });
           });
           return [rain, fire];
+        }
+        if (rig.strikeFx === "flameCleave") {
+          const cut = flameCleave(sky, rig.fxColor);
+          const fire = flameWall(sky, rig.fxColor);
+          // Tuyệt chiêu một người: nhát chém lửa trăng khuyết bổ qua đối thủ đứng đầu, rồi lửa bén lên họ (Thiêu đốt).
+          loaded[i]!.onStrike?.((kind) => {
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !foe) return;
+            const size = app.screen.height * FIGURE;
+            cut.slash(spot(foe, 0), size, e.side === 0 ? 1 : -1);
+            fire.burn(spot(foe, 0), size, 0.2);
+          });
+          return [cut, fire];
         }
         if (rig.strikeFx === "flameWall") {
           const fx = flameWall(sky, rig.fxColor);

@@ -55,7 +55,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }, { fireRain }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }, { fireRain }, { flameCleave }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/ward"), import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -64,7 +64,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           import("@/app/game/stage/silver"), import("@/app/game/stage/coins"),
           import("@/app/game/stage/banner"), import("@/app/game/stage/sap"),
           import("@/app/game/stage/thorn"), import("@/app/game/stage/miasma"),
-          import("@/app/game/stage/meteor"),
+          import("@/app/game/stage/meteor"), import("@/app/game/stage/cleave"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -161,6 +161,15 @@ export default function RigPreview({ id, size, onSnapshot }: {
             rain[1].burn(at, size, 0.35 + n * 0.12);
           });
         });
+        // Nhát chém lửa hệ Hỏa: bổ qua một điểm bên phải khung, lửa bén theo sau.
+        const cleave = team === "flameCleave" ? [flameCleave(app.stage, rig.fxColor), flameWall(app.stage, rig.fxColor)] as const : null;
+        if (cleave) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y * 0.8;
+          const at = { x: el.clientWidth * 0.85, y: loaded.view.y };
+          cleave[0].slash(at, size, 1);
+          cleave[1].burn(at, size, 0.2);
+        });
         // Đập đất hệ Thổ: nứt đất ở mép phải khung, vòm khiên quanh nhân vật.
         const slam = team === "groundSlam" ? groundSlam(app.stage, rig.fxColor) : null;
         const slamWard = slam ? earthWard(app.stage, rig.fxColor) : null;
@@ -242,6 +251,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           mist?.forEach((m) => m.update(dt));
           tide?.update(dt);
           rain?.forEach((r) => r.update(dt));
+          cleave?.forEach((c) => c.update(dt));
           siege?.update(dt);
           roots?.forEach((r) => r.update(dt));
           thorns?.update(dt);
