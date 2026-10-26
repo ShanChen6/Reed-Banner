@@ -119,7 +119,8 @@ export interface WarriorRig {
    * đội; `bambooSap` chỉ ở tuyệt chiêu, chém lá trúc lên đối thủ đứng đầu và hút sinh khí về chính mình;
    * `thornBind` chỉ ở tuyệt chiêu, dây gai quấn từng đối thủ và hút sinh khí về chính mình; `rootGuard` chỉ ở tuyệt
    * chiêu, vòng lá hồi phục quanh cả đội và vòm khiên đất quanh chính mình; `poisonMist` chỉ ở tuyệt chiêu, sương độc
-   * quanh từng đối thủ và vòng lá hồi phục quanh đội mình.
+   * quanh từng đối thủ và vòng lá hồi phục quanh đội mình; `groveWard` chỉ ở tuyệt chiêu, vòng lá và vòm khiên quanh
+   * từng đồng đội.
    */
   readonly strikeFx?:
     | "lightning"
@@ -138,7 +139,8 @@ export interface WarriorRig {
     | "bambooSap"
     | "thornBind"
     | "rootGuard"
-    | "poisonMist";
+    | "poisonMist"
+    | "groveWard";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1567,6 +1569,48 @@ const NHAN_TRUC: WarriorRig = {
     anchor: { x: 800, y: 950 }, scale: 0.85 },
 };
 
+/**
+ * Sầm Tuệ, quân sư hệ Mộc (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code:
+ * cờ đuôi nheo cán tre cùng nắm tay xoay quanh cổ tay theo nhịp giáo như Lê Hoàn, bàn tay cầm thẻ tre và đầu tách
+ * riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const SAM_TUE: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "sam-tue",
+  texScale: 0.5,
+  foot: { x: 620, y: 1500 },
+  height: 1400,
+  parts: {
+    body: { x: 326, y: 110, w: 657, h: 1407 },
+    armR: { x: 745, y: 735, w: 172, h: 161 },
+    sword: { x: 21, y: 3, w: 443, h: 1478 },
+    arm: { x: 357, y: 460, w: 84, h: 96 },
+    head: { x: 490, y: 111, w: 191, h: 235 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 410, y: 510 },
+    elbowR: { x: 770, y: 760 },
+    neck: { x: 590, y: 340 },
+  },
+  blade: [{ x: 395, y: 500 }, { x: 362, y: 10 }],
+  strikeFx: "groveWard",
+  fxColor: 0x4f9a4a,
+  // Hạ cờ chĩa ngang (đánh thường), dựng cờ ôm thẻ tre (ra chiêu), thế tấn vung cờ chéo ra lệnh (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 23, y: 8 },
+      anchor: { x: 940, y: 1000 }, scale: 1.3, burst: { x: 50, y: 100 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 10, y: 3 },
+      anchor: { x: 680, y: 1505 }, scale: 1, burst: { x: 760, y: 450 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 42, y: 9 },
+      anchor: { x: 860, y: 1115 }, scale: 1.2, burst: { x: 1230, y: 330 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 13, y: 67 },
+    anchor: { x: 900, y: 900 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1599,6 +1643,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   hoangMoc: HOANG_MOC,
   lucDiep: LUC_DIEP,
   nhanTruc: NHAN_TRUC,
+  samTue: SAM_TUE,
 };
 
 export function rigOf(id: string): Rig | null {
