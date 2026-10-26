@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }, { fireRain }, { flameCleave }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -227,6 +227,8 @@ export default function BattleStage({
         import("./sap"),
         import("./thorn"),
         import("./miasma"),
+        import("./meteor"),
+        import("./cleave"),
       ]);
       const app = new Application();
       await app.init({
@@ -360,6 +362,20 @@ export default function BattleStage({
           });
           return [fx];
         }
+        if (rig.strikeFx === "tideSiege") {
+          const tide = waterPillar(sky, rig.fxColor);
+          const crack = ironFormation(sky, rig.fxColor);
+          // Tuyệt chiêu triều dâng: cột nước dâng rồi đông băng dưới chân từng đối thủ (Đóng băng), vết nứt trên người họ (Công giảm).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => {
+              tide.cover(spot(s, 0), size, n * 0.08);
+              crack.shatter(spot(s, 0.5), size, 0.3 + n * 0.08);
+            });
+          });
+          return [tide, crack];
+        }
         if (rig.strikeFx === "ironFormation") {
           const fx = ironFormation(sky, rig.fxColor);
           // Tuyệt chiêu thiết trận: khiên nứt trên từng đối thủ (Thủ giảm), mũi tên vàng ở từng đồng đội (Công tăng).
@@ -412,6 +428,48 @@ export default function BattleStage({
             alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, 0.2 + n * 0.08));
           });
           return [slam, ward];
+        }
+        if (rig.strikeFx === "fireRain") {
+          const rain = fireRain(sky, rig.fxColor);
+          const fire = flameWall(sky, rig.fxColor);
+          // Tuyệt chiêu mưa lửa: cầu lửa rơi chéo xuống từng đối thủ từ phía người tung chiêu, chạm đất thì lửa bén (Thiêu đốt).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            const dir = e.side === 0 ? 1 : -1;
+            alive(false).forEach((s, n) => {
+              rain.fall(spot(s, 0), size, dir, n * 0.12);
+              fire.burn(spot(s, 0), size, 0.35 + n * 0.12);
+            });
+          });
+          return [rain, fire];
+        }
+        if (rig.strikeFx === "flameCleave") {
+          const cut = flameCleave(sky, rig.fxColor);
+          const fire = flameWall(sky, rig.fxColor);
+          // Tuyệt chiêu một người: nhát chém lửa trăng khuyết bổ qua đối thủ đứng đầu, rồi lửa bén lên họ (Thiêu đốt).
+          loaded[i]!.onStrike?.((kind) => {
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !foe) return;
+            const size = app.screen.height * FIGURE;
+            cut.slash(spot(foe, 0), size, e.side === 0 ? 1 : -1);
+            fire.burn(spot(foe, 0), size, 0.2);
+          });
+          return [cut, fire];
+        }
+        if (rig.strikeFx === "emberMend") {
+          const bloom = leafBloom(sky, rig.fxColor, EMBER);
+          const rally = ironFormation(sky, rig.fxColor);
+          // Tuyệt chiêu đan hỏa: vòng than hồng hồi phục quanh từng đồng đội (Hồi máu), mũi tên vàng dâng lên (Công tăng).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(true).forEach((s, n) => {
+              bloom.cover(spot(s, 0), size, n * 0.08);
+              rally.rally(spot(s, 0), size, 0.35 + n * 0.08);
+            });
+          });
+          return [bloom, rally];
         }
         if (rig.strikeFx === "flameWall") {
           const fx = flameWall(sky, rig.fxColor);
