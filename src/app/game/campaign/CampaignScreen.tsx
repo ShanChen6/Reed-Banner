@@ -21,7 +21,7 @@ import {
 import { PROFILE_ERROR } from "../battle/ProgressPanel";
 import ChapterOne from "./ChapterOne";
 import RaidHall from "./RaidPanel";
-import { SceneLink, useScene } from "../SceneContext";
+import { useScene } from "../SceneContext";
 
 export default function CampaignScreen() {
   const { go } = useScene();
@@ -92,20 +92,6 @@ export default function CampaignScreen() {
 
   return (
     <Shell>
-      <div className="mb-3 flex justify-end gap-2 text-sm">
-        <SceneLink
-          scene="PROFILE"
-          className="rounded bg-white/10 px-3 py-1.5 hover:bg-white/15"
-        >
-          Hồ sơ
-        </SceneLink>
-        <SceneLink
-          scene="PLAYING"
-          className="rounded bg-white/10 px-3 py-1.5 hover:bg-white/15"
-        >
-          Trận thường
-        </SceneLink>
-      </div>
       <ChapterOne
         profile={profile}
         onProfile={setProfile}
