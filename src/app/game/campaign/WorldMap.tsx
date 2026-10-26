@@ -16,6 +16,7 @@ import {
   type ChapterMissionStatus,
 } from "@/core";
 import { AtlasCorners } from "./AtlasFrame";
+import { FACTION_MARKS, flagPath } from "./factionMarks";
 import { fitView, useMapView, MAX_ZOOM } from "./useMapView";
 import {
   NAME_FONT,
@@ -189,7 +190,76 @@ function City({ k }: { k: number }) {
   );
 }
 
-function Banner({ k, color, hq }: { k: number; color: string; hq: boolean }) {
+/** Hình vẽ giữa cờ của một cứ điểm, tâm ở (0, 0). */
+function MarkGlyph({ id }: { id: StrongholdId }) {
+  const m = FACTION_MARKS[id];
+  return (
+    <g stroke="#f2d27c" strokeWidth={2.2} strokeLinejoin="round" fill="none">
+      <path d={m.glyph} />
+      {m.fill && <path d={m.fill} fill="#f2d27c" stroke="none" />}
+    </g>
+  );
+}
+
+/** Lá cờ (không cán): dáng + hình vẽ theo id, nền là màu thế cục. Dùng chung cho bản đồ và ô ngoài bản đồ. */
+function FlagCloth({ id, color }: { id: StrongholdId; color: string }) {
+  const shape = FACTION_MARKS[id].shape;
+  return (
+    <>
+      <path
+        d={flagPath(shape)}
+        fill={color}
+        stroke="#d4a24c"
+        strokeWidth={shape === "twin" ? 4 : 2.5}
+        strokeLinejoin="round"
+      />
+      {shape === "twin" && (
+        <path
+          d="M-19,-109 L19,-109 L19,-50"
+          fill="none"
+          stroke="#f2d27c"
+          strokeWidth={1.2}
+          opacity={0.8}
+        />
+      )}
+      <g transform="translate(0,-84)">
+        <MarkGlyph id={id} />
+      </g>
+    </>
+  );
+}
+
+/** Cờ nhỏ cho HTML (ô Bình Kiều, danh sách cứ điểm), cùng hình với cờ trên bản đồ. */
+export function FactionFlag({
+  id,
+  color,
+  className,
+}: {
+  id: StrongholdId;
+  color: string;
+  className?: string;
+}) {
+  return (
+    <svg
+      viewBox="-27 -117 54 80"
+      className={className}
+      aria-hidden
+      focusable="false"
+    >
+      <FlagCloth id={id} color={color} />
+    </svg>
+  );
+}
+
+function Banner({
+  k,
+  id,
+  color,
+}: {
+  k: number;
+  id: StrongholdId;
+  color: string;
+}) {
   return (
     <g transform={`scale(${k})`}>
       <line
@@ -201,32 +271,14 @@ function Banner({ k, color, hq }: { k: number; color: string; hq: boolean }) {
         strokeWidth={3}
       />
       <line
-        x1={-25}
-        y1={-112}
-        x2={25}
-        y2={-112}
+        x1={-27}
+        y1={-114}
+        x2={27}
+        y2={-114}
         stroke="var(--map-ink)"
         strokeWidth={3}
       />
-      <path
-        d="M-20,-112 L20,-112 L20,-48 L0,-58 L-20,-48 Z"
-        fill={color}
-        stroke="#d4a24c"
-        strokeWidth={hq ? 4 : 2.5}
-      />
-      <circle
-        cx={0}
-        cy={-86}
-        r={9}
-        fill="none"
-        stroke="#f2d27c"
-        strokeWidth={2.5}
-      />
-      <path
-        d="M0,-100 L0,-72 M-9,-86 L9,-86"
-        stroke="#f2d27c"
-        strokeWidth={2}
-      />
+      <FlagCloth id={id} color={color} />
     </g>
   );
 }
@@ -394,7 +446,7 @@ export default function WorldMap({
                     rx={80 * g.scale}
                     ry={95 * g.scale}
                     fill="#f2c14e"
-                    opacity={0.55}
+                    opacity={0.4}
                     filter="url(#world-glow)"
                   />
                 )}
@@ -415,11 +467,7 @@ export default function WorldMap({
                   </g>
                 )}
                 <g transform={`translate(${g.pole[0]},${g.pole[1]})`}>
-                  <Banner
-                    k={g.scale}
-                    color={STATE_COLOR[st]}
-                    hq={st === "hq"}
-                  />
+                  <Banner k={g.scale} id={s.id} color={STATE_COLOR[st]} />
                 </g>
                 <rect
                   x={g.label[0]}
@@ -524,16 +572,11 @@ export default function WorldMap({
                 s.id === selected ? "map-chip-active" : ""
               } ${inChapter.has(s.id) ? "" : "opacity-70"}`}
             >
-              <span
-                aria-hidden
-                className="flex size-7 items-center justify-center rounded text-sm font-black text-amber-50"
-                style={{
-                  background:
-                    STATE_COLOR[strongholdState(s, campaign.factions)],
-                }}
-              >
-                ?
-              </span>
+              <FactionFlag
+                id={s.id}
+                color={STATE_COLOR[strongholdState(s, campaign.factions)]}
+                className="h-8 w-6 shrink-0"
+              />
               <span className="text-xs leading-tight">
                 <span className="block font-bold">
                   {s.place} · {strongholdLeader(s)}
@@ -582,13 +625,10 @@ export default function WorldMap({
                   s.id === selected ? "map-chip-active" : ""
                 }`}
               >
-                <span
-                  aria-hidden
-                  className="size-3 shrink-0 rounded-sm"
-                  style={{
-                    background:
-                      STATE_COLOR[strongholdState(s, campaign.factions)],
-                  }}
+                <FactionFlag
+                  id={s.id}
+                  color={STATE_COLOR[strongholdState(s, campaign.factions)]}
+                  className="h-7 w-5 shrink-0"
                 />
                 <span className="min-w-0 leading-tight">
                   <span className="block truncate font-semibold">
