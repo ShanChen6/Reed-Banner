@@ -29,6 +29,7 @@
 | [17-prompt-do-hoa.md](design/17-prompt-do-hoa.md) | Prompt Copilot ráp sẵn cho đồ họa ngoài nhân vật: 42 trang bị, 21 ô bàn cờ, 54 lớp nền trận, mẫu giao diện, tranh lớn, linh vật, hạt hiệu ứng |
 | [18-prompt-tu-the.md](design/18-prompt-tu-the.md) | Prompt ráp sẵn tranh tư thế ra chiêu, tuyệt chiêu và bị hạ gục cho 61 nhân vật đánh trận |
 | [19-codex-do-hoa.md](design/19-codex-do-hoa.md) | Prompt cho Codex dựng hình động nhân vật: tách nền, cắt lớp, vá chỗ bị che, rig, tranh tư thế, file xem trước cho Shan duyệt |
+| [23-home-v2-dai-ban-doanh.md](design/23-home-v2-dai-ban-doanh.md) | Home V2: sảnh Đại Bản Doanh, hero Hoa Lư, sáu card chế độ có artwork, giữ nguyên Header và Chiến dịch |
 
 **Kỹ thuật** (`tech/`)
 
