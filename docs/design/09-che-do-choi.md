@@ -1,5 +1,7 @@
 # Chế độ chơi
 
+> **Quyết định sản phẩm mới (27/10/2026):** tham khảo [Game Modes 2026: định hướng, Binh Pháp và Song Tháp](../game-modes/README.md). Nội dung chi tiết bên dưới mô tả **implementation baseline trước khi triển khai các đề xuất**, không có nghĩa mode mới đã tồn tại. Các giá trị Trial 20 / Destiny 10 / nhãn Sinh tồn ở bảng dưới là **trạng thái code hiện tại**, còn định hướng tương lai xem tài liệu mới.
+
 > Cập nhật: 25/10/2026 (CAMP-08.04: gỡ chiến dịch 13 màn cũ, tách Đánh trùm/BXH/nhiệm vụ khỏi màn cũ)
 
 ## 1. Tổng quan
