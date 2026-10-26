@@ -1,7 +1,7 @@
 # 09 — DESIGN FREEZE UI: Sử ký + bản đồ toàn cảnh 12 cứ điểm + panel chi tiết
 
 > Cập nhật: 26/10/2026  
-> Trạng thái: **PHƯƠNG ÁN GIAO DIỆN ĐÃ ĐƯỢC SHAN DUYỆT** qua ảnh concept trong hội thoại. **Chưa đồng nghĩa source code hoặc asset bản đồ đã hoàn thành.**  
+> Trạng thái: **APPROVED** — phương án giao diện đã được Shan duyệt qua ảnh concept trong hội thoại. **Chưa đồng nghĩa source code hoặc asset bản đồ đã hoàn thành.**  
 > Đây là đặc tả hình thức/điều hướng UI, KHÔNG ghi đè `docs/02-game-modes/campaign/design-freeze.md` và ma trận sử liệu.
 
 ## A. Mục tiêu cuối cùng người chơi phải thấy
