@@ -824,13 +824,12 @@ test("Trương Viêm có bốn tranh, tường lửa hệ Hỏa, khiên nâng đ
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Hồng Đan có ba tranh, đan hỏa hệ Hỏa, hồ lô lắc quanh nắm tay và texture khớp tọa độ", () => {
+test("Hồng Đan có bốn tranh, đan hỏa hệ Hỏa, hồ lô lắc quanh nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("hongDan");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, "gourd");
   assert.equal(rig.strikeFx, "emberMend");
-  for (const kind of ["attack", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
-  assert.equal(rig.poses?.cast, undefined);
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
     assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
