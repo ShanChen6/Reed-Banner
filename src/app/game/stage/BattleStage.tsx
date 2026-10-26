@@ -437,6 +437,18 @@ export default function BattleStage({
           });
           return [ward, ice];
         }
+        if (rig.strikeFx === "springDew") {
+          const bloom = leafBloom(sky, rig.fxColor);
+          const ice = waterPillar(sky, rig.fxColor);
+          // Tuyệt chiêu cam lộ: vòng cam lộ hồi phục quanh từng đồng đội (Hồi máu, giải trừ), cột băng dưới chân từng đối thủ (Đóng băng).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(true).forEach((s, n) => bloom.cover(spot(s, 0), size, n * 0.08));
+            alive(false).forEach((s, n) => ice.cover(spot(s, 0), size, 0.3 + n * 0.08));
+          });
+          return [bloom, ice];
+        }
         if (rig.strikeFx === "frostSpear") {
           const fx = waterPillar(sky, rig.fxColor);
           // Tuyệt chiêu một người: cột nước đóng băng dưới chân đối thủ đứng đầu (Đóng băng, rút năng lượng).

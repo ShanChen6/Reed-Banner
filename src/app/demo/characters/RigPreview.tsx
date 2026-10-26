@@ -116,7 +116,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
         });
         // Vòm khiên đất hệ Thổ, vòng lá hệ Mộc: nở quanh chính nhân vật khi tuyệt chiêu.
         const team = rig.skeleton === "warrior" ? rig.strikeFx : undefined;
-        const wards = team === "earthWard" || team === "tideBulwark" ? earthWard(app.stage, rig.fxColor) : team === "leafBloom" ? leafBloom(app.stage, rig.fxColor)
+        const wards = team === "earthWard" || team === "tideBulwark" ? earthWard(app.stage, rig.fxColor) : team === "leafBloom" || team === "springDew" ? leafBloom(app.stage, rig.fxColor)
           : team === "silverGrace" ? silverGrace(app.stage, rig.fxColor) : null;
         if (wards) loaded.onStrike?.((kind) => {
           if (kind === "ultimate" && loaded) wards.cover({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y);
@@ -135,7 +135,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           [0.25, 0.5].forEach((k, n) => drain.drain({ x: el.clientWidth - 40, y: el.clientHeight * k + size * 0.2 }, me, size, n * 0.1));
         });
         // Cột nước hệ Thủy: phun lên ở hai điểm bên phải khung.
-        const pillar = team === "waterPillar" || team === "frostSpear" || team === "tideBulwark" ? waterPillar(app.stage, rig.fxColor) : null;
+        const pillar = team === "waterPillar" || team === "frostSpear" || team === "tideBulwark" || team === "springDew" ? waterPillar(app.stage, rig.fxColor) : null;
         if (pillar) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y;
