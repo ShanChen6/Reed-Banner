@@ -924,11 +924,13 @@ export default function ChapterOne({
           )}
 
           {routeId && (
-            <RouteSummary
-              campaign={campaign}
-              routeId={routeId}
-              onPick={openMission}
-            />
+            <div className={`campaign-atlas ${atlasSerif.variable}`}>
+              <RouteSummary
+                campaign={campaign}
+                routeId={routeId}
+                onPick={openMission}
+              />
+            </div>
           )}
         </>
       ) : (
