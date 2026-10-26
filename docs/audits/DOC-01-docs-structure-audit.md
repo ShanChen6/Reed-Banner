@@ -118,10 +118,10 @@ Cấu trúc trên là mục tiêu dài hạn, không bắt buộc di chuyển m�
 - [x] Đã xác minh nguồn UI trùng và trạng thái PR #179/#181/#182.
 - [x] Đã xác minh các entrypoint lớn từ index và file thực tế.
 - [x] Đã đề xuất target structure và mapping ưu tiên.
-- [ ] Sinh full manifest từ `git ls-files` trên checkout và phân loại toàn bộ Markdown.
-- [ ] Kiểm tra toàn bộ links/anchors và docs path references trong repository.
-- [ ] Chốt canonical owner cho từng nhóm file chưa có trong audit.
-- [ ] Duyệt mapping cụ thể trước khi move.
-- [ ] Sau PR #182 merge, rebase mapping Home V2 để tránh conflict.
+- [x] Sinh full manifest từ `git ls-files` trên checkout và phân loại toàn bộ Markdown ([DOC-01-manifest.md](DOC-01-manifest.md)).
+- [x] Kiểm tra toàn bộ links/anchors và docs path references trong repository (manifest mục 4–5).
+- [x] Chốt canonical owner cho từng nhóm file chưa có trong audit (manifest mục 3, 6).
+- [x] Duyệt mapping cụ thể trước khi move (Shan, 27/10/2026).
+- [x] Sau PR #182 merge, rebase mapping Home V2 để tránh conflict (PR #182 đã merge trước manifest).
 
-**Không được gọi DOC-01 hoàn tất toàn bộ inventory** cho đến khi các mục chưa kiểm chứng ở trên được xử lý.
+**DOC-01 hoàn tất** ngày 27/10/2026: manifest đầy đủ 182 file, bảng ánh xạ và quyết định của Shan ở [DOC-01-manifest.md](DOC-01-manifest.md).
