@@ -193,6 +193,8 @@ export const NAME_FONT = 20;
 const LABEL_H = PLACE_FONT + NAME_FONT + 18;
 /** Ước lượng bề ngang chữ có chân (em trung bình), chỉ để xếp nhãn không đè nhau. */
 const EM = 0.56;
+/** Tên sứ quân in nghiêng có nhiều dấu chồng nên rộng hơn tên đất. */
+const EM_ITALIC = 0.62;
 
 /** Khung của cờ, thành và tên đất quanh một điểm; dùng chung cho vẽ và cho test không đè nhau. */
 export function strongholdGlyph(
@@ -207,7 +209,10 @@ export function strongholdGlyph(
   const c = s.faction ? k : k * 2.1;
   const city: Box = [cx - 50 * c, cy - 30 * c, cx + 50 * c, cy + 30 * c];
   const w =
-    Math.max(s.place.length * PLACE_FONT, speaker.length * NAME_FONT) * EM + 16;
+    Math.max(
+      s.place.length * PLACE_FONT * EM,
+      speaker.length * NAME_FONT * EM_ITALIC,
+    ) + 20;
   const side = LABEL_SIDE[s.id] ?? "right";
   if (side === "below") {
     const top = city[3] + 4;
