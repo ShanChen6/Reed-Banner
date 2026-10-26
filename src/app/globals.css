@@ -542,6 +542,15 @@
   scrollbar-color: var(--atlas-bronze) transparent;
   scrollbar-width: thin;
 }
+.campaign-atlas .atlas-route {
+  border-color: var(--atlas-border-soft);
+  background: color-mix(in srgb, var(--atlas-paper-hi) 55%, transparent);
+}
+/* Tuyến của chương đang xem: viền son. */
+.campaign-atlas .atlas-route-active {
+  border-color: var(--atlas-red-hi);
+  box-shadow: inset 0 0 0 1px var(--atlas-red-hi);
+}
 .campaign-atlas .atlas-route-done {
   border-color: #2e7d4f;
 }
