@@ -4,6 +4,7 @@
 // Chỉ là trình bày: chọn chương chỉ đổi chương đang xem, không mở hay hoàn thành nhiệm vụ nào. Tiến độ lấy từ
 // hồ sơ server qua chapterStatus.
 
+import Image from "next/image";
 import {
   CAMPAIGN_CHAPTERS,
   WARLORD_RECORDS,
@@ -109,6 +110,21 @@ export function ChapterRail({
           );
         })}
       </div>
+      {/* Tranh trang trí cuối cột (Shan vẽ), chỉ hiện khi cột đứng dọc. */}
+      <figure className="mt-3 hidden xl:block">
+        <Image
+          src="/art/campaign/rail-ink.webp"
+          alt=""
+          width={640}
+          height={213}
+          className="atlas-rail-art w-full"
+        />
+        <figcaption className="atlas-poem mt-1 px-1 text-center text-sm leading-snug italic">
+          Non sông này vốn một dải,
+          <br />
+          chí anh hùng đời đời còn đó.
+        </figcaption>
+      </figure>
     </nav>
   );
 }
