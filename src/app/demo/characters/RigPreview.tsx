@@ -135,11 +135,11 @@ export default function RigPreview({ id, size, onSnapshot }: {
           [0.25, 0.5].forEach((k, n) => drain.drain({ x: el.clientWidth - 40, y: el.clientHeight * k + size * 0.2 }, me, size, n * 0.1));
         });
         // Cột nước hệ Thủy: phun lên ở hai điểm bên phải khung.
-        const pillar = team === "waterPillar" ? waterPillar(app.stage, rig.fxColor) : null;
+        const pillar = team === "waterPillar" || team === "frostSpear" ? waterPillar(app.stage, rig.fxColor) : null;
         if (pillar) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y;
-          [0.78, 0.92].forEach((k, n) => pillar.cover({ x: el.clientWidth * k, y: loaded!.view.y }, size * 0.8, n * 0.1));
+          (team === "frostSpear" ? [0.86] : [0.78, 0.92]).forEach((k, n) => pillar.cover({ x: el.clientWidth * k, y: loaded!.view.y }, size * 0.8, n * 0.1));
         });
         // Tường lửa hệ Hỏa: quanh nhân vật, lửa bén ở mép phải khung.
         const fire = team === "flameWall" ? flameWall(app.stage, rig.fxColor) : null;

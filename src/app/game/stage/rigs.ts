@@ -120,7 +120,7 @@ export interface WarriorRig {
    * `thornBind` chỉ ở tuyệt chiêu, dây gai quấn từng đối thủ và hút sinh khí về chính mình; `rootGuard` chỉ ở tuyệt
    * chiêu, vòng lá hồi phục quanh cả đội và vòm khiên đất quanh chính mình; `poisonMist` chỉ ở tuyệt chiêu, sương độc
    * quanh từng đối thủ và vòng lá hồi phục quanh đội mình; `groveWard` chỉ ở tuyệt chiêu, vòng lá và vòm khiên quanh
-   * từng đồng đội.
+   * từng đồng đội; `frostSpear` chỉ ở tuyệt chiêu, cột nước đóng băng dưới chân đối thủ đứng đầu.
    */
   readonly strikeFx?:
     | "lightning"
@@ -140,7 +140,8 @@ export interface WarriorRig {
     | "thornBind"
     | "rootGuard"
     | "poisonMist"
-    | "groveWard";
+    | "groveWard"
+    | "frostSpear";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1611,6 +1612,51 @@ const SAM_TUE: WarriorRig = {
     anchor: { x: 900, y: 900 }, scale: 0.85 },
 };
 
+/**
+ * Hồ Lãng, tướng sĩ hệ Thủy (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
+ * code: giáo cùng nắm tay xoay quanh cổ tay theo nhịp đẩy giáo, bàn tay trái, đầu và dải buộc tóc xanh tách riêng.
+ * Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const HO_LANG: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "ho-lang",
+  texScale: 0.5,
+  foot: { x: 540, y: 1500 },
+  height: 1410,
+  parts: {
+    body: { x: 282, y: 95, w: 553, h: 1431 },
+    armR: { x: 761, y: 755, w: 78, h: 120 },
+    sword: { x: 210, y: 4, w: 65, h: 1492 },
+    arm: { x: 209, y: 512, w: 102, h: 103 },
+    head: { x: 500, y: 100, w: 156, h: 211 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 440, y: 155, w: 62, h: 96 }, behind: true,
+      wind: { axis: "y", start: 0.2, amp: 5, freq: 1.6, k: 2.8, phase: 0.4 } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 290, y: 560 },
+    elbowR: { x: 780, y: 770 },
+    neck: { x: 575, y: 300 },
+  },
+  blade: [{ x: 245, y: 560 }, { x: 256, y: 10 }],
+  strikeFx: "frostSpear",
+  fxColor: 0x2f7fc1,
+  // Đâm giáo ngang tầm ngực (đánh thường), thế tấn hất giáo chéo lên (ra chiêu), tấn rộng kéo giáo ngang hông (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 23, y: 15 },
+      anchor: { x: 600, y: 990 }, scale: 1.35, burst: { x: 1515, y: 280 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 35, y: 30 },
+      anchor: { x: 640, y: 960 }, scale: 1.35, burst: { x: 1515, y: 45 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 14, y: 41 },
+      anchor: { x: 720, y: 955 }, scale: 1.35, burst: { x: 1525, y: 465 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 17, y: 125 },
+    anchor: { x: 760, y: 880 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1644,6 +1690,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   lucDiep: LUC_DIEP,
   nhanTruc: NHAN_TRUC,
   samTue: SAM_TUE,
+  hoLang: HO_LANG,
 };
 
 export function rigOf(id: string): Rig | null {
