@@ -15,6 +15,7 @@ import {
   type ChapterContent,
   type ChapterMissionStatus,
 } from "@/core";
+import { AtlasCorners } from "./AtlasFrame";
 import { fitView, useMapView, MAX_ZOOM } from "./useMapView";
 import {
   NAME_FONT,
@@ -269,7 +270,8 @@ export default function WorldMap({
   };
 
   return (
-    <figure className="campaign-map flex flex-col self-start overflow-hidden rounded-xl border-2 border-[#6b4a22] shadow-[0_0_0_2px_#c9a25a66]">
+    <figure className="campaign-map atlas-frame flex flex-col self-start overflow-hidden">
+      <AtlasCorners />
       <div className="relative">
         <svg
           {...svgProps}
