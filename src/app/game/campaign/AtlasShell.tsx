@@ -744,13 +744,6 @@ export function AtlasHeader({
         </SceneLink>
       </nav>
       <div className="flex flex-wrap items-center justify-end gap-1.5 px-1">
-        {/* Trên điện thoại thanh chung ẩn lối Trận thường cho gọn, nên đặt lại ở đây. */}
-        <SceneLink
-          scene="PLAYING"
-          className="atlas-stat mr-auto flex min-h-11 items-center rounded-md border px-3 text-sm font-semibold sm:hidden"
-        >
-          Trận thường
-        </SceneLink>
         <dl className="flex flex-wrap items-center justify-end gap-1.5 text-sm">
           {[
             { k: "Cấp", v: level, icon: "level" },
