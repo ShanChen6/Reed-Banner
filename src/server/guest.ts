@@ -1,5 +1,5 @@
 // Tài khoản khách: id ngẫu nhiên lưu trong cookie có chữ ký HMAC, để client không giả được id người khác.
-// Xem docs/tech/ha-tang.md mục 4. Đăng nhập OAuth sẽ gắn danh tính vào chính tài khoản này.
+// Xem docs/07-architecture/ha-tang.md mục 4. Đăng nhập OAuth sẽ gắn danh tính vào chính tài khoản này.
 
 import { createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 

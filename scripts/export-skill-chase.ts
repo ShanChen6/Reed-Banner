@@ -1,7 +1,7 @@
 /** Data export only; no battle, simulation or balance evaluation. Does not overwrite historical reports. */
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { ALL_COMPANIONS, mainCharacter, characterSkills, COMBO_PASSIVES, CHASE_PASSIVES, chasePassives, DBL_ULTIMATES, DEFAULT_SPIRIT_EXPERIMENT, PROFESSIONS, ELEMENTS } from '../src/core';
-const dir = 'docs/design/data';
+const dir = 'docs/03-characters/ky-nang/data';
 mkdirSync(dir, { recursive: true });
 const loadout = (f: ReturnType<typeof mainCharacter>) => ({ id: f.id, name: f.name, profession: f.profession, element: f.element, active: characterSkills(f.profession, f.element, f.id).map(d => d.id), passives: [f.comboPassive!, ...chasePassives(f)] });
 const dbl = PROFESSIONS.flatMap(p => ELEMENTS.map(e => loadout(mainCharacter(e, p))));

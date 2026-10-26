@@ -1,6 +1,6 @@
 # Dữ liệu kỹ năng phiên bản 2 / combo đồng đội
 
-[Báo cáo](../2026-10-22-combo.md) · [Thiết kế và chuyển hồ sơ](../../design/21-combo-dong-doi.md) · [Ma trận 61 nhân vật](roster-matrix.md).
+[Báo cáo](../2026-10-22-combo.md) · [Thiết kế và chuyển hồ sơ](../../03-characters/ky-nang/lich-su/21-combo-dong-doi.md) · [Ma trận 61 nhân vật](roster-matrix.md).
 
 ## Các tệp
 

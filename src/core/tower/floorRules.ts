@@ -1,5 +1,5 @@
 // Luật tầng Song Tháp: dữ liệu thuần + kiểm tra đội hình, không phụ thuộc UI hay battle engine.
-// Nội dung luật cụ thể của từng tầng thuộc task sau. Xem docs/dual-tower/00-02-rules.md §3.2.
+// Nội dung luật cụ thể của từng tầng thuộc task sau. Xem docs/02-game-modes/dual-tower/00-02-rules.md §3.2.
 import { ELEMENTS, PROFESSIONS, type Element, type Profession } from "../battle";
 import { MAIN_ID } from "../progress/profile";
 

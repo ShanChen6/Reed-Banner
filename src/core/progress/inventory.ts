@@ -1,5 +1,5 @@
 // Túi đồ và 9 ô trang bị trong hồ sơ: mặc, tháo, ghép, bán, mua ở cửa hàng, nhận đồ rơi sau trận.
-// Hồ sơ chỉ lưu id món trong mỗi ô; món nằm trong túi đồ. Xem docs/design/07-trang-bi.md.
+// Hồ sơ chỉ lưu id món trong mỗi ô; món nằm trong túi đồ. Xem docs/04-equipment/trang-bi.md.
 
 import {
   ELEMENTS,
