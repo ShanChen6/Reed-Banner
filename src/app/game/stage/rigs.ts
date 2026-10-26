@@ -123,7 +123,8 @@ export interface WarriorRig {
    * từng đồng đội; `frostSpear` chỉ ở tuyệt chiêu, cột nước đóng băng dưới chân đối thủ đứng đầu; `tideBulwark` chỉ ở
    * tuyệt chiêu, vòm khiên quanh từng đồng đội và cột băng dưới chân từng đối thủ; `springDew` chỉ ở tuyệt chiêu, vòng cam lộ hồi phục quanh từng đồng
    * đội và cột băng dưới chân từng đối thủ; `tideMist` chỉ ở tuyệt chiêu, sương nước quanh từng đối thủ và hạt năng
-   * lượng bay về chính mình; `tideSiege` chỉ ở tuyệt chiêu, cột băng dưới chân và vết nứt trên từng đối thủ.
+   * lượng bay về chính mình; `tideSiege` chỉ ở tuyệt chiêu, cột băng dưới chân và vết nứt trên từng đối thủ; `fireRain` chỉ ở
+   * tuyệt chiêu, cầu lửa rơi xuống và lửa bén trên từng đối thủ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -148,7 +149,8 @@ export interface WarriorRig {
     | "tideBulwark"
     | "springDew"
     | "tideMist"
-    | "tideSiege";
+    | "tideSiege"
+    | "fireRain";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1843,6 +1845,49 @@ const VI_TRIEU: WarriorRig = {
     anchor: { x: 800, y: 900 }, scale: 0.9 },
 };
 
+/**
+ * Hà Vân, pháp sư hệ Hỏa (tướng khởi đầu). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code
+ * như Đào Lam: trượng cầu lửa cùng nắm tay xoay quanh cổ tay, cầu lửa sáng riêng; bàn tay buông và đầu tách riêng.
+ * Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const HA_VAN: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "staff",
+  dir: "ha-van",
+  texScale: 0.5,
+  foot: { x: 520, y: 1515 },
+  height: 1500,
+  parts: {
+    body: { x: 157, y: 1, w: 797, h: 1528 },
+    armR: { x: 746, y: 628, w: 69, h: 168 },
+    sword: { x: 100, y: 389, w: 142, h: 333 },
+    arm: { x: 168, y: 570, w: 101, h: 65 },
+    head: { x: 428, y: 10, w: 195, h: 227 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 250, y: 600 },
+    elbowR: { x: 775, y: 645 },
+    neck: { x: 530, y: 220 },
+  },
+  blade: [{ x: 205, y: 600 }, { x: 160, y: 455 }],
+  orb: { x: 160, y: 455 },
+  strikeFx: "fireRain",
+  fxColor: 0xd9502a,
+  // Chĩa trượng cầu lửa tới (đánh thường), hạ trượng xòe tay (ra chiêu), giơ cao trượng chỉ tay gọi mưa lửa (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 30, y: 0 },
+      anchor: { x: 630, y: 1510 }, scale: 1, burst: { x: 170, y: 270 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 18, y: 3 },
+      anchor: { x: 640, y: 1510 }, scale: 1, burst: { x: 750, y: 320 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 12, y: 7 },
+      anchor: { x: 460, y: 1505 }, scale: 1, burst: { x: 1010, y: 350 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 7, y: 6 },
+    anchor: { x: 800, y: 900 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1881,6 +1926,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   maiThanh: MAI_THANH,
   quachAn: QUACH_AN,
   viTrieu: VI_TRIEU,
+  haVan: HA_VAN,
 };
 
 export function rigOf(id: string): Rig | null {
