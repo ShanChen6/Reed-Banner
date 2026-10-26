@@ -93,7 +93,7 @@ export default function MusterPanel({
           {resolved
             .map(
               (r) =>
-                `${companionById(r.faction)?.name ?? r.faction}: ${FACTION_STATUS_TEXT[r.status].toLowerCase()} (${r.mission})`,
+                `${companionById(r.faction)?.name ?? r.faction}: ${FACTION_STATUS_TEXT[r.status].toLowerCase()}`,
             )
             .join(" · ")}
         </p>

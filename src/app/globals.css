@@ -202,7 +202,9 @@
 /* Lòng bàn cờ trang giới thiệu: đá phiến sẫm cùng tông nền ô, tối dần ra mép như mặt bàn khảm. */
 .fx-board-well {
   background: radial-gradient(ellipse at 50% 40%, #2c3a4b, #18212c 75%);
-  box-shadow: inset 0 0 0 1px #0b1118, inset 0 0 18px #000a;
+  box-shadow:
+    inset 0 0 0 1px #0b1118,
+    inset 0 0 18px #000a;
 }
 
 /* Ô đặc biệt bản mạnh tỏa sáng nhẹ. */
@@ -232,7 +234,13 @@
 /* Trang giới thiệu kiểu fantasy theo logo: chữ mạ vàng, khung viền đồng, nút sơn mài đỏ. Viền dùng hai lớp nền
    (padding-box + border-box) thay cho ảnh viền để giữ bo góc. */
 .fx-gilt-text {
-  background: linear-gradient(180deg, #fff6cc 0%, #f2c55e 38%, #b77a26 62%, #f3d48a 100%);
+  background: linear-gradient(
+    180deg,
+    #fff6cc 0%,
+    #f2c55e 38%,
+    #b77a26 62%,
+    #f3d48a 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -250,14 +258,16 @@
   border: 1px solid transparent;
   background:
     radial-gradient(ellipse at 50% 0%, #7a2a1c, #3a1712 70%) padding-box,
-    linear-gradient(160deg, #fff4c4, #d4a24c 40%, #7a4d18 70%, #f3d48a) border-box;
+    linear-gradient(160deg, #fff4c4, #d4a24c 40%, #7a4d18 70%, #f3d48a)
+      border-box;
   box-shadow: 0 0 40px -14px #e2582b88;
 }
 .fx-btn {
   border: 2px solid transparent;
   background:
     linear-gradient(180deg, #e2523a, #a52c1a 55%, #6e1a0f) padding-box,
-    linear-gradient(180deg, #fff4c4, #e7b85a 35%, #8a5a1c 65%, #f6dc93) border-box;
+    linear-gradient(180deg, #fff4c4, #e7b85a 35%, #8a5a1c 65%, #f6dc93)
+      border-box;
   color: #fff4d6;
   text-shadow: 0 1px 0 #5c120b;
   box-shadow:
@@ -274,7 +284,15 @@
   border: 3px solid transparent;
   background:
     linear-gradient(180deg, #4a1a12, #2a0f0b) padding-box,
-    linear-gradient(160deg, #fff4c4, #e7b85a 25%, #8a5a1c 55%, #f6dc93 80%, #b77a26) border-box;
+    linear-gradient(
+        160deg,
+        #fff4c4,
+        #e7b85a 25%,
+        #8a5a1c 55%,
+        #f6dc93 80%,
+        #b77a26
+      )
+      border-box;
   box-shadow:
     0 0 0 1px #2b1d14,
     0 0 60px -10px #e2582b66,
@@ -286,14 +304,32 @@
 }
 .hero-shade {
   background:
-    linear-gradient(to bottom, #17110e99, #17110e55 25%, #17110e88 70%, #17110e),
+    linear-gradient(
+      to bottom,
+      #17110e99,
+      #17110e55 25%,
+      #17110e88 70%,
+      #17110e
+    ),
     linear-gradient(#0f0a07a6, #0f0a07a6);
 }
 @media (min-width: 768px) {
   .hero-shade {
     background:
-      linear-gradient(to bottom, #17110e66, transparent 20%, transparent 75%, #17110e),
-      linear-gradient(to right, #0f0a07f0, #0f0a07b3 32%, #0f0a0733 55%, #0f0a0700 75%);
+      linear-gradient(
+        to bottom,
+        #17110e66,
+        transparent 20%,
+        transparent 75%,
+        #17110e
+      ),
+      linear-gradient(
+        to right,
+        #0f0a07f0,
+        #0f0a07b3 32%,
+        #0f0a0733 55%,
+        #0f0a0700 75%
+      );
   }
 }
 /* Tâm sao mặt trống sáng lên rồi dịu xuống theo nhịp thở. */
@@ -309,7 +345,13 @@
   }
 }
 .hero-star {
-  background: radial-gradient(circle, #fff6d6 0, #ffd77acc 18%, #f2a93b55 45%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    #fff6d6 0,
+    #ffd77acc 18%,
+    #f2a93b55 45%,
+    transparent 70%
+  );
   mix-blend-mode: screen;
   animation: hero-star 4s ease-in-out infinite;
 }
@@ -356,11 +398,218 @@
   }
 }
 
+/* Khung Sử ký (MAP-01, Polish V2 P01): chữ Noto Serif chỉ trong .campaign-atlas. Mọi màu của Sử ký lấy từ các
+   token --atlas-* dưới đây (gỗ, giấy dó, mực, đồng, son); không ảnh hưởng bàn cờ hay trận đấu. */
+.campaign-atlas {
+  --font-serif: var(--font-atlas), Georgia, serif;
+  --atlas-wood: #2b1f15;
+  --atlas-wood-hi: #3d2c1d;
+  --atlas-wood-lo: #1a120c;
+  --atlas-paper: #e4cc99;
+  --atlas-paper-hi: #f4e6c3;
+  --atlas-paper-card: #f2e1b8;
+  --atlas-paper-deep: #d2b47b;
+  --atlas-ink: #3b2a1a;
+  --atlas-ink-soft: #5c4430;
+  --atlas-ink-on-wood: #ecd9ab;
+  --atlas-title: #f3dfae;
+  --atlas-gold: #c9a25a;
+  --atlas-gold-hi: #d4a24c;
+  --atlas-bronze: #8f6a32;
+  --atlas-red: #8f241d;
+  --atlas-red-hi: #b4382c;
+  --atlas-muted: #8a7458;
+  --atlas-border: #6b4a22;
+  --atlas-border-soft: #9c7845aa;
+  --atlas-line: #c9a25a73;
+  font-family: var(--font-serif);
+}
+.campaign-atlas .atlas-title {
+  color: var(--atlas-title);
+  text-shadow: 0 2px 0 #00000080;
+}
+
+/* Khung đồng cổ dùng chung: viền 1.5px, một vạch vàng mảnh lùi vào trong 4px, góc hoa văn do <AtlasCorners />
+   vẽ. Vạch trong là ::after nên không chắn bấm. */
+.campaign-atlas .atlas-frame {
+  position: relative;
+  border: 1.5px solid var(--atlas-border);
+  border-radius: 0.75rem;
+}
+.campaign-atlas .atlas-frame::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid var(--atlas-line);
+  border-radius: 0.5rem;
+  pointer-events: none;
+}
+.campaign-atlas .atlas-corner {
+  color: var(--atlas-bronze);
+}
+.campaign-atlas .atlas-frame-wood .atlas-corner {
+  color: var(--atlas-gold-hi);
+}
+/* Giấy dó ngả vàng như mép tranh bản đồ. */
+.campaign-atlas .atlas-frame-paper {
+  background:
+    radial-gradient(
+      ellipse at 25% 0%,
+      var(--atlas-paper-hi) 0%,
+      transparent 60%
+    ),
+    radial-gradient(ellipse at 100% 100%, #b98f5280 0%, transparent 55%),
+    var(--atlas-paper);
+  color: var(--atlas-ink);
+  box-shadow: inset 0 0 28px #7a52228c;
+}
+/* Gỗ sẫm cho thanh header. */
+.campaign-atlas .atlas-frame-wood {
+  background: linear-gradient(var(--atlas-wood-hi), #231910);
+  color: var(--atlas-ink-on-wood);
+}
+.campaign-atlas .world-strip {
+  background: linear-gradient(#dcc08a, var(--atlas-paper-deep));
+  color: var(--atlas-ink);
+}
+.campaign-atlas .atlas-chapter,
+.campaign-atlas .atlas-mission {
+  border-color: var(--atlas-border-soft);
+  background: color-mix(in srgb, var(--atlas-paper-card) 85%, transparent);
+  color: var(--atlas-ink);
+  transition: background-color 0.15s;
+}
+.campaign-atlas .atlas-chapter:not(:disabled):hover,
+.campaign-atlas .atlas-mission:not(:disabled):hover {
+  background: #fbefcf;
+}
+.campaign-atlas .atlas-chapter:disabled,
+.campaign-atlas .atlas-mission:disabled {
+  opacity: 0.55;
+}
+.campaign-atlas .atlas-chapter-active {
+  border-color: var(--atlas-gold-hi);
+  background: linear-gradient(90deg, var(--atlas-red), var(--atlas-red-hi));
+  color: #fbecc8;
+  box-shadow: 0 0 0 2px #d4a24c66;
+}
+.campaign-atlas .atlas-chapter-active:not(:disabled):hover {
+  background: linear-gradient(90deg, #9c2a22, #c0402f);
+}
+/* Thẻ chương: góc hoa văn nhỏ, ảnh có viền đồng, nhãn tiến độ nền mực trên ảnh. */
+.campaign-atlas .atlas-chapter .atlas-corner {
+  color: var(--atlas-gold);
+}
+.campaign-atlas .atlas-chapter-active .atlas-corner {
+  color: var(--atlas-gold-hi);
+}
+.campaign-atlas .atlas-chapter-thumb {
+  border-color: var(--atlas-border-soft);
+}
+.campaign-atlas .atlas-chapter-active .atlas-chapter-thumb {
+  border-color: var(--atlas-gold-hi);
+}
+.campaign-atlas .atlas-chapter-progress {
+  background: #1f160fd9;
+  color: #f4e2b8;
+}
+/* Thẻ phần thưởng trong panel phải: giấy sáng hơn, viền đồng. */
+.campaign-atlas .atlas-reward {
+  border-color: var(--atlas-bronze);
+  background: color-mix(in srgb, var(--atlas-paper-hi) 80%, transparent);
+}
+.campaign-atlas .atlas-mission-active {
+  border-color: #b8862f;
+  background: #fff0c9;
+  box-shadow: 0 0 0 2px #d4a24c80;
+}
+/* Đại card bao toàn màn: gỗ sẫm nổi lên khỏi nền trang bằng viền đồng và bóng đổ. */
+.campaign-atlas .atlas-shell {
+  border-color: #8a6a3b;
+  background:
+    radial-gradient(ellipse at 50% 0%, #4a3622 0%, transparent 70%),
+    linear-gradient(#33251a, #1f160f);
+  box-shadow:
+    0 0 0 1px #c9a25a40,
+    0 12px 32px #000a;
+}
+/* Header nằm trong đại card: chỉ một vạch đồng ngăn với ba cột bên dưới. */
+.campaign-atlas .atlas-header {
+  border-bottom: 1px solid var(--atlas-line);
+  color: var(--atlas-ink-on-wood);
+}
+.campaign-atlas .atlas-scroll {
+  scrollbar-color: var(--atlas-bronze) transparent;
+  scrollbar-width: thin;
+}
+.campaign-atlas .atlas-route {
+  border-color: var(--atlas-border-soft);
+  background: color-mix(in srgb, var(--atlas-paper-hi) 55%, transparent);
+}
+/* Tuyến của chương đang xem: viền son. */
+.campaign-atlas .atlas-route-active {
+  border-color: var(--atlas-red-hi);
+  box-shadow: inset 0 0 0 1px var(--atlas-red-hi);
+}
+.campaign-atlas .atlas-route-done {
+  border-color: #2e7d4f;
+}
+.campaign-atlas .atlas-muted {
+  color: var(--atlas-ink-soft);
+}
+.campaign-atlas .atlas-poem {
+  color: #4a321b;
+}
+/* Tranh cuối cột chương: mờ dần ra mép để hòa vào nền giấy. */
+.campaign-atlas .atlas-rail-art {
+  mask-image: radial-gradient(
+    ellipse 72% 70% at 50% 50%,
+    #000 60%,
+    transparent 100%
+  );
+}
+/* Thanh header: thẻ đang mở là giấy dó. */
+.campaign-atlas .atlas-tab {
+  border-color: #8a6a3b99;
+  background: linear-gradient(#33261a, #241a11);
+  color: var(--atlas-ink-on-wood);
+}
+.campaign-atlas .atlas-tab:hover {
+  background: linear-gradient(#45331f, #2e2115);
+}
+.campaign-atlas .atlas-tab-active,
+.campaign-atlas .atlas-tab-active:hover {
+  border-color: var(--atlas-gold-hi);
+  background: linear-gradient(#f3e3b9, #d9bd84);
+  color: var(--atlas-ink);
+}
+.campaign-atlas .atlas-stat {
+  border-color: #8a6a3b99;
+  background: var(--atlas-wood-lo);
+  color: var(--atlas-title);
+}
+.campaign-atlas .atlas-stat-icon {
+  color: var(--atlas-gold-hi);
+}
+.campaign-atlas .atlas-panel-heading {
+  margin-bottom: 0.375rem;
+  border-bottom: 1px solid #8a6a3b66;
+  padding-bottom: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.campaign-atlas :focus-visible {
+  outline: 2px solid var(--atlas-gold-hi);
+  outline-offset: 2px;
+}
+
 /* Bản đồ chiến dịch: giấy dó, mực khắc gỗ, sông xanh chàm, đường hành quân đỏ son. */
 .campaign-map {
-  --map-paper: #e9d9b4;
-  --map-paper-dark: #cdb68a;
-  --map-ink: #3b2a1a;
+  --map-paper: var(--atlas-paper, #e4cc99);
+  --map-paper-dark: var(--atlas-paper-deep, #d2b47b);
+  --map-ink: var(--atlas-ink, #3b2a1a);
   --map-sea: #a9b9a8;
   --map-sea-ink: #5e7468;
   --map-river: #5f8a8b;
@@ -371,46 +620,91 @@
   fill: var(--map-ink);
   font-family: var(--font-serif, Georgia, serif);
 }
-.campaign-map .map-title {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-}
+/* Nhãn cứ điểm: giấy dó đặc, viền đồng; nhãn đang chọn viền vàng dày hơn. */
 .campaign-map .map-label {
-  font-size: 14px;
-  font-weight: 700;
-  paint-order: stroke;
-  stroke: var(--map-paper);
-  stroke-width: 3px;
+  fill: var(--atlas-paper-hi, #f4e6c3);
+  fill-opacity: 0.94;
+  stroke: var(--atlas-bronze, #8f6a32);
+  stroke-opacity: 0.85;
+  stroke-width: 2px;
 }
-.campaign-map .map-label-small {
-  font-size: 11px;
-  font-style: italic;
+.campaign-map .map-label-selected {
+  fill: #fff0c9;
+  fill-opacity: 1;
+  stroke: var(--atlas-gold-hi, #d4a24c);
+  stroke-opacity: 1;
+  stroke-width: 4px;
 }
-.campaign-map .map-label-river {
-  font-size: 12px;
-  font-style: italic;
-  fill: #2f5556;
+/* Nút phóng/thu và ô chọn cứ điểm ngoài bản đồ dùng chung bảng màu giấy dó. */
+.campaign-map .map-control,
+.campaign-map .map-chip {
+  border-color: var(--atlas-bronze, #8f6a32);
+  background: color-mix(
+    in srgb,
+    var(--atlas-paper-hi, #f4e6c3) 92%,
+    transparent
+  );
+  color: var(--atlas-ink, #3b2a1a);
+}
+.campaign-map .map-chip-active {
+  border-color: var(--atlas-gold-hi, #d4a24c);
+  background: #fff0c9;
+}
+.campaign-map .world-strip {
+  border-color: var(--atlas-border, #6b4a22);
+}
+.campaign-map .map-controls {
+  background: linear-gradient(#dcc08a, var(--atlas-paper-deep, #d2b47b));
+}
+@media (min-width: 768px) {
+  .campaign-map .map-controls {
+    background: none;
+  }
+}
+/* Gợi ý xoay ngang: chỉ điện thoại nhỏ đang cầm dọc. */
+.campaign-map .rotate-hint {
+  display: none;
+}
+@media (max-width: 639px) and (orientation: portrait) {
+  .campaign-map .rotate-hint {
+    display: flex;
+  }
+}
+/* Điện thoại xoay ngang, màn thấp: header Sử ký gọn một hàng (ẩn tiêu đề, thẻ cao 44px) để chừa chỗ cho bản đồ. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .campaign-atlas .atlas-header {
+    flex-direction: row;
+    align-items: center;
+    padding-bottom: 0.5rem;
+  }
+  .campaign-atlas .atlas-header-title {
+    display: none;
+  }
+  .campaign-atlas .atlas-tab {
+    height: 44px;
+    flex-direction: row;
+  }
+}
+/* Điện thoại xoay ngang: bản đồ vừa chiều cao màn hình (tỉ lệ 3:2), không phải cuộn mới thấy hết. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .campaign-map .map-viewport {
+    width: 100%;
+    max-width: calc((100dvh - 1rem) * 1.5);
+    margin-inline: auto;
+  }
 }
 .campaign-map .map-label-sea {
-  font-size: 16px;
+  font-size: 34px;
   font-style: italic;
   letter-spacing: 0.2em;
   fill: #34483f;
 }
-.campaign-map .map-num {
-  font-size: 11px;
-  font-weight: 800;
-  font-family: inherit;
-}
-.campaign-map .map-num-light {
-  fill: #f5f0e1;
-}
 .campaign-map .map-stage:focus {
   outline: none;
 }
-.campaign-map .map-stage:focus-visible circle:not(.map-pulse) {
+.campaign-map .map-stage:focus-visible > rect:first-of-type {
   stroke: #f2c14e;
+  stroke-width: 5px;
 }
 .map-pulse {
   transform-box: fill-box;
@@ -446,5 +740,29 @@
 @media (prefers-reduced-motion: reduce) {
   .scene-enter {
     animation: none;
+  }
+}
+
+/* Trình phát thoại Chiến dịch: câu mới hiện dần, chân dung đổi độ sáng theo người nói. */
+.dialogue-line {
+  animation: dialogue-in 150ms ease-out;
+}
+.dialogue-portrait {
+  transition:
+    opacity 150ms ease-out,
+    filter 150ms ease-out;
+}
+@keyframes dialogue-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dialogue-line {
+    animation: none;
+  }
+  .dialogue-portrait {
+    transition: none;
   }
 }

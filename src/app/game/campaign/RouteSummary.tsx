@@ -4,14 +4,17 @@
 // vùng còn thiếu trước Đỗ Động. Chỉ đọc hồ sơ server; xem lại hay đánh lại không đổi tiến độ.
 
 import {
+  CAMPAIGN_ROUTES,
   campaignFinaleGate,
   campaignRouteSummary,
   companionById,
   missionLabel,
+  storyNodeById,
   type CampaignMissionId,
   type CampaignProgressV2,
   type CampaignRoute,
 } from "@/core";
+import { AtlasCorners } from "./AtlasFrame";
 import { FACTION_STATUS_TEXT } from "./StoryBeats";
 
 const FOCUS =
@@ -28,43 +31,55 @@ export const METHOD_TEXT: Readonly<Record<string, string>> = {
   campaign: "đánh dẹp theo tổng thuật",
 };
 
-export default function RouteSummary({
+/** Một tuyến: tên, tiến độ và từng vùng. `active` khi tuyến thuộc chương đang xem. */
+function RouteColumn({
   campaign,
   routeId,
+  active,
   onPick,
 }: {
   campaign: CampaignProgressV2;
   routeId: CampaignRoute["id"];
+  active: boolean;
   onPick: (id: CampaignMissionId) => void;
 }) {
   const { route, regions, complete } = campaignRouteSummary(campaign, routeId);
-  const gate = campaignFinaleGate(campaign);
-  const other = gate.missing.filter((id) => !route.missions.includes(id));
   const done = regions.filter((r) => r.state === "completed").length;
   return (
     <section
       aria-labelledby={`route-${route.id}`}
-      className={`flex flex-col gap-2 rounded-xl border-2 p-3 ${complete ? "border-emerald-500/50 bg-emerald-500/10" : "border-white/15 bg-black/25"}`}
+      aria-current={active ? "true" : undefined}
+      className={`atlas-route flex flex-col gap-2 rounded-lg border p-2.5 ${active ? "atlas-route-active" : ""} ${complete ? "atlas-route-done" : ""}`}
     >
-      <h2 id={`route-${route.id}`} className="font-bold text-amber-100">
-        {complete
-          ? `Tổng kết ${route.name.toLowerCase()}`
-          : `${route.name}: ${done}/${regions.length} vùng`}
-      </h2>
-      <ul className="grid gap-1.5 text-sm sm:grid-cols-2">
+      <h3
+        id={`route-${route.id}`}
+        className="flex items-baseline justify-between gap-2 font-bold"
+      >
+        <span>
+          {route.name}
+          <span className="atlas-muted ml-1.5 text-xs font-normal">
+            Chương {ROUTE_ROMAN[route.chapter]}
+          </span>
+        </span>
+        <span className="text-sm">
+          {complete ? "✓ " : ""}
+          {done}/{regions.length} vùng
+        </span>
+      </h3>
+      <ol className="grid gap-1.5 text-sm xl:grid-cols-2">
         {regions.map((r) => (
           <li key={r.mission}>
             <button
               type="button"
               disabled={r.state === "locked"}
               onClick={() => onPick(r.mission)}
-              className={`flex min-h-11 w-full flex-col items-start rounded-md border border-white/10 bg-black/30 px-2 py-1 text-left disabled:cursor-not-allowed disabled:opacity-45 ${FOCUS}`}
+              className={`atlas-mission flex min-h-11 w-full flex-col items-start rounded-md border px-2 py-1 text-left disabled:cursor-not-allowed ${FOCUS}`}
             >
-              <span className="font-semibold text-amber-50">
+              <span className="font-semibold">
                 {r.state === "completed" ? "✓ " : ""}
-                {r.place} · {r.mission}
+                {regionName(r.place, r.mission)}
               </span>
-              <span className="text-xs text-stone-300">
+              <span className="atlas-muted text-xs">
                 {r.faction?.resolved
                   ? `${companionById(r.faction.faction)?.name ?? r.faction.faction}: ${METHOD_TEXT[r.faction.resolutionMethod] ?? FACTION_STATUS_TEXT[r.faction.status].toLowerCase()}`
                   : r.state === "open"
@@ -79,20 +94,87 @@ export default function RouteSummary({
             </button>
           </li>
         ))}
-      </ul>
-      {complete && (
-        <p className="text-xs text-stone-300">
+      </ol>
+    </section>
+  );
+}
+
+/** Tên vùng kèm tên nhiệm vụ; bỏ phần lặp khi tên nhiệm vụ đã chứa tên đất (vd. "Siêu Loại"). */
+function regionName(place: string, mission: CampaignMissionId) {
+  const title = missionLabel(mission);
+  return title.includes(place) ? title : `${place} · ${title}`;
+}
+
+const ROUTE_ROMAN = ["", "I", "II", "III", "IV", "V", "VI"] as const;
+
+/**
+ * Hai tuyến tây và đông đi song song sau Chương III, gặp nhau ở Đỗ Động: Đỗ Động mở khi xong vùng cuối của cả hai
+ * tuyến (prereqs của node). Tuyến của chương đang xem được viền nổi; mọi trạng thái đọc từ hồ sơ server.
+ */
+export default function RouteSummary({
+  campaign,
+  chapter,
+  onPick,
+}: {
+  campaign: CampaignProgressV2;
+  /** Chương đang xem, để làm nổi tuyến của chương đó. */
+  chapter: number;
+  onPick: (id: CampaignMissionId) => void;
+}) {
+  const gate = campaignFinaleGate(campaign);
+  const allDone = CAMPAIGN_ROUTES.every(
+    (r) => campaignRouteSummary(campaign, r.id).complete,
+  );
+  const finale = storyNodeById("M21")!;
+  const finaleDone = campaign.completed.includes(finale.id);
+  return (
+    <section
+      aria-labelledby="route-board-title"
+      className="atlas-frame atlas-frame-paper flex flex-col gap-2 p-3"
+    >
+      <AtlasCorners />
+      <h2 id="route-board-title" className="px-1 font-bold">
+        Hai tuyến hội quân
+      </h2>
+      <div className="grid gap-2 md:grid-cols-2">
+        {CAMPAIGN_ROUTES.map((r) => (
+          <RouteColumn
+            key={r.id}
+            campaign={campaign}
+            routeId={r.id}
+            active={r.chapter === chapter}
+            onPick={onPick}
+          />
+        ))}
+      </div>
+      {/* Điểm hội: hai tuyến cùng dẫn tới Đỗ Động. */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-sm">
+        <span aria-hidden className="atlas-muted">
+          Tây + Đông →
+        </span>
+        <button
+          type="button"
+          disabled={!gate.ready}
+          onClick={() => onPick(finale.id)}
+          className={`atlas-mission flex min-h-11 items-center gap-2 rounded-md border px-3 py-1 font-semibold disabled:cursor-not-allowed ${FOCUS}`}
+        >
+          {finaleDone ? "✓ " : gate.ready ? "" : "🔒 "}
+          {finale.title}
+        </button>
+        <span className="atlas-muted min-w-0 flex-1 text-xs">
+          {finaleDone
+            ? "Đã qua Đỗ Động."
+            : gate.ready
+              ? "Hai tuyến đã xong: Đỗ Động đã mở."
+              : `Mở khi xong cả hai tuyến. Còn thiếu: ${gate.missing.map(missionLabel).join(", ")}.`}
+        </span>
+      </div>
+      {allDone && (
+        <p className="atlas-muted px-1 text-xs">
           Xem lại nhiệm vụ không ghi thêm gì. Đánh lại trận chỉ nhận thưởng trận
           thường; thưởng nhiệm vụ và thế cục sứ quân đã ghi một lần.
         </p>
       )}
-      <p className="text-xs text-stone-400">
-        {gate.ready
-          ? "Hai tuyến đã xong: Đỗ Động đã mở."
-          : other.length > 0
-            ? `Đỗ Động mở khi xong cả hai tuyến. Tuyến còn lại thiếu: ${other.map(missionLabel).join(", ")}.`
-            : "Đỗ Động mở khi xong cả hai tuyến."}
-      </p>
     </section>
   );
 }

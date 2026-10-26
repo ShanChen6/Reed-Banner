@@ -29,7 +29,7 @@ import { DIFFICULTY_NAME, ELEMENT_NAME } from "../battle/labels";
 function gateText(boss: WarlordEncounter): string {
   const gate = raidUnlockMission(boss.id);
   return gate
-    ? `Mở sau nhiệm vụ ${gate} ${storyNodeById(gate)?.title ?? ""}`.trim()
+    ? `Mở sau nhiệm vụ ${storyNodeById(gate)?.title ?? gate}`
     : "Chưa có mốc mở";
 }
 
