@@ -212,7 +212,7 @@ function RewardModal({
     >
       <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border-2 border-[var(--gold)] bg-[#2a1f19] p-4 text-stone-100 shadow-2xl">
         <p className="text-xs tracking-widest text-amber-300/80 uppercase">
-          Hoàn thành lần đầu · {node.id}
+          Hoàn thành lần đầu
         </p>
         <h2
           id="first-clear-title"
@@ -858,7 +858,6 @@ export default function ChapterOne({
           <AtlasCorners />
           <AtlasHeader
             view={atlas.view}
-            mission={step.nodeId}
             level={profile.main.level}
             gold={profile.gold}
             supply={campaign.supply}
@@ -963,7 +962,7 @@ export default function ChapterOne({
           <article className="flex flex-col gap-3 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4 shadow-[inset_0_0_24px_#0009]">
             <header>
               <p className="text-xs tracking-widest text-amber-300/80 uppercase">
-                {node.id} · {node.location.name} ·{" "}
+                {node.location.name} ·{" "}
                 {CERTAINTY_TEXT[node.location.certainty]}
                 {node.location.modernRegion && (
                   <span className="text-stone-400 normal-case">

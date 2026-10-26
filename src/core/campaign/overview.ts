@@ -110,8 +110,9 @@ export function campaignMusterReady(campaign: CampaignProgressV2): boolean {
 }
 
 /** Tên ngắn của nhiệm vụ để hiện trong danh sách còn thiếu. */
+/** Tên nhiệm vụ cho người chơi đọc; mã Mxx chỉ là khóa nội bộ, chỉ dùng khi thiếu tên. */
 export function missionLabel(id: CampaignMissionId): string {
-  return `${id} ${storyNodeById(id)?.title ?? ""}`.trim();
+  return storyNodeById(id)?.title ?? id;
 }
 
 export type CampaignRegionState = "completed" | "open" | "locked";

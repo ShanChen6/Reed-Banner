@@ -7,6 +7,9 @@
 import Image from "next/image";
 import {
   CAMPAIGN_CHAPTERS,
+  CAMPAIGN_CHAPTER_FIRST_CLEAR_GOLD,
+  companionById,
+  isCombatStoryNode,
   WARLORD_RECORDS,
   factionResolutionOf,
   chapterCompleted,
@@ -23,7 +26,12 @@ import { AtlasCorners } from "./AtlasFrame";
 import { BasisBadge } from "./StoryBeats";
 import { backdropUrl, missionBackdrop } from "./dialogue";
 import { METHOD_TEXT } from "./RouteSummary";
-import { STATE_COLOR, STATE_TEXT, missionStatusMap } from "./WorldMap";
+import {
+  FactionFlag,
+  STATE_COLOR,
+  STATE_TEXT,
+  missionStatusMap,
+} from "./WorldMap";
 import {
   chapterThumbUrl,
   strongholdLeader,
@@ -203,9 +211,7 @@ function MissionList({
                       : "🔒"}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate font-semibold">
-                  {id} · {n.title}
-                </span>
+                <span className="block truncate font-semibold">{n.title}</span>
                 <span className="block truncate text-xs opacity-75">
                   {STATUS_TEXT[s]} · Chương {ROMAN[n.chapter]} ·{" "}
                   {n.rewards.firstClearGold} vàng lần đầu
@@ -308,6 +314,123 @@ function focusMission(
   );
 }
 
+/**
+ * Phần thưởng của một nhiệm vụ, chỉ gồm những gì server thật sự phát (applyCampaignFirstClear): vàng lần đầu theo
+ * node, 250 vàng khi xong cả chương, tướng gia nhập khi chương xong, mở Đánh trùm. Trận còn cho EXP, vàng nhặt và
+ * đồ rơi nhưng số không cố định nên chỉ ghi chú. Đã nhận hay chưa đọc từ phiếu thưởng (rewardReceipts).
+ */
+export function MissionRewardCard({
+  campaign,
+  mission,
+  status,
+}: {
+  campaign: CampaignProgressV2;
+  mission: CampaignMissionId;
+  status: ChapterMissionStatus;
+}) {
+  const node = storyNodeById(mission)!;
+  const got = (r: string) =>
+    (campaign.rewardReceipts as readonly string[]).includes(r);
+  // Hoàn thành nhiệm vụ luôn ghi phiếu node: cùng lúc, nên nhiệm vụ đã xong coi như đã nhận vàng lần đầu.
+  const firstClaimed = status === "completed" || got(`node:${mission}`);
+  const chapterClaimed = got(`chapter:${node.chapter}`);
+  const closed = status === "locked" || status === "comingSoon";
+  const rows: {
+    key: string;
+    label: string;
+    value: string;
+    done: boolean;
+    note?: string;
+  }[] = [
+    {
+      key: "gold",
+      label: "Vàng lần đầu",
+      value: `${node.rewards.firstClearGold.toLocaleString("vi-VN")} vàng`,
+      done: firstClaimed,
+    },
+  ];
+  rows.push({
+    key: "chapter",
+    label: `Xong Chương ${ROMAN[node.chapter]}`,
+    value: `${CAMPAIGN_CHAPTER_FIRST_CLEAR_GOLD} vàng`,
+    done: chapterClaimed,
+    note: "khi đủ 4 nhiệm vụ của chương",
+  });
+  for (const u of node.unlockedContent) {
+    if (u.kind === "companion")
+      rows.push({
+        key: `hero:${u.id}`,
+        label: "Tướng gia nhập",
+        value: companionById(u.id)?.name ?? u.id,
+        done: got(`hero:${u.id}`),
+        note: "khi xong cả chương",
+      });
+    else
+      rows.push({
+        key: `raid:${u.target}`,
+        label: "Mở Đánh trùm",
+        value: companionById(u.target)?.name ?? u.target,
+        done: status === "completed",
+      });
+  }
+  return (
+    <section
+      aria-labelledby="atlas-reward-title"
+      className="atlas-reward rounded-lg border p-2.5"
+    >
+      <h3
+        id="atlas-reward-title"
+        className="atlas-panel-heading flex items-baseline justify-between gap-2"
+      >
+        Phần thưởng
+        <span className="text-xs font-normal tracking-normal normal-case opacity-75">
+          {node.title}
+        </span>
+      </h3>
+      {closed ? (
+        <p className="text-sm opacity-80">
+          Nhiệm vụ chưa mở, chưa phát thưởng.
+        </p>
+      ) : (
+        <>
+          <ul className="flex flex-col gap-1 text-sm">
+            {rows.map((r) => (
+              <li
+                key={r.key}
+                className={`flex items-baseline gap-2 ${r.done ? "opacity-60" : ""}`}
+              >
+                <span className="min-w-0 flex-1">
+                  {r.label}
+                  {r.note && !r.done && (
+                    <span className="block text-xs opacity-70">{r.note}</span>
+                  )}
+                </span>
+                <span className="text-right font-bold">
+                  {r.value}
+                  <span className="block text-xs font-normal">
+                    {r.done ? "✓ đã nhận" : ""}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ul>
+          {isCombatStoryNode(node) && (
+            <p className="mt-1.5 text-xs opacity-75">
+              Trận còn cho EXP, vàng nhặt được và đồ rơi; số lượng tùy trận.
+            </p>
+          )}
+          {status === "completed" && (
+            <p className="mt-1.5 text-xs opacity-75">
+              Xem lại không nhận lại thưởng lần đầu
+              {isCombatStoryNode(node) ? ", chỉ nhận thưởng trận thường" : ""}.
+            </p>
+          )}
+        </>
+      )}
+    </section>
+  );
+}
+
 export function StrongholdPanel({
   campaign,
   stronghold: s,
@@ -332,6 +455,8 @@ export function StrongholdPanel({
     : undefined;
   const resolution = s.faction ? factionResolutionOf(s.faction) : undefined;
   const focus = focusMission(missions);
+  // Thẻ thưởng theo nhiệm vụ của nút chính; vùng chưa mở gì thì xem nhiệm vụ đầu tiên (hiện "chưa phát thưởng").
+  const rewardFor = focus ?? missions[0];
   const backdrop = backdropUrl(missionBackdrop(s.missions[0] ?? "M01"));
   return (
     <aside
@@ -341,10 +466,10 @@ export function StrongholdPanel({
       <AtlasCorners />
       <div className="atlas-scroll flex min-h-0 flex-1 flex-col gap-3 xl:overflow-y-auto xl:pr-1">
         <header className="flex items-start gap-3">
-          <span
-            aria-hidden
-            className="mt-1 h-12 w-8 shrink-0 rounded-sm border-2 border-[#d4a24c] [clip-path:polygon(0_0,100%_0,100%_100%,50%_85%,0_100%)]"
-            style={{ background: STATE_COLOR[state] }}
+          <FactionFlag
+            id={s.id}
+            color={STATE_COLOR[state]}
+            className="mt-1 h-12 w-9 shrink-0"
           />
           <div className="min-w-0 flex-1">
             <p className="text-xs font-semibold tracking-widest uppercase opacity-75">
@@ -395,7 +520,10 @@ export function StrongholdPanel({
               <dt className="opacity-70">Kết cục</dt>
               <dd>
                 {state === "unresolved" ? (
-                  <>Hiện khi bạn đi qua {resolution.mission}.</>
+                  <>
+                    Hiện khi bạn đi qua “
+                    {storyNodeById(resolution.mission)?.title ?? "nhiệm vụ"}”.
+                  </>
                 ) : (
                   <>
                     {record?.outcome}{" "}
@@ -422,6 +550,18 @@ export function StrongholdPanel({
           </p>
         )}
 
+        {rewardFor ? (
+          <MissionRewardCard
+            campaign={campaign}
+            mission={rewardFor.id}
+            status={rewardFor.status}
+          />
+        ) : (
+          <p className="rounded-lg border border-[#8a6a3b66] p-2 text-center text-sm opacity-80">
+            Chưa có nhiệm vụ nào gắn với vùng này.
+          </p>
+        )}
+
         <div>
           <h3 className="atlas-panel-heading">Nhiệm vụ ở {s.place}</h3>
           <MissionList
@@ -436,13 +576,20 @@ export function StrongholdPanel({
           <button
             type="button"
             onClick={() => onPick(focus.id)}
+            aria-label={`${
+              focus.status === "completed"
+                ? "Xem lại"
+                : focus.status === "inProgress"
+                  ? "Tiếp tục"
+                  : "Bắt đầu"
+            }: ${storyNodeById(focus.id)?.title ?? ""}`}
             className="min-h-12 rounded-lg border-2 border-[#d4a24c] bg-gradient-to-b from-[#b4382c] to-[#7a2c1d] px-4 text-base font-bold tracking-wide text-amber-50 uppercase shadow"
           >
             {focus.status === "completed"
-              ? `Xem lại ${focus.id}`
+              ? "Xem lại"
               : focus.status === "inProgress"
-                ? `Tiếp tục ${focus.id}`
-                : `Bắt đầu ${focus.id}`}
+                ? "Tiếp tục"
+                : "Bắt đầu"}
           </button>
         ) : (
           <p className="rounded-lg border border-[#8a6a3b66] p-2 text-center text-sm opacity-80">
@@ -544,22 +691,20 @@ function StatIcon({ kind }: { kind: StatKind }) {
 
 export function AtlasHeader({
   view,
-  mission,
   level,
   gold,
   supply,
   onView,
 }: {
   view: AtlasView;
-  mission: CampaignMissionId;
   level: number;
   gold: number;
   supply: number;
   onView: (v: AtlasView) => void;
 }) {
-  const tabs: readonly { v: AtlasView; label: string; hint?: string }[] = [
+  const tabs: readonly { v: AtlasView; label: string }[] = [
     { v: "atlas", label: "Bản đồ" },
-    { v: "mission", label: "Nhiệm vụ", hint: mission },
+    { v: "mission", label: "Nhiệm vụ" },
     { v: "codex", label: "Sử ký" },
   ];
   const tabClass = (active: boolean) =>
@@ -591,11 +736,6 @@ export function AtlasHeader({
           >
             <TabIcon kind={t.v} />
             {t.label}
-            {t.hint && (
-              <span className="hidden text-xs font-normal normal-case opacity-75 xl:inline">
-                {t.hint}
-              </span>
-            )}
           </button>
         ))}
         <SceneLink scene="PROFILE" className={tabClass(false)}>
