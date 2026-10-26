@@ -270,7 +270,7 @@ export default function WorldMap({
   };
 
   return (
-    <figure className="campaign-map atlas-frame flex flex-col self-start overflow-hidden">
+    <figure className="campaign-map atlas-frame flex flex-col self-start overflow-hidden xl:h-full xl:self-stretch">
       <AtlasCorners />
       <div className="relative">
         <svg
@@ -589,7 +589,7 @@ export default function WorldMap({
 
       <figcaption
         id="world-map-legend"
-        className="world-strip flex flex-wrap items-center gap-x-3 gap-y-1 px-3 py-2 text-xs"
+        className="world-strip flex flex-wrap items-center content-start gap-x-3 gap-y-1 px-3 py-2 text-xs xl:flex-1"
       >
         {(Object.keys(STATE_COLOR) as StrongholdState[]).map((st) => (
           <span key={st} className="flex items-center gap-1">

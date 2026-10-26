@@ -501,6 +501,25 @@
   background: #fff0c9;
   box-shadow: 0 0 0 2px #d4a24c80;
 }
+/* Đại card bao toàn màn: gỗ sẫm nổi lên khỏi nền trang bằng viền đồng và bóng đổ. */
+.campaign-atlas .atlas-shell {
+  border-color: #8a6a3b;
+  background:
+    radial-gradient(ellipse at 50% 0%, #4a3622 0%, transparent 70%),
+    linear-gradient(#33251a, #1f160f);
+  box-shadow:
+    0 0 0 1px #c9a25a40,
+    0 12px 32px #000a;
+}
+/* Header nằm trong đại card: chỉ một vạch đồng ngăn với ba cột bên dưới. */
+.campaign-atlas .atlas-header {
+  border-bottom: 1px solid var(--atlas-line);
+  color: var(--atlas-ink-on-wood);
+}
+.campaign-atlas .atlas-scroll {
+  scrollbar-color: var(--atlas-bronze) transparent;
+  scrollbar-width: thin;
+}
 .campaign-atlas .atlas-route-done {
   border-color: #2e7d4f;
 }
