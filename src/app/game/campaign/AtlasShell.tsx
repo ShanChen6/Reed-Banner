@@ -6,6 +6,8 @@
 
 import {
   CAMPAIGN_CHAPTERS,
+  WARLORD_RECORDS,
+  factionResolutionOf,
   chapterCompleted,
   chapterStatus,
   chapterUnlocked,
@@ -16,7 +18,15 @@ import {
   type ChapterMissionStatus,
 } from "@/core";
 import { BasisBadge } from "./StoryBeats";
-import { chapterThumbUrl } from "./worldAtlas";
+import { backdropUrl, missionBackdrop } from "./dialogue";
+import { METHOD_TEXT } from "./RouteSummary";
+import { STATE_COLOR, STATE_TEXT, missionStatusMap } from "./WorldMap";
+import {
+  chapterThumbUrl,
+  strongholdLeader,
+  strongholdState,
+  type WorldStronghold,
+} from "./worldAtlas";
 
 export const ROMAN = ["", "I", "II", "III", "IV", "V", "VI"] as const;
 
@@ -102,6 +112,70 @@ export function ChapterRail({
   );
 }
 
+function MissionList({
+  label,
+  missions,
+  current,
+  onPick,
+}: {
+  label: string;
+  missions: readonly {
+    readonly id: CampaignMissionId;
+    readonly status: ChapterMissionStatus;
+  }[];
+  current: CampaignMissionId;
+  onPick: (id: CampaignMissionId) => void;
+}) {
+  return (
+    <ol className="flex flex-col gap-1.5" aria-label={label}>
+      {missions.map(({ id, status: s }) => {
+        const n = storyNodeById(id)!;
+        const usable = s !== "locked" && s !== "comingSoon";
+        return (
+          <li key={id}>
+            <button
+              type="button"
+              disabled={!usable}
+              aria-current={current === id}
+              onClick={() => onPick(id)}
+              className={`atlas-mission flex min-h-11 w-full items-center gap-2 rounded-lg border px-2 py-1.5 text-left text-sm ${
+                current === id ? "atlas-mission-active" : ""
+              } disabled:cursor-not-allowed`}
+            >
+              <span
+                className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                  s === "completed"
+                    ? "bg-emerald-700 text-white"
+                    : usable
+                      ? "bg-[#a8322b] text-amber-50"
+                      : "bg-[#cdb68a] text-[#3b2a1a]"
+                }`}
+              >
+                {s === "completed"
+                  ? "✓"
+                  : usable
+                    ? id.slice(1)
+                    : s === "comingSoon"
+                      ? "…"
+                      : "🔒"}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate font-semibold">
+                  {id} · {n.title}
+                </span>
+                <span className="block truncate text-xs opacity-75">
+                  {STATUS_TEXT[s]} · Chương {ROMAN[n.chapter]} ·{" "}
+                  {n.rewards.firstClearGold} vàng lần đầu
+                </span>
+              </span>
+            </button>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
 export function ChapterPanel({
   campaign,
   chapter,
@@ -141,54 +215,12 @@ export function ChapterPanel({
 
       <div>
         <h3 className="atlas-panel-heading">Nhiệm vụ chương</h3>
-        <ol
-          className="flex flex-col gap-1.5"
-          aria-label={`Nhiệm vụ Chương ${roman}`}
-        >
-          {statuses.map(({ id, status: s }) => {
-            const n = storyNodeById(id)!;
-            const usable = s !== "locked" && s !== "comingSoon";
-            return (
-              <li key={id}>
-                <button
-                  type="button"
-                  disabled={!usable}
-                  aria-current={current === id}
-                  onClick={() => onPick(id)}
-                  className={`atlas-mission flex min-h-11 w-full items-center gap-2 rounded-lg border px-2 py-1.5 text-left text-sm ${
-                    current === id ? "atlas-mission-active" : ""
-                  } disabled:cursor-not-allowed`}
-                >
-                  <span
-                    className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                      s === "completed"
-                        ? "bg-emerald-700 text-white"
-                        : usable
-                          ? "bg-[#a8322b] text-amber-50"
-                          : "bg-[#cdb68a] text-[#3b2a1a]"
-                    }`}
-                  >
-                    {s === "completed"
-                      ? "✓"
-                      : usable
-                        ? id.slice(1)
-                        : s === "comingSoon"
-                          ? "…"
-                          : "🔒"}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate font-semibold">
-                      {id} · {n.title}
-                    </span>
-                    <span className="block truncate text-xs opacity-75">
-                      {STATUS_TEXT[s]} · {n.rewards.firstClearGold} vàng lần đầu
-                    </span>
-                  </span>
-                </button>
-              </li>
-            );
-          })}
-        </ol>
+        <MissionList
+          label={`Nhiệm vụ Chương ${roman}`}
+          missions={statuses}
+          current={current}
+          onPick={onPick}
+        />
       </div>
 
       <p className="text-sm leading-relaxed opacity-85">
@@ -205,6 +237,170 @@ export function ChapterPanel({
           <p className="mt-1">{chapter.legendVsRecord.record}</p>
         </div>
       </div>
+    </aside>
+  );
+}
+
+const CERTAINTY_TEXT = {
+  recorded: "địa danh có sử chép",
+  traditional: "định vị theo truyền thống",
+  disputed: "vị trí còn tranh luận",
+  fictional: "địa điểm do game dựng",
+} as const;
+
+/** Nhiệm vụ nút chính của panel: việc đang dở hoặc đang mở trước, rồi tới việc đã xong để xem lại. */
+function focusMission(
+  missions: readonly {
+    readonly id: CampaignMissionId;
+    readonly status: ChapterMissionStatus;
+  }[],
+) {
+  return (
+    missions.find((m) => m.status === "inProgress") ??
+    missions.find((m) => m.status === "open") ??
+    missions.find((m) => m.status === "completed")
+  );
+}
+
+export function StrongholdPanel({
+  campaign,
+  stronghold: s,
+  current,
+  onPick,
+  onClose,
+}: {
+  campaign: CampaignProgressV2;
+  stronghold: WorldStronghold;
+  current: CampaignMissionId;
+  onPick: (id: CampaignMissionId) => void;
+  onClose: () => void;
+}) {
+  const status = missionStatusMap(campaign);
+  const missions = s.missions.map((id) => ({
+    id,
+    status: status.get(id) ?? ("locked" as const),
+  }));
+  const state = strongholdState(s, campaign.factions);
+  const record = s.faction
+    ? WARLORD_RECORDS.find((w) => w.faction === s.faction)
+    : undefined;
+  const resolution = s.faction ? factionResolutionOf(s.faction) : undefined;
+  const focus = focusMission(missions);
+  const backdrop = backdropUrl(missionBackdrop(s.missions[0] ?? "M01"));
+  return (
+    <aside
+      aria-labelledby="atlas-panel-title"
+      className="atlas-panel flex flex-col gap-3 rounded-xl border-2 border-[#8a6a3b] p-3"
+    >
+      <header className="flex items-start gap-3">
+        <span
+          aria-hidden
+          className="mt-1 h-12 w-8 shrink-0 rounded-sm border-2 border-[#d4a24c] [clip-path:polygon(0_0,100%_0,100%_100%,50%_85%,0_100%)]"
+          style={{ background: STATE_COLOR[state] }}
+        />
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-semibold tracking-widest uppercase opacity-75">
+            {s.faction ? "Cứ điểm sứ quân" : "Đầu não"} · {STATE_TEXT[state]}
+          </p>
+          <h2
+            id="atlas-panel-title"
+            className="text-2xl leading-tight font-black"
+          >
+            {s.place}
+          </h2>
+          <p className="text-[15px] italic">
+            {strongholdLeader(s)}
+            {record ? ` · ${record.title}` : ""}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Đóng thông tin cứ điểm, về thông tin chương"
+          className="flex size-11 shrink-0 items-center justify-center rounded-lg border border-[#8a6a3b80] bg-[#f6ead0] text-xl font-bold hover:bg-[#fff4dc]"
+        >
+          ×
+        </button>
+      </header>
+
+      {/* Ảnh minh họa lấy từ ảnh nền thoại của vùng; ảnh lỗi thì chỉ còn màu nền. */}
+      <div
+        aria-hidden
+        className="aspect-[16/8] rounded-lg border border-[#8a6a3b80] bg-[#cdb68a] bg-cover bg-center"
+        style={{ backgroundImage: `url(${backdrop})` }}
+      />
+
+      <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm leading-relaxed">
+        <dt className="opacity-70">Địa danh</dt>
+        <dd>
+          {CERTAINTY_TEXT[s.certainty]}
+          {s.modernRegion ? ` · ngày nay: ${s.modernRegion}` : ""}
+        </dd>
+        {record && record.aliases.length > 0 && (
+          <>
+            <dt className="opacity-70">Còn chép</dt>
+            <dd>{record.aliases.join(", ")}</dd>
+          </>
+        )}
+        {resolution && (
+          <>
+            <dt className="opacity-70">Kết cục</dt>
+            <dd>
+              {state === "unresolved" ? (
+                <>Hiện khi bạn đi qua {resolution.mission}.</>
+              ) : (
+                <>
+                  {record?.outcome}{" "}
+                  <span className="opacity-70">
+                    (game kể: {METHOD_TEXT[resolution.settlement]})
+                  </span>
+                </>
+              )}
+            </dd>
+          </>
+        )}
+      </dl>
+
+      {!s.faction && (
+        <p className="text-sm leading-relaxed">
+          Căn cứ của Đinh Bộ Lĩnh, không tính là một trong 12 sứ quân. Các nhiệm
+          vụ ở đây mở đầu và khép lại chiến dịch.
+        </p>
+      )}
+      {!s.at && (
+        <p className="text-sm leading-relaxed">
+          Sử chép “nay không rõ chỗ nào”, các bản tổng thuật đặt ở hai vùng khác
+          nhau, nên bản đồ không cắm cờ cho Bình Kiều.
+        </p>
+      )}
+
+      <div>
+        <h3 className="atlas-panel-heading">Nhiệm vụ ở {s.place}</h3>
+        <MissionList
+          label={`Nhiệm vụ ở ${s.place}`}
+          missions={missions}
+          current={current}
+          onPick={onPick}
+        />
+      </div>
+
+      {focus ? (
+        <button
+          type="button"
+          onClick={() => onPick(focus.id)}
+          className="min-h-12 rounded-lg border-2 border-[#d4a24c] bg-gradient-to-b from-[#b4382c] to-[#7a2c1d] px-4 text-base font-bold tracking-wide text-amber-50 uppercase shadow"
+        >
+          {focus.status === "completed"
+            ? `Xem lại ${focus.id}`
+            : focus.status === "inProgress"
+              ? `Tiếp tục ${focus.id}`
+              : `Bắt đầu ${focus.id}`}
+        </button>
+      ) : (
+        <p className="rounded-lg border border-[#8a6a3b66] p-2 text-center text-sm opacity-80">
+          🔒 Chưa mở nhiệm vụ nào ở đây.
+        </p>
+      )}
     </aside>
   );
 }

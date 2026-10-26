@@ -61,8 +61,9 @@ import {
   ONLINE_ERROR_TEXT,
   toBattleState,
 } from "../battle/online";
-import CampaignMap from "./CampaignMap";
-import { ChapterPanel, ChapterRail } from "./AtlasShell";
+import WorldMap from "./WorldMap";
+import { ChapterPanel, ChapterRail, StrongholdPanel } from "./AtlasShell";
+import { strongholdById, type StrongholdId } from "./worldAtlas";
 import { atlasSerif } from "./atlasFont";
 import DiplomacyScene from "./DiplomacyScene";
 import DialoguePlayer from "./DialoguePlayer";
@@ -656,6 +657,9 @@ export default function ChapterOne({
   const chapter: ChapterContent =
     chapterContentOf(savedStep.nodeId) ?? CAMPAIGN_CHAPTERS[0]!;
   const statuses = chapterStatus(campaign, chapter);
+  /** Cứ điểm đang xem ở panel phải (chỉ là trạng thái giao diện); null = thông tin chương. */
+  const [strongholdId, setStronghold] = useState<StrongholdId | null>(null);
+  const stronghold = strongholdId ? strongholdById(strongholdId) : undefined;
   const [seen, setSeen] = useState<readonly string[]>(
     () => readJson<string[]>(SEEN_KEY) ?? [],
   );
@@ -809,23 +813,34 @@ export default function ChapterOne({
             <ChapterRail
               campaign={campaign}
               current={chapter}
-              onPick={(c) =>
-                move({ nodeId: chapterFocus(campaign, c), phase: "intro" })
-              }
+              onPick={(c) => {
+                setStronghold(null);
+                move({ nodeId: chapterFocus(campaign, c), phase: "intro" });
+              }}
             />
           </div>
-          <CampaignMap
-            campaign={campaign}
-            selected={step.nodeId}
-            chapter={chapter.chapter}
-            onOpen={(id) => move({ nodeId: id, phase: "intro" })}
-          />
-          <ChapterPanel
+          <WorldMap
             campaign={campaign}
             chapter={chapter}
-            current={step.nodeId}
-            onPick={(id) => move({ nodeId: id, phase: "intro" })}
+            selected={strongholdId}
+            onSelect={setStronghold}
           />
+          {stronghold ? (
+            <StrongholdPanel
+              campaign={campaign}
+              stronghold={stronghold}
+              current={step.nodeId}
+              onPick={(id) => move({ nodeId: id, phase: "intro" })}
+              onClose={() => setStronghold(null)}
+            />
+          ) : (
+            <ChapterPanel
+              campaign={campaign}
+              chapter={chapter}
+              current={step.nodeId}
+              onPick={(id) => move({ nodeId: id, phase: "intro" })}
+            />
+          )}
         </div>
       </div>
 
