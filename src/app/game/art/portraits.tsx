@@ -1,5 +1,5 @@
 // Chân dung nhân vật dạng huy hiệu tròn, vẽ bằng SVG theo cùng phong cách khắc gỗ với ô cờ.
-// Đây là hình tạm cho tới khi có chân dung của họa sĩ (docs/design/13-hinh-anh.md mục 2.4).
+// Đây là hình tạm cho tới khi có chân dung của họa sĩ (docs/06-art/art-bible.md mục 2.4).
 // Mỗi người khác nhau ở mũ/tóc, màu áo và đồ cầm tay theo nghề, để nhận ra được ở cỡ 32 px.
 
 import { useId } from "react";

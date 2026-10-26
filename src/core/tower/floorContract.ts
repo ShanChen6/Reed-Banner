@@ -1,6 +1,6 @@
 // Hợp đồng tầng và thưởng cho Song Tháp. Chỉ định nghĩa kiểu, dựng tầng xác định, kế hoạch thưởng
 // (sự kiện đá, chưa cộng vào hồ sơ) và kiểm tra trận. Không chứa nội dung 20 tầng hay số liệu thưởng.
-// Xem docs/dual-tower/00-02-rules.md §3-4. Trận dùng lại battle engine nguyên vẹn.
+// Xem docs/02-game-modes/dual-tower/00-02-rules.md §3-4. Trận dùng lại battle engine nguyên vẹn.
 import type { Difficulty } from "../ai";
 import type { FighterConfig } from "../battle";
 import { STANDARD_WEIGHTS, type SpawnWeights } from "../board";

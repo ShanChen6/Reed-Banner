@@ -2,7 +2,7 @@
 // nhận gửi tới chính email đó. Quên mật khẩu: nhập tên đăng nhập hoặc email, thư mang đường dẫn đặt lại dùng
 // một lần, hạn ngắn. Màn hình luôn báo "đã gửi nếu thông tin đúng" để không lộ tên hay email nào có thật.
 // Hàm ở đây chỉ soạn thư, route gửi thư sau khi đã trả lời (thời gian trả lời không lộ gì). Xem
-// docs/tech/ha-tang.md mục 4.
+// docs/07-architecture/ha-tang.md mục 4.
 
 import { createHash, randomBytes } from "node:crypto";
 import type { AccountStore, TokenPurpose } from "./accounts";

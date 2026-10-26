@@ -1,6 +1,6 @@
 // Dữ liệu tầng Tháp Thí Luyện (Trial): schema, parse nghiêm ngặt, registry chỉ đọc, bản công khai.
 // Chưa chứa nội dung 20 tầng và không phát thưởng; số liệu là do task nội dung sau cung cấp.
-// Xem docs/dual-tower/00-02-rules.md §3.
+// Xem docs/02-game-modes/dual-tower/00-02-rules.md §3.
 import type { Difficulty } from "../ai";
 import { TILE_KINDS, validateWeights, type SpawnWeights } from "../board";
 import type { FighterConfig } from "../battle";

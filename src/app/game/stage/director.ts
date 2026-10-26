@@ -8,7 +8,7 @@ import {
 } from "@/core";
 
 /**
- * Động tác một nhân vật trên sân khấu, thời lượng theo bảng hoạt ảnh ở docs/design/15-ke-hoach-do-hoa.md:
+ * Động tác một nhân vật trên sân khấu, thời lượng theo bảng hoạt ảnh ở docs/06-art/ke-hoach-do-hoa.md:
  * ready 0,3 s (đến lượt), attack 0,5–0,7 s, cast 0,6–0,9 s, ultimate 1,2–1,8 s kèm cận cảnh, hit 0,3 s,
  * guard 0,4 s (khiên đỡ), buff/debuff/heal 0,4 s, victory 1,2 s rồi lặp đoạn cuối. Gục (ko) đi qua
  * `setDown` vì theo máu chứ không theo sự kiện.

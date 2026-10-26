@@ -1,6 +1,6 @@
 // Song Tháp (Trial / Destiny) lưu trong hồ sơ.
 // Chỉ định danh và parse/serialize; luật tầng, thưởng và UI nằm ở task sau.
-// Xem docs/dual-tower/00-03-migration-plan.md.
+// Xem docs/02-game-modes/dual-tower/00-03-migration-plan.md.
 
 import { ELEMENTS, ENERGY_MAX, PROFESSIONS, type FighterConfig } from "../battle";
 import { GEAR_SLOTS, TIERS, type GearItem } from "../gear";

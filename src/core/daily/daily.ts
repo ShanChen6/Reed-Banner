@@ -1,6 +1,6 @@
 // Thử thách hằng ngày (lộ trình 5.2): mỗi ngày một đề chung cho mọi người chơi (đội, đối thủ, bàn cờ, luật
 // sân), mỗi người đánh một lần, xếp hạng theo điểm. Seed của ngày chỉ nằm trên server.
-// Số liệu là điểm xuất phát do Claude đặt, chờ Shan duyệt. Xem docs/design/09-che-do-choi.md mục 5.1.
+// Số liệu là điểm xuất phát do Claude đặt, chờ Shan duyệt. Xem docs/02-game-modes/README.md mục 5.1.
 
 import type { Difficulty } from "../ai";
 import {

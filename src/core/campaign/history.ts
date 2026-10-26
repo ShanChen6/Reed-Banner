@@ -1,4 +1,4 @@
-// Sử ký trong game (CAMP-08.02): bản rút gọn của docs/campaign-v2/history-sources.md và warlord-matrix.md để
+// Sử ký trong game (CAMP-08.02): bản rút gọn của docs/02-game-modes/campaign/history-sources.md và warlord-matrix.md để
 // người chơi kiểm chứng mốc lịch sử mà không rời game. Mô tả là lời tóm tắt của ledger, không phải trích nguyên
 // văn; không có ngày tháng nào ngoài các mốc ledger đã ghi. Lớp game (trận, lựa chọn, lương, nghề/hệ) luôn tách
 // riêng ở `fiction`.

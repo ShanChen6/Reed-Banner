@@ -1,4 +1,4 @@
-// 7 nguyên tố và hệ số sát thương trong trận, xem docs/design/05-nguyen-to.md.
+// 7 nguyên tố và hệ số sát thương trong trận, xem docs/01-gameplay/nguyen-to.md.
 
 export const ELEMENTS = ["kim", "moc", "thuy", "hoa", "tho", "loi", "phong"] as const;
 export type Element = (typeof ELEMENTS)[number];

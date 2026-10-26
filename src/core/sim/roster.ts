@@ -1,7 +1,7 @@
 // Mô phỏng sức mạnh từng nhân vật kèm: mỗi trận 3vs3, phe 0 là Đinh Bộ Lĩnh + nhân vật cần đo + một bạn
 // ngẫu nhiên, phe 1 là Đinh Bộ Lĩnh + 2 nhân vật ngẫu nhiên; hai phe cùng hệ nhân vật chính (xoay 7 hệ) và cùng
 // cấp. Bạn và đối thủ rút từ cả kho nhân vật kèm nên 50% là ngang mức trung bình.
-// Dùng để cân tướng thường, tướng lịch sử và sứ quân, xem docs/design/14-nhan-vat.md.
+// Dùng để cân tướng thường, tướng lịch sử và sứ quân, xem docs/03-characters/danh-sach-nhan-vat.md.
 
 import { ELEMENTS, type FighterConfig, type SideIndex } from "../battle";
 import { autoProgress, buildMain, leveledFoe } from "../progress";
