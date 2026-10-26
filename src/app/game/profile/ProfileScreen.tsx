@@ -1,5 +1,7 @@
 "use client";
 
+import { Card, Button } from "@/components/ui";
+
 import { comboDescription } from "@/core";
 import { skillText } from "../battle/labels";
 
@@ -280,7 +282,7 @@ export default function ProfileScreen({
   if (!profile) {
     return (
       <Frame>
-        <p className="py-24 text-center text-stone-300">
+        <p className="py-24 text-center text-foreground-secondary">
           {loadError
             ? "Không tải được hồ sơ, thử tải lại trang."
             : "Đang tải hồ sơ…"}
@@ -350,7 +352,7 @@ export default function ProfileScreen({
     <Frame>
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2 px-1">
         <div className="flex items-center gap-2 text-sm">
-          <span className="text-stone-400">Người chơi:</span>
+          <span className="text-muted">Người chơi:</span>
           <span className="font-semibold text-amber-200">
             {playerName ?? "Khách"}
           </span>
@@ -416,9 +418,9 @@ export default function ProfileScreen({
       {tab === "character" && (
         <div className="grid gap-3 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
           {/* Bên trái: nhân vật */}
-          <section
+          <Card
             aria-label="Nhân vật"
-            className="rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-3 shadow-[inset_0_0_24px_#0009]"
+            className="p-3 shadow-card-inset"
           >
             <RosterPicker
               profile={profile}
@@ -574,7 +576,7 @@ export default function ProfileScreen({
                   key={k}
                   className={`flex items-center justify-between gap-2 px-2 py-1 ${Math.floor(i / 2) % 2 === 0 ? "bg-black/25" : "bg-black/10"}`}
                 >
-                  <dt className="text-stone-300">{k}</dt>
+                  <dt className="text-foreground-secondary">{k}</dt>
                   <dd className="font-semibold text-stone-50 tabular-nums">
                     {v}
                     {(gearBonus[k] ?? 0) > 0 && (
@@ -593,7 +595,7 @@ export default function ProfileScreen({
               </li>)}
             </ul>
             {(bonuses.length > 0 || ultimate) && (
-              <ul className="mt-2 flex flex-col gap-0.5 text-xs text-stone-300">
+              <ul className="mt-2 flex flex-col gap-0.5 text-xs text-foreground-secondary">
                 {bonuses.map((b) => (
                   <li
                     key={`${b.kind}-${b.id}-${b.level}`}
@@ -618,12 +620,12 @@ export default function ProfileScreen({
                 )}
               </ul>
             )}
-          </section>
+          </Card>
 
           {/* Bên phải: túi đồ */}
-          <section
+          <Card
             aria-label="Túi đồ"
-            className="flex flex-col rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-3 shadow-[inset_0_0_24px_#0009]"
+            className="flex flex-col p-3 shadow-card-inset"
           >
             <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
               <h2 className="text-base font-bold text-amber-200">
@@ -661,7 +663,7 @@ export default function ProfileScreen({
                   className={`min-w-7 rounded border px-1.5 text-xs font-semibold ${
                     page === i
                       ? "border-amber-200 bg-gradient-to-b from-amber-200 to-amber-500 text-stone-950"
-                      : "border-[#8a6a3b] bg-black/30 text-stone-300"
+                      : "border-[#8a6a3b] bg-black/30 text-foreground-secondary"
                   }`}
                 >
                   {i + 1}
@@ -732,7 +734,7 @@ export default function ProfileScreen({
                     <p className={`font-semibold ${TIER_CLASS[item.tier]}`}>
                       {gearText(item)}
                     </p>
-                    <p className="text-xs text-stone-300">
+                    <p className="text-xs text-foreground-secondary">
                       {STAT_NAME[SLOT_STAT[item.slot]]} +
                       {itemStat(item, fighter.element)} khi {nameOf(character)}{" "}
                       mặc
@@ -799,7 +801,7 @@ export default function ProfileScreen({
                   </div>
                 </div>
               ) : (
-                <p className="text-xs text-stone-400">
+                <p className="text-xs text-muted">
                   Chọn một món trong túi hoặc trên người để xem chi tiết. Thắng
                   trận chắc chắn rơi 1 món; mua thêm ở thẻ Đội hình &amp; cửa
                   hàng.
@@ -809,7 +811,7 @@ export default function ProfileScreen({
 
             {/* Khay ghép */}
             <div className="mt-2 flex flex-wrap items-center gap-2 rounded-lg border border-dashed border-sky-500/50 p-2 text-xs">
-              <span className="text-stone-300">Ghép:</span>
+              <span className="text-foreground-secondary">Ghép:</span>
               {[0, 1, 2].map((i) => {
                 const it = trayItems[i];
                 return it ? (
@@ -836,7 +838,7 @@ export default function ProfileScreen({
                   />
                 );
               })}
-              <button
+              <Button variant="primary"
                 type="button"
                 disabled={busy || trayItems.length !== 3}
                 onClick={() =>
@@ -844,18 +846,18 @@ export default function ProfileScreen({
                     setMergeTray([]),
                   )
                 }
-                className="rounded bg-amber-500 px-2 py-1 font-semibold text-stone-950 disabled:opacity-35"
+
               >
                 Ghép
                 {trayItems.length === 3
                   ? ` (−${mergeCost(trayItems[0]!.tier)} vàng)`
                   : ""}
-              </button>
-              <span className="text-stone-400">
+              </Button>
+              <span className="text-muted">
                 3 món cùng ô, cùng hệ, cùng phẩm; giữ bộ của món đầu.
               </span>
             </div>
-          </section>
+          </Card>
         </div>
       )}
     </Frame>
@@ -865,7 +867,7 @@ export default function ProfileScreen({
 /** Khung ngoài: nền trận, dải tiêu đề, nút đóng về màn chính. */
 function Frame({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex-1 bg-[radial-gradient(ellipse_at_top,#4a2418_0%,#17110e_60%)] px-2 py-4 text-stone-100 [--gold:#d4a24c] [--panel:#271d18] sm:px-4">
+    <main className="ui-screen px-2 py-4 sm:px-4">
       <div className="relative mx-auto max-w-6xl rounded-2xl border-4 border-[#c79a4a] bg-[#1d1511] p-3 pt-10 shadow-[0_0_0_2px_#3b2a1d,0_12px_40px_#000c] sm:p-4 sm:pt-12">
         <div className="absolute -top-5 left-1/2 -translate-x-1/2 rounded-xl border-4 border-[#c79a4a] bg-gradient-to-b from-[#fbf3df] to-[#e6d3a7] px-8 py-1.5 shadow-[0_4px_0_#0006] sm:px-12">
           <h1 className="text-lg font-black tracking-[0.2em] text-[#5a1e14] sm:text-xl">

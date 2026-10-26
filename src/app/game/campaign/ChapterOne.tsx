@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui";
+
 // Các chương Campaign V2 đã có nội dung (Chương I–III, Chương IV có M13, M15, M16): intro → lựa chọn trình diễn → hoàn thành (story) hoặc chuẩn bị xuất quân
 // (trận). Mọi tiến độ, lựa chọn và thưởng lấy từ hồ sơ server; trình duyệt chỉ nhớ bước đang xem và màn
 // thưởng đã xem để tải lại trang không phải xem lại từ đầu.
@@ -71,7 +73,6 @@ import {
 } from "./AtlasShell";
 import { strongholdById, type StrongholdId } from "./worldAtlas";
 import { AtlasCorners } from "./AtlasFrame";
-import { atlasSerif } from "./atlasFont";
 import DiplomacyScene from "./DiplomacyScene";
 import DialoguePlayer from "./DialoguePlayer";
 import MusterPanel from "./MusterPanel";
@@ -209,7 +210,7 @@ function RewardModal({
       aria-labelledby="first-clear-title"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
     >
-      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border-2 border-[var(--gold)] bg-[#2a1f19] p-4 text-stone-100 shadow-2xl">
+      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border-2 border-[var(--gold)] bg-[#2a1f19] p-4 text-foreground shadow-2xl">
         <p className="text-xs tracking-widest text-amber-300/80 uppercase">
           Hoàn thành lần đầu
         </p>
@@ -254,27 +255,27 @@ function RewardModal({
               Mở khóa đồng hành: {companionById(id)?.name ?? id}
             </li>
           ))}
-          <li className="text-xs text-stone-400">
+          <li className="text-xs text-muted">
             Server đã ghi thưởng một lần; đánh lại hoặc xem lại không nhận thêm.
           </li>
         </ul>
         <div className="mt-4 flex flex-wrap gap-2">
           {nextId && (
-            <button
+            <Button variant="ornate"
               type="button"
               onClick={() => onNext(reward.receipts, nextId)}
-              className="rounded-lg border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-4 py-2 font-bold text-amber-50"
+
             >
               Tiếp: {storyNodeById(nextId)!.title}
-            </button>
+            </Button>
           )}
-          <button
+          <Button variant="secondary"
             type="button"
             onClick={() => onClose(reward.receipts)}
-            className="rounded bg-white/10 px-4 py-2 hover:bg-white/15"
+
           >
             Đóng
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -364,7 +365,7 @@ function BattlePrep({
                   ? "border-emerald-400/50 bg-emerald-500/15 text-emerald-200"
                   : i === phase
                     ? "border-amber-300 bg-amber-500/25 font-semibold text-amber-50"
-                    : "border-white/10 bg-black/30 text-stone-400"
+                    : "border-white/10 bg-black/30 text-muted"
               }`}
             >
               {i < phase ? "✓ " : ""}Phase {i + 1}/{labels.length}: {label}
@@ -414,17 +415,17 @@ function BattlePrep({
         )}
       </div>
       <dl className="grid grid-cols-2 gap-x-3 gap-y-1 rounded-md bg-black/25 p-2 text-sm sm:grid-cols-4">
-        <dt className="text-stone-400">Thể thức</dt>
+        <dt className="text-muted">Thể thức</dt>
         <dd className="font-semibold">
           {scenario.mode === "3v3" ? "3vs3" : "1vs1"}
         </dd>
-        <dt className="text-stone-400">Độ khó</dt>
+        <dt className="text-muted">Độ khó</dt>
         <dd className="font-semibold">
           {DIFFICULTY_NAME[scenario.difficulty]}
         </dd>
-        <dt className="text-stone-400">Cấp đối thủ</dt>
+        <dt className="text-muted">Cấp đối thủ</dt>
         <dd className="font-semibold">{encounter.level}</dd>
-        <dt className="text-stone-400">Cấp gợi ý</dt>
+        <dt className="text-muted">Cấp gợi ý</dt>
         <dd
           className={`font-semibold ${advice.underLevel ? "text-rose-400" : "text-emerald-400"}`}
         >
@@ -445,11 +446,11 @@ function BattlePrep({
             />
             <div className="min-w-0 text-xs">
               <p className="truncate text-sm font-semibold">{f.name}</p>
-              <p className="flex items-center gap-1 text-stone-300">
+              <p className="flex items-center gap-1 text-foreground-secondary">
                 <ElementIcon element={f.element} className="size-3.5" />
                 {ELEMENT_NAME[f.element]} · {PROFESSION_NAME[f.profession]}
               </p>
-              <p className="text-stone-400">
+              <p className="text-muted">
                 {encounter.foes[i]?.hero
                   ? "Sứ quân có tên trong sử · trận do game dựng"
                   : "Nhân vật hư cấu"}
@@ -464,7 +465,7 @@ function BattlePrep({
         aria-label="Gợi ý đội hình"
       >
         <h3 className="mb-1 font-semibold text-amber-200">Gợi ý đội hình</h3>
-        <p className="text-stone-300">
+        <p className="text-foreground-secondary">
           {advice.mode === "1v1"
             ? "Trận 1vs1: chỉ Đinh Bộ Lĩnh ra trận."
             : "Trận 3vs3: Đinh Bộ Lĩnh cùng hai người bạn chọn dưới đây."}{" "}
@@ -474,7 +475,7 @@ function BattlePrep({
         </p>
         {advice.mode === "3v3" && (
           <div className="mt-2">
-            <p className="text-xs text-stone-400" id={`team-${nodeId}`}>
+            <p className="text-xs text-muted" id={`team-${nodeId}`}>
               Đi cùng ({team.length}/2):{" "}
               {team.map((id) => companionById(id)?.name ?? id).join(", ") ||
                 "chưa chọn"}
@@ -502,7 +503,7 @@ function BattlePrep({
                   >
                     <ElementIcon element={c.element} className="size-3.5" />
                     {c.name}
-                    <span className="text-stone-400">
+                    <span className="text-muted">
                       {PROFESSION_NAME[c.profession]}
                     </span>
                   </button>
@@ -534,7 +535,7 @@ function BattlePrep({
             </button>
           ))}
         </div>
-        <p className="mt-1 text-xs text-stone-400">
+        <p className="mt-1 text-xs text-muted">
           Vũ khí nghề {PROFESSION_NAME[profession]}:{" "}
           {weapon ? gearText(weapon) : "chưa trang bị (đổi ở Hồ sơ)"}. Mỗi nghề
           dùng vũ khí riêng; nghề và hệ chọn ở đây được lưu khi xuất quân.
@@ -566,7 +567,7 @@ function BattlePrep({
           ))}
         </div>
         <p
-          className={`mt-1 text-xs ${counters ? "text-emerald-300" : weak ? "text-rose-300" : "text-stone-400"}`}
+          className={`mt-1 text-xs ${counters ? "text-emerald-300" : weak ? "text-rose-300" : "text-muted"}`}
         >
           {counters
             ? "Hệ đang chọn khắc thủ lĩnh đối phương."
@@ -581,21 +582,21 @@ function BattlePrep({
         aria-label="Gợi ý lương"
       >
         <h3 className="mb-1 font-semibold text-amber-200">Lương mang theo</h3>
-        <p className={advice.lowFood ? "text-rose-300" : "text-stone-300"}>
+        <p className={advice.lowFood ? "text-rose-300" : "text-foreground-secondary"}>
           Đang có {advice.food}/{CAMPAIGN_FOOD_MAX} lương; gợi ý từ{" "}
           {advice.suggestedFood} để quân không đói suốt trận.
           {advice.lowFood &&
             ` Thiếu ${missing} lương: quân đói sẽ đánh yếu hơn.`}
         </p>
         {advice.lowFood && (
-          <button
+          <Button variant="primary"
             type="button"
             disabled={busy || profile.gold < missing * FOOD_PRICE}
             onClick={() => onAction({ type: "buyFood", amount: missing })}
-            className="mt-1 rounded bg-amber-500 px-3 py-1 font-semibold text-stone-950 disabled:opacity-35"
+            className="mt-1"
           >
             Mua {missing} lương ({missing * FOOD_PRICE} vàng)
-          </button>
+          </Button>
         )}
       </section>
 
@@ -609,20 +610,20 @@ function BattlePrep({
 
       <div className="flex flex-wrap items-center gap-2">
         {resumeId ? (
-          <button
+          <Button variant="ornate"
             type="button"
             disabled={busy}
             onClick={onResume}
-            className="rounded-lg border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-6 py-2 font-bold tracking-wider text-amber-50 uppercase disabled:opacity-50"
+            className="tracking-wider uppercase"
           >
             Tiếp tục trận
-          </button>
+          </Button>
         ) : (
-          <button
+          <Button variant="ornate"
             type="button"
             disabled={busy || !teamReady}
             onClick={() => onStart({ element, profession, team })}
-            className="rounded-lg border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-6 py-2 font-bold tracking-wider text-amber-50 uppercase disabled:opacity-50"
+            className="tracking-wider uppercase"
           >
             {!teamReady
               ? "Chọn đủ 2 người đi cùng"
@@ -633,7 +634,7 @@ function BattlePrep({
                   : profile.campaign.completed.includes(nodeId)
                     ? "Đánh lại"
                     : "Xuất quân"}
-          </button>
+          </Button>
         )}
       </div>
     </div>
@@ -849,7 +850,7 @@ export default function ChapterOne({
       />
       {/* Đại card Sử ký (Polish V2 P02): header, ba cột và tuyến dưới nằm trong một khung gỗ. Màn nhiệm vụ và
           Sử ký chỉ giữ header trong khung, nội dung của chúng nằm dưới. */}
-      <div className={`campaign-atlas ${atlasSerif.variable}`}>
+      <div className="campaign-atlas">
         <div className="atlas-frame atlas-frame-wood atlas-shell flex flex-col gap-3 p-2 sm:p-3">
           <AtlasCorners />
           <AtlasHeader
@@ -949,7 +950,7 @@ export default function ChapterOne({
             >
               ← Về bản đồ Sử ký
             </button>
-            <p className="text-sm text-stone-400">
+            <p className="text-sm text-muted">
               Chương {ROMAN[chapter.chapter]} · {chapter.title}
               {stronghold ? ` · ${stronghold.place}` : ""}
             </p>
@@ -961,7 +962,7 @@ export default function ChapterOne({
                 {node.location.name} ·{" "}
                 {CERTAINTY_TEXT[node.location.certainty]}
                 {node.location.modernRegion && (
-                  <span className="text-stone-400 normal-case">
+                  <span className="text-muted normal-case">
                     {" "}
                     (ngày nay: {node.location.modernRegion})
                   </span>
@@ -981,7 +982,7 @@ export default function ChapterOne({
                 ))}
               </div>
               {node.type === "diplomacy" && !copy && (
-                <p className="mt-2 text-xs text-stone-400">
+                <p className="mt-2 text-xs text-muted">
                   Hội kiến: không có trận, không có thanh máu. Hoàn thành bằng
                   lựa chọn lời đáp; server ghi kết quả.
                 </p>
@@ -1016,7 +1017,7 @@ export default function ChapterOne({
             </header>
 
             {!copy ? (
-              <p className="text-stone-300">
+              <p className="text-foreground-secondary">
                 Nội dung nhiệm vụ này sẽ mở ở bản sau.
               </p>
             ) : node.type === "diplomacy" ? (
@@ -1124,7 +1125,7 @@ export default function ChapterOne({
                                 (x) => x.id === c.id,
                               )?.tone;
                               return tone ? (
-                                <span className="ml-1.5 text-[10px] text-stone-400 uppercase">
+                                <span className="ml-1.5 text-[10px] text-muted uppercase">
                                   {TONE_TEXT[tone]}
                                 </span>
                               ) : null;
@@ -1133,7 +1134,7 @@ export default function ChapterOne({
                         );
                       })}
                     </div>
-                    <p className="text-xs text-stone-400">
+                    <p className="text-xs text-muted">
                       Lựa chọn chỉ đổi lời kể; kết quả nhiệm vụ và phần thưởng
                       như nhau.
                     </p>

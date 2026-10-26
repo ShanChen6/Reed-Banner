@@ -1,5 +1,7 @@
 "use client";
 
+import { Select, Card, Alert } from "@/components/ui";
+
 // Giao diện thuần của Tháp Thí Luyện: nhận dữ liệu và callback qua props (không tự gọi mạng, không dùng context
 // phân cảnh) nên dựng được ở mọi nơi. Server là nguồn sự thật: số đá, "đã nhận" và kỷ lục chỉ hiện đúng như
 // server trả; client không tự cộng.
@@ -83,7 +85,7 @@ function FloorNavigator({
             ? "border-emerald-400/60 bg-emerald-900/30"
             : f.state === "open"
               ? "border-amber-400/70 bg-amber-900/25"
-              : "border-stone-600 bg-black/30 text-stone-400";
+              : "border-stone-600 bg-black/30 text-muted";
         return (
           <li key={f.floor.id}>
             <button
@@ -123,19 +125,19 @@ function Pick({
   onPick: (v: string) => void;
 }) {
   return (
-    <label className="flex flex-col gap-1 text-xs text-stone-300">
+    <label className="flex flex-col gap-1 text-xs text-foreground-secondary">
       {label}
-      <select
+      <Select
         value={value}
         onChange={(e) => onPick(e.target.value)}
-        className="min-h-11 rounded-lg border border-stone-600 bg-black/40 px-2 text-sm text-stone-100 focus-visible:outline-2 focus-visible:outline-amber-300"
+        className="min-h-11 text-sm focus-visible:outline-2 focus-visible:outline-amber-300"
       >
         {options.map((o) => (
           <option key={o.value} value={o.value}>
             {o.text}
           </option>
         ))}
-      </select>
+      </Select>
     </label>
   );
 }
@@ -164,9 +166,9 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
   };
 
   return (
-    <section
+    <Card
       aria-labelledby="trial-floor-title"
-      className="flex flex-col gap-4 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4"
+      className="flex flex-col gap-4"
     >
       <header>
         <p className="text-xs tracking-widest text-amber-300/80 uppercase">
@@ -175,11 +177,11 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
         <h2 id="trial-floor-title" className="text-xl font-black text-amber-100">
           Tầng {f.floor}: {f.narrative.title}
         </h2>
-        <p className="mt-1 text-sm text-stone-300">{f.narrative.intro}</p>
+        <p className="mt-1 text-sm text-foreground-secondary">{f.narrative.intro}</p>
       </header>
 
       {locked && (
-        <p role="status" className="rounded-lg bg-black/40 p-3 text-sm text-stone-300">
+        <p role="status" className="rounded-lg bg-black/40 p-3 text-sm text-foreground-secondary">
           🔒 {lockedHint(entry)}. Bạn vẫn xem được luật để chuẩn bị đội.
         </p>
       )}
@@ -188,7 +190,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
         <div>
           <h3 className="mb-1 text-sm font-bold text-amber-200">Luật tầng</h3>
           {rules.length === 0 ? (
-            <p className="text-sm text-stone-300">Tự do chọn đội.</p>
+            <p className="text-sm text-foreground-secondary">Tự do chọn đội.</p>
           ) : (
             <ul className="flex flex-col gap-1 text-sm">
               {rules.map((r) => (
@@ -206,20 +208,20 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
         </div>
         <div className="flex flex-col gap-1 text-sm">
           <h3 className="mb-1 text-sm font-bold text-amber-200">Điều kiện thắng</h3>
-          <p className={win.supported ? "text-stone-100" : "text-rose-300"}>
+          <p className={win.supported ? "text-foreground" : "text-rose-300"}>
             {win.text}
             {!win.supported && " (chưa hỗ trợ, chưa vào được)"}
           </p>
-          <p className="text-stone-300">Giới hạn {f.turnLimit} lượt · máu đầy, lương 60 mỗi lần thử.</p>
+          <p className="text-foreground-secondary">Giới hạn {f.turnLimit} lượt · máu đầy, lương 60 mỗi lần thử.</p>
           <p className={entry.firstClearClaimed ? "text-emerald-300" : "text-amber-200"} data-testid="first-clear">
             💎 {firstClearText(entry)}
           </p>
           {entry.record && (
-            <p className="text-stone-300">
+            <p className="text-foreground-secondary">
               Kỷ lục: {entry.record.bestTurns} lượt · đã qua {entry.record.clears} lần
             </p>
           )}
-          {entry.state === "cleared" && <p className="text-stone-400">Đánh lại để cải thiện kỷ lục, không có thêm đá.</p>}
+          {entry.state === "cleared" && <p className="text-muted">Đánh lại để cải thiện kỷ lục, không có thêm đá.</p>}
         </div>
       </div>
 
@@ -258,7 +260,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
                     <Portrait id={o.id} element={o.element} profession={o.profession} className="size-10 shrink-0" />
                     <span className="min-w-0 text-xs">
                       <span className="block truncate text-sm font-semibold">{o.name}</span>
-                      <span className="flex items-center gap-1 text-stone-300">
+                      <span className="flex items-center gap-1 text-foreground-secondary">
                         <ElementIcon element={o.element} className="size-3.5" />
                         {ELEMENT_NAME[o.element]} · {PROFESSION_NAME[o.profession]}
                       </span>
@@ -275,7 +277,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
               <Portrait id={MAIN_ID} element={build.element} profession={build.profession} className="size-12 shrink-0" />
               <div className="text-sm">
                 <p className="font-semibold">Đinh Bộ Lĩnh (thủ lĩnh, luôn ra trận)</p>
-                <p className="flex items-center gap-1 text-stone-300" data-testid="leader-preview">
+                <p className="flex items-center gap-1 text-foreground-secondary" data-testid="leader-preview">
                   <ElementIcon element={build.element} className="size-3.5" />
                   {ELEMENT_NAME[build.element]} · {PROFESSION_NAME[build.profession]}
                 </p>
@@ -297,15 +299,15 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
                 />
               </div>
             ) : (
-              <p className="mt-2 text-xs text-stone-400">
+              <p className="mt-2 text-xs text-muted">
                 {companions.length < 2 ? "Chọn đủ 2 tướng để xem các build hợp luật của thủ lĩnh." : "Không có build thủ lĩnh nào hợp luật với 2 tướng này."}
               </p>
             )}
-            <p className="mt-2 text-xs text-stone-400">Đổi nghề/hệ chỉ áp dụng cho trận này, không đổi hồ sơ.</p>
+            <p className="mt-2 text-xs text-muted">Đổi nghề/hệ chỉ áp dụng cho trận này, không đổi hồ sơ.</p>
           </div>
 
           <div aria-live="polite" data-testid="lineup-status" className="text-sm">
-            {preview.status === "incomplete" && <p className="text-stone-300">Cần chọn thêm {preview.missing} tướng kèm.</p>}
+            {preview.status === "incomplete" && <p className="text-foreground-secondary">Cần chọn thêm {preview.missing} tướng kèm.</p>}
             {preview.status === "valid" && <p className="text-emerald-300">✔ Đội hình hợp luật (server sẽ kiểm tra lại).</p>}
             {preview.status === "invalid" && (
               <ul className="text-rose-300">
@@ -343,7 +345,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
           </span>
         )}
       </div>
-    </section>
+    </Card>
   );
 }
 
@@ -357,7 +359,7 @@ export default function TrialView(props: TrialViewProps) {
         <div>
           <p className="text-xs tracking-widest text-amber-300/80 uppercase">Song Tháp</p>
           <h1 className="text-2xl font-black text-amber-100">Tháp Thí Luyện</h1>
-          <p className="text-sm text-stone-400">
+          <p className="text-sm text-muted">
             Đã qua tầng {overview.cleared}/{overview.floors.length} · chơi lại tùy ý, đá lần đầu chỉ nhận một lần
           </p>
         </div>
@@ -371,9 +373,9 @@ export default function TrialView(props: TrialViewProps) {
       </div>
 
       {!overview.supported && (
-        <p role="alert" className="rounded-lg bg-rose-900/40 p-3 text-sm text-rose-100">
+        <Alert role="alert" className="p-3 text-sm text-rose-100">
           Dữ liệu Song Tháp của bạn thuộc phiên bản mới hơn bản này. Hãy tải lại trang hoặc chờ cập nhật; tiến trình không bị ghi đè.
-        </p>
+        </Alert>
       )}
 
       <section
@@ -387,9 +389,9 @@ export default function TrialView(props: TrialViewProps) {
               Tier {overview.sweep.tier} · dự kiến nhận <strong>{overview.sweep.amount} Đá Cường Hóa</strong>
             </p>
           ) : (
-            <p className="text-sm text-stone-300">Vượt tầng 1 để mở quyền quét hằng ngày.</p>
+            <p className="text-sm text-foreground-secondary">Vượt tầng 1 để mở quyền quét hằng ngày.</p>
           )}
-          <p className="mt-1 text-xs text-stone-400">
+          <p className="mt-1 text-xs text-muted">
             {overview.sweep.claimedToday ? "Lượt tiếp theo: " : "Có thể quét: "}
             <time dateTime={new Date(overview.sweep.nextAt).toISOString()}>{formatSweepTime(overview.sweep.nextAt)}</time> (giờ Việt Nam)
           </p>
@@ -409,9 +411,9 @@ export default function TrialView(props: TrialViewProps) {
           {sweepButton.text}
         </button>
         <div id="trial-sweep-history" className="sm:col-span-2">
-          <h3 className="text-xs font-semibold tracking-wide text-stone-300 uppercase">Lịch sử nhận gần đây</h3>
+          <h3 className="text-xs font-semibold tracking-wide text-foreground-secondary uppercase">Lịch sử nhận gần đây</h3>
           {overview.sweep.history.length ? (
-            <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-stone-400">
+            <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
               {overview.sweep.history.map((item) => (
                 <li key={item.dateKey}>
                   {item.dateKey}{item.amount === null ? " · đã nhận" : ` · +${item.amount} đá`}
@@ -425,22 +427,22 @@ export default function TrialView(props: TrialViewProps) {
       </section>
 
       {!overview.available ? (
-        <p role="status" className="rounded-xl border border-stone-600 bg-black/30 p-6 text-center text-stone-300">
+        <p role="status" className="rounded-xl border border-stone-600 bg-black/30 p-6 text-center text-foreground-secondary">
           Tháp Thí Luyện chưa mở: các tầng thử thách chưa được phát hành. Tiến trình của bạn được giữ nguyên.
         </p>
       ) : (
         <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-          <section aria-labelledby="trial-floors-title" className="flex flex-col gap-2 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4">
+          <Card aria-labelledby="trial-floors-title" className="flex flex-col gap-2">
             <h2 id="trial-floors-title" className="font-bold text-amber-200">
               Các tầng
             </h2>
             <FloorNavigator floors={overview.floors} selected={floor} active={overview.active?.floor ?? null} onSelect={props.onSelectFloor} />
-            <p className="text-xs text-stone-400">Dùng phím mũi tên để chuyển tầng, Enter để chọn.</p>
-          </section>
+            <p className="text-xs text-muted">Dùng phím mũi tên để chuyển tầng, Enter để chọn.</p>
+          </Card>
           {entry ? (
             <FloorDetail {...props} entry={entry} />
           ) : (
-            <p role="status" className="rounded-xl border border-stone-600 bg-black/30 p-6 text-center text-stone-300">
+            <p role="status" className="rounded-xl border border-stone-600 bg-black/30 p-6 text-center text-foreground-secondary">
               Chọn một tầng để xem luật và chuẩn bị đội.
             </p>
           )}

@@ -1,5 +1,7 @@
 "use client";
 
+import { Card, Button } from "@/components/ui";
+
 // Thử thách hằng ngày: đề chung hôm nay (đội cho sẵn, đối thủ, sân nhà), lượt của mình và bảng xếp hạng.
 // Mỗi người một lượt mỗi ngày; server giữ chỗ lượt trước khi tạo trận.
 
@@ -45,7 +47,7 @@ function Fighters({ list }: { list: readonly FighterConfig[] }) {
           />
           <div className="min-w-0 text-xs">
             <p className="truncate text-sm font-semibold">{f.name}</p>
-            <p className="flex items-center gap-1 text-stone-300">
+            <p className="flex items-center gap-1 text-foreground-secondary">
               <ElementIcon element={f.element} className="size-3.5" />
               {ELEMENT_NAME[f.element]} · {PROFESSION_NAME[f.profession]} ·{" "}
               {f.maxHp} máu
@@ -70,7 +72,7 @@ export default function DailyScreen() {
   if (!data?.setup) {
     return (
       <Shell>
-        <p className="py-24 text-center text-stone-300">
+        <p className="py-24 text-center text-foreground-secondary">
           {data
             ? "Không tải được thử thách hôm nay, thử tải lại trang."
             : "Đang tải…"}
@@ -125,7 +127,7 @@ export default function DailyScreen() {
             Ngày {data.day?.split("-").reverse().join("/")}
           </p>
           <h1 className="text-2xl font-black text-amber-100">Thử thách ngày</h1>
-          <p className="text-sm text-stone-400">
+          <p className="text-sm text-muted">
             Một đề chung cho mọi người, mỗi người đánh một lần. Đề mới lúc 0
             giờ.
           </p>
@@ -147,9 +149,9 @@ export default function DailyScreen() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-        <section className="flex flex-col gap-3 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4 shadow-[inset_0_0_24px_#0009]">
+        <Card className="flex flex-col gap-3 shadow-card-inset">
           <h2 className="text-lg font-bold text-amber-100">Đề hôm nay</h2>
-          <p className="text-sm text-stone-300">
+          <p className="text-sm text-foreground-secondary">
             Đội cho sẵn, cấp {DAILY_LEVEL}, không trang bị. Đối thủ đánh ở mức{" "}
             {DIFFICULTY_NAME[setup.difficulty]}
             {warlord
@@ -172,7 +174,7 @@ export default function DailyScreen() {
               <Fighters list={setup.foes} />
             </div>
           </div>
-          <p className="text-xs text-stone-400">
+          <p className="text-xs text-muted">
             Xếp hạng: thắng đứng trên thua; cùng thắng thì ít lượt hơn đứng
             trên, rồi còn nhiều máu hơn. Thưởng {DAILY_GOLD.win} vàng khi thắng,{" "}
             {DAILY_GOLD.loss} vàng khi thua.
@@ -184,29 +186,29 @@ export default function DailyScreen() {
                 {mine.rank !== null && ` · hạng ${mine.rank}`}
               </p>
             ) : (
-              <button
+              <Button variant="ornate"
                 type="button"
                 disabled={busy}
                 onClick={() => void play()}
-                className="rounded-lg border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-6 py-2 font-bold tracking-wider text-amber-50 uppercase disabled:opacity-50"
+                className="tracking-wider uppercase"
               >
                 {busy
                   ? "Đang vào trận…"
                   : mine
                     ? "Tiếp tục trận"
                     : "Đánh (1 lần)"}
-              </button>
+              </Button>
             )}
             {message && (
               <span className="text-sm text-rose-400">{message}</span>
             )}
           </div>
-        </section>
+        </Card>
 
-        <section className="flex flex-col gap-2 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4">
+        <Card className="flex flex-col gap-2">
           <h2 className="font-bold text-amber-200">Bảng xếp hạng</h2>
           {top.length === 0 ? (
-            <p className="text-sm text-stone-400">Chưa ai đánh xong hôm nay.</p>
+            <p className="text-sm text-muted">Chưa ai đánh xong hôm nay.</p>
           ) : (
             <ol className="flex flex-col gap-1 text-sm">
               {top.map((r) => (
@@ -221,7 +223,7 @@ export default function DailyScreen() {
                     {r.name}
                     {r.mine && " (bạn)"}
                   </span>
-                  <span className="text-xs text-stone-300">
+                  <span className="text-xs text-foreground-secondary">
                     {scoreText(r.score)}
                   </span>
                 </li>
@@ -231,7 +233,7 @@ export default function DailyScreen() {
           {mine?.rank != null && !top.some((r) => r.mine) && (
             <p className="text-sm text-amber-200">Hạng của bạn: {mine.rank}</p>
           )}
-        </section>
+        </Card>
       </div>
     </Shell>
   );
@@ -239,7 +241,7 @@ export default function DailyScreen() {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex-1 bg-[radial-gradient(ellipse_at_top,#2b2440_0%,#17110e_60%)] px-3 py-6 text-stone-100 [--gold:#d4a24c] sm:px-6">
+    <main className="ui-screen ui-screen--cool">
       <div className="mx-auto max-w-6xl">{children}</div>
     </main>
   );

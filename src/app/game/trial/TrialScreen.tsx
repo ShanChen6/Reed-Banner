@@ -1,4 +1,6 @@
 "use client";
+import { Button } from "@/components/ui";
+
 
 import { useCallback, useEffect, useState } from "react";
 import type { Profile } from "@/core";
@@ -40,7 +42,7 @@ async function json<T>(url: string, init?: RequestInit): Promise<T | null> {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex-1 bg-[radial-gradient(ellipse_at_top,#34251d_0%,#17110e_62%)] px-3 py-6 text-stone-100 [--gold:#d4a24c] sm:px-6">
+    <main className="ui-screen">
       <div className="mx-auto max-w-6xl">{children}</div>
     </main>
   );
@@ -101,13 +103,13 @@ export default function TrialScreen() {
   if (!overview || !profile) {
     return (
       <Shell>
-        <div className="py-24 text-center text-stone-300">
+        <div className="py-24 text-center text-foreground-secondary">
           {loadError ? (
             <>
               <p role="alert">Không tải được Tháp Thí Luyện. Hãy kiểm tra kết nối rồi thử lại.</p>
-              <button type="button" onClick={() => void load()} className="mt-4 min-h-11 rounded-lg bg-white/10 px-4 py-2 font-semibold hover:bg-white/15">
+              <Button variant="secondary" type="button" onClick={() => void load()} className="mt-4 min-h-11">
                 Tải lại
-              </button>
+              </Button>
             </>
           ) : (
             <p role="status">Đang tải Tháp Thí Luyện…</p>

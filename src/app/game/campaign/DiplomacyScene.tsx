@@ -130,7 +130,7 @@ export default function DiplomacyScene({
       </header>
 
       {outcome && (
-        <p className="text-xs text-stone-300">
+        <p className="text-xs text-foreground-secondary">
           Không có trận, không có thanh máu. Kết cục đã cố định:{" "}
           <strong className="text-sky-200">{outcome}</strong>
           {counterpart ? ` (${counterpart.name})` : ""}. Lời đáp chỉ đổi cách
@@ -209,7 +209,7 @@ export default function DiplomacyScene({
                     )}
                   </span>
                   {preview && (
-                    <span className="line-clamp-2 text-xs text-stone-300">
+                    <span className="line-clamp-2 text-xs text-foreground-secondary">
                       {preview.text}
                     </span>
                   )}

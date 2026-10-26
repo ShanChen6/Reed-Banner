@@ -63,17 +63,17 @@ function RaidPanel({
           Cốt truyện kể {leader.name} bị đánh dẹp theo tổng thuật. Trận này là tái đấu do game sáng tác ở bậc khó
           hơn, không thêm sự kiện lịch sử nào.
         </p>
-        <p className="mt-1 flex items-center gap-1.5 text-sm text-stone-300">
+        <p className="mt-1 flex items-center gap-1.5 text-sm text-foreground-secondary">
           <ElementIcon element={leader.element} className="size-4 shrink-0" />
           {raidSetup(boss, 1).rule}
           {boss.mode === "3v3" && " Thủ lĩnh máu ×1,5."}
         </p>
-        <p className="mt-1 text-xs text-stone-400">
+        <p className="mt-1 text-xs text-muted">
           Thể thức {boss.mode === "3v3" ? "3vs3, ra trận cùng đội đã chọn ở trang Hồ sơ" : "1vs1"}. Đánh trùm
           không dùng lương chiến dịch và không đổi tiến độ chiến dịch.
         </p>
       </div>
-      {!open && <p className="text-sm text-stone-400">{gateText(boss)}.</p>}
+      {!open && <p className="text-sm text-muted">{gateText(boss)}.</p>}
       <ul className="grid gap-2 sm:grid-cols-3">
         {RAID_TIERS.map((tier) => {
           const info = RAID_TIER_INFO[tier];
@@ -95,7 +95,7 @@ function RaidPanel({
                 {info.name}
                 {won && <span className="text-emerald-300">✓ Đã thắng</span>}
               </p>
-              <p className="text-stone-300">
+              <p className="text-foreground-secondary">
                 Đối thủ cấp {raidLevel(boss, tier)} ·{" "}
                 {DIFFICULTY_NAME[raidDifficulty(boss, tier)]}
               </p>
@@ -160,12 +160,12 @@ export default function RaidHall({
   return (
     <section
       aria-labelledby="raid-hall-title"
-      className="mt-6 rounded-xl border-2 border-[#7a2c1d] bg-[#2a1719]/90 p-4 shadow-[inset_0_0_24px_#0009]"
+      className="mt-6 rounded-xl border-2 border-[#7a2c1d] bg-[#2a1719]/90 p-4 shadow-card-inset"
     >
       <h2 id="raid-hall-title" className="text-xl font-black text-amber-100">
         Đánh trùm · {openCount}/{RAID_BOSSES.length} sứ quân đã mở
       </h2>
-      <p className="mb-3 text-sm text-stone-400">
+      <p className="mb-3 text-sm text-muted">
         Chế độ lặp lại riêng, không phải nhiệm vụ chiến dịch: tái đấu các sứ
         quân bị đánh dẹp, mỗi người mở sau nhiệm vụ mốc của họ trong chiến dịch.
       </p>
@@ -207,7 +207,7 @@ export default function RaidHall({
                     <span className="block truncate font-semibold">
                       {open ? leader.name : "Sứ quân chưa gặp"}
                     </span>
-                    <span className="block truncate text-xs text-stone-400">
+                    <span className="block truncate text-xs text-muted">
                       {open
                         ? `Tái đấu · ${best > 0 ? `đã thắng ${RAID_TIER_INFO[best as RaidTier].name}` : "chưa thắng bậc nào"}`
                         : gateText(b)}
@@ -232,7 +232,7 @@ export default function RaidHall({
             onStart={(tier) => onStart(boss.id, tier)}
           />
         ) : (
-          <p className="self-center text-sm text-stone-400">
+          <p className="self-center text-sm text-muted">
             Chưa có sứ quân nào mở. Sứ quân đầu tiên mở sau nhiệm vụ{" "}
             {gateText(RAID_BOSSES[0]!).replace("Mở sau nhiệm vụ ", "")}.
           </p>

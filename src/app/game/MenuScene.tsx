@@ -43,14 +43,14 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
   );
 
   return (
-    <main className="demo-bg flex flex-1 flex-col items-center bg-[#17110e] px-4 py-8 text-stone-100 [--gold:#d4a24c] [--panel:#271d18]">
+    <main className="demo-bg flex flex-1 flex-col items-center bg-[#17110e] px-4 py-8 text-foreground">
       <div className="flex w-full max-w-3xl flex-col items-center gap-6">
         <div className="text-center">
           <h1 className="mx-auto w-72 max-w-full">
             <Logo priority className="h-auto w-full" />
           </h1>
           <DongSonBand className="mx-auto mt-3 w-40" />
-          <p className="mt-3 text-sm text-stone-400">
+          <p className="mt-3 text-sm text-muted">
             {account ? `Chào ${account.name}.` : "Đang chơi với tư cách khách, tiến độ gắn với trình duyệt này."}
           </p>
         </div>
@@ -79,8 +79,8 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
             return (
             <li key={m.scene}>
               {disabled ? <div aria-disabled="true" className="flex h-full flex-col gap-1 rounded-xl border border-stone-700 bg-[var(--panel)]/60 p-4 opacity-70">
-                <span className="flex items-center gap-2 font-serif text-lg font-bold text-stone-300"><ShieldIcon className="size-4" /> {m.title}</span>
-                <span className="text-sm text-stone-400">Chưa mở · tiến trình được giữ nguyên.</span>
+                <span className="flex items-center gap-2 font-serif text-lg font-bold text-foreground-secondary"><ShieldIcon className="size-4" /> {m.title}</span>
+                <span className="text-sm text-muted">Chưa mở · tiến trình được giữ nguyên.</span>
               </div> : <SceneLink
                 scene={m.scene}
                 className="flex h-full flex-col gap-1 rounded-xl border border-[var(--gold)]/30 bg-[var(--panel)]/90 p-4 transition hover:border-[var(--gold)] hover:bg-[var(--panel)]"
@@ -88,7 +88,7 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
                 <span className="flex items-center gap-2 font-serif text-lg font-bold text-amber-100">
                   <ShieldIcon className="size-4 text-[var(--gold)]" /> {m.title}
                 </span>
-                <span className="text-sm text-stone-400">{m.text}</span>
+                <span className="text-sm text-muted">{m.text}</span>
               </SceneLink>}
             </li>
           )})}

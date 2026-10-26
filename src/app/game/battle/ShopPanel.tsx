@@ -1,5 +1,7 @@
 "use client";
 
+import { Select, Button } from "@/components/ui";
+
 // Cửa hàng nhân vật kèm và chọn đội 3vs3 của Chơi thử và Chơi online. Luật nằm trong @/core (applyProfileAction);
 // ở đây chỉ hiển thị và gửi thao tác, giống ProgressPanel.
 
@@ -91,15 +93,15 @@ function CompanionCard({
           {hero ? "Mở khóa đồng hành sau" : "Mở bán sau"} {lockNode.id} “{lockNode.title}”
         </span>
       ) : (
-        <button
+        <Button variant="primary"
           type="button"
           disabled={disabled || price === undefined || profile.gold < price}
           onClick={onBuy}
-          className="rounded bg-amber-500 px-2 py-0.5 text-[10px] font-semibold text-stone-950 tabular-nums disabled:opacity-35"
+          className="text-[10px] tabular-nums"
           title={price !== undefined && profile.gold < price ? `Cần ${price} vàng` : undefined}
         >
           Mua {price}
-        </button>
+        </Button>
       )}
     </li>
   );
@@ -166,11 +168,11 @@ export default function ShopPanel({
       <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 lg:grid-cols-3">{owned.map(card)}</ul>
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <span className="font-semibold">Lọc nhân vật chưa có:</span>
-        <select
+        <Select
           aria-label="Lọc theo nghề"
           value={profFilter}
           onChange={(e) => setProfFilter(e.target.value as Profession | "all")}
-          className="rounded bg-black/10 px-1 py-0.5"
+
         >
           <option value="all">Mọi nghề</option>
           {PROFESSIONS.map((p) => (
@@ -178,12 +180,12 @@ export default function ShopPanel({
               {PROFESSION_NAME[p]}
             </option>
           ))}
-        </select>
-        <select
+        </Select>
+        <Select
           aria-label="Lọc theo hệ"
           value={elemFilter}
           onChange={(e) => setElemFilter(e.target.value as Element | "all")}
-          className="rounded bg-black/10 px-1 py-0.5"
+
         >
           <option value="all">Mọi hệ</option>
           {ELEMENTS.map((el) => (
@@ -191,7 +193,7 @@ export default function ShopPanel({
               {ELEMENT_NAME[el]}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
       {forSale.length > 0 && (
         <>

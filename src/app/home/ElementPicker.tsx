@@ -1,5 +1,7 @@
 "use client";
 
+import { Select } from "@/components/ui";
+
 import { useState } from "react";
 import { type Element, ELEMENTS, elementRelation, characterSkills, PROFESSIONS, type Profession, PASSIVES, PROFESSION_COMBO, COMBO_PASSIVES, CHASE_PASSIVES, chasePassives } from "@/core";
 import { chaseTriggerText, comboTriggerText, ELEMENT_NAME, PROFESSION_NAME, passiveText, rageTriggerText } from "../game/battle/labels";
@@ -40,9 +42,9 @@ export default function ElementPicker() {
   return (
     <div className="space-y-5">
       <label className="flex justify-center gap-2 text-sm">Nghề
-        <select className="rounded bg-stone-900 p-1" value={profession} onChange={e => setProfession(e.target.value as Profession)}>
+        <Select  value={profession} onChange={e => setProfession(e.target.value as Profession)}>
           {PROFESSIONS.map(p => <option key={p} value={p}>{PROFESSION_NAME[p]}</option>)}
-        </select>
+        </Select>
       </label>
       <div role="tablist" aria-label="Chọn nguyên tố" className="flex flex-wrap justify-center gap-2">
         {ELEMENTS.map((e) => (
