@@ -427,11 +427,9 @@ export default function WorldMap({
                   width={g.label[2] - g.label[0]}
                   height={g.label[3] - g.label[1]}
                   rx={8}
-                  fill="var(--map-paper)"
-                  fillOpacity={0.9}
-                  stroke={isSelected ? "#b8862f" : "var(--map-ink)"}
-                  strokeOpacity={isSelected ? 1 : 0.35}
-                  strokeWidth={isSelected ? 3 : 1.5}
+                  className={
+                    isSelected ? "map-label map-label-selected" : "map-label"
+                  }
                 />
                 <text
                   x={g.labelX}
@@ -504,7 +502,7 @@ export default function WorldMap({
               title={b.a}
               disabled={b.off}
               onClick={b.f}
-              className="flex size-11 items-center justify-center rounded-lg border border-[#8a6a3b] bg-[#f5f0e1]/90 text-lg font-bold text-[#3b2a1a] shadow disabled:opacity-40"
+              className="map-control flex size-11 items-center justify-center rounded-lg border text-lg font-bold shadow disabled:opacity-40"
             >
               {b.t}
             </button>
@@ -513,42 +511,63 @@ export default function WorldMap({
       </div>
 
       {/* Bình Kiều: sử chép "nay không rõ chỗ nào", nên ở ô riêng chứ không cắm cờ lên bản đồ. */}
-      <div className="flex flex-wrap gap-1.5 world-strip border-t-2 border-[#6b4a22] px-3 pt-2">
-        {UNPLACED_STRONGHOLDS.map((s) => (
-          <button
-            key={s.id}
-            type="button"
-            aria-pressed={s.id === selected}
-            aria-label={`${label(s)}, vị trí còn tranh luận`}
-            onClick={() => onSelect(s.id)}
-            className={`flex min-h-11 items-center gap-2 rounded-lg border-2 border-dashed px-2.5 py-1 text-left text-[#3b2a1a] shadow ${
-              s.id === selected
-                ? "border-[#b8862f] bg-[#fff0c9]"
-                : "border-[#8a6a3b] bg-[#f5f0e1]/90"
-            } ${inChapter.has(s.id) ? "" : "opacity-70"}`}
-          >
-            <span
-              aria-hidden
-              className="flex size-7 items-center justify-center rounded text-sm font-black text-amber-50"
-              style={{
-                background: STATE_COLOR[strongholdState(s, campaign.factions)],
-              }}
+      <div className="world-strip flex flex-col gap-2 border-t px-3 py-2 lg:flex-row lg:items-center xl:flex-1">
+        <div className="flex shrink-0 flex-wrap gap-1.5">
+          {UNPLACED_STRONGHOLDS.map((s) => (
+            <button
+              key={s.id}
+              type="button"
+              aria-pressed={s.id === selected}
+              aria-label={`${label(s)}, vị trí còn tranh luận`}
+              onClick={() => onSelect(s.id)}
+              className={`map-chip flex min-h-11 items-center gap-2 rounded-lg border-2 border-dashed px-2.5 py-1 text-left shadow ${
+                s.id === selected ? "map-chip-active" : ""
+              } ${inChapter.has(s.id) ? "" : "opacity-70"}`}
             >
-              ?
-            </span>
-            <span className="text-xs leading-tight">
-              <span className="block font-bold">
-                {s.place} · {strongholdLeader(s)}
+              <span
+                aria-hidden
+                className="flex size-7 items-center justify-center rounded text-sm font-black text-amber-50"
+                style={{
+                  background:
+                    STATE_COLOR[strongholdState(s, campaign.factions)],
+                }}
+              >
+                ?
               </span>
-              <span className="block italic opacity-80">
-                vị trí còn tranh luận
+              <span className="text-xs leading-tight">
+                <span className="block font-bold">
+                  {s.place} · {strongholdLeader(s)}
+                </span>
+                <span className="block italic opacity-80">
+                  vị trí còn tranh luận
+                </span>
               </span>
+            </button>
+          ))}
+        </div>
+        {/* Chú giải chung hàng với Bình Kiều; là div vì figcaption phải là con trực tiếp của figure. */}
+        <div
+          id="world-map-legend"
+          className="flex min-w-0 flex-1 flex-wrap content-start items-center gap-x-3 gap-y-1 text-xs"
+        >
+          {(Object.keys(STATE_COLOR) as StrongholdState[]).map((st) => (
+            <span key={st} className="flex items-center gap-1">
+              <span
+                aria-hidden
+                className="inline-block h-3 w-2.5 rounded-sm"
+                style={{ background: STATE_COLOR[st] }}
+              />
+              {STATE_TEXT[st]}
             </span>
-          </button>
-        ))}
+          ))}
+          <span className="basis-full opacity-75">
+            Màu cờ theo thế cục đã ghi trong hồ sơ của bạn. Vị trí là bố cục
+            minh họa để định hướng, không phải tọa độ chiến trường.
+          </span>
+        </div>
       </div>
       {/* Bản đồ nhỏ trên điện thoại: chọn cứ điểm từ danh sách, không cần chạm trúng lá cờ. */}
-      <details className="world-strip border-t-2 border-[#6b4a22] px-3 py-2 text-sm md:hidden">
+      <details className="world-strip border-t px-3 py-2 text-sm md:hidden">
         <summary className="flex min-h-11 cursor-pointer items-center font-semibold">
           Danh sách cứ điểm ({WORLD_STRONGHOLDS.length})
         </summary>
@@ -559,10 +578,8 @@ export default function WorldMap({
                 type="button"
                 aria-pressed={s.id === selected}
                 onClick={() => onSelect(s.id)}
-                className={`flex min-h-11 w-full items-center gap-2 rounded-lg border px-2 py-1 text-left ${
-                  s.id === selected
-                    ? "border-[#b8862f] bg-[#fff0c9]"
-                    : "border-[#9c784580] bg-[#f3e3bc]"
+                className={`map-chip flex min-h-11 w-full items-center gap-2 rounded-lg border px-2 py-1 text-left ${
+                  s.id === selected ? "map-chip-active" : ""
                 }`}
               >
                 <span
@@ -586,26 +603,6 @@ export default function WorldMap({
           ))}
         </ul>
       </details>
-
-      <figcaption
-        id="world-map-legend"
-        className="world-strip flex flex-wrap items-center content-start gap-x-3 gap-y-1 px-3 py-2 text-xs xl:flex-1"
-      >
-        {(Object.keys(STATE_COLOR) as StrongholdState[]).map((st) => (
-          <span key={st} className="flex items-center gap-1">
-            <span
-              aria-hidden
-              className="inline-block h-3 w-2.5 rounded-sm"
-              style={{ background: STATE_COLOR[st] }}
-            />
-            {STATE_TEXT[st]}
-          </span>
-        ))}
-        <span className="basis-full opacity-75">
-          Màu cờ theo thế cục đã ghi trong hồ sơ của bạn. Vị trí là bố cục minh
-          họa để định hướng, không phải tọa độ chiến trường.
-        </span>
-      </figcaption>
     </figure>
   );
 }

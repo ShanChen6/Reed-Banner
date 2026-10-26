@@ -593,9 +593,9 @@
 
 /* Bản đồ chiến dịch: giấy dó, mực khắc gỗ, sông xanh chàm, đường hành quân đỏ son. */
 .campaign-map {
-  --map-paper: #e9d9b4;
-  --map-paper-dark: #cdb68a;
-  --map-ink: #3b2a1a;
+  --map-paper: var(--atlas-paper, #e4cc99);
+  --map-paper-dark: var(--atlas-paper-deep, #d2b47b);
+  --map-ink: var(--atlas-ink, #3b2a1a);
   --map-sea: #a9b9a8;
   --map-sea-ink: #5e7468;
   --map-river: #5f8a8b;
@@ -605,6 +605,39 @@
 .campaign-map text {
   fill: var(--map-ink);
   font-family: var(--font-serif, Georgia, serif);
+}
+/* Nhãn cứ điểm: giấy dó đặc, viền đồng; nhãn đang chọn viền vàng dày hơn. */
+.campaign-map .map-label {
+  fill: var(--atlas-paper-hi, #f4e6c3);
+  fill-opacity: 0.94;
+  stroke: var(--atlas-bronze, #8f6a32);
+  stroke-opacity: 0.85;
+  stroke-width: 2px;
+}
+.campaign-map .map-label-selected {
+  fill: #fff0c9;
+  fill-opacity: 1;
+  stroke: var(--atlas-gold-hi, #d4a24c);
+  stroke-opacity: 1;
+  stroke-width: 4px;
+}
+/* Nút phóng/thu và ô chọn cứ điểm ngoài bản đồ dùng chung bảng màu giấy dó. */
+.campaign-map .map-control,
+.campaign-map .map-chip {
+  border-color: var(--atlas-bronze, #8f6a32);
+  background: color-mix(
+    in srgb,
+    var(--atlas-paper-hi, #f4e6c3) 92%,
+    transparent
+  );
+  color: var(--atlas-ink, #3b2a1a);
+}
+.campaign-map .map-chip-active {
+  border-color: var(--atlas-gold-hi, #d4a24c);
+  background: #fff0c9;
+}
+.campaign-map .world-strip {
+  border-color: var(--atlas-border, #6b4a22);
 }
 .campaign-map .map-label-sea {
   font-size: 34px;
