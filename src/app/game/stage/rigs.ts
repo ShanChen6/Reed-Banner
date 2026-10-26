@@ -189,42 +189,47 @@ export function partsOf(rig: Rig): readonly string[] {
       ];
 }
 
-/** Đào Lam, pháp sư hệ Thủy: bản thử Đ0, tách bằng live2dlayer (xem docs/design/15-ke-hoach-do-hoa.md). */
-const DAO_LAM: MageRig = {
-  skeleton: "mage",
+/**
+ * Đào Lam, pháp sư hệ Thủy (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn) thay bản thử Đ0 tách bằng
+ * live2dlayer. Ảnh đứng tách lớp bằng code: trượng cầu nước cùng nắm tay xoay quanh cổ tay, cầu nước sáng riêng; bàn
+ * tay buông và đầu tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const DAO_LAM: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "staff",
   dir: "dao-lam",
   texScale: 0.5,
-  foot: { x: 495, y: 1010 },
-  height: 1000,
+  foot: { x: 560, y: 1510 },
+  height: 1500,
   parts: {
-    backhair: { x: 198, y: 37, w: 589, h: 712 },
-    legs: { x: 413, y: 746, w: 67, h: 186 },
-    bottom: { x: 208, y: 336, w: 625, h: 644 },
-    boots: { x: 415, y: 810, w: 161, h: 205 },
-    top: { x: 187, y: 133, w: 652, h: 642 },
-    neck: { x: 463, y: 105, w: 48, h: 72 },
-    armL: { x: 555, y: 257, w: 216, h: 352 },
-    armR: { x: 221, y: 200, w: 207, h: 319 },
-    ribbon: { x: 458, y: 10, w: 281, h: 152 },
-    waterL: { x: 183, y: 39, w: 264, h: 413 },
-    waterR: { x: 551, y: 110, w: 294, h: 452 },
-    gourd: { x: 230, y: 46, w: 175, h: 283 },
-    head: { x: 449, y: 44, w: 95, h: 116 },
-    eyeL: { x: 503, y: 103, w: 23, h: 14 },
-    eyeR: { x: 473, y: 95, w: 23, h: 13 },
+    body: { x: 63, y: 6, w: 923, h: 1521 },
+    armR: { x: 785, y: 640, w: 54, h: 116 },
+    sword: { x: 162, y: 346, w: 159, h: 390 },
+    arm: { x: 232, y: 545, w: 74, h: 81 },
+    head: { x: 490, y: 40, w: 151, h: 201 },
   },
+  cloth: [],
+  covers: [],
   joints: {
-    upper: { x: 500, y: 420 },
-    armL: { x: 592, y: 292 },
-    armR: { x: 410, y: 250 },
-    waterL: { x: 360, y: 200 },
-    waterR: { x: 628, y: 368 },
-    gourd: { x: 358, y: 200 },
-    head: { x: 492, y: 166 },
-    eyeL: { x: 514, y: 110 },
-    eyeR: { x: 484, y: 102 },
+    shoulder: { x: 270, y: 590 },
+    elbowR: { x: 800, y: 660 },
+    neck: { x: 560, y: 235 },
   },
-  fxColor: 0x9fe3ff,
+  blade: [{ x: 255, y: 580 }, { x: 200, y: 385 }],
+  orb: { x: 200, y: 385 },
+  strikeFx: "waterPillar",
+  fxColor: 0x2f7fc1,
+  // Hạ trượng chĩa cầu nước tới (đánh thường), giơ trượng xòe tay (ra chiêu), thế tấn đẩy chưởng kéo trượng ngang (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 20, y: 9 },
+      anchor: { x: 630, y: 1515 }, scale: 1, burst: { x: 940, y: 605 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 17, y: 9 },
+      anchor: { x: 630, y: 1515 }, scale: 1, burst: { x: 845, y: 300 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 6, y: 61 },
+      anchor: { x: 560, y: 1425 }, scale: 1.05, burst: { x: 965, y: 365 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 6, y: 45 },
+    anchor: { x: 800, y: 900 }, scale: 0.85 },
 };
 
 /**
