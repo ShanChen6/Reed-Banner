@@ -513,6 +513,11 @@
   background: #1f160fd9;
   color: #f4e2b8;
 }
+/* Thẻ phần thưởng trong panel phải: giấy sáng hơn, viền đồng. */
+.campaign-atlas .atlas-reward {
+  border-color: var(--atlas-bronze);
+  background: color-mix(in srgb, var(--atlas-paper-hi) 80%, transparent);
+}
 .campaign-atlas .atlas-mission-active {
   border-color: #b8862f;
   background: #fff0c9;
