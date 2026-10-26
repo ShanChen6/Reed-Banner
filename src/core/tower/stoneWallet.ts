@@ -1,5 +1,5 @@
 // Ví Đá Cường Hóa: cộng đá vào tài khoản theo sự kiện có khóa duy nhất. Chỉ cộng, không có đường tiêu đá
-// (tiêu đá là FUTURE TODO, xem docs/design/equipment-enhancement-todo.md).
+// (tiêu đá là FUTURE TODO, xem docs/04-equipment/cuong-hoa-todo.md).
 import {
   isDualTowerV1,
   STONE_LEDGER_MAX,

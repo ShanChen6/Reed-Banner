@@ -1,6 +1,6 @@
 // Nhiệm vụ ngày/tuần, thành tựu, điểm danh (lộ trình 5.4). Server cộng tiến độ khi trận kết thúc, người chơi
 // bấm nhận thưởng. Ngày và tuần tính theo giờ Việt Nam. Số liệu là điểm xuất phát do Claude đặt, chờ Shan duyệt.
-// Xem docs/design/09-che-do-choi.md mục 5.2.
+// Xem docs/02-game-modes/README.md mục 5.2.
 
 /** Ngày và tuần đổi lúc 0 giờ giờ Việt Nam (UTC+7). */
 export const VN_UTC_OFFSET_MS = 7 * 60 * 60 * 1000;

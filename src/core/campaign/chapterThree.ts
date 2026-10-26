@@ -1,7 +1,7 @@
 // Lời dẫn Chương III "Nhà Ngô rạn vỡ" (M09–M12): tin dữ năm 965, bản đồ không có thứ tự, rồi hai tuyến quy
 // phục Đằng Châu (M11) và Bình Kiều (M12). Hai nhiệm vụ quy phục hoàn thành bằng sự kiện hội kiến, không có
 // trận hay thanh máu; kết cục ghi vào thế cục sứ quân (factions.ts) một lần, không tính là trận thắng.
-// Nguồn theo docs/campaign-v2/history-sources.md, warlord-matrix.md; locator ở docs/campaign-v2/chapter-3-sources.md.
+// Nguồn theo docs/02-game-modes/campaign/history-sources.md, warlord-matrix.md; locator ở docs/02-game-modes/campaign/chapter-3-sources.md.
 
 import type { ChapterContent, MissionCopy } from "./chapterOne";
 

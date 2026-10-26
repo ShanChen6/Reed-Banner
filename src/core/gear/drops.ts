@@ -1,5 +1,5 @@
 // Rơi đồ sau trận và phí ghép. Server gọi các hàm này; số liệu là điểm xuất phát.
-// Xem docs/design/07-trang-bi.md mục 5–6.
+// Xem docs/04-equipment/trang-bi.md mục 5–6.
 
 import type { Difficulty } from "../ai";
 import { PROFESSIONS } from "../battle/rules";
