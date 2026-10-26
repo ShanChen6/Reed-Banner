@@ -11,7 +11,6 @@ import {
   CAMPAIGN_UNIFICATION_NODE,
   campaignCompleted,
   CAMPAIGN_FOOD_MAX,
-  CAMPAIGN_ROUTES,
   ELEMENTS,
   FOOD_PRICE,
   MAIN_ID,
@@ -781,9 +780,6 @@ export default function ChapterOne({
   const recorded = campaign.storyChoices[step.nodeId];
   const choice = step.choice ?? recorded;
   const done = status === "completed";
-  const routeId = CAMPAIGN_ROUTES.find(
-    (r) => r.chapter === chapter.chapter,
-  )?.id;
 
   const submitEvent = async () => {
     if (!choice) return;
@@ -924,10 +920,10 @@ export default function ChapterOne({
                 />
               )}
 
-              {routeId && (
+              {chapter.chapter >= 4 && (
                 <RouteSummary
                   campaign={campaign}
-                  routeId={routeId}
+                  chapter={chapter.chapter}
                   onPick={openMission}
                 />
               )}
