@@ -425,6 +425,15 @@ export default function BattleStage({
           });
           return [fx];
         }
+        if (rig.strikeFx === "frostSpear") {
+          const fx = waterPillar(sky, rig.fxColor);
+          // Tuyệt chiêu một người: cột nước đóng băng dưới chân đối thủ đứng đầu (Đóng băng, rút năng lượng).
+          loaded[i]!.onStrike?.((kind) => {
+            const foe = alive(false)[0];
+            if (kind === "ultimate" && foe) fx.cover(spot(foe, 0), app.screen.height * FIGURE);
+          });
+          return [fx];
+        }
         if (rig.strikeFx === "waterPillar") {
           const fx = waterPillar(sky, rig.fxColor);
           // Tuyệt chiêu trận nước: cột nước phun lên rồi đóng băng dưới chân từng đối thủ còn đứng.
