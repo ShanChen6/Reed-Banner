@@ -50,6 +50,10 @@
 | [06-05-feature-flags.md](dual-tower/06-05-feature-flags.md) | RH-02: cấu hình, endpoint matrix, freeze và rollback Trial/Destiny |
 | [06-06-neon-staging-runbook.md](dual-tower/06-06-neon-staging-runbook.md) | RH-03: preflight, migration staging, backup/restore drill và evidence |
 
+**Kiểm kê / quản trị docs**
+
+- [DOC-01 — Kiểm kê cấu trúc tài liệu](audits/DOC-01-docs-structure-audit.md) — nguồn chính, vùng trùng lặp, mapping đề xuất và các bước còn cần kiểm chứng (audit-only).
+
 **Quản lý**
 
 | File | Nội dung |
