@@ -712,8 +712,8 @@ export function AtlasHeader({
       active ? "atlas-tab-active" : ""
     }`;
   return (
-    <header className="atlas-header flex flex-col gap-2 px-1 pt-1 pb-3 lg:flex-row lg:items-center">
-      <div className="px-3 lg:w-60 lg:shrink-0">
+    <header className="atlas-header flex flex-col gap-2 px-1 pt-1 pb-3 xl:flex-row xl:items-center">
+      <div className="atlas-header-title px-3 xl:w-60 xl:shrink-0">
         <h1
           id="chapter-one-title"
           className="atlas-title text-xl leading-tight font-black tracking-wide uppercase sm:text-2xl"
@@ -724,7 +724,7 @@ export function AtlasHeader({
       </div>
       <nav
         aria-label="Màn Sử ký"
-        className="grid flex-1 grid-cols-4 gap-1.5 lg:mx-auto lg:max-w-[44rem]"
+        className="grid flex-1 grid-cols-4 gap-1.5 xl:mx-auto xl:max-w-[44rem]"
       >
         {tabs.map((t) => (
           <button
@@ -743,22 +743,31 @@ export function AtlasHeader({
           Binh lực
         </SceneLink>
       </nav>
-      <dl className="flex flex-wrap items-center justify-end gap-1.5 px-1 text-sm">
-        {[
-          { k: "Cấp", v: level, icon: "level" },
-          { k: "Vàng", v: gold, icon: "gold" },
-          { k: "Lương", v: supply, icon: "supply" },
-        ].map((x) => (
-          <div
-            key={x.k}
-            className="atlas-stat flex h-9 items-center gap-1.5 rounded-md border px-2.5"
-          >
-            <StatIcon kind={x.icon as StatKind} />
-            <dt className="text-xs opacity-75">{x.k}</dt>
-            <dd className="font-bold">{x.v.toLocaleString("vi-VN")}</dd>
-          </div>
-        ))}
-      </dl>
+      <div className="flex flex-wrap items-center justify-end gap-1.5 px-1">
+        {/* Trên điện thoại thanh chung ẩn lối Trận thường cho gọn, nên đặt lại ở đây. */}
+        <SceneLink
+          scene="PLAYING"
+          className="atlas-stat mr-auto flex min-h-11 items-center rounded-md border px-3 text-sm font-semibold sm:hidden"
+        >
+          Trận thường
+        </SceneLink>
+        <dl className="flex flex-wrap items-center justify-end gap-1.5 text-sm">
+          {[
+            { k: "Cấp", v: level, icon: "level" },
+            { k: "Vàng", v: gold, icon: "gold" },
+            { k: "Lương", v: supply, icon: "supply" },
+          ].map((x) => (
+            <div
+              key={x.k}
+              className="atlas-stat flex h-9 items-center gap-1.5 rounded-md border px-2.5"
+            >
+              <StatIcon kind={x.icon as StatKind} />
+              <dt className="text-xs opacity-75">{x.k}</dt>
+              <dd className="font-bold">{x.v.toLocaleString("vi-VN")}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
     </header>
   );
 }

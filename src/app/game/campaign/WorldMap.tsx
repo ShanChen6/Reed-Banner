@@ -17,6 +17,7 @@ import {
 } from "@/core";
 import { AtlasCorners } from "./AtlasFrame";
 import { FACTION_MARKS, flagPath } from "./factionMarks";
+import RotateHint from "./RotateHint";
 import { fitView, useMapView, MAX_ZOOM } from "./useMapView";
 import {
   NAME_FONT,
@@ -324,7 +325,8 @@ export default function WorldMap({
   return (
     <figure className="campaign-map atlas-frame flex flex-col self-start overflow-hidden xl:h-full xl:self-stretch">
       <AtlasCorners />
-      <div className="relative">
+      <RotateHint />
+      <div className="map-viewport relative">
         <svg
           {...svgProps}
           className="block h-auto w-full select-none"
@@ -522,7 +524,9 @@ export default function WorldMap({
           </g>
         </svg>
 
-        <div className="absolute top-2 left-2 flex flex-col gap-1.5">
+        {/* Nút phóng/thu: một hàng ở mép dưới phải (vùng biển, không có cứ điểm); bản đồ nhỏ thì đặt thành dải
+            riêng dưới bản đồ để không che nhãn nào. */}
+        <div className="map-controls flex justify-end gap-1.5 p-1.5 md:absolute md:right-2 md:bottom-2 md:p-0">
           {[
             {
               t: "+",
@@ -610,7 +614,7 @@ export default function WorldMap({
         </div>
       </div>
       {/* Bản đồ nhỏ trên điện thoại: chọn cứ điểm từ danh sách, không cần chạm trúng lá cờ. */}
-      <details className="world-strip border-t px-3 py-2 text-sm md:hidden">
+      <details className="world-strip border-t px-3 py-2 text-sm lg:hidden">
         <summary className="flex min-h-11 cursor-pointer items-center font-semibold">
           Danh sách cứ điểm ({WORLD_STRONGHOLDS.length})
         </summary>

@@ -653,6 +653,46 @@
 .campaign-map .world-strip {
   border-color: var(--atlas-border, #6b4a22);
 }
+.campaign-map .map-controls {
+  background: linear-gradient(#dcc08a, var(--atlas-paper-deep, #d2b47b));
+}
+@media (min-width: 768px) {
+  .campaign-map .map-controls {
+    background: none;
+  }
+}
+/* Gợi ý xoay ngang: chỉ điện thoại nhỏ đang cầm dọc. */
+.campaign-map .rotate-hint {
+  display: none;
+}
+@media (max-width: 639px) and (orientation: portrait) {
+  .campaign-map .rotate-hint {
+    display: flex;
+  }
+}
+/* Điện thoại xoay ngang, màn thấp: header Sử ký gọn một hàng (ẩn tiêu đề, thẻ cao 44px) để chừa chỗ cho bản đồ. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .campaign-atlas .atlas-header {
+    flex-direction: row;
+    align-items: center;
+    padding-bottom: 0.5rem;
+  }
+  .campaign-atlas .atlas-header-title {
+    display: none;
+  }
+  .campaign-atlas .atlas-tab {
+    height: 44px;
+    flex-direction: row;
+  }
+}
+/* Điện thoại xoay ngang: bản đồ vừa chiều cao màn hình (tỉ lệ 3:2), không phải cuộn mới thấy hết. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .campaign-map .map-viewport {
+    width: 100%;
+    max-width: calc((100dvh - 1rem) * 1.5);
+    margin-inline: auto;
+  }
+}
 .campaign-map .map-label-sea {
   font-size: 34px;
   font-style: italic;
