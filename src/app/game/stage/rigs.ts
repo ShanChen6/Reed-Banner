@@ -120,7 +120,8 @@ export interface WarriorRig {
    * `thornBind` chỉ ở tuyệt chiêu, dây gai quấn từng đối thủ và hút sinh khí về chính mình; `rootGuard` chỉ ở tuyệt
    * chiêu, vòng lá hồi phục quanh cả đội và vòm khiên đất quanh chính mình; `poisonMist` chỉ ở tuyệt chiêu, sương độc
    * quanh từng đối thủ và vòng lá hồi phục quanh đội mình; `groveWard` chỉ ở tuyệt chiêu, vòng lá và vòm khiên quanh
-   * từng đồng đội; `frostSpear` chỉ ở tuyệt chiêu, cột nước đóng băng dưới chân đối thủ đứng đầu.
+   * từng đồng đội; `frostSpear` chỉ ở tuyệt chiêu, cột nước đóng băng dưới chân đối thủ đứng đầu; `tideBulwark` chỉ ở
+   * tuyệt chiêu, vòm khiên quanh từng đồng đội và cột băng dưới chân từng đối thủ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -141,7 +142,8 @@ export interface WarriorRig {
     | "rootGuard"
     | "poisonMist"
     | "groveWard"
-    | "frostSpear";
+    | "frostSpear"
+    | "tideBulwark";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1662,6 +1664,52 @@ const HO_LANG: WarriorRig = {
     anchor: { x: 760, y: 880 }, scale: 0.9 },
 };
 
+/**
+ * Thái Hà, binh lính hệ Thủy (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
+ * code như Nguyễn Khoan: chĩa ba cùng nắm tay xoay quanh cổ tay, khiên mây cùng cẳng tay nâng lên khi vào thế và đỡ
+ * đòn, đầu và đuôi khăn xanh tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const THAI_HA: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "thai-ha",
+  texScale: 0.5,
+  foot: { x: 540, y: 1490 },
+  height: 1360,
+  parts: {
+    body: { x: 197, y: 140, w: 683, h: 1381 },
+    armR: { x: 739, y: 537, w: 245, h: 464 },
+    sword: { x: 126, y: 6, w: 95, h: 1462 },
+    arm: { x: 138, y: 471, w: 91, h: 115 },
+    head: { x: 471, y: 140, w: 171, h: 196 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 375, y: 263, w: 80, h: 77 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 5, freq: 1.6, k: 3, phase: 0.2, vertical: true, reverse: true } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 200, y: 525 },
+    elbowR: { x: 765, y: 600 },
+    neck: { x: 560, y: 330 },
+  },
+  blade: [{ x: 175, y: 520 }, { x: 175, y: 20 }],
+  shieldRaise: -0.35,
+  strikeFx: "tideBulwark",
+  fxColor: 0x2f7fc1,
+  // Đâm chĩa ba ngang (đánh thường), giơ khiên che người (ra chiêu), lao tới núp khiên đâm chéo (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 12, y: 17 },
+      anchor: { x: 600, y: 1000 }, scale: 1.35, burst: { x: 1515, y: 270 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 35, y: 6 },
+      anchor: { x: 560, y: 1510 }, scale: 1, burst: { x: 830, y: 650 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 42, y: 8 },
+      anchor: { x: 700, y: 1010 }, scale: 1.3, burst: { x: 1470, y: 70 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 13, y: 64 },
+    anchor: { x: 800, y: 900 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1696,6 +1744,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   nhanTruc: NHAN_TRUC,
   samTue: SAM_TUE,
   hoLang: HO_LANG,
+  thaiHa: THAI_HA,
 };
 
 export function rigOf(id: string): Rig | null {

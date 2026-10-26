@@ -425,6 +425,18 @@ export default function BattleStage({
           });
           return [fx];
         }
+        if (rig.strikeFx === "tideBulwark") {
+          const ward = earthWard(sky, rig.fxColor);
+          const ice = waterPillar(sky, rig.fxColor);
+          // Tuyệt chiêu thủy trại: vòm khiên nước quanh từng đồng đội (Khiên), cột băng dưới chân từng đối thủ (Đóng băng).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, n * 0.08));
+            alive(false).forEach((s, n) => ice.cover(spot(s, 0), size, 0.25 + n * 0.08));
+          });
+          return [ward, ice];
+        }
         if (rig.strikeFx === "frostSpear") {
           const fx = waterPillar(sky, rig.fxColor);
           // Tuyệt chiêu một người: cột nước đóng băng dưới chân đối thủ đứng đầu (Đóng băng, rút năng lượng).
