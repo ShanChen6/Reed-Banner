@@ -704,3 +704,115 @@
     transition: none;
   }
 }
+
+/* Thanh header chung của màn chơi (src/app/game/header/). Một hệ chất liệu: gỗ sơn mài tối, đồng cổ trầm (viền,
+   icon, khung avatar cùng một sắc), tranh thủy mặc chìm vào gỗ; vàng chỉ để nhấn rất ít. Token --hdr-* chỉ áp trong
+   thanh này. Tranh ở public/art/ui/header/, hai góc hoa văn ở public/art/ui/header/ornaments/. */
+.game-header {
+  --hdr-wood: #1c120d;
+  --hdr-wood-hi: #2e1d14;
+  --hdr-bronze: #8a6634;
+  --hdr-bronze-hi: #b08a4e;
+  --hdr-gold: #c9a463;
+  --hdr-text: #efdfbd;
+  --hdr-text-soft: #bfa985;
+  --hdr-active: #7e2a20;
+  color: var(--hdr-text);
+  font-family: var(--font-serif);
+  background:
+    radial-gradient(ellipse 45% 160% at 50% 0%, #3a2416 0%, transparent 70%),
+    linear-gradient(180deg, var(--hdr-wood-hi) 0%, var(--hdr-wood) 70%, #140c08 100%);
+  box-shadow: 0 6px 16px -8px #000000d9;
+}
+/* Tranh: phóng theo chiều cao (không kéo giãn), cổng thành ở đúng giữa màn hình. Mặt nạ hai lớp làm tan cả hai
+   đầu lẫn mép trên/dưới; hạ sáng và độ rực để cùng tông gỗ, chữ và nút đặt lên vẫn đọc rõ. */
+.game-header-panorama {
+  width: min(100%, 66rem);
+  background: url("/art/ui/header/header-panorama.webp") center 48% / auto 122% no-repeat;
+  filter: brightness(0.74) saturate(0.85) sepia(0.12);
+  mask-image:
+    linear-gradient(90deg, transparent 0%, #000 30%, #000 70%, transparent 100%),
+    linear-gradient(180deg, #0000 0%, #000 22%, #000 72%, #0000 100%);
+  mask-composite: intersect;
+}
+@media (max-width: 767px) {
+  .game-header-panorama {
+    filter: brightness(0.58) saturate(0.78) sepia(0.15);
+  }
+}
+/* Đường chỉ đồng trên/dưới: một nét mảnh, cùng sắc với viền nút. */
+.game-header-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hdr-bronze) 6%, var(--hdr-bronze-hi) 50%, var(--hdr-bronze) 94%, transparent);
+  opacity: 0.85;
+}
+.game-header-btn {
+  color: var(--hdr-text);
+  text-shadow: 0 1px 2px #000000b3;
+  transition:
+    color 0.15s,
+    background-color 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+.game-header-btn:hover {
+  color: #fff3d6;
+  background-color: #f4e3bf12;
+}
+.game-header-btn:focus-visible,
+.game-header-menu-item:focus-visible {
+  outline: 2px solid var(--hdr-gold);
+  outline-offset: 2px;
+}
+/* Nút Hồ sơ/Trận thường và khung avatar dùng chung một khung: viền đồng 1px trên nền sơn mài trong mờ (tranh phía
+   sau vẫn ẩn hiện), rê chuột thì viền sáng lên, màn đang mở thì nền đỏ son. */
+.game-header-chip {
+  border: 1px solid var(--hdr-bronze);
+  background: #160e0abf;
+  box-shadow: inset 0 1px 0 #efdfbd0f;
+}
+.game-header-chip:hover,
+.game-header-account:hover .game-header-avatar,
+.game-header-account[aria-expanded="true"] .game-header-avatar {
+  border-color: var(--hdr-bronze-hi);
+}
+.game-header-chip:hover {
+  background: #22160fd9;
+}
+.game-header-chip[aria-current="page"] {
+  border-color: var(--hdr-bronze-hi);
+  background: linear-gradient(180deg, #7e2a20e6, #561c15e6);
+}
+.game-header-account:hover,
+.game-header-account[aria-expanded="true"] {
+  background-color: #160e0abf;
+}
+.game-header-avatar {
+  border: 1px solid var(--hdr-bronze);
+  box-shadow:
+    0 0 0 2px #160e0a,
+    0 0 0 3px color-mix(in srgb, var(--hdr-bronze) 45%, transparent);
+  transition: border-color 0.15s;
+}
+.game-header-menu {
+  border: 1px solid var(--hdr-bronze);
+  background: linear-gradient(180deg, var(--hdr-wood-hi), var(--hdr-wood));
+  box-shadow: 0 14px 32px -10px #000000e6;
+}
+.game-header-menu-item {
+  color: var(--hdr-text);
+  font-size: 0.9rem;
+  transition: background-color 0.15s;
+}
+.game-header-menu-item:hover {
+  background-color: #f4e3bf14;
+}
+.game-header-menu-item[aria-current="page"] {
+  background-color: #8f2f2399;
+}
+@media (prefers-reduced-motion: reduce) {
+  .game-header-btn,
+  .game-header-menu-item {
+    transition: none;
+  }
+}
