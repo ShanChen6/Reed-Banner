@@ -496,6 +496,23 @@
 .campaign-atlas .atlas-chapter-active:not(:disabled):hover {
   background: linear-gradient(90deg, #9c2a22, #c0402f);
 }
+/* Thẻ chương: góc hoa văn nhỏ, ảnh có viền đồng, nhãn tiến độ nền mực trên ảnh. */
+.campaign-atlas .atlas-chapter .atlas-corner {
+  color: var(--atlas-gold);
+}
+.campaign-atlas .atlas-chapter-active .atlas-corner {
+  color: var(--atlas-gold-hi);
+}
+.campaign-atlas .atlas-chapter-thumb {
+  border-color: var(--atlas-border-soft);
+}
+.campaign-atlas .atlas-chapter-active .atlas-chapter-thumb {
+  border-color: var(--atlas-gold-hi);
+}
+.campaign-atlas .atlas-chapter-progress {
+  background: #1f160fd9;
+  color: #f4e2b8;
+}
 .campaign-atlas .atlas-mission-active {
   border-color: #b8862f;
   background: #fff0c9;

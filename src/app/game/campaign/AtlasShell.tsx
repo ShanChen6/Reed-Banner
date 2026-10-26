@@ -78,34 +78,45 @@ export function ChapterRail({
               type="button"
               role="tab"
               aria-selected={active}
+              aria-label={`Chương ${ROMAN[c.chapter]}: ${c.title}, ${c.region.name}, ${
+                !open ? "chưa mở" : `${finished}/${c.missions.length} nhiệm vụ`
+              }`}
               disabled={!open}
               onClick={() => onPick(c)}
-              className={`atlas-chapter flex min-h-11 w-56 shrink-0 snap-start items-center gap-2 rounded-lg border p-1.5 text-left xl:w-full ${
+              className={`atlas-chapter relative flex h-[4.5rem] w-60 shrink-0 snap-start items-center gap-2 rounded-lg border py-1.5 pr-2.5 pl-2 text-left xl:w-full ${
                 active ? "atlas-chapter-active" : ""
               } disabled:cursor-not-allowed`}
             >
+              <AtlasCorners size="size-3" />
               <span className="w-6 shrink-0 text-center text-lg font-black">
                 {ROMAN[c.chapter]}
               </span>
-              {/* Hình nhỏ chỉ trang trí, cắt từ ảnh nền thoại; ảnh lỗi thì ô vẫn đọc được nhờ màu nền. */}
+              {/* Hình nhỏ giữ đúng tỉ lệ 16:9 của ảnh gốc; ảnh lỗi thì ô vẫn đọc được nhờ màu nền. Góc dưới là tiến độ. */}
               <span
                 aria-hidden
-                className="hidden h-10 w-14 shrink-0 rounded bg-[#cdb68a] bg-cover bg-center sm:block"
+                className={`atlas-chapter-thumb relative aspect-video w-16 shrink-0 overflow-hidden rounded border bg-cover bg-center ${
+                  open ? "" : "grayscale"
+                }`}
                 style={{
                   backgroundImage: `url(${chapterThumbUrl(c.chapter)})`,
                 }}
-              />
-              <span className="min-w-0 flex-1">
+              >
+                <span className="atlas-chapter-progress absolute right-0 bottom-0 rounded-tl px-1 text-[10px] leading-4 font-bold">
+                  {!open ? (
+                    <LockGlyph />
+                  ) : done ? (
+                    `✓ ${finished}/${c.missions.length}`
+                  ) : (
+                    `${finished}/${c.missions.length}`
+                  )}
+                </span>
+              </span>
+              <span aria-hidden className="min-w-0 flex-1">
                 <span className="line-clamp-2 block text-sm leading-tight font-bold">
                   {c.title}
                 </span>
-                <span className="block truncate text-xs opacity-80">
-                  {c.region.name} ·{" "}
-                  {!open
-                    ? "🔒 chưa mở"
-                    : done
-                      ? `✓ ${finished}/${c.missions.length}`
-                      : `${finished}/${c.missions.length}`}
+                <span className="mt-0.5 block truncate text-xs opacity-80">
+                  {c.region.name}
                 </span>
               </span>
             </button>
@@ -128,6 +139,19 @@ export function ChapterRail({
         </figcaption>
       </figure>
     </nav>
+  );
+}
+
+/** Ổ khóa nhỏ cho chương chưa mở, vẽ bằng SVG thay emoji để cùng màu chữ. */
+function LockGlyph() {
+  return (
+    <svg
+      viewBox="0 0 12 12"
+      className="inline size-2.5 align-[-1px]"
+      fill="currentColor"
+    >
+      <path d="M3.5 5V3.75a2.5 2.5 0 0 1 5 0V5h.5a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1.25 0h2.5V3.75a1.25 1.25 0 0 0-2.5 0z" />
+    </svg>
   );
 }
 
