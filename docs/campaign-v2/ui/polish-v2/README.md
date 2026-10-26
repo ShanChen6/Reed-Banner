@@ -2,6 +2,8 @@
 
 **Kiểm tra code:** `develop` commit `5926ad1eed1c` (26/10/2026, UTC+7). PR #158–#161 đã merge. Phạm vi này **chỉ polish giao diện**, không xây lại MAP-00–MAP-03.
 
+**Tiến độ (26/10/2026):** P00–P10 xong, PR #163–#171 đã merge `develop`. Kết quả nghiệm thu và lệnh đã chạy ở [`QA-P10.md`](QA-P10.md).
+
 ## Mục tiêu
 Đưa màn Sử Ký Đại Việt hiện tại sát mockup được duyệt: toàn bộ gameplay trong một đại card; khung đồng cổ mảnh với hoa văn góc; 6 thẻ chương bằng chiều cao với màu đỏ khi active; map và nhãn đồng màu; cờ có cá tính từng thế lực; header có avatar và IGN thật; tab cùng chiều cao; panel phải có **card phần thưởng đúng contract server**; responsive, accessibility và QA.
 

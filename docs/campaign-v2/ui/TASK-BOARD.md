@@ -15,7 +15,7 @@
 | MAP-03 | Tích hợp atlas/map/mission | Shan tự làm (bản đồ + ảnh nền), Claude ghép sau | UI-04, MAP-02 |
 | BG-01 | Ảnh nền khung thoại | DONE: 7 tranh Shan vẽ ở `public/art/campaign/bg/`, chọn theo nhiệm vụ (`missionBackdrop`); `atlas.webp` để dành cho MAP-01 | UI-01 |
 | UI-05 | Sử liệu, mobile và optional art | TODO | MAP-03 |
-| QA-01 | Nghiệm thu toàn UI | TODO | UI-05 |
+| QA-01 | Nghiệm thu toàn UI | Atlas DONE (`polish-v2/QA-P10.md`, 26/10); checklist thoại ở `06-nghiem-thu.md` chưa chạy | UI-05 |
 | AUD-01…07 | Âm thanh, SFX, BGM, Voice | **TODO — DEFERRED** | Chỉ thực hiện khi UI hoàn thành, có yêu cầu mới |
 
 **Không chuyển task từ TODO sang PASS dựa trên tài liệu; chỉ sau khi thực sự triển khai và kiểm tra.**
