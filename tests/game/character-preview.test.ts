@@ -17,7 +17,7 @@ test("bảng xem thử chỉ có nhân vật có rig, dung lượng khớp các 
     assert.equal(urls.size, character.files.length);
     for (const name of partsOf(rig)) assert.ok(urls.has(partUrl(rig, name)));
   }
-  for (const id of ["nguyenBac", "dinhDien", "luuCo", "trinhTu", "dinhLien", "tranLam", "phamBachHo", "ngoXuongXi", "tranCuong", "kieuCongHan", "nguyenKhoan", "kieuThuan", "lyKhue", "nguyenThuTiep", "luDuong", "nguyenSieu", "doCanhThac", "chuNgan", "caoKien", "chauNgoc", "toKim", "nghiemThiet", "lamTung", "hoangMoc", "lucDiep", "nhanTruc", "samTue", "hoLang", "daoLam", "thaiHa", "damThao", "maiThanh", "quachAn", "viTrieu", "haVan"]) {
+  for (const id of ["nguyenBac", "dinhDien", "luuCo", "trinhTu", "dinhLien", "tranLam", "phamBachHo", "ngoXuongXi", "tranCuong", "kieuCongHan", "nguyenKhoan", "kieuThuan", "lyKhue", "nguyenThuTiep", "luDuong", "nguyenSieu", "doCanhThac", "chuNgan", "caoKien", "chauNgoc", "toKim", "nghiemThiet", "lamTung", "hoangMoc", "lucDiep", "nhanTruc", "samTue", "hoLang", "daoLam", "thaiHa", "damThao", "maiThanh", "quachAn", "viTrieu", "haVan", "lyLiet"]) {
     const character = characters.find((c) => c.id === id)!;
     assert.ok(character.assets.every((a) => a.file || a.kind === "attack" || (a.kind === "cast" && (id === "nguyenKhoan" || id === "nguyenSieu" || id === "nghiemThiet")) || a.kind === "style"), `${id} cần đủ năm ảnh đối chiếu`);
     assert.ok(character.files.reduce((sum, file) => sum + file.bytes, 0) <= 350_000);

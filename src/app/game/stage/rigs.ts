@@ -124,7 +124,8 @@ export interface WarriorRig {
    * tuyệt chiêu, vòm khiên quanh từng đồng đội và cột băng dưới chân từng đối thủ; `springDew` chỉ ở tuyệt chiêu, vòng cam lộ hồi phục quanh từng đồng
    * đội và cột băng dưới chân từng đối thủ; `tideMist` chỉ ở tuyệt chiêu, sương nước quanh từng đối thủ và hạt năng
    * lượng bay về chính mình; `tideSiege` chỉ ở tuyệt chiêu, cột băng dưới chân và vết nứt trên từng đối thủ; `fireRain` chỉ ở
-   * tuyệt chiêu, cầu lửa rơi xuống và lửa bén trên từng đối thủ.
+   * tuyệt chiêu, cầu lửa rơi xuống và lửa bén trên từng đối thủ; `flameCleave` chỉ ở tuyệt chiêu, nhát chém lửa và lửa
+   * bén trên đối thủ đứng đầu.
    */
   readonly strikeFx?:
     | "lightning"
@@ -150,7 +151,8 @@ export interface WarriorRig {
     | "springDew"
     | "tideMist"
     | "tideSiege"
-    | "fireRain";
+    | "fireRain"
+    | "flameCleave";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1888,6 +1890,48 @@ const HA_VAN: WarriorRig = {
     anchor: { x: 800, y: 900 }, scale: 0.85 },
 };
 
+/**
+ * Lý Liệt, tướng sĩ hệ Hỏa (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code
+ * như Hồ Lãng: đại đao (cả dải vải đỏ buộc cán) cùng nắm tay xoay quanh cổ tay theo nhịp giáo, bàn tay phải và đầu
+ * tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const LY_LIET: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "ly-liet",
+  texScale: 0.5,
+  foot: { x: 610, y: 1510 },
+  height: 1410,
+  parts: {
+    body: { x: 300, y: 102, w: 550, h: 1414 },
+    armR: { x: 713, y: 778, w: 84, h: 104 },
+    sword: { x: 203, y: 8, w: 127, h: 1456 },
+    arm: { x: 217, y: 543, w: 86, h: 108 },
+    head: { x: 373, y: 102, w: 260, h: 248 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 295, y: 600 },
+    elbowR: { x: 755, y: 795 },
+    neck: { x: 540, y: 330 },
+  },
+  blade: [{ x: 250, y: 600 }, { x: 270, y: 20 }],
+  strikeFx: "flameCleave",
+  fxColor: 0xd9502a,
+  // Tấn rộng đâm đại đao ngang (đánh thường), hất đao chéo lên (ra chiêu), hai tay ghì đao chém chéo (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 26, y: 5 },
+      anchor: { x: 710, y: 1000 }, scale: 1.42, burst: { x: 1510, y: 410 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 16, y: 14 },
+      anchor: { x: 770, y: 1005 }, scale: 1.45, burst: { x: 1505, y: 40 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 54, y: 25 },
+      anchor: { x: 750, y: 990 }, scale: 1.45, burst: { x: 1500, y: 60 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 12, y: 34 },
+    anchor: { x: 760, y: 880 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1927,6 +1971,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   quachAn: QUACH_AN,
   viTrieu: VI_TRIEU,
   haVan: HA_VAN,
+  lyLiet: LY_LIET,
 };
 
 export function rigOf(id: string): Rig | null {
