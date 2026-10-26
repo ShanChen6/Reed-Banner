@@ -19,6 +19,7 @@ import {
   type ChapterMissionStatus,
 } from "@/core";
 import { SceneLink } from "../SceneContext";
+import { AtlasCorners } from "./AtlasFrame";
 import { BasisBadge } from "./StoryBeats";
 import { backdropUrl, missionBackdrop } from "./dialogue";
 import { METHOD_TEXT } from "./RouteSummary";
@@ -52,8 +53,9 @@ export function ChapterRail({
   return (
     <nav
       aria-label="Sử ký sáu chương"
-      className="atlas-rail rounded-xl border-2 border-[#8a6a3b] p-2"
+      className="atlas-frame atlas-frame-paper p-2"
     >
+      <AtlasCorners />
       <h2 className="mb-2 hidden px-1 text-center text-sm font-bold tracking-widest text-[#3b2a1a] uppercase xl:block">
         Chương chiến dịch
       </h2>
@@ -211,8 +213,9 @@ export function ChapterPanel({
   return (
     <aside
       aria-labelledby="atlas-panel-title"
-      className="atlas-panel flex flex-col gap-3 rounded-xl border-2 border-[#8a6a3b] p-3"
+      className="atlas-frame atlas-frame-paper flex flex-col gap-3 p-3"
     >
+      <AtlasCorners />
       <header>
         <p className="text-xs font-semibold tracking-widest uppercase opacity-75">
           Chương {roman} · {finished}/{chapter.missions.length} nhiệm vụ
@@ -307,8 +310,9 @@ export function StrongholdPanel({
   return (
     <aside
       aria-labelledby="atlas-panel-title"
-      className="atlas-panel flex flex-col gap-3 rounded-xl border-2 border-[#8a6a3b] p-3"
+      className="atlas-frame atlas-frame-paper flex flex-col gap-3 p-3"
     >
+      <AtlasCorners />
       <header className="flex items-start gap-3">
         <span
           aria-hidden
@@ -499,8 +503,9 @@ export function AtlasHeader({
       active ? "atlas-tab-active" : ""
     }`;
   return (
-    <header className="atlas-bar flex flex-col gap-2 rounded-xl border-2 p-2 lg:flex-row lg:items-center">
-      <div className="px-2 lg:w-56 lg:shrink-0">
+    <header className="atlas-frame atlas-frame-wood flex flex-col gap-2 p-3 lg:flex-row lg:items-center">
+      <AtlasCorners />
+      <div className="px-3 lg:w-60 lg:shrink-0">
         <h1
           id="chapter-one-title"
           className="atlas-title text-xl leading-tight font-black tracking-wide uppercase sm:text-2xl"

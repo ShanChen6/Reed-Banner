@@ -12,6 +12,7 @@ import {
   type CampaignProgressV2,
   type CampaignRoute,
 } from "@/core";
+import { AtlasCorners } from "./AtlasFrame";
 import { FACTION_STATUS_TEXT } from "./StoryBeats";
 
 const FOCUS =
@@ -44,9 +45,10 @@ export default function RouteSummary({
   return (
     <section
       aria-labelledby={`route-${route.id}`}
-      className={`flex flex-col gap-2 rounded-xl border-2 p-3 ${complete ? "border-emerald-500/50 bg-emerald-500/10" : "border-white/15 bg-black/25"}`}
+      className={`atlas-frame atlas-frame-paper flex flex-col gap-2 p-3 ${complete ? "atlas-route-done" : ""}`}
     >
-      <h2 id={`route-${route.id}`} className="font-bold text-amber-100">
+      <AtlasCorners />
+      <h2 id={`route-${route.id}`} className="font-bold">
         {complete
           ? `Tổng kết ${route.name.toLowerCase()}`
           : `${route.name}: ${done}/${regions.length} vùng`}
@@ -58,13 +60,13 @@ export default function RouteSummary({
               type="button"
               disabled={r.state === "locked"}
               onClick={() => onPick(r.mission)}
-              className={`flex min-h-11 w-full flex-col items-start rounded-md border border-white/10 bg-black/30 px-2 py-1 text-left disabled:cursor-not-allowed disabled:opacity-45 ${FOCUS}`}
+              className={`atlas-mission flex min-h-11 w-full flex-col items-start rounded-md border px-2 py-1 text-left disabled:cursor-not-allowed ${FOCUS}`}
             >
-              <span className="font-semibold text-amber-50">
+              <span className="font-semibold">
                 {r.state === "completed" ? "✓ " : ""}
                 {r.place} · {r.mission}
               </span>
-              <span className="text-xs text-stone-300">
+              <span className="atlas-muted text-xs">
                 {r.faction?.resolved
                   ? `${companionById(r.faction.faction)?.name ?? r.faction.faction}: ${METHOD_TEXT[r.faction.resolutionMethod] ?? FACTION_STATUS_TEXT[r.faction.status].toLowerCase()}`
                   : r.state === "open"
@@ -81,12 +83,12 @@ export default function RouteSummary({
         ))}
       </ul>
       {complete && (
-        <p className="text-xs text-stone-300">
+        <p className="atlas-muted text-xs">
           Xem lại nhiệm vụ không ghi thêm gì. Đánh lại trận chỉ nhận thưởng trận
           thường; thưởng nhiệm vụ và thế cục sứ quân đã ghi một lần.
         </p>
       )}
-      <p className="text-xs text-stone-400">
+      <p className="atlas-muted text-xs">
         {gate.ready
           ? "Hai tuyến đã xong: Đỗ Động đã mở."
           : other.length > 0
