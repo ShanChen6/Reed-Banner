@@ -1,42 +1,27 @@
 "use client";
 
-// Màn hội kiến cho nhiệm vụ ngoại giao (M06, M11–M13): bối cảnh + chân dung hai bên, lời dẫn dạng đối thoại,
-// thẻ lựa chọn giọng điệu, rồi kết cục cố định (Quy phục/Liên minh) do server ghi. Lựa chọn chỉ đổi lời kể,
+// Màn hội kiến cho nhiệm vụ ngoại giao (M06, M11–M13): bối cảnh hai bên, lời dẫn phát từng câu (DialoguePlayer),
+// thẻ lựa chọn giọng điệu, lời đáp phát từng câu, rồi kết cục cố định (Quy phục/Liên minh) do server ghi. Lựa chọn chỉ đổi lời kể,
 // không có thưởng riêng và không đổi kết cục. Mọi trạng thái hoàn thành lấy từ hồ sơ server; trình duyệt chỉ
 // giữ bước đang xem (qua onMove của màn Chiến dịch).
 
 import { useRef, useState } from "react";
 import {
-  CAMPAIGN_RECRUITS,
   campaignEventByNode,
   companionById,
   missionCopy,
   storyNodeById,
   type CampaignMissionId,
   type Profile,
-  type StoryBeat,
 } from "@/core";
-import { Portrait } from "../art/portraits";
 import {
   completeCampaignEventOnline,
   fetchProfile,
   ONLINE_ERROR_TEXT,
 } from "../battle/online";
-import {
-  BasisBadge,
-  Beats,
-  FACTION_STATUS_TEXT,
-  SourceNotes,
-  TONE_TEXT,
-} from "./StoryBeats";
-
-const MAIN_SPEAKER = "Đinh Bộ Lĩnh";
-/** Người phía Hoa Lư: tướng đồng hành và sứ giả của ta đứng bên trái, không bị coi là phía bên kia. */
-const OUR_SIDE = new Set<string>([
-  MAIN_SPEAKER,
-  "Sứ giả Hoa Lư",
-  ...CAMPAIGN_RECRUITS.map((r) => r.name),
-]);
+import DialoguePlayer from "./DialoguePlayer";
+import { MAIN_SPEAKER, speakerSide } from "./dialogue";
+import { FACTION_STATUS_TEXT, SourceNotes, TONE_TEXT } from "./StoryBeats";
 
 const OUTCOME_TEXT: Record<string, string> = {
   allianced: FACTION_STATUS_TEXT.allied,
@@ -47,71 +32,6 @@ const FOCUS =
   "focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1c140f] focus-visible:outline-none";
 
 export type DiplomacyPhase = "intro" | "choice";
-
-/** Đối thoại: thoại Đinh Bộ Lĩnh bên trái, thoại phía bên kia bên phải, lời dẫn ở giữa. */
-function Dialogue({ beats }: { beats: readonly StoryBeat[] }) {
-  return (
-    <ul className="flex flex-col gap-2">
-      {beats.map((b, i) => {
-        if (!b.speaker)
-          return (
-            <li key={i} className="rounded-md bg-black/30 p-2 text-sm">
-              <BasisBadge basis={b.basis} />
-              <p className="mt-1 text-stone-200 italic">{b.text}</p>
-              {b.refs && b.refs.length > 0 && (
-                <p className="mt-1 text-[11px] text-stone-400">
-                  Nguồn: {b.refs.join(", ")}
-                </p>
-              )}
-            </li>
-          );
-        const ours = !!b.speaker && OUR_SIDE.has(b.speaker);
-        return (
-          <li
-            key={i}
-            className={`max-w-[92%] rounded-lg border p-2 text-sm ${
-              ours
-                ? "self-start border-amber-500/40 bg-amber-900/30"
-                : "self-end border-sky-400/30 bg-sky-950/40"
-            }`}
-          >
-            <p className="text-xs font-semibold text-amber-300">
-              {b.speaker}{" "}
-              <span className="font-normal text-stone-400">
-                · thoại hư cấu, không phải trích dẫn sử
-              </span>
-            </p>
-            <p className="mt-0.5 text-amber-50">“{b.text}”</p>
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
-
-function Speaker({
-  name,
-  title,
-  children,
-  align,
-}: {
-  name: string;
-  title: string;
-  children: React.ReactNode;
-  align: "left" | "right";
-}) {
-  return (
-    <figure
-      className={`flex items-center gap-2 ${align === "right" ? "flex-row-reverse text-right" : ""}`}
-    >
-      {children}
-      <figcaption>
-        <p className="text-sm font-bold text-amber-50">{name}</p>
-        <p className="text-xs text-stone-300">{title}</p>
-      </figcaption>
-    </figure>
-  );
-}
 
 export default function DiplomacyScene({
   profile,
@@ -150,7 +70,7 @@ export default function DiplomacyScene({
     ...copy.choices.flatMap((c) => c.beats),
   ]
     .map((b) => b.speaker)
-    .find((s) => s && !OUR_SIDE.has(s));
+    .find((s) => s && speakerSide(s) === "right");
   // Vùng theo về (Lữ Đường) không phải một cuộc quy phục trước mặt: con dấu ghi "Theo về".
   const outcome =
     event?.faction?.settlement === "regionalAccession"
@@ -193,57 +113,21 @@ export default function DiplomacyScene({
       aria-labelledby={`diplomacy-${nodeId}`}
       className="flex flex-col gap-3"
     >
-      <div className="relative overflow-hidden rounded-xl border border-amber-500/40 bg-[radial-gradient(ellipse_at_top,#5b3a22_0%,#2a1b12_55%,#140d09_100%)] p-3">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-15 [background-image:repeating-radial-gradient(circle_at_50%_120%,#e8c37a_0_1px,transparent_1px_14px)]"
-        />
-        <p className="relative text-[11px] tracking-widest text-amber-300/90 uppercase">
+      <header className="rounded-lg border border-amber-500/30 bg-black/30 px-3 py-2">
+        <p className="text-[11px] tracking-widest text-amber-300/90 uppercase">
           Hội kiến · {node.location.name}
           {node.location.modernRegion ? `, ${node.location.modernRegion}` : ""}
         </p>
-        <h3 id={`diplomacy-${nodeId}`} className="sr-only">
-          {node.title}
+        <h3
+          id={`diplomacy-${nodeId}`}
+          className="text-sm font-semibold text-amber-50"
+        >
+          {MAIN_SPEAKER} <span className="text-amber-300/70">⟷</span>{" "}
+          {counterpart
+            ? `${counterpartVoice ?? counterpart.name}${counterpartVoice && counterpartVoice !== counterpart.name ? ` (${counterpart.name})` : ""}`
+            : node.title}
         </h3>
-        <div className="relative mt-3 flex items-center justify-between gap-2">
-          <Speaker name={MAIN_SPEAKER} title="Hoa Lư" align="left">
-            <Portrait
-              id="dinhBoLinh"
-              element={profile.element}
-              profession={profile.profession}
-              className="size-14 shrink-0 sm:size-16"
-            />
-          </Speaker>
-          <span aria-hidden className="text-xl text-amber-300/70">
-            ⟷
-          </span>
-          {counterpart && (
-            <Speaker
-              name={counterpartVoice ?? counterpart.name}
-              title={counterpart.name}
-              align="right"
-            >
-              <Portrait
-                id={counterpart.id}
-                element={counterpart.element}
-                profession={counterpart.profession}
-                className="size-14 shrink-0 sm:size-16"
-              />
-            </Speaker>
-          )}
-        </div>
-        {copy.cinematic?.map((b, i) => (
-          <p
-            key={i}
-            className="relative mt-3 font-serif text-sm text-amber-50/90 italic"
-          >
-            <span className="mr-1 text-[10px] not-italic tracking-widest text-amber-300/70 uppercase">
-              Cảnh dựng ·
-            </span>
-            {b.text}
-          </p>
-        ))}
-      </div>
+      </header>
 
       {outcome && (
         <p className="text-xs text-stone-300">
@@ -255,18 +139,36 @@ export default function DiplomacyScene({
         </p>
       )}
 
-      <Dialogue beats={copy.intro} />
-      <SourceNotes nodeId={nodeId} label="Xem chú thích sử liệu" />
-
-      {phase === "intro" && !done ? (
+      {phase === "intro" ? (
+        <DialoguePlayer
+          key={`${nodeId}:intro`}
+          missionId={nodeId}
+          sequence="intro"
+          label={`Hội kiến ${node.id}`}
+          segments={[
+            {
+              section: "cinematic",
+              beats: copy.cinematic ?? [],
+              cinematic: true,
+            },
+            { section: "intro", beats: copy.intro },
+          ]}
+          main={profile}
+          finishLabel={done ? "Xem kết cục" : "Vào hội kiến"}
+          onFinished={() => onMove("choice", choice)}
+        />
+      ) : (
         <button
           type="button"
-          onClick={() => onMove("choice", choice)}
-          className={`min-h-11 self-start rounded-lg bg-amber-500 px-5 font-semibold text-stone-950 ${FOCUS}`}
+          onClick={() => onMove("intro", done ? undefined : choice)}
+          className={`min-h-11 self-start rounded-lg bg-white/10 px-4 text-sm hover:bg-white/15 ${FOCUS}`}
         >
-          Vào hội kiến
+          ↺ Xem lại hội kiến
         </button>
-      ) : (
+      )}
+      <SourceNotes nodeId={nodeId} label="Xem chú thích sử liệu" />
+
+      {phase === "choice" && (
         <div className="flex flex-col gap-2">
           <p
             id={`diplomacy-prompt-${nodeId}`}
@@ -320,7 +222,18 @@ export default function DiplomacyScene({
               );
             })}
           </div>
-          {picked && <Dialogue beats={picked.beats} />}
+          {picked && (
+            <DialoguePlayer
+              key={`${nodeId}:choice:${picked.id}`}
+              missionId={nodeId}
+              sequence={`choice:${picked.id}`}
+              label={`Lời đáp: ${picked.label}`}
+              segments={[
+                { section: `choice:${picked.id}`, beats: picked.beats },
+              ]}
+              main={profile}
+            />
+          )}
           {!done && (
             <button
               type="button"
@@ -337,7 +250,7 @@ export default function DiplomacyScene({
 
       <div role="status" aria-live="polite" className="flex flex-col gap-2">
         {message && <p className="text-sm text-rose-300">{message}</p>}
-        {done && (
+        {done && phase === "choice" && (
           <div className="rounded-xl border-2 border-sky-400/50 bg-sky-950/40 p-3">
             <p className="flex flex-wrap items-baseline gap-2">
               <span className="rounded border-2 border-sky-300 px-2 py-0.5 text-lg font-black tracking-widest text-sky-100 uppercase">
@@ -350,7 +263,14 @@ export default function DiplomacyScene({
               )}
             </p>
             <div className="mt-2">
-              <Beats beats={copy.outro} />
+              <DialoguePlayer
+                key={`${nodeId}:outro`}
+                missionId={nodeId}
+                sequence="outro"
+                label={`Kết cục ${node.id}`}
+                segments={[{ section: "outro", beats: copy.outro }]}
+                main={profile}
+              />
             </div>
           </div>
         )}

@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -312,6 +312,20 @@ export default function BattleStage({
           });
           return [mist, bloom];
         }
+        if (rig.strikeFx === "groveWard") {
+          const bloom = leafBloom(sky, rig.fxColor);
+          const ward = earthWard(sky, rig.fxColor);
+          // Tuyệt chiêu bày trận cả đội: vòng lá hồi phục rồi vòm khiên (Thủ tăng) quanh từng đồng đội.
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(true).forEach((s, n) => {
+              bloom.cover(spot(s, 0), size, n * 0.08);
+              ward.cover(spot(s, 0), size, 0.3 + n * 0.08);
+            });
+          });
+          return [bloom, ward];
+        }
         if (rig.strikeFx === "rootGuard") {
           const bloom = leafBloom(sky, rig.fxColor);
           const ward = earthWard(sky, rig.fxColor);
@@ -411,6 +425,39 @@ export default function BattleStage({
           });
           return [fx];
         }
+        if (rig.strikeFx === "tideBulwark") {
+          const ward = earthWard(sky, rig.fxColor);
+          const ice = waterPillar(sky, rig.fxColor);
+          // Tuyệt chiêu thủy trại: vòm khiên nước quanh từng đồng đội (Khiên), cột băng dưới chân từng đối thủ (Đóng băng).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, n * 0.08));
+            alive(false).forEach((s, n) => ice.cover(spot(s, 0), size, 0.25 + n * 0.08));
+          });
+          return [ward, ice];
+        }
+        if (rig.strikeFx === "springDew") {
+          const bloom = leafBloom(sky, rig.fxColor);
+          const ice = waterPillar(sky, rig.fxColor);
+          // Tuyệt chiêu cam lộ: vòng cam lộ hồi phục quanh từng đồng đội (Hồi máu, giải trừ), cột băng dưới chân từng đối thủ (Đóng băng).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(true).forEach((s, n) => bloom.cover(spot(s, 0), size, n * 0.08));
+            alive(false).forEach((s, n) => ice.cover(spot(s, 0), size, 0.3 + n * 0.08));
+          });
+          return [bloom, ice];
+        }
+        if (rig.strikeFx === "frostSpear") {
+          const fx = waterPillar(sky, rig.fxColor);
+          // Tuyệt chiêu một người: cột nước đóng băng dưới chân đối thủ đứng đầu (Đóng băng, rút năng lượng).
+          loaded[i]!.onStrike?.((kind) => {
+            const foe = alive(false)[0];
+            if (kind === "ultimate" && foe) fx.cover(spot(foe, 0), app.screen.height * FIGURE);
+          });
+          return [fx];
+        }
         if (rig.strikeFx === "waterPillar") {
           const fx = waterPillar(sky, rig.fxColor);
           // Tuyệt chiêu trận nước: cột nước phun lên rồi đóng băng dưới chân từng đối thủ còn đứng.
@@ -428,6 +475,21 @@ export default function BattleStage({
             if (kind === "ultimate" && foe) fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
           });
           return [fx];
+        }
+        if (rig.strikeFx === "tideMist") {
+          const mist = poisonMist(sky, rig.fxColor, TIDE);
+          const drain = supplyDrain(sky, rig.fxColor);
+          // Tuyệt chiêu thủy độn: sương nước cuộn quanh từng đối thủ (câm lặng), hạt sáng năng lượng bay về người tung chiêu.
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => {
+              mist.cover(spot(s, 0), size, n * 0.08);
+              drain.drain(spot(s, 0.5), spot(me, 0.55), size, 0.35 + n * 0.1);
+            });
+          });
+          return [mist, drain];
         }
         if (rig.strikeFx === "supplyDrain") {
           const fx = supplyDrain(sky, rig.fxColor);

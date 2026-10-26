@@ -80,37 +80,53 @@ export default function GameShell({
             light ? "border-[#b8862f]/30 bg-[#f3ebdc]/90 text-stone-900" : "border-[#d4a24c]/25 bg-[#17110e]/90 text-stone-100"
           }`}
         >
-          <nav className="mx-auto flex max-w-6xl items-center gap-3 px-3 py-2 text-sm sm:px-4">
+          <nav className="mx-auto flex max-w-6xl items-center gap-3 px-3 py-1 text-sm sm:px-4">
             {currentScene === "MENU" ? (
               <Link href="/" className="flex items-center gap-1.5 font-serif text-base font-bold">
                 <LogoMark className="size-7" /> Cờ Lau
               </Link>
             ) : (
-              <SceneLink scene="MENU" className="flex items-center gap-1.5 rounded px-2 py-1 font-semibold hover:bg-white/10">
+              <SceneLink scene="MENU" className="flex min-h-11 items-center gap-1.5 rounded px-2 py-1 font-semibold whitespace-nowrap hover:bg-white/10">
                 <span aria-hidden>←</span> Màn chính
               </SceneLink>
             )}
             <span className="truncate opacity-60">{currentScene === "MENU" ? "" : SCENE_TITLE[currentScene]}</span>
             <span className="ml-auto" />
+            {/* Màn Sử ký: lối tắt Hồ sơ và Trận thường nằm trên thanh chung, không thành một hàng nút riêng. */}
+            {currentScene === "CAMPAIGN" && (
+              <>
+                <SceneLink scene="PROFILE" className="hidden min-h-11 items-center rounded px-2 py-1 hover:bg-white/10 sm:flex">
+                  Hồ sơ
+                </SceneLink>
+                <SceneLink scene="PLAYING" className="hidden min-h-11 items-center rounded px-2 py-1 hover:bg-white/10 sm:flex">
+                  Trận thường
+                </SceneLink>
+              </>
+            )}
             {account ? (
-              <SceneLink scene="ACCOUNT" className="flex items-center gap-2 rounded px-2 py-1 hover:bg-white/10" title="Tài khoản">
-                {account.avatarUrl && (
-                  // Ảnh đại diện từ Google/GitHub, nhỏ nên không cần tối ưu qua next/image.
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={account.avatarUrl} alt="" className="size-6 rounded-full" referrerPolicy="no-referrer" />
-                )}
+              <SceneLink scene="ACCOUNT" className="flex min-h-11 items-center gap-2 rounded px-2 py-1 hover:bg-white/10" title="Tài khoản">
+                <AccountAvatar account={account} />
                 <span className="max-w-32 truncate font-semibold">{account.name}</span>
               </SceneLink>
             ) : (
-              !(currentScene in auth) && (
-                <SceneLink
-                  scene="LOGIN"
-                  params={{ returnTo: currentScene === "MENU" ? undefined : scenePath(currentScene) }}
-                  className="rounded bg-amber-500 px-2.5 py-1 font-semibold text-stone-950"
-                >
-                  Đăng nhập
-                </SceneLink>
-              )
+              <>
+                {/* Khách vẫn chơi được, tiến độ lưu theo cookie khách; nút Đăng nhập để giữ tiến độ trên tài khoản. */}
+                <span className="hidden items-center gap-1.5 opacity-80 sm:flex">
+                  <span aria-hidden className="grid size-6 place-items-center rounded-full border border-current/40 text-xs">
+                    ?
+                  </span>
+                  Khách
+                </span>
+                {!(currentScene in auth) && (
+                  <SceneLink
+                    scene="LOGIN"
+                    params={{ returnTo: currentScene === "MENU" ? undefined : scenePath(currentScene) }}
+                    className="relative rounded bg-amber-500 px-2.5 py-1 font-semibold whitespace-nowrap text-stone-950 before:absolute before:inset-x-0 before:-inset-y-2 before:content-['']"
+                  >
+                    Đăng nhập
+                  </SceneLink>
+                )}
+              </>
             )}
           </nav>
         </header>
@@ -124,6 +140,22 @@ export default function GameShell({
         </div>
       </div>
     </SceneContext.Provider>
+  );
+}
+
+/** Ảnh đại diện Google/GitHub; tài khoản mật khẩu không có ảnh thì hiện chữ cái đầu của tên. */
+function AccountAvatar({ account }: { account: ShellAccount }) {
+  if (account.avatarUrl)
+    return (
+      // Ảnh đại diện từ Google/GitHub, nhỏ nên không cần tối ưu qua next/image.
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={account.avatarUrl} alt="" className="size-7 rounded-full border border-[#d4a24c]/60" referrerPolicy="no-referrer" />
+    );
+  const initial = [...account.name.trim()][0]?.toUpperCase() ?? "?";
+  return (
+    <span aria-hidden className="grid size-7 place-items-center rounded-full border border-[#d4a24c]/60 bg-[#6b2a1a] text-xs font-bold text-amber-100">
+      {initial}
+    </span>
   );
 }
 

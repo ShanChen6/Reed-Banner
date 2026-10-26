@@ -119,7 +119,11 @@ export interface WarriorRig {
    * đội; `bambooSap` chỉ ở tuyệt chiêu, chém lá trúc lên đối thủ đứng đầu và hút sinh khí về chính mình;
    * `thornBind` chỉ ở tuyệt chiêu, dây gai quấn từng đối thủ và hút sinh khí về chính mình; `rootGuard` chỉ ở tuyệt
    * chiêu, vòng lá hồi phục quanh cả đội và vòm khiên đất quanh chính mình; `poisonMist` chỉ ở tuyệt chiêu, sương độc
-   * quanh từng đối thủ và vòng lá hồi phục quanh đội mình.
+   * quanh từng đối thủ và vòng lá hồi phục quanh đội mình; `groveWard` chỉ ở tuyệt chiêu, vòng lá và vòm khiên quanh
+   * từng đồng đội; `frostSpear` chỉ ở tuyệt chiêu, cột nước đóng băng dưới chân đối thủ đứng đầu; `tideBulwark` chỉ ở
+   * tuyệt chiêu, vòm khiên quanh từng đồng đội và cột băng dưới chân từng đối thủ; `springDew` chỉ ở tuyệt chiêu, vòng cam lộ hồi phục quanh từng đồng
+   * đội và cột băng dưới chân từng đối thủ; `tideMist` chỉ ở tuyệt chiêu, sương nước quanh từng đối thủ và hạt năng
+   * lượng bay về chính mình.
    */
   readonly strikeFx?:
     | "lightning"
@@ -138,7 +142,12 @@ export interface WarriorRig {
     | "bambooSap"
     | "thornBind"
     | "rootGuard"
-    | "poisonMist";
+    | "poisonMist"
+    | "groveWard"
+    | "frostSpear"
+    | "tideBulwark"
+    | "springDew"
+    | "tideMist";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -186,42 +195,47 @@ export function partsOf(rig: Rig): readonly string[] {
       ];
 }
 
-/** Đào Lam, pháp sư hệ Thủy: bản thử Đ0, tách bằng live2dlayer (xem docs/design/15-ke-hoach-do-hoa.md). */
-const DAO_LAM: MageRig = {
-  skeleton: "mage",
+/**
+ * Đào Lam, pháp sư hệ Thủy (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn) thay bản thử Đ0 tách bằng
+ * live2dlayer. Ảnh đứng tách lớp bằng code: trượng cầu nước cùng nắm tay xoay quanh cổ tay, cầu nước sáng riêng; bàn
+ * tay buông và đầu tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const DAO_LAM: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "staff",
   dir: "dao-lam",
   texScale: 0.5,
-  foot: { x: 495, y: 1010 },
-  height: 1000,
+  foot: { x: 560, y: 1510 },
+  height: 1500,
   parts: {
-    backhair: { x: 198, y: 37, w: 589, h: 712 },
-    legs: { x: 413, y: 746, w: 67, h: 186 },
-    bottom: { x: 208, y: 336, w: 625, h: 644 },
-    boots: { x: 415, y: 810, w: 161, h: 205 },
-    top: { x: 187, y: 133, w: 652, h: 642 },
-    neck: { x: 463, y: 105, w: 48, h: 72 },
-    armL: { x: 555, y: 257, w: 216, h: 352 },
-    armR: { x: 221, y: 200, w: 207, h: 319 },
-    ribbon: { x: 458, y: 10, w: 281, h: 152 },
-    waterL: { x: 183, y: 39, w: 264, h: 413 },
-    waterR: { x: 551, y: 110, w: 294, h: 452 },
-    gourd: { x: 230, y: 46, w: 175, h: 283 },
-    head: { x: 449, y: 44, w: 95, h: 116 },
-    eyeL: { x: 503, y: 103, w: 23, h: 14 },
-    eyeR: { x: 473, y: 95, w: 23, h: 13 },
+    body: { x: 63, y: 6, w: 923, h: 1521 },
+    armR: { x: 785, y: 640, w: 54, h: 116 },
+    sword: { x: 162, y: 346, w: 159, h: 390 },
+    arm: { x: 232, y: 545, w: 74, h: 81 },
+    head: { x: 490, y: 40, w: 151, h: 201 },
   },
+  cloth: [],
+  covers: [],
   joints: {
-    upper: { x: 500, y: 420 },
-    armL: { x: 592, y: 292 },
-    armR: { x: 410, y: 250 },
-    waterL: { x: 360, y: 200 },
-    waterR: { x: 628, y: 368 },
-    gourd: { x: 358, y: 200 },
-    head: { x: 492, y: 166 },
-    eyeL: { x: 514, y: 110 },
-    eyeR: { x: 484, y: 102 },
+    shoulder: { x: 270, y: 590 },
+    elbowR: { x: 800, y: 660 },
+    neck: { x: 560, y: 235 },
   },
-  fxColor: 0x9fe3ff,
+  blade: [{ x: 255, y: 580 }, { x: 200, y: 385 }],
+  orb: { x: 200, y: 385 },
+  strikeFx: "waterPillar",
+  fxColor: 0x2f7fc1,
+  // Hạ trượng chĩa cầu nước tới (đánh thường), giơ trượng xòe tay (ra chiêu), thế tấn đẩy chưởng kéo trượng ngang (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 20, y: 9 },
+      anchor: { x: 630, y: 1515 }, scale: 1, burst: { x: 940, y: 605 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 17, y: 9 },
+      anchor: { x: 630, y: 1515 }, scale: 1, burst: { x: 845, y: 300 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 6, y: 61 },
+      anchor: { x: 560, y: 1425 }, scale: 1.05, burst: { x: 965, y: 365 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 6, y: 45 },
+    anchor: { x: 800, y: 900 }, scale: 0.85 },
 };
 
 /**
@@ -1567,6 +1581,224 @@ const NHAN_TRUC: WarriorRig = {
     anchor: { x: 800, y: 950 }, scale: 0.85 },
 };
 
+/**
+ * Sầm Tuệ, quân sư hệ Mộc (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code:
+ * cờ đuôi nheo cán tre cùng nắm tay xoay quanh cổ tay theo nhịp giáo như Lê Hoàn, bàn tay cầm thẻ tre và đầu tách
+ * riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const SAM_TUE: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "sam-tue",
+  texScale: 0.5,
+  foot: { x: 620, y: 1500 },
+  height: 1400,
+  parts: {
+    body: { x: 326, y: 110, w: 657, h: 1407 },
+    armR: { x: 745, y: 735, w: 172, h: 161 },
+    sword: { x: 21, y: 3, w: 443, h: 1478 },
+    arm: { x: 357, y: 460, w: 84, h: 96 },
+    head: { x: 490, y: 111, w: 191, h: 235 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 410, y: 510 },
+    elbowR: { x: 770, y: 760 },
+    neck: { x: 590, y: 340 },
+  },
+  blade: [{ x: 395, y: 500 }, { x: 362, y: 10 }],
+  strikeFx: "groveWard",
+  fxColor: 0x4f9a4a,
+  // Hạ cờ chĩa ngang (đánh thường), dựng cờ ôm thẻ tre (ra chiêu), thế tấn vung cờ chéo ra lệnh (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 23, y: 8 },
+      anchor: { x: 940, y: 1000 }, scale: 1.3, burst: { x: 50, y: 100 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 10, y: 3 },
+      anchor: { x: 680, y: 1505 }, scale: 1, burst: { x: 760, y: 450 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 42, y: 9 },
+      anchor: { x: 860, y: 1115 }, scale: 1.2, burst: { x: 1230, y: 330 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 13, y: 67 },
+    anchor: { x: 900, y: 900 }, scale: 0.85 },
+};
+
+/**
+ * Hồ Lãng, tướng sĩ hệ Thủy (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
+ * code: giáo cùng nắm tay xoay quanh cổ tay theo nhịp đẩy giáo, bàn tay trái, đầu và dải buộc tóc xanh tách riêng.
+ * Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const HO_LANG: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "ho-lang",
+  texScale: 0.5,
+  foot: { x: 540, y: 1500 },
+  height: 1410,
+  parts: {
+    body: { x: 282, y: 95, w: 553, h: 1431 },
+    armR: { x: 761, y: 755, w: 78, h: 120 },
+    sword: { x: 210, y: 4, w: 65, h: 1492 },
+    arm: { x: 209, y: 512, w: 102, h: 103 },
+    head: { x: 500, y: 100, w: 156, h: 211 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 440, y: 155, w: 62, h: 96 }, behind: true,
+      wind: { axis: "y", start: 0.2, amp: 5, freq: 1.6, k: 2.8, phase: 0.4 } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 290, y: 560 },
+    elbowR: { x: 780, y: 770 },
+    neck: { x: 575, y: 300 },
+  },
+  blade: [{ x: 245, y: 560 }, { x: 256, y: 10 }],
+  strikeFx: "frostSpear",
+  fxColor: 0x2f7fc1,
+  // Đâm giáo ngang tầm ngực (đánh thường), thế tấn hất giáo chéo lên (ra chiêu), tấn rộng kéo giáo ngang hông (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 23, y: 15 },
+      anchor: { x: 600, y: 990 }, scale: 1.35, burst: { x: 1515, y: 280 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 35, y: 30 },
+      anchor: { x: 640, y: 960 }, scale: 1.35, burst: { x: 1515, y: 45 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 14, y: 41 },
+      anchor: { x: 720, y: 955 }, scale: 1.35, burst: { x: 1525, y: 465 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 17, y: 125 },
+    anchor: { x: 760, y: 880 }, scale: 0.9 },
+};
+
+/**
+ * Thái Hà, binh lính hệ Thủy (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
+ * code như Nguyễn Khoan: chĩa ba cùng nắm tay xoay quanh cổ tay, khiên mây cùng cẳng tay nâng lên khi vào thế và đỡ
+ * đòn, đầu và đuôi khăn xanh tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const THAI_HA: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "thai-ha",
+  texScale: 0.5,
+  foot: { x: 540, y: 1490 },
+  height: 1360,
+  parts: {
+    body: { x: 197, y: 140, w: 683, h: 1381 },
+    armR: { x: 739, y: 537, w: 245, h: 464 },
+    sword: { x: 126, y: 6, w: 95, h: 1462 },
+    arm: { x: 138, y: 471, w: 91, h: 115 },
+    head: { x: 471, y: 140, w: 171, h: 196 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 375, y: 263, w: 80, h: 77 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 5, freq: 1.6, k: 3, phase: 0.2, vertical: true, reverse: true } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 200, y: 525 },
+    elbowR: { x: 765, y: 600 },
+    neck: { x: 560, y: 330 },
+  },
+  blade: [{ x: 175, y: 520 }, { x: 175, y: 20 }],
+  shieldRaise: -0.35,
+  strikeFx: "tideBulwark",
+  fxColor: 0x2f7fc1,
+  // Đâm chĩa ba ngang (đánh thường), giơ khiên che người (ra chiêu), lao tới núp khiên đâm chéo (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 12, y: 17 },
+      anchor: { x: 600, y: 1000 }, scale: 1.35, burst: { x: 1515, y: 270 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 35, y: 6 },
+      anchor: { x: 560, y: 1510 }, scale: 1, burst: { x: 830, y: 650 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 42, y: 8 },
+      anchor: { x: 700, y: 1010 }, scale: 1.3, burst: { x: 1470, y: 70 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 13, y: 64 },
+    anchor: { x: 800, y: 900 }, scale: 0.9 },
+};
+
+/**
+ * Mai Thanh, y sư hệ Thủy (tướng khởi đầu). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code:
+ * bàn tay xách hồ lô sứ xoay quanh cổ tay, hồ lô lắc quanh nắm tay như các y sư khác; bàn tay buông và đầu tách
+ * riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const MAI_THANH: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "gourd",
+  grip: { x: 265, y: 530 },
+  dir: "mai-thanh",
+  texScale: 0.5,
+  foot: { x: 590, y: 1500 },
+  height: 1490,
+  parts: {
+    body: { x: 291, y: 10, w: 566, h: 1507 },
+    armR: { x: 714, y: 685, w: 57, h: 84 },
+    sword: { x: 204, y: 520, w: 162, h: 341 },
+    arm: { x: 215, y: 485, w: 110, h: 68 },
+    head: { x: 470, y: 25, w: 152, h: 238 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 290, y: 520 },
+    elbowR: { x: 735, y: 705 },
+    neck: { x: 545, y: 255 },
+  },
+  blade: [{ x: 265, y: 530 }, { x: 270, y: 700 }],
+  strikeFx: "springDew",
+  fxColor: 0x2f7fc1,
+  // Đẩy chưởng, hồ lô xách bên hông (đánh thường), ôm hồ lô mở nắp (ra chiêu), nâng hồ lô rót cam lộ (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 153, y: 11 },
+      anchor: { x: 600, y: 1500 }, scale: 1, burst: { x: 830, y: 265 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 129, y: 12 },
+      anchor: { x: 575, y: 1505 }, scale: 1, burst: { x: 360, y: 265 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 46, y: 11 },
+      anchor: { x: 540, y: 1505 }, scale: 1, burst: { x: 215, y: 285 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 41, y: 50 },
+    anchor: { x: 800, y: 900 }, scale: 0.85 },
+};
+
+/**
+ * Quách Ẩn, mưu sĩ hệ Thủy (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
+ * code: quạt giấy sóng nước cùng nắm tay phẩy theo nhịp quạt, bàn tay buông và đầu tách riêng. Hệ tọa độ: ảnh đứng
+ * 1024×1536.
+ */
+const QUACH_AN: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "fan",
+  dir: "quach-an",
+  texScale: 0.5,
+  foot: { x: 525, y: 1515 },
+  height: 1510,
+  parts: {
+    body: { x: 225, y: 5, w: 688, h: 1522 },
+    armR: { x: 732, y: 638, w: 68, h: 157 },
+    sword: { x: 100, y: 487, w: 198, h: 317 },
+    arm: { x: 280, y: 565, w: 68, h: 97 },
+    head: { x: 482, y: 5, w: 181, h: 244 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 335, y: 590 },
+    elbowR: { x: 760, y: 650 },
+    neck: { x: 575, y: 235 },
+  },
+  blade: [{ x: 290, y: 620 }, { x: 130, y: 560 }],
+  strikeFx: "tideMist",
+  fxColor: 0x2f7fc1,
+  // Phẩy quạt thấp bên hông (đánh thường), che quạt chỉ tay (ra chiêu), che quạt xòe chưởng (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 41, y: 10 },
+      anchor: { x: 525, y: 1515 }, scale: 1, burst: { x: 110, y: 640 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 37, y: 6 },
+      anchor: { x: 470, y: 1515 }, scale: 1, burst: { x: 1005, y: 340 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 46, y: 6 },
+      anchor: { x: 430, y: 1510 }, scale: 1, burst: { x: 955, y: 330 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 29, y: 46 },
+    anchor: { x: 760, y: 960 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1599,6 +1831,11 @@ const RIGS: Readonly<Record<string, Rig>> = {
   hoangMoc: HOANG_MOC,
   lucDiep: LUC_DIEP,
   nhanTruc: NHAN_TRUC,
+  samTue: SAM_TUE,
+  hoLang: HO_LANG,
+  thaiHa: THAI_HA,
+  maiThanh: MAI_THANH,
+  quachAn: QUACH_AN,
 };
 
 export function rigOf(id: string): Rig | null {

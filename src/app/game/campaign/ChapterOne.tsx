@@ -4,14 +4,13 @@
 // (trận). Mọi tiến độ, lựa chọn và thưởng lấy từ hồ sơ server; trình duyệt chỉ nhớ bước đang xem và màn
 // thưởng đã xem để tải lại trang không phải xem lại từ đầu.
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   CAMPAIGN_CHAPTERS,
   CAMPAIGN_FINAL_NODE,
   CAMPAIGN_UNIFICATION_NODE,
   campaignCompleted,
   CAMPAIGN_FOOD_MAX,
-  CAMPAIGN_ROUTES,
   ELEMENTS,
   FOOD_PRICE,
   MAIN_ID,
@@ -29,11 +28,9 @@ import {
   campaignScenarioByNode,
   campaignFocusChapter,
   campaignMusterReady,
-  chapterCompleted,
   chapterContentOf,
   chapterFocus,
   chapterStatus,
-  chapterUnlocked,
   companionById,
   factionResolutionOfMission,
   missionCopy,
@@ -42,7 +39,6 @@ import {
   storyNodeById,
   type CampaignMissionId,
   type ChapterContent,
-  type ChapterMissionStatus,
   type Element,
   type Profession,
   type Profile,
@@ -64,8 +60,20 @@ import {
   ONLINE_ERROR_TEXT,
   toBattleState,
 } from "../battle/online";
-import CampaignMap from "./CampaignMap";
+import WorldMap from "./WorldMap";
+import {
+  AtlasHeader,
+  ChapterPanel,
+  ChapterRail,
+  ROMAN,
+  StrongholdPanel,
+  type AtlasView,
+} from "./AtlasShell";
+import { strongholdById, type StrongholdId } from "./worldAtlas";
+import { AtlasCorners } from "./AtlasFrame";
+import { atlasSerif } from "./atlasFont";
 import DiplomacyScene from "./DiplomacyScene";
+import DialoguePlayer from "./DialoguePlayer";
 import MusterPanel from "./MusterPanel";
 import RouteSummary from "./RouteSummary";
 import WorldLedger from "./WorldLedger";
@@ -74,8 +82,6 @@ import CampaignEnding from "./CampaignEnding";
 import WarlordCodex, { MissionSources } from "./HistoricalCodex";
 import {
   BasisBadge,
-  Beats,
-  Cinematic,
   FACTION_STATUS_TEXT,
   SourceNotes,
   TONE_TEXT,
@@ -84,10 +90,17 @@ import { useScene } from "../SceneContext";
 
 /** Bước đang xem của nhiệm vụ: chỉ là tiện ích hiển thị, không phải tiến độ. */
 const STEP_KEY = "coLau.campaign.v2.step";
+/** Màn đang xem (bản đồ Sử ký hay một nhiệm vụ) và cứ điểm đang chọn: chỉ là trạng thái giao diện. */
+const ATLAS_KEY = "coLau.campaign.v2.atlas";
 /** Phiếu thưởng đã xem màn thưởng (rewardReceipts của server). */
 const SEEN_KEY = "coLau.campaign.v2.seen";
 
 type Phase = "intro" | "choice" | "prep";
+interface AtlasState {
+  readonly view: AtlasView;
+  readonly stronghold: StrongholdId | null;
+}
+
 interface Step {
   readonly nodeId: CampaignMissionId;
   readonly phase: Phase;
@@ -112,22 +125,12 @@ function writeJson(key: string, value: unknown) {
   }
 }
 
-const STATUS_TEXT: Record<ChapterMissionStatus, string> = {
-  completed: "Đã hoàn thành",
-  inProgress: "Đang xuất quân",
-  open: "Đang mở",
-  locked: "Chưa mở",
-  comingSoon: "Sắp có",
-};
-
 const CERTAINTY_TEXT = {
   recorded: "vị trí có sử chép",
   traditional: "định vị truyền thống",
   disputed: "vị trí còn tranh luận",
   fictional: "địa điểm hư cấu",
 } as const;
-
-const ROMAN = ["", "I", "II", "III", "IV", "V", "VI"] as const;
 
 /** Nhiệm vụ kế tiếp sau khi hoàn thành: trong chương, hết chương thì sang chương sau nếu đã mở. */
 function nextMission(
@@ -149,9 +152,38 @@ function nextMission(
   return null;
 }
 
-function ChoiceBeats({ nodeId, choice }: { nodeId: string; choice?: string }) {
-  const picked = missionCopy(nodeId)?.choices.find((c) => c.id === choice);
-  return picked ? <Beats beats={picked.beats} /> : null;
+/** Lời đáp đã chọn rồi (nếu có) kết thúc nhiệm vụ, phát từng câu. Chỉ trình diễn, không gửi gì lên server. */
+function StoryLines({
+  profile,
+  nodeId,
+  choice,
+  outro,
+}: {
+  profile: Profile;
+  nodeId: string;
+  choice?: string;
+  outro?: boolean;
+}) {
+  const copy = missionCopy(nodeId);
+  const picked = copy?.choices.find((c) => c.id === choice);
+  const segments = [
+    ...(picked
+      ? [{ section: `choice:${picked.id}`, beats: picked.beats }]
+      : []),
+    ...(outro && copy ? [{ section: "outro", beats: copy.outro }] : []),
+  ];
+  if (segments.length === 0) return null;
+  const sequence = segments.map((s) => s.section).join("+");
+  return (
+    <DialoguePlayer
+      key={`${nodeId}:${sequence}`}
+      missionId={nodeId}
+      sequence={sequence}
+      label={outro ? `Kết thúc ${nodeId}` : `Lời đáp ${nodeId}`}
+      segments={segments}
+      main={profile}
+    />
+  );
 }
 
 function RewardModal({
@@ -179,7 +211,7 @@ function RewardModal({
     >
       <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border-2 border-[var(--gold)] bg-[#2a1f19] p-4 text-stone-100 shadow-2xl">
         <p className="text-xs tracking-widest text-amber-300/80 uppercase">
-          Hoàn thành lần đầu · {node.id}
+          Hoàn thành lần đầu
         </p>
         <h2
           id="first-clear-title"
@@ -189,13 +221,12 @@ function RewardModal({
         </h2>
         {copy && (
           <div className="mt-3">
-            <ChoiceBeats
+            <StoryLines
+              profile={profile}
               nodeId={node.id}
               choice={profile.campaign.storyChoices[node.id]}
+              outro
             />
-            <div className="mt-2">
-              <Beats beats={copy.outro} />
-            </div>
           </div>
         )}
         <ul className="mt-3 flex flex-col gap-1 rounded-md bg-black/30 p-2 text-sm">
@@ -640,6 +671,48 @@ export default function ChapterOne({
   const chapter: ChapterContent =
     chapterContentOf(savedStep.nodeId) ?? CAMPAIGN_CHAPTERS[0]!;
   const statuses = chapterStatus(campaign, chapter);
+  // Bản đồ hay nhiệm vụ, và cứ điểm đang chọn ở panel phải (null = thông tin chương). Quay lại bản đồ giữ nguyên
+  // chương và cứ điểm; tải lại trang thì mở lại đúng màn đang xem.
+  const [atlas, setAtlas] = useState<AtlasState>(() => {
+    const saved = readJson<AtlasState>(ATLAS_KEY);
+    return {
+      view:
+        saved?.view === "mission" || saved?.view === "codex"
+          ? saved.view
+          : "atlas",
+      stronghold:
+        saved?.stronghold && strongholdById(saved.stronghold)
+          ? saved.stronghold
+          : null,
+    };
+  });
+  const updateAtlas = (next: AtlasState) => {
+    setAtlas(next);
+    writeJson(ATLAS_KEY, next);
+  };
+  const strongholdId = atlas.stronghold;
+  const stronghold = strongholdId ? strongholdById(strongholdId) : undefined;
+  const setStronghold = (id: StrongholdId | null) =>
+    updateAtlas({ ...atlas, stronghold: id });
+  const sectionRef = useRef<HTMLElement>(null);
+  const missionHeadingRef = useRef<HTMLHeadingElement>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const shownView = useRef(atlas.view);
+  // Đổi màn thì đưa tiêu điểm tới tiêu đề nhiệm vụ hoặc về bản đồ (người dùng bàn phím, đọc màn hình không lạc).
+  useEffect(() => {
+    if (shownView.current === atlas.view) return;
+    shownView.current = atlas.view;
+    sectionRef.current?.scrollIntoView({ block: "start" });
+    if (atlas.view === "mission") {
+      missionHeadingRef.current?.focus();
+      return;
+    }
+    const map = mapRef.current;
+    const target =
+      map?.querySelector<SVGElement>("[aria-pressed=true]") ??
+      map?.querySelector<SVGElement>("svg");
+    target?.focus();
+  }, [atlas.view]);
   const [seen, setSeen] = useState<readonly string[]>(
     () => readJson<string[]>(SEEN_KEY) ?? [],
   );
@@ -687,6 +760,12 @@ export default function ChapterOne({
     writeJson(STEP_KEY, next);
   };
 
+  /** Mở một nhiệm vụ đã mở khóa ở màn nhiệm vụ; chỉ đổi màn, không gọi API. */
+  const openMission = (id: CampaignMissionId) => {
+    move({ nodeId: id, phase: "intro" });
+    updateAtlas({ ...atlas, view: "mission" });
+  };
+
   const markSeen = (receipts: readonly string[]) => {
     const all = [...new Set([...seen, ...receipts])];
     setSeen(all);
@@ -701,12 +780,6 @@ export default function ChapterOne({
   const recorded = campaign.storyChoices[step.nodeId];
   const choice = step.choice ?? recorded;
   const done = status === "completed";
-  const chapterDone = chapterCompleted(campaign, chapter.chapter);
-  const roman = ROMAN[chapter.chapter];
-  const finished = statuses.filter((m) => m.status === "completed").length;
-  const routeId = CAMPAIGN_ROUTES.find(
-    (r) => r.chapter === chapter.chapter,
-  )?.id;
 
   const submitEvent = async () => {
     if (!choice) return;
@@ -759,8 +832,11 @@ export default function ChapterOne({
 
   return (
     <section
-      aria-labelledby="chapter-one-title"
-      className="flex flex-col gap-4"
+      ref={sectionRef}
+      aria-labelledby={
+        atlas.view === "atlas" ? "chapter-one-title" : "mission-title"
+      }
+      className="flex scroll-mt-4 flex-col gap-4"
     >
       <RewardModal
         profile={profile}
@@ -768,361 +844,351 @@ export default function ChapterOne({
         onClose={markSeen}
         onNext={(receipts, next) => {
           markSeen(receipts);
-          if (next) move({ nodeId: next, phase: "intro" });
+          if (next) openMission(next);
         }}
       />
-      <div
-        className="flex flex-wrap gap-2"
-        role="tablist"
-        aria-label="Chương Chiến dịch"
-      >
-        {CAMPAIGN_CHAPTERS.map((c) => {
-          const open = chapterUnlocked(campaign, c.chapter);
-          return (
-            <button
-              key={c.chapter}
-              type="button"
-              role="tab"
-              aria-selected={c === chapter}
-              disabled={!open}
-              onClick={() =>
-                move({ nodeId: chapterFocus(campaign, c), phase: "intro" })
-              }
-              className={`rounded-lg border px-3 py-1.5 text-sm font-semibold ${
-                c === chapter
-                  ? "border-amber-300 bg-amber-500/20 text-amber-100"
-                  : "border-white/10 bg-black/25 text-stone-300"
-              } disabled:cursor-not-allowed disabled:opacity-45`}
-            >
-              {open ? "" : "🔒 "}Chương {ROMAN[c.chapter]} · {c.title}
-            </button>
-          );
-        })}
-      </div>
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="text-xs tracking-widest text-amber-300/80 uppercase">
-            Chương {roman} · {finished}/{chapter.missions.length} nhiệm vụ
-          </p>
-          <h1
-            id="chapter-one-title"
-            className="text-2xl font-black text-amber-100"
-          >
-            {chapter.title}
-          </h1>
-          <p className="text-sm text-stone-400">{chapter.question}</p>
-        </div>
-        <p className="text-sm text-stone-400">
-          Đinh Bộ Lĩnh cấp {profile.main.level} · {profile.gold} vàng ·{" "}
-          {campaign.supply} lương
-        </p>
-      </div>
-
-      {chapterDone && (
-        <p className="rounded-xl border-2 border-emerald-500/50 bg-emerald-500/10 p-3 text-emerald-100">
-          <span className="font-bold">Hoàn thành Chương {roman}.</span>{" "}
-          {chapter.completeLine}
-        </p>
-      )}
-
-      {chapter.chapter === 6 && campaignCompleted(campaign) && (
-        <CampaignEnding
-          campaign={campaign}
-          onReplay={() => move({ nodeId: CAMPAIGN_FINAL_NODE, phase: "intro" })}
-        />
-      )}
-
-      {chapter.chapter === 3 && campaignMusterReady(campaign) && (
-        <MusterPanel
-          profile={profile}
-          busy={actionBusy}
-          onAction={onAction}
-          onPick={(id) => move({ nodeId: id, phase: "intro" })}
-        />
-      )}
-
-      {routeId && (
-        <RouteSummary
-          campaign={campaign}
-          routeId={routeId}
-          onPick={(id) => move({ nodeId: id, phase: "intro" })}
-        />
-      )}
-
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-        <div className="flex flex-col gap-3">
-          <CampaignMap
-            campaign={campaign}
-            selected={step.nodeId}
-            chapter={chapter.chapter}
-            onOpen={(id) => move({ nodeId: id, phase: "intro" })}
+      {/* Đại card Sử ký (Polish V2 P02): header, ba cột và tuyến dưới nằm trong một khung gỗ. Màn nhiệm vụ và
+          Sử ký chỉ giữ header trong khung, nội dung của chúng nằm dưới. */}
+      <div className={`campaign-atlas ${atlasSerif.variable}`}>
+        <div className="atlas-frame atlas-frame-wood atlas-shell flex flex-col gap-3 p-2 sm:p-3">
+          <AtlasCorners />
+          <AtlasHeader
+            view={atlas.view}
+            level={profile.main.level}
+            gold={profile.gold}
+            supply={campaign.supply}
+            onView={(view) => updateAtlas({ ...atlas, view })}
           />
-          <p className="text-xs text-stone-400">{chapter.region.note}</p>
-          <WorldLedger campaign={profile.campaign} />
-          <div className="grid gap-2 rounded-xl border border-white/10 bg-black/25 p-3 text-sm sm:grid-cols-2">
-            <div>
-              <BasisBadge basis="legend" />
-              <p className="mt-1 text-stone-300">
-                {chapter.legendVsRecord.legend}
-              </p>
-            </div>
-            <div>
-              <BasisBadge basis="recorded" />
-              <p className="mt-1 text-stone-300">
-                {chapter.legendVsRecord.record}
-              </p>
-            </div>
-          </div>
-          <ol
-            className="flex flex-col gap-1.5"
-            aria-label={`Nhiệm vụ Chương ${roman}`}
-          >
-            {statuses.map(({ id, status: s }) => {
-              const n = storyNodeById(id)!;
-              const usable = s !== "locked" && s !== "comingSoon";
-              return (
-                <li key={id}>
-                  <button
-                    type="button"
-                    disabled={!usable}
-                    aria-current={step.nodeId === id}
-                    onClick={() => move({ nodeId: id, phase: "intro" })}
-                    className={`flex w-full items-center gap-2 rounded-lg border px-2 py-1.5 text-left text-sm transition ${
-                      step.nodeId === id
-                        ? "border-amber-300 bg-amber-500/20"
-                        : "border-white/10 bg-black/25 hover:bg-black/40"
-                    } disabled:cursor-not-allowed disabled:opacity-45`}
-                  >
-                    <span
-                      className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                        s === "completed"
-                          ? "bg-emerald-600 text-white"
-                          : usable
-                            ? "bg-amber-500 text-stone-950"
-                            : "bg-stone-700 text-stone-300"
-                      }`}
-                    >
-                      {s === "completed"
-                        ? "✓"
-                        : usable
-                          ? id.slice(1)
-                          : s === "comingSoon"
-                            ? "…"
-                            : "🔒"}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate font-semibold">
-                        {n.title}
-                      </span>
-                      <span className="block truncate text-xs text-stone-400">
-                        {STATUS_TEXT[s]} · {n.rewards.firstClearGold} vàng lần
-                        đầu
-                      </span>
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
+          {atlas.view === "atlas" && (
+            <div ref={mapRef} className="flex flex-col gap-3">
+              {/* Ba cột cùng hàng cao bằng nhau; panel phải dài thì cuộn bên trong thay vì kéo dài hàng. */}
+              <div className="grid grid-cols-[minmax(0,1fr)] gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)] xl:grid-cols-[minmax(260px,0.22fr)_minmax(0,1fr)_minmax(300px,0.3fr)]">
+                <div className="md:col-span-2 xl:col-span-1">
+                  <ChapterRail
+                    campaign={campaign}
+                    current={chapter}
+                    onPick={(c) => {
+                      updateAtlas({ view: "atlas", stronghold: null });
+                      move({
+                        nodeId: chapterFocus(campaign, c),
+                        phase: "intro",
+                      });
+                    }}
+                  />
+                </div>
+                <WorldMap
+                  campaign={campaign}
+                  chapter={chapter}
+                  selected={strongholdId}
+                  onSelect={setStronghold}
+                />
+                <div className="min-w-0 xl:relative">
+                  <div className="xl:absolute xl:inset-0">
+                    {stronghold ? (
+                      <StrongholdPanel
+                        campaign={campaign}
+                        stronghold={stronghold}
+                        current={step.nodeId}
+                        onPick={openMission}
+                        onClose={() => setStronghold(null)}
+                      />
+                    ) : (
+                      <ChapterPanel
+                        campaign={campaign}
+                        chapter={chapter}
+                        current={step.nodeId}
+                        onPick={openMission}
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
 
-        <article className="flex flex-col gap-3 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4 shadow-[inset_0_0_24px_#0009]">
-          <header>
-            <p className="text-xs tracking-widest text-amber-300/80 uppercase">
-              {node.id} · {node.location.name} ·{" "}
-              {CERTAINTY_TEXT[node.location.certainty]}
-              {node.location.modernRegion && (
-                <span className="text-stone-400 normal-case">
-                  {" "}
-                  (ngày nay: {node.location.modernRegion})
-                </span>
+              {chapter.chapter === 6 && campaignCompleted(campaign) && (
+                <CampaignEnding
+                  campaign={campaign}
+                  onReplay={() => openMission(CAMPAIGN_FINAL_NODE)}
+                />
               )}
-            </p>
-            <h2 className="text-xl font-bold text-amber-100">{node.title}</h2>
-            <div className="mt-1 flex flex-wrap gap-1">
-              {node.historicalBasis.map((b) => (
-                <BasisBadge key={b} basis={b} />
-              ))}
-            </div>
-            {node.type === "diplomacy" && !copy && (
-              <p className="mt-2 text-xs text-stone-400">
-                Hội kiến: không có trận, không có thanh máu. Hoàn thành bằng lựa
-                chọn lời đáp; server ghi kết quả.
-              </p>
-            )}
-            {!event &&
-              isBattle &&
-              (() => {
-                const fate = factionResolutionOfMission(node.id);
-                return fate ? (
-                  <p className="mt-1 text-xs text-sky-200">
-                    Kết cục cố định của{" "}
-                    {companionById(fate.faction)?.name ?? fate.faction}:{" "}
-                    {FACTION_STATUS_TEXT[fate.status].toLowerCase()} theo tổng
-                    thuật. Trận là cách game kể việc ấy.{" "}
-                    {campaign.factions[fate.faction]
-                      ? "Đã ghi vào thế cục sứ quân."
-                      : "Thắng lần đầu sẽ ghi vào thế cục sứ quân một lần."}
-                  </p>
-                ) : null;
-              })()}
-            {event?.faction && node.type !== "diplomacy" && (
-              <p className="mt-1 text-xs text-sky-200">
-                Kết cục cố định:{" "}
-                {companionById(event.faction.faction)?.name ??
-                  event.faction.faction}{" "}
-                {FACTION_STATUS_TEXT[event.faction.status].toLowerCase()}.{" "}
-                {campaign.factions[event.faction.faction]
-                  ? "Đã ghi vào thế cục sứ quân."
-                  : "Hoàn thành sẽ ghi vào thế cục sứ quân một lần."}
-              </p>
-            )}
-          </header>
 
-          {!copy ? (
-            <p className="text-stone-300">
-              Nội dung nhiệm vụ này sẽ mở ở bản sau.
+              {chapter.chapter === 3 && campaignMusterReady(campaign) && (
+                <MusterPanel
+                  profile={profile}
+                  busy={actionBusy}
+                  onAction={onAction}
+                  onPick={openMission}
+                />
+              )}
+
+              {chapter.chapter >= 4 && (
+                <RouteSummary
+                  campaign={campaign}
+                  chapter={chapter.chapter}
+                  onPick={openMission}
+                />
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+      {atlas.view === "codex" ? (
+        <>
+          <WorldLedger campaign={profile.campaign} />
+          <WarlordCodex campaign={campaign} />
+        </>
+      ) : atlas.view === "atlas" ? null : (
+        <>
+          <nav
+            aria-label="Đường dẫn"
+            className="flex flex-wrap items-center gap-x-3 gap-y-1"
+          >
+            <button
+              type="button"
+              onClick={() => updateAtlas({ ...atlas, view: "atlas" })}
+              className="min-h-11 rounded-lg border border-[#8a6a3b] bg-[#2a1f19] px-4 font-semibold text-amber-100 hover:bg-[#3a2b22]"
+            >
+              ← Về bản đồ Sử ký
+            </button>
+            <p className="text-sm text-stone-400">
+              Chương {ROMAN[chapter.chapter]} · {chapter.title}
+              {stronghold ? ` · ${stronghold.place}` : ""}
             </p>
-          ) : node.type === "diplomacy" ? (
-            <DiplomacyScene
-              profile={profile}
-              nodeId={step.nodeId}
-              phase={step.phase === "intro" ? "intro" : "choice"}
-              {...(step.choice ? { choice: step.choice } : {})}
-              onMove={(phase, c) =>
-                move({
-                  nodeId: step.nodeId,
-                  phase,
-                  ...(c ? { choice: c } : {}),
-                })
-              }
-              onProfile={onProfile}
-            />
-          ) : (
-            <>
-              {step.nodeId === "M23" && (
-                <p className="rounded-xl border border-amber-500/30 bg-black/30 p-3 text-sm text-amber-100">
-                  <span className="font-semibold text-amber-200">
-                    Trích đoạn xây dựng quốc gia.
-                  </span>{" "}
-                  Chọn một việc ưu tiên rồi đọc kết quả. Không có trận, đồng hồ
-                  hay tài nguyên mới; lựa chọn không đổi lịch sử chính hay kinh
-                  tế trong game.
+          </nav>
+
+          <article className="flex flex-col gap-3 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4 shadow-[inset_0_0_24px_#0009]">
+            <header>
+              <p className="text-xs tracking-widest text-amber-300/80 uppercase">
+                {node.location.name} ·{" "}
+                {CERTAINTY_TEXT[node.location.certainty]}
+                {node.location.modernRegion && (
+                  <span className="text-stone-400 normal-case">
+                    {" "}
+                    (ngày nay: {node.location.modernRegion})
+                  </span>
+                )}
+              </p>
+              <h2
+                id="mission-title"
+                ref={missionHeadingRef}
+                tabIndex={-1}
+                className="text-xl font-bold text-amber-100 focus:outline-none"
+              >
+                {node.title}
+              </h2>
+              <div className="mt-1 flex flex-wrap gap-1">
+                {node.historicalBasis.map((b) => (
+                  <BasisBadge key={b} basis={b} />
+                ))}
+              </div>
+              {node.type === "diplomacy" && !copy && (
+                <p className="mt-2 text-xs text-stone-400">
+                  Hội kiến: không có trận, không có thanh máu. Hoàn thành bằng
+                  lựa chọn lời đáp; server ghi kết quả.
                 </p>
               )}
-              <Cinematic nodeId={step.nodeId} />
-              <Beats beats={copy.intro} />
-              {step.nodeId === CAMPAIGN_UNIFICATION_NODE && (
-                <FactionDossiers campaign={campaign} />
+              {!event &&
+                isBattle &&
+                (() => {
+                  const fate = factionResolutionOfMission(node.id);
+                  return fate ? (
+                    <p className="mt-1 text-xs text-sky-200">
+                      Kết cục cố định của{" "}
+                      {companionById(fate.faction)?.name ?? fate.faction}:{" "}
+                      {FACTION_STATUS_TEXT[fate.status].toLowerCase()} theo tổng
+                      thuật. Trận là cách game kể việc ấy.{" "}
+                      {campaign.factions[fate.faction]
+                        ? "Đã ghi vào thế cục sứ quân."
+                        : "Thắng lần đầu sẽ ghi vào thế cục sứ quân một lần."}
+                    </p>
+                  ) : null;
+                })()}
+              {event?.faction && node.type !== "diplomacy" && (
+                <p className="mt-1 text-xs text-sky-200">
+                  Kết cục cố định:{" "}
+                  {companionById(event.faction.faction)?.name ??
+                    event.faction.faction}{" "}
+                  {FACTION_STATUS_TEXT[event.faction.status].toLowerCase()}.{" "}
+                  {campaign.factions[event.faction.faction]
+                    ? "Đã ghi vào thế cục sứ quân."
+                    : "Hoàn thành sẽ ghi vào thế cục sứ quân một lần."}
+                </p>
               )}
-              <SourceNotes nodeId={step.nodeId} />
-              {step.phase === "intro" ? (
-                <button
-                  type="button"
-                  onClick={() =>
-                    move({
-                      nodeId: step.nodeId,
-                      phase: "choice",
-                      choice: recorded,
-                    })
-                  }
-                  className="self-start rounded bg-amber-500 px-4 py-1.5 font-semibold text-stone-950"
-                >
-                  Tiếp tục
-                </button>
-              ) : (
-                <div className="flex flex-col gap-2">
-                  <p className="font-semibold text-amber-200">{copy.prompt}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {copy.choices.map((c) => {
-                      // Đã hoàn thành thì lựa chọn đã ghi trên server là cố định.
-                      const locked =
-                        done && recorded !== undefined && recorded !== c.id;
-                      return (
-                        <button
-                          key={c.id}
-                          type="button"
-                          disabled={locked || step.phase === "prep"}
-                          aria-pressed={choice === c.id}
-                          onClick={() =>
-                            move({
-                              nodeId: step.nodeId,
-                              phase: "choice",
-                              choice: c.id,
-                            })
-                          }
-                          className={`rounded border px-3 py-1.5 text-sm ${
-                            choice === c.id
-                              ? "border-amber-300 bg-amber-500/25"
-                              : "border-white/15 bg-black/30"
-                          } disabled:opacity-40`}
-                        >
-                          {c.label}
-                          {(() => {
-                            const tone = event?.choices.find(
-                              (x) => x.id === c.id,
-                            )?.tone;
-                            return tone ? (
-                              <span className="ml-1.5 text-[10px] text-stone-400 uppercase">
-                                {TONE_TEXT[tone]}
-                              </span>
-                            ) : null;
-                          })()}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  <p className="text-xs text-stone-400">
-                    Lựa chọn chỉ đổi lời kể; kết quả nhiệm vụ và phần thưởng như
-                    nhau.
+            </header>
+
+            {!copy ? (
+              <p className="text-stone-300">
+                Nội dung nhiệm vụ này sẽ mở ở bản sau.
+              </p>
+            ) : node.type === "diplomacy" ? (
+              <DiplomacyScene
+                profile={profile}
+                nodeId={step.nodeId}
+                phase={step.phase === "intro" ? "intro" : "choice"}
+                {...(step.choice ? { choice: step.choice } : {})}
+                onMove={(phase, c) =>
+                  move({
+                    nodeId: step.nodeId,
+                    phase,
+                    ...(c ? { choice: c } : {}),
+                  })
+                }
+                onProfile={onProfile}
+              />
+            ) : (
+              <>
+                {step.nodeId === "M23" && (
+                  <p className="rounded-xl border border-amber-500/30 bg-black/30 p-3 text-sm text-amber-100">
+                    <span className="font-semibold text-amber-200">
+                      Trích đoạn xây dựng quốc gia.
+                    </span>{" "}
+                    Chọn một việc ưu tiên rồi đọc kết quả. Không có trận, đồng
+                    hồ hay tài nguyên mới; lựa chọn không đổi lịch sử chính hay
+                    kinh tế trong game.
                   </p>
-                  <ChoiceBeats nodeId={step.nodeId} choice={choice} />
-                  {done && <Beats beats={copy.outro} />}
-                  {!isBattle && !done && (
-                    <button
-                      type="button"
-                      disabled={!choice || busy}
-                      onClick={() => void submitEvent()}
-                      className="self-start rounded-lg border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-5 py-2 font-bold text-amber-50 disabled:opacity-50"
-                    >
-                      {busy ? "Đang ghi…" : "Hoàn thành nhiệm vụ"}
-                    </button>
-                  )}
-                  {isBattle && step.phase === "choice" && (
-                    <button
-                      type="button"
-                      disabled={!choice}
-                      onClick={() =>
-                        move({ nodeId: step.nodeId, phase: "prep", choice })
-                      }
-                      className="self-start rounded bg-amber-500 px-4 py-1.5 font-semibold text-stone-950 disabled:opacity-40"
-                    >
-                      Chuẩn bị xuất quân
-                    </button>
-                  )}
-                  {isBattle && step.phase === "prep" && (
-                    <BattlePrep
+                )}
+                {step.phase === "intro" ? (
+                  <DialoguePlayer
+                    key={`${step.nodeId}:intro`}
+                    missionId={step.nodeId}
+                    sequence="intro"
+                    label={`Lời dẫn ${node.id}`}
+                    segments={[
+                      {
+                        section: "cinematic",
+                        beats: copy.cinematic ?? [],
+                        cinematic: true,
+                      },
+                      { section: "intro", beats: copy.intro },
+                    ]}
+                    main={profile}
+                    finishLabel="Tiếp tục"
+                    onFinished={() =>
+                      move({
+                        nodeId: step.nodeId,
+                        phase: "choice",
+                        choice: choice ?? recorded,
+                      })
+                    }
+                  />
+                ) : inProgress === step.nodeId ? null : (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      move({
+                        nodeId: step.nodeId,
+                        phase: "intro",
+                        ...(step.choice ? { choice: step.choice } : {}),
+                      })
+                    }
+                    className="min-h-11 self-start rounded-lg bg-white/10 px-4 text-sm hover:bg-white/15"
+                  >
+                    ↺ Xem lại lời dẫn
+                  </button>
+                )}
+                {step.nodeId === CAMPAIGN_UNIFICATION_NODE && (
+                  <FactionDossiers campaign={campaign} />
+                )}
+                <SourceNotes nodeId={step.nodeId} />
+                {step.phase !== "intro" && (
+                  <div className="flex flex-col gap-2">
+                    <p className="font-semibold text-amber-200">
+                      {copy.prompt}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {copy.choices.map((c) => {
+                        // Đã hoàn thành thì lựa chọn đã ghi trên server là cố định.
+                        const locked =
+                          done && recorded !== undefined && recorded !== c.id;
+                        return (
+                          <button
+                            key={c.id}
+                            type="button"
+                            disabled={locked || step.phase === "prep"}
+                            aria-pressed={choice === c.id}
+                            onClick={() =>
+                              move({
+                                nodeId: step.nodeId,
+                                phase: "choice",
+                                choice: c.id,
+                              })
+                            }
+                            className={`rounded border px-3 py-1.5 text-sm ${
+                              choice === c.id
+                                ? "border-amber-300 bg-amber-500/25"
+                                : "border-white/15 bg-black/30"
+                            } disabled:opacity-40`}
+                          >
+                            {c.label}
+                            {(() => {
+                              const tone = event?.choices.find(
+                                (x) => x.id === c.id,
+                              )?.tone;
+                              return tone ? (
+                                <span className="ml-1.5 text-[10px] text-stone-400 uppercase">
+                                  {TONE_TEXT[tone]}
+                                </span>
+                              ) : null;
+                            })()}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <p className="text-xs text-stone-400">
+                      Lựa chọn chỉ đổi lời kể; kết quả nhiệm vụ và phần thưởng
+                      như nhau.
+                    </p>
+                    <StoryLines
                       profile={profile}
                       nodeId={step.nodeId}
-                      busy={busy || actionBusy}
-                      resumeId={
-                        resumable?.nodeId === step.nodeId ? resumable.id : null
-                      }
-                      onAction={onAction}
-                      onStart={(c) => void startBattle(c)}
-                      onResume={resumeBattle}
+                      choice={choice}
+                      outro={done}
                     />
-                  )}
-                </div>
-              )}
-            </>
-          )}
-          {copy && <MissionSources nodeId={step.nodeId} />}
-          {message && <p className="text-sm text-rose-400">{message}</p>}
-        </article>
-      </div>
-
-      <WarlordCodex campaign={campaign} />
+                    {!isBattle && !done && (
+                      <button
+                        type="button"
+                        disabled={!choice || busy}
+                        onClick={() => void submitEvent()}
+                        className="self-start rounded-lg border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-5 py-2 font-bold text-amber-50 disabled:opacity-50"
+                      >
+                        {busy ? "Đang ghi…" : "Hoàn thành nhiệm vụ"}
+                      </button>
+                    )}
+                    {isBattle && step.phase === "choice" && (
+                      <button
+                        type="button"
+                        disabled={!choice}
+                        onClick={() =>
+                          move({ nodeId: step.nodeId, phase: "prep", choice })
+                        }
+                        className="self-start rounded bg-amber-500 px-4 py-1.5 font-semibold text-stone-950 disabled:opacity-40"
+                      >
+                        Chuẩn bị xuất quân
+                      </button>
+                    )}
+                    {isBattle && step.phase === "prep" && (
+                      <BattlePrep
+                        profile={profile}
+                        nodeId={step.nodeId}
+                        busy={busy || actionBusy}
+                        resumeId={
+                          resumable?.nodeId === step.nodeId
+                            ? resumable.id
+                            : null
+                        }
+                        onAction={onAction}
+                        onStart={(c) => void startBattle(c)}
+                        onResume={resumeBattle}
+                      />
+                    )}
+                  </div>
+                )}
+              </>
+            )}
+            {copy && <MissionSources nodeId={step.nodeId} />}
+            {message && <p className="text-sm text-rose-400">{message}</p>}
+          </article>
+        </>
+      )}
     </section>
   );
 }
