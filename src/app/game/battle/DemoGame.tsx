@@ -1430,7 +1430,7 @@ export default function DemoGame({
     [selectable, state.turn.actor, apply],
   );
 
-  // Điều khiển bàn phím, docs/design/11-giao-dien.md mục 2.3.
+  // Điều khiển bàn phím, docs/05-ui-ux/screens/battle.md mục 2.3.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (!myTurn) return;

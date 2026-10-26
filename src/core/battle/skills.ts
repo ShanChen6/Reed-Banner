@@ -1,4 +1,4 @@
-// Kỹ năng không theo nguyên tố: chiêu nghề nấc 1–2 (tùy tướng AI, docs/design/06-nhan-vat-ky-nang.md mục 4.3),
+// Kỹ năng không theo nguyên tố: chiêu nghề nấc 1–2 (tùy tướng AI, docs/03-characters/ky-nang/mo-hinh-nhan-vat.md mục 4.3),
 // Dữ liệu raw legacy giữ số ô lịch sử; registry xuất layout2: tuyệt chiêu ô4, nghề nâng cao ô5.
 // Kỹ năng là dữ liệu; battle.ts thực thi các bước theo thứ tự.
 
@@ -196,7 +196,7 @@ const ULTIMATES: readonly SkillDef[] = ([
       { type: "whirl", turns: 2, auto: true },
     ],
   },
-  // Tướng thường bán ở cửa hàng, docs/design/14-nhan-vat.md mục 4.
+  // Tướng thường bán ở cửa hàng, docs/03-characters/danh-sach-nhan-vat.md mục 4.
   {
     id: "kimQuaThietMa", name: "Kim Qua Thiết Mã", profession: "tuongSi", tier: 3, character: "tranCuong", cost: 100, target: "enemy",
     steps: [{ type: "damage", atk: 2.8, pierce: 0.4 }, { type: "effect", to: "targets", effect: "defDown", value: 0.3, turns: 2 }],
@@ -453,7 +453,7 @@ const ULTIMATES: readonly SkillDef[] = ([
   },
 ] satisfies SkillDef[]).map((d) => ({ ...d, slot: 5 }));
 
-// Bộ kỹ năng nhân vật chính theo nguyên tố, docs/design/12-ky-nang-nhan-vat-chinh.md mục 2–7.
+// Bộ kỹ năng nhân vật chính theo nguyên tố, docs/03-characters/ky-nang/preset-ai-he-cu.md mục 2–7.
 const MAIN: readonly SkillDef[] = [
   {
     id: "lucDiepPhong", name: "Lục Diệp Phong", element: "moc", slot: 1, cost: 35, target: "self",
@@ -985,7 +985,7 @@ export function getSkill(id: string): SkillDef | undefined {
   return Object.hasOwn(SKILLS,id) ? SKILLS[id] : undefined;
 }
 
-/** Cấp kỹ năng: 1 đến SKILL_MAX_LEVEL, nâng bằng điểm kỹ năng. Xem docs/design/12-ky-nang-nhan-vat-chinh.md mục 1.1. */
+/** Cấp kỹ năng: 1 đến SKILL_MAX_LEVEL, nâng bằng điểm kỹ năng. Xem docs/03-characters/ky-nang/preset-ai-he-cu.md mục 1.1. */
 export const SKILL_MAX_LEVEL = 5;
 /** Mỗi cấp trên 1 cộng thêm tỉ lệ này vào hệ số chính. */
 export const SKILL_LEVEL_BONUS = 0.1;
@@ -1066,7 +1066,7 @@ export function needsCell(def: SkillDef): boolean {
 
 /**
  * Kỹ năng bị động của thủ lĩnh theo nguyên tố, tự kích hoạt khi đầy Nộ, hiệu lực 3 lượt của phe.
- * Xem docs/design/12-ky-nang-nhan-vat-chinh.md.
+ * Xem docs/03-characters/ky-nang/preset-ai-he-cu.md.
  */
 export const PASSIVES: Record<Element, { readonly name: string }> = {
   moc: { name: "Sinh Sôi Bất Tận" },
@@ -1104,7 +1104,7 @@ export const PASSIVE = {
 } as const;
 
 /**
- * Dấu ấn nguyên tố trên chiêu nghề, xem docs/design/05-nguyen-to.md mục 5.
+ * Dấu ấn nguyên tố trên chiêu nghề, xem docs/01-gameplay/nguyen-to.md mục 5.
  * Giá trị N chưa có trong docs là mặc định tạm, chờ mô phỏng.
  */
 export const MARK = {

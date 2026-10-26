@@ -1,5 +1,5 @@
 // Bảng xếp hạng (lộ trình 4.6): điểm của từng bảng tính thẳng từ hồ sơ, server ghi lại sau mỗi lần cộng thưởng.
-// Điểm cao hơn đứng trên; bằng điểm thì ai đạt trước đứng trên. Xem docs/design/09-che-do-choi.md mục 2.3.
+// Điểm cao hơn đứng trên; bằng điểm thì ai đạt trước đứng trên. Xem docs/02-game-modes/README.md mục 2.3.
 
 import {
   isCampaignMissionId,

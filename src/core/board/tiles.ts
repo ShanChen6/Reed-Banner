@@ -1,4 +1,4 @@
-// Loại ô và bảng tỉ lệ sinh ô, xem docs/design/01-ban-co.md.
+// Loại ô và bảng tỉ lệ sinh ô, xem docs/01-gameplay/ban-co.md.
 
 export const TILE_KINDS = ["kiem", "amDuong", "banhChung", "tim", "vang", "sach", "trong"] as const;
 export type TileKind = (typeof TILE_KINDS)[number];

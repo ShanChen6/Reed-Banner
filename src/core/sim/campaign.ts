@@ -1,6 +1,6 @@
 // Mô phỏng trận của Campaign V2 (nhiệm vụ có encounter) và Đánh trùm: đội người chơi dựng theo tiến trình tự
 // dựng ở một cấp, đấu đúng đội và luật server dùng. AI Thường đánh thay người chơi. Chiến dịch 13 màn cũ và
-// `--stage` đã gỡ ở CAMP-08.04. Xem docs/design/09-che-do-choi.md mục 2.
+// `--stage` đã gỡ ở CAMP-08.04. Xem docs/02-game-modes/README.md mục 2.
 
 import { createBattle, type FighterConfig, type SideIndex } from "../battle";
 import { playAiTurn } from "../ai";

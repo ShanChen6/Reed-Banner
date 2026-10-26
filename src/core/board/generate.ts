@@ -1,4 +1,4 @@
-// Sinh bàn khởi đầu, sinh ô rơi và xáo bàn, xem docs/design/01-ban-co.md mục 4.
+// Sinh bàn khởi đầu, sinh ô rơi và xáo bàn, xem docs/01-gameplay/ban-co.md mục 4.
 
 import type { Rng } from "../rng";
 import { BOARD_COLS, BOARD_ROWS, createBoard, indexOf, posOf, type Board, type Pos } from "./grid";
