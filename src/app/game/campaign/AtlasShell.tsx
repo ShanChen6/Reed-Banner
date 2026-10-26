@@ -482,6 +482,42 @@ function TabIcon({ kind }: { kind: AtlasView | "army" }) {
  * Thanh header của màn Sử ký: Bản đồ, Nhiệm vụ (nhiệm vụ đang xem), Sử ký (sổ thế cục và hồ sơ sứ quân), Binh lực
  * (đội hình ở trang Hồ sơ). Đổi thẻ chỉ đổi màn đang xem, không gọi API.
  */
+type StatKind = "level" | "gold" | "supply";
+
+/** Biểu tượng nhỏ trước Cấp, Vàng, Lương: thoi đồng, đồng xu, bó lúa. Chỉ trang trí, chữ bên cạnh mới là nhãn. */
+function StatIcon({ kind }: { kind: StatKind }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      className="atlas-stat-icon size-4 shrink-0"
+      aria-hidden
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.3}
+      strokeLinejoin="round"
+    >
+      {kind === "level" && (
+        <>
+          <path d="M8 1.5 14.5 8 8 14.5 1.5 8z" />
+          <path d="M8 5 11 8 8 11 5 8z" fill="currentColor" stroke="none" />
+        </>
+      )}
+      {kind === "gold" && (
+        <>
+          <circle cx={8} cy={8} r={6.2} />
+          <rect x={6.2} y={6.2} width={3.6} height={3.6} />
+        </>
+      )}
+      {kind === "supply" && (
+        <>
+          <path d="M8 15V5M8 15c0-3-3-4-4.5-6M8 15c0-3 3-4 4.5-6" />
+          <path d="M8 5c-1.2-1-1.2-2.6 0-3.5C9.2 2.4 9.2 4 8 5zM5 9c-1.5-.3-2.3-1.6-2-3 1.4.2 2.3 1.5 2 3zM11 9c1.5-.3 2.3-1.6 2-3-1.4.2-2.3 1.5-2 3z" />
+        </>
+      )}
+    </svg>
+  );
+}
+
 export function AtlasHeader({
   view,
   mission,
@@ -503,7 +539,7 @@ export function AtlasHeader({
     { v: "codex", label: "Sử ký" },
   ];
   const tabClass = (active: boolean) =>
-    `atlas-tab flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-md border px-1 py-1.5 text-xs font-bold tracking-wide whitespace-nowrap uppercase sm:flex-row sm:gap-1.5 sm:px-2 sm:text-sm xl:px-4 ${
+    `atlas-tab flex h-[52px] min-w-0 flex-col items-center justify-center gap-0.5 rounded-md border px-1 text-xs leading-none font-bold tracking-wide whitespace-nowrap uppercase sm:h-12 sm:flex-row sm:gap-1.5 sm:px-2 sm:text-sm ${
       active ? "atlas-tab-active" : ""
     }`;
   return (
@@ -519,7 +555,7 @@ export function AtlasHeader({
       </div>
       <nav
         aria-label="Màn Sử ký"
-        className="grid flex-1 grid-cols-4 gap-1.5 lg:flex lg:justify-center"
+        className="grid flex-1 grid-cols-4 gap-1.5 lg:mx-auto lg:max-w-[44rem]"
       >
         {tabs.map((t) => (
           <button
@@ -545,14 +581,15 @@ export function AtlasHeader({
       </nav>
       <dl className="flex flex-wrap items-center justify-end gap-1.5 px-1 text-sm">
         {[
-          { k: "Cấp", v: level },
-          { k: "Vàng", v: gold },
-          { k: "Lương", v: supply },
+          { k: "Cấp", v: level, icon: "level" },
+          { k: "Vàng", v: gold, icon: "gold" },
+          { k: "Lương", v: supply, icon: "supply" },
         ].map((x) => (
           <div
             key={x.k}
-            className="atlas-stat flex items-baseline gap-1 rounded-md border px-2.5 py-1"
+            className="atlas-stat flex h-9 items-center gap-1.5 rounded-md border px-2.5"
           >
+            <StatIcon kind={x.icon as StatKind} />
             <dt className="text-xs opacity-75">{x.k}</dt>
             <dd className="font-bold">{x.v.toLocaleString("vi-VN")}</dd>
           </div>
