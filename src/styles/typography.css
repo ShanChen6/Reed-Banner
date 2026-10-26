@@ -1,0 +1,35 @@
+@theme inline {
+  --font-sans: var(--font-game), Georgia, serif;
+  --font-serif: var(--font-game), Georgia, serif;
+  --font-heading: var(--font-game), Georgia, serif;
+  --font-mono: var(--font-game), Georgia, serif;
+}
+
+@theme {
+  --tracking-wide: 0.02em;
+  --tracking-wider: 0.04em;
+  --tracking-widest: 0.06em;
+}
+
+@utility text-display {
+  font-family: var(--font-game), Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.3;
+  font-weight: 800;
+  letter-spacing: normal;
+  text-wrap: balance;
+}
+
+@utility text-heading {
+  font-family: var(--font-game), Georgia, serif;
+  font-size: clamp(1.875rem, 3vw, 2.25rem);
+  line-height: 1.35;
+  font-weight: 800;
+  letter-spacing: normal;
+  text-wrap: balance;
+}
+
+@utility text-caption {
+  font-size: 0.75rem;
+  line-height: 1.5;
+}

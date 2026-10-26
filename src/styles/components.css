@@ -1,0 +1,76 @@
+/* Shared behavior and decoration. Component structure/variants live in ui/*.tsx. */
+@layer components {
+  .ui-button:disabled { cursor: not-allowed; opacity: 0.45; }
+  .ui-button[aria-disabled="true"] { pointer-events: none; opacity: 0.45; }
+  .ui-button--ornate {
+    background: linear-gradient(180deg, var(--accent), var(--accent-deep));
+    color: var(--accent-foreground);
+  }
+  .ui-button--ornate:hover:not(:disabled) { filter: brightness(1.12); }
+  .ui-control::placeholder { color: var(--muted); }
+  .ui-control:disabled { cursor: not-allowed; }
+  .ui-control option { background: var(--control-background); color: var(--foreground); }
+  .ui-screen {
+    flex: 1;
+    background: radial-gradient(ellipse at top, var(--screen-glow), var(--background) 62%);
+    padding: 1.5rem 0.75rem;
+    color: var(--foreground);
+  }
+  .ui-screen--cool { --screen-glow: var(--screen-glow-cool); }
+  @media (min-width: 640px) { .ui-screen { padding-inline: 1.5rem; } }
+  @media (prefers-reduced-motion: reduce) { .ui-button { transition: none; } }
+}
+
+@layer components {
+/* Trang giới thiệu kiểu fantasy theo logo: chữ mạ vàng, khung viền đồng, nút sơn mài đỏ. Viền dùng hai lớp nền
+   (padding-box + border-box) thay cho ảnh viền để giữ bo góc. */
+.fx-gilt-text {
+  background: var(--gilt-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.fx-panel {
+  border: 1px solid transparent;
+  background:
+    var(--panel-gradient) padding-box,
+    var(--panel-border-gradient) border-box;
+  box-shadow:
+    inset 0 1px 0 #fff2,
+    0 14px 30px -20px #000;
+}
+.fx-panel-hi {
+  border: 1px solid transparent;
+  background:
+    var(--panel-highlight-gradient) padding-box,
+    var(--bronze-gradient) border-box;
+  box-shadow: 0 0 40px -14px #e2582b88;
+}
+.fx-btn {
+  border: 2px solid transparent;
+  background:
+    var(--lacquer-gradient) padding-box,
+    var(--bronze-gradient) border-box;
+  color: var(--accent-foreground);
+  text-shadow: 0 1px 0 #5c120b;
+  box-shadow:
+    0 0 26px -6px #e2582bcc,
+    inset 0 1px 0 #ffffff40;
+}
+.fx-btn-ghost {
+  border: 1px solid transparent;
+  background:
+    var(--panel-gradient) padding-box,
+    var(--bronze-gradient) border-box;
+}
+.fx-frame {
+  border: 3px solid transparent;
+  background:
+    var(--panel-highlight-gradient) padding-box,
+    var(--bronze-gradient) border-box;
+  box-shadow:
+    0 0 0 1px #2b1d14,
+    0 0 60px -10px #e2582b66,
+    0 30px 60px -20px #000;
+}
+}

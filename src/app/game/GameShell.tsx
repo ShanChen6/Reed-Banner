@@ -77,7 +77,7 @@ export default function GameShell({
       <div className="flex min-h-dvh flex-col">
         <header
           className={`sticky top-0 z-40 border-b backdrop-blur ${
-            light ? "border-[#b8862f]/30 bg-[#f3ebdc]/90 text-stone-900" : "border-[#d4a24c]/25 bg-[#17110e]/90 text-stone-100"
+            light ? "border-[#b8862f]/30 bg-[#f3ebdc]/90 text-stone-900" : "border-[#d4a24c]/25 bg-[#17110e]/90 text-foreground"
           }`}
         >
           <nav className="mx-auto flex max-w-6xl items-center gap-3 px-3 py-1 text-sm sm:px-4">
@@ -210,10 +210,10 @@ function SceneView({
 
 function DisabledTowerMode({ name }: { name: string }) {
   return (
-    <main className="flex flex-1 items-center justify-center bg-[#17110e] px-4 text-stone-100">
+    <main className="flex flex-1 items-center justify-center bg-[#17110e] px-4 text-foreground">
       <section role="status" className="max-w-md rounded-xl border border-amber-600/40 bg-[#271d18] p-6 text-center">
         <h1 className="font-serif text-2xl font-bold text-amber-100">{name}</h1>
-        <p className="mt-2 text-stone-300">Chế độ này chưa mở. Tiến trình và trận đang dở được giữ nguyên cho đến khi mở lại.</p>
+        <p className="mt-2 text-foreground-secondary">Chế độ này chưa mở. Tiến trình và trận đang dở được giữ nguyên cho đến khi mở lại.</p>
         <SceneLink scene="MENU" className="mt-4 inline-block rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950">Về màn chính</SceneLink>
       </section>
     </main>

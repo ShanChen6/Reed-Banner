@@ -1,5 +1,7 @@
 "use client";
 
+import { Card, Button } from "@/components/ui";
+
 // Nhiệm vụ: điểm danh 7 ngày, nhiệm vụ ngày/tuần, thành tựu. Tiến độ do server cộng khi trận kết thúc; bấm
 // Nhận thì server kiểm tra lại rồi cộng vàng.
 
@@ -58,7 +60,7 @@ export default function QuestsScreen() {
   if (!profile) {
     return (
       <Shell>
-        <p className="py-24 text-center text-stone-300">
+        <p className="py-24 text-center text-foreground-secondary">
           {loadError ? "Không tải được hồ sơ, thử tải lại trang." : "Đang tải…"}
         </p>
       </Shell>
@@ -113,7 +115,7 @@ export default function QuestsScreen() {
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-black text-amber-100">Nhiệm vụ</h1>
-          <p className="text-sm text-stone-400">{profile.gold} vàng</p>
+          <p className="text-sm text-muted">{profile.gold} vàng</p>
         </div>
         <div className="flex gap-2 text-sm">
           <SceneLink
@@ -132,17 +134,17 @@ export default function QuestsScreen() {
       </div>
       {message && <p className="mb-3 text-sm text-rose-400">{message}</p>}
 
-      <section className="mb-4 flex flex-col gap-3 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4">
+      <Card className="mb-4 flex flex-col gap-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="font-bold text-amber-200">Điểm danh</h2>
-          <button
+          <Button variant="ornate"
             type="button"
             disabled={busy || checkedToday}
             onClick={() => void act({ type: "checkIn" })}
-            className="rounded-lg border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-5 py-1.5 font-bold text-amber-50 disabled:opacity-50"
+
           >
             {checkedToday ? "Hôm nay đã điểm danh" : "Điểm danh"}
-          </button>
+          </Button>
         </div>
         <ol className="grid grid-cols-7 gap-1.5 text-center text-xs">
           {CHECKIN_GOLD.map((g, i) => {
@@ -154,29 +156,29 @@ export default function QuestsScreen() {
                 key={n}
                 className={`flex flex-col items-center gap-0.5 rounded-lg border px-1 py-2 ${got ? "border-emerald-500/60 bg-emerald-500/15" : today ? "border-amber-400 bg-amber-500/15" : "border-white/10 bg-black/30"}`}
               >
-                <span className="text-stone-400">Ngày {n}</span>
+                <span className="text-muted">Ngày {n}</span>
                 <span className="font-bold text-amber-200">{g}</span>
-                <span className="text-[10px] text-stone-400">
+                <span className="text-[10px] text-muted">
                   {got ? "Đã nhận" : "vàng"}
                 </span>
               </li>
             );
           })}
         </ol>
-        <p className="text-xs text-stone-400">
+        <p className="text-xs text-muted">
           Điểm danh liền ngày để nhận nhiều hơn; bỏ một ngày thì chuỗi về ngày
           1. Đủ 7 ngày thì bắt đầu chuỗi mới.
         </p>
-      </section>
+      </Card>
 
       <div className="grid gap-4 lg:grid-cols-3">
         {sections.map((sec) => (
-          <section
+          <Card
             key={sec.title}
-            className="flex flex-col gap-2 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4"
+            className="flex flex-col gap-2"
           >
             <h2 className="font-bold text-amber-200">{sec.title}</h2>
-            <p className="text-xs text-stone-400">{sec.note}</p>
+            <p className="text-xs text-muted">{sec.note}</p>
             <ul className="flex flex-col gap-2">
               {sec.rows.map((r) => (
                 <li
@@ -185,7 +187,7 @@ export default function QuestsScreen() {
                 >
                   <div className="min-w-0 flex-1">
                     <p className="font-semibold">{r.title}</p>
-                    <div className="mt-1 flex items-center gap-2 text-xs text-stone-300">
+                    <div className="mt-1 flex items-center gap-2 text-xs text-foreground-secondary">
                       <div
                         className="h-2 flex-1 overflow-hidden rounded-full bg-black/50"
                         role="meter"
@@ -208,14 +210,14 @@ export default function QuestsScreen() {
                     type="button"
                     disabled={busy || !r.done || r.claimed}
                     onClick={() => void act(r.action)}
-                    className={`w-20 shrink-0 rounded px-2 py-1.5 text-xs font-semibold ${r.claimed ? "bg-white/5 text-stone-500" : r.done ? "bg-amber-500 text-stone-950" : "bg-white/10 text-stone-400"}`}
+                    className={`w-20 shrink-0 rounded px-2 py-1.5 text-xs font-semibold ${r.claimed ? "bg-white/5 text-stone-500" : r.done ? "bg-amber-500 text-stone-950" : "bg-white/10 text-muted"}`}
                   >
                     {r.claimed ? "Đã nhận" : `${r.gold} vàng`}
                   </button>
                 </li>
               ))}
             </ul>
-          </section>
+          </Card>
         ))}
       </div>
     </Shell>
@@ -224,7 +226,7 @@ export default function QuestsScreen() {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex-1 bg-[radial-gradient(ellipse_at_top,#2b2440_0%,#17110e_60%)] px-3 py-6 text-stone-100 [--gold:#d4a24c] sm:px-6">
+    <main className="ui-screen ui-screen--cool">
       <div className="mx-auto max-w-6xl">{children}</div>
     </main>
   );

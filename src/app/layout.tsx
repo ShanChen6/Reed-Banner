@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
 import { TileDefs } from "./game/art/tiles";
+
+const gameFont = localFont({
+  src: "./fonts/NotoSerif.ttf",
+  variable: "--font-game",
+  weight: "100 900",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Cờ Lau",
@@ -9,8 +17,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="vi" className="scroll-smooth">
-      <body className="min-h-dvh bg-stone-950 text-stone-100 antialiased">
+    <html lang="vi" className={`${gameFont.variable} scroll-smooth`}>
+      <body className="min-h-dvh antialiased">
         <TileDefs />
         {children}
       </body>
