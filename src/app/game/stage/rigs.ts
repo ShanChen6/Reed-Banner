@@ -123,7 +123,7 @@ export interface WarriorRig {
    * từng đồng đội; `frostSpear` chỉ ở tuyệt chiêu, cột nước đóng băng dưới chân đối thủ đứng đầu; `tideBulwark` chỉ ở
    * tuyệt chiêu, vòm khiên quanh từng đồng đội và cột băng dưới chân từng đối thủ; `springDew` chỉ ở tuyệt chiêu, vòng cam lộ hồi phục quanh từng đồng
    * đội và cột băng dưới chân từng đối thủ; `tideMist` chỉ ở tuyệt chiêu, sương nước quanh từng đối thủ và hạt năng
-   * lượng bay về chính mình.
+   * lượng bay về chính mình; `tideSiege` chỉ ở tuyệt chiêu, cột băng dưới chân và vết nứt trên từng đối thủ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -147,7 +147,8 @@ export interface WarriorRig {
     | "frostSpear"
     | "tideBulwark"
     | "springDew"
-    | "tideMist";
+    | "tideMist"
+    | "tideSiege";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1799,6 +1800,49 @@ const QUACH_AN: WarriorRig = {
     anchor: { x: 760, y: 960 }, scale: 0.85 },
 };
 
+/**
+ * Vi Triều, quân sư hệ Thủy (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Tranh đánh thường vẽ cờ
+ * chĩa sang trái nên được lật ngang như Nghiêm Thiết. Ảnh đứng tách lớp bằng code: cờ lệnh sóng nước cùng nắm tay
+ * xoay quanh cổ tay theo nhịp giáo, bàn tay cầm thẻ tre và đầu tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const VI_TRIEU: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "vi-trieu",
+  texScale: 0.5,
+  foot: { x: 620, y: 1505 },
+  height: 1330,
+  parts: {
+    body: { x: 283, y: 192, w: 708, h: 1328 },
+    armR: { x: 778, y: 794, w: 165, h: 194 },
+    sword: { x: 5, y: 4, w: 425, h: 1513 },
+    arm: { x: 350, y: 546, w: 70, h: 82 },
+    head: { x: 531, y: 192, w: 156, h: 247 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 405, y: 605 },
+    elbowR: { x: 850, y: 805 },
+    neck: { x: 610, y: 400 },
+  },
+  blade: [{ x: 385, y: 590 }, { x: 378, y: 20 }],
+  strikeFx: "tideSiege",
+  fxColor: 0x2f7fc1,
+  // Chĩa cờ lệnh về phía đối thủ (đánh thường), ôm thẻ tre trước ngực (ra chiêu), quét cờ thấp giơ thẻ tre ra lệnh
+  // (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 39, y: 9 },
+      anchor: { x: 515, y: 1005 }, scale: 1.33, burst: { x: 1500, y: 155 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 8, y: 5 },
+      anchor: { x: 610, y: 1510 }, scale: 1, burst: { x: 720, y: 620 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 43, y: 8 },
+      anchor: { x: 640, y: 1000 }, scale: 1.33, burst: { x: 1180, y: 230 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 37, y: 61 },
+    anchor: { x: 800, y: 900 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1836,6 +1880,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   thaiHa: THAI_HA,
   maiThanh: MAI_THANH,
   quachAn: QUACH_AN,
+  viTrieu: VI_TRIEU,
 };
 
 export function rigOf(id: string): Rig | null {
