@@ -1,8 +1,8 @@
-// Nội dung chữ của trang giới thiệu, rút từ docs/design. Số liệu trận lấy thẳng từ src/core để không lệch.
+// Nội dung chữ của trang giới thiệu, rút từ docs/ (01-gameplay, 03-characters). Số liệu trận lấy thẳng từ src/core để không lệch.
 
 import type { Element, Profession, TileKind } from "@/core";
 
-/** Tính cách và hiệu ứng hay dùng theo docs/design/05-nguyen-to.md mục 2. */
+/** Tính cách và hiệu ứng hay dùng theo docs/01-gameplay/nguyen-to.md mục 2. */
 export const ELEMENT_TRAIT: Record<Element, { readonly role: string; readonly tags: readonly string[] }> = {
   kim: { role: "Đánh chắc, xuyên giáp", tags: ["Thủ−", "Bỏ qua DEF", "Xuyên Khiên"] },
   moc: { role: "Đánh dai, hồi máu", tags: ["Hồi phục", "Hồi máu", "Phá ô"] },
@@ -13,7 +13,7 @@ export const ELEMENT_TRAIT: Record<Element, { readonly role: string; readonly ta
   phong: { role: "Linh hoạt, điều khiển bàn cờ", tags: ["Lốc xoáy", "Xua tan", "Công−"] },
 };
 
-/** Ô ghép được cho gì, theo docs/design/03-tai-nguyen-cong-thuc.md. */
+/** Ô ghép được cho gì, theo docs/01-gameplay/tai-nguyen-cong-thuc.md. */
 export const TILE_GIVES: Record<TileKind, string> = {
   kiem: "Sát thương lên đối thủ",
   amDuong: "Năng lượng để tung kỹ năng",
@@ -24,7 +24,7 @@ export const TILE_GIVES: Record<TileKind, string> = {
   trong: "Nộ của thủ lĩnh",
 };
 
-/** Nội tại nghề, docs/design/06-nhan-vat-ky-nang.md mục 4.1. */
+/** Nội tại nghề, docs/03-characters/ky-nang/mo-hinh-nhan-vat.md mục 4.1. */
 export const PROFESSION_PERK: Record<Profession, string> = {
   tuongSi: "Ghép từ 4 kiếm: +30% sát thương",
   phapSu: "Năng lượng từ âm dương ×1.5",

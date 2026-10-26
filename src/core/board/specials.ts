@@ -1,4 +1,4 @@
-// Hiệu ứng trên bàn cờ khi ô đặc biệt được kích hoạt, xem docs/design/01-ban-co.md mục 3.
+// Hiệu ứng trên bàn cờ khi ô đặc biệt được kích hoạt, xem docs/01-gameplay/ban-co.md mục 3.
 // Hiệu ứng ngoài bàn cờ (hồi máu, nộ, năng lượng, lương) do lớp trận đấu đọc từ Activation.
 
 import type { Rng } from "../rng";

@@ -1,5 +1,5 @@
 // Đấu trường bóng ma trên server: kho điểm và đội phòng thủ, bày đối thủ, ghi kết quả. Luật và số liệu ở
-// @/core (arena). Xem docs/design/09-che-do-choi.md mục 5.3.
+// @/core (arena). Xem docs/02-game-modes/README.md mục 5.3.
 
 import {
   ARENA_ATTACKS_PER_DAY,

@@ -1,7 +1,7 @@
 /**
  * Dữ liệu dựng hình động nhân vật trên sân khấu trận. Tọa độ theo hệ của file PSD gốc (1024×1024); ảnh
  * từng lớp nằm ở public/art/characters/<thư mục>/<lớp>.webp và được thu nhỏ theo `texScale` cho nhẹ.
- * Cách tách lớp và dựng khớp: docs/design/15-ke-hoach-do-hoa.md mục 4.4.
+ * Cách tách lớp và dựng khớp: docs/06-art/ke-hoach-do-hoa.md mục 4.4.
  */
 
 export interface Point {

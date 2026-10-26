@@ -1,4 +1,4 @@
-// Mô phỏng phần biết chắc của một nước đi, xem docs/design/10-ai.md.
+// Mô phỏng phần biết chắc của một nước đi, xem docs/01-gameplay/ai.md.
 // Không lấp ô mới và bỏ qua hiệu ứng ngẫu nhiên của ô đặc biệt: AI không được biết luồng ô rơi.
 
 import {

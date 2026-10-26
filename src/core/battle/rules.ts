@@ -1,5 +1,5 @@
 // Hằng số luật trận đấu. Số liệu là điểm xuất phát, sẽ chỉnh bằng mô phỏng.
-// Xem docs/design/02-tran-dau.md và docs/design/03-tai-nguyen-cong-thuc.md.
+// Xem docs/01-gameplay/tran-dau.md và docs/01-gameplay/tai-nguyen-cong-thuc.md.
 
 import type { TileKind } from "../board";
 

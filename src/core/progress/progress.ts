@@ -1,7 +1,7 @@
 import { chasePassives } from "../battle/chase";
 // Tiến trình nhân vật: kinh nghiệm, cấp, điểm kỹ năng, nâng cấp kỹ năng, mở khóa theo cấp, nhánh nấc 2
 // và phần thưởng cuối trận. Dữ liệu thuần, tuần tự hóa được (lưu DB hoặc trình duyệt).
-// Xem docs/design/08-tien-trinh-kinh-te.md. Số liệu là điểm xuất phát, chờ mô phỏng cân bằng.
+// Xem docs/01-gameplay/tien-trinh-kinh-te.md. Số liệu là điểm xuất phát, chờ mô phỏng cân bằng.
 
 import {
   getSkill,

@@ -1,6 +1,6 @@
 import type { Difficulty } from "../ai";
 
-/** Public IDs are frozen by docs/campaign-v2/design-freeze.md. */
+/** Public IDs are frozen by docs/02-game-modes/campaign/design-freeze.md. */
 export const CAMPAIGN_MISSION_IDS = [
   "M01",
   "M02",

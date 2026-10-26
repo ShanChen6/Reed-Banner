@@ -1,6 +1,6 @@
 // Đăng ký và đăng nhập bằng tên đăng nhập + mật khẩu. Mật khẩu băm bằng scrypt (có sẵn trong Node), sai
 // liên tiếp nhiều lần thì khóa tên đó một lúc để chống dò. Chưa có email nên không khôi phục được mật
-// khẩu: trang đăng ký cảnh báo và khuyên liên kết thêm Google/GitHub. Xem docs/tech/ha-tang.md mục 4.
+// khẩu: trang đăng ký cảnh báo và khuyên liên kết thêm Google/GitHub. Xem docs/07-architecture/ha-tang.md mục 4.
 
 import { randomBytes, scrypt as scryptCb, timingSafeEqual, type ScryptOptions } from "node:crypto";
 import type { AccountStore } from "./accounts";
