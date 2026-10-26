@@ -80,13 +80,13 @@ export default function GameShell({
             light ? "border-[#b8862f]/30 bg-[#f3ebdc]/90 text-stone-900" : "border-[#d4a24c]/25 bg-[#17110e]/90 text-stone-100"
           }`}
         >
-          <nav className="mx-auto flex max-w-6xl items-center gap-3 px-3 py-2 text-sm sm:px-4">
+          <nav className="mx-auto flex max-w-6xl items-center gap-3 px-3 py-1 text-sm sm:px-4">
             {currentScene === "MENU" ? (
               <Link href="/" className="flex items-center gap-1.5 font-serif text-base font-bold">
                 <LogoMark className="size-7" /> Cờ Lau
               </Link>
             ) : (
-              <SceneLink scene="MENU" className="flex items-center gap-1.5 rounded px-2 py-1 font-semibold whitespace-nowrap hover:bg-white/10">
+              <SceneLink scene="MENU" className="flex min-h-11 items-center gap-1.5 rounded px-2 py-1 font-semibold whitespace-nowrap hover:bg-white/10">
                 <span aria-hidden>←</span> Màn chính
               </SceneLink>
             )}
@@ -95,16 +95,16 @@ export default function GameShell({
             {/* Màn Sử ký: lối tắt Hồ sơ và Trận thường nằm trên thanh chung, không thành một hàng nút riêng. */}
             {currentScene === "CAMPAIGN" && (
               <>
-                <SceneLink scene="PROFILE" className="hidden rounded px-2 py-1 hover:bg-white/10 sm:block">
+                <SceneLink scene="PROFILE" className="hidden min-h-11 items-center rounded px-2 py-1 hover:bg-white/10 sm:flex">
                   Hồ sơ
                 </SceneLink>
-                <SceneLink scene="PLAYING" className="hidden rounded px-2 py-1 hover:bg-white/10 sm:block">
+                <SceneLink scene="PLAYING" className="hidden min-h-11 items-center rounded px-2 py-1 hover:bg-white/10 sm:flex">
                   Trận thường
                 </SceneLink>
               </>
             )}
             {account ? (
-              <SceneLink scene="ACCOUNT" className="flex items-center gap-2 rounded px-2 py-1 hover:bg-white/10" title="Tài khoản">
+              <SceneLink scene="ACCOUNT" className="flex min-h-11 items-center gap-2 rounded px-2 py-1 hover:bg-white/10" title="Tài khoản">
                 <AccountAvatar account={account} />
                 <span className="max-w-32 truncate font-semibold">{account.name}</span>
               </SceneLink>
@@ -121,7 +121,7 @@ export default function GameShell({
                   <SceneLink
                     scene="LOGIN"
                     params={{ returnTo: currentScene === "MENU" ? undefined : scenePath(currentScene) }}
-                    className="rounded bg-amber-500 px-2.5 py-1 font-semibold whitespace-nowrap text-stone-950"
+                    className="relative rounded bg-amber-500 px-2.5 py-1 font-semibold whitespace-nowrap text-stone-950 before:absolute before:inset-x-0 before:-inset-y-2 before:content-['']"
                   >
                     Đăng nhập
                   </SceneLink>
