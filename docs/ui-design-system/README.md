@@ -2,8 +2,8 @@
 
 **Status:** specification and migration plan only · **Date:** 27/10/2026 · **Baseline:** `develop`
 
-- [Game Mode UI/UX Specification](game-mode-ui-spec.md): design language, responsive/layout rules, screen-by-screen information architecture, interaction and visual wireframes.
-- [Implementation Roadmap](implementation-roadmap.md): tasks UI-00..UI-09, source impact, acceptance tests, art checklist and risks.
+- [Game Mode UI/UX Specification](game-mode-ui-spec.md): design language, responsive/layout rules, screen-by-screen information architecture, interaction and visual wireframes; **Home V2 approved visual direction (section 14)**.
+- [Implementation Roadmap](implementation-roadmap.md): tasks UI-00..UI-09, source impact, acceptance tests, art checklist and risks; **UI-02 Home V2 refined implementation gate (section 7)**.
 
 ## Scope
 
