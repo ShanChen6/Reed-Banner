@@ -1,5 +1,7 @@
 "use client";
 
+import { Card, Button } from "@/components/ui";
+
 // Đấu trường bóng ma: điểm và thành tích, đội phòng thủ (bản chụp đội 3vs3 đang chọn), 3 đối thủ đang bày.
 // Đánh dùng đội 3vs3 đang chọn ở hồ sơ; đối thủ do AI điều khiển.
 
@@ -33,7 +35,7 @@ function Members({ list }: { list: readonly ArenaMember[] }) {
           />
           <div className="min-w-0 text-xs">
             <p className="truncate text-sm font-semibold">{m.name}</p>
-            <p className="flex items-center gap-1 text-stone-300">
+            <p className="flex items-center gap-1 text-foreground-secondary">
               <ElementIcon element={m.element} className="size-3.5" />
               {ELEMENT_NAME[m.element]} · {PROFESSION_NAME[m.profession]} · cấp{" "}
               {m.level}
@@ -58,7 +60,7 @@ export default function ArenaScreen() {
   if (data?.rating === undefined) {
     return (
       <Shell>
-        <p className="py-24 text-center text-stone-300">
+        <p className="py-24 text-center text-foreground-secondary">
           {data ? "Không tải được đấu trường, thử tải lại trang." : "Đang tải…"}
         </p>
       </Shell>
@@ -113,7 +115,7 @@ export default function ArenaScreen() {
           <h1 className="text-2xl font-black text-amber-100">
             Đấu trường bóng ma
           </h1>
-          <p className="text-sm text-stone-400">
+          <p className="text-sm text-muted">
             Đánh với đội phòng thủ của người chơi khác, do máy điều khiển ở mức{" "}
             {DIFFICULTY_NAME[ARENA_DIFFICULTY]}. Thắng cộng điểm, thua trừ điểm.
           </p>
@@ -136,7 +138,7 @@ export default function ArenaScreen() {
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <div className="flex flex-col gap-4">
-          <section className="grid grid-cols-3 gap-2 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4 text-center">
+          <Card className="grid grid-cols-3 gap-2 text-center">
             <Stat label="Điểm" value={String(data.rating)} big />
             <Stat
               label="Hạng"
@@ -161,46 +163,46 @@ export default function ArenaScreen() {
               value={`+${ARENA_WIN_GOLD} vàng`}
               small
             />
-          </section>
+          </Card>
 
-          <section className="flex flex-col gap-2 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4">
+          <Card className="flex flex-col gap-2">
             <div className="flex items-baseline justify-between gap-2">
               <h2 className="font-bold text-amber-200">Đội phòng thủ</h2>
               {data.defense && (
-                <span className="text-xs text-stone-400">
+                <span className="text-xs text-muted">
                   Lực chiến {data.defense.power}
                 </span>
               )}
             </div>
-            <p className="text-xs text-stone-400">
+            <p className="text-xs text-muted">
               Người khác đánh với bản chụp đội này. Nâng cấp hay đổi đội ở hồ sơ
               xong thì bấm cập nhật.
             </p>
             {data.defense && <Members list={data.defense.members} />}
-            <button
+            <Button variant="secondary"
               type="button"
               disabled={busy !== null}
               onClick={() => void command("defend")}
-              className="self-start rounded bg-white/10 px-3 py-1.5 text-sm hover:bg-white/15 disabled:opacity-50"
+              className="self-start text-sm"
             >
               {busy === "defend" ? "Đang lưu…" : "Cập nhật theo đội hiện tại"}
-            </button>
-          </section>
+            </Button>
+          </Card>
         </div>
 
-        <section className="flex flex-col gap-3 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4 shadow-[inset_0_0_24px_#0009]">
+        <Card className="flex flex-col gap-3 shadow-card-inset">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-lg font-bold text-amber-100">Chọn đối thủ</h2>
-            <button
+            <Button variant="secondary"
               type="button"
               disabled={busy !== null}
               onClick={() => void command("refresh")}
-              className="rounded bg-white/10 px-3 py-1.5 text-sm hover:bg-white/15 disabled:opacity-50"
+              className="text-sm"
             >
               {busy === "refresh" ? "Đang tìm…" : "Đổi đối thủ"}
-            </button>
+            </Button>
           </div>
-          <p className="text-xs text-stone-400">
+          <p className="text-xs text-muted">
             Bạn ra trận với đội 3vs3 đang chọn ở hồ sơ. Đối thủ có điểm càng
             cao, thắng càng được nhiều điểm.
           </p>
@@ -213,20 +215,20 @@ export default function ArenaScreen() {
               >
                 <div>
                   <p className="truncate font-bold text-amber-100">{o.name}</p>
-                  <p className="text-xs text-stone-300">
+                  <p className="text-xs text-foreground-secondary">
                     {o.rating} điểm · lực chiến {o.power}
                     {o.bot && " · bóng ma luyện tập"}
                   </p>
                 </div>
                 <Members list={o.members} />
-                <button
+                <Button variant="ornate"
                   type="button"
                   disabled={busy !== null || left <= 0}
                   onClick={() => void attack(i)}
-                  className="mt-auto rounded-lg border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-4 py-1.5 font-bold tracking-wider text-amber-50 uppercase disabled:opacity-50"
+                  className="mt-auto tracking-wider uppercase"
                 >
                   {busy === `attack${i}` ? "Đang vào trận…" : "Đánh"}
-                </button>
+                </Button>
               </div>
             ))}
           </div>
@@ -235,7 +237,7 @@ export default function ArenaScreen() {
               Hôm nay đã hết lượt. Lượt mới lúc 0 giờ.
             </p>
           )}
-        </section>
+        </Card>
       </div>
     </Shell>
   );
@@ -254,7 +256,7 @@ function Stat({
 }) {
   return (
     <div className="rounded-lg bg-black/25 p-2">
-      <p className="text-[11px] tracking-wide text-stone-400 uppercase">
+      <p className="text-[11px] tracking-wide text-muted uppercase">
         {label}
       </p>
       <p
@@ -268,7 +270,7 @@ function Stat({
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex-1 bg-[radial-gradient(ellipse_at_top,#2b2440_0%,#17110e_60%)] px-3 py-6 text-stone-100 [--gold:#d4a24c] sm:px-6">
+    <main className="ui-screen ui-screen--cool">
       <div className="mx-auto max-w-6xl">{children}</div>
     </main>
   );

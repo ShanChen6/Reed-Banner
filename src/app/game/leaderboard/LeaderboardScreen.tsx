@@ -1,5 +1,9 @@
 "use client";
 
+import { Pagination } from "@/components/ui/Pagination";
+
+import { Card, CardBody, CardFooter, Input, Select, Button } from "@/components/ui";
+
 // Bảng xếp hạng: chiến dịch (số nhiệm vụ, rồi tổng lượt ít nhất), từng nhiệm vụ có trận (ít lượt nhất), sinh tồn, đấu
 // trường.
 // Điểm do server ghi sau mỗi lần cộng thưởng.
@@ -113,7 +117,7 @@ export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEn
   const shown = data?.board === board ? data : null;
 
   return (
-    <main className="flex-1 bg-[radial-gradient(ellipse_at_top,#2b2440_0%,#17110e_60%)] px-3 py-6 text-stone-100 sm:px-6">
+    <main className="ui-screen ui-screen--cool">
       <div className="mx-auto max-w-3xl">
         <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <h1 className="text-2xl font-black text-amber-100">Bảng xếp hạng</h1>
@@ -149,42 +153,51 @@ export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEn
         </div>
 
         {tab === "destiny" ? (
-          <section className="flex flex-col gap-3 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4">
+          <Card padding="none">
+            <CardBody className="flex flex-col gap-3">
             <label className="flex flex-wrap items-center gap-2 text-sm">Cycle lịch sử
-              <input type="date" value={cycle || destiny?.cycle?.cycleId || ""} onChange={(event) => { setCycle(event.target.value); setCursor("0"); }} className="rounded bg-black/40 px-2 py-1" />
-              {cycle && <button type="button" onClick={() => { setCycle(""); setCursor("0"); }} className="rounded bg-white/10 px-2 py-1">Cycle hiện tại</button>}
+              <Input type="date" value={cycle || destiny?.cycle?.cycleId || ""} onChange={(event) => { setCycle(event.target.value); setCursor("0"); }}  />
+              {cycle && <Button variant="secondary" type="button" onClick={() => { setCycle(""); setCursor("0"); }} >Cycle hiện tại</Button>}
             </label>
-            <p className="text-xs text-stone-400">{NOTE.destiny}</p>
-            {!destiny?.entries ? <p className="py-6 text-center text-sm text-stone-400">{destiny?.error ? "Cycle hoặc truy vấn không hợp lệ." : "Đang tải…"}</p> : destiny.entries.length === 0 ? <p className="py-6 text-center text-sm text-stone-400">Chưa có thành tích trong cycle này.</p> : <ol className="flex flex-col gap-1 text-sm">{destiny.entries.map((entry) => <li key={entry.rank} className={`flex items-center gap-2 rounded px-2 py-1.5 ${entry.mine ? "bg-amber-500/20 font-semibold" : "bg-black/20"}`}><span className="w-7 text-right tabular-nums text-amber-300">{entry.rank}</span><span className="min-w-0 flex-1 truncate">{entry.name}{entry.mine && " (bạn)"}</span><span className="text-xs tabular-nums text-stone-300">Tầng {entry.clearedFloor} · {entry.totalTurns} lượt</span></li>)}</ol>}
+            <p className="text-xs text-muted">{NOTE.destiny}</p>
+            {!destiny?.entries ? <p className="py-6 text-center text-sm text-muted">{destiny?.error ? "Cycle hoặc truy vấn không hợp lệ." : "Đang tải…"}</p> : destiny.entries.length === 0 ? <p className="py-6 text-center text-sm text-muted">Chưa có thành tích trong cycle này.</p> : <ol className="flex flex-col gap-1 text-sm">{destiny.entries.map((entry) => <li key={entry.rank} className={`flex items-center gap-2 rounded px-2 py-1.5 ${entry.mine ? "bg-amber-500/20 font-semibold" : "bg-black/20"}`}><span className="w-7 text-right tabular-nums text-amber-300">{entry.rank}</span><span className="min-w-0 flex-1 truncate">{entry.name}{entry.mine && " (bạn)"}</span><span className="text-xs tabular-nums text-foreground-secondary">Tầng {entry.clearedFloor} · {entry.totalTurns} lượt</span></li>)}</ol>}
             {destiny?.mine && !destiny.entries?.some((entry) => entry.mine) && <p className="text-sm text-amber-200">Hạng của bạn: {destiny.mine.rank} · tầng {destiny.mine.clearedFloor} · {destiny.mine.totalTurns} lượt</p>}
-            <div className="flex justify-end gap-2"><button type="button" disabled={cursor === "0"} onClick={() => setCursor(String(Math.max(0, Number(cursor) - 20)))} className="rounded bg-white/10 px-3 py-1.5 disabled:opacity-30">Trang trước</button><button type="button" disabled={!destiny?.nextCursor} onClick={() => destiny?.nextCursor && setCursor(destiny.nextCursor)} className="rounded bg-white/10 px-3 py-1.5 disabled:opacity-30">Trang sau</button></div>
-          </section>
-        ) : <section className="flex flex-col gap-2 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4">
+            </CardBody>
+            <CardFooter className="justify-end">
+            <Pagination
+              hasPrevious={cursor !== "0"}
+              hasNext={Boolean(destiny?.nextCursor)}
+              onPrevious={() => setCursor(String(Math.max(0, Number(cursor) - 20)))}
+              onNext={() => destiny?.nextCursor && setCursor(destiny.nextCursor)}
+            />
+            </CardFooter>
+          </Card>
+        ) : <Card className="flex flex-col gap-2">
           {tab === "mission" && (
             <label className="flex flex-wrap items-center gap-2 text-sm">
               Nhiệm vụ
-              <select
+              <Select
                 value={mission}
                 onChange={(e) =>
                   setMission(e.target.value as CampaignMissionId)
                 }
-                className="rounded bg-black/40 px-2 py-1"
+
               >
                 {COMBAT_MISSIONS.map((n) => (
                   <option key={n.id} value={n.id}>
                     {n.id} · {n.title}
                   </option>
                 ))}
-              </select>
+              </Select>
             </label>
           )}
-          <p className="text-xs text-stone-400">{NOTE[tab]}</p>
+          <p className="text-xs text-muted">{NOTE[tab]}</p>
           {!shown ? (
-            <p className="py-6 text-center text-sm text-stone-400">
+            <p className="py-6 text-center text-sm text-muted">
               {data?.error ? "Không tải được bảng xếp hạng." : "Đang tải…"}
             </p>
           ) : shown.top!.length === 0 ? (
-            <p className="py-6 text-center text-sm text-stone-400">
+            <p className="py-6 text-center text-sm text-muted">
               Chưa có ai trên bảng này.
             </p>
           ) : (
@@ -195,7 +208,7 @@ export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEn
                   className={`flex items-center gap-2 rounded px-2 py-1.5 ${r.mine ? "bg-amber-500/20 font-semibold" : "bg-black/20"}`}
                 >
                   <span
-                    className={`w-7 text-right tabular-nums ${r.rank <= 3 ? "font-black text-amber-300" : "text-stone-400"}`}
+                    className={`w-7 text-right tabular-nums ${r.rank <= 3 ? "font-black text-amber-300" : "text-muted"}`}
                   >
                     {r.rank}
                   </span>
@@ -203,7 +216,7 @@ export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEn
                     {r.name}
                     {r.mine && " (bạn)"}
                   </span>
-                  <span className="text-xs text-stone-300 tabular-nums">
+                  <span className="text-xs text-foreground-secondary tabular-nums">
                     {scoreText(board, r.score)}
                   </span>
                 </li>
@@ -216,7 +229,7 @@ export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEn
               {scoreText(board, shown.mine.score)}
             </p>
           )}
-        </section>}
+        </Card>}
       </div>
     </main>
   );

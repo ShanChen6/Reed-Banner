@@ -1,4 +1,6 @@
 "use client";
+import { Button } from "@/components/ui";
+
 
 // Màn chờ trước trận: xem hai đội, chọn nguyên tố, nghề, trang bị mẫu và độ khó rồi vào trận. Luôn là nền
 // sơn mài tối (không theo giao diện sáng/tối) để chữ màu phẩm trang bị đọc được.
@@ -140,7 +142,7 @@ export default function SetupLobby({
         <header className="flex flex-col items-center gap-1 text-center">
           <p className="text-xs uppercase tracking-[0.3em] text-amber-300/80">{online ? "Chơi online" : "Chơi thử"}</p>
           <h2 className="font-serif text-2xl font-bold sm:text-3xl">Chuẩn bị xuất trận</h2>
-          <DongSonBand className="mt-1 w-48 opacity-80 [--gold:#d4a24c]" />
+          <DongSonBand className="mt-1 w-48 opacity-80" />
         </header>
 
         {!online && (
@@ -291,11 +293,11 @@ export default function SetupLobby({
         </Section>
 
         <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-          <button
+          <Button variant="primary"
             type="button"
             onClick={onStart}
             disabled={pending}
-            className="flex items-center gap-2 rounded-xl bg-amber-500 px-6 py-2.5 text-lg font-bold text-stone-950 shadow-lg transition hover:bg-amber-400 disabled:opacity-60"
+            className="flex items-center gap-2 text-lg shadow-lg transition"
           >
             {pending ? (
               <>
@@ -307,7 +309,7 @@ export default function SetupLobby({
                 <LeaderFlag className="size-6" /> Vào trận
               </>
             )}
-          </button>
+          </Button>
           {canReturn && (
             <button type="button" onClick={onReturn} className="rounded-xl bg-white/15 px-4 py-2.5 hover:bg-white/25">
               Quay lại trận đang đánh

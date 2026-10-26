@@ -1,0 +1,107 @@
+/* One Cờ Lau theme, inspired by ShanVerse’s palette → role → component structure. */
+@layer base {
+  :root {
+    color-scheme: dark;
+    --background: var(--color-brand-ink);
+    --surface: var(--color-brand-wood);
+    --surface-elevated: #30251e;
+    --surface-hover: #3d3026;
+    --surface-selected: #4d3b24;
+    --foreground: #f5f5f4;
+    --foreground-secondary: #d6d3d1;
+    --muted: #a8a29e;
+    --foreground-disabled: #8f8781;
+    --primary: var(--color-brand-gold);
+    --primary-foreground: var(--color-brand-ink);
+    --primary-hover: #e7b85a;
+    --primary-active: var(--color-brand-gold-light);
+    --secondary: #3a2e26;
+    --secondary-foreground: var(--foreground);
+    --secondary-hover: #493a30;
+    --accent: var(--color-brand-lacquer);
+    --accent-foreground: #fff4d6;
+    --accent-hover: #d54a39;
+    --accent-deep: var(--color-brand-lacquer-deep);
+    --border: var(--color-brand-bronze);
+    --ring: var(--color-brand-gold);
+    --control-background: #100c0a;
+    --disabled: #352b25;
+    --success: #6ee7b7;
+    --success-surface: #123a2b;
+    --warning: #fde68a;
+    --warning-surface: #463015;
+    --danger: #fecdd3;
+    --danger-surface: #4c1c29;
+    --danger-solid: #b42335;
+    --danger-foreground: #ffffff;
+    --info: #bae6fd;
+    --info-surface: #15364b;
+    --decorative-frame: #5a1e14;
+    --battle-frame: #1b2a21;
+    --battle-cell: #14251c;
+    --screen-glow: #4a2418;
+    --screen-glow-cool: #2b2440;
+    /* Decorative gradients are shared by the landing page's fantasy frames. */
+    --gilt-gradient: linear-gradient(180deg, #fff6cc 0%, var(--primary) 38%, #b77a26 62%, var(--color-brand-gold-light) 100%);
+    --bronze-gradient: linear-gradient(160deg, #fff4c4, var(--primary) 40%, var(--border) 70%, var(--color-brand-gold-light));
+    --panel-gradient: linear-gradient(180deg, var(--surface), var(--background));
+    --panel-border-gradient: linear-gradient(160deg, var(--color-brand-gold-light), var(--border) 45%, var(--primary));
+    --panel-highlight-gradient: radial-gradient(ellipse at 50% 0%, var(--accent-deep), var(--decorative-frame) 70%);
+    --lacquer-gradient: linear-gradient(180deg, var(--accent-hover), var(--accent) 55%, var(--accent-deep));
+  }
+
+  /* Compatibility aliases for existing board/art components. */
+  :root {
+    --bg: var(--background);
+    --panel: var(--surface);
+    --fg: var(--foreground);
+    --gold: var(--primary);
+    --frame: var(--decorative-frame);
+    --cell: var(--battle-cell);
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-selected: var(--surface-selected);
+  --color-foreground: var(--foreground);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-foreground-disabled: var(--foreground-disabled);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-hover: var(--accent-hover);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-control: var(--control-background);
+  --color-disabled: var(--disabled);
+  --color-success: var(--success);
+  --color-success-surface: var(--success-surface);
+  --color-warning: var(--warning);
+  --color-warning-surface: var(--warning-surface);
+  --color-danger: var(--danger);
+  --color-danger-surface: var(--danger-surface);
+  --color-destructive: var(--danger-solid);
+  --color-destructive-foreground: var(--danger-foreground);
+  --color-info: var(--info);
+  --color-info-surface: var(--info-surface);
+  --color-gold: var(--primary);
+  --color-frame: var(--decorative-frame);
+}
+
+@theme {
+  --radius-control: 0.5rem;
+  --radius-card: 0.75rem;
+  --shadow-card: 0 6px 20px -12px #0008;
+  --shadow-card-inset: inset 0 0 24px #0006;
+}

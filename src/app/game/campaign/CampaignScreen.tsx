@@ -40,7 +40,7 @@ export default function CampaignScreen() {
   if (!profile) {
     return (
       <Shell>
-        <p className="py-24 text-center text-stone-300">
+        <p className="py-24 text-center text-foreground-secondary">
           {loadError
             ? "Không tải được hồ sơ, thử tải lại trang."
             : "Đang tải chiến dịch…"}
@@ -111,7 +111,7 @@ export default function CampaignScreen() {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex-1 bg-[radial-gradient(ellipse_at_top,#4a2418_0%,#17110e_60%)] px-3 py-6 text-stone-100 [--gold:#d4a24c] sm:px-6">
+    <main className="ui-screen">
       <div className="mx-auto max-w-[1440px]">{children}</div>
     </main>
   );
