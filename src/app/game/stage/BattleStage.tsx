@@ -312,6 +312,20 @@ export default function BattleStage({
           });
           return [mist, bloom];
         }
+        if (rig.strikeFx === "groveWard") {
+          const bloom = leafBloom(sky, rig.fxColor);
+          const ward = earthWard(sky, rig.fxColor);
+          // Tuyệt chiêu bày trận cả đội: vòng lá hồi phục rồi vòm khiên (Thủ tăng) quanh từng đồng đội.
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(true).forEach((s, n) => {
+              bloom.cover(spot(s, 0), size, n * 0.08);
+              ward.cover(spot(s, 0), size, 0.3 + n * 0.08);
+            });
+          });
+          return [bloom, ward];
+        }
         if (rig.strikeFx === "rootGuard") {
           const bloom = leafBloom(sky, rig.fxColor);
           const ward = earthWard(sky, rig.fxColor);
