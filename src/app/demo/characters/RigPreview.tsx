@@ -135,7 +135,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           [0.25, 0.5].forEach((k, n) => drain.drain({ x: el.clientWidth - 40, y: el.clientHeight * k + size * 0.2 }, me, size, n * 0.1));
         });
         // Cột nước hệ Thủy: phun lên ở hai điểm bên phải khung.
-        const pillar = team === "waterPillar" || team === "frostSpear" || team === "tideBulwark" || team === "springDew" ? waterPillar(app.stage, rig.fxColor) : null;
+        const pillar = team === "waterPillar" || team === "frostSpear" || team === "tideBulwark" || team === "springDew" || team === "tideSiege" ? waterPillar(app.stage, rig.fxColor) : null;
         if (pillar) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y;
@@ -219,11 +219,17 @@ export default function RigPreview({ id, size, onSnapshot }: {
         if (tide) loaded.onStrike?.((kind) => {
           if (kind === "ultimate" && loaded) tide.cover({ x: el.clientWidth - 70, y: loaded.view.y }, rig.height * loaded.view.scale.y * 0.8);
         });
+        // Triều dâng hệ Thủy: vết nứt ở mép phải khung (cột nước do `pillar` vẽ).
+        const siege = team === "tideSiege" ? ironFormation(app.stage, rig.fxColor) : null;
+        if (siege) loaded.onStrike?.((kind) => {
+          if (kind === "ultimate" && loaded) siege.shatter({ x: el.clientWidth - 60, y: el.clientHeight * 0.5 }, rig.height * loaded.view.scale.y, 0.3);
+        });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
           loaded?.update(dt);
           mist?.forEach((m) => m.update(dt));
           tide?.update(dt);
+          siege?.update(dt);
           roots?.forEach((r) => r.update(dt));
           thorns?.update(dt);
           sap?.update(dt);

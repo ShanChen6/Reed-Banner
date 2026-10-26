@@ -360,6 +360,20 @@ export default function BattleStage({
           });
           return [fx];
         }
+        if (rig.strikeFx === "tideSiege") {
+          const tide = waterPillar(sky, rig.fxColor);
+          const crack = ironFormation(sky, rig.fxColor);
+          // Tuyệt chiêu triều dâng: cột nước dâng rồi đông băng dưới chân từng đối thủ (Đóng băng), vết nứt trên người họ (Công giảm).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => {
+              tide.cover(spot(s, 0), size, n * 0.08);
+              crack.shatter(spot(s, 0.5), size, 0.3 + n * 0.08);
+            });
+          });
+          return [tide, crack];
+        }
         if (rig.strikeFx === "ironFormation") {
           const fx = ironFormation(sky, rig.fxColor);
           // Tuyệt chiêu thiết trận: khiên nứt trên từng đối thủ (Thủ giảm), mũi tên vàng ở từng đồng đội (Công tăng).
