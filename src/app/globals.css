@@ -458,6 +458,17 @@
   box-shadow: 0 0 0 2px #d4a24c80;
 }
 /* Thanh header: gỗ sẫm viền đồng, thẻ đang mở là giấy dó. */
+.campaign-atlas .atlas-poem {
+  color: #4a321b;
+}
+/* Tranh cuối cột chương: mờ dần ra mép để hòa vào nền giấy. */
+.campaign-atlas .atlas-rail-art {
+  mask-image: radial-gradient(
+    ellipse 72% 70% at 50% 50%,
+    #000 60%,
+    transparent 100%
+  );
+}
 .campaign-atlas .atlas-bar {
   border-color: #8a6a3b;
   background: linear-gradient(#3d2c1d, #231910);
