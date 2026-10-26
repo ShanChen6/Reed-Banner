@@ -122,7 +122,8 @@ export interface WarriorRig {
    * quanh từng đối thủ và vòng lá hồi phục quanh đội mình; `groveWard` chỉ ở tuyệt chiêu, vòng lá và vòm khiên quanh
    * từng đồng đội; `frostSpear` chỉ ở tuyệt chiêu, cột nước đóng băng dưới chân đối thủ đứng đầu; `tideBulwark` chỉ ở
    * tuyệt chiêu, vòm khiên quanh từng đồng đội và cột băng dưới chân từng đối thủ; `springDew` chỉ ở tuyệt chiêu, vòng cam lộ hồi phục quanh từng đồng
-   * đội và cột băng dưới chân từng đối thủ.
+   * đội và cột băng dưới chân từng đối thủ; `tideMist` chỉ ở tuyệt chiêu, sương nước quanh từng đối thủ và hạt năng
+   * lượng bay về chính mình.
    */
   readonly strikeFx?:
     | "lightning"
@@ -145,7 +146,8 @@ export interface WarriorRig {
     | "groveWard"
     | "frostSpear"
     | "tideBulwark"
-    | "springDew";
+    | "springDew"
+    | "tideMist";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1755,6 +1757,48 @@ const MAI_THANH: WarriorRig = {
     anchor: { x: 800, y: 900 }, scale: 0.85 },
 };
 
+/**
+ * Quách Ẩn, mưu sĩ hệ Thủy (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
+ * code: quạt giấy sóng nước cùng nắm tay phẩy theo nhịp quạt, bàn tay buông và đầu tách riêng. Hệ tọa độ: ảnh đứng
+ * 1024×1536.
+ */
+const QUACH_AN: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "fan",
+  dir: "quach-an",
+  texScale: 0.5,
+  foot: { x: 525, y: 1515 },
+  height: 1510,
+  parts: {
+    body: { x: 225, y: 5, w: 688, h: 1522 },
+    armR: { x: 732, y: 638, w: 68, h: 157 },
+    sword: { x: 100, y: 487, w: 198, h: 317 },
+    arm: { x: 280, y: 565, w: 68, h: 97 },
+    head: { x: 482, y: 5, w: 181, h: 244 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 335, y: 590 },
+    elbowR: { x: 760, y: 650 },
+    neck: { x: 575, y: 235 },
+  },
+  blade: [{ x: 290, y: 620 }, { x: 130, y: 560 }],
+  strikeFx: "tideMist",
+  fxColor: 0x2f7fc1,
+  // Phẩy quạt thấp bên hông (đánh thường), che quạt chỉ tay (ra chiêu), che quạt xòe chưởng (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 41, y: 10 },
+      anchor: { x: 525, y: 1515 }, scale: 1, burst: { x: 110, y: 640 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 37, y: 6 },
+      anchor: { x: 470, y: 1515 }, scale: 1, burst: { x: 1005, y: 340 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 46, y: 6 },
+      anchor: { x: 430, y: 1510 }, scale: 1, burst: { x: 955, y: 330 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 29, y: 46 },
+    anchor: { x: 760, y: 960 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -1791,6 +1835,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   hoLang: HO_LANG,
   thaiHa: THAI_HA,
   maiThanh: MAI_THANH,
+  quachAn: QUACH_AN,
 };
 
 export function rigOf(id: string): Rig | null {

@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -475,6 +475,21 @@ export default function BattleStage({
             if (kind === "ultimate" && foe) fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
           });
           return [fx];
+        }
+        if (rig.strikeFx === "tideMist") {
+          const mist = poisonMist(sky, rig.fxColor, TIDE);
+          const drain = supplyDrain(sky, rig.fxColor);
+          // Tuyệt chiêu thủy độn: sương nước cuộn quanh từng đối thủ (câm lặng), hạt sáng năng lượng bay về người tung chiêu.
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => {
+              mist.cover(spot(s, 0), size, n * 0.08);
+              drain.drain(spot(s, 0.5), spot(me, 0.55), size, 0.35 + n * 0.1);
+            });
+          });
+          return [mist, drain];
         }
         if (rig.strikeFx === "supplyDrain") {
           const fx = supplyDrain(sky, rig.fxColor);
