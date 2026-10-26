@@ -1,5 +1,7 @@
 "use client";
 
+import { Select, Card, Button } from "@/components/ui";
+
 // Sinh tồn: chọn đội phòng thủ và doanh trại trước khi bắt đầu lượt chơi mới.
 
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -114,20 +116,20 @@ export default function SurvivalScreen() {
   if (!profile) {
     return (
       <Shell>
-        <div className="py-24 text-center text-stone-300">
+        <div className="py-24 text-center text-foreground-secondary">
           {loadError ? (
             <>
               <p>Không tải được hồ sơ. Hãy kiểm tra kết nối rồi thử lại.</p>
-              <button
+              <Button variant="secondary"
                 type="button"
                 onClick={() => {
                   setLoadError(false);
                   void loadProfile();
                 }}
-                className="mt-4 rounded-lg bg-white/10 px-4 py-2 font-semibold hover:bg-white/15"
+                className="mt-4"
               >
                 Tải lại hồ sơ
-              </button>
+              </Button>
             </>
           ) : (
             <p role="status">Đang tải hồ sơ…</p>
@@ -215,7 +217,7 @@ export default function SurvivalScreen() {
       <div className="min-w-0 rounded-lg border border-white/10 bg-black/25 p-2">
         <label
           htmlFor={`${kind}-${slot}`}
-          className="mb-2 block text-xs font-bold uppercase tracking-wider text-stone-300"
+          className="mb-2 block text-xs font-bold uppercase tracking-wider text-foreground-secondary"
         >
           {label}
         </label>
@@ -229,14 +231,14 @@ export default function SurvivalScreen() {
             {kind === "reserve" ? "Không chọn dự bị" : "Chưa chọn"}
           </div>
         )}
-        <select
+        <Select
           id={`${kind}-${slot}`}
           value={value}
           onChange={(event) =>
             updateSelection(kind, slot, event.currentTarget.value)
           }
           disabled={busy}
-          className="min-h-11 w-full rounded-md border border-white/15 bg-[#211914] px-2 text-sm text-stone-100 focus:border-amber-400 focus:outline-none disabled:opacity-60"
+          className="min-h-11 w-full text-sm disabled:opacity-60"
         >
           {kind === "active" && (
             <option value="" disabled>
@@ -251,7 +253,7 @@ export default function SurvivalScreen() {
               </option>
             ) : null,
           )}
-        </select>
+        </Select>
       </div>
     );
   };
@@ -264,7 +266,7 @@ export default function SurvivalScreen() {
             Vô hạn
           </p>
           <h1 className="text-2xl font-black text-amber-100">Sinh tồn</h1>
-          <p className="text-sm text-stone-400">
+          <p className="text-sm text-muted">
             Kỷ lục: {profile.survival.best} đợt · Đinh Bộ Lĩnh cấp{" "}
             {profile.main.level} · {profile.gold} vàng
           </p>
@@ -280,10 +282,10 @@ export default function SurvivalScreen() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-        <section className="flex flex-col gap-4 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-3 sm:p-4">
+        <Card className="flex flex-col gap-4 p-3 sm:">
           <div>
             <h2 className="font-bold text-amber-200">Đội phòng thủ</h2>
-            <p className="text-xs text-stone-400">
+            <p className="text-xs text-muted">
               Ba tướng này trực tiếp chiến đấu. Đinh Bộ Lĩnh luôn giữ vị trí thủ lĩnh.
             </p>
           </div>
@@ -301,7 +303,7 @@ export default function SurvivalScreen() {
           </div>
           <div className="border-t border-white/10 pt-3">
             <h3 className="font-bold text-emerald-200">Doanh trại · Dự bị</h3>
-            <p className="mb-2 text-xs text-stone-400">
+            <p className="mb-2 text-xs text-muted">
               Dự bị không tham chiến trong round. Có thể mang tối đa hai tướng; không bắt buộc đủ.
             </p>
             <div className="grid gap-2 sm:grid-cols-2">
@@ -309,14 +311,14 @@ export default function SurvivalScreen() {
               {slotPicker("reserve", 1, reserveIds[1] ?? "")}
             </div>
           </div>
-          <p className="text-xs text-stone-400">
+          <p className="text-xs text-muted">
             Danh sách chỉ gồm nhân vật đã sở hữu. Cấp, nghề, hệ và chỉ số được chụp vào lượt chơi khi bắt đầu.
           </p>
-        </section>
+        </Card>
 
-        <section className="flex flex-col gap-3 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4 shadow-[inset_0_0_24px_#0009]">
+        <Card className="flex flex-col gap-3 shadow-card-inset">
           <h2 className="text-lg font-bold text-amber-100">Lượt chơi mới</h2>
-          <ul className="list-disc space-y-1 pl-5 text-sm text-stone-300">
+          <ul className="list-disc space-y-1 pl-5 text-sm text-foreground-secondary">
             <li>
               Một trận không dừng trên cùng bàn cờ. Đối thủ kéo đến theo đợt,
               mạnh dần; cứ {SURVIVAL_BOSS_EVERY} đợt có một sứ quân dẫn quân.
@@ -344,7 +346,7 @@ export default function SurvivalScreen() {
               cộng vàng và sách nhặt trên bàn cờ.
             </li>
           </ul>
-          <p className="text-sm text-stone-300">
+          <p className="text-sm text-foreground-secondary">
             Đợt 1: {first.foes.length} đối thủ cấp {first.level},{" "}
             {DIFFICULTY_NAME[first.difficulty]}. Đối thủ mỗi lượt chơi một khác.
           </p>
@@ -354,21 +356,21 @@ export default function SurvivalScreen() {
             </p>
           )}
           <div className="flex flex-wrap items-center gap-3">
-            <button
+            <Button variant="ornate"
               type="button"
               disabled={busy || selectionError !== null}
               onClick={() => void start()}
-              className="min-h-11 rounded-lg border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-6 py-2 font-bold tracking-wider text-amber-50 uppercase disabled:cursor-not-allowed disabled:opacity-50"
+              className="min-h-11 tracking-wider uppercase"
             >
               {busy ? "Đang vào trận…" : "Bắt đầu Sinh tồn"}
-            </button>
+            </Button>
             {message && (
               <span role="alert" className="text-sm text-rose-300">
                 {message}
               </span>
             )}
           </div>
-        </section>
+        </Card>
       </div>
     </Shell>
   );
@@ -390,20 +392,20 @@ function FighterSummary({
         className="size-11 shrink-0"
       />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold text-stone-100">
+        <p className="truncate text-sm font-semibold text-foreground">
           {fighter.id === MAIN_ID ? "Đinh Bộ Lĩnh" : fighter.name}
-          <span className="ml-1 text-xs font-normal text-stone-400">
+          <span className="ml-1 text-xs font-normal text-muted">
             cấp {level}
           </span>
         </p>
-        <p className="flex flex-wrap items-center gap-x-1 text-xs text-stone-300">
+        <p className="flex flex-wrap items-center gap-x-1 text-xs text-foreground-secondary">
           <ElementIcon element={fighter.element} className="size-3.5" />
           {ELEMENT_NAME[fighter.element]}
           <span aria-hidden>·</span>
           <ProfessionIcon profession={fighter.profession} className="size-3.5" />
           {PROFESSION_NAME[fighter.profession]}
         </p>
-        <p className="text-[11px] text-stone-400">
+        <p className="text-[11px] text-muted">
           {fighter.maxHp} máu · {fighter.atk} công · {fighter.def} thủ
         </p>
       </div>
@@ -413,7 +415,7 @@ function FighterSummary({
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex-1 bg-[radial-gradient(ellipse_at_top,#2b2440_0%,#17110e_60%)] px-3 py-6 text-stone-100 [--gold:#d4a24c] sm:px-6">
+    <main className="ui-screen ui-screen--cool">
       <div className="mx-auto max-w-6xl">{children}</div>
     </main>
   );

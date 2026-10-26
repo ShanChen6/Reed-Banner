@@ -61,10 +61,10 @@ function SourceList({ sources }: { sources: readonly HistorySource[] }) {
   return (
     <ul className="flex flex-col gap-1.5">
       {sources.map((s) => (
-        <li key={s.id} className="text-xs text-stone-300">
+        <li key={s.id} className="text-xs text-foreground-secondary">
           <span className="font-mono text-stone-500">{s.id}</span>{" "}
           <ExternalLink href={s.url}>{s.title}</ExternalLink>
-          <span className="block text-stone-400">
+          <span className="block text-muted">
             {s.publisher} · {KIND_TEXT[s.kind]} · chỗ cần xem: {s.locator}
           </span>
           <span className="block text-stone-500">Giới hạn: {s.limits}</span>
@@ -80,12 +80,12 @@ export function MissionSources({ nodeId }: { nodeId: CampaignMissionId }) {
     <details className="rounded-md border border-sky-400/40 bg-sky-950/30 p-2 text-sm">
       <summary className="flex min-h-11 cursor-pointer items-center gap-2 rounded font-semibold text-sky-200 focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:outline-none">
         Sử liệu
-        <span className="text-xs font-normal text-stone-400">
+        <span className="text-xs font-normal text-muted">
           sự kiện, nguồn và phần game dựng
         </span>
       </summary>
       <div className="mt-2 flex flex-col gap-3">
-        <p className="text-xs text-stone-400">
+        <p className="text-xs text-muted">
           Đây là ghi chú nguồn của game, tóm tắt theo sổ nguồn, không phải lời
           nhân vật và không phải trích nguyên văn.
         </p>
@@ -98,14 +98,14 @@ export function MissionSources({ nodeId }: { nodeId: CampaignMissionId }) {
             {h.basis.map((b) => (
               <li
                 key={b}
-                className="flex items-start gap-2 text-xs text-stone-300"
+                className="flex items-start gap-2 text-xs text-foreground-secondary"
               >
                 <BasisBadge basis={b} />
                 <span>{BASIS_LABEL[b].hint}</span>
               </li>
             ))}
           </ul>
-          <p className="mt-1 text-xs text-stone-400">
+          <p className="mt-1 text-xs text-muted">
             Địa danh: {h.location.name} ({CERTAINTY_TEXT[h.location.certainty]})
             {h.location.modernRegion
               ? ` · ngày nay: ${h.location.modernRegion}`
@@ -131,7 +131,7 @@ export function MissionSources({ nodeId }: { nodeId: CampaignMissionId }) {
                     </span>
                   </div>
                   <p className="text-stone-200">{c.summary}</p>
-                  <p className="mt-0.5 text-stone-400">Lưu ý: {c.caveat}</p>
+                  <p className="mt-0.5 text-muted">Lưu ý: {c.caveat}</p>
                 </li>
               ))}
             </ul>
@@ -150,7 +150,7 @@ export function MissionSources({ nodeId }: { nodeId: CampaignMissionId }) {
                     <span className="text-stone-500">{u.id} · </span>
                     {u.question}
                   </p>
-                  <p className="mt-0.5 text-stone-400">
+                  <p className="mt-0.5 text-muted">
                     Game chọn: {u.decision}
                   </p>
                 </li>
@@ -174,9 +174,9 @@ export function MissionSources({ nodeId }: { nodeId: CampaignMissionId }) {
                     <span className="font-semibold text-amber-100">
                       {w.name}
                     </span>
-                    <span className="text-stone-400">({w.title})</span>
+                    <span className="text-muted">({w.title})</span>
                   </div>
-                  <p className="text-stone-300">{w.outcome}</p>
+                  <p className="text-foreground-secondary">{w.outcome}</p>
                 </li>
               ))}
             </ul>
@@ -196,7 +196,7 @@ export function MissionSources({ nodeId }: { nodeId: CampaignMissionId }) {
           <h3 className="mb-1 text-xs font-semibold text-stone-200">
             Phần do game dựng
           </h3>
-          <ul className="list-disc pl-5 text-xs text-stone-300">
+          <ul className="list-disc pl-5 text-xs text-foreground-secondary">
             {h.fiction.map((f) => (
               <li key={f}>{f}</li>
             ))}
@@ -229,7 +229,7 @@ export default function WarlordCodex({
       <h2 id="warlord-codex-title" className="font-semibold text-amber-200">
         Sứ quân ký · {known}/12 hồ sơ đã mở
       </h2>
-      <p className="mb-2 text-xs text-stone-400">
+      <p className="mb-2 text-xs text-muted">
         Hồ sơ mở khi nhiệm vụ của sứ quân đó mở; kết cục chỉ hiện khi bạn đã đi
         qua. Số thứ tự là của sổ nguồn, không phải thứ tự đánh dẹp.
       </p>
@@ -251,14 +251,14 @@ export default function WarlordCodex({
                     {w.id}
                   </span>
                   {w.name}
-                  <span className="text-xs font-normal text-stone-400">
+                  <span className="text-xs font-normal text-muted">
                     · {location.name} ·{" "}
                     {stage === "resolved"
                       ? GROUP_TEXT[r.group]
                       : "chưa có kết cục"}
                   </span>
                 </summary>
-                <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5 text-xs text-stone-300">
+                <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5 text-xs text-foreground-secondary">
                   <dt className="text-stone-500">Danh hiệu</dt>
                   <dd>
                     {w.title}

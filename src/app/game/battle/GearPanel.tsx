@@ -1,5 +1,7 @@
 "use client";
 
+import { Select as UISelect, Button } from "@/components/ui";
+
 // Túi đồ và 9 ô trang bị của Chơi thử (Tiến trình) và Chơi online, kèm cửa hàng trang bị. Luật nằm trong
 // @/core (applyProfileAction); ở đây chỉ hiển thị và gửi thao tác, giống ProgressPanel.
 
@@ -110,17 +112,17 @@ function Select<T extends string>({
   return (
     <label className="flex items-center gap-1">
       <span className="opacity-70">{label}</span>
-      <select
+      <UISelect
         value={value}
         onChange={(e) => onChange(e.target.value as T)}
-        className="rounded bg-black/20 px-1 py-0.5"
+
       >
         {options.map((o) => (
           <option key={o.value} value={o.value}>
             {o.text}
           </option>
         ))}
-      </select>
+      </UISelect>
     </label>
   );
 }
@@ -354,16 +356,16 @@ export default function GearPanel({
                 Ghép 3 món thành 1 món phẩm cao hơn, giữ bộ của món chọn đầu
                 tiên.
               </span>
-              <button
+              <Button variant="primary"
                 type="button"
                 disabled={disabled}
                 onClick={() =>
                   commit({ type: "merge", items: picked, main: 0 })
                 }
-                className="rounded bg-amber-500 px-2 py-0.5 font-semibold text-stone-950 disabled:opacity-40"
+
               >
                 Ghép (−{mergeCost(items[0]!.tier)} vàng)
-              </button>
+              </Button>
             </>
           ) : (
             <span className="flex-1 opacity-70">
@@ -455,7 +457,7 @@ export function GearShop({
         }))}
         onChange={(t) => setOrder({ ...order, tier: Number(t) as Tier })}
       />
-      <button
+      <Button variant="primary"
         type="button"
         disabled={disabled || profile.gold < price}
         onClick={() =>
@@ -468,10 +470,10 @@ export function GearShop({
             ...(order.slot === "vuKhi" ? { profession: order.profession } : {}),
           })
         }
-        className="rounded bg-amber-500 px-2 py-0.5 font-semibold text-stone-950 disabled:opacity-35"
+
       >
         Mua {price}
-      </button>
+      </Button>
     </div>
   );
 }

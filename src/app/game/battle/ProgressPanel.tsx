@@ -1,4 +1,6 @@
 "use client";
+import { Button } from "@/components/ui";
+
 
 // Bảng tiến trình của Chơi thử và Chơi online: cấp, kinh nghiệm, điểm kỹ năng, nâng kỹ năng theo ô.
 // Mọi luật nằm trong @/core/progress; ở đây chỉ hiển thị và gửi thao tác (Chơi thử áp tại chỗ, Chơi online gửi server).
@@ -123,11 +125,11 @@ function SkillRow({
               {"★".repeat(SKILL_MAX_LEVEL - level)}
             </span>
           </span>
-          <button
+          <Button variant="primary"
             type="button"
             disabled={!canUp || cost === null || points < cost}
             onClick={onUp}
-            className="w-12 rounded bg-amber-500 px-1 py-0.5 text-[10px] font-semibold text-stone-950 disabled:opacity-30"
+            className="w-12 text-[10px]"
             title={
               cost === null
                 ? "Đã tối đa"
@@ -135,7 +137,7 @@ function SkillRow({
             }
           >
             {cost === null ? "Tối đa" : `+ (${cost})`}
-          </button>
+          </Button>
         </>
       )}
     </li>

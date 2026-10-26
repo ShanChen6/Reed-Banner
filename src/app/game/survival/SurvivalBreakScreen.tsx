@@ -1,5 +1,7 @@
 "use client";
 
+import { Select, Button } from "@/components/ui";
+
 import {
   ELEMENTS,
   MAIN_SLOT_UNLOCK,
@@ -40,21 +42,21 @@ export default function SurvivalBreakScreen(props: SurvivalBreakScreenProps) {
     return (
       <section
         role="alert"
-        className="fixed inset-2 z-40 m-auto flex max-h-[90dvh] max-w-3xl flex-col justify-center gap-4 overflow-y-auto rounded-xl border border-rose-400/70 bg-[#17110e]/[.98] p-4 text-stone-100 shadow-2xl sm:p-6"
+        className="fixed inset-2 z-40 m-auto flex max-h-[90dvh] max-w-3xl flex-col justify-center gap-4 overflow-y-auto rounded-xl border border-rose-400/70 bg-[#17110e]/[.98] p-4 text-foreground shadow-2xl sm:p-6"
       >
         <h2 className="text-xl font-bold text-rose-200">Không tải được dữ liệu nghỉ</h2>
-        <p className="text-sm text-stone-300">
+        <p className="text-sm text-foreground-secondary">
           Server chưa cung cấp bản xem trước đội hình, hồi phục và lương. Không thể tự tính thay hoặc tự bắt đầu đợt kế.
         </p>
         {error && <p className="text-sm text-rose-300">{error}</p>}
-        <button
+        <Button variant="primary"
           type="button"
           disabled={pending}
           onClick={onRefresh}
-          className="min-h-11 rounded-lg bg-amber-500 px-4 py-2 font-bold text-stone-950 disabled:opacity-50"
+          className="min-h-11"
         >
           {pending ? "Đang tải dữ liệu…" : "Tải lại dữ liệu nghỉ"}
-        </button>
+        </Button>
       </section>
     );
   }
@@ -191,7 +193,7 @@ function SurvivalBreakReady({
   return (
     <section
       aria-labelledby="survival-break-title"
-      className="fixed inset-x-2 bottom-2 z-40 m-auto flex max-h-[92dvh] w-[calc(100%-1rem)] max-w-5xl flex-col gap-4 overflow-y-auto rounded-xl border border-amber-400/70 bg-[#17110e]/[.98] p-3 text-stone-100 shadow-2xl sm:inset-4 sm:w-auto sm:p-5 lg:inset-8"
+      className="fixed inset-x-2 bottom-2 z-40 m-auto flex max-h-[92dvh] w-[calc(100%-1rem)] max-w-5xl flex-col gap-4 overflow-y-auto rounded-xl border border-amber-400/70 bg-[#17110e]/[.98] p-3 text-foreground shadow-2xl sm:inset-4 sm:w-auto sm:p-5 lg:inset-8"
     >
       <header className="flex flex-wrap items-start justify-between gap-3 border-b border-white/10 pb-3">
         <div>
@@ -201,7 +203,7 @@ function SurvivalBreakReady({
           <h2 id="survival-break-title" className="text-xl font-black text-amber-100 sm:text-2xl">
             Đã thắng đợt {survival.wave}
           </h2>
-          <p className="text-sm text-stone-300">
+          <p className="text-sm text-foreground-secondary">
             Đợt tiếp theo: {next.wave}
             {next.boss && (
               <span className="ml-2 inline-flex rounded-full bg-rose-900/70 px-2 py-0.5 text-xs font-bold text-rose-100">
@@ -226,7 +228,7 @@ function SurvivalBreakReady({
               <h3 id="survival-force-title" className="font-bold text-amber-200">
                 Quân lực · HP sau hồi phục
               </h3>
-              <p className="text-xs text-stone-400">
+              <p className="text-xs text-muted">
                 HP hiển thị là bản xem trước do server tính; năng lượng giữ nguyên.
               </p>
             </div>
@@ -270,7 +272,7 @@ function SurvivalBreakReady({
                             {status}
                           </span>
                         </div>
-                        <p className="flex flex-wrap items-center gap-1 text-xs text-stone-400">
+                        <p className="flex flex-wrap items-center gap-1 text-xs text-muted">
                           {fighter.location === "active" ? "Active" : "Dự bị"}
                           <ElementIcon element={fighter.element} className="size-3.5" />
                           {ELEMENT_NAME[fighter.element]}
@@ -299,7 +301,7 @@ function SurvivalBreakReady({
                           style={{ width: `${hpWidth}%` }}
                         />
                       </div>
-                      <p className="mt-1 text-right text-xs text-stone-300">
+                      <p className="mt-1 text-right text-xs text-foreground-secondary">
                         Năng lượng: {fighter.energy}
                       </p>
                     </div>
@@ -318,7 +320,7 @@ function SurvivalBreakReady({
                 <h3 id="survival-tactics-title" className="font-bold text-amber-200">
                   Chuẩn bị chiến thuật
                 </h3>
-                <p className="text-xs text-stone-400">
+                <p className="text-xs text-muted">
                   Bản nháp chỉ thay đổi trên màn hình; server chỉ áp dụng khi xác nhận vào đợt.
                 </p>
               </div>
@@ -357,10 +359,10 @@ function SurvivalBreakReady({
                           />
                         )}
                         <span className="min-w-0 flex-1">
-                          <span className="block text-xs text-stone-400">
+                          <span className="block text-xs text-muted">
                             Đồng đội {slot} · {fighter?.hpAfterRecovery ?? 0}/{fighter?.maxHp ?? 0} HP
                           </span>
-                          <select
+                          <Select
                             aria-label={`Chọn đồng đội vị trí ${slot}`}
                             disabled={pending}
                             value={id}
@@ -371,10 +373,10 @@ function SurvivalBreakReady({
                                 return updated;
                               })
                             }
-                            className="min-h-10 w-full rounded bg-stone-900 px-2 text-sm text-white"
+                            className="min-h-10 w-full text-sm text-white"
                           >
                             {slotOptions(slot)}
-                          </select>
+                          </Select>
                         </span>
                       </label>
                     );
@@ -388,7 +390,7 @@ function SurvivalBreakReady({
                     ? "Đội hình hợp lệ · Đinh Bộ Lĩnh giữ vị trí thủ lĩnh."
                     : "Đội hình chưa hợp lệ: cần đủ hai đồng đội sống; tướng gục chỉ được giữ nguyên vị trí khi không còn dự bị sống."}
                 </p>
-                <p className="mt-2 text-xs font-semibold text-stone-300">
+                <p className="mt-2 text-xs font-semibold text-foreground-secondary">
                   Dự bị sau khi xác nhận:
                 </p>
                 <ul className="mt-1 flex flex-wrap gap-2">
@@ -418,44 +420,44 @@ function SurvivalBreakReady({
                 {preview.leaderBuildBasis && leaderPreview ? (
                   <>
                     <div className="grid gap-2 sm:grid-cols-2">
-                      <label className="text-xs text-stone-300">
+                      <label className="text-xs text-foreground-secondary">
                         Nghề
-                        <select
+                        <Select
                           aria-label="Nghề Đinh Bộ Lĩnh"
                           disabled={pending}
                           value={draftProfession}
                           onChange={(event) =>
                             setDraftProfession(event.target.value as Profession)
                           }
-                          className="mt-1 min-h-10 w-full rounded bg-stone-900 px-2 text-sm text-white"
+                          className="mt-1 min-h-10 w-full text-sm text-white"
                         >
                           {PROFESSIONS.map((profession) => (
                             <option key={profession} value={profession}>
                               {PROFESSION_NAME[profession]}
                             </option>
                           ))}
-                        </select>
+                        </Select>
                       </label>
-                      <label className="text-xs text-stone-300">
+                      <label className="text-xs text-foreground-secondary">
                         Nguyên tố
-                        <select
+                        <Select
                           aria-label="Nguyên tố Đinh Bộ Lĩnh"
                           disabled={pending}
                           value={draftElement}
                           onChange={(event) =>
                             setDraftElement(event.target.value as Element)
                           }
-                          className="mt-1 min-h-10 w-full rounded bg-stone-900 px-2 text-sm text-white"
+                          className="mt-1 min-h-10 w-full text-sm text-white"
                         >
                           {ELEMENTS.map((element) => (
                             <option key={element} value={element}>
                               {ELEMENT_NAME[element]}
                             </option>
                           ))}
-                        </select>
+                        </Select>
                       </label>
                     </div>
-                    <div className="mt-2 flex items-center gap-2 text-xs text-stone-300">
+                    <div className="mt-2 flex items-center gap-2 text-xs text-foreground-secondary">
                       <Portrait
                         id="dinhBoLinh"
                         element={draftElement}
@@ -470,16 +472,16 @@ function SurvivalBreakReady({
                         ATK {leaderPreview.config.atk} · DEF {leaderPreview.config.def}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs text-stone-400">
+                    <p className="mt-1 text-xs text-muted">
                       Hiện tại: {PROFESSION_NAME[currentProfession]} · {ELEMENT_NAME[currentElement]}
                       {" → "}
                       Bản nháp: {PROFESSION_NAME[draftProfession]} · {ELEMENT_NAME[draftElement]}
                     </p>
-                    <p className="mt-1 text-xs text-stone-400">
+                    <p className="mt-1 text-xs text-muted">
                       Máu được chuyển theo tỷ lệ {Math.round(preview.leaderBuildBasis.hpRatio * 100)}%; thay đổi nghề/hệ không sửa Profile.
                     </p>
                     <div className="mt-2">
-                      <p className="mb-1 text-xs font-semibold text-stone-300">
+                      <p className="mb-1 text-xs font-semibold text-foreground-secondary">
                         Kỹ năng dự kiến · cấp {preview.leaderBuildBasis.progress.level}
                       </p>
                       <ul className="grid gap-1 sm:grid-cols-2">
@@ -499,7 +501,7 @@ function SurvivalBreakReady({
                               <span className="block truncate text-xs font-semibold">
                                 {skill.name}
                               </span>
-                              <span className="block text-[10px] text-stone-400">
+                              <span className="block text-[10px] text-muted">
                                 {unlocked
                                   ? `Đã mở · cấp kỹ năng ${leaderSkillLevel(skill.slot)}`
                                   : `Mở ở cấp ${MAIN_SLOT_UNLOCK[skill.slot ?? 0] ?? 1}`}
@@ -511,7 +513,7 @@ function SurvivalBreakReady({
                     </div>
                   </>
                 ) : (
-                  <p role="status" className="rounded bg-black/30 p-2 text-xs text-stone-300">
+                  <p role="status" className="rounded bg-black/30 p-2 text-xs text-foreground-secondary">
                     Bản lưu này không có snapshot tiến trình cần thiết để xem trước build. Cấu hình hiện tại được giữ nguyên.
                   </p>
                 )}
@@ -539,7 +541,7 @@ function SurvivalBreakReady({
                   />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold">{foe.name}</p>
-                    <p className="flex items-center gap-1 text-xs text-stone-400">
+                    <p className="flex items-center gap-1 text-xs text-muted">
                       <ElementIcon element={foe.element} className="size-3.5" />
                       {ELEMENT_NAME[foe.element]}
                       <ProfessionIcon profession={foe.profession} className="size-3.5" />
@@ -565,7 +567,7 @@ function SurvivalBreakReady({
             </p>
           ) : (
             <>
-              <p className="text-sm text-stone-300">
+              <p className="text-sm text-foreground-secondary">
                 Chọn một tướng gục để hồi sinh khi xác nhận vào đợt kế. Chi phí:{" "}
                 <strong>{preview.reviveCost} lương</strong>.
               </p>
@@ -607,22 +609,22 @@ function SurvivalBreakReady({
             </p>
           )}
           <div className="mt-auto flex flex-col gap-2 border-t border-white/10 pt-3">
-            <button
+            <Button variant="primary"
               type="button"
               disabled={pending || !lineupValid}
               onClick={() => onNext(action)}
-              className="min-h-11 rounded-lg bg-amber-500 px-4 py-2 font-bold text-stone-950 hover:bg-amber-400 disabled:opacity-50"
+              className="min-h-11"
             >
               {pending ? "Đang xử lý…" : `Xác nhận và vào đợt ${next.wave}`}
-            </button>
-            <button
+            </Button>
+            <Button variant="secondary"
               type="button"
               disabled={pending}
               onClick={onEnd}
-              className="min-h-11 rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/15 disabled:opacity-50"
+              className="min-h-11 text-sm"
             >
               Dừng Sinh tồn · ghi {survival.cleared} đợt
-            </button>
+            </Button>
           </div>
         </aside>
       </div>
