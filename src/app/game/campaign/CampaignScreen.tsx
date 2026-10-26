@@ -126,7 +126,7 @@ export default function CampaignScreen() {
 function Shell({ children }: { children: React.ReactNode }) {
   return (
     <main className="flex-1 bg-[radial-gradient(ellipse_at_top,#4a2418_0%,#17110e_60%)] px-3 py-6 text-stone-100 [--gold:#d4a24c] sm:px-6">
-      <div className="mx-auto max-w-6xl">{children}</div>
+      <div className="mx-auto max-w-[1440px]">{children}</div>
     </main>
   );
 }
