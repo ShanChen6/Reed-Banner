@@ -126,3 +126,22 @@ Asset requirement: Vietnamese 10th-century low-fantasy visual references, no emb
 - [x] Migration sequence and acceptance criteria.
 - [ ] Artwork/mockups approved by owner.
 - [ ] UI coding and screenshot testing (separate PRs).
+
+## 7. UI-02 — Home V2 refined design gate (27/10/2026)
+
+Sau khi kiểm tra baseline, chủ dự án chọn **Home V2 illustration-led** thay vì bản Home card chữ hoặc wireframe hero + sáu ô giấy dó đơn giản. Tham chiếu chi tiết: [Home V2 trong game-mode-ui-spec.md](game-mode-ui-spec.md#14-home-v2--visual-direction-đã-chọn-27102026).
+
+### Triển khai theo các bước riêng
+
+1. **UI-02A — Asset inventory:** định vị logo, ảnh pano Hoa Lư, thumbnail Campaign và các artwork/overlay liên quan; lập danh sách thiếu, chưa tự sinh/thay asset.
+2. **UI-02B — Hero:** giữ Global Header; dùng pano môi trường làm nền hero, gradient và branded CTA; không biến `Vào Trận` thành `Tiếp tục` giả.
+3. **UI-02C — Six mode cards:** grid 3×2 desktop, 2 cột tablet, 1 cột mobile; icon chỉ phụ trợ artwork; đọc live availability, progress, labels và links từ nguồn chuẩn.
+4. **UI-02D — Secondary actions:** tổ chức tiện ích hiện có; không nhân đôi navigation từ Header và không thêm mode docs-only.
+5. **UI-02E — Verification:** visual diff với Campaign, QA states và test điều hướng/flags tại 1920×1080, 1440×900, 1024×768, 390×844.
+
+### Review/acceptance gate
+
+- Wireframe hiện có chỉ minh họa tỉ lệ và hierarchy, **không phải screenshot UI cuối**; artwork ví dụ không được xem là asset production.
+- Phải cho người duyệt thấy screenshot Home mới cạnh màn Campaign reference trước khi chuyển mode khác.
+- Không sửa header, campaign scene, battle logic, API contract hoặc feature flag.
+- Ưu tiên Home trong task UI-02, sau đó Trial → Destiny → Survival → Daily → Arena như roadmap hiện tại; không gộp hết vào một PR.
