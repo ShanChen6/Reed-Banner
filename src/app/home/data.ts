@@ -57,6 +57,6 @@ export const FAQ: readonly { readonly q: string; readonly a: string }[] = [
   },
   {
     q: "Có những chế độ nào?",
-    a: "Chơi thử offline, trận thường online, chiến dịch dẹp 12 sứ quân kèm đánh trùm, Tháp Thí Luyện, Tháp Vận Mệnh, sinh tồn, thử thách ngày và đấu trường. Thêm nhiệm vụ, điểm danh và bảng xếp hạng.",
+    a: "Thao Luyện offline, Giao Tranh online, Bình Loạn dẹp 12 sứ quân kèm Tái đấu sứ quân, Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh và Quần Hùng. Thêm nhiệm vụ, điểm danh và bảng xếp hạng.",
   },
 ];

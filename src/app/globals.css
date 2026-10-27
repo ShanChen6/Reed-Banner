@@ -816,3 +816,128 @@
     transition: none;
   }
 }
+
+/* Màn chính (Home V2, MenuScene): dùng lại khung/góc/màu của Sử ký trong .campaign-atlas. Hero là tranh Hoa Lư,
+   lớp phủ tối bên trái (và phía dưới trên điện thoại) để logo, câu dẫn và nút đọc rõ. */
+.campaign-atlas .home-hero {
+  border-color: #8a6a3b;
+  box-shadow:
+    0 0 0 1px #c9a25a40,
+    0 14px 36px #000b;
+}
+.campaign-atlas .home-hero-shade {
+  background:
+    linear-gradient(0deg, #17110ef2 0%, #17110e99 30%, transparent 62%),
+    linear-gradient(90deg, #140d09d9 0%, #140d0980 34%, transparent 62%);
+}
+@media (min-width: 1024px) {
+  .campaign-atlas .home-hero-shade {
+    background:
+      linear-gradient(0deg, #17110eb3 0%, transparent 28%),
+      linear-gradient(90deg, #140d09f0 0%, #140d09b8 30%, #140d0933 52%, transparent 66%);
+  }
+}
+/* Nút chính đỏ son viền vàng như nút hành động của Sử ký; nút phụ gỗ viền đồng. */
+.campaign-atlas .home-cta {
+  border: 1.5px solid var(--atlas-gold-hi);
+  background: linear-gradient(180deg, var(--atlas-red-hi), var(--atlas-red) 55%, #5e1712);
+  color: #fbecc8;
+  text-shadow: 0 1px 2px #0009;
+  box-shadow:
+    inset 0 1px 0 #ffd9a040,
+    0 6px 18px -6px #8f241dcc;
+  transition: filter 0.15s, box-shadow 0.15s;
+}
+.campaign-atlas .home-cta:hover {
+  filter: brightness(1.1);
+  box-shadow:
+    inset 0 1px 0 #ffd9a059,
+    0 8px 24px -6px #b4382ce6;
+}
+.campaign-atlas .home-secondary {
+  border: 1px solid var(--atlas-bronze);
+  background: #1d140dcc;
+  color: var(--atlas-ink-on-wood);
+  transition: border-color 0.15s, background-color 0.15s;
+}
+.campaign-atlas .home-secondary:hover {
+  border-color: var(--atlas-gold);
+  background: #2a1d13e6;
+}
+.campaign-atlas .home-rule {
+  background: linear-gradient(90deg, var(--atlas-border-soft), transparent);
+}
+/* Thẻ chế độ: gỗ sẫm, viền đồng; rê chuột sáng viền và đẩy nhẹ tranh. Thẻ Chiến dịch viền vàng để nổi hơn một chút. */
+.campaign-atlas .home-mode {
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.campaign-atlas a.home-mode:hover {
+  border-color: var(--atlas-gold);
+  box-shadow: 0 10px 26px -12px #000, 0 0 0 1px #c9a25a40;
+}
+.campaign-atlas .home-mode-featured {
+  border-color: var(--atlas-gold);
+}
+.campaign-atlas .home-mode-featured::after {
+  border-color: #d4a24c80;
+}
+.campaign-atlas .home-mode-locked {
+  border-color: #4a3826;
+  cursor: not-allowed;
+}
+.campaign-atlas .home-mode-locked .atlas-corner {
+  color: #6b5640;
+}
+.campaign-atlas .home-kicker {
+  border: 1px solid #c9a25a99;
+  background: #1a120ccc;
+  color: var(--atlas-title);
+}
+.campaign-atlas .home-enter {
+  color: var(--atlas-gold-hi);
+}
+.campaign-atlas a.home-mode:hover .home-enter {
+  color: var(--atlas-title);
+}
+.campaign-atlas .home-utility {
+  background: linear-gradient(var(--atlas-wood-hi), #231910);
+  color: var(--atlas-ink-on-wood);
+  transition: border-color 0.15s;
+}
+.campaign-atlas .home-utility:hover {
+  border-color: var(--atlas-gold);
+}
+@media (prefers-reduced-motion: reduce) {
+  .campaign-atlas .home-cta,
+  .campaign-atlas .home-mode,
+  .campaign-atlas .home-secondary,
+  .campaign-atlas .home-utility {
+    transition: none;
+  }
+}
+/* Thẻ "Sắp ra mắt": chưa có tranh nên nền sơn mài có lưới sa bàn mờ; viền trầm hơn thẻ đang mở. */
+.campaign-atlas .home-mode-soon {
+  border-color: #5c4630;
+  border-style: dashed;
+}
+.campaign-atlas .home-mode-soon .atlas-corner {
+  color: #7a6146;
+}
+.campaign-atlas .home-soon-art {
+  background:
+    radial-gradient(ellipse at 50% 40%, #4a3320 0%, transparent 70%),
+    repeating-linear-gradient(0deg, #c9a25a14 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(90deg, #c9a25a14 0 1px, transparent 1px 28px),
+    #21170f;
+}
+.campaign-atlas .home-sa-ban {
+  border: 1px solid #8a6a3b99;
+  border-radius: 0.5rem;
+  background: #1a120ccc;
+  opacity: 0.85;
+}
+.campaign-atlas .home-soon-portrait {
+  border: 1.5px dashed var(--atlas-bronze);
+  background: #1a120c;
+  color: var(--atlas-gold);
+}

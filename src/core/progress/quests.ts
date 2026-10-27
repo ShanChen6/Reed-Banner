@@ -81,7 +81,7 @@ export const WEEKLY_QUESTS: readonly QuestDef[] = [
   { id: "w.win15", title: "Thắng 15 trận", stat: "win", target: 15, gold: 400 },
   {
     id: "w.campaign5",
-    title: "Thắng 5 trận chiến dịch hoặc đánh trùm",
+    title: "Thắng 5 trận Bình Loạn hoặc Tái đấu sứ quân",
     stat: "campaign",
     target: 5,
     gold: 300,
