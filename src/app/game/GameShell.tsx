@@ -113,7 +113,7 @@ function SceneView({
     case "TRIAL":
       return towerFeatures.trial ? <TrialScreen /> : <DisabledTowerMode name="Tháp Thí Luyện" />;
     case "DESTINY":
-      return towerFeatures.destiny ? <DestinyScreen /> : <DisabledTowerMode name="Tháp Vận Mệnh" />;
+      return towerFeatures.destiny ? <DestinyScreen /> : <DisabledTowerMode name="Tháp Thiên Mệnh" />;
     case "SURVIVAL":
       return <SurvivalScreen />;
     case "DAILY":

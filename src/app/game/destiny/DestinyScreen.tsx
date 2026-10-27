@@ -173,7 +173,7 @@ export default function DestinyScreen() {
 
   if (!overview || !profile) return (
     <main className="flex flex-1 items-center justify-center bg-[#17110e] p-6 text-stone-200">
-      <div className="text-center">{failed ? <><p role="alert">Không tải được Tháp Vận Mệnh.</p><Button variant="secondary" className="mt-3" onClick={() => void load()}>Tải lại</Button></> : <p role="status">Đang tải Tháp Vận Mệnh…</p>}</div>
+      <div className="text-center">{failed ? <><p role="alert">Không tải được Tháp Thiên Mệnh.</p><Button variant="secondary" className="mt-3" onClick={() => void load()}>Tải lại</Button></> : <p role="status">Đang tải Tháp Vận Mệnh…</p>}</div>
     </main>
   );
 
@@ -185,7 +185,7 @@ export default function DestinyScreen() {
       <div className="mx-auto max-w-6xl space-y-5">
         <header className="rounded-xl border border-amber-500/30 bg-black/20 p-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
-            <div><p className="text-xs uppercase tracking-[.2em] text-amber-400">Chu kỳ {overview.cycleId ?? "—"}</p><h1 className="font-serif text-3xl font-bold text-amber-100">Tháp Vận Mệnh</h1><p className="mt-1 text-sm text-muted">HP, năng lượng và lương được giữ xuyên tầng. Roster khóa cho cả run.</p></div>
+            <div><p className="text-xs uppercase tracking-[.2em] text-amber-400">Chu kỳ {overview.cycleId ?? "—"}</p><h1 className="font-serif text-3xl font-bold text-amber-100">Tháp Thiên Mệnh</h1><p className="mt-1 text-sm text-muted">HP, năng lượng và lương được giữ xuyên tầng. Roster khóa cho cả run.</p></div>
             <div className="text-right text-sm"><p>Đá Cường Hóa: <strong className="text-amber-300">{overview.stones}</strong></p><p>Kỷ lục chu kỳ: tầng {overview.progress?.cycleBest ?? 0}</p><SceneLink scene="LEADERBOARD" params={{ board: "destiny" }} className="text-amber-300 underline">BXH Vận Mệnh</SceneLink></div>
           </div>
         </header>

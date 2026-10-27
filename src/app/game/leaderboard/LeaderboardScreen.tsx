@@ -53,11 +53,11 @@ const TABS: readonly {
   id: "campaign" | "mission" | "survival" | "arena" | "destiny";
   label: string;
 }[] = [
-  { id: "campaign", label: "Chiến dịch" },
+  { id: "campaign", label: "Bình Loạn" },
   { id: "mission", label: "Từng trận" },
-  { id: "survival", label: "Sinh tồn" },
-  { id: "arena", label: "Đấu trường" },
-  { id: "destiny", label: "Vận Mệnh" },
+  { id: "survival", label: "Trấn Ải" },
+  { id: "arena", label: "Quần Hùng" },
+  { id: "destiny", label: "Thiên Mệnh" },
 ];
 
 const NOTE: Record<(typeof TABS)[number]["id"], string> = {
@@ -132,7 +132,7 @@ export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEn
               scene="DAILY"
               className="rounded bg-white/10 px-3 py-1.5 hover:bg-white/15"
             >
-              Thử thách ngày
+              Nhật Lệnh
             </SceneLink>
           </div>
         </div>

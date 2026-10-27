@@ -1761,7 +1761,7 @@ export default function DemoGame({
         <header className="flex flex-wrap items-center justify-between gap-2">
           <h1 className="flex items-center gap-1.5 text-lg font-bold">
             <LeaderFlag className="size-6" />
-            {online ? "Cờ Lau · Chơi online" : "Cờ Lau · Chơi thử"}
+            {online ? "Cờ Lau · Giao Tranh" : "Cờ Lau · Thao Luyện"}
           </h1>
           <div className="text-sm font-semibold" aria-live="polite">
             {!started
@@ -2076,7 +2076,7 @@ export default function DemoGame({
                       scene="CAMPAIGN"
                       className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
                     >
-                      {phaseAdvanced ? "Chuẩn bị phase tiếp" : "Về Chiến dịch"}
+                      {phaseAdvanced ? "Chuẩn bị phase tiếp" : "Về Bình Loạn"}
                     </SceneLink>
                   </div>
                 )}
@@ -2138,13 +2138,13 @@ export default function DemoGame({
                         {outcome.destiny && (
                           <p className={`font-semibold ${outcome.destiny.won ? "text-amber-300" : "text-rose-300"}`}>
                             {outcome.destiny.won
-                              ? `Vận Mệnh: đã vượt tầng ${outcome.destiny.floor}. Hãy chọn một phần thưởng.`
-                              : `Vận Mệnh: đội hình gục ở tầng ${outcome.destiny.floor}. Run đã kết thúc.`}
+                              ? `Thiên Mệnh: đã vượt tầng ${outcome.destiny.floor}. Hãy chọn một phần thưởng.`
+                              : `Thiên Mệnh: đội hình gục ở tầng ${outcome.destiny.floor}. Run đã kết thúc.`}
                           </p>
                         )}
                         {outcome.daily && (
                           <p className="font-semibold text-amber-300">
-                            Thử thách ngày:{" "}
+                            Nhật Lệnh:{" "}
                             {outcome.daily.score.won
                               ? `thắng sau ${outcome.daily.score.turns} lượt`
                               : "thua"}
@@ -2157,7 +2157,7 @@ export default function DemoGame({
                           <p
                             className={`font-semibold ${outcome.arena.won ? "text-amber-300" : "text-rose-300"}`}
                           >
-                            Đấu trường: {outcome.arena.won ? "thắng" : "thua"}{" "}
+                            Quần Hùng: {outcome.arena.won ? "thắng" : "thua"}{" "}
                             {outcome.arena.opponent},{" "}
                             {outcome.arena.delta >= 0 ? "+" : "−"}
                             {Math.abs(outcome.arena.delta)} điểm
@@ -2213,7 +2213,7 @@ export default function DemoGame({
                           scene="DESTINY"
                           className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
                         >
-                          {outcome?.destiny?.won ? "Chọn thưởng Vận Mệnh" : "Về Tháp Vận Mệnh"}
+                          {outcome?.destiny?.won ? "Chọn thưởng Thiên Mệnh" : "Về Tháp Thiên Mệnh"}
                         </SceneLink>
                       )}
                       {dailyDay && (

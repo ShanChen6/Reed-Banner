@@ -69,7 +69,7 @@ export function ChapterRail({
       </h2>
       <div
         role="tablist"
-        aria-label="Chương Chiến dịch"
+        aria-label="Chương Bình Loạn"
         aria-orientation="vertical"
         className="flex snap-x gap-2 overflow-x-auto pb-1 xl:flex-col xl:overflow-visible xl:pb-0"
       >
@@ -368,7 +368,7 @@ export function MissionRewardCard({
     else
       rows.push({
         key: `raid:${u.target}`,
-        label: "Mở Đánh trùm",
+        label: "Mở Tái đấu sứ quân",
         value: companionById(u.target)?.name ?? u.target,
         done: status === "completed",
       });
