@@ -43,17 +43,15 @@ const MODES: readonly Mode[] = [
 
 /**
  * Chế độ Shan đã duyệt tên (26/10) nhưng chưa có route/engine: chỉ hiện thẻ "Sắp ra mắt", không bấm được.
- * TODO: khi có scene và feature flag thì chuyển lên MODES; TODO tranh: public/art/home/tran-do.webp, tam-tuong-ky.webp,
- * vien-chinh.webp (xem /mnt/project-files/art/prompts/home-thumbnail-che-do.md). Viễn Chinh chưa có cơ chế.
+ * TODO: khi có scene và feature flag thì chuyển lên MODES; TODO tranh: public/art/home/vien-chinh.webp
+ * (xem /mnt/project-files/art/prompts/home-thumbnail-che-do.md). Viễn Chinh chưa có cơ chế.
  */
-const UPCOMING: readonly { id: "tran-do" | "tam-tuong-ky" | "vien-chinh"; title: string; text: string }[] = [
-  { id: "tran-do", title: "Trận Đồ", text: "Bày quân lệnh theo nghề và hệ để khai thông sa bàn." },
-  { id: "tam-tuong-ky", title: "Tầm Tướng Ký", text: "Ghép yếu tố từ bảy hệ để tìm lại chân dung danh tướng." },
+const UPCOMING: readonly { id: "tran-do" | "tam-tuong-ky" | "vien-chinh"; title: string; text: string; art?: string }[] = [
+  { id: "tran-do", title: "Trận Đồ", text: "Bày quân lệnh theo nghề và hệ để khai thông sa bàn.", art: "tran-do" },
+  { id: "tam-tuong-ky", title: "Tầm Tướng Ký", text: "Ghép yếu tố từ bảy hệ để tìm lại chân dung danh tướng.", art: "tam-tuong-ky" },
   { id: "vien-chinh", title: "Viễn Chinh", text: "Đưa quân đi xa ngoài bờ cõi. Cơ chế đang được thiết kế." },
 ];
 
-const PROFESSION_ART = ["tuongSi", "binhLinh", "quanSu", "muuSi", "phapSu", "ySu"] as const;
-const ELEMENT_ART = ["kim", "moc", "thuy", "hoa", "tho", "loi", "phong"] as const;
 
 /** Tiện ích cuối trang. Hồ sơ và Tài khoản đã có trên thanh header nên không lặp lại ở đây. */
 const UTILITIES: readonly { scene: Scene; title: string; icon: UtilityIcon }[] = [
@@ -234,43 +232,15 @@ function ModeCard({ mode, locked }: { mode: Mode; locked: boolean }) {
   );
 }
 
-/** Thẻ chế độ sắp ra mắt: cùng khung với thẻ chế độ, không bấm được, tranh tạm dựng từ biểu tượng sẵn có. */
+/** Thẻ chế độ sắp ra mắt: cùng khung với thẻ chế độ, không bấm được; chưa có tranh thì dùng tranh mực tạm. */
 function UpcomingCard({ mode }: { mode: (typeof UPCOMING)[number] }) {
   return (
     <div aria-disabled="true" className="home-mode home-mode-soon atlas-frame atlas-frame-wood flex h-full flex-col">
       <div className="home-soon-art relative aspect-[16/9] overflow-hidden rounded-t-[0.65rem] lg:aspect-[2/1]">
-        {mode.id === "vien-chinh" ? (
-          <Image src="/art/campaign/rail-ink.webp" alt="" fill sizes="(min-width: 1024px) 460px, 100vw" className="object-cover object-bottom opacity-60 sepia-[.4]" />
-        ) : mode.id === "tran-do" ? (
-          <div aria-hidden className="absolute inset-x-0 top-1 bottom-12 grid place-items-center">
-            <div className="home-sa-ban grid grid-cols-3 gap-2 p-3">
-              {PROFESSION_ART.map((k) => (
-                <Image key={k} src={`/art/professions/${k}.webp`} alt="" width={44} height={44} className="size-8 sm:size-10" />
-              ))}
-            </div>
-          </div>
+        {mode.art ? (
+          <Image src={`/art/home/${mode.art}.webp`} alt="" fill sizes="(min-width: 1024px) 460px, 100vw" className="object-cover opacity-80 sepia-[.25]" />
         ) : (
-          <div aria-hidden className="absolute inset-x-0 top-1 bottom-12 grid place-items-center">
-            <div className="relative size-28 sm:size-32">
-              {ELEMENT_ART.map((k, i) => {
-                const a = (i / ELEMENT_ART.length) * 2 * Math.PI - Math.PI / 2;
-                return (
-                  <Image
-                    key={k}
-                    src={`/art/elements/${k}.webp`}
-                    alt=""
-                    width={36}
-                    height={36}
-                    className="absolute size-7 -translate-x-1/2 -translate-y-1/2 sm:size-8"
-                    style={{ left: `${50 + 42 * Math.cos(a)}%`, top: `${50 + 42 * Math.sin(a)}%` }}
-                  />
-                );
-              })}
-              <span className="home-soon-portrait absolute top-1/2 left-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full font-serif text-2xl font-bold">
-                ?
-              </span>
-            </div>
-          </div>
+          <Image src="/art/campaign/rail-ink.webp" alt="" fill sizes="(min-width: 1024px) 460px, 100vw" className="object-cover object-bottom opacity-60 sepia-[.4]" />
         )}
         <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#1d140d] via-[#1d140d]/20 to-transparent" />
         <span className="home-kicker absolute top-3 left-3 rounded px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase">
