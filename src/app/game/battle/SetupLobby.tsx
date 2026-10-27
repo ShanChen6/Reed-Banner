@@ -140,7 +140,7 @@ export default function SetupLobby({
       />
       <div className="relative flex flex-col gap-4 p-4 sm:p-6">
         <header className="flex flex-col items-center gap-1 text-center">
-          <p className="text-xs uppercase tracking-[0.3em] text-amber-300/80">{online ? "Chơi online" : "Chơi thử"}</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-amber-300/80">{online ? "Giao Tranh" : "Thao Luyện"}</p>
           <h2 className="font-serif text-2xl font-bold sm:text-3xl">Chuẩn bị xuất trận</h2>
           <DongSonBand className="mt-1 w-48 opacity-80" />
         </header>

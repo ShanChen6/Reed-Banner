@@ -57,14 +57,14 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
   },
   {
     id: "a.survival10",
-    title: "Sinh tồn qua 10 đợt",
+    title: "Trấn Ải qua 10 đợt",
     target: 10,
     gold: 300,
     value: (p) => p.survival.best,
   },
   {
     id: "a.survival20",
-    title: "Sinh tồn qua 20 đợt",
+    title: "Trấn Ải qua 20 đợt",
     target: 20,
     gold: 800,
     value: (p) => p.survival.best,

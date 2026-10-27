@@ -113,7 +113,7 @@ export default function ArenaScreen() {
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-black text-amber-100">
-            Đấu trường bóng ma
+            Quần Hùng
           </h1>
           <p className="text-sm text-muted">
             Đánh với đội phòng thủ của người chơi khác, do máy điều khiển ở mức{" "}
