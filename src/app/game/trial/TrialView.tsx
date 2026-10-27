@@ -98,7 +98,8 @@ function FloorNavigator({
               aria-label={`Tầng ${f.floor.floor}, ${FLOOR_STATE_TEXT[f.state]}${active === f.floor.floor ? ", đang đánh dở" : ""}`}
               onClick={() => onSelect(f.floor.floor)}
               onKeyDown={(e) => onKey(e, i)}
-              className={`flex min-h-12 w-full flex-col items-center justify-center rounded-lg border-2 px-1 py-1.5 text-sm font-bold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 ${tone} ${isSel ? "ring-2 ring-amber-200" : ""}`}
+              data-state={f.state}
+              className={`tower-screen__floor flex min-h-12 w-full flex-col items-center justify-center border-2 px-1 py-1.5 text-sm font-bold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 ${tone} ${isSel ? "ring-2 ring-amber-200" : ""}`}
             >
               <span>{f.floor.floor}</span>
               <span className="text-[10px] font-normal" aria-hidden>
@@ -168,7 +169,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
   return (
     <Card
       aria-labelledby="trial-floor-title"
-      className="flex flex-col gap-4"
+      className="tower-screen__panel flex flex-col gap-4"
     >
       <header>
         <p className="text-xs tracking-widest text-amber-300/80 uppercase">
@@ -325,7 +326,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
           type="button"
           disabled={!canStart}
           onClick={props.onStart}
-          className={`${btn} border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-6 tracking-wider text-amber-50 uppercase`}
+          className={`${btn} tower-screen__action px-6 tracking-wider uppercase`}
         >
           {busy ? "Đang vào tầng…" : hasActiveHere ? "Tiếp tục trận" : entry.state === "cleared" ? "Đánh lại" : "Vào tầng"}
         </button>
@@ -355,7 +356,7 @@ export default function TrialView(props: TrialViewProps) {
   const sweepButton = sweepButtonState(overview.sweep, props.sweepBusy);
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-end justify-between gap-3">
+      <div className="tower-screen__banner">
         <div>
           <p className="text-xs tracking-widest text-amber-300/80 uppercase">Song Tháp</p>
           <h1 className="text-2xl font-black text-amber-100">Tháp Thí Luyện</h1>
@@ -364,7 +365,7 @@ export default function TrialView(props: TrialViewProps) {
           </p>
         </div>
         <p
-          className="rounded-lg border border-amber-400/40 bg-black/30 px-3 py-1.5 text-sm"
+          className="tower-screen__metric text-sm"
           aria-label={`Đá Cường Hóa: ${overview.stones}`}
           data-testid="stones"
         >
@@ -380,7 +381,7 @@ export default function TrialView(props: TrialViewProps) {
 
       <section
         aria-labelledby="trial-sweep-title"
-        className="grid gap-4 rounded-xl border-2 border-amber-500/40 bg-gradient-to-br from-amber-950/60 to-[#2a1f19] p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
+        className="tower-screen__panel grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
       >
         <div className="min-w-0">
           <h2 id="trial-sweep-title" className="font-bold text-amber-200">Quét Tháp Thí Luyện</h2>
@@ -406,7 +407,7 @@ export default function TrialView(props: TrialViewProps) {
           disabled={sweepButton.disabled || !overview.supported}
           onClick={props.onSweep}
           aria-describedby="trial-sweep-history"
-          className={`${btn} min-h-12 w-full border-2 border-amber-400 bg-amber-700 px-5 text-amber-50 hover:bg-amber-600 sm:w-auto`}
+          className={`${btn} tower-screen__action min-h-12 w-full px-5 sm:w-auto`}
         >
           {sweepButton.text}
         </button>
@@ -432,7 +433,7 @@ export default function TrialView(props: TrialViewProps) {
         </p>
       ) : (
         <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-          <Card aria-labelledby="trial-floors-title" className="flex flex-col gap-2">
+          <Card aria-labelledby="trial-floors-title" className="tower-screen__panel flex flex-col gap-2">
             <h2 id="trial-floors-title" className="font-bold text-amber-200">
               Các tầng
             </h2>
