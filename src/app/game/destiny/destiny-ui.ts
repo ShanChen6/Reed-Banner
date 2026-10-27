@@ -11,7 +11,7 @@ import {
 } from "@/core";
 
 export const DESTINY_ERROR_TEXT: Readonly<Record<string, string>> = {
-  featureDisabled: "Tháp Vận Mệnh đang tạm đóng; tiến trình và trận dở được giữ nguyên.",
+  featureDisabled: "Tháp Thiên Mệnh đang tạm đóng; tiến trình và trận dở được giữ nguyên.",
   bad_request: "Dữ liệu gửi lên không hợp lệ.",
   invalid_roster: "Roster này không có đội hợp luật cho toàn chu kỳ.",
   invalid_lineup: "Đội active không hợp luật tầng hoặc có tướng đã gục.",

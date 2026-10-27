@@ -37,7 +37,7 @@ export default function CampaignEnding({
     >
       <header>
         <p className="text-xs tracking-widest text-amber-300/80 uppercase">
-          Chiến dịch hoàn thành · {campaign.completed.length}/{total} nhiệm vụ
+          Bình Loạn hoàn thành · {campaign.completed.length}/{total} nhiệm vụ
         </p>
         <h2
           id="campaign-ending-title"

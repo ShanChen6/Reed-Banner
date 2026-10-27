@@ -69,8 +69,8 @@ function RaidPanel({
           {boss.mode === "3v3" && " Thủ lĩnh máu ×1,5."}
         </p>
         <p className="mt-1 text-xs text-muted">
-          Thể thức {boss.mode === "3v3" ? "3vs3, ra trận cùng đội đã chọn ở trang Hồ sơ" : "1vs1"}. Đánh trùm
-          không dùng lương chiến dịch và không đổi tiến độ chiến dịch.
+          Thể thức {boss.mode === "3v3" ? "3vs3, ra trận cùng đội đã chọn ở trang Hồ sơ" : "1vs1"}. Tái đấu sứ quân
+          không dùng lương Bình Loạn và không đổi tiến độ Bình Loạn.
         </p>
       </div>
       {!open && <p className="text-sm text-muted">{gateText(boss)}.</p>}
@@ -163,14 +163,14 @@ export default function RaidHall({
       className="mt-6 rounded-xl border-2 border-[#7a2c1d] bg-[#2a1719]/90 p-4 shadow-card-inset"
     >
       <h2 id="raid-hall-title" className="text-xl font-black text-amber-100">
-        Đánh trùm · {openCount}/{RAID_BOSSES.length} sứ quân đã mở
+        Tái đấu sứ quân · {openCount}/{RAID_BOSSES.length} sứ quân đã mở
       </h2>
       <p className="mb-3 text-sm text-muted">
         Chế độ lặp lại riêng, không phải nhiệm vụ chiến dịch: tái đấu các sứ
         quân bị đánh dẹp, mỗi người mở sau nhiệm vụ mốc của họ trong chiến dịch.
       </p>
       <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-        <ol className="flex flex-col gap-1.5" aria-label="Sứ quân đánh trùm">
+        <ol className="flex flex-col gap-1.5" aria-label="Sứ quân tái đấu">
           {RAID_BOSSES.map((b) => {
             const leader = b.foes[0]!;
             const open = raidBossOpen(profile.campaign, b.id);
