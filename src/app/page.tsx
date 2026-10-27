@@ -73,14 +73,14 @@ const FEATURES: { tile: Tile; title: string; body: string }[] = [
 
 /** Các chế độ đang có trong màn chơi /game (cùng danh sách với MenuScene). `flag`: chế độ bật bằng biến môi trường lúc build. */
 const MODES: readonly { slug: string; name: string; body: string; tile: Tile; flag?: keyof TowerFeatureFlags }[] = [
-  { slug: "practice", name: "Chơi thử", body: "Vào trận ngay, offline, 3vs3 đấu Tianwu với đội cấp tối đa. Không cần tài khoản.", tile: { kind: "amDuong" } },
-  { slug: "play", name: "Trận thường", body: "Trận online có đồng hồ 30 giây, nhận vàng, kinh nghiệm và chiến lợi phẩm.", tile: { kind: "kiem" } },
-  { slug: "campaign", name: "Chiến dịch", body: "Sáu chương dẹp loạn 12 sứ quân, tướng lịch sử gia nhập, rồi tái đấu sứ quân bị đánh dẹp ở 3 bậc.", tile: { kind: "trong" } },
+  { slug: "practice", name: "Thao Luyện", body: "Vào trận ngay, offline, 3vs3 đấu Tianwu với đội cấp tối đa. Không cần tài khoản.", tile: { kind: "amDuong" } },
+  { slug: "play", name: "Giao Tranh", body: "Trận online có đồng hồ 30 giây, nhận vàng, kinh nghiệm và chiến lợi phẩm.", tile: { kind: "kiem" } },
+  { slug: "campaign", name: "Bình Loạn", body: "Sáu chương dẹp loạn 12 sứ quân, tướng lịch sử gia nhập, rồi Tái đấu sứ quân bị đánh dẹp ở 3 bậc.", tile: { kind: "trong" } },
   { slug: "trial", name: "Tháp Thí Luyện", body: "20 tầng cố định, tự chọn đội và luật riêng từng tầng.", tile: { kind: "vang", special: "weak" }, flag: "trial" },
-  { slug: "destiny", name: "Tháp Vận Mệnh", body: "Khóa đội hình theo chu kỳ, giữ máu và lương xuyên tầng.", tile: { kind: "amDuong", special: "weak" }, flag: "destiny" },
-  { slug: "survival", name: "Sinh tồn", body: "Một bàn cờ, đối thủ kéo đến theo đợt, nghỉ giữa đợt để tính tiếp.", tile: { kind: "tim" } },
-  { slug: "daily", name: "Thử thách ngày", body: "Một đề chung cho mọi người, mỗi ngày một lần, có bảng xếp hạng.", tile: { kind: "banhChung" } },
-  { slug: "arena", name: "Đấu trường", body: "Đánh đội phòng thủ của người chơi khác, leo điểm mỗi ngày.", tile: { kind: "kiem", special: "strong" } },
+  { slug: "destiny", name: "Tháp Thiên Mệnh", body: "Khóa đội hình theo chu kỳ, giữ máu và lương xuyên tầng.", tile: { kind: "amDuong", special: "weak" }, flag: "destiny" },
+  { slug: "survival", name: "Trấn Ải", body: "Một bàn cờ, đối thủ kéo đến theo đợt, nghỉ giữa đợt để tính tiếp.", tile: { kind: "tim" } },
+  { slug: "daily", name: "Nhật Lệnh", body: "Một đề chung cho mọi người, mỗi ngày một lần, có bảng xếp hạng.", tile: { kind: "banhChung" } },
+  { slug: "arena", name: "Quần Hùng", body: "Đánh đội phòng thủ của người chơi khác, leo điểm mỗi ngày.", tile: { kind: "kiem", special: "strong" } },
 ];
 
 
@@ -470,7 +470,7 @@ export default function Home() {
             </li>
             <li>
               <Link href="/game/practice" className="hover:text-[var(--gold)]">
-                Chơi thử offline
+                Thao Luyện
               </Link>
             </li>
             <li>

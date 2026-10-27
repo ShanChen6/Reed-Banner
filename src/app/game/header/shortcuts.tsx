@@ -4,7 +4,7 @@ import type { Scene } from "../scene";
 
 export const HEADER_SHORTCUTS = [
   { scene: "PROFILE", label: "Hồ sơ", icon: "book" },
-  { scene: "PLAYING", label: "Trận thường", icon: "flag" },
+  { scene: "PLAYING", label: "Giao Tranh", icon: "flag" },
 ] as const satisfies readonly { scene: Scene; label: string; icon: ShortcutIcon }[];
 
 type ShortcutIcon = "book" | "flag";

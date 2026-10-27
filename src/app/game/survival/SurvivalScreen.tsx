@@ -265,7 +265,7 @@ export default function SurvivalScreen() {
           <p className="text-xs tracking-widest text-amber-300/80 uppercase">
             Vô hạn
           </p>
-          <h1 className="text-2xl font-black text-amber-100">Sinh tồn</h1>
+          <h1 className="text-2xl font-black text-amber-100">Trấn Ải</h1>
           <p className="text-sm text-muted">
             Kỷ lục: {profile.survival.best} đợt · Đinh Bộ Lĩnh cấp{" "}
             {profile.main.level} · {profile.gold} vàng
@@ -362,7 +362,7 @@ export default function SurvivalScreen() {
               onClick={() => void start()}
               className="min-h-11 tracking-wider uppercase"
             >
-              {busy ? "Đang vào trận…" : "Bắt đầu Sinh tồn"}
+              {busy ? "Đang vào trận…" : "Bắt đầu Trấn Ải"}
             </Button>
             {message && (
               <span role="alert" className="text-sm text-rose-300">
