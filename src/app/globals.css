@@ -4,6 +4,7 @@
 @import "../styles/typography.css";
 @import "../styles/base.css";
 @import "../styles/components.css";
+@import "../styles/tower.css";
 
 /* Hoạt ảnh bàn cờ trang /demo (src/app/demo/animation.ts). --dx/--dy tính bằng số ô; 2px là khe giữa các ô. */
 .tile-anim {
