@@ -930,14 +930,3 @@
     repeating-linear-gradient(90deg, #c9a25a14 0 1px, transparent 1px 28px),
     #21170f;
 }
-.campaign-atlas .home-sa-ban {
-  border: 1px solid #8a6a3b99;
-  border-radius: 0.5rem;
-  background: #1a120ccc;
-  opacity: 0.85;
-}
-.campaign-atlas .home-soon-portrait {
-  border: 1.5px dashed var(--atlas-bronze);
-  background: #1a120c;
-  color: var(--atlas-gold);
-}
