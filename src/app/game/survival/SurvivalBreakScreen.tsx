@@ -623,7 +623,7 @@ function SurvivalBreakReady({
               onClick={onEnd}
               className="min-h-11 text-sm"
             >
-              Dừng Sinh tồn · ghi {survival.cleared} đợt
+              Dừng Trấn Ải · ghi {survival.cleared} đợt
             </Button>
           </div>
         </aside>
