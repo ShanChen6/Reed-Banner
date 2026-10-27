@@ -42,8 +42,8 @@ async function json<T>(url: string, init?: RequestInit): Promise<T | null> {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="ui-screen">
-      <div className="mx-auto max-w-6xl">{children}</div>
+    <main className="ui-screen tower-screen tower-screen--trial">
+      <div className="tower-screen__content">{children}</div>
     </main>
   );
 }
