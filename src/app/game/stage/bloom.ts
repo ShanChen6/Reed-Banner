@@ -1,7 +1,7 @@
 /**
  * Vòng lá hồi sinh vẽ trên cả sân (hệ tọa độ của stage PixiJS): tuyệt chiêu hồi máu của y sư hệ Mộc nở một vòng
  * sáng dưới chân từng đồng đội, lá xoay vòng quanh người rồi bay lên cùng hạt sáng, sau đó tan dần. Màu viền và hạt
- * sáng đổi được: y sư hệ Hỏa dùng than hồng thay lá non.
+ * sáng đổi được: y sư hệ Hỏa dùng than hồng thay lá non, y sư hệ Thổ dùng lá thuốc màu đất.
  */
 import { Container, Graphics } from "pixi.js";
 import type { Point } from "./rigs";
@@ -35,6 +35,9 @@ const SPRING: BloomGlow = { line: 0xc9f5b0, spark: 0xeaffd8 };
 
 /** Than hồng của y sư hệ Hỏa. */
 export const EMBER: BloomGlow = { line: 0xffd8a0, spark: 0xfff2c4 };
+
+/** Lá thuốc màu đất của y sư hệ Thổ. */
+export const LOAM: BloomGlow = { line: 0xf3dc9a, spark: 0xfff4d0 };
 
 export function leafBloom(parent: Container, color: number, glow: BloomGlow = SPRING) {
   const g = new Graphics();
