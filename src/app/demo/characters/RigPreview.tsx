@@ -56,7 +56,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -68,6 +68,8 @@ export default function RigPreview({ id, size, onSnapshot }: {
           import("@/app/game/stage/meteor"), import("@/app/game/stage/cleave"),
           import("@/app/game/stage/chain"),
           import("@/app/game/stage/drum"),
+          import("@/app/game/stage/surge"),
+          import("@/app/game/stage/taunt"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -189,6 +191,24 @@ export default function RigPreview({ id, size, onSnapshot }: {
             from = to;
           });
         });
+        // Địa mạch hệ Thổ: chạy từ đầu trượng tới hai điểm bên phải khung rồi trồi đá nhọn, khiên mặt trống trước nhân vật.
+        const surge = team === "earthSurge" ? [earthSurge(app.stage, rig.fxColor), drumShield(app.stage, rig.fxColor)] as const : null;
+        if (surge) loaded.onStrike?.((kind, at) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y * 0.8;
+          const from = { x: at.x, y: loaded.view.y };
+          [0.78, 0.92].forEach((k, n) => surge[0].surge(from, { x: el.clientWidth * k, y: loaded!.view.y }, size, n * 0.08));
+          surge[1].cover({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y, 0.35);
+        });
+        // Trấn sơn hệ Thổ: gai đá quanh nhân vật, ấn khiêu khích ở hai điểm bên phải khung, khiên mặt trống trước nhân vật.
+        const roar = team === "tauntRoar" ? [tauntRoar(app.stage, rig.fxColor), drumShield(app.stage, rig.fxColor)] as const : null;
+        if (roar) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          const foes = [0.78, 0.92].map((k) => ({ x: el.clientWidth * k, y: loaded!.view.y }));
+          roar[0].roar({ x: loaded.view.x, y: loaded.view.y }, foes, size);
+          roar[1].cover({ x: loaded.view.x, y: loaded.view.y }, size, 0.3);
+        });
         // Đan hỏa hệ Hỏa: vòng than hồng và mũi tên vàng quanh nhân vật.
         const mend = team === "emberMend" ? [leafBloom(app.stage, rig.fxColor, EMBER), ironFormation(app.stage, rig.fxColor)] as const : null;
         if (mend) loaded.onStrike?.((kind) => {
@@ -246,8 +266,9 @@ export default function RigPreview({ id, size, onSnapshot }: {
           const size = rig.height * loaded.view.scale.y;
           thorns.bind({ x: el.clientWidth - 60, y: loaded.view.y }, { x: loaded.view.x, y: loaded.view.y - size * 0.55 }, size * 0.8);
         });
-        // Rễ già giữ thành hệ Mộc: vòng lá quanh nhân vật, khiên mặt trống trước mặt.
-        const roots = team === "rootGuard" || team === "groveWard" ? [leafBloom(app.stage, rig.fxColor), drumShield(app.stage, rig.fxColor)] as const : null;
+        // Rễ già giữ thành hệ Mộc, hậu thổ dưỡng nguyên hệ Thổ: vòng lá quanh nhân vật, khiên mặt trống trước mặt.
+        const roots = team === "rootGuard" || team === "groveWard" || team === "earthMend"
+          ? [leafBloom(app.stage, rig.fxColor, team === "earthMend" ? LOAM : undefined), drumShield(app.stage, rig.fxColor)] as const : null;
         if (roots) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const at = { x: loaded.view.x, y: loaded.view.y };
@@ -279,6 +300,18 @@ export default function RigPreview({ id, size, onSnapshot }: {
             blaze[1].burn(at, size, 0.3 + n * 0.1);
           });
         });
+        // Đoạn đạo tuyệt lương hệ Thổ: địa mạch chạy từ tay tới hai điểm bên phải khung, bụi đất cuộn quanh hai điểm đó.
+        const sever = team === "roadSever" ? [earthSurge(app.stage, rig.fxColor), poisonMist(app.stage, rig.fxColor, DUST)] as const : null;
+        if (sever) loaded.onStrike?.((kind, at) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y * 0.8;
+          const from = { x: at.x, y: loaded.view.y };
+          [0.78, 0.92].forEach((k, n) => {
+            const foot = { x: el.clientWidth * k, y: loaded!.view.y };
+            sever[0].surge(from, foot, size, n * 0.08);
+            sever[1].cover(foot, size, 0.3 + n * 0.08);
+          });
+        });
         // Triều dâng hệ Thủy: vết nứt ở mép phải khung (cột nước do `pillar` vẽ).
         const siege = team === "tideSiege" ? ironFormation(app.stage, rig.fxColor) : null;
         if (siege) loaded.onStrike?.((kind) => {
@@ -290,9 +323,12 @@ export default function RigPreview({ id, size, onSnapshot }: {
           mist?.forEach((m) => m.update(dt));
           tide?.update(dt);
           blaze?.forEach((b) => b.update(dt));
+          sever?.forEach((b) => b.update(dt));
           rain?.forEach((r) => r.update(dt));
           cleave?.forEach((c) => c.update(dt));
           chain?.forEach((c) => c.update(dt));
+          surge?.forEach((c) => c.update(dt));
+          roar?.forEach((c) => c.update(dt));
           mend?.forEach((m) => m.update(dt));
           siege?.update(dt);
           roots?.forEach((r) => r.update(dt));

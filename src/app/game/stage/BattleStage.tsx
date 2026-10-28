@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -239,6 +239,8 @@ export default function BattleStage({
         import("./cleave"),
         import("./chain"),
         import("./drum"),
+        import("./surge"),
+        import("./taunt"),
       ]);
       const app = new Application();
       await app.init({
@@ -325,10 +327,11 @@ export default function BattleStage({
           });
           return [mist, bloom];
         }
-        if (rig.strikeFx === "groveWard") {
-          const bloom = leafBloom(sky, rig.fxColor);
+        if (rig.strikeFx === "groveWard" || rig.strikeFx === "earthMend") {
+          const bloom = leafBloom(sky, rig.fxColor, rig.strikeFx === "earthMend" ? LOAM : undefined);
           const ward = drumShield(sky, rig.fxColor, facing);
-          // Tuyệt chiêu bày trận cả đội: vòng lá hồi phục rồi khiên mặt trống (Thủ tăng) quanh từng đồng đội.
+          // Tuyệt chiêu bày trận cả đội: vòng lá hồi phục rồi khiên mặt trống (Thủ tăng) quanh từng đồng đội. Hậu thổ dưỡng
+          // nguyên hệ Thổ cũng vậy, lá thuốc màu đất (Hồi máu) rồi khiên mặt trống (Khiên 10% máu).
           loaded[i]!.onStrike?.((kind) => {
             if (kind !== "ultimate") return;
             const size = app.screen.height * FIGURE;
@@ -486,6 +489,35 @@ export default function BattleStage({
           });
           return [chain, fire];
         }
+        if (rig.strikeFx === "earthSurge") {
+          const surge = earthSurge(sky, rig.fxColor);
+          const ward = drumShield(sky, rig.fxColor, facing);
+          // Tuyệt chiêu địa mạch bùng phát: trượng nện đất, địa mạch chạy tới chân từng đối thủ rồi trồi đá nhọn (phá ô 3×3),
+          // khiên mặt trống trước từng đồng đội (Thủ tăng).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            const from = { x: at.x, y: spot(me, 0).y };
+            alive(false).forEach((s, n) => surge.surge(from, spot(s, 0), size, n * 0.08));
+            alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, 0.35 + n * 0.08));
+          });
+          return [surge, ward];
+        }
+        if (rig.strikeFx === "tauntRoar") {
+          const roar = tauntRoar(sky, rig.fxColor);
+          const ward = drumShield(sky, rig.fxColor, facing);
+          // Tuyệt chiêu trấn sơn hộ quân: dộng khiên xuống đất, vòng gai đá quanh chính mình (phản đòn), ấn khiêu khích trên
+          // đầu từng đối thủ, khiên mặt trống trước từng đồng đội (Khiên 25% máu).
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            roar.roar(spot(me, 0), alive(false).map((s) => spot(s, 0)), size);
+            alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, 0.3 + n * 0.08));
+          });
+          return [roar, ward];
+        }
         if (rig.strikeFx === "flameCleave") {
           const cut = flameCleave(sky, rig.fxColor);
           const fire = flameWall(sky, rig.fxColor);
@@ -575,6 +607,23 @@ export default function BattleStage({
             if (kind === "ultimate" && foe) fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
           });
           return [fx];
+        }
+        if (rig.strikeFx === "roadSever") {
+          const surge = earthSurge(sky, rig.fxColor);
+          const dust = poisonMist(sky, rig.fxColor, DUST);
+          // Tuyệt chiêu đoạn đạo tuyệt lương: địa mạch cắt đường chạy tới chân từng đối thủ rồi trồi đá chắn (phá ô ngẫu
+          // nhiên), bụi đất cuộn quanh họ (mất lương, mất năng lượng).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            const from = { x: at.x, y: spot(me, 0).y };
+            alive(false).forEach((s, n) => {
+              surge.surge(from, spot(s, 0), size, n * 0.08);
+              dust.cover(spot(s, 0), size, 0.3 + n * 0.08);
+            });
+          });
+          return [surge, dust];
         }
         if (rig.strikeFx === "granaryBlaze") {
           const smoke = poisonMist(sky, rig.fxColor, SMOKE);
