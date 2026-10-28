@@ -129,7 +129,8 @@ export interface WarriorRig {
    * lượng bay về chính mình; `tideSiege` chỉ ở tuyệt chiêu, cột băng dưới chân và vết nứt trên từng đối thủ; `fireRain` chỉ ở
    * tuyệt chiêu, cầu lửa rơi xuống và lửa bén trên từng đối thủ; `flameCleave` chỉ ở tuyệt chiêu, nhát chém lửa và lửa
    * bén trên đối thủ đứng đầu; `emberMend` chỉ ở tuyệt chiêu, vòng than hồng hồi phục và mũi tên vàng quanh
-   * từng đồng đội; `fireChain` chỉ ở tuyệt chiêu, tên lửa nảy lần lượt qua từng đối thủ và lửa bén lên họ.
+   * từng đồng đội; `granaryBlaze` chỉ ở tuyệt chiêu, khói kho lương và lửa bén quanh từng đối thủ; `fireChain` chỉ ở
+   * tuyệt chiêu, tên lửa nảy lần lượt qua từng đối thủ và lửa bén lên họ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -158,6 +159,7 @@ export interface WarriorRig {
     | "fireRain"
     | "flameCleave"
     | "emberMend"
+    | "granaryBlaze"
     | "fireChain";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
@@ -2071,6 +2073,48 @@ const HONG_DAN: WarriorRig = {
     anchor: { x: 800, y: 900 }, scale: 0.85 },
 };
 
+/**
+ * Ninh Hỏa, mưu sĩ hệ Hỏa (tướng cửa hàng). Bộ tranh Shan gửi 28/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
+ * code như Quách Ẩn: quạt lá cháy mép cùng nắm tay phẩy theo nhịp quạt, bàn tay buông và đầu tách riêng. Tranh ngồi thử
+ * hộp mồi lửa làm tranh phong thái. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const NINH_HOA: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "fan",
+  dir: "ninh-hoa",
+  texScale: 0.5,
+  foot: { x: 600, y: 1515 },
+  height: 1510,
+  parts: {
+    body: { x: 266, y: 6, w: 657, h: 1522 },
+    armR: { x: 769, y: 662, w: 67, h: 142 },
+    sword: { x: 16, y: 310, w: 254, h: 297 },
+    arm: { x: 187, y: 497, w: 104, h: 78 },
+    head: { x: 484, y: 6, w: 186, h: 228 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 280, y: 545 },
+    elbowR: { x: 800, y: 675 },
+    neck: { x: 590, y: 215 },
+  },
+  blade: [{ x: 240, y: 590 }, { x: 120, y: 350 }],
+  strikeFx: "granaryBlaze",
+  fxColor: 0xe0602a,
+  // Phẩy quạt (đánh thường), quạt hạ thấp tay chỉ đường (ra chiêu), giơ quạt chỉ lối sai dẫn địch vào kho lửa (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 12, y: 6 },
+      anchor: { x: 640, y: 1505 }, scale: 1, burst: { x: 115, y: 640 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 7, y: 8 },
+      anchor: { x: 580, y: 1500 }, scale: 1, burst: { x: 1010, y: 250 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 90, y: 8 },
+      anchor: { x: 550, y: 1515 }, scale: 1, burst: { x: 1005, y: 246 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 46, y: 148 },
+    anchor: { x: 780, y: 900 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -2114,6 +2158,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   lyLiet: LY_LIET,
   truongViem: TRUONG_VIEM,
   hongDan: HONG_DAN,
+  ninhHoa: NINH_HOA,
 };
 
 export function rigOf(id: string): Rig | null {

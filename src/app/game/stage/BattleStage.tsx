@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE }, { fireRain }, { flameCleave }, { fireChain }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -551,6 +551,20 @@ export default function BattleStage({
             if (kind === "ultimate" && foe) fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
           });
           return [fx];
+        }
+        if (rig.strikeFx === "granaryBlaze") {
+          const smoke = poisonMist(sky, rig.fxColor, SMOKE);
+          const fire = flameWall(sky, rig.fxColor);
+          // Tuyệt chiêu hỏa thiêu kho lương: khói kho lương cuộn quanh từng đối thủ (mất lương, mất năng lượng), lửa bén lên họ (Thiêu đốt).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => {
+              smoke.cover(spot(s, 0), size, n * 0.08);
+              fire.burn(spot(s, 0), size, 0.3 + n * 0.1);
+            });
+          });
+          return [smoke, fire];
         }
         if (rig.strikeFx === "tideMist") {
           const mist = poisonMist(sky, rig.fxColor, TIDE);
