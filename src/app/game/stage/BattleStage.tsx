@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { drumShield }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -237,6 +237,7 @@ export default function BattleStage({
         import("./miasma"),
         import("./meteor"),
         import("./cleave"),
+        import("./chain"),
         import("./drum"),
       ]);
       const app = new Application();
@@ -467,6 +468,23 @@ export default function BattleStage({
             });
           });
           return [rain, fire];
+        }
+        if (rig.strikeFx === "fireChain") {
+          const chain = fireChain(sky, rig.fxColor);
+          const fire = flameWall(sky, rig.fxColor);
+          // Tuyệt chiêu hỏa công liên kế: tên lửa từ cờ lệnh trúng đối thủ đầu rồi nảy sang từng người kế (Công giảm), lửa bén lên họ (Thiêu đốt).
+          loaded[i]!.onStrike?.((kind, at) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            let from = at;
+            alive(false).forEach((s, n) => {
+              const to = spot(s, 0.5);
+              chain.link(from, to, size, n * 0.22);
+              fire.burn(spot(s, 0), size, 0.25 + n * 0.22);
+              from = to;
+            });
+          });
+          return [chain, fire];
         }
         if (rig.strikeFx === "flameCleave") {
           const cut = flameCleave(sky, rig.fxColor);
