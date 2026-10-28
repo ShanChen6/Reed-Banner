@@ -82,10 +82,19 @@ function portraitMove(
       return [
         [
           { transform: "none", filter: "none" },
-          { transform: `translateX(${-dir * 4}px)`, filter: "drop-shadow(0 0 8px rgb(147 197 253)) brightness(1.15)", offset: 0.25 },
+          { transform: `translateX(${-dir * 4}px)`, filter: "drop-shadow(0 0 8px rgb(242 207 134)) brightness(1.15)", offset: 0.25 },
           { transform: "none", filter: "none" },
         ],
         400,
+      ];
+    case "shield":
+      return [
+        [
+          { transform: "none", filter: "none" },
+          { transform: "translateY(-2px)", filter: "drop-shadow(0 0 10px rgb(242 207 134)) brightness(1.1)", offset: 0.35 },
+          { transform: "none", filter: "none" },
+        ],
+        500,
       ];
     case "buff":
       return [
