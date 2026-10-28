@@ -85,7 +85,7 @@ export function warrior(
   const L = layers(rig.texScale);
   const cloth = (behind: boolean, overArms = false) => {
     for (const c of rig.cloth)
-      if (!!c.behind === behind && !!c.overArms === overArms) L.mesh(img(c.name), c.box, body, c.wind);
+      if (!c.onWeapon && !!c.behind === behind && !!c.overArms === overArms) L.mesh(img(c.name), c.box, body, c.wind);
   };
   cloth(true);
   L.sprite(img("body"), parts.body, body);
@@ -94,6 +94,8 @@ export function warrior(
   L.sprite(img("armR"), parts.armR, armR);
   const arm = L.joint(joints.shoulder.x, joints.shoulder.y, body);
   const held = rig.grip ? L.joint(rig.grip.x, rig.grip.y, arm) : arm;
+  // Lá cờ buộc trên cán: vẽ sau cán, bay theo gió và xoay cùng tay cầm.
+  for (const c of rig.cloth) if (c.onWeapon) L.mesh(img(c.name), c.box, held, c.wind);
   L.sprite(img("sword"), parts.sword, held);
   // Hào quang dọc lưỡi kiếm, theo tay khi chém.
   const auras = Array.from({ length: rig.weapon === "fan" || rig.weapon === "gourd" ? 0 : 6 }, (_, i) => {
