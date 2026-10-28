@@ -94,8 +94,11 @@ export interface WarriorRig {
   readonly foot: Point;
   readonly height: number;
   readonly parts: Readonly<Record<WarriorPart, PartBox>>;
-  /** Lớp vải bay theo gió. `behind`: vẽ sau thân (áo choàng, dải buộc tóc), còn lại vẽ ngay trên thân. */
-  readonly cloth: readonly { readonly name: string; readonly box: PartBox; readonly wind: Wind; readonly behind?: boolean; readonly overArms?: boolean }[];
+  /**
+   * Lớp vải bay theo gió. `behind`: vẽ sau thân (áo choàng, dải buộc tóc), còn lại vẽ ngay trên thân; `onWeapon`: buộc
+   * trên vũ khí (lá cờ lệnh), xoay theo tay cầm và vẽ ngay sau vũ khí.
+   */
+  readonly cloth: readonly { readonly name: string; readonly box: PartBox; readonly wind: Wind; readonly behind?: boolean; readonly overArms?: boolean; readonly onWeapon?: boolean }[];
   /** Lớp phủ lên tay cầm kiếm (giáp vai, tay áo) để che chỗ nối ở vai. */
   readonly covers: readonly { readonly name: string; readonly box: PartBox }[];
   /** shoulder: vai tay cầm kiếm (cả tay và kiếm xoay quanh đây); elbowR: khuỷu tay không; neck: cổ. */
@@ -126,7 +129,7 @@ export interface WarriorRig {
    * lượng bay về chính mình; `tideSiege` chỉ ở tuyệt chiêu, cột băng dưới chân và vết nứt trên từng đối thủ; `fireRain` chỉ ở
    * tuyệt chiêu, cầu lửa rơi xuống và lửa bén trên từng đối thủ; `flameCleave` chỉ ở tuyệt chiêu, nhát chém lửa và lửa
    * bén trên đối thủ đứng đầu; `emberMend` chỉ ở tuyệt chiêu, vòng than hồng hồi phục và mũi tên vàng quanh
-   * từng đồng đội.
+   * từng đồng đội; `fireChain` chỉ ở tuyệt chiêu, tên lửa nảy lần lượt qua từng đối thủ và lửa bén lên họ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -154,7 +157,8 @@ export interface WarriorRig {
     | "tideSiege"
     | "fireRain"
     | "flameCleave"
-    | "emberMend";
+    | "emberMend"
+    | "fireChain";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -1893,6 +1897,52 @@ const HA_VAN: WarriorRig = {
 };
 
 /**
+ * Tôn Diệm, quân sư hệ Hỏa (tướng cửa hàng). Bộ tranh Shan gửi 28/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code
+ * như Vi Triều: cán cờ lệnh cùng nắm tay xoay quanh cổ tay theo nhịp giáo, lá cờ tách riêng bay theo gió trên cán; bàn
+ * tay cầm bó thẻ tre và đầu tách riêng. Tranh gác chân lên khối gỗ làm tranh phong thái. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const TON_DIEM: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "ton-diem",
+  texScale: 0.5,
+  foot: { x: 620, y: 1515 },
+  height: 1400,
+  parts: {
+    body: { x: 294, y: 130, w: 643, h: 1399 },
+    armR: { x: 722, y: 687, w: 155, h: 197 },
+    sword: { x: 289, y: 6, w: 38, h: 1469 },
+    arm: { x: 275, y: 480, w: 64, h: 93 },
+    head: { x: 451, y: 130, w: 194, h: 211 },
+  },
+  cloth: [
+    { name: "flag", box: { x: 14, y: 45, w: 280, h: 477 }, onWeapon: true,
+      wind: { axis: "x", start: 0.1, amp: 14, freq: 1.6, k: 4, phase: 0.3, vertical: true, reverse: true } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 308, y: 518 },
+    elbowR: { x: 765, y: 768 },
+    neck: { x: 560, y: 330 },
+  },
+  blade: [{ x: 308, y: 470 }, { x: 308, y: 20 }],
+  strikeFx: "fireChain",
+  fxColor: 0xe0602a,
+  // Chĩa cán cờ ngang đâm tới (đánh thường), giơ bó thẻ tre truyền lệnh (ra chiêu), giơ cao cờ chỉ huy phát hỏa công
+  // (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 35, y: 12 },
+      anchor: { x: 1060, y: 1000 }, scale: 1.4, burst: { x: 1495, y: 505 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 19, y: 7 },
+      anchor: { x: 650, y: 1500 }, scale: 1, burst: { x: 833, y: 450 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 23, y: 4 },
+      anchor: { x: 600, y: 1505 }, scale: 1.1, burst: { x: 395, y: 40 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 54, y: 12 },
+    anchor: { x: 850, y: 900 }, scale: 0.85 },
+};
+
+/**
  * Lý Liệt, tướng sĩ hệ Hỏa (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code
  * như Hồ Lãng: đại đao (cả dải vải đỏ buộc cán) cùng nắm tay xoay quanh cổ tay theo nhịp giáo, bàn tay phải và đầu
  * tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
@@ -2060,6 +2110,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   quachAn: QUACH_AN,
   viTrieu: VI_TRIEU,
   haVan: HA_VAN,
+  tonDiem: TON_DIEM,
   lyLiet: LY_LIET,
   truongViem: TRUONG_VIEM,
   hongDan: HONG_DAN,
