@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -607,6 +607,23 @@ export default function BattleStage({
             if (kind === "ultimate" && foe) fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
           });
           return [fx];
+        }
+        if (rig.strikeFx === "roadSever") {
+          const surge = earthSurge(sky, rig.fxColor);
+          const dust = poisonMist(sky, rig.fxColor, DUST);
+          // Tuyệt chiêu đoạn đạo tuyệt lương: địa mạch cắt đường chạy tới chân từng đối thủ rồi trồi đá chắn (phá ô ngẫu
+          // nhiên), bụi đất cuộn quanh họ (mất lương, mất năng lượng).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            const from = { x: at.x, y: spot(me, 0).y };
+            alive(false).forEach((s, n) => {
+              surge.surge(from, spot(s, 0), size, n * 0.08);
+              dust.cover(spot(s, 0), size, 0.3 + n * 0.08);
+            });
+          });
+          return [surge, dust];
         }
         if (rig.strikeFx === "granaryBlaze") {
           const smoke = poisonMist(sky, rig.fxColor, SMOKE);
