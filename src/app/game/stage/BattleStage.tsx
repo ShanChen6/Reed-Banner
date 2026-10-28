@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -327,10 +327,11 @@ export default function BattleStage({
           });
           return [mist, bloom];
         }
-        if (rig.strikeFx === "groveWard") {
-          const bloom = leafBloom(sky, rig.fxColor);
+        if (rig.strikeFx === "groveWard" || rig.strikeFx === "earthMend") {
+          const bloom = leafBloom(sky, rig.fxColor, rig.strikeFx === "earthMend" ? LOAM : undefined);
           const ward = drumShield(sky, rig.fxColor, facing);
-          // Tuyệt chiêu bày trận cả đội: vòng lá hồi phục rồi khiên mặt trống (Thủ tăng) quanh từng đồng đội.
+          // Tuyệt chiêu bày trận cả đội: vòng lá hồi phục rồi khiên mặt trống (Thủ tăng) quanh từng đồng đội. Hậu thổ dưỡng
+          // nguyên hệ Thổ cũng vậy, lá thuốc màu đất (Hồi máu) rồi khiên mặt trống (Khiên 10% máu).
           loaded[i]!.onStrike?.((kind) => {
             if (kind !== "ultimate") return;
             const size = app.screen.height * FIGURE;
