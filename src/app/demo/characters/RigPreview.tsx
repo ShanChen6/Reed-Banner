@@ -56,7 +56,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -68,6 +68,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           import("@/app/game/stage/meteor"), import("@/app/game/stage/cleave"),
           import("@/app/game/stage/chain"),
           import("@/app/game/stage/drum"),
+          import("@/app/game/stage/surge"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -189,6 +190,15 @@ export default function RigPreview({ id, size, onSnapshot }: {
             from = to;
           });
         });
+        // Địa mạch hệ Thổ: chạy từ đầu trượng tới hai điểm bên phải khung rồi trồi đá nhọn, khiên mặt trống trước nhân vật.
+        const surge = team === "earthSurge" ? [earthSurge(app.stage, rig.fxColor), drumShield(app.stage, rig.fxColor)] as const : null;
+        if (surge) loaded.onStrike?.((kind, at) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y * 0.8;
+          const from = { x: at.x, y: loaded.view.y };
+          [0.78, 0.92].forEach((k, n) => surge[0].surge(from, { x: el.clientWidth * k, y: loaded!.view.y }, size, n * 0.08));
+          surge[1].cover({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y, 0.35);
+        });
         // Đan hỏa hệ Hỏa: vòng than hồng và mũi tên vàng quanh nhân vật.
         const mend = team === "emberMend" ? [leafBloom(app.stage, rig.fxColor, EMBER), ironFormation(app.stage, rig.fxColor)] as const : null;
         if (mend) loaded.onStrike?.((kind) => {
@@ -293,6 +303,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           rain?.forEach((r) => r.update(dt));
           cleave?.forEach((c) => c.update(dt));
           chain?.forEach((c) => c.update(dt));
+          surge?.forEach((c) => c.update(dt));
           mend?.forEach((m) => m.update(dt));
           siege?.update(dt);
           roots?.forEach((r) => r.update(dt));
