@@ -1,6 +1,7 @@
 /** Đồ dùng chung cho các bộ xương hình động (puppet.ts, warrior.ts). */
 import { Container, Graphics, MeshPlane, Sprite, Texture, type Buffer } from "pixi.js";
 import type { CueKind } from "./director";
+import { drumFace, drumRing } from "./drum";
 import type { PartBox, Wind } from "./rigs";
 
 export type { Wind } from "./rigs";
@@ -169,7 +170,7 @@ export const KO_SECONDS = 0.8;
 export const VICTORY_INTRO = 1.2;
 
 /** Động tác phản ứng dùng chung, không theo vũ khí. */
-export type ReactionKind = "ready" | "hit" | "guard" | "buff" | "debuff" | "heal";
+export type ReactionKind = "ready" | "hit" | "guard" | "shield" | "buff" | "debuff" | "heal";
 
 export interface Reaction {
   /** Lùi (âm) hoặc tiến (dương) theo hướng mặt. */
@@ -191,7 +192,7 @@ const still = { shiftX: 0, lift: 0, tilt: 0, squash: 0, raise: 0, tint: 0xffffff
 
 /**
  * Phản ứng chung của mọi bộ xương: vào thế khi đến lượt, trúng đòn (giật lùi, ửng đỏ), đỡ bằng khiên (ghì
- * người, ánh lam), được tăng (vươn lên, ánh vàng), bị giảm (chùng xuống, ánh tím), được hồi (ánh xanh lá).
+ * người, ánh đồng), được khiên (đứng thẳng, ánh đồng), được tăng (vươn lên, ánh vàng), bị giảm (chùng xuống, ánh tím), được hồi (ánh xanh lá).
  */
 export function reaction(kind: ReactionKind, a: number): Reaction {
   switch (kind) {
@@ -215,7 +216,12 @@ export function reaction(kind: ReactionKind, a: number): Reaction {
     case "guard": {
       // Ghì người đỡ đòn, lùi nửa bước, giữ thế 0,4 s.
       const k = pulse(a, 0, 0.06) * (1 - pulse(a, 0.22, 0.4));
-      return { ...still, shiftX: -9 * k, tilt: -0.5 * k, squash: -0.02 * k, raise: 0.5 * k, tint: k > 0.05 ? 0xcfe4ff : 0xffffff, glow: 0.6 * k, done: a > 0.4 };
+      return { ...still, shiftX: -9 * k, tilt: -0.5 * k, squash: -0.02 * k, raise: 0.5 * k, tint: k > 0.05 ? 0xffe6b8 : 0xffffff, glow: 0.6 * k, done: a > 0.4 };
+    }
+    case "shield": {
+      // Đứng thẳng người khi mặt trống mọc lên trước mặt.
+      const k = pulse(a, 0, 0.12) * (1 - pulse(a, 0.3, 0.5));
+      return { ...still, lift: 4 * k, squash: 0.015 * k, raise: 0.25 * k, tint: k > 0.05 ? 0xffe6b8 : 0xffffff, glow: 0.8 * k, done: a > 0.5 };
     }
     case "buff": {
       const k = pulse(a, 0, 0.12) * (1 - pulse(a, 0.24, 0.4));
@@ -253,16 +259,21 @@ export function victory(a: number): Omit<Reaction, "done" | "tint"> {
 }
 
 /**
- * Hiệu ứng phản ứng vẽ quanh người, gốc tọa độ ở chân, hướng mặt là +x: vòng sáng dưới chân khi vào thế, vòm
- * khiên phía trước khi đỡ, hạt vàng bay lên khi được tăng, hạt tím rơi khi bị giảm, hạt xanh khi được hồi, và
+ * Hiệu ứng phản ứng vẽ quanh người, gốc tọa độ ở chân, hướng mặt là +x: vòng sáng dưới chân khi vào thế, mặt
+ * trống đồng chớp hiện trước mặt khi đỡ (tia lửa ở điểm va, sóng gợn như tiếng trống), vòng hoa văn dưới chân và
+ * mặt trống nhỏ mọc lên khi được khiên, hạt vàng bay lên khi được tăng, hạt tím rơi khi bị giảm, hạt xanh khi được hồi, và
  * tia sáng lấp lánh lúc ăn mừng.
  */
 export function cueFx(parent: Container, height: number, color: number) {
   const root = new Container();
   parent.addChild(root);
+  // Mặt trống vẽ thường (đồng che được người), quầng và sóng cộng sáng ở lớp trên.
+  const drum = new Graphics();
+  root.addChild(drum);
   const g = new Graphics();
   g.blendMode = "add";
   root.addChild(g);
+  const clang = particles(root, 0xf2cf86, 24, 420);
   const up = particles(root, 0xffd76b, 30, -260);
   const down = particles(root, 0x9b6bff, 24, 220);
   const green = particles(root, 0x6bffa8, 24, -200);
@@ -271,6 +282,9 @@ export function cueFx(parent: Container, height: number, color: number) {
   let t = 0;
   let nextSparkle = 0;
   const w = height * 0.22;
+  /** Mặt trống nhỏ trước mặt: tâm ngang và bán trục ngang theo cỡ người. */
+  const drumX = height * 0.2;
+  const drumRx = height * 0.075;
   const spray = (p: ReturnType<typeof particles>, n: number, vy: number) => {
     for (let i = 0; i < n; i++) {
       const x = (Math.random() - 0.5) * w * 1.6;
@@ -283,32 +297,62 @@ export function cueFx(parent: Container, height: number, color: number) {
       kind = next;
       t = 0;
       nextSparkle = 0;
-      if (next === "buff") spray(up, 14, -160);
+      if (next === "guard") {
+        // Tia lửa tóe ra từ điểm va trên mặt trống, bắn ngược về phía đòn đánh tới.
+        for (let i = 0; i < 16; i++) {
+          const d = (Math.random() - 0.5) * 2.2;
+          const v = 260 + Math.random() * 520;
+          clang.spawn(drumX + drumRx * 0.4, -height * 0.52, Math.cos(d) * v, Math.sin(d) * v - 180, 0.14 + Math.random() * 0.16, 0.25 + Math.random() * 0.25);
+        }
+      } else if (next === "buff") spray(up, 14, -160);
       else if (next === "debuff") spray(down, 12, 40);
       else if (next === "heal") spray(green, 12, -120);
     },
     clear() {
       kind = null;
-      for (const p of [up, down, green, sparkle]) p.clear();
+      for (const p of [clang, up, down, green, sparkle]) p.clear();
       g.clear();
+      drum.clear();
     },
     update(dt: number) {
       t += dt;
       g.clear();
+      drum.clear();
       if (kind === "ready" && t < 0.35) {
         const k = t / 0.35;
         g.ellipse(0, -4, w * (0.6 + k), w * 0.18 * (0.6 + k)).stroke({ color, width: 10, alpha: 0.9 * (1 - k) });
-      } else if (kind === "guard" && t < 0.45) {
-        // Vòm khiên cong trước mặt, lóe rồi tan.
-        const k = Math.min(1, t / 0.08) * (1 - pulse(t, 0.2, 0.45));
-        const cy = -height * 0.5;
-        g.ellipse(w * 0.6, cy, w * 0.9, height * 0.52).stroke({ color: 0xbfe1ff, width: 14, alpha: 0.75 * k });
-        g.ellipse(w * 0.6, cy, w * 0.9, height * 0.52).fill({ color: 0x8fc8ff, alpha: 0.12 * k });
+      } else if (kind === "guard" && t < 0.55) {
+        // Mặt trống chớp hiện, rung khi đòn dội vào, sóng gợn tỏa ra như tiếng trống rồi tan.
+        const k = Math.min(1, t / 0.06) * (1 - pulse(t, 0.3, 0.55));
+        const shake = Math.sin(t * 90) * height * 0.006 * (1 - pulse(t, 0, 0.2));
+        const cx = drumX + shake;
+        const cy = -height * 0.48;
+        const ry = height * 0.33 * (0.85 + 0.15 * Math.min(1, t / 0.06));
+        drumFace(drum, cx, cy, drumRx, ry, 1, height, k, t * 3);
+        g.ellipse(cx, cy, drumRx * 1.3, ry * 1.08).stroke({ color, width: height * 0.025, alpha: 0.5 * k });
+        g.ellipse(cx + drumRx * 0.4, -height * 0.52, drumRx * 0.6, ry * 0.25).fill({ color: 0xfff1c8, alpha: 0.6 * (1 - pulse(t, 0, 0.15)) });
+        for (let i = 0; i < 3; i++) {
+          const r = pulse(t, 0.04 + i * 0.07, 0.4 + i * 0.07);
+          if (r <= 0 || r >= 1) continue;
+          g.ellipse(cx, cy, drumRx * (1.2 + 2.2 * r), ry * (1.05 + 0.5 * r)).stroke({ color, width: height * 0.012 * (1 - r), alpha: 0.7 * (1 - r) });
+        }
+      } else if (kind === "shield" && t < 0.9) {
+        // Vòng hoa văn sáng dưới chân, mặt trống nhỏ mọc lên trước mặt rồi mờ dần.
+        const fade = 1 - pulse(t, 0.6, 0.9);
+        const ring = pulse(t, 0, 0.25);
+        drumRing(drum, g, 0, -4, w * 1.5 * (1 - (1 - ring) ** 3), height, color, fade, t * 0.6);
+        const grow = pulse(t, 0.08, 0.38);
+        const ry = height * 0.3 * (1 - (1 - grow) ** 3);
+        if (ry > 1) {
+          const cy = -ry - height * 0.03;
+          drumFace(drum, drumX, cy, drumRx, ry, 1, height, fade, t * 1.2);
+          g.ellipse(drumX, cy, drumRx * 1.3, ry * 1.08).stroke({ color, width: height * 0.025, alpha: (0.25 + 0.4 * (1 - pulse(t, 0.38, 0.6))) * fade });
+        }
       } else if (kind === "victory" && t >= nextSparkle) {
         nextSparkle = t + 0.18;
         spray(sparkle, 2, -80);
       }
-      for (const p of [up, down, green, sparkle]) p.update(dt);
+      for (const p of [clang, up, down, green, sparkle]) p.update(dt);
     },
   };
 }

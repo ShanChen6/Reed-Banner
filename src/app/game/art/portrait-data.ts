@@ -31,15 +31,18 @@ const PHOTOS: Readonly<Record<string, string>> = {
   nhanTruc: "/art/characters/nhan-truc/portrait.webp",
   samTue: "/art/characters/sam-tue/portrait.webp",
   hoLang: "/art/characters/ho-lang/portrait.webp",
+  khaSon: "/art/characters/kha-son/portrait.webp",
   daoLam: "/art/characters/dao-lam/portrait.webp",
   thaiHa: "/art/characters/thai-ha/portrait.webp",
   maiThanh: "/art/characters/mai-thanh/portrait.webp",
   quachAn: "/art/characters/quach-an/portrait.webp",
   viTrieu: "/art/characters/vi-trieu/portrait.webp",
   haVan: "/art/characters/ha-van/portrait.webp",
+  tonDiem: "/art/characters/ton-diem/portrait.webp",
   lyLiet: "/art/characters/ly-liet/portrait.webp",
   truongViem: "/art/characters/truong-viem/portrait.webp",
   hongDan: "/art/characters/hong-dan/portrait.webp",
+  ninhHoa: "/art/characters/ninh-hoa/portrait.webp",
 };
 
 export function portraitUrl(id: string): string | null {
