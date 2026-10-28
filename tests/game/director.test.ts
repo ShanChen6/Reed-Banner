@@ -94,7 +94,7 @@ describe("đạo diễn trận", () => {
     assert.deepEqual(end.map((c) => c.kind), ["guard", "hit"]);
   });
 
-  it("hiệu ứng: khiên là đỡ, tăng là buff, giảm là debuff; phát sau cú trúng nếu vừa bị đánh", () => {
+  it("hiệu ứng: khiên là được khiên, tăng là buff, giảm là debuff; phát sau cú trúng nếu vừa bị đánh", () => {
     const s = battle(1);
     const { end } = stageCues(s, [
       { type: "effect", side: 0, fighter: 0, effect: "shield" },
@@ -104,7 +104,7 @@ describe("đạo diễn trận", () => {
       { type: "effect", side: 1, fighter: 1, effect: "freezeImmune" },
     ]);
     assert.deepEqual(end, [
-      { side: 0, fighter: 0, kind: "guard", delay: 0 },
+      { side: 0, fighter: 0, kind: "shield", delay: 0 },
       { side: 0, fighter: 1, kind: "buff", delay: 0 },
       { side: 1, fighter: 2, kind: "hit", delay: 0 },
       { side: 1, fighter: 2, kind: "debuff", delay: AFTER_HIT_MS },

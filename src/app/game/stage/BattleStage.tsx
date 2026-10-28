@@ -82,10 +82,19 @@ function portraitMove(
       return [
         [
           { transform: "none", filter: "none" },
-          { transform: `translateX(${-dir * 4}px)`, filter: "drop-shadow(0 0 8px rgb(147 197 253)) brightness(1.15)", offset: 0.25 },
+          { transform: `translateX(${-dir * 4}px)`, filter: "drop-shadow(0 0 8px rgb(242 207 134)) brightness(1.15)", offset: 0.25 },
           { transform: "none", filter: "none" },
         ],
         400,
+      ];
+    case "shield":
+      return [
+        [
+          { transform: "none", filter: "none" },
+          { transform: "translateY(-2px)", filter: "drop-shadow(0 0 10px rgb(242 207 134)) brightness(1.1)", offset: 0.35 },
+          { transform: "none", filter: "none" },
+        ],
+        500,
       ];
     case "buff":
       return [
@@ -208,11 +217,10 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
-        import("./ward"),
         import("./bloom"),
         import("./pierce"),
         import("./drain"),
@@ -230,6 +238,7 @@ export default function BattleStage({
         import("./meteor"),
         import("./cleave"),
         import("./chain"),
+        import("./drum"),
       ]);
       const app = new Application();
       await app.init({
@@ -277,7 +286,7 @@ export default function BattleStage({
       });
       layout();
       app.renderer.on("resize", layout);
-      // Hiệu ứng vẽ trên cả sân, đè lên mọi nhân vật: sét hệ Lôi, vòm khiên đất hệ Thổ, vòng lá hồi sinh hệ Mộc,
+      // Hiệu ứng vẽ trên cả sân, đè lên mọi nhân vật: sét hệ Lôi, khiên mặt trống đồng, vòng lá hồi sinh hệ Mộc,
       // mũi sáng phá giáp hệ Kim, đoạt lương và cột nước đóng băng hệ Thủy, tường lửa hệ Hỏa, đập đất hệ Thổ,
       // ngân châm, tường thép, mưa kim bạc, tiền vàng ly tán và
       // thiết trận hệ Kim, trúc lâm hút sinh khí và dây gai
@@ -293,9 +302,10 @@ export default function BattleStage({
           return { x: slotX(s.side, s.index) * width, y: height * (GROUND - FIGURE * k) };
         };
         const alive = (mine: boolean) => latest.current.filter((s) => (s.side === e.side) === mine && isAlive(s.fighter));
+        const facing = e.side === 0 ? 1 : -1;
         if (rig.strikeFx === "earthWard" || rig.strikeFx === "leafBloom" || rig.strikeFx === "silverGrace") {
-          const make = rig.strikeFx === "earthWard" ? earthWard : rig.strikeFx === "leafBloom" ? leafBloom : silverGrace;
-          const fx = make(sky, rig.fxColor);
+          const fx = rig.strikeFx === "earthWard" ? drumShield(sky, rig.fxColor, facing)
+            : rig.strikeFx === "leafBloom" ? leafBloom(sky, rig.fxColor) : silverGrace(sky, rig.fxColor);
           // Tuyệt chiêu cho cả đội: hiệu ứng nở quanh từng đồng đội còn đứng.
           loaded[i]!.onStrike?.((kind) => {
             if (kind !== "ultimate") return;
@@ -317,8 +327,8 @@ export default function BattleStage({
         }
         if (rig.strikeFx === "groveWard") {
           const bloom = leafBloom(sky, rig.fxColor);
-          const ward = earthWard(sky, rig.fxColor);
-          // Tuyệt chiêu bày trận cả đội: vòng lá hồi phục rồi vòm khiên (Thủ tăng) quanh từng đồng đội.
+          const ward = drumShield(sky, rig.fxColor, facing);
+          // Tuyệt chiêu bày trận cả đội: vòng lá hồi phục rồi khiên mặt trống (Thủ tăng) quanh từng đồng đội.
           loaded[i]!.onStrike?.((kind) => {
             if (kind !== "ultimate") return;
             const size = app.screen.height * FIGURE;
@@ -331,8 +341,8 @@ export default function BattleStage({
         }
         if (rig.strikeFx === "rootGuard") {
           const bloom = leafBloom(sky, rig.fxColor);
-          const ward = earthWard(sky, rig.fxColor);
-          // Tuyệt chiêu giữ thành: vòng lá hồi phục quanh cả đội, vòm khiên quanh chính mình (Khiên, Khiêu khích).
+          const ward = drumShield(sky, rig.fxColor, facing);
+          // Tuyệt chiêu giữ thành: vòng lá hồi phục quanh cả đội, khiên mặt trống trước chính mình (Khiên, Khiêu khích).
           loaded[i]!.onStrike?.((kind) => {
             const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
             if (kind !== "ultimate" || !me) return;
@@ -419,8 +429,8 @@ export default function BattleStage({
         }
         if (rig.strikeFx === "groundSlam") {
           const slam = groundSlam(sky, rig.fxColor);
-          const ward = earthWard(sky, rig.fxColor);
-          // Tuyệt chiêu bổ chùy: nứt đất dưới chân đối thủ đứng đầu, vòm khiên đất quanh cả đội mình (Thủ +30%).
+          const ward = drumShield(sky, rig.fxColor, facing);
+          // Tuyệt chiêu bổ chùy: nứt đất dưới chân đối thủ đứng đầu, khiên mặt trống trước cả đội mình (Thủ +30%).
           loaded[i]!.onStrike?.((kind) => {
             if (kind !== "ultimate") return;
             const size = app.screen.height * FIGURE;
@@ -429,6 +439,20 @@ export default function BattleStage({
             alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, 0.2 + n * 0.08));
           });
           return [slam, ward];
+        }
+        if (rig.strikeFx === "mountainCrush") {
+          const slam = groundSlam(sky, rig.fxColor);
+          const drum = drumShield(sky, rig.fxColor);
+          // Tuyệt chiêu sơn hà trấn kích: nứt đất dưới chân đối thủ đứng đầu (phá ô hình chữ thập), khiên mặt trống đồng trước chính mình.
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            const foe = alive(false)[0];
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (foe) slam.slam(spot(foe, 0), size);
+            if (me) drum.raise(spot(me, 0), size, facing, 0.15);
+          });
+          return [slam, drum];
         }
         if (rig.strikeFx === "fireRain") {
           const rain = fireRain(sky, rig.fxColor);
@@ -502,9 +526,9 @@ export default function BattleStage({
           return [fx];
         }
         if (rig.strikeFx === "tideBulwark") {
-          const ward = earthWard(sky, rig.fxColor);
+          const ward = drumShield(sky, rig.fxColor, facing);
           const ice = waterPillar(sky, rig.fxColor);
-          // Tuyệt chiêu thủy trại: vòm khiên nước quanh từng đồng đội (Khiên), cột băng dưới chân từng đối thủ (Đóng băng).
+          // Tuyệt chiêu thủy trại: khiên mặt trống trước từng đồng đội (Khiên), cột băng dưới chân từng đối thủ (Đóng băng).
           loaded[i]!.onStrike?.((kind) => {
             if (kind !== "ultimate") return;
             const size = app.screen.height * FIGURE;
