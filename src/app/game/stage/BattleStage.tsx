@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -239,6 +239,7 @@ export default function BattleStage({
         import("./cleave"),
         import("./chain"),
         import("./drum"),
+        import("./surge"),
       ]);
       const app = new Application();
       await app.init({
@@ -485,6 +486,21 @@ export default function BattleStage({
             });
           });
           return [chain, fire];
+        }
+        if (rig.strikeFx === "earthSurge") {
+          const surge = earthSurge(sky, rig.fxColor);
+          const ward = drumShield(sky, rig.fxColor, facing);
+          // Tuyệt chiêu địa mạch bùng phát: trượng nện đất, địa mạch chạy tới chân từng đối thủ rồi trồi đá nhọn (phá ô 3×3),
+          // khiên mặt trống trước từng đồng đội (Thủ tăng).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            const from = { x: at.x, y: spot(me, 0).y };
+            alive(false).forEach((s, n) => surge.surge(from, spot(s, 0), size, n * 0.08));
+            alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, 0.35 + n * 0.08));
+          });
+          return [surge, ward];
         }
         if (rig.strikeFx === "flameCleave") {
           const cut = flameCleave(sky, rig.fxColor);
