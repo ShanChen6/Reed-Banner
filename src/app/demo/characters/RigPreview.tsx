@@ -55,7 +55,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { drumShield }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/ward"), import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -65,6 +65,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           import("@/app/game/stage/banner"), import("@/app/game/stage/sap"),
           import("@/app/game/stage/thorn"), import("@/app/game/stage/miasma"),
           import("@/app/game/stage/meteor"), import("@/app/game/stage/cleave"),
+          import("@/app/game/stage/drum"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -179,14 +180,16 @@ export default function RigPreview({ id, size, onSnapshot }: {
           mend[0].cover(at, size);
           mend[1].rally(at, size, 0.35);
         });
-        // Đập đất hệ Thổ (bổ chùy, sơn hà trấn kích): nứt đất ở mép phải khung, vòm khiên quanh nhân vật.
+        // Đập đất hệ Thổ (bổ chùy, sơn hà trấn kích): nứt đất ở mép phải khung, vòm khiên hoặc mặt trống quanh nhân vật.
         const slam = team === "groundSlam" || team === "mountainCrush" ? groundSlam(app.stage, rig.fxColor) : null;
-        const slamWard = slam ? earthWard(app.stage, rig.fxColor) : null;
+        const slamWard = team === "groundSlam" ? earthWard(app.stage, rig.fxColor) : null;
+        const drum = team === "mountainCrush" ? drumShield(app.stage, rig.fxColor) : null;
         if (slam) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y;
           slam.slam({ x: el.clientWidth - 60, y: loaded.view.y }, size * 0.8);
           slamWard?.cover({ x: loaded.view.x, y: loaded.view.y }, size, 0.2);
+          drum?.raise({ x: loaded.view.x, y: loaded.view.y }, size, 1, 0.15);
         });
         // Ngân châm hệ Kim: bắn tới ba điểm ở mép phải khung.
         const needles = team === "needleVolley" ? needleVolley(app.stage, rig.fxColor) : null;
@@ -290,6 +293,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           fire?.update(dt);
           slam?.update(dt);
           slamWard?.update(dt);
+          drum?.update(dt);
         });
         setReady(true);
       } catch (cause) {

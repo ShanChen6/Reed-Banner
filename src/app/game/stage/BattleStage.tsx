@@ -208,7 +208,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { earthWard }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { drumShield }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -229,6 +229,7 @@ export default function BattleStage({
         import("./miasma"),
         import("./meteor"),
         import("./cleave"),
+        import("./drum"),
       ]);
       const app = new Application();
       await app.init({
@@ -431,17 +432,17 @@ export default function BattleStage({
         }
         if (rig.strikeFx === "mountainCrush") {
           const slam = groundSlam(sky, rig.fxColor);
-          const ward = earthWard(sky, rig.fxColor);
-          // Tuyệt chiêu sơn hà trấn kích: nứt đất dưới chân đối thủ đứng đầu (phá ô hình chữ thập), vòm khiên đất quanh chính mình.
+          const drum = drumShield(sky, rig.fxColor);
+          // Tuyệt chiêu sơn hà trấn kích: nứt đất dưới chân đối thủ đứng đầu (phá ô hình chữ thập), khiên mặt trống đồng trước chính mình.
           loaded[i]!.onStrike?.((kind) => {
             if (kind !== "ultimate") return;
             const size = app.screen.height * FIGURE;
             const foe = alive(false)[0];
             const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
             if (foe) slam.slam(spot(foe, 0), size);
-            if (me) ward.cover(spot(me, 0), size, 0.2);
+            if (me) drum.raise(spot(me, 0), size, e.side === 0 ? 1 : -1, 0.15);
           });
-          return [slam, ward];
+          return [slam, drum];
         }
         if (rig.strikeFx === "fireRain") {
           const rain = fireRain(sky, rig.fxColor);
