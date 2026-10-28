@@ -429,6 +429,20 @@ export default function BattleStage({
           });
           return [slam, ward];
         }
+        if (rig.strikeFx === "mountainCrush") {
+          const slam = groundSlam(sky, rig.fxColor);
+          const ward = earthWard(sky, rig.fxColor);
+          // Tuyệt chiêu sơn hà trấn kích: nứt đất dưới chân đối thủ đứng đầu (phá ô hình chữ thập), vòm khiên đất quanh chính mình.
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            const foe = alive(false)[0];
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (foe) slam.slam(spot(foe, 0), size);
+            if (me) ward.cover(spot(me, 0), size, 0.2);
+          });
+          return [slam, ward];
+        }
         if (rig.strikeFx === "fireRain") {
           const rain = fireRain(sky, rig.fxColor);
           const fire = flameWall(sky, rig.fxColor);

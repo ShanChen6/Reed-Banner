@@ -179,8 +179,8 @@ export default function RigPreview({ id, size, onSnapshot }: {
           mend[0].cover(at, size);
           mend[1].rally(at, size, 0.35);
         });
-        // Đập đất hệ Thổ: nứt đất ở mép phải khung, vòm khiên quanh nhân vật.
-        const slam = team === "groundSlam" ? groundSlam(app.stage, rig.fxColor) : null;
+        // Đập đất hệ Thổ (bổ chùy, sơn hà trấn kích): nứt đất ở mép phải khung, vòm khiên quanh nhân vật.
+        const slam = team === "groundSlam" || team === "mountainCrush" ? groundSlam(app.stage, rig.fxColor) : null;
         const slamWard = slam ? earthWard(app.stage, rig.fxColor) : null;
         if (slam) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
