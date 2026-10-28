@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -240,6 +240,7 @@ export default function BattleStage({
         import("./chain"),
         import("./drum"),
         import("./surge"),
+        import("./taunt"),
       ]);
       const app = new Application();
       await app.init({
@@ -501,6 +502,20 @@ export default function BattleStage({
             alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, 0.35 + n * 0.08));
           });
           return [surge, ward];
+        }
+        if (rig.strikeFx === "tauntRoar") {
+          const roar = tauntRoar(sky, rig.fxColor);
+          const ward = drumShield(sky, rig.fxColor, facing);
+          // Tuyệt chiêu trấn sơn hộ quân: dộng khiên xuống đất, vòng gai đá quanh chính mình (phản đòn), ấn khiêu khích trên
+          // đầu từng đối thủ, khiên mặt trống trước từng đồng đội (Khiên 25% máu).
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            roar.roar(spot(me, 0), alive(false).map((s) => spot(s, 0)), size);
+            alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, 0.3 + n * 0.08));
+          });
+          return [roar, ward];
         }
         if (rig.strikeFx === "flameCleave") {
           const cut = flameCleave(sky, rig.fxColor);
