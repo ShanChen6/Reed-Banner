@@ -1,7 +1,7 @@
 /**
  * Trúc độc mê hồn vẽ trên cả sân (hệ tọa độ của stage PixiJS): tuyệt chiêu của mưu sĩ hệ Mộc thả làn sương độc xanh
  * cuộn quanh từng đối thủ, lá trúc xoáy và vòng mê man quay trên đầu họ (rút năng lượng, câm lặng). Bảng màu đổi được:
- * mưu sĩ hệ Thủy dùng sương nước xanh và giọt nước xoáy thay lá trúc.
+ * mưu sĩ hệ Thủy dùng sương nước xanh và giọt nước xoáy thay lá trúc, mưu sĩ hệ Hỏa dùng khói kho lương và tàn lửa.
  */
 import { Container, Graphics } from "pixi.js";
 import type { Point } from "./rigs";
@@ -29,6 +29,9 @@ const BAMBOO: MistPalette = { haze: 0x5c7a3a, leaf: 0x8fd46a, halo: 0xd9f2a0 };
 
 /** Sương nước của mưu sĩ hệ Thủy. */
 export const TIDE: MistPalette = { haze: 0x1f4f7a, leaf: 0xbfe6ff, halo: 0xe8f7ff };
+
+/** Khói kho lương cháy của mưu sĩ hệ Hỏa: tàn lửa xoáy thay lá trúc. */
+export const SMOKE: MistPalette = { haze: 0x3b2a24, leaf: 0xffa54a, halo: 0xffd98a };
 
 export function poisonMist(parent: Container, color: number, palette: MistPalette = BAMBOO) {
   const g = new Graphics();
