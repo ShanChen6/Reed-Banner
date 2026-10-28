@@ -10,7 +10,7 @@ import {
 /**
  * Động tác một nhân vật trên sân khấu, thời lượng theo bảng hoạt ảnh ở docs/06-art/ke-hoach-do-hoa.md:
  * ready 0,3 s (đến lượt), attack 0,5–0,7 s, cast 0,6–0,9 s, ultimate 1,2–1,8 s kèm cận cảnh, hit 0,3 s,
- * guard 0,4 s (khiên đỡ), buff/debuff/heal 0,4 s, victory 1,2 s rồi lặp đoạn cuối. Gục (ko) đi qua
+ * guard 0,4 s (khiên đỡ trọn đòn), shield 0,5 s (được khiên), buff/debuff/heal 0,4 s, victory 1,2 s rồi lặp đoạn cuối. Gục (ko) đi qua
  * `setDown` vì theo máu chứ không theo sự kiện.
  */
 export type CueKind =
@@ -20,6 +20,7 @@ export type CueKind =
   | "ultimate"
   | "hit"
   | "guard"
+  | "shield"
   | "buff"
   | "debuff"
   | "heal"
@@ -115,7 +116,7 @@ export function stageCues(
       case "effect": {
         const kind =
           e.effect === "shield"
-            ? "guard"
+            ? "shield"
             : POSITIVE_EFFECTS.includes(e.effect) || e.effect === "taunt"
               ? "buff"
               : NEGATIVE_EFFECTS.includes(e.effect)
@@ -155,7 +156,7 @@ export function stageCues(
   return { start, end: after };
 }
 
-const AFTER_HIT = new Set<CueKind>(["guard", "buff", "debuff", "heal"]);
+const AFTER_HIT = new Set<CueKind>(["guard", "shield", "buff", "debuff", "heal"]);
 
 export type CueListener = (cues: readonly Cue[]) => void;
 

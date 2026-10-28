@@ -26,6 +26,51 @@ interface Shield {
 
 const ease = (k: number) => 1 - (1 - Math.min(1, Math.max(0, k))) ** 3;
 
+/** Điểm trên mặt trống: mặt trống là elip dẹt ngang vì nhìn chếch. */
+const on = (cx: number, cy: number, rx: number, ry: number, a: number, k: number) =>
+  [cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k] as const;
+
+/**
+ * Vẽ một mặt trống đồng đứng nghiêng tâm (cx, cy), bán trục rx (ngang) và ry (dọc): nền đồng, tang trống phía sau
+ * (theo `dir`), các vành hoa văn đồng tâm xen vạch chéo và ngôi sao giữa mười hai cánh xoay theo `spin`. `z` là cỡ
+ * người để tính nét; dùng chung cho khiên tuyệt chiêu và động tác đỡ đòn, được khiên.
+ */
+export function drumFace(g: Graphics, cx: number, cy: number, rx: number, ry: number, dir: number, z: number, alpha: number, spin: number) {
+  g.ellipse(cx, cy, rx, ry).fill({ color: BRONZE, alpha: 0.4 * alpha });
+  // Bề dày tang trống ở phía sau mặt.
+  g.ellipse(cx - dir * rx * 0.18, cy, rx, ry).stroke({ color: 0x3d250c, width: z * 0.014, alpha: 0.7 * alpha });
+  g.ellipse(cx, cy, rx, ry).stroke({ color: GILT, width: z * 0.01, alpha: 0.95 * alpha });
+  // Các vành hoa văn đồng tâm, xen vạch chéo như mặt trống Đông Sơn.
+  for (const k of [0.82, 0.62, 0.42]) g.ellipse(cx, cy, rx * k, ry * k).stroke({ color: GILT, width: z * 0.004, alpha: 0.8 * alpha });
+  for (let i = 0; i < 28; i++) {
+    const a = (i / 28) * Math.PI * 2;
+    const [x0, y0] = on(cx, cy, rx, ry, a, 0.64);
+    const [x1, y1] = on(cx, cy, rx, ry, a + 0.12, 0.8);
+    g.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: GILT, width: z * 0.003, alpha: 0.6 * alpha });
+  }
+  // Ngôi sao giữa mười hai cánh.
+  const star: number[] = [];
+  for (let i = 0; i < 24; i++) {
+    const [px, py] = on(cx, cy, rx, ry, (i / 24) * Math.PI * 2 + spin, i % 2 ? 0.14 : 0.38);
+    star.push(px, py);
+  }
+  g.poly(star).fill({ color: GILT, alpha: 0.85 * alpha });
+  g.ellipse(cx, cy, rx * 0.1, ry * 0.1).fill({ color: 0xfff1c8, alpha });
+}
+
+/** Vòng hoa văn dưới chân tâm (x, y), bán kính `r`: nền đồng mờ vẽ vào `g`, hai vành và vạch sáng vẽ vào `glow`. */
+export function drumRing(g: Graphics, glow: Graphics, x: number, y: number, r: number, z: number, color: number, alpha: number, spin: number) {
+  g.ellipse(x, y, r, r * 0.2).fill({ color: BRONZE, alpha: 0.28 * alpha });
+  glow.ellipse(x, y, r, r * 0.2).stroke({ color, width: z * 0.012, alpha: 0.75 * alpha });
+  glow.ellipse(x, y, r * 0.78, r * 0.156).stroke({ color, width: z * 0.006, alpha: 0.6 * alpha });
+  for (let i = 0; i < 24; i++) {
+    const a = (i / 24) * Math.PI * 2 + spin;
+    const [x0, y0] = on(x, y, r, r * 0.2, a, 0.8);
+    const [x1, y1] = on(x, y, r, r * 0.2, a, 0.97);
+    glow.moveTo(x0, y0).lineTo(x1, y1).stroke({ color, width: z * 0.004, alpha: 0.55 * alpha });
+  }
+}
+
 /** `facing`: hướng mặt trống khi gọi `cover` (1 sang phải, -1 sang trái), theo phe người tung chiêu. */
 export function drumShield(parent: Container, color: number, facing = 1) {
   const back = new Graphics();
@@ -34,10 +79,6 @@ export function drumShield(parent: Container, color: number, facing = 1) {
   glow.blendMode = "add";
   parent.addChild(back, g, glow);
   let shields: Shield[] = [];
-
-  /** Điểm trên mặt trống: mặt trống là elip dẹt ngang vì nhìn chếch. */
-  const on = (cx: number, cy: number, rx: number, ry: number, a: number, k: number) =>
-    [cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k] as const;
 
   return {
     /** Dựng mặt trống trước người đứng ở `at` (giữa hai bàn chân), quay về hướng `dir`, chờ `wait` giây. */
@@ -71,17 +112,8 @@ export function drumShield(parent: Container, color: number, facing = 1) {
         const { x, y } = s.at;
         const z = s.size;
 
-        // Vòng hoa văn dưới chân: hai vành elip và các vạch như vành trống, sáng dần rồi tắt.
-        const ring = z * 0.36 * grow;
-        back.ellipse(x, y, ring, ring * 0.2).fill({ color: BRONZE, alpha: 0.28 * fade });
-        glow.ellipse(x, y, ring, ring * 0.2).stroke({ color, width: z * 0.012, alpha: 0.75 * fade });
-        glow.ellipse(x, y, ring * 0.78, ring * 0.156).stroke({ color, width: z * 0.006, alpha: 0.6 * fade });
-        for (let i = 0; i < 24; i++) {
-          const a = (i / 24) * Math.PI * 2 + s.t * 0.4;
-          const [x0, y0] = on(x, y, ring, ring * 0.2, a, 0.8);
-          const [x1, y1] = on(x, y, ring, ring * 0.2, a, 0.97);
-          glow.moveTo(x0, y0).lineTo(x1, y1).stroke({ color, width: z * 0.004, alpha: 0.55 * fade });
-        }
+        // Vòng hoa văn dưới chân như vành trống, sáng dần rồi tắt.
+        drumRing(back, glow, x, y, z * 0.36 * grow, z, color, fade, s.t * 0.4);
 
         // Đá vụn bay vòng quanh người: nửa sau vẽ dưới, nửa trước vẽ trên mặt trống.
         for (const r of s.rocks) {
@@ -109,26 +141,7 @@ export function drumShield(parent: Container, color: number, facing = 1) {
         const cx = x + s.dir * z * 0.42;
         const cy = y - ry - z * 0.04;
         if (ry < 1) continue;
-        g.ellipse(cx, cy, rx, ry).fill({ color: BRONZE, alpha: 0.4 * fade });
-        // Bề dày tang trống ở phía sau mặt.
-        g.ellipse(cx - s.dir * rx * 0.18, cy, rx, ry).stroke({ color: 0x3d250c, width: z * 0.014, alpha: 0.7 * fade });
-        g.ellipse(cx, cy, rx, ry).stroke({ color: GILT, width: z * 0.01, alpha: 0.95 * fade });
-        // Các vành hoa văn đồng tâm, xen vạch chéo như mặt trống Đông Sơn.
-        for (const k of [0.82, 0.62, 0.42]) g.ellipse(cx, cy, rx * k, ry * k).stroke({ color: GILT, width: z * 0.004, alpha: 0.8 * fade });
-        for (let i = 0; i < 28; i++) {
-          const a = (i / 28) * Math.PI * 2;
-          const [x0, y0] = on(cx, cy, rx, ry, a, 0.64);
-          const [x1, y1] = on(cx, cy, rx, ry, a + 0.12, 0.8);
-          g.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: GILT, width: z * 0.003, alpha: 0.6 * fade });
-        }
-        // Ngôi sao giữa mười hai cánh, xoay chậm.
-        const star: number[] = [];
-        for (let i = 0; i < 24; i++) {
-          const [px, py] = on(cx, cy, rx, ry, (i / 24) * Math.PI * 2 + s.t * 0.8, i % 2 ? 0.14 : 0.38);
-          star.push(px, py);
-        }
-        g.poly(star).fill({ color: GILT, alpha: 0.85 * fade });
-        g.ellipse(cx, cy, rx * 0.1, ry * 0.1).fill({ color: 0xfff1c8, alpha: fade });
+        drumFace(g, cx, cy, rx, ry, s.dir, z, fade, s.t * 0.8);
 
         // Ánh sáng: quầng quanh mặt trống, lóe mạnh lúc vừa mọc xong và lúc vỡ.
         const flash = Math.max(1 - Math.abs(s.t - RISE) / 0.2, s.t > HOLD ? 1 - fade : 0, 0);

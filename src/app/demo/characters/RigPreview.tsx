@@ -14,6 +14,7 @@ const ACTIONS = [
   { kind: "ultimate", label: "Tuyệt chiêu", ms: 1800 },
   { kind: "hit", label: "Trúng đòn", ms: 600 },
   { kind: "guard", label: "Đỡ đòn", ms: 700 },
+  { kind: "shield", label: "Được khiên", ms: 1000 },
   { kind: "buff", label: "Được tăng", ms: 700 },
   { kind: "debuff", label: "Bị giảm", ms: 700 },
   { kind: "heal", label: "Hồi máu", ms: 700 },
