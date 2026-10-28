@@ -56,7 +56,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -300,6 +300,18 @@ export default function RigPreview({ id, size, onSnapshot }: {
             blaze[1].burn(at, size, 0.3 + n * 0.1);
           });
         });
+        // Đoạn đạo tuyệt lương hệ Thổ: địa mạch chạy từ tay tới hai điểm bên phải khung, bụi đất cuộn quanh hai điểm đó.
+        const sever = team === "roadSever" ? [earthSurge(app.stage, rig.fxColor), poisonMist(app.stage, rig.fxColor, DUST)] as const : null;
+        if (sever) loaded.onStrike?.((kind, at) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y * 0.8;
+          const from = { x: at.x, y: loaded.view.y };
+          [0.78, 0.92].forEach((k, n) => {
+            const foot = { x: el.clientWidth * k, y: loaded!.view.y };
+            sever[0].surge(from, foot, size, n * 0.08);
+            sever[1].cover(foot, size, 0.3 + n * 0.08);
+          });
+        });
         // Triều dâng hệ Thủy: vết nứt ở mép phải khung (cột nước do `pillar` vẽ).
         const siege = team === "tideSiege" ? ironFormation(app.stage, rig.fxColor) : null;
         if (siege) loaded.onStrike?.((kind) => {
@@ -311,6 +323,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           mist?.forEach((m) => m.update(dt));
           tide?.update(dt);
           blaze?.forEach((b) => b.update(dt));
+          sever?.forEach((b) => b.update(dt));
           rain?.forEach((r) => r.update(dt));
           cleave?.forEach((c) => c.update(dt));
           chain?.forEach((c) => c.update(dt));
