@@ -131,7 +131,8 @@ export interface WarriorRig {
    * tuyệt chiêu, cầu lửa rơi xuống và lửa bén trên từng đối thủ; `flameCleave` chỉ ở tuyệt chiêu, nhát chém lửa và lửa
    * bén trên đối thủ đứng đầu; `emberMend` chỉ ở tuyệt chiêu, vòng than hồng hồi phục và mũi tên vàng quanh
    * từng đồng đội; `granaryBlaze` chỉ ở tuyệt chiêu, khói kho lương và lửa bén quanh từng đối thủ; `fireChain` chỉ ở
-   * tuyệt chiêu, tên lửa nảy lần lượt qua từng đối thủ và lửa bén lên họ.
+   * tuyệt chiêu, tên lửa nảy lần lượt qua từng đối thủ và lửa bén lên họ; `earthSurge` chỉ ở tuyệt chiêu, địa mạch chạy
+   * ngầm tới chân từng đối thủ rồi trồi đá nhọn, khiên mặt trống trước từng đồng đội.
    */
   readonly strikeFx?:
     | "lightning"
@@ -162,7 +163,8 @@ export interface WarriorRig {
     | "flameCleave"
     | "emberMend"
     | "granaryBlaze"
-    | "fireChain";
+    | "fireChain"
+    | "earthSurge";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -2158,6 +2160,51 @@ const NINH_HOA: WarriorRig = {
     anchor: { x: 780, y: 900 }, scale: 0.85 },
 };
 
+/**
+ * Doãn Nham, pháp sư hệ Thổ (tướng cửa hàng). Bộ tranh Shan gửi 28/10 (nền trong suốt sẵn, khổ 1374×1145, ảnh đứng
+ * phóng ×1.32 vào khung 1024×1536). Ảnh đứng tách lớp bằng code như Đàm Thảo: trượng đầu đá cùng nắm tay xoay quanh cổ
+ * tay, viên hổ phách trên đầu trượng sáng riêng; bàn tay buông và đầu tách riêng. Tranh ngồi xổm chống trượng làm tranh
+ * phong thái. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const DOAN_NHAM: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "staff",
+  dir: "doan-nham",
+  texScale: 0.5,
+  foot: { x: 560, y: 1500 },
+  height: 1485,
+  parts: {
+    body: { x: 108, y: 24, w: 902, h: 1484 },
+    armR: { x: 822, y: 768, w: 99, h: 144 },
+    sword: { x: 12, y: 12, w: 173, h: 1483 },
+    arm: { x: 30, y: 495, w: 120, h: 127 },
+    head: { x: 400, y: 20, w: 252, h: 270 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 140, y: 560 },
+    elbowR: { x: 860, y: 785 },
+    neck: { x: 545, y: 265 },
+  },
+  blade: [{ x: 85, y: 560 }, { x: 100, y: 130 }],
+  orb: { x: 100, y: 130 },
+  strikeFx: "earthSurge",
+  fxColor: 0xd8902e,
+  // Đâm trượng ngang về phía đối thủ (đánh thường), chống trượng xòe tay trấn (ra chiêu), tấn thấp nện đầu trượng xuống
+  // đất (tuyệt chiêu). Tranh nguồn cùng tỉ lệ ảnh đứng gốc nên phóng ×1.32.
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 63, y: 12 },
+      anchor: { x: 635, y: 1130 }, scale: 1.32, burst: { x: 1245, y: 420 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 325, y: 4 },
+      anchor: { x: 735, y: 1125 }, scale: 1.32, burst: { x: 1030, y: 260 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 101, y: 9 },
+      anchor: { x: 620, y: 1070 }, scale: 1.32, burst: { x: 1200, y: 980 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 47, y: 20 },
+    anchor: { x: 800, y: 880 }, scale: 1.12 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -2203,6 +2250,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   truongViem: TRUONG_VIEM,
   hongDan: HONG_DAN,
   ninhHoa: NINH_HOA,
+  doanNham: DOAN_NHAM,
 };
 
 export function rigOf(id: string): Rig | null {
