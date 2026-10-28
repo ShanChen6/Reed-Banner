@@ -135,6 +135,8 @@ export interface WarriorRig {
    * ngầm tới chân từng đối thủ rồi trồi đá nhọn, khiên mặt trống trước từng đồng đội; `tauntRoar` chỉ ở tuyệt chiêu,
    * khiên mặt trống trước từng đồng đội, vòng gai đá quanh chính mình và ấn khiêu khích trên đầu từng đối thủ;
    * `earthMend` chỉ ở tuyệt chiêu, vòng lá thuốc màu đất hồi phục rồi khiên mặt trống quanh từng đồng đội.
+   `roadSever` chỉ ở tuyệt chiêu, địa mạch cắt
+   * đường tới chân từng đối thủ và bụi đất cuộn quanh họ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -168,7 +170,8 @@ export interface WarriorRig {
     | "fireChain"
     | "earthSurge"
     | "tauntRoar"
-    | "earthMend";
+    | "earthMend"
+    | "roadSever";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -2302,6 +2305,49 @@ const BE_LIEN: WarriorRig = {
     anchor: { x: 800, y: 990 }, scale: 0.8 },
 };
 
+/**
+ * Mã Nhạc, mưu sĩ hệ Thổ (tướng cửa hàng). Bộ tranh Shan gửi 28/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code như
+ * Ninh Hỏa: quạt nan vuông cùng nắm tay phẩy theo nhịp quạt quanh cổ tay, bàn tay buông và đầu quấn khăn tách riêng, chỗ
+ * cổ tay trong ống tay áo được vá màu lót áo. Tranh cúi xem ấn gỗ làm tranh phong thái. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const MA_NHAC: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "fan",
+  dir: "ma-nhac",
+  texScale: 0.5,
+  foot: { x: 620, y: 1512 },
+  height: 1505,
+  parts: {
+    body: { x: 224, y: 7, w: 755, h: 1511 },
+    armR: { x: 824, y: 736, w: 92, h: 153 },
+    sword: { x: 24, y: 238, w: 244, h: 325 },
+    arm: { x: 137, y: 447, w: 131, h: 116 },
+    head: { x: 462, y: 4, w: 246, h: 238 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 252, y: 530 },
+    elbowR: { x: 868, y: 748 },
+    neck: { x: 585, y: 225 },
+  },
+  blade: [{ x: 205, y: 540 }, { x: 130, y: 260 }],
+  strikeFx: "roadSever",
+  fxColor: 0xc8923a,
+  // Quạt nan quét thấp (đánh thường), giơ quạt chỉ tay vạch đường (ra chiêu), lật ngang quạt xòe tay chặn đường lương
+  // (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 32, y: 11 },
+      anchor: { x: 600, y: 1500 }, scale: 1, burst: { x: 140, y: 500 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 17, y: 7 },
+      anchor: { x: 500, y: 1470 }, scale: 1, burst: { x: 1000, y: 312 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 14, y: 7 },
+      anchor: { x: 520, y: 1470 }, scale: 1, burst: { x: 960, y: 232 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 8, y: 304 },
+    anchor: { x: 600, y: 1180 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -2350,6 +2396,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   doanNham: DOAN_NHAM,
   leThach: LE_THACH,
   beLien: BE_LIEN,
+  maNhac: MA_NHAC,
 };
 
 export function rigOf(id: string): Rig | null {
