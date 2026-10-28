@@ -1,6 +1,6 @@
 /**
- * Khiên mặt trống vẽ trên cả sân (hệ tọa độ của stage PixiJS): tuyệt chiêu của tướng sĩ hệ Thổ dựng một mặt trống
- * đồng đứng nghiêng trước người tung chiêu, quay về phía đối thủ. Vòng hoa văn dưới chân sáng lên, mặt trống mọc
+ * Khiên mặt trống vẽ trên cả sân (hệ tọa độ của stage PixiJS): tuyệt chiêu tạo khiên dựng một mặt trống đồng đứng
+ * nghiêng trước người được che, quay về phía đối thủ. Vòng hoa văn dưới chân sáng lên, mặt trống mọc
  * từ đất với ngôi sao giữa xoay chậm, đá vụn bay vòng quanh người, rồi mặt trống lóe sáng, đá rơi xuống và tan.
  */
 import { Container, Graphics } from "pixi.js";
@@ -26,7 +26,8 @@ interface Shield {
 
 const ease = (k: number) => 1 - (1 - Math.min(1, Math.max(0, k))) ** 3;
 
-export function drumShield(parent: Container, color: number) {
+/** `facing`: hướng mặt trống khi gọi `cover` (1 sang phải, -1 sang trái), theo phe người tung chiêu. */
+export function drumShield(parent: Container, color: number, facing = 1) {
   const back = new Graphics();
   const g = new Graphics();
   const glow = new Graphics();
@@ -49,6 +50,10 @@ export function drumShield(parent: Container, color: number) {
         edge: Array.from({ length: 6 }, () => 0.65 + Math.random() * 0.45),
       }));
       shields.push({ at, size, dir, wait, t: 0, rocks });
+    },
+    /** Dựng mặt trống trước người đứng ở `at`, quay theo `facing`. */
+    cover(at: Point, size: number, wait = 0) {
+      this.raise(at, size, facing, wait);
     },
     update(dt: number) {
       back.clear();

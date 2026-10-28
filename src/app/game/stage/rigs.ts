@@ -107,22 +107,22 @@ export interface WarriorRig {
   readonly orb?: Point;
   /**
    * Hiệu ứng lúc đòn trúng vẽ trên cả sân: `lightning` phóng sét tới đối thủ, tuyệt chiêu giáng sét xuống cả đội;
-   * `earthWard` và `leafBloom` chỉ ở tuyệt chiêu, dựng vòm khiên đất hoặc nở vòng lá hồi sinh quanh từng đồng đội;
+   * `earthWard` và `leafBloom` chỉ ở tuyệt chiêu, dựng khiên mặt trống đồng hoặc nở vòng lá hồi sinh quanh từng đồng đội;
    * `armorPierce` chỉ ở tuyệt chiêu, phóng mũi sáng xuyên giáp tới đối thủ đứng đầu; `supplyDrain` chỉ ở tuyệt
    * chiêu, phủ sương băng lên cả đội đối thủ và hút hạt sáng từ họ về người tung chiêu; `waterPillar` chỉ ở tuyệt
    * chiêu, phun cột nước rồi đóng băng dưới chân từng đối thủ; `flameWall` chỉ ở tuyệt chiêu, dựng tường lửa
    * quanh chính mình và bén lửa lên từng đối thủ; `groundSlam` chỉ ở tuyệt chiêu, nứt đất dưới chân đối thủ đứng
-   * đầu và dựng vòm khiên đất quanh cả đội mình; `mountainCrush` chỉ ở tuyệt chiêu, nứt đất dưới chân đối thủ đứng
+   * đầu và dựng khiên mặt trống trước cả đội mình; `mountainCrush` chỉ ở tuyệt chiêu, nứt đất dưới chân đối thủ đứng
    * đầu và dựng khiên mặt trống đồng trước chính mình; `needleVolley` chỉ ở tuyệt chiêu, bắn tỏa kim bạc tới từng đối thủ;
    * `steelBulwark` chỉ ở tuyệt chiêu, dựng tường thép trước mặt chính mình; `silverGrace` chỉ ở tuyệt chiêu, rải kim
    * bạc và vòng sáng hồi máu quanh từng đồng đội; `coinScatter` chỉ ở tuyệt chiêu, tung tiền vàng khỏi đối thủ đứng
    * đầu kèm ấn câm lặng; `ironFormation` chỉ ở tuyệt chiêu, khiên nứt trên từng đối thủ và mũi tên vàng ở từng đồng
    * đội; `bambooSap` chỉ ở tuyệt chiêu, chém lá trúc lên đối thủ đứng đầu và hút sinh khí về chính mình;
    * `thornBind` chỉ ở tuyệt chiêu, dây gai quấn từng đối thủ và hút sinh khí về chính mình; `rootGuard` chỉ ở tuyệt
-   * chiêu, vòng lá hồi phục quanh cả đội và vòm khiên đất quanh chính mình; `poisonMist` chỉ ở tuyệt chiêu, sương độc
-   * quanh từng đối thủ và vòng lá hồi phục quanh đội mình; `groveWard` chỉ ở tuyệt chiêu, vòng lá và vòm khiên quanh
+   * chiêu, vòng lá hồi phục quanh cả đội và khiên mặt trống trước chính mình; `poisonMist` chỉ ở tuyệt chiêu, sương độc
+   * quanh từng đối thủ và vòng lá hồi phục quanh đội mình; `groveWard` chỉ ở tuyệt chiêu, vòng lá và khiên mặt trống quanh
    * từng đồng đội; `frostSpear` chỉ ở tuyệt chiêu, cột nước đóng băng dưới chân đối thủ đứng đầu; `tideBulwark` chỉ ở
-   * tuyệt chiêu, vòm khiên quanh từng đồng đội và cột băng dưới chân từng đối thủ; `springDew` chỉ ở tuyệt chiêu, vòng cam lộ hồi phục quanh từng đồng
+   * tuyệt chiêu, khiên mặt trống trước từng đồng đội và cột băng dưới chân từng đối thủ; `springDew` chỉ ở tuyệt chiêu, vòng cam lộ hồi phục quanh từng đồng
    * đội và cột băng dưới chân từng đối thủ; `tideMist` chỉ ở tuyệt chiêu, sương nước quanh từng đối thủ và hạt năng
    * lượng bay về chính mình; `tideSiege` chỉ ở tuyệt chiêu, cột băng dưới chân và vết nứt trên từng đối thủ; `fireRain` chỉ ở
    * tuyệt chiêu, cầu lửa rơi xuống và lửa bén trên từng đối thủ; `flameCleave` chỉ ở tuyệt chiêu, nhát chém lửa và lửa
