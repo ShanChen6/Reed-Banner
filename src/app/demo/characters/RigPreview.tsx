@@ -56,7 +56,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -266,8 +266,9 @@ export default function RigPreview({ id, size, onSnapshot }: {
           const size = rig.height * loaded.view.scale.y;
           thorns.bind({ x: el.clientWidth - 60, y: loaded.view.y }, { x: loaded.view.x, y: loaded.view.y - size * 0.55 }, size * 0.8);
         });
-        // Rễ già giữ thành hệ Mộc: vòng lá quanh nhân vật, khiên mặt trống trước mặt.
-        const roots = team === "rootGuard" || team === "groveWard" ? [leafBloom(app.stage, rig.fxColor), drumShield(app.stage, rig.fxColor)] as const : null;
+        // Rễ già giữ thành hệ Mộc, hậu thổ dưỡng nguyên hệ Thổ: vòng lá quanh nhân vật, khiên mặt trống trước mặt.
+        const roots = team === "rootGuard" || team === "groveWard" || team === "earthMend"
+          ? [leafBloom(app.stage, rig.fxColor, team === "earthMend" ? LOAM : undefined), drumShield(app.stage, rig.fxColor)] as const : null;
         if (roots) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const at = { x: loaded.view.x, y: loaded.view.y };
