@@ -1,5 +1,12 @@
 # Nhật ký thay đổi thiết kế
 
+## 30/10/2026 — Nghề Xạ thủ thay Cung thủ; Sát thủ chờ trao đổi
+
+- Chốt hướng Xạ thủ đa vũ khí, giữ RB ID. Kim/Mộc bảo toàn ảnh; Thủy phi tiêu, Hỏa phi luân, Thổ đá ném tay (không lao/ná), Lôi phi châm, Phong lụa chiến. Năm người thay W01 bằng W02; tên đề xuất bỏ ngữ nghĩa cung/nỏ không phù hợp.
+- Viết lại nguồn [thiết kế](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md) và [prompt](../06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md). Bộ thiết kế mới DRAFT để review; hướng vũ khí đã được người dùng chốt, chưa có mô phỏng/ảnh nghiệm thu hoặc thay đổi runtime.
+- Theo yêu cầu rõ ràng của người dùng, xóa file prompt 04 cũ và QA Cung thủ V4.5, thay nội dung năm Cung thủ lỗi thời trong nguồn 08/09; không chép bản cũ sang archive. Git giữ lịch sử. Đây là ngoại lệ có chỉ đạo đối với quy định giữ tài liệu lịch sử; sửa liên kết và MOVED, gắn nhãn các audit liên quan để không dùng làm luật hiện hành.
+- Sát thủ cần trao đổi lại trước khi chốt: giữ nguyên bảy hồ sơ/skill/prompt, không coi là thiết kế đã duyệt lại, không sửa hoặc triển khai trong đợt Xạ thủ.
+
 ## 26/10/2026 — Chọn đối thủ nhận kỹ năng
 
 - Kỹ năng đơn mục tiêu cho chọn đối thủ (hoặc đồng đội) khi có từ hai lựa chọn: bấm thẻ, hoặc ←/→ rồi Enter (Shan yêu cầu).
@@ -311,3 +318,4 @@
 ## 16/10/2026
 
 - Bản chốt thiết kế đầu tiên sau buổi phản biện (`docs/co-lau-design.md`).
+

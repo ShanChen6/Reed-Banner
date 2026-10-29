@@ -99,7 +99,7 @@ Không đổi: `docs/reports/`, `docs/audits/` (script đọc/ghi thẳng vào �
 | `docs/design/v4-2/01-chinh-lich-su-su-quan.md` | [`docs/06-art/prompts/v4-2/01-chinh-lich-su-su-quan.md`](06-art/prompts/v4-2/01-chinh-lich-su-su-quan.md) |
 | `docs/design/v4-2/02-tuong-thuong-kim-moc-thuy.md` | [`docs/06-art/prompts/v4-2/02-tuong-thuong-kim-moc-thuy.md`](06-art/prompts/v4-2/02-tuong-thuong-kim-moc-thuy.md) |
 | `docs/design/v4-2/03-tuong-thuong-hoa-tho-loi-phong.md` | [`docs/06-art/prompts/v4-2/03-tuong-thuong-hoa-tho-loi-phong.md`](06-art/prompts/v4-2/03-tuong-thuong-hoa-tho-loi-phong.md) |
-| `docs/design/v4-2/04-cung-thu-sat-thu.md` | [`docs/06-art/prompts/v4-2/04-cung-thu-sat-thu.md`](06-art/prompts/v4-2/04-cung-thu-sat-thu.md) |
+| `docs/design/v4-2/04-cung-thu-sat-thu.md` | [`docs/06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md`](06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md) |
 | `docs/design/v4-2/05-weapon-skill-conflict-audit.md` | [`docs/06-art/prompts/v4-2/05-weapon-skill-conflict-audit.md`](06-art/prompts/v4-2/05-weapon-skill-conflict-audit.md) |
 | `docs/design/v4-2/06-weapon-reference-sheets-v1.md` | [`docs/06-art/prompts/v4-2/06-weapon-reference-sheets-v1.md`](06-art/prompts/v4-2/06-weapon-reference-sheets-v1.md) |
 | `docs/design/v4-2/07-medium-weapon-design-proposals.md` | [`docs/06-art/prompts/v4-2/07-medium-weapon-design-proposals.md`](06-art/prompts/v4-2/07-medium-weapon-design-proposals.md) |
@@ -176,3 +176,13 @@ Không đổi: `docs/reports/`, `docs/audits/` (script đọc/ghi thẳng vào �
 | `docs/ui-design-system/implementation-roadmap.md` | [`docs/05-ui-ux/implementation/roadmap.md`](05-ui-ux/implementation/roadmap.md) |
 | `docs/ui-design-system/README.md` | [`docs/05-ui-ux/design-system/README.md`](05-ui-ux/design-system/README.md) |
 | `docs/README.md` mục Thuật ngữ | [`docs/00-overview/thuat-ngu.md`](00-overview/thuat-ngu.md) |
+
+
+## Thay thiết kế Xạ thủ — 30/10/2026
+
+Các bản dưới đây bị xóa theo yêu cầu người dùng; tra lịch sử Git khi cần. Không khôi phục prompt cũ vào nguồn sản xuất.
+
+| Đường dẫn cũ | Đường dẫn mới |
+|---|---|
+| `docs/06-art/prompts/v4-2/04-cung-thu-sat-thu.md` | [`docs/06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md`](06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md) |
+| `docs/06-art/prompts/v4-2/19-archer-gameplay-art-v4-5-qa.md` | [`docs/06-art/prompts/v4-2/08-new-professions-14-skill-kits.md`](06-art/prompts/v4-2/08-new-professions-14-skill-kits.md) |
