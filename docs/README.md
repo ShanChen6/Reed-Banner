@@ -57,6 +57,7 @@
 | [lo-trinh.md](lo-trinh.md) | Lộ trình theo giai đoạn |
 | [cau-hoi-mo.md](cau-hoi-mo.md) | Mọi câu hỏi còn mở (TODO) |
 | [nhat-ky-thay-doi.md](nhat-ky-thay-doi.md) | Các quyết định thiết kế theo ngày |
+| [ho-so-master-chat.md](ho-so-master-chat.md) | Ngữ cảnh cho chat mới về dựng hình nhân vật: kiến trúc rig, quy trình, tiến độ |
 
 ## Quy ước viết docs
 
