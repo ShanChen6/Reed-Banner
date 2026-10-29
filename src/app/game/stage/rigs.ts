@@ -149,7 +149,8 @@ export interface WarriorRig {
    * lốc gió quanh chính mình, khiên mặt trống trước từng đồng đội và luồng gió đưa năng lượng tới họ; `galeMend` chỉ ở
    * tuyệt chiêu, vòng gió trắng xanh hồi phục quanh từng đồng đội và luồng gió đưa năng lượng tới họ; `galeRift` chỉ ở
    * tuyệt chiêu, lốc cuốn quanh từng đối thủ và năng lượng bay khỏi họ về chính mình; `galeRout` chỉ ở tuyệt chiêu, lốc
-   * cuốn và khiên nứt trên từng đối thủ, luồng gió đưa năng lượng tới từng đồng đội.
+   * cuốn và khiên nứt trên từng đối thủ, luồng gió đưa năng lượng tới từng đồng đội; `boltBreach` chỉ ở tuyệt chiêu,
+   * tên nỏ xuyên tới đối thủ đứng đầu và khiên giáp họ nứt vỡ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -197,7 +198,8 @@ export interface WarriorRig {
     | "galeBulwark"
     | "galeMend"
     | "galeRift"
-    | "galeRout";
+    | "galeRout"
+    | "boltBreach";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -2955,6 +2957,50 @@ const PHUNG_PHONG: WarriorRig = {
     anchor: { x: 800, y: 900 }, scale: 0.85 },
 };
 
+/**
+ * Bạch Nỏ Lang, cung thủ hệ Kim (RB-062, nghề Cung thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
+ * 29/10 (nền trong suốt sẵn). Nỏ ôm ngang ngực bằng hai tay nên nỏ cùng bàn tay đỡ phía trước là một lớp xoay quanh nắm
+ * tay cầm báng; ống tên bên hông lắc nhẹ thay bàn tay buông; đầu (cả đuôi khăn) tách riêng. Phần giáp ngực sau nỏ được vá
+ * nhưng luôn bị nỏ che. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const BACH_NO_LANG: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "bach-no-lang",
+  texScale: 0.5,
+  foot: { x: 420, y: 1510 },
+  height: 1500,
+  parts: {
+    body: { x: 36, y: 12, w: 748, h: 1511 },
+    armR: { x: 528, y: 598, w: 137, h: 316 },
+    sword: { x: 205, y: 338, w: 802, h: 250 },
+    arm: { x: 268, y: 426, w: 131, h: 102 },
+    head: { x: 279, y: 12, w: 211, h: 263 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 330, y: 470 },
+    elbowR: { x: 560, y: 625 },
+    neck: { x: 420, y: 250 },
+  },
+  blade: [{ x: 330, y: 470 }, { x: 960, y: 455 }],
+  strikeFx: "boltBreach",
+  fxColor: 0x9ea4ad,
+  // Đá tống ngắn, ôm nỏ ngang ngực không bắn (đánh thường), đứng trụ áp má ngắm (ra chiêu), quỳ một gối ghì nỏ phóng tên
+  // phá thành (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 6, y: 12 },
+      anchor: { x: 220, y: 1490 }, scale: 1, burst: { x: 1010, y: 300 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 14, y: 10 },
+      anchor: { x: 440, y: 1505 }, scale: 1, burst: { x: 975, y: 460 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 43, y: 7 },
+      anchor: { x: 780, y: 1005 }, scale: 1.05, burst: { x: 1480, y: 370 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 20, y: 15 },
+    anchor: { x: 800, y: 900 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -3017,6 +3063,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   bachSuong: BACH_SUONG,
   buiPhieu: BUI_PHIEU,
   phungPhong: PHUNG_PHONG,
+  bachNoLang: BACH_NO_LANG,
 };
 
 export function rigOf(id: string): Rig | null {
