@@ -16,13 +16,8 @@
 
 ### Cung thủ
 
-| Ô | ID đề xuất | Chiêu | Năng lượng | Mục tiêu | Steps đề xuất | Hướng động tác |
-|---|---|---|---:|---|---|---|
-| 1 | `role_cungThu_xaDiem` | **Xạ Điểm** | 30 | enemy | damage atk 1.6; mark normal | Giương dây, ngắm điểm yếu, bắn một phát chính xác. |
-| 3 | `role_cungThu_khoanGiap` | **Khoan Giáp Tiễn** | 45 | enemy | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns | Kéo hết tầm rồi xuyên vào vị trí giáp hở, vẫn đúng một mũi tên. |
-| 5 | `role_cungThu_muaTien` | **Mưa Tiễn Kỳ Tập** | 60 | allEnemies | damage atk 0.75 to each enemy; destroy random 3 tiles | Loạt tên được gợi bằng tư thế trước khi bắn; không vẽ nhiều cung mới. |
+> Chiêu nghề Cung thủ được mô tả chuẩn tại phần **Cung thủ V4.5** bên dưới. Slot 1/3/5 dùng chung, nhưng tư thế diễn xuất riêng cho từng nhân vật. Không tạo trạng thái `mark normal` nếu engine chưa có bước tương ứng.
 
-**Chase nghề** `archerPrepared` — **Tiếp xạ:** trigger `armorBroken`; effect `damage` 0.40× ATK. Khi đồng đội gây phá giáp thành công, Cung thủ bắn truy kích 40% ATK vào đúng mục tiêu, chỉ một lần cho mỗi action. **Combo đồng đội:** Theo hướng pursuit của combo hiện hành; đề xuất `archerPursuit`, chưa thêm runtime.
 
 ### Sát thủ
 
@@ -50,213 +45,297 @@
 
 ## 14 bộ kỹ năng theo từng nhân vật
 
+## Cung thủ V4.5 — chiến đấu cận/viễn và ngôn ngữ hành động
+
+> **Thay đổi thiết kế 29/10/2026:** Chỉ cập nhật **7 Cung thủ RB-062–068**, giữ nguyên mã/định danh nghề, kỹ năng hệ và 7 Sát thủ. Mọi thông số dưới đây là **proposal cân bằng**, không đồng nghĩa đã triển khai trong runtime.
+
+**Gameplay vs. hình ảnh:** Đòn đánh thường có thể được *minh họa* bằng đá tống, thúc gối, gạt cẳng tay, đẩy tay, quét chân hoặc thân nỏ che chắn. Đây là **biến thể animation/sprite của một đòn đánh thường**, không có nghĩa engine đang có tầm đánh cận chiến, hệ vật lý hoặc phân loại sát thương mới. Nếu sau này lập trình cơ chế cận/viễn, phải bổ sung luật riêng; không suy ra từ prompt ảnh.
+
+**Quy tắc ba nhịp bắt buộc:** Frame 2 — đánh thường **phản xạ/giữ khoảng cách** (được phép không bắn); Frame 3 — **Khoan Giáp Tiễn, nghề ô 3** (một phát bắn chính xác); Frame 4 — **tuyệt chiêu cá nhân ô 4** (thế tổng thể khác biệt: quỳ ghì, chặn lối, khóa điểm neo, hiệu lệnh loạt tên, trấn tuyến, cắt tín hiệu, hoặc lùi đổi góc).
+
+**Giữ vũ khí nguyên vẹn:** Chỉ một cung/nỏ canonical và bộ tên hoặc hộp tên đã mô tả; khi đánh thường không bắn, vũ khí được ôm, giữ sát người hoặc giữ ở tay, **không tự mọc dây đeo mới**. Chốt tư thế cầm thuận tự nhiên theo Master được duyệt; không bắt model đảo tay hay gò bàn tay quanh cán. Không tì toàn bộ trọng lượng vào cánh cung, không dùng dây cung làm roi, không đập vỡ cơ cấu nỏ. Phần thân dưới và góc ngắm khác nhau phải dễ đọc thành 3 silhouette khi thu nhỏ còn ~128px.
+
+**Bảy hướng khác biệt:** Kim = sức nặng/kỷ luật; Mộc = săn và khóa đường; Thủy = boong hẹp/góc thấp; Hỏa = mở thế/đánh diện; Thổ = trấn tuyến/bảo vệ; Lôi = cắt tín hiệu/phản xạ; Phong = đổi trụ/thoát vị trí.
+
+**Mục tiêu cân bằng:** Cung thủ đánh tầm xa có nhịp mạnh nhưng không thay thế Tướng sĩ cận chiến hoặc Quân sư buff. Các hiệu ứng `freeze`, `shield`, `burn`, `pierce`, `energy`, `destroy`, `whirl` vẫn phụ thuộc engine; chưa có debuff trói, teleport hay nhân bản. P4 cá nhân cần kiểm tra stacking và giới hạn `CHASE_LIMITS`.
+
+### Ba kỹ năng nghề dùng chung — đề xuất V4.5
+
+| Ô | Tên / ID | Cost | Mục tiêu | Hiệu ứng đề xuất | Ý nghĩa và animation |
+|---|---|---:|---|---|---|
+| 1 | **Xạ Điểm** `role_cungThu_xaDiem` | 30 | enemy | 1.60× ATK, xuyên 10% DEF | Phát bắn định mục tiêu, không thêm trạng thái `mark` chưa hỗ trợ |
+| 3 | **Khoan Giáp Tiễn** `role_cungThu_khoanGiap` | 45 | enemy | 1.90× ATK, xuyên 25% DEF, giảm DEF 15% trong 2 lượt | Một tên duy nhất nhắm khe giáp, **tư thế tùy nhân vật** |
+| 5 | **Mưa Tiễn Kỳ Tập** `role_cungThu_muaTien` | 60 | allEnemies | 0.75× ATK mỗi địch, phá ngẫu nhiên 3 ô | Kỹ năng diện chung, VFX nhiều tên tách khỏi sprite; không tạo thêm cung |
+
+Lưu ý số liệu nấc 1 khác bản cũ ở chỗ bỏ nhãn `mark normal` chưa có cơ chế xác định; thay bằng xuyên 10% DEF làm phương án kiểm thử, **không phải đã thay đổi code**.
+
+### Quy ước bị động của nghề
+
+`archerPrepared` (*Tiếp xạ*): khi đồng đội phá giáp, Cung thủ có cơ hội truy kích mục tiêu bằng 0.40× ATK (đề xuất), **không quá một lần trên mỗi action nguồn**. Hai phản ứng hệ tái dùng từ hệ hiện hành; **P4 cá nhân là đề xuất mới** chưa đăng ký runtime. Trong cơ chế đã có, cần phân biệt passive nghề mở cơ hội chuẩn bị với các ID chase trả về từ `chasePassives()`; không tự nhận đã đủ bốn passive riêng chạy được.
+
+### Ma trận tư thế bất trùng giữa 7 người
+
+| Mã | Đánh thường | Ra chiêu ô 3 | Tuyệt chiêu ô 4 |
+|---|---|---|---|
+| RB-062 | Đá tống ngắn ở tầm bụng, cả hai tay kẹp nỏ nặng ngang ngực để tránh va đập cơ cấu cò. Không bắn. | Đứng trụ hai chân, nỏ ngang ngực, áp má sát ray, lấy điểm ngắm chính xác một khe giáp. | Quỳ một gối, thân người gập sau báng nỏ, ghì nỏ nặng thành một trục ổn định, chuẩn bị phóng đúng một tên phá thành. |
+| RB-063 | Lách sang trái, quét chân thấp để tách người áp sát; cung tre giữ dọc ở tay trái, dây không kéo. | Đứng tĩnh, kéo một tên tre ngang vai, nhắm đúng một khe giáp ở tầm trung; trục cánh cung trên dài hơn vẫn nhìn rõ. | Chân sau xoay rộng, người nghiêng gần mặt đất, cung tre nghiêng chéo thấp và mũi tên chỉ lối thoát giả định; dáng khóa đường từ phía sườn. |
+| RB-064 | Thúc gối ngắn, nỏ gọn ép sát sườn bằng cánh tay, không chạm cơ cấu cò. Không nạp thêm tên. | Đứng trụ hẹp, đưa nỏ ngắn sát vai phải và ngắm một khe giáp ngang thân; khuỷu không bị che bởi cánh nỏ. | Hạ thế nghiêng gần quỳ ở một chân, nỏ ngang mạn tưởng tượng và chỉ lệch sang góc thấp bên phải nhằm chặn điểm neo; một tên sẵn trên ray. |
+| RB-065 | Bật vai và thúc khuỷu tay phải ngang ngực khi cung dài giữ thẳng ở tay trái, dây không giương; không đánh bằng đầu cung. | Hạ chân trụ rồi kéo cung ngang vai, ngắm một điểm yếu đơn mục tiêu, không có lửa trên mũi tên. | Chân mở cực rộng, xoay hông mạnh, cung lớn dựng một đường chéo đi lên, tên duy nhất chĩa lên hướng tuyến quân; mô tả hiệu lệnh mưa tên mà không vẽ nhiều xạ thủ. |
+| RB-066 | Đẩy bằng lòng bàn tay phải để giữ khoảng cách trong khi tay trái dựng nguyên trường cung nặng sát thân, không dùng cánh cung làm gậy. | Chân trụ chắc, kéo một tên nặng ngang vai, nhắm khe giáp đơn mục tiêu; không thay đổi phiến sừng gốc. | Xoay vai chắn tuyến đồng đội tưởng tượng, cung nằm chéo thấp trước người, một tên nhắm xuống lối xung phong, chân mở rộng như mỏ neo. |
+| RB-067 | Bước nghiêng tránh sát người, dùng lòng bàn tay phải gạt nhanh cẳng tay đối thủ tưởng tượng; cung phản cong giữ ở tay trái dưới hông, không giương. | Hai chân tạm đứng yên, kéo một mũi tên hẹp với cung phản cong ở góc vai nông; nhắm một điểm giáp rất nhỏ. | Sau khi chuông bên hông đã được ra tín hiệu (không chạm chuông trong cùng ảnh), xoay chân sau rộng, nâng cung lên một đường chéo cao và thả một tên vào mục tiêu chỉ huy; dáng chớp thời cơ, không giương hai tên. |
+| RB-068 | Đá quét ngang thấp khi chuyển trụ, cung ngắn bất đối xứng thu gọn trong tay trái ở hông; tay phải mở để giữ thăng bằng; không bắn. | Ngừng đúng một nhịp, chân trước trụ cố định, kéo tên lông xám và ngắm chính xác ngang ngực; cung ngắn vẫn có cánh trên dài hơn. | Bước lùi chéo rộng với thân người xoay gần ngang, vừa mở cung và hoàn tất một phát bắn theo góc sườn; tà áo tự bay theo quán tính, không vẽ dư ảnh nhân vật. |
+
+## Hồ sơ gameplay và 10 kỹ năng từng Cung thủ (V4.5)
+
 ### RB-062 — Bạch Nỏ Lang · Cung thủ / Kim
 
-**Chiến thuật nhận diện:** Đồng đội phá giáp: suy yếu thêm 8% DEF mục tiêu trong 1 lượt.
+**Chức năng gameplay:** Nỏ thủ phá giáp hạng nặng. **Nhịp chiến đấu:** Đầm, chắc, kiểm soát cửa hẹp; cận chiến chỉ để tạo khoảng cách rồi trở lại nỏ.
 
-**Sáu chủ động**
+**Ngôn ngữ hình khối:** **ĐÁ NGẮN → NGẮM NGANG → QUỲ GHÌ NỎ**. Cả ba khung cần khác nhau về hướng thân, chân trụ và mức sử dụng cung/nỏ.
 
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | damage atk 1.6; mark normal |
-| 2 | **Luyện Kim Thành Kiếm** | `element_luyenKimThanhKiem` | Biến 4 ô thành Kiếm (theo registry hiện tại) |
-| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns |
-| 4 | **Thiết Nỏ Phá Thành** | `rb_bnl_thietNoPhaThanh` | damage 2.70× ATK, pierce 0.45; defDown 0.20 for 2 turns; destroy line 4 tiles |
-| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | damage atk 0.75 to each enemy; destroy random 3 tiles |
-| 6 | **Kim Ý Ngưng Thần** | `element_kimYNgungThan` | Gây 1,3× ATK, xuyên 50% DEF (bản layout2 đã thay nội dung cũ) |
+**Sáu kỹ năng chủ động**
 
-**Tuyệt chiêu cá nhân:** `rb_bnl_thietNoPhaThanh`, giá **95** năng lượng, target `enemy`. damage 2.70× ATK, pierce 0.45; defDown 0.20 for 2 turns; destroy line 4 tiles. **Hướng nghệ thuật:** Giữ nỏ lớn hai tay, khóa vai và nhả một tên đồng xuyên giáp.
+| Ô | Kỹ năng | Skill ID | Cost | Hiệu ứng và vai trò (đề xuất) |
+|---|---|---|---:|---|
+| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | 30 | 1.60× ATK, xuyên 10% DEF; chọn mục tiêu đơn |
+| 2 | **Luyện Kim Thành Kiếm** | `element_luyenKimThanhKiem` | theo registry | Biến 4 ô thành Kiếm (theo registry hiện tại) |
+| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | 45 | 1.90× ATK, xuyên 25% DEF, DEF mục tiêu -15% trong 2 lượt |
+| 4 | **Thiết Nỏ Phá Thành** | `rb_bnl_thietNoPhaThanh` | 95 | 2.70× ATK; xuyên 45% DEF; giảm DEF 20% trong 2 lượt; phá một hàng 4 ô (đề xuất); target=`enemy` |
+| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | 60 | 0.75× ATK tới toàn địch, phá ngẫu nhiên 3 ô |
+| 6 | **Kim Ý Ngưng Thần** | `element_kimYNgungThan` | theo registry | Gây 1,3× ATK, xuyên 50% DEF (bản layout2 đã thay nội dung cũ) |
 
-**Bốn bị động (chase)**
+**Bốn nguồn bị động trong bản proposal** (P4 chưa đăng ký runtime):
 
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
+| Bị động | Tên / ID | Trigger / hiệu ứng |
+|---|---|---|
 | P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
 | P2 | Hành | Kim phá / `kim1` | Kế thừa registry hệ hiện tại |
 | P3 | Hành | Kim truy / `kim2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Nỏ thành bền bỉ** / `rb_bnl_passive` | `armorBroken` → `armor` 0.08 DEF reduction; Đồng đội phá giáp: suy yếu thêm 8% DEF mục tiêu trong 1 lượt. |
+| P4 — cá nhân | **Nỏ thành bền bỉ** / `rb_bnl_passive` | `armorBroken`: Giảm thêm DEF mục tiêu 8% trong 1 lượt, tối đa 1 lần mỗi action (không tự kích hoạt từ lần trừ DEF bổ sung). |
 
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Khoan Giáp Tiễn** (chiêu nghề ô 3). Khung 4 diễn tả **Thiết Nỏ Phá Thành** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
+**Mô tả chiến đấu để dựng ảnh**
+
+- **Basic / Frame 2:** Đá tống ngắn ở tầm bụng, cả hai tay kẹp nỏ nặng ngang ngực để tránh va đập cơ cấu cò. Không bắn.
+- **Skill / Frame 3 — Khoan Giáp Tiễn:** Đứng trụ hai chân, nỏ ngang ngực, áp má sát ray, lấy điểm ngắm chính xác một khe giáp.
+- **Ultimate / Frame 4 — Thiết Nỏ Phá Thành:** Quỳ một gối, thân người gập sau báng nỏ, ghì nỏ nặng thành một trục ổn định, chuẩn bị phóng đúng một tên phá thành.
+
+**Chống trùng:** ĐÁ NGẮN → NGẮM NGANG → QUỲ GHÌ NỎ. **Rủi ro cân bằng cần mô phỏng:** Burst mạnh + giảm giáp chồng nghề; kiểm tra boss armor và chống double proc.
 
 ---
 
 ### RB-063 — Thanh Lâm Xạ · Cung thủ / Mộc
 
-**Chiến thuật nhận diện:** Đồng đội nhận hồi thực: dựng Khiên 4% HP tối đa cho người đó.
+**Chức năng gameplay:** Thợ săn khóa lối / bảo hộ người rút. **Nhịp chiến đấu:** Lấy góc lệch và địa hình tưởng tượng làm ngôn ngữ chiến thuật; không tạo status 'trói' vật lý.
 
-**Sáu chủ động**
+**Ngôn ngữ hình khối:** **QUÉT CHÂN → NGẮM THẲNG → ÉP LỐI CHÉO THẤP**. Cả ba khung cần khác nhau về hướng thân, chân trụ và mức sử dụng cung/nỏ.
 
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | damage atk 1.6; mark normal |
-| 2 | **Lục Diệp Phong** | `element_lucDiepPhong` | Phá ngẫu nhiên 5 ô |
-| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns |
-| 4 | **Lục Tiễn Trói Đường** | `rb_tlx_lucTienTroiDuong` | damage 1.95× ATK; effect defDown 0.25 2 turns; heal team ratio 0.06 |
-| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | damage atk 0.75 to each enemy; destroy random 3 tiles |
-| 6 | **Linh Mộc Hồi Sinh** | `element_linhMocHoiSinh` | Hồi bản thân 11% HP và đổi 3 ô thành Tim |
+**Sáu kỹ năng chủ động**
 
-**Tuyệt chiêu cá nhân:** `rb_tlx_lucTienTroiDuong`, giá **90** năng lượng, target `enemy`. damage 1.95× ATK; effect defDown 0.25 2 turns; heal team ratio 0.06. **Hướng nghệ thuật:** Bắn về rìa bước di chuyển của địch, mô tả dây rừng chỉ bằng hướng bắn; không mọc dây từ cung.
+| Ô | Kỹ năng | Skill ID | Cost | Hiệu ứng và vai trò (đề xuất) |
+|---|---|---|---:|---|
+| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | 30 | 1.60× ATK, xuyên 10% DEF; chọn mục tiêu đơn |
+| 2 | **Lục Diệp Phong** | `element_lucDiepPhong` | theo registry | Phá ngẫu nhiên 5 ô |
+| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | 45 | 1.90× ATK, xuyên 25% DEF, DEF mục tiêu -15% trong 2 lượt |
+| 4 | **Lục Tiễn Trói Đường** | `rb_tlx_lucTienTroiDuong` | 90 | 1.95× ATK; giảm DEF 25% trong 2 lượt; hồi đội 6% HP tối đa (đề xuất); target=`enemy` |
+| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | 60 | 0.75× ATK tới toàn địch, phá ngẫu nhiên 3 ô |
+| 6 | **Linh Mộc Hồi Sinh** | `element_linhMocHoiSinh` | theo registry | Hồi bản thân 11% HP và đổi 3 ô thành Tim |
 
-**Bốn bị động (chase)**
+**Bốn nguồn bị động trong bản proposal** (P4 chưa đăng ký runtime):
 
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
+| Bị động | Tên / ID | Trigger / hiệu ứng |
+|---|---|---|
 | P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
 | P2 | Hành | Mộc sinh / `moc1` | Kế thừa registry hệ hiện tại |
 | P3 | Hành | Mộc hộ / `moc2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Rễ hộ người** / `rb_tlx_passive` | `healed` → `shield` 0.04 max HP; Đồng đội nhận hồi thực: dựng Khiên 4% HP tối đa cho người đó. |
+| P4 — cá nhân | **Rễ hộ người** / `rb_tlx_passive` | `healed`: Khi một đồng minh được hồi HP thực, cấp Khiên bằng 4% HP tối đa người ấy; tối đa một lần cho mỗi action nguồn. |
 
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Khoan Giáp Tiễn** (chiêu nghề ô 3). Khung 4 diễn tả **Lục Tiễn Trói Đường** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
+**Mô tả chiến đấu để dựng ảnh**
+
+- **Basic / Frame 2:** Lách sang trái, quét chân thấp để tách người áp sát; cung tre giữ dọc ở tay trái, dây không kéo.
+- **Skill / Frame 3 — Khoan Giáp Tiễn:** Đứng tĩnh, kéo một tên tre ngang vai, nhắm đúng một khe giáp ở tầm trung; trục cánh cung trên dài hơn vẫn nhìn rõ.
+- **Ultimate / Frame 4 — Lục Tiễn Trói Đường:** Chân sau xoay rộng, người nghiêng gần mặt đất, cung tre nghiêng chéo thấp và mũi tên chỉ lối thoát giả định; dáng khóa đường từ phía sườn.
+
+**Chống trùng:** QUÉT CHÂN → NGẮM THẲNG → ÉP LỐI CHÉO THẤP. **Rủi ro cân bằng cần mô phỏng:** Định nghĩa healed theo hồi thực để không lặp chain với Mộc hộ; tên 'trói' không phải immobilize.
 
 ---
 
 ### RB-064 — Lam Giang Nỗ · Cung thủ / Thủy
 
-**Chiến thuật nhận diện:** Khi đồng đội khống chế một địch, bản thân nhận 7 năng lượng.
+**Chức năng gameplay:** Trinh sát nỏ nhẹ khống chế tuyến sông. **Nhịp chiến đấu:** Nhỏ, nhanh, thấp; đánh trong không gian hẹp và cắt nhịp di chuyển.
 
-**Sáu chủ động**
+**Ngôn ngữ hình khối:** **THÚC GỐI → NGẮM HẸP → QUỲ THẤP KHÓA NEO**. Cả ba khung cần khác nhau về hướng thân, chân trụ và mức sử dụng cung/nỏ.
 
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | damage atk 1.6; mark normal |
-| 2 | **Thủy Nguyệt Tụ Linh** | `element_thuyNguyetTuLinh` | Chiêu hệ theo registry: xem steps chính thức khi triển khai |
-| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns |
-| 4 | **Thủy Tiễn Khóa Thuyền** | `rb_lgn_thuyTienKhoaThuyen` | damage 2.05× ATK; effect freeze chance 0.35 for 1 turn; energy targets -15 |
-| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | damage atk 0.75 to each enemy; destroy random 3 tiles |
-| 6 | **Thanh Lưu Tẩy Trần** | `element_thanhLuuTayTran` | Chiêu hệ theo registry: xem steps chính thức khi triển khai |
+**Sáu kỹ năng chủ động**
 
-**Tuyệt chiêu cá nhân:** `rb_lgn_thuyTienKhoaThuyen`, giá **95** năng lượng, target `enemy`. damage 2.05× ATK; effect freeze chance 0.35 for 1 turn; energy targets -15. **Hướng nghệ thuật:** Dùng nỏ nhỏ của thuyền tuần tra, nhắm thẳng dây neo tưởng tượng ngoài khung.
+| Ô | Kỹ năng | Skill ID | Cost | Hiệu ứng và vai trò (đề xuất) |
+|---|---|---|---:|---|
+| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | 30 | 1.60× ATK, xuyên 10% DEF; chọn mục tiêu đơn |
+| 2 | **Thủy Nguyệt Tụ Linh** | `element_thuyNguyetTuLinh` | theo registry | Chiêu hệ theo registry: xem steps chính thức khi triển khai |
+| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | 45 | 1.90× ATK, xuyên 25% DEF, DEF mục tiêu -15% trong 2 lượt |
+| 4 | **Thủy Tiễn Khóa Thuyền** | `rb_lgn_thuyTienKhoaThuyen` | 95 | 2.05× ATK; 35% gây đóng băng 1 lượt; trừ 15 năng lượng địch (đề xuất); target=`enemy` |
+| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | 60 | 0.75× ATK tới toàn địch, phá ngẫu nhiên 3 ô |
+| 6 | **Thanh Lưu Tẩy Trần** | `element_thanhLuuTayTran` | theo registry | Chiêu hệ theo registry: xem steps chính thức khi triển khai |
 
-**Bốn bị động (chase)**
+**Bốn nguồn bị động trong bản proposal** (P4 chưa đăng ký runtime):
 
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
+| Bị động | Tên / ID | Trigger / hiệu ứng |
+|---|---|---|
 | P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
 | P2 | Hành | Thủy tiếp / `thuy1` | Kế thừa registry hệ hiện tại |
 | P3 | Hành | Thủy dẫn / `thuy2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Thủy hiệu ứng cảnh giới** / `rb_lgn_passive` | `controlled` → `energy` +7 self energy; Khi đồng đội khống chế một địch, bản thân nhận 7 năng lượng. |
+| P4 — cá nhân | **Thủy hiệu ứng cảnh giới** / `rb_lgn_passive` | `controlled`: Nhận 7 năng lượng khi đồng đội khống chế thành công mục tiêu, giới hạn một lần mỗi action. |
 
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Khoan Giáp Tiễn** (chiêu nghề ô 3). Khung 4 diễn tả **Thủy Tiễn Khóa Thuyền** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
+**Mô tả chiến đấu để dựng ảnh**
+
+- **Basic / Frame 2:** Thúc gối ngắn, nỏ gọn ép sát sườn bằng cánh tay, không chạm cơ cấu cò. Không nạp thêm tên.
+- **Skill / Frame 3 — Khoan Giáp Tiễn:** Đứng trụ hẹp, đưa nỏ ngắn sát vai phải và ngắm một khe giáp ngang thân; khuỷu không bị che bởi cánh nỏ.
+- **Ultimate / Frame 4 — Thủy Tiễn Khóa Thuyền:** Hạ thế nghiêng gần quỳ ở một chân, nỏ ngang mạn tưởng tượng và chỉ lệch sang góc thấp bên phải nhằm chặn điểm neo; một tên sẵn trên ray.
+
+**Chống trùng:** THÚC GỐI → NGẮM HẸP → QUỲ THẤP KHÓA NEO. **Rủi ro cân bằng cần mô phỏng:** Không có mô hình tàu/thuyền trên bàn cờ; khóa thuyền là hình tượng, hiệu ứng thật là freeze/energy.
 
 ---
 
 ### RB-065 — Xích Diệm Tiễn · Cung thủ / Hỏa
 
-**Chiến thuật nhận diện:** Đồng đội phá giáp: bắn truy kích 35% ATK vào mục tiêu.
+**Chức năng gameplay:** Khai hỏa diện rộng / áp lực đội hình. **Nhịp chiến đấu:** Mở thế, áp lực nhịp cao; đòn lớn dùng tên hiệu lệnh để đại diện vùng ảnh hưởng.
 
-**Sáu chủ động**
+**Ngôn ngữ hình khối:** **THÚC CHỎ → NGẮM NGANG → MỞ RỘNG TÊN HIỆU LỆNH**. Cả ba khung cần khác nhau về hướng thân, chân trụ và mức sử dụng cung/nỏ.
 
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | damage atk 1.6; mark normal |
-| 2 | **Phóng Hỏa Thiêu Doanh** | `element_phongHoaThieuDoanh` | Chiêu Hỏa theo registry hiện tại |
-| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns |
-| 4 | **Hỏa Vũ Tiễn Trận** | `rb_xdt_hoaVuTienTran` | damage 1.15× ATK to enemies; burn value 0.12 ofAtk 2 turns; destroy square 3 |
-| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | damage atk 0.75 to each enemy; destroy random 3 tiles |
-| 6 | **Nộ Hỏa Thiêu Thân** | `element_noHoaThieuThan` | Chiêu Hỏa theo registry hiện tại |
+**Sáu kỹ năng chủ động**
 
-**Tuyệt chiêu cá nhân:** `rb_xdt_hoaVuTienTran`, giá **100** năng lượng, target `allEnemies`. damage 1.15× ATK to enemies; burn value 0.12 ofAtk 2 turns; destroy square 3. **Hướng nghệ thuật:** Giương cung lên đường chéo, sắp nhả một mũi tên chỉ huy loạt bắn; lửa tách VFX.
+| Ô | Kỹ năng | Skill ID | Cost | Hiệu ứng và vai trò (đề xuất) |
+|---|---|---|---:|---|
+| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | 30 | 1.60× ATK, xuyên 10% DEF; chọn mục tiêu đơn |
+| 2 | **Phóng Hỏa Thiêu Doanh** | `element_phongHoaThieuDoanh` | theo registry | Chiêu Hỏa theo registry hiện tại |
+| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | 45 | 1.90× ATK, xuyên 25% DEF, DEF mục tiêu -15% trong 2 lượt |
+| 4 | **Hỏa Vũ Tiễn Trận** | `rb_xdt_hoaVuTienTran` | 100 | 1.15× ATK cho tất cả địch; đốt 12% ATK trong 2 lượt; phá cụm vuông 3×3 ô (đề xuất); target=`allEnemies` |
+| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | 60 | 0.75× ATK tới toàn địch, phá ngẫu nhiên 3 ô |
+| 6 | **Nộ Hỏa Thiêu Thân** | `element_noHoaThieuThan` | theo registry | Chiêu Hỏa theo registry hiện tại |
 
-**Bốn bị động (chase)**
+**Bốn nguồn bị động trong bản proposal** (P4 chưa đăng ký runtime):
 
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
+| Bị động | Tên / ID | Trigger / hiệu ứng |
+|---|---|---|
 | P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
 | P2 | Hành | Hỏa truy / `hoa1` | Kế thừa registry hệ hiện tại |
 | P3 | Hành | Hỏa phá / `hoa2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Hỏa cốt truy kích** / `rb_xdt_passive` | `armorBroken` → `damage` 0.35× ATK; Đồng đội phá giáp: bắn truy kích 35% ATK vào mục tiêu. |
+| P4 — cá nhân | **Hỏa cốt truy kích** / `rb_xdt_passive` | `armorBroken`: Khi đồng đội phá giáp, truy kích mục tiêu thêm 35% ATK; giới hạn một lần mỗi action và chống vòng phản ứng. |
 
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Khoan Giáp Tiễn** (chiêu nghề ô 3). Khung 4 diễn tả **Hỏa Vũ Tiễn Trận** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
+**Mô tả chiến đấu để dựng ảnh**
+
+- **Basic / Frame 2:** Bật vai và thúc khuỷu tay phải ngang ngực khi cung dài giữ thẳng ở tay trái, dây không giương; không đánh bằng đầu cung.
+- **Skill / Frame 3 — Khoan Giáp Tiễn:** Hạ chân trụ rồi kéo cung ngang vai, ngắm một điểm yếu đơn mục tiêu, không có lửa trên mũi tên.
+- **Ultimate / Frame 4 — Hỏa Vũ Tiễn Trận:** Chân mở cực rộng, xoay hông mạnh, cung lớn dựng một đường chéo đi lên, tên duy nhất chĩa lên hướng tuyến quân; mô tả hiệu lệnh mưa tên mà không vẽ nhiều xạ thủ.
+
+**Chống trùng:** THÚC CHỎ → NGẮM NGANG → MỞ RỘNG TÊN HIỆU LỆNH. **Rủi ro cân bằng cần mô phỏng:** P1 Tiếp xạ cùng trigger, bắt buộc mô phỏng stacking và giới hạn tổng số phản ứng.
 
 ---
 
 ### RB-066 — Trấn Sơn Cung · Cung thủ / Thổ
 
-**Chiến thuật nhận diện:** Khi Khiên đồng minh hấp thụ đòn, phản kích bắn 30% ATK.
+**Chức năng gameplay:** Xạ thủ trấn giữ / che tuyến. **Nhịp chiến đấu:** Khả năng phòng vệ đọc qua thân người trụ thấp, không tự mọc khiên vật lý.
 
-**Sáu chủ động**
+**Ngôn ngữ hình khối:** **ĐẨY TAY → NGẮM TRỤ → CHẮN TUYẾN BẰNG CUNG HẠ THẤP**. Cả ba khung cần khác nhau về hướng thân, chân trụ và mức sử dụng cung/nỏ.
 
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | damage atk 1.6; mark normal |
-| 2 | **Hậu Thổ Tích Lương** | `element_hauThoTichLuong` | Chiêu Thổ theo registry hiện tại |
-| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns |
-| 4 | **Sơn Cung Hộ Trận** | `rb_tsc_sonCungHoTran` | damage 1.55× ATK; shield to team 0.10 max HP lasting 2 turns; atkDown targets 0.20 for 2 turns |
-| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | damage atk 0.75 to each enemy; destroy random 3 tiles |
-| 6 | **Thạch Giáp** | `element_thachGiap` | Chiêu Thổ theo registry hiện tại |
+**Sáu kỹ năng chủ động**
 
-**Tuyệt chiêu cá nhân:** `rb_tsc_sonCungHoTran`, giá **95** năng lượng, target `enemy`. damage 1.55× ATK; shield to team 0.10 max HP lasting 2 turns; atkDown targets 0.20 for 2 turns. **Hướng nghệ thuật:** Hạ cung nặng, bắn một tên cản nhịp địch trong thế chân rộng.
+| Ô | Kỹ năng | Skill ID | Cost | Hiệu ứng và vai trò (đề xuất) |
+|---|---|---|---:|---|
+| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | 30 | 1.60× ATK, xuyên 10% DEF; chọn mục tiêu đơn |
+| 2 | **Hậu Thổ Tích Lương** | `element_hauThoTichLuong` | theo registry | Chiêu Thổ theo registry hiện tại |
+| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | 45 | 1.90× ATK, xuyên 25% DEF, DEF mục tiêu -15% trong 2 lượt |
+| 4 | **Sơn Cung Hộ Trận** | `rb_tsc_sonCungHoTran` | 95 | 1.55× ATK vào một địch; cấp Khiên đội 10% HP tối đa trong 2 lượt; giảm ATK địch 20% trong 2 lượt (đề xuất); target=`enemy` |
+| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | 60 | 0.75× ATK tới toàn địch, phá ngẫu nhiên 3 ô |
+| 6 | **Thạch Giáp** | `element_thachGiap` | theo registry | Chiêu Thổ theo registry hiện tại |
 
-**Bốn bị động (chase)**
+**Bốn nguồn bị động trong bản proposal** (P4 chưa đăng ký runtime):
 
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
+| Bị động | Tên / ID | Trigger / hiệu ứng |
+|---|---|---|
 | P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
 | P2 | Hành | Thổ hộ / `tho1` | Kế thừa registry hệ hiện tại |
 | P3 | Hành | Thổ chấn / `tho2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Sơn trấn kiên thủ** / `rb_tsc_passive` | `shieldAbsorbed` → `damage` 0.30× ATK; Khi Khiên đồng minh hấp thụ đòn, phản kích bắn 30% ATK. |
+| P4 — cá nhân | **Sơn trấn kiên thủ** / `rb_tsc_passive` | `shieldAbsorbed`: Khi Khiên đồng minh thực sự hấp thụ sát thương, phản kích một mục tiêu bằng 30% ATK; tối đa một lần mỗi action. |
 
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Khoan Giáp Tiễn** (chiêu nghề ô 3). Khung 4 diễn tả **Sơn Cung Hộ Trận** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
+**Mô tả chiến đấu để dựng ảnh**
+
+- **Basic / Frame 2:** Đẩy bằng lòng bàn tay phải để giữ khoảng cách trong khi tay trái dựng nguyên trường cung nặng sát thân, không dùng cánh cung làm gậy.
+- **Skill / Frame 3 — Khoan Giáp Tiễn:** Chân trụ chắc, kéo một tên nặng ngang vai, nhắm khe giáp đơn mục tiêu; không thay đổi phiến sừng gốc.
+- **Ultimate / Frame 4 — Sơn Cung Hộ Trận:** Xoay vai chắn tuyến đồng đội tưởng tượng, cung nằm chéo thấp trước người, một tên nhắm xuống lối xung phong, chân mở rộng như mỏ neo.
+
+**Chống trùng:** ĐẨY TAY → NGẮM TRỤ → CHẮN TUYẾN BẰNG CUNG HẠ THẤP. **Rủi ro cân bằng cần mô phỏng:** Khiên trong skill là hiệu ứng gameplay tách asset, không biến thành tấm khiên cầm tay.
 
 ---
 
 ### RB-067 — Lôi Minh Xạ · Cung thủ / Lôi
 
-**Chiến thuật nhận diện:** Gây mất HP bằng kỹ năng: trừ 5 năng lượng mục tiêu.
+**Chức năng gameplay:** Xạ thủ cắt năng lượng / ngắt hiệu lệnh. **Nhịp chiến đấu:** Phản xạ đột ngột như tín hiệu trạm, tước khí bằng một phát bắn đúng thời điểm.
 
-**Sáu chủ động**
+**Ngôn ngữ hình khối:** **GẠT TAY → NGẮM CHÍNH XÁC → XOAY LỆCH BẮN CẮT LỆNH**. Cả ba khung cần khác nhau về hướng thân, chân trụ và mức sử dụng cung/nỏ.
 
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | damage atk 1.6; mark normal |
-| 2 | **Lôi Trụ Giáng Thế** | `element_loiTruGiangThe` | Chiêu Lôi theo registry hiện tại |
-| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns |
-| 4 | **Lôi Minh Tước Khí** | `rb_lmx_loiMinhTuocKhi` | damage 2.10× ATK; energy targets -35; silence chance 0.35 for 1 turn |
-| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | damage atk 0.75 to each enemy; destroy random 3 tiles |
-| 6 | **Tĩnh Điện Hộ Thân** | `element_tinhDienHoThan` | Trừ địch 20 năng lượng, hoàn bản thân 10 năng lượng (layout2) |
+**Sáu kỹ năng chủ động**
 
-**Tuyệt chiêu cá nhân:** `rb_lmx_loiMinhTuocKhi`, giá **100** năng lượng, target `enemy`. damage 2.10× ATK; energy targets -35; silence chance 0.35 for 1 turn. **Hướng nghệ thuật:** Bắn ngay sau nhịp rung chuông tín hiệu ở tay, giữ một cung và một tên.
+| Ô | Kỹ năng | Skill ID | Cost | Hiệu ứng và vai trò (đề xuất) |
+|---|---|---|---:|---|
+| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | 30 | 1.60× ATK, xuyên 10% DEF; chọn mục tiêu đơn |
+| 2 | **Lôi Trụ Giáng Thế** | `element_loiTruGiangThe` | theo registry | Chiêu Lôi theo registry hiện tại |
+| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | 45 | 1.90× ATK, xuyên 25% DEF, DEF mục tiêu -15% trong 2 lượt |
+| 4 | **Lôi Minh Tước Khí** | `rb_lmx_loiMinhTuocKhi` | 100 | 2.10× ATK; trừ 35 năng lượng địch; 35% câm lặng 1 lượt (đề xuất); target=`enemy` |
+| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | 60 | 0.75× ATK tới toàn địch, phá ngẫu nhiên 3 ô |
+| 6 | **Tĩnh Điện Hộ Thân** | `element_tinhDienHoThan` | theo registry | Trừ địch 20 năng lượng, hoàn bản thân 10 năng lượng (layout2) |
 
-**Bốn bị động (chase)**
+**Bốn nguồn bị động trong bản proposal** (P4 chưa đăng ký runtime):
 
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
+| Bị động | Tên / ID | Trigger / hiệu ứng |
+|---|---|---|
 | P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
 | P2 | Hành | Lôi truy / `loi1` | Kế thừa registry hệ hiện tại |
 | P3 | Hành | Lôi đoạt / `loi2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Lôi khẩu chớp thời cơ** / `rb_lmx_passive` | `skillDamage` → `drain` -5 enemy energy; Gây mất HP bằng kỹ năng: trừ 5 năng lượng mục tiêu. |
+| P4 — cá nhân | **Lôi khẩu chớp thời cơ** / `rb_lmx_passive` | `skillDamage`: Nếu kỹ năng gây mất HP thật, mục tiêu mất thêm 5 năng lượng một lần mỗi action (không tính DoT tự kích lại). |
 
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Khoan Giáp Tiễn** (chiêu nghề ô 3). Khung 4 diễn tả **Lôi Minh Tước Khí** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
+**Mô tả chiến đấu để dựng ảnh**
+
+- **Basic / Frame 2:** Bước nghiêng tránh sát người, dùng lòng bàn tay phải gạt nhanh cẳng tay đối thủ tưởng tượng; cung phản cong giữ ở tay trái dưới hông, không giương.
+- **Skill / Frame 3 — Khoan Giáp Tiễn:** Hai chân tạm đứng yên, kéo một mũi tên hẹp với cung phản cong ở góc vai nông; nhắm một điểm giáp rất nhỏ.
+- **Ultimate / Frame 4 — Lôi Minh Tước Khí:** Sau khi chuông bên hông đã được ra tín hiệu (không chạm chuông trong cùng ảnh), xoay chân sau rộng, nâng cung lên một đường chéo cao và thả một tên vào mục tiêu chỉ huy; dáng chớp thời cơ, không giương hai tên.
+
+**Chống trùng:** GẠT TAY → NGẮM CHÍNH XÁC → XOAY LỆCH BẮN CẮT LỆNH. **Rủi ro cân bằng cần mô phỏng:** Đánh giá khả năng khóa năng lượng liên tiếp, đặt cooldown nội bộ nếu combo quá mạnh.
 
 ---
 
 ### RB-068 — Tật Phong Tiễn · Cung thủ / Phong
 
-**Chiến thuật nhận diện:** Khi đồng đội xua tan hiệu ứng địch thành công, bản thân nhận 6 năng lượng.
+**Chức năng gameplay:** Xạ thủ cơ động / chuyển vị nghi binh. **Nhịp chiến đấu:** Hit-and-run theo hướng chuyển chân, không teleport, không có bản sao cơ thể.
 
-**Sáu chủ động**
+**Ngôn ngữ hình khối:** **QUÉT CHÂN → DỪNG NGẮM → LÙI CHÉO BẮN NGHI BINH**. Cả ba khung cần khác nhau về hướng thân, chân trụ và mức sử dụng cung/nỏ.
 
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | damage atk 1.6; mark normal |
-| 2 | **Phong Quyển Tàn Vân** | `element_phongQuyenTanVan` | Chiêu Phong theo registry hiện tại |
-| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns |
-| 4 | **Tật Phong Phân Ảnh** | `rb_tpt_tatPhongPhanAnh` | damage 0.85× ATK to all enemies; whirl 2 auto; atkDown enemies 0.15 for 2 turns |
-| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | damage atk 0.75 to each enemy; destroy random 3 tiles |
-| 6 | **Thanh Phong Tụ Khí** | `element_thanhPhongTuKhi` | Cả đội +10 năng lượng và +10% DEF trong 2 lượt (layout2) |
+**Sáu kỹ năng chủ động**
 
-**Tuyệt chiêu cá nhân:** `rb_tpt_tatPhongPhanAnh`, giá **95** năng lượng, target `allEnemies`. damage 0.85× ATK to all enemies; whirl 2 auto; atkDown enemies 0.15 for 2 turns. **Hướng nghệ thuật:** Tay rời dây ở cuối nhịp bắn, thân mở đường chạy; không nhân bản người hoặc cung.
+| Ô | Kỹ năng | Skill ID | Cost | Hiệu ứng và vai trò (đề xuất) |
+|---|---|---|---:|---|
+| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | 30 | 1.60× ATK, xuyên 10% DEF; chọn mục tiêu đơn |
+| 2 | **Phong Quyển Tàn Vân** | `element_phongQuyenTanVan` | theo registry | Chiêu Phong theo registry hiện tại |
+| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | 45 | 1.90× ATK, xuyên 25% DEF, DEF mục tiêu -15% trong 2 lượt |
+| 4 | **Tật Phong Phân Ảnh** | `rb_tpt_tatPhongPhanAnh` | 95 | 0.85× ATK cho tất cả địch; whirl 2 ô tự động; giảm ATK địch 15% trong 2 lượt (đề xuất); target=`allEnemies` |
+| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | 60 | 0.75× ATK tới toàn địch, phá ngẫu nhiên 3 ô |
+| 6 | **Thanh Phong Tụ Khí** | `element_thanhPhongTuKhi` | theo registry | Cả đội +10 năng lượng và +10% DEF trong 2 lượt (layout2) |
 
-**Bốn bị động (chase)**
+**Bốn nguồn bị động trong bản proposal** (P4 chưa đăng ký runtime):
 
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
+| Bị động | Tên / ID | Trigger / hiệu ứng |
+|---|---|---|
 | P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
 | P2 | Hành | Phong tiếp / `phong1` | Kế thừa registry hệ hiện tại |
 | P3 | Hành | Phong dẫn / `phong2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Thuận gió hồi nhịp** / `rb_tpt_passive` | `dispelled` → `energy` +6 self energy; Khi đồng đội xua tan hiệu ứng địch thành công, bản thân nhận 6 năng lượng. |
+| P4 — cá nhân | **Thuận gió hồi nhịp** / `rb_tpt_passive` | `dispelled`: Khi đồng đội xua tan hiệu ứng của địch thành công, bản thân +6 năng lượng, tối đa một lần mỗi action. |
 
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Khoan Giáp Tiễn** (chiêu nghề ô 3). Khung 4 diễn tả **Tật Phong Phân Ảnh** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
+**Mô tả chiến đấu để dựng ảnh**
+
+- **Basic / Frame 2:** Đá quét ngang thấp khi chuyển trụ, cung ngắn bất đối xứng thu gọn trong tay trái ở hông; tay phải mở để giữ thăng bằng; không bắn.
+- **Skill / Frame 3 — Khoan Giáp Tiễn:** Ngừng đúng một nhịp, chân trước trụ cố định, kéo tên lông xám và ngắm chính xác ngang ngực; cung ngắn vẫn có cánh trên dài hơn.
+- **Ultimate / Frame 4 — Tật Phong Phân Ảnh:** Bước lùi chéo rộng với thân người xoay gần ngang, vừa mở cung và hoàn tất một phát bắn theo góc sườn; tà áo tự bay theo quán tính, không vẽ dư ảnh nhân vật.
+
+**Chống trùng:** QUÉT CHÂN → DỪNG NGẮM → LÙI CHÉO BẮN NGHI BINH. **Rủi ro cân bằng cần mô phỏng:** Whirl cần phân biệt tạo lượt/cascade trong thiết kế trận; không tự thêm extra turn vào ultimate.
 
 ---
 
