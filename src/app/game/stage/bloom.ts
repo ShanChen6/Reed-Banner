@@ -59,6 +59,9 @@ export const LOAM: BloomGlow = { line: 0xf3dc9a, spark: 0xfff4d0 };
 /** Ánh điện tím của y sư hệ Lôi. */
 export const VOLT: BloomGlow = { line: 0xe2d4ff, spark: 0xf6f0ff };
 
+/** Gió lành trắng xanh của y sư hệ Phong. */
+export const BREEZE: BloomGlow = { line: 0xd8fff6, spark: 0xf4fffc };
+
 /**
  * `back`: lớp vẽ sau nhân vật (quầng sáng, nửa sau vòng, vệt sáng và lá phía sau); bỏ trống thì vẽ chung vào `parent`.
  */

@@ -56,7 +56,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }] = await Promise.all([
+        const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT, BREEZE }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -143,7 +143,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           if (kind === "ultimate") pierce.pierce(at, { x: el.clientWidth - 24, y: at.y }, el.dataset.size === "large" ? 5 : 3);
         });
         // Đoạt lương hệ Thủy: hút hạt sáng từ mép phải khung về nhân vật.
-        const drain = team === "supplyDrain" || team === "tideMist" || team === "stormSeal" ? supplyDrain(app.stage, rig.fxColor) : null;
+        const drain = team === "supplyDrain" || team === "tideMist" || team === "stormSeal" || team === "galeRift" ? supplyDrain(app.stage, rig.fxColor) : null;
         if (drain) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y;
@@ -390,10 +390,32 @@ export default function RigPreview({ id, size, onSnapshot }: {
             rout[1].shatter({ x, y: loaded!.view.y - size * 0.5 }, size, 0.2 + n * 0.1);
           });
         });
-        // Phong đao hệ Phong: ba lưỡi gió và lốc cuốn ở một điểm bên phải khung.
-        const gale = team === "galeSlash" ? galeSlash(app.stage, rig.fxColor) : null;
+        // Phong đao hệ Phong: ba lưỡi gió và lốc cuốn ở một điểm bên phải khung; cuồng lưu chỉ gọi lốc ở hai điểm.
+        const gale = team === "galeSlash" || team === "galeVortex" || team === "galeRift" ? galeSlash(app.stage, rig.fxColor) : null;
         if (gale) loaded.onStrike?.((kind) => {
-          if (kind === "ultimate" && loaded) gale.slash({ x: el.clientWidth * 0.85, y: loaded.view.y }, rig.height * loaded.view.scale.y * 0.8, 1);
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y * 0.8;
+          if (team === "galeSlash") gale.slash({ x: el.clientWidth * 0.85, y: loaded.view.y }, size, 1);
+          else [0.78, 0.92].forEach((k, n) => gale.whirl({ x: el.clientWidth * k, y: loaded!.view.y }, size, n * 0.1));
+        });
+        // Gió lành hệ Phong: vòng gió trắng xanh quanh nhân vật.
+        const breeze = team === "galeMend" ? leafBloom(app.stage, rig.fxColor, BREEZE, halo) : null;
+        if (breeze) loaded.onStrike?.((kind) => {
+          if (kind === "ultimate" && loaded) breeze.cover({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y);
+        });
+        // Phong lũy hệ Phong: lốc gió và khiên mặt trống quanh nhân vật.
+        const bulwarkGale = team === "galeBulwark" ? [galeSlash(app.stage, rig.fxColor), drumShield(app.stage, rig.fxColor)] as const : null;
+        if (bulwarkGale) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const at = { x: loaded.view.x, y: loaded.view.y };
+          const size = rig.height * loaded.view.scale.y;
+          bulwarkGale[0].whirl(at, size);
+          bulwarkGale[1].cover(at, size, 0.3);
+        });
+        // Tia gió hệ Phong: phóng từ quả cầu tới mép phải khung khi đánh thường và ra chiêu.
+        const gust = team === "galeVortex" ? lightning(app.stage, rig.fxColor) : null;
+        if (gust) loaded.onStrike?.((kind, at) => {
+          if (kind !== "ultimate") gust.bolt(at, { x: el.clientWidth - 12, y: el.clientHeight * 0.55 }, (el.dataset.size === "large" ? 5 : 3) * (kind === "cast" ? 1.4 : 1));
         });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
@@ -403,6 +425,9 @@ export default function RigPreview({ id, size, onSnapshot }: {
           storm?.forEach((f) => f.update(dt));
           rout?.forEach((f) => f.update(dt));
           gale?.update(dt);
+          gust?.update(dt);
+          bulwarkGale?.forEach((f) => f.update(dt));
+          breeze?.update(dt);
           blaze?.forEach((b) => b.update(dt));
           sever?.forEach((b) => b.update(dt));
           bastion?.forEach((b) => b.update(dt));
