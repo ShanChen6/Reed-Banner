@@ -6,7 +6,7 @@
 ## Kiến trúc và ràng buộc tương thích
 
 - **Chủ động:** ô 1/3/5 là chiêu nghề, ô 2/6 là chiêu hệ đã có (tái dùng `ELEMENT_SKILLS`), ô 4 là tuyệt chiêu cá nhân mới. Mỗi tướng đúng sáu ô.
-- **Bị động:** 1 chase theo nghề + 2 chase theo hệ có sẵn + **1 chase cá nhân mới**. Runtime trả mặc định 3 chase ID; P4 cá nhân là đặc tả chưa triển khai, đồng thời cần phân biệt với mô tả four-passive loadout trong code. Lưu ý kỹ thuật (đối chiếu `src/core/battle/chase.ts` ngày 25/10/2026): `chasePassives()` mặc định trả **3 chase ID** (1 nghề + 2 hệ), nhưng mô tả kiến trúc trong code gọi đây là four-passive loadout do tính riêng một cơ chế cơ hội chuẩn bị. **P4 cá nhân trong tài liệu này chưa có ID/runtime**, không được nhầm với 4 passive đã chạy. Cần duyệt lại cách đếm và mô phỏng stacking trước khi thêm P4.
+- **Bị động (V4.5 riêng Cung thủ):** Giữ tổng cộng **4 ô** = 1 cơ hội nghề + 3 chase (1 chase nghề, 1 chase hệ, 1 chase cá nhân). Đề xuất **thay chase hệ thứ hai bằng chase cá nhân**, không tạo ô thứ năm. Engine hiện tại có 1 cơ hội nghề + 3 chase (nghề + 2 hệ), chưa có role `cungThu`; khi triển khai phải đăng ký nghề và ánh xạ thay thế. **Sát thủ:** giữ nguyên đặc tả trước đây, chưa thay cơ chế, cần QA riêng trước build.
 - **Combo đồng đội:** lớp `comboPassive` hiện có là hệ thống khác; không cộng nhầm thành bị động thứ năm. Hai nghề mới chưa có mapping combo, tile nghề, base stats, AI và UI.
 - **Giá trị:** hệ số ATK, hồi và năng lượng trong tài liệu là *điểm xuất phát để mô phỏng*, không phải giá trị đã cân bằng hay đã triển khai. Dùng các loại step có trong `SkillStep` như `damage/effect/heal/energy/destroy/transform/whirl`; tránh trạng thái 'độc', 'tàng hình', 'trói' chưa được định nghĩa.
 - **Phản ứng:** chỉ dùng tín hiệu `armorBroken/controlled/dispelled/skillDamage/healed/shieldAbsorbed`; phải áp dụng giới hạn `CHASE_LIMITS.maxReactions=12, maxDepth=4`, có guard chống phản ứng tự lặp.
@@ -71,7 +71,7 @@ Lưu ý số liệu nấc 1 khác bản cũ ở chỗ bỏ nhãn `mark normal` c
 
 ### Quy ước bị động của nghề
 
-`archerPrepared` (*Tiếp xạ*): khi đồng đội phá giáp, Cung thủ có cơ hội truy kích mục tiêu bằng 0.40× ATK (đề xuất), **không quá một lần trên mỗi action nguồn**. Hai phản ứng hệ tái dùng từ hệ hiện hành; **P4 cá nhân là đề xuất mới** chưa đăng ký runtime. Trong cơ chế đã có, cần phân biệt passive nghề mở cơ hội chuẩn bị với các ID chase trả về từ `chasePassives()`; không tự nhận đã đủ bốn passive riêng chạy được.
+`archerPrepared` (*Tiếp xạ*): khi đồng đội phá giáp, Cung thủ có cơ hội truy kích mục tiêu bằng 0.40× ATK (đề xuất), **không quá một lần trên mỗi action nguồn**. Theo cấu trúc hiệu lực `chase.ts`, bốn ô là **1 cơ hội nghề (P1) + 3 chase (P2 nghề + P3 hành thứ nhất + P4 cá nhân)**. Chase hành thứ hai bị thay thế, không trang bị, dù vẫn tồn tại trong registry để dùng cho các tướng khác. Cả `archerPreparedOpportunity`, `archerPrepared` và bảy P4 đều là đề xuất, **chưa có runtime**; cần audit lại tương tác trước triển khai. Không coi đây là thay đổi code.
 
 ### Ma trận tư thế bất trùng giữa 7 người
 
@@ -104,14 +104,17 @@ Lưu ý số liệu nấc 1 khác bản cũ ở chỗ bỏ nhãn `mark normal` c
 | 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | 60 | 0.75× ATK tới toàn địch, phá ngẫu nhiên 3 ô |
 | 6 | **Kim Ý Ngưng Thần** | `element_kimYNgungThan` | theo registry | Gây 1,3× ATK, xuyên 50% DEF (bản layout2 đã thay nội dung cũ) |
 
-**Bốn nguồn bị động trong bản proposal** (P4 chưa đăng ký runtime):
+**Bốn ô bị động đề xuất V4.5** (bản triển khai chưa có; thiết kế **thay thế**, không cộng thêm bị động thứ năm):
 
-| Bị động | Tên / ID | Trigger / hiệu ứng |
-|---|---|---|
-| P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
-| P2 | Hành | Kim phá / `kim1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Kim truy / `kim2` | Kế thừa registry hệ hiện tại |
-| P4 — cá nhân | **Nỏ thành bền bỉ** / `rb_bnl_passive` | `armorBroken`: Giảm thêm DEF mục tiêu 8% trong 1 lượt, tối đa 1 lần mỗi action (không tự kích hoạt từ lần trừ DEF bổ sung). |
+| Ô | Nguồn | Tên / ID | Trigger / hiệu ứng |
+|---|---|---|---|
+| P1 | Cơ hội nghề | **Chuẩn bị xạ kích** / `archerPreparedOpportunity` *(đề xuất)* | Cơ hội chuẩn bị theo luật nghề, không phải một chase phản ứng độc lập |
+| P2 | Chase nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
+| P3 | Chase hành thứ nhất | Kim phá / `kim1` | Kế thừa registry hệ hiện tại |
+| P4 | Chase cá nhân | **Nỏ thành bền bỉ** / `rb_bnl_passive` | `armorBroken`: Giảm thêm DEF mục tiêu 8% trong 1 lượt, tối đa 1 lần mỗi action (không tự kích hoạt từ lần trừ DEF bổ sung). |
+
+**Bị động hành thứ hai chưa trang bị trong phương án 4 ô này:** Kim truy / `kim2` | Kế thừa registry hệ hiện tại |. Đây là **đánh đổi có chủ đích** để dành ô cho cá tính riêng; nếu giữ cả hai chase hành theo engine hiện tại thì phải bỏ P4 cá nhân hoặc mở rộng thành 5 ô, không được tự thêm cả hai.
+
 
 **Mô tả chiến đấu để dựng ảnh**
 
@@ -142,12 +145,15 @@ Lưu ý số liệu nấc 1 khác bản cũ ở chỗ bỏ nhãn `mark normal` c
 
 **Bốn nguồn bị động trong bản proposal** (P4 chưa đăng ký runtime):
 
-| Bị động | Tên / ID | Trigger / hiệu ứng |
-|---|---|---|
-| P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
-| P2 | Hành | Mộc sinh / `moc1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Mộc hộ / `moc2` | Kế thừa registry hệ hiện tại |
-| P4 — cá nhân | **Rễ hộ người** / `rb_tlx_passive` | `healed`: Khi một đồng minh được hồi HP thực, cấp Khiên bằng 4% HP tối đa người ấy; tối đa một lần cho mỗi action nguồn. |
+| Ô | Nguồn | Tên / ID | Trigger / hiệu ứng |
+|---|---|---|---|
+| P1 | Cơ hội nghề | **Chuẩn bị xạ kích** / `archerPreparedOpportunity` *(đề xuất)* | Cơ hội chuẩn bị theo luật nghề, không phải một chase phản ứng độc lập |
+| P2 | Chase nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
+| P3 | Chase hành thứ nhất | Mộc sinh / `moc1` | Kế thừa registry hệ hiện tại |
+| P4 | Chase cá nhân | **Rễ hộ người** / `rb_tlx_passive` | `healed`: Khi một đồng minh được hồi HP thực, cấp Khiên bằng 4% HP tối đa người ấy; tối đa một lần cho mỗi action nguồn. |
+
+**Bị động hành thứ hai chưa trang bị trong phương án 4 ô này:** Mộc hộ / `moc2` | Kế thừa registry hệ hiện tại |. Đây là **đánh đổi có chủ đích** để dành ô cho cá tính riêng; nếu giữ cả hai chase hành theo engine hiện tại thì phải bỏ P4 cá nhân hoặc mở rộng thành 5 ô, không được tự thêm cả hai.
+
 
 **Mô tả chiến đấu để dựng ảnh**
 
@@ -178,12 +184,15 @@ Lưu ý số liệu nấc 1 khác bản cũ ở chỗ bỏ nhãn `mark normal` c
 
 **Bốn nguồn bị động trong bản proposal** (P4 chưa đăng ký runtime):
 
-| Bị động | Tên / ID | Trigger / hiệu ứng |
-|---|---|---|
-| P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
-| P2 | Hành | Thủy tiếp / `thuy1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Thủy dẫn / `thuy2` | Kế thừa registry hệ hiện tại |
-| P4 — cá nhân | **Thủy hiệu ứng cảnh giới** / `rb_lgn_passive` | `controlled`: Nhận 7 năng lượng khi đồng đội khống chế thành công mục tiêu, giới hạn một lần mỗi action. |
+| Ô | Nguồn | Tên / ID | Trigger / hiệu ứng |
+|---|---|---|---|
+| P1 | Cơ hội nghề | **Chuẩn bị xạ kích** / `archerPreparedOpportunity` *(đề xuất)* | Cơ hội chuẩn bị theo luật nghề, không phải một chase phản ứng độc lập |
+| P2 | Chase nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
+| P3 | Chase hành thứ nhất | Thủy tiếp / `thuy1` | Kế thừa registry hệ hiện tại |
+| P4 | Chase cá nhân | **Thủy hiệu ứng cảnh giới** / `rb_lgn_passive` | `controlled`: Nhận 7 năng lượng khi đồng đội khống chế thành công mục tiêu, giới hạn một lần mỗi action. |
+
+**Bị động hành thứ hai chưa trang bị trong phương án 4 ô này:** Thủy dẫn / `thuy2` | Kế thừa registry hệ hiện tại |. Đây là **đánh đổi có chủ đích** để dành ô cho cá tính riêng; nếu giữ cả hai chase hành theo engine hiện tại thì phải bỏ P4 cá nhân hoặc mở rộng thành 5 ô, không được tự thêm cả hai.
+
 
 **Mô tả chiến đấu để dựng ảnh**
 
@@ -214,12 +223,15 @@ Lưu ý số liệu nấc 1 khác bản cũ ở chỗ bỏ nhãn `mark normal` c
 
 **Bốn nguồn bị động trong bản proposal** (P4 chưa đăng ký runtime):
 
-| Bị động | Tên / ID | Trigger / hiệu ứng |
-|---|---|---|
-| P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
-| P2 | Hành | Hỏa truy / `hoa1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Hỏa phá / `hoa2` | Kế thừa registry hệ hiện tại |
-| P4 — cá nhân | **Hỏa cốt truy kích** / `rb_xdt_passive` | `armorBroken`: Khi đồng đội phá giáp, truy kích mục tiêu thêm 35% ATK; giới hạn một lần mỗi action và chống vòng phản ứng. |
+| Ô | Nguồn | Tên / ID | Trigger / hiệu ứng |
+|---|---|---|---|
+| P1 | Cơ hội nghề | **Chuẩn bị xạ kích** / `archerPreparedOpportunity` *(đề xuất)* | Cơ hội chuẩn bị theo luật nghề, không phải một chase phản ứng độc lập |
+| P2 | Chase nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
+| P3 | Chase hành thứ nhất | Hỏa truy / `hoa1` | Kế thừa registry hệ hiện tại |
+| P4 | Chase cá nhân | **Hỏa cốt truy kích** / `rb_xdt_passive` | `armorBroken`: Khi đồng đội phá giáp, truy kích mục tiêu thêm 35% ATK; giới hạn một lần mỗi action và chống vòng phản ứng. |
+
+**Bị động hành thứ hai chưa trang bị trong phương án 4 ô này:** Hỏa phá / `hoa2` | Kế thừa registry hệ hiện tại |. Đây là **đánh đổi có chủ đích** để dành ô cho cá tính riêng; nếu giữ cả hai chase hành theo engine hiện tại thì phải bỏ P4 cá nhân hoặc mở rộng thành 5 ô, không được tự thêm cả hai.
+
 
 **Mô tả chiến đấu để dựng ảnh**
 
@@ -250,12 +262,15 @@ Lưu ý số liệu nấc 1 khác bản cũ ở chỗ bỏ nhãn `mark normal` c
 
 **Bốn nguồn bị động trong bản proposal** (P4 chưa đăng ký runtime):
 
-| Bị động | Tên / ID | Trigger / hiệu ứng |
-|---|---|---|
-| P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
-| P2 | Hành | Thổ hộ / `tho1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Thổ chấn / `tho2` | Kế thừa registry hệ hiện tại |
-| P4 — cá nhân | **Sơn trấn kiên thủ** / `rb_tsc_passive` | `shieldAbsorbed`: Khi Khiên đồng minh thực sự hấp thụ sát thương, phản kích một mục tiêu bằng 30% ATK; tối đa một lần mỗi action. |
+| Ô | Nguồn | Tên / ID | Trigger / hiệu ứng |
+|---|---|---|---|
+| P1 | Cơ hội nghề | **Chuẩn bị xạ kích** / `archerPreparedOpportunity` *(đề xuất)* | Cơ hội chuẩn bị theo luật nghề, không phải một chase phản ứng độc lập |
+| P2 | Chase nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
+| P3 | Chase hành thứ nhất | Thổ hộ / `tho1` | Kế thừa registry hệ hiện tại |
+| P4 | Chase cá nhân | **Sơn trấn kiên thủ** / `rb_tsc_passive` | `shieldAbsorbed`: Khi Khiên đồng minh thực sự hấp thụ sát thương, phản kích một mục tiêu bằng 30% ATK; tối đa một lần mỗi action. |
+
+**Bị động hành thứ hai chưa trang bị trong phương án 4 ô này:** Thổ chấn / `tho2` | Kế thừa registry hệ hiện tại |. Đây là **đánh đổi có chủ đích** để dành ô cho cá tính riêng; nếu giữ cả hai chase hành theo engine hiện tại thì phải bỏ P4 cá nhân hoặc mở rộng thành 5 ô, không được tự thêm cả hai.
+
 
 **Mô tả chiến đấu để dựng ảnh**
 
@@ -286,12 +301,15 @@ Lưu ý số liệu nấc 1 khác bản cũ ở chỗ bỏ nhãn `mark normal` c
 
 **Bốn nguồn bị động trong bản proposal** (P4 chưa đăng ký runtime):
 
-| Bị động | Tên / ID | Trigger / hiệu ứng |
-|---|---|---|
-| P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
-| P2 | Hành | Lôi truy / `loi1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Lôi đoạt / `loi2` | Kế thừa registry hệ hiện tại |
-| P4 — cá nhân | **Lôi khẩu chớp thời cơ** / `rb_lmx_passive` | `skillDamage`: Nếu kỹ năng gây mất HP thật, mục tiêu mất thêm 5 năng lượng một lần mỗi action (không tính DoT tự kích lại). |
+| Ô | Nguồn | Tên / ID | Trigger / hiệu ứng |
+|---|---|---|---|
+| P1 | Cơ hội nghề | **Chuẩn bị xạ kích** / `archerPreparedOpportunity` *(đề xuất)* | Cơ hội chuẩn bị theo luật nghề, không phải một chase phản ứng độc lập |
+| P2 | Chase nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
+| P3 | Chase hành thứ nhất | Lôi truy / `loi1` | Kế thừa registry hệ hiện tại |
+| P4 | Chase cá nhân | **Lôi khẩu chớp thời cơ** / `rb_lmx_passive` | `skillDamage`: Nếu kỹ năng gây mất HP thật, mục tiêu mất thêm 5 năng lượng một lần mỗi action (không tính DoT tự kích lại). |
+
+**Bị động hành thứ hai chưa trang bị trong phương án 4 ô này:** Lôi đoạt / `loi2` | Kế thừa registry hệ hiện tại |. Đây là **đánh đổi có chủ đích** để dành ô cho cá tính riêng; nếu giữ cả hai chase hành theo engine hiện tại thì phải bỏ P4 cá nhân hoặc mở rộng thành 5 ô, không được tự thêm cả hai.
+
 
 **Mô tả chiến đấu để dựng ảnh**
 
@@ -322,12 +340,15 @@ Lưu ý số liệu nấc 1 khác bản cũ ở chỗ bỏ nhãn `mark normal` c
 
 **Bốn nguồn bị động trong bản proposal** (P4 chưa đăng ký runtime):
 
-| Bị động | Tên / ID | Trigger / hiệu ứng |
-|---|---|---|
-| P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
-| P2 | Hành | Phong tiếp / `phong1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Phong dẫn / `phong2` | Kế thừa registry hệ hiện tại |
-| P4 — cá nhân | **Thuận gió hồi nhịp** / `rb_tpt_passive` | `dispelled`: Khi đồng đội xua tan hiệu ứng của địch thành công, bản thân +6 năng lượng, tối đa một lần mỗi action. |
+| Ô | Nguồn | Tên / ID | Trigger / hiệu ứng |
+|---|---|---|---|
+| P1 | Cơ hội nghề | **Chuẩn bị xạ kích** / `archerPreparedOpportunity` *(đề xuất)* | Cơ hội chuẩn bị theo luật nghề, không phải một chase phản ứng độc lập |
+| P2 | Chase nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
+| P3 | Chase hành thứ nhất | Phong tiếp / `phong1` | Kế thừa registry hệ hiện tại |
+| P4 | Chase cá nhân | **Thuận gió hồi nhịp** / `rb_tpt_passive` | `dispelled`: Khi đồng đội xua tan hiệu ứng của địch thành công, bản thân +6 năng lượng, tối đa một lần mỗi action. |
+
+**Bị động hành thứ hai chưa trang bị trong phương án 4 ô này:** Phong dẫn / `phong2` | Kế thừa registry hệ hiện tại |. Đây là **đánh đổi có chủ đích** để dành ô cho cá tính riêng; nếu giữ cả hai chase hành theo engine hiện tại thì phải bỏ P4 cá nhân hoặc mở rộng thành 5 ô, không được tự thêm cả hai.
+
 
 **Mô tả chiến đấu để dựng ảnh**
 
