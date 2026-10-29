@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM, VOLT }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -590,6 +590,22 @@ export default function BattleStage({
             });
           });
           return [bloom, rally];
+        }
+        if (rig.strikeFx === "thunderMend") {
+          const needles = needleVolley(sky, rig.fxColor);
+          const bloom = leafBloom(sky, rig.fxColor, VOLT);
+          // Tuyệt chiêu lôi châm khởi tử: chùm kim tím từ tay tới ngực từng đồng đội, rồi vòng sáng tím hồi phục quanh họ
+          // (Hồi máu, cộng năng lượng).
+          loaded[i]!.onStrike?.((kind, at) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            const w = Math.max(2, app.screen.height * 0.012);
+            alive(true).forEach((s, n) => {
+              needles.volley(at, spot(s, 0.5), w, n * 0.06);
+              bloom.cover(spot(s, 0), size, 0.25 + n * 0.08);
+            });
+          });
+          return [needles, bloom];
         }
         if (rig.strikeFx === "flameWall") {
           const fx = flameWall(sky, rig.fxColor);
