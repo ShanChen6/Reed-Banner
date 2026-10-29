@@ -59,6 +59,14 @@ const PHOTOS: Readonly<Record<string, string>> = {
   manhTuong: "/art/characters/manh-tuong/portrait.webp",
   bachSuong: "/art/characters/bach-suong/portrait.webp",
   buiPhieu: "/art/characters/bui-phieu/portrait.webp",
+  phungPhong: "/art/characters/phung-phong/portrait.webp",
+  bachNoLang: "/art/characters/bach-no-lang/portrait.webp",
+  thanhLamXa: "/art/characters/thanh-lam-xa/portrait.webp",
+  lamGiangPhiDiep: "/art/characters/lam-giang-phi-diep/portrait.webp",
+  xichDiemLuan: "/art/characters/xich-diem-luan/portrait.webp",
+  tranSonThach: "/art/characters/tran-son-thach/portrait.webp",
+  loiMinhXa: "/art/characters/loi-minh-xa/portrait.webp",
+  tatPhongLang: "/art/characters/tat-phong-lang/portrait.webp",
 };
 
 export function portraitUrl(id: string): string | null {

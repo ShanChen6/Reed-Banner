@@ -1,5 +1,9 @@
 # Chốt Tinh thần F và bộ kỹ năng 6 chủ động + 4 bị động
 
+> Thiết kế mở rộng 30/10/2026: xem [nguồn Xạ thủ](../../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md). Đây là thiết kế chưa triển khai; không tự đổi roster hoặc kỹ năng hiện hành. Sát thủ dùng bộ W02 đa vũ khí mới, chưa triển khai runtime.
+
+> Bảng thông số mở rộng 30/10/2026: [Xạ thủ và Sát thủ](../../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md) có chỉ số nền, cost/hệ số cấp1–5, P1–P4 và contract poison. Toàn bộ là DRAFT để mô phỏng, không thay bảng kỹ năng đang chạy ở tài liệu này.
+
 > Thông số cập nhật sau kiểm chứng: [giá Thủ thành, task3](#cân-bằng-f-giá-thủ-thành) (cuối file này).
 
 Tiếp nối [phiên bản phối hợp trước](lich-su/21-combo-dong-doi.md). Quyết định của người dùng trong phiên này thay thế trạng thái “A mặc định, F chỉ thử nghiệm” của các tài liệu cũ. Kiểm chứng baseline tiếp theo: [task1 — F, bản đồ kỹ năng và công thức](../../reports/2026-10-22-baseline-f/README.md). Các giới hạn kiểm chứng của phiên triển khai gốc bên dưới giữ làm lịch sử.
@@ -84,3 +88,4 @@ Giữ Khiên20%HP người nhận ở cấp1,28% ở cấp5; Khiêu khích2 lư�
 Xác nhận cuối dùng141 cụm seed mới,1.680 trận mỗi thông số: cap23→21; median3vs320,5→20; restricted-duration delta−0,316 lượt/phe, CI95%−0,566…−0,074. Chênh lệch cap còn bao0 trong CI, vẫn có21 trận censored; không coi đây là loại bỏ mọi vòng phòng thủ. Báo cáo có dữ liệu nghề/hệ/cấp/gear, đóng góp mười kỹ năng và giới hạn mẫu.
 
 Các chiêu tiện ích không tăng tác dụng ở cấp nâng2–4 vẫn theo luật cũ; danh sách và đề xuất review riêng nằm trong báo cáo, chưa thêm cơ chế nâng.
+

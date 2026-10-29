@@ -80,3 +80,12 @@
 - [x] Chỉ số chính của 9 ô trang bị (3 ô ATK, 3 ô Máu, 3 ô DEF).
 - [x] 5 phẩm Trắng, Lục, Lam, Tím, Cam; ghép luôn thành công.
 - [x] Thể thức của từng chế độ chơi; thêm Thử thách hằng ngày, Thế cờ, Đấu trường bóng ma.
+
+
+## Xạ thủ và Sát thủ — 30/10/2026
+
+- Xạ thủ: chốt hướng đổi nghề, giữ Kim/Mộc, Thủy–phi tiêu, Hỏa–phi luân, Thổ–đá ném bằng tay, Lôi–phi châm, Phong–lụa chiến. Bộ tên mới, chiêu và ảnh W02 cần review trước khi triển khai; xem [nguồn thiết kế](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md).
+- Sát thủ đã chốt bộ vũ khí ngày 30/10: dao găm, song đao, lưỡi dao ẩn, Bạo Vũ Lê Hoa Châm, kim châm độc, móng vuốt; Phong dùng sáo âm công. Phân bổ hệ và 42 prompt W02 đã được thiết kế thay bản cũ; chưa có ảnh nghiệm thu hoặc runtime.
+- TODO: Review và mô phỏng [bảng thông số hai nghề](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md): Xạ thủ HP475/ATK55/DEF9, Sát thủ HP450/ATK58/DEF8 ở cấp1 chưa gear; cấp chiêu1–5 và P1–P4 đã có proposal cụ thể. Đây không phải chỉ số đã cân bằng hoặc runtime.
+- TODO: Khi triển khai poison, xác minh hook cuối lượt thường (không tick lượt thêm), cap hai nguồn, snapshot ATK, Khiên hấp thụ trước HP, cleanse và provenance. Các hành vi đã được đặc tả trong nguồn chính; việc còn lại là review, code, test và mô phỏng, không để lựa chọn runtime ngầm.
+- TODO: Mô phỏng và chốt P1 cơ hội nghề, ánh xạ P4 thay chase hệ thứ hai và thông số Xạ thủ; nghiệm thu sáu ảnh W02 mỗi nhân vật. Chưa báo cáo như tính năng runtime.
