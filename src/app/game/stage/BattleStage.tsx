@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT, BREEZE }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT, BREEZE }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }, { flameDisc }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -246,6 +246,7 @@ export default function BattleStage({
         import("./heaven"),
         import("./aegis"),
         import("./gale"),
+        import("./disc"),
       ]);
       const app = new Application();
       await app.init({
@@ -713,6 +714,19 @@ export default function BattleStage({
             alive(false).forEach((s, n) => fx.cover(spot(s, 0), app.screen.height * FIGURE, n * 0.1));
           });
           return [fx];
+        }
+        if (rig.strikeFx === "flameDisc") {
+          const disc = flameDisc(sky, rig.fxColor);
+          const fire = flameWall(sky, rig.fxColor);
+          // Tuyệt chiêu cả đội đối thủ: phi luân lửa nảy lần lượt qua từng người, lửa bén lên chỗ trúng (Thiêu đốt).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const foes = alive(false);
+            if (kind !== "ultimate" || foes.length === 0) return;
+            const size = app.screen.height * FIGURE;
+            disc.fling([at, ...foes.map((s) => spot(s, 0.5))], size);
+            foes.forEach((s, n) => fire.burn(spot(s, 0), size, 0.22 * (n + 1)));
+          });
+          return [disc, fire];
         }
         if (rig.strikeFx === "willowTide") {
           const fx = armorPierce(sky, rig.fxColor);
