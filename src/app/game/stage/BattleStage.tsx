@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT, BREEZE }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -636,6 +636,36 @@ export default function BattleStage({
           });
           return [ward, ice];
         }
+        if (rig.strikeFx === "galeRift") {
+          const gale = galeSlash(sky, rig.fxColor);
+          const drain = supplyDrain(sky, rig.fxColor);
+          // Tuyệt chiêu phiêu phong: lốc cuốn quanh từng đối thủ (xoáy bàn cờ, xóa hiệu ứng tốt), năng lượng bị gió cuốn
+          // khỏi họ bay về chính mình.
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => {
+              gale.whirl(spot(s, 0), size, n * 0.1);
+              drain.drain(spot(s, 0.5), spot(me, 0.55), size, 0.45 + n * 0.1);
+            });
+          });
+          return [gale, drain];
+        }
+        if (rig.strikeFx === "galeMend") {
+          const bloom = leafBloom(sky, rig.fxColor, BREEZE, halo);
+          const gust = supplyDrain(sky, rig.fxColor);
+          // Tuyệt chiêu gió lành: vòng gió trắng xanh hồi phục quanh từng đồng đội (Hồi máu, giải trừ), luồng gió đưa năng
+          // lượng tới từng đồng đội.
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            alive(true).forEach((s, n) => bloom.cover(spot(s, 0), size, n * 0.08));
+            alive(true).filter((s) => s !== me).forEach((s, n) => gust.drain(spot(me, 0.55), spot(s, 0.55), size, 0.4 + n * 0.1));
+          });
+          return [bloom, gust];
+        }
         if (rig.strikeFx === "springDew") {
           const bloom = leafBloom(sky, rig.fxColor, SPRING, halo);
           const ice = waterPillar(sky, rig.fxColor);
@@ -752,6 +782,36 @@ export default function BattleStage({
             });
           });
           return [bolt, crack];
+        }
+        if (rig.strikeFx === "galeBulwark") {
+          const gale = galeSlash(sky, rig.fxColor);
+          const ward = drumShield(sky, rig.fxColor, facing);
+          const gust = supplyDrain(sky, rig.fxColor);
+          // Tuyệt chiêu phong lũy: lốc gió dựng quanh chính mình (khiêu khích), khiên mặt trống trước từng đồng đội (Khiên),
+          // luồng gió đưa năng lượng tới từng đồng đội.
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            gale.whirl(spot(me, 0), size);
+            alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, 0.3 + n * 0.08));
+            alive(true).filter((s) => s !== me).forEach((s, n) => gust.drain(spot(me, 0.55), spot(s, 0.55), size, 0.5 + n * 0.1));
+          });
+          return [gale, ward, gust];
+        }
+        if (rig.strikeFx === "galeVortex") {
+          const gale = galeSlash(sky, rig.fxColor);
+          const bolts = lightning(sky, rig.fxColor);
+          // Đánh thường và ra chiêu phóng tia gió từ quả cầu tới đối thủ đứng đầu; tuyệt chiêu gọi lốc cuốn quanh từng đối thủ
+          // (xoáy bàn cờ, xóa hiệu ứng tốt).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const foes = alive(false);
+            if (foes.length === 0) return;
+            const w = Math.max(3, app.screen.height * 0.022);
+            if (kind === "ultimate") foes.forEach((s, n) => gale.whirl(spot(s, 0), app.screen.height * FIGURE, n * 0.1));
+            else bolts.bolt(at, spot(foes[0]!, 0.5), kind === "cast" ? w * 1.4 : w);
+          });
+          return [gale, bolts];
         }
         if (rig.strikeFx === "galeSlash") {
           const gale = galeSlash(sky, rig.fxColor);
