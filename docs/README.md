@@ -40,7 +40,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 |---|---|
 | ★ [danh-sach-nhan-vat.md](03-characters/danh-sach-nhan-vat.md) | 61 nhân vật: tướng thường, tướng lịch sử, sứ quân |
 | ★ [ky-nang/README.md](03-characters/ky-nang/README.md) | Kỹ năng hiện hành: Tinh thần F, 6 chủ động + 4 bị động, giá Thủ thành |
-| ★ [Thiết kế Xạ thủ](06-art/prompts/v4-2/08-new-professions-14-skill-kits.md) | RB-062–068: Kim/Mộc bảo toàn; năm vũ khí mới; 6 chủ động + 4 bị động. Thiết kế DRAFT, chưa runtime; Sát thủ chờ trao đổi riêng |
+| ★ [Thiết kế Xạ thủ và Sát thủ](06-art/prompts/v4-2/08-new-professions-14-skill-kits.md) | RB-062–075: chỉ số nền, 6 chiêu nghề, 14 tuyệt chiêu, 14 chiêu hệ đối chiếu, loadout 6+4; bảng cấp 1/5 và contract poison. Thiết kế DRAFT, chưa runtime; Sát thủ có bộ đa vũ khí mới (DRAFT, chưa runtime) |
 | [ky-nang/mo-hinh-nhan-vat.md](03-characters/ky-nang/mo-hinh-nhan-vat.md) | Mô hình nhân vật, nghề, luật dùng kỹ năng (bộ chiêu cụ thể đã thay) |
 | [ky-nang/preset-ai-he-cu.md](03-characters/ky-nang/preset-ai-he-cu.md) | Bộ kỹ năng hệ cũ, chỉ dùng cho preset AI chiến dịch |
 | [ky-nang/data/](03-characters/ky-nang/data/skill-chase-v3.md) | Dữ liệu sinh từ code và bảng kỹ năng 60 nhân vật kèm |
@@ -69,7 +69,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 |---|---|
 | ★ [art-bible.md](06-art/art-bible.md) | Phong cách, bảng màu art, yêu cầu cho họa sĩ, quy ước đưa hình vào `public/art/` |
 | [ke-hoach-do-hoa.md](06-art/ke-hoach-do-hoa.md) | Kế hoạch đồ họa & hoạt ảnh Đ0–Đ9 |
-| ★ [prompts/v4-2/](06-art/prompts/v4-2/00-bao-cao.md) | Điểm vào bộ prompt; [Xạ thủ và hồ sơ Sát thủ chờ trao đổi](06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md). Năm Xạ thủ W02 là DRAFT, Kim/Mộc bảo toàn |
+| ★ [prompts/v4-2/](06-art/prompts/v4-2/00-bao-cao.md) | Điểm vào bộ prompt; [Xạ thủ và prompt Sát thủ đa vũ khí](06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md). Năm Xạ thủ W02 là DRAFT, Kim/Mộc bảo toàn |
 | [prompts/](06-art/prompts/do-hoa.md) | [Đồ họa ngoài nhân vật](06-art/prompts/do-hoa.md), [Codex dựng rig](06-art/prompts/codex-rig-nhan-vat.md); bản cũ SUPERSEDED: [nhân vật](06-art/prompts/nhan-vat.md), [tư thế](06-art/prompts/tu-the.md) |
 | [nhan-vat/nguyen-bac.md](06-art/nhan-vat/nguyen-bac.md) | Hình động Nguyễn Bặc |
 | [ho-so-master-chat.md](06-art/ho-so-master-chat.md) | Ngữ cảnh cho chat mới về dựng hình nhân vật: kiến trúc rig và hiệu ứng, quy trình từ bộ 5 ảnh, tiến độ |

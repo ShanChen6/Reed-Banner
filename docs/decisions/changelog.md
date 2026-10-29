@@ -1,5 +1,21 @@
 # Nhật ký thay đổi thiết kế
 
+## 30/10/2026 — Hoàn thiện chiêu thức và bảng thông số Xạ thủ/Sát thủ
+
+- Theo lựa chọn của người dùng: chỉ cập nhật docs/bảng thông số, chưa triển khai hoặc mở hai nghề trong trận. Viết lại [nguồn thiết kế](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md) để mỗi con số có một bảng nguồn, loadout nhân vật chỉ tham chiếu ID.
+- Bổ sung chỉ số cấp1 Xạ thủ 475/55/9 và Sát thủ 450/58/8 (HP/ATK/DEF), tăng trưởng cùng runtime +3% mỗi cấp, ví dụ cấp10/20/30; không tạo độ hiếm/chỉ số riêng mạnh hơn cho từng hệ.
+- Đủ 6 chiêu nghề, 14 tuyệt chiêu và bảng đối chiếu14 chiêu hệ, cost/hệ số cấp1/5 và công thức cấp2–4. Giữ hệ số chiêu hiện có của proposal, bổ sung recipient, nhiều hit/execute, phá ô một lần, xác suất/thời hạn và cost rõ ràng. Mọi cost là năng lượng, không phải Nộ.
+- Hoàn thiện P1 alias tái dùng pursuit/resonance +20% theo mục tiêu, P2/P3/P4, thời hạn và guard. P1 là comboPassive trong bốn ô, không có bốn chase cộng thêm combo thành năm.
+- Chốt proposal poison theo cuối lượt thường, không tick lượt thêm, cap hai nguồn, Khiên hấp thụ trước HP và cleanse. Hệ số poison tăng theo cấp chiêu là yêu cầu mới chưa có trong scaleSkill. Không giả làm burn hoặc coi đã hỗ trợ.
+- Kiểm tra số học không thay thế mô phỏng; giữ DRAFT, chưa công bố cân bằng. Giữ nguyên toàn bộ prompt, vũ khí, tên/ID và code.
+
+## 30/10/2026 — Tái thiết kế Sát thủ theo bảy loại vũ khí
+
+- Người dùng chốt bỏ nỏ mini; bộ vũ khí gồm dao găm, song đao, lưỡi dao ẩn, Bạo Vũ Lê Hoa Châm, kim châm độc, móng vuốt và sáo âm công cho Phong. Phân bổ đề xuất: Kim dao găm, Mộc kim độc, Thủy lưỡi ẩn, Hỏa song đao, Thổ trảo, Lôi hộp phóng châm, Phong sáo.
+- Giữ tên/ID RB-069–075, nhân dạng và bảng màu; dùng Weapon W02. Thay toàn bộ bảy hồ sơ Sát thủ W01, bộ kỹ năng và 42 prompt ngay trong [nguồn thiết kế](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md) / [nguồn prompt](../06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md), không để bản cũ song song. Hai nghề cùng 6 chủ động + 4 bị động; P4 cá nhân thay chase hệ thứ hai.
+- Âm công nội lực và các dụng cụ là diễn giải hư cấu mỹ thuật. Poison là contract đề xuất cần xác minh hook/tick/Khiên/giải debuff; không coi là status đã code. Phân bổ, hệ số, tên chiêu và bộ ảnh mới vẫn DRAFT cần review/mô phỏng.
+- Giữ nguyên bảy hồ sơ và prompt Xạ thủ, kể cả Kim/Mộc đã làm, phi hoàng thạch và khung tung hứng Trấn Sơn Thạch. Không sửa code hoặc asset trong đợt này.
+
 ## 30/10/2026 — Trấn Sơn Thạch tung hứng phi hoàng thạch ở khung cá nhân
 
 - Khung 6 đổi từ ngồi xem đá sang đứng thả lỏng, hơi nhếch cười, mắt nhìn một viên phi hoàng thạch vừa tung thấp phía trên tay phải mở ngang eo; tay trái chống hông. Đây là tung bắt vui, không phải đòn chiến đấu hoặc phép nâng đá.
