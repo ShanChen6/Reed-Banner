@@ -59,7 +59,7 @@ P1 `marksmanPreparedOpportunity` — Chuẩn bị xạ kích: ô cơ hội chu�
 | RB-063 | Thanh Lâm Xạ | Mộc | Cung tre W01 | Giữ bộ ảnh đã làm |
 | RB-064 | Lam Giang Phi Diệp | Thủy | phi tiêu lá liễu W02 | Thay toàn bộ mô tả cung/nỏ cũ |
 | RB-065 | Xích Diệm Luân | Hỏa | phi luân vành kín W02 | Thay toàn bộ mô tả cung/nỏ cũ |
-| RB-066 | Trấn Sơn Thạch | Thổ | đá ném trực tiếp W02 | Thay toàn bộ mô tả cung/nỏ cũ |
+| RB-066 | Trấn Sơn Thạch | Thổ | phi hoàng thạch ném tay W02 | Thay toàn bộ mô tả cung/nỏ cũ |
 | RB-067 | Lôi Minh Xạ | Lôi | phi châm bản lớn W02 | Thay toàn bộ mô tả cung/nỏ cũ |
 | RB-068 | Tật Phong Lăng | Phong | một dải lụa chiến W02 | Thay toàn bộ mô tả cung/nỏ cũ |
 
@@ -187,7 +187,9 @@ Chỉ cập nhật thuật ngữ chiêu nghề; pose, khuôn mặt, bảng màu,
 
 ### RB-066 — Trấn Sơn Thạch · Xạ thủ / Thổ
 
-**Tiểu sử hư cấu:** Người giữ lối đèo từng nhặt đá bảo vệ đường rút cho dân làng. Túi đá đan mây bọc da thay cho trường cung.
+**Tiểu sử hư cấu:** Người giữ lối đèo từng nhặt đá bảo vệ đường rút cho dân làng. Dùng phi hoàng thạch nhỏ thuôn dẹt, hai đầu vát nhọn, mang trong túi đan mây bọc da thay cho trường cung.
+
+**Vũ khí hình ảnh:** `RB-066-W02` — một phi hoàng thạch bằng đá vàng đất mờ, dài cỡ ngón tay ngắn, thuôn dẹt, hai đầu vát nhọn, sống giữa rõ và các mặt phẳng sắc cạnh. Cầm phần giữa bằng ngón cái và ngón trỏ/giữa tay phải; lúc hạ gục đặt cạnh bàn tay phải mở. Không dùng đá tròn hoặc khối đá to. Đây là tinh chỉnh hình ảnh, không đổi kỹ năng/chỉ số.
 
 **Vai trò:** Đòn nặng phá giáp và che tuyến; dáng trụ chắc. Không có cơ chế chậm tốc hay đẩy vị trí tự phát.
 
