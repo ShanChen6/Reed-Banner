@@ -1,5 +1,10 @@
 # Nhật ký thay đổi thiết kế
 
+## 30/10/2026 — Đồng bộ phi hoàng thạch cho Trấn Sơn Thạch
+
+- Thay mô tả đá cuội tròn/cỡ lòng bàn tay của RB-066 bằng phi hoàng thạch nhỏ, thuôn dẹt, hai đầu vát nhọn, sống giữa rõ, các mặt vát vàng đất mờ. Giữ Weapon ID `RB-066-W02` và đồng bộ cả sáu prompt cùng hồ sơ thiết kế.
+- Cầm phần giữa bằng ngón cái và ngón trỏ/giữa tay phải; khung hạ gục buông vật cạnh bàn tay mở, tránh mâu thuẫn với mô tả chung. Thẻ đá bên hông là phụ kiện riêng. Không đổi pose, nhân dạng, trang phục, nền hoặc gameplay; không sửa nhân vật khác.
+
 ## 30/10/2026 — Nghề Xạ thủ thay Cung thủ; Sát thủ chờ trao đổi
 
 - Chốt hướng Xạ thủ đa vũ khí, giữ RB ID. Kim/Mộc bảo toàn ảnh; Thủy phi tiêu, Hỏa phi luân, Thổ đá ném tay (không lao/ná), Lôi phi châm, Phong lụa chiến. Năm người thay W01 bằng W02; tên đề xuất bỏ ngữ nghĩa cung/nỏ không phù hợp.
