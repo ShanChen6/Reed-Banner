@@ -139,7 +139,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           if (kind === "ultimate" && loaded) wards.cover({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y);
         });
         // Mũi sáng phá giáp hệ Kim: phóng tới mép phải khung.
-        const pierce = team === "armorPierce" || team === "boltBreach" || team === "thicketShot" || team === "willowTide" || team === "stoneGuard" || team === "voltNeedle" ? armorPierce(app.stage, rig.fxColor) : null;
+        const pierce = team === "armorPierce" || team === "boltBreach" || team === "thicketShot" || team === "willowTide" || team === "stoneGuard" || team === "voltNeedle" || team === "myriadEdge" ? armorPierce(app.stage, rig.fxColor) : null;
         if (pierce) loaded.onStrike?.((kind, at) => {
           if (kind === "ultimate") pierce.pierce(at, { x: el.clientWidth - 24, y: at.y }, el.dataset.size === "large" ? 5 : 3);
         });
@@ -418,6 +418,13 @@ export default function RigPreview({ id, size, onSnapshot }: {
         if (guard) loaded.onStrike?.((kind) => {
           if (kind === "ultimate" && loaded) guard.cover({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y, 0.3);
         });
+        // Vạn tượng: sét giáng ở mép phải khung (luồng sáng do `pierce` vẽ), khiên mặt trống trước nhân vật.
+        const myriad = team === "myriadEdge" ? [lightning(app.stage, rig.fxColor), drumShield(app.stage, rig.fxColor)] as const : null;
+        if (myriad) loaded.onStrike?.((kind, at) => {
+          if (kind !== "ultimate" || !loaded) return;
+          myriad[0].strike({ x: el.clientWidth - 24, y: at.y }, el.dataset.size === "large" ? 8 : 5, 0.12);
+          myriad[1].cover({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y, 0.3);
+        });
         // Gió lành hệ Phong: vòng gió trắng xanh quanh nhân vật.
         const breeze = team === "galeMend" ? leafBloom(app.stage, rig.fxColor, BREEZE, halo) : null;
         if (breeze) loaded.onStrike?.((kind) => {
@@ -451,6 +458,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           thicket?.update(dt);
           disc?.forEach((f) => f.update(dt));
           guard?.update(dt);
+          myriad?.forEach((f) => f.update(dt));
           blaze?.forEach((b) => b.update(dt));
           sever?.forEach((b) => b.update(dt));
           bastion?.forEach((b) => b.update(dt));

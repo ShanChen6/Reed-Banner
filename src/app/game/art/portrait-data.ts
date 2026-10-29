@@ -67,6 +67,7 @@ const PHOTOS: Readonly<Record<string, string>> = {
   tranSonThach: "/art/characters/tran-son-thach/portrait.webp",
   loiMinhXa: "/art/characters/loi-minh-xa/portrait.webp",
   tatPhongLang: "/art/characters/tat-phong-lang/portrait.webp",
+  minhNguyet: "/art/characters/minh-nguyet/portrait.webp",
 };
 
 export function portraitUrl(id: string): string | null {
