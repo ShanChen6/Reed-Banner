@@ -715,6 +715,23 @@ export default function BattleStage({
           });
           return [fx];
         }
+        if (rig.strikeFx === "myriadEdge") {
+          const fx = armorPierce(sky, rig.fxColor);
+          const bolt = lightning(sky, rig.fxColor);
+          const ward = drumShield(sky, rig.fxColor, facing);
+          // Tuyệt chiêu vạn tượng quy nhất: mũi kiếm phóng luồng sáng tới đối thủ đứng đầu, sét giáng đúng chỗ trúng; khiên
+          // mặt trống trước chính mình (giải trừ, Khiên).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !me || !foe) return;
+            const w = Math.max(3, app.screen.height * 0.022);
+            fx.pierce(at, spot(foe, 0.5), w);
+            bolt.strike(spot(foe, 0.55), w * 1.6, 0.12);
+            ward.cover(spot(me, 0), app.screen.height * FIGURE, 0.3);
+          });
+          return [fx, bolt, ward];
+        }
         if (rig.strikeFx === "silkGale") {
           const gale = galeSlash(sky, rig.fxColor);
           const crack = ironFormation(sky, rig.fxColor);

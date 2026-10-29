@@ -9,7 +9,7 @@ import type { CharacterPreview, PreviewFile } from "./types";
  * Nhân vật đã có bộ hình nhưng chưa có trong roster vì nghề chưa mở trong trận (Xạ thủ, Sát thủ): trang xem thử vẫn
  * dựng hình động để duyệt tranh, không đưa vào shop hay trận đấu.
  */
-const PREVIEW_ONLY: Readonly<Record<string, { readonly name: string; readonly element: Element; readonly profession: GameProfession }>> = {
+const PREVIEW_ONLY: Readonly<Record<string, { readonly name: string; readonly element: Element; readonly profession: GameProfession; readonly title?: string }>> = {
   bachNoLang: { name: "Bạch Nỏ Lang", element: "kim", profession: "cungThu" },
   thanhLamXa: { name: "Thanh Lâm Xạ", element: "moc", profession: "cungThu" },
   lamGiangPhiDiep: { name: "Lam Giang Phi Diệp", element: "thuy", profession: "cungThu" },
@@ -17,6 +17,8 @@ const PREVIEW_ONLY: Readonly<Record<string, { readonly name: string; readonly el
   tranSonThach: { name: "Trấn Sơn Thạch", element: "tho", profession: "cungThu" },
   loiMinhXa: { name: "Lôi Minh Xạ", element: "loi", profession: "cungThu" },
   tatPhongLang: { name: "Tật Phong Lăng", element: "phong", profession: "cungThu" },
+  // Nhân vật đặc biệt dung hợp tám nghề; nghề ghi Tướng sĩ chỉ để dùng hình dự phòng, trang hiện danh xưng.
+  dinhNgoc: { name: "Đinh Ngọc", element: "kim", profession: "tuongSi", title: "Vạn Tượng Hành Giả" },
 };
 
 /** Chỉ đọc file tĩnh lúc dựng trang; trình duyệt không cần API hay hồ sơ. */
@@ -47,7 +49,7 @@ export async function characterCatalog(): Promise<CharacterPreview[]> {
     const defeat = rig.skeleton === "warrior" ? rig.down : undefined;
     const files = [...layers, portrait, standing, style].filter((f): f is PreviewFile => f !== null);
     return {
-      id, name: character.name, element: character.element, profession: character.profession, previewOnly: id in PREVIEW_ONLY,
+      id, name: character.name, element: character.element, profession: character.profession, previewOnly: id in PREVIEW_ONLY, title: PREVIEW_ONLY[id]?.title,
       files, rigBytes: layers.reduce((sum, f) => sum + f!.bytes, 0),
       assets: [
         { kind: "portrait", label: "Avatar", file: portrait },
