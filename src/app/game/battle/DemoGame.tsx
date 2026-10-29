@@ -6,6 +6,7 @@ import { skillText } from "./labels";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   act,
+  swapCells,
   applyProfileAction,
   applyRewards,
   battleRewards,
@@ -103,6 +104,7 @@ import {
   TIER_CLASS,
 } from "./labels";
 import { bounceFrames, eventFrames, type Frame } from "./animation";
+import { sidesAfterEvents } from "./heldSides";
 import { COMBAT_PACING } from "./pacing";
 import {
   CloudCorner,
@@ -797,7 +799,11 @@ export default function DemoGame({
   const animId = useRef(0);
   /** Bàn cờ đã diễn xong nhưng state chưa commit (lúc nghỉ chuyển phe), để không hiện lại bàn cũ. */
   const [heldBoard, setHeldBoard] = useState<Board | null>(null);
+  /** Chỉ số hai phe sau phần đã diễn, giữ cùng lúc với heldBoard để thanh máu/năng lượng không trễ một lượt. */
+  const [heldSides, setHeldSides] = useState<BattleState["sides"] | null>(null);
   const afterAnim = useRef<(() => void) | null>(null);
+  /** Online: khung đổi ô đã diễn trước trong lúc chờ server, commit kế tiếp bỏ khung đầu. */
+  const swapShown = useRef(false);
   const pacingTimeouts = useRef<Set<number>>(new Set());
   const turnBannerId = useRef(0);
   const [pacing, setPacing] = useState(false);
@@ -1006,6 +1012,7 @@ export default function DemoGame({
       }
 
       let board = before.board;
+      let sides = before.sides;
       const finish = () => {
         // Chơi offline: đồng hồ lượt mới tính từ lúc hoạt ảnh xong, thời gian xem hoạt ảnh không bị trừ.
         const shown =
@@ -1019,6 +1026,7 @@ export default function DemoGame({
             : after;
         setState(shown);
         setHeldBoard(null);
+        setHeldSides(null);
         // Trận online: server cộng thưởng và gửi `outcome` (xem receive).
         if (
           !online &&
@@ -1058,11 +1066,16 @@ export default function DemoGame({
         const current = batches[index];
         if (!current) return finish();
         const cues = stageCues(before, current.events);
-        const frames = eventFrames(board, current.events);
+        let frames = eventFrames(board, current.events);
+        if (index === 0 && swapShown.current && current.events[0]?.type === "swap")
+          frames = frames.slice(1);
+        if (index === 0) swapShown.current = false;
         cueBus.emit(cues.start);
         play(frames, () => {
           board = frames.at(-1)?.board ?? board;
           setHeldBoard(board);
+          sides = sidesAfterEvents(sides, current.events, after);
+          setHeldSides(sides);
           pushLog(after, current.events);
           const effectMs = showNumbers(current.events);
           cueBus.emit(cues.end);
@@ -1110,6 +1123,11 @@ export default function DemoGame({
             ERROR_TEXT[res.error as keyof typeof ERROR_TEXT] ??
             res.error,
         );
+      if (!res.view || res.view.seq < seq.current || !res.events?.length) {
+        // Không có gì để diễn: trả bàn cờ về state thật nếu đã diễn trước khung đổi ô.
+        swapShown.current = false;
+        setHeldBoard(null);
+      }
       if (!res.view) return;
       if (res.view.seq < seq.current) return;
       seq.current = res.view.seq;
@@ -1175,8 +1193,17 @@ export default function DemoGame({
         flash(text);
         return false;
       }
-      if (online) sendOnline(action);
-      else commit(state, r.state, r.events);
+      if (online) {
+        // Đổi ô diễn ngay, không chờ server; phần xóa và rơi ô (cần rng của server) diễn khi có kết quả.
+        if (action.type === "swap") {
+          const swapped = swapCells(state.board, action.from, action.to);
+          swapShown.current = true;
+          play(eventFrames(state.board, [{ type: "swap", from: action.from, to: action.to, steps: [] }]), () =>
+            setHeldBoard((held) => (swapShown.current ? swapped : held)),
+          );
+        }
+        sendOnline(action);
+      } else commit(state, r.state, r.events);
       return true;
     },
     [state, actor, flash, play, commit, online, sendOnline],
@@ -1403,7 +1430,7 @@ export default function DemoGame({
     [selectable, state.turn.actor, apply],
   );
 
-  // Điều khiển bàn phím, docs/design/11-giao-dien.md mục 2.3.
+  // Điều khiển bàn phím, docs/05-ui-ux/screens/battle.md mục 2.3.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (!myTurn) return;
@@ -1508,6 +1535,7 @@ export default function DemoGame({
     setAnim(null);
     afterAnim.current = null;
     setHeldBoard(null);
+    setHeldSides(null);
     setFloats([]);
     setState(null);
     setOutcome(null);
@@ -1669,7 +1697,7 @@ export default function DemoGame({
   const aimMark = aim?.target ?? aimIndex;
 
   const side = (s: 0 | 1) => {
-    const own = state.sides[s];
+    const own = (heldSides ?? state.sides)[s];
     return (
       <div className="flex w-full flex-col gap-2 md:w-40 md:shrink-0 lg:w-56">
         <div className="flex items-center justify-between text-xs opacity-80">
@@ -1733,7 +1761,7 @@ export default function DemoGame({
         <header className="flex flex-wrap items-center justify-between gap-2">
           <h1 className="flex items-center gap-1.5 text-lg font-bold">
             <LeaderFlag className="size-6" />
-            {online ? "Cờ Lau · Chơi online" : "Cờ Lau · Chơi thử"}
+            {online ? "Cờ Lau · Giao Tranh" : "Cờ Lau · Thao Luyện"}
           </h1>
           <div className="text-sm font-semibold" aria-live="polite">
             {!started
@@ -1847,7 +1875,7 @@ export default function DemoGame({
 
         {started && (
           <BattleStage
-            sides={[state.sides[PLAYER].fighters, state.sides[AI].fighters]}
+            sides={[(heldSides ?? state.sides)[PLAYER].fighters, (heldSides ?? state.sides)[AI].fighters]}
             actor={
               state.winner === null
                 ? { side: state.turn.side, fighter: state.turn.actor }
@@ -2048,7 +2076,7 @@ export default function DemoGame({
                       scene="CAMPAIGN"
                       className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
                     >
-                      {phaseAdvanced ? "Chuẩn bị phase tiếp" : "Về Chiến dịch"}
+                      {phaseAdvanced ? "Chuẩn bị phase tiếp" : "Về Bình Loạn"}
                     </SceneLink>
                   </div>
                 )}
@@ -2110,13 +2138,13 @@ export default function DemoGame({
                         {outcome.destiny && (
                           <p className={`font-semibold ${outcome.destiny.won ? "text-amber-300" : "text-rose-300"}`}>
                             {outcome.destiny.won
-                              ? `Vận Mệnh: đã vượt tầng ${outcome.destiny.floor}. Hãy chọn một phần thưởng.`
-                              : `Vận Mệnh: đội hình gục ở tầng ${outcome.destiny.floor}. Run đã kết thúc.`}
+                              ? `Thiên Mệnh: đã vượt tầng ${outcome.destiny.floor}. Hãy chọn một phần thưởng.`
+                              : `Thiên Mệnh: đội hình gục ở tầng ${outcome.destiny.floor}. Run đã kết thúc.`}
                           </p>
                         )}
                         {outcome.daily && (
                           <p className="font-semibold text-amber-300">
-                            Thử thách ngày:{" "}
+                            Nhật Lệnh:{" "}
                             {outcome.daily.score.won
                               ? `thắng sau ${outcome.daily.score.turns} lượt`
                               : "thua"}
@@ -2129,7 +2157,7 @@ export default function DemoGame({
                           <p
                             className={`font-semibold ${outcome.arena.won ? "text-amber-300" : "text-rose-300"}`}
                           >
-                            Đấu trường: {outcome.arena.won ? "thắng" : "thua"}{" "}
+                            Quần Hùng: {outcome.arena.won ? "thắng" : "thua"}{" "}
                             {outcome.arena.opponent},{" "}
                             {outcome.arena.delta >= 0 ? "+" : "−"}
                             {Math.abs(outcome.arena.delta)} điểm
@@ -2185,7 +2213,7 @@ export default function DemoGame({
                           scene="DESTINY"
                           className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
                         >
-                          {outcome?.destiny?.won ? "Chọn thưởng Vận Mệnh" : "Về Tháp Vận Mệnh"}
+                          {outcome?.destiny?.won ? "Chọn thưởng Thiên Mệnh" : "Về Tháp Thiên Mệnh"}
                         </SceneLink>
                       )}
                       {dailyDay && (

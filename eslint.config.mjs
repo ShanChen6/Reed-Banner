@@ -8,7 +8,7 @@ export default defineConfig([
   globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
   {
     // src/core/ là logic trận đấu: TypeScript thuần, xác định theo seed.
-    // Xem docs/tech/kien-truc.md.
+    // Xem docs/07-architecture/kien-truc.md.
     files: ["src/core/**/*.ts"],
     rules: {
       "no-restricted-imports": [

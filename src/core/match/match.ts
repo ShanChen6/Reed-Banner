@@ -1,6 +1,6 @@
 // Trận online do server có thẩm quyền: nhận ý định của người chơi, chạy bù lượt hết giờ kiểu "tính lười",
 // cho AI đánh, xử thua trận bỏ dở và ẩn mọi luồng ngẫu nhiên khỏi client.
-// Xem docs/tech/ha-tang.md mục 2. Thuần, không đọc giờ hệ thống: `now` luôn do server truyền vào.
+// Xem docs/07-architecture/ha-tang.md mục 2. Thuần, không đọc giờ hệ thống: `now` luôn do server truyền vào.
 
 import { playAiTurn, type Difficulty } from "../ai";
 import {

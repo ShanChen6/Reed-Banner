@@ -1,6 +1,6 @@
 // Đấu trường bóng ma (lộ trình 5.5): PvP không đồng bộ. Mỗi người chơi để lại một đội phòng thủ (bản chụp
 // đội 3vs3 lúc đặt); người khác đánh với đội đó do AI điều khiển. Điểm đấu trường tính kiểu Elo.
-// Số liệu là điểm xuất phát do Claude đặt, chờ Shan duyệt. Xem docs/design/09-che-do-choi.md mục 5.3.
+// Số liệu là điểm xuất phát do Claude đặt, chờ Shan duyệt. Xem docs/02-game-modes/README.md mục 5.3.
 
 import type { Difficulty } from "../ai";
 import {
