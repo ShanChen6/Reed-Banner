@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -244,6 +244,7 @@ export default function BattleStage({
         import("./bastion"),
         import("./thunder"),
         import("./heaven"),
+        import("./aegis"),
       ]);
       const app = new Application();
       await app.init({
@@ -547,6 +548,20 @@ export default function BattleStage({
             else bolts.bolt(at, spot(foe, 0.5), kind === "cast" ? w * 1.4 : w);
           });
           return [bolts, smite];
+        }
+        if (rig.strikeFx === "thunderAegis") {
+          const shock = thunderAegis(sky, rig.fxColor);
+          const ward = drumShield(sky, rig.fxColor, facing);
+          // Tuyệt chiêu chấn lôi thiết vệ: dộng khiên, vòng sấm quanh chân và khiên mặt trống trước chính mình (tăng thủ),
+          // sét chạy tới từng đối thủ kèm ấn khiêu khích trên đầu và đốm năng lượng bật khỏi thân (mất năng lượng).
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            shock.guard(spot(me, 0), alive(false).map((s) => spot(s, 0)), size);
+            ward.cover(spot(me, 0), size, 0.25);
+          });
+          return [shock, ward];
         }
         if (rig.strikeFx === "thunderCleave") {
           const cut = thunderCleave(sky, rig.fxColor);
