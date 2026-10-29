@@ -753,6 +753,20 @@ export default function BattleStage({
           });
           return [bolt, crack];
         }
+        if (rig.strikeFx === "galeVortex") {
+          const gale = galeSlash(sky, rig.fxColor);
+          const bolts = lightning(sky, rig.fxColor);
+          // Đánh thường và ra chiêu phóng tia gió từ quả cầu tới đối thủ đứng đầu; tuyệt chiêu gọi lốc cuốn quanh từng đối thủ
+          // (xoáy bàn cờ, xóa hiệu ứng tốt).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const foes = alive(false);
+            if (foes.length === 0) return;
+            const w = Math.max(3, app.screen.height * 0.022);
+            if (kind === "ultimate") foes.forEach((s, n) => gale.whirl(spot(s, 0), app.screen.height * FIGURE, n * 0.1));
+            else bolts.bolt(at, spot(foes[0]!, 0.5), kind === "cast" ? w * 1.4 : w);
+          });
+          return [gale, bolts];
+        }
         if (rig.strikeFx === "galeSlash") {
           const gale = galeSlash(sky, rig.fxColor);
           const gust = supplyDrain(sky, rig.fxColor);
