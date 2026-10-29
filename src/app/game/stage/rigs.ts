@@ -138,7 +138,9 @@ export interface WarriorRig {
    * `roadSever` chỉ ở tuyệt chiêu, địa mạch cắt đường tới chân từng đối thủ và bụi đất cuộn quanh họ; `stoneBastion`
    * chỉ ở tuyệt chiêu, tám cột đá mọc quanh chân, khiên mặt trống và mũi tên vàng ở từng đồng đội; `thunderCleave` chỉ ở
    * tuyệt chiêu, ba nhát chém sét liền vào đối thủ đứng đầu, khiên nứt và đốm năng lượng bật khỏi người họ; `heavenStrike` đánh thường và ra chiêu phóng sét từ quả cầu tới
-   * đối thủ đứng đầu, tuyệt chiêu mây giông tụ rồi cột sét lớn giáng xuống người đó, đốm năng lượng bật khỏi thân.
+   * đối thủ đứng đầu, tuyệt chiêu mây giông tụ rồi cột sét lớn giáng xuống người đó, đốm năng lượng bật khỏi thân; `thunderAegis` chỉ ở
+   * tuyệt chiêu, vòng sấm tỏa quanh chân và khiên mặt trống trước chính mình, sét chạy tới từng đối thủ kèm ấn khiêu khích
+   * trên đầu và đốm năng lượng bật khỏi thân họ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -176,7 +178,8 @@ export interface WarriorRig {
     | "roadSever"
     | "stoneBastion"
     | "thunderCleave"
-    | "heavenStrike";
+    | "heavenStrike"
+    | "thunderAegis";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -2490,6 +2493,55 @@ const VU_LOI: WarriorRig = {
     anchor: { x: 700, y: 1150 }, scale: 1.2 },
 };
 
+/**
+ * Ông Chấn, binh lính hệ Lôi (tướng cửa hàng). Bộ tranh Shan gửi 29/10 (nền trong suốt sẵn; tranh gục và tranh chỉnh khăn
+ * khổ 1172×1342). Ảnh đứng tách lớp bằng code như Lê Thạch: giáo cùng nắm tay xoay quanh cổ tay (đoạn cán sau nắm tay lấp
+ * bằng đoạn cán ngay trên), khiên mây viền đồng là lớp tay không nâng lên khi vào thế và đỡ đòn (mép tay áo dưới vành
+ * khiên được kéo dài), đầu quấn khăn tím tách riêng, đuôi khăn bay sau đầu. Tranh chỉnh khăn tựa giáo làm tranh phong
+ * thái. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const ONG_CHAN: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "ong-chan",
+  texScale: 0.5,
+  foot: { x: 540, y: 1483 },
+  height: 1350,
+  parts: {
+    body: { x: 56, y: 131, w: 968, h: 1353 },
+    armR: { x: 670, y: 295, w: 337, h: 456 },
+    sword: { x: 69, y: 32, w: 91, h: 1262 },
+    arm: { x: 66, y: 497, w: 95, h: 125 },
+    head: { x: 399, y: 131, w: 228, h: 228 },
+  },
+  cloth: [
+    { name: "scarf", box: { x: 290, y: 232, w: 125, h: 115 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 5, freq: 1.6, k: 3.2, phase: 0.4, vertical: true, reverse: true } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 112, y: 560 },
+    elbowR: { x: 690, y: 450 },
+    neck: { x: 520, y: 325 },
+  },
+  blade: [{ x: 112, y: 560 }, { x: 114, y: 40 }],
+  shieldRaise: -0.35,
+  strikeFx: "thunderAegis",
+  fxColor: 0xb48cff,
+  // Đâm giáo ngang núp khiên (đánh thường), đứng thẳng dựng giáo (ra chiêu), hạ mũi giáo, tấn rộng đẩy khiên ra trước
+  // trấn giữ (tuyệt chiêu). Cỡ người so theo khoảng đỉnh khăn tới nút thắt lưng.
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 25, y: 170 },
+      anchor: { x: 520, y: 1404 }, scale: 1.03, burst: { x: 1015, y: 646 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 131, y: 22 },
+      anchor: { x: 547, y: 1506 }, scale: 1, burst: { x: 181, y: 40 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 31, y: 28 },
+      anchor: { x: 542, y: 1488 }, scale: 1.03, burst: { x: 895, y: 568 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 19, y: 288 },
+    anchor: { x: 600, y: 1130 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -2542,6 +2594,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   taThach: TA_THACH,
   tongTan: TONG_TAN,
   vuLoi: VU_LOI,
+  ongChan: ONG_CHAN,
 };
 
 export function rigOf(id: string): Rig | null {
