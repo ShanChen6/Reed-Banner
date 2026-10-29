@@ -11,7 +11,7 @@ export type Profession = (typeof PROFESSIONS)[number];
  * Hai nghề mở rộng CHÍNH THỨC trong danh mục thiết kế Reed Banner.
  * Chưa kích hoạt trong matchmaking/roster cho đến khi có TileKind,
  * kỹ năng nghề, combo/passive, base stats, UI và kiểm thử end-to-end.
- * Không gán ô kiếm giả cho Cung thủ/Sát thủ vì sẽ làm sai gameplay.
+ * Không gán ô kiếm giả cho Xạ thủ/Sát thủ vì sẽ làm sai gameplay.
  */
 export const EXPANSION_PROFESSIONS = ["cungThu", "satThu"] as const;
 export type ExpansionProfession = (typeof EXPANSION_PROFESSIONS)[number];
@@ -25,7 +25,7 @@ export const PROFESSION_DISPLAY_NAME: Readonly<Record<GameProfession, string>> =
   ySu: "Y sư",
   muuSi: "Mưu sĩ",
   quanSu: "Quân sư",
-  cungThu: "Cung thủ",
+  cungThu: "Xạ thủ",
   satThu: "Sát thủ",
 };
 /** Ranh giới chủ động tránh dùng nghề chưa có kỹ năng trong trận. */

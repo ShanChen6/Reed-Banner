@@ -6,7 +6,7 @@ import { partsOf, partUrl, rigIds, rigOf } from "@/app/game/stage/rigs";
 import type { CharacterPreview, PreviewFile } from "./types";
 
 /**
- * Nhân vật đã có bộ hình nhưng chưa có trong roster vì nghề chưa mở trong trận (Cung thủ, Sát thủ): trang xem thử vẫn
+ * Nhân vật đã có bộ hình nhưng chưa có trong roster vì nghề chưa mở trong trận (Xạ thủ, Sát thủ): trang xem thử vẫn
  * dựng hình động để duyệt tranh, không đưa vào shop hay trận đấu.
  */
 const PREVIEW_ONLY: Readonly<Record<string, { readonly name: string; readonly element: Element; readonly profession: GameProfession }>> = {

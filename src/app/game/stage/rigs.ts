@@ -2966,7 +2966,7 @@ const PHUNG_PHONG: WarriorRig = {
 };
 
 /**
- * Bạch Nỏ Lang, cung thủ hệ Kim (RB-062, nghề Cung thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
+ * Bạch Nỏ Lang, xạ thủ hệ Kim (RB-062, nghề Xạ thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
  * 29/10 (nền trong suốt sẵn). Nỏ ôm ngang ngực bằng hai tay nên nỏ cùng bàn tay đỡ phía trước là một lớp xoay quanh nắm
  * tay cầm báng; ống tên bên hông lắc nhẹ thay bàn tay buông; đầu (cả đuôi khăn) tách riêng. Phần giáp ngực sau nỏ được vá
  * nhưng luôn bị nỏ che. Hệ tọa độ: ảnh đứng 1024×1536.
@@ -3010,7 +3010,7 @@ const BACH_NO_LANG: WarriorRig = {
 };
 
 /**
- * Thanh Lâm Xạ, cung thủ hệ Mộc (RB-063, nghề Cung thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
+ * Thanh Lâm Xạ, xạ thủ hệ Mộc (RB-063, nghề Xạ thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
  * 29/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: cung tre dài (cả dây) cùng bàn tay cầm cung xoay quanh cổ tay
  * như trượng, bàn tay chạm giỏ tên và đầu tách riêng; bím tóc, giỏ tên ở lại thân. Hệ tọa độ: ảnh đứng 1024×1536.
  */
