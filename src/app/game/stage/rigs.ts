@@ -155,7 +155,8 @@ export interface WarriorRig {
    * lao tới đối thủ đứng đầu và cột nước đông băng dưới chân họ; `flameDisc` chỉ ở tuyệt chiêu, phi luân lửa nảy qua
    * từng đối thủ và lửa bén lên họ; `stoneGuard` chỉ ở tuyệt chiêu, đá lao tới đối thủ đứng đầu, khiên giáp họ nứt và
    * khiên mặt trống trước từng đồng đội; `voltNeedle` chỉ ở tuyệt chiêu, lôi châm lao tới đối thủ đứng đầu, mây giông
-   * câm lặng phủ quanh họ và năng lượng bay về chính mình.
+   * câm lặng phủ quanh họ và năng lượng bay về chính mình; `silkGale` chỉ ở tuyệt chiêu, lốc cuốn và khiên nứt trên từng
+   * đối thủ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -209,7 +210,8 @@ export interface WarriorRig {
     | "willowTide"
     | "flameDisc"
     | "stoneGuard"
-    | "voltNeedle";
+    | "voltNeedle"
+    | "silkGale";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -3223,6 +3225,51 @@ const LOI_MINH_XA: WarriorRig = {
     anchor: { x: 700, y: 1120 }, scale: 0.85 },
 };
 
+/**
+ * Tật Phong Lăng, xạ thủ hệ Phong (RB-068, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
+ * (nền trong suốt sẵn). Ảnh đứng hai tay nâng dải lụa thành vòng nên vòng lụa giữa ở lại thân; đầu lụa rủ bên trái cùng bàn
+ * tay trái lắc nhẹ quanh cổ tay như hồ lô của y sư, cổ tay áo phải và đầu tách riêng. Tranh tư thế vẽ người nhỏ hơn hình
+ * đứng nên phóng 1.1. Hệ tọa độ: ảnh đứng 1086×1448.
+ */
+const TAT_PHONG_LANG: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "gourd",
+  grip: { x: 285, y: 530 },
+  dir: "tat-phong-lang",
+  texScale: 0.5,
+  foot: { x: 460, y: 1430 },
+  height: 1420,
+  parts: {
+    body: { x: 171, y: 8, w: 877, h: 1430 },
+    armR: { x: 762, y: 447, w: 129, h: 46 },
+    sword: { x: 208, y: 520, w: 131, h: 471 },
+    arm: { x: 240, y: 450, w: 67, h: 111 },
+    head: { x: 433, y: 8, w: 190, h: 232 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 275, y: 465 },
+    elbowR: { x: 775, y: 470 },
+    neck: { x: 545, y: 225 },
+  },
+  blade: [{ x: 285, y: 530 }, { x: 270, y: 970 }],
+  strikeFx: "silkGale",
+  fxColor: 0x2e9e90,
+  // Đá quét, gom lụa cạnh hông (đánh thường), bước tới quét lụa ngang hông (ra chiêu), xoay rộng nâng lụa thành cung lớn trên
+  // đầu (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 14, y: 6 },
+      anchor: { x: 276, y: 1185 }, scale: 1.1, burst: { x: 1290, y: 500 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 61, y: 8 },
+      anchor: { x: 600, y: 1170 }, scale: 1.1, burst: { x: 1240, y: 700 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 8, y: 8 },
+      anchor: { x: 650, y: 1170 }, scale: 1.1, burst: { x: 1300, y: 330 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 14, y: 8 },
+    anchor: { x: 660, y: 1150 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -3291,6 +3338,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   xichDiemLuan: XICH_DIEM_LUAN,
   tranSonThach: TRAN_SON_THACH,
   loiMinhXa: LOI_MINH_XA,
+  tatPhongLang: TAT_PHONG_LANG,
 };
 
 export function rigOf(id: string): Rig | null {

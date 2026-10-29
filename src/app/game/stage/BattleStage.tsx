@@ -715,6 +715,20 @@ export default function BattleStage({
           });
           return [fx];
         }
+        if (rig.strikeFx === "silkGale") {
+          const gale = galeSlash(sky, rig.fxColor);
+          const crack = ironFormation(sky, rig.fxColor);
+          // Tuyệt chiêu phong lăng nhiễu trận: lốc lụa cuốn quanh từng đối thủ (xoáy bàn cờ), khiên giáp họ nứt (Công giảm).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => {
+              gale.whirl(spot(s, 0), size, n * 0.1);
+              crack.shatter(spot(s, 0.5), size, 0.35 + n * 0.1);
+            });
+          });
+          return [gale, crack];
+        }
         if (rig.strikeFx === "voltNeedle") {
           const fx = armorPierce(sky, rig.fxColor);
           const mist = poisonMist(sky, rig.fxColor, STORM);

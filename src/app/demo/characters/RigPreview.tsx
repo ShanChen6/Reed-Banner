@@ -368,7 +368,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           bastion[2].rally(at, size, 0.45);
         });
         // Triều dâng hệ Thủy: vết nứt ở mép phải khung (cột nước do `pillar` vẽ).
-        const siege = team === "tideSiege" || team === "galeRout" || team === "boltBreach" || team === "thicketShot" || team === "stoneGuard" ? ironFormation(app.stage, rig.fxColor) : null;
+        const siege = team === "tideSiege" || team === "galeRout" || team === "boltBreach" || team === "thicketShot" || team === "stoneGuard" || team === "silkGale" ? ironFormation(app.stage, rig.fxColor) : null;
         if (siege) loaded.onStrike?.((kind) => {
           if (kind === "ultimate" && loaded) siege.shatter({ x: el.clientWidth - 60, y: el.clientHeight * 0.5 }, rig.height * loaded.view.scale.y, 0.3);
         });
@@ -392,7 +392,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           });
         });
         // Phong đao hệ Phong: ba lưỡi gió và lốc cuốn ở một điểm bên phải khung; cuồng lưu chỉ gọi lốc ở hai điểm.
-        const gale = team === "galeSlash" || team === "galeVortex" || team === "galeRift" || team === "galeRout" ? galeSlash(app.stage, rig.fxColor) : null;
+        const gale = team === "galeSlash" || team === "galeVortex" || team === "galeRift" || team === "galeRout" || team === "silkGale" ? galeSlash(app.stage, rig.fxColor) : null;
         if (gale) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y * 0.8;
