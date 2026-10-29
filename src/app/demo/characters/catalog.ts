@@ -12,6 +12,7 @@ import type { CharacterPreview, PreviewFile } from "./types";
 const PREVIEW_ONLY: Readonly<Record<string, { readonly name: string; readonly element: Element; readonly profession: GameProfession }>> = {
   bachNoLang: { name: "Bạch Nỏ Lang", element: "kim", profession: "cungThu" },
   thanhLamXa: { name: "Thanh Lâm Xạ", element: "moc", profession: "cungThu" },
+  lamGiangPhiDiep: { name: "Lam Giang Phi Diệp", element: "thuy", profession: "cungThu" },
 };
 
 /** Chỉ đọc file tĩnh lúc dựng trang; trình duyệt không cần API hay hồ sơ. */
