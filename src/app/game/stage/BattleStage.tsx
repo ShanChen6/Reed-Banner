@@ -714,6 +714,22 @@ export default function BattleStage({
           });
           return [fx];
         }
+        if (rig.strikeFx === "thicketShot") {
+          const fx = armorPierce(sky, rig.fxColor);
+          const crack = ironFormation(sky, rig.fxColor);
+          const bloom = leafBloom(sky, rig.fxColor, SPRING, halo);
+          // Tuyệt chiêu một người: mũi tên tre xuyên tới đối thủ đứng đầu, khiên giáp họ nứt (Thủ giảm), vòng lá hồi phục
+          // quanh từng đồng đội.
+          loaded[i]!.onStrike?.((kind, at) => {
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !foe) return;
+            const size = app.screen.height * FIGURE;
+            fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
+            crack.shatter(spot(foe, 0.5), size, 0.15);
+            alive(true).forEach((s, n) => bloom.cover(spot(s, 0), size, 0.35 + n * 0.08));
+          });
+          return [fx, crack, bloom];
+        }
         if (rig.strikeFx === "boltBreach") {
           const fx = armorPierce(sky, rig.fxColor);
           const crack = ironFormation(sky, rig.fxColor);
