@@ -16,7 +16,7 @@ const bytes = (value: number) => `${(value / 1000).toLocaleString("vi-VN", { max
 
 function CharacterDetails({ character, size }: { character: CharacterPreview; size: "battle" | "large" }) {
   const [snapshot, setSnapshot] = useState<string | null>(null);
-  // Nghề chưa mở (Cung thủ, Sát thủ) chưa có hình vẽ tay dự phòng; nhân vật xem thử luôn có ảnh chân dung riêng.
+  // Nghề chưa mở (Xạ thủ, Sát thủ) chưa có hình vẽ tay dự phòng; nhân vật xem thử luôn có ảnh chân dung riêng.
   const look = isActiveProfession(character.profession) ? character.profession : "tuongSi";
   const total = character.files.reduce((sum, file) => sum + file.bytes, 0);
   return (
