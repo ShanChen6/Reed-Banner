@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -243,6 +243,7 @@ export default function BattleStage({
         import("./taunt"),
         import("./bastion"),
         import("./thunder"),
+        import("./heaven"),
       ]);
       const app = new Application();
       await app.init({
@@ -532,6 +533,20 @@ export default function BattleStage({
             fire.burn(spot(foe, 0), size, 0.2);
           });
           return [cut, fire];
+        }
+        if (rig.strikeFx === "heavenStrike") {
+          const bolts = lightning(sky, rig.fxColor);
+          const smite = heavenStrike(sky, rig.fxColor);
+          // Đánh thường và ra chiêu phóng sét từ quả cầu tới đối thủ đứng đầu; tuyệt chiêu thiên lôi giáng thế: mây giông
+          // tụ trên đầu họ, cột sét lớn giáng xuống (phá một cột ô), đốm năng lượng bật khỏi thân (mất năng lượng).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const foe = alive(false)[0];
+            if (!foe) return;
+            const w = Math.max(3, app.screen.height * 0.022);
+            if (kind === "ultimate") smite.smite(spot(foe, 0), app.screen.height * FIGURE);
+            else bolts.bolt(at, spot(foe, 0.5), kind === "cast" ? w * 1.4 : w);
+          });
+          return [bolts, smite];
         }
         if (rig.strikeFx === "thunderCleave") {
           const cut = thunderCleave(sky, rig.fxColor);
