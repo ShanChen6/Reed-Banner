@@ -118,7 +118,7 @@ const SLOT_ART: Record<Exclude<GearSlot, "vuKhi">, (a: string) => React.ReactNod
   ),
 };
 
-/** Vũ khí riêng theo nghề (docs/design/13-hinh-anh.md mục 2.4). */
+/** Vũ khí riêng theo nghề (docs/06-art/art-bible.md mục 2.4). */
 const WEAPON_ART: Record<Profession, (a: string) => React.ReactNode> = {
   // Tướng sĩ: đao lưỡi cong.
   tuongSi: (a) => (

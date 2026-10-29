@@ -1,6 +1,6 @@
 // Nhân vật: Đinh Bộ Lĩnh, tướng thường (khởi đầu và cửa hàng), tướng lịch sử và sứ quân.
 // Mọi nhân vật kèm mang bộ 3 chiêu nghề + 2 chiêu hệ + 1 chiêu riêng như Đinh Bộ Lĩnh, nâng theo ô; ô 4 là kỹ năng riêng.
-// Xem docs/design/14-nhan-vat.md; cân bằng bằng `pnpm sim -- --roster`.
+// Xem docs/03-characters/danh-sach-nhan-vat.md; cân bằng bằng `pnpm sim -- --roster`.
 
 import { chasePassives } from "../battle/chase";
 import { PROFESSION_COMBO, type ComboPassiveId } from "../battle/combos";
@@ -64,7 +64,7 @@ export interface ShopCompanion {
 
 /**
  * Tướng thường bán ở cửa hàng: cùng 5 người khởi đầu phủ đủ 6 nghề × 7 hệ, mỗi tổ hợp một người. Giá chia
- * 2 mức (khoảng 20 và 40 trận thắng), cân theo người cày nhiều nhất. Điểm xuất phát, xem docs/design/08-tien-trinh-kinh-te.md mục 3.
+ * 2 mức (khoảng 20 và 40 trận thắng), cân theo người cày nhiều nhất. Điểm xuất phát, xem docs/01-gameplay/tien-trinh-kinh-te.md mục 3.
  */
 export const SHOP_PRICES = { basic: 1500, elite: 3000 } as const;
 
@@ -111,7 +111,7 @@ export const SHOP_COMPANIONS: readonly ShopCompanion[] = [
 
 /**
  * Tướng lịch sử gia nhập đội qua chiến dịch, ô 4 là chiêu riêng.
- * Nghề và nguyên tố là điểm xuất phát, xem docs/design/09-che-do-choi.md mục 2.1.
+ * Nghề và nguyên tố là điểm xuất phát, xem docs/02-game-modes/README.md mục 2.1.
  */
 export const HERO_COMPANIONS: readonly FighterConfig[] = [
   companion("nguyenBac", "Nguyễn Bặc", "tuongSi", "hoa"),

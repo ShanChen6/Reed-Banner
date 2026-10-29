@@ -1,6 +1,6 @@
 // Sinh tồn (lộ trình 5.3): một trận 3vs3 không dừng trên cùng bàn cờ, đối thủ kéo đến theo đợt mạnh dần.
 // Giữa hai đợt: người còn sống hồi máu, thêm lương, hồi sinh tối đa 1 người. Điểm là số đợt đã vượt qua.
-// Số liệu là điểm xuất phát do Claude đặt, chờ Shan duyệt. Xem docs/design/09-che-do-choi.md mục 4.
+// Số liệu là điểm xuất phát do Claude đặt, chờ Shan duyệt. Xem docs/02-game-modes/README.md mục 4.
 
 import type { Difficulty } from "../ai";
 import {

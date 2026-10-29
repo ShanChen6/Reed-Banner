@@ -1,4 +1,4 @@
-// Vùng phá ô của kỹ năng, xem docs/design/12-ky-nang-nhan-vat-chinh.md mục 1.2.
+// Vùng phá ô của kỹ năng, xem docs/03-characters/ky-nang/preset-ai-he-cu.md mục 1.2.
 
 import type { Rng } from "../rng";
 import { posOf, type Board, type Pos } from "./grid";

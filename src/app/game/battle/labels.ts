@@ -42,7 +42,7 @@ export const TILE_NAME: Record<TileKind, string> = {
   trong: "Trống trận",
 };
 
-/** Tên ô đặc biệt theo docs/design/01-ban-co.md mục 3. */
+/** Tên ô đặc biệt theo docs/01-gameplay/ban-co.md mục 3. */
 export const SPECIAL_NAME: Record<SpecialGrade, Record<TileKind, string>> = {
   strong: {
     kiem: "Kiếm lửa",

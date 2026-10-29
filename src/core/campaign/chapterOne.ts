@@ -1,5 +1,5 @@
 // Lời dẫn Chương I (M01–M03) và khung dùng chung cho các chương sau (Chương II ở chapterTwo.ts): intro, lựa chọn trình diễn, outro và ghi chú sử liệu. Mỗi đoạn mang nhãn
-// nguồn theo docs/campaign-v2/history-sources.md: "recorded" chỉ dùng cho claim có trong ledger, thoại nhân
+// nguồn theo docs/02-game-modes/campaign/history-sources.md: "recorded" chỉ dùng cho claim có trong ledger, thoại nhân
 // vật luôn "fictional", truyền thuyết luôn "legend". Lựa chọn chỉ đổi lời dẫn, không đổi kết quả hay thưởng.
 
 import {

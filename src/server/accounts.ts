@@ -1,6 +1,6 @@
 // Tài khoản và đăng nhập (OAuth hoặc tên đăng nhập + mật khẩu). Tài khoản chính là tài khoản khách: lần
 // đầu đăng nhập hay đăng ký, danh tính được gắn vào id khách đang dùng nên trận và dữ liệu giữ nguyên.
-// Xem docs/tech/ha-tang.md mục 4. Postgres ở ./db/accounts; bản trong bộ nhớ cho dev và test.
+// Xem docs/07-architecture/ha-tang.md mục 4. Postgres ở ./db/accounts; bản trong bộ nhớ cho dev và test.
 
 export type ProviderId = "google" | "github";
 

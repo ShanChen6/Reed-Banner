@@ -1,5 +1,5 @@
 // Nội dung phát hành Tháp Thí Luyện V1: 20 tầng cố định. Chỉ chứa dữ liệu trận;
-// lý do thiết kế và bằng chứng validator nằm ở docs/dual-tower/02-06-trial-content-report.md.
+// lý do thiết kế và bằng chứng validator nằm ở docs/02-game-modes/dual-tower/02-06-trial-content-report.md.
 import { trialFloorId, type FloorRules, type TrialFloorSpec } from "@/core";
 
 const STANDARD = { kiem: 18, amDuong: 16, banhChung: 15, tim: 15, vang: 11, sach: 11, trong: 14 } as const;

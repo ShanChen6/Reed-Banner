@@ -1,6 +1,6 @@
 // Nhiệm vụ ngày/tuần, thành tựu, điểm danh (lộ trình 5.4). Server cộng tiến độ khi trận kết thúc, người chơi
 // bấm nhận thưởng. Ngày và tuần tính theo giờ Việt Nam. Số liệu là điểm xuất phát do Claude đặt, chờ Shan duyệt.
-// Xem docs/design/09-che-do-choi.md mục 5.2.
+// Xem docs/02-game-modes/README.md mục 5.2.
 
 /** Ngày và tuần đổi lúc 0 giờ giờ Việt Nam (UTC+7). */
 export const VN_UTC_OFFSET_MS = 7 * 60 * 60 * 1000;
@@ -81,7 +81,7 @@ export const WEEKLY_QUESTS: readonly QuestDef[] = [
   { id: "w.win15", title: "Thắng 15 trận", stat: "win", target: 15, gold: 400 },
   {
     id: "w.campaign5",
-    title: "Thắng 5 trận chiến dịch hoặc đánh trùm",
+    title: "Thắng 5 trận Bình Loạn hoặc Tái đấu sứ quân",
     stat: "campaign",
     target: 5,
     gold: 300,

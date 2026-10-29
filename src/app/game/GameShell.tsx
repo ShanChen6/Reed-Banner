@@ -2,13 +2,11 @@
 
 // Màn chơi: một giao diện duy nhất, `currentScene` quyết định phân cảnh nào hiện ra. Phân cảnh lấy từ đường
 // dẫn (usePathname) nên thanh địa chỉ, nút Back và state luôn khớp nhau; đổi phân cảnh chỉ render lại phần
-// giữa, thanh trên (về màn chính, tài khoản) giữ nguyên. Các phân cảnh tài khoản dựng sẵn ở server (cần
+// giữa, thanh header chung (header/GameHeader.tsx) giữ nguyên. Các phân cảnh tài khoản dựng sẵn ở server (cần
 // cookie, nhà cung cấp OAuth) rồi truyền vào qua `auth`.
 
-import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { LogoMark } from "./art/logo";
 import ArenaScreen from "./arena/ArenaScreen";
 import DemoGame from "./battle/DemoGame";
 import CampaignScreen from "./campaign/CampaignScreen";
@@ -22,6 +20,7 @@ import { isScenePath, pushScenePath, SceneContext, SceneLink, type SceneApi } fr
 import SurvivalScreen from "./survival/SurvivalScreen";
 import TrialScreen from "./trial/TrialScreen";
 import DestinyScreen from "./destiny/DestinyScreen";
+import GameHeader from "./header/GameHeader";
 
 export interface ShellAccount {
   readonly name: string;
@@ -70,66 +69,10 @@ export default function GameShell({
     document.title = currentScene === "MENU" ? "Cờ Lau" : `${SCENE_TITLE[currentScene]} · Cờ Lau`;
   }, [currentScene]);
 
-  const light = theme === "light" && (currentScene === "PLAYING" || currentScene === "PRACTICE");
-
   return (
     <SceneContext.Provider value={api}>
       <div className="flex min-h-dvh flex-col">
-        <header
-          className={`sticky top-0 z-40 border-b backdrop-blur ${
-            light ? "border-[#b8862f]/30 bg-[#f3ebdc]/90 text-stone-900" : "border-[#d4a24c]/25 bg-[#17110e]/90 text-foreground"
-          }`}
-        >
-          <nav className="mx-auto flex max-w-6xl items-center gap-3 px-3 py-1 text-sm sm:px-4">
-            {currentScene === "MENU" ? (
-              <Link href="/" className="flex items-center gap-1.5 font-serif text-base font-bold">
-                <LogoMark className="size-7" /> Cờ Lau
-              </Link>
-            ) : (
-              <SceneLink scene="MENU" className="flex min-h-11 items-center gap-1.5 rounded px-2 py-1 font-semibold whitespace-nowrap hover:bg-white/10">
-                <span aria-hidden>←</span> Màn chính
-              </SceneLink>
-            )}
-            <span className="truncate opacity-60">{currentScene === "MENU" ? "" : SCENE_TITLE[currentScene]}</span>
-            <span className="ml-auto" />
-            {/* Màn Sử ký: lối tắt Hồ sơ và Trận thường nằm trên thanh chung, không thành một hàng nút riêng. */}
-            {currentScene === "CAMPAIGN" && (
-              <>
-                <SceneLink scene="PROFILE" className="hidden min-h-11 items-center rounded px-2 py-1 hover:bg-white/10 sm:flex">
-                  Hồ sơ
-                </SceneLink>
-                <SceneLink scene="PLAYING" className="hidden min-h-11 items-center rounded px-2 py-1 hover:bg-white/10 sm:flex">
-                  Trận thường
-                </SceneLink>
-              </>
-            )}
-            {account ? (
-              <SceneLink scene="ACCOUNT" className="flex min-h-11 items-center gap-2 rounded px-2 py-1 hover:bg-white/10" title="Tài khoản">
-                <AccountAvatar account={account} />
-                <span className="max-w-32 truncate font-semibold">{account.name}</span>
-              </SceneLink>
-            ) : (
-              <>
-                {/* Khách vẫn chơi được, tiến độ lưu theo cookie khách; nút Đăng nhập để giữ tiến độ trên tài khoản. */}
-                <span className="hidden items-center gap-1.5 opacity-80 sm:flex">
-                  <span aria-hidden className="grid size-6 place-items-center rounded-full border border-current/40 text-xs">
-                    ?
-                  </span>
-                  Khách
-                </span>
-                {!(currentScene in auth) && (
-                  <SceneLink
-                    scene="LOGIN"
-                    params={{ returnTo: currentScene === "MENU" ? undefined : scenePath(currentScene) }}
-                    className="relative rounded bg-amber-500 px-2.5 py-1 font-semibold whitespace-nowrap text-stone-950 before:absolute before:inset-x-0 before:-inset-y-2 before:content-['']"
-                  >
-                    Đăng nhập
-                  </SceneLink>
-                )}
-              </>
-            )}
-          </nav>
-        </header>
+        <GameHeader scene={currentScene} account={account} />
         {arrived && api.params.get("login") === "error" && !(currentScene in auth) && (
           <p role="alert" className="bg-rose-900/60 px-4 py-2 text-center text-sm text-rose-100">
             Đăng nhập không thành công, thử lại nhé.
@@ -140,22 +83,6 @@ export default function GameShell({
         </div>
       </div>
     </SceneContext.Provider>
-  );
-}
-
-/** Ảnh đại diện Google/GitHub; tài khoản mật khẩu không có ảnh thì hiện chữ cái đầu của tên. */
-function AccountAvatar({ account }: { account: ShellAccount }) {
-  if (account.avatarUrl)
-    return (
-      // Ảnh đại diện từ Google/GitHub, nhỏ nên không cần tối ưu qua next/image.
-      // eslint-disable-next-line @next/next/no-img-element
-      <img src={account.avatarUrl} alt="" className="size-7 rounded-full border border-[#d4a24c]/60" referrerPolicy="no-referrer" />
-    );
-  const initial = [...account.name.trim()][0]?.toUpperCase() ?? "?";
-  return (
-    <span aria-hidden className="grid size-7 place-items-center rounded-full border border-[#d4a24c]/60 bg-[#6b2a1a] text-xs font-bold text-amber-100">
-      {initial}
-    </span>
   );
 }
 
@@ -186,7 +113,7 @@ function SceneView({
     case "TRIAL":
       return towerFeatures.trial ? <TrialScreen /> : <DisabledTowerMode name="Tháp Thí Luyện" />;
     case "DESTINY":
-      return towerFeatures.destiny ? <DestinyScreen /> : <DisabledTowerMode name="Tháp Vận Mệnh" />;
+      return towerFeatures.destiny ? <DestinyScreen /> : <DisabledTowerMode name="Tháp Thiên Mệnh" />;
     case "SURVIVAL":
       return <SurvivalScreen />;
     case "DAILY":

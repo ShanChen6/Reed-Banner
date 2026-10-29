@@ -89,7 +89,7 @@ const ENCOUNTERS: readonly CampaignEncounter[] = [
    * M07: toán cướp ven biển ghép từ nhiều nhóm vô danh (mission matrix: `fictional`, không mang tên sứ quân
    * hay thế lực có thật). Trần Lãm là đồng minh nên không ra trận ở phe đối thủ. Sim CAMP-05.04: ~50% ở cấp gợi ý.
    * CAMP-09.02: trận đánh thật đầu tiên nên hạ về đối thủ cấp 2, AI Dễ (storyNodes) cho ~66% với đội tướng lịch sử,
-   * 58% với đội khởi đầu (docs/campaign-v2/balance-report.md).
+   * 58% với đội khởi đầu (docs/02-game-modes/campaign/balance-report.md).
    */
   {
     nodeId: "M07",
@@ -359,7 +359,7 @@ const ENCOUNTERS: readonly CampaignEncounter[] = [
    * đường vô danh, rồi hai phase trùm. Phase trùm đầu dừng khi máu Đỗ Cảnh Thạc xuống nửa; phase cuối ông vào
    * trận với máu còn lại cùng hai tùy tướng mới. Trận cuối, vây một năm, người hạ đều không phải dữ kiện (U07).
    * CAMP-09.02: phase mở đường hạ cấp 7 → 6 vì là phase khó nhất (38%) dù không có trùm; nay 45–56%, hai phase
-   * trùm giữ cấp 8 (docs/campaign-v2/balance-report.md).
+   * trùm giữ cấp 8 (docs/02-game-modes/campaign/balance-report.md).
    */
   {
     nodeId: "M21",

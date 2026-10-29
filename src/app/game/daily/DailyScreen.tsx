@@ -126,7 +126,7 @@ export default function DailyScreen() {
           <p className="text-xs tracking-widest text-amber-300/80 uppercase">
             Ngày {data.day?.split("-").reverse().join("/")}
           </p>
-          <h1 className="text-2xl font-black text-amber-100">Thử thách ngày</h1>
+          <h1 className="text-2xl font-black text-amber-100">Nhật Lệnh</h1>
           <p className="text-sm text-muted">
             Một đề chung cho mọi người, mỗi người đánh một lần. Đề mới lúc 0
             giờ.
@@ -143,7 +143,7 @@ export default function DailyScreen() {
             scene="SURVIVAL"
             className="rounded bg-white/10 px-3 py-1.5 hover:bg-white/15"
           >
-            Sinh tồn
+            Trấn Ải
           </SceneLink>
         </div>
       </div>
