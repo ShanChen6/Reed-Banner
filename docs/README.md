@@ -40,7 +40,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 |---|---|
 | ★ [danh-sach-nhan-vat.md](03-characters/danh-sach-nhan-vat.md) | 61 nhân vật: tướng thường, tướng lịch sử, sứ quân |
 | ★ [ky-nang/README.md](03-characters/ky-nang/README.md) | Kỹ năng hiện hành: Tinh thần F, 6 chủ động + 4 bị động, giá Thủ thành |
-| ★ [Thiết kế Xạ thủ và Sát thủ](06-art/prompts/v4-2/08-new-professions-14-skill-kits.md) | RB-062–075: Xạ thủ bảo toàn; Sát thủ đa vũ khí W02; 6 chủ động + 4 bị động. Thiết kế DRAFT, chưa runtime; Sát thủ có bộ đa vũ khí mới (DRAFT, chưa runtime) |
+| ★ [Thiết kế Xạ thủ và Sát thủ](06-art/prompts/v4-2/08-new-professions-14-skill-kits.md) | RB-062–075: chỉ số nền, 6 chiêu nghề, 14 tuyệt chiêu, 14 chiêu hệ đối chiếu, loadout 6+4; bảng cấp 1/5 và contract poison. Thiết kế DRAFT, chưa runtime; Sát thủ có bộ đa vũ khí mới (DRAFT, chưa runtime) |
 | [ky-nang/mo-hinh-nhan-vat.md](03-characters/ky-nang/mo-hinh-nhan-vat.md) | Mô hình nhân vật, nghề, luật dùng kỹ năng (bộ chiêu cụ thể đã thay) |
 | [ky-nang/preset-ai-he-cu.md](03-characters/ky-nang/preset-ai-he-cu.md) | Bộ kỹ năng hệ cũ, chỉ dùng cho preset AI chiến dịch |
 | [ky-nang/data/](03-characters/ky-nang/data/skill-chase-v3.md) | Dữ liệu sinh từ code và bảng kỹ năng 60 nhân vật kèm |
