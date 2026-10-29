@@ -56,7 +56,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -72,6 +72,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           import("@/app/game/stage/taunt"),
           import("@/app/game/stage/bastion"),
           import("@/app/game/stage/thunder"),
+          import("@/app/game/stage/heaven"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -178,6 +179,14 @@ export default function RigPreview({ id, size, onSnapshot }: {
           const at = { x: el.clientWidth * 0.85, y: loaded.view.y };
           cleave[0].slash(at, size, 1);
           cleave[1].burn(at, size, 0.2);
+        });
+        // Thiên lôi giáng thế hệ Lôi: sét từ quả cầu tới mép phải khung, tuyệt chiêu cột sét lớn giáng xuống điểm bên phải.
+        const smite = team === "heavenStrike" ? [lightning(app.stage, rig.fxColor), heavenStrike(app.stage, rig.fxColor)] as const : null;
+        if (smite) loaded.onStrike?.((kind, at) => {
+          if (!loaded) return;
+          const w = el.dataset.size === "large" ? 5 : 3;
+          if (kind === "ultimate") smite[1].smite({ x: el.clientWidth * 0.85, y: loaded.view.y }, rig.height * loaded.view.scale.y * 0.8);
+          else smite[0].bolt(at, { x: el.clientWidth - 12, y: el.clientHeight * 0.55 }, kind === "cast" ? w * 1.4 : w);
         });
         // Lôi đao liên trảm hệ Lôi: ba nhát chém sét qua một điểm bên phải khung, khiên nứt theo sau.
         const combo = team === "thunderCleave" ? [thunderCleave(app.stage, rig.fxColor), ironFormation(app.stage, rig.fxColor)] as const : null;
@@ -349,6 +358,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           rain?.forEach((r) => r.update(dt));
           cleave?.forEach((c) => c.update(dt));
           combo?.forEach((c) => c.update(dt));
+          smite?.forEach((c) => c.update(dt));
           chain?.forEach((c) => c.update(dt));
           surge?.forEach((c) => c.update(dt));
           roar?.forEach((c) => c.update(dt));
