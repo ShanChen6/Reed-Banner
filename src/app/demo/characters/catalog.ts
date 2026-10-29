@@ -15,6 +15,7 @@ const PREVIEW_ONLY: Readonly<Record<string, { readonly name: string; readonly el
   lamGiangPhiDiep: { name: "Lam Giang Phi Diệp", element: "thuy", profession: "cungThu" },
   xichDiemLuan: { name: "Xích Diệm Luân", element: "hoa", profession: "cungThu" },
   tranSonThach: { name: "Trấn Sơn Thạch", element: "tho", profession: "cungThu" },
+  loiMinhXa: { name: "Lôi Minh Xạ", element: "loi", profession: "cungThu" },
 };
 
 /** Chỉ đọc file tĩnh lúc dựng trang; trình duyệt không cần API hay hồ sơ. */
