@@ -56,7 +56,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM, VOLT }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }] = await Promise.all([
+        const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -74,6 +74,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           import("@/app/game/stage/thunder"),
           import("@/app/game/stage/heaven"),
           import("@/app/game/stage/aegis"),
+          import("@/app/game/stage/gale"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -93,6 +94,9 @@ export default function RigPreview({ id, size, onSnapshot }: {
         }
         puppet.current = loaded;
         app.stage.addChild(loaded.view);
+        // Lớp sau lưng nhân vật: quầng sáng và vệt sáng hồi phục của y sư.
+        const halo = new Container();
+        app.stage.addChildAt(halo, 0);
         const bounds = loaded.view.getLocalBounds();
         const resize = () => {
           if (!app || !loaded || disposed) return;
@@ -126,10 +130,11 @@ export default function RigPreview({ id, size, onSnapshot }: {
         });
         // Vòm khiên đất hệ Thổ, vòng lá hệ Mộc: nở quanh chính nhân vật khi tuyệt chiêu.
         const team = rig.skeleton === "warrior" ? rig.strikeFx : undefined;
-        const wards = team === "earthWard" || team === "tideBulwark" ? drumShield(app.stage, rig.fxColor) : team === "leafBloom" || team === "springDew" ? leafBloom(app.stage, rig.fxColor)
+        const wards = team === "earthWard" || team === "tideBulwark" ? drumShield(app.stage, rig.fxColor) : team === "leafBloom" || team === "springDew" ? leafBloom(app.stage, rig.fxColor, SPRING, halo)
           : team === "silverGrace" ? silverGrace(app.stage, rig.fxColor) : null;
-        // Hình động chỉ giữ một người nghe nhát trúng: thủy trại dựng khiên trong lượt nghe của cột nước bên dưới.
-        if (wards && team !== "tideBulwark") loaded.onStrike?.((kind) => {
+        // Hình động chỉ giữ một người nghe nhát trúng: thủy trại dựng khiên, cam lộ nở vòng trong lượt nghe của cột nước
+        // bên dưới.
+        if (wards && team !== "tideBulwark" && team !== "springDew") loaded.onStrike?.((kind) => {
           if (kind === "ultimate" && loaded) wards.cover({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y);
         });
         // Mũi sáng phá giáp hệ Kim: phóng tới mép phải khung.
@@ -138,7 +143,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           if (kind === "ultimate") pierce.pierce(at, { x: el.clientWidth - 24, y: at.y }, el.dataset.size === "large" ? 5 : 3);
         });
         // Đoạt lương hệ Thủy: hút hạt sáng từ mép phải khung về nhân vật.
-        const drain = team === "supplyDrain" || team === "tideMist" ? supplyDrain(app.stage, rig.fxColor) : null;
+        const drain = team === "supplyDrain" || team === "tideMist" || team === "stormSeal" ? supplyDrain(app.stage, rig.fxColor) : null;
         if (drain) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y;
@@ -151,7 +156,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y;
           (team === "frostSpear" ? [0.86] : [0.78, 0.92]).forEach((k, n) => pillar.cover({ x: el.clientWidth * k, y: loaded!.view.y }, size * 0.8, n * 0.1));
-          if (team === "tideBulwark") wards?.cover({ x: loaded.view.x, y: loaded.view.y }, size);
+          if (team === "tideBulwark" || team === "springDew") wards?.cover({ x: loaded.view.x, y: loaded.view.y }, size);
         });
         // Tường lửa hệ Hỏa: quanh nhân vật, lửa bén ở mép phải khung.
         const fire = team === "flameWall" ? flameWall(app.stage, rig.fxColor) : null;
@@ -240,7 +245,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           roar[1].cover({ x: loaded.view.x, y: loaded.view.y }, size, 0.3);
         });
         // Đan hỏa hệ Hỏa: vòng than hồng và mũi tên vàng quanh nhân vật.
-        const mend = team === "emberMend" ? [leafBloom(app.stage, rig.fxColor, EMBER), ironFormation(app.stage, rig.fxColor)] as const : null;
+        const mend = team === "emberMend" ? [leafBloom(app.stage, rig.fxColor, EMBER, halo), ironFormation(app.stage, rig.fxColor)] as const : null;
         if (mend) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const at = { x: loaded.view.x, y: loaded.view.y };
@@ -249,7 +254,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           mend[1].rally(at, size, 0.35);
         });
         // Lôi châm khởi tử hệ Lôi: chùm kim tím từ tay về ngực nhân vật, rồi vòng sáng tím quanh chân.
-        const pricks = team === "thunderMend" ? [needleVolley(app.stage, rig.fxColor), leafBloom(app.stage, rig.fxColor, VOLT)] as const : null;
+        const pricks = team === "thunderMend" ? [needleVolley(app.stage, rig.fxColor), leafBloom(app.stage, rig.fxColor, VOLT, halo)] as const : null;
         if (pricks) loaded.onStrike?.((kind, at) => {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y;
@@ -307,7 +312,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
         });
         // Rễ già giữ thành hệ Mộc, hậu thổ dưỡng nguyên hệ Thổ: vòng lá quanh nhân vật, khiên mặt trống trước mặt.
         const roots = team === "rootGuard" || team === "groveWard" || team === "earthMend"
-          ? [leafBloom(app.stage, rig.fxColor, team === "earthMend" ? LOAM : undefined), drumShield(app.stage, rig.fxColor)] as const : null;
+          ? [leafBloom(app.stage, rig.fxColor, team === "earthMend" ? LOAM : SPRING, halo), drumShield(app.stage, rig.fxColor)] as const : null;
         if (roots) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const at = { x: loaded.view.x, y: loaded.view.y };
@@ -316,7 +321,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           roots[1].cover(at, size, 0.25);
         });
         // Trúc độc hệ Mộc: sương độc ở mép phải khung, vòng lá quanh nhân vật.
-        const mist = team === "poisonMist" ? [poisonMist(app.stage, rig.fxColor), leafBloom(app.stage, rig.fxColor)] as const : null;
+        const mist = team === "poisonMist" ? [poisonMist(app.stage, rig.fxColor), leafBloom(app.stage, rig.fxColor, SPRING, halo)] as const : null;
         if (mist) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y;
@@ -366,11 +371,38 @@ export default function RigPreview({ id, size, onSnapshot }: {
         if (siege) loaded.onStrike?.((kind) => {
           if (kind === "ultimate" && loaded) siege.shatter({ x: el.clientWidth - 60, y: el.clientHeight * 0.5 }, rig.height * loaded.view.scale.y, 0.3);
         });
+        // Kinh lôi hệ Lôi: sét giáng và mây giông câm lặng ở mép phải khung (hạt năng lượng bay về do `drain` vẽ).
+        const storm = team === "stormSeal" ? [lightning(app.stage, rig.fxColor), poisonMist(app.stage, rig.fxColor, STORM)] as const : null;
+        if (storm) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y * 0.8;
+          storm[0].strike({ x: el.clientWidth - 70, y: loaded.view.y - size * 0.55 }, el.dataset.size === "large" ? 8 : 5);
+          storm[1].cover({ x: el.clientWidth - 70, y: loaded.view.y }, size, 0.15);
+        });
+        // Lôi trận hệ Lôi: sét giáng và khiên nứt ở hai điểm bên phải khung.
+        const rout = team === "thunderRout" ? [lightning(app.stage, rig.fxColor), ironFormation(app.stage, rig.fxColor)] as const : null;
+        if (rout) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y * 0.8;
+          [0.78, 0.92].forEach((k, n) => {
+            const x = el.clientWidth * k;
+            rout[0].strike({ x, y: loaded!.view.y - size * 0.55 }, el.dataset.size === "large" ? 8 : 5, n * 0.1);
+            rout[1].shatter({ x, y: loaded!.view.y - size * 0.5 }, size, 0.2 + n * 0.1);
+          });
+        });
+        // Phong đao hệ Phong: ba lưỡi gió và lốc cuốn ở một điểm bên phải khung.
+        const gale = team === "galeSlash" ? galeSlash(app.stage, rig.fxColor) : null;
+        if (gale) loaded.onStrike?.((kind) => {
+          if (kind === "ultimate" && loaded) gale.slash({ x: el.clientWidth * 0.85, y: loaded.view.y }, rig.height * loaded.view.scale.y * 0.8, 1);
+        });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
           loaded?.update(dt);
           mist?.forEach((m) => m.update(dt));
           tide?.update(dt);
+          storm?.forEach((f) => f.update(dt));
+          rout?.forEach((f) => f.update(dt));
+          gale?.update(dt);
           blaze?.forEach((b) => b.update(dt));
           sever?.forEach((b) => b.update(dt));
           bastion?.forEach((b) => b.update(dt));

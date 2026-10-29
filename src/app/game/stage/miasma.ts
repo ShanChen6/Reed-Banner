@@ -36,6 +36,9 @@ export const SMOKE: MistPalette = { haze: 0x3b2a24, leaf: 0xffa54a, halo: 0xffd9
 /** Bụi đất đường lương bị cắt của mưu sĩ hệ Thổ: sỏi vàng đất xoáy thay lá trúc. */
 export const DUST: MistPalette = { haze: 0x5a4126, leaf: 0xd9a650, halo: 0xf0d59a };
 
+/** Mây giông câm lặng của mưu sĩ hệ Lôi: tia điện tím xoáy thay lá trúc. */
+export const STORM: MistPalette = { haze: 0x2d2350, leaf: 0xd9c8ff, halo: 0xf1eaff };
+
 export function poisonMist(parent: Container, color: number, palette: MistPalette = BAMBOO) {
   const g = new Graphics();
   parent.addChild(g);
