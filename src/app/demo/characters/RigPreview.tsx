@@ -143,7 +143,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           if (kind === "ultimate") pierce.pierce(at, { x: el.clientWidth - 24, y: at.y }, el.dataset.size === "large" ? 5 : 3);
         });
         // Đoạt lương hệ Thủy: hút hạt sáng từ mép phải khung về nhân vật.
-        const drain = team === "supplyDrain" || team === "tideMist" || team === "stormSeal" ? supplyDrain(app.stage, rig.fxColor) : null;
+        const drain = team === "supplyDrain" || team === "tideMist" || team === "stormSeal" || team === "galeRift" ? supplyDrain(app.stage, rig.fxColor) : null;
         if (drain) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y;
@@ -391,7 +391,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           });
         });
         // Phong đao hệ Phong: ba lưỡi gió và lốc cuốn ở một điểm bên phải khung; cuồng lưu chỉ gọi lốc ở hai điểm.
-        const gale = team === "galeSlash" || team === "galeVortex" ? galeSlash(app.stage, rig.fxColor) : null;
+        const gale = team === "galeSlash" || team === "galeVortex" || team === "galeRift" ? galeSlash(app.stage, rig.fxColor) : null;
         if (gale) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y * 0.8;
