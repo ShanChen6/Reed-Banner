@@ -1,16 +1,25 @@
 import { stat } from "node:fs/promises";
 import path from "node:path";
-import { ALL_COMPANIONS, mainCharacter } from "@/core";
+import { ALL_COMPANIONS, mainCharacter, type Element, type GameProfession } from "@/core";
 import { portraitUrl } from "@/app/game/art/portrait-data";
 import { partsOf, partUrl, rigIds, rigOf } from "@/app/game/stage/rigs";
 import type { CharacterPreview, PreviewFile } from "./types";
+
+/**
+ * Nhân vật đã có bộ hình nhưng chưa có trong roster vì nghề chưa mở trong trận (Cung thủ, Sát thủ): trang xem thử vẫn
+ * dựng hình động để duyệt tranh, không đưa vào shop hay trận đấu.
+ */
+const PREVIEW_ONLY: Readonly<Record<string, { readonly name: string; readonly element: Element; readonly profession: GameProfession }>> = {
+  bachNoLang: { name: "Bạch Nỏ Lang", element: "kim", profession: "cungThu" },
+};
 
 /** Chỉ đọc file tĩnh lúc dựng trang; trình duyệt không cần API hay hồ sơ. */
 export async function characterCatalog(): Promise<CharacterPreview[]> {
   const roster = [mainCharacter("moc"), ...ALL_COMPANIONS];
   return Promise.all(rigIds().map(async (id) => {
     const rig = rigOf(id)!;
-    const character = roster.find((c) => c.id === id)!;
+    const character = roster.find((c) => c.id === id) ?? PREVIEW_ONLY[id];
+    if (!character) throw new Error(`${id} có rig nhưng không có trong roster`);
     const file = async (url: string | null): Promise<PreviewFile | null> => {
       if (!url) return null;
       try {
@@ -32,7 +41,7 @@ export async function characterCatalog(): Promise<CharacterPreview[]> {
     const defeat = rig.skeleton === "warrior" ? rig.down : undefined;
     const files = [...layers, portrait, standing, style].filter((f): f is PreviewFile => f !== null);
     return {
-      id, name: character.name, element: character.element, profession: character.profession,
+      id, name: character.name, element: character.element, profession: character.profession, previewOnly: id in PREVIEW_ONLY,
       files, rigBytes: layers.reduce((sum, f) => sum + f!.bytes, 0),
       assets: [
         { kind: "portrait", label: "Avatar", file: portrait },

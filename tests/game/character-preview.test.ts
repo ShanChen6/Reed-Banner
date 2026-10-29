@@ -17,7 +17,7 @@ test("bảng xem thử chỉ có nhân vật có rig, dung lượng khớp các 
     assert.equal(urls.size, character.files.length);
     for (const name of partsOf(rig)) assert.ok(urls.has(partUrl(rig, name)));
   }
-  for (const id of ["nguyenBac", "dinhDien", "luuCo", "trinhTu", "dinhLien", "tranLam", "phamBachHo", "ngoXuongXi", "tranCuong", "kieuCongHan", "nguyenKhoan", "kieuThuan", "lyKhue", "nguyenThuTiep", "luDuong", "nguyenSieu", "doCanhThac", "chuNgan", "caoKien", "chauNgoc", "toKim", "nghiemThiet", "lamTung", "hoangMoc", "lucDiep", "nhanTruc", "samTue", "hoLang", "khaSon", "daoLam", "thaiHa", "damThao", "maiThanh", "quachAn", "viTrieu", "haVan", "tonDiem", "lyLiet", "truongViem", "hongDan", "ninhHoa", "doanNham", "leThach", "beLien", "maNhac", "taThach", "tongTan", "vuLoi", "ongChan", "tieuMinh", "tuKinh", "macVan", "huaLang", "lieuYen", "manhTuong", "bachSuong", "buiPhieu", "phungPhong"]) {
+  for (const id of ["nguyenBac", "dinhDien", "luuCo", "trinhTu", "dinhLien", "tranLam", "phamBachHo", "ngoXuongXi", "tranCuong", "kieuCongHan", "nguyenKhoan", "kieuThuan", "lyKhue", "nguyenThuTiep", "luDuong", "nguyenSieu", "doCanhThac", "chuNgan", "caoKien", "chauNgoc", "toKim", "nghiemThiet", "lamTung", "hoangMoc", "lucDiep", "nhanTruc", "samTue", "hoLang", "khaSon", "daoLam", "thaiHa", "damThao", "maiThanh", "quachAn", "viTrieu", "haVan", "tonDiem", "lyLiet", "truongViem", "hongDan", "ninhHoa", "doanNham", "leThach", "beLien", "maNhac", "taThach", "tongTan", "vuLoi", "ongChan", "tieuMinh", "tuKinh", "macVan", "huaLang", "lieuYen", "manhTuong", "bachSuong", "buiPhieu", "phungPhong", "bachNoLang"]) {
     const character = characters.find((c) => c.id === id)!;
     assert.ok(character.assets.every((a) => a.file || a.kind === "attack" || (a.kind === "cast" && (id === "nguyenKhoan" || id === "nguyenSieu" || id === "nghiemThiet")) || a.kind === "style"), `${id} cần đủ năm ảnh đối chiếu`);
     assert.ok(character.files.reduce((sum, file) => sum + file.bytes, 0) <= 350_000);
@@ -36,4 +36,14 @@ test("tranh gục được tải trong rig, alpha thật và tỉ lệ texture �
     assert.equal(file.toString("ascii", 12, 16), "VP8X");
     assert.ok(file[20]! & 0x10, `${art.name} cần alpha thật`);
   }
+});
+
+test("nhân vật chỉ xem thử có trên trang xem thử nhưng không có trong roster", async () => {
+  const { ALL_COMPANIONS } = await import("../../src/core");
+  const characters = await characterCatalog();
+  const archer = characters.find((c) => c.id === "bachNoLang");
+  assert.ok(archer?.previewOnly);
+  assert.equal(archer.profession, "cungThu");
+  assert.ok(!ALL_COMPANIONS.some((c) => c.id === "bachNoLang"));
+  assert.ok(characters.filter((c) => c.id !== "bachNoLang").every((c) => !c.previewOnly));
 });

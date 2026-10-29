@@ -714,6 +714,18 @@ export default function BattleStage({
           });
           return [fx];
         }
+        if (rig.strikeFx === "boltBreach") {
+          const fx = armorPierce(sky, rig.fxColor);
+          const crack = ironFormation(sky, rig.fxColor);
+          // Tuyệt chiêu một người: tên nỏ nặng xuyên tới đối thủ đứng đầu, khiên giáp họ nứt vỡ (xuyên giáp, Thủ giảm).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !foe) return;
+            fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
+            crack.shatter(spot(foe, 0.5), app.screen.height * FIGURE, 0.15);
+          });
+          return [fx, crack];
+        }
         if (rig.strikeFx === "armorPierce") {
           const fx = armorPierce(sky, rig.fxColor);
           // Tuyệt chiêu xuyên giáp một người: mũi sáng từ mũi kiếm tới đối thủ đứng đầu.
