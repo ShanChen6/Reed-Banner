@@ -89,3 +89,10 @@
 - TODO: Review và mô phỏng [bảng thông số hai nghề](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md): Xạ thủ HP475/ATK55/DEF9, Sát thủ HP450/ATK58/DEF8 ở cấp1 chưa gear; cấp chiêu1–5 và P1–P4 đã có proposal cụ thể. Đây không phải chỉ số đã cân bằng hoặc runtime.
 - TODO: Khi triển khai poison, xác minh hook cuối lượt thường (không tick lượt thêm), cap hai nguồn, snapshot ATK, Khiên hấp thụ trước HP, cleanse và provenance. Các hành vi đã được đặc tả trong nguồn chính; việc còn lại là review, code, test và mô phỏng, không để lựa chọn runtime ngầm.
 - TODO: Mô phỏng và chốt P1 cơ hội nghề, ánh xạ P4 thay chase hệ thứ hai và thông số Xạ thủ; nghiệm thu sáu ảnh W02 mỗi nhân vật. Chưa báo cáo như tính năng runtime.
+
+## Đinh Ngọc — nhân vật đặc biệt dung hợp
+
+- Đã chốt hướng: nữ khoảng 25 tuổi, tên Đinh Ngọc; tám nghề/bảy hệ phân bổ qua6 chủ động và4 nội tại, có nghề chỉ cần nội tại. Nguồn duy nhất: [thiết kế](../03-characters/dinh-ngoc.md), [art và6 prompt](../06-art/prompts/dinh-ngoc.md).
+- TODO: Duyệt ngoại hình Master theo ảnh tham chiếu, trang phục thế kỷ X và bản chính không kính; không suy ra thân phận/tiểu sử người thật. Danh xưng Vạn Tượng Hành Giả và mã RB-SP-001 là đề xuất.
+- TODO: Review gameplay/chỉ số, mapping special template không tự nhận nội tại nghề/hệ cũ; per-skill damageElement và hệ phòng thủ Kim cố định; passive cuối lượt, shield-break provenance, quota hồi3 tick/trận, P4 một cơ hội và snapshot/reset mode.
+- TODO: Chốt cách mở đồng hành và kiểm chứng bằng mô phỏng trước triển khai; chưa sửa Campaign, roster, code, UI hoặc asset.

@@ -38,6 +38,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 
 | File | Nội dung |
 |---|---|
+| ★ [Đinh Ngọc — Vạn Tượng Hành Giả](03-characters/dinh-ngoc.md) | DRAFT: nữ khoảng 25 tuổi, nhân vật đặc biệt dung hợp8 nghề/7 hệ qua6 chủ động +4 nội tại; [sáu prompt](06-art/prompts/dinh-ngoc.md), chưa có runtime |
 | ★ [danh-sach-nhan-vat.md](03-characters/danh-sach-nhan-vat.md) | 61 nhân vật: tướng thường, tướng lịch sử, sứ quân |
 | ★ [ky-nang/README.md](03-characters/ky-nang/README.md) | Kỹ năng hiện hành: Tinh thần F, 6 chủ động + 4 bị động, giá Thủ thành |
 | ★ [Thiết kế Xạ thủ và Sát thủ](06-art/prompts/v4-2/08-new-professions-14-skill-kits.md) | RB-062–075: chỉ số nền, 6 chiêu nghề, 14 tuyệt chiêu, 14 chiêu hệ đối chiếu, loadout 6+4; bảng cấp 1/5 và contract poison. Thiết kế DRAFT, chưa runtime; Sát thủ có bộ đa vũ khí mới (DRAFT, chưa runtime) |
@@ -71,6 +72,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | [ke-hoach-do-hoa.md](06-art/ke-hoach-do-hoa.md) | Kế hoạch đồ họa & hoạt ảnh Đ0–Đ9 |
 | ★ [prompts/v4-2/](06-art/prompts/v4-2/00-bao-cao.md) | Điểm vào bộ prompt; [Xạ thủ và prompt Sát thủ đa vũ khí](06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md). Năm Xạ thủ W02 là DRAFT, Kim/Mộc bảo toàn |
 | [prompts/](06-art/prompts/do-hoa.md) | [Đồ họa ngoài nhân vật](06-art/prompts/do-hoa.md), [Codex dựng rig](06-art/prompts/codex-rig-nhan-vat.md); bản cũ SUPERSEDED: [nhân vật](06-art/prompts/nhan-vat.md), [tư thế](06-art/prompts/tu-the.md) |
+| [prompts/dinh-ngoc.md](06-art/prompts/dinh-ngoc.md) | Character DNA, trang phục lấy cảm hứng thế kỷ X, một kiếm/một mặt ngọc và6 prompt cho Đinh Ngọc; DRAFT, chưa duyệt Master |
 | [nhan-vat/nguyen-bac.md](06-art/nhan-vat/nguyen-bac.md) | Hình động Nguyễn Bặc |
 | [ho-so-master-chat.md](06-art/ho-so-master-chat.md) | Ngữ cảnh cho chat mới về dựng hình nhân vật: kiến trúc rig và hiệu ứng, quy trình từ bộ 5 ảnh, tiến độ |
 
