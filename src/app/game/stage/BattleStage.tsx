@@ -715,6 +715,23 @@ export default function BattleStage({
           });
           return [fx];
         }
+        if (rig.strikeFx === "voltNeedle") {
+          const fx = armorPierce(sky, rig.fxColor);
+          const mist = poisonMist(sky, rig.fxColor, STORM);
+          const drain = supplyDrain(sky, rig.fxColor);
+          // Tuyệt chiêu một người: lôi châm lao thẳng tới đối thủ đứng đầu, mây giông câm lặng phủ quanh họ, năng lượng bị
+          // tước bay về chính mình.
+          loaded[i]!.onStrike?.((kind, at) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !me || !foe) return;
+            const size = app.screen.height * FIGURE;
+            fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
+            mist.cover(spot(foe, 0), size, 0.15);
+            drain.drain(spot(foe, 0.5), spot(me, 0.55), size, 0.35);
+          });
+          return [fx, mist, drain];
+        }
         if (rig.strikeFx === "stoneGuard") {
           const fx = armorPierce(sky, rig.fxColor);
           const crack = ironFormation(sky, rig.fxColor);

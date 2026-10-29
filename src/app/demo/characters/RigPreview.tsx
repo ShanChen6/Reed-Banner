@@ -139,12 +139,12 @@ export default function RigPreview({ id, size, onSnapshot }: {
           if (kind === "ultimate" && loaded) wards.cover({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y);
         });
         // Mũi sáng phá giáp hệ Kim: phóng tới mép phải khung.
-        const pierce = team === "armorPierce" || team === "boltBreach" || team === "thicketShot" || team === "willowTide" || team === "stoneGuard" ? armorPierce(app.stage, rig.fxColor) : null;
+        const pierce = team === "armorPierce" || team === "boltBreach" || team === "thicketShot" || team === "willowTide" || team === "stoneGuard" || team === "voltNeedle" ? armorPierce(app.stage, rig.fxColor) : null;
         if (pierce) loaded.onStrike?.((kind, at) => {
           if (kind === "ultimate") pierce.pierce(at, { x: el.clientWidth - 24, y: at.y }, el.dataset.size === "large" ? 5 : 3);
         });
         // Đoạt lương hệ Thủy: hút hạt sáng từ mép phải khung về nhân vật.
-        const drain = team === "supplyDrain" || team === "tideMist" || team === "stormSeal" || team === "galeRift" ? supplyDrain(app.stage, rig.fxColor) : null;
+        const drain = team === "supplyDrain" || team === "tideMist" || team === "stormSeal" || team === "galeRift" || team === "voltNeedle" ? supplyDrain(app.stage, rig.fxColor) : null;
         if (drain) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y;
@@ -373,11 +373,11 @@ export default function RigPreview({ id, size, onSnapshot }: {
           if (kind === "ultimate" && loaded) siege.shatter({ x: el.clientWidth - 60, y: el.clientHeight * 0.5 }, rig.height * loaded.view.scale.y, 0.3);
         });
         // Kinh lôi hệ Lôi: sét giáng và mây giông câm lặng ở mép phải khung (hạt năng lượng bay về do `drain` vẽ).
-        const storm = team === "stormSeal" ? [lightning(app.stage, rig.fxColor), poisonMist(app.stage, rig.fxColor, STORM)] as const : null;
+        const storm = team === "stormSeal" || team === "voltNeedle" ? [lightning(app.stage, rig.fxColor), poisonMist(app.stage, rig.fxColor, STORM)] as const : null;
         if (storm) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y * 0.8;
-          storm[0].strike({ x: el.clientWidth - 70, y: loaded.view.y - size * 0.55 }, el.dataset.size === "large" ? 8 : 5);
+          if (team === "stormSeal") storm[0].strike({ x: el.clientWidth - 70, y: loaded.view.y - size * 0.55 }, el.dataset.size === "large" ? 8 : 5);
           storm[1].cover({ x: el.clientWidth - 70, y: loaded.view.y }, size, 0.15);
         });
         // Lôi trận hệ Lôi: sét giáng và khiên nứt ở hai điểm bên phải khung.

@@ -154,7 +154,8 @@ export interface WarriorRig {
    * thủ đứng đầu, khiên giáp họ nứt và vòng lá hồi phục quanh từng đồng đội; `willowTide` chỉ ở tuyệt chiêu, phi tiêu
    * lao tới đối thủ đứng đầu và cột nước đông băng dưới chân họ; `flameDisc` chỉ ở tuyệt chiêu, phi luân lửa nảy qua
    * từng đối thủ và lửa bén lên họ; `stoneGuard` chỉ ở tuyệt chiêu, đá lao tới đối thủ đứng đầu, khiên giáp họ nứt và
-   * khiên mặt trống trước từng đồng đội.
+   * khiên mặt trống trước từng đồng đội; `voltNeedle` chỉ ở tuyệt chiêu, lôi châm lao tới đối thủ đứng đầu, mây giông
+   * câm lặng phủ quanh họ và năng lượng bay về chính mình.
    */
   readonly strikeFx?:
     | "lightning"
@@ -207,7 +208,8 @@ export interface WarriorRig {
     | "thicketShot"
     | "willowTide"
     | "flameDisc"
-    | "stoneGuard";
+    | "stoneGuard"
+    | "voltNeedle";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -3179,6 +3181,48 @@ const TRAN_SON_THACH: WarriorRig = {
     anchor: { x: 660, y: 1100 }, scale: 0.85 },
 };
 
+/**
+ * Lôi Minh Xạ, xạ thủ hệ Lôi (RB-067, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10 (nền
+ * trong suốt sẵn). Ảnh đứng tách lớp bằng code: lôi châm cùng nắm tay giơ cao vung như kiếm ngắn, bàn tay chống hông và
+ * đầu (cả dải buộc tóc tím) tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const LOI_MINH_XA: WarriorRig = {
+  skeleton: "warrior",
+  dir: "loi-minh-xa",
+  texScale: 0.5,
+  foot: { x: 530, y: 1505 },
+  height: 1500,
+  parts: {
+    body: { x: 142, y: 0, w: 786, h: 1515 },
+    armR: { x: 712, y: 620, w: 79, h: 101 },
+    sword: { x: 243, y: 94, w: 67, h: 129 },
+    arm: { x: 193, y: 209, w: 79, h: 128 },
+    head: { x: 302, y: 5, w: 409, h: 263 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 230, y: 320 },
+    elbowR: { x: 760, y: 640 },
+    neck: { x: 560, y: 240 },
+  },
+  blade: [{ x: 250, y: 220 }, { x: 305, y: 100 }],
+  strikeFx: "voltNeedle",
+  fxColor: 0xb48cff,
+  // Bước chéo gạt tay trái, châm thu thấp (đánh thường), đứng chắc đưa châm ngang má (ra chiêu), chùng người kéo châm cao
+  // qua vai sau (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 3, y: 3 },
+      anchor: { x: 690, y: 1180 }, scale: 1, burst: { x: 1240, y: 340 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 0, y: 0 },
+      anchor: { x: 515, y: 1500 }, scale: 1, burst: { x: 780, y: 240 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 11, y: 17 },
+      anchor: { x: 660, y: 1170 }, scale: 1, burst: { x: 1280, y: 680 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 9, y: 10 },
+    anchor: { x: 700, y: 1120 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -3246,6 +3290,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   lamGiangPhiDiep: LAM_GIANG_PHI_DIEP,
   xichDiemLuan: XICH_DIEM_LUAN,
   tranSonThach: TRAN_SON_THACH,
+  loiMinhXa: LOI_MINH_XA,
 };
 
 export function rigOf(id: string): Rig | null {
