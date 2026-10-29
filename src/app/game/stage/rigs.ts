@@ -148,7 +148,8 @@ export interface WarriorRig {
    * gió từ quả cầu tới đối thủ đứng đầu, tuyệt chiêu gọi lốc cuốn quanh từng đối thủ; `galeBulwark` chỉ ở tuyệt chiêu,
    * lốc gió quanh chính mình, khiên mặt trống trước từng đồng đội và luồng gió đưa năng lượng tới họ; `galeMend` chỉ ở
    * tuyệt chiêu, vòng gió trắng xanh hồi phục quanh từng đồng đội và luồng gió đưa năng lượng tới họ; `galeRift` chỉ ở
-   * tuyệt chiêu, lốc cuốn quanh từng đối thủ và năng lượng bay khỏi họ về chính mình.
+   * tuyệt chiêu, lốc cuốn quanh từng đối thủ và năng lượng bay khỏi họ về chính mình; `galeRout` chỉ ở tuyệt chiêu, lốc
+   * cuốn và khiên nứt trên từng đối thủ, luồng gió đưa năng lượng tới từng đồng đội.
    */
   readonly strikeFx?:
     | "lightning"
@@ -195,7 +196,8 @@ export interface WarriorRig {
     | "galeVortex"
     | "galeBulwark"
     | "galeMend"
-    | "galeRift";
+    | "galeRift"
+    | "galeRout";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -2910,6 +2912,49 @@ const BUI_PHIEU: WarriorRig = {
     anchor: { x: 800, y: 850 }, scale: 0.85 },
 };
 
+/**
+ * Phùng Phong, quân sư hệ Phong (tướng khởi đầu). Bộ tranh Shan gửi 29/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
+ * code như Vi Triều: cờ lệnh mây gió cùng nắm tay xoay quanh cổ tay theo nhịp giáo, bàn tay cầm thẻ tre và đầu (cả khăn
+ * xanh) tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const PHUNG_PHONG: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "phung-phong",
+  texScale: 0.5,
+  foot: { x: 670, y: 1505 },
+  height: 1300,
+  parts: {
+    body: { x: 341, y: 210, w: 654, h: 1299 },
+    armR: { x: 688, y: 498, w: 95, h: 193 },
+    sword: { x: 40, y: 23, w: 380, h: 1457 },
+    arm: { x: 336, y: 578, w: 73, h: 85 },
+    head: { x: 452, y: 210, w: 245, h: 211 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 372, y: 615 },
+    elbowR: { x: 735, y: 640 },
+    neck: { x: 600, y: 400 },
+  },
+  blade: [{ x: 375, y: 620 }, { x: 330, y: 40 }],
+  strikeFx: "galeRout",
+  fxColor: 0x2e9e90,
+  // Chĩa cờ lệnh ngang về phía đối thủ (đánh thường), dựng cờ đưa thẻ tre ra lệnh (ra chiêu), quét cờ chéo giơ cao thẻ
+  // tre (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 9, y: 170 },
+      anchor: { x: 350, y: 1478 }, scale: 1, burst: { x: 1010, y: 290 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 23, y: 12 },
+      anchor: { x: 620, y: 1495 }, scale: 1, burst: { x: 950, y: 680 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 18, y: 47 },
+      anchor: { x: 490, y: 1500 }, scale: 0.93, burst: { x: 860, y: 240 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 2, y: 79 },
+    anchor: { x: 800, y: 900 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -2971,6 +3016,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   manhTuong: MANH_TUONG,
   bachSuong: BACH_SUONG,
   buiPhieu: BUI_PHIEU,
+  phungPhong: PHUNG_PHONG,
 };
 
 export function rigOf(id: string): Rig | null {
