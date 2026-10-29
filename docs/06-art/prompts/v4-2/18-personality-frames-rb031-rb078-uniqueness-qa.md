@@ -1,5 +1,8 @@
 # Reed Banner — Khung 6 độc bản: RB-031 đến RB-078
 
+> Cập nhật nhãn: 30/10/2026
+> Trạng thái: **AUDIT** — bằng chứng lịch sử trước khi đổi nghề. Các nhận xét Cung thủ RB-062–068 bên dưới đã hết hiệu lực; không dùng để tạo ảnh hoặc triển khai. Thiết kế hiện hành: [Xạ thủ](./08-new-professions-14-skill-kits.md), [prompt](./09-14-heroes-character-and-frame-prompts-v4-3.md). Sát thủ chờ trao đổi riêng.
+
 > 26/10/2026 · Chỉ chỉnh **Phong cách cá nhân** ở khung 6. Không tạo ảnh, không thay gameplay, Weapon DNA, trang phục, khung 1–5 hoặc prompt của **RB-001 đến RB-030**.
 
 ## Phát hiện
@@ -52,3 +55,4 @@ Nhóm tướng thường cũ có vòng lặp 7 dạng tư thế, thường gặp
 - [ ] Chưa kiểm duyệt hình ảnh đã render; cử chỉ chi tiết, số hạt/kim và độ thấy được của vật mang theo cần thử nghiệm tạo ảnh khi người dùng thực hiện.
 
 **Chú ý:** Các khung 6 thuộc RB-001–RB-030 còn giữ mẫu chung/lặp nếu có, theo yêu cầu cố định asset đã tạo. Không được tự động sửa lại.
+

@@ -1,5 +1,8 @@
 # Reed Banner — QA nhóm D và E: 17 nhân vật / 102 prompt
 
+> Cập nhật nhãn: 30/10/2026
+> Trạng thái: **AUDIT** — bằng chứng lịch sử trước khi đổi nghề. Các nhận xét Cung thủ RB-062–068 bên dưới đã hết hiệu lực; không dùng để tạo ảnh hoặc triển khai. Thiết kế hiện hành: [Xạ thủ](./08-new-professions-14-skill-kits.md), [prompt](./09-14-heroes-character-and-frame-prompts-v4-3.md). Sát thủ chờ trao đổi riêng.
+
 > 25/10/2026 — Nhánh `develop`. **Chỉ chỉnh tài liệu và prompt**, không sinh ảnh, không sửa runtime gameplay hoặc bảng cân bằng.
 
 ## Nguồn chuẩn
@@ -52,3 +55,4 @@
 ## Quyết định tiếp
 
 Ưu tiên duyệt tài liệu thay đổi vũ khí MEDIUM cho các nhân vật còn trùng hình học (nếu người dùng muốn), rồi chuẩn hóa index tài liệu và loại bỏ chỉ dẫn outdated. Không có việc bắt buộc phải tạo ảnh trong giai đoạn này.
+

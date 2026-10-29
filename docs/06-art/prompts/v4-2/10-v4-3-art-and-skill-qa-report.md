@@ -1,5 +1,8 @@
 # Reed Banner — Báo cáo QA nhân vật mới V4.3
 
+> Cập nhật nhãn: 30/10/2026
+> Trạng thái: **AUDIT** — bằng chứng lịch sử trước khi đổi nghề. Các nhận xét Cung thủ RB-062–068 bên dưới đã hết hiệu lực; không dùng để tạo ảnh hoặc triển khai. Thiết kế hiện hành: [Xạ thủ](./08-new-professions-14-skill-kits.md), [prompt](./09-14-heroes-character-and-frame-prompts-v4-3.md). Sát thủ chờ trao đổi riêng.
+
 > 24/10/2026 · Tình trạng: đã rà nội dung 14 nhân vật/84 prompt, **chưa nghiệm thu ảnh** · Scope: văn bản và prompt בלבד.
 
 ## Đối chiếu thực hiện
@@ -64,3 +67,4 @@
 
 - [Skill kits](./08-new-professions-14-skill-kits.md)
 - [Character & frame prompts](./09-14-heroes-character-and-frame-prompts-v4-3.md)
+
