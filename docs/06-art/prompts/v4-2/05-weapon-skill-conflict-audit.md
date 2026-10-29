@@ -1,7 +1,7 @@
 # REED BANNER — Weapon ↔ Skill Conflict Audit
 
 > Cập nhật nhãn: 30/10/2026
-> Trạng thái: **AUDIT** — bằng chứng lịch sử trước khi đổi nghề. Các nhận xét Cung thủ RB-062–068 bên dưới đã hết hiệu lực; không dùng để tạo ảnh hoặc triển khai. Thiết kế hiện hành: [Xạ thủ](./08-new-professions-14-skill-kits.md), [prompt](./09-14-heroes-character-and-frame-prompts-v4-3.md). Sát thủ chờ trao đổi riêng.
+> Trạng thái: **AUDIT** — bằng chứng lịch sử trước khi đổi nghề. Các nhận xét Cung thủ RB-062–068 bên dưới đã hết hiệu lực; không dùng để tạo ảnh hoặc triển khai. Thiết kế hiện hành: [Xạ thủ](./08-new-professions-14-skill-kits.md), [prompt](./09-14-heroes-character-and-frame-prompts-v4-3.md). Các nhận xét Sát thủ W01 cũng đã bị thay bởi bộ đa vũ khí W02 tại hai nguồn trên; không dùng audit cũ để dựng ảnh hoặc triển khai.
 
 > **Ngày:** 24/10/2026 · **Nhánh:** develop · **Trạng thái:** Đề xuất thay đổi, KHÔNG ghi đè asset/Weapon DNA đã được duyệt.
 
