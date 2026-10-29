@@ -56,7 +56,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -71,6 +71,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           import("@/app/game/stage/surge"),
           import("@/app/game/stage/taunt"),
           import("@/app/game/stage/bastion"),
+          import("@/app/game/stage/thunder"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -177,6 +178,15 @@ export default function RigPreview({ id, size, onSnapshot }: {
           const at = { x: el.clientWidth * 0.85, y: loaded.view.y };
           cleave[0].slash(at, size, 1);
           cleave[1].burn(at, size, 0.2);
+        });
+        // Lôi đao liên trảm hệ Lôi: ba nhát chém sét qua một điểm bên phải khung, khiên nứt theo sau.
+        const combo = team === "thunderCleave" ? [thunderCleave(app.stage, rig.fxColor), ironFormation(app.stage, rig.fxColor)] as const : null;
+        if (combo) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y * 0.8;
+          const at = { x: el.clientWidth * 0.85, y: loaded.view.y };
+          combo[0].slash(at, size, 1);
+          combo[1].shatter({ x: at.x, y: at.y - size * 0.5 }, size, 0.3);
         });
         // Hỏa công liên kế hệ Hỏa: tên lửa từ cờ lệnh nảy qua hai điểm bên phải khung, lửa bén theo sau.
         const chain = team === "fireChain" ? [fireChain(app.stage, rig.fxColor), flameWall(app.stage, rig.fxColor)] as const : null;
@@ -338,6 +348,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           bastion?.forEach((b) => b.update(dt));
           rain?.forEach((r) => r.update(dt));
           cleave?.forEach((c) => c.update(dt));
+          combo?.forEach((c) => c.update(dt));
           chain?.forEach((c) => c.update(dt));
           surge?.forEach((c) => c.update(dt));
           roar?.forEach((c) => c.update(dt));

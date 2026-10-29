@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -242,6 +242,7 @@ export default function BattleStage({
         import("./surge"),
         import("./taunt"),
         import("./bastion"),
+        import("./thunder"),
       ]);
       const app = new Application();
       await app.init({
@@ -531,6 +532,20 @@ export default function BattleStage({
             fire.burn(spot(foe, 0), size, 0.2);
           });
           return [cut, fire];
+        }
+        if (rig.strikeFx === "thunderCleave") {
+          const cut = thunderCleave(sky, rig.fxColor);
+          const crack = ironFormation(sky, rig.fxColor);
+          // Tuyệt chiêu lôi đao liên trảm: ba nhát chém sét liền vào đối thủ đứng đầu, khiên nứt (xuyên khiên), đốm năng
+          // lượng bật khỏi người họ (mất năng lượng).
+          loaded[i]!.onStrike?.((kind) => {
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !foe) return;
+            const size = app.screen.height * FIGURE;
+            cut.slash(spot(foe, 0), size, e.side === 0 ? 1 : -1);
+            crack.shatter(spot(foe, 0.5), size, 0.3);
+          });
+          return [cut, crack];
         }
         if (rig.strikeFx === "emberMend") {
           const bloom = leafBloom(sky, rig.fxColor, EMBER);
