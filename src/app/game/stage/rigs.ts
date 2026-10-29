@@ -134,9 +134,9 @@ export interface WarriorRig {
    * tuyệt chiêu, tên lửa nảy lần lượt qua từng đối thủ và lửa bén lên họ; `earthSurge` chỉ ở tuyệt chiêu, địa mạch chạy
    * ngầm tới chân từng đối thủ rồi trồi đá nhọn, khiên mặt trống trước từng đồng đội; `tauntRoar` chỉ ở tuyệt chiêu,
    * khiên mặt trống trước từng đồng đội, vòng gai đá quanh chính mình và ấn khiêu khích trên đầu từng đối thủ;
-   * `earthMend` chỉ ở tuyệt chiêu, vòng lá thuốc màu đất hồi phục rồi khiên mặt trống quanh từng đồng đội.
-   `roadSever` chỉ ở tuyệt chiêu, địa mạch cắt
-   * đường tới chân từng đối thủ và bụi đất cuộn quanh họ.
+   * `earthMend` chỉ ở tuyệt chiêu, vòng lá thuốc màu đất hồi phục rồi khiên mặt trống quanh từng đồng đội;
+   * `roadSever` chỉ ở tuyệt chiêu, địa mạch cắt đường tới chân từng đối thủ và bụi đất cuộn quanh họ; `stoneBastion`
+   * chỉ ở tuyệt chiêu, tám cột đá mọc quanh chân, khiên mặt trống và mũi tên vàng ở từng đồng đội.
    */
   readonly strikeFx?:
     | "lightning"
@@ -171,7 +171,8 @@ export interface WarriorRig {
     | "earthSurge"
     | "tauntRoar"
     | "earthMend"
-    | "roadSever";
+    | "roadSever"
+    | "stoneBastion";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -2348,6 +2349,53 @@ const MA_NHAC: WarriorRig = {
     anchor: { x: 600, y: 1180 }, scale: 0.85 },
 };
 
+/**
+ * Tạ Thạch, quân sư hệ Thổ (tướng cửa hàng). Bộ tranh Shan gửi 28/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code
+ * như Tôn Diệm: cán cờ lệnh cùng nắm tay xoay quanh cổ tay theo nhịp giáo, lá cờ vàng tách riêng bay theo gió trên cán;
+ * bàn tay cầm bó thẻ tre và đầu tách riêng, chỗ bó thẻ che cổ tay áo vá màu. Tranh cúi cắm cờ trận làm tranh phong thái.
+ * Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const TA_THACH: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "ta-thach",
+  texScale: 0.5,
+  foot: { x: 538, y: 1512 },
+  height: 1510,
+  parts: {
+    body: { x: 170, y: 3, w: 732, h: 1514 },
+    armR: { x: 837, y: 419, w: 172, h: 242 },
+    sword: { x: 42, y: 76, w: 128, h: 686 },
+    arm: { x: 79, y: 516, w: 91, h: 121 },
+    head: { x: 451, y: 3, w: 225, h: 260 },
+  },
+  cloth: [
+    { name: "flag", box: { x: 73, y: 94, w: 202, h: 399 }, onWeapon: true,
+      wind: { axis: "x", start: 0.12, amp: 12, freq: 1.5, k: 4, phase: 0.6, vertical: true } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 163, y: 578 },
+    elbowR: { x: 872, y: 598 },
+    neck: { x: 560, y: 236 },
+  },
+  blade: [{ x: 150, y: 520 }, { x: 60, y: 90 }],
+  strikeFx: "stoneBastion",
+  fxColor: 0xd09a48,
+  // Vung cờ lệnh ra sau, đưa bó thẻ tre tới (đánh thường), giơ cao cờ truyền lệnh (ra chiêu), vung cờ bày bát trận
+  // (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 11, y: 4 },
+      anchor: { x: 608, y: 1486 }, scale: 1, burst: { x: 905, y: 790 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 127, y: 9 },
+      anchor: { x: 585, y: 1488 }, scale: 1, burst: { x: 232, y: 190 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 10, y: 12 },
+      anchor: { x: 540, y: 1470 }, scale: 1, burst: { x: 135, y: 230 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 17, y: 108 },
+    anchor: { x: 820, y: 860 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -2397,6 +2445,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   leThach: LE_THACH,
   beLien: BE_LIEN,
   maNhac: MA_NHAC,
+  taThach: TA_THACH,
 };
 
 export function rigOf(id: string): Rig | null {

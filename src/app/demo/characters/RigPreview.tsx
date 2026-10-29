@@ -56,7 +56,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -70,6 +70,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           import("@/app/game/stage/drum"),
           import("@/app/game/stage/surge"),
           import("@/app/game/stage/taunt"),
+          import("@/app/game/stage/bastion"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -312,6 +313,16 @@ export default function RigPreview({ id, size, onSnapshot }: {
             sever[1].cover(foot, size, 0.3 + n * 0.08);
           });
         });
+        // Bát trận thạch lũy hệ Thổ: tám cột đá, khiên mặt trống và mũi tên vàng quanh nhân vật.
+        const bastion = team === "stoneBastion" ? [stoneBastion(app.stage, rig.fxColor), drumShield(app.stage, rig.fxColor), ironFormation(app.stage, rig.fxColor)] as const : null;
+        if (bastion) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const at = { x: loaded.view.x, y: loaded.view.y };
+          const size = rig.height * loaded.view.scale.y;
+          bastion[0].ring(at, size);
+          bastion[1].cover(at, size, 0.25);
+          bastion[2].rally(at, size, 0.45);
+        });
         // Triều dâng hệ Thủy: vết nứt ở mép phải khung (cột nước do `pillar` vẽ).
         const siege = team === "tideSiege" ? ironFormation(app.stage, rig.fxColor) : null;
         if (siege) loaded.onStrike?.((kind) => {
@@ -324,6 +335,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           tide?.update(dt);
           blaze?.forEach((b) => b.update(dt));
           sever?.forEach((b) => b.update(dt));
+          bastion?.forEach((b) => b.update(dt));
           rain?.forEach((r) => r.update(dt));
           cleave?.forEach((c) => c.update(dt));
           chain?.forEach((c) => c.update(dt));
