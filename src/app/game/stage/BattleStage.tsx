@@ -636,6 +636,22 @@ export default function BattleStage({
           });
           return [ward, ice];
         }
+        if (rig.strikeFx === "galeRift") {
+          const gale = galeSlash(sky, rig.fxColor);
+          const drain = supplyDrain(sky, rig.fxColor);
+          // Tuyệt chiêu phiêu phong: lốc cuốn quanh từng đối thủ (xoáy bàn cờ, xóa hiệu ứng tốt), năng lượng bị gió cuốn
+          // khỏi họ bay về chính mình.
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => {
+              gale.whirl(spot(s, 0), size, n * 0.1);
+              drain.drain(spot(s, 0.5), spot(me, 0.55), size, 0.45 + n * 0.1);
+            });
+          });
+          return [gale, drain];
+        }
         if (rig.strikeFx === "galeMend") {
           const bloom = leafBloom(sky, rig.fxColor, BREEZE, halo);
           const gust = supplyDrain(sky, rig.fxColor);

@@ -147,7 +147,8 @@ export interface WarriorRig {
    * cuốn quanh chân họ và luồng gió đưa năng lượng tới từng đồng đội; `galeVortex` đánh thường và ra chiêu phóng tia
    * gió từ quả cầu tới đối thủ đứng đầu, tuyệt chiêu gọi lốc cuốn quanh từng đối thủ; `galeBulwark` chỉ ở tuyệt chiêu,
    * lốc gió quanh chính mình, khiên mặt trống trước từng đồng đội và luồng gió đưa năng lượng tới họ; `galeMend` chỉ ở
-   * tuyệt chiêu, vòng gió trắng xanh hồi phục quanh từng đồng đội và luồng gió đưa năng lượng tới họ.
+   * tuyệt chiêu, vòng gió trắng xanh hồi phục quanh từng đồng đội và luồng gió đưa năng lượng tới họ; `galeRift` chỉ ở
+   * tuyệt chiêu, lốc cuốn quanh từng đối thủ và năng lượng bay khỏi họ về chính mình.
    */
   readonly strikeFx?:
     | "lightning"
@@ -193,7 +194,8 @@ export interface WarriorRig {
     | "galeSlash"
     | "galeVortex"
     | "galeBulwark"
-    | "galeMend";
+    | "galeMend"
+    | "galeRift";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -2865,6 +2867,49 @@ const BACH_SUONG: WarriorRig = {
     anchor: { x: 520, y: 1300 }, scale: 0.9 },
 };
 
+/**
+ * Bùi Phiêu, mưu sĩ hệ Phong (tướng cửa hàng). Bộ tranh Shan gửi 29/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
+ * code như Nhan Trúc: quạt lông trắng cùng nắm tay phẩy theo nhịp quạt, bàn tay buông và đầu (cả khăn xanh) tách riêng.
+ * Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const BUI_PHIEU: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "fan",
+  dir: "bui-phieu",
+  texScale: 0.5,
+  foot: { x: 710, y: 1510 },
+  height: 1500,
+  parts: {
+    body: { x: 260, y: 10, w: 726, h: 1509 },
+    armR: { x: 836, y: 685, w: 76, h: 135 },
+    sword: { x: 13, y: 161, w: 328, h: 370 },
+    arm: { x: 238, y: 410, w: 109, h: 89 },
+    head: { x: 470, y: 13, w: 277, h: 258 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 335, y: 475 },
+    elbowR: { x: 870, y: 700 },
+    neck: { x: 620, y: 190 },
+  },
+  blade: [{ x: 290, y: 455 }, { x: 120, y: 260 }],
+  strikeFx: "galeRift",
+  fxColor: 0x2e9e90,
+  // Phẩy quạt lông thấp quét ngang (đánh thường), giơ quạt chỉ tay về phía đối thủ (ra chiêu), tấn rộng giơ quạt xòe tay
+  // gọi gió (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 18, y: 11 },
+      anchor: { x: 715, y: 1505 }, scale: 1, burst: { x: 80, y: 900 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 56, y: 8 },
+      anchor: { x: 555, y: 1505 }, scale: 1, burst: { x: 1000, y: 330 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 43, y: 17 },
+      anchor: { x: 560, y: 1500 }, scale: 1, burst: { x: 1010, y: 370 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 16, y: 171 },
+    anchor: { x: 800, y: 850 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -2925,6 +2970,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   lieuYen: LIEU_YEN,
   manhTuong: MANH_TUONG,
   bachSuong: BACH_SUONG,
+  buiPhieu: BUI_PHIEU,
 };
 
 export function rigOf(id: string): Rig | null {
