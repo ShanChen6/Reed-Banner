@@ -1,5 +1,10 @@
 # Nhật ký thay đổi thiết kế
 
+## 30/10/2026 — Trấn Sơn Thạch tung hứng phi hoàng thạch ở khung cá nhân
+
+- Khung 6 đổi từ ngồi xem đá sang đứng thả lỏng, hơi nhếch cười, mắt nhìn một viên phi hoàng thạch vừa tung thấp phía trên tay phải mở ngang eo; tay trái chống hông. Đây là tung bắt vui, không phải đòn chiến đấu hoặc phép nâng đá.
+- Chỉ một viên xuất hiện, tay phải trống dưới viên đang bay. Sửa ngoại lệ khung 6 trong ghi chú hình học để không mâu thuẫn với quy tắc cầm vật. Giữ năm khung còn lại, Weapon DNA, nhân dạng, phụ kiện và gameplay.
+
 ## 30/10/2026 — Đồng bộ phi hoàng thạch cho Trấn Sơn Thạch
 
 - Thay mô tả đá cuội tròn/cỡ lòng bàn tay của RB-066 bằng phi hoàng thạch nhỏ, thuôn dẹt, hai đầu vát nhọn, sống giữa rõ, các mặt vát vàng đất mờ. Giữ Weapon ID `RB-066-W02` và đồng bộ cả sáu prompt cùng hồ sơ thiết kế.
