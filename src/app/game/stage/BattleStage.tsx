@@ -753,6 +753,22 @@ export default function BattleStage({
           });
           return [bolt, crack];
         }
+        if (rig.strikeFx === "galeBulwark") {
+          const gale = galeSlash(sky, rig.fxColor);
+          const ward = drumShield(sky, rig.fxColor, facing);
+          const gust = supplyDrain(sky, rig.fxColor);
+          // Tuyệt chiêu phong lũy: lốc gió dựng quanh chính mình (khiêu khích), khiên mặt trống trước từng đồng đội (Khiên),
+          // luồng gió đưa năng lượng tới từng đồng đội.
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            gale.whirl(spot(me, 0), size);
+            alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, 0.3 + n * 0.08));
+            alive(true).filter((s) => s !== me).forEach((s, n) => gust.drain(spot(me, 0.55), spot(s, 0.55), size, 0.5 + n * 0.1));
+          });
+          return [gale, ward, gust];
+        }
         if (rig.strikeFx === "galeVortex") {
           const gale = galeSlash(sky, rig.fxColor);
           const bolts = lightning(sky, rig.fxColor);
