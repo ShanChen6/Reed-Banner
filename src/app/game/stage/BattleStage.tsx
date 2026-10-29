@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -245,6 +245,7 @@ export default function BattleStage({
         import("./thunder"),
         import("./heaven"),
         import("./aegis"),
+        import("./gale"),
       ]);
       const app = new Application();
       await app.init({
@@ -751,6 +752,21 @@ export default function BattleStage({
             });
           });
           return [bolt, crack];
+        }
+        if (rig.strikeFx === "galeSlash") {
+          const gale = galeSlash(sky, rig.fxColor);
+          const gust = supplyDrain(sky, rig.fxColor);
+          // Tuyệt chiêu một người: ba lưỡi gió chém qua đối thủ đứng đầu, lốc cuốn quanh chân họ (xoáy bàn cờ), luồng gió đưa
+          // năng lượng tới từng đồng đội.
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !me || !foe) return;
+            const size = app.screen.height * FIGURE;
+            gale.slash(spot(foe, 0), size, e.side === 0 ? 1 : -1);
+            alive(true).filter((s) => s !== me).forEach((s, n) => gust.drain(spot(me, 0.55), spot(s, 0.55), size, 0.5 + n * 0.1));
+          });
+          return [gale, gust];
         }
         if (rig.strikeFx === "stormSeal") {
           const bolt = lightning(sky, rig.fxColor);

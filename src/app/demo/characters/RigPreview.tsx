@@ -56,7 +56,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }] = await Promise.all([
+        const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -74,6 +74,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           import("@/app/game/stage/thunder"),
           import("@/app/game/stage/heaven"),
           import("@/app/game/stage/aegis"),
+          import("@/app/game/stage/gale"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -389,6 +390,11 @@ export default function RigPreview({ id, size, onSnapshot }: {
             rout[1].shatter({ x, y: loaded!.view.y - size * 0.5 }, size, 0.2 + n * 0.1);
           });
         });
+        // Phong đao hệ Phong: ba lưỡi gió và lốc cuốn ở một điểm bên phải khung.
+        const gale = team === "galeSlash" ? galeSlash(app.stage, rig.fxColor) : null;
+        if (gale) loaded.onStrike?.((kind) => {
+          if (kind === "ultimate" && loaded) gale.slash({ x: el.clientWidth * 0.85, y: loaded.view.y }, rig.height * loaded.view.scale.y * 0.8, 1);
+        });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
           loaded?.update(dt);
@@ -396,6 +402,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           tide?.update(dt);
           storm?.forEach((f) => f.update(dt));
           rout?.forEach((f) => f.update(dt));
+          gale?.update(dt);
           blaze?.forEach((b) => b.update(dt));
           sever?.forEach((b) => b.update(dt));
           bastion?.forEach((b) => b.update(dt));
