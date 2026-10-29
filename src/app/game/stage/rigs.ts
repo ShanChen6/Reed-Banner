@@ -151,7 +151,8 @@ export interface WarriorRig {
    * tuyệt chiêu, lốc cuốn quanh từng đối thủ và năng lượng bay khỏi họ về chính mình; `galeRout` chỉ ở tuyệt chiêu, lốc
    * cuốn và khiên nứt trên từng đối thủ, luồng gió đưa năng lượng tới từng đồng đội; `boltBreach` chỉ ở tuyệt chiêu,
    * tên nỏ xuyên tới đối thủ đứng đầu và khiên giáp họ nứt vỡ; `thicketShot` chỉ ở tuyệt chiêu, mũi tên xuyên tới đối
-   * thủ đứng đầu, khiên giáp họ nứt và vòng lá hồi phục quanh từng đồng đội.
+   * thủ đứng đầu, khiên giáp họ nứt và vòng lá hồi phục quanh từng đồng đội; `willowTide` chỉ ở tuyệt chiêu, phi tiêu
+   * lao tới đối thủ đứng đầu và cột nước đông băng dưới chân họ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -201,7 +202,8 @@ export interface WarriorRig {
     | "galeRift"
     | "galeRout"
     | "boltBreach"
-    | "thicketShot";
+    | "thicketShot"
+    | "willowTide";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -3046,6 +3048,49 @@ const THANH_LAM_XA: WarriorRig = {
     anchor: { x: 800, y: 900 }, scale: 0.85 },
 };
 
+/**
+ * Lam Giang Phi Diệp, xạ thủ hệ Thủy (RB-064, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
+ * 30/10; tranh tuyệt chiêu có nền ca-rô in sẵn nên tách nền bằng code, giữ lưỡi phi tiêu thép trong viền đen. Ảnh đứng
+ * tách lớp bằng code: phi tiêu lá liễu cùng nắm tay vung như kiếm ngắn, bàn tay giữ ống tiêu và đầu (cả dải buộc tóc)
+ * tách riêng. Hệ tọa độ: ảnh đứng 1086×1448.
+ */
+const LAM_GIANG_PHI_DIEP: WarriorRig = {
+  skeleton: "warrior",
+  dir: "lam-giang-phi-diep",
+  texScale: 0.5,
+  foot: { x: 560, y: 1405 },
+  height: 1400,
+  parts: {
+    body: { x: 272, y: 9, w: 547, h: 1406 },
+    armR: { x: 720, y: 563, w: 77, h: 112 },
+    sword: { x: 312, y: 755, w: 47, h: 146 },
+    arm: { x: 286, y: 682, w: 82, h: 87 },
+    head: { x: 390, y: 10, w: 270, h: 217 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 325, y: 715 },
+    elbowR: { x: 735, y: 585 },
+    neck: { x: 560, y: 215 },
+  },
+  blade: [{ x: 330, y: 740 }, { x: 337, y: 900 }],
+  strikeFx: "willowTide",
+  fxColor: 0x2f7fc1,
+  // Bước ngang thúc gối, phi tiêu thu sát hông (đánh thường), chùng gối nghiêng thân kéo tiêu ngang thấp (ra chiêu), xoay hông
+  // đưa tiêu lên chéo ngang vai sắp phóng (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 115, y: 13 },
+      anchor: { x: 540, y: 1424 }, scale: 1, burst: { x: 1040, y: 640 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 201, y: 14 },
+      anchor: { x: 765, y: 1000 }, scale: 1, burst: { x: 1440, y: 450 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 51, y: 35 },
+      anchor: { x: 620, y: 1495 }, scale: 0.88, burst: { x: 990, y: 640 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 22, y: 3 },
+    anchor: { x: 800, y: 900 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -3110,6 +3155,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   phungPhong: PHUNG_PHONG,
   bachNoLang: BACH_NO_LANG,
   thanhLamXa: THANH_LAM_XA,
+  lamGiangPhiDiep: LAM_GIANG_PHI_DIEP,
 };
 
 export function rigOf(id: string): Rig | null {

@@ -714,6 +714,18 @@ export default function BattleStage({
           });
           return [fx];
         }
+        if (rig.strikeFx === "willowTide") {
+          const fx = armorPierce(sky, rig.fxColor);
+          const ice = waterPillar(sky, rig.fxColor);
+          // Tuyệt chiêu một người: phi tiêu lá liễu lao thẳng tới đối thủ đứng đầu, cột nước đông băng dưới chân họ (Đóng băng).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !foe) return;
+            fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
+            ice.cover(spot(foe, 0), app.screen.height * FIGURE, 0.15);
+          });
+          return [fx, ice];
+        }
         if (rig.strikeFx === "thicketShot") {
           const fx = armorPierce(sky, rig.fxColor);
           const crack = ironFormation(sky, rig.fxColor);
