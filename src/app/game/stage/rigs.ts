@@ -142,7 +142,8 @@ export interface WarriorRig {
    * tuyệt chiêu, vòng sấm tỏa quanh chân và khiên mặt trống trước chính mình, sét chạy tới từng đối thủ kèm ấn khiêu khích
    * trên đầu và đốm năng lượng bật khỏi thân họ; `thunderMend` chỉ ở tuyệt chiêu, chùm kim tím từ tay tới từng đồng đội
    * rồi vòng sáng tím hồi phục quanh họ; `stormSeal` chỉ ở tuyệt chiêu, sét giáng xuống đối thủ đứng đầu, mây giông
-   * câm lặng phủ quanh họ và năng lượng bay về chính mình.
+   * câm lặng phủ quanh họ và năng lượng bay về chính mình; `thunderRout` chỉ ở tuyệt chiêu, sét giáng lần lượt xuống
+   * từng đối thủ và khiên giáp họ nứt vỡ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -183,7 +184,8 @@ export interface WarriorRig {
     | "heavenStrike"
     | "thunderAegis"
     | "thunderMend"
-    | "stormSeal";
+    | "stormSeal"
+    | "thunderRout";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -2631,6 +2633,49 @@ const TU_KINH: WarriorRig = {
     anchor: { x: 800, y: 900 }, scale: 0.85 },
 };
 
+/**
+ * Mạc Vân, quân sư hệ Lôi (tướng cửa hàng). Bộ tranh Shan gửi 29/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code
+ * như Vi Triều: cờ lệnh tím cùng nắm tay xoay quanh cổ tay theo nhịp giáo, bàn tay cầm thẻ tre và đầu tách riêng. Tranh
+ * đánh thường và tuyệt chiêu vẽ người nhỏ trong khung ngang nên phóng lên cho bằng hình đứng. Hệ tọa độ: ảnh đứng
+ * 1024×1536.
+ */
+const MAC_VAN: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "mac-van",
+  texScale: 0.5,
+  foot: { x: 640, y: 1505 },
+  height: 1400,
+  parts: {
+    body: { x: 303, y: 120, w: 681, h: 1402 },
+    armR: { x: 785, y: 532, w: 172, h: 168 },
+    sword: { x: 88, y: 3, w: 258, h: 1508 },
+    arm: { x: 252, y: 494, w: 65, h: 65 },
+    head: { x: 497, y: 120, w: 172, h: 201 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 290, y: 525 },
+    elbowR: { x: 800, y: 640 },
+    neck: { x: 590, y: 310 },
+  },
+  blade: [{ x: 285, y: 525 }, { x: 258, y: 20 }],
+  strikeFx: "thunderRout",
+  fxColor: 0xb48cff,
+  // Chĩa cờ lệnh ngang về phía đối thủ (đánh thường), giơ thẻ tre ra lệnh (ra chiêu), quét cờ chéo trao thẻ tre (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 50, y: 14 },
+      anchor: { x: 760, y: 1000 }, scale: 1.38, burst: { x: 1490, y: 385 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 42, y: 5 },
+      anchor: { x: 630, y: 1505 }, scale: 1, burst: { x: 875, y: 440 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 21, y: 12 },
+      anchor: { x: 660, y: 1170 }, scale: 1.28, burst: { x: 1270, y: 25 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 31, y: 80 },
+    anchor: { x: 800, y: 900 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -2686,6 +2731,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   ongChan: ONG_CHAN,
   tieuMinh: TIEU_MINH,
   tuKinh: TU_KINH,
+  macVan: MAC_VAN,
 };
 
 export function rigOf(id: string): Rig | null {

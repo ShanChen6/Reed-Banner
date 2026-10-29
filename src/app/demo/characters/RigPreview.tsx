@@ -378,12 +378,24 @@ export default function RigPreview({ id, size, onSnapshot }: {
           storm[0].strike({ x: el.clientWidth - 70, y: loaded.view.y - size * 0.55 }, el.dataset.size === "large" ? 8 : 5);
           storm[1].cover({ x: el.clientWidth - 70, y: loaded.view.y }, size, 0.15);
         });
+        // Lôi trận hệ Lôi: sét giáng và khiên nứt ở hai điểm bên phải khung.
+        const rout = team === "thunderRout" ? [lightning(app.stage, rig.fxColor), ironFormation(app.stage, rig.fxColor)] as const : null;
+        if (rout) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y * 0.8;
+          [0.78, 0.92].forEach((k, n) => {
+            const x = el.clientWidth * k;
+            rout[0].strike({ x, y: loaded!.view.y - size * 0.55 }, el.dataset.size === "large" ? 8 : 5, n * 0.1);
+            rout[1].shatter({ x, y: loaded!.view.y - size * 0.5 }, size, 0.2 + n * 0.1);
+          });
+        });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
           loaded?.update(dt);
           mist?.forEach((m) => m.update(dt));
           tide?.update(dt);
           storm?.forEach((f) => f.update(dt));
+          rout?.forEach((f) => f.update(dt));
           blaze?.forEach((b) => b.update(dt));
           sever?.forEach((b) => b.update(dt));
           bastion?.forEach((b) => b.update(dt));

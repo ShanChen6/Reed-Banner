@@ -737,6 +737,21 @@ export default function BattleStage({
           });
           return [mist, drain];
         }
+        if (rig.strikeFx === "thunderRout") {
+          const bolt = lightning(sky, rig.fxColor);
+          const crack = ironFormation(sky, rig.fxColor);
+          // Tuyệt chiêu lôi trận: sét giáng lần lượt xuống từng đối thủ, khiên giáp họ nứt vỡ (Công giảm, mất năng lượng).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            const w = Math.max(3, app.screen.height * 0.022) * 1.6;
+            alive(false).forEach((s, n) => {
+              bolt.strike(spot(s, 0.55), w, n * 0.1);
+              crack.shatter(spot(s, 0.5), size, 0.2 + n * 0.1);
+            });
+          });
+          return [bolt, crack];
+        }
         if (rig.strikeFx === "stormSeal") {
           const bolt = lightning(sky, rig.fxColor);
           const mist = poisonMist(sky, rig.fxColor, STORM);
