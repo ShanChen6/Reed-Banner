@@ -152,7 +152,8 @@ export interface WarriorRig {
    * cuốn và khiên nứt trên từng đối thủ, luồng gió đưa năng lượng tới từng đồng đội; `boltBreach` chỉ ở tuyệt chiêu,
    * tên nỏ xuyên tới đối thủ đứng đầu và khiên giáp họ nứt vỡ; `thicketShot` chỉ ở tuyệt chiêu, mũi tên xuyên tới đối
    * thủ đứng đầu, khiên giáp họ nứt và vòng lá hồi phục quanh từng đồng đội; `willowTide` chỉ ở tuyệt chiêu, phi tiêu
-   * lao tới đối thủ đứng đầu và cột nước đông băng dưới chân họ.
+   * lao tới đối thủ đứng đầu và cột nước đông băng dưới chân họ; `flameDisc` chỉ ở tuyệt chiêu, phi luân lửa nảy qua
+   * từng đối thủ và lửa bén lên họ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -203,7 +204,8 @@ export interface WarriorRig {
     | "galeRout"
     | "boltBreach"
     | "thicketShot"
-    | "willowTide";
+    | "willowTide"
+    | "flameDisc";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -3091,6 +3093,48 @@ const LAM_GIANG_PHI_DIEP: WarriorRig = {
     anchor: { x: 800, y: 900 }, scale: 0.85 },
 };
 
+/**
+ * Xích Diệm Luân, xạ thủ hệ Hỏa (RB-065, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10 (nền
+ * trong suốt sẵn). Ảnh đứng tách lớp bằng code: phi luân vành kín cùng nắm tay vung như kiếm ngắn, bàn tay chống hông và
+ * đầu (cả dải buộc tóc) tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const XICH_DIEM_LUAN: WarriorRig = {
+  skeleton: "warrior",
+  dir: "xich-diem-luan",
+  texScale: 0.5,
+  foot: { x: 590, y: 1505 },
+  height: 1490,
+  parts: {
+    body: { x: 211, y: 18, w: 758, h: 1493 },
+    armR: { x: 650, y: 482, w: 150, h: 133 },
+    sword: { x: 70, y: 739, w: 296, h: 334 },
+    arm: { x: 182, y: 690, w: 107, h: 100 },
+    head: { x: 383, y: 19, w: 282, h: 234 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 235, y: 720 },
+    elbowR: { x: 760, y: 515 },
+    neck: { x: 560, y: 240 },
+  },
+  blade: [{ x: 235, y: 730 }, { x: 215, y: 1070 }],
+  strikeFx: "flameDisc",
+  fxColor: 0xd9502a,
+  // Tung cước, vòng thu sát hông (đánh thường), thế chân rộng vung vòng ngang hông ra sau (ra chiêu), xoay thân dựng vòng
+  // trên vai chuẩn bị phóng chéo (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 6, y: 9 },
+      anchor: { x: 430, y: 1515 }, scale: 1, burst: { x: 930, y: 290 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 7, y: 3 },
+      anchor: { x: 790, y: 1180 }, scale: 1, burst: { x: 1290, y: 370 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 19, y: 0 },
+      anchor: { x: 690, y: 1175 }, scale: 1, burst: { x: 1290, y: 390 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 2, y: 0 },
+    anchor: { x: 680, y: 1150 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -3156,6 +3200,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   bachNoLang: BACH_NO_LANG,
   thanhLamXa: THANH_LAM_XA,
   lamGiangPhiDiep: LAM_GIANG_PHI_DIEP,
+  xichDiemLuan: XICH_DIEM_LUAN,
 };
 
 export function rigOf(id: string): Rig | null {
