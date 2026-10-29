@@ -80,3 +80,10 @@
 - [x] Chỉ số chính của 9 ô trang bị (3 ô ATK, 3 ô Máu, 3 ô DEF).
 - [x] 5 phẩm Trắng, Lục, Lam, Tím, Cam; ghép luôn thành công.
 - [x] Thể thức của từng chế độ chơi; thêm Thử thách hằng ngày, Thế cờ, Đấu trường bóng ma.
+
+
+## Xạ thủ và Sát thủ — 30/10/2026
+
+- Xạ thủ: chốt hướng đổi nghề, giữ Kim/Mộc, Thủy–phi tiêu, Hỏa–phi luân, Thổ–đá ném bằng tay, Lôi–phi châm, Phong–lụa chiến. Bộ tên mới, chiêu và ảnh W02 cần review trước khi triển khai; xem [nguồn thiết kế](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md).
+- TODO: Trao đổi lại toàn bộ định hướng Sát thủ RB-069–075: vai trò, vũ khí, khác biệt giữa bảy hệ, bộ động tác và kỹ năng. Chưa có phương án mới được chốt; giữ nguyên hồ sơ cũ làm đầu vào, không triển khai tự động.
+- TODO: Mô phỏng và chốt P1 cơ hội nghề, ánh xạ P4 thay chase hệ thứ hai và thông số Xạ thủ; nghiệm thu sáu ảnh W02 mỗi nhân vật. Chưa báo cáo như tính năng runtime.
