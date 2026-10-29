@@ -1,4 +1,4 @@
-import type { Element, Profession } from "@/core";
+import type { Element, GameProfession } from "@/core";
 
 export interface PreviewFile {
   readonly url: string;
@@ -10,7 +10,9 @@ export interface CharacterPreview {
   readonly id: string;
   readonly name: string;
   readonly element: Element;
-  readonly profession: Profession;
+  readonly profession: GameProfession;
+  /** Nhân vật chưa có trong roster (nghề chưa mở trong trận): chỉ xem hình ở trang này. */
+  readonly previewOnly: boolean;
   readonly files: readonly PreviewFile[];
   readonly rigBytes: number;
   readonly assets: readonly {

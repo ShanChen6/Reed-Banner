@@ -2,9 +2,11 @@
 
 > Trạng thái: **APPROVED** — bộ prompt nhân vật đang dùng (Shan chốt 27/10/2026), thay [nhan-vat.md](../nhan-vat.md) và [tu-the.md](../tu-the.md). Các hạn chế ghi bên dưới vẫn còn.
 
-**Ngày cập nhật:** 24/10/2026. **Nhánh:** develop.
+**Ngày cập nhật:** 30/10/2026. **Nhánh:** develop.
 
 ## Trạng thái
+
+**30/10/2026:** Xạ thủ thay Cung thủ. Kim/Mộc giữ bộ ảnh; năm hệ còn lại dùng W02. Hai bản cũ 04 và QA V4.5 đã xóa theo yêu cầu, không lưu bản prompt mâu thuẫn trong thư mục khác. Sát thủ đã thay bộ W02, chưa nghiệm thu ảnh; trạng thái APPROVED đầu file không áp dụng cho thiết kế mới đang DRAFT ở tài liệu 08/09.
 
 Đã loại bỏ tài liệu V3.1 sai bằng commit `fb946ff82b2661b8245a27c5ff302a3a17f73bc4`. Tạo 4 tệp V4.2 theo 75 tướng, 6 khung/tướng = **450 prompt**; mỗi nhân vật có phần hồ sơ đối chiếu asset bằng tiếng Việt và prompt tiếng Anh độc lập. Master = Idle, không có ảnh đứng trùng.
 
@@ -30,7 +32,7 @@
 - [01-chinh-lich-su-su-quan](./01-chinh-lich-su-su-quan.md)
 - [02-tuong-thuong-kim-moc-thuy](./02-tuong-thuong-kim-moc-thuy.md)
 - [03-tuong-thuong-hoa-tho-loi-phong](./03-tuong-thuong-hoa-tho-loi-phong.md)
-- [04-cung-thu-sat-thu](./04-cung-thu-sat-thu.md)
+- [Xạ thủ: thiết kế](./08-new-professions-14-skill-kits.md) · [Prompt Xạ thủ và prompt Sát thủ đa vũ khí](./09-14-heroes-character-and-frame-prompts-v4-3.md)
 
 ## Checklist QA
 
@@ -40,3 +42,4 @@
 - [ ] Duyệt tattoo/scar, không tự áp họ Trần đồng loạt.
 - [ ] Kiểm thử silhouette, kiểm tra màu 7 hành và khả năng nhận diện ở thumbnail.
 - [ ] Chốt lore riêng cho từng nhân vật thay vì suy từ ngoại hình.
+

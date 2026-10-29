@@ -1,480 +1,493 @@
-# Reed Banner — 14 bộ chiêu Cung thủ & Sát thủ (Design Freeze Candidate)
+# Reed Banner — Thiết kế nhân vật Xạ thủ và Sát thủ
 
-> **Ngày:** 24/10/2026 · **Trạng thái:** đặc tả đề xuất, chưa thêm vào `src/core/battle/skills.ts`, `chase.ts`, `roster.ts` hay giao diện.
-> **Phạm vi:** 7 Cung thủ + 7 Sát thủ × **6 chủ động + 4 bị động** = 140 mục kỹ năng theo phân bổ nhân vật. Nhiều kỹ năng dùng chung nghề/hành được tái sử dụng; không phải 140 mã kỹ năng độc lập.
+> Cập nhật: 30/10/2026
+> Trạng thái: **DRAFT** — hướng vũ khí đã chốt; bảng thông số này là điểm xuất phát hoàn chỉnh để review/mô phỏng, chưa phải cân bằng cuối hoặc chức năng runtime. Chỉ cập nhật docs theo lựa chọn của người dùng, không mở hai nghề trong trận.
 
-## Kiến trúc và ràng buộc tương thích
+## Phạm vi và nguồn chính
 
-- **Chủ động:** ô 1/3/5 là chiêu nghề, ô 2/6 là chiêu hệ đã có (tái dùng `ELEMENT_SKILLS`), ô 4 là tuyệt chiêu cá nhân mới. Mỗi tướng đúng sáu ô.
-- **Bị động:** 1 chase theo nghề + 2 chase theo hệ có sẵn + **1 chase cá nhân mới**. Runtime trả mặc định 3 chase ID; P4 cá nhân là đặc tả chưa triển khai, đồng thời cần phân biệt với mô tả four-passive loadout trong code. Lưu ý kỹ thuật (đối chiếu `src/core/battle/chase.ts` ngày 25/10/2026): `chasePassives()` mặc định trả **3 chase ID** (1 nghề + 2 hệ), nhưng mô tả kiến trúc trong code gọi đây là four-passive loadout do tính riêng một cơ chế cơ hội chuẩn bị. **P4 cá nhân trong tài liệu này chưa có ID/runtime**, không được nhầm với 4 passive đã chạy. Cần duyệt lại cách đếm và mô phỏng stacking trước khi thêm P4.
-- **Combo đồng đội:** lớp `comboPassive` hiện có là hệ thống khác; không cộng nhầm thành bị động thứ năm. Hai nghề mới chưa có mapping combo, tile nghề, base stats, AI và UI.
-- **Giá trị:** hệ số ATK, hồi và năng lượng trong tài liệu là *điểm xuất phát để mô phỏng*, không phải giá trị đã cân bằng hay đã triển khai. Dùng các loại step có trong `SkillStep` như `damage/effect/heal/energy/destroy/transform/whirl`; tránh trạng thái 'độc', 'tàng hình', 'trói' chưa được định nghĩa.
-- **Phản ứng:** chỉ dùng tín hiệu `armorBroken/controlled/dispelled/skillDamage/healed/shieldAbsorbed`; phải áp dụng giới hạn `CHASE_LIMITS.maxReactions=12, maxDepth=4`, có guard chống phản ứng tự lặp.
-- **Art:** hiệu ứng lửa, băng, sét, xoáy và ảo ảnh do engine hiển thị; vũ khí chính là asset bất biến. 6 khung: Master/Idle, đánh thường, ra chiêu, tuyệt chiêu, hạ gục, cá tính.
+Nguồn chính cho chiêu thức, chỉ số và phân bổ sáu chủ động + bốn bị động của RB-062–075. [Bộ prompt](./09-14-heroes-character-and-frame-prompts-v4-3.md) là nguồn hình ảnh; [kỹ năng đang chạy](../../../03-characters/ky-nang/README.md) vẫn quyết định hành vi runtime. Bản này thay các bảng đề xuất sơ bộ cũ ngay tại đây, không tạo bảng “final/v2” song song.
 
-## 3 chiêu nghề dùng chung mỗi nghề (ô 1 / 3 / 5)
+- Giữ tên, ID, vũ khí và toàn bộ prompt hiện có. Kim/Mộc Xạ thủ giữ W01; các nhân vật khác dùng W02. Không yêu cầu tạo lại ảnh, không đổi dáng tung hứng phi hoàng thạch của Trấn Sơn Thạch.
+- Xạ thủ: nỏ nặng, cung tre, phi tiêu, phi luân, phi hoàng thạch, phi châm, lụa chiến. Sát thủ: dao găm, kim châm độc, lưỡi dao ẩn, song đao, móng vuốt, hộp Bạo Vũ Lê Hoa Châm, sáo âm công Phong. Không có nỏ mini hoặc thiết phiến trong bộ chốt.
+- `xaThu` là namespace thiết kế; code danh mục còn `cungThu`. Khi triển khai cần migration/alias có kiểm thử, không tự thêm hai nghề tương đương. `satThu` vẫn là nghề mở rộng, chưa mở gameplay.
+- Không giả định có tầm bắn, hàng sau, teleport, né, tốc độ hoặc crit riêng. Đổi vị trí, nội lực và vũ khí là ngôn ngữ mỹ thuật; damage vẫn chịu luật trận hiện hành. Các nhân vật và công cụ kỳ ảo là hư cấu.
 
-### Cung thủ
+## Quy ước dùng chiêu và tăng cấp
 
-| Ô | ID đề xuất | Chiêu | Năng lượng | Mục tiêu | Steps đề xuất | Hướng động tác |
-|---|---|---|---:|---|---|---|
-| 1 | `role_cungThu_xaDiem` | **Xạ Điểm** | 30 | enemy | damage atk 1.6; mark normal | Giương dây, ngắm điểm yếu, bắn một phát chính xác. |
-| 3 | `role_cungThu_khoanGiap` | **Khoan Giáp Tiễn** | 45 | enemy | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns | Kéo hết tầm rồi xuyên vào vị trí giáp hở, vẫn đúng một mũi tên. |
-| 5 | `role_cungThu_muaTien` | **Mưa Tiễn Kỳ Tập** | 60 | allEnemies | damage atk 0.75 to each enemy; destroy random 3 tiles | Loạt tên được gợi bằng tư thế trước khi bắn; không vẽ nhiều cung mới. |
+| Mục | Đặc tả |
+|---|---|
+| Sáu ô chủ động | 1/3/5 nghề; 2/6 hệ; 4 tuyệt chiêu cá nhân |
+| Mở theo cấp nhân vật | ô 1/2: cấp 1; ô 3: cấp 5; ô 4: cấp 10; ô 5: cấp 15; ô 6: cấp 20 |
+| Chi phí | Tất cả cost dưới đây là **năng lượng** riêng nhân vật (0–100), kể cả tuyệt chiêu ô 4; không dùng Nộ thay thế |
+| Số lần dùng | Người hành động dùng tối đa một chủ động/lượt theo luật hiện hành; không thêm cooldown riêng |
+| Cấp kỹ năng | 1–5, độc lập với cấp nhân vật; không tự nâng mọi chiêu lên 5 khi nhân vật cấp 5 |
+| Hệ số nâng | `m(k)=1+0.10×(k−1)`: 1 / 1.1 / 1.2 / 1.3 / 1.4 |
+| Thuộc tính tăng | hệ số damage, heal, shield, atkUp/Down, defUp/Down, burn; làm tròn hệ số tới 0.001 theo scaleSkill |
+| Không tăng | thời lượng, xác suất, số hit, số ô, số nấc whirl, pierce, ngưỡng/multiplier execute, lượng năng lượng cộng/trừ |
+| Cost cấp 1–4 / 5 | cấp 1–4 giữ nguyên; cấp 5 `floor(cost×0.9/5)×5` |
+| Bị động | P1/P2/P3/P4 không dùng điểm nâng chủ động; giữ nguyên hệ số khi chiêu lên cấp |
+| Hiệu ứng trùng | cùng kind lấy giá trị mạnh hơn và thời hạn dài hơn, không cộng thẳng %; poison có cap riêng bên dưới |
+| Khiên/hồi | theo HP tối đa người nhận và Tinh thần F của người nhận, áp F một lần; Khiên đã tạo không co hồi tố |
 
-**Chase nghề** `archerPrepared` — **Tiếp xạ:** trigger `armorBroken`; effect `damage` 0.40× ATK. Khi đồng đội gây phá giáp thành công, Cung thủ bắn truy kích 40% ATK vào đúng mục tiêu, chỉ một lần cho mỗi action. **Combo đồng đội:** Theo hướng pursuit của combo hiện hành; đề xuất `archerPursuit`, chưa thêm runtime.
+Quy tắc cấp được đối chiếu [scaleSkill](../../../../src/core/battle/skills.ts) tại snapshot `4a23d12cbfb470cf7995b3b80733843ca289071c`. Poison chưa có trong registry: chính sách tăng hệ số poison theo m(k) bên dưới là **đề xuất cần code riêng**, không phải scaleSkill hiện đã hỗ trợ. DEF, Sĩ khí, nguyên tố, Khiên, miễn nhiễm freeze và thứ tự giải quyết theo [luật trận](../../../01-gameplay/tai-nguyen-cong-thuc.md), không viết lại ở đây.
 
-### Sát thủ
+## Chỉ số nền hai nghề
 
-| Ô | ID đề xuất | Chiêu | Năng lượng | Mục tiêu | Steps đề xuất | Hướng động tác |
-|---|---|---|---:|---|---|---|
-| 1 | `role_satThu_luotSat` | **Lướt Sát** | 30 | enemy | damage atk 1.65; energy self +5 | Một bước chéo ngắn đưa lưỡi vào cự ly gần, không teleport. |
-| 3 | `role_satThu_catMach` | **Cắt Mạch** | 45 | enemy | damage atk 2.0 pierce 0.20; energy targets -10 | Đâm hoặc cắt vào kẽ giáp, không tự biến đoản đao thành vũ khí dài. |
-| 5 | `role_satThu_truyMenh` | **Truy Mệnh** | 65 | enemy | damage atk 2.35; execute threshold 0.35 multiplier 1.30 | Chặn đường rút bằng một cú kết thúc, không xuyên người hoặc máu me. |
+Đề xuất cấp nhân vật 1, chưa trang bị, chưa buff, trước hệ số HP solo. Bảy người cùng nghề dùng cùng chỉ số nền; khác biệt nằm ở hệ, bộ chiêu và vũ khí, không có nhân vật hiếm mạnh hơn. Không thêm cấp sao, crit, tốc độ, né hoặc tầm đánh.
 
-**Chase nghề** `assassinPrepared` — **Thừa hư tập kích:** trigger `controlled`; effect `damage` 0.45× ATK. Khi đồng đội gây khống chế thành công, Sát thủ phản ứng đúng một nhát 45% ATK vào mục tiêu bị khống chế. **Combo đồng đội:** Theo hướng resonance/pursuit; đề xuất `assassinExploit`, chưa thêm runtime.
+| Nghề | HP | ATK | DEF | Vai trò chỉ số |
+|---|---:|---:|---:|---|
+| Xạ thủ | 475 | 55 | 9 | Sát thương ổn định, phá giáp và linh hoạt; thấp độ bền hơn Tướng sĩ |
+| Sát thủ | 450 | 58 | 8 | Sát thương đơn cao hơn, đánh đổi độ bền |
+| Tướng sĩ hiện có — đối chiếu | 500 | 55 | 10 | Nguồn BASE_STATS hiện hành, không sửa |
 
-## 2 kỹ năng hành đã có (ô 2 và 6)
+Dùng cùng `STAT_GROWTH=0.03`, cấp tối đa 30 như [progress.ts](../../../../src/core/progress/progress.ts): từng chỉ số = `Math.round(base×(1+0.03×(L−1)))`; áp tăng trưởng **một lần**, sau đó trang bị và luật chế độ theo pipeline hiện hành. Bảng này không tự cập nhật roster.
 
-| Hành | Ô 2 — ID | Ô 6 — ID | Bị động hệ dùng lại |
+| Nghề | Cấp | HP | ATK | DEF |
+|---|---:|---:|---:|---:|
+| Xạ thủ | 1 | 475 | 55 | 9 |
+| Xạ thủ | 10 | 603 | 70 | 11 |
+| Xạ thủ | 20 | 746 | 86 | 14 |
+| Xạ thủ | 30 | 888 | 103 | 17 |
+| Sát thủ | 1 | 450 | 58 | 8 |
+| Sát thủ | 10 | 572 | 74 | 10 |
+| Sát thủ | 20 | 706 | 91 | 13 |
+| Sát thủ | 30 | 842 | 108 | 15 |
+
+## Xạ thủ — bộ kỹ năng nghề
+
+Định Điểm/Phá Giáp là đòn đơn; Tập Kích dùng vũ khí của từng người bằng VFX, không bắt phi luân/lụa/đá biến thành mưa tên. Khung ra chiêu minh họa ô 3, tên/ID giữ nguyên bộ prompt.
+
+| Ô | Chiêu / ID | Target | NL cấp 1 / 5 | Damage cấp 1 / 5 | Hiệu ứng cấp 1 / 5 |
+|---|---|---|---|---|---|
+| 1 | Định Điểm / `role_xaThu_dinhDiem` | enemy | 30 / 25 | 1.6× ATK / 2.24× ATK | xuyên 10% DEF; cấp 5: xuyên 10% DEF |
+| 3 | Phá Giáp / `role_xaThu_phaGiap` | enemy | 45 / 40 | 1.9× ATK / 2.66× ATK | xuyên 25% DEF; sau sát thương DEF -15%, 2 lượt; cấp 5: xuyên 25% DEF; sau sát thương DEF -21%, 2 lượt |
+| 5 | Tập Kích / `role_xaThu_tapKich` | allEnemies | 60 / 50 | 0.75× ATK / 1.05× ATK | phá ngẫu nhiên 3 ô, đúng một lần/action; cấp 5: phá ngẫu nhiên 3 ô, đúng một lần/action |
+
+## Sát thủ — bộ đa vũ khí
+
+Thừa Hư/Đoạt Khí dùng chung cho đao, trảo, kim, hộp phóng và âm công. Truy Mệnh khai thác HP thấp nhưng không tự giết mục tiêu. Không dùng bộ Lướt Sát/Cắt Mạch cũ.
+
+| Ô | Chiêu / ID | Target | NL cấp 1 / 5 | Damage cấp 1 / 5 | Hiệu ứng cấp 1 / 5 |
+|---|---|---|---|---|---|
+| 1 | Thừa Hư / `role_satThu_thuaHu` | enemy | 30 / 25 | 1.65× ATK / 2.31× ATK | bản thân +5 năng lượng nếu gây mất HP thật; một lần/action; cấp 5: bản thân +5 năng lượng nếu gây mất HP thật; một lần/action |
+| 3 | Đoạt Khí / `role_satThu_doatKhi` | enemy | 45 / 40 | 1.9× ATK / 2.66× ATK | xuyên 20% DEF; địch -10 năng lượng sau sát thương; cấp 5: xuyên 20% DEF; địch -10 năng lượng sau sát thương |
+| 5 | Truy Mệnh / `role_satThu_truyMenh` | enemy | 65 / 55 | 2.35× ATK / 3.29× ATK | HP trước đòn ≤35%: ×1.30 hệ số đòn; không tự kết liễu; cấp 5: HP trước đòn ≤35%: ×1.30 hệ số đòn; không tự kết liễu |
+
+**Thứ tự dùng chiêu:** trừ cost → các hit damage → hiệu ứng debuff → năng lượng/hồi/Khiên theo recipient → tác động bàn cờ đúng một lần → giải hàng đợi phản ứng. Nếu bước damage làm mục tiêu chết, bỏ bước enemy trên người đó, không đổi sang địch khác; bước self/team còn hợp lệ chạy theo luật kết thúc action/trận hiện hành. Execute kiểm HP ngay trước hit mang execute, sau hit trước; không kiểm từ lúc bấm nút rồi dùng lại cho mọi hit.
+
+## Hai kỹ năng hệ ở ô 2 và 6
+
+Bảng đối chiếu registry `ELEMENT_SKILLS` tại cùng snapshot để hoàn thiện loadout; **không đổi số liệu hệ cho hai nghề mới**. Nếu code hệ thay đổi về sau, registry thắng và phải cập nhật bảng đối chiếu này. Giá trị HP là trước F; cost cấp 5 theo công thức chung. Các chiêu hệ không có vũ khí vật lý mới.
+
+| Hệ / ô | Kỹ năng / ID | Target | NL cấp 1 / 5 | Hiệu ứng cấp 1 | Cấp 5 |
+|---|---|---|---|---|---|
+| Kim / 2 | Luyện Kim Thành Kiếm / `element_luyenKimThanhKiem` | self | 20 / 15 | biến 4 ô thành Kiếm | không đổi số ô |
+| Kim / 6 | Kim Ý Ngưng Thần / `element_kimYNgungThan` | enemy | 35 / 30 | 1.30× ATK, xuyên 50% DEF | 1.82× ATK, xuyên 50% DEF |
+| Mộc / 2 | Lục Diệp Phong / `element_lucDiepPhong` | self | 35 / 30 | phá random:5 | không đổi số ô |
+| Mộc / 6 | Linh Mộc Hồi Sinh / `element_linhMocHoiSinh` | self | 30 / 25 | hồi 11% HP tối đa self; biến 3 ô Tim | hồi 15.4%; vẫn 3 ô Tim |
+| Thủy / 2 | Thủy Nguyệt Tụ Linh / `element_thuyNguyetTuLinh` | self | 20 / 15 | biến 5 ô Âm dương | không đổi số ô |
+| Thủy / 6 | Thanh Lưu Tẩy Trần / `element_thanhLuuTayTran` | self | 30 / 25 | cleanse self; hồi 10% HP tối đa self | hồi 14%; cleanse giữ nguyên |
+| Hỏa / 2 | Phóng Hỏa Thiêu Doanh / `element_phongHoaThieuDoanh` | self | 35 / 30 | phá square:3 | không đổi vùng |
+| Hỏa / 6 | Nộ Hỏa Thiêu Thân / `element_noHoaThieuThan` | self | 30 / 25 | ATK +35%, DEF -15%, 2 lượt | ATK +49%, DEF -21%, vẫn 2 lượt |
+| Thổ / 2 | Hậu Thổ Tích Lương / `element_hauThoTichLuong` | self | 20 / 15 | biến 5 ô Bánh chưng | không đổi số ô |
+| Thổ / 6 | Thạch Giáp / `element_thachGiap` | self | 30 / 25 | Khiên 20% HP tối đa; turns:null | Khiên 28%; turns:null |
+| Lôi / 2 | Lôi Trụ Giáng Thế / `element_loiTruGiangThe` | self | 40 / 35 | phá columns:1 | không đổi vùng |
+| Lôi / 6 | Tĩnh Điện Hộ Thân / `element_tinhDienHoThan` | enemy | 30 / 25 | địch -20 năng lượng; self +10 | lượng năng lượng không đổi |
+| Phong / 2 | Phong Quyển Tàn Vân / `element_phongQuyenTanVan` | self | 40 / 35 | whirl tối đa 2 nấc, người chơi chọn | không tăng nấc |
+| Phong / 6 | Thanh Phong Tụ Khí / `element_thanhPhongTuKhi` | team | 30 / 25 | team +10 năng lượng; DEF +10%/2 lượt | vẫn +10 năng lượng; DEF +14%/2 lượt |
+
+“Phá square:3” là vùng 3×3 hợp lệ; “line:4” là vùng bốn ô theo contract AreaShape, không mặc định xóa cả hàng bàn cờ. “columns:1” là một cột theo kích thước bàn hiện hành, không hardcode số ô. Cascade/lượt thêm sau phá/biến/xoay theo luật chung; không thưởng thêm lượt chỉ vì tên chiêu.
+
+## Tuyệt chiêu cá nhân ô 4
+
+Tất cả là proposal. Damage dưới đây liệt kê **từng hit**, không phải một hệ số rồi nhân lần nữa với số hit. Với allEnemies, hệ số áp lên từng địch còn sống; phá ô/whirl chỉ một lần cho toàn action. Những dòng hỗ trợ team/self phải dùng recipient tách khỏi target enemy. Hệ số cấp 2–4 lấy m(k), không cần bảng nhân bản.
+
+| Nhân vật | Chiêu / ID | Target | NL cấp 1 / 5 | Damage cấp 1 / 5 | Hiệu ứng cấp 1 | Hiệu ứng cấp 5 |
+|---|---|---|---|---|---|---|
+| RB-062 Bạch Nỏ Lang | Thiết Nỏ Phá Thành / `rb_bnl_thietNoPhaThanh` | enemy | 95 / 85 | 2.7× ATK / 3.78× ATK | xuyên 45% DEF; DEF -20%/2 lượt; phá vùng line:4 một lần | xuyên 45% DEF; DEF -28%/2 lượt; phá line:4 một lần |
+| RB-063 Thanh Lâm Xạ | Lục Tiễn Trói Đường / `rb_tlx_lucTienTroiDuong` | enemy | 90 / 80 | 1.95× ATK / 2.73× ATK | DEF -25%/2 lượt; sau đó team hồi 6% HP tối đa từng người | DEF -35%/2 lượt; team hồi 8.4% HP tối đa từng người |
+| RB-064 Lam Giang Phi Diệp | Liễu Diệp Tỏa Giang / `rb064_lieuDiepToaGiang` | enemy | 95 / 85 | 2.05× ATK / 2.87× ATK | 35% freeze 1 lượt; địch -15 năng lượng một lần | 35% freeze 1 lượt; địch -15 năng lượng một lần |
+| RB-065 Xích Diệm Luân | Xích Luân Liệt Trận / `rb065_xichLuanLietTran` | allEnemies | 100 / 90 | 1.15× ATK / 1.61× ATK | burn 0.12× ATK nguồn/tick ×2; phá square:3 một lần/action | burn 0.168× ATK nguồn/tick ×2; phá square:3 một lần/action |
+| RB-066 Trấn Sơn Thạch | Trấn Sơn Hộ Trận / `rb066_tranSonHoTran` | enemy | 95 / 85 | 1.55× ATK / 2.17× ATK | địch ATK -20%/2 lượt; team Khiên 10% HP tối đa từng người/2 lượt | địch ATK -28%/2 lượt; team Khiên 14% HP tối đa từng người/2 lượt |
+| RB-067 Lôi Minh Xạ | Lôi Châm Tước Khí / `rb067_loiChamTuocKhi` | enemy | 100 / 90 | 2.1× ATK / 2.94× ATK | địch -35 năng lượng; 35% silence 1 lượt | địch -35 năng lượng; 35% silence 1 lượt |
+| RB-068 Tật Phong Lăng | Phong Lăng Nhiễu Trận / `rb068_phongLangNhieuTran` | allEnemies | 95 / 85 | 0.85× ATK / 1.19× ATK | địch ATK -15%/2 lượt; whirl:auto tối đa 2 nấc một lần/action | địch ATK -21%/2 lượt; whirl:auto tối đa 2 nấc một lần/action |
+| RB-069 Bạch Phong Đao | Thiết Ấn Đoạt Mệnh / `rb069_ultimate` | enemy | 95 / 85 | 2.55× ATK / 3.57× ATK | xuyên 35% DEF; DEF -15%/2 lượt | xuyên 35% DEF; DEF -21%/2 lượt |
+| RB-070 Độc Ảnh | Độc Ảnh Tiềm Châm / `rb070_ultimate` | enemy | 90 / 80 | 1.65× ATK / 2.31× ATK | poison 0.12× ATK nguồn/tick ×2; xác suất áp 100% nếu mục tiêu hợp lệ | poison 0.168× ATK nguồn/tick ×2; xác suất áp 100% |
+| RB-071 Hàn Giang Khách | Hàn Giang Tàng Nhận / `rb071_ultimate` | enemy | 95 / 85 | 2.1× ATK / 2.94× ATK | địch -20 năng lượng; ATK -15%/2 lượt | địch -20 năng lượng; ATK -21%/2 lượt |
+| RB-072 Xích Dạ | Xích Dạ Song Sát / `rb072_ultimate` | enemy | 100 / 90 | 1.15 + 1.15× ATK / 1.61 + 1.61× ATK | chỉ hit cuối kiểm HP ngay trước hit đó ≤35% để nhân ×1.30 | chỉ hit cuối kiểm HP ngay trước hit đó ≤35% để nhân ×1.30 |
+| RB-073 Địa Ẩn | Địa Phục Liệt Trảo / `rb073_ultimate` | enemy | 95 / 85 | 2.05× ATK / 2.87× ATK | địch DEF -20%/2 lượt; self DEF +15%/2 lượt | địch DEF -28%/2 lượt; self DEF +21%/2 lượt |
+| RB-074 Lôi Ảnh | Bạo Vũ Lê Hoa / `rb074_ultimate` | enemy | 100 / 90 | 0.75 + 0.75 + 0.75× ATK / 1.05 + 1.05 + 1.05× ATK | địch -20 năng lượng sau chuỗi một lần; không kích bị động ba lần | địch -20 năng lượng sau chuỗi một lần; không kích bị động ba lần |
+| RB-075 Vô Ảnh | Vô Thanh Đoạt Phách / `rb075_ultimate` | enemy | 100 / 90 | 2.1× ATK / 2.94× ATK | địch -25 năng lượng; 35% silence 1 lượt; nội lực là mỹ thuật hư cấu | địch -25 năng lượng; 35% silence 1 lượt; không thêm xuyên Khiên |
+
+- **Lục Tiễn Trói Đường:** “trói” là hình tượng, không áp status trói; thứ tự damage enemy → defDown enemy → heal team. Hồi dựa HP tối đa từng đồng minh, không dựa HP của địch/người dùng.
+- **Trấn Sơn Hộ Trận:** damage/atkDown lên enemy; shield lên team, tính HP và F riêng từng người. Khiên đề xuất có hạn hai lượt của phe nhận; không nhầm với Thạch Giáp turns:null.
+- **Xích Dạ Song Sát:** L1 tổng thường 2.30× ATK; khi chỉ hit cuối đạt execute, tổng hệ số tối đa 2.645× ATK, trước DEF/rounding. L5 tương ứng 3.22 / 3.703× ATK. Không áp execute cho hit đầu.
+- **Bạo Vũ Lê Hoa:** 3 hit cùng mục tiêu, tổng L1 2.25× ATK, L5 3.15× ATK, trừ năng lượng một lần. Mục tiêu chết giữa chuỗi thì dừng hit còn lại, không phân phát hit cho địch khác. Mỗi P2/P4 chỉ một lần/action, không hoàn NL ba lần.
+- **Âm công Phong:** nội lực chỉ đổi cách thể hiện; không tự bỏ qua DEF/Khiên, không là hỗ trợ team, không interrupt action đang giải quyết. Giữ sáo, tên và ID khớp prompt.
+
+## Bốn bị động và hợp đồng phản ứng
+
+P1 là cơ hội chuẩn bị lưu qua `comboPassive/comboReady`; P2/P3/P4 là ba phản ứng tức thời. Đó là tổng bốn ô, không phải bốn chase cộng combo thành năm. Các ID P1 dài bên dưới là alias thiết kế, chưa có trong registry; dự kiến ánh xạ reuse mẫu hiện hành để không viết thêm một hệ cơ hội độc lập.
+
+### P1 và P2 dùng chung theo nghề
+
+| Nghề / ô | Alias/ID thiết kế | Điều kiện | Tác dụng cố định |
 |---|---|---|---|
-| Kim | **Luyện Kim Thành Kiếm** (`element_luyenKimThanhKiem`) | **Kim Ý Ngưng Thần** (`element_kimYNgungThan`) | `kim1`, `kim2` |
-| Mộc | **Lục Diệp Phong** (`element_lucDiepPhong`) | **Linh Mộc Hồi Sinh** (`element_linhMocHoiSinh`) | `moc1`, `moc2` |
-| Thủy | **Thủy Nguyệt Tụ Linh** (`element_thuyNguyetTuLinh`) | **Thanh Lưu Tẩy Trần** (`element_thanhLuuTayTran`) | `thuy1`, `thuy2` |
-| Hỏa | **Phóng Hỏa Thiêu Doanh** (`element_phongHoaThieuDoanh`) | **Nộ Hỏa Thiêu Thân** (`element_noHoaThieuThan`) | `hoa1`, `hoa2` |
-| Thổ | **Hậu Thổ Tích Lương** (`element_hauThoTichLuong`) | **Thạch Giáp** (`element_thachGiap`) | `tho1`, `tho2` |
-| Lôi | **Lôi Trụ Giáng Thế** (`element_loiTruGiangThe`) | **Tĩnh Điện Hộ Thân** (`element_tinhDienHoThan`) | `loi1`, `loi2` |
-| Phong | **Phong Quyển Tàn Vân** (`element_phongQuyenTanVan`) | **Thanh Phong Tụ Khí** (`element_thanhPhongTuKhi`) | `phong1`, `phong2` |
-
-> Những mô tả hiệu ứng hệ đầy đủ phải lấy từ registry khi triển khai; không tự viết lại hành làm thay đổi kỹ năng. Vì mỗi nhân vật đã có 2 chiêu hệ này, chỉ cần thiết kế **tuyệt chiêu riêng** mới tại ô 4.
-
-## 14 bộ kỹ năng theo từng nhân vật
-
-### RB-062 — Bạch Nỏ Lang · Cung thủ / Kim
-
-**Chiến thuật nhận diện:** Đồng đội phá giáp: suy yếu thêm 8% DEF mục tiêu trong 1 lượt.
-
-**Sáu chủ động**
-
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | damage atk 1.6; mark normal |
-| 2 | **Luyện Kim Thành Kiếm** | `element_luyenKimThanhKiem` | Biến 4 ô thành Kiếm (theo registry hiện tại) |
-| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns |
-| 4 | **Thiết Nỏ Phá Thành** | `rb_bnl_thietNoPhaThanh` | damage 2.70× ATK, pierce 0.45; defDown 0.20 for 2 turns; destroy line 4 tiles |
-| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | damage atk 0.75 to each enemy; destroy random 3 tiles |
-| 6 | **Kim Ý Ngưng Thần** | `element_kimYNgungThan` | Gây 1,3× ATK, xuyên 50% DEF (bản layout2 đã thay nội dung cũ) |
-
-**Tuyệt chiêu cá nhân:** `rb_bnl_thietNoPhaThanh`, giá **95** năng lượng, target `enemy`. damage 2.70× ATK, pierce 0.45; defDown 0.20 for 2 turns; destroy line 4 tiles. **Hướng nghệ thuật:** Giữ nỏ lớn hai tay, khóa vai và nhả một tên đồng xuyên giáp.
-
-**Bốn bị động (chase)**
-
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
-| P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
-| P2 | Hành | Kim phá / `kim1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Kim truy / `kim2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Nỏ thành bền bỉ** / `rb_bnl_passive` | `armorBroken` → `armor` 0.08 DEF reduction; Đồng đội phá giáp: suy yếu thêm 8% DEF mục tiêu trong 1 lượt. |
-
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Khoan Giáp Tiễn** (chiêu nghề ô 3). Khung 4 diễn tả **Thiết Nỏ Phá Thành** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
-
----
-
-### RB-063 — Thanh Lâm Xạ · Cung thủ / Mộc
-
-**Chiến thuật nhận diện:** Đồng đội nhận hồi thực: dựng Khiên 4% HP tối đa cho người đó.
-
-**Sáu chủ động**
-
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | damage atk 1.6; mark normal |
-| 2 | **Lục Diệp Phong** | `element_lucDiepPhong` | Phá ngẫu nhiên 5 ô |
-| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns |
-| 4 | **Lục Tiễn Trói Đường** | `rb_tlx_lucTienTroiDuong` | damage 1.95× ATK; effect defDown 0.25 2 turns; heal team ratio 0.06 |
-| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | damage atk 0.75 to each enemy; destroy random 3 tiles |
-| 6 | **Linh Mộc Hồi Sinh** | `element_linhMocHoiSinh` | Hồi bản thân 11% HP và đổi 3 ô thành Tim |
-
-**Tuyệt chiêu cá nhân:** `rb_tlx_lucTienTroiDuong`, giá **90** năng lượng, target `enemy`. damage 1.95× ATK; effect defDown 0.25 2 turns; heal team ratio 0.06. **Hướng nghệ thuật:** Bắn về rìa bước di chuyển của địch, mô tả dây rừng chỉ bằng hướng bắn; không mọc dây từ cung.
-
-**Bốn bị động (chase)**
-
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
-| P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
-| P2 | Hành | Mộc sinh / `moc1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Mộc hộ / `moc2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Rễ hộ người** / `rb_tlx_passive` | `healed` → `shield` 0.04 max HP; Đồng đội nhận hồi thực: dựng Khiên 4% HP tối đa cho người đó. |
-
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Khoan Giáp Tiễn** (chiêu nghề ô 3). Khung 4 diễn tả **Lục Tiễn Trói Đường** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
-
----
-
-### RB-064 — Lam Giang Nỗ · Cung thủ / Thủy
-
-**Chiến thuật nhận diện:** Khi đồng đội khống chế một địch, bản thân nhận 7 năng lượng.
-
-**Sáu chủ động**
-
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | damage atk 1.6; mark normal |
-| 2 | **Thủy Nguyệt Tụ Linh** | `element_thuyNguyetTuLinh` | Chiêu hệ theo registry: xem steps chính thức khi triển khai |
-| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns |
-| 4 | **Thủy Tiễn Khóa Thuyền** | `rb_lgn_thuyTienKhoaThuyen` | damage 2.05× ATK; effect freeze chance 0.35 for 1 turn; energy targets -15 |
-| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | damage atk 0.75 to each enemy; destroy random 3 tiles |
-| 6 | **Thanh Lưu Tẩy Trần** | `element_thanhLuuTayTran` | Chiêu hệ theo registry: xem steps chính thức khi triển khai |
-
-**Tuyệt chiêu cá nhân:** `rb_lgn_thuyTienKhoaThuyen`, giá **95** năng lượng, target `enemy`. damage 2.05× ATK; effect freeze chance 0.35 for 1 turn; energy targets -15. **Hướng nghệ thuật:** Dùng nỏ nhỏ của thuyền tuần tra, nhắm thẳng dây neo tưởng tượng ngoài khung.
-
-**Bốn bị động (chase)**
-
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
-| P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
-| P2 | Hành | Thủy tiếp / `thuy1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Thủy dẫn / `thuy2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Thủy hiệu ứng cảnh giới** / `rb_lgn_passive` | `controlled` → `energy` +7 self energy; Khi đồng đội khống chế một địch, bản thân nhận 7 năng lượng. |
-
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Khoan Giáp Tiễn** (chiêu nghề ô 3). Khung 4 diễn tả **Thủy Tiễn Khóa Thuyền** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
-
----
-
-### RB-065 — Xích Diệm Tiễn · Cung thủ / Hỏa
-
-**Chiến thuật nhận diện:** Đồng đội phá giáp: bắn truy kích 35% ATK vào mục tiêu.
-
-**Sáu chủ động**
-
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | damage atk 1.6; mark normal |
-| 2 | **Phóng Hỏa Thiêu Doanh** | `element_phongHoaThieuDoanh` | Chiêu Hỏa theo registry hiện tại |
-| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns |
-| 4 | **Hỏa Vũ Tiễn Trận** | `rb_xdt_hoaVuTienTran` | damage 1.15× ATK to enemies; burn value 0.12 ofAtk 2 turns; destroy square 3 |
-| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | damage atk 0.75 to each enemy; destroy random 3 tiles |
-| 6 | **Nộ Hỏa Thiêu Thân** | `element_noHoaThieuThan` | Chiêu Hỏa theo registry hiện tại |
-
-**Tuyệt chiêu cá nhân:** `rb_xdt_hoaVuTienTran`, giá **100** năng lượng, target `allEnemies`. damage 1.15× ATK to enemies; burn value 0.12 ofAtk 2 turns; destroy square 3. **Hướng nghệ thuật:** Giương cung lên đường chéo, sắp nhả một mũi tên chỉ huy loạt bắn; lửa tách VFX.
-
-**Bốn bị động (chase)**
-
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
-| P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
-| P2 | Hành | Hỏa truy / `hoa1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Hỏa phá / `hoa2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Hỏa cốt truy kích** / `rb_xdt_passive` | `armorBroken` → `damage` 0.35× ATK; Đồng đội phá giáp: bắn truy kích 35% ATK vào mục tiêu. |
-
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Khoan Giáp Tiễn** (chiêu nghề ô 3). Khung 4 diễn tả **Hỏa Vũ Tiễn Trận** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
-
----
-
-### RB-066 — Trấn Sơn Cung · Cung thủ / Thổ
-
-**Chiến thuật nhận diện:** Khi Khiên đồng minh hấp thụ đòn, phản kích bắn 30% ATK.
-
-**Sáu chủ động**
-
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | damage atk 1.6; mark normal |
-| 2 | **Hậu Thổ Tích Lương** | `element_hauThoTichLuong` | Chiêu Thổ theo registry hiện tại |
-| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns |
-| 4 | **Sơn Cung Hộ Trận** | `rb_tsc_sonCungHoTran` | damage 1.55× ATK; shield to team 0.10 max HP lasting 2 turns; atkDown targets 0.20 for 2 turns |
-| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | damage atk 0.75 to each enemy; destroy random 3 tiles |
-| 6 | **Thạch Giáp** | `element_thachGiap` | Chiêu Thổ theo registry hiện tại |
-
-**Tuyệt chiêu cá nhân:** `rb_tsc_sonCungHoTran`, giá **95** năng lượng, target `enemy`. damage 1.55× ATK; shield to team 0.10 max HP lasting 2 turns; atkDown targets 0.20 for 2 turns. **Hướng nghệ thuật:** Hạ cung nặng, bắn một tên cản nhịp địch trong thế chân rộng.
-
-**Bốn bị động (chase)**
-
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
-| P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
-| P2 | Hành | Thổ hộ / `tho1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Thổ chấn / `tho2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Sơn trấn kiên thủ** / `rb_tsc_passive` | `shieldAbsorbed` → `damage` 0.30× ATK; Khi Khiên đồng minh hấp thụ đòn, phản kích bắn 30% ATK. |
-
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Khoan Giáp Tiễn** (chiêu nghề ô 3). Khung 4 diễn tả **Sơn Cung Hộ Trận** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
-
----
-
-### RB-067 — Lôi Minh Xạ · Cung thủ / Lôi
-
-**Chiến thuật nhận diện:** Gây mất HP bằng kỹ năng: trừ 5 năng lượng mục tiêu.
-
-**Sáu chủ động**
-
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | damage atk 1.6; mark normal |
-| 2 | **Lôi Trụ Giáng Thế** | `element_loiTruGiangThe` | Chiêu Lôi theo registry hiện tại |
-| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns |
-| 4 | **Lôi Minh Tước Khí** | `rb_lmx_loiMinhTuocKhi` | damage 2.10× ATK; energy targets -35; silence chance 0.35 for 1 turn |
-| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | damage atk 0.75 to each enemy; destroy random 3 tiles |
-| 6 | **Tĩnh Điện Hộ Thân** | `element_tinhDienHoThan` | Trừ địch 20 năng lượng, hoàn bản thân 10 năng lượng (layout2) |
-
-**Tuyệt chiêu cá nhân:** `rb_lmx_loiMinhTuocKhi`, giá **100** năng lượng, target `enemy`. damage 2.10× ATK; energy targets -35; silence chance 0.35 for 1 turn. **Hướng nghệ thuật:** Bắn ngay sau nhịp rung chuông tín hiệu ở tay, giữ một cung và một tên.
-
-**Bốn bị động (chase)**
-
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
-| P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
-| P2 | Hành | Lôi truy / `loi1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Lôi đoạt / `loi2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Lôi khẩu chớp thời cơ** / `rb_lmx_passive` | `skillDamage` → `drain` -5 enemy energy; Gây mất HP bằng kỹ năng: trừ 5 năng lượng mục tiêu. |
-
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Khoan Giáp Tiễn** (chiêu nghề ô 3). Khung 4 diễn tả **Lôi Minh Tước Khí** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
-
----
-
-### RB-068 — Tật Phong Tiễn · Cung thủ / Phong
-
-**Chiến thuật nhận diện:** Khi đồng đội xua tan hiệu ứng địch thành công, bản thân nhận 6 năng lượng.
-
-**Sáu chủ động**
-
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Xạ Điểm** | `role_cungThu_xaDiem` | damage atk 1.6; mark normal |
-| 2 | **Phong Quyển Tàn Vân** | `element_phongQuyenTanVan` | Chiêu Phong theo registry hiện tại |
-| 3 | **Khoan Giáp Tiễn** | `role_cungThu_khoanGiap` | damage atk 1.9 pierce 0.25; defDown 0.15 for 2 turns |
-| 4 | **Tật Phong Phân Ảnh** | `rb_tpt_tatPhongPhanAnh` | damage 0.85× ATK to all enemies; whirl 2 auto; atkDown enemies 0.15 for 2 turns |
-| 5 | **Mưa Tiễn Kỳ Tập** | `role_cungThu_muaTien` | damage atk 0.75 to each enemy; destroy random 3 tiles |
-| 6 | **Thanh Phong Tụ Khí** | `element_thanhPhongTuKhi` | Cả đội +10 năng lượng và +10% DEF trong 2 lượt (layout2) |
-
-**Tuyệt chiêu cá nhân:** `rb_tpt_tatPhongPhanAnh`, giá **95** năng lượng, target `allEnemies`. damage 0.85× ATK to all enemies; whirl 2 auto; atkDown enemies 0.15 for 2 turns. **Hướng nghệ thuật:** Tay rời dây ở cuối nhịp bắn, thân mở đường chạy; không nhân bản người hoặc cung.
-
-**Bốn bị động (chase)**
-
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
-| P1 | Nghề | Tiếp xạ / `archerPrepared` | `armorBroken` → 0.40× ATK |
-| P2 | Hành | Phong tiếp / `phong1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Phong dẫn / `phong2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Thuận gió hồi nhịp** / `rb_tpt_passive` | `dispelled` → `energy` +6 self energy; Khi đồng đội xua tan hiệu ứng địch thành công, bản thân nhận 6 năng lượng. |
-
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Khoan Giáp Tiễn** (chiêu nghề ô 3). Khung 4 diễn tả **Tật Phong Phân Ảnh** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
-
----
+| Xạ thủ P1 | `marksmanPreparedOpportunity` → mẫu `pursuit` | đồng đội phá giáp hoặc xua tan buff địch thật | chuẩn bị +20% sát thương trực tiếp cho action hợp lệ tiếp theo vào đúng địch đó |
+| Xạ thủ P2 | `marksmanPrepared` | armorBroken hữu hiệu do đồng đội | truy kích 0.40× ATK vào đúng địch đó |
+| Sát thủ P1 | `assassinPreparedOpportunity` → mẫu `resonance` | đồng đội gây freeze/silence thành công | chuẩn bị +20% sát thương trực tiếp cho action hợp lệ tiếp theo vào đúng địch đó |
+| Sát thủ P2 | `assassinPrepared` | controlled hữu hiệu do đồng đội | truy kích 0.45× ATK vào đúng địch đó |
+
+P1 chỉ một cơ hội đang giữ/người, không cộng dồn phần trăm; cơ hội mới hợp lệ thay mục tiêu và làm mới hạn. Mở ở bộ đếm lượt thường t thì hết trước đầu lượt thường t+3 theo contract hiện hành; lượt thêm không tăng bộ đếm. Chỉ action chủ động/bàn cờ hợp lệ tiêu cơ hội, không nhân lên chase/DoT, không nhân thêm cost/energy hoặc buff/debuff. Với nhiều hit, +20% áp trên các hit trực tiếp của cùng action vào đúng mục tiêu, không cộng 20% vào hệ số mỗi hit rồi nhân lần nữa. Cơ hội đồng đội không tự mở cho chính mình trong solo. Mục tiêu chết thì cơ hội không tự đổi địch. Cơ chế Nộ/thủ lĩnh có sẵn không tính thành ô thứ năm.
+
+### P3 dùng lại hệ
+
+| Hệ / ID | Trigger | Recipient / hệ số cố định |
+|---|---|---|
+| Kim / `kim1` | skillDamage mất HP thật | địch DEF -10%, 1 lượt |
+| Mộc / `moc1` | skillDamage mất HP thật | hồi đồng minh có tỷ lệ HP thấp nhất 4% HP tối đa; theo F |
+| Thủy / `thuy1` | controlled thật | hồi đồng minh thấp HP nhất 5% HP tối đa; theo F |
+| Hỏa / `hoa1` | armorBroken thật | truy kích 0.40× ATK |
+| Thổ / `tho1` | healed có HP thực | Khiên 5% HP tối đa người vừa được hồi; theo F |
+| Lôi / `loi1` | controlled thật | truy kích 0.45× ATK |
+| Phong / `phong1` | dispelled xóa buff địch thật | truy kích 0.40× ATK |
+
+P3 là bảng đối chiếu [chase.ts](../../../../src/core/battle/chase.ts), theo eligibility/recipient của engine; có thể nhận tín hiệu hợp lệ của bản thân nếu registry cho phép. Không trang bị thêm `kim2/moc2/thuy2/hoa2/tho2/loi2/phong2` cùng P4 cá nhân.
+
+### P4 riêng từng nhân vật
+
+| Nhân vật | P4 / ID | Trigger | Recipient | Tác dụng không tăng theo cấp chủ động |
+|---|---|---|---|---|
+| RB-062 Bạch Nỏ Lang | Nỏ thành bền bỉ / `rb_bnl_passive` | armorBroken do đồng đội | địch bị phá giáp | DEF -8%, 1 lượt; không cộng thêm khi defDown mạnh hơn đang tồn tại |
+| RB-063 Thanh Lâm Xạ | Rễ hộ người / `rb_tlx_passive` | healed do đồng đội, hồi HP thật | đúng đồng minh vừa được hồi | Khiên 4% HP tối đa người nhận, turns:null; theo F |
+| RB-064 Lam Giang Phi Diệp | Cảnh giới bến sông / `rb064_canhGioi` | controlled do đồng đội | self | năng lượng +7 |
+| RB-065 Xích Diệm Luân | Hỏa cốt truy kích / `rb065_hoaCot` | armorBroken do đồng đội | địch bị phá giáp | 0.35× ATK |
+| RB-066 Trấn Sơn Thạch | Sơn trấn kiên thủ / `rb066_kienThu` | shieldAbsorbed hữu hiệu trên đồng minh từ đòn chủ động | địch gây sát thương nếu có provenance | 0.30× ATK; không xác định được nguồn thì bỏ qua, không đoán mục tiêu |
+| RB-067 Lôi Minh Xạ | Chớp thời cơ / `rb067_chopThoiCo` | skillDamage do kỹ năng chủ động bản thân gây mất HP thật | địch nhận sát thương | năng lượng -5; mỗi action một lần |
+| RB-068 Tật Phong Lăng | Thuận gió hồi nhịp / `rb068_hoiNhip` | dispelled do đồng đội xóa buff địch hữu hiệu | self | năng lượng +6 |
+| RB-069 Bạch Phong Đao | Ấn khuyết quyết tâm / `rb069_passive` | armorBroken do đồng đội | địch bị phá giáp | 0.25× ATK |
+| RB-070 Độc Ảnh | Lâm ảnh tiếp nhịp / `rb070_passive` | controlled do đồng đội | self | năng lượng +6 |
+| RB-071 Hàn Giang Khách | Tĩnh thủy hồi tức / `rb071_passive` | controlled do đồng đội | self | năng lượng +5 |
+| RB-072 Xích Dạ | Dạ tập thừa hư / `rb072_passive` | controlled do đồng đội | địch bị khống chế | 0.30× ATK |
+| RB-073 Địa Ẩn | Phục địa phản kích / `rb073_passive` | shieldAbsorbed hữu hiệu trên self từ đòn chủ động | địch gây sát thương nếu có provenance | 0.30× ATK; không có provenance thì bỏ qua |
+| RB-074 Lôi Ảnh | Tàn vũ hồi nhịp / `rb074_passive` | skillDamage do kỹ năng chủ động bản thân gây mất HP thật | self | năng lượng +4; toàn chuỗi ba hit chỉ một lần |
+| RB-075 Vô Ảnh | Dư âm tiếp vận / `rb075_passive` | dispelled do đồng đội xóa buff địch hữu hiệu | self | năng lượng +6 |
+
+### Guard bắt buộc
+
+- Mỗi P2/P3/P4 của mỗi fighter tối đa một lần/action gốc; toàn chuỗi tối đa 12 phản ứng, sâu tối đa 4. Cast và act bàn cờ là hai action gốc riêng. Một action ba hit hoặc AoE ba người không reset guard theo hit/target.
+- Theo thứ tự P2 → P3 → P4 khi cùng fighter đủ điều kiện, giữ thứ tự fighter/signal của engine. Không tự mở lại P1 từ chase; P2/P4 không tự kích từ hiệu ứng của chính phản ứng đó. P3 nối tiếp theo provenance và guard hiện hành.
+- Loại DoT, regen, phản đòn, hút máu, hết lương và nguồn không phải action chủ động/bàn cờ khỏi các trigger yêu cầu chủ động. Người gục/freeze/silence không phản ứng theo luật hiện hành.
+- Không hồi năng lượng khi đã đầy, không trừ dưới 0, không tính hồi HP dư là hồi hữu hiệu; năng lượng clamp 0–100. Hồi/Khiên theo F một lần; không cộng thêm hệ số nâng chủ động vào passive.
+- Phản kích cần attacker provenance mới đã ghi rõ trong P4 RB-066/073; nếu dữ liệu không xác định được địch nguồn thì bỏ qua. Đây là yêu cầu mở rộng dữ liệu cần kiểm tra khi implement, không khẳng định engine đã trả attacker.
+
+## Poison của kim châm độc — proposal hoàn chỉnh cho mô phỏng
+
+Không tráo tên burn thành độc. `poison` chưa có trong EffectKind/scaleSkill/cleanse registry; mọi quy tắc sau là **đề xuất mới**, không sửa runtime ở PR này.
+
+| Thuộc tính | Quy tắc |
+|---|---|
+| Nguồn | một fighter instance (side,index), không chỉ character ID; lưu nguồn khi áp |
+| Áp lần đầu | sau hit trực tiếp của rb070_ultimate nếu địch còn sống; 100% nếu đích hợp lệ |
+| Lượng mỗi tick | snapshot ATK gốc trong trận của nguồn sau cấp/gear, trước buff/debuff, lúc áp ×0.12×m(cấp kỹ năng); không cộng lại hệ số m ở tick; tối đa cấp 5 là 0.168× ATK snapshot |
+| Thời hạn | đúng 2 tick ở cuối **lượt thường của phe mục tiêu**; lượt thêm không tick và không trừ thời hạn; không tick cho mỗi cast/hit |
+| Stack | tối đa một stack/nguồn/mục tiêu, tối đa hai nguồn khác nhau/mục tiêu |
+| Cùng nguồn áp lại | giữ tick damage mạnh hơn, làm mới còn 2 tick; không tick ngay, không cộng damage |
+| Nguồn mới khi đủ cap | từ chối stack mới; không đẩy stack cũ ngầm; damage trực tiếp vẫn có tác dụng |
+| DEF và Khiên | tick bỏ DEF nhưng **Khiên hấp thụ trước HP**; không xuyên Khiên mặc định; không tạo shieldAbsorbed/chase từ tick |
+| Các hệ số khác | tick không crit, không nguyên tố/Sĩ khí/P1 hay hút máu thêm lần nữa; F không giảm damage độc; giống quy ước nguồn gián tiếp |
+| Giải độc | cleanse loại debuff xóa tất cả stack độc trước tick; dispel buff địch không phải cleanse |
+| Làm tròn tick | Math.round lượng tick trước khi Khiên hấp thụ; không round lại phần sát thương sau Khiên |
+| Thứ tự | hoàn tất action/cascade/chase → ở mốc cuối lượt thường, tick theo thứ tự fighter/nguồn ổn định → giảm số tick → xóa stack hết hạn; dừng khi chết/trận kết thúc |
+| Nguồn chết | độc đã áp vẫn tồn tại, dùng snapshot ATK; không hồi sinh nguồn; mục tiêu chết thì xóa stack của người đó |
+| Phản ứng | không tạo skillDamage/controlled/armorBroken/chase/P1 hoặc hồi/trừ năng lượng; không lan độc/giảm hồi máu |
+
+Quy tắc không tick ở lượt thêm thay câu proposal sơ bộ “bao gồm lượt thêm” để nhất quán bộ đếm thời hạn chung. Nếu engine chưa biểu diễn được stack/provenance thì trì hoãn riêng poison; không âm thầm đổi sang burn hoặc công bố nghề đã hoàn chỉnh runtime.
+
+## Loadout và chỉ số 14 nhân vật
+
+Mỗi dòng bên dưới có đúng sáu chủ động và P1–P4; chỉ tham chiếu ID vào bảng nguồn chính ở trên, không chép lại số liệu. Tất cả số liệu nền chưa gear. Giá mua, độ hiếm, trang bị, tile nghề và Đinh Bộ Lĩnh biến thể mới không nằm trong lần cập nhật docs này.
+
+### RB-062 — Bạch Nỏ Lang · Xạ thủ / Kim
+
+**Vũ khí:** Nỏ nặng W01. **Chỉ số cấp 1:** HP 475, ATK 55, DEF 9. Giữ nguyên nhân dạng và sáu khung tại nguồn prompt.
+
+| Ô | Kỹ năng / ID | Nguồn thông số |
+|---|---|---|
+| 1 | Định Điểm / `role_xaThu_dinhDiem` | Bảng nghề |
+| 2 | Luyện Kim Thành Kiếm / `element_luyenKimThanhKiem` | Bảng hệ |
+| 3 | Phá Giáp / `role_xaThu_phaGiap` | Bảng nghề |
+| 4 | Thiết Nỏ Phá Thành / `rb_bnl_thietNoPhaThanh` | Bảng tuyệt chiêu |
+| 5 | Tập Kích / `role_xaThu_tapKich` | Bảng nghề |
+| 6 | Kim Ý Ngưng Thần / `element_kimYNgungThan` | Bảng hệ |
+| P1 | `marksmanPreparedOpportunity` | Cơ hội chuẩn bị nghề |
+| P2 | `marksmanPrepared` | Chase nghề |
+| P3 | `kim1` | Chase hệ thứ nhất |
+| P4 | Nỏ thành bền bỉ / `rb_bnl_passive` | Bảng bị động cá nhân |
+
+Không trang bị chase hệ thứ hai `kim2`. Khung 3 minh họa ô 3, khung 4 minh họa ô 4; các giá trị chỉ áp khi triển khai và kiểm chứng sau.
+
+### RB-063 — Thanh Lâm Xạ · Xạ thủ / Mộc
+
+**Vũ khí:** Cung tre W01. **Chỉ số cấp 1:** HP 475, ATK 55, DEF 9. Giữ nguyên nhân dạng và sáu khung tại nguồn prompt.
+
+| Ô | Kỹ năng / ID | Nguồn thông số |
+|---|---|---|
+| 1 | Định Điểm / `role_xaThu_dinhDiem` | Bảng nghề |
+| 2 | Lục Diệp Phong / `element_lucDiepPhong` | Bảng hệ |
+| 3 | Phá Giáp / `role_xaThu_phaGiap` | Bảng nghề |
+| 4 | Lục Tiễn Trói Đường / `rb_tlx_lucTienTroiDuong` | Bảng tuyệt chiêu |
+| 5 | Tập Kích / `role_xaThu_tapKich` | Bảng nghề |
+| 6 | Linh Mộc Hồi Sinh / `element_linhMocHoiSinh` | Bảng hệ |
+| P1 | `marksmanPreparedOpportunity` | Cơ hội chuẩn bị nghề |
+| P2 | `marksmanPrepared` | Chase nghề |
+| P3 | `moc1` | Chase hệ thứ nhất |
+| P4 | Rễ hộ người / `rb_tlx_passive` | Bảng bị động cá nhân |
+
+Không trang bị chase hệ thứ hai `moc2`. Khung 3 minh họa ô 3, khung 4 minh họa ô 4; các giá trị chỉ áp khi triển khai và kiểm chứng sau.
+
+### RB-064 — Lam Giang Phi Diệp · Xạ thủ / Thủy
+
+**Vũ khí:** Phi tiêu lá liễu W02. **Chỉ số cấp 1:** HP 475, ATK 55, DEF 9. Giữ nguyên nhân dạng và sáu khung tại nguồn prompt.
+
+| Ô | Kỹ năng / ID | Nguồn thông số |
+|---|---|---|
+| 1 | Định Điểm / `role_xaThu_dinhDiem` | Bảng nghề |
+| 2 | Thủy Nguyệt Tụ Linh / `element_thuyNguyetTuLinh` | Bảng hệ |
+| 3 | Phá Giáp / `role_xaThu_phaGiap` | Bảng nghề |
+| 4 | Liễu Diệp Tỏa Giang / `rb064_lieuDiepToaGiang` | Bảng tuyệt chiêu |
+| 5 | Tập Kích / `role_xaThu_tapKich` | Bảng nghề |
+| 6 | Thanh Lưu Tẩy Trần / `element_thanhLuuTayTran` | Bảng hệ |
+| P1 | `marksmanPreparedOpportunity` | Cơ hội chuẩn bị nghề |
+| P2 | `marksmanPrepared` | Chase nghề |
+| P3 | `thuy1` | Chase hệ thứ nhất |
+| P4 | Cảnh giới bến sông / `rb064_canhGioi` | Bảng bị động cá nhân |
+
+Không trang bị chase hệ thứ hai `thuy2`. Khung 3 minh họa ô 3, khung 4 minh họa ô 4; các giá trị chỉ áp khi triển khai và kiểm chứng sau.
+
+### RB-065 — Xích Diệm Luân · Xạ thủ / Hỏa
+
+**Vũ khí:** Phi luân W02. **Chỉ số cấp 1:** HP 475, ATK 55, DEF 9. Giữ nguyên nhân dạng và sáu khung tại nguồn prompt.
+
+| Ô | Kỹ năng / ID | Nguồn thông số |
+|---|---|---|
+| 1 | Định Điểm / `role_xaThu_dinhDiem` | Bảng nghề |
+| 2 | Phóng Hỏa Thiêu Doanh / `element_phongHoaThieuDoanh` | Bảng hệ |
+| 3 | Phá Giáp / `role_xaThu_phaGiap` | Bảng nghề |
+| 4 | Xích Luân Liệt Trận / `rb065_xichLuanLietTran` | Bảng tuyệt chiêu |
+| 5 | Tập Kích / `role_xaThu_tapKich` | Bảng nghề |
+| 6 | Nộ Hỏa Thiêu Thân / `element_noHoaThieuThan` | Bảng hệ |
+| P1 | `marksmanPreparedOpportunity` | Cơ hội chuẩn bị nghề |
+| P2 | `marksmanPrepared` | Chase nghề |
+| P3 | `hoa1` | Chase hệ thứ nhất |
+| P4 | Hỏa cốt truy kích / `rb065_hoaCot` | Bảng bị động cá nhân |
+
+Không trang bị chase hệ thứ hai `hoa2`. Khung 3 minh họa ô 3, khung 4 minh họa ô 4; các giá trị chỉ áp khi triển khai và kiểm chứng sau.
+
+### RB-066 — Trấn Sơn Thạch · Xạ thủ / Thổ
+
+**Vũ khí:** Phi hoàng thạch W02. **Chỉ số cấp 1:** HP 475, ATK 55, DEF 9. Giữ nguyên nhân dạng và sáu khung tại nguồn prompt.
+
+| Ô | Kỹ năng / ID | Nguồn thông số |
+|---|---|---|
+| 1 | Định Điểm / `role_xaThu_dinhDiem` | Bảng nghề |
+| 2 | Hậu Thổ Tích Lương / `element_hauThoTichLuong` | Bảng hệ |
+| 3 | Phá Giáp / `role_xaThu_phaGiap` | Bảng nghề |
+| 4 | Trấn Sơn Hộ Trận / `rb066_tranSonHoTran` | Bảng tuyệt chiêu |
+| 5 | Tập Kích / `role_xaThu_tapKich` | Bảng nghề |
+| 6 | Thạch Giáp / `element_thachGiap` | Bảng hệ |
+| P1 | `marksmanPreparedOpportunity` | Cơ hội chuẩn bị nghề |
+| P2 | `marksmanPrepared` | Chase nghề |
+| P3 | `tho1` | Chase hệ thứ nhất |
+| P4 | Sơn trấn kiên thủ / `rb066_kienThu` | Bảng bị động cá nhân |
+
+Không trang bị chase hệ thứ hai `tho2`. Khung 3 minh họa ô 3, khung 4 minh họa ô 4; các giá trị chỉ áp khi triển khai và kiểm chứng sau.
+
+### RB-067 — Lôi Minh Xạ · Xạ thủ / Lôi
+
+**Vũ khí:** Phi châm bản lớn W02. **Chỉ số cấp 1:** HP 475, ATK 55, DEF 9. Giữ nguyên nhân dạng và sáu khung tại nguồn prompt.
+
+| Ô | Kỹ năng / ID | Nguồn thông số |
+|---|---|---|
+| 1 | Định Điểm / `role_xaThu_dinhDiem` | Bảng nghề |
+| 2 | Lôi Trụ Giáng Thế / `element_loiTruGiangThe` | Bảng hệ |
+| 3 | Phá Giáp / `role_xaThu_phaGiap` | Bảng nghề |
+| 4 | Lôi Châm Tước Khí / `rb067_loiChamTuocKhi` | Bảng tuyệt chiêu |
+| 5 | Tập Kích / `role_xaThu_tapKich` | Bảng nghề |
+| 6 | Tĩnh Điện Hộ Thân / `element_tinhDienHoThan` | Bảng hệ |
+| P1 | `marksmanPreparedOpportunity` | Cơ hội chuẩn bị nghề |
+| P2 | `marksmanPrepared` | Chase nghề |
+| P3 | `loi1` | Chase hệ thứ nhất |
+| P4 | Chớp thời cơ / `rb067_chopThoiCo` | Bảng bị động cá nhân |
+
+Không trang bị chase hệ thứ hai `loi2`. Khung 3 minh họa ô 3, khung 4 minh họa ô 4; các giá trị chỉ áp khi triển khai và kiểm chứng sau.
+
+### RB-068 — Tật Phong Lăng · Xạ thủ / Phong
+
+**Vũ khí:** Lụa chiến W02. **Chỉ số cấp 1:** HP 475, ATK 55, DEF 9. Giữ nguyên nhân dạng và sáu khung tại nguồn prompt.
+
+| Ô | Kỹ năng / ID | Nguồn thông số |
+|---|---|---|
+| 1 | Định Điểm / `role_xaThu_dinhDiem` | Bảng nghề |
+| 2 | Phong Quyển Tàn Vân / `element_phongQuyenTanVan` | Bảng hệ |
+| 3 | Phá Giáp / `role_xaThu_phaGiap` | Bảng nghề |
+| 4 | Phong Lăng Nhiễu Trận / `rb068_phongLangNhieuTran` | Bảng tuyệt chiêu |
+| 5 | Tập Kích / `role_xaThu_tapKich` | Bảng nghề |
+| 6 | Thanh Phong Tụ Khí / `element_thanhPhongTuKhi` | Bảng hệ |
+| P1 | `marksmanPreparedOpportunity` | Cơ hội chuẩn bị nghề |
+| P2 | `marksmanPrepared` | Chase nghề |
+| P3 | `phong1` | Chase hệ thứ nhất |
+| P4 | Thuận gió hồi nhịp / `rb068_hoiNhip` | Bảng bị động cá nhân |
+
+Không trang bị chase hệ thứ hai `phong2`. Khung 3 minh họa ô 3, khung 4 minh họa ô 4; các giá trị chỉ áp khi triển khai và kiểm chứng sau.
 
 ### RB-069 — Bạch Phong Đao · Sát thủ / Kim
 
-**Chiến thuật nhận diện:** Đồng đội phá giáp: sát thủ đánh nối 30% ATK vào mục tiêu.
+**Vũ khí:** Dao găm W02. **Chỉ số cấp 1:** HP 450, ATK 58, DEF 8. Giữ nguyên nhân dạng và sáu khung tại nguồn prompt.
 
-**Sáu chủ động**
+| Ô | Kỹ năng / ID | Nguồn thông số |
+|---|---|---|
+| 1 | Thừa Hư / `role_satThu_thuaHu` | Bảng nghề |
+| 2 | Luyện Kim Thành Kiếm / `element_luyenKimThanhKiem` | Bảng hệ |
+| 3 | Đoạt Khí / `role_satThu_doatKhi` | Bảng nghề |
+| 4 | Thiết Ấn Đoạt Mệnh / `rb069_ultimate` | Bảng tuyệt chiêu |
+| 5 | Truy Mệnh / `role_satThu_truyMenh` | Bảng nghề |
+| 6 | Kim Ý Ngưng Thần / `element_kimYNgungThan` | Bảng hệ |
+| P1 | `assassinPreparedOpportunity` | Cơ hội chuẩn bị nghề |
+| P2 | `assassinPrepared` | Chase nghề |
+| P3 | `kim1` | Chase hệ thứ nhất |
+| P4 | Ấn khuyết quyết tâm / `rb069_passive` | Bảng bị động cá nhân |
 
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Lướt Sát** | `role_satThu_luotSat` | damage atk 1.65; energy self +5 |
-| 2 | **Luyện Kim Thành Kiếm** | `element_luyenKimThanhKiem` | Biến 4 ô thành Kiếm (theo registry hiện tại) |
-| 3 | **Cắt Mạch** | `role_satThu_catMach` | damage atk 2.0 pierce 0.20; energy targets -10 |
-| 4 | **Bạch Nhận Xuyên Giáp** | `rb_bpd_bachNhanXuyenGiap` | damage 2.65× ATK; pierce 0.60; pierceShield true; defDown targets 0.15 for 2 turns |
-| 5 | **Truy Mệnh** | `role_satThu_truyMenh` | damage atk 2.35; execute threshold 0.35 multiplier 1.30 |
-| 6 | **Kim Ý Ngưng Thần** | `element_kimYNgungThan` | Gây 1,3× ATK, xuyên 50% DEF (bản layout2 đã thay nội dung cũ) |
-
-**Tuyệt chiêu cá nhân:** `rb_bpd_bachNhanXuyenGiap`, giá **95** năng lượng, target `enemy`. damage 2.65× ATK; pierce 0.60; pierceShield true; defDown targets 0.15 for 2 turns. **Hướng nghệ thuật:** Đao găm thẳng đâm dưới kẽ giáp, lưỡi không dài thêm.
-
-**Bốn bị động (chase)**
-
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
-| P1 | Nghề | Thừa hư tập kích / `assassinPrepared` | `controlled` → 0.45× ATK |
-| P2 | Hành | Kim phá / `kim1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Kim truy / `kim2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Một nhát chính xác** / `rb_bpd_passive` | `armorBroken` → `damage` 0.30× ATK; Đồng đội phá giáp: sát thủ đánh nối 30% ATK vào mục tiêu. |
-
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Cắt Mạch** (chiêu nghề ô 3). Khung 4 diễn tả **Bạch Nhận Xuyên Giáp** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
-
----
+Không trang bị chase hệ thứ hai `kim2`. Khung 3 minh họa ô 3, khung 4 minh họa ô 4; các giá trị chỉ áp khi triển khai và kiểm chứng sau.
 
 ### RB-070 — Độc Ảnh · Sát thủ / Mộc
 
-**Chiến thuật nhận diện:** Kỹ năng gây mất HP: hồi 3% HP tối đa cho đồng đội yếu nhất.
+**Vũ khí:** Kim châm độc W02. **Chỉ số cấp 1:** HP 450, ATK 58, DEF 8. Giữ nguyên nhân dạng và sáu khung tại nguồn prompt.
 
-**Sáu chủ động**
+| Ô | Kỹ năng / ID | Nguồn thông số |
+|---|---|---|
+| 1 | Thừa Hư / `role_satThu_thuaHu` | Bảng nghề |
+| 2 | Lục Diệp Phong / `element_lucDiepPhong` | Bảng hệ |
+| 3 | Đoạt Khí / `role_satThu_doatKhi` | Bảng nghề |
+| 4 | Độc Ảnh Tiềm Châm / `rb070_ultimate` | Bảng tuyệt chiêu |
+| 5 | Truy Mệnh / `role_satThu_truyMenh` | Bảng nghề |
+| 6 | Linh Mộc Hồi Sinh / `element_linhMocHoiSinh` | Bảng hệ |
+| P1 | `assassinPreparedOpportunity` | Cơ hội chuẩn bị nghề |
+| P2 | `assassinPrepared` | Chase nghề |
+| P3 | `moc1` | Chase hệ thứ nhất |
+| P4 | Lâm ảnh tiếp nhịp / `rb070_passive` | Bảng bị động cá nhân |
 
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Lướt Sát** | `role_satThu_luotSat` | damage atk 1.65; energy self +5 |
-| 2 | **Lục Diệp Phong** | `element_lucDiepPhong` | Phá ngẫu nhiên 5 ô |
-| 3 | **Cắt Mạch** | `role_satThu_catMach` | damage atk 2.0 pierce 0.20; energy targets -10 |
-| 4 | **Mộc Ảnh Đoạn Mạch** | `rb_da_mocAnhDoanMach` | damage 2.25× ATK with lifesteal 0.20; silence targets for 1 turn chance 0.45; regen self 0.04 max HP 2 turns |
-| 5 | **Truy Mệnh** | `role_satThu_truyMenh` | damage atk 2.35; execute threshold 0.35 multiplier 1.30 |
-| 6 | **Linh Mộc Hồi Sinh** | `element_linhMocHoiSinh` | Hồi bản thân 11% HP và đổi 3 ô thành Tim |
-
-**Tuyệt chiêu cá nhân:** `rb_da_mocAnhDoanMach`, giá **100** năng lượng, target `enemy`. damage 2.25× ATK with lifesteal 0.20; silence targets for 1 turn chance 0.45; regen self 0.04 max HP 2 turns. **Hướng nghệ thuật:** Dùng hai dao làm một thế khóa cổ tay rồi cắt ngắn, không vẽ độc tố.
-
-**Bốn bị động (chase)**
-
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
-| P1 | Nghề | Thừa hư tập kích / `assassinPrepared` | `controlled` → 0.45× ATK |
-| P2 | Hành | Mộc sinh / `moc1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Mộc hộ / `moc2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Thảo ảnh dưỡng huyết** / `rb_da_passive` | `skillDamage` → `heal` 0.03 max HP to weakest ally; Kỹ năng gây mất HP: hồi 3% HP tối đa cho đồng đội yếu nhất. |
-
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Cắt Mạch** (chiêu nghề ô 3). Khung 4 diễn tả **Mộc Ảnh Đoạn Mạch** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
-
----
+Không trang bị chase hệ thứ hai `moc2`. Khung 3 minh họa ô 3, khung 4 minh họa ô 4; các giá trị chỉ áp khi triển khai và kiểm chứng sau.
 
 ### RB-071 — Hàn Giang Khách · Sát thủ / Thủy
 
-**Chiến thuật nhận diện:** Khi địch bị khống chế: hồi 3,5% HP tối đa cho đồng minh yếu nhất.
+**Vũ khí:** Lưỡi dao ẩn W02. **Chỉ số cấp 1:** HP 450, ATK 58, DEF 8. Giữ nguyên nhân dạng và sáu khung tại nguồn prompt.
 
-**Sáu chủ động**
+| Ô | Kỹ năng / ID | Nguồn thông số |
+|---|---|---|
+| 1 | Thừa Hư / `role_satThu_thuaHu` | Bảng nghề |
+| 2 | Thủy Nguyệt Tụ Linh / `element_thuyNguyetTuLinh` | Bảng hệ |
+| 3 | Đoạt Khí / `role_satThu_doatKhi` | Bảng nghề |
+| 4 | Hàn Giang Tàng Nhận / `rb071_ultimate` | Bảng tuyệt chiêu |
+| 5 | Truy Mệnh / `role_satThu_truyMenh` | Bảng nghề |
+| 6 | Thanh Lưu Tẩy Trần / `element_thanhLuuTayTran` | Bảng hệ |
+| P1 | `assassinPreparedOpportunity` | Cơ hội chuẩn bị nghề |
+| P2 | `assassinPrepared` | Chase nghề |
+| P3 | `thuy1` | Chase hệ thứ nhất |
+| P4 | Tĩnh thủy hồi tức / `rb071_passive` | Bảng bị động cá nhân |
 
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Lướt Sát** | `role_satThu_luotSat` | damage atk 1.65; energy self +5 |
-| 2 | **Thủy Nguyệt Tụ Linh** | `element_thuyNguyetTuLinh` | Chiêu hệ theo registry: xem steps chính thức khi triển khai |
-| 3 | **Cắt Mạch** | `role_satThu_catMach` | damage atk 2.0 pierce 0.20; energy targets -10 |
-| 4 | **Hàn Giang Bế Khí** | `rb_hgk_hanGiangBeKhi` | damage 2.00× ATK; freeze chance 0.40 for 1 turn; energy targets -20 |
-| 5 | **Truy Mệnh** | `role_satThu_truyMenh` | damage atk 2.35; execute threshold 0.35 multiplier 1.30 |
-| 6 | **Thanh Lưu Tẩy Trần** | `element_thanhLuuTayTran` | Chiêu hệ theo registry: xem steps chính thức khi triển khai |
-
-**Tuyệt chiêu cá nhân:** `rb_hgk_hanGiangBeKhi`, giá **95** năng lượng, target `enemy`. damage 2.00× ATK; freeze chance 0.40 for 1 turn; energy targets -20. **Hướng nghệ thuật:** Đâm một nhát từ tầm ngắn, vai thấp như người quen di chuyển trên thuyền.
-
-**Bốn bị động (chase)**
-
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
-| P1 | Nghề | Thừa hư tập kích / `assassinPrepared` | `controlled` → 0.45× ATK |
-| P2 | Hành | Thủy tiếp / `thuy1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Thủy dẫn / `thuy2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Hơi sông lặng** / `rb_hgk_passive` | `controlled` → `heal` 0.035 max HP to weakest ally; Khi địch bị khống chế: hồi 3,5% HP tối đa cho đồng minh yếu nhất. |
-
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Cắt Mạch** (chiêu nghề ô 3). Khung 4 diễn tả **Hàn Giang Bế Khí** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
-
----
+Không trang bị chase hệ thứ hai `thuy2`. Khung 3 minh họa ô 3, khung 4 minh họa ô 4; các giá trị chỉ áp khi triển khai và kiểm chứng sau.
 
 ### RB-072 — Xích Dạ · Sát thủ / Hỏa
 
-**Chiến thuật nhận diện:** Đồng đội phá giáp: sát thủ chém bồi 38% ATK.
+**Vũ khí:** Song đao W02. **Chỉ số cấp 1:** HP 450, ATK 58, DEF 8. Giữ nguyên nhân dạng và sáu khung tại nguồn prompt.
 
-**Sáu chủ động**
+| Ô | Kỹ năng / ID | Nguồn thông số |
+|---|---|---|
+| 1 | Thừa Hư / `role_satThu_thuaHu` | Bảng nghề |
+| 2 | Phóng Hỏa Thiêu Doanh / `element_phongHoaThieuDoanh` | Bảng hệ |
+| 3 | Đoạt Khí / `role_satThu_doatKhi` | Bảng nghề |
+| 4 | Xích Dạ Song Sát / `rb072_ultimate` | Bảng tuyệt chiêu |
+| 5 | Truy Mệnh / `role_satThu_truyMenh` | Bảng nghề |
+| 6 | Nộ Hỏa Thiêu Thân / `element_noHoaThieuThan` | Bảng hệ |
+| P1 | `assassinPreparedOpportunity` | Cơ hội chuẩn bị nghề |
+| P2 | `assassinPrepared` | Chase nghề |
+| P3 | `hoa1` | Chase hệ thứ nhất |
+| P4 | Dạ tập thừa hư / `rb072_passive` | Bảng bị động cá nhân |
 
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Lướt Sát** | `role_satThu_luotSat` | damage atk 1.65; energy self +5 |
-| 2 | **Phóng Hỏa Thiêu Doanh** | `element_phongHoaThieuDoanh` | Chiêu Hỏa theo registry hiện tại |
-| 3 | **Cắt Mạch** | `role_satThu_catMach` | damage atk 2.0 pierce 0.20; energy targets -10 |
-| 4 | **Xích Dạ Liên Trảm** | `rb_xd_xichDaLienTram` | damage 2.60× ATK; burn targets 0.16 ofAtk for 2 turns; execute threshold 0.30 multiplier 1.25 |
-| 5 | **Truy Mệnh** | `role_satThu_truyMenh` | damage atk 2.35; execute threshold 0.35 multiplier 1.30 |
-| 6 | **Nộ Hỏa Thiêu Thân** | `element_noHoaThieuThan` | Chiêu Hỏa theo registry hiện tại |
-
-**Tuyệt chiêu cá nhân:** `rb_xd_xichDaLienTram`, giá **100** năng lượng, target `enemy`. damage 2.60× ATK; burn targets 0.16 ofAtk for 2 turns; execute threshold 0.30 multiplier 1.25. **Hướng nghệ thuật:** Cắt một nhát thấp rồi thu đao cho nhát kết, tuyệt chiêu chỉ chụp một khoảnh khắc.
-
-**Bốn bị động (chase)**
-
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
-| P1 | Nghề | Thừa hư tập kích / `assassinPrepared` | `controlled` → 0.45× ATK |
-| P2 | Hành | Hỏa truy / `hoa1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Hỏa phá / `hoa2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Dạ hỏa truy mệnh** / `rb_xd_passive` | `armorBroken` → `damage` 0.38× ATK; Đồng đội phá giáp: sát thủ chém bồi 38% ATK. |
-
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Cắt Mạch** (chiêu nghề ô 3). Khung 4 diễn tả **Xích Dạ Liên Trảm** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
-
----
+Không trang bị chase hệ thứ hai `hoa2`. Khung 3 minh họa ô 3, khung 4 minh họa ô 4; các giá trị chỉ áp khi triển khai và kiểm chứng sau.
 
 ### RB-073 — Địa Ẩn · Sát thủ / Thổ
 
-**Chiến thuật nhận diện:** Khi Khiên đồng đội đỡ đòn: làm mục tiêu đang giao chiến giảm DEF 8% một lượt.
+**Vũ khí:** Móng vuốt W02. **Chỉ số cấp 1:** HP 450, ATK 58, DEF 8. Giữ nguyên nhân dạng và sáu khung tại nguồn prompt.
 
-**Sáu chủ động**
+| Ô | Kỹ năng / ID | Nguồn thông số |
+|---|---|---|
+| 1 | Thừa Hư / `role_satThu_thuaHu` | Bảng nghề |
+| 2 | Hậu Thổ Tích Lương / `element_hauThoTichLuong` | Bảng hệ |
+| 3 | Đoạt Khí / `role_satThu_doatKhi` | Bảng nghề |
+| 4 | Địa Phục Liệt Trảo / `rb073_ultimate` | Bảng tuyệt chiêu |
+| 5 | Truy Mệnh / `role_satThu_truyMenh` | Bảng nghề |
+| 6 | Thạch Giáp / `element_thachGiap` | Bảng hệ |
+| P1 | `assassinPreparedOpportunity` | Cơ hội chuẩn bị nghề |
+| P2 | `assassinPrepared` | Chase nghề |
+| P3 | `tho1` | Chase hệ thứ nhất |
+| P4 | Phục địa phản kích / `rb073_passive` | Bảng bị động cá nhân |
 
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Lướt Sát** | `role_satThu_luotSat` | damage atk 1.65; energy self +5 |
-| 2 | **Hậu Thổ Tích Lương** | `element_hauThoTichLuong` | Chiêu Thổ theo registry hiện tại |
-| 3 | **Cắt Mạch** | `role_satThu_catMach` | damage atk 2.0 pierce 0.20; energy targets -10 |
-| 4 | **Địa Phục Đoạn Lộ** | `rb_di_diaPhucDoanLo` | damage 2.20× ATK; defDown targets 0.25 for 2 turns; shield to self 0.12 max HP lasting 2 turns |
-| 5 | **Truy Mệnh** | `role_satThu_truyMenh` | damage atk 2.35; execute threshold 0.35 multiplier 1.30 |
-| 6 | **Thạch Giáp** | `element_thachGiap` | Chiêu Thổ theo registry hiện tại |
-
-**Tuyệt chiêu cá nhân:** `rb_di_diaPhucDoanLo`, giá **95** năng lượng, target `enemy`. damage 2.20× ATK; defDown targets 0.25 for 2 turns; shield to self 0.12 max HP lasting 2 turns. **Hướng nghệ thuật:** Hạ thấp trọng tâm, vung rìu tay thấp vào chỗ nối khiên chân đối thủ.
-
-**Bốn bị động (chase)**
-
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
-| P1 | Nghề | Thừa hư tập kích / `assassinPrepared` | `controlled` → 0.45× ATK |
-| P2 | Hành | Thổ hộ / `tho1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Thổ chấn / `tho2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Địa ảnh đỡ đòn** / `rb_di_passive` | `shieldAbsorbed` → `armor` defDown 0.08 for 1 turn; Khi Khiên đồng đội đỡ đòn: làm mục tiêu đang giao chiến giảm DEF 8% một lượt. |
-
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Cắt Mạch** (chiêu nghề ô 3). Khung 4 diễn tả **Địa Phục Đoạn Lộ** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
-
----
+Không trang bị chase hệ thứ hai `tho2`. Khung 3 minh họa ô 3, khung 4 minh họa ô 4; các giá trị chỉ áp khi triển khai và kiểm chứng sau.
 
 ### RB-074 — Lôi Ảnh · Sát thủ / Lôi
 
-**Chiến thuật nhận diện:** Kỹ năng gây mất HP: trừ thêm 8 năng lượng mục tiêu.
+**Vũ khí:** Hộp Bạo Vũ Lê Hoa Châm W02. **Chỉ số cấp 1:** HP 450, ATK 58, DEF 8. Giữ nguyên nhân dạng và sáu khung tại nguồn prompt.
 
-**Sáu chủ động**
+| Ô | Kỹ năng / ID | Nguồn thông số |
+|---|---|---|
+| 1 | Thừa Hư / `role_satThu_thuaHu` | Bảng nghề |
+| 2 | Lôi Trụ Giáng Thế / `element_loiTruGiangThe` | Bảng hệ |
+| 3 | Đoạt Khí / `role_satThu_doatKhi` | Bảng nghề |
+| 4 | Bạo Vũ Lê Hoa / `rb074_ultimate` | Bảng tuyệt chiêu |
+| 5 | Truy Mệnh / `role_satThu_truyMenh` | Bảng nghề |
+| 6 | Tĩnh Điện Hộ Thân / `element_tinhDienHoThan` | Bảng hệ |
+| P1 | `assassinPreparedOpportunity` | Cơ hội chuẩn bị nghề |
+| P2 | `assassinPrepared` | Chase nghề |
+| P3 | `loi1` | Chase hệ thứ nhất |
+| P4 | Tàn vũ hồi nhịp / `rb074_passive` | Bảng bị động cá nhân |
 
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Lướt Sát** | `role_satThu_luotSat` | damage atk 1.65; energy self +5 |
-| 2 | **Lôi Trụ Giáng Thế** | `element_loiTruGiangThe` | Chiêu Lôi theo registry hiện tại |
-| 3 | **Cắt Mạch** | `role_satThu_catMach` | damage atk 2.0 pierce 0.20; energy targets -10 |
-| 4 | **Thiểm Ảnh Tước Khí** | `rb_la_thiemAnhTuocKhi` | damage 2.10× ATK; pierce 0.30; energy targets -30; silence chance 0.30 for 1 turn |
-| 5 | **Truy Mệnh** | `role_satThu_truyMenh` | damage atk 2.35; execute threshold 0.35 multiplier 1.30 |
-| 6 | **Tĩnh Điện Hộ Thân** | `element_tinhDienHoThan` | Trừ địch 20 năng lượng, hoàn bản thân 10 năng lượng (layout2) |
-
-**Tuyệt chiêu cá nhân:** `rb_la_thiemAnhTuocKhi`, giá **100** năng lượng, target `enemy`. damage 2.10× ATK; pierce 0.30; energy targets -30; silence chance 0.30 for 1 turn. **Hướng nghệ thuật:** Hai đoản đao ngắn thực hiện động tác đảo tay, không có đao thứ ba.
-
-**Bốn bị động (chase)**
-
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
-| P1 | Nghề | Thừa hư tập kích / `assassinPrepared` | `controlled` → 0.45× ATK |
-| P2 | Hành | Lôi truy / `loi1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Lôi đoạt / `loi2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Lôi ảnh dứt mạch** / `rb_la_passive` | `skillDamage` → `drain` -8 enemy energy; Kỹ năng gây mất HP: trừ thêm 8 năng lượng mục tiêu. |
-
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Cắt Mạch** (chiêu nghề ô 3). Khung 4 diễn tả **Thiểm Ảnh Tước Khí** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
-
----
+Không trang bị chase hệ thứ hai `loi2`. Khung 3 minh họa ô 3, khung 4 minh họa ô 4; các giá trị chỉ áp khi triển khai và kiểm chứng sau.
 
 ### RB-075 — Vô Ảnh · Sát thủ / Phong
 
-**Chiến thuật nhận diện:** Khi đồng đội xua tan hiệu ứng địch thành công: nhận 7 năng lượng.
+**Vũ khí:** Sáo trúc âm công W02. **Chỉ số cấp 1:** HP 450, ATK 58, DEF 8. Giữ nguyên nhân dạng và sáu khung tại nguồn prompt.
 
-**Sáu chủ động**
+| Ô | Kỹ năng / ID | Nguồn thông số |
+|---|---|---|
+| 1 | Thừa Hư / `role_satThu_thuaHu` | Bảng nghề |
+| 2 | Phong Quyển Tàn Vân / `element_phongQuyenTanVan` | Bảng hệ |
+| 3 | Đoạt Khí / `role_satThu_doatKhi` | Bảng nghề |
+| 4 | Vô Thanh Đoạt Phách / `rb075_ultimate` | Bảng tuyệt chiêu |
+| 5 | Truy Mệnh / `role_satThu_truyMenh` | Bảng nghề |
+| 6 | Thanh Phong Tụ Khí / `element_thanhPhongTuKhi` | Bảng hệ |
+| P1 | `assassinPreparedOpportunity` | Cơ hội chuẩn bị nghề |
+| P2 | `assassinPrepared` | Chase nghề |
+| P3 | `phong1` | Chase hệ thứ nhất |
+| P4 | Dư âm tiếp vận / `rb075_passive` | Bảng bị động cá nhân |
 
-| Ô | Chiêu | ID | Chức năng / mục tiêu |
-|---|---|---|---|
-| 1 | **Lướt Sát** | `role_satThu_luotSat` | damage atk 1.65; energy self +5 |
-| 2 | **Phong Quyển Tàn Vân** | `element_phongQuyenTanVan` | Chiêu Phong theo registry hiện tại |
-| 3 | **Cắt Mạch** | `role_satThu_catMach` | damage atk 2.0 pierce 0.20; energy targets -10 |
-| 4 | **Vô Ảnh Hoán Bộ** | `rb_va_voAnhHoanBo` | damage 2.25× ATK; dispel targets; whirl 2 auto; atkDown targets 0.15 2 turns |
-| 5 | **Truy Mệnh** | `role_satThu_truyMenh` | damage atk 2.35; execute threshold 0.35 multiplier 1.30 |
-| 6 | **Thanh Phong Tụ Khí** | `element_thanhPhongTuKhi` | Cả đội +10 năng lượng và +10% DEF trong 2 lượt (layout2) |
+Không trang bị chase hệ thứ hai `phong2`. Khung 3 minh họa ô 3, khung 4 minh họa ô 4; các giá trị chỉ áp khi triển khai và kiểm chứng sau.
 
-**Tuyệt chiêu cá nhân:** `rb_va_voAnhHoanBo`, giá **95** năng lượng, target `enemy`. damage 2.25× ATK; dispel targets; whirl 2 auto; atkDown targets 0.15 2 turns. **Hướng nghệ thuật:** Đổi chân dẫn, dao mỏng quét đường ngắn, trông như đổi vị trí không phải hóa thành khói.
+## Kiểm tra số học và điều kiện nghiệm thu
 
-**Bốn bị động (chase)**
+Các ví dụ kiểm số học dưới đây **không phải mô phỏng trận** hoặc bằng chứng cân bằng. Quy ước ATK=100, DEF địch=20, Sĩ khí/nguyên tố=1, không Khiên/P1/buff, làm tròn ở cuối mỗi hit:
 
-| Thứ tự | Nguồn | Chiêu / ID | Trigger / hiệu ứng |
-|---|---|---|---|
-| P1 | Nghề | Thừa hư tập kích / `assassinPrepared` | `controlled` → 0.45× ATK |
-| P2 | Hành | Phong tiếp / `phong1` | Kế thừa registry hệ hiện tại |
-| P3 | Hành | Phong dẫn / `phong2` | Kế thừa registry hệ hiện tại |
-| P4 | Riêng | **Vô thanh tiếp vận** / `rb_va_passive` | `dispelled` → `energy` +7 self energy; Khi đồng đội xua tan hiệu ứng địch thành công: nhận 7 năng lượng. |
+| Trường hợp | Kết quả kỳ vọng |
+|---|---|
+| Định Điểm cấp 1 | round(160×100/118) = 136 HP; cost 30 |
+| Định Điểm cấp 5 | round(224×100/118) = 190 HP; cost 25; pierce vẫn 10% |
+| Truy Mệnh cấp 1, ngoài execute | round(235×100/120) = 196 HP |
+| Truy Mệnh cấp 5, đủ execute | round(329×1.30×100/120) = 356 HP; cost 55 |
+| Bạo Vũ Lê Hoa cấp 1 | mỗi hit round(75×100/120)=63; ba hit =189 HP nếu địch sống đủ chuỗi, không round tổng thành188; trừ NL chỉ20 |
+| Độc cấp 1 / 5, không Khiên | mỗi tick 12 / 17 HP với round(16.8)=17; hai tick24 /34 HP, không tick lượt thêm |
 
-**Ưu tiên cho ảnh ra chiêu / tuyệt chiêu:** khung 3 diễn tả **Cắt Mạch** (chiêu nghề ô 3). Khung 4 diễn tả **Vô Ảnh Hoán Bộ** (ô 4). Các kỹ năng khác không bắt buộc thêm frame ảnh riêng.
+Trước mở hai nghề: mô phỏng đối xứng ghế/seed 1v1, 3v3; so vai trò với sáu nghề đang chạy, không chỉ mirror. Phủ cấp nhân vật1/10/20/30, chiêu1/3/5, gear0 và gear đại diện; báo HP/ATK/DEF, tỷ lệ thắng kèm CI95%, thời lượng/censored, P1/P2/P3/P4 đóng góp, năng lượng thực, DoT và giới hạn phản ứng. Mục tiêu review: không gây vòng hoàn NL vô hạn, không vượt12 phản ứng/sâu4, không nhân vùng phá theo số địch/hit, không làm mất vai trò nghề cũ. Chưa đặt ngưỡng tỷ lệ thắng như tiêu chuẩn đã đạt khi chưa có mô phỏng.
 
----
-
-## Kiểm định cần thực hiện sau phê duyệt (chưa triển khai)
-
-- [ ] Chạy type-check khi mở rộng `Profession` vào chiến đấu thực tế.
-- [ ] Thêm role skill, ultimate ID và chase cá nhân vào registry; xác thực `unique id`, target, recipient và cost.
-- [ ] Kiểm tra 4 chase/hero hoạt động không lặp vô hạn; combo nghề riêng phải độc lập với chase.
-- [ ] Mô phỏng PvE/PvP thời lượng trận, damage/energy, lượt combo, hồi phục và tương tác nguyên tố; không xác nhận cân bằng theo tài liệu này.
-- [ ] Xây tile nghề hoặc luật dùng tile không làm thay đổi semantics ô của sáu nghề cũ.
-- [ ] Cung/nỏ có animation nạp tên/tốc độ bắn; sát thủ không được dịch chuyển tức thời khi engine chưa hỗ trợ vị trí.
+> TODO: Triển khai/harness ở task riêng sau khi review bảng này; đối chiếu tile nghề, alias cungThu→xaThu, comboReady, provenance attacker, poison, tooltip/AI/server-authoritative và snapshot/save. Không chạm runtime trong lần cập nhật docs này.

@@ -6,7 +6,8 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Portrait } from "@/app/game/art/portraits";
-import { ELEMENT_NAME, PROFESSION_NAME } from "@/app/game/battle/labels";
+import { isActiveProfession, PROFESSION_DISPLAY_NAME } from "@/core";
+import { ELEMENT_NAME } from "@/app/game/battle/labels";
 import RigPreview from "./RigPreview";
 import type { CharacterPreview } from "./types";
 
@@ -15,14 +16,19 @@ const bytes = (value: number) => `${(value / 1000).toLocaleString("vi-VN", { max
 
 function CharacterDetails({ character, size }: { character: CharacterPreview; size: "battle" | "large" }) {
   const [snapshot, setSnapshot] = useState<string | null>(null);
+  // Nghề chưa mở (Xạ thủ, Sát thủ) chưa có hình vẽ tay dự phòng; nhân vật xem thử luôn có ảnh chân dung riêng.
+  const look = isActiveProfession(character.profession) ? character.profession : "tuongSi";
   const total = character.files.reduce((sum, file) => sum + file.bytes, 0);
   return (
     <div className="space-y-5">
       <header className="flex items-center gap-3">
-        <Portrait id={character.id} element={character.element} profession={character.profession} className="size-16 shrink-0" />
+        <Portrait id={character.id} element={character.element} profession={look} className="size-16 shrink-0" />
         <div className="min-w-0">
           <h2 className="text-xl font-bold">{character.name}</h2>
-          <p className="text-sm text-stone-400">{PROFESSION_NAME[character.profession]} · {ELEMENT_NAME[character.element]}</p>
+          <p className="text-sm text-stone-400">
+            {PROFESSION_DISPLAY_NAME[character.profession]} · {ELEMENT_NAME[character.element]}
+            {character.previewOnly && " · chỉ xem thử, chưa có trong trận"}
+          </p>
           <p className="mt-1 text-xs text-stone-400">Rig trong trận: {bytes(character.rigBytes)} · Tất cả: {bytes(total)}</p>
         </div>
       </header>
@@ -39,7 +45,7 @@ function CharacterDetails({ character, size }: { character: CharacterPreview; si
                 ) : asset.kind === "standing" && snapshot ? (
                   <Image src={snapshot} alt={`Rig đứng của ${character.name}`} width={640} height={640} unoptimized className="h-full w-full object-contain" />
                 ) : asset.kind === "portrait" ? (
-                  <Portrait id={character.id} element={character.element} profession={character.profession} className="w-3/4" />
+                  <Portrait id={character.id} element={character.element} profession={look} className="w-3/4" />
                 ) : (
                   <p className="p-3 text-center text-sm text-stone-500">{asset.kind === "standing" ? "Đang dựng hình…" : "Chưa có tranh riêng"}</p>
                 )}
