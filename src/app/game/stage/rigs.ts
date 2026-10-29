@@ -146,7 +146,8 @@ export interface WarriorRig {
    * từng đối thủ và khiên giáp họ nứt vỡ; `galeSlash` chỉ ở tuyệt chiêu, ba lưỡi gió chém qua đối thủ đứng đầu, lốc
    * cuốn quanh chân họ và luồng gió đưa năng lượng tới từng đồng đội; `galeVortex` đánh thường và ra chiêu phóng tia
    * gió từ quả cầu tới đối thủ đứng đầu, tuyệt chiêu gọi lốc cuốn quanh từng đối thủ; `galeBulwark` chỉ ở tuyệt chiêu,
-   * lốc gió quanh chính mình, khiên mặt trống trước từng đồng đội và luồng gió đưa năng lượng tới họ.
+   * lốc gió quanh chính mình, khiên mặt trống trước từng đồng đội và luồng gió đưa năng lượng tới họ; `galeMend` chỉ ở
+   * tuyệt chiêu, vòng gió trắng xanh hồi phục quanh từng đồng đội và luồng gió đưa năng lượng tới họ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -191,7 +192,8 @@ export interface WarriorRig {
     | "thunderRout"
     | "galeSlash"
     | "galeVortex"
-    | "galeBulwark";
+    | "galeBulwark"
+    | "galeMend";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -2819,6 +2821,50 @@ const MANH_TUONG: WarriorRig = {
     anchor: { x: 800, y: 900 }, scale: 0.9 },
 };
 
+/**
+ * Bạch Sương, y sư hệ Phong (tướng cửa hàng). Bộ tranh Shan gửi 29/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code
+ * như Mai Thanh: bàn tay xách hồ lô ngọc trắng xoay quanh cổ tay, hồ lô lắc quanh nắm tay; bàn tay buông và đầu tách
+ * riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const BACH_SUONG: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "gourd",
+  grip: { x: 255, y: 625 },
+  dir: "bach-suong",
+  texScale: 0.5,
+  foot: { x: 530, y: 1505 },
+  height: 1500,
+  parts: {
+    body: { x: 282, y: 16, w: 638, h: 1508 },
+    armR: { x: 740, y: 697, w: 58, h: 119 },
+    sword: { x: 210, y: 624, w: 153, h: 412 },
+    arm: { x: 208, y: 568, w: 95, h: 77 },
+    head: { x: 407, y: 16, w: 216, h: 266 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 290, y: 600 },
+    elbowR: { x: 755, y: 712 },
+    neck: { x: 540, y: 255 },
+  },
+  blade: [{ x: 255, y: 625 }, { x: 290, y: 880 }],
+  strikeFx: "galeMend",
+  fxColor: 0x2e9e90,
+  // Tấn thấp đẩy chưởng, hồ lô xách bên hông (đánh thường), ôm hồ lô mở nút (ra chiêu), vươn tay ban gió lành cho cả đội
+  // (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 103, y: 17 },
+      anchor: { x: 570, y: 1490 }, scale: 1, burst: { x: 700, y: 420 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 228, y: 5 },
+      anchor: { x: 515, y: 1505 }, scale: 1, burst: { x: 660, y: 280 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 109, y: 14 },
+      anchor: { x: 470, y: 1505 }, scale: 1, burst: { x: 990, y: 380 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 2, y: 209 },
+    anchor: { x: 520, y: 1300 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -2878,6 +2924,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   huaLang: HUA_LANG,
   lieuYen: LIEU_YEN,
   manhTuong: MANH_TUONG,
+  bachSuong: BACH_SUONG,
 };
 
 export function rigOf(id: string): Rig | null {

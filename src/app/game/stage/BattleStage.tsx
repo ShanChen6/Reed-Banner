@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT, BREEZE }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -635,6 +635,20 @@ export default function BattleStage({
             alive(false).forEach((s, n) => ice.cover(spot(s, 0), size, 0.25 + n * 0.08));
           });
           return [ward, ice];
+        }
+        if (rig.strikeFx === "galeMend") {
+          const bloom = leafBloom(sky, rig.fxColor, BREEZE, halo);
+          const gust = supplyDrain(sky, rig.fxColor);
+          // Tuyệt chiêu gió lành: vòng gió trắng xanh hồi phục quanh từng đồng đội (Hồi máu, giải trừ), luồng gió đưa năng
+          // lượng tới từng đồng đội.
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            alive(true).forEach((s, n) => bloom.cover(spot(s, 0), size, n * 0.08));
+            alive(true).filter((s) => s !== me).forEach((s, n) => gust.drain(spot(me, 0.55), spot(s, 0.55), size, 0.4 + n * 0.1));
+          });
+          return [bloom, gust];
         }
         if (rig.strikeFx === "springDew") {
           const bloom = leafBloom(sky, rig.fxColor, SPRING, halo);
