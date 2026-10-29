@@ -145,7 +145,8 @@ export interface WarriorRig {
    * câm lặng phủ quanh họ và năng lượng bay về chính mình; `thunderRout` chỉ ở tuyệt chiêu, sét giáng lần lượt xuống
    * từng đối thủ và khiên giáp họ nứt vỡ; `galeSlash` chỉ ở tuyệt chiêu, ba lưỡi gió chém qua đối thủ đứng đầu, lốc
    * cuốn quanh chân họ và luồng gió đưa năng lượng tới từng đồng đội; `galeVortex` đánh thường và ra chiêu phóng tia
-   * gió từ quả cầu tới đối thủ đứng đầu, tuyệt chiêu gọi lốc cuốn quanh từng đối thủ.
+   * gió từ quả cầu tới đối thủ đứng đầu, tuyệt chiêu gọi lốc cuốn quanh từng đối thủ; `galeBulwark` chỉ ở tuyệt chiêu,
+   * lốc gió quanh chính mình, khiên mặt trống trước từng đồng đội và luồng gió đưa năng lượng tới họ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -189,7 +190,8 @@ export interface WarriorRig {
     | "stormSeal"
     | "thunderRout"
     | "galeSlash"
-    | "galeVortex";
+    | "galeVortex"
+    | "galeBulwark";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -2769,6 +2771,54 @@ const LIEU_YEN: WarriorRig = {
     anchor: { x: 800, y: 900 }, scale: 0.85 },
 };
 
+/**
+ * Mạnh Tường, binh lính hệ Phong (tướng cửa hàng). Bộ tranh Shan gửi 29/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
+ * code như Trương Viêm: giáo cùng nắm tay xoay quanh cổ tay, khiên mây cùng cẳng tay nâng lên khi vào thế và đỡ đòn, đầu
+ * và đuôi khăn xanh tách riêng. Tranh đánh thường vẽ người nhỏ trong khung ngang nên phóng lên cho bằng hình đứng.
+ * Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const MANH_TUONG: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "manh-tuong",
+  texScale: 0.5,
+  foot: { x: 590, y: 1505 },
+  height: 1340,
+  parts: {
+    body: { x: 165, y: 162, w: 731, h: 1345 },
+    armR: { x: 688, y: 402, w: 265, h: 577 },
+    sword: { x: 108, y: 6, w: 143, h: 1428 },
+    arm: { x: 111, y: 452, w: 81, h: 101 },
+    head: { x: 423, y: 162, w: 189, h: 187 },
+  },
+  cloth: [
+    { name: "ribbon", box: { x: 264, y: 271, w: 186, h: 155 }, behind: true,
+      wind: { axis: "x", start: 0.2, amp: 5, freq: 1.6, k: 3, phase: 0.2, vertical: true, reverse: true } },
+  ],
+  covers: [],
+  joints: {
+    shoulder: { x: 180, y: 505 },
+    elbowR: { x: 712, y: 615 },
+    neck: { x: 540, y: 335 },
+  },
+  blade: [{ x: 152, y: 500 }, { x: 128, y: 20 }],
+  shieldRaise: -0.35,
+  strikeFx: "galeBulwark",
+  fxColor: 0x2e9e90,
+  // Tấn rộng núp khiên đâm giáo ngang (đánh thường), đẩy khiên ra trước (ra chiêu), hạ thấp người ghì khiên che thân
+  // (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 28, y: 20 },
+      anchor: { x: 500, y: 1000 }, scale: 1.28, burst: { x: 1515, y: 175 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 127, y: 18 },
+      anchor: { x: 550, y: 1500 }, scale: 1, burst: { x: 900, y: 600 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 114, y: 12 },
+      anchor: { x: 620, y: 1485 }, scale: 1, burst: { x: 780, y: 760 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 9, y: 54 },
+    anchor: { x: 800, y: 900 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -2827,6 +2877,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   macVan: MAC_VAN,
   huaLang: HUA_LANG,
   lieuYen: LIEU_YEN,
+  manhTuong: MANH_TUONG,
 };
 
 export function rigOf(id: string): Rig | null {

@@ -398,6 +398,15 @@ export default function RigPreview({ id, size, onSnapshot }: {
           if (team === "galeSlash") gale.slash({ x: el.clientWidth * 0.85, y: loaded.view.y }, size, 1);
           else [0.78, 0.92].forEach((k, n) => gale.whirl({ x: el.clientWidth * k, y: loaded!.view.y }, size, n * 0.1));
         });
+        // Phong lũy hệ Phong: lốc gió và khiên mặt trống quanh nhân vật.
+        const bulwarkGale = team === "galeBulwark" ? [galeSlash(app.stage, rig.fxColor), drumShield(app.stage, rig.fxColor)] as const : null;
+        if (bulwarkGale) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const at = { x: loaded.view.x, y: loaded.view.y };
+          const size = rig.height * loaded.view.scale.y;
+          bulwarkGale[0].whirl(at, size);
+          bulwarkGale[1].cover(at, size, 0.3);
+        });
         // Tia gió hệ Phong: phóng từ quả cầu tới mép phải khung khi đánh thường và ra chiêu.
         const gust = team === "galeVortex" ? lightning(app.stage, rig.fxColor) : null;
         if (gust) loaded.onStrike?.((kind, at) => {
@@ -412,6 +421,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           rout?.forEach((f) => f.update(dt));
           gale?.update(dt);
           gust?.update(dt);
+          bulwarkGale?.forEach((f) => f.update(dt));
           blaze?.forEach((b) => b.update(dt));
           sever?.forEach((b) => b.update(dt));
           bastion?.forEach((b) => b.update(dt));
