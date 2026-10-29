@@ -715,6 +715,22 @@ export default function BattleStage({
           });
           return [fx];
         }
+        if (rig.strikeFx === "stoneGuard") {
+          const fx = armorPierce(sky, rig.fxColor);
+          const crack = ironFormation(sky, rig.fxColor);
+          const ward = drumShield(sky, rig.fxColor, facing);
+          // Tuyệt chiêu trấn sơn hộ trận: phi hoàng thạch lao tới đối thủ đứng đầu, khiên giáp họ nứt (Công giảm), khiên mặt trống
+          // trước từng đồng đội (Khiên).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !foe) return;
+            const size = app.screen.height * FIGURE;
+            fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
+            crack.shatter(spot(foe, 0.5), size, 0.15);
+            alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, 0.3 + n * 0.08));
+          });
+          return [fx, crack, ward];
+        }
         if (rig.strikeFx === "flameDisc") {
           const disc = flameDisc(sky, rig.fxColor);
           const fire = flameWall(sky, rig.fxColor);

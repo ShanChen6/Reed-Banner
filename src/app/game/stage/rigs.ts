@@ -153,7 +153,8 @@ export interface WarriorRig {
    * tên nỏ xuyên tới đối thủ đứng đầu và khiên giáp họ nứt vỡ; `thicketShot` chỉ ở tuyệt chiêu, mũi tên xuyên tới đối
    * thủ đứng đầu, khiên giáp họ nứt và vòng lá hồi phục quanh từng đồng đội; `willowTide` chỉ ở tuyệt chiêu, phi tiêu
    * lao tới đối thủ đứng đầu và cột nước đông băng dưới chân họ; `flameDisc` chỉ ở tuyệt chiêu, phi luân lửa nảy qua
-   * từng đối thủ và lửa bén lên họ.
+   * từng đối thủ và lửa bén lên họ; `stoneGuard` chỉ ở tuyệt chiêu, đá lao tới đối thủ đứng đầu, khiên giáp họ nứt và
+   * khiên mặt trống trước từng đồng đội.
    */
   readonly strikeFx?:
     | "lightning"
@@ -205,7 +206,8 @@ export interface WarriorRig {
     | "boltBreach"
     | "thicketShot"
     | "willowTide"
-    | "flameDisc";
+    | "flameDisc"
+    | "stoneGuard";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -3135,6 +3137,48 @@ const XICH_DIEM_LUAN: WarriorRig = {
     anchor: { x: 680, y: 1150 }, scale: 0.85 },
 };
 
+/**
+ * Trấn Sơn Thạch, xạ thủ hệ Thổ (RB-066, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10 (nền
+ * trong suốt sẵn). Ảnh đứng tách lớp bằng code: phi hoàng thạch cùng nắm tay vung như kiếm ngắn, bàn tay trái và đầu tách
+ * riêng. Tranh tư thế vẽ người nhỏ hơn hình đứng nên phóng nhẹ. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const TRAN_SON_THACH: WarriorRig = {
+  skeleton: "warrior",
+  dir: "tran-son-thach",
+  texScale: 0.5,
+  foot: { x: 540, y: 1505 },
+  height: 1500,
+  parts: {
+    body: { x: 93, y: 0, w: 865, h: 1514 },
+    armR: { x: 839, y: 690, w: 97, h: 162 },
+    sword: { x: 204, y: 758, w: 38, h: 45 },
+    arm: { x: 107, y: 688, w: 116, h: 126 },
+    head: { x: 364, y: 3, w: 284, h: 218 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 150, y: 710 },
+    elbowR: { x: 870, y: 705 },
+    neck: { x: 520, y: 205 },
+  },
+  blade: [{ x: 185, y: 760 }, { x: 240, y: 798 }],
+  strikeFx: "stoneGuard",
+  fxColor: 0xc8963c,
+  // Bước tới đấm tay trái, tay phải giữ đá thu về (đánh thường), chùng gối vung đá về sau ngang thấp (ra chiêu), trụ sâu
+  // đưa đá trên vai ném mạnh (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 30, y: 7 },
+      anchor: { x: 550, y: 1420 }, scale: 1.06, burst: { x: 1070, y: 380 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 9, y: 0 },
+      anchor: { x: 560, y: 1415 }, scale: 1.05, burst: { x: 1080, y: 590 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 33, y: 12 },
+      anchor: { x: 720, y: 1170 }, scale: 1.05, burst: { x: 1300, y: 600 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 1, y: 4 },
+    anchor: { x: 660, y: 1100 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -3201,6 +3245,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   thanhLamXa: THANH_LAM_XA,
   lamGiangPhiDiep: LAM_GIANG_PHI_DIEP,
   xichDiemLuan: XICH_DIEM_LUAN,
+  tranSonThach: TRAN_SON_THACH,
 };
 
 export function rigOf(id: string): Rig | null {

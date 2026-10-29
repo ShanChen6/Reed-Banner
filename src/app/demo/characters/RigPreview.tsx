@@ -139,7 +139,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           if (kind === "ultimate" && loaded) wards.cover({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y);
         });
         // Mũi sáng phá giáp hệ Kim: phóng tới mép phải khung.
-        const pierce = team === "armorPierce" || team === "boltBreach" || team === "thicketShot" || team === "willowTide" ? armorPierce(app.stage, rig.fxColor) : null;
+        const pierce = team === "armorPierce" || team === "boltBreach" || team === "thicketShot" || team === "willowTide" || team === "stoneGuard" ? armorPierce(app.stage, rig.fxColor) : null;
         if (pierce) loaded.onStrike?.((kind, at) => {
           if (kind === "ultimate") pierce.pierce(at, { x: el.clientWidth - 24, y: at.y }, el.dataset.size === "large" ? 5 : 3);
         });
@@ -368,7 +368,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           bastion[2].rally(at, size, 0.45);
         });
         // Triều dâng hệ Thủy: vết nứt ở mép phải khung (cột nước do `pillar` vẽ).
-        const siege = team === "tideSiege" || team === "galeRout" || team === "boltBreach" || team === "thicketShot" ? ironFormation(app.stage, rig.fxColor) : null;
+        const siege = team === "tideSiege" || team === "galeRout" || team === "boltBreach" || team === "thicketShot" || team === "stoneGuard" ? ironFormation(app.stage, rig.fxColor) : null;
         if (siege) loaded.onStrike?.((kind) => {
           if (kind === "ultimate" && loaded) siege.shatter({ x: el.clientWidth - 60, y: el.clientHeight * 0.5 }, rig.height * loaded.view.scale.y, 0.3);
         });
@@ -413,6 +413,11 @@ export default function RigPreview({ id, size, onSnapshot }: {
           disc[0].fling([at, ...hits], size);
           hits.forEach((h, n) => disc[1].burn({ x: h.x, y: loaded!.view.y }, size, 0.22 * (n + 1)));
         });
+        // Trấn sơn hệ Thổ: khiên mặt trống trước nhân vật (đá lao và khiên nứt do `pierce`, `siege` vẽ).
+        const guard = team === "stoneGuard" ? drumShield(app.stage, rig.fxColor) : null;
+        if (guard) loaded.onStrike?.((kind) => {
+          if (kind === "ultimate" && loaded) guard.cover({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y, 0.3);
+        });
         // Gió lành hệ Phong: vòng gió trắng xanh quanh nhân vật.
         const breeze = team === "galeMend" ? leafBloom(app.stage, rig.fxColor, BREEZE, halo) : null;
         if (breeze) loaded.onStrike?.((kind) => {
@@ -445,6 +450,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           breeze?.update(dt);
           thicket?.update(dt);
           disc?.forEach((f) => f.update(dt));
+          guard?.update(dt);
           blaze?.forEach((b) => b.update(dt));
           sever?.forEach((b) => b.update(dt));
           bastion?.forEach((b) => b.update(dt));
