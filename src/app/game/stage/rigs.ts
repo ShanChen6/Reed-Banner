@@ -144,7 +144,8 @@ export interface WarriorRig {
    * rồi vòng sáng tím hồi phục quanh họ; `stormSeal` chỉ ở tuyệt chiêu, sét giáng xuống đối thủ đứng đầu, mây giông
    * câm lặng phủ quanh họ và năng lượng bay về chính mình; `thunderRout` chỉ ở tuyệt chiêu, sét giáng lần lượt xuống
    * từng đối thủ và khiên giáp họ nứt vỡ; `galeSlash` chỉ ở tuyệt chiêu, ba lưỡi gió chém qua đối thủ đứng đầu, lốc
-   * cuốn quanh chân họ và luồng gió đưa năng lượng tới từng đồng đội.
+   * cuốn quanh chân họ và luồng gió đưa năng lượng tới từng đồng đội; `galeVortex` đánh thường và ra chiêu phóng tia
+   * gió từ quả cầu tới đối thủ đứng đầu, tuyệt chiêu gọi lốc cuốn quanh từng đối thủ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -187,7 +188,8 @@ export interface WarriorRig {
     | "thunderMend"
     | "stormSeal"
     | "thunderRout"
-    | "galeSlash";
+    | "galeSlash"
+    | "galeVortex";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -2723,6 +2725,50 @@ const HUA_LANG: WarriorRig = {
     anchor: { x: 800, y: 900 }, scale: 0.85 },
 };
 
+/**
+ * Liễu Yên, pháp sư hệ Phong (tướng cửa hàng). Bộ tranh Shan gửi 29/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
+ * code: trượng trúc dài (cả cầu ngọc và chùm lông vũ) cùng nắm tay xoay quanh cổ tay, bàn tay buông và đầu tách riêng.
+ * Tranh đánh thường vẽ người nhỏ trong khung ngang nên phóng lên cho bằng hình đứng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const LIEU_YEN: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "staff",
+  dir: "lieu-yen",
+  texScale: 0.5,
+  foot: { x: 560, y: 1500 },
+  height: 1420,
+  parts: {
+    body: { x: 236, y: 78, w: 776, h: 1426 },
+    armR: { x: 745, y: 716, w: 65, h: 116 },
+    sword: { x: 58, y: 10, w: 281, h: 1438 },
+    arm: { x: 180, y: 375, w: 67, h: 95 },
+    head: { x: 466, y: 82, w: 160, h: 194 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 235, y: 450 },
+    elbowR: { x: 765, y: 730 },
+    neck: { x: 545, y: 265 },
+  },
+  blade: [{ x: 212, y: 420 }, { x: 196, y: 45 }],
+  orb: { x: 196, y: 45 },
+  strikeFx: "galeVortex",
+  fxColor: 0x2e9e90,
+  // Đẩy trượng ngang chĩa cầu ngọc tới (đánh thường), dựng trượng xòe tay (ra chiêu), nghiêng trượng vươn tay gọi lốc
+  // (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 41, y: 8 },
+      anchor: { x: 640, y: 1005 }, scale: 1.4, burst: { x: 1505, y: 155 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 57, y: 10 },
+      anchor: { x: 575, y: 1500 }, scale: 1, burst: { x: 820, y: 630 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 0, y: 11 },
+      anchor: { x: 780, y: 1495 }, scale: 1.07, burst: { x: 1015, y: 300 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 20, y: 9 },
+    anchor: { x: 800, y: 900 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -2780,6 +2826,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   tuKinh: TU_KINH,
   macVan: MAC_VAN,
   huaLang: HUA_LANG,
+  lieuYen: LIEU_YEN,
 };
 
 export function rigOf(id: string): Rig | null {

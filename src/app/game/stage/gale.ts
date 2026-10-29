@@ -1,6 +1,7 @@
 /**
  * Phong đao vẽ trên cả sân (hệ tọa độ của stage PixiJS): tuyệt chiêu một người của tướng sĩ hệ Phong chém ba lưỡi gió
  * hình trăng khuyết liên tiếp qua đối thủ, rồi một cơn lốc cuốn quanh chân họ (xoáy bàn cờ), lá và bụi bay vòng lên.
+ * Pháp sư hệ Phong chỉ gọi cơn lốc (`whirl`), không có lưỡi gió.
  */
 import { Container, Graphics } from "pixi.js";
 import type { Point } from "./rigs";
@@ -16,6 +17,8 @@ interface Gale {
   readonly size: number;
   /** Phía lưỡi gió bổ tới: 1 từ trái sang, -1 từ phải sang. */
   readonly dir: number;
+  /** Có ba lưỡi gió trước cơn lốc không. */
+  readonly cuts: boolean;
   wait: number;
   t: number;
   readonly specks: readonly { readonly phase: number; readonly rise: number; readonly r: number }[];
@@ -28,6 +31,15 @@ const CUTS = [
   { tilt: -0.15, k: 0.3 },
 ] as const;
 
+/** Lá và bụi bay vòng trong cơn lốc. */
+function specksOf(size: number) {
+  return Array.from({ length: 14 }, () => ({
+    phase: Math.random() * Math.PI * 2,
+    rise: 0.3 + Math.random() * 0.5,
+    r: size * (0.006 + Math.random() * 0.008),
+  }));
+}
+
 export function galeSlash(parent: Container, color: number) {
   const g = new Graphics();
   g.blendMode = "add";
@@ -36,12 +48,11 @@ export function galeSlash(parent: Container, color: number) {
   return {
     /** Chém người đứng ở `at`, bổ tới từ phía `dir`, chờ `wait` giây. */
     slash(at: Point, size: number, dir: number, wait = 0) {
-      const specks = Array.from({ length: 14 }, () => ({
-        phase: Math.random() * Math.PI * 2,
-        rise: 0.3 + Math.random() * 0.5,
-        r: size * (0.006 + Math.random() * 0.008),
-      }));
-      gales.push({ at, size, dir, wait, t: 0, specks });
+      gales.push({ at, size, dir, cuts: true, wait, t: 0, specks: specksOf(size) });
+    },
+    /** Chỉ cơn lốc cuốn quanh người đứng ở `at`, chờ `wait` giây. */
+    whirl(at: Point, size: number, wait = 0) {
+      gales.push({ at, size, dir: 1, cuts: false, wait, t: 0, specks: specksOf(size) });
     },
     update(dt: number) {
       g.clear();
@@ -54,7 +65,7 @@ export function galeSlash(parent: Container, color: number) {
         if (w.t >= LIFE) continue;
         const { at, size: s, dir } = w;
         // Lưỡi gió: cung mảnh quét ngang qua thân, dày ở giữa, tắt nhanh sau khi quét xong.
-        CUTS.forEach((c, n) => {
+        if (w.cuts) CUTS.forEach((c, n) => {
           const t = w.t - n * GAP;
           if (t <= 0) return;
           const reach = Math.min(1, t / CUT);
@@ -79,7 +90,7 @@ export function galeSlash(parent: Container, color: number) {
           g.poly([...outer, ...inner]).stroke({ color: 0xe6fff9, width: s * 0.004, alpha: fade });
         });
         // Lốc cuốn quanh chân sau lưỡi cuối: các vòng elip xoay, hẹp dần lên trên, lá bụi bay vòng.
-        const start = (CUTS.length - 1) * GAP + CUT * 0.6;
+        const start = w.cuts ? (CUTS.length - 1) * GAP + CUT * 0.6 : 0;
         const k = (w.t - start) / (LIFE - start);
         if (k <= 0) continue;
         const grow = Math.min(1, k * 4);

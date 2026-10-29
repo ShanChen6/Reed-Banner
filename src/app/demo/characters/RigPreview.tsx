@@ -390,10 +390,18 @@ export default function RigPreview({ id, size, onSnapshot }: {
             rout[1].shatter({ x, y: loaded!.view.y - size * 0.5 }, size, 0.2 + n * 0.1);
           });
         });
-        // Phong đao hệ Phong: ba lưỡi gió và lốc cuốn ở một điểm bên phải khung.
-        const gale = team === "galeSlash" ? galeSlash(app.stage, rig.fxColor) : null;
+        // Phong đao hệ Phong: ba lưỡi gió và lốc cuốn ở một điểm bên phải khung; cuồng lưu chỉ gọi lốc ở hai điểm.
+        const gale = team === "galeSlash" || team === "galeVortex" ? galeSlash(app.stage, rig.fxColor) : null;
         if (gale) loaded.onStrike?.((kind) => {
-          if (kind === "ultimate" && loaded) gale.slash({ x: el.clientWidth * 0.85, y: loaded.view.y }, rig.height * loaded.view.scale.y * 0.8, 1);
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y * 0.8;
+          if (team === "galeSlash") gale.slash({ x: el.clientWidth * 0.85, y: loaded.view.y }, size, 1);
+          else [0.78, 0.92].forEach((k, n) => gale.whirl({ x: el.clientWidth * k, y: loaded!.view.y }, size, n * 0.1));
+        });
+        // Tia gió hệ Phong: phóng từ quả cầu tới mép phải khung khi đánh thường và ra chiêu.
+        const gust = team === "galeVortex" ? lightning(app.stage, rig.fxColor) : null;
+        if (gust) loaded.onStrike?.((kind, at) => {
+          if (kind !== "ultimate") gust.bolt(at, { x: el.clientWidth - 12, y: el.clientHeight * 0.55 }, (el.dataset.size === "large" ? 5 : 3) * (kind === "cast" ? 1.4 : 1));
         });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
@@ -403,6 +411,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           storm?.forEach((f) => f.update(dt));
           rout?.forEach((f) => f.update(dt));
           gale?.update(dt);
+          gust?.update(dt);
           blaze?.forEach((b) => b.update(dt));
           sever?.forEach((b) => b.update(dt));
           bastion?.forEach((b) => b.update(dt));
