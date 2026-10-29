@@ -1,5 +1,12 @@
 # Nhật ký thay đổi thiết kế
 
+## 30/10/2026 — Tái thiết kế Sát thủ theo bảy loại vũ khí
+
+- Người dùng chốt bỏ nỏ mini; bộ vũ khí gồm dao găm, song đao, lưỡi dao ẩn, Bạo Vũ Lê Hoa Châm, kim châm độc, móng vuốt và sáo âm công cho Phong. Phân bổ đề xuất: Kim dao găm, Mộc kim độc, Thủy lưỡi ẩn, Hỏa song đao, Thổ trảo, Lôi hộp phóng châm, Phong sáo.
+- Giữ tên/ID RB-069–075, nhân dạng và bảng màu; dùng Weapon W02. Thay toàn bộ bảy hồ sơ Sát thủ W01, bộ kỹ năng và 42 prompt ngay trong [nguồn thiết kế](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md) / [nguồn prompt](../06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md), không để bản cũ song song. Hai nghề cùng 6 chủ động + 4 bị động; P4 cá nhân thay chase hệ thứ hai.
+- Âm công nội lực và các dụng cụ là diễn giải hư cấu mỹ thuật. Poison là contract đề xuất cần xác minh hook/tick/Khiên/giải debuff; không coi là status đã code. Phân bổ, hệ số, tên chiêu và bộ ảnh mới vẫn DRAFT cần review/mô phỏng.
+- Giữ nguyên bảy hồ sơ và prompt Xạ thủ, kể cả Kim/Mộc đã làm, phi hoàng thạch và khung tung hứng Trấn Sơn Thạch. Không sửa code hoặc asset trong đợt này.
+
 ## 30/10/2026 — Trấn Sơn Thạch tung hứng phi hoàng thạch ở khung cá nhân
 
 - Khung 6 đổi từ ngồi xem đá sang đứng thả lỏng, hơi nhếch cười, mắt nhìn một viên phi hoàng thạch vừa tung thấp phía trên tay phải mở ngang eo; tay trái chống hông. Đây là tung bắt vui, không phải đòn chiến đấu hoặc phép nâng đá.
