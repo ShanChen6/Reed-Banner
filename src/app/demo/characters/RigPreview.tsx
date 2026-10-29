@@ -56,7 +56,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM, VOLT }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM, VOLT }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -138,7 +138,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           if (kind === "ultimate") pierce.pierce(at, { x: el.clientWidth - 24, y: at.y }, el.dataset.size === "large" ? 5 : 3);
         });
         // Đoạt lương hệ Thủy: hút hạt sáng từ mép phải khung về nhân vật.
-        const drain = team === "supplyDrain" || team === "tideMist" ? supplyDrain(app.stage, rig.fxColor) : null;
+        const drain = team === "supplyDrain" || team === "tideMist" || team === "stormSeal" ? supplyDrain(app.stage, rig.fxColor) : null;
         if (drain) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y;
@@ -366,11 +366,20 @@ export default function RigPreview({ id, size, onSnapshot }: {
         if (siege) loaded.onStrike?.((kind) => {
           if (kind === "ultimate" && loaded) siege.shatter({ x: el.clientWidth - 60, y: el.clientHeight * 0.5 }, rig.height * loaded.view.scale.y, 0.3);
         });
+        // Kinh lôi hệ Lôi: sét giáng và mây giông câm lặng ở mép phải khung (hạt năng lượng bay về do `drain` vẽ).
+        const storm = team === "stormSeal" ? [lightning(app.stage, rig.fxColor), poisonMist(app.stage, rig.fxColor, STORM)] as const : null;
+        if (storm) loaded.onStrike?.((kind) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y * 0.8;
+          storm[0].strike({ x: el.clientWidth - 70, y: loaded.view.y - size * 0.55 }, el.dataset.size === "large" ? 8 : 5);
+          storm[1].cover({ x: el.clientWidth - 70, y: loaded.view.y }, size, 0.15);
+        });
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
           loaded?.update(dt);
           mist?.forEach((m) => m.update(dt));
           tide?.update(dt);
+          storm?.forEach((f) => f.update(dt));
           blaze?.forEach((b) => b.update(dt));
           sever?.forEach((b) => b.update(dt));
           bastion?.forEach((b) => b.update(dt));

@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM, VOLT }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM, VOLT }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -732,6 +732,22 @@ export default function BattleStage({
             });
           });
           return [mist, drain];
+        }
+        if (rig.strikeFx === "stormSeal") {
+          const bolt = lightning(sky, rig.fxColor);
+          const mist = poisonMist(sky, rig.fxColor, STORM);
+          const drain = supplyDrain(sky, rig.fxColor);
+          // Tuyệt chiêu một người: sét giáng xuống đối thủ đứng đầu, mây giông câm lặng phủ quanh họ, năng lượng bay về chính mình.
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !me || !foe) return;
+            const size = app.screen.height * FIGURE;
+            bolt.strike(spot(foe, 0.55), Math.max(3, app.screen.height * 0.022) * 1.6);
+            mist.cover(spot(foe, 0), size, 0.15);
+            drain.drain(spot(foe, 0.5), spot(me, 0.55), size, 0.35);
+          });
+          return [bolt, mist, drain];
         }
         if (rig.strikeFx === "supplyDrain") {
           const fx = supplyDrain(sky, rig.fxColor);

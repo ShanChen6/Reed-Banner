@@ -141,7 +141,8 @@ export interface WarriorRig {
    * đối thủ đứng đầu, tuyệt chiêu mây giông tụ rồi cột sét lớn giáng xuống người đó, đốm năng lượng bật khỏi thân; `thunderAegis` chỉ ở
    * tuyệt chiêu, vòng sấm tỏa quanh chân và khiên mặt trống trước chính mình, sét chạy tới từng đối thủ kèm ấn khiêu khích
    * trên đầu và đốm năng lượng bật khỏi thân họ; `thunderMend` chỉ ở tuyệt chiêu, chùm kim tím từ tay tới từng đồng đội
-   * rồi vòng sáng tím hồi phục quanh họ.
+   * rồi vòng sáng tím hồi phục quanh họ; `stormSeal` chỉ ở tuyệt chiêu, sét giáng xuống đối thủ đứng đầu, mây giông
+   * câm lặng phủ quanh họ và năng lượng bay về chính mình.
    */
   readonly strikeFx?:
     | "lightning"
@@ -181,7 +182,8 @@ export interface WarriorRig {
     | "thunderCleave"
     | "heavenStrike"
     | "thunderAegis"
-    | "thunderMend";
+    | "thunderMend"
+    | "stormSeal";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -2587,6 +2589,48 @@ const TIEU_MINH: WarriorRig = {
     anchor: { x: 760, y: 985 }, scale: 0.82 },
 };
 
+/**
+ * Từ Kinh, mưu sĩ hệ Lôi (tướng cửa hàng). Bộ tranh Shan gửi 29/10 (nền trong suốt sẵn), kèm ảnh phong thái. Ảnh đứng
+ * tách lớp bằng code như Nhan Trúc: quạt sắt khép cùng nắm tay phẩy theo nhịp quạt, bàn tay buông và đầu tách riêng.
+ * Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const TU_KINH: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "fan",
+  dir: "tu-kinh",
+  texScale: 0.5,
+  foot: { x: 580, y: 1510 },
+  height: 1500,
+  parts: {
+    body: { x: 224, y: 15, w: 740, h: 1509 },
+    armR: { x: 760, y: 682, w: 75, h: 137 },
+    sword: { x: 47, y: 584, w: 217, h: 130 },
+    arm: { x: 168, y: 622, w: 95, h: 84 },
+    head: { x: 427, y: 15, w: 192, h: 229 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 245, y: 650 },
+    elbowR: { x: 785, y: 700 },
+    neck: { x: 545, y: 205 },
+  },
+  blade: [{ x: 215, y: 665 }, { x: 60, y: 600 }],
+  strikeFx: "stormSeal",
+  fxColor: 0xb48cff,
+  // Chĩa quạt sắt về phía đối thủ (đánh thường), thủ thế quạt ngang hông (ra chiêu), giơ quạt xòe tay đoạt khí (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 90, y: 8 },
+      anchor: { x: 520, y: 1505 }, scale: 1, burst: { x: 960, y: 280 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 42, y: 20 },
+      anchor: { x: 545, y: 1480 }, scale: 1, burst: { x: 370, y: 610 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 148, y: 11 },
+      anchor: { x: 515, y: 1500 }, scale: 1, burst: { x: 985, y: 450 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 29, y: 58 },
+    anchor: { x: 800, y: 900 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -2641,6 +2685,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   vuLoi: VU_LOI,
   ongChan: ONG_CHAN,
   tieuMinh: TIEU_MINH,
+  tuKinh: TU_KINH,
 };
 
 export function rigOf(id: string): Rig | null {
