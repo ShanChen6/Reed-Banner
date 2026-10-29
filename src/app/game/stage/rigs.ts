@@ -137,7 +137,8 @@ export interface WarriorRig {
    * `earthMend` chỉ ở tuyệt chiêu, vòng lá thuốc màu đất hồi phục rồi khiên mặt trống quanh từng đồng đội;
    * `roadSever` chỉ ở tuyệt chiêu, địa mạch cắt đường tới chân từng đối thủ và bụi đất cuộn quanh họ; `stoneBastion`
    * chỉ ở tuyệt chiêu, tám cột đá mọc quanh chân, khiên mặt trống và mũi tên vàng ở từng đồng đội; `thunderCleave` chỉ ở
-   * tuyệt chiêu, ba nhát chém sét liền vào đối thủ đứng đầu, khiên nứt và đốm năng lượng bật khỏi người họ.
+   * tuyệt chiêu, ba nhát chém sét liền vào đối thủ đứng đầu, khiên nứt và đốm năng lượng bật khỏi người họ; `heavenStrike` đánh thường và ra chiêu phóng sét từ quả cầu tới
+   * đối thủ đứng đầu, tuyệt chiêu mây giông tụ rồi cột sét lớn giáng xuống người đó, đốm năng lượng bật khỏi thân.
    */
   readonly strikeFx?:
     | "lightning"
@@ -174,7 +175,8 @@ export interface WarriorRig {
     | "earthMend"
     | "roadSever"
     | "stoneBastion"
-    | "thunderCleave";
+    | "thunderCleave"
+    | "heavenStrike";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -2443,6 +2445,51 @@ const TONG_TAN: WarriorRig = {
     anchor: { x: 560, y: 1250 }, scale: 0.9 },
 };
 
+/**
+ * Vũ Lôi, pháp sư hệ Lôi (tướng cửa hàng). Bộ tranh Shan gửi 29/10 (nền trong suốt sẵn, khổ 1024×1536; tranh tuyệt chiêu
+ * khổ ngang 1536×1024). Ảnh đứng tách lớp bằng code như Doãn Nham: trượng đầu lồng đồng gắn quả cầu tím cùng nắm tay xoay
+ * quanh cổ tay, khe trượng sau nắm tay lấp bằng đoạn trượng ngay dưới; bàn tay buông và đầu tách riêng. Tranh chống trượng
+ * chống nạnh làm tranh phong thái. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const VU_LOI: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "staff",
+  dir: "vu-loi",
+  texScale: 0.5,
+  foot: { x: 510, y: 1500 },
+  height: 1495,
+  parts: {
+    body: { x: 198, y: 5, w: 771, h: 1515 },
+    armR: { x: 798, y: 646, w: 76, h: 145 },
+    sword: { x: 100, y: 43, w: 124, h: 1432 },
+    arm: { x: 121, y: 413, w: 97, h: 95 },
+    head: { x: 462, y: 8, w: 190, h: 250 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 205, y: 462 },
+    elbowR: { x: 818, y: 668 },
+    neck: { x: 548, y: 235 },
+  },
+  blade: [{ x: 165, y: 460 }, { x: 160, y: 127 }],
+  orb: { x: 160, y: 127 },
+  strikeFx: "heavenStrike",
+  fxColor: 0xb48cff,
+  // Kết ấn Ngũ hành đẩy bàn tay về phía đối thủ (đánh thường), chạm đỉnh trượng gọi sét vào quả cầu (ra chiêu), giơ ngang
+  // trượng qua đầu gọi thiên lôi (tuyệt chiêu). Cỡ người so theo khóa thắt lưng.
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 154, y: 7 },
+      anchor: { x: 560, y: 1490 }, scale: 1.05, burst: { x: 770, y: 300 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 96, y: 25 },
+      anchor: { x: 546, y: 1472 }, scale: 1.05, burst: { x: 270, y: 95 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 195, y: 10 },
+      anchor: { x: 827, y: 998 }, scale: 1.28, burst: { x: 1230, y: 50 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 8, y: 189 },
+    anchor: { x: 700, y: 1150 }, scale: 1.2 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -2494,6 +2541,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   maNhac: MA_NHAC,
   taThach: TA_THACH,
   tongTan: TONG_TAN,
+  vuLoi: VU_LOI,
 };
 
 export function rigOf(id: string): Rig | null {
