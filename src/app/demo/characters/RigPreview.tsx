@@ -56,7 +56,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }] = await Promise.all([
+        const [{ Application }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM, VOLT }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -248,6 +248,15 @@ export default function RigPreview({ id, size, onSnapshot }: {
           mend[0].cover(at, size);
           mend[1].rally(at, size, 0.35);
         });
+        // Lôi châm khởi tử hệ Lôi: chùm kim tím từ tay về ngực nhân vật, rồi vòng sáng tím quanh chân.
+        const pricks = team === "thunderMend" ? [needleVolley(app.stage, rig.fxColor), leafBloom(app.stage, rig.fxColor, VOLT)] as const : null;
+        if (pricks) loaded.onStrike?.((kind, at) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          const w = el.dataset.size === "large" ? 3 : 2;
+          pricks[0].volley(at, { x: loaded.view.x, y: loaded.view.y - size * 0.5 }, w);
+          pricks[1].cover({ x: loaded.view.x, y: loaded.view.y }, size, 0.25);
+        });
         // Đập đất hệ Thổ (bổ chùy, sơn hà trấn kích): nứt đất ở mép phải khung, khiên mặt trống trước nhân vật.
         const slam = team === "groundSlam" || team === "mountainCrush" ? groundSlam(app.stage, rig.fxColor) : null;
         const drum = slam ? drumShield(app.stage, rig.fxColor) : null;
@@ -374,6 +383,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           surge?.forEach((c) => c.update(dt));
           roar?.forEach((c) => c.update(dt));
           mend?.forEach((m) => m.update(dt));
+          pricks?.forEach((m) => m.update(dt));
           siege?.update(dt);
           roots?.forEach((r) => r.update(dt));
           thorns?.update(dt);
