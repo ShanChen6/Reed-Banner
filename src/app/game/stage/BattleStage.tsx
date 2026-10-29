@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, EMBER, LOAM }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -241,6 +241,7 @@ export default function BattleStage({
         import("./drum"),
         import("./surge"),
         import("./taunt"),
+        import("./bastion"),
       ]);
       const app = new Application();
       await app.init({
@@ -607,6 +608,23 @@ export default function BattleStage({
             if (kind === "ultimate" && foe) fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
           });
           return [fx];
+        }
+        if (rig.strikeFx === "stoneBastion") {
+          const ring = stoneBastion(sky, rig.fxColor);
+          const ward = drumShield(sky, rig.fxColor, facing);
+          const rally = ironFormation(sky, rig.fxColor);
+          // Tuyệt chiêu bát trận thạch lũy: tám cột đá mọc quanh chân từng đồng đội, khiên mặt trống đồng (Khiên 12% máu)
+          // rồi mũi tên vàng dâng lên (Thủ tăng).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(true).forEach((s, n) => {
+              ring.ring(spot(s, 0), size, n * 0.08);
+              ward.cover(spot(s, 0), size, 0.25 + n * 0.08);
+              rally.rally(spot(s, 0), size, 0.45 + n * 0.08);
+            });
+          });
+          return [ring, ward, rally];
         }
         if (rig.strikeFx === "roadSever") {
           const surge = earthSurge(sky, rig.fxColor);
