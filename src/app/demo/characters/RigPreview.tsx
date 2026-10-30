@@ -179,13 +179,15 @@ export default function RigPreview({ id, size, onSnapshot }: {
           });
         });
         // Nhát chém lửa hệ Hỏa: bổ qua một điểm bên phải khung, lửa bén theo sau.
-        const cleave = team === "flameCleave" ? [flameCleave(app.stage, rig.fxColor), flameWall(app.stage, rig.fxColor)] as const : null;
+        const cleave = team === "flameCleave" || team === "twinCleave" ? [flameCleave(app.stage, rig.fxColor), flameWall(app.stage, rig.fxColor)] as const : null;
         if (cleave) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y * 0.8;
           const at = { x: el.clientWidth * 0.85, y: loaded.view.y };
           cleave[0].slash(at, size, 1);
-          cleave[1].burn(at, size, 0.2);
+          // Song sát: nhát thứ hai bổ ngược chiều, bắt chéo nhát đầu.
+          if (team === "twinCleave") cleave[0].slash(at, size, -1, 0.22);
+          cleave[1].burn(at, size, team === "twinCleave" ? 0.4 : 0.2);
         });
         // Thiên lôi giáng thế hệ Lôi: sét từ quả cầu tới mép phải khung, tuyệt chiêu cột sét lớn giáng xuống điểm bên phải.
         const smite = team === "heavenStrike" ? [lightning(app.stage, rig.fxColor), heavenStrike(app.stage, rig.fxColor)] as const : null;

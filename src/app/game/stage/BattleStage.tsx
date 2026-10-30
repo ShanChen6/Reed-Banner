@@ -727,6 +727,21 @@ export default function BattleStage({
           });
           return [fx, mist];
         }
+        if (rig.strikeFx === "twinCleave") {
+          const cut = flameCleave(sky, rig.fxColor);
+          const fire = flameWall(sky, rig.fxColor);
+          // Tuyệt chiêu song sát: hai nhát chém lửa bắt chéo nhau qua đối thủ đứng đầu, rồi lửa bén lên họ.
+          loaded[i]!.onStrike?.((kind) => {
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !foe) return;
+            const size = app.screen.height * FIGURE;
+            const dir = e.side === 0 ? 1 : -1;
+            cut.slash(spot(foe, 0), size, dir);
+            cut.slash(spot(foe, 0), size, -dir, 0.22);
+            fire.burn(spot(foe, 0), size, 0.4);
+          });
+          return [cut, fire];
+        }
         if (rig.strikeFx === "tideBlade") {
           const fx = armorPierce(sky, rig.fxColor);
           const crack = ironFormation(sky, rig.fxColor);
