@@ -1,6 +1,11 @@
 # Nhật ký thay đổi thiết kế
 
-## 30/10/2026 — Đinh Ngọc: nhân vật đặc biệt dung hợp tám nghề/bảy hệ
+## 30/10/2026
+
+**Lôi Ảnh — đồng bộ Bạo Vũ Lê Hoa Châm dạng tròn (Shan chốt hình học)**
+- Thay hộp chữ nhật W02 bằng hộp tròn dẹt `RB-074-W03`, đồng cũ/sắt sẫm, hai vòng đồng tâm và hoa lê; cập nhật mô tả vũ khí và cả sáu prompt tại nguồn hiện hành.
+- Giữ nhân dạng, bảng màu, bao hông phải và toàn bộ chỉ số/kỹ năng; hộp cầm tay phải, khung hạ gục đặt cạnh tay phải, châm/sét tách VFX. Master W03 và năm khung còn lại cần duyệt ảnh; chưa thay asset/runtime.
+ — Đinh Ngọc: nhân vật đặc biệt dung hợp tám nghề/bảy hệ
 
 - Người dùng chốt tên Đinh Ngọc, giới tính nữ, khoảng 25 tuổi; lấy cảm hứng đường nét ảnh tham chiếu, trang phục giữ hướng thế kỷ X. Nhân vật hư cấu, không gán tiểu sử/danh tính người thật.
 - Thống nhất nghề có thể hiện qua nội tại: Binh lính–Thổ phòng hộ, Y sư–Mộc hồi phục, Mưu sĩ–Lôi tước cơ, Quân sư–Phong phối hợp; bốn nghề còn lại qua chủ động. Thiết kế6+4 cố định, không cộng tám nội tại mặc định.
