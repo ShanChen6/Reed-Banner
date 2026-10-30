@@ -3,45 +3,43 @@
 
 import type { TileKind } from "../board";
 
-/** Nghề đã có đầy đủ luật chiến đấu, ô match-3 và kỹ năng đang chạy. */
-export const PROFESSIONS = ["tuongSi", "phapSu", "binhLinh", "ySu", "muuSi", "quanSu"] as const;
-export type Profession = (typeof PROFESSIONS)[number];
-
-/**
- * Hai nghề mở rộng CHÍNH THỨC trong danh mục thiết kế Reed Banner.
- * Chưa kích hoạt trong matchmaking/roster cho đến khi có TileKind,
- * kỹ năng nghề, combo/passive, base stats, UI và kiểm thử end-to-end.
- * Không gán ô kiếm giả cho Xạ thủ/Sát thủ vì sẽ làm sai gameplay.
- */
-export const EXPANSION_PROFESSIONS = ["cungThu", "satThu"] as const;
+/** Sáu nghề đã phát hành; cũng là danh sách nghề của Đinh Bộ Lĩnh. */
+export const LEGACY_PROFESSIONS = ["tuongSi", "phapSu", "binhLinh", "ySu", "muuSi", "quanSu"] as const;
+export type LegacyProfession = (typeof LEGACY_PROFESSIONS)[number];
+/** ID canonical: alias cungThu chỉ được đọc tại biên dữ liệu. */
+export const EXPANSION_PROFESSIONS = ["xaThu", "satThu"] as const;
 export type ExpansionProfession = (typeof EXPANSION_PROFESSIONS)[number];
-/** Danh mục tám nghề của sản phẩm, bao gồm nghề chưa mở khóa gameplay. */
-export const ALL_PROFESSIONS = [...PROFESSIONS, ...EXPANSION_PROFESSIONS] as const;
+export const ALL_PROFESSIONS = [...LEGACY_PROFESSIONS, ...EXPANSION_PROFESSIONS] as const;
 export type GameProfession = (typeof ALL_PROFESSIONS)[number];
+export type Profession = LegacyProfession;
+/** Giữ tắt cho tới khi PROF-02..06 có bằng chứng nghiệm thu. */
+export const NEW_PROFESSIONS_ENABLED: boolean = false;
+export const PROFESSIONS = LEGACY_PROFESSIONS;
 export const PROFESSION_DISPLAY_NAME: Readonly<Record<GameProfession, string>> = {
-  tuongSi: "Tướng sĩ",
-  phapSu: "Pháp sư",
-  binhLinh: "Binh lính",
-  ySu: "Y sư",
-  muuSi: "Mưu sĩ",
-  quanSu: "Quân sư",
-  cungThu: "Xạ thủ",
-  satThu: "Sát thủ",
+  tuongSi: "Tướng sĩ", phapSu: "Pháp sư", binhLinh: "Binh lính", ySu: "Y sư",
+  muuSi: "Mưu sĩ", quanSu: "Quân sư", xaThu: "Xạ thủ", satThu: "Sát thủ",
 };
-/** Ranh giới chủ động tránh dùng nghề chưa có kỹ năng trong trận. */
-export function isActiveProfession(profession: GameProfession): profession is Profession {
-  return (PROFESSIONS as readonly string[]).includes(profession);
+export function normalizeProfession(value: unknown): GameProfession | undefined {
+  if (value === "cungThu") return "xaThu";
+  return typeof value === "string" && (ALL_PROFESSIONS as readonly string[]).includes(value)
+    ? value as GameProfession : undefined;
 }
-
-/** Loại ô gắn với mỗi nghề. Trống trận không gắn nghề nào. */
-export const PROFESSION_TILE: Record<Profession, TileKind> = {
-  tuongSi: "kiem",
-  phapSu: "amDuong",
-  binhLinh: "banhChung",
-  ySu: "tim",
-  muuSi: "vang",
-  quanSu: "sach",
+export function isActiveProfession(value: unknown): value is Profession {
+  return typeof value === "string" && (PROFESSIONS as readonly string[]).includes(value);
+}
+export function isLeaderProfession(value: unknown): value is LegacyProfession {
+  return typeof value === "string" && (LEGACY_PROFESSIONS as readonly string[]).includes(value);
+}
+/** Ô công kích dùng chung mọi nghề; key kiem giữ nguyên cho save/replay. */
+export const ATTACK_TILE: TileKind = "kiem";
+/** Chỉ các ô tài nguyên có tương tác riêng theo nghề; không gán ô công kích cho nghề. */
+export const PROFESSION_RESOURCE_TILE: Readonly<Partial<Record<Profession, TileKind>>> = {
+  phapSu: "amDuong", binhLinh: "banhChung", ySu: "tim", muuSi: "vang", quanSu: "sach",
 };
+/** @deprecated Dữ liệu legacy; không dùng để định nghĩa ô công kích hay thêm nghề mới. */
+export const PROFESSION_TILE: Readonly<Record<LegacyProfession, TileKind>> = {
+  tuongSi: ATTACK_TILE, ...PROFESSION_RESOURCE_TILE,
+} as Readonly<Record<LegacyProfession, TileKind>>;
 
 /** 1vs1: máu tối đa nhân thêm, vì không có đồng đội chia sát thương. Điểm xuất phát theo mô phỏng. */
 export const SOLO_HP_MULTIPLIER = 2;
