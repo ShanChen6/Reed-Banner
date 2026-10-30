@@ -1,0 +1,1270 @@
+{
+  "cohort": "smoke-only",
+  "releaseAccepted": false,
+  "limits": {
+    "turns": 160,
+    "actions": 1000
+  },
+  "seeds": [
+    31
+  ],
+  "rows": [
+    {
+      "hero": "bachNoLang",
+      "profession": "xaThu",
+      "foeRole": "tuongSi",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 1,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0,
+      "ci95": [
+        0,
+        0.48990002040399916
+      ],
+      "meanTurns": 28.5,
+      "stats": [
+        {
+          "id": "bachNoLang",
+          "hp": 746,
+          "atk": 86,
+          "def": 14
+        }
+      ],
+      "maxReactions": 2,
+      "maxDepth": 2,
+      "poisonDamage": 0,
+      "energyGain": 940,
+      "energyDrain": 0,
+      "contributions": {
+        "kim1": 10,
+        "kim2": 10
+      }
+    },
+    {
+      "hero": "bachNoLang",
+      "profession": "xaThu",
+      "foeRole": "tuongSi",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 3,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0.5,
+      "ci95": [
+        0.15003570882017148,
+        0.8499642911798285
+      ],
+      "meanTurns": 55,
+      "stats": [
+        {
+          "id": "bachNoLang",
+          "hp": 746,
+          "atk": 86,
+          "def": 14
+        },
+        {
+          "id": "phungPhong",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        },
+        {
+          "id": "toKim",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        }
+      ],
+      "maxReactions": 6,
+      "maxDepth": 3,
+      "poisonDamage": 0,
+      "energyGain": 3738,
+      "energyDrain": 178,
+      "contributions": {
+        "phong2": 12,
+        "kim2": 20,
+        "medic": 10,
+        "thuy2": 18,
+        "guardian": 16,
+        "tho2": 6,
+        "P1:renewal": 2,
+        "tho1": 2,
+        "kim1": 6,
+        "phong1": 2
+      }
+    },
+    {
+      "hero": "thanhLamXa",
+      "profession": "xaThu",
+      "foeRole": "binhLinh",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 1,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0.5,
+      "ci95": [
+        0.15003570882017148,
+        0.8499642911798285
+      ],
+      "meanTurns": 84,
+      "stats": [
+        {
+          "id": "thanhLamXa",
+          "hp": 746,
+          "atk": 86,
+          "def": 14
+        }
+      ],
+      "maxReactions": 1,
+      "maxDepth": 1,
+      "poisonDamage": 0,
+      "energyGain": 3360,
+      "energyDrain": 0,
+      "contributions": {
+        "moc2": 30,
+        "moc1": 14
+      }
+    },
+    {
+      "hero": "thanhLamXa",
+      "profession": "xaThu",
+      "foeRole": "binhLinh",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 3,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 1,
+      "ci95": [
+        0.5100999795960008,
+        1
+      ],
+      "meanTurns": 103.5,
+      "stats": [
+        {
+          "id": "thanhLamXa",
+          "hp": 746,
+          "atk": 86,
+          "def": 14
+        },
+        {
+          "id": "phungPhong",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        },
+        {
+          "id": "toKim",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        }
+      ],
+      "maxReactions": 6,
+      "maxDepth": 3,
+      "poisonDamage": 0,
+      "energyGain": 6738,
+      "energyDrain": 732,
+      "contributions": {
+        "moc2": 30,
+        "thuy2": 38,
+        "guardian": 22,
+        "moc1": 30,
+        "phong2": 16,
+        "kim2": 30,
+        "commander": 10,
+        "kim1": 20,
+        "tho2": 14,
+        "medic": 14,
+        "P1:coordination": 2,
+        "phong1": 4,
+        "strategist": 4
+      }
+    },
+    {
+      "hero": "lamGiangPhiDiep",
+      "profession": "xaThu",
+      "foeRole": "ySu",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 1,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 1,
+      "ci95": [
+        0.5100999795960008,
+        1
+      ],
+      "meanTurns": 108.5,
+      "stats": [
+        {
+          "id": "lamGiangPhiDiep",
+          "hp": 746,
+          "atk": 86,
+          "def": 14
+        }
+      ],
+      "maxReactions": 1,
+      "maxDepth": 1,
+      "poisonDamage": 0,
+      "energyGain": 3764,
+      "energyDrain": 30,
+      "contributions": {
+        "thuy2": 54
+      }
+    },
+    {
+      "hero": "lamGiangPhiDiep",
+      "profession": "xaThu",
+      "foeRole": "ySu",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 3,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0.5,
+      "ci95": [
+        0.15003570882017148,
+        0.8499642911798285
+      ],
+      "meanTurns": 58,
+      "stats": [
+        {
+          "id": "lamGiangPhiDiep",
+          "hp": 746,
+          "atk": 86,
+          "def": 14
+        },
+        {
+          "id": "phungPhong",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        },
+        {
+          "id": "toKim",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        }
+      ],
+      "maxReactions": 7,
+      "maxDepth": 3,
+      "poisonDamage": 0,
+      "energyGain": 4108,
+      "energyDrain": 236,
+      "contributions": {
+        "thuy2": 34,
+        "guardian": 22,
+        "phong2": 16,
+        "kim2": 24,
+        "kim1": 12,
+        "commander": 4,
+        "P1:coordination": 2,
+        "thuy1": 4,
+        "rb064_canhGioi": 4,
+        "tho2": 4,
+        "medic": 4
+      }
+    },
+    {
+      "hero": "xichDiemLuan",
+      "profession": "xaThu",
+      "foeRole": "phapSu",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 1,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0,
+      "ci95": [
+        0,
+        0.48990002040399916
+      ],
+      "meanTurns": 19.5,
+      "stats": [
+        {
+          "id": "xichDiemLuan",
+          "hp": 746,
+          "atk": 86,
+          "def": 14
+        }
+      ],
+      "maxReactions": 2,
+      "maxDepth": 2,
+      "poisonDamage": 0,
+      "energyGain": 1550,
+      "energyDrain": 0,
+      "contributions": {
+        "hoa1": 12,
+        "hoa2": 8
+      }
+    },
+    {
+      "hero": "xichDiemLuan",
+      "profession": "xaThu",
+      "foeRole": "phapSu",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 3,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0.5,
+      "ci95": [
+        0.15003570882017148,
+        0.8499642911798285
+      ],
+      "meanTurns": 53,
+      "stats": [
+        {
+          "id": "xichDiemLuan",
+          "hp": 746,
+          "atk": 86,
+          "def": 14
+        },
+        {
+          "id": "phungPhong",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        },
+        {
+          "id": "toKim",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        }
+      ],
+      "maxReactions": 5,
+      "maxDepth": 2,
+      "poisonDamage": 0,
+      "energyGain": 3732,
+      "energyDrain": 150,
+      "contributions": {
+        "hoa2": 6,
+        "medic": 8,
+        "hoa1": 6,
+        "thuy2": 14,
+        "guardian": 14,
+        "tho1": 2,
+        "kim1": 2,
+        "kim2": 2,
+        "phong2": 2
+      }
+    },
+    {
+      "hero": "tranSonThach",
+      "profession": "xaThu",
+      "foeRole": "muuSi",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 1,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0.5,
+      "ci95": [
+        0.15003570882017148,
+        0.8499642911798285
+      ],
+      "meanTurns": 82,
+      "stats": [
+        {
+          "id": "tranSonThach",
+          "hp": 746,
+          "atk": 86,
+          "def": 14
+        }
+      ],
+      "maxReactions": 1,
+      "maxDepth": 1,
+      "poisonDamage": 0,
+      "energyGain": 4250,
+      "energyDrain": 84,
+      "contributions": {
+        "rb066_kienThu": 44
+      }
+    },
+    {
+      "hero": "tranSonThach",
+      "profession": "xaThu",
+      "foeRole": "muuSi",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 3,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0,
+      "ci95": [
+        0,
+        0.48990002040399916
+      ],
+      "meanTurns": 73.5,
+      "stats": [
+        {
+          "id": "tranSonThach",
+          "hp": 746,
+          "atk": 86,
+          "def": 14
+        },
+        {
+          "id": "phungPhong",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        },
+        {
+          "id": "toKim",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        }
+      ],
+      "maxReactions": 9,
+      "maxDepth": 4,
+      "poisonDamage": 0,
+      "energyGain": 4948,
+      "energyDrain": 464,
+      "contributions": {
+        "phong2": 24,
+        "kim2": 16,
+        "tho1": 10,
+        "thuy2": 14,
+        "guardian": 10,
+        "kim1": 6,
+        "rb066_kienThu": 10,
+        "tho2": 16,
+        "medic": 4,
+        "phong1": 2,
+        "P1:pursuit": 2
+      }
+    },
+    {
+      "hero": "loiMinhXa",
+      "profession": "xaThu",
+      "foeRole": "quanSu",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 1,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0,
+      "ci95": [
+        0,
+        0.48990002040399916
+      ],
+      "meanTurns": 32.5,
+      "stats": [
+        {
+          "id": "loiMinhXa",
+          "hp": 746,
+          "atk": 86,
+          "def": 14
+        }
+      ],
+      "maxReactions": 1,
+      "maxDepth": 1,
+      "poisonDamage": 0,
+      "energyGain": 2486,
+      "energyDrain": 190,
+      "contributions": {
+        "rb067_chopThoiCo": 4
+      }
+    },
+    {
+      "hero": "loiMinhXa",
+      "profession": "xaThu",
+      "foeRole": "quanSu",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 3,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0.5,
+      "ci95": [
+        0.15003570882017148,
+        0.8499642911798285
+      ],
+      "meanTurns": 74,
+      "stats": [
+        {
+          "id": "loiMinhXa",
+          "hp": 746,
+          "atk": 86,
+          "def": 14
+        },
+        {
+          "id": "phungPhong",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        },
+        {
+          "id": "toKim",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        }
+      ],
+      "maxReactions": 10,
+      "maxDepth": 3,
+      "poisonDamage": 0,
+      "energyGain": 5432,
+      "energyDrain": 966,
+      "contributions": {
+        "rb067_chopThoiCo": 16,
+        "phong2": 26,
+        "kim2": 14,
+        "commander": 12,
+        "thuy2": 12,
+        "guardian": 12,
+        "tho2": 4,
+        "kim1": 6,
+        "loi2": 4,
+        "medic": 4,
+        "P1:coordination": 4,
+        "loi1": 2,
+        "phong1": 2
+      }
+    },
+    {
+      "hero": "tatPhongLang",
+      "profession": "xaThu",
+      "foeRole": "tuongSi",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 1,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0,
+      "ci95": [
+        0,
+        0.48990002040399916
+      ],
+      "meanTurns": 24.5,
+      "stats": [
+        {
+          "id": "tatPhongLang",
+          "hp": 746,
+          "atk": 86,
+          "def": 14
+        }
+      ],
+      "maxReactions": 1,
+      "maxDepth": 1,
+      "poisonDamage": 0,
+      "energyGain": 1306,
+      "energyDrain": 0,
+      "contributions": {
+        "phong2": 12
+      }
+    },
+    {
+      "hero": "tatPhongLang",
+      "profession": "xaThu",
+      "foeRole": "tuongSi",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 3,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0.5,
+      "ci95": [
+        0.15003570882017148,
+        0.8499642911798285
+      ],
+      "meanTurns": 35,
+      "stats": [
+        {
+          "id": "tatPhongLang",
+          "hp": 746,
+          "atk": 86,
+          "def": 14
+        },
+        {
+          "id": "phungPhong",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        },
+        {
+          "id": "toKim",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        }
+      ],
+      "maxReactions": 8,
+      "maxDepth": 3,
+      "poisonDamage": 0,
+      "energyGain": 2826,
+      "energyDrain": 152,
+      "contributions": {
+        "phong2": 24,
+        "medic": 18,
+        "thuy2": 26,
+        "guardian": 24,
+        "tho2": 10,
+        "kim1": 6,
+        "kim2": 6,
+        "P1:renewal": 2
+      }
+    },
+    {
+      "hero": "bachPhongDao",
+      "profession": "satThu",
+      "foeRole": "binhLinh",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 1,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0,
+      "ci95": [
+        0,
+        0.48990002040399916
+      ],
+      "meanTurns": 67.5,
+      "stats": [
+        {
+          "id": "bachPhongDao",
+          "hp": 706,
+          "atk": 91,
+          "def": 13
+        }
+      ],
+      "maxReactions": 2,
+      "maxDepth": 2,
+      "poisonDamage": 0,
+      "energyGain": 2720,
+      "energyDrain": 60,
+      "contributions": {
+        "kim1": 32,
+        "kim2": 2
+      }
+    },
+    {
+      "hero": "bachPhongDao",
+      "profession": "satThu",
+      "foeRole": "binhLinh",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 3,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0.5,
+      "ci95": [
+        0.15003570882017148,
+        0.8499642911798285
+      ],
+      "meanTurns": 69,
+      "stats": [
+        {
+          "id": "bachPhongDao",
+          "hp": 706,
+          "atk": 91,
+          "def": 13
+        },
+        {
+          "id": "phungPhong",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        },
+        {
+          "id": "toKim",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        }
+      ],
+      "maxReactions": 9,
+      "maxDepth": 4,
+      "poisonDamage": 0,
+      "energyGain": 4696,
+      "energyDrain": 346,
+      "contributions": {
+        "kim1": 38,
+        "phong2": 30,
+        "kim2": 36,
+        "tho2": 12,
+        "medic": 12,
+        "guardian": 10,
+        "thuy2": 16,
+        "assassinPrepared": 2,
+        "P1:resonance": 2
+      }
+    },
+    {
+      "hero": "docAnh",
+      "profession": "satThu",
+      "foeRole": "ySu",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 1,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0.5,
+      "ci95": [
+        0.15003570882017148,
+        0.8499642911798285
+      ],
+      "meanTurns": 113,
+      "stats": [
+        {
+          "id": "docAnh",
+          "hp": 706,
+          "atk": 91,
+          "def": 13
+        }
+      ],
+      "maxReactions": 1,
+      "maxDepth": 1,
+      "poisonDamage": 0,
+      "energyGain": 4320,
+      "energyDrain": 40,
+      "contributions": {
+        "moc2": 40,
+        "moc1": 20
+      }
+    },
+    {
+      "hero": "docAnh",
+      "profession": "satThu",
+      "foeRole": "ySu",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 3,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0,
+      "ci95": [
+        0,
+        0.48990002040399916
+      ],
+      "meanTurns": 45.5,
+      "stats": [
+        {
+          "id": "docAnh",
+          "hp": 706,
+          "atk": 91,
+          "def": 13
+        },
+        {
+          "id": "phungPhong",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        },
+        {
+          "id": "toKim",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        }
+      ],
+      "maxReactions": 6,
+      "maxDepth": 4,
+      "poisonDamage": 0,
+      "energyGain": 3144,
+      "energyDrain": 184,
+      "contributions": {
+        "moc2": 18,
+        "thuy2": 18,
+        "guardian": 18,
+        "moc1": 6,
+        "phong2": 6,
+        "kim1": 6,
+        "commander": 4,
+        "kim2": 6,
+        "tho2": 10,
+        "medic": 8
+      }
+    },
+    {
+      "hero": "hanGiangKhach",
+      "profession": "satThu",
+      "foeRole": "phapSu",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 1,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0.5,
+      "ci95": [
+        0.15003570882017148,
+        0.8499642911798285
+      ],
+      "meanTurns": 18,
+      "stats": [
+        {
+          "id": "hanGiangKhach",
+          "hp": 706,
+          "atk": 91,
+          "def": 13
+        }
+      ],
+      "maxReactions": 0,
+      "maxDepth": 0,
+      "poisonDamage": 0,
+      "energyGain": 1558,
+      "energyDrain": 60,
+      "contributions": {}
+    },
+    {
+      "hero": "hanGiangKhach",
+      "profession": "satThu",
+      "foeRole": "phapSu",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 3,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0.5,
+      "ci95": [
+        0.15003570882017148,
+        0.8499642911798285
+      ],
+      "meanTurns": 35,
+      "stats": [
+        {
+          "id": "hanGiangKhach",
+          "hp": 706,
+          "atk": 91,
+          "def": 13
+        },
+        {
+          "id": "phungPhong",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        },
+        {
+          "id": "toKim",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        }
+      ],
+      "maxReactions": 7,
+      "maxDepth": 3,
+      "poisonDamage": 0,
+      "energyGain": 3034,
+      "energyDrain": 102,
+      "contributions": {
+        "phong2": 20,
+        "kim1": 12,
+        "kim2": 12,
+        "thuy2": 16,
+        "guardian": 10,
+        "medic": 4,
+        "phong1": 2,
+        "tho1": 2,
+        "assassinPrepared": 2,
+        "thuy1": 2,
+        "rb071_passive": 2,
+        "commander": 2
+      }
+    },
+    {
+      "hero": "xichDa",
+      "profession": "satThu",
+      "foeRole": "muuSi",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 1,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0.5,
+      "ci95": [
+        0.15003570882017148,
+        0.8499642911798285
+      ],
+      "meanTurns": 27,
+      "stats": [
+        {
+          "id": "xichDa",
+          "hp": 706,
+          "atk": 91,
+          "def": 13
+        }
+      ],
+      "maxReactions": 2,
+      "maxDepth": 2,
+      "poisonDamage": 0,
+      "energyGain": 1112,
+      "energyDrain": 58,
+      "contributions": {
+        "hoa1": 12,
+        "hoa2": 2
+      }
+    },
+    {
+      "hero": "xichDa",
+      "profession": "satThu",
+      "foeRole": "muuSi",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 3,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0.5,
+      "ci95": [
+        0.15003570882017148,
+        0.8499642911798285
+      ],
+      "meanTurns": 52,
+      "stats": [
+        {
+          "id": "xichDa",
+          "hp": 706,
+          "atk": 91,
+          "def": 13
+        },
+        {
+          "id": "phungPhong",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        },
+        {
+          "id": "toKim",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        }
+      ],
+      "maxReactions": 4,
+      "maxDepth": 3,
+      "poisonDamage": 0,
+      "energyGain": 3730,
+      "energyDrain": 292,
+      "contributions": {
+        "hoa1": 10,
+        "kim2": 12,
+        "phong2": 12,
+        "kim1": 12,
+        "thuy2": 22,
+        "guardian": 16,
+        "thuy1": 6,
+        "tho2": 2,
+        "medic": 2
+      }
+    },
+    {
+      "hero": "diaAn",
+      "profession": "satThu",
+      "foeRole": "quanSu",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 1,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0.5,
+      "ci95": [
+        0.15003570882017148,
+        0.8499642911798285
+      ],
+      "meanTurns": 51,
+      "stats": [
+        {
+          "id": "diaAn",
+          "hp": 706,
+          "atk": 91,
+          "def": 13
+        }
+      ],
+      "maxReactions": 1,
+      "maxDepth": 1,
+      "poisonDamage": 0,
+      "energyGain": 2440,
+      "energyDrain": 0,
+      "contributions": {
+        "rb073_passive": 20
+      }
+    },
+    {
+      "hero": "diaAn",
+      "profession": "satThu",
+      "foeRole": "quanSu",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 3,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0.5,
+      "ci95": [
+        0.15003570882017148,
+        0.8499642911798285
+      ],
+      "meanTurns": 82,
+      "stats": [
+        {
+          "id": "diaAn",
+          "hp": 706,
+          "atk": 91,
+          "def": 13
+        },
+        {
+          "id": "phungPhong",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        },
+        {
+          "id": "toKim",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        }
+      ],
+      "maxReactions": 10,
+      "maxDepth": 4,
+      "poisonDamage": 0,
+      "energyGain": 5336,
+      "energyDrain": 208,
+      "contributions": {
+        "phong2": 24,
+        "kim1": 12,
+        "kim2": 12,
+        "commander": 18,
+        "tho1": 20,
+        "thuy2": 18,
+        "guardian": 18,
+        "rb073_passive": 6,
+        "tho2": 16,
+        "medic": 6,
+        "P1:coordination": 8,
+        "phong1": 2
+      }
+    },
+    {
+      "hero": "loiAnh",
+      "profession": "satThu",
+      "foeRole": "tuongSi",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 1,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0.5,
+      "ci95": [
+        0.15003570882017148,
+        0.8499642911798285
+      ],
+      "meanTurns": 27,
+      "stats": [
+        {
+          "id": "loiAnh",
+          "hp": 706,
+          "atk": 91,
+          "def": 13
+        }
+      ],
+      "maxReactions": 1,
+      "maxDepth": 1,
+      "poisonDamage": 0,
+      "energyGain": 1420,
+      "energyDrain": 136,
+      "contributions": {
+        "rb074_passive": 12,
+        "loi2": 10
+      }
+    },
+    {
+      "hero": "loiAnh",
+      "profession": "satThu",
+      "foeRole": "tuongSi",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 3,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0,
+      "ci95": [
+        0,
+        0.48990002040399916
+      ],
+      "meanTurns": 39.5,
+      "stats": [
+        {
+          "id": "loiAnh",
+          "hp": 706,
+          "atk": 91,
+          "def": 13
+        },
+        {
+          "id": "phungPhong",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        },
+        {
+          "id": "toKim",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        }
+      ],
+      "maxReactions": 9,
+      "maxDepth": 3,
+      "poisonDamage": 0,
+      "energyGain": 3030,
+      "energyDrain": 620,
+      "contributions": {
+        "loi2": 8,
+        "medic": 10,
+        "thuy2": 20,
+        "guardian": 18,
+        "rb074_passive": 10,
+        "phong2": 6,
+        "kim1": 6,
+        "kim2": 6,
+        "tho2": 2,
+        "P1:renewal": 2,
+        "tho1": 2
+      }
+    },
+    {
+      "hero": "voAnh",
+      "profession": "satThu",
+      "foeRole": "binhLinh",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 1,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0,
+      "ci95": [
+        0,
+        0.48990002040399916
+      ],
+      "meanTurns": 61.5,
+      "stats": [
+        {
+          "id": "voAnh",
+          "hp": 706,
+          "atk": 91,
+          "def": 13
+        }
+      ],
+      "maxReactions": 0,
+      "maxDepth": 0,
+      "poisonDamage": 0,
+      "energyGain": 2956,
+      "energyDrain": 80,
+      "contributions": {}
+    },
+    {
+      "hero": "voAnh",
+      "profession": "satThu",
+      "foeRole": "binhLinh",
+      "level": 20,
+      "skillLevel": 3,
+      "gear": 0,
+      "mode": 3,
+      "games": 4,
+      "completed": 4,
+      "censored": 0,
+      "winRate": 0,
+      "ci95": [
+        0,
+        0.48990002040399916
+      ],
+      "meanTurns": 77.5,
+      "stats": [
+        {
+          "id": "voAnh",
+          "hp": 706,
+          "atk": 91,
+          "def": 13
+        },
+        {
+          "id": "phungPhong",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        },
+        {
+          "id": "toKim",
+          "hp": 746,
+          "atk": 78,
+          "def": 16
+        }
+      ],
+      "maxReactions": 8,
+      "maxDepth": 3,
+      "poisonDamage": 0,
+      "energyGain": 5262,
+      "energyDrain": 428,
+      "contributions": {
+        "phong2": 26,
+        "kim1": 12,
+        "kim2": 12,
+        "tho2": 6,
+        "medic": 6,
+        "thuy2": 20,
+        "guardian": 18,
+        "P1:retaliation": 4,
+        "phong1": 4,
+        "rb075_passive": 2
+      }
+    }
+  ]
+}

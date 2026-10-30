@@ -7,7 +7,6 @@ import {
   ENERGY_MAX,
   ELEMENTS,
   FOOD_MAX,
-  PROFESSIONS,
   isLeaderProfession,
   normalizeProfession,
   type BattleState,
