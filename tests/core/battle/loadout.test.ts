@@ -18,9 +18,9 @@ function arena(skills: string[], trio = false): BattleState {
 
 describe("bộ nghề + hệ", () => {
   it("đủ 42 tổ hợp: 3 nghề, 2 hệ, 1 tuyệt chiêu; ID không trùng và thứ tự theo mốc", () => {
-    assert.equal(ROLE_SKILLS.length,18);
+    assert.equal(ROLE_SKILLS.length,24);
     assert.equal(ELEMENT_SKILLS.length,14);
-    assert.equal(new Set([...ROLE_SKILLS,...ELEMENT_SKILLS].map(d=>d.id)).size,32);
+    assert.equal(new Set([...ROLE_SKILLS,...ELEMENT_SKILLS].map(d=>d.id)).size,38);
     for (const p of PROFESSIONS) for (const e of ELEMENTS) {
       const defs = characterSkills(p,e);
       assert.deepEqual(defs.map(d=>d.slot),[1,2,3,4,5,6]);
