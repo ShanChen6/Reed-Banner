@@ -150,7 +150,7 @@ export interface WarriorRig {
    * tuyệt chiêu, vòng gió trắng xanh hồi phục quanh từng đồng đội và luồng gió đưa năng lượng tới họ; `galeRift` chỉ ở
    * tuyệt chiêu, lốc cuốn quanh từng đối thủ và năng lượng bay khỏi họ về chính mình; `galeRout` chỉ ở tuyệt chiêu, lốc
    * cuốn và khiên nứt trên từng đối thủ, luồng gió đưa năng lượng tới từng đồng đội; `boltBreach` chỉ ở tuyệt chiêu,
-   * tên nỏ xuyên tới đối thủ đứng đầu và khiên giáp họ nứt vỡ; `thicketShot` chỉ ở tuyệt chiêu, mũi tên xuyên tới đối
+   * tên nỏ (hoặc mũi dao) xuyên tới đối thủ đứng đầu và khiên giáp họ nứt vỡ; `thicketShot` chỉ ở tuyệt chiêu, mũi tên xuyên tới đối
    * thủ đứng đầu, khiên giáp họ nứt và vòng lá hồi phục quanh từng đồng đội; `willowTide` chỉ ở tuyệt chiêu, phi tiêu
    * lao tới đối thủ đứng đầu và cột nước đông băng dưới chân họ; `flameDisc` chỉ ở tuyệt chiêu, phi luân lửa nảy qua
    * từng đối thủ và lửa bén lên họ; `stoneGuard` chỉ ở tuyệt chiêu, đá lao tới đối thủ đứng đầu, khiên giáp họ nứt và
@@ -3315,6 +3315,49 @@ const DINH_NGOC: WarriorRig = {
     anchor: { x: 760, y: 920 }, scale: 0.85 },
 };
 
+/**
+ * Bạch Phong Đao, sát thủ hệ Kim (RB-069, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
+ * 30/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: dao găm cùng nắm tay phải xoay quanh cổ tay theo nhịp chém,
+ * bàn tay trái giơ chưởng và đầu tách riêng; bao dao ở lại thân. Tuyệt chiêu dùng chung hiệu ứng xuyên giáp với Bạch Nỏ
+ * Lang. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const BACH_PHONG_DAO: WarriorRig = {
+  skeleton: "warrior",
+  dir: "bach-phong-dao",
+  texScale: 0.5,
+  foot: { x: 560, y: 1500 },
+  height: 1490,
+  parts: {
+    body: { x: 195, y: 9, w: 775, h: 1509 },
+    armR: { x: 688, y: 335, w: 95, h: 142 },
+    sword: { x: 113, y: 770, w: 147, h: 260 },
+    arm: { x: 219, y: 655, w: 79, h: 118 },
+    head: { x: 445, y: 12, w: 224, h: 274 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 262, y: 690 },
+    elbowR: { x: 712, y: 440 },
+    neck: { x: 540, y: 275 },
+  },
+  blade: [{ x: 240, y: 775 }, { x: 118, y: 1028 }],
+  strikeFx: "boltBreach",
+  fxColor: 0x9ea4ad,
+  // Thúc khuỷu nắm đấm, dao hạ thấp (đánh thường), đâm dao ngang ngực (ra chiêu), lao tới giơ dao ngang vai đoạt mệnh
+  // (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 55, y: 14 },
+      anchor: { x: 555, y: 1505 }, scale: 1, burst: { x: 900, y: 270 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 20, y: 26 },
+      anchor: { x: 520, y: 1500 }, scale: 1, burst: { x: 1000, y: 430 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 85, y: 22 },
+      anchor: { x: 545, y: 1500 }, scale: 1, burst: { x: 720, y: 260 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 25, y: 57 },
+    anchor: { x: 760, y: 920 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -3385,6 +3428,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   loiMinhXa: LOI_MINH_XA,
   tatPhongLang: TAT_PHONG_LANG,
   dinhNgoc: DINH_NGOC,
+  bachPhongDao: BACH_PHONG_DAO,
 };
 
 export function rigOf(id: string): Rig | null {

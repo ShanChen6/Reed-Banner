@@ -17,6 +17,7 @@ const PREVIEW_ONLY: Readonly<Record<string, { readonly name: string; readonly el
   tranSonThach: { name: "Trấn Sơn Thạch", element: "tho", profession: "cungThu" },
   loiMinhXa: { name: "Lôi Minh Xạ", element: "loi", profession: "cungThu" },
   tatPhongLang: { name: "Tật Phong Lăng", element: "phong", profession: "cungThu" },
+  bachPhongDao: { name: "Bạch Phong Đao", element: "kim", profession: "satThu" },
   // Nhân vật đặc biệt dung hợp tám nghề; nghề ghi Tướng sĩ chỉ để dùng hình dự phòng, trang hiện danh xưng.
   dinhNgoc: { name: "Đinh Ngọc", element: "kim", profession: "tuongSi", title: "Vạn Tượng Hành Giả" },
 };
