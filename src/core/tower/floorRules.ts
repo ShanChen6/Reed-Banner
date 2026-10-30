@@ -1,6 +1,6 @@
 // Luật tầng Song Tháp: dữ liệu thuần + kiểm tra đội hình, không phụ thuộc UI hay battle engine.
 // Nội dung luật cụ thể của từng tầng thuộc task sau. Xem docs/02-game-modes/dual-tower/00-02-rules.md §3.2.
-import { ELEMENTS, PROFESSIONS, type Element, type Profession } from "../battle";
+import { ELEMENTS, ALL_PROFESSIONS, LEGACY_PROFESSIONS, PROFESSIONS, type Element, type Profession } from "../battle";
 import { MAIN_ID } from "../progress/profile";
 
 export const LINEUP_SIZE = 3;
@@ -71,7 +71,7 @@ export type LineupResult =
 const isElement = (x: unknown): x is Element =>
   (ELEMENTS as readonly unknown[]).includes(x);
 const isProfession = (x: unknown): x is Profession =>
-  (PROFESSIONS as readonly unknown[]).includes(x);
+  (ALL_PROFESSIONS as readonly unknown[]).includes(x);
 const isCount = (n: unknown): n is number =>
   Number.isInteger(n) && (n as number) >= 0 && (n as number) <= LINEUP_SIZE;
 
@@ -258,7 +258,7 @@ export function leaderBuildOptions(
   companions: readonly LineupMember[],
 ): readonly { element: Element; profession: Profession }[] {
   return ELEMENTS.flatMap((element) =>
-    PROFESSIONS.flatMap((profession) =>
+    LEGACY_PROFESSIONS.flatMap((profession) =>
       validateLineup(rules, [{ id: leaderId, element, profession }, ...companions], leaderId).ok
         ? [{ element, profession }]
         : [],

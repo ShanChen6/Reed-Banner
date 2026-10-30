@@ -63,7 +63,7 @@ export function defaultDestinyBuild(
   rules: FloorRules,
   activeIds: readonly string[],
 ): DestinyLeaderBuild {
-  return legalLeaderBuilds(run, rules, activeIds)[0] ?? { element: ELEMENTS[0], profession: PROFESSIONS[0] };
+  return legalLeaderBuilds(run, rules, activeIds)[0] ?? { element: ELEMENTS[0], profession: PROFESSIONS[0]! };
 }
 
 export function rewardTargetLimit(offer: DestinyRewardOffer): { min: number; max: number; downed: boolean } {
