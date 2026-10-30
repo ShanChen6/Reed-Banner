@@ -139,7 +139,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           if (kind === "ultimate" && loaded) wards.cover({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y);
         });
         // Mũi sáng phá giáp hệ Kim: phóng tới mép phải khung.
-        const pierce = team === "armorPierce" || team === "boltBreach" || team === "thicketShot" || team === "willowTide" || team === "stoneGuard" || team === "voltNeedle" || team === "myriadEdge" ? armorPierce(app.stage, rig.fxColor) : null;
+        const pierce = team === "armorPierce" || team === "boltBreach" || team === "thicketShot" || team === "willowTide" || team === "stoneGuard" || team === "voltNeedle" || team === "myriadEdge" || team === "venomNeedle" ? armorPierce(app.stage, rig.fxColor) : null;
         if (pierce) loaded.onStrike?.((kind, at) => {
           if (kind === "ultimate") pierce.pierce(at, { x: el.clientWidth - 24, y: at.y }, el.dataset.size === "large" ? 5 : 3);
         });
@@ -425,6 +425,11 @@ export default function RigPreview({ id, size, onSnapshot }: {
           myriad[0].strike({ x: el.clientWidth - 24, y: at.y }, el.dataset.size === "large" ? 8 : 5, 0.12);
           myriad[1].cover({ x: loaded.view.x, y: loaded.view.y }, rig.height * loaded.view.scale.y, 0.3);
         });
+        // Độc châm hệ Mộc: sương độc ở mép phải khung (kim châm do `pierce` vẽ).
+        const venom = team === "venomNeedle" ? poisonMist(app.stage, rig.fxColor) : null;
+        if (venom) loaded.onStrike?.((kind) => {
+          if (kind === "ultimate" && loaded) venom.cover({ x: el.clientWidth - 70, y: loaded.view.y }, rig.height * loaded.view.scale.y * 0.8, 0.15);
+        });
         // Gió lành hệ Phong: vòng gió trắng xanh quanh nhân vật.
         const breeze = team === "galeMend" ? leafBloom(app.stage, rig.fxColor, BREEZE, halo) : null;
         if (breeze) loaded.onStrike?.((kind) => {
@@ -459,6 +464,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           disc?.forEach((f) => f.update(dt));
           guard?.update(dt);
           myriad?.forEach((f) => f.update(dt));
+          venom?.update(dt);
           blaze?.forEach((b) => b.update(dt));
           sever?.forEach((b) => b.update(dt));
           bastion?.forEach((b) => b.update(dt));

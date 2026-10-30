@@ -157,7 +157,8 @@ export interface WarriorRig {
    * khiên mặt trống trước từng đồng đội; `voltNeedle` chỉ ở tuyệt chiêu, lôi châm lao tới đối thủ đứng đầu, mây giông
    * câm lặng phủ quanh họ và năng lượng bay về chính mình; `silkGale` chỉ ở tuyệt chiêu, lốc cuốn và khiên nứt trên từng
    * đối thủ; `myriadEdge` chỉ ở tuyệt chiêu, luồng sáng từ mũi kiếm và sét giáng xuống đối thủ đứng đầu, khiên mặt
-   * trống trước chính mình.
+   * trống trước chính mình; `venomNeedle` chỉ ở tuyệt chiêu, kim châm lao tới đối thủ đứng đầu và sương độc cuộn quanh
+   * họ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -213,7 +214,8 @@ export interface WarriorRig {
     | "stoneGuard"
     | "voltNeedle"
     | "silkGale"
-    | "myriadEdge";
+    | "myriadEdge"
+    | "venomNeedle";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -3358,6 +3360,48 @@ const BACH_PHONG_DAO: WarriorRig = {
     anchor: { x: 760, y: 920 }, scale: 0.85 },
 };
 
+/**
+ * Độc Ảnh, sát thủ hệ Mộc (RB-070, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
+ * (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: kim châm độc cùng nắm tay trái xoay quanh cổ tay, bàn tay phải và đầu
+ * (cả mũ trùm) tách riêng; ống tre, bầu độc ở lại thân. Tranh ra chiêu vẽ người lớn hơn hình đứng nên thu 0.8. Hệ tọa độ:
+ * ảnh đứng 1024×1536.
+ */
+const DOC_ANH: WarriorRig = {
+  skeleton: "warrior",
+  dir: "doc-anh",
+  texScale: 0.5,
+  foot: { x: 590, y: 1500 },
+  height: 1480,
+  parts: {
+    body: { x: 228, y: 17, w: 607, h: 1488 },
+    armR: { x: 664, y: 662, w: 80, h: 141 },
+    sword: { x: 259, y: 825, w: 27, h: 54 },
+    arm: { x: 215, y: 720, w: 73, h: 111 },
+    head: { x: 436, y: 19, w: 217, h: 218 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 250, y: 740 },
+    elbowR: { x: 690, y: 680 },
+    neck: { x: 530, y: 228 },
+  },
+  blade: [{ x: 262, y: 815 }, { x: 286, y: 878 }],
+  strikeFx: "venomNeedle",
+  fxColor: 0x4f9a4a,
+  // Tấn rộng thấp, châm cầm thấp (đánh thường), ngồi xổm phóng châm ngang (ra chiêu), tấn rộng giơ châm cạnh tai (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 80, y: 16 },
+      anchor: { x: 700, y: 985 }, scale: 1.05, burst: { x: 1460, y: 560 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 30, y: 92 },
+      anchor: { x: 470, y: 1455 }, scale: 0.8, burst: { x: 220, y: 680 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 42, y: 10 },
+      anchor: { x: 660, y: 1180 }, scale: 1.05, burst: { x: 1230, y: 500 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 27, y: 71 },
+    anchor: { x: 600, y: 1400 }, scale: 0.85 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -3429,6 +3473,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   tatPhongLang: TAT_PHONG_LANG,
   dinhNgoc: DINH_NGOC,
   bachPhongDao: BACH_PHONG_DAO,
+  docAnh: DOC_ANH,
 };
 
 export function rigOf(id: string): Rig | null {

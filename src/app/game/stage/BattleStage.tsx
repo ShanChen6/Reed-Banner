@@ -715,6 +715,18 @@ export default function BattleStage({
           });
           return [fx];
         }
+        if (rig.strikeFx === "venomNeedle") {
+          const fx = armorPierce(sky, rig.fxColor);
+          const mist = poisonMist(sky, rig.fxColor);
+          // Tuyệt chiêu một người: kim châm độc lao tới đối thủ đứng đầu, sương độc cuộn quanh họ (Trúng độc).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !foe) return;
+            fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
+            mist.cover(spot(foe, 0), app.screen.height * FIGURE, 0.15);
+          });
+          return [fx, mist];
+        }
         if (rig.strikeFx === "myriadEdge") {
           const fx = armorPierce(sky, rig.fxColor);
           const bolt = lightning(sky, rig.fxColor);
