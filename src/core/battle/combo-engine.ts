@@ -313,7 +313,7 @@ export class ComboEngine {
                     if (!id ||
                         f.hp <= 0 ||
                         i === e.source.fighter ||
-                        (f.comboReady && (f.profession as string) !== "xaThu" && (f.profession as string) !== "satThu") ||
+                        (f.comboReady && f.profession !== "xaThu" && f.profession !== "satThu") ||
                         f.effects.some((x) => x.kind === "silence" || x.kind === "freeze"))
                         return;
                     const p: ComboPassiveDef = COMBO_PASSIVES[id];
@@ -327,7 +327,7 @@ export class ComboEngine {
                     if (this.fighter(e.target).hp <= 0)
                         return;
                     const turn = this.meta().sideTurns[e.source.side];
-                    if (f.comboOpenedAt === turn && (f.profession as string) !== "xaThu" && (f.profession as string) !== "satThu")
+                    if (f.comboOpenedAt === turn && f.profession !== "xaThu" && f.profession !== "satThu")
                         return;
                     const ready: ComboOpportunity = {
                         passive: id,

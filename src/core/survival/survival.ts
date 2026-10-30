@@ -8,6 +8,8 @@ import {
   ELEMENTS,
   FOOD_MAX,
   PROFESSIONS,
+  isLeaderProfession,
+  normalizeProfession,
   type BattleState,
   type Fighter,
   type FighterConfig,
@@ -714,7 +716,7 @@ export function proposeSurvivalLeaderBuild(
     };
   if (
     payload.profession !== undefined &&
-    !PROFESSIONS.includes(payload.profession as Profession)
+    !isLeaderProfession(payload.profession)
   )
     return { ok: false, error: "invalidProfession" };
   if (
@@ -811,7 +813,7 @@ export function applySurvivalLeaderBuild(
     element: entry.snapshot.config.element,
   };
   if (
-    !PROFESSIONS.includes(choice.profession) ||
+    !isLeaderProfession(choice.profession) ||
     !ELEMENTS.includes(choice.element)
   )
     return { ok: false, error: "invalidPayload" };
@@ -1272,13 +1274,14 @@ function validHpRatio(value: unknown): value is number {
 }
 
 function parseFighterConfig(value: unknown): FighterConfig | null {
+  if (isRecord(value)) value = {...value,profession:normalizeProfession(value.profession)};
   if (!isRecord(value)) return null;
   if (
     typeof value.id !== "string" ||
     value.id.length === 0 ||
     typeof value.name !== "string" ||
     !ELEMENTS.includes(value.element as Element) ||
-    !PROFESSIONS.includes(value.profession as Profession) ||
+    !normalizeProfession(value.profession) ||
     !Number.isInteger(value.maxHp) ||
     (value.maxHp as number) < 1 ||
     !Number.isInteger(value.atk) ||
@@ -1387,7 +1390,7 @@ function parseMainBuild(
     value.kind !== "snapshot" ||
     !isRecord(value.progress) ||
     !ELEMENTS.includes(value.baseElement as Element) ||
-    !PROFESSIONS.includes(value.baseProfession as Profession)
+    !isLeaderProfession(value.baseProfession)
   )
     return null;
   return structuredClone(value) as unknown as NonNullable<
@@ -1402,7 +1405,7 @@ function parseLeaderBuildChoice(
   if (
     !isRecord(value) ||
     !ELEMENTS.includes(value.element as Element) ||
-    !PROFESSIONS.includes(value.profession as Profession)
+    !isLeaderProfession(value.profession)
   )
     return null;
   return {

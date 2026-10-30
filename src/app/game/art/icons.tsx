@@ -24,6 +24,8 @@ export function ElementIcon({ element, className = "size-4" }: { element: Elemen
 }
 
 export const PROFESSION_COLOR: Record<Profession, string> = {
+  xaThu: "#476b47",
+  satThu: "#554266",
   tuongSi: "#9b2c1f",
   phapSu: "#6b3fa0",
   binhLinh: "#6b4a2b",

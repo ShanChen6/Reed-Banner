@@ -61,7 +61,7 @@ export const CHASE_PASSIVES = {
     phong2: passive('phong2', 'Phong dẫn', ['skillDamage'], 'energy', 5, 'Kỹ năng gây mất HP: cấp người tạo tín hiệu 5 năng lượng.'),
 } satisfies Record<string, ChasePassiveDef>;
 export type ChasePassiveId = keyof typeof CHASE_PASSIVES;
-const ROLE_CHASE: Record<Profession, ChasePassiveId> = { tuongSi: 'martial', phapSu: 'arcane', binhLinh: 'guardian', ySu: 'medic', muuSi: 'strategist', quanSu: 'commander' };
+const ROLE_CHASE: Record<Profession, ChasePassiveId> = { xaThu:'marksmanPrepared', satThu:'assassinPrepared', tuongSi: 'martial', phapSu: 'arcane', binhLinh: 'guardian', ySu: 'medic', muuSi: 'strategist', quanSu: 'commander' };
 const ELEMENT_CHASE: Record<Element, readonly [
     ChasePassiveId,
     ChasePassiveId

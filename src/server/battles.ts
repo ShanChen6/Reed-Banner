@@ -48,6 +48,7 @@ import {
   survivalWave,
   ownsCompanion,
   PROFESSIONS,
+  isLeaderProfession,
   profileTeam,
   raidBossById,
   raidSetup,
@@ -355,7 +356,7 @@ export function parseNewBattle(body: unknown): NewBattleInput | null {
   if (
     !oneOf(["1v1", "3v3"] as const, mode) ||
     !oneOf(ELEMENTS, element) ||
-    !oneOf(PROFESSIONS, profession)
+    !isLeaderProfession(profession)
   )
     return null;
   if (!oneOf(DIFFICULTIES, difficulty)) return null;
