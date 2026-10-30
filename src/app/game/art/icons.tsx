@@ -36,6 +36,11 @@ export const PROFESSION_COLOR: Record<Profession, string> = {
 
 /** Biểu tượng nghề: ảnh vẽ tay ở public/art/professions/<nghề>.webp. */
 export function ProfessionIcon({ profession, className = "size-4" }: { profession: Profession; className?: string }) {
+  // Missing painted icons use neutral inline vectors, never a broken image or another profession.
+  if (profession === 'xaThu' || profession === 'satThu') return <svg viewBox="0 0 24 24" className={className} aria-hidden focusable="false">
+    {profession === 'xaThu' ? <g fill="none" stroke="currentColor" strokeWidth={1.8}><circle cx={12} cy={12} r={7}/><circle cx={12} cy={12} r={2}/><path d="M12 2 V6 M12 18 V22 M2 12 H6 M18 12 H22"/></g>
+      : <g fill="none" stroke="currentColor" strokeWidth={1.8}><path d="M12 3 L16 14 H8 Z M6 16 H18 M12 16 V22"/></g>}
+  </svg>;
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden focusable="false">
       <image href={`/art/professions/${profession}.webp`} width={24} height={24} />

@@ -26,7 +26,6 @@ import {
   type Element,
   type GearItem,
   type GearSlot,
-  type Profession,
   type GameProfession,
   type SpecialGrade,
   type Tier,
@@ -34,7 +33,7 @@ import {
 } from "@/core";
 
 export const TILE_NAME: Record<TileKind, string> = {
-  kiem: "Kiếm",
+  kiem: "Công kích",
   amDuong: "Âm dương",
   banhChung: "Bánh chưng",
   tim: "Tim",
@@ -158,7 +157,7 @@ export function gearText(item: GearItem): string {
 }
 
 /** Mô tả lấy từ các bước thực thi, dùng chung ở trước trận, quản lý và trong trận. */
-const pct = (n: number) => `${Math.round(n * 100)}%`;
+const pct = (n: number) => `${Number((n * 100).toFixed(1))}%`;
 
 export const SKILL_TARGET_NAME: Record<SkillDef["target"], string> = { enemy: "địch đơn", ally: "đồng minh đơn", self: "bản thân", team: "cả đội", allEnemies: "mọi địch" };
 
