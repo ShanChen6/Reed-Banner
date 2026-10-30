@@ -1,5 +1,7 @@
 # Danh sách nhân vật
 
+> Nhân vật đặc biệt đang thiết kế: [Đinh Ngọc — Vạn Tượng Hành Giả](dinh-ngoc.md), nữ khoảng 25 tuổi, mã tạm RB-SP-001. Bộ6 chủ động +4 nội tại dung hợp8 nghề/7 hệ là DRAFT, chưa đăng ký roster hoặc tăng tổng nhân vật đang chơi.
+
 > Thiết kế mở rộng 30/10/2026: xem [nguồn Xạ thủ](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md). Đây là thiết kế chưa triển khai; không tự đổi roster hoặc kỹ năng hiện hành. Sát thủ dùng bộ W02 đa vũ khí mới, chưa triển khai runtime.
 
 > Cập nhật tiếp theo: [kỹ năng phiên bản 2 và combo đồng đội](ky-nang/lich-su/21-combo-dong-doi.md). Layout mới đổi tuyệt chiêu sang ô 4, nghề nâng cao sang ô 5, có chuyển hồ sơ giữ điểm. Các định nghĩa legacy/lịch sử bên dưới cần đọc cùng tài liệu phiên bản 2.

@@ -1,5 +1,13 @@
 # Nhật ký thay đổi thiết kế
 
+## 30/10/2026 — Đinh Ngọc: nhân vật đặc biệt dung hợp tám nghề/bảy hệ
+
+- Người dùng chốt tên Đinh Ngọc, giới tính nữ, khoảng 25 tuổi; lấy cảm hứng đường nét ảnh tham chiếu, trang phục giữ hướng thế kỷ X. Nhân vật hư cấu, không gán tiểu sử/danh tính người thật.
+- Thống nhất nghề có thể hiện qua nội tại: Binh lính–Thổ phòng hộ, Y sư–Mộc hồi phục, Mưu sĩ–Lôi tước cơ, Quân sư–Phong phối hợp; bốn nghề còn lại qua chủ động. Thiết kế6+4 cố định, không cộng tám nội tại mặc định.
+- Tạo nguồn [Đinh Ngọc](../03-characters/dinh-ngoc.md) và [art/sáu prompt](../06-art/prompts/dinh-ngoc.md). Tên Linh Đan ở trao đổi ban đầu đã bỏ; không tạo file hoặc ID runtime mang tên đó. Mã RB-SP-001, danh xưng, chỉ số500/50/10, chiêu và cách mở là DRAFT cần review/mô phỏng.
+- Một kiếm DN-W01, một ngọc DN-A01, hệ phòng thủ Kim cố định; hệ damage theo chiêu là contract mở rộng cần code riêng. Không nhân bảy hit/buff trong tuyệt chiêu, không tự có slot đội thứ tư.
+- Chưa tạo ảnh, công bố cân bằng hoặc thay code/roster/save; giữ nguyên nhân vật và prompt khác. Ảnh chân dung gốc không được đưa vào source công khai.
+
 ## 30/10/2026 — Hoàn thiện chiêu thức và bảng thông số Xạ thủ/Sát thủ
 
 - Theo lựa chọn của người dùng: chỉ cập nhật docs/bảng thông số, chưa triển khai hoặc mở hai nghề trong trận. Viết lại [nguồn thiết kế](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md) để mỗi con số có một bảng nguồn, loadout nhân vật chỉ tham chiếu ID.
