@@ -6,7 +6,7 @@ import { EXPANSION_ROLE_SKILLS, EXPANSION_CHARACTER_SKILLS } from "./expansion-s
 import type { AreaShape, TileKind } from "../board";
 import type { EffectKind } from "./effects";
 import type { Element } from "./elements";
-import type { Profession, GameProfession } from "./rules";
+import type { Profession, GameProfession, LegacyProfession } from "./rules";
 
 /** Ai nhận tác dụng của kỹ năng. enemy/ally: một người do người chơi chọn. */
 export type SkillTarget = "enemy" | "ally" | "self" | "allEnemies" | "team";
@@ -932,7 +932,7 @@ export const CHARACTER_SKILLS:readonly SkillDef[]=defineCharacterSkills([
 ]);
 
 /** ĐBL: one personal ultimate for every profession × element loadout. */
-const DBL_ROLE_FINISHERS: Record<Profession, { name: string; target: SkillTarget; steps: readonly SkillStep[] }> = {
+const DBL_ROLE_FINISHERS: Record<LegacyProfession, { name: string; target: SkillTarget; steps: readonly SkillStep[] }> = {
  tuongSi: {name:"Bình định",target:"enemy",steps:[{type:"damage",atk:3.2,pierce:0.3},{type:"effect",to:"targets",effect:"defDown",value:0.25,turns:2}]},
  phapSu: {name:"Thiên uy",target:"allEnemies",steps:[{type:"damage",atk:2.2},{type:"effect",to:"targets",effect:"silence",value:0,turns:1}]},
  binhLinh: {name:"Trấn quốc",target:"enemy",steps:[{type:"damage",atk:2.4},{type:"effect",to:"team",effect:"shield",value:0.15,ofMaxHp:true,turns:2}]},

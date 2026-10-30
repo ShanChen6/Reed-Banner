@@ -88,6 +88,8 @@ export type ComboPassiveId = keyof typeof COMBO_PASSIVES;
 export const PROFESSION_COMBO: Readonly<
   Record<FighterConfig["profession"], ComboPassiveId>
 > = {
+  xaThu: "pursuit",
+  satThu: "resonance",
   tuongSi: "pursuit",
   phapSu: "resonance",
   binhLinh: "retaliation",

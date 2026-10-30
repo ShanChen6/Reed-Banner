@@ -26,6 +26,8 @@ export const TILE_GIVES: Record<TileKind, string> = {
 
 /** Nội tại nghề, docs/03-characters/ky-nang/mo-hinh-nhan-vat.md mục 4.1. */
 export const PROFESSION_PERK: Record<Profession, string> = {
+  xaThu: "Chuẩn bị công kích khi đồng đội phá giáp hoặc xua tan",
+  satThu: "Chuẩn bị công kích khi đồng đội khống chế",
   tuongSi: "Ghép từ 4 kiếm: +30% sát thương",
   phapSu: "Năng lượng từ âm dương ×1.5",
   binhLinh: "Lương tụt chậm, sĩ khí cao thì thêm DEF",

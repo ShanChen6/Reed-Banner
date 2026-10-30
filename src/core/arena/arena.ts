@@ -6,7 +6,7 @@ import type { Difficulty } from "../ai";
 import {
   withComboPassive,
   ELEMENTS,
-  PROFESSIONS,
+  LEGACY_PROFESSIONS as PROFESSIONS,
   type Element,
   type FighterConfig,
   type Profession,

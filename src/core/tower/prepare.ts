@@ -3,7 +3,7 @@
 // Dùng lại buildMain/withGear/profileTeam như Survival V1.1; không đổi logic Survival.
 import {
   ELEMENTS,
-  PROFESSIONS,
+  LEGACY_PROFESSIONS as PROFESSIONS,
   type Element,
   type FighterConfig,
   type Profession,
