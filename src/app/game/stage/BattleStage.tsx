@@ -727,6 +727,23 @@ export default function BattleStage({
           });
           return [fx, mist];
         }
+        if (rig.strikeFx === "earthClaw") {
+          const surge = earthSurge(sky, rig.fxColor);
+          const crack = ironFormation(sky, rig.fxColor);
+          const ward = drumShield(sky, rig.fxColor, facing);
+          // Tuyệt chiêu địa phục liệt trảo: vuốt cào đất, địa mạch chạy ngầm tới chân đối thủ đứng đầu rồi trồi đá nhọn,
+          // khiên họ nứt (Thủ giảm), khiên mặt trống trước chính mình (Thủ tăng).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !me || !foe) return;
+            const size = app.screen.height * FIGURE;
+            surge.surge({ x: at.x, y: spot(me, 0).y }, spot(foe, 0), size);
+            crack.shatter(spot(foe, 0.5), size, 0.4);
+            ward.cover(spot(me, 0), size, 0.3);
+          });
+          return [surge, crack, ward];
+        }
         if (rig.strikeFx === "twinCleave") {
           const cut = flameCleave(sky, rig.fxColor);
           const fire = flameWall(sky, rig.fxColor);

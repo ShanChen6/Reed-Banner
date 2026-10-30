@@ -159,7 +159,9 @@ export interface WarriorRig {
    * đối thủ; `myriadEdge` chỉ ở tuyệt chiêu, luồng sáng từ mũi kiếm và sét giáng xuống đối thủ đứng đầu, khiên mặt
    * trống trước chính mình; `venomNeedle` chỉ ở tuyệt chiêu, kim châm lao tới đối thủ đứng đầu và sương độc cuộn quanh
    * họ; `tideBlade` chỉ ở tuyệt chiêu, mũi dao nước lao tới đối thủ đứng đầu, khiên họ nứt và năng lượng bay về chính
-   * mình; `twinCleave` chỉ ở tuyệt chiêu, hai nhát chém lửa bắt chéo nhau qua đối thủ đứng đầu rồi lửa bén lên họ.
+   * mình; `twinCleave` chỉ ở tuyệt chiêu, hai nhát chém lửa bắt chéo nhau qua đối thủ đứng đầu rồi lửa bén lên họ;
+   * `earthClaw` chỉ ở tuyệt chiêu, địa mạch chạy ngầm tới chân đối thủ đứng đầu trồi đá nhọn, khiên họ nứt và khiên mặt
+   * trống trước chính mình.
    */
   readonly strikeFx?:
     | "lightning"
@@ -218,7 +220,8 @@ export interface WarriorRig {
     | "myriadEdge"
     | "venomNeedle"
     | "tideBlade"
-    | "twinCleave";
+    | "twinCleave"
+    | "earthClaw";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -3488,6 +3491,49 @@ const XICH_DA: WarriorRig = {
     anchor: { x: 560, y: 1340 }, scale: 0.9 },
 };
 
+/**
+ * Địa Ẩn, sát thủ hệ Thổ (RB-073, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
+ * (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: móng vuốt tay phải tách khỏi bàn tay để cùng xoay quanh cổ tay, bàn
+ * tay trái cùng móng vuốt và đầu (cả khăn quấn) tách riêng. Tranh ra chiêu vẽ người lớn hơn hình đứng nên thu 0.92. Hệ
+ * tọa độ: ảnh đứng 1024×1536.
+ */
+const DIA_AN: WarriorRig = {
+  skeleton: "warrior",
+  dir: "dia-an",
+  texScale: 0.5,
+  foot: { x: 555, y: 1490 },
+  height: 1470,
+  parts: {
+    body: { x: 195, y: 24, w: 715, h: 1493 },
+    armR: { x: 753, y: 600, w: 148, h: 185 },
+    sword: { x: 250, y: 570, w: 108, h: 101 },
+    arm: { x: 233, y: 525, w: 158, h: 156 },
+    head: { x: 432, y: 25, w: 233, h: 231 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 280, y: 550 },
+    elbowR: { x: 810, y: 630 },
+    neck: { x: 560, y: 215 },
+  },
+  blade: [{ x: 290, y: 600 }, { x: 350, y: 660 }],
+  strikeFx: "earthClaw",
+  fxColor: 0xc8963c,
+  // Đá cao chân trước (đánh thường), ngồi tấn thấp một vuốt trước ngực một vuốt trên gối (ra chiêu), tấn rộng giơ vuốt
+  // trên đầu và vươn vuốt kia tới (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 25, y: 44 },
+      anchor: { x: 360, y: 1470 }, scale: 1, burst: { x: 950, y: 780 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 14, y: 119 },
+      anchor: { x: 550, y: 1410 }, scale: 0.92, burst: { x: 950, y: 920 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 15, y: 32 },
+      anchor: { x: 500, y: 1470 }, scale: 1, burst: { x: 950, y: 830 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 36, y: 189 },
+    anchor: { x: 900, y: 700 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -3562,6 +3608,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   docAnh: DOC_ANH,
   hanGiangKhach: HAN_GIANG_KHACH,
   xichDa: XICH_DA,
+  diaAn: DIA_AN,
 };
 
 export function rigOf(id: string): Rig | null {
