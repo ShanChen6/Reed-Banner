@@ -439,7 +439,7 @@ Không trang bị chase hệ thứ hai `tho2`. Khung 3 minh họa ô 3, khung 4 
 
 ### RB-074 — Lôi Ảnh · Sát thủ / Lôi
 
-**Vũ khí:** Hộp Bạo Vũ Lê Hoa Châm W02. **Chỉ số cấp 1:** HP 450, ATK 58, DEF 8. Giữ nguyên nhân dạng và sáu khung tại nguồn prompt.
+**Vũ khí:** Bạo Vũ Lê Hoa Châm `RB-074-W03`: một hộp tròn dẹt cỡ lòng bàn tay, vỏ đồng cũ, mặt sắt sẫm, hai vòng đồng tâm và hoa lê giữa mặt; tay phải cầm, tay trái không cầm vũ khí. Thay hộp chữ nhật ba khe W02; hộp luôn đóng, châm/sét là VFX riêng. Sáu tư thế và hình học chi tiết ở [nguồn prompt](./09-14-heroes-character-and-frame-prompts-v4-3.md#rb-074--lôi-ảnh--sát-thủ--lôi). **Chỉ số cấp 1:** HP 450, ATK 58, DEF 8. Giữ nguyên nhân dạng và sáu khung tại nguồn prompt.
 
 | Ô | Kỹ năng / ID | Nguồn thông số |
 |---|---|---|

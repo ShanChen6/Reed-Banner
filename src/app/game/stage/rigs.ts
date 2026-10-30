@@ -161,7 +161,9 @@ export interface WarriorRig {
    * họ; `tideBlade` chỉ ở tuyệt chiêu, mũi dao nước lao tới đối thủ đứng đầu, khiên họ nứt và năng lượng bay về chính
    * mình; `twinCleave` chỉ ở tuyệt chiêu, hai nhát chém lửa bắt chéo nhau qua đối thủ đứng đầu rồi lửa bén lên họ;
    * `earthClaw` chỉ ở tuyệt chiêu, địa mạch chạy ngầm tới chân đối thủ đứng đầu trồi đá nhọn, khiên họ nứt và khiên mặt
-   * trống trước chính mình.
+   * trống trước chính mình; `stormVolley` chỉ ở tuyệt chiêu, ba loạt kim tím liên tiếp tới đối thủ đứng đầu, sét giáng
+   * và mây giông cuộn quanh họ; `flutePulse` chỉ ở tuyệt chiêu, sóng âm từ ống sáo tới đầu đối thủ đứng đầu và cơn lốc
+   * cuốn quanh họ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -221,7 +223,9 @@ export interface WarriorRig {
     | "venomNeedle"
     | "tideBlade"
     | "twinCleave"
-    | "earthClaw";
+    | "earthClaw"
+    | "stormVolley"
+    | "flutePulse";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -3534,6 +3538,90 @@ const DIA_AN: WarriorRig = {
     anchor: { x: 900, y: 700 }, scale: 0.9 },
 };
 
+/**
+ * Lôi Ảnh, sát thủ hệ Lôi (RB-074, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
+ * (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: hộp phóng kim tách khỏi bàn tay phải để cùng xoay quanh cổ tay, bàn
+ * tay trái và đầu (cả búi tóc, dây buộc) tách riêng; bím tóc, túi đeo ở lại thân. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const LOI_ANH: WarriorRig = {
+  skeleton: "warrior",
+  dir: "loi-anh",
+  texScale: 0.5,
+  foot: { x: 530, y: 1500 },
+  height: 1490,
+  parts: {
+    body: { x: 190, y: 10, w: 653, h: 1515 },
+    armR: { x: 771, y: 668, w: 73, h: 104 },
+    sword: { x: 291, y: 690, w: 97, h: 99 },
+    arm: { x: 258, y: 645, w: 128, h: 133 },
+    head: { x: 452, y: 10, w: 209, h: 206 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 290, y: 665 },
+    elbowR: { x: 800, y: 690 },
+    neck: { x: 570, y: 200 },
+  },
+  blade: [{ x: 300, y: 742 }, { x: 385, y: 742 }],
+  strikeFx: "stormVolley",
+  fxColor: 0xb48cff,
+  // Lùi nửa bước gạt chưởng (đánh thường), giơ hộp kim sau vai đẩy chưởng tới (ra chiêu), quỳ một gối giơ hộp kim cao
+  // (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 81, y: 9 },
+      anchor: { x: 540, y: 1500 }, scale: 1, burst: { x: 660, y: 320 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 183, y: 10 },
+      anchor: { x: 560, y: 1500 }, scale: 1, burst: { x: 272, y: 210 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 33, y: 117 },
+      anchor: { x: 500, y: 1440 }, scale: 1, burst: { x: 336, y: 300 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 17, y: 139 },
+    anchor: { x: 560, y: 1350 }, scale: 0.95 },
+};
+
+/**
+ * Vô Ảnh, sát thủ hệ Phong (RB-075, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
+ * (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: sáo trúc tách khỏi bàn tay phải để cùng xoay quanh cổ tay, bàn tay
+ * trái và đầu (cả búi tóc) tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const VO_ANH: WarriorRig = {
+  skeleton: "warrior",
+  dir: "vo-anh",
+  texScale: 0.5,
+  foot: { x: 540, y: 1500 },
+  height: 1490,
+  parts: {
+    body: { x: 199, y: 11, w: 625, h: 1509 },
+    armR: { x: 702, y: 658, w: 67, h: 120 },
+    sword: { x: 138, y: 588, w: 326, h: 195 },
+    arm: { x: 295, y: 640, w: 88, h: 101 },
+    head: { x: 425, y: 15, w: 201, h: 204 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 335, y: 650 },
+    elbowR: { x: 735, y: 672 },
+    neck: { x: 540, y: 200 },
+  },
+  blade: [{ x: 150, y: 597 }, { x: 455, y: 772 }],
+  strikeFx: "flutePulse",
+  fxColor: 0x2e9e90,
+  // Bước ngang thúc cùi chỏ, sáo thu bên hông (đánh thường), đứng nghiêng thổi sáo (ra chiêu), bước rộng xoay người vẫn
+  // thổi sáo (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 58, y: 16 },
+      anchor: { x: 620, y: 1490 }, scale: 1, burst: { x: 816, y: 310 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 150, y: 10 },
+      anchor: { x: 580, y: 1500 }, scale: 1, burst: { x: 552, y: 190 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 9, y: 27 },
+      anchor: { x: 560, y: 1470 }, scale: 1, burst: { x: 668, y: 222 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 9, y: 177 },
+    anchor: { x: 560, y: 1350 }, scale: 0.95 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -3609,6 +3697,8 @@ const RIGS: Readonly<Record<string, Rig>> = {
   hanGiangKhach: HAN_GIANG_KHACH,
   xichDa: XICH_DA,
   diaAn: DIA_AN,
+  loiAnh: LOI_ANH,
+  voAnh: VO_ANH,
 };
 
 export function rigOf(id: string): Rig | null {
