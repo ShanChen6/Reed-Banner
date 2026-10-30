@@ -158,7 +158,8 @@ export interface WarriorRig {
    * câm lặng phủ quanh họ và năng lượng bay về chính mình; `silkGale` chỉ ở tuyệt chiêu, lốc cuốn và khiên nứt trên từng
    * đối thủ; `myriadEdge` chỉ ở tuyệt chiêu, luồng sáng từ mũi kiếm và sét giáng xuống đối thủ đứng đầu, khiên mặt
    * trống trước chính mình; `venomNeedle` chỉ ở tuyệt chiêu, kim châm lao tới đối thủ đứng đầu và sương độc cuộn quanh
-   * họ.
+   * họ; `tideBlade` chỉ ở tuyệt chiêu, mũi dao nước lao tới đối thủ đứng đầu, khiên họ nứt và năng lượng bay về chính
+   * mình.
    */
   readonly strikeFx?:
     | "lightning"
@@ -215,7 +216,8 @@ export interface WarriorRig {
     | "voltNeedle"
     | "silkGale"
     | "myriadEdge"
-    | "venomNeedle";
+    | "venomNeedle"
+    | "tideBlade";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -3402,6 +3404,47 @@ const DOC_ANH: WarriorRig = {
     anchor: { x: 600, y: 1400 }, scale: 0.85 },
 };
 
+/**
+ * Hàn Giang Khách, sát thủ hệ Thủy (RB-071, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan
+ * gửi 30/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: đoản đao cùng nắm tay phải xoay quanh cổ tay, bàn tay trái
+ * và đầu tách riêng; vạt áo, dải lụa ở lại thân. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const HAN_GIANG_KHACH: WarriorRig = {
+  skeleton: "warrior",
+  dir: "han-giang-khach",
+  texScale: 0.5,
+  foot: { x: 560, y: 1490 },
+  height: 1480,
+  parts: {
+    body: { x: 46, y: 12, w: 939, h: 1509 },
+    armR: { x: 644, y: 532, w: 89, h: 85 },
+    sword: { x: 287, y: 753, w: 238, h: 240 },
+    arm: { x: 300, y: 751, w: 77, h: 108 },
+    head: { x: 450, y: 15, w: 261, h: 238 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 335, y: 775 },
+    elbowR: { x: 690, y: 552 },
+    neck: { x: 580, y: 245 },
+  },
+  blade: [{ x: 375, y: 850 }, { x: 512, y: 985 }],
+  strikeFx: "tideBlade",
+  fxColor: 0x2f7fc1,
+  // Tấn rộng đẩy chưởng (đánh thường), tấn rộng đâm đoản đao ngang hông (ra chiêu), giơ đao sau đầu và đẩy chưởng (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 20, y: 65 },
+      anchor: { x: 530, y: 1470 }, scale: 1, burst: { x: 960, y: 310 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 5, y: 61 },
+      anchor: { x: 500, y: 1480 }, scale: 1, burst: { x: 850, y: 540 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 31, y: 26 },
+      anchor: { x: 600, y: 1340 }, scale: 1.05, burst: { x: 1080, y: 395 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 14, y: 82 },
+    anchor: { x: 680, y: 1130 }, scale: 0.9 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -3474,6 +3517,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   dinhNgoc: DINH_NGOC,
   bachPhongDao: BACH_PHONG_DAO,
   docAnh: DOC_ANH,
+  hanGiangKhach: HAN_GIANG_KHACH,
 };
 
 export function rigOf(id: string): Rig | null {
