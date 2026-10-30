@@ -162,7 +162,8 @@ export interface WarriorRig {
    * mình; `twinCleave` chỉ ở tuyệt chiêu, hai nhát chém lửa bắt chéo nhau qua đối thủ đứng đầu rồi lửa bén lên họ;
    * `earthClaw` chỉ ở tuyệt chiêu, địa mạch chạy ngầm tới chân đối thủ đứng đầu trồi đá nhọn, khiên họ nứt và khiên mặt
    * trống trước chính mình; `stormVolley` chỉ ở tuyệt chiêu, ba loạt kim tím liên tiếp tới đối thủ đứng đầu, sét giáng
-   * và mây giông cuộn quanh họ.
+   * và mây giông cuộn quanh họ; `flutePulse` chỉ ở tuyệt chiêu, sóng âm từ ống sáo tới đầu đối thủ đứng đầu và cơn lốc
+   * cuốn quanh họ.
    */
   readonly strikeFx?:
     | "lightning"
@@ -223,7 +224,8 @@ export interface WarriorRig {
     | "tideBlade"
     | "twinCleave"
     | "earthClaw"
-    | "stormVolley";
+    | "stormVolley"
+    | "flutePulse";
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;
@@ -3578,6 +3580,48 @@ const LOI_ANH: WarriorRig = {
     anchor: { x: 560, y: 1350 }, scale: 0.95 },
 };
 
+/**
+ * Vô Ảnh, sát thủ hệ Phong (RB-075, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
+ * (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: sáo trúc tách khỏi bàn tay phải để cùng xoay quanh cổ tay, bàn tay
+ * trái và đầu (cả búi tóc) tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const VO_ANH: WarriorRig = {
+  skeleton: "warrior",
+  dir: "vo-anh",
+  texScale: 0.5,
+  foot: { x: 540, y: 1500 },
+  height: 1490,
+  parts: {
+    body: { x: 199, y: 11, w: 625, h: 1509 },
+    armR: { x: 702, y: 658, w: 67, h: 120 },
+    sword: { x: 138, y: 588, w: 326, h: 195 },
+    arm: { x: 295, y: 640, w: 88, h: 101 },
+    head: { x: 425, y: 15, w: 201, h: 204 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 335, y: 650 },
+    elbowR: { x: 735, y: 672 },
+    neck: { x: 540, y: 200 },
+  },
+  blade: [{ x: 150, y: 597 }, { x: 455, y: 772 }],
+  strikeFx: "flutePulse",
+  fxColor: 0x2e9e90,
+  // Bước ngang thúc cùi chỏ, sáo thu bên hông (đánh thường), đứng nghiêng thổi sáo (ra chiêu), bước rộng xoay người vẫn
+  // thổi sáo (tuyệt chiêu).
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 58, y: 16 },
+      anchor: { x: 620, y: 1490 }, scale: 1, burst: { x: 816, y: 310 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 150, y: 10 },
+      anchor: { x: 580, y: 1500 }, scale: 1, burst: { x: 552, y: 190 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 9, y: 27 },
+      anchor: { x: 560, y: 1470 }, scale: 1, burst: { x: 668, y: 222 } },
+  },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 9, y: 177 },
+    anchor: { x: 560, y: 1350 }, scale: 0.95 },
+};
+
 /** Hình động theo id nhân vật. Nhân vật chưa có hình động thì sân khấu dùng chân dung. */
 const RIGS: Readonly<Record<string, Rig>> = {
   daoLam: DAO_LAM,
@@ -3654,6 +3698,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   xichDa: XICH_DA,
   diaAn: DIA_AN,
   loiAnh: LOI_ANH,
+  voAnh: VO_ANH,
 };
 
 export function rigOf(id: string): Rig | null {
