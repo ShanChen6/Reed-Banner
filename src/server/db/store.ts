@@ -2,7 +2,7 @@
 
 import { and, eq, isNull } from "drizzle-orm";
 import type { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
-import { deserializeSurvivalRun, type Match } from "@/core";
+import { deserializeSurvivalRun, migrateStoredProfessionAliases, type Match } from "@/core";
 import type { MatchRecord, MatchStore } from "../store";
 import { matches } from "./schema";
 
@@ -20,7 +20,7 @@ function hydrateMatch(value: unknown): Match {
     value.battle.sides.length !== 2
   )
     throw new Error("Invalid stored match state");
-  const match = value as Match;
+  const match = migrateStoredProfessionAliases(value as Match);
   if (match.survival === undefined) return match;
   const hydrated = deserializeSurvivalRun(match.survival, match.battle);
   if (!hydrated.ok) throw new Error("Invalid stored Survival state");

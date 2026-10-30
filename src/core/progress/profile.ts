@@ -1,10 +1,11 @@
 // Hồ sơ người chơi: tiến trình nhân vật chính và các nhân vật kèm, vàng, lựa chọn trước trận.
 // Dữ liệu thuần: /demo lưu ở trình duyệt, /play lưu trên server (bảng `profiles`).
 
-import type { Element, FighterConfig, Profession } from "../battle";
+import {isLeaderProfession, normalizeProfession, type Element, type FighterConfig, type Profession} from "../battle";
 import { withGear, type GearItem, type GearSlot, type Tier } from "../gear";
 import {
   companionById,
+  isReleasedCompanion,
   shopPrice,
   STARTER_COMPANIONS,
 } from "../roster";
@@ -68,6 +69,8 @@ export interface Profile {
   readonly skillLayout: 2;
   readonly element: Element;
   readonly profession: Profession;
+  /** Preserve unsupported historical leader choice without inventing a new DBL kit. */
+  readonly unavailableLeaderProfession?: Profession;
   readonly main: CharacterProgress;
   /** Nhân vật kèm đã có (khởi đầu và mua ở cửa hàng), theo id. */
   readonly companions: Readonly<Record<string, CharacterProgress>>;
@@ -171,7 +174,7 @@ export function profileTeam(
   );
   const companions = companionIds.flatMap((id) => {
     const base = companionById(id);
-    if (!base || !ownsCompanion(profile, id)) return [];
+    if (!base || !isReleasedCompanion(id) || !ownsCompanion(profile, id)) return [];
     return [
       withGear(
         buildCompanion(base, progressOf(profile, id)),
@@ -287,6 +290,8 @@ export function parseProfile(raw: unknown): Profile {
     ...fresh,
     ...rest,
     skillLayout: 2,
+    profession: isLeaderProfession(p.profession) ? p.profession : fresh.profession,
+    ...(!isLeaderProfession(p.profession) && normalizeProfession(p.profession) ? {unavailableLeaderProfession:normalizeProfession(p.profession)} : {}),
     main: p.skillLayout === 2 ? p.main : migrateSkillSlots(p.main),
     companions,
     team: fresh.team,

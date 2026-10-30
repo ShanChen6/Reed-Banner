@@ -23,22 +23,22 @@ function passive(id: string, name: string, triggers: readonly ComboSignalKind[],
     return { id, name, triggers, effect, value, description, alliesOnly };
 }
 export const CHASE_PASSIVES = {
-    marksmanPrepared: {...passive('marksmanPrepared', 'Chờ thời phá giáp', ['armorBroken'], 'damage', 0.4, 'Chờ thời phá giáp: armorBroken, damage 0.4; một lần/action.', true), activeOnly: true},
-    assassinPrepared: {...passive('assassinPrepared', 'Chờ thời khống chế', ['controlled'], 'damage', 0.45, 'Chờ thời khống chế: controlled, damage 0.45; một lần/action.', true), activeOnly: true},
-    rb_bnl_passive: {...passive('rb_bnl_passive', 'Nỏ thành bền bỉ', ['armorBroken'], 'armor', 0.08, 'Nỏ thành bền bỉ: armorBroken, armor 0.08; một lần/action.', true), activeOnly: true},
-    rb_tlx_passive: {...passive('rb_tlx_passive', 'Rễ hộ người', ['healed'], 'shield', 0.04, 'Rễ hộ người: healed, shield 0.04; một lần/action.', true), activeOnly: true, shieldTurns: null},
-    rb064_canhGioi: {...passive('rb064_canhGioi', 'Cảnh giới bến sông', ['controlled'], 'energy', 7, 'Cảnh giới bến sông: controlled, energy 7; một lần/action.', true), activeOnly: true, selfRecipient: true},
-    rb065_hoaCot: {...passive('rb065_hoaCot', 'Hỏa cốt truy kích', ['armorBroken'], 'damage', 0.35, 'Hỏa cốt truy kích: armorBroken, damage 0.35; một lần/action.', true), activeOnly: true},
-    rb066_kienThu: {...passive('rb066_kienThu', 'Sơn trấn kiên thủ', ['shieldAbsorbed'], 'damage', 0.3, 'Sơn trấn kiên thủ: shieldAbsorbed, damage 0.3; một lần/action.', false), activeOnly: true, attackerRecipient: true},
-    rb067_chopThoiCo: {...passive('rb067_chopThoiCo', 'Chớp thời cơ', ['skillDamage'], 'drain', 5, 'Chớp thời cơ: skillDamage, drain 5; một lần/action.', false), activeOnly: true, selfSource: true},
-    rb068_hoiNhip: {...passive('rb068_hoiNhip', 'Thuận gió hồi nhịp', ['dispelled'], 'energy', 6, 'Thuận gió hồi nhịp: dispelled, energy 6; một lần/action.', true), activeOnly: true, selfRecipient: true},
-    rb069_passive: {...passive('rb069_passive', 'Ấn khuyết quyết tâm', ['armorBroken'], 'damage', 0.25, 'Ấn khuyết quyết tâm: armorBroken, damage 0.25; một lần/action.', true), activeOnly: true},
-    rb070_passive: {...passive('rb070_passive', 'Lâm ảnh tiếp nhịp', ['controlled'], 'energy', 6, 'Lâm ảnh tiếp nhịp: controlled, energy 6; một lần/action.', true), activeOnly: true, selfRecipient: true},
-    rb071_passive: {...passive('rb071_passive', 'Tĩnh thủy hồi tức', ['controlled'], 'energy', 5, 'Tĩnh thủy hồi tức: controlled, energy 5; một lần/action.', true), activeOnly: true, selfRecipient: true},
-    rb072_passive: {...passive('rb072_passive', 'Dạ tập thừa hư', ['controlled'], 'damage', 0.3, 'Dạ tập thừa hư: controlled, damage 0.3; một lần/action.', true), activeOnly: true},
-    rb073_passive: {...passive('rb073_passive', 'Phục địa phản kích', ['shieldAbsorbed'], 'damage', 0.3, 'Phục địa phản kích: shieldAbsorbed, damage 0.3; một lần/action.', false), activeOnly: true, attackerRecipient: true, receiverOnly: true},
-    rb074_passive: {...passive('rb074_passive', 'Tàn vũ hồi nhịp', ['skillDamage'], 'energy', 4, 'Tàn vũ hồi nhịp: skillDamage, energy 4; một lần/action.', false), activeOnly: true, selfSource: true, selfRecipient: true},
-    rb075_passive: {...passive('rb075_passive', 'Dư âm tiếp vận', ['dispelled'], 'energy', 6, 'Dư âm tiếp vận: dispelled, energy 6; một lần/action.', true), activeOnly: true, selfRecipient: true},
+    marksmanPrepared: {...passive('marksmanPrepared', 'Chờ thời phá giáp', ['armorBroken'], 'damage', 0.4, 'Đồng đội phá giáp hữu hiệu: truy kích đúng mục tiêu bằng 40% ATK; tối đa một lần mỗi hành động.', true), activeOnly: true},
+    assassinPrepared: {...passive('assassinPrepared', 'Chờ thời khống chế', ['controlled'], 'damage', 0.45, 'Đồng đội khống chế thành công: truy kích đúng mục tiêu bằng 45% ATK; tối đa một lần mỗi hành động.', true), activeOnly: true},
+    rb_bnl_passive: {...passive('rb_bnl_passive', 'Nỏ thành bền bỉ', ['armorBroken'], 'armor', 0.08, 'Đồng đội phá giáp: giảm DEF mục tiêu 8% trong 1 lượt; không cộng dồn với giảm DEF mạnh hơn.', true), activeOnly: true},
+    rb_tlx_passive: {...passive('rb_tlx_passive', 'Rễ hộ người', ['healed'], 'shield', 0.04, 'Đồng đội hồi HP thực: cấp Khiên bằng 4% HP tối đa người vừa được hồi, tới khi hết; theo Tinh thần người nhận.', true), activeOnly: true, shieldTurns: null},
+    rb064_canhGioi: {...passive('rb064_canhGioi', 'Cảnh giới bến sông', ['controlled'], 'energy', 7, 'Đồng đội khống chế thành công: bản thân nhận 7 năng lượng; một lần mỗi hành động.', true), activeOnly: true, selfRecipient: true},
+    rb065_hoaCot: {...passive('rb065_hoaCot', 'Hỏa cốt truy kích', ['armorBroken'], 'damage', 0.35, 'Đồng đội phá giáp: truy kích mục tiêu bằng 35% ATK; một lần mỗi hành động.', true), activeOnly: true},
+    rb066_kienThu: {...passive('rb066_kienThu', 'Sơn trấn kiên thủ', ['shieldAbsorbed'], 'damage', 0.3, 'Khiên đồng minh đỡ đòn chủ động: phản kích đúng người tấn công bằng 30% ATK; bỏ qua khi không xác định được nguồn.', false), activeOnly: true, attackerRecipient: true},
+    rb067_chopThoiCo: {...passive('rb067_chopThoiCo', 'Chớp thời cơ', ['skillDamage'], 'drain', 5, 'Kỹ năng chủ động bản thân gây mất HP thật: trừ mục tiêu 5 năng lượng; một lần mỗi hành động.', false), activeOnly: true, selfSource: true},
+    rb068_hoiNhip: {...passive('rb068_hoiNhip', 'Thuận gió hồi nhịp', ['dispelled'], 'energy', 6, 'Đồng đội xua tan buff địch hữu hiệu: bản thân nhận 6 năng lượng; một lần mỗi hành động.', true), activeOnly: true, selfRecipient: true},
+    rb069_passive: {...passive('rb069_passive', 'Ấn khuyết quyết tâm', ['armorBroken'], 'damage', 0.25, 'Đồng đội phá giáp: truy kích mục tiêu bằng 25% ATK; một lần mỗi hành động.', true), activeOnly: true},
+    rb070_passive: {...passive('rb070_passive', 'Lâm ảnh tiếp nhịp', ['controlled'], 'energy', 6, 'Đồng đội khống chế thành công: bản thân nhận 6 năng lượng; một lần mỗi hành động.', true), activeOnly: true, selfRecipient: true},
+    rb071_passive: {...passive('rb071_passive', 'Tĩnh thủy hồi tức', ['controlled'], 'energy', 5, 'Đồng đội khống chế thành công: bản thân nhận 5 năng lượng; một lần mỗi hành động.', true), activeOnly: true, selfRecipient: true},
+    rb072_passive: {...passive('rb072_passive', 'Dạ tập thừa hư', ['controlled'], 'damage', 0.3, 'Đồng đội khống chế thành công: truy kích mục tiêu bằng 30% ATK; một lần mỗi hành động.', true), activeOnly: true},
+    rb073_passive: {...passive('rb073_passive', 'Phục địa phản kích', ['shieldAbsorbed'], 'damage', 0.3, 'Khiên bản thân đỡ đòn chủ động: phản kích đúng người tấn công bằng 30% ATK; bỏ qua khi không xác định được nguồn.', false), activeOnly: true, attackerRecipient: true, receiverOnly: true},
+    rb074_passive: {...passive('rb074_passive', 'Tàn vũ hồi nhịp', ['skillDamage'], 'energy', 4, 'Kỹ năng chủ động bản thân gây mất HP thật: nhận 4 năng lượng; toàn chuỗi nhiều hit chỉ nhận một lần.', false), activeOnly: true, selfSource: true, selfRecipient: true},
+    rb075_passive: {...passive('rb075_passive', 'Dư âm tiếp vận', ['dispelled'], 'energy', 6, 'Đồng đội xua tan buff địch hữu hiệu: bản thân nhận 6 năng lượng; một lần mỗi hành động.', true), activeOnly: true, selfRecipient: true},
     martial: passive('martial', 'Liên trảm', ['armorBroken'], 'damage', 0.55, 'Đồng đội phá giáp: truy kích mục tiêu bằng 55% ATK.', true),
     arcane: passive('arcane', 'Chú kích', ['controlled'], 'damage', 0.5, 'Đồng đội khống chế: truy kích mục tiêu bằng 50% ATK.', true),
     guardian: passive('guardian', 'Tiếp phòng', ['healed'], 'shield', 0.06, 'Đồng đội hồi HP thực: cấp Khiên bằng 6% HP tối đa người vừa được hồi.', true),
@@ -61,7 +61,7 @@ export const CHASE_PASSIVES = {
     phong2: passive('phong2', 'Phong dẫn', ['skillDamage'], 'energy', 5, 'Kỹ năng gây mất HP: cấp người tạo tín hiệu 5 năng lượng.'),
 } satisfies Record<string, ChasePassiveDef>;
 export type ChasePassiveId = keyof typeof CHASE_PASSIVES;
-const ROLE_CHASE: Record<Profession, ChasePassiveId> = { tuongSi: 'martial', phapSu: 'arcane', binhLinh: 'guardian', ySu: 'medic', muuSi: 'strategist', quanSu: 'commander' };
+const ROLE_CHASE: Record<Profession, ChasePassiveId> = { xaThu:'marksmanPrepared', satThu:'assassinPrepared', tuongSi: 'martial', phapSu: 'arcane', binhLinh: 'guardian', ySu: 'medic', muuSi: 'strategist', quanSu: 'commander' };
 const ELEMENT_CHASE: Record<Element, readonly [
     ChasePassiveId,
     ChasePassiveId
