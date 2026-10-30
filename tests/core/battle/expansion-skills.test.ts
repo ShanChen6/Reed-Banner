@@ -84,3 +84,22 @@ test('shield counter uses actual attacker and ignores missing provenance',()=>{
  const r=cast(s,id);const counter=r.events.find(e=>e.type==='chase'&&e.passive==='rb066_kienThu');
  assert.ok(counter&&counter.type==='chase');assert.deepEqual(counter.target,{side:0,fighter:0});
 });
+
+test('every new active executes at skill 1/3/5 in solo and teams without duplicating board effects',()=>{
+ for(const def of [...EXPANSION_ROLE_SKILLS,...EXPANSION_CHARACTER_SKILLS])for(const level of [1,3,5])for(const size of [1,3]){
+  const make=(side:string)=>Array.from({length:size},(_,i)=>unit(`${side}${i}`,side==='p'&&i===0?{skills:[def.id],skillLevels:{[def.id]:level}}:{}));
+  const s=createBattle({sides:[{fighters:make('p'),leader:0},{fighters:make('q'),leader:0}],seed:31,timer:false}).state;
+  s.sides[0].fighters[0]!.energy=100;
+  const r=act(s,{type:'skill',skill:def.id,target:0,cell:{row:2,col:2}});assert.ok(r.ok,`${def.id}:L${level}:${size}`);
+  const boardSteps=def.steps.filter(s=>s.type==='destroy'||s.type==='transform'||s.type==='whirl').length;
+  assert.ok(r.events.filter(e=>e.type==='board').length<=boardSteps,`${def.id} board duplicated by AoE`);
+  for(const side of r.state.sides)for(const f of side.fighters)assert.ok(f.energy>=0&&f.energy<=100);
+ }
+});
+
+test('mixed recipient support uses each teammate HP and spirit exactly once',()=>{
+ const id='rb_tlx_lucTienTroiDuong';const s=setup(id);
+ s.sides[0].fighters[0]!.hp=1000;s.sides[0].fighters[0]!.spirit=0;
+ s.sides[0].fighters[1]={...s.sides[0].fighters[1]!,maxHp:1000,hp:500};
+ const r=cast(s,id);assert.equal(r.state.sides[0].fighters[0]!.hp,1024);assert.equal(r.state.sides[0].fighters[1]!.hp,560);
+});

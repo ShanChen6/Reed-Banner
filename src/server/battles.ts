@@ -47,7 +47,6 @@ import {
   syncSurvivalRosterState,
   survivalWave,
   ownsCompanion,
-  PROFESSIONS,
   isLeaderProfession,
   profileTeam,
   raidBossById,
