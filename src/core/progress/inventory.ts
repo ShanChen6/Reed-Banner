@@ -4,6 +4,7 @@
 import {
   ELEMENTS,
   PROFESSIONS,
+  normalizeProfession,
   type Element,
   type Profession,
 } from "../battle";
@@ -262,7 +263,7 @@ export function buyGear(profile: Profile, order: GearOrder): InventoryResult {
     !ELEMENTS.includes(order.element) ||
     !getGearSet(order.set) ||
     weapon !== (order.profession !== undefined) ||
-    (order.profession !== undefined && !PROFESSIONS.includes(order.profession))
+    (order.profession !== undefined && !(PROFESSIONS as readonly string[]).includes(order.profession))
   ) {
     return { ok: false, error: "invalidItem" };
   }
@@ -293,7 +294,7 @@ export function isGearItem(x: unknown): x is GearItem {
     TIERS.includes(x.tier as Tier) &&
     typeof x.set === "string" &&
     (weapon
-      ? PROFESSIONS.includes(x.profession as Profession)
+      ? normalizeProfession(x.profession) !== undefined && normalizeProfession(x.profession) === x.profession
       : x.profession === undefined)
   );
 }
@@ -305,7 +306,7 @@ export function parseInventory(raw: {
   nextItemId?: unknown;
 }): Pick<Profile, "bag" | "loadouts" | "nextItemId"> {
   const bag = Array.isArray(raw.bag)
-    ? raw.bag.filter(isGearItem).slice(0, BAG_LIMIT)
+    ? raw.bag.map(item => isObj(item) && item.slot === "vuKhi" ? {...item,profession:normalizeProfession(item.profession)} : item).filter(isGearItem).slice(0, BAG_LIMIT)
     : [];
   const ids = new Set(bag.map((it) => it.id));
   const strings = (rec: unknown) =>
@@ -316,11 +317,21 @@ export function parseInventory(raw: {
           ),
         )
       : {};
+  const weapons = (rec: unknown) => {
+    const saved = strings(rec);
+    const migrated: Partial<Record<Profession,string>> = {};
+    // canonical key wins a collision; alternate item remains in bag, never destroyed.
+    for (const key of [...Object.keys(saved).filter(k=>k!=="cungThu"), ...Object.keys(saved).filter(k=>k==="cungThu")]) {
+      const profession = normalizeProfession(key);
+      if (profession && migrated[profession] === undefined) migrated[profession] = saved[key];
+    }
+    return migrated;
+  };
   const loadouts = isObj(raw.loadouts)
     ? Object.fromEntries(
         Object.entries(raw.loadouts).flatMap(([c, l]) =>
           isObj(l)
-            ? [[c, { weapons: strings(l.weapons), slots: strings(l.slots) }]]
+            ? [[c, { weapons: weapons(l.weapons), slots: strings(l.slots) }]]
             : [],
         ),
       )

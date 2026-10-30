@@ -207,7 +207,7 @@ Quy tắc không tick ở lượt thêm thay câu proposal sơ bộ “bao gồm
 
 ## Loadout và chỉ số 14 nhân vật
 
-Mỗi dòng bên dưới có đúng sáu chủ động và P1–P4; chỉ tham chiếu ID vào bảng nguồn chính ở trên, không chép lại số liệu. Tất cả số liệu nền chưa gear. Giá mua, độ hiếm, trang bị, tile nghề và Đinh Bộ Lĩnh biến thể mới không nằm trong lần cập nhật docs này.
+Mỗi dòng bên dưới có đúng sáu chủ động và P1–P4; chỉ tham chiếu ID vào bảng nguồn chính ở trên, không chép lại số liệu. Tất cả số liệu nền chưa gear. Giá mua RB-062–075: **1.500 vàng/người**, mức basic hiện có; Shan chốt khi triển khai PROF ngày 30/10/2026. Không tự cấp cho hồ sơ cũ. Mở bán phụ thuộc feature flag và nghiệm thu PROF-06. Độ hiếm, trang bị và Đinh Bộ Lĩnh biến thể mới không bổ sung trong thiết kế này.
 
 ### RB-062 — Bạch Nỏ Lang · Xạ thủ / Kim
 
