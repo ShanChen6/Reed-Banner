@@ -53,3 +53,14 @@ test('alias collision keeps both weapons in bag; canonical equipped key wins det
  const base=EXPANSION_COMPANIONS[0]!;const equipped=withGear(base,gear);assert.ok(equipped.atk>base.atk);
  const canonical:GearItem={id:'z',slot:'vuKhi',profession:'satThu',element:'kim',tier:2,set:'none'};assert.equal(isGearItem(canonical),true);
 });
+
+test('nested battle/arena/Destiny snapshots normalize only profession aliases without retuning history',async()=>{
+ const {migrateStoredProfessionAliases,withComboPassive}=await import('../../../src/core');
+ const old={seq:19,battle:{seed:71,sides:[{fighters:[{profession:'cungThu',hp:32,energy:44,skills:['legacy'],skillLevels:{legacy:3}}]}]},survival:{snapshot:{config:{profession:'cungThu',atk:81}}},destiny:{snapshot:{equipment:[{profession:'cungThu',id:'g5'}]}},label:'cungThu'};
+ const input=structuredClone(old);const migrated=migrateStoredProfessionAliases(old);
+ assert.equal(migrated.battle.sides[0]!.fighters[0]!.profession,'xaThu');assert.equal(migrated.survival.snapshot.config.profession,'xaThu');
+ assert.equal(migrated.destiny.snapshot.equipment[0]!.profession,'xaThu');assert.equal(migrated.label,'cungThu');
+ assert.equal(migrated.battle.sides[0]!.fighters[0]!.hp,32);assert.equal(migrated.seq,19);assert.deepEqual(old,input);assert.deepEqual(migrateStoredProfessionAliases(migrated),migrated);
+ const legacy={...EXPANSION_COMPANIONS[0]!,profession:'cungThu'};
+ const rebuilt=withComboPassive(legacy as unknown as typeof EXPANSION_COMPANIONS[number]);assert.equal(rebuilt.profession,'xaThu');assert.equal(rebuilt.atk,legacy.atk);
+});
