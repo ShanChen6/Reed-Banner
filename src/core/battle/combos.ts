@@ -1,3 +1,4 @@
+import {normalizeProfession} from "./rules";
 // Combo definitions and pure projections shared by battle, AI, UI and future roster entries.
 import { chasePassives, CHASE_PASSIVES } from "./chase";
 import type { BattleState, Fighter, FighterConfig, SideIndex } from "./state";
@@ -88,6 +89,8 @@ export type ComboPassiveId = keyof typeof COMBO_PASSIVES;
 export const PROFESSION_COMBO: Readonly<
   Record<FighterConfig["profession"], ComboPassiveId>
 > = {
+  xaThu: "pursuit",
+  satThu: "resonance",
   tuongSi: "pursuit",
   phapSu: "resonance",
   binhLinh: "retaliation",
@@ -235,10 +238,12 @@ export function skillComboPartners(def: SkillDef): string[] {
 export function withComboPassive<T extends FighterConfig>(
   f: T,
 ): T & { readonly comboPassive: ComboPassiveId } {
+  const profession = normalizeProfession(f.profession) ?? f.profession;
   return {
     ...f,
-    comboPassive: f.comboPassive ?? PROFESSION_COMBO[f.profession],
-    chasePassives: chasePassives(f),
+    profession,
+    comboPassive: f.comboPassive ?? PROFESSION_COMBO[profession],
+    chasePassives: chasePassives({...f,profession}),
   };
 }
 

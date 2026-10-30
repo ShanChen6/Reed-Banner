@@ -249,8 +249,12 @@ export function buildCompanion(
   base: FighterConfig,
   p: CharacterProgress,
 ): FighterConfig {
+  const open = new Set(unlockedMainSlots(p.level));
+  const defs = characterSkills(base.profession,base.element,base.id).filter(s=>open.has(s.slot ?? 0));
   return {
-    ...buildMain(p, base.element, base.profession, base.id),
+    ...scaleStats(base,p.level),
+    skills:defs.map(s=>s.id),
+    skillLevels:Object.fromEntries(defs.map(s=>[s.id,p.skillLevels[mainSlotKey(s.slot!)] ?? 1])),
     id: base.id,
     name: base.name,
     comboPassive: base.comboPassive ?? PROFESSION_COMBO[base.profession],
