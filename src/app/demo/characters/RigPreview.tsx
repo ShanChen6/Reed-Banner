@@ -56,7 +56,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT, BREEZE }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }, { flameDisc }] = await Promise.all([
+        const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT, BREEZE }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }, { flameDisc }, { flutePulse }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -76,6 +76,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           import("@/app/game/stage/aegis"),
           import("@/app/game/stage/gale"),
           import("@/app/game/stage/disc"),
+          import("@/app/game/stage/ripple"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -436,6 +437,15 @@ export default function RigPreview({ id, size, onSnapshot }: {
         if (venom) loaded.onStrike?.((kind) => {
           if (kind === "ultimate" && loaded) venom.cover({ x: el.clientWidth - 70, y: loaded.view.y }, rig.height * loaded.view.scale.y * 0.8, 0.15);
         });
+        // Vô thanh đoạt phách hệ Phong: sóng âm từ ống sáo tới đầu một người ở mép phải khung, lốc cuốn quanh người đó.
+        const flute = team === "flutePulse" ? [flutePulse(app.stage, rig.fxColor), galeSlash(app.stage, rig.fxColor)] as const : null;
+        if (flute) loaded.onStrike?.((kind, at) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y * 0.8;
+          const foot = { x: el.clientWidth - 70, y: loaded.view.y };
+          flute[0].pulse(at, { x: foot.x, y: foot.y - size * 0.85 }, size);
+          flute[1].whirl(foot, size, 0.35);
+        });
         // Gió lành hệ Phong: vòng gió trắng xanh quanh nhân vật.
         const breeze = team === "galeMend" ? leafBloom(app.stage, rig.fxColor, BREEZE, halo) : null;
         if (breeze) loaded.onStrike?.((kind) => {
@@ -471,6 +481,8 @@ export default function RigPreview({ id, size, onSnapshot }: {
           guard?.update(dt);
           myriad?.forEach((f) => f.update(dt));
           venom?.update(dt);
+          flute?.[0].update(dt);
+          flute?.[1].update(dt);
           blaze?.forEach((b) => b.update(dt));
           sever?.forEach((b) => b.update(dt));
           bastion?.forEach((b) => b.update(dt));

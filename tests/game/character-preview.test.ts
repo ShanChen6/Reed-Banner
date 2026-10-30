@@ -17,7 +17,7 @@ test("bảng xem thử chỉ có nhân vật có rig, dung lượng khớp các 
     assert.equal(urls.size, character.files.length);
     for (const name of partsOf(rig)) assert.ok(urls.has(partUrl(rig, name)));
   }
-  for (const id of ["nguyenBac", "dinhDien", "luuCo", "trinhTu", "dinhLien", "tranLam", "phamBachHo", "ngoXuongXi", "tranCuong", "kieuCongHan", "nguyenKhoan", "kieuThuan", "lyKhue", "nguyenThuTiep", "luDuong", "nguyenSieu", "doCanhThac", "chuNgan", "caoKien", "chauNgoc", "toKim", "nghiemThiet", "lamTung", "hoangMoc", "lucDiep", "nhanTruc", "samTue", "hoLang", "khaSon", "daoLam", "thaiHa", "damThao", "maiThanh", "quachAn", "viTrieu", "haVan", "tonDiem", "lyLiet", "truongViem", "hongDan", "ninhHoa", "doanNham", "leThach", "beLien", "maNhac", "taThach", "tongTan", "vuLoi", "ongChan", "tieuMinh", "tuKinh", "macVan", "huaLang", "lieuYen", "manhTuong", "bachSuong", "buiPhieu", "phungPhong", "bachNoLang", "thanhLamXa", "lamGiangPhiDiep", "xichDiemLuan", "tranSonThach", "loiMinhXa", "tatPhongLang", "dinhNgoc", "bachPhongDao", "docAnh", "hanGiangKhach", "xichDa", "diaAn", "loiAnh"]) {
+  for (const id of ["nguyenBac", "dinhDien", "luuCo", "trinhTu", "dinhLien", "tranLam", "phamBachHo", "ngoXuongXi", "tranCuong", "kieuCongHan", "nguyenKhoan", "kieuThuan", "lyKhue", "nguyenThuTiep", "luDuong", "nguyenSieu", "doCanhThac", "chuNgan", "caoKien", "chauNgoc", "toKim", "nghiemThiet", "lamTung", "hoangMoc", "lucDiep", "nhanTruc", "samTue", "hoLang", "khaSon", "daoLam", "thaiHa", "damThao", "maiThanh", "quachAn", "viTrieu", "haVan", "tonDiem", "lyLiet", "truongViem", "hongDan", "ninhHoa", "doanNham", "leThach", "beLien", "maNhac", "taThach", "tongTan", "vuLoi", "ongChan", "tieuMinh", "tuKinh", "macVan", "huaLang", "lieuYen", "manhTuong", "bachSuong", "buiPhieu", "phungPhong", "bachNoLang", "thanhLamXa", "lamGiangPhiDiep", "xichDiemLuan", "tranSonThach", "loiMinhXa", "tatPhongLang", "dinhNgoc", "bachPhongDao", "docAnh", "hanGiangKhach", "xichDa", "diaAn", "loiAnh", "voAnh"]) {
     const character = characters.find((c) => c.id === id)!;
     assert.ok(character.assets.every((a) => a.file || a.kind === "attack" || (a.kind === "cast" && (id === "nguyenKhoan" || id === "nguyenSieu" || id === "nghiemThiet")) || a.kind === "style"), `${id} cần đủ năm ảnh đối chiếu`);
     assert.ok(character.files.reduce((sum, file) => sum + file.bytes, 0) <= 350_000);
@@ -48,7 +48,7 @@ test("nhân vật chỉ xem thử có trên trang xem thử nhưng không có tr
     assert.equal(archer.profession, "cungThu");
     assert.ok(!ALL_COMPANIONS.some((c) => c.id === id));
   }
-  const assassins = ["bachPhongDao", "docAnh", "hanGiangKhach", "xichDa", "diaAn", "loiAnh"];
+  const assassins = ["bachPhongDao", "docAnh", "hanGiangKhach", "xichDa", "diaAn", "loiAnh", "voAnh"];
   for (const id of assassins) {
     const assassin = characters.find((c) => c.id === id);
     assert.ok(assassin?.previewOnly);
