@@ -120,6 +120,9 @@ const SLOT_ART: Record<Exclude<GearSlot, "vuKhi">, (a: string) => React.ReactNod
 
 /** Vũ khí riêng theo nghề (docs/06-art/art-bible.md mục 2.4). */
 const WEAPON_ART: Record<Profession, (a: string) => React.ReactNode> = {
+  // Biểu tượng vũ khí nghề; không thay vũ khí riêng của nhân vật.
+  xaThu: a => <g><path d="M14 8 Q38 24 14 40 L14 8 M14 24 H39 M33 19 L39 24 L33 29" fill="none" stroke={a} strokeWidth={3}/></g>,
+  satThu: a => <g><path d="M24 6 L29 27 H19 Z" fill={STEEL} {...ink}/><path d="M16 29 H32 M24 29 V42" stroke={a} strokeWidth={4}/></g>,
   // Tướng sĩ: đao lưỡi cong.
   tuongSi: (a) => (
     <g transform="rotate(40 24 24)">

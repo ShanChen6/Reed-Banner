@@ -358,3 +358,7 @@
 
 - Bản chốt thiết kế đầu tiên sau buổi phản biện (`docs/co-lau-design.md`).
 
+
+## 30/10/2026 — Giá 14 tướng Xạ thủ/Sát thủ
+
+Shan chốt RB-062–075 giá 1.500 vàng mỗi người, dùng mức basic hiện có. Không cấp miễn phí cho hồ sơ cũ; giữ khóa phát hành đến nghiệm thu PROF-06. Nguồn thông số: [thiết kế hai nghề](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md).

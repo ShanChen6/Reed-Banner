@@ -78,6 +78,8 @@ export function sidesAfterEvents(
         const f = fighter(e);
         if (!f) break;
         f.effects = f.effects.filter((x) => x.kind !== e.effect);
+        // One poison source may expire while another still has a tick remaining.
+        if (e.effect === 'poison') f.effects.push(...structuredClone(after.sides[e.side].fighters[e.fighter]?.effects.filter(x=>x.kind==='poison') ?? []));
         // Hết Đóng băng thì core tự thêm Miễn băng, không phát sự kiện "effect".
         const immune = e.effect === "freeze" &&
           after.sides[e.side].fighters[e.fighter]?.effects.find((x) => x.kind === "freezeImmune");
