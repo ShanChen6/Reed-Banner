@@ -727,6 +727,23 @@ export default function BattleStage({
           });
           return [fx, mist];
         }
+        if (rig.strikeFx === "tideBlade") {
+          const fx = armorPierce(sky, rig.fxColor);
+          const crack = ironFormation(sky, rig.fxColor);
+          const pull = supplyDrain(sky, rig.fxColor);
+          // Tuyệt chiêu hàn giang tàng nhận: mũi dao nước lao tới đối thủ đứng đầu, khiên họ nứt (Công giảm), năng lượng
+          // của họ bay về chính mình.
+          loaded[i]!.onStrike?.((kind, at) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !me || !foe) return;
+            const size = app.screen.height * FIGURE;
+            fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
+            crack.shatter(spot(foe, 0.5), size, 0.2);
+            pull.drain(spot(foe, 0.5), spot(me, 0.55), size, 0.35);
+          });
+          return [fx, crack, pull];
+        }
         if (rig.strikeFx === "myriadEdge") {
           const fx = armorPierce(sky, rig.fxColor);
           const bolt = lightning(sky, rig.fxColor);
