@@ -715,6 +715,84 @@ export default function BattleStage({
           });
           return [fx];
         }
+        if (rig.strikeFx === "venomNeedle") {
+          const fx = armorPierce(sky, rig.fxColor);
+          const mist = poisonMist(sky, rig.fxColor);
+          // Tuyệt chiêu một người: kim châm độc lao tới đối thủ đứng đầu, sương độc cuộn quanh họ (Trúng độc).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !foe) return;
+            fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
+            mist.cover(spot(foe, 0), app.screen.height * FIGURE, 0.15);
+          });
+          return [fx, mist];
+        }
+        if (rig.strikeFx === "earthClaw") {
+          const surge = earthSurge(sky, rig.fxColor);
+          const crack = ironFormation(sky, rig.fxColor);
+          const ward = drumShield(sky, rig.fxColor, facing);
+          // Tuyệt chiêu địa phục liệt trảo: vuốt cào đất, địa mạch chạy ngầm tới chân đối thủ đứng đầu rồi trồi đá nhọn,
+          // khiên họ nứt (Thủ giảm), khiên mặt trống trước chính mình (Thủ tăng).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !me || !foe) return;
+            const size = app.screen.height * FIGURE;
+            surge.surge({ x: at.x, y: spot(me, 0).y }, spot(foe, 0), size);
+            crack.shatter(spot(foe, 0.5), size, 0.4);
+            ward.cover(spot(me, 0), size, 0.3);
+          });
+          return [surge, crack, ward];
+        }
+        if (rig.strikeFx === "twinCleave") {
+          const cut = flameCleave(sky, rig.fxColor);
+          const fire = flameWall(sky, rig.fxColor);
+          // Tuyệt chiêu song sát: hai nhát chém lửa bắt chéo nhau qua đối thủ đứng đầu, rồi lửa bén lên họ.
+          loaded[i]!.onStrike?.((kind) => {
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !foe) return;
+            const size = app.screen.height * FIGURE;
+            const dir = e.side === 0 ? 1 : -1;
+            cut.slash(spot(foe, 0), size, dir);
+            cut.slash(spot(foe, 0), size, -dir, 0.22);
+            fire.burn(spot(foe, 0), size, 0.4);
+          });
+          return [cut, fire];
+        }
+        if (rig.strikeFx === "tideBlade") {
+          const fx = armorPierce(sky, rig.fxColor);
+          const crack = ironFormation(sky, rig.fxColor);
+          const pull = supplyDrain(sky, rig.fxColor);
+          // Tuyệt chiêu hàn giang tàng nhận: mũi dao nước lao tới đối thủ đứng đầu, khiên họ nứt (Công giảm), năng lượng
+          // của họ bay về chính mình.
+          loaded[i]!.onStrike?.((kind, at) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !me || !foe) return;
+            const size = app.screen.height * FIGURE;
+            fx.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
+            crack.shatter(spot(foe, 0.5), size, 0.2);
+            pull.drain(spot(foe, 0.5), spot(me, 0.55), size, 0.35);
+          });
+          return [fx, crack, pull];
+        }
+        if (rig.strikeFx === "myriadEdge") {
+          const fx = armorPierce(sky, rig.fxColor);
+          const bolt = lightning(sky, rig.fxColor);
+          const ward = drumShield(sky, rig.fxColor, facing);
+          // Tuyệt chiêu vạn tượng quy nhất: mũi kiếm phóng luồng sáng tới đối thủ đứng đầu, sét giáng đúng chỗ trúng; khiên
+          // mặt trống trước chính mình (giải trừ, Khiên).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !me || !foe) return;
+            const w = Math.max(3, app.screen.height * 0.022);
+            fx.pierce(at, spot(foe, 0.5), w);
+            bolt.strike(spot(foe, 0.55), w * 1.6, 0.12);
+            ward.cover(spot(me, 0), app.screen.height * FIGURE, 0.3);
+          });
+          return [fx, bolt, ward];
+        }
         if (rig.strikeFx === "silkGale") {
           const gale = galeSlash(sky, rig.fxColor);
           const crack = ironFormation(sky, rig.fxColor);

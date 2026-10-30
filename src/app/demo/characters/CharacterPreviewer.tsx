@@ -26,7 +26,7 @@ function CharacterDetails({ character, size }: { character: CharacterPreview; si
         <div className="min-w-0">
           <h2 className="text-xl font-bold">{character.name}</h2>
           <p className="text-sm text-stone-400">
-            {PROFESSION_DISPLAY_NAME[character.profession]} · {ELEMENT_NAME[character.element]}
+            {character.title ?? PROFESSION_DISPLAY_NAME[character.profession]} · {ELEMENT_NAME[character.element]}
             {character.previewOnly && " · chỉ xem thử, chưa có trong trận"}
           </p>
           <p className="mt-1 text-xs text-stone-400">Rig trong trận: {bytes(character.rigBytes)} · Tất cả: {bytes(total)}</p>
