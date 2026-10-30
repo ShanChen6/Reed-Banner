@@ -8,6 +8,8 @@ interface Signal {
     target: ComboRef;
     action: number;
     depth?: number;
+    attacker?: ComboRef;
+    provenanceOnly?: boolean;
 }
 /** One deterministic queue per action. Gameplay never depends on audit logging or board RNG. */
 export class ComboEngine {
@@ -171,7 +173,10 @@ export class ComboEngine {
         else
             q.push({ amount, source: target, action: 0 }); // Non-skill/self grants cannot open retaliation.
     }
-    shieldAbsorbed(target: ComboRef, amount: number, activeAttack: boolean) {
+    shieldAbsorbed(target: ComboRef, amount: number, activeAttack: boolean, attacker?: ComboRef) {
+        if (amount > 0 && activeAttack && attacker && !this.suppressed && !this.chasing && attacker.side !== target.side) {
+            this.chaseQueue.push({kind:'shieldAbsorbed',source:target,target,attacker,provenanceOnly:true,action:this.skill?.action ?? 0,depth:0});
+        }
         const q = this.fighter(target).comboShield ?? [];
         while (amount > 0 && q.length) {
             const grant = q[0]!;
@@ -243,6 +248,10 @@ export class ComboEngine {
                         const p: ChasePassiveDef = CHASE_PASSIVES[id];
                         const key = `${e.source.side}:${i}:${id}`;
                         if (!p.triggers.includes(e.kind)) continue;
+                        if (!!p.attackerRecipient !== !!e.provenanceOnly) continue;
+                        if (p.activeOnly && (e.depth ?? 0) !== 0) continue;
+                        if (p.selfSource && i !== e.source.fighter) continue;
+                        if (p.receiverOnly && i !== e.target.fighter) continue;
                         const skip = (reason: string) => this.audit('candidate', reason, e, i, id);
                         if (this.chaseCount >= CHASE_LIMITS.maxReactions || this.state.winner !== null) break;
                         if (f.hp <= 0 || f.effects.some(x => x.kind === 'silence' || x.kind === 'freeze')) { skip('blocked'); continue; }
@@ -251,6 +260,11 @@ export class ComboEngine {
                         const hostile = p.effect === 'damage' || p.effect === 'armor' || p.effect === 'drain';
                         const enemy = e.target.side !== e.source.side ? e.target : { side: (1 - e.source.side) as SideIndex, fighter: this.state.sides[(1 - e.source.side) as SideIndex].fighters.findIndex(x => x.hp > 0) };
                         let target = hostile ? enemy : e.target.side === e.source.side ? e.target : e.source;
+                        if (p.selfRecipient) target = {side:e.source.side,fighter:i};
+                        if (p.attackerRecipient) {
+                            if (!e.attacker || e.attacker.side === e.source.side) { skip('missingAttacker'); continue; }
+                            target = e.attacker;
+                        }
                         if (p.effect === 'heal') {
                             const candidates = this.state.sides[e.source.side].fighters.map((x, j) => ({ x, j })).filter(({ x }) => x.hp > 0 && x.hp < x.maxHp).sort((a, b) => a.x.hp / a.x.maxHp - b.x.hp / b.x.maxHp || a.j - b.j);
                             if (!candidates.length) { skip('fullHealth'); continue; }
@@ -299,7 +313,7 @@ export class ComboEngine {
                     if (!id ||
                         f.hp <= 0 ||
                         i === e.source.fighter ||
-                        f.comboReady ||
+                        (f.comboReady && f.profession !== "xaThu" && f.profession !== "satThu") ||
                         f.effects.some((x) => x.kind === "silence" || x.kind === "freeze"))
                         return;
                     const p: ComboPassiveDef = COMBO_PASSIVES[id];
@@ -313,7 +327,7 @@ export class ComboEngine {
                     if (this.fighter(e.target).hp <= 0)
                         return;
                     const turn = this.meta().sideTurns[e.source.side];
-                    if (f.comboOpenedAt === turn)
+                    if (f.comboOpenedAt === turn && f.profession !== "xaThu" && f.profession !== "satThu")
                         return;
                     const ready: ComboOpportunity = {
                         passive: id,

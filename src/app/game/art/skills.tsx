@@ -2,7 +2,7 @@
 // (nhân vật kèm), hình giữa nói kỹ năng làm gì, dấu nhỏ ở góc nói thêm tác dụng phụ (tăng, giảm, cả đội…).
 // Tuyệt chiêu ô 4 có vòng tia vàng như ô đặc biệt bản mạnh.
 
-import type { Element, Profession, SkillDef } from "@/core";
+import type { Element, GameProfession, SkillDef } from "@/core";
 import { ELEMENT_COLOR } from "./icons";
 import { INK, starPoints } from "./tiles";
 
@@ -16,7 +16,9 @@ const inkLine = { fill: "none", stroke: INK, strokeWidth: 1.5, strokeLinecap: "r
 /** Nền huy hiệu kỹ năng hệ Kim tối hơn màu nguyên tố để hình sáng vẫn nổi. */
 const SKILL_ELEMENT_BG: Partial<Record<Element, string>> = { kim: "#6c737d" };
 
-export const PROFESSION_COLOR: Record<Profession, string> = {
+export const PROFESSION_COLOR: Record<GameProfession, string> = {
+  xaThu: "#476b47",
+  satThu: "#554266",
   tuongSi: "#8f2d22",
   phapSu: "#6a3f8f",
   binhLinh: "#6b4a2b",
