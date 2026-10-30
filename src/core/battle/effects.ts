@@ -5,6 +5,7 @@ export const EFFECT_KINDS = [
   "freeze",
   "freezeImmune",
   "burn",
+  "poison",
   "atkUp",
   "atkDown",
   "defUp",
@@ -20,12 +21,14 @@ export interface Effect {
   readonly kind: EffectKind;
   /** shield: lượng hấp thụ còn lại; burn/regen: máu mỗi lượt; atk/def/reflect: tỉ lệ (0.25 = 25%). */
   value: number;
+  /** Poison stack source: fighter instance, never character ID. */
+  readonly source?: { readonly side: 0 | 1; readonly fighter: number };
   /** Số lượt còn lại của phe bị ảnh hưởng; null là tới khi hết (Khiên). */
   turns: number | null;
 }
 
 /** Bị Thanh tẩy xóa. */
-export const NEGATIVE_EFFECTS: readonly EffectKind[] = ["freeze", "burn", "atkDown", "defDown", "silence"];
+export const NEGATIVE_EFFECTS: readonly EffectKind[] = ["freeze", "burn", "poison", "atkDown", "defDown", "silence"];
 /** Bị Xua tan xóa. */
 export const POSITIVE_EFFECTS: readonly EffectKind[] = ["shield", "atkUp", "defUp", "regen", "reflect"];
 
@@ -53,6 +56,14 @@ export function addEffect(effects: Effect[], incoming: Effect): boolean {
   }
   if (effect.kind === "taunt") effect = { ...effect, turns: Math.min(TAUNT_MAX_TURNS, effect.turns ?? TAUNT_MAX_TURNS) };
 
+  if (effect.kind === "poison") {
+    if (!effect.source || effect.turns !== 2 || !Number.isFinite(effect.value) || effect.value <= 0) return false;
+    const stacks = effects.filter(e => e.kind === 'poison');
+    const same = stacks.find(e => e.source?.side === effect.source!.side && e.source?.fighter === effect.source!.fighter);
+    if (same) { same.value = Math.max(same.value, effect.value); same.turns = 2; return true; }
+    if (stacks.length >= 2) return false;
+    effects.push({...effect, source:{...effect.source}}); return true;
+  }
   const existing = findEffect(effects, effect.kind);
   if (!existing) {
     effects.push({ ...effect });

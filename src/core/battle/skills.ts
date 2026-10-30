@@ -2,10 +2,11 @@
 // Dữ liệu raw legacy giữ số ô lịch sử; registry xuất layout2: tuyệt chiêu ô4, nghề nâng cao ô5.
 // Kỹ năng là dữ liệu; battle.ts thực thi các bước theo thứ tự.
 
+import { EXPANSION_ROLE_SKILLS, EXPANSION_CHARACTER_SKILLS } from "./expansion-skills";
 import type { AreaShape, TileKind } from "../board";
 import type { EffectKind } from "./effects";
 import type { Element } from "./elements";
-import type { Profession } from "./rules";
+import type { Profession, GameProfession } from "./rules";
 
 /** Ai nhận tác dụng của kỹ năng. enemy/ally: một người do người chơi chọn. */
 export type SkillTarget = "enemy" | "ally" | "self" | "allEnemies" | "team";
@@ -45,7 +46,7 @@ export type SkillStep =
   | { readonly type: "heal"; readonly to: StepRecipient; readonly ratio: number }
   | { readonly type: "cleanse"; readonly to: StepRecipient }
   | { readonly type: "dispel"; readonly to: "targets" }
-  | { readonly type: "energy"; readonly to: StepRecipient; readonly amount: number }
+  | { readonly type: "energy"; readonly to: StepRecipient; readonly amount: number; readonly requiresHpDamage?: boolean }
   | { readonly type: "enemyFood"; readonly amount: number }
   | { readonly type: "mark"; readonly enhanced: boolean; readonly guaranteed?: boolean }
   /** Phá ô: ngẫu nhiên, hoặc một hình vùng quanh ô người chơi chạm. */
@@ -61,7 +62,7 @@ export interface SkillDef {
   readonly id: string;
   readonly name: string;
   /** Nguồn nghề (cả preset AI cũ và chiêu nghề mới). */
-  readonly profession?: Profession;
+  readonly profession?: GameProfession;
   readonly tier?: 1 | 2 | 3;
   /** Tuyệt chiêu nấc 3 hoặc chiêu riêng: id nhân vật sở hữu. */
   readonly character?: string;
@@ -895,7 +896,7 @@ const RAW_ROLE_SKILLS: readonly SkillDef[] = [
   role("muaChuoc", "muuSi", 1), role("lyGian", "muuSi", 3), role("catQuanLuong", "muuSi", 4, 55),
   role("nghiBinh", "quanSu", 1), role("hieuLenh", "quanSu", 3), role("phaKe", "quanSu", 4, 55),
 ];
-export const ROLE_SKILLS = RAW_ROLE_SKILLS.map(d => d.slot === 4 ? { ...d, slot: 5 } : d);
+export const ROLE_SKILLS = [...RAW_ROLE_SKILLS.map(d => d.slot === 4 ? { ...d, slot: 5 } : d), ...EXPANSION_ROLE_SKILLS];
 function elemental(id: string, slot: number): SkillDef {
   const old = [...MAIN, ...PHONG].find(d => d.id === id)!;
   return { ...old, id: `element_${id}`, slot };
@@ -926,6 +927,7 @@ export function defineCharacterSkills(defs:readonly SkillDef[]):readonly SkillDe
 export const CHARACTER_SKILLS:readonly SkillDef[]=defineCharacterSkills([
  ...ULTIMATES.map((d):SkillDef=>({...d,slot:4,ultimate:true,characterKind:'ultimate'})),
  ...SIGNATURES.map((d):SkillDef=>({...d,slot:4,ultimate:true,characterKind:'signature'})),
+ ...EXPANSION_CHARACTER_SKILLS,
  // Future personal skills are canonical records: slot4, ultimate:true, stable ID + character.
 ]);
 
@@ -993,7 +995,7 @@ export const SKILL_LEVEL_BONUS = 0.1;
 export const SKILL_MAX_LEVEL_DISCOUNT = 0.1;
 
 /** Hiệu ứng có giá trị là hệ số chính (Khiên, Công/Thủ, Hồi phục, Thiêu đốt, Phản đòn) được tăng theo cấp. */
-const SCALED_EFFECTS: readonly EffectKind[] = ["shield", "atkUp", "atkDown", "defUp", "defDown", "regen", "burn", "reflect"];
+const SCALED_EFFECTS: readonly EffectKind[] = ["shield", "atkUp", "atkDown", "defUp", "defDown", "regen", "burn", "poison", "reflect"];
 
 /**
  * Kỹ năng ở một cấp: sát thương, lượng hồi và hệ số hiệu ứng ×(1 + 10% mỗi cấp trên 1); thời lượng, số ô,

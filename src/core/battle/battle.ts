@@ -68,6 +68,7 @@ export type DamageSource =
   | "sword"
   | "skill"
   | "burn"
+  | "poison"
   | "reflect"
   | "starvation";
 
@@ -652,7 +653,7 @@ class Ctx {
       switch(p.effect){
         case 'damage': this.damage(target,Math.round(p.value*effectiveAtk(caster,state.experimentalSpirit)*R.MORALE_DAMAGE[R.moraleOf(state.sides[source.side].food)]*elementMultiplier(caster.element,receiver.element)*R.defenseMultiplier(effectiveDef(state.sides[target.side],receiver,state.experimentalSpirit),0)),"skill",source);break;
         case 'heal':this.heal(target,Math.round(receiver.maxHp*p.value),false,true);break;
-        case 'shield':this.applyEffect(target,{kind:'shield',value:Math.round(receiver.maxHp*p.value),turns:2});break;
+        case 'shield':this.applyEffect(target,{kind:'shield',value:Math.round(receiver.maxHp*p.value),turns:p.shieldTurns === undefined ? 2 : p.shieldTurns});break;
         case 'armor':this.applyEffect(target,{kind:'defDown',value:p.value,turns:1});break;
         case 'drain':this.gainEnergy(target,-p.value);break;
         case 'energy':this.gainEnergy(target,p.value);break;
@@ -773,12 +774,18 @@ class Ctx {
       });
     }
     own.fighters.forEach((f, i) => {
+      const stacks = f.effects.filter(e => e.kind === 'poison').sort((a,b) => a.source!.side-b.source!.side || a.source!.fighter-b.source!.fighter);
+      for (const stack of stacks) {
+        if (!isAlive(f) || s.winner !== null) break;
+        this.combo.withoutTriggers(() => this.damage({side,fighter:i}, Math.round(stack.value), 'poison'));
+      }
+      if (!isAlive(f)) f.effects = f.effects.filter(e => e.kind !== 'poison');
       for (const effect of tickDurations(f.effects)) {
         if(effect === 'shield')this.combo.removeShield({side,fighter:i});
         this.emit({ type: "effectEnd", side, fighter: i, effect });
       }
     });
-    this.beginSideTurn(otherSide(side));
+    if (s.winner === null) this.beginSideTurn(otherSide(side));
   }
 
   private startAction(extra: boolean): void {
@@ -845,6 +852,7 @@ class Ctx {
     const hoa = passiveOn(ownSide, caster, "hoa") ? 1 + PASSIVE.hoaDamage : 1;
     const thuy = passiveOn(ownSide, caster, "thuy");
 
+    let hpDamage = false;
     try { for (const step of def.steps) {
       const recipients = (to: StepRecipient): FighterRef[] => {
         if (to === "self") return [self];
@@ -877,6 +885,7 @@ class Ctx {
                   pierce,
                 ),
             );
+            const hpBefore = target.hp;
             const dealt = this.damage(
               t,
               amount,
@@ -884,6 +893,7 @@ class Ctx {
               self,
               step.pierceShield || kim,
             );
+            hpDamage ||= target.hp < hpBefore;
             if (step.lifesteal && dealt > 0)
               this.heal(self, Math.round(dealt * step.lifesteal));
             if (
@@ -942,6 +952,7 @@ class Ctx {
               kind: step.effect,
               value,
               turns: step.turns,
+              ...(step.effect === "poison" ? {source:self} : {}),
             });
           }
           break;
@@ -956,7 +967,8 @@ class Ctx {
           for (const r of targets) this.strip(r, POSITIVE_EFFECTS);
           break;
         case "energy":
-          for (const r of recipients(step.to)) this.gainEnergy(r, step.amount < 0 && r.side !== self.side ? step.amount - this.combo.drainExtra(r) : step.amount);
+          if (step.requiresHpDamage && !hpDamage) break;
+          for (const r of recipients(step.to).filter(r => isAlive(this.fighter(r)))) this.gainEnergy(r, step.amount < 0 && r.side !== self.side ? step.amount - this.combo.drainExtra(r) : step.amount);
           break;
         case "enemyFood": {
           const foeIdx = otherSide(self.side);
@@ -1369,7 +1381,7 @@ class Ctx {
     if (shield) {
       absorbed = Math.min(shield.value, amount);
       shield.value -= absorbed;
-      this.combo.shieldAbsorbed(ref, absorbed, (source === "skill" || source === "sword") && attacker !== undefined);
+      this.combo.shieldAbsorbed(ref, absorbed, (source === "skill" || source === "sword") && attacker !== undefined, attacker);
       if (shield.value <= 0) this.strip(ref, ["shield"]);
     }
     const lost = Math.min(f.hp, amount - absorbed);
@@ -1381,6 +1393,7 @@ class Ctx {
       this.addRage(ref.side, (lost / f.maxHp) * R.RAGE_PER_HP_RATIO);
     }
     if (!isAlive(f)) {
+      f.effects = f.effects.filter(e => e.kind !== "poison");
       this.combo.down(ref);
       this.emit({ type: "ko", ...ref });
       if (aliveIndices(own).length === 0) {
