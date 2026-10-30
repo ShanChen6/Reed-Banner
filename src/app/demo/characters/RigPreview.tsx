@@ -56,7 +56,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT, BREEZE }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }, { flameDisc }] = await Promise.all([
+        const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT, BREEZE }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }, { flameDisc }, { flutePulse }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -76,6 +76,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           import("@/app/game/stage/aegis"),
           import("@/app/game/stage/gale"),
           import("@/app/game/stage/disc"),
+          import("@/app/game/stage/ripple"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -276,11 +277,14 @@ export default function RigPreview({ id, size, onSnapshot }: {
           drum?.cover({ x: loaded.view.x, y: loaded.view.y }, size, 0.15);
         });
         // Ngân châm hệ Kim: bắn tới ba điểm ở mép phải khung.
-        const needles = team === "needleVolley" ? needleVolley(app.stage, rig.fxColor) : null;
+        const needles = team === "needleVolley" || team === "stormVolley" ? needleVolley(app.stage, rig.fxColor) : null;
         if (needles) loaded.onStrike?.((kind, at) => {
-          if (kind !== "ultimate") return;
+          if (kind !== "ultimate" || !loaded) return;
           const w = el.dataset.size === "large" ? 3 : 2;
-          [0.35, 0.55, 0.75].forEach((k, n) => needles.volley(at, { x: el.clientWidth - 30, y: el.clientHeight * k }, w, n * 0.06));
+          // Bạo vũ lê hoa: ba loạt kim liên tiếp tới cùng một người ở mép phải khung (sét và mây giông do `storm` vẽ).
+          const size = rig.height * loaded.view.scale.y * 0.8;
+          if (team === "stormVolley") for (let n = 0; n < 3; n++) needles.volley(at, { x: el.clientWidth - 70, y: loaded.view.y - size * (0.45 + n * 0.05) }, w, n * 0.12);
+          else [0.35, 0.55, 0.75].forEach((k, n) => needles.volley(at, { x: el.clientWidth - 30, y: el.clientHeight * k }, w, n * 0.06));
         });
         // Tường thép hệ Kim: dựng trước mặt nhân vật.
         const bulwark = team === "steelBulwark" ? steelBulwark(app.stage, rig.fxColor) : null;
@@ -376,12 +380,12 @@ export default function RigPreview({ id, size, onSnapshot }: {
           if (kind === "ultimate" && loaded) siege.shatter({ x: el.clientWidth - 60, y: el.clientHeight * 0.5 }, rig.height * loaded.view.scale.y, 0.3);
         });
         // Kinh lôi hệ Lôi: sét giáng và mây giông câm lặng ở mép phải khung (hạt năng lượng bay về do `drain` vẽ).
-        const storm = team === "stormSeal" || team === "voltNeedle" ? [lightning(app.stage, rig.fxColor), poisonMist(app.stage, rig.fxColor, STORM)] as const : null;
+        const storm = team === "stormSeal" || team === "voltNeedle" || team === "stormVolley" ? [lightning(app.stage, rig.fxColor), poisonMist(app.stage, rig.fxColor, STORM)] as const : null;
         if (storm) loaded.onStrike?.((kind) => {
           if (kind !== "ultimate" || !loaded) return;
           const size = rig.height * loaded.view.scale.y * 0.8;
-          if (team === "stormSeal") storm[0].strike({ x: el.clientWidth - 70, y: loaded.view.y - size * 0.55 }, el.dataset.size === "large" ? 8 : 5);
-          storm[1].cover({ x: el.clientWidth - 70, y: loaded.view.y }, size, 0.15);
+          if (team !== "voltNeedle") storm[0].strike({ x: el.clientWidth - 70, y: loaded.view.y - size * 0.55 }, el.dataset.size === "large" ? 8 : 5, team === "stormVolley" ? 0.4 : 0);
+          storm[1].cover({ x: el.clientWidth - 70, y: loaded.view.y }, size, team === "stormVolley" ? 0.45 : 0.15);
         });
         // Lôi trận hệ Lôi: sét giáng và khiên nứt ở hai điểm bên phải khung.
         const rout = team === "thunderRout" ? [lightning(app.stage, rig.fxColor), ironFormation(app.stage, rig.fxColor)] as const : null;
@@ -433,6 +437,15 @@ export default function RigPreview({ id, size, onSnapshot }: {
         if (venom) loaded.onStrike?.((kind) => {
           if (kind === "ultimate" && loaded) venom.cover({ x: el.clientWidth - 70, y: loaded.view.y }, rig.height * loaded.view.scale.y * 0.8, 0.15);
         });
+        // Vô thanh đoạt phách hệ Phong: sóng âm từ ống sáo tới đầu một người ở mép phải khung, lốc cuốn quanh người đó.
+        const flute = team === "flutePulse" ? [flutePulse(app.stage, rig.fxColor), galeSlash(app.stage, rig.fxColor)] as const : null;
+        if (flute) loaded.onStrike?.((kind, at) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y * 0.8;
+          const foot = { x: el.clientWidth - 70, y: loaded.view.y };
+          flute[0].pulse(at, { x: foot.x, y: foot.y - size * 0.85 }, size);
+          flute[1].whirl(foot, size, 0.35);
+        });
         // Gió lành hệ Phong: vòng gió trắng xanh quanh nhân vật.
         const breeze = team === "galeMend" ? leafBloom(app.stage, rig.fxColor, BREEZE, halo) : null;
         if (breeze) loaded.onStrike?.((kind) => {
@@ -468,6 +481,8 @@ export default function RigPreview({ id, size, onSnapshot }: {
           guard?.update(dt);
           myriad?.forEach((f) => f.update(dt));
           venom?.update(dt);
+          flute?.[0].update(dt);
+          flute?.[1].update(dt);
           blaze?.forEach((b) => b.update(dt));
           sever?.forEach((b) => b.update(dt));
           bastion?.forEach((b) => b.update(dt));

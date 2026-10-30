@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT, BREEZE }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }, { flameDisc }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT, BREEZE }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }, { flameDisc }, { flutePulse }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -247,6 +247,7 @@ export default function BattleStage({
         import("./aegis"),
         import("./gale"),
         import("./disc"),
+        import("./ripple"),
       ]);
       const app = new Application();
       await app.init({
@@ -726,6 +727,36 @@ export default function BattleStage({
             mist.cover(spot(foe, 0), app.screen.height * FIGURE, 0.15);
           });
           return [fx, mist];
+        }
+        if (rig.strikeFx === "flutePulse") {
+          const sound = flutePulse(sky, rig.fxColor);
+          const gale = galeSlash(sky, rig.fxColor);
+          // Tuyệt chiêu vô thanh đoạt phách: sóng âm từ ống sáo tới đầu đối thủ đứng đầu (mất năng lượng, có thể câm lặng),
+          // cơn lốc cuốn quanh họ.
+          loaded[i]!.onStrike?.((kind, at) => {
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !foe) return;
+            const size = app.screen.height * FIGURE;
+            sound.pulse(at, spot(foe, 0.85), size);
+            gale.whirl(spot(foe, 0), size, 0.35);
+          });
+          return [sound, gale];
+        }
+        if (rig.strikeFx === "stormVolley") {
+          const needles = needleVolley(sky, rig.fxColor);
+          const bolt = lightning(sky, rig.fxColor);
+          const cloud = poisonMist(sky, rig.fxColor, STORM);
+          // Tuyệt chiêu bạo vũ lê hoa: ba loạt kim tím liên tiếp tới đối thủ đứng đầu, sét giáng xuống họ, mây giông cuộn
+          // quanh (mất năng lượng).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !foe) return;
+            const w = Math.max(2, app.screen.height * 0.012);
+            for (let n = 0; n < 3; n++) needles.volley(at, spot(foe, 0.45 + n * 0.05), w, n * 0.12);
+            bolt.strike(spot(foe, 0.55), w * 2.6, 0.4);
+            cloud.cover(spot(foe, 0), app.screen.height * FIGURE, 0.45);
+          });
+          return [needles, bolt, cloud];
         }
         if (rig.strikeFx === "earthClaw") {
           const surge = earthSurge(sky, rig.fxColor);
