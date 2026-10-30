@@ -323,7 +323,8 @@ export function parseInventory(raw: {
     // canonical key wins a collision; alternate item remains in bag, never destroyed.
     for (const key of [...Object.keys(saved).filter(k=>k!=="cungThu"), ...Object.keys(saved).filter(k=>k==="cungThu")]) {
       const profession = normalizeProfession(key);
-      if (profession && migrated[profession] === undefined) migrated[profession] = saved[key];
+      const id = saved[key];
+      if (profession && typeof id === "string" && migrated[profession] === undefined) migrated[profession] = id;
     }
     return migrated;
   };
