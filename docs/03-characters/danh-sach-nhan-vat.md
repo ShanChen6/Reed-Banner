@@ -219,3 +219,37 @@ Phó tướng, thầy pháp, lang y… đi kèm sứ quân ở chiến dịch kh
 
 Hồ sơ lưu trước 20/10/2026 có nhân vật kèm nâng chiêu nghề theo id hoặc đã mua chiêu nhánh. Khi đọc hồ sơ, những nhân vật này được **xóa khóa chiêu nghề/nhánh cũ và hoàn đúng điểm đã chi** (giá nâng 1,1,2,2 và giá nhánh 1), cộng vào điểm chưa chi; giữ cấp, kinh nghiệm và khóa ô nếu có. Xóa khóa/nhánh cũ là dấu hiệu đã chuyển, nên đọc lại không hoàn lặp; trường `branchChoice` bị bỏ. Hồ sơ khóa ô của mọi nhân vật giữ nguyên, kể cả cấp nâng của ô 4/6 tạm khóa theo mốc mới. Chi tiết ở [20](ky-nang/lich-su/20-cai-to-ky-nang.md#ánh-xạ-cũ--mới-và-lưu-trữ).
 
+
+## 10. Cân bằng Xạ thủ và Sát thủ (31/10/2026)
+
+Đo sau khi hai nghề vào trận và nhân vật chính mở đủ 8 nghề. Điểm xuất phát chưa chỉnh số nào; không đổi chiêu, chỉ số hay giá.
+
+**Nhân vật kèm** (`pnpm sim -- --roster --level 20`, cách đo như mục 8, kho rút là cả 74 nhân vật; 100 trận/người, seed 1, nhiễu khoảng ±5 điểm; bốn người lệch nhất đo lại 400 trận, seed 5, nhiễu ±2,5):
+
+| Nhóm | Thắng trung bình |
+|---|---:|
+| Xạ thủ + Sát thủ mới (14) | 50,9% |
+| Tướng thường cũ | 51,8% |
+| Tướng lịch sử | 49,8% |
+| Sứ quân | 55,1% |
+
+- 14 người mới nằm trong 42–62% ở lần đo 100 trận; hai người lệch nhất đo lại cho ra Thanh Lâm Xạ 52,5% (lần đầu 62%) và Hàn Giang Khách 46% (lần đầu 42%), tức đó là nhiễu. Trấn Sơn Thạch 47% và Lam Giang Phi Diệp 46,3% khi đo lại. Cả 14 trong dải 41–58% của mục 8, không có người nào cần chỉnh.
+- Ngoài dải mục 8 ở lần đo này đều là nhân vật cũ: cao nhất Lâm Tùng 67%, Nguyễn Khoan 62%, Ông Chấn 61%, Mạnh Tường 61%; thấp nhất Nhan Trúc 41%, Bùi Phiêu 42%, Từ Kinh/Tôn Diệm/Lưu Cơ 43%. Sứ quân trung bình 55,1% cao hơn mức 49–51% của mục 8 vì kho rút giờ có thêm 14 người mới; chưa đo lại cấp 10 và 30.
+
+**Đinh Bộ Lĩnh theo nghề × hệ** (`node --import tsx scripts/profession-balance.ts`, cấp 20, vòng tròn 56 dựng, mỗi cặp hai lượt đi trước, 3 080 trận mỗi chế độ; 3v3 cùng hai tướng kèm Hà Vân và Mai Thanh):
+
+| Nghề | 1v1 | 3v3 |
+|---|---:|---:|
+| Tướng sĩ | 54,4% | 59,5% |
+| Pháp sư | 63,4% | 54,4% |
+| Binh lính | 67,4% | 53,4% |
+| Y sư | 46,8% | 45,3% |
+| Mưu sĩ | 34,2% | 45,1% |
+| Quân sư | 39,2% | 44,8% |
+| **Xạ thủ** | **47,8%** | **46,6%** |
+| **Sát thủ** | **46,9%** | **50,9%** |
+
+- Hai nghề mới nằm giữa các nghề cũ ở cả hai chế độ, không nghề nào lệch ra khỏi mặt bằng hiện có; không chỉnh.
+- Lệch lớn nằm ở nghề cũ, có từ trước: 1v1 Binh lính 67% (Binh lính/Lôi 73%) và Pháp sư 63% rất cao, Mưu sĩ 34% (Mưu sĩ/Kim 20%) và Quân sư 39% rất thấp; AI Thường dùng nghề hỗ trợ kém trong đấu một người.
+- Theo hệ, Kim thấp ở cả hai chế độ (1v1 40,5%, 3v3 41,8%); với nghề mới, Xạ thủ/Kim 3v3 35,5% và Sát thủ/Kim 37,3% là hai dựng thấp nhất. Lôi cao ở 3v3 (59%). Đây là lệch hệ chung, không riêng nghề mới.
+- Đây là AI đấu AI ở cấp 20, không trang bị, một cặp đồng đội cố định; không thay cho cohort có trang bị, cấp 1/10/30 và breakdown độc/P1–P4 ở [báo cáo PROF](../reports/professions-2026-10-30/README.md).

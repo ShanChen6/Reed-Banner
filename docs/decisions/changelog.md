@@ -2,6 +2,9 @@
 
 ## 31/10/2026
 
+**Cân bằng sơ bộ Xạ thủ/Sát thủ**
+- Mô phỏng AI đấu AI cấp 20: 14 nhân vật mới 50,9% trung bình, Đinh Bộ Lĩnh Xạ thủ/Sát thủ giữa các nghề cũ; không chỉnh số liệu nào. Thêm `scripts/profession-balance.ts`. Kết quả và lệch có từ trước ở [mục 10](../03-characters/danh-sach-nhan-vat.md#10-cân-bằng-xạ-thủ-và-sát-thủ-31102026).
+
 **Đinh Bộ Lĩnh thêm Xạ thủ và Sát thủ — triển khai (Shan duyệt số liệu)**
 - Nhân vật chính dùng được 8 nghề (56 tổ hợp), 14 tuyệt chiêu ô 4 mới, hồ sơ cũ `cungThu` khôi phục thành Xạ thủ; thiết kế đổi sang IMPLEMENTED. Shan đồng ý thiết kế lại hình: biến thể cung tre/dao găm có [đặc tả và prompt](../06-art/prompts/dinh-bo-linh-xa-thu-sat-thu.md) (DRAFT, chưa có ảnh/code rig).
 - Nguồn [dinh-bo-linh-xa-thu-sat-thu.md](../03-characters/dinh-bo-linh-xa-thu-sat-thu.md): 56 tổ hợp, dùng lại chiêu nghề/chỉ số/bị động của đồng hành, đề xuất 14 tuyệt chiêu ô 4 mới (Vạn tiễn, Tuyệt mệnh × 7 hệ). Chưa sửa code; nhân vật chính vẫn sáu nghề.
