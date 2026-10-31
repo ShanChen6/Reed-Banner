@@ -13,7 +13,7 @@ import {
   GEAR_SLOTS,
   getGearSet,
   PASSIVES,
-  LEGACY_PROFESSIONS as PROFESSIONS,
+  PROFESSIONS,
   TIERS,
   type Difficulty,
   type Element,

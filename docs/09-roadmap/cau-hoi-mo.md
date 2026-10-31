@@ -96,3 +96,16 @@
 - TODO: Duyệt ngoại hình Master theo ảnh tham chiếu, trang phục thế kỷ X và bản chính không kính; không suy ra thân phận/tiểu sử người thật. Danh xưng Vạn Tượng Hành Giả và mã RB-SP-001 là đề xuất.
 - TODO: Review gameplay/chỉ số, mapping special template không tự nhận nội tại nghề/hệ cũ; per-skill damageElement và hệ phòng thủ Kim cố định; passive cuối lượt, shield-break provenance, quota hồi3 tick/trận, P4 một cơ hội và snapshot/reset mode.
 - TODO: Chốt cách mở đồng hành và kiểm chứng bằng mô phỏng trước triển khai; chưa sửa Campaign, roster, code, UI hoặc asset.
+
+## Nhân vật tổng hợp — 31/10/2026
+
+- Đã chốt hướng: hai nghề/hai hệ, phòng thủ và đòn thường theo hệ chính, giá cao, cách nhận đặc biệt, icon tổng hợp. Nguồn duy nhất: [thiết kế](../03-characters/nhan-vat-tong-hop.md).
+- Đã chốt: "kiếm sĩ" là Tướng sĩ (gọi nhầm).
+- TODO: Chốt cách nhận, mức giá và giới hạn trong đội sau khi thiết kế thêm vài nhân vật tổng hợp; duyệt mô hình chính/phụ và cách hiển thị hệ chính trong trận; mô phỏng cân bằng trước khi triển khai.
+
+## Đinh Bộ Lĩnh — thêm Xạ thủ và Sát thủ — 31/10/2026
+
+- Đã làm: Đinh Bộ Lĩnh dùng được Xạ thủ/Sát thủ, Shan duyệt số liệu 31/10/2026. Nguồn: [thiết kế](../03-characters/dinh-bo-linh-xa-thu-sat-thu.md), [art và prompt](../06-art/prompts/dinh-bo-linh-xa-thu-sat-thu.md).
+- Đã đo sơ bộ cân bằng 56 tổ hợp và 14 nhân vật mới (cấp 20, không gear): nằm trong dải hiện có, chưa chỉnh số nào; xem [mục 10](../03-characters/danh-sach-nhan-vat.md#10-cân-bằng-xạ-thủ-và-sát-thủ-31102026).
+- TODO: Đo thêm cấp 10/30, có trang bị và cấp chiêu khác nhau trước khi chốt; quyết định có xử lý lệch có từ trước (Binh lính/Pháp sư cao, Mưu sĩ/Quân sư thấp ở 1v1; hệ Kim thấp; Lâm Tùng 67%) hay không.
+- TODO: Tạo và duyệt ảnh biến thể vũ khí (cung tre, dao găm) cho rig Đinh Bộ Lĩnh, rồi thêm code chọn biến thể; hiện hiển thị bằng bản kiếm.

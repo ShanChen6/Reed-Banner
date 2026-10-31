@@ -20,10 +20,10 @@ test('all new companions reuse existing portraits, rig layers and action poses',
  }
 });
 
-test('missing painted profession/skill icons render safe SVG; all tooltips have actual step text',()=>{
+test('painted profession icons exist and render; all tooltips have actual step text',()=>{
  for(const profession of ['xaThu','satThu'] as const){
   const html=renderToStaticMarkup(createElement(ProfessionIcon,{profession}));
-  assert.ok(html.includes('<svg'));assert.equal(html.includes('<image'),false);assert.ok(html.includes('aria-hidden="true"'));
+  assert.ok(html.includes('<svg'));assert.ok(html.includes(`/art/professions/${profession}.webp`));assert.ok(existsSync(`public/art/professions/${profession}.webp`));assert.ok(html.includes('aria-hidden="true"'));
  }
  for(const f of EXPANSION_COMPANIONS)for(const skill of characterSkills(f.profession,f.element,f.id))for(const level of [1,3,5]){
   const def=scaleSkill(skill,level);assert.ok(renderToStaticMarkup(createElement(SkillIcon,{def})).includes('<svg'));

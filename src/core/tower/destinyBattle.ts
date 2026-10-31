@@ -1,6 +1,6 @@
 import {
   ELEMENTS,
-  PROFESSIONS,
+  isLeaderProfession,
   RAGE_MAX,
   ENERGY_MAX,
   createBattle,
@@ -73,7 +73,7 @@ export function createDestinyFloorBattle(run: DestinyRun, input: DestinyBattleIn
   if (input.activeIds[0] !== MAIN_ID) return { ok: false, error: "leader_must_be_first" };
   if (new Set(input.activeIds).size !== input.activeIds.length) return { ok: false, error: "duplicate_fighter" };
   if (!(ELEMENTS as readonly unknown[]).includes(input.leaderBuild.element) ||
-      !(PROFESSIONS as readonly unknown[]).includes(input.leaderBuild.profession))
+      !isLeaderProfession(input.leaderBuild.profession))
     return { ok: false, error: "invalid_leader_build" };
   if (input.foes.fighters.length !== LINEUP_SIZE) return { ok: false, error: "foes_must_be_three" };
 

@@ -12,8 +12,8 @@ export type ExpansionProfession = (typeof EXPANSION_PROFESSIONS)[number];
 export const ALL_PROFESSIONS = [...LEGACY_PROFESSIONS, ...EXPANSION_PROFESSIONS] as const;
 export type GameProfession = (typeof ALL_PROFESSIONS)[number];
 export type Profession = GameProfession;
-/** Giữ tắt cho tới khi PROF-02..06 có bằng chứng nghiệm thu. */
-export const NEW_PROFESSIONS_ENABLED: boolean = false;
+/** Bật theo quyết định của Shan ngày 31/10/2026: Xạ thủ và Sát thủ vào trận. */
+export const NEW_PROFESSIONS_ENABLED: boolean = true;
 export const PROFESSIONS: readonly Profession[] = NEW_PROFESSIONS_ENABLED ? ALL_PROFESSIONS : LEGACY_PROFESSIONS;
 export const PROFESSION_DISPLAY_NAME: Readonly<Record<GameProfession, string>> = {
   tuongSi: "Tướng sĩ", phapSu: "Pháp sư", binhLinh: "Binh lính", ySu: "Y sư",
@@ -27,8 +27,10 @@ export function normalizeProfession(value: unknown): GameProfession | undefined 
 export function isActiveProfession(value: unknown): value is Profession {
   return typeof value === "string" && (PROFESSIONS as readonly string[]).includes(value);
 }
-export function isLeaderProfession(value: unknown): value is LegacyProfession {
-  return typeof value === "string" && (LEGACY_PROFESSIONS as readonly string[]).includes(value);
+/** Nghề Đinh Bộ Lĩnh chọn được; cùng danh sách nghề đã mở, gồm Xạ thủ và Sát thủ. */
+export const LEADER_PROFESSIONS: readonly Profession[] = PROFESSIONS;
+export function isLeaderProfession(value: unknown): value is Profession {
+  return typeof value === "string" && (LEADER_PROFESSIONS as readonly string[]).includes(value);
 }
 /** Ô công kích dùng chung mọi nghề; key kiem giữ nguyên cho save/replay. */
 export const ATTACK_TILE: TileKind = "kiem";

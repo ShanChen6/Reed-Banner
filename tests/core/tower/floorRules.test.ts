@@ -111,7 +111,7 @@ describe("luật tầng", () => {
       ["unsatisfiable"],
     );
     assert.deepEqual(
-      c({ bannedProfessions: ["tuongSi", "phapSu", "binhLinh", "ySu", "muuSi", "quanSu"] }),
+      c({ bannedProfessions: ["tuongSi", "phapSu", "binhLinh", "ySu", "muuSi", "quanSu", "xaThu", "satThu"] }),
       ["unsatisfiable"],
     );
   });

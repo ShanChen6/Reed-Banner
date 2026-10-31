@@ -17,9 +17,9 @@ it('AI: self-heal đầy máu không nhận điểm phối hợp từ đồng đ
  assert.ok(scoreSkill(toView(s),def)!.score>100);
  const a=act(s,{type:'skill',skill:def.id});assert.ok(a.ok);assert.ok(a.events.some(e=>e.type==='combo'&&e.outcome==='opened'));
 });
-it('kịch bản:42 nghề/hệ, hai mode, cấp trước/sau mốc,3 mức đồ, đảo bên giữ cùng config/seed',()=>{
- const cs=task2Cases();assert.equal(cs.length,1680);
- assert.equal(new Set(cs.map(c=>c.profession+':'+c.element)).size,42);
+it('kịch bản:56 nghề/hệ, hai mode, cấp trước/sau mốc,3 mức đồ, đảo bên giữ cùng config/seed',()=>{
+ const cs=task2Cases();assert.equal(cs.length,2240);
+ assert.equal(new Set(cs.map(c=>c.profession+':'+c.element)).size,56);
  assert.deepEqual(new Set(cs.map(c=>c.level)),new Set(LEVELS));assert.deepEqual(new Set(cs.map(c=>c.equipment)),new Set(GEARS));
  const roster=new Set<string>();
  for(let i=0;i<cs.length;i+=2){const a=cs[i]!,b=cs[i+1]!;assert.equal(a.matchup.sides[a.focalSide].fighters[0]!.id,'dinhBoLinh');assert.equal(a.matchup.seed,b.matchup.seed);assert.deepEqual(a.matchup.sides[0],b.matchup.sides[1]);a.matchup.sides.flatMap(s=>s.fighters).forEach(f=>roster.add(f.id));if(a.level<10)assert.ok(a.gearItems.flat().every(g=>g.tier<=2));}
