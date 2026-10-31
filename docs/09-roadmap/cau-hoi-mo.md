@@ -106,5 +106,6 @@
 ## Đinh Bộ Lĩnh — thêm Xạ thủ và Sát thủ — 31/10/2026
 
 - Đã làm: Đinh Bộ Lĩnh dùng được Xạ thủ/Sát thủ, Shan duyệt số liệu 31/10/2026. Nguồn: [thiết kế](../03-characters/dinh-bo-linh-xa-thu-sat-thu.md), [art và prompt](../06-art/prompts/dinh-bo-linh-xa-thu-sat-thu.md).
-- TODO: Mô phỏng cân bằng 56 tổ hợp (hai chiêu kết nghề Vạn tiễn/Tuyệt mệnh là điểm xuất phát).
+- Đã đo sơ bộ cân bằng 56 tổ hợp và 14 nhân vật mới (cấp 20, không gear): nằm trong dải hiện có, chưa chỉnh số nào; xem [mục 10](../03-characters/danh-sach-nhan-vat.md#10-cân-bằng-xạ-thủ-và-sát-thủ-31102026).
+- TODO: Đo thêm cấp 10/30, có trang bị và cấp chiêu khác nhau trước khi chốt; quyết định có xử lý lệch có từ trước (Binh lính/Pháp sư cao, Mưu sĩ/Quân sư thấp ở 1v1; hệ Kim thấp; Lâm Tùng 67%) hay không.
 - TODO: Tạo và duyệt ảnh biến thể vũ khí (cung tre, dao găm) cho rig Đinh Bộ Lĩnh, rồi thêm code chọn biến thể; hiện hiển thị bằng bản kiếm.
