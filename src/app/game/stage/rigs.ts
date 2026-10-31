@@ -619,7 +619,8 @@ const TRINH_TU: WarriorRig = {
  * Lê Hoàn, quân sư hệ Lôi. Bộ tranh Shan gửi 31/10 (nền trong suốt sẵn), thay bộ cầm cờ lệnh cũ: giáp vảy sắt viền da,
  * khăn chít trán, áo choàng đỏ sẫm, kiếm thẳng. Ảnh đứng tách lớp bằng code như Đinh Bộ Lĩnh: cẳng tay cầm kiếm cùng
  * thanh kiếm xoay quanh khuỷu, cẳng tay trái buông bên hông, đầu (chỗ cẳng tay che áo được vá màu). Đổi vũ khí nhưng giữ
- * nhịp động tác của bộ cờ lệnh cũ (nhịp giáo: đẩy tới nhẹ, không vung vòng). Hệ tọa độ: ảnh đứng 1024×1536.
+ * nhịp động tác của bộ cờ lệnh cũ (nhịp giáo: đẩy tới nhẹ, không vung vòng). Tranh kéo áo choàng ngoái nhìn làm tranh
+ * phong thái. Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const LE_HOAN: WarriorRig = {
   skeleton: "warrior",
