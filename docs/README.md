@@ -38,6 +38,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 
 | File | Nội dung |
 |---|---|
+| ★ [Đinh Bộ Lĩnh — thêm Xạ thủ/Sát thủ](03-characters/dinh-bo-linh-xa-thu-sat-thu.md) | DRAFT: mở hai nghề mới cho nhân vật chính, 56 tổ hợp; 14 tuyệt chiêu ô 4 mới, dùng lại chiêu nghề và bị động của đồng hành, chưa có code |
 | ★ [Nhân vật tổng hợp](03-characters/nhan-vat-tong-hop.md) | DRAFT: nhân vật đặc biệt hai nghề/hai hệ; phòng thủ và đòn thường theo hệ chính, hệ phụ chỉ mở rộng chiêu; giá cao, cách nhận đặc biệt, icon tổng hợp |
 | ★ [Đinh Ngọc — Vạn Tượng Hành Giả](03-characters/dinh-ngoc.md) | DRAFT: nữ khoảng 25 tuổi, nhân vật đặc biệt dung hợp8 nghề/7 hệ qua6 chủ động +4 nội tại; [sáu prompt](06-art/prompts/dinh-ngoc.md), chưa có runtime |
 | ★ [danh-sach-nhan-vat.md](03-characters/danh-sach-nhan-vat.md) | 61 nhân vật: tướng thường, tướng lịch sử, sứ quân |
