@@ -23,12 +23,12 @@ test('14 new registry entries have exact base stats, slots, P1+P2+P3+P4 and no s
  }
 });
 
-test('price is 1500 each, release gate prevents acquiring or deploying before acceptance',()=>{
+test('price is 1500 each, đã mở bán và dùng được trong đội',()=>{
  for(const {fighter,price} of EXPANSION_SHOP_COMPANIONS){
-  assert.equal(price,1500);assert.ok(!ALL_COMPANIONS.some(f=>f.id===fighter.id));
+  assert.equal(price,1500);assert.ok(ALL_COMPANIONS.some(f=>f.id===fighter.id));
   const p={...newProfile(),gold:100000,companions:{...newProfile().companions,[fighter.id]:NEW_PROGRESS}};
-  assert.equal(profileTeam(p,[fighter.id]).length,1);
-  assert.equal(applyProfileAction({...newProfile(),gold:100000},{type:'buyCompanion',character:fighter.id}).ok,false);
+  assert.deepEqual(profileTeam(p,[fighter.id]).map(f=>f.id),['dinhBoLinh',fighter.id]);
+  assert.equal(applyProfileAction({...newProfile(),gold:100000},{type:'buyCompanion',character:fighter.id}).ok,true);
  }
  assert.throws(()=>mainCharacter('kim','xaThu'),/chưa hỗ trợ/);
  assert.throws(()=>mainCharacter('kim','satThu'),/chưa hỗ trợ/);

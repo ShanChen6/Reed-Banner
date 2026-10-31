@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { it } from "node:test";
 import {
-  act, createBattle, beginWave, mainCharacter, ALL_COMPANIONS, PROFESSIONS, ELEMENTS,
+  act, createBattle, beginWave, mainCharacter, ALL_COMPANIONS, LEGACY_PROFESSIONS as PROFESSIONS, ELEMENTS,
   characterSkills, chasePassives, COMBO_PASSIVES, CHASE_PASSIVES, CHASE_LIMITS,
   spiritAt, spiritHealMultiplier, type FighterConfig, type BattleState,
   autoProgress, buildMain, presetLoadout, withGear, equippedItems,

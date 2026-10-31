@@ -100,4 +100,5 @@
 ## Nhân vật tổng hợp — 31/10/2026
 
 - Đã chốt hướng: hai nghề/hai hệ, phòng thủ và đòn thường theo hệ chính, giá cao, cách nhận đặc biệt, icon tổng hợp. Nguồn duy nhất: [thiết kế](../03-characters/nhan-vat-tong-hop.md).
-- TODO: Chốt cách nhận, mức giá và giới hạn trong đội; chốt "kiếm sĩ" là nghề nào; duyệt mô hình chính/phụ và cách hiển thị hệ chính trong trận; mô phỏng cân bằng trước khi triển khai.
+- Đã chốt: "kiếm sĩ" là Tướng sĩ (gọi nhầm).
+- TODO: Chốt cách nhận, mức giá và giới hạn trong đội sau khi thiết kế thêm vài nhân vật tổng hợp; duyệt mô hình chính/phụ và cách hiển thị hệ chính trong trận; mô phỏng cân bằng trước khi triển khai.

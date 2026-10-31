@@ -1,5 +1,5 @@
 // Kịch bản kiểm chứng nghề/hệ và Tinh thần; không dùng generator roster cũ gắn nhãn sai ĐBL.
-import { ELEMENTS, PROFESSIONS, type Profession, type SideIndex } from '../battle';
+import { ELEMENTS, LEGACY_PROFESSIONS as PROFESSIONS, type Profession, type SideIndex } from '../battle';
 import { autoProgress, buildCompanion, buildMain } from '../progress';
 import { withGear, presetLoadout } from '../gear';
 import { ALL_COMPANIONS } from '../roster';
