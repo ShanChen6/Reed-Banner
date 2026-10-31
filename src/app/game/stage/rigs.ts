@@ -141,7 +141,9 @@ export interface WarriorRig {
    * đối thủ đứng đầu, tuyệt chiêu mây giông tụ rồi cột sét lớn giáng xuống người đó, đốm năng lượng bật khỏi thân; `thunderAegis` chỉ ở
    * tuyệt chiêu, vòng sấm tỏa quanh chân và khiên mặt trống trước chính mình, sét chạy tới từng đối thủ kèm ấn khiêu khích
    * trên đầu và đốm năng lượng bật khỏi thân họ; `thunderMend` chỉ ở tuyệt chiêu, chùm kim tím từ tay tới từng đồng đội
-   * rồi vòng sáng tím hồi phục quanh họ; `stormSeal` chỉ ở tuyệt chiêu, sét giáng xuống đối thủ đứng đầu, mây giông
+   * rồi vòng sáng tím hồi phục quanh họ; `thunderMarch` đánh thường và ra chiêu phóng sét
+   * từ mũi kiếm, bàn tay tới đối thủ đứng đầu, tuyệt chiêu mười đạo sét chạy sát đất tới chân từng đối thủ, ấn mũi tên chỉ
+   * xuống trên đầu họ và đốm năng lượng quanh từng đồng đội; `stormSeal` chỉ ở tuyệt chiêu, sét giáng xuống đối thủ đứng đầu, mây giông
    * câm lặng phủ quanh họ và năng lượng bay về chính mình; `thunderRout` chỉ ở tuyệt chiêu, sét giáng lần lượt xuống
    * từng đối thủ và khiên giáp họ nứt vỡ; `galeSlash` chỉ ở tuyệt chiêu, ba lưỡi gió chém qua đối thủ đứng đầu, lốc
    * cuốn quanh chân họ và luồng gió đưa năng lượng tới từng đồng đội; `galeVortex` đánh thường và ra chiêu phóng tia
@@ -204,6 +206,7 @@ export interface WarriorRig {
     | "heavenStrike"
     | "thunderAegis"
     | "thunderMend"
+    | "thunderMarch"
     | "stormSeal"
     | "thunderRout"
     | "galeSlash"
@@ -643,6 +646,7 @@ const LE_HOAN: WarriorRig = {
     { x: 280, y: 815 },
     { x: 70, y: 1210 },
   ],
+  strikeFx: "thunderMarch",
   fxColor: 0xb98cff,
   // Thủ kiếm, chỉ tay về phía trước (đánh thường), xòe tay ra lệnh (ra chiêu), giơ kiếm qua đầu (tuyệt chiêu). Cỡ so
   // theo khóa thắt lưng (62 px đứng).

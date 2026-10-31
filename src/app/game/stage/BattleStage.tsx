@@ -217,7 +217,7 @@ export default function BattleStage({
     let destroy: (() => void) | null = null;
 
     void (async () => {
-      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT, BREEZE }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }, { flameDisc }, { flutePulse }] = await Promise.all([
+      const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT, BREEZE }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }, { flameDisc }, { flutePulse }, { thunderMarch }] = await Promise.all([
         import("pixi.js"),
         import("./puppet"),
         import("./lightning"),
@@ -248,6 +248,7 @@ export default function BattleStage({
         import("./gale"),
         import("./disc"),
         import("./ripple"),
+        import("./march"),
       ]);
       const app = new Application();
       await app.init({
@@ -555,6 +556,27 @@ export default function BattleStage({
             else bolts.bolt(at, spot(foe, 0.5), kind === "cast" ? w * 1.4 : w);
           });
           return [bolts, smite];
+        }
+        if (rig.strikeFx === "thunderMarch") {
+          const bolts = lightning(sky, rig.fxColor);
+          const march = thunderMarch(sky, rig.fxColor);
+          // Đánh thường và ra chiêu phóng sét từ mũi kiếm, bàn tay tới đối thủ đứng đầu; tuyệt chiêu thập đạo lôi binh: mười
+          // đạo sét chạy sát đất tới chân từng đối thủ (sát thương), ấn mũi tên chỉ xuống trên đầu họ (giảm công), đốm năng
+          // lượng bay lên quanh từng đồng đội.
+          loaded[i]!.onStrike?.((kind, at) => {
+            const foe = alive(false)[0];
+            if (!foe) return;
+            const size = app.screen.height * FIGURE;
+            if (kind !== "ultimate") {
+              const w = Math.max(3, app.screen.height * 0.02);
+              bolts.bolt(at, spot(foe, 0.5), kind === "cast" ? w * 1.4 : w);
+              return;
+            }
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            const from = me ? spot(me, 0) : { x: at.x, y: spot(foe, 0).y };
+            march.march({ x: from.x + facing * size * 0.18, y: from.y }, alive(false).map((s) => spot(s, 0)), alive(true).map((s) => spot(s, 0)), size);
+          });
+          return [bolts, march];
         }
         if (rig.strikeFx === "thunderAegis") {
           const shock = thunderAegis(sky, rig.fxColor);
