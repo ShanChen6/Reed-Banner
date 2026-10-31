@@ -23,22 +23,25 @@ test('14 new registry entries have exact base stats, slots, P1+P2+P3+P4 and no s
  }
 });
 
-test('price is 1500 each, release gate prevents acquiring or deploying before acceptance',()=>{
+test('price is 1500 each, đã mở bán và dùng được trong đội',()=>{
  for(const {fighter,price} of EXPANSION_SHOP_COMPANIONS){
-  assert.equal(price,1500);assert.ok(!ALL_COMPANIONS.some(f=>f.id===fighter.id));
+  assert.equal(price,1500);assert.ok(ALL_COMPANIONS.some(f=>f.id===fighter.id));
   const p={...newProfile(),gold:100000,companions:{...newProfile().companions,[fighter.id]:NEW_PROGRESS}};
-  assert.equal(profileTeam(p,[fighter.id]).length,1);
-  assert.equal(applyProfileAction({...newProfile(),gold:100000},{type:'buyCompanion',character:fighter.id}).ok,false);
+  assert.deepEqual(profileTeam(p,[fighter.id]).map(f=>f.id),['dinhBoLinh',fighter.id]);
+  assert.equal(applyProfileAction({...newProfile(),gold:100000},{type:'buyCompanion',character:fighter.id}).ok,true);
  }
- assert.throws(()=>mainCharacter('kim','xaThu'),/chưa hỗ trợ/);
- assert.throws(()=>mainCharacter('kim','satThu'),/chưa hỗ trợ/);
+ for(const profession of ['xaThu','satThu'] as const){
+  const main=mainCharacter('kim',profession);
+  assert.equal(main.profession,profession);assert.deepEqual([main.maxHp,main.atk,main.def],profession==='xaThu'?[475,55,9]:[450,58,8]);
+  assert.deepEqual(characterSkills(profession,'kim').map(s=>s.slot),[1,2,3,4,5,6]);
+ }
 });
 
 test('save migration is idempotent and preserves old investments and unreleased roster',()=>{
  const fresh=newProfile();const cp:CharacterProgress={...NEW_PROGRESS,level:20,xp:123,skillPoints:7,skillLevels:{o1:3,o4:2},branches:[]};
  const raw={...fresh,profession:'cungThu',gold:9876,main:cp,companions:{...fresh.companions,docAnh:cp},bag:[{id:'g7',slot:'vuKhi',profession:'cungThu',element:'kim',tier:2,set:'none'}],loadouts:{docAnh:{weapons:{cungThu:'g7'},slots:{}}},nextItemId:8};
  const before=structuredClone(raw);const p=parseProfile(raw);
- assert.deepEqual(raw,before);assert.equal(p.profession,'tuongSi');assert.equal(p.unavailableLeaderProfession,'xaThu');
+ assert.deepEqual(raw,before);assert.equal(p.profession,'xaThu');
  assert.equal(p.gold,9876);assert.deepEqual(p.main,cp);assert.deepEqual(p.companions.docAnh,cp);
  assert.equal(p.bag[0]!.profession,'xaThu');assert.equal(p.bag[0]!.id,'g7');assert.deepEqual(p.loadouts.docAnh!.weapons,{xaThu:'g7'});
  assert.deepEqual(parseProfile(p),p);assert.equal(p.nextItemId,8);

@@ -21,7 +21,7 @@
 - Có ngay từ lúc tạo game, **luôn ra trận** ở cả 1vs1 và 3vs3.
 - **Nghề:** chọn 1 trong 6 nghề **trước mỗi trận** (mặc định Tướng sĩ khi tạo game). Nhân vật chính hưởng nội tại của nghề đang chọn (xem mục 4.1). Trong trận không đổi được.
   - Nghề quyết định 3 kỹ năng chủ động, nội tại nghề, loại ô và vũ khí. Hệ quyết định 2 kỹ năng bổ trợ/bàn cờ; ô 5 riêng theo nhân vật.
-  - 6 nghề × 7 nguyên tố cho 42 cách dựng nhân vật chính.
+  - 6 nghề × 7 nguyên tố cho 42 cách dựng nhân vật chính. Từ 31/10/2026 mở thêm Xạ thủ và Sát thủ thành 8 nghề, 56 cách: [thiết kế](../dinh-bo-linh-xa-thu-sat-thu.md).
   - Đội được phép có nhiều người cùng nghề (ví dụ hai Y sư). Nội tại tác động lên cả phe, như lương của Binh lính, không cộng dồn.
 - **Nguyên tố:** chọn 1 trong 7 (Kim, Mộc, Thủy, Hỏa, Thổ, Lôi, Phong) khi tạo game, và được **đổi trước mỗi trận**. Trong trận không đổi được.
 - **6 kỹ năng chủ động:** 3 nghề + 2 hệ + 1 tuyệt chiêu; thêm bị động theo hệ của thủ lĩnh. Đổi nghề/hệ giữ cấp nâng theo ô.

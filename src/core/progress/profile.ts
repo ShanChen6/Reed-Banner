@@ -69,8 +69,6 @@ export interface Profile {
   readonly skillLayout: 2;
   readonly element: Element;
   readonly profession: Profession;
-  /** Preserve unsupported historical leader choice without inventing a new DBL kit. */
-  readonly unavailableLeaderProfession?: Profession;
   readonly main: CharacterProgress;
   /** Nhân vật kèm đã có (khởi đầu và mua ở cửa hàng), theo id. */
   readonly companions: Readonly<Record<string, CharacterProgress>>;
@@ -266,6 +264,11 @@ export function migrateSkillSlots(p: CharacterProgress): CharacterProgress {
  if(p.skillLevels.o5!==undefined)levels.o4=p.skillLevels.o5;
  return {...p,skillLevels:levels};
 }
+/** Nghề lưu trong hồ sơ cũ (kể cả alias cungThu) nếu Đinh Bộ Lĩnh dùng được. */
+function leaderProfession(value: unknown): Profession | undefined {
+  const profession = normalizeProfession(value);
+  return isLeaderProfession(profession) ? profession : undefined;
+}
 /** Đọc hồ sơ đã lưu; dữ liệu hỏng hoặc khác phiên bản thì trả về hồ sơ mới. */
 export function parseProfile(raw: unknown): Profile {
   const p = raw as Profile | null;
@@ -290,8 +293,7 @@ export function parseProfile(raw: unknown): Profile {
     ...fresh,
     ...rest,
     skillLayout: 2,
-    profession: isLeaderProfession(p.profession) ? p.profession : fresh.profession,
-    ...(!isLeaderProfession(p.profession) && normalizeProfession(p.profession) ? {unavailableLeaderProfession:normalizeProfession(p.profession)} : {}),
+    profession: leaderProfession(p.profession) ?? fresh.profession,
     main: p.skillLayout === 2 ? p.main : migrateSkillSlots(p.main),
     companions,
     team: fresh.team,

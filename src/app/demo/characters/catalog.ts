@@ -6,24 +6,10 @@ import { partsOf, partUrl, rigIds, rigOf } from "@/app/game/stage/rigs";
 import type { CharacterPreview, PreviewFile } from "./types";
 
 /**
- * Nhân vật đã có bộ hình nhưng chưa có trong roster vì nghề chưa mở trong trận (Xạ thủ, Sát thủ): trang xem thử vẫn
- * dựng hình động để duyệt tranh, không đưa vào shop hay trận đấu.
+ * Nhân vật đã có bộ hình nhưng chưa có trong roster: trang xem thử vẫn dựng hình động để duyệt tranh,
+ * không đưa vào shop hay trận đấu. Xạ thủ và Sát thủ đã vào roster nên không còn ở đây.
  */
 const PREVIEW_ONLY: Readonly<Record<string, { readonly name: string; readonly element: Element; readonly profession: GameProfession; readonly title?: string }>> = {
-  bachNoLang: { name: "Bạch Nỏ Lang", element: "kim", profession: "xaThu" },
-  thanhLamXa: { name: "Thanh Lâm Xạ", element: "moc", profession: "xaThu" },
-  lamGiangPhiDiep: { name: "Lam Giang Phi Diệp", element: "thuy", profession: "xaThu" },
-  xichDiemLuan: { name: "Xích Diệm Luân", element: "hoa", profession: "xaThu" },
-  tranSonThach: { name: "Trấn Sơn Thạch", element: "tho", profession: "xaThu" },
-  loiMinhXa: { name: "Lôi Minh Xạ", element: "loi", profession: "xaThu" },
-  tatPhongLang: { name: "Tật Phong Lăng", element: "phong", profession: "xaThu" },
-  bachPhongDao: { name: "Bạch Phong Đao", element: "kim", profession: "satThu" },
-  docAnh: { name: "Độc Ảnh", element: "moc", profession: "satThu" },
-  hanGiangKhach: { name: "Hàn Giang Khách", element: "thuy", profession: "satThu" },
-  xichDa: { name: "Xích Dạ", element: "hoa", profession: "satThu" },
-  diaAn: { name: "Địa Ẩn", element: "tho", profession: "satThu" },
-  loiAnh: { name: "Lôi Ảnh", element: "loi", profession: "satThu" },
-  voAnh: { name: "Vô Ảnh", element: "phong", profession: "satThu" },
   // Nhân vật đặc biệt dung hợp tám nghề; nghề ghi Tướng sĩ chỉ để dùng hình dự phòng, trang hiện danh xưng.
   dinhNgoc: { name: "Đinh Ngọc", element: "kim", profession: "tuongSi", title: "Vạn Tượng Hành Giả" },
 };

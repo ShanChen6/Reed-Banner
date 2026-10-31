@@ -56,7 +56,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
     };
     void (async () => {
       try {
-        const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT, BREEZE }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }, { flameDisc }, { flutePulse }] = await Promise.all([
+        const [{ Application, Container }, { loadPuppet }, { lightning }, { leafBloom, SPRING, EMBER, LOAM, VOLT, BREEZE }, { armorPierce }, { supplyDrain }, { waterPillar }, { flameWall }, { groundSlam }, { needleVolley }, { steelBulwark }, { silverGrace }, { coinScatter }, { ironFormation }, { bambooSap }, { thornBind }, { poisonMist, TIDE, SMOKE, DUST, STORM }, { fireRain }, { flameCleave }, { fireChain }, { drumShield }, { earthSurge }, { tauntRoar }, { stoneBastion }, { thunderCleave }, { heavenStrike }, { thunderAegis }, { galeSlash }, { flameDisc }, { flutePulse }, { thunderMarch }] = await Promise.all([
           import("pixi.js"), import("@/app/game/stage/puppet"), import("@/app/game/stage/lightning"),
           import("@/app/game/stage/bloom"), import("@/app/game/stage/pierce"),
           import("@/app/game/stage/drain"), import("@/app/game/stage/pillar"),
@@ -77,6 +77,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           import("@/app/game/stage/gale"),
           import("@/app/game/stage/disc"),
           import("@/app/game/stage/ripple"),
+          import("@/app/game/stage/march"),
         ]);
         if (disposed) return;
         app = new Application();
@@ -197,6 +198,17 @@ export default function RigPreview({ id, size, onSnapshot }: {
           const w = el.dataset.size === "large" ? 5 : 3;
           if (kind === "ultimate") smite[1].smite({ x: el.clientWidth * 0.85, y: loaded.view.y }, rig.height * loaded.view.scale.y * 0.8);
           else smite[0].bolt(at, { x: el.clientWidth - 12, y: el.clientHeight * 0.55 }, kind === "cast" ? w * 1.4 : w);
+        });
+        // Thập đạo lôi binh hệ Lôi: sét từ mũi kiếm, bàn tay tới mép phải khung; tuyệt chiêu mười đạo sét chạy sát đất tới hai
+        // điểm bên phải, đốm năng lượng quanh nhân vật.
+        const ranks = team === "thunderMarch" ? [lightning(app.stage, rig.fxColor), thunderMarch(app.stage, rig.fxColor)] as const : null;
+        if (ranks) loaded.onStrike?.((kind, at) => {
+          if (!loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          const w = el.dataset.size === "large" ? 5 : 3;
+          if (kind !== "ultimate") return ranks[0].bolt(at, { x: el.clientWidth - 12, y: el.clientHeight * 0.55 }, kind === "cast" ? w * 1.4 : w);
+          const foes = [0.78, 0.92].map((k) => ({ x: el.clientWidth * k, y: loaded!.view.y }));
+          ranks[1].march({ x: loaded.view.x + size * 0.18, y: loaded.view.y }, foes, [{ x: loaded.view.x, y: loaded.view.y }], size);
         });
         // Chấn lôi thiết vệ hệ Lôi: vòng sấm và khiên mặt trống quanh nhân vật, sét và ấn khiêu khích ở hai điểm bên phải khung.
         const aegis = team === "thunderAegis" ? [thunderAegis(app.stage, rig.fxColor), drumShield(app.stage, rig.fxColor)] as const : null;
@@ -490,6 +502,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           cleave?.forEach((c) => c.update(dt));
           combo?.forEach((c) => c.update(dt));
           smite?.forEach((c) => c.update(dt));
+          ranks?.forEach((c) => c.update(dt));
           aegis?.forEach((c) => c.update(dt));
           chain?.forEach((c) => c.update(dt));
           surge?.forEach((c) => c.update(dt));

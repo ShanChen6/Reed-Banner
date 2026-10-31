@@ -81,8 +81,8 @@ it('Ly gián chỉ có giá trị khi mục tiêu kịp hành động trong th�
  s.sides[1].fighters.forEach((f,i)=>{s.sides[1].fighters[i]={...f,skills:['role_tramKich'],energy:i===2?100:0};});
  assert.equal(chooseSkill(s),null);s.sides[1].fighters[0]!.energy=100;const a=chooseSkill(s);assert.ok(a?.type==='skill');assert.equal(a.target,0);
 });
-it('sampler phủ 42 tổ hợp/4 cấp/roster và ĐBL luôn có mặt, đổi bên giữ cùng seed/đội',()=>{
- const cases=screeningCases();assert.equal(cases.length,1344);const ids=new Set<string>();
+it('sampler phủ 56 tổ hợp/4 cấp/roster và ĐBL luôn có mặt, đổi bên giữ cùng seed/đội',()=>{
+ const cases=screeningCases();assert.equal(cases.length,1792);const ids=new Set<string>();
  for(let i=0;i<cases.length;i+=2){const a=cases[i]!,b=cases[i+1]!;assert.equal(a.matchup.sides[a.focalSide].fighters[0]!.id,'dinhBoLinh');assert.equal(b.matchup.sides[b.focalSide].fighters[0]!.id,'dinhBoLinh');assert.equal(a.matchup.seed,b.matchup.seed);assert.deepEqual(a.matchup.sides[0],b.matchup.sides[1]);a.matchup.sides.flatMap(s=>s.fighters).forEach(f=>ids.add(f.id));}
  assert.equal(ids.size,61);assert.equal(spiritCases().length,128);assert.equal(campaignAuditCases().length,24);
  const bare=campaignAuditCases([701]),geared=campaignAuditCases([701],'white3');assert.equal(geared.length,bare.length);assert.ok(geared[0]!.matchup.sides[0].fighters[0]!.maxHp>bare[0]!.matchup.sides[0].fighters[0]!.maxHp);assert.deepEqual(geared[0]!.matchup.sides[1],bare[0]!.matchup.sides[1]);
