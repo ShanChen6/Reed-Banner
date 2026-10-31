@@ -11,6 +11,7 @@ import ArenaScreen from "./arena/ArenaScreen";
 import DemoGame from "./battle/DemoGame";
 import CampaignScreen from "./campaign/CampaignScreen";
 import DailyScreen from "./daily/DailyScreen";
+import FormationScreen from "./formation/FormationScreen";
 import LeaderboardScreen from "./leaderboard/LeaderboardScreen";
 import MenuScene from "./MenuScene";
 import ProfileScreen from "./profile/ProfileScreen";
@@ -121,6 +122,8 @@ function SceneView({
       return <DailyScreen />;
     case "ARENA":
       return <ArenaScreen />;
+    case "FORMATION":
+      return <FormationScreen />;
     case "QUESTS":
       return <QuestsScreen />;
     case "SHOP":

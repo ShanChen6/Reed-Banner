@@ -1,6 +1,7 @@
 # 02 — BINH PHÁP: Game Design Document v0.1
 
-**Trạng thái:** APPROVED CONCEPT + PROPOSED RULE BASELINE, cần BP-00 sign-off trước triển khai.
+> Cập nhật: 31/10/2026
+> Trạng thái: **DRAFT** — concept đã thống nhất (tên hiển thị **Trận Đồ**); bản chơi thử offline đã có code theo [mục 11](#11-bản-triển-khai-đầu-tiên-chơi-thử-offline), các luật đề xuất vẫn chờ Shan chốt ở BP-00.
 
 ## 1. Định vị
 
@@ -86,3 +87,28 @@ Ví dụ: trên là Y sư–Kim, trái là Pháp sư–Hỏa ⇒ quân Y sư–H
 5. Offline practice trước hay server-authoritative ngay ngày phát hành (đề xuất prototype offline, production reward server).
 
 **Không giả định các phương án đề xuất này đã được user phê duyệt.**
+
+## 11. Bản triển khai đầu tiên (chơi thử offline)
+
+Tên hiển thị trong game là **Trận Đồ** (đã duyệt tên 26/10/2026); "Binh Pháp" là tên thiết kế. Bản này đi trước BP-00 theo yêu cầu của Shan "đọc docs, thảo luận và triển khai": mọi câu hỏi ở mục 10 lấy **giá trị đề xuất làm mặc định**, nằm gọn trong `src/core/binh-phap/rulesets.ts` và `types.ts` nên đổi được mà không sửa luật. Chưa có nghĩa là đã duyệt.
+
+| Câu hỏi mục 10 | Mặc định đang chạy | Ghi chú |
+|---|---|---|
+| 1. Kích thước | Theo bậc: 3×3, 5×5, 8×8, 8×8 | Không có một cỡ duy nhất; 8×8 ở hai bậc cao |
+| 2. Thanh Bỏ Lệnh | 0–3; đặt quân −1; dọn hàng/cột về 0; bỏ khi đã đầy là thua | Thu Hồi cũng hạ 1 |
+| 3. Quân Lệnh / Thu Hồi | Có từ bậc Thường (6% / 6%); bậc Nhập môn không có | Không bao giờ ra hai quân đặc biệt liên tiếp; không ra Thu Hồi khi bàn trống |
+| 4. Điểm, sinh quân, xem trước | Đặt 10, +5 mỗi quân kề khớp cả nghề lẫn hệ, mỗi hàng/cột dọn 50, thắng 500; chưa xem trước quân kế | Điểm xuất phát, chưa cân bằng theo cảm giác chơi |
+| 5. Offline hay server | Offline, khách, không thưởng, không xếp hạng | Ván dở lưu ở `localStorage`, phân biệt rõ không phải dữ liệu đã server xác minh |
+
+**Bốn bậc** (`RULESETS`): Nhập môn 3×3 (2 nghề × 2 hệ, không quân đặc biệt); Thường 5×5 (3 × 4); Khó 8×8 (4 × 4); Đại trận 8×8 (6 × 6). Mọi cặp nghề–hệ đều có ít nhất một tướng trong danh mục nên chân dung luôn khớp thuộc tính; quân đặc biệt dùng biểu tượng mới vẽ bằng SVG. Binh Pháp chỉ dùng 6 nghề active, chưa đụng Xạ thủ/Sát thủ.
+
+**Quyết định chi tiết đã chốt khi code** (mục 3–6 chưa đủ rõ):
+
+- Quân Lệnh kề không miễn kiểm tra các quân kề khác của quân thường đặt sau (đúng mục 6).
+- Thu Hồi chỉ đặt lên ô có quân, kể cả Quân Lệnh; không đổi `covered`. Đặt xong tính là một nước thành công (hạ thanh 1, tiến lượt) nhưng không cộng điểm đặt.
+- Dọn hàng/cột: lấy hợp các ô, mỗi đường tính 50 điểm một lần, rồi mới xét thắng. Thắng được xét trước khi sinh quân mới nên không tiêu RNG.
+- Lệnh sai không đổi state, điểm, thanh Bỏ Lệnh hay RNG (kiểm thử `tests/core/binh-phap/engine.test.ts`).
+- Không có Undo.
+
+**Code:** `src/core/binh-phap/` (luật, reducer, sinh quân, lưu/nạp), `src/app/game/formation/FormationScreen.tsx` (scene `FORMATION`, đường dẫn `/game/formation`), mô phỏng `scripts/binh-phap-sim.ts`. Số đo ở [05 — mô phỏng và QA](05-binh-phap-balance-qa.md#kết-quả-mô-phỏng-baseline-31102026).
+

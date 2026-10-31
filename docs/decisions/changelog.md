@@ -378,3 +378,8 @@
 ## 30/10/2026 — Giá 14 tướng Xạ thủ/Sát thủ
 
 Shan chốt RB-062–075 giá 1.500 vàng mỗi người, dùng mức basic hiện có. Không cấp miễn phí cho hồ sơ cũ; giữ khóa phát hành đến nghiệm thu PROF-06. Nguồn thông số: [thiết kế hai nghề](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md).
+
+## 31/10/2026 — Trận Đồ (Binh Pháp) bản chơi thử
+
+Triển khai BP-01 đến BP-04 một phần theo yêu cầu của Shan: engine `src/core/binh-phap/`, scene `FORMATION` (`/game/formation`), mô phỏng `scripts/binh-phap-sim.ts`. Các câu hỏi BP-00 lấy giá trị đề xuất làm mặc định, **chưa được duyệt** ([GDD mục 11](../02-game-modes/future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline)). Offline, không thưởng, chưa có feature flag.
+

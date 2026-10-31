@@ -74,10 +74,28 @@ Theo package.json và toolchain thực tế tại thời điểm triển khai: c
 
 | Tiêu chí | Vai trò | Trạng thái hiện tại |
 |---|---|---|
-| Rules v1 approved | Product | Pending BP-00 |
-| Valid placements & clear | Engine | Not implemented |
-| Seed deterministic | Engine QA | Not implemented |
-| Balance simulation | Design | Not implemented |
-| Art readability | UI/Art | Not implemented |
-| Save/Resume | Frontend | Not implemented |
+| Rules v1 approved | Product | Pending BP-00 (đang chạy giá trị đề xuất, xem GDD mục 11) |
+| Valid placements & clear | Engine | Implemented, 24 test (`tests/core/binh-phap`) |
+| Seed deterministic | Engine QA | Implemented, replay equality kiểm trong mô phỏng |
+| Balance simulation | Design | Baseline đầu tiên bên dưới; chưa có agent lookahead |
+| Art readability | UI/Art | Chưa duyệt (đã chụp 1440px/390px, không tràn ngang) |
+| Save/Resume | Frontend | Implemented (`localStorage`, nạp fail-closed) |
 | Server reward secure | Backend | Deferred P1 |
+
+## Kết quả mô phỏng baseline (31/10/2026)
+
+Lệnh: `pnpm exec tsx scripts/binh-phap-sim.ts --runs 2000 --seed 1`. Mỗi ván chạy lại bằng `replay` và so sánh state; 0 nước hợp lệ bị từ chối, 0 lệch replay. Agent *random* chọn ngẫu nhiên trong các ô đặt được (bỏ lệnh khi hết nước); *greedy* ưu tiên nước cho nhiều ô khai thông và điểm nhất, chỉ dùng Thu Hồi khi thanh đã nóng. Người chơi thật nằm quanh hoặc trên greedy, nên số này là **điểm xuất phát**, không phải mục tiêu.
+
+| Bậc | Agent | Thắng | Lượt (trung vị / p90) | Bỏ lệnh TB | Khai thông TB |
+|---|---|---|---|---|---|
+| Nhập môn 3×3 | random | 97,0% | 19 / 32 | 2,5 | 98,8% |
+| Nhập môn 3×3 | greedy | 97,9% | 10 / 13 | 1,3 | 99,1% |
+| Thường 5×5 | random | 78,3% | 63 / 106 | 7,1 | 91,5% |
+| Thường 5×5 | greedy | 79,5% | 34 / 43 | 6,6 | 86,7% |
+| Khó 8×8 | random | 27,4% | 154 / 261 | 15,7 | 84,6% |
+| Khó 8×8 | greedy | 83,0% | 85 / 104 | 7,5 | 84,4% |
+| Đại trận 8×8 | random | 0,0% | 74 / 124 | 13,2 | 56,8% |
+| Đại trận 8×8 | greedy | 32,8% | 95 / 138 | 13,4 | 57,9% |
+
+Nhận xét: bốn bậc tăng độ khó đúng chiều; greedy hơn random rõ ở hai bậc 8×8 (chiến thuật có ý nghĩa), còn ở 3×3 và 5×5 ngang nhau vì bàn nhỏ và Bỏ Lệnh hào phóng. Bậc Thường chưa tách khỏi Nhập môn bằng chiến thuật; cần agent lookahead và thử người thật trước khi chốt. Số lượt p90 ở bậc 8×8 (100 đến 260 nước) cho một ván khá dài trên điện thoại, cần cân nhắc ở BP-00.
+
