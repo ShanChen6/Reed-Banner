@@ -102,3 +102,8 @@
 - Đã chốt hướng: hai nghề/hai hệ, phòng thủ và đòn thường theo hệ chính, giá cao, cách nhận đặc biệt, icon tổng hợp. Nguồn duy nhất: [thiết kế](../03-characters/nhan-vat-tong-hop.md).
 - Đã chốt: "kiếm sĩ" là Tướng sĩ (gọi nhầm).
 - TODO: Chốt cách nhận, mức giá và giới hạn trong đội sau khi thiết kế thêm vài nhân vật tổng hợp; duyệt mô hình chính/phụ và cách hiển thị hệ chính trong trận; mô phỏng cân bằng trước khi triển khai.
+
+## Đinh Bộ Lĩnh — thêm Xạ thủ và Sát thủ — 31/10/2026
+
+- Shan yêu cầu thêm hai nghề này cho nhân vật chính. Nguồn duy nhất: [thiết kế](../03-characters/dinh-bo-linh-xa-thu-sat-thu.md).
+- TODO: Duyệt hai chiêu kết nghề và số liệu 14 tuyệt chiêu ô 4, mô phỏng 56 tổ hợp; chốt có làm biến thể vũ khí cho rig Đinh Bộ Lĩnh hay giữ kiếm; rà từng chỗ đang dùng `LEGACY_PROFESSIONS` cho nhân vật chính trước khi triển khai.
