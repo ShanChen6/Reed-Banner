@@ -2,6 +2,9 @@
 
 ## 31/10/2026
 
+**Xạ thủ và Sát thủ vào trận (Shan quyết định)**
+- `NEW_PROFESSIONS_ENABLED=true`: 14 đồng hành RB-062..075 có trong roster, shop 1.500 vàng, dùng được trong đội và các mode; Đinh Bộ Lĩnh vẫn sáu nghề cũ. Icon vẽ tay xạ thủ/sát thủ thay SVG tạm. Các khoảng trống nghiệm thu còn lại ghi ở [báo cáo PROF](../reports/professions-2026-10-30/README.md).
+
 **Nhân vật tổng hợp — hướng thiết kế (Shan thống nhất)**
 - Nhân vật đặc biệt mang hai nghề/hai hệ: phòng thủ và đòn đánh thường theo hệ chính, giá cao hơn nhiều, nhận bằng cách đặc biệt, dùng icon tổng hợp nghề/hệ.
 - Tạo nguồn [nhan-vat-tong-hop.md](../03-characters/nhan-vat-tong-hop.md) (DRAFT) với đề xuất chính/phụ, ví dụ và tác động code; chưa sửa code, roster hay save. Icon `tongHop` cho nghề/hệ và hiển thị tổng hợp của Đinh Ngọc ở trang xem thử đã có.
