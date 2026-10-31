@@ -363,7 +363,7 @@ const TRAN_CUONG: WarriorRig = {
  * Đinh Bộ Lĩnh, nhân vật chính, bản tướng quân. Bộ tranh Shan gửi 31/10 (nền trong suốt sẵn), thay bộ cũ: giáp vảy đen
  * viền đồng, áo trắng, áo choàng đỏ. Ảnh đứng tách lớp bằng code: cẳng tay cầm đao cùng thanh đao xoay quanh khuỷu,
  * bàn tay đặt trên khóa thắt lưng, đầu, hai vạt áo choàng bay theo gió sau lưng (chỗ đao và cẳng tay che vạt trái được
- * vá màu). Tranh đứng chống đao làm tranh phong thái. Bộ mới chưa có tranh gục nên tạm giữ tranh gục của bộ cũ.
+ * vá màu). Tranh đứng chống đao làm tranh phong thái, tranh quỳ chống bao đao làm tranh gục.
  * Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const DINH_BO_LINH: WarriorRig = {
@@ -414,13 +414,9 @@ const DINH_BO_LINH: WarriorRig = {
     ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 9, y: 22 },
       anchor: { x: 480, y: 1480 }, scale: 1, burst: { x: 800, y: 60 } },
   },
-  // Tranh gục của bộ cũ (nền ô vuông tách bằng rembg), cỡ so theo khóa thắt lưng của ảnh đứng mới.
-  down: {
-    name: "pose-down",
-    origin: { x: 10, y: 42 },
-    anchor: { x: 850, y: 865 },
-    scale: 0.76,
-  },
+  // Quỳ một gối, tay chống bao đao.
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 83, y: 107 },
+    anchor: { x: 520, y: 1400 }, scale: 0.97 },
 };
 
 /** Nguyễn Bặc, tướng sĩ Hỏa. Mảnh vá từ ảnh phẳng; tọa độ ráp 1024×1536. */
