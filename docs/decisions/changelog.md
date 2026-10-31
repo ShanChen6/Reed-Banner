@@ -1,5 +1,11 @@
 # Nhật ký thay đổi thiết kế
 
+## 31/10/2026
+
+**Nhân vật tổng hợp — hướng thiết kế (Shan thống nhất)**
+- Nhân vật đặc biệt mang hai nghề/hai hệ: phòng thủ và đòn đánh thường theo hệ chính, giá cao hơn nhiều, nhận bằng cách đặc biệt, dùng icon tổng hợp nghề/hệ.
+- Tạo nguồn [nhan-vat-tong-hop.md](../03-characters/nhan-vat-tong-hop.md) (DRAFT) với đề xuất chính/phụ, ví dụ và tác động code; chưa sửa code, roster hay save. Icon `tongHop` cho nghề/hệ và hiển thị tổng hợp của Đinh Ngọc ở trang xem thử đã có.
+
 ## 30/10/2026
 
 **Lôi Ảnh — đồng bộ Bạo Vũ Lê Hoa Châm dạng tròn (Shan chốt hình học)**

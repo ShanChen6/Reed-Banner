@@ -96,3 +96,8 @@
 - TODO: Duyệt ngoại hình Master theo ảnh tham chiếu, trang phục thế kỷ X và bản chính không kính; không suy ra thân phận/tiểu sử người thật. Danh xưng Vạn Tượng Hành Giả và mã RB-SP-001 là đề xuất.
 - TODO: Review gameplay/chỉ số, mapping special template không tự nhận nội tại nghề/hệ cũ; per-skill damageElement và hệ phòng thủ Kim cố định; passive cuối lượt, shield-break provenance, quota hồi3 tick/trận, P4 một cơ hội và snapshot/reset mode.
 - TODO: Chốt cách mở đồng hành và kiểm chứng bằng mô phỏng trước triển khai; chưa sửa Campaign, roster, code, UI hoặc asset.
+
+## Nhân vật tổng hợp — 31/10/2026
+
+- Đã chốt hướng: hai nghề/hai hệ, phòng thủ và đòn thường theo hệ chính, giá cao, cách nhận đặc biệt, icon tổng hợp. Nguồn duy nhất: [thiết kế](../03-characters/nhan-vat-tong-hop.md).
+- TODO: Chốt cách nhận, mức giá và giới hạn trong đội; chốt "kiếm sĩ" là nghề nào; duyệt mô hình chính/phụ và cách hiển thị hệ chính trong trận; mô phỏng cân bằng trước khi triển khai.
