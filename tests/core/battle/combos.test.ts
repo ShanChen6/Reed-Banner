@@ -25,7 +25,7 @@ import {
   WARLORD_ENCOUNTERS,
   campaignEncounterFoes,
   encounterFighter,
-  LEGACY_PROFESSIONS as PROFESSIONS,
+  PROFESSIONS,
   ELEMENTS,
   PROFESSION_COMBO,
   SKILL_SLOT_ORDER,

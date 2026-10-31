@@ -5,7 +5,7 @@ import { Select, Button } from "@/components/ui";
 import {
   ELEMENTS,
   MAIN_SLOT_UNLOCK,
-  LEGACY_PROFESSIONS as PROFESSIONS,
+  PROFESSIONS,
   characterSkills,
   scaleSkill,
   type Element,

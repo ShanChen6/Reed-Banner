@@ -27,8 +27,10 @@ export function normalizeProfession(value: unknown): GameProfession | undefined 
 export function isActiveProfession(value: unknown): value is Profession {
   return typeof value === "string" && (PROFESSIONS as readonly string[]).includes(value);
 }
-export function isLeaderProfession(value: unknown): value is LegacyProfession {
-  return typeof value === "string" && (LEGACY_PROFESSIONS as readonly string[]).includes(value);
+/** Nghề Đinh Bộ Lĩnh chọn được; cùng danh sách nghề đã mở, gồm Xạ thủ và Sát thủ. */
+export const LEADER_PROFESSIONS: readonly Profession[] = PROFESSIONS;
+export function isLeaderProfession(value: unknown): value is Profession {
+  return typeof value === "string" && (LEADER_PROFESSIONS as readonly string[]).includes(value);
 }
 /** Ô công kích dùng chung mọi nghề; key kiem giữ nguyên cho save/replay. */
 export const ATTACK_TILE: TileKind = "kiem";

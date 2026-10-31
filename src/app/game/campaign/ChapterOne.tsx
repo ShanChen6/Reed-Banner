@@ -16,7 +16,7 @@ import {
   ELEMENTS,
   FOOD_PRICE,
   MAIN_ID,
-  LEGACY_PROFESSIONS as PROFESSIONS,
+  PROFESSIONS,
   loadoutOf,
   ownsCompanion,
   campaignBattleAdvice,

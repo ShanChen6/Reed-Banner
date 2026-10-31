@@ -38,7 +38,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 
 | File | Nội dung |
 |---|---|
-| ★ [Đinh Bộ Lĩnh — thêm Xạ thủ/Sát thủ](03-characters/dinh-bo-linh-xa-thu-sat-thu.md) | DRAFT: mở hai nghề mới cho nhân vật chính, 56 tổ hợp; 14 tuyệt chiêu ô 4 mới, dùng lại chiêu nghề và bị động của đồng hành, chưa có code |
+| ★ [Đinh Bộ Lĩnh — thêm Xạ thủ/Sát thủ](03-characters/dinh-bo-linh-xa-thu-sat-thu.md) | IMPLEMENTED: nhân vật chính có 8 nghề (56 tổ hợp); 14 tuyệt chiêu ô 4 mới, dùng lại chiêu nghề và bị động của đồng hành; [biến thể hình ảnh và prompt](06-art/prompts/dinh-bo-linh-xa-thu-sat-thu.md) DRAFT |
 | ★ [Nhân vật tổng hợp](03-characters/nhan-vat-tong-hop.md) | DRAFT: nhân vật đặc biệt hai nghề/hai hệ; phòng thủ và đòn thường theo hệ chính, hệ phụ chỉ mở rộng chiêu; giá cao, cách nhận đặc biệt, icon tổng hợp |
 | ★ [Đinh Ngọc — Vạn Tượng Hành Giả](03-characters/dinh-ngoc.md) | DRAFT: nữ khoảng 25 tuổi, nhân vật đặc biệt dung hợp8 nghề/7 hệ qua6 chủ động +4 nội tại; [sáu prompt](06-art/prompts/dinh-ngoc.md), chưa có runtime |
 | ★ [danh-sach-nhan-vat.md](03-characters/danh-sach-nhan-vat.md) | 61 nhân vật: tướng thường, tướng lịch sử, sứ quân |
@@ -74,6 +74,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | [ke-hoach-do-hoa.md](06-art/ke-hoach-do-hoa.md) | Kế hoạch đồ họa & hoạt ảnh Đ0–Đ9 |
 | ★ [prompts/v4-2/](06-art/prompts/v4-2/00-bao-cao.md) | Điểm vào bộ prompt; [Xạ thủ và prompt Sát thủ đa vũ khí](06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md). Năm Xạ thủ W02 là DRAFT, Kim/Mộc bảo toàn |
 | [prompts/](06-art/prompts/do-hoa.md) | [Đồ họa ngoài nhân vật](06-art/prompts/do-hoa.md), [Codex dựng rig](06-art/prompts/codex-rig-nhan-vat.md); bản cũ SUPERSEDED: [nhân vật](06-art/prompts/nhan-vat.md), [tư thế](06-art/prompts/tu-the.md) |
+| [prompts/dinh-bo-linh-xa-thu-sat-thu.md](06-art/prompts/dinh-bo-linh-xa-thu-sat-thu.md) | Biến thể vũ khí cung tre/dao găm cho rig Đinh Bộ Lĩnh và các prompt Master/tư thế; DRAFT, chưa có ảnh |
 | [prompts/dinh-ngoc.md](06-art/prompts/dinh-ngoc.md) | Character DNA, trang phục lấy cảm hứng thế kỷ X, một kiếm/một mặt ngọc và6 prompt cho Đinh Ngọc; DRAFT, chưa duyệt Master |
 | [nhan-vat/nguyen-bac.md](06-art/nhan-vat/nguyen-bac.md) | Hình động Nguyễn Bặc |
 | [ho-so-master-chat.md](06-art/ho-so-master-chat.md) | Ngữ cảnh cho chat mới về dựng hình nhân vật: kiến trúc rig và hiệu ứng, quy trình từ bộ 5 ảnh, tiến độ |
