@@ -42,12 +42,13 @@ const MODES: readonly Mode[] = [
 ];
 
 /**
- * Chế độ Shan đã duyệt tên (26/10) nhưng chưa có route/engine: chỉ hiện thẻ "Sắp ra mắt", không bấm được.
+ * Chế độ Shan đã duyệt tên (26/10) nhưng chưa phát hành chính thức: thẻ "Sắp ra mắt" không bấm được. Trận Đồ đã có bản
+ * chơi thử offline (không thưởng) nên bấm vào được, nhưng vẫn ở hàng này, không thành card thứ bảy của sáu chế độ live.
  * TODO: khi có scene và feature flag thì chuyển lên MODES; TODO tranh: public/art/home/vien-chinh.webp
  * (xem /mnt/project-files/art/prompts/home-thumbnail-che-do.md). Viễn Chinh chưa có cơ chế.
  */
-const UPCOMING: readonly { id: "tran-do" | "tam-tuong-ky" | "vien-chinh"; title: string; text: string; art?: string }[] = [
-  { id: "tran-do", title: "Trận Đồ", text: "Bày quân lệnh theo nghề và hệ để khai thông sa bàn.", art: "tran-do" },
+const UPCOMING: readonly { id: "tran-do" | "tam-tuong-ky" | "vien-chinh"; title: string; text: string; art?: string; scene?: Scene }[] = [
+  { id: "tran-do", title: "Trận Đồ", text: "Bày quân lệnh theo nghề và hệ để khai thông sa bàn.", art: "tran-do", scene: "FORMATION" },
   { id: "tam-tuong-ky", title: "Tầm Tướng Ký", text: "Ghép yếu tố từ bảy hệ để tìm lại chân dung danh tướng.", art: "tam-tuong-ky" },
   { id: "vien-chinh", title: "Viễn Chinh", text: "Đưa quân đi xa ngoài bờ cõi. Cơ chế đang được thiết kế." },
 ];
@@ -235,8 +236,9 @@ function ModeCard({ mode, locked }: { mode: Mode; locked: boolean }) {
 
 /** Thẻ chế độ sắp ra mắt: cùng khung với thẻ chế độ, không bấm được; chưa có tranh thì dùng tranh mực tạm. */
 function UpcomingCard({ mode }: { mode: (typeof UPCOMING)[number] }) {
-  return (
-    <div aria-disabled="true" className="home-mode home-mode-soon atlas-frame atlas-frame-wood flex h-full flex-col">
+  const frame = "home-mode home-mode-soon atlas-frame atlas-frame-wood group flex h-full flex-col";
+  const body = (
+    <>
       <div className="home-soon-art relative aspect-[16/9] overflow-hidden rounded-t-[0.65rem] lg:aspect-[2/1]">
         {mode.art ? (
           <Image src={`/art/home/${mode.art}.webp`} alt="" fill sizes="(min-width: 1024px) 460px, 100vw" className="object-cover opacity-80 sepia-[.25]" />
@@ -245,7 +247,7 @@ function UpcomingCard({ mode }: { mode: (typeof UPCOMING)[number] }) {
         )}
         <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#1d140d] via-[#1d140d]/20 to-transparent" />
         <span className="home-kicker absolute top-3 left-3 rounded px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase">
-          Sắp ra mắt
+          {mode.scene ? "Bản chơi thử" : "Sắp ra mắt"}
         </span>
         <h3 className="absolute right-4 bottom-2.5 left-4 font-serif text-xl font-bold text-[var(--atlas-title)] [text-shadow:0_2px_4px_#000] sm:text-2xl">
           {mode.title}
@@ -253,11 +255,29 @@ function UpcomingCard({ mode }: { mode: (typeof UPCOMING)[number] }) {
       </div>
       <div className="flex flex-1 flex-col gap-3 px-4 pt-2.5 pb-4">
         <p className="text-[15px] leading-snug text-[var(--atlas-ink-on-wood)]/90">{mode.text}</p>
-        <span className="mt-auto flex items-center gap-1.5 text-sm text-[var(--atlas-muted)]">
-          <LockGlyph /> Đang thiết kế, chưa chơi được
-        </span>
+        {mode.scene ? (
+          <div className="mt-auto flex items-center justify-between gap-2 text-sm">
+            <span className="text-[var(--atlas-muted)]">Chơi thử · không thưởng</span>
+            <span className="home-enter flex items-center gap-1 font-serif font-semibold">Vào <span aria-hidden>›</span></span>
+          </div>
+        ) : (
+          <span className="mt-auto flex items-center gap-1.5 text-sm text-[var(--atlas-muted)]">
+            <LockGlyph /> Đang thiết kế, chưa chơi được
+          </span>
+        )}
       </div>
       <AtlasCorners size="size-5" />
+    </>
+  );
+  if (mode.scene)
+    return (
+      <SceneLink scene={mode.scene} className={frame}>
+        {body}
+      </SceneLink>
+    );
+  return (
+    <div aria-disabled="true" className={frame}>
+      {body}
     </div>
   );
 }
