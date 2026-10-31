@@ -34,8 +34,8 @@ import {
   parseProfile,
   parseProfileAction,
   ALL_PROFESSIONS,
-  isLeaderProfession,
-  LEGACY_PROFESSIONS as PROFESSIONS,
+  EXPANSION_PROFESSIONS,
+  PROFESSIONS,
   profileTeam,
   scaleSkill,
   SHOP_COMPANIONS,
@@ -174,7 +174,7 @@ describe("mở khóa và dựng nhân vật", () => {
     assert.ok(r.ok);
     assert.equal(buildCompanion(leThach, r.progress).skillLevels!.tranSonHoQuan, 2);
     // Xạ thủ/Sát thủ có tuyệt chiêu giá riêng (90–100) theo bảng thiết kế riêng.
-    for (const c of [...STARTER_COMPANIONS, ...SHOP_COMPANIONS.map((x) => x.fighter)].filter((x) => isLeaderProfession(x.profession))) {
+    for (const c of [...STARTER_COMPANIONS, ...SHOP_COMPANIONS.map((x) => x.fighter)].filter((x) => !EXPANSION_PROFESSIONS.includes(x.profession as never))) {
       const ult = ultimateOf(c.id)!;
       assert.equal(ult.slot, 4);
       assert.equal(ult.cost, 100);
@@ -309,13 +309,13 @@ describe("thao tác trên hồ sơ", () => {
     assert.deepEqual(profileTeam(team.profile, team.profile.team).map((f) => f.id), ["dinhBoLinh", "daoLam", "leThach"]);
   });
 
-  it("tướng thường phủ đủ 42 tổ hợp nghề × hệ, mỗi tổ hợp một người; ai cũng có kỹ năng riêng ở ô 4", () => {
+  it("tướng thường phủ đủ 56 tổ hợp nghề × hệ, mỗi tổ hợp một người; ai cũng có kỹ năng riêng ở ô 4", () => {
     const common = [...STARTER_COMPANIONS, ...SHOP_COMPANIONS.map((c) => c.fighter)];
     assert.ok(common.length >= 56);
     assert.equal(new Set(common.map((c) => `${c.profession}-${c.element}`)).size, 56);
     assert.equal(new Set(ALL_COMPANIONS.map((c) => c.id)).size, ALL_COMPANIONS.length);
     assert.equal(new Set(ALL_COMPANIONS.map((c) => personalSkillOf(c.id)!.id)).size, ALL_COMPANIONS.length);
-    assert.ok(PROFESSIONS.length * 7 === 42);
+    assert.ok(PROFESSIONS.length * 7 === 56);
     assert.ok(ALL_PROFESSIONS.length * 7 === 56);
     // Tướng lịch sử và sứ quân có chiêu riêng thay tuyệt chiêu.
     for (const c of ALL_COMPANIONS) {

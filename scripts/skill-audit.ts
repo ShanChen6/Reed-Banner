@@ -1,7 +1,7 @@
 // Historical sampler for reproducing the first report only; use spirit-audit.ts for profession/element measurements.
 // So sánh hai revision: chạy cùng script, cấu hình và seed; JSON trên stdout.
 import { parseArgs } from 'node:util';
-import { autoProgress, buildMain, buildMatchups, LEGACY_PROFESSIONS as PROFESSIONS, runBattle, summarize, missionMatchups, campaignEncounter, type CampaignMissionId, type SimMode } from '../src/core';
+import { autoProgress, buildMain, buildMatchups, PROFESSIONS, runBattle, summarize, missionMatchups, campaignEncounter, type CampaignMissionId, type SimMode } from '../src/core';
 const {values}=parseArgs({options:{seed:{type:'string'},battles:{type:'string',default:'12'},level:{type:'string'},mode:{type:'string'},profession:{type:'string'},mission:{type:'string'}}});
 const count=Number(values.battles);
 const seeds=values.seed===undefined?[1,73]:[Number(values.seed)];

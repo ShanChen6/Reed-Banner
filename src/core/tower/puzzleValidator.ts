@@ -7,7 +7,7 @@ import {
   act,
   createBattle,
   ELEMENTS,
-  LEGACY_PROFESSIONS as PROFESSIONS,
+  PROFESSIONS,
   selectableActors,
   type BattleAction,
   type BattleState,

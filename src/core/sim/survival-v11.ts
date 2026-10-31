@@ -79,6 +79,8 @@ const PROFESSIONS: readonly Profession[] = [
   "ySu",
   "muuSi",
   "quanSu",
+  "xaThu",
+  "satThu",
 ];
 const ELEMENTS: readonly Element[] = [
   "kim",

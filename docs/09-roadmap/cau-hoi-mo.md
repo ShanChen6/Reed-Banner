@@ -105,5 +105,6 @@
 
 ## Đinh Bộ Lĩnh — thêm Xạ thủ và Sát thủ — 31/10/2026
 
-- Shan yêu cầu thêm hai nghề này cho nhân vật chính. Nguồn duy nhất: [thiết kế](../03-characters/dinh-bo-linh-xa-thu-sat-thu.md).
-- TODO: Duyệt hai chiêu kết nghề và số liệu 14 tuyệt chiêu ô 4, mô phỏng 56 tổ hợp; chốt có làm biến thể vũ khí cho rig Đinh Bộ Lĩnh hay giữ kiếm; rà từng chỗ đang dùng `LEGACY_PROFESSIONS` cho nhân vật chính trước khi triển khai.
+- Đã làm: Đinh Bộ Lĩnh dùng được Xạ thủ/Sát thủ, Shan duyệt số liệu 31/10/2026. Nguồn: [thiết kế](../03-characters/dinh-bo-linh-xa-thu-sat-thu.md), [art và prompt](../06-art/prompts/dinh-bo-linh-xa-thu-sat-thu.md).
+- TODO: Mô phỏng cân bằng 56 tổ hợp (hai chiêu kết nghề Vạn tiễn/Tuyệt mệnh là điểm xuất phát).
+- TODO: Tạo và duyệt ảnh biến thể vũ khí (cung tre, dao găm) cho rig Đinh Bộ Lĩnh, rồi thêm code chọn biến thể; hiện hiển thị bằng bản kiếm.

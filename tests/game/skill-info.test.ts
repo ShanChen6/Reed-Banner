@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { characterSkills, ELEMENTS, PASSIVE, LEGACY_PROFESSIONS as PROFESSIONS, scaleSkill, SKILL_MAX_LEVEL } from "../../src/core";
+import { characterSkills, ELEMENTS, PASSIVE, PROFESSIONS, scaleSkill, SKILL_MAX_LEVEL } from "../../src/core";
 import { passiveText, skillLevelTable, skillStepTexts } from "../../src/app/game/battle/labels";
 
 describe("mô tả kỹ năng trang giới thiệu", () => {

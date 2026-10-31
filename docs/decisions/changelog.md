@@ -2,8 +2,9 @@
 
 ## 31/10/2026
 
-**Đinh Bộ Lĩnh thêm Xạ thủ và Sát thủ — thiết kế DRAFT**
-- Tạo nguồn [dinh-bo-linh-xa-thu-sat-thu.md](../03-characters/dinh-bo-linh-xa-thu-sat-thu.md): 56 tổ hợp, dùng lại chiêu nghề/chỉ số/bị động của đồng hành, đề xuất 14 tuyệt chiêu ô 4 mới (Vạn tiễn, Tuyệt mệnh × 7 hệ). Chưa sửa code; nhân vật chính vẫn sáu nghề.
+**Đinh Bộ Lĩnh thêm Xạ thủ và Sát thủ — triển khai (Shan duyệt số liệu)**
+- Nhân vật chính dùng được 8 nghề (56 tổ hợp), 14 tuyệt chiêu ô 4 mới, hồ sơ cũ `cungThu` khôi phục thành Xạ thủ; thiết kế đổi sang IMPLEMENTED. Shan đồng ý thiết kế lại hình: biến thể cung tre/dao găm có [đặc tả và prompt](../06-art/prompts/dinh-bo-linh-xa-thu-sat-thu.md) (DRAFT, chưa có ảnh/code rig).
+- Nguồn [dinh-bo-linh-xa-thu-sat-thu.md](../03-characters/dinh-bo-linh-xa-thu-sat-thu.md): 56 tổ hợp, dùng lại chiêu nghề/chỉ số/bị động của đồng hành, đề xuất 14 tuyệt chiêu ô 4 mới (Vạn tiễn, Tuyệt mệnh × 7 hệ). Chưa sửa code; nhân vật chính vẫn sáu nghề.
 
 **Xạ thủ và Sát thủ vào trận (Shan quyết định)**
 - `NEW_PROFESSIONS_ENABLED=true`: 14 đồng hành RB-062..075 có trong roster, shop 1.500 vàng, dùng được trong đội và các mode; Đinh Bộ Lĩnh vẫn sáu nghề cũ. Icon vẽ tay xạ thủ/sát thủ thay SVG tạm. Các khoảng trống nghiệm thu còn lại ghi ở [báo cáo PROF](../reports/professions-2026-10-30/README.md).

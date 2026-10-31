@@ -1,7 +1,7 @@
 # Đinh Bộ Lĩnh — thêm nghề Xạ thủ và Sát thủ
 
 > Cập nhật: 31/10/2026
-> Trạng thái: **DRAFT** — Shan yêu cầu thêm hai nghề mới cho nhân vật chính ngày 31/10/2026; số liệu dưới đây là điểm xuất phát để review/mô phỏng. Chưa có code: hiện `mainCharacter` và `isLeaderProfession` vẫn chỉ nhận sáu nghề cũ.
+> Trạng thái: **IMPLEMENTED** — Shan yêu cầu ngày 31/10/2026 và duyệt số liệu cùng ngày; code đã có trên `develop`. Số liệu vẫn là điểm xuất phát chờ mô phỏng. Biến thể hình ảnh là DRAFT, xem [art](../06-art/prompts/dinh-bo-linh-xa-thu-sat-thu.md).
 
 Nguồn chính của việc mở **Xạ thủ** và **Sát thủ** cho Đinh Bộ Lĩnh. Luật nhân vật chính (chọn nghề trước trận, đổi hệ trước trận, 6 chủ động + bị động) nằm ở [mô hình nhân vật](ky-nang/mo-hinh-nhan-vat.md#2-nhân-vật-chính-đinh-bộ-lĩnh) và không đổi: 8 nghề × 7 hệ = **56** cách dựng thay cho 42. Bộ chiêu nghề, chỉ số nền và bốn bị động của hai nghề dùng lại từ [thiết kế Xạ thủ/Sát thủ](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md); không chép lại ở đây.
 
@@ -34,16 +34,16 @@ Lý do chọn số:
 
 > TODO: Số liệu 1.1×/15%/2.7×/ngưỡng 35%/+5 năng lượng là điểm xuất phát; cần mô phỏng cân bằng so với 6 nghề hiện có trước khi triển khai. Tên chiêu kết "Vạn tiễn" và "Tuyệt mệnh" là đề xuất.
 
-## Tác động lên hồ sơ và giao diện
+## Tác động lên hồ sơ và giao diện (đã làm)
 
-1. **Danh sách nghề của nhân vật chính:** thêm hằng số riêng cho nhân vật chính (đề xuất `LEADER_PROFESSIONS` = 8 nghề) và đổi `isLeaderProfession`, `mainCharacter`, `DBL_ULTIMATES`. Hiện nhiều nơi tách nghề nhân vật chính bằng `LEGACY_PROFESSIONS` (thử thách hằng ngày, Tháp/Destiny, Sinh tồn, Đấu trường, bộ chọn trong SetupLobby/ChapterOne/Sinh tồn/ElementPicker): từng nơi phải được duyệt khi đổi.
-2. **Hồ sơ cũ:** trường `unavailableLeaderProfession` đã giữ nghề Xạ thủ của hồ sơ cũ (`cungThu`). Khi mở nghề thì khôi phục thành nghề đang chọn rồi xóa trường; không đổi XP, điểm, vàng, đồ.
+1. **Danh sách nghề của nhân vật chính:** `LEADER_PROFESSIONS` (= mọi nghề đã mở) thay cho `LEGACY_PROFESSIONS` ở `isLeaderProfession`, `mainCharacter`, `DBL_ULTIMATES`, bộ chọn nghề (SetupLobby, ChapterOne, Sinh tồn, ElementPicker), thử thách hằng ngày, Đấu trường, Tháp/Destiny và các harness mô phỏng.
+2. **Hồ sơ cũ:** nghề Xạ thủ lưu từ trước (`cungThu`) được khôi phục thành nghề đang chọn khi đọc hồ sơ; trường `unavailableLeaderProfession` đã bỏ. Không đổi XP, điểm, vàng, đồ.
 3. **Cấp kỹ năng:** nâng theo ô (`o1`…`o6`) nên đổi nghề giữ nguyên cấp nâng; không cần migration điểm.
-4. **Mode và luật tầng:** Campaign/Sinh tồn/Tháp phải chấp nhận nghề mới cho thủ lĩnh, kể cả `bannedProfessions` và `minProfessions` của luật tầng. Mô phỏng 56 tổ hợp thay cho 42 trong các harness (audit, task2/3/4).
-5. **Test:** các test đang khẳng định 42 tổ hợp của Đinh Bộ Lĩnh (progress, loadout, combos, chase-baseline, spirit-audit) đổi thành 56.
+4. **Mode và luật tầng:** Campaign/Sinh tồn/Tháp chấp nhận nghề mới cho thủ lĩnh, kể cả `bannedProfessions` và `minProfessions`. Các harness mô phỏng (audit, task2/3/4) quét 56 tổ hợp thay cho 42.
+5. **Test:** các test từng khẳng định 42 tổ hợp của Đinh Bộ Lĩnh nay khẳng định 56.
 
 ## Hình ảnh
 
-Rig Đinh Bộ Lĩnh hiện dùng một thanh kiếm cho mọi nghề (`public/art/characters/dinh-bo-linh/`). Bản đầu **không** thêm art mới: Xạ thủ/Sát thủ hiển thị bằng hình hiện có và icon nghề đã vẽ tay. Biến thể vũ khí theo nghề cho nhân vật chính (nỏ/dao găm) nếu cần sẽ là task art riêng, cần duyệt Master.
+Shan đồng ý thiết kế lại hình (31/10/2026): chỉ hai nghề mới có biến thể vũ khí (Xạ thủ cầm cung tre, Sát thủ cầm dao găm cầm ngược), sáu nghề cũ giữ kiếm. Đặc tả và prompt: [Đinh Bộ Lĩnh — biến thể hình ảnh](../06-art/prompts/dinh-bo-linh-xa-thu-sat-thu.md). Ảnh chưa được tạo nên hiện hai nghề này vẫn hiển thị bằng bản kiếm.
 
-> TODO: Chốt có làm biến thể vũ khí theo nghề cho Đinh Bộ Lĩnh hay không; nếu không, kiểm tra nhìn bằng mắt rằng cầm kiếm khi chọn Xạ thủ/Sát thủ không gây hiểu nhầm trong tooltip và hồ sơ.
+> TODO: Tạo và duyệt Master, tách lớp, và thêm hỗ trợ biến thể trong rig (đang chưa có code); xem mục nghiệm thu ở file art.
