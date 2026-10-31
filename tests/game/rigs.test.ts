@@ -54,7 +54,7 @@ test("khớp Nguyễn Bặc nằm trong vùng chồng, kích thước texture kh
 test("Lê Hoàn có đủ lớp WebP, ba tranh tư thế và nằm trong ngân sách 350 KB", () => {
   const rig = rigOf("leHoan");
   assert.ok(rig && rig.skeleton === "warrior");
-  assert.equal(rig.weapon, undefined);
+  assert.equal(rig.weapon, "spear");
   assert.equal(rig.poses?.attack?.name, "pose-attack");
   assert.equal(rig.poses?.cast?.name, "pose-cast");
   assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
