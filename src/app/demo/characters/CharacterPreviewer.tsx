@@ -5,6 +5,7 @@ import { Select } from "@/components/ui";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { ElementIcon, ProfessionIcon } from "@/app/game/art/icons";
 import { Portrait } from "@/app/game/art/portraits";
 import { isActiveProfession, PROFESSION_DISPLAY_NAME } from "@/core";
 import { ELEMENT_NAME } from "@/app/game/battle/labels";
@@ -25,8 +26,17 @@ function CharacterDetails({ character, size }: { character: CharacterPreview; si
         <Portrait id={character.id} element={character.element} profession={look} className="size-16 shrink-0" />
         <div className="min-w-0">
           <h2 className="text-xl font-bold">{character.name}</h2>
-          <p className="text-sm text-stone-400">
-            {character.title ?? PROFESSION_DISPLAY_NAME[character.profession]} · {ELEMENT_NAME[character.element]}
+          <p className="flex flex-wrap items-center gap-1 text-sm text-stone-400">
+            {character.title ? (
+              <>
+                {character.title} · <ProfessionIcon profession="tongHop" className="size-5" /> Nghề tổng hợp ·{" "}
+                <ElementIcon element="tongHop" className="size-5" /> Hệ tổng hợp
+              </>
+            ) : (
+              <>
+                {PROFESSION_DISPLAY_NAME[character.profession]} · {ELEMENT_NAME[character.element]}
+              </>
+            )}
             {character.previewOnly && " · chỉ xem thử, chưa có trong trận"}
           </p>
           <p className="mt-1 text-xs text-stone-400">Rig trong trận: {bytes(character.rigBytes)} · Tất cả: {bytes(total)}</p>
