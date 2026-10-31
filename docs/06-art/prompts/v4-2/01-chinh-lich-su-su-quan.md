@@ -5,7 +5,7 @@
 
 ## Phạm vi pilot và cách dùng
 
-Shan xác nhận mục tiêu **prompt thiết kế lại**, không ràng buộc theo tranh cũ: làm mới nhân dạng, phục trang, màu và đạo cụ của năm pilot. Quyết định này thay yêu cầu giữ ngoại hình cũ đối với **bộ prompt mới của năm người này**; không cho phép ghi đè ảnh hoặc thay gameplay. KEEP/REFINE trong [audit giai đoạn 1](../../../audits/kiem-ke-nhan-vat-lich-su-giai-doan-1.md) là kết quả lịch sử của audit tài nguyên, không phải rào cản cho bộ prompt mới. Nguyễn Bặc và 13 người ngoài pilot chưa được viết lại trong lượt này.
+Shan xác nhận mục tiêu **prompt thiết kế lại**, không ràng buộc theo tranh cũ: làm mới nhân dạng, phục trang, màu và đạo cụ của năm pilot. Quyết định này thay yêu cầu giữ ngoại hình cũ đối với **bộ prompt mới của năm người này**; không cho phép ghi đè ảnh hoặc thay gameplay. KEEP/REFINE trong audit giai đoạn 1 là kết quả lịch sử của audit tài nguyên, không phải rào cản cho bộ prompt mới. Nguyễn Bặc và 13 người ngoài pilot chưa được viết lại trong lượt này.
 
 **Nguồn H:** [sổ nguồn Campaign](../../../02-game-modes/campaign/history-sources.md) (E00/E04a/E08/E10/E12/U04), [ma trận sứ quân](../../../02-game-modes/campaign/warlord-matrix.md) (W01/W04). **Nguồn R:** [roster](../../../../src/core/roster/roster.ts), [kỹ năng runtime](../../../../src/core/battle/skills.ts). Các nguồn này xác nhận nội dung repo, chưa thay việc thẩm định phục trang bằng hiện vật. Không mở lại hoặc nâng mức tin cậy nguồn ngoài repo trong lượt viết prompt này.
 
