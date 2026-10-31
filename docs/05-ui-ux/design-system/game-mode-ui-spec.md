@@ -14,7 +14,7 @@
 - Survival vẫn tên hiển thị **Sinh tồn** cho đến khi duyệt rename Thủ Thành; concept hình doanh trại/cổng thành không hàm ý HP thành.
 - Daily: một đề cố định/ngày, một lượt/người, đội cho sẵn, không trang bị. Arena: PvP **bất đồng bộ** chống đội phòng thủ snapshot do AI điều khiển, không matchmaking real-time.
 - Đánh trùm là phần của Campaign, không thiết kế lại. Normal/Practice thuộc luồng trận chiến chung; chỉ cân chỉnh entry/navigation, không đổi luật.
-- Binh Pháp và Liệt Truyện là **concept docs-only**, không thêm nút khả dụng khi chưa có route/engine; Viễn Chinh deferred.
+- Liệt Truyện là **concept docs-only**, không thêm nút khả dụng khi chưa có route/engine; Viễn Chinh deferred. Trận Đồ (Binh Pháp) có **bản chơi thử offline** ở `/game/formation`, vào từ thẻ ở hàng "Đang dựng" của Home (không phải card thứ bảy của sáu chế độ live).
 
 ## 2. Khung thống nhất
 
@@ -259,7 +259,7 @@ Không đụng Campaign, battle engine, mode balance, rewards, routing contracts
 - Hero là **một vùng ảnh pano chính**, không đặt ảnh thành trì trong thẻ nhỏ tách rời. Dùng overlay chuyển sắc để logo/tagline/CTA đọc rõ và dùng lại logo game chính thức, không thay hình tự tạo.
 - `VÀO TRẬN` giữ đúng hành vi điều hướng trận thường hiện có; nút `CHIẾN DỊCH` (nếu có) mở scene Campaign đang tồn tại; không đổi semantics của action để chạy tới trận gần nhất. `Tiếp tục` chỉ hiện khi backend/runtime thực sự hỗ trợ resume.
 - Sáu card có tên mode, **một câu mô tả**, thumbnail riêng, tối đa một chỉ số tiến trình/trạng thái có nguồn dữ liệu thật, và affordance click/locked/disabled/pending rõ. Campaign có thể nhấn mạnh nhẹ bằng prominence/diện tích nhưng phải giữ khả năng quét đều cả sáu.
-- Nhóm Trial/Destiny có thể mang nhãn phụ `Song Tháp`, song vẫn là **hai card độc lập** với feature flags độc lập. Không tự thêm card Liệt Truyện, Binh Pháp, Viễn Chinh vào sáu card live; mode tương lai cần approval và route/feature flag riêng.
+- Nhóm Trial/Destiny có thể mang nhãn phụ `Song Tháp`, song vẫn là **hai card độc lập** với feature flags độc lập. Không tự thêm card Liệt Truyện, Binh Pháp/Trận Đồ, Viễn Chinh vào sáu card live (Trận Đồ chơi thử nằm ở hàng "Đang dựng", bấm được); mode tương lai cần approval và route/feature flag riêng.
 - Thanh tiện ích phía dưới chỉ chứa liên kết thực sự khả dụng, tránh lặp lại Hồ sơ hoặc Trận thường nếu đã dễ truy cập ở Header; ưu tiên `Hồ sơ & Trang bị`, `Nhiệm vụ`, `Xếp hạng`, `Tài khoản` theo routing đã kiểm tra.
 
 ### 14.3 Art direction cho sáu card
