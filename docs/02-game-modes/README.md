@@ -2,7 +2,7 @@
 
 > **Quyết định sản phẩm mới (27/10/2026):** tham khảo [Game Modes 2026: định hướng, Binh Pháp và Song Tháp](future/README.md). Nội dung chi tiết bên dưới mô tả **implementation baseline trước khi triển khai các đề xuất**, không có nghĩa mode mới đã tồn tại. Các giá trị Trial 20 / Destiny 10 / nhãn Sinh tồn ở bảng dưới là **trạng thái code hiện tại**, còn định hướng tương lai xem tài liệu mới.
 
-> Cập nhật: 25/10/2026 (CAMP-08.04: gỡ chiến dịch 13 màn cũ, tách Đánh trùm/BXH/nhiệm vụ khỏi màn cũ)
+> Cập nhật: 31/10/2026 (thêm Trận Đồ bản chơi thử; 25/10: CAMP-08.04 gỡ chiến dịch 13 màn cũ, tách Đánh trùm/BXH/nhiệm vụ khỏi màn cũ)
 
 ## 1. Tổng quan
 
@@ -15,6 +15,7 @@
 | **Tháp Thí Luyện (Trial)** | 20 tầng cố định, luật đội hình/bàn cờ và thưởng đá lần đầu | 3vs3 | Song Tháp V1.0 |
 | **Tháp Vận Mệnh (Destiny)** | Run 10 tầng theo chu kỳ tuần, roster khóa và tài nguyên xuyên tầng | 3vs3 | Song Tháp V1.0 |
 | **Sinh tồn** | Một trận không kết thúc, đối thủ theo đợt, báo trước đợt kế tiếp | 3vs3 | Sau giai đoạn 4 |
+| **Trận Đồ** (bản chơi thử) | Game xếp quân theo nghề/hệ, không đánh nhau; offline, khách, không thưởng, không xếp hạng. Luật ở [GDD Binh Pháp](future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline) | Một người, 4 bậc 3×3–8×8 | Sau Song Tháp |
 
 ## 2. Chiến dịch
 

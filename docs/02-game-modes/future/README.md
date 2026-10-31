@@ -1,6 +1,8 @@
 # Reed Banner — Game Modes: quyết định sản phẩm và đặc tả mở rộng
 
 > 27/10/2026 · trạng thái: **DOCS / DESIGN ONLY**. Không thay code, DB, Battle Engine, UI hay phần thưởng. PR này là đề xuất để review; chưa phải release.
+>
+> 31/10/2026: **Binh Pháp (hiển thị là Trận Đồ) đã có bản chơi thử offline** theo [GDD mục 11](02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline); luật vẫn chờ BP-00. Liệt Truyện và các mục còn lại vẫn là design only.
 
 ## Đọc theo thứ tự
 

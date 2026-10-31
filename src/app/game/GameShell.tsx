@@ -11,10 +11,12 @@ import ArenaScreen from "./arena/ArenaScreen";
 import DemoGame from "./battle/DemoGame";
 import CampaignScreen from "./campaign/CampaignScreen";
 import DailyScreen from "./daily/DailyScreen";
+import FormationScreen from "./formation/FormationScreen";
 import LeaderboardScreen from "./leaderboard/LeaderboardScreen";
 import MenuScene from "./MenuScene";
 import ProfileScreen from "./profile/ProfileScreen";
 import QuestsScreen from "./quests/QuestsScreen";
+import ShopScreen from "./shop/ShopScreen";
 import { resolveScene, sceneOfPath, scenePath, SCENE_TITLE, type AuthScene, type Scene } from "./scene";
 import { isScenePath, pushScenePath, SceneContext, SceneLink, type SceneApi } from "./SceneContext";
 import SurvivalScreen from "./survival/SurvivalScreen";
@@ -120,8 +122,12 @@ function SceneView({
       return <DailyScreen />;
     case "ARENA":
       return <ArenaScreen />;
+    case "FORMATION":
+      return <FormationScreen />;
     case "QUESTS":
       return <QuestsScreen />;
+    case "SHOP":
+      return <ShopScreen />;
     case "LEADERBOARD":
       return <LeaderboardScreen destinyEnabled={towerFeatures.destiny} />;
     case "PROFILE":
