@@ -51,7 +51,7 @@ writeFileSync(
   JSON.stringify({ roster, campaign }, null, 2),
 );
 const names = {
-  tuongSi: "Tướng sĩ",
+  xaThu:"Xạ thủ",satThu:"Sát thủ",tuongSi: "Tướng sĩ",
   phapSu: "Pháp sư",
   binhLinh: "Binh lính",
   ySu: "Y sư",

@@ -45,7 +45,7 @@ test("nhân vật chỉ xem thử có trên trang xem thử nhưng không có tr
   for (const id of archers) {
     const archer = characters.find((c) => c.id === id);
     assert.ok(archer?.previewOnly);
-    assert.equal(archer.profession, "cungThu");
+    assert.equal(archer.profession, "xaThu");
     assert.ok(!ALL_COMPANIONS.some((c) => c.id === id));
   }
   const assassins = ["bachPhongDao", "docAnh", "hanGiangKhach", "xichDa", "diaAn", "loiAnh", "voAnh"];

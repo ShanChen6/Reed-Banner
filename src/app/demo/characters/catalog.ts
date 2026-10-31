@@ -10,13 +10,13 @@ import type { CharacterPreview, PreviewFile } from "./types";
  * dựng hình động để duyệt tranh, không đưa vào shop hay trận đấu.
  */
 const PREVIEW_ONLY: Readonly<Record<string, { readonly name: string; readonly element: Element; readonly profession: GameProfession; readonly title?: string }>> = {
-  bachNoLang: { name: "Bạch Nỏ Lang", element: "kim", profession: "cungThu" },
-  thanhLamXa: { name: "Thanh Lâm Xạ", element: "moc", profession: "cungThu" },
-  lamGiangPhiDiep: { name: "Lam Giang Phi Diệp", element: "thuy", profession: "cungThu" },
-  xichDiemLuan: { name: "Xích Diệm Luân", element: "hoa", profession: "cungThu" },
-  tranSonThach: { name: "Trấn Sơn Thạch", element: "tho", profession: "cungThu" },
-  loiMinhXa: { name: "Lôi Minh Xạ", element: "loi", profession: "cungThu" },
-  tatPhongLang: { name: "Tật Phong Lăng", element: "phong", profession: "cungThu" },
+  bachNoLang: { name: "Bạch Nỏ Lang", element: "kim", profession: "xaThu" },
+  thanhLamXa: { name: "Thanh Lâm Xạ", element: "moc", profession: "xaThu" },
+  lamGiangPhiDiep: { name: "Lam Giang Phi Diệp", element: "thuy", profession: "xaThu" },
+  xichDiemLuan: { name: "Xích Diệm Luân", element: "hoa", profession: "xaThu" },
+  tranSonThach: { name: "Trấn Sơn Thạch", element: "tho", profession: "xaThu" },
+  loiMinhXa: { name: "Lôi Minh Xạ", element: "loi", profession: "xaThu" },
+  tatPhongLang: { name: "Tật Phong Lăng", element: "phong", profession: "xaThu" },
   bachPhongDao: { name: "Bạch Phong Đao", element: "kim", profession: "satThu" },
   docAnh: { name: "Độc Ảnh", element: "moc", profession: "satThu" },
   hanGiangKhach: { name: "Hàn Giang Khách", element: "thuy", profession: "satThu" },
