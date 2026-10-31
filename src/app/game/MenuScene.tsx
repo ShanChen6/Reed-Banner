@@ -55,12 +55,13 @@ const UPCOMING: readonly { id: "tran-do" | "tam-tuong-ky" | "vien-chinh"; title:
 
 /** Tiện ích cuối trang. Hồ sơ và Tài khoản đã có trên thanh header nên không lặp lại ở đây. */
 const UTILITIES: readonly { scene: Scene; title: string; icon: UtilityIcon }[] = [
+  { scene: "SHOP", title: "Cửa Hàng", icon: "shop" },
   { scene: "QUESTS", title: "Nhiệm vụ", icon: "scroll" },
   { scene: "LEADERBOARD", title: "Xếp hạng", icon: "rank" },
   { scene: "PRACTICE", title: "Thao Luyện", icon: "swords" },
 ];
 
-type UtilityIcon = "scroll" | "rank" | "swords";
+type UtilityIcon = "scroll" | "rank" | "swords" | "shop";
 
 function hasSavedBattle(): boolean {
   try {
@@ -275,6 +276,7 @@ function UtilityGlyph({ kind }: { kind: UtilityIcon }) {
     <svg aria-hidden viewBox="0 0 24 24" className="size-5 shrink-0 text-[var(--atlas-gold)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
       {kind === "scroll" && <path d="M7 4h11a2 2 0 0 1 0 4H7M7 4a2 2 0 0 0 0 4v10a2 2 0 0 0 2 2h9V8M10 12h5M10 15.5h5" />}
       {kind === "rank" && <path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4ZM7 6H4.5a2.5 2.5 0 0 0 3 3.2M17 6h2.5a2.5 2.5 0 0 1-3 3.2" />}
+      {kind === "shop" && <path d="M4 9l1.5-5h13L20 9M4 9h16M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0A2.7 2.7 0 0 0 20 9M5.5 12v8h13v-8M10 20v-4h4v4" />}
       {kind === "swords" && <path d="M4 4l10.5 10.5M12.5 16.5l4-4M16 16l4 4M20 4L9.5 14.5M11.5 16.5l-4-4M8 16l-4 4" />}
     </svg>
   );

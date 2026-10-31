@@ -15,6 +15,7 @@ import LeaderboardScreen from "./leaderboard/LeaderboardScreen";
 import MenuScene from "./MenuScene";
 import ProfileScreen from "./profile/ProfileScreen";
 import QuestsScreen from "./quests/QuestsScreen";
+import ShopScreen from "./shop/ShopScreen";
 import { resolveScene, sceneOfPath, scenePath, SCENE_TITLE, type AuthScene, type Scene } from "./scene";
 import { isScenePath, pushScenePath, SceneContext, SceneLink, type SceneApi } from "./SceneContext";
 import SurvivalScreen from "./survival/SurvivalScreen";
@@ -122,6 +123,8 @@ function SceneView({
       return <ArenaScreen />;
     case "QUESTS":
       return <QuestsScreen />;
+    case "SHOP":
+      return <ShopScreen />;
     case "LEADERBOARD":
       return <LeaderboardScreen destinyEnabled={towerFeatures.destiny} />;
     case "PROFILE":
