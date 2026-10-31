@@ -16,11 +16,11 @@ test('canonical catalog has eight unique professions and one marksman namespace'
   }
 });
 
-test('release gate and leader remain closed until skill, roster and acceptance phases', () => {
-  assert.equal(NEW_PROFESSIONS_ENABLED, false);
+test('Xạ thủ và Sát thủ đã mở trong trận nhưng Đinh Bộ Lĩnh vẫn chỉ dùng sáu nghề cũ', () => {
+  assert.equal(NEW_PROFESSIONS_ENABLED, true);
   for (const profession of LEGACY_PROFESSIONS) assert.equal(isActiveProfession(profession), true);
   for (const profession of EXPANSION_PROFESSIONS) {
-    assert.equal(isActiveProfession(profession), false);
+    assert.equal(isActiveProfession(profession), true);
     assert.equal(isLeaderProfession(profession), false);
   }
   assert.equal(isActiveProfession('cungThu'), false);

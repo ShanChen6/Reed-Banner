@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import {
-  ALL_COMPANIONS, PROFESSIONS, ELEMENTS, mainCharacter, characterSkills,
+  ALL_COMPANIONS, LEGACY_PROFESSIONS as PROFESSIONS, ELEMENTS, mainCharacter, characterSkills,
   chasePassives, COMBO_PASSIVES, CHASE_PASSIVES, CHASE_LIMITS,
   SKILL_SLOT_UNLOCK, STORY_NODES, campaignEncounterFoes, DEFAULT_SPIRIT_EXPERIMENT,
   SPIRIT_EXPERIMENTS, spiritAt, spiritHealMultiplier, getSkill,

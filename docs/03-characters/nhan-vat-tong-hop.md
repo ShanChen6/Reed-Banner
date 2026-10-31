@@ -37,7 +37,7 @@ Hệ phụ chỉ ảnh hưởng damage của **chiêu mang hệ đó**, theo cù
 | Sát thủ Kim–Mộc (tên chưa đặt) | Sát thủ, Kim | Tướng sĩ, Mộc | Chịu khắc theo Kim. Chiêu Mộc dùng damage Mộc. Hai chiêu Tướng sĩ thêm khả năng cận chiến. |
 | [Đinh Ngọc](dinh-ngoc.md) | Kim (phòng thủ) | Bảy hệ qua chiêu | Dùng khuôn `specialHybrid` riêng; không theo mô hình chính/phụ vì nghề lấy từ cả tám nghề |
 
-> TODO: "Kiếm sĩ" không phải nghề trong game (tám nghề: Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư, Xạ thủ, Sát thủ). Chốt xem "kiếm sĩ" là nghề Tướng sĩ hay chỉ là mô tả vũ khí. Sát thủ và Xạ thủ cũng chưa có runtime trong trận, nên mọi nhân vật tổng hợp dùng hai nghề này phải đợi [thiết kế Xạ thủ/Sát thủ](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md).
+Shan xác nhận "kiếm sĩ" là cách gọi nhầm của Tướng sĩ, nên ví dụ trên đúng. Từ 31/10/2026 Xạ thủ và Sát thủ đã vào trận ([thiết kế](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md)), nên nhân vật tổng hợp dùng hai nghề này không còn bị chặn bởi runtime.
 
 ## Cách nhận
 
@@ -47,7 +47,7 @@ Hệ phụ chỉ ảnh hưởng damage của **chiêu mang hệ đó**, theo cù
 - Một loại vật phẩm hoặc tiền riêng để đổi, không dùng chung với tiền thường.
 - Giá cao chỉ là một phần của cảm giác đặc biệt, không là cách duy nhất.
 
-> TODO: Chốt cách nhận cụ thể (nhiệm vụ, mốc chương, vật phẩm đổi), mức giá so với nhân vật thường, và giới hạn số lượng nhân vật tổng hợp trong đội.
+> TODO: Chốt cách nhận cụ thể (nhiệm vụ, mốc chương, vật phẩm đổi), mức giá so với nhân vật thường, và giới hạn số lượng nhân vật tổng hợp trong đội. Shan chưa nghĩ ra ngày 31/10/2026; sẽ chốt sau khi thiết kế thêm một vài nhân vật tổng hợp để so sánh.
 
 ## Hiển thị
 

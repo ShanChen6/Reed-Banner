@@ -5,7 +5,7 @@
 import type { Difficulty } from "../ai";
 import {
   ELEMENTS,
-  PROFESSIONS,
+  LEGACY_PROFESSIONS as PROFESSIONS,
   type BattleState,
   type Element,
   type FighterConfig,

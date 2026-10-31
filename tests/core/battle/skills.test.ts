@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
-  PROFESSIONS,
+  LEGACY_PROFESSIONS as PROFESSIONS,
   act,
   createBattle,
   findValidMoves,

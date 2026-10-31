@@ -38,22 +38,22 @@ test("tranh gục được tải trong rig, alpha thật và tỉ lệ texture �
   }
 });
 
-test("nhân vật chỉ xem thử có trên trang xem thử nhưng không có trong roster", async () => {
+test("Xạ thủ và Sát thủ đã vào roster; chỉ Đinh Ngọc còn là nhân vật xem thử", async () => {
   const { ALL_COMPANIONS } = await import("../../src/core");
   const characters = await characterCatalog();
   const archers = ["bachNoLang", "thanhLamXa", "lamGiangPhiDiep", "xichDiemLuan", "tranSonThach", "loiMinhXa", "tatPhongLang"];
   for (const id of archers) {
     const archer = characters.find((c) => c.id === id);
-    assert.ok(archer?.previewOnly);
+    assert.ok(archer && !archer.previewOnly);
     assert.equal(archer.profession, "xaThu");
-    assert.ok(!ALL_COMPANIONS.some((c) => c.id === id));
+    assert.ok(ALL_COMPANIONS.some((c) => c.id === id));
   }
   const assassins = ["bachPhongDao", "docAnh", "hanGiangKhach", "xichDa", "diaAn", "loiAnh", "voAnh"];
   for (const id of assassins) {
     const assassin = characters.find((c) => c.id === id);
-    assert.ok(assassin?.previewOnly);
+    assert.ok(assassin && !assassin.previewOnly);
     assert.equal(assassin.profession, "satThu");
-    assert.ok(!ALL_COMPANIONS.some((c) => c.id === id));
+    assert.ok(ALL_COMPANIONS.some((c) => c.id === id));
   }
   const special = characters.find((c) => c.id === "dinhNgoc");
   assert.ok(special?.previewOnly);

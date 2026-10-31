@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
-  ALL_COMPANIONS, ELEMENTS, PROFESSIONS, ROLE_SKILLS, ELEMENT_SKILLS,
+  ALL_COMPANIONS, ELEMENTS, LEGACY_PROFESSIONS as PROFESSIONS, ROLE_SKILLS, ELEMENT_SKILLS,
   characterSkills, skillSource, getSkill, personalSkillOf, buildMain, buildCompanion,
   autoProgress, NEW_PROGRESS, parseProfile, newProfile, upgradeSkill,
   needsCell, whirlStep, act, createBattle, chooseSkill, toView, scaleSkill, buildCampaignLeader, legacyHeroSkills,

@@ -2,7 +2,7 @@ import { parseArgs } from 'node:util';
 import { writeFileSync,readFileSync,appendFileSync,mkdirSync,existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
-import { SKILLS, ALL_COMPANIONS, PROFESSIONS, ELEMENTS, buildMain,buildCompanion,autoProgress,withGear,gearStats,presetLoadout,equippedItems,GEAR_SETS,GEAR_SLOTS,type GearItem,type SkillDef } from '../src/core';
+import { SKILLS, ALL_COMPANIONS, LEGACY_PROFESSIONS as PROFESSIONS, ELEMENTS, buildMain,buildCompanion,autoProgress,withGear,gearStats,presetLoadout,equippedItems,GEAR_SETS,GEAR_SLOTS,type GearItem,type SkillDef } from '../src/core';
 import { task2Cases,equipment,type MeasuredCase } from './lib/task2-cases';
 import { measured } from './lib/task2-runner';
 const {values:v}=parseArgs({options:{group:{type:'string',default:'identity'},variant:{type:'string',default:'baseline'}}});
