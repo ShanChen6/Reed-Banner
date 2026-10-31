@@ -109,3 +109,9 @@
 - Đã đo sơ bộ cân bằng 56 tổ hợp và 14 nhân vật mới (cấp 20, không gear): nằm trong dải hiện có, chưa chỉnh số nào; xem [mục 10](../03-characters/danh-sach-nhan-vat.md#10-cân-bằng-xạ-thủ-và-sát-thủ-31102026).
 - TODO: Đo thêm cấp 10/30, có trang bị và cấp chiêu khác nhau trước khi chốt; quyết định có xử lý lệch có từ trước (Binh lính/Pháp sư cao, Mưu sĩ/Quân sư thấp ở 1v1; hệ Kim thấp; Lâm Tùng 67%) hay không.
 - TODO: Tạo và duyệt ảnh biến thể vũ khí (cung tre, dao găm) cho rig Đinh Bộ Lĩnh, rồi thêm code chọn biến thể; hiện hiển thị bằng bản kiếm.
+
+## Trận Đồ (Binh Pháp)
+
+- TODO: BP-00 sign-off. Bản chơi thử đang chạy giá trị đề xuất (4 bậc 3×3/5×5/8×8/8×8, thanh Bỏ Lệnh 0–3, Quân Lệnh/Thu Hồi 6%, điểm 10/5/50/500, không xem trước quân kế). Cần Shan chốt hoặc đổi, xem [GDD mục 11](../02-game-modes/future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline).
+- TODO: Thêm feature flag server cho Trận Đồ và quyết định có thưởng/xếp hạng không (BP-05/06); bản hiện tại offline, không thưởng, không có flag.
+- TODO: Agent mô phỏng lookahead và thử người thật để cân lại bậc Thường (greedy ngang random) và độ dài ván 8×8 (p90 100 đến 260 nước), xem [QA Binh Pháp](../02-game-modes/future/05-binh-phap-balance-qa.md#kết-quả-mô-phỏng-baseline-31102026).
