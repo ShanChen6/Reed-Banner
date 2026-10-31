@@ -26,14 +26,14 @@ import {
   type Element,
   type GearItem,
   type GearSlot,
-  type Profession,
+  type GameProfession,
   type SpecialGrade,
   type Tier,
   type TileKind,
 } from "@/core";
 
 export const TILE_NAME: Record<TileKind, string> = {
-  kiem: "Kiếm",
+  kiem: "Công kích",
   amDuong: "Âm dương",
   banhChung: "Bánh chưng",
   tim: "Tim",
@@ -64,7 +64,9 @@ export const SPECIAL_NAME: Record<SpecialGrade, Record<TileKind, string>> = {
   },
 };
 
-export const PROFESSION_NAME: Record<Profession, string> = {
+export const PROFESSION_NAME: Record<GameProfession, string> = {
+  xaThu: "Xạ thủ",
+  satThu: "Sát thủ",
   tuongSi: "Tướng sĩ",
   phapSu: "Pháp sư",
   binhLinh: "Binh lính",
@@ -88,6 +90,7 @@ export const EFFECT_NAME: Record<EffectKind, string> = {
   freeze: "Đóng băng",
   freezeImmune: "Miễn băng",
   burn: "Thiêu đốt",
+  poison: "Độc",
   atkUp: "Công+",
   atkDown: "Công−",
   defUp: "Thủ+",
@@ -154,7 +157,7 @@ export function gearText(item: GearItem): string {
 }
 
 /** Mô tả lấy từ các bước thực thi, dùng chung ở trước trận, quản lý và trong trận. */
-const pct = (n: number) => `${Math.round(n * 100)}%`;
+const pct = (n: number) => `${Number((n * 100).toFixed(1))}%`;
 
 export const SKILL_TARGET_NAME: Record<SkillDef["target"], string> = { enemy: "địch đơn", ally: "đồng minh đơn", self: "bản thân", team: "cả đội", allEnemies: "mọi địch" };
 
@@ -173,7 +176,7 @@ export function skillStepTexts(def: SkillDef): string[] {
       case "heal": return `Hồi ${pct(s.ratio)} máu ${to[s.to]}`;
       case "cleanse": return `Thanh tẩy ${to[s.to]}`;
       case "dispel": return "Xua tan hiệu ứng có lợi mục tiêu";
-      case "energy": return `${s.amount >= 0 ? "+" : ""}${s.amount} năng lượng ${to[s.to]}`;
+      case "energy": return `${s.amount >= 0 ? "+" : ""}${s.amount} năng lượng ${to[s.to]}${s.requiresHpDamage ? ", nếu gây mất HP thật" : ""}`;
       case "enemyFood": return `${s.amount} lương địch`;
       case "mark": return `Dấu ấn nguyên tố${s.enhanced ? " cường hóa" : ""}${s.guaranteed ? " chắc chắn" : ""}`;
       case "effect": return `${EFFECT_NAME[s.effect]} ${s.value ? pct(s.value) : ""}${s.ofMaxHp ? " máu tối đa" : s.ofAtk ? " Công" : ""} ${to[s.to]}${s.turns === null ? " đến khi hết" : ` ${s.turns} lượt`}${s.chance === undefined ? "" : `, xác suất ${pct(s.chance)}`}`;

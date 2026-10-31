@@ -484,7 +484,7 @@ it("nguồn chiêu riêng canonical mở rộng mà không qua chuyển ô legac
     /Trùng chiêu riêng/,
   );
   assert.throws(() => defineCharacterSkills([{ ...next, slot: 5 }]), /ô4/);
-  assert.equal(CHARACTER_SKILLS.length, ALL_COMPANIONS.length);
+  assert.equal(CHARACTER_SKILLS.length, ALL_COMPANIONS.length + 14);
 });
 
 it("API nâng ô 4/5 yêu cầu layout2, chặn client cache cũ nâng nhầm chiêu", () => {

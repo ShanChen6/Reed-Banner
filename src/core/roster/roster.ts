@@ -6,7 +6,7 @@ import { chasePassives } from "../battle/chase";
 import { PROFESSION_COMBO, type ComboPassiveId } from "../battle/combos";
 import { characterSkills } from "../battle/skills";
 import type { Element } from "../battle/elements";
-import type { Profession } from "../battle/rules";
+import { NEW_PROFESSIONS_ENABLED, isLeaderProfession, type Profession } from "../battle/rules";
 import type { FighterConfig } from "../battle/state";
 
 export interface BaseStats {
@@ -17,6 +17,8 @@ export interface BaseStats {
 
 /** Chỉ số gốc theo nghề, cùng một cấp. Điểm xuất phát. */
 export const BASE_STATS: Readonly<Record<Profession, BaseStats>> = {
+  xaThu: { maxHp:475, atk:55, def:9 },
+  satThu: { maxHp:450, atk:58, def:8 },
   tuongSi: { maxHp: 500, atk: 55, def: 10 },
   phapSu: { maxHp: 450, atk: 55, def: 8 },
   binhLinh: { maxHp: 600, atk: 45, def: 15 },
@@ -27,6 +29,7 @@ export const BASE_STATS: Readonly<Record<Profession, BaseStats>> = {
 
 /** Nhân vật chính mặc định: Đinh Bộ Lĩnh, Tướng sĩ; lắp bộ theo nghề và nguyên tố đã chọn. */
 export function mainCharacter(element: Element = "moc", profession: Profession = "tuongSi"): FighterConfig {
+  if (!isLeaderProfession(profession)) throw new RangeError(`Đinh Bộ Lĩnh chưa hỗ trợ nghề ${profession}`);
   return {
     id: "dinhBoLinh",
     name: "Đinh Bộ Lĩnh",
@@ -44,7 +47,7 @@ export function mainCharacter(element: Element = "moc", profession: Profession =
  * của tướng thường, chiêu riêng của tướng lịch sử và sứ quân). Bản mở hết; tiến trình lọc theo cấp ở buildHero.
  */
 function companion(id: string, name: string, profession: Profession, element: Element, comboPassive: ComboPassiveId = PROFESSION_COMBO[profession]): FighterConfig {
-  return { ...mainCharacter(element, profession), id, name, comboPassive, skills: characterSkills(profession, element, id).map((s) => s.id) };
+  return { id, name, profession, element, ...BASE_STATS[profession], chasePassives:chasePassives({profession,element}), comboPassive, skills: characterSkills(profession, element, id).map((s) => s.id) };
 }
 
 /** 5 tướng thường khởi đầu, mỗi người một nghề còn lại. */
@@ -68,7 +71,7 @@ export interface ShopCompanion {
  */
 export const SHOP_PRICES = { basic: 1500, elite: 3000 } as const;
 
-export const SHOP_COMPANIONS: readonly ShopCompanion[] = [
+const LEGACY_SHOP_COMPANIONS: readonly ShopCompanion[] = [
   { fighter: companion("tranCuong", "Trần Cương", "tuongSi", "kim"), price: SHOP_PRICES.basic },
   { fighter: companion("lyLiet", "Lý Liệt", "tuongSi", "hoa"), price: SHOP_PRICES.elite },
   { fighter: companion("daoLam", "Đào Lam", "phapSu", "thuy"), price: SHOP_PRICES.basic },
@@ -108,6 +111,32 @@ export const SHOP_COMPANIONS: readonly ShopCompanion[] = [
   { fighter: companion("viTrieu", "Vi Triều", "quanSu", "thuy"), price: SHOP_PRICES.elite },
   { fighter: companion("tonDiem", "Tôn Diệm", "quanSu", "hoa"), price: SHOP_PRICES.elite },
 ];
+
+/** Registry thử nghiệm: giữ ID/tiến trình kể cả khi release gate tắt. Chưa cấp miễn phí. */
+export const EXPANSION_COMPANIONS: readonly FighterConfig[] = [
+  {...companion("bachNoLang","Bạch Nỏ Lang","xaThu","kim"),chasePassives:["marksmanPrepared","kim1","rb_bnl_passive"]},
+  {...companion("thanhLamXa","Thanh Lâm Xạ","xaThu","moc"),chasePassives:["marksmanPrepared","moc1","rb_tlx_passive"]},
+  {...companion("lamGiangPhiDiep","Lam Giang Phi Diệp","xaThu","thuy"),chasePassives:["marksmanPrepared","thuy1","rb064_canhGioi"]},
+  {...companion("xichDiemLuan","Xích Diệm Luân","xaThu","hoa"),chasePassives:["marksmanPrepared","hoa1","rb065_hoaCot"]},
+  {...companion("tranSonThach","Trấn Sơn Thạch","xaThu","tho"),chasePassives:["marksmanPrepared","tho1","rb066_kienThu"]},
+  {...companion("loiMinhXa","Lôi Minh Xạ","xaThu","loi"),chasePassives:["marksmanPrepared","loi1","rb067_chopThoiCo"]},
+  {...companion("tatPhongLang","Tật Phong Lăng","xaThu","phong"),chasePassives:["marksmanPrepared","phong1","rb068_hoiNhip"]},
+  {...companion("bachPhongDao","Bạch Phong Đao","satThu","kim"),chasePassives:["assassinPrepared","kim1","rb069_passive"]},
+  {...companion("docAnh","Độc Ảnh","satThu","moc"),chasePassives:["assassinPrepared","moc1","rb070_passive"]},
+  {...companion("hanGiangKhach","Hàn Giang Khách","satThu","thuy"),chasePassives:["assassinPrepared","thuy1","rb071_passive"]},
+  {...companion("xichDa","Xích Dạ","satThu","hoa"),chasePassives:["assassinPrepared","hoa1","rb072_passive"]},
+  {...companion("diaAn","Địa Ẩn","satThu","tho"),chasePassives:["assassinPrepared","tho1","rb073_passive"]},
+  {...companion("loiAnh","Lôi Ảnh","satThu","loi"),chasePassives:["assassinPrepared","loi1","rb074_passive"]},
+  {...companion("voAnh","Vô Ảnh","satThu","phong"),chasePassives:["assassinPrepared","phong1","rb075_passive"]},
+];
+/** Product IDs remain stable independently of camelCase runtime/save IDs. */
+export const EXPANSION_CHARACTER_IDS: Readonly<Record<string,string>> = Object.fromEntries(EXPANSION_COMPANIONS.map((f,i)=>[`RB-${String(62+i).padStart(3,'0')}`,f.id]));
+/** Giá basic 1.500 vàng/tướng được Shan chốt trong task PROF ngày 30/10/2026. */
+export const EXPANSION_SHOP_COMPANIONS: readonly ShopCompanion[] = EXPANSION_COMPANIONS.map(fighter=>({fighter,price:SHOP_PRICES.basic}));
+export const SHOP_COMPANIONS: readonly ShopCompanion[] = [...LEGACY_SHOP_COMPANIONS, ...(NEW_PROFESSIONS_ENABLED ? EXPANSION_SHOP_COMPANIONS : [])];
+export function isReleasedCompanion(id:string):boolean {
+  return NEW_PROFESSIONS_ENABLED || !EXPANSION_COMPANIONS.some(c=>c.id===id);
+}
 
 /**
  * Tướng lịch sử gia nhập đội qua chiến dịch, ô 4 là chiêu riêng.
@@ -172,7 +201,7 @@ export const ALL_COMPANIONS: readonly FighterConfig[] = [
 ];
 
 export function companionById(id: string): FighterConfig | undefined {
-  return ALL_COMPANIONS.find((c) => c.id === id);
+  return [...ALL_COMPANIONS, ...EXPANSION_COMPANIONS].find((c) => c.id === id);
 }
 
 export function shopPrice(id: string): number | undefined {

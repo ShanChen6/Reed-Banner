@@ -14,7 +14,7 @@ const BRONZE = "#d4a24c";
 const ink = { stroke: INK, strokeWidth: 1.8, strokeLinejoin: "round", strokeLinecap: "round" } as const;
 
 type Head = "topknot" | "bun" | "nonLa" | "scarf" | "scholar" | "wrap";
-type Prop = "reedFlag" | "flameOrb" | "spearShield" | "gourd" | "fan" | "slips";
+type Prop = "none" | "reedFlag" | "flameOrb" | "spearShield" | "gourd" | "fan" | "slips";
 
 interface Look {
   readonly head: Head;
@@ -36,6 +36,8 @@ const LOOKS: Readonly<Record<string, Look>> = {
 
 /** Diện mạo mặc định theo nghề, cho nhân vật chưa có hình riêng (ví dụ sứ quân). */
 const PROFESSION_LOOK: Readonly<Record<Profession, Look>> = {
+  xaThu: { head:"wrap", robe:"#476b47", prop:"none" },
+  satThu: { head:"scarf", robe:"#554266", prop:"none" },
   tuongSi: { head: "topknot", robe: "#5a1e14", prop: "reedFlag", armor: true },
   phapSu: LOOKS.haVan!,
   binhLinh: LOOKS.leThach!,
@@ -104,6 +106,7 @@ function Headwear({ head, accent }: { head: Head; accent: string }) {
 
 function HeldProp({ prop, accent }: { prop: Prop; accent: string }) {
   switch (prop) {
+    case "none": return null;
     case "reedFlag":
       return (
         <g>

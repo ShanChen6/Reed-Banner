@@ -306,7 +306,7 @@ function scoreSkillTarget(view: AiView, def: SkillDef, selected?: number): { sco
             const changed = r.def * (step.effect === "defUp" ? 1 + step.value : 1 - step.value);
             worth = Math.abs(defenseMultiplier(r.def) - defenseMultiplier(changed)) * ctx.me.atk * 3 * (step.turns ?? 1);
           }
-          if (step.effect === "burn") worth = (step.ofAtk ? ctx.me.atk * step.value : step.value) * (step.turns ?? 1);
+          if (step.effect === "burn" || step.effect === "poison") worth = (step.ofAtk ? ctx.me.atk * step.value : step.value) * (step.turns ?? 1);
           if (step.effect === "freeze" && hasEffect(r.effects, "freezeImmune")) worth = 0;
           if (step.effect === "shield") worth = Math.max(0, Math.round(Math.round((step.ofMaxHp ? Math.round(r.maxHp * step.value) : step.ofAtk ? Math.round(ctx.me.atk * step.value) : step.value) * comboMultiplier(view,{side:view.turn.side,fighter:view.turn.actor},"sustain")) * spiritHealMultiplier(r.spirit, view.experimentalSpirit)) - (existing?.value ?? 0)) * SHIELD_WORTH;
           if (step.effect === "regen") worth = Math.min(r.maxHp - r.hp, Math.max(0, Math.round(Math.round(r.maxHp * step.value) * spiritHealMultiplier(r.spirit, view.experimentalSpirit)) * (step.turns ?? 1) - Math.round((existing?.value ?? 0) * spiritHealMultiplier(r.spirit, view.experimentalSpirit)) * (existing?.turns ?? 0))) * 0.7;
