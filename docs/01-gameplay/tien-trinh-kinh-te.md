@@ -46,4 +46,6 @@
 
 - **Nhân vật kèm** (Claude đặt 19–20/10/2026, chờ Shan duyệt): 37 tướng thường giá 1 500 hoặc 3 000 vàng ([danh sách](../03-characters/danh-sach-nhan-vat.md#4-tướng-thường)) và 12 sứ quân giá 3 000 vàng, mỗi sứ quân mở bán sau khi qua màn chiến dịch của người đó ([danh sách](../03-characters/danh-sach-nhan-vat.md#6-sứ-quân)). Mua hết tốn khoảng 120 000 vàng, đủ dài cho người cày nhiều nhất. Mua bằng thao tác `buyCompanion` trên hồ sơ (server trừ vàng, kiểm tra màn đã qua); cửa hàng lọc được theo nghề và hệ.
 
+- **Màn Cửa Hàng** (`/game/shop`, 31/10/2026): một trang riêng gom mua tướng (`buyCompanion`), trang bị Lục/Lam (`buyGear`) và vật phẩm (lương Bình Loạn, `buyFood`). Không thêm luật hay giá mới; chỉ dùng lại các thao tác hồ sơ sẵn có. Tab "Đội hình & cửa hàng" ở Hồ sơ vẫn giữ để đổi đội.
+
 > TODO: danh sách trang bị cố định của cửa hàng và giá.
