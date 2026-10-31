@@ -16,6 +16,7 @@ import { ElementIcon, LeaderFlag } from "./game/art/icons";
 import { Logo, LogoMark } from "./game/art/logo";
 import Image from "next/image";
 import { Portrait } from "./game/art/portraits";
+import { ModeIcon, type ModeIconKind } from "./game/art/mode-icons";
 import { BoardCrest, TileArt } from "./game/art/tiles";
 import { towerFeatureFlags, type TowerFeatureFlags } from "@/server/featureFlags";
 import { FAQ, PROFESSION_PERK, TILE_GIVES } from "./home/data";
@@ -72,15 +73,15 @@ const FEATURES: { tile: Tile; title: string; body: string }[] = [
 ];
 
 /** Các chế độ đang có trong màn chơi /game (cùng danh sách với MenuScene). `flag`: chế độ bật bằng biến môi trường lúc build. */
-const MODES: readonly { slug: string; name: string; body: string; tile: Tile; flag?: keyof TowerFeatureFlags }[] = [
-  { slug: "practice", name: "Thao Luyện", body: "Vào trận ngay, offline, 3vs3 đấu Tianwu với đội cấp tối đa. Không cần tài khoản.", tile: { kind: "amDuong" } },
-  { slug: "play", name: "Giao Tranh", body: "Trận online có đồng hồ 30 giây, nhận vàng, kinh nghiệm và chiến lợi phẩm.", tile: { kind: "kiem" } },
-  { slug: "campaign", name: "Bình Loạn", body: "Sáu chương dẹp loạn 12 sứ quân, tướng lịch sử gia nhập, rồi Tái đấu sứ quân bị đánh dẹp ở 3 bậc.", tile: { kind: "trong" } },
-  { slug: "trial", name: "Tháp Thí Luyện", body: "20 tầng cố định, tự chọn đội và luật riêng từng tầng.", tile: { kind: "vang", special: "weak" }, flag: "trial" },
-  { slug: "destiny", name: "Tháp Thiên Mệnh", body: "Khóa đội hình theo chu kỳ, giữ máu và lương xuyên tầng.", tile: { kind: "amDuong", special: "weak" }, flag: "destiny" },
-  { slug: "survival", name: "Trấn Ải", body: "Một bàn cờ, đối thủ kéo đến theo đợt, nghỉ giữa đợt để tính tiếp.", tile: { kind: "tim" } },
-  { slug: "daily", name: "Nhật Lệnh", body: "Một đề chung cho mọi người, mỗi ngày một lần, có bảng xếp hạng.", tile: { kind: "banhChung" } },
-  { slug: "arena", name: "Quần Hùng", body: "Đánh đội phòng thủ của người chơi khác, leo điểm mỗi ngày.", tile: { kind: "kiem", special: "strong" } },
+const MODES: readonly { slug: ModeIconKind; name: string; body: string; flag?: keyof TowerFeatureFlags }[] = [
+  { slug: "practice", name: "Thao Luyện", body: "Vào trận ngay, offline, 3vs3 đấu Tianwu với đội cấp tối đa. Không cần tài khoản." },
+  { slug: "play", name: "Giao Tranh", body: "Trận online có đồng hồ 30 giây, nhận vàng, kinh nghiệm và chiến lợi phẩm." },
+  { slug: "campaign", name: "Bình Loạn", body: "Sáu chương dẹp loạn 12 sứ quân, tướng lịch sử gia nhập, rồi Tái đấu sứ quân bị đánh dẹp ở 3 bậc." },
+  { slug: "trial", name: "Tháp Thí Luyện", body: "20 tầng cố định, tự chọn đội và luật riêng từng tầng.", flag: "trial" },
+  { slug: "destiny", name: "Tháp Thiên Mệnh", body: "Khóa đội hình theo chu kỳ, giữ máu và lương xuyên tầng.", flag: "destiny" },
+  { slug: "survival", name: "Trấn Ải", body: "Một bàn cờ, đối thủ kéo đến theo đợt, nghỉ giữa đợt để tính tiếp." },
+  { slug: "daily", name: "Nhật Lệnh", body: "Một đề chung cho mọi người, mỗi ngày một lần, có bảng xếp hạng." },
+  { slug: "arena", name: "Quần Hùng", body: "Đánh đội phòng thủ của người chơi khác, leo điểm mỗi ngày." },
 ];
 
 
@@ -373,7 +374,7 @@ export default function Home() {
               const body = (
                 <>
                   <span className="flex items-center gap-3">
-                    <TileArt kind={m.tile.kind} special={m.tile.special} className="size-10 shrink-0" />
+                    <ModeIcon kind={m.slug} className="size-10 shrink-0" />
                     <span className="font-serif text-xl font-bold">{m.name}</span>
                     {!open && (
                       <Badge className="ml-auto uppercase tracking-wider">Sắp có</Badge>
