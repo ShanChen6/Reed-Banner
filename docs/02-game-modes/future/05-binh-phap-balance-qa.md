@@ -80,7 +80,7 @@ Theo package.json và toolchain thực tế tại thời điểm triển khai: c
 | Balance simulation | Design | Baseline đầu tiên bên dưới; chưa có agent lookahead |
 | Art readability | UI/Art | Chưa duyệt (đã chụp 1440px/390px, không tràn ngang) |
 | Save/Resume | Frontend | Implemented (`localStorage`, nạp fail-closed) |
-| Server reward secure | Backend | Deferred P1 |
+| Server reward secure | Backend | Implemented (server giữ ván, nhận thưởng một lần); chờ review kinh tế, giới hạn tốc độ và cron dọn ván dở |
 
 ## Kết quả mô phỏng baseline (01/11/2026)
 

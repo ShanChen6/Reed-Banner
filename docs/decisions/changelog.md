@@ -385,7 +385,7 @@ Triển khai BP-01 đến BP-04 một phần theo yêu cầu của Shan: engine 
 
 ## 01/11/2026 — Trận Đồ: bàn chữ nhật, chướng ngại, điểm và thưởng theo bậc
 
-Shan chốt: bàn không cần vuông (5×7, 7×9, 9×9…), có ô chướng ngại ngẫu nhiên không đặt được quân, xếp hạng cao được thưởng và thưởng chia theo bậc chơi; thanh Bỏ Lệnh và xác suất quân đặc biệt giữ đề xuất. Đã code bàn chữ nhật, chướng ngại, điểm mới và quân đặc biệt mới. Xếp hạng và thưởng mới có thiết kế ([GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-thiết-kế-chưa-có-code)), chưa có code.
+Shan chốt: bàn không cần vuông (5×7, 7×9, 9×9…), có ô chướng ngại ngẫu nhiên không đặt được quân, xếp hạng cao được thưởng và thưởng chia theo bậc chơi; thanh Bỏ Lệnh và xác suất quân đặc biệt giữ đề xuất. Đã code bàn chữ nhật, chướng ngại, điểm mới và quân đặc biệt mới. Xếp hạng và thưởng mới có thiết kế ([GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)), chưa có code.
 
 ### 01/11/2026 (bổ sung) — Cỡ bàn các bậc Trận Đồ
 
@@ -402,4 +402,8 @@ Shan loại bỏ nhân vật 2 nghề + 2 hệ khỏi Trận Đồ vì làm gi�
 ### 01/11/2026 (bổ sung) — Nhân vật dung hợp thứ hai và phạm vi bậc
 
 Nhân vật dung hợp thứ hai của Trận Đồ là Trần Vũ Phong – Vân Du Tử (đang thiết kế). Cả hai nhân vật dung hợp chỉ xuất hiện ở bậc Khó và Đại trận, không ở Hướng dẫn và Thường ([GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)). Code khóa phạm vi bậc bằng `FUSION_ALLOWED_LEVELS`; danh sách vẫn rỗng cho tới khi duyệt.
+
+### 01/11/2026 (bổ sung) — Trận Đồ xếp hạng và thưởng (server)
+
+Theo yêu cầu của Shan, đã code phần server: kỳ (ngày cho Thường và Khó, tuần cho Đại trận), seed server phát, server giữ ván và áp từng lệnh, hạng, thưởng vàng theo bậc, nhận thưởng một lần, bảng `formation_entries`. Tắt mặc định sau `FORMATION_RANKED_ENABLED`. Thay đổi so với kế hoạch trước: server giữ ván thay vì kiểm lại nhật ký của client, để chặn luyện trước. Bảng thưởng là điểm xuất phát chờ Shan duyệt ([GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)).
 

@@ -20,6 +20,7 @@ import {
   type BoardPiece,
   type Piece,
   type PlacementCheck,
+  type PuzzleEvent,
   type PuzzleState,
   type Ruleset,
 } from "@/core/binh-phap";
@@ -28,6 +29,8 @@ import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
 import { SceneLink } from "../SceneContext";
+import RankedPanel from "./RankedPanel";
+import { claimRanked, fetchOverview, moveRanked, startRanked, toPuzzleState, type FormationView, type Overview } from "./rankedClient";
 
 const SAVE_KEY = "reed-banner:tran-do:save:v1";
 const BEST_KEY = "reed-banner:tran-do:best:v1";
@@ -76,6 +79,18 @@ const REASON_TEXT: Record<Extract<PlacementCheck, { ok: false }>["reason"], stri
   mismatch: "Phải cùng nghề hoặc cùng hệ với từng quân kề.",
 };
 
+function describeEvents(events: readonly PuzzleEvent[]): string {
+  const phrases: string[] = [];
+  for (const e of events) {
+    if (e.type === "lineCleared") phrases.push(e.axis === "row" ? `Dọn hàng ${e.index + 1}.` : `Dọn cột ${e.index + 1}.`);
+    if (e.type === "erased") phrases.push("Đã thu hồi quân.");
+    if (e.type === "discarded") phrases.push("Đã bỏ lệnh.");
+    if (e.type === "won") phrases.push("Khai thông toàn bộ sa bàn!");
+    if (e.type === "lost") phrases.push("Bỏ lệnh quá nhiều, thua trận.");
+  }
+  return phrases.join(" ");
+}
+
 export default function FormationScreen() {
   const [state, setState] = useState<PuzzleState | null>(null);
   const [ready, setReady] = useState(false);
@@ -84,6 +99,11 @@ export default function FormationScreen() {
   const [last, setLast] = useState<number | null>(null);
   const [focus, setFocus] = useState(0);
   const boardRef = useRef<HTMLDivElement>(null);
+  // Chế độ xếp hạng: ván nằm ở server, client chỉ giữ bản công khai.
+  const [ranked, setRanked] = useState<FormationView | null>(null);
+  const [overview, setOverview] = useState<Overview | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [claimNote, setClaimNote] = useState("");
 
   // Nạp ván dở sau khi hiển thị lần đầu: server không có localStorage nên tránh lệch hydration.
   useEffect(() => {
@@ -92,7 +112,67 @@ export default function FormationScreen() {
     if (saved && saved.phase === "playing") setState(saved);
     setBest(readBest());
     setReady(true);
+    void fetchOverview().then(setOverview);
   }, []);
+
+  const refreshOverview = useCallback(() => void fetchOverview().then(setOverview), []);
+
+  const playRanked = useCallback(
+    async (level: string) => {
+      if (busy) return;
+      setBusy(true);
+      setMessage("");
+      const r = await startRanked(level);
+      setBusy(false);
+      if (!r.ok) {
+        setMessage(r.status === 403 ? "Chế độ xếp hạng chưa mở." : "Không mở được ván xếp hạng, thử lại nhé.");
+        return;
+      }
+      setRanked(r.data.view);
+      setLast(null);
+      setFocus(0);
+    },
+    [busy],
+  );
+
+  const leaveRanked = useCallback(() => {
+    setRanked(null);
+    setMessage("");
+    refreshOverview();
+  }, [refreshOverview]);
+
+  const applyRanked = useCallback(
+    async (command: Parameters<typeof transition>[1]) => {
+      if (!ranked || busy || ranked.status !== "playing") return;
+      const local = toPuzzleState(ranked);
+      // Báo lỗi luật ngay trên máy cho đỡ tốn một lượt gọi server; server vẫn kiểm lại mọi lệnh.
+      if (command.kind === "place") {
+        const c = checkPlacement(local, local.hand, command.row, command.col);
+        if (!c.ok) return setMessage(REASON_TEXT[c.reason]);
+      }
+      setBusy(true);
+      const r = await moveRanked(ranked.level, ranked.seq, command);
+      setBusy(false);
+      if (!r.ok) {
+        if (r.data.view) setRanked(r.data.view);
+        setMessage(r.data.reason ? "Lệnh không hợp lệ." : r.data.error === "conflict" ? "Ván vừa được cập nhật, đã tải lại." : "Không gửi được lệnh, thử lại nhé.");
+        return;
+      }
+      setRanked(r.data.view);
+      setLast(command.kind === "place" ? idx(local.width, command.row, command.col) : null);
+      setMessage(describeEvents(r.data.events));
+    },
+    [ranked, busy],
+  );
+
+  const claim = useCallback(
+    async (level: string, period: string) => {
+      const r = await claimRanked(level, period);
+      setClaimNote(r.ok ? `Đã nhận ${r.data.gold} vàng (hạng ${r.data.rank}/${r.data.winners}).` : "Không nhận được thưởng, thử lại sau nhé.");
+      refreshOverview();
+    },
+    [refreshOverview],
+  );
 
   const start = useCallback((rules: Ruleset) => {
     const s = createPuzzle(rules, freshSeed());
@@ -120,15 +200,7 @@ export default function FormationScreen() {
       }
       setState(t.state);
       setLast(command.kind === "place" ? idx(state.width, command.row, command.col) : null);
-      const phrases: string[] = [];
-      for (const e of t.events) {
-        if (e.type === "lineCleared") phrases.push(e.axis === "row" ? `Dọn hàng ${e.index + 1}.` : `Dọn cột ${e.index + 1}.`);
-        if (e.type === "erased") phrases.push("Đã thu hồi quân.");
-        if (e.type === "discarded") phrases.push("Đã bỏ lệnh.");
-        if (e.type === "won") phrases.push("Khai thông toàn bộ sa bàn!");
-        if (e.type === "lost") phrases.push("Bỏ lệnh quá nhiều, thua trận.");
-      }
-      setMessage(phrases.join(" "));
+      setMessage(describeEvents(t.events));
       if (t.state.phase === "playing") writeStorage(SAVE_KEY, serializePuzzle(t.state));
       else {
         writeStorage(SAVE_KEY, null);
@@ -145,7 +217,34 @@ export default function FormationScreen() {
   );
 
   if (!ready) return <Shell><p className="py-20 text-center text-[var(--atlas-muted)]">Đang bày sa bàn…</p></Shell>;
-  if (!state) return <Shell><LevelPicker best={best} onStart={start} /></Shell>;
+  if (ranked) {
+    const rules = rulesetById(ranked.level)!;
+    return (
+      <Shell>
+        <Board
+          state={toPuzzleState(ranked)}
+          rules={rules}
+          message={message}
+          last={last}
+          focus={focus}
+          setFocus={setFocus}
+          boardRef={boardRef}
+          apply={(c) => void applyRanked(c)}
+          onRestart={leaveRanked}
+          onLeave={leaveRanked}
+          best={0}
+          ranked={{ period: ranked.period, rank: ranked.rank, busy, score: ranked.score }}
+        />
+      </Shell>
+    );
+  }
+  if (!state)
+    return (
+      <Shell>
+        {overview?.enabled && <RankedPanel overview={overview} busy={busy} note={claimNote || message} onPlay={(l) => void playRanked(l)} onClaim={(l, p) => void claim(l, p)} />}
+        <LevelPicker best={best} onStart={start} ranked={overview?.enabled === true} />
+      </Shell>
+    );
 
   const rules = rulesetById(state.rulesetId)!;
   return (
@@ -197,12 +296,12 @@ function Rules() {
   );
 }
 
-function LevelPicker({ best, onStart }: { best: Record<string, number>; onStart: (r: Ruleset) => void }) {
+function LevelPicker({ best, onStart, ranked }: { best: Record<string, number>; onStart: (r: Ruleset) => void; ranked: boolean }) {
   return (
     <>
-      <Heading title="Trận Đồ" sub="Bày quân lệnh" />
+      <Heading title={ranked ? "Chơi thử" : "Trận Đồ"} sub={ranked ? "Không thưởng, không xếp hạng" : "Bày quân lệnh"} />
       <p className="max-w-2xl font-serif text-lg text-[var(--atlas-title)]">
-        Bày quân tướng theo nghề và hệ để khai thông toàn bộ sa bàn. Bản chơi thử: không thưởng, không xếp hạng.
+        Bày quân tướng theo nghề và hệ để khai thông toàn bộ sa bàn.{ranked ? " Chơi thoải mái, bàn cờ ngẫu nhiên mỗi ván." : " Bản chơi thử: không thưởng, không xếp hạng."}
       </p>
       <ul className="grid gap-4 sm:grid-cols-2">
         {RULESETS.map((r) => (
@@ -243,6 +342,7 @@ function Board({
   onRestart,
   onLeave,
   best,
+  ranked,
 }: {
   state: PuzzleState;
   rules: Ruleset;
@@ -255,9 +355,12 @@ function Board({
   onRestart: () => void;
   onLeave: () => void;
   best: number;
+  /** Có khi đang chơi xếp hạng: không có Ván mới, kết quả chờ kỳ khép lại mới nhận thưởng. */
+  ranked?: { period: string; rank: number | null; busy: boolean; score: number | null };
 }) {
   const { width, height } = state;
-  const playing = state.phase === "playing";
+  const playing = state.phase === "playing" && !ranked?.busy;
+  const finished = state.phase !== "playing";
   const legal = useMemo(() => new Set(legalPlacements(state)), [state]);
   const total = useMemo(() => playableCount(state.cells), [state.cells]);
 
@@ -289,10 +392,16 @@ function Board({
   return (
     <>
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <Heading title={`Trận Đồ · ${rules.name}`} sub={`Sa bàn ${width}×${height}`} />
+        <Heading title={`Trận Đồ · ${rules.name}${ranked ? " · Xếp hạng" : ""}`} sub={ranked ? `Kỳ ${ranked.period} · Sa bàn ${width}×${height}` : `Sa bàn ${width}×${height}`} />
         <div className="flex gap-2">
-          <button type="button" onClick={onRestart} className="home-secondary min-h-11 rounded-lg px-4 font-serif font-semibold">Ván mới</button>
-          <button type="button" onClick={onLeave} className="home-secondary min-h-11 rounded-lg px-4 font-serif font-semibold">Đổi bậc</button>
+          {ranked ? (
+            <button type="button" onClick={onLeave} className="home-secondary min-h-11 rounded-lg px-4 font-serif font-semibold">Về danh sách</button>
+          ) : (
+            <>
+              <button type="button" onClick={onRestart} className="home-secondary min-h-11 rounded-lg px-4 font-serif font-semibold">Ván mới</button>
+              <button type="button" onClick={onLeave} className="home-secondary min-h-11 rounded-lg px-4 font-serif font-semibold">Đổi bậc</button>
+            </>
+          )}
         </div>
       </div>
 
@@ -338,7 +447,7 @@ function Board({
         </div>
 
         <aside className="flex flex-col gap-4" aria-label="Bảng điều khiển">
-          {playing ? <Hand state={state} rules={rules} apply={apply} noMove={legal.size === 0} /> : <Result state={state} best={best} onRestart={onRestart} onLeave={onLeave} />}
+          {!finished ? <Hand state={state} rules={rules} apply={apply} noMove={legal.size === 0} disabled={ranked?.busy === true} /> : ranked ? <RankedResult state={state} rank={ranked.rank} score={ranked.score} period={ranked.period} onLeave={onLeave} /> : <Result state={state} best={best} onRestart={onRestart} onLeave={onLeave} />}
           <dl className="atlas-frame atlas-frame-wood grid grid-cols-2 gap-x-3 gap-y-1 p-4 text-[15px]">
             <dt className="text-[var(--atlas-muted)]">Khai thông</dt>
             <dd className="text-right font-semibold">{state.coveredCount}/{total}</dd>
@@ -360,7 +469,7 @@ function Board({
   );
 }
 
-function Hand({ state, rules, apply, noMove }: { state: PuzzleState; rules: Ruleset; apply: (c: Parameters<typeof transition>[1]) => void; noMove: boolean }) {
+function Hand({ state, rules, apply, noMove, disabled = false }: { state: PuzzleState; rules: Ruleset; apply: (c: Parameters<typeof transition>[1]) => void; noMove: boolean; disabled?: boolean }) {
   const h = state.hand;
   const full = state.discardHeat >= rules.maxHeat;
   return (
@@ -399,9 +508,26 @@ function Hand({ state, rules, apply, noMove }: { state: PuzzleState; rules: Rule
           ))}
         </div>
       </div>
-      <button type="button" onClick={() => apply({ kind: "discard" })} className="home-secondary min-h-12 rounded-lg px-4 font-serif font-semibold">
+      <button type="button" disabled={disabled} onClick={() => apply({ kind: "discard" })} className="home-secondary min-h-12 rounded-lg px-4 font-serif font-semibold disabled:opacity-60">
         Bỏ Lệnh{noMove ? " (hết nước đặt)" : ""}
       </button>
+    </section>
+  );
+}
+
+function RankedResult({ state, rank, score, period, onLeave }: { state: PuzzleState; rank: number | null; score: number | null; period: string; onLeave: () => void }) {
+  const won = state.phase === "won";
+  return (
+    <section role="status" aria-label="Kết quả xếp hạng" className="atlas-frame atlas-frame-wood flex flex-col gap-3 p-4">
+      <h2 className="font-serif text-2xl font-bold text-[var(--atlas-title)]">{won ? "Khai thông sa bàn!" : "Trận đồ vỡ"}</h2>
+      {won ? (
+        <p className="text-[15px]">
+          Bạn đạt <b>{score ?? state.score} điểm</b>{rank ? `, hạng tạm thời ${rank}` : ""}. Hạng chốt và thưởng nhận được sau khi kỳ {period} khép lại.
+        </p>
+      ) : (
+        <p className="text-[15px]">Ván thua không vào bảng xếp hạng và không có thưởng. Mỗi kỳ chỉ có một ván tính hạng; hãy thử lại ở kỳ sau, hoặc luyện ở mục Chơi thử.</p>
+      )}
+      <button type="button" onClick={onLeave} className="home-cta min-h-12 w-fit rounded-lg px-6 font-serif font-bold">Về danh sách</button>
     </section>
   );
 }
