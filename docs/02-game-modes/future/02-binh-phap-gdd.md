@@ -101,6 +101,8 @@ Tên hiển thị trong game là **Trận Đồ** (đã duyệt tên 26/10/2026)
 | Quân đặc biệt | Quân Lệnh 8% / Thu Hồi 4% (Đại trận Quân Lệnh 10%); Hướng dẫn không có. Không ra hai quân đặc biệt liên tiếp; không ra Thu Hồi khi bàn trống | Shan không có ý kiến, dùng đề xuất |
 | Offline hay server | Chơi thử offline (khách, không thưởng); xếp hạng và thưởng chạy trên server, tắt mặc định | Chơi thử là mặc định đề xuất; xếp hạng và thưởng ở [mục 12](#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt) |
 
+**Chế độ thường và chế độ xếp hạng.** Trận Đồ có hai chế độ cùng tồn tại. **Chơi thường** (trước đây gọi "chơi thử") chạy offline ở trình duyệt, không cần cờ hay đăng nhập, không thưởng, không xếp hạng, chơi bao nhiêu ván tùy thích với cả bốn bậc kể cả Hướng dẫn, và lưu ván dở tại máy. **Xếp hạng** ([mục 12](#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)) chạy trên server, có thưởng, tắt mặc định; khi tắt, màn Trận Đồ chỉ còn chế độ thường.
+
 **Bốn bậc** (`RULESETS`, id `huong-dan`, `thuong`, `kho`, `dai-tran`):
 
 | Bậc | Cỡ bàn | Nghề × hệ | Chướng ngại | Quân Lệnh / Thu Hồi | Xếp hạng, thưởng |

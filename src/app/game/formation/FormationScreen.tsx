@@ -299,7 +299,7 @@ function Rules() {
 function LevelPicker({ best, onStart, ranked }: { best: Record<string, number>; onStart: (r: Ruleset) => void; ranked: boolean }) {
   return (
     <>
-      <Heading title={ranked ? "Chơi thử" : "Trận Đồ"} sub={ranked ? "Không thưởng, không xếp hạng" : "Bày quân lệnh"} />
+      <Heading title={ranked ? "Chơi thường" : "Trận Đồ"} sub={ranked ? "Không thưởng, không xếp hạng, chơi bao nhiêu ván tùy thích" : "Bày quân lệnh"} />
       <p className="max-w-2xl font-serif text-lg text-[var(--atlas-title)]">
         Bày quân tướng theo nghề và hệ để khai thông toàn bộ sa bàn.{ranked ? " Chơi thoải mái, bàn cờ ngẫu nhiên mỗi ván." : " Bản chơi thử: không thưởng, không xếp hạng."}
       </p>
@@ -525,7 +525,7 @@ function RankedResult({ state, rank, score, period, onLeave }: { state: PuzzleSt
           Bạn đạt <b>{score ?? state.score} điểm</b>{rank ? `, hạng tạm thời ${rank}` : ""}. Hạng chốt và thưởng nhận được sau khi kỳ {period} khép lại.
         </p>
       ) : (
-        <p className="text-[15px]">Ván thua không vào bảng xếp hạng và không có thưởng. Mỗi kỳ chỉ có một ván tính hạng; hãy thử lại ở kỳ sau, hoặc luyện ở mục Chơi thử.</p>
+        <p className="text-[15px]">Ván thua không vào bảng xếp hạng và không có thưởng. Mỗi kỳ chỉ có một ván tính hạng; hãy thử lại ở kỳ sau, hoặc luyện ở mục Chơi thường.</p>
       )}
       <button type="button" onClick={onLeave} className="home-cta min-h-12 w-fit rounded-lg px-6 font-serif font-bold">Về danh sách</button>
     </section>
@@ -540,7 +540,7 @@ function Result({ state, best, onRestart, onLeave }: { state: PuzzleState; best:
       <p className="text-[15px]">
         {won ? `Bạn đạt ${state.score} điểm${state.score >= best ? " (cao nhất từ trước tới nay)" : ""}.` : "Bỏ lệnh quá nhiều lần liên tiếp. Thử lại với seed mới nhé."}
       </p>
-      <p className="text-sm text-[var(--atlas-muted)]">Bản chơi thử: không có thưởng và không lên bảng xếp hạng.</p>
+      <p className="text-sm text-[var(--atlas-muted)]">Chế độ chơi thường: không có thưởng và không lên bảng xếp hạng.</p>
       <div className="flex flex-wrap gap-2">
         <button type="button" onClick={onRestart} className="home-cta min-h-12 rounded-lg px-6 font-serif font-bold">Chơi lại</button>
         <button type="button" onClick={onLeave} className="home-secondary min-h-12 rounded-lg px-4 font-serif font-semibold">Đổi bậc</button>
