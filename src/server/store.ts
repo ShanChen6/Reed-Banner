@@ -7,6 +7,8 @@ import {migrateStoredProfessionAliases, type Match} from "@/core";
 import { MemoryAccountStore, type AccountStore } from "./accounts";
 import { DrizzleAccountStore } from "./db/accounts";
 import { DrizzleDailyStore } from "./db/daily";
+import { DrizzleFormationStore } from "./db/formation";
+import { MemoryFormationStore, type FormationStore } from "./formation";
 import { DrizzleLeaderboardStore } from "./db/leaderboard";
 import { DrizzleArenaStore } from "./db/arena";
 import { MemoryArenaStore, type ArenaStore } from "./arena";
@@ -72,7 +74,7 @@ export class MemoryMatchStore implements MatchStore {
   }
 }
 
-const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore; coLauDestinyLeaderboardStore?: DestinyLeaderboardStore; coLauArenaStore?: ArenaStore };
+const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore; coLauDestinyLeaderboardStore?: DestinyLeaderboardStore; coLauArenaStore?: ArenaStore; coLauFormationStore?: FormationStore };
 
 /**
  * Kho dùng chung của server: Postgres (Neon) khi có DATABASE_URL, ngược lại lưu trong bộ nhớ (dev).
@@ -103,6 +105,13 @@ export function dailyStore(): DailyStore {
   const url = process.env.DATABASE_URL;
   globalStore.coLauDailyStore ??= url ? new DrizzleDailyStore(neonDb(url)) : new MemoryDailyStore();
   return globalStore.coLauDailyStore;
+}
+
+/** Kho Trận Đồ xếp hạng, cùng nguồn với kho trận. */
+export function formationStore(): FormationStore {
+  const url = process.env.DATABASE_URL;
+  globalStore.coLauFormationStore ??= url ? new DrizzleFormationStore(neonDb(url)) : new MemoryFormationStore();
+  return globalStore.coLauFormationStore;
 }
 
 /** Kho bảng xếp hạng, cùng nguồn với kho trận. */

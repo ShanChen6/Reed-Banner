@@ -80,22 +80,28 @@ Theo package.json và toolchain thực tế tại thời điểm triển khai: c
 | Balance simulation | Design | Baseline đầu tiên bên dưới; chưa có agent lookahead |
 | Art readability | UI/Art | Chưa duyệt (đã chụp 1440px/390px, không tràn ngang) |
 | Save/Resume | Frontend | Implemented (`localStorage`, nạp fail-closed) |
-| Server reward secure | Backend | Deferred P1 |
+| Server reward secure | Backend | Implemented (server giữ ván, nhận thưởng một lần); chờ review kinh tế, giới hạn tốc độ và cron dọn ván dở |
 
-## Kết quả mô phỏng baseline (31/10/2026)
+## Kết quả mô phỏng baseline (01/11/2026)
 
-Lệnh: `pnpm exec tsx scripts/binh-phap-sim.ts --runs 2000 --seed 1`. Mỗi ván chạy lại bằng `replay` và so sánh state; 0 nước hợp lệ bị từ chối, 0 lệch replay. Agent *random* chọn ngẫu nhiên trong các ô đặt được (bỏ lệnh khi hết nước); *greedy* ưu tiên nước cho nhiều ô khai thông và điểm nhất, chỉ dùng Thu Hồi khi thanh đã nóng. Người chơi thật nằm quanh hoặc trên greedy, nên số này là **điểm xuất phát**, không phải mục tiêu.
+Lệnh: `pnpm exec tsx scripts/binh-phap-sim.ts --runs 2000 --seed 1`. Bốn bậc theo [GDD mục 11](02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline): 3×3, 5×5, 6×6, và Đại trận cỡ ngẫu nhiên 7–10. Mỗi ván chạy lại bằng `replay` và so sánh state; 0 nước hợp lệ bị từ chối, 0 lệch replay. Agent *random* chọn ngẫu nhiên trong các ô đặt được (bỏ lệnh khi hết nước); *greedy* ưu tiên nước cho nhiều ô khai thông và điểm nhất, chỉ dùng Thu Hồi khi thanh đã nóng. Người chơi thật nằm quanh hoặc trên greedy, nên số này là **điểm xuất phát**, không phải mục tiêu.
 
-| Bậc | Agent | Thắng | Lượt (trung vị / p90) | Bỏ lệnh TB | Khai thông TB |
+| Bậc | Agent | Thắng | Lượt (trung vị / p90, mọi ván) | Bỏ lệnh TB | Khai thông TB |
 |---|---|---|---|---|---|
-| Nhập môn 3×3 | random | 97,0% | 19 / 32 | 2,5 | 98,8% |
-| Nhập môn 3×3 | greedy | 97,9% | 10 / 13 | 1,3 | 99,1% |
-| Thường 5×5 | random | 78,3% | 63 / 106 | 7,1 | 91,5% |
-| Thường 5×5 | greedy | 79,5% | 34 / 43 | 6,6 | 86,7% |
-| Khó 8×8 | random | 27,4% | 154 / 261 | 15,7 | 84,6% |
-| Khó 8×8 | greedy | 83,0% | 85 / 104 | 7,5 | 84,4% |
-| Đại trận 8×8 | random | 0,0% | 74 / 124 | 13,2 | 56,8% |
-| Đại trận 8×8 | greedy | 32,8% | 95 / 138 | 13,4 | 57,9% |
+| Hướng dẫn 3×3 | random | 97,0% | 19 / 32 | 2,5 | 98,8% |
+| Hướng dẫn 3×3 | greedy | 97,9% | 10 / 13 | 1,3 | 99,1% |
+| Thường 5×5 | random | 86,1% | 56 / 94 | 5,6 | 85,1% |
+| Thường 5×5 | greedy | 78,0% | 33 / 44 | 6,5 | 79,7% |
+| Khó 6×6 | random | 61,5% | 81 / 146 | 10,9 | 73,6% |
+| Khó 6×6 | greedy | 63,9% | 47 / 66 | 8,6 | 64,6% |
+| Đại trận 7–10 | random | 6,8% | 82 / 190 | 16,3 | 49,9% |
+| Đại trận 7–10 | greedy | 32,5% | 17 / 124 | 11,3 | 35,8% |
 
-Nhận xét: bốn bậc tăng độ khó đúng chiều; greedy hơn random rõ ở hai bậc 8×8 (chiến thuật có ý nghĩa), còn ở 3×3 và 5×5 ngang nhau vì bàn nhỏ và Bỏ Lệnh hào phóng. Bậc Thường chưa tách khỏi Nhập môn bằng chiến thuật; cần agent lookahead và thử người thật trước khi chốt. Số lượt p90 ở bậc 8×8 (100 đến 260 nước) cho một ván khá dài trên điện thoại, cần cân nhắc ở BP-00.
+**Cách chọn số liệu** (quét 600 ván mỗi cấu hình; bộ sweep chạy bằng script tạm, không nằm trong repo):
 
+- **Núm độ khó chính là số nghề × hệ và thanh Bỏ Lệnh**, không phải cỡ bàn. Với 5×5 và chướng ngại 8%, thanh 2 → 3 vạch đổi tỉ lệ thắng của greedy từ 57% lên 78% (3 nghề × 4 hệ); đổi từ 3×3 lên 4×4 loại quân thì từ 88% xuống 66% (thanh 3). Vì Shan chưa muốn đổi thanh Bỏ Lệnh, các bậc khác nhau chủ yếu ở bộ quân.
+- **Chướng ngại rút ngắn hàng/cột nên giúp bot random dọn dễ hơn**, trong khi greedy bị thiệt nhẹ vì đường đi hẹp. Tỉ lệ 10–30% ở Đại trận đổi random từ 12% lên 47% thắng, còn greedy từ 52% xuống 34%. Vì vậy chướng ngại không nên tăng quá nhiều: nó làm kỹ năng ít quan trọng hơn và vẫn rút ngắn ván.
+- **Đại trận chọn 8 nghề × 7 hệ, chướng ngại 10–16%** vì cho khoảng cách kỹ năng lớn nhất giữa random (khoảng 2–7%) và greedy (khoảng 33%). Đây là tính chất cần có của bậc xếp hạng. Cấu hình 5 × 5 loại quân dễ hơn nhiều (greedy 67%) nhưng random cũng thắng 49%, tức là kém phân hóa.
+- Lỗi cần nhớ khi đo: `transition` tra bộ luật theo `rulesetId` trong `RULESETS`, nên muốn thử một cấu hình khác phải thay thẳng mục trong registry (như script sweep đã làm), không chỉ truyền ruleset vào `createPuzzle`.
+
+Nhận xét: bốn bậc tăng độ khó đúng chiều; Thường và Khó chưa tách bằng chiến thuật (greedy chỉ ngang random). Cần agent mạnh hơn (lookahead) trước khi chốt. Độ dài Đại trận phụ thuộc cỡ bàn và nằm khoảng 100 nước (trung vị, ván thắng) với bot greedy, nhờ trần 72 ô chơi được.

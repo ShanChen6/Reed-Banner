@@ -247,7 +247,7 @@ function UpcomingCard({ mode }: { mode: (typeof UPCOMING)[number] }) {
         )}
         <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#1d140d] via-[#1d140d]/20 to-transparent" />
         <span className="home-kicker absolute top-3 left-3 rounded px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase">
-          {mode.scene ? "Bản chơi thử" : "Sắp ra mắt"}
+          {mode.scene ? "Đã mở" : "Sắp ra mắt"}
         </span>
         <h3 className="absolute right-4 bottom-2.5 left-4 font-serif text-xl font-bold text-[var(--atlas-title)] [text-shadow:0_2px_4px_#000] sm:text-2xl">
           {mode.title}
@@ -257,7 +257,7 @@ function UpcomingCard({ mode }: { mode: (typeof UPCOMING)[number] }) {
         <p className="text-[15px] leading-snug text-[var(--atlas-ink-on-wood)]/90">{mode.text}</p>
         {mode.scene ? (
           <div className="mt-auto flex items-center justify-between gap-2 text-sm">
-            <span className="text-[var(--atlas-muted)]">Chơi thử · không thưởng</span>
+            <span className="text-[var(--atlas-muted)]">Chơi thường · có xếp hạng khi bật</span>
             <span className="home-enter flex items-center gap-1 font-serif font-semibold">Vào <span aria-hidden>›</span></span>
           </div>
         ) : (
