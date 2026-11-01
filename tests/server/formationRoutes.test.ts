@@ -6,6 +6,8 @@ import { POST as claim } from "../../src/app/api/formation/claim/route";
 import { POST as move } from "../../src/app/api/formation/move/route";
 import { POST as start } from "../../src/app/api/formation/start/route";
 import { formationRankedEnabled } from "../../src/server/featureFlags";
+import { signGuest } from "../../src/server/guest";
+import { accountStore } from "../../src/server/store";
 
 const ORIGIN = "http://localhost";
 const post = (path: string, body: unknown, cookie?: string, origin: string | null = ORIGIN) =>
@@ -45,19 +47,36 @@ describe("route Trận Đồ xếp hạng", () => {
     assert.equal(r.headers.get("set-cookie"), null);
   });
 
-  it("chặn POST khác nguồn gốc và POST không có cookie", async () => {
+  it("chặn POST khác nguồn gốc", async () => {
     process.env.FORMATION_RANKED_ENABLED = "true";
     assert.equal((await start(post("/api/formation/start", { level: "thuong" }, undefined, "http://evil.example"))).status, 400);
     assert.equal((await start(post("/api/formation/start", { level: "thuong" }, undefined, null))).status, 400);
-    assert.equal((await move(post("/api/formation/move", { level: "thuong", seq: 0, command: { kind: "discard" } }))).status, 400);
-    assert.equal((await claim(post("/api/formation/claim", { level: "thuong", period: "2026-11-04" }))).status, 400);
+    assert.equal((await move(post("/api/formation/move", { level: "thuong", seq: 0, command: { kind: "discard" } }, undefined, null))).status, 400);
+    assert.equal((await claim(post("/api/formation/claim", { level: "thuong", period: "2026-11-04" }, undefined, "http://evil.example"))).status, 400);
   });
 
-  it("luồng đầy đủ: mở ván tạo khách, đi nước, không lộ seed, bậc lạ bị 404", async () => {
+  it("khách (chưa đăng nhập) không chơi được: không có cookie hoặc cookie khách đều bị 401, không tạo cookie mới", async () => {
     process.env.FORMATION_RANKED_ENABLED = "true";
-    const res = await start(post("/api/formation/start", { level: "kho" }));
+    const noCookie = await start(post("/api/formation/start", { level: "kho" }));
+    assert.equal(noCookie.status, 401);
+    assert.equal(noCookie.headers.get("set-cookie"), null);
+    const guest = `colau_guest=${signGuest("g_chi_la_khach")}`;
+    assert.equal((await start(post("/api/formation/start", { level: "kho" }, guest))).status, 401);
+    assert.equal((await move(post("/api/formation/move", { level: "kho", seq: 0, command: { kind: "discard" } }, guest))).status, 401);
+    assert.equal((await claim(post("/api/formation/claim", { level: "kho", period: "2026-11-01" }, guest))).status, 401);
+    const o = await (await overview(new NextRequest(`${ORIGIN}/api/formation`, { headers: { cookie: guest } }))).json();
+    assert.equal(o.enabled, true);
+    assert.equal(o.canPlay, false);
+    assert.deepEqual(o.levels, []); // khách không xem bảng
+  });
+
+  it("luồng đầy đủ với tài khoản đã đăng nhập: mở ván, đi nước, không lộ seed, bậc lạ bị 404", async () => {
+    process.env.FORMATION_RANKED_ENABLED = "true";
+    const id = "g_tai_khoan_thu";
+    await accountStore().link(id, { provider: "github", subject: "tai-khoan-thu", name: "Người Thử", avatarUrl: null }, Date.now());
+    const cookie = `colau_guest=${signGuest(id)}`;
+    const res = await start(post("/api/formation/start", { level: "kho" }, cookie));
     assert.equal(res.status, 200);
-    const cookie = res.headers.get("set-cookie")!.split(";")[0]!;
     const body = await res.json();
     assert.equal(body.view.level, "kho");
     assert.ok(!("seed" in body.view.puzzle) && !("rngState" in body.view.puzzle));
@@ -78,6 +97,7 @@ describe("route Trận Đồ xếp hạng", () => {
 
     const o = await (await overview(new NextRequest(`${ORIGIN}/api/formation`, { headers: { cookie } }))).json();
     assert.equal(o.enabled, true);
+    assert.equal(o.canPlay, true);
     const kho = o.levels.find((l: { level: string }) => l.level === "kho");
     assert.equal(kho.mine.seq, 1);
     assert.deepEqual(o.levels.map((l: { level: string }) => l.level), ["thuong", "kho", "dai-tran"]);

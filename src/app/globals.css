@@ -931,3 +931,117 @@
     repeating-linear-gradient(90deg, #c9a25a14 0 1px, transparent 1px 28px),
     #21170f;
 }
+
+/* Trận Đồ: sa bàn là một tấm bản đồ. Ô chưa khai thông được phủ bằng ảnh che ĐẶC KÍN (không trong suốt, để không nhầm với
+   ô đã mở); ô khai thông trong suốt để lộ bản đồ; ô chướng ngại có nền riêng, không lấy ảnh của bản đồ. Lớp phủ nằm ở
+   ::before và đổi bằng opacity nên có chuyển động mượt khi ô được mở. */
+.fm-board {
+  background-color: #1a130e;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.fm-cell {
+  position: relative;
+}
+.fm-cell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.45s ease;
+}
+.fm-cell[data-state="fog"]::before {
+  background: #2a1f16 url("/art/formation/fog.svg") center / 48px 48px;
+  box-shadow: inset 0 0 0 1px rgb(143 106 50 / 0.45);
+  opacity: 1;
+}
+.fm-cell[data-state="lit"]::before {
+  background: #2a1f16 url("/art/formation/fog.svg") center / 48px 48px;
+  opacity: 0;
+}
+.fm-cell[data-state="lit"] {
+  box-shadow: inset 0 0 0 1px rgb(255 226 160 / 0.28), inset 0 0 16px rgb(255 214 130 / 0.16);
+}
+.fm-cell[data-state="rock"]::before {
+  background: radial-gradient(circle at 50% 40%, #4a3e30 0%, #30261c 70%);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.5), inset 0 0 10px rgb(0 0 0 / 0.5);
+  opacity: 1;
+}
+.fm-cell > * {
+  position: relative;
+}
+.fm-token,
+.fm-obstacle {
+  transition: opacity 0.8s ease;
+}
+.fm-token {
+  filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.6));
+}
+/* Hoàn thành: quân và chướng ngại mờ đi để cả bản đồ hiện ra. */
+[data-won="true"] .fm-token,
+[data-won="true"] .fm-obstacle {
+  opacity: 0;
+}
+[data-won="true"] .fm-cell[data-state="rock"]::before {
+  opacity: 0;
+}
+[data-won="true"] .fm-cell {
+  box-shadow: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fm-cell::before,
+  .fm-token,
+  .fm-obstacle {
+    transition: none;
+  }
+}
+
+/* Trận Đồ: lớp che dùng ở thẻ bản đồ (cùng họa tiết với ô che trên sa bàn). */
+.fm-fogfill {
+  background: #2a1f16 url("/art/formation/fog.svg") center / 48px 48px;
+}
+
+/* Trận Đồ: vệt sáng quét qua hàng hoặc cột vừa được dọn. */
+.fm-sweep {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+}
+.fm-sweep-row {
+  background: linear-gradient(90deg, transparent, rgb(255 226 160 / 0.9), transparent) no-repeat;
+  background-size: 40% 100%;
+  animation: fm-sweep-row 0.7s ease-out forwards;
+}
+.fm-sweep-col {
+  background: linear-gradient(180deg, transparent, rgb(255 226 160 / 0.9), transparent) no-repeat;
+  background-size: 100% 40%;
+  animation: fm-sweep-col 0.7s ease-out forwards;
+}
+@keyframes fm-sweep-row {
+  0% { opacity: 0; background-position: -40% 0; }
+  15% { opacity: 1; }
+  100% { opacity: 0; background-position: 140% 0; }
+}
+@keyframes fm-sweep-col {
+  0% { opacity: 0; background-position: 0 -40%; }
+  15% { opacity: 1; }
+  100% { opacity: 0; background-position: 0 140%; }
+}
+@keyframes fm-flash {
+  0% { opacity: 0; }
+  30% { opacity: 0.7; }
+  100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fm-sweep-row,
+  .fm-sweep-col {
+    background: rgb(255 226 160 / 0.5);
+    animation: fm-flash 0.4s ease-out forwards;
+  }
+}
+
+/* Trận Đồ: ngọn lửa của thanh Bỏ Lệnh. */
+.fm-flame-on {
+  filter: drop-shadow(0 0 5px rgb(255 140 40 / 0.8));
+}

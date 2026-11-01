@@ -1,11 +1,12 @@
 // POST /api/destiny/battles `{ activeIds, leaderBuild }`: mở hoặc resume trận tầng hiện tại.
 import { NextResponse, type NextRequest } from "next/server";
 import { startDestinyBattle } from "@/server/destiny";
-import { guestOf, readJson, serverDeps } from "@/server/http";
+import { guestOf, isSignedInAccount, loginRequiredResponse, readJson, serverDeps } from "@/server/http";
 
 export async function POST(request: NextRequest) {
   const owner = guestOf(request);
   if (!owner) return NextResponse.json({ error: "no_run" }, { status: 403 });
+  if (serverDeps().destinyEnabled && !(await isSignedInAccount(owner))) return loginRequiredResponse();
   const result = await startDestinyBattle(owner, await readJson(request), serverDeps());
   return NextResponse.json(result, {
     status: result.ok ? 200 : result.error === "featureDisabled" ? 503 : result.error === "conflict" || result.error === "invalid_phase" ? 409 : 422,

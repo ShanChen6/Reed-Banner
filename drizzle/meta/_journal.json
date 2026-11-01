@@ -71,6 +71,20 @@
       "when": 1793534169632,
       "tag": "0009_formation_entries",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1793558008269,
+      "tag": "0010_rank_reward_claims",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1793560038054,
+      "tag": "0011_season_scores",
+      "breakpoints": true
     }
   ]
 }

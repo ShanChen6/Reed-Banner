@@ -17,6 +17,7 @@ import {
   ONLINE_ERROR_TEXT,
   type ArenaResponse,
 } from "../battle/online";
+import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { SceneLink, useScene } from "../SceneContext";
 
 function Members({ list }: { list: readonly ArenaMember[] }) {
@@ -110,6 +111,7 @@ export default function ArenaScreen() {
 
   return (
     <Shell>
+      <div className="mb-4"><RankRewardsPanel mode="arena" /></div>
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-black text-amber-100">

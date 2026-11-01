@@ -1,4 +1,5 @@
 "use client";
+import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { Button } from "@/components/ui";
 
 
@@ -191,6 +192,8 @@ export default function DestinyScreen() {
         </header>
 
         {message && <p role="alert" className="rounded-lg border border-rose-400/30 bg-rose-950/50 p-3 text-rose-100">{message}</p>}
+
+        <RankRewardsPanel mode="destiny" />
 
         {noActiveRun && (
           <section className="tower-screen__panel">

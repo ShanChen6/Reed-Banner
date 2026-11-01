@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96">
+  <!-- Ô che của Trận Đồ (ảnh giữ chỗ): nền sơn mài nâu đặc kín với vân mây cuộn kiểu Đông Sơn. Đặc kín (không trong suốt) để người chơi không nhầm với ô đã mở. -->
+  <rect width="96" height="96" fill="#2a1f16"/>
+  <g fill="none" stroke="#4b3723" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 28c0-10 15-10 15 0s-11 9-11 1"/>
+    <path d="M58 28c0-10 15-10 15 0s-11 9-11 1"/>
+    <path d="M34 76c0-10 15-10 15 0s-11 9-11 1"/>
+    <path d="M82 76c0-10 15-10 15 0s-11 9-11 1"/>
+    <path d="M-14 76c0-10 15-10 15 0s-11 9-11 1"/>
+    <path d="M4 50c8 0 12-5 20-5M52 50c8 0 12-5 20-5M28 96c8 0 12-5 20-5M76 96c8 0 12-5 20-5M-20 96c8 0 12-5 20-5M28 0c8 0 12-5 20-5M76 0c8 0 12-5 20-5M-20 0c8 0 12-5 20-5"/>
+  </g>
+  <circle cx="48" cy="12" r="2.2" fill="#5a4229"/><circle cx="0" cy="12" r="2.2" fill="#5a4229"/><circle cx="96" cy="12" r="2.2" fill="#5a4229"/>
+  <circle cx="24" cy="60" r="2.2" fill="#5a4229"/><circle cx="72" cy="60" r="2.2" fill="#5a4229"/>
+</svg>

@@ -14,7 +14,9 @@ import {
   publicPuzzle,
   rankedLevel,
   rewardGold,
+  periodEnd,
   rulesetById,
+  themeOfState,
   transition,
   type Command,
   type PublicPuzzle,
@@ -133,6 +135,11 @@ export function formationSeed(secret: string, level: string, period: string): nu
   return createHmac("sha256", secret).update(`formation:${level}:${period}`).digest().readUInt32BE(0);
 }
 
+/** Muối bí mật của ván trong kỳ (xem `PuzzleState.salt`): HMAC khác seed, không gửi cho client, như nhau với mọi người trong kỳ. */
+export function formationSalt(secret: string, level: string, period: string): string {
+  return createHmac("sha256", secret).update(`formation-salt:${level}:${period}`).digest("hex").slice(0, 32);
+}
+
 export interface FormationDeps {
   readonly store: FormationStore;
   readonly profiles: ProfileStore;
@@ -140,11 +147,17 @@ export interface FormationDeps {
   readonly secret?: string;
   readonly enabled: boolean;
   readonly newId: () => string;
+  /**
+   * Người này đã đăng nhập (có tài khoản) chưa. Khách không chơi, không nhận thưởng xếp hạng (Shan chốt 01/11/2026);
+   * vẫn xem được bảng.
+   */
+  readonly isSignedIn: (ownerId: string) => Promise<boolean>;
 }
 
 export type FormationError =
   | "featureDisabled"
   | "unavailable"
+  | "loginRequired"
   | "badRequest"
   | "unknownLevel"
   | "noAttempt"
@@ -196,11 +209,12 @@ export type StartResult = { readonly ok: true; readonly view: FormationView; rea
 export async function startFormation(deps: FormationDeps, ownerId: string, levelId: unknown, name: string | null = null): Promise<StartResult> {
   const g = gate(deps, levelId);
   if (!g.ok) return g;
+  if (!(await deps.isSignedIn(ownerId))) return { ok: false, error: "loginRequired" };
   const existing = await deps.store.get(g.level, g.period, ownerId);
   if (existing) return { ok: true, view: await viewOf(deps, existing), resumed: true };
   const rules = rulesetById(g.level);
   if (!rules) return { ok: false, error: "unknownLevel" };
-  const state = createPuzzle(rules, formationSeed(deps.secret!, g.level, g.period));
+  const state = createPuzzle(rules, formationSeed(deps.secret!, g.level, g.period), formationSalt(deps.secret!, g.level, g.period));
   const entry: FormationEntry = {
     id: deps.newId(),
     level: g.level,
@@ -244,6 +258,7 @@ export type MoveResult =
 export async function moveFormation(deps: FormationDeps, ownerId: string, levelId: unknown, seq: unknown, command: unknown): Promise<MoveResult> {
   const g = gate(deps, levelId);
   if (!g.ok) return g;
+  if (!(await deps.isSignedIn(ownerId))) return { ok: false, error: "loginRequired" };
   const cmd = parseCommand(command);
   if (!cmd || !Number.isInteger(seq)) return { ok: false, error: "badRequest" };
   const entry = await deps.store.get(g.level, g.period, ownerId);
@@ -293,6 +308,10 @@ export interface LevelOverview {
   readonly level: string;
   readonly cadence: "day" | "week";
   readonly period: string;
+  /** Thời điểm (ms) kỳ này kết thúc, để đếm ngược trên thẻ. */
+  readonly endsAt: number;
+  /** Chủ đề bản đồ của kỳ (chọn bản đồ nền trong kho), như nhau với mọi người; không lộ seed hay muối. */
+  readonly theme: number;
   readonly winners: number;
   readonly mine: FormationView | null;
   readonly top: readonly BoardRow[];
@@ -303,8 +322,11 @@ export const BOARD_SIZE = 20;
 const CLAIM_LIST = 10;
 
 /** Tổng quan các bậc xếp hạng; `ownerId` null khi chưa có cookie (chỉ xem bảng). */
-export async function formationOverview(deps: FormationDeps, ownerId: string | null): Promise<{ enabled: boolean; levels: LevelOverview[] }> {
-  if (!deps.enabled || !deps.secret) return { enabled: false, levels: [] };
+export async function formationOverview(deps: FormationDeps, ownerId: string | null): Promise<{ enabled: boolean; canPlay: boolean; levels: LevelOverview[] }> {
+  if (!deps.enabled || !deps.secret) return { enabled: false, canPlay: false, levels: [] };
+  const canPlay = ownerId !== null && (await deps.isSignedIn(ownerId));
+  // Khách không xem bảng (Shan, 01/11/2026): chỉ biết chế độ đang mở và cần đăng nhập.
+  if (!canPlay) return { enabled: true, canPlay: false, levels: [] };
   const levels = await Promise.all(
     RANKED_LEVELS.map(async (l): Promise<LevelOverview> => {
       const period = periodKey(l.id, deps.now)!;
@@ -324,6 +346,8 @@ export async function formationOverview(deps: FormationDeps, ownerId: string | n
         level: l.id,
         cadence: l.cadence,
         period,
+        endsAt: periodEnd(l.id, deps.now)!,
+        theme: themeOfState({ seed: formationSeed(deps.secret!, l.id, period), salt: formationSalt(deps.secret!, l.id, period) }),
         winners,
         mine: mine ? await viewOf(deps, mine) : null,
         top: top.map((e, i) => ({
@@ -338,7 +362,7 @@ export async function formationOverview(deps: FormationDeps, ownerId: string | n
       };
     }),
   );
-  return { enabled: true, levels };
+  return { enabled: true, canPlay, levels };
 }
 
 export type ClaimResult =
@@ -349,6 +373,7 @@ export type ClaimResult =
 export async function claimFormation(deps: FormationDeps, ownerId: string, levelId: unknown, period: unknown): Promise<ClaimResult> {
   if (!deps.enabled) return { ok: false, error: "featureDisabled" };
   if (typeof levelId !== "string" || !rankedLevel(levelId)) return { ok: false, error: "unknownLevel" };
+  if (!(await deps.isSignedIn(ownerId))) return { ok: false, error: "loginRequired" };
   if (typeof period !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(period)) return { ok: false, error: "badRequest" };
   if (!periodClosed(levelId, period, deps.now)) return { ok: false, error: "notClaimable" };
   const entry = await deps.store.get(levelId, period, ownerId);
@@ -372,6 +397,8 @@ export function formationHttpStatus(error: FormationError): number {
   switch (error) {
     case "badRequest":
       return 400;
+    case "loginRequired":
+      return 401;
     case "featureDisabled":
       return 403;
     case "unknownLevel":

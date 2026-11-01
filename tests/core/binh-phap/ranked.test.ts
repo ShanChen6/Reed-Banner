@@ -9,6 +9,7 @@ import {
   compareResults,
   createPuzzle,
   periodClosed,
+  periodEnd,
   periodKey,
   publicPuzzle,
   rewardGold,
@@ -49,6 +50,25 @@ describe("kỳ xếp hạng", () => {
   });
 });
 
+describe("thời điểm kết thúc kỳ", () => {
+  it("kỳ ngày kết thúc lúc 0 giờ giờ Việt Nam hôm sau; kỳ tuần vào thứ Hai kế tiếp", () => {
+    const wed = VN("2026-11-04T12:00:00Z"); // thứ Tư 12 giờ trưa VN
+    assert.equal(periodEnd("thuong", wed), VN("2026-11-05T00:00:00Z"));
+    assert.equal(periodEnd("kho", wed), VN("2026-11-05T00:00:00Z"));
+    assert.equal(periodEnd("dai-tran", wed), VN("2026-11-09T00:00:00Z"));
+    // Đúng mốc đổi kỳ thì kỳ mới bắt đầu, kết thúc sau một kỳ nữa.
+    assert.equal(periodEnd("thuong", VN("2026-11-05T00:00:00Z")), VN("2026-11-06T00:00:00Z"));
+    assert.equal(periodEnd("dai-tran", VN("2026-11-09T00:00:00Z")), VN("2026-11-16T00:00:00Z"));
+    assert.equal(periodEnd("huong-dan", wed), null);
+    // Kỳ luôn kết thúc đúng lúc periodClosed đổi.
+    for (const lvl of ["thuong", "dai-tran"]) {
+      const end = periodEnd(lvl, wed)!;
+      assert.equal(periodKey(lvl, end - 1), periodKey(lvl, wed));
+      assert.notEqual(periodKey(lvl, end), periodKey(lvl, wed));
+    }
+  });
+});
+
 describe("hạng và thưởng", () => {
   it("điểm cao hơn đứng trên, bằng điểm thì ít nước hơn, rồi nộp sớm hơn", () => {
     const a = { score: 900, turns: 50, finishedAt: 5 };
@@ -58,18 +78,23 @@ describe("hạng và thưởng", () => {
     assert.equal(compareResults(a, { ...a }), 0);
   });
 
-  it("bậc thưởng cao cần đủ người thắng", () => {
-    assert.equal(rewardTier(1, 1), "win"); // một mình một bảng
-    assert.equal(rewardTier(1, 4), "half"); // chưa đủ 5 người cho hạng nhất
-    assert.equal(rewardTier(1, 5), "top1");
-    assert.equal(rewardTier(2, 7), "half");
-    assert.equal(rewardTier(2, 8), "top3");
-    assert.equal(rewardTier(7, 14), "half"); assert.equal(rewardTier(8, 14), "win");
-    assert.equal(rewardTier(8, 15), "top10");
-    assert.equal(rewardTier(8, 15), "top10"); assert.equal(rewardTier(11, 15), "win");
-    assert.equal(rewardTier(15, 30), "half"); // nửa trên = ceil(30/2) = 15 người
-    assert.equal(rewardTier(16, 30), "win");
-    assert.equal(rewardTier(16, 31), "half"); // làm tròn lên: ceil(31/2) = 16
+  it("bảng ít người vẫn có thưởng: một mình một bảng là hạng nhất", () => {
+    assert.equal(rewardTier(1, 1), "top1");
+    assert.equal(rewardTier(1, 2), "top1");
+    assert.equal(rewardTier(2, 2), "top3");
+    assert.equal(rewardTier(3, 3), "top3");
+    assert.equal(rewardTier(4, 4), "top10");
+  });
+
+  it("bậc theo hạng khi bảng đông", () => {
+    assert.equal(rewardTier(1, 40), "top1");
+    assert.equal(rewardTier(3, 40), "top3");
+    assert.equal(rewardTier(10, 40), "top10");
+    assert.equal(rewardTier(11, 40), "half");
+    assert.equal(rewardTier(20, 40), "half");
+    assert.equal(rewardTier(21, 40), "win");
+    assert.equal(rewardTier(16, 31), "half"); // nửa trên làm tròn lên: ceil(31/2) = 16
+    assert.equal(rewardTier(17, 31), "win");
   });
 
   it("mỗi người đúng một bậc, bậc không đảo ngược theo hạng", () => {

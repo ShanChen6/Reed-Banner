@@ -407,3 +407,45 @@ Nhân vật dung hợp thứ hai của Trận Đồ là Trần Vũ Phong – Vâ
 
 Theo yêu cầu của Shan, đã code phần server: kỳ (ngày cho Thường và Khó, tuần cho Đại trận), seed server phát, server giữ ván và áp từng lệnh, hạng, thưởng vàng theo bậc, nhận thưởng một lần, bảng `formation_entries`. Tắt mặc định sau `FORMATION_RANKED_ENABLED`. Thay đổi so với kế hoạch trước: server giữ ván thay vì kiểm lại nhật ký của client, để chặn luyện trước. Bảng thưởng là điểm xuất phát chờ Shan duyệt ([GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)).
 
+### 01/11/2026 (sửa) — Thưởng xếp hạng Trận Đồ không đòi số người tối thiểu
+
+Shan: bảng ít người vẫn phải có thưởng. Bỏ điều kiện "đủ người thắng" ở các bậc thưởng; một mình một bảng vẫn là hạng nhất. Đánh đổi: tài khoản phụ dễ nhận thưởng hơn ([GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)).
+
+### 01/11/2026 (bổ sung) — Xếp hạng chỉ cho tài khoản đăng nhập; thưởng vàng theo hạng cho Nhật Lệnh và Thiên Mệnh
+
+Shan chốt: (1) vào chế độ xếp hạng phải đăng nhập, khách không chơi; (2) trước mắt thưởng xếp hạng của mọi chế độ chỉ là vàng, loại thưởng khác bàn sau. Đã code: Trận Đồ xếp hạng chặn khách; thưởng vàng theo hạng cuối kỳ cho Nhật Lệnh (ngày) và Tháp Thiên Mệnh (chu kỳ 7 ngày) qua sổ chung `rank_reward_claims` (migration 0010), chỉ tài khoản đăng nhập nhận được. Bình Loạn, Từng trận, Trấn Ải, Quần Hùng chưa có thưởng theo hạng vì chưa có kỳ ([chế độ chơi mục 6](../02-game-modes/README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt)).
+
+### 01/11/2026 (bổ sung) — Khách chỉ chơi thường; Bình Loạn không có BXH; hướng PvP Quần Hùng
+
+Shan chốt: (1) khách chơi thường thoải mái, chế độ **online có bảng xếp hạng và thưởng** chặn hết khách: Nhật Lệnh, Trấn Ải, Quần Hùng, Tháp Thiên Mệnh (cùng Trận Đồ xếp hạng) trả `401 loginRequired` ở server, giao diện hiện màn nhắc đăng nhập; (2) Bình Loạn là offline theo tuyến lịch sử nên **không có bảng xếp hạng**, hai bảng Chiến dịch và Từng trận gỡ khỏi giao diện; (3) Quần Hùng hiện giữ nguyên là tìm đối thủ offline, sắp tới thêm chế độ online hai người chơi đấu trực tiếp, ghi vào [thiết kế DRAFT](../02-game-modes/future/13-quan-hung-pvp-truc-tiep.md) để phát triển sau.
+
+### 01/11/2026 (bổ sung) — Khách không xem bảng xếp hạng; mùa tuần cho Trấn Ải và Quần Hùng
+
+Shan chốt: (1) chặn luôn khách **xem** bảng xếp hạng và màn của các chế độ online có xếp hạng (không chỉ chặn chơi); (2) Trấn Ải và Quần Hùng có **mùa theo tuần**. Đã code: các API xem bảng, đề Nhật Lệnh, màn Thiên Mệnh trả `401` cho khách; Trận Đồ xếp hạng không trả bảng cho khách; trang Xếp hạng cần đăng nhập. Mùa tuần: bảng `season_scores` (migration 0011), điểm mùa ghi khi lượt Trấn Ải và trận Quần Hùng kết thúc, bảng mùa trong trang Xếp hạng (mặc định tuần này, có nút Mọi thời đại), thưởng vàng theo hạng cuối mùa qua sổ `rank_reward_claims` (Trấn Ải 500/300/180/80/30, Quần Hùng 600/400/240/100/40). Cách tính điểm mùa Quần Hùng là đề xuất chờ Shan duyệt ([chế độ chơi mục 6.3](../02-game-modes/README.md#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng)).
+
+### 01/11/2026 (bổ sung) — Chốt cách tính điểm mùa Quần Hùng
+
+Shan chọn cách tính đã đề xuất: điểm mùa Quần Hùng là tổng điểm đấu trường nhận được từ các trận mình đi đánh trong tuần (không tính phòng thủ, chỉ tổng dương mới có tên, Elo gốc không reset). Không cần đổi code; chỉ bỏ nhãn "đề xuất" ở docs.
+
+### 01/11/2026 (bổ sung) — Duyệt bảng vàng Trấn Ải và Quần Hùng
+
+Shan duyệt bảng vàng theo hạng mùa: Trấn Ải 500/300/180/80/30 và Quần Hùng 600/400/240/100/40 (hạng nhất, top 3, top 10, nửa trên, có tên). Không đổi code. Bảng của Trận Đồ, Nhật Lệnh và Tháp Thiên Mệnh vẫn chờ duyệt.
+
+### 01/11/2026 (bổ sung) — Duyệt toàn bộ bảng vàng thưởng hạng
+
+Shan duyệt bảng vàng theo hạng của cả năm chế độ: Trận Đồ (Thường 150/100/60/30/20, Khó 300/200/120/60/40, Đại trận 1000/600/350/150/80), Nhật Lệnh 100/70/50/30/10, Tháp Thiên Mệnh 800/500/300/150/60, Trấn Ải 500/300/180/80/30, Quần Hùng 600/400/240/100/40. Không đổi code. Trận Đồ xếp hạng vẫn tắt mặc định sau `FORMATION_RANKED_ENABLED`.
+
+## 02/11/2026 — Sa bàn Trận Đồ là bản đồ
+
+Shan: sa bàn dùng ảnh bản đồ riêng làm nền; đặt quân thì ô sáng lên lộ bản đồ; chướng ngại thiết kế lại cho hợp bản đồ; bỏ biểu tượng hệ dài trên quân. Đã code với ảnh giữ chỗ (sương che ô chưa khai thông, núi chướng ngại, quân tròn kèm một huy hiệu nghề). Ảnh bản đồ thật do Shan thiết kế; màn chế độ và màn chơi chi tiết là gợi ý chờ chọn ([giao diện Trận Đồ](../05-ui-ux/screens/tran-do.md)).
+
+## 02/11/2026 — Trận Đồ: kho bản đồ, ô che, chướng ngại 4 biến thể, tùy chỉnh; sửa lỗ hổng dò seed
+
+Shan chốt: kho ảnh bản đồ xoay theo kỳ (13 địa danh thật thời Loạn 12 sứ quân); ô chưa mở là ảnh che đặc kín (không để ảnh mờ của bản đồ); chướng ngại 4 biến thể (núi, rừng, đầm lầy, thành lũy) với nền ô riêng; quân đủ huy hiệu nghề và hệ nhỏ vừa đủ; hoàn thành thì hiện ảnh đầy đủ; thêm chế độ **tùy chỉnh** trong Chơi thường (cột, hàng, nghề, hệ, quân đặc biệt, chướng ngại); gợi ý giao diện triển khai trước. Đã code với ảnh giữ chỗ ([giao diện Trận Đồ](../05-ui-ux/screens/tran-do.md)).
+
+**Sửa bảo mật:** tự rà soát phát hiện ván xếp hạng dò được seed (32 bit, bàn cờ hiển thị) nên biết trước dãy quân. Đã thêm **muối bí mật** cho ván xếp hạng ([GDD Binh Pháp mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)). Ván xếp hạng đang dở tạo trước bản sửa vẫn chạy theo cách cũ (không muối) cho tới khi kết thúc.
+
+### 02/11/2026 (bổ sung) — Kho bản đồ 30, màn chế độ và màn chơi chi tiết Trận Đồ
+
+Shan: thêm càng nhiều địa danh càng tốt (kho không giới hạn), cần prompt tạo ảnh đầy đủ (bản đồ, ô che đặc kín, 4 icon chướng ngại), và triển khai giao diện màn chế độ và màn chơi chi tiết rồi sẽ test lần 1 và góp ý. Đã làm: kho 30 bản đồ (13 địa danh sứ quân và Hoa Lư, 7 địa danh Ngô – Đinh, 10 cảnh quan chung) kèm [bộ prompt đầy đủ](../06-art/prompts/tran-do-hinh-anh.md) và test kiểm mọi bản đồ có prompt; màn chế độ (tab, thẻ bản đồ mờ sương, đồng hồ kỳ, thang thưởng bậc thang, bộ sưu tập địa danh); màn chơi (lệnh bài, ba ngọn lửa Bỏ Lệnh, thanh dưới màn hình cho điện thoại, vệt sáng dọn hàng, nút gợi ý, hướng dẫn từng bước). API tổng quan xếp hạng thêm `endsAt` và `theme` ([giao diện Trận Đồ](../05-ui-ux/screens/tran-do.md)).
+

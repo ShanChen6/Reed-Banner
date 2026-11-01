@@ -101,6 +101,8 @@ Tên hiển thị trong game là **Trận Đồ** (đã duyệt tên 26/10/2026)
 | Quân đặc biệt | Quân Lệnh 8% / Thu Hồi 4% (Đại trận Quân Lệnh 10%); Hướng dẫn không có. Không ra hai quân đặc biệt liên tiếp; không ra Thu Hồi khi bàn trống | Shan không có ý kiến, dùng đề xuất |
 | Offline hay server | Chơi thử offline (khách, không thưởng); xếp hạng và thưởng chạy trên server, tắt mặc định | Chơi thử là mặc định đề xuất; xếp hạng và thưởng ở [mục 12](#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt) |
 
+**Tùy chỉnh (trong Chơi thường).** Người chơi tự chọn cỡ bàn (cột × hàng 3–10), từng nghề (≥2) và từng hệ (≥2), tỉ lệ Quân Lệnh (≤15%), Thu Hồi (≤10%), nhân vật dung hợp (≤10%, khóa tới khi có nhân vật được duyệt) và chướng ngại (≤30%). Bộ luật nằm trong chính ván (id `tuy-chinh`), engine kiểm giới hạn khi tạo và khi nạp; không thưởng, không xếp hạng, không ghi điểm cao nhất (`customRuleset` ở `src/core/binh-phap/rulesets.ts`).
+
 **Chế độ thường và chế độ xếp hạng.** Trận Đồ có hai chế độ cùng tồn tại. **Chơi thường** (trước đây gọi "chơi thử") chạy offline ở trình duyệt, không cần cờ hay đăng nhập, không thưởng, không xếp hạng, chơi bao nhiêu ván tùy thích với cả bốn bậc kể cả Hướng dẫn, và lưu ván dở tại máy. **Xếp hạng** ([mục 12](#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)) chạy trên server, có thưởng, tắt mặc định; khi tắt, màn Trận Đồ chỉ còn chế độ thường.
 
 **Bốn bậc** (`RULESETS`, id `huong-dan`, `thuong`, `kho`, `dai-tran`):
@@ -171,14 +173,15 @@ Quân này rất mạnh: 4% đã nâng tỉ lệ thắng của greedy khoảng 1
 
 ## 12. Xếp hạng và thưởng (đã code, mặc định tắt)
 
-Shan (01/11/2026): xếp hạng cao được nhận thưởng; thưởng chia theo mức độ chơi để công bằng; làm phần server. Đã code, **tắt mặc định** sau cờ `FORMATION_RANKED_ENABLED` (chỉ chuỗi `true` mới bật, thiếu hoặc giá trị lạ là tắt). Mức thưởng và điều kiện hạng là **điểm xuất phát**, chờ Shan duyệt trước khi bật ở production. Code: `src/core/binh-phap/ranked.ts` (kỳ, hạng, thưởng), `src/server/formation.ts` + `src/server/db/formation.ts` + `src/app/api/formation/` (server), `src/app/game/formation/RankedPanel.tsx` (giao diện), bảng `formation_entries` (migration `drizzle/0009_formation_entries.sql`).
+Shan (01/11/2026): xếp hạng cao được nhận thưởng; thưởng chia theo mức độ chơi để công bằng; làm phần server. Đã code, **tắt mặc định** sau cờ `FORMATION_RANKED_ENABLED` (chỉ chuỗi `true` mới bật, thiếu hoặc giá trị lạ là tắt). Bảng thưởng đã được Shan duyệt (01/11/2026); việc còn lại trước khi bật ở production là đặt cờ và `SESSION_SECRET`, và chưa có security review chính thức. Code: `src/core/binh-phap/ranked.ts` (kỳ, hạng, thưởng), `src/server/formation.ts` + `src/server/db/formation.ts` + `src/app/api/formation/` (server), `src/app/game/formation/RankedPanel.tsx` (giao diện), bảng `formation_entries` (migration `drizzle/0009_formation_entries.sql`).
 
 **Cách chống gian lận: server giữ ván và áp từng lệnh.** Bản thiết kế đầu định "client chơi rồi gửi nhật ký cho server chạy lại". Đã đổi vì seed phải gửi cho client thì client chạy thử được vô hạn lần trên cùng bàn (luyện trước, chọn nước tối ưu) rồi chỉ nộp ván đẹp nhất. Bản đang chạy:
 
-1. `POST /api/formation/start`: server sinh seed bằng HMAC(`SESSION_SECRET`, bậc, kỳ), nên mọi người trong kỳ cùng bàn, cùng chướng ngại, cùng dãy quân, mà không ai đoán trước được kỳ sau. Seed và trạng thái RNG **không bao giờ rời server**.
+1. `POST /api/formation/start`: server sinh seed bằng HMAC(`SESSION_SECRET`, bậc, kỳ), nên mọi người trong kỳ cùng bàn, cùng chướng ngại, cùng dãy quân, mà không ai đoán trước được kỳ sau. Seed, trạng thái RNG và **muối** **không bao giờ rời server**. **Muối** (02/11/2026): seed chỉ 32 bit mà bàn cờ (chướng ngại, quân đầu) hiển thị ra, nên người chơi có thể dò ngược mọi seed để tìm đúng seed rồi biết trước toàn bộ dãy quân. Vì vậy ván xếp hạng mang thêm một muối bí mật 128 bit (HMAC khác với seed): địa hình và **từng quân** lấy seed từ băm của (muối, mục đích, số thứ tự lượt) thay vì một dòng RNG 32 bit chạy liên tục; biết bàn cờ và các quân đã ra cũng không suy ra được quân sau. Client chỉ nhận `theme` (một hàm một chiều của muối, dùng chọn bản đồ nền).
 2. `POST /api/formation/move`: client gửi lệnh (đặt quân hoặc bỏ lệnh) kèm `seq`; server chạy đúng engine `src/core/binh-phap`, lưu trạng thái mới, trả bản công khai (bàn và quân đang cầm, không seed, không RNG). Lệnh sai không đổi gì; `seq` lệch (gửi trùng, hai tab) bị từ chối kèm ván hiện tại. Mỗi lệnh là không thể hoàn tác và quân kế tiếp chưa ai biết, nên không luyện trước được.
 3. Mỗi người **một ván mỗi kỳ mỗi bậc** (chỉ mục duy nhất trong DB). Mở lại thì nối đúng ván cũ, tải lại trang không mất tiến độ và không bày bàn mới. Ván vượt 600 lệnh bị xử thua.
 4. Điểm do server tính. Chỉ ván **thắng** có hạng; ván thua không hạng, không thưởng.
+5. **Chỉ tài khoản đã đăng nhập mới chơi và nhận thưởng** (Shan chốt 01/11/2026): khách bị chặn ở mọi route (`401 loginRequired`) và cả ở tầng service, không để lại ván nào; khách cũng **không xem bảng** (tổng quan chỉ báo "cần đăng nhập", không có danh sách bậc), và thấy nút "Đăng nhập để chơi". Ván khách đã chơi ở chế độ thường không bị ảnh hưởng.
 
 **Kỳ** (giờ Việt Nam, như Nhật Lệnh): Thường và Khó đổi **theo ngày** lúc 0 giờ; Đại trận đổi **theo tuần** vào thứ Hai 0 giờ. Hướng dẫn không xếp hạng, không thưởng. Hạng: điểm cao hơn, rồi ít nước hơn, rồi nộp sớm hơn.
 
@@ -190,13 +193,13 @@ Shan (01/11/2026): xếp hạng cao được nhận thưởng; thưởng chia th
 | Khó (ngày) | 300 | 200 | 120 | 60 | 40 |
 | Đại trận (tuần) | 1 000 | 600 | 350 | 150 | 80 |
 
-Bậc cao cần **đủ người thắng** trong kỳ để một mình một bảng không hái được hạng nhất: hạng nhất cần từ 5 người thắng, top 3 cần từ 8, top 10 cần từ 15, nửa trên (làm tròn lên) cần từ 2, còn lại là "thắng ván". Mốc so với Nhật Lệnh (thắng 150 vàng) và Đấu trường (thắng +50).
+Hạng tính theo hạng cuối kỳ của người thắng; nửa trên làm tròn lên. **Không đòi số người tối thiểu** (Shan chốt 01/11/2026): bảng ít người vẫn có thưởng, kể cả một mình một bảng thì là hạng nhất. Mốc so với Nhật Lệnh (thắng 150 vàng) và Đấu trường (thắng +50).
 
 **Nhận thưởng** (`POST /api/formation/claim`): chỉ khi kỳ đã khép lại; cờ nhận được đặt bằng một lệnh cập nhật có điều kiện (đúng một bên thắng khi gọi song song) rồi mới cộng vàng vào hồ sơ; cộng vàng hỏng thì hoàn lại cờ để thử lại. Hạng và số người thắng chốt theo trạng thái lúc nhận, vì kỳ đã khép nên không đổi nữa.
 
 **Hạn chế đã biết** (chưa xử lý, ghi để quyết định sau):
 
-- Khách tạo thêm tài khoản (xóa cookie) để chơi nhiều ván một kỳ. Bảng chia sẻ chung với Nhật Lệnh nên cùng mức rủi ro; điều kiện "đủ người thắng" làm giảm lợi ích. Có thể giới hạn thưởng cho tài khoản đã đăng nhập.
+- Vì không đòi số người tối thiểu, một tài khoản phụ chơi một mình một bảng vẫn nhận hạng nhất (Đại trận: 1 000 vàng mỗi tuần mỗi tài khoản). Yêu cầu đăng nhập chặn được việc xóa cookie để tạo "khách" mới, nhưng chưa chặn được người đăng ký nhiều tài khoản. Cách giảm còn lại: chỉ tính hạng khi điểm đạt chuẩn (số đo: điểm mỗi ô chơi được của người thắng dao động hẹp, khoảng 65–75 ở Thường, 54–64 ở Khó, 40–47 ở Đại trận, nên ngưỡng điểm chặn được ít).
 - Cùng bàn cờ cả kỳ nên người chơi có thể chia sẻ dãy quân cho nhau (như lộ đáp án Nhật Lệnh). Server không chặn được việc người ngoài giải hộ.
 - Chưa có giới hạn tốc độ gọi API và chưa có tác vụ cron dọn ván bỏ dở (ván dở của kỳ cũ chỉ nằm im, không có hạng).
 - Đổi `version` của bậc thì ván đang chơi của bậc đó không đọc được nữa (nạp fail-closed); phải triển khai vào lúc kỳ vừa đổi.

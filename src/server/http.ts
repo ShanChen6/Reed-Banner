@@ -7,7 +7,8 @@ import { GUEST_COOKIE, newGuestId, signGuest, verifyGuest } from "./guest";
 import { arenaStore, dailyStore, destinyLeaderboardStore, leaderboardStore, matchStore, profileStore } from "./store";
 import { formationRankedEnabled, towerFeatureFlags } from "./featureFlags";
 import type { FormationDeps } from "./formation";
-import { formationStore } from "./store";
+import { accountStore, dailyStore as dailyStoreOf, destinyLeaderboardStore as destinyBoardOf, formationStore, rankRewardStore, seasonStore } from "./store";
+import { dailySource, destinySource, seasonSource, type RankRewardDeps } from "./rankRewards";
 
 /** Cookie khách sống 30 ngày, khớp với hạn xóa tài khoản khách không hoạt động. */
 const GUEST_MAX_AGE = 30 * 24 * 60 * 60;
@@ -33,6 +34,16 @@ export function guestOf(request: NextRequest): string | null {
   return verifyGuest(request.cookies.get(GUEST_COOKIE)?.value);
 }
 
+/** Đã có tài khoản đăng nhập (không phải khách). Chế độ online có bảng xếp hạng và thưởng chỉ cho tài khoản này. */
+export async function isSignedInAccount(ownerId: string): Promise<boolean> {
+  return (await accountStore().get(ownerId)) !== null;
+}
+
+/** Phản hồi chuẩn khi khách vào chế độ cần đăng nhập. */
+export function loginRequiredResponse(): NextResponse {
+  return NextResponse.json({ error: "loginRequired" }, { status: 401, headers: { "cache-control": "no-store" } });
+}
+
 export function serverDeps(): Deps {
   const features = towerFeatureFlags();
   return {
@@ -50,6 +61,8 @@ export function serverDeps(): Deps {
     destinySecret: process.env.SESSION_SECRET,
     trialEnabled: features.trial,
     destinyEnabled: features.destiny,
+    seasons: seasonStore(),
+    isSignedIn: isSignedInAccount,
   };
 }
 
@@ -97,5 +110,23 @@ export function formationDeps(): FormationDeps {
     secret: process.env.SESSION_SECRET,
     enabled: formationRankedEnabled(),
     newId: () => `f_${randomUUID()}`,
+    isSignedIn: isSignedInAccount,
+  };
+}
+
+/** Phụ thuộc của thưởng hạng theo kỳ. Tháp Thiên Mệnh chỉ có nguồn khi cờ Destiny bật. */
+export function rankRewardDeps(): RankRewardDeps {
+  const features = towerFeatureFlags();
+  return {
+    sources: [
+      dailySource(dailyStoreOf()),
+      ...(features.destiny ? [destinySource(destinyBoardOf())] : []),
+      seasonSource("survival", seasonStore()),
+      seasonSource("arena", seasonStore()),
+    ],
+    claims: rankRewardStore(),
+    profiles: profileStore(),
+    now: Date.now(),
+    isSignedIn: isSignedInAccount,
   };
 }
