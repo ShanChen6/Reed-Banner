@@ -179,7 +179,7 @@ Shan (01/11/2026): xếp hạng cao được nhận thưởng; thưởng chia th
 2. `POST /api/formation/move`: client gửi lệnh (đặt quân hoặc bỏ lệnh) kèm `seq`; server chạy đúng engine `src/core/binh-phap`, lưu trạng thái mới, trả bản công khai (bàn và quân đang cầm, không seed, không RNG). Lệnh sai không đổi gì; `seq` lệch (gửi trùng, hai tab) bị từ chối kèm ván hiện tại. Mỗi lệnh là không thể hoàn tác và quân kế tiếp chưa ai biết, nên không luyện trước được.
 3. Mỗi người **một ván mỗi kỳ mỗi bậc** (chỉ mục duy nhất trong DB). Mở lại thì nối đúng ván cũ, tải lại trang không mất tiến độ và không bày bàn mới. Ván vượt 600 lệnh bị xử thua.
 4. Điểm do server tính. Chỉ ván **thắng** có hạng; ván thua không hạng, không thưởng.
-5. **Chỉ tài khoản đã đăng nhập mới chơi và nhận thưởng** (Shan chốt 01/11/2026): khách bị chặn ở mọi route (`401 loginRequired`) và cả ở tầng service, không để lại ván nào; khách vẫn xem được bảng và thấy nút "Đăng nhập để chơi". Ván khách đã chơi ở chế độ thường không bị ảnh hưởng.
+5. **Chỉ tài khoản đã đăng nhập mới chơi và nhận thưởng** (Shan chốt 01/11/2026): khách bị chặn ở mọi route (`401 loginRequired`) và cả ở tầng service, không để lại ván nào; khách cũng **không xem bảng** (tổng quan chỉ báo "cần đăng nhập", không có danh sách bậc), và thấy nút "Đăng nhập để chơi". Ván khách đã chơi ở chế độ thường không bị ảnh hưởng.
 
 **Kỳ** (giờ Việt Nam, như Nhật Lệnh): Thường và Khó đổi **theo ngày** lúc 0 giờ; Đại trận đổi **theo tuần** vào thứ Hai 0 giờ. Hướng dẫn không xếp hạng, không thưởng. Hạng: điểm cao hơn, rồi ít nước hơn, rồi nộp sớm hơn.
 

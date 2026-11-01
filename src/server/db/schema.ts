@@ -209,3 +209,19 @@ export const rankRewardClaims = pgTable(
   },
   (t) => [primaryKey({ columns: [t.mode, t.period, t.ownerId] }), index("rank_reward_claims_owner_idx").on(t.ownerId, t.mode)],
 );
+
+/**
+ * Điểm mùa theo tuần của Trấn Ải và Quần Hùng: mỗi người một dòng mỗi mùa mỗi chế độ. `updatedAt` đổi mỗi khi điểm
+ * đổi, để bằng điểm thì ai đạt trước đứng trên. Bảng xếp hạng đọc theo (mode, season, score).
+ */
+export const seasonScores = pgTable(
+  "season_scores",
+  {
+    mode: text("mode").notNull(),
+    season: text("season").notNull(),
+    ownerId: text("owner_id").notNull(),
+    score: integer("score").notNull(),
+    updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.mode, t.season, t.ownerId] }), index("season_scores_rank_idx").on(t.mode, t.season, t.score)],
+);

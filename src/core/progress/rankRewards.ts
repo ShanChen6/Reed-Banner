@@ -23,19 +23,24 @@ export function rewardTier(rank: number, participants: number): RewardTier | nul
 }
 
 /** Chế độ có thưởng hạng theo kỳ chạy qua sổ nhận chung (`rank_reward_claims`). Trận Đồ có sổ riêng. */
-export type RankRewardMode = "daily" | "destiny";
+export type RankRewardMode = "daily" | "destiny" | "survival" | "arena";
 
-export const RANK_REWARD_MODES: readonly RankRewardMode[] = ["daily", "destiny"];
+export const RANK_REWARD_MODES: readonly RankRewardMode[] = ["daily", "destiny", "survival", "arena"];
 
 export const RANK_REWARD_MODE_NAME: Readonly<Record<RankRewardMode, string>> = {
   daily: "Nhật Lệnh",
   destiny: "Tháp Thiên Mệnh",
+  survival: "Trấn Ải",
+  arena: "Quần Hùng",
 };
 
-/** Vàng theo bậc thưởng của từng chế độ chung sổ. Nhật Lệnh đã có 150/50 vàng cố định mỗi ván nên thưởng hạng nhỏ hơn. */
+/** Vàng theo bậc thưởng của từng chế độ chung sổ (kỳ theo ngày, theo chu kỳ hoặc theo mùa tuần). Nhật Lệnh đã có 150/50 vàng cố định mỗi ván nên thưởng hạng nhỏ hơn. */
 export const RANK_REWARD_GOLD: Readonly<Record<RankRewardMode, Readonly<Record<RewardTier, number>>>> = {
   daily: { top1: 100, top3: 70, top10: 50, half: 30, win: 10 },
   destiny: { top1: 800, top3: 500, top10: 300, half: 150, win: 60 },
+  // Mùa theo tuần (Trấn Ải: số đợt cao nhất; Quần Hùng: điểm đấu trường nhận được trong tuần).
+  survival: { top1: 500, top3: 300, top10: 180, half: 80, win: 30 },
+  arena: { top1: 600, top3: 400, top10: 240, half: 100, win: 40 },
 };
 
 export function rankRewardGold(mode: RankRewardMode, rank: number, participants: number): { tier: RewardTier; gold: number } | null {

@@ -7,8 +7,8 @@ import { GUEST_COOKIE, newGuestId, signGuest, verifyGuest } from "./guest";
 import { arenaStore, dailyStore, destinyLeaderboardStore, leaderboardStore, matchStore, profileStore } from "./store";
 import { formationRankedEnabled, towerFeatureFlags } from "./featureFlags";
 import type { FormationDeps } from "./formation";
-import { accountStore, dailyStore as dailyStoreOf, destinyLeaderboardStore as destinyBoardOf, formationStore, rankRewardStore } from "./store";
-import { dailySource, destinySource, type RankRewardDeps } from "./rankRewards";
+import { accountStore, dailyStore as dailyStoreOf, destinyLeaderboardStore as destinyBoardOf, formationStore, rankRewardStore, seasonStore } from "./store";
+import { dailySource, destinySource, seasonSource, type RankRewardDeps } from "./rankRewards";
 
 /** Cookie khách sống 30 ngày, khớp với hạn xóa tài khoản khách không hoạt động. */
 const GUEST_MAX_AGE = 30 * 24 * 60 * 60;
@@ -61,6 +61,7 @@ export function serverDeps(): Deps {
     destinySecret: process.env.SESSION_SECRET,
     trialEnabled: features.trial,
     destinyEnabled: features.destiny,
+    seasons: seasonStore(),
     isSignedIn: isSignedInAccount,
   };
 }
@@ -117,7 +118,12 @@ export function formationDeps(): FormationDeps {
 export function rankRewardDeps(): RankRewardDeps {
   const features = towerFeatureFlags();
   return {
-    sources: [dailySource(dailyStoreOf()), ...(features.destiny ? [destinySource(destinyBoardOf())] : [])],
+    sources: [
+      dailySource(dailyStoreOf()),
+      ...(features.destiny ? [destinySource(destinyBoardOf())] : []),
+      seasonSource("survival", seasonStore()),
+      seasonSource("arena", seasonStore()),
+    ],
     claims: rankRewardStore(),
     profiles: profileStore(),
     now: Date.now(),

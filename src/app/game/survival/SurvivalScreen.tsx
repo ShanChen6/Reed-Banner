@@ -32,6 +32,7 @@ import {
   ONLINE_BATTLE_KEY,
   ONLINE_ERROR_TEXT,
 } from "../battle/online";
+import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { SceneLink, useScene } from "../SceneContext";
 import {
   survivalRosterPayload,
@@ -260,6 +261,7 @@ export default function SurvivalScreen() {
 
   return (
     <Shell>
+      <div className="mb-4"><RankRewardsPanel mode="survival" /></div>
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="text-xs tracking-widest text-amber-300/80 uppercase">

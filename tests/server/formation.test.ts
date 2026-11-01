@@ -91,14 +91,16 @@ describe("Trận Đồ xếp hạng: chỉ tài khoản đã đăng nhập", () 
     assert.equal(await d.store.get("thuong", periodKey("thuong", d.now)!, "khach"), null); // không để lại ván nào
   });
 
-  it("tài khoản đăng nhập chơi bình thường; khách vẫn xem được bảng nhưng canPlay là false", async () => {
+  it("tài khoản đăng nhập chơi bình thường; khách không xem bảng (canPlay false, danh sách rỗng)", async () => {
     const d = guestsOnly();
     assert.ok((await startFormation(d, "tai-khoan", "thuong")).ok);
     const asGuest = await formationOverview(d, "khach");
     assert.equal(asGuest.canPlay, false);
-    assert.equal(asGuest.levels.length, 3);
+    assert.equal(asGuest.enabled, true);
+    assert.deepEqual(asGuest.levels, []);
     assert.equal((await formationOverview(d, null)).canPlay, false);
     assert.equal((await formationOverview(d, "tai-khoan")).canPlay, true);
+    assert.equal((await formationOverview(d, "tai-khoan")).levels.length, 3);
   });
 
   it("cờ tắt thì báo tắt trước khi hỏi đăng nhập", async () => {
