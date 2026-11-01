@@ -6,3 +6,4 @@ export * from "./rules";
 export * from "./generator";
 export * from "./reducer";
 export * from "./serialize";
+export * from "./ranked";

@@ -98,5 +98,7 @@ Cờ Lau viết mới hoàn toàn bằng **TypeScript**. Không dùng Java và k
 - Hai runtime flag server-authoritative `TRIAL_ENABLED` và `DESTINY_ENABLED` điều khiển độc lập route, battle
   settlement/cron và entry UI; chỉ exact `true` mới bật, thiếu cấu hình mặc định tắt. Xem [RH-02](../02-game-modes/dual-tower/06-05-feature-flags.md).
 
+- Trận Đồ xếp hạng (`FORMATION_RANKED_ENABLED`, mặc định tắt, chỉ `true` mới bật) cần `SESSION_SECRET` để HMAC seed theo bậc và kỳ. Server giữ trạng thái ván trong bảng `formation_entries` và không gửi seed cho client; xem [GDD Binh Pháp mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt).
+
 Kế hoạch migration/rollback: [T00.03](../02-game-modes/dual-tower/00-03-migration-plan.md). Nghiệm thu hiện tại:
 [T06.04](../02-game-modes/dual-tower/06-04-final-acceptance.md).

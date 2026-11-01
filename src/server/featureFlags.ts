@@ -18,3 +18,8 @@ export const trialEnabled = (deps: { readonly trialEnabled?: boolean }): boolean
 
 export const destinyEnabled = (deps: { readonly destinyEnabled?: boolean }): boolean =>
   deps.destinyEnabled !== false;
+
+/** Trận Đồ xếp hạng và thưởng. Chỉ chuỗi `true` mới bật; thiếu, rỗng hoặc giá trị lạ đều fail-closed (mặc định tắt). */
+export function formationRankedEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
+  return env.FORMATION_RANKED_ENABLED === "true";
+}

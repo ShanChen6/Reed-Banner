@@ -9,8 +9,8 @@
 | BP-02 | Seeded piece generator, pool, policy agent, Monte Carlo simulator | BP-01 | Replay deterministic & balance report. **Đã làm** (2 agent random/greedy; chưa lookahead) |
 | BP-03 | Frontend Binh Pháp Board, HUD, controls & assets existing | BP-02 | Desktop/mobile/a11y review. **Đã làm** bản đầu, chờ review mỹ thuật |
 | BP-04 | Scene wiring gated, tutorial, pause/resume local/guest | BP-03 | No navigation/regression issues. **Đã làm một phần**: scene `FORMATION`, resume local; chưa có feature flag, chưa có tutorial riêng (chỉ bảng luật) |
-| BP-05 | Progress persistence and optional online verified run | BP-02/04 | Versioned save; security review |
-| BP-06 | Leaderboard, rewards economy **ONLY if approved** | BP-05 | Server settlement idempotent; economic QA. Shan đã chốt hướng có xếp hạng và thưởng theo bậc (01/11/2026); thiết kế ở [GDD mục 12](02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-thiết-kế-chưa-có-code), chưa code |
+| BP-05 | Progress persistence and optional online verified run | BP-02/04 | Versioned save; security review. **Đã làm** dưới dạng server giữ ván và áp từng lệnh (thay cho "client chơi rồi nộp nhật ký"), xem [GDD mục 12](02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt); chưa có security review chính thức |
+| BP-06 | Leaderboard, rewards economy **ONLY if approved** | BP-05 | Server settlement idempotent; economic QA. Shan đã chốt hướng có xếp hạng và thưởng theo bậc (01/11/2026); **Đã code** (cờ `FORMATION_RANKED_ENABLED`, mặc định tắt); chờ duyệt bảng thưởng và review kinh tế trước khi bật, xem [GDD mục 12](02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt) |
 | BP-07 | QA comprehensive, rollout flag, documentation, regression | BP-04/05 | Formal product acceptance |
 | LT-00 | Chốt rulebook ghép 2 yếu tố, authoring standards/hints/save (docs-only) | Docs concept reviewed | Sign-off, không còn mâu thuẫn content |
 | LT-01 | Slice content graph 3 nhân vật Châu Ngọc/Tô Kim/Vi Triều, validation & portraits | LT-00 | Acyclic / reachable / recipe uniqueness |
