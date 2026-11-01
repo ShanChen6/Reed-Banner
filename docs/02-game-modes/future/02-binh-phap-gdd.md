@@ -190,13 +190,13 @@ Shan (01/11/2026): xếp hạng cao được nhận thưởng; thưởng chia th
 | Khó (ngày) | 300 | 200 | 120 | 60 | 40 |
 | Đại trận (tuần) | 1 000 | 600 | 350 | 150 | 80 |
 
-Bậc cao cần **đủ người thắng** trong kỳ để một mình một bảng không hái được hạng nhất: hạng nhất cần từ 5 người thắng, top 3 cần từ 8, top 10 cần từ 15, nửa trên (làm tròn lên) cần từ 2, còn lại là "thắng ván". Mốc so với Nhật Lệnh (thắng 150 vàng) và Đấu trường (thắng +50).
+Hạng tính theo hạng cuối kỳ của người thắng; nửa trên làm tròn lên. **Không đòi số người tối thiểu** (Shan chốt 01/11/2026): bảng ít người vẫn có thưởng, kể cả một mình một bảng thì là hạng nhất. Mốc so với Nhật Lệnh (thắng 150 vàng) và Đấu trường (thắng +50).
 
 **Nhận thưởng** (`POST /api/formation/claim`): chỉ khi kỳ đã khép lại; cờ nhận được đặt bằng một lệnh cập nhật có điều kiện (đúng một bên thắng khi gọi song song) rồi mới cộng vàng vào hồ sơ; cộng vàng hỏng thì hoàn lại cờ để thử lại. Hạng và số người thắng chốt theo trạng thái lúc nhận, vì kỳ đã khép nên không đổi nữa.
 
 **Hạn chế đã biết** (chưa xử lý, ghi để quyết định sau):
 
-- Khách tạo thêm tài khoản (xóa cookie) để chơi nhiều ván một kỳ. Bảng chia sẻ chung với Nhật Lệnh nên cùng mức rủi ro; điều kiện "đủ người thắng" làm giảm lợi ích. Có thể giới hạn thưởng cho tài khoản đã đăng nhập.
+- Khách tạo thêm tài khoản (xóa cookie) để chơi nhiều ván một kỳ, và vì không đòi số người tối thiểu nên một tài khoản phụ chơi một mình một bảng vẫn nhận hạng nhất (Đại trận: 1 000 vàng mỗi tuần mỗi tài khoản). Cùng mức rủi ro với Nhật Lệnh nhưng số vàng lớn hơn. Cách giảm đã cân nhắc: giới hạn thưởng cho tài khoản đã đăng nhập, hoặc chỉ tính hạng khi điểm đạt chuẩn (số đo: điểm mỗi ô chơi được của người thắng dao động hẹp, khoảng 65–75 ở Thường, 54–64 ở Khó, 40–47 ở Đại trận, nên ngưỡng điểm chặn được ít).
 - Cùng bàn cờ cả kỳ nên người chơi có thể chia sẻ dãy quân cho nhau (như lộ đáp án Nhật Lệnh). Server không chặn được việc người ngoài giải hộ.
 - Chưa có giới hạn tốc độ gọi API và chưa có tác vụ cron dọn ván bỏ dở (ván dở của kỳ cũ chỉ nằm im, không có hạng).
 - Đổi `version` của bậc thì ván đang chơi của bậc đó không đọc được nữa (nạp fail-closed); phải triển khai vào lúc kỳ vừa đổi.

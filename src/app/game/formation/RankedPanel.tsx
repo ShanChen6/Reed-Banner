@@ -106,7 +106,7 @@ export default function RankedPanel({
       </ul>
       <details className="atlas-frame atlas-frame-wood p-4">
         <summary className="cursor-pointer font-serif font-bold text-[var(--atlas-title)]">Bảng thưởng theo hạng</summary>
-        <p className="mt-2 text-sm text-[var(--atlas-muted)]">Mỗi người nhận đúng một bậc. Bậc cao cần đủ người thắng trong kỳ để tránh hạng nhất khi chơi một mình.</p>
+        <p className="mt-2 text-sm text-[var(--atlas-muted)]">Mỗi người nhận đúng một bậc theo hạng cuối kỳ. Bảng ít người vẫn có thưởng; nửa trên tính làm tròn lên.</p>
         <table className="mt-2 w-full text-left text-[15px]">
           <thead>
             <tr className="text-[var(--atlas-muted)]">
@@ -123,9 +123,6 @@ export default function RankedPanel({
             ))}
           </tbody>
         </table>
-        <p className="mt-2 text-sm text-[var(--atlas-muted)]">
-          Điều kiện: hạng nhất cần ≥5 người thắng, top 3 cần ≥8, top 10 cần ≥15; nửa trên cần ≥2; còn lại là &ldquo;thắng ván&rdquo;.
-        </p>
       </details>
     </section>
   );
