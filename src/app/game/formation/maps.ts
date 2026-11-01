@@ -1,4 +1,4 @@
-// Kho bản đồ nền của sa bàn Trận Đồ: địa danh thật thời Loạn 12 sứ quân và giai đoạn Ngô – Đinh, cộng cảnh quan chung
+// Kho ảnh nền của sa bàn Trận Đồ (tranh vẽ tay 2D điện ảnh như nền Bình Loạn): địa danh thật thời Loạn 12 sứ quân và giai đoạn Ngô – Đinh, cộng cảnh quan chung
 // (Shan chốt 02/11/2026, **không giới hạn số ảnh**). Ô chưa khai thông được ô che (ảnh đặc kín) che đi; đặt quân thì ô lộ
 // mảnh bản đồ bên dưới; hoàn thành thì hiện cả bản đồ. Bản đồ đổi theo kỳ: chọn theo `theme` của ván (suy từ seed/muối,
 // như nhau với mọi người trong kỳ).
