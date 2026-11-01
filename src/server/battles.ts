@@ -117,6 +117,19 @@ export interface Deps {
   /** Route production luôn truyền giá trị từ env; thiếu chỉ dành cho compatibility của caller nội bộ/test cũ. */
   readonly trialEnabled?: boolean;
   readonly destinyEnabled?: boolean;
+  /**
+   * Người này đã đăng nhập chưa. Route production luôn truyền; có thì Sinh tồn, Nhật Lệnh, Quần Hùng và Thiên Mệnh
+   * (online, có bảng xếp hạng và thưởng) từ chối khách. Thiếu chỉ dành cho caller nội bộ và test cũ.
+   */
+  readonly isSignedIn?: (ownerId: string) => Promise<boolean>;
+}
+
+/** Trận thuộc chế độ online có bảng xếp hạng và thưởng. */
+const rankedMatch = (m: Match): boolean => !!(m.survival || m.daily || m.arena || m.destiny);
+
+/** Khách bị từ chối khi `deps.isSignedIn` có mặt và trả false. */
+async function guestBlocked(deps: Pick<Deps, "isSignedIn">, ownerId: string): Promise<boolean> {
+  return deps.isSignedIn !== undefined && !(await deps.isSignedIn(ownerId));
 }
 
 const DIFFICULTIES: readonly Difficulty[] = [
@@ -165,6 +178,8 @@ export type ServiceError =
   | "arenaGone"
   /** Trận Destiny thuộc chu kỳ đã đóng. */
   | "cycleExpired"
+  /** Chế độ online có bảng xếp hạng và thưởng chỉ cho tài khoản đã đăng nhập; khách chơi thường thoải mái. */
+  | "loginRequired"
   | typeof FEATURE_DISABLED_ERROR;
 
 /** Phần thưởng cuối trận đã cộng vào hồ sơ, gửi kèm đúng một lần (response làm trận kết thúc). */
@@ -513,6 +528,8 @@ export async function createBattleFor(
   input: NewBattleInput,
   deps: Deps,
 ): Promise<ServiceResult> {
+  if ((input.survival || input.daily || input.arena !== undefined) && (await guestBlocked(deps, ownerId)))
+    return { ok: false, error: "loginRequired" };
   if (input.survival) return createSurvivalBattle(ownerId, input, deps);
   if (input.daily) return createDailyBattle(ownerId, deps);
   if (input.arena !== undefined)
@@ -1333,6 +1350,7 @@ export async function getBattle(
   const r = await load(id, ownerId, deps.store);
   if (!r) return { ok: false, error: "notFound" };
   if (!matchFeatureEnabled(r.match, deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
+  if (rankedMatch(r.match) && (await guestBlocked(deps, ownerId))) return { ok: false, error: "loginRequired" };
   if (!(await destinyMatchCurrent(r, deps))) return { ok: false, error: "cycleExpired" };
   return settleRecord(r, deps);
 }
@@ -1369,6 +1387,7 @@ export async function actBattle(
   const r = await load(id, ownerId, deps.store);
   if (!r) return { ok: false, error: "notFound" };
   if (!matchFeatureEnabled(r.match, deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
+  if (rankedMatch(r.match) && (await guestBlocked(deps, ownerId))) return { ok: false, error: "loginRequired" };
   if (!(await destinyMatchCurrent(r, deps))) return { ok: false, error: "cycleExpired" };
   if (r.match.campaignScenario) {
     const scenario = settleCampaignScenarioMatch(r.match);
@@ -1416,6 +1435,7 @@ export async function actBattle(
 /** Mã HTTP cho từng lỗi. */
 export function httpStatus(error: ServiceError): number {
   if (error === FEATURE_DISABLED_ERROR) return 503;
+  if (error === "loginRequired") return 401;
   if (error === "notFound" || error === "arenaGone") return 404;
   if (
     error === "conflict" ||

@@ -2,7 +2,7 @@
 
 > **Quyết định sản phẩm mới (27/10/2026):** tham khảo [Game Modes 2026: định hướng, Binh Pháp và Song Tháp](future/README.md). Nội dung chi tiết bên dưới mô tả **implementation baseline trước khi triển khai các đề xuất**, không có nghĩa mode mới đã tồn tại. Các giá trị Trial 20 / Destiny 10 / nhãn Sinh tồn ở bảng dưới là **trạng thái code hiện tại**, còn định hướng tương lai xem tài liệu mới.
 
-> Cập nhật: 31/10/2026 (thêm Trận Đồ bản chơi thử; 25/10: CAMP-08.04 gỡ chiến dịch 13 màn cũ, tách Đánh trùm/BXH/nhiệm vụ khỏi màn cũ)
+> Cập nhật: 01/11/2026 (khách và chế độ xếp hạng, Bình Loạn không có bảng, hướng PvP Quần Hùng; 31/10: thêm Trận Đồ bản chơi thử; 25/10: CAMP-08.04 gỡ chiến dịch 13 màn cũ, tách Đánh trùm/BXH/nhiệm vụ khỏi màn cũ)
 
 ## 1. Tổng quan
 
@@ -57,9 +57,10 @@
 
 ### 2.2 Bảng xếp hạng (Claude đặt 20/10/2026, chuyển sang Campaign V2 ở CAMP-08.04)
 
-- Trang bảng xếp hạng có các bảng: **Chiến dịch**, **Từng trận** (chọn nhiệm vụ có trận), **Sinh tồn**, **Đấu trường**, **Vận Mệnh**. Mỗi bảng hiện 50 người đứng đầu và hạng của người đang xem. Thử thách hằng ngày giữ bảng riêng.
-- **Chiến dịch:** hoàn thành nhiều nhiệm vụ V2 hơn đứng trên (sự kiện và ngoại giao cũng tính là hoàn thành); bằng số nhiệm vụ thì tổng số lượt ít nhất của các **nhiệm vụ có trận** ít hơn đứng trên. Sự kiện không có lượt nên không cộng gì; nhiệm vụ có trận đã xong mà chưa có số lượt tính 200 lượt.
-- **Từng trận** (`mission:<M..>`): hoàn thành nhiệm vụ có trận đó với ít lượt nhất (đếm lượt của cả hai phe), lấy từ `campaign.bestBattleTurns`. Chỉ nhiệm vụ trận, phòng thủ, công thành, trùm có bảng; không tính đánh trùm.
+- Trang bảng xếp hạng có các bảng: **Sinh tồn**, **Đấu trường**, **Vận Mệnh**. Mỗi bảng hiện 50 người đứng đầu và hạng của người đang xem. Thử thách hằng ngày giữ bảng riêng, Trận Đồ xếp hạng nằm trong màn Trận Đồ.
+- **Bình Loạn không có bảng xếp hạng** (Shan, 01/11/2026): chiến dịch là chế độ offline theo tuyến lịch sử. Hai bảng **Chiến dịch** và **Từng trận** dưới đây đã bị gỡ khỏi giao diện; server và dữ liệu cũ (`campaign`, `mission:<M..>`) vẫn còn, chưa xóa.
+- **Chiến dịch (đã gỡ khỏi giao diện):** hoàn thành nhiều nhiệm vụ V2 hơn đứng trên (sự kiện và ngoại giao cũng tính là hoàn thành); bằng số nhiệm vụ thì tổng số lượt ít nhất của các **nhiệm vụ có trận** ít hơn đứng trên. Sự kiện không có lượt nên không cộng gì; nhiệm vụ có trận đã xong mà chưa có số lượt tính 200 lượt.
+- **Từng trận (đã gỡ khỏi giao diện)** (`mission:<M..>`): hoàn thành nhiệm vụ có trận đó với ít lượt nhất (đếm lượt của cả hai phe), lấy từ `campaign.bestBattleTurns`. Chỉ nhiệm vụ trận, phòng thủ, công thành, trùm có bảng; không tính đánh trùm.
 - **Sinh tồn:** số đợt nhiều nhất đã vượt.
 - Bằng điểm thì người đạt điểm đó trước đứng trên. Khách hiện là "Khách" kèm 4 ký tự cuối mã.
 - Server ghi điểm vào bảng `leaderboard_scores` sau mỗi lần cộng thưởng trận online; người chơi có thành tích từ trước được ghi khi mở trang. Code ở `src/core/progress/leaderboard.ts` và `src/server/leaderboard.ts`.
@@ -214,6 +215,7 @@ Trang `/arena`, code ở `src/core/arena/` (đội phòng thủ, bóng ma máy t
 - **Thưởng:** thưởng trận thường (kinh nghiệm, vàng nhặt, món rơi theo độ khó Khó) và thêm 50 vàng khi thắng.
 - **Bảng xếp hạng:** tab Đấu trường ở `/leaderboard`, theo điểm; lên bảng khi có đội phòng thủ.
 - **Chưa làm:** nhật ký bị đánh (chỉ có số trận giữ được và bị mất), mùa giải và thưởng theo hạng, chặn đánh lại cùng một người.
+- **Hướng sắp tới:** chế độ online hai người chơi đấu trực tiếp, xem [mục 6.2](#62-quần-hùng-online-hai-người-chơi-phát-triển-sau). Đấu trường bóng ma hiện tại giữ nguyên.
 
 ## 6. Thưởng vàng theo hạng cuối kỳ (Claude đặt 01/11/2026, chờ Shan duyệt)
 
@@ -227,5 +229,18 @@ Shan (01/11/2026): trước mắt thưởng xếp hạng của **mọi chế đ�
 
 Bậc: hạng 1; hạng 2–3; hạng 4–10; từ hạng 11 tới hết nửa trên (làm tròn lên); còn lại. Code: `src/core/progress/rankRewards.ts` (bậc và bảng vàng), `src/server/rankRewards.ts` (nguồn theo chế độ, sổ nhận, nhận thưởng), `/api/rank-rewards` (danh sách chờ nhận) và `/api/rank-rewards/claim`. Chỉ nhận được các kỳ đã khép trong 7 kỳ gần nhất.
 
-**Chưa có thưởng theo hạng** (ghi vào [câu hỏi mở](../09-roadmap/cau-hoi-mo.md)): **Bình Loạn**, **Từng trận** và **Trấn Ải** là bảng cộng dồn không có kỳ, **Quần Hùng** là điểm Elo liên tục; thưởng theo hạng cần có "mùa" (cắt bảng theo tuần hoặc tháng) trước. Các bảng này vẫn thưởng vàng khi chơi như cũ (xem các mục trên).
+**Chưa có thưởng theo hạng:** **Trấn Ải** là bảng cộng dồn không có kỳ và **Quần Hùng** là điểm Elo liên tục; thưởng theo hạng cần có "mùa" (cắt bảng theo tuần hoặc tháng) trước, xem [câu hỏi mở](../09-roadmap/cau-hoi-mo.md). Cả hai vẫn thưởng vàng khi chơi như cũ. **Bình Loạn** và **Từng trận** không có bảng xếp hạng (offline theo tuyến lịch sử) nên không có thưởng theo hạng.
 
+### 6.1 Ai chơi được chế độ nào (Shan, 01/11/2026)
+
+Khách chơi thường thoải mái; chế độ **online có bảng xếp hạng và thưởng** chỉ cho **tài khoản đã đăng nhập**, server từ chối khách bằng `401 loginRequired` (không chỉ giao diện).
+
+| Khách chơi được | Chỉ tài khoản đăng nhập |
+|---|---|
+| Luyện tập / Chơi thử, Giao Tranh (trận thường), Bình Loạn, Đánh trùm, Tháp Thí Luyện, **Trận Đồ chơi thường** | **Nhật Lệnh**, **Trấn Ải** (Sinh tồn), **Quần Hùng** (Đấu trường), **Tháp Thiên Mệnh**, **Trận Đồ xếp hạng** |
+
+Khách vẫn xem được bảng xếp hạng. Trận xếp hạng đang dở của một khách cũ (đăng xuất giữa chừng) không xem và không đi tiếp được (`getBattle` và `actBattle` trả `loginRequired`); riêng "dừng run" Thiên Mệnh vẫn cho phép để kết thúc run có sẵn. Code: `Deps.isSignedIn` ở `src/server/battles.ts`, helper `isSignedInAccount` và `loginRequiredResponse` ở `src/server/http.ts`, màn nhắc `src/app/game/LoginGate.tsx`. Tháp Thí Luyện không có bảng xếp hạng nên vẫn mở cho khách.
+
+### 6.2 Quần Hùng online hai người chơi (phát triển sau)
+
+Quần Hùng hiện là tìm đối thủ offline (mục 5.3). Shan muốn thêm chế độ **online hai người chơi đấu trực tiếp**; xem [thiết kế DRAFT](future/13-quan-hung-pvp-truc-tiep.md). Chưa có code.

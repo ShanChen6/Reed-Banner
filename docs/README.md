@@ -32,7 +32,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [campaign/](02-game-modes/campaign/design-freeze.md) | Campaign V2: [design freeze](02-game-modes/campaign/design-freeze.md), [mission matrix](02-game-modes/campaign/mission-matrix.md), [sổ nguồn sử](02-game-modes/campaign/history-sources.md), [contract](02-game-modes/campaign/contracts.md), [nghiệm thu](02-game-modes/campaign/final-acceptance.md) |
 | ★ [dual-tower/](02-game-modes/dual-tower/00-02-rules.md) | Song Tháp: [luật](02-game-modes/dual-tower/00-02-rules.md), [hướng dẫn người chơi](02-game-modes/dual-tower/player-help.md), [feature flags](02-game-modes/dual-tower/06-05-feature-flags.md), [runbook Neon](02-game-modes/dual-tower/06-06-neon-staging-runbook.md), [nghiệm thu](02-game-modes/dual-tower/06-04-final-acceptance.md) |
 | ★ [survival/](02-game-modes/survival/02-rules-state-machine.md) | Sinh tồn V1.1: [luật & state machine](02-game-modes/survival/02-rules-state-machine.md), [dữ liệu](02-game-modes/survival/03-data-architecture.md), [nghiệm thu](02-game-modes/survival/24-final-acceptance.md) |
-| [future/](02-game-modes/future/README.md) | Đề xuất chưa triển khai: Binh Pháp, Liệt Truyện, định hướng Tháp/Sinh tồn (**DRAFT**, design only) |
+| [future/](02-game-modes/future/README.md) | Đề xuất chưa triển khai: Binh Pháp, Liệt Truyện, định hướng Tháp/Sinh tồn, [Quần Hùng PvP trực tiếp](02-game-modes/future/13-quan-hung-pvp-truc-tiep.md) (**DRAFT**, design only) |
 
 ## 03 · Nhân vật & kỹ năng (`03-characters/`)
 

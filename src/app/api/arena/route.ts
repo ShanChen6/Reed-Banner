@@ -5,12 +5,14 @@
 import { randomInt } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { arenaView, type ArenaCommand } from "@/server/arena";
-import { guestOf, newGuestId, readJson, setAccountCookie } from "@/server/http";
+import { guestOf, isSignedInAccount, loginRequiredResponse, readJson } from "@/server/http";
 import { arenaStore, leaderboardStore, profileStore } from "@/server/store";
 
 async function handle(request: NextRequest, command: ArenaCommand) {
   const existing = guestOf(request);
-  const owner = existing ?? newGuestId();
+  // Quần Hùng là chế độ online có bảng xếp hạng và thưởng: khách không vào (không tạo khách mới ở đây).
+  if (!existing || !(await isSignedInAccount(existing))) return loginRequiredResponse();
+  const owner = existing;
   const view = await arenaView(owner, command, {
     arena: arenaStore(),
     profiles: profileStore(),
@@ -19,7 +21,6 @@ async function handle(request: NextRequest, command: ArenaCommand) {
     seed: randomInt(0, 2 ** 31),
   });
   const res = NextResponse.json(view, { headers: { "cache-control": "no-store" } });
-  if (!existing) setAccountCookie(res, owner);
   return res;
 }
 
