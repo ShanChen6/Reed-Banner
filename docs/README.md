@@ -63,6 +63,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [design-system/theme.md](05-ui-ux/design-system/theme.md) | Theme và token CSS đang chạy (`src/styles/`) |
 | ★ [design-system/README.md](05-ui-ux/design-system/README.md) | UI Home và các chế độ ngoài Campaign; spec ở [game-mode-ui-spec.md](05-ui-ux/design-system/game-mode-ui-spec.md) (Home V2 mục 14) |
 | ★ [screens/battle.md](05-ui-ux/screens/battle.md) | Màn trận đấu, điều khiển |
+| ★ [screens/tran-do.md](05-ui-ux/screens/tran-do.md) | Giao diện Trận Đồ: sa bàn là bản đồ, quân, chướng ngại, yêu cầu ảnh, gợi ý màn chế độ (**DRAFT**) |
 | ★ [campaign/README.md](05-ui-ux/campaign/README.md) | UI riêng Campaign: thoại, Sử ký, World Atlas; [task board](05-ui-ux/campaign/task-board.md), [Polish V2](05-ui-ux/campaign/polish-v2/README.md), [audio (DEFERRED)](05-ui-ux/campaign/audio-todo/README.md) |
 | ★ [implementation/roadmap.md](05-ui-ux/implementation/roadmap.md) | Lộ trình UI-00…UI-09, UI-02A…E |
 

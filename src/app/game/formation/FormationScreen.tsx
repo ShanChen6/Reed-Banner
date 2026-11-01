@@ -25,10 +25,11 @@ import {
   type Ruleset,
 } from "@/core/binh-phap";
 import { companionById } from "@/core/roster/roster";
-import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
+import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
 import { SceneLink } from "../SceneContext";
+import { mapOf } from "./maps";
 import RankedPanel from "./RankedPanel";
 import { claimRanked, fetchOverview, moveRanked, startRanked, toPuzzleState, type FormationView, type Overview } from "./rankedClient";
 
@@ -411,9 +412,13 @@ function Board({
             ref={boardRef}
             role="grid"
             aria-label={`Sa bàn ${height} hàng ${width} cột`}
-            className="atlas-frame atlas-frame-wood grid w-fit gap-1 p-2"
-            style={{ gridTemplateColumns: `repeat(${width}, ${cell})`, gridAutoRows: cell }}
+            data-won={state.phase === "won"}
+            className="atlas-frame atlas-frame-wood w-fit p-2"
           >
+           <div
+            className="fm-board grid overflow-hidden rounded-sm"
+            style={{ gridTemplateColumns: `repeat(${width}, ${cell})`, gridAutoRows: cell, backgroundImage: `url(${mapOf(rules.id).src})` }}
+           >
             {state.cells.map((c, i) => {
               const r = Math.floor(i / width);
               const col = i % width;
@@ -430,18 +435,19 @@ function Board({
                     onClick={() => apply({ kind: "place", row: r, col })}
                     aria-disabled={c.blocked || undefined}
                     aria-label={`Hàng ${r + 1}, cột ${col + 1}: ${c.blocked ? "chướng ngại, không đặt được" : c.piece ? pieceLabel(c.piece) : c.covered ? "trống, đã khai thông" : "trống, chưa khai thông"}${ok ? ", đặt được" : ""}`}
+                    data-state={c.blocked ? "rock" : c.covered ? "lit" : "fog"}
                     className={[
-                      "relative flex items-center justify-center rounded-md border transition-colors motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--atlas-gold)]",
-                      c.blocked ? "border-[#1b130d] bg-[repeating-linear-gradient(45deg,#3a3026_0_6px,#2a2119_6px_12px)]" : c.covered ? "border-[#8F6A32] bg-[#E4CC99]" : "border-[#3D2C1D] bg-[#2B1F15]",
-                      ok ? "ring-2 ring-[#C9A25A]/90 ring-inset" : "",
-                      last === i ? "outline-2 outline-[#8F241D]" : "",
+                      "fm-cell flex items-center justify-center focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--atlas-gold)]",
+                      ok ? "ring-2 ring-[#E8C477] ring-inset" : "",
+                      last === i ? "z-10 outline-2 outline-offset-[-2px] outline-[#E8C477]" : "",
                     ].join(" ")}
                   >
-                    {c.blocked ? <Rock /> : c.piece ? <PieceFace piece={c.piece} /> : ok ? <span aria-hidden className="size-2 rounded-full bg-[#C9A25A]" /> : null}
+                    {c.blocked ? <Mountain /> : c.piece ? <PieceFace piece={c.piece} /> : ok ? <span aria-hidden className="size-2 rounded-full bg-[#E8C477] shadow-[0_0_6px_#E8C477]" /> : null}
                   </button>
                 </div>
               );
             })}
+           </div>
           </div>
           <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-[var(--atlas-title)]">{message}</p>
         </div>
@@ -550,37 +556,45 @@ function Result({ state, best, onRestart, onLeave }: { state: PuzzleState; best:
   );
 }
 
-/** Mặt quân: chân dung ở giữa, nghề ở góc trên trái, hệ ở góc dưới phải (kèm chữ cho trình đọc màn hình ở aria-label của ô). */
+/**
+ * Quân trên sa bàn: chân dung tròn như một con cờ đặt lên bản đồ, viền theo hệ (màu của hệ đã nằm ở khung chân dung nên
+ * không vẽ thêm biểu tượng hệ), chỉ một huy hiệu nghề tròn nhỏ ở góc dưới phải. Tên nghề và hệ nằm ở aria-label của ô và
+ * ở khung "Quân đang cầm".
+ */
 function PieceFace({ piece, large = false }: { piece: Piece | BoardPiece; large?: boolean }) {
-  if (piece.kind === "wild") return <Glyph kind="wild" />;
-  if (piece.kind === "eraser") return <Glyph kind="eraser" />;
-  const icon = large ? "size-6" : "size-[32%]";
+  if (piece.kind === "wild") return <span className="fm-token block size-full"><Glyph kind="wild" /></span>;
+  if (piece.kind === "eraser") return <span className="fm-token block size-full"><Glyph kind="eraser" /></span>;
+  const badge = `absolute right-[4%] bottom-[4%] flex ${large ? "size-7" : "size-[28%]"} items-center justify-center rounded-full border border-[#C9A25A]/70 bg-[#2B1F15]/90 text-[#E4CC99]`;
   if (piece.kind === "fusion") {
-    // Dung hợp: số 8 (nghề) ở góc trên-trái, số 7 (hệ) ở góc dưới-phải thay cho biểu tượng đơn lẻ.
-    const badge = large ? "min-w-6 text-[13px]" : "min-w-[32%] text-[10px]";
+    // Dung hợp: một huy hiệu vàng hình sao thay cho biểu tượng nghề (đủ 8 nghề, 7 hệ).
     return (
-      <span className="relative block size-full">
+      <span className="fm-token relative block size-full p-[6%]">
         <Portrait id={piece.characterId} element="kim" profession="tuongSi" className="size-full" />
-        <span className={`absolute top-0 left-0 rounded-full bg-[#2B1F15]/85 p-[2px] text-center font-bold leading-none text-[#E4CC99] ${badge}`}>8</span>
-        <span className={`absolute right-0 bottom-0 rounded-full bg-[#2B1F15]/85 p-[2px] text-center font-bold leading-none text-[#E4CC99] ${badge}`}>7</span>
+        <span className={`${badge} border-[#E8C477] bg-[#8F241D] text-[#FFE9B0]`} aria-hidden>
+          <svg viewBox="0 0 24 24" className="size-[70%]" fill="currentColor"><path d="M12 2.5l2.6 6 6.4.6-4.9 4.2 1.5 6.3L12 16.3 6.4 19.6l1.5-6.3L3 9.1l6.4-.6z" /></svg>
+        </span>
       </span>
     );
   }
   return (
-    <span className="relative block size-full">
+    <span className="fm-token relative block size-full p-[6%]">
       <Portrait id={piece.characterId} element={piece.element} profession={piece.profession} className="size-full" />
-      <span className="absolute top-0 left-0 rounded-full bg-[#2B1F15]/85 p-[2px] text-[#E4CC99]"><ProfessionIcon profession={piece.profession} className={icon} /></span>
-      <span className="absolute right-0 bottom-0 rounded-full p-[2px]" style={{ background: ELEMENT_COLOR[piece.element] }}><ElementIcon element={piece.element} className={icon} /></span>
+      <span className={badge} aria-hidden>
+        <ProfessionIcon profession={piece.profession} className="size-[72%]" />
+      </span>
     </span>
   );
 }
 
-/** Chướng ngại: tảng đá xám, không phải ô để chơi. */
-function Rock() {
+/** Chướng ngại: dãy núi mực nho nằm trên bản đồ (đá núi, không đi qua được). */
+function Mountain() {
   return (
-    <svg viewBox="0 0 48 48" className="size-full p-1.5" aria-hidden focusable="false">
-      <path d="M8 36 L14 18 L24 10 L35 16 L41 34 L32 40 L16 40 Z" fill="#6b6256" stroke="#14100c" strokeWidth={2} strokeLinejoin="round" />
-      <path d="M14 18 L24 26 L35 16 M24 26 L24 40" fill="none" stroke="#14100c" strokeWidth={1.4} opacity={0.6} />
+    <svg viewBox="0 0 48 48" className="size-full p-[8%] drop-shadow-[0_2px_2px_rgba(0,0,0,0.55)]" aria-hidden focusable="false">
+      <path d="M3 38 L15 14 L22 25 L30 8 L45 38 Z" fill="#3b3128" stroke="#120d09" strokeWidth={1.6} strokeLinejoin="round" />
+      <path d="M30 8 L36 21 L31 18 L27 24 Z" fill="#8a7a64" opacity={0.85} />
+      <path d="M15 14 L19 22 L16 20 L12 26 Z" fill="#8a7a64" opacity={0.7} />
+      <path d="M3 38 H45" stroke="#120d09" strokeWidth={1.6} />
+      <path d="M9 41 q6 -3 12 0 M27 42 q6 -3 12 0" fill="none" stroke="#120d09" strokeWidth={1.2} opacity={0.55} strokeLinecap="round" />
     </svg>
   );
 }

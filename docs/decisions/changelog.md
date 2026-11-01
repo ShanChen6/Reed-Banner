@@ -435,3 +435,7 @@ Shan duyệt bảng vàng theo hạng mùa: Trấn Ải 500/300/180/80/30 và Qu
 
 Shan duyệt bảng vàng theo hạng của cả năm chế độ: Trận Đồ (Thường 150/100/60/30/20, Khó 300/200/120/60/40, Đại trận 1000/600/350/150/80), Nhật Lệnh 100/70/50/30/10, Tháp Thiên Mệnh 800/500/300/150/60, Trấn Ải 500/300/180/80/30, Quần Hùng 600/400/240/100/40. Không đổi code. Trận Đồ xếp hạng vẫn tắt mặc định sau `FORMATION_RANKED_ENABLED`.
 
+## 02/11/2026 — Sa bàn Trận Đồ là bản đồ
+
+Shan: sa bàn dùng ảnh bản đồ riêng làm nền; đặt quân thì ô sáng lên lộ bản đồ; chướng ngại thiết kế lại cho hợp bản đồ; bỏ biểu tượng hệ dài trên quân. Đã code với ảnh giữ chỗ (sương che ô chưa khai thông, núi chướng ngại, quân tròn kèm một huy hiệu nghề). Ảnh bản đồ thật do Shan thiết kế; màn chế độ và màn chơi chi tiết là gợi ý chờ chọn ([giao diện Trận Đồ](../05-ui-ux/screens/tran-do.md)).
+
