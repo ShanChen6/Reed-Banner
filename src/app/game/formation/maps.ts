@@ -1,11 +1,11 @@
-// Kho bản đồ nền của sa bàn Trận Đồ: địa danh thật thời Loạn 12 sứ quân và giai đoạn Ngô – Đinh, cộng cảnh quan chung
+// Kho ảnh nền của sa bàn Trận Đồ (tranh vẽ tay 2D điện ảnh như nền Bình Loạn): địa danh thật thời Loạn 12 sứ quân và giai đoạn Ngô – Đinh, cộng cảnh quan chung
 // (Shan chốt 02/11/2026, **không giới hạn số ảnh**). Ô chưa khai thông được ô che (ảnh đặc kín) che đi; đặt quân thì ô lộ
 // mảnh bản đồ bên dưới; hoàn thành thì hiện cả bản đồ. Bản đồ đổi theo kỳ: chọn theo `theme` của ván (suy từ seed/muối,
 // như nhau với mọi người trong kỳ).
 //
 // Thêm bản đồ mới: thả `public/art/formation/maps/<id>.webp`, thêm một dòng vào MAP_POOL, và thêm prompt vào
-// docs/06-art/prompts/tran-do-hinh-anh.md mục 1.3 (test kiểm đủ). Hiện mỗi bản đồ dùng một tranh nền chiến dịch có sẵn làm
-// ảnh giữ chỗ (8 ảnh lặp cho nhiều bản đồ); ảnh thật thay dần từng dòng bằng cách đổi `src`.
+// docs/06-art/prompts/tran-do-hinh-anh.md mục 1.3 (test kiểm đủ). Bản đồ chưa có ảnh thật dùng tranh nền chiến dịch làm
+// ảnh giữ chỗ (8 ảnh lặp); ảnh thật thêm id vào REAL_MAPS.
 
 import { WARLORD_ENCOUNTERS } from "@/core";
 
@@ -32,7 +32,10 @@ const PLACEHOLDERS = [
   "/art/campaign/bg/atlas.webp",
 ] as const;
 
-const placeholder = (n: number) => PLACEHOLDERS[n % PLACEHOLDERS.length]!;
+/** Bản đồ đã có ảnh thật (`public/art/formation/maps/<id>.webp`); thêm id vào đây khi thả ảnh mới. */
+const REAL_MAPS: ReadonlySet<string> = new Set(["hoaLu", "tranLam", "phamBachHo", "ngoXuongXi", "ngoNhatKhanh"]);
+
+const srcFor = (id: string, n: number) => (REAL_MAPS.has(id) ? `/art/formation/maps/${id}.webp` : PLACEHOLDERS[n % PLACEHOLDERS.length]!);
 
 /** Địa danh thật có thêm ngoài 12 sứ quân. */
 const HISTORIC: readonly Omit<FormationMap, "src" | "kind">[] = [
@@ -64,19 +67,19 @@ export const MAP_POOL: readonly FormationMap[] = [
   {
     id: "hoaLu",
     place: "Hoa Lư",
-    src: placeholder(0),
+    src: srcFor("hoaLu", 0),
     blurb: "Hoa Lư, Ninh Bình: vùng núi đá vôi nơi Đinh Bộ Lĩnh dựng căn cứ, sau này là kinh đô Đại Cồ Việt.",
     kind: "lich-su",
   },
   ...WARLORD_ENCOUNTERS.map((w, i): FormationMap => ({
     id: w.id,
     place: w.place,
-    src: placeholder(i + 1),
+    src: srcFor(w.id, i + 1),
     blurb: `${w.place} (nay thuộc ${w.modernRegion}): vùng của ${w.foes[0]?.name ?? "một sứ quân"} thời Loạn 12 sứ quân.`,
     kind: "lich-su",
   })),
-  ...HISTORIC.map((m, i): FormationMap => ({ ...m, src: placeholder(i + 13), kind: "lich-su" })),
-  ...LANDSCAPES.map((m, i): FormationMap => ({ ...m, src: placeholder(i + 20), kind: "canh-quan" })),
+  ...HISTORIC.map((m, i): FormationMap => ({ ...m, src: srcFor(m.id, i + 13), kind: "lich-su" })),
+  ...LANDSCAPES.map((m, i): FormationMap => ({ ...m, src: srcFor(m.id, i + 20), kind: "canh-quan" })),
 ];
 
 /** Mỗi bậc lệch một khoảng khác nhau để trong cùng một kỳ các bậc không trùng bản đồ. */

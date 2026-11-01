@@ -1,5 +1,13 @@
 # Nhật ký thay đổi thiết kế
 
+## 02/11/2026
+
+**Trận Đồ: 5 ảnh bản đồ thật**
+- Hoa Lư, Bố Hải Khẩu, Đằng Châu, Bình Kiều, Đường Lâm thay ảnh giữ chỗ (1024², WebP). Còn 25 bản đồ.
+
+**Trận Đồ: tích hợp ô che và 4 icon chướng ngại do Shan tạo**
+- Ô che `fog.webp` được duyệt, icon núi/rừng/đầm lầy/thành lũy "tạm được" thay SVG giữ chỗ. Thêm `scripts/cutout-formation-icon.py` để cắt ô caro vẽ sẵn thành nền trong suốt; ghi lưu ý nền phẳng cho lần tạo sau ở [prompt hình ảnh](../06-art/prompts/tran-do-hinh-anh.md).
+
 ## 31/10/2026
 
 **Cân bằng sơ bộ Xạ thủ/Sát thủ**
@@ -448,4 +456,8 @@ Shan chốt: kho ảnh bản đồ xoay theo kỳ (13 địa danh thật thời 
 ### 02/11/2026 (bổ sung) — Kho bản đồ 30, màn chế độ và màn chơi chi tiết Trận Đồ
 
 Shan: thêm càng nhiều địa danh càng tốt (kho không giới hạn), cần prompt tạo ảnh đầy đủ (bản đồ, ô che đặc kín, 4 icon chướng ngại), và triển khai giao diện màn chế độ và màn chơi chi tiết rồi sẽ test lần 1 và góp ý. Đã làm: kho 30 bản đồ (13 địa danh sứ quân và Hoa Lư, 7 địa danh Ngô – Đinh, 10 cảnh quan chung) kèm [bộ prompt đầy đủ](../06-art/prompts/tran-do-hinh-anh.md) và test kiểm mọi bản đồ có prompt; màn chế độ (tab, thẻ bản đồ mờ sương, đồng hồ kỳ, thang thưởng bậc thang, bộ sưu tập địa danh); màn chơi (lệnh bài, ba ngọn lửa Bỏ Lệnh, thanh dưới màn hình cho điện thoại, vệt sáng dọn hàng, nút gợi ý, hướng dẫn từng bước). API tổng quan xếp hạng thêm `endsAt` và `theme` ([giao diện Trận Đồ](../05-ui-ux/screens/tran-do.md)).
+
+### 02/11/2026 (sửa) — Prompt ảnh Trận Đồ đổi sang phong cách nền Bình Loạn
+
+Ảnh tạo từ bộ prompt đầu ("bản đồ thủy mặc trên giấy dó nhìn từ trên xuống") chưa đạt chất lượng. Shan đề nghị tham khảo prompt nền Bình Loạn. Đã viết lại toàn bộ 30 prompt bản đồ theo khối phong cách tranh vẽ tay 2D điện ảnh của nền chiến dịch, chỉ bỏ điều kiện hộp thoại và thêm điều kiện nền sa bàn (vuông 1:1 ưu tiên, góc nhìn hơi cao, chi tiết rải đều, tông trung bình). Ô che và 4 icon chướng ngại giữ nguyên ([prompt hình ảnh Trận Đồ](../06-art/prompts/tran-do-hinh-anh.md)).
 

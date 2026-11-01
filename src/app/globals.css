@@ -951,12 +951,12 @@
   transition: opacity 0.45s ease;
 }
 .fm-cell[data-state="fog"]::before {
-  background: #2a1f16 url("/art/formation/fog.svg") center / 48px 48px;
+  background: #2a1f16 url("/art/formation/fog.webp") center / 100% 100%;
   box-shadow: inset 0 0 0 1px rgb(143 106 50 / 0.45);
   opacity: 1;
 }
 .fm-cell[data-state="lit"]::before {
-  background: #2a1f16 url("/art/formation/fog.svg") center / 48px 48px;
+  background: #2a1f16 url("/art/formation/fog.webp") center / 100% 100%;
   opacity: 0;
 }
 .fm-cell[data-state="lit"] {
@@ -998,7 +998,7 @@
 
 /* Trận Đồ: lớp che dùng ở thẻ bản đồ (cùng họa tiết với ô che trên sa bàn). */
 .fm-fogfill {
-  background: #2a1f16 url("/art/formation/fog.svg") center / 48px 48px;
+  background: #2a1f16 url("/art/formation/fog.webp") center / 96px 96px;
 }
 
 /* Trận Đồ: vệt sáng quét qua hàng hoặc cột vừa được dọn. */
