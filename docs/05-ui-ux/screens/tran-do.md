@@ -24,13 +24,13 @@ Luật chơi ở [GDD Binh Pháp](../../02-game-modes/future/02-binh-phap-gdd.md
 - **Quân**: chân dung tròn có bóng như con cờ đặt lên bản đồ, kèm **hai huy hiệu tròn nhỏ**: hệ (nền theo màu hệ) ở đáy trái, nghề (nền tối) ở đáy phải; kích thước theo ô, không nhỏ hơn 11px. Quân dung hợp dùng một huy hiệu sao đỏ ở giữa đáy.
 - **Hoàn thành**: quân và chướng ngại mờ đi (0,8 giây) để cả bản đồ hiện ra trên sa bàn, và khung kết quả hiện ảnh bản đồ đầy đủ kèm địa danh, một dòng giới thiệu và chú thích "tranh minh họa tái dựng, không phải bản đồ lịch sử chính xác" (theo [sổ nguồn sử](../../02-game-modes/campaign/history-sources.md): vị trí một số địa danh còn tranh luận, ví dụ Bình Kiều).
 - **Tùy chỉnh** (`CustomForm.tsx`, trong Chơi thường): cột và hàng 3–10, chướng ngại 0–30%, Quân Lệnh 0–15%, Thu Hồi 0–10%, nhân vật dung hợp 0–10% (khóa tới khi có nhân vật được duyệt), chọn từng nghề (≥2) và từng hệ (≥2). Lựa chọn lưu ở máy; ván tùy chỉnh không ghi điểm cao nhất, không thưởng, không xếp hạng; engine kiểm lại giới hạn khi tạo và khi nạp ván.
-- Ảnh giữ chỗ: tranh nền chiến dịch có sẵn (8 ảnh cho 13 địa danh nên có lặp, và không phải bản đồ nhìn từ trên xuống).
+- Ảnh giữ chỗ: tranh nền chiến dịch có sẵn (8 ảnh cho 30 bản đồ nên có lặp). Chúng cùng phong cách với ảnh thật sắp tới và cho thấy đúng hiệu ứng lộ dần.
 
 ## 3. Yêu cầu ảnh (cho họa sĩ)
 
 **Prompt đầy đủ, dán được ngay, ở [prompt hình ảnh Trận Đồ](../../06-art/prompts/tran-do-hinh-anh.md)** (nguồn duy nhất, không lặp ở đây): 30 bản đồ (13 địa danh sứ quân và Hoa Lư, 7 địa danh Ngô – Đinh, 10 cảnh quan chung), ô che đặc kín và bốn icon chướng ngại. Kho **không giới hạn số ảnh**; cách thêm bản đồ mới ở mục 1.4 tài liệu đó.
 
-Tóm tắt thông số: bản đồ vuông 2048×2048 WebP (chi tiết quan trọng trong 80% giữa ảnh, tương phản vừa để chân dung quân đọc rõ), ô che lát được 256×256 đặc kín, icon chướng ngại 256×256 nền trong suốt.
+Tóm tắt thông số: **tranh vẽ tay 2D điện ảnh đúng phong cách nền Bình Loạn** (cập nhật 02/11/2026, thay cho "bản đồ thủy mặc" của bản đầu vì ảnh tạo ra chưa đạt), ưu tiên vuông 2048×2048 WebP (16:9 vẫn dùng được, sa bàn cắt theo tỉ lệ bàn), chi tiết rải đều toàn khung, tông trung bình để chân dung quân đọc rõ; ô che lát được 256×256 đặc kín; icon chướng ngại 256×256 nền trong suốt.
 
 ## 4. Còn thiếu và rủi ro
 
