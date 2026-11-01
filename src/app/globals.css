@@ -931,3 +931,39 @@
     repeating-linear-gradient(90deg, #c9a25a14 0 1px, transparent 1px 28px),
     #21170f;
 }
+
+/* Trận Đồ: sa bàn là một tấm bản đồ. Ô chưa khai thông bị sương che; ô khai thông trong suốt để lộ bản đồ bên dưới.
+   Hai trạng thái dùng cùng một thuộc tính (background-color) nên đổi qua lại có chuyển động mượt. */
+.fm-board {
+  background-color: #1a130e;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.fm-cell {
+  position: relative;
+  transition: background-color 0.45s ease, box-shadow 0.45s ease;
+}
+.fm-cell[data-state="fog"] {
+  background-color: rgb(26 19 14 / 0.94);
+  box-shadow: inset 0 0 0 1px rgb(143 106 50 / 0.3);
+}
+.fm-cell[data-state="lit"] {
+  background-color: rgb(26 19 14 / 0);
+  box-shadow: inset 0 0 0 1px rgb(255 226 160 / 0.28), inset 0 0 16px rgb(255 214 130 / 0.16);
+}
+.fm-cell[data-state="rock"] {
+  background-color: rgb(12 9 6 / 0.38);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.35);
+}
+.fm-board[data-won="true"] .fm-cell[data-state="lit"] {
+  box-shadow: inset 0 0 0 1px rgb(255 226 160 / 0.1);
+}
+.fm-token {
+  filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.6));
+}
+@media (prefers-reduced-motion: reduce) {
+  .fm-cell {
+    transition: none;
+  }
+}

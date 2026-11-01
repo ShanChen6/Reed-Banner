@@ -123,3 +123,7 @@
 
 - TODO: Duyệt luật PvP trực tiếp ([thiết kế DRAFT](../02-game-modes/future/13-quan-hung-pvp-truc-tiep.md)): chuẩn hóa cấp và trang bị hay để nguyên tiến độ; dùng đội 3vs3 đang chọn hay chọn riêng mỗi trận; con số hết giờ, mất kết nối, trận mỗi ngày và số lần đánh lại cùng một người; kênh đẩy (polling, SSE hay dịch vụ ngoài); có giao hữu không tính Elo không; song song hay thay thế đấu trường bóng ma.
 
+## Giao diện Trận Đồ
+
+- TODO: Shan thiết kế ảnh bản đồ cho sa bàn Trận Đồ (yêu cầu ở [giao diện Trận Đồ mục 3](../05-ui-ux/screens/tran-do.md#3-yêu-cầu-ảnh-bản-đồ-cho-họa-sĩ)), chọn một ảnh mỗi bậc hay kho ảnh xoay theo kỳ, kiểu núi chướng ngại, địa danh thật hay hư cấu, và hướng thiết kế màn chế độ và màn chơi chi tiết (mục 5, 6 cùng tài liệu).
+
