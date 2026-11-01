@@ -16,12 +16,21 @@ import {
   type Piece,
   type PuzzleState,
   type Ruleset,
+  generateObstacles,
+  FUSION_ALLOWED_LEVELS,
+  FUSION_CHARACTERS,
+  MAX_FUSION_CHARACTERS,
+  type FusionCharacter,
+  type FusionPiece,
+  playableCount,
 } from "../../../src/core/binh-phap";
 import type { Element, Profession } from "../../../src/core/battle";
+import { createRng } from "../../../src/core/rng";
 
-const NHAP_MON = RULESETS[0]!; // 3×3
-const KHO = RULESETS[2]!; // 8×8
-const THUONG = RULESETS[1]!; // 5×5
+const HUONG_DAN = RULESETS[0]!; // 3×3, hướng dẫn
+// Bàn thử 8×8 đặc (cùng id "kho" để reducer tìm được bộ luật); bậc Khó thật là 6×6 có chướng ngại.
+const KHO: Ruleset = { ...RULESETS[2]!, width: 8, height: 8, obstaclePercent: 0 };
+const THUONG: Ruleset = { ...RULESETS[1]!, width: 5, height: 5, obstaclePercent: 0 };
 
 const n = (profession: Profession, element: Element, uid = `${profession}-${element}`): BoardPiece => ({
   kind: "normal",
@@ -36,10 +45,11 @@ const eraser: Piece = { kind: "eraser", uid: "e" };
 /** State thử: đặt sẵn quân và quân đang cầm, ô có quân tự động là đã khai thông. */
 function setup(rules: Ruleset, pieces: Record<string, BoardPiece>, hand: Piece, extra: Partial<PuzzleState> = {}, covered: number[] = []): PuzzleState {
   const base = createPuzzle(rules, 1);
-  const cells: Cell[] = base.cells.map((c) => ({ ...c }));
+  // Bàn thử luôn đặc: bỏ chướng ngại sinh theo seed để vị trí quân trong test cố định.
+  const cells: Cell[] = base.cells.map((c) => ({ ...c, blocked: false }));
   for (const [key, piece] of Object.entries(pieces)) {
     const [r, c] = key.split(",").map(Number) as [number, number];
-    cells[idx(rules.width, r, c)] = { covered: true, piece };
+    cells[idx(rules.width, r, c)] = { blocked: false, covered: true, piece };
   }
   for (const i of covered) cells[i] = { ...cells[i]!, covered: true };
   const coveredCount = cells.filter((c) => c.covered).length;
@@ -120,7 +130,7 @@ describe("Quân Lệnh và Thu Hồi", () => {
 
 describe("hàng, cột và khai thông", () => {
   it("hàng đủ quân thì xóa hàng, giữ covered, cộng điểm và hạ thanh về 0", () => {
-    const s = setup(NHAP_MON, { "0,0": n("ySu", "kim"), "0,1": n("ySu", "hoa") }, n("tuongSi", "hoa"), { discardHeat: 2 });
+    const s = setup(HUONG_DAN, { "0,0": n("ySu", "kim"), "0,1": n("ySu", "hoa") }, n("tuongSi", "hoa"), { discardHeat: 2 });
     const t = transition(s, place(0, 2));
     assert.ok(t.ok);
     for (let c = 0; c < 3; c++) {
@@ -134,7 +144,7 @@ describe("hàng, cột và khai thông", () => {
 
   it("hàng và cột kín cùng lúc: xóa hợp các ô, mỗi đường tính điểm một lần", () => {
     const s = setup(
-      NHAP_MON,
+      HUONG_DAN,
       { "0,0": n("ySu", "kim"), "0,1": n("ySu", "kim"), "1,0": n("ySu", "kim") },
       n("ySu", "kim"),
     );
@@ -142,7 +152,7 @@ describe("hàng, cột và khai thông", () => {
     assert.ok(t.ok);
     assert.equal(t.state.linesCleared, 1); // chỉ hàng 0; cột 2 chưa kín
     const s2 = setup(
-      NHAP_MON,
+      HUONG_DAN,
       { "0,1": n("ySu", "kim"), "0,2": n("ySu", "kim"), "1,0": n("ySu", "kim"), "2,0": n("ySu", "kim") },
       n("ySu", "kim"),
     );
@@ -154,7 +164,7 @@ describe("hàng, cột và khai thông", () => {
   });
 
   it("xóa xong, bàn trống thì đặt được ở ô bất kỳ", () => {
-    const s = setup(NHAP_MON, { "0,0": n("ySu", "kim"), "0,1": n("ySu", "kim") }, n("ySu", "kim"));
+    const s = setup(HUONG_DAN, { "0,0": n("ySu", "kim"), "0,1": n("ySu", "kim") }, n("ySu", "kim"));
     const t = transition(s, place(0, 2));
     assert.ok(t.ok && t.state.phase === "playing");
     assert.equal(legalPlacements(t.state, n("tuongSi", "hoa")).length, 9);
@@ -162,7 +172,7 @@ describe("hàng, cột và khai thông", () => {
 
   it("thắng khi mọi ô đã khai thông, xét trước khi sinh quân mới (RNG không tiến)", () => {
     const covered = Array.from({ length: 9 }, (_, i) => i).filter((i) => i !== 8);
-    const s = setup(NHAP_MON, { "2,1": n("ySu", "kim") }, n("ySu", "kim"), {}, covered);
+    const s = setup(HUONG_DAN, { "2,1": n("ySu", "kim") }, n("ySu", "kim"), {}, covered);
     const t = transition(s, place(2, 2));
     assert.ok(t.ok);
     assert.equal(t.state.phase, "won");
@@ -174,10 +184,10 @@ describe("hàng, cột và khai thông", () => {
   });
 
   it("đặt lại vào ô đã khai thông chỉ không tăng coveredCount", () => {
-    const s = setup(NHAP_MON, { "1,1": n("ySu", "kim") }, n("ySu", "kim"), {}, [0]);
+    const s = setup(HUONG_DAN, { "1,1": n("ySu", "kim") }, n("ySu", "kim"), {}, [0]);
     const t = transition(s, place(0, 1));
     assert.ok(t.ok && t.state.coveredCount === s.coveredCount + 1);
-    const again = setup(NHAP_MON, { "1,1": n("ySu", "kim") }, n("ySu", "kim"), {}, [1]);
+    const again = setup(HUONG_DAN, { "1,1": n("ySu", "kim") }, n("ySu", "kim"), {}, [1]);
     const t2 = transition(again, place(0, 1));
     assert.ok(t2.ok && t2.state.coveredCount === again.coveredCount);
   });
@@ -185,7 +195,7 @@ describe("hàng, cột và khai thông", () => {
 
 describe("Bỏ Lệnh", () => {
   it("bỏ quân tăng thanh, sinh quân mới và tiến RNG", () => {
-    const s = createPuzzle(NHAP_MON, 7);
+    const s = createPuzzle(HUONG_DAN, 7);
     const t = transition(s, { kind: "discard" });
     assert.ok(t.ok);
     assert.equal(t.state.discardHeat, 1);
@@ -195,13 +205,13 @@ describe("Bỏ Lệnh", () => {
   });
 
   it("thanh đầy mà còn bỏ nữa thì thua", () => {
-    let s = createPuzzle(NHAP_MON, 7);
-    for (let i = 0; i < NHAP_MON.maxHeat; i++) {
+    let s = createPuzzle(HUONG_DAN, 7);
+    for (let i = 0; i < HUONG_DAN.maxHeat; i++) {
       const t = transition(s, { kind: "discard" });
       assert.ok(t.ok);
       s = t.state;
     }
-    assert.equal(s.discardHeat, NHAP_MON.maxHeat);
+    assert.equal(s.discardHeat, HUONG_DAN.maxHeat);
     assert.equal(s.phase, "playing");
     const lost = transition(s, { kind: "discard" });
     assert.ok(lost.ok && lost.state.phase === "lost");
@@ -280,10 +290,11 @@ describe("bất biến và xác định", () => {
 
 describe("lưu và nạp", () => {
   it("vòng tròn serialize/parse giữ nguyên state", () => {
-    let s = createPuzzle(THUONG, 21);
+    const real = RULESETS[1]!;
+    let s = createPuzzle(real, 21);
     for (let i = 0; i < 10; i++) {
       const legal = legalPlacements(s);
-      const t = transition(s, legal.length ? place(Math.floor(legal[0]! / 5), legal[0]! % 5) : { kind: "discard" });
+      const t = transition(s, legal.length ? place(Math.floor(legal[0]! / real.width), legal[0]! % real.width) : { kind: "discard" });
       if (!t.ok || t.state.phase !== "playing") break;
       s = t.state;
     }
@@ -291,7 +302,7 @@ describe("lưu và nạp", () => {
   });
 
   it("dữ liệu hỏng thì trả null chứ không ném lỗi", () => {
-    const good = JSON.parse(serializePuzzle(createPuzzle(NHAP_MON, 1))) as Record<string, unknown>;
+    const good = JSON.parse(serializePuzzle(createPuzzle(HUONG_DAN, 1))) as Record<string, unknown>;
     const bads: unknown[] = [
       null,
       "{",
@@ -309,5 +320,299 @@ describe("lưu và nạp", () => {
       { ...good, cells: (good.cells as unknown[]).map((c, i) => (i === 0 ? { covered: false, piece: { kind: "wild", uid: "w" } } : c)) },
     ];
     for (const b of bads) assert.equal(parsePuzzle(b), null);
+  });
+});
+
+describe("chướng ngại và bàn chữ nhật", () => {
+  const wall = (rules: Ruleset, ...blockedAt: [number, number][]): PuzzleState => {
+    const base = setup(rules, {}, n("ySu", "kim"));
+    const cells = base.cells.map((c, i) => ({ ...c, blocked: blockedAt.some(([r, col]) => idx(rules.width, r, col) === i) }));
+    return { ...base, cells };
+  };
+
+  it("ô chướng ngại không đặt được, kể cả Quân Lệnh và Thu Hồi", () => {
+    const s = wall(HUONG_DAN, [1, 1]);
+    assert.equal(!checkPlacement(s, n("ySu", "kim"), 1, 1).ok && (checkPlacement(s, n("ySu", "kim"), 1, 1) as { reason: string }).reason, "blocked");
+    assert.deepEqual(transition({ ...s, hand: wild() }, place(1, 1)), { ok: false, reason: "blocked" });
+    assert.deepEqual(transition({ ...s, hand: eraser }, place(1, 1)), { ok: false, reason: "blocked" });
+    assert.equal(legalPlacements(s).length, 8);
+  });
+
+  it("chướng ngại không làm cầu nối: quân chỉ kề chướng ngại thì không đặt được", () => {
+    const base = setup(HUONG_DAN, { "0,0": n("ySu", "kim") }, n("ySu", "kim"));
+    const s: PuzzleState = { ...base, cells: base.cells.map((c, i) => ({ ...c, blocked: i === idx(3, 0, 1) })) };
+    assert.deepEqual(legalPlacements(s).map((i) => [Math.floor(i / 3), i % 3]), [[1, 0]]);
+  });
+
+  it("thắng khi khai thông hết ô chơi được, không cần ô chướng ngại", () => {
+    const base = setup(HUONG_DAN, { "2,1": n("ySu", "kim") }, n("ySu", "kim"));
+    const blockedAt = idx(3, 0, 0);
+    const covered = base.cells.map((c, i) => (i === blockedAt || i === idx(3, 2, 2) ? c : { ...c, covered: true }));
+    const cells = covered.map((c, i) => (i === blockedAt ? { ...c, blocked: true, covered: false } : c));
+    const s: PuzzleState = { ...base, cells, coveredCount: cells.filter((c) => c.covered).length };
+    assert.equal(playableCount(cells), 8);
+    const t = transition(s, place(2, 2));
+    assert.ok(t.ok && t.state.phase === "won");
+  });
+
+  it("hàng có chướng ngại kín khi mọi ô chơi được đã có quân, nhưng đường dưới 3 ô chơi được thì không tính", () => {
+    const base = setup(HUONG_DAN, { "1,0": n("ySu", "kim"), "1,2": n("ySu", "kim") }, n("ySu", "kim"));
+    const s3: PuzzleState = { ...base, cells: base.cells.map((c, i) => ({ ...c, blocked: i === idx(3, 0, 0) })) };
+    assert.equal(transition(s3, place(1, 1)).ok && (transition(s3, place(1, 1)) as { state: PuzzleState }).state.linesCleared, 1); // hàng 1 đủ 3 ô
+    // Hàng 0 chỉ còn 2 ô chơi được: đặt kín cũng không dọn.
+    const only2 = setup(HUONG_DAN, { "0,1": n("ySu", "kim") }, n("ySu", "kim"));
+    const cells = only2.cells.map((c, i) => ({ ...c, blocked: i === idx(3, 0, 0) }));
+    const t = transition({ ...only2, cells }, place(0, 2));
+    assert.ok(t.ok && t.state.linesCleared === 0);
+  });
+
+  it("bàn 5×7: chỉ số hàng-trước-cột đúng và kề 4 hướng không vượt biên", () => {
+    const rules: Ruleset = { ...RULESETS[1]!, width: 5, height: 7, obstaclePercent: 0 };
+    assert.equal(rules.width * rules.height, 35);
+    const s = setup(rules, { "6,4": n("ySu", "kim") }, n("ySu", "moc"));
+    assert.deepEqual(legalPlacements(s).map((i) => [Math.floor(i / 5), i % 5]), [[5, 4], [6, 3]]);
+  });
+
+  it("sinh chướng ngại xác định, đủ số lượng và các ô còn lại luôn liền nhau", () => {
+    for (const [w, h, pct] of [[5, 7, 10], [7, 9, 12], [9, 9, 14], [9, 9, 40]] as const) {
+      for (let seed = 1; seed <= 25; seed++) {
+        const a = generateObstacles(createRng(seed), w, h, pct);
+        assert.deepEqual(a, generateObstacles(createRng(seed), w, h, pct));
+        const count = a.filter(Boolean).length;
+        assert.ok(count <= Math.round((w * h * pct) / 100));
+        assert.ok(count >= Math.round((w * h * pct) / 100) - 2, `${w}x${h} ${pct}% seed ${seed}: ${count}`);
+        // Liền nhau: lan từ một ô trống phải tới mọi ô trống.
+        const free = a.map((b, i) => (b ? -1 : i)).filter((i) => i >= 0);
+        const seen = new Set([free[0]!]);
+        const stack = [free[0]!];
+        while (stack.length) {
+          const at = stack.pop()!;
+          for (const nb of [at - w, at + w, at % w ? at - 1 : -1, (at + 1) % w ? at + 1 : -1]) {
+            if (nb >= 0 && nb < w * h && !a[nb] && !seen.has(nb)) { seen.add(nb); stack.push(nb); }
+          }
+        }
+        assert.equal(seen.size, free.length);
+      }
+    }
+  });
+
+  it("ván của bậc Thường có chướng ngại khác nhau theo seed và lưu/nạp giữ nguyên", () => {
+    const rules = RULESETS[1]!;
+    const a = createPuzzle(rules, 1);
+    const b = createPuzzle(rules, 2);
+    assert.equal(a.width, 5);
+    assert.equal(a.height, 5);
+    assert.ok(a.cells.some((c) => c.blocked));
+    assert.notDeepEqual(a.cells.map((c) => c.blocked), b.cells.map((c) => c.blocked));
+    assert.deepEqual(parsePuzzle(serializePuzzle(a)), a);
+  });
+
+  it("Đại trận: cỡ mỗi cạnh 7–10 theo seed, xác định, đủ biến thiên, ô chơi được không vượt trần", () => {
+    const rules = RULESETS[3]!;
+    const cap = rules.randomSize!.maxPlayable;
+    const sizes = new Set<string>();
+    for (let seed = 1; seed <= 300; seed++) {
+      const s = createPuzzle(rules, seed);
+      assert.ok(s.width >= 7 && s.width <= 10 && s.height >= 7 && s.height <= 10, `${s.width}x${s.height}`);
+      assert.equal(s.cells.length, s.width * s.height);
+      assert.ok(playableCount(s.cells) <= cap, `seed ${seed}: ${playableCount(s.cells)} ô chơi được`);
+      assert.ok(playableCount(s.cells) >= Math.round(s.width * s.height * 0.7), "chướng ngại không được ăn quá 30% bàn");
+      assert.deepEqual(createPuzzle(rules, seed), s);
+      sizes.add(`${s.width}x${s.height}`);
+    }
+    assert.ok(sizes.size >= 12, `chỉ có ${sizes.size} cỡ khác nhau`);
+    // Bàn lớn nhất (10×10) phải bị tăng chướng ngại tới trần; bàn nhỏ nhất theo tỉ lệ thấp.
+    const big = Array.from({ length: 2000 }, (_, i) => createPuzzle(rules, i + 1)).find((s) => s.width === 10 && s.height === 10)!;
+    assert.equal(playableCount(big.cells), cap);
+  });
+
+  it("Đại trận: có cả Xạ thủ và Sát thủ trong bộ quân", () => {
+    const rules = RULESETS[3]!;
+    assert.ok(rules.professions.includes("xaThu") && rules.professions.includes("satThu"));
+    let s = createPuzzle(rules, 5);
+    const seen = new Set<string>();
+    for (let i = 0; i < 600; i++) {
+      if (s.hand.kind === "normal") seen.add(s.hand.profession);
+      const t = transition(s, { kind: "discard" });
+      s = !t.ok || t.state.phase === "lost" ? createPuzzle(rules, i + 9) : t.state;
+    }
+    assert.ok(seen.has("xaThu") && seen.has("satThu"), [...seen].join(","));
+  });
+
+  it("nạp: cỡ ngoài khoảng của Đại trận hoặc sai cỡ cố định bị từ chối", () => {
+    const dt = JSON.parse(serializePuzzle(createPuzzle(RULESETS[3]!, 1))) as { width: number; cells: unknown[] };
+    assert.equal(parsePuzzle({ ...dt, width: 11 }), null);
+    assert.equal(parsePuzzle({ ...dt, width: dt.width === 7 ? 8 : 7 }), null); // số ô không khớp cỡ
+    const th = JSON.parse(serializePuzzle(createPuzzle(RULESETS[1]!, 1))) as { width: number };
+    assert.equal(parsePuzzle({ ...th, width: 6 }), null);
+  });
+
+  it("nạp từ chối ô chướng ngại có quân hoặc đã khai thông", () => {
+    const good = JSON.parse(serializePuzzle(createPuzzle(RULESETS[1]!, 1))) as { cells: { blocked: boolean; covered: boolean; piece: unknown }[] };
+    const i = good.cells.findIndex((c) => c.blocked);
+    for (const bad of [{ covered: true, piece: null }, { covered: false, piece: { kind: "wild", uid: "w" } }]) {
+      const cells = good.cells.map((c, k) => (k === i ? { blocked: true, ...bad } : c));
+      assert.equal(parsePuzzle({ ...good, cells }), null);
+    }
+  });
+
+  it("thưởng thắng cộng theo vạch Bỏ Lệnh còn lại và số nước tiết kiệm", () => {
+    const covered = Array.from({ length: 9 }, (_, i) => i).filter((i) => i !== 8);
+    const win = (extra: Partial<PuzzleState>) => {
+      const s = setup(HUONG_DAN, { "2,1": n("ySu", "kim") }, n("ySu", "kim"), extra, covered);
+      const t = transition(s, place(2, 2));
+      assert.ok(t.ok && t.state.phase === "won");
+      return t.state.score;
+    };
+    const w = HUONG_DAN.score;
+    const par = Math.floor(w.parTurnsPerCell * 9);
+    // turn = 4 → tiết kiệm par − 5 nước; thanh trống 3 vạch (heat 0).
+    const cool = win({ turn: 4, discardHeat: 0 });
+    assert.equal(cool, w.place + w.perfectNeighbor + w.win + w.winPerHeatLeft * 3 + w.winPerTurnSaved * (par - 5));
+    const hot = win({ turn: 4, discardHeat: 3 });
+    assert.equal(hot, w.place + w.perfectNeighbor + w.win + w.winPerHeatLeft * 1 + w.winPerTurnSaved * (par - 5)); // thanh 3 → đặt thành công hạ còn 2 → trống 1 vạch
+    assert.ok(win({ turn: 40, discardHeat: 0 }) < cool);
+  });
+});
+
+describe("nhân vật dung hợp (kiểu Đinh Ngọc)", () => {
+  const NGOC: FusionPiece = { kind: "fusion", uid: "f", characterId: "dinhNgoc" };
+
+  it("khớp mọi quân kề thường", () => {
+    const s = setup(KHO, { "3,3": n("ySu", "kim"), "5,5": n("quanSu", "phong") }, NGOC);
+    assert.deepEqual(checkPlacement(s, NGOC, 3, 4), { ok: true });
+    assert.deepEqual(checkPlacement(s, NGOC, 4, 5), { ok: true });
+  });
+
+  it("vẫn phải đặt sát một quân, khác Quân Lệnh", () => {
+    const s = setup(KHO, { "3,3": n("ySu", "kim") }, NGOC);
+    assert.deepEqual(checkPlacement(s, NGOC, 0, 0), { ok: false, reason: "notAdjacent", blockers: [] });
+    assert.deepEqual(checkPlacement(s, wild(), 0, 0), { ok: true });
+    assert.deepEqual(legalPlacements(s).map((i) => [Math.floor(i / 8), i % 8]), [[2, 3], [3, 2], [3, 4], [4, 3]]);
+  });
+
+  it("bàn trống thì đặt ở ô bất kỳ như quân thường", () => {
+    const s = setup(KHO, {}, NGOC);
+    assert.equal(legalPlacements(s).length, 64);
+  });
+
+  it("không đặt đè lên quân khác và không đặt vào chướng ngại", () => {
+    const s = setup(KHO, { "3,3": n("ySu", "kim") }, NGOC);
+    assert.equal(!checkPlacement(s, NGOC, 3, 3).ok && (checkPlacement(s, NGOC, 3, 3) as { reason: string }).reason, "occupied");
+  });
+
+  it("quân thường kề quân dung hợp vẫn phải khớp các quân kề khác", () => {
+    const s = setup(KHO, { "3,3": NGOC, "2,4": n("ySu", "kim") }, n("tuongSi", "hoa"));
+    const c = checkPlacement(s, s.hand, 3, 4);
+    assert.equal(!c.ok && c.reason, "mismatch");
+    assert.deepEqual(!c.ok && c.blockers, [idx(8, 2, 4)]);
+    // Khớp quân kia thì được, nhờ quân dung hợp không cản.
+    const ok = setup(KHO, { "3,3": NGOC, "2,4": n("ySu", "kim") }, n("quanSu", "kim"));
+    assert.deepEqual(checkPlacement(ok, ok.hand, 3, 4), { ok: true });
+  });
+
+  it("không tạo điểm khớp hoàn hảo, cả khi đặt lẫn khi làm quân kề", () => {
+    const placing = setup(KHO, { "3,3": n("ySu", "kim") }, NGOC);
+    const t = transition(placing, place(3, 4));
+    assert.ok(t.ok && t.state.score === KHO.score.place);
+    const beside = setup(KHO, { "3,3": NGOC }, n("ySu", "kim"));
+    const t2 = transition(beside, place(3, 4));
+    assert.ok(t2.ok && t2.state.score === KHO.score.place);
+  });
+
+  it("hai quân dung hợp đặt cạnh nhau được", () => {
+    const s = setup(KHO, { "3,3": NGOC }, { ...NGOC, uid: "g", characterId: "nhanVatKhac" });
+    assert.deepEqual(checkPlacement(s, s.hand, 3, 4), { ok: true });
+  });
+
+  it("Hướng dẫn và Thường không bao giờ có quân dung hợp, kể cả khi lọt vào danh sách", () => {
+    assert.deepEqual([...FUSION_ALLOWED_LEVELS].sort(), ["dai-tran", "kho"]);
+    for (const r of RULESETS) if (!FUSION_ALLOWED_LEVELS.includes(r.id)) assert.equal(r.fusions.length, 0, r.id);
+  });
+
+  it("danh sách mặc định hợp lệ: tối đa 2 nhân vật, không trùng, bậc có thật", () => {
+    assert.ok(FUSION_CHARACTERS.length <= MAX_FUSION_CHARACTERS);
+    assert.equal(MAX_FUSION_CHARACTERS, 2);
+    const ids = new Set<string>();
+    for (const f of FUSION_CHARACTERS) {
+      assert.ok(!ids.has(f.characterId), `trùng ${f.characterId}`);
+      ids.add(f.characterId);
+      assert.ok(f.name.length > 0 && f.levels.length > 0);
+      assert.ok(f.levels.every((l) => RULESETS.some((r) => r.id === l)));
+      assert.ok(f.levels.every((l) => FUSION_ALLOWED_LEVELS.includes(l)), `${f.characterId} chỉ được ở bậc Khó và Đại trận`);
+    }
+  });
+
+  /** Thay tạm bậc Đại trận trong registry để thử danh sách dung hợp khác rỗng, rồi trả lại. */
+  const withFusions = <T,>(fusions: readonly FusionCharacter[], fusionPermille: number, run: (rules: Ruleset) => T): T => {
+    const k = RULESETS.findIndex((r) => r.id === "dai-tran");
+    const original = RULESETS[k]!;
+    const patched: Ruleset = { ...original, fusions, fusionPermille };
+    (RULESETS as Ruleset[])[k] = patched;
+    try {
+      return run(patched);
+    } finally {
+      (RULESETS as Ruleset[])[k] = original;
+    }
+  };
+  const hands = (rules: Ruleset, seed: number, count: number) => {
+    let s = createPuzzle(rules, seed);
+    const out: string[] = [];
+    for (let i = 0; i < count; i++) {
+      out.push(JSON.stringify(s.hand));
+      const t = transition(s, { kind: "discard" });
+      s = !t.ok || t.state.phase === "lost" ? createPuzzle(rules, seed + i + 1) : t.state;
+    }
+    return out;
+  };
+  const NGOC_CHAR: FusionCharacter = { characterId: "dinhNgoc", name: "Đinh Ngọc", levels: ["dai-tran"] };
+  const KHAC_CHAR: FusionCharacter = { characterId: "nhanVatKhac", name: "Nhân vật khác", levels: ["dai-tran"] };
+
+  it("danh sách rỗng: dãy quân y hệt khi fusionPermille bằng 0", () => {
+    const a = withFusions([], 0, (r) => hands(r, 11, 300));
+    const b = withFusions([], 150, (r) => hands(r, 11, 300));
+    assert.deepEqual(a, b);
+  });
+
+  it("có nhân vật: ra đúng tỉ lệ, chọn đều giữa các nhân vật, không liền sau quân đặc biệt, deterministic", () => {
+    withFusions([NGOC_CHAR, KHAC_CHAR], 100, (rules) => {
+      const counts: Record<string, number> = {};
+      let total = 0;
+      let fusions = 0;
+      for (let seed = 1; seed <= 40; seed++) {
+        let s = createPuzzle(rules, seed);
+        let prev = "normal";
+        for (let i = 0; i < 60; i++) {
+          if (prev !== "normal" && s.hand.kind !== "normal") assert.fail("hai quân đặc biệt liên tiếp");
+          if (s.hand.kind === "fusion") {
+            fusions += 1;
+            counts[s.hand.characterId] = (counts[s.hand.characterId] ?? 0) + 1;
+          }
+          total += 1;
+          prev = s.hand.kind;
+          const t = transition(s, { kind: "discard" });
+          if (!t.ok || t.state.phase === "lost") {
+            s = createPuzzle(rules, seed * 1000 + i);
+            prev = "normal";
+          } else s = t.state;
+        }
+      }
+      const rate = fusions / total;
+      assert.ok(rate > 0.05 && rate < 0.13, `tỉ lệ ${rate}`);
+      assert.deepEqual(Object.keys(counts).sort(), ["dinhNgoc", "nhanVatKhac"]);
+      assert.deepEqual(hands(rules, 5, 100), hands(rules, 5, 100));
+    });
+  });
+
+  it("lưu và nạp quân dung hợp; từ chối thiếu id", () => {
+    const rules = RULESETS[3]!;
+    const base = JSON.parse(serializePuzzle(createPuzzle(rules, 2))) as Record<string, unknown>;
+    const good = { ...base, hand: { kind: "fusion", uid: "x", characterId: "dinhNgoc" } };
+    const parsed = parsePuzzle(good);
+    assert.ok(parsed && parsed.hand.kind === "fusion");
+    assert.deepEqual(parsePuzzle(serializePuzzle(parsed!)), parsed);
+    for (const hand of [{ ...good.hand, characterId: "" }, { kind: "fusion", uid: "x" }, { ...good.hand, uid: "" }]) {
+      assert.equal(parsePuzzle({ ...good, hand }), null);
+    }
   });
 });

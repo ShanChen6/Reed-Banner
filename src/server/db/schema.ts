@@ -163,3 +163,32 @@ export const arenaPlayers = pgTable(
   },
   (t) => [index("arena_players_rating_idx").on(t.rating)],
 );
+
+/**
+ * Trận Đồ xếp hạng: mỗi người một ván mỗi kỳ mỗi bậc (chỉ mục duy nhất chặn mở ván thứ hai). Server giữ trạng thái
+ * ván (gồm seed và RNG, không bao giờ gửi cho client) và áp từng lệnh, nên không thể luyện trước hay giả điểm.
+ * `claimedAt` đặt đúng một lần khi nhận thưởng sau khi kỳ khép lại.
+ */
+export const formationEntries = pgTable(
+  "formation_entries",
+  {
+    id: text("id").primaryKey(),
+    level: text("level").notNull(),
+    period: text("period").notNull(),
+    ownerId: text("owner_id").notNull(),
+    state: jsonb("state").notNull(),
+    seq: integer("seq").notNull(),
+    status: text("status").notNull(),
+    score: integer("score"),
+    turns: integer("turns"),
+    startedAt: bigint("started_at", { mode: "number" }).notNull(),
+    finishedAt: bigint("finished_at", { mode: "number" }),
+    claimedAt: bigint("claimed_at", { mode: "number" }),
+    rewardGold: integer("reward_gold"),
+  },
+  (t) => [
+    uniqueIndex("formation_entries_attempt_idx").on(t.period, t.level, t.ownerId),
+    index("formation_entries_rank_idx").on(t.level, t.period, t.status, t.score),
+    index("formation_entries_owner_idx").on(t.ownerId, t.level),
+  ],
+);

@@ -1,6 +1,6 @@
 # 02 — BINH PHÁP: Game Design Document v0.1
 
-> Cập nhật: 31/10/2026
+> Cập nhật: 01/11/2026
 > Trạng thái: **DRAFT** — concept đã thống nhất (tên hiển thị **Trận Đồ**); bản chơi thử offline đã có code theo [mục 11](#11-bản-triển-khai-đầu-tiên-chơi-thử-offline), các luật đề xuất vẫn chờ Shan chốt ở BP-00.
 
 ## 1. Định vị
@@ -90,25 +90,115 @@ Ví dụ: trên là Y sư–Kim, trái là Pháp sư–Hỏa ⇒ quân Y sư–H
 
 ## 11. Bản triển khai đầu tiên (chơi thử offline)
 
-Tên hiển thị trong game là **Trận Đồ** (đã duyệt tên 26/10/2026); "Binh Pháp" là tên thiết kế. Bản này đi trước BP-00 theo yêu cầu của Shan "đọc docs, thảo luận và triển khai": mọi câu hỏi ở mục 10 lấy **giá trị đề xuất làm mặc định**, nằm gọn trong `src/core/binh-phap/rulesets.ts` và `types.ts` nên đổi được mà không sửa luật. Chưa có nghĩa là đã duyệt.
+Tên hiển thị trong game là **Trận Đồ** (đã duyệt tên 26/10/2026); "Binh Pháp" là tên thiết kế. Bản này đi trước BP-00 theo yêu cầu của Shan "đọc docs, thảo luận và triển khai". Các giá trị nằm gọn trong `src/core/binh-phap/rulesets.ts` và `types.ts`. Cột cuối ghi nguồn từng giá trị: **Shan chốt** hoặc **mặc định đề xuất** (chưa duyệt).
 
-| Câu hỏi mục 10 | Mặc định đang chạy | Ghi chú |
+| Giá trị | Đang chạy | Nguồn |
 |---|---|---|
-| 1. Kích thước | Theo bậc: 3×3, 5×5, 8×8, 8×8 | Không có một cỡ duy nhất; 8×8 ở hai bậc cao |
-| 2. Thanh Bỏ Lệnh | 0–3; đặt quân −1; dọn hàng/cột về 0; bỏ khi đã đầy là thua | Thu Hồi cũng hạ 1 |
-| 3. Quân Lệnh / Thu Hồi | Có từ bậc Thường (6% / 6%); bậc Nhập môn không có | Không bao giờ ra hai quân đặc biệt liên tiếp; không ra Thu Hồi khi bàn trống |
-| 4. Điểm, sinh quân, xem trước | Đặt 10, +5 mỗi quân kề khớp cả nghề lẫn hệ, mỗi hàng/cột dọn 50, thắng 500; chưa xem trước quân kế | Điểm xuất phát, chưa cân bằng theo cảm giác chơi |
-| 5. Offline hay server | Offline, khách, không thưởng, không xếp hạng | Ván dở lưu ở `localStorage`, phân biệt rõ không phải dữ liệu đã server xác minh |
+| Cỡ bàn | Hình chữ nhật `width × height`. Hướng dẫn 3×3; Thường 5×5; Khó 6×6; **Đại trận ngẫu nhiên theo seed, mỗi cạnh 7–10** | Shan chốt 01/11/2026 |
+| Ô chướng ngại | Rải ngẫu nhiên theo seed: Hướng dẫn 0%, Thường 8%, Khó 10%, Đại trận 10–16% theo diện tích có trần 72 ô chơi được. Không đặt quân được, không cần khai thông, không nối được hai quân, các ô còn lại luôn liền nhau | Shan chốt có chướng ngại; con số do đo bằng mô phỏng, xem bên dưới |
+| Thanh Bỏ Lệnh | 0–3; đặt quân hạ 1; dọn hàng/cột về 0; bỏ khi đã đầy là thua | Giữ như đề xuất (Shan chưa có đề xuất khác); chưa kiểm phương án "dọn hạ 2" |
+| Điểm | Đặt 10; +5 mỗi quân kề khớp cả nghề lẫn hệ; mỗi hàng/cột dọn 50; thắng 500 + 100 mỗi vạch Bỏ Lệnh còn trống + 5 mỗi nước nhanh hơn chuẩn (chuẩn = 3 nước × số ô chơi được) | Shan giao "làm hợp lý" 01/11/2026 |
+| Quân đặc biệt | Quân Lệnh 8% / Thu Hồi 4% (Đại trận Quân Lệnh 10%); Hướng dẫn không có. Không ra hai quân đặc biệt liên tiếp; không ra Thu Hồi khi bàn trống | Shan không có ý kiến, dùng đề xuất |
+| Offline hay server | Chơi thử offline (khách, không thưởng); xếp hạng và thưởng chạy trên server, tắt mặc định | Chơi thử là mặc định đề xuất; xếp hạng và thưởng ở [mục 12](#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt) |
 
-**Bốn bậc** (`RULESETS`): Nhập môn 3×3 (2 nghề × 2 hệ, không quân đặc biệt); Thường 5×5 (3 × 4); Khó 8×8 (4 × 4); Đại trận 8×8 (6 × 6). Mọi cặp nghề–hệ đều có ít nhất một tướng trong danh mục nên chân dung luôn khớp thuộc tính; quân đặc biệt dùng biểu tượng mới vẽ bằng SVG. Binh Pháp chỉ dùng 6 nghề active, chưa đụng Xạ thủ/Sát thủ.
+**Chế độ thường và chế độ xếp hạng.** Trận Đồ có hai chế độ cùng tồn tại. **Chơi thường** (trước đây gọi "chơi thử") chạy offline ở trình duyệt, không cần cờ hay đăng nhập, không thưởng, không xếp hạng, chơi bao nhiêu ván tùy thích với cả bốn bậc kể cả Hướng dẫn, và lưu ván dở tại máy. **Xếp hạng** ([mục 12](#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)) chạy trên server, có thưởng, tắt mặc định; khi tắt, màn Trận Đồ chỉ còn chế độ thường.
 
-**Quyết định chi tiết đã chốt khi code** (mục 3–6 chưa đủ rõ):
+**Bốn bậc** (`RULESETS`, id `huong-dan`, `thuong`, `kho`, `dai-tran`):
+
+| Bậc | Cỡ bàn | Nghề × hệ | Chướng ngại | Quân Lệnh / Thu Hồi | Xếp hạng, thưởng |
+|---|---|---|---|---|---|
+| Hướng dẫn | 3×3 | 2 × 2 | 0% | không có | **Không** (bậc học) |
+| Thường | 5×5 | 3 × 4 | 8% | 8% / 4% | Có ([mục 12](#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)) |
+| Khó | 6×6 | 4 × 5 | 10% | 8% / 4% | Có |
+| Đại trận | **7–10 × 7–10, ngẫu nhiên theo seed** | **8 × 7** (đủ 56 loại) | 10–16%, trần 72 ô chơi được | 10% / 4% | Có |
+
+Mọi cặp nghề–hệ đều có ít nhất một tướng trong danh mục, nên chân dung luôn khớp thuộc tính; quân đặc biệt và chướng ngại dùng biểu tượng vẽ bằng SVG.
+
+**Xạ thủ và Sát thủ.** Hai nghề này đã vào game từ 31/10/2026 (`NEW_PROFESSIONS_ENABLED`, 14 tướng RB-062–075 đều có chân dung), nhưng chỉ **Đại trận** dùng chúng; ba bậc kia giữ 6 nghề cũ để người mới học luật với bộ quân nhỏ. Muốn thêm vào bậc khác chỉ cần thêm `xaThu`/`satThu` vào `professions` của bậc đó và tăng `version`. Trận Đồ không có giá trị riêng cho hai nghề: chúng chỉ là thêm hai loại nghề trong luật "cùng nghề hoặc cùng hệ".
+
+**Cỡ bàn ngẫu nhiên của Đại trận.** Rút từ seed: mỗi cạnh đều trong [7, 10] (nên có 16 cỡ, gồm cả bàn dọc lẫn ngang như 7×10 và 10×7), rồi rải chướng ngại. Số chướng ngại tính theo hai quy tắc, lấy giá trị lớn hơn:
+
+1. **Theo diện tích:** tỉ lệ nội suy từ 10% (7×7) lên 16% (10×10), vì bàn lớn cần nhiều chướng ngại hơn để dọn hàng/cột ngắn lại.
+2. **Trần ô chơi được 72:** nếu bàn còn hơn 72 ô chơi được thì tăng chướng ngại cho tới khi còn 72. Lý do: thời lượng ván tỉ lệ với số ô chơi được (khoảng 100 nước ở 60 ô với bot greedy); không có trần thì bàn 10×10 dài hơn 150 nước.
+
+| Cỡ | Diện tích | Chướng ngại | Chơi được |
+|---|---|---|---|
+| 7×7 | 49 | 5 (10%) | 44 |
+| 7×9 | 63 | 7 (11%) | 56 |
+| 8×8 | 64 | 8 (13%) | 56 |
+| 9×9 | 81 | 11 (14%) | 70 |
+| 10×9 | 90 | 18 (20%) | 72 |
+| 10×10 | 100 | 28 (28%) | 72 |
+
+Chướng ngại luôn giữ các ô còn lại liền nhau theo 4 hướng (mỗi ô chỉ bị chặn nếu vẫn liền). Chướng ngại tối đa là 28% diện tích nên không bao giờ biến bàn thành mê cung rời rạc. Khi xếp hạng, mọi người chơi cùng seed thì cùng cỡ và cùng bản đồ.
+
+Engine nhận mọi cỡ nên thêm bậc hay chế độ tự chọn cỡ bàn (chơi thường, không xếp hạng) chỉ là thêm một mục trong `RULESETS`.
+
+**Luật chi tiết đã chốt khi code** (mục 3–6 chưa đủ rõ):
 
 - Quân Lệnh kề không miễn kiểm tra các quân kề khác của quân thường đặt sau (đúng mục 6).
 - Thu Hồi chỉ đặt lên ô có quân, kể cả Quân Lệnh; không đổi `covered`. Đặt xong tính là một nước thành công (hạ thanh 1, tiến lượt) nhưng không cộng điểm đặt.
+- **Chướng ngại:** chỉ sinh trước quân đầu tiên (thứ tự RNG cố định); mỗi ô chỉ bị chặn nếu các ô còn lại vẫn liền nhau theo 4 hướng. Thắng khi khai thông hết *ô chơi được*.
+- **Đường kín với chướng ngại:** hàng/cột kín khi mọi ô chơi được của nó đều có quân, nhưng chỉ tính nếu có **từ 3 ô chơi được** (tránh dọn miễn phí ở chỗ chỉ còn 1–2 ô). Chướng ngại không bị dọn.
 - Dọn hàng/cột: lấy hợp các ô, mỗi đường tính 50 điểm một lần, rồi mới xét thắng. Thắng được xét trước khi sinh quân mới nên không tiêu RNG.
 - Lệnh sai không đổi state, điểm, thanh Bỏ Lệnh hay RNG (kiểm thử `tests/core/binh-phap/engine.test.ts`).
 - Không có Undo.
 
-**Code:** `src/core/binh-phap/` (luật, reducer, sinh quân, lưu/nạp), `src/app/game/formation/FormationScreen.tsx` (scene `FORMATION`, đường dẫn `/game/formation`), mô phỏng `scripts/binh-phap-sim.ts`. Số đo ở [05 — mô phỏng và QA](05-binh-phap-balance-qa.md#kết-quả-mô-phỏng-baseline-31102026).
+**Code:** `src/core/binh-phap/` (luật, reducer, sinh quân và địa hình, lưu/nạp), `src/app/game/formation/FormationScreen.tsx` (scene `FORMATION`, đường dẫn `/game/formation`), mô phỏng `scripts/binh-phap-sim.ts`. Số đo ở [05 — mô phỏng và QA](05-binh-phap-balance-qa.md#kết-quả-mô-phỏng-baseline-01112026). Lưu ván dở ở `localStorage`; đổi bộ luật của một bậc thì save cũ bị bỏ (fail-closed).
 
+### 11.1 Nhân vật dung hợp (kiểu Đinh Ngọc)
+
+Shan (01/11/2026): chỉ giữ loại nhân vật mang **đủ 8 nghề và 7 hệ** như [Đinh Ngọc](../../03-characters/dinh-ngoc.md), **tối đa hai nhân vật**: Đinh Ngọc và **Trần Vũ Phong – Vân Du Tử** (đang thiết kế, chưa có tài liệu nhân vật). **Chỉ xuất hiện ở bậc Khó và Đại trận** (`FUSION_ALLOWED_LEVELS`); Hướng dẫn và Thường không bao giờ có; không có nhân vật 2 nghề + 2 hệ (hoặc ít hơn tám/bảy) vì làm ván dễ đi. Hạ tầng đã có trong engine, **danh sách mặc định rỗng** cho tới khi Shan duyệt từng nhân vật (`src/core/binh-phap/specials.ts`, `FUSION_CHARACTERS`).
+
+- **Quân `fusion`** khớp mọi quân kề. Luật vẫn chỉ dựa trên nghề và hệ.
+- **Khác Quân Lệnh:** quân `fusion` vẫn **phải đặt sát một quân** (trừ khi bàn trống) và quân đặt cạnh nó vẫn phải khớp các quân kề khác. Không đặt được ở ô trống xa mọi quân, không đặt đè lên quân khác hay chướng ngại. Hai quân `fusion` đặt cạnh nhau được.
+- **Điểm:** không tạo điểm "khớp hoàn hảo" (+5), cả khi đặt lẫn khi làm quân kề của quân thường.
+- **Sinh quân:** tung chung với Quân Lệnh/Thu Hồi bằng một lần tung; tỉ lệ `fusionPermille` của bậc, chọn đều giữa các nhân vật được duyệt cho bậc đó (`levels`). Không ra liền sau quân đặc biệt. Danh sách rỗng thì dãy quân y hệt trước khi có tính năng này.
+- **Thêm một nhân vật** là thêm một dòng vào `FUSION_CHARACTERS` (id, tên, các bậc); test chặn quá `MAX_FUSION_CHARACTERS = 2`. Sau đó đo lại bằng mô phỏng và tăng `version` của bậc liên quan.
+- **Hiển thị:** chân dung kèm số "8" (nghề) ở góc trên-trái và "7" (hệ) ở góc dưới-phải; khung thông tin ghi "Dung hợp mọi nghề và mọi hệ".
+
+**Ảnh hưởng độ khó (Đại trận, 800 ván, một nhân vật dung hợp):**
+
+| Tỉ lệ quân dung hợp | Random thắng | Greedy thắng |
+|---|---|---|
+| 0% | 6,0% | 31,4% |
+| 4% | 13,8% | 42,3% |
+| 8% | 25,5% | 51,0% |
+
+Quân này rất mạnh: 4% đã nâng tỉ lệ thắng của greedy khoảng 11 điểm, nên **tỉ lệ phải thấp, đề xuất 1–2%** cho bậc có xếp hạng. `fusionPermille` của Khó và Đại trận đặt 15 (1,5%) nhưng chưa có tác dụng vì danh sách rỗng; số đo trên chỉ ở Đại trận, Khó (bàn 6×6 nhỏ hơn) có thể nhạy hơn nên phải đo lại trước khi bật. Cả hai bậc này đều có xếp hạng và thưởng, nên nhân vật dung hợp sẽ xuất hiện trong ván tính thưởng; vì seed do server phát nên mọi người gặp cùng dãy quân.
+
+*Lịch sử:* cùng ngày, bản đầu của hạ tầng này cho phép quân có tập nghề/hệ bất kỳ; Shan loại bỏ vì làm giảm độ khó, chỉ giữ loại dung hợp đủ 8 nghề, 7 hệ.
+
+## 12. Xếp hạng và thưởng (đã code, mặc định tắt)
+
+Shan (01/11/2026): xếp hạng cao được nhận thưởng; thưởng chia theo mức độ chơi để công bằng; làm phần server. Đã code, **tắt mặc định** sau cờ `FORMATION_RANKED_ENABLED` (chỉ chuỗi `true` mới bật, thiếu hoặc giá trị lạ là tắt). Mức thưởng và điều kiện hạng là **điểm xuất phát**, chờ Shan duyệt trước khi bật ở production. Code: `src/core/binh-phap/ranked.ts` (kỳ, hạng, thưởng), `src/server/formation.ts` + `src/server/db/formation.ts` + `src/app/api/formation/` (server), `src/app/game/formation/RankedPanel.tsx` (giao diện), bảng `formation_entries` (migration `drizzle/0009_formation_entries.sql`).
+
+**Cách chống gian lận: server giữ ván và áp từng lệnh.** Bản thiết kế đầu định "client chơi rồi gửi nhật ký cho server chạy lại". Đã đổi vì seed phải gửi cho client thì client chạy thử được vô hạn lần trên cùng bàn (luyện trước, chọn nước tối ưu) rồi chỉ nộp ván đẹp nhất. Bản đang chạy:
+
+1. `POST /api/formation/start`: server sinh seed bằng HMAC(`SESSION_SECRET`, bậc, kỳ), nên mọi người trong kỳ cùng bàn, cùng chướng ngại, cùng dãy quân, mà không ai đoán trước được kỳ sau. Seed và trạng thái RNG **không bao giờ rời server**.
+2. `POST /api/formation/move`: client gửi lệnh (đặt quân hoặc bỏ lệnh) kèm `seq`; server chạy đúng engine `src/core/binh-phap`, lưu trạng thái mới, trả bản công khai (bàn và quân đang cầm, không seed, không RNG). Lệnh sai không đổi gì; `seq` lệch (gửi trùng, hai tab) bị từ chối kèm ván hiện tại. Mỗi lệnh là không thể hoàn tác và quân kế tiếp chưa ai biết, nên không luyện trước được.
+3. Mỗi người **một ván mỗi kỳ mỗi bậc** (chỉ mục duy nhất trong DB). Mở lại thì nối đúng ván cũ, tải lại trang không mất tiến độ và không bày bàn mới. Ván vượt 600 lệnh bị xử thua.
+4. Điểm do server tính. Chỉ ván **thắng** có hạng; ván thua không hạng, không thưởng.
+
+**Kỳ** (giờ Việt Nam, như Nhật Lệnh): Thường và Khó đổi **theo ngày** lúc 0 giờ; Đại trận đổi **theo tuần** vào thứ Hai 0 giờ. Hướng dẫn không xếp hạng, không thưởng. Hạng: điểm cao hơn, rồi ít nước hơn, rồi nộp sớm hơn.
+
+**Thưởng** (vàng, chia theo bậc chơi; nhận sau khi kỳ khép lại, mỗi ván nhận đúng một lần). Mỗi người nhận đúng một bậc thưởng, bậc cao nhất đủ điều kiện:
+
+| Bậc | Hạng nhất | Top 3 | Top 10 | Nửa trên | Thắng ván |
+|---|---|---|---|---|---|
+| Thường (ngày) | 150 | 100 | 60 | 30 | 20 |
+| Khó (ngày) | 300 | 200 | 120 | 60 | 40 |
+| Đại trận (tuần) | 1 000 | 600 | 350 | 150 | 80 |
+
+Bậc cao cần **đủ người thắng** trong kỳ để một mình một bảng không hái được hạng nhất: hạng nhất cần từ 5 người thắng, top 3 cần từ 8, top 10 cần từ 15, nửa trên (làm tròn lên) cần từ 2, còn lại là "thắng ván". Mốc so với Nhật Lệnh (thắng 150 vàng) và Đấu trường (thắng +50).
+
+**Nhận thưởng** (`POST /api/formation/claim`): chỉ khi kỳ đã khép lại; cờ nhận được đặt bằng một lệnh cập nhật có điều kiện (đúng một bên thắng khi gọi song song) rồi mới cộng vàng vào hồ sơ; cộng vàng hỏng thì hoàn lại cờ để thử lại. Hạng và số người thắng chốt theo trạng thái lúc nhận, vì kỳ đã khép nên không đổi nữa.
+
+**Hạn chế đã biết** (chưa xử lý, ghi để quyết định sau):
+
+- Khách tạo thêm tài khoản (xóa cookie) để chơi nhiều ván một kỳ. Bảng chia sẻ chung với Nhật Lệnh nên cùng mức rủi ro; điều kiện "đủ người thắng" làm giảm lợi ích. Có thể giới hạn thưởng cho tài khoản đã đăng nhập.
+- Cùng bàn cờ cả kỳ nên người chơi có thể chia sẻ dãy quân cho nhau (như lộ đáp án Nhật Lệnh). Server không chặn được việc người ngoài giải hộ.
+- Chưa có giới hạn tốc độ gọi API và chưa có tác vụ cron dọn ván bỏ dở (ván dở của kỳ cũ chỉ nằm im, không có hạng).
+- Đổi `version` của bậc thì ván đang chơi của bậc đó không đọc được nữa (nạp fail-closed); phải triển khai vào lúc kỳ vừa đổi.
+- Chưa có tab Trận Đồ ở trang `/game/leaderboard`; bảng hiện nằm trong màn Trận Đồ (top 10 mỗi bậc).
+- Nhân vật dung hợp (mục 11.1) sẽ xuất hiện trong ván tính thưởng ở Khó và Đại trận khi được bật.

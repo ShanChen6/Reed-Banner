@@ -112,6 +112,7 @@
 
 ## Trận Đồ (Binh Pháp)
 
-- TODO: BP-00 sign-off. Bản chơi thử đang chạy giá trị đề xuất (4 bậc 3×3/5×5/8×8/8×8, thanh Bỏ Lệnh 0–3, Quân Lệnh/Thu Hồi 6%, điểm 10/5/50/500, không xem trước quân kế). Cần Shan chốt hoặc đổi, xem [GDD mục 11](../02-game-modes/future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline).
-- TODO: Thêm feature flag server cho Trận Đồ và quyết định có thưởng/xếp hạng không (BP-05/06); bản hiện tại offline, không thưởng, không có flag.
-- TODO: Agent mô phỏng lookahead và thử người thật để cân lại bậc Thường (greedy ngang random) và độ dài ván 8×8 (p90 100 đến 260 nước), xem [QA Binh Pháp](../02-game-modes/future/05-binh-phap-balance-qa.md#kết-quả-mô-phỏng-baseline-31102026).
+- TODO: BP-00 sign-off. Bản chơi thử đang chạy giá trị đề xuất (Hướng dẫn 3×3, Thường 5×5, Khó 6×6, Đại trận cỡ ngẫu nhiên 7–10; có chướng ngại, thanh Bỏ Lệnh 0–3, Quân Lệnh 8%/Thu Hồi 4%, điểm 10/5/50 và thưởng thắng 500 cộng thêm, không xem trước quân kế). Cỡ bàn các bậc do Shan chốt 01/11/2026. Cần Shan chốt hoặc đổi, xem [GDD mục 11](../02-game-modes/future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline).
+- TODO: Duyệt bảng thưởng và kỳ xếp hạng Trận Đồ đã code (ngày cho Thường/Khó, tuần cho Đại trận; vàng 150/300/1000 cho hạng nhất; điều kiện đủ người thắng 5/8/15/2), rồi mới bật `FORMATION_RANKED_ENABLED` ở production. Xem [GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt), gồm các hạn chế đã biết (tài khoản khách, giới hạn tốc độ, tab BXH).
+- TODO: Agent mô phỏng lookahead và thử người thật để cân lại bậc Thường (greedy ngang random) và độ dài ván lớn (Đại trận phụ thuộc cỡ bàn), xem [QA Binh Pháp](../02-game-modes/future/05-binh-phap-balance-qa.md#kết-quả-mô-phỏng-baseline-01112026).
+- TODO: Hoàn tất thiết kế và duyệt hai nhân vật dung hợp của Trận Đồ (Đinh Ngọc, Trần Vũ Phong – Vân Du Tử; đủ 8 nghề, 7 hệ; chỉ ở bậc Khó và Đại trận), đo lại độ khó ở bàn 6×6 của Khó, chốt tỉ lệ (đề xuất 1–2% vì rất mạnh), xem [GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc).

@@ -383,3 +383,27 @@ Shan chốt RB-062–075 giá 1.500 vàng mỗi người, dùng mức basic hi�
 
 Triển khai BP-01 đến BP-04 một phần theo yêu cầu của Shan: engine `src/core/binh-phap/`, scene `FORMATION` (`/game/formation`), mô phỏng `scripts/binh-phap-sim.ts`. Các câu hỏi BP-00 lấy giá trị đề xuất làm mặc định, **chưa được duyệt** ([GDD mục 11](../02-game-modes/future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline)). Offline, không thưởng, chưa có feature flag.
 
+## 01/11/2026 — Trận Đồ: bàn chữ nhật, chướng ngại, điểm và thưởng theo bậc
+
+Shan chốt: bàn không cần vuông (5×7, 7×9, 9×9…), có ô chướng ngại ngẫu nhiên không đặt được quân, xếp hạng cao được thưởng và thưởng chia theo bậc chơi; thanh Bỏ Lệnh và xác suất quân đặc biệt giữ đề xuất. Đã code bàn chữ nhật, chướng ngại, điểm mới và quân đặc biệt mới. Xếp hạng và thưởng mới có thiết kế ([GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)), chưa có code.
+
+### 01/11/2026 (bổ sung) — Cỡ bàn các bậc Trận Đồ
+
+Shan chốt: Hướng dẫn 3×3 (không xếp hạng, không thưởng), Thường 5×5, Khó 6×6, Đại trận cỡ ngẫu nhiên mỗi cạnh 7–10; số chướng ngại phải tính kỹ. Đã code, số chướng ngại do mô phỏng chọn (tỉ lệ theo diện tích, trần 72 ô chơi được). Đại trận dùng đủ 8 nghề, gồm Xạ thủ và Sát thủ. Id bậc "Nhập môn" đổi thành `huong-dan`, save cũ bị bỏ.
+
+### 01/11/2026 (bổ sung) — Quân nhân vật đặc biệt nhiều nghề/hệ trong Trận Đồ
+
+Shan đồng ý tổng quát hóa quân thành tập nghề, tập hệ giao nhau để chứa Đinh Ngọc và các nhân vật đặc biệt sắp thiết kế. Đã code hạ tầng; danh sách nhân vật để trống, chưa nhân vật nào được bật ([GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)).
+
+### 01/11/2026 (sửa) — Chỉ giữ nhân vật dung hợp đủ 8 nghề, 7 hệ
+
+Shan loại bỏ nhân vật 2 nghề + 2 hệ khỏi Trận Đồ vì làm giảm độ khó; chỉ giữ tối đa hai nhân vật mang đủ 8 nghề và 7 hệ như Đinh Ngọc, vẫn phải đặt sát một quân. Kiểu `multi` (tập nghề, tập hệ) được thay bằng kiểu `fusion` đơn giản. Danh sách vẫn rỗng ([GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)).
+
+### 01/11/2026 (bổ sung) — Nhân vật dung hợp thứ hai và phạm vi bậc
+
+Nhân vật dung hợp thứ hai của Trận Đồ là Trần Vũ Phong – Vân Du Tử (đang thiết kế). Cả hai nhân vật dung hợp chỉ xuất hiện ở bậc Khó và Đại trận, không ở Hướng dẫn và Thường ([GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)). Code khóa phạm vi bậc bằng `FUSION_ALLOWED_LEVELS`; danh sách vẫn rỗng cho tới khi duyệt.
+
+### 01/11/2026 (bổ sung) — Trận Đồ xếp hạng và thưởng (server)
+
+Theo yêu cầu của Shan, đã code phần server: kỳ (ngày cho Thường và Khó, tuần cho Đại trận), seed server phát, server giữ ván và áp từng lệnh, hạng, thưởng vàng theo bậc, nhận thưởng một lần, bảng `formation_entries`. Tắt mặc định sau `FORMATION_RANKED_ENABLED`. Thay đổi so với kế hoạch trước: server giữ ván thay vì kiểm lại nhật ký của client, để chặn luyện trước. Bảng thưởng là điểm xuất phát chờ Shan duyệt ([GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)).
+

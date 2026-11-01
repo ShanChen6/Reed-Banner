@@ -15,7 +15,7 @@
 | **Tháp Thí Luyện (Trial)** | 20 tầng cố định, luật đội hình/bàn cờ và thưởng đá lần đầu | 3vs3 | Song Tháp V1.0 |
 | **Tháp Vận Mệnh (Destiny)** | Run 10 tầng theo chu kỳ tuần, roster khóa và tài nguyên xuyên tầng | 3vs3 | Song Tháp V1.0 |
 | **Sinh tồn** | Một trận không kết thúc, đối thủ theo đợt, báo trước đợt kế tiếp | 3vs3 | Sau giai đoạn 4 |
-| **Trận Đồ** (bản chơi thử) | Game xếp quân theo nghề/hệ, không đánh nhau; offline, khách, không thưởng, không xếp hạng. Luật ở [GDD Binh Pháp](future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline) | Một người, 4 bậc 3×3–8×8 | Sau Song Tháp |
+| **Trận Đồ** | Game xếp quân theo nghề/hệ, không đánh nhau; chơi thử offline (không thưởng) và xếp hạng có thưởng trên server (tắt mặc định, `FORMATION_RANKED_ENABLED`). Luật ở [GDD Binh Pháp](future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline) | Một người, 4 bậc 3×3–8×8 | Sau Song Tháp |
 
 ## 2. Chiến dịch
 

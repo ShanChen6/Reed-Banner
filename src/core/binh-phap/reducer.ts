@@ -1,8 +1,8 @@
 // Máy trạng thái của một ván. `transition` bất biến: lệnh sai trả `ok: false`, state, điểm, thanh Bỏ Lệnh và RNG không đổi.
 
 import { createRng } from "../rng";
-import { nextPiece } from "./generator";
-import { checkPlacement, completedLines, idx } from "./rules";
+import { generateObstacles, nextPiece } from "./generator";
+import { checkPlacement, completedLines, idx, playableCount, typesMatchBoth } from "./rules";
 import { RULESETS, SCHEMA_VERSION } from "./rulesets";
 import type { BoardPiece, Cell, Command, Piece, PuzzleEvent, PuzzleState, Ruleset, Transition } from "./types";
 
@@ -11,18 +11,36 @@ function rulesFor(state: PuzzleState): Ruleset | null {
   return r && r.version === state.rulesVersion ? r : null;
 }
 
+/** Cỡ bàn và tỉ lệ chướng ngại của một ván: cố định, hoặc rút theo seed khi bậc có `randomSize`. */
+function boardSpec(rules: Ruleset, rng: ReturnType<typeof createRng>): { width: number; height: number; obstaclePercent: number } {
+  const r = rules.randomSize;
+  if (!r) return { width: rules.width, height: rules.height, obstaclePercent: rules.obstaclePercent };
+  const width = rng.int(r.min, r.max);
+  const height = rng.int(r.min, r.max);
+  const area = width * height;
+  const lo = r.min * r.min;
+  const hi = r.max * r.max;
+  const t = hi === lo ? 0 : (area - lo) / (hi - lo);
+  const byArea = r.obstaclePercentAtMin + (r.obstaclePercentAtMax - r.obstaclePercentAtMin) * t;
+  const byCap = (100 * (area - r.maxPlayable)) / area;
+  return { width, height, obstaclePercent: Math.max(byArea, byCap) };
+}
+
 /** Ván mới từ seed (số nguyên 32 bit không dấu). Quân đầu tiên luôn là quân thường hoặc Quân Lệnh. */
 export function createPuzzle(rules: Ruleset, seed: number): PuzzleState {
   const rng = createRng(seed);
+  // Thứ tự RNG cố định: cỡ bàn (nếu ngẫu nhiên), địa hình, rồi quân đầu tiên.
+  const { width, height, obstaclePercent } = boardSpec(rules, rng);
+  const blocked = generateObstacles(rng, width, height, obstaclePercent);
   const hand = nextPiece(rng, rules, 0, null, false);
   return {
     schemaVersion: SCHEMA_VERSION,
     rulesetId: rules.id,
     rulesVersion: rules.version,
     seed: seed >>> 0,
-    width: rules.width,
-    height: rules.height,
-    cells: Array.from({ length: rules.width * rules.height }, (): Cell => ({ covered: false, piece: null })),
+    width,
+    height,
+    cells: blocked.map((b): Cell => ({ blocked: b, covered: false, piece: null })),
     hand,
     discardHeat: 0,
     score: 0,
@@ -81,7 +99,7 @@ function place(state: PuzzleState, rules: Ruleset, row: number, col: number): Tr
 
   if (piece.kind === "eraser") {
     const gone = cells[at]!.piece!;
-    cells[at] = { covered: cells[at]!.covered, piece: null };
+    cells[at] = { ...cells[at]!, piece: null };
     events.push({ type: "erased", row, col, piece: gone });
     heat = Math.max(0, heat - 1);
   } else {
@@ -90,15 +108,15 @@ function place(state: PuzzleState, rules: Ruleset, row: number, col: number): Tr
       covered += 1;
       events.push({ type: "covered", row, col });
     }
-    // Điểm cộng thêm tính trên quân kề *trước khi* đặt; Quân Lệnh không tạo điểm khớp hoàn hảo.
+    // Điểm cộng thêm tính trên quân kề *trước khi* đặt; chỉ hai quân thường trùng cả nghề lẫn hệ mới được (Quân Lệnh và quân dung hợp thì không).
     let perfect = 0;
     if (piece.kind === "normal") {
       for (const n of [row > 0 ? at - width : -1, row < height - 1 ? at + width : -1, col > 0 ? at - 1 : -1, col < width - 1 ? at + 1 : -1]) {
         const nb = n >= 0 ? cells[n]!.piece : null;
-        if (nb && nb.kind === "normal" && nb.profession === piece.profession && nb.element === piece.element) perfect += 1;
+        if (nb && nb.kind === "normal" && typesMatchBoth(piece, nb)) perfect += 1;
       }
     }
-    cells[at] = { covered: true, piece: onBoard };
+    cells[at] = { ...cells[at]!, covered: true, piece: onBoard };
     events.push({ type: "placed", row, col, piece: onBoard });
     score += rules.score.place + perfect * rules.score.perfectNeighbor;
     heat = Math.max(0, heat - 1);
@@ -111,7 +129,7 @@ function place(state: PuzzleState, rules: Ruleset, row: number, col: number): Tr
         events.push({ type: "lineCleared", axis: l.axis, index: l.index });
         for (let k = 0; k < (l.axis === "row" ? width : height); k++) clear.add(l.axis === "row" ? idx(width, l.index, k) : idx(width, k, l.index));
       }
-      for (const i of clear) cells[i] = { covered: cells[i]!.covered, piece: null };
+      for (const i of clear) cells[i] = { ...cells[i]!, piece: null };
       score += lines.length * rules.score.line;
       linesCleared += lines.length;
       heat = 0;
@@ -130,9 +148,13 @@ function place(state: PuzzleState, rules: Ruleset, row: number, col: number): Tr
     turn,
   };
   // Thắng được xét ngay sau khi đặt và dọn hàng, trước khi sinh quân mới (không tiêu RNG).
-  if (covered === width * height) {
+  const playable = playableCount(cells);
+  if (covered === playable) {
     events.push({ type: "won" });
-    return { ok: true, state: { ...base, score: score + rules.score.win, phase: "won" }, events };
+    const w = rules.score;
+    const par = Math.floor(w.parTurnsPerCell * playable);
+    const bonus = w.win + w.winPerHeatLeft * (rules.maxHeat - heat) + w.winPerTurnSaved * Math.max(0, par - turn);
+    return { ok: true, state: { ...base, score: score + bonus, phase: "won" }, events };
   }
   const next = spawn(state, rules, cells, piece, turn);
   events.push({ type: "spawned", piece: next.hand });

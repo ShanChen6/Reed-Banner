@@ -1,6 +1,6 @@
 // Luật đặt quân thuần: không đổi state, không ngẫu nhiên, không đọc giờ.
 
-import type { BoardPiece, Cell, Piece, PlacementCheck, PuzzleState } from "./types";
+import type { BoardPiece, Cell, NormalPiece, Piece, PlacementCheck, PuzzleState } from "./types";
 
 export const idx = (width: number, row: number, col: number): number => row * width + col;
 
@@ -14,14 +14,31 @@ export function neighbors4(width: number, height: number, row: number, col: numb
   return out;
 }
 
+/** Số ô chơi được (không phải chướng ngại). */
+export function playableCount(cells: readonly Cell[]): number {
+  return cells.reduce((n, c) => (c.blocked ? n : n + 1), 0);
+}
+
+/** Đường (hàng/cột) ngắn hơn mức này không tính là "kín": tránh dọn miễn phí ở chỗ chỉ còn 1–2 ô trống. */
+export const MIN_LINE_CELLS = 3;
+
 export function boardIsEmpty(cells: readonly Cell[]): boolean {
   return cells.every((c) => c.piece === null);
 }
 
-/** Quân mới khớp một quân kề khi cùng nghề hoặc cùng hệ; Quân Lệnh khớp tất cả. */
+/** Hai quân thường khớp khi cùng nghề hoặc cùng hệ. */
+export function typesMatch(a: NormalPiece, b: NormalPiece): boolean {
+  return a.profession === b.profession || a.element === b.element;
+}
+/** Khớp cả nghề lẫn hệ (dùng cho điểm cộng thêm). */
+export function typesMatchBoth(a: NormalPiece, b: NormalPiece): boolean {
+  return a.profession === b.profession && a.element === b.element;
+}
+
+/** Quân mới khớp một quân kề khi cùng nghề hoặc cùng hệ; Quân Lệnh và quân dung hợp khớp tất cả. */
 export function matches(piece: Piece, neighbor: BoardPiece): boolean {
-  if (piece.kind !== "normal" || neighbor.kind === "wild") return true;
-  return piece.profession === neighbor.profession || piece.element === neighbor.element;
+  if (piece.kind !== "normal" || neighbor.kind !== "normal") return true;
+  return typesMatch(piece, neighbor);
 }
 
 /**
@@ -34,11 +51,13 @@ export function checkPlacement(state: PuzzleState, piece: Piece, row: number, co
     return { ok: false, reason: "outOfBounds", blockers: [] };
   }
   const target = cells[idx(width, row, col)]!;
+  if (target.blocked) return { ok: false, reason: "blocked", blockers: [] };
   if (piece.kind === "eraser") {
     return target.piece ? { ok: true } : { ok: false, reason: "empty", blockers: [] };
   }
   if (target.piece) return { ok: false, reason: "occupied", blockers: [] };
   if (piece.kind === "wild") return { ok: true };
+  // Quân thường và quân dung hợp cùng luật: sát một quân, khớp từng quân kề (quân dung hợp khớp tất cả).
   if (boardIsEmpty(cells)) return { ok: true };
   const occupied = neighbors4(width, height, row, col).filter((n) => cells[n]!.piece !== null);
   if (occupied.length === 0) return { ok: false, reason: "notAdjacent", blockers: [] };
@@ -63,13 +82,25 @@ export function completedLines(cells: readonly Cell[], width: number, height: nu
   const out: { axis: "row" | "col"; index: number }[] = [];
   for (let r = 0; r < height; r++) {
     let full = true;
-    for (let c = 0; c < width && full; c++) full = cells[idx(width, r, c)]!.piece !== null;
-    if (full) out.push({ axis: "row", index: r });
+    let free = 0;
+    for (let c = 0; c < width && full; c++) {
+      const cell = cells[idx(width, r, c)]!;
+      if (cell.blocked) continue;
+      free += 1;
+      full = cell.piece !== null;
+    }
+    if (full && free >= MIN_LINE_CELLS) out.push({ axis: "row", index: r });
   }
   for (let c = 0; c < width; c++) {
     let full = true;
-    for (let r = 0; r < height && full; r++) full = cells[idx(width, r, c)]!.piece !== null;
-    if (full) out.push({ axis: "col", index: c });
+    let free = 0;
+    for (let r = 0; r < height && full; r++) {
+      const cell = cells[idx(width, r, c)]!;
+      if (cell.blocked) continue;
+      free += 1;
+      full = cell.piece !== null;
+    }
+    if (full && free >= MIN_LINE_CELLS) out.push({ axis: "col", index: c });
   }
   return out;
 }

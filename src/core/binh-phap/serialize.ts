@@ -1,6 +1,7 @@
 // Lưu và nạp ván dở. Đọc ngược fail-closed: bất kỳ trường nào sai kiểu hay sai luật thì trả null, không ném lỗi.
 
 import { ELEMENTS, PROFESSIONS } from "../battle";
+import { playableCount } from "./rules";
 import { RULESETS, SCHEMA_VERSION } from "./rulesets";
 import type { BoardPiece, Cell, Piece, PuzzleState } from "./types";
 
@@ -12,6 +13,7 @@ function parsePiece(v: unknown, allowEraser: boolean): Piece | null {
   if (!isObj(v) || !isStr(v.uid)) return null;
   if (v.kind === "wild") return { kind: "wild", uid: v.uid };
   if (v.kind === "eraser") return allowEraser ? { kind: "eraser", uid: v.uid } : null;
+  if (v.kind === "fusion") return isStr(v.characterId) ? { kind: "fusion", uid: v.uid, characterId: v.characterId } : null;
   if (v.kind !== "normal" || !isStr(v.characterId)) return null;
   const { profession, element } = v;
   if (!(PROFESSIONS as readonly unknown[]).includes(profession) || !(ELEMENTS as readonly unknown[]).includes(element)) return null;
@@ -28,12 +30,14 @@ export function parsePuzzle(raw: unknown): PuzzleState | null {
     if (!isObj(v) || v.schemaVersion !== SCHEMA_VERSION) return null;
     const rules = RULESETS.find((r) => r.id === v.rulesetId && r.version === v.rulesVersion);
     if (!rules) return null;
-    if (v.width !== rules.width || v.height !== rules.height) return null;
-    if (!Array.isArray(v.cells) || v.cells.length !== rules.width * rules.height) return null;
+    const sizeOk = (n: unknown, fixed: number) => (rules.randomSize ? isInt(n, rules.randomSize.min, rules.randomSize.max) : n === fixed);
+    if (!sizeOk(v.width, rules.width) || !sizeOk(v.height, rules.height)) return null;
+    if (!Array.isArray(v.cells) || v.cells.length !== (v.width as number) * (v.height as number)) return null;
     const cells: Cell[] = [];
     let covered = 0;
     for (const c of v.cells as unknown[]) {
-      if (!isObj(c) || typeof c.covered !== "boolean") return null;
+      if (!isObj(c) || typeof c.covered !== "boolean" || typeof c.blocked !== "boolean") return null;
+      if (c.blocked && (c.covered || c.piece !== null)) return null;
       let piece: BoardPiece | null = null;
       if (c.piece !== null) {
         const p = parsePiece(c.piece, false);
@@ -43,15 +47,17 @@ export function parsePuzzle(raw: unknown): PuzzleState | null {
       // Quân đang nằm trên bàn thì ô chắc chắn đã khai thông.
       if (piece && !c.covered) return null;
       if (c.covered) covered += 1;
-      cells.push({ covered: c.covered, piece });
+      cells.push({ blocked: c.blocked, covered: c.covered, piece });
     }
     const hand = parsePiece(v.hand, true);
     if (!hand) return null;
     const phase = v.phase;
     if (phase !== "playing" && phase !== "won" && phase !== "lost") return null;
     if (v.coveredCount !== covered) return null;
-    if (phase === "won" && covered !== cells.length) return null;
-    if (phase === "playing" && covered === cells.length) return null;
+    const playable = playableCount(cells);
+    if (playable === 0) return null;
+    if (phase === "won" && covered !== playable) return null;
+    if (phase === "playing" && covered === playable) return null;
     if (!isInt(v.seed, 0, 0xffffffff) || !isInt(v.rngState, 0, 0xffffffff)) return null;
     if (!isInt(v.discardHeat, 0, rules.maxHeat)) return null;
     const counters = [v.score, v.placed, v.discarded, v.linesCleared, v.turn];
@@ -61,8 +67,8 @@ export function parsePuzzle(raw: unknown): PuzzleState | null {
       rulesetId: rules.id,
       rulesVersion: rules.version,
       seed: v.seed as number,
-      width: rules.width,
-      height: rules.height,
+      width: v.width as number,
+      height: v.height as number,
       cells,
       hand,
       discardHeat: v.discardHeat as number,

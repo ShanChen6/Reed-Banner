@@ -11,6 +11,16 @@ export interface NormalPiece {
   readonly profession: Profession;
   readonly element: Element;
 }
+/**
+ * Quân nhân vật dung hợp (ví dụ Đinh Ngọc): mang đủ mọi nghề và mọi hệ nên khớp mọi quân kề. Khác Quân Lệnh ở chỗ
+ * vẫn **phải đặt sát một quân** (trừ khi bàn trống) và quân đặt cạnh nó vẫn phải khớp các quân kề khác. Chỉ có tối đa
+ * `MAX_FUSION_CHARACTERS` nhân vật loại này, liệt kê ở `specials.ts`.
+ */
+export interface FusionPiece {
+  readonly kind: "fusion";
+  readonly uid: string;
+  readonly characterId: string;
+}
 /** Quân Lệnh (wild): đặt ở ô trống bất kỳ, khớp mọi quân kề. */
 export interface WildPiece {
   readonly kind: "wild";
@@ -21,11 +31,13 @@ export interface EraserPiece {
   readonly kind: "eraser";
   readonly uid: string;
 }
-export type Piece = NormalPiece | WildPiece | EraserPiece;
+export type Piece = NormalPiece | FusionPiece | WildPiece | EraserPiece;
 /** Quân đã nằm trên bàn (không bao giờ là Thu Hồi). */
-export type BoardPiece = NormalPiece | WildPiece;
+export type BoardPiece = NormalPiece | FusionPiece | WildPiece;
 
 export interface Cell {
+  /** Ô chướng ngại (địa hình): không đặt được quân, không cần khai thông, không tính vào hàng/cột kín. */
+  readonly blocked: boolean;
   /** Ô đã khai thông: đặt quân vào một lần là giữ mãi, kể cả khi quân bị dọn. */
   readonly covered: boolean;
   readonly piece: BoardPiece | null;
@@ -43,16 +55,43 @@ export interface Ruleset {
   readonly version: number;
   readonly name: string;
   readonly blurb: string;
+  /** Cỡ bàn cố định. Khi có `randomSize`, đây chỉ là giá trị danh nghĩa (cỡ lớn nhất) và cỡ thật sinh theo seed. */
   readonly width: number;
   readonly height: number;
+  /**
+   * Cỡ bàn ngẫu nhiên theo seed: mỗi cạnh lấy đều trong [min, max]. Tỉ lệ chướng ngại nội suy theo diện tích từ
+   * `obstaclePercentAtMin` (bàn nhỏ nhất min×min) đến `obstaclePercentAtMax` (bàn lớn nhất max×max).
+   */
+  readonly randomSize?: {
+    readonly min: number;
+    readonly max: number;
+    readonly obstaclePercentAtMin: number;
+    readonly obstaclePercentAtMax: number;
+    /** Trần số ô chơi được: bàn lớn bị tăng chướng ngại cho tới khi còn nhiều nhất chừng này ô, để ván không quá dài. */
+    readonly maxPlayable: number;
+  };
   readonly professions: readonly Profession[];
   readonly elements: readonly Element[];
   /** Xác suất sinh quân đặc biệt, tính theo phần nghìn. Không bao giờ sinh hai quân đặc biệt liên tiếp. */
   readonly wildPermille: number;
   readonly eraserPermille: number;
+  /** Xác suất (phần nghìn) sinh quân nhân vật dung hợp; chỉ có tác dụng khi `fusions` không rỗng. */
+  readonly fusionPermille: number;
+  /** Nhân vật dung hợp đã duyệt cho bậc này (lọc từ `FUSION_CHARACTERS`). Rỗng nghĩa là bậc không có quân loại này. */
+  readonly fusions: readonly FusionCharacter[];
+  /** Số ô chướng ngại sinh ngẫu nhiên theo seed, tính theo phần trăm diện tích bàn (0 = bàn đặc). Bị `randomSize` ghi đè. */
+  readonly obstaclePercent: number;
   /** Thanh Bỏ Lệnh chạy 0..maxHeat; bỏ quân khi thanh đã đầy là thua. */
   readonly maxHeat: number;
   readonly score: ScoreWeights;
+}
+
+/** Một nhân vật dung hợp được phép xuất hiện trong Trận Đồ. Luật không cần nghề/hệ vì quân khớp tất cả. */
+export interface FusionCharacter {
+  readonly characterId: string;
+  readonly name: string;
+  /** Id các bậc (`Ruleset.id`) được phép sinh nhân vật này. */
+  readonly levels: readonly string[];
 }
 
 export interface ScoreWeights {
@@ -61,6 +100,11 @@ export interface ScoreWeights {
   readonly perfectNeighbor: number;
   readonly line: number;
   readonly win: number;
+  /** Thưởng thắng thêm cho mỗi vạch Bỏ Lệnh còn trống. */
+  readonly winPerHeatLeft: number;
+  /** Thưởng thắng thêm cho mỗi nước chơi nhanh hơn "chuẩn" (chuẩn = parTurnsPerCell × số ô chơi được). */
+  readonly winPerTurnSaved: number;
+  readonly parTurnsPerCell: number;
 }
 
 export interface PuzzleState {
@@ -99,6 +143,7 @@ export type PuzzleEvent =
 export type RejectReason =
   | "finished"
   | "outOfBounds"
+  | "blocked"
   | "occupied"
   | "empty"
   | "notAdjacent"
