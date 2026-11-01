@@ -16,12 +16,16 @@ import {
   type Piece,
   type PuzzleState,
   type Ruleset,
+  generateObstacles,
+  playableCount,
 } from "../../../src/core/binh-phap";
 import type { Element, Profession } from "../../../src/core/battle";
+import { createRng } from "../../../src/core/rng";
 
 const NHAP_MON = RULESETS[0]!; // 3×3
-const KHO = RULESETS[2]!; // 8×8
-const THUONG = RULESETS[1]!; // 5×5
+// Bàn thử 8×8 đặc (cùng id "kho" để reducer tìm được bộ luật); bậc Khó thật là 7×9 có chướng ngại.
+const KHO: Ruleset = { ...RULESETS[2]!, width: 8, height: 8, obstaclePercent: 0 };
+const THUONG: Ruleset = { ...RULESETS[1]!, width: 5, height: 5, obstaclePercent: 0 };
 
 const n = (profession: Profession, element: Element, uid = `${profession}-${element}`): BoardPiece => ({
   kind: "normal",
@@ -36,10 +40,11 @@ const eraser: Piece = { kind: "eraser", uid: "e" };
 /** State thử: đặt sẵn quân và quân đang cầm, ô có quân tự động là đã khai thông. */
 function setup(rules: Ruleset, pieces: Record<string, BoardPiece>, hand: Piece, extra: Partial<PuzzleState> = {}, covered: number[] = []): PuzzleState {
   const base = createPuzzle(rules, 1);
-  const cells: Cell[] = base.cells.map((c) => ({ ...c }));
+  // Bàn thử luôn đặc: bỏ chướng ngại sinh theo seed để vị trí quân trong test cố định.
+  const cells: Cell[] = base.cells.map((c) => ({ ...c, blocked: false }));
   for (const [key, piece] of Object.entries(pieces)) {
     const [r, c] = key.split(",").map(Number) as [number, number];
-    cells[idx(rules.width, r, c)] = { covered: true, piece };
+    cells[idx(rules.width, r, c)] = { blocked: false, covered: true, piece };
   }
   for (const i of covered) cells[i] = { ...cells[i]!, covered: true };
   const coveredCount = cells.filter((c) => c.covered).length;
@@ -280,10 +285,11 @@ describe("bất biến và xác định", () => {
 
 describe("lưu và nạp", () => {
   it("vòng tròn serialize/parse giữ nguyên state", () => {
-    let s = createPuzzle(THUONG, 21);
+    const real = RULESETS[1]!;
+    let s = createPuzzle(real, 21);
     for (let i = 0; i < 10; i++) {
       const legal = legalPlacements(s);
-      const t = transition(s, legal.length ? place(Math.floor(legal[0]! / 5), legal[0]! % 5) : { kind: "discard" });
+      const t = transition(s, legal.length ? place(Math.floor(legal[0]! / real.width), legal[0]! % real.width) : { kind: "discard" });
       if (!t.ok || t.state.phase !== "playing") break;
       s = t.state;
     }
@@ -309,5 +315,117 @@ describe("lưu và nạp", () => {
       { ...good, cells: (good.cells as unknown[]).map((c, i) => (i === 0 ? { covered: false, piece: { kind: "wild", uid: "w" } } : c)) },
     ];
     for (const b of bads) assert.equal(parsePuzzle(b), null);
+  });
+});
+
+describe("chướng ngại và bàn chữ nhật", () => {
+  const wall = (rules: Ruleset, ...blockedAt: [number, number][]): PuzzleState => {
+    const base = setup(rules, {}, n("ySu", "kim"));
+    const cells = base.cells.map((c, i) => ({ ...c, blocked: blockedAt.some(([r, col]) => idx(rules.width, r, col) === i) }));
+    return { ...base, cells };
+  };
+
+  it("ô chướng ngại không đặt được, kể cả Quân Lệnh và Thu Hồi", () => {
+    const s = wall(NHAP_MON, [1, 1]);
+    assert.equal(!checkPlacement(s, n("ySu", "kim"), 1, 1).ok && (checkPlacement(s, n("ySu", "kim"), 1, 1) as { reason: string }).reason, "blocked");
+    assert.deepEqual(transition({ ...s, hand: wild() }, place(1, 1)), { ok: false, reason: "blocked" });
+    assert.deepEqual(transition({ ...s, hand: eraser }, place(1, 1)), { ok: false, reason: "blocked" });
+    assert.equal(legalPlacements(s).length, 8);
+  });
+
+  it("chướng ngại không làm cầu nối: quân chỉ kề chướng ngại thì không đặt được", () => {
+    const base = setup(NHAP_MON, { "0,0": n("ySu", "kim") }, n("ySu", "kim"));
+    const s: PuzzleState = { ...base, cells: base.cells.map((c, i) => ({ ...c, blocked: i === idx(3, 0, 1) })) };
+    assert.deepEqual(legalPlacements(s).map((i) => [Math.floor(i / 3), i % 3]), [[1, 0]]);
+  });
+
+  it("thắng khi khai thông hết ô chơi được, không cần ô chướng ngại", () => {
+    const base = setup(NHAP_MON, { "2,1": n("ySu", "kim") }, n("ySu", "kim"));
+    const blockedAt = idx(3, 0, 0);
+    const covered = base.cells.map((c, i) => (i === blockedAt || i === idx(3, 2, 2) ? c : { ...c, covered: true }));
+    const cells = covered.map((c, i) => (i === blockedAt ? { ...c, blocked: true, covered: false } : c));
+    const s: PuzzleState = { ...base, cells, coveredCount: cells.filter((c) => c.covered).length };
+    assert.equal(playableCount(cells), 8);
+    const t = transition(s, place(2, 2));
+    assert.ok(t.ok && t.state.phase === "won");
+  });
+
+  it("hàng có chướng ngại kín khi mọi ô chơi được đã có quân, nhưng đường dưới 3 ô chơi được thì không tính", () => {
+    const base = setup(NHAP_MON, { "1,0": n("ySu", "kim"), "1,2": n("ySu", "kim") }, n("ySu", "kim"));
+    const s3: PuzzleState = { ...base, cells: base.cells.map((c, i) => ({ ...c, blocked: i === idx(3, 0, 0) })) };
+    assert.equal(transition(s3, place(1, 1)).ok && (transition(s3, place(1, 1)) as { state: PuzzleState }).state.linesCleared, 1); // hàng 1 đủ 3 ô
+    // Hàng 0 chỉ còn 2 ô chơi được: đặt kín cũng không dọn.
+    const only2 = setup(NHAP_MON, { "0,1": n("ySu", "kim") }, n("ySu", "kim"));
+    const cells = only2.cells.map((c, i) => ({ ...c, blocked: i === idx(3, 0, 0) }));
+    const t = transition({ ...only2, cells }, place(0, 2));
+    assert.ok(t.ok && t.state.linesCleared === 0);
+  });
+
+  it("bàn 5×7: chỉ số hàng-trước-cột đúng và kề 4 hướng không vượt biên", () => {
+    const rules: Ruleset = { ...RULESETS[1]!, obstaclePercent: 0 };
+    assert.equal(rules.width * rules.height, 35);
+    const s = setup(rules, { "6,4": n("ySu", "kim") }, n("ySu", "moc"));
+    assert.deepEqual(legalPlacements(s).map((i) => [Math.floor(i / 5), i % 5]), [[5, 4], [6, 3]]);
+  });
+
+  it("sinh chướng ngại xác định, đủ số lượng và các ô còn lại luôn liền nhau", () => {
+    for (const [w, h, pct] of [[5, 7, 10], [7, 9, 12], [9, 9, 14], [9, 9, 40]] as const) {
+      for (let seed = 1; seed <= 25; seed++) {
+        const a = generateObstacles(createRng(seed), w, h, pct);
+        assert.deepEqual(a, generateObstacles(createRng(seed), w, h, pct));
+        const count = a.filter(Boolean).length;
+        assert.ok(count <= Math.round((w * h * pct) / 100));
+        assert.ok(count >= Math.round((w * h * pct) / 100) - 2, `${w}x${h} ${pct}% seed ${seed}: ${count}`);
+        // Liền nhau: lan từ một ô trống phải tới mọi ô trống.
+        const free = a.map((b, i) => (b ? -1 : i)).filter((i) => i >= 0);
+        const seen = new Set([free[0]!]);
+        const stack = [free[0]!];
+        while (stack.length) {
+          const at = stack.pop()!;
+          for (const nb of [at - w, at + w, at % w ? at - 1 : -1, (at + 1) % w ? at + 1 : -1]) {
+            if (nb >= 0 && nb < w * h && !a[nb] && !seen.has(nb)) { seen.add(nb); stack.push(nb); }
+          }
+        }
+        assert.equal(seen.size, free.length);
+      }
+    }
+  });
+
+  it("ván của bậc Thường có chướng ngại khác nhau theo seed và lưu/nạp giữ nguyên", () => {
+    const rules = RULESETS[1]!;
+    const a = createPuzzle(rules, 1);
+    const b = createPuzzle(rules, 2);
+    assert.equal(a.width, 5);
+    assert.equal(a.height, 7);
+    assert.ok(a.cells.some((c) => c.blocked));
+    assert.notDeepEqual(a.cells.map((c) => c.blocked), b.cells.map((c) => c.blocked));
+    assert.deepEqual(parsePuzzle(serializePuzzle(a)), a);
+  });
+
+  it("nạp từ chối ô chướng ngại có quân hoặc đã khai thông", () => {
+    const good = JSON.parse(serializePuzzle(createPuzzle(RULESETS[1]!, 1))) as { cells: { blocked: boolean; covered: boolean; piece: unknown }[] };
+    const i = good.cells.findIndex((c) => c.blocked);
+    for (const bad of [{ covered: true, piece: null }, { covered: false, piece: { kind: "wild", uid: "w" } }]) {
+      const cells = good.cells.map((c, k) => (k === i ? { blocked: true, ...bad } : c));
+      assert.equal(parsePuzzle({ ...good, cells }), null);
+    }
+  });
+
+  it("thưởng thắng cộng theo vạch Bỏ Lệnh còn lại và số nước tiết kiệm", () => {
+    const covered = Array.from({ length: 9 }, (_, i) => i).filter((i) => i !== 8);
+    const win = (extra: Partial<PuzzleState>) => {
+      const s = setup(NHAP_MON, { "2,1": n("ySu", "kim") }, n("ySu", "kim"), extra, covered);
+      const t = transition(s, place(2, 2));
+      assert.ok(t.ok && t.state.phase === "won");
+      return t.state.score;
+    };
+    const w = NHAP_MON.score;
+    const par = Math.floor(w.parTurnsPerCell * 9);
+    // turn = 4 → tiết kiệm par − 5 nước; thanh trống 3 vạch (heat 0).
+    const cool = win({ turn: 4, discardHeat: 0 });
+    assert.equal(cool, w.place + w.perfectNeighbor + w.win + w.winPerHeatLeft * 3 + w.winPerTurnSaved * (par - 5));
+    const hot = win({ turn: 4, discardHeat: 3 });
+    assert.equal(hot, w.place + w.perfectNeighbor + w.win + w.winPerHeatLeft * 1 + w.winPerTurnSaved * (par - 5)); // thanh 3 → đặt thành công hạ còn 2 → trống 1 vạch
+    assert.ok(win({ turn: 40, discardHeat: 0 }) < cool);
   });
 });

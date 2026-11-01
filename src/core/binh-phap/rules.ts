@@ -14,6 +14,14 @@ export function neighbors4(width: number, height: number, row: number, col: numb
   return out;
 }
 
+/** Số ô chơi được (không phải chướng ngại). */
+export function playableCount(cells: readonly Cell[]): number {
+  return cells.reduce((n, c) => (c.blocked ? n : n + 1), 0);
+}
+
+/** Đường (hàng/cột) ngắn hơn mức này không tính là "kín": tránh dọn miễn phí ở chỗ chỉ còn 1–2 ô trống. */
+export const MIN_LINE_CELLS = 3;
+
 export function boardIsEmpty(cells: readonly Cell[]): boolean {
   return cells.every((c) => c.piece === null);
 }
@@ -34,6 +42,7 @@ export function checkPlacement(state: PuzzleState, piece: Piece, row: number, co
     return { ok: false, reason: "outOfBounds", blockers: [] };
   }
   const target = cells[idx(width, row, col)]!;
+  if (target.blocked) return { ok: false, reason: "blocked", blockers: [] };
   if (piece.kind === "eraser") {
     return target.piece ? { ok: true } : { ok: false, reason: "empty", blockers: [] };
   }
@@ -63,13 +72,25 @@ export function completedLines(cells: readonly Cell[], width: number, height: nu
   const out: { axis: "row" | "col"; index: number }[] = [];
   for (let r = 0; r < height; r++) {
     let full = true;
-    for (let c = 0; c < width && full; c++) full = cells[idx(width, r, c)]!.piece !== null;
-    if (full) out.push({ axis: "row", index: r });
+    let free = 0;
+    for (let c = 0; c < width && full; c++) {
+      const cell = cells[idx(width, r, c)]!;
+      if (cell.blocked) continue;
+      free += 1;
+      full = cell.piece !== null;
+    }
+    if (full && free >= MIN_LINE_CELLS) out.push({ axis: "row", index: r });
   }
   for (let c = 0; c < width; c++) {
     let full = true;
-    for (let r = 0; r < height && full; r++) full = cells[idx(width, r, c)]!.piece !== null;
-    if (full) out.push({ axis: "col", index: c });
+    let free = 0;
+    for (let r = 0; r < height && full; r++) {
+      const cell = cells[idx(width, r, c)]!;
+      if (cell.blocked) continue;
+      free += 1;
+      full = cell.piece !== null;
+    }
+    if (full && free >= MIN_LINE_CELLS) out.push({ axis: "col", index: c });
   }
   return out;
 }

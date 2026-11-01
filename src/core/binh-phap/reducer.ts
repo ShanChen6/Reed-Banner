@@ -1,8 +1,8 @@
 // Máy trạng thái của một ván. `transition` bất biến: lệnh sai trả `ok: false`, state, điểm, thanh Bỏ Lệnh và RNG không đổi.
 
 import { createRng } from "../rng";
-import { nextPiece } from "./generator";
-import { checkPlacement, completedLines, idx } from "./rules";
+import { generateObstacles, nextPiece } from "./generator";
+import { checkPlacement, completedLines, idx, playableCount } from "./rules";
 import { RULESETS, SCHEMA_VERSION } from "./rulesets";
 import type { BoardPiece, Cell, Command, Piece, PuzzleEvent, PuzzleState, Ruleset, Transition } from "./types";
 
@@ -14,6 +14,8 @@ function rulesFor(state: PuzzleState): Ruleset | null {
 /** Ván mới từ seed (số nguyên 32 bit không dấu). Quân đầu tiên luôn là quân thường hoặc Quân Lệnh. */
 export function createPuzzle(rules: Ruleset, seed: number): PuzzleState {
   const rng = createRng(seed);
+  // Thứ tự RNG cố định: địa hình trước, quân đầu tiên sau.
+  const blocked = generateObstacles(rng, rules.width, rules.height, rules.obstaclePercent);
   const hand = nextPiece(rng, rules, 0, null, false);
   return {
     schemaVersion: SCHEMA_VERSION,
@@ -22,7 +24,7 @@ export function createPuzzle(rules: Ruleset, seed: number): PuzzleState {
     seed: seed >>> 0,
     width: rules.width,
     height: rules.height,
-    cells: Array.from({ length: rules.width * rules.height }, (): Cell => ({ covered: false, piece: null })),
+    cells: blocked.map((b): Cell => ({ blocked: b, covered: false, piece: null })),
     hand,
     discardHeat: 0,
     score: 0,
@@ -81,7 +83,7 @@ function place(state: PuzzleState, rules: Ruleset, row: number, col: number): Tr
 
   if (piece.kind === "eraser") {
     const gone = cells[at]!.piece!;
-    cells[at] = { covered: cells[at]!.covered, piece: null };
+    cells[at] = { ...cells[at]!, piece: null };
     events.push({ type: "erased", row, col, piece: gone });
     heat = Math.max(0, heat - 1);
   } else {
@@ -98,7 +100,7 @@ function place(state: PuzzleState, rules: Ruleset, row: number, col: number): Tr
         if (nb && nb.kind === "normal" && nb.profession === piece.profession && nb.element === piece.element) perfect += 1;
       }
     }
-    cells[at] = { covered: true, piece: onBoard };
+    cells[at] = { ...cells[at]!, covered: true, piece: onBoard };
     events.push({ type: "placed", row, col, piece: onBoard });
     score += rules.score.place + perfect * rules.score.perfectNeighbor;
     heat = Math.max(0, heat - 1);
@@ -111,7 +113,7 @@ function place(state: PuzzleState, rules: Ruleset, row: number, col: number): Tr
         events.push({ type: "lineCleared", axis: l.axis, index: l.index });
         for (let k = 0; k < (l.axis === "row" ? width : height); k++) clear.add(l.axis === "row" ? idx(width, l.index, k) : idx(width, k, l.index));
       }
-      for (const i of clear) cells[i] = { covered: cells[i]!.covered, piece: null };
+      for (const i of clear) cells[i] = { ...cells[i]!, piece: null };
       score += lines.length * rules.score.line;
       linesCleared += lines.length;
       heat = 0;
@@ -130,9 +132,13 @@ function place(state: PuzzleState, rules: Ruleset, row: number, col: number): Tr
     turn,
   };
   // Thắng được xét ngay sau khi đặt và dọn hàng, trước khi sinh quân mới (không tiêu RNG).
-  if (covered === width * height) {
+  const playable = playableCount(cells);
+  if (covered === playable) {
     events.push({ type: "won" });
-    return { ok: true, state: { ...base, score: score + rules.score.win, phase: "won" }, events };
+    const w = rules.score;
+    const par = Math.floor(w.parTurnsPerCell * playable);
+    const bonus = w.win + w.winPerHeatLeft * (rules.maxHeat - heat) + w.winPerTurnSaved * Math.max(0, par - turn);
+    return { ok: true, state: { ...base, score: score + bonus, phase: "won" }, events };
   }
   const next = spawn(state, rules, cells, piece, turn);
   events.push({ type: "spawned", piece: next.hand });
