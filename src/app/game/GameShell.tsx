@@ -23,6 +23,7 @@ import SurvivalScreen from "./survival/SurvivalScreen";
 import TrialScreen from "./trial/TrialScreen";
 import DestinyScreen from "./destiny/DestinyScreen";
 import GameHeader from "./header/GameHeader";
+import LoginGate from "./LoginGate";
 
 export interface ShellAccount {
   readonly name: string;
@@ -115,13 +116,13 @@ function SceneView({
     case "TRIAL":
       return towerFeatures.trial ? <TrialScreen /> : <DisabledTowerMode name="Tháp Thí Luyện" />;
     case "DESTINY":
-      return towerFeatures.destiny ? <DestinyScreen /> : <DisabledTowerMode name="Tháp Thiên Mệnh" />;
+      return !towerFeatures.destiny ? <DisabledTowerMode name="Tháp Thiên Mệnh" /> : account ? <DestinyScreen /> : <LoginGate name={SCENE_TITLE.DESTINY} />;
     case "SURVIVAL":
-      return <SurvivalScreen />;
+      return account ? <SurvivalScreen /> : <LoginGate name={SCENE_TITLE.SURVIVAL} />;
     case "DAILY":
-      return <DailyScreen />;
+      return account ? <DailyScreen /> : <LoginGate name={SCENE_TITLE.DAILY} />;
     case "ARENA":
-      return <ArenaScreen />;
+      return account ? <ArenaScreen /> : <LoginGate name={SCENE_TITLE.ARENA} />;
     case "FORMATION":
       return <FormationScreen />;
     case "QUESTS":

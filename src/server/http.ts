@@ -34,6 +34,16 @@ export function guestOf(request: NextRequest): string | null {
   return verifyGuest(request.cookies.get(GUEST_COOKIE)?.value);
 }
 
+/** Đã có tài khoản đăng nhập (không phải khách). Chế độ online có bảng xếp hạng và thưởng chỉ cho tài khoản này. */
+export async function isSignedInAccount(ownerId: string): Promise<boolean> {
+  return (await accountStore().get(ownerId)) !== null;
+}
+
+/** Phản hồi chuẩn khi khách vào chế độ cần đăng nhập. */
+export function loginRequiredResponse(): NextResponse {
+  return NextResponse.json({ error: "loginRequired" }, { status: 401, headers: { "cache-control": "no-store" } });
+}
+
 export function serverDeps(): Deps {
   const features = towerFeatureFlags();
   return {
@@ -51,6 +61,7 @@ export function serverDeps(): Deps {
     destinySecret: process.env.SESSION_SECRET,
     trialEnabled: features.trial,
     destinyEnabled: features.destiny,
+    isSignedIn: isSignedInAccount,
   };
 }
 
@@ -98,7 +109,7 @@ export function formationDeps(): FormationDeps {
     secret: process.env.SESSION_SECRET,
     enabled: formationRankedEnabled(),
     newId: () => `f_${randomUUID()}`,
-    isSignedIn: async (ownerId) => (await accountStore().get(ownerId)) !== null,
+    isSignedIn: isSignedInAccount,
   };
 }
 
@@ -110,6 +121,6 @@ export function rankRewardDeps(): RankRewardDeps {
     claims: rankRewardStore(),
     profiles: profileStore(),
     now: Date.now(),
-    isSignedIn: async (ownerId) => (await accountStore().get(ownerId)) !== null,
+    isSignedIn: isSignedInAccount,
   };
 }

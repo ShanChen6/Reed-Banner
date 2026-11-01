@@ -415,3 +415,7 @@ Shan: bảng ít người vẫn phải có thưởng. Bỏ điều kiện "đủ
 
 Shan chốt: (1) vào chế độ xếp hạng phải đăng nhập, khách không chơi; (2) trước mắt thưởng xếp hạng của mọi chế độ chỉ là vàng, loại thưởng khác bàn sau. Đã code: Trận Đồ xếp hạng chặn khách; thưởng vàng theo hạng cuối kỳ cho Nhật Lệnh (ngày) và Tháp Thiên Mệnh (chu kỳ 7 ngày) qua sổ chung `rank_reward_claims` (migration 0010), chỉ tài khoản đăng nhập nhận được. Bình Loạn, Từng trận, Trấn Ải, Quần Hùng chưa có thưởng theo hạng vì chưa có kỳ ([chế độ chơi mục 6](../02-game-modes/README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt)).
 
+### 01/11/2026 (bổ sung) — Khách chỉ chơi thường; Bình Loạn không có BXH; hướng PvP Quần Hùng
+
+Shan chốt: (1) khách chơi thường thoải mái, chế độ **online có bảng xếp hạng và thưởng** chặn hết khách: Nhật Lệnh, Trấn Ải, Quần Hùng, Tháp Thiên Mệnh (cùng Trận Đồ xếp hạng) trả `401 loginRequired` ở server, giao diện hiện màn nhắc đăng nhập; (2) Bình Loạn là offline theo tuyến lịch sử nên **không có bảng xếp hạng**, hai bảng Chiến dịch và Từng trận gỡ khỏi giao diện; (3) Quần Hùng hiện giữ nguyên là tìm đối thủ offline, sắp tới thêm chế độ online hai người chơi đấu trực tiếp, ghi vào [thiết kế DRAFT](../02-game-modes/future/13-quan-hung-pvp-truc-tiep.md) để phát triển sau.
+

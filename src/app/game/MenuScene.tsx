@@ -55,6 +55,9 @@ const UPCOMING: readonly { id: "tran-do" | "tam-tuong-ky" | "vien-chinh"; title:
 
 
 /** Tiện ích cuối trang. Hồ sơ và Tài khoản đã có trên thanh header nên không lặp lại ở đây. */
+/** Chế độ online có bảng xếp hạng và thưởng: chỉ tài khoản đăng nhập vào được (server cũng chặn). */
+const ONLINE_RANKED: readonly Scene[] = ["DAILY", "SURVIVAL", "ARENA", "DESTINY"];
+
 const UTILITIES: readonly { scene: Scene; title: string; icon: UtilityIcon }[] = [
   { scene: "SHOP", title: "Cửa Hàng", icon: "shop" },
   { scene: "QUESTS", title: "Nhiệm vụ", icon: "scroll" },
@@ -128,7 +131,7 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
           <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
             {MODES.map((m) => (
               <li key={m.scene}>
-                <ModeCard mode={m} locked={locked(m.scene)} />
+                <ModeCard mode={m} locked={locked(m.scene)} needsLogin={!account && ONLINE_RANKED.includes(m.scene)} />
               </li>
             ))}
           </ul>
@@ -179,7 +182,7 @@ function SectionHeading({ id, kicker, title }: { id: string; kicker: string; tit
 }
 
 /** Thẻ chế độ: tranh là phần chính, tên đặt trên mép dưới tranh, một câu mô tả và trạng thái thật (mở/chưa mở). */
-function ModeCard({ mode, locked }: { mode: Mode; locked: boolean }) {
+function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; needsLogin: boolean }) {
   const body = (
     <>
       <div className="relative aspect-[5/2] overflow-hidden rounded-t-[0.65rem] sm:aspect-[16/9] lg:aspect-[2/1]">
@@ -209,7 +212,7 @@ function ModeCard({ mode, locked }: { mode: Mode; locked: boolean }) {
             </span>
           ) : (
             <>
-              <span className="text-[var(--atlas-muted)]">Đang mở</span>
+              <span className="text-[var(--atlas-muted)]">{needsLogin ? "Cần đăng nhập" : "Đang mở"}</span>
               <span className="home-enter flex items-center gap-1 font-serif font-semibold">
                 Vào <span aria-hidden>›</span>
               </span>
