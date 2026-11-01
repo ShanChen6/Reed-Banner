@@ -192,3 +192,36 @@ export const formationEntries = pgTable(
     index("formation_entries_owner_idx").on(t.ownerId, t.level),
   ],
 );
+
+/**
+ * Sổ nhận thưởng hạng theo kỳ của các chế độ dùng chung cơ chế (Nhật Lệnh, Tháp Thiên Mệnh). Khóa chính
+ * (mode, period, owner_id) chặn nhận hai lần: chèn trùng bị từ chối nên đúng một request cộng được vàng.
+ */
+export const rankRewardClaims = pgTable(
+  "rank_reward_claims",
+  {
+    mode: text("mode").notNull(),
+    period: text("period").notNull(),
+    ownerId: text("owner_id").notNull(),
+    rank: integer("rank").notNull(),
+    gold: integer("gold").notNull(),
+    claimedAt: bigint("claimed_at", { mode: "number" }).notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.mode, t.period, t.ownerId] }), index("rank_reward_claims_owner_idx").on(t.ownerId, t.mode)],
+);
+
+/**
+ * Điểm mùa theo tuần của Trấn Ải và Quần Hùng: mỗi người một dòng mỗi mùa mỗi chế độ. `updatedAt` đổi mỗi khi điểm
+ * đổi, để bằng điểm thì ai đạt trước đứng trên. Bảng xếp hạng đọc theo (mode, season, score).
+ */
+export const seasonScores = pgTable(
+  "season_scores",
+  {
+    mode: text("mode").notNull(),
+    season: text("season").notNull(),
+    ownerId: text("owner_id").notNull(),
+    score: integer("score").notNull(),
+    updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.mode, t.season, t.ownerId] }), index("season_scores_rank_idx").on(t.mode, t.season, t.score)],
+);

@@ -72,6 +72,11 @@ export class DrizzleDailyStore implements DailyStore {
     return rows.map(toEntry);
   }
 
+  async countFinished(day: string): Promise<number> {
+    const [row] = await this.db.select({ n: count() }).from(dailyEntries).where(and(eq(dailyEntries.day, day), isNotNull(dailyEntries.score)));
+    return row?.n ?? 0;
+  }
+
   async rankOf(day: string, ownerId: string): Promise<number | null> {
     const mine = await this.get(day, ownerId);
     if (!mine?.result) return null;

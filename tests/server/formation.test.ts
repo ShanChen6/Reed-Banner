@@ -12,6 +12,7 @@ import {
   MemoryFormationStore,
   claimFormation,
   formationOverview,
+  formationSalt,
   formationSeed,
   moveFormation,
   startFormation,
@@ -32,6 +33,7 @@ function deps(over: Partial<FormationDeps> = {}): FormationDeps {
     secret: "khoa-bi-mat-cho-test",
     enabled: true,
     newId: () => `f_${++n}`,
+    isSignedIn: async () => true,
     ...over,
   };
 }
@@ -75,7 +77,35 @@ describe("Trận Đồ xếp hạng: cổng vào", () => {
     assert.deepEqual(await startFormation(deps({ enabled: false }), "a", "thuong"), { ok: false, error: "featureDisabled" });
     assert.deepEqual(await startFormation(deps({ secret: undefined }), "a", "thuong"), { ok: false, error: "unavailable" });
     for (const level of ["huong-dan", "la", 5, null, undefined]) assert.deepEqual(await startFormation(deps(), "a", level), { ok: false, error: "unknownLevel" });
-    assert.deepEqual(await formationOverview(deps({ enabled: false }), "a"), { enabled: false, levels: [] });
+    assert.deepEqual(await formationOverview(deps({ enabled: false }), "a"), { enabled: false, canPlay: false, levels: [] });
+  });
+});
+
+describe("Trận Đồ xếp hạng: chỉ tài khoản đã đăng nhập", () => {
+  const guestsOnly = (): FormationDeps => deps({ isSignedIn: async (id) => id !== "khach" });
+
+  it("khách không mở ván, không đi nước, không nhận thưởng", async () => {
+    const d = guestsOnly();
+    assert.deepEqual(await startFormation(d, "khach", "thuong"), { ok: false, error: "loginRequired" });
+    assert.deepEqual(await moveFormation(d, "khach", "thuong", 0, { kind: "discard" }), { ok: false, error: "loginRequired" });
+    assert.deepEqual(await claimFormation(at(d, T0 + DAY), "khach", "thuong", periodKey("thuong", d.now)!), { ok: false, error: "loginRequired" });
+    assert.equal(await d.store.get("thuong", periodKey("thuong", d.now)!, "khach"), null); // không để lại ván nào
+  });
+
+  it("tài khoản đăng nhập chơi bình thường; khách không xem bảng (canPlay false, danh sách rỗng)", async () => {
+    const d = guestsOnly();
+    assert.ok((await startFormation(d, "tai-khoan", "thuong")).ok);
+    const asGuest = await formationOverview(d, "khach");
+    assert.equal(asGuest.canPlay, false);
+    assert.equal(asGuest.enabled, true);
+    assert.deepEqual(asGuest.levels, []);
+    assert.equal((await formationOverview(d, null)).canPlay, false);
+    assert.equal((await formationOverview(d, "tai-khoan")).canPlay, true);
+    assert.equal((await formationOverview(d, "tai-khoan")).levels.length, 3);
+  });
+
+  it("cờ tắt thì báo tắt trước khi hỏi đăng nhập", async () => {
+    assert.deepEqual(await startFormation({ ...guestsOnly(), enabled: false }, "khach", "thuong"), { ok: false, error: "featureDisabled" });
   });
 });
 
@@ -119,6 +149,43 @@ describe("Trận Đồ xếp hạng: mở ván", () => {
     const seed = formationSeed(d.secret!, "kho", periodKey("kho", d.now)!);
     assert.ok(!json.includes(`"seed"`) && !json.includes(`"rngState"`));
     assert.ok(!json.includes(`:${seed},`) && !json.includes(`:${seed}}`));
+  });
+
+  it("tổng quan có endsAt và theme của kỳ; theme khớp theme của ván khi mở", async () => {
+    const d = deps();
+    const before = (await formationOverview(d, "a")).levels;
+    for (const l of before) {
+      assert.ok(l.endsAt > d.now && l.endsAt - d.now <= 7 * DAY);
+      assert.equal(typeof l.theme, "number");
+      assert.ok(!JSON.stringify(l).includes(formationSalt(d.secret!, l.level, l.period)));
+    }
+    for (const level of ["thuong", "kho", "dai-tran"]) {
+      const started = await startFormation(d, "a", level);
+      assert.ok(started.ok);
+      assert.equal(started.view.puzzle.theme, before.find((l) => l.level === level)!.theme, level);
+    }
+    const thuong = before.find((l) => l.level === "thuong")!;
+    assert.equal(thuong.endsAt, Date.parse("2026-11-04T17:00:00Z")); // 0 giờ VN ngày 05/11
+  });
+
+  it("ván lưu có muối bí mật; bản gửi client chỉ có theme, không muối", async () => {
+    const d = deps();
+    const r = await startFormation(d, "a", "dai-tran");
+    assert.ok(r.ok);
+    const stored = (await d.store.get("dai-tran", periodKey("dai-tran", d.now)!, "a"))!;
+    assert.equal(stored.state.salt, formationSalt(d.secret!, "dai-tran", periodKey("dai-tran", d.now)!));
+    assert.match(stored.state.salt!, /^[0-9a-f]{32}$/);
+    const json = JSON.stringify(r.view);
+    assert.ok(!json.includes("salt") && !json.includes(stored.state.salt!));
+    assert.equal(typeof r.view.puzzle.theme, "number");
+    // Cùng kỳ cùng theme cho mọi người; muối khác nhau theo khóa, bậc và kỳ.
+    const other = await startFormation(d, "b", "dai-tran");
+    assert.ok(other.ok && other.view.puzzle.theme === r.view.puzzle.theme);
+    assert.notEqual(formationSalt("k1", "kho", "2026-11-04"), formationSalt("k2", "kho", "2026-11-04"));
+    assert.notEqual(formationSalt("k1", "kho", "2026-11-04"), formationSalt("k1", "thuong", "2026-11-04"));
+    assert.notEqual(formationSalt("k1", "kho", "2026-11-04"), formationSalt("k1", "kho", "2026-11-05"));
+    // Muối khác seed: biết seed không suy ra được muối.
+    assert.notEqual(formationSalt("k1", "kho", "2026-11-04"), formationSeed("k1", "kho", "2026-11-04").toString(16));
   });
 
   it("seed phụ thuộc khóa bí mật, bậc và kỳ", () => {

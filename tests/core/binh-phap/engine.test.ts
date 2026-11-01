@@ -17,6 +17,12 @@ import {
   type PuzzleState,
   type Ruleset,
   generateObstacles,
+  CUSTOM_LIMITS,
+  CUSTOM_RULESET_ID,
+  customRuleset,
+  hash32,
+  themeOf,
+  themeOfState,
   FUSION_ALLOWED_LEVELS,
   FUSION_CHARACTERS,
   MAX_FUSION_CHARACTERS,
@@ -614,5 +620,144 @@ describe("nhân vật dung hợp (kiểu Đinh Ngọc)", () => {
     for (const hand of [{ ...good.hand, characterId: "" }, { kind: "fusion", uid: "x" }, { ...good.hand, uid: "" }]) {
       assert.equal(parsePuzzle({ ...good, hand }), null);
     }
+  });
+});
+
+describe("muối bí mật của ván xếp hạng", () => {
+  const rules = RULESETS[1]!;
+  const handsOf = (state: PuzzleState, count: number) => {
+    let s = state;
+    const out: string[] = [];
+    for (let i = 0; i < count; i++) {
+      out.push(JSON.stringify(s.hand));
+      const t = transition(s, { kind: "discard" });
+      s = !t.ok || t.state.phase === "lost" ? createPuzzle(rules, 1) : t.state;
+    }
+    return out;
+  };
+
+  it("cùng seed và cùng muối cho cùng ván; khác muối thì khác bàn và khác dãy quân", () => {
+    const a = createPuzzle(rules, 77, "aaaaaaaaaaaaaaaa");
+    assert.deepEqual(a, createPuzzle(rules, 77, "aaaaaaaaaaaaaaaa"));
+    assert.deepEqual(handsOf(a, 40), handsOf(createPuzzle(rules, 77, "aaaaaaaaaaaaaaaa"), 40));
+    const b = createPuzzle(rules, 77, "bbbbbbbbbbbbbbbb");
+    assert.notDeepEqual(handsOf(a, 40), handsOf(b, 40));
+    assert.notDeepEqual(a.cells.map((c) => c.blocked), b.cells.map((c) => c.blocked));
+  });
+
+  it("biết seed vẫn không đoán được ván có muối (không trùng dãy quân của ván không muối)", () => {
+    for (let seed = 1; seed <= 60; seed++) {
+      const salted = handsOf(createPuzzle(rules, seed, "0123456789abcdef"), 25);
+      const plain = handsOf(createPuzzle(rules, seed), 25);
+      assert.notDeepEqual(salted, plain, `seed ${seed}`);
+    }
+  });
+
+  it("dãy quân không phụ thuộc cách đi (chỉ phụ thuộc số lượt), kể cả có muối", () => {
+    const base = createPuzzle(rules, 5, "feedfacefeedface");
+    const s1 = transition(base, { kind: "discard" });
+    assert.ok(s1.ok);
+    // Đi bất kỳ nước đặt hợp lệ khác từ cùng trạng thái cũng ra cùng quân kế tiếp loại thường.
+    const legal = legalPlacements(base);
+    const placed = legal.length ? transition(base, { kind: "place", row: Math.floor(legal[0]! / base.width), col: legal[0]! % base.width }) : null;
+    if (placed?.ok && base.hand.kind === "normal") assert.deepEqual(placed.state.hand, s1.state.hand);
+  });
+
+  it("lưu và nạp giữ muối; muối sai định dạng bị từ chối", () => {
+    const s = createPuzzle(rules, 9, "0123456789abcdef");
+    assert.equal(parsePuzzle(serializePuzzle(s))?.salt, "0123456789abcdef");
+    assert.deepEqual(parsePuzzle(serializePuzzle(s)), s);
+    const raw = JSON.parse(serializePuzzle(s)) as Record<string, unknown>;
+    for (const salt of ["", "xyz", 5, "a".repeat(80)]) assert.equal(parsePuzzle({ ...raw, salt }), null);
+  });
+
+  it("hash32 phân tán và ổn định; themeOf không đụng tới RNG", () => {
+    assert.equal(hash32("a"), hash32("a"));
+    assert.notEqual(hash32("a"), hash32("b"));
+    const themes = new Set(Array.from({ length: 500 }, (_, i) => themeOf(i) % 13));
+    assert.equal(themes.size, 13, "theme phải phủ đủ 13 bản đồ");
+    const salted = createPuzzle(rules, 3, "0123456789abcdef");
+    assert.equal(themeOfState(salted), hash32("0123456789abcdef|theme") >>> 8);
+    assert.equal(themeOfState({ seed: 3 }), themeOf(3));
+    // theme không đổi dãy quân.
+    assert.deepEqual(createPuzzle(rules, 3).hand, createPuzzle(rules, 3).hand);
+  });
+});
+
+describe("chế độ tùy chỉnh", () => {
+  const valid = { width: 6, height: 4, professions: ["tuongSi", "ySu", "phapSu"], elements: ["kim", "hoa"], wildPermille: 50, eraserPermille: 20, fusionPermille: 0, obstaclePercent: 10 };
+
+  it("dựng bộ luật từ lựa chọn hợp lệ", () => {
+    const r = customRuleset(valid);
+    assert.ok(r);
+    assert.equal(r.id, CUSTOM_RULESET_ID);
+    assert.equal(r.width, 6);
+    assert.equal(r.height, 4);
+    assert.deepEqual(r.professions, valid.professions);
+    assert.equal(r.maxHeat, 3);
+  });
+
+  it("từ chối giá trị ngoài giới hạn hoặc sai kiểu", () => {
+    const bad: Record<string, unknown>[] = [
+      { ...valid, width: CUSTOM_LIMITS.minSide - 1 },
+      { ...valid, height: CUSTOM_LIMITS.maxSide + 1 },
+      { ...valid, width: 4.5 },
+      { ...valid, professions: ["tuongSi"] },
+      { ...valid, professions: ["tuongSi", "tuongSi"] },
+      { ...valid, professions: ["tuongSi", "rồng"] },
+      { ...valid, elements: ["kim"] },
+      { ...valid, wildPermille: CUSTOM_LIMITS.maxWildPermille + 1 },
+      { ...valid, eraserPermille: -1 },
+      { ...valid, fusionPermille: CUSTOM_LIMITS.maxFusionPermille + 1 },
+      { ...valid, obstaclePercent: CUSTOM_LIMITS.maxObstaclePercent + 1 },
+    ];
+    for (const b of bad) assert.equal(customRuleset(b), null, JSON.stringify(b));
+    for (const junk of [null, 5, "x", [], undefined]) assert.equal(customRuleset(junk), null);
+  });
+
+  it("chơi được nhiều cỡ bàn và nhiều bộ nghề/hệ; lưu và nạp giữ nguyên bộ luật", () => {
+    for (const [w, h] of [[3, 3], [10, 10], [3, 10], [10, 3]] as const) {
+      const r = customRuleset({ ...valid, width: w, height: h })!;
+      let s = createPuzzle(r, 12);
+      assert.equal(s.width, w);
+      assert.equal(s.height, h);
+      assert.equal(s.custom?.id, CUSTOM_RULESET_ID);
+      for (let i = 0; i < 30 && s.phase === "playing"; i++) {
+        const legal = legalPlacements(s);
+        const t = transition(s, legal.length ? { kind: "place", row: Math.floor(legal[0]! / w), col: legal[0]! % w } : { kind: "discard" });
+        assert.ok(t.ok);
+        s = t.state;
+      }
+      assert.deepEqual(parsePuzzle(serializePuzzle(s)), s);
+    }
+  });
+
+  it("quân sinh ra chỉ thuộc nghề và hệ đã chọn", () => {
+    const r = customRuleset({ ...valid, wildPermille: 0, eraserPermille: 0 })!;
+    let s = createPuzzle(r, 3);
+    for (let i = 0; i < 120; i++) {
+      assert.ok(s.hand.kind === "normal" && r.professions.includes(s.hand.profession) && r.elements.includes(s.hand.element));
+      const t = transition(s, { kind: "discard" });
+      s = !t.ok || t.state.phase === "lost" ? createPuzzle(r, i + 5) : t.state;
+    }
+  });
+
+  it("nạp từ chối bộ luật tùy chỉnh bị sửa ngoài giới hạn", () => {
+    const s = createPuzzle(customRuleset(valid)!, 4);
+    const raw = JSON.parse(serializePuzzle(s)) as { custom: Record<string, unknown> };
+    for (const patch of [{ width: 99 }, { professions: ["tuongSi"] }, { wildPermille: 5000 }]) {
+      assert.equal(parsePuzzle({ ...raw, custom: { ...raw.custom, ...patch } }), null);
+    }
+    assert.equal(parsePuzzle({ ...raw, custom: undefined }), null);
+    assert.equal(parsePuzzle({ ...raw, rulesVersion: 2 }), null);
+  });
+
+  it("ván có tùy chỉnh bị bỏ qua nếu id là bậc thật (không mượn custom để đổi luật bậc thật)", () => {
+    const s = createPuzzle(RULESETS[1]!, 4);
+    const raw = JSON.parse(serializePuzzle(s)) as Record<string, unknown>;
+    const withCustom = parsePuzzle({ ...raw, custom: { ...valid } });
+    assert.ok(withCustom);
+    assert.equal(withCustom.custom, undefined);
+    assert.equal(withCustom.width, 5);
   });
 });

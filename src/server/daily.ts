@@ -30,6 +30,8 @@ export interface DailyStore {
   top(day: string, limit: number): Promise<DailyEntry[]>;
   /** Hạng của một lượt đã xong: 1 + số lượt xếp trên. */
   rankOf(day: string, ownerId: string): Promise<number | null>;
+  /** Số lượt đã xong trong ngày (mọi người có tên trên bảng). */
+  countFinished(day: string): Promise<number>;
 }
 
 const before = (a: DailyEntry, b: DailyEntry) =>
@@ -58,6 +60,10 @@ export class MemoryDailyStore implements DailyStore {
 
   async top(day: string, limit: number): Promise<DailyEntry[]> {
     return [...this.rows.values()].filter((r) => r.day === day && r.result).sort(before).slice(0, limit);
+  }
+
+  async countFinished(day: string): Promise<number> {
+    return [...this.rows.values()].filter((r) => r.day === day && r.result).length;
   }
 
   async rankOf(day: string, ownerId: string): Promise<number | null> {

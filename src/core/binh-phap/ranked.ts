@@ -1,7 +1,9 @@
 // Trận Đồ có xếp hạng và thưởng: kỳ, hạng, bậc thưởng. Thuần túy, không đụng DB hay giờ hệ thống.
 // Thiết kế ở docs/02-game-modes/future/02-binh-phap-gdd.md mục 12. Mức thưởng là điểm xuất phát chờ Shan duyệt.
 
+import { rewardTier, type RewardTier } from "../progress/rankRewards";
 import { vnDay, vnWeek } from "../progress/quests";
+import { themeOfState } from "./reducer";
 import type { PuzzleState } from "./types";
 
 export type RankedCadence = "day" | "week";
@@ -20,6 +22,15 @@ export function periodKey(levelId: string, now: number): string | null {
   const level = rankedLevel(levelId);
   if (!level) return null;
   return level.cadence === "day" ? vnDay(now) : vnWeek(now);
+}
+
+/** Thời điểm (ms) kỳ hiện tại của bậc kết thúc: 0 giờ giờ Việt Nam của ngày kế tiếp hoặc của thứ Hai kế tiếp. */
+export function periodEnd(levelId: string, now: number): number | null {
+  const level = rankedLevel(levelId);
+  const key = periodKey(levelId, now);
+  if (!level || key === null) return null;
+  const days = level.cadence === "day" ? 1 : 7;
+  return Date.parse(`${key}T00:00:00.000Z`) - 7 * 3600_000 + days * 24 * 3600_000;
 }
 
 /** Kỳ đã khép lại khi khóa của nó nhỏ hơn khóa kỳ hiện tại. */
@@ -42,19 +53,7 @@ export function compareResults(a: RankedResult, b: RankedResult): number {
   return b.score - a.score || a.turns - b.turns || a.finishedAt - b.finishedAt;
 }
 
-export type RewardTier = "top1" | "top3" | "top10" | "half" | "win";
-
-/**
- * Bậc thưởng theo hạng. Bậc cao cần đủ người thắng trong kỳ (`minWinners`), để một mình một bảng không hái được
- * thưởng hạng 1. Mỗi người nhận đúng một bậc, bậc cao nhất đủ điều kiện.
- */
-export const REWARD_TIERS: readonly { readonly tier: RewardTier; readonly maxRank: (winners: number) => number; readonly minWinners: number; readonly label: string }[] = [
-  { tier: "top1", maxRank: () => 1, minWinners: 5, label: "Hạng nhất" },
-  { tier: "top3", maxRank: () => 3, minWinners: 8, label: "Top 3" },
-  { tier: "top10", maxRank: () => 10, minWinners: 15, label: "Top 10" },
-  { tier: "half", maxRank: (n) => Math.ceil(n / 2), minWinners: 2, label: "Nửa trên" },
-  { tier: "win", maxRank: (n) => n, minWinners: 1, label: "Thắng ván" },
-];
+export { REWARD_TIERS, rewardTier, type RewardTier } from "../progress/rankRewards";
 
 /** Vàng theo bậc thưởng, chia theo mức độ chơi. Điểm xuất phát chờ Shan duyệt. */
 export const REWARD_GOLD: Readonly<Record<string, Readonly<Record<RewardTier, number>>>> = {
@@ -63,25 +62,23 @@ export const REWARD_GOLD: Readonly<Record<string, Readonly<Record<RewardTier, nu
   "dai-tran": { top1: 1000, top3: 600, top10: 350, half: 150, win: 80 },
 };
 
-/** Bậc thưởng của người đứng hạng `rank` (từ 1) trong số `winners` người thắng; null khi hạng không hợp lệ. */
-export function rewardTier(rank: number, winners: number): RewardTier | null {
-  if (!Number.isInteger(rank) || !Number.isInteger(winners) || rank < 1 || winners < 1 || rank > winners) return null;
-  for (const t of REWARD_TIERS) if (winners >= t.minWinners && rank <= t.maxRank(winners)) return t.tier;
-  return null;
-}
-
 export function rewardGold(levelId: string, rank: number, winners: number): { tier: RewardTier; gold: number } | null {
   const table = REWARD_GOLD[levelId];
   const tier = rewardTier(rank, winners);
   return table && tier ? { tier, gold: table[tier] } : null;
 }
 
-/** Bản ván gửi cho client: không có seed và trạng thái RNG, để không đoán trước được các quân sau. */
-export type PublicPuzzle = Omit<PuzzleState, "seed" | "rngState">;
+/**
+ * Bản ván gửi cho client: không có seed và trạng thái RNG, để không đoán trước được các quân sau. `theme` (chọn bản đồ nền)
+ * là hàm một chiều của seed nên không lộ seed.
+ */
+export type PublicPuzzle = Omit<PuzzleState, "seed" | "rngState" | "salt" | "custom"> & { readonly theme: number };
 
 export function publicPuzzle(state: PuzzleState): PublicPuzzle {
-  const { seed: _seed, rngState: _rngState, ...rest } = state;
+  const { seed: _seed, rngState: _rngState, salt: _salt, custom: _custom, ...rest } = state;
   void _seed;
   void _rngState;
-  return rest;
+  void _salt;
+  void _custom;
+  return { ...rest, theme: themeOfState(state) };
 }

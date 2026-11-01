@@ -18,7 +18,8 @@
 10. [10 — Kiến trúc engine ghép yếu tố](10-liet-truyen-architecture.md)
 11. [11 — UX, Art Bible của Liệt Truyện](11-liet-truyen-ui-art.md)
 12. [12 — QA và roadmap Liệt Truyện](12-liet-truyen-qa-roadmap.md)
-13. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
+13. [13 — Quần Hùng online: đấu trực tiếp hai người chơi](13-quan-hung-pvp-truc-tiep.md) (DRAFT, phát triển sau)
+14. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
 
 ## Quy ước quyết định
 

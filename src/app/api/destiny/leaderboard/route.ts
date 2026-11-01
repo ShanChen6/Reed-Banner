@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { activeDestinyCycle, destinyCycleById, publicDestinyCycle } from "@/server/destinyCycle";
 import { destinyLeaderboardView } from "@/server/destinyLeaderboard";
-import { guestOf, serverDeps } from "@/server/http";
+import { guestOf, isSignedInAccount, loginRequiredResponse, serverDeps } from "@/server/http";
 import { destinyLeaderboardStore } from "@/server/store";
 
 const integer = (value: string | null, fallback: number) => {
@@ -13,6 +13,8 @@ const integer = (value: string | null, fallback: number) => {
 export async function GET(request: NextRequest) {
   if (!serverDeps().destinyEnabled)
     return NextResponse.json({ enabled: false, error: "featureDisabled" }, { headers: { "cache-control": "no-store" } });
+  const viewer = guestOf(request);
+  if (!viewer || !(await isSignedInAccount(viewer))) return loginRequiredResponse();
   const scheduled = activeDestinyCycle(Date.now());
   if (!scheduled.ok) return NextResponse.json({ error: "invalid_time" }, { status: 500 });
   const requestedCycle = request.nextUrl.searchParams.get("cycle");

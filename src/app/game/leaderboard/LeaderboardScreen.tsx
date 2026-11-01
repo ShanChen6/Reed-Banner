@@ -2,25 +2,24 @@
 
 import { Pagination } from "@/components/ui/Pagination";
 
-import { Card, CardBody, CardFooter, Input, Select, Button } from "@/components/ui";
+import { Card, CardBody, CardFooter, Input, Button } from "@/components/ui";
 
-// Bảng xếp hạng: chiến dịch (số nhiệm vụ, rồi tổng lượt ít nhất), từng nhiệm vụ có trận (ít lượt nhất), sinh tồn, đấu
-// trường.
+// Bảng xếp hạng: Trấn Ải (số đợt), Quần Hùng (điểm đấu trường) và Thiên Mệnh (tầng, theo chu kỳ). Bình Loạn là chế độ
+// offline nên không có bảng.
 // Điểm do server ghi sau mỗi lần cộng thưởng.
 
 import { useEffect, useState } from "react";
 import {
-  STORY_NODES,
   describeScore,
-  isCombatStoryNode,
   type BoardId,
-  type CampaignMissionId,
 } from "@/core";
 import { SceneLink } from "../SceneContext";
 import { useScene } from "../SceneContext";
 
 interface BoardResponse {
   readonly board?: BoardId;
+  /** Có khi là bảng mùa theo tuần (khóa thứ Hai đầu tuần). */
+  readonly season?: string;
   readonly top?: readonly {
     readonly rank: number;
     readonly name: string;
@@ -46,50 +45,48 @@ interface DestinyBoardResponse {
   readonly error?: string;
 }
 
-/** Nhiệm vụ có trận của Campaign V2; sự kiện và ngoại giao không có bảng lượt. */
-const COMBAT_MISSIONS = STORY_NODES.filter(isCombatStoryNode);
 
 const TABS: readonly {
-  id: "campaign" | "mission" | "survival" | "arena" | "destiny";
+  id: "survival" | "arena" | "destiny";
   label: string;
 }[] = [
-  { id: "campaign", label: "Bình Loạn" },
-  { id: "mission", label: "Từng trận" },
   { id: "survival", label: "Trấn Ải" },
   { id: "arena", label: "Quần Hùng" },
   { id: "destiny", label: "Thiên Mệnh" },
 ];
 
 const NOTE: Record<(typeof TABS)[number]["id"], string> = {
-  campaign:
-    "Hoàn thành nhiều nhiệm vụ chiến dịch hơn đứng trên (sự kiện và ngoại giao cũng tính); bằng nhau thì tổng số lượt ít nhất của các nhiệm vụ có trận ít hơn đứng trên.",
-  mission:
-    "Hoàn thành nhiệm vụ có trận này với ít lượt nhất (tính cả hai phe).",
   survival: "Số đợt nhiều nhất đã vượt qua.",
   arena:
     "Điểm đấu trường bóng ma: thắng cộng, thua trừ, nhiều hơn khi gặp đối thủ mạnh hơn.",
   destiny: "Tầng clear cao hơn; hòa thì tổng lượt ít hơn, sau đó người hoàn thành sớm hơn.",
 };
 
-function scoreText(board: BoardId, score: number): string {
+/** Ghi chú riêng của bảng mùa theo tuần (đổi vào thứ Hai 0 giờ, điểm mùa bắt đầu lại từ 0). */
+const SEASON_NOTE: Record<"survival" | "arena", string> = {
+  survival: "Mùa theo tuần, đổi vào thứ Hai 0 giờ: số đợt cao nhất đã vượt trong một lượt chơi của tuần. Hạng cuối mùa nhận vàng.",
+  arena:
+    "Mùa theo tuần, đổi vào thứ Hai 0 giờ: tổng điểm đấu trường nhận được từ các trận bạn đi đánh trong tuần (chỉ người có tổng dương mới có tên). Điểm gốc không bị reset. Hạng cuối mùa nhận vàng.",
+};
+
+function scoreText(board: BoardId, score: number, season: boolean): string {
+  if (season) return board === "arena" ? `+${score} điểm` : `${score} đợt`;
   const d = describeScore(board, score);
-  if (board === "campaign") return `${d.main} nhiệm vụ · ${d.turns} lượt`;
-  if (board.startsWith("mission:")) return `${d.main} lượt`;
   if (board === "arena") return `${d.main} điểm`;
   return `${d.main} đợt`;
 }
 
 export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEnabled?: boolean }) {
   const { params } = useScene();
-  const [tab, setTab] = useState<(typeof TABS)[number]["id"]>(() => params.get("board") === "destiny" && destinyEnabled ? "destiny" : "campaign");
-  const [mission, setMission] = useState<CampaignMissionId>(
-    COMBAT_MISSIONS[0]!.id,
-  );
+  const [tab, setTab] = useState<(typeof TABS)[number]["id"]>(() => params.get("board") === "destiny" && destinyEnabled ? "destiny" : "survival");
   const [data, setData] = useState<BoardResponse | null>(null);
   const [destiny, setDestiny] = useState<DestinyBoardResponse | null>(null);
+  // Mặc định xem bảng mùa tuần này; "Mọi thời đại" là bảng cộng dồn cũ.
+  const [scope, setScope] = useState<"season" | "all">("season");
   const [cycle, setCycle] = useState("");
   const [cursor, setCursor] = useState("0");
-  const board: BoardId = tab === "mission" ? `mission:${mission}` : tab === "destiny" ? "campaign" : tab;
+  // Bình Loạn là chế độ offline theo tuyến lịch sử, không có bảng xếp hạng (Shan, 01/11/2026).
+  const board: BoardId = tab === "destiny" ? "survival" : tab;
 
   useEffect(() => {
     if (tab === "destiny") {
@@ -103,7 +100,7 @@ export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEn
       return () => { live = false; };
     }
     let live = true;
-    void fetch(`/api/leaderboard?board=${encodeURIComponent(board)}`, {
+    void fetch(`/api/leaderboard?board=${encodeURIComponent(board)}${scope === "season" ? "&season=current" : ""}`, {
       cache: "no-store",
     })
       .then((r) => r.json() as Promise<BoardResponse>)
@@ -112,9 +109,10 @@ export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEn
     return () => {
       live = false;
     };
-  }, [board, tab, cycle, cursor]);
+  }, [board, tab, cycle, cursor, scope]);
 
-  const shown = data?.board === board ? data : null;
+  const shown = data?.board === board && Boolean(data.season) === (scope === "season") ? data : null;
+  const season = scope === "season";
 
   return (
     <main className="ui-screen ui-screen--cool">
@@ -173,25 +171,20 @@ export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEn
             </CardFooter>
           </Card>
         ) : <Card className="flex flex-col gap-2">
-          {tab === "mission" && (
-            <label className="flex flex-wrap items-center gap-2 text-sm">
-              Nhiệm vụ
-              <Select
-                value={mission}
-                onChange={(e) =>
-                  setMission(e.target.value as CampaignMissionId)
-                }
-
+          <div role="group" aria-label="Phạm vi bảng" className="flex gap-1.5 text-sm">
+            {(["season", "all"] as const).map((s) => (
+              <button
+                key={s}
+                type="button"
+                aria-pressed={scope === s}
+                onClick={() => setScope(s)}
+                className={`rounded-full px-3 py-1 font-semibold ${scope === s ? "bg-amber-500 text-stone-950" : "bg-white/10 hover:bg-white/15"}`}
               >
-                {COMBAT_MISSIONS.map((n) => (
-                  <option key={n.id} value={n.id}>
-                    {n.id} · {n.title}
-                  </option>
-                ))}
-              </Select>
-            </label>
-          )}
-          <p className="text-xs text-muted">{NOTE[tab]}</p>
+                {s === "season" ? "Mùa tuần này" : "Mọi thời đại"}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-muted">{season ? `${SEASON_NOTE[tab as "survival" | "arena"]}${shown?.season ? ` (mùa bắt đầu ${shown.season})` : ""}` : NOTE[tab]}</p>
           {!shown ? (
             <p className="py-6 text-center text-sm text-muted">
               {data?.error ? "Không tải được bảng xếp hạng." : "Đang tải…"}
@@ -217,7 +210,7 @@ export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEn
                     {r.mine && " (bạn)"}
                   </span>
                   <span className="text-xs text-foreground-secondary tabular-nums">
-                    {scoreText(board, r.score)}
+                    {scoreText(board, r.score, season)}
                   </span>
                 </li>
               ))}
@@ -226,7 +219,7 @@ export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEn
           {shown?.mine && !shown.top!.some((r) => r.mine) && (
             <p className="text-sm text-amber-200">
               Hạng của bạn: {shown.mine.rank} ·{" "}
-              {scoreText(board, shown.mine.score)}
+              {scoreText(board, shown.mine.score, season)}
             </p>
           )}
         </Card>}

@@ -7,7 +7,8 @@ import { POST as destinyPost } from "../../src/app/api/destiny/run/route";
 import { FEATURE_DISABLED_ERROR, towerFeatureFlags } from "../../src/server/featureFlags";
 import { actBattle, createBattleFor, getBattle, settleAbandoned } from "../../src/server/battles";
 import { MemoryProfileStore, loadProfile } from "../../src/server/profiles";
-import { MemoryMatchStore } from "../../src/server/store";
+import { MemoryMatchStore, accountStore } from "../../src/server/store";
+import { signGuest } from "../../src/server/guest";
 import { startTrialRequest, trialRegistry } from "../../src/server/trialApi";
 import { startDestinyBattle, startDestinyRun } from "../../src/server/destiny";
 import { resolveDestinyFloor } from "../../src/server/destinyContent";
@@ -20,9 +21,9 @@ const trialBody = {
 };
 const destinyBody = { rosterIds: [MAIN_ID, ...STARTER_COMPANIONS.slice(0, 2).map(({ id }) => id)] };
 
-const request = (url: string, body: unknown) => new NextRequest(url, {
+const request = (url: string, body: unknown, cookie?: string) => new NextRequest(url, {
   method: "POST",
-  headers: { "content-type": "application/json" },
+  headers: { "content-type": "application/json", ...(cookie ? { cookie } : {}) },
   body: JSON.stringify(body),
 });
 
@@ -66,7 +67,17 @@ describe("Song Tháp feature flags", { concurrency: false }, () => {
         assert.equal(trialJson.error, trial ? undefined : FEATURE_DISABLED_ERROR);
         if (!trial) assert.equal(trialResponse.headers.get("set-cookie"), null);
 
-        const destinyResponse = await destinyPost(request("http://localhost/api/destiny/run", destinyBody));
+        // Thiên Mệnh có bảng xếp hạng và thưởng nên cần tài khoản đã đăng nhập; khách bị 401 khi cờ bật.
+        if (destiny) {
+          const guest = await destinyPost(request("http://localhost/api/destiny/run", destinyBody));
+          assert.equal(guest.status, 401);
+          assert.equal(guest.headers.get("set-cookie"), null);
+        }
+        const accountId = `g_flag_destiny_${trial}_${destiny}`;
+        await accountStore().link(accountId, { provider: "github", subject: accountId, name: "Người Thử", avatarUrl: null }, Date.now());
+        const destinyResponse = await destinyPost(
+          request("http://localhost/api/destiny/run", destinyBody, destiny ? `colau_guest=${signGuest(accountId)}` : undefined),
+        );
         const destinyJson = await destinyResponse.json();
         assert.equal(destinyResponse.status, destiny ? 200 : 503);
         assert.equal(destinyJson.error, destiny ? undefined : FEATURE_DISABLED_ERROR);

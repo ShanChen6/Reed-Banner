@@ -32,7 +32,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [campaign/](02-game-modes/campaign/design-freeze.md) | Campaign V2: [design freeze](02-game-modes/campaign/design-freeze.md), [mission matrix](02-game-modes/campaign/mission-matrix.md), [sổ nguồn sử](02-game-modes/campaign/history-sources.md), [contract](02-game-modes/campaign/contracts.md), [nghiệm thu](02-game-modes/campaign/final-acceptance.md) |
 | ★ [dual-tower/](02-game-modes/dual-tower/00-02-rules.md) | Song Tháp: [luật](02-game-modes/dual-tower/00-02-rules.md), [hướng dẫn người chơi](02-game-modes/dual-tower/player-help.md), [feature flags](02-game-modes/dual-tower/06-05-feature-flags.md), [runbook Neon](02-game-modes/dual-tower/06-06-neon-staging-runbook.md), [nghiệm thu](02-game-modes/dual-tower/06-04-final-acceptance.md) |
 | ★ [survival/](02-game-modes/survival/02-rules-state-machine.md) | Sinh tồn V1.1: [luật & state machine](02-game-modes/survival/02-rules-state-machine.md), [dữ liệu](02-game-modes/survival/03-data-architecture.md), [nghiệm thu](02-game-modes/survival/24-final-acceptance.md) |
-| [future/](02-game-modes/future/README.md) | Đề xuất chưa triển khai: Binh Pháp, Liệt Truyện, định hướng Tháp/Sinh tồn (**DRAFT**, design only) |
+| [future/](02-game-modes/future/README.md) | Đề xuất chưa triển khai: Binh Pháp, Liệt Truyện, định hướng Tháp/Sinh tồn, [Quần Hùng PvP trực tiếp](02-game-modes/future/13-quan-hung-pvp-truc-tiep.md) (**DRAFT**, design only) |
 
 ## 03 · Nhân vật & kỹ năng (`03-characters/`)
 
@@ -63,6 +63,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [design-system/theme.md](05-ui-ux/design-system/theme.md) | Theme và token CSS đang chạy (`src/styles/`) |
 | ★ [design-system/README.md](05-ui-ux/design-system/README.md) | UI Home và các chế độ ngoài Campaign; spec ở [game-mode-ui-spec.md](05-ui-ux/design-system/game-mode-ui-spec.md) (Home V2 mục 14) |
 | ★ [screens/battle.md](05-ui-ux/screens/battle.md) | Màn trận đấu, điều khiển |
+| ★ [screens/tran-do.md](05-ui-ux/screens/tran-do.md) | Giao diện Trận Đồ: sa bàn là bản đồ, quân, chướng ngại, yêu cầu ảnh, gợi ý màn chế độ (**DRAFT**) |
 | ★ [campaign/README.md](05-ui-ux/campaign/README.md) | UI riêng Campaign: thoại, Sử ký, World Atlas; [task board](05-ui-ux/campaign/task-board.md), [Polish V2](05-ui-ux/campaign/polish-v2/README.md), [audio (DEFERRED)](05-ui-ux/campaign/audio-todo/README.md) |
 | ★ [implementation/roadmap.md](05-ui-ux/implementation/roadmap.md) | Lộ trình UI-00…UI-09, UI-02A…E |
 
@@ -75,6 +76,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [prompts/v4-2/](06-art/prompts/v4-2/00-bao-cao.md) | Điểm vào bộ prompt; [Xạ thủ và prompt Sát thủ đa vũ khí](06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md). Năm Xạ thủ W02 là DRAFT, Kim/Mộc bảo toàn |
 | [prompts/](06-art/prompts/do-hoa.md) | [Đồ họa ngoài nhân vật](06-art/prompts/do-hoa.md), [Codex dựng rig](06-art/prompts/codex-rig-nhan-vat.md); bản cũ SUPERSEDED: [nhân vật](06-art/prompts/nhan-vat.md), [tư thế](06-art/prompts/tu-the.md) |
 | [prompts/dinh-bo-linh-xa-thu-sat-thu.md](06-art/prompts/dinh-bo-linh-xa-thu-sat-thu.md) | Biến thể vũ khí cung tre/dao găm cho rig Đinh Bộ Lĩnh và các prompt Master/tư thế; DRAFT, chưa có ảnh |
+| [prompts/tran-do-hinh-anh.md](06-art/prompts/tran-do-hinh-anh.md) | Prompt đầy đủ cho Trận Đồ: 30 bản đồ (địa danh thời Loạn 12 sứ quân và cảnh quan, kho không giới hạn), ô che đặc kín, 4 icon chướng ngại; DRAFT, ảnh chưa có |
 | [prompts/dinh-ngoc.md](06-art/prompts/dinh-ngoc.md) | Character DNA, trang phục lấy cảm hứng thế kỷ X, một kiếm/một mặt ngọc và6 prompt cho Đinh Ngọc; DRAFT, chưa duyệt Master |
 | [nhan-vat/nguyen-bac.md](06-art/nhan-vat/nguyen-bac.md) | Hình động Nguyễn Bặc |
 | [ho-so-master-chat.md](06-art/ho-so-master-chat.md) | Ngữ cảnh cho chat mới về dựng hình nhân vật: kiến trúc rig và hiệu ứng, quy trình từ bộ 5 ảnh, tiến độ |

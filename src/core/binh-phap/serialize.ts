@@ -2,7 +2,7 @@
 
 import { ELEMENTS, PROFESSIONS } from "../battle";
 import { playableCount } from "./rules";
-import { RULESETS, SCHEMA_VERSION } from "./rulesets";
+import { CUSTOM_RULESET_ID, RULESETS, SCHEMA_VERSION, customRuleset } from "./rulesets";
 import type { BoardPiece, Cell, Piece, PuzzleState } from "./types";
 
 const isObj = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null && !Array.isArray(v);
@@ -28,7 +28,13 @@ export function parsePuzzle(raw: unknown): PuzzleState | null {
   try {
     const v = typeof raw === "string" ? (JSON.parse(raw) as unknown) : raw;
     if (!isObj(v) || v.schemaVersion !== SCHEMA_VERSION) return null;
-    const rules = RULESETS.find((r) => r.id === v.rulesetId && r.version === v.rulesVersion);
+    // Ván tùy chỉnh mang bộ luật trong chính nó: dựng lại từ lựa chọn (kiểm giới hạn), không tin dữ liệu lưu.
+    const rules =
+      v.rulesetId === CUSTOM_RULESET_ID
+        ? v.rulesVersion === 1
+          ? customRuleset(v.custom)
+          : null
+        : RULESETS.find((r) => r.id === v.rulesetId && r.version === v.rulesVersion);
     if (!rules) return null;
     const sizeOk = (n: unknown, fixed: number) => (rules.randomSize ? isInt(n, rules.randomSize.min, rules.randomSize.max) : n === fixed);
     if (!sizeOk(v.width, rules.width) || !sizeOk(v.height, rules.height)) return null;
@@ -59,6 +65,7 @@ export function parsePuzzle(raw: unknown): PuzzleState | null {
     if (phase === "won" && covered !== playable) return null;
     if (phase === "playing" && covered === playable) return null;
     if (!isInt(v.seed, 0, 0xffffffff) || !isInt(v.rngState, 0, 0xffffffff)) return null;
+    if (v.salt !== undefined && !(typeof v.salt === "string" && /^[0-9a-f]{16,64}$/.test(v.salt))) return null;
     if (!isInt(v.discardHeat, 0, rules.maxHeat)) return null;
     const counters = [v.score, v.placed, v.discarded, v.linesCleared, v.turn];
     if (!counters.every((n) => isInt(n, 0, 1e9))) return null;
@@ -80,6 +87,8 @@ export function parsePuzzle(raw: unknown): PuzzleState | null {
       phase,
       turn: v.turn as number,
       rngState: v.rngState as number,
+      ...(typeof v.salt === "string" ? { salt: v.salt } : {}),
+      ...(rules.id === CUSTOM_RULESET_ID ? { custom: rules } : {}),
     };
   } catch {
     return null;
