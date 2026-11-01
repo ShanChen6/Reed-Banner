@@ -63,7 +63,7 @@ export const RULESETS: readonly Ruleset[] = [
     elements: ["kim", "moc", "tho", "loi", "phong"],
     wildPermille: 80,
     eraserPermille: 40,
-    fusionPermille: 0,
+    fusionPermille: 15,
     fusions: fusionsForLevel("kho"),
     obstaclePercent: 10,
     maxHeat: 3,
