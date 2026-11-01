@@ -171,7 +171,7 @@ Quân này rất mạnh: 4% đã nâng tỉ lệ thắng của greedy khoảng 1
 
 ## 12. Xếp hạng và thưởng (đã code, mặc định tắt)
 
-Shan (01/11/2026): xếp hạng cao được nhận thưởng; thưởng chia theo mức độ chơi để công bằng; làm phần server. Đã code, **tắt mặc định** sau cờ `FORMATION_RANKED_ENABLED` (chỉ chuỗi `true` mới bật, thiếu hoặc giá trị lạ là tắt). Mức thưởng và điều kiện hạng là **điểm xuất phát**, chờ Shan duyệt trước khi bật ở production. Code: `src/core/binh-phap/ranked.ts` (kỳ, hạng, thưởng), `src/server/formation.ts` + `src/server/db/formation.ts` + `src/app/api/formation/` (server), `src/app/game/formation/RankedPanel.tsx` (giao diện), bảng `formation_entries` (migration `drizzle/0009_formation_entries.sql`).
+Shan (01/11/2026): xếp hạng cao được nhận thưởng; thưởng chia theo mức độ chơi để công bằng; làm phần server. Đã code, **tắt mặc định** sau cờ `FORMATION_RANKED_ENABLED` (chỉ chuỗi `true` mới bật, thiếu hoặc giá trị lạ là tắt). Bảng thưởng đã được Shan duyệt (01/11/2026); việc còn lại trước khi bật ở production là đặt cờ và `SESSION_SECRET`, và chưa có security review chính thức. Code: `src/core/binh-phap/ranked.ts` (kỳ, hạng, thưởng), `src/server/formation.ts` + `src/server/db/formation.ts` + `src/app/api/formation/` (server), `src/app/game/formation/RankedPanel.tsx` (giao diện), bảng `formation_entries` (migration `drizzle/0009_formation_entries.sql`).
 
 **Cách chống gian lận: server giữ ván và áp từng lệnh.** Bản thiết kế đầu định "client chơi rồi gửi nhật ký cho server chạy lại". Đã đổi vì seed phải gửi cho client thì client chạy thử được vô hạn lần trên cùng bàn (luyện trước, chọn nước tối ưu) rồi chỉ nộp ván đẹp nhất. Bản đang chạy:
 
