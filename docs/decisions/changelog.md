@@ -427,3 +427,7 @@ Shan chốt: (1) chặn luôn khách **xem** bảng xếp hạng và màn của 
 
 Shan chọn cách tính đã đề xuất: điểm mùa Quần Hùng là tổng điểm đấu trường nhận được từ các trận mình đi đánh trong tuần (không tính phòng thủ, chỉ tổng dương mới có tên, Elo gốc không reset). Không cần đổi code; chỉ bỏ nhãn "đề xuất" ở docs.
 
+### 01/11/2026 (bổ sung) — Duyệt bảng vàng Trấn Ải và Quần Hùng
+
+Shan duyệt bảng vàng theo hạng mùa: Trấn Ải 500/300/180/80/30 và Quần Hùng 600/400/240/100/40 (hạng nhất, top 3, top 10, nửa trên, có tên). Không đổi code. Bảng của Trận Đồ, Nhật Lệnh và Tháp Thiên Mệnh vẫn chờ duyệt.
+
