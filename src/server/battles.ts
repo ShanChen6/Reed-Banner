@@ -89,6 +89,7 @@ import { loadProfile, updateProfile, type ProfileStore } from "./profiles";
 import type { MatchRecord, MatchStore } from "./store";
 import { dailySeed, type DailyStore } from "./daily";
 import { submitProfile, type LeaderboardStore } from "./leaderboard";
+import { recordSeason, type SeasonStore } from "./seasons";
 import { offerDefense, type ArenaStore } from "./arena";
 import { settleTrial, type TrialResult } from "./trialSettle";
 import { settleDestinyMatch, type DestinyResult } from "./destinySettle";
@@ -117,6 +118,8 @@ export interface Deps {
   /** Route production luôn truyền giá trị từ env; thiếu chỉ dành cho compatibility của caller nội bộ/test cũ. */
   readonly trialEnabled?: boolean;
   readonly destinyEnabled?: boolean;
+  /** Điểm mùa theo tuần của Trấn Ải và Quần Hùng; không có thì không ghi mùa. */
+  readonly seasons?: SeasonStore;
   /**
    * Người này đã đăng nhập chưa. Route production luôn truyền; có thì Sinh tồn, Nhật Lệnh, Quần Hùng và Thiên Mệnh
    * (online, có bảng xếp hạng và thưởng) từ chối khách. Thiếu chỉ dành cho caller nội bộ và test cũ.
@@ -876,6 +879,8 @@ async function settleArena(
       won ? "win" : "loss",
       deps.now,
     );
+    // Điểm mùa Quần Hùng: chỉ tính điểm nhận được từ trận mình đi đánh, không tính phòng thủ.
+    await recordSeason(deps.seasons, { mode: "arena", ownerId, now: deps.now, add: d.attacker });
     const scores: [string, number | null][] = [[ownerId, rating]];
     if (opp.owner !== null)
       scores.push([
@@ -1282,6 +1287,9 @@ async function reward(
       u.stored.profile,
       deps.now,
     );
+  // Điểm mùa Trấn Ải: số đợt đã vượt của lượt chơi này; giữ điểm cao nhất trong tuần.
+  if (match.survival && cleared > 0)
+    await recordSeason(deps.seasons, { mode: "survival", ownerId: r.ownerId, now: deps.now, best: cleared });
   const arena = await settleArena(r.ownerId, match, rewards.won, deps);
   return {
     rewards,

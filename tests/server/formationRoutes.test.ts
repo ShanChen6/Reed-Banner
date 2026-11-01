@@ -67,6 +67,7 @@ describe("route Trận Đồ xếp hạng", () => {
     const o = await (await overview(new NextRequest(`${ORIGIN}/api/formation`, { headers: { cookie: guest } }))).json();
     assert.equal(o.enabled, true);
     assert.equal(o.canPlay, false);
+    assert.deepEqual(o.levels, []); // khách không xem bảng
   });
 
   it("luồng đầy đủ với tài khoản đã đăng nhập: mở ván, đi nước, không lộ seed, bậc lạ bị 404", async () => {

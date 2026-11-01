@@ -2,6 +2,10 @@ import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
 import { NextRequest } from "next/server";
 import { GET as arenaGet, POST as arenaPost } from "../../src/app/api/arena/route";
+import { GET as dailyGet } from "../../src/app/api/daily/route";
+import { GET as destinyOverviewGet } from "../../src/app/api/destiny/route";
+import { GET as destinyBoardGet } from "../../src/app/api/destiny/leaderboard/route";
+import { GET as leaderboardGet } from "../../src/app/api/leaderboard/route";
 import { POST as destinyBattles } from "../../src/app/api/destiny/battles/route";
 import { POST as destinyReward } from "../../src/app/api/destiny/reward/route";
 import { POST as destinyRun } from "../../src/app/api/destiny/run/route";
@@ -107,6 +111,41 @@ describe("route chế độ online có xếp hạng và thưởng", () => {
     for (const handler of [destinyBattles, destinyReward]) {
       assert.equal((await handler(req("/api/x", "POST", guest))).status, 401);
     }
+  });
+
+  it("khách không xem bảng xếp hạng, đề Nhật Lệnh và màn Thiên Mệnh; tài khoản thì xem được", async () => {
+    const guest = `colau_guest=${signGuest("g_khach_xem_bang")}`;
+    for (const cookie of [undefined, guest]) {
+      for (const handler of [leaderboardGet, dailyGet, destinyOverviewGet, destinyBoardGet]) {
+        const res = await handler(req("/api/x?board=survival", "GET", cookie));
+        assert.equal(res.status, 401, handler.name);
+        assert.equal((await res.json()).error, "loginRequired");
+      }
+    }
+    const id = "g_tai_khoan_xem_bang";
+    await accountStore().link(id, { provider: "github", subject: "tk-xem-bang", name: "Người Thử", avatarUrl: null }, Date.now());
+    const cookie = `colau_guest=${signGuest(id)}`;
+    assert.equal((await leaderboardGet(req("/api/leaderboard?board=survival", "GET", cookie))).status, 200);
+    assert.equal((await dailyGet(req("/api/daily", "GET", cookie))).status, 200);
+    assert.equal((await destinyOverviewGet(req("/api/destiny", "GET", cookie))).status, 200);
+    assert.equal((await destinyBoardGet(req("/api/destiny/leaderboard", "GET", cookie))).status, 200);
+  });
+
+  it("bảng mùa theo tuần: season=current hoặc thứ Hai hợp lệ; sai thì 400", async () => {
+    const id = "g_tai_khoan_bang_mua";
+    await accountStore().link(id, { provider: "github", subject: "tk-bang-mua", name: "Người Thử", avatarUrl: null }, Date.now());
+    const cookie = `colau_guest=${signGuest(id)}`;
+    const ok = await leaderboardGet(req("/api/leaderboard?board=survival&season=current", "GET", cookie));
+    assert.equal(ok.status, 200);
+    const body = await ok.json();
+    assert.equal(body.board, "survival");
+    assert.match(body.season, /^\d{4}-\d{2}-\d{2}$/);
+    assert.equal((await leaderboardGet(req("/api/leaderboard?board=arena&season=2026-10-26", "GET", cookie))).status, 200);
+    for (const q of ["board=survival&season=2026-10-27", "board=survival&season=abc", "board=campaign&season=current"]) {
+      assert.equal((await leaderboardGet(req(`/api/leaderboard?${q}`, "GET", cookie))).status, 400, q);
+    }
+    // Không có season thì vẫn là bảng mọi thời đại.
+    assert.equal((await (await leaderboardGet(req("/api/leaderboard?board=survival", "GET", cookie))).json()).season, undefined);
   });
 
   it("khách vẫn kết thúc được run Thiên Mệnh có sẵn (stop không bị chặn)", async () => {

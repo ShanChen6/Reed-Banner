@@ -314,6 +314,8 @@ const CLAIM_LIST = 10;
 export async function formationOverview(deps: FormationDeps, ownerId: string | null): Promise<{ enabled: boolean; canPlay: boolean; levels: LevelOverview[] }> {
   if (!deps.enabled || !deps.secret) return { enabled: false, canPlay: false, levels: [] };
   const canPlay = ownerId !== null && (await deps.isSignedIn(ownerId));
+  // Khách không xem bảng (Shan, 01/11/2026): chỉ biết chế độ đang mở và cần đăng nhập.
+  if (!canPlay) return { enabled: true, canPlay: false, levels: [] };
   const levels = await Promise.all(
     RANKED_LEVELS.map(async (l): Promise<LevelOverview> => {
       const period = periodKey(l.id, deps.now)!;

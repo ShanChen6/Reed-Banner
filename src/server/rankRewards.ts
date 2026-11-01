@@ -7,6 +7,7 @@ import {
   RANK_REWARD_MODES,
   rankRewardGold,
   vnDay,
+  vnWeek,
   type RankRewardMode,
   type RewardTier,
 } from "@/core";
@@ -14,6 +15,7 @@ import type { DailyStore } from "./daily";
 import { activeDestinyCycle, destinyCycleById } from "./destinyCycle";
 import type { DestinyLeaderboardStore } from "./destinyLeaderboard";
 import { updateProfile, type ProfileStore } from "./profiles";
+import type { SeasonStore } from "./seasons";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 /** Chỉ cho nhận thưởng của vài kỳ gần nhất, để danh sách chờ nhận không dài vô hạn. */
@@ -91,6 +93,21 @@ export function destinySource(board: DestinyLeaderboardStore): RankRewardSource 
     },
     async standing(period, ownerId) {
       const [mine, participants] = await Promise.all([board.rankOf(period, ownerId), board.count(period)]);
+      return mine ? { rank: mine.rank, participants } : null;
+    },
+  };
+}
+
+/** Mùa theo tuần của Trấn Ải và Quần Hùng: kỳ là khóa thứ Hai đầu tuần, bảng là điểm mùa của @/server/seasons. */
+export function seasonSource(mode: "survival" | "arena", seasons: SeasonStore): RankRewardSource {
+  return {
+    mode,
+    closedPeriods(now, count) {
+      const current = vnWeek(now);
+      return Array.from({ length: count }, (_, i) => vnWeek(now - (i + 1) * 7 * DAY_MS)).filter((p) => p < current);
+    },
+    async standing(period, ownerId) {
+      const [mine, participants] = await Promise.all([seasons.rankOf(mode, period, ownerId), seasons.count(mode, period)]);
       return mine ? { rank: mine.rank, participants } : null;
     },
   };

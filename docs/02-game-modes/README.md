@@ -57,7 +57,7 @@
 
 ### 2.2 Bảng xếp hạng (Claude đặt 20/10/2026, chuyển sang Campaign V2 ở CAMP-08.04)
 
-- Trang bảng xếp hạng có các bảng: **Sinh tồn**, **Đấu trường**, **Vận Mệnh**. Mỗi bảng hiện 50 người đứng đầu và hạng của người đang xem. Thử thách hằng ngày giữ bảng riêng, Trận Đồ xếp hạng nằm trong màn Trận Đồ.
+- Trang bảng xếp hạng có các bảng: **Sinh tồn**, **Đấu trường**, **Vận Mệnh**. Sinh tồn và Đấu trường mặc định hiện **bảng mùa tuần này**, có nút chuyển sang **Mọi thời đại** (bảng cộng dồn cũ); xem [mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng). Mỗi bảng hiện 50 người đứng đầu và hạng của người đang xem. Thử thách hằng ngày giữ bảng riêng, Trận Đồ xếp hạng nằm trong màn Trận Đồ.
 - **Bình Loạn không có bảng xếp hạng** (Shan, 01/11/2026): chiến dịch là chế độ offline theo tuyến lịch sử. Hai bảng **Chiến dịch** và **Từng trận** dưới đây đã bị gỡ khỏi giao diện; server và dữ liệu cũ (`campaign`, `mission:<M..>`) vẫn còn, chưa xóa.
 - **Chiến dịch (đã gỡ khỏi giao diện):** hoàn thành nhiều nhiệm vụ V2 hơn đứng trên (sự kiện và ngoại giao cũng tính là hoàn thành); bằng số nhiệm vụ thì tổng số lượt ít nhất của các **nhiệm vụ có trận** ít hơn đứng trên. Sự kiện không có lượt nên không cộng gì; nhiệm vụ có trận đã xong mà chưa có số lượt tính 200 lượt.
 - **Từng trận (đã gỡ khỏi giao diện)** (`mission:<M..>`): hoàn thành nhiệm vụ có trận đó với ít lượt nhất (đếm lượt của cả hai phe), lấy từ `campaign.bestBattleTurns`. Chỉ nhiệm vụ trận, phòng thủ, công thành, trùm có bảng; không tính đánh trùm.
@@ -214,7 +214,8 @@ Trang `/arena`, code ở `src/core/arena/` (đội phòng thủ, bóng ma máy t
 - **Điểm (kiểu Elo):** bắt đầu 1000. Người đánh đổi 32 × (kết quả − kỳ vọng), người phòng thủ đổi ngược dấu một nửa (16 ×). Ngang điểm thì thắng +16, thua −16, người phòng thủ −8/+8. Điểm không xuống dưới 0. Bóng ma máy tạo luôn 1000 điểm, nên càng lên cao đánh bóng ma càng ít điểm.
 - **Thưởng:** thưởng trận thường (kinh nghiệm, vàng nhặt, món rơi theo độ khó Khó) và thêm 50 vàng khi thắng.
 - **Bảng xếp hạng:** tab Đấu trường ở `/leaderboard`, theo điểm; lên bảng khi có đội phòng thủ.
-- **Chưa làm:** nhật ký bị đánh (chỉ có số trận giữ được và bị mất), mùa giải và thưởng theo hạng, chặn đánh lại cùng một người.
+- **Mùa và thưởng:** có mùa theo tuần và thưởng vàng theo hạng, xem [mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng).
+- **Chưa làm:** nhật ký bị đánh (chỉ có số trận giữ được và bị mất), chặn đánh lại cùng một người.
 - **Hướng sắp tới:** chế độ online hai người chơi đấu trực tiếp, xem [mục 6.2](#62-quần-hùng-online-hai-người-chơi-phát-triển-sau). Đấu trường bóng ma hiện tại giữ nguyên.
 
 ## 6. Thưởng vàng theo hạng cuối kỳ (Claude đặt 01/11/2026, chờ Shan duyệt)
@@ -226,10 +227,12 @@ Shan (01/11/2026): trước mắt thưởng xếp hạng của **mọi chế đ�
 | **Trận Đồ** Thường / Khó / Đại trận | ngày / ngày / tuần | 150 / 300 / 1 000 | 100 / 200 / 600 | 60 / 120 / 350 | 30 / 60 / 150 | 20 / 40 / 80 (thắng ván) | Sổ riêng trong `formation_entries`, chi tiết ở [GDD Binh Pháp mục 12](future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt); tắt mặc định |
 | **Nhật Lệnh** | ngày | 100 | 70 | 50 | 30 | 10 | Sổ chung `rank_reward_claims`; cộng thêm 150/50 vàng cố định mỗi ván |
 | **Tháp Thiên Mệnh** | chu kỳ 7 ngày | 800 | 500 | 300 | 150 | 60 | Sổ chung `rank_reward_claims`; cộng thêm đá cuối chu kỳ; chỉ khi cờ `DESTINY_ENABLED` bật |
+| **Trấn Ải** | mùa tuần | 500 | 300 | 180 | 80 | 30 | Sổ chung `rank_reward_claims`, điểm mùa ở `season_scores` ([mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng)) |
+| **Quần Hùng** | mùa tuần | 600 | 400 | 240 | 100 | 40 | Như Trấn Ải |
 
 Bậc: hạng 1; hạng 2–3; hạng 4–10; từ hạng 11 tới hết nửa trên (làm tròn lên); còn lại. Code: `src/core/progress/rankRewards.ts` (bậc và bảng vàng), `src/server/rankRewards.ts` (nguồn theo chế độ, sổ nhận, nhận thưởng), `/api/rank-rewards` (danh sách chờ nhận) và `/api/rank-rewards/claim`. Chỉ nhận được các kỳ đã khép trong 7 kỳ gần nhất.
 
-**Chưa có thưởng theo hạng:** **Trấn Ải** là bảng cộng dồn không có kỳ và **Quần Hùng** là điểm Elo liên tục; thưởng theo hạng cần có "mùa" (cắt bảng theo tuần hoặc tháng) trước, xem [câu hỏi mở](../09-roadmap/cau-hoi-mo.md). Cả hai vẫn thưởng vàng khi chơi như cũ. **Bình Loạn** và **Từng trận** không có bảng xếp hạng (offline theo tuyến lịch sử) nên không có thưởng theo hạng.
+**Không có thưởng theo hạng:** **Bình Loạn** và **Từng trận** không có bảng xếp hạng (offline theo tuyến lịch sử). Mọi chế độ vẫn thưởng vàng khi chơi như cũ.
 
 ### 6.1 Ai chơi được chế độ nào (Shan, 01/11/2026)
 
@@ -237,10 +240,20 @@ Khách chơi thường thoải mái; chế độ **online có bảng xếp hạn
 
 | Khách chơi được | Chỉ tài khoản đăng nhập |
 |---|---|
-| Luyện tập / Chơi thử, Giao Tranh (trận thường), Bình Loạn, Đánh trùm, Tháp Thí Luyện, **Trận Đồ chơi thường** | **Nhật Lệnh**, **Trấn Ải** (Sinh tồn), **Quần Hùng** (Đấu trường), **Tháp Thiên Mệnh**, **Trận Đồ xếp hạng** |
+| Luyện tập / Chơi thử, Giao Tranh (trận thường), Bình Loạn, Đánh trùm, Tháp Thí Luyện, **Trận Đồ chơi thường** | **Nhật Lệnh**, **Trấn Ải** (Sinh tồn), **Quần Hùng** (Đấu trường), **Tháp Thiên Mệnh**, **Trận Đồ xếp hạng**, trang **Bảng xếp hạng** |
 
-Khách vẫn xem được bảng xếp hạng. Trận xếp hạng đang dở của một khách cũ (đăng xuất giữa chừng) không xem và không đi tiếp được (`getBattle` và `actBattle` trả `loginRequired`); riêng "dừng run" Thiên Mệnh vẫn cho phép để kết thúc run có sẵn. Code: `Deps.isSignedIn` ở `src/server/battles.ts`, helper `isSignedInAccount` và `loginRequiredResponse` ở `src/server/http.ts`, màn nhắc `src/app/game/LoginGate.tsx`. Tháp Thí Luyện không có bảng xếp hạng nên vẫn mở cho khách.
+**Khách cũng không xem** bảng xếp hạng, đề Nhật Lệnh, màn Thiên Mệnh và màn Quần Hùng/Trấn Ải: các API `GET` tương ứng trả `401`, Trận Đồ xếp hạng chỉ báo "cần đăng nhập" không kèm bảng, và giao diện hiện màn nhắc đăng nhập ở cả trang Xếp hạng (Shan, 01/11/2026). Trận xếp hạng đang dở của một khách cũ (đăng xuất giữa chừng) không xem và không đi tiếp được (`getBattle` và `actBattle` trả `loginRequired`); riêng "dừng run" Thiên Mệnh vẫn cho phép để kết thúc run có sẵn. Code: `Deps.isSignedIn` ở `src/server/battles.ts`, helper `isSignedInAccount` và `loginRequiredResponse` ở `src/server/http.ts`, màn nhắc `src/app/game/LoginGate.tsx`. Tháp Thí Luyện không có bảng xếp hạng nên vẫn mở cho khách.
 
 ### 6.2 Quần Hùng online hai người chơi (phát triển sau)
 
 Quần Hùng hiện là tìm đối thủ offline (mục 5.3). Shan muốn thêm chế độ **online hai người chơi đấu trực tiếp**; xem [thiết kế DRAFT](future/13-quan-hung-pvp-truc-tiep.md). Chưa có code.
+
+### 6.3 Mùa theo tuần của Trấn Ải và Quần Hùng
+
+Shan (01/11/2026): Trấn Ải và Quần Hùng có **mùa theo tuần**, đổi vào thứ Hai 0 giờ giờ Việt Nam (cùng khóa với Đại trận và chu kỳ Thiên Mệnh). Điểm mùa bắt đầu lại từ 0 mỗi tuần; hạng cuối mùa nhận vàng ([mục 6](#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt)). Bảng mọi thời đại cũ vẫn còn để xem.
+
+- **Trấn Ải:** điểm mùa = số đợt cao nhất đã vượt trong **một lượt chơi** của tuần (lượt kém hơn không hạ điểm).
+- **Quần Hùng:** điểm mùa = tổng điểm đấu trường nhận được từ các trận **mình đi đánh** trong tuần (thắng cộng, thua trừ); không tính phòng thủ, để người chỉ treo đội phòng thủ không leo hạng. Chỉ người có tổng **dương** mới có tên trên bảng. **Điểm Elo gốc không bị reset**; mùa chỉ đo mức tiến bộ trong tuần. *Đề xuất của Claude (Shan chưa chọn cách tính cho Quần Hùng); phương án khác: xếp theo Elo cuối tuần có reset mềm, cần chụp bảng cuối mùa.*
+- Ghi điểm mùa lúc trận kết thúc, cùng lúc cộng thưởng; lỗi ghi mùa chỉ ghi log, không làm hỏng thưởng cuối trận. Code: `src/server/seasons.ts`, `src/server/db/seasons.ts`, bảng `season_scores` (migration 0011), API `GET /api/leaderboard?board=survival|arena&season=current|<thứ Hai>`.
+- Số người có tên trên bảng (điểm dương) là số người để tính nửa trên. Không đòi số người tối thiểu, như các chế độ khác.
+

@@ -419,3 +419,7 @@ Shan chốt: (1) vào chế độ xếp hạng phải đăng nhập, khách khô
 
 Shan chốt: (1) khách chơi thường thoải mái, chế độ **online có bảng xếp hạng và thưởng** chặn hết khách: Nhật Lệnh, Trấn Ải, Quần Hùng, Tháp Thiên Mệnh (cùng Trận Đồ xếp hạng) trả `401 loginRequired` ở server, giao diện hiện màn nhắc đăng nhập; (2) Bình Loạn là offline theo tuyến lịch sử nên **không có bảng xếp hạng**, hai bảng Chiến dịch và Từng trận gỡ khỏi giao diện; (3) Quần Hùng hiện giữ nguyên là tìm đối thủ offline, sắp tới thêm chế độ online hai người chơi đấu trực tiếp, ghi vào [thiết kế DRAFT](../02-game-modes/future/13-quan-hung-pvp-truc-tiep.md) để phát triển sau.
 
+### 01/11/2026 (bổ sung) — Khách không xem bảng xếp hạng; mùa tuần cho Trấn Ải và Quần Hùng
+
+Shan chốt: (1) chặn luôn khách **xem** bảng xếp hạng và màn của các chế độ online có xếp hạng (không chỉ chặn chơi); (2) Trấn Ải và Quần Hùng có **mùa theo tuần**. Đã code: các API xem bảng, đề Nhật Lệnh, màn Thiên Mệnh trả `401` cho khách; Trận Đồ xếp hạng không trả bảng cho khách; trang Xếp hạng cần đăng nhập. Mùa tuần: bảng `season_scores` (migration 0011), điểm mùa ghi khi lượt Trấn Ải và trận Quần Hùng kết thúc, bảng mùa trong trang Xếp hạng (mặc định tuần này, có nút Mọi thời đại), thưởng vàng theo hạng cuối mùa qua sổ `rank_reward_claims` (Trấn Ải 500/300/180/80/30, Quần Hùng 600/400/240/100/40). Cách tính điểm mùa Quần Hùng là đề xuất chờ Shan duyệt ([chế độ chơi mục 6.3](../02-game-modes/README.md#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng)).
+

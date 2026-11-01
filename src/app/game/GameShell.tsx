@@ -130,7 +130,7 @@ function SceneView({
     case "SHOP":
       return <ShopScreen />;
     case "LEADERBOARD":
-      return <LeaderboardScreen destinyEnabled={towerFeatures.destiny} />;
+      return account ? <LeaderboardScreen destinyEnabled={towerFeatures.destiny} /> : <LoginGate name={SCENE_TITLE.LEADERBOARD} />;
     case "PROFILE":
       return <ProfileScreen playerName={account?.name ?? null} />;
     case "LOGIN":
