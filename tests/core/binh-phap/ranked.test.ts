@@ -9,6 +9,7 @@ import {
   compareResults,
   createPuzzle,
   periodClosed,
+  periodEnd,
   periodKey,
   publicPuzzle,
   rewardGold,
@@ -46,6 +47,25 @@ describe("kỳ xếp hạng", () => {
       assert.ok(REWARD_GOLD[l.id]);
     }
     assert.ok(!RANKED_LEVELS.some((l) => l.id === "huong-dan"));
+  });
+});
+
+describe("thời điểm kết thúc kỳ", () => {
+  it("kỳ ngày kết thúc lúc 0 giờ giờ Việt Nam hôm sau; kỳ tuần vào thứ Hai kế tiếp", () => {
+    const wed = VN("2026-11-04T12:00:00Z"); // thứ Tư 12 giờ trưa VN
+    assert.equal(periodEnd("thuong", wed), VN("2026-11-05T00:00:00Z"));
+    assert.equal(periodEnd("kho", wed), VN("2026-11-05T00:00:00Z"));
+    assert.equal(periodEnd("dai-tran", wed), VN("2026-11-09T00:00:00Z"));
+    // Đúng mốc đổi kỳ thì kỳ mới bắt đầu, kết thúc sau một kỳ nữa.
+    assert.equal(periodEnd("thuong", VN("2026-11-05T00:00:00Z")), VN("2026-11-06T00:00:00Z"));
+    assert.equal(periodEnd("dai-tran", VN("2026-11-09T00:00:00Z")), VN("2026-11-16T00:00:00Z"));
+    assert.equal(periodEnd("huong-dan", wed), null);
+    // Kỳ luôn kết thúc đúng lúc periodClosed đổi.
+    for (const lvl of ["thuong", "dai-tran"]) {
+      const end = periodEnd(lvl, wed)!;
+      assert.equal(periodKey(lvl, end - 1), periodKey(lvl, wed));
+      assert.notEqual(periodKey(lvl, end), periodKey(lvl, wed));
+    }
   });
 });
 

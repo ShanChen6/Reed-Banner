@@ -445,3 +445,7 @@ Shan chốt: kho ảnh bản đồ xoay theo kỳ (13 địa danh thật thời 
 
 **Sửa bảo mật:** tự rà soát phát hiện ván xếp hạng dò được seed (32 bit, bàn cờ hiển thị) nên biết trước dãy quân. Đã thêm **muối bí mật** cho ván xếp hạng ([GDD Binh Pháp mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)). Ván xếp hạng đang dở tạo trước bản sửa vẫn chạy theo cách cũ (không muối) cho tới khi kết thúc.
 
+### 02/11/2026 (bổ sung) — Kho bản đồ 30, màn chế độ và màn chơi chi tiết Trận Đồ
+
+Shan: thêm càng nhiều địa danh càng tốt (kho không giới hạn), cần prompt tạo ảnh đầy đủ (bản đồ, ô che đặc kín, 4 icon chướng ngại), và triển khai giao diện màn chế độ và màn chơi chi tiết rồi sẽ test lần 1 và góp ý. Đã làm: kho 30 bản đồ (13 địa danh sứ quân và Hoa Lư, 7 địa danh Ngô – Đinh, 10 cảnh quan chung) kèm [bộ prompt đầy đủ](../06-art/prompts/tran-do-hinh-anh.md) và test kiểm mọi bản đồ có prompt; màn chế độ (tab, thẻ bản đồ mờ sương, đồng hồ kỳ, thang thưởng bậc thang, bộ sưu tập địa danh); màn chơi (lệnh bài, ba ngọn lửa Bỏ Lệnh, thanh dưới màn hình cho điện thoại, vệt sáng dọn hàng, nút gợi ý, hướng dẫn từng bước). API tổng quan xếp hạng thêm `endsAt` và `theme` ([giao diện Trận Đồ](../05-ui-ux/screens/tran-do.md)).
+

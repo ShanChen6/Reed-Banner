@@ -24,6 +24,15 @@ export function periodKey(levelId: string, now: number): string | null {
   return level.cadence === "day" ? vnDay(now) : vnWeek(now);
 }
 
+/** Thời điểm (ms) kỳ hiện tại của bậc kết thúc: 0 giờ giờ Việt Nam của ngày kế tiếp hoặc của thứ Hai kế tiếp. */
+export function periodEnd(levelId: string, now: number): number | null {
+  const level = rankedLevel(levelId);
+  const key = periodKey(levelId, now);
+  if (!level || key === null) return null;
+  const days = level.cadence === "day" ? 1 : 7;
+  return Date.parse(`${key}T00:00:00.000Z`) - 7 * 3600_000 + days * 24 * 3600_000;
+}
+
 /** Kỳ đã khép lại khi khóa của nó nhỏ hơn khóa kỳ hiện tại. */
 export function periodClosed(levelId: string, period: string, now: number): boolean {
   const current = periodKey(levelId, now);

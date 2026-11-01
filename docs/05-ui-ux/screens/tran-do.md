@@ -1,7 +1,7 @@
 # Giao diện Trận Đồ
 
 > Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — cơ chế sa bàn là bản đồ đã có code với ảnh giữ chỗ; ảnh bản đồ, ô che và icon chướng ngại thật do Shan thiết kế; gợi ý màn chế độ và màn chơi chi tiết đã làm một phần để Shan tham khảo rồi góp ý.
+> Trạng thái: **DRAFT** — sa bàn là bản đồ, màn chế độ và màn chơi chi tiết đã có code với ảnh giữ chỗ; ảnh bản đồ, ô che và icon chướng ngại thật do Shan thiết kế; Shan test lần 1 rồi góp ý.
 
 Luật chơi ở [GDD Binh Pháp](../../02-game-modes/future/02-binh-phap-gdd.md); tài liệu này chỉ nói về giao diện. Màn chơi nằm ở `src/app/game/formation/`.
 
@@ -28,79 +28,43 @@ Luật chơi ở [GDD Binh Pháp](../../02-game-modes/future/02-binh-phap-gdd.md
 
 ## 3. Yêu cầu ảnh (cho họa sĩ)
 
-### 3.1 Ảnh bản đồ (13 ảnh, mỗi địa danh một ảnh)
+**Prompt đầy đủ, dán được ngay, ở [prompt hình ảnh Trận Đồ](../../06-art/prompts/tran-do-hinh-anh.md)** (nguồn duy nhất, không lặp ở đây): 30 bản đồ (13 địa danh sứ quân và Hoa Lư, 7 địa danh Ngô – Đinh, 10 cảnh quan chung), ô che đặc kín và bốn icon chướng ngại. Kho **không giới hạn số ảnh**; cách thêm bản đồ mới ở mục 1.4 tài liệu đó.
 
-| Mục | Yêu cầu |
-|---|---|
-| Tệp | `public/art/formation/maps/<id>.webp`, `id`: `hoaLu`, `tranLam`, `phamBachHo`, … (đúng id sứ quân trong `WARLORD_ENCOUNTERS`); sửa `src` trong `maps.ts` |
-| Khổ | **Vuông 2048×2048**, WebP. Sa bàn từ 3×3 đến 10×10 và hình chữ nhật nên ảnh bị cắt theo tỉ lệ bàn; **chi tiết quan trọng nằm trong 80% giữa ảnh** |
-| Phong cách | Bản đồ vẽ tay trên giấy dó, nhìn chếch từ trên xuống, mực nâu và màu đất nhạt, thế kỷ X Đại Việt (sông, núi, làng, thành, đường); khớp [art bible](../../06-art/art-bible.md) |
-| Độ tương phản | Trung bình, màu hơi nhạt: **chân dung quân tròn phải đọc rõ khi đặt lên bất kỳ chỗ nào** |
-| Chi tiết | Ô chỉ cỡ 1/10 ảnh nên cần địa vật đủ lớn để nhận ra khi mới lộ vài ô (một khúc sông, một mái nhà, một đoạn tường thành) |
-| Cấm | Chữ, số, lưới ô, khung UI, hình người đọc được mặt (trùng chân dung quân), watermark |
-| Địa danh | Chữ do UI hiển thị khi hoàn thành, không vẽ vào ảnh |
-
-Prompt gốc (đổi `[ĐỊA ĐIỂM + ĐẶC TRƯNG]` theo bảng dưới):
-
-> "Hand-painted 10th-century Vietnamese strategic map on aged mulberry paper, seen from a high oblique angle, [PLACE AND FEATURES], dirt roads, muted ink brown and earthy greens, soft mid-tone contrast, no text, no numbers, no grid, no UI, no faces, no watermark, square composition with the important landmarks inside the central 80%."
-
-| id | Địa danh (nay) | Đặc trưng gợi ý cho `[PLACE AND FEATURES]` |
-|---|---|---|
-| `hoaLu` | Hoa Lư, Ninh Bình | Limestone karst mountains ringing a valley, a small walled citadel, narrow river gaps |
-| `tranLam` | Bố Hải Khẩu, Thái Bình | River mouth near the sea, tidal flats, fishing boats and salt fields |
-| `phamBachHo` | Đằng Châu, Hưng Yên | Red River delta plain, dikes, a river port with moored boats |
-| `ngoXuongXi` | Bình Kiều | Rural plain, a long bridge over a stream (tên cầu), scattered villages |
-| `ngoNhatKhanh` | Đường Lâm | Ancient village of laterite houses and banyan trees, a village gate |
-| `nguyenKhoan` | Tam Đái | Where three rivers meet, wide water, a hilltop stronghold |
-| `kieuCongHan` | Phong Châu | Upland hills and rice terraces, a river valley with a fortified hill |
-| `kieuThuan` | Hồi Hồ | Lake edge with reed beds and a stilted bridge, a fortified village |
-| `lyKhue` | Siêu Loại | Canal-crossed plain, low hills, a moated stronghold |
-| `nguyenThuTiep` | Tiên Du | Mountain with temples and pines overlooking fields |
-| `luDuong` | Tế Giang | Misty marsh with reeds and a wooden causeway |
-| `nguyenSieu` | Tây Phù Liệt | Village between ponds and fields with a small earthen wall |
-| `doCanhThac` | Đỗ Động Giang | River bend with embankments, villages on raised ground |
-
-*(Cột id ở trên là gợi ý đối chiếu; id thật lấy từ `WARLORD_ENCOUNTERS` trong `src/core/campaign/warlords.ts`. Đặc trưng là phỏng theo cảnh quan hiện nay và thông tin trong sổ nguồn sử, mang tính minh họa; Bình Kiều định vị còn tranh luận nên không vẽ chi tiết địa lý cụ thể.)*
-
-### 3.2 Ảnh ô che (1 họa tiết lát được)
-
-| Mục | Yêu cầu |
-|---|---|
-| Tệp | `public/art/formation/fog.svg` hoặc `fog.webp` (đổi đường dẫn trong `src/app/globals.css`, lớp `.fm-cell[data-state="fog"]::before`) |
-| Khổ | Ô vuông **lát được liền mạch** 256×256 (hiển thị khoảng 48px mỗi ô lặp) |
-| Phong cách | Sơn mài nâu sẫm với vân mây cuộn hoặc họa tiết Đông Sơn chìm, **đặc kín hoàn toàn (không trong suốt)**, độ tương phản thấp để không rối khi nhiều ô cạnh nhau, **khác hẳn** màu và chất liệu bản đồ để không nhầm với ô đã mở |
-
-> "Seamless tileable texture, dark lacquered brown wood with faint embossed Dong Son bronze-drum cloud swirls, fully opaque, low contrast, flat lighting, no text, no objects, no borders, 256x256."
-
-### 3.3 Bốn icon chướng ngại
-
-Mỗi icon: **256×256, PNG/WebP nền trong suốt**, nhìn rõ ở cỡ 32px, nhìn từ chếch trên xuống, có bóng đổ nhẹ, mực nâu và màu đất khớp bản đồ; **không** chữ. Tệp `public/art/formation/obstacles/<nui|rung|damLay|thanhLuy>.webp`, rồi đổi `Obstacle` trong `FormationScreen.tsx` sang thẻ ảnh. Nền ô chướng ngại do UI vẽ (đá tối), icon không cần nền.
-
-| Icon | Prompt gốc |
-|---|---|
-| Núi (`nui`) | "Isolated hand-painted game icon of a rugged limestone mountain peak with a snow-white cap, ink outlines, muted brown and grey, transparent background, readable at 32px, no text." |
-| Rừng (`rung`) | "Isolated hand-painted game icon of a small cluster of three round-canopy trees with thin trunks, ink outlines, muted greens and browns, transparent background, readable at 32px, no text." |
-| Đầm lầy (`damLay`) | "Isolated hand-painted game icon of a small marsh pond with rippling teal water and tall reeds with brown seed heads, ink outlines, transparent background, readable at 32px, no text." |
-| Thành lũy (`thanhLuy`) | "Isolated hand-painted game icon of a short stone fortress wall with crenellations and an arched gate, 10th-century Vietnamese earthen-stone style, ink outlines, muted grey-brown, transparent background, readable at 32px, no text." |
+Tóm tắt thông số: bản đồ vuông 2048×2048 WebP (chi tiết quan trọng trong 80% giữa ảnh, tương phản vừa để chân dung quân đọc rõ), ô che lát được 256×256 đặc kín, icon chướng ngại 256×256 nền trong suốt.
 
 ## 4. Còn thiếu và rủi ro
 
 - Ảnh thật chưa có: cần chỉnh lại độ tương phản của quân và ô che khi có ảnh thật.
 - Ô nhỏ trên điện thoại (bàn 10×10 còn khoảng 33px, dưới mức 44px của nút điều khiển); hai huy hiệu bù bằng cỡ tối thiểu 11px nhưng vẫn rất nhỏ.
-- Chưa có chuyển động khi dọn hàng/cột (chỉ có tin nhắn dưới sa bàn) và chưa có âm thanh (DEFERRED).
+- Chưa có âm thanh (DEFERRED).
 - Một số địa danh có định vị còn tranh luận (Bình Kiều); ảnh phải là tranh minh họa tái dựng và UI đã ghi chú như vậy.
-- 13 địa danh nên kỳ xoay vòng sau khoảng hai tuần ở Đại trận và hai tuần ở bậc theo ngày nếu chọn tuần tự; hiện chọn theo băm nên có thể lặp lại trước khi hết vòng.
+- Kho có 30 bản đồ chọn theo băm nên một bản đồ có thể lặp lại trước khi hết vòng (không xoay tuần tự).
 
-## 5. Gợi ý màn chế độ (để Shan tham khảo thực tế rồi góp ý)
+## 5. Màn chế độ (đã code, chờ Shan test lần 1)
 
-Đã làm: thẻ bậc, tab, bảng thưởng như hiện tại. **Chưa làm** (đang chờ góp ý): thẻ bậc là ảnh bản đồ mờ sương của kỳ này, đồng hồ kỳ ("còn 5 giờ") và hạng hiện tại trên thẻ, thang thưởng dạng bậc thang, hai tab Xếp hạng/Chơi thường, bộ sưu tập địa danh đã hoàn thành (hướng cho thưởng không phải vàng sau này).
+Cấu trúc `ModeScreen.tsx`. Hai tab khi xếp hạng đang mở (**Xếp hạng · có thưởng**, **Chơi thường**); khi xếp hạng tắt chỉ có Chơi thường, không hiện tab.
 
-## 6. Gợi ý màn chơi chi tiết (để Shan tham khảo thực tế rồi góp ý)
+- **Thẻ bậc là một tấm bản đồ** (`MapCard.tsx`): ảnh bản đồ phủ bằng ô che đặc kín từ trên xuống, phần đã khai thông lộ ra từ dưới lên theo tiến độ. Ở thẻ xếp hạng: chưa chơi thì che kín và **giấu cả tên địa danh** ("Bản đồ chưa lộ"), đang chơi thì lộ theo phần trăm khai thông, thắng thì lộ hết kèm tên. Thẻ chơi thường là bản đồ mẫu (đổi theo ngày, chỉ để trang trí) vì ván thật chọn ngẫu nhiên.
+- **Đồng hồ kỳ** trên thẻ xếp hạng ("Còn 5 giờ 12 phút" theo giờ server, tự tải lại bảng khi kỳ hết), số người đã thắng, trạng thái ván.
+- **Hạng hiện tại và thưởng dự kiến** (hạng/số người thắng, bậc thưởng, vàng) khi đã thắng, kèm lưu ý hạng còn đổi tới hết kỳ.
+- **Thang thưởng dạng bậc thang** (`RewardLadder.tsx`): năm bậc cao thấp khác nhau, vàng từng bậc, bậc hiện tại của người chơi sáng lên.
+- **Thưởng chờ nhận**, bảng xếp hạng top 10 mỗi bậc (gập), bảng thưởng đầy đủ (gập).
+- **Bộ sưu tập địa danh** `n/30` lưu ở máy: khai thông trọn một sa bàn (chơi thường hay xếp hạng) thì thêm địa danh; chưa có thì hiện "? ? ?".
+- Khách thấy tab xếp hạng chỉ có lời nhắc đăng nhập (không có bảng), chơi thường vẫn đầy đủ.
 
-Đã làm: bản đồ là trung tâm, quân tròn kèm hai huy hiệu, hoàn thành hiện cả bản đồ và địa danh. **Chưa làm**: thanh dưới màn hình trên điện thoại (quân đang cầm và Bỏ Lệnh), "lệnh bài" lớn cho quân đang cầm và thanh Bỏ Lệnh vẽ như ba vạch lửa, hiệu ứng dọn hàng bằng vệt sáng, gợi ý ô đặt được chỉ khi rê hoặc bật tắt, hướng dẫn từng bước bằng lớp phủ ở bậc 3×3.
+## 6. Màn chơi chi tiết (đã code, chờ Shan test lần 1)
+
+- **Bản đồ là trung tâm**, vệt sáng quét qua hàng hoặc cột vừa dọn (0,7 giây; giảm chuyển động thì chỉ nháy sáng). Rê chuột hoặc dùng bàn phím lên ô thì dòng dưới sa bàn nói ô đó đặt được hay không và vì sao.
+- **Lệnh bài** (`Hud.tsx`, `CommandCard`): tấm bài giấy dó có dấu son "LỆNH BÀI", chân dung lớn, tên, nghề, hệ hoặc công dụng quân đặc biệt.
+- **Thanh Bỏ Lệnh là ba ngọn lửa**: mỗi lần bỏ một ngọn bùng lên, ngọn cuối đổi màu đỏ khi bỏ nữa là thua; đặt quân thì dịu đi.
+- **Tiến độ** là thanh đầy dần kèm phần trăm; thống kê khô (điểm, quân đã đặt, hàng đã dọn, điểm cao nhất) gập vào "Thống kê ván"; luật gập vào "Luật chơi".
+- **Điện thoại**: thanh cố định ở đáy màn hình (`MobileBar`) có quân đang cầm thu nhỏ, ba ngọn lửa, nút Bỏ Lệnh và phần trăm khai thông, để ngón cái chạm tới; ẩn ở màn rộng.
+- **Gợi ý ô đặt được** là nút bật tắt, nhớ lựa chọn ở máy; **mặc định bật ở bậc Hướng dẫn, tắt ở các bậc khác** (đề xuất, chờ góp ý).
+- **Hướng dẫn từng bước** ở Hướng dẫn (`TutorialTip`): bước 1 chạm ô đầu tiên, bước 2 luật kề và khớp, nhắc Bỏ Lệnh khi hết nước, nhắc dọn hàng; bấm "Đã hiểu" thì không hiện lại.
+- **Kết quả**: sa bàn mờ quân và chướng ngại để hiện cả bản đồ, khung kết quả có bản đồ đầy đủ kèm địa danh; thắng thì thêm vào bộ sưu tập.
 
 ## 7. Câu hỏi còn mở
 
-1. Gần đến lúc có ảnh thật: kho 13 địa danh đủ chưa, hay thêm địa danh khác (ví dụ Đại La, Cổ Loa)?
+1. Kho đã mở rộng lên 30 bản đồ (Cổ Loa, Đại La, Bạch Đằng, … và cảnh quan chung) và không giới hạn; còn địa danh nào anh muốn thêm?
 2. Chọn bản đồ theo băm (có thể lặp trong vòng) hay xoay tuần tự để mỗi bản đồ xuất hiện đều?
-3. Hướng nào ở mục 5 và 6 làm tiếp sau khi Shan tham khảo?
+3. Sau khi test lần 1: chỉnh gì ở mục 5 và 6 (mặc định gợi ý, độ lớn ô trên điện thoại, nội dung thẻ)?

@@ -151,6 +151,23 @@ describe("Trận Đồ xếp hạng: mở ván", () => {
     assert.ok(!json.includes(`:${seed},`) && !json.includes(`:${seed}}`));
   });
 
+  it("tổng quan có endsAt và theme của kỳ; theme khớp theme của ván khi mở", async () => {
+    const d = deps();
+    const before = (await formationOverview(d, "a")).levels;
+    for (const l of before) {
+      assert.ok(l.endsAt > d.now && l.endsAt - d.now <= 7 * DAY);
+      assert.equal(typeof l.theme, "number");
+      assert.ok(!JSON.stringify(l).includes(formationSalt(d.secret!, l.level, l.period)));
+    }
+    for (const level of ["thuong", "kho", "dai-tran"]) {
+      const started = await startFormation(d, "a", level);
+      assert.ok(started.ok);
+      assert.equal(started.view.puzzle.theme, before.find((l) => l.level === level)!.theme, level);
+    }
+    const thuong = before.find((l) => l.level === "thuong")!;
+    assert.equal(thuong.endsAt, Date.parse("2026-11-04T17:00:00Z")); // 0 giờ VN ngày 05/11
+  });
+
   it("ván lưu có muối bí mật; bản gửi client chỉ có theme, không muối", async () => {
     const d = deps();
     const r = await startFormation(d, "a", "dai-tran");

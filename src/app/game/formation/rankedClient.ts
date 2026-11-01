@@ -11,6 +11,8 @@ export interface Overview {
   /** Đã đăng nhập thì chơi và nhận thưởng được; khách chỉ xem bảng. */
   readonly canPlay: boolean;
   readonly levels: readonly LevelOverview[];
+  /** Giờ server (ms) lúc trả lời, để đếm ngược kỳ theo giờ server chứ không theo đồng hồ máy. */
+  readonly now?: number;
 }
 
 async function call<T>(url: string, body?: unknown): Promise<{ ok: true; data: T } | { ok: false; status: number; data: { error?: string; reason?: string; view?: FormationView } }> {
