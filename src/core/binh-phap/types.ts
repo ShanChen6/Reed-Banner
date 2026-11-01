@@ -45,14 +45,27 @@ export interface Ruleset {
   readonly version: number;
   readonly name: string;
   readonly blurb: string;
+  /** Cỡ bàn cố định. Khi có `randomSize`, đây chỉ là giá trị danh nghĩa (cỡ lớn nhất) và cỡ thật sinh theo seed. */
   readonly width: number;
   readonly height: number;
+  /**
+   * Cỡ bàn ngẫu nhiên theo seed: mỗi cạnh lấy đều trong [min, max]. Tỉ lệ chướng ngại nội suy theo diện tích từ
+   * `obstaclePercentAtMin` (bàn nhỏ nhất min×min) đến `obstaclePercentAtMax` (bàn lớn nhất max×max).
+   */
+  readonly randomSize?: {
+    readonly min: number;
+    readonly max: number;
+    readonly obstaclePercentAtMin: number;
+    readonly obstaclePercentAtMax: number;
+    /** Trần số ô chơi được: bàn lớn bị tăng chướng ngại cho tới khi còn nhiều nhất chừng này ô, để ván không quá dài. */
+    readonly maxPlayable: number;
+  };
   readonly professions: readonly Profession[];
   readonly elements: readonly Element[];
   /** Xác suất sinh quân đặc biệt, tính theo phần nghìn. Không bao giờ sinh hai quân đặc biệt liên tiếp. */
   readonly wildPermille: number;
   readonly eraserPermille: number;
-  /** Số ô chướng ngại sinh ngẫu nhiên theo seed, tính theo phần trăm diện tích bàn (0 = bàn đặc). */
+  /** Số ô chướng ngại sinh ngẫu nhiên theo seed, tính theo phần trăm diện tích bàn (0 = bàn đặc). Bị `randomSize` ghi đè. */
   readonly obstaclePercent: number;
   /** Thanh Bỏ Lệnh chạy 0..maxHeat; bỏ quân khi thanh đã đầy là thua. */
   readonly maxHeat: number;

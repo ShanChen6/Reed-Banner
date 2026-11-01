@@ -387,3 +387,7 @@ Triển khai BP-01 đến BP-04 một phần theo yêu cầu của Shan: engine 
 
 Shan chốt: bàn không cần vuông (5×7, 7×9, 9×9…), có ô chướng ngại ngẫu nhiên không đặt được quân, xếp hạng cao được thưởng và thưởng chia theo bậc chơi; thanh Bỏ Lệnh và xác suất quân đặc biệt giữ đề xuất. Đã code bàn chữ nhật, chướng ngại, điểm mới và quân đặc biệt mới. Xếp hạng và thưởng mới có thiết kế ([GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-thiết-kế-chưa-có-code)), chưa có code.
 
+### 01/11/2026 (bổ sung) — Cỡ bàn các bậc Trận Đồ
+
+Shan chốt: Hướng dẫn 3×3 (không xếp hạng, không thưởng), Thường 5×5, Khó 6×6, Đại trận cỡ ngẫu nhiên mỗi cạnh 7–10; số chướng ngại phải tính kỹ. Đã code, số chướng ngại do mô phỏng chọn (tỉ lệ theo diện tích, trần 72 ô chơi được). Đại trận dùng đủ 8 nghề, gồm Xạ thủ và Sát thủ. Id bậc "Nhập môn" đổi thành `huong-dan`, save cũ bị bỏ.
+

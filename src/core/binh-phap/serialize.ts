@@ -29,8 +29,9 @@ export function parsePuzzle(raw: unknown): PuzzleState | null {
     if (!isObj(v) || v.schemaVersion !== SCHEMA_VERSION) return null;
     const rules = RULESETS.find((r) => r.id === v.rulesetId && r.version === v.rulesVersion);
     if (!rules) return null;
-    if (v.width !== rules.width || v.height !== rules.height) return null;
-    if (!Array.isArray(v.cells) || v.cells.length !== rules.width * rules.height) return null;
+    const sizeOk = (n: unknown, fixed: number) => (rules.randomSize ? isInt(n, rules.randomSize.min, rules.randomSize.max) : n === fixed);
+    if (!sizeOk(v.width, rules.width) || !sizeOk(v.height, rules.height)) return null;
+    if (!Array.isArray(v.cells) || v.cells.length !== (v.width as number) * (v.height as number)) return null;
     const cells: Cell[] = [];
     let covered = 0;
     for (const c of v.cells as unknown[]) {
@@ -65,8 +66,8 @@ export function parsePuzzle(raw: unknown): PuzzleState | null {
       rulesetId: rules.id,
       rulesVersion: rules.version,
       seed: v.seed as number,
-      width: rules.width,
-      height: rules.height,
+      width: v.width as number,
+      height: v.height as number,
       cells,
       hand,
       discardHeat: v.discardHeat as number,
