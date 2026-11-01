@@ -995,3 +995,53 @@
     transition: none;
   }
 }
+
+/* Trận Đồ: lớp che dùng ở thẻ bản đồ (cùng họa tiết với ô che trên sa bàn). */
+.fm-fogfill {
+  background: #2a1f16 url("/art/formation/fog.svg") center / 48px 48px;
+}
+
+/* Trận Đồ: vệt sáng quét qua hàng hoặc cột vừa được dọn. */
+.fm-sweep {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+}
+.fm-sweep-row {
+  background: linear-gradient(90deg, transparent, rgb(255 226 160 / 0.9), transparent) no-repeat;
+  background-size: 40% 100%;
+  animation: fm-sweep-row 0.7s ease-out forwards;
+}
+.fm-sweep-col {
+  background: linear-gradient(180deg, transparent, rgb(255 226 160 / 0.9), transparent) no-repeat;
+  background-size: 100% 40%;
+  animation: fm-sweep-col 0.7s ease-out forwards;
+}
+@keyframes fm-sweep-row {
+  0% { opacity: 0; background-position: -40% 0; }
+  15% { opacity: 1; }
+  100% { opacity: 0; background-position: 140% 0; }
+}
+@keyframes fm-sweep-col {
+  0% { opacity: 0; background-position: 0 -40%; }
+  15% { opacity: 1; }
+  100% { opacity: 0; background-position: 0 140%; }
+}
+@keyframes fm-flash {
+  0% { opacity: 0; }
+  30% { opacity: 0.7; }
+  100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fm-sweep-row,
+  .fm-sweep-col {
+    background: rgb(255 226 160 / 0.5);
+    animation: fm-flash 0.4s ease-out forwards;
+  }
+}
+
+/* Trận Đồ: ngọn lửa của thanh Bỏ Lệnh. */
+.fm-flame-on {
+  filter: drop-shadow(0 0 5px rgb(255 140 40 / 0.8));
+}

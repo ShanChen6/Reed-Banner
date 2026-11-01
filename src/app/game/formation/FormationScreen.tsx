@@ -1,78 +1,51 @@
 "use client";
 
-// Trận Đồ (Binh Pháp): bày quân lệnh theo nghề hoặc hệ để khai thông toàn bộ sa bàn. Chế độ chơi thường offline: không
-// thưởng, không lên bảng xếp hạng, ván dở lưu ở trình duyệt. Luật ở src/core/binh-phap, spec ở
-// docs/02-game-modes/future/02-binh-phap-gdd.md (mục 11).
+// Trận Đồ (Binh Pháp): bày quân lệnh theo nghề hoặc hệ để khai thông toàn bộ sa bàn, mỗi ô khai thông lộ một mảnh bản đồ.
+// Chơi thường chạy offline (không thưởng, không xếp hạng, ván dở lưu ở trình duyệt); xếp hạng chạy trên server (ván nằm ở
+// server, client chỉ giữ bản công khai). Luật ở src/core/binh-phap, spec ở docs/02-game-modes/future/02-binh-phap-gdd.md,
+// giao diện ở docs/05-ui-ux/screens/tran-do.md.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   CUSTOM_RULESET_ID,
-  RULESETS,
-  themeOfState,
-  FUSION_CHARACTERS,
   checkPlacement,
   createPuzzle,
   idx,
   legalPlacements,
-  playableCount,
   parsePuzzle,
+  playableCount,
   rulesetById,
   serializePuzzle,
+  themeOfState,
   transition,
-  type BoardPiece,
-  type Piece,
   type PlacementCheck,
   type PuzzleEvent,
   type PuzzleState,
   type Ruleset,
 } from "@/core/binh-phap";
-import { companionById } from "@/core/roster/roster";
-import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
-import { Portrait } from "../art/portraits";
-import { ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
 import { SceneLink } from "../SceneContext";
-import CustomForm from "./CustomForm";
+import BoardView, { type Sweep } from "./BoardView";
+import { CommandCard, HeatFlames, HintToggle, MobileBar, ProgressMeter, TutorialTip, tutorialText } from "./Hud";
 import { mapFor, type FormationMap } from "./maps";
-import RankedPanel from "./RankedPanel";
+import ModeScreen from "./ModeScreen";
+import { obstacleKind, obstacleLabel } from "./pieces";
 import { claimRanked, fetchOverview, moveRanked, startRanked, toPuzzleState, type FormationView, type Overview } from "./rankedClient";
-
-const SAVE_KEY = "reed-banner:tran-do:save:v1";
-const BEST_KEY = "reed-banner:tran-do:best:v1";
-
-function readStorage(key: string): string | null {
-  try {
-    return window.localStorage.getItem(key);
-  } catch {
-    return null;
-  }
-}
-function writeStorage(key: string, value: string | null) {
-  try {
-    if (value === null) window.localStorage.removeItem(key);
-    else window.localStorage.setItem(key, value);
-  } catch {
-    /* trình duyệt chặn lưu: vẫn chơi được, chỉ không resume */
-  }
-}
-function readBest(): Record<string, number> {
-  try {
-    const v = JSON.parse(readStorage(BEST_KEY) ?? "{}") as Record<string, unknown>;
-    return Object.fromEntries(Object.entries(v).filter(([, n]) => typeof n === "number" && Number.isFinite(n))) as Record<string, number>;
-  } catch {
-    return {};
-  }
-}
+import Rules from "./Rules";
+import {
+  BEST_KEY,
+  SAVE_KEY,
+  addToCollection,
+  markTutorialDone,
+  readBest,
+  readCollection,
+  readHints,
+  readStorage,
+  tutorialDone,
+  writeHints,
+  writeStorage,
+} from "./storage";
 
 const freshSeed = () => (Math.random() * 0x100000000) >>> 0;
-
-const nameOf = (id: string) => FUSION_CHARACTERS.find((f) => f.characterId === id)?.name ?? companionById(id)?.name ?? "Tướng";
-
-function pieceLabel(p: Piece): string {
-  if (p.kind === "wild") return "Quân Lệnh";
-  if (p.kind === "eraser") return "Thu Hồi";
-  if (p.kind === "fusion") return `${nameOf(p.characterId)}, dung hợp mọi nghề và mọi hệ`;
-  return `${nameOf(p.characterId)}, ${PROFESSION_NAME[p.profession]}, hệ ${ELEMENT_NAME[p.element]}`;
-}
 
 const REASON_TEXT: Record<Extract<PlacementCheck, { ok: false }>["reason"], string> = {
   outOfBounds: "Ngoài sa bàn.",
@@ -95,13 +68,22 @@ function describeEvents(events: readonly PuzzleEvent[]): string {
   return phrases.join(" ");
 }
 
+let sweepId = 0;
+const sweepsOf = (events: readonly PuzzleEvent[]): Sweep[] =>
+  events.flatMap((e) => (e.type === "lineCleared" ? [{ id: ++sweepId, axis: e.axis, index: e.index }] : []));
+
 export default function FormationScreen() {
   const [state, setState] = useState<PuzzleState | null>(null);
   const [ready, setReady] = useState(false);
   const [best, setBest] = useState<Record<string, number>>({});
+  const [collection, setCollection] = useState<string[]>([]);
   const [message, setMessage] = useState("");
   const [last, setLast] = useState<number | null>(null);
   const [focus, setFocus] = useState(0);
+  const [peek, setPeek] = useState<number | null>(null);
+  const [sweeps, setSweeps] = useState<Sweep[]>([]);
+  const [hintPref, setHintPref] = useState<boolean | null>(null);
+  const [tipDone, setTipDone] = useState(true);
   const boardRef = useRef<HTMLDivElement>(null);
   // Chế độ xếp hạng: ván nằm ở server, client chỉ giữ bản công khai.
   const [ranked, setRanked] = useState<FormationView | null>(null);
@@ -109,17 +91,79 @@ export default function FormationScreen() {
   const [busy, setBusy] = useState(false);
   const [claimNote, setClaimNote] = useState("");
 
-  // Nạp ván dở sau khi hiển thị lần đầu: server không có localStorage nên tránh lệch hydration.
+  // Nạp ván dở và lựa chọn đã lưu sau khi hiển thị lần đầu: server không có localStorage nên tránh lệch hydration.
   useEffect(() => {
     const saved = parsePuzzle(readStorage(SAVE_KEY));
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- đọc kho trình duyệt chỉ có ở client
+    /* eslint-disable react-hooks/set-state-in-effect -- đọc kho trình duyệt chỉ có ở client */
     if (saved && saved.phase === "playing") setState(saved);
     setBest(readBest());
+    setCollection(readCollection());
+    setHintPref(readHints());
+    setTipDone(tutorialDone());
+    /* eslint-enable react-hooks/set-state-in-effect */
     setReady(true);
     void fetchOverview().then(setOverview);
   }, []);
 
+  // Vệt sáng dọn hàng tự tắt sau khi chạy xong.
+  useEffect(() => {
+    if (sweeps.length === 0) return;
+    const t = window.setTimeout(() => setSweeps([]), 800);
+    return () => window.clearTimeout(t);
+  }, [sweeps]);
+
   const refreshOverview = useCallback(() => void fetchOverview().then(setOverview), []);
+
+  const collect = useCallback((id: string) => setCollection(addToCollection(id)), []);
+
+  const start = useCallback((rules: Ruleset) => {
+    const s = createPuzzle(rules, freshSeed());
+    writeStorage(SAVE_KEY, serializePuzzle(s));
+    setState(s);
+    setMessage("");
+    setLast(null);
+    setFocus(0);
+    setSweeps([]);
+  }, []);
+
+  const leave = useCallback(() => {
+    writeStorage(SAVE_KEY, null);
+    setState(null);
+    setMessage("");
+    setSweeps([]);
+  }, []);
+
+  const apply = useCallback(
+    (command: Parameters<typeof transition>[1]) => {
+      if (!state) return;
+      const t = transition(state, command);
+      if (!t.ok) {
+        const c = command.kind === "place" ? checkPlacement(state, state.hand, command.row, command.col) : null;
+        setMessage(c && !c.ok ? REASON_TEXT[c.reason] : "Lệnh không hợp lệ.");
+        return;
+      }
+      setState(t.state);
+      setLast(command.kind === "place" ? idx(state.width, command.row, command.col) : null);
+      setSweeps(sweepsOf(t.events));
+      setMessage(describeEvents(t.events));
+      if (t.state.phase === "playing") writeStorage(SAVE_KEY, serializePuzzle(t.state));
+      else {
+        writeStorage(SAVE_KEY, null);
+        if (t.state.phase === "won") {
+          const rules = t.state.custom ?? rulesetById(t.state.rulesetId);
+          if (rules) collect(mapFor(rules.id, themeOfState(t.state)).id);
+          if (t.state.rulesetId !== CUSTOM_RULESET_ID) {
+            setBest((prev) => {
+              const next = { ...prev, [t.state.rulesetId]: Math.max(prev[t.state.rulesetId] ?? 0, t.state.score) };
+              writeStorage(BEST_KEY, JSON.stringify(next));
+              return next;
+            });
+          }
+        }
+      }
+    },
+    [state, collect],
+  );
 
   const playRanked = useCallback(
     async (level: string) => {
@@ -129,12 +173,14 @@ export default function FormationScreen() {
       const r = await startRanked(level);
       setBusy(false);
       if (!r.ok) {
-        setMessage(r.status === 403 ? "Chế độ xếp hạng chưa mở." : r.status === 401 ? "Cần đăng nhập để chơi xếp hạng." : "Không mở được ván xếp hạng, thử lại nhé.");
+        setClaimNote(r.status === 403 ? "Chế độ xếp hạng chưa mở." : r.status === 401 ? "Cần đăng nhập để chơi xếp hạng." : "Không mở được ván xếp hạng, thử lại nhé.");
         return;
       }
+      setClaimNote("");
       setRanked(r.data.view);
       setLast(null);
       setFocus(0);
+      setSweeps([]);
     },
     [busy],
   );
@@ -142,6 +188,7 @@ export default function FormationScreen() {
   const leaveRanked = useCallback(() => {
     setRanked(null);
     setMessage("");
+    setSweeps([]);
     refreshOverview();
   }, [refreshOverview]);
 
@@ -164,9 +211,11 @@ export default function FormationScreen() {
       }
       setRanked(r.data.view);
       setLast(command.kind === "place" ? idx(local.width, command.row, command.col) : null);
+      setSweeps(sweepsOf(r.data.events));
       setMessage(describeEvents(r.data.events));
+      if (r.data.view.status === "won") collect(mapFor(r.data.view.level, r.data.view.puzzle.theme).id);
     },
-    [ranked, busy],
+    [ranked, busy, collect],
   );
 
   const claim = useCallback(
@@ -178,95 +227,70 @@ export default function FormationScreen() {
     [refreshOverview],
   );
 
-  const start = useCallback((rules: Ruleset) => {
-    const s = createPuzzle(rules, freshSeed());
-    writeStorage(SAVE_KEY, serializePuzzle(s));
-    setState(s);
-    setMessage("");
-    setLast(null);
-    setFocus(0);
-  }, []);
+  // Ván đang chơi: ván xếp hạng (bản công khai từ server) hoặc ván chơi thường (ở máy).
+  const playState: PuzzleState | null = ranked ? toPuzzleState(ranked) : state;
+  const playRules: Ruleset | null = ranked ? (rulesetById(ranked.level) ?? null) : state ? (state.custom ?? rulesetById(state.rulesetId) ?? null) : null;
+  const theme = ranked ? ranked.puzzle.theme : state ? themeOfState(state) : 0;
+  const rankedBusy = ranked ? busy : false;
 
-  const leave = useCallback(() => {
-    writeStorage(SAVE_KEY, null);
-    setState(null);
-    setMessage("");
-  }, []);
-
-  const apply = useCallback(
-    (command: Parameters<typeof transition>[1]) => {
-      if (!state) return;
-      const t = transition(state, command);
-      if (!t.ok) {
-        const c = command.kind === "place" ? checkPlacement(state, state.hand, command.row, command.col) : null;
-        setMessage(c && !c.ok ? REASON_TEXT[c.reason] : "Lệnh không hợp lệ.");
-        return;
-      }
-      setState(t.state);
-      setLast(command.kind === "place" ? idx(state.width, command.row, command.col) : null);
-      setMessage(describeEvents(t.events));
-      if (t.state.phase === "playing") writeStorage(SAVE_KEY, serializePuzzle(t.state));
-      else {
-        writeStorage(SAVE_KEY, null);
-        if (t.state.phase === "won" && t.state.rulesetId !== CUSTOM_RULESET_ID) {
-          setBest((prev) => {
-            const next = { ...prev, [t.state.rulesetId]: Math.max(prev[t.state.rulesetId] ?? 0, t.state.score) };
-            writeStorage(BEST_KEY, JSON.stringify(next));
-            return next;
-          });
-        }
-      }
+  const onCommand = useCallback(
+    (c: Parameters<typeof transition>[1]) => {
+      if (ranked) void applyRanked(c);
+      else apply(c);
     },
-    [state],
+    [ranked, applyRanked, apply],
   );
 
   if (!ready) return <Shell><p className="py-20 text-center text-[var(--atlas-muted)]">Đang bày sa bàn…</p></Shell>;
-  if (ranked) {
-    const rules = rulesetById(ranked.level)!;
+
+  if (!playState || !playRules)
     return (
       <Shell>
-        <Board
-          theme={ranked.puzzle.theme}
-          state={toPuzzleState(ranked)}
-          rules={rules}
-          message={message}
-          last={last}
-          focus={focus}
-          setFocus={setFocus}
-          boardRef={boardRef}
-          apply={(c) => void applyRanked(c)}
-          onRestart={leaveRanked}
-          onLeave={leaveRanked}
-          best={0}
-          ranked={{ period: ranked.period, rank: ranked.rank, busy, score: ranked.score }}
+        <ModeScreen
+          overview={overview}
+          best={best}
+          busy={busy}
+          note={claimNote || message}
+          collection={collection}
+          onPlayRanked={(l) => void playRanked(l)}
+          onClaim={(l, p) => void claim(l, p)}
+          onStart={start}
+          onExpire={refreshOverview}
         />
       </Shell>
     );
-  }
-  if (!state)
-    return (
-      <Shell>
-        {overview?.enabled && <RankedPanel overview={overview} busy={busy} note={claimNote || message} onPlay={(l) => void playRanked(l)} onClaim={(l, p) => void claim(l, p)} />}
-        <LevelPicker best={best} onStart={start} ranked={overview?.enabled === true} />
-      </Shell>
-    );
 
-  const rules = state.custom ?? rulesetById(state.rulesetId)!;
+  const hintsOn = hintPref ?? playRules.id === "huong-dan";
   return (
     <Shell>
-      <Board
-        theme={themeOfState(state)}
-        state={state}
-        rules={rules}
+      <PlayView
+        state={playState}
+        rules={playRules}
+        theme={theme}
         message={message}
         last={last}
         focus={focus}
         setFocus={setFocus}
+        peek={peek}
+        setPeek={setPeek}
         boardRef={boardRef}
-        apply={apply}
-        onRestart={() => start(rules)}
-        onLeave={leave}
-        best={best[rules.id] ?? 0}
+        sweeps={sweeps}
+        hintsOn={hintsOn}
+        onToggleHints={() => {
+          writeHints(!hintsOn);
+          setHintPref(!hintsOn);
+        }}
+        tipVisible={!tipDone && playRules.id === "huong-dan" && !ranked}
+        onDismissTip={() => {
+          markTutorialDone();
+          setTipDone(true);
+        }}
+        onCommand={onCommand}
+        busy={rankedBusy}
+        onRestart={() => (ranked ? leaveRanked() : start(playRules))}
+        onLeave={ranked ? leaveRanked : leave}
+        best={best[playRules.id] ?? 0}
+        ranked={ranked ? { period: ranked.period, rank: ranked.rank, score: ranked.score } : undefined}
       />
     </Shell>
   );
@@ -280,130 +304,81 @@ function Shell({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Heading({ title, sub }: { title: string; sub: string }) {
-  return (
-    <header>
-      <p className="text-xs font-semibold tracking-[0.25em] text-[var(--atlas-gold)] uppercase">{sub}</p>
-      <h1 className="atlas-title font-serif text-3xl font-bold">{title}</h1>
-    </header>
-  );
-}
-
-function Rules() {
-  return (
-    <ul className="list-disc space-y-1.5 pl-5 text-[15px] leading-snug text-[var(--atlas-ink-on-wood)]/90">
-      <li>Mỗi lượt bạn cầm một quân tướng. Chạm ô trống để đặt; ô đó phải sát (trên, dưới, trái, phải) một quân đã có, trừ khi sa bàn đang trống.</li>
-      <li>Quân mới phải <b>cùng nghề hoặc cùng hệ</b> với <b>từng</b> quân kề. Có thể cùng nghề với quân này và cùng hệ với quân kia.</li>
-      <li>Hàng hoặc cột kín quân (từ 3 ô chơi được trở lên) thì được dọn sạch, nhưng ô vẫn giữ vệt <b>khai thông</b>. Khai thông hết mọi ô chơi được là thắng.</li>
-      <li><b>Chướng ngại</b> (tảng đá) mọc ngẫu nhiên trên sa bàn: không đặt quân được, không cần khai thông và không nối được hai quân.</li>
-      <li><b>Quân Lệnh</b> đặt ở ô trống bất kỳ và khớp mọi quân kề. <b>Thu Hồi</b> xóa một quân trên bàn.</li>
-      <li><b>Bỏ Lệnh</b> đổi sang quân khác nhưng làm thanh nóng lên; bỏ khi thanh đã đầy là thua. Đặt quân thành công hạ thanh 1, dọn được hàng hoặc cột thì thanh về 0.</li>
-    </ul>
-  );
-}
-
-function LevelPicker({ best, onStart, ranked }: { best: Record<string, number>; onStart: (r: Ruleset) => void; ranked: boolean }) {
-  return (
-    <>
-      <Heading title={ranked ? "Chơi thường" : "Trận Đồ"} sub={ranked ? "Không thưởng, không xếp hạng, chơi bao nhiêu ván tùy thích" : "Bày quân lệnh"} />
-      <p className="max-w-2xl font-serif text-lg text-[var(--atlas-title)]">
-        Bày quân tướng theo nghề và hệ để khai thông toàn bộ sa bàn.{ranked ? " Chơi thoải mái, bàn cờ ngẫu nhiên mỗi ván." : " Chế độ chơi thường: không thưởng, không xếp hạng."}
-      </p>
-      <ul className="grid gap-4 sm:grid-cols-2">
-        {RULESETS.map((r) => (
-          <li key={r.id}>
-            <button
-              type="button"
-              onClick={() => onStart(r)}
-              className="home-mode atlas-frame atlas-frame-wood flex min-h-32 w-full flex-col items-start gap-1.5 p-4 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--atlas-gold)]"
-            >
-              <span className="font-serif text-xl font-bold text-[var(--atlas-title)]">{r.name}</span>
-              <span className="text-[15px] leading-snug text-[var(--atlas-ink-on-wood)]/90">{r.blurb}</span>
-              <span className="mt-auto text-sm text-[var(--atlas-muted)]">
-                {r.randomSize ? `cỡ ngẫu nhiên ${r.randomSize.min}–${r.randomSize.max}` : `${r.width}×${r.height}`} · {r.professions.length} nghề × {r.elements.length} hệ{r.obstaclePercent > 0 ? " · có chướng ngại" : ""}
-                {best[r.id] ? ` · Điểm cao nhất ${best[r.id]}` : ""}
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
-      <CustomForm onStart={onStart} />
-      <section aria-labelledby="tran-do-rules" className="atlas-frame atlas-frame-wood p-4">
-        <h2 id="tran-do-rules" className="mb-2 font-serif text-xl font-bold text-[var(--atlas-title)]">Luật chơi</h2>
-        <Rules />
-      </section>
-      <SceneLink scene="MENU" className="home-secondary flex min-h-12 w-fit items-center rounded-lg px-6 font-serif font-semibold">Về màn chính</SceneLink>
-    </>
-  );
-}
-
-function Board({
-  theme,
+function PlayView({
   state,
   rules,
+  theme,
   message,
   last,
   focus,
   setFocus,
+  peek,
+  setPeek,
   boardRef,
-  apply,
+  sweeps,
+  hintsOn,
+  onToggleHints,
+  tipVisible,
+  onDismissTip,
+  onCommand,
+  busy,
   onRestart,
   onLeave,
   best,
   ranked,
 }: {
-  /** Chủ đề bản đồ của ván (chọn bản đồ nền trong kho theo kỳ). */
-  theme: number;
   state: PuzzleState;
   rules: Ruleset;
+  theme: number;
   message: string;
   last: number | null;
   focus: number;
   setFocus: (i: number) => void;
+  peek: number | null;
+  setPeek: (i: number | null) => void;
   boardRef: React.RefObject<HTMLDivElement | null>;
-  apply: (c: Parameters<typeof transition>[1]) => void;
+  sweeps: readonly Sweep[];
+  hintsOn: boolean;
+  onToggleHints: () => void;
+  tipVisible: boolean;
+  onDismissTip: () => void;
+  onCommand: (c: Parameters<typeof transition>[1]) => void;
+  busy: boolean;
   onRestart: () => void;
   onLeave: () => void;
   best: number;
   /** Có khi đang chơi xếp hạng: không có Ván mới, kết quả chờ kỳ khép lại mới nhận thưởng. */
-  ranked?: { period: string; rank: number | null; busy: boolean; score: number | null };
+  ranked?: { period: string; rank: number | null; score: number | null };
 }) {
   const { width, height } = state;
-  const playing = state.phase === "playing" && !ranked?.busy;
   const finished = state.phase !== "playing";
+  const playing = !finished && !busy;
   const legal = useMemo(() => new Set(legalPlacements(state)), [state]);
   const total = useMemo(() => playableCount(state.cells), [state.cells]);
   const map = mapFor(rules.id, theme);
+  const noMove = legal.size === 0;
+  const tip = tipVisible ? tutorialText(state, noMove) : null;
 
-  const moveFocus = (to: number) => {
-    setFocus(to);
-    boardRef.current?.querySelectorAll<HTMLButtonElement>("button[data-cell]")[to]?.focus();
-  };
-  const onKeyDown = (e: React.KeyboardEvent, i: number) => {
-    const r = Math.floor(i / width);
-    const c = i % width;
-    const next =
-      e.key === "ArrowUp" ? idx(width, Math.max(0, r - 1), c)
-      : e.key === "ArrowDown" ? idx(width, Math.min(height - 1, r + 1), c)
-      : e.key === "ArrowLeft" ? idx(width, r, Math.max(0, c - 1))
-      : e.key === "ArrowRight" ? idx(width, r, Math.min(width - 1, c + 1))
-      : e.key === "Home" ? idx(width, r, 0)
-      : e.key === "End" ? idx(width, r, width - 1)
-      : null;
-    if (next !== null) {
-      e.preventDefault();
-      moveFocus(next);
-    }
-  };
-
-  // Cỡ ô: tối đa theo số cột, và co lại để cả hàng luôn vừa chiều ngang màn (trừ lề trang, khung và khoảng cách ô).
-  const maxCell = width <= 3 ? 112 : width <= 5 ? 88 : width <= 7 ? 72 : 60;
-  const cell = `min(${maxCell}px, calc((100vw - 3rem - ${(width - 1) * 4 + 20}px) / ${width}))`;
+  // Lý do ô đang rê chuột hoặc có tiêu điểm đặt được hay không (không đọc lên cho trình đọc màn hình: nhãn ô đã có).
+  const peekText = (() => {
+    if (peek === null || !playing) return "";
+    const r = Math.floor(peek / width);
+    const c = peek % width;
+    const check = checkPlacement(state, state.hand, r, c);
+    if (check.ok) return `Hàng ${r + 1}, cột ${c + 1}: đặt được.`;
+    if (check.reason === "blocked") return `Hàng ${r + 1}, cột ${c + 1}: ${obstacleLabel(obstacleKind(peek))}, không đặt được quân.`;
+    return `Hàng ${r + 1}, cột ${c + 1}: ${REASON_TEXT[check.reason]}`;
+  })();
 
   return (
     <>
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <Heading title={`Trận Đồ · ${rules.name}${ranked ? " · Xếp hạng" : ""}`} sub={ranked ? `Kỳ ${ranked.period} · Sa bàn ${width}×${height}` : `Sa bàn ${width}×${height}`} />
+        <header>
+          <p className="text-xs font-semibold tracking-[0.25em] text-[var(--atlas-gold)] uppercase">
+            {ranked ? `Kỳ ${ranked.period} · ` : ""}Sa bàn {width}×{height}
+          </p>
+          <h1 className="atlas-title font-serif text-3xl font-bold">Trận Đồ · {rules.name}{ranked ? " · Xếp hạng" : ""}</h1>
+        </header>
         <div className="flex gap-2">
           {ranked ? (
             <button type="button" onClick={onLeave} className="home-secondary min-h-11 rounded-lg px-4 font-serif font-semibold">Về danh sách</button>
@@ -416,118 +391,59 @@ function Board({
         </div>
       </div>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className={`grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px] ${finished ? "" : "pb-28 lg:pb-0"}`}>
         <div className="flex flex-col items-center gap-3">
-          <div
-            ref={boardRef}
-            role="grid"
-            aria-label={`Sa bàn ${height} hàng ${width} cột`}
-            data-won={state.phase === "won"}
-            className="atlas-frame atlas-frame-wood w-fit p-2"
-          >
-           <div
-            className="fm-board grid overflow-hidden rounded-sm"
-            style={{ gridTemplateColumns: `repeat(${width}, ${cell})`, gridAutoRows: cell, backgroundImage: `url(${map.src})` }}
-           >
-            {state.cells.map((c, i) => {
-              const r = Math.floor(i / width);
-              const col = i % width;
-              const ok = playing && legal.has(i);
-              return (
-                <div role="gridcell" key={i} className="contents">
-                  <button
-                    type="button"
-                    data-cell
-                    tabIndex={i === focus ? 0 : -1}
-                    disabled={!playing}
-                    onFocus={() => setFocus(i)}
-                    onKeyDown={(e) => onKeyDown(e, i)}
-                    onClick={() => apply({ kind: "place", row: r, col })}
-                    aria-disabled={c.blocked || undefined}
-                    aria-label={`Hàng ${r + 1}, cột ${col + 1}: ${c.blocked ? `${obstacleLabel(obstacleKind(i))} (chướng ngại), không đặt được` : c.piece ? pieceLabel(c.piece) : c.covered ? "trống, đã khai thông" : "trống, chưa khai thông"}${ok ? ", đặt được" : ""}`}
-                    data-state={c.blocked ? "rock" : c.covered ? "lit" : "fog"}
-                    className={[
-                      "fm-cell flex items-center justify-center focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--atlas-gold)]",
-                      ok ? "ring-2 ring-[#E8C477] ring-inset" : "",
-                      last === i && state.phase !== "won" ? "z-10 outline-2 outline-offset-[-2px] outline-[#E8C477]" : "",
-                    ].join(" ")}
-                  >
-                    {c.blocked ? <Obstacle kind={obstacleKind(i)} /> : c.piece ? <PieceFace piece={c.piece} /> : ok ? <span aria-hidden className="size-2 rounded-full bg-[#E8C477] shadow-[0_0_6px_#E8C477]" /> : null}
-                  </button>
-                </div>
-              );
-            })}
-           </div>
-          </div>
+          <BoardView state={state} map={map} legal={legal} showHints={hintsOn} playing={playing} last={last} focus={focus} setFocus={setFocus} setPeek={setPeek} boardRef={boardRef} sweeps={sweeps} onPlace={(row, col) => onCommand({ kind: "place", row, col })} />
           <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-[var(--atlas-title)]">{message}</p>
+          <p aria-hidden className="-mt-2 min-h-5 text-center text-sm text-[var(--atlas-muted)]">{peekText}</p>
+          {tip && <div className="w-full max-w-xl"><TutorialTip text={tip} onDismiss={onDismissTip} /></div>}
+          {!finished && <HintToggle on={hintsOn} onToggle={onToggleHints} />}
         </div>
 
         <aside className="flex flex-col gap-4" aria-label="Bảng điều khiển">
-          {!finished ? <Hand state={state} rules={rules} apply={apply} noMove={legal.size === 0} disabled={ranked?.busy === true} /> : ranked ? <RankedResult state={state} rank={ranked.rank} score={ranked.score} period={ranked.period} map={map} onLeave={onLeave} /> : <Result state={state} best={best} map={map} custom={rules.id === CUSTOM_RULESET_ID} onRestart={onRestart} onLeave={onLeave} />}
-          <dl className="atlas-frame atlas-frame-wood grid grid-cols-2 gap-x-3 gap-y-1 p-4 text-[15px]">
-            <dt className="text-[var(--atlas-muted)]">Khai thông</dt>
-            <dd className="text-right font-semibold">{state.coveredCount}/{total}</dd>
-            <dt className="text-[var(--atlas-muted)]">Điểm</dt>
-            <dd className="text-right font-semibold">{state.score}</dd>
-            <dt className="text-[var(--atlas-muted)]">Quân đã đặt</dt>
-            <dd className="text-right font-semibold">{state.placed}</dd>
-            <dt className="text-[var(--atlas-muted)]">Hàng/cột đã dọn</dt>
-            <dd className="text-right font-semibold">{state.linesCleared}</dd>
-            {best > 0 && (<><dt className="text-[var(--atlas-muted)]">Điểm cao nhất</dt><dd className="text-right font-semibold">{best}</dd></>)}
-          </dl>
+          {finished ? (
+            ranked ? <RankedResult state={state} rank={ranked.rank} score={ranked.score} period={ranked.period} map={map} onLeave={onLeave} /> : <Result state={state} best={best} map={map} custom={rules.id === CUSTOM_RULESET_ID} onRestart={onRestart} onLeave={onLeave} />
+          ) : (
+            <div className="hidden flex-col gap-4 lg:flex">
+              <CommandCard state={state} />
+              <div className="atlas-frame atlas-frame-wood flex flex-col gap-3 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm text-[var(--atlas-muted)]">Bỏ Lệnh {state.discardHeat}/{rules.maxHeat}{state.discardHeat >= rules.maxHeat ? " · bỏ nữa là thua" : ""}</p>
+                    <HeatFlames heat={state.discardHeat} max={rules.maxHeat} />
+                  </div>
+                  <button type="button" disabled={busy} onClick={() => onCommand({ kind: "discard" })} className="home-secondary min-h-12 rounded-lg px-4 font-serif font-semibold disabled:opacity-60">
+                    Bỏ Lệnh{noMove ? " (hết nước đặt)" : ""}
+                  </button>
+                </div>
+                <ProgressMeter covered={state.coveredCount} total={total} />
+              </div>
+            </div>
+          )}
+          {finished && <div className="atlas-frame atlas-frame-wood p-4"><ProgressMeter covered={state.coveredCount} total={total} /></div>}
+          <details className="atlas-frame atlas-frame-wood p-4">
+            <summary className="cursor-pointer font-serif font-bold text-[var(--atlas-title)]">Thống kê ván</summary>
+            <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-[15px]">
+              <dt className="text-[var(--atlas-muted)]">Điểm</dt>
+              <dd className="text-right font-semibold">{state.score}</dd>
+              <dt className="text-[var(--atlas-muted)]">Quân đã đặt</dt>
+              <dd className="text-right font-semibold">{state.placed}</dd>
+              <dt className="text-[var(--atlas-muted)]">Hàng/cột đã dọn</dt>
+              <dd className="text-right font-semibold">{state.linesCleared}</dd>
+              {best > 0 && !ranked && (<><dt className="text-[var(--atlas-muted)]">Điểm cao nhất</dt><dd className="text-right font-semibold">{best}</dd></>)}
+            </dl>
+          </details>
           <details className="atlas-frame atlas-frame-wood p-4">
             <summary className="cursor-pointer font-serif font-bold text-[var(--atlas-title)]">Luật chơi</summary>
             <div className="mt-2"><Rules /></div>
           </details>
         </aside>
       </div>
-    </>
-  );
-}
 
-function Hand({ state, rules, apply, noMove, disabled = false }: { state: PuzzleState; rules: Ruleset; apply: (c: Parameters<typeof transition>[1]) => void; noMove: boolean; disabled?: boolean }) {
-  const h = state.hand;
-  const full = state.discardHeat >= rules.maxHeat;
-  return (
-    <section aria-label="Quân đang cầm" className="atlas-frame atlas-frame-wood flex flex-col gap-3 p-4">
-      <h2 className="font-serif text-xl font-bold text-[var(--atlas-title)]">Quân đang cầm</h2>
-      <div className="flex items-center gap-3">
-        <div className="size-24 shrink-0 rounded-lg border border-[#8F6A32] bg-[#E4CC99] p-1"><PieceFace piece={h} large /></div>
-        <div className="text-[15px] leading-snug">
-          {h.kind === "normal" ? (
-            <>
-              <p className="font-serif text-lg font-bold">{nameOf(h.characterId)}</p>
-              <p className="flex items-center gap-1"><ProfessionIcon profession={h.profession} className="size-5" /> {PROFESSION_NAME[h.profession]}</p>
-              <p className="flex items-center gap-1"><ElementIcon element={h.element} className="size-5" /> Hệ {ELEMENT_NAME[h.element]}</p>
-            </>
-          ) : h.kind === "fusion" ? (
-            <>
-              <p className="font-serif text-lg font-bold">{nameOf(h.characterId)}</p>
-              <p>Dung hợp mọi nghề và mọi hệ: khớp mọi quân kề.</p>
-              <p className="text-sm text-[var(--atlas-muted)]">Vẫn phải đặt sát một quân.</p>
-            </>
-          ) : h.kind === "wild" ? (
-            <><p className="font-serif text-lg font-bold">Quân Lệnh</p><p>Đặt ở ô trống bất kỳ; khớp mọi quân kề.</p></>
-          ) : (
-            <><p className="font-serif text-lg font-bold">Thu Hồi</p><p>Chạm vào một quân trên bàn để xóa; ô vẫn giữ vệt khai thông.</p></>
-          )}
-        </div>
-      </div>
-      <div>
-        <p className="mb-1 flex items-center justify-between text-sm">
-          <span>Bỏ Lệnh</span>
-          <span aria-live="polite" className={full ? "font-semibold text-rose-300" : "text-[var(--atlas-muted)]"}>{state.discardHeat}/{rules.maxHeat}{full ? " · bỏ nữa là thua" : ""}</span>
-        </p>
-        <div role="meter" aria-label="Thanh Bỏ Lệnh" aria-valuemin={0} aria-valuemax={rules.maxHeat} aria-valuenow={state.discardHeat} className="flex gap-1">
-          {Array.from({ length: rules.maxHeat }, (_, i) => (
-            <span key={i} className={`h-2.5 flex-1 rounded-full ${i < state.discardHeat ? (full ? "bg-rose-500" : "bg-amber-500") : "bg-[#3D2C1D]"}`} />
-          ))}
-        </div>
-      </div>
-      <button type="button" disabled={disabled} onClick={() => apply({ kind: "discard" })} className="home-secondary min-h-12 rounded-lg px-4 font-serif font-semibold disabled:opacity-60">
-        Bỏ Lệnh{noMove ? " (hết nước đặt)" : ""}
-      </button>
-    </section>
+      {!finished && (
+        <MobileBar state={state} rules={rules} noMove={noMove} disabled={busy} covered={state.coveredCount} total={total} onDiscard={() => onCommand({ kind: "discard" })} />
+      )}
+    </>
   );
 }
 
@@ -540,7 +456,9 @@ function CompletedMap({ map }: { map: FormationMap }) {
       <figcaption className="text-sm leading-snug">
         <b className="font-serif text-base text-[var(--atlas-title)]">{map.place}</b>
         <span className="block text-[var(--atlas-muted)]">{map.blurb}</span>
-        <span className="block text-xs text-[var(--atlas-muted)]">Tranh minh họa tái dựng, không phải bản đồ lịch sử chính xác.</span>
+        <span className="block text-xs text-[var(--atlas-muted)]">
+          {map.kind === "lich-su" ? "Tranh minh họa tái dựng, không phải bản đồ lịch sử chính xác." : "Cảnh quan minh họa, không phải địa danh cụ thể."}
+        </span>
       </figcaption>
     </figure>
   );
@@ -580,121 +498,5 @@ function Result({ state, best, map, custom, onRestart, onLeave }: { state: Puzzl
         <SceneLink scene="MENU" className="home-secondary flex min-h-12 items-center rounded-lg px-4 font-serif font-semibold">Về màn chính</SceneLink>
       </div>
     </section>
-  );
-}
-
-/** Huy hiệu tròn nhỏ (nghề hoặc hệ) ở đáy con cờ; kích thước theo ô nhưng không nhỏ hơn 11px để còn đọc được. */
-const BADGE = "absolute bottom-[3%] flex aspect-square w-[27%] min-w-[11px] items-center justify-center rounded-full border border-[#E4CC99]/70";
-
-/**
- * Quân trên sa bàn: chân dung tròn như một con cờ đặt lên bản đồ. Huy hiệu nghề (đáy phải, nền tối) và hệ (đáy trái, nền
- * theo màu hệ) đủ cả hai nhưng nhỏ vừa đủ. Tên nghề và hệ vẫn có ở nhãn truy cập của ô và ở khung "Quân đang cầm".
- */
-function PieceFace({ piece, large = false }: { piece: Piece | BoardPiece; large?: boolean }) {
-  if (piece.kind === "wild") return <span className="fm-token block size-full"><Glyph kind="wild" /></span>;
-  if (piece.kind === "eraser") return <span className="fm-token block size-full"><Glyph kind="eraser" /></span>;
-  const badge = large ? `${BADGE} w-[24%]` : BADGE;
-  if (piece.kind === "fusion") {
-    // Dung hợp (đủ 8 nghề, 7 hệ): một huy hiệu sao đỏ ở giữa đáy thay cho hai huy hiệu.
-    return (
-      <span className="fm-token relative block size-full p-[6%]">
-        <Portrait id={piece.characterId} element="kim" profession="tuongSi" className="size-full" />
-        <span className={`${badge} left-1/2 -translate-x-1/2 border-[#E8C477] bg-[#8F241D] text-[#FFE9B0]`} aria-hidden>
-          <svg viewBox="0 0 24 24" className="size-[70%]" fill="currentColor"><path d="M12 2.5l2.6 6 6.4.6-4.9 4.2 1.5 6.3L12 16.3 6.4 19.6l1.5-6.3L3 9.1l6.4-.6z" /></svg>
-        </span>
-      </span>
-    );
-  }
-  return (
-    <span className="fm-token relative block size-full p-[6%]">
-      <Portrait id={piece.characterId} element={piece.element} profession={piece.profession} className="size-full" />
-      <span className={`${badge} left-[3%]`} style={{ background: ELEMENT_COLOR[piece.element] }} aria-hidden>
-        <ElementIcon element={piece.element} className="size-[78%]" />
-      </span>
-      <span className={`${badge} right-[3%] bg-[#2B1F15] text-[#E4CC99]`} aria-hidden>
-        <ProfessionIcon profession={piece.profession} className="size-[76%]" />
-      </span>
-    </span>
-  );
-}
-
-/** Bốn kiểu chướng ngại (núi, rừng, đầm lầy, thành lũy): chỉ khác hình, cùng luật không đặt quân được. */
-export const OBSTACLE_KINDS = ["nui", "rung", "damLay", "thanhLuy"] as const;
-export type ObstacleKind = (typeof OBSTACLE_KINDS)[number];
-
-/** Kiểu chướng ngại của một ô: theo vị trí, như nhau với mọi người chơi cùng bàn. */
-export const obstacleKind = (cellIndex: number): ObstacleKind => OBSTACLE_KINDS[(Math.imul(cellIndex + 1, 2654435761) >>> 7) % OBSTACLE_KINDS.length]!;
-
-const OBSTACLE_LABEL: Record<ObstacleKind, string> = { nui: "núi", rung: "rừng", damLay: "đầm lầy", thanhLuy: "thành lũy" };
-export const obstacleLabel = (k: ObstacleKind) => OBSTACLE_LABEL[k];
-
-/**
- * Chướng ngại vẽ bằng SVG (ảnh giữ chỗ, sẽ thay bằng icon vẽ tay), nền ô riêng không lấy ảnh bản đồ. Mỗi kiểu có nét riêng:
- * núi (đỉnh nhọn có tuyết), rừng (cụm cây tán tròn), đầm lầy (mặt nước gợn và cỏ lau), thành lũy (tường có lỗ châu mai và cổng).
- */
-function Obstacle({ kind }: { kind: ObstacleKind }) {
-  const common = "fm-obstacle block size-full p-[10%] drop-shadow-[0_2px_2px_rgba(0,0,0,0.6)]";
-  return (
-    <svg viewBox="0 0 48 48" className={common} aria-hidden focusable="false">
-      {kind === "nui" && (
-        <>
-          <path d="M3 39 L15 15 L22 26 L30 8 L45 39 Z" fill="#4c4033" stroke="#120d09" strokeWidth={1.6} strokeLinejoin="round" />
-          <path d="M30 8 L36 22 L31 19 L27 25 Z" fill="#d8cdb6" />
-          <path d="M15 15 L19 23 L16 21 L12 27 Z" fill="#d8cdb6" opacity={0.85} />
-          <path d="M3 39 H45" stroke="#120d09" strokeWidth={1.6} />
-        </>
-      )}
-      {kind === "rung" && (
-        <>
-          <path d="M8 40 H40" stroke="#120d09" strokeWidth={1.6} strokeLinecap="round" />
-          {[[14, 27, 8], [26, 22, 10], [35, 29, 7]].map(([x, y, r]) => (
-            <g key={x}>
-              <rect x={x! - 1.2} y={y! + r! - 2} width={2.4} height={40 - y! - r! + 2} fill="#2e2118" />
-              <circle cx={x} cy={y} r={r} fill="#3f6b3a" stroke="#120d09" strokeWidth={1.4} />
-              <circle cx={x! - r! / 3} cy={y! - r! / 3} r={r! / 3} fill="#6a9a5c" opacity={0.7} />
-            </g>
-          ))}
-        </>
-      )}
-      {kind === "damLay" && (
-        <>
-          <ellipse cx={24} cy={31} rx={19} ry={9} fill="#2f5a62" stroke="#120d09" strokeWidth={1.6} />
-          <path d="M11 30 q4 -3 8 0 M24 34 q4 -3 8 0 M17 27 q3 -2 6 0" fill="none" stroke="#9fd0d0" strokeWidth={1.3} strokeLinecap="round" />
-          {[[34, 24], [38, 27], [10, 25]].map(([x, y]) => (
-            <g key={x} stroke="#5a4a22" strokeWidth={1.4} strokeLinecap="round" fill="none">
-              <path d={`M${x} ${y! + 6} V${y! - 7}`} />
-              <ellipse cx={x} cy={y! - 8} rx={1.6} ry={3.4} fill="#7a5f2c" />
-            </g>
-          ))}
-        </>
-      )}
-      {kind === "thanhLuy" && (
-        <>
-          <path d="M5 41 V19 h5 v-4 h5 v4 h4 v-4 h5 v4 h4 v-4 h5 v4 h5 v22 Z" fill="#6a5d4b" stroke="#120d09" strokeWidth={1.6} strokeLinejoin="round" />
-          <path d="M19 41 V29 a5 5 0 0 1 10 0 V41 Z" fill="#1d1510" stroke="#120d09" strokeWidth={1.4} />
-          <path d="M9 24 H15 M34 24 H40 M9 31 H15 M34 31 H40" stroke="#120d09" strokeWidth={1.1} opacity={0.6} />
-        </>
-      )}
-    </svg>
-  );
-}
-
-function Glyph({ kind }: { kind: "wild" | "eraser" }) {
-  return (
-    <svg viewBox="0 0 48 48" className="size-full p-1" aria-hidden focusable="false" fill="none" stroke="#8F241D" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
-      {kind === "wild" ? (
-        <>
-          <circle cx={24} cy={24} r={16} fill="#C9A25A" stroke="#2B1F15" />
-          <circle cx={24} cy={24} r={10} stroke="#2B1F15" />
-          <path d="M24 12 V36 M12 24 H36" />
-        </>
-      ) : (
-        <>
-          <path d="M14 30 L28 12 L38 20 L26 36 H16 Z" fill="#E4CC99" stroke="#2B1F15" />
-          <path d="M20 30 L32 16" />
-          <path d="M10 40 H38" stroke="#2B1F15" />
-        </>
-      )}
-    </svg>
   );
 }

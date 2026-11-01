@@ -1,21 +1,24 @@
-// Kho bản đồ nền của sa bàn Trận Đồ: địa danh thật của thời Loạn 12 sứ quân (Shan chốt 02/11/2026). Ô chưa khai thông
-// được ô che (ảnh đặc kín) che đi; đặt quân thì ô lộ mảnh bản đồ bên dưới; hoàn thành thì hiện cả bản đồ.
-// Bản đồ đổi theo kỳ: chọn theo `theme` của ván (suy từ seed/muối, như nhau với mọi người trong kỳ).
+// Kho bản đồ nền của sa bàn Trận Đồ: địa danh thật thời Loạn 12 sứ quân và giai đoạn Ngô – Đinh, cộng cảnh quan chung
+// (Shan chốt 02/11/2026, **không giới hạn số ảnh**). Ô chưa khai thông được ô che (ảnh đặc kín) che đi; đặt quân thì ô lộ
+// mảnh bản đồ bên dưới; hoàn thành thì hiện cả bản đồ. Bản đồ đổi theo kỳ: chọn theo `theme` của ván (suy từ seed/muối,
+// như nhau với mọi người trong kỳ).
 //
-// TẠM THỜI: mỗi địa danh dùng một tranh nền chiến dịch có sẵn làm ảnh giữ chỗ (8 ảnh cho 13 địa danh nên có lặp). Khi có
-// ảnh bản đồ thật (Shan sẽ cho thiết kế): thả file `public/art/formation/maps/<id>.webp` và đổi `src`. Yêu cầu ảnh và
-// prompt: docs/05-ui-ux/screens/tran-do.md mục 3.
+// Thêm bản đồ mới: thả `public/art/formation/maps/<id>.webp`, thêm một dòng vào MAP_POOL, và thêm prompt vào
+// docs/06-art/prompts/tran-do-hinh-anh.md mục 1.3 (test kiểm đủ). Hiện mỗi bản đồ dùng một tranh nền chiến dịch có sẵn làm
+// ảnh giữ chỗ (8 ảnh lặp cho nhiều bản đồ); ảnh thật thay dần từng dòng bằng cách đổi `src`.
 
 import { WARLORD_ENCOUNTERS } from "@/core";
 
 export interface FormationMap {
-  /** Id ổn định (id sứ quân, hoặc `hoaLu`), dùng đặt tên file ảnh. */
+  /** Id ổn định (id sứ quân hoặc id tự đặt), dùng đặt tên file ảnh và khóa prompt trong docs. */
   readonly id: string;
-  /** Địa danh theo sổ nguồn sử Campaign V2. */
+  /** Địa danh hoặc tên cảnh quan hiển thị khi hoàn thành bản đồ. */
   readonly place: string;
   readonly src: string;
   /** Một dòng giới thiệu hiện khi hoàn thành bản đồ. */
   readonly blurb: string;
+  /** `lich-su`: địa danh thật; `canh-quan`: cảnh quan chung minh họa, không phải địa danh cụ thể. */
+  readonly kind: "lich-su" | "canh-quan";
 }
 
 const PLACEHOLDERS = [
@@ -29,20 +32,51 @@ const PLACEHOLDERS = [
   "/art/campaign/bg/atlas.webp",
 ] as const;
 
-/** Hoa Lư (căn cứ của Đinh Bộ Lĩnh) cộng 12 địa danh của 12 sứ quân theo danh mục `WARLORD_ENCOUNTERS`. */
+const placeholder = (n: number) => PLACEHOLDERS[n % PLACEHOLDERS.length]!;
+
+/** Địa danh thật có thêm ngoài 12 sứ quân. */
+const HISTORIC: readonly Omit<FormationMap, "src" | "kind">[] = [
+  { id: "coLoa", place: "Cổ Loa", blurb: "Cổ Loa (nay thuộc Đông Anh, Hà Nội): thành đất nhiều vòng có hào nước, gắn với Ngô Quyền xưng vương năm 939." },
+  { id: "bachDang", place: "Bạch Đằng", blurb: "Bạch Đằng (nay thuộc Quảng Ninh – Hải Phòng): cửa sông nhiều bãi nước triều, nơi Ngô Quyền đánh bại quân Nam Hán năm 938." },
+  { id: "daiLa", place: "Đại La", blurb: "Đại La (nay là Hà Nội): thành lớn bên sông Hồng, trung tâm của vùng Giao Châu từ thời Đường, nơi về sau là Thăng Long." },
+  { id: "luyLau", place: "Luy Lâu", blurb: "Luy Lâu (nay thuộc Thuận Thành, Bắc Ninh): trị sở cổ của vùng Giao Châu, nơi giao nhau của nhiều dòng sông và đường buôn bán." },
+  { id: "aiChau", place: "Ái Châu", blurb: "Ái Châu (nay thuộc Thanh Hóa): vùng đất phía nam đồng bằng sông Hồng, quê hương Dương Đình Nghệ, nơi khởi nghiệp của nhiều thủ lĩnh cuối thời Bắc thuộc." },
+  { id: "hoanChau", place: "Hoan Châu", blurb: "Hoan Châu (nay thuộc Nghệ An – Hà Tĩnh): vùng biên viễn phía nam của nước Việt thế kỷ X, nhiều núi sát biển." },
+  { id: "tanVien", place: "Núi Tản Viên", blurb: "Núi Tản Viên (nay thuộc Ba Vì, Hà Nội): ngọn núi thiêng gắn với truyền thuyết Sơn Tinh, nhìn xuống đồng bằng sông Hồng (truyền thuyết, không phải sử kiện)." },
+];
+
+/** Cảnh quan chung (minh họa, không phải địa danh cụ thể). */
+const LANDSCAPES: readonly Omit<FormationMap, "src" | "kind">[] = [
+  { id: "dongLua", place: "Đồng lúa đồng bằng", blurb: "Cánh đồng lúa của đồng bằng sông Hồng với bờ ruộng, mương nước và xóm làng (cảnh quan minh họa, không phải địa danh cụ thể)." },
+  { id: "damSen", place: "Đầm sen", blurb: "Đầm sen rộng với những lối đi hẹp và chòi canh (cảnh quan minh họa)." },
+  { id: "langVenSong", place: "Làng ven sông", blurb: "Làng ven sông với lũy tre, cổng làng và bến nước (cảnh quan minh họa)." },
+  { id: "benThuyen", place: "Bến thuyền sông", blurb: "Bến thuyền ở ngã ba sông, nơi buôn bán và trú quân (cảnh quan minh họa)." },
+  { id: "trungDu", place: "Vùng trung du", blurb: "Gò đồi trung du với ruộng bậc thang và rừng nhỏ (cảnh quan minh họa)." },
+  { id: "cuaBien", place: "Cửa biển", blurb: "Cửa biển với bãi cát, ruộng muối và thuyền đánh cá (cảnh quan minh họa)." },
+  { id: "chuaCoTrenDoi", place: "Chùa cổ trên đồi", blurb: "Ngôi chùa cổ trên đồi thông giữa đồng bằng (cảnh quan minh họa)." },
+  { id: "thanhDatCoHao", place: "Thành đất có hào nước", blurb: "Thành đất cổ có hào nước bao quanh (cảnh quan minh họa)." },
+  { id: "rungGia", place: "Rừng già", blurb: "Rừng già với lối mòn và thác nhỏ (cảnh quan minh họa)." },
+  { id: "nuiDaVoi", place: "Núi đá vôi", blurb: "Dãy núi đá vôi dựng đứng bên thung lũng sông (cảnh quan minh họa)." },
+];
+
+/** Hoa Lư, 12 địa danh của 12 sứ quân (theo `WARLORD_ENCOUNTERS`), địa danh thật bổ sung rồi cảnh quan chung. */
 export const MAP_POOL: readonly FormationMap[] = [
   {
     id: "hoaLu",
     place: "Hoa Lư",
-    src: PLACEHOLDERS[0],
+    src: placeholder(0),
     blurb: "Hoa Lư, Ninh Bình: vùng núi đá vôi nơi Đinh Bộ Lĩnh dựng căn cứ, sau này là kinh đô Đại Cồ Việt.",
+    kind: "lich-su",
   },
   ...WARLORD_ENCOUNTERS.map((w, i): FormationMap => ({
     id: w.id,
     place: w.place,
-    src: PLACEHOLDERS[(i + 1) % PLACEHOLDERS.length]!,
+    src: placeholder(i + 1),
     blurb: `${w.place} (nay thuộc ${w.modernRegion}): vùng của ${w.foes[0]?.name ?? "một sứ quân"} thời Loạn 12 sứ quân.`,
+    kind: "lich-su",
   })),
+  ...HISTORIC.map((m, i): FormationMap => ({ ...m, src: placeholder(i + 13), kind: "lich-su" })),
+  ...LANDSCAPES.map((m, i): FormationMap => ({ ...m, src: placeholder(i + 20), kind: "canh-quan" })),
 ];
 
 /** Mỗi bậc lệch một khoảng khác nhau để trong cùng một kỳ các bậc không trùng bản đồ. */

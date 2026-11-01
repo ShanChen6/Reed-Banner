@@ -14,7 +14,9 @@ import {
   publicPuzzle,
   rankedLevel,
   rewardGold,
+  periodEnd,
   rulesetById,
+  themeOfState,
   transition,
   type Command,
   type PublicPuzzle,
@@ -306,6 +308,10 @@ export interface LevelOverview {
   readonly level: string;
   readonly cadence: "day" | "week";
   readonly period: string;
+  /** Thời điểm (ms) kỳ này kết thúc, để đếm ngược trên thẻ. */
+  readonly endsAt: number;
+  /** Chủ đề bản đồ của kỳ (chọn bản đồ nền trong kho), như nhau với mọi người; không lộ seed hay muối. */
+  readonly theme: number;
   readonly winners: number;
   readonly mine: FormationView | null;
   readonly top: readonly BoardRow[];
@@ -340,6 +346,8 @@ export async function formationOverview(deps: FormationDeps, ownerId: string | n
         level: l.id,
         cadence: l.cadence,
         period,
+        endsAt: periodEnd(l.id, deps.now)!,
+        theme: themeOfState({ seed: formationSeed(deps.secret!, l.id, period), salt: formationSalt(deps.secret!, l.id, period) }),
         winners,
         mine: mine ? await viewOf(deps, mine) : null,
         top: top.map((e, i) => ({
