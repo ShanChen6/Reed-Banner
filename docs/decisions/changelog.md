@@ -407,3 +407,7 @@ Nhân vật dung hợp thứ hai của Trận Đồ là Trần Vũ Phong – Vâ
 
 Theo yêu cầu của Shan, đã code phần server: kỳ (ngày cho Thường và Khó, tuần cho Đại trận), seed server phát, server giữ ván và áp từng lệnh, hạng, thưởng vàng theo bậc, nhận thưởng một lần, bảng `formation_entries`. Tắt mặc định sau `FORMATION_RANKED_ENABLED`. Thay đổi so với kế hoạch trước: server giữ ván thay vì kiểm lại nhật ký của client, để chặn luyện trước. Bảng thưởng là điểm xuất phát chờ Shan duyệt ([GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)).
 
+### 01/11/2026 (sửa) — Thưởng xếp hạng Trận Đồ không đòi số người tối thiểu
+
+Shan: bảng ít người vẫn phải có thưởng. Bỏ điều kiện "đủ người thắng" ở các bậc thưởng; một mình một bảng vẫn là hạng nhất. Đánh đổi: tài khoản phụ dễ nhận thưởng hơn ([GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)).
+

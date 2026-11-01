@@ -45,15 +45,15 @@ export function compareResults(a: RankedResult, b: RankedResult): number {
 export type RewardTier = "top1" | "top3" | "top10" | "half" | "win";
 
 /**
- * Bậc thưởng theo hạng. Bậc cao cần đủ người thắng trong kỳ (`minWinners`), để một mình một bảng không hái được
- * thưởng hạng 1. Mỗi người nhận đúng một bậc, bậc cao nhất đủ điều kiện.
+ * Bậc thưởng theo hạng. Mỗi người nhận đúng một bậc, bậc cao nhất hạng của mình đạt tới. Không đòi số người tối
+ * thiểu (Shan chốt 01/11/2026): bảng ít người vẫn có thưởng, kể cả một mình một bảng thì là hạng nhất.
  */
-export const REWARD_TIERS: readonly { readonly tier: RewardTier; readonly maxRank: (winners: number) => number; readonly minWinners: number; readonly label: string }[] = [
-  { tier: "top1", maxRank: () => 1, minWinners: 5, label: "Hạng nhất" },
-  { tier: "top3", maxRank: () => 3, minWinners: 8, label: "Top 3" },
-  { tier: "top10", maxRank: () => 10, minWinners: 15, label: "Top 10" },
-  { tier: "half", maxRank: (n) => Math.ceil(n / 2), minWinners: 2, label: "Nửa trên" },
-  { tier: "win", maxRank: (n) => n, minWinners: 1, label: "Thắng ván" },
+export const REWARD_TIERS: readonly { readonly tier: RewardTier; readonly maxRank: (winners: number) => number; readonly label: string }[] = [
+  { tier: "top1", maxRank: () => 1, label: "Hạng nhất" },
+  { tier: "top3", maxRank: () => 3, label: "Top 3" },
+  { tier: "top10", maxRank: () => 10, label: "Top 10" },
+  { tier: "half", maxRank: (n) => Math.ceil(n / 2), label: "Nửa trên" },
+  { tier: "win", maxRank: (n) => n, label: "Thắng ván" },
 ];
 
 /** Vàng theo bậc thưởng, chia theo mức độ chơi. Điểm xuất phát chờ Shan duyệt. */
@@ -66,7 +66,7 @@ export const REWARD_GOLD: Readonly<Record<string, Readonly<Record<RewardTier, nu
 /** Bậc thưởng của người đứng hạng `rank` (từ 1) trong số `winners` người thắng; null khi hạng không hợp lệ. */
 export function rewardTier(rank: number, winners: number): RewardTier | null {
   if (!Number.isInteger(rank) || !Number.isInteger(winners) || rank < 1 || winners < 1 || rank > winners) return null;
-  for (const t of REWARD_TIERS) if (winners >= t.minWinners && rank <= t.maxRank(winners)) return t.tier;
+  for (const t of REWARD_TIERS) if (rank <= t.maxRank(winners)) return t.tier;
   return null;
 }
 
