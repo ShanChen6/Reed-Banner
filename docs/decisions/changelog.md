@@ -1,5 +1,10 @@
 # Nhật ký thay đổi thiết kế
 
+## 02/11/2026
+
+**Trận Đồ: tích hợp ô che và 4 icon chướng ngại do Shan tạo**
+- Ô che `fog.webp` được duyệt, icon núi/rừng/đầm lầy/thành lũy "tạm được" thay SVG giữ chỗ. Thêm `scripts/cutout-formation-icon.py` để cắt ô caro vẽ sẵn thành nền trong suốt; ghi lưu ý nền phẳng cho lần tạo sau ở [prompt hình ảnh](../06-art/prompts/tran-do-hinh-anh.md).
+
 ## 31/10/2026
 
 **Cân bằng sơ bộ Xạ thủ/Sát thủ**

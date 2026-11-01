@@ -1,7 +1,7 @@
 # Giao diện Trận Đồ
 
 > Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — sa bàn là bản đồ, màn chế độ và màn chơi chi tiết đã có code với ảnh giữ chỗ; ảnh bản đồ, ô che và icon chướng ngại thật do Shan thiết kế; Shan test lần 1 rồi góp ý.
+> Trạng thái: **DRAFT** — sa bàn là bản đồ, màn chế độ và màn chơi chi tiết đã có code với ảnh giữ chỗ; ô che và 4 icon chướng ngại v1 đã tích hợp, ảnh 30 bản đồ thật do Shan thiết kế; Shan test lần 1 rồi góp ý.
 
 Luật chơi ở [GDD Binh Pháp](../../02-game-modes/future/02-binh-phap-gdd.md); tài liệu này chỉ nói về giao diện. Màn chơi nằm ở `src/app/game/formation/`.
 
@@ -19,8 +19,8 @@ Luật chơi ở [GDD Binh Pháp](../../02-game-modes/future/02-binh-phap-gdd.md
 ## 2. Đã code (ảnh giữ chỗ)
 
 - **Kho bản đồ** (`maps.ts`): 13 địa danh lấy từ danh mục sứ quân của Campaign V2 (`WARLORD_ENCOUNTERS`) cộng Hoa Lư. Bản đồ của một ván chọn bằng `mapFor(bậc, theme)`; `theme` suy từ seed (chơi thường) hoặc từ muối bí mật (xếp hạng) và như nhau với mọi người trong cùng kỳ, mỗi bậc lệch một khoảng nên cùng kỳ các bậc không trùng bản đồ. Thường/Khó đổi bản đồ mỗi ngày, Đại trận mỗi tuần (theo kỳ xếp hạng).
-- **Ô che đặc kín** (`public/art/formation/fog.svg`, ảnh giữ chỗ): nền sơn mài nâu với vân mây cuộn, đè hoàn toàn lên bản đồ. Ô mở thì ô che mờ dần (0,45 giây, tắt khi giảm chuyển động), ô trong suốt lộ bản đồ và viền sáng nhẹ. Ô vẫn sáng sau khi quân bị dọn (vệt khai thông).
-- **Chướng ngại** (4 biến thể SVG giữ chỗ): núi (đỉnh nhọn có tuyết), rừng (cụm cây tán tròn), đầm lầy (mặt nước gợn và cỏ lau), thành lũy (tường có lỗ châu mai và cổng). Mỗi ô một kiểu theo vị trí (như nhau cho mọi người chơi cùng bàn). Ô chướng ngại có nền đá tối riêng, không lấy ảnh bản đồ.
+- **Ô che đặc kín** (`public/art/formation/fog.webp`, ảnh Shan tạo, đã duyệt 02/11/2026): nền sơn mài nâu với vân mây cuộn, đè hoàn toàn lên bản đồ. Ô mở thì ô che mờ dần (0,45 giây, tắt khi giảm chuyển động), ô trong suốt lộ bản đồ và viền sáng nhẹ. Ô vẫn sáng sau khi quân bị dọn (vệt khai thông).
+- **Chướng ngại** (4 icon webp trong suốt ở `public/art/formation/obstacles/`, Shan tạo, "tạm được" ở v1): núi (đỉnh nhọn có tuyết), rừng (cụm cây tán tròn), đầm lầy (mặt nước gợn và cỏ lau), thành lũy (tường có lỗ châu mai và cổng). Mỗi ô một kiểu theo vị trí (như nhau cho mọi người chơi cùng bàn). Ô chướng ngại có nền đá tối riêng, không lấy ảnh bản đồ.
 - **Quân**: chân dung tròn có bóng như con cờ đặt lên bản đồ, kèm **hai huy hiệu tròn nhỏ**: hệ (nền theo màu hệ) ở đáy trái, nghề (nền tối) ở đáy phải; kích thước theo ô, không nhỏ hơn 11px. Quân dung hợp dùng một huy hiệu sao đỏ ở giữa đáy.
 - **Hoàn thành**: quân và chướng ngại mờ đi (0,8 giây) để cả bản đồ hiện ra trên sa bàn, và khung kết quả hiện ảnh bản đồ đầy đủ kèm địa danh, một dòng giới thiệu và chú thích "tranh minh họa tái dựng, không phải bản đồ lịch sử chính xác" (theo [sổ nguồn sử](../../02-game-modes/campaign/history-sources.md): vị trí một số địa danh còn tranh luận, ví dụ Bình Kiều).
 - **Tùy chỉnh** (`CustomForm.tsx`, trong Chơi thường): cột và hàng 3–10, chướng ngại 0–30%, Quân Lệnh 0–15%, Thu Hồi 0–10%, nhân vật dung hợp 0–10% (khóa tới khi có nhân vật được duyệt), chọn từng nghề (≥2) và từng hệ (≥2). Lựa chọn lưu ở máy; ván tùy chỉnh không ghi điểm cao nhất, không thưởng, không xếp hạng; engine kiểm lại giới hạn khi tạo và khi nạp ván.
