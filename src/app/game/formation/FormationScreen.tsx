@@ -7,6 +7,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   RULESETS,
+  SPECIAL_CHARACTERS,
+  elementsOf,
+  professionsOf,
   checkPlacement,
   createPuzzle,
   idx,
@@ -20,10 +23,12 @@ import {
   type Piece,
   type PlacementCheck,
   type PuzzleState,
+  type TypedPiece,
   type Ruleset,
 } from "@/core/binh-phap";
 import { companionById } from "@/core/roster/roster";
 import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
+import { ELEMENTS, PROFESSIONS } from "@/core/battle";
 import { Portrait } from "../art/portraits";
 import { ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
 import { SceneLink } from "../SceneContext";
@@ -57,12 +62,22 @@ function readBest(): Record<string, number> {
 
 const freshSeed = () => (Math.random() * 0x100000000) >>> 0;
 
-const nameOf = (id: string) => companionById(id)?.name ?? "Tướng";
+const nameOf = (id: string) => SPECIAL_CHARACTERS.find((s) => s.characterId === id)?.name ?? companionById(id)?.name ?? "Tướng";
+
+/** "Mọi nghề" khi quân có đủ nghề của game, ngược lại liệt kê tên. */
+function professionText(p: TypedPiece): string {
+  const list = professionsOf(p);
+  return list.length >= PROFESSIONS.length ? "mọi nghề" : list.map((x) => PROFESSION_NAME[x]).join(", ");
+}
+function elementText(p: TypedPiece): string {
+  const list = elementsOf(p);
+  return list.length >= ELEMENTS.length ? "mọi hệ" : list.map((x) => ELEMENT_NAME[x]).join(", ");
+}
 
 function pieceLabel(p: Piece): string {
   if (p.kind === "wild") return "Quân Lệnh";
   if (p.kind === "eraser") return "Thu Hồi";
-  return `${nameOf(p.characterId)}, ${PROFESSION_NAME[p.profession]}, hệ ${ELEMENT_NAME[p.element]}`;
+  return `${nameOf(p.characterId)}, nghề ${professionText(p)}, hệ ${elementText(p)}`;
 }
 
 const REASON_TEXT: Record<Extract<PlacementCheck, { ok: false }>["reason"], string> = {
@@ -373,6 +388,13 @@ function Hand({ state, rules, apply, noMove }: { state: PuzzleState; rules: Rule
               <p className="flex items-center gap-1"><ProfessionIcon profession={h.profession} className="size-5" /> {PROFESSION_NAME[h.profession]}</p>
               <p className="flex items-center gap-1"><ElementIcon element={h.element} className="size-5" /> Hệ {ELEMENT_NAME[h.element]}</p>
             </>
+          ) : h.kind === "multi" ? (
+            <>
+              <p className="font-serif text-lg font-bold">{nameOf(h.characterId)}</p>
+              <p>Nghề: {professionText(h)}</p>
+              <p>Hệ: {elementText(h)}</p>
+              <p className="text-sm text-[var(--atlas-muted)]">Khớp khi trùng bất kỳ nghề hoặc hệ nào.</p>
+            </>
           ) : h.kind === "wild" ? (
             <><p className="font-serif text-lg font-bold">Quân Lệnh</p><p>Đặt ở ô trống bất kỳ; khớp mọi quân kề.</p></>
           ) : (
@@ -421,11 +443,19 @@ function PieceFace({ piece, large = false }: { piece: Piece | BoardPiece; large?
   if (piece.kind === "wild") return <Glyph kind="wild" />;
   if (piece.kind === "eraser") return <Glyph kind="eraser" />;
   const icon = large ? "size-6" : "size-[32%]";
+  const professions = professionsOf(piece);
+  const elements = elementsOf(piece);
+  // Quân nhiều nghề/hệ: tối đa hai biểu tượng mỗi góc; nhiều hơn thì hiện số lượng ("8" nghề, "7" hệ) thay vì tràn ô.
+  const badge = large ? "min-w-6 text-[13px]" : "min-w-[32%] text-[10px]";
   return (
     <span className="relative block size-full">
-      <Portrait id={piece.characterId} element={piece.element} profession={piece.profession} className="size-full" />
-      <span className="absolute top-0 left-0 rounded-full bg-[#2B1F15]/85 p-[2px] text-[#E4CC99]"><ProfessionIcon profession={piece.profession} className={icon} /></span>
-      <span className="absolute right-0 bottom-0 rounded-full p-[2px]" style={{ background: ELEMENT_COLOR[piece.element] }}><ElementIcon element={piece.element} className={icon} /></span>
+      <Portrait id={piece.characterId} element={elements[0]!} profession={professions[0]!} className="size-full" />
+      <span className="absolute top-0 left-0 flex rounded-full bg-[#2B1F15]/85 p-[2px] text-[#E4CC99]">
+        {professions.length <= 2 ? professions.map((x) => <ProfessionIcon key={x} profession={x} className={icon} />) : <span className={`${badge} text-center font-bold leading-none`}>{professions.length}</span>}
+      </span>
+      <span className="absolute right-0 bottom-0 flex rounded-full bg-[#2B1F15]/85 p-[2px]">
+        {elements.length <= 2 ? elements.map((x) => <span key={x} className="rounded-full" style={{ background: ELEMENT_COLOR[x] }}><ElementIcon element={x} className={icon} /></span>) : <span className={`${badge} text-center font-bold leading-none text-[#E4CC99]`}>{elements.length}</span>}
+      </span>
     </span>
   );
 }

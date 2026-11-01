@@ -5,7 +5,7 @@ import { charactersFor } from "./catalog";
 import type { Piece, Ruleset } from "./types";
 
 /**
- * Quân kế tiếp. `previous` là quân vừa dùng: sau một quân đặc biệt luôn ra quân thường (chống chuỗi đặc biệt); không sinh Thu Hồi khi bàn trống.
+ * Quân kế tiếp. `previous` là quân vừa dùng: sau một quân đặc biệt luôn ra quân thường (chống chuỗi đặc biệt); không sinh Thu Hồi khi bàn trống; nhân vật đặc biệt (nhiều nghề/hệ) cũng không ra liền sau một quân đặc biệt.
  * Thứ tự gọi RNG cố định: một lần chọn loại, rồi (nếu quân thường) nghề, hệ, người đại diện.
  */
 export function nextPiece(rng: Rng, rules: Ruleset, serial: number, previous: Piece | null, boardHasPieces: boolean): Piece {
@@ -15,6 +15,12 @@ export function nextPiece(rng: Rng, rules: Ruleset, serial: number, previous: Pi
     if (roll < rules.wildPermille) return { kind: "wild", uid };
     // Bàn chưa có quân thì Thu Hồi vô dụng: nhường chỗ cho quân thường.
     if (boardHasPieces && roll < rules.wildPermille + rules.eraserPermille) return { kind: "eraser", uid };
+    // Nhân vật đặc biệt dùng chung lần tung với các quân đặc biệt khác: danh sách rỗng thì dãy quân không đổi so với trước.
+    const lo = rules.wildPermille + rules.eraserPermille;
+    if (rules.specials.length > 0 && roll >= lo && roll < lo + rules.multiPermille) {
+      const who = rules.specials[rng.int(0, rules.specials.length - 1)]!;
+      return { kind: "multi", uid, characterId: who.characterId, professions: who.professions, elements: who.elements };
+    }
   }
   const profession = rules.professions[rng.int(0, rules.professions.length - 1)]!;
   const element = rules.elements[rng.int(0, rules.elements.length - 1)]!;

@@ -2,7 +2,7 @@
 
 import { createRng } from "../rng";
 import { generateObstacles, nextPiece } from "./generator";
-import { checkPlacement, completedLines, idx, playableCount } from "./rules";
+import { checkPlacement, completedLines, idx, playableCount, typesMatchBoth } from "./rules";
 import { RULESETS, SCHEMA_VERSION } from "./rulesets";
 import type { BoardPiece, Cell, Command, Piece, PuzzleEvent, PuzzleState, Ruleset, Transition } from "./types";
 
@@ -110,10 +110,10 @@ function place(state: PuzzleState, rules: Ruleset, row: number, col: number): Tr
     }
     // Điểm cộng thêm tính trên quân kề *trước khi* đặt; Quân Lệnh không tạo điểm khớp hoàn hảo.
     let perfect = 0;
-    if (piece.kind === "normal") {
+    if (piece.kind !== "wild") {
       for (const n of [row > 0 ? at - width : -1, row < height - 1 ? at + width : -1, col > 0 ? at - 1 : -1, col < width - 1 ? at + 1 : -1]) {
         const nb = n >= 0 ? cells[n]!.piece : null;
-        if (nb && nb.kind === "normal" && nb.profession === piece.profession && nb.element === piece.element) perfect += 1;
+        if (nb && nb.kind !== "wild" && typesMatchBoth(piece, nb)) perfect += 1;
       }
     }
     cells[at] = { ...cells[at]!, covered: true, piece: onBoard };
