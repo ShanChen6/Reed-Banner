@@ -94,14 +94,43 @@ Tên hiển thị trong game là **Trận Đồ** (đã duyệt tên 26/10/2026)
 
 | Giá trị | Đang chạy | Nguồn |
 |---|---|---|
-| Cỡ bàn | Hình chữ nhật **tùy ý** `width × height`, chọn theo bậc: 3×3, 5×7, 7×9, 9×9 | Shan chốt hướng 01/11/2026 (không ép bàn vuông); số cụ thể là điểm xuất phát |
-| Ô chướng ngại | Rải ngẫu nhiên theo seed: 0% / 10% / 12% / 14% diện tích. Không đặt quân được, không cần khai thông, không nối được hai quân, các ô còn lại luôn liền nhau | Shan chốt 01/11/2026; tỉ lệ là điểm xuất phát |
+| Cỡ bàn | Hình chữ nhật `width × height`. Hướng dẫn 3×3; Thường 5×5; Khó 6×6; **Đại trận ngẫu nhiên theo seed, mỗi cạnh 7–10** | Shan chốt 01/11/2026 |
+| Ô chướng ngại | Rải ngẫu nhiên theo seed: Hướng dẫn 0%, Thường 8%, Khó 10%, Đại trận 10–16% theo diện tích có trần 72 ô chơi được. Không đặt quân được, không cần khai thông, không nối được hai quân, các ô còn lại luôn liền nhau | Shan chốt có chướng ngại; con số do đo bằng mô phỏng, xem bên dưới |
 | Thanh Bỏ Lệnh | 0–3; đặt quân hạ 1; dọn hàng/cột về 0; bỏ khi đã đầy là thua | Giữ như đề xuất (Shan chưa có đề xuất khác); chưa kiểm phương án "dọn hạ 2" |
 | Điểm | Đặt 10; +5 mỗi quân kề khớp cả nghề lẫn hệ; mỗi hàng/cột dọn 50; thắng 500 + 100 mỗi vạch Bỏ Lệnh còn trống + 5 mỗi nước nhanh hơn chuẩn (chuẩn = 3 nước × số ô chơi được) | Shan giao "làm hợp lý" 01/11/2026 |
-| Quân đặc biệt | Quân Lệnh 8% / Thu Hồi 4% (Đại trận Quân Lệnh 10%); Nhập môn không có. Không ra hai quân đặc biệt liên tiếp; không ra Thu Hồi khi bàn trống | Shan không có ý kiến, dùng đề xuất |
+| Quân đặc biệt | Quân Lệnh 8% / Thu Hồi 4% (Đại trận Quân Lệnh 10%); Hướng dẫn không có. Không ra hai quân đặc biệt liên tiếp; không ra Thu Hồi khi bàn trống | Shan không có ý kiến, dùng đề xuất |
 | Offline hay server | Offline, khách, không thưởng, không xếp hạng | Mặc định đề xuất; xếp hạng và thưởng ở [mục 12](#12-xếp-hạng-và-thưởng-thiết-kế-chưa-có-code) |
 
-**Bốn bậc** (`RULESETS`): Nhập môn 3×3 (2 nghề × 2 hệ, không chướng ngại, không quân đặc biệt); Thường 5×7 (3 × 4); Khó 7×9 (4 × 5); Đại trận 9×9 (6 × 6). Mọi cặp nghề–hệ đều có ít nhất một tướng trong danh mục nên chân dung luôn khớp thuộc tính; quân đặc biệt và chướng ngại dùng biểu tượng vẽ bằng SVG. Binh Pháp chỉ dùng 6 nghề active, chưa đụng Xạ thủ/Sát thủ. Engine nhận bất kỳ cỡ nào, nên thêm bậc hay chế độ tự chọn cỡ bàn (chơi thường, không xếp hạng) chỉ là thêm một mục trong `RULESETS`.
+**Bốn bậc** (`RULESETS`, id `huong-dan`, `thuong`, `kho`, `dai-tran`):
+
+| Bậc | Cỡ bàn | Nghề × hệ | Chướng ngại | Quân Lệnh / Thu Hồi | Xếp hạng, thưởng |
+|---|---|---|---|---|---|
+| Hướng dẫn | 3×3 | 2 × 2 | 0% | không có | **Không** (bậc học) |
+| Thường | 5×5 | 3 × 4 | 8% | 8% / 4% | Có (thiết kế ở [mục 12](#12-xếp-hạng-và-thưởng-thiết-kế-chưa-có-code)) |
+| Khó | 6×6 | 4 × 5 | 10% | 8% / 4% | Có |
+| Đại trận | **7–10 × 7–10, ngẫu nhiên theo seed** | **8 × 7** (đủ 56 loại) | 10–16%, trần 72 ô chơi được | 10% / 4% | Có |
+
+Mọi cặp nghề–hệ đều có ít nhất một tướng trong danh mục, nên chân dung luôn khớp thuộc tính; quân đặc biệt và chướng ngại dùng biểu tượng vẽ bằng SVG.
+
+**Xạ thủ và Sát thủ.** Hai nghề này đã vào game từ 31/10/2026 (`NEW_PROFESSIONS_ENABLED`, 14 tướng RB-062–075 đều có chân dung), nhưng chỉ **Đại trận** dùng chúng; ba bậc kia giữ 6 nghề cũ để người mới học luật với bộ quân nhỏ. Muốn thêm vào bậc khác chỉ cần thêm `xaThu`/`satThu` vào `professions` của bậc đó và tăng `version`. Trận Đồ không có giá trị riêng cho hai nghề: chúng chỉ là thêm hai loại nghề trong luật "cùng nghề hoặc cùng hệ".
+
+**Cỡ bàn ngẫu nhiên của Đại trận.** Rút từ seed: mỗi cạnh đều trong [7, 10] (nên có 16 cỡ, gồm cả bàn dọc lẫn ngang như 7×10 và 10×7), rồi rải chướng ngại. Số chướng ngại tính theo hai quy tắc, lấy giá trị lớn hơn:
+
+1. **Theo diện tích:** tỉ lệ nội suy từ 10% (7×7) lên 16% (10×10), vì bàn lớn cần nhiều chướng ngại hơn để dọn hàng/cột ngắn lại.
+2. **Trần ô chơi được 72:** nếu bàn còn hơn 72 ô chơi được thì tăng chướng ngại cho tới khi còn 72. Lý do: thời lượng ván tỉ lệ với số ô chơi được (khoảng 100 nước ở 60 ô với bot greedy); không có trần thì bàn 10×10 dài hơn 150 nước.
+
+| Cỡ | Diện tích | Chướng ngại | Chơi được |
+|---|---|---|---|
+| 7×7 | 49 | 5 (10%) | 44 |
+| 7×9 | 63 | 7 (11%) | 56 |
+| 8×8 | 64 | 8 (13%) | 56 |
+| 9×9 | 81 | 11 (14%) | 70 |
+| 10×9 | 90 | 18 (20%) | 72 |
+| 10×10 | 100 | 28 (28%) | 72 |
+
+Chướng ngại luôn giữ các ô còn lại liền nhau theo 4 hướng (mỗi ô chỉ bị chặn nếu vẫn liền). Chướng ngại tối đa là 28% diện tích nên không bao giờ biến bàn thành mê cung rời rạc. Khi xếp hạng, mọi người chơi cùng seed thì cùng cỡ và cùng bản đồ.
+
+Engine nhận mọi cỡ nên thêm bậc hay chế độ tự chọn cỡ bàn (chơi thường, không xếp hạng) chỉ là thêm một mục trong `RULESETS`.
 
 **Luật chi tiết đã chốt khi code** (mục 3–6 chưa đủ rõ):
 
@@ -126,7 +155,7 @@ Shan (01/11/2026): xếp hạng cao được nhận thưởng; thưởng chia th
 3. **Mỗi người một lượt tính điểm mỗi kỳ và mỗi bậc** (server ghi chỗ trước khi bày bàn, như Nhật Lệnh). Chơi tiếp ngoài lượt đó vẫn được nhưng không lên bảng, không thưởng.
 4. Hạng thắng bằng điểm; bằng điểm thì ít nước hơn, rồi nộp sớm hơn.
 
-**Kỳ:** đề xuất bảng theo **ngày** (đổi 0 giờ giờ Việt Nam, như Nhật Lệnh) cho Thường và Khó, và bảng theo **tuần** (thứ Hai 0 giờ) cho Đại trận. Nhập môn là bậc học, không xếp hạng, không thưởng.
+**Kỳ:** đề xuất bảng theo **ngày** (đổi 0 giờ giờ Việt Nam, như Nhật Lệnh) cho Thường và Khó, và bảng theo **tuần** (thứ Hai 0 giờ) cho Đại trận. Hướng dẫn là bậc học, không xếp hạng, không thưởng.
 
 **Thưởng chia theo bậc** (vàng, đề xuất; mốc so với Nhật Lệnh thắng 150 vàng và Đấu trường thắng +50). Nhận một lần mỗi kỳ, theo hạng chốt lúc đổi kỳ:
 

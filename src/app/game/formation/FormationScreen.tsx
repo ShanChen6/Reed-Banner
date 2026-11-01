@@ -213,7 +213,7 @@ function LevelPicker({ best, onStart }: { best: Record<string, number>; onStart:
               <span className="font-serif text-xl font-bold text-[var(--atlas-title)]">{r.name}</span>
               <span className="text-[15px] leading-snug text-[var(--atlas-ink-on-wood)]/90">{r.blurb}</span>
               <span className="mt-auto text-sm text-[var(--atlas-muted)]">
-                {r.width}×{r.height} · {r.professions.length} nghề × {r.elements.length} hệ{r.obstaclePercent > 0 ? " · có chướng ngại" : ""}
+                {r.randomSize ? `cỡ ngẫu nhiên ${r.randomSize.min}–${r.randomSize.max}` : `${r.width}×${r.height}`} · {r.professions.length} nghề × {r.elements.length} hệ{r.obstaclePercent > 0 ? " · có chướng ngại" : ""}
                 {best[r.id] ? ` · Điểm cao nhất ${best[r.id]}` : ""}
               </span>
             </button>

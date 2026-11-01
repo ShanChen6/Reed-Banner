@@ -11,19 +11,35 @@ function rulesFor(state: PuzzleState): Ruleset | null {
   return r && r.version === state.rulesVersion ? r : null;
 }
 
+/** Cỡ bàn và tỉ lệ chướng ngại của một ván: cố định, hoặc rút theo seed khi bậc có `randomSize`. */
+function boardSpec(rules: Ruleset, rng: ReturnType<typeof createRng>): { width: number; height: number; obstaclePercent: number } {
+  const r = rules.randomSize;
+  if (!r) return { width: rules.width, height: rules.height, obstaclePercent: rules.obstaclePercent };
+  const width = rng.int(r.min, r.max);
+  const height = rng.int(r.min, r.max);
+  const area = width * height;
+  const lo = r.min * r.min;
+  const hi = r.max * r.max;
+  const t = hi === lo ? 0 : (area - lo) / (hi - lo);
+  const byArea = r.obstaclePercentAtMin + (r.obstaclePercentAtMax - r.obstaclePercentAtMin) * t;
+  const byCap = (100 * (area - r.maxPlayable)) / area;
+  return { width, height, obstaclePercent: Math.max(byArea, byCap) };
+}
+
 /** Ván mới từ seed (số nguyên 32 bit không dấu). Quân đầu tiên luôn là quân thường hoặc Quân Lệnh. */
 export function createPuzzle(rules: Ruleset, seed: number): PuzzleState {
   const rng = createRng(seed);
-  // Thứ tự RNG cố định: địa hình trước, quân đầu tiên sau.
-  const blocked = generateObstacles(rng, rules.width, rules.height, rules.obstaclePercent);
+  // Thứ tự RNG cố định: cỡ bàn (nếu ngẫu nhiên), địa hình, rồi quân đầu tiên.
+  const { width, height, obstaclePercent } = boardSpec(rules, rng);
+  const blocked = generateObstacles(rng, width, height, obstaclePercent);
   const hand = nextPiece(rng, rules, 0, null, false);
   return {
     schemaVersion: SCHEMA_VERSION,
     rulesetId: rules.id,
     rulesVersion: rules.version,
     seed: seed >>> 0,
-    width: rules.width,
-    height: rules.height,
+    width,
+    height,
     cells: blocked.map((b): Cell => ({ blocked: b, covered: false, piece: null })),
     hand,
     discardHeat: 0,

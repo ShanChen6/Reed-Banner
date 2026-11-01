@@ -112,6 +112,6 @@
 
 ## Trận Đồ (Binh Pháp)
 
-- TODO: BP-00 sign-off. Bản chơi thử đang chạy giá trị đề xuất (4 bậc bàn chữ nhật 3×3/5×7/7×9/9×9 có chướng ngại, thanh Bỏ Lệnh 0–3, Quân Lệnh 8%/Thu Hồi 4%, điểm 10/5/50 và thưởng thắng 500 cộng thêm, không xem trước quân kế). Cần Shan chốt hoặc đổi, xem [GDD mục 11](../02-game-modes/future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline).
+- TODO: BP-00 sign-off. Bản chơi thử đang chạy giá trị đề xuất (Hướng dẫn 3×3, Thường 5×5, Khó 6×6, Đại trận cỡ ngẫu nhiên 7–10; có chướng ngại, thanh Bỏ Lệnh 0–3, Quân Lệnh 8%/Thu Hồi 4%, điểm 10/5/50 và thưởng thắng 500 cộng thêm, không xem trước quân kế). Cỡ bàn các bậc do Shan chốt 01/11/2026. Cần Shan chốt hoặc đổi, xem [GDD mục 11](../02-game-modes/future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline).
 - TODO: Chốt bảng thưởng và kỳ xếp hạng Trận Đồ (đề xuất ở [GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-thiết-kế-chưa-có-code): ngày cho Thường/Khó, tuần cho Đại trận, seed do server phát). Shan đã chốt hướng có thưởng theo hạng và theo bậc; chưa có code, chưa có cờ tính năng.
-- TODO: Agent mô phỏng lookahead và thử người thật để cân lại bậc Thường (greedy ngang random) và độ dài ván lớn (Đại trận p90 khoảng 125 đến 265 nước), xem [QA Binh Pháp](../02-game-modes/future/05-binh-phap-balance-qa.md#kết-quả-mô-phỏng-baseline-01112026).
+- TODO: Agent mô phỏng lookahead và thử người thật để cân lại bậc Thường (greedy ngang random) và độ dài ván lớn (Đại trận phụ thuộc cỡ bàn), xem [QA Binh Pháp](../02-game-modes/future/05-binh-phap-balance-qa.md#kết-quả-mô-phỏng-baseline-01112026).
