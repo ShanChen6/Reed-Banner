@@ -431,3 +431,7 @@ Shan chọn cách tính đã đề xuất: điểm mùa Quần Hùng là tổng 
 
 Shan duyệt bảng vàng theo hạng mùa: Trấn Ải 500/300/180/80/30 và Quần Hùng 600/400/240/100/40 (hạng nhất, top 3, top 10, nửa trên, có tên). Không đổi code. Bảng của Trận Đồ, Nhật Lệnh và Tháp Thiên Mệnh vẫn chờ duyệt.
 
+### 01/11/2026 (bổ sung) — Duyệt toàn bộ bảng vàng thưởng hạng
+
+Shan duyệt bảng vàng theo hạng của cả năm chế độ: Trận Đồ (Thường 150/100/60/30/20, Khó 300/200/120/60/40, Đại trận 1000/600/350/150/80), Nhật Lệnh 100/70/50/30/10, Tháp Thiên Mệnh 800/500/300/150/60, Trấn Ải 500/300/180/80/30, Quần Hùng 600/400/240/100/40. Không đổi code. Trận Đồ xếp hạng vẫn tắt mặc định sau `FORMATION_RANKED_ENABLED`.
+
