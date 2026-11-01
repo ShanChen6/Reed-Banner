@@ -423,3 +423,7 @@ Shan chốt: (1) khách chơi thường thoải mái, chế độ **online có b
 
 Shan chốt: (1) chặn luôn khách **xem** bảng xếp hạng và màn của các chế độ online có xếp hạng (không chỉ chặn chơi); (2) Trấn Ải và Quần Hùng có **mùa theo tuần**. Đã code: các API xem bảng, đề Nhật Lệnh, màn Thiên Mệnh trả `401` cho khách; Trận Đồ xếp hạng không trả bảng cho khách; trang Xếp hạng cần đăng nhập. Mùa tuần: bảng `season_scores` (migration 0011), điểm mùa ghi khi lượt Trấn Ải và trận Quần Hùng kết thúc, bảng mùa trong trang Xếp hạng (mặc định tuần này, có nút Mọi thời đại), thưởng vàng theo hạng cuối mùa qua sổ `rank_reward_claims` (Trấn Ải 500/300/180/80/30, Quần Hùng 600/400/240/100/40). Cách tính điểm mùa Quần Hùng là đề xuất chờ Shan duyệt ([chế độ chơi mục 6.3](../02-game-modes/README.md#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng)).
 
+### 01/11/2026 (bổ sung) — Chốt cách tính điểm mùa Quần Hùng
+
+Shan chọn cách tính đã đề xuất: điểm mùa Quần Hùng là tổng điểm đấu trường nhận được từ các trận mình đi đánh trong tuần (không tính phòng thủ, chỉ tổng dương mới có tên, Elo gốc không reset). Không cần đổi code; chỉ bỏ nhãn "đề xuất" ở docs.
+
