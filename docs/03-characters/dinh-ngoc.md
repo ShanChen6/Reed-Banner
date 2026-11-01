@@ -156,5 +156,4 @@ Ví dụ trung tính, không gear/buff/Sĩ khí/quan hệ hệ, ATK100, DEF đ�
 
 ## Trận Đồ (Binh Pháp)
 
-Đinh Ngọc là nhân vật đặc biệt nhiều nghề/hệ đầu tiên dự kiến cho [Trận Đồ](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-đặc-biệt-nhiều-nghềhệ): quân mang đủ 8 nghề và 7 hệ, khớp mọi quân kề nhưng vẫn phải đặt sát một quân. **Chưa bật**: nhân vật chưa duyệt và chưa đăng ký vào roster, nên danh sách đặc biệt của Trận Đồ đang rỗng. Muốn bật chỉ cần thêm một dòng vào `src/core/binh-phap/specials.ts` sau khi được duyệt.
-
+Đinh Ngọc là nhân vật dung hợp đầu tiên dự kiến cho [Trận Đồ](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc): quân mang đủ 8 nghề và 7 hệ, khớp mọi quân kề nhưng vẫn phải đặt sát một quân. Trận Đồ chỉ giữ tối đa hai nhân vật loại này (Shan chốt 01/11/2026). **Chưa bật**: nhân vật chưa duyệt và chưa đăng ký vào roster, nên danh sách dung hợp của Trận Đồ đang rỗng. Muốn bật chỉ cần thêm một dòng vào `src/core/binh-phap/specials.ts` sau khi được duyệt.

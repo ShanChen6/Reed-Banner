@@ -108,12 +108,12 @@ function place(state: PuzzleState, rules: Ruleset, row: number, col: number): Tr
       covered += 1;
       events.push({ type: "covered", row, col });
     }
-    // Điểm cộng thêm tính trên quân kề *trước khi* đặt; Quân Lệnh không tạo điểm khớp hoàn hảo.
+    // Điểm cộng thêm tính trên quân kề *trước khi* đặt; chỉ hai quân thường trùng cả nghề lẫn hệ mới được (Quân Lệnh và quân dung hợp thì không).
     let perfect = 0;
-    if (piece.kind !== "wild") {
+    if (piece.kind === "normal") {
       for (const n of [row > 0 ? at - width : -1, row < height - 1 ? at + width : -1, col > 0 ? at - 1 : -1, col < width - 1 ? at + 1 : -1]) {
         const nb = n >= 0 ? cells[n]!.piece : null;
-        if (nb && nb.kind !== "wild" && typesMatchBoth(piece, nb)) perfect += 1;
+        if (nb && nb.kind === "normal" && typesMatchBoth(piece, nb)) perfect += 1;
       }
     }
     cells[at] = { ...cells[at]!, covered: true, piece: onBoard };

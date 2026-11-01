@@ -9,24 +9,11 @@ const isObj = (v: unknown): v is Record<string, unknown> => typeof v === "object
 const isInt = (v: unknown, min: number, max: number): v is number => Number.isInteger(v) && (v as number) >= min && (v as number) <= max;
 const isStr = (v: unknown): v is string => typeof v === "string" && v.length > 0 && v.length <= 64;
 
-/** Tập không rỗng, không trùng, mọi phần tử thuộc danh sách cho phép. */
-function parseSet(v: unknown, allowed: readonly string[]): string[] | null {
-  if (!Array.isArray(v) || v.length === 0 || v.length > allowed.length) return null;
-  if (!v.every((x) => typeof x === "string" && allowed.includes(x))) return null;
-  return new Set(v).size === v.length ? (v as string[]) : null;
-}
-
 function parsePiece(v: unknown, allowEraser: boolean): Piece | null {
   if (!isObj(v) || !isStr(v.uid)) return null;
   if (v.kind === "wild") return { kind: "wild", uid: v.uid };
   if (v.kind === "eraser") return allowEraser ? { kind: "eraser", uid: v.uid } : null;
-  if (v.kind === "multi") {
-    if (!isStr(v.characterId)) return null;
-    const professions = parseSet(v.professions, PROFESSIONS);
-    const elements = parseSet(v.elements, ELEMENTS);
-    if (!professions || !elements) return null;
-    return { kind: "multi", uid: v.uid, characterId: v.characterId, professions: professions as never, elements: elements as never };
-  }
+  if (v.kind === "fusion") return isStr(v.characterId) ? { kind: "fusion", uid: v.uid, characterId: v.characterId } : null;
   if (v.kind !== "normal" || !isStr(v.characterId)) return null;
   const { profession, element } = v;
   if (!(PROFESSIONS as readonly unknown[]).includes(profession) || !(ELEMENTS as readonly unknown[]).includes(element)) return null;

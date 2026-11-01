@@ -144,27 +144,28 @@ Engine nhận mọi cỡ nên thêm bậc hay chế độ tự chọn cỡ bàn 
 
 **Code:** `src/core/binh-phap/` (luật, reducer, sinh quân và địa hình, lưu/nạp), `src/app/game/formation/FormationScreen.tsx` (scene `FORMATION`, đường dẫn `/game/formation`), mô phỏng `scripts/binh-phap-sim.ts`. Số đo ở [05 — mô phỏng và QA](05-binh-phap-balance-qa.md#kết-quả-mô-phỏng-baseline-01112026). Lưu ván dở ở `localStorage`; đổi bộ luật của một bậc thì save cũ bị bỏ (fail-closed).
 
-### 11.1 Nhân vật đặc biệt nhiều nghề/hệ
+### 11.1 Nhân vật dung hợp (kiểu Đinh Ngọc)
 
-Shan (01/11/2026): sắp tới sẽ thiết kế thêm nhân vật đặc biệt có từ hai nghề + hệ trở lên, trong đó có [Đinh Ngọc](../../03-characters/dinh-ngoc.md) (dung hợp 8 nghề, 7 hệ). Hạ tầng đã có trong engine, **danh sách mặc định rỗng** cho tới khi Shan duyệt từng nhân vật (`src/core/binh-phap/specials.ts`).
+Shan (01/11/2026): chỉ giữ loại nhân vật mang **đủ 8 nghề và 7 hệ** như [Đinh Ngọc](../../03-characters/dinh-ngoc.md), **tối đa hai nhân vật**; không có nhân vật 2 nghề + 2 hệ (hoặc ít hơn tám/bảy) vì làm ván dễ đi. Hạ tầng đã có trong engine, **danh sách mặc định rỗng** cho tới khi Shan duyệt từng nhân vật (`src/core/binh-phap/specials.ts`, `FUSION_CHARACTERS`).
 
-- **Kiểu quân `multi`** mang tập nghề và tập hệ. Hai quân khớp khi **tập nghề giao nhau hoặc tập hệ giao nhau**; quân thường là trường hợp mỗi tập một phần tử, nên luật cũ không đổi. Luật vẫn chỉ dựa trên nghề và hệ.
-- **Khác Quân Lệnh:** quân `multi` vẫn phải đặt sát một quân (trừ khi bàn trống) và quân đặt cạnh nó vẫn phải khớp các quân kề khác. Đinh Ngọc khớp mọi quân kề nhưng không đặt được ở ô trống xa mọi quân.
-- **Điểm:** quân kề khớp cả nghề lẫn hệ (cả hai tập đều giao) vẫn được +5.
-- **Sinh quân:** tung chung với Quân Lệnh/Thu Hồi bằng một lần tung; tỉ lệ `multiPermille` của bậc, chọn đều trong các nhân vật được duyệt cho bậc đó (`levels`). Không ra liền sau quân đặc biệt. Danh sách rỗng thì dãy quân y hệt trước khi có tính năng này.
-- **Thêm một nhân vật** là thêm một dòng vào `SPECIAL_CHARACTERS` (id, tên, tập nghề, tập hệ, các bậc), rồi đo lại bằng mô phỏng và tăng `version` của bậc liên quan. Không cần sửa luật.
-- **Hiển thị:** tối đa hai biểu tượng nghề và hai biểu tượng hệ mỗi góc; nhiều hơn thì hiện số lượng (Đinh Ngọc: "8" và "7"). Khung thông tin ghi "mọi nghề, mọi hệ".
+- **Quân `fusion`** khớp mọi quân kề. Luật vẫn chỉ dựa trên nghề và hệ.
+- **Khác Quân Lệnh:** quân `fusion` vẫn **phải đặt sát một quân** (trừ khi bàn trống) và quân đặt cạnh nó vẫn phải khớp các quân kề khác. Không đặt được ở ô trống xa mọi quân, không đặt đè lên quân khác hay chướng ngại. Hai quân `fusion` đặt cạnh nhau được.
+- **Điểm:** không tạo điểm "khớp hoàn hảo" (+5), cả khi đặt lẫn khi làm quân kề của quân thường.
+- **Sinh quân:** tung chung với Quân Lệnh/Thu Hồi bằng một lần tung; tỉ lệ `fusionPermille` của bậc, chọn đều giữa các nhân vật được duyệt cho bậc đó (`levels`). Không ra liền sau quân đặc biệt. Danh sách rỗng thì dãy quân y hệt trước khi có tính năng này.
+- **Thêm một nhân vật** là thêm một dòng vào `FUSION_CHARACTERS` (id, tên, các bậc); test chặn quá `MAX_FUSION_CHARACTERS = 2`. Sau đó đo lại bằng mô phỏng và tăng `version` của bậc liên quan.
+- **Hiển thị:** chân dung kèm số "8" (nghề) ở góc trên-trái và "7" (hệ) ở góc dưới-phải; khung thông tin ghi "Dung hợp mọi nghề và mọi hệ".
 
-**Ảnh hưởng độ khó (Đại trận, 800 ván, một quân dung hợp kiểu Đinh Ngọc):**
+**Ảnh hưởng độ khó (Đại trận, 800 ván, một nhân vật dung hợp):**
 
 | Tỉ lệ quân dung hợp | Random thắng | Greedy thắng |
 |---|---|---|
 | 0% | 6,0% | 31,4% |
 | 4% | 13,8% | 42,3% |
 | 8% | 25,5% | 51,0% |
-| 4% với quân 2 nghề + 2 hệ | 8,6% | 37,5% |
 
-Quân dung hợp rất mạnh: 4% đã nâng tỉ lệ thắng của greedy khoảng 11 điểm. **Đề xuất tỉ lệ 1–2% cho bậc có xếp hạng** và chỉ bật sau khi chốt mức điều chỉnh độ khó; mặc định `multiPermille` của Đại trận đang là 40 nhưng không có tác dụng vì danh sách rỗng. Quân 2 nghề + 2 hệ nhẹ hơn nhiều. Cần Shan chốt: nhân vật đặc biệt có xuất hiện ở các bậc có thưởng không, hay chỉ ở ván không xếp hạng.
+Quân này rất mạnh: 4% đã nâng tỉ lệ thắng của greedy khoảng 11 điểm, nên **tỉ lệ phải thấp, đề xuất 1–2%** cho bậc có xếp hạng. `fusionPermille` của Đại trận đặt 15 (1,5%) nhưng chưa có tác dụng vì danh sách rỗng. Cần Shan chốt: nhân vật dung hợp có xuất hiện ở các bậc có thưởng không, hay chỉ ở ván không xếp hạng.
+
+*Lịch sử:* cùng ngày, bản đầu của hạ tầng này cho phép quân có tập nghề/hệ bất kỳ; Shan loại bỏ vì làm giảm độ khó, chỉ giữ loại dung hợp đủ 8 nghề, 7 hệ.
 
 ## 12. Xếp hạng và thưởng (thiết kế, chưa có code)
 

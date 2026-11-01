@@ -393,5 +393,9 @@ Shan chốt: Hướng dẫn 3×3 (không xếp hạng, không thưởng), Thư�
 
 ### 01/11/2026 (bổ sung) — Quân nhân vật đặc biệt nhiều nghề/hệ trong Trận Đồ
 
-Shan đồng ý tổng quát hóa quân thành tập nghề, tập hệ giao nhau để chứa Đinh Ngọc và các nhân vật đặc biệt sắp thiết kế. Đã code hạ tầng; danh sách nhân vật để trống, chưa nhân vật nào được bật ([GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-đặc-biệt-nhiều-nghềhệ)).
+Shan đồng ý tổng quát hóa quân thành tập nghề, tập hệ giao nhau để chứa Đinh Ngọc và các nhân vật đặc biệt sắp thiết kế. Đã code hạ tầng; danh sách nhân vật để trống, chưa nhân vật nào được bật ([GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)).
+
+### 01/11/2026 (sửa) — Chỉ giữ nhân vật dung hợp đủ 8 nghề, 7 hệ
+
+Shan loại bỏ nhân vật 2 nghề + 2 hệ khỏi Trận Đồ vì làm giảm độ khó; chỉ giữ tối đa hai nhân vật mang đủ 8 nghề và 7 hệ như Đinh Ngọc, vẫn phải đặt sát một quân. Kiểu `multi` (tập nghề, tập hệ) được thay bằng kiểu `fusion` đơn giản. Danh sách vẫn rỗng ([GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)).
 

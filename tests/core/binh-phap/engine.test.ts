@@ -17,12 +17,13 @@ import {
   type PuzzleState,
   type Ruleset,
   generateObstacles,
-  SPECIAL_CHARACTERS,
-  type MultiPiece,
-  type SpecialCharacter,
+  FUSION_CHARACTERS,
+  MAX_FUSION_CHARACTERS,
+  type FusionCharacter,
+  type FusionPiece,
   playableCount,
 } from "../../../src/core/binh-phap";
-import { ELEMENTS, PROFESSIONS, type Element, type Profession } from "../../../src/core/battle";
+import type { Element, Profession } from "../../../src/core/battle";
 import { createRng } from "../../../src/core/rng";
 
 const HUONG_DAN = RULESETS[0]!; // 3×3, hướng dẫn
@@ -473,79 +474,73 @@ describe("chướng ngại và bàn chữ nhật", () => {
   });
 });
 
-describe("nhân vật đặc biệt nhiều nghề/hệ", () => {
-  const multi = (professions: Profession[], elements: Element[], uid = "m"): MultiPiece => ({ kind: "multi", uid, characterId: "dinhNgoc", professions, elements });
-  const DUNG_HOP = multi([...PROFESSIONS], [...ELEMENTS]); // kiểu Đinh Ngọc: đủ mọi nghề, mọi hệ
+describe("nhân vật dung hợp (kiểu Đinh Ngọc)", () => {
+  const NGOC: FusionPiece = { kind: "fusion", uid: "f", characterId: "dinhNgoc" };
 
-  it("khớp khi tập nghề giao nhau hoặc tập hệ giao nhau", () => {
-    const m = multi(["tuongSi", "phapSu"], ["kim"]);
-    const viaProfession = setup(KHO, { "3,3": n("phapSu", "hoa") }, m);
-    assert.deepEqual(checkPlacement(viaProfession, m, 3, 4), { ok: true });
-    const viaElement = setup(KHO, { "3,3": n("ySu", "kim") }, m);
-    assert.deepEqual(checkPlacement(viaElement, m, 3, 4), { ok: true });
-    const none = setup(KHO, { "3,3": n("ySu", "moc") }, m);
-    assert.equal(checkPlacement(none, m, 3, 4).ok, false);
+  it("khớp mọi quân kề thường", () => {
+    const s = setup(KHO, { "3,3": n("ySu", "kim"), "5,5": n("quanSu", "phong") }, NGOC);
+    assert.deepEqual(checkPlacement(s, NGOC, 3, 4), { ok: true });
+    assert.deepEqual(checkPlacement(s, NGOC, 4, 5), { ok: true });
   });
 
-  it("quân thường đặt cạnh quân nhiều nghề/hệ cũng khớp theo tập", () => {
-    const s = setup(KHO, { "3,3": multi(["tuongSi", "phapSu"], ["kim", "hoa"]) }, n("phapSu", "moc"));
-    assert.deepEqual(checkPlacement(s, s.hand, 3, 4), { ok: true });
-    assert.equal(checkPlacement({ ...s, hand: n("ySu", "moc") }, n("ySu", "moc"), 3, 4).ok, false);
-  });
-
-  it("hai quân nhiều nghề/hệ rời nhau thì không khớp", () => {
-    const a = multi(["tuongSi", "phapSu"], ["kim", "hoa"], "a");
-    const b = multi(["ySu", "muuSi"], ["moc", "tho"], "b");
-    const s = setup(KHO, { "3,3": a }, b);
-    assert.equal(checkPlacement(s, b, 3, 4).ok, false);
-  });
-
-  it("quân dung hợp khớp mọi quân kề nhưng vẫn phải đặt sát một quân, khác Quân Lệnh", () => {
-    const s = setup(KHO, { "3,3": n("ySu", "kim"), "5,5": n("quanSu", "phong") }, DUNG_HOP);
-    assert.deepEqual(checkPlacement(s, DUNG_HOP, 3, 4), { ok: true });
-    assert.deepEqual(checkPlacement(s, DUNG_HOP, 4, 5), { ok: true }); // kề (5,5)
-    assert.deepEqual(checkPlacement(s, DUNG_HOP, 0, 0), { ok: false, reason: "notAdjacent", blockers: [] });
+  it("vẫn phải đặt sát một quân, khác Quân Lệnh", () => {
+    const s = setup(KHO, { "3,3": n("ySu", "kim") }, NGOC);
+    assert.deepEqual(checkPlacement(s, NGOC, 0, 0), { ok: false, reason: "notAdjacent", blockers: [] });
     assert.deepEqual(checkPlacement(s, wild(), 0, 0), { ok: true });
-    // Bàn trống: đặt được ở ô bất kỳ như quân thường.
-    assert.deepEqual(checkPlacement(setup(KHO, {}, DUNG_HOP), DUNG_HOP, 0, 0), { ok: true });
+    assert.deepEqual(legalPlacements(s).map((i) => [Math.floor(i / 8), i % 8]), [[2, 3], [3, 2], [3, 4], [4, 3]]);
+  });
+
+  it("bàn trống thì đặt ở ô bất kỳ như quân thường", () => {
+    const s = setup(KHO, {}, NGOC);
+    assert.equal(legalPlacements(s).length, 64);
+  });
+
+  it("không đặt đè lên quân khác và không đặt vào chướng ngại", () => {
+    const s = setup(KHO, { "3,3": n("ySu", "kim") }, NGOC);
+    assert.equal(!checkPlacement(s, NGOC, 3, 3).ok && (checkPlacement(s, NGOC, 3, 3) as { reason: string }).reason, "occupied");
   });
 
   it("quân thường kề quân dung hợp vẫn phải khớp các quân kề khác", () => {
-    const s = setup(KHO, { "3,3": DUNG_HOP, "2,4": n("ySu", "kim") }, n("tuongSi", "hoa"));
+    const s = setup(KHO, { "3,3": NGOC, "2,4": n("ySu", "kim") }, n("tuongSi", "hoa"));
     const c = checkPlacement(s, s.hand, 3, 4);
     assert.equal(!c.ok && c.reason, "mismatch");
     assert.deepEqual(!c.ok && c.blockers, [idx(8, 2, 4)]);
+    // Khớp quân kia thì được, nhờ quân dung hợp không cản.
+    const ok = setup(KHO, { "3,3": NGOC, "2,4": n("ySu", "kim") }, n("quanSu", "kim"));
+    assert.deepEqual(checkPlacement(ok, ok.hand, 3, 4), { ok: true });
   });
 
-  it("điểm cộng thêm tính khi giao nhau cả nghề lẫn hệ", () => {
-    const m = multi(["ySu", "phapSu"], ["kim", "hoa"]);
-    const s = setup(KHO, { "3,3": n("ySu", "kim") }, m);
-    const t = transition(s, place(3, 4));
-    assert.ok(t.ok);
-    assert.equal(t.state.score, KHO.score.place + KHO.score.perfectNeighbor);
-    const half = setup(KHO, { "3,3": n("ySu", "moc") }, m);
-    const t2 = transition(half, place(3, 4));
+  it("không tạo điểm khớp hoàn hảo, cả khi đặt lẫn khi làm quân kề", () => {
+    const placing = setup(KHO, { "3,3": n("ySu", "kim") }, NGOC);
+    const t = transition(placing, place(3, 4));
+    assert.ok(t.ok && t.state.score === KHO.score.place);
+    const beside = setup(KHO, { "3,3": NGOC }, n("ySu", "kim"));
+    const t2 = transition(beside, place(3, 4));
     assert.ok(t2.ok && t2.state.score === KHO.score.place);
   });
 
-  it("danh sách mặc định chỉ chứa mục hợp lệ cho các bậc có thật", () => {
+  it("hai quân dung hợp đặt cạnh nhau được", () => {
+    const s = setup(KHO, { "3,3": NGOC }, { ...NGOC, uid: "g", characterId: "nhanVatKhac" });
+    assert.deepEqual(checkPlacement(s, s.hand, 3, 4), { ok: true });
+  });
+
+  it("danh sách mặc định hợp lệ: tối đa 2 nhân vật, không trùng, bậc có thật", () => {
+    assert.ok(FUSION_CHARACTERS.length <= MAX_FUSION_CHARACTERS);
+    assert.equal(MAX_FUSION_CHARACTERS, 2);
     const ids = new Set<string>();
-    for (const sp of SPECIAL_CHARACTERS) {
-      assert.ok(!ids.has(sp.characterId), `trùng ${sp.characterId}`);
-      ids.add(sp.characterId);
-      assert.ok(sp.professions.length >= 1 && sp.elements.length >= 1);
-      assert.ok(sp.professions.every((p) => (PROFESSIONS as readonly string[]).includes(p)));
-      assert.ok(sp.elements.every((e) => (ELEMENTS as readonly string[]).includes(e)));
-      assert.ok(sp.professions.length >= 2 || sp.elements.length >= 2, `${sp.characterId} phải có từ hai nghề hoặc hai hệ`);
-      assert.ok(sp.levels.every((l) => RULESETS.some((r) => r.id === l)));
+    for (const f of FUSION_CHARACTERS) {
+      assert.ok(!ids.has(f.characterId), `trùng ${f.characterId}`);
+      ids.add(f.characterId);
+      assert.ok(f.name.length > 0 && f.levels.length > 0);
+      assert.ok(f.levels.every((l) => RULESETS.some((r) => r.id === l)));
     }
   });
 
-  /** Thay tạm bậc Đại trận trong registry để thử danh sách đặc biệt khác rỗng, rồi trả lại. */
-  const withSpecials = <T,>(specials: readonly SpecialCharacter[], multiPermille: number, run: (rules: Ruleset) => T): T => {
+  /** Thay tạm bậc Đại trận trong registry để thử danh sách dung hợp khác rỗng, rồi trả lại. */
+  const withFusions = <T,>(fusions: readonly FusionCharacter[], fusionPermille: number, run: (rules: Ruleset) => T): T => {
     const k = RULESETS.findIndex((r) => r.id === "dai-tran");
     const original = RULESETS[k]!;
-    const patched: Ruleset = { ...original, specials, multiPermille };
+    const patched: Ruleset = { ...original, fusions, fusionPermille };
     (RULESETS as Ruleset[])[k] = patched;
     try {
       return run(patched);
@@ -553,63 +548,64 @@ describe("nhân vật đặc biệt nhiều nghề/hệ", () => {
       (RULESETS as Ruleset[])[k] = original;
     }
   };
-  const hands = (rules: Ruleset, seed: number, n: number) => {
+  const hands = (rules: Ruleset, seed: number, count: number) => {
     let s = createPuzzle(rules, seed);
     const out: string[] = [];
-    for (let i = 0; i < n; i++) {
+    for (let i = 0; i < count; i++) {
       out.push(JSON.stringify(s.hand));
       const t = transition(s, { kind: "discard" });
       s = !t.ok || t.state.phase === "lost" ? createPuzzle(rules, seed + i + 1) : t.state;
     }
     return out;
   };
-  const NGOC: SpecialCharacter = { characterId: "dinhNgoc", name: "Đinh Ngọc", professions: [...PROFESSIONS], elements: [...ELEMENTS], levels: ["dai-tran"] };
+  const NGOC_CHAR: FusionCharacter = { characterId: "dinhNgoc", name: "Đinh Ngọc", levels: ["dai-tran"] };
+  const KHAC_CHAR: FusionCharacter = { characterId: "nhanVatKhac", name: "Nhân vật khác", levels: ["dai-tran"] };
 
-  it("danh sách đặc biệt rỗng: dãy quân y hệt khi multiPermille bằng 0", () => {
-    const a = withSpecials([], 0, (r) => hands(r, 11, 300));
-    const b = withSpecials([], 40, (r) => hands(r, 11, 300));
+  it("danh sách rỗng: dãy quân y hệt khi fusionPermille bằng 0", () => {
+    const a = withFusions([], 0, (r) => hands(r, 11, 300));
+    const b = withFusions([], 150, (r) => hands(r, 11, 300));
     assert.deepEqual(a, b);
   });
 
-  it("có nhân vật đặc biệt: xuất hiện đúng tỉ lệ, không ra liền sau quân đặc biệt, deterministic", () => {
-    withSpecials([NGOC], 100, (rules) => {
-      let multis = 0;
+  it("có nhân vật: ra đúng tỉ lệ, chọn đều giữa các nhân vật, không liền sau quân đặc biệt, deterministic", () => {
+    withFusions([NGOC_CHAR, KHAC_CHAR], 100, (rules) => {
+      const counts: Record<string, number> = {};
       let total = 0;
-      let prev = "normal";
+      let fusions = 0;
       for (let seed = 1; seed <= 40; seed++) {
         let s = createPuzzle(rules, seed);
+        let prev = "normal";
         for (let i = 0; i < 60; i++) {
           if (prev !== "normal" && s.hand.kind !== "normal") assert.fail("hai quân đặc biệt liên tiếp");
-          if (s.hand.kind === "multi") {
-            multis += 1;
-            assert.equal(s.hand.characterId, "dinhNgoc");
-            assert.equal(s.hand.professions.length, PROFESSIONS.length);
+          if (s.hand.kind === "fusion") {
+            fusions += 1;
+            counts[s.hand.characterId] = (counts[s.hand.characterId] ?? 0) + 1;
           }
           total += 1;
           prev = s.hand.kind;
           const t = transition(s, { kind: "discard" });
-          if (!t.ok || t.state.phase === "lost") { s = createPuzzle(rules, seed * 1000 + i); prev = "normal"; } else s = t.state;
+          if (!t.ok || t.state.phase === "lost") {
+            s = createPuzzle(rules, seed * 1000 + i);
+            prev = "normal";
+          } else s = t.state;
         }
       }
-      const rate = multis / total;
+      const rate = fusions / total;
       assert.ok(rate > 0.05 && rate < 0.13, `tỉ lệ ${rate}`);
+      assert.deepEqual(Object.keys(counts).sort(), ["dinhNgoc", "nhanVatKhac"]);
       assert.deepEqual(hands(rules, 5, 100), hands(rules, 5, 100));
     });
   });
 
-  it("lưu và nạp quân nhiều nghề/hệ; từ chối tập rỗng, trùng hoặc sai giá trị", () => {
+  it("lưu và nạp quân dung hợp; từ chối thiếu id", () => {
     const rules = RULESETS[3]!;
     const base = JSON.parse(serializePuzzle(createPuzzle(rules, 2))) as Record<string, unknown>;
-    const good = { ...base, hand: { kind: "multi", uid: "x", characterId: "dinhNgoc", professions: ["tuongSi", "ySu"], elements: ["kim"] } };
+    const good = { ...base, hand: { kind: "fusion", uid: "x", characterId: "dinhNgoc" } };
     const parsed = parsePuzzle(good);
-    assert.ok(parsed && parsed.hand.kind === "multi");
+    assert.ok(parsed && parsed.hand.kind === "fusion");
     assert.deepEqual(parsePuzzle(serializePuzzle(parsed!)), parsed);
-    for (const hand of [
-      { ...good.hand, professions: [] },
-      { ...good.hand, professions: ["tuongSi", "tuongSi"] },
-      { ...good.hand, elements: ["rồng"] },
-      { ...good.hand, characterId: "" },
-      { ...good.hand, elements: [...ELEMENTS, "kim"] },
-    ]) assert.equal(parsePuzzle({ ...good, hand }), null);
+    for (const hand of [{ ...good.hand, characterId: "" }, { kind: "fusion", uid: "x" }, { ...good.hand, uid: "" }]) {
+      assert.equal(parsePuzzle({ ...good, hand }), null);
+    }
   });
 });

@@ -12,16 +12,14 @@ export interface NormalPiece {
   readonly element: Element;
 }
 /**
- * Quân nhân vật đặc biệt có từ hai nghề hoặc hai hệ trở lên (ví dụ Đinh Ngọc dung hợp cả 8 nghề và 7 hệ). Khớp một
- * quân khác khi **tập nghề giao nhau hoặc tập hệ giao nhau**. Vẫn phải đặt sát một quân (khác Quân Lệnh) và vẫn phải
- * khớp từng quân kề. Danh sách nhân vật ở `specials.ts`.
+ * Quân nhân vật dung hợp (ví dụ Đinh Ngọc): mang đủ mọi nghề và mọi hệ nên khớp mọi quân kề. Khác Quân Lệnh ở chỗ
+ * vẫn **phải đặt sát một quân** (trừ khi bàn trống) và quân đặt cạnh nó vẫn phải khớp các quân kề khác. Chỉ có tối đa
+ * `MAX_FUSION_CHARACTERS` nhân vật loại này, liệt kê ở `specials.ts`.
  */
-export interface MultiPiece {
-  readonly kind: "multi";
+export interface FusionPiece {
+  readonly kind: "fusion";
   readonly uid: string;
   readonly characterId: string;
-  readonly professions: readonly Profession[];
-  readonly elements: readonly Element[];
 }
 /** Quân Lệnh (wild): đặt ở ô trống bất kỳ, khớp mọi quân kề. */
 export interface WildPiece {
@@ -33,11 +31,9 @@ export interface EraserPiece {
   readonly kind: "eraser";
   readonly uid: string;
 }
-export type Piece = NormalPiece | MultiPiece | WildPiece | EraserPiece;
+export type Piece = NormalPiece | FusionPiece | WildPiece | EraserPiece;
 /** Quân đã nằm trên bàn (không bao giờ là Thu Hồi). */
-export type BoardPiece = NormalPiece | MultiPiece | WildPiece;
-/** Quân có nghề và hệ (thường hoặc đặc biệt nhiều nghề/hệ). */
-export type TypedPiece = NormalPiece | MultiPiece;
+export type BoardPiece = NormalPiece | FusionPiece | WildPiece;
 
 export interface Cell {
   /** Ô chướng ngại (địa hình): không đặt được quân, không cần khai thông, không tính vào hàng/cột kín. */
@@ -79,10 +75,10 @@ export interface Ruleset {
   /** Xác suất sinh quân đặc biệt, tính theo phần nghìn. Không bao giờ sinh hai quân đặc biệt liên tiếp. */
   readonly wildPermille: number;
   readonly eraserPermille: number;
-  /** Xác suất (phần nghìn) sinh quân nhân vật đặc biệt; chỉ có tác dụng khi `specials` không rỗng. */
-  readonly multiPermille: number;
-  /** Nhân vật đặc biệt đã duyệt cho bậc này (lọc từ `SPECIAL_CHARACTERS`). Rỗng nghĩa là bậc không có quân loại này. */
-  readonly specials: readonly SpecialCharacter[];
+  /** Xác suất (phần nghìn) sinh quân nhân vật dung hợp; chỉ có tác dụng khi `fusions` không rỗng. */
+  readonly fusionPermille: number;
+  /** Nhân vật dung hợp đã duyệt cho bậc này (lọc từ `FUSION_CHARACTERS`). Rỗng nghĩa là bậc không có quân loại này. */
+  readonly fusions: readonly FusionCharacter[];
   /** Số ô chướng ngại sinh ngẫu nhiên theo seed, tính theo phần trăm diện tích bàn (0 = bàn đặc). Bị `randomSize` ghi đè. */
   readonly obstaclePercent: number;
   /** Thanh Bỏ Lệnh chạy 0..maxHeat; bỏ quân khi thanh đã đầy là thua. */
@@ -90,12 +86,10 @@ export interface Ruleset {
   readonly score: ScoreWeights;
 }
 
-/** Một nhân vật đặc biệt được phép xuất hiện trong Trận Đồ. */
-export interface SpecialCharacter {
+/** Một nhân vật dung hợp được phép xuất hiện trong Trận Đồ. Luật không cần nghề/hệ vì quân khớp tất cả. */
+export interface FusionCharacter {
   readonly characterId: string;
   readonly name: string;
-  readonly professions: readonly Profession[];
-  readonly elements: readonly Element[];
   /** Id các bậc (`Ruleset.id`) được phép sinh nhân vật này. */
   readonly levels: readonly string[];
 }
