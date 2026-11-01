@@ -10,7 +10,7 @@
 // - Chướng ngại của Đại trận tăng theo diện tích (10% ở 7×7 đến 16% ở 10×10) và có trần 72 ô chơi được để ván
 //   dài khoảng 100 nước thay vì hơn 150 ở bàn 10×10.
 
-import { specialsForLevel } from "./specials";
+import { fusionsForLevel } from "./specials";
 import type { Ruleset } from "./types";
 
 export const SCHEMA_VERSION = 3;
@@ -29,8 +29,8 @@ export const RULESETS: readonly Ruleset[] = [
     elements: ["kim", "hoa"],
     wildPermille: 0,
     eraserPermille: 0,
-    multiPermille: 0,
-    specials: specialsForLevel("huong-dan"),
+    fusionPermille: 0,
+    fusions: fusionsForLevel("huong-dan"),
     obstaclePercent: 0,
     maxHeat: 3,
     score: SCORE,
@@ -46,8 +46,8 @@ export const RULESETS: readonly Ruleset[] = [
     elements: ["kim", "thuy", "hoa", "tho"],
     wildPermille: 80,
     eraserPermille: 40,
-    multiPermille: 0,
-    specials: specialsForLevel("thuong"),
+    fusionPermille: 0,
+    fusions: fusionsForLevel("thuong"),
     obstaclePercent: 8,
     maxHeat: 3,
     score: SCORE,
@@ -63,8 +63,8 @@ export const RULESETS: readonly Ruleset[] = [
     elements: ["kim", "moc", "tho", "loi", "phong"],
     wildPermille: 80,
     eraserPermille: 40,
-    multiPermille: 0,
-    specials: specialsForLevel("kho"),
+    fusionPermille: 0,
+    fusions: fusionsForLevel("kho"),
     obstaclePercent: 10,
     maxHeat: 3,
     score: SCORE,
@@ -81,8 +81,8 @@ export const RULESETS: readonly Ruleset[] = [
     elements: ["kim", "moc", "thuy", "hoa", "tho", "loi", "phong"],
     wildPermille: 100,
     eraserPermille: 40,
-    multiPermille: 40,
-    specials: specialsForLevel("dai-tran"),
+    fusionPermille: 15,
+    fusions: fusionsForLevel("dai-tran"),
     obstaclePercent: 13,
     maxHeat: 3,
     score: SCORE,

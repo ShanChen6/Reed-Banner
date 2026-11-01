@@ -1,7 +1,6 @@
 // Luật đặt quân thuần: không đổi state, không ngẫu nhiên, không đọc giờ.
 
-import type { Element, Profession } from "../battle";
-import type { BoardPiece, Cell, Piece, PlacementCheck, PuzzleState, TypedPiece } from "./types";
+import type { BoardPiece, Cell, NormalPiece, Piece, PlacementCheck, PuzzleState } from "./types";
 
 export const idx = (width: number, row: number, col: number): number => row * width + col;
 
@@ -27,26 +26,18 @@ export function boardIsEmpty(cells: readonly Cell[]): boolean {
   return cells.every((c) => c.piece === null);
 }
 
-export function professionsOf(p: TypedPiece): readonly Profession[] {
-  return p.kind === "multi" ? p.professions : [p.profession];
-}
-export function elementsOf(p: TypedPiece): readonly Element[] {
-  return p.kind === "multi" ? p.elements : [p.element];
-}
-const intersects = <T,>(a: readonly T[], b: readonly T[]) => a.some((x) => b.includes(x));
-
-/** Hai quân có nghề và hệ khớp khi tập nghề giao nhau hoặc tập hệ giao nhau (quân thường: một nghề, một hệ). */
-export function typesMatch(a: TypedPiece, b: TypedPiece): boolean {
-  return intersects(professionsOf(a), professionsOf(b)) || intersects(elementsOf(a), elementsOf(b));
+/** Hai quân thường khớp khi cùng nghề hoặc cùng hệ. */
+export function typesMatch(a: NormalPiece, b: NormalPiece): boolean {
+  return a.profession === b.profession || a.element === b.element;
 }
 /** Khớp cả nghề lẫn hệ (dùng cho điểm cộng thêm). */
-export function typesMatchBoth(a: TypedPiece, b: TypedPiece): boolean {
-  return intersects(professionsOf(a), professionsOf(b)) && intersects(elementsOf(a), elementsOf(b));
+export function typesMatchBoth(a: NormalPiece, b: NormalPiece): boolean {
+  return a.profession === b.profession && a.element === b.element;
 }
 
-/** Quân mới khớp một quân kề khi cùng nghề hoặc cùng hệ; Quân Lệnh khớp tất cả. */
+/** Quân mới khớp một quân kề khi cùng nghề hoặc cùng hệ; Quân Lệnh và quân dung hợp khớp tất cả. */
 export function matches(piece: Piece, neighbor: BoardPiece): boolean {
-  if (piece.kind === "wild" || piece.kind === "eraser" || neighbor.kind === "wild") return true;
+  if (piece.kind !== "normal" || neighbor.kind !== "normal") return true;
   return typesMatch(piece, neighbor);
 }
 
@@ -66,7 +57,7 @@ export function checkPlacement(state: PuzzleState, piece: Piece, row: number, co
   }
   if (target.piece) return { ok: false, reason: "occupied", blockers: [] };
   if (piece.kind === "wild") return { ok: true };
-  // Quân thường và quân nhiều nghề/hệ cùng luật: sát một quân, khớp từng quân kề.
+  // Quân thường và quân dung hợp cùng luật: sát một quân, khớp từng quân kề (quân dung hợp khớp tất cả).
   if (boardIsEmpty(cells)) return { ok: true };
   const occupied = neighbors4(width, height, row, col).filter((n) => cells[n]!.piece !== null);
   if (occupied.length === 0) return { ok: false, reason: "notAdjacent", blockers: [] };
