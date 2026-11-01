@@ -1,6 +1,6 @@
 # 02 — BINH PHÁP: Game Design Document v0.1
 
-> Cập nhật: 31/10/2026
+> Cập nhật: 01/11/2026
 > Trạng thái: **DRAFT** — concept đã thống nhất (tên hiển thị **Trận Đồ**); bản chơi thử offline đã có code theo [mục 11](#11-bản-triển-khai-đầu-tiên-chơi-thử-offline), các luật đề xuất vẫn chờ Shan chốt ở BP-00.
 
 ## 1. Định vị
@@ -90,25 +90,50 @@ Ví dụ: trên là Y sư–Kim, trái là Pháp sư–Hỏa ⇒ quân Y sư–H
 
 ## 11. Bản triển khai đầu tiên (chơi thử offline)
 
-Tên hiển thị trong game là **Trận Đồ** (đã duyệt tên 26/10/2026); "Binh Pháp" là tên thiết kế. Bản này đi trước BP-00 theo yêu cầu của Shan "đọc docs, thảo luận và triển khai": mọi câu hỏi ở mục 10 lấy **giá trị đề xuất làm mặc định**, nằm gọn trong `src/core/binh-phap/rulesets.ts` và `types.ts` nên đổi được mà không sửa luật. Chưa có nghĩa là đã duyệt.
+Tên hiển thị trong game là **Trận Đồ** (đã duyệt tên 26/10/2026); "Binh Pháp" là tên thiết kế. Bản này đi trước BP-00 theo yêu cầu của Shan "đọc docs, thảo luận và triển khai". Các giá trị nằm gọn trong `src/core/binh-phap/rulesets.ts` và `types.ts`. Cột cuối ghi nguồn từng giá trị: **Shan chốt** hoặc **mặc định đề xuất** (chưa duyệt).
 
-| Câu hỏi mục 10 | Mặc định đang chạy | Ghi chú |
+| Giá trị | Đang chạy | Nguồn |
 |---|---|---|
-| 1. Kích thước | Theo bậc: 3×3, 5×5, 8×8, 8×8 | Không có một cỡ duy nhất; 8×8 ở hai bậc cao |
-| 2. Thanh Bỏ Lệnh | 0–3; đặt quân −1; dọn hàng/cột về 0; bỏ khi đã đầy là thua | Thu Hồi cũng hạ 1 |
-| 3. Quân Lệnh / Thu Hồi | Có từ bậc Thường (6% / 6%); bậc Nhập môn không có | Không bao giờ ra hai quân đặc biệt liên tiếp; không ra Thu Hồi khi bàn trống |
-| 4. Điểm, sinh quân, xem trước | Đặt 10, +5 mỗi quân kề khớp cả nghề lẫn hệ, mỗi hàng/cột dọn 50, thắng 500; chưa xem trước quân kế | Điểm xuất phát, chưa cân bằng theo cảm giác chơi |
-| 5. Offline hay server | Offline, khách, không thưởng, không xếp hạng | Ván dở lưu ở `localStorage`, phân biệt rõ không phải dữ liệu đã server xác minh |
+| Cỡ bàn | Hình chữ nhật **tùy ý** `width × height`, chọn theo bậc: 3×3, 5×7, 7×9, 9×9 | Shan chốt hướng 01/11/2026 (không ép bàn vuông); số cụ thể là điểm xuất phát |
+| Ô chướng ngại | Rải ngẫu nhiên theo seed: 0% / 10% / 12% / 14% diện tích. Không đặt quân được, không cần khai thông, không nối được hai quân, các ô còn lại luôn liền nhau | Shan chốt 01/11/2026; tỉ lệ là điểm xuất phát |
+| Thanh Bỏ Lệnh | 0–3; đặt quân hạ 1; dọn hàng/cột về 0; bỏ khi đã đầy là thua | Giữ như đề xuất (Shan chưa có đề xuất khác); chưa kiểm phương án "dọn hạ 2" |
+| Điểm | Đặt 10; +5 mỗi quân kề khớp cả nghề lẫn hệ; mỗi hàng/cột dọn 50; thắng 500 + 100 mỗi vạch Bỏ Lệnh còn trống + 5 mỗi nước nhanh hơn chuẩn (chuẩn = 3 nước × số ô chơi được) | Shan giao "làm hợp lý" 01/11/2026 |
+| Quân đặc biệt | Quân Lệnh 8% / Thu Hồi 4% (Đại trận Quân Lệnh 10%); Nhập môn không có. Không ra hai quân đặc biệt liên tiếp; không ra Thu Hồi khi bàn trống | Shan không có ý kiến, dùng đề xuất |
+| Offline hay server | Offline, khách, không thưởng, không xếp hạng | Mặc định đề xuất; xếp hạng và thưởng ở [mục 12](#12-xếp-hạng-và-thưởng-thiết-kế-chưa-có-code) |
 
-**Bốn bậc** (`RULESETS`): Nhập môn 3×3 (2 nghề × 2 hệ, không quân đặc biệt); Thường 5×5 (3 × 4); Khó 8×8 (4 × 4); Đại trận 8×8 (6 × 6). Mọi cặp nghề–hệ đều có ít nhất một tướng trong danh mục nên chân dung luôn khớp thuộc tính; quân đặc biệt dùng biểu tượng mới vẽ bằng SVG. Binh Pháp chỉ dùng 6 nghề active, chưa đụng Xạ thủ/Sát thủ.
+**Bốn bậc** (`RULESETS`): Nhập môn 3×3 (2 nghề × 2 hệ, không chướng ngại, không quân đặc biệt); Thường 5×7 (3 × 4); Khó 7×9 (4 × 5); Đại trận 9×9 (6 × 6). Mọi cặp nghề–hệ đều có ít nhất một tướng trong danh mục nên chân dung luôn khớp thuộc tính; quân đặc biệt và chướng ngại dùng biểu tượng vẽ bằng SVG. Binh Pháp chỉ dùng 6 nghề active, chưa đụng Xạ thủ/Sát thủ. Engine nhận bất kỳ cỡ nào, nên thêm bậc hay chế độ tự chọn cỡ bàn (chơi thường, không xếp hạng) chỉ là thêm một mục trong `RULESETS`.
 
-**Quyết định chi tiết đã chốt khi code** (mục 3–6 chưa đủ rõ):
+**Luật chi tiết đã chốt khi code** (mục 3–6 chưa đủ rõ):
 
 - Quân Lệnh kề không miễn kiểm tra các quân kề khác của quân thường đặt sau (đúng mục 6).
 - Thu Hồi chỉ đặt lên ô có quân, kể cả Quân Lệnh; không đổi `covered`. Đặt xong tính là một nước thành công (hạ thanh 1, tiến lượt) nhưng không cộng điểm đặt.
+- **Chướng ngại:** chỉ sinh trước quân đầu tiên (thứ tự RNG cố định); mỗi ô chỉ bị chặn nếu các ô còn lại vẫn liền nhau theo 4 hướng. Thắng khi khai thông hết *ô chơi được*.
+- **Đường kín với chướng ngại:** hàng/cột kín khi mọi ô chơi được của nó đều có quân, nhưng chỉ tính nếu có **từ 3 ô chơi được** (tránh dọn miễn phí ở chỗ chỉ còn 1–2 ô). Chướng ngại không bị dọn.
 - Dọn hàng/cột: lấy hợp các ô, mỗi đường tính 50 điểm một lần, rồi mới xét thắng. Thắng được xét trước khi sinh quân mới nên không tiêu RNG.
 - Lệnh sai không đổi state, điểm, thanh Bỏ Lệnh hay RNG (kiểm thử `tests/core/binh-phap/engine.test.ts`).
 - Không có Undo.
 
-**Code:** `src/core/binh-phap/` (luật, reducer, sinh quân, lưu/nạp), `src/app/game/formation/FormationScreen.tsx` (scene `FORMATION`, đường dẫn `/game/formation`), mô phỏng `scripts/binh-phap-sim.ts`. Số đo ở [05 — mô phỏng và QA](05-binh-phap-balance-qa.md#kết-quả-mô-phỏng-baseline-31102026).
+**Code:** `src/core/binh-phap/` (luật, reducer, sinh quân và địa hình, lưu/nạp), `src/app/game/formation/FormationScreen.tsx` (scene `FORMATION`, đường dẫn `/game/formation`), mô phỏng `scripts/binh-phap-sim.ts`. Số đo ở [05 — mô phỏng và QA](05-binh-phap-balance-qa.md#kết-quả-mô-phỏng-baseline-01112026). Lưu ván dở ở `localStorage`; đổi bộ luật của một bậc thì save cũ bị bỏ (fail-closed).
 
+## 12. Xếp hạng và thưởng (thiết kế, chưa có code)
+
+Shan (01/11/2026): xếp hạng cao được nhận thưởng; thưởng chia theo mức độ chơi để công bằng. Các điểm dưới đây là **đề xuất** để Shan chốt; không có số nào đã chạy. Làm ở BP-05/BP-06, sau khi BP-00 chốt luật.
+
+**Công bằng bắt buộc.** Điểm do client báo thì không tin được, và seed do client chọn thì chọn được ván dễ. Vì vậy:
+
+1. **Seed do server phát** theo bậc và theo kỳ, giống [Thử thách hằng ngày](../README.md#51-thử-thách-hằng-ngày-claude-đặt-20102026-chờ-shan-duyệt): mọi người chơi cùng một bàn, cùng chướng ngại, cùng dãy quân trong kỳ đó. Chướng ngại và quân đều sinh từ seed nên khớp nhau.
+2. **Client gửi nhật ký lệnh** (`place r,c` hoặc `discard`); server chạy lại bằng đúng engine `src/core/binh-phap` (đã có `replay`), tự tính điểm, từ chối nhật ký có lệnh sai hoặc quá dài. Điểm hiển thị là điểm server tính.
+3. **Mỗi người một lượt tính điểm mỗi kỳ và mỗi bậc** (server ghi chỗ trước khi bày bàn, như Nhật Lệnh). Chơi tiếp ngoài lượt đó vẫn được nhưng không lên bảng, không thưởng.
+4. Hạng thắng bằng điểm; bằng điểm thì ít nước hơn, rồi nộp sớm hơn.
+
+**Kỳ:** đề xuất bảng theo **ngày** (đổi 0 giờ giờ Việt Nam, như Nhật Lệnh) cho Thường và Khó, và bảng theo **tuần** (thứ Hai 0 giờ) cho Đại trận. Nhập môn là bậc học, không xếp hạng, không thưởng.
+
+**Thưởng chia theo bậc** (vàng, đề xuất; mốc so với Nhật Lệnh thắng 150 vàng và Đấu trường thắng +50). Nhận một lần mỗi kỳ, theo hạng chốt lúc đổi kỳ:
+
+| Bậc | Hạng 1 | Hạng 2–3 | Top 10 | Top 50% | Tham gia và thắng |
+|---|---|---|---|---|---|
+| Thường (ngày) | 150 | 100 | 60 | 30 | 20 |
+| Khó (ngày) | 300 | 200 | 120 | 60 | 40 |
+| Đại trận (tuần) | 1 000 | 600 | 350 | 150 | 80 |
+
+Thắng ván tính điểm mới được nhận thưởng "Tham gia và thắng"; thua thì không tính hạng. Thưởng đi qua cùng biên nhận idempotent như thưởng Campaign (không phát hai lần, nhận qua server). Bảng nằm cùng trang `/game/leaderboard`, thêm tab Trận Đồ có chọn bậc. Cần thêm: bảng DB (`formation_entries`: kỳ, bậc, người chơi, điểm, nước, nhật ký) và cờ tính năng server mặc định tắt. Phần này thuộc [BP-05/06](07-implementation-roadmap.md), cần review kinh tế và chống gian lận như [05 mục T4](05-binh-phap-balance-qa.md).

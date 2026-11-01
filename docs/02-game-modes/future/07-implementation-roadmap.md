@@ -5,12 +5,12 @@
 | Task | Phạm vi | Phụ thuộc | DoD |
 |---|---|---|---|
 | BP-00 | Chốt v1 ruleset / security / names / MVP, ADR | Docs được duyệt | Rulebook nhất quán + sign-off. **Chưa sign-off**: code chạy giá trị đề xuất ([GDD mục 11](02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline)) |
-| BP-01 | Core reducer, validator, scoring events, 4-neighbor, lines, wild/eraser | BP-00 | Unit & property-based tests passing. **Đã làm 31/10/2026** (24 test, chưa có property-based) |
+| BP-01 | Core reducer, validator, scoring events, 4-neighbor, lines, wild/eraser | BP-00 | Unit & property-based tests passing. **Đã làm 31/10/2026** (33 test, chưa có property-based; có bàn chữ nhật và chướng ngại) |
 | BP-02 | Seeded piece generator, pool, policy agent, Monte Carlo simulator | BP-01 | Replay deterministic & balance report. **Đã làm** (2 agent random/greedy; chưa lookahead) |
 | BP-03 | Frontend Binh Pháp Board, HUD, controls & assets existing | BP-02 | Desktop/mobile/a11y review. **Đã làm** bản đầu, chờ review mỹ thuật |
 | BP-04 | Scene wiring gated, tutorial, pause/resume local/guest | BP-03 | No navigation/regression issues. **Đã làm một phần**: scene `FORMATION`, resume local; chưa có feature flag, chưa có tutorial riêng (chỉ bảng luật) |
 | BP-05 | Progress persistence and optional online verified run | BP-02/04 | Versioned save; security review |
-| BP-06 | Leaderboard, rewards economy **ONLY if approved** | BP-05 | Server settlement idempotent; economic QA |
+| BP-06 | Leaderboard, rewards economy **ONLY if approved** | BP-05 | Server settlement idempotent; economic QA. Shan đã chốt hướng có xếp hạng và thưởng theo bậc (01/11/2026); thiết kế ở [GDD mục 12](02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-thiết-kế-chưa-có-code), chưa code |
 | BP-07 | QA comprehensive, rollout flag, documentation, regression | BP-04/05 | Formal product acceptance |
 | LT-00 | Chốt rulebook ghép 2 yếu tố, authoring standards/hints/save (docs-only) | Docs concept reviewed | Sign-off, không còn mâu thuẫn content |
 | LT-01 | Slice content graph 3 nhân vật Châu Ngọc/Tô Kim/Vi Triều, validation & portraits | LT-00 | Acyclic / reachable / recipe uniqueness |

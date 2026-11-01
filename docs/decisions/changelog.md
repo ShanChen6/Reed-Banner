@@ -383,3 +383,7 @@ Shan chốt RB-062–075 giá 1.500 vàng mỗi người, dùng mức basic hi�
 
 Triển khai BP-01 đến BP-04 một phần theo yêu cầu của Shan: engine `src/core/binh-phap/`, scene `FORMATION` (`/game/formation`), mô phỏng `scripts/binh-phap-sim.ts`. Các câu hỏi BP-00 lấy giá trị đề xuất làm mặc định, **chưa được duyệt** ([GDD mục 11](../02-game-modes/future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline)). Offline, không thưởng, chưa có feature flag.
 
+## 01/11/2026 — Trận Đồ: bàn chữ nhật, chướng ngại, điểm và thưởng theo bậc
+
+Shan chốt: bàn không cần vuông (5×7, 7×9, 9×9…), có ô chướng ngại ngẫu nhiên không đặt được quân, xếp hạng cao được thưởng và thưởng chia theo bậc chơi; thanh Bỏ Lệnh và xác suất quân đặc biệt giữ đề xuất. Đã code bàn chữ nhật, chướng ngại, điểm mới và quân đặc biệt mới. Xếp hạng và thưởng mới có thiết kế ([GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-thiết-kế-chưa-có-code)), chưa có code.
+

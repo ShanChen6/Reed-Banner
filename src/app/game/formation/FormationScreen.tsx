@@ -11,6 +11,7 @@ import {
   createPuzzle,
   idx,
   legalPlacements,
+  playableCount,
   parsePuzzle,
   rulesetById,
   serializePuzzle,
@@ -66,6 +67,7 @@ function pieceLabel(p: Piece): string {
 
 const REASON_TEXT: Record<Extract<PlacementCheck, { ok: false }>["reason"], string> = {
   outOfBounds: "Ngoài sa bàn.",
+  blocked: "Ô chướng ngại, không đặt được quân.",
   occupied: "Ô này đã có quân.",
   empty: "Thu Hồi chỉ đặt lên ô đang có quân.",
   notAdjacent: "Quân phải đặt sát một quân khác (trên, dưới, trái hoặc phải).",
@@ -185,7 +187,8 @@ function Rules() {
     <ul className="list-disc space-y-1.5 pl-5 text-[15px] leading-snug text-[var(--atlas-ink-on-wood)]/90">
       <li>Mỗi lượt bạn cầm một quân tướng. Chạm ô trống để đặt; ô đó phải sát (trên, dưới, trái, phải) một quân đã có, trừ khi sa bàn đang trống.</li>
       <li>Quân mới phải <b>cùng nghề hoặc cùng hệ</b> với <b>từng</b> quân kề. Có thể cùng nghề với quân này và cùng hệ với quân kia.</li>
-      <li>Hàng hoặc cột kín quân thì được dọn sạch, nhưng ô vẫn giữ vệt <b>khai thông</b>. Khai thông hết mọi ô là thắng.</li>
+      <li>Hàng hoặc cột kín quân (từ 3 ô chơi được trở lên) thì được dọn sạch, nhưng ô vẫn giữ vệt <b>khai thông</b>. Khai thông hết mọi ô chơi được là thắng.</li>
+      <li><b>Chướng ngại</b> (tảng đá) mọc ngẫu nhiên trên sa bàn: không đặt quân được, không cần khai thông và không nối được hai quân.</li>
       <li><b>Quân Lệnh</b> đặt ở ô trống bất kỳ và khớp mọi quân kề. <b>Thu Hồi</b> xóa một quân trên bàn.</li>
       <li><b>Bỏ Lệnh</b> đổi sang quân khác nhưng làm thanh nóng lên; bỏ khi thanh đã đầy là thua. Đặt quân thành công hạ thanh 1, dọn được hàng hoặc cột thì thanh về 0.</li>
     </ul>
@@ -210,7 +213,7 @@ function LevelPicker({ best, onStart }: { best: Record<string, number>; onStart:
               <span className="font-serif text-xl font-bold text-[var(--atlas-title)]">{r.name}</span>
               <span className="text-[15px] leading-snug text-[var(--atlas-ink-on-wood)]/90">{r.blurb}</span>
               <span className="mt-auto text-sm text-[var(--atlas-muted)]">
-                {r.width}×{r.height} · {r.professions.length} nghề × {r.elements.length} hệ
+                {r.width}×{r.height} · {r.professions.length} nghề × {r.elements.length} hệ{r.obstaclePercent > 0 ? " · có chướng ngại" : ""}
                 {best[r.id] ? ` · Điểm cao nhất ${best[r.id]}` : ""}
               </span>
             </button>
@@ -254,7 +257,7 @@ function Board({
   const { width, height } = state;
   const playing = state.phase === "playing";
   const legal = useMemo(() => new Set(legalPlacements(state)), [state]);
-  const total = width * height;
+  const total = useMemo(() => playableCount(state.cells), [state.cells]);
 
   const moveFocus = (to: number) => {
     setFocus(to);
@@ -277,8 +280,9 @@ function Board({
     }
   };
 
-  // Cỡ ô: bàn 8×8 vẫn nằm gọn ở màn 320px; bàn nhỏ thì ô lớn hơn.
-  const cell = width <= 3 ? "clamp(64px,22vw,112px)" : width <= 5 ? "clamp(52px,16vw,88px)" : "clamp(36px,10.5vw,64px)";
+  // Cỡ ô: tối đa theo số cột, và co lại để cả hàng luôn vừa chiều ngang màn (trừ lề trang, khung và khoảng cách ô).
+  const maxCell = width <= 3 ? 112 : width <= 5 ? 88 : width <= 7 ? 72 : 60;
+  const cell = `min(${maxCell}px, calc((100vw - 3rem - ${(width - 1) * 4 + 20}px) / ${width}))`;
 
   return (
     <>
@@ -295,7 +299,7 @@ function Board({
           <div
             ref={boardRef}
             role="grid"
-            aria-label={`Sa bàn ${width} hàng ${height} cột`}
+            aria-label={`Sa bàn ${height} hàng ${width} cột`}
             className="atlas-frame atlas-frame-wood grid w-fit gap-1 p-2"
             style={{ gridTemplateColumns: `repeat(${width}, ${cell})`, gridAutoRows: cell }}
           >
@@ -313,15 +317,16 @@ function Board({
                     onFocus={() => setFocus(i)}
                     onKeyDown={(e) => onKeyDown(e, i)}
                     onClick={() => apply({ kind: "place", row: r, col })}
-                    aria-label={`Hàng ${r + 1}, cột ${col + 1}: ${c.piece ? pieceLabel(c.piece) : c.covered ? "trống, đã khai thông" : "trống, chưa khai thông"}${ok ? ", đặt được" : ""}`}
+                    aria-disabled={c.blocked || undefined}
+                    aria-label={`Hàng ${r + 1}, cột ${col + 1}: ${c.blocked ? "chướng ngại, không đặt được" : c.piece ? pieceLabel(c.piece) : c.covered ? "trống, đã khai thông" : "trống, chưa khai thông"}${ok ? ", đặt được" : ""}`}
                     className={[
                       "relative flex items-center justify-center rounded-md border transition-colors motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--atlas-gold)]",
-                      c.covered ? "border-[#8F6A32] bg-[#E4CC99]" : "border-[#3D2C1D] bg-[#2B1F15]",
+                      c.blocked ? "border-[#1b130d] bg-[repeating-linear-gradient(45deg,#3a3026_0_6px,#2a2119_6px_12px)]" : c.covered ? "border-[#8F6A32] bg-[#E4CC99]" : "border-[#3D2C1D] bg-[#2B1F15]",
                       ok ? "ring-2 ring-[#C9A25A]/90 ring-inset" : "",
                       last === i ? "outline-2 outline-[#8F241D]" : "",
                     ].join(" ")}
                   >
-                    {c.piece ? <PieceFace piece={c.piece} /> : ok ? <span aria-hidden className="size-2 rounded-full bg-[#C9A25A]" /> : null}
+                    {c.blocked ? <Rock /> : c.piece ? <PieceFace piece={c.piece} /> : ok ? <span aria-hidden className="size-2 rounded-full bg-[#C9A25A]" /> : null}
                   </button>
                 </div>
               );
@@ -422,6 +427,16 @@ function PieceFace({ piece, large = false }: { piece: Piece | BoardPiece; large?
       <span className="absolute top-0 left-0 rounded-full bg-[#2B1F15]/85 p-[2px] text-[#E4CC99]"><ProfessionIcon profession={piece.profession} className={icon} /></span>
       <span className="absolute right-0 bottom-0 rounded-full p-[2px]" style={{ background: ELEMENT_COLOR[piece.element] }}><ElementIcon element={piece.element} className={icon} /></span>
     </span>
+  );
+}
+
+/** Chướng ngại: tảng đá xám, không phải ô để chơi. */
+function Rock() {
+  return (
+    <svg viewBox="0 0 48 48" className="size-full p-1.5" aria-hidden focusable="false">
+      <path d="M8 36 L14 18 L24 10 L35 16 L41 34 L32 40 L16 40 Z" fill="#6b6256" stroke="#14100c" strokeWidth={2} strokeLinejoin="round" />
+      <path d="M14 18 L24 26 L35 16 M24 26 L24 40" fill="none" stroke="#14100c" strokeWidth={1.4} opacity={0.6} />
+    </svg>
   );
 }
 

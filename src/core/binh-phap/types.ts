@@ -26,6 +26,8 @@ export type Piece = NormalPiece | WildPiece | EraserPiece;
 export type BoardPiece = NormalPiece | WildPiece;
 
 export interface Cell {
+  /** Ô chướng ngại (địa hình): không đặt được quân, không cần khai thông, không tính vào hàng/cột kín. */
+  readonly blocked: boolean;
   /** Ô đã khai thông: đặt quân vào một lần là giữ mãi, kể cả khi quân bị dọn. */
   readonly covered: boolean;
   readonly piece: BoardPiece | null;
@@ -50,6 +52,8 @@ export interface Ruleset {
   /** Xác suất sinh quân đặc biệt, tính theo phần nghìn. Không bao giờ sinh hai quân đặc biệt liên tiếp. */
   readonly wildPermille: number;
   readonly eraserPermille: number;
+  /** Số ô chướng ngại sinh ngẫu nhiên theo seed, tính theo phần trăm diện tích bàn (0 = bàn đặc). */
+  readonly obstaclePercent: number;
   /** Thanh Bỏ Lệnh chạy 0..maxHeat; bỏ quân khi thanh đã đầy là thua. */
   readonly maxHeat: number;
   readonly score: ScoreWeights;
@@ -61,6 +65,11 @@ export interface ScoreWeights {
   readonly perfectNeighbor: number;
   readonly line: number;
   readonly win: number;
+  /** Thưởng thắng thêm cho mỗi vạch Bỏ Lệnh còn trống. */
+  readonly winPerHeatLeft: number;
+  /** Thưởng thắng thêm cho mỗi nước chơi nhanh hơn "chuẩn" (chuẩn = parTurnsPerCell × số ô chơi được). */
+  readonly winPerTurnSaved: number;
+  readonly parTurnsPerCell: number;
 }
 
 export interface PuzzleState {
@@ -99,6 +108,7 @@ export type PuzzleEvent =
 export type RejectReason =
   | "finished"
   | "outOfBounds"
+  | "blocked"
   | "occupied"
   | "empty"
   | "notAdjacent"

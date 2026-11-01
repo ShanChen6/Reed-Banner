@@ -1,6 +1,7 @@
 // Lưu và nạp ván dở. Đọc ngược fail-closed: bất kỳ trường nào sai kiểu hay sai luật thì trả null, không ném lỗi.
 
 import { ELEMENTS, PROFESSIONS } from "../battle";
+import { playableCount } from "./rules";
 import { RULESETS, SCHEMA_VERSION } from "./rulesets";
 import type { BoardPiece, Cell, Piece, PuzzleState } from "./types";
 
@@ -33,7 +34,8 @@ export function parsePuzzle(raw: unknown): PuzzleState | null {
     const cells: Cell[] = [];
     let covered = 0;
     for (const c of v.cells as unknown[]) {
-      if (!isObj(c) || typeof c.covered !== "boolean") return null;
+      if (!isObj(c) || typeof c.covered !== "boolean" || typeof c.blocked !== "boolean") return null;
+      if (c.blocked && (c.covered || c.piece !== null)) return null;
       let piece: BoardPiece | null = null;
       if (c.piece !== null) {
         const p = parsePiece(c.piece, false);
@@ -43,15 +45,17 @@ export function parsePuzzle(raw: unknown): PuzzleState | null {
       // Quân đang nằm trên bàn thì ô chắc chắn đã khai thông.
       if (piece && !c.covered) return null;
       if (c.covered) covered += 1;
-      cells.push({ covered: c.covered, piece });
+      cells.push({ blocked: c.blocked, covered: c.covered, piece });
     }
     const hand = parsePiece(v.hand, true);
     if (!hand) return null;
     const phase = v.phase;
     if (phase !== "playing" && phase !== "won" && phase !== "lost") return null;
     if (v.coveredCount !== covered) return null;
-    if (phase === "won" && covered !== cells.length) return null;
-    if (phase === "playing" && covered === cells.length) return null;
+    const playable = playableCount(cells);
+    if (playable === 0) return null;
+    if (phase === "won" && covered !== playable) return null;
+    if (phase === "playing" && covered === playable) return null;
     if (!isInt(v.seed, 0, 0xffffffff) || !isInt(v.rngState, 0, 0xffffffff)) return null;
     if (!isInt(v.discardHeat, 0, rules.maxHeat)) return null;
     const counters = [v.score, v.placed, v.discarded, v.linesCleared, v.turn];

@@ -82,20 +82,19 @@ Theo package.json và toolchain thực tế tại thời điểm triển khai: c
 | Save/Resume | Frontend | Implemented (`localStorage`, nạp fail-closed) |
 | Server reward secure | Backend | Deferred P1 |
 
-## Kết quả mô phỏng baseline (31/10/2026)
+## Kết quả mô phỏng baseline (01/11/2026)
 
-Lệnh: `pnpm exec tsx scripts/binh-phap-sim.ts --runs 2000 --seed 1`. Mỗi ván chạy lại bằng `replay` và so sánh state; 0 nước hợp lệ bị từ chối, 0 lệch replay. Agent *random* chọn ngẫu nhiên trong các ô đặt được (bỏ lệnh khi hết nước); *greedy* ưu tiên nước cho nhiều ô khai thông và điểm nhất, chỉ dùng Thu Hồi khi thanh đã nóng. Người chơi thật nằm quanh hoặc trên greedy, nên số này là **điểm xuất phát**, không phải mục tiêu.
+Lệnh: `pnpm exec tsx scripts/binh-phap-sim.ts --runs 2000 --seed 1`. Bàn chữ nhật 3×3, 5×7, 7×9, 9×9 có chướng ngại ngẫu nhiên theo seed ([GDD mục 11](02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline)). Mỗi ván chạy lại bằng `replay` và so sánh state; 0 nước hợp lệ bị từ chối, 0 lệch replay. Agent *random* chọn ngẫu nhiên trong các ô đặt được (bỏ lệnh khi hết nước); *greedy* ưu tiên nước cho nhiều ô khai thông và điểm nhất, chỉ dùng Thu Hồi khi thanh đã nóng. Người chơi thật nằm quanh hoặc trên greedy, nên số này là **điểm xuất phát**, không phải mục tiêu.
 
 | Bậc | Agent | Thắng | Lượt (trung vị / p90) | Bỏ lệnh TB | Khai thông TB |
 |---|---|---|---|---|---|
 | Nhập môn 3×3 | random | 97,0% | 19 / 32 | 2,5 | 98,8% |
 | Nhập môn 3×3 | greedy | 97,9% | 10 / 13 | 1,3 | 99,1% |
-| Thường 5×5 | random | 78,3% | 63 / 106 | 7,1 | 91,5% |
-| Thường 5×5 | greedy | 79,5% | 34 / 43 | 6,6 | 86,7% |
-| Khó 8×8 | random | 27,4% | 154 / 261 | 15,7 | 84,6% |
-| Khó 8×8 | greedy | 83,0% | 85 / 104 | 7,5 | 84,4% |
-| Đại trận 8×8 | random | 0,0% | 74 / 124 | 13,2 | 56,8% |
-| Đại trận 8×8 | greedy | 32,8% | 95 / 138 | 13,4 | 57,9% |
+| Thường 5×7 | random | 88,3% | 77 / 129 | 5,1 | 81,6% |
+| Thường 5×7 | greedy | 74,6% | 46 / 67 | 7,9 | 73,3% |
+| Khó 7×9 | random | 62,2% | 154 / 268 | 12,3 | 72,9% |
+| Khó 7×9 | greedy | 67,0% | 79 / 104 | 8,8 | 62,0% |
+| Đại trận 9×9 | random | 17,0% | 141 / 265 | 18,6 | 61,8% |
+| Đại trận 9×9 | greedy | 55,0% | 97 / 126 | 10,0 | 50,9% |
 
-Nhận xét: bốn bậc tăng độ khó đúng chiều; greedy hơn random rõ ở hai bậc 8×8 (chiến thuật có ý nghĩa), còn ở 3×3 và 5×5 ngang nhau vì bàn nhỏ và Bỏ Lệnh hào phóng. Bậc Thường chưa tách khỏi Nhập môn bằng chiến thuật; cần agent lookahead và thử người thật trước khi chốt. Số lượt p90 ở bậc 8×8 (100 đến 260 nước) cho một ván khá dài trên điện thoại, cần cân nhắc ở BP-00.
-
+Nhận xét: bốn bậc tăng độ khó đúng chiều ở cả hai agent. Chướng ngại làm hàng/cột ngắn lại nên dọn dễ hơn, vì vậy bàn có chướng ngại dễ thắng hơn bàn đặc cùng cỡ; tỉ lệ chướng ngại và số nghề/hệ phải chỉnh cùng nhau. Ở Thường và Khó, greedy không hơn random (greedy bỏ Thu Hồi và ưu tiên khai thông chứ không giữ chỗ dọn hàng), nên cần agent mạnh hơn (lookahead) trước khi chốt độ khó. Số lượt p90 ở Đại trận (khoảng 125 đến 265 nước) khá dài cho điện thoại.
