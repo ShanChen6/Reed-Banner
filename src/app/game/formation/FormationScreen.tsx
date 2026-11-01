@@ -125,7 +125,7 @@ export default function FormationScreen() {
       const r = await startRanked(level);
       setBusy(false);
       if (!r.ok) {
-        setMessage(r.status === 403 ? "Chế độ xếp hạng chưa mở." : "Không mở được ván xếp hạng, thử lại nhé.");
+        setMessage(r.status === 403 ? "Chế độ xếp hạng chưa mở." : r.status === 401 ? "Cần đăng nhập để chơi xếp hạng." : "Không mở được ván xếp hạng, thử lại nhé.");
         return;
       }
       setRanked(r.data.view);

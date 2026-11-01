@@ -1,6 +1,7 @@
 // Trận Đồ có xếp hạng và thưởng: kỳ, hạng, bậc thưởng. Thuần túy, không đụng DB hay giờ hệ thống.
 // Thiết kế ở docs/02-game-modes/future/02-binh-phap-gdd.md mục 12. Mức thưởng là điểm xuất phát chờ Shan duyệt.
 
+import { rewardTier, type RewardTier } from "../progress/rankRewards";
 import { vnDay, vnWeek } from "../progress/quests";
 import type { PuzzleState } from "./types";
 
@@ -42,19 +43,7 @@ export function compareResults(a: RankedResult, b: RankedResult): number {
   return b.score - a.score || a.turns - b.turns || a.finishedAt - b.finishedAt;
 }
 
-export type RewardTier = "top1" | "top3" | "top10" | "half" | "win";
-
-/**
- * Bậc thưởng theo hạng. Mỗi người nhận đúng một bậc, bậc cao nhất hạng của mình đạt tới. Không đòi số người tối
- * thiểu (Shan chốt 01/11/2026): bảng ít người vẫn có thưởng, kể cả một mình một bảng thì là hạng nhất.
- */
-export const REWARD_TIERS: readonly { readonly tier: RewardTier; readonly maxRank: (winners: number) => number; readonly label: string }[] = [
-  { tier: "top1", maxRank: () => 1, label: "Hạng nhất" },
-  { tier: "top3", maxRank: () => 3, label: "Top 3" },
-  { tier: "top10", maxRank: () => 10, label: "Top 10" },
-  { tier: "half", maxRank: (n) => Math.ceil(n / 2), label: "Nửa trên" },
-  { tier: "win", maxRank: (n) => n, label: "Thắng ván" },
-];
+export { REWARD_TIERS, rewardTier, type RewardTier } from "../progress/rankRewards";
 
 /** Vàng theo bậc thưởng, chia theo mức độ chơi. Điểm xuất phát chờ Shan duyệt. */
 export const REWARD_GOLD: Readonly<Record<string, Readonly<Record<RewardTier, number>>>> = {
@@ -62,13 +51,6 @@ export const REWARD_GOLD: Readonly<Record<string, Readonly<Record<RewardTier, nu
   kho: { top1: 300, top3: 200, top10: 120, half: 60, win: 40 },
   "dai-tran": { top1: 1000, top3: 600, top10: 350, half: 150, win: 80 },
 };
-
-/** Bậc thưởng của người đứng hạng `rank` (từ 1) trong số `winners` người thắng; null khi hạng không hợp lệ. */
-export function rewardTier(rank: number, winners: number): RewardTier | null {
-  if (!Number.isInteger(rank) || !Number.isInteger(winners) || rank < 1 || winners < 1 || rank > winners) return null;
-  for (const t of REWARD_TIERS) if (rank <= t.maxRank(winners)) return t.tier;
-  return null;
-}
 
 export function rewardGold(levelId: string, rank: number, winners: number): { tier: RewardTier; gold: number } | null {
   const table = REWARD_GOLD[levelId];

@@ -192,3 +192,20 @@ export const formationEntries = pgTable(
     index("formation_entries_owner_idx").on(t.ownerId, t.level),
   ],
 );
+
+/**
+ * Sổ nhận thưởng hạng theo kỳ của các chế độ dùng chung cơ chế (Nhật Lệnh, Tháp Thiên Mệnh). Khóa chính
+ * (mode, period, owner_id) chặn nhận hai lần: chèn trùng bị từ chối nên đúng một request cộng được vàng.
+ */
+export const rankRewardClaims = pgTable(
+  "rank_reward_claims",
+  {
+    mode: text("mode").notNull(),
+    period: text("period").notNull(),
+    ownerId: text("owner_id").notNull(),
+    rank: integer("rank").notNull(),
+    gold: integer("gold").notNull(),
+    claimedAt: bigint("claimed_at", { mode: "number" }).notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.mode, t.period, t.ownerId] }), index("rank_reward_claims_owner_idx").on(t.ownerId, t.mode)],
+);

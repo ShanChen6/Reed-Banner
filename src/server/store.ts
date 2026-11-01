@@ -9,6 +9,8 @@ import { DrizzleAccountStore } from "./db/accounts";
 import { DrizzleDailyStore } from "./db/daily";
 import { DrizzleFormationStore } from "./db/formation";
 import { MemoryFormationStore, type FormationStore } from "./formation";
+import { DrizzleRankRewardStore } from "./db/rankRewards";
+import { MemoryRankRewardStore, type RankRewardStore } from "./rankRewards";
 import { DrizzleLeaderboardStore } from "./db/leaderboard";
 import { DrizzleArenaStore } from "./db/arena";
 import { MemoryArenaStore, type ArenaStore } from "./arena";
@@ -74,7 +76,7 @@ export class MemoryMatchStore implements MatchStore {
   }
 }
 
-const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore; coLauDestinyLeaderboardStore?: DestinyLeaderboardStore; coLauArenaStore?: ArenaStore; coLauFormationStore?: FormationStore };
+const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore; coLauDestinyLeaderboardStore?: DestinyLeaderboardStore; coLauArenaStore?: ArenaStore; coLauFormationStore?: FormationStore; coLauRankRewardStore?: RankRewardStore };
 
 /**
  * Kho dùng chung của server: Postgres (Neon) khi có DATABASE_URL, ngược lại lưu trong bộ nhớ (dev).
@@ -105,6 +107,13 @@ export function dailyStore(): DailyStore {
   const url = process.env.DATABASE_URL;
   globalStore.coLauDailyStore ??= url ? new DrizzleDailyStore(neonDb(url)) : new MemoryDailyStore();
   return globalStore.coLauDailyStore;
+}
+
+/** Sổ nhận thưởng hạng theo kỳ (Nhật Lệnh, Thiên Mệnh), cùng nguồn với kho trận. */
+export function rankRewardStore(): RankRewardStore {
+  const url = process.env.DATABASE_URL;
+  globalStore.coLauRankRewardStore ??= url ? new DrizzleRankRewardStore(neonDb(url)) : new MemoryRankRewardStore();
+  return globalStore.coLauRankRewardStore;
 }
 
 /** Kho Trận Đồ xếp hạng, cùng nguồn với kho trận. */

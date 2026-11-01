@@ -23,6 +23,7 @@ import {
   ONLINE_ERROR_TEXT,
   type DailyResponse,
 } from "../battle/online";
+import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { SceneLink, useScene } from "../SceneContext";
 
 function scoreText(s: DailyScore): string {
@@ -146,6 +147,10 @@ export default function DailyScreen() {
             Trấn Ải
           </SceneLink>
         </div>
+      </div>
+
+      <div className="mb-4">
+        <RankRewardsPanel mode="daily" />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">

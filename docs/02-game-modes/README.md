@@ -214,3 +214,18 @@ Trang `/arena`, code ở `src/core/arena/` (đội phòng thủ, bóng ma máy t
 - **Thưởng:** thưởng trận thường (kinh nghiệm, vàng nhặt, món rơi theo độ khó Khó) và thêm 50 vàng khi thắng.
 - **Bảng xếp hạng:** tab Đấu trường ở `/leaderboard`, theo điểm; lên bảng khi có đội phòng thủ.
 - **Chưa làm:** nhật ký bị đánh (chỉ có số trận giữ được và bị mất), mùa giải và thưởng theo hạng, chặn đánh lại cùng một người.
+
+## 6. Thưởng vàng theo hạng cuối kỳ (Claude đặt 01/11/2026, chờ Shan duyệt)
+
+Shan (01/11/2026): trước mắt thưởng xếp hạng của **mọi chế độ chỉ là vàng**; các loại thưởng khác (danh hiệu, trang bị, mở tướng) bàn sau khi các chế độ ổn định. Mỗi người nhận đúng một bậc theo hạng cuối kỳ; **bảng ít người vẫn có thưởng** (một mình một bảng là hạng nhất). Nhận sau khi kỳ khép lại, đúng một lần mỗi kỳ, và **chỉ tài khoản đã đăng nhập** nhận được (khách xem bảng, không nhận).
+
+| Chế độ | Kỳ | Hạng nhất | Top 3 | Top 10 | Nửa trên | Có tên trên bảng | Cơ chế |
+|---|---|---|---|---|---|---|---|
+| **Trận Đồ** Thường / Khó / Đại trận | ngày / ngày / tuần | 150 / 300 / 1 000 | 100 / 200 / 600 | 60 / 120 / 350 | 30 / 60 / 150 | 20 / 40 / 80 (thắng ván) | Sổ riêng trong `formation_entries`, chi tiết ở [GDD Binh Pháp mục 12](future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt); tắt mặc định |
+| **Nhật Lệnh** | ngày | 100 | 70 | 50 | 30 | 10 | Sổ chung `rank_reward_claims`; cộng thêm 150/50 vàng cố định mỗi ván |
+| **Tháp Thiên Mệnh** | chu kỳ 7 ngày | 800 | 500 | 300 | 150 | 60 | Sổ chung `rank_reward_claims`; cộng thêm đá cuối chu kỳ; chỉ khi cờ `DESTINY_ENABLED` bật |
+
+Bậc: hạng 1; hạng 2–3; hạng 4–10; từ hạng 11 tới hết nửa trên (làm tròn lên); còn lại. Code: `src/core/progress/rankRewards.ts` (bậc và bảng vàng), `src/server/rankRewards.ts` (nguồn theo chế độ, sổ nhận, nhận thưởng), `/api/rank-rewards` (danh sách chờ nhận) và `/api/rank-rewards/claim`. Chỉ nhận được các kỳ đã khép trong 7 kỳ gần nhất.
+
+**Chưa có thưởng theo hạng** (ghi vào [câu hỏi mở](../09-roadmap/cau-hoi-mo.md)): **Bình Loạn**, **Từng trận** và **Trấn Ải** là bảng cộng dồn không có kỳ, **Quần Hùng** là điểm Elo liên tục; thưởng theo hạng cần có "mùa" (cắt bảng theo tuần hoặc tháng) trước. Các bảng này vẫn thưởng vàng khi chơi như cũ (xem các mục trên).
+

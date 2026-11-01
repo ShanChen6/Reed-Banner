@@ -411,3 +411,7 @@ Theo yêu cầu của Shan, đã code phần server: kỳ (ngày cho Thường v
 
 Shan: bảng ít người vẫn phải có thưởng. Bỏ điều kiện "đủ người thắng" ở các bậc thưởng; một mình một bảng vẫn là hạng nhất. Đánh đổi: tài khoản phụ dễ nhận thưởng hơn ([GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)).
 
+### 01/11/2026 (bổ sung) — Xếp hạng chỉ cho tài khoản đăng nhập; thưởng vàng theo hạng cho Nhật Lệnh và Thiên Mệnh
+
+Shan chốt: (1) vào chế độ xếp hạng phải đăng nhập, khách không chơi; (2) trước mắt thưởng xếp hạng của mọi chế độ chỉ là vàng, loại thưởng khác bàn sau. Đã code: Trận Đồ xếp hạng chặn khách; thưởng vàng theo hạng cuối kỳ cho Nhật Lệnh (ngày) và Tháp Thiên Mệnh (chu kỳ 7 ngày) qua sổ chung `rank_reward_claims` (migration 0010), chỉ tài khoản đăng nhập nhận được. Bình Loạn, Từng trận, Trấn Ải, Quần Hùng chưa có thưởng theo hạng vì chưa có kỳ ([chế độ chơi mục 6](../02-game-modes/README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt)).
+

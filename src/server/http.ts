@@ -7,7 +7,8 @@ import { GUEST_COOKIE, newGuestId, signGuest, verifyGuest } from "./guest";
 import { arenaStore, dailyStore, destinyLeaderboardStore, leaderboardStore, matchStore, profileStore } from "./store";
 import { formationRankedEnabled, towerFeatureFlags } from "./featureFlags";
 import type { FormationDeps } from "./formation";
-import { formationStore } from "./store";
+import { accountStore, dailyStore as dailyStoreOf, destinyLeaderboardStore as destinyBoardOf, formationStore, rankRewardStore } from "./store";
+import { dailySource, destinySource, type RankRewardDeps } from "./rankRewards";
 
 /** Cookie khách sống 30 ngày, khớp với hạn xóa tài khoản khách không hoạt động. */
 const GUEST_MAX_AGE = 30 * 24 * 60 * 60;
@@ -97,5 +98,18 @@ export function formationDeps(): FormationDeps {
     secret: process.env.SESSION_SECRET,
     enabled: formationRankedEnabled(),
     newId: () => `f_${randomUUID()}`,
+    isSignedIn: async (ownerId) => (await accountStore().get(ownerId)) !== null,
+  };
+}
+
+/** Phụ thuộc của thưởng hạng theo kỳ. Tháp Thiên Mệnh chỉ có nguồn khi cờ Destiny bật. */
+export function rankRewardDeps(): RankRewardDeps {
+  const features = towerFeatureFlags();
+  return {
+    sources: [dailySource(dailyStoreOf()), ...(features.destiny ? [destinySource(destinyBoardOf())] : [])],
+    claims: rankRewardStore(),
+    profiles: profileStore(),
+    now: Date.now(),
+    isSignedIn: async (ownerId) => (await accountStore().get(ownerId)) !== null,
   };
 }

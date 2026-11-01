@@ -140,11 +140,17 @@ export interface FormationDeps {
   readonly secret?: string;
   readonly enabled: boolean;
   readonly newId: () => string;
+  /**
+   * Người này đã đăng nhập (có tài khoản) chưa. Khách không chơi, không nhận thưởng xếp hạng (Shan chốt 01/11/2026);
+   * vẫn xem được bảng.
+   */
+  readonly isSignedIn: (ownerId: string) => Promise<boolean>;
 }
 
 export type FormationError =
   | "featureDisabled"
   | "unavailable"
+  | "loginRequired"
   | "badRequest"
   | "unknownLevel"
   | "noAttempt"
@@ -196,6 +202,7 @@ export type StartResult = { readonly ok: true; readonly view: FormationView; rea
 export async function startFormation(deps: FormationDeps, ownerId: string, levelId: unknown, name: string | null = null): Promise<StartResult> {
   const g = gate(deps, levelId);
   if (!g.ok) return g;
+  if (!(await deps.isSignedIn(ownerId))) return { ok: false, error: "loginRequired" };
   const existing = await deps.store.get(g.level, g.period, ownerId);
   if (existing) return { ok: true, view: await viewOf(deps, existing), resumed: true };
   const rules = rulesetById(g.level);
@@ -244,6 +251,7 @@ export type MoveResult =
 export async function moveFormation(deps: FormationDeps, ownerId: string, levelId: unknown, seq: unknown, command: unknown): Promise<MoveResult> {
   const g = gate(deps, levelId);
   if (!g.ok) return g;
+  if (!(await deps.isSignedIn(ownerId))) return { ok: false, error: "loginRequired" };
   const cmd = parseCommand(command);
   if (!cmd || !Number.isInteger(seq)) return { ok: false, error: "badRequest" };
   const entry = await deps.store.get(g.level, g.period, ownerId);
@@ -303,8 +311,9 @@ export const BOARD_SIZE = 20;
 const CLAIM_LIST = 10;
 
 /** Tổng quan các bậc xếp hạng; `ownerId` null khi chưa có cookie (chỉ xem bảng). */
-export async function formationOverview(deps: FormationDeps, ownerId: string | null): Promise<{ enabled: boolean; levels: LevelOverview[] }> {
-  if (!deps.enabled || !deps.secret) return { enabled: false, levels: [] };
+export async function formationOverview(deps: FormationDeps, ownerId: string | null): Promise<{ enabled: boolean; canPlay: boolean; levels: LevelOverview[] }> {
+  if (!deps.enabled || !deps.secret) return { enabled: false, canPlay: false, levels: [] };
+  const canPlay = ownerId !== null && (await deps.isSignedIn(ownerId));
   const levels = await Promise.all(
     RANKED_LEVELS.map(async (l): Promise<LevelOverview> => {
       const period = periodKey(l.id, deps.now)!;
@@ -338,7 +347,7 @@ export async function formationOverview(deps: FormationDeps, ownerId: string | n
       };
     }),
   );
-  return { enabled: true, levels };
+  return { enabled: true, canPlay, levels };
 }
 
 export type ClaimResult =
@@ -349,6 +358,7 @@ export type ClaimResult =
 export async function claimFormation(deps: FormationDeps, ownerId: string, levelId: unknown, period: unknown): Promise<ClaimResult> {
   if (!deps.enabled) return { ok: false, error: "featureDisabled" };
   if (typeof levelId !== "string" || !rankedLevel(levelId)) return { ok: false, error: "unknownLevel" };
+  if (!(await deps.isSignedIn(ownerId))) return { ok: false, error: "loginRequired" };
   if (typeof period !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(period)) return { ok: false, error: "badRequest" };
   if (!periodClosed(levelId, period, deps.now)) return { ok: false, error: "notClaimable" };
   const entry = await deps.store.get(levelId, period, ownerId);
@@ -372,6 +382,8 @@ export function formationHttpStatus(error: FormationError): number {
   switch (error) {
     case "badRequest":
       return 400;
+    case "loginRequired":
+      return 401;
     case "featureDisabled":
       return 403;
     case "unknownLevel":

@@ -25,6 +25,8 @@ export interface DestinyLeaderboardStore {
   submit(value: DestinyLeaderboardSubmission): Promise<boolean>;
   page(cycleId: string, offset: number, limit: number): Promise<readonly DestinyLeaderboardEntry[]>;
   rankOf(cycleId: string, ownerId: string): Promise<{ rank: number; entry: DestinyLeaderboardEntry } | null>;
+  /** Số người có tên trên bảng của chu kỳ. */
+  count(cycleId: string): Promise<number>;
 }
 
 const compare = (a: DestinyLeaderboardEntry, b: DestinyLeaderboardEntry) =>
@@ -64,6 +66,10 @@ export class MemoryDestinyLeaderboardStore implements DestinyLeaderboardStore {
   async page(cycleId: string, offset: number, limit: number): Promise<readonly DestinyLeaderboardEntry[]> {
     return [...this.rows.values()].filter((row) => row.cycleId === cycleId)
       .sort(compare).slice(offset, offset + limit);
+  }
+
+  async count(cycleId: string): Promise<number> {
+    return [...this.rows.values()].filter((row) => row.cycleId === cycleId).length;
   }
 
   async rankOf(cycleId: string, ownerId: string) {
