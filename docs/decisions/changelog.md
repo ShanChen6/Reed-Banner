@@ -399,3 +399,7 @@ Shan đồng ý tổng quát hóa quân thành tập nghề, tập hệ giao nha
 
 Shan loại bỏ nhân vật 2 nghề + 2 hệ khỏi Trận Đồ vì làm giảm độ khó; chỉ giữ tối đa hai nhân vật mang đủ 8 nghề và 7 hệ như Đinh Ngọc, vẫn phải đặt sát một quân. Kiểu `multi` (tập nghề, tập hệ) được thay bằng kiểu `fusion` đơn giản. Danh sách vẫn rỗng ([GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)).
 
+### 01/11/2026 (bổ sung) — Nhân vật dung hợp thứ hai và phạm vi bậc
+
+Nhân vật dung hợp thứ hai của Trận Đồ là Trần Vũ Phong – Vân Du Tử (đang thiết kế). Cả hai nhân vật dung hợp chỉ xuất hiện ở bậc Khó và Đại trận, không ở Hướng dẫn và Thường ([GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)). Code khóa phạm vi bậc bằng `FUSION_ALLOWED_LEVELS`; danh sách vẫn rỗng cho tới khi duyệt.
+

@@ -17,6 +17,7 @@ import {
   type PuzzleState,
   type Ruleset,
   generateObstacles,
+  FUSION_ALLOWED_LEVELS,
   FUSION_CHARACTERS,
   MAX_FUSION_CHARACTERS,
   type FusionCharacter,
@@ -524,6 +525,11 @@ describe("nhân vật dung hợp (kiểu Đinh Ngọc)", () => {
     assert.deepEqual(checkPlacement(s, s.hand, 3, 4), { ok: true });
   });
 
+  it("Hướng dẫn và Thường không bao giờ có quân dung hợp, kể cả khi lọt vào danh sách", () => {
+    assert.deepEqual([...FUSION_ALLOWED_LEVELS].sort(), ["dai-tran", "kho"]);
+    for (const r of RULESETS) if (!FUSION_ALLOWED_LEVELS.includes(r.id)) assert.equal(r.fusions.length, 0, r.id);
+  });
+
   it("danh sách mặc định hợp lệ: tối đa 2 nhân vật, không trùng, bậc có thật", () => {
     assert.ok(FUSION_CHARACTERS.length <= MAX_FUSION_CHARACTERS);
     assert.equal(MAX_FUSION_CHARACTERS, 2);
@@ -533,6 +539,7 @@ describe("nhân vật dung hợp (kiểu Đinh Ngọc)", () => {
       ids.add(f.characterId);
       assert.ok(f.name.length > 0 && f.levels.length > 0);
       assert.ok(f.levels.every((l) => RULESETS.some((r) => r.id === l)));
+      assert.ok(f.levels.every((l) => FUSION_ALLOWED_LEVELS.includes(l)), `${f.characterId} chỉ được ở bậc Khó và Đại trận`);
     }
   });
 

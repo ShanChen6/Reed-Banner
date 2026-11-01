@@ -146,7 +146,7 @@ Engine nhận mọi cỡ nên thêm bậc hay chế độ tự chọn cỡ bàn 
 
 ### 11.1 Nhân vật dung hợp (kiểu Đinh Ngọc)
 
-Shan (01/11/2026): chỉ giữ loại nhân vật mang **đủ 8 nghề và 7 hệ** như [Đinh Ngọc](../../03-characters/dinh-ngoc.md), **tối đa hai nhân vật**; không có nhân vật 2 nghề + 2 hệ (hoặc ít hơn tám/bảy) vì làm ván dễ đi. Hạ tầng đã có trong engine, **danh sách mặc định rỗng** cho tới khi Shan duyệt từng nhân vật (`src/core/binh-phap/specials.ts`, `FUSION_CHARACTERS`).
+Shan (01/11/2026): chỉ giữ loại nhân vật mang **đủ 8 nghề và 7 hệ** như [Đinh Ngọc](../../03-characters/dinh-ngoc.md), **tối đa hai nhân vật**: Đinh Ngọc và **Trần Vũ Phong – Vân Du Tử** (đang thiết kế, chưa có tài liệu nhân vật). **Chỉ xuất hiện ở bậc Khó và Đại trận** (`FUSION_ALLOWED_LEVELS`); Hướng dẫn và Thường không bao giờ có; không có nhân vật 2 nghề + 2 hệ (hoặc ít hơn tám/bảy) vì làm ván dễ đi. Hạ tầng đã có trong engine, **danh sách mặc định rỗng** cho tới khi Shan duyệt từng nhân vật (`src/core/binh-phap/specials.ts`, `FUSION_CHARACTERS`).
 
 - **Quân `fusion`** khớp mọi quân kề. Luật vẫn chỉ dựa trên nghề và hệ.
 - **Khác Quân Lệnh:** quân `fusion` vẫn **phải đặt sát một quân** (trừ khi bàn trống) và quân đặt cạnh nó vẫn phải khớp các quân kề khác. Không đặt được ở ô trống xa mọi quân, không đặt đè lên quân khác hay chướng ngại. Hai quân `fusion` đặt cạnh nhau được.
@@ -163,7 +163,7 @@ Shan (01/11/2026): chỉ giữ loại nhân vật mang **đủ 8 nghề và 7 h�
 | 4% | 13,8% | 42,3% |
 | 8% | 25,5% | 51,0% |
 
-Quân này rất mạnh: 4% đã nâng tỉ lệ thắng của greedy khoảng 11 điểm, nên **tỉ lệ phải thấp, đề xuất 1–2%** cho bậc có xếp hạng. `fusionPermille` của Đại trận đặt 15 (1,5%) nhưng chưa có tác dụng vì danh sách rỗng. Cần Shan chốt: nhân vật dung hợp có xuất hiện ở các bậc có thưởng không, hay chỉ ở ván không xếp hạng.
+Quân này rất mạnh: 4% đã nâng tỉ lệ thắng của greedy khoảng 11 điểm, nên **tỉ lệ phải thấp, đề xuất 1–2%** cho bậc có xếp hạng. `fusionPermille` của Khó và Đại trận đặt 15 (1,5%) nhưng chưa có tác dụng vì danh sách rỗng; số đo trên chỉ ở Đại trận, Khó (bàn 6×6 nhỏ hơn) có thể nhạy hơn nên phải đo lại trước khi bật. Cả hai bậc này đều có xếp hạng và thưởng, nên nhân vật dung hợp sẽ xuất hiện trong ván tính thưởng; vì seed do server phát nên mọi người gặp cùng dãy quân.
 
 *Lịch sử:* cùng ngày, bản đầu của hạ tầng này cho phép quân có tập nghề/hệ bất kỳ; Shan loại bỏ vì làm giảm độ khó, chỉ giữ loại dung hợp đủ 8 nghề, 7 hệ.
 
