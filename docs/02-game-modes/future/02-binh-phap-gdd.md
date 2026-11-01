@@ -101,6 +101,8 @@ Tên hiển thị trong game là **Trận Đồ** (đã duyệt tên 26/10/2026)
 | Quân đặc biệt | Quân Lệnh 8% / Thu Hồi 4% (Đại trận Quân Lệnh 10%); Hướng dẫn không có. Không ra hai quân đặc biệt liên tiếp; không ra Thu Hồi khi bàn trống | Shan không có ý kiến, dùng đề xuất |
 | Offline hay server | Chơi thử offline (khách, không thưởng); xếp hạng và thưởng chạy trên server, tắt mặc định | Chơi thử là mặc định đề xuất; xếp hạng và thưởng ở [mục 12](#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt) |
 
+**Tùy chỉnh (trong Chơi thường).** Người chơi tự chọn cỡ bàn (cột × hàng 3–10), từng nghề (≥2) và từng hệ (≥2), tỉ lệ Quân Lệnh (≤15%), Thu Hồi (≤10%), nhân vật dung hợp (≤10%, khóa tới khi có nhân vật được duyệt) và chướng ngại (≤30%). Bộ luật nằm trong chính ván (id `tuy-chinh`), engine kiểm giới hạn khi tạo và khi nạp; không thưởng, không xếp hạng, không ghi điểm cao nhất (`customRuleset` ở `src/core/binh-phap/rulesets.ts`).
+
 **Chế độ thường và chế độ xếp hạng.** Trận Đồ có hai chế độ cùng tồn tại. **Chơi thường** (trước đây gọi "chơi thử") chạy offline ở trình duyệt, không cần cờ hay đăng nhập, không thưởng, không xếp hạng, chơi bao nhiêu ván tùy thích với cả bốn bậc kể cả Hướng dẫn, và lưu ván dở tại máy. **Xếp hạng** ([mục 12](#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)) chạy trên server, có thưởng, tắt mặc định; khi tắt, màn Trận Đồ chỉ còn chế độ thường.
 
 **Bốn bậc** (`RULESETS`, id `huong-dan`, `thuong`, `kho`, `dai-tran`):
@@ -175,7 +177,7 @@ Shan (01/11/2026): xếp hạng cao được nhận thưởng; thưởng chia th
 
 **Cách chống gian lận: server giữ ván và áp từng lệnh.** Bản thiết kế đầu định "client chơi rồi gửi nhật ký cho server chạy lại". Đã đổi vì seed phải gửi cho client thì client chạy thử được vô hạn lần trên cùng bàn (luyện trước, chọn nước tối ưu) rồi chỉ nộp ván đẹp nhất. Bản đang chạy:
 
-1. `POST /api/formation/start`: server sinh seed bằng HMAC(`SESSION_SECRET`, bậc, kỳ), nên mọi người trong kỳ cùng bàn, cùng chướng ngại, cùng dãy quân, mà không ai đoán trước được kỳ sau. Seed và trạng thái RNG **không bao giờ rời server**.
+1. `POST /api/formation/start`: server sinh seed bằng HMAC(`SESSION_SECRET`, bậc, kỳ), nên mọi người trong kỳ cùng bàn, cùng chướng ngại, cùng dãy quân, mà không ai đoán trước được kỳ sau. Seed, trạng thái RNG và **muối** **không bao giờ rời server**. **Muối** (02/11/2026): seed chỉ 32 bit mà bàn cờ (chướng ngại, quân đầu) hiển thị ra, nên người chơi có thể dò ngược mọi seed để tìm đúng seed rồi biết trước toàn bộ dãy quân. Vì vậy ván xếp hạng mang thêm một muối bí mật 128 bit (HMAC khác với seed): địa hình và **từng quân** lấy seed từ băm của (muối, mục đích, số thứ tự lượt) thay vì một dòng RNG 32 bit chạy liên tục; biết bàn cờ và các quân đã ra cũng không suy ra được quân sau. Client chỉ nhận `theme` (một hàm một chiều của muối, dùng chọn bản đồ nền).
 2. `POST /api/formation/move`: client gửi lệnh (đặt quân hoặc bỏ lệnh) kèm `seq`; server chạy đúng engine `src/core/binh-phap`, lưu trạng thái mới, trả bản công khai (bàn và quân đang cầm, không seed, không RNG). Lệnh sai không đổi gì; `seq` lệch (gửi trùng, hai tab) bị từ chối kèm ván hiện tại. Mỗi lệnh là không thể hoàn tác và quân kế tiếp chưa ai biết, nên không luyện trước được.
 3. Mỗi người **một ván mỗi kỳ mỗi bậc** (chỉ mục duy nhất trong DB). Mở lại thì nối đúng ván cũ, tải lại trang không mất tiến độ và không bày bàn mới. Ván vượt 600 lệnh bị xử thua.
 4. Điểm do server tính. Chỉ ván **thắng** có hạng; ván thua không hạng, không thưởng.

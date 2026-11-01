@@ -125,5 +125,6 @@
 
 ## Giao diện Trận Đồ
 
-- TODO: Shan thiết kế ảnh bản đồ cho sa bàn Trận Đồ (yêu cầu ở [giao diện Trận Đồ mục 3](../05-ui-ux/screens/tran-do.md#3-yêu-cầu-ảnh-bản-đồ-cho-họa-sĩ)), chọn một ảnh mỗi bậc hay kho ảnh xoay theo kỳ, kiểu núi chướng ngại, địa danh thật hay hư cấu, và hướng thiết kế màn chế độ và màn chơi chi tiết (mục 5, 6 cùng tài liệu).
-
+- Đã chốt (Shan, 02/11/2026): kho ảnh bản đồ xoay theo kỳ với địa danh thật thời Loạn 12 sứ quân; ô che bằng ảnh đặc kín; chướng ngại bốn biến thể (núi, rừng, đầm lầy, thành lũy) với nền ô riêng; quân đủ huy hiệu nghề và hệ nhỏ vừa đủ; hoàn thành màn thì hiện ảnh đầy đủ; chế độ tùy chỉnh trong Chơi thường.
+- TODO: Shan thiết kế 13 ảnh bản đồ, ảnh ô che và 4 icon chướng ngại ([yêu cầu và prompt](../05-ui-ux/screens/tran-do.md#3-yêu-cầu-ảnh-cho-họa-sĩ)); hiện dùng ảnh giữ chỗ.
+- TODO: Shan tham khảo bản triển khai thực tế rồi góp ý màn chế độ và màn chơi chi tiết ([mục 5 và 6](../05-ui-ux/screens/tran-do.md#5-gợi-ý-màn-chế-độ-để-shan-tham-khảo-thực-tế-rồi-góp-ý)).

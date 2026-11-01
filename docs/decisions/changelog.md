@@ -439,3 +439,9 @@ Shan duyệt bảng vàng theo hạng của cả năm chế độ: Trận Đồ 
 
 Shan: sa bàn dùng ảnh bản đồ riêng làm nền; đặt quân thì ô sáng lên lộ bản đồ; chướng ngại thiết kế lại cho hợp bản đồ; bỏ biểu tượng hệ dài trên quân. Đã code với ảnh giữ chỗ (sương che ô chưa khai thông, núi chướng ngại, quân tròn kèm một huy hiệu nghề). Ảnh bản đồ thật do Shan thiết kế; màn chế độ và màn chơi chi tiết là gợi ý chờ chọn ([giao diện Trận Đồ](../05-ui-ux/screens/tran-do.md)).
 
+## 02/11/2026 — Trận Đồ: kho bản đồ, ô che, chướng ngại 4 biến thể, tùy chỉnh; sửa lỗ hổng dò seed
+
+Shan chốt: kho ảnh bản đồ xoay theo kỳ (13 địa danh thật thời Loạn 12 sứ quân); ô chưa mở là ảnh che đặc kín (không để ảnh mờ của bản đồ); chướng ngại 4 biến thể (núi, rừng, đầm lầy, thành lũy) với nền ô riêng; quân đủ huy hiệu nghề và hệ nhỏ vừa đủ; hoàn thành thì hiện ảnh đầy đủ; thêm chế độ **tùy chỉnh** trong Chơi thường (cột, hàng, nghề, hệ, quân đặc biệt, chướng ngại); gợi ý giao diện triển khai trước. Đã code với ảnh giữ chỗ ([giao diện Trận Đồ](../05-ui-ux/screens/tran-do.md)).
+
+**Sửa bảo mật:** tự rà soát phát hiện ván xếp hạng dò được seed (32 bit, bàn cờ hiển thị) nên biết trước dãy quân. Đã thêm **muối bí mật** cho ván xếp hạng ([GDD Binh Pháp mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)). Ván xếp hạng đang dở tạo trước bản sửa vẫn chạy theo cách cũ (không muối) cho tới khi kết thúc.
+

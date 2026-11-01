@@ -133,6 +133,11 @@ export function formationSeed(secret: string, level: string, period: string): nu
   return createHmac("sha256", secret).update(`formation:${level}:${period}`).digest().readUInt32BE(0);
 }
 
+/** Muối bí mật của ván trong kỳ (xem `PuzzleState.salt`): HMAC khác seed, không gửi cho client, như nhau với mọi người trong kỳ. */
+export function formationSalt(secret: string, level: string, period: string): string {
+  return createHmac("sha256", secret).update(`formation-salt:${level}:${period}`).digest("hex").slice(0, 32);
+}
+
 export interface FormationDeps {
   readonly store: FormationStore;
   readonly profiles: ProfileStore;
@@ -207,7 +212,7 @@ export async function startFormation(deps: FormationDeps, ownerId: string, level
   if (existing) return { ok: true, view: await viewOf(deps, existing), resumed: true };
   const rules = rulesetById(g.level);
   if (!rules) return { ok: false, error: "unknownLevel" };
-  const state = createPuzzle(rules, formationSeed(deps.secret!, g.level, g.period));
+  const state = createPuzzle(rules, formationSeed(deps.secret!, g.level, g.period), formationSalt(deps.secret!, g.level, g.period));
   const entry: FormationEntry = {
     id: deps.newId(),
     level: g.level,

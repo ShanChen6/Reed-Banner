@@ -10,7 +10,8 @@
 // - Chướng ngại của Đại trận tăng theo diện tích (10% ở 7×7 đến 16% ở 10×10) và có trần 72 ô chơi được để ván
 //   dài khoảng 100 nước thay vì hơn 150 ở bàn 10×10.
 
-import { fusionsForLevel } from "./specials";
+import { ELEMENTS, PROFESSIONS, type Element, type Profession } from "../battle";
+import { FUSION_CHARACTERS, fusionsForLevel } from "./specials";
 import type { Ruleset } from "./types";
 
 export const SCHEMA_VERSION = 3;
@@ -94,4 +95,65 @@ export const UNRANKED_RULESET_IDS: readonly string[] = ["huong-dan"];
 
 export function rulesetById(id: string): Ruleset | undefined {
   return RULESETS.find((r) => r.id === id);
+}
+
+// --- Chế độ tùy chỉnh (trong Chơi thường): người chơi tự chọn cỡ bàn, nghề, hệ và quân đặc biệt. Không xếp hạng, không
+// thưởng, không ghi điểm cao nhất. Giới hạn dưới đây chặn ván vô nghĩa hoặc quá nặng.
+
+export const CUSTOM_RULESET_ID = "tuy-chinh";
+
+export const CUSTOM_LIMITS = {
+  minSide: 3,
+  maxSide: 10,
+  minProfessions: 2,
+  minElements: 2,
+  maxWildPermille: 150,
+  maxEraserPermille: 100,
+  maxFusionPermille: 100,
+  maxObstaclePercent: 30,
+} as const;
+
+export interface CustomOptions {
+  readonly width: number;
+  readonly height: number;
+  readonly professions: readonly Profession[];
+  readonly elements: readonly Element[];
+  readonly wildPermille: number;
+  readonly eraserPermille: number;
+  /** Quân nhân vật dung hợp; chỉ có tác dụng khi danh sách nhân vật dung hợp đã duyệt không rỗng. */
+  readonly fusionPermille: number;
+  readonly obstaclePercent: number;
+}
+
+const inRange = (n: unknown, lo: number, hi: number): n is number => Number.isInteger(n) && (n as number) >= lo && (n as number) <= hi;
+const distinctSubset = <T extends string>(v: unknown, all: readonly T[], min: number): v is T[] =>
+  Array.isArray(v) && v.length >= min && v.length <= all.length && new Set(v).size === v.length && v.every((x) => all.includes(x as T));
+
+/** Bộ luật tùy chỉnh từ lựa chọn của người chơi; null khi có giá trị ngoài giới hạn. */
+export function customRuleset(o: unknown): Ruleset | null {
+  if (typeof o !== "object" || o === null) return null;
+  const v = o as Record<string, unknown>;
+  const L = CUSTOM_LIMITS;
+  if (!inRange(v.width, L.minSide, L.maxSide) || !inRange(v.height, L.minSide, L.maxSide)) return null;
+  if (!distinctSubset(v.professions, PROFESSIONS as readonly Profession[], L.minProfessions)) return null;
+  if (!distinctSubset(v.elements, ELEMENTS as readonly Element[], L.minElements)) return null;
+  if (!inRange(v.wildPermille, 0, L.maxWildPermille) || !inRange(v.eraserPermille, 0, L.maxEraserPermille)) return null;
+  if (!inRange(v.fusionPermille, 0, L.maxFusionPermille) || !inRange(v.obstaclePercent, 0, L.maxObstaclePercent)) return null;
+  return {
+    id: CUSTOM_RULESET_ID,
+    version: 1,
+    name: "Tùy chỉnh",
+    blurb: "Tự chọn cỡ bàn, nghề, hệ và quân đặc biệt. Chơi thường: không thưởng, không xếp hạng.",
+    width: v.width,
+    height: v.height,
+    professions: v.professions,
+    elements: v.elements,
+    wildPermille: v.wildPermille,
+    eraserPermille: v.eraserPermille,
+    fusionPermille: v.fusionPermille,
+    fusions: FUSION_CHARACTERS,
+    obstaclePercent: v.obstaclePercent,
+    maxHeat: 3,
+    score: SCORE,
+  };
 }

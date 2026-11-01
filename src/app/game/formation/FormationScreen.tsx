@@ -1,12 +1,14 @@
 "use client";
 
-// Trận Đồ (Binh Pháp): bày quân lệnh theo nghề hoặc hệ để khai thông toàn bộ sa bàn. Bản chơi thử offline: không
+// Trận Đồ (Binh Pháp): bày quân lệnh theo nghề hoặc hệ để khai thông toàn bộ sa bàn. Chế độ chơi thường offline: không
 // thưởng, không lên bảng xếp hạng, ván dở lưu ở trình duyệt. Luật ở src/core/binh-phap, spec ở
 // docs/02-game-modes/future/02-binh-phap-gdd.md (mục 11).
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  CUSTOM_RULESET_ID,
   RULESETS,
+  themeOfState,
   FUSION_CHARACTERS,
   checkPlacement,
   createPuzzle,
@@ -25,11 +27,12 @@ import {
   type Ruleset,
 } from "@/core/binh-phap";
 import { companionById } from "@/core/roster/roster";
-import { ElementIcon, ProfessionIcon } from "../art/icons";
+import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
 import { SceneLink } from "../SceneContext";
-import { mapOf } from "./maps";
+import CustomForm from "./CustomForm";
+import { mapFor, type FormationMap } from "./maps";
 import RankedPanel from "./RankedPanel";
 import { claimRanked, fetchOverview, moveRanked, startRanked, toPuzzleState, type FormationView, type Overview } from "./rankedClient";
 
@@ -205,7 +208,7 @@ export default function FormationScreen() {
       if (t.state.phase === "playing") writeStorage(SAVE_KEY, serializePuzzle(t.state));
       else {
         writeStorage(SAVE_KEY, null);
-        if (t.state.phase === "won") {
+        if (t.state.phase === "won" && t.state.rulesetId !== CUSTOM_RULESET_ID) {
           setBest((prev) => {
             const next = { ...prev, [t.state.rulesetId]: Math.max(prev[t.state.rulesetId] ?? 0, t.state.score) };
             writeStorage(BEST_KEY, JSON.stringify(next));
@@ -223,6 +226,7 @@ export default function FormationScreen() {
     return (
       <Shell>
         <Board
+          theme={ranked.puzzle.theme}
           state={toPuzzleState(ranked)}
           rules={rules}
           message={message}
@@ -247,10 +251,11 @@ export default function FormationScreen() {
       </Shell>
     );
 
-  const rules = rulesetById(state.rulesetId)!;
+  const rules = state.custom ?? rulesetById(state.rulesetId)!;
   return (
     <Shell>
       <Board
+        theme={themeOfState(state)}
         state={state}
         rules={rules}
         message={message}
@@ -302,7 +307,7 @@ function LevelPicker({ best, onStart, ranked }: { best: Record<string, number>; 
     <>
       <Heading title={ranked ? "Chơi thường" : "Trận Đồ"} sub={ranked ? "Không thưởng, không xếp hạng, chơi bao nhiêu ván tùy thích" : "Bày quân lệnh"} />
       <p className="max-w-2xl font-serif text-lg text-[var(--atlas-title)]">
-        Bày quân tướng theo nghề và hệ để khai thông toàn bộ sa bàn.{ranked ? " Chơi thoải mái, bàn cờ ngẫu nhiên mỗi ván." : " Bản chơi thử: không thưởng, không xếp hạng."}
+        Bày quân tướng theo nghề và hệ để khai thông toàn bộ sa bàn.{ranked ? " Chơi thoải mái, bàn cờ ngẫu nhiên mỗi ván." : " Chế độ chơi thường: không thưởng, không xếp hạng."}
       </p>
       <ul className="grid gap-4 sm:grid-cols-2">
         {RULESETS.map((r) => (
@@ -322,6 +327,7 @@ function LevelPicker({ best, onStart, ranked }: { best: Record<string, number>; 
           </li>
         ))}
       </ul>
+      <CustomForm onStart={onStart} />
       <section aria-labelledby="tran-do-rules" className="atlas-frame atlas-frame-wood p-4">
         <h2 id="tran-do-rules" className="mb-2 font-serif text-xl font-bold text-[var(--atlas-title)]">Luật chơi</h2>
         <Rules />
@@ -332,6 +338,7 @@ function LevelPicker({ best, onStart, ranked }: { best: Record<string, number>; 
 }
 
 function Board({
+  theme,
   state,
   rules,
   message,
@@ -345,6 +352,8 @@ function Board({
   best,
   ranked,
 }: {
+  /** Chủ đề bản đồ của ván (chọn bản đồ nền trong kho theo kỳ). */
+  theme: number;
   state: PuzzleState;
   rules: Ruleset;
   message: string;
@@ -364,6 +373,7 @@ function Board({
   const finished = state.phase !== "playing";
   const legal = useMemo(() => new Set(legalPlacements(state)), [state]);
   const total = useMemo(() => playableCount(state.cells), [state.cells]);
+  const map = mapFor(rules.id, theme);
 
   const moveFocus = (to: number) => {
     setFocus(to);
@@ -417,7 +427,7 @@ function Board({
           >
            <div
             className="fm-board grid overflow-hidden rounded-sm"
-            style={{ gridTemplateColumns: `repeat(${width}, ${cell})`, gridAutoRows: cell, backgroundImage: `url(${mapOf(rules.id).src})` }}
+            style={{ gridTemplateColumns: `repeat(${width}, ${cell})`, gridAutoRows: cell, backgroundImage: `url(${map.src})` }}
            >
             {state.cells.map((c, i) => {
               const r = Math.floor(i / width);
@@ -434,15 +444,15 @@ function Board({
                     onKeyDown={(e) => onKeyDown(e, i)}
                     onClick={() => apply({ kind: "place", row: r, col })}
                     aria-disabled={c.blocked || undefined}
-                    aria-label={`Hàng ${r + 1}, cột ${col + 1}: ${c.blocked ? "chướng ngại, không đặt được" : c.piece ? pieceLabel(c.piece) : c.covered ? "trống, đã khai thông" : "trống, chưa khai thông"}${ok ? ", đặt được" : ""}`}
+                    aria-label={`Hàng ${r + 1}, cột ${col + 1}: ${c.blocked ? `${obstacleLabel(obstacleKind(i))} (chướng ngại), không đặt được` : c.piece ? pieceLabel(c.piece) : c.covered ? "trống, đã khai thông" : "trống, chưa khai thông"}${ok ? ", đặt được" : ""}`}
                     data-state={c.blocked ? "rock" : c.covered ? "lit" : "fog"}
                     className={[
                       "fm-cell flex items-center justify-center focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--atlas-gold)]",
                       ok ? "ring-2 ring-[#E8C477] ring-inset" : "",
-                      last === i ? "z-10 outline-2 outline-offset-[-2px] outline-[#E8C477]" : "",
+                      last === i && state.phase !== "won" ? "z-10 outline-2 outline-offset-[-2px] outline-[#E8C477]" : "",
                     ].join(" ")}
                   >
-                    {c.blocked ? <Mountain /> : c.piece ? <PieceFace piece={c.piece} /> : ok ? <span aria-hidden className="size-2 rounded-full bg-[#E8C477] shadow-[0_0_6px_#E8C477]" /> : null}
+                    {c.blocked ? <Obstacle kind={obstacleKind(i)} /> : c.piece ? <PieceFace piece={c.piece} /> : ok ? <span aria-hidden className="size-2 rounded-full bg-[#E8C477] shadow-[0_0_6px_#E8C477]" /> : null}
                   </button>
                 </div>
               );
@@ -453,7 +463,7 @@ function Board({
         </div>
 
         <aside className="flex flex-col gap-4" aria-label="Bảng điều khiển">
-          {!finished ? <Hand state={state} rules={rules} apply={apply} noMove={legal.size === 0} disabled={ranked?.busy === true} /> : ranked ? <RankedResult state={state} rank={ranked.rank} score={ranked.score} period={ranked.period} onLeave={onLeave} /> : <Result state={state} best={best} onRestart={onRestart} onLeave={onLeave} />}
+          {!finished ? <Hand state={state} rules={rules} apply={apply} noMove={legal.size === 0} disabled={ranked?.busy === true} /> : ranked ? <RankedResult state={state} rank={ranked.rank} score={ranked.score} period={ranked.period} map={map} onLeave={onLeave} /> : <Result state={state} best={best} map={map} custom={rules.id === CUSTOM_RULESET_ID} onRestart={onRestart} onLeave={onLeave} />}
           <dl className="atlas-frame atlas-frame-wood grid grid-cols-2 gap-x-3 gap-y-1 p-4 text-[15px]">
             <dt className="text-[var(--atlas-muted)]">Khai thông</dt>
             <dd className="text-right font-semibold">{state.coveredCount}/{total}</dd>
@@ -521,7 +531,22 @@ function Hand({ state, rules, apply, noMove, disabled = false }: { state: Puzzle
   );
 }
 
-function RankedResult({ state, rank, score, period, onLeave }: { state: PuzzleState; rank: number | null; score: number | null; period: string; onLeave: () => void }) {
+/** Bản đồ đầy đủ của màn vừa hoàn thành, kèm địa danh. Ảnh tái dựng/minh họa, không phải tư liệu địa lý. */
+function CompletedMap({ map }: { map: FormationMap }) {
+  return (
+    <figure className="m-0 flex flex-col gap-1.5">
+      {/* eslint-disable-next-line @next/next/no-img-element -- ảnh bản đồ tĩnh, kích thước theo khung */}
+      <img src={map.src} alt={`Bản đồ hoàn chỉnh: ${map.place}`} className="aspect-[16/10] w-full rounded border border-[#8F6A32] object-cover" />
+      <figcaption className="text-sm leading-snug">
+        <b className="font-serif text-base text-[var(--atlas-title)]">{map.place}</b>
+        <span className="block text-[var(--atlas-muted)]">{map.blurb}</span>
+        <span className="block text-xs text-[var(--atlas-muted)]">Tranh minh họa tái dựng, không phải bản đồ lịch sử chính xác.</span>
+      </figcaption>
+    </figure>
+  );
+}
+
+function RankedResult({ state, rank, score, period, map, onLeave }: { state: PuzzleState; rank: number | null; score: number | null; period: string; map: FormationMap; onLeave: () => void }) {
   const won = state.phase === "won";
   return (
     <section role="status" aria-label="Kết quả xếp hạng" className="atlas-frame atlas-frame-wood flex flex-col gap-3 p-4">
@@ -533,20 +558,22 @@ function RankedResult({ state, rank, score, period, onLeave }: { state: PuzzleSt
       ) : (
         <p className="text-[15px]">Ván thua không vào bảng xếp hạng và không có thưởng. Mỗi kỳ chỉ có một ván tính hạng; hãy thử lại ở kỳ sau, hoặc luyện ở mục Chơi thường.</p>
       )}
+      {won && <CompletedMap map={map} />}
       <button type="button" onClick={onLeave} className="home-cta min-h-12 w-fit rounded-lg px-6 font-serif font-bold">Về danh sách</button>
     </section>
   );
 }
 
-function Result({ state, best, onRestart, onLeave }: { state: PuzzleState; best: number; onRestart: () => void; onLeave: () => void }) {
+function Result({ state, best, map, custom, onRestart, onLeave }: { state: PuzzleState; best: number; map: FormationMap; custom: boolean; onRestart: () => void; onLeave: () => void }) {
   const won = state.phase === "won";
   return (
     <section role="status" aria-label="Kết quả" className="atlas-frame atlas-frame-wood flex flex-col gap-3 p-4">
       <h2 className="font-serif text-2xl font-bold text-[var(--atlas-title)]">{won ? "Khai thông sa bàn!" : "Trận đồ vỡ"}</h2>
       <p className="text-[15px]">
-        {won ? `Bạn đạt ${state.score} điểm${state.score >= best ? " (cao nhất từ trước tới nay)" : ""}.` : "Bỏ lệnh quá nhiều lần liên tiếp. Thử lại với seed mới nhé."}
+        {won ? `Bạn đạt ${state.score} điểm${!custom && state.score >= best ? " (cao nhất từ trước tới nay)" : ""}.` : "Bỏ lệnh quá nhiều lần liên tiếp. Thử lại với seed mới nhé."}
       </p>
       <p className="text-sm text-[var(--atlas-muted)]">Chế độ chơi thường: không có thưởng và không lên bảng xếp hạng.</p>
+      {won && <CompletedMap map={map} />}
       <div className="flex flex-wrap gap-2">
         <button type="button" onClick={onRestart} className="home-cta min-h-12 rounded-lg px-6 font-serif font-bold">Chơi lại</button>
         <button type="button" onClick={onLeave} className="home-secondary min-h-12 rounded-lg px-4 font-serif font-semibold">Đổi bậc</button>
@@ -556,21 +583,23 @@ function Result({ state, best, onRestart, onLeave }: { state: PuzzleState; best:
   );
 }
 
+/** Huy hiệu tròn nhỏ (nghề hoặc hệ) ở đáy con cờ; kích thước theo ô nhưng không nhỏ hơn 11px để còn đọc được. */
+const BADGE = "absolute bottom-[3%] flex aspect-square w-[27%] min-w-[11px] items-center justify-center rounded-full border border-[#E4CC99]/70";
+
 /**
- * Quân trên sa bàn: chân dung tròn như một con cờ đặt lên bản đồ, viền theo hệ (màu của hệ đã nằm ở khung chân dung nên
- * không vẽ thêm biểu tượng hệ), chỉ một huy hiệu nghề tròn nhỏ ở góc dưới phải. Tên nghề và hệ nằm ở aria-label của ô và
- * ở khung "Quân đang cầm".
+ * Quân trên sa bàn: chân dung tròn như một con cờ đặt lên bản đồ. Huy hiệu nghề (đáy phải, nền tối) và hệ (đáy trái, nền
+ * theo màu hệ) đủ cả hai nhưng nhỏ vừa đủ. Tên nghề và hệ vẫn có ở nhãn truy cập của ô và ở khung "Quân đang cầm".
  */
 function PieceFace({ piece, large = false }: { piece: Piece | BoardPiece; large?: boolean }) {
   if (piece.kind === "wild") return <span className="fm-token block size-full"><Glyph kind="wild" /></span>;
   if (piece.kind === "eraser") return <span className="fm-token block size-full"><Glyph kind="eraser" /></span>;
-  const badge = `absolute right-[4%] bottom-[4%] flex ${large ? "size-7" : "size-[28%]"} items-center justify-center rounded-full border border-[#C9A25A]/70 bg-[#2B1F15]/90 text-[#E4CC99]`;
+  const badge = large ? `${BADGE} w-[24%]` : BADGE;
   if (piece.kind === "fusion") {
-    // Dung hợp: một huy hiệu vàng hình sao thay cho biểu tượng nghề (đủ 8 nghề, 7 hệ).
+    // Dung hợp (đủ 8 nghề, 7 hệ): một huy hiệu sao đỏ ở giữa đáy thay cho hai huy hiệu.
     return (
       <span className="fm-token relative block size-full p-[6%]">
         <Portrait id={piece.characterId} element="kim" profession="tuongSi" className="size-full" />
-        <span className={`${badge} border-[#E8C477] bg-[#8F241D] text-[#FFE9B0]`} aria-hidden>
+        <span className={`${badge} left-1/2 -translate-x-1/2 border-[#E8C477] bg-[#8F241D] text-[#FFE9B0]`} aria-hidden>
           <svg viewBox="0 0 24 24" className="size-[70%]" fill="currentColor"><path d="M12 2.5l2.6 6 6.4.6-4.9 4.2 1.5 6.3L12 16.3 6.4 19.6l1.5-6.3L3 9.1l6.4-.6z" /></svg>
         </span>
       </span>
@@ -579,22 +608,73 @@ function PieceFace({ piece, large = false }: { piece: Piece | BoardPiece; large?
   return (
     <span className="fm-token relative block size-full p-[6%]">
       <Portrait id={piece.characterId} element={piece.element} profession={piece.profession} className="size-full" />
-      <span className={badge} aria-hidden>
-        <ProfessionIcon profession={piece.profession} className="size-[72%]" />
+      <span className={`${badge} left-[3%]`} style={{ background: ELEMENT_COLOR[piece.element] }} aria-hidden>
+        <ElementIcon element={piece.element} className="size-[78%]" />
+      </span>
+      <span className={`${badge} right-[3%] bg-[#2B1F15] text-[#E4CC99]`} aria-hidden>
+        <ProfessionIcon profession={piece.profession} className="size-[76%]" />
       </span>
     </span>
   );
 }
 
-/** Chướng ngại: dãy núi mực nho nằm trên bản đồ (đá núi, không đi qua được). */
-function Mountain() {
+/** Bốn kiểu chướng ngại (núi, rừng, đầm lầy, thành lũy): chỉ khác hình, cùng luật không đặt quân được. */
+export const OBSTACLE_KINDS = ["nui", "rung", "damLay", "thanhLuy"] as const;
+export type ObstacleKind = (typeof OBSTACLE_KINDS)[number];
+
+/** Kiểu chướng ngại của một ô: theo vị trí, như nhau với mọi người chơi cùng bàn. */
+export const obstacleKind = (cellIndex: number): ObstacleKind => OBSTACLE_KINDS[(Math.imul(cellIndex + 1, 2654435761) >>> 7) % OBSTACLE_KINDS.length]!;
+
+const OBSTACLE_LABEL: Record<ObstacleKind, string> = { nui: "núi", rung: "rừng", damLay: "đầm lầy", thanhLuy: "thành lũy" };
+export const obstacleLabel = (k: ObstacleKind) => OBSTACLE_LABEL[k];
+
+/**
+ * Chướng ngại vẽ bằng SVG (ảnh giữ chỗ, sẽ thay bằng icon vẽ tay), nền ô riêng không lấy ảnh bản đồ. Mỗi kiểu có nét riêng:
+ * núi (đỉnh nhọn có tuyết), rừng (cụm cây tán tròn), đầm lầy (mặt nước gợn và cỏ lau), thành lũy (tường có lỗ châu mai và cổng).
+ */
+function Obstacle({ kind }: { kind: ObstacleKind }) {
+  const common = "fm-obstacle block size-full p-[10%] drop-shadow-[0_2px_2px_rgba(0,0,0,0.6)]";
   return (
-    <svg viewBox="0 0 48 48" className="size-full p-[8%] drop-shadow-[0_2px_2px_rgba(0,0,0,0.55)]" aria-hidden focusable="false">
-      <path d="M3 38 L15 14 L22 25 L30 8 L45 38 Z" fill="#3b3128" stroke="#120d09" strokeWidth={1.6} strokeLinejoin="round" />
-      <path d="M30 8 L36 21 L31 18 L27 24 Z" fill="#8a7a64" opacity={0.85} />
-      <path d="M15 14 L19 22 L16 20 L12 26 Z" fill="#8a7a64" opacity={0.7} />
-      <path d="M3 38 H45" stroke="#120d09" strokeWidth={1.6} />
-      <path d="M9 41 q6 -3 12 0 M27 42 q6 -3 12 0" fill="none" stroke="#120d09" strokeWidth={1.2} opacity={0.55} strokeLinecap="round" />
+    <svg viewBox="0 0 48 48" className={common} aria-hidden focusable="false">
+      {kind === "nui" && (
+        <>
+          <path d="M3 39 L15 15 L22 26 L30 8 L45 39 Z" fill="#4c4033" stroke="#120d09" strokeWidth={1.6} strokeLinejoin="round" />
+          <path d="M30 8 L36 22 L31 19 L27 25 Z" fill="#d8cdb6" />
+          <path d="M15 15 L19 23 L16 21 L12 27 Z" fill="#d8cdb6" opacity={0.85} />
+          <path d="M3 39 H45" stroke="#120d09" strokeWidth={1.6} />
+        </>
+      )}
+      {kind === "rung" && (
+        <>
+          <path d="M8 40 H40" stroke="#120d09" strokeWidth={1.6} strokeLinecap="round" />
+          {[[14, 27, 8], [26, 22, 10], [35, 29, 7]].map(([x, y, r]) => (
+            <g key={x}>
+              <rect x={x! - 1.2} y={y! + r! - 2} width={2.4} height={40 - y! - r! + 2} fill="#2e2118" />
+              <circle cx={x} cy={y} r={r} fill="#3f6b3a" stroke="#120d09" strokeWidth={1.4} />
+              <circle cx={x! - r! / 3} cy={y! - r! / 3} r={r! / 3} fill="#6a9a5c" opacity={0.7} />
+            </g>
+          ))}
+        </>
+      )}
+      {kind === "damLay" && (
+        <>
+          <ellipse cx={24} cy={31} rx={19} ry={9} fill="#2f5a62" stroke="#120d09" strokeWidth={1.6} />
+          <path d="M11 30 q4 -3 8 0 M24 34 q4 -3 8 0 M17 27 q3 -2 6 0" fill="none" stroke="#9fd0d0" strokeWidth={1.3} strokeLinecap="round" />
+          {[[34, 24], [38, 27], [10, 25]].map(([x, y]) => (
+            <g key={x} stroke="#5a4a22" strokeWidth={1.4} strokeLinecap="round" fill="none">
+              <path d={`M${x} ${y! + 6} V${y! - 7}`} />
+              <ellipse cx={x} cy={y! - 8} rx={1.6} ry={3.4} fill="#7a5f2c" />
+            </g>
+          ))}
+        </>
+      )}
+      {kind === "thanhLuy" && (
+        <>
+          <path d="M5 41 V19 h5 v-4 h5 v4 h4 v-4 h5 v4 h4 v-4 h5 v4 h5 v22 Z" fill="#6a5d4b" stroke="#120d09" strokeWidth={1.6} strokeLinejoin="round" />
+          <path d="M19 41 V29 a5 5 0 0 1 10 0 V41 Z" fill="#1d1510" stroke="#120d09" strokeWidth={1.4} />
+          <path d="M9 24 H15 M34 24 H40 M9 31 H15 M34 31 H40" stroke="#120d09" strokeWidth={1.1} opacity={0.6} />
+        </>
+      )}
     </svg>
   );
 }

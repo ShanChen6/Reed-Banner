@@ -932,8 +932,9 @@
     #21170f;
 }
 
-/* Trận Đồ: sa bàn là một tấm bản đồ. Ô chưa khai thông bị sương che; ô khai thông trong suốt để lộ bản đồ bên dưới.
-   Hai trạng thái dùng cùng một thuộc tính (background-color) nên đổi qua lại có chuyển động mượt. */
+/* Trận Đồ: sa bàn là một tấm bản đồ. Ô chưa khai thông được phủ bằng ảnh che ĐẶC KÍN (không trong suốt, để không nhầm với
+   ô đã mở); ô khai thông trong suốt để lộ bản đồ; ô chướng ngại có nền riêng, không lấy ảnh của bản đồ. Lớp phủ nằm ở
+   ::before và đổi bằng opacity nên có chuyển động mượt khi ô được mở. */
 .fm-board {
   background-color: #1a130e;
   background-repeat: no-repeat;
@@ -942,28 +943,55 @@
 }
 .fm-cell {
   position: relative;
-  transition: background-color 0.45s ease, box-shadow 0.45s ease;
 }
-.fm-cell[data-state="fog"] {
-  background-color: rgb(26 19 14 / 0.94);
-  box-shadow: inset 0 0 0 1px rgb(143 106 50 / 0.3);
+.fm-cell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.45s ease;
+}
+.fm-cell[data-state="fog"]::before {
+  background: #2a1f16 url("/art/formation/fog.svg") center / 48px 48px;
+  box-shadow: inset 0 0 0 1px rgb(143 106 50 / 0.45);
+  opacity: 1;
+}
+.fm-cell[data-state="lit"]::before {
+  background: #2a1f16 url("/art/formation/fog.svg") center / 48px 48px;
+  opacity: 0;
 }
 .fm-cell[data-state="lit"] {
-  background-color: rgb(26 19 14 / 0);
   box-shadow: inset 0 0 0 1px rgb(255 226 160 / 0.28), inset 0 0 16px rgb(255 214 130 / 0.16);
 }
-.fm-cell[data-state="rock"] {
-  background-color: rgb(12 9 6 / 0.38);
-  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.35);
+.fm-cell[data-state="rock"]::before {
+  background: radial-gradient(circle at 50% 40%, #4a3e30 0%, #30261c 70%);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.5), inset 0 0 10px rgb(0 0 0 / 0.5);
+  opacity: 1;
 }
-.fm-board[data-won="true"] .fm-cell[data-state="lit"] {
-  box-shadow: inset 0 0 0 1px rgb(255 226 160 / 0.1);
+.fm-cell > * {
+  position: relative;
+}
+.fm-token,
+.fm-obstacle {
+  transition: opacity 0.8s ease;
 }
 .fm-token {
   filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.6));
 }
+/* Hoàn thành: quân và chướng ngại mờ đi để cả bản đồ hiện ra. */
+[data-won="true"] .fm-token,
+[data-won="true"] .fm-obstacle {
+  opacity: 0;
+}
+[data-won="true"] .fm-cell[data-state="rock"]::before {
+  opacity: 0;
+}
+[data-won="true"] .fm-cell {
+  box-shadow: none;
+}
 @media (prefers-reduced-motion: reduce) {
-  .fm-cell {
+  .fm-cell::before,
+  .fm-token,
+  .fm-obstacle {
     transition: none;
   }
 }
