@@ -127,6 +127,14 @@ export interface PuzzleState {
   /** Số lệnh hợp lệ đã chạy; cũng là số thứ tự quân sinh ra (uid). */
   readonly turn: number;
   readonly rngState: number;
+  /**
+   * Muối bí mật của ván xếp hạng (do server sinh, không bao giờ gửi cho client). Có muối thì mỗi lần sinh quân và địa
+   * hình lấy seed từ băm (muối, mục đích, số thứ tự) thay vì một dòng RNG 32 bit chạy liên tục, nên dù bàn cờ hiển thị
+   * ra cũng không dò ngược được seed để biết trước các quân sau. Ván chơi thường không có muối.
+   */
+  readonly salt?: string;
+  /** Bộ luật tùy chỉnh của chế độ thường (id `tuy-chinh`); chỉ có ở ván tùy chỉnh. Ván xếp hạng không bao giờ có. */
+  readonly custom?: Ruleset;
 }
 
 export type PuzzleEvent =

@@ -3,6 +3,7 @@
 
 import { rewardTier, type RewardTier } from "../progress/rankRewards";
 import { vnDay, vnWeek } from "../progress/quests";
+import { themeOfState } from "./reducer";
 import type { PuzzleState } from "./types";
 
 export type RankedCadence = "day" | "week";
@@ -58,12 +59,17 @@ export function rewardGold(levelId: string, rank: number, winners: number): { ti
   return table && tier ? { tier, gold: table[tier] } : null;
 }
 
-/** Bản ván gửi cho client: không có seed và trạng thái RNG, để không đoán trước được các quân sau. */
-export type PublicPuzzle = Omit<PuzzleState, "seed" | "rngState">;
+/**
+ * Bản ván gửi cho client: không có seed và trạng thái RNG, để không đoán trước được các quân sau. `theme` (chọn bản đồ nền)
+ * là hàm một chiều của seed nên không lộ seed.
+ */
+export type PublicPuzzle = Omit<PuzzleState, "seed" | "rngState" | "salt" | "custom"> & { readonly theme: number };
 
 export function publicPuzzle(state: PuzzleState): PublicPuzzle {
-  const { seed: _seed, rngState: _rngState, ...rest } = state;
+  const { seed: _seed, rngState: _rngState, salt: _salt, custom: _custom, ...rest } = state;
   void _seed;
   void _rngState;
-  return rest;
+  void _salt;
+  void _custom;
+  return { ...rest, theme: themeOfState(state) };
 }

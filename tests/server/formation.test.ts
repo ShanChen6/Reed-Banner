@@ -12,6 +12,7 @@ import {
   MemoryFormationStore,
   claimFormation,
   formationOverview,
+  formationSalt,
   formationSeed,
   moveFormation,
   startFormation,
@@ -148,6 +149,26 @@ describe("Trận Đồ xếp hạng: mở ván", () => {
     const seed = formationSeed(d.secret!, "kho", periodKey("kho", d.now)!);
     assert.ok(!json.includes(`"seed"`) && !json.includes(`"rngState"`));
     assert.ok(!json.includes(`:${seed},`) && !json.includes(`:${seed}}`));
+  });
+
+  it("ván lưu có muối bí mật; bản gửi client chỉ có theme, không muối", async () => {
+    const d = deps();
+    const r = await startFormation(d, "a", "dai-tran");
+    assert.ok(r.ok);
+    const stored = (await d.store.get("dai-tran", periodKey("dai-tran", d.now)!, "a"))!;
+    assert.equal(stored.state.salt, formationSalt(d.secret!, "dai-tran", periodKey("dai-tran", d.now)!));
+    assert.match(stored.state.salt!, /^[0-9a-f]{32}$/);
+    const json = JSON.stringify(r.view);
+    assert.ok(!json.includes("salt") && !json.includes(stored.state.salt!));
+    assert.equal(typeof r.view.puzzle.theme, "number");
+    // Cùng kỳ cùng theme cho mọi người; muối khác nhau theo khóa, bậc và kỳ.
+    const other = await startFormation(d, "b", "dai-tran");
+    assert.ok(other.ok && other.view.puzzle.theme === r.view.puzzle.theme);
+    assert.notEqual(formationSalt("k1", "kho", "2026-11-04"), formationSalt("k2", "kho", "2026-11-04"));
+    assert.notEqual(formationSalt("k1", "kho", "2026-11-04"), formationSalt("k1", "thuong", "2026-11-04"));
+    assert.notEqual(formationSalt("k1", "kho", "2026-11-04"), formationSalt("k1", "kho", "2026-11-05"));
+    // Muối khác seed: biết seed không suy ra được muối.
+    assert.notEqual(formationSalt("k1", "kho", "2026-11-04"), formationSeed("k1", "kho", "2026-11-04").toString(16));
   });
 
   it("seed phụ thuộc khóa bí mật, bậc và kỳ", () => {

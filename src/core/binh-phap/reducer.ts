@@ -3,12 +3,26 @@
 import { createRng } from "../rng";
 import { generateObstacles, nextPiece } from "./generator";
 import { checkPlacement, completedLines, idx, playableCount, typesMatchBoth } from "./rules";
-import { RULESETS, SCHEMA_VERSION } from "./rulesets";
+import { CUSTOM_RULESET_ID, RULESETS, SCHEMA_VERSION } from "./rulesets";
 import type { BoardPiece, Cell, Command, Piece, PuzzleEvent, PuzzleState, Ruleset, Transition } from "./types";
 
 function rulesFor(state: PuzzleState): Ruleset | null {
+  if (state.rulesetId === CUSTOM_RULESET_ID) return state.custom && state.custom.version === state.rulesVersion ? state.custom : null;
   const r = RULESETS.find((x) => x.id === state.rulesetId);
   return r && r.version === state.rulesVersion ? r : null;
+}
+
+/** Băm chuỗi thành 32 bit (hai vòng trộn kiểu murmur); đầu vào gồm muối bí mật nên đầu ra không dự đoán được. */
+export function hash32(text: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++) {
+    h = Math.imul(h ^ text.charCodeAt(i), 0x01000193);
+    h ^= h >>> 15;
+    h = Math.imul(h, 0x85ebca6b);
+  }
+  h ^= h >>> 16;
+  h = Math.imul(h, 0xc2b2ae35);
+  return (h ^ (h >>> 13)) >>> 0;
 }
 
 /** Cỡ bàn và tỉ lệ chướng ngại của một ván: cố định, hoặc rút theo seed khi bậc có `randomSize`. */
@@ -26,13 +40,16 @@ function boardSpec(rules: Ruleset, rng: ReturnType<typeof createRng>): { width: 
   return { width, height, obstaclePercent: Math.max(byArea, byCap) };
 }
 
-/** Ván mới từ seed (số nguyên 32 bit không dấu). Quân đầu tiên luôn là quân thường hoặc Quân Lệnh. */
-export function createPuzzle(rules: Ruleset, seed: number): PuzzleState {
-  const rng = createRng(seed);
+/**
+ * Ván mới từ seed (số nguyên 32 bit không dấu). Quân đầu tiên luôn là quân thường hoặc Quân Lệnh. Có `salt` (xếp hạng)
+ * thì địa hình và từng quân sinh từ băm của muối, xem `PuzzleState.salt`.
+ */
+export function createPuzzle(rules: Ruleset, seed: number, salt?: string): PuzzleState {
+  const rng = createRng(salt ? hash32(`${salt}|board`) : seed);
   // Thứ tự RNG cố định: cỡ bàn (nếu ngẫu nhiên), địa hình, rồi quân đầu tiên.
   const { width, height, obstaclePercent } = boardSpec(rules, rng);
   const blocked = generateObstacles(rng, width, height, obstaclePercent);
-  const hand = nextPiece(rng, rules, 0, null, false);
+  const hand = salt ? nextPiece(createRng(hash32(`${salt}|piece|0`)), rules, 0, null, false) : nextPiece(rng, rules, 0, null, false);
   return {
     schemaVersion: SCHEMA_VERSION,
     rulesetId: rules.id,
@@ -50,8 +67,25 @@ export function createPuzzle(rules: Ruleset, seed: number): PuzzleState {
     coveredCount: 0,
     phase: "playing",
     turn: 0,
-    rngState: rng.state(),
+    rngState: salt ? 0 : rng.state(),
+    ...(salt ? { salt } : {}),
+    ...(rules.id === CUSTOM_RULESET_ID ? { custom: rules } : {}),
   };
+}
+
+/**
+ * Chủ đề hình ảnh của ván (chọn bản đồ nền trong kho theo kỳ), suy ra thuần từ seed và **không** dùng RNG của ván nên
+ * không ảnh hưởng dãy quân hay địa hình. Trả số nguyên không âm; giao diện lấy phần dư theo số bản đồ.
+ */
+export function themeOfState(state: Pick<PuzzleState, "seed" | "salt">): number {
+  return state.salt ? hash32(`${state.salt}|theme`) >>> 8 : themeOf(state.seed);
+}
+
+export function themeOf(seed: number): number {
+  let h = (seed >>> 0) ^ 0x9e3779b9;
+  h = Math.imul(h ^ (h >>> 16), 0x85ebca6b);
+  h = Math.imul(h ^ (h >>> 13), 0xc2b2ae35);
+  return (h ^ (h >>> 16)) >>> 8;
 }
 
 export function transition(state: PuzzleState, command: Command): Transition {
@@ -64,9 +98,10 @@ export function transition(state: PuzzleState, command: Command): Transition {
 }
 
 function spawn(state: PuzzleState, rules: Ruleset, cells: readonly Cell[], used: Piece, turn: number) {
-  const rng = createRng(state.rngState);
+  // Ván có muối: quân thứ `turn` lấy seed từ băm riêng, không phụ thuộc dòng RNG, nên không suy ra được từ quân đã thấy.
+  const rng = createRng(state.salt ? hash32(`${state.salt}|piece|${turn}`) : state.rngState);
   const hand = nextPiece(rng, rules, turn, used, cells.some((c) => c.piece !== null));
-  return { hand, rngState: rng.state() };
+  return { hand, rngState: state.salt ? 0 : rng.state() };
 }
 
 function discard(state: PuzzleState, rules: Ruleset): Transition {
