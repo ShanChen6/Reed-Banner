@@ -144,6 +144,28 @@ Engine nhận mọi cỡ nên thêm bậc hay chế độ tự chọn cỡ bàn 
 
 **Code:** `src/core/binh-phap/` (luật, reducer, sinh quân và địa hình, lưu/nạp), `src/app/game/formation/FormationScreen.tsx` (scene `FORMATION`, đường dẫn `/game/formation`), mô phỏng `scripts/binh-phap-sim.ts`. Số đo ở [05 — mô phỏng và QA](05-binh-phap-balance-qa.md#kết-quả-mô-phỏng-baseline-01112026). Lưu ván dở ở `localStorage`; đổi bộ luật của một bậc thì save cũ bị bỏ (fail-closed).
 
+### 11.1 Nhân vật đặc biệt nhiều nghề/hệ
+
+Shan (01/11/2026): sắp tới sẽ thiết kế thêm nhân vật đặc biệt có từ hai nghề + hệ trở lên, trong đó có [Đinh Ngọc](../../03-characters/dinh-ngoc.md) (dung hợp 8 nghề, 7 hệ). Hạ tầng đã có trong engine, **danh sách mặc định rỗng** cho tới khi Shan duyệt từng nhân vật (`src/core/binh-phap/specials.ts`).
+
+- **Kiểu quân `multi`** mang tập nghề và tập hệ. Hai quân khớp khi **tập nghề giao nhau hoặc tập hệ giao nhau**; quân thường là trường hợp mỗi tập một phần tử, nên luật cũ không đổi. Luật vẫn chỉ dựa trên nghề và hệ.
+- **Khác Quân Lệnh:** quân `multi` vẫn phải đặt sát một quân (trừ khi bàn trống) và quân đặt cạnh nó vẫn phải khớp các quân kề khác. Đinh Ngọc khớp mọi quân kề nhưng không đặt được ở ô trống xa mọi quân.
+- **Điểm:** quân kề khớp cả nghề lẫn hệ (cả hai tập đều giao) vẫn được +5.
+- **Sinh quân:** tung chung với Quân Lệnh/Thu Hồi bằng một lần tung; tỉ lệ `multiPermille` của bậc, chọn đều trong các nhân vật được duyệt cho bậc đó (`levels`). Không ra liền sau quân đặc biệt. Danh sách rỗng thì dãy quân y hệt trước khi có tính năng này.
+- **Thêm một nhân vật** là thêm một dòng vào `SPECIAL_CHARACTERS` (id, tên, tập nghề, tập hệ, các bậc), rồi đo lại bằng mô phỏng và tăng `version` của bậc liên quan. Không cần sửa luật.
+- **Hiển thị:** tối đa hai biểu tượng nghề và hai biểu tượng hệ mỗi góc; nhiều hơn thì hiện số lượng (Đinh Ngọc: "8" và "7"). Khung thông tin ghi "mọi nghề, mọi hệ".
+
+**Ảnh hưởng độ khó (Đại trận, 800 ván, một quân dung hợp kiểu Đinh Ngọc):**
+
+| Tỉ lệ quân dung hợp | Random thắng | Greedy thắng |
+|---|---|---|
+| 0% | 6,0% | 31,4% |
+| 4% | 13,8% | 42,3% |
+| 8% | 25,5% | 51,0% |
+| 4% với quân 2 nghề + 2 hệ | 8,6% | 37,5% |
+
+Quân dung hợp rất mạnh: 4% đã nâng tỉ lệ thắng của greedy khoảng 11 điểm. **Đề xuất tỉ lệ 1–2% cho bậc có xếp hạng** và chỉ bật sau khi chốt mức điều chỉnh độ khó; mặc định `multiPermille` của Đại trận đang là 40 nhưng không có tác dụng vì danh sách rỗng. Quân 2 nghề + 2 hệ nhẹ hơn nhiều. Cần Shan chốt: nhân vật đặc biệt có xuất hiện ở các bậc có thưởng không, hay chỉ ở ván không xếp hạng.
+
 ## 12. Xếp hạng và thưởng (thiết kế, chưa có code)
 
 Shan (01/11/2026): xếp hạng cao được nhận thưởng; thưởng chia theo mức độ chơi để công bằng. Các điểm dưới đây là **đề xuất** để Shan chốt; không có số nào đã chạy. Làm ở BP-05/BP-06, sau khi BP-00 chốt luật.

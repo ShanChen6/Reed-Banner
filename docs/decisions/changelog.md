@@ -391,3 +391,7 @@ Shan chốt: bàn không cần vuông (5×7, 7×9, 9×9…), có ô chướng ng
 
 Shan chốt: Hướng dẫn 3×3 (không xếp hạng, không thưởng), Thường 5×5, Khó 6×6, Đại trận cỡ ngẫu nhiên mỗi cạnh 7–10; số chướng ngại phải tính kỹ. Đã code, số chướng ngại do mô phỏng chọn (tỉ lệ theo diện tích, trần 72 ô chơi được). Đại trận dùng đủ 8 nghề, gồm Xạ thủ và Sát thủ. Id bậc "Nhập môn" đổi thành `huong-dan`, save cũ bị bỏ.
 
+### 01/11/2026 (bổ sung) — Quân nhân vật đặc biệt nhiều nghề/hệ trong Trận Đồ
+
+Shan đồng ý tổng quát hóa quân thành tập nghề, tập hệ giao nhau để chứa Đinh Ngọc và các nhân vật đặc biệt sắp thiết kế. Đã code hạ tầng; danh sách nhân vật để trống, chưa nhân vật nào được bật ([GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-đặc-biệt-nhiều-nghềhệ)).
+

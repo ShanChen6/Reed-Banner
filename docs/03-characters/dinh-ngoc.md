@@ -153,3 +153,8 @@ Ví dụ trung tính, không gear/buff/Sĩ khí/quan hệ hệ, ATK100, DEF đ�
 Đây chỉ là kiểm số học, không phải mô phỏng trận. Trước rollout cần ma trận 1v1/3v3, cấp1/10/20/30, chiêu1/3/5, gear0/đại diện, các phe/hệ đối thủ, F100/20%, có/không đồng đội khống chế. So với đấu sĩ và hỗ trợ chuyên môn; báo tỷ lệ thắng kèm CI95%, thời lượng/censored, nguồn sát thương/hồi/Khiên, P4 cơ hội mở/tiêu/hết hạn và tài nguyên thực. Kiểm riêng freeze/silence, shield hết hạn/dispel, nguồn chết, nhiều hit/AoE, tải snapshot và reset Survival.
 
 > TODO: Review hình Master, mapping special template/slot và cách mở khóa trước implement. Các chi tiết gameplay/ID/chỉ số ở đây là proposal, không coi đã được cân bằng hoặc đã triển khai. Theo dõi tại [câu hỏi mở](../09-roadmap/cau-hoi-mo.md).
+
+## Trận Đồ (Binh Pháp)
+
+Đinh Ngọc là nhân vật đặc biệt nhiều nghề/hệ đầu tiên dự kiến cho [Trận Đồ](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-đặc-biệt-nhiều-nghềhệ): quân mang đủ 8 nghề và 7 hệ, khớp mọi quân kề nhưng vẫn phải đặt sát một quân. **Chưa bật**: nhân vật chưa duyệt và chưa đăng ký vào roster, nên danh sách đặc biệt của Trận Đồ đang rỗng. Muốn bật chỉ cần thêm một dòng vào `src/core/binh-phap/specials.ts` sau khi được duyệt.
+

@@ -11,6 +11,18 @@ export interface NormalPiece {
   readonly profession: Profession;
   readonly element: Element;
 }
+/**
+ * Quân nhân vật đặc biệt có từ hai nghề hoặc hai hệ trở lên (ví dụ Đinh Ngọc dung hợp cả 8 nghề và 7 hệ). Khớp một
+ * quân khác khi **tập nghề giao nhau hoặc tập hệ giao nhau**. Vẫn phải đặt sát một quân (khác Quân Lệnh) và vẫn phải
+ * khớp từng quân kề. Danh sách nhân vật ở `specials.ts`.
+ */
+export interface MultiPiece {
+  readonly kind: "multi";
+  readonly uid: string;
+  readonly characterId: string;
+  readonly professions: readonly Profession[];
+  readonly elements: readonly Element[];
+}
 /** Quân Lệnh (wild): đặt ở ô trống bất kỳ, khớp mọi quân kề. */
 export interface WildPiece {
   readonly kind: "wild";
@@ -21,9 +33,11 @@ export interface EraserPiece {
   readonly kind: "eraser";
   readonly uid: string;
 }
-export type Piece = NormalPiece | WildPiece | EraserPiece;
+export type Piece = NormalPiece | MultiPiece | WildPiece | EraserPiece;
 /** Quân đã nằm trên bàn (không bao giờ là Thu Hồi). */
-export type BoardPiece = NormalPiece | WildPiece;
+export type BoardPiece = NormalPiece | MultiPiece | WildPiece;
+/** Quân có nghề và hệ (thường hoặc đặc biệt nhiều nghề/hệ). */
+export type TypedPiece = NormalPiece | MultiPiece;
 
 export interface Cell {
   /** Ô chướng ngại (địa hình): không đặt được quân, không cần khai thông, không tính vào hàng/cột kín. */
@@ -65,11 +79,25 @@ export interface Ruleset {
   /** Xác suất sinh quân đặc biệt, tính theo phần nghìn. Không bao giờ sinh hai quân đặc biệt liên tiếp. */
   readonly wildPermille: number;
   readonly eraserPermille: number;
+  /** Xác suất (phần nghìn) sinh quân nhân vật đặc biệt; chỉ có tác dụng khi `specials` không rỗng. */
+  readonly multiPermille: number;
+  /** Nhân vật đặc biệt đã duyệt cho bậc này (lọc từ `SPECIAL_CHARACTERS`). Rỗng nghĩa là bậc không có quân loại này. */
+  readonly specials: readonly SpecialCharacter[];
   /** Số ô chướng ngại sinh ngẫu nhiên theo seed, tính theo phần trăm diện tích bàn (0 = bàn đặc). Bị `randomSize` ghi đè. */
   readonly obstaclePercent: number;
   /** Thanh Bỏ Lệnh chạy 0..maxHeat; bỏ quân khi thanh đã đầy là thua. */
   readonly maxHeat: number;
   readonly score: ScoreWeights;
+}
+
+/** Một nhân vật đặc biệt được phép xuất hiện trong Trận Đồ. */
+export interface SpecialCharacter {
+  readonly characterId: string;
+  readonly name: string;
+  readonly professions: readonly Profession[];
+  readonly elements: readonly Element[];
+  /** Id các bậc (`Ruleset.id`) được phép sinh nhân vật này. */
+  readonly levels: readonly string[];
 }
 
 export interface ScoreWeights {
