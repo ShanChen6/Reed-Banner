@@ -179,6 +179,7 @@ Shan (01/11/2026): xếp hạng cao được nhận thưởng; thưởng chia th
 2. `POST /api/formation/move`: client gửi lệnh (đặt quân hoặc bỏ lệnh) kèm `seq`; server chạy đúng engine `src/core/binh-phap`, lưu trạng thái mới, trả bản công khai (bàn và quân đang cầm, không seed, không RNG). Lệnh sai không đổi gì; `seq` lệch (gửi trùng, hai tab) bị từ chối kèm ván hiện tại. Mỗi lệnh là không thể hoàn tác và quân kế tiếp chưa ai biết, nên không luyện trước được.
 3. Mỗi người **một ván mỗi kỳ mỗi bậc** (chỉ mục duy nhất trong DB). Mở lại thì nối đúng ván cũ, tải lại trang không mất tiến độ và không bày bàn mới. Ván vượt 600 lệnh bị xử thua.
 4. Điểm do server tính. Chỉ ván **thắng** có hạng; ván thua không hạng, không thưởng.
+5. **Chỉ tài khoản đã đăng nhập mới chơi và nhận thưởng** (Shan chốt 01/11/2026): khách bị chặn ở mọi route (`401 loginRequired`) và cả ở tầng service, không để lại ván nào; khách vẫn xem được bảng và thấy nút "Đăng nhập để chơi". Ván khách đã chơi ở chế độ thường không bị ảnh hưởng.
 
 **Kỳ** (giờ Việt Nam, như Nhật Lệnh): Thường và Khó đổi **theo ngày** lúc 0 giờ; Đại trận đổi **theo tuần** vào thứ Hai 0 giờ. Hướng dẫn không xếp hạng, không thưởng. Hạng: điểm cao hơn, rồi ít nước hơn, rồi nộp sớm hơn.
 
@@ -196,7 +197,7 @@ Hạng tính theo hạng cuối kỳ của người thắng; nửa trên làm tr
 
 **Hạn chế đã biết** (chưa xử lý, ghi để quyết định sau):
 
-- Khách tạo thêm tài khoản (xóa cookie) để chơi nhiều ván một kỳ, và vì không đòi số người tối thiểu nên một tài khoản phụ chơi một mình một bảng vẫn nhận hạng nhất (Đại trận: 1 000 vàng mỗi tuần mỗi tài khoản). Cùng mức rủi ro với Nhật Lệnh nhưng số vàng lớn hơn. Cách giảm đã cân nhắc: giới hạn thưởng cho tài khoản đã đăng nhập, hoặc chỉ tính hạng khi điểm đạt chuẩn (số đo: điểm mỗi ô chơi được của người thắng dao động hẹp, khoảng 65–75 ở Thường, 54–64 ở Khó, 40–47 ở Đại trận, nên ngưỡng điểm chặn được ít).
+- Vì không đòi số người tối thiểu, một tài khoản phụ chơi một mình một bảng vẫn nhận hạng nhất (Đại trận: 1 000 vàng mỗi tuần mỗi tài khoản). Yêu cầu đăng nhập chặn được việc xóa cookie để tạo "khách" mới, nhưng chưa chặn được người đăng ký nhiều tài khoản. Cách giảm còn lại: chỉ tính hạng khi điểm đạt chuẩn (số đo: điểm mỗi ô chơi được của người thắng dao động hẹp, khoảng 65–75 ở Thường, 54–64 ở Khó, 40–47 ở Đại trận, nên ngưỡng điểm chặn được ít).
 - Cùng bàn cờ cả kỳ nên người chơi có thể chia sẻ dãy quân cho nhau (như lộ đáp án Nhật Lệnh). Server không chặn được việc người ngoài giải hộ.
 - Chưa có giới hạn tốc độ gọi API và chưa có tác vụ cron dọn ván bỏ dở (ván dở của kỳ cũ chỉ nằm im, không có hạng).
 - Đổi `version` của bậc thì ván đang chơi của bậc đó không đọc được nữa (nạp fail-closed); phải triển khai vào lúc kỳ vừa đổi.

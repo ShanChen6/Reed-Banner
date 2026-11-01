@@ -63,6 +63,11 @@ export class DrizzleDestinyLeaderboardStore implements DestinyLeaderboardStore {
     return rows.map((row) => ({ ...row, name: row.name ?? null }));
   }
 
+  async count(cycleId: string): Promise<number> {
+    const [row] = await this.db.select({ n: count() }).from(destinyLeaderboardScores).where(eq(destinyLeaderboardScores.cycleId, cycleId));
+    return row?.n ?? 0;
+  }
+
   async rankOf(cycleId: string, ownerId: string) {
     const [mine] = await this.db.select({
       cycleId: destinyLeaderboardScores.cycleId,

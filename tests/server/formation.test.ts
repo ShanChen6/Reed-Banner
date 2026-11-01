@@ -32,6 +32,7 @@ function deps(over: Partial<FormationDeps> = {}): FormationDeps {
     secret: "khoa-bi-mat-cho-test",
     enabled: true,
     newId: () => `f_${++n}`,
+    isSignedIn: async () => true,
     ...over,
   };
 }
@@ -75,7 +76,33 @@ describe("Trận Đồ xếp hạng: cổng vào", () => {
     assert.deepEqual(await startFormation(deps({ enabled: false }), "a", "thuong"), { ok: false, error: "featureDisabled" });
     assert.deepEqual(await startFormation(deps({ secret: undefined }), "a", "thuong"), { ok: false, error: "unavailable" });
     for (const level of ["huong-dan", "la", 5, null, undefined]) assert.deepEqual(await startFormation(deps(), "a", level), { ok: false, error: "unknownLevel" });
-    assert.deepEqual(await formationOverview(deps({ enabled: false }), "a"), { enabled: false, levels: [] });
+    assert.deepEqual(await formationOverview(deps({ enabled: false }), "a"), { enabled: false, canPlay: false, levels: [] });
+  });
+});
+
+describe("Trận Đồ xếp hạng: chỉ tài khoản đã đăng nhập", () => {
+  const guestsOnly = (): FormationDeps => deps({ isSignedIn: async (id) => id !== "khach" });
+
+  it("khách không mở ván, không đi nước, không nhận thưởng", async () => {
+    const d = guestsOnly();
+    assert.deepEqual(await startFormation(d, "khach", "thuong"), { ok: false, error: "loginRequired" });
+    assert.deepEqual(await moveFormation(d, "khach", "thuong", 0, { kind: "discard" }), { ok: false, error: "loginRequired" });
+    assert.deepEqual(await claimFormation(at(d, T0 + DAY), "khach", "thuong", periodKey("thuong", d.now)!), { ok: false, error: "loginRequired" });
+    assert.equal(await d.store.get("thuong", periodKey("thuong", d.now)!, "khach"), null); // không để lại ván nào
+  });
+
+  it("tài khoản đăng nhập chơi bình thường; khách vẫn xem được bảng nhưng canPlay là false", async () => {
+    const d = guestsOnly();
+    assert.ok((await startFormation(d, "tai-khoan", "thuong")).ok);
+    const asGuest = await formationOverview(d, "khach");
+    assert.equal(asGuest.canPlay, false);
+    assert.equal(asGuest.levels.length, 3);
+    assert.equal((await formationOverview(d, null)).canPlay, false);
+    assert.equal((await formationOverview(d, "tai-khoan")).canPlay, true);
+  });
+
+  it("cờ tắt thì báo tắt trước khi hỏi đăng nhập", async () => {
+    assert.deepEqual(await startFormation({ ...guestsOnly(), enabled: false }, "khach", "thuong"), { ok: false, error: "featureDisabled" });
   });
 });
 

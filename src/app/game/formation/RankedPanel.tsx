@@ -4,6 +4,7 @@
 // Dữ liệu từ GET /api/formation; điểm, hạng và thưởng do server tính.
 
 import { REWARD_GOLD, REWARD_TIERS, rulesetById } from "@/core/binh-phap";
+import { SceneLink } from "../SceneContext";
 import type { LevelOverview, Overview } from "./rankedClient";
 
 const TIER_LABEL = Object.fromEntries(REWARD_TIERS.map((t) => [t.tier, t.label])) as Record<string, string>;
@@ -42,9 +43,16 @@ export default function RankedPanel({
         </p>
       </header>
 
+      {!overview.canPlay && (
+        <div role="note" className="atlas-frame atlas-frame-wood flex flex-wrap items-center justify-between gap-3 p-4">
+          <p className="max-w-xl text-[15px]">Chế độ xếp hạng chỉ dành cho tài khoản đã đăng nhập. Khách vẫn xem được bảng; muốn chơi và nhận thưởng hãy đăng nhập (ván khách đang chơi ở các chế độ khác được giữ nguyên).</p>
+          <SceneLink scene="LOGIN" className="home-cta flex min-h-12 items-center rounded-lg px-6 font-serif font-bold">Đăng nhập</SceneLink>
+        </div>
+      )}
+
       <p role="status" aria-live="polite" className="min-h-6 text-[15px] text-[var(--atlas-title)]">{note}</p>
 
-      {pending.length > 0 && (
+      {overview.canPlay && pending.length > 0 && (
         <section aria-label="Thưởng chờ nhận" className="atlas-frame atlas-frame-wood p-4">
           <h2 className="mb-2 font-serif text-xl font-bold text-[var(--atlas-title)]">Thưởng chờ nhận</h2>
           <ul className="flex flex-col gap-2">
@@ -74,11 +82,11 @@ export default function RankedPanel({
               <p className="text-[15px]">{s.text}</p>
               <button
                 type="button"
-                disabled={busy || s.disabled}
+                disabled={busy || s.disabled || !overview.canPlay}
                 onClick={() => onPlay(l.level)}
                 className="home-cta min-h-12 rounded-lg px-4 font-serif font-bold disabled:opacity-60"
               >
-                {s.action}
+                {overview.canPlay ? s.action : "Đăng nhập để chơi"}
               </button>
               {gold && (
                 <p className="text-sm text-[var(--atlas-muted)]">

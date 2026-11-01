@@ -6,3 +6,4 @@ export * from "./dualTowerState";
 export * from "./quests";
 export * from "./achievements";
 export * from "./leaderboard";
+export * from "./rankRewards";

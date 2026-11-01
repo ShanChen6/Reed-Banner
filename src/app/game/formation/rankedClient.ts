@@ -8,6 +8,8 @@ export type { Claimable, FormationView, LevelOverview };
 
 export interface Overview {
   readonly enabled: boolean;
+  /** Đã đăng nhập thì chơi và nhận thưởng được; khách chỉ xem bảng. */
+  readonly canPlay: boolean;
   readonly levels: readonly LevelOverview[];
 }
 
