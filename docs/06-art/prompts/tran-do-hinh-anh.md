@@ -1,7 +1,7 @@
 # Prompt hình ảnh cho Trận Đồ
 
 > Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — bộ prompt để Shan tạo ảnh; ảnh chưa có, hiện dùng ảnh giữ chỗ. Chưa duyệt Master phong cách.
+> Trạng thái: **DRAFT** — bộ prompt để Shan tạo ảnh; ô che và 4 icon chướng ngại v1 đã có (02/11/2026), ảnh 30 bản đồ vẫn là ảnh giữ chỗ. Chưa duyệt Master phong cách.
 
 Nguồn chính của giao diện Trận Đồ là [giao diện Trận Đồ](../../05-ui-ux/screens/tran-do.md); tài liệu này chỉ chứa **prompt đầy đủ để dán thẳng vào công cụ tạo ảnh**, kèm tên tệp và thông số. Kho bản đồ **không giới hạn số ảnh**: thêm một ảnh mới theo mục 1.4. Mọi prompt viết tiếng Anh (công cụ tạo ảnh), giải thích tiếng Việt.
 
@@ -336,6 +336,10 @@ Tệp: `public/art/formation/obstacles/thanhLuy.webp`
 ```text
 Hand-painted game icon of a short stone and earth fortress wall with crenellated top and a central arched gate with a wooden door, 10th-century Vietnamese military style, weathered grey-brown stone with ochre and moss accents, isolated single object centered on a fully transparent background, bold dark brown ink outline, flat painterly colors, soft drop shadow beneath, simple silhouette readable at 32px, 256x256, no text, no frame, no ground plane, no other objects.
 ```
+
+### 3.1 Trạng thái và lưu ý nền trong suốt
+
+Ô che (`public/art/formation/fog.webp`) đã duyệt; 4 icon v1 "tạm được" đã tích hợp. Công cụ tạo ảnh trả icon với **ô caro vẽ sẵn thay vì alpha thật**, nên đã dùng `scripts/cutout-formation-icon.py` (lan từ mép, bỏ mảng sáng trung tính, giữ mảng liền lớn nhất, làm mềm viền) để ra webp trong suốt 256×256 (cần Pillow, numpy, scipy). Còn vệt bóng trắng mờ ở chân vật thể. Lần tạo sau nên yêu cầu **nền một màu phẳng (#00FF00 hoặc xám đặc), không bóng đổ dưới chân** để cắt sạch hơn.
 
 ## 4. Kiểm tra sau khi có ảnh
 

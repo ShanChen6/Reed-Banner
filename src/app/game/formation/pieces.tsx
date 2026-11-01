@@ -62,53 +62,19 @@ const OBSTACLE_LABEL: Record<ObstacleKind, string> = { nui: "núi", rung: "rừn
 export const obstacleLabel = (k: ObstacleKind) => OBSTACLE_LABEL[k];
 
 /**
- * Chướng ngại vẽ bằng SVG (ảnh giữ chỗ, sẽ thay bằng icon vẽ tay), nền ô riêng không lấy ảnh bản đồ. Mỗi kiểu có nét riêng:
- * núi (đỉnh nhọn có tuyết), rừng (cụm cây tán tròn), đầm lầy (mặt nước gợn và cỏ lau), thành lũy (tường có lỗ châu mai và cổng).
+ * Chướng ngại là icon vẽ tay (webp nền trong suốt, xem `scripts/cutout-formation-icon.py`), nền ô riêng không lấy ảnh bản đồ.
+ * Bốn kiểu: núi, rừng, đầm lầy, thành lũy.
  */
 export function Obstacle({ kind }: { kind: ObstacleKind }) {
-  const common = "fm-obstacle block size-full p-[10%] drop-shadow-[0_2px_2px_rgba(0,0,0,0.6)]";
   return (
-    <svg viewBox="0 0 48 48" className={common} aria-hidden focusable="false">
-      {kind === "nui" && (
-        <>
-          <path d="M3 39 L15 15 L22 26 L30 8 L45 39 Z" fill="#4c4033" stroke="#120d09" strokeWidth={1.6} strokeLinejoin="round" />
-          <path d="M30 8 L36 22 L31 19 L27 25 Z" fill="#d8cdb6" />
-          <path d="M15 15 L19 23 L16 21 L12 27 Z" fill="#d8cdb6" opacity={0.85} />
-          <path d="M3 39 H45" stroke="#120d09" strokeWidth={1.6} />
-        </>
-      )}
-      {kind === "rung" && (
-        <>
-          <path d="M8 40 H40" stroke="#120d09" strokeWidth={1.6} strokeLinecap="round" />
-          {[[14, 27, 8], [26, 22, 10], [35, 29, 7]].map(([x, y, r]) => (
-            <g key={x}>
-              <rect x={x! - 1.2} y={y! + r! - 2} width={2.4} height={40 - y! - r! + 2} fill="#2e2118" />
-              <circle cx={x} cy={y} r={r} fill="#3f6b3a" stroke="#120d09" strokeWidth={1.4} />
-              <circle cx={x! - r! / 3} cy={y! - r! / 3} r={r! / 3} fill="#6a9a5c" opacity={0.7} />
-            </g>
-          ))}
-        </>
-      )}
-      {kind === "damLay" && (
-        <>
-          <ellipse cx={24} cy={31} rx={19} ry={9} fill="#2f5a62" stroke="#120d09" strokeWidth={1.6} />
-          <path d="M11 30 q4 -3 8 0 M24 34 q4 -3 8 0 M17 27 q3 -2 6 0" fill="none" stroke="#9fd0d0" strokeWidth={1.3} strokeLinecap="round" />
-          {[[34, 24], [38, 27], [10, 25]].map(([x, y]) => (
-            <g key={x} stroke="#5a4a22" strokeWidth={1.4} strokeLinecap="round" fill="none">
-              <path d={`M${x} ${y! + 6} V${y! - 7}`} />
-              <ellipse cx={x} cy={y! - 8} rx={1.6} ry={3.4} fill="#7a5f2c" />
-            </g>
-          ))}
-        </>
-      )}
-      {kind === "thanhLuy" && (
-        <>
-          <path d="M5 41 V19 h5 v-4 h5 v4 h4 v-4 h5 v4 h4 v-4 h5 v4 h5 v22 Z" fill="#6a5d4b" stroke="#120d09" strokeWidth={1.6} strokeLinejoin="round" />
-          <path d="M19 41 V29 a5 5 0 0 1 10 0 V41 Z" fill="#1d1510" stroke="#120d09" strokeWidth={1.4} />
-          <path d="M9 24 H15 M34 24 H40 M9 31 H15 M34 31 H40" stroke="#120d09" strokeWidth={1.1} opacity={0.6} />
-        </>
-      )}
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element -- icon 256px nhỏ, không cần tối ưu qua next/image
+    <img
+      src={`/art/formation/obstacles/${kind}.webp`}
+      alt=""
+      aria-hidden
+      draggable={false}
+      className="fm-obstacle block size-full object-contain p-[8%] drop-shadow-[0_2px_2px_rgba(0,0,0,0.6)]"
+    />
   );
 }
 
