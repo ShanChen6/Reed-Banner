@@ -61,6 +61,9 @@
 - Nhân vật đặc biệt mang hai nghề/hai hệ: phòng thủ và đòn đánh thường theo hệ chính, giá cao hơn nhiều, nhận bằng cách đặc biệt, dùng icon tổng hợp nghề/hệ.
 - Tạo nguồn [nhan-vat-tong-hop.md](../03-characters/nhan-vat-tong-hop.md) (DRAFT) với đề xuất chính/phụ, ví dụ và tác động code; chưa sửa code, roster hay save. Icon `tongHop` cho nghề/hệ và hiển thị tổng hợp của Đinh Ngọc ở trang xem thử đã có.
 
+**Vũ Phong — năm prompt khung còn lại**
+- Thêm năm prompt (đánh thường, ra chiêu ô2, tuyệt chiêu ô4, hạ gục, cá tính) vào [nguồn Vũ Phong](../03-characters/vu-phong.md), cùng khối DNA với prompt Master; một trượng duy nhất ở mọi khung. DRAFT, chưa tạo ảnh, Master chưa duyệt.
+
 **Vũ Phong — bộ kỹ năng và chiêu thức đề xuất (tám nghề/bảy hệ)**
 - Người dùng chốt Vũ Phong là nhân vật đặc biệt như Đinh Ngọc, đủ tám nghề/bảy hệ qua 6 chủ động + 4 nội tại. Viết bộ kỹ năng vào [nguồn Vũ Phong](../03-characters/vu-phong.md); bản hai nghề/hai hệ nháp trước đó bị thay hoàn toàn.
 - Đảo vai so với Đinh Ngọc để không trùng lối chơi: phòng thủ Phong; chủ động là Quân sư/Mưu sĩ/Y sư/Binh lính (hỗ trợ, điều khiển bàn cờ), nội tại là Tướng sĩ/Xạ thủ/Sát thủ/Pháp sư (phản ứng tấn công). Chỉ số 480/52/9.
