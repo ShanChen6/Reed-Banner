@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Âm thanh trận đánh: `hit` (dùng chung 8 nghề), `invalid`, `match3` (dùng lại cho 4 và 5 ô)**
+- Cắt từ năm đoạn Gemini. `battle.hit.<nghề>` chưa có tiếng riêng từng nghề nên cả 8 nghề dùng chung 5 biến thể đòn; `match4`/`match5` dùng tiếng `match3` với tốc độ 1,08 và 1,16. Chờ tiếng riêng khi Shan tạo thêm.
+
 **Âm thanh: `battle.swap`, `formation.tick`, `formation.rank`, nhạc màn chọn bậc**
 - `formation.rank` phát khi nhận thưởng xếp hạng; `formation.tick` điểm từng giây trong 5 giây cuối của một kỳ khi đang ở màn chọn bậc (thu hẹp so với "dưới 1 giờ" trong bảng cue vì lặp dày gây phiền). Nhạc `formation_menu` (99 giây) làm vòng lặp bằng `scripts/make-music-loop.py` (cắt phần tắt dần, trộn đuôi vào đầu). Lớp căng thẳng Gemini tạo dài khác bản nền nên chưa dùng được, chờ bản nhạc đang chơi.
 
