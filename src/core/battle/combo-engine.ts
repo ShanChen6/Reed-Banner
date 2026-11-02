@@ -42,7 +42,7 @@ export class ComboEngine {
     }
     beginTurn(side: SideIndex) {
         if (!this.state.comboState &&
-            !this.state.sides.some((s) => s.fighters.some((f) => f.comboPassive)))
+            !this.state.sides.some((s) => s.fighters.some((f) => f.comboPassive || f.special)))
             return;
         const m = this.meta();
         m.sideTurns[side]++;
@@ -62,7 +62,7 @@ export class ComboEngine {
     }
     beginSkill(source: ComboRef) {
         if (!this.state.comboState &&
-            !this.state.sides.some((s) => s.fighters.some((f) => f.comboPassive)))
+            !this.state.sides.some((s) => s.fighters.some((f) => f.comboPassive || f.special)))
             return;
         this.skill = { source, action: ++this.meta().sequence, combo: false };
     }
@@ -198,6 +198,19 @@ export class ComboEngine {
                 q.shift();
         }
     }
+    /** Nhân vật đặc biệt: người nhận mất HP vì kỹ năng của địch. Tín hiệu mang nguồn gốc (nguồn là người nhận, attacker là địch). */
+    damageTaken(target: ComboRef, attacker: ComboRef | undefined) {
+        this.provenance('damageTaken', target, attacker);
+    }
+    /** Nhân vật đặc biệt: Khiên của người nhận vừa về 0 vì đòn của địch. */
+    shieldBroken(target: ComboRef, attacker: ComboRef | undefined) {
+        this.provenance('shieldBroken', target, attacker);
+    }
+    private provenance(kind: ComboSignalKind, target: ComboRef, attacker: ComboRef | undefined) {
+        if (!attacker || attacker.side === target.side || this.suppressed || this.chasing)
+            return;
+        this.chaseQueue.push({ kind, source: target, target, attacker, provenanceOnly: true, action: this.skill?.action ?? 0, depth: 0 });
+    }
     removeShield(target: ComboRef) {
         delete this.fighter(target).comboShield;
     }
@@ -248,7 +261,7 @@ export class ComboEngine {
                         const p: ChasePassiveDef = CHASE_PASSIVES[id];
                         const key = `${e.source.side}:${i}:${id}`;
                         if (!p.triggers.includes(e.kind)) continue;
-                        if (!!p.attackerRecipient !== !!e.provenanceOnly) continue;
+                        if (!!(p.attackerRecipient || p.provenance) !== !!e.provenanceOnly) continue;
                         if (p.activeOnly && (e.depth ?? 0) !== 0) continue;
                         if (p.selfSource && i !== e.source.fighter) continue;
                         if (p.receiverOnly && i !== e.target.fighter) continue;
@@ -257,7 +270,7 @@ export class ComboEngine {
                         if (f.hp <= 0 || f.effects.some(x => x.kind === 'silence' || x.kind === 'freeze')) { skip('blocked'); continue; }
                         if (this.chaseUsed.has(key)) { skip('alreadyUsed'); continue; }
                         if (p.alliesOnly && i === e.source.fighter) { skip('selfSource'); continue; }
-                        const hostile = p.effect === 'damage' || p.effect === 'armor' || p.effect === 'drain';
+                        const hostile = p.effect === 'damage' || p.effect === 'armor' || p.effect === 'drain' || p.effect === 'burn' || p.effect === 'silence';
                         const enemy = e.target.side !== e.source.side ? e.target : { side: (1 - e.source.side) as SideIndex, fighter: this.state.sides[(1 - e.source.side) as SideIndex].fighters.findIndex(x => x.hp > 0) };
                         let target = hostile ? enemy : e.target.side === e.source.side ? e.target : e.source;
                         if (p.selfRecipient) target = {side:e.source.side,fighter:i};
@@ -274,6 +287,8 @@ export class ComboEngine {
                         if (p.effect === 'drain' && this.fighter(target).energy <= 0) { skip('emptyEnergy'); continue; }
                         if (p.effect === 'energy' && this.fighter(target).energy >= ENERGY_MAX) { skip('fullEnergy'); continue; }
                         if (p.effect === 'shield' && Math.round(this.fighter(target).maxHp * p.value * spiritHealMultiplier(this.fighter(target).spirit, this.state.experimentalSpirit)) <= (this.fighter(target).effects.find(x => x.kind === 'shield')?.value ?? 0)) { skip('existingShield'); continue; }
+                        if (p.effect === 'silence' && this.fighter(target).effects.some(x => x.kind === 'silence')) { skip('existingSilence'); continue; }
+                        if (p.effect === 'defUp' && this.fighter(target).effects.some(x => x.kind === 'defUp' && x.value >= p.value && (x.turns === null || x.turns >= (p.turns ?? 1)))) { skip('existingBuff'); continue; }
                         if (p.effect === 'armor' && this.fighter(target).effects.some(x => x.kind === 'defDown' && x.value >= p.value && (x.turns === null || x.turns >= 1))) { skip('existingArmor'); continue; }
                         skip('triggered');
                         this.chaseUsed.add(key);

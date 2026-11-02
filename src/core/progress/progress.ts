@@ -186,7 +186,8 @@ export function buyBranch(
 }
 
 function scaleStats(f: FighterConfig, level: number): FighterConfig {
-  const base = BASE_STATS[f.profession];
+  // Nhân vật đặc biệt có chỉ số nền riêng, không theo bảng nghề.
+  const base = f.special ? f : BASE_STATS[f.profession];
   const lv = Math.min(MAX_LEVEL, Math.max(1, level));
   const m = 1 + STAT_GROWTH * (lv - 1);
   return {
@@ -257,7 +258,7 @@ export function buildCompanion(
     skillLevels:Object.fromEntries(defs.map(s=>[s.id,p.skillLevels[mainSlotKey(s.slot!)] ?? 1])),
     id: base.id,
     name: base.name,
-    comboPassive: base.comboPassive ?? PROFESSION_COMBO[base.profession],
+    comboPassive: base.special ? base.comboPassive : base.comboPassive ?? PROFESSION_COMBO[base.profession],
     chasePassives: chasePassives(base),
   };
 }
