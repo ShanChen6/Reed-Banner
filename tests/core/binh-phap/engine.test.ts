@@ -764,46 +764,40 @@ describe("quân mới liên quan tới quân trên bàn", () => {
   const related = (p: Piece, board: readonly BoardPiece[]) =>
     p.kind !== "normal" || board.every((b) => b.kind !== "normal") || board.some((b) => b.kind === "normal" && (b.profession === p.profession || b.element === p.element));
 
-  /** Chơi tự động, trả về (số quân thường có bàn để so, số quân liên quan). */
-  const sample = (rules: Ruleset, seeds: number) => {
-    let total = 0;
-    let rel = 0;
-    for (let seed = 1; seed <= seeds; seed++) {
-      let s = createPuzzle(rules, seed, seed % 2 ? "0123456789abcdef" : undefined);
-      for (let i = 0; i < 60 && s.phase === "playing"; i++) {
-        const board = s.cells.flatMap((c) => (c.piece ? [c.piece] : []));
-        if (s.hand.kind === "normal" && board.some((b) => b.kind === "normal")) {
-          total += 1;
-          if (related(s.hand, board)) rel += 1;
+  /** Quân Lệnh hoặc dung hợp còn ô trống kề bên: lúc đó quân mới không bị ràng buộc. */
+  const openWildcard = (s: PuzzleState) =>
+    s.cells.some((c, i) => {
+      if (c.piece?.kind !== "wild" && c.piece?.kind !== "fusion") return false;
+      const r = Math.floor(i / s.width);
+      const col = i % s.width;
+      return [r > 0 ? i - s.width : -1, r < s.height - 1 ? i + s.width : -1, col > 0 ? i - 1 : -1, col < s.width - 1 ? i + 1 : -1].some((n) => n >= 0 && !s.cells[n]!.blocked && s.cells[n]!.piece === null);
+    });
+
+  for (const rules of RULESETS) {
+    it(`${rules.id}: quân thường luôn chung nghề hoặc hệ với một quân thường trên bàn, trừ khi có Quân Lệnh còn ô kề`, () => {
+      let checked = 0;
+      for (let seed = 1; seed <= 40; seed++) {
+        let s = createPuzzle(rules, seed, seed % 2 ? "0123456789abcdef" : undefined);
+        for (let i = 0; i < 80 && s.phase === "playing"; i++) {
+          const board = s.cells.flatMap((c) => (c.piece ? [c.piece] : []));
+          if (s.hand.kind === "normal" && board.some((b) => b.kind === "normal") && !openWildcard(s)) {
+            checked += 1;
+            assert.ok(related(s.hand, board), `${rules.id} seed ${seed} lượt ${i}`);
+          }
+          const legal = legalPlacements(s);
+          const t = transition(s, legal.length ? { kind: "place", row: Math.floor(legal[0]! / s.width), col: legal[0]! % s.width } : { kind: "discard" });
+          assert.ok(t.ok);
+          s = t.state;
         }
-        const legal = legalPlacements(s);
-        const t = transition(s, legal.length ? { kind: "place", row: Math.floor(legal[0]! / s.width), col: legal[0]! % s.width } : { kind: "discard" });
-        assert.ok(t.ok);
-        s = t.state;
       }
-    }
-    return { total, rel };
-  };
-
-  it("Hướng dẫn (1000‰): quân thường luôn liên quan tới bàn", () => {
-    const { total, rel } = sample(RULESETS.find((r) => r.id === "huong-dan")!, 30);
-    assert.ok(total > 100);
-    assert.equal(rel, total);
-  });
-
-  for (const rules of RULESETS.filter((r) => r.relatedPermille < 1000)) {
-    it(`${rules.id}: tỉ lệ quân liên quan tối thiểu bằng relatedPermille (${rules.relatedPermille}‰), vẫn có quân không liên quan`, () => {
-      const { total, rel } = sample(rules, 60);
-      assert.ok(total > 300);
-      assert.ok(rel / total >= rules.relatedPermille / 1000 - 0.05, `${rel}/${total}`);
-      assert.ok(rel < total, "phải còn quân không liên quan để Bỏ Lệnh có tác dụng");
+      assert.ok(checked > 100);
     });
   }
 
   it("quân liên quan có thể không đặt được (neo không cần còn ô trống kề bên)", () => {
     const rules = RULESETS.find((r) => r.id === "dai-tran")!;
     let stuckRelated = 0;
-    for (let seed = 1; seed <= 40 && stuckRelated === 0; seed++) {
+    for (let seed = 1; seed <= 60 && stuckRelated === 0; seed++) {
       let s = createPuzzle(rules, seed);
       for (let i = 0; i < 80 && s.phase === "playing"; i++) {
         const board = s.cells.flatMap((c) => (c.piece ? [c.piece] : []));

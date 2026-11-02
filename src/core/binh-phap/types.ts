@@ -77,8 +77,6 @@ export interface Ruleset {
   readonly eraserPermille: number;
   /** Xác suất (phần nghìn) sinh quân nhân vật dung hợp; chỉ có tác dụng khi `fusions` không rỗng. */
   readonly fusionPermille: number;
-  /** Xác suất (‰) quân thường sinh ra chung nghề hoặc hệ với một quân thường đang trên bàn; phần còn lại ngẫu nhiên hoàn toàn. */
-  readonly relatedPermille: number;
   /** Nhân vật dung hợp đã duyệt cho bậc này (lọc từ `FUSION_CHARACTERS`). Rỗng nghĩa là bậc không có quân loại này. */
   readonly fusions: readonly FusionCharacter[];
   /** Số ô chướng ngại sinh ngẫu nhiên theo seed, tính theo phần trăm diện tích bàn (0 = bàn đặc). Bị `randomSize` ghi đè. */
