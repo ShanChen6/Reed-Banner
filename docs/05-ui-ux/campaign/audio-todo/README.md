@@ -30,5 +30,6 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 ## Docs phục vụ khi quay lại
 
 - `01-voice-bible.md` (chưa viết): hồ sơ giọng & luật diễn xuất.
-- `02-architecture-and-assets.md` (chưa viết): kiến trúc kỹ thuật, asset conventions, quality.
+- [02-architecture-and-assets.md](02-architecture-and-assets.md) (DRAFT, 02/11/2026): kiến trúc kỹ thuật, quy ước tệp, bảng cue cho mọi chế độ.
+- [04-prompts-trien-khai-theo-che-do.md](04-prompts-trien-khai-theo-che-do.md) (DRAFT, 02/11/2026): prompt giao việc code và prompt tạo âm thanh theo chế độ.
 - `03-tts-prompts-and-budget.md` (chưa viết): prompt TTS, hạn mức, giấy phép và ngân sách dự kiến.

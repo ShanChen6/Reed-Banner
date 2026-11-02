@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Âm thanh cho mọi chế độ: tài liệu và prompt (chưa triển khai)**
+- Thêm [kiến trúc, quy ước tệp và bảng cue](../05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md) (Trận Đồ, trận đánh, Chiến dịch, Tháp, Sinh tồn, Thử thách, Đấu trường, Quần Hùng) và [prompt giao việc code (A1–A5) cùng prompt tạo hiệu ứng/nhạc](../05-ui-ux/campaign/audio-todo/04-prompts-trien-khai-theo-che-do.md). Backlog AUD vẫn DEFERRED, chưa có code hay tệp âm thanh.
+
 **Biểu tượng nghề Xạ thủ mới**
 - Biểu tượng cũ (ba mũi phi tiêu) lẫn với Sát thủ ở cỡ nhỏ; thay bằng cung tre và mũi tên do Shan tạo ([prompt và cách tích hợp](../06-art/prompts/icon-nghe-xa-thu.md)). Script cắt nền thêm tham số xoay và viền sáng.
 
