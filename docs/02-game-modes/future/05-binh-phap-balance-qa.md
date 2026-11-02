@@ -108,13 +108,24 @@ Nhận xét: bốn bậc tăng độ khó đúng chiều; Thường và Khó ch�
 
 ## Đo lại sau khi đổi luật sinh quân (02/11/2026)
 
-Shan chơi thử Đại trận thấy 5 lượt đầu ra 5 quân không dính gì nhau phải bỏ hết. Từ bản này quân thường sinh ra luôn **chung ít nhất một nghề hoặc hệ với một quân thường đang trên bàn** (ưu tiên quân còn ô trống kề bên); quân đặc biệt ra theo tỉ lệ riêng, không cần liên quan. Bộ luật các bậc tăng `version` (save cũ bị bỏ). Đo `--runs 2000 --seed 1`:
+Shan chơi thử Đại trận thấy 5 lượt đầu ra 5 quân không dính gì nhau phải bỏ hết. Luật mới: quân thường sinh ra, **với xác suất `relatedPermille` của bậc**, chung ít nhất một nghề hoặc hệ với một quân thường **bất kỳ** trên bàn; phần còn lại ngẫu nhiên hoàn toàn. Quân neo **không cần còn ô trống kề bên** (Shan: ưu tiên ô trống thì quá dễ), nên vẫn có quân liên quan mà không có chỗ đặt, lúc đó Bỏ Lệnh mới có tác dụng. Quân đặc biệt ra theo tỉ lệ riêng, không cần liên quan. Bộ luật các bậc tăng `version` (save cũ bị bỏ).
+
+Quét `relatedPermille` (500 ván mỗi mức, thanh Bỏ Lệnh giữ nguyên 0–3), thắng random / greedy:
+
+| relatedPermille | Thường | Khó | Đại trận |
+|---|---|---|---|
+| 1000 | 98% / 99,6% | 90% / 98% | 26% / 90% |
+| 700 | 98% / 98% | 86% / 96% | 17% / 80% |
+| 450 | 92% / 97% | 80% / 87% | 12% / 69% |
+| (trước khi đổi luật, 01/11) | — | 62% / 64% | 7% / 33% |
+
+Điểm xuất phát đang dùng: Hướng dẫn 1000‰, Thường 800‰, Khó 700‰, Đại trận 650‰. Đo `--runs 1000 --seed 1`:
 
 | Bậc | Agent | Thắng | Lượt (trung vị / p90) | Bỏ lệnh TB |
 |---|---|---|---|---|
-| Hướng dẫn | random / greedy | 100% / 100% | 17/30 · 9/9 | 0,11 / 0,00 |
-| Thường | random / greedy | 98,0% / 99,7% | 53/82 · 27/41 | 1,75 / 1,42 |
-| Khó | random / greedy | 92,0% / 98,7% | 81/137 · 42/62 | 5,11 / 2,75 |
-| Đại trận | random / greedy | 29,4% / 95,0% | 150/263 · 92/120 | 19,35 / 6,95 |
+| Hướng dẫn | random / greedy | 100% / 100% | 17/29 · 9/9 | 0,14 / 0,00 |
+| Thường | random / greedy | 97,2% / 99,1% | 53/85 · 29/43 | 2,89 / 2,80 |
+| Khó | random / greedy | 87,1% / 96,2% | 86/142 · 47/65 | 8,05 / 5,75 |
+| Đại trận | random / greedy | 16,4% / 81,0% | 132/242 · 98/130 | 21,92 / 12,21 |
 
-Nhận xét: ván dễ hơn hẳn (Đại trận greedy từ 33% lên 95%, random từ 2–7% lên 29%) vì ít khi phải bỏ quân; bản đo trước đã quá khó với bot nhưng người chơi thật thấy sai chỗ ở **lúc đầu ván** chứ không phải độ khó tổng thể. Thanh Bỏ Lệnh là núm bù: thử riêng Đại trận (600 ván) với thanh 2 vạch cho random 15,8% / greedy 85,5%, thanh 1 vạch cho 3,2% / 53,7%. Chưa đổi vì Shan chưa muốn đổi thanh Bỏ Lệnh; cần Shan chọn mức khó mục tiêu cho các bậc xếp hạng, xem [câu hỏi mở](../../09-roadmap/cau-hoi-mo.md).
+Nhận xét: ván vẫn dễ hơn trước khi đổi luật (Đại trận greedy 33% → 81%), vì ít phải bỏ quân hơn; số lần bỏ lệnh giữ ở mức hợp lý nhờ quân liên quan không đặt được. Hạ `relatedPermille` hoặc chỉnh chướng ngại là núm bù không đụng thanh Bỏ Lệnh. Cần Shan chọn độ khó mục tiêu cho từng bậc xếp hạng, xem [câu hỏi mở](../../09-roadmap/cau-hoi-mo.md).

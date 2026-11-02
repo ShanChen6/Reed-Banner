@@ -2,17 +2,16 @@
 
 import type { Rng } from "../rng";
 import { charactersFor } from "./catalog";
-import { neighbors4 } from "./rules";
 import type { Cell, NormalPiece, Piece, Ruleset } from "./types";
 
 /**
  * Quân kế tiếp. `previous` là quân vừa dùng: sau một quân đặc biệt luôn ra quân thường (chống chuỗi đặc biệt); không sinh Thu Hồi khi bàn trống; nhân vật dung hợp cũng không ra liền sau một quân đặc biệt.
  * **Quân thường luôn liên quan tới bàn** (Shan chốt 02/11/2026): khi bàn đã có quân thường, quân mới chia sẻ ít nhất một nghề hoặc một hệ với một
- * quân thường đang trên bàn (ưu tiên quân còn ô trống kề bên), để không phải bỏ liền nhiều quân không dính gì tới nhau. Quân đặc biệt (Quân Lệnh,
+ * quân thường đang trên bàn (không cần còn chỗ đặt), với xác suất `relatedPermille` của bậc; phần còn lại ra ngẫu nhiên hoàn toàn. Mục đích: không phải bỏ liền nhiều quân không dính gì tới nhau, nhưng vẫn có quân liên quan mà không có chỗ đặt, để Bỏ Lệnh còn tác dụng. Chống phải bỏ liền nhiều quân không dính gì tới nhau. Quân đặc biệt (Quân Lệnh,
  * Thu Hồi, dung hợp) ra theo tỉ lệ riêng, không cần liên quan.
  * Thứ tự gọi RNG cố định: một lần chọn loại, rồi (nếu quân thường) [quân neo, nghề-hay-hệ khi bàn có quân thường], nghề, hệ, người đại diện.
  */
-export function nextPiece(rng: Rng, rules: Ruleset, serial: number, previous: Piece | null, cells: readonly Cell[], width = 0, height = 0): Piece {
+export function nextPiece(rng: Rng, rules: Ruleset, serial: number, previous: Piece | null, cells: readonly Cell[]): Piece {
   const uid = `p${serial}`;
   const boardHasPieces = cells.some((c) => c.piece !== null);
   const roll = rng.int(0, 999);
@@ -27,12 +26,16 @@ export function nextPiece(rng: Rng, rules: Ruleset, serial: number, previous: Pi
       return { kind: "fusion", uid, characterId: who.characterId };
     }
   }
-  const anchors = anchorPieces(cells, width, height);
+  // Quân neo là một quân thường bất kỳ trên bàn, KHÔNG cần còn chỗ trống kề bên: quân sinh ra có thể liên quan mà vẫn không đặt được, lúc đó Bỏ Lệnh mới có ý nghĩa.
+  const anchors: NormalPiece[] = [];
+  for (const c of cells) if (c.piece?.kind === "normal") anchors.push(c.piece);
   let anchor: NormalPiece | null = null;
   let keepProfession = false;
   if (anchors.length > 0) {
-    anchor = anchors[rng.int(0, anchors.length - 1)]!;
+    const relatedRoll = rng.int(0, 999);
+    const who = rng.int(0, anchors.length - 1);
     keepProfession = rng.int(0, 1) === 0;
+    if (relatedRoll < rules.relatedPermille) anchor = anchors[who]!;
   }
   const pickedProfession = rules.professions[rng.int(0, rules.professions.length - 1)]!;
   const pickedElement = rules.elements[rng.int(0, rules.elements.length - 1)]!;
@@ -41,18 +44,6 @@ export function nextPiece(rng: Rng, rules: Ruleset, serial: number, previous: Pi
   const people = charactersFor(profession, element);
   const who = people[rng.int(0, people.length - 1)]!;
   return { kind: "normal", uid, characterId: who.characterId, profession, element };
-}
-
-/** Quân thường trên bàn làm "neo" cho quân mới; ưu tiên quân còn ô chơi được trống kề bên (có chỗ để nối), không có thì lấy mọi quân thường. */
-function anchorPieces(cells: readonly Cell[], width: number, height: number): NormalPiece[] {
-  const all: NormalPiece[] = [];
-  const open: NormalPiece[] = [];
-  cells.forEach((c, i) => {
-    if (c.piece?.kind !== "normal") return;
-    all.push(c.piece);
-    if (width > 0 && neighbors4(width, height, Math.floor(i / width), i % width).some((n) => !cells[n]!.blocked && cells[n]!.piece === null)) open.push(c.piece);
-  });
-  return open.length > 0 ? open : all;
 }
 
 /**
