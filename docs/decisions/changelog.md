@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Biểu tượng nghề Xạ thủ mới**
+- Biểu tượng cũ (ba mũi phi tiêu) lẫn với Sát thủ ở cỡ nhỏ; thay bằng cung tre và mũi tên do Shan tạo ([prompt và cách tích hợp](../06-art/prompts/icon-nghe-xa-thu.md)). Script cắt nền thêm tham số xoay và viền sáng.
+
 **Trận Đồ: sửa chân dung quân kế tiếp hiện trễ 1–2 giây**
 - Nguyên nhân: chân dung là ảnh WebP nạp trong SVG, chỉ tải khi quân xuất hiện lần đầu nên ô nền và huy hiệu hiện ngay còn gương mặt trễ. Giờ vào màn chơi là tải sẵn (và giải mã) chân dung của mọi quân có thể ra trong bộ luật đang chơi, các bậc khác tải lúc rảnh (`src/app/game/formation/preload.ts`).
 

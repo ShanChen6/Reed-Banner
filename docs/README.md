@@ -78,7 +78,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | [prompts/dinh-bo-linh-xa-thu-sat-thu.md](06-art/prompts/dinh-bo-linh-xa-thu-sat-thu.md) | Biến thể vũ khí cung tre/dao găm cho rig Đinh Bộ Lĩnh và các prompt Master/tư thế; DRAFT, chưa có ảnh |
 | [prompts/tran-do-hinh-anh.md](06-art/prompts/tran-do-hinh-anh.md) | Prompt đầy đủ cho Trận Đồ: 30 bản đồ (địa danh thời Loạn 12 sứ quân và cảnh quan, kho không giới hạn), ô che đặc kín, 4 icon chướng ngại; DRAFT, ảnh chưa có |
 | [prompts/tran-do-video-huong-dan.md](06-art/prompts/tran-do-video-huong-dan.md) | Prompt Veo 3 cho video hướng dẫn cách chơi Trận Đồ (sa bàn gỗ, lời dẫn tiếng Việt) và gợi ý nối 4 cảnh; DRAFT |
-| [prompts/icon-nghe-xa-thu.md](06-art/prompts/icon-nghe-xa-thu.md) | Prompt vẽ lại biểu tượng nghề Xạ thủ (cung và tên, khác hẳn dao găm của Sát thủ); DRAFT, chưa có ảnh |
+| [prompts/icon-nghe-xa-thu.md](06-art/prompts/icon-nghe-xa-thu.md) | Prompt và cách tích hợp biểu tượng nghề Xạ thủ mới (cung và tên, khác hẳn dao găm của Sát thủ); IMPLEMENTED |
 | [prompts/dinh-ngoc.md](06-art/prompts/dinh-ngoc.md) | Character DNA, trang phục lấy cảm hứng thế kỷ X, một kiếm/một mặt ngọc và6 prompt cho Đinh Ngọc; DRAFT, chưa duyệt Master |
 | [nhan-vat/nguyen-bac.md](06-art/nhan-vat/nguyen-bac.md) | Hình động Nguyễn Bặc |
 | [ho-so-master-chat.md](06-art/ho-so-master-chat.md) | Ngữ cảnh cho chat mới về dựng hình nhân vật: kiến trúc rig và hiệu ứng, quy trình từ bộ 5 ảnh, tiến độ |

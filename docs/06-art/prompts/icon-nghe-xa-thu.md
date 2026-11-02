@@ -1,7 +1,7 @@
 # Prompt vẽ lại biểu tượng nghề Xạ thủ
 
 > Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — Shan thấy biểu tượng hiện tại (ba mũi phi tiêu xòe, cán quấn dây xanh) khó phân biệt với Sát thủ (hai dao găm bắt chéo); cần vẽ lại. Chưa có ảnh mới. Biểu tượng cũ vẫn dùng ở `public/art/professions/xaThu.webp` cho tới khi thay.
+> Trạng thái: **IMPLEMENTED** (02/11/2026) — Shan thấy biểu tượng cũ (ba mũi phi tiêu xòe, cán quấn dây xanh) khó phân biệt với Sát thủ (hai dao găm bắt chéo). Ảnh mới (cung tre và mũi tên) do Shan tạo từ prompt dưới đây đã thay `public/art/professions/xaThu.webp`.
 
 ## Vì sao phải đổi
 
@@ -30,3 +30,13 @@ Background: one flat solid plain light grey color #F2F2F2, completely uniform, n
 2. Cắt nền thành trong suốt bằng `scripts/cutout-formation-icon.py` (cần Pillow, numpy, scipy). Prompt dùng nền xám sáng phẳng (#F2F2F2) vì script cắt các điểm sáng, ít bão hòa, liền với mép ảnh; lệnh: `python3 scripts/cutout-formation-icon.py <ảnh vào> public/art/professions/xaThu.webp 128`. Lông vũ trắng của mũi tên nằm trong viền tối nên không bị cắt nhầm; nếu có, hạ ngưỡng sáng (tham số thứ 4, mặc định 205) hoặc cho lông vũ màu xanh ngọc.
 3. Lưu `public/art/professions/xaThu.webp` (128×128, WebP, nền trong suốt) thay tệp cũ. `ProfessionIcon` và huy hiệu quân tự dùng ảnh mới.
 4. Kiểm tra ở cỡ nhỏ nhất (khoảng 12 px) và đặt cạnh biểu tượng Sát thủ: nhìn ngay phải phân biệt được.
+
+## Đã tích hợp
+
+Ảnh gốc là cung dựng dọc, chiếm khung vuông rất ít và nét cung tối khó đọc trên nền huy hiệu tối. Đã cắt nền bằng `scripts/cutout-formation-icon.py` với **xoay 40° ngược chiều kim đồng hồ** (cung nằm chéo như ngọn giáo của Binh lính, đầy khung hơn) và **viền sáng 2 px** (#E4CC99, giữ dây cung và thân cung đọc được ở 12–24 px):
+
+```bash
+python3 scripts/cutout-formation-icon.py <ảnh gốc> public/art/professions/xaThu.webp 128 205 40 2
+```
+
+Ở cỡ 12–24 px, hình cung chéo và mũi tên khác rõ với chữ X của dao găm Sát thủ. Biểu tượng này cũng hiện ở mọi nơi dùng `ProfessionIcon` (huy hiệu quân, danh sách nhân vật, trang bị).
