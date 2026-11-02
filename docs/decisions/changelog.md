@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Trận Đồ: thêm 5 ảnh bản đồ thật (18/30)**
+- Ái Châu, Luy Lâu, Đại La, Bạch Đằng, Cổ Loa. Còn 12 bản đồ.
+
 **Trận Đồ: thêm 5 ảnh bản đồ thật (13/30)**
 - Đỗ Động Giang, Tây Phù Liệt, Tế Giang, Tiên Du, Siêu Loại. Còn 17 bản đồ.
 
