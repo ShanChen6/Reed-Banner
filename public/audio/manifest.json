@@ -46,6 +46,35 @@
         "sfx/formation/flame1_b"
       ],
       "volume": 0.8
+    },
+    "formation.win": {
+      "files": [
+        "sfx/formation/win_a",
+        "sfx/formation/win_b"
+      ],
+      "volume": 0.9
+    },
+    "formation.lose": {
+      "files": [
+        "sfx/formation/lose_a",
+        "sfx/formation/lose_c"
+      ],
+      "volume": 0.9
+    },
+    "formation.flame2": {
+      "files": [
+        "sfx/formation/flame2_a",
+        "sfx/formation/flame2_b",
+        "sfx/formation/flame2_c"
+      ],
+      "volume": 0.85
+    },
+    "formation.flame3": {
+      "files": [
+        "sfx/formation/flame3_a",
+        "sfx/formation/flame3_b"
+      ],
+      "volume": 0.85
     }
   },
   "music": {},

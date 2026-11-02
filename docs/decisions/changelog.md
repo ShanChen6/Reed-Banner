@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Âm thanh Trận Đồ: thêm `win`, `lose`, `flame2`, `flame3`**
+- Cắt từ bốn đoạn Gemini bằng `scripts/slice-sfx.py` (win/lose dài 4 và 2,5 giây, mỗi cue 2 biến thể khác vị trí; `flame3` yếu nhất). Còn thiếu: `flamedown`, `wild`, `eraser`, `fusion` và nhạc.
+
 **Âm thanh Trận Đồ: thêm `fogclear`, `line`, `discard`, `flame1`**
 - Cắt từ bốn đoạn Gemini (mỗi đoạn khoảng 1 phút) bằng `scripts/slice-sfx.py`; `line` và `flame1` chỉ giữ 2 biến thể vì tiếng thứ ba có đuôi còn to. Còn thiếu: `flame2`, `flame3`, `flamedown`, `win`, `lose`, `wild`, `eraser`, `fusion` và nhạc.
 
