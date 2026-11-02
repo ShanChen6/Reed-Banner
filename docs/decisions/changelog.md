@@ -2,6 +2,27 @@
 
 ## 02/11/2026
 
+**Âm thanh trận đánh: `hit` (dùng chung 8 nghề), `invalid`, `match3` (dùng lại cho 4 và 5 ô)**
+- Cắt từ năm đoạn Gemini. `battle.hit.<nghề>` chưa có tiếng riêng từng nghề nên cả 8 nghề dùng chung 5 biến thể đòn; `match4`/`match5` dùng tiếng `match3` với tốc độ 1,08 và 1,16. Chờ tiếng riêng khi Shan tạo thêm.
+
+**Âm thanh: `battle.swap`, `formation.tick`, `formation.rank`, nhạc màn chọn bậc**
+- `formation.rank` phát khi nhận thưởng xếp hạng; `formation.tick` điểm từng giây trong 5 giây cuối của một kỳ khi đang ở màn chọn bậc (thu hẹp so với "dưới 1 giờ" trong bảng cue vì lặp dày gây phiền). Nhạc `formation_menu` (99 giây) làm vòng lặp bằng `scripts/make-music-loop.py` (cắt phần tắt dần, trộn đuôi vào đầu). Lớp căng thẳng Gemini tạo dài khác bản nền nên chưa dùng được, chờ bản nhạc đang chơi.
+
+**Trận Đồ: đủ 30/30 ảnh bản đồ thật**
+- Thêm Núi đá vôi và Rừng già; kho không còn ảnh giữ chỗ (kho không giới hạn số ảnh, thêm bản đồ mới theo mục 1.4 của tài liệu prompt hình ảnh).
+
+**Trận Đồ: thêm 5 ảnh bản đồ thật (28/30)**
+- Thành đất có hào nước, Chùa cổ trên đồi, Cửa biển, Vùng trung du, Bến thuyền sông. Còn 2 bản đồ: Rừng già, Núi đá vôi.
+
+**Trận Đồ: thêm 5 ảnh bản đồ thật (23/30)**
+- Làng ven sông, Đầm sen, Đồng lúa đồng bằng, Núi Tản Viên, Hoan Châu. Còn 7 bản đồ.
+
+**Trận Đồ: thêm 5 ảnh bản đồ thật (18/30)**
+- Ái Châu, Luy Lâu, Đại La, Bạch Đằng, Cổ Loa. Còn 12 bản đồ.
+
+**Trận Đồ: thêm 5 ảnh bản đồ thật (13/30)**
+- Đỗ Động Giang, Tây Phù Liệt, Tế Giang, Tiên Du, Siêu Loại. Còn 17 bản đồ.
+
 **Âm thanh Trận Đồ: thêm `eraser`, `wild`, `match`, `flamedown`, `fusion`; nối `formation.match`**
 - Cắt từ năm đoạn Gemini; `eraser`, `flamedown`, `fusion` chỉ giữ 2 biến thể vì tiếng thứ ba tắt chậm. `formation.match` giờ phát khi quân đặt khớp cả nghề lẫn hệ với một quân kề (được điểm cộng). Trận Đồ đã đủ hiệu ứng P1/P2 trừ `rank` và `tick`; còn thiếu nhạc nền.
 
@@ -57,6 +78,57 @@
 **Nhân vật tổng hợp — hướng thiết kế (Shan thống nhất)**
 - Nhân vật đặc biệt mang hai nghề/hai hệ: phòng thủ và đòn đánh thường theo hệ chính, giá cao hơn nhiều, nhận bằng cách đặc biệt, dùng icon tổng hợp nghề/hệ.
 - Tạo nguồn [nhan-vat-tong-hop.md](../03-characters/nhan-vat-tong-hop.md) (DRAFT) với đề xuất chính/phụ, ví dụ và tác động code; chưa sửa code, roster hay save. Icon `tongHop` cho nghề/hệ và hiển thị tổng hợp của Đinh Ngọc ở trang xem thử đã có.
+
+**Hiển thị nhân vật dung hợp: bỏ chữ "Phòng thủ X"**
+- Theo góp ý của Shan: đã có biểu tượng hệ phòng thủ nhỏ ở góc nên bỏ chữ "Phòng thủ Phong/Kim" trên thẻ; hệ phòng thủ vẫn có trong tooltip.
+
+**Hiển thị nhân vật dung hợp: icon hệ phòng thủ nhỏ ở góc**
+- Theo yêu cầu của Shan: biểu tượng hệ phòng thủ (Kim, Phong) hiện nhỏ ở góc dưới biểu tượng Vạn hệ trên thẻ trong trận; biểu tượng Vạn nghề giữ nguyên như cũ, không thêm biểu tượng phụ.
+
+**Hiển thị nhân vật dung hợp: đổi tên và dùng icon riêng cho hệ**
+- Theo góp ý của Shan: tên hiển thị "tổng hợp" đổi thành **Vạn nghề** và **Vạn hệ** (id kỹ thuật `tongHop` và tên file icon giữ nguyên); cả thẻ trong trận lẫn trang xem thử. Thẻ nhân vật dùng luôn icon Vạn hệ thay cho icon Kim/Phong, kèm chữ "Phòng thủ X" để người chơi vẫn biết khắc chế. Chưa đổi tên khái niệm "nhân vật tổng hợp" (hai nghề, hai hệ) trong docs thiết kế.
+
+**Hiển thị nhân vật dung hợp trong trận**
+- Thẻ nhân vật trong trận: biểu tượng nghề tổng hợp, biểu tượng hệ phòng thủ kèm dấu tổng hợp nhỏ (theo hướng "Hiển thị" của [nhân vật tổng hợp](../03-characters/nhan-vat-tong-hop.md#hiển-thị)), tooltip nêu hệ phòng thủ và bốn nội tại. Khung chi tiết hiện "Nội tại 1–4" với mô tả đầy đủ thay cho nhãn Nghề/Hệ; chiêu ghi "Chiêu dung hợp · đòn hệ X". Tướng thường không đổi. Kiểm bằng Playwright (dựng tạm trong Thao Luyện, đã gỡ) và test `tests/game/special-labels.test.ts`.
+
+**Giao diện lốc xoáy: xem trước kết quả xoay**
+- Kiểm trên trình duyệt thật: luồng chọn tâm xoay (chạm ô, chọn chiều/số nấc, chọn mục tiêu) đã có sẵn trong trận đấu và chạy đúng với ô1 (xoay 1 nấc, chọn mục tiêu) và ô6 (xoay tối đa 2 nấc, tự nhắm) của Vũ Phong. Nhận định "UI chưa làm" ở mục trước là sai.
+- Bổ sung: mỗi nút xoay ghi số ô sẽ ghép ngay, rê chuột/focus để xem vòng 8 ô sau khi xoay và các ô ghép được; giữ viền vòng xoay và dòng "Đã chọn xoay …" ở bước chọn mục tiêu. Thêm hàm thuần `previewWhirl` (core/board) có test. Chưa thể chơi Vũ Phong trong trận vì chưa mở ở chế độ nào.
+
+**Vũ Phong — cân bằng lần 1**
+- Đo bằng script mới `scripts/special-balance.ts` (đấu 56 dựng Đinh Bộ Lĩnh, cấp 30, có khoảng tin cậy). Nguyên nhân lệch: bước xoay bàn cờ của ô1 giá quá rẻ (thêm một nước đi bàn cờ miễn phí, khoảng 20 điểm thắng) và P1 (khoảng 4 điểm).
+- Chốt: ô1 giá 35→40 và 1.4→1.3× ATK, ô2 giá 35→40, P1 35%→30% ATK. Kết quả cấp 30: 1vs1 từ 64,7% xuống 53,0% [47,6–58,2]; 3vs3 từ 66,1% xuống 61,6% [55,1–67,7] (dựng mạnh nhất mẫu: 63,6%). Đinh Ngọc 1vs1 43,8%, 3vs3 50,9%, chưa chỉnh. Chưa phải cân bằng cuối: thiếu trang bị, F, đủ đối thủ.
+
+**Đinh Ngọc và Vũ Phong — kỹ năng chạy được trong core**
+- Theo yêu cầu "làm kỹ năng chạy được": sáu chủ động và bốn nội tại của cả hai đã có trong engine chiến đấu, kiểm bằng `tests/core/battle/special-characters.test.ts` (38 test). Thêm `SkillDef.damageElement` (hệ từng chiêu), cờ `FighterConfig.special` (bỏ nội tại nghề mặc định, chỉ số nền riêng, cho phép bốn truy kích khi không có bị động phối hợp), hiệu ứng truy kích `burn`/`silence`/`defUp`, tín hiệu `damageTaken`/`shieldBroken`/`weakened`/`finishing`, nội tại cuối lượt có quota lưu trong snapshot và bị động phối hợp `phongLenh`.
+- Giới hạn "một lần mỗi lượt" thực thi theo hành động gốc; vài lựa chọn mục tiêu của chiêu đa mục tiêu là mục tiêu đầu tiên theo vị trí. Xem mục "Triển khai trong core" của [Đinh Ngọc](../03-characters/dinh-ngoc.md) và [Vũ Phong](../03-characters/vu-phong.md).
+- Mô phỏng thăm dò (100 trận mỗi ô, ±10 điểm): Đinh Ngọc 52%/44% (1vs1/3vs3), Vũ Phong 66%/73%, mốc Trần Cương 38%/49%. Vũ Phong nghiêng mạnh, đã cân bằng ở mục sau.
+- Chưa mở ở chế độ nào: hai nhân vật nằm ở `SPECIAL_COMPANIONS`, chưa thuộc `ALL_COMPANIONS` (shop, Chiến dịch, Tháp, Sinh tồn). Trận Đồ vẫn dùng hai nhân vật như quân dung hợp, không đổi.
+
+**Trận Đồ — bật Đinh Ngọc và Vũ Phong làm quân dung hợp**
+- Theo yêu cầu "thêm vào các chế độ chơi", Shan chọn chỉ Trận Đồ ở lần này: `FUSION_CHARACTERS` có Đinh Ngọc và Vũ Phong ở Khó và Đại trận, `version` hai bậc 6→7. Đo lại 1.500 ván mỗi ô: tỉ lệ thắng gần như không đổi ở 1,5% (xem [GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)).
+- Chưa đưa hai nhân vật vào các chế độ đấu (Thường, Chiến dịch, Tháp, Sinh tồn): chưa có runtime kỹ năng/nội tại, cách mở khóa chưa chốt.
+
+**Vũ Phong — dựng hình động (rig)**
+- Tách ảnh đứng thành sáu lớp (thân, đầu, trượng, nắm tay phải, bàn tay trái, đuôi khăn), xuất tranh tư thế ×0.3 và đăng ký `VU_PHONG` trong `rigs.ts` với nhịp `staff` và hiệu ứng `galeRout`; thêm vào trang xem thử và test. Chỉ có trên trang xem thử, chưa vào roster, shop hay trận.
+
+**Vũ Phong — nhập ảnh phong thái (khung 6)**
+- Người dùng gửi hai phương án khung 6; chọn phương án có nụ cười nửa miệng và nét nhướng mày làm `style.webp`. Đủ ảnh cho sáu khung; chưa dựng rig.
+
+**Vũ Phong — nhập năm ảnh khung 1–5**
+- Người dùng cung cấp năm ảnh trong suốt (Idle, đánh thường, ra chiêu, tuyệt chiêu, hạ gục) và chọn theo ảnh: sửa Character DNA và prompt ở [nguồn Vũ Phong](../03-characters/vu-phong.md) (búi cao, râu dê, thân săn chắc, hồ lô hai ngăn). Nhập ảnh vào `public/art/characters/vu-phong/` và đăng ký avatar `vuPhong`; chưa dựng rig, chưa vào roster.
+
+**Vũ Phong — năm prompt khung còn lại**
+- Thêm năm prompt (đánh thường, ra chiêu ô2, tuyệt chiêu ô4, hạ gục, cá tính) vào [nguồn Vũ Phong](../03-characters/vu-phong.md), cùng khối DNA với prompt Master; một trượng duy nhất ở mọi khung. DRAFT, chưa tạo ảnh, Master chưa duyệt.
+
+**Vũ Phong — bộ kỹ năng và chiêu thức đề xuất (tám nghề/bảy hệ)**
+- Người dùng chốt Vũ Phong là nhân vật đặc biệt như Đinh Ngọc, đủ tám nghề/bảy hệ qua 6 chủ động + 4 nội tại. Viết bộ kỹ năng vào [nguồn Vũ Phong](../03-characters/vu-phong.md); bản hai nghề/hai hệ nháp trước đó bị thay hoàn toàn.
+- Đảo vai so với Đinh Ngọc để không trùng lối chơi: phòng thủ Phong; chủ động là Quân sư/Mưu sĩ/Y sư/Binh lính (hỗ trợ, điều khiển bàn cờ), nội tại là Tướng sĩ/Xạ thủ/Sát thủ/Pháp sư (phản ứng tấn công). Chỉ số 480/52/9.
+- Tất cả số liệu và ID là DRAFT, chưa mô phỏng; cần per-skill `damageElement` và template `specialHybrid` trước khi triển khai. Chuyển ví dụ trong [nhân vật tổng hợp](../03-characters/nhan-vat-tong-hop.md) sang cùng khuôn với Đinh Ngọc.
+
+**Vũ Phong — Vân Du Tử: dựng hình tượng nhân vật**
+- Người dùng yêu cầu nhân vật Vũ Phong, danh xưng Vân Du Tử, nam khoảng 25–30 tuổi, có hình xăm. Tạo nguồn [Vũ Phong](../03-characters/vu-phong.md): tính cách lãng khách, Character DNA (chọn 28 tuổi), hệ hình xăm (mây xoắn tay phải, gió tay trái, giao long vai phải), trang phục, trượng trúc đề xuất và prompt Master.
+- Chỉ là hình tượng DRAFT: chưa có nghề/hệ, chỉ số, ID runtime, ảnh hoặc code. Vũ khí và danh xưng là đề xuất cần duyệt.
 
 ## 30/10/2026
 

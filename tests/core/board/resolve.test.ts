@@ -9,7 +9,9 @@ import {
   generateBoard,
   hasValidMove,
   parseBoard,
+  previewWhirl,
   resolveBoard,
+  whirlCells,
   swap,
   tileAt,
   type MoveResult,
@@ -196,6 +198,45 @@ describe("resolveBoard", () => {
         if (result.steps.length < 100) assert.equal(findMatches(board).length, 0);
         assert.ok(hasValidMove(board));
         assert.ok(board.cells.every((t) => t !== null));
+      }
+    }
+  });
+});
+
+describe("previewWhirl", () => {
+  // Bàn đích: hàng 1 cột 1–3 là bộ ghép 3 kiếm; bàn thật là bàn đích xoay ngược một nấc quanh tâm (2,2).
+  const target = parseBoard(`
+    ABTSV
+    TKKKB
+    BSAVT
+    VTBSA
+    ABTSV
+  `);
+  const center = { row: 2, col: 2 };
+  const before = whirlCells(target, { center, turns: -1 });
+
+  it("chỉ ra đúng các ô sẽ ghép sau khi xoay và không đổi bàn gốc", () => {
+    const snapshot = [...before.cells];
+    const view = previewWhirl(before, { center, turns: 1 });
+    assert.deepEqual([...view.matched].sort((a, b) => a - b), [6, 7, 8]);
+    assert.deepEqual(view.after.cells, target.cells);
+    assert.deepEqual(before.cells, snapshot);
+  });
+
+  it("xoay ngược chiều trên bàn đó không cho bộ ghép kiếm ở hàng 1", () => {
+    const { matched } = previewWhirl(before, { center, turns: -1 });
+    assert.ok(![6, 7, 8].every((i) => matched.has(i)));
+  });
+
+  it("khớp whirlCells và findMatches trên nhiều bàn ngẫu nhiên", () => {
+    for (let seed = 1; seed <= 20; seed++) {
+      const board = generateBoard(createRng(seed), W);
+      for (const turns of [-2, -1, 1, 2]) {
+        const whirl = { center: { row: 3, col: 4 }, turns };
+        const view = previewWhirl(board, whirl);
+        assert.deepEqual(view.after.cells, whirlCells(board, whirl).cells);
+        const expected = findMatches(view.after).reduce((n, g) => n + g.cells.length, 0);
+        assert.equal(view.matched.size, expected);
       }
     }
   });

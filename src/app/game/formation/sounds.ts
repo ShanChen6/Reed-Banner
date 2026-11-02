@@ -105,6 +105,8 @@ export const FORMATION_PRELOAD: readonly CueId[] = [
   "formation.flame3",
   "formation.flamedown",
   "formation.wild",
+  "formation.rank",
+  "formation.tick",
   "formation.eraser",
   "formation.fusion",
   "formation.win",

@@ -35,6 +35,7 @@ const targets = {
   heal: "đồng minh sống có tỷ lệ HP thấp nhất; hòa chọn vị trí trước",
   shield: "đồng minh nhận tín hiệu hồi",
   energy: "người nhận tín hiệu hồi hoặc người phát tín hiệu sát thương",
+  burn: "địch nhận tín hiệu", silence: "địch nhận tín hiệu", defUp: "chính người nhận đòn",
 };
 const definitions = {
   prepared: Object.values(COMBO_PASSIVES).map(p => ({

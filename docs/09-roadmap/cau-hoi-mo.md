@@ -115,7 +115,8 @@
 - TODO: BP-00 sign-off. Bản chơi thử đang chạy giá trị đề xuất (Hướng dẫn 3×3, Thường 5×5, Khó 6×6, Đại trận cỡ ngẫu nhiên 7–10; có chướng ngại, thanh Bỏ Lệnh 0–3, Quân Lệnh 8%/Thu Hồi 4%, điểm 10/5/50 và thưởng thắng 500 cộng thêm, không xem trước quân kế). Cỡ bàn các bậc do Shan chốt 01/11/2026. Cần Shan chốt hoặc đổi, xem [GDD mục 11](../02-game-modes/future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline).
 - TODO: Duyệt bảng thưởng và kỳ xếp hạng Trận Đồ đã code (ngày cho Thường/Khó, tuần cho Đại trận; vàng 150/300/1000 cho hạng nhất; không đòi số người thắng tối thiểu), rồi mới bật `FORMATION_RANKED_ENABLED` ở production. Xem [GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt), gồm các hạn chế đã biết (tài khoản khách, giới hạn tốc độ, tab BXH).
 - TODO: Agent mô phỏng lookahead và thử người thật để cân lại bậc Thường (greedy ngang random) và độ dài ván lớn (Đại trận phụ thuộc cỡ bàn), xem [QA Binh Pháp](../02-game-modes/future/05-binh-phap-balance-qa.md#kết-quả-mô-phỏng-baseline-01112026).
-- TODO: Hoàn tất thiết kế và duyệt hai nhân vật dung hợp của Trận Đồ (Đinh Ngọc, Trần Vũ Phong – Vân Du Tử; đủ 8 nghề, 7 hệ; chỉ ở bậc Khó và Đại trận), đo lại độ khó ở bàn 6×6 của Khó, chốt tỉ lệ (đề xuất 1–2% vì rất mạnh), xem [GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc).
+- Đã bật (02/11/2026): Đinh Ngọc và Vũ Phong là quân dung hợp của Trận Đồ ở Khó và Đại trận, 1,5% mỗi quân, hai bậc tăng `version` lên 7; số đo ở [GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc).
+- TODO: Shan duyệt chính thức hai nhân vật dung hợp (Vũ Phong còn DRAFT, chưa chốt họ Trần); triển khai đổi `version` vào lúc kỳ xếp hạng vừa đổi; chọn lại tỉ lệ nếu thấy quân quá mạnh.
 - Đã chốt (Shan, 01/11/2026): cách tính điểm mùa Quần Hùng là tổng điểm nhận được từ trận mình đi đánh, Elo gốc không reset; Trấn Ải là số đợt cao nhất một lượt chơi trong tuần; và **toàn bộ bảng vàng theo hạng** của Trận Đồ, Nhật Lệnh, Tháp Thiên Mệnh, Trấn Ải, Quần Hùng đã duyệt (xem [chế độ chơi mục 6](../02-game-modes/README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt)). Việc còn lại trước khi bật Trận Đồ xếp hạng ở production: đặt `FORMATION_RANKED_ENABLED=true` cùng `SESSION_SECRET`.
 - TODO: Loại thưởng ngoài vàng (danh hiệu theo kỳ, trang bị, mở tướng) cho mọi chế độ; Shan sẽ bàn chi tiết sau khi các chế độ ổn định.
 
@@ -128,3 +129,17 @@
 - Đã chốt (Shan, 02/11/2026): kho ảnh bản đồ xoay theo kỳ với địa danh thật thời Loạn 12 sứ quân; ô che bằng ảnh đặc kín; chướng ngại bốn biến thể (núi, rừng, đầm lầy, thành lũy) với nền ô riêng; quân đủ huy hiệu nghề và hệ nhỏ vừa đủ; hoàn thành màn thì hiện ảnh đầy đủ; chế độ tùy chỉnh trong Chơi thường.
 - TODO: Shan thiết kế 13 ảnh bản đồ, ảnh ô che và 4 icon chướng ngại ([yêu cầu và prompt](../05-ui-ux/screens/tran-do.md#3-yêu-cầu-ảnh-cho-họa-sĩ)); hiện dùng ảnh giữ chỗ.
 - TODO: Shan test lần 1 màn chế độ và màn chơi chi tiết đã triển khai ([mục 5 và 6](../05-ui-ux/screens/tran-do.md#5-màn-chế-độ-đã-code-chờ-shan-test-lần-1)) rồi góp ý. Kho bản đồ mở rộng lên 30 và không giới hạn; prompt đầy đủ ở [prompt hình ảnh Trận Đồ](../06-art/prompts/tran-do-hinh-anh.md).
+
+## Đinh Ngọc và Vũ Phong — chạy trong trận
+
+- Đã có (02/11/2026): sáu chủ động + bốn nội tại của cả hai chạy trong `src/core`, test 38 ca; chưa mở ở chế độ nào ([Đinh Ngọc](../03-characters/dinh-ngoc.md#triển-khai-trong-core-02112026), [Vũ Phong](../03-characters/vu-phong.md#triển-khai-trong-core-02112026)).
+- Đã cân bằng lần 1 Vũ Phong (02/11/2026): 1vs1 53,0%, 3vs3 61,6% ở cấp 30 ([số đo](../03-characters/vu-phong.md#cân-bằng-lần-1-02112026)).
+- TODO: Cân bằng đủ ma trận cho cả hai (trang bị, F=20%, từng hệ/nghề đối thủ, ô4/ô5 gần như không được AI dùng); xem lại Đinh Ngọc 1vs1 (43,8%).
+- Giao diện chọn và xem trước lốc xoáy cho ô1, ô6 của Vũ Phong đã có (02/11/2026): dùng luồng chọn tâm sẵn của trận đấu, thêm số ô ghép trên nút xoay và xem trước khi rê chuột; xem [mục lốc xoáy trong Giao diện trận](../05-ui-ux/screens/battle.md).
+- TODO: Chọn chế độ mở (Thường, Chiến dịch, Tháp, Sinh tồn), cách mở khóa, giá; đăng ký vào roster/save. Icon tổng hợp và danh sách bốn nội tại trong trận đã có (02/11/2026); các màn khác (Sinh tồn, Chiến dịch, hồ sơ, cửa hàng) chưa đổi vì hai nhân vật chưa xuất hiện ở đó.
+
+## Vũ Phong — Vân Du Tử
+
+- Đã có hình tượng DRAFT: nam khoảng 28 tuổi, lãng khách có hình xăm; nguồn duy nhất: [vu-phong.md](../03-characters/vu-phong.md).
+- TODO: Duyệt sáu ảnh và rig hình động Vũ Phong trên trang xem thử; thống nhất dây hồ lô và kiểu hình xăm cẳng tay phải ở khung 2–3 (rig dùng ảnh đứng nên không bị ảnh hưởng).
+- TODO: Review và mô phỏng bộ kỹ năng DRAFT tám nghề/bảy hệ (phòng thủ Phong, chỉ số 480/52/9, sáu chủ động, bốn nội tại P1–P4 theo lượt thường); chốt cách mở khóa và ID. Cần per-skill `damageElement` và template `specialHybrid` trước khi code; chưa sửa roster, code, UI hoặc asset.

@@ -7,3 +7,6 @@
 | `sfx/formation/fogclear_a..c`, `line_a..b`, `discard_a..c`, `flame1_a..b` | Cắt từ bốn đoạn Gemini tạo (02/11/2026) bằng `scripts/slice-sfx.py`, prompt cùng tên cue trong docs | Như trên |
 | `sfx/formation/win_a..b`, `lose_a,c`, `flame2_a..c`, `flame3_a..b` | Cắt từ bốn đoạn Gemini tạo (02/11/2026) bằng `scripts/slice-sfx.py` | Như trên |
 | `sfx/formation/eraser_a..b`, `wild_a..c`, `match_a..c`, `flamedown_a..b`, `fusion_a..b` | Cắt từ năm đoạn Gemini tạo (02/11/2026) bằng `scripts/slice-sfx.py` | Như trên |
+| `sfx/battle/swap_a..c`, `sfx/formation/tick_a..c`, `rank_a..b` | Cắt từ ba đoạn Gemini tạo (02/11/2026) bằng `scripts/slice-sfx.py` | Như trên |
+| `music/formation_menu` | Bản nhạc Gemini tạo (02/11/2026), chuẩn hóa -18 LUFS và làm vòng lặp bằng `scripts/make-music-loop.py` | Như trên |
+| `sfx/battle/hit1..3_*`, `invalid_a..c`, `match3_a..c` | Cắt từ năm đoạn Gemini tạo (02/11/2026) bằng `scripts/slice-sfx.py`. Tiếng đòn đánh dùng chung cho cả 8 nghề; `match4`/`match5` dùng lại tiếng `match3` với tốc độ cao hơn | Như trên |

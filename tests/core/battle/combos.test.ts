@@ -21,6 +21,7 @@ import {
   buildCompanion,
   buildMain,
   ALL_COMPANIONS,
+  SPECIAL_COMPANIONS,
   STORY_NODES,
   WARLORD_ENCOUNTERS,
   campaignEncounterFoes,
@@ -484,8 +485,8 @@ it("nguồn chiêu riêng canonical mở rộng mà không qua chuyển ô legac
     /Trùng chiêu riêng/,
   );
   assert.throws(() => defineCharacterSkills([{ ...next, slot: 5 }]), /ô4/);
-  // Xạ thủ/Sát thủ đã vào ALL_COMPANIONS: mỗi nhân vật kèm một chiêu riêng.
-  assert.equal(CHARACTER_SKILLS.length, ALL_COMPANIONS.length);
+  // Xạ thủ/Sát thủ đã vào ALL_COMPANIONS: mỗi nhân vật kèm một chiêu riêng; thêm tuyệt chiêu ô4 của hai nhân vật đặc biệt.
+  assert.equal(CHARACTER_SKILLS.length, ALL_COMPANIONS.length + SPECIAL_COMPANIONS.length);
 });
 
 it("API nâng ô 4/5 yêu cầu layout2, chặn client cache cũ nâng nhầm chiêu", () => {

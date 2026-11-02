@@ -112,8 +112,148 @@
         "sfx/formation/fusion_b"
       ],
       "volume": 0.9
+    },
+    "battle.swap": {
+      "files": [
+        "sfx/battle/swap_a",
+        "sfx/battle/swap_b",
+        "sfx/battle/swap_c"
+      ],
+      "volume": 0.7
+    },
+    "formation.tick": {
+      "files": [
+        "sfx/formation/tick_a",
+        "sfx/formation/tick_b",
+        "sfx/formation/tick_c"
+      ],
+      "volume": 0.7
+    },
+    "formation.rank": {
+      "files": [
+        "sfx/formation/rank_a",
+        "sfx/formation/rank_b"
+      ],
+      "volume": 0.9
+    },
+    "battle.hit.tuongSi": {
+      "files": [
+        "sfx/battle/hit1_a",
+        "sfx/battle/hit1_b",
+        "sfx/battle/hit2_a",
+        "sfx/battle/hit2_b",
+        "sfx/battle/hit3_a"
+      ],
+      "volume": 0.85
+    },
+    "battle.hit.binhLinh": {
+      "files": [
+        "sfx/battle/hit1_a",
+        "sfx/battle/hit1_b",
+        "sfx/battle/hit2_a",
+        "sfx/battle/hit2_b",
+        "sfx/battle/hit3_a"
+      ],
+      "volume": 0.85
+    },
+    "battle.hit.phapSu": {
+      "files": [
+        "sfx/battle/hit1_a",
+        "sfx/battle/hit1_b",
+        "sfx/battle/hit2_a",
+        "sfx/battle/hit2_b",
+        "sfx/battle/hit3_a"
+      ],
+      "volume": 0.85
+    },
+    "battle.hit.ySu": {
+      "files": [
+        "sfx/battle/hit1_a",
+        "sfx/battle/hit1_b",
+        "sfx/battle/hit2_a",
+        "sfx/battle/hit2_b",
+        "sfx/battle/hit3_a"
+      ],
+      "volume": 0.85
+    },
+    "battle.hit.muuSi": {
+      "files": [
+        "sfx/battle/hit1_a",
+        "sfx/battle/hit1_b",
+        "sfx/battle/hit2_a",
+        "sfx/battle/hit2_b",
+        "sfx/battle/hit3_a"
+      ],
+      "volume": 0.85
+    },
+    "battle.hit.quanSu": {
+      "files": [
+        "sfx/battle/hit1_a",
+        "sfx/battle/hit1_b",
+        "sfx/battle/hit2_a",
+        "sfx/battle/hit2_b",
+        "sfx/battle/hit3_a"
+      ],
+      "volume": 0.85
+    },
+    "battle.hit.xaThu": {
+      "files": [
+        "sfx/battle/hit1_a",
+        "sfx/battle/hit1_b",
+        "sfx/battle/hit2_a",
+        "sfx/battle/hit2_b",
+        "sfx/battle/hit3_a"
+      ],
+      "volume": 0.85
+    },
+    "battle.hit.satThu": {
+      "files": [
+        "sfx/battle/hit1_a",
+        "sfx/battle/hit1_b",
+        "sfx/battle/hit2_a",
+        "sfx/battle/hit2_b",
+        "sfx/battle/hit3_a"
+      ],
+      "volume": 0.85
+    },
+    "battle.invalid": {
+      "files": [
+        "sfx/battle/invalid_a",
+        "sfx/battle/invalid_b",
+        "sfx/battle/invalid_c"
+      ],
+      "volume": 0.7
+    },
+    "battle.match3": {
+      "files": [
+        "sfx/battle/match3_a",
+        "sfx/battle/match3_b",
+        "sfx/battle/match3_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.match4": {
+      "files": [
+        "sfx/battle/match3_a",
+        "sfx/battle/match3_b",
+        "sfx/battle/match3_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.match5": {
+      "files": [
+        "sfx/battle/match3_a",
+        "sfx/battle/match3_b",
+        "sfx/battle/match3_c"
+      ],
+      "volume": 0.8
     }
   },
-  "music": {},
+  "music": {
+    "formation_menu": {
+      "file": "music/formation_menu",
+      "volume": 0.5
+    }
+  },
   "ambience": {}
 }

@@ -29,8 +29,8 @@ function CharacterDetails({ character, size }: { character: CharacterPreview; si
           <p className="flex flex-wrap items-center gap-1 text-sm text-stone-400">
             {character.title ? (
               <>
-                {character.title} · <ProfessionIcon profession="tongHop" className="size-5" /> Nghề tổng hợp ·{" "}
-                <ElementIcon element="tongHop" className="size-5" /> Hệ tổng hợp
+                {character.title} · <ProfessionIcon profession="tongHop" className="size-5" /> Vạn nghề ·{" "}
+                <ElementIcon element="tongHop" className="size-5" /> Vạn hệ
               </>
             ) : (
               <>

@@ -10,7 +10,15 @@ export type ComboSignalKind =
   | "dispelled"
   | "skillDamage"
   | "healed"
-  | "shieldAbsorbed";
+  | "shieldAbsorbed"
+  /** Nhân vật đặc biệt: người nhận mất HP vì kỹ năng của địch (provenance, nguồn là người nhận). */
+  | "damageTaken"
+  /** Nhân vật đặc biệt: Khiên của người nhận vừa về 0 vì đòn chủ động hoặc bàn cờ của địch. */
+  | "shieldBroken"
+  /** Địch còn sống nhưng HP vừa xuống ≤50% HP tối đa sau kỹ năng. */
+  | "weakened"
+  /** Địch còn sống nhưng HP vừa xuống ≤30% HP tối đa sau kỹ năng. */
+  | "finishing";
 export type ComboPayoff = "damage" | "sustain" | "drain" | "discount";
 export interface ComboPassiveDef {
   readonly id: string;
@@ -63,6 +71,16 @@ export const COMBO_PASSIVES = {
     targeted: false,
     description:
       "Đồng đội dùng kỹ năng gây mất HP thực: kỹ năng hồi/cấp Khiên hữu hiệu tiếp theo tăng 25% lượng gốc của các bước hồi/Khiên trực tiếp, trước hệ số Tinh thần của người nhận.",
+  },
+  phongLenh: {
+    id: "phongLenh",
+    name: "Phong lệnh tiếp ứng",
+    triggers: ["controlled"],
+    payoff: "damage",
+    value: 0.15,
+    targeted: true,
+    description:
+      "Đồng đội khác áp Đóng băng/Câm lặng thành công: đòn kiếm/kỹ năng sát thương tiếp theo vào đúng mục tiêu đó tăng 15% sát thương; một cơ hội giữ, hết hạn như cơ hội phối hợp thường.",
   },
   interdiction: {
     id: "interdiction",

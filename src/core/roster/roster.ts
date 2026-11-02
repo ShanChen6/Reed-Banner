@@ -200,6 +200,30 @@ export const ALL_COMPANIONS: readonly FighterConfig[] = [
   ...WARLORD_COMPANIONS.map((c) => c.fighter),
 ];
 
+/**
+ * Nhân vật đặc biệt dung hợp tám nghề/bảy hệ (docs/03-characters/dinh-ngoc.md, vu-phong.md; DRAFT, số liệu là điểm xuất
+ * phát chưa mô phỏng). Loadout cố định 6 chủ động + 4 nội tại; `special` bỏ nội tại nghề mặc định. Chưa nằm trong
+ * `ALL_COMPANIONS` nên chưa có trong shop, Chiến dịch, Tháp hay Sinh tồn; mở ở chế độ nào là quyết định sản phẩm sau.
+ */
+export const SPECIAL_COMPANIONS: readonly FighterConfig[] = [
+  {
+    id: "dinhNgoc", name: "Đinh Ngọc", special: true, element: "kim", profession: "tuongSi",
+    maxHp: 500, atk: 50, def: 10,
+    chasePassives: ["dn_thoMachHoThan", "dn_mocTucDuongSinh", "dn_loiYDoatCo"], comboPassive: "phongLenh",
+    skills: characterSkills("tuongSi", "kim", "dinhNgoc").map((s) => s.id),
+  },
+  {
+    id: "vuPhong", name: "Vũ Phong", special: true, element: "phong", profession: "quanSu",
+    maxHp: 480, atk: 52, def: 9,
+    chasePassives: ["vp_truongThietHoiDap", "vp_phiDiepTheoGio", "vp_hoaAnVanSau", "vp_loiVanTranPhap"],
+    skills: characterSkills("quanSu", "phong", "vuPhong").map((s) => s.id),
+  },
+];
+
+export function specialById(id: string): FighterConfig | undefined {
+  return SPECIAL_COMPANIONS.find((c) => c.id === id);
+}
+
 export function companionById(id: string): FighterConfig | undefined {
   return [...ALL_COMPANIONS, ...EXPANSION_COMPANIONS].find((c) => c.id === id);
 }

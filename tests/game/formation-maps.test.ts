@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import { MAP_POOL, mapFor } from "../../src/app/game/formation/maps";
 
@@ -15,6 +15,12 @@ describe("kho bản đồ Trận Đồ", () => {
       assert.ok(m.place.length > 0 && m.blurb.length > 10, m.id);
       assert.ok(m.kind === "lich-su" || m.kind === "canh-quan", m.id);
     }
+  });
+
+  it("mọi tệp trong public/art/formation/maps đều được dùng, và ngược lại (không quên khai báo ảnh thật)", () => {
+    const files = readdirSync("public/art/formation/maps").filter((f) => f.endsWith(".webp")).map((f) => f.slice(0, -5)).sort();
+    const real = MAP_POOL.filter((m) => m.src.startsWith("/art/formation/maps/")).map((m) => m.id).sort();
+    assert.deepEqual(real, files);
   });
 
   it("mọi ảnh trỏ tới tệp có thật trong public (ảnh giữ chỗ hoặc ảnh thật)", () => {

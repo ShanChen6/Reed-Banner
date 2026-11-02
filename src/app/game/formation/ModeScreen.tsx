@@ -5,6 +5,7 @@
 // hạng đang mở, và bộ sưu tập địa danh đã khai thông.
 
 import { useEffect, useRef, useState } from "react";
+import { useAudio } from "../audio/AudioProvider";
 import { REWARD_GOLD, REWARD_TIERS, RULESETS, rewardGold, type Ruleset } from "@/core/binh-phap";
 import { SceneLink } from "../SceneContext";
 import CustomForm from "./CustomForm";
@@ -185,6 +186,20 @@ export default function ModeScreen({
   const active = tab ?? (rankedOn && overview?.canPlay ? "ranked" : "practice");
   const now = useServerNow(overview, onExpire);
   const pending = (overview?.levels ?? []).flatMap((l) => l.claimable);
+  // Năm giây cuối của một kỳ: mõ điểm từng giây (`now` cập nhật mỗi 20 giây nên hẹn giờ theo phần còn lại tại thời điểm đó).
+  const { play: playSound } = useAudio();
+  useEffect(() => {
+    if (now === 0) return;
+    const timers: number[] = [];
+    for (const l of overview?.levels ?? []) {
+      const remain = l.endsAt - now;
+      for (let k = 5; k >= 1; k--) {
+        const delay = remain - k * 1000;
+        if (delay > 0 && delay <= 20_000) timers.push(window.setTimeout(() => playSound("formation.tick"), delay));
+      }
+    }
+    return () => timers.forEach((t) => window.clearTimeout(t));
+  }, [now, overview, playSound]);
   // Bản đồ mẫu trên thẻ chơi thường đổi mỗi ngày (chỉ để trang trí; ván thật chọn bản đồ ngẫu nhiên).
   const dayTheme = Math.floor(now / 86_400_000);
 

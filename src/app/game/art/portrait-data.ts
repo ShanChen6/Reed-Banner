@@ -68,6 +68,7 @@ const PHOTOS: Readonly<Record<string, string>> = {
   loiMinhXa: "/art/characters/loi-minh-xa/portrait.webp",
   tatPhongLang: "/art/characters/tat-phong-lang/portrait.webp",
   dinhNgoc: "/art/characters/dinh-ngoc/portrait.webp",
+  vuPhong: "/art/characters/vu-phong/portrait.webp",
   bachPhongDao: "/art/characters/bach-phong-dao/portrait.webp",
   docAnh: "/art/characters/doc-anh/portrait.webp",
   hanGiangKhach: "/art/characters/han-giang-khach/portrait.webp",
