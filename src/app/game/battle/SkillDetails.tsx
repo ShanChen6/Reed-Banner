@@ -1,9 +1,17 @@
 import { COMBO_PASSIVES, CHASE_PASSIVES, chasePassives, type FighterConfig, type ComboPassiveId, type SkillDef } from '@/core';
 import { skillText } from './labels';
+import { fusionPassiveLines } from './special-labels';
 
-/** The prepared opportunity is profession passive1; three automatic reactions complete the loadout. */
-export default function SkillDetails({skills,passive,fighter}:{skills:readonly SkillDef[];passive?:ComboPassiveId;fighter?:Pick<FighterConfig,'profession'|'element'|'chasePassives'>}) {
+/** The prepared opportunity is profession passive1; three automatic reactions complete the loadout. Fusion characters list four fixed passives. */
+export default function SkillDetails({skills,passive,fighter}:{skills:readonly SkillDef[];passive?:ComboPassiveId;fighter?:Pick<FighterConfig,'profession'|'element'|'chasePassives'|'special'|'comboPassive'>}) {
   const reactions=fighter?chasePassives(fighter):[];
+  const fusion=fighter?fusionPassiveLines(fighter):[];
+  if(fusion.length)return <details className="w-full rounded border border-current/15 p-2 text-xs">
+    <summary className="cursor-pointer font-semibold">Bộ 6 chủ động · 4 nội tại dung hợp</summary>
+    <ul className="mt-2 space-y-2 text-amber-200">{fusion.map(line=><li key={line.label}>{line.label} · {line.name}: {line.description}</li>)}</ul>
+    <p className="mt-2 opacity-70">Nhân vật dung hợp không nhận nội tại nghề mặc định; chỉ bốn nội tại này. Truy kích tự nối trong cùng hành động, không tốn lượt hay năng lượng; mỗi nội tại tối đa một lần mỗi hành động, toàn chuỗi tối đa 12 phản ứng, sâu 4. Đóng băng/Câm lặng chặn phản ứng; riêng nội tại cuối lượt vẫn chạy khi còn sống.</p>
+    <ul className="mt-2 space-y-2">{skills.map(skill=><li key={skill.id}>{skillText(skill)}</li>)}</ul>
+  </details>;
   return <details className="w-full rounded border border-current/15 p-2 text-xs">
     <summary className="cursor-pointer font-semibold">Bộ 6 chủ động · 4 bị động</summary>
     {passive && <p className="mt-2 text-amber-200" aria-label="Bị động nghề 1">Nghề 1 · {COMBO_PASSIVES[passive].name}: {COMBO_PASSIVES[passive].description}</p>}

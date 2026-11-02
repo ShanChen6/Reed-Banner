@@ -1,7 +1,7 @@
 # Giao diện Trận Đồ
 
 > Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — sa bàn là bản đồ, màn chế độ và màn chơi chi tiết đã có code với ảnh giữ chỗ; ô che và 4 icon chướng ngại v1 đã tích hợp, ảnh 30 bản đồ thật do Shan thiết kế; Shan test lần 1 rồi góp ý.
+> Trạng thái: **DRAFT** — sa bàn là bản đồ, màn chế độ và màn chơi chi tiết đã có code; ô che, 4 icon chướng ngại v1 và đủ 30 ảnh bản đồ thật (Shan tạo) đã tích hợp; Shan test lần 1 rồi góp ý.
 
 Luật chơi ở [GDD Binh Pháp](../../02-game-modes/future/02-binh-phap-gdd.md); tài liệu này chỉ nói về giao diện. Màn chơi nằm ở `src/app/game/formation/`.
 
@@ -16,7 +16,7 @@ Luật chơi ở [GDD Binh Pháp](../../02-game-modes/future/02-binh-phap-gdd.md
 7. **Chế độ tùy chỉnh** trong Chơi thường: chọn cột × hàng, nghề, hệ, quân đặc biệt (và chướng ngại).
 8. Gợi ý giao diện màn chế độ và màn chơi: **triển khai trước**, Shan tham khảo thực tế rồi góp ý sau.
 
-## 2. Đã code (ảnh giữ chỗ)
+## 2. Đã code
 
 - **Kho bản đồ** (`maps.ts`): 13 địa danh lấy từ danh mục sứ quân của Campaign V2 (`WARLORD_ENCOUNTERS`) cộng Hoa Lư. Bản đồ của một ván chọn bằng `mapFor(bậc, theme)`; `theme` suy từ seed (chơi thường) hoặc từ muối bí mật (xếp hạng) và như nhau với mọi người trong cùng kỳ, mỗi bậc lệch một khoảng nên cùng kỳ các bậc không trùng bản đồ. Thường/Khó đổi bản đồ mỗi ngày, Đại trận mỗi tuần (theo kỳ xếp hạng).
 - **Ô che đặc kín** (`public/art/formation/fog.webp`, ảnh Shan tạo, đã duyệt 02/11/2026): nền sơn mài nâu với vân mây cuộn, đè hoàn toàn lên bản đồ. Ô mở thì ô che mờ dần (0,45 giây, tắt khi giảm chuyển động), ô trong suốt lộ bản đồ và viền sáng nhẹ. Ô vẫn sáng sau khi quân bị dọn (vệt khai thông).

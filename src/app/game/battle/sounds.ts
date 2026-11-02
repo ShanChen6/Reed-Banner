@@ -30,7 +30,10 @@ export function frameCue(sound: FrameSound | undefined): CuePlay | null {
     const tier = Math.min(4, sound.chain - 1) as 1 | 2 | 3 | 4;
     return { id: `battle.combo${tier}` };
   }
-  return { id: sound.size >= 5 ? "battle.match5" : sound.size === 4 ? "battle.match4" : "battle.match3" };
+  // Chưa có tiếng riêng cho 4 và 5 ô: dùng chung tiếng 3 ô, cao dần theo số ô (manifest trỏ cùng tệp).
+  if (sound.size >= 5) return { id: "battle.match5", rate: 1.16 };
+  if (sound.size === 4) return { id: "battle.match4", rate: 1.08 };
+  return { id: "battle.match3" };
 }
 
 /**

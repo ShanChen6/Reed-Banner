@@ -250,6 +250,17 @@ export function whirlBoard(board: Board, whirl: Whirl, rng: Rng, weights: SpawnW
 }
 
 /**
+ * Xem trước một lần xoay mà không đổi bàn cờ và không cần ngẫu nhiên: bàn sau khi xoay (chưa xử lý cascade) và chỉ số
+ * các ô tạo thành bộ ghép ngay sau lần xoay đó. Giao diện dùng để cho người chơi thấy kết quả trước khi xác nhận.
+ */
+export function previewWhirl(board: Board, whirl: Whirl): { readonly after: Board; readonly matched: ReadonlySet<number> } {
+  const after = whirlCells(board, whirl);
+  const matched = new Set<number>();
+  for (const group of findMatches(after)) for (const pos of group.cells) matched.add(indexOf(after, pos));
+  return { after, matched };
+}
+
+/**
  * Lốc xoáy tự chọn cho kỹ năng có xoay kèm theo: lần xoay tạo bộ ghép nhiều ô nhất (hòa thì lấy tâm
  * đứng trước, nấc nhỏ trước, chiều kim đồng hồ trước). null nếu không lần xoay nào tạo bộ ghép.
  */

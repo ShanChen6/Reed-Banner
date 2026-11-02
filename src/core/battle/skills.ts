@@ -3,6 +3,7 @@
 // Kỹ năng là dữ liệu; battle.ts thực thi các bước theo thứ tự.
 
 import { EXPANSION_ROLE_SKILLS, EXPANSION_CHARACTER_SKILLS } from "./expansion-skills";
+import { SPECIAL_SKILLS, SPECIAL_SKILL_SETS } from "./special-skills";
 import type { AreaShape, TileKind } from "../board";
 import type { EffectKind } from "./effects";
 import type { Element } from "./elements";
@@ -68,6 +69,8 @@ export interface SkillDef {
   readonly character?: string;
   /** Ô bộ kỹ năng: 1/3/5 nghề, 2/6 hệ, 4 riêng; preset AI cũ giữ ô cũ. */
   readonly element?: Element;
+  /** Hệ của từng hit sát thương; bỏ trống là hệ của người tung chiêu. Nhân vật đặc biệt dùng để mỗi chiêu một hệ. */
+  readonly damageElement?: Element;
   readonly slot?: number;
   readonly ultimate?: boolean;
   readonly characterKind?: "ultimate" | "signature";
@@ -928,6 +931,7 @@ export const CHARACTER_SKILLS:readonly SkillDef[]=defineCharacterSkills([
  ...ULTIMATES.map((d):SkillDef=>({...d,slot:4,ultimate:true,characterKind:'ultimate'})),
  ...SIGNATURES.map((d):SkillDef=>({...d,slot:4,ultimate:true,characterKind:'signature'})),
  ...EXPANSION_CHARACTER_SKILLS,
+ ...SPECIAL_SKILLS.filter(d=>d.slot===4),
  // Future personal skills are canonical records: slot4, ultimate:true, stable ID + character.
 ]);
 
@@ -967,6 +971,9 @@ export function skillSource(def: SkillDef): "profession" | "element" | "characte
 
 /** Nguồn thống nhất cho mọi nhân vật chơi được; tiến trình lọc sau khi lắp bộ. */
 export function characterSkills(profession: Profession, element: Element, character?: string): SkillDef[] {
+  // Nhân vật đặc biệt có loadout cố định, không ghép từ nghề và hệ.
+  const special = character !== undefined && Object.hasOwn(SPECIAL_SKILL_SETS, character) ? SPECIAL_SKILL_SETS[character] : undefined;
+  if (special) return [...special];
   const ultimate = !character || character === "dinhBoLinh" ? dinhBoLinhUltimate(profession,element) : personalSkillOf(character) ?? getSkill(legacyElementSkills(element).find(d => d.slot === 5)!.id)!;
   const defs = [...ROLE_SKILLS.filter(d => d.profession === profession), ...ELEMENT_SKILLS.filter(d => d.element === element), ultimate];
   return SKILL_SLOT_ORDER.map(slot => defs.find(d => d.slot === slot)!);
@@ -982,6 +989,8 @@ export const SKILLS: Readonly<Record<string, SkillDef>> = defineSkillRegistry(
     ...DEFS,
     ...[...MAIN,...PHONG].map((d):SkillDef=>d.slot===5?{...d,slot:4,ultimate:true}:d.slot===4?{...d,slot:5}:d),
     ...CHARACTER_SKILLS,...DBL_ULTIMATES,...ROLE_SKILLS,...ELEMENT_SKILLS,
+    // Năm chiêu còn lại của nhân vật đặc biệt (ô4 đã nằm trong CHARACTER_SKILLS).
+    ...SPECIAL_SKILLS.filter(d=>d.slot!==4),
   ],
 );
 
