@@ -232,16 +232,13 @@ export default function FormationScreen() {
   // Ván đang chơi: ván xếp hạng (bản công khai từ server) hoặc ván chơi thường (ở máy).
   const playState: PuzzleState | null = ranked ? toPuzzleState(ranked) : state;
   const playRules: Ruleset | null = ranked ? (rulesetById(ranked.level) ?? null) : state ? (state.custom ?? rulesetById(state.rulesetId) ?? null) : null;
-  // Tải sẵn chân dung để quân kế tiếp hiện đủ gương mặt ngay (không trễ 1–2 giây): bộ luật đang chơi ngay lập tức, các bậc khác lúc rảnh.
+  // Tải sẵn chân dung để quân hiện đủ gương mặt ngay, không trễ 1–2 giây: ngay khi vào màn chọn bậc (mọi bậc, Thường trước), và bộ luật đang chơi.
+  useEffect(() => {
+    [...RULESETS].sort((x, y) => Number(y.id === "thuong") - Number(x.id === "thuong")).forEach((r) => preloadPortraits(r));
+  }, []);
   useEffect(() => {
     if (playRules) preloadPortraits(playRules);
   }, [playRules]);
-  useEffect(() => {
-    const idle = (window as Window & { requestIdleCallback?: (cb: () => void) => number }).requestIdleCallback;
-    const run = () => RULESETS.forEach((r) => preloadPortraits(r));
-    if (idle) idle(run);
-    else setTimeout(run, 1200);
-  }, []);
   const theme = ranked ? ranked.puzzle.theme : state ? themeOfState(state) : 0;
   const rankedBusy = ranked ? busy : false;
 
