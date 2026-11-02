@@ -2,14 +2,19 @@
 
 import type { Rng } from "../rng";
 import { charactersFor } from "./catalog";
-import type { Piece, Ruleset } from "./types";
+import { neighbors4 } from "./rules";
+import type { Cell, NormalPiece, Piece, Ruleset } from "./types";
 
 /**
  * Quân kế tiếp. `previous` là quân vừa dùng: sau một quân đặc biệt luôn ra quân thường (chống chuỗi đặc biệt); không sinh Thu Hồi khi bàn trống; nhân vật dung hợp cũng không ra liền sau một quân đặc biệt.
- * Thứ tự gọi RNG cố định: một lần chọn loại, rồi (nếu quân thường) nghề, hệ, người đại diện.
+ * **Quân thường luôn liên quan tới bàn** (Shan chốt 02/11/2026): khi bàn đã có quân thường, quân mới chia sẻ ít nhất một nghề hoặc một hệ với một
+ * quân thường đang trên bàn (ưu tiên quân còn ô trống kề bên), để không phải bỏ liền nhiều quân không dính gì tới nhau. Quân đặc biệt (Quân Lệnh,
+ * Thu Hồi, dung hợp) ra theo tỉ lệ riêng, không cần liên quan.
+ * Thứ tự gọi RNG cố định: một lần chọn loại, rồi (nếu quân thường) [quân neo, nghề-hay-hệ khi bàn có quân thường], nghề, hệ, người đại diện.
  */
-export function nextPiece(rng: Rng, rules: Ruleset, serial: number, previous: Piece | null, boardHasPieces: boolean): Piece {
+export function nextPiece(rng: Rng, rules: Ruleset, serial: number, previous: Piece | null, cells: readonly Cell[], width = 0, height = 0): Piece {
   const uid = `p${serial}`;
+  const boardHasPieces = cells.some((c) => c.piece !== null);
   const roll = rng.int(0, 999);
   if (previous === null || previous.kind === "normal") {
     if (roll < rules.wildPermille) return { kind: "wild", uid };
@@ -22,11 +27,32 @@ export function nextPiece(rng: Rng, rules: Ruleset, serial: number, previous: Pi
       return { kind: "fusion", uid, characterId: who.characterId };
     }
   }
-  const profession = rules.professions[rng.int(0, rules.professions.length - 1)]!;
-  const element = rules.elements[rng.int(0, rules.elements.length - 1)]!;
+  const anchors = anchorPieces(cells, width, height);
+  let anchor: NormalPiece | null = null;
+  let keepProfession = false;
+  if (anchors.length > 0) {
+    anchor = anchors[rng.int(0, anchors.length - 1)]!;
+    keepProfession = rng.int(0, 1) === 0;
+  }
+  const pickedProfession = rules.professions[rng.int(0, rules.professions.length - 1)]!;
+  const pickedElement = rules.elements[rng.int(0, rules.elements.length - 1)]!;
+  const profession = anchor && keepProfession ? anchor.profession : pickedProfession;
+  const element = anchor && !keepProfession ? anchor.element : pickedElement;
   const people = charactersFor(profession, element);
   const who = people[rng.int(0, people.length - 1)]!;
   return { kind: "normal", uid, characterId: who.characterId, profession, element };
+}
+
+/** Quân thường trên bàn làm "neo" cho quân mới; ưu tiên quân còn ô chơi được trống kề bên (có chỗ để nối), không có thì lấy mọi quân thường. */
+function anchorPieces(cells: readonly Cell[], width: number, height: number): NormalPiece[] {
+  const all: NormalPiece[] = [];
+  const open: NormalPiece[] = [];
+  cells.forEach((c, i) => {
+    if (c.piece?.kind !== "normal") return;
+    all.push(c.piece);
+    if (width > 0 && neighbors4(width, height, Math.floor(i / width), i % width).some((n) => !cells[n]!.blocked && cells[n]!.piece === null)) open.push(c.piece);
+  });
+  return open.length > 0 ? open : all;
 }
 
 /**

@@ -105,3 +105,16 @@ Lệnh: `pnpm exec tsx scripts/binh-phap-sim.ts --runs 2000 --seed 1`. Bốn b�
 - Lỗi cần nhớ khi đo: `transition` tra bộ luật theo `rulesetId` trong `RULESETS`, nên muốn thử một cấu hình khác phải thay thẳng mục trong registry (như script sweep đã làm), không chỉ truyền ruleset vào `createPuzzle`.
 
 Nhận xét: bốn bậc tăng độ khó đúng chiều; Thường và Khó chưa tách bằng chiến thuật (greedy chỉ ngang random). Cần agent mạnh hơn (lookahead) trước khi chốt. Độ dài Đại trận phụ thuộc cỡ bàn và nằm khoảng 100 nước (trung vị, ván thắng) với bot greedy, nhờ trần 72 ô chơi được.
+
+## Đo lại sau khi đổi luật sinh quân (02/11/2026)
+
+Shan chơi thử Đại trận thấy 5 lượt đầu ra 5 quân không dính gì nhau phải bỏ hết. Từ bản này quân thường sinh ra luôn **chung ít nhất một nghề hoặc hệ với một quân thường đang trên bàn** (ưu tiên quân còn ô trống kề bên); quân đặc biệt ra theo tỉ lệ riêng, không cần liên quan. Bộ luật các bậc tăng `version` (save cũ bị bỏ). Đo `--runs 2000 --seed 1`:
+
+| Bậc | Agent | Thắng | Lượt (trung vị / p90) | Bỏ lệnh TB |
+|---|---|---|---|---|
+| Hướng dẫn | random / greedy | 100% / 100% | 17/30 · 9/9 | 0,11 / 0,00 |
+| Thường | random / greedy | 98,0% / 99,7% | 53/82 · 27/41 | 1,75 / 1,42 |
+| Khó | random / greedy | 92,0% / 98,7% | 81/137 · 42/62 | 5,11 / 2,75 |
+| Đại trận | random / greedy | 29,4% / 95,0% | 150/263 · 92/120 | 19,35 / 6,95 |
+
+Nhận xét: ván dễ hơn hẳn (Đại trận greedy từ 33% lên 95%, random từ 2–7% lên 29%) vì ít khi phải bỏ quân; bản đo trước đã quá khó với bot nhưng người chơi thật thấy sai chỗ ở **lúc đầu ván** chứ không phải độ khó tổng thể. Thanh Bỏ Lệnh là núm bù: thử riêng Đại trận (600 ván) với thanh 2 vạch cho random 15,8% / greedy 85,5%, thanh 1 vạch cho 3,2% / 53,7%. Chưa đổi vì Shan chưa muốn đổi thanh Bỏ Lệnh; cần Shan chọn mức khó mục tiêu cho các bậc xếp hạng, xem [câu hỏi mở](../../09-roadmap/cau-hoi-mo.md).

@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Trận Đồ: quân mới phải liên quan tới quân trên bàn (Shan quyết định)**
+- Chơi thử Đại trận thấy 5 lượt đầu ra 5 quân không dính nhau, phải bỏ hết. Quân thường kế tiếp giờ chung ít nhất một nghề hoặc hệ với một quân thường trên bàn (ưu tiên quân còn ô trống kề bên); Quân Lệnh, Thu Hồi, dung hợp vẫn theo tỉ lệ riêng. Bộ luật các bậc tăng version. Ván dễ hơn hẳn (Đại trận greedy 33% → 95%): số đo và các mức thanh Bỏ Lệnh thử bù ở [mô phỏng](../02-game-modes/future/05-binh-phap-balance-qa.md#đo-lại-sau-khi-đổi-luật-sinh-quân-02112026), chờ Shan chọn độ khó mục tiêu.
+
 **Trận Đồ: 5 ảnh bản đồ thật**
 - Hoa Lư, Bố Hải Khẩu, Đằng Châu, Bình Kiều, Đường Lâm thay ảnh giữ chỗ (1024², WebP). Còn 25 bản đồ.
 - Thêm Hồi Hồ, Phong Châu, Tam Đái (8/30). Còn 22 bản đồ.

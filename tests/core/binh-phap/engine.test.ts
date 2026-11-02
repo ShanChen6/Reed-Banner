@@ -653,14 +653,12 @@ describe("muối bí mật của ván xếp hạng", () => {
     }
   });
 
-  it("dãy quân không phụ thuộc cách đi (chỉ phụ thuộc số lượt), kể cả có muối", () => {
+  it("dãy quân tất định theo trạng thái: cùng bàn cùng lượt thì cùng quân kế, kể cả có muối", () => {
     const base = createPuzzle(rules, 5, "feedfacefeedface");
-    const s1 = transition(base, { kind: "discard" });
-    assert.ok(s1.ok);
-    // Đi bất kỳ nước đặt hợp lệ khác từ cùng trạng thái cũng ra cùng quân kế tiếp loại thường.
-    const legal = legalPlacements(base);
-    const placed = legal.length ? transition(base, { kind: "place", row: Math.floor(legal[0]! / base.width), col: legal[0]! % base.width }) : null;
-    if (placed?.ok && base.hand.kind === "normal") assert.deepEqual(placed.state.hand, s1.state.hand);
+    const a = transition(base, { kind: "discard" });
+    const b = transition(base, { kind: "discard" });
+    assert.ok(a.ok && b.ok);
+    assert.deepEqual(a.state.hand, b.state.hand);
   });
 
   it("lưu và nạp giữ muối; muối sai định dạng bị từ chối", () => {
@@ -749,7 +747,7 @@ describe("chế độ tùy chỉnh", () => {
       assert.equal(parsePuzzle({ ...raw, custom: { ...raw.custom, ...patch } }), null);
     }
     assert.equal(parsePuzzle({ ...raw, custom: undefined }), null);
-    assert.equal(parsePuzzle({ ...raw, rulesVersion: 2 }), null);
+    assert.equal(parsePuzzle({ ...raw, rulesVersion: 99 }), null);
   });
 
   it("ván có tùy chỉnh bị bỏ qua nếu id là bậc thật (không mượn custom để đổi luật bậc thật)", () => {
@@ -759,5 +757,44 @@ describe("chế độ tùy chỉnh", () => {
     assert.ok(withCustom);
     assert.equal(withCustom.custom, undefined);
     assert.equal(withCustom.width, 5);
+  });
+});
+
+describe("quân mới liên quan tới quân trên bàn", () => {
+  const related = (p: Piece, board: readonly BoardPiece[]) =>
+    p.kind !== "normal" || board.every((b) => b.kind !== "normal") || board.some((b) => b.kind === "normal" && (b.profession === p.profession || b.element === p.element));
+
+  for (const rules of RULESETS) {
+    it(`${rules.id}: quân thường luôn chung nghề hoặc hệ với một quân thường đang trên bàn`, () => {
+      for (let seed = 1; seed <= 30; seed++) {
+        let s = createPuzzle(rules, seed, seed % 2 ? "0123456789abcdef" : undefined);
+        for (let i = 0; i < 60 && s.phase === "playing"; i++) {
+          const board = s.cells.flatMap((c) => (c.piece ? [c.piece] : []));
+          assert.ok(related(s.hand, board), `${rules.id} seed ${seed} lượt ${i}`);
+          const legal = legalPlacements(s);
+          const t = transition(s, legal.length ? { kind: "place", row: Math.floor(legal[0]! / s.width), col: legal[0]! % s.width } : { kind: "discard" });
+          assert.ok(t.ok);
+          s = t.state;
+        }
+      }
+    });
+  }
+
+  it("năm lượt đầu ở Đại trận: ván tự chơi đặt được nhiều quân liền nhau, không phải bỏ hết", () => {
+    const rules = RULESETS.find((r) => r.id === "dai-tran")!;
+    let discards = 0;
+    let turns = 0;
+    for (let seed = 1; seed <= 40; seed++) {
+      let s = createPuzzle(rules, seed);
+      for (let i = 0; i < 5 && s.phase === "playing"; i++) {
+        const legal = legalPlacements(s);
+        turns += 1;
+        if (!legal.length) { discards += 1; const t = transition(s, { kind: "discard" }); assert.ok(t.ok); s = t.state; continue; }
+        const t = transition(s, { kind: "place", row: Math.floor(legal[0]! / s.width), col: legal[0]! % s.width });
+        assert.ok(t.ok);
+        s = t.state;
+      }
+    }
+    assert.ok(discards / turns < 0.25, `tỉ lệ buộc bỏ ${discards}/${turns}`);
   });
 });

@@ -28,7 +28,7 @@ Chọn ô (r,c) trong biên. Ô đó phải trống và hợp lệ.
 - Với **từng quân kề** theo 4 hướng, quân mới phải thỏa `sameProfession || sameElement`. Khớp nghề với quân A nhưng khớp hệ với quân B vẫn hợp lệ.
 - Nếu có bất kỳ quân kề thường nào không thỏa thì **không** được đặt, dù đã khớp với quân khác.
 - Đặt không hợp lệ không tiêu quân/không thay turn hay progress/không gọi RNG, chỉ hiện giải thích UI.
-- Khi đặt hợp lệ: tạo occupant, đặt `covered[r][c] = true`, xử lý hàng/cột hoàn tất, cập nhật thanh Bỏ Lệnh, điểm số và sinh quân kế theo thứ tự deterministic.
+- Khi đặt hợp lệ: tạo occupant, đặt `covered[r][c] = true`, xử lý hàng/cột hoàn tất, cập nhật thanh Bỏ Lệnh, điểm số và sinh quân kế theo thứ tự deterministic. **Quân thường kế tiếp luôn chung ít nhất một nghề hoặc hệ với một quân thường đang trên bàn** (Shan chốt 02/11/2026, ưu tiên quân còn ô trống kề bên; quân đặc biệt ra theo tỉ lệ riêng, không cần liên quan); vì vậy quân kế phụ thuộc bàn hiện tại, vẫn tất định theo trạng thái.
 
 Ví dụ: trên là Y sư–Kim, trái là Pháp sư–Hỏa ⇒ quân Y sư–Hỏa hợp lệ. Không dùng quan hệ tương sinh/tương khắc làm điều kiện khớp — yếu tố đặc trưng ở đây là **bằng nhau**, dễ học.
 

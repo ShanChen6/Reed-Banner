@@ -2,7 +2,7 @@
 
 import { ELEMENTS, PROFESSIONS } from "../battle";
 import { playableCount } from "./rules";
-import { CUSTOM_RULESET_ID, RULESETS, SCHEMA_VERSION, customRuleset } from "./rulesets";
+import { CUSTOM_RULES_VERSION, CUSTOM_RULESET_ID, RULESETS, SCHEMA_VERSION, customRuleset } from "./rulesets";
 import type { BoardPiece, Cell, Piece, PuzzleState } from "./types";
 
 const isObj = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null && !Array.isArray(v);
@@ -31,7 +31,7 @@ export function parsePuzzle(raw: unknown): PuzzleState | null {
     // Ván tùy chỉnh mang bộ luật trong chính nó: dựng lại từ lựa chọn (kiểm giới hạn), không tin dữ liệu lưu.
     const rules =
       v.rulesetId === CUSTOM_RULESET_ID
-        ? v.rulesVersion === 1
+        ? v.rulesVersion === CUSTOM_RULES_VERSION
           ? customRuleset(v.custom)
           : null
         : RULESETS.find((r) => r.id === v.rulesetId && r.version === v.rulesVersion);
