@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Âm thanh Trận Đồ: thêm `fogclear`, `line`, `discard`, `flame1`**
+- Cắt từ bốn đoạn Gemini (mỗi đoạn khoảng 1 phút) bằng `scripts/slice-sfx.py`; `line` và `flame1` chỉ giữ 2 biến thể vì tiếng thứ ba có đuôi còn to. Còn thiếu: `flame2`, `flame3`, `flamedown`, `win`, `lose`, `wild`, `eraser`, `fusion` và nhạc.
+
 **Âm thanh: hai cue đầu tiên của Trận Đồ**
 - `formation.place` và `formation.reject` (mỗi cue 3 biến thể) cắt từ hai đoạn Gemini tạo bằng `scripts/slice-sfx.py`; ghi nguồn ở `public/audio/CREDITS.md`, chờ Shan xác nhận giấy phép thương mại và nghe thử.
 
