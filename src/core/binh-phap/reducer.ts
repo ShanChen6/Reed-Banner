@@ -100,7 +100,7 @@ export function transition(state: PuzzleState, command: Command): Transition {
 function spawn(state: PuzzleState, rules: Ruleset, cells: readonly Cell[], used: Piece, turn: number) {
   // Ván có muối: quân thứ `turn` lấy seed từ băm riêng, không phụ thuộc dòng RNG, nên không suy ra được từ quân đã thấy.
   const rng = createRng(state.salt ? hash32(`${state.salt}|piece|${turn}`) : state.rngState);
-  const hand = nextPiece(rng, rules, turn, used, cells);
+  const hand = nextPiece(rng, rules, turn, used, cells, state.width, state.height);
   return { hand, rngState: state.salt ? 0 : rng.state() };
 }
 
