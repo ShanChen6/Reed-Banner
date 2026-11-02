@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import { Select, Button } from "@/components/ui";
+import { useAudio } from "../audio/AudioProvider";
 
 import {
   ELEMENTS,
@@ -38,6 +40,9 @@ export default function SurvivalBreakScreen(props: SurvivalBreakScreenProps) {
   const { survival, pending, error, onRefresh } = props;
   const preview = survival.break;
   const next = survival.next;
+  const { play: playSound } = useAudio();
+  // Báo trước đợt kế: một tiếng cảnh báo khi màn nghỉ hiện ra.
+  useEffect(() => playSound("survival.warn"), [playSound]);
   if (!preview || !next) {
     return (
       <section

@@ -104,6 +104,7 @@ import {
   TIER_CLASS,
 } from "./labels";
 import { useAudio } from "../audio/AudioProvider";
+import type { MusicId } from "../audio/cues";
 import { bounceFrames, eventFrames, type Frame } from "./animation";
 import { BATTLE_PRELOAD, frameCue, soundsForEvents, type CuePlay } from "./sounds";
 import { sidesAfterEvents } from "./heldSides";
@@ -871,13 +872,32 @@ export default function DemoGame({
   const atBreak =
     survival !== null && !survival.done && state.winner === PLAYER;
   // Nhạc nền theo loại trận (chỉ khi đang trong trận, không phải màn chuẩn bị): Sinh tồn, trùm chiến dịch, trận thường; rời trận thì tắt dần.
-  const battleMusic: "battle_normal" | "battle_boss" | "survival" | null = !started ? null : survival ? "survival" : phaseObjective?.type === "bossPhases" ? "battle_boss" : "battle_normal";
+  const battleMusic: MusicId | null = !started
+    ? null
+    : survival
+      ? "survival"
+      : destinyFloorNo !== null
+        ? "tower_destiny"
+        : arenaFoe
+          ? "arena"
+          : raidBoss !== null || phaseObjective?.type === "bossPhases"
+            ? "battle_boss"
+            : "battle_normal";
   useEffect(() => {
     if (battleMusic) playMusic(battleMusic);
     else stopMusic(600);
   }, [battleMusic, playMusic, stopMusic]);
   useEffect(() => () => stopMusic(600), [stopMusic]);
   useEffect(() => preloadSounds(BATTLE_PRELOAD), [preloadSounds]);
+  // Kết quả Nhật Lệnh và Đấu trường: một tiếng báo khi server trả điểm và hạng.
+  const dailyDone = outcome?.daily !== undefined;
+  const arenaDone = outcome?.arena !== undefined;
+  useEffect(() => {
+    if (dailyDone) playSound("daily.complete");
+  }, [dailyDone, playSound]);
+  useEffect(() => {
+    if (arenaDone) playSound("arena.rank");
+  }, [arenaDone, playSound]);
   /** Đang chạy hoạt ảnh thì chưa nhận thao tác mới. */
   const myTurn = playerTurn && anim === null && !pending && !pacing;
   const actor = state.sides[PLAYER].fighters[state.turn.actor]!;
