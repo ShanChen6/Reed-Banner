@@ -1,7 +1,7 @@
 # Âm thanh: kiến trúc, quy ước tệp và bảng cue theo chế độ
 
 > Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — thiết kế để triển khai sau; chưa có code, chưa có tệp âm thanh. Backlog và điều kiện bắt đầu ở [README](README.md). Prompt giao việc và prompt tạo âm thanh ở [04-prompts-trien-khai-theo-che-do.md](04-prompts-trien-khai-theo-che-do.md).
+> Trạng thái: **DRAFT** — engine (AUD-02) và nối Trận Đồ đã có code (02/11/2026); các chế độ khác chưa nối, chưa có tệp âm thanh. Backlog và điều kiện bắt đầu ở [README](README.md). Prompt giao việc và prompt tạo âm thanh ở [04-prompts-trien-khai-theo-che-do.md](04-prompts-trien-khai-theo-che-do.md).
 
 Phạm vi: **toàn bộ chế độ chơi** (Trận Đồ, Chiến dịch và trận đánh, Tháp Thí Luyện, Tháp Vận Mệnh, Sinh tồn, Thử thách hằng ngày, Đấu trường bóng ma, Quần Hùng online sau này). Âm thanh chỉ là lớp cảm giác: không chế độ nào được cần nghe mới hiểu luật hay cốt truyện.
 

@@ -8,6 +8,7 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ArenaScreen from "./arena/ArenaScreen";
+import AudioProvider from "./audio/AudioProvider";
 import DemoGame from "./battle/DemoGame";
 import CampaignScreen from "./campaign/CampaignScreen";
 import DailyScreen from "./daily/DailyScreen";
@@ -74,6 +75,7 @@ export default function GameShell({
 
   return (
     <SceneContext.Provider value={api}>
+      <AudioProvider>
       <div className="flex min-h-dvh flex-col">
         <GameHeader scene={currentScene} account={account} />
         {arrived && api.params.get("login") === "error" && !(currentScene in auth) && (
@@ -85,6 +87,7 @@ export default function GameShell({
           <SceneView scene={currentScene} account={account} theme={theme} auth={auth} resume={api.params.get("resume") === "1"} towerFeatures={towerFeatures} />
         </div>
       </div>
+      </AudioProvider>
     </SceneContext.Provider>
   );
 }

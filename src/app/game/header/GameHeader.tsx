@@ -10,6 +10,7 @@ import { LogoMark } from "../art/logo";
 import type { ShellAccount } from "../GameShell";
 import { SCENE_TITLE, type Scene } from "../scene";
 import { SceneLink } from "../SceneContext";
+import AudioControl from "./AudioControl";
 import HeaderAccountMenu from "./HeaderAccountMenu";
 import { HEADER_SHORTCUTS, ShortcutGlyph } from "./shortcuts";
 import { HeaderOrnament } from "./HeaderOrnament";
@@ -23,6 +24,7 @@ export default function GameHeader({ scene, account }: { scene: Scene; account: 
         <HeaderNavigation scene={scene} />
         <span className="flex-1" />
         <HeaderActions scene={scene} />
+        <AudioControl />
         <HeaderAccountMenu scene={scene} account={account} />
       </div>
     </header>
