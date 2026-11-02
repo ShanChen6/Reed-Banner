@@ -75,6 +75,43 @@
         "sfx/formation/flame3_b"
       ],
       "volume": 0.85
+    },
+    "formation.eraser": {
+      "files": [
+        "sfx/formation/eraser_a",
+        "sfx/formation/eraser_b"
+      ],
+      "volume": 0.8
+    },
+    "formation.wild": {
+      "files": [
+        "sfx/formation/wild_a",
+        "sfx/formation/wild_b",
+        "sfx/formation/wild_c"
+      ],
+      "volume": 0.85
+    },
+    "formation.match": {
+      "files": [
+        "sfx/formation/match_a",
+        "sfx/formation/match_b",
+        "sfx/formation/match_c"
+      ],
+      "volume": 0.7
+    },
+    "formation.flamedown": {
+      "files": [
+        "sfx/formation/flamedown_a",
+        "sfx/formation/flamedown_b"
+      ],
+      "volume": 0.7
+    },
+    "formation.fusion": {
+      "files": [
+        "sfx/formation/fusion_a",
+        "sfx/formation/fusion_b"
+      ],
+      "volume": 0.9
     }
   },
   "music": {},

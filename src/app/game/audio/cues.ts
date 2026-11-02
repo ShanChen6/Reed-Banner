@@ -4,6 +4,7 @@
 export const FORMATION_CUES = [
   "formation.place",
   "formation.reject",
+  "formation.match",
   "formation.fogclear",
   "formation.line",
   "formation.wild",

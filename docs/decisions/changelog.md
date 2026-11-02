@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Âm thanh Trận Đồ: thêm `eraser`, `wild`, `match`, `flamedown`, `fusion`; nối `formation.match`**
+- Cắt từ năm đoạn Gemini; `eraser`, `flamedown`, `fusion` chỉ giữ 2 biến thể vì tiếng thứ ba tắt chậm. `formation.match` giờ phát khi quân đặt khớp cả nghề lẫn hệ với một quân kề (được điểm cộng). Trận Đồ đã đủ hiệu ứng P1/P2 trừ `rank` và `tick`; còn thiếu nhạc nền.
+
 **Âm thanh Trận Đồ: thêm `win`, `lose`, `flame2`, `flame3`**
 - Cắt từ bốn đoạn Gemini bằng `scripts/slice-sfx.py` (win/lose dài 4 và 2,5 giây, mỗi cue 2 biến thể khác vị trí; `flame3` yếu nhất). Còn thiếu: `flamedown`, `wild`, `eraser`, `fusion` và nhạc.
 
