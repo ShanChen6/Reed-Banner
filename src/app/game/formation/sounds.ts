@@ -1,7 +1,7 @@
 // Âm thanh của Trận Đồ: ánh xạ thuần từ sự kiện của engine (`PuzzleEvent`) sang cue, để test được mà không cần AudioContext.
 // Bảng cue: docs/05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md mục 5.2.
 
-import type { PuzzleEvent, PuzzleState } from "@/core/binh-phap";
+import { neighbors4, typesMatchBoth, type PuzzleEvent, type PuzzleState } from "@/core/binh-phap";
 import type { CueId, MusicId } from "../audio/cues";
 
 export interface CuePlay {
@@ -11,6 +11,19 @@ export interface CuePlay {
 
 /** Lệnh bị từ chối (đặt sai chỗ, sai nghề/hệ, ô bị chiếm hay chướng ngại). */
 export const REJECT: CuePlay = { id: "formation.reject" };
+
+/**
+ * Đặt quân khớp cả nghề lẫn hệ với một quân kề (được điểm cộng): thêm một tiếng ngân ấm sau tiếng đặt.
+ * `state` là trạng thái trước nước đi.
+ */
+export function isPerfectPlacement(state: PuzzleState, row: number, col: number): boolean {
+  const piece = state.hand;
+  if (piece.kind !== "normal") return false;
+  return neighbors4(state.width, state.height, row, col).some((i) => {
+    const n = state.cells[i]?.piece;
+    return n?.kind === "normal" && typesMatchBoth(piece, n);
+  });
+}
 
 /**
  * Cue cho một nước đi, theo thứ tự nghe tự nhiên: đặt quân, ô che tan, dọn đường, lửa, kết thúc.
@@ -82,6 +95,7 @@ export function musicFor(state: PuzzleState | null): MusicId {
 /** Cue cần tải sẵn khi vào Trận Đồ. */
 export const FORMATION_PRELOAD: readonly CueId[] = [
   "formation.place",
+  "formation.match",
   "formation.reject",
   "formation.fogclear",
   "formation.line",

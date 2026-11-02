@@ -31,7 +31,7 @@ import { CommandCard, HeatFlames, HintToggle, MobileBar, ProgressMeter, Tutorial
 import { mapFor, type FormationMap } from "./maps";
 import ModeScreen from "./ModeScreen";
 import { preloadPortraits } from "./preload";
-import { cuesForEvents, FORMATION_PRELOAD, musicFor, REJECT, tensionLayer } from "./sounds";
+import { cuesForEvents, FORMATION_PRELOAD, isPerfectPlacement, musicFor, REJECT, tensionLayer } from "./sounds";
 import { obstacleKind, obstacleLabel } from "./pieces";
 import { claimRanked, fetchOverview, moveRanked, startRanked, toPuzzleState, type FormationView, type Overview } from "./rankedClient";
 import Rules from "./Rules";
@@ -149,6 +149,7 @@ export default function FormationScreen() {
         return;
       }
       for (const c of cuesForEvents(t.events, state.discardHeat)) audio.play(c.id, { rate: c.rate });
+      if (command.kind === "place" && isPerfectPlacement(state, command.row, command.col)) audio.play("formation.match");
       setState(t.state);
       setLast(command.kind === "place" ? idx(state.width, command.row, command.col) : null);
       setSweeps(sweepsOf(t.events));
@@ -220,6 +221,7 @@ export default function FormationScreen() {
         return;
       }
       for (const c of cuesForEvents(r.data.events, local.discardHeat)) audio.play(c.id, { rate: c.rate });
+      if (command.kind === "place" && isPerfectPlacement(local, command.row, command.col)) audio.play("formation.match");
       setRanked(r.data.view);
       setLast(command.kind === "place" ? idx(local.width, command.row, command.col) : null);
       setSweeps(sweepsOf(r.data.events));
