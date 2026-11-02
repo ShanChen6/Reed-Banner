@@ -135,7 +135,8 @@
 - Đã có (02/11/2026): sáu chủ động + bốn nội tại của cả hai chạy trong `src/core`, test 38 ca; chưa mở ở chế độ nào ([Đinh Ngọc](../03-characters/dinh-ngoc.md#triển-khai-trong-core-02112026), [Vũ Phong](../03-characters/vu-phong.md#triển-khai-trong-core-02112026)).
 - Đã cân bằng lần 1 Vũ Phong (02/11/2026): 1vs1 53,0%, 3vs3 61,6% ở cấp 30 ([số đo](../03-characters/vu-phong.md#cân-bằng-lần-1-02112026)).
 - TODO: Cân bằng đủ ma trận cho cả hai (trang bị, F=20%, từng hệ/nghề đối thủ, ô4/ô5 gần như không được AI dùng); xem lại Đinh Ngọc 1vs1 (43,8%).
-- TODO: Chọn chế độ mở (Thường, Chiến dịch, Tháp, Sinh tồn), cách mở khóa, giá; đăng ký vào roster/save; giao diện trận cho chiêu `whirl` do người chơi chọn tâm của Vũ Phong (ô1, ô6) và hiển thị bốn nội tại truy kích; mô phỏng cân bằng đầy đủ theo kế hoạch trong hai tài liệu nhân vật.
+- Giao diện chọn và xem trước lốc xoáy cho ô1, ô6 của Vũ Phong đã có (02/11/2026): dùng luồng chọn tâm sẵn của trận đấu, thêm số ô ghép trên nút xoay và xem trước khi rê chuột; xem [mục lốc xoáy trong Giao diện trận](../05-ui-ux/screens/battle.md).
+- TODO: Chọn chế độ mở (Thường, Chiến dịch, Tháp, Sinh tồn), cách mở khóa, giá; đăng ký vào roster/save; hiển thị icon nghề/hệ tổng hợp và bốn nội tại truy kích của hai nhân vật trong trận.
 
 ## Vũ Phong — Vân Du Tử
 

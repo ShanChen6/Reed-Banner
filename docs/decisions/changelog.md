@@ -61,6 +61,10 @@
 - Nhân vật đặc biệt mang hai nghề/hai hệ: phòng thủ và đòn đánh thường theo hệ chính, giá cao hơn nhiều, nhận bằng cách đặc biệt, dùng icon tổng hợp nghề/hệ.
 - Tạo nguồn [nhan-vat-tong-hop.md](../03-characters/nhan-vat-tong-hop.md) (DRAFT) với đề xuất chính/phụ, ví dụ và tác động code; chưa sửa code, roster hay save. Icon `tongHop` cho nghề/hệ và hiển thị tổng hợp của Đinh Ngọc ở trang xem thử đã có.
 
+**Giao diện lốc xoáy: xem trước kết quả xoay**
+- Kiểm trên trình duyệt thật: luồng chọn tâm xoay (chạm ô, chọn chiều/số nấc, chọn mục tiêu) đã có sẵn trong trận đấu và chạy đúng với ô1 (xoay 1 nấc, chọn mục tiêu) và ô6 (xoay tối đa 2 nấc, tự nhắm) của Vũ Phong. Nhận định "UI chưa làm" ở mục trước là sai.
+- Bổ sung: mỗi nút xoay ghi số ô sẽ ghép ngay, rê chuột/focus để xem vòng 8 ô sau khi xoay và các ô ghép được; giữ viền vòng xoay và dòng "Đã chọn xoay …" ở bước chọn mục tiêu. Thêm hàm thuần `previewWhirl` (core/board) có test. Chưa thể chơi Vũ Phong trong trận vì chưa mở ở chế độ nào.
+
 **Vũ Phong — cân bằng lần 1**
 - Đo bằng script mới `scripts/special-balance.ts` (đấu 56 dựng Đinh Bộ Lĩnh, cấp 30, có khoảng tin cậy). Nguyên nhân lệch: bước xoay bàn cờ của ô1 giá quá rẻ (thêm một nước đi bàn cờ miễn phí, khoảng 20 điểm thắng) và P1 (khoảng 4 điểm).
 - Chốt: ô1 giá 35→40 và 1.4→1.3× ATK, ô2 giá 35→40, P1 35%→30% ATK. Kết quả cấp 30: 1vs1 từ 64,7% xuống 53,0% [47,6–58,2]; 3vs3 từ 66,1% xuống 61,6% [55,1–67,7] (dựng mạnh nhất mẫu: 63,6%). Đinh Ngọc 1vs1 43,8%, 3vs3 50,9%, chưa chỉnh. Chưa phải cân bằng cuối: thiếu trang bị, F, đủ đối thủ.

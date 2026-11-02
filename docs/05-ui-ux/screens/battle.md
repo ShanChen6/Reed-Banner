@@ -1,6 +1,6 @@
 # Giao diện
 
-> Cập nhật: 24/10/2026
+> Cập nhật: 02/11/2026
 
 ## 1. Bố cục màn hình trận đấu
 
@@ -55,6 +55,7 @@ Ba cách điều khiển dùng song song; người chơi đổi qua lại bất 
 | 1 – 6 | Chọn kỹ năng chủ động 1 – 6 của người hành động |
 
 - **Ngắm kỹ năng bằng bàn phím:** sau khi chọn kỹ năng, ← → đổi mục tiêu (đồng đội hoặc đối thủ) rồi Enter để dùng. Kỹ năng có vùng trên bàn cờ thì con trỏ chuyển vào bàn, di chuyển để chọn tâm rồi Enter. Kỹ năng lốc xoáy (hệ Phong) chọn tâm bằng con trỏ và Enter, rồi Q xoay ngược, E xoay theo chiều kim đồng hồ (giữ Shift để xoay 2 nấc).
+- **Chọn và xem trước lốc xoáy:** bấm kỹ năng có bước xoay (chiêu hệ Phong, ô1 và ô6 của Vũ Phong), rồi chạm một ô không sát mép làm tâm; chạm ô mép hiện lời nhắc, chạm lại tâm để bỏ. Vòng 8 ô quanh tâm viền xanh. Mỗi nút xoay (↺, ↻, thêm ×2 khi được 2 nấc) ghi sẵn **số ô sẽ ghép ngay** ("ghép 3" hoặc "không ghép"); rê chuột hoặc focus vào nút để xem vòng 8 ô sau khi xoay và các ô sẽ ghép viền vàng (chưa đổi bàn cờ). Với kỹ năng còn phải chọn mục tiêu (ô1 ở 3vs3), sau khi chọn chiều xoay vòng xoay vẫn được giữ viền và dòng nhắc "Đã chọn xoay …" hiện cùng lời nhắc chọn đối thủ. Esc hủy ở mọi bước. Phần tính xem trước là `previewWhirl` trong `src/core/board/resolve.ts` (hàm thuần, có test).
 - Con trỏ bàn phím là một khung viền rõ trên ô; tự ẩn khi người chơi dùng chuột hoặc chạm, hiện lại khi bấm phím.
 - Đồng hồ 30 giây áp như nhau cho mọi cách điều khiển.
 
