@@ -61,6 +61,10 @@
 - Nhân vật đặc biệt mang hai nghề/hai hệ: phòng thủ và đòn đánh thường theo hệ chính, giá cao hơn nhiều, nhận bằng cách đặc biệt, dùng icon tổng hợp nghề/hệ.
 - Tạo nguồn [nhan-vat-tong-hop.md](../03-characters/nhan-vat-tong-hop.md) (DRAFT) với đề xuất chính/phụ, ví dụ và tác động code; chưa sửa code, roster hay save. Icon `tongHop` cho nghề/hệ và hiển thị tổng hợp của Đinh Ngọc ở trang xem thử đã có.
 
+**Trận Đồ — bật Đinh Ngọc và Vũ Phong làm quân dung hợp**
+- Theo yêu cầu "thêm vào các chế độ chơi", Shan chọn chỉ Trận Đồ ở lần này: `FUSION_CHARACTERS` có Đinh Ngọc và Vũ Phong ở Khó và Đại trận, `version` hai bậc 6→7. Đo lại 1.500 ván mỗi ô: tỉ lệ thắng gần như không đổi ở 1,5% (xem [GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)).
+- Chưa đưa hai nhân vật vào các chế độ đấu (Thường, Chiến dịch, Tháp, Sinh tồn): chưa có runtime kỹ năng/nội tại, cách mở khóa chưa chốt.
+
 **Vũ Phong — dựng hình động (rig)**
 - Tách ảnh đứng thành sáu lớp (thân, đầu, trượng, nắm tay phải, bàn tay trái, đuôi khăn), xuất tranh tư thế ×0.3 và đăng ký `VU_PHONG` trong `rigs.ts` với nhịp `staff` và hiệu ứng `galeRout`; thêm vào trang xem thử và test. Chỉ có trên trang xem thử, chưa vào roster, shop hay trận.
 

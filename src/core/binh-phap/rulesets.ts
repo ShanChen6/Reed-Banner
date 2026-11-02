@@ -57,7 +57,7 @@ export const RULESETS: readonly Ruleset[] = [
   },
   {
     id: "kho",
-    version: 6,
+    version: 7,
     name: "Khó",
     blurb: "Sa bàn 6×6, bốn nghề và năm hệ, nhiều chướng ngại hơn.",
     width: 6,
@@ -74,7 +74,7 @@ export const RULESETS: readonly Ruleset[] = [
   },
   {
     id: "dai-tran",
-    version: 6,
+    version: 7,
     name: "Đại trận",
     blurb: "Sa bàn cỡ ngẫu nhiên, mỗi cạnh từ 7 đến 10 ô, đủ tám nghề và bảy hệ. Mỗi ván một bản đồ khác.",
     width: 10,
