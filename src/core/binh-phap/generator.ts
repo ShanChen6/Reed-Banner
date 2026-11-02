@@ -2,16 +2,15 @@
 
 import type { Rng } from "../rng";
 import { charactersFor } from "./catalog";
+import { neighbors4 } from "./rules";
 import type { Cell, NormalPiece, Piece, Ruleset } from "./types";
 
 /**
  * Quân kế tiếp. `previous` là quân vừa dùng: sau một quân đặc biệt luôn ra quân thường (chống chuỗi đặc biệt); không sinh Thu Hồi khi bàn trống; nhân vật dung hợp cũng không ra liền sau một quân đặc biệt.
- * **Quân thường luôn liên quan tới bàn** (Shan chốt 02/11/2026): khi bàn đã có quân thường, quân mới chia sẻ ít nhất một nghề hoặc một hệ với một
- * quân thường đang trên bàn (không cần còn chỗ đặt), với xác suất `relatedPermille` của bậc; phần còn lại ra ngẫu nhiên hoàn toàn. Mục đích: không phải bỏ liền nhiều quân không dính gì tới nhau, nhưng vẫn có quân liên quan mà không có chỗ đặt, để Bỏ Lệnh còn tác dụng. Chống phải bỏ liền nhiều quân không dính gì tới nhau. Quân đặc biệt (Quân Lệnh,
- * Thu Hồi, dung hợp) ra theo tỉ lệ riêng, không cần liên quan.
- * Thứ tự gọi RNG cố định: một lần chọn loại, rồi (nếu quân thường) [quân neo, nghề-hay-hệ khi bàn có quân thường], nghề, hệ, người đại diện.
+ * **Quân thường luôn liên quan tới bàn** (Shan chốt 02/11/2026): khi bàn có quân thường, quân mới chung ít nhất một nghề hoặc một hệ với một quân thường bất kỳ trên bàn (không cần còn chỗ đặt, để Bỏ Lệnh còn tác dụng). Chỉ khi có Quân Lệnh hoặc quân dung hợp còn ô trống kề bên thì quân mới không bị ràng buộc. Quân đặc biệt (Quân Lệnh, Thu Hồi, dung hợp) ra theo tỉ lệ riêng.
+ * Thứ tự gọi RNG cố định: một lần chọn loại, rồi (nếu quân thường) [quân neo và nghề-hay-hệ khi bị ràng buộc], nghề, hệ, người đại diện.
  */
-export function nextPiece(rng: Rng, rules: Ruleset, serial: number, previous: Piece | null, cells: readonly Cell[]): Piece {
+export function nextPiece(rng: Rng, rules: Ruleset, serial: number, previous: Piece | null, cells: readonly Cell[], width = 0, height = 0): Piece {
   const uid = `p${serial}`;
   const boardHasPieces = cells.some((c) => c.piece !== null);
   const roll = rng.int(0, 999);
@@ -27,15 +26,16 @@ export function nextPiece(rng: Rng, rules: Ruleset, serial: number, previous: Pi
     }
   }
   // Quân neo là một quân thường bất kỳ trên bàn, KHÔNG cần còn chỗ trống kề bên: quân sinh ra có thể liên quan mà vẫn không đặt được, lúc đó Bỏ Lệnh mới có ý nghĩa.
-  const anchors: NormalPiece[] = [];
-  for (const c of cells) if (c.piece?.kind === "normal") anchors.push(c.piece);
+  // Ngoại lệ: có Quân Lệnh hoặc quân dung hợp còn ô trống kề bên thì quân mới đặt được cạnh nó, nên không ràng buộc.
   let anchor: NormalPiece | null = null;
   let keepProfession = false;
-  if (anchors.length > 0) {
-    const relatedRoll = rng.int(0, 999);
-    const who = rng.int(0, anchors.length - 1);
-    keepProfession = rng.int(0, 1) === 0;
-    if (relatedRoll < rules.relatedPermille) anchor = anchors[who]!;
+  if (!hasOpenWildcard(cells, width, height)) {
+    const anchors: NormalPiece[] = [];
+    for (const c of cells) if (c.piece?.kind === "normal") anchors.push(c.piece);
+    if (anchors.length > 0) {
+      anchor = anchors[rng.int(0, anchors.length - 1)]!;
+      keepProfession = rng.int(0, 1) === 0;
+    }
   }
   const pickedProfession = rules.professions[rng.int(0, rules.professions.length - 1)]!;
   const pickedElement = rules.elements[rng.int(0, rules.elements.length - 1)]!;
@@ -44,6 +44,16 @@ export function nextPiece(rng: Rng, rules: Ruleset, serial: number, previous: Pi
   const people = charactersFor(profession, element);
   const who = people[rng.int(0, people.length - 1)]!;
   return { kind: "normal", uid, characterId: who.characterId, profession, element };
+}
+
+/** Có Quân Lệnh hoặc quân dung hợp (khớp mọi quân) trên bàn mà còn ô chơi được trống kề bên. */
+function hasOpenWildcard(cells: readonly Cell[], width: number, height: number): boolean {
+  if (width <= 0) return false;
+  return cells.some(
+    (c, i) =>
+      (c.piece?.kind === "wild" || c.piece?.kind === "fusion") &&
+      neighbors4(width, height, Math.floor(i / width), i % width).some((n) => !cells[n]!.blocked && cells[n]!.piece === null),
+  );
 }
 
 /**
