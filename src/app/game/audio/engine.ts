@@ -73,6 +73,14 @@ interface MusicPlayer {
   readonly sources: SourceLike[];
 }
 
+type LoopChannel = "music" | "ambience";
+interface ChannelState {
+  wanted: { id: string; fadeMs: number } | null;
+  player: MusicPlayer | null;
+  token: number;
+  layerValue: number;
+}
+
 const TC = 0.08; // hằng số thời gian làm mượt âm lượng (giây)
 
 export class AudioEngine {
@@ -86,10 +94,11 @@ export class AudioEngine {
   private active = 0;
   private unlocked = false;
   private settings: AudioSettings;
-  private wantedMusic: { id: string; fadeMs: number } | null = null;
-  private music: MusicPlayer | null = null;
-  private musicToken = 0;
-  private layerValue = 0;
+  /** Hai kênh lặp: nhạc nền (bus music) và âm thanh nền (bus ambience). */
+  private channels: Record<LoopChannel, ChannelState> = {
+    music: { wanted: null, player: null, token: 0, layerValue: 0 },
+    ambience: { wanted: null, player: null, token: 0, layerValue: 0 },
+  };
   private duckUntil = 0;
   private pendingPreload = new Set<string>();
 
@@ -104,7 +113,10 @@ export class AudioEngine {
     return this.active;
   }
   get currentMusic(): string | null {
-    return this.music?.id ?? null;
+    return this.channels.music.player?.id ?? null;
+  }
+  get currentAmbience(): string | null {
+    return this.channels.ambience.player?.id ?? null;
   }
   get muted(): boolean {
     return this.settings.muted;
@@ -136,7 +148,10 @@ export class AudioEngine {
       this.manifest = EMPTY_MANIFEST;
     }
     if (this.pendingPreload.size > 0) void this.preload([...this.pendingPreload]);
-    if (this.wantedMusic) void this.playMusic(this.wantedMusic.id, this.wantedMusic.fadeMs);
+    for (const ch of ["music", "ambience"] as const) {
+      const w = this.channels[ch].wanted;
+      if (w) void this.playLoop(ch, w.id, w.fadeMs);
+    }
   }
 
   private applyGains(immediate = false): void {
@@ -252,21 +267,36 @@ export class AudioEngine {
   }
 
   /** Đổi nhạc nền sang `id` (crossfade `fadeMs`). Chưa mở khóa thì nhớ và phát khi mở khóa; cùng bài đang phát thì giữ nguyên. */
-  async playMusic(id: string, fadeMs = 800): Promise<void> {
-    this.wantedMusic = { id, fadeMs };
+  playMusic(id: string, fadeMs = 800): Promise<void> {
+    return this.playLoop("music", id, fadeMs);
+  }
+  stopMusic(fadeMs = 600): void {
+    this.stopLoop("music", fadeMs);
+  }
+  /** Âm thanh nền (gió, chim, ...) đi qua bus ambience, cùng cách hoạt động với nhạc. */
+  playAmbience(id: string, fadeMs = 1200): Promise<void> {
+    return this.playLoop("ambience", id, fadeMs);
+  }
+  stopAmbience(fadeMs = 800): void {
+    this.stopLoop("ambience", fadeMs);
+  }
+
+  private async playLoop(channel: LoopChannel, id: string, fadeMs: number): Promise<void> {
+    const ch = this.channels[channel];
+    ch.wanted = { id, fadeMs };
     if (!this.unlocked || !this.ctx) return;
-    if (this.music?.id === id) return;
-    const entry = this.manifest.music[id];
-    const token = ++this.musicToken;
+    if (ch.player?.id === id) return;
+    const entry = this.manifest[channel][id];
+    const token = ++ch.token;
     if (!entry) {
-      this.fadeOutMusic(fadeMs);
+      this.fadeOutLoop(channel, fadeMs);
       return;
     }
     const [main, layer] = await Promise.all([this.load(entry.file), entry.layer ? this.load(entry.layer) : Promise.resolve(null)]);
-    if (token !== this.musicToken || !main || !this.ctx) return; // đã có yêu cầu mới hơn, hoặc không tải được
+    if (token !== ch.token || !main || !this.ctx) return; // đã có yêu cầu mới hơn, hoặc không tải được
     const ctx = this.ctx;
-    const bus = this.buses.get("music")!;
-    this.fadeOutMusic(fadeMs);
+    const bus = this.buses.get(channel)!;
+    this.fadeOutLoop(channel, fadeMs);
     const gain = ctx.createGain();
     gain.gain.value = 0;
     gain.connect(bus);
@@ -282,19 +312,20 @@ export class AudioEngine {
     let layerGain: GainLike | null = null;
     if (layer) {
       layerGain = ctx.createGain();
-      layerGain.gain.value = this.layerValue;
+      layerGain.gain.value = ch.layerValue;
       layerGain.connect(gain);
       mk(layer, layerGain);
     }
     for (const s of sources) s.start();
     gain.gain.setTargetAtTime(entry.volume ?? 1, ctx.currentTime, Math.max(0.01, fadeMs / 3000));
-    this.music = { id, gain, layerGain, sources };
+    ch.player = { id, gain, layerGain, sources };
   }
 
-  private fadeOutMusic(fadeMs: number): void {
-    const old = this.music;
+  private fadeOutLoop(channel: LoopChannel, fadeMs: number): void {
+    const ch = this.channels[channel];
+    const old = ch.player;
     const ctx = this.ctx;
-    this.music = null;
+    ch.player = null;
     if (!old || !ctx) return;
     old.gain.gain.setTargetAtTime(0, ctx.currentTime, Math.max(0.01, fadeMs / 3000));
     const stopAt = ctx.currentTime + fadeMs / 1000 + 0.2;
@@ -307,17 +338,19 @@ export class AudioEngine {
     }
   }
 
-  stopMusic(fadeMs = 600): void {
-    this.wantedMusic = null;
-    this.musicToken += 1;
-    this.fadeOutMusic(fadeMs);
+  private stopLoop(channel: LoopChannel, fadeMs: number): void {
+    const ch = this.channels[channel];
+    ch.wanted = null;
+    ch.token += 1;
+    this.fadeOutLoop(channel, fadeMs);
   }
 
   /** Lớp thêm của nhạc hiện tại (0..1), ví dụ lớp căng thẳng theo thanh Bỏ Lệnh. */
   setLayer(value: number): void {
-    this.layerValue = Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0));
-    const lg = this.music?.layerGain;
-    if (lg && this.ctx) lg.gain.setTargetAtTime(this.layerValue, this.ctx.currentTime, 0.3);
+    const ch = this.channels.music;
+    ch.layerValue = Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0));
+    const lg = ch.player?.layerGain;
+    if (lg && this.ctx) lg.gain.setTargetAtTime(ch.layerValue, this.ctx.currentTime, 0.3);
   }
 }
 

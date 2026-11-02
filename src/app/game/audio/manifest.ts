@@ -21,9 +21,11 @@ export interface Manifest {
   readonly version: 1;
   readonly sfx: Readonly<Record<string, CueEntry>>;
   readonly music: Readonly<Record<string, MusicEntry>>;
+  /** Âm thanh nền lặp (gió, chim, ...), cùng dạng với nhạc nhưng đi qua bus ambience. */
+  readonly ambience: Readonly<Record<string, MusicEntry>>;
 }
 
-export const EMPTY_MANIFEST: Manifest = { version: 1, sfx: {}, music: {} };
+export const EMPTY_MANIFEST: Manifest = { version: 1, sfx: {}, music: {}, ambience: {} };
 
 const isObj = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null && !Array.isArray(v);
 const isPath = (v: unknown): v is string => typeof v === "string" && /^[a-z0-9][a-z0-9/_-]*$/i.test(v) && !v.includes("..");
@@ -40,12 +42,17 @@ export function parseManifest(raw: unknown): Manifest {
       if (files.length > 0) sfx[id] = { files, volume: vol(e.volume) };
     }
   }
-  const music: Record<string, MusicEntry> = {};
-  if (isObj(raw.music)) {
-    for (const [id, e] of Object.entries(raw.music)) {
-      if (!isObj(e) || !isPath(e.file)) continue;
-      music[id] = { file: e.file, layer: isPath(e.layer) ? e.layer : undefined, volume: vol(e.volume), loop: e.loop === false ? false : undefined };
+  const loops = (src: unknown): Record<string, MusicEntry> => {
+    const out: Record<string, MusicEntry> = {};
+    if (isObj(src)) {
+      for (const [id, e] of Object.entries(src)) {
+        if (!isObj(e) || !isPath(e.file)) continue;
+        out[id] = { file: e.file, layer: isPath(e.layer) ? e.layer : undefined, volume: vol(e.volume), loop: e.loop === false ? false : undefined };
+      }
     }
-  }
-  return { version: 1, sfx, music };
+    return out;
+  };
+  const music = loops(raw.music);
+  const ambience = loops(raw.ambience);
+  return { version: 1, sfx, music, ambience };
 }

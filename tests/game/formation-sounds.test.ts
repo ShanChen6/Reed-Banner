@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { RULESETS, createPuzzle, legalPlacements, transition, type PuzzleEvent } from "../../src/core/binh-phap";
 import { CUE_IDS } from "../../src/app/game/audio/cues";
-import { cuesForEvents, flameCue, FORMATION_PRELOAD, musicFor, tensionLayer } from "../../src/app/game/formation/sounds";
+import { cuesForEvents, flameCue, FORMATION_PRELOAD, isPerfectPlacement, musicFor, tensionLayer } from "../../src/app/game/formation/sounds";
 
 const piece = { kind: "normal", uid: "p1", characterId: "x", profession: "tuongSi", element: "kim" } as const;
 const ids = (events: readonly PuzzleEvent[], prev = 0) => cuesForEvents(events, prev).map((c) => c.id);
@@ -84,6 +84,18 @@ describe("âm thanh Trận Đồ: ánh xạ sự kiện sang cue", () => {
     assert.equal(musicFor(s), "formation_play");
     assert.equal(musicFor({ ...s, phase: "won" }), "formation_result_win");
     assert.equal(musicFor({ ...s, phase: "lost" }), "formation_result_lose");
+  });
+
+  it("đặt khớp cả nghề lẫn hệ với một quân kề thì có tiếng ngân", () => {
+    const s = createPuzzle(RULESETS[0]!, 1);
+    const same = { kind: "normal", uid: "a", characterId: "x", profession: "tuongSi", element: "kim" } as const;
+    const half = { kind: "normal", uid: "b", characterId: "y", profession: "tuongSi", element: "hoa" } as const;
+    const cells = s.cells.map((c, i) => (i === 1 ? { ...c, piece: same } : c));
+    const hand = { ...same, uid: "h" };
+    assert.equal(isPerfectPlacement({ ...s, cells, hand }, 0, 0), true);
+    assert.equal(isPerfectPlacement({ ...s, cells, hand: { ...half, uid: "h" } }, 0, 0), false);
+    assert.equal(isPerfectPlacement({ ...s, cells, hand: { kind: "wild", uid: "w" } }, 0, 0), false);
+    assert.equal(isPerfectPlacement({ ...s, cells, hand }, 2, 2), false);
   });
 
   it("danh sách tải sẵn chỉ chứa mã hợp lệ", () => {

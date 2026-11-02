@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { describe, it } from "node:test";
-import { CUE_IDS, MUSIC_IDS } from "../../src/app/game/audio/cues";
+import { AMBIENCE_IDS, CUE_IDS, MUSIC_IDS } from "../../src/app/game/audio/cues";
 import { AudioEngine, MAX_CONCURRENT, MIN_GAP_MS, type ContextLike, type EngineEnv, type GainLike, type SourceLike } from "../../src/app/game/audio/engine";
 import { EMPTY_MANIFEST, parseManifest } from "../../src/app/game/audio/manifest";
 import { DEFAULT_SETTINGS, parseSettings } from "../../src/app/game/audio/settings";
@@ -65,6 +65,7 @@ class FakeContext implements ContextLike {
 }
 
 const MANIFEST = {
+  ambience: { atlas: { file: "amb/atlas", volume: 0.3 } },
   version: 1,
   sfx: { "formation.place": { files: ["sfx/formation/place_a", "sfx/formation/place_b"], volume: 0.5 }, "formation.line": { files: ["sfx/formation/line"] } },
   music: { formation_play: { file: "music/formation_play", layer: "music/formation_play_layer2", volume: 0.6 }, formation_menu: { file: "music/formation_menu" } },
@@ -208,6 +209,28 @@ describe("AudioEngine", () => {
     assert.equal(engine.currentMusic, null);
   });
 
+  it("âm thanh nền chạy kênh riêng, không đụng nhạc nền; dừng riêng được", async () => {
+    const { engine, ctx } = await ready();
+    await engine.playMusic("formation_menu");
+    await engine.playAmbience("atlas");
+    assert.equal(engine.currentMusic, "formation_menu");
+    assert.equal(engine.currentAmbience, "atlas");
+    const amb = ctx.sources.at(-1)!;
+    assert.ok(amb.loop && amb.started === 1);
+    engine.stopAmbience(0);
+    assert.equal(engine.currentAmbience, null);
+    assert.equal(engine.currentMusic, "formation_menu");
+    assert.ok(amb.stopped > 0);
+  });
+
+  it("âm thanh nền gọi trước khi mở khóa thì phát khi mở khóa", async () => {
+    const { engine } = setup();
+    void engine.playAmbience("atlas");
+    await engine.unlock();
+    await new Promise((r) => setTimeout(r, 5));
+    assert.equal(engine.currentAmbience, "atlas");
+  });
+
   it("nhạc không có trong manifest thì không phát và bỏ bài cũ", async () => {
     const { engine } = await ready();
     await engine.playMusic("formation_play");
@@ -259,6 +282,10 @@ describe("manifest và cài đặt", () => {
     for (const [id, e] of Object.entries(m.sfx)) {
       assert.ok((CUE_IDS as readonly string[]).includes(id), `cue lạ: ${id}`);
       for (const f of e.files) assert.ok(existsSync(`public/audio/${f}.ogg`) && existsSync(`public/audio/${f}.m4a`), `thiếu tệp ${f}`);
+    }
+    for (const [id, e] of Object.entries(m.ambience)) {
+      assert.ok((AMBIENCE_IDS as readonly string[]).includes(id), `âm nền lạ: ${id}`);
+      assert.ok(existsSync(`public/audio/${e.file}.ogg`) && existsSync(`public/audio/${e.file}.m4a`), `thiếu tệp ${e.file}`);
     }
     for (const [id, e] of Object.entries(m.music)) {
       assert.ok((MUSIC_IDS as readonly string[]).includes(id), `nhạc lạ: ${id}`);

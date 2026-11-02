@@ -1,5 +1,119 @@
 {
   "version": 1,
-  "sfx": {},
-  "music": {}
+  "sfx": {
+    "formation.place": {
+      "files": [
+        "sfx/formation/place_a",
+        "sfx/formation/place_b",
+        "sfx/formation/place_c"
+      ],
+      "volume": 0.9
+    },
+    "formation.reject": {
+      "files": [
+        "sfx/formation/reject_a",
+        "sfx/formation/reject_b",
+        "sfx/formation/reject_c"
+      ],
+      "volume": 0.9
+    },
+    "formation.fogclear": {
+      "files": [
+        "sfx/formation/fogclear_a",
+        "sfx/formation/fogclear_b",
+        "sfx/formation/fogclear_c"
+      ],
+      "volume": 0.7
+    },
+    "formation.line": {
+      "files": [
+        "sfx/formation/line_a",
+        "sfx/formation/line_b"
+      ],
+      "volume": 0.8
+    },
+    "formation.discard": {
+      "files": [
+        "sfx/formation/discard_a",
+        "sfx/formation/discard_b",
+        "sfx/formation/discard_c"
+      ],
+      "volume": 0.8
+    },
+    "formation.flame1": {
+      "files": [
+        "sfx/formation/flame1_a",
+        "sfx/formation/flame1_b"
+      ],
+      "volume": 0.8
+    },
+    "formation.win": {
+      "files": [
+        "sfx/formation/win_a",
+        "sfx/formation/win_b"
+      ],
+      "volume": 0.9
+    },
+    "formation.lose": {
+      "files": [
+        "sfx/formation/lose_a",
+        "sfx/formation/lose_c"
+      ],
+      "volume": 0.9
+    },
+    "formation.flame2": {
+      "files": [
+        "sfx/formation/flame2_a",
+        "sfx/formation/flame2_b",
+        "sfx/formation/flame2_c"
+      ],
+      "volume": 0.85
+    },
+    "formation.flame3": {
+      "files": [
+        "sfx/formation/flame3_a",
+        "sfx/formation/flame3_b"
+      ],
+      "volume": 0.85
+    },
+    "formation.eraser": {
+      "files": [
+        "sfx/formation/eraser_a",
+        "sfx/formation/eraser_b"
+      ],
+      "volume": 0.8
+    },
+    "formation.wild": {
+      "files": [
+        "sfx/formation/wild_a",
+        "sfx/formation/wild_b",
+        "sfx/formation/wild_c"
+      ],
+      "volume": 0.85
+    },
+    "formation.match": {
+      "files": [
+        "sfx/formation/match_a",
+        "sfx/formation/match_b",
+        "sfx/formation/match_c"
+      ],
+      "volume": 0.7
+    },
+    "formation.flamedown": {
+      "files": [
+        "sfx/formation/flamedown_a",
+        "sfx/formation/flamedown_b"
+      ],
+      "volume": 0.7
+    },
+    "formation.fusion": {
+      "files": [
+        "sfx/formation/fusion_a",
+        "sfx/formation/fusion_b"
+      ],
+      "volume": 0.9
+    }
+  },
+  "music": {},
+  "ambience": {}
 }
