@@ -1,7 +1,7 @@
 # Âm thanh: kiến trúc, quy ước tệp và bảng cue theo chế độ
 
 > Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — engine (AUD-02) và nối Trận Đồ đã có code (02/11/2026); các chế độ khác chưa nối, chưa có tệp âm thanh. Backlog và điều kiện bắt đầu ở [README](README.md). Prompt giao việc và prompt tạo âm thanh ở [04-prompts-trien-khai-theo-che-do.md](04-prompts-trien-khai-theo-che-do.md).
+> Trạng thái: **DRAFT** — engine (AUD-02), nối Trận Đồ và nối trận đánh (AUD-03) đã có code (02/11/2026); nhạc bản đồ, thoại, Tháp, Đấu trường chưa nối, chưa có tệp âm thanh. Backlog và điều kiện bắt đầu ở [README](README.md). Prompt giao việc và prompt tạo âm thanh ở [04-prompts-trien-khai-theo-che-do.md](04-prompts-trien-khai-theo-che-do.md).
 
 Phạm vi: **toàn bộ chế độ chơi** (Trận Đồ, Chiến dịch và trận đánh, Tháp Thí Luyện, Tháp Vận Mệnh, Sinh tồn, Thử thách hằng ngày, Đấu trường bóng ma, Quần Hùng online sau này). Âm thanh chỉ là lớp cảm giác: không chế độ nào được cần nghe mới hiểu luật hay cốt truyện.
 
@@ -108,6 +108,8 @@ Nhạc Trận Đồ: `music/formation_menu` (màn chế độ: sáo + đàn tran
 | `battle.turn` | Đổi lượt | Mõ một tiếng | 0,2 s | P2 |
 | `battle.timer` | Đồng hồ 30 giây còn 5 giây | Mõ nhịp nhanh | 0,25 s | P2 |
 | `battle.win` / `lose` | Kết thúc trận | Khải hoàn bằng trống đồng + sáo; thua: trống trầm + đàn bầu | 3–4 s | P1 |
+
+Đã nối (02/11/2026): tiếng ghép ô theo từng khung hoạt ảnh (`Frame.sound`), cue theo sự kiện ở hai thời điểm `start`/`end` của đạo diễn trận, nhạc `battle_normal`/`battle_boss` (chiến dịch có pha trùm)/`survival` khi đang trong trận. Chưa nối: `battle.crit`, `battle.turn`, `battle.timer`.
 
 Nhạc: `music/battle_normal`, `music/battle_boss` (căng hơn, trống chiến), `music/battle_tower` (u tối, vang), `music/survival` (nhịp tăng theo đợt). Ambience theo địa hình nhiệm vụ.
 

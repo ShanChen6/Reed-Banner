@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Âm thanh: nối trận đánh (prompt A3)**
+- Trận thường, luyện tập, chiến dịch và sinh tồn (đều qua `DemoGame`): tiếng ghép ô khớp từng khung hoạt ảnh (đổi ô, 3/4/5 ô, combo tầng 1–4, đổi sai), cue theo nghề/hệ/tuyệt chiêu, sát thương, khiên, hồi, hiệu ứng (cháy, đóng băng, độc, tăng, giảm), gục, thắng/thua, ở đúng hai thời điểm của đạo diễn trận; nhạc trận, trùm, sinh tồn. Chưa có tệp âm thanh nên chưa có tiếng.
+
 **Âm thanh: engine toàn game và nối Trận Đồ (prompt A1, A2)**
 - Engine Web Audio (`src/app/game/audio/`): mở khóa sau cử chỉ đầu, 4 bus, tắt tiếng và âm lượng lưu ở máy, giới hạn 8 cue và 40 ms, biến thể và lệch tốc độ ±3%, crossfade nhạc, tạm dừng khi ẩn tab; nút âm thanh ở thanh trên. Trận Đồ phát cue theo sự kiện của engine, nhạc theo màn và lớp căng thẳng theo thanh Bỏ Lệnh. Manifest còn rỗng nên chưa có tiếng cho tới khi có tệp.
 
