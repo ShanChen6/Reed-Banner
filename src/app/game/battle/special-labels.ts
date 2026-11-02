@@ -5,17 +5,25 @@ import { ELEMENT_NAME } from "./labels";
 
 type KindSource = Pick<FighterConfig, "special" | "element">;
 
-/** Nhân vật dung hợp thì dùng biểu tượng nghề tổng hợp; còn lại giữ nghề của mình. */
+/** Nhân vật dung hợp dùng biểu tượng riêng (`tongHop`) cho cả nghề lẫn hệ; còn lại giữ nghề/hệ của mình. */
 export function isFusion(f: Pick<FighterConfig, "special">): boolean {
   return f.special === true;
 }
 
-export const FUSION_PROFESSION_TITLE = "Nghề tổng hợp: có nền tảng cả tám nghề, không nhận nội tại nghề mặc định";
+/** Tên hiển thị của hai biểu tượng riêng (id kỹ thuật vẫn là `tongHop`). */
+export const FUSION_PROFESSION_NAME = "Vạn nghề";
+export const FUSION_ELEMENT_NAME = "Vạn hệ";
+export const FUSION_PROFESSION_TITLE = `${FUSION_PROFESSION_NAME}: có nền tảng cả tám nghề, không nhận nội tại nghề mặc định`;
+
+/** Chữ cạnh biểu tượng hệ: biểu tượng Vạn hệ không cho biết hệ phòng thủ, nên chữ ghi rõ để người chơi tính khắc chế. */
+export function elementLabel(f: KindSource): string {
+  return isFusion(f) ? `Phòng thủ ${ELEMENT_NAME[f.element]}` : ELEMENT_NAME[f.element];
+}
 
 /** Chú thích hệ: nhân vật dung hợp chịu khắc theo hệ phòng thủ nhưng đánh bằng nhiều hệ theo từng chiêu. */
 export function elementTitle(f: KindSource): string {
   return isFusion(f)
-    ? `Hệ phòng thủ ${ELEMENT_NAME[f.element]} (chịu khắc theo hệ này); dung hợp bảy hệ qua từng chiêu`
+    ? `${FUSION_ELEMENT_NAME}: đánh bằng bảy hệ theo từng chiêu; hệ phòng thủ ${ELEMENT_NAME[f.element]} (chịu khắc theo hệ này)`
     : ELEMENT_NAME[f.element];
 }
 
@@ -38,5 +46,5 @@ export function fusionPassiveLines(f: Pick<FighterConfig, "special" | "professio
 
 /** Dòng tóm tắt nhân vật dung hợp trong tooltip thẻ nhân vật. */
 export function fusionSummary(f: Pick<FighterConfig, "special" | "element">): string | null {
-  return isFusion(f) ? `Nhân vật đặc biệt: dung hợp tám nghề và bảy hệ · hệ phòng thủ ${ELEMENT_NAME[f.element as Element]}` : null;
+  return isFusion(f) ? `Nhân vật đặc biệt: ${FUSION_PROFESSION_NAME}, ${FUSION_ELEMENT_NAME} · hệ phòng thủ ${ELEMENT_NAME[f.element as Element]}` : null;
 }

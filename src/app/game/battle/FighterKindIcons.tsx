@@ -1,11 +1,11 @@
 import { ElementIcon, ProfessionIcon } from "@/app/game/art/icons";
 import type { FighterConfig } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME } from "./labels";
-import { FUSION_PROFESSION_TITLE, elementTitle, isFusion } from "./special-labels";
+import { FUSION_ELEMENT_NAME, FUSION_PROFESSION_NAME, FUSION_PROFESSION_TITLE, elementLabel, elementTitle, isFusion } from "./special-labels";
 
 /**
- * Biểu tượng nghề và hệ của một nhân vật trong trận. Nhân vật dung hợp: biểu tượng nghề tổng hợp, và biểu tượng hệ
- * phòng thủ (quyết định khắc chế) kèm dấu tổng hợp nhỏ ở góc.
+ * Biểu tượng nghề và hệ của một nhân vật trong trận. Nhân vật dung hợp dùng hai biểu tượng riêng (Vạn nghề, Vạn hệ);
+ * hệ phòng thủ, quyết định khắc chế, ghi bằng chữ cạnh biểu tượng và trong chú thích.
  */
 export default function FighterKindIcons({
   fighter,
@@ -17,19 +17,17 @@ export default function FighterKindIcons({
   showName?: boolean;
 }) {
   const fusion = isFusion(fighter);
-  const professionTitle = fusion ? FUSION_PROFESSION_TITLE : PROFESSION_NAME[fighter.profession];
   return (
     <>
-      <span title={professionTitle} className="shrink-0">
+      <span title={fusion ? FUSION_PROFESSION_TITLE : PROFESSION_NAME[fighter.profession]} className="shrink-0">
         <ProfessionIcon profession={fusion ? "tongHop" : fighter.profession} className={className} />
-        <span className="sr-only">{fusion ? "Nghề tổng hợp" : PROFESSION_NAME[fighter.profession]}</span>
+        <span className="sr-only">{fusion ? FUSION_PROFESSION_NAME : PROFESSION_NAME[fighter.profession]}</span>
       </span>
-      <span title={elementTitle(fighter)} className="relative inline-flex shrink-0" data-fusion={fusion || undefined}>
-        <ElementIcon element={fighter.element} className={className} />
-        {fusion && <ElementIcon element="tongHop" className="absolute -bottom-0.5 -right-0.5 size-2 rounded-full ring-1 ring-black/60" />}
-        <span className="sr-only">{fusion ? `${ELEMENT_NAME[fighter.element]}, hệ tổng hợp` : ELEMENT_NAME[fighter.element]}</span>
+      <span title={elementTitle(fighter)} className="shrink-0">
+        <ElementIcon element={fusion ? "tongHop" : fighter.element} className={className} />
+        <span className="sr-only">{fusion ? `${FUSION_ELEMENT_NAME}, phòng thủ ${ELEMENT_NAME[fighter.element]}` : ELEMENT_NAME[fighter.element]}</span>
       </span>
-      {showName && <span className="hidden lg:inline">{fusion ? `${ELEMENT_NAME[fighter.element]} · tổng hợp` : ELEMENT_NAME[fighter.element]}</span>}
+      {showName && <span className={fusion ? "truncate" : "hidden lg:inline"}>{elementLabel(fighter)}</span>}
     </>
   );
 }

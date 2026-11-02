@@ -64,6 +64,9 @@
 - Nhân vật đặc biệt mang hai nghề/hai hệ: phòng thủ và đòn đánh thường theo hệ chính, giá cao hơn nhiều, nhận bằng cách đặc biệt, dùng icon tổng hợp nghề/hệ.
 - Tạo nguồn [nhan-vat-tong-hop.md](../03-characters/nhan-vat-tong-hop.md) (DRAFT) với đề xuất chính/phụ, ví dụ và tác động code; chưa sửa code, roster hay save. Icon `tongHop` cho nghề/hệ và hiển thị tổng hợp của Đinh Ngọc ở trang xem thử đã có.
 
+**Hiển thị nhân vật dung hợp: đổi tên và dùng icon riêng cho hệ**
+- Theo góp ý của Shan: tên hiển thị "tổng hợp" đổi thành **Vạn nghề** và **Vạn hệ** (id kỹ thuật `tongHop` và tên file icon giữ nguyên); cả thẻ trong trận lẫn trang xem thử. Thẻ nhân vật dùng luôn icon Vạn hệ thay cho icon Kim/Phong, kèm chữ "Phòng thủ X" để người chơi vẫn biết khắc chế. Chưa đổi tên khái niệm "nhân vật tổng hợp" (hai nghề, hai hệ) trong docs thiết kế.
+
 **Hiển thị nhân vật dung hợp trong trận**
 - Thẻ nhân vật trong trận: biểu tượng nghề tổng hợp, biểu tượng hệ phòng thủ kèm dấu tổng hợp nhỏ (theo hướng "Hiển thị" của [nhân vật tổng hợp](../03-characters/nhan-vat-tong-hop.md#hiển-thị)), tooltip nêu hệ phòng thủ và bốn nội tại. Khung chi tiết hiện "Nội tại 1–4" với mô tả đầy đủ thay cho nhãn Nghề/Hệ; chiêu ghi "Chiêu dung hợp · đòn hệ X". Tướng thường không đổi. Kiểm bằng Playwright (dựng tạm trong Thao Luyện, đã gỡ) và test `tests/game/special-labels.test.ts`.
 
