@@ -93,8 +93,8 @@ describe("dữ liệu nhân vật đặc biệt", () => {
     check("dn_vanTuongQuyNhat", 90, 80, 2.3, 3.22);
     check("dn_thoAnTranTam", 40, 35);
     check("dn_loiVanKhaiLo", 55, 45, 0.7, 0.98);
-    check("vp_phongKhoiVanDong", 35, 30, 1.4, 1.96);
-    check("vp_muaGiangYLoan", 35, 30, 1.35, 1.89);
+    check("vp_phongKhoiVanDong", 40, 35, 1.3, 1.82);
+    check("vp_muaGiangYLoan", 40, 35, 1.35, 1.89);
     check("vp_lucDiepDanLo", 45, 40);
     check("vp_vanDuThienLy", 90, 80, 0.9, 1.26);
     check("vp_diaMachHoDoi", 55, 45);
@@ -292,13 +292,13 @@ describe("Đinh Ngọc: bốn nội tại", () => {
 
 describe("Vũ Phong: sáu chủ động", () => {
   const phong = (extra: Partial<FighterConfig> = {}) => special("vuPhong", extra);
-  it("ô1 Phong Khởi Vân Động: 1.4× ATK rồi xoay bàn cờ 1 nấc; thiếu lốc xoáy thì bị từ chối", () => {
+  it("ô1 Phong Khởi Vân Động: 1.3× ATK rồi xoay bàn cờ 1 nấc; thiếu lốc xoáy thì bị từ chối", () => {
     const s = setup(phong(), unit("ally"));
     assert.deepEqual(act(s, { type: "skill", skill: "vp_phongKhoiVanDong", target: 0 }), { ok: false, error: "invalidTarget" });
     const r = cast(s, "vp_phongKhoiVanDong", { whirl });
-    assert.equal(damageOn(r.events, 1, 0)[0]!.amount, Math.round(140 * 100 / 120));
+    assert.equal(damageOn(r.events, 1, 0)[0]!.amount, Math.round(130 * 100 / 120));
     assert.equal(r.events.filter((e) => e.type === "whirl").length, 1);
-    assert.equal(r.state.sides[0].fighters[0]!.energy, 65);
+    assert.equal(r.state.sides[0].fighters[0]!.energy, 60);
   });
 
   it("ô2 Mưa Giăng Ý Loạn: hệ Thủy, 30% Đóng băng 1 lượt (có lúc trúng, có lúc không)", () => {
@@ -370,13 +370,13 @@ describe("Vũ Phong: bốn nội tại", () => {
   const phong = (extra: Partial<FighterConfig> = {}) => special("vuPhong", extra);
   const striker = unit("striker", { skills: ["role_tramKich"] });
 
-  it("P1 Trượng Thiết Hồi Đáp: mất HP thật vì chủ động của địch thì trả đòn Kim 35% ATK vào đúng kẻ đó", () => {
+  it("P1 Trượng Thiết Hồi Đáp: mất HP thật vì chủ động của địch thì trả đòn Kim 30% ATK vào đúng kẻ đó", () => {
     const s = setup(phong(), unit("ally"), [striker, unit("e2")], 31, 1);
     s.sides[1].fighters[0]!.energy = 100;
     const r = cast(s, "role_tramKich", { target: 0 });
     assert.equal(chases(r.events, "vp_truongThietHoiDap").length, 1);
     const back = damageOn(r.events, 1, 0).filter((e) => e.source === "skill");
-    assert.equal(back[0]!.amount, Math.round(35 * 100 / 120));
+    assert.equal(back[0]!.amount, Math.round(30 * 100 / 120));
   });
 
   it("P1 không trả đòn khi bị hạ gục hoặc khi Khiên đỡ hết", () => {

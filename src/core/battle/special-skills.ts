@@ -46,11 +46,11 @@ export const DINH_NGOC_SKILLS: readonly SkillDef[] = [
 
 export const VU_PHONG_SKILLS: readonly SkillDef[] = [
   def({
-    id: "vp_phongKhoiVanDong", name: "Phong Khởi Vân Động", character: "vuPhong", slot: 1, cost: 35, target: "enemy",
-    damageElement: "phong", steps: [{ type: "damage", atk: 1.4 }, { type: "whirl", turns: 1 }],
+    id: "vp_phongKhoiVanDong", name: "Phong Khởi Vân Động", character: "vuPhong", slot: 1, cost: 40, target: "enemy",
+    damageElement: "phong", steps: [{ type: "damage", atk: 1.3 }, { type: "whirl", turns: 1 }],
   }),
   def({
-    id: "vp_muaGiangYLoan", name: "Mưa Giăng Ý Loạn", character: "vuPhong", slot: 2, cost: 35, target: "enemy",
+    id: "vp_muaGiangYLoan", name: "Mưa Giăng Ý Loạn", character: "vuPhong", slot: 2, cost: 40, target: "enemy",
     damageElement: "thuy",
     steps: [{ type: "damage", atk: 1.35 }, { type: "effect", to: "targets", effect: "freeze", value: 0, turns: 1, chance: 0.3 }],
   }),

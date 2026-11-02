@@ -167,17 +167,16 @@ Kỹ năng đã chạy được trong engine chiến đấu (`src/core`), kiểm
 | Nội tại | Hệ truy kích hiện có (`CHASE_PASSIVES`) mở rộng: hiệu ứng `burn`, `silence`, `defUp`; tín hiệu mới `damageTaken`, `shieldBroken`, `weakened`, `finishing`; nội tại cuối lượt (`turnEnd`) có quota lưu trong `Fighter.chaseCounters` (snapshot nên reload không reset) |
 | Reset | Quota nội tại cuối lượt reset ở trận mới và `beginWave` |
 
-### Mô phỏng thăm dò (02/11/2026)
+### Cân bằng lần 1 (02/11/2026)
 
-AI Thường điều khiển, cấp 30, không trang bị, đấu 26 tướng trong `ALL_COMPANIONS` (mỗi ba tướng một), 2 seed × 2 người đi trước = **100 trận mỗi ô**; sai số khoảng ±10 điểm nên chỉ để phát hiện lệch lớn, **không phải báo cáo cân bằng**. Tướng thường Trần Cương làm mốc.
+Đo bằng [special-balance.ts](../../scripts/special-balance.ts) như [Vũ Phong](vu-phong.md#cân-bằng-lần-1-02112026): cấp 30, AI Thường, không trang bị, đấu 56 dựng Đinh Bộ Lĩnh cùng cấp (mốc trung bình 50%; 3vs3 cấp 30 các dựng nằm trong 40%–63,6%).
 
-| Nhân vật | 1vs1 thắng | 3vs3 thắng (hai đồng đội ngẫu nhiên từ roster) |
-|---|---:|---:|
-| Trần Cương (mốc) | 38% | 49% |
-| Đinh Ngọc | 52% | 44% |
-| Vũ Phong | 66% | 73% |
+| Chế độ | Thắng |
+|---|---:|
+| 1vs1 | 43,8% [37,4–50,3] (n=224) |
+| 3vs3 (cùng Hà Vân, Mai Thanh) | 50,9% [41,8–60,0] (n=112) |
 
-Nhận xét: Đinh Ngọc nằm trong dải bình thường. **Vũ Phong nghiêng mạnh**; AI gần như chỉ dùng ô1 (đòn Phong 1.4× ATK giá 35 kèm xoay bàn cờ, 442 lần trong 100 trận 1vs1) và bị động trả đòn P1. Cần mô phỏng đủ ma trận (cấp 1/10/20/30, gear, F, đối thủ đủ nghề/hệ) và hạ số liệu (ví dụ giá ô1, hệ số P1 hoặc ATK nền) **trước khi mở ở bất kỳ chế độ nào**. Ô4 gần như không được dùng vì AI tiêu năng lượng vào ô1 trước khi đủ 90.
+Nằm trong dải bình thường, hơi yếu ở 1vs1 nhưng khoảng tin cậy còn chạm 50%. **Chưa chỉnh số.** AI gần như chỉ dùng ô1 (1.014 lần trong 224 trận) và ô2; ô3, ô4, ô5 gần như không được dùng, nên cần mô phỏng thêm trước khi quyết định buff.
 
 ### Khác bản thiết kế khi triển khai
 

@@ -61,10 +61,14 @@
 - Nhân vật đặc biệt mang hai nghề/hai hệ: phòng thủ và đòn đánh thường theo hệ chính, giá cao hơn nhiều, nhận bằng cách đặc biệt, dùng icon tổng hợp nghề/hệ.
 - Tạo nguồn [nhan-vat-tong-hop.md](../03-characters/nhan-vat-tong-hop.md) (DRAFT) với đề xuất chính/phụ, ví dụ và tác động code; chưa sửa code, roster hay save. Icon `tongHop` cho nghề/hệ và hiển thị tổng hợp của Đinh Ngọc ở trang xem thử đã có.
 
+**Vũ Phong — cân bằng lần 1**
+- Đo bằng script mới `scripts/special-balance.ts` (đấu 56 dựng Đinh Bộ Lĩnh, cấp 30, có khoảng tin cậy). Nguyên nhân lệch: bước xoay bàn cờ của ô1 giá quá rẻ (thêm một nước đi bàn cờ miễn phí, khoảng 20 điểm thắng) và P1 (khoảng 4 điểm).
+- Chốt: ô1 giá 35→40 và 1.4→1.3× ATK, ô2 giá 35→40, P1 35%→30% ATK. Kết quả cấp 30: 1vs1 từ 64,7% xuống 53,0% [47,6–58,2]; 3vs3 từ 66,1% xuống 61,6% [55,1–67,7] (dựng mạnh nhất mẫu: 63,6%). Đinh Ngọc 1vs1 43,8%, 3vs3 50,9%, chưa chỉnh. Chưa phải cân bằng cuối: thiếu trang bị, F, đủ đối thủ.
+
 **Đinh Ngọc và Vũ Phong — kỹ năng chạy được trong core**
 - Theo yêu cầu "làm kỹ năng chạy được": sáu chủ động và bốn nội tại của cả hai đã có trong engine chiến đấu, kiểm bằng `tests/core/battle/special-characters.test.ts` (38 test). Thêm `SkillDef.damageElement` (hệ từng chiêu), cờ `FighterConfig.special` (bỏ nội tại nghề mặc định, chỉ số nền riêng, cho phép bốn truy kích khi không có bị động phối hợp), hiệu ứng truy kích `burn`/`silence`/`defUp`, tín hiệu `damageTaken`/`shieldBroken`/`weakened`/`finishing`, nội tại cuối lượt có quota lưu trong snapshot và bị động phối hợp `phongLenh`.
 - Giới hạn "một lần mỗi lượt" thực thi theo hành động gốc; vài lựa chọn mục tiêu của chiêu đa mục tiêu là mục tiêu đầu tiên theo vị trí. Xem mục "Triển khai trong core" của [Đinh Ngọc](../03-characters/dinh-ngoc.md) và [Vũ Phong](../03-characters/vu-phong.md).
-- Mô phỏng thăm dò (100 trận mỗi ô, ±10 điểm): Đinh Ngọc 52%/44% (1vs1/3vs3), Vũ Phong 66%/73%, mốc Trần Cương 38%/49%. Vũ Phong nghiêng mạnh, cần cân bằng trước khi mở.
+- Mô phỏng thăm dò (100 trận mỗi ô, ±10 điểm): Đinh Ngọc 52%/44% (1vs1/3vs3), Vũ Phong 66%/73%, mốc Trần Cương 38%/49%. Vũ Phong nghiêng mạnh, đã cân bằng ở mục sau.
 - Chưa mở ở chế độ nào: hai nhân vật nằm ở `SPECIAL_COMPANIONS`, chưa thuộc `ALL_COMPANIONS` (shop, Chiến dịch, Tháp, Sinh tồn). Trận Đồ vẫn dùng hai nhân vật như quân dung hợp, không đổi.
 
 **Trận Đồ — bật Đinh Ngọc và Vũ Phong làm quân dung hợp**

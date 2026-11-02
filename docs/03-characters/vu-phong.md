@@ -141,8 +141,8 @@ Mốc mở chủ động: ô1/ô2 cấp 1, ô3 cấp 5, ô4 cấp 10, ô5 cấp 
 
 | Ô / mở cấp | Tên / ID | Nghề / hệ đòn | Target | NL cấp 1 / 5 | Damage cấp 1 | Hiệu ứng | Cấp 5 |
 |---|---|---|---|---|---|---|---|
-| 1 / 1 | Phong Khởi Vân Động / `vp_phongKhoiVanDong` | Quân sư / Phong | enemy | 35 / 30 | 1.4× ATK | Một hit; sau damage xoay bàn cờ **1 nấc** quanh tâm do người chơi chọn, một lần/action | 1.96× ATK; vẫn 1 nấc |
-| 2 / 1 | Mưa Giăng Ý Loạn / `vp_muaGiangYLoan` | Mưu sĩ / Thủy | enemy | 35 / 30 | 1.35× ATK | Một hit; 30% Đóng băng 1 lượt (luật Đóng băng chung) | 1.89× ATK; vẫn 30%, 1 lượt |
+| 1 / 1 | Phong Khởi Vân Động / `vp_phongKhoiVanDong` | Quân sư / Phong | enemy | 40 / 35 | 1.3× ATK | Một hit; sau damage xoay bàn cờ **1 nấc** quanh tâm do người chơi chọn, một lần/action | 1.82× ATK; vẫn 1 nấc |
+| 2 / 1 | Mưa Giăng Ý Loạn / `vp_muaGiangYLoan` | Mưu sĩ / Thủy | enemy | 40 / 35 | 1.35× ATK | Một hit; 30% Đóng băng 1 lượt (luật Đóng băng chung) | 1.89× ATK; vẫn 30%, 1 lượt |
 | 3 / 5 | Lục Diệp Dẫn Lộ / `vp_lucDiepDanLo` | Y sư / Mộc | ally (gồm self; solo là self) | 45 / 40 | — | Thanh tẩy mục tiêu, rồi hồi **8% HP tối đa người nhận**, nhân F | Hồi 11.2% |
 | 4 / 10 | Vân Du Thiên Lý / `vp_vanDuThienLy` | Quân sư / Phong | allEnemies | 90 / 80 | 0.9× ATK | Một hit mỗi địch còn sống → Xua tan buff từng địch → xoay bàn cờ **tối đa 2 nấc, tự động**, một lần/action. Tuyệt chiêu ô4 | 1.26× ATK; vẫn 2 nấc |
 | 5 / 15 | Địa Mạch Hộ Đội / `vp_diaMachHoDoi` | Binh lính / Thổ | team | 55 / 45 | — | Khiên **6% HP tối đa người nhận** và DEF +8% trong 2 lượt thường phe mình | Khiên 8.4%; DEF +11.2%; vẫn 2 lượt |
@@ -166,7 +166,7 @@ Ngoại lệ loadout có chủ đích như Đinh Ngọc: bốn phản ứng cố
 
 | Ô | Nội tại / ID | Nghề + hệ | Điều kiện | Tác dụng | Giới hạn |
 |---|---|---|---|---|---|
-| P1 | Trượng Thiết Hồi Đáp / `vp_truongThietHoiDap` | Tướng sĩ + Kim | Vũ Phong mất HP thật vì chủ động của một địch | Truy kích 0.35× ATK, hệ Kim, vào đúng địch đó | Tối đa một lần/lượt thường địch; không kích vì DoT, phản đòn hay tự hủy; không kích nếu Khiên hấp thụ hết đòn; không vào địch đã chết |
+| P1 | Trượng Thiết Hồi Đáp / `vp_truongThietHoiDap` | Tướng sĩ + Kim | Vũ Phong mất HP thật vì chủ động của một địch | Truy kích 0.3× ATK, hệ Kim, vào đúng địch đó | Tối đa một lần/lượt thường địch; không kích vì DoT, phản đòn hay tự hủy; không kích nếu Khiên hấp thụ hết đòn; không vào địch đã chết |
 | P2 | Phi Diệp Theo Gió / `vp_phiDiepTheoGio` | Xạ thủ + Phong | Đồng đội **khác** gây mất HP thật khiến địch còn sống có HP ≤50% HP tối đa | Truy kích 0.3× ATK, hệ Phong, vào đúng địch đó (VFX lá trúc bay theo gió, không vũ khí thứ hai) | Tối đa một lần/lượt thường phe mình; không từ chính mình, chase hay DoT; solo không có tín hiệu và không có proc bù |
 | P3 | Hỏa Ẩn Vân Sau / `vp_hoaAnVanSau` | Sát thủ + Hỏa | Chủ động của chính Vũ Phong gây mất HP thật và để địch còn sống ở HP ≤30% HP tối đa | Thiêu đốt 2 lượt, mỗi lượt `round(0.3×ATK)` (snapshot ATK lúc áp) | Một lần/action gốc; AoE chọn đúng một địch đủ điều kiện có tỷ lệ HP thấp nhất, hòa vị trí trước; không giết thêm, không kích bởi chase |
 | P4 | Lôi Vân Trấn Pháp / `vp_loiVanTranPhap` | Pháp sư + Lôi | Xua tan hữu hiệu của phe ta (Vũ Phong hoặc đồng đội) xóa ít nhất một buff khỏi địch | Câm lặng 1 lượt lên đúng địch bị xóa nhiều buff nhất, hòa vị trí trước | Một lần/action gốc, tối đa một lần/lượt thường phe mình; không kích nếu Xua tan không xóa gì |
@@ -185,7 +185,7 @@ Ngoại lệ loadout có chủ đích như Đinh Ngọc: bốn phản ứng cố
 - **Mở nhịp:** ô2 làm địch đứng yên một lượt; ô1 xoay bàn cờ chuẩn bị combo cho đội. Dùng ô4 khi địch đang có buff để Xua tan và kích P4 Câm lặng. Ô6 trước lượt đội dồn sát thương.
 - **Đội tốt:** đội có sát thương cao nhưng thiếu hỗ trợ (để P2 liên tục có tín hiệu), người cần gỡ bất lợi và hồi, đội có nhiều combo bàn cờ.
 - **Đối thủ khó:** Mộc (×1.25 lên Vũ Phong), đội ít buff làm ô4/P4 mất tác dụng, đội đủ giáp khiến sát thương cá nhân thấp không đủ.
-- **Điểm yếu:** HP/DEF thấp; ATK nền thấp; chiêu hỗ trợ đắt (ô4 90 năng lượng, ô5 55); không xuyên Khiên hoặc DEF; không né, không tàng hình. Đa dụng không đồng nghĩa giỏi hơn chuyên gia từng việc.
+- **Điểm yếu:** HP/DEF thấp; ATK nền thấp; chiêu đắt (ô1 và ô2 giá 40, ô4 90 năng lượng, ô5 55); không xuyên Khiên hoặc DEF; không né, không tàng hình. Đa dụng không đồng nghĩa giỏi hơn chuyên gia từng việc.
 
 ### Kiểm tra số học
 
@@ -193,12 +193,12 @@ Ví dụ trung tính, không gear, Sĩ khí hoặc khắc hệ: ATK người đ�
 
 | Kiểm | Kết quả |
 |---|---|
-| Ô1 cấp 1 | round(140×100/120) = 117 HP; cost 35 |
-| Ô1 cấp 5 | round(196×100/120) = 163 HP; cost 30; vẫn 1 nấc |
+| Ô1 cấp 1 | round(130×100/120) = 108 HP; cost 40 |
+| Ô1 cấp 5 | round(182×100/120) = 152 HP; cost 35; vẫn 1 nấc |
 | Ô2 cấp 1 | round(135×100/120) = 113 HP; Đóng băng 30% |
 | Ô4 cấp 1, mỗi địch | round(90×100/120) = 75 HP; cost 90 |
 | Ô4 cấp 5, mỗi địch | round(126×100/120) = 105 HP; cost 80 |
-| P1 đáp trả | round(35×100/120) = 29 HP |
+| P1 đáp trả | round(30×100/120) = 25 HP |
 | P2 phóng theo | round(30×100/120) = 25 HP |
 | P3 Thiêu đốt, ATK 100 | 30 HP/lượt × 2 lượt = 60 HP trước giới hạn HP còn lại |
 | Ô3 cấp 1, đồng minh HPmax 500, F 100% | hồi 40; cấp 5 hồi 56 |
@@ -228,17 +228,24 @@ Kỹ năng đã chạy được trong engine chiến đấu (`src/core`), kiểm
 | Nội tại | Hệ truy kích hiện có (`CHASE_PASSIVES`) mở rộng: hiệu ứng `burn`, `silence`, `defUp`; tín hiệu mới `damageTaken`, `shieldBroken`, `weakened`, `finishing`; nội tại cuối lượt (`turnEnd`) có quota lưu trong `Fighter.chaseCounters` (snapshot nên reload không reset) |
 | Reset | Quota nội tại cuối lượt reset ở trận mới và `beginWave` |
 
-### Mô phỏng thăm dò (02/11/2026)
+### Cân bằng lần 1 (02/11/2026)
 
-AI Thường điều khiển, cấp 30, không trang bị, đấu 26 tướng trong `ALL_COMPANIONS` (mỗi ba tướng một), 2 seed × 2 người đi trước = **100 trận mỗi ô**; sai số khoảng ±10 điểm nên chỉ để phát hiện lệch lớn, **không phải báo cáo cân bằng**. Tướng thường Trần Cương làm mốc.
+Đo bằng [special-balance.ts](../../scripts/special-balance.ts): Vũ Phong cấp 30 (và 10, 20), AI Thường, không trang bị, đấu **56 dựng Đinh Bộ Lĩnh** (8 nghề × 7 hệ, cùng cấp), cả hai người đi trước; 3vs3 mỗi phe có thêm Hà Vân và Mai Thanh. Mốc: win-rate của chính các dựng đó (trung bình 50%; ở 3vs3 cấp 30, mẫu 12 dựng nằm trong **40%–63,6%**).
 
-| Nhân vật | 1vs1 thắng | 3vs3 thắng (hai đồng đội ngẫu nhiên từ roster) |
-|---|---:|---:|
-| Trần Cương (mốc) | 38% | 49% |
-| Đinh Ngọc | 52% | 44% |
-| Vũ Phong | 66% | 73% |
+| Bản | Điều chỉnh | 1vs1 cấp 30 | 3vs3 cấp 30 |
+|---|---|---:|---:|
+| Gốc | ô1 giá 35 / 1.4× ATK; ô2 giá 35; P1 35% | 64,7% [58,3–70,7] | 66,1% [56,9–74,2] |
+| Cắt thử P1 | P1 = 0 | 60,1% | — |
+| Cắt thử ô1 | bỏ bước xoay bàn cờ của ô1 | 42,0% | — |
+| V1 | ô1 giá 50 / 1.3×; P1 30% | 42,0% | — |
+| V2 | ô1 giá 40 / 1.3×; P1 30% | 53,9% [48,5–59,1] | — |
+| **V3 (chốt)** | V2 + ô2 giá 40 | **53,0%** [47,6–58,2] (n=336) | **61,6%** [55,1–67,7] (n=224) |
 
-Nhận xét: Đinh Ngọc nằm trong dải bình thường. **Vũ Phong nghiêng mạnh**; AI gần như chỉ dùng ô1 (đòn Phong 1.4× ATK giá 35 kèm xoay bàn cờ, 442 lần trong 100 trận 1vs1) và bị động trả đòn P1. Cần mô phỏng đủ ma trận (cấp 1/10/20/30, gear, F, đối thủ đủ nghề/hệ) và hạ số liệu (ví dụ giá ô1, hệ số P1 hoặc ATK nền) **trước khi mở ở bất kỳ chế độ nào**. Ô4 gần như không được dùng vì AI tiêu năng lượng vào ô1 trước khi đủ 90.
+- **Nguyên nhân lệch:** bước xoay bàn cờ gắn trên ô1 (một nước đi bàn cờ miễn phí cùng đòn đánh) làm khoảng 20 điểm thắng; P1 trả đòn khoảng 4 điểm. AI dùng ô1 tới 5,7 lần mỗi trận 1vs1.
+- **Điều chỉnh chốt:** ô1 giá 40 (cấp 5: 35) và 1.3× ATK (cấp 5: 1.82×); ô2 giá 40 (cấp 5: 35); P1 từ 35% xuống 30% ATK. Mọi thứ khác giữ nguyên.
+- **Cấp thấp (1vs1, bản V2):** cấp 10 và 20 đều 52,7% [46,2–59,1], không lệch theo cấp.
+- 3vs3 vẫn ở nửa trên của dải vì buff, Khiên và hồi của Vũ Phong lợi cả đội; đó là vai trò của nhân vật, nhưng nên theo dõi.
+- Còn thiếu để gọi là cân bằng xong: trang bị, F=20%, đủ 7 hệ đối thủ riêng từng cái, đồng đội khác, ô4 (AI gần như không dùng vì chưa đủ 90 năng lượng).
 
 ### Khác bản thiết kế khi triển khai
 
