@@ -1,7 +1,7 @@
 # Vũ Phong — Vân Du Tử
 
 > Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — có hình tượng, sáu ảnh khung (đã nhập vào `public/art/`, chưa có rig) và bộ kỹ năng đề xuất: nhân vật đặc biệt dung hợp tám nghề/bảy hệ qua 6 chủ động + 4 nội tại, cùng khuôn với Đinh Ngọc nhưng đảo vai. Mọi số liệu là điểm xuất phát chưa mô phỏng; chưa có ID runtime, rig, code; chưa Shan duyệt.
+> Trạng thái: **DRAFT** — có hình tượng, sáu ảnh khung và rig hình động (chỉ có trên trang xem thử) và bộ kỹ năng đề xuất: nhân vật đặc biệt dung hợp tám nghề/bảy hệ qua 6 chủ động + 4 nội tại, cùng khuôn với Đinh Ngọc nhưng đảo vai. Mọi số liệu là điểm xuất phát chưa mô phỏng; chưa có ID runtime, chưa vào roster; chưa Shan duyệt.
 
 ## Hồ sơ
 
@@ -269,7 +269,7 @@ Create ONE full-body 2D game character, Vu Phong / Vũ Phong, titled Van Du Tu (
 
 ## Ảnh đã nhập
 
-Ngày 02/11/2026 người dùng cung cấp sáu ảnh nền trong suốt cho khung 1–6 (khung 6 có hai phương án, chọn một) và chọn **theo ảnh**: Character DNA ở trên đã sửa cho khớp (búi cao, râu dê, thân săn chắc, hồ lô hai ngăn). Ảnh gốc được cắt sát nhân vật và thu còn ½ kích thước (WebP, có alpha) tại `public/art/characters/vu-phong/`, đặt tên theo quy ước của Đinh Ngọc:
+Ngày 02/11/2026 người dùng cung cấp sáu ảnh nền trong suốt cho khung 1–6 (khung 6 có hai phương án, chọn một) và chọn **theo ảnh**: Character DNA ở trên đã sửa cho khớp (búi cao, râu dê, thân săn chắc, hồ lô hai ngăn). Ảnh gốc được cắt sát nhân vật và lưu WebP có alpha tại `public/art/characters/vu-phong/`, đặt tên theo quy ước của Đinh Ngọc (tranh tư thế ×0.3, ảnh đứng và phong thái ¼):
 
 | File | Khung | Ghi chú |
 |---|---|---|
@@ -281,12 +281,26 @@ Ngày 02/11/2026 người dùng cung cấp sáu ảnh nền trong suốt cho khu
 | `style.webp` | 6 — Phong thái (cá tính) | Đứng bắt chéo chân, trượng gác sau vai, hai cẳng tay vắt lên, cười nửa miệng nhướng mày; lộ cả mây xoắn tay phải và gió tay trái |
 | `portrait.webp` | Avatar 192×192 | Cắt từ khung 1; đã đăng ký `vuPhong` trong [portrait-data.ts](../../src/app/game/art/portrait-data.ts) |
 
-Chưa có: các lớp rig (thân, đầu, tay, trượng), mục trong `rigs.ts` và trang xem thử. Vũ Phong chưa vào roster nên không có trong trận.
+### Rig hình động
+
+Ảnh đứng (1024×1536) được tách bằng code thành sáu lớp WebP ở ½ kích thước, đăng ký là `VU_PHONG` trong [rigs.ts](../../src/app/game/stage/rigs.ts) và hiện trên trang xem thử `/demo/characters?id=vuPhong`:
+
+| Lớp | Nội dung |
+|---|---|
+| `body` | Thân, tóc sau lưng, hồ lô, túi, chân; đã vá chỗ khuất sau khăn |
+| `head` | Đầu, búi tóc và dải buộc tóc |
+| `sword` | Trượng trúc nguyên cây (đoạn nằm trong nắm tay được che bởi `arm`) |
+| `arm` | Nắm tay phải cầm trượng; trượng và nắm tay xoay quanh cổ tay |
+| `armR` | Bàn tay trái buông |
+| `scarf` | Đuôi khăn bay theo gió (lớp vải, vẽ trên thân) |
+
+Nhịp vũ khí `staff` (nâng trượng nhẹ như pháp trượng, không vung kiểu kiếm); hiệu ứng tuyệt chiêu dùng lại `galeRout` (lốc cuốn quanh từng đối thủ, khiên nứt) vì ô4 Vân Du Thiên Lý Xua tan buff địch, màu `0x2e9e90`. Tổng ngân sách ảnh trong trận khoảng 218 KB (trần 350 KB). Test: `tests/game/rigs.test.ts`.
+
+Vũ Phong chưa vào roster nên không có trong trận, shop hay Practice. Trang xem thử ghi "Nghề tổng hợp · Hệ tổng hợp".
 
 Điểm lệch cần thống nhất khi dựng rig, chưa chỉnh ảnh:
 - Dây hồ lô: khung 1, 4 và 6 buộc ở đai; khung 2 và 3 có thêm dây chéo qua ngực.
 - Hình xăm cẳng tay phải: khung 1 và 4 là mây xoắn tròn, khung 2 và 3 gần với sóng/mây kép; giữ một kiểu duy nhất khi chốt.
-- Khung 3 (tuyệt chiêu) sát mép trên ảnh gốc nên cần chừa lề khi cắt lớp.
 
 ## Nghiệm thu
 

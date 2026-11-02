@@ -1555,6 +1555,39 @@ test("Đinh Ngọc có bốn tranh, vạn tượng hệ Kim, kiếm chém theo n
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
+test("Vũ Phong có bốn tranh, lốc gió hệ Phong, trượng theo nắm tay, khăn bay và texture khớp tọa độ", () => {
+  const rig = rigOf("vuPhong");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "staff");
+  assert.equal(rig.strikeFx, "galeRout");
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
+  assert.equal(rig.down?.name, "pose-down");
+  assert.deepEqual(rig.cloth.map((c) => c.name), ["scarf"]);
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  contains(rig.blade[0], rig.parts.sword);
+  contains(rig.blade[1], rig.parts.sword);
+  const boxes = { ...rig.parts, scarf: rig.cloth[0]!.box };
+  for (const [name, box] of Object.entries(boxes)) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+  for (const art of [...Object.values(rig.poses!), rig.down!]) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, art.name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.ok(data[20]! & 0x10, `${art.name} cần alpha thật`);
+  }
+  let bytes = statSync("public/art/characters/vu-phong/portrait.webp").size;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+});
+
 test("Bạch Phong Đao có bốn tranh, xuyên giáp hệ Kim, dao găm theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("bachPhongDao");
   assert.ok(rig?.skeleton === "warrior");
