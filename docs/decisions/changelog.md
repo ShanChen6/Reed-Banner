@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Trận Đồ: thêm 5 ảnh bản đồ thật (13/30)**
+- Đỗ Động Giang, Tây Phù Liệt, Tế Giang, Tiên Du, Siêu Loại. Còn 17 bản đồ.
+
 **Âm thanh Trận Đồ: thêm `eraser`, `wild`, `match`, `flamedown`, `fusion`; nối `formation.match`**
 - Cắt từ năm đoạn Gemini; `eraser`, `flamedown`, `fusion` chỉ giữ 2 biến thể vì tiếng thứ ba tắt chậm. `formation.match` giờ phát khi quân đặt khớp cả nghề lẫn hệ với một quân kề (được điểm cộng). Trận Đồ đã đủ hiệu ứng P1/P2 trừ `rank` và `tick`; còn thiếu nhạc nền.
 
