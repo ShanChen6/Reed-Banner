@@ -97,6 +97,10 @@ describe("âm thanh trận đánh", () => {
     }
   });
 
+  it("sinh tồn: đợt mới vào sân có tiếng riêng", () => {
+    assert.deepEqual(soundsForEvents(battle(1), [{ type: "wave", wave: 2 }]).start.map((c) => c.id), ["survival.wave"]);
+  });
+
   it("danh sách tải sẵn chỉ gồm cue hợp lệ", () => {
     for (const c of BATTLE_PRELOAD) assert.ok(known.has(c));
   });

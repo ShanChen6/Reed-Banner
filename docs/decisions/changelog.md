@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Âm thanh: nhạc theo phân cảnh (prompt A4)**
+- `SceneAudio` áp nhạc và âm nền theo phân cảnh (bản đồ chiến dịch kèm âm nền, Tháp, Đấu trường, Sinh tồn); thoại và kết cục đổi nhạc rồi trả lại; trận đánh chọn nhạc theo loại (sinh tồn, Thiên Mệnh, Đấu trường, trùm, thường); cue `atlas.select`, `dialogue.next`, `survival.wave`, `survival.warn`, `daily.complete`, `arena.rank`. Engine thêm kênh âm nền (ambience). Chưa có tệp âm thanh.
+
 **Âm thanh: nối trận đánh (prompt A3)**
 - Trận thường, luyện tập, chiến dịch và sinh tồn (đều qua `DemoGame`): tiếng ghép ô khớp từng khung hoạt ảnh (đổi ô, 3/4/5 ô, combo tầng 1–4, đổi sai), cue theo nghề/hệ/tuyệt chiêu, sát thương, khiên, hồi, hiệu ứng (cháy, đóng băng, độc, tăng, giảm), gục, thắng/thua, ở đúng hai thời điểm của đạo diễn trận; nhạc trận, trùm, sinh tồn. Chưa có tệp âm thanh nên chưa có tiếng.
 
