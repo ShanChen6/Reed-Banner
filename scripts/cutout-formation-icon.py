@@ -5,7 +5,8 @@ Công cụ tạo ảnh hay trả về ảnh RGB có họa tiết ô caro VẼ S�
 và liền với mép ảnh là nền (lan từ mép vào, dừng ở nét viền tối của vật thể), đặt alpha 0 ở đó, bào nhẹ viền để mất quầng
 sáng, cắt sát vật thể, đưa về khung vuông và thu nhỏ.
 
-Dùng:  python3 scripts/cutout-formation-icon.py <ảnh vào> <ảnh ra.webp> [kích thước=256] [ngưỡng sáng=205]
+Dùng:  python3 scripts/cutout-formation-icon.py <ảnh vào> <ảnh ra.webp> [kích thước=256] [ngưỡng sáng=205] [xoay độ=0] [viền sáng px=0]
+Xoay (ngược chiều kim đồng hồ) giúp vật thể dài chiếm đầy khung vuông; viền sáng (màu #E4CC99) giúp vật thể tối đọc được trên nền huy hiệu tối.
 Ví dụ: python3 scripts/cutout-formation-icon.py ~/Downloads/nui.webp public/art/formation/obstacles/nui.webp
 Cần: Pillow, numpy.
 """
@@ -75,6 +76,8 @@ def main() -> None:
     src, dst = sys.argv[1], sys.argv[2]
     size = int(sys.argv[3]) if len(sys.argv) > 3 else 256
     bright = int(sys.argv[4]) if len(sys.argv) > 4 else 205
+    rotate = float(sys.argv[5]) if len(sys.argv) > 5 else 0.0
+    rim = int(sys.argv[6]) if len(sys.argv) > 6 else 0
     im = Image.open(src).convert("RGB")
     rgb = np.asarray(im)
     bg = flood_from_border(background_mask(rgb, bright))
@@ -97,10 +100,21 @@ def main() -> None:
     if not box:
         sys.exit("Không tìm thấy vật thể (có thể ngưỡng sáng quá thấp).")
     out = out.crop(box)
+    if rotate:
+        out = out.rotate(rotate, resample=Image.BICUBIC, expand=True)
+        out = out.crop(out.getchannel("A").point(lambda v: 255 if v > 8 else 0).getbbox())
     side = int(max(out.size) * 1.08)
     canvas = Image.new("RGBA", (side, side), (0, 0, 0, 0))
     canvas.paste(out, ((side - out.width) // 2, (side - out.height) // 2))
     canvas = canvas.resize((size, size), Image.LANCZOS)
+    if rim:
+        from PIL import ImageFilter
+
+        halo = canvas.getchannel("A").filter(ImageFilter.MaxFilter(2 * rim + 1)).filter(ImageFilter.GaussianBlur(0.6))
+        base = Image.new("RGBA", canvas.size, (228, 204, 153, 0))
+        base.putalpha(halo)
+        base.alpha_composite(canvas)
+        canvas = base
     canvas.save(dst, "WEBP", quality=92, method=6)
     print(f"{dst}: {size}x{size}, vật thể {out.size[0]}x{out.size[1]} (từ {im.size[0]}x{im.size[1]})")
 
