@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Trận Đồ: thêm 5 ảnh bản đồ thật (28/30)**
+- Thành đất có hào nước, Chùa cổ trên đồi, Cửa biển, Vùng trung du, Bến thuyền sông. Còn 2 bản đồ: Rừng già, Núi đá vôi.
+
 **Trận Đồ: thêm 5 ảnh bản đồ thật (23/30)**
 - Làng ven sông, Đầm sen, Đồng lúa đồng bằng, Núi Tản Viên, Hoan Châu. Còn 7 bản đồ.
 
