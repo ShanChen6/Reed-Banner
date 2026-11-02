@@ -5,7 +5,7 @@ import { FUSION_ELEMENT_NAME, FUSION_PROFESSION_NAME, FUSION_PROFESSION_TITLE, e
 
 /**
  * Biểu tượng nghề và hệ của một nhân vật trong trận. Nhân vật dung hợp dùng hai biểu tượng riêng (Vạn nghề, Vạn hệ);
- * hệ phòng thủ, quyết định khắc chế, ghi bằng chữ cạnh biểu tượng và trong chú thích.
+ * hệ phòng thủ, quyết định khắc chế, hiện bằng biểu tượng hệ nhỏ ở góc dưới biểu tượng Vạn hệ, chữ cạnh biểu tượng và chú thích.
  */
 export default function FighterKindIcons({
   fighter,
@@ -23,8 +23,10 @@ export default function FighterKindIcons({
         <ProfessionIcon profession={fusion ? "tongHop" : fighter.profession} className={className} />
         <span className="sr-only">{fusion ? FUSION_PROFESSION_NAME : PROFESSION_NAME[fighter.profession]}</span>
       </span>
-      <span title={elementTitle(fighter)} className="shrink-0">
+      <span title={elementTitle(fighter)} className={`relative inline-flex shrink-0 ${fusion ? "mr-1.5" : ""}`}>
         <ElementIcon element={fusion ? "tongHop" : fighter.element} className={className} />
+        {/* Nhân vật dung hợp: biểu tượng hệ phòng thủ nhỏ ở góc dưới biểu tượng Vạn hệ. */}
+        {fusion && <ElementIcon element={fighter.element} className="absolute -bottom-1 -right-1.5 size-3 rounded-full bg-black/60 ring-1 ring-black/70" />}
         <span className="sr-only">{fusion ? `${FUSION_ELEMENT_NAME}, phòng thủ ${ELEMENT_NAME[fighter.element]}` : ELEMENT_NAME[fighter.element]}</span>
       </span>
       {showName && <span className={fusion ? "truncate" : "hidden lg:inline"}>{elementLabel(fighter)}</span>}
