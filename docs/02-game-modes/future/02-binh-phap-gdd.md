@@ -150,7 +150,7 @@ Engine nhận mọi cỡ nên thêm bậc hay chế độ tự chọn cỡ bàn 
 
 ### 11.1 Nhân vật dung hợp (kiểu Đinh Ngọc)
 
-Shan (01/11/2026): chỉ giữ loại nhân vật mang **đủ 8 nghề và 7 hệ** như [Đinh Ngọc](../../03-characters/dinh-ngoc.md), **tối đa hai nhân vật**: Đinh Ngọc và **Trần Vũ Phong – Vân Du Tử** (đang thiết kế, chưa có tài liệu nhân vật). **Chỉ xuất hiện ở bậc Khó và Đại trận** (`FUSION_ALLOWED_LEVELS`); Hướng dẫn và Thường không bao giờ có; không có nhân vật 2 nghề + 2 hệ (hoặc ít hơn tám/bảy) vì làm ván dễ đi. Hạ tầng đã có trong engine, **danh sách mặc định rỗng** cho tới khi Shan duyệt từng nhân vật (`src/core/binh-phap/specials.ts`, `FUSION_CHARACTERS`).
+Shan (01/11/2026): chỉ giữ loại nhân vật mang **đủ 8 nghề và 7 hệ** như [Đinh Ngọc](../../03-characters/dinh-ngoc.md), **tối đa hai nhân vật**: Đinh Ngọc và **Trần Vũ Phong – Vân Du Tử** (nguồn nhân vật: [Vũ Phong](../../03-characters/vu-phong.md), DRAFT, chưa duyệt). **Chỉ xuất hiện ở bậc Khó và Đại trận** (`FUSION_ALLOWED_LEVELS`); Hướng dẫn và Thường không bao giờ có; không có nhân vật 2 nghề + 2 hệ (hoặc ít hơn tám/bảy) vì làm ván dễ đi. Hạ tầng đã có trong engine, **danh sách mặc định rỗng** cho tới khi Shan duyệt từng nhân vật (`src/core/binh-phap/specials.ts`, `FUSION_CHARACTERS`).
 
 - **Quân `fusion`** khớp mọi quân kề. Luật vẫn chỉ dựa trên nghề và hệ.
 - **Khác Quân Lệnh:** quân `fusion` vẫn **phải đặt sát một quân** (trừ khi bàn trống) và quân đặt cạnh nó vẫn phải khớp các quân kề khác. Không đặt được ở ô trống xa mọi quân, không đặt đè lên quân khác hay chướng ngại. Hai quân `fusion` đặt cạnh nhau được.

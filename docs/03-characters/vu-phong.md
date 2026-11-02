@@ -1,19 +1,21 @@
 # Vũ Phong — Vân Du Tử
 
 > Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — có hình tượng và bộ kỹ năng đề xuất (6 chủ động + 4 nội tại, chỉ số nền). Mọi số liệu là điểm xuất phát chưa mô phỏng; chưa có ID runtime, code, ảnh hoặc asset; chưa Shan duyệt.
+> Trạng thái: **DRAFT** — có hình tượng và bộ kỹ năng đề xuất: nhân vật đặc biệt dung hợp tám nghề/bảy hệ qua 6 chủ động + 4 nội tại, cùng khuôn với Đinh Ngọc nhưng đảo vai. Mọi số liệu là điểm xuất phát chưa mô phỏng; chưa có ID runtime, code, ảnh hoặc asset; chưa Shan duyệt.
 
 ## Hồ sơ
 
 | Mục | Đề xuất |
 |---|---|
 | Tên | Vũ Phong |
+| Tên đầy đủ | GDD [Binh Pháp](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc) gọi là **Trần Vũ Phong**; tài liệu này viết gọn Vũ Phong.  Chưa chốt họ Trần có vào roster hay không |
 | Danh xưng | Vân Du Tử — "kẻ rong chơi trên mây" |
 | Phân loại | Nhân vật hư cấu, nam khoảng 25–30 tuổi (chọn 28 để dựng hình); không phải nhân vật lịch sử |
 | Bối cảnh | Low fantasy lấy cảm hứng thế kỷ X thời Đinh – Cờ Lau, như [art bible](../06-art/art-bible.md) |
 | Mã thiết kế | Chưa cấp. Không dùng chuỗi RB-001… và không tự chiếm `RB-SP-002`; chốt ID khi có task triển khai |
-| Loại | Nhân vật đặc biệt kiểu [tổng hợp](nhan-vat-tong-hop.md): hệ chính **Phong**, hệ phụ **Thủy**; nghề chính **Quân sư**, nghề phụ **Tướng sĩ** |
-| Vai trò | Điều khiển bàn cờ và nhịp năng lượng, hỗ trợ nhẹ; sát thương cá nhân thấp |
+| Loại | Nhân vật hư cấu đặc biệt kiểu `specialHybrid` như [Đinh Ngọc](dinh-ngoc.md): có nền tảng cả **tám nghề** và **bảy hệ**; không phải nghề thứ chín |
+| Hệ phòng thủ | **Phong** cố định (Đinh Ngọc là Kim) |
+| Vai trò | Điều khiển bàn cờ, hỗ trợ đội và đáp trả: chủ động nghiêng hỗ trợ/điều khiển, nội tại nghiêng tấn công |
 | Kỹ năng | Loadout cố định 6 chủ động + 4 nội tại; xem [Kỹ năng và chiêu thức](#kỹ-năng-và-chiêu-thức) |
 
 ## Hình tượng và tính cách
@@ -81,24 +83,50 @@ Một **trượng trúc đi đường** `VP-W01`: thân trúc già dài khoảng
 
 ## Kỹ năng và chiêu thức
 
-Tên *Vũ Phong* gồm mưa (Thủy) và gió (Phong), nên bộ chiêu lấy **Phong làm chính** (xoay bàn cờ, xua tan, tiếp năng lượng) và **Thủy làm phụ** (đóng băng, thanh tẩy, Khiên nhỏ). Trượng trúc là nguồn nghề phụ Tướng sĩ cho chiêu cận chiến ô1. Đây là điểm xuất phát để mô phỏng, không phải số đã cân bằng.
+Vũ Phong dung hợp đủ **tám nghề** và **bảy hệ** qua **6 chủ động + 4 nội tại**, cùng khuôn cố định với [Đinh Ngọc](dinh-ngoc.md#tám-nghề-và-bảy-hệ-được-thể-hiện-thế-nào). Không mang tám vũ khí, không bảy kháng hệ, không cộng đủ tám nội tại nghề mặc định. Mọi số liệu là điểm xuất phát chưa mô phỏng.
+
+### Khác Đinh Ngọc thế nào
+
+| | Đinh Ngọc | Vũ Phong |
+|---|---|---|
+| Hệ phòng thủ, đòn thường | Kim | Phong |
+| Nghề ở **chủ động** | Tướng sĩ, Xạ thủ, Sát thủ, Pháp sư | Quân sư, Mưu sĩ, Y sư, Binh lính |
+| Nghề ở **nội tại** | Binh lính, Y sư, Mưu sĩ, Quân sư | Tướng sĩ, Xạ thủ, Sát thủ, Pháp sư |
+| Chỉ số cấp 1 | 500 / 50 / 10 | 480 / 52 / 9 |
+| Lối chơi | Tự đánh, tự bảo vệ, tận dụng sơ hở | Mở nhịp cho đội, xoay bàn cờ, đáp trả bằng phản ứng |
+| Cần đồng đội | P4 mới cần | P2 cần; các nội tại khác hoạt động khi solo |
 
 ### Phạm vi và quy tắc nền
 
 | Mục | Đặc tả đề xuất |
 |---|---|
-| Hệ phòng thủ | **Phong** cố định (bị Mộc khắc, khắc Thổ). Hệ phụ Thủy chỉ đổi hệ damage của hai chiêu Thủy, không đổi phòng thủ |
-| Đòn đánh thường | Hệ Phong, đánh bằng trượng theo luật chung; không thêm bonus kiếm 30% của Tướng sĩ |
-| Nội tại nghề mặc định | Không tự nhận nội tại Quân sư hay Tướng sĩ; chỉ dùng bốn nội tại ghi dưới (cùng ngoại lệ loadout như [Đinh Ngọc](dinh-ngoc.md#bốn-nội-tại-dung-hợp)) |
+| Hệ phòng thủ | **Phong** cố định (bị Mộc khắc, khắc Thổ). Thi triển chiêu hệ khác không đổi hệ phòng thủ |
+| Đòn đánh thường | Hệ Phong, đánh bằng trượng theo luật chung; không bonus kiếm 30% của Tướng sĩ |
+| Nội tại nghề mặc định | Không tự nhận; chỉ dùng bốn nội tại bên dưới (ngoại lệ loadout như [Đinh Ngọc](dinh-ngoc.md#bốn-nội-tại-dung-hợp)) |
 | Loadout | Cố định 6+4 ở bản đầu; không menu đổi chiêu, không đổi nghề/hệ giữa trận |
 | Đội hình | Đồng hành tùy chọn, chiếm một slot; không thay nhân vật chính, không thêm slot đội |
-| Hiệu ứng | Chỉ dùng [danh sách hiệu ứng hiện hành](../01-gameplay/hieu-ung.md): không tàng hình, không né, không hạ gục tức thì |
+| Hiệu ứng | Chỉ dùng [danh sách hiệu ứng](../01-gameplay/hieu-ung.md): không tàng hình, không né, không hạ gục tức thì |
 
 Mọi cost là năng lượng, không phải Nộ. Một người dùng tối đa một chủ động/lượt theo luật chung.
 
+### Bảng phủ tám nghề và bảy hệ
+
+| Nghề | Kênh | Hệ | Dấu ấn gameplay |
+|---|---|---|---|
+| Quân sư | Chủ động ô1, ô4, ô6 | Phong | Xoay bàn cờ, Xua tan, tăng ATK đội |
+| Mưu sĩ | Chủ động ô2 | Thủy | Đóng băng làm gián đoạn nhịp địch |
+| Y sư | Chủ động ô3 | Mộc | Thanh tẩy và hồi HP cho đồng đội |
+| Binh lính | Chủ động ô5 | Thổ | Khiên và DEF cho cả đội |
+| Tướng sĩ | Nội tại P1 | Kim | Đáp trả kẻ làm mất HP |
+| Xạ thủ | Nội tại P2 | Phong | Phóng theo khi đồng đội làm địch yếu |
+| Sát thủ | Nội tại P3 | Hỏa | Thiêu đốt địch sắp gục |
+| Pháp sư | Nội tại P4 | Lôi | Câm lặng khi Xua tan hữu hiệu |
+
+Bảy hệ đủ trong cả bộ: Phong (ô1/4/6, P2), Thủy (ô2), Mộc (ô3), Thổ (ô5), Kim (P1), Hỏa (P3), Lôi (P4). Bảy hệ chỉ là nhãn và VFX tách lớp; không bảy buff đồng thời, không đổi màu trang phục.
+
 ### Chỉ số nền và tiến trình
 
-Mỏng hơn mặt bằng để đổi lấy bộ chiêu đa dụng: HP và DEF thấp hơn Đinh Ngọc (500/50/10), ATK nhỉnh hơn một chút. Tăng trưởng cùng hệ hiện hành `round(base×(1+0.03×(L−1)))`, L1–30, trước gear và hệ số HP chế độ.
+Mỏng hơn mặt bằng để đổi lấy bộ chiêu đa dụng. Tăng trưởng cùng hệ hiện hành `round(base×(1+0.03×(L−1)))`, L1–30, trước gear và hệ số HP chế độ.
 
 | Cấp nhân vật | HP | ATK | DEF |
 |---|---:|---:|---:|
@@ -107,55 +135,57 @@ Mỏng hơn mặt bằng để đổi lấy bộ chiêu đa dụng: HP và DEF t
 | 20 | 754 | 82 | 14 |
 | 30 | 898 | 97 | 17 |
 
-Mốc mở chủ động theo ô: ô1/ô2 ở cấp 1, ô3 ở cấp 5, ô4 ở cấp 10, ô5 ở cấp 15, ô6 ở cấp 20. Bốn nội tại có sẵn khi mở khóa. Cấp chiêu 1–5 tách cấp nhân vật: damage/Khiên/buff-debuff tăng 10% mỗi cấp trên 1, cost cấp 5 `floor(cost×0.9/5)×5`; thời lượng, xác suất, số nấc whirl, năng lượng và số ô giữ nguyên.
+Mốc mở chủ động: ô1/ô2 cấp 1, ô3 cấp 5, ô4 cấp 10, ô5 cấp 15, ô6 cấp 20. Bốn nội tại có sẵn khi mở khóa. Cấp chiêu 1–5 tách cấp nhân vật: damage/hồi/Khiên/buff-debuff tăng 10% mỗi cấp trên 1, cost cấp 5 `floor(cost×0.9/5)×5`; thời lượng, xác suất, số nấc whirl, năng lượng và số ô giữ nguyên. Nội tại không tăng theo cấp chiêu.
 
 ### Sáu kỹ năng chủ động
 
 | Ô / mở cấp | Tên / ID | Nghề / hệ đòn | Target | NL cấp 1 / 5 | Damage cấp 1 | Hiệu ứng | Cấp 5 |
 |---|---|---|---|---|---|---|---|
-| 1 / 1 | Trượng Phong Tảo Địa / `vp_truongPhongTaoDia` | Tướng sĩ / Phong | enemy | 35 / 30 | 1.4× ATK | Một hit; sau damage xoay bàn cờ **1 nấc** quanh tâm do người chơi chọn, một lần/action | 1.96× ATK; vẫn 1 nấc |
-| 2 / 1 | Vân Liêm Tế Vũ / `vp_vanLiemTeVu` | Quân sư / Thủy | enemy | 35 / 30 | 1.35× ATK | Một hit; 30% Đóng băng 1 lượt (theo luật Đóng băng chung: tối đa 2 lượt, sau tan miễn 1 lượt) | 1.89× ATK; vẫn 30%, 1 lượt |
-| 3 / 5 | Thuận Phong Truyền Tín / `vp_thuanPhongTruyenTin` | Quân sư / Phong | ally (gồm self; solo là self) | 40 / 35 | — | Thanh tẩy mục tiêu, rồi +12 năng lượng cho mục tiêu (kẹp 0–100) | Không đổi hiệu ứng; cost 35 |
-| 4 / 10 | Vân Du Thiên Lý / `vp_vanDuThienLy` | Quân sư / Phong | allEnemies | 90 / 80 | 0.9× ATK | Một hit mỗi địch còn sống → Xua tan buff của từng địch → xoay bàn cờ **tối đa 2 nấc, tự động**, một lần/action. Đây là tuyệt chiêu ô4 | 1.26× ATK; vẫn 2 nấc |
-| 5 / 15 | Mưa Rửa Dặm Dài / `vp_muaRuaDamDai` | Quân sư / Thủy | team | 55 / 45 | — | Thanh tẩy cả đội, rồi Khiên **6% HP tối đa người nhận** trong 2 lượt thường phe mình | Khiên 8.4%; vẫn 2 lượt |
+| 1 / 1 | Phong Khởi Vân Động / `vp_phongKhoiVanDong` | Quân sư / Phong | enemy | 35 / 30 | 1.4× ATK | Một hit; sau damage xoay bàn cờ **1 nấc** quanh tâm do người chơi chọn, một lần/action | 1.96× ATK; vẫn 1 nấc |
+| 2 / 1 | Mưa Giăng Ý Loạn / `vp_muaGiangYLoan` | Mưu sĩ / Thủy | enemy | 35 / 30 | 1.35× ATK | Một hit; 30% Đóng băng 1 lượt (luật Đóng băng chung) | 1.89× ATK; vẫn 30%, 1 lượt |
+| 3 / 5 | Lục Diệp Dẫn Lộ / `vp_lucDiepDanLo` | Y sư / Mộc | ally (gồm self; solo là self) | 45 / 40 | — | Thanh tẩy mục tiêu, rồi hồi **8% HP tối đa người nhận**, nhân F | Hồi 11.2% |
+| 4 / 10 | Vân Du Thiên Lý / `vp_vanDuThienLy` | Quân sư / Phong | allEnemies | 90 / 80 | 0.9× ATK | Một hit mỗi địch còn sống → Xua tan buff từng địch → xoay bàn cờ **tối đa 2 nấc, tự động**, một lần/action. Tuyệt chiêu ô4 | 1.26× ATK; vẫn 2 nấc |
+| 5 / 15 | Địa Mạch Hộ Đội / `vp_diaMachHoDoi` | Binh lính / Thổ | team | 55 / 45 | — | Khiên **6% HP tối đa người nhận** và DEF +8% trong 2 lượt thường phe mình | Khiên 8.4%; DEF +11.2%; vẫn 2 lượt |
 | 6 / 20 | Cuồng Phong Đổi Cục / `vp_cuongPhongDoiCuc` | Quân sư / Phong | self | 50 / 45 | — | Xoay bàn cờ **tối đa 2 nấc, người chơi chọn**, rồi ATK cả đội +10% trong 2 lượt thường phe mình | ATK +14%; vẫn 2 nấc, 2 lượt |
 
 ### Thứ tự và nguyên tố sát thương
 
-- Mỗi hit tính **hệ gắn với chiêu**: ô1/ô4 Phong, ô2 Thủy. Hệ phụ Thủy chỉ xuất hiện ở ô2 và ô5; nghĩa là mục tiêu Thổ chịu ×0.75 với ô2 (Thủy bị Thổ khắc), mục tiêu Hỏa chịu ×1.25. Đòn đánh thường và phòng thủ vẫn Phong. Cần contract per-skill `damageElement` như [Đinh Ngọc](dinh-ngoc.md#thứ-tự-và-nguyên-tố-sát-thương) và [nhân vật tổng hợp](nhan-vat-tong-hop.md#tác-động-lên-code-chưa-làm); chưa thể chỉ thêm SkillDef rồi báo chạy đúng.
-- **Ô1:** damage trước, xoay sau. Nếu mục tiêu chết hoặc bàn cờ không thể xoay hợp lệ thì bỏ bước xoay, không hoàn năng lượng. Xoay 1 nấc là lựa chọn của người chơi trước khi chốt action; AI chọn nấc tốt nhất theo heuristic hiện có.
-- **Ô2:** tung xác suất Đóng băng sau khi hit trúng mục tiêu còn sống (kể cả hit bị Khiên hấp thụ); không áp lên mục tiêu đang miễn nhiễm Đóng băng và không có hiệu lực nếu mục tiêu đã chết.
-- **Ô3:** chọn mục tiêu ally; nếu không có bất lợi để gỡ thì vẫn cấp năng lượng (chiêu không phí). Năng lượng không phải nguồn để mở lại P1 hay P3.
-- **Ô4:** một hit mỗi địch, Xua tan từng địch sau hit; Xua tan không có tác dụng khi địch không có buff thì bỏ qua. Xoay bàn cờ một lần cho cả action, không mỗi địch.
-- **Ô5:** Khiên mới nhân F người nhận một lần. Khiên cùng loại làm mới theo luật chung, không cộng dồn với Khiên P4 hay Khiên từ nguồn khác.
-- **Ô6:** whirl chỉ xoay bàn cờ, không thêm lượt vì tên chiêu; cascade và extra turn theo luật bàn cờ. ATK +10% làm mới theo luật cùng loại, không cộng với Công+ khác.
+- Mỗi hit tính **hệ gắn với chiêu**: ô1/ô4 Phong, ô2 Thủy, P1 Kim, P2 Phong. Từng hit chỉ một quan hệ nguyên tố. Ô3/5/6 không gây damage. Cần contract per-skill `damageElement` như [Đinh Ngọc](dinh-ngoc.md#thứ-tự-và-nguyên-tố-sát-thương); chưa thể chỉ thêm SkillDef rồi báo chạy đúng. Thiêu đốt P3 là DoT, không tính khắc hệ riêng.
+- **Ô1:** damage trước, xoay sau. Mục tiêu chết hoặc không có nước xoay hợp lệ thì bỏ bước xoay, không hoàn năng lượng.
+- **Ô2:** tung xác suất Đóng băng sau khi hit trúng mục tiêu còn sống (kể cả bị Khiên hấp thụ); không áp lên mục tiêu đang miễn nhiễm Đóng băng.
+- **Ô3:** thanh tẩy trước, hồi sau. Không có bất lợi để gỡ vẫn hồi. HP đầy thì chỉ thanh tẩy, không tiêu quota nào. Hồi nhân F người nhận một lần.
+- **Ô4:** một hit mỗi địch, Xua tan từng địch sau hit (địch không buff thì bỏ qua); xoay bàn cờ một lần cho cả action, không mỗi địch.
+- **Ô5:** Khiên và DEF+ là hai effect cùng action. Khiên cùng loại làm mới, không cộng với Khiên P-khác; nhân F người nhận một lần.
+- **Ô6:** whirl chỉ xoay bàn cờ, không thêm lượt; cascade/extra turn theo luật bàn cờ. ATK+ làm mới theo luật cùng loại.
 - Xoay bàn cờ dùng cơ chế whirl hiện có của hệ Phong ([nguyên tố](../01-gameplay/nguyen-to.md)); không thêm cơ chế xoay mới.
+- Không có tài nguyên riêng, thanh nội lực thứ hai hay điểm đổi hệ.
 
-### Bốn nội tại
+### Bốn nội tại dung hợp
 
-Bốn phản ứng cố định (P1 và P4 theo Phong, P2 theo Thủy, P3 kết hợp Phong–Thủy); không nhét thành bốn chase ID mặc định rồi cộng combo.
+Ngoại lệ loadout có chủ đích như Đinh Ngọc: bốn phản ứng cố định, không nhét thành bốn chase ID mặc định rồi cộng combo, không kế thừa thêm bộ P1/P2 nghề và hai chase hệ ngoài bốn mục này.
 
-| Ô | Nội tại / ID | Hệ | Điều kiện | Tác dụng | Giới hạn |
+| Ô | Nội tại / ID | Nghề + hệ | Điều kiện | Tác dụng | Giới hạn |
 |---|---|---|---|---|---|
-| P1 | Gió Dẫn Đường / `vp_gioDanDuong` | Phong | Hành động của chính Vũ Phong (ô1/ô4/ô6) làm bàn cờ **thật sự thay đổi** do whirl | +4 năng lượng cho Vũ Phong | Một lần/action gốc, tối đa một lần/lượt thường; không tích khi whirl bị bỏ hoặc không đổi ô |
-| P2 | Mưa Rửa Bụi Trần / `vp_muaRuaBuiTran` | Thủy | Ô3 hoặc ô5 của chính Vũ Phong **gỡ được ít nhất một bất lợi** khỏi người nhận | Người đó nhận Hồi phục 3% HP tối đa/lượt trong 1 lượt thường, nhân F người nhận | Một người nhận tối đa một lần/action; không trigger khi thanh tẩy không có gì để gỡ; không kích bởi regen/thanh tẩy của người khác |
-| P3 | Thủy Phong Tương Ứng / `vp_thuyPhongTuongUng` | Phong + Thủy | Một địch bị Đóng băng hữu hiệu (bởi bất kỳ ai, kể cả chính Vũ Phong) | Truy kích 0.4× ATK, hệ Phong, vào đúng địch đó | Tối đa một lần/lượt thường của phe mình; không trigger với địch đang miễn nhiễm Đóng băng; không chase tiếp |
-| P4 | Nằm Mây Tránh Bão / `vp_namMayTranhBao` | Phong (Tướng sĩ phụ) | Một lần/trận: sau đòn của địch, HP Vũ Phong **vượt xuống** ≤30% HP tối đa và còn sống | Thanh tẩy self, rồi Khiên self 10% HP tối đa trong 2 lượt thường phe mình, nhân F | Một lần/trận; không kích lại nếu hồi HP rồi tụt lần nữa; không hồi sinh |
+| P1 | Trượng Thiết Hồi Đáp / `vp_truongThietHoiDap` | Tướng sĩ + Kim | Vũ Phong mất HP thật vì chủ động của một địch | Truy kích 0.35× ATK, hệ Kim, vào đúng địch đó | Tối đa một lần/lượt thường địch; không kích vì DoT, phản đòn hay tự hủy; không kích nếu Khiên hấp thụ hết đòn; không vào địch đã chết |
+| P2 | Phi Diệp Theo Gió / `vp_phiDiepTheoGio` | Xạ thủ + Phong | Đồng đội **khác** gây mất HP thật khiến địch còn sống có HP ≤50% HP tối đa | Truy kích 0.3× ATK, hệ Phong, vào đúng địch đó (VFX lá trúc bay theo gió, không vũ khí thứ hai) | Tối đa một lần/lượt thường phe mình; không từ chính mình, chase hay DoT; solo không có tín hiệu và không có proc bù |
+| P3 | Hỏa Ẩn Vân Sau / `vp_hoaAnVanSau` | Sát thủ + Hỏa | Chủ động của chính Vũ Phong gây mất HP thật và để địch còn sống ở HP ≤30% HP tối đa | Thiêu đốt 2 lượt, mỗi lượt `round(0.3×ATK)` (snapshot ATK lúc áp) | Một lần/action gốc; AoE chọn đúng một địch đủ điều kiện có tỷ lệ HP thấp nhất, hòa vị trí trước; không giết thêm, không kích bởi chase |
+| P4 | Lôi Vân Trấn Pháp / `vp_loiVanTranPhap` | Pháp sư + Lôi | Xua tan hữu hiệu của phe ta (Vũ Phong hoặc đồng đội) xóa ít nhất một buff khỏi địch | Câm lặng 1 lượt lên đúng địch bị xóa nhiều buff nhất, hòa vị trí trước | Một lần/action gốc, tối đa một lần/lượt thường phe mình; không kích nếu Xua tan không xóa gì |
 
 #### Ranh giới chống lặp
 
-1. P1/P2/P3/P4 không tự mở lại nhau; guard chung của chuỗi truy kích (tối đa 12 phản ứng, độ sâu 4) vẫn áp cho tương tác với đội.
-2. P3 là nội tại phản ứng duy nhất gây damage; sát thương dùng ATK/DEF, lương và quan hệ hệ hiện hành, không tiêu hay nhân cơ hội chuẩn bị đang giữ.
-3. P4 cần biết HP trước/sau đòn; nếu cùng đòn vừa đẩy HP xuống ≤30% vừa có thể hạ gục thì kết quả hạ gục thắng, P4 không cứu.
-4. Khi Vũ Phong chết: P1/P2/P4 dừng. P3 chỉ chạy khi còn sống. Bị Đóng băng hoặc Câm lặng chặn P1 và P3 theo hợp đồng hành động hiện hành; P2 là hồi theo tick nên vẫn hiệu lực khi Đóng băng nếu Vũ Phong đã thi triển trước đó.
-5. Quota và provenance của P4 lưu trong snapshot; reload tab hoặc đổi focus UI không reset. Mỗi trận mới (và mỗi beginWave của Survival) reset.
+1. **P1:** bộ đếm reset ở đầu lượt thường của phe địch, không reset theo hit hay extra turn. Cần biết HP trước/sau đòn. Nếu đòn đó hạ gục Vũ Phong thì không đáp trả.
+2. **P2:** lấy tín hiệu từ action đồng đội gốc. Nếu địch đã dưới ngưỡng 50% từ trước nhưng hit này vẫn gây mất HP thật, vẫn hợp lệ; nếu hit bị Khiên chặn hoàn toàn thì không.
+3. **P3:** Thiêu đốt cùng loại làm mới và lấy giá trị mạnh hơn, không cộng dồn. Thiêu đốt chạy theo luật hiện hành: đầu lượt phe bị ảnh hưởng, không chạy ở extra turn.
+4. **P4:** không phát sinh từ Xua tan của địch lên đội ta. Câm lặng theo luật chung: không dùng chủ động, vẫn đổi ô.
+5. Cả bốn nội tại không tự mở lại nhau; guard chung của chuỗi truy kích (tối đa 12 phản ứng, độ sâu 4) vẫn áp cho tương tác với đội. Nhân vật chết, Đóng băng hoặc Câm lặng thì P1–P4 dừng theo hợp đồng hành động hiện hành.
+6. Không có quota theo trận; snapshot lưu bộ đếm theo lượt của P1–P4 để reload không reset. Mỗi trận mới (và beginWave Survival) reset.
 
 ### Cách chơi và điểm yếu
 
-- **Vai trò:** mở nhịp cho đội. Mở bằng ô2 làm đối thủ đứng yên, ô3 truyền năng lượng cho người cần chiêu lớn, ô6 buff ATK rồi xoay bàn cờ lấy combo.
-- **Ghép đội tốt:** nhân vật có chiêu năng lượng cao; đội đóng băng/khống chế để P3 liên tục có tín hiệu; người cần được gỡ bất lợi.
-- **Đối thủ khó:** Mộc (×1.25 lên Vũ Phong), đội ít buff nên ô4 mất Xua tan, đội đủ giáp khiến sát thương cá nhân thấp không đủ.
-- **Điểm yếu:** HP/DEF thấp; không hồi HP trực tiếp; không xuyên Khiên hoặc DEF; ATK nền thấp nên đứng một mình rất yếu; Đóng băng 30% có thể thất bại; không né, không tàng hình.
+- **Mở nhịp:** ô2 làm địch đứng yên một lượt; ô1 xoay bàn cờ chuẩn bị combo cho đội. Dùng ô4 khi địch đang có buff để Xua tan và kích P4 Câm lặng. Ô6 trước lượt đội dồn sát thương.
+- **Đội tốt:** đội có sát thương cao nhưng thiếu hỗ trợ (để P2 liên tục có tín hiệu), người cần gỡ bất lợi và hồi, đội có nhiều combo bàn cờ.
+- **Đối thủ khó:** Mộc (×1.25 lên Vũ Phong), đội ít buff làm ô4/P4 mất tác dụng, đội đủ giáp khiến sát thương cá nhân thấp không đủ.
+- **Điểm yếu:** HP/DEF thấp; ATK nền thấp; chiêu hỗ trợ đắt (ô4 90 năng lượng, ô5 55); không xuyên Khiên hoặc DEF; không né, không tàng hình. Đa dụng không đồng nghĩa giỏi hơn chuyên gia từng việc.
 
 ### Kiểm tra số học
 
@@ -168,20 +198,22 @@ Ví dụ trung tính, không gear, Sĩ khí hoặc khắc hệ: ATK người đ�
 | Ô2 cấp 1 | round(135×100/120) = 113 HP; Đóng băng 30% |
 | Ô4 cấp 1, mỗi địch | round(90×100/120) = 75 HP; cost 90 |
 | Ô4 cấp 5, mỗi địch | round(126×100/120) = 105 HP; cost 80 |
-| P3 truy kích | round(40×100/120) = 33 HP |
-| Ô5 cấp 1, đồng minh HP 500, F 100% | Khiên 30; cấp 5 Khiên 42 |
-| P2 Hồi phục, Vũ Phong HP 480, F 100% | 14 HP/lượt; F 20% còn 3 HP |
-| P4 Khiên, HP tối đa 480, F 100% | 48; F 20% còn 10 |
+| P1 đáp trả | round(35×100/120) = 29 HP |
+| P2 phóng theo | round(30×100/120) = 25 HP |
+| P3 Thiêu đốt, ATK 100 | 30 HP/lượt × 2 lượt = 60 HP trước giới hạn HP còn lại |
+| Ô3 cấp 1, đồng minh HPmax 500, F 100% | hồi 40; cấp 5 hồi 56 |
+| Ô3 cấp 1, HPmax 500, F 20% | hồi 8 (không nhân F lần hai) |
+| Ô5 cấp 1, HPmax 500 | Khiên 30; cấp 5 Khiên 42 |
 
 Đây chỉ là kiểm số học, không phải mô phỏng trận.
 
 ### Kế hoạch cân bằng
 
-Trước rollout cần ma trận 1v1/3v3, cấp 1/10/20/30, chiêu 1/3/5, gear 0/đại diện, đối thủ đủ 7 hệ và 8 nghề, F 100%/20%, có/không đồng đội khống chế, có/không buff địch. So với Quân sư, Tướng sĩ, tướng Phong và Thủy thường. Báo tỷ lệ thắng kèm CI95%, thời lượng/censored, nguồn sát thương/hồi/Khiên, số lần P1–P4 kích/tiêu và năng lượng thực cấp. Kiểm riêng whirl không đổi ô, Xua tan khi không có buff, thanh tẩy không có bất lợi, địch miễn nhiễm Đóng băng, Khiên hết hạn, tải snapshot và reset Survival.
+Trước rollout cần ma trận 1v1/3v3, cấp 1/10/20/30, chiêu 1/3/5, gear 0/đại diện, đối thủ đủ 7 hệ và 8 nghề, F 100%/20%, có/không đồng đội gây sát thương, có/không buff địch. So với Đinh Ngọc, Quân sư, Y sư và tướng Phong thường. Báo tỷ lệ thắng kèm CI95%, thời lượng/censored, nguồn sát thương/hồi/Khiên, số lần P1–P4 kích/tiêu và năng lượng thực cấp. Kiểm riêng whirl không đổi ô, Xua tan khi không có buff, địch miễn nhiễm Đóng băng, Khiên hết hạn, Thiêu đốt làm mới, tải snapshot và reset Survival.
 
 ### Tích hợp dự kiến
 
-Không thêm "nghề Phong Du" vào `ALL_PROFESSIONS`. Cần template cho nhân vật tổng hợp/đặc biệt: loadout cố định, per-skill `damageElement`, bốn nội tại hỗn hợp, chặn tự lắp nội tại nghề/hệ mặc định. Dữ liệu tối thiểu: identity `vuPhong`, defenseElement `phong`, hệ phụ `thuy`, nghề chính `quanSu`, phụ `tuongSi`, sáu skill ID và bốn passive ID ở trên, quota P4 trong snapshot. Đó là contract đề xuất, không phải API hiện có; server-authoritative cho damageElement, target, cost và trigger. Cách mở khóa theo hướng chung của [nhân vật tổng hợp](nhan-vat-tong-hop.md#cách-nhận), chưa chốt.
+Không thêm "nghề Phong Du" vào `ALL_PROFESSIONS` và không dùng mô hình chính/phụ của [nhân vật tổng hợp](nhan-vat-tong-hop.md): Vũ Phong dùng khuôn `specialHybrid` cùng Đinh Ngọc (loadout cố định, per-skill `damageElement`, bốn nội tại hỗn hợp, chặn tự lắp nội tại nghề/hệ mặc định). Dữ liệu tối thiểu: identity `vuPhong`, template `specialHybrid`, defenseElement `phong`, sáu skill ID và bốn passive ID ở trên, bộ đếm P1–P4 trong snapshot. Đó là contract đề xuất, không phải API hiện có; server-authoritative cho damageElement, target, cost và trigger. Cách mở khóa theo hướng chung của [nhân vật tổng hợp](nhan-vat-tong-hop.md#cách-nhận), chưa chốt.
 
 ## Prompt Master (khung Idle)
 

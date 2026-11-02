@@ -35,8 +35,7 @@ Hệ phụ chỉ ảnh hưởng damage của **chiêu mang hệ đó**, theo cù
 | Nhân vật | Chính | Phụ | Ghi chú |
 |---|---|---|---|
 | Sát thủ Kim–Mộc (tên chưa đặt) | Sát thủ, Kim | Tướng sĩ, Mộc | Chịu khắc theo Kim. Chiêu Mộc dùng damage Mộc. Hai chiêu Tướng sĩ thêm khả năng cận chiến. |
-| [Vũ Phong](vu-phong.md) | Quân sư, Phong | Tướng sĩ, Thủy | Chịu khắc theo Phong. Hai chiêu Thủy (ô2, ô5) dùng damage/hiệu ứng Thủy. Loadout cố định 6+4 như Đinh Ngọc, không tự nhận nội tại nghề chính |
-| [Đinh Ngọc](dinh-ngoc.md) | Kim (phòng thủ) | Bảy hệ qua chiêu | Dùng khuôn `specialHybrid` riêng; không theo mô hình chính/phụ vì nghề lấy từ cả tám nghề |
+| [Đinh Ngọc](dinh-ngoc.md), [Vũ Phong](vu-phong.md) | Kim (Đinh Ngọc), Phong (Vũ Phong) — phòng thủ | Bảy hệ qua chiêu | Dùng khuôn `specialHybrid` riêng; không theo mô hình chính/phụ vì nghề lấy từ cả tám nghề |
 
 Shan xác nhận "kiếm sĩ" là cách gọi nhầm của Tướng sĩ, nên ví dụ trên đúng. Từ 31/10/2026 Xạ thủ và Sát thủ đã vào trận ([thiết kế](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md)), nên nhân vật tổng hợp dùng hai nghề này không còn bị chặn bởi runtime.
 
