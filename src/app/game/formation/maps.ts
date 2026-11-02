@@ -33,7 +33,7 @@ const PLACEHOLDERS = [
 ] as const;
 
 /** Bản đồ đã có ảnh thật (`public/art/formation/maps/<id>.webp`); thêm id vào đây khi thả ảnh mới. */
-const REAL_MAPS: ReadonlySet<string> = new Set(["hoaLu", "tranLam", "phamBachHo", "ngoXuongXi", "ngoNhatKhanh"]);
+const REAL_MAPS: ReadonlySet<string> = new Set(["hoaLu", "tranLam", "phamBachHo", "ngoXuongXi", "ngoNhatKhanh", "kieuThuan", "kieuCongHan", "nguyenKhoan"]);
 
 const srcFor = (id: string, n: number) => (REAL_MAPS.has(id) ? `/art/formation/maps/${id}.webp` : PLACEHOLDERS[n % PLACEHOLDERS.length]!);
 
