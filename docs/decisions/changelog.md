@@ -61,6 +61,10 @@
 - Nhân vật đặc biệt mang hai nghề/hai hệ: phòng thủ và đòn đánh thường theo hệ chính, giá cao hơn nhiều, nhận bằng cách đặc biệt, dùng icon tổng hợp nghề/hệ.
 - Tạo nguồn [nhan-vat-tong-hop.md](../03-characters/nhan-vat-tong-hop.md) (DRAFT) với đề xuất chính/phụ, ví dụ và tác động code; chưa sửa code, roster hay save. Icon `tongHop` cho nghề/hệ và hiển thị tổng hợp của Đinh Ngọc ở trang xem thử đã có.
 
+**Vũ Phong — Vân Du Tử: dựng hình tượng nhân vật**
+- Người dùng yêu cầu nhân vật Vũ Phong, danh xưng Vân Du Tử, nam khoảng 25–30 tuổi, có hình xăm. Tạo nguồn [Vũ Phong](../03-characters/vu-phong.md): tính cách lãng khách, Character DNA (chọn 28 tuổi), hệ hình xăm (mây xoắn tay phải, gió tay trái, giao long vai phải), trang phục, trượng trúc đề xuất và prompt Master.
+- Chỉ là hình tượng DRAFT: chưa có nghề/hệ, chỉ số, ID runtime, ảnh hoặc code. Vũ khí và danh xưng là đề xuất cần duyệt.
+
 ## 30/10/2026
 
 **Lôi Ảnh — đồng bộ Bạo Vũ Lê Hoa Châm dạng tròn (Shan chốt hình học)**
