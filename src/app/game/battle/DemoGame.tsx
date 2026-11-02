@@ -103,7 +103,9 @@ import {
   SPECIAL_NAME,
   TIER_CLASS,
 } from "./labels";
+import { useAudio } from "../audio/AudioProvider";
 import { bounceFrames, eventFrames, type Frame } from "./animation";
+import { BATTLE_PRELOAD, frameCue, soundsForEvents, type CuePlay } from "./sounds";
 import { sidesAfterEvents } from "./heldSides";
 import { COMBAT_PACING } from "./pacing";
 import {
@@ -814,6 +816,17 @@ export default function DemoGame({
   const [floats, setFloats] = useState<Float[]>([]);
   /** Kênh động tác cho sân khấu trận. */
   const [cueBus] = useState(createCueBus);
+  // Âm thanh trận: cue theo sự kiện (start/end khớp đạo diễn trận), tiếng ghép ô theo từng khung, nhạc nền theo loại trận.
+  const { play: playSound, preload: preloadSounds, playMusic, stopMusic } = useAudio();
+  const playCues = useCallback(
+    (list: readonly CuePlay[]) => {
+      for (const c of list) {
+        if (c.delay) window.setTimeout(() => playSound(c.id, { rate: c.rate }), c.delay);
+        else playSound(c.id, { rate: c.rate });
+      }
+    },
+    [playSound],
+  );
   const floatId = useRef(0);
   const drag = useRef<{ pos: Pos; x: number; y: number } | null>(null);
   /** Trận online: id, seq server đang có, đang chờ server trả lời, lệch giờ so với server. */
@@ -857,6 +870,14 @@ export default function DemoGame({
   /** Sinh tồn: vừa hạ hết một đợt, chờ người chơi vào đợt kế (hoặc dừng). */
   const atBreak =
     survival !== null && !survival.done && state.winner === PLAYER;
+  // Nhạc nền theo loại trận (chỉ khi đang trong trận, không phải màn chuẩn bị): Sinh tồn, trùm chiến dịch, trận thường; rời trận thì tắt dần.
+  const battleMusic: "battle_normal" | "battle_boss" | "survival" | null = !started ? null : survival ? "survival" : phaseObjective?.type === "bossPhases" ? "battle_boss" : "battle_normal";
+  useEffect(() => {
+    if (battleMusic) playMusic(battleMusic);
+    else stopMusic(600);
+  }, [battleMusic, playMusic, stopMusic]);
+  useEffect(() => () => stopMusic(600), [stopMusic]);
+  useEffect(() => preloadSounds(BATTLE_PRELOAD), [preloadSounds]);
   /** Đang chạy hoạt ảnh thì chưa nhận thao tác mới. */
   const myTurn = playerTurn && anim === null && !pending && !pacing;
   const actor = state.sides[PLAYER].fighters[state.turn.actor]!;
@@ -976,6 +997,13 @@ export default function DemoGame({
     return () => window.clearTimeout(t);
   }, [anim]);
 
+  // Tiếng ghép ô phát đúng lúc từng khung hoạt ảnh bắt đầu.
+  useEffect(() => {
+    if (!anim) return;
+    const c = frameCue(anim.frames[anim.i]?.sound);
+    if (c) playSound(c.id, { rate: c.rate });
+  }, [anim, playSound]);
+
   const commit = useCallback(
     (
       before: BattleState,
@@ -1071,6 +1099,8 @@ export default function DemoGame({
           frames = frames.slice(1);
         if (index === 0) swapShown.current = false;
         cueBus.emit(cues.start);
+        const sounds = soundsForEvents(before, current.events, PLAYER);
+        playCues(sounds.start);
         play(frames, () => {
           board = frames.at(-1)?.board ?? board;
           setHeldBoard(board);
@@ -1079,6 +1109,7 @@ export default function DemoGame({
           pushLog(after, current.events);
           const effectMs = showNumbers(current.events);
           cueBus.emit(cues.end);
+          playCues(sounds.end);
           const next = batches[index + 1];
           if (!next || next.side === current.side) return present(index + 1);
           const beginPause = () => afterPacingDelay(COMBAT_PACING.turnPauseMs, () => {
@@ -1103,6 +1134,7 @@ export default function DemoGame({
       pushLog,
       showNumbers,
       cueBus,
+      playCues,
       online,
       mode,
       profile,
