@@ -1,8 +1,52 @@
 {
   "version": 1,
   "sfx": {
-    "formation.place": { "files": ["sfx/formation/place_a", "sfx/formation/place_b", "sfx/formation/place_c"], "volume": 0.9 },
-    "formation.reject": { "files": ["sfx/formation/reject_a", "sfx/formation/reject_b", "sfx/formation/reject_c"], "volume": 0.9 }
+    "formation.place": {
+      "files": [
+        "sfx/formation/place_a",
+        "sfx/formation/place_b",
+        "sfx/formation/place_c"
+      ],
+      "volume": 0.9
+    },
+    "formation.reject": {
+      "files": [
+        "sfx/formation/reject_a",
+        "sfx/formation/reject_b",
+        "sfx/formation/reject_c"
+      ],
+      "volume": 0.9
+    },
+    "formation.fogclear": {
+      "files": [
+        "sfx/formation/fogclear_a",
+        "sfx/formation/fogclear_b",
+        "sfx/formation/fogclear_c"
+      ],
+      "volume": 0.7
+    },
+    "formation.line": {
+      "files": [
+        "sfx/formation/line_a",
+        "sfx/formation/line_b"
+      ],
+      "volume": 0.8
+    },
+    "formation.discard": {
+      "files": [
+        "sfx/formation/discard_a",
+        "sfx/formation/discard_b",
+        "sfx/formation/discard_c"
+      ],
+      "volume": 0.8
+    },
+    "formation.flame1": {
+      "files": [
+        "sfx/formation/flame1_a",
+        "sfx/formation/flame1_b"
+      ],
+      "volume": 0.8
+    }
   },
   "music": {},
   "ambience": {}
