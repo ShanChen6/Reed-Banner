@@ -85,8 +85,8 @@ Việt cổ thế kỷ X, ấm và trầm: **sáo trúc, đàn bầu, đàn tran
 | `formation.flamedown` | Hạ lửa khi đặt thành công | Hơi lửa lụi | 0,4 s | P2 |
 | `formation.win` | `won` | Bản đồ lộ ra: trống đồng + sáo mở rộng, ngân dài | 4 s | P1 |
 | `formation.lose` | `lost` | Lửa tắt, trống trầm, sáo rơi xuống | 2,5 s | P1 |
-| `formation.rank` | Hiện hạng cuối kỳ | Chiêng điểm theo hạng (top 1 dài hơn) | 1,5 s | P2 |
-| `formation.tick` | Kỳ sắp hết (dưới 1 giờ) | Mõ nhịp chậm (chỉ phát khi đang ở màn chế độ) | 0,3 s | P2 |
+| `formation.rank` | Nhận thưởng xếp hạng cuối kỳ (đã nối) | Chiêng điểm theo hạng (top 1 dài hơn) | 1,5 s | P2 |
+| `formation.tick` | 5 giây cuối của một kỳ (đã nối; chỉ phát khi đang ở màn chọn bậc) | Mõ điểm từng giây | 0,3 s | P2 |
 
 Nhạc Trận Đồ: `music/formation_menu` (màn chế độ: sáo + đàn tranh nhẹ, 90 s), `music/formation_play` (đang chơi: bàn gỗ yên tĩnh, đàn tranh ít nốt, 110 s) và **lớp căng thẳng** `formation_play_layer2` (trống nhẹ và đàn bầu) tăng dần theo `discardHeat` (0 → 0, 1 → 0,33, 2 → 0,66, 3 → 1); `music/formation_result_win` và `_lose` ngắn. Ambience: gió nhẹ + tre, rất nhỏ.
 

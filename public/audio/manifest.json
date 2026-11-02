@@ -112,8 +112,36 @@
         "sfx/formation/fusion_b"
       ],
       "volume": 0.9
+    },
+    "battle.swap": {
+      "files": [
+        "sfx/battle/swap_a",
+        "sfx/battle/swap_b",
+        "sfx/battle/swap_c"
+      ],
+      "volume": 0.7
+    },
+    "formation.tick": {
+      "files": [
+        "sfx/formation/tick_a",
+        "sfx/formation/tick_b",
+        "sfx/formation/tick_c"
+      ],
+      "volume": 0.7
+    },
+    "formation.rank": {
+      "files": [
+        "sfx/formation/rank_a",
+        "sfx/formation/rank_b"
+      ],
+      "volume": 0.9
     }
   },
-  "music": {},
+  "music": {
+    "formation_menu": {
+      "file": "music/formation_menu",
+      "volume": 0.5
+    }
+  },
   "ambience": {}
 }
