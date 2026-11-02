@@ -61,6 +61,9 @@
 - Nhân vật đặc biệt mang hai nghề/hai hệ: phòng thủ và đòn đánh thường theo hệ chính, giá cao hơn nhiều, nhận bằng cách đặc biệt, dùng icon tổng hợp nghề/hệ.
 - Tạo nguồn [nhan-vat-tong-hop.md](../03-characters/nhan-vat-tong-hop.md) (DRAFT) với đề xuất chính/phụ, ví dụ và tác động code; chưa sửa code, roster hay save. Icon `tongHop` cho nghề/hệ và hiển thị tổng hợp của Đinh Ngọc ở trang xem thử đã có.
 
+**Hiển thị nhân vật dung hợp trong trận**
+- Thẻ nhân vật trong trận: biểu tượng nghề tổng hợp, biểu tượng hệ phòng thủ kèm dấu tổng hợp nhỏ (theo hướng "Hiển thị" của [nhân vật tổng hợp](../03-characters/nhan-vat-tong-hop.md#hiển-thị)), tooltip nêu hệ phòng thủ và bốn nội tại. Khung chi tiết hiện "Nội tại 1–4" với mô tả đầy đủ thay cho nhãn Nghề/Hệ; chiêu ghi "Chiêu dung hợp · đòn hệ X". Tướng thường không đổi. Kiểm bằng Playwright (dựng tạm trong Thao Luyện, đã gỡ) và test `tests/game/special-labels.test.ts`.
+
 **Giao diện lốc xoáy: xem trước kết quả xoay**
 - Kiểm trên trình duyệt thật: luồng chọn tâm xoay (chạm ô, chọn chiều/số nấc, chọn mục tiêu) đã có sẵn trong trận đấu và chạy đúng với ô1 (xoay 1 nấc, chọn mục tiêu) và ô6 (xoay tối đa 2 nấc, tự nhắm) của Vũ Phong. Nhận định "UI chưa làm" ở mục trước là sai.
 - Bổ sung: mỗi nút xoay ghi số ô sẽ ghép ngay, rê chuột/focus để xem vòng 8 ô sau khi xoay và các ô ghép được; giữ viền vòng xoay và dòng "Đã chọn xoay …" ở bước chọn mục tiêu. Thêm hàm thuần `previewWhirl` (core/board) có test. Chưa thể chơi Vũ Phong trong trận vì chưa mở ở chế độ nào.

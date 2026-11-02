@@ -136,7 +136,7 @@
 - Đã cân bằng lần 1 Vũ Phong (02/11/2026): 1vs1 53,0%, 3vs3 61,6% ở cấp 30 ([số đo](../03-characters/vu-phong.md#cân-bằng-lần-1-02112026)).
 - TODO: Cân bằng đủ ma trận cho cả hai (trang bị, F=20%, từng hệ/nghề đối thủ, ô4/ô5 gần như không được AI dùng); xem lại Đinh Ngọc 1vs1 (43,8%).
 - Giao diện chọn và xem trước lốc xoáy cho ô1, ô6 của Vũ Phong đã có (02/11/2026): dùng luồng chọn tâm sẵn của trận đấu, thêm số ô ghép trên nút xoay và xem trước khi rê chuột; xem [mục lốc xoáy trong Giao diện trận](../05-ui-ux/screens/battle.md).
-- TODO: Chọn chế độ mở (Thường, Chiến dịch, Tháp, Sinh tồn), cách mở khóa, giá; đăng ký vào roster/save; hiển thị icon nghề/hệ tổng hợp và bốn nội tại truy kích của hai nhân vật trong trận.
+- TODO: Chọn chế độ mở (Thường, Chiến dịch, Tháp, Sinh tồn), cách mở khóa, giá; đăng ký vào roster/save. Icon tổng hợp và danh sách bốn nội tại trong trận đã có (02/11/2026); các màn khác (Sinh tồn, Chiến dịch, hồ sơ, cửa hàng) chưa đổi vì hai nhân vật chưa xuất hiện ở đó.
 
 ## Vũ Phong — Vân Du Tử
 

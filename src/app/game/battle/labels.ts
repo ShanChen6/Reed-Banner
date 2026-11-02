@@ -163,7 +163,12 @@ export const SKILL_TARGET_NAME: Record<SkillDef["target"], string> = { enemy: "�
 
 /** Nguồn kỹ năng: nghề, hệ hay tuyệt chiêu/chiêu riêng của nhân vật. */
 export function skillSourceName(def: SkillDef): string {
-  if (skillSource(def) === "character") return def.characterKind === "signature" ? "Chiêu riêng" : "Tuyệt chiêu nhân vật";
+  // Chiêu nhân vật đặc biệt: hệ của đòn tách khỏi hệ phòng thủ của người tung chiêu.
+  const hit = def.damageElement ? ` · đòn hệ ${ELEMENT_NAME[def.damageElement]}` : "";
+  if (skillSource(def) === "character") {
+    if (!def.ultimate) return `Chiêu dung hợp${hit}`;
+    return (def.characterKind === "signature" ? "Chiêu riêng" : "Tuyệt chiêu nhân vật") + hit;
+  }
   return def.profession ? `Nghề ${PROFESSION_NAME[def.profession]}` : def.element ? `Hệ ${ELEMENT_NAME[def.element]}` : "Kỹ năng";
 }
 
