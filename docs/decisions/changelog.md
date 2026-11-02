@@ -4,6 +4,7 @@
 
 **Trận Đồ: 5 ảnh bản đồ thật**
 - Hoa Lư, Bố Hải Khẩu, Đằng Châu, Bình Kiều, Đường Lâm thay ảnh giữ chỗ (1024², WebP). Còn 25 bản đồ.
+- Thêm Hồi Hồ, Phong Châu, Tam Đái (8/30). Còn 22 bản đồ.
 
 **Trận Đồ: tích hợp ô che và 4 icon chướng ngại do Shan tạo**
 - Ô che `fog.webp` được duyệt, icon núi/rừng/đầm lầy/thành lũy "tạm được" thay SVG giữ chỗ. Thêm `scripts/cutout-formation-icon.py` để cắt ô caro vẽ sẵn thành nền trong suốt; ghi lưu ý nền phẳng cho lần tạo sau ở [prompt hình ảnh](../06-art/prompts/tran-do-hinh-anh.md).
