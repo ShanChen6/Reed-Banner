@@ -15,13 +15,15 @@ import { FUSION_CHARACTERS, fusionsForLevel } from "./specials";
 import type { Ruleset } from "./types";
 
 export const SCHEMA_VERSION = 3;
+/** Phiên bản bộ luật tùy chỉnh (tăng khi luật sinh quân hoặc giới hạn đổi). */
+export const CUSTOM_RULES_VERSION = 2;
 
 const SCORE = { place: 10, perfectNeighbor: 5, line: 50, win: 500, winPerHeatLeft: 100, winPerTurnSaved: 5, parTurnsPerCell: 3 } as const;
 
 export const RULESETS: readonly Ruleset[] = [
   {
     id: "huong-dan",
-    version: 1,
+    version: 2,
     name: "Hướng dẫn",
     blurb: "Sa bàn 3×3, hai nghề và hai hệ, không chướng ngại. Học luật; không xếp hạng, không thưởng.",
     width: 3,
@@ -38,7 +40,7 @@ export const RULESETS: readonly Ruleset[] = [
   },
   {
     id: "thuong",
-    version: 3,
+    version: 4,
     name: "Thường",
     blurb: "Sa bàn 5×5 có vài chướng ngại, ba nghề và bốn hệ, có Quân Lệnh và Thu Hồi.",
     width: 5,
@@ -55,7 +57,7 @@ export const RULESETS: readonly Ruleset[] = [
   },
   {
     id: "kho",
-    version: 3,
+    version: 4,
     name: "Khó",
     blurb: "Sa bàn 6×6, bốn nghề và năm hệ, nhiều chướng ngại hơn.",
     width: 6,
@@ -72,7 +74,7 @@ export const RULESETS: readonly Ruleset[] = [
   },
   {
     id: "dai-tran",
-    version: 3,
+    version: 4,
     name: "Đại trận",
     blurb: "Sa bàn cỡ ngẫu nhiên, mỗi cạnh từ 7 đến 10 ô, đủ tám nghề và bảy hệ. Mỗi ván một bản đồ khác.",
     width: 10,
@@ -141,7 +143,7 @@ export function customRuleset(o: unknown): Ruleset | null {
   if (!inRange(v.fusionPermille, 0, L.maxFusionPermille) || !inRange(v.obstaclePercent, 0, L.maxObstaclePercent)) return null;
   return {
     id: CUSTOM_RULESET_ID,
-    version: 1,
+    version: CUSTOM_RULES_VERSION,
     name: "Tùy chỉnh",
     blurb: "Tự chọn cỡ bàn, nghề, hệ và quân đặc biệt. Chơi thường: không thưởng, không xếp hạng.",
     width: v.width,
