@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Âm thanh: `battle.swap`, `formation.tick`, `formation.rank`, nhạc màn chọn bậc**
+- `formation.rank` phát khi nhận thưởng xếp hạng; `formation.tick` điểm từng giây trong 5 giây cuối của một kỳ khi đang ở màn chọn bậc (thu hẹp so với "dưới 1 giờ" trong bảng cue vì lặp dày gây phiền). Nhạc `formation_menu` (99 giây) làm vòng lặp bằng `scripts/make-music-loop.py` (cắt phần tắt dần, trộn đuôi vào đầu). Lớp căng thẳng Gemini tạo dài khác bản nền nên chưa dùng được, chờ bản nhạc đang chơi.
+
 **Trận Đồ: đủ 30/30 ảnh bản đồ thật**
 - Thêm Núi đá vôi và Rừng già; kho không còn ảnh giữ chỗ (kho không giới hạn số ảnh, thêm bản đồ mới theo mục 1.4 của tài liệu prompt hình ảnh).
 

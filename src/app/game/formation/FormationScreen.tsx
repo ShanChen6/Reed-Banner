@@ -234,10 +234,11 @@ export default function FormationScreen() {
   const claim = useCallback(
     async (level: string, period: string) => {
       const r = await claimRanked(level, period);
+      if (r.ok) audio.play("formation.rank");
       setClaimNote(r.ok ? `Đã nhận ${r.data.gold} vàng (hạng ${r.data.rank}/${r.data.winners}).` : "Không nhận được thưởng, thử lại sau nhé.");
       refreshOverview();
     },
-    [refreshOverview],
+    [refreshOverview, audio],
   );
 
   // Ván đang chơi: ván xếp hạng (bản công khai từ server) hoặc ván chơi thường (ở máy).
