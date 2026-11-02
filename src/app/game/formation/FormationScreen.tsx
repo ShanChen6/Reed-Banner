@@ -24,12 +24,14 @@ import {
   type PuzzleState,
   type Ruleset,
 } from "@/core/binh-phap";
+import { useAudio } from "../audio/AudioProvider";
 import { SceneLink } from "../SceneContext";
 import BoardView, { type Sweep } from "./BoardView";
 import { CommandCard, HeatFlames, HintToggle, MobileBar, ProgressMeter, TutorialTip, tutorialText } from "./Hud";
 import { mapFor, type FormationMap } from "./maps";
 import ModeScreen from "./ModeScreen";
 import { preloadPortraits } from "./preload";
+import { cuesForEvents, FORMATION_PRELOAD, musicFor, REJECT, tensionLayer } from "./sounds";
 import { obstacleKind, obstacleLabel } from "./pieces";
 import { claimRanked, fetchOverview, moveRanked, startRanked, toPuzzleState, type FormationView, type Overview } from "./rankedClient";
 import Rules from "./Rules";
@@ -92,6 +94,7 @@ export default function FormationScreen() {
   const [overview, setOverview] = useState<Overview | null>(null);
   const [busy, setBusy] = useState(false);
   const [claimNote, setClaimNote] = useState("");
+  const audio = useAudio();
 
   // Nạp ván dở và lựa chọn đã lưu sau khi hiển thị lần đầu: server không có localStorage nên tránh lệch hydration.
   useEffect(() => {
@@ -142,8 +145,10 @@ export default function FormationScreen() {
       if (!t.ok) {
         const c = command.kind === "place" ? checkPlacement(state, state.hand, command.row, command.col) : null;
         setMessage(c && !c.ok ? REASON_TEXT[c.reason] : "Lệnh không hợp lệ.");
+        audio.play(REJECT.id);
         return;
       }
+      for (const c of cuesForEvents(t.events, state.discardHeat)) audio.play(c.id, { rate: c.rate });
       setState(t.state);
       setLast(command.kind === "place" ? idx(state.width, command.row, command.col) : null);
       setSweeps(sweepsOf(t.events));
@@ -164,7 +169,7 @@ export default function FormationScreen() {
         }
       }
     },
-    [state, collect],
+    [state, collect, audio],
   );
 
   const playRanked = useCallback(
@@ -201,7 +206,10 @@ export default function FormationScreen() {
       // Báo lỗi luật ngay trên máy cho đỡ tốn một lượt gọi server; server vẫn kiểm lại mọi lệnh.
       if (command.kind === "place") {
         const c = checkPlacement(local, local.hand, command.row, command.col);
-        if (!c.ok) return setMessage(REASON_TEXT[c.reason]);
+        if (!c.ok) {
+          audio.play(REJECT.id);
+          return setMessage(REASON_TEXT[c.reason]);
+        }
       }
       setBusy(true);
       const r = await moveRanked(ranked.level, ranked.seq, command);
@@ -211,13 +219,14 @@ export default function FormationScreen() {
         setMessage(r.data.reason ? "Lệnh không hợp lệ." : r.data.error === "conflict" ? "Ván vừa được cập nhật, đã tải lại." : "Không gửi được lệnh, thử lại nhé.");
         return;
       }
+      for (const c of cuesForEvents(r.data.events, local.discardHeat)) audio.play(c.id, { rate: c.rate });
       setRanked(r.data.view);
       setLast(command.kind === "place" ? idx(local.width, command.row, command.col) : null);
       setSweeps(sweepsOf(r.data.events));
       setMessage(describeEvents(r.data.events));
       if (r.data.view.status === "won") collect(mapFor(r.data.view.level, r.data.view.puzzle.theme).id);
     },
-    [ranked, busy, collect],
+    [ranked, busy, collect, audio],
   );
 
   const claim = useCallback(
@@ -239,6 +248,16 @@ export default function FormationScreen() {
   useEffect(() => {
     if (playRules) preloadPortraits(playRules);
   }, [playRules]);
+  // Âm thanh: tải sẵn cue, nhạc theo màn (chọn bậc, đang chơi, kết quả), lớp căng thẳng theo thanh Bỏ Lệnh; rời Trận Đồ thì tắt nhạc.
+  const { preload, playMusic, stopMusic, setLayer } = audio;
+  useEffect(() => preload(FORMATION_PRELOAD), [preload]);
+  const music = ready ? musicFor(playState) : null;
+  useEffect(() => {
+    if (music) playMusic(music);
+  }, [music, playMusic]);
+  useEffect(() => () => stopMusic(600), [stopMusic]);
+  const heatLayer = playState && playRules && playState.phase === "playing" ? tensionLayer(playState.discardHeat, playRules.maxHeat) : 0;
+  useEffect(() => setLayer(heatLayer), [heatLayer, setLayer]);
   const theme = ranked ? ranked.puzzle.theme : state ? themeOfState(state) : 0;
   const rankedBusy = ranked ? busy : false;
 

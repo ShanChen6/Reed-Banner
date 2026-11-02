@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Âm thanh: engine toàn game và nối Trận Đồ (prompt A1, A2)**
+- Engine Web Audio (`src/app/game/audio/`): mở khóa sau cử chỉ đầu, 4 bus, tắt tiếng và âm lượng lưu ở máy, giới hạn 8 cue và 40 ms, biến thể và lệch tốc độ ±3%, crossfade nhạc, tạm dừng khi ẩn tab; nút âm thanh ở thanh trên. Trận Đồ phát cue theo sự kiện của engine, nhạc theo màn và lớp căng thẳng theo thanh Bỏ Lệnh. Manifest còn rỗng nên chưa có tiếng cho tới khi có tệp.
+
 **Âm thanh cho mọi chế độ: tài liệu và prompt (chưa triển khai)**
 - Thêm [kiến trúc, quy ước tệp và bảng cue](../05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md) (Trận Đồ, trận đánh, Chiến dịch, Tháp, Sinh tồn, Thử thách, Đấu trường, Quần Hùng) và [prompt giao việc code (A1–A5) cùng prompt tạo hiệu ứng/nhạc](../05-ui-ux/campaign/audio-todo/04-prompts-trien-khai-theo-che-do.md). Backlog AUD vẫn DEFERRED, chưa có code hay tệp âm thanh.
 
