@@ -49,7 +49,7 @@ export function createPuzzle(rules: Ruleset, seed: number, salt?: string): Puzzl
   // Thứ tự RNG cố định: cỡ bàn (nếu ngẫu nhiên), địa hình, rồi quân đầu tiên.
   const { width, height, obstaclePercent } = boardSpec(rules, rng);
   const blocked = generateObstacles(rng, width, height, obstaclePercent);
-  const hand = salt ? nextPiece(createRng(hash32(`${salt}|piece|0`)), rules, 0, null, false) : nextPiece(rng, rules, 0, null, false);
+  const hand = salt ? nextPiece(createRng(hash32(`${salt}|piece|0`)), rules, 0, null, []) : nextPiece(rng, rules, 0, null, []);
   return {
     schemaVersion: SCHEMA_VERSION,
     rulesetId: rules.id,
@@ -100,7 +100,7 @@ export function transition(state: PuzzleState, command: Command): Transition {
 function spawn(state: PuzzleState, rules: Ruleset, cells: readonly Cell[], used: Piece, turn: number) {
   // Ván có muối: quân thứ `turn` lấy seed từ băm riêng, không phụ thuộc dòng RNG, nên không suy ra được từ quân đã thấy.
   const rng = createRng(state.salt ? hash32(`${state.salt}|piece|${turn}`) : state.rngState);
-  const hand = nextPiece(rng, rules, turn, used, cells.some((c) => c.piece !== null));
+  const hand = nextPiece(rng, rules, turn, used, cells);
   return { hand, rngState: state.salt ? 0 : rng.state() };
 }
 
