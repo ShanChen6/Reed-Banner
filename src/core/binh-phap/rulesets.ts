@@ -2,7 +2,6 @@
 // Khó 6×6, Đại trận cỡ ngẫu nhiên mỗi cạnh 7–10. Giá trị là điểm xuất phát, đo bằng
 // `pnpm exec tsx scripts/binh-phap-sim.ts` (docs/02-game-modes/future/05-binh-phap-balance-qa.md).
 // Đổi bất kỳ giá trị nào của một bậc phải tăng `version` của bậc đó.
-// `relatedPermille`: xác suất quân thường mới chung nghề hoặc hệ với một quân trên bàn (Shan chốt hướng 02/11/2026, con số là điểm xuất phát đo bằng mô phỏng).
 //
 // Ghi chú cân bằng (đo 600 ván mỗi cấu hình, bot random và greedy):
 // - Số nghề × hệ và thanh Bỏ Lệnh mới là núm độ khó chính; chướng ngại rút ngắn đường nên giúp dọn hàng dễ hơn.
@@ -17,14 +16,14 @@ import type { Ruleset } from "./types";
 
 export const SCHEMA_VERSION = 3;
 /** Phiên bản bộ luật tùy chỉnh (tăng khi luật sinh quân hoặc giới hạn đổi). */
-export const CUSTOM_RULES_VERSION = 3;
+export const CUSTOM_RULES_VERSION = 4;
 
 const SCORE = { place: 10, perfectNeighbor: 5, line: 50, win: 500, winPerHeatLeft: 100, winPerTurnSaved: 5, parTurnsPerCell: 3 } as const;
 
 export const RULESETS: readonly Ruleset[] = [
   {
     id: "huong-dan",
-    version: 3,
+    version: 4,
     name: "Hướng dẫn",
     blurb: "Sa bàn 3×3, hai nghề và hai hệ, không chướng ngại. Học luật; không xếp hạng, không thưởng.",
     width: 3,
@@ -34,7 +33,6 @@ export const RULESETS: readonly Ruleset[] = [
     wildPermille: 0,
     eraserPermille: 0,
     fusionPermille: 0,
-    relatedPermille: 1000,
     fusions: fusionsForLevel("huong-dan"),
     obstaclePercent: 0,
     maxHeat: 3,
@@ -42,7 +40,7 @@ export const RULESETS: readonly Ruleset[] = [
   },
   {
     id: "thuong",
-    version: 5,
+    version: 6,
     name: "Thường",
     blurb: "Sa bàn 5×5 có vài chướng ngại, ba nghề và bốn hệ, có Quân Lệnh và Thu Hồi.",
     width: 5,
@@ -52,7 +50,6 @@ export const RULESETS: readonly Ruleset[] = [
     wildPermille: 80,
     eraserPermille: 40,
     fusionPermille: 0,
-    relatedPermille: 800,
     fusions: fusionsForLevel("thuong"),
     obstaclePercent: 8,
     maxHeat: 3,
@@ -60,7 +57,7 @@ export const RULESETS: readonly Ruleset[] = [
   },
   {
     id: "kho",
-    version: 5,
+    version: 6,
     name: "Khó",
     blurb: "Sa bàn 6×6, bốn nghề và năm hệ, nhiều chướng ngại hơn.",
     width: 6,
@@ -70,7 +67,6 @@ export const RULESETS: readonly Ruleset[] = [
     wildPermille: 80,
     eraserPermille: 40,
     fusionPermille: 15,
-    relatedPermille: 700,
     fusions: fusionsForLevel("kho"),
     obstaclePercent: 10,
     maxHeat: 3,
@@ -78,7 +74,7 @@ export const RULESETS: readonly Ruleset[] = [
   },
   {
     id: "dai-tran",
-    version: 5,
+    version: 6,
     name: "Đại trận",
     blurb: "Sa bàn cỡ ngẫu nhiên, mỗi cạnh từ 7 đến 10 ô, đủ tám nghề và bảy hệ. Mỗi ván một bản đồ khác.",
     width: 10,
@@ -89,7 +85,6 @@ export const RULESETS: readonly Ruleset[] = [
     wildPermille: 100,
     eraserPermille: 40,
     fusionPermille: 15,
-    relatedPermille: 650,
     fusions: fusionsForLevel("dai-tran"),
     obstaclePercent: 13,
     maxHeat: 3,
@@ -158,7 +153,6 @@ export function customRuleset(o: unknown): Ruleset | null {
     wildPermille: v.wildPermille,
     eraserPermille: v.eraserPermille,
     fusionPermille: v.fusionPermille,
-    relatedPermille: 1000,
     fusions: FUSION_CHARACTERS,
     obstaclePercent: v.obstaclePercent,
     maxHeat: 3,
