@@ -128,3 +128,8 @@
 - Đã chốt (Shan, 02/11/2026): kho ảnh bản đồ xoay theo kỳ với địa danh thật thời Loạn 12 sứ quân; ô che bằng ảnh đặc kín; chướng ngại bốn biến thể (núi, rừng, đầm lầy, thành lũy) với nền ô riêng; quân đủ huy hiệu nghề và hệ nhỏ vừa đủ; hoàn thành màn thì hiện ảnh đầy đủ; chế độ tùy chỉnh trong Chơi thường.
 - TODO: Shan thiết kế 13 ảnh bản đồ, ảnh ô che và 4 icon chướng ngại ([yêu cầu và prompt](../05-ui-ux/screens/tran-do.md#3-yêu-cầu-ảnh-cho-họa-sĩ)); hiện dùng ảnh giữ chỗ.
 - TODO: Shan test lần 1 màn chế độ và màn chơi chi tiết đã triển khai ([mục 5 và 6](../05-ui-ux/screens/tran-do.md#5-màn-chế-độ-đã-code-chờ-shan-test-lần-1)) rồi góp ý. Kho bản đồ mở rộng lên 30 và không giới hạn; prompt đầy đủ ở [prompt hình ảnh Trận Đồ](../06-art/prompts/tran-do-hinh-anh.md).
+
+## Vũ Phong — Vân Du Tử
+
+- Đã có hình tượng DRAFT: nam khoảng 28 tuổi, lãng khách có hình xăm; nguồn duy nhất: [vu-phong.md](../03-characters/vu-phong.md).
+- TODO: Duyệt tuổi, ngoại hình, bố cục hình xăm, trượng trúc và Master prompt; sau đó chọn nghề/hệ, loadout, chỉ số, cách mở khóa và ID. Chưa sửa roster, code, UI hoặc asset.
