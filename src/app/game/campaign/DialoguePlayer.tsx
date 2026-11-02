@@ -7,6 +7,7 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import type { Element, Profession } from "@/core";
+import { useAudio } from "../audio/AudioProvider";
 import { Portrait } from "../art/portraits";
 import { BasisBadge } from "./StoryBeats";
 import {
@@ -224,12 +225,19 @@ export default function DialoguePlayer({
   );
   const [backlog, setBacklog] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
+  const { play: playSound, playMusic } = useAudio();
+  // Thoại: nhạc đàn bầu nhẹ thay nhạc bản đồ trong lúc mở, trả lại khi đóng.
+  useEffect(() => {
+    playMusic("dialogue", 600);
+    return () => playMusic("atlas", 600);
+  }, [playMusic]);
 
   if (lines.length === 0) return null;
   const line = lines[Math.min(index, last)]!;
 
   const goTo = (i: number) => {
     const next = Math.max(0, Math.min(last, i));
+    if (next !== index) playSound("dialogue.next");
     setIndex(next);
     if (next > viewed) {
       setViewed(next);

@@ -1,5 +1,7 @@
 "use client";
+import { useEffect } from "react";
 import { Button } from "@/components/ui";
+import { useAudio } from "../audio/AudioProvider";
 
 
 // Kết chiến dịch (M24 "Đại Lễ Đăng Quang năm 968"): biên niên, sổ thế cục, người đồng hành, mốc không thuộc lễ 968
@@ -24,6 +26,12 @@ export default function CampaignEnding({
   campaign: CampaignProgressV2;
   onReplay: () => void;
 }) {
+  const { playMusic } = useAudio();
+  // Kết cục: nhạc riêng, trả nhạc bản đồ khi đóng.
+  useEffect(() => {
+    playMusic("ending", 1200);
+    return () => playMusic("atlas", 1200);
+  }, [playMusic]);
   const ledger = campaignWorldLedger(campaign.factions);
   const total = CAMPAIGN_CHAPTERS.reduce((n, c) => n + c.missions.length, 0);
   const sources = Object.entries(SOURCE_TITLE) as [

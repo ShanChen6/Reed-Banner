@@ -98,6 +98,9 @@ export function soundsForEvents(before: BattleState, events: readonly BattleEven
         if (id) add(end, { id, delay: AFTER_HIT_MS });
         break;
       }
+      case "wave":
+        add(start, { id: "survival.wave" });
+        break;
       case "ko":
         add(end, { id: "battle.ko", delay: HIT_DELAY_MS + 200 });
         break;

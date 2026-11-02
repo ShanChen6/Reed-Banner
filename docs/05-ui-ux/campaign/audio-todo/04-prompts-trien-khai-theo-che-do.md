@@ -1,7 +1,7 @@
 # Prompt triển khai âm thanh theo chế độ chơi
 
 > Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — bộ prompt để giao việc và tạo âm thanh ([README](README.md)); A1, A2 và A3 đã thực hiện (02/11/2026), A4–A5 và phần tạo tệp âm thanh (B) chưa. Kiến trúc, quy ước tệp và bảng cue ở [02-architecture-and-assets.md](02-architecture-and-assets.md) (nguồn chính, không lặp ở đây).
+> Trạng thái: **DRAFT** — bộ prompt để giao việc và tạo âm thanh ([README](README.md)); A1, A2, A3 và A4 đã thực hiện (02/11/2026), A5 và phần tạo tệp âm thanh (B) chưa. Kiến trúc, quy ước tệp và bảng cue ở [02-architecture-and-assets.md](02-architecture-and-assets.md) (nguồn chính, không lặp ở đây).
 
 Hai nhóm prompt: **A** giao cho Claude Code/Codex để viết code (theo thứ tự AUD-02 → AUD-03 → AUD-04), **B** dán vào công cụ tạo âm thanh để có tệp. Làm A1 trước, có tệp tạm hoặc im lặng đều chạy được; B làm song song.
 

@@ -4,7 +4,7 @@
 // và tạm dừng khi tab ẩn. Ngoài nhà cung cấp, `useAudio()` trả bản im lặng nên component dùng được ở mọi nơi (test, trang khác).
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import type { Bus, CueId, MusicId } from "./cues";
+import type { AmbienceId, Bus, CueId, MusicId } from "./cues";
 import { AudioEngine, browserEnv, type PlayOptions } from "./engine";
 import { DEFAULT_SETTINGS, loadSettings, saveSettings, type AudioSettings } from "./settings";
 
@@ -18,6 +18,8 @@ export interface AudioApi {
   playMusic(id: MusicId, fadeMs?: number): void;
   stopMusic(fadeMs?: number): void;
   setLayer(value: number): void;
+  playAmbience(id: AmbienceId, fadeMs?: number): void;
+  stopAmbience(fadeMs?: number): void;
 }
 
 const SILENT: AudioApi = {
@@ -30,6 +32,8 @@ const SILENT: AudioApi = {
   playMusic: () => undefined,
   stopMusic: () => undefined,
   setLayer: () => undefined,
+  playAmbience: () => undefined,
+  stopAmbience: () => undefined,
 };
 
 const AudioContextApi = createContext<AudioApi>(SILENT);
@@ -92,6 +96,8 @@ export default function AudioProvider({ children }: { children: React.ReactNode 
       playMusic: (id: MusicId, fadeMs?: number) => void getEngine()?.playMusic(id, fadeMs),
       stopMusic: (fadeMs?: number) => getEngine()?.stopMusic(fadeMs),
       setLayer: (v: number) => getEngine()?.setLayer(v),
+      playAmbience: (id: AmbienceId, fadeMs?: number) => void getEngine()?.playAmbience(id, fadeMs),
+      stopAmbience: (fadeMs?: number) => getEngine()?.stopAmbience(fadeMs),
     }),
     [],
   );

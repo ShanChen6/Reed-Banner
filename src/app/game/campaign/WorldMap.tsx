@@ -7,6 +7,7 @@
 // Tranh lỗi thì còn nền giấy dó vẽ bằng code và thành trì SVG (MAP-ART-02).
 
 import { useState } from "react";
+import { useAudio } from "../audio/AudioProvider";
 import {
   CAMPAIGN_CHAPTERS,
   chapterStatus,
@@ -298,6 +299,11 @@ export default function WorldMap({
 }) {
   const { view, setView, zoomBy, reset, reveal, svgProps } = useMapView(W, H);
   const [artFailed, setArtFailed] = useState(false);
+  const { play: playSound } = useAudio();
+  const pick = (id: StrongholdId) => {
+    playSound("atlas.select");
+    onSelect(id);
+  };
   const status = missionStatusMap(campaign);
   const inChapter = new Set(chapterStrongholds(chapter.missions));
 
@@ -418,13 +424,13 @@ export default function WorldMap({
                 aria-pressed={isSelected}
                 className="map-stage cursor-pointer"
                 opacity={lit || isSelected ? 1 : 0.72}
-                onClick={() => onSelect(s.id)}
+                onClick={() => pick(s.id)}
                 onFocus={() => reveal(x, y)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     e.stopPropagation();
-                    onSelect(s.id);
+                    pick(s.id);
                   }
                 }}
               >
@@ -571,7 +577,7 @@ export default function WorldMap({
               type="button"
               aria-pressed={s.id === selected}
               aria-label={`${label(s)}, vị trí còn tranh luận`}
-              onClick={() => onSelect(s.id)}
+              onClick={() => pick(s.id)}
               className={`map-chip flex min-h-11 items-center gap-2 rounded-lg border-2 border-dashed px-2.5 py-1 text-left shadow ${
                 s.id === selected ? "map-chip-active" : ""
               } ${inChapter.has(s.id) ? "" : "opacity-70"}`}
@@ -624,7 +630,7 @@ export default function WorldMap({
               <button
                 type="button"
                 aria-pressed={s.id === selected}
-                onClick={() => onSelect(s.id)}
+                onClick={() => pick(s.id)}
                 className={`map-chip flex min-h-11 w-full items-center gap-2 rounded-lg border px-2 py-1 text-left ${
                   s.id === selected ? "map-chip-active" : ""
                 }`}

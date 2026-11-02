@@ -1,7 +1,7 @@
 # Âm thanh: kiến trúc, quy ước tệp và bảng cue theo chế độ
 
 > Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — engine (AUD-02), nối Trận Đồ và nối trận đánh (AUD-03) đã có code (02/11/2026); nhạc bản đồ, thoại, Tháp, Đấu trường chưa nối, chưa có tệp âm thanh. Backlog và điều kiện bắt đầu ở [README](README.md). Prompt giao việc và prompt tạo âm thanh ở [04-prompts-trien-khai-theo-che-do.md](04-prompts-trien-khai-theo-che-do.md).
+> Trạng thái: **DRAFT** — engine (AUD-02), nối Trận Đồ và nối trận đánh (AUD-03) và nhạc theo phân cảnh (AUD-04) đã có code (02/11/2026), chưa có tệp âm thanh. Backlog và điều kiện bắt đầu ở [README](README.md). Prompt giao việc và prompt tạo âm thanh ở [04-prompts-trien-khai-theo-che-do.md](04-prompts-trien-khai-theo-che-do.md).
 
 Phạm vi: **toàn bộ chế độ chơi** (Trận Đồ, Chiến dịch và trận đánh, Tháp Thí Luyện, Tháp Vận Mệnh, Sinh tồn, Thử thách hằng ngày, Đấu trường bóng ma, Quần Hùng online sau này). Âm thanh chỉ là lớp cảm giác: không chế độ nào được cần nghe mới hiểu luật hay cốt truyện.
 
@@ -126,11 +126,13 @@ Nhạc: `music/battle_normal`, `music/battle_boss` (căng hơn, trống chiến)
 | `music/ending_*` | Kết cục (theo cấp độ lịch sử) | Sáo + đàn, mỗi kết cục một hướng | P2 |
 | Giọng đọc | Sau này, xem AUD-05/06 | Thoại nhân vật theo hồ sơ giọng | P3 |
 
+Đã nối (02/11/2026): `music/atlas` + `amb/atlas` khi ở màn Bình Loạn; `music/dialogue` khi mở bộ phát thoại (trả nhạc bản đồ khi đóng); `music/ending` ở màn kết cục; cue `atlas.select` khi chọn điểm trên bản đồ, `dialogue.next` khi sang câu thoại kế. Chưa nối: `music/prep`, `atlas.unlock`, `music/ending_*` theo cấp độ lịch sử.
+
 ### 5.5 Tháp, Sinh tồn, Thử thách, Đấu trường, Quần Hùng
 
 | Chế độ | Nhạc | Cue riêng | Ưu tiên |
 |---|---|---|---|
-| Tháp Thí Luyện | `music/tower_trial` | `tower.floor` (lên tầng), `tower.firstclear` (thưởng đá lần đầu) | P2 |
+| Tháp Thí Luyện | `music/tower_trial` (nhạc màn Tháp; trận đánh trong Tháp hiện dùng `battle_normal`) | `tower.floor` (lên tầng), `tower.firstclear` (thưởng đá lần đầu) | P2 |
 | Tháp Vận Mệnh | `music/tower_destiny` | `destiny.choose` (chọn thẻ/roster), `destiny.fail` | P2 |
 | Sinh tồn | `music/survival` + lớp tăng theo đợt | `survival.wave` (đợt mới), `survival.warn` (báo trước đợt kế) | P2 |
 | Thử thách hằng ngày | dùng nhạc trận | `daily.complete` | P2 |
@@ -142,3 +144,7 @@ Nhạc: `music/battle_normal`, `music/battle_boss` (căng hơn, trống chiến)
 - Test tự động: mọi `CueId` có dòng manifest và tệp; mọi tệp trong manifest tồn tại; kích thước tệp trong ngưỡng; không có cue trùng tên.
 - Test hành vi (jsdom, `AudioContext` giả): chưa unlock thì không phát; tắt tiếng thì không phát; giới hạn đồng thời; ducking trả lại âm lượng.
 - Kiểm tay: iOS Safari, Android Chrome, desktop; tab ẩn; tắt tiếng; lặp nhạc không hở; hai cue sát nhau không méo; âm lượng các bộ ngang nhau.
+
+## 7. Nhạc theo phân cảnh và theo loại trận (đã nối)
+
+`audio/sceneMusic.ts` ánh xạ phân cảnh sang nhạc/âm nền; `SceneAudio` áp khi đổi phân cảnh. Trận Đồ và trận đánh (`SELF`) tự chọn nhạc ở màn của mình. Trong trận đánh (`DemoGame`): Sinh tồn → `survival`; Thiên Mệnh → `tower_destiny`; Đấu trường → `arena`; đánh trùm hoặc nhiệm vụ có pha trùm → `battle_boss`; còn lại `battle_normal`. Cue đã nối thêm: `survival.wave` (đợt mới), `survival.warn` (màn nghỉ giữa đợt), `daily.complete` (có điểm Nhật Lệnh), `arena.rank` (có kết quả Đấu trường). Manifest có thêm mục `ambience` (cùng dạng `music`, bus `ambience`).
