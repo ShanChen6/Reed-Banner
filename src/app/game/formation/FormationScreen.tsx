@@ -14,6 +14,7 @@ import {
   legalPlacements,
   parsePuzzle,
   playableCount,
+  RULESETS,
   rulesetById,
   serializePuzzle,
   themeOfState,
@@ -28,6 +29,7 @@ import BoardView, { type Sweep } from "./BoardView";
 import { CommandCard, HeatFlames, HintToggle, MobileBar, ProgressMeter, TutorialTip, tutorialText } from "./Hud";
 import { mapFor, type FormationMap } from "./maps";
 import ModeScreen from "./ModeScreen";
+import { preloadPortraits } from "./preload";
 import { obstacleKind, obstacleLabel } from "./pieces";
 import { claimRanked, fetchOverview, moveRanked, startRanked, toPuzzleState, type FormationView, type Overview } from "./rankedClient";
 import Rules from "./Rules";
@@ -230,6 +232,16 @@ export default function FormationScreen() {
   // Ván đang chơi: ván xếp hạng (bản công khai từ server) hoặc ván chơi thường (ở máy).
   const playState: PuzzleState | null = ranked ? toPuzzleState(ranked) : state;
   const playRules: Ruleset | null = ranked ? (rulesetById(ranked.level) ?? null) : state ? (state.custom ?? rulesetById(state.rulesetId) ?? null) : null;
+  // Tải sẵn chân dung để quân kế tiếp hiện đủ gương mặt ngay (không trễ 1–2 giây): bộ luật đang chơi ngay lập tức, các bậc khác lúc rảnh.
+  useEffect(() => {
+    if (playRules) preloadPortraits(playRules);
+  }, [playRules]);
+  useEffect(() => {
+    const idle = (window as Window & { requestIdleCallback?: (cb: () => void) => number }).requestIdleCallback;
+    const run = () => RULESETS.forEach((r) => preloadPortraits(r));
+    if (idle) idle(run);
+    else setTimeout(run, 1200);
+  }, []);
   const theme = ranked ? ranked.puzzle.theme : state ? themeOfState(state) : 0;
   const rankedBusy = ranked ? busy : false;
 

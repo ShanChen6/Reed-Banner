@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Trận Đồ: sửa chân dung quân kế tiếp hiện trễ 1–2 giây**
+- Nguyên nhân: chân dung là ảnh WebP nạp trong SVG, chỉ tải khi quân xuất hiện lần đầu nên ô nền và huy hiệu hiện ngay còn gương mặt trễ. Giờ vào màn chơi là tải sẵn (và giải mã) chân dung của mọi quân có thể ra trong bộ luật đang chơi, các bậc khác tải lúc rảnh (`src/app/game/formation/preload.ts`).
+
 **Trận Đồ: quân thường mới luôn liên quan tới quân trên bàn (Shan quyết định)**
 - Chơi thử Đại trận thấy quân không dính gì với bàn (Sát thủ Thổ khi bàn không có Sát thủ hay Thổ). Luật: quân thường mới luôn chung nghề hoặc hệ với một quân thường bất kỳ trên bàn, **không cần còn ô trống kề bên** (vẫn có quân không đặt được để Bỏ Lệnh có tác dụng); chỉ khi có Quân Lệnh hoặc quân dung hợp còn ô trống kề bên thì không ràng buộc. Bỏ khái niệm xác suất liên quan đã thử. Bộ luật các bậc tăng version. Ván dễ hơn (Đại trận greedy 33% → 88%): [số đo](../02-game-modes/future/05-binh-phap-balance-qa.md#đo-lại-sau-khi-đổi-luật-sinh-quân-02112026), chờ Shan chọn độ khó mục tiêu.
 
