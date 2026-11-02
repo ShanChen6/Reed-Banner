@@ -132,5 +132,5 @@
 ## Vũ Phong — Vân Du Tử
 
 - Đã có hình tượng DRAFT: nam khoảng 28 tuổi, lãng khách có hình xăm; nguồn duy nhất: [vu-phong.md](../03-characters/vu-phong.md).
-- TODO: Duyệt năm ảnh khung 1–5 đã nhập (ảnh cho khung 6 còn thiếu), thống nhất dây hồ lô và kiểu hình xăm cẳng tay phải; sau đó mới dựng rig và thêm vào trang xem thử.
+- TODO: Duyệt sáu ảnh khung 1–6 đã nhập, thống nhất dây hồ lô và kiểu hình xăm cẳng tay phải; sau đó mới dựng rig và thêm vào trang xem thử.
 - TODO: Review và mô phỏng bộ kỹ năng DRAFT tám nghề/bảy hệ (phòng thủ Phong, chỉ số 480/52/9, sáu chủ động, bốn nội tại P1–P4 theo lượt thường); chốt cách mở khóa và ID. Cần per-skill `damageElement` và template `specialHybrid` trước khi code; chưa sửa roster, code, UI hoặc asset.

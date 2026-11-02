@@ -61,6 +61,9 @@
 - Nhân vật đặc biệt mang hai nghề/hai hệ: phòng thủ và đòn đánh thường theo hệ chính, giá cao hơn nhiều, nhận bằng cách đặc biệt, dùng icon tổng hợp nghề/hệ.
 - Tạo nguồn [nhan-vat-tong-hop.md](../03-characters/nhan-vat-tong-hop.md) (DRAFT) với đề xuất chính/phụ, ví dụ và tác động code; chưa sửa code, roster hay save. Icon `tongHop` cho nghề/hệ và hiển thị tổng hợp của Đinh Ngọc ở trang xem thử đã có.
 
+**Vũ Phong — nhập ảnh phong thái (khung 6)**
+- Người dùng gửi hai phương án khung 6; chọn phương án có nụ cười nửa miệng và nét nhướng mày làm `style.webp`. Đủ ảnh cho sáu khung; chưa dựng rig.
+
 **Vũ Phong — nhập năm ảnh khung 1–5**
 - Người dùng cung cấp năm ảnh trong suốt (Idle, đánh thường, ra chiêu, tuyệt chiêu, hạ gục) và chọn theo ảnh: sửa Character DNA và prompt ở [nguồn Vũ Phong](../03-characters/vu-phong.md) (búi cao, râu dê, thân săn chắc, hồ lô hai ngăn). Nhập ảnh vào `public/art/characters/vu-phong/` và đăng ký avatar `vuPhong`; chưa dựng rig, chưa vào roster.
 
