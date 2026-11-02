@@ -133,4 +133,4 @@
 
 - Đã có hình tượng DRAFT: nam khoảng 28 tuổi, lãng khách có hình xăm; nguồn duy nhất: [vu-phong.md](../03-characters/vu-phong.md).
 - TODO: Duyệt tuổi, ngoại hình, bố cục hình xăm, trượng trúc và Master prompt.
-- TODO: Review và mô phỏng bộ kỹ năng DRAFT (Phong chính/Thủy phụ, chỉ số 480/52/9, sáu chủ động, bốn nội tại P1–P4, P4 một lần/trận); chốt cách mở khóa và ID. Cần per-skill `damageElement` và template đặc biệt trước khi code; chưa sửa roster, code, UI hoặc asset.
+- TODO: Review và mô phỏng bộ kỹ năng DRAFT tám nghề/bảy hệ (phòng thủ Phong, chỉ số 480/52/9, sáu chủ động, bốn nội tại P1–P4 theo lượt thường); chốt cách mở khóa và ID. Cần per-skill `damageElement` và template `specialHybrid` trước khi code; chưa sửa roster, code, UI hoặc asset.
