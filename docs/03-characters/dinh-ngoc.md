@@ -1,7 +1,7 @@
 # Đinh Ngọc — Vạn Tượng Hành Giả
 
-> Cập nhật: 30/10/2026
-> Trạng thái: **DRAFT** — đã thống nhất hướng một nhân vật dung hợp tám nghề/bảy hệ qua sáu chủ động và bốn nội tại; tên Đinh Ngọc, nữ khoảng 25 tuổi đã chốt; ngoại hình chi tiết, chiêu thức, thông số và cách mở khóa dưới đây là đề xuất hoàn chỉnh để review. Chưa có code, ảnh Master hoặc kết quả mô phỏng.
+> Cập nhật: 02/11/2026
+> Trạng thái: **DRAFT** — đã thống nhất hướng một nhân vật dung hợp tám nghề/bảy hệ qua sáu chủ động và bốn nội tại; tên Đinh Ngọc, nữ khoảng 25 tuổi đã chốt; ngoại hình chi tiết, chiêu thức, thông số và cách mở khóa dưới đây là đề xuất hoàn chỉnh để review. Kỹ năng và nội tại đã chạy được trong core (chưa mở ở chế độ nào, xem [Triển khai trong core](#triển-khai-trong-core-02112026)); chưa có kết quả mô phỏng cân bằng.
 
 ## Hồ sơ và vị trí trong Reed Banner
 
@@ -153,6 +153,40 @@ Ví dụ trung tính, không gear/buff/Sĩ khí/quan hệ hệ, ATK100, DEF đ�
 Đây chỉ là kiểm số học, không phải mô phỏng trận. Trước rollout cần ma trận 1v1/3v3, cấp1/10/20/30, chiêu1/3/5, gear0/đại diện, các phe/hệ đối thủ, F100/20%, có/không đồng đội khống chế. So với đấu sĩ và hỗ trợ chuyên môn; báo tỷ lệ thắng kèm CI95%, thời lượng/censored, nguồn sát thương/hồi/Khiên, P4 cơ hội mở/tiêu/hết hạn và tài nguyên thực. Kiểm riêng freeze/silence, shield hết hạn/dispel, nguồn chết, nhiều hit/AoE, tải snapshot và reset Survival.
 
 > TODO: Review hình Master, mapping special template/slot và cách mở khóa trước implement. Các chi tiết gameplay/ID/chỉ số ở đây là proposal, không coi đã được cân bằng hoặc đã triển khai. Theo dõi tại [câu hỏi mở](../09-roadmap/cau-hoi-mo.md).
+
+## Triển khai trong core (02/11/2026)
+
+Kỹ năng đã chạy được trong engine chiến đấu (`src/core`), kiểm bằng `tests/core/battle/special-characters.test.ts`. **Chưa mở ở chế độ nào**: nhân vật nằm ở `SPECIAL_COMPANIONS` ([roster.ts](../../src/core/roster/roster.ts)), không thuộc `ALL_COMPANIONS`, nên chưa có trong shop, Thường, Chiến dịch, Tháp, Sinh tồn hay Practice; mở ở đâu và cách mở khóa là quyết định sản phẩm sau. Trang `/demo` cũng chưa chọn được hai nhân vật này.
+
+| Hạng mục | Cách làm |
+|---|---|
+| Sáu chủ động | Dữ liệu trong [special-skills.ts](../../src/core/battle/special-skills.ts), đăng ký trong `SKILLS`; ô4 nằm trong `CHARACTER_SKILLS`. `characterSkills()` trả đúng bộ sáu chiêu theo ô cho id nhân vật này |
+| Hệ từng chiêu | Trường mới `SkillDef.damageElement`; mỗi hit tính theo hệ của chiêu, hệ phòng thủ là `element` của nhân vật. AI tính theo cùng trường |
+| Bỏ nội tại nghề | Cờ mới `FighterConfig.special`: bỏ lương Binh lính, năng lượng Pháp sư, hồi Y sư, bonus kiếm 30%, hút năng lượng Mưu sĩ, làm yếu Quân sư. `profession` chỉ để hiển thị |
+| Chỉ số nền | `scaleStats` dùng chỉ số riêng của nhân vật đặc biệt, không theo bảng nghề |
+| Nội tại | Hệ truy kích hiện có (`CHASE_PASSIVES`) mở rộng: hiệu ứng `burn`, `silence`, `defUp`; tín hiệu mới `damageTaken`, `shieldBroken`, `weakened`, `finishing`; nội tại cuối lượt (`turnEnd`) có quota lưu trong `Fighter.chaseCounters` (snapshot nên reload không reset) |
+| Reset | Quota nội tại cuối lượt reset ở trận mới và `beginWave` |
+
+### Mô phỏng thăm dò (02/11/2026)
+
+AI Thường điều khiển, cấp 30, không trang bị, đấu 26 tướng trong `ALL_COMPANIONS` (mỗi ba tướng một), 2 seed × 2 người đi trước = **100 trận mỗi ô**; sai số khoảng ±10 điểm nên chỉ để phát hiện lệch lớn, **không phải báo cáo cân bằng**. Tướng thường Trần Cương làm mốc.
+
+| Nhân vật | 1vs1 thắng | 3vs3 thắng (hai đồng đội ngẫu nhiên từ roster) |
+|---|---:|---:|
+| Trần Cương (mốc) | 38% | 49% |
+| Đinh Ngọc | 52% | 44% |
+| Vũ Phong | 66% | 73% |
+
+Nhận xét: Đinh Ngọc nằm trong dải bình thường. **Vũ Phong nghiêng mạnh**; AI gần như chỉ dùng ô1 (đòn Phong 1.4× ATK giá 35 kèm xoay bàn cờ, 442 lần trong 100 trận 1vs1) và bị động trả đòn P1. Cần mô phỏng đủ ma trận (cấp 1/10/20/30, gear, F, đối thủ đủ nghề/hệ) và hạ số liệu (ví dụ giá ô1, hệ số P1 hoặc ATK nền) **trước khi mở ở bất kỳ chế độ nào**. Ô4 gần như không được dùng vì AI tiêu năng lượng vào ô1 trước khi đủ 90.
+
+### Khác bản thiết kế khi triển khai
+
+Giới hạn "một lần mỗi lượt" của hệ truy kích hiện hành được thực thi là **một lần mỗi hành động gốc** theo luật chung của chuỗi truy kích, vì engine đếm theo hành động chứ không theo lượt:
+
+- **P1:** một lần mỗi hành động của địch (buff DEF không cộng dồn nên hiệu quả giống nhau); không kích khi Khiên còn dư, hết hạn hoặc bị Xua tan.
+- **P2:** hồi `round(round(HPmax×5%)×F)`, kẹp theo HP thiếu; quota 3 lần chỉ tính khi HP tăng thật, lưu theo trận.
+- **P3:** trừ năng lượng mục tiêu **bị trúng đầu tiên** (theo thứ tự vị trí), không chọn địch mất HP nhiều nhất, khi chiêu đa mục tiêu.
+- **P4:** dùng bị động phối hợp mới `phongLenh` (+15%, như `resonance` nhưng 15%): chỉ đồng đội khác mở được; một cơ hội giữ, hết hạn theo luật cơ hội phối hợp chung.
 
 ## Trận Đồ (Binh Pháp)
 

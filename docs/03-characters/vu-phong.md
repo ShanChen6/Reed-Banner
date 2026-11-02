@@ -1,7 +1,7 @@
 # Vũ Phong — Vân Du Tử
 
 > Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — có hình tượng, sáu ảnh khung và rig hình động (chỉ có trên trang xem thử) và bộ kỹ năng đề xuất: nhân vật đặc biệt dung hợp tám nghề/bảy hệ qua 6 chủ động + 4 nội tại, cùng khuôn với Đinh Ngọc nhưng đảo vai. Mọi số liệu là điểm xuất phát chưa mô phỏng; chưa có ID runtime, chưa vào roster; chưa Shan duyệt.
+> Trạng thái: **DRAFT** — có hình tượng, sáu ảnh khung và rig hình động (chỉ có trên trang xem thử) và bộ kỹ năng đề xuất: nhân vật đặc biệt dung hợp tám nghề/bảy hệ qua 6 chủ động + 4 nội tại, cùng khuôn với Đinh Ngọc nhưng đảo vai. Mọi số liệu là điểm xuất phát chưa mô phỏng; kỹ năng và nội tại đã chạy được trong core (chưa mở ở chế độ nào, xem [Triển khai trong core](#triển-khai-trong-core-02112026)); chưa Shan duyệt.
 
 ## Hồ sơ
 
@@ -214,6 +214,41 @@ Trước rollout cần ma trận 1v1/3v3, cấp 1/10/20/30, chiêu 1/3/5, gear 0
 ### Tích hợp dự kiến
 
 Không thêm "nghề Phong Du" vào `ALL_PROFESSIONS` và không dùng mô hình chính/phụ của [nhân vật tổng hợp](nhan-vat-tong-hop.md): Vũ Phong dùng khuôn `specialHybrid` cùng Đinh Ngọc (loadout cố định, per-skill `damageElement`, bốn nội tại hỗn hợp, chặn tự lắp nội tại nghề/hệ mặc định). Dữ liệu tối thiểu: identity `vuPhong`, template `specialHybrid`, defenseElement `phong`, sáu skill ID và bốn passive ID ở trên, bộ đếm P1–P4 trong snapshot. Đó là contract đề xuất, không phải API hiện có; server-authoritative cho damageElement, target, cost và trigger. Cách mở khóa theo hướng chung của [nhân vật tổng hợp](nhan-vat-tong-hop.md#cách-nhận), chưa chốt.
+
+## Triển khai trong core (02/11/2026)
+
+Kỹ năng đã chạy được trong engine chiến đấu (`src/core`), kiểm bằng `tests/core/battle/special-characters.test.ts`. **Chưa mở ở chế độ nào**: nhân vật nằm ở `SPECIAL_COMPANIONS` ([roster.ts](../../src/core/roster/roster.ts)), không thuộc `ALL_COMPANIONS`, nên chưa có trong shop, Thường, Chiến dịch, Tháp, Sinh tồn hay Practice; mở ở đâu và cách mở khóa là quyết định sản phẩm sau. Trang `/demo` cũng chưa chọn được hai nhân vật này.
+
+| Hạng mục | Cách làm |
+|---|---|
+| Sáu chủ động | Dữ liệu trong [special-skills.ts](../../src/core/battle/special-skills.ts), đăng ký trong `SKILLS`; ô4 nằm trong `CHARACTER_SKILLS`. `characterSkills()` trả đúng bộ sáu chiêu theo ô cho id nhân vật này |
+| Hệ từng chiêu | Trường mới `SkillDef.damageElement`; mỗi hit tính theo hệ của chiêu, hệ phòng thủ là `element` của nhân vật. AI tính theo cùng trường |
+| Bỏ nội tại nghề | Cờ mới `FighterConfig.special`: bỏ lương Binh lính, năng lượng Pháp sư, hồi Y sư, bonus kiếm 30%, hút năng lượng Mưu sĩ, làm yếu Quân sư. `profession` chỉ để hiển thị |
+| Chỉ số nền | `scaleStats` dùng chỉ số riêng của nhân vật đặc biệt, không theo bảng nghề |
+| Nội tại | Hệ truy kích hiện có (`CHASE_PASSIVES`) mở rộng: hiệu ứng `burn`, `silence`, `defUp`; tín hiệu mới `damageTaken`, `shieldBroken`, `weakened`, `finishing`; nội tại cuối lượt (`turnEnd`) có quota lưu trong `Fighter.chaseCounters` (snapshot nên reload không reset) |
+| Reset | Quota nội tại cuối lượt reset ở trận mới và `beginWave` |
+
+### Mô phỏng thăm dò (02/11/2026)
+
+AI Thường điều khiển, cấp 30, không trang bị, đấu 26 tướng trong `ALL_COMPANIONS` (mỗi ba tướng một), 2 seed × 2 người đi trước = **100 trận mỗi ô**; sai số khoảng ±10 điểm nên chỉ để phát hiện lệch lớn, **không phải báo cáo cân bằng**. Tướng thường Trần Cương làm mốc.
+
+| Nhân vật | 1vs1 thắng | 3vs3 thắng (hai đồng đội ngẫu nhiên từ roster) |
+|---|---:|---:|
+| Trần Cương (mốc) | 38% | 49% |
+| Đinh Ngọc | 52% | 44% |
+| Vũ Phong | 66% | 73% |
+
+Nhận xét: Đinh Ngọc nằm trong dải bình thường. **Vũ Phong nghiêng mạnh**; AI gần như chỉ dùng ô1 (đòn Phong 1.4× ATK giá 35 kèm xoay bàn cờ, 442 lần trong 100 trận 1vs1) và bị động trả đòn P1. Cần mô phỏng đủ ma trận (cấp 1/10/20/30, gear, F, đối thủ đủ nghề/hệ) và hạ số liệu (ví dụ giá ô1, hệ số P1 hoặc ATK nền) **trước khi mở ở bất kỳ chế độ nào**. Ô4 gần như không được dùng vì AI tiêu năng lượng vào ô1 trước khi đủ 90.
+
+### Khác bản thiết kế khi triển khai
+
+Giới hạn "một lần mỗi lượt" được thực thi là **một lần mỗi hành động gốc** theo luật chung của chuỗi truy kích:
+
+- **P1:** trả đòn Kim vào đúng kẻ tấn công, một lần mỗi hành động của địch; không trả khi bị hạ gục hoặc Khiên đỡ hết.
+- **P2:** chỉ đồng đội khác mở được; chiêu của chính Vũ Phong không tự kích. Truy kích dùng hệ Phong.
+- **P3:** chiêu nhiều mục tiêu chọn **địch đủ điều kiện đầu tiên** theo vị trí, không chọn tỷ lệ HP thấp nhất. Thiêu đốt lấy `round(30% ATK)` tại lúc áp.
+- **P4:** Câm lặng địch bị Xua tan **đầu tiên** theo vị trí, không chọn địch bị xóa nhiều buff nhất; không kích nếu Xua tan không xóa gì.
+- **Không có bị động phối hợp:** là nhân vật đặc biệt đầu tiên mang bốn nội tại đều là truy kích, nên `FighterConfig.chasePassives` cho phép bốn id khi `special` và không có `comboPassive`.
 
 ## Prompt Master (khung Idle)
 

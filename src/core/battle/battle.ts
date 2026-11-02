@@ -1,4 +1,4 @@
-import { CHASE_PASSIVES, type ChaseEvent, type ChaseAuditEvent } from "./chase";
+import { CHASE_PASSIVES, validChaseCount, type ChasePassiveDef, type ChaseEvent, type ChaseAuditEvent } from "./chase";
 // Luồng trận đấu: lượt, người hành động, kỹ năng, áp kết quả bàn cờ lên hai phe.
 // Xem docs/01-gameplay/tran-dau.md, 03-tai-nguyen-cong-thuc.md, 04-hieu-ung.md, 06-nhan-vat-ky-nang.md.
 // Hàm thuần: nhận trạng thái cũ, trả trạng thái mới; thời gian do bên gọi truyền vào.
@@ -242,7 +242,7 @@ function buildSide(s: SideConfig, solo: boolean): Side {
     throw new RangeError("Thủ lĩnh phải còn máu");
   for (const f of s.fighters) {
     if(f.comboPassive && !Object.hasOwn(COMBO_PASSIVES,f.comboPassive))throw new RangeError(`Bị động phối hợp không tồn tại: ${f.comboPassive}`);
-    if(f.chasePassives && (f.chasePassives.length!==3 || new Set(f.chasePassives).size!==3 || f.chasePassives.some(id=>!Object.hasOwn(CHASE_PASSIVES,id))))throw new RangeError("Cần ba bị động truy kích hợp lệ, không trùng");
+    if(f.chasePassives && (!validChaseCount(f) || new Set(f.chasePassives).size!==f.chasePassives.length || f.chasePassives.some(id=>!Object.hasOwn(CHASE_PASSIVES,id))))throw new RangeError("Cần ba bị động truy kích hợp lệ, không trùng (nhân vật đặc biệt không có bị động phối hợp được bốn)");
     for (const id of f.skills ?? [])
       if (!getSkill(id)) throw new RangeError(`Kỹ năng không tồn tại: ${id}`);
   }
@@ -355,7 +355,7 @@ export function beginWave(
   ctx.emit({ type: "wave", wave: config.wave });
   own.fighters.forEach((f, i) => {
     f.effects = [];
-    delete f.comboReady;delete f.comboOpenedAt;delete f.comboShield;
+    delete f.comboReady;delete f.comboOpenedAt;delete f.comboShield;delete f.chaseCounters;
     f.spirit = R.SPIRIT_MAX;
     if (
       config.revive.includes(i) &&
@@ -629,10 +629,15 @@ export function effectiveAtk(f: Fighter, experiment?: R.SpiritExperiment): numbe
 }
 
 /** DEF sau hiệu ứng; Binh lính +5% mỗi bậc sĩ khí trên mức bình thường. */
+/** Nghề được hưởng nội tại nghề mặc định: nhân vật đặc biệt không nhận, chỉ dùng bốn nội tại riêng. */
+function intrinsicProfession(f: Pick<Fighter, "profession" | "special">): Fighter["profession"] | undefined {
+  return f.special ? undefined : f.profession;
+}
+
 export function effectiveDef(side: Side, f: Fighter, experiment?: R.SpiritExperiment): number {
   const tiers = R.moraleOf(side.food) === "eager" ? 1 : 0;
   const bonus =
-    f.profession === "binhLinh" ? R.BINH_LINH_DEF_PER_TIER * tiers : 0;
+    intrinsicProfession(f) === "binhLinh" ? R.BINH_LINH_DEF_PER_TIER * tiers : 0;
   const passive = passiveOn(side, f, "hoa") ? PASSIVE.hoaDefDown : 0;
   return Math.max(
     0,
@@ -651,12 +656,15 @@ class Ctx {
   ) { this.combo = new ComboEngine(state, e => this.emit(e.type==='combo'?{...e,turn:state.turn.number}:e), (p,source,target) => {
       const caster=this.fighter(source);const receiver=this.fighter(target);
       switch(p.effect){
-        case 'damage': this.damage(target,Math.round(p.value*effectiveAtk(caster,state.experimentalSpirit)*R.MORALE_DAMAGE[R.moraleOf(state.sides[source.side].food)]*elementMultiplier(caster.element,receiver.element)*R.defenseMultiplier(effectiveDef(state.sides[target.side],receiver,state.experimentalSpirit),0)),"skill",source);break;
+        case 'damage': this.damage(target,Math.round(p.value*effectiveAtk(caster,state.experimentalSpirit)*R.MORALE_DAMAGE[R.moraleOf(state.sides[source.side].food)]*elementMultiplier(p.element ?? caster.element,receiver.element)*R.defenseMultiplier(effectiveDef(state.sides[target.side],receiver,state.experimentalSpirit),0)),"skill",source);break;
         case 'heal':this.heal(target,Math.round(receiver.maxHp*p.value),false,true);break;
         case 'shield':this.applyEffect(target,{kind:'shield',value:Math.round(receiver.maxHp*p.value),turns:p.shieldTurns === undefined ? 2 : p.shieldTurns});break;
         case 'armor':this.applyEffect(target,{kind:'defDown',value:p.value,turns:1});break;
         case 'drain':this.gainEnergy(target,-p.value);break;
         case 'energy':this.gainEnergy(target,p.value);break;
+        case 'burn':this.applyEffect(target,{kind:'burn',value:Math.max(1,Math.round(caster.atk*p.value)),turns:p.turns??2});break;
+        case 'silence':this.applyEffect(target,{kind:'silence',value:0,turns:p.turns??1});break;
+        case 'defUp':this.applyEffect(target,{kind:'defUp',value:p.value,turns:p.turns??1});break;
       }
     }); }
 
@@ -696,7 +704,7 @@ class Ctx {
     if (own.passiveTurns > 0) own.passiveTurns--;
 
     const hasBinhLinh = own.fighters.some(
-      (f) => isAlive(f) && f.profession === "binhLinh",
+      (f) => isAlive(f) && intrinsicProfession(f) === "binhLinh",
     );
     own.food = Math.max(
       0,
@@ -784,8 +792,26 @@ class Ctx {
         if(effect === 'shield')this.combo.removeShield({side,fighter:i});
         this.emit({ type: "effectEnd", side, fighter: i, effect });
       }
+      this.turnEndPassives({ side, fighter: i });
     });
     if (s.winner === null) this.beginSideTurn(otherSide(side));
+  }
+
+  /**
+   * Nội tại cuối lượt thường của nhân vật đặc biệt (CHASE_PASSIVES[...].turnEnd), sau sát thương theo thời gian và hết hạn
+   * hiệu ứng. Hồi theo Tinh thần của chính mình, chỉ tính lượt quota khi HP tăng thật; không mở chuỗi, không hồi sinh.
+   */
+  private turnEndPassives(ref: FighterRef): void {
+    const f = this.fighter(ref);
+    for (const id of f.chasePassives ?? []) {
+      const p: ChasePassiveDef = CHASE_PASSIVES[id];
+      if (!p.turnEnd || !isAlive(f) || this.state.winner !== null) continue;
+      const used = f.chaseCounters?.[id] ?? 0;
+      if (used >= p.turnEnd.quota || f.hp >= f.maxHp || f.hp / f.maxHp > p.turnEnd.hpBelow) continue;
+      const before = f.hp;
+      this.combo.withoutTriggers(() => this.heal(ref, Math.round(f.maxHp * p.value)));
+      if (f.hp > before) f.chaseCounters = { ...f.chaseCounters, [id]: used + 1 };
+    }
   }
 
   private startAction(extra: boolean): void {
@@ -879,7 +905,7 @@ class Ctx {
                 morale *
                 spread *
                 hoa *
-                elementMultiplier(caster.element, target.element) *
+                elementMultiplier(def.damageElement ?? caster.element, target.element) *
                 R.defenseMultiplier(
                   effectiveDef(s.sides[t.side], target, s.experimentalSpirit),
                   pierce,
@@ -1151,7 +1177,7 @@ class Ctx {
 
     // Năng lượng
     let energy = h.amDuong * R.ENERGY_PER_TILE;
-    if (actor.profession === "phapSu") energy *= R.ENERGY_PHAP_SU;
+    if (intrinsicProfession(actor) === "phapSu") energy *= R.ENERGY_PHAP_SU;
     if (morale === "hungry" || morale === "starving") energy *= R.ENERGY_HUNGRY;
     energy += count("amDuong", "weak") * R.BUA_AM_DUONG_ENERGY;
     if (passiveOn(own, own.fighters[own.leader]!, "loi"))
@@ -1161,7 +1187,7 @@ class Ctx {
 
     // Hồi máu; Y sư: hồi vượt máu tối đa thành Khiên tạm thời.
     if (h.tim > 0) {
-      const ySu = actor.profession === "ySu";
+      const ySu = intrinsicProfession(actor) === "ySu";
       const amount = Math.round(
         actor.maxHp * R.HEAL_PER_TILE_RATIO * h.tim * (ySu ? R.HEAL_Y_SU : 1),
       );
@@ -1218,7 +1244,7 @@ class Ctx {
         (m) => m.kind === "kiem" && m.cells.length >= 4,
       );
       const prof =
-        actor.profession === "tuongSi" && bigSword ? R.TUONG_SI_BONUS : 1;
+        intrinsicProfession(actor) === "tuongSi" && bigSword ? R.TUONG_SI_BONUS : 1;
       const hoa = passiveOn(own, actor, "hoa") ? 1 + PASSIVE.hoaDamage : 1;
       const pierce = passiveOn(own, actor, "kim") ? PASSIVE.kimPierce : 0;
       const amount = Math.round(
@@ -1239,9 +1265,9 @@ class Ctx {
     const victim = singleTarget(s, s.turn.actor);
     if (victim !== null) {
       const ref = { side: foeIdx, fighter: victim };
-      if (actor.profession === "muuSi" && h.vang > 0)
+      if (intrinsicProfession(actor) === "muuSi" && h.vang > 0)
         this.gainEnergy(ref, -h.vang * R.MUU_SI_DRAIN_PER_TILE);
-      if (actor.profession === "quanSu" && h.sach > 0) {
+      if (intrinsicProfession(actor) === "quanSu" && h.sach > 0) {
         const effects = foe.fighters[victim]!.effects;
         const current = findEffect(effects, "atkDown")?.value ?? 0;
         const value = Math.min(
@@ -1377,17 +1403,28 @@ class Ctx {
     const baseAmount = amount;
     if(attacker && (source === "skill" || source === "sword"))amount = Math.round(amount * this.combo.damageRatio(attacker,ref));
     let absorbed = 0;
+    let shieldGone = false;
     const shield = ignoreShield ? undefined : findEffect(f.effects, "shield");
     if (shield) {
       absorbed = Math.min(shield.value, amount);
       shield.value -= absorbed;
       this.combo.shieldAbsorbed(ref, absorbed, (source === "skill" || source === "sword") && attacker !== undefined, attacker);
-      if (shield.value <= 0) this.strip(ref, ["shield"]);
+      if (shield.value <= 0) { shieldGone = true; this.strip(ref, ["shield"]); }
     }
     const lost = Math.min(f.hp, amount - absorbed);
     f.hp -= lost;
     this.emit({ type: "damage", ...ref, amount: lost, absorbed, source });
     if(source === "skill" && Math.min(lost, Math.max(0,baseAmount-absorbed)) > 0)this.combo.signal("skillDamage",ref);
+    // Tín hiệu của nhân vật đặc biệt: chỉ từ đòn của địch (khác phe), không từ DoT, phản đòn hay truy kích.
+    if (attacker && attacker.side !== ref.side) {
+      if (shieldGone && (source === "skill" || source === "sword")) this.combo.shieldBroken(ref, attacker);
+      if (source === "skill" && lost > 0) this.combo.damageTaken(ref, attacker);
+      if (source === "skill" && lost > 0 && isAlive(f)) {
+        const left = f.hp / f.maxHp;
+        if (left <= 0.5) this.combo.signal("weakened", ref);
+        if (left <= 0.3) this.combo.signal("finishing", ref);
+      }
+    }
 
     if (ref.fighter === own.leader && isAlive(f) && lost > 0) {
       this.addRage(ref.side, (lost / f.maxHp) * R.RAGE_PER_HP_RATIO);

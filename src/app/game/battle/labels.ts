@@ -241,6 +241,10 @@ export const COMBO_SIGNAL_TEXT: Record<ComboSignalKind, string> = {
   skillDamage: "kỹ năng làm mục tiêu mất HP thực (phần Khiên đỡ không tính)",
   healed: "kỹ năng hồi HP thực (phần hồi tràn không tính)",
   shieldAbsorbed: "kỹ năng cấp Khiên cho đồng đội và Khiên đó thực sự đỡ đòn kiếm/kỹ năng của địch",
+  damageTaken: "bản thân mất HP thực vì kỹ năng chủ động của địch",
+  shieldBroken: "Khiên của bản thân vừa về 0 vì đòn kiếm/kỹ năng của địch",
+  weakened: "kỹ năng khiến một địch còn sống xuống còn tối đa 50% HP",
+  finishing: "kỹ năng khiến một địch còn sống xuống còn tối đa 30% HP",
 };
 
 const signals = (kinds: readonly ComboSignalKind[]) => kinds.map((k) => COMBO_SIGNAL_TEXT[k]).join(" hoặc ");
@@ -265,6 +269,9 @@ export function chaseTriggerText(p: ChasePassiveDef): string[] {
     armor: "mục tiêu đã có Thủ− bằng hoặc mạnh hơn",
     drain: "mục tiêu hết năng lượng",
     energy: "người nhận đầy năng lượng",
+    burn: "mục tiêu đã chết",
+    silence: "mục tiêu đã bị Câm lặng",
+    defUp: "đã có DEF+ bằng hoặc mạnh hơn",
   };
   return [
     `Tự phản ứng ngay khi ${p.alliesOnly ? "một đồng đội khác" : "bất kỳ ai trong phe, kể cả bản thân,"} dùng ${signals(p.triggers)}; không tốn lượt hay năng lượng.`,

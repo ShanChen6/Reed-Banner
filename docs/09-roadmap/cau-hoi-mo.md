@@ -130,6 +130,12 @@
 - TODO: Shan thiết kế 13 ảnh bản đồ, ảnh ô che và 4 icon chướng ngại ([yêu cầu và prompt](../05-ui-ux/screens/tran-do.md#3-yêu-cầu-ảnh-cho-họa-sĩ)); hiện dùng ảnh giữ chỗ.
 - TODO: Shan test lần 1 màn chế độ và màn chơi chi tiết đã triển khai ([mục 5 và 6](../05-ui-ux/screens/tran-do.md#5-màn-chế-độ-đã-code-chờ-shan-test-lần-1)) rồi góp ý. Kho bản đồ mở rộng lên 30 và không giới hạn; prompt đầy đủ ở [prompt hình ảnh Trận Đồ](../06-art/prompts/tran-do-hinh-anh.md).
 
+## Đinh Ngọc và Vũ Phong — chạy trong trận
+
+- Đã có (02/11/2026): sáu chủ động + bốn nội tại của cả hai chạy trong `src/core`, test 38 ca; chưa mở ở chế độ nào ([Đinh Ngọc](../03-characters/dinh-ngoc.md#triển-khai-trong-core-02112026), [Vũ Phong](../03-characters/vu-phong.md#triển-khai-trong-core-02112026)).
+- TODO: Cân bằng Vũ Phong (thăm dò 66%/73% thắng 1vs1/3vs3 so với mốc 38%/49%): hạ ô1 hoặc P1, mô phỏng đủ ma trận.
+- TODO: Chọn chế độ mở (Thường, Chiến dịch, Tháp, Sinh tồn), cách mở khóa, giá; đăng ký vào roster/save; giao diện trận cho chiêu `whirl` do người chơi chọn tâm của Vũ Phong (ô1, ô6) và hiển thị bốn nội tại truy kích; mô phỏng cân bằng đầy đủ theo kế hoạch trong hai tài liệu nhân vật.
+
 ## Vũ Phong — Vân Du Tử
 
 - Đã có hình tượng DRAFT: nam khoảng 28 tuổi, lãng khách có hình xăm; nguồn duy nhất: [vu-phong.md](../03-characters/vu-phong.md).

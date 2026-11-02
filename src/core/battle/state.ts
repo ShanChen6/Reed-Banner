@@ -11,6 +11,11 @@ export interface FighterConfig {
   readonly chasePassives?: readonly import("./chase").ChasePassiveId[];
   readonly id: string;
   readonly name: string;
+  /**
+   * Nhân vật đặc biệt dung hợp (Đinh Ngọc, Vũ Phong): `profession` chỉ để hiển thị và dùng hình dự phòng; không nhận nội tại
+   * nghề mặc định, loadout 6+4 cố định. `element` là hệ phòng thủ.
+   */
+  readonly special?: boolean;
   readonly element: Element;
   readonly profession: Profession;
   readonly maxHp: number;
@@ -30,6 +35,8 @@ export interface Fighter extends FighterConfig {
   comboOpenedAt?: number;
   comboShield?: ShieldGrant[];
   hp: number;
+  /** Bộ đếm theo trận của nội tại đặc biệt (id nội tại → số lần đã dùng). */
+  chaseCounters?: Record<string, number>;
   energy: number;
   /** Tinh thần chiến đấu, 0..SPIRIT_MAX; giảm khi trận kéo dài. */
   spirit: number;
