@@ -22,7 +22,7 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 
 ## Hiện trạng (02/11/2026)
 
-Đã có engine và nút âm thanh toàn game, và Trận Đồ đã nối cue/nhạc. `public/audio/manifest.json` đang rỗng nên **chưa có tiếng**: thả tệp `.ogg` và `.m4a` vào `public/audio/` rồi thêm dòng manifest theo [quy ước](02-architecture-and-assets.md#3-quy-ước-tệp) (test kiểm đủ tệp). Trận đánh (A3, qua `DemoGame`) và nhạc theo phân cảnh (A4: bản đồ chiến dịch kèm âm nền, thoại, kết cục, Tháp, Đấu trường, Sinh tồn) cũng đã nối.
+Đã có engine và nút âm thanh toàn game, và Trận Đồ đã nối cue/nhạc. `public/audio/manifest.json` mới có hai cue của Trận Đồ (`formation.place`, `formation.reject`, cắt từ đoạn Gemini tạo; xem `public/audio/CREDITS.md`) nên **các cue còn lại chưa có tiếng**: thả tệp `.ogg` và `.m4a` vào `public/audio/` rồi thêm dòng manifest theo [quy ước](02-architecture-and-assets.md#3-quy-ước-tệp) (test kiểm đủ tệp). Trận đánh (A3, qua `DemoGame`) và nhạc theo phân cảnh (A4: bản đồ chiến dịch kèm âm nền, thoại, kết cục, Tháp, Đấu trường, Sinh tồn) cũng đã nối.
 
 ## Không nằm trong bản UI hiện tại
 

@@ -1,6 +1,9 @@
 {
   "version": 1,
-  "sfx": {},
+  "sfx": {
+    "formation.place": { "files": ["sfx/formation/place_a", "sfx/formation/place_b", "sfx/formation/place_c"], "volume": 0.9 },
+    "formation.reject": { "files": ["sfx/formation/reject_a", "sfx/formation/reject_b", "sfx/formation/reject_c"], "volume": 0.9 }
+  },
   "music": {},
   "ambience": {}
 }
