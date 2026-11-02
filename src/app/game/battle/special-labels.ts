@@ -15,11 +15,6 @@ export const FUSION_PROFESSION_NAME = "Vạn nghề";
 export const FUSION_ELEMENT_NAME = "Vạn hệ";
 export const FUSION_PROFESSION_TITLE = `${FUSION_PROFESSION_NAME}: có nền tảng cả tám nghề, không nhận nội tại nghề mặc định`;
 
-/** Chữ cạnh biểu tượng hệ: biểu tượng Vạn hệ không cho biết hệ phòng thủ, nên chữ ghi rõ để người chơi tính khắc chế. */
-export function elementLabel(f: KindSource): string {
-  return isFusion(f) ? `Phòng thủ ${ELEMENT_NAME[f.element]}` : ELEMENT_NAME[f.element];
-}
-
 /** Chú thích hệ: nhân vật dung hợp chịu khắc theo hệ phòng thủ nhưng đánh bằng nhiều hệ theo từng chiêu. */
 export function elementTitle(f: KindSource): string {
   return isFusion(f)
