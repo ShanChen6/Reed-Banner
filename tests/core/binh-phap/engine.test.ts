@@ -653,14 +653,12 @@ describe("muối bí mật của ván xếp hạng", () => {
     }
   });
 
-  it("dãy quân không phụ thuộc cách đi (chỉ phụ thuộc số lượt), kể cả có muối", () => {
+  it("dãy quân tất định theo trạng thái: cùng bàn cùng lượt thì cùng quân kế, kể cả có muối", () => {
     const base = createPuzzle(rules, 5, "feedfacefeedface");
-    const s1 = transition(base, { kind: "discard" });
-    assert.ok(s1.ok);
-    // Đi bất kỳ nước đặt hợp lệ khác từ cùng trạng thái cũng ra cùng quân kế tiếp loại thường.
-    const legal = legalPlacements(base);
-    const placed = legal.length ? transition(base, { kind: "place", row: Math.floor(legal[0]! / base.width), col: legal[0]! % base.width }) : null;
-    if (placed?.ok && base.hand.kind === "normal") assert.deepEqual(placed.state.hand, s1.state.hand);
+    const a = transition(base, { kind: "discard" });
+    const b = transition(base, { kind: "discard" });
+    assert.ok(a.ok && b.ok);
+    assert.deepEqual(a.state.hand, b.state.hand);
   });
 
   it("lưu và nạp giữ muối; muối sai định dạng bị từ chối", () => {
@@ -749,7 +747,7 @@ describe("chế độ tùy chỉnh", () => {
       assert.equal(parsePuzzle({ ...raw, custom: { ...raw.custom, ...patch } }), null);
     }
     assert.equal(parsePuzzle({ ...raw, custom: undefined }), null);
-    assert.equal(parsePuzzle({ ...raw, rulesVersion: 2 }), null);
+    assert.equal(parsePuzzle({ ...raw, rulesVersion: 99 }), null);
   });
 
   it("ván có tùy chỉnh bị bỏ qua nếu id là bậc thật (không mượn custom để đổi luật bậc thật)", () => {
@@ -759,5 +757,63 @@ describe("chế độ tùy chỉnh", () => {
     assert.ok(withCustom);
     assert.equal(withCustom.custom, undefined);
     assert.equal(withCustom.width, 5);
+  });
+});
+
+describe("quân mới liên quan tới quân trên bàn", () => {
+  const related = (p: Piece, board: readonly BoardPiece[]) =>
+    p.kind !== "normal" || board.every((b) => b.kind !== "normal") || board.some((b) => b.kind === "normal" && (b.profession === p.profession || b.element === p.element));
+
+  /** Chơi tự động, trả về (số quân thường có bàn để so, số quân liên quan). */
+  const sample = (rules: Ruleset, seeds: number) => {
+    let total = 0;
+    let rel = 0;
+    for (let seed = 1; seed <= seeds; seed++) {
+      let s = createPuzzle(rules, seed, seed % 2 ? "0123456789abcdef" : undefined);
+      for (let i = 0; i < 60 && s.phase === "playing"; i++) {
+        const board = s.cells.flatMap((c) => (c.piece ? [c.piece] : []));
+        if (s.hand.kind === "normal" && board.some((b) => b.kind === "normal")) {
+          total += 1;
+          if (related(s.hand, board)) rel += 1;
+        }
+        const legal = legalPlacements(s);
+        const t = transition(s, legal.length ? { kind: "place", row: Math.floor(legal[0]! / s.width), col: legal[0]! % s.width } : { kind: "discard" });
+        assert.ok(t.ok);
+        s = t.state;
+      }
+    }
+    return { total, rel };
+  };
+
+  it("Hướng dẫn (1000‰): quân thường luôn liên quan tới bàn", () => {
+    const { total, rel } = sample(RULESETS.find((r) => r.id === "huong-dan")!, 30);
+    assert.ok(total > 100);
+    assert.equal(rel, total);
+  });
+
+  for (const rules of RULESETS.filter((r) => r.relatedPermille < 1000)) {
+    it(`${rules.id}: tỉ lệ quân liên quan tối thiểu bằng relatedPermille (${rules.relatedPermille}‰), vẫn có quân không liên quan`, () => {
+      const { total, rel } = sample(rules, 60);
+      assert.ok(total > 300);
+      assert.ok(rel / total >= rules.relatedPermille / 1000 - 0.05, `${rel}/${total}`);
+      assert.ok(rel < total, "phải còn quân không liên quan để Bỏ Lệnh có tác dụng");
+    });
+  }
+
+  it("quân liên quan có thể không đặt được (neo không cần còn ô trống kề bên)", () => {
+    const rules = RULESETS.find((r) => r.id === "dai-tran")!;
+    let stuckRelated = 0;
+    for (let seed = 1; seed <= 40 && stuckRelated === 0; seed++) {
+      let s = createPuzzle(rules, seed);
+      for (let i = 0; i < 80 && s.phase === "playing"; i++) {
+        const board = s.cells.flatMap((c) => (c.piece ? [c.piece] : []));
+        const legal = legalPlacements(s);
+        if (s.hand.kind === "normal" && legal.length === 0 && related(s.hand, board) && board.some((b) => b.kind === "normal")) stuckRelated += 1;
+        const t = transition(s, legal.length ? { kind: "place", row: Math.floor(legal[0]! / s.width), col: legal[0]! % s.width } : { kind: "discard" });
+        assert.ok(t.ok);
+        s = t.state;
+      }
+    }
+    assert.ok(stuckRelated > 0);
   });
 });

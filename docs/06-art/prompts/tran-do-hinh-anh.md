@@ -1,7 +1,7 @@
 # Prompt hình ảnh cho Trận Đồ
 
 > Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — bộ prompt để Shan tạo ảnh; ô che và 4 icon chướng ngại v1 đã có (02/11/2026), 5/30 ảnh bản đồ thật đã tích hợp (`hoaLu`, `tranLam`, `phamBachHo`, `ngoXuongXi`, `ngoNhatKhanh`), 25 bản còn lại là ảnh giữ chỗ. Chưa duyệt Master phong cách.
+> Trạng thái: **DRAFT** — bộ prompt để Shan tạo ảnh; ô che và 4 icon chướng ngại v1 đã có (02/11/2026), 8/30 ảnh bản đồ thật đã tích hợp (`hoaLu`, `tranLam`, `phamBachHo`, `ngoXuongXi`, `ngoNhatKhanh`, `kieuThuan`, `kieuCongHan`, `nguyenKhoan`), 22 bản còn lại là ảnh giữ chỗ. Chưa duyệt Master phong cách.
 
 Nguồn chính của giao diện Trận Đồ là [giao diện Trận Đồ](../../05-ui-ux/screens/tran-do.md); tài liệu này chỉ chứa **prompt đầy đủ để dán thẳng vào công cụ tạo ảnh**, kèm tên tệp và thông số. Kho bản đồ **không giới hạn số ảnh**: thêm một ảnh mới theo mục 1.4. Mọi prompt viết tiếng Anh (công cụ tạo ảnh), giải thích tiếng Việt.
 
@@ -285,7 +285,7 @@ High quality hand-painted 2D environment for a Vietnamese historical fantasy mat
 3. Thêm một mục `#### \`<id>\`` kèm prompt vào mục 1.3 của tài liệu này (test `tests/game/formation-maps.test.ts` kiểm mọi bản đồ trong kho đều có prompt ở đây).
 4. Địa danh thật: ghi nguồn vào blurb theo [sổ nguồn sử](../../02-game-modes/campaign/history-sources.md); nếu chưa chắc về vị trí hoặc sự kiện thì dùng cảnh quan chung và nói rõ là minh họa.
 
-Bản đồ chưa có ảnh thật dùng 8 tranh nền chiến dịch lặp lại làm giữ chỗ; ảnh thật thả vào `public/art/formation/maps/<id>.webp` (1024×1024, WebP q82) rồi thêm id vào `REAL_MAPS` trong `maps.ts`. Đã có 5/30: `hoaLu`, `tranLam`, `phamBachHo`, `ngoXuongXi`, `ngoNhatKhanh` (Shan tạo 02/11/2026).
+Bản đồ chưa có ảnh thật dùng 8 tranh nền chiến dịch lặp lại làm giữ chỗ; ảnh thật thả vào `public/art/formation/maps/<id>.webp` (1024×1024, WebP q82) rồi thêm id vào `REAL_MAPS` trong `maps.ts`. Đã có 8/30: `hoaLu`, `tranLam`, `phamBachHo`, `ngoXuongXi`, `ngoNhatKhanh`, `kieuThuan`, `kieuCongHan`, `nguyenKhoan` (Shan tạo 02/11/2026).
 
 ## 2. Ô che đặc kín
 
