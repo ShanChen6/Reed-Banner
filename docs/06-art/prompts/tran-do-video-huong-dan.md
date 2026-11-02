@@ -19,7 +19,7 @@ Audio: soft bamboo flute and a low drum, subtle wooden click when each token is 
 
 Bản thử đầu (qua trang trung gian có watermark) có các lỗi: lưới không đúng 3×3, quân nằm đè đường kẻ, quân chỉ một màu thay vì hai huy hiệu, thiếu cảnh quân sai, kết thúc mơ hồ. Bộ dưới đây sửa các lỗi đó: **mỗi cảnh một ý luật, một hành động**, và lặp lại khối cố định để các cảnh giống một bàn.
 
-Cách làm trong Flow: tạo cảnh 1 bằng *Text to Video*; các cảnh sau dùng *Frames to Video* (khung cuối cảnh trước làm khung đầu) hoặc, nếu có, *Extend*. Gói miễn phí có hạn mức và có thể chỉ cho mô hình nhanh, có thể chưa có tiếng hoặc còn dấu nhỏ; vì vậy các prompt **không yêu cầu lời thoại**: lời dẫn thu riêng (mục 3). Hạn mức thay đổi theo thời điểm, kiểm tra trên trang Flow.
+Cách làm trong Flow: tạo cảnh 1 bằng *Text to Video*; các cảnh sau dùng *Frames to Video* (khung cuối cảnh trước làm khung đầu) hoặc, nếu có, *Extend*. Gói miễn phí có hạn mức và có thể chỉ cho mô hình nhanh, có thể chưa có tiếng hoặc còn dấu nhỏ; mỗi prompt có dòng `Audio:` với lời dẫn tiếng Việt để Veo tự đọc; giọng có thể lệch giữa các cảnh, nên nếu không ưng thì xóa dòng `Audio:` và thu lời dẫn riêng (mục 3). Hạn mức thay đổi theo thời điểm, kiểm tra trên trang Flow.
 
 **Khối cố định (dán ở đầu MỌI cảnh):**
 
@@ -30,21 +30,25 @@ Cinematic hand-painted 2D animation, Vietnamese historical fantasy game, warm go
 **Cảnh 1 — Đặt quân sát quân đã có** (lời dẫn: "Mỗi lượt bạn cầm một quân tướng. Hãy đặt nó sát một quân đã có.")
 ```
 [khối cố định] One token already rests in the center tile. A hand places a second token on the tile directly to its right, with a soft wooden click. The mist cover above that tile thins away and a small patch of painted landscape becomes visible. Calm slow movement, 8 seconds.
+Audio: soft bamboo flute and low drum, subtle wooden sounds. An off-screen calm middle-aged male Vietnamese narrator, warm steady voice, same voice in every scene, says in Vietnamese: "Mỗi lượt bạn cầm một quân tướng. Hãy đặt nó sát một quân đã có."
 ```
 
 **Cảnh 2 — Cùng nghề hoặc cùng hệ với từng quân kề** (lời dẫn: "Quân mới phải cùng nghề hoặc cùng hệ với từng quân kề.")
 ```
 [khối cố định] Two tokens lie in adjacent tiles. The hand holds a token whose red badge looks like the left neighbour's red badge: it is placed on the tile touching both, a golden light line connects the matching badges, and the tile glows warmly. Then the hand tries another token with different badges: the tile flashes dull red, a low thud sounds, and the token is lifted back into the hand. Calm, readable, 8 seconds.
+Audio: soft bamboo flute and low drum, subtle wooden sounds. An off-screen calm middle-aged male Vietnamese narrator, warm steady voice, same voice in every scene, says in Vietnamese: "Quân mới phải cùng nghề hoặc cùng hệ với từng quân kề."
 ```
 
 **Cảnh 3 — Chướng ngại, Quân Lệnh, Thu Hồi** (lời dẫn: "Chướng ngại chắn đường. Quân Lệnh khớp mọi quân, Thu Hồi gỡ một quân khỏi bàn.")
 ```
 [khối cố định] Three tiles are blocked by tiny painted obstacles standing on dark stone tiles: a mountain, a clump of trees, a swamp pool. A token slides toward the mountain tile and bounces back. A golden plain-faced coin token (the wild token) is placed between two mismatched tokens and glows with both colours. A hand then lifts one token off the board and it dissolves into gold dust. 8 seconds.
+Audio: soft bamboo flute and low drum, subtle wooden sounds. An off-screen calm middle-aged male Vietnamese narrator, warm steady voice, same voice in every scene, says in Vietnamese: "Chướng ngại chắn đường. Quân Lệnh khớp mọi quân, Thu Hồi gỡ một quân khỏi bàn."
 ```
 
 **Cảnh 4 — Dọn hàng, lửa Bỏ Lệnh, thắng** (lời dẫn: "Bỏ Lệnh sẽ nhóm lửa; lửa đầy mà còn bỏ nữa là thua. Khai thông hết sa bàn để thấy cả bản đồ.")
 ```
 [khối cố định] A small lantern flame at the board corner flickers larger when the hand swaps a token, then shrinks when a token is placed. The third token completes a full row of three: the row glows, the tokens dissolve into golden dust, and the mist over the row disappears. The camera slowly pulls back as all remaining mist drifts away and the whole painted landscape is revealed in golden light. 8 seconds.
+Audio: soft bamboo flute and low drum, subtle wooden sounds. An off-screen calm middle-aged male Vietnamese narrator, warm steady voice, same voice in every scene, says in Vietnamese: "Bỏ Lệnh sẽ nhóm lửa; lửa đầy mà còn bỏ nữa là thua. Khai thông hết sa bàn để thấy cả bản đồ."
 ```
 
 ## 3. Ghép video và lời dẫn
