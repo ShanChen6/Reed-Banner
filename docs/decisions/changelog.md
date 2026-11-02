@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Trận Đồ: đủ 30/30 ảnh bản đồ thật**
+- Thêm Núi đá vôi và Rừng già; kho không còn ảnh giữ chỗ (kho không giới hạn số ảnh, thêm bản đồ mới theo mục 1.4 của tài liệu prompt hình ảnh).
+
 **Trận Đồ: thêm 5 ảnh bản đồ thật (28/30)**
 - Thành đất có hào nước, Chùa cổ trên đồi, Cửa biển, Vùng trung du, Bến thuyền sông. Còn 2 bản đồ: Rừng già, Núi đá vôi.
 
