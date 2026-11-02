@@ -18,6 +18,7 @@ import {
   getSkill,
   isAdjacent,
   isWhirlCenter,
+  previewWhirl,
   buildCompanion,
   buildMain,
   maxProgress,
@@ -791,6 +792,8 @@ export default function DemoGame({
   const [aimIndex, setAimIndex] = useState(0);
   const [whirlAim, setWhirlAim] = useState<WhirlAim>(null);
   const [pendingWhirl, setPendingWhirl] = useState<Whirl | null>(null);
+  /** Nấc xoay đang rê chuột hoặc focus để xem trước kết quả (chưa bấm). */
+  const [spinPreview, setSpinPreview] = useState<number | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [log, setLog] = useState<LogLine[]>([]);
   const logId = useRef(0);
@@ -1742,6 +1745,18 @@ export default function DemoGame({
 
   const frame = anim ? anim.frames[anim.i] : undefined;
   const board = frame?.board ?? heldBoard ?? state.board;
+  /** Tâm lốc xoáy hiển thị: đang chọn chiều xoay, hoặc đã chọn xong và còn chờ chọn mục tiêu. */
+  const whirlCenter = whirlAim?.center ?? (aim && pendingWhirl ? pendingWhirl.center : null);
+  /** Với từng nấc xoay có thể chọn: bàn cờ sau khi xoay và các ô sẽ ghép được ngay (chỉ để xem trước, không đổi trạng thái). */
+  const spinOptions = useMemo(() => {
+    const center = whirlAim?.center;
+    if (!whirlAim || !center) return [];
+    const turnsList = [-whirlAim.max, ...(whirlAim.max > 1 ? [-1, 1] : []), whirlAim.max]
+      .filter((t, i, list) => list.indexOf(t) === i)
+      .sort((x, y) => x - y);
+    return turnsList.map((turns) => ({ turns, ...previewWhirl(state.board, { center, turns }) }));
+  }, [whirlAim, state.board]);
+  const spinView = whirlAim?.center && spinPreview !== null ? spinOptions.find((o) => o.turns === spinPreview) : undefined;
 
   // Thẻ bấm được để chọn (hoặc đổi) mục tiêu; mục tiêu đã chọn được đánh dấu trong lúc chọn tâm.
   const aimingFoe = aim?.choose && aim.skill.target === "enemy";
@@ -1975,11 +1990,14 @@ export default function DemoGame({
                     col: i % board.cols,
                   };
                   const cellAnim = frame?.anims[i];
-                  const center = whirlAim?.center;
+                  const center = whirlCenter;
                   const isSel =
                     (selected?.row === pos.row && selected.col === pos.col) ||
                     (center?.row === pos.row && center.col === pos.col);
                   const isRing = !!center && inRing(center, pos);
+                  // Xem trước: ô trong vòng hiện quân sau khi xoay; ô sẽ ghép được viền vàng.
+                  const shown = spinView && isRing ? spinView.after.cells[i] : tile;
+                  const willMatch = !!spinView?.matched.has(i);
                   const isCur =
                     showCursor &&
                     cursor.row === pos.row &&
@@ -2000,11 +2018,11 @@ export default function DemoGame({
                       onPointerDown={(e) => onPointerDown(pos, e)}
                       className={`relative aspect-square rounded-md bg-[var(--cell)] ${
                         isSel ? "z-10 scale-110 ring-2 ring-amber-300" : ""
-                      } ${isRing ? "ring-2 ring-teal-400" : ""} ${isCur ? "outline-2 outline-sky-400" : ""} ${(aim && needsCell(aim.skill)) || whirlAim ? "cursor-crosshair" : "cursor-pointer"}`}
+                      } ${isRing ? "ring-2 ring-teal-400" : ""} ${willMatch ? "z-10 ring-2 ring-amber-300 brightness-125" : ""} ${isCur ? "outline-2 outline-sky-400" : ""} ${(aim && needsCell(aim.skill)) || whirlAim ? "cursor-crosshair" : "cursor-pointer"}`}
                     >
-                      {tile && (
+                      {shown && (
                         <span
-                          className={`absolute inset-0 flex items-center justify-center ${cellAnim ? `tile-anim tile-anim-${cellAnim.kind}` : ""}`}
+                          className={`absolute inset-0 flex items-center justify-center ${spinView && isRing ? "opacity-80" : ""} ${cellAnim ? `tile-anim tile-anim-${cellAnim.kind}` : ""}`}
                           style={
                             cellAnim
                               ? ({
@@ -2016,9 +2034,9 @@ export default function DemoGame({
                           }
                         >
                           <TileArt
-                            kind={tile.kind}
-                            special={tile.special}
-                            className={`size-full ${tile.special === "strong" ? "tile-strong" : ""}`}
+                            kind={shown.kind}
+                            special={shown.special}
+                            className={`size-full ${shown.special === "strong" ? "tile-strong" : ""}`}
                           />
                         </span>
                       )}
@@ -2389,26 +2407,33 @@ export default function DemoGame({
             {whirlAim && (
               <div className="flex flex-wrap items-center gap-1.5 text-xs">
                 {whirlAim.center &&
-                  [-whirlAim.max, ...(whirlAim.max > 1 ? [-1, 1] : []), whirlAim.max]
-                    .filter((t, i, list) => list.indexOf(t) === i)
-                    .sort((x, y) => x - y)
-                    .map((t) => (
-                      <button
-                        key={t}
-                        type="button"
-                        onClick={() => spinWhirl(t)}
-                        className="rounded bg-teal-600 px-2 py-1 font-bold text-white"
-                        aria-label={`Xoay ${Math.abs(t)} nấc ${t > 0 ? "theo" : "ngược"} chiều kim đồng hồ`}
-                      >
-                        {t > 0 ? "↻" : "↺"}
-                        {Math.abs(t) > 1 ? ` ×${Math.abs(t)}` : ""}
-                      </button>
-                    ))}
+                  spinOptions.map(({ turns: t, matched }) => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => {
+                        setSpinPreview(null);
+                        spinWhirl(t);
+                      }}
+                      onPointerEnter={() => setSpinPreview(t)}
+                      onPointerLeave={() => setSpinPreview(null)}
+                      onFocus={() => setSpinPreview(t)}
+                      onBlur={() => setSpinPreview(null)}
+                      className="rounded bg-teal-600 px-2 py-1 font-bold text-white"
+                      aria-label={`Xoay ${Math.abs(t)} nấc ${t > 0 ? "theo" : "ngược"} chiều kim đồng hồ, ${matched.size > 0 ? `ghép được ${matched.size} ô` : "không ghép được ô nào"}`}
+                    >
+                      {t > 0 ? "↻" : "↺"}
+                      {Math.abs(t) > 1 ? ` ×${Math.abs(t)}` : ""}
+                      <span className="ml-1 font-normal opacity-90">{matched.size > 0 ? `ghép ${matched.size}` : "không ghép"}</span>
+                    </button>
+                  ))}
                 <span className="opacity-80">{whirlHint(whirlAim)} Esc để hủy.</span>
               </div>
             )}
             {aim && (
               <p className="text-xs opacity-80">
+                {pendingWhirl &&
+                  `Đã chọn xoay ${pendingWhirl.turns > 0 ? "↻" : "↺"}${Math.abs(pendingWhirl.turns) > 1 ? ` ×${Math.abs(pendingWhirl.turns)}` : ""} quanh hàng ${pendingWhirl.center.row + 1}, cột ${pendingWhirl.center.col + 1}. `}
                 {aim.choose && aim.target === undefined
                   ? aim.skill.target === "ally"
                     ? `Chọn đồng đội cho ${aim.skill.name} (bấm thẻ hoặc ←/→ rồi Enter). Esc để hủy.`
