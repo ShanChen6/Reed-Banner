@@ -2,6 +2,21 @@
 
 ## 02/11/2026
 
+**Âm thanh: nối trận đánh (prompt A3)**
+- Trận thường, luyện tập, chiến dịch và sinh tồn (đều qua `DemoGame`): tiếng ghép ô khớp từng khung hoạt ảnh (đổi ô, 3/4/5 ô, combo tầng 1–4, đổi sai), cue theo nghề/hệ/tuyệt chiêu, sát thương, khiên, hồi, hiệu ứng (cháy, đóng băng, độc, tăng, giảm), gục, thắng/thua, ở đúng hai thời điểm của đạo diễn trận; nhạc trận, trùm, sinh tồn. Chưa có tệp âm thanh nên chưa có tiếng.
+
+**Âm thanh: engine toàn game và nối Trận Đồ (prompt A1, A2)**
+- Engine Web Audio (`src/app/game/audio/`): mở khóa sau cử chỉ đầu, 4 bus, tắt tiếng và âm lượng lưu ở máy, giới hạn 8 cue và 40 ms, biến thể và lệch tốc độ ±3%, crossfade nhạc, tạm dừng khi ẩn tab; nút âm thanh ở thanh trên. Trận Đồ phát cue theo sự kiện của engine, nhạc theo màn và lớp căng thẳng theo thanh Bỏ Lệnh. Manifest còn rỗng nên chưa có tiếng cho tới khi có tệp.
+
+**Âm thanh cho mọi chế độ: tài liệu và prompt (chưa triển khai)**
+- Thêm [kiến trúc, quy ước tệp và bảng cue](../05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md) (Trận Đồ, trận đánh, Chiến dịch, Tháp, Sinh tồn, Thử thách, Đấu trường, Quần Hùng) và [prompt giao việc code (A1–A5) cùng prompt tạo hiệu ứng/nhạc](../05-ui-ux/campaign/audio-todo/04-prompts-trien-khai-theo-che-do.md). Backlog AUD vẫn DEFERRED, chưa có code hay tệp âm thanh.
+
+**Biểu tượng nghề Xạ thủ mới**
+- Biểu tượng cũ (ba mũi phi tiêu) lẫn với Sát thủ ở cỡ nhỏ; thay bằng cung tre và mũi tên do Shan tạo ([prompt và cách tích hợp](../06-art/prompts/icon-nghe-xa-thu.md)). Script cắt nền thêm tham số xoay và viền sáng.
+
+**Trận Đồ: sửa chân dung quân kế tiếp hiện trễ 1–2 giây**
+- Nguyên nhân: chân dung là ảnh WebP nạp trong SVG, chỉ tải khi quân xuất hiện lần đầu nên ô nền và huy hiệu hiện ngay còn gương mặt trễ. Giờ vào màn chơi là tải sẵn (và giải mã) chân dung của mọi quân có thể ra trong bộ luật đang chơi, các bậc khác tải lúc rảnh (`src/app/game/formation/preload.ts`).
+
 **Trận Đồ: quân thường mới luôn liên quan tới quân trên bàn (Shan quyết định)**
 - Chơi thử Đại trận thấy quân không dính gì với bàn (Sát thủ Thổ khi bàn không có Sát thủ hay Thổ). Luật: quân thường mới luôn chung nghề hoặc hệ với một quân thường bất kỳ trên bàn, **không cần còn ô trống kề bên** (vẫn có quân không đặt được để Bỏ Lệnh có tác dụng); chỉ khi có Quân Lệnh hoặc quân dung hợp còn ô trống kề bên thì không ràng buộc. Bỏ khái niệm xác suất liên quan đã thử. Bộ luật các bậc tăng version. Ván dễ hơn (Đại trận greedy 33% → 88%): [số đo](../02-game-modes/future/05-binh-phap-balance-qa.md#đo-lại-sau-khi-đổi-luật-sinh-quân-02112026), chờ Shan chọn độ khó mục tiêu.
 

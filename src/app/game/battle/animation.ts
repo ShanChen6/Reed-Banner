@@ -13,12 +13,20 @@ export interface CellAnim {
   readonly dy: number;
 }
 
+/** Âm thanh gắn với khung: phát đúng lúc khung bắt đầu để khớp hoạt ảnh (xem battle/sounds.ts). */
+export type FrameSound =
+  | { readonly kind: "swap" }
+  | { readonly kind: "bounce" }
+  /** Một bước xóa: `size` số ô bị xóa, `chain` bậc chuỗi (1 là lần xóa đầu, từ 2 là combo). */
+  | { readonly kind: "clear"; readonly size: number; readonly chain: number };
+
 export interface Frame {
   readonly board: Board;
   readonly anims: Readonly<Record<number, CellAnim>>;
   readonly ms: number;
   /** Bậc chuỗi cascade (2 trở lên) để hiện nhãn "Chuỗi ×N". */
   readonly chain?: number;
+  readonly sound?: FrameSound;
 }
 
 const SWAP_MS = 170;
@@ -42,6 +50,7 @@ export function bounceFrames(board: Board, from: Pos, to: Pos): Frame[] {
         [idx(board, to)]: { kind: "bounce", dx: -dx || 0, dy: -dy || 0 },
       },
       ms: BOUNCE_MS,
+      sound: { kind: "bounce" },
     },
   ];
 }
@@ -78,7 +87,7 @@ function cascadeFrames(pre: Board, steps: readonly CascadeStep[]): Frame[] {
     const clear: Record<number, CellAnim> = {};
     for (const p of step.cleared) clear[idx(board, p)] = { kind: "clear", dx: 0, dy: 0 };
     for (const a of step.activations) clear[idx(board, a.pos)] = { kind: "blast", dx: 0, dy: 0 };
-    frames.push({ board, anims: clear, ms: CLEAR_MS, ...(i > 0 ? { chain: i + 1 } : {}) });
+    frames.push({ board, anims: clear, ms: CLEAR_MS, sound: { kind: "clear", size: step.cleared.length, chain: i + 1 }, ...(i > 0 ? { chain: i + 1 } : {}) });
 
     const pop: Record<number, CellAnim> = {};
     for (const c of step.created) pop[idx(board, c.pos)] = { kind: "pop", dx: 0, dy: 0 };
@@ -112,6 +121,7 @@ export function eventFrames(start: Board, events: readonly BattleEvent[]): Frame
             [idx(board, e.from)]: { kind: "move", dx, dy },
           },
           ms: SWAP_MS,
+          sound: { kind: "swap" },
         });
         frames.push(...cascadeFrames(swapped, e.steps));
         board = e.steps.at(-1)?.boardAfter ?? swapped;

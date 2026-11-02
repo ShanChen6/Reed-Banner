@@ -64,7 +64,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [design-system/README.md](05-ui-ux/design-system/README.md) | UI Home và các chế độ ngoài Campaign; spec ở [game-mode-ui-spec.md](05-ui-ux/design-system/game-mode-ui-spec.md) (Home V2 mục 14) |
 | ★ [screens/battle.md](05-ui-ux/screens/battle.md) | Màn trận đấu, điều khiển |
 | ★ [screens/tran-do.md](05-ui-ux/screens/tran-do.md) | Giao diện Trận Đồ: sa bàn là bản đồ, quân, chướng ngại, yêu cầu ảnh, gợi ý màn chế độ (**DRAFT**) |
-| ★ [campaign/README.md](05-ui-ux/campaign/README.md) | UI riêng Campaign: thoại, Sử ký, World Atlas; [task board](05-ui-ux/campaign/task-board.md), [Polish V2](05-ui-ux/campaign/polish-v2/README.md), [audio (DEFERRED)](05-ui-ux/campaign/audio-todo/README.md) |
+| ★ [campaign/README.md](05-ui-ux/campaign/README.md) | UI riêng Campaign: thoại, Sử ký, World Atlas; [task board](05-ui-ux/campaign/task-board.md), [Polish V2](05-ui-ux/campaign/polish-v2/README.md), [audio (DEFERRED)](05-ui-ux/campaign/audio-todo/README.md): [kiến trúc và bảng cue mọi chế độ](05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md), [prompt triển khai và tạo âm thanh](05-ui-ux/campaign/audio-todo/04-prompts-trien-khai-theo-che-do.md) |
 | ★ [implementation/roadmap.md](05-ui-ux/implementation/roadmap.md) | Lộ trình UI-00…UI-09, UI-02A…E |
 
 ## 06 · Đồ họa (`06-art/`)
@@ -78,6 +78,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | [prompts/dinh-bo-linh-xa-thu-sat-thu.md](06-art/prompts/dinh-bo-linh-xa-thu-sat-thu.md) | Biến thể vũ khí cung tre/dao găm cho rig Đinh Bộ Lĩnh và các prompt Master/tư thế; DRAFT, chưa có ảnh |
 | [prompts/tran-do-hinh-anh.md](06-art/prompts/tran-do-hinh-anh.md) | Prompt đầy đủ cho Trận Đồ: 30 bản đồ (địa danh thời Loạn 12 sứ quân và cảnh quan, kho không giới hạn), ô che đặc kín, 4 icon chướng ngại; DRAFT, ảnh chưa có |
 | [prompts/tran-do-video-huong-dan.md](06-art/prompts/tran-do-video-huong-dan.md) | Prompt Veo 3 cho video hướng dẫn cách chơi Trận Đồ (sa bàn gỗ, lời dẫn tiếng Việt) và gợi ý nối 4 cảnh; DRAFT |
+| [prompts/icon-nghe-xa-thu.md](06-art/prompts/icon-nghe-xa-thu.md) | Prompt và cách tích hợp biểu tượng nghề Xạ thủ mới (cung và tên, khác hẳn dao găm của Sát thủ); IMPLEMENTED |
 | [prompts/dinh-ngoc.md](06-art/prompts/dinh-ngoc.md) | Character DNA, trang phục lấy cảm hứng thế kỷ X, một kiếm/một mặt ngọc và6 prompt cho Đinh Ngọc; DRAFT, chưa duyệt Master |
 | [nhan-vat/nguyen-bac.md](06-art/nhan-vat/nguyen-bac.md) | Hình động Nguyễn Bặc |
 | [ho-so-master-chat.md](06-art/ho-so-master-chat.md) | Ngữ cảnh cho chat mới về dựng hình nhân vật: kiến trúc rig và hiệu ứng, quy trình từ bộ 5 ảnh, tiến độ |
