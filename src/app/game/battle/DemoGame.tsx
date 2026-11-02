@@ -1,5 +1,7 @@
 "use client";
 
+import FighterKindIcons from "./FighterKindIcons";
+import { fusionPassiveLines, fusionSummary, isFusion } from "./special-labels";
 import SkillDetails from "./SkillDetails";
 import { skillText } from "./labels";
 
@@ -95,11 +97,9 @@ import {
 import {
   DIFFICULTY_NAME,
   EFFECT_NAME,
-  ELEMENT_NAME,
   ERROR_TEXT,
   gearText,
   GOOD_EFFECTS,
-  PROFESSION_NAME,
   TILE_NAME,
   SPECIAL_NAME,
   TIER_CLASS,
@@ -599,9 +599,12 @@ function FighterCard({
   // Nội tại chỉ nằm trong tooltip; thẻ chỉ hiện buff/debuff.
   const cardTitle = [
     `ATK ${fighter.atk} · DEF ${fighter.def} · Máu tối đa ${fighter.maxHp}`,
-    fighter.comboPassive &&
-      `Nội tại · ${comboDescription(fighter)}`,
-    fighter.chasePassives &&
+    fusionSummary(fighter),
+    isFusion(fighter)
+      ? `Nội tại: ${fusionPassiveLines(fighter).map((l) => l.name).join(" · ")}`
+      : fighter.comboPassive && `Nội tại · ${comboDescription(fighter)}`,
+    !isFusion(fighter) &&
+      fighter.chasePassives &&
       `Truy kích: ${chasePassives(fighter).map((id) => CHASE_PASSIVES[id].name).join(" · ")}`,
     `Tinh thần: Công/Thủ ${Math.round(spiritStatMultiplier(fighter.spirit, experimentalSpirit) * 100)}% · Hồi/Khiên mới ${Math.round(spiritHealMultiplier(fighter.spirit, experimentalSpirit) * 100)}%`,
   ]
@@ -643,24 +646,7 @@ function FighterCard({
             <span className="truncate">{fighter.name}</span>
           </span>
           <span className="flex items-center gap-1 text-[10px] opacity-75">
-            <span
-              title={PROFESSION_NAME[fighter.profession]}
-              className="shrink-0"
-            >
-              <ProfessionIcon
-                profession={fighter.profession}
-                className="size-3.5"
-              />
-              <span className="sr-only">
-                {PROFESSION_NAME[fighter.profession]}
-              </span>
-            </span>
-            <span title={ELEMENT_NAME[fighter.element]} className="shrink-0">
-              <ElementIcon element={fighter.element} className="size-3.5" />
-            </span>
-            <span className="hidden lg:inline">
-              {ELEMENT_NAME[fighter.element]}
-            </span>
+            <FighterKindIcons fighter={fighter} showName />
           </span>
         </div>
       </div>
