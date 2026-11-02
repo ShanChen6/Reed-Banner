@@ -2,6 +2,9 @@
 
 ## 02/11/2026
 
+**Âm thanh: hai cue đầu tiên của Trận Đồ**
+- `formation.place` và `formation.reject` (mỗi cue 3 biến thể) cắt từ hai đoạn Gemini tạo bằng `scripts/slice-sfx.py`; ghi nguồn ở `public/audio/CREDITS.md`, chờ Shan xác nhận giấy phép thương mại và nghe thử.
+
 **Âm thanh: nhạc theo phân cảnh (prompt A4)**
 - `SceneAudio` áp nhạc và âm nền theo phân cảnh (bản đồ chiến dịch kèm âm nền, Tháp, Đấu trường, Sinh tồn); thoại và kết cục đổi nhạc rồi trả lại; trận đánh chọn nhạc theo loại (sinh tồn, Thiên Mệnh, Đấu trường, trùm, thường); cue `atlas.select`, `dialogue.next`, `survival.wave`, `survival.warn`, `daily.complete`, `arena.rank`. Engine thêm kênh âm nền (ambience). Chưa có tệp âm thanh.
 

@@ -47,6 +47,14 @@ Chỉ làm khi Voice Bible (01-voice-bible.md) đã được Shan duyệt. Voice
 
 Công cụ gợi ý: hiệu ứng bằng công cụ tạo SFX từ văn bản (ví dụ ElevenLabs Sound Effects, Stable Audio), nhạc bằng công cụ tạo nhạc (ví dụ Suno, Udio, Lyria). Kiểm tra giấy phép thương mại của gói đang dùng trước khi đưa tệp vào repo, và ghi nguồn vào `public/audio/CREDITS.md`. Tạo 3 lượt cho mỗi cue rồi chọn tốt nhất (hoặc dùng làm biến thể `_a/_b/_c`).
 
+> **Lưu ý khi dùng Gemini (02/11/2026):** dán prompt hiệu ứng ngắn vào Gemini cho ra **tệp mp3 khoảng 1 phút gồm nhiều tiếng lặp** (đặt tên như "The Tenth Move"), không phải một tiếng 0,25 giây. Dùng `scripts/slice-sfx.py` để cắt các tiếng đơn sạch nhất, xuất `.ogg` và `.m4a` đúng quy ước:
+>
+> ```bash
+> python3 scripts/slice-sfx.py <tệp mp3> public/audio/sfx/formation place 3 0.28
+> ```
+>
+> Script in thời điểm và điểm số từng tiếng được chọn; nghe lại và chạy lại với tham số khác (số biến thể, độ dài, ngưỡng tách biệt) nếu chưa ưng. Đã làm với `formation.place` (3 biến thể) và `formation.reject` (3 biến thể).
+
 ### B1. Khối phong cách (dán đầu mọi prompt hiệu ứng)
 
 ```
