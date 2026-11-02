@@ -1,11 +1,11 @@
 import { ElementIcon, ProfessionIcon } from "@/app/game/art/icons";
 import type { FighterConfig } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME } from "./labels";
-import { FUSION_ELEMENT_NAME, FUSION_PROFESSION_NAME, FUSION_PROFESSION_TITLE, elementLabel, elementTitle, isFusion } from "./special-labels";
+import { FUSION_ELEMENT_NAME, FUSION_PROFESSION_NAME, FUSION_PROFESSION_TITLE, elementTitle, isFusion } from "./special-labels";
 
 /**
  * Biểu tượng nghề và hệ của một nhân vật trong trận. Nhân vật dung hợp dùng hai biểu tượng riêng (Vạn nghề, Vạn hệ);
- * hệ phòng thủ, quyết định khắc chế, hiện bằng biểu tượng hệ nhỏ ở góc dưới biểu tượng Vạn hệ, chữ cạnh biểu tượng và chú thích.
+ * hệ phòng thủ, quyết định khắc chế, hiện bằng biểu tượng hệ nhỏ ở góc dưới biểu tượng Vạn hệ, và chú thích khi rê chuột.
  */
 export default function FighterKindIcons({
   fighter,
@@ -29,7 +29,8 @@ export default function FighterKindIcons({
         {fusion && <ElementIcon element={fighter.element} className="absolute -bottom-1 -right-1.5 size-3 rounded-full bg-black/60 ring-1 ring-black/70" />}
         <span className="sr-only">{fusion ? `${FUSION_ELEMENT_NAME}, phòng thủ ${ELEMENT_NAME[fighter.element]}` : ELEMENT_NAME[fighter.element]}</span>
       </span>
-      {showName && <span className={fusion ? "truncate" : "hidden lg:inline"}>{elementLabel(fighter)}</span>}
+      {/* Nhân vật dung hợp đã có biểu tượng hệ phòng thủ ở góc nên không ghi chữ; chi tiết ở chú thích. */}
+      {showName && !fusion && <span className="hidden lg:inline">{ELEMENT_NAME[fighter.element]}</span>}
     </>
   );
 }

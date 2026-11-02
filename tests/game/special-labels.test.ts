@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { ALL_COMPANIONS, SPECIAL_COMPANIONS, getSkill, specialById } from "../../src/core";
-import { elementLabel, elementTitle, fusionPassiveLines, fusionSummary, isFusion } from "../../src/app/game/battle/special-labels";
+import { elementTitle, fusionPassiveLines, fusionSummary, isFusion } from "../../src/app/game/battle/special-labels";
 import { skillSourceName, skillText } from "../../src/app/game/battle/labels";
 
 test("nhân vật dung hợp được nhận ra, tướng thường thì không", () => {
@@ -26,13 +26,10 @@ test("tướng thường không có danh sách nội tại dung hợp", () => {
   assert.equal(fusionSummary(ALL_COMPANIONS[0]!), null);
 });
 
-test("nhãn hệ ghi rõ hệ phòng thủ dù biểu tượng là Vạn hệ", () => {
-  assert.equal(elementLabel(specialById("vuPhong")!), "Phòng thủ Phong");
-  assert.equal(elementLabel(specialById("dinhNgoc")!), "Phòng thủ Kim");
+test("chú thích hệ ghi rõ hệ phòng thủ dù biểu tượng là Vạn hệ", () => {
   assert.match(elementTitle(specialById("vuPhong")!), /Vạn hệ.*bảy hệ.*phòng thủ Phong/);
   assert.match(fusionSummary(specialById("dinhNgoc")!)!, /Vạn nghề, Vạn hệ.*phòng thủ Kim/);
   assert.doesNotMatch(elementTitle(ALL_COMPANIONS[0]!), /phòng thủ|Vạn/);
-  assert.equal(elementLabel(ALL_COMPANIONS[0]!), elementTitle(ALL_COMPANIONS[0]!));
 });
 
 test("nhãn chiêu dung hợp ghi hệ của đòn, không gọi nhầm là tuyệt chiêu", () => {

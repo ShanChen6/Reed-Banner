@@ -73,6 +73,9 @@
 - Nhân vật đặc biệt mang hai nghề/hai hệ: phòng thủ và đòn đánh thường theo hệ chính, giá cao hơn nhiều, nhận bằng cách đặc biệt, dùng icon tổng hợp nghề/hệ.
 - Tạo nguồn [nhan-vat-tong-hop.md](../03-characters/nhan-vat-tong-hop.md) (DRAFT) với đề xuất chính/phụ, ví dụ và tác động code; chưa sửa code, roster hay save. Icon `tongHop` cho nghề/hệ và hiển thị tổng hợp của Đinh Ngọc ở trang xem thử đã có.
 
+**Hiển thị nhân vật dung hợp: bỏ chữ "Phòng thủ X"**
+- Theo góp ý của Shan: đã có biểu tượng hệ phòng thủ nhỏ ở góc nên bỏ chữ "Phòng thủ Phong/Kim" trên thẻ; hệ phòng thủ vẫn có trong tooltip.
+
 **Hiển thị nhân vật dung hợp: icon hệ phòng thủ nhỏ ở góc**
 - Theo yêu cầu của Shan: biểu tượng hệ phòng thủ (Kim, Phong) hiện nhỏ ở góc dưới biểu tượng Vạn hệ trên thẻ trong trận; biểu tượng Vạn nghề giữ nguyên như cũ, không thêm biểu tượng phụ.
 
