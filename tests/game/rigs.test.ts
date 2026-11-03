@@ -905,7 +905,7 @@ test("Hồng Đan có bốn tranh, đan hỏa hệ Hỏa, hồ lô lắc quanh n
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Ninh Hỏa có bốn tranh, hỏa thiêu kho lương hệ Hỏa, quạt phẩy theo nắm tay và texture khớp tọa độ", () => {
+test("Ninh Hỏa bộ mới có bốn tranh, hỏa thiêu kho lương hệ Hỏa, quạt lá phẩy theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("ninhHoa");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, "fan");

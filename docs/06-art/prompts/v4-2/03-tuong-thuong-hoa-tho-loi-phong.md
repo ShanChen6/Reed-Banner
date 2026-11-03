@@ -268,7 +268,7 @@ POSE: PERSONAL VIGNETTE — Standing with shoulders relaxed, tie one crimson clo
 
 ### RB-042 — Ninh Hỏa · Mưu sĩ / Hỏa
 
-> Trạng thái riêng: **APPROVED — ART/PROMPT** (03/11/2026) — Master và sáu prompt đã được Shan đồng ý, nhưng chưa nghiệm thu PNG của sáu pose hoặc thay asset/rig. Bộ V4.2 gốc vẫn giữ làm baseline.
+> Trạng thái riêng: **APPROVED — ART/PROMPT** (03/11/2026) — Master và sáu prompt đã được Shan đồng ý, nhưng chưa nghiệm thu PNG của sáu pose hoặc thay asset/rig. Bộ V4.2 gốc vẫn giữ làm baseline. Shan gửi sáu PNG cùng ngày, đã tích hợp runtime (`public/art/characters/ninh-hoa/`) theo POSE ID (thứ tự ảnh gửi ngược khung): RB042_IDLE → ảnh đứng tách lớp, RB042_BASIC_ATTACK (quạt quét ra ngoài, tay trái mở hướng ngược) → `pose-attack`, RB042_SKILL → `pose-cast`, RB042_ULTIMATE (hạ quạt ngang hông, tay trái úp) → `pose-ultimate`, RB042_DEFEATED → `pose-down`, RB042_PERSONALITY → `style`.
 
 #### Character Identity — “Người tính hướng lửa” (lore sáng tác đề xuất)
 
