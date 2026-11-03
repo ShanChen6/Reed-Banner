@@ -217,6 +217,10 @@ Trước rollout cần ma trận 1v1/3v3, cấp 1/10/20/30, chiêu 1/3/5, gear 0
 
 Không thêm "nghề Phong Du" vào `ALL_PROFESSIONS` và không dùng mô hình chính/phụ của [nhân vật tổng hợp](nhan-vat-tong-hop.md): Vũ Phong dùng khuôn `specialHybrid` cùng Đinh Ngọc (loadout cố định, per-skill `damageElement`, bốn nội tại hỗn hợp, chặn tự lắp nội tại nghề/hệ mặc định). Dữ liệu tối thiểu: identity `vuPhong`, template `specialHybrid`, defenseElement `phong`, sáu skill ID và bốn passive ID ở trên, bộ đếm P1–P4 trong snapshot. Đó là contract đề xuất, không phải API hiện có; server-authoritative cho damageElement, target, cost và trigger. Cách mở khóa theo hướng chung của [nhân vật tổng hợp](nhan-vat-tong-hop.md#cách-nhận), chưa chốt.
 
+### Mở khóa
+
+Shan chốt 03/11/2026: chuỗi nhiệm vụ phụ 3 bước, hiện sau khi qua hết **Chương IV** Chiến dịch, chủ đề rong ruổi tìm người; gia nhập ở **cấp 1**. Luật chung và các bước ở [Đinh Ngọc — mở khóa](dinh-ngoc.md#mo-khoa-nhan-vat-dac-biet).
+
 ## Triển khai trong core (02/11/2026)
 
 Kỹ năng đã chạy được trong engine chiến đấu (`src/core`), kiểm bằng `tests/core/battle/special-characters.test.ts`. **Chưa mở ở chế độ nào**: nhân vật nằm ở `SPECIAL_COMPANIONS` ([roster.ts](../../src/core/roster/roster.ts)), không thuộc `ALL_COMPANIONS`, nên chưa có trong shop, Thường, Chiến dịch, Tháp, Sinh tồn hay Practice; mở ở đâu và cách mở khóa là quyết định sản phẩm sau. Trang `/demo` cũng chưa chọn được hai nhân vật này.
@@ -358,4 +362,4 @@ Vũ Phong chưa vào roster nên không có trong trận, shop hay Practice. Tra
 - [ ] Hình xăm đúng vùng ở mọi khung; không VFX gió, mưa, mây vẽ vào ảnh nhân vật.
 - [ ] Silhouette phân biệt được với Đinh Bộ Lĩnh và các nhân vật nam khác ở 128px: tóc dài búi lỏng, vai phải trần, trượng cao.
 
-> TODO: Review hình tượng và bộ kỹ năng (nghề/hệ, chỉ số, sáu chiêu, bốn nội tại) trước khi viết ID hoặc code; mô phỏng cân bằng; chốt cách mở khóa. Theo dõi tại [câu hỏi mở](../09-roadmap/cau-hoi-mo.md).
+> TODO: Review hình tượng và bộ kỹ năng (nghề/hệ, chỉ số, sáu chiêu, bốn nội tại) trước khi viết ID hoặc code; mô phỏng cân bằng (cách mở khóa đã chốt 03/11/2026, xem [Mở khóa](#mở-khóa)). Theo dõi tại [câu hỏi mở](../09-roadmap/cau-hoi-mo.md).
