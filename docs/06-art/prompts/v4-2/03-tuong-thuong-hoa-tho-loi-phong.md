@@ -268,6 +268,63 @@ POSE: PERSONAL VIGNETTE — Standing with shoulders relaxed, tie one crimson clo
 
 ### RB-042 — Ninh Hỏa · Mưu sĩ / Hỏa
 
+> Trạng thái riêng: **DRAFT** — pilot nhân vật hư cấu tiếp theo (03/11/2026), **mới ở bước hồ sơ + một prompt Master/Idle**. Chưa tạo/duyệt ảnh mới, chưa viết lại toàn bộ pose; ảnh và sáu prompt V4.2 ở dưới giữ làm baseline.
+
+#### Character Identity — “Người tính hướng lửa” (lore sáng tác đề xuất)
+
+- **Runtime/art:** `ninhHoa` / RB-042; nghề **Mưu sĩ**, hệ **Hỏa** theo roster. Tuyệt chiêu đã có ID `hoaThieuKhoLuong` (Hỏa Thiêu Kho Lương), không sửa logic hoặc số liệu gameplay. Hệ Hỏa **không** yêu cầu vẽ người cháy rực hoặc hỏa diệm thường trực.
+- **Xuất thân hư cấu:** con một gia đình làm nghề lò gạch và nung gốm ở rìa vùng trung du, lớn lên cùng việc canh gió, giữ lửa và phòng cháy kho chứa. Khi chiến tranh kéo đến, anh trở thành người đọc hướng gió, thiết kế đòn nghi binh bằng khói và đề xuất đánh vào hậu cần đối thủ. Đây là sáng tác của Reed Banner, không phải nhân vật hay sự kiện được sử ghi nhận.
+- **Động cơ, xung đột:** muốn chiến thắng bằng tính toán hơn là đổi mạng người, nhưng luôn phải cân nhắc hậu quả của việc dùng lửa gần khu dân cư. Bề ngoài nhanh trí, đôi khi nhếch miệng đầy tự tin; bên trong có tính kỷ luật và biết sợ sai lầm.
+- **Khác biệt với Mã Nhạc:** Ninh Hỏa **trẻ hơn** (visual age 29–35), gầy cao, động tác nhanh, cổ-vai linh hoạt; mặt trái xoan hẹp, gò má nổi, mắt sáng tinh ranh, lông mày nhướng bất đối xứng, ria mỏng, búi tóc cao hơi lệch. Mã Nhạc trung niên, đằm, dáng vững và quạt vuông; Ninh Hỏa sắc, nhanh, quạt lá cọ khác hình học.
+- **Costume DNA:** áo giao lĩnh trong màu gai ấm `#D8C6A4`, áo khoác ngắn gọn bên ngoài màu đỏ gạch `#903C32`, áo chính đỏ son trầm `#C84231` dùng **một vài mảng** chứ không phủ toàn thân, quần nâu than `#343236`, thắt lưng nâu da `#614438`, vải điểm màu hổ phách `#E38B38` tại mép cổ/đai. Một tay áo có vết sém nhỏ tự nhiên như đã ghi ở V4.2, không biến thành hoa văn lửa.
+- **Equipment DNA RB-042-W01:** **một quạt lá cọ bản vừa**, bề mặt tự nhiên có mép hơi sém, cán gỗ thẳng quấn **một** dải vải đỏ. Quạt có hình rẻ quạt tự nhiên, **không vuông** như Mã Nhạc, không quạt lông như Quân sư, không quạt xếp/hỏa pháp bảo; khối rộng khoảng 0,25H (H chiều cao người đứng) là **đề xuất**, khóa theo ảnh Master sau khi duyệt. Tay phải giải phẫu cầm quạt. **Một hộp đá lửa nhỏ** đeo hông trái theo V4.2, không sinh thêm bó đuốc/đao/pháp khí.
+- **Visual target:** `Vietnamese Historical Low Fantasy — Heroic Stylization`: **không photoreal như ảnh đóng vai**, không tiên hiệp/áo nhiều lớp bay, nhưng giàu nhịp thiết kế, tương phản hình khối và khí chất một hero biết tính toán. Cần cùng ngôn ngữ nét cọ với Mã Nhạc v2.1, Trần Lãm và Ngô Nhật Khánh.
+- **Ranh giới:** tên, tuổi thị giác, xuất thân, vết sém, đạo cụ và tâm lý đều **game-authored**. Không mặc định “Hỏa” đồng nghĩa phóng hỏa bừa bãi hay cháy thân; VFX hệ được thêm tại runtime.
+
+#### Master/Idle vNext — Prompt tiếng Anh độc lập (chỉ dựng một ảnh)
+
+```text
+Create ONE full-body 2D game character, Ninh Hỏa (RB-042 / ninhHoa), a fictional Vietnamese 10th-century battlefield deception strategist, profession Mưu sĩ, element Hỏa, in the Reed Banner low-fantasy world.
+
+ART DIRECTION — NONNEGOTIABLE:
+Vietnamese Historical Low Fantasy — Heroic Stylization. A compelling hand-painted 2D strategy RPG hero, NOT a photorealistic man in a historical costume and NOT a high-fantasy fire mage. Match the painterly finish, human anatomy, texture density, dramatic but controlled lighting and readable silhouette of the approved Mã Nhạc v2.1, Trần Lãm and Ngô Nhật Khánh art direction while retaining an entirely distinct personal identity.
+
+CHARACTER STORY:
+Ninh Hỏa grew up near hill-country brick and pottery kilns, learning to judge air flow, fuel, smoke and safe firebreaks. During wartime he became a quick-thinking strategist of decoys, smoke signals and supply sabotage. He treats fire as a dangerous responsibility, not a supernatural toy. This lore is ORIGINAL GAME FICTION.
+
+IDENTITY DNA:
+Vietnamese male, visual age approximately 29–35. Tall lean resilient build, agile but not exaggerated, about 7.2 adult heads high. Narrow oval face, prominent cheekbones, bright calculating dark eyes, one eyebrow naturally slightly higher than the other, straight nose, thin neatly kept moustache and clean chin. Tight black hair tied into ONE high slightly off-center topknot. A controlled, quick knowing half-smile with thoughtful tension around the eyes, not a villain's wicked grin. His silhouette should be recognizably younger and more angular than Mã Nhạc's compact middle-aged build.
+
+COSTUME DNA:
+Layered practical 10th-century Vietnamese-inspired crossed-collar clothing, designed as an individual field strategist rather than a class uniform. Natural hemp ivory inner collar #D8C6A4; charcoal-brown main under-robe and trousers #343236; muted brick-red short structured overcoat #903C32 with asymmetrical hem and clean shoulders; a restrained cinnabar panel #C84231 on ONE narrow sash section; dark warm-brown waist belt #614438; amber ochre #E38B38 as minor stitched edge and cord accents only. Cropped practical wrist openings, light cloth calf wraps and sturdy dark low shoes. One SMALL singed spot on the lower edge of anatomical LEFT sleeve (an old workshop accident), not flames or runes. Exactly ONE small practical fire-tinder box fixed at anatomical LEFT hip. Avoid lavish gold, long cape, heavy armor and endless flying fabric strips.
+
+WEAPON / PERSONAL TOOL RB-042-W01:
+EXACTLY ONE palm-leaf command fan, broad natural fan-leaf silhouette with subtle ribs and slightly singed outer edge, mounted on ONE straight short hardwood grip wrapped in ONE narrow muted-red cloth strip. Overall fan width approximately 0.25 of upright body height H, a proposed design ratio to lock after Master approval. The anatomical RIGHT hand holds this fan securely at a diagonal just outside his torso at lower-chest height. This is NOT a square woven reed fan like Mã Nhạc, NOT a folding fan, feather fan, magical flaming fan, shield or floating object. No extra weapons or props.
+
+MASTER IDLE POSE:
+Stand in an alert grounded three-quarter view, anatomy RIGHT foot stepped a little outward and slightly behind, weight supported on LEFT leg. Upright spine and open but relaxed shoulders. RIGHT arm holds the palm-leaf fan diagonally away from the body, showing its distinct leaf-shaped contour. LEFT hand hovers near the small tinder box on his LEFT belt without opening or duplicating it. Head tilted a little toward anatomical LEFT, focused eyes surveying a changing wind direction as if predicting the timing of an operation. Expression confident and calculating, never cartoonishly mischievous. A distinct hero silhouette based on the leaf fan, short structured overcoat, asymmetrical sash and tall lean proportions.
+
+FANTASY CONTROL:
+Heroic stylization through composed dramatic design, costume rhythm, strong shape language and expressive pose. NO permanent flame, floating embers, glowing symbols, supernatural wings, fire armor, giant weapon or elemental magic baked into the Master. Fire effects belong only to gameplay VFX.
+
+OUTPUT:
+ONE complete full-body character from topknot to footwear, entire hand fan and tinder box visible, generous transparent margins, premium hand-painted semi-realistic illustration with clear game-scale readability. Genuine transparent-alpha PNG cutout. No studio gradient, black background, ground shadow, village scene, lettering, text, UI, framing, second character or watermark.
+
+STRICT NEGATIVE:
+No photoreal live-action portrait; no generic scholar identical to Mã Nhạc; no square woven fan, no fur or folding fan; no tiger motif; no oversized decorative armor; no xianxia costume, Chinese imperial official robe, Japanese armor, Western medieval plate armor; no extra hands or mismatched anatomy; no extra weapons or magic VFX. Do not produce additional frames until the Master is reviewed.
+```
+
+#### QA pilot trước khi chuyển sang frame khác
+
+- [ ] Cùng phong cách hand-painted heroic với Mã Nhạc v2.1 nhưng khuôn mặt/vóc dáng hoàn toàn khác.
+- [ ] Nghề Mưu sĩ rõ qua ánh mắt/tư thế/đạo cụ, hệ Hỏa qua màu nhấn và câu chuyện, không VFX bám người.
+- [ ] Quạt lá cọ **không** bị biến thành quạt vuông, quạt lông, quạt xếp hoặc ngọn lửa.
+- [ ] Hộp đá lửa chỉ **một**, đúng hông trái; vết sém chỉ trên tay áo trái.
+- [ ] Không photoreal, không high fantasy, không giản dị như NPC; các mảng áo và đường viền có chủ đích.
+- [ ] Sau khi Shan duyệt Master, mới khóa Weapon/Costume DNA và viết sáu pose theo Master thực tế; dữ liệu ảnh/rig cũ giữ nguyên cho đến nghiệm thu.
+
+#### Hồ sơ và sáu prompt V4.2 gốc — lưu để so sánh, chưa thay asset
+
 > **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** MEDIUM · CÂN NHẮC. Chiêu tham chiếu: **Hỏa Thiêu Kho Lương** (`hoaThieuKhoLuong`). Quạt dễ trùng với mưu sĩ khác; giữ hình quạt nếu skill phù hợp, bổ sung dấu hiệu cá nhân và ấn/thẻ nếu chiêu yêu cầu. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
