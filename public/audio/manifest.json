@@ -247,6 +247,91 @@
         "sfx/battle/match3_c"
       ],
       "volume": 0.8
+    },
+    "battle.win": {
+      "files": [
+        "sfx/battle/win_a"
+      ],
+      "volume": 0.9
+    },
+    "battle.lose": {
+      "files": [
+        "sfx/battle/lose_a",
+        "sfx/battle/lose_b"
+      ],
+      "volume": 0.9
+    },
+    "battle.ko": {
+      "files": [
+        "sfx/battle/ko_a",
+        "sfx/battle/ko_b",
+        "sfx/battle/ko_c"
+      ],
+      "volume": 0.85
+    },
+    "battle.damage": {
+      "files": [
+        "sfx/battle/damage_a",
+        "sfx/battle/damage_b",
+        "sfx/battle/damage_c"
+      ],
+      "volume": 0.85
+    },
+    "battle.skill.kim": {
+      "files": [
+        "sfx/battle/skill_a",
+        "sfx/battle/skill_b",
+        "sfx/battle/skill_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.skill.moc": {
+      "files": [
+        "sfx/battle/skill_a",
+        "sfx/battle/skill_b",
+        "sfx/battle/skill_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.skill.thuy": {
+      "files": [
+        "sfx/battle/skill_a",
+        "sfx/battle/skill_b",
+        "sfx/battle/skill_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.skill.hoa": {
+      "files": [
+        "sfx/battle/skill_a",
+        "sfx/battle/skill_b",
+        "sfx/battle/skill_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.skill.tho": {
+      "files": [
+        "sfx/battle/skill_a",
+        "sfx/battle/skill_b",
+        "sfx/battle/skill_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.skill.loi": {
+      "files": [
+        "sfx/battle/skill_a",
+        "sfx/battle/skill_b",
+        "sfx/battle/skill_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.skill.phong": {
+      "files": [
+        "sfx/battle/skill_a",
+        "sfx/battle/skill_b",
+        "sfx/battle/skill_c"
+      ],
+      "volume": 0.8
     }
   },
   "music": {
