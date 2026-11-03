@@ -1748,7 +1748,7 @@ POSE: PERSONALITY VIGNETTE: seated cross-legged on a plain reed mat, carefully i
 
 ### RB-014 — Kiều Thuận (Kiều Lệnh công) · Y sư / Mộc
 
-> **APPROVED — MASTER + 5 POSE PROMPTS** (03/11/2026). Ưu tiên **Production v2.1** bên dưới: bầu thuốc và kiếm đeo hông trái, chỉ Basic rút kiếm. Chưa xác nhận năm PNG đã nghiệm thu hoặc runtime đã thay. Hồ sơ DRAFT cũ/V4.2 bên dưới bảo lưu làm lịch sử.
+> **APPROVED — MASTER + 5 POSE PROMPTS** (03/11/2026). Ưu tiên **Production v2.1** bên dưới: bầu thuốc và kiếm đeo hông trái, chỉ Basic rút kiếm. Shan gửi sáu PNG cùng ngày, đã tích hợp runtime (`public/art/characters/kieu-thuan/`) theo thứ tự khung: 1 → ảnh đứng tách lớp, 2 → `pose-attack`, 3 → `pose-cast`, 4 → `pose-ultimate`, 5 → `pose-down`, 6 → `style`. Hồ sơ DRAFT cũ/V4.2 bên dưới bảo lưu làm lịch sử.
 
 #### Historical Identity — Sứ quân Hồi Hồ
 

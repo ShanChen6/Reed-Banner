@@ -971,49 +971,46 @@ const NGUYEN_KHOAN: WarriorRig = {
 };
 
 /**
- * Kiều Thuận, sứ quân Hồi Hồ, y sư hệ Mộc. Bộ tranh Shan gửi 24/10 (nền đã trong suốt): ảnh đứng tách lớp bằng
- * code. Bàn tay cầm hồ lô xoay quanh cổ tay, hồ lô treo dây lắc quanh nắm tay; bàn tay phải, đầu và dải khăn
- * tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ * Kiều Thuận, sứ quân Hồi Hồ, y sư hệ Mộc. Bộ tranh Shan gửi 03/11 (nền đã trong suốt, RB-014 Production v2.1):
+ * ảnh đứng tách lớp bằng code. Nắm tay phải xoay quanh cổ tay, bầu thuốc treo dây lắc quanh nắm tay (vạt áo sau
+ * bầu vá bằng vân vải lấy từ dải áo ngay dưới); bàn tay trái chống hông là lớp tay không. Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const KIEU_THUAN: WarriorRig = {
   skeleton: "warrior",
   weapon: "gourd",
-  grip: { x: 150, y: 205 },
+  grip: { x: 372, y: 700 },
   dir: "kieu-thuan",
   texScale: 0.5,
-  foot: { x: 560, y: 1500 },
-  height: 1490,
+  foot: { x: 500, y: 1490 },
+  height: 1436,
   parts: {
-    body: { x: 49, y: 0, w: 927, h: 1536 },
-    armR: { x: 892, y: 679, w: 116, h: 154 },
-    sword: { x: 19, y: 168, w: 182, h: 460 },
-    arm: { x: 108, y: 175, w: 163, h: 181 },
-    head: { x: 558, y: 12, w: 165, h: 251 },
+    body: { x: 222, y: 54, w: 588, h: 1438 },
+    armR: { x: 602, y: 558, w: 101, h: 77 },
+    sword: { x: 273, y: 694, w: 125, h: 203 },
+    arm: { x: 292, y: 613, w: 105, h: 93 },
+    head: { x: 386, y: 54, w: 200, h: 211 },
   },
-  cloth: [
-    { name: "ribbon", box: { x: 270, y: 101, w: 291, h: 160 }, behind: true,
-      wind: { axis: "x", start: 0.2, amp: 6, freq: 1.6, k: 3, phase: 0.6, vertical: true, reverse: true } },
-  ],
+  cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 240, y: 315 },
-    elbowR: { x: 910, y: 705 },
-    neck: { x: 640, y: 245 },
+    shoulder: { x: 305, y: 630 },
+    elbowR: { x: 695, y: 580 },
+    neck: { x: 490, y: 250 },
   },
-  blade: [{ x: 150, y: 205 }, { x: 110, y: 470 }],
+  blade: [{ x: 372, y: 700 }, { x: 335, y: 890 }],
   strikeFx: "leafBloom",
   fxColor: 0x4f9a4a,
-  // Hồ lô buông thấp kết ấn (đánh thường), ôm hồ lô mở tay (ra chiêu), thế tấn rộng vươn tay về đồng minh (tuyệt chiêu).
+  // Rút kiếm ngắn phản đòn (đánh thường), tấn thấp đưa bầu thuốc tới người bị thương (ra chiêu), áp bầu lên ngực mở tay về đồng minh (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 62, y: 10 },
-      anchor: { x: 680, y: 1165 }, scale: 1.05, burst: { x: 910, y: 340 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 15, y: 5 },
-      anchor: { x: 430, y: 1500 }, scale: 1, burst: { x: 930, y: 300 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 17, y: 2 },
-      anchor: { x: 665, y: 1170 }, scale: 1.05, burst: { x: 620, y: 410 } },
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 469, y: 22 },
+      anchor: { x: 768, y: 985 }, scale: 1.25, burst: { x: 1000, y: 245 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 134, y: 56 },
+      anchor: { x: 544, y: 975 }, scale: 1, burst: { x: 1275, y: 538 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 352, y: 20 },
+      anchor: { x: 606, y: 1050 }, scale: 1.28, burst: { x: 1100, y: 212 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 16, y: 75 },
-    anchor: { x: 800, y: 930 }, scale: 0.9 },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 54, y: 124 },
+    anchor: { x: 870, y: 790 }, scale: 1.1 },
 };
 
 /**

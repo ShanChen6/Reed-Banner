@@ -173,6 +173,7 @@ test("Kiều Thuận có bốn tranh, vòng lá hệ Mộc, hồ lô lắc quanh
   assert.equal(rig.fxColor, 0x4f9a4a);
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
+  assert.equal(rig.cloth.length, 0);
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
     assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
   contains(rig.grip!, rig.parts.arm);
