@@ -35,7 +35,11 @@ export interface FormationEntry {
   readonly ownerId: string;
   /** Tên hiển thị (tài khoản đã đăng nhập); khách là null. */
   readonly name: string | null;
-  readonly state: PuzzleState;
+  /**
+   * Trạng thái ván. Kho Postgres trả null khi ván lưu từ phiên bản luật cũ không đọc lại được: chỗ dùng thì bày lại
+   * bàn đầu kỳ (`stateOf`), điểm, số nước và hạng vẫn theo cột đã lưu.
+   */
+  readonly state: PuzzleState | null;
   readonly seq: number;
   readonly status: FormationStatus;
   readonly score: number | null;
@@ -181,13 +185,26 @@ export interface FormationView {
   readonly rank: number | null;
 }
 
+/** Bàn đầu kỳ của bậc (mọi người cùng kỳ gặp cùng bàn). Chỉ gọi sau khi đã kiểm có `secret`. */
+function periodPuzzle(deps: FormationDeps, level: string, period: string): PuzzleState | null {
+  const rules = rulesetById(level);
+  return rules ? createPuzzle(rules, formationSeed(deps.secret!, level, period), formationSalt(deps.secret!, level, period)) : null;
+}
+
+/** Trạng thái để hiển thị hoặc đi tiếp; ván lưu không đọc được thì chơi lại từ bàn đầu kỳ (cùng seq). */
+function stateOf(deps: FormationDeps, e: FormationEntry): PuzzleState {
+  const s = e.state ?? periodPuzzle(deps, e.level, e.period);
+  if (!s) throw new Error(`Ván Trận Đồ của bậc lạ: ${e.level}`);
+  return s;
+}
+
 async function viewOf(deps: FormationDeps, e: FormationEntry): Promise<FormationView> {
   return {
     level: e.level,
     period: e.period,
     status: e.status,
     seq: e.seq,
-    puzzle: publicPuzzle(e.state),
+    puzzle: publicPuzzle(stateOf(deps, e)),
     score: e.score,
     turns: e.turns,
     rank: e.status === "won" ? await deps.store.rankOf(e) : null,
@@ -212,9 +229,8 @@ export async function startFormation(deps: FormationDeps, ownerId: string, level
   if (!(await deps.isSignedIn(ownerId))) return { ok: false, error: "loginRequired" };
   const existing = await deps.store.get(g.level, g.period, ownerId);
   if (existing) return { ok: true, view: await viewOf(deps, existing), resumed: true };
-  const rules = rulesetById(g.level);
-  if (!rules) return { ok: false, error: "unknownLevel" };
-  const state = createPuzzle(rules, formationSeed(deps.secret!, g.level, g.period), formationSalt(deps.secret!, g.level, g.period));
+  const state = periodPuzzle(deps, g.level, g.period);
+  if (!state) return { ok: false, error: "unknownLevel" };
   const entry: FormationEntry = {
     id: deps.newId(),
     level: g.level,
@@ -265,7 +281,7 @@ export async function moveFormation(deps: FormationDeps, ownerId: string, levelI
   if (!entry) return { ok: false, error: "noAttempt" };
   if (entry.status !== "playing") return { ok: false, error: "finished", view: await viewOf(deps, entry) };
   if (entry.seq !== seq) return { ok: false, error: "conflict", view: await viewOf(deps, entry) };
-  const t = transition(entry.state, cmd);
+  const t = transition(stateOf(deps, entry), cmd);
   if (!t.ok) return { ok: false, error: "rejected", reason: t.reason };
   let state = t.state;
   // Quá số lệnh cho phép thì xử thua, chặn ván kéo dài vô hạn.
