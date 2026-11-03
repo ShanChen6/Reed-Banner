@@ -63,7 +63,7 @@ export const SCENE_TITLE: Record<Scene, string> = {
   QUESTS: "Nhiệm vụ",
   SHOP: "Cửa Hàng",
   LEADERBOARD: "Bảng xếp hạng",
-  PROFILE: "Hồ sơ",
+  PROFILE: "Doanh Trại",
   LOGIN: "Đăng nhập",
   REGISTER: "Đăng ký",
   ACCOUNT: "Tài khoản",

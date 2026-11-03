@@ -458,6 +458,8 @@ const NGUYEN_BAC: WarriorRig = {
     scale: 1,
   },
   poses: {
+    // Đánh thường: tranh Shan gửi 03/11, chém đao thấp trong thế tấn rộng (cỡ so theo thân trên).
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 98, y: 15 }, anchor: { x: 670, y: 1145 }, scale: 1.2, burst: { x: 1085, y: 850 } },
     cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 13, y: 6 }, anchor: { x: 810, y: 1020 }, scale: 1.25, burst: { x: 1500, y: 245 } },
     ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 13, y: 10 }, anchor: { x: 650, y: 1006 }, scale: 1.25, burst: { x: 1500, y: 30 } },
   },
@@ -514,6 +516,8 @@ const DINH_DIEN: WarriorRig = {
   ],
   fxColor: 0xd9ad65,
   poses: {
+    // Đánh thường: tranh Shan gửi 03/11, đâm giáo ngang ngực, khiên mây ép sát sườn (cỡ so theo thân trên).
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 470, y: 17 }, anchor: { x: 815, y: 870 }, scale: 1.33, burst: { x: 1515, y: 262 } },
     cast: {
       origin: { x: 75, y: 13 },
       scale: 0.95,
@@ -570,10 +574,12 @@ const LUU_CO: WarriorRig = {
   blade: [{ x: 276, y: 558 }, { x: 140, y: 335 }],
   fxColor: 0xf0cf8a,
   poses: {
-    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 10, y: 30 }, anchor: { x: 620, y: 1513 }, scale: 1, burst: { x: 150, y: 170 } },
-    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 8, y: 13 }, anchor: { x: 565, y: 1510 }, scale: 1, burst: { x: 947, y: 80 } },
+    // Đánh thường: tranh Shan gửi 03/11, quét quạt lông ngang người (cỡ so theo đầu).
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 15, y: 87 }, anchor: { x: 565, y: 1380 }, scale: 1.05, burst: { x: 880, y: 500 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 10, y: 30 }, anchor: { x: 620, y: 1513 }, scale: 1, burst: { x: 150, y: 170 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 8, y: 13 }, anchor: { x: 565, y: 1510 }, scale: 1, burst: { x: 947, y: 80 } },
   },
-  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 40, y: 37 }, anchor: { x: 850, y: 1007 }, scale: 1 },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 40, y: 37 }, anchor: { x: 850, y: 1007 }, scale: 1 },
 };
 
 /** Trịnh Tú, y sư hệ Mộc. Khớp trong ảnh nguồn 1024×1536, hồ lô có điểm cầm riêng. */
@@ -609,10 +615,12 @@ const TRINH_TU: WarriorRig = {
   blade: [{ x: 167, y: 414 }, { x: 157, y: 285 }],
   fxColor: 0x9bd777,
   poses: {
-    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 43, y: 45 }, anchor: { x: 690, y: 1508 }, scale: 1, burst: { x: 170, y: 165 } },
-    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 12, y: 57 }, anchor: { x: 680, y: 1508 }, scale: 1, burst: { x: 220, y: 225 } },
+    // Đánh thường: tranh Shan gửi 03/11, tấn rộng ôm bầu thuốc, tay trái đẩy ra (cỡ so theo đầu).
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 81, y: 29 }, anchor: { x: 669, y: 1230 }, scale: 1.15, burst: { x: 1026, y: 382 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 43, y: 45 }, anchor: { x: 690, y: 1508 }, scale: 1, burst: { x: 170, y: 165 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 12, y: 57 }, anchor: { x: 680, y: 1508 }, scale: 1, burst: { x: 220, y: 225 } },
   },
-  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 23, y: 36 }, anchor: { x: 920, y: 1000 }, scale: 1 },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 23, y: 36 }, anchor: { x: 920, y: 1000 }, scale: 1 },
 };
 
 /**
@@ -1187,6 +1195,9 @@ const NGUYEN_SIEU: WarriorRig = {
   fxColor: 0xd9502a,
   // Đâm giáo sau khiên (đánh thường), thế thủ giơ khiên trấn lũy (tuyệt chiêu); ra chiêu dùng nhịp đẩy giáo.
   poses: {
+    // Ra chiêu: tranh Shan gửi 03/11, giơ khiên mây chắn trước, giáo chúc xuống (cỡ so theo đầu).
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 14, y: 1 },
+      anchor: { x: 625, y: 1255 }, scale: 1, burst: { x: 1060, y: 250 } },
     attack: { name: "pose-attack", texScale: 0.3, origin: { x: 17, y: 14 },
       anchor: { x: 680, y: 955 }, scale: 1.1, burst: { x: 1495, y: 110 } },
     ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 99, y: 2 },
@@ -1421,44 +1432,47 @@ const TO_KIM: WarriorRig = {
 };
 
 /**
- * Nghiêm Thiết, quân sư hệ Kim (tướng cửa hàng). Bộ tranh Shan gửi 25/10 (nền trong suốt sẵn; tranh ra chiêu gửi trùng
- * tranh đánh thường nên ra chiêu dùng nhịp đẩy cờ của rig). Tranh đánh thường vẽ cờ chĩa sang trái nên được lật ngang.
- * Ảnh đứng tách lớp bằng code: cờ lệnh cùng nắm tay xoay quanh cổ tay theo nhịp giáo như Lê Hoàn, bàn tay cầm thẻ tre
- * và đầu tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ * Nghiêm Thiết, quân sư hệ Kim (tướng cửa hàng). Bộ tranh Shan vẽ lại gửi 03/11 (RB-025; nền trong suốt sẵn, riêng tranh
+ * gục nền đen đã tách). Ảnh đứng tách lớp bằng code: cờ lệnh cùng nắm tay phải xoay quanh chỗ cầm theo nhịp giáo, bàn tay
+ * trái ôm bó thẻ tre xoay quanh khuỷu, đầu kèm dải buộc tóc tách riêng (vải cờ dưới dải tóc đã vá). Hệ tọa độ: ảnh đứng
+ * 1024×1536.
  */
 const NGHIEM_THIET: WarriorRig = {
   skeleton: "warrior",
   weapon: "spear",
   dir: "nghiem-thiet",
   texScale: 0.5,
-  foot: { x: 560, y: 1500 },
-  height: 1400,
+  foot: { x: 545, y: 1505 },
+  height: 1380,
   parts: {
-    body: { x: 207, y: 113, w: 798, h: 1409 },
-    armR: { x: 745, y: 650, w: 181, h: 225 },
-    sword: { x: 25, y: 1, w: 354, h: 1495 },
-    arm: { x: 301, y: 568, w: 105, h: 88 },
-    head: { x: 521, y: 113, w: 147, h: 223 },
+    body: { x: 191, y: 166, w: 774, h: 1358 },
+    armR: { x: 590, y: 510, w: 197, h: 222 },
+    sword: { x: 152, y: 2, w: 408, h: 1438 },
+    arm: { x: 192, y: 447, w: 75, h: 98 },
+    head: { x: 401, y: 166, w: 210, h: 191 },
   },
   cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 360, y: 610 },
-    elbowR: { x: 790, y: 700 },
-    neck: { x: 590, y: 330 },
+    shoulder: { x: 232, y: 495 },
+    elbowR: { x: 775, y: 668 },
+    neck: { x: 548, y: 340 },
   },
-  blade: [{ x: 362, y: 600 }, { x: 362, y: 20 }],
+  blade: [{ x: 232, y: 495 }, { x: 180, y: 20 }],
   strikeFx: "ironFormation",
   fxColor: 0x9ea4ad,
-  // Chĩa cờ lệnh về phía đối thủ (đánh thường), giơ cao cờ đẩy thẻ tre ra lệnh (tuyệt chiêu).
+  // Phất cờ ngang hông (đánh thường), dựng cờ giơ thẻ tre hô hiệu lệnh (ra chiêu), cờ chéo, thẻ tre vạch thế trận
+  // (tuyệt chiêu). Cỡ so theo đầu với ảnh đứng.
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 0, y: 145 },
-      anchor: { x: 308, y: 1450 }, scale: 1, burst: { x: 994, y: 440 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 26, y: 4 },
-      anchor: { x: 450, y: 1480 }, scale: 1, burst: { x: 930, y: 560 } },
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 14, y: 73 },
+      anchor: { x: 570, y: 1495 }, scale: 0.95, burst: { x: 760, y: 760 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 45, y: 4 },
+      anchor: { x: 490, y: 1515 }, scale: 1, burst: { x: 900, y: 555 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 20, y: 14 },
+      anchor: { x: 545, y: 1505 }, scale: 1, burst: { x: 950, y: 560 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 34, y: 48 },
-    anchor: { x: 1000, y: 820 }, scale: 0.85 },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 39, y: 10 },
+    anchor: { x: 760, y: 1012 }, scale: 0.85 },
 };
 
 /**

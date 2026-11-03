@@ -69,7 +69,7 @@ function RaidPanel({
           {boss.mode === "3v3" && " Thủ lĩnh máu ×1,5."}
         </p>
         <p className="mt-1 text-xs text-muted">
-          Thể thức {boss.mode === "3v3" ? "3vs3, ra trận cùng đội đã chọn ở trang Hồ sơ" : "1vs1"}. Tái đấu sứ quân
+          Thể thức {boss.mode === "3v3" ? "3vs3, ra trận cùng đội đã chọn ở Doanh Trại" : "1vs1"}. Tái đấu sứ quân
           không dùng lương Bình Loạn và không đổi tiến độ Bình Loạn.
         </p>
       </div>

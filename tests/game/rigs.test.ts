@@ -272,7 +272,7 @@ test("Lữ Đường có bốn tranh, cột nước hệ Thủy, cầu nước n
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Nguyễn Siêu có tranh đánh thường, tuyệt chiêu, bị hạ gục; tường lửa hệ Hỏa, khiên nâng được", () => {
+test("Nguyễn Siêu có tranh đánh thường, ra chiêu, tuyệt chiêu, bị hạ gục; tường lửa hệ Hỏa, khiên nâng được", () => {
   const rig = rigOf("nguyenSieu");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, "spear");
@@ -280,7 +280,7 @@ test("Nguyễn Siêu có tranh đánh thường, tuyệt chiêu, bị hạ gục
   assert.equal(rig.fxColor, 0xd9502a);
   assert.ok((rig.shieldRaise ?? 0) < 0);
   assert.equal(rig.poses?.attack?.name, "pose-attack");
-  assert.equal(rig.poses?.cast, undefined);
+  assert.equal(rig.poses?.cast?.name, "pose-cast");
   assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
   assert.equal(rig.down?.name, "pose-down");
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
@@ -429,13 +429,13 @@ test("Tô Kim có bốn tranh, tiền vàng ly tán hệ Kim, khớp nằm trong
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Nghiêm Thiết có tranh đánh thường, tuyệt chiêu, bị hạ gục; thiết trận hệ Kim và texture khớp tọa độ", () => {
+test("Nghiêm Thiết có tranh đánh thường, ra chiêu, tuyệt chiêu, bị hạ gục; thiết trận hệ Kim và texture khớp tọa độ", () => {
   const rig = rigOf("nghiemThiet");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, "spear");
   assert.equal(rig.strikeFx, "ironFormation");
   assert.equal(rig.poses?.attack?.name, "pose-attack");
-  assert.equal(rig.poses?.cast, undefined);
+  assert.equal(rig.poses?.cast?.name, "pose-cast");
   assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
   assert.equal(rig.down?.name, "pose-down");
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
