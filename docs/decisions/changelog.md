@@ -2,6 +2,10 @@
 
 ## 03/11/2026
 
+**Tầm Tướng Ký: bản chốt thiết kế LT-00 (DRAFT)**
+- Thêm [14 — Liệt Truyện Design Freeze](../02-game-modes/future/14-liet-truyen-design-freeze.md): kiểm kê code (7 hệ, 8 nghề, `chauNgoc`/`toKim`/`viTrieu` và chân dung), bảng 5 APPROVED / 22 PROPOSED / 5 OPEN, rulebook, 8 ví dụ chuẩn, 34 test Given/When/Then. Chờ Shan duyệt; chưa mở LT-01.
+- Sửa [danh mục chế độ](../02-game-modes/future/01-mode-portfolio.md#rủi-ro-sản-phẩm): code đã bật 8 nghề (`NEW_PROFESSIONS_ENABLED = true`), không còn là 6.
+
 **Nhạc: Đấu trường và Quần Hùng online**
 - `music/arena` phát ở màn Đấu trường và trận Đấu trường; `music/pvp` chuẩn bị sẵn cho Quần Hùng online (chưa phát triển nên chưa phát ở đâu). Còn thiếu: Tháp Thí Luyện, Tháp Thiên Mệnh, kết cục, nhạc đang chơi và kết quả Trận Đồ, âm nền bản đồ.
 

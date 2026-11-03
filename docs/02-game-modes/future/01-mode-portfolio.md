@@ -38,7 +38,7 @@
 
 ## Rủi ro sản phẩm
 
-- Có 6 nghề active (Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư) và 7 hệ active (Kim/Mộc/Thủy/Hỏa/Thổ/Lôi/Phong). Cung thủ và Sát thủ nằm trong danh mục thiết kế mở rộng, **chưa** active Battle Engine. BP dùng registry riêng để tránh tự bật hai nghề này.
+- Có 8 nghề active (Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư và hai nghề mở rộng Xạ thủ, Sát thủ, bật bằng `NEW_PROFESSIONS_ENABLED` trong `src/core/battle/rules.ts`) và 7 hệ active (Kim/Mộc/Thủy/Hỏa/Thổ/Lôi/Phong). BP dùng registry riêng nên không tự đổi theo cờ này. (Sửa 03/11/2026 theo kiểm kê [LT-00](14-liet-truyen-design-freeze.md#22-mâu-thuẫn-phát-hiện).)
 - Chân dung nhân vật là biểu đạt hiển thị, **không** phải điều kiện khớp; điều kiện duy nhất là Nghề hoặc Hệ.
 - Tránh để gallery art dày làm khó hiểu luật: phải luôn có icon nghề/hệ và preview các ô hợp lệ.
 - Liệt Truyện tận dụng chân dung game, nhưng phải có kiểm toán recipe riêng theo **signature nhân vật**, không cố ghép `nghề+hệ` ra tướng trực tiếp. Không coi phép ghép tượng trưng là sự kiện lịch sử.

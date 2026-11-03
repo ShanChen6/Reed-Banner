@@ -1,6 +1,8 @@
 # 08 — Liệt Truyện: Tầm Tướng Ký — Game Design Document v0.1
 
 > **CONCEPT APPROVED / RULES PROPOSED** · 27/10/2026. Đây là thiết kế mode mới lấy cảm hứng từ cơ chế khám phá kết hợp của Doodle God; chưa phải đặc tả luật được sign-off, chưa có engine, route, UI hay thưởng. Không đổi luật Campaign/Binh Pháp.
+>
+> 03/11/2026: bảng quyết định LT-00 ở [14 — Design Freeze](14-liet-truyen-design-freeze.md) (DRAFT); khi được duyệt, file đó thắng file này.
 
 ## 1. Định vị và mục tiêu
 

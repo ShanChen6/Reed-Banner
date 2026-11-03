@@ -124,6 +124,12 @@
 
 - TODO: Duyệt luật PvP trực tiếp ([thiết kế DRAFT](../02-game-modes/future/13-quan-hung-pvp-truc-tiep.md)): chuẩn hóa cấp và trang bị hay để nguyên tiến độ; dùng đội 3vs3 đang chọn hay chọn riêng mỗi trận; con số hết giờ, mất kết nối, trận mỗi ngày và số lần đánh lại cùng một người; kênh đẩy (polling, SSE hay dịch vụ ngoài); có giao hữu không tính Elo không; song song hay thay thế đấu trường bóng ma.
 
+## Tầm Tướng Ký (Liệt Truyện)
+
+- TODO: LT-00 sign-off. Shan duyệt hoặc sửa 22 dòng PROPOSED (cặp không thứ tự, một kết quả mỗi cặp, `A+A` khi có khai báo, tướng là terminal, hint miễn phí 3 mức, lưu local, không thưởng lúc ra mắt…) ở [Design Freeze mục 3](../02-game-modes/future/14-liet-truyen-design-freeze.md#3-bảng-quyết-định).
+- TODO: Năm câu OPEN của LT-00: đồng bộ tiến trình guest khi đăng nhập, lộ số tướng còn lại, tự mở hint khi ghép sai nhiều, dùng lore đề xuất trong Tướng Lục hay chờ duyệt, chọn tướng cho gói 10–12 ([Design Freeze mục 3](../02-game-modes/future/14-liet-truyen-design-freeze.md#3-bảng-quyết-định)).
+- TODO: LT-01 sửa công thức cuối của Tô Kim (đang là “Hệ + Nghề”) và thêm nhánh dùng hệ Lôi ([Design Freeze mục 2.2](../02-game-modes/future/14-liet-truyen-design-freeze.md#22-mâu-thuẫn-phát-hiện)).
+
 ## Giao diện Trận Đồ
 
 - Đã chốt (Shan, 02/11/2026): kho ảnh bản đồ xoay theo kỳ với địa danh thật thời Loạn 12 sứ quân; ô che bằng ảnh đặc kín; chướng ngại bốn biến thể (núi, rừng, đầm lầy, thành lũy) với nền ô riêng; quân đủ huy hiệu nghề và hệ nhỏ vừa đủ; hoàn thành màn thì hiện ảnh đầy đủ; chế độ tùy chỉnh trong Chơi thường.

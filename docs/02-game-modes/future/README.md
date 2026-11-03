@@ -19,7 +19,8 @@
 11. [11 — UX, Art Bible của Liệt Truyện](11-liet-truyen-ui-art.md)
 12. [12 — QA và roadmap Liệt Truyện](12-liet-truyen-qa-roadmap.md)
 13. [13 — Quần Hùng online: đấu trực tiếp hai người chơi](13-quan-hung-pvp-truc-tiep.md) (DRAFT, phát triển sau)
-14. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
+14. [14 — Liệt Truyện: Design Freeze LT-00](14-liet-truyen-design-freeze.md) (DRAFT, chờ Shan duyệt; nguồn chính luật Liệt Truyện khi duyệt)
+15. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
 
 ## Quy ước quyết định
 
