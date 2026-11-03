@@ -1,10 +1,13 @@
 # Hình ảnh & yêu cầu cho họa sĩ
 
-> Cập nhật: 20/10/2026
+> Cập nhật: 03/11/2026
+> Trạng thái: **APPROVED** — Art Direction thống nhất 03/11/2026; hiện trạng asset/rig cũ không thay đổi cho đến khi nghiệm thu từng nhân vật.
 >
 > Kế hoạch đồ họa hoàn chỉnh (hoạt ảnh nhân vật, làm nhẹ ảnh, hiệu năng, trang trí) ở [Kế hoạch đồ họa](ke-hoach-do-hoa.md).
 
-File này có hai phần. Phần 1 ghi phong cách của bộ hình dựng bằng code (SVG) đang dùng trong game. Phần 2 là **bản yêu cầu gửi họa sĩ** (hoặc dùng làm đầu vào cho công cụ AI vẽ ảnh) cho phần code không vẽ được: chân dung nhân vật và hình trang bị.
+File này có ba phần. **Mục 3** là quyết định art direction mới nhất, có quyền ưu tiên khi mâu thuẫn với các hướng sản xuất nhân vật cũ ở mục 2; mục 1 mô tả art đang chạy và không bị coi là đã thay thế.
+
+File này có hai phần tư liệu gốc: Phần 1 ghi phong cách của bộ hình dựng bằng code (SVG) đang dùng trong game. Phần 2 là **bản yêu cầu gửi họa sĩ** (hoặc dùng làm đầu vào cho công cụ AI vẽ ảnh) cho phần code không vẽ được: chân dung nhân vật và hình trang bị.
 
 ## 1. Bộ hình dựng bằng code
 
@@ -156,3 +159,45 @@ Canvas: 512x512. Must stay recognizable at 48 px.
 ```
 
 > TODO: chọn người vẽ hoặc công cụ AI, ngân sách và thời điểm (khi gameplay đã ổn); chốt danh sách 12 sứ quân theo thứ tự chiến dịch.
+
+
+---
+
+## 3. Art direction 03/11/2026 — Historical Grounded Fantasy (APPROVED)
+
+### 3.1 Quyết định chung
+
+**Một Art Bible — Một phong cách — Mỗi nhân vật một câu chuyện.** Tất cả nhân vật lịch sử, tướng thường hư cấu, nghề mở rộng và nhân vật đặc biệt đều đi qua cùng quy trình **Character Identity → Canonical Master → sáu tư thế → QA → rig/asset integration**. Hai ảnh nhân vật **Trần Lãm Master v3** và **Ngô Nhật Khánh Master mới** đã được Shan chọn làm mốc hướng tạo hình; ảnh được duyệt thực tế phải được cung cấp riêng khi dựng, không thay bằng mô tả văn bản hoặc ảnh tìm kiếm tương tự.
+
+**Thay thế định hướng sản xuất ảnh nhân vật mới ở mục 2.2 khi có xung đột:** hình người bán hiện thực, tự nhiên, có tuổi và sinh khí; trang phục Việt Nam thế kỷ X hư cấu hóa một cách có lý do; vật liệu vải dệt, gỗ, da, đồng, sắt; hoa văn hạn chế, tránh lạm dụng biểu tượng Đông Sơn; ít fantasy trên master, vẫn cho phép hệ/nghề và VFX thể hiện mạnh trong gameplay. Không lạm dụng áo dài bay, áo nhiều tầng tiên hiệp, giáp khổng lồ, vũ khí cơ học phi lý, hoàng bào/miện không đúng địa vị. Đây là **historical low-fantasy**, không phải tuyên bố phục dựng chính xác các hiện vật hoặc chân dung lịch sử.
+
+**Sự khác biệt không chỉ là màu:** khuôn mặt, tuổi, hình thể, dáng đứng, cấu tạo trang phục, địa bàn/xuất thân, nghề nghiệp, thói quen, đạo cụ riêng, biểu cảm và silhouette. Không có đồng phục mặc định cho một nghề và không lấy hệ làm lý do sơn toàn bộ người cùng một màu. Với nhân vật hư cấu, mỗi người bắt buộc có một câu chuyện riêng đủ cụ thể để giải thích trang phục và cách chiến đấu, không dùng tiểu sử chung thay tên.
+
+### 3.2 Character Identity: hai nguồn nghiên cứu, một đích thiết kế
+
+| Loại | Nguồn phát triển nhân vật | Điều cần khóa |
+|---|---|---|
+| Nhân vật lịch sử | Sử liệu có dẫn nguồn; phân biệt recorded / reconstructed / legend / fictional theo [sổ nguồn Campaign](../02-game-modes/campaign/history-sources.md) | Danh xưng đúng thời, địa vị, khí chất, diện mạo **sáng tác** không mạo nhận là chân dung lịch sử |
+| Nhân vật hư cấu | Mốc bối cảnh của Reed Banner + nghề/hệ từ roster + tiểu sử game-authored cá nhân | Nơi xuất thân, vai trò trước chiến tranh, động cơ, điểm yếu, thói quen, vật dụng và lý do chiến đấu |
+
+Mọi hồ sơ phải có **Identity DNA** (tên, tuổi tạo hình, khuôn mặt, vóc dáng, khí chất, xuất thân, động cơ), **Costume DNA** (mảng màu và vật liệu cố định), **Equipment DNA** (một hình học và giải phẫu tay), **Pose Language** (Idle, Basic, Skill, Ultimate, Defeated, Personality), **Historical/Fiction boundary** và **QA gate**. Nghề quyết định logic hành động; hệ quyết định nhận diện vừa đủ và VFX ở runtime; không sửa nghề/hệ/skill ID để khớp tranh.
+
+### 3.3 Khóa độ đồng nhất và fantasy
+
+- Đồng nhất độ chi tiết nét vẽ, tỉ lệ người trưởng thành, ánh sáng, độ tương phản và chất liệu trên tất cả nhóm nhân vật. Đánh giá ở cả ảnh lớn và thumbnail 48–160px trong UI thực tế.
+- Master là người toàn thân, vũ khí và phụ kiện trọn khung, không VFX bake-in. Xuất PNG có **alpha thật** nếu công cụ hỗ trợ; quy trình chroma cũ vẫn là tài liệu tham chiếu, không thể thay pipeline runtime mà không kiểm tra.
+- Không thêm vai trò fantasy bằng hiệu ứng cháy/sét/nước trên cơ thể khi dựng Master. Tuyệt chiêu có thể giàu fantasy ở lớp VFX và chuyển động của game; art tĩnh phải giữ vật liệu/giải phẫu hợp lý.
+- Không dùng trang phục cùng một khuôn cho các tướng chung nghề, hoặc chỉ thay mã HEX để tạo 7 hệ. Cấm đổi ngẫu nhiên mặt, dáng, màu mảng áo, số vũ khí và chiều tay giữa các pose.
+- **Defeated** phải thực sự mất trọng tâm; **Personality** phải biểu đạt nét riêng không thành một tư thế chiến đấu lặp lại.
+
+### 3.4 Kế hoạch chuyển đổi theo từng nhân vật — không sản xuất hàng loạt
+
+1. **Baseline bất biến:** asset gốc, ảnh đã dựng, rig, animation và VFX hiện đang chạy được giữ nguyên. Không ghi đè trực tiếp, không xóa, không thay cache/runtime trong bước thiết kế.
+2. **Chọn MỘT nhân vật:** đọc roster, skills, hồ sơ cũ và xem ảnh đang chạy; phân loại các chi tiết giữ, điều chỉnh hoặc bỏ có lý do. Nếu chưa thấy ảnh gốc, ghi rõ thiếu reference.
+3. **Viết Identity & lore riêng:** nhân vật lịch sử bám sử; nhân vật hư cấu bám bối cảnh game, nghề/hệ. Cấm dựng tiểu sử giống nhau chỉ đổi tên.
+4. **Chỉ tạo MỘT Master/Idle** theo prompt độc lập, so với ảnh cũ và hai mốc đã duyệt; sửa đến khi Shan chấp thuận. Không sinh đồng loạt sáu pose.
+5. **Khóa ảnh Master mới** và Weapon/Costume DNA, sau đó lần lượt Basic → Skill → Ultimate → Defeated → Personality, kiểm từng khung.
+6. **QA & tích hợp từng nhân vật:** alpha, hình học vũ khí, đúng tay/hông, đúng lớp rig, khớp kích thước và VFX, nhận diện thumbnail; chỉ thay asset sau khi có xác nhận.
+7. Nếu hình mới không đạt, tiếp tục dùng bản cũ. Không mặc nhiên coi APPROVED của Art Bible là APPROVED từng ảnh hay IMPLEMENTED trong runtime.
+
+**Pilot đầu tiên cho nhân vật hư cấu:** [RB-048 Mã Nhạc](prompts/v4-2/03-tuong-thuong-hoa-tho-loi-phong.md). Chỉ hồ sơ và Master prompt mới là DRAFT cho đến khi Shan duyệt ảnh; không áp dụng lại nguyên xi hình cũ và không buộc đổi thiết kế nhân vật lịch sử đã duyệt.
