@@ -19,6 +19,7 @@ Mỗi nhân vật (nhân vật chính và nhân vật kèm) có **9 ô trang b�
 | 9 | **Ngọc bội** | +Máu | Dùng chung mọi nghề |
 
 - Mỗi chỉ số chính có đúng 3 ô.
+- Hình từng món, khung phẩm và huy hiệu bộ: [Prompt trang bị](../06-art/prompts/trang-bi.md) (DRAFT).
 - **Không có chỉ số phụ** (Shan chốt 19/10/2026): trang sức chỉ cộng chỉ số chính, không có năng lượng khởi đầu hay hồi máu.
 - **Chỉ số gốc** của một món phẩm Trắng (điểm xuất phát, code ở `src/core/gear/`): ATK +3, Máu +30, DEF +2. Chỉ số món = gốc × hệ số phẩm × hệ số nguyên tố, làm tròn. Ví dụ đủ 3 món Cam cùng nguyên tố cộng ATK +42, Máu +405, DEF +27.
 
