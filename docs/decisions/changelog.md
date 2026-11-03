@@ -2,6 +2,9 @@
 
 ## 03/11/2026
 
+**Hồ sơ đổi thành Doanh Trại**
+- Shan: màn Hồ sơ đổi tên hiển thị thành Doanh Trại, quản lý được 50–100 nhân vật; mục Tướng sĩ / Đội hình / Kho đồ, Cửa hàng là lối vào riêng; kỹ năng nằm trong chi tiết từng tướng. Đường dẫn `/game/profile` giữ nguyên, luật trang bị/ghép/đội hình không đổi ([Doanh Trại](../05-ui-ux/screens/doanh-trai.md)). Tiêu đề mục tiện ích ở màn chính đổi từ "Doanh trại" thành "Quân vụ" để không trùng.
+
 **Nhạc: Đấu trường và Quần Hùng online**
 - `music/arena` phát ở màn Đấu trường và trận Đấu trường; `music/pvp` chuẩn bị sẵn cho Quần Hùng online (chưa phát triển nên chưa phát ở đâu). Còn thiếu: Tháp Thí Luyện, Tháp Thiên Mệnh, kết cục, nhạc đang chơi và kết quả Trận Đồ, âm nền bản đồ.
 
