@@ -14,7 +14,7 @@
 | Thử thách ngày | Một lượt/ngày, đề chung và leaderboard | Giữ | Đã có |
 | Đấu trường | 3v3 vs snapshot phòng thủ AI | Giữ, không gọi là real-time PvP | Đã có |
 | **Binh Pháp** | Không có route/engine | **APPROVED CONCEPT:** game xếp quân theo Nghề + Hệ, chân dung nhân vật; thiết kế/triển khai mới | P0 new design |
-| **Liệt Truyện — Tầm Tướng Ký** | Không có route/engine | **APPROVED CONCEPT:** ghép hai yếu tố khởi đầu từ 7 hệ → vật liệu/tri thức → chân dung tướng có **công thức cuối riêng**; luật chi tiết **PROPOSED, chưa chốt LT-00** | Design / sau BP |
+| **Tầm Tướng Ký** (trước gọi Liệt Truyện) | Không có route/engine | **APPROVED CONCEPT:** ghép hai yếu tố khởi đầu từ 7 hệ → vật liệu/tri thức → chân dung tướng có **công thức cuối riêng**; Shan chốt luật chính 03/11/2026 ở [Design Freeze](14-tam-tuong-ky-design-freeze.md), phần còn lại chờ duyệt | Design / sau BP |
 | Viễn Chinh | Không có | Chưa tìm ra cơ chế đủ riêng; **DEFERRED** | Backlog |
 | Thủ Thành riêng (HP thành) | Không có | **Không mở thành mode thứ hai** trùng Sinh tồn | Not planned |
 
@@ -38,7 +38,7 @@
 
 ## Rủi ro sản phẩm
 
-- Có 8 nghề active (Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư và hai nghề mở rộng Xạ thủ, Sát thủ, bật bằng `NEW_PROFESSIONS_ENABLED` trong `src/core/battle/rules.ts`) và 7 hệ active (Kim/Mộc/Thủy/Hỏa/Thổ/Lôi/Phong). BP dùng registry riêng nên không tự đổi theo cờ này. (Sửa 03/11/2026 theo kiểm kê [LT-00](14-liet-truyen-design-freeze.md#22-mâu-thuẫn-phát-hiện).)
+- Có 8 nghề active (Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư và hai nghề mở rộng Xạ thủ, Sát thủ, bật bằng `NEW_PROFESSIONS_ENABLED` trong `src/core/battle/rules.ts`) và 7 hệ active (Kim/Mộc/Thủy/Hỏa/Thổ/Lôi/Phong). BP dùng registry riêng nên không tự đổi theo cờ này. (Sửa 03/11/2026 theo kiểm kê [LT-00](14-tam-tuong-ky-design-freeze.md#22-mâu-thuẫn-và-điểm-cần-lưu-ý).)
 - Chân dung nhân vật là biểu đạt hiển thị, **không** phải điều kiện khớp; điều kiện duy nhất là Nghề hoặc Hệ.
 - Tránh để gallery art dày làm khó hiểu luật: phải luôn có icon nghề/hệ và preview các ô hợp lệ.
 - Liệt Truyện tận dụng chân dung game, nhưng phải có kiểm toán recipe riêng theo **signature nhân vật**, không cố ghép `nghề+hệ` ra tướng trực tiếp. Không coi phép ghép tượng trưng là sự kiện lịch sử.

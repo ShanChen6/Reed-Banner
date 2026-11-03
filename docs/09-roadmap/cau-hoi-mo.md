@@ -124,11 +124,12 @@
 
 - TODO: Duyệt luật PvP trực tiếp ([thiết kế DRAFT](../02-game-modes/future/13-quan-hung-pvp-truc-tiep.md)): chuẩn hóa cấp và trang bị hay để nguyên tiến độ; dùng đội 3vs3 đang chọn hay chọn riêng mỗi trận; con số hết giờ, mất kết nối, trận mỗi ngày và số lần đánh lại cùng một người; kênh đẩy (polling, SSE hay dịch vụ ngoài); có giao hữu không tính Elo không; song song hay thay thế đấu trường bóng ma.
 
-## Tầm Tướng Ký (Liệt Truyện)
+## Tầm Tướng Ký
 
-- TODO: LT-00 sign-off. Shan duyệt hoặc sửa 22 dòng PROPOSED (cặp không thứ tự, một kết quả mỗi cặp, `A+A` khi có khai báo, tướng là terminal, hint miễn phí 3 mức, lưu local, không thưởng lúc ra mắt…) ở [Design Freeze mục 3](../02-game-modes/future/14-liet-truyen-design-freeze.md#3-bảng-quyết-định).
-- TODO: Năm câu OPEN của LT-00: đồng bộ tiến trình guest khi đăng nhập, lộ số tướng còn lại, tự mở hint khi ghép sai nhiều, dùng lore đề xuất trong Tướng Lục hay chờ duyệt, chọn tướng cho gói 10–12 ([Design Freeze mục 3](../02-game-modes/future/14-liet-truyen-design-freeze.md#3-bảng-quyết-định)).
-- TODO: LT-01 sửa công thức cuối của Tô Kim (đang là “Hệ + Nghề”) và thêm nhánh dùng hệ Lôi ([Design Freeze mục 2.2](../02-game-modes/future/14-liet-truyen-design-freeze.md#22-mâu-thuẫn-phát-hiện)).
+- Đã chốt (Shan, 03/11/2026): tên Tầm Tướng Ký; ghép có thứ tự (`A+B` ≠ `B+A`, `A+A` ra một kết quả); hai chế độ Thường (tốn phiếu, không mất nguyên liệu, có gợi ý) và Hạng tuần (đề cử 5/7/10 tướng, kho 7 nguyên tố bị tiêu, không gợi ý, có thưởng); số lần ghép lịch sử > đặc biệt > thường; gợi ý miễn phí 2 lượt, không lộ đủ công thức, không tự mở; ghép ra tướng chỉ mở thành tựu; bắt buộc đăng nhập; Tướng Lục hiện bóng mờ đủ pack; tạm dùng nghề/hệ/vật biểu trưng. Xem [Design Freeze mục 3.1](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#31-đã-chốt).
+- TODO: Duyệt 27 dòng đề xuất (lượt 15 lần ghép mỗi phiếu, nguồn phiếu từ nhiệm vụ/điểm danh, kho hạng 10 mỗi hệ +2 mỗi ngày, điểm 100/200/300, thưởng như Trấn Ải…) ở [Design Freeze mục 3.2](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#32-đề-xuất).
+- TODO: Bảy câu còn mở (1 phiếu cho một lượt hay một lần ghép; 2 gợi ý tính theo phiếu, ngày hay cả đời; thành tựu có vàng không; ghép sai ở hạng có mất nguyên liệu; nguồn nguyên liệu hạng khác; số tướng đề cử cố định hay đổi; chọn tướng cho pack 10–12) ở [Design Freeze mục 3.3](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#33-còn-mở).
+- TODO: LT-01 viết lại công thức ví dụ theo luật có thứ tự, sửa công thức cuối của Tô Kim (đang là “Hệ + Nghề”) và thêm nhánh dùng hệ Lôi ([Design Freeze mục 2.2](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#22-mâu-thuẫn-và-điểm-cần-lưu-ý)).
 
 ## Giao diện Trận Đồ
 

@@ -58,7 +58,7 @@ Nếu mở reward/chiêu mộ tương lai:
 ## Trạng thái hiện tại
 
 - [x] Concept và tài liệu draft.
-- [x] LT-00 bản chốt đề xuất: [14 — Design Freeze](14-liet-truyen-design-freeze.md) (03/11/2026).
+- [x] LT-00 bản chốt đề xuất và 10 quyết định của Shan (03/11/2026): [14 — Design Freeze](14-tam-tuong-ky-design-freeze.md). Roadmap mới ở [mục 8](14-tam-tuong-ky-design-freeze.md#8-roadmap-sau-quyết-định-03112026) thay bảng trên.
 - [ ] LT-00 sign-off.
 - [ ] Engine/tests.
 - [ ] UI/asset approved.
