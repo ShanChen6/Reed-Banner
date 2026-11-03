@@ -577,7 +577,7 @@ CONSISTENCY: Create a new design from the description; no previous Reed Banner a
 
 ### RB-008 — Trần Lãm · Quân sư / Thủy
 
-> Trạng thái riêng: **DRAFT** — pilot thiết kế mới từ đầu theo yêu cầu Shan 31/10/2026; không khóa theo tranh cũ. Chưa duyệt Master hoặc tạo ảnh.
+> Trạng thái riêng: **DRAFT** — pilot thiết kế mới từ đầu theo yêu cầu Shan 31/10/2026; không khóa theo tranh cũ. Shan gửi 6 tranh ngày 03/11/2026, đã đưa vào game (`public/art/characters/tran-lam/`). Bộ tranh không theo đúng thứ tự khung và vẽ gậy gỗ hai đầu bịt đồng thay gậy gút dây, nên ghép theo dáng: tranh đứng → ảnh đứng tách lớp, hạ gậy quét ngang → `pose-attack`, giơ gậy xòe tay → `pose-cast`, thế tấn gậy ngang ngực → `pose-ultimate`, ngồi bệt gậy rơi → `pose-down`, đọc cuộn giấy → `style`.
 
 #### Identity DNA mới và ranh giới sử liệu
 
