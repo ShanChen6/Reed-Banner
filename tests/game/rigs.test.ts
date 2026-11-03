@@ -113,6 +113,7 @@ test("Kiều Công Hãn có đủ bốn tranh, sét hệ Lôi, khớp nằm tron
   assert.equal(rig.poses?.cast?.name, "pose-cast");
   assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
   assert.equal(rig.down?.name, "pose-down");
+  assert.equal(rig.cloth.length, 0);
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
     assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
   contains(rig.joints.shoulder, rig.parts.arm);
