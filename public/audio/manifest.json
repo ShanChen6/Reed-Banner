@@ -338,6 +338,26 @@
     "formation_menu": {
       "file": "music/formation_menu",
       "volume": 0.5
+    },
+    "atlas": {
+      "file": "music/atlas",
+      "volume": 0.5
+    },
+    "dialogue": {
+      "file": "music/dialogue",
+      "volume": 0.4
+    },
+    "survival": {
+      "file": "music/survival",
+      "volume": 0.5
+    },
+    "battle_boss": {
+      "file": "music/battle_boss",
+      "volume": 0.5
+    },
+    "battle_normal": {
+      "file": "music/battle_normal",
+      "volume": 0.5
     }
   },
   "ambience": {}
