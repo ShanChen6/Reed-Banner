@@ -881,7 +881,7 @@ QUALITY GATE: Same mature commander face and fixed color panels; no white tiger 
 
 ### RB-010 — Ngô Xương Xí · Mưu sĩ / Kim
 
-> Trạng thái: **APPROVED — PROMPT DIRECTION** (03/11/2026), **MASTER IMAGE vẫn cần review** về khí chất sứ quân. Bộ sáu prompt vNext đã viết; chưa có xác nhận đủ PNG mới được render, QA hoặc tích hợp. Prompt V4.2 cũ bảo lưu.
+> Trạng thái: **APPROVED — PROMPT DIRECTION** (03/11/2026), **MASTER IMAGE vẫn cần review** về khí chất sứ quân. Bộ sáu prompt vNext đã viết; chưa có xác nhận đủ PNG mới được render, QA hoặc tích hợp. Prompt V4.2 cũ bảo lưu. Shan gửi sáu PNG cùng ngày, đã tích hợp runtime (`public/art/characters/ngo-xuong-xi/`) theo POSE ID và đúng thứ tự khung: RB010_IDLE → ảnh đứng tách lớp, RB010_BASIC_ATTACK → `pose-attack`, RB010_SKILL → `pose-cast`, RB010_ULTIMATE → `pose-ultimate`, RB010_DEFEATED → `pose-down`, RB010_PERSONALITY → `style`; bỏ các lớp vải cũ (ribbon, train, sash, sleeve).
 
 #### Dữ kiện lịch sử và tạo hình
 
