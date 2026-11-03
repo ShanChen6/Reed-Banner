@@ -1748,7 +1748,7 @@ POSE: PERSONALITY VIGNETTE: seated cross-legged on a plain reed mat, carefully i
 
 ### RB-014 — Kiều Thuận (Kiều Lệnh công) · Y sư / Mộc
 
-> **DRAFT — CHARACTER IDENTITY + MASTER/IDLE ONLY** (03/11/2026). Chưa duyệt ảnh mới, chưa xây lại 6 pose, chưa sửa asset/rig. Ưu tiên **đối chiếu bộ ảnh cũ trước** để quyết định KEEP / REFINE / REDESIGN. Toàn bộ tư liệu V4.2 giữ bên dưới.
+> **APPROVED — MASTER + 5 POSE PROMPTS** (03/11/2026). Ưu tiên **Production v2.1** bên dưới: bầu thuốc và kiếm đeo hông trái, chỉ Basic rút kiếm. Chưa xác nhận năm PNG đã nghiệm thu hoặc runtime đã thay. Hồ sơ DRAFT cũ/V4.2 bên dưới bảo lưu làm lịch sử.
 
 #### Historical Identity — Sứ quân Hồi Hồ
 
@@ -1813,6 +1813,111 @@ NEGATIVE: ordinary medicine seller, peasant with herb basket, green nature wizar
 - [ ] Y sư/Mộc qua hành vi bảo hộ và VFX runtime, không dùng trang phục phù thủy Mộc.
 - [ ] Nếu Master được duyệt, sau đó thiết kế từng pose theo Unique Pose Identity, không sinh hàng loạt.
 - [ ] Không thay asset hoặc gameplay khi chưa nghiệm thu.
+
+#### Production v2.1 — Master đã chọn + 5 pose (03/11/2026)
+
+> **APPROVED DESIGN / PROMPTS — NOT runtime integration.** Người dùng đã cung cấp ảnh Master Kiều Thuận mới có **bầu thuốc hai ngăn tay phải** và **đoản kiếm tra vỏ tại hông trái** và yêu cầu năm pose còn lại. **Master ảnh chính là Idle**, không render ảnh Idle thứ hai. Năm prompt dưới đây chốt theo ảnh Master đó. Chưa xác thực đủ năm PNG cuối hoặc thay asset/rig.
+> Thông tin lịch sử ghi nhận ông là sứ quân Hồi Hồ; nghề Y sư, đạo cụ bầu thuốc, kiếm cụ thể và cử chỉ là game-authored, không phải di vật đã kiểm chứng.
+
+**Quy tắc vũ khí:** Basic được rút **một** kiếm sang tay phải và treo bầu ở đai phải bằng dây có sẵn (vỏ kiếm rỗng). Skill, Ultimate và Personality kiếm **trong vỏ**; Defeated kiếm vẫn tra vỏ còn bầu rơi xuống. Tuyệt chiêu runtime `hoiHoSinhKhi` không thay đổi.
+
+| Pose | Silhouette riêng |
+|---|---|
+| Idle | Ảnh Master được duyệt; tay phải cầm bầu, kiếm hông trái |
+| Basic | Né chéo và phản đòn ngắn bằng kiếm tay phải |
+| Skill | Cúi thấp cứu người ngoài khung, bầu ở tay phải |
+| Ultimate | Đứng mở rộng, nâng bầu trước ngực và tay trái hiệu triệu |
+| Defeated | Ngã hẳn sang phải, bầu tuột khỏi tay |
+| Personality | Hai tay kiểm tra nắp cùng một bầu, kiếm ở hông |
+
+##### Production pose 2 — Basic Attack — Đoản kiếm hộ thân
+
+```text
+Create ONE full-body painted 2D character image, Kiều Thuận (Kiều Lệnh công), RB-014 / kieuThuan, fictionalized 10th-century Vietnamese Hồi Hồ regional warlord, Y sư / Mộc in Reed Banner. MANDATORY IMAGE REFERENCE: the user-approved updated Master v2.1 (green robe, brown botanical-embroidered vest, gourd + LEFT-hip sheathed short sword). Preserve exactly his unique middle-aged Vietnamese face, pointed mixed-black-gray beard and moustache, strong mature anatomy, olive-green wrapped headcloth with fabric tail, stern warm eyes and original clothing layers.
+
+COSTUME LOCK: forest-green crossed-collar tunic #2D6542, ivory inner collar and rolled sleeves #E9DFC4, ONE bark-brown sleeveless field vest #6B5038 with original vertical leafy embroidery on front edge and single practical pocket, moss waist cloth #608651, broad brown belt, ONE rectangular bronze clasp, brown trousers, pale calf wraps, dark soft shoes. Match approved image patterns, closures, hem shapes and accessories exactly; don't add costumes or armor.
+
+EQUIPMENT LOCK: EXACTLY ONE natural amber double-bulbed bronze-capped medicine gourd RB-014-W01 with the original cord, and EXACTLY ONE short straight iron sword RB-014-W02 with dark wood grip, small bronze guard, dark wood scabbard attached at ANATOMICAL LEFT hip. Normally the sword remains FULLY SHEATHED; Basic alone may draw it into ANATOMICAL RIGHT hand while the same scabbard stays EMPTY at LEFT hip and gourd hangs at RIGHT belt. Never duplicate objects. In all other frames RIGHT hand normally holds the gourd, sword fully sheathed; Defeated releases the one gourd.
+
+ART/OUTPUT: Vietnamese Historical Low Fantasy — Heroic Stylization, premium hand-painted semi-realistic 2D character game art, adult proportions, readable silhouette, restrained fantasy only, no photoreal costume photo or xianxia. Exactly ONE full-body character with complete hands/feet/gourd/sword visible, genuine transparent alpha PNG with safe margins, no scene, floor, gradient, UI, text, watermark, other people, animals or baked Mộc VFX. Historical identity as lord is grounded; healer class and props are fiction, not authenticated history.
+
+POSE ID: RB014_BASIC_ATTACK
+POSE DIRECTION: Single short protective counterattack. Original ONE gourd suspended at ANATOMICAL RIGHT waist by its existing carrying cord, out of the hand. The RIGHT hand holds the SINGLE short straight sword DRAWN, angled diagonally forward at lower chest height; original sheath at LEFT hip is EMPTY. Shift weight back onto RIGHT leg and move LEFT foot diagonally to evade; LEFT hand opens near torso to balance. No overly wide slash, duplicate sword or gourd in right hand simultaneously.
+QUALITY GATE: Identical approved Master face/garments, correct sword and gourd count and anatomy; truly transparent PNG and complete uncut equipment.
+```
+
+##### Production pose 3 — Skill — Hộ thương cứu trận
+
+```text
+Create ONE full-body painted 2D character image, Kiều Thuận (Kiều Lệnh công), RB-014 / kieuThuan, fictionalized 10th-century Vietnamese Hồi Hồ regional warlord, Y sư / Mộc in Reed Banner. MANDATORY IMAGE REFERENCE: the user-approved updated Master v2.1 (green robe, brown botanical-embroidered vest, gourd + LEFT-hip sheathed short sword). Preserve exactly his unique middle-aged Vietnamese face, pointed mixed-black-gray beard and moustache, strong mature anatomy, olive-green wrapped headcloth with fabric tail, stern warm eyes and original clothing layers.
+
+COSTUME LOCK: forest-green crossed-collar tunic #2D6542, ivory inner collar and rolled sleeves #E9DFC4, ONE bark-brown sleeveless field vest #6B5038 with original vertical leafy embroidery on front edge and single practical pocket, moss waist cloth #608651, broad brown belt, ONE rectangular bronze clasp, brown trousers, pale calf wraps, dark soft shoes. Match approved image patterns, closures, hem shapes and accessories exactly; don't add costumes or armor.
+
+EQUIPMENT LOCK: EXACTLY ONE natural amber double-bulbed bronze-capped medicine gourd RB-014-W01 with the original cord, and EXACTLY ONE short straight iron sword RB-014-W02 with dark wood grip, small bronze guard, dark wood scabbard attached at ANATOMICAL LEFT hip. Normally the sword remains FULLY SHEATHED; Basic alone may draw it into ANATOMICAL RIGHT hand while the same scabbard stays EMPTY at LEFT hip and gourd hangs at RIGHT belt. Never duplicate objects. In all other frames RIGHT hand normally holds the gourd, sword fully sheathed; Defeated releases the one gourd.
+
+ART/OUTPUT: Vietnamese Historical Low Fantasy — Heroic Stylization, premium hand-painted semi-realistic 2D character game art, adult proportions, readable silhouette, restrained fantasy only, no photoreal costume photo or xianxia. Exactly ONE full-body character with complete hands/feet/gourd/sword visible, genuine transparent alpha PNG with safe margins, no scene, floor, gradient, UI, text, watermark, other people, animals or baked Mộc VFX. Historical identity as lord is grounded; healer class and props are fiction, not authenticated history.
+
+POSE ID: RB014_SKILL
+POSE DIRECTION: RIGHT hand holds ONE intact original capped gourd, reaches it forward toward an imagined casualty off frame; LEFT arm reaches gently downward, five distinct fingers. Lower into asymmetric deep crouch, LEFT knee bent toward invisible casualty and RIGHT leg extended diagonally for balance. Shoulder and torso lean forward with intent and gravity; sword remains FULLY SHEATHED at LEFT hip and stays outside leg silhouette. This is an art-language title, not a skill ID rename. No actual second person or magical glow.
+QUALITY GATE: Identical approved Master face/garments, correct sword and gourd count and anatomy; truly transparent PNG and complete uncut equipment.
+```
+
+##### Production pose 4 — Ultimate — Hồi Hồ Sinh Khí
+
+```text
+Create ONE full-body painted 2D character image, Kiều Thuận (Kiều Lệnh công), RB-014 / kieuThuan, fictionalized 10th-century Vietnamese Hồi Hồ regional warlord, Y sư / Mộc in Reed Banner. MANDATORY IMAGE REFERENCE: the user-approved updated Master v2.1 (green robe, brown botanical-embroidered vest, gourd + LEFT-hip sheathed short sword). Preserve exactly his unique middle-aged Vietnamese face, pointed mixed-black-gray beard and moustache, strong mature anatomy, olive-green wrapped headcloth with fabric tail, stern warm eyes and original clothing layers.
+
+COSTUME LOCK: forest-green crossed-collar tunic #2D6542, ivory inner collar and rolled sleeves #E9DFC4, ONE bark-brown sleeveless field vest #6B5038 with original vertical leafy embroidery on front edge and single practical pocket, moss waist cloth #608651, broad brown belt, ONE rectangular bronze clasp, brown trousers, pale calf wraps, dark soft shoes. Match approved image patterns, closures, hem shapes and accessories exactly; don't add costumes or armor.
+
+EQUIPMENT LOCK: EXACTLY ONE natural amber double-bulbed bronze-capped medicine gourd RB-014-W01 with the original cord, and EXACTLY ONE short straight iron sword RB-014-W02 with dark wood grip, small bronze guard, dark wood scabbard attached at ANATOMICAL LEFT hip. Normally the sword remains FULLY SHEATHED; Basic alone may draw it into ANATOMICAL RIGHT hand while the same scabbard stays EMPTY at LEFT hip and gourd hangs at RIGHT belt. Never duplicate objects. In all other frames RIGHT hand normally holds the gourd, sword fully sheathed; Defeated releases the one gourd.
+
+ART/OUTPUT: Vietnamese Historical Low Fantasy — Heroic Stylization, premium hand-painted semi-realistic 2D character game art, adult proportions, readable silhouette, restrained fantasy only, no photoreal costume photo or xianxia. Exactly ONE full-body character with complete hands/feet/gourd/sword visible, genuine transparent alpha PNG with safe margins, no scene, floor, gradient, UI, text, watermark, other people, animals or baked Mộc VFX. Historical identity as lord is grounded; healer class and props are fiction, not authenticated history.
+
+POSE ID: RB014_ULTIMATE
+POSE DIRECTION: Ultimate id hoiHoSinhKhi (heals allies and applies regeneration). Commanding restorative rally: RIGHT foot steps outward and plants, back straight with open chest. RIGHT hand lifts original ONE gourd to upper chest close to heart, LEFT arm opens wide toward anatomical LEFT with palm UP and all five fingers visible. Head and confident eyes toward imagined allies, lips slightly open delivering a calm rallying order. Sheathed sword remains at LEFT hip. Distinct from Skill's low crouch and Basic's drawn sword. NO healing green lights/leaves or effects in PNG.
+QUALITY GATE: Identical approved Master face/garments, correct sword and gourd count and anatomy; truly transparent PNG and complete uncut equipment.
+```
+
+##### Production pose 5 — Defeated — Hồi Hồ thất thế
+
+```text
+Create ONE full-body painted 2D character image, Kiều Thuận (Kiều Lệnh công), RB-014 / kieuThuan, fictionalized 10th-century Vietnamese Hồi Hồ regional warlord, Y sư / Mộc in Reed Banner. MANDATORY IMAGE REFERENCE: the user-approved updated Master v2.1 (green robe, brown botanical-embroidered vest, gourd + LEFT-hip sheathed short sword). Preserve exactly his unique middle-aged Vietnamese face, pointed mixed-black-gray beard and moustache, strong mature anatomy, olive-green wrapped headcloth with fabric tail, stern warm eyes and original clothing layers.
+
+COSTUME LOCK: forest-green crossed-collar tunic #2D6542, ivory inner collar and rolled sleeves #E9DFC4, ONE bark-brown sleeveless field vest #6B5038 with original vertical leafy embroidery on front edge and single practical pocket, moss waist cloth #608651, broad brown belt, ONE rectangular bronze clasp, brown trousers, pale calf wraps, dark soft shoes. Match approved image patterns, closures, hem shapes and accessories exactly; don't add costumes or armor.
+
+EQUIPMENT LOCK: EXACTLY ONE natural amber double-bulbed bronze-capped medicine gourd RB-014-W01 with the original cord, and EXACTLY ONE short straight iron sword RB-014-W02 with dark wood grip, small bronze guard, dark wood scabbard attached at ANATOMICAL LEFT hip. Normally the sword remains FULLY SHEATHED; Basic alone may draw it into ANATOMICAL RIGHT hand while the same scabbard stays EMPTY at LEFT hip and gourd hangs at RIGHT belt. Never duplicate objects. In all other frames RIGHT hand normally holds the gourd, sword fully sheathed; Defeated releases the one gourd.
+
+ART/OUTPUT: Vietnamese Historical Low Fantasy — Heroic Stylization, premium hand-painted semi-realistic 2D character game art, adult proportions, readable silhouette, restrained fantasy only, no photoreal costume photo or xianxia. Exactly ONE full-body character with complete hands/feet/gourd/sword visible, genuine transparent alpha PNG with safe margins, no scene, floor, gradient, UI, text, watermark, other people, animals or baked Mộc VFX. Historical identity as lord is grounded; healer class and props are fiction, not authenticated history.
+
+POSE ID: RB014_DEFEATED
+POSE DIRECTION: Truly incapacitated: hips ON GROUND, torso has collapsed heavily toward anatomical RIGHT, RIGHT arm outstretched with fingers open after dropping original ONE intact bronze-capped gourd next to RIGHT hand. LEFT arm weakly folded at side but fully connected and anatomically legible, one leg under body, other out to side. Head droops, eyes half shut; sword stays FULLY SHEATHED on LEFT belt, no exposed blade. Wide composition showing gourd and body, NOT kneeling, resting, getting up or historical death narrative.
+QUALITY GATE: Identical approved Master face/garments, correct sword and gourd count and anatomy; truly transparent PNG and complete uncut equipment.
+```
+
+##### Production pose 6 — Personality — Người giữ sinh khí Hồi Hồ
+
+```text
+Create ONE full-body painted 2D character image, Kiều Thuận (Kiều Lệnh công), RB-014 / kieuThuan, fictionalized 10th-century Vietnamese Hồi Hồ regional warlord, Y sư / Mộc in Reed Banner. MANDATORY IMAGE REFERENCE: the user-approved updated Master v2.1 (green robe, brown botanical-embroidered vest, gourd + LEFT-hip sheathed short sword). Preserve exactly his unique middle-aged Vietnamese face, pointed mixed-black-gray beard and moustache, strong mature anatomy, olive-green wrapped headcloth with fabric tail, stern warm eyes and original clothing layers.
+
+COSTUME LOCK: forest-green crossed-collar tunic #2D6542, ivory inner collar and rolled sleeves #E9DFC4, ONE bark-brown sleeveless field vest #6B5038 with original vertical leafy embroidery on front edge and single practical pocket, moss waist cloth #608651, broad brown belt, ONE rectangular bronze clasp, brown trousers, pale calf wraps, dark soft shoes. Match approved image patterns, closures, hem shapes and accessories exactly; don't add costumes or armor.
+
+EQUIPMENT LOCK: EXACTLY ONE natural amber double-bulbed bronze-capped medicine gourd RB-014-W01 with the original cord, and EXACTLY ONE short straight iron sword RB-014-W02 with dark wood grip, small bronze guard, dark wood scabbard attached at ANATOMICAL LEFT hip. Normally the sword remains FULLY SHEATHED; Basic alone may draw it into ANATOMICAL RIGHT hand while the same scabbard stays EMPTY at LEFT hip and gourd hangs at RIGHT belt. Never duplicate objects. In all other frames RIGHT hand normally holds the gourd, sword fully sheathed; Defeated releases the one gourd.
+
+ART/OUTPUT: Vietnamese Historical Low Fantasy — Heroic Stylization, premium hand-painted semi-realistic 2D character game art, adult proportions, readable silhouette, restrained fantasy only, no photoreal costume photo or xianxia. Exactly ONE full-body character with complete hands/feet/gourd/sword visible, genuine transparent alpha PNG with safe margins, no scene, floor, gradient, UI, text, watermark, other people, animals or baked Mộc VFX. Historical identity as lord is grounded; healer class and props are fiction, not authenticated history.
+
+POSE ID: RB014_PERSONALITY
+POSE DIRECTION: Quiet noncombat inspection: upright relaxed stance with weight on RIGHT leg. RIGHT hand lifts original ONE double-bulbed gourd to lower chest, supporting it by neck, LEFT hand reaches across and checks the SAME gourd's existing bronze cap with natural fully visible five fingers. All LEFT shoulder, elbow, wrist and hand correctly connected, separate from gourd and chest; head gently lowers to inspect cap, subtle composed warmth. Sword stays FULLY SHEATHED and visible on LEFT hip. No second container, added potion, green effects or combat pose.
+QUALITY GATE: Identical approved Master face/garments, correct sword and gourd count and anatomy; truly transparent PNG and complete uncut equipment.
+```
+
+#### QA trước khi thay asset
+
+- [ ] Khuôn mặt, khăn olive, áo xanh và áo khoác thêu nâu đúng ảnh Master; không quay lại đồ bay tiên hiệp cũ.
+- [ ] Mỗi frame đúng **một bầu thuốc**, **một kiếm**; Basic kiếm ở tay phải, vỏ kiếm rỗng hông trái; các frame còn lại kiếm tra vỏ.
+- [ ] Basic/Skill/Ultimate khác trọng tâm, phương thức chiến đấu và biểu cảm.
+- [ ] Defeated hông chạm đất và buông bầu; Personality đủ cánh tay, không nhân đôi bầu.
+- [ ] PNG alpha thật, không có sàn/phông đen hoặc VFX Mộc tích hợp sẵn.
+- [ ] Chỉ cập nhật runtime sau khi Shan duyệt ảnh từng frame.
 
 #### Tư liệu V4.2 cũ — giữ nguyên làm baseline
 
@@ -1881,6 +1986,73 @@ POSE: PERSONAL VIGNETTE: đứng cạnh voi chiến (chỉ là đề xuất, c�
 ---
 
 ### RB-015 — Lý Khuê (Lý Lãng công) · Tướng sĩ / Kim
+
+> **DRAFT — HISTORICAL IDENTITY / MASTER PILOT** (03/11/2026). Một nhân vật tiếp theo, **chưa duyệt ảnh mới, chưa viết sáu pose vNext, chưa sửa asset/rig/gameplay**. Phải so sánh Master cũ trong game trước khi quyết định KEEP/REFINE/REDESIGN. Sáu frame V4.2 giữ nguyên bên dưới.
+
+#### Historical & gameplay boundary
+
+- **Recorded:** Lý Khuê / Lý Lãng công, sứ quân **Siêu Loại** theo [W08](../../../02-game-modes/campaign/warlord-matrix.md) và [nguồn lịch sử](../../../02-game-modes/campaign/history-sources.md). Ghi chép đánh dẹp có tính tổng thuật; **không** gán chính xác ai đã giết, tử trận hay quy hàng nếu thiếu nguồn.
+- **Fictional game class:** `lyKhue`, **Tướng sĩ / Kim**, ultimate `sieuLoaiPhaGiap` (*Siêu Loại Phá Giáp*, một đòn phá giáp/giảm phòng thủ). Nghề, hệ, kỹ năng là gameplay, không phải thuộc tính lịch sử xác thực.
+- **Art authenticity:** diện mạo, giáp, vũ khí, tuổi, mối quan hệ với thuyền tuần tra đều là **creative interpretation**, không trình bày như bản phục dựng chính xác thế kỷ X.
+- **Vấn đề bản cũ:** V4.2 sử dụng giáp lamellar sáng bạc-vàng và kiếm đồng thẳng. Cần **giữ nếu đã đẹp**, nhưng kiểm tra cảm giác quá chói/kim loại và khí chất **sứ quân giữ đất**. Không mặc định phải đổi kiểu kiếm của một asset đã duyệt.
+
+#### Character Identity & Costume DNA — “Sứ quân Siêu Loại, người phá thế giáp”
+
+- **Visual age:** 40–48, nam Việt, cao vạm vừa với vai vuông, thân dài khỏe và trọng tâm rất chắc; dáng **thẳng, hơi nghiêng vai trái về trước**, khác Nguyễn Khoan (khiên-giáo, phòng thủ), Kiều Công Hãn (trượng/kiếm, Lôi), Ngô Xương Xí (quạt lông).
+- **Face:** mặt dài dạng xương diều hâu nhưng tự nhiên, mắt sáng hẹp, gò má cao, sống mũi thẳng, **râu cằm ngắn nhọn**, trán có một đường nhăn chéo do thói quen cau mày; không tạo vết sẹo mới từ suy đoán sử liệu.
+- **Personal story (fiction):** từng giám sát bến đò và vận chuyển người/vật liệu qua những tuyến nước Siêu Loại; dần học cách nhận ra chỗ yếu trong trang bị quân địch và tổ chức đội quân đánh vào điểm đó. Ít nói, kiên quyết nhưng không hung bạo. Câu chuyện là **lore đề xuất** của Reed Banner.
+- **Visual Hook:** một tấm giáp thân trước **hình khối gọn, kim loại tối** chỉ bảo vệ giữa ngực, bên ngoài là áo giáp phiến nhỏ màu thép mờ, chất vải ngà và nâu sẫm. Không làm thành tướng giáp bạc sáng như tiên hiệp, không full plate.
+- **Costume DNA proposed:** áo giao lĩnh trong ngà `#F1E9D8`, áo tay ngắn nâu than `#4A403B`; lớp giáp phiến sắt xám `#707982` trên da cũ, điểm sáng bạc `#AAB1B8` ở vài cạnh **không** phủ cả thân; đai da nâu với **một khóa đồng cổ** `#A68B54`, quần sẫm, bó chân, giày vải. Thể hiện địa vị qua chất giáp đồng nhất, thế đứng và khóa đai, không qua mũ miện hoặc vàng.
+- **Weapon RB-015-W01:** **một kiếm thẳng hai lưỡi** trong tay phải theo asset gốc. Hình học, chuôi/đốc/vệ và chất liệu cần theo **ảnh Master cũ nếu được duyệt**; thiết kế pilot đề xuất kiếm sắt tối, lưỡi ~0.36H, chuôi gỗ và vệ đồng nhỏ, nhưng **không tự thay kiếm đồng đã duyệt** nếu chưa có sự đồng ý. Tay trái tự do, không thêm khiên hoặc kiếm thứ hai.
+- **Fantasy:** một điểm anh hùng rõ ở vai/giáp và kiếm, nét vẽ hand-painted nhất quán với Reed Banner, không metal wizard, kim quang hay giáp phép.
+
+#### Unique Pose Identity Matrix (chỉ ý tưởng; KHÔNG viết sáu pose)
+
+| Pose | Gợi ý độc lập | Khác các sứ quân trước |
+|---|---|---|
+| Idle | Kiếm tay phải hạ gần sau đùi, tay trái đặt nhẹ lên mặt khóa đai, mắt nhìn ngang sườn | Không giáo dựng, quạt thấp, trượng chỉ huy |
+| Basic | Bước vòng nhỏ sang trái, kiếm từ cạnh hông áp vào đường chéo thấp | Không giống Kiều Thuận chỉ tự vệ |
+| Skill | Xoay cổ tay dựng lưỡi kiếm theo phương thẳng trước ngực, tay trái che khuỷu để khóa hướng đánh | Không giơ quạt/chỉ lệnh |
+| Ultimate | Chuyển trọng tâm xuống chân trước và chém xuyên một đường ngắn chéo lên theo `sieuLoaiPhaGiap` | Không đẩy khiên/ra lệnh |
+| Defeated | Gối khuỵu rồi thân thực sự đổ nghiêng về sau, kiếm rơi riêng phía trước | Không chỉ quỳ |
+| Personality | Kiểm tra phần cố định chuôi kiếm bằng bàn tay trái, kiếm vẫn ở tay phải hạ thấp | Không bầu thuốc, không trang sức giả |
+
+#### Master / Idle Prompt (EN — draft, create only ONE image after review)
+
+```text
+Create ONE full-body 2D game character, Lý Khuê (Lý Lãng công), art ID RB-015 / lyKhue, a fictionalized Vietnamese historical regional warlord of Siêu Loại in the tenth-century Twelve Warlords era, for Reed Banner.
+
+ART DIRECTION: Vietnamese Historical Low Fantasy — Heroic Stylization. A mature territorial warrior-lord whose presence reflects the authority to command an independent force, NOT a generic footman, anime swordsman, wizard or photo-real costume actor. Match Reed Banner painterly finish, but preserve a separate identity from Nguyễn Khoan and Kiều Công Hãn.
+
+HISTORICAL BOUNDARY: His name/title and Siêu Loại association derive from historical sources; exact facial identity, physique, equipment and battle style are creative fiction. Gameplay Tướng sĩ / Kim and ultimate Siêu Loại Phá Giáp (sieuLoaiPhaGiap) are gameplay inventions. Do not invent a documented battle or claim his death was caused by any specific other hero.
+
+REFERENCE: Before replacing the art, compare the existing approved Lý Khuê game Master. If it looks strong and unique, KEEP or REFINE it. When a matching existing weapon reference is supplied, retain the EXACT already-approved straight double-edged sword, even if material differs from this proposal. This prompt is a controlled design PILOT, not permission to overwrite assets.
+
+IDENTITY DNA: Vietnamese male, visual age 40–48. Broad straight shoulders, lean but forceful muscular build with a longer torso and firmly planted legs. Face high-cheekboned with a natural hawk-like angular outline, narrow clear eyes, straight nose, neat short pointed chin beard and slightly compressed jaw. Black hair tied compactly under ONE simple dark travel headcloth. His expression is stern, controlled and unyielding, but not cruel. Dignity of a lord responsible for troops, with no oversized crown.
+
+COSTUME DNA: warm ivory crossed-collar inner fabric #F1E9D8, charcoal-brown short-sleeved campaign tunic #4A403B, ONE compact lamellar layer of weathered dark steel-gray #707982 mounted over aged brown leather; small restrained silver edges #AAB1B8 only at a few armor joins, one practical broad brown leather belt with one dull bronze buckle #A68B54. Sleeves and torso are practical, not heavy plated fantasy armor. Dark trousers, wrapped calves and worn low cloth shoes. A distinctive compact rectangular chest-panel silhouette, not a huge silver/gold ceremonial suit. All colors assigned to fixed panels.
+
+WEAPON LOCK RB-015-W01 (PROVISIONAL): EXACTLY ONE straight double-edged sword in anatomical RIGHT hand, blade shape matching the original game reference if provided. One rigid continuous blade with central ridge, simple dark wood grip wrapped with dark cord, restrained aged bronze guard and pommel. Proposed blade length around 0.36 standing body height, BUT preserve old game geometry if approved. No second sword, shield, long spear, fan, magical blade beam or floating metal pieces.
+
+MASTER IDLE: Stable three-quarter full-body pose, weight mostly on anatomical RIGHT rear foot, LEFT foot set half a step ahead. RIGHT hand lowers the one straight sword diagonally outside RIGHT thigh with blade tip pointing safely down and OUT from leg; LEFT hand rests near original bronze belt buckle with fully visible fingers. One shoulder turned slightly more forward than the other, eyes examining a distant enemy line, head held level and quiet. A decisive territorial military commander with restrained pressure, not a static mannequin or soldier waiting for orders.
+
+HEROIC SILHOUETTE: clear broad shoulders, compact metal chest armor, one straight sword blade extending outside body, a deliberate slightly asymmetrical hip line. A charismatic warlord at small character-card scale. Fantasy is stylized quality and deliberate silhouette, not glowing metals.
+
+OUTPUT: ONE complete full-body figure with entire sword, head, both hands and shoes visible with safe margins. True transparent-alpha PNG (not checkerboard or dark/gradient backdrop), no environment, cast shadow, other person, scenery, text, UI, watermark or baked elemental VFX. Do not create six poses at once.
+
+NEGATIVE: no historical reenactment photo, no glowing golden armor, no exaggerated silver royal plate, no giant helmet, no Chinese imperial palace robe, Japanese samurai, European knight, generic knight, crooked sword, two swords, shield, duplicated fingers, oversized shoulders or added insignia.
+```
+
+#### Review gate
+
+- [ ] Compare actual in-game Lý Khuê Master; decide KEEP/REFINE/REDESIGN, not automatic replacement.
+- [ ] Lord of Siêu Loại clearly distinct from Nguyen Khoan and other general-class characters.
+- [ ] Blade ONE and continuous; keep original geometry unless Shan agrees to change.
+- [ ] Strong historical-low-fantasy heroic silhouette, not bright all-metal fantasy costume.
+- [ ] Genuine transparent alpha, no cropped sword/head/feet.
+- [ ] Only after Master approval propose five remaining frames with Unique Pose Identity.
+
+#### Hồ sơ V4.2 cũ — bảo lưu nguyên văn để đối chiếu
 
 > **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ / TINH CHỈNH. Chiêu tham chiếu: **Siêu Loại Phá Giáp** (`sieuLoaiPhaGiap`). Chưa thấy xung đột trực tiếp ở cấp mô tả; chuẩn hóa Weapon Geometry Sheet và kiểm tra động tác có thật dùng đạo cụ. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
