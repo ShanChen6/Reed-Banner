@@ -1,7 +1,7 @@
 "use client";
 
 // Thanh header chung của màn chơi /game: trái là điều hướng (về màn chính, tên phân cảnh), giữa là tranh phong
-// cảnh làm nền trang trí, phải là lối tắt Hồ sơ/Trận thường và menu tài khoản. GameShell dựng một lần cho mọi
+// cảnh làm nền trang trí, phải là lối tắt Doanh Trại/Trận thường và menu tài khoản. GameShell dựng một lần cho mọi
 // phân cảnh; tab riêng của từng màn (vd. thanh Sử ký) vẫn nằm trong màn đó. Màu lấy từ token --hdr-* trong
 // globals.css (lớp .game-header), không đổi màu của phần còn lại.
 
@@ -75,7 +75,7 @@ function HeaderNavigation({ scene }: { scene: Scene }) {
   );
 }
 
-/** Phải: Hồ sơ, Trận thường (từ md; dưới md nằm trong menu tài khoản). Chưa có chuông vì game chưa có thông báo. */
+/** Phải: Doanh Trại, Trận thường (từ md; dưới md nằm trong menu tài khoản). Chưa có chuông vì game chưa có thông báo. */
 function HeaderActions({ scene }: { scene: Scene }) {
   return (
     <div className="hidden shrink-0 items-center gap-1.5 md:flex xl:gap-2">

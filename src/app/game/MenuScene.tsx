@@ -149,7 +149,7 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
         </section>
 
         <section aria-labelledby="home-more">
-          <SectionHeading id="home-more" kicker="Tiện ích" title="Doanh trại" />
+          <SectionHeading id="home-more" kicker="Tiện ích" title="Quân vụ" />
           <ul className="mt-5 grid gap-3 sm:grid-cols-3">
             {UTILITIES.map((u) => (
               <li key={u.scene}>
