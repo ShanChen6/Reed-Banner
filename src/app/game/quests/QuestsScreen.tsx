@@ -128,7 +128,7 @@ export default function QuestsScreen() {
             scene="PROFILE"
             className="rounded bg-white/10 px-3 py-1.5 hover:bg-white/15"
           >
-            Hồ sơ
+            Doanh Trại
           </SceneLink>
         </div>
       </div>

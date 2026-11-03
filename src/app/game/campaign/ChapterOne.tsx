@@ -537,7 +537,7 @@ function BattlePrep({
         </div>
         <p className="mt-1 text-xs text-muted">
           Vũ khí nghề {PROFESSION_NAME[profession]}:{" "}
-          {weapon ? gearText(weapon) : "chưa trang bị (đổi ở Hồ sơ)"}. Mỗi nghề
+          {weapon ? gearText(weapon) : "chưa trang bị (đổi ở Doanh Trại)"}. Mỗi nghề
           dùng vũ khí riêng; nghề và hệ chọn ở đây được lưu khi xuất quân.
         </p>
         <div
