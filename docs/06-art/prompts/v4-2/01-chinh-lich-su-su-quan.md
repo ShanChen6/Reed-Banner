@@ -1514,7 +1514,7 @@ POSE: PERSONAL VIGNETTE: seated at a boat bow tending a small travel pouch; the 
 
 ### RB-013 — Kiều Công Hãn (Kiều Tam Chế) · Pháp sư / Lôi
 
-> Trạng thái: **DRAFT** — master design và 5 prompt pose đã chốt (03/11/2026); chưa xác nhận ảnh đủ 5 pose và chưa thay runtime. **Ưu tiên block Production v2** (quyền trượng dài, kiếm tra vỏ); phần DRAFT bản đầu và V4.2 là lịch sử nghiên cứu.
+> Trạng thái: **DRAFT** — master design và 5 prompt pose đã chốt (03/11/2026); Shan gửi sáu PNG cùng ngày, đã tích hợp runtime (`public/art/characters/kieu-cong-han/`) ghép theo POSE ID Production v2: Master (tay trái trên chuôi kiếm) → ảnh đứng tách lớp, RB013_BASIC_ATTACK → `pose-attack`, RB013_SKILL (xòe tay trái) → `pose-cast`, RB013_ULTIMATE → `pose-ultimate`, RB013_DEFEATED → `pose-down`, RB013_PERSONALITY → `style`. **Ưu tiên block Production v2** (quyền trượng dài, kiếm tra vỏ); phần DRAFT bản đầu và V4.2 là lịch sử nghiên cứu.
 
 #### Historical Identity & Creative Boundary
 
