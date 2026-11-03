@@ -664,6 +664,54 @@ POSE: PERSONAL VIGNETTE — Standing broad-shouldered, lightly adjust the ORIGIN
 
 ### RB-048 — Mã Nhạc · Mưu sĩ / Thổ
 
+> Trạng thái riêng: **DRAFT** — pilot thiết kế lại theo [Art Direction 03/11/2026](../../art-bible.md#3-art-direction-03112026--historical-grounded-fantasy-approved). **Chỉ viết hồ sơ mới và một prompt Master/Idle; chưa tạo ảnh, chưa duyệt Master, chưa thay thế 6 pose cũ hoặc asset trong code.** Tư liệu và sáu prompt V4.2 trước đây được bảo lưu bên dưới để so sánh.
+
+#### Pilot mới — Character Identity (hư cấu, game-authored)
+
+- **Runtime/art:** `maNhac` / RB-048. **Nghề/hệ:** Mưu sĩ / Thổ; giữ nguyên mã, hệ, nghề và kỹ năng trong game. Tuyệt chiêu đang tham chiếu `doanDaoTuyetLuong` — động tác cần hợp lối đánh nghi binh và cắt tiếp vận, không vẽ sức mạnh bằng lớp đá bám thân.
+- **Câu chuyện riêng đề xuất:** Mã Nhạc sinh trưởng trong một gia đình quản bến vận lương ở vùng trung du, học cách ước lượng đường dốc, mùa lũ và cân thóc trước khi theo quân. Sau một lần đoàn tiếp tế đi lạc làm quân dân đói khát, ông thề không để chuyện ấy lặp lại. Mã Nhạc phát triển thành mưu sĩ chuyên khảo sát đường vòng, bố trí kho lương và phá đường tiếp vận của đối thủ. **Tất cả là sáng tác của Reed Banner, chưa phải canon lore được nghiệm thu.**
+- **Động cơ và mâu thuẫn:** ưu tiên an toàn của đoàn quân, đôi khi tính toán quá nhiều và khó tin người; bình tĩnh dưới sức ép nhưng mang nỗi day dứt với những người không được tiếp tế kịp.
+- **Nhân dạng (visual age 42–48):** nam Việt, vóc gọn, lưng thẳng nhưng vai có độ trĩu tự nhiên vì từng lao động; mặt dài-vuông hơi hốc, gò má rõ, mắt nhỏ quan sát, chân mày đậm, ria mép ngắn hơi rủ; tóc đen pha ít sợi bạc giấu dưới khăn vấn nâu. Không tạo ông già thư sinh yếu ớt, quan tể tướng áo lụa, hay NPC giống mọi mưu sĩ.
+- **Costume DNA:** áo giao lĩnh vải dệt vàng đất trầm `#B48642` có dấu mòn ở khuỷu; lớp trong màu cát sáng `#D8BF8B`, thắt lưng nâu `#76543B`, một dải vải đất nung `#A65E42` bên hông, quần nâu đất, giày vải mềm và xà cạp thô. Áo dưới gối một chút, tay thu gọn hợp việc ghi chép, không tầng lớp áo bay hay giáp vàng fantasy.
+- **Vật dụng/weapon `RB-048-W01`:** **một quạt vuông đan cói** khung gỗ cứng theo asset cũ, tay phải giải phẫu cầm. Giữ dạng vuông và sự khác biệt với quạt lông, không thay thành quạt xếp; khung cỡ gần 0,20H, tỷ lệ phải khóa theo ảnh Master được duyệt. **Một thẻ đong lương nhỏ** treo bên đai trái (nhận dạng cá nhân), một ống bút tre nhỏ bên phải, không thêm đạo cụ khác khi idle.
+- **Dấu hiệu nhận diện:** mắt luôn dò xét địa hình, tay phải có vết mực cũ, thẻ đong lương ở đai; nét riêng đến từ nghề vận lương và quyết định khó khăn, không phải bộ áo nâu chung cho hệ Thổ.
+- **Khác biệt nghề/hệ:** Mưu sĩ = phán đoán và nghi binh, không phải tu sĩ dùng pháp trượng; Thổ = màu vật liệu và sở trường chiến thuật địa hình, **không** tạo giáp đá hoặc hào quang thường trực.
+- **Reference thực tế:** ảnh Mã Nhạc đang chạy trong game và các frame V4.2 là **baseline**, nhưng chưa có bản PNG gốc được so sánh bằng pixel trong task docs này. Nếu prompt xung đột với ảnh hiện có, phải chờ review, không tuyên bố đã bảo toàn chi tiết ảnh.
+- **Phân biệt lịch sử:** toàn bộ tiểu sử là sáng tác lấy cảm hứng đời sống Việt thế kỷ X; không phải nhân vật lịch sử xác thực.
+
+#### Pilot mới — Master/Idle prompt duy nhất (EN, chờ duyệt ảnh)
+
+```text
+Create ONE full-body 2D game character, Mã Nhạc (RB-048 / maNhac), a fictional Vietnamese 10th-century supply-route strategist and deception planner in the grounded low-fantasy world of Reed Banner. Game profession Mưu sĩ, element Thổ; these guide his combat behavior and restrained accents, NOT a generic class uniform or magical stone outfit.
+
+CHARACTER STORY DNA: A former river-and-hill supply-route surveyor who learned to measure grain, terrain and travel risk, haunted by a failed delivery that endangered civilians. He now chooses patient strategy over heroic display. This is original fictional game lore, not a historical account.
+
+FACE & BODY: Vietnamese man of visual age 42–48. Compact, lean and physically resilient; mild habitual shoulder heaviness from work, but straight upright spine. Narrow rectangular weathered face, defined cheekbones, slightly hollow cheeks, focused narrow dark-brown eyes, thick level brows, short subtly drooping moustache. Dark hair with faint gray streaks wrapped in ONE modest brown work headcloth. Thoughtful, controlled, alert; no grandfather comedy, aristocratic beauty or exaggerated angry frown.
+
+COSTUME & FIXED COLOR PANELS: A practical crossed-collar woven work robe in muted ochre #B48642, with visible natural wear at the elbows, ending just below knees; sandy ivory undercollar and cuffs #D8BF8B; sturdy simple waist sash #76543B; ONE narrow terracotta fabric end #A65E42 at the anatomical LEFT waist; dark earth-brown practical trousers, coarse calf wraps and soft dark-brown cloth shoes. Narrow, functional forearm sleeves. ONE small grain-measure tally token at anatomical LEFT belt and ONE narrow bamboo brush case at anatomical RIGHT belt. No flowing silk layers, ornate aristocratic medallions, giant armor or magical talismans.
+
+EQUIPMENT LOCK RB-048-W01: EXACTLY ONE rigid square fan of woven natural reed in a four-sided dark-wood frame, about 0.20 of upright character height H in its largest dimension, the SAME fan geometry and woven texture as an approved reference when available. Anatomical RIGHT hand holds the fan by its short built-in handle, raised at upper waist to lower chest level; anatomical LEFT hand rests lightly over the sash, not touching the fan. NO feather fan, folding fan, shield, magical scroll, sword, second fan or hovering items. A small permanent ink stain is visible on RIGHT hand without deforming fingers.
+
+MASTER IDLE POSE: Full-body standing three-quarter view, weight slightly on anatomical LEFT leg, right foot half a step to the side; shoulders natural, chest not overinflated. Head angled to anatomical LEFT, eyes scanning an unseen route, mouth relaxed and closed. RIGHT hand holds the square fan in a compact controlled gesture beside torso, not presented as an oversized war fan. LEFT hand touches the belt near the single grain tally. All headwear, face, token, brush case, costume panels, trousers and shoes fully readable.
+
+ART STYLE: Follow Reed Banner approved 03/11/2026 Historical Grounded Fantasy character style: the same hand-painted semi-realistic 2D visual language as the approved Trần Lãm and Ngô Nhật Khánh character masters; grounded adult facial anatomy, believable textile weight and aging, restrained contour linework and painterly light, natural cloth and wood, strong readable silhouette, individual non-repeating design. No Chinese imperial court costume, Japanese samurai armor, European fantasy armor, giant fantasy weapons, exaggerated robes, anime eyes or chibi body.
+
+OUTPUT: ONE fully visible character head to toe, natural 7-head proportions, vertical composition with generous margins, entire square fan visible, genuinely TRANSPARENT alpha PNG, no gradient, black stage, floor shadow, scenery, text, logo, watermark, UI or baked skill/element effects.
+
+NEGATIVE & QA: Never make this look like a generic sage with a paper folding fan, a monarch, a magical earth wizard or an old peasant carrying a tool at random. No extra props, fingers, fans or swapped anatomical hands. Retain visual continuity with the original in-game Mã Nhạc where that does not conflict with the newly approved art-direction review. This is ONLY the MASTER/IDLE design pilot. Do NOT generate Basic, Skill, Ultimate, Defeated or Personality until this image is explicitly approved.
+```
+
+#### Pilot QA — trước khi được phép tạo các pose còn lại
+
+- [ ] Đối chiếu trực tiếp ảnh Mã Nhạc cũ và Master mới trên cùng nền và kích thước trong UI.
+- [ ] Cá tính hiện qua mắt, dáng người, quạt cói, thẻ đong lương; nhìn vào không nhầm với những mưu sĩ khác.
+- [ ] Phong cách, chất liệu và độ chi tiết hòa hợp với hai Master lịch sử đã duyệt.
+- [ ] Quạt vuông không biến thành quạt lông hoặc vũ khí fantasy; đúng tay phải, không nhân đôi đạo cụ.
+- [ ] Nhìn thấy đủ người, chân, quạt và phụ kiện, PNG alpha thật.
+- [ ] Shan duyệt Master + weapon geometry trước khi viết hoặc sinh 5 pose còn lại; chưa thay asset, rig, skills hoặc VFX.
+
+#### Tư liệu V4.2 cũ — giữ nguyên để so sánh (chưa bị thay thế trong runtime)
+
 > **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** MEDIUM · CÂN NHẮC. Chiêu tham chiếu: **Đoạn Đạo Tuyệt Lương** (`doanDaoTuyetLuong`). Quạt dễ trùng với mưu sĩ khác; giữ hình quạt nếu skill phù hợp, bổ sung dấu hiệu cá nhân và ấn/thẻ nếu chiêu yêu cầu. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
