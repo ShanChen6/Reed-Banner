@@ -732,7 +732,7 @@ QUALITY GATE: Identical Trần Lãm facial identity in all frames; fixed origina
 
 ### RB-009 — Phạm Bạch Hổ (Phạm Phòng Át) · Tướng sĩ / Hỏa
 
-> Trạng thái riêng: **DRAFT** — đề xuất Historical-first pilot ngày 03/11/2026; **CHƯA duyệt Master mới hoặc 6 ảnh**, không ghi đè ảnh/weapon reference đã được duyệt. Thử từng nhân vật, sai đâu sửa đó.
+> Trạng thái riêng: **DRAFT** — đề xuất Historical-first pilot ngày 03/11/2026; **CHƯA duyệt Master mới hoặc 6 ảnh**, không ghi đè ảnh/weapon reference đã được duyệt. Thử từng nhân vật, sai đâu sửa đó. Shan gửi sáu PNG cùng ngày, đã tích hợp runtime (`public/art/characters/pham-bach-ho/`) theo thứ tự khung: 1 → ảnh đứng tách lớp, 2 → `pose-attack`, 3 → `pose-cast`, 4 → `pose-ultimate`, 5 → `pose-down`, 6 → `style`.
 
 #### Nhận dạng, lịch sử và ranh giới sáng tạo
 
