@@ -1276,7 +1276,7 @@ QUALITY GATE: Same approved face, burgundy/ochre costume and original full-lengt
 
 ### RB-012 — Nguyễn Khoan (Nguyễn Thái Bình) · Binh lính / Thổ
 
-> Trạng thái: **APPROVED — MASTER/POSE PROMPT DIRECTION** (03/11/2026), với Master v2 theo mô tả dã sử và **Pose 6 mang khiên trên vai**. Chưa xác minh ảnh final đầy đủ hoặc tích hợp runtime. Dữ liệu DRAFT cũ và V4.2 dưới đây chỉ là lịch sử triển khai, ưu tiên block Production v2 mới.
+> Trạng thái: **APPROVED — MASTER/POSE PROMPT DIRECTION** (03/11/2026), với Master v2 theo mô tả dã sử và **Pose 6 mang khiên trên vai**. Shan gửi sáu PNG cùng ngày, đã tích hợp runtime (`public/art/characters/nguyen-khoan/`) theo thứ tự khung: 1 → ảnh đứng tách lớp, 2 → `pose-attack`, 3 → `pose-cast`, 4 → `pose-ultimate`, 5 → `pose-down`, 6 → `style`; ảnh 6 cầm khiên ở tay thay vì mang trên vai như prompt. Dữ liệu DRAFT cũ và V4.2 dưới đây chỉ là lịch sử triển khai, ưu tiên block Production v2 mới.
 
 #### Historical Identity — Sứ quân Tam Đái
 
