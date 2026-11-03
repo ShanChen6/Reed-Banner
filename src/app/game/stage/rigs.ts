@@ -738,15 +738,15 @@ const TRAN_LAM: WarriorRig = {
   },
   blade: [{ x: 182, y: 1490 }, { x: 188, y: 360 }],
   fxColor: 0x7fcaff,
-  // Hạ gậy quét ngang, tay kia nắm trước ngực (đánh thường); giơ gậy chéo sau đầu, xòe bàn tay về trước (ra chiêu);
-  // thế tấn rộng, gậy ngang ngực, tay kia mở chặn (tuyệt chiêu). Cỡ so theo bề ngang khăn đầu.
+  // Ghép theo POSE ID của prompt RB-008 v3: thế tấn rộng quét gậy ngang ngực (đánh thường); giơ gậy chéo, tay kia chỉ
+  // về trước (ra chiêu); bước tới đâm gậy xuống trước, tay kia nắm trước ngực (tuyệt chiêu). Cỡ so theo bề ngang khăn đầu.
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 172, y: 11 },
-      anchor: { x: 570, y: 1003 }, scale: 1.2, burst: { x: 1245, y: 700 } },
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 135, y: 44 },
+      anchor: { x: 765, y: 965 }, scale: 1.2, burst: { x: 1395, y: 312 } },
     cast: { name: "pose-cast", texScale: 0.3, origin: { x: 38, y: 18 },
       anchor: { x: 510, y: 1500 }, scale: 1.03, burst: { x: 955, y: 455 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 135, y: 44 },
-      anchor: { x: 765, y: 965 }, scale: 1.2, burst: { x: 1395, y: 312 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 172, y: 11 },
+      anchor: { x: 570, y: 1003 }, scale: 1.2, burst: { x: 1245, y: 700 } },
   },
   // Ngồi bệt ngả sang bên, một tay chống đất, gậy rơi bên cạnh.
   down: { name: "pose-down", texScale: 0.3, origin: { x: 36, y: 36 },
