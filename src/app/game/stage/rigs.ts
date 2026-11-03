@@ -664,45 +664,49 @@ const LE_HOAN: WarriorRig = {
     anchor: { x: 500, y: 1240 }, scale: 0.95 },
 };
 
-/** Đinh Liễn, pháp sư hệ Thủy. Tọa độ theo tranh 1024×1536; nâng pháp trượng nhẹ từ vai. */
+/**
+ * Đinh Liễn, pháp sư hệ Thủy. Bộ tranh Shan gửi 03/11 (nền trong suốt sẵn) theo thiết kế mới RB-007: áo giao lĩnh chàm,
+ * giáp da mỏng, vòng vải ngà cổ tay, tay cầm thủ bản gỗ đầu bịt đồng, thay bộ áo lam cầm trượng cầu cũ. Ảnh đứng tách
+ * lớp bằng code: bàn tay cùng thủ bản xoay quanh cổ tay (nhịp trượng, nâng nhẹ), cẳng tay không buông bên hông, đầu;
+ * chỗ thủ bản che tay áo được chép vân tay áo bên kia, chỗ cẳng tay che vạt áo được chép vân vạt áo cạnh đó. Hệ tọa độ:
+ * ảnh đứng 1024×1536.
+ */
 const DINH_LIEN: WarriorRig = {
   skeleton: "warrior",
   weapon: "staff",
   dir: "dinh-lien",
   texScale: 0.5,
-  foot: { x: 625, y: 1508 },
-  height: 1513,
+  foot: { x: 500, y: 1450 },
+  height: 1375,
   parts: {
-    body: { x: 251, y: 10, w: 770, h: 1513 },
-    armR: { x: 820, y: 518, w: 193, h: 101 },
-    sword: { x: 33, y: 91, w: 245, h: 445 },
-    arm: { x: 5, y: 314, w: 488, h: 556 },
-    head: { x: 546, y: 10, w: 203, h: 217 },
+    body: { x: 280, y: 78, w: 433, h: 1380 },
+    armR: { x: 314, y: 691, w: 90, h: 203 },
+    sword: { x: 614, y: 381, w: 69, h: 318 },
+    arm: { x: 614, y: 548, w: 91, h: 117 },
+    head: { x: 398, y: 78, w: 171, h: 209 },
   },
-  cloth: [
-    { name: "ribbon", box: { x: 272, y: 81, w: 318, h: 204 }, behind: true,
-      wind: { axis: "x", start: 0.2, amp: 5, freq: 1.6, k: 2.8, phase: 0.3, vertical: true, reverse: true } },
-    { name: "cape", box: { x: 10, y: 588, w: 553, h: 669 }, behind: true,
-      wind: { axis: "y", start: 0.2, amp: 4, freq: 1.2, k: 2.8, phase: 1.2 } },
-    { name: "sash", box: { x: 461, y: 551, w: 196, h: 268 },
-      wind: { axis: "y", start: 0.2, amp: 2, freq: 1.35, k: 2.8, phase: 2.1 } },
-  ],
-  covers: [{ name: "sleeve", box: { x: 400, y: 223, w: 138, h: 140 } }],
+  cloth: [],
+  covers: [],
   joints: {
-    shoulder: { x: 465, y: 330 },
-    elbowR: { x: 846, y: 550 },
-    neck: { x: 645, y: 211 },
+    shoulder: { x: 660, y: 580 },
+    elbowR: { x: 345, y: 702 },
+    neck: { x: 490, y: 270 },
   },
-  blade: [{ x: 193, y: 369 }, { x: 95, y: 155 }],
+  blade: [{ x: 642, y: 690 }, { x: 658, y: 392 }],
   fxColor: 0x9fe3ff,
+  // Đưa tay không ra ngang hông (đánh thường), xòe bàn tay chắn trước ngực, thủ bản ngang thắt lưng (ra chiêu), giơ
+  // thủ bản cạnh thái dương và ấn tay về trước trong thế tấn (tuyệt chiêu). Cỡ so theo khoảng mắt tới cằm.
   poses: {
-    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 0, y: 66 },
-      anchor: { x: 555, y: 1465 }, scale: 1, burst: { x: 920, y: 174 } },
-    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 11, y: 10 },
-      anchor: { x: 620, y: 1505 }, scale: 1, burst: { x: 450, y: 75 } },
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 287, y: 66 },
+      anchor: { x: 475, y: 1478 }, scale: 0.97, burst: { x: 810, y: 449 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 209, y: 32 },
+      anchor: { x: 470, y: 1505 }, scale: 0.95, burst: { x: 345, y: 330 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 99, y: 70 },
+      anchor: { x: 480, y: 1490 }, scale: 0.97, burst: { x: 752, y: 110 } },
   },
-  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 12, y: 12 },
-    anchor: { x: 930, y: 945 }, scale: 0.88 },
+  // Ngồi bệt lệch hông, một tay chống đất, thủ bản rơi bên cạnh.
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 43, y: 455 },
+    anchor: { x: 560, y: 1262 }, scale: 0.95 },
 };
 
 /** Trần Lãm, quân sư hệ Thủy. Cờ lệnh đẩy nhẹ; tọa độ theo tranh 1024×1536. */
