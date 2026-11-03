@@ -2,6 +2,9 @@
 
 ## 03/11/2026
 
+**Nhạc: bản đồ chiến dịch, thoại, sinh tồn, trùm, trận thường**
+- Năm bản nhạc Gemini làm vòng lặp 79–113 giây bằng `scripts/make-music-loop.py`; mỗi bản khoảng 1–1,8 MB (`public/audio` thêm khoảng 14 MB). Còn thiếu: nhạc Tháp Thí Luyện, Tháp Thiên Mệnh, Đấu trường, kết cục, nhạc đang chơi và kết quả Trận Đồ, âm nền bản đồ.
+
 **Âm thanh trận đánh: `win`, `lose`, `ko`, `damage`, `skill` (dùng chung 7 hệ)**
 - Cắt từ năm đoạn Gemini bằng `scripts/slice-sfx.py`; `win` chỉ giữ 1 biến thể (biến thể thứ hai tắt dần chậm). `battle.skill.<hệ>` chưa có tiếng riêng từng hệ nên cả 7 hệ dùng chung 3 biến thể. Còn thiếu: combo, tuyệt chiêu, hồi, khiên, tăng, giảm, cháy, đóng băng, độc, nhạc trận.
 
