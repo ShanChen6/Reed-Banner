@@ -753,6 +753,50 @@ const TRAN_LAM: WarriorRig = {
     anchor: { x: 750, y: 960 }, scale: 1.1 },
 };
 
+/**
+ * Ngô Nhật Khánh (Ngô Nam công), quân sư hệ Phong. Bộ tranh Shan gửi 03/11 (nền trong suốt sẵn) theo Master RB-011:
+ * áo giao lĩnh tía, áo khoác cộc nâu, khăn vai vàng nghệ, giáo có tua đỏ và cờ nhỏ, kiếm tra vỏ hông trái. Ảnh đứng
+ * tách lớp bằng code: bàn tay nắm cùng cây giáo xoay quanh cổ tay, bàn tay đặt trên chuôi kiếm, đầu; chỗ bàn tay che tay
+ * áo và chuôi kiếm được vá bằng khuếch tán màu xung quanh. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
+const NGO_NHAT_KHANH: WarriorRig = {
+  skeleton: "warrior",
+  weapon: "spear",
+  dir: "ngo-nhat-khanh",
+  texScale: 0.5,
+  foot: { x: 500, y: 1498 },
+  height: 1318,
+  parts: {
+    body: { x: 223, y: 179, w: 569, h: 1328 },
+    armR: { x: 564, y: 706, w: 100, h: 90 },
+    sword: { x: 181, y: 17, w: 117, h: 1483 },
+    arm: { x: 226, y: 588, w: 79, h: 87 },
+    head: { x: 320, y: 179, w: 280, h: 221 },
+  },
+  cloth: [],
+  covers: [],
+  joints: {
+    shoulder: { x: 298, y: 630 },
+    elbowR: { x: 650, y: 722 },
+    neck: { x: 510, y: 385 },
+  },
+  blade: [{ x: 266, y: 630 }, { x: 262, y: 30 }],
+  fxColor: 0x2e9e90,
+  // Theo POSE ID của prompt RB-011: đâm giáo chéo thấp hai tay (đánh thường), giữ giáo dựng, hai ngón tay chỉ đường quân
+  // (ra chiêu), bước tới giương giáo chéo cao làm hiệu tập hợp (tuyệt chiêu). Cỡ so theo bề ngang khăn đầu.
+  poses: {
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 156, y: 36 },
+      anchor: { x: 565, y: 995 }, scale: 1.05, burst: { x: 1395, y: 620 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 156, y: 32 },
+      anchor: { x: 500, y: 1498 }, scale: 1, burst: { x: 930, y: 348 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 189, y: 29 },
+      anchor: { x: 510, y: 1160 }, scale: 1.16, burst: { x: 1185, y: 33 } },
+  },
+  // Ngồi bệt ngả sang bên, một chân duỗi, giáo rơi nằm chéo trước mặt.
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 53, y: 73 },
+    anchor: { x: 850, y: 900 }, scale: 1 },
+};
+
 /** Phạm Bạch Hổ, tướng sĩ hệ Hỏa. Tách lớp từ tranh 1024×1536, áo choàng lông hổ bay sau tay đao. */
 const PHAM_BACH_HO: WarriorRig = {
   skeleton: "warrior",
@@ -3657,6 +3701,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   leHoan: LE_HOAN,
   dinhLien: DINH_LIEN,
   tranLam: TRAN_LAM,
+  ngoNhatKhanh: NGO_NHAT_KHANH,
   phamBachHo: PHAM_BACH_HO,
   ngoXuongXi: NGO_XUONG_XI,
   kieuCongHan: KIEU_CONG_HAN,

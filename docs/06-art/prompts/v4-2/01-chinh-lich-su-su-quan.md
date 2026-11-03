@@ -947,7 +947,7 @@ POSE: PERSONAL VIGNETTE: ngồi vắt chân đọc thẻ tre. Character reveals 
 
 ### RB-011 — Ngô Nhật Khánh · Quân sư / Phong
 
-> Trạng thái riêng: **APPROVED** — ảnh Master mới đã được Shan duyệt 03/11/2026; sáu prompt dưới đây là bản sản xuất theo ảnh mới, **chưa nghiệm thu sáu PNG và chưa tích hợp runtime**.
+> Trạng thái riêng: **APPROVED** — ảnh Master mới đã được Shan duyệt 03/11/2026; sáu prompt dưới đây là bản sản xuất theo ảnh mới. Shan gửi sáu PNG cùng ngày, đã tích hợp runtime (`public/art/characters/ngo-nhat-khanh/`) theo thứ tự khung: 1 → ảnh đứng tách lớp, 2 → `pose-attack`, 3 → `pose-cast`, 4 → `pose-ultimate`, 5 → `pose-down`, 6 → `style`.
 
 #### Identity DNA và sử liệu
 
