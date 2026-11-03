@@ -126,10 +126,10 @@
 
 ## Tầm Tướng Ký
 
-- Đã chốt (Shan, 03/11/2026): tên Tầm Tướng Ký; ghép có thứ tự (`A+B` ≠ `B+A`, `A+A` ra một kết quả); hai chế độ Thường (tốn phiếu, không mất nguyên liệu, có gợi ý) và Hạng tuần (đề cử 5/7/10 tướng, kho 7 nguyên tố bị tiêu, không gợi ý, có thưởng); số lần ghép lịch sử > đặc biệt > thường; gợi ý miễn phí 2 lượt, không lộ đủ công thức, không tự mở; ghép ra tướng chỉ mở thành tựu; bắt buộc đăng nhập; Tướng Lục hiện bóng mờ đủ pack; tạm dùng nghề/hệ/vật biểu trưng. Xem [Design Freeze mục 3.1](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#31-đã-chốt).
-- TODO: Duyệt 27 dòng đề xuất (lượt 15 lần ghép mỗi phiếu, nguồn phiếu từ nhiệm vụ/điểm danh, kho hạng 10 mỗi hệ +2 mỗi ngày, điểm 100/200/300, thưởng như Trấn Ải…) ở [Design Freeze mục 3.2](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#32-đề-xuất).
-- TODO: Bảy câu còn mở (1 phiếu cho một lượt hay một lần ghép; 2 gợi ý tính theo phiếu, ngày hay cả đời; thành tựu có vàng không; ghép sai ở hạng có mất nguyên liệu; nguồn nguyên liệu hạng khác; số tướng đề cử cố định hay đổi; chọn tướng cho pack 10–12) ở [Design Freeze mục 3.3](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#33-còn-mở).
-- TODO: LT-01 viết lại công thức ví dụ theo luật có thứ tự, sửa công thức cuối của Tô Kim (đang là “Hệ + Nghề”) và thêm nhánh dùng hệ Lôi ([Design Freeze mục 2.2](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#22-mâu-thuẫn-và-điểm-cần-lưu-ý)).
+- Đã chốt (Shan, 03/11/2026): tên Tầm Tướng Ký; ghép có thứ tự, `A+A` được phép; chế độ Thường 1 phiếu = 1 lượt 15–20 lần ghép, có gợi ý; chế độ Hạng tuần tiêu nguyên liệu, ghép sai mất không hoàn, nguyên liệu từ thưởng hạng các chế độ (cân nhắc cửa hàng), số tướng đề cử cố định và xoay vòng; độ khó lịch sử > đặc biệt > thường; thành tựu theo bộ (vàng + huy hiệu), không cho tướng lẻ; bắt buộc đăng nhập; gói đầu 10 tướng lịch sử + 2 đặc biệt. Xem [Design Freeze mục 3.1](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#31-đã-chốt).
+- TODO: Duyệt 30 dòng đề xuất (gợi ý 2 lượt/ngày, nguồn phiếu, bó nguyên tố trong thưởng hạng các chế độ theo tuần, cấp nền 3 bó/tuần, điểm 200/300, thành tựu bộ tổng 3 200 vàng…) ở [Design Freeze mục 3.2](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#32-đề-xuất).
+- TODO: Có bán bó nguyên tố ở cửa hàng không; duyệt danh sách 12 tướng gói đầu; Đinh Ngọc và Vũ Phong (DRAFT) có kịp gói đầu không ([Design Freeze mục 3.3](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#33-còn-mở)).
+- TODO: Khi code thưởng bó nguyên tố, sửa [thưởng hạng mục 6](../02-game-modes/README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt) (hiện ghi “chỉ vàng”).
 
 ## Giao diện Trận Đồ
 
