@@ -268,7 +268,7 @@ POSE: PERSONAL VIGNETTE — Standing with shoulders relaxed, tie one crimson clo
 
 ### RB-042 — Ninh Hỏa · Mưu sĩ / Hỏa
 
-> Trạng thái riêng: **DRAFT** — pilot nhân vật hư cấu tiếp theo (03/11/2026), **mới ở bước hồ sơ + một prompt Master/Idle**. Chưa tạo/duyệt ảnh mới, chưa viết lại toàn bộ pose; ảnh và sáu prompt V4.2 ở dưới giữ làm baseline.
+> Trạng thái riêng: **APPROVED — ART/PROMPT** (03/11/2026) — Master và sáu prompt đã được Shan đồng ý, nhưng chưa nghiệm thu PNG của sáu pose hoặc thay asset/rig. Bộ V4.2 gốc vẫn giữ làm baseline.
 
 #### Character Identity — “Người tính hướng lửa” (lore sáng tác đề xuất)
 
@@ -322,6 +322,129 @@ No photoreal live-action portrait; no generic scholar identical to Mã Nhạc; n
 - [ ] Hộp đá lửa chỉ **một**, đúng hông trái; vết sém chỉ trên tay áo trái.
 - [ ] Không photoreal, không high fantasy, không giản dị như NPC; các mảng áo và đường viền có chủ đích.
 - [ ] Sau khi Shan duyệt Master, mới khóa Weapon/Costume DNA và viết sáu pose theo Master thực tế; dữ liệu ảnh/rig cũ giữ nguyên cho đến nghiệm thu.
+
+#### Production vNext — Sáu prompt theo Master đã duyệt (03/11/2026)
+
+> **APPROVED — ART/PROMPT:** Shan đã chấp thuận ảnh Master của Ninh Hỏa và bộ sáu prompt mô tả ở đây. **Không** đồng nghĩa sáu PNG đã xuất/QA hoặc rig/asset đã được tích hợp. Mã và nghề/hệ runtime giữ nguyên. Mỗi khối dưới đây là prompt **độc lập, không cần ghép**, nhưng bắt buộc đính kèm ảnh Master thật từ cuộc hội thoại (ảnh không tự đồng bộ vào Git).
+
+**Pose language hiện đã duyệt:** Idle đứng quan sát; Basic nghi binh quạt ngang; Skill nâng quạt chỉ hướng; Ultimate hạ quạt phát lệnh; Defeated ngã sụp, quạt rời tay; Personality thử hướng gió. **Giữ nguyên bộ đã duyệt** dù các nhân vật kế tiếp phải phát triển bộ ngôn ngữ chuyển động riêng, không sao chép mẫu này.
+
+##### Pose 1 — Idle / Master
+
+```text
+REED BANNER / RB-042 NINH HỎA / ninhHoa. Full-body 2D historical low-fantasy hero pose. STYLE: Vietnamese Historical Low Fantasy — Heroic Stylization; painterly game illustration, adult proportions, not photoreal costume photography or high fantasy.
+
+MANDATORY MASTER REFERENCE: Use the actual user-approved Ninh Hỏa Master uploaded on 03/11/2026. Keep IDENTICAL face: young Vietnamese male apparent age 29–35, narrow high-cheekboned face, sharp attentive eyes, uneven raised brows, thin moustache, high compact black topknot with brown tie, playful controlled expression. Same tall lean build.
+
+COSTUME LOCK: asymmetrical short brick-red outer coat #903C32, with its ORIGINAL two shoulder fastening cords, original hem and small damaged hole on anatomical LEFT sleeve; dark charcoal-brown cross-collar inner tunic/trousers #343236, natural ivory collar #D8C6A4, dark brown wrapped sash #614438, ONE cinnabar front hanging ribbon #C84231, pale calf wrappings, dark cloth shoes. EXACTLY ONE rectangular tinderbox on ANATOMICAL LEFT hip suspended by original short cord; keep every garment layer, fitting, hem, accessory position and dimension the same as the approved image. Do not repaint the outfit or add ornaments.
+
+WEAPON LOCK RB-042-W01: EXACTLY ONE broad natural fan of dried palm leaf with radiating ribs, slightly asymmetrical curved outline and small singed irregularities, mounted on ONE short wooden handle wrapped with dark red cloth. In the ANATOMICAL RIGHT hand in all standing frames; only dropped separately in Defeated. Never change it into a folding, feather or woven square fan. Keep identical leaf outline, size, handle and material across poses.
+
+OUTPUT: ONE character only, entirely visible from topknot to shoes with complete fan and tinderbox. True transparent alpha PNG with clear margin for extended poses; no scenery, dark studio gradient, floor/cast shadow, lettering, UI, watermark, magical fire/smoke/embers or additional weapons. For the fallen pose use a wider canvas. All body mechanics physically plausible, accessory count locked.
+
+POSE ID: RB042_IDLE
+ACTION: Reproduce the approved Master stance: weight mostly on anatomical LEFT leg, RIGHT foot slightly out, RIGHT hand holding palm-leaf fan diagonally outside the torso around lower chest; LEFT arm relaxed by tinderbox, head turned toward anatomical LEFT with a wry knowing expression. This is the canonical Master, no new stance invented.
+QUALITY GATE: Same face and garment structure as approved Master; ONE palm-leaf fan, ONE left-hip tinderbox and ONE damaged left sleeve. Anatomical handedness correct, full body uncropped, real transparent alpha.
+```
+
+##### Pose 2 — Basic Attack / Nghi binh đảo hướng
+
+```text
+REED BANNER / RB-042 NINH HỎA / ninhHoa. Full-body 2D historical low-fantasy hero pose. STYLE: Vietnamese Historical Low Fantasy — Heroic Stylization; painterly game illustration, adult proportions, not photoreal costume photography or high fantasy.
+
+MANDATORY MASTER REFERENCE: Use the actual user-approved Ninh Hỏa Master uploaded on 03/11/2026. Keep IDENTICAL face: young Vietnamese male apparent age 29–35, narrow high-cheekboned face, sharp attentive eyes, uneven raised brows, thin moustache, high compact black topknot with brown tie, playful controlled expression. Same tall lean build.
+
+COSTUME LOCK: asymmetrical short brick-red outer coat #903C32, with its ORIGINAL two shoulder fastening cords, original hem and small damaged hole on anatomical LEFT sleeve; dark charcoal-brown cross-collar inner tunic/trousers #343236, natural ivory collar #D8C6A4, dark brown wrapped sash #614438, ONE cinnabar front hanging ribbon #C84231, pale calf wrappings, dark cloth shoes. EXACTLY ONE rectangular tinderbox on ANATOMICAL LEFT hip suspended by original short cord; keep every garment layer, fitting, hem, accessory position and dimension the same as the approved image. Do not repaint the outfit or add ornaments.
+
+WEAPON LOCK RB-042-W01: EXACTLY ONE broad natural fan of dried palm leaf with radiating ribs, slightly asymmetrical curved outline and small singed irregularities, mounted on ONE short wooden handle wrapped with dark red cloth. In the ANATOMICAL RIGHT hand in all standing frames; only dropped separately in Defeated. Never change it into a folding, feather or woven square fan. Keep identical leaf outline, size, handle and material across poses.
+
+OUTPUT: ONE character only, entirely visible from topknot to shoes with complete fan and tinderbox. True transparent alpha PNG with clear margin for extended poses; no scenery, dark studio gradient, floor/cast shadow, lettering, UI, watermark, magical fire/smoke/embers or additional weapons. For the fallen pose use a wider canvas. All body mechanics physically plausible, accessory count locked.
+
+POSE ID: RB042_BASIC_ATTACK
+ACTION: Lateral evasive feint. Ninh Hỏa steps quickly toward anatomical LEFT, rotates torso, RIGHT forearm sweeps the ORIGINAL palm fan outward across chest level while LEFT palm opens the other way as a deceptive signal. Eyes narrow with quick calculation. Not a heavy physical fan strike, leap or magical fire. Distinct from calm Idle and raised-fan Skill.
+QUALITY GATE: Same face and garment structure as approved Master; ONE palm-leaf fan, ONE left-hip tinderbox and ONE damaged left sleeve. Anatomical handedness correct, full body uncropped, real transparent alpha.
+```
+
+##### Pose 3 — Skill / Hỏa kế
+
+```text
+REED BANNER / RB-042 NINH HỎA / ninhHoa. Full-body 2D historical low-fantasy hero pose. STYLE: Vietnamese Historical Low Fantasy — Heroic Stylization; painterly game illustration, adult proportions, not photoreal costume photography or high fantasy.
+
+MANDATORY MASTER REFERENCE: Use the actual user-approved Ninh Hỏa Master uploaded on 03/11/2026. Keep IDENTICAL face: young Vietnamese male apparent age 29–35, narrow high-cheekboned face, sharp attentive eyes, uneven raised brows, thin moustache, high compact black topknot with brown tie, playful controlled expression. Same tall lean build.
+
+COSTUME LOCK: asymmetrical short brick-red outer coat #903C32, with its ORIGINAL two shoulder fastening cords, original hem and small damaged hole on anatomical LEFT sleeve; dark charcoal-brown cross-collar inner tunic/trousers #343236, natural ivory collar #D8C6A4, dark brown wrapped sash #614438, ONE cinnabar front hanging ribbon #C84231, pale calf wrappings, dark cloth shoes. EXACTLY ONE rectangular tinderbox on ANATOMICAL LEFT hip suspended by original short cord; keep every garment layer, fitting, hem, accessory position and dimension the same as the approved image. Do not repaint the outfit or add ornaments.
+
+WEAPON LOCK RB-042-W01: EXACTLY ONE broad natural fan of dried palm leaf with radiating ribs, slightly asymmetrical curved outline and small singed irregularities, mounted on ONE short wooden handle wrapped with dark red cloth. In the ANATOMICAL RIGHT hand in all standing frames; only dropped separately in Defeated. Never change it into a folding, feather or woven square fan. Keep identical leaf outline, size, handle and material across poses.
+
+OUTPUT: ONE character only, entirely visible from topknot to shoes with complete fan and tinderbox. True transparent alpha PNG with clear margin for extended poses; no scenery, dark studio gradient, floor/cast shadow, lettering, UI, watermark, magical fire/smoke/embers or additional weapons. For the fallen pose use a wider canvas. All body mechanics physically plausible, accessory count locked.
+
+POSE ID: RB042_SKILL
+ACTION: Capture one precise tactical command rather than an attack. RIGHT arm raises the ORIGINAL fan diagonally near his RIGHT shoulder; LEFT arm extends to indicate a specific path at shoulder height with index and middle fingers together. Spine remains upright, LEFT foot slightly forward, eyes focused along the LEFT hand. Expression has lost its smile and is sharply decisive. No new props or fire VFX. This is a pose-direction nickname, not a gameplay skill rename.
+QUALITY GATE: Same face and garment structure as approved Master; ONE palm-leaf fan, ONE left-hip tinderbox and ONE damaged left sleeve. Anatomical handedness correct, full body uncropped, real transparent alpha.
+```
+
+##### Pose 4 — Ultimate / Hỏa Thiêu Kho Lương
+
+```text
+REED BANNER / RB-042 NINH HỎA / ninhHoa. Full-body 2D historical low-fantasy hero pose. STYLE: Vietnamese Historical Low Fantasy — Heroic Stylization; painterly game illustration, adult proportions, not photoreal costume photography or high fantasy.
+
+MANDATORY MASTER REFERENCE: Use the actual user-approved Ninh Hỏa Master uploaded on 03/11/2026. Keep IDENTICAL face: young Vietnamese male apparent age 29–35, narrow high-cheekboned face, sharp attentive eyes, uneven raised brows, thin moustache, high compact black topknot with brown tie, playful controlled expression. Same tall lean build.
+
+COSTUME LOCK: asymmetrical short brick-red outer coat #903C32, with its ORIGINAL two shoulder fastening cords, original hem and small damaged hole on anatomical LEFT sleeve; dark charcoal-brown cross-collar inner tunic/trousers #343236, natural ivory collar #D8C6A4, dark brown wrapped sash #614438, ONE cinnabar front hanging ribbon #C84231, pale calf wrappings, dark cloth shoes. EXACTLY ONE rectangular tinderbox on ANATOMICAL LEFT hip suspended by original short cord; keep every garment layer, fitting, hem, accessory position and dimension the same as the approved image. Do not repaint the outfit or add ornaments.
+
+WEAPON LOCK RB-042-W01: EXACTLY ONE broad natural fan of dried palm leaf with radiating ribs, slightly asymmetrical curved outline and small singed irregularities, mounted on ONE short wooden handle wrapped with dark red cloth. In the ANATOMICAL RIGHT hand in all standing frames; only dropped separately in Defeated. Never change it into a folding, feather or woven square fan. Keep identical leaf outline, size, handle and material across poses.
+
+OUTPUT: ONE character only, entirely visible from topknot to shoes with complete fan and tinderbox. True transparent alpha PNG with clear margin for extended poses; no scenery, dark studio gradient, floor/cast shadow, lettering, UI, watermark, magical fire/smoke/embers or additional weapons. For the fallen pose use a wider canvas. All body mechanics physically plausible, accessory count locked.
+
+POSE ID: RB042_ULTIMATE
+ACTION: Runtime personal ultimate is hoaThieuKhoLuong. Capture one final command to attack an enemy supply depot: RIGHT arm forcefully lowers the ORIGINAL fan forward to waist height, LEFT arm extends palm down in a decisive direction, LEFT knee bent in a forward planted step, RIGHT leg braces, torso inclines slightly. Mouth open in one short command, intensely focused, NOT enraged. The fire, smoke, area damage and other effects belong to the game engine; paint NO such VFX into the character asset. Distinct from Skill's raised fan and Basic's lateral feint.
+QUALITY GATE: Same face and garment structure as approved Master; ONE palm-leaf fan, ONE left-hip tinderbox and ONE damaged left sleeve. Anatomical handedness correct, full body uncropped, real transparent alpha.
+```
+
+##### Pose 5 — Defeated / Thất trận
+
+```text
+REED BANNER / RB-042 NINH HỎA / ninhHoa. Full-body 2D historical low-fantasy hero pose. STYLE: Vietnamese Historical Low Fantasy — Heroic Stylization; painterly game illustration, adult proportions, not photoreal costume photography or high fantasy.
+
+MANDATORY MASTER REFERENCE: Use the actual user-approved Ninh Hỏa Master uploaded on 03/11/2026. Keep IDENTICAL face: young Vietnamese male apparent age 29–35, narrow high-cheekboned face, sharp attentive eyes, uneven raised brows, thin moustache, high compact black topknot with brown tie, playful controlled expression. Same tall lean build.
+
+COSTUME LOCK: asymmetrical short brick-red outer coat #903C32, with its ORIGINAL two shoulder fastening cords, original hem and small damaged hole on anatomical LEFT sleeve; dark charcoal-brown cross-collar inner tunic/trousers #343236, natural ivory collar #D8C6A4, dark brown wrapped sash #614438, ONE cinnabar front hanging ribbon #C84231, pale calf wrappings, dark cloth shoes. EXACTLY ONE rectangular tinderbox on ANATOMICAL LEFT hip suspended by original short cord; keep every garment layer, fitting, hem, accessory position and dimension the same as the approved image. Do not repaint the outfit or add ornaments.
+
+WEAPON LOCK RB-042-W01: EXACTLY ONE broad natural fan of dried palm leaf with radiating ribs, slightly asymmetrical curved outline and small singed irregularities, mounted on ONE short wooden handle wrapped with dark red cloth. In the ANATOMICAL RIGHT hand in all standing frames; only dropped separately in Defeated. Never change it into a folding, feather or woven square fan. Keep identical leaf outline, size, handle and material across poses.
+
+OUTPUT: ONE character only, entirely visible from topknot to shoes with complete fan and tinderbox. True transparent alpha PNG with clear margin for extended poses; no scenery, dark studio gradient, floor/cast shadow, lettering, UI, watermark, magical fire/smoke/embers or additional weapons. For the fallen pose use a wider canvas. All body mechanics physically plausible, accessory count locked.
+
+POSE ID: RB042_DEFEATED
+ACTION: Genuine loss of fighting ability: hips on the ground, body collapses toward anatomical RIGHT, head droops, eyes half shut; RIGHT hand open after releasing ORIGINAL fan, which lies distinctly beside him at ground level, same size, fully visible. LEFT arm makes a weak failing brace, one leg folded and the other extended irregularly. The original tinderbox remains attached at anatomical LEFT waist. NOT kneeling, resting, crouching or preparing to rise; no gore.
+QUALITY GATE: Same face and garment structure as approved Master; ONE palm-leaf fan, ONE left-hip tinderbox and ONE damaged left sleeve. Anatomical handedness correct, full body uncropped, real transparent alpha.
+```
+
+##### Pose 6 — Personality / Người đọc hướng gió
+
+```text
+REED BANNER / RB-042 NINH HỎA / ninhHoa. Full-body 2D historical low-fantasy hero pose. STYLE: Vietnamese Historical Low Fantasy — Heroic Stylization; painterly game illustration, adult proportions, not photoreal costume photography or high fantasy.
+
+MANDATORY MASTER REFERENCE: Use the actual user-approved Ninh Hỏa Master uploaded on 03/11/2026. Keep IDENTICAL face: young Vietnamese male apparent age 29–35, narrow high-cheekboned face, sharp attentive eyes, uneven raised brows, thin moustache, high compact black topknot with brown tie, playful controlled expression. Same tall lean build.
+
+COSTUME LOCK: asymmetrical short brick-red outer coat #903C32, with its ORIGINAL two shoulder fastening cords, original hem and small damaged hole on anatomical LEFT sleeve; dark charcoal-brown cross-collar inner tunic/trousers #343236, natural ivory collar #D8C6A4, dark brown wrapped sash #614438, ONE cinnabar front hanging ribbon #C84231, pale calf wrappings, dark cloth shoes. EXACTLY ONE rectangular tinderbox on ANATOMICAL LEFT hip suspended by original short cord; keep every garment layer, fitting, hem, accessory position and dimension the same as the approved image. Do not repaint the outfit or add ornaments.
+
+WEAPON LOCK RB-042-W01: EXACTLY ONE broad natural fan of dried palm leaf with radiating ribs, slightly asymmetrical curved outline and small singed irregularities, mounted on ONE short wooden handle wrapped with dark red cloth. In the ANATOMICAL RIGHT hand in all standing frames; only dropped separately in Defeated. Never change it into a folding, feather or woven square fan. Keep identical leaf outline, size, handle and material across poses.
+
+OUTPUT: ONE character only, entirely visible from topknot to shoes with complete fan and tinderbox. True transparent alpha PNG with clear margin for extended poses; no scenery, dark studio gradient, floor/cast shadow, lettering, UI, watermark, magical fire/smoke/embers or additional weapons. For the fallen pose use a wider canvas. All body mechanics physically plausible, accessory count locked.
+
+POSE ID: RB042_PERSONALITY
+ACTION: Distinct QUIET personal habit: balanced relaxed stance mostly on anatomical RIGHT leg, RIGHT hand lowers the ORIGINAL fan beside torso. LEFT forearm bends and left palm turns up at chest height, fingers slightly separated to sense a natural breeze. Head tips toward LEFT palm, eyes curious, subtle knowing half-smile. Only a tiny natural motion of existing coat and sash. No visible wind, flames, spellcasting, second fan or additional objects.
+QUALITY GATE: Same face and garment structure as approved Master; ONE palm-leaf fan, ONE left-hip tinderbox and ONE damaged left sleeve. Anatomical handedness correct, full body uncropped, real transparent alpha.
+```
+
+#### QA trước khi tích hợp (chưa xác nhận đã hoàn tất)
+
+- [ ] Giữ khuôn mặt, tóc búi, ria mép và hai dây vai giống hệt Master.
+- [ ] Quạt lá cọ một chiếc, cùng hình học, đúng tay phải trừ khi bị đánh rơi.
+- [ ] Đúng một hộp đá lửa ở hông trái, đúng vết sém tay áo trái.
+- [ ] 6 tư thế rõ ý đồ; Defeated thật sự mất trọng tâm.
+- [ ] Nền alpha thật, không vẽ sẵn VFX.
+- [ ] Không sửa asset/rig/runtime khi chưa nghiệm thu ảnh.
 
 #### Hồ sơ và sáu prompt V4.2 gốc — lưu để so sánh, chưa thay asset
 
