@@ -881,7 +881,7 @@ QUALITY GATE: Same mature commander face and fixed color panels; no white tiger 
 
 ### RB-010 — Ngô Xương Xí · Mưu sĩ / Kim
 
-> Trạng thái: **REVIEW / MASTER PILOT** (03/11/2026). Kiểm tra bản cũ trước, **không mặc định REDESIGN**. Bản vNext dưới đây chỉ là đề xuất có điều kiện; chưa duyệt ảnh, chưa tạo sáu pose mới, chưa thay hình đang dùng. Sáu prompt V4.2 cũ được giữ ở cuối mục làm baseline và không phải phiên bản hiện hành nếu mâu thuẫn sử liệu.
+> Trạng thái: **APPROVED — PROMPT DIRECTION** (03/11/2026), **MASTER IMAGE vẫn cần review** về khí chất sứ quân. Bộ sáu prompt vNext đã viết; chưa có xác nhận đủ PNG mới được render, QA hoặc tích hợp. Prompt V4.2 cũ bảo lưu.
 
 #### Dữ kiện lịch sử và tạo hình
 
@@ -956,6 +956,146 @@ No copied Ngô Nhật Khánh spear armor, no copied Mã Nhạc square reed fan, 
 - [ ] Khác pose Mã Nhạc, Ninh Hỏa và Từ Kinh; không dùng cùng công thức động tác.
 - [ ] Quạt nguyên bản giữ đúng hình học, không vẽ thêm đạo cụ chưa được duyệt.
 - [ ] Sau khi Master duyệt, mới triển khai sáu pose lần lượt; không sửa runtime/rig trong đợt này.
+
+#### Production vNext — Bộ 6 prompt Ngô Xương Xí: “Sứ quân Bình Kiều” (03/11/2026)
+
+> **APPROVED — PROMPT DIRECTION ONLY:** Shan yêu cầu sáu prompt theo tinh thần “có khí chất sứ quân hơn”; **chưa có xác nhận ảnh Master đã được duyệt cuối cùng** và chưa có bằng chứng đủ sáu PNG mới đã render/QA/tích hợp. Không thay thế runtime. Ảnh ban đầu Shan gửi là tài liệu **review chưa đạt về quyền uy**, không được coi là final reference. Khi có Master chỉnh sửa đạt chuẩn, luôn đính kèm ảnh đó để tạo các pose.
+
+**Identity/pose concept:** Ngô Xương Xí là người giữ Bình Kiều thuộc dòng họ Ngô, khí chất thủ lĩnh trầm kín. Giữ quạt lông trắng, phục trang xanh xám có mantle vai trái; tăng ánh mắt, thế đứng và độ quyết của gesture. Khác Mã Nhạc và Ninh Hỏa vì thiên về **động tác nhỏ, uy áp nội tâm và nhịp chuyển động kiềm chế**, không phát lệnh lớn.
+
+| Pose | Hình dáng nhận diện | Phân biệt |
+|---|---|---|
+| Idle | Đứng chắc, quạt thấp, tay trái trên đai | Uy sứ quân, không thư sinh |
+| Basic | Lui trọng tâm, quạt ngắn chéo trước thân | Không vung quạt ngang |
+| Skill | Quạt sát ngực, tay trái mật lệnh nhỏ | Không giơ quạt chỉ hướng |
+| Ultimate | Quạt chắn ngang ngực, người gần như bất động | Không lao tới/hét |
+| Defeated | Ngã ngửa chếch phải, buông quạt, hông chạm đất | Không quỳ hoặc ngã giả |
+| Personality | Vuốt/chỉnh mantle vai trái, quạt hạ thấp | Không lặp đặt tay trên đai |
+
+**Sáu prompt độc lập** dưới đây đều tự chứa Identity, Costume, Weapon và Output. Chỉ thay pose được chỉ định. Đối chiếu Master đã duyệt của chính nhân vật, không tham chiếu nhầm ảnh cũ chưa đạt.
+
+##### Khung 1 — Idle / Sứ quân Bình Kiều
+
+```text
+REED BANNER, CHARACTER NGÔ XƯƠNG XÍ / RB-010 / ngoXuongXi. Historical warlord of Bình Kiều, son of Thiên Sách Vương Ngô Xương Ngập. Vietnamese Historical Low Fantasy — Heroic Stylization. GAMEPLAY class Mưu sĩ, element Kim; these are game assignments, not documented historical facts. USE THE NEW WARLORD MASTER IMAGE AS STRICT REFERENCE ONLY WHEN IT HAS ACTUALLY BEEN APPROVED; if only the earlier softer version exists, stop and review the Master first. Do not invent a reference image or claim approval.
+
+IDENTITY LOCK: Vietnamese male visual age 26–32; lean but physically assured adult, long oval face, defined cheekbones, firm jaw, deep-set focused brown eyes, short trimmed moustache, compact black hair under ONE dark blue-black wrapped headcloth. Watchful, proud, politically calculating, not a passive scholar, generic young aristocrat or emperor. Identity and costume are original game art, NOT historical reconstruction.
+
+COSTUME LOCK: ONE ivory crossed-collar underlayer #F1E9D8, dark blue-gray main robe #505E61, ONE structured deep indigo shoulder mantle #263D53 over anatomical LEFT shoulder, restrained steel-gray fabric trim #707982, dark brown firm waist belt #665144 with exactly ONE antique bronze rectangular clasp #A68B54, practical dark trousers, cloth-wrapped calves and low closed shoes. Keep exactly the same facial features, hair, fabric panel allocation, garment cut, mantle geometry, clasp, accessory counts and proportions across all frames, matching the final approved reference.
+
+EQUIPMENT LOCK RB-010-W01: Exactly ONE natural WHITE FEATHER command fan with layered feathers and a single dark wooden grip. The identical original feather fan must retain size, feather layering, handle, fittings and physical geometry in every frame. RIGHT anatomical hand grips it while standing; Defeated releases it. Never transform into a folding fan, reed fan, metal fan, sword, shield or magic object. No extra weapons or invented rank insignia.
+
+OUTPUT/STYLE: ONE full-body game character head to shoes, naturally convincing movement and weight, premium hand-painted semi-realistic 2D game illustration with restrained heroic stylization, clearly a commanding territorial lord. Complete fan and limbs within generous transparent margins; wider canvas permitted for fall/extended arms. TRUE transparent alpha PNG with NO backdrop, vignette, floor, cast shadow, scene, other people, writing, UI, watermark or baked elemental effects. Avoid Chinese imperial costume, xianxia, fantasy crown, magic metal aura, excessive armor and photoreal actors.
+
+POSE ID: RB010_IDLE
+ACTION: The iconic canonical Master standing pose. Stable three-quarter posture, upright open chest, shoulders squared, RIGHT foot anchors behind, LEFT foot advances subtly. RIGHT hand holds the white feather fan firmly at RIGHT thigh angled forward, not drooping; LEFT hand presses over the bronze belt clasp, controlling the mantle. Chin modestly lifted, eyes judging the middle distance, mouth closed. Authority of a regional ruler, not a court scholar.
+
+QUALITY GATE: authoritative warlord impression, same approved face and garment panels, ONE original feather fan in anatomical RIGHT hand except fallen pose, ONE original belt clasp and LEFT shoulder mantle, all body parts fully visible, true alpha background. No extra props or VFX.
+```
+
+##### Khung 2 — Basic Attack / Hư thực biến chiêu
+
+```text
+REED BANNER, CHARACTER NGÔ XƯƠNG XÍ / RB-010 / ngoXuongXi. Historical warlord of Bình Kiều, son of Thiên Sách Vương Ngô Xương Ngập. Vietnamese Historical Low Fantasy — Heroic Stylization. GAMEPLAY class Mưu sĩ, element Kim; these are game assignments, not documented historical facts. USE THE NEW WARLORD MASTER IMAGE AS STRICT REFERENCE ONLY WHEN IT HAS ACTUALLY BEEN APPROVED; if only the earlier softer version exists, stop and review the Master first. Do not invent a reference image or claim approval.
+
+IDENTITY LOCK: Vietnamese male visual age 26–32; lean but physically assured adult, long oval face, defined cheekbones, firm jaw, deep-set focused brown eyes, short trimmed moustache, compact black hair under ONE dark blue-black wrapped headcloth. Watchful, proud, politically calculating, not a passive scholar, generic young aristocrat or emperor. Identity and costume are original game art, NOT historical reconstruction.
+
+COSTUME LOCK: ONE ivory crossed-collar underlayer #F1E9D8, dark blue-gray main robe #505E61, ONE structured deep indigo shoulder mantle #263D53 over anatomical LEFT shoulder, restrained steel-gray fabric trim #707982, dark brown firm waist belt #665144 with exactly ONE antique bronze rectangular clasp #A68B54, practical dark trousers, cloth-wrapped calves and low closed shoes. Keep exactly the same facial features, hair, fabric panel allocation, garment cut, mantle geometry, clasp, accessory counts and proportions across all frames, matching the final approved reference.
+
+EQUIPMENT LOCK RB-010-W01: Exactly ONE natural WHITE FEATHER command fan with layered feathers and a single dark wooden grip. The identical original feather fan must retain size, feather layering, handle, fittings and physical geometry in every frame. RIGHT anatomical hand grips it while standing; Defeated releases it. Never transform into a folding fan, reed fan, metal fan, sword, shield or magic object. No extra weapons or invented rank insignia.
+
+OUTPUT/STYLE: ONE full-body game character head to shoes, naturally convincing movement and weight, premium hand-painted semi-realistic 2D game illustration with restrained heroic stylization, clearly a commanding territorial lord. Complete fan and limbs within generous transparent margins; wider canvas permitted for fall/extended arms. TRUE transparent alpha PNG with NO backdrop, vignette, floor, cast shadow, scene, other people, writing, UI, watermark or baked elemental effects. Avoid Chinese imperial costume, xianxia, fantasy crown, magic metal aura, excessive armor and photoreal actors.
+
+POSE ID: RB010_BASIC_ATTACK
+ACTION: Controlled compact deceptive feint. Shift weight BACK onto RIGHT leg, LEFT foot slides sideways, torso makes a small quarter rotation right. RIGHT wrist moves the unchanged feather fan across a SHORT diagonal arc before lower torso, ending above waist; LEFT forearm stays near belt and mantle. Narrow defensive silhouette and cold observant expression. NOT a large fan sweep, slash or leap.
+
+QUALITY GATE: authoritative warlord impression, same approved face and garment panels, ONE original feather fan in anatomical RIGHT hand except fallen pose, ONE original belt clasp and LEFT shoulder mantle, all body parts fully visible, true alpha background. No extra props or VFX.
+```
+
+##### Khung 3 — Skill / Mật lệnh Bình Kiều
+
+```text
+REED BANNER, CHARACTER NGÔ XƯƠNG XÍ / RB-010 / ngoXuongXi. Historical warlord of Bình Kiều, son of Thiên Sách Vương Ngô Xương Ngập. Vietnamese Historical Low Fantasy — Heroic Stylization. GAMEPLAY class Mưu sĩ, element Kim; these are game assignments, not documented historical facts. USE THE NEW WARLORD MASTER IMAGE AS STRICT REFERENCE ONLY WHEN IT HAS ACTUALLY BEEN APPROVED; if only the earlier softer version exists, stop and review the Master first. Do not invent a reference image or claim approval.
+
+IDENTITY LOCK: Vietnamese male visual age 26–32; lean but physically assured adult, long oval face, defined cheekbones, firm jaw, deep-set focused brown eyes, short trimmed moustache, compact black hair under ONE dark blue-black wrapped headcloth. Watchful, proud, politically calculating, not a passive scholar, generic young aristocrat or emperor. Identity and costume are original game art, NOT historical reconstruction.
+
+COSTUME LOCK: ONE ivory crossed-collar underlayer #F1E9D8, dark blue-gray main robe #505E61, ONE structured deep indigo shoulder mantle #263D53 over anatomical LEFT shoulder, restrained steel-gray fabric trim #707982, dark brown firm waist belt #665144 with exactly ONE antique bronze rectangular clasp #A68B54, practical dark trousers, cloth-wrapped calves and low closed shoes. Keep exactly the same facial features, hair, fabric panel allocation, garment cut, mantle geometry, clasp, accessory counts and proportions across all frames, matching the final approved reference.
+
+EQUIPMENT LOCK RB-010-W01: Exactly ONE natural WHITE FEATHER command fan with layered feathers and a single dark wooden grip. The identical original feather fan must retain size, feather layering, handle, fittings and physical geometry in every frame. RIGHT anatomical hand grips it while standing; Defeated releases it. Never transform into a folding fan, reed fan, metal fan, sword, shield or magic object. No extra weapons or invented rank insignia.
+
+OUTPUT/STYLE: ONE full-body game character head to shoes, naturally convincing movement and weight, premium hand-painted semi-realistic 2D game illustration with restrained heroic stylization, clearly a commanding territorial lord. Complete fan and limbs within generous transparent margins; wider canvas permitted for fall/extended arms. TRUE transparent alpha PNG with NO backdrop, vignette, floor, cast shadow, scene, other people, writing, UI, watermark or baked elemental effects. Avoid Chinese imperial costume, xianxia, fantasy crown, magic metal aura, excessive armor and photoreal actors.
+
+POSE ID: RB010_SKILL
+ACTION: A discreet confidential military signal, not a fan-based spell. RIGHT elbow bends inward to hold the same open white feather fan CLOSE to anatomical RIGHT upper chest, feather face readable. LEFT hand makes a very small two-finger signal just above the belt, near torso; shoulders incline forward only slightly, gaze meets an unseen subordinate to anatomical LEFT. Feet remain planted and posture compact. No broad pointing, overhand flourish or shout. This action name is ART ONLY and does not rename runtime skill IDs.
+
+QUALITY GATE: authoritative warlord impression, same approved face and garment panels, ONE original feather fan in anatomical RIGHT hand except fallen pose, ONE original belt clasp and LEFT shoulder mantle, all body parts fully visible, true alpha background. No extra props or VFX.
+```
+
+##### Khung 4 — Ultimate / Ngô Gia Di Mưu
+
+```text
+REED BANNER, CHARACTER NGÔ XƯƠNG XÍ / RB-010 / ngoXuongXi. Historical warlord of Bình Kiều, son of Thiên Sách Vương Ngô Xương Ngập. Vietnamese Historical Low Fantasy — Heroic Stylization. GAMEPLAY class Mưu sĩ, element Kim; these are game assignments, not documented historical facts. USE THE NEW WARLORD MASTER IMAGE AS STRICT REFERENCE ONLY WHEN IT HAS ACTUALLY BEEN APPROVED; if only the earlier softer version exists, stop and review the Master first. Do not invent a reference image or claim approval.
+
+IDENTITY LOCK: Vietnamese male visual age 26–32; lean but physically assured adult, long oval face, defined cheekbones, firm jaw, deep-set focused brown eyes, short trimmed moustache, compact black hair under ONE dark blue-black wrapped headcloth. Watchful, proud, politically calculating, not a passive scholar, generic young aristocrat or emperor. Identity and costume are original game art, NOT historical reconstruction.
+
+COSTUME LOCK: ONE ivory crossed-collar underlayer #F1E9D8, dark blue-gray main robe #505E61, ONE structured deep indigo shoulder mantle #263D53 over anatomical LEFT shoulder, restrained steel-gray fabric trim #707982, dark brown firm waist belt #665144 with exactly ONE antique bronze rectangular clasp #A68B54, practical dark trousers, cloth-wrapped calves and low closed shoes. Keep exactly the same facial features, hair, fabric panel allocation, garment cut, mantle geometry, clasp, accessory counts and proportions across all frames, matching the final approved reference.
+
+EQUIPMENT LOCK RB-010-W01: Exactly ONE natural WHITE FEATHER command fan with layered feathers and a single dark wooden grip. The identical original feather fan must retain size, feather layering, handle, fittings and physical geometry in every frame. RIGHT anatomical hand grips it while standing; Defeated releases it. Never transform into a folding fan, reed fan, metal fan, sword, shield or magic object. No extra weapons or invented rank insignia.
+
+OUTPUT/STYLE: ONE full-body game character head to shoes, naturally convincing movement and weight, premium hand-painted semi-realistic 2D game illustration with restrained heroic stylization, clearly a commanding territorial lord. Complete fan and limbs within generous transparent margins; wider canvas permitted for fall/extended arms. TRUE transparent alpha PNG with NO backdrop, vignette, floor, cast shadow, scene, other people, writing, UI, watermark or baked elemental effects. Avoid Chinese imperial costume, xianxia, fantasy crown, magic metal aura, excessive armor and photoreal actors.
+
+POSE ID: RB010_ULTIMATE
+ACTION: Runtime ultimate ID ngoGiaDiMuu. A decisive moment of stillness and mental domination, not an aggressive rush. Feet plant a little wider than Idle, knees subtly lower center of gravity; RIGHT arm sets same white feather fan ACROSS lower chest like a deliberate horizontal visual boundary, LEFT hand presses over original belt clasp. Torso square and nearly motionless, chin slightly lowered while eyes LOCK straight toward unseen opponent, jaw firm, no shouting. Distinct broad horizontal feather silhouette. Damage, energy loss, silence and board destruction effects belong in runtime, NOT image.
+
+QUALITY GATE: authoritative warlord impression, same approved face and garment panels, ONE original feather fan in anatomical RIGHT hand except fallen pose, ONE original belt clasp and LEFT shoulder mantle, all body parts fully visible, true alpha background. No extra props or VFX.
+```
+
+##### Khung 5 — Defeated / Bình Kiều thất thế
+
+```text
+REED BANNER, CHARACTER NGÔ XƯƠNG XÍ / RB-010 / ngoXuongXi. Historical warlord of Bình Kiều, son of Thiên Sách Vương Ngô Xương Ngập. Vietnamese Historical Low Fantasy — Heroic Stylization. GAMEPLAY class Mưu sĩ, element Kim; these are game assignments, not documented historical facts. USE THE NEW WARLORD MASTER IMAGE AS STRICT REFERENCE ONLY WHEN IT HAS ACTUALLY BEEN APPROVED; if only the earlier softer version exists, stop and review the Master first. Do not invent a reference image or claim approval.
+
+IDENTITY LOCK: Vietnamese male visual age 26–32; lean but physically assured adult, long oval face, defined cheekbones, firm jaw, deep-set focused brown eyes, short trimmed moustache, compact black hair under ONE dark blue-black wrapped headcloth. Watchful, proud, politically calculating, not a passive scholar, generic young aristocrat or emperor. Identity and costume are original game art, NOT historical reconstruction.
+
+COSTUME LOCK: ONE ivory crossed-collar underlayer #F1E9D8, dark blue-gray main robe #505E61, ONE structured deep indigo shoulder mantle #263D53 over anatomical LEFT shoulder, restrained steel-gray fabric trim #707982, dark brown firm waist belt #665144 with exactly ONE antique bronze rectangular clasp #A68B54, practical dark trousers, cloth-wrapped calves and low closed shoes. Keep exactly the same facial features, hair, fabric panel allocation, garment cut, mantle geometry, clasp, accessory counts and proportions across all frames, matching the final approved reference.
+
+EQUIPMENT LOCK RB-010-W01: Exactly ONE natural WHITE FEATHER command fan with layered feathers and a single dark wooden grip. The identical original feather fan must retain size, feather layering, handle, fittings and physical geometry in every frame. RIGHT anatomical hand grips it while standing; Defeated releases it. Never transform into a folding fan, reed fan, metal fan, sword, shield or magic object. No extra weapons or invented rank insignia.
+
+OUTPUT/STYLE: ONE full-body game character head to shoes, naturally convincing movement and weight, premium hand-painted semi-realistic 2D game illustration with restrained heroic stylization, clearly a commanding territorial lord. Complete fan and limbs within generous transparent margins; wider canvas permitted for fall/extended arms. TRUE transparent alpha PNG with NO backdrop, vignette, floor, cast shadow, scene, other people, writing, UI, watermark or baked elemental effects. Avoid Chinese imperial costume, xianxia, fantasy crown, magic metal aura, excessive armor and photoreal actors.
+
+POSE ID: RB010_DEFEATED
+ACTION: A truly physically DEFEATED collapse: hips on the ground, torso fallen backward slightly toward anatomical RIGHT, RIGHT shoulder lower; RIGHT arm extends outward with OPEN fingers after releasing the SAME intact white feather fan, lying SEPARATELY next to him. LEFT arm weakly tries but fails to prop body, one leg folded beneath, one extending diagonally. Head slack and eyes partly shut, dignified but in pain, no theatrical gore. Widen composition to show complete figure and entire dropped fan. NOT kneeling, sitting calmly or recovering. Combat pose is fictional, not a historical claim about Bình Kiều.
+
+QUALITY GATE: authoritative warlord impression, same approved face and garment panels, ONE original feather fan in anatomical RIGHT hand except fallen pose, ONE original belt clasp and LEFT shoulder mantle, all body parts fully visible, true alpha background. No extra props or VFX.
+```
+
+##### Khung 6 — Personality / Tự trọng họ Ngô
+
+```text
+REED BANNER, CHARACTER NGÔ XƯƠNG XÍ / RB-010 / ngoXuongXi. Historical warlord of Bình Kiều, son of Thiên Sách Vương Ngô Xương Ngập. Vietnamese Historical Low Fantasy — Heroic Stylization. GAMEPLAY class Mưu sĩ, element Kim; these are game assignments, not documented historical facts. USE THE NEW WARLORD MASTER IMAGE AS STRICT REFERENCE ONLY WHEN IT HAS ACTUALLY BEEN APPROVED; if only the earlier softer version exists, stop and review the Master first. Do not invent a reference image or claim approval.
+
+IDENTITY LOCK: Vietnamese male visual age 26–32; lean but physically assured adult, long oval face, defined cheekbones, firm jaw, deep-set focused brown eyes, short trimmed moustache, compact black hair under ONE dark blue-black wrapped headcloth. Watchful, proud, politically calculating, not a passive scholar, generic young aristocrat or emperor. Identity and costume are original game art, NOT historical reconstruction.
+
+COSTUME LOCK: ONE ivory crossed-collar underlayer #F1E9D8, dark blue-gray main robe #505E61, ONE structured deep indigo shoulder mantle #263D53 over anatomical LEFT shoulder, restrained steel-gray fabric trim #707982, dark brown firm waist belt #665144 with exactly ONE antique bronze rectangular clasp #A68B54, practical dark trousers, cloth-wrapped calves and low closed shoes. Keep exactly the same facial features, hair, fabric panel allocation, garment cut, mantle geometry, clasp, accessory counts and proportions across all frames, matching the final approved reference.
+
+EQUIPMENT LOCK RB-010-W01: Exactly ONE natural WHITE FEATHER command fan with layered feathers and a single dark wooden grip. The identical original feather fan must retain size, feather layering, handle, fittings and physical geometry in every frame. RIGHT anatomical hand grips it while standing; Defeated releases it. Never transform into a folding fan, reed fan, metal fan, sword, shield or magic object. No extra weapons or invented rank insignia.
+
+OUTPUT/STYLE: ONE full-body game character head to shoes, naturally convincing movement and weight, premium hand-painted semi-realistic 2D game illustration with restrained heroic stylization, clearly a commanding territorial lord. Complete fan and limbs within generous transparent margins; wider canvas permitted for fall/extended arms. TRUE transparent alpha PNG with NO backdrop, vignette, floor, cast shadow, scene, other people, writing, UI, watermark or baked elemental effects. Avoid Chinese imperial costume, xianxia, fantasy crown, magic metal aura, excessive armor and photoreal actors.
+
+POSE ID: RB010_PERSONALITY
+ACTION: A small private act of composure before negotiations. RIGHT hand holds original white feather fan LOW near RIGHT thigh, not discarded. LEFT hand adjusts the edge of the EXISTING indigo LEFT-shoulder mantle near LEFT upper chest, without creating ornaments. Back upright but slightly relaxed, gaze quietly distant, expression disciplined with guarded pride, mouth neutral. No new object, royal insignia, scroll or throne. Distinct from Idle's LEFT hand on belt and all combat frames.
+
+QUALITY GATE: authoritative warlord impression, same approved face and garment panels, ONE original feather fan in anatomical RIGHT hand except fallen pose, ONE original belt clasp and LEFT shoulder mantle, all body parts fully visible, true alpha background. No extra props or VFX.
+```
+
+#### QA trước khi sản xuất / tích hợp
+
+- [ ] Master mới thực sự đã duyệt khí chất sứ quân, không dùng nhầm bản mềm như thư sinh.
+- [ ] Khuôn mặt, tóc, khăn, mantle vai trái, khóa đai và quạt nguyên bản nhất quán.
+- [ ] Basic, Skill, Ultimate có silhouette riêng; 6 pose khác nhau và không trùng mưu sĩ khác.
+- [ ] Defeated hông chạm đất, quạt buông rời tay; mọi vật nằm trọn trong canvas.
+- [ ] Alpha trong suốt thật, không bake-in VFX, không đổi vũ khí hoặc runtime.
+- [ ] Tích hợp chỉ sau khi Shan duyệt từng frame và kiểm tra ảnh/rig.
 
 #### Tư liệu và sáu prompt V4.2 cũ — giữ nguyên làm baseline (có nhãn outdated)
 
