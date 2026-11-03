@@ -879,7 +879,85 @@ QUALITY GATE: Same mature commander face and fixed color panels; no white tiger 
 4. Chỉ sau khi Shan duyệt Master mới sinh từng frame tiếp theo theo trình tự Basic → Skill → Ultimate → Defeated → Personality.
 5. Nếu Master không đạt, **chỉnh prompt RB-009**, không chuyển sang sản xuất nhân vật khác, không ghi đè asset cũ.
 
-### RB-010 — Ngô Xương Xí (Kiều công) · Mưu sĩ / Kim
+### RB-010 — Ngô Xương Xí · Mưu sĩ / Kim
+
+> Trạng thái: **REVIEW / MASTER PILOT** (03/11/2026). Kiểm tra bản cũ trước, **không mặc định REDESIGN**. Bản vNext dưới đây chỉ là đề xuất có điều kiện; chưa duyệt ảnh, chưa tạo sáu pose mới, chưa thay hình đang dùng. Sáu prompt V4.2 cũ được giữ ở cuối mục làm baseline và không phải phiên bản hiện hành nếu mâu thuẫn sử liệu.
+
+#### Dữ kiện lịch sử và tạo hình
+
+- **Recorded:** Ngô Xương Xí, thuộc dòng dõi Ngô, được ghi là **con Thiên Sách Vương**; giữ Bình Kiều trong danh sách 12 sứ quân (mục W03 ở [ma trận](../../../02-game-modes/campaign/warlord-matrix.md), nguồn S01 trong [sổ nguồn](../../../02-game-modes/campaign/history-sources.md)). Địa điểm Bình Kiều còn điểm chưa thống nhất. **Không sử dụng “Kiều công” như danh hiệu chính sử** chỉ vì dữ liệu legacy đã dùng.
+- **Quan hệ/kết cục:** Tài liệu W03 phân loại việc quy phục ở mức tổng thuật, **không** có chứng cứ chắc chắn cho một trận Bình Kiều bị đánh dẹp cụ thể. Không sáng tác tình tiết tiêu diệt hoặc nhục hình thành historical canon.
+- **Game-authored:** tuổi biểu kiến, bộ mặt, chất liệu trang phục, chiến khí, vật dụng và hành động của nhân vật là nghệ thuật hư cấu, không phải chân dung/di vật đã xác nhận. Tránh gắn nhãn con Ngô Quyền trực tiếp; Ngô Xương Xí được ghi là con Thiên Sách Vương Ngô Xương Ngập.
+- **Gameplay:** `ngoXuongXi`, nghề Mưu sĩ / Kim, kỹ năng cá nhân `ngoGiaDiMuu` (Ngô Gia Di Mưu) — không đổi tính năng/số liệu. Không tự suy ngược nghề từ sử liệu.
+- **Định hướng:** thủ lĩnh chi nhánh Ngô cát cứ ở Bình Kiều, sinh trưởng gần những biến động của vương triều, tỉnh táo và thận trọng. **Khác Ngô Nhật Khánh**: Nhật Khánh nghiêng về hình tượng thủ lĩnh quân sự cầm giáo và kiếm, Xương Xí nghiêng về một vị chủ trại biết cân nhắc lợi hại, đánh giá người và giữ quân.
+- **Không xóa thiết kế tốt:** trước khi tạo Master mới, phải so bản hiện tại trong `/demo/character` về mặt, áo, quạt, pose và khả năng nhận diện. Nếu bản cũ đã độc đáo và phù hợp Art Bible, chọn **KEEP/REFINE** thay vì bắt buộc thay Master.
+
+#### Character DNA vNext (chỉ áp dụng nếu bản cũ cần tinh chỉnh)
+
+- **Visual age:** 26–32 (tạo hình, không khẳng định niên đại sinh); nam Việt, dáng cao trung bình, thanh nhưng chắc, khuôn mặt trái xoan dài hơi góc cạnh, mắt tối sâu hơi trũng, gò má gọn, môi mím khi suy nghĩ; ria ngắn tiết chế và một vệt bạc nhỏ ở tóc mai là lựa chọn tạo hình.
+- **Cá tính:** dè dặt, tự trọng, điều hành tỉnh táo; có thói quen quan sát trước khi trả lời và giữ vật dụng trong trật tự.
+- **Dáng riêng:** đứng trọng tâm có phần khép, một tay giữ thẻ gỗ quân vụ sát ngực, tay còn lại mang quạt nhẹ nghiêng xuống. Không dạng giơ trượng, giơ quạt hoặc vung tay ra lệnh lớn.
+- **Silhouette:** mảng áo khoác ngoài dài đến giữa đùi, **lệch về một vai**, mặt áo trước không tầng lớp dày, cổ giao lĩnh gọn, đai bản vừa, mũ/khăn đầu thấp; khác những áo trùm tím dài và quần áo mưu sĩ chung kiểu tiên hiệp.
+- **Color DNA đề xuất:** áo trong ngà trầm `#F1E9D8`, áo chính xanh xám sẫm `#505E61`, viền vải xám thép `#707982`, đai da nâu `#665144`, đồng cổ `#A68B54`, một dải vải xanh đen `#263D53`. **Kim** là sắc điểm nhấn chất liệu, không biến toàn bộ thành bạc trắng sáng bóng.
+- **Weapon:** nếu quạt lông trắng `RB-010-W01` trong asset hiện tại đã độc đáo, **giữ đúng quạt cũ và hình học cũ**; các thay đổi phong cách không được tự thay quạt thành kiếm, thẻ hoặc vũ khí mới. Thẻ gỗ quân vụ được xem là đạo cụ phụ để đánh giá riêng, **không thêm mặc định** nếu bản cũ chưa có, tránh làm tăng số lượng đạo cụ toàn bộ 6 pose.
+- **Fantasy:** qua độ dứt khoát của silhouette, hoa văn riêng tiết chế và ánh sáng game-art, không dùng tiên hiệp/kim quang/mũ miện. Giữ chất vẽ bán hiện thực, không photoreal như diễn viên đóng phục trang.
+
+#### Pose Identity Matrix — nghiên cứu trước, chưa thiết kế sáu pose
+
+| Frame | Hành động riêng dự kiến | Tránh trùng |
+|---|---|---|
+| Idle | Giữ quạt gần hông, ánh mắt nhìn chéo xuống như cân nhắc một quyết định | Không đứng ngang quạt trước ngực như Mã Nhạc |
+| Basic | Đổi chân, xoay nửa người và bất ngờ **khép khoảng cách tay** như làm đối thủ đoán sai ý đồ; quạt chỉ lướt một góc nhỏ | Không quạt ngang như Ninh Hỏa |
+| Skill | Lùi gọn một nửa bước, hạ vai nhìn qua đối thủ, tay không giữ quạt khép sát thân như ra mật lệnh | Không mặc định giơ quạt rồi dùng tay trái chỉ hướng |
+| Ultimate / Ngô Gia Di Mưu | Đứng tĩnh, xoay cổ tay giữ quạt thành đường chắn ngang trước thân, ánh mắt khóa mục tiêu; cảm giác ra quyết định kín thay vì hét lớn | Không kiểu bước mạnh/hạ quạt phát lệnh; VFX Kim và hiệu ứng battle do engine tạo |
+| Defeated | Khuỵu rồi **đổ hẳn ngửa về sau** với thân mất cân bằng, quạt văng khỏi tay, hông chạm đất | Không quỳ anh hùng, không giống ngã sụp sang bên |
+| Personality | Lặng lẽ kiểm tra nếp buộc quạt và giấu nụ cười nhận ra kế hoạch của đối thủ | Không xem thẻ lương của Mã Nhạc hay thử gió của Ninh Hỏa |
+
+**Quality gate:** khi che tên/màu/VFX vẫn phân biệt được tư thế và khí chất; giữ đúng vũ khí, đúng tay; không thay đồ sau Master; không sinh sáu ảnh trước khi Master qua kiểm tra.
+
+#### Master / Idle prompt (EN, proposed; needs original asset comparison)
+
+```text
+Create ONE full-body character concept for Ngô Xương Xí, RB-010 / ngoXuongXi, a Vietnamese historical figure portrayed as a fictionalized regional leader of Bình Kiều in the 10th-century Twelve Warlords period, for the low-fantasy strategy game Reed Banner.
+
+HISTORICAL BOUNDARY:
+Sources identify him as a son of Thiên Sách Vương Ngô Xương Ngập and a warlord connected with Bình Kiều. Do not depict him as a direct son of Ngô Quyền or assert an unverified royal title such as "Kiều công." His actual face, clothing and equipment are not historically documented: this is artistic interpretation, NOT an authenticated reconstruction. Gameplay class Mưu sĩ and element Kim are fiction and must not turn him into a metallic wizard.
+
+REVIEW REFERENCE FIRST:
+Use the actual current approved Ngô Xương Xí game art if supplied, preserve any distinctive successful identity and original RB-010-W01 feather-fan geometry. This is a controlled MASTER PILOT, NOT permission to discard already-approved assets. Match the painterly finish of approved Ngô Nhật Khánh, Trần Lãm and Mã Nhạc, not their face, outfit or poses.
+
+IDENTITY:
+Vietnamese man, artistic age approximately 26–32. Moderately tall, lean but healthy, shoulders compact and self-contained. Elongated oval face with defined cheekbones, watchful deep dark eyes, straight nose, short well-trimmed moustache, lips held in an appraising neutral line. Low compact black hair knot beneath a close-fitting plain blue-black cloth headwrap, no crown or imperial cap. Composed, quietly proud, weighing consequences and personal loyalties. Not a teenage scholar, powerless refugee, or villain caricature.
+
+COSTUME & COLOR DNA:
+One practical crossed-collar ivory tunic #F1E9D8, dark desaturated blue-slate main field robe #505E61 with short fitted sleeves, ONE asymmetrical structured outer mantle draped more heavily across anatomical LEFT shoulder but ending around mid-thigh, narrow steel-gray woven border #707982 only in a few controlled sections, warm dark-brown medium-width leather/cloth waist belt #665144 with ONE modest bronze clasp #A68B54, dark indigo-blue fabric accent #263D53 at the waist, sturdy dark trousers, cloth calf wrappings, practical soft closed shoes. Materials have weight and historical low-fantasy logic. No large silver-gold armor, white ceremonial imperial silk, dragon ornaments, giant cape or floating scholar robes.
+
+WEAPON RB-010-W01:
+EXACTLY ONE original white-feather command fan, held by anatomical RIGHT hand. Keep the fan's documented approved shape, real feather count appearance, handle length, grip material, dimensions and any accepted ornaments if the existing game asset reference is available. If the old fan's exact shape is unknown, treat the fan as a preliminary design and DO NOT claim it is weapon-geometry approved. No duplicate fan, blade, sword, wand, magical metal folding fan or detached hovering feathers. The anatomical LEFT hand stays near the belt; DO NOT add a new object just to distinguish him from other strategists.
+
+MASTER/IDLE:
+A compressed, contained and calculating stance, three-quarter full-body view. Weight held mostly on anatomical RIGHT leg, LEFT foot forward by less than half a step. RIGHT hand holds the white-feather fan LOW near anatomical RIGHT hip at a mild diagonal, fully visible, not raised as a battle command. LEFT hand lightly holds his outer mantle close at the waist, conveying a private and controlled manner. Head tilted fractionally toward anatomical LEFT, gaze directed off-camera as if deciding whether to trust a messenger. No broad arm gestures, no forward lunge and no half-shout. A regional leader with his own authority, not just a uniformed Mưu sĩ.
+
+STYLE:
+Vietnamese Historical Low Fantasy — Heroic Stylization. Premium hand-painted 2D character art, restrained painterly contours, believable textile depth, expressive face, readable silhouette and deliberate heroic polish. No photoreal live-action or overly plain civilian NPC; no high-fantasy xianxia, Qing/late-court wardrobe, samurai/Western armor, glowing metal or baked elemental effects.
+
+OUTPUT:
+ONE full-body figure, head, both arms, complete original white-feather fan and footwear inside frame. Genuine transparent PNG alpha, no gradient background, floor, cast shadow, scene, letters, title, watermark, border or UI. Master only, do not generate six frames automatically.
+
+NEGATIVE:
+No copied Ngô Nhật Khánh spear armor, no copied Mã Nhạc square reed fan, no Ninh Hỏa palm leaf fan, no highly decorated imperial crown, no duplicate props, no fantasy metal plates, no inaccurate anatomical hand switch, no generic scholar quill scene.
+```
+
+#### QA — chỉ cho phép tiến tiếp khi duyệt Master
+
+- [ ] Xem đủ ảnh cũ / mới cạnh nhau ở màn `/demo/character`, tránh thay bản đang dùng chỉ vì đổi Art Bible.
+- [ ] Xác nhận danh xưng/quan hệ từ W03; không dùng title “Kiều công” như chính sử.
+- [ ] Phân biệt Ngô Xương Xí và Ngô Nhật Khánh qua hình thể, khí chất, vũ khí và cách đứng.
+- [ ] Khác pose Mã Nhạc, Ninh Hỏa và Từ Kinh; không dùng cùng công thức động tác.
+- [ ] Quạt nguyên bản giữ đúng hình học, không vẽ thêm đạo cụ chưa được duyệt.
+- [ ] Sau khi Master duyệt, mới triển khai sáu pose lần lượt; không sửa runtime/rig trong đợt này.
+
+#### Tư liệu và sáu prompt V4.2 cũ — giữ nguyên làm baseline (có nhãn outdated)
 
 > **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** MEDIUM · CÂN NHẮC. Chiêu tham chiếu: **Ngô Gia Di Mưu** (`ngoGiaDiMuu`). Quạt dễ trùng với mưu sĩ khác; giữ hình quạt nếu skill phù hợp, bổ sung dấu hiệu cá nhân và ấn/thẻ nếu chiêu yêu cầu. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
