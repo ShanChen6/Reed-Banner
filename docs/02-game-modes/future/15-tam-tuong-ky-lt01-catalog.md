@@ -11,31 +11,31 @@ Luật theo [Design Freeze](14-tam-tuong-ky-design-freeze.md) (FROZEN). File nà
 |---|---|
 | `src/core/tam-tuong-ky/types.ts` | Node, công thức có thứ tự, pack, bậc tướng, mã lỗi |
 | `src/core/tam-tuong-ky/graph.ts` | `recipeKey` (`A>B`), `computeMetrics` (`minCombines`, `starterCost`), `findCycles` |
-| `src/core/tam-tuong-ky/validate.ts` | `validatePack`: lỗi và cảnh báo theo [mục 7.2](14-tam-tuong-ky-design-freeze.md#72-validator-catalog); `TIER_COMBINE_RANGE` |
+| `src/core/tam-tuong-ky/validate.ts` | `validatePack`: lỗi và cảnh báo theo [mục 7.2](14-tam-tuong-ky-design-freeze.md#72-validator-catalog); `TIER_COMBINES` (thường 7, đặc biệt 9, lịch sử 12) |
 | `src/core/tam-tuong-ky/catalog.ts` | `SLICE_PACK` (draft), `rosterCharacter` đọc nghề/hệ/bậc từ roster, `CORE_CATALOG_DEPS` |
-| `tests/core/tam-tuong-ky/catalog.test.ts` | 28 test: slice hợp lệ, số đo, mỗi lỗi và cảnh báo của validator |
+| `tests/core/tam-tuong-ky/catalog.test.ts` | 27 test: slice hợp lệ, số đo, mỗi lỗi và cảnh báo của validator |
 
 Catalog không chép nghề, hệ hay tên chân dung: validator đọc từ `roster.ts`; test kiểm chân dung bằng `portraitUrl` và file trong `public/`. Module không import tiến trình, Battle Engine, trang bị hay hàm cấp tướng.
 
 ## 2. Kết quả kiểm
 
-`validatePack(SLICE_PACK)`: **0 lỗi, 0 cảnh báo**. `pnpm test`: 1161/1161 qua; `pnpm typecheck` sạch.
+`validatePack(SLICE_PACK)`: **0 lỗi, 0 cảnh báo**.
 
-| Tướng | Bậc | Khung | Số lần ghép tối thiểu | Nguyên tố tiêu | Công thức cuối (ô trước + ô sau) |
+| Tướng | Bậc | Số lần ghép bắt buộc | Số lần ghép tối thiểu | Nguyên tố tiêu | Công thức cuối (ô trước + ô sau) |
 |---|---|---|---|---|---|
-| Đinh Ngọc | đặc biệt | 7–9 | **8** | 9 | Kiếm ngọc + Đường xa |
-| Lê Hoàn | lịch sử | 9–12 | **10** | 11 | Thập đạo + Binh thư |
-| Nguyễn Bặc | lịch sử | 9–12 | **11** | 12 | Đại đao buộc vải đỏ + Hỏa kỳ |
+| Đinh Ngọc | đặc biệt | 9 | **9** | 10 | Kiếm ngọc + Đường xa |
+| Lê Hoàn | lịch sử | 12 | **12** | 13 | Thập đạo + Binh thư |
+| Nguyễn Bặc | lịch sử | 12 | **12** | 13 | Đại đao buộc vải đỏ + Hỏa kỳ |
 
-- Thứ tự chặt: 10 và 11 (lịch sử) > 8 (đặc biệt).
-- 7/7 starter đều được dùng; 27 công thức, 24 node trung gian.
-- 12/49 cặp starter có công thức, trong đó 3 cặp `A+A` (Mộc+Mộc, Thủy+Thủy, Thổ+Thổ) và 2 cặp gương ra hai kết quả khác nhau (Mộc+Thủy / Thủy+Mộc, Phong+Lôi / Lôi+Phong).
-- Node dùng chung: Vải gai (3 nhánh), Tre (3), Sắt rèn (2).
-- Ba node phụ không dẫn tới tướng (Dược thảo, Giông tố, Lũy đất), để minh họa thứ tự ô và `A+A`. Ở chế độ Hạng chúng là ngõ cụt tốn nguyên liệu; LT-05 quyết định giữ hay nối vào tướng khác.
+- Số lần ghép bắt buộc theo [P-5](14-tam-tuong-ky-design-freeze.md#32-đề-xuất-đã-duyệt): thường 7, đặc biệt 9, lịch sử 12 (Shan chốt 03/11/2026).
+- 7/7 starter đều được dùng; 28 công thức, 25 node trung gian.
+- 10/49 cặp starter có công thức, trong đó 3 cặp `A+A` (Mộc+Mộc, Thủy+Thủy, Thổ+Thổ) và 1 cặp gương ra hai kết quả khác nhau (Mộc+Thủy → Lau sậy, Thủy+Mộc → Dược thảo).
+- Node dùng chung: Tre (3 nhánh), Vải gai (2), Dải vải đỏ (2), Sắt rèn (2).
+- Một node phụ không dẫn tới tướng: Dược thảo, để minh họa thứ tự ô. Ở chế độ Hạng nó là ngõ cụt tốn nguyên liệu; LT-05 nối vào tướng khác (ví dụ Trịnh Tú, Y sư) hoặc bỏ.
 
 ## 3. Công thức
 
-Đọc “ô trước + ô sau → kết quả”. Lý do biểu trưng ghi trong code (`reason`).
+Đọc “ô trước + ô sau → kết quả”; số trong ngoặc là số lần ghép tối thiểu tới node đó. Lý do biểu trưng ghi trong code (`reason`).
 
 ### Bậc 1 (hai starter)
 
@@ -46,43 +46,44 @@ Catalog không chép nghề, hệ hay tên chân dung: validator đọc từ `ro
 | Kim | Hỏa | Sắt rèn |
 | Mộc | Mộc | Tre |
 | Mộc | Phong | Vải gai |
-| Phong | Lôi | Trống trận |
 | Lôi | Phong | Giông tố |
-| Hỏa | Thủy | Mực |
+| Mộc | Hỏa | Than củi |
 | Thủy | Thủy | Giọt sương |
 | Thổ | Kim | Đá ngọc thô |
-| Phong | Thổ | Đường xa |
 | Thổ | Thổ | Lũy đất |
 
 ### Lê Hoàn — cờ lệnh tam giác và bó thẻ tre
 
 | Ô trước | Ô sau | Kết quả |
 |---|---|---|
-| Tre | Vải gai | Cờ lệnh |
-| Tre | Kim | Thẻ tre |
-| Thẻ tre | Mực | Binh thư |
-| Cờ lệnh | Trống trận | Thập đạo |
-| Thập đạo | Binh thư | **Lê Hoàn** |
+| Giông tố | Mộc | Trống trận (2) |
+| Than củi | Thủy | Mực (2) |
+| Tre | Vải gai | Cờ lệnh (3) |
+| Tre | Kim | Thẻ tre (2) |
+| Thẻ tre | Mực | Binh thư (5) |
+| Cờ lệnh | Trống trận | Thập đạo (6) |
+| Thập đạo | Binh thư | **Lê Hoàn (12)** |
 
 ### Nguyễn Bặc — đại đao đơn lưỡi, dải vải đỏ, hỏa kỳ
 
 | Ô trước | Ô sau | Kết quả |
 |---|---|---|
-| Lau sậy | Vải gai | Cờ lau |
-| Vải gai | Hỏa | Dải vải đỏ |
-| Sắt rèn | Tre | Đại đao |
-| Đại đao | Dải vải đỏ | Đại đao buộc vải đỏ |
-| Cờ lau | Hỏa | Hỏa kỳ |
-| Đại đao buộc vải đỏ | Hỏa kỳ | **Nguyễn Bặc** |
+| Vải gai | Hỏa | Dải vải đỏ (2) |
+| Lau sậy | Dải vải đỏ | Cờ lau (4) |
+| Sắt rèn | Tre | Đại đao (3) |
+| Đại đao | Dải vải đỏ | Đại đao buộc vải đỏ (6) |
+| Cờ lau | Hỏa | Hỏa kỳ (5) |
+| Đại đao buộc vải đỏ | Hỏa kỳ | **Nguyễn Bặc (12)** |
 
 ### Đinh Ngọc — kiếm ngắn thẳng, mặt ngọc giọt nước, giữ đường
 
 | Ô trước | Ô sau | Kết quả |
 |---|---|---|
-| Sắt rèn | Kim | Kiếm ngắn |
-| Đá ngọc thô | Giọt sương | Ngọc giọt nước |
-| Kiếm ngắn | Ngọc giọt nước | Kiếm ngọc |
-| Kiếm ngọc | Đường xa | **Đinh Ngọc** |
+| Lũy đất | Phong | Đường xa (2) |
+| Sắt rèn | Kim | Kiếm ngắn (2) |
+| Đá ngọc thô | Giọt sương | Ngọc giọt nước (3) |
+| Kiếm ngắn | Ngọc giọt nước | Kiếm ngọc (6) |
+| Kiếm ngọc | Đường xa | **Đinh Ngọc (9)** |
 
 ## 4. Nguồn vật biểu trưng và nguồn sử
 

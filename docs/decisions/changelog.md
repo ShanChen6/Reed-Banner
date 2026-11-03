@@ -3,7 +3,8 @@
 ## 03/11/2026
 
 **Tầm Tướng Ký: LT-01 catalog slice (DRAFT, có code)**
-- `src/core/tam-tuong-ky/`: kiểu dữ liệu, đồ thị công thức có thứ tự, validator theo Design Freeze mục 7.2 và `SLICE_PACK` (draft) cho Nguyễn Bặc (11 lần ghép), Lê Hoàn (10), Đinh Ngọc (8); 28 test ở `tests/core/tam-tuong-ky/`. Báo cáo: [catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md). Chưa có engine, UI, route hay dữ liệu lưu.
+- Shan chốt số lần ghép tối thiểu **cố định**: thường 7, đặc biệt 9, lịch sử 12 (thay khung 5–7 / 7–9 / 9–12 duyệt trước đó trong ngày). Validator đổi `tierOrder`/`tierRange` thành một lỗi `tierCombines`; slice chỉnh lại: Đinh Ngọc 9, Lê Hoàn 12, Nguyễn Bặc 12.
+- `src/core/tam-tuong-ky/`: kiểu dữ liệu, đồ thị công thức có thứ tự, validator theo Design Freeze mục 7.2 và `SLICE_PACK` (draft) cho Nguyễn Bặc, Lê Hoàn, Đinh Ngọc; 27 test ở `tests/core/tam-tuong-ky/`. Báo cáo: [catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md). Chưa có engine, UI, route hay dữ liệu lưu.
 
 **Tầm Tướng Ký: bản chốt thiết kế LT-00 (DRAFT)**
 - Thêm [14 — Tầm Tướng Ký Design Freeze](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md): kiểm kê code (7 hệ, 8 nghề, `chauNgoc`/`toKim`/`viTrieu` và chân dung, thành tựu, mùa tuần, sổ thưởng hạng), luật, ví dụ chuẩn và 50 test Given/When/Then.

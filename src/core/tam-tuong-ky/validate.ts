@@ -5,14 +5,12 @@ import { ELEMENTS } from "../battle";
 import { computeMetrics, findCycles, recipeKey } from "./graph";
 import type { CatalogDeps, CatalogIssue, CatalogNode, HeroTier, Pack } from "./types";
 
-/** Khung số lần ghép tối thiểu theo bậc (P-5, Shan sửa 03/11/2026). Điểm xuất phát, LT-05 chỉnh. */
-export const TIER_COMBINE_RANGE: Readonly<Record<HeroTier, readonly [number, number]>> = {
-  thuong: [5, 7],
-  dacBiet: [7, 9],
-  lichSu: [9, 12],
+/** Số lần ghép tối thiểu của mỗi tướng theo bậc (P-5, Shan chốt 03/11/2026): cố định, không phải khung. */
+export const TIER_COMBINES: Readonly<Record<HeroTier, number>> = {
+  thuong: 7,
+  dacBiet: 9,
+  lichSu: 12,
 };
-
-const TIER_ORDER: readonly HeroTier[] = ["thuong", "dacBiet", "lichSu"];
 
 export function validatePack(pack: Pack, deps: CatalogDeps): readonly CatalogIssue[] {
   const issues: CatalogIssue[] = [];
@@ -93,11 +91,8 @@ export function validatePack(pack: Pack, deps: CatalogDeps): readonly CatalogIss
         error("missingHistorySource", `${h.id} là tướng lịch sử nhưng thiếu mã nguồn hợp lệ`, h.id);
     }
     const m = metrics.get(h.id);
-    if (m) {
-      const [lo, hi] = TIER_COMBINE_RANGE[h.tier];
-      if (m.minCombines < lo || m.minCombines > hi)
-        warn("tierRange", `${h.id} cần ${m.minCombines} lần ghép, ngoài khung ${lo}–${hi} của bậc ${h.tier}`, h.id);
-    }
+    if (m && m.minCombines !== TIER_COMBINES[h.tier])
+      error("tierCombines", `${h.id} cần ${m.minCombines} lần ghép, bậc ${h.tier} phải đúng ${TIER_COMBINES[h.tier]}`, h.id);
     for (const r of finals) {
       const [a, b] = [nodes.get(r.first), nodes.get(r.second)];
       const isOwnElement = (n?: CatalogNode) => n?.kind === "element" && n.element === info.element;
@@ -106,20 +101,6 @@ export function validatePack(pack: Pack, deps: CatalogDeps): readonly CatalogIss
         warn("elementPlusProfession", `${r.id} là “hệ + nghề” của ${h.id}`, r.id);
     }
   }
-
-  // Thứ tự chặt giữa các bậc trong pack.
-  for (let i = 0; i < TIER_ORDER.length; i++)
-    for (let j = i + 1; j < TIER_ORDER.length; j++) {
-      const lower = heroes.filter((h) => h.tier === TIER_ORDER[i]);
-      const higher = heroes.filter((h) => h.tier === TIER_ORDER[j]);
-      for (const lo of lower)
-        for (const hi of higher) {
-          const a = metrics.get(lo.id)?.minCombines;
-          const b = metrics.get(hi.id)?.minCombines;
-          if (a !== undefined && b !== undefined && a >= b)
-            error("tierOrder", `${hi.id} (${TIER_ORDER[j]}, ${b}) phải cần nhiều lần ghép hơn ${lo.id} (${TIER_ORDER[i]}, ${a})`, hi.id);
-        }
-    }
 
   // Mọi starter có ích.
   const used = new Set(pack.recipes.flatMap((r) => [r.first, r.second]));

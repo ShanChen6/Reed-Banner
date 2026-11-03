@@ -8,7 +8,7 @@ import { ELEMENTS } from "../../../src/core/battle";
 import {
   CORE_CATALOG_DEPS,
   SLICE_PACK,
-  TIER_COMBINE_RANGE,
+  TIER_COMBINES,
   computeMetrics,
   findCycles,
   recipeKey,
@@ -57,16 +57,12 @@ describe("slice-1", () => {
     assert.deepEqual(starters.map((n) => n.element), [...ELEMENTS]);
   });
 
-  it("độ khó theo bậc: Đinh Ngọc 8, Lê Hoàn 10, Nguyễn Bặc 11 lần ghép", () => {
+  it("số lần ghép đúng theo bậc: thường 7, đặc biệt 9, lịch sử 12", () => {
+    assert.deepEqual(TIER_COMBINES, { thuong: 7, dacBiet: 9, lichSu: 12 });
     const m = computeMetrics(SLICE_PACK);
-    assert.deepEqual(m.get("hero.dinhNgoc"), { minCombines: 8, starterCost: 9 });
-    assert.deepEqual(m.get("hero.leHoan"), { minCombines: 10, starterCost: 11 });
-    assert.deepEqual(m.get("hero.nguyenBac"), { minCombines: 11, starterCost: 12 });
-    for (const h of SLICE_PACK.nodes.filter((n) => n.kind === "character")) {
-      const [lo, hi] = TIER_COMBINE_RANGE[h.tier!];
-      const c = m.get(h.id)!.minCombines;
-      assert.ok(c >= lo && c <= hi, `${h.id} ${c} ngoài ${lo}–${hi}`);
-    }
+    assert.deepEqual(m.get("hero.dinhNgoc"), { minCombines: 9, starterCost: 10 });
+    assert.deepEqual(m.get("hero.leHoan"), { minCombines: 12, starterCost: 13 });
+    assert.deepEqual(m.get("hero.nguyenBac"), { minCombines: 12, starterCost: 13 });
   });
 
   it("mọi node ghép được từ starter", () => {
@@ -78,14 +74,13 @@ describe("slice-1", () => {
     const key = (a: string, b: string) => SLICE_PACK.recipes.find((r) => recipeKey(r.first, r.second) === recipeKey(a, b));
     assert.equal(key("elt.moc", "elt.thuy")?.result, "mat.reed");
     assert.equal(key("elt.thuy", "elt.moc")?.result, "mat.herbs");
-    assert.equal(key("elt.phong", "elt.loi")?.result, "mat.warDrum");
-    assert.equal(key("elt.loi", "elt.phong")?.result, "mat.storm");
     assert.ok(SLICE_PACK.recipes.some((r) => r.first === r.second));
   });
 
   it("có node trung gian dùng chung giữa các nhánh tướng", () => {
     const uses = (id: string) => SLICE_PACK.recipes.filter((r) => r.first === id || r.second === id).length;
-    assert.ok(uses("mat.cloth") >= 3);
+    assert.ok(uses("mat.cloth") >= 2);
+    assert.ok(uses("mat.redSash") >= 2);
     assert.ok(uses("mat.bamboo") >= 3);
     assert.ok(uses("mat.forgedIron") >= 2);
   });
@@ -177,10 +172,16 @@ describe("validator: lỗi", () => {
     assert.ok(codes(pack, "error").includes("tierMismatch"));
   });
 
-  it("tierOrder: tướng đặc biệt cần nhiều lần ghép hơn tướng lịch sử", () => {
-    // Rút ngắn đường của Lê Hoàn xuống 3 lần ghép: thấp hơn Đinh Ngọc (8).
-    const pack = withRecipes(replaceRecipe("r.leHoan", { first: "mat.warDrum", second: "mat.cloth" }));
-    assert.ok(codes(pack, "error").includes("tierOrder"));
+  it("tierCombines: tướng ít hoặc nhiều lần ghép hơn số của bậc", () => {
+    // Lê Hoàn rút xuống 4 lần ghép.
+    const short = withRecipes(replaceRecipe("r.leHoan", { first: "mat.warDrum", second: "mat.cloth" }));
+    assert.ok(codes(short, "error").includes("tierCombines"));
+    // Nguyễn Bặc lên 13 lần ghép: Hỏa kỳ cần thêm một bước.
+    const long = withRecipes(
+      [...replaceRecipe("r.nguyenBac", { second: "know.fireBanner2" }), recipe("r.fb2", "know.fireBanner", "elt.kim", "know.fireBanner2")],
+      withNodes([...SLICE_PACK.nodes, { id: "know.fireBanner2", kind: "knowledge", nameVi: "Hỏa kỳ 2" }]),
+    );
+    assert.ok(codes(long, "error").includes("tierCombines"));
   });
 
   it("missingHistorySource: tướng lịch sử không có mã nguồn hợp lệ", () => {
@@ -197,16 +198,6 @@ describe("validator: lỗi", () => {
 });
 
 describe("validator: cảnh báo", () => {
-  it("tierRange: tướng ngoài khung bậc nhưng vẫn đúng thứ tự", () => {
-    // Nguyễn Bặc 13 lần ghép: vẫn > Đinh Ngọc nhưng ngoài 9–12.
-    const pack = withRecipes([
-      ...replaceRecipe("r.nguyenBac", { second: "know.warManual2" }),
-      recipe("r.manual2", "know.fireBanner", "mat.bambooSlips", "know.warManual2"),
-    ], withNodes([...SLICE_PACK.nodes, { id: "know.warManual2", kind: "knowledge", nameVi: "Binh thư 2" }]));
-    assert.deepEqual(codes(pack, "error"), []);
-    assert.ok(codes(pack, "warning").includes("tierRange"));
-  });
-
   it("elementPlusProfession: công thức cuối là hệ + tri thức nghề của tướng", () => {
     const nodes = SLICE_PACK.nodes.map((n) => (n.id === "know.tenCircuits" ? { ...n, professionHint: "quanSu" as const } : n));
     const pack = withRecipes(replaceRecipe("r.leHoan", { first: "know.tenCircuits", second: "elt.loi" }), withNodes(nodes));
