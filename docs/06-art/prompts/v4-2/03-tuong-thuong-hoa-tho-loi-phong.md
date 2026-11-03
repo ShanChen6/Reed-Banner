@@ -1412,6 +1412,78 @@ POSE: PERSONAL VIGNETTE — Sit with one knee raised and count the FIVE CLOSED n
 
 ### RB-054 — Từ Kinh · Mưu sĩ / Lôi
 
+> Trạng thái riêng: **DRAFT** — pilot nhân vật hư cấu tiếp theo, ngày 03/11/2026. **Chỉ hồ sơ Identity, Master/Idle prompt và Pose Identity Matrix định hướng**; chưa duyệt ảnh, chưa tạo hoặc viết lại 6 pose mới, chưa sửa code hay asset. Sáu prompt V4.2 trước đây được giữ nguyên phía dưới làm baseline.
+
+#### Identity DNA — “Người truyền tín hiệu trong giông” (game-authored)
+
+- **Runtime/art ID:** `tuKinh` / RB-054; **Mưu sĩ / Lôi**. Ultimate theo registry: `kinhLoiDoatKhi` (Kinh Lôi Đoạt Khí). Không suy rằng nhân vật tự tạo sét; sức mạnh nguyên tố và hiệu ứng do runtime quản lý.
+- **Câu chuyện riêng đề xuất:** Từ Kinh từng làm người liên lạc đi qua những đường trạm ven núi trong mùa mưa giông, ghi nhớ nhịp gõ trống, tiếng chuông và thời gian truyền tin giữa các chốt. Trong một đêm đường trạm bị cắt, tín hiệu sai đã khiến một đội quân lạc hướng. Từ đó ông tập trung phát triển các hiệu lệnh ngắn, đúng thời điểm, dùng nhịp đánh lạc hướng khiến đối phương mất nhịp phối hợp. **Hoàn toàn hư cấu, chưa canon lore.**
+- **Khí chất:** kín tiếng, tỉnh táo, tập trung vào sự chính xác; hành động rất tiết kiệm, như đã tính từng nhịp. Điểm yếu là quá ngại tín hiệu mơ hồ, thường tự ép mình kiểm chứng trước khi quyết định.
+- **Nhân dạng:** nam Việt khoảng 34–39 tuổi tạo hình, **cao gầy với cổ dài, vai nhỏ nhưng thẳng**, mặt góc cạnh, gò má cao, da ngăm sáng, mắt hẹp, ria ngắn tỉa đều; một vết sẹo mảnh **ở sát đuôi lông mày phải** (đặc điểm đề xuất cần xem trong Master). Tóc đen buộc búi thấp dưới khăn chụp đầu màu xám than; không khăn vấn cao/trán rộng như Mã Nhạc hay tóc búi cao của Ninh Hỏa.
+- **Silhouette Hook:** áo khoác **ngắn một bên hông**, cắt vạt xiên để dễ di chuyển; vai thẳng hẹp, chân đứng một trước một sau tạo trục dài; cổ khăn tím hẹp là mảng dọc. Khác Mã Nhạc (khối đứng vững, quạt vuông) và Ninh Hỏa (đường áo đỏ gạch, quạt lá cọ, dáng nhanh xoay).
+- **Costume DNA:** áo trong giao lĩnh màu tro đá `#39465A`, cổ ngà sẫm `#D8D1BE`, áo ngoài vải thô xanh-xám `#4C5564` xẻ ngắn lệch bên trái, khăn cổ tím mận tối `#7656A4` như dấu hiệu cá nhân, một đường thắt dây đồng cũ nhỏ `#D6B75B`, quần nâu than bó vừa ở cổ chân, giày vải đi đường. **Không** áo học sĩ tím toàn thân, không áo phất dài, không giáp kim loại lấp lánh.
+- **Đạo cụ RB-054-W01:** theo asset cũ là **một quạt xếp có nan sắt**, dạng đóng như thẻ hiệu lệnh ngắn ở tay phải. Với Master pilot **giữ quạt đóng**, nhấn hình thon-dài trái ngược quạt vuông của Mã Nhạc và quạt lá của Ninh Hỏa. Đây là **thiết kế hư cấu**, không tuyên bố là hiện vật phổ biến thời thế kỷ X; nếu ảnh trông quá hậu kỳ, cần đề xuất lại đạo cụ trước khi chốt Master. Chỉ một quạt, không thay thành dùi trống, kiếm hoặc bùa.
+- **Visual hook phụ:** một dây buộc nhỏ ở cổ tay trái dùng ghi nhịp truyền tin (không chuông phát sáng, không đeo hàng chục phù hiệu). Chỉ bổ sung nếu giúp nhận diện rõ, không làm rối silhouette.
+- **Nguồn ảnh chuẩn:** asset Từ Kinh đang chạy trong game là baseline để so sánh, nhưng task docs này chưa có PNG gốc để xác minh. Master mới chỉ là đề xuất, không ghi đè ảnh đã xuất.
+- **Art style:** [Vietnamese Historical Low Fantasy — Heroic Stylization](../../art-bible.md#3-art-direction-03112026--historical-grounded-fantasy-approved), ít fantasy về vật liệu, nhiều cá tính về cấu trúc/tư thế, cùng nét cọ với Mã Nhạc và Ninh Hỏa nhưng không sao chép gương mặt, áo hay pose.
+
+#### Pose Identity Matrix — dự kiến, chưa sinh 6 pose
+
+| Frame | Định hướng chuyển động riêng của Từ Kinh | Phân biệt Mã Nhạc / Ninh Hỏa |
+|---|---|---|
+| Idle | Trọng tâm nghiêng nhẹ về chân sau; quạt xếp đóng gần thân, tai/ngón tay như đang nghe nhịp xa | Không dựng quạt trước ngực, không đứng dang quạt |
+| Basic | Bước lùi nửa nhịp, xoay vai và dùng quạt đóng gõ vào lòng bàn tay trái để ra tín hiệu giả | Không quạt ngang/đánh lạc hướng bằng hai tay chỉ ngược |
+| Skill | Khuỵu nhẹ, nghiêng tai, tay trái gập sát khuỷu; quạt đóng ép dọc cạnh thân như đang chờ đúng khoảnh khắc | Không giơ quạt cao chỉ hướng |
+| Ultimate | Bước ngang ngắt nhịp, xoay người quay ba phần tư về sau, tay phải dứt khoát gõ quạt vào cổ tay trái để kích hoạt chuỗi hiệu lệnh | Không hạ quạt phát lệnh tiến thẳng |
+| Defeated | Mất thăng bằng ngã **ngửa xiên về sau**, một chân gập dưới hông; quạt văng về trước, tách khỏi bàn tay | Không ngồi sụp sang một bên |
+| Personality | Tựa tai gần cổ tay trái, thử gõ nhịp bằng ngón tay, quạt đóng giữ thấp; suy nghĩ về khoảng trễ tín hiệu | Không xem thẻ lương, không thử hướng gió |
+
+> Matrix này là **định hướng chuyển động** theo [Unique Pose Identity](../../art-bible.md#33a-unique-pose-identity--áp-dụng-cho-nhân-vật-thiết-kế-tiếp-theo-approved-03112026). Chỉ khóa pose thật sau khi ảnh Master và hình học quạt được duyệt; các kỹ năng nghề/hệ còn lại cần đối chiếu registry trước khi hoàn thiện animation.
+
+#### Master / Idle prompt (EN, độc lập) — chờ duyệt ảnh
+
+```text
+Create ONE full-body 2D game character, Từ Kinh (RB-054 / tuKinh), a fictional Vietnamese 10th-century battlefield signal strategist in the low-fantasy setting of Reed Banner. GAMEPLAY PROFESSION Mưu sĩ, ELEMENT Lôi: tactical identity only, NOT a lightning mage outfit.
+
+ART DIRECTION — MANDATORY:
+Vietnamese Historical Low Fantasy — Heroic Stylization. Premium hand-painted semi-realistic 2D game character art, painterly cloth, expressive mature face, strong small-scale silhouette, historically inspired Vietnamese materials and restrained fantasy. Match the STYLE QUALITY of approved Mã Nhạc v2.1 and Ninh Hỏa, but NEVER copy their garment structure, color blocks, face, fan geometry or 6-pose gestures. Not a real-life photograph and not xianxia.
+
+PERSONAL STORY DNA:
+An experienced military communications runner from mountain-edge relay roads. He learns the timing of distant drumbeats, bells and troop movement during storms; a failed relay once cost an allied group its way. Now he uses the smallest possible signals at the most precise moment, fighting through rhythm and uncertainty. This is ORIGINAL FICTION created for Reed Banner, not a historical source.
+
+FACE & BODY:
+Vietnamese male, visual age 34–39, tall slim adult approximately 7.3 heads high, narrow straight shoulders, long but natural neck, narrow angular face with high cheekbones, focused deep-set dark eyes, thin straight eyebrows and a small precisely trimmed moustache. A single thin OLD healed scar near the end of his ANATOMICAL RIGHT eyebrow (not across his eye). Black hair gathered LOW beneath one close-fitting charcoal cloth cap with a short flat back flap. An alert reserved expression with a controlled mouth, no grin, no aggressive scowl. Distinct from the middle-aged thick-browed Mã Nhạc and high-topknotted sly Ninh Hỏa.
+
+COSTUME DNA:
+Practical narrow-sleeved Vietnamese-inspired crossed-collar field tunic in storm-slate #39465A with a muted ivory inner collar #D8D1BE, ONE short asymmetrical outer traveling vest in smoky blue-gray #4C5564, the anatomical LEFT front hem noticeably SHORTER than the RIGHT, no geometrically bordered sleeveless scholar vest. ONE narrow dark-amethyst scarf #7656A4 tucked close at the collar, its free end short and controlled. Simple aged brass belt fastening #D6B75B, woven dark-brown travel belt and ONE thin left-wrist signal cord, dark practical slim trousers, wrapped ankles and worn low cloth shoes. All cloth feels used and field-made, not ceremonial silk. Keep palette varied with mostly neutral slate and small purple accents; do not recolor the whole man purple.
+
+EQUIPMENT RB-054-W01:
+ONE closed iron-ribbed folding signal fan, short straight baton-like silhouette, dark iron ribs tightly folded together, dark wood end-guards and simple restrained fastening, roughly forearm length. Its closed shape must look unlike the open SQUARE woven fan of Mã Nhạc and broad PALM-LEAF fan of Ninh Hỏa. This is original low-fantasy creative prop design, not an authenticated ancient Vietnamese artifact. Anatomical RIGHT hand grips the original closed fan beside the body. NO second fan, no sword, no lightning rod, no drum, no loose paper talisman. Do not open the fan in this Master frame.
+
+MASTER IDLE:
+A distinctive listening-and-counting stance. Body held three-quarters, weight on anatomical RIGHT rear leg, anatomical LEFT foot resting half a stride forward with heel light, ready to move but not running. RIGHT elbow bent close to the ribs, RIGHT hand keeps the closed fan DOWN along the outside of the torso. LEFT hand is partly raised at chest level with TWO fingertips lightly separated, as if counting beats of a distant signal without pointing at anyone. Head slightly tilted, chin lowered, gaze to a distant off-frame source. Torso quiet and compact: no broad open arms, no pointing command pose, no generic scholar holding a fan across his chest.
+
+VISUAL DESIGN GOAL:
+The viewer should immediately read a guarded, precise, fast-moving relay tactician: his tall narrow silhouette, unequal short coat hem, closed thin signal fan, neck scarf and listening posture create a unique identity even without VFX. The profession does NOT determine a shared uniform. Subtle heroic stylization comes from sharp gesture language and clear costume rhythm, not giant fantasy items.
+
+OUTPUT:
+EXACTLY ONE complete full-body character, all shoes, cap, hands, narrow folded fan and waist visible, vertical composition, true transparent PNG alpha, no black or gradient background, no ground shadow, no environment, text, UI or watermark.
+
+NEGATIVE:
+No face or wardrobe cloned from Mã Nhạc or Ninh Hỏa, no square fan, no wide palm-leaf fan, no opened fan in idle, no raised magical staff, no glowing lightning, no exaggerated purple robes, no elaborate high-fantasy armor, no Chinese imperial official clothing, Japanese samurai, European armor, photo-real costume photography, deformed hands or extra items. ONLY CREATE MASTER/IDLE, not six poses.
+```
+
+#### Pilot QA
+
+- [ ] Khác Mã Nhạc và Ninh Hỏa về mặt/vóc, khăn đầu, kết cấu áo, dáng quạt và ngôn ngữ Idle.
+- [ ] Quạt xếp **đang đóng** có nan sắt hợp lý, một vật duy nhất. Nếu trông quá hậu kỳ/khó tin, sửa đạo cụ trước khi khóa Master.
+- [ ] Chất nét và ánh sáng khớp Art Bible, nhân vật có “hero presence”, không giống NPC hay pháp sư sét.
+- [ ] Cấu trúc trang phục, scarf, vết sẹo, dây cổ tay rõ nhưng không thêm phụ kiện vô cớ.
+- [ ] Alpha thật, không VFX bake-in, không bị cắt người/quạt.
+- [ ] Chưa dựng 6 pose mới hay tích hợp cho đến khi Shan duyệt Master và Pose Identity Matrix.
+
+#### Hồ sơ V4.2 cũ — giữ lại làm baseline, chưa thay asset
+
 > **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** MEDIUM · CÂN NHẮC. Chiêu tham chiếu: **Kinh Lôi Đoạt Khí** (`kinhLoiDoatKhi`). Quạt dễ trùng với mưu sĩ khác; giữ hình quạt nếu skill phù hợp, bổ sung dấu hiệu cá nhân và ấn/thẻ nếu chiêu yêu cầu. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
