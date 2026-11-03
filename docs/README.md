@@ -76,6 +76,8 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | [ke-hoach-do-hoa.md](06-art/ke-hoach-do-hoa.md) | Kế hoạch đồ họa & hoạt ảnh Đ0–Đ9 |
 | ★ [prompts/v4-2/](06-art/prompts/v4-2/00-bao-cao.md) | Điểm vào bộ prompt; [Xạ thủ và prompt Sát thủ đa vũ khí](06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md). Năm Xạ thủ W02 là DRAFT, Kim/Mộc bảo toàn |
 | [prompts/](06-art/prompts/do-hoa.md) | [Đồ họa ngoài nhân vật](06-art/prompts/do-hoa.md), [Codex dựng rig](06-art/prompts/codex-rig-nhan-vat.md); bản cũ SUPERSEDED: [nhân vật](06-art/prompts/nhan-vat.md), [tư thế](06-art/prompts/tu-the.md) |
+| [prompts/icon-ky-nang.md](06-art/prompts/icon-ky-nang.md) | Prompt biểu tượng kỹ năng còn vẽ SVG: 24 chiêu nghề, tuyệt chiêu/chiêu riêng 74 nhân vật, tuyệt chiêu ô 4 Đinh Bộ Lĩnh, cách dùng lại 42 ảnh kỹ năng hệ; DRAFT, chưa có ảnh |
+| [prompts/trang-bi.md](06-art/prompts/trang-bi.md) | Prompt hệ thống trang bị: 48 món (8 ô + 8 vũ khí × 3 bộ), 5 khung phẩm, huy hiệu bộ, ô trống; thay mục 4 của Đồ họa; DRAFT, chưa có ảnh |
 | [prompts/dinh-bo-linh-xa-thu-sat-thu.md](06-art/prompts/dinh-bo-linh-xa-thu-sat-thu.md) | Biến thể vũ khí cung tre/dao găm cho rig Đinh Bộ Lĩnh và các prompt Master/tư thế; DRAFT, chưa có ảnh |
 | [prompts/tran-do-hinh-anh.md](06-art/prompts/tran-do-hinh-anh.md) | Prompt đầy đủ cho Trận Đồ: 30 bản đồ (địa danh thời Loạn 12 sứ quân và cảnh quan, kho không giới hạn), ô che đặc kín, 4 icon chướng ngại; DRAFT, ảnh chưa có |
 | [prompts/tran-do-video-huong-dan.md](06-art/prompts/tran-do-video-huong-dan.md) | Prompt Veo 3 cho video hướng dẫn cách chơi Trận Đồ (sa bàn gỗ, lời dẫn tiếng Việt) và gợi ý nối 4 cảnh; DRAFT |
