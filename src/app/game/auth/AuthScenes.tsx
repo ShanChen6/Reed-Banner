@@ -131,7 +131,7 @@ export function AccountScene({
           Vào chơi
         </ReturnLink>
         <SceneLink scene="PROFILE" className="w-full rounded-lg bg-white/10 px-4 py-2 text-center text-sm font-semibold hover:bg-white/15">
-          Hồ sơ nhân vật
+          Doanh Trại
         </SceneLink>
         {linkable.map((p) => (
           <a
