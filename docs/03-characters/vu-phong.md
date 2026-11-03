@@ -1,14 +1,16 @@
-# Vũ Phong — Vân Du Tử
+# Trần Vũ Phong — Vân Du Tử
 
-> Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — có hình tượng, sáu ảnh khung và rig hình động (chỉ có trên trang xem thử) và bộ kỹ năng đề xuất: nhân vật đặc biệt dung hợp tám nghề/bảy hệ qua 6 chủ động + 4 nội tại, cùng khuôn với Đinh Ngọc nhưng đảo vai. Mọi số liệu là điểm xuất phát chưa mô phỏng; kỹ năng và nội tại đã chạy được trong core (chưa mở ở chế độ nào, xem [Triển khai trong core](#triển-khai-trong-core-02112026)); chưa Shan duyệt.
+> Cập nhật: 03/11/2026
+> Trạng thái: **APPROVED** — Shan chốt 03/11/2026: Trần Vũ Phong là nhân vật đặc biệt chính thức, họ Trần. Số liệu kỹ năng vẫn là điểm xuất phát chờ cân bằng; code còn tên “Vũ Phong” và chưa mở trong game.
+>
+> Bản ghi trước (02/11/2026): **DRAFT** — có hình tượng, sáu ảnh khung và rig hình động (chỉ có trên trang xem thử) và bộ kỹ năng đề xuất: nhân vật đặc biệt dung hợp tám nghề/bảy hệ qua 6 chủ động + 4 nội tại, cùng khuôn với Đinh Ngọc nhưng đảo vai. Mọi số liệu là điểm xuất phát chưa mô phỏng; kỹ năng và nội tại đã chạy được trong core (chưa mở ở chế độ nào, xem [Triển khai trong core](#triển-khai-trong-core-02112026)); chưa Shan duyệt.
 
 ## Hồ sơ
 
 | Mục | Đề xuất |
 |---|---|
-| Tên | Vũ Phong |
-| Tên đầy đủ | GDD [Binh Pháp](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc) gọi là **Trần Vũ Phong**; tài liệu này viết gọn Vũ Phong. Chưa chốt họ Trần có vào roster hay không |
+| Tên | **Trần Vũ Phong** (Shan chốt họ Trần 03/11/2026) |
+| Tên đầy đủ | Trần Vũ Phong, như [GDD Binh Pháp](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc); tài liệu này có chỗ viết gọn Vũ Phong. Tên hiển thị trong roster đổi thành Trần Vũ Phong ở task code riêng |
 | Danh xưng | Vân Du Tử — "kẻ rong chơi trên mây" |
 | Phân loại | Nhân vật hư cấu, nam khoảng 25–30 tuổi (chọn 28 để dựng hình); không phải nhân vật lịch sử |
 | Bối cảnh | Low fantasy lấy cảm hứng thế kỷ X thời Đinh – Cờ Lau, như [art bible](../06-art/art-bible.md) |

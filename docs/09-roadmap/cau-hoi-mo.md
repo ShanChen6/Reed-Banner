@@ -116,7 +116,8 @@
 - TODO: Duyệt bảng thưởng và kỳ xếp hạng Trận Đồ đã code (ngày cho Thường/Khó, tuần cho Đại trận; vàng 150/300/1000 cho hạng nhất; không đòi số người thắng tối thiểu), rồi mới bật `FORMATION_RANKED_ENABLED` ở production. Xem [GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt), gồm các hạn chế đã biết (tài khoản khách, giới hạn tốc độ, tab BXH).
 - TODO: Agent mô phỏng lookahead và thử người thật để cân lại bậc Thường (greedy ngang random) và độ dài ván lớn (Đại trận phụ thuộc cỡ bàn), xem [QA Binh Pháp](../02-game-modes/future/05-binh-phap-balance-qa.md#kết-quả-mô-phỏng-baseline-01112026).
 - Đã bật (02/11/2026): Đinh Ngọc và Vũ Phong là quân dung hợp của Trận Đồ ở Khó và Đại trận, 1,5% mỗi quân, hai bậc tăng `version` lên 7; số đo ở [GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc).
-- TODO: Shan duyệt chính thức hai nhân vật dung hợp (Vũ Phong còn DRAFT, chưa chốt họ Trần); triển khai đổi `version` vào lúc kỳ xếp hạng vừa đổi; chọn lại tỉ lệ nếu thấy quân quá mạnh.
+- Đã chốt (Shan, 03/11/2026): Đinh Ngọc và Trần Vũ Phong là nhân vật chính thức, chốt họ Trần.
+- TODO: Đổi tên hiển thị `vuPhong` thành “Trần Vũ Phong” trong code (`roster.ts`, `binh-phap/specials.ts`, `demo/characters/catalog.ts`) và chọn cách mở hai nhân vật trong game; triển khai đổi `version` vào lúc kỳ xếp hạng vừa đổi; chọn lại tỉ lệ nếu thấy quân quá mạnh.
 - Đã chốt (Shan, 01/11/2026): cách tính điểm mùa Quần Hùng là tổng điểm nhận được từ trận mình đi đánh, Elo gốc không reset; Trấn Ải là số đợt cao nhất một lượt chơi trong tuần; và **toàn bộ bảng vàng theo hạng** của Trận Đồ, Nhật Lệnh, Tháp Thiên Mệnh, Trấn Ải, Quần Hùng đã duyệt (xem [chế độ chơi mục 6](../02-game-modes/README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt)). Việc còn lại trước khi bật Trận Đồ xếp hạng ở production: đặt `FORMATION_RANKED_ENABLED=true` cùng `SESSION_SECRET`.
 - TODO: Loại thưởng ngoài vàng (danh hiệu theo kỳ, trang bị, mở tướng) cho mọi chế độ; Shan sẽ bàn chi tiết sau khi các chế độ ổn định.
 
@@ -128,7 +129,7 @@
 
 - Đã chốt (Shan, 03/11/2026): tên Tầm Tướng Ký; ghép có thứ tự, `A+A` được phép; chế độ Thường 1 phiếu = 1 lượt 15–20 lần ghép, có gợi ý; chế độ Hạng tuần tiêu nguyên liệu, ghép sai mất không hoàn, nguyên liệu từ thưởng hạng các chế độ (cân nhắc cửa hàng), số tướng đề cử cố định và xoay vòng; độ khó lịch sử > đặc biệt > thường; thành tựu theo bộ (vàng + huy hiệu), không cho tướng lẻ; bắt buộc đăng nhập; gói đầu 10 tướng lịch sử + 2 đặc biệt. Xem [Design Freeze mục 3.1](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#31-đã-chốt).
 - TODO: Duyệt 30 dòng đề xuất (gợi ý 2 lượt/ngày, nguồn phiếu, bó nguyên tố trong thưởng hạng các chế độ theo tuần, cấp nền 3 bó/tuần, điểm 200/300, thành tựu bộ tổng 3 200 vàng…) ở [Design Freeze mục 3.2](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#32-đề-xuất).
-- TODO: Có bán bó nguyên tố ở cửa hàng không; duyệt danh sách 12 tướng gói đầu; Đinh Ngọc và Vũ Phong (DRAFT) có kịp gói đầu không ([Design Freeze mục 3.3](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#33-còn-mở)).
+- Đã chốt (Shan, 03/11/2026): bán bó nguyên tố ở cửa hàng có giới hạn tuần; duyệt 12 tướng gói đầu; Đinh Bộ Lĩnh xây theo hướng nhân vật đặc biệt (đề xuất vào gói 2, [P-27](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#32-đề-xuất)).
 - TODO: Khi code thưởng bó nguyên tố, sửa [thưởng hạng mục 6](../02-game-modes/README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt) (hiện ghi “chỉ vàng”).
 
 ## Giao diện Trận Đồ

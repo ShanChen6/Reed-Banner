@@ -1,7 +1,7 @@
 # 14 — Tầm Tướng Ký — Design Freeze (LT-00)
 
 > Cập nhật: 03/11/2026
-> Trạng thái: **DRAFT** — Shan đã chốt hai đợt quyết định ngày 03/11/2026 (mục 3.1); các dòng đề xuất ở mục 3.2 và câu mở ở mục 3.3 chờ duyệt. Chưa bắt đầu LT-01/LT-02.
+> Trạng thái: **DRAFT** — Shan đã chốt ba đợt quyết định ngày 03/11/2026 (mục 3.1), không còn câu mở; các số liệu đề xuất ở mục 3.2 chờ duyệt. Chưa bắt đầu LT-01/LT-02.
 
 File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây gọi “Liệt Truyện — Tầm Tướng Ký”). Nó thay các đề xuất trong [GDD](08-liet-truyen-gdd.md), [công thức](09-liet-truyen-recipes.md), [kiến trúc](10-liet-truyen-architecture.md), [UI/art](11-liet-truyen-ui-art.md) và [QA/roadmap](12-liet-truyen-qa-roadmap.md); khi khác nhau, file này thắng. Tên file 08–12 giữ nguyên `liet-truyen` để không làm hỏng link và script.
 
@@ -12,13 +12,14 @@ File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây g
 - **Tên:** Tầm Tướng Ký.
 - **Ghép có thứ tự:** `Lôi + Mộc` và `Mộc + Lôi` là hai công thức khác nhau, ra hai kết quả khác nhau. `Lôi + Lôi`, `Mộc + Mộc` được phép, mỗi cặp ra một kết quả.
 - **Chế độ Thường:** 1 phiếu mở một lượt 15–20 lần ghép (chốt khi cân bằng). Nguyên liệu không mất. Phiếu kiếm từ thưởng các chế độ khác, phát ít. Có gợi ý.
-- **Chế độ Hạng tuần:** số tướng đề cử **cố định**, danh sách **xoay vòng theo tuần**. Khởi đầu từ 7 nguyên tố; mỗi lần ghép tiêu nguyên liệu, **ghép sai cũng mất, không hoàn lại**. Nguyên liệu thêm kiếm từ thưởng hạng các chế độ, có thể mua ở cửa hàng. Không gợi ý. Có thưởng.
+- **Chế độ Hạng tuần:** số tướng đề cử **cố định**, danh sách **xoay vòng theo tuần**. Khởi đầu từ 7 nguyên tố; mỗi lần ghép tiêu nguyên liệu, **ghép sai cũng mất, không hoàn lại**. Nguyên liệu thêm kiếm từ thưởng hạng các chế độ và mua ở cửa hàng (có giới hạn mỗi tuần). Không gợi ý. Có thưởng.
 - **Độ khó:** số lần ghép tối thiểu theo bậc **lịch sử > đặc biệt > thường**.
 - **Gợi ý:** chỉ chế độ Thường, không lộ đủ công thức, không tự mở. Shan nghiêng về **2 lượt miễn phí mỗi ngày**; Claude đồng ý (P-8).
 - **Thành tựu:** mở **đủ một bộ** tướng (ví dụ đủ tướng hệ Hỏa) thưởng vàng + huy hiệu; mở một tướng lẻ không có thành tựu.
 - **Phải đăng nhập**, khách không chơi thử.
 - **Tướng Lục** hiện bóng mờ đủ số tướng của pack; tạm dùng nghề, hệ, vật biểu trưng và icon có sẵn.
-- **Gói đầu tiên:** 10 tướng lịch sử + 2 tướng đặc biệt.
+- **Gói đầu tiên:** 10 tướng lịch sử + 2 tướng đặc biệt (Đinh Ngọc, Trần Vũ Phong), danh sách ở [mục 5](#5-gói-đầu-tiên-10-lịch-sử--2-đặc-biệt) đã duyệt.
+- **Đinh Bộ Lĩnh** xây theo hướng nhân vật đặc biệt.
 
 ## 2. Kiểm kê hiện trạng
 
@@ -29,7 +30,7 @@ File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây g
 | 7 hệ | `src/core/battle/elements.ts` → `ELEMENTS` | `kim`, `moc`, `thuy`, `hoa`, `tho`, `loi`, `phong` | Starter `elt.*`; chỉ lấy ID, tên, icon. **Không** đọc `COUNTERS`/`GENERATES` |
 | Nghề | `src/core/battle/rules.ts` | 6 nghề cũ + `xaThu`, `satThu`; `NEW_PROFESSIONS_ENABLED = true` nên 8 nghề active | Metadata, icon |
 | Tướng lịch sử | `src/core/roster/roster.ts`, [danh sách nhân vật mục 5–6](../../03-characters/danh-sach-nhan-vat.md#5-tướng-lịch-sử) | Đinh Bộ Lĩnh, 6 tướng theo Đinh Bộ Lĩnh, 12 sứ quân | Nguồn chọn 10 tướng gói đầu |
-| Tướng đặc biệt | `roster.ts` (`special: true`) | `dinhNgoc` (Tướng sĩ/Kim), `vuPhong` (Quân sư/Phong); cả hai tài liệu nhân vật còn **DRAFT** | 2 tướng đặc biệt gói đầu |
+| Tướng đặc biệt | `roster.ts` (`special: true`) | `dinhNgoc` (Tướng sĩ/Kim), `vuPhong` (Quân sư/Phong, tên hiển thị trong code còn “Vũ Phong”); Shan duyệt chính thức 03/11/2026 | 2 tướng đặc biệt gói đầu |
 | Chân dung | `src/app/game/art/portrait-data.ts` | Có ảnh cho cả 12 tướng đề xuất ở [mục 5](#5-gói-đầu-tiên-10-lịch-sử--2-đặc-biệt) | Tướng Lục |
 | Nguồn sử | [Sổ nguồn Campaign](../campaign/history-sources.md) | Nhãn và mức tin cậy cho nhân vật lịch sử | Nhãn trong Tướng Lục |
 | Thẻ Home | `src/app/game/MenuScene.tsx` → `UPCOMING` | `tam-tuong-ky`, “Tầm Tướng Ký”, chưa có `scene` | Giữ “sắp ra mắt” tới khi phát hành |
@@ -45,8 +46,8 @@ File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây g
 1. **Số nghề active.** Tài liệu cũ ghi 6 nghề; code đã bật 8. Đã sửa [danh mục chế độ](01-mode-portfolio.md#rủi-ro-sản-phẩm).
 2. **Ví dụ công thức 09 không còn dùng được.** [09 mục 2](09-liet-truyen-recipes.md#2-ba-cây-thử-nghiệm-chưa-khóa) viết cho ba tướng thường theo luật không thứ tự. Gói đầu không có tướng thường, nên ba cây đó chỉ còn làm dữ liệu test engine.
 3. **Thưởng hạng không còn chỉ là vàng.** Shan chốt 01/11/2026 “trước mắt thưởng xếp hạng mọi chế độ chỉ là vàng” ([chế độ chơi mục 6](../README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt)). Quyết định 03/11/2026 thêm nguyên liệu Tầm Tướng Ký vào thưởng hạng; khi code phải sửa mục đó. Số vàng đã duyệt không đổi.
-4. **Hai tướng đặc biệt còn DRAFT.** [Đinh Ngọc](../../03-characters/dinh-ngoc.md) và [Vũ Phong](../../03-characters/vu-phong.md) chưa được duyệt chính thức; Vũ Phong chưa chốt họ Trần. Tên hiển thị trong Tướng Lục phải theo bản duyệt cuối.
-5. **Hệ và nghề của Đinh Bộ Lĩnh đổi theo người chơi** (`mainCharacter(element, profession)`), nên không xếp được vào bộ theo hệ. Đề xuất không đưa vào gói đầu (P-27).
+4. **Hai tướng đặc biệt đã chính thức, code chưa theo kịp.** Shan duyệt [Đinh Ngọc](../../03-characters/dinh-ngoc.md) và [Trần Vũ Phong](../../03-characters/vu-phong.md) ngày 03/11/2026. Code vẫn ghi tên “Vũ Phong” (`roster.ts`, `binh-phap/specials.ts`, `demo/characters/catalog.ts`) và cả hai vẫn là nhân vật xem thử, chưa có cách mở trong game. Đổi tên và mở chính thức là task code riêng, không thuộc LT-00.
+5. **Đinh Bộ Lĩnh.** Hệ và nghề đổi theo người chơi (`mainCharacter(element, profession)`), nên không xếp được vào bộ theo hệ. Shan chốt 03/11/2026: trong Tầm Tướng Ký, Đinh Bộ Lĩnh xây theo hướng **nhân vật đặc biệt** (A-21).
 6. **Tướng lịch sử cần nguồn.** Vật biểu trưng và mô tả phải theo [sổ nguồn](../campaign/history-sources.md); công thức là biểu trưng, không phải sự kiện.
 7. **Quy định khách.** [Mục 6.1](../README.md#61-ai-chơi-được-chế-độ-nào-shan-01112026) cho khách chơi thường ở các chế độ khác; Tầm Tướng Ký là ngoại lệ. Khi phát hành phải thêm vào bảng đó.
 8. **Đường dẫn prompt cũ.** Prompt LT-00 nhắc `docs/game-modes/…` và số 13; thư mục đã chuyển ([MOVED.md](../../MOVED.md)), số 13 đã dùng cho Quần Hùng.
@@ -77,7 +78,10 @@ File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây g
 | A-14 | Đăng nhập | Bắt buộc; khách không chơi thử |
 | A-15 | Tướng Lục | Bóng mờ đủ số tướng của pack |
 | A-16 | Nội dung tướng | Tạm dùng nghề, hệ, vật biểu trưng, icon nghề/hệ có sẵn |
-| A-17 | Gói đầu | **10 tướng lịch sử + 2 tướng đặc biệt** |
+| A-17 | Gói đầu | **10 tướng lịch sử + 2 tướng đặc biệt**; danh sách 12 tướng ở [mục 5](#5-gói-đầu-tiên-10-lịch-sử--2-đặc-biệt) đã duyệt (Shan, 03/11/2026) |
+| A-19 | Cửa hàng | **Bán túi (bó) nguyên tố**, giới hạn mua mỗi tuần để tránh lạm phát và không ảnh hưởng tới hạng (Shan, 03/11/2026) |
+| A-20 | Tướng đặc biệt | **Đinh Ngọc** và **Trần Vũ Phong** chốt, đưa vào chính thức (Shan, 03/11/2026) |
+| A-21 | Đinh Bộ Lĩnh | Xây theo hướng nhân vật đặc biệt (Shan, 03/11/2026); xem P-27 |
 | A-18 | Khám phá ≠ sở hữu | Ghép ra tướng không cấp tướng vào đội, không EXP/đá/trang bị |
 
 ### 3.2 Đề xuất
@@ -108,7 +112,7 @@ File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây g
 |---|---|
 | P-11 | **Túi nguyên tố** lưu theo tài khoản, không reset. Đơn vị thưởng là **bó** = 1 đơn vị mỗi hệ (7 đơn vị). Thưởng hạng các chế độ **theo tuần** (Trận Đồ Đại trận, Tháp Thiên Mệnh, Trấn Ải, Quần Hùng, và chính Tầm Tướng Ký): hạng 1 → 5 bó; 2–3 → 4; 4–10 → 3; nửa trên → 2; có tên → 1. Chế độ theo ngày (Nhật Lệnh, Trận Đồ Thường/Khó) không thưởng bó, tránh lạm phát. Cộng cùng lúc nhận vàng, qua sổ `rank_reward_claims` |
 | P-12 | Cấp nền: lần đầu vào chế độ Hạng mỗi tuần nhận 3 bó, để người mới vẫn chơi được |
-| P-13 | Cửa hàng (nếu Shan đồng ý bán, O-1): 1 bó = 300 vàng, tối đa 2 bó mỗi tuần. Trần mua thấp để vàng không quyết định hạng |
+| P-13 | Cửa hàng (A-19): 1 bó = 300 vàng, tối đa 2 bó mỗi tuần, đổi cùng tuần hạng. Trần thấp hơn cấp nền (3 bó) để vàng không quyết định hạng; chốt số sau mô phỏng LT-05 |
 | P-14 | Node trung gian ghép ở Hạng chỉ sống trong tuần; hết tuần bỏ, nguyên tố còn dư giữ trong túi. Tướng tạo ra không vào túi |
 | P-15 | Mỗi lần ghép tiêu 1 đơn vị mỗi nguyên liệu (`A+A` tiêu 2); thành công cộng 1 đơn vị kết quả; `noRecipe` vẫn tiêu (A-8). Không tốn phiếu |
 | P-16 | Đề cử: server chọn đầu tuần, giống nhau cho mọi người, xoay vòng sao cho mỗi tướng trong gói được đề cử đều nhau. Mỗi tuần có ít nhất 1 tướng đặc biệt. Bóng mờ đề cử hiện bậc, nghề, hệ; tên và chân dung lộ khi ghép ra |
@@ -132,20 +136,14 @@ File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây g
 | P-24 | Bóng mờ: không tên, không chân dung, aria “Tướng chưa tìm thấy”; chế độ Thường chỉ hiện bậc |
 | P-25 | Nhãn: màn chơi luôn có “Công thức biểu trưng của trò chơi, không phải diễn giải sử học”; tướng lịch sử có nhãn và nguồn theo sổ nguồn |
 | P-26 | ID đã phát hành không đổi nghĩa, không xóa; sửa phải tăng `contentVersion` kèm migration và test |
-| P-27 | Gói đầu không có Đinh Bộ Lĩnh (mâu thuẫn 5) |
+| P-27 | Đinh Bộ Lĩnh vào Tầm Tướng Ký ở **bậc đặc biệt** (A-21), hiện biểu tượng dung hợp thay vì một hệ/nghề, không thuộc bộ thành tựu theo hệ/nghề. Vì gói đầu đã chốt 12 tướng, đề xuất đưa vào **gói 2**, kèm thành tựu bộ đặc biệt mới (Đinh Bộ Lĩnh + Đinh Ngọc + Trần Vũ Phong) |
 | P-28 | Cờ `TAM_TUONG_KY_ENABLED` và `TAM_TUONG_KY_RANKED_ENABLED` mặc định tắt |
 | P-29 | Code: `src/core/tam-tuong-ky/` (không import `battle` ngoài `ELEMENTS` và nhãn nghề), `src/app/game/tam-tuong-ky/`, `src/server/tamTuongKy.ts` |
 | P-30 | Slice LT-01: 3 tướng trong gói đầu (Nguyễn Bặc, Lê Hoàn, Đinh Ngọc) để thử cả hai bậc. Ba cây tướng thường ở 09 chỉ làm dữ liệu test |
 
 ### 3.3 Còn mở
 
-| # | Câu hỏi |
-|---|---|
-| O-1 | Có bán bó nguyên tố ở cửa hàng không (đề xuất P-13: có, trần thấp)? |
-| O-2 | Duyệt danh sách 12 tướng ở mục 5? |
-| O-3 | Thứ tự duyệt Đinh Ngọc, Vũ Phong (đang DRAFT) có kịp gói đầu không; nếu không, thay bằng tướng đặc biệt nào? |
-
-Số lần ghép mỗi phiếu (15–20) và số tướng đề cử (5/7/10) đã có hướng chốt; LT-05 chọn số bằng mô phỏng.
+Không còn câu hỏi mở về luật (03/11/2026). Số lần ghép mỗi phiếu (15–20), số tướng đề cử (5/7/10), số bó và giá cửa hàng chốt bằng mô phỏng LT-05.
 
 ## 4. Luật chơi
 
@@ -176,7 +174,7 @@ Số lần ghép mỗi phiếu (15–20) và số tướng đề cử (5/7/10) �
 
 ## 5. Gói đầu tiên: 10 lịch sử + 2 đặc biệt
 
-Đề xuất (O-2). Chọn để 5 hệ có đúng 2 tướng (đủ làm thành tựu bộ theo hệ) và có cả hai nhóm lịch sử.
+Shan duyệt 03/11/2026. Chọn để 5 hệ có đúng 2 tướng (đủ làm thành tựu bộ theo hệ) và có cả hai nhóm lịch sử.
 
 | Nhóm | Tướng | ID | Nghề | Hệ |
 |---|---|---|---|---|
@@ -191,7 +189,7 @@ Số lần ghép mỗi phiếu (15–20) và số tướng đề cử (5/7/10) �
 | | Trần Lãm | `tranLam` | Quân sư | Thủy |
 | | Ngô Nhật Khánh | `ngoNhatKhanh` | Quân sư | Phong |
 | Đặc biệt | Đinh Ngọc | `dinhNgoc` | Tướng sĩ | Kim |
-| | Vũ Phong | `vuPhong` | Quân sư | Phong |
+| | Trần Vũ Phong | `vuPhong` | Quân sư | Phong |
 
 Theo hệ: Hỏa, Thổ, Kim, Thủy, Phong mỗi hệ 2 tướng; Mộc và Lôi mỗi hệ 1 tướng (chưa có thành tựu hệ, chờ gói sau). Cả 12 tướng đều có chân dung trong `portrait-data.ts`. Nghề và hệ của tướng đặc biệt lấy theo `roster.ts`, dù trong trận họ dung hợp tám nghề/bảy hệ.
 
@@ -306,12 +304,12 @@ LT-01 (validator), LT-02 (engine), LT-04 (Thường), LT-06 (Hạng) phải có 
 | LT-03 | UI: Vạn Vật Lục, Đài Hợp Nguyên (ô trước/ô sau rõ ràng), Tướng Lục bóng mờ, màn nhắc đăng nhập |
 | LT-04 | Server chế độ Thường: phiếu, lượt, gợi ý theo ngày, sổ khám phá, thành tựu bộ, phiếu từ nhiệm vụ/điểm danh; test mục 7.3 |
 | LT-05 | Đủ gói 12 tướng; mô phỏng nguồn nguyên liệu để chốt số lần ghép mỗi phiếu, số tướng đề cử và số bó |
-| LT-06 | Server Hạng tuần: túi, đề cử xoay vòng, điểm, mùa, bó trong thưởng hạng, cửa hàng (nếu duyệt); test mục 7.4 |
+| LT-06 | Server Hạng tuần: túi, đề cử xoay vòng, điểm, mùa, bó trong thưởng hạng, cửa hàng có trần tuần; test mục 7.4 |
 | LT-07 | QA, bật cờ, cập nhật [bảng ai chơi được chế độ nào](../README.md#61-ai-chơi-được-chế-độ-nào-shan-01112026) và [bảng thưởng hạng](../README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt) |
 
 ## 10. Điều kiện chuyển sang LT-01
 
 - [x] Shan chốt luật chính (mục 3.1, 03/11/2026).
 - [ ] Shan duyệt hoặc sửa các dòng ở mục 3.2.
-- [ ] Shan trả lời O-2 (danh sách tướng) để LT-01 chọn đúng slice; O-1 và O-3 có thể để tới LT-05/LT-06.
+- [x] Shan chốt danh sách 12 tướng, cửa hàng, hai tướng đặc biệt (03/11/2026).
 - [ ] Đổi trạng thái file này sang **FROZEN** và ghi vào [changelog](../../decisions/changelog.md).

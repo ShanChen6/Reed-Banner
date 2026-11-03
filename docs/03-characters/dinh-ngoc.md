@@ -1,7 +1,9 @@
 # Đinh Ngọc — Vạn Tượng Hành Giả
 
-> Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — đã thống nhất hướng một nhân vật dung hợp tám nghề/bảy hệ qua sáu chủ động và bốn nội tại; tên Đinh Ngọc, nữ khoảng 25 tuổi đã chốt; ngoại hình chi tiết, chiêu thức, thông số và cách mở khóa dưới đây là đề xuất hoàn chỉnh để review. Kỹ năng và nội tại đã chạy được trong core (chưa mở ở chế độ nào, xem [Triển khai trong core](#triển-khai-trong-core-02112026)); chưa có kết quả mô phỏng cân bằng.
+> Cập nhật: 03/11/2026
+> Trạng thái: **APPROVED** — Shan chốt 03/11/2026: Đinh Ngọc là nhân vật đặc biệt chính thức. Số liệu kỹ năng vẫn là điểm xuất phát chờ cân bằng; code chưa mở trong game.
+>
+> Bản ghi trước (02/11/2026): **DRAFT** — đã thống nhất hướng một nhân vật dung hợp tám nghề/bảy hệ qua sáu chủ động và bốn nội tại; tên Đinh Ngọc, nữ khoảng 25 tuổi đã chốt; ngoại hình chi tiết, chiêu thức, thông số và cách mở khóa dưới đây là đề xuất hoàn chỉnh để review. Kỹ năng và nội tại đã chạy được trong core (chưa mở ở chế độ nào, xem [Triển khai trong core](#triển-khai-trong-core-02112026)); chưa có kết quả mô phỏng cân bằng.
 
 ## Hồ sơ và vị trí trong Reed Banner
 
