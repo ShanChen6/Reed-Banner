@@ -1514,7 +1514,7 @@ POSE: PERSONAL VIGNETTE: seated at a boat bow tending a small travel pouch; the 
 
 ### RB-013 — Kiều Công Hãn (Kiều Tam Chế) · Pháp sư / Lôi
 
-> Trạng thái: **DRAFT — HISTORICAL IDENTITY / MASTER PILOT** (03/11/2026). **Chưa duyệt ảnh**, chưa viết sáu pose mới, chưa thay asset hoặc gameplay. Ảnh/6 prompt V4.2 bảo toàn dưới đây để đối chiếu; phải đánh giá KEEP/REFINE/REDESIGN dựa trên hình cũ trước khi đổi.
+> Trạng thái: **MASTER DESIGN + 5 POSE PROMPTS ĐÃ CHỐT** (03/11/2026); chưa xác nhận ảnh đủ 5 pose và chưa thay runtime. **Ưu tiên block Production v2** (quyền trượng dài, kiếm tra vỏ); phần DRAFT bản đầu và V4.2 là lịch sử nghiên cứu.
 
 #### Historical Identity & Creative Boundary
 
@@ -1576,6 +1576,107 @@ NEGATIVE: generic fire/lightning mage, monk, frail scholar, emperor with crown, 
 - [ ] Cùng phong cách với Trần Lãm, Ngô Xương Xí, Nguyễn Khoan nhưng khác mặt, áo và silhouette.
 - [ ] Không VFX bám người, alpha thật, toàn thân, không cắt trượng.
 - [ ] Chưa sản xuất 6 pose mới, rig/runtime không thay đổi.
+
+#### Production v2 — Master quyền trượng + kiếm, 5 pose còn lại (03/11/2026)
+
+> **APPROVED ART DIRECTION / POSE PROMPTS**, **NOT confirmed PNG integration**. Master mới người dùng đã chọn nhấn mạnh khí chất sứ quân: **một quyền trượng dài tay phải với đầu vòng đồng giữ một cầu tím, một kiếm luôn tra vỏ tại hông trái**, áo tím-nâu nhiều lớp, khăn tím chàm. **Mẫu này THAY THẾ đề xuất Master DRAFT ở trên về thiết kế quyền trượng và trang phục**; bản DRAFT và V4.2 vẫn được bảo lưu. Chưa xác minh năm PNG đã được tạo/duyệt hoặc code đã thay asset. Ảnh Master trong chat phải được cung cấp làm reference thật; không mặc định ảnh đã được lưu vào repo. Ảnh Master đã tạo có phông tối, khi xuất asset runtime phải xử lý alpha thật.
+
+**Khóa Master:** mắt sắc, ria và chòm râu cằm nhọn, khăn vấn tím, áo giao lĩnh chàm, áo ngoài tím nâu và khăn vai, viền đồng, khóa đai vuông, một trượng dài đầu vòng đồng/cầu tím, một kiếm ở hông trái **luôn tra vỏ**. Không tự chuyển về đoản trượng gỗ trơn hay thêm kiếm rút khỏi vỏ.
+
+| Khung | Chuyển động & silhouette riêng | Tránh lỗi |
+|---|---|---|
+| Idle / Master | **Dùng ảnh Master mới đã chốt**, trượng đứng tay phải, tay trái gần chuôi kiếm | Không sinh một Idle thứ hai |
+| Basic | Bước ngắn và đưa trượng chéo về trước | Không thành giáo, cầu tím vẫn dính đầu trượng |
+| Skill | Trượng dựng thẳng, tay trái mở lòng bàn tay | Không lặp đòn đánh thường |
+| Ultimate | **Hai tay cùng giữ một trượng** giơ chéo cao | Không nhân đôi trượng hoặc rút kiếm |
+| Defeated | Ngã thật, trượng rơi riêng, kiếm vẫn ở vỏ | Không quỳ/ngồi nghỉ |
+| Personality | Tay trái kiểm tra dây kiếm, tay phải giữ trượng | Bàn tay trái không bị áo/chuôi kiếm nuốt mất |
+
+**Mỗi prompt dưới đây tự chứa Identity, Costume, Weapon và Output**, dùng độc lập khi đính kèm Master. Chỉ dựng lần lượt từng frame, ưu tiên QA vũ khí/anatomy trước khi làm frame sau.
+
+##### Production pose 2 — Basic Attack — Trượng điểm phá thế
+
+```text
+Create ONE full-body 2D game character, Kiều Công Hãn (Kiều Tam Chế), RB-013 / kieuCongHan, a Vietnamese 10th-century warlord of Phong Châu. Use the user-approved ornate MASTER image from this conversation as the FIXED reference, not the earlier plain dark-brown baton version. Maintain EXACTLY the same mature Vietnamese face (sharp eyes, neatly trimmed moustache, pointed chin beard), dark violet layered headwrap, sturdy natural anatomy, indigo crossed-collar under-robe and ivory neckline, layered plum-brown structured outer garment, deep-purple shoulder mantle, antique-bronze woven borders and single square bronze waist clasp, dark trousers, wraps and practical shoes. Heroic warlord presence, not an ordinary wizard or imperial king. Apparel is artistic interpretation, not a historically documented outfit.
+
+EQUIPMENT LOCK: EXACTLY ONE LONG straight dark-hardwood command SCEPTER/STaff in anatomical RIGHT hand for standing frames; the SAME single ornate bronze ring at the top holds EXACTLY ONE violet sphere, with no changed ring profile or length. The ring and sphere are fixed material parts of the scepter, not a separate floating weapon. EXACTLY ONE original sheathed sword on anatomical LEFT hip in its dark scabbard, with matching bronze fittings and unchanged hilt; ALWAYS fully sheathed in every frame. No additional sword, dagger or weapon. For the DEFEATED pose only, the same staff has been released and lies separately beside him; sword remains sheathed. The original Master image has a gradient backdrop and luminous violet lightning detail; for all production pose PNGs require TRUE transparent alpha and NO background or baked lightning effects. Keep the violet sphere itself as the weapon feature, no expanded lightning aura.
+
+ART: Vietnamese Historical Low Fantasy — Heroic Stylization. Premium painterly 2D character art, natural adult anatomy, historically inspired materials with a restrained magical staff prop; retain the approved ornamental robe despite its higher fantasy level, do NOT redesign into the earlier plain short baton. Full figure including all hands, staff top/butt, sword and shoes within clear margins; ONE character on true transparent alpha, no scenery, cast-shadow base, black gradient, title, writing, UI, watermark, extra people or baked skill VFX.
+
+POSE ID: RB013_BASIC_ATTACK
+ACTION: Compact forward RIGHT-hand staff strike: left foot steps slightly forward; RIGHT hand drives the single long rigid scepter on a restrained diagonal toward an unseen target, bronze ring and fixed violet sphere leading, NOT a spear thrust that damages the orb. LEFT hand stays by the original sheathed sword's hilt without pulling it. Torso rotates modestly; legs anchor; expression tight, controlled and stern. Single continuous staff and one scabbard, no extra energy.
+
+QUALITY GATE: SAME approved Master face, clothes, staff head geometry and sheathed sword. One long staff, one fixed violet orb, one fully sheathed sword. Hands anatomically connected and weapon fully inside canvas; true alpha with no external VFX.
+```
+
+##### Production pose 3 — Skill — Lôi ấn định trận
+
+```text
+Create ONE full-body 2D game character, Kiều Công Hãn (Kiều Tam Chế), RB-013 / kieuCongHan, a Vietnamese 10th-century warlord of Phong Châu. Use the user-approved ornate MASTER image from this conversation as the FIXED reference, not the earlier plain dark-brown baton version. Maintain EXACTLY the same mature Vietnamese face (sharp eyes, neatly trimmed moustache, pointed chin beard), dark violet layered headwrap, sturdy natural anatomy, indigo crossed-collar under-robe and ivory neckline, layered plum-brown structured outer garment, deep-purple shoulder mantle, antique-bronze woven borders and single square bronze waist clasp, dark trousers, wraps and practical shoes. Heroic warlord presence, not an ordinary wizard or imperial king. Apparel is artistic interpretation, not a historically documented outfit.
+
+EQUIPMENT LOCK: EXACTLY ONE LONG straight dark-hardwood command SCEPTER/STaff in anatomical RIGHT hand for standing frames; the SAME single ornate bronze ring at the top holds EXACTLY ONE violet sphere, with no changed ring profile or length. The ring and sphere are fixed material parts of the scepter, not a separate floating weapon. EXACTLY ONE original sheathed sword on anatomical LEFT hip in its dark scabbard, with matching bronze fittings and unchanged hilt; ALWAYS fully sheathed in every frame. No additional sword, dagger or weapon. For the DEFEATED pose only, the same staff has been released and lies separately beside him; sword remains sheathed. The original Master image has a gradient backdrop and luminous violet lightning detail; for all production pose PNGs require TRUE transparent alpha and NO background or baked lightning effects. Keep the violet sphere itself as the weapon feature, no expanded lightning aura.
+
+ART: Vietnamese Historical Low Fantasy — Heroic Stylization. Premium painterly 2D character art, natural adult anatomy, historically inspired materials with a restrained magical staff prop; retain the approved ornamental robe despite its higher fantasy level, do NOT redesign into the earlier plain short baton. Full figure including all hands, staff top/butt, sword and shoes within clear margins; ONE character on true transparent alpha, no scenery, cast-shadow base, black gradient, title, writing, UI, watermark, extra people or baked skill VFX.
+
+POSE ID: RB013_SKILL
+ACTION: RIGHT hand keeps the entire long original scepter VERTICAL beside anatomical RIGHT shoulder, butt near RIGHT foot; LEFT arm extends forward to chest level with a clear open five-fingered palm, visually separate from scabbard and clothes. Shoulder and hips face target in a grounded near-still stance; sharp closed-mouth concentration. No attack thrust and no magical circle. This pose label is artistic, NOT a renaming of a runtime skill.
+
+QUALITY GATE: SAME approved Master face, clothes, staff head geometry and sheathed sword. One long staff, one fixed violet orb, one fully sheathed sword. Hands anatomically connected and weapon fully inside canvas; true alpha with no external VFX.
+```
+
+##### Production pose 4 — Ultimate — Phong Châu Lôi Kích
+
+```text
+Create ONE full-body 2D game character, Kiều Công Hãn (Kiều Tam Chế), RB-013 / kieuCongHan, a Vietnamese 10th-century warlord of Phong Châu. Use the user-approved ornate MASTER image from this conversation as the FIXED reference, not the earlier plain dark-brown baton version. Maintain EXACTLY the same mature Vietnamese face (sharp eyes, neatly trimmed moustache, pointed chin beard), dark violet layered headwrap, sturdy natural anatomy, indigo crossed-collar under-robe and ivory neckline, layered plum-brown structured outer garment, deep-purple shoulder mantle, antique-bronze woven borders and single square bronze waist clasp, dark trousers, wraps and practical shoes. Heroic warlord presence, not an ordinary wizard or imperial king. Apparel is artistic interpretation, not a historically documented outfit.
+
+EQUIPMENT LOCK: EXACTLY ONE LONG straight dark-hardwood command SCEPTER/STaff in anatomical RIGHT hand for standing frames; the SAME single ornate bronze ring at the top holds EXACTLY ONE violet sphere, with no changed ring profile or length. The ring and sphere are fixed material parts of the scepter, not a separate floating weapon. EXACTLY ONE original sheathed sword on anatomical LEFT hip in its dark scabbard, with matching bronze fittings and unchanged hilt; ALWAYS fully sheathed in every frame. No additional sword, dagger or weapon. For the DEFEATED pose only, the same staff has been released and lies separately beside him; sword remains sheathed. The original Master image has a gradient backdrop and luminous violet lightning detail; for all production pose PNGs require TRUE transparent alpha and NO background or baked lightning effects. Keep the violet sphere itself as the weapon feature, no expanded lightning aura.
+
+ART: Vietnamese Historical Low Fantasy — Heroic Stylization. Premium painterly 2D character art, natural adult anatomy, historically inspired materials with a restrained magical staff prop; retain the approved ornamental robe despite its higher fantasy level, do NOT redesign into the earlier plain short baton. Full figure including all hands, staff top/butt, sword and shoes within clear margins; ONE character on true transparent alpha, no scenery, cast-shadow base, black gradient, title, writing, UI, watermark, extra people or baked skill VFX.
+
+POSE ID: RB013_ULTIMATE
+ACTION: Ultimate runtime skill ID phongChauLoiKich. A dramatic, grounded two-hand SAME-STAFF lift: RIGHT hand grips the wooden staff below midshaft, LEFT hand supports a lower distinct part of the SAME shaft; arms raise it diagonally above anatomical RIGHT shoulder with the ornate bronze ring and fixed violet sphere pointing upward, fully visible. Left foot forward, right foot braces, torso slightly coiled, eyes confident and voice delivering a short command. The sword is still fully sheathed at LEFT hip and its hilt is NOT being held simultaneously. No lightning bolts, explosions or magic painted into PNG; runtime supplies them.
+
+QUALITY GATE: SAME approved Master face, clothes, staff head geometry and sheathed sword. One long staff, one fixed violet orb, one fully sheathed sword. Hands anatomically connected and weapon fully inside canvas; true alpha with no external VFX.
+```
+
+##### Production pose 5 — Defeated — Phong Châu thất thế
+
+```text
+Create ONE full-body 2D game character, Kiều Công Hãn (Kiều Tam Chế), RB-013 / kieuCongHan, a Vietnamese 10th-century warlord of Phong Châu. Use the user-approved ornate MASTER image from this conversation as the FIXED reference, not the earlier plain dark-brown baton version. Maintain EXACTLY the same mature Vietnamese face (sharp eyes, neatly trimmed moustache, pointed chin beard), dark violet layered headwrap, sturdy natural anatomy, indigo crossed-collar under-robe and ivory neckline, layered plum-brown structured outer garment, deep-purple shoulder mantle, antique-bronze woven borders and single square bronze waist clasp, dark trousers, wraps and practical shoes. Heroic warlord presence, not an ordinary wizard or imperial king. Apparel is artistic interpretation, not a historically documented outfit.
+
+EQUIPMENT LOCK: EXACTLY ONE LONG straight dark-hardwood command SCEPTER/STaff in anatomical RIGHT hand for standing frames; the SAME single ornate bronze ring at the top holds EXACTLY ONE violet sphere, with no changed ring profile or length. The ring and sphere are fixed material parts of the scepter, not a separate floating weapon. EXACTLY ONE original sheathed sword on anatomical LEFT hip in its dark scabbard, with matching bronze fittings and unchanged hilt; ALWAYS fully sheathed in every frame. No additional sword, dagger or weapon. For the DEFEATED pose only, the same staff has been released and lies separately beside him; sword remains sheathed. The original Master image has a gradient backdrop and luminous violet lightning detail; for all production pose PNGs require TRUE transparent alpha and NO background or baked lightning effects. Keep the violet sphere itself as the weapon feature, no expanded lightning aura.
+
+ART: Vietnamese Historical Low Fantasy — Heroic Stylization. Premium painterly 2D character art, natural adult anatomy, historically inspired materials with a restrained magical staff prop; retain the approved ornamental robe despite its higher fantasy level, do NOT redesign into the earlier plain short baton. Full figure including all hands, staff top/butt, sword and shoes within clear margins; ONE character on true transparent alpha, no scenery, cast-shadow base, black gradient, title, writing, UI, watermark, extra people or baked skill VFX.
+
+POSE ID: RB013_DEFEATED
+ACTION: Truly collapsed and unable to fight: hips and upper torso ON THE GROUND, body fallen backward toward anatomical LEFT, LEFT shoulder low with the shoulder mantle folded under him, head drooped and eyelids half shut, one leg bent beneath and other extended. RIGHT fingers open after releasing the ONE original long rigid scepter, which lies diagonally separate beside the body with complete ring, single violet orb and butt visible. LEFT arm rests across abdomen, anatomically complete; ONE sword remains fully sheathed at LEFT hip. Not balanced kneeling, resting or rising. This is a FICTIONAL game defeat, not a historical depiction.
+
+QUALITY GATE: SAME approved Master face, clothes, staff head geometry and sheathed sword. One long staff, one fixed violet orb, one fully sheathed sword. Hands anatomically connected and weapon fully inside canvas; true alpha with no external VFX.
+```
+
+##### Production pose 6 — Personality — Người giữ quyền Phong Châu
+
+```text
+Create ONE full-body 2D game character, Kiều Công Hãn (Kiều Tam Chế), RB-013 / kieuCongHan, a Vietnamese 10th-century warlord of Phong Châu. Use the user-approved ornate MASTER image from this conversation as the FIXED reference, not the earlier plain dark-brown baton version. Maintain EXACTLY the same mature Vietnamese face (sharp eyes, neatly trimmed moustache, pointed chin beard), dark violet layered headwrap, sturdy natural anatomy, indigo crossed-collar under-robe and ivory neckline, layered plum-brown structured outer garment, deep-purple shoulder mantle, antique-bronze woven borders and single square bronze waist clasp, dark trousers, wraps and practical shoes. Heroic warlord presence, not an ordinary wizard or imperial king. Apparel is artistic interpretation, not a historically documented outfit.
+
+EQUIPMENT LOCK: EXACTLY ONE LONG straight dark-hardwood command SCEPTER/STaff in anatomical RIGHT hand for standing frames; the SAME single ornate bronze ring at the top holds EXACTLY ONE violet sphere, with no changed ring profile or length. The ring and sphere are fixed material parts of the scepter, not a separate floating weapon. EXACTLY ONE original sheathed sword on anatomical LEFT hip in its dark scabbard, with matching bronze fittings and unchanged hilt; ALWAYS fully sheathed in every frame. No additional sword, dagger or weapon. For the DEFEATED pose only, the same staff has been released and lies separately beside him; sword remains sheathed. The original Master image has a gradient backdrop and luminous violet lightning detail; for all production pose PNGs require TRUE transparent alpha and NO background or baked lightning effects. Keep the violet sphere itself as the weapon feature, no expanded lightning aura.
+
+ART: Vietnamese Historical Low Fantasy — Heroic Stylization. Premium painterly 2D character art, natural adult anatomy, historically inspired materials with a restrained magical staff prop; retain the approved ornamental robe despite its higher fantasy level, do NOT redesign into the earlier plain short baton. Full figure including all hands, staff top/butt, sword and shoes within clear margins; ONE character on true transparent alpha, no scenery, cast-shadow base, black gradient, title, writing, UI, watermark, extra people or baked skill VFX.
+
+POSE ID: RB013_PERSONALITY
+ACTION: Distinct calm noncombat ritual: RIGHT hand keeps the original long scepter standing nearly vertically by RIGHT foot; LEFT hand checks the scabbard's EXISTING belt attachment at anatomical LEFT hip. Full LEFT shoulder-to-upper arm-to-elbow-to-wrist-to-hand anatomy visible, five anatomically correct fingers, with clear negative space from belt and fabric; the sword is never drawn. Head inclines toward the fastening while gaze remains vigilant; composed and responsible regional leader. No spellcasting, no new prop.
+
+QUALITY GATE: SAME approved Master face, clothes, staff head geometry and sheathed sword. One long staff, one fixed violet orb, one fully sheathed sword. Hands anatomically connected and weapon fully inside canvas; true alpha with no external VFX.
+```
+
+#### Production QA / trạng thái
+
+- [ ] Master mới (quyền trượng dài, kiếm hông trái) được lưu làm reference ảnh; không dùng bản đoản trượng trơn DRAFT.
+- [ ] Giữ khuôn mặt, khăn vấn, viền đồng, áo và khí chất như Master đã chọn.
+- [ ] Năm pose riêng không lặp; Ultimate hai tay giữ **một trượng**; kiếm không rút.
+- [ ] Defeated nằm gục hẳn; Personality tay trái đủ giải phẫu.
+- [ ] PNG alpha thật, loại phông gradient và lightning backdrop khỏi asset.
+- [ ] Chưa đánh dấu 5 ảnh và rig được tích hợp khi chưa kiểm tra thực tế.
 
 #### Prompt V4.2 cũ (bảo lưu nguyên văn để đối chiếu)
 
@@ -1646,6 +1747,74 @@ POSE: PERSONALITY VIGNETTE: seated cross-legged on a plain reed mat, carefully i
 ---
 
 ### RB-014 — Kiều Thuận (Kiều Lệnh công) · Y sư / Mộc
+
+> **DRAFT — CHARACTER IDENTITY + MASTER/IDLE ONLY** (03/11/2026). Chưa duyệt ảnh mới, chưa xây lại 6 pose, chưa sửa asset/rig. Ưu tiên **đối chiếu bộ ảnh cũ trước** để quyết định KEEP / REFINE / REDESIGN. Toàn bộ tư liệu V4.2 giữ bên dưới.
+
+#### Historical Identity — Sứ quân Hồi Hồ
+
+- **Recorded:** Kiều Thuận (trong nguồn cũng chép **Kiểu Thuận / Kiểu Lệnh Công**) là sứ quân gắn với **Hồi Hồ** trong danh sách mười hai sứ quân, đối chiếu hồ sơ [W07](../../../02-game-modes/campaign/warlord-matrix.md) và [sổ nguồn](../../../02-game-modes/campaign/history-sources.md). Tình tiết đánh dẹp chỉ có mức xác nhận tổng thuật, không tự gán trận cụ thể, sa lầy hay cái chết thành lịch sử.
+- **Tranh luận sáng tác:** tuổi tác, diện mạo, việc học thuốc, nghề chữa bệnh và đạo cụ bầu thuốc đều là **game-authored**, không coi là sự thật có chứng cứ. Chữ “Y sư” và hệ Mộc chỉ là gameplay, không được biến sứ quân thành thầy thuốc vô danh.
+- **Ultimate runtime:** `hoiHoSinhKhi` (Hồi Hồ Sinh Khí): hồi phục đội và hồi phục theo lượt; giữ nguyên ID, số liệu, cơ chế.
+- **Khác biệt:** Kiều Công Hãn là sứ quân Phong Châu với trượng và kiếm, khí chất nghiêm và hành động phát lệnh Lôi. Kiều Thuận là thủ lĩnh Hồi Hồ theo **phong thái ôn hòa nhưng có uy**, quyền lực qua hiểu địa bàn, tổ chức và chăm lo quân lính; không cần trượng Lôi, không mặc đồng phục pháp sư hay Y sư.
+- **Giới hạn kiểm chứng:** chưa có ảnh hiện tại ở lượt này để so sánh trực tiếp; bản dưới đây là **Master đề xuất**, không có quyền tự thay thế một Master cũ đã đẹp.
+
+#### Unique Character DNA — “Người giữ sinh khí Hồi Hồ” (DRAFT)
+
+- **Nhân dạng:** Nam Việt tuổi tạo hình 43–52; vóc **cao trung bình, vai tròn chắc, thân hơi gầy nhưng bền bỉ**, mắt rộng vừa với đuôi mắt dịu, mũi chắc, gò má đầy, **râu đen pha bạc ngắn theo quai hàm** và ria ngắn, không râu dài mảnh kiểu tiên ông. Mặt có nét cười nhẹ nhưng không hiền lành yếu đuối.
+- **Xuất thân tính cách sáng tác:** thủ lĩnh quen sông nước và đất bãi Hồi Hồ, coi giữ nguồn nước, đường đi và việc chữa thương là chiến lược để quân sống sót. Trầm ổn, quyết đoán khi cần, hiểu con người; đôi khi tự mình kiểm tra vật dụng chữa thương. Đây là *fictional lore*, không phải ký sự.
+- **Visual Hook:** tư thế **đứng nghiêng trọng tâm nhẹ**, một tay chạm khóa đai như đánh giá quân trại, tay phải mang bầu thuốc hình quả bầu **nhưng thấp gần hông** để tránh biến thành người bán thuốc. Áo ngoài ngắn không tay của người giữ trại, bên dưới là áo giao lĩnh xắn cẳng tay; **không** mantle một vai, không khăn lông, không giáo-khiên.
+- **Trang phục:** áo trong ngà lanh `#E9DFC4`, áo chính xanh lá sẫm `#2D6542` với tay áo gọn, áo gi-lê dệt thô vỏ cây `#6B5038` **cắt ngắn ngang hông và có túi bên phải**, điểm xanh rêu `#608651` ở thắt đai/đường may; quần nâu than, bọc chân sáng, giày vải chắc. Một khóa đai đồng cũ đủ rõ biểu thị địa vị; không áo xanh lục rực rỡ phủ cả người.
+- **Đạo cụ `RB-014-W01`:** **một bầu thuốc tự nhiên** cổ hẹp, thân bầu kép, nắp đồng đơn giản, dây buộc chắc; anatomical RIGHT hand cầm thấp gần hông bằng phần cổ bầu. Hình học bầu giữ nguyên nếu ảnh cũ có reference được duyệt. **Một túi thảo dược nhỏ** có thể giữ nếu đã có trên Master cũ; không bổ sung đồng loạt túi thuốc, gậy, liềm hoặc bình thứ hai.
+- **Heroic status:** uy quyền một sứ quân thể hiện qua ánh mắt sáng, lưng vững, khóa đai và mảng áo dễ đọc, không vương miện, long bào, giáp quá lớn hay pháp thuật Mộc thường trực.
+- **Visual differentiation:** Không giống Mã Nhạc (quạt cói/Thổ), Ninh Hỏa (quạt lá/Hỏa), Từ Kinh (quạt xếp/Lôi), Kiều Công Hãn (trượng/kiếm và áo tím) và Nguyễn Khoan (giáo/khiên). Không yêu cầu cùng nghề Y sư là cùng hình thái đứng/thi triển.
+
+#### Pose Identity Matrix — ĐỊNH HƯỚNG, chưa viết 6 prompt
+
+| Khung | Cử chỉ riêng có ý nghĩa | Phân biệt |
+|---|---|---|
+| Idle | Đứng thả lỏng nhưng vững, bầu thuốc thấp bên phải, tay trái tựa khóa đai | Không giơ bầu như dùng phép |
+| Basic | Lùi chân để tránh áp sát, chuyển bầu thuốc từ hông lên trước trong một động tác che chắn gọn | Không ném bầu hay biến thành quyền trượng |
+| Skill | Quỳ thấp một chân thoáng qua để tới người bị thương ngoài khung, bầu thuốc vẫn trong tay phải | Không tạo thêm bệnh nhân trong PNG |
+| Ultimate / Hồi Hồ Sinh Khí | Xoay vai sang trái, mở lòng bàn tay trái thành cử chỉ gọi đồng đội tới, tay phải giữ bầu gần tim | Không phun nước/đám lá tự động |
+| Defeated | Mất thăng bằng trượt nghiêng xuống đất, bầu rơi khỏi tay và nằm nguyên vẹn một bên | Ngã thật, không ngồi nghỉ |
+| Personality | Dùng tay trái kiểm nút buộc **của chính bầu hiện có** khi tay phải giữ bầu, mắt hơi nheo quan sát | Không tạo túi, cốc hoặc thẻ tre mới |
+
+#### Master / Idle Prompt (EN — standalone DRAFT, không tạo ảnh ở bước docs)
+
+```text
+Create ONE full-body 2D game character, Kiều Thuận (also called Kiều Lệnh công), RB-014 / kieuThuan, a fictionalized Vietnamese historical regional warlord holding Hồi Hồ during the 10th-century Twelve Warlords period in Reed Banner.
+
+ART DIRECTION: Vietnamese Historical Low Fantasy — Heroic Stylization. Premium hand-painted 2D historical low-fantasy strategy-game hero, with a commanding but compassionate regional lord's personality. NOT a generic healer NPC, frail monk, herbal merchant, photoreal actor in costume, Chinese imperial prince or high-fantasy nature mage.
+
+HISTORICAL BOUNDARY: The warlord's association with Hồi Hồ is historical; facial appearance, healing profession, medicinal calabash and character rituals are creative interpretations, NOT authenticated artifacts. Class Y sư / element Mộc and ultimate hoiHoSinhKhi are GAMEPLAY constructs and must not erase his status as an independent regional leader.
+
+IDENTITY DNA: Vietnamese male, artistic age 43–52, naturally durable medium-tall adult frame about 7.1 heads high; moderately broad but gently sloped shoulders, weathered robust hands, a long-balanced torso and grounded legs. A wide oval mature face with filled cheekbones, intelligent dark eyes with gentle outer corners, strong nose and calm firm mouth; short neatly groomed moustache and jawline beard with some gray, not a long sage beard. Dark hair under ONE muted moss-brown tightly wrapped headcloth, no royal crown or oversized ornaments. Calm eyes, faint restrained sympathy but unmistakable authority.
+
+PERSONAL STORY DNA: A game-fiction lord accustomed to river routes, wetland pathways and protecting troops through prepared stores and care for the wounded. Thoughtful and attentive, but ready to make hard decisions. His outward calm conceals the resolve of someone responsible for an entire territory and his followers.
+
+COSTUME DNA: natural linen crossed-collar inner tunic #E9DFC4 with original fitted sleeves rolled cleanly to mid forearm; practical deep forest-green field robe #2D6542 with a short front opening and clear waist structure; ONE short roughwoven bark-brown sleeveless overvest #6B5038 ending at high hip with a single small existing-style pocket on the anatomical RIGHT side; a restrained muted moss-green fabric waist tie #608651 under ONE functional brown leather belt bearing ONE simple aged-bronze clasp. Dark earthen trousers, modest light calf wraps and low sturdy cloth shoes. Garments should be practical, distinct and character-specific, not generic healer robes or infinite flowing silk layers. Original approved outfit takes precedence if visual review calls for KEEP/REFINE.
+
+EQUIPMENT RB-014-W01: EXACTLY ONE organic double-bulbed calabash medicine gourd with a narrow neck, natural dark amber rind, ONE simple aged-bronze capped mouth, practical hemp loop. Anatomical RIGHT hand grips the gourd low near RIGHT hip by its neck/strap; anatomical LEFT hand is free near his belt, elbow readable. If a prior approved Master exists, match the exact gourd silhouette, size and fittings before applying this proposal. Do not invent a second gourd, magical green potion glow, sword, staff or floating leaves.
+
+MASTER / IDLE: three-quarter full body, weight mostly on anatomical RIGHT rear leg, LEFT foot slightly advanced and angled outward, spine upright, shoulders relaxed but authoritative, chin neutral, eyes looking toward imagined troops beyond frame. RIGHT hand holds the one capped gourd at hip height, clearly visible but not thrust forward as a spell. LEFT hand rests near the original bronze belt clasp, thumb lightly touching it, natural visible fingers. The compact hip-length vest, sturdy belt and human face must make him a territorial commander first and field healer second. Strong character silhouette yet no domineering armor or royal regalia.
+
+FANTASY CONTROL: Restrained heroic stylization through expressive face, costume weight, purposeful silhouette, rich painterly cloth/wood/bronze. NO leaves swirling, glowing vines, floating green runes, enlarged gourd or magic aura; runtime applies Mộc healing VFX. Match the ART STYLE of approved historical characters, not identical faces or costumes.
+
+OUTPUT: EXACTLY ONE full-body human character with complete gourd, both hands, feet and head fully visible, comfortable alpha-safe margin, genuine transparent PNG background, no ground, cast shadow, gradient backdrop, text, interface, logo, watermark or other people. MASTER ONLY: do not generate six poses in one batch.
+
+NEGATIVE: ordinary medicine seller, peasant with herb basket, green nature wizard, monk with staff, long floating robes, copied Kiều Công Hãn hair/shoulder mantle, extra equipment, duplicated gourds, missing anatomical forearms, heavily stylized anime face, warlord crown or exaggerated fantasy armor.
+```
+
+#### Review Gate — trước khi sản xuất pose
+
+- [ ] So sánh ảnh hiện tại với Master proposal; chọn KEEP, REFINE hoặc REDESIGN. Chưa coi bản mới là tự động tốt hơn.
+- [ ] Có khí chất sứ quân Hồi Hồ: vững, bản lĩnh, nhân hậu có giới hạn; không bị đọc là người bán thuốc.
+- [ ] Bầu thuốc chỉ một, hình học bất biến, tay phải; nét mặt/râu/khăn/cấu trúc áo khác Kiều Công Hãn và các Y sư khác.
+- [ ] Y sư/Mộc qua hành vi bảo hộ và VFX runtime, không dùng trang phục phù thủy Mộc.
+- [ ] Nếu Master được duyệt, sau đó thiết kế từng pose theo Unique Pose Identity, không sinh hàng loạt.
+- [ ] Không thay asset hoặc gameplay khi chưa nghiệm thu.
+
+#### Tư liệu V4.2 cũ — giữ nguyên làm baseline
 
 > **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ / TINH CHỈNH. Chiêu tham chiếu: **Hồi Hồ Sinh Khí** (`hoiHoSinhKhi`). Chưa thấy xung đột trực tiếp ở cấp mô tả; chuẩn hóa Weapon Geometry Sheet và kiểm tra động tác có thật dùng đạo cụ. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
