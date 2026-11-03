@@ -13,6 +13,11 @@ export interface Overview {
   readonly levels: readonly LevelOverview[];
   /** Giờ server (ms) lúc trả lời, để đếm ngược kỳ theo giờ server chứ không theo đồng hồ máy. */
   readonly now?: number;
+  /**
+   * Tải tổng quan lỗi (mạng hoặc server). Vẫn hiện thẻ Xếp hạng kèm nút thử lại thay vì coi như chế độ tắt: trước
+   * đây lỗi 500 làm người đã đăng nhập mất hẳn lựa chọn Xếp hạng/Chơi thường mà không biết vì sao.
+   */
+  readonly failed?: boolean;
 }
 
 async function call<T>(url: string, body?: unknown): Promise<{ ok: true; data: T } | { ok: false; status: number; data: { error?: string; reason?: string; view?: FormationView } }> {
@@ -30,9 +35,9 @@ async function call<T>(url: string, body?: unknown): Promise<{ ok: true; data: T
   }
 }
 
-export async function fetchOverview(): Promise<Overview | null> {
+export async function fetchOverview(): Promise<Overview> {
   const r = await call<Overview>("/api/formation");
-  return r.ok ? r.data : null;
+  return r.ok ? r.data : { enabled: true, canPlay: false, levels: [], failed: true };
 }
 
 export const startRanked = (level: string) => call<{ view: FormationView; resumed: boolean }>("/api/formation/start", { level });

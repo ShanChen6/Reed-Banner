@@ -173,6 +173,7 @@ describe("Trận Đồ xếp hạng: mở ván", () => {
     const r = await startFormation(d, "a", "dai-tran");
     assert.ok(r.ok);
     const stored = (await d.store.get("dai-tran", periodKey("dai-tran", d.now)!, "a"))!;
+    assert.ok(stored.state);
     assert.equal(stored.state.salt, formationSalt(d.secret!, "dai-tran", periodKey("dai-tran", d.now)!));
     assert.match(stored.state.salt!, /^[0-9a-f]{32}$/);
     const json = JSON.stringify(r.view);
@@ -246,6 +247,7 @@ describe("Trận Đồ xếp hạng: đi nước", () => {
     const s = await startFormation(d, "a", "thuong");
     assert.ok(s.ok);
     const entry = (await d.store.get("thuong", periodKey("thuong", d.now)!, "a"))!;
+    assert.ok(entry.state);
     assert.ok(await d.store.save({ ...entry, state: { ...entry.state, turn: MAX_RANKED_TURNS - 1 }, seq: entry.seq + 1 }, entry.seq));
     const cur = await startFormation(d, "a", "thuong");
     assert.ok(cur.ok);
@@ -353,3 +355,36 @@ describe("Trận Đồ xếp hạng: bảng và thưởng", () => {
   });
 });
 
+
+describe("Trận Đồ xếp hạng: ván lưu không đọc lại được (đổi phiên bản luật)", () => {
+  it("tổng quan của tài khoản đăng nhập vẫn trả về; ván dở chơi lại từ bàn đầu kỳ, giữ seq", async () => {
+    const d = deps();
+    const s = await startFormation(d, "a", "thuong");
+    assert.ok(s.ok);
+    const period = periodKey("thuong", d.now)!;
+    const entry = (await d.store.get("thuong", period, "a"))!;
+    // Kho Postgres trả state null khi không đọc được ván cũ; giả lập bằng cách ghi thẳng vào kho bộ nhớ.
+    assert.ok(await d.store.save({ ...entry, state: null, seq: entry.seq + 1 }, entry.seq));
+    const o = await formationOverview(d, "a");
+    assert.equal(o.enabled, true);
+    assert.equal(o.canPlay, true);
+    const mine = o.levels.find((l) => l.level === "thuong")?.mine;
+    assert.ok(mine && mine.status === "playing" && mine.seq === entry.seq + 1);
+    assert.deepEqual(mine.puzzle, s.view.puzzle);
+    const r = await moveFormation(d, "a", "thuong", mine.seq, chooseCommand(mine));
+    assert.ok(r.ok, JSON.stringify(r));
+    assert.equal(r.view.seq, entry.seq + 2);
+    assert.ok((await d.store.get("thuong", period, "a"))!.state);
+  });
+
+  it("ván đã thắng không đọc được vẫn giữ điểm và hạng trên bảng", async () => {
+    const d = deps();
+    const won = await playOut(d, "a", "thuong");
+    const period = periodKey("thuong", d.now)!;
+    const entry = (await d.store.get("thuong", period, "a"))!;
+    assert.ok(await d.store.save({ ...entry, state: null }, entry.seq));
+    const l = (await formationOverview(d, "a")).levels.find((x) => x.level === "thuong")!;
+    assert.equal(l.mine?.status, won.status);
+    assert.equal(l.mine?.score, won.score);
+  });
+});
