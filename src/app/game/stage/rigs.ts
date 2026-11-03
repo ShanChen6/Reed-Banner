@@ -458,6 +458,8 @@ const NGUYEN_BAC: WarriorRig = {
     scale: 1,
   },
   poses: {
+    // Đánh thường: tranh Shan gửi 03/11, chém đao thấp trong thế tấn rộng (cỡ so theo thân trên).
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 98, y: 15 }, anchor: { x: 670, y: 1145 }, scale: 1.2, burst: { x: 1085, y: 850 } },
     cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 13, y: 6 }, anchor: { x: 810, y: 1020 }, scale: 1.25, burst: { x: 1500, y: 245 } },
     ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 13, y: 10 }, anchor: { x: 650, y: 1006 }, scale: 1.25, burst: { x: 1500, y: 30 } },
   },
@@ -514,6 +516,8 @@ const DINH_DIEN: WarriorRig = {
   ],
   fxColor: 0xd9ad65,
   poses: {
+    // Đánh thường: tranh Shan gửi 03/11, đâm giáo ngang ngực, khiên mây ép sát sườn (cỡ so theo thân trên).
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 470, y: 17 }, anchor: { x: 815, y: 870 }, scale: 1.33, burst: { x: 1515, y: 262 } },
     cast: {
       origin: { x: 75, y: 13 },
       scale: 0.95,
