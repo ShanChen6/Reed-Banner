@@ -797,44 +797,47 @@ const NGO_NHAT_KHANH: WarriorRig = {
     anchor: { x: 850, y: 900 }, scale: 1 },
 };
 
-/** Phạm Bạch Hổ, tướng sĩ hệ Hỏa. Tách lớp từ tranh 1024×1536, áo choàng lông hổ bay sau tay đao. */
+/**
+ * Phạm Bạch Hổ, tướng sĩ hệ Hỏa. Bộ tranh Shan gửi 03/11 (nền trong suốt sẵn) theo RB-009: áo khoác cộc đỏ nâu, giáp
+ * vảy, đai da và dải đỏ, đao một lưỡi cầm buông bên phải, thay bộ áo choàng lông hổ cũ. Ảnh đứng tách lớp bằng code:
+ * cẳng tay cùng thanh đao xoay quanh chỗ cắt dưới khuỷu (cẳng tay không chồng lên thân nên không cần vá), bàn tay đặt
+ * trên đai (vá bằng khuếch tán màu), đầu. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
 const PHAM_BACH_HO: WarriorRig = {
   skeleton: "warrior",
   dir: "pham-bach-ho",
   texScale: 0.5,
-  foot: { x: 650, y: 1510 },
-  height: 1511,
+  foot: { x: 525, y: 1465 },
+  height: 1387,
   parts: {
-    body: { x: 93, y: 10, w: 929, h: 1511 },
-    armR: { x: 819, y: 403, w: 146, h: 222 },
-    sword: { x: 3, y: 580, w: 481, h: 757 },
-    arm: { x: 272, y: 382, w: 234, h: 385 },
-    head: { x: 573, y: 10, w: 206, h: 226 },
+    body: { x: 257, y: 78, w: 547, h: 1392 },
+    armR: { x: 577, y: 607, w: 117, h: 119 },
+    sword: { x: 44, y: 880, w: 272, h: 434 },
+    arm: { x: 225, y: 664, w: 116, h: 216 },
+    head: { x: 400, y: 78, w: 220, h: 252 },
   },
-  cloth: [
-    { name: "ribbon", box: { x: 219, y: 62, w: 433, h: 306 }, behind: true,
-      wind: { axis: "x", start: 0.2, amp: 6, freq: 1.6, k: 3, phase: 0.3, vertical: true, reverse: true } },
-    { name: "cape", box: { x: 151, y: 312, w: 415, h: 844 }, behind: true,
-      wind: { axis: "y", start: 0.2, amp: 4, freq: 1.2, k: 2.8, phase: 1.4 } },
-    { name: "apron", box: { x: 315, y: 850, w: 321, h: 193 },
-      wind: { axis: "y", start: 0.3, amp: 2, freq: 1.35, k: 2.6, phase: 2.1 } },
-  ],
-  covers: [{ name: "sleeve", box: { x: 353, y: 301, w: 183, h: 126 } }],
+  cloth: [],
+  covers: [],
   joints: {
-    shoulder: { x: 440, y: 400 },
-    elbowR: { x: 905, y: 450 },
-    neck: { x: 685, y: 207 },
+    shoulder: { x: 300, y: 668 },
+    elbowR: { x: 685, y: 630 },
+    neck: { x: 515, y: 305 },
   },
-  blade: [{ x: 315, y: 780 }, { x: 10, y: 1330 }],
+  blade: [{ x: 265, y: 870 }, { x: 50, y: 1305 }],
   fxColor: 0xff913f,
+  // Theo thứ tự khung của prompt RB-009: chém ngang ngang ngực (đánh thường), bước tới chém chéo xuống, tay kia mở ra sau
+  // (ra chiêu), sải bước giơ đao qua vai phải (tuyệt chiêu). Cỡ so theo chiều cao đầu.
   poses: {
-    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 29, y: 67 },
-      anchor: { x: 710, y: 1006 }, scale: 1.12, burst: { x: 1500, y: 90 } },
-    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 37, y: 9 },
-      anchor: { x: 800, y: 1010 }, scale: 1, burst: { x: 1440, y: 430 } },
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 268, y: 25 },
+      anchor: { x: 610, y: 1075 }, scale: 1, burst: { x: 1360, y: 356 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 274, y: 37 },
+      anchor: { x: 650, y: 975 }, scale: 1, burst: { x: 1274, y: 802 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 97, y: 67 },
+      anchor: { x: 510, y: 1380 }, scale: 1, burst: { x: 667, y: 73 } },
   },
-  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 21, y: 61 },
-    anchor: { x: 910, y: 965 }, scale: 1 },
+  // Ngồi ngả nghiêng, một tay chống đất, đao rơi bên cạnh.
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 18, y: 76 },
+    anchor: { x: 800, y: 900 }, scale: 1 },
 };
 
 /** Ngô Xương Xí, mưu sĩ hệ Kim. Quạt lông và tay áo dùng nhịp phẩy nhẹ, tọa độ tranh 1024×1536. */
