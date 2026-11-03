@@ -489,7 +489,7 @@ CONSISTENCY: Create a new design from the description; no previous Reed Banner a
 
 ### RB-007 — Đinh Liễn · Pháp sư / Thủy
 
-> Trạng thái riêng: **DRAFT** — pilot thiết kế mới từ đầu theo yêu cầu Shan 31/10/2026; không khóa theo tranh cũ. Chưa duyệt Master hoặc tạo ảnh.
+> Trạng thái riêng: **DRAFT** — pilot thiết kế mới từ đầu theo yêu cầu Shan 31/10/2026; không khóa theo tranh cũ. Shan gửi đủ 6 khung ngày 03/11/2026, đã đưa vào game (`public/art/characters/dinh-lien/`: khung 1 → ảnh đứng tách lớp, 2 → `pose-attack`, 3 → `pose-cast`, 4 → `pose-ultimate`, 5 → `pose-down`, 6 → `style`).
 
 #### Identity DNA mới và ranh giới sử liệu
 
