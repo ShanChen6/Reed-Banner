@@ -930,47 +930,46 @@ const KIEU_CONG_HAN: WarriorRig = {
 };
 
 /**
- * Nguyễn Khoan, sứ quân Tam Đái, binh lính hệ Thổ. Bộ tranh Shan gửi 24/10 (nền đã trong suốt): ảnh đứng tách lớp
- * bằng code. Giáo cùng nắm tay xoay quanh cổ tay; khiên mây là lớp tay không, nâng lên khi vào thế và đỡ đòn,
- * phần thân sau khiên vá bằng ảnh đối xứng. Hệ tọa độ: ảnh đứng 1024×1536.
+ * Nguyễn Khoan, sứ quân Tam Đái, binh lính hệ Thổ. Bộ tranh Shan gửi 03/11 (nền đã trong suốt): ảnh đứng tách lớp
+ * bằng code. Giáo cùng nắm tay xoay quanh cổ tay (cẳng tay sau cán giáo vá lại); khiên mây kèm cẳng tay là lớp tay
+ * không, nâng lên khi vào thế và đỡ đòn, vạt áo sau khiên nội suy theo cột. Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const NGUYEN_KHOAN: WarriorRig = {
   skeleton: "warrior",
   weapon: "spear",
   dir: "nguyen-khoan",
   texScale: 0.5,
-  foot: { x: 560, y: 1480 },
-  height: 1375,
+  foot: { x: 505, y: 1495 },
+  height: 1360,
   parts: {
-    body: { x: 144, y: 110, w: 799, h: 1380 },
-    armR: { x: 700, y: 435, w: 290, h: 524 },
-    sword: { x: 53, y: 9, w: 100, h: 1489 },
-    arm: { x: 82, y: 543, w: 97, h: 112 },
-    head: { x: 392, y: 113, w: 187, h: 236 },
+    body: { x: 202, y: 139, w: 573, h: 1364 },
+    armR: { x: 628, y: 524, w: 235, h: 417 },
+    sword: { x: 221, y: 35, w: 65, h: 1464 },
+    arm: { x: 200, y: 472, w: 74, h: 80 },
+    head: { x: 400, y: 139, w: 175, h: 191 },
   },
-  cloth: [
-    { name: "ribbon", box: { x: 247, y: 205, w: 154, h: 136 }, behind: true,
-      wind: { axis: "x", start: 0.2, amp: 6, freq: 1.5, k: 3, phase: 0.8, vertical: true, reverse: true } },
-  ],
+  cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 165, y: 600 },
-    elbowR: { x: 722, y: 650 },
-    neck: { x: 500, y: 330 },
+    shoulder: { x: 245, y: 540 },
+    elbowR: { x: 640, y: 600 },
+    neck: { x: 485, y: 320 },
   },
-  blade: [{ x: 128, y: 600 }, { x: 122, y: 12 }],
+  blade: [{ x: 243, y: 520 }, { x: 252, y: 40 }],
   shieldRaise: -0.35,
   strikeFx: "earthWard",
   fxColor: 0xa5772f,
-  // Đâm giáo sau khiên (đánh thường), giơ giáo qua đầu trấn thủ (tuyệt chiêu); ra chiêu dùng nhịp đẩy giáo.
+  // Đâm giáo qua mép khiên (đánh thường), giơ giáo thủ khiên (ra chiêu), thế tấn thấp giáo chĩa trước (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 4, y: 6 },
-      anchor: { x: 640, y: 1145 }, scale: 1, burst: { x: 1300, y: 145 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 18, y: 10 },
-      anchor: { x: 650, y: 1185 }, scale: 1, burst: { x: 1290, y: 320 } },
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 89, y: 10 },
+      anchor: { x: 575, y: 995 }, scale: 1, burst: { x: 1465, y: 175 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 183, y: 12 },
+      anchor: { x: 845, y: 995 }, scale: 1.03, burst: { x: 790, y: 25 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 63, y: 43 },
+      anchor: { x: 857, y: 985 }, scale: 0.97, burst: { x: 1300, y: 215 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 0, y: 16 },
-    anchor: { x: 640, y: 930 }, scale: 0.9 },
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 45, y: 117 },
+    anchor: { x: 880, y: 700 }, scale: 0.9 },
 };
 
 /**
