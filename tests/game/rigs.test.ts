@@ -1007,7 +1007,7 @@ test("Bế Liên có bốn tranh, hồi phục hệ Thổ, bầu nậm xoay quan
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Mã Nhạc có bốn tranh, đoạn đạo tuyệt lương hệ Thổ, quạt nan phẩy theo nắm tay và texture khớp tọa độ", () => {
+test("Mã Nhạc bộ mới có bốn tranh, đoạn đạo tuyệt lương hệ Thổ, quạt cói phẩy theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("maNhac");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, "fan");
