@@ -1276,6 +1276,76 @@ QUALITY GATE: Same approved face, burgundy/ochre costume and original full-lengt
 
 ### RB-012 — Nguyễn Khoan (Nguyễn Thái Bình) · Binh lính / Thổ
 
+> Trạng thái: **DRAFT — REVIEW OLD MASTER FIRST** (03/11/2026). Đây là hướng đề xuất riêng cho Nguyễn Khoan và một Master/Idle prompt; **chưa có ảnh Master mới được duyệt, chưa viết sáu pose vNext, chưa thay asset hoặc rig**. Giữ toàn bộ hồ sơ V4.2 và sáu pose cũ bên dưới.
+
+#### Historical Identity — Sứ quân Tam Đái
+
+- **Recorded:** Nguyễn Khoan, hiệu Nguyễn Thái Bình, sứ quân Tam Đái theo [W05](../../../02-game-modes/campaign/warlord-matrix.md), [history source ledger](../../../02-game-modes/campaign/history-sources.md). Cơ chế, thời điểm tan rã của thế lực chưa có căn cứ đủ chắc; **không** khẳng định trận bị vây đói hay tử trận là sự kiện lịch sử.
+- **Art interpretation:** tuổi hiển thị khoảng 48–58, gương mặt dày dạn và râu có sợi bạc, bề thế, chắc khỏe, bình tĩnh chịu áp lực; đây là **sáng tác**. Khác Trần Lãm (hào trưởng với trượng lệnh), Ngô Xương Xí (quạt lông quý tộc), Ngô Nhật Khánh (giáo và kiếm).
+- **Địa vị:** một người thực sự giữ địa bàn và quân đội, không phải lính canh vô danh; cần cảm giác chỉ huy từ thân hình, thế đứng, vật liệu, biểu tượng quân trại. Gameplay nghề **Binh lính / Thổ** chỉ chi phối hành động/hiệu ứng, không hạ cấp nhân vật thành lính thường.
+- **Kỹ năng runtime:** ultimate `tamDaiKienThanh` (Tam Đái Kiên Thành); tác dụng trong registry gồm khiên đồng đội, khiêu khích và phản đòn. Bảo toàn skill ID, hiệu ứng và gameplay. Câu chuyện tập trung vào bảo vệ thành trại và chịu sức ép, **không biến địa danh thành một trận thành lịch sử xác thực**.
+- **Visual Hook:** thủ lĩnh giữ tuyến với *một giáo thẳng, một khiên mây tròn* và thế đứng như bức tường; thân vạm vỡ thấp trọng tâm, ánh mắt quan sát bình thản. Địa vị thể hiện qua áo giáp đệm có kết cấu, khóa đai đồng tiết chế, không vương miện, long bào, da thú hoặc giáp fantasy cồng kềnh.
+- **Cần review:** asset RB-012 cũ đã có bộ prompt/ảnh; chưa đối chiếu trực tiếp pixels trong task docs. Nếu đã đạt, giữ/REFINE. Không cho phép tự thay đổi vũ khí/hướng tay và không mặc định phải tạo lại sáu ảnh.
+
+#### Costume & Weapon DNA (proposed, pending Master approval)
+
+- **Nhân dạng:** nam Việt 48–58 tuổi tạo hình, cổ dày, ngực và cánh tay khỏe, gò má tròn rộng, lông mày đậm, mắt sâu chậm rãi, râu muối tiêu ngắn; khăn vấn vải nâu đất thấp, không đội giáp đầu kim loại.
+- **Trang phục:** áo giao lĩnh ngà đất `#D8BF8B` trong giáp đệm dày màu nâu sâu `#76543B`, áo ngoài ngắn màu ochre `#B48642`, mép gấu/đai vải đất nung `#A65E42`; tối đa một mảng giáp vảy sắt/đồng sẫm bảo vệ ngực và một khóa đai đồng, không chồng lớp áo không cần thiết. Quần vải sẫm, bọc chân và giày vải chắc; chi tiết cá nhân gắn với nghề giữ quân, không bùa phép Thổ.
+- **RB-012-W01:** ONE straight rigid hardwood spear, assembled length about `1.12H`, ONE leaf-shaped iron head around `0.13` of total length, shaft continues uninterrupted from ferrule to butt, anatomical RIGHT hand holds. Keep fully visible and physically plausible.
+- **Shield:** EXACTLY ONE round woven-rattan shield diameter about `0.43H`, strapped to anatomical LEFT forearm, not glued to torso or attached to spear. Same geometry and attachment in all future frames. Exact ratios can be finalized only after Master/weapon sheet approval.
+- **Không đồng phục nghề:** không vay màu, giáp, dáng vai hoặc động tác từ một Binh lính/Thổ khác; đây là thủ lĩnh phòng tuyến Tam Đái, không phải binh lính cấp thấp.
+
+#### Pose Identity Matrix (định hướng, KHÔNG phải sáu prompt đã duyệt)
+
+| Pose | Dáng riêng Nguyễn Khoan | Kiểm tra trùng |
+|---|---|---|
+| Idle | Chân rộng chắc, khiên thấp chếch trước hông trái, giáo dựng xéo sau vai phải, mặt nhìn thẳng | Khác chỉ huy cầm trượng của Trần Lãm |
+| Basic | Một đòn đâm giáo ngắn từ sau cạnh khiên, chân phải kéo sát, thân không lao quá xa | Khác các chiêu kiếm quạt |
+| Skill | Hạ trọng tâm, khiên ngang sườn trái, tay phải ghìm cán giáo thành tuyến chắn | Phản ánh phòng thủ, không giơ vũ khí kiểu ra lệnh |
+| Ultimate | Hai chân ghim đất, khiên dựng trước thân, giáo đặt chéo bảo vệ đồng đội; thân che chắn quyết liệt | `tamDaiKienThanh`: không chém, phép Thổ ở VFX riêng |
+| Defeated | Gục sấp sang trước với khiên kẹt dưới cẳng tay, giáo tuột khỏi tay phải nằm tách riêng; cơ thể thật sự ngã | Không quỳ thủ thế |
+| Personality | Chỉnh dây buộc khiên đã có ở cẳng tay trái; nhìn quanh như điểm danh quân | Không giống đánh thường/skill |
+
+> Matrix là art-direction brainstorm, phải đối chiếu bộ pose hiện có và kiểm đúng gameplay; chỉ viết sáu prompt sau khi Master được duyệt. Áp dụng [Unique Pose Identity](../../art-bible.md#33a-unique-pose-identity--áp-dụng-cho-nhân-vật-thiết-kế-tiếp-theo-approved-03112026).
+
+#### Master / Idle prompt (EN — independent, DRAFT)
+
+```text
+Create ONE full-body 2D historical low-fantasy game character, Nguyễn Khoan (Nguyễn Thái Bình), RB-012 / nguyenKhoan, a fictionalized portrayal of the 10th-century Vietnamese regional warlord holding Tam Đái, for Reed Banner.
+
+MANDATORY ART DIRECTION: Vietnamese Historical Low Fantasy — Heroic Stylization. The game character must appear a real TERRITORIAL COMMANDER with soldiers and a defended region, not a generic foot soldier. Grounded historical-inspired materials, compelling illustrated hero presence, believable weight and anatomy, painterly 2D game finish, NOT photoreal actor or Chinese imperial fantasy general.
+
+HISTORICAL BOUNDARY: Name, alternate name and Tam Đái association come from historical records; all face, age, weapons, garments and personal rituals are original game art, NOT documented artifacts. Do not invent his death, siege or defeat as historic fact. GAMEPLAY CLASS Binh lính / ELEMENT Thổ is a game abstraction, not social rank.
+
+MASTER REFERENCE: Compare the ACTUAL EXISTING Nguyễn Khoan character asset before generating a replacement. Preserve successful distinctive shapes and weapon configuration. This DRAFT requires the user's review to replace an existing Master; never assume approval.
+
+FACE & BODY DNA: Vietnamese mature male, visual age around 48–58, broad compact frame, powerful thick neck, solid shoulders, dense forearms, low balanced posture, natural adult proportions approximately 6.8–7 heads high. A wide weathered face, low prominent brow, deep deliberate dark eyes, broad nose, short salt-and-pepper beard and moustache, calm vigilant expression. ONE tightly wrapped muted-brown headcloth, some gray at temples. Not a youthful infantryman, a towering armored berserker or a gentle elder.
+
+COSTUME DNA: crossed-collar natural sandstone inner tunic #D8BF8B, thick layered weathered brown padded field armor #76543B over practical ochre short tunic #B48642, small restrained dark aged-bronze or iron scales at upper torso only, ONE terracotta cloth fastening/accent #A65E42 around waist, broad functional dark leather belt with ONE simple bronze clasp. Dark woven trousers, practical leg bindings and sturdy closed cloth shoes. Durable and well-maintained gear of a territorial commander. No gold armor, beast pelt, royal crown, elaborate cape, decorative weapons or uniform matching another character.
+
+WEAPON / EQUIPMENT LOCK RB-012-W01: EXACTLY ONE continuous STRAIGHT hardwood spear around 1.12 times body height H, narrow single leaf-shaped iron spearhead approx 13 percent of assembled spear length, one simple iron socket, no shaft gaps, no bent or jointed segments. Hold spear in ANATOMICAL RIGHT hand with rigid full length visible. EXACTLY ONE round woven-rattan shield diameter approximately 0.43H, correctly strapped to ANATOMICAL LEFT forearm, with natural fiber pattern, dark wooden rim and restrained practical central reinforcement. No extra sword, axe, banner or magic staff. These are provisional proportions pending approval, but both objects must remain consistent with actual approved existing assets if retained.
+
+MASTER IDLE — TERRITORIAL DEFENDER:
+Standing in a grounded three-quarter viewpoint, feet planted solidly just wider than shoulders, knees softly flexed; chest naturally broad, upper body slightly rotated toward an imagined frontline. ANATOMICAL LEFT forearm supports the round shield at hip-to-lower chest height, shield face angled slightly toward the viewer, NOT covering all costume. ANATOMICAL RIGHT hand holds straight spear with upper end rising diagonally beside right shoulder and butt near right foot, NOT a walking cane. His weight sits low as if prepared to absorb pressure, but he remains upright, commanding rather than crouching. Head turned toward the far side of the battlefield, lips closed, gaze stern and composed, showing an experienced lord who trusts defensive discipline. Strong visual triangular silhouette from spear, broad torso and shield.
+
+STYLIZATION: Heroic presence through confident posture, deliberate shape hierarchy, compact armor panels and readable shield/spear contrast. No earth rock plates, elemental aura, giant bronze armor, exaggerated spikes, film-photo realism or overdecorated fantasy motifs.
+
+OUTPUT: Exactly ONE complete full-body 2D character, all face, spearhead and spear butt, both feet, shield and hands inside frame, reasonable safe margins. Genuine transparent alpha PNG background, NO ground plate, cast shadow, studio vignette, text, UI, logos, other persons or baked VFX. ONLY generate Master/Idle for review, not a batch of six frames.
+
+NEGATIVE: generic infantry extra, hunched elderly peasant, king with crown, giant layered armor, floating earth, double spear, second shield, shield fused to spear, spear hidden behind torso, unstable shaft geometry, hand swaps, wrong shield forearm, mismatched costume materials or cropped head/feet/equipment.
+```
+
+#### Review gate trước khi sinh 6 pose
+
+- [ ] So sánh ảnh đang dùng với đề xuất này. Nếu bản cũ đẹp và có khí chất sứ quân, chốt KEEP/REFINE thay vì bắt buộc REDESIGN.
+- [ ] Có uy của thủ lĩnh Tam Đái, không giống lính thường hay Trần Lãm.
+- [ ] Giáo một cán thẳng, khiên buộc cẳng tay trái, bố cục không cắt mất đầu giáo/chuôi.
+- [ ] Trang phục có dấu hiệu địa vị vừa đủ, không biến thành vương giả hoặc giáp fantasy.
+- [ ] Heroic Stylization: giữ cảm giác game 2D, không quá đời thực.
+- [ ] Chỉ tạo Master sau review; chưa thay pose, rig, VFX, gameplay.
+
+#### Tư liệu V4.2 gốc và sáu prompt cũ (bảo lưu, chưa ghi đè runtime)
+
 > **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ / TINH CHỈNH. Chiêu tham chiếu: **Tam Đái Kiên Thành** (`tamDaiKienThanh`). Chưa thấy xung đột trực tiếp ở cấp mô tả; chuẩn hóa Weapon Geometry Sheet và kiểm tra động tác có thật dùng đạo cụ. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
 #### Tiểu sử, mô tả nhân vật để đối chiếu asset (tiếng Việt)
