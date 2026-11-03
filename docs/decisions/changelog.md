@@ -3,7 +3,8 @@
 ## 03/11/2026
 
 **Tầm Tướng Ký: bản chốt thiết kế LT-00 (DRAFT)**
-- Thêm [14 — Liệt Truyện Design Freeze](../02-game-modes/future/14-liet-truyen-design-freeze.md): kiểm kê code (7 hệ, 8 nghề, `chauNgoc`/`toKim`/`viTrieu` và chân dung), bảng 5 APPROVED / 22 PROPOSED / 5 OPEN, rulebook, 8 ví dụ chuẩn, 34 test Given/When/Then. Chờ Shan duyệt; chưa mở LT-01.
+- Thêm [14 — Tầm Tướng Ký Design Freeze](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md): kiểm kê code (7 hệ, 8 nghề, `chauNgoc`/`toKim`/`viTrieu` và chân dung, thành tựu, mùa tuần, sổ thưởng hạng), luật, ví dụ chuẩn và 50 test Given/When/Then.
+- Shan chốt 10 quyết định: tên Tầm Tướng Ký (bỏ “Liệt Truyện”); ghép có thứ tự, `A+A` được phép; hai chế độ Thường (phiếu) và Hạng tuần (kho nguyên tố bị tiêu, thưởng); độ khó lịch sử > đặc biệt > thường; gợi ý chỉ ở Thường, 2 lượt miễn phí, không lộ đủ công thức, không tự mở; ghép ra tướng chỉ mở thành tựu; bắt buộc đăng nhập; Tướng Lục hiện bóng mờ đủ pack; tạm dùng nghề/hệ/vật biểu trưng. Thay luật “không thứ tự”, “cho khách chơi offline”, “hint 3 mức” trong GDD 08. Còn 27 đề xuất và 7 câu mở chờ duyệt; chưa mở LT-01.
 - Sửa [danh mục chế độ](../02-game-modes/future/01-mode-portfolio.md#rủi-ro-sản-phẩm): code đã bật 8 nghề (`NEW_PROFESSIONS_ENABLED = true`), không còn là 6.
 
 **Nhạc: Đấu trường và Quần Hùng online**

@@ -13,13 +13,13 @@
 5. [05 — Mô phỏng, QA và cân bằng](05-binh-phap-balance-qa.md)
 6. [06 — Định hướng Tháp và Sinh tồn](06-towers-survival-future.md)
 7. [07 — Roadmap task triển khai](07-implementation-roadmap.md)
-8. [08 — Liệt Truyện: Tầm Tướng Ký — GDD](08-liet-truyen-gdd.md)
+8. [08 — Tầm Tướng Ký (trước gọi Liệt Truyện) — GDD](08-liet-truyen-gdd.md)
 9. [09 — Công thức và quy chuẩn nội dung Liệt Truyện](09-liet-truyen-recipes.md)
 10. [10 — Kiến trúc engine ghép yếu tố](10-liet-truyen-architecture.md)
 11. [11 — UX, Art Bible của Liệt Truyện](11-liet-truyen-ui-art.md)
 12. [12 — QA và roadmap Liệt Truyện](12-liet-truyen-qa-roadmap.md)
 13. [13 — Quần Hùng online: đấu trực tiếp hai người chơi](13-quan-hung-pvp-truc-tiep.md) (DRAFT, phát triển sau)
-14. [14 — Liệt Truyện: Design Freeze LT-00](14-liet-truyen-design-freeze.md) (DRAFT, chờ Shan duyệt; nguồn chính luật Liệt Truyện khi duyệt)
+14. [14 — Tầm Tướng Ký: Design Freeze LT-00](14-tam-tuong-ky-design-freeze.md) (DRAFT; nguồn chính luật Tầm Tướng Ký, thay luật trong 08–12)
 15. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
 
 ## Quy ước quyết định
