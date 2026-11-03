@@ -721,7 +721,7 @@ POSE: PERSONAL VIGNETTE — Standing broad-shouldered, lightly adjust the ORIGIN
 
 ### RB-048 — Mã Nhạc · Mưu sĩ / Thổ
 
-> Trạng thái riêng: **APPROVED — ART/PROMPT** (03/11/2026). Shan đã chốt hướng Master v2.1 **Vietnamese Historical Low Fantasy — Heroic Stylization** và đồng ý bộ 6 prompt. **Không đồng nghĩa ảnh cả 6 pose đã render, được QA hay tích hợp runtime.** Bảo toàn tư liệu V4.2 bên dưới.
+> Trạng thái riêng: **APPROVED — ART/PROMPT** (03/11/2026). Shan đã chốt hướng Master v2.1 **Vietnamese Historical Low Fantasy — Heroic Stylization** và đồng ý bộ 6 prompt. **Không đồng nghĩa ảnh cả 6 pose đã render, được QA hay tích hợp runtime.** Bảo toàn tư liệu V4.2 bên dưới. Shan gửi PNG cùng ngày, đã tích hợp runtime (`public/art/characters/ma-nhac/`) theo POSE DIRECTION v2.1: Frame 1 Idle (tay trái mở ra lệnh) → ảnh đứng tách lớp, Frame 2 Basic (quạt ngang ngực, tay trái chỉ hướng ngược) → `pose-attack`, Frame 3 Skill (quạt sát vai, chỉ tay xuống) → `pose-cast`, Frame 4 Ultimate → `pose-ultimate`, Frame 5 → `pose-down`, Frame 6 → `style`; ảnh đứng thừa (tay đặt trên đai) bỏ theo ý Shan.
 
 #### Pilot mới — Character Identity (hư cấu, game-authored)
 
