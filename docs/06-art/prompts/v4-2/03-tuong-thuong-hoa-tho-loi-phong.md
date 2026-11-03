@@ -664,7 +664,7 @@ POSE: PERSONAL VIGNETTE — Standing broad-shouldered, lightly adjust the ORIGIN
 
 ### RB-048 — Mã Nhạc · Mưu sĩ / Thổ
 
-> Trạng thái riêng: **DRAFT** — pilot thiết kế lại theo [Art Direction 03/11/2026](../../art-bible.md#3-art-direction-03112026--historical-grounded-fantasy-approved). **Chỉ viết hồ sơ mới và một prompt Master/Idle; chưa tạo ảnh, chưa duyệt Master, chưa thay thế 6 pose cũ hoặc asset trong code.** Tư liệu và sáu prompt V4.2 trước đây được bảo lưu bên dưới để so sánh.
+> Trạng thái riêng: **APPROVED — ART/PROMPT** (03/11/2026). Shan đã chốt hướng Master v2.1 **Vietnamese Historical Low Fantasy — Heroic Stylization** và đồng ý bộ 6 prompt. **Không đồng nghĩa ảnh cả 6 pose đã render, được QA hay tích hợp runtime.** Bảo toàn tư liệu V4.2 bên dưới.
 
 #### Pilot mới — Character Identity (hư cấu, game-authored)
 
@@ -679,7 +679,7 @@ POSE: PERSONAL VIGNETTE — Standing broad-shouldered, lightly adjust the ORIGIN
 - **Reference thực tế:** ảnh Mã Nhạc đang chạy trong game và các frame V4.2 là **baseline**, nhưng chưa có bản PNG gốc được so sánh bằng pixel trong task docs này. Nếu prompt xung đột với ảnh hiện có, phải chờ review, không tuyên bố đã bảo toàn chi tiết ảnh.
 - **Phân biệt lịch sử:** toàn bộ tiểu sử là sáng tác lấy cảm hứng đời sống Việt thế kỷ X; không phải nhân vật lịch sử xác thực.
 
-#### Pilot mới — Master/Idle prompt duy nhất (EN, chờ duyệt ảnh)
+#### Prompt pilot đời đầu (lưu lịch sử — đã được Master v2.1 thay thế)
 
 ```text
 Create ONE full-body 2D game character, Mã Nhạc (RB-048 / maNhac), a fictional Vietnamese 10th-century supply-route strategist and deception planner in the grounded low-fantasy world of Reed Banner. Game profession Mưu sĩ, element Thổ; these guide his combat behavior and restrained accents, NOT a generic class uniform or magical stone outfit.
@@ -701,7 +701,7 @@ OUTPUT: ONE fully visible character head to toe, natural 7-head proportions, ver
 NEGATIVE & QA: Never make this look like a generic sage with a paper folding fan, a monarch, a magical earth wizard or an old peasant carrying a tool at random. No extra props, fingers, fans or swapped anatomical hands. Retain visual continuity with the original in-game Mã Nhạc where that does not conflict with the newly approved art-direction review. This is ONLY the MASTER/IDLE design pilot. Do NOT generate Basic, Skill, Ultimate, Defeated or Personality until this image is explicitly approved.
 ```
 
-#### Pilot QA — trước khi được phép tạo các pose còn lại
+#### QA lịch sử của pilot đời đầu
 
 - [ ] Đối chiếu trực tiếp ảnh Mã Nhạc cũ và Master mới trên cùng nền và kích thước trong UI.
 - [ ] Cá tính hiện qua mắt, dáng người, quạt cói, thẻ đong lương; nhìn vào không nhầm với những mưu sĩ khác.
@@ -709,6 +709,130 @@ NEGATIVE & QA: Never make this look like a generic sage with a paper folding fan
 - [ ] Quạt vuông không biến thành quạt lông hoặc vũ khí fantasy; đúng tay phải, không nhân đôi đạo cụ.
 - [ ] Nhìn thấy đủ người, chân, quạt và phụ kiện, PNG alpha thật.
 - [ ] Shan duyệt Master + weapon geometry trước khi viết hoặc sinh 5 pose còn lại; chưa thay asset, rig, skills hoặc VFX.
+
+#### Production v2.1 — Sáu prompt chuẩn đã duyệt 03/11/2026
+
+**Nguồn chuẩn:** Master v2.1 đã được Shan đồng ý trong chat 03/11/2026, nhận diện qua áo ochre, vest nâu viền hình học, quạt cói vuông khung gỗ, khăn đầu, ống bút và **hai thẻ đeo đai**. Ảnh reference trong hội thoại không tự lưu vào Git; khi generate phải đính kèm **ảnh Master v2.1 thật**, không dùng bản quá photoreal trước đó. Idle là Master, không cần tạo một phiên bản đứng khác.
+
+**Cơ chế tạo ảnh:** sáu prompt độc lập. Đã duyệt **nội dung prompt và hướng Master**, không xác nhận đủ 6 PNG hoặc pipeline runtime. Thử từng ảnh và sửa sai tại frame trước khi chuyển frame tiếp.
+
+#### Frame 1 — Idle / Master
+
+```text
+REED BANNER — RB-048 Mã Nhạc (maNhac), fictional Vietnamese 10th-century Mưu sĩ / Thổ. USE THE USER-APPROVED MASTER v2.1 IMAGE FROM 03/11/2026 as the immutable reference for face, body, garment cut, geometry and number of accessories. Heroic low-fantasy hand-painted 2D game illustration, NOT photorealistic costume photography and NOT high-fantasy xianxia.
+
+IDENTITY DNA: Vietnamese man visual age about 42–48, lean resilient adult with weathered angular face, discerning narrow dark eyes, pronounced brows, short moustache, subtle gray-streaked hair beneath ONE wrapped brown headcloth. Calculating, disciplined supply-route strategist with personal responsibility for food convoys and terrain. Preserve exactly the approved face, headwrap shape and adult proportions.
+
+COSTUME DNA: Muted ochre crossed-collar robe #B48642, ivory inner collar and sleeve lining #D8BF8B, ONE structured dark-brown sleeveless vest #76543B with restrained geometric borders, wide wrapped dark-brown waist sash, ONE hanging terracotta fabric panel #A65E42, loose brown trousers, wrapped calves and low dark practical shoes. Match the approved Master v2.1 garment patterns, hem length, sleeves, fabric folds and shoulder shape. ONE narrow bamboo writing tube at the same belt position and EXACTLY TWO wooden tally tags attached in the same positions and same counts as approved Master v2.1. Do not swap left/right placement of accessories; do not add layers, ornaments or independent props.
+
+EQUIPMENT LOCK RB-048-W01: EXACTLY ONE rigid four-sided square woven-reed fan with a short wooden handle, dark-wood border, matching original weave and original corner/center fittings. Keep identical width, height, thickness, frame and grip in all six frames. Normally held in anatomical RIGHT hand, except Defeated when released. Do NOT turn it into feather/folding fan, shield, projectile or magical talisman.
+
+STYLE/OUTPUT: Vietnamese Historical Low Fantasy — Heroic Stylization, game-ready illustrated brushwork, restrained dramatic light, adult anatomy and clear readable silhouette. ONE full-body character, whole head, feet, fan, hands and original belt objects visible with generous safety margin; natural fabric motion only, true transparent PNG alpha with NO dark gradient backdrop, floor, cast shadow, scene, title, UI, watermark, added characters or baked Earth-element VFX. Never mirror the anatomical accessories, duplicate tally tags, deform hands or change the Master v2.1.
+
+POSE DIRECTION: A stable three-quarter stance, anatomical RIGHT foot a half-step offset, poised upright back, head turned as if scanning terrain. RIGHT hand holds the ORIGINAL square fan upright slightly outside the torso near lower chest level; anatomical LEFT hand opens in a restrained command gesture near chest-to-waist height, matching the approved Master v2.1's commanding presence. Eyes sharp, expression quiet and thoughtful. NOT a newly designed Master; reproduce approved standing image with consistent equipment.
+
+QUALITY GATE: identical Master v2.1 face and garment panels, square fan geometry and TWO attached tags, anatomical RIGHT fan hand except defeat, no cropped parts, no VFX, true alpha.
+```
+
+#### Frame 2 — Basic Attack / Nghi binh
+
+```text
+REED BANNER — RB-048 Mã Nhạc (maNhac), fictional Vietnamese 10th-century Mưu sĩ / Thổ. USE THE USER-APPROVED MASTER v2.1 IMAGE FROM 03/11/2026 as the immutable reference for face, body, garment cut, geometry and number of accessories. Heroic low-fantasy hand-painted 2D game illustration, NOT photorealistic costume photography and NOT high-fantasy xianxia.
+
+IDENTITY DNA: Vietnamese man visual age about 42–48, lean resilient adult with weathered angular face, discerning narrow dark eyes, pronounced brows, short moustache, subtle gray-streaked hair beneath ONE wrapped brown headcloth. Calculating, disciplined supply-route strategist with personal responsibility for food convoys and terrain. Preserve exactly the approved face, headwrap shape and adult proportions.
+
+COSTUME DNA: Muted ochre crossed-collar robe #B48642, ivory inner collar and sleeve lining #D8BF8B, ONE structured dark-brown sleeveless vest #76543B with restrained geometric borders, wide wrapped dark-brown waist sash, ONE hanging terracotta fabric panel #A65E42, loose brown trousers, wrapped calves and low dark practical shoes. Match the approved Master v2.1 garment patterns, hem length, sleeves, fabric folds and shoulder shape. ONE narrow bamboo writing tube at the same belt position and EXACTLY TWO wooden tally tags attached in the same positions and same counts as approved Master v2.1. Do not swap left/right placement of accessories; do not add layers, ornaments or independent props.
+
+EQUIPMENT LOCK RB-048-W01: EXACTLY ONE rigid four-sided square woven-reed fan with a short wooden handle, dark-wood border, matching original weave and original corner/center fittings. Keep identical width, height, thickness, frame and grip in all six frames. Normally held in anatomical RIGHT hand, except Defeated when released. Do NOT turn it into feather/folding fan, shield, projectile or magical talisman.
+
+STYLE/OUTPUT: Vietnamese Historical Low Fantasy — Heroic Stylization, game-ready illustrated brushwork, restrained dramatic light, adult anatomy and clear readable silhouette. ONE full-body character, whole head, feet, fan, hands and original belt objects visible with generous safety margin; natural fabric motion only, true transparent PNG alpha with NO dark gradient backdrop, floor, cast shadow, scene, title, UI, watermark, added characters or baked Earth-element VFX. Never mirror the anatomical accessories, duplicate tally tags, deform hands or change the Master v2.1.
+
+POSE DIRECTION: A fast controlled tactical diversion, not a physically destructive fan strike: LEFT foot advances diagonally, torso rotates a little; RIGHT arm extends the SAME rigid square fan outward at chest level toward the unseen opponent; LEFT hand points precisely in the opposite direction to misdirect attention. Knees soft, center of gravity grounded; face intent and calculating. Different from idle; fan still one intact item with fixed weave and fittings.
+
+QUALITY GATE: identical Master v2.1 face and garment panels, square fan geometry and TWO attached tags, anatomical RIGHT fan hand except defeat, no cropped parts, no VFX, true alpha.
+```
+
+#### Frame 3 — Skill / Phá kế
+
+```text
+REED BANNER — RB-048 Mã Nhạc (maNhac), fictional Vietnamese 10th-century Mưu sĩ / Thổ. USE THE USER-APPROVED MASTER v2.1 IMAGE FROM 03/11/2026 as the immutable reference for face, body, garment cut, geometry and number of accessories. Heroic low-fantasy hand-painted 2D game illustration, NOT photorealistic costume photography and NOT high-fantasy xianxia.
+
+IDENTITY DNA: Vietnamese man visual age about 42–48, lean resilient adult with weathered angular face, discerning narrow dark eyes, pronounced brows, short moustache, subtle gray-streaked hair beneath ONE wrapped brown headcloth. Calculating, disciplined supply-route strategist with personal responsibility for food convoys and terrain. Preserve exactly the approved face, headwrap shape and adult proportions.
+
+COSTUME DNA: Muted ochre crossed-collar robe #B48642, ivory inner collar and sleeve lining #D8BF8B, ONE structured dark-brown sleeveless vest #76543B with restrained geometric borders, wide wrapped dark-brown waist sash, ONE hanging terracotta fabric panel #A65E42, loose brown trousers, wrapped calves and low dark practical shoes. Match the approved Master v2.1 garment patterns, hem length, sleeves, fabric folds and shoulder shape. ONE narrow bamboo writing tube at the same belt position and EXACTLY TWO wooden tally tags attached in the same positions and same counts as approved Master v2.1. Do not swap left/right placement of accessories; do not add layers, ornaments or independent props.
+
+EQUIPMENT LOCK RB-048-W01: EXACTLY ONE rigid four-sided square woven-reed fan with a short wooden handle, dark-wood border, matching original weave and original corner/center fittings. Keep identical width, height, thickness, frame and grip in all six frames. Normally held in anatomical RIGHT hand, except Defeated when released. Do NOT turn it into feather/folding fan, shield, projectile or magical talisman.
+
+STYLE/OUTPUT: Vietnamese Historical Low Fantasy — Heroic Stylization, game-ready illustrated brushwork, restrained dramatic light, adult anatomy and clear readable silhouette. ONE full-body character, whole head, feet, fan, hands and original belt objects visible with generous safety margin; natural fabric motion only, true transparent PNG alpha with NO dark gradient backdrop, floor, cast shadow, scene, title, UI, watermark, added characters or baked Earth-element VFX. Never mirror the anatomical accessories, duplicate tally tags, deform hands or change the Master v2.1.
+
+POSE DIRECTION: Action representing an active tactical skill; exact combat skill behavior belongs to runtime. RIGHT hand raises the SAME square fan diagonally close to anatomical RIGHT shoulder; LEFT arm reaches forward and down, index finger indicating an enemy formation weakness. Wider grounded stance, slight forward lean, concentrated slightly stern eyes and slightly open mouth as if giving a clipped order. Neither a physical fan attack nor a spell effect. Distinct from Basic's outward diversion.
+
+QUALITY GATE: identical Master v2.1 face and garment panels, square fan geometry and TWO attached tags, anatomical RIGHT fan hand except defeat, no cropped parts, no VFX, true alpha.
+```
+
+#### Frame 4 — Ultimate / Đoạn Đạo Tuyệt Lương
+
+```text
+REED BANNER — RB-048 Mã Nhạc (maNhac), fictional Vietnamese 10th-century Mưu sĩ / Thổ. USE THE USER-APPROVED MASTER v2.1 IMAGE FROM 03/11/2026 as the immutable reference for face, body, garment cut, geometry and number of accessories. Heroic low-fantasy hand-painted 2D game illustration, NOT photorealistic costume photography and NOT high-fantasy xianxia.
+
+IDENTITY DNA: Vietnamese man visual age about 42–48, lean resilient adult with weathered angular face, discerning narrow dark eyes, pronounced brows, short moustache, subtle gray-streaked hair beneath ONE wrapped brown headcloth. Calculating, disciplined supply-route strategist with personal responsibility for food convoys and terrain. Preserve exactly the approved face, headwrap shape and adult proportions.
+
+COSTUME DNA: Muted ochre crossed-collar robe #B48642, ivory inner collar and sleeve lining #D8BF8B, ONE structured dark-brown sleeveless vest #76543B with restrained geometric borders, wide wrapped dark-brown waist sash, ONE hanging terracotta fabric panel #A65E42, loose brown trousers, wrapped calves and low dark practical shoes. Match the approved Master v2.1 garment patterns, hem length, sleeves, fabric folds and shoulder shape. ONE narrow bamboo writing tube at the same belt position and EXACTLY TWO wooden tally tags attached in the same positions and same counts as approved Master v2.1. Do not swap left/right placement of accessories; do not add layers, ornaments or independent props.
+
+EQUIPMENT LOCK RB-048-W01: EXACTLY ONE rigid four-sided square woven-reed fan with a short wooden handle, dark-wood border, matching original weave and original corner/center fittings. Keep identical width, height, thickness, frame and grip in all six frames. Normally held in anatomical RIGHT hand, except Defeated when released. Do NOT turn it into feather/folding fan, shield, projectile or magical talisman.
+
+STYLE/OUTPUT: Vietnamese Historical Low Fantasy — Heroic Stylization, game-ready illustrated brushwork, restrained dramatic light, adult anatomy and clear readable silhouette. ONE full-body character, whole head, feet, fan, hands and original belt objects visible with generous safety margin; natural fabric motion only, true transparent PNG alpha with NO dark gradient backdrop, floor, cast shadow, scene, title, UI, watermark, added characters or baked Earth-element VFX. Never mirror the anatomical accessories, duplicate tally tags, deform hands or change the Master v2.1.
+
+POSE DIRECTION: Personal ultimate at slot 4, runtime skill ID doanDaoTuyetLuong. Depict the decisive order to sever an enemy supply route. RIGHT arm drives the SAME intact fan diagonally down and forward near waist level while anatomical LEFT arm strongly extends toward the unseen route, open palm down and fingers together. LEFT foot strides forward and bends, rear foot anchors; face resolute, mouth slightly open with commanding force. No rocks, dust attack, magically glowing fan, food convoy or troops drawn into the frame. Distinct from raised-fan Skill.
+
+QUALITY GATE: identical Master v2.1 face and garment panels, square fan geometry and TWO attached tags, anatomical RIGHT fan hand except defeat, no cropped parts, no VFX, true alpha.
+```
+
+#### Frame 5 — Defeated / Thất trận
+
+```text
+REED BANNER — RB-048 Mã Nhạc (maNhac), fictional Vietnamese 10th-century Mưu sĩ / Thổ. USE THE USER-APPROVED MASTER v2.1 IMAGE FROM 03/11/2026 as the immutable reference for face, body, garment cut, geometry and number of accessories. Heroic low-fantasy hand-painted 2D game illustration, NOT photorealistic costume photography and NOT high-fantasy xianxia.
+
+IDENTITY DNA: Vietnamese man visual age about 42–48, lean resilient adult with weathered angular face, discerning narrow dark eyes, pronounced brows, short moustache, subtle gray-streaked hair beneath ONE wrapped brown headcloth. Calculating, disciplined supply-route strategist with personal responsibility for food convoys and terrain. Preserve exactly the approved face, headwrap shape and adult proportions.
+
+COSTUME DNA: Muted ochre crossed-collar robe #B48642, ivory inner collar and sleeve lining #D8BF8B, ONE structured dark-brown sleeveless vest #76543B with restrained geometric borders, wide wrapped dark-brown waist sash, ONE hanging terracotta fabric panel #A65E42, loose brown trousers, wrapped calves and low dark practical shoes. Match the approved Master v2.1 garment patterns, hem length, sleeves, fabric folds and shoulder shape. ONE narrow bamboo writing tube at the same belt position and EXACTLY TWO wooden tally tags attached in the same positions and same counts as approved Master v2.1. Do not swap left/right placement of accessories; do not add layers, ornaments or independent props.
+
+EQUIPMENT LOCK RB-048-W01: EXACTLY ONE rigid four-sided square woven-reed fan with a short wooden handle, dark-wood border, matching original weave and original corner/center fittings. Keep identical width, height, thickness, frame and grip in all six frames. Normally held in anatomical RIGHT hand, except Defeated when released. Do NOT turn it into feather/folding fan, shield, projectile or magical talisman.
+
+STYLE/OUTPUT: Vietnamese Historical Low Fantasy — Heroic Stylization, game-ready illustrated brushwork, restrained dramatic light, adult anatomy and clear readable silhouette. ONE full-body character, whole head, feet, fan, hands and original belt objects visible with generous safety margin; natural fabric motion only, true transparent PNG alpha with NO dark gradient backdrop, floor, cast shadow, scene, title, UI, watermark, added characters or baked Earth-element VFX. Never mirror the anatomical accessories, duplicate tally tags, deform hands or change the Master v2.1.
+
+POSE DIRECTION: Actual defeat: hips ON the ground and upper body has collapsed heavily to anatomical LEFT, head down, eyes half closed and mouth exhausted. One leg extended, other bent unevenly. RIGHT hand open, having RELEASED the original ONE fan, which lies separately beside him fully visible in its original intact rectangular wood-and-reed geometry. LEFT forearm weakly braces but cannot support him upright. SAME bamboo tube and EXACTLY TWO tally tags remain attached in their original belt positions, not scattered duplicates. Widen canvas to fit entire collapsed figure and fan. Never kneeling heroically, meditating or preparing to stand.
+
+QUALITY GATE: identical Master v2.1 face and garment panels, square fan geometry and TWO attached tags, anatomical RIGHT fan hand except defeat, no cropped parts, no VFX, true alpha.
+```
+
+#### Frame 6 — Personality / Người giữ đường lương
+
+```text
+REED BANNER — RB-048 Mã Nhạc (maNhac), fictional Vietnamese 10th-century Mưu sĩ / Thổ. USE THE USER-APPROVED MASTER v2.1 IMAGE FROM 03/11/2026 as the immutable reference for face, body, garment cut, geometry and number of accessories. Heroic low-fantasy hand-painted 2D game illustration, NOT photorealistic costume photography and NOT high-fantasy xianxia.
+
+IDENTITY DNA: Vietnamese man visual age about 42–48, lean resilient adult with weathered angular face, discerning narrow dark eyes, pronounced brows, short moustache, subtle gray-streaked hair beneath ONE wrapped brown headcloth. Calculating, disciplined supply-route strategist with personal responsibility for food convoys and terrain. Preserve exactly the approved face, headwrap shape and adult proportions.
+
+COSTUME DNA: Muted ochre crossed-collar robe #B48642, ivory inner collar and sleeve lining #D8BF8B, ONE structured dark-brown sleeveless vest #76543B with restrained geometric borders, wide wrapped dark-brown waist sash, ONE hanging terracotta fabric panel #A65E42, loose brown trousers, wrapped calves and low dark practical shoes. Match the approved Master v2.1 garment patterns, hem length, sleeves, fabric folds and shoulder shape. ONE narrow bamboo writing tube at the same belt position and EXACTLY TWO wooden tally tags attached in the same positions and same counts as approved Master v2.1. Do not swap left/right placement of accessories; do not add layers, ornaments or independent props.
+
+EQUIPMENT LOCK RB-048-W01: EXACTLY ONE rigid four-sided square woven-reed fan with a short wooden handle, dark-wood border, matching original weave and original corner/center fittings. Keep identical width, height, thickness, frame and grip in all six frames. Normally held in anatomical RIGHT hand, except Defeated when released. Do NOT turn it into feather/folding fan, shield, projectile or magical talisman.
+
+STYLE/OUTPUT: Vietnamese Historical Low Fantasy — Heroic Stylization, game-ready illustrated brushwork, restrained dramatic light, adult anatomy and clear readable silhouette. ONE full-body character, whole head, feet, fan, hands and original belt objects visible with generous safety margin; natural fabric motion only, true transparent PNG alpha with NO dark gradient backdrop, floor, cast shadow, scene, title, UI, watermark, added characters or baked Earth-element VFX. Never mirror the anatomical accessories, duplicate tally tags, deform hands or change the Master v2.1.
+
+POSE DIRECTION: Quiet noncombat personal ritual of checking supplies. RIGHT hand lowers the SAME fan vertically beside the body. LEFT hand lifts ONE of the EXACTLY TWO original tally tags while it REMAINS attached to its original cord; the other tag still hangs undisturbed. Mã Nhạc studies it attentively with subtle concern and responsible thought, standing relaxed but upright. ONE bamboo writing tube stays untouched on the belt. No third tally tag, detached duplicate, scroll, map table or new prop. Completely distinct from combat gestures.
+
+QUALITY GATE: identical Master v2.1 face and garment panels, square fan geometry and TWO attached tags, anatomical RIGHT fan hand except defeat, no cropped parts, no VFX, true alpha.
+```
+
+#### Art QA cho bộ v2.1
+
+- [ ] Sáu frame giữ **một khuôn mặt**, chất liệu hand-painted game art; không trở về ảnh phục trang đời thực.
+- [ ] Đúng **một quạt vuông RB-048-W01**, không thay hình quạt, luôn đúng tay phải khi cầm.
+- [ ] Đúng **hai thẻ đeo**, một ống bút; cùng bên cơ thể qua cả sáu frame.
+- [ ] Basic / Skill / Ultimate khác nhau về hướng tay, fan và trọng tâm.
+- [ ] Defeated thực sự ngã, quạt rơi khỏi tay; Personality chỉ nhấc **một trong hai thẻ hiện có**.
+- [ ] PNG alpha thật, không phông đen gradient; không ảnh thừa, không VFX bake-in.
+- [ ] Chỉ tích hợp runtime sau QA ảnh + rig và có sự đồng ý của Shan.
 
 #### Tư liệu V4.2 cũ — giữ nguyên để so sánh (chưa bị thay thế trong runtime)
 
