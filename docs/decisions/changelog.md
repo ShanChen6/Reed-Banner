@@ -2,7 +2,11 @@
 
 ## 03/11/2026
 
-**Tầm Tướng Ký: LT-01 catalog slice (DRAFT, có code)**
+**Tầm Tướng Ký: LT-02 engine ghép (có code)**
+- Shan duyệt công thức slice LT-01; [catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md) **DRAFT → APPROVED**.
+- `src/core/tam-tuong-ky/engine.ts`, `hints.ts`: ghép chế độ Thường (sổ khám phá) và Hạng (kho, tiêu cả khi ghép sai, tướng không vào kho), gợi ý mức 1–2 không lộ đủ công thức; 29 test. Xem [engine LT-02](../02-game-modes/future/16-tam-tuong-ky-lt02-engine.md). Chưa có server, UI hay dữ liệu lưu.
+
+**Tầm Tướng Ký: LT-01 catalog slice (có code)**
 - Shan chốt số lần ghép tối thiểu **cố định**: thường 7, đặc biệt 9, lịch sử 12 (thay khung 5–7 / 7–9 / 9–12 duyệt trước đó trong ngày). Validator đổi `tierOrder`/`tierRange` thành một lỗi `tierCombines`; slice chỉnh lại: Đinh Ngọc 9, Lê Hoàn 12, Nguyễn Bặc 12.
 - `src/core/tam-tuong-ky/`: kiểu dữ liệu, đồ thị công thức có thứ tự, validator theo Design Freeze mục 7.2 và `SLICE_PACK` (draft) cho Nguyễn Bặc, Lê Hoàn, Đinh Ngọc; 27 test ở `tests/core/tam-tuong-ky/`. Báo cáo: [catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md). Chưa có engine, UI, route hay dữ liệu lưu.
 

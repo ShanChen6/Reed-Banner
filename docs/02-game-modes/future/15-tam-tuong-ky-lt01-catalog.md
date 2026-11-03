@@ -1,7 +1,7 @@
 # 15 — Tầm Tướng Ký: catalog slice LT-01
 
 > Cập nhật: 03/11/2026
-> Trạng thái: **DRAFT** — catalog thử 3 tướng và validator đã có code (`src/core/tam-tuong-ky/`), pack để `draft`; công thức và tên node chờ Shan duyệt.
+> Trạng thái: **APPROVED** — Shan duyệt công thức và tên node ngày 03/11/2026. Catalog thử 3 tướng và validator đã có code (`src/core/tam-tuong-ky/`); pack vẫn để `draft` (chưa phát hành).
 
 Luật theo [Design Freeze](14-tam-tuong-ky-design-freeze.md) (FROZEN). File này ghi nội dung slice và kết quả kiểm; dữ liệu thật nằm trong code, file này không định nghĩa luật mới.
 
@@ -99,5 +99,5 @@ Hai tướng lịch sử gắn mã nguồn `S04` (Việt Nam sử lược, mục
 
 ## 5. Việc tiếp theo
 
-- Shan duyệt tên node và công thức ở mục 3.
-- LT-02: engine thuần cho chế độ Thường và Hạng trên `SLICE_PACK`, test [mục 7.1](14-tam-tuong-ky-design-freeze.md#71-engine).
+- [x] Shan duyệt tên node và công thức ở mục 3 (03/11/2026).
+- [x] LT-02: engine thuần cho chế độ Thường và Hạng, xem [16 — engine LT-02](16-tam-tuong-ky-lt02-engine.md).

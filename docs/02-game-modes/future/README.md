@@ -20,8 +20,9 @@
 12. [12 — QA và roadmap Liệt Truyện](12-liet-truyen-qa-roadmap.md)
 13. [13 — Quần Hùng online: đấu trực tiếp hai người chơi](13-quan-hung-pvp-truc-tiep.md) (DRAFT, phát triển sau)
 14. [14 — Tầm Tướng Ký: Design Freeze LT-00](14-tam-tuong-ky-design-freeze.md) (FROZEN; nguồn chính luật Tầm Tướng Ký, thay luật trong 08–12)
-15. [15 — Tầm Tướng Ký: catalog slice LT-01](15-tam-tuong-ky-lt01-catalog.md) (DRAFT, có code)
-16. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
+15. [15 — Tầm Tướng Ký: catalog slice LT-01](15-tam-tuong-ky-lt01-catalog.md) (APPROVED, có code)
+16. [16 — Tầm Tướng Ký: engine ghép LT-02](16-tam-tuong-ky-lt02-engine.md) (APPROVED, có code)
+17. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
 
 ## Quy ước quyết định
 

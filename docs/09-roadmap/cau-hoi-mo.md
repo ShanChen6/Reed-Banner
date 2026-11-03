@@ -131,7 +131,7 @@
 - Đã duyệt (Shan, 03/11/2026): toàn bộ đề xuất mục 3.2, số lần ghép cố định thường 7 / đặc biệt 9 / lịch sử 12 ([Design Freeze mục 3.2](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#32-đề-xuất-đã-duyệt)). Số liệu là điểm xuất phát, LT-05 chỉnh bằng mô phỏng.
 - Đã chốt (Shan, 03/11/2026): bán bó nguyên tố ở cửa hàng có giới hạn tuần; duyệt 12 tướng gói đầu; Đinh Bộ Lĩnh xây theo hướng nhân vật đặc biệt (đề xuất vào gói 2, [P-27](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#32-đề-xuất-đã-duyệt)).
 - Đã làm (LT-01, 03/11/2026): catalog slice Nguyễn Bặc, Lê Hoàn, Đinh Ngọc theo luật có thứ tự, dùng đủ 7 hệ, không công thức “Hệ + Nghề” ([catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md)).
-- TODO: Shan duyệt tên node và công thức slice ([catalog LT-01 mục 3](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md#3-công-thức)).
+- Đã duyệt (Shan, 03/11/2026): tên node và công thức slice LT-01. LT-02 engine đã có code ([engine LT-02](../02-game-modes/future/16-tam-tuong-ky-lt02-engine.md)).
 - TODO: Thêm claim tước Định Quốc công (Nguyễn Bặc), Thập đạo tướng quân (Lê Hoàn) vào sổ nguồn và đối chiếu S04 trước khi Tướng Lục hiện mô tả lịch sử ([catalog LT-01 mục 4](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md#4-nguồn-vật-biểu-trưng-và-nguồn-sử)).
 - TODO: Khi code thưởng bó nguyên tố, sửa [thưởng hạng mục 6](../02-game-modes/README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt) (hiện ghi “chỉ vàng”).
 
