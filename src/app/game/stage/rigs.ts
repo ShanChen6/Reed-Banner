@@ -709,43 +709,48 @@ const DINH_LIEN: WarriorRig = {
     anchor: { x: 560, y: 1262 }, scale: 0.95 },
 };
 
-/** Trần Lãm, quân sư hệ Thủy. Cờ lệnh đẩy nhẹ; tọa độ theo tranh 1024×1536. */
+/**
+ * Trần Lãm, quân sư hệ Thủy. Bộ tranh Shan gửi 03/11 (nền trong suốt sẵn) theo thiết kế mới RB-008: áo giao lĩnh nâu
+ * ôliu, áo khoác cộc nâu, đai chàm, gậy gỗ hai đầu bịt đồng, thay bộ cờ lệnh cũ. Ảnh đứng tách lớp bằng code: bàn tay
+ * nắm cùng cây gậy xoay quanh cổ tay (nhịp trượng, nghiêng nhẹ), bàn tay đặt trên đai, đầu; chỗ gậy che tay áo và vạt
+ * áo khoác được vá bằng khuếch tán màu xung quanh. Hệ tọa độ: ảnh đứng 1024×1536.
+ */
 const TRAN_LAM: WarriorRig = {
   skeleton: "warrior",
-  weapon: "spear",
+  weapon: "staff",
   dir: "tran-lam",
   texScale: 0.5,
-  foot: { x: 610, y: 1508 },
-  height: 1505,
+  foot: { x: 495, y: 1512 },
+  height: 1495,
   parts: {
-    body: { x: 27, y: 43, w: 980, h: 1472 },
-    armR: { x: 817, y: 435, w: 190, h: 222 },
-    sword: { x: 15, y: 12, w: 332, h: 1393 },
-    arm: { x: 256, y: 502, w: 115, h: 133 },
-    head: { x: 457, y: 43, w: 225, h: 305 },
+    body: { x: 88, y: 19, w: 768, h: 1503 },
+    armR: { x: 547, y: 568, w: 178, h: 110 },
+    sword: { x: 155, y: 345, w: 58, h: 1172 },
+    arm: { x: 134, y: 462, w: 104, h: 109 },
+    head: { x: 330, y: 19, w: 240, h: 259 },
   },
-  cloth: [
-    { name: "ribbon", box: { x: 321, y: 86, w: 187, h: 182 }, behind: true,
-      wind: { axis: "x", start: 0.2, amp: 4, freq: 1.6, k: 2.8, phase: 0.3, vertical: true, reverse: true } },
-    { name: "sash", box: { x: 505, y: 575, w: 88, h: 368 },
-      wind: { axis: "y", start: 0.2, amp: 2, freq: 1.3, k: 2.6, phase: 1.4 } },
-  ],
-  covers: [{ name: "sleeve", box: { x: 296, y: 344, w: 148, h: 197 } }],
+  cloth: [],
+  covers: [],
   joints: {
-    shoulder: { x: 365, y: 505 },
-    elbowR: { x: 825, y: 545 },
-    neck: { x: 554, y: 270 },
+    shoulder: { x: 160, y: 555 },
+    elbowR: { x: 705, y: 605 },
+    neck: { x: 470, y: 255 },
   },
-  blade: [{ x: 300, y: 550 }, { x: 287, y: 18 }],
+  blade: [{ x: 182, y: 1490 }, { x: 188, y: 360 }],
   fxColor: 0x7fcaff,
+  // Ghép theo POSE ID của prompt RB-008 v3: thế tấn rộng quét gậy ngang ngực (đánh thường); giơ gậy chéo, tay kia chỉ
+  // về trước (ra chiêu); bước tới đâm gậy xuống trước, tay kia nắm trước ngực (tuyệt chiêu). Cỡ so theo bề ngang khăn đầu.
   poses: {
-    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 13, y: 3 },
-      anchor: { x: 650, y: 1510 }, scale: 1, burst: { x: 100, y: 50 } },
-    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 7, y: 18 },
-      anchor: { x: 645, y: 1510 }, scale: 1, burst: { x: 960, y: 220 } },
+    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 135, y: 44 },
+      anchor: { x: 765, y: 965 }, scale: 1.2, burst: { x: 1395, y: 312 } },
+    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 38, y: 18 },
+      anchor: { x: 510, y: 1500 }, scale: 1.03, burst: { x: 955, y: 455 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 172, y: 11 },
+      anchor: { x: 570, y: 1003 }, scale: 1.2, burst: { x: 1245, y: 700 } },
   },
-  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 36, y: 99 },
-    anchor: { x: 955, y: 910 }, scale: 1 },
+  // Ngồi bệt ngả sang bên, một tay chống đất, gậy rơi bên cạnh.
+  down: { name: "pose-down", texScale: 0.3, origin: { x: 36, y: 36 },
+    anchor: { x: 750, y: 960 }, scale: 1.1 },
 };
 
 /** Phạm Bạch Hổ, tướng sĩ hệ Hỏa. Tách lớp từ tranh 1024×1536, áo choàng lông hổ bay sau tay đao. */

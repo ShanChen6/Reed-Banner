@@ -577,7 +577,7 @@ CONSISTENCY: Create a new design from the description; no previous Reed Banner a
 
 ### RB-008 — Trần Lãm · Quân sư / Thủy
 
-> Trạng thái riêng: **APPROVED** — Shan duyệt định hướng Master Design v3 theo **ảnh 1** (hào trưởng thực quyền) và bộ 6 tư thế ngày 03/11/2026. Đây là **duyệt thiết kế/prompt**, **chưa nghiệm thu PNG hoặc tích hợp runtime**.
+> Trạng thái riêng: **APPROVED** — Shan duyệt định hướng Master Design v3 theo **ảnh 1** (hào trưởng thực quyền) và bộ 6 tư thế ngày 03/11/2026. Đây là **duyệt thiết kế/prompt**, chưa nghiệm thu PNG theo mục QA bên dưới. Shan gửi 6 PNG cùng ngày, đã tích hợp runtime (`public/art/characters/tran-lam/`) ghép theo POSE ID: Idle → ảnh đứng tách lớp, Basic Attack (gậy ngang ngực) → `pose-attack`, Skill → `pose-cast`, Ultimate (đâm gậy xuống trước, tay trái nắm) → `pose-ultimate`, Defeated → `pose-down`, Personality → `style`.
 
 #### Identity DNA và ranh giới sử liệu
 
