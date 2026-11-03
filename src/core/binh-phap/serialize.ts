@@ -94,3 +94,22 @@ export function parsePuzzle(raw: unknown): PuzzleState | null {
     return null;
   }
 }
+
+/**
+ * Đọc ván lưu trên server qua các lần tăng `version` của bộ luật. Ván đúng phiên bản thì như `parsePuzzle`; ván của
+ * bộ luật có sẵn nhưng phiên bản cũ thì thử đọc lại theo phiên bản hiện tại (bàn, quân trên tay và bộ đếm vẫn phải
+ * hợp lệ theo luật mới, các lượt sau rút quân theo luật mới). Không đọc được thì trả null, không ném lỗi.
+ */
+export function parseStoredPuzzle(raw: unknown): PuzzleState | null {
+  const exact = parsePuzzle(raw);
+  if (exact) return exact;
+  try {
+    const v = typeof raw === "string" ? (JSON.parse(raw) as unknown) : raw;
+    if (!isObj(v) || v.rulesetId === CUSTOM_RULESET_ID) return null;
+    const rules = RULESETS.find((r) => r.id === v.rulesetId);
+    if (!rules || v.rulesVersion === rules.version) return null;
+    return parsePuzzle({ ...v, rulesVersion: rules.version });
+  } catch {
+    return null;
+  }
+}
