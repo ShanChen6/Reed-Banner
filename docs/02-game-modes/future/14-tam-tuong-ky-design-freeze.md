@@ -86,7 +86,7 @@ File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây g
 
 ### 3.2 Đề xuất đã duyệt
 
-Shan duyệt toàn bộ ngày 03/11/2026; riêng P-5 Shan sửa khung độ khó.
+Shan duyệt toàn bộ ngày 03/11/2026; riêng P-5 Shan đổi thành số cố định.
 
 **Luật ghép và độ khó**
 
@@ -96,7 +96,7 @@ Shan duyệt toàn bộ ngày 03/11/2026; riêng P-5 Shan sửa khung độ khó
 | P-2 | Nếu catalog có cả `A>B` và `B>A` thì hai kết quả **phải khác nhau** (lỗi `mirrorSameResult`). Không bắt buộc cặp nào cũng có công thức |
 | P-3 | Tướng là điểm cuối, không làm nguyên liệu; mỗi tướng đúng **một** công thức cuối; node trung gian có thể có nhiều công thức |
 | P-4 | `minCombines(node)` = số lần ghép ít nhất từ starter, mỗi nguyên liệu trung gian tính riêng (vì ở Hạng nguyên liệu bị tiêu). `starterCost(node)` = số đơn vị nguyên tố tiêu hết |
-| P-5 | Khung `minCombines` (Shan sửa 03/11/2026): **thường 5–7** (cho gói sau), **đặc biệt 7–9**, **lịch sử 9–12**. Hai khung kề nhau chung một số ở biên (7, 9), nên validator còn bắt buộc thứ tự chặt trong cùng pack: mọi tướng lịch sử > mọi tướng đặc biệt > mọi tướng thường |
+| P-5 | Số lần ghép tối thiểu `minCombines` **cố định theo bậc** (Shan chốt 03/11/2026, thay khung 5–7 / 7–9 / 9–12 cùng ngày): **thường 7**, **đặc biệt 9**, **lịch sử 12**. Mỗi tướng phải đúng số của bậc mình (lỗi `tierCombines`); thứ tự lịch sử > đặc biệt > thường vì thế luôn đúng |
 | P-6 | Engine deterministic: không RNG, không `Date.now`, không gọi mạng |
 | P-7 | Mọi node đạt được từ 7 starter; không vòng phụ thuộc; không công thức ra chính nguyên liệu hoặc ra starter; mỗi pack dùng cả 7 starter (cảnh báo); công thức cuối không là “hệ của tướng + tri thức theo nghề của tướng” (cảnh báo) |
 
@@ -246,8 +246,8 @@ LT-01 (validator), LT-02 (engine), LT-04 (Thường), LT-06 (Hạng) phải có 
 21. **Given** tướng làm nguyên liệu, **then** lỗi `heroAsInput`.
 22. **Given** tướng có 0 hoặc ≥ 2 công thức cuối, **then** lỗi `heroRecipeCount`.
 23. **Given** `characterId` không có trong roster, **then** lỗi `unknownCharacter`; thiếu chân dung thì cảnh báo.
-24. **Given** một tướng đặc biệt có `minCombines` ≥ một tướng lịch sử cùng pack (hoặc thường ≥ đặc biệt), **then** lỗi `tierOrder`.
-25. **Given** tướng ngoài khung P-5 của bậc mình, **then** cảnh báo `tierRange`.
+24. **Given** một tướng có `minCombines` khác số của bậc mình (thường 7, đặc biệt 9, lịch sử 12), **then** lỗi `tierCombines`.
+25. **Given** catalog hợp lệ, **then** thứ tự số lần ghép lịch sử > đặc biệt > thường luôn đúng (hệ quả của dòng 24).
 26. **Given** tướng lịch sử không có mã nguồn trong sổ nguồn, **then** lỗi `missingHistorySource`.
 27. **Given** công thức cuối “hệ của tướng + tri thức nghề của tướng”, hoặc pack không dùng một starter, **then** cảnh báo `elementPlusProfession` / `unusedStarter`.
 
@@ -312,6 +312,6 @@ LT-01 (validator), LT-02 (engine), LT-04 (Thường), LT-06 (Hạng) phải có 
 ## 10. Điều kiện chuyển sang LT-01
 
 - [x] Shan chốt luật chính (mục 3.1, 03/11/2026).
-- [x] Shan duyệt mục 3.2, sửa khung độ khó P-5 (03/11/2026).
+- [x] Shan duyệt mục 3.2, chốt số lần ghép cố định P-5 (03/11/2026).
 - [x] Shan chốt danh sách 12 tướng, cửa hàng, hai tướng đặc biệt (03/11/2026).
 - [x] Đổi trạng thái file này sang **FROZEN** và ghi vào [changelog](../../decisions/changelog.md) (03/11/2026).

@@ -7,7 +7,7 @@ export type RecipeId = string;
 
 export type NodeKind = "element" | "material" | "knowledge" | "character";
 
-/** Bậc tướng; số lần ghép tối thiểu lịch sử > đặc biệt > thường (Design Freeze A-11, P-5). */
+/** Bậc tướng; số lần ghép tối thiểu cố định theo bậc: thường 7, đặc biệt 9, lịch sử 12 (Design Freeze A-11, P-5). */
 export type HeroTier = "thuong" | "dacBiet" | "lichSu";
 
 export interface CatalogNode {
@@ -77,11 +77,10 @@ export type IssueCode =
   | "unknownCharacter"
   | "duplicateCharacter"
   | "tierMismatch"
-  | "tierOrder"
+  | "tierCombines"
   | "missingHistorySource"
   | "starterMismatch"
   | "missingPortrait"
-  | "tierRange"
   | "elementPlusProfession"
   | "unusedStarter";
 
