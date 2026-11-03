@@ -190,6 +190,16 @@ Mọi hồ sơ phải có **Identity DNA** (tên, tuổi tạo hình, khuôn m�
 - Không dùng trang phục cùng một khuôn cho các tướng chung nghề, hoặc chỉ thay mã HEX để tạo 7 hệ. Cấm đổi ngẫu nhiên mặt, dáng, màu mảng áo, số vũ khí và chiều tay giữa các pose.
 - **Defeated** phải thực sự mất trọng tâm; **Personality** phải biểu đạt nét riêng không thành một tư thế chiến đấu lặp lại.
 
+### 3.3a Unique Pose Identity — áp dụng cho nhân vật thiết kế tiếp theo (APPROVED 03/11/2026)
+
+- **Giữ nguyên bộ pose của Mã Nhạc và Ninh Hỏa đã chốt; không hồi tố sửa lại.** Quy tắc này áp dụng cho những nhân vật thiết kế tiếp theo.
+- Sáu tên **Idle, Basic Attack, Skill, Ultimate, Defeated, Personality** là sáu *vai trò trình diễn*, **không** phải sáu tư thế/động tác mẫu.
+- Khi lên kế hoạch pose mới, so sánh trước với các nhân vật cùng nghề đã duyệt. Không lặp theo công thức: giơ quạt, tay kia chỉ hướng; hạ quạt phát lệnh; đứng quan sát; ngã cùng một bên.
+- Mỗi người có **Pose Identity Matrix** gồm: trọng tâm/trục thân, động tác tay và chân, hướng chuyển động, mức năng lượng, mục đích hành động, biểu cảm, silhouette. **Basic–Skill–Ultimate của cùng người phải phân biệt rõ**, đồng thời từng pose nên khác có ý nghĩa với nhân vật cùng nghề.
+- **Skill ID và gameplay quyết định cơ chế, còn câu chuyện và cá tính quyết định ngôn ngữ cơ thể.** Không tạo động tác chung chỉ vì cùng nghề, cùng đạo cụ hay cùng hệ. Vũ khí và phụ kiện giữ nguyên nếu ảnh đã duyệt.
+- **Defeated:** phải thật sự mất khả năng chiến đấu, nhưng cách ngã có thể rất khác nhau; không được mặc định mọi người đều ngồi đổ sang một bên. **Personality:** khai thác một thói quen riêng, không phải biến thể của Idle.
+- **Quy trình:** duyệt Character DNA và Master trước; lập ma trận pose/đối chiếu trước khi viết sáu prompt; chỉ generate một frame mỗi lần. Cùng phong cách ảnh không có nghĩa là cùng bộ động tác.
+
 ### 3.4 Kế hoạch chuyển đổi theo từng nhân vật — không sản xuất hàng loạt
 
 1. **Baseline bất biến:** asset gốc, ảnh đã dựng, rig, animation và VFX hiện đang chạy được giữ nguyên. Không ghi đè trực tiếp, không xóa, không thay cache/runtime trong bước thiết kế.
