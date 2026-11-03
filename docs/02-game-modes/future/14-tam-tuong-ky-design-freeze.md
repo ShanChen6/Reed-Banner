@@ -1,7 +1,7 @@
 # 14 — Tầm Tướng Ký — Design Freeze (LT-00)
 
 > Cập nhật: 03/11/2026
-> Trạng thái: **DRAFT** — Shan đã chốt ba đợt quyết định ngày 03/11/2026 (mục 3.1), không còn câu mở; các số liệu đề xuất ở mục 3.2 chờ duyệt. Chưa bắt đầu LT-01/LT-02.
+> Trạng thái: **FROZEN** — Shan chốt mục 3.1 và duyệt mục 3.2 ngày 03/11/2026. Số liệu ở mục 3.2 là **điểm xuất phát**: LT-05 được chỉnh trong khoảng đã ghi bằng mô phỏng; đổi luật phải qua quyết định mới.
 
 File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây gọi “Liệt Truyện — Tầm Tướng Ký”). Nó thay các đề xuất trong [GDD](08-liet-truyen-gdd.md), [công thức](09-liet-truyen-recipes.md), [kiến trúc](10-liet-truyen-architecture.md), [UI/art](11-liet-truyen-ui-art.md) và [QA/roadmap](12-liet-truyen-qa-roadmap.md); khi khác nhau, file này thắng. Tên file 08–12 giữ nguyên `liet-truyen` để không làm hỏng link và script.
 
@@ -84,7 +84,9 @@ File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây g
 | A-21 | Đinh Bộ Lĩnh | Xây theo hướng nhân vật đặc biệt (Shan, 03/11/2026); xem P-27 |
 | A-18 | Khám phá ≠ sở hữu | Ghép ra tướng không cấp tướng vào đội, không EXP/đá/trang bị |
 
-### 3.2 Đề xuất
+### 3.2 Đề xuất đã duyệt
+
+Shan duyệt toàn bộ ngày 03/11/2026; riêng P-5 Shan sửa khung độ khó.
 
 **Luật ghép và độ khó**
 
@@ -94,7 +96,7 @@ File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây g
 | P-2 | Nếu catalog có cả `A>B` và `B>A` thì hai kết quả **phải khác nhau** (lỗi `mirrorSameResult`). Không bắt buộc cặp nào cũng có công thức |
 | P-3 | Tướng là điểm cuối, không làm nguyên liệu; mỗi tướng đúng **một** công thức cuối; node trung gian có thể có nhiều công thức |
 | P-4 | `minCombines(node)` = số lần ghép ít nhất từ starter, mỗi nguyên liệu trung gian tính riêng (vì ở Hạng nguyên liệu bị tiêu). `starterCost(node)` = số đơn vị nguyên tố tiêu hết |
-| P-5 | Khung `minCombines`: thường 3–5 (cho gói sau), đặc biệt 6–8, lịch sử 9–12. Validator bắt buộc mọi tướng lịch sử > mọi tướng đặc biệt > mọi tướng thường trong cùng pack |
+| P-5 | Khung `minCombines` (Shan sửa 03/11/2026): **thường 5–7** (cho gói sau), **đặc biệt 7–9**, **lịch sử 9–12**. Hai khung kề nhau chung một số ở biên (7, 9), nên validator còn bắt buộc thứ tự chặt trong cùng pack: mọi tướng lịch sử > mọi tướng đặc biệt > mọi tướng thường |
 | P-6 | Engine deterministic: không RNG, không `Date.now`, không gọi mạng |
 | P-7 | Mọi node đạt được từ 7 starter; không vòng phụ thuộc; không công thức ra chính nguyên liệu hoặc ra starter; mỗi pack dùng cả 7 starter (cảnh báo); công thức cuối không là “hệ của tướng + tri thức theo nghề của tướng” (cảnh báo) |
 
@@ -310,6 +312,6 @@ LT-01 (validator), LT-02 (engine), LT-04 (Thường), LT-06 (Hạng) phải có 
 ## 10. Điều kiện chuyển sang LT-01
 
 - [x] Shan chốt luật chính (mục 3.1, 03/11/2026).
-- [ ] Shan duyệt hoặc sửa các dòng ở mục 3.2.
+- [x] Shan duyệt mục 3.2, sửa khung độ khó P-5 (03/11/2026).
 - [x] Shan chốt danh sách 12 tướng, cửa hàng, hai tướng đặc biệt (03/11/2026).
-- [ ] Đổi trạng thái file này sang **FROZEN** và ghi vào [changelog](../../decisions/changelog.md).
+- [x] Đổi trạng thái file này sang **FROZEN** và ghi vào [changelog](../../decisions/changelog.md) (03/11/2026).

@@ -128,8 +128,8 @@
 ## Tầm Tướng Ký
 
 - Đã chốt (Shan, 03/11/2026): tên Tầm Tướng Ký; ghép có thứ tự, `A+A` được phép; chế độ Thường 1 phiếu = 1 lượt 15–20 lần ghép, có gợi ý; chế độ Hạng tuần tiêu nguyên liệu, ghép sai mất không hoàn, nguyên liệu từ thưởng hạng các chế độ (cân nhắc cửa hàng), số tướng đề cử cố định và xoay vòng; độ khó lịch sử > đặc biệt > thường; thành tựu theo bộ (vàng + huy hiệu), không cho tướng lẻ; bắt buộc đăng nhập; gói đầu 10 tướng lịch sử + 2 đặc biệt. Xem [Design Freeze mục 3.1](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#31-đã-chốt).
-- TODO: Duyệt 30 dòng đề xuất (gợi ý 2 lượt/ngày, nguồn phiếu, bó nguyên tố trong thưởng hạng các chế độ theo tuần, cấp nền 3 bó/tuần, điểm 200/300, thành tựu bộ tổng 3 200 vàng…) ở [Design Freeze mục 3.2](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#32-đề-xuất).
-- Đã chốt (Shan, 03/11/2026): bán bó nguyên tố ở cửa hàng có giới hạn tuần; duyệt 12 tướng gói đầu; Đinh Bộ Lĩnh xây theo hướng nhân vật đặc biệt (đề xuất vào gói 2, [P-27](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#32-đề-xuất)).
+- Đã duyệt (Shan, 03/11/2026): toàn bộ đề xuất mục 3.2, khung số lần ghép thường 5–7 / đặc biệt 7–9 / lịch sử 9–12 ([Design Freeze mục 3.2](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#32-đề-xuất-đã-duyệt)). Số liệu là điểm xuất phát, LT-05 chỉnh bằng mô phỏng.
+- Đã chốt (Shan, 03/11/2026): bán bó nguyên tố ở cửa hàng có giới hạn tuần; duyệt 12 tướng gói đầu; Đinh Bộ Lĩnh xây theo hướng nhân vật đặc biệt (đề xuất vào gói 2, [P-27](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#32-đề-xuất-đã-duyệt)).
 - TODO: Khi code thưởng bó nguyên tố, sửa [thưởng hạng mục 6](../02-game-modes/README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt) (hiện ghi “chỉ vàng”).
 
 ## Giao diện Trận Đồ
