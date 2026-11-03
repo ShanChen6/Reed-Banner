@@ -1276,7 +1276,7 @@ QUALITY GATE: Same approved face, burgundy/ochre costume and original full-lengt
 
 ### RB-012 — Nguyễn Khoan (Nguyễn Thái Bình) · Binh lính / Thổ
 
-> Trạng thái: **DRAFT — REVIEW OLD MASTER FIRST** (03/11/2026). Đây là hướng đề xuất riêng cho Nguyễn Khoan và một Master/Idle prompt; **chưa có ảnh Master mới được duyệt, chưa viết sáu pose vNext, chưa thay asset hoặc rig**. Giữ toàn bộ hồ sơ V4.2 và sáu pose cũ bên dưới.
+> Trạng thái: **APPROVED — MASTER/POSE PROMPT DIRECTION** (03/11/2026), với Master v2 theo mô tả dã sử và **Pose 6 mang khiên trên vai**. Chưa xác minh ảnh final đầy đủ hoặc tích hợp runtime. Dữ liệu DRAFT cũ và V4.2 dưới đây chỉ là lịch sử triển khai, ưu tiên block Production v2 mới.
 
 #### Historical Identity — Sứ quân Tam Đái
 
@@ -1343,6 +1343,106 @@ NEGATIVE: generic infantry extra, hunched elderly peasant, king with crown, gian
 - [ ] Trang phục có dấu hiệu địa vị vừa đủ, không biến thành vương giả hoặc giáp fantasy.
 - [ ] Heroic Stylization: giữ cảm giác game 2D, không quá đời thực.
 - [ ] Chỉ tạo Master sau review; chưa thay pose, rig, VFX, gameplay.
+
+#### Production v2 — Sáu prompt chuẩn, shield-on-shoulder Personality (03/11/2026)
+
+> **APPROVED — PROMPT DIRECTION**: Shan chốt tư thế Personality **được tháo khiên và đeo trên vai**; không bắt buộc đeo trên cẳng tay trái khi ngoài chiến đấu. Bộ prompt Master v2 và sáu pose đã được yêu cầu, nhưng **chưa xác thực đủ sáu ảnh final/QA/tích hợp**. Mọi thay đổi ảnh vẫn cần duyệt từng frame.
+> **Nguồn tạo hình:** chân dung tráng niên cao lớn, mặt vuông, mắt sáng, uy nghi nhưng khoan dung theo truyền thuyết địa phương (đánh dấu **folklore-inspired**, chưa coi là sử liệu chứng thực). Giáo tay phải; khiên trên cẳng tay trái trong combat, chỉ thay cách mang ở Personality.
+
+**Master v2:** khác bản draft cũ tuổi biểu kiến 48–58: tạo hình mục tiêu 38–45, dáng cao vạm vỡ và gương mặt khôi ngô hơn; không bắt buộc đổi vũ khí, giáp và màu. Ảnh Master mới do Shan cung cấp cần là tham chiếu trực tiếp khi sản xuất mỗi frame. **Không dùng các mô tả DRAFT cổ hơn bên dưới làm chuẩn cao hơn mục này.**
+
+##### Production frame 1 — Idle / Hùng chủ Tam Đái
+
+```text
+REED BANNER — Nguyễn Khoan / Nguyễn Thái Bình / RB-012 / nguyenKhoan. Vietnamese 10th-century Tam Đái warlord, gameplay Binh lính / Thổ, ultimate tamDaiKienThanh. ART: Vietnamese Historical Low Fantasy — Heroic Stylization, painted 2D strategy-game character, NOT photo-real. REFERENCE: use the revised tall, square-faced, magnanimous Nguyễn Khoan Master v2 as FACE/COSTUME/EQUIPMENT LOCK. Existing photograph-like Master or any pose is not to be treated as a license to change character. Folklore-inspired towering powerful trượng phu with bright eyes and calm authority, artistic age 38–45, approximately 7.3–7.5 heads tall; broad shoulders, strong legs and arms, square handsome face, clear eyes, strong brows, short black-and-gray beard, brown wrapped headcloth. Folklore descriptions are inspiration, not authenticated historical portraits.
+
+COSTUME LOCK: ivory crossed collar #D8BF8B, ochre main tunic #B48642, brown padded vest #76543B with small dark iron scales over upper chest, one brown leather belt with one bronze clasp, one terracotta accent #A65E42, dark trousers, wrapped calves, sturdy dark shoes. Keep Master v2 armor panel order, weave, colors and bronze fittings. WEAPON LOCK: exactly ONE rigid straight hardwood spear RB-012-W01 with ONE leaf-shaped iron tip, about 1.12H long, anatomical RIGHT hand in standing/combat frames (released in Defeated). Exactly ONE round woven-rattan shield with the same original rim, central boss and weave, diameter ~0.43H. In COMBAT frames, shield is securely strapped to anatomical LEFT forearm. In PERSONALITY ONLY, shield MAY be unstrapped and slung on the anatomical LEFT shoulder by a real leather carrying strap, leaving BOTH arms visibly complete. Do not add a second spear/shield.
+
+OUTPUT: ONE complete full-body hand-painted semi-realistic heroic 2D cutout, safe margins including complete spear and shield, alpha-transparent PNG, no floor, scenery, logo, text, UI, watermark, baked Earth VFX, giant fantasy armor, Chinese court robe, extra hands or mirrored anatomy. Match approved Master v2 precisely where available; do not invent an image reference.
+
+POSE ID: RB012_IDLE
+POSE: Broad confident three-quarter stance, powerful upright chest, feet slightly beyond shoulder width; RIGHT hand holds complete spear near-vertical by RIGHT foot, LEFT forearm shows shield at lower chest angled outward. Calm bright eyes watch the distance, broad shoulders strong, compassion without broad grin.
+QUALITY GATE: anatomical continuity in all frames, one intact spear and one intact shield, original Master v2 costume, same mature face, all props in canvas; Personality shield slung on LEFT shoulder and free LEFT arm completely visible.
+```
+
+##### Production frame 2 — Basic Attack / Phá thương cự địch
+
+```text
+REED BANNER — Nguyễn Khoan / Nguyễn Thái Bình / RB-012 / nguyenKhoan. Vietnamese 10th-century Tam Đái warlord, gameplay Binh lính / Thổ, ultimate tamDaiKienThanh. ART: Vietnamese Historical Low Fantasy — Heroic Stylization, painted 2D strategy-game character, NOT photo-real. REFERENCE: use the revised tall, square-faced, magnanimous Nguyễn Khoan Master v2 as FACE/COSTUME/EQUIPMENT LOCK. Existing photograph-like Master or any pose is not to be treated as a license to change character. Folklore-inspired towering powerful trượng phu with bright eyes and calm authority, artistic age 38–45, approximately 7.3–7.5 heads tall; broad shoulders, strong legs and arms, square handsome face, clear eyes, strong brows, short black-and-gray beard, brown wrapped headcloth. Folklore descriptions are inspiration, not authenticated historical portraits.
+
+COSTUME LOCK: ivory crossed collar #D8BF8B, ochre main tunic #B48642, brown padded vest #76543B with small dark iron scales over upper chest, one brown leather belt with one bronze clasp, one terracotta accent #A65E42, dark trousers, wrapped calves, sturdy dark shoes. Keep Master v2 armor panel order, weave, colors and bronze fittings. WEAPON LOCK: exactly ONE rigid straight hardwood spear RB-012-W01 with ONE leaf-shaped iron tip, about 1.12H long, anatomical RIGHT hand in standing/combat frames (released in Defeated). Exactly ONE round woven-rattan shield with the same original rim, central boss and weave, diameter ~0.43H. In COMBAT frames, shield is securely strapped to anatomical LEFT forearm. In PERSONALITY ONLY, shield MAY be unstrapped and slung on the anatomical LEFT shoulder by a real leather carrying strap, leaving BOTH arms visibly complete. Do not add a second spear/shield.
+
+OUTPUT: ONE complete full-body hand-painted semi-realistic heroic 2D cutout, safe margins including complete spear and shield, alpha-transparent PNG, no floor, scenery, logo, text, UI, watermark, baked Earth VFX, giant fantasy armor, Chinese court robe, extra hands or mirrored anatomy. Match approved Master v2 precisely where available; do not invent an image reference.
+
+POSE ID: RB012_BASIC_ATTACK
+POSE: A short controlled forward spear thrust from the RIGHT edge of the LEFT-held defensive shield. RIGHT hand drives spear rigidly forward outside the shield silhouette; RIGHT foot steps, rear foot anchors, LEFT shield guards upper body. Do not thrust through shield or perform shield bash.
+QUALITY GATE: anatomical continuity in all frames, one intact spear and one intact shield, original Master v2 costume, same mature face, all props in canvas; Personality shield slung on LEFT shoulder and free LEFT arm completely visible.
+```
+
+##### Production frame 3 — Skill / Tường khiên hộ trận
+
+```text
+REED BANNER — Nguyễn Khoan / Nguyễn Thái Bình / RB-012 / nguyenKhoan. Vietnamese 10th-century Tam Đái warlord, gameplay Binh lính / Thổ, ultimate tamDaiKienThanh. ART: Vietnamese Historical Low Fantasy — Heroic Stylization, painted 2D strategy-game character, NOT photo-real. REFERENCE: use the revised tall, square-faced, magnanimous Nguyễn Khoan Master v2 as FACE/COSTUME/EQUIPMENT LOCK. Existing photograph-like Master or any pose is not to be treated as a license to change character. Folklore-inspired towering powerful trượng phu with bright eyes and calm authority, artistic age 38–45, approximately 7.3–7.5 heads tall; broad shoulders, strong legs and arms, square handsome face, clear eyes, strong brows, short black-and-gray beard, brown wrapped headcloth. Folklore descriptions are inspiration, not authenticated historical portraits.
+
+COSTUME LOCK: ivory crossed collar #D8BF8B, ochre main tunic #B48642, brown padded vest #76543B with small dark iron scales over upper chest, one brown leather belt with one bronze clasp, one terracotta accent #A65E42, dark trousers, wrapped calves, sturdy dark shoes. Keep Master v2 armor panel order, weave, colors and bronze fittings. WEAPON LOCK: exactly ONE rigid straight hardwood spear RB-012-W01 with ONE leaf-shaped iron tip, about 1.12H long, anatomical RIGHT hand in standing/combat frames (released in Defeated). Exactly ONE round woven-rattan shield with the same original rim, central boss and weave, diameter ~0.43H. In COMBAT frames, shield is securely strapped to anatomical LEFT forearm. In PERSONALITY ONLY, shield MAY be unstrapped and slung on the anatomical LEFT shoulder by a real leather carrying strap, leaving BOTH arms visibly complete. Do not add a second spear/shield.
+
+OUTPUT: ONE complete full-body hand-painted semi-realistic heroic 2D cutout, safe margins including complete spear and shield, alpha-transparent PNG, no floor, scenery, logo, text, UI, watermark, baked Earth VFX, giant fantasy armor, Chinese court robe, extra hands or mirrored anatomy. Match approved Master v2 precisely where available; do not invent an image reference.
+
+POSE ID: RB012_SKILL
+POSE: Raise original LEFT forearm shield outward and slightly forward, lowering both knees to absorb imagined pressure; RIGHT hand draws original spear diagonally BACK beside RIGHT shoulder and maintains a defensive line. Defensive stance, not a second thrust. Tường khiên is an art-language label, not a change to gameplay skill IDs.
+QUALITY GATE: anatomical continuity in all frames, one intact spear and one intact shield, original Master v2 costume, same mature face, all props in canvas; Personality shield slung on LEFT shoulder and free LEFT arm completely visible.
+```
+
+##### Production frame 4 — Ultimate / Tam Đái Kiên Thành
+
+```text
+REED BANNER — Nguyễn Khoan / Nguyễn Thái Bình / RB-012 / nguyenKhoan. Vietnamese 10th-century Tam Đái warlord, gameplay Binh lính / Thổ, ultimate tamDaiKienThanh. ART: Vietnamese Historical Low Fantasy — Heroic Stylization, painted 2D strategy-game character, NOT photo-real. REFERENCE: use the revised tall, square-faced, magnanimous Nguyễn Khoan Master v2 as FACE/COSTUME/EQUIPMENT LOCK. Existing photograph-like Master or any pose is not to be treated as a license to change character. Folklore-inspired towering powerful trượng phu with bright eyes and calm authority, artistic age 38–45, approximately 7.3–7.5 heads tall; broad shoulders, strong legs and arms, square handsome face, clear eyes, strong brows, short black-and-gray beard, brown wrapped headcloth. Folklore descriptions are inspiration, not authenticated historical portraits.
+
+COSTUME LOCK: ivory crossed collar #D8BF8B, ochre main tunic #B48642, brown padded vest #76543B with small dark iron scales over upper chest, one brown leather belt with one bronze clasp, one terracotta accent #A65E42, dark trousers, wrapped calves, sturdy dark shoes. Keep Master v2 armor panel order, weave, colors and bronze fittings. WEAPON LOCK: exactly ONE rigid straight hardwood spear RB-012-W01 with ONE leaf-shaped iron tip, about 1.12H long, anatomical RIGHT hand in standing/combat frames (released in Defeated). Exactly ONE round woven-rattan shield with the same original rim, central boss and weave, diameter ~0.43H. In COMBAT frames, shield is securely strapped to anatomical LEFT forearm. In PERSONALITY ONLY, shield MAY be unstrapped and slung on the anatomical LEFT shoulder by a real leather carrying strap, leaving BOTH arms visibly complete. Do not add a second spear/shield.
+
+OUTPUT: ONE complete full-body hand-painted semi-realistic heroic 2D cutout, safe margins including complete spear and shield, alpha-transparent PNG, no floor, scenery, logo, text, UI, watermark, baked Earth VFX, giant fantasy armor, Chinese court robe, extra hands or mirrored anatomy. Match approved Master v2 precisely where available; do not invent an image reference.
+
+POSE ID: RB012_ULTIMATE
+POSE: Ultimate runtime ID tamDaiKienThanh. Step broadly laterally with LEFT foot, lower center of gravity and brace firmly. LEFT shield faces imagined threat at center-left chest; RIGHT spear creates an outward diagonal barrier on RIGHT. He protects allies off frame without drawing them. Team shield, taunt and reflect remain ENGINE effects, NOT baked VFX. This is the widest protective pose, distinct from compact Skill.
+QUALITY GATE: anatomical continuity in all frames, one intact spear and one intact shield, original Master v2 costume, same mature face, all props in canvas; Personality shield slung on LEFT shoulder and free LEFT arm completely visible.
+```
+
+##### Production frame 5 — Defeated / Trượng phu thất trận
+
+```text
+REED BANNER — Nguyễn Khoan / Nguyễn Thái Bình / RB-012 / nguyenKhoan. Vietnamese 10th-century Tam Đái warlord, gameplay Binh lính / Thổ, ultimate tamDaiKienThanh. ART: Vietnamese Historical Low Fantasy — Heroic Stylization, painted 2D strategy-game character, NOT photo-real. REFERENCE: use the revised tall, square-faced, magnanimous Nguyễn Khoan Master v2 as FACE/COSTUME/EQUIPMENT LOCK. Existing photograph-like Master or any pose is not to be treated as a license to change character. Folklore-inspired towering powerful trượng phu with bright eyes and calm authority, artistic age 38–45, approximately 7.3–7.5 heads tall; broad shoulders, strong legs and arms, square handsome face, clear eyes, strong brows, short black-and-gray beard, brown wrapped headcloth. Folklore descriptions are inspiration, not authenticated historical portraits.
+
+COSTUME LOCK: ivory crossed collar #D8BF8B, ochre main tunic #B48642, brown padded vest #76543B with small dark iron scales over upper chest, one brown leather belt with one bronze clasp, one terracotta accent #A65E42, dark trousers, wrapped calves, sturdy dark shoes. Keep Master v2 armor panel order, weave, colors and bronze fittings. WEAPON LOCK: exactly ONE rigid straight hardwood spear RB-012-W01 with ONE leaf-shaped iron tip, about 1.12H long, anatomical RIGHT hand in standing/combat frames (released in Defeated). Exactly ONE round woven-rattan shield with the same original rim, central boss and weave, diameter ~0.43H. In COMBAT frames, shield is securely strapped to anatomical LEFT forearm. In PERSONALITY ONLY, shield MAY be unstrapped and slung on the anatomical LEFT shoulder by a real leather carrying strap, leaving BOTH arms visibly complete. Do not add a second spear/shield.
+
+OUTPUT: ONE complete full-body hand-painted semi-realistic heroic 2D cutout, safe margins including complete spear and shield, alpha-transparent PNG, no floor, scenery, logo, text, UI, watermark, baked Earth VFX, giant fantasy armor, Chinese court robe, extra hands or mirrored anatomy. Match approved Master v2 precisely where available; do not invent an image reference.
+
+POSE ID: RB012_DEFEATED
+POSE: Physical complete defeat: hips and side of torso on ground toward anatomical LEFT, head dropped, one leg tucked and other stretched behind, LEFT shield STILL strapped but side-on near ground, RIGHT hand OPEN after dropping ONE intact straight spear separately diagonally beside body. Entire spear and body visible on wide canvas. Never heroic kneel, supported guard or recovery stance.
+QUALITY GATE: anatomical continuity in all frames, one intact spear and one intact shield, original Master v2 costume, same mature face, all props in canvas; Personality shield slung on LEFT shoulder and free LEFT arm completely visible.
+```
+
+##### Production frame 6 — Personality / Người giữ lòng quân — shield on shoulder
+
+```text
+REED BANNER — Nguyễn Khoan / Nguyễn Thái Bình / RB-012 / nguyenKhoan. Vietnamese 10th-century Tam Đái warlord, gameplay Binh lính / Thổ, ultimate tamDaiKienThanh. ART: Vietnamese Historical Low Fantasy — Heroic Stylization, painted 2D strategy-game character, NOT photo-real. REFERENCE: use the revised tall, square-faced, magnanimous Nguyễn Khoan Master v2 as FACE/COSTUME/EQUIPMENT LOCK. Existing photograph-like Master or any pose is not to be treated as a license to change character. Folklore-inspired towering powerful trượng phu with bright eyes and calm authority, artistic age 38–45, approximately 7.3–7.5 heads tall; broad shoulders, strong legs and arms, square handsome face, clear eyes, strong brows, short black-and-gray beard, brown wrapped headcloth. Folklore descriptions are inspiration, not authenticated historical portraits.
+
+COSTUME LOCK: ivory crossed collar #D8BF8B, ochre main tunic #B48642, brown padded vest #76543B with small dark iron scales over upper chest, one brown leather belt with one bronze clasp, one terracotta accent #A65E42, dark trousers, wrapped calves, sturdy dark shoes. Keep Master v2 armor panel order, weave, colors and bronze fittings. WEAPON LOCK: exactly ONE rigid straight hardwood spear RB-012-W01 with ONE leaf-shaped iron tip, about 1.12H long, anatomical RIGHT hand in standing/combat frames (released in Defeated). Exactly ONE round woven-rattan shield with the same original rim, central boss and weave, diameter ~0.43H. In COMBAT frames, shield is securely strapped to anatomical LEFT forearm. In PERSONALITY ONLY, shield MAY be unstrapped and slung on the anatomical LEFT shoulder by a real leather carrying strap, leaving BOTH arms visibly complete. Do not add a second spear/shield.
+
+OUTPUT: ONE complete full-body hand-painted semi-realistic heroic 2D cutout, safe margins including complete spear and shield, alpha-transparent PNG, no floor, scenery, logo, text, UI, watermark, baked Earth VFX, giant fantasy armor, Chinese court robe, extra hands or mirrored anatomy. Match approved Master v2 precisely where available; do not invent an image reference.
+
+POSE ID: RB012_PERSONALITY
+POSE: NONCOMBAT. RIGHT hand holds the single original spear vertically beside RIGHT foot. The original ONE rattan shield is FULLY REMOVED from LEFT forearm and carried across the anatomical LEFT shoulder/back by ONE sturdy leather carrying strap: rim visible behind LEFT shoulder, shield weight naturally supported, no floating shield, no duplication. Anatomical LEFT arm is ENTIRELY FREE, shoulder-elbow-forearm-wrist-hand anatomically connected and visible; LEFT hand gently checks or tightens an EXISTING leather belt fastening at the front waist, five natural fingers fully legible. Head tips slightly downward to inspect the fastening, expression thoughtful and subtly warm, like a commander checking readiness before meeting soldiers. Strong separation between free LEFT arm and shield on shoulder; no missing-arm illusion. No combat stance or extra tools. This shield carry position is a POSE-ONLY change and does not alter shield geometry.
+QUALITY GATE: anatomical continuity in all frames, one intact spear and one intact shield, original Master v2 costume, same mature face, all props in canvas; Personality shield slung on LEFT shoulder and free LEFT arm completely visible.
+```
+
+#### Art QA mới
+
+- [ ] Master v2 cao lớn và mặt vuông, thần thái vừa uy vừa khoan hòa; không dùng bản cũ quá già làm identity lock.
+- [ ] Một giáo thẳng tay phải và một khiên mây tròn; combat khiên ở cẳng tay trái.
+- [ ] Personality **khiên đeo vai trái, tháo khỏi tay**; tay trái đủ vai → khuỷu → cẳng → cổ tay → bàn tay, năm ngón tự nhiên.
+- [ ] Basic đâm, Skill thủ, Ultimate bảo hộ diện rộng: silhouette khác nhau.
+- [ ] Defeated thực sự nằm gục; alpha trong suốt, không bake VFX.
+- [ ] Chưa coi prompt đã duyệt là bằng chứng ảnh/rig đã tích hợp.
 
 #### Tư liệu V4.2 gốc và sáu prompt cũ (bảo lưu, chưa ghi đè runtime)
 
@@ -1413,6 +1513,71 @@ POSE: PERSONAL VIGNETTE: seated at a boat bow tending a small travel pouch; the 
 ---
 
 ### RB-013 — Kiều Công Hãn (Kiều Tam Chế) · Pháp sư / Lôi
+
+> Trạng thái: **DRAFT — HISTORICAL IDENTITY / MASTER PILOT** (03/11/2026). **Chưa duyệt ảnh**, chưa viết sáu pose mới, chưa thay asset hoặc gameplay. Ảnh/6 prompt V4.2 bảo toàn dưới đây để đối chiếu; phải đánh giá KEEP/REFINE/REDESIGN dựa trên hình cũ trước khi đổi.
+
+#### Historical Identity & Creative Boundary
+
+- **Recorded:** Kiều Công Hãn (nguồn sử cũng dùng cách ghi **Kiểu Công Hãn / Kiểu Tam Chế**) là một sứ quân giữ **Phong Châu**, hồ sơ [W06](../../../02-game-modes/campaign/warlord-matrix.md), [ledger nguồn](../../../02-game-modes/campaign/history-sources.md). Vị trí và mối liên hệ với nhân vật khác cần dựa trên nguồn riêng; không tự đồng nhất Kiều Tri Hựu. Kết cục đánh dẹp ở mức tổng thuật, **không** bịa trận, người trực tiếp giết hoặc thời điểm.
+- **Vai trò lịch sử:** một **sứ quân Phong Châu với quyền chỉ huy thực tế**; không nên mặc áo pháp sư như thể hành pháp là nghề sử liệu ghi nhận.
+- **Vai trò game:** runtime `kieuCongHan`, `phapSu` / `loi`; tuyệt chiêu `phongChauLoiKich` (Phong Châu Lôi Kích). Nghề/hệ/kỹ năng là fantasy gameplay, không chứng minh nhân vật lịch sử dùng lôi thuật.
+- **Art interpretation:** gương mặt, vóc dáng, trang phục, đồ dùng và cá tính dưới đây **fictional/game-authored**; lấy cảm hứng vị thế thủ lĩnh vùng trung du. Thiết kế hero historical low-fantasy, không phục dựng trang phục 10th-century xác thực.
+- **Mâu thuẫn cần sửa:** prompt V4.2 cũ dùng áo tím, pháp trượng gắn quả cầu Lôi và hành lễ như pháp sư. **Không tự xóa** bản đẹp đang chạy; cần so sánh hình Master thực tế. Bản đề xuất mới tăng uy một người cai quản Phong Châu, bớt cảm giác pháp sư tiên hiệp; vẫn có chỗ cho hiệu ứng Lôi trong gameplay.
+
+#### Master Identity DNA — “Sứ quân Phong Châu, người định thế trận” (DRAFT)
+
+- **Tuổi hiển thị:** 38–46; nam Việt, vóc cao trung bình và săn chắc, **vai vuông vừa**, không quá to như Nguyễn Khoan; gương mặt dài góc cạnh nhưng đầy sinh khí, sống mũi chắc, mắt sâu thẳng, râu ngắn gọn hơn vẻ pháp sư râu dài của V4.2; tóc vấn gọn dưới một khăn đầu chàm tối.
+- **Khí chất:** thủ lĩnh có quân và địa bàn, nói ít mà dứt khoát; ánh mắt đặt niềm tin vào phán đoán, không phải nhà tu hành đang nhập định. **Không** sao chép Trần Lãm (tuổi cao, trượng lệnh), Ngô Xương Xí (quạt lông) hoặc Nguyễn Khoan (giáo-khiên).
+- **Costume DNA:** áo trong giao lĩnh `#DED7C6`, áo chính màu lam than `#39465A`, khoác ngoài nâu than `#4C403E` xẻ vạt gọn, một khăn choàng ngắn đậm tím xám `#7656A4` đặt quanh vai trái để gợi Lôi rất nhẹ, đai da sẫm `#54433B` với **một khóa đồng cổ `#A68B54`**, quần tối, xà cạp, giày vải. Ưu tiên khối vai và phần đai rõ, không áo pháp bào tím nhiều lớp bay.
+- **Weapon concept RB-013-W01:** giữ logic **một pháp trượng/đoản trượng gỗ dài khoảng 0.54H tay phải**, nhưng *đầu cầu Lôi tím trong vòng đồng* từ V4.2 là chi tiết fantasy cần đánh giá: nếu asset cũ đã độc đáo, giữ có chọn lọc; nếu quá pháp sư, thay bằng **đầu trượng chỉ huy bằng đồng khắc hình học trừu tượng** sau khi Shan duyệt. Tuyệt đối không tự thay hình học weapon trong sản phẩm khi Master chưa chốt.
+- **Silhouette hook:** bàn tay phải cầm đoản trượng chéo trước hông, tay trái tựa lên đai như giữ quyền ra lệnh, khối áo ngắn lệch bên hông, vai gọn chắc. Không giơ pháp trượng để triệu sét ở Idle.
+- **Fantasy:** Heroic Stylization nằm ở nét cọ, nhịp trang phục và nhân dạng; **VFX Lôi để ở runtime**.
+
+#### Pose Identity Matrix (DRAFT — chưa viết 6 prompt)
+
+| Pose | Định hướng riêng Kiều Công Hãn | Không lặp |
+|---|---|---|
+| Idle | Đoản trượng nằm chéo thấp trước hông, mắt quan sát đội hình | Không đứng dựng giáo như Nguyễn Khoan |
+| Basic | Bước ngắn xoay gót, chặn đường tiến bằng trượng ngang bụng | Không giống quạt nghi binh của Mã Nhạc |
+| Skill | Chân không đổi chỗ, dồn vai và chấm đầu trượng xuống đất như chốt quyết định | Không bàn tay trái phát lệnh kiểu chung |
+| Ultimate | Xoay trượng qua vai bằng cả hai tay, thân nửa nghiêng tạo đường chéo mạnh | Khác đánh thường; VFX Lôi tách riêng |
+| Defeated | Ngã nghiêng hông xuống đất, đoản trượng tuột phía sau vai phải | Không quỳ hoặc đứng nghỉ |
+| Personality | Dùng tay trái vuốt thẳng dây đai đã có khi đang xem trượng, suy tính một quyết định | Không tự thêm pháp khí/bùa |
+
+#### Master/Idle prompt (EN — standalone; chỉ tạo MỘT ảnh nếu cần)
+
+```text
+Create ONE full-body 2D game character, Kiều Công Hãn / Kiều Tam Chế, art ID RB-013, runtime kieuCongHan, a fictionalized portrayal of a powerful Vietnamese territorial warlord based in Phong Châu during the 10th-century Twelve Warlords period.
+
+STYLE GOAL: Vietnamese Historical Low Fantasy — Heroic Stylization. ONE memorable regional lord, grounded in practical Vietnamese-inspired 10th-century materials but rendered as premium hand-painted semi-realistic 2D strategy-game art. NOT a generic spellcasting wizard or photoreal actor in costume.
+
+HISTORICAL BOUNDARY: Name and Phong Châu association are from traditional historical accounts; exact appearance, regalia and weapon are game-authored. Class Pháp sư and element Lôi, including personal ultimate phongChauLoiKich, are GAME MECHANICS, not recorded supernatural powers.
+
+IDENTITY DNA: Vietnamese man of artistic age 38–46, naturally sturdy but not bulky, straight shoulders and deliberate posture, approximately 7.15 adult head heights, long angular but healthy face, dark steady deep-set eyes, pronounced brows, a neat short moustache and close-cropped chin beard, black hair under ONE compact dark-indigo wrapped headcloth. Facial expression: composed, unsmiling, quietly commanding, an independent lord who maintains troops and territory. Avoid elderly mystical ascetic appearance, thin caricature face or scholarly passivity.
+
+COSTUME DNA: restrained ivory crossed-collar inner garment #DED7C6; deep muted storm-slate tunic #39465A; ONE practical short structured dark earth-brown field-command overcoat #4C403E with slightly asymmetrical side split; ONE very short desaturated amethyst-gray shoulder textile accent #7656A4 over anatomical LEFT upper shoulder only, not a flowing magical cape; ONE worn dark-brown leather belt #54433B with a modest single aged bronze rectangular clasp #A68B54. Functional dark loose trousers, wrapped calves and sturdy low cloth shoes. Materials woven cloth, light leather, bronze and wood; no excessive gold or layered wizard sleeves. Keep each hue assigned to the same panel in every future frame.
+
+PRIMARY EQUIPMENT RB-013-W01 (PROVISIONAL; REQUIRE MASTER REVIEW): Exactly ONE compact rigid hardwood command/ritual baton roughly 0.54 times character height, held by ANATOMICAL RIGHT hand. Choose ONE head geometry for the approved Master and NEVER change it across poses: default proposal is a restrained single aged-bronze geometric tip without active glowing orb, while the historic V4.2 game asset used one violet orb in a bronze ring. Do NOT combine both heads, multiply props, or silently replace an already approved weapon. If using the old image as reference, preserve its originally approved head and explicitly resolve the tradeoff in review.
+
+MASTER IDLE / POSE: full-body confident three-quarter view, feet planted securely but not as wide as a shield bearer. RIGHT hand holds the SAME short baton diagonally downward in front of his RIGHT hip, naturally firm grip; LEFT hand rests firmly at the belt. Chest upright and open, shoulders squared, chin lifted slightly, eyes judging an unseen scene to anatomical LEFT. A controlled territorial ruler, not someone praying, channeling lightning or requesting instructions. His command presence must be readable without rank symbols or VFX. Distinct from Trần Lãm, Ngô Xương Xí and Nguyễn Khoan.
+
+ART FINISH: premium painterly 2D illustration; natural Vietnamese adult face and hands, 7-head realistic heroic anatomy, textile and bronze details readable at thumbnail scale, no high fantasy glow/metal armor/long flying capes, no Western or Japanese military gear, no Chinese imperial court stereotype, no realistic live-action photography.
+
+OUTPUT: EXACTLY ONE complete full-body figure, complete baton, hair, hands, toes and accessories visible, generous safe margins, genuine transparent PNG alpha. NO background, scenery, shadow plate, title, watermark, writing, UI, VFX, extra people or objects. Master only: do NOT generate the six poses.
+
+NEGATIVE: generic fire/lightning mage, monk, frail scholar, emperor with crown, giant ornate ritual staff, duplicated violet orbs, extra weapons, costume color swapping, floating magic, deformed hands, or missing belt clasp.
+```
+
+#### Review gate (chưa nghiệm thu)
+
+- [ ] So sánh bản Master V4.2 đang chạy với Master mới; nếu thiết kế cũ đã có cá tính thì giữ/REFINE, không bắt buộc thay.
+- [ ] Phải là **sứ quân giữ Phong Châu**, không phải pháp sư vô danh; ảnh có quyền uy và nét riêng.
+- [ ] Đầu đoản trượng: **chọn một** phương án, không được mặc định thay asset cũ; hình học khóa sau duyệt.
+- [ ] Cùng phong cách với Trần Lãm, Ngô Xương Xí, Nguyễn Khoan nhưng khác mặt, áo và silhouette.
+- [ ] Không VFX bám người, alpha thật, toàn thân, không cắt trượng.
+- [ ] Chưa sản xuất 6 pose mới, rig/runtime không thay đổi.
+
+#### Prompt V4.2 cũ (bảo lưu nguyên văn để đối chiếu)
 
 > **AUDIT VŨ KHÍ ↔ KỸ NĂNG (24/10/2026):** LOW · GIỮ + CHUẨN HÓA. Chiêu tham chiếu: **Phong Châu Lôi Kích** (`phongChauLoiKich`). Giữ pháp khí, quy định đầu pháp khí, họa tiết theo hệ và chiều dài cố định; hiệu ứng nguyên tố render bằng code, không bake ảnh. **Chỉ là đề xuất; chưa tự sửa ảnh đã duyệt hay đổi vũ khí trong 6 prompt.**
 
