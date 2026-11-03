@@ -2,6 +2,9 @@
 
 ## 03/11/2026
 
+**Nhạc: Đấu trường và Quần Hùng online**
+- `music/arena` phát ở màn Đấu trường và trận Đấu trường; `music/pvp` chuẩn bị sẵn cho Quần Hùng online (chưa phát triển nên chưa phát ở đâu). Còn thiếu: Tháp Thí Luyện, Tháp Thiên Mệnh, kết cục, nhạc đang chơi và kết quả Trận Đồ, âm nền bản đồ.
+
 **Nhạc: bản đồ chiến dịch, thoại, sinh tồn, trùm, trận thường**
 - Năm bản nhạc Gemini làm vòng lặp 79–113 giây bằng `scripts/make-music-loop.py`; mỗi bản khoảng 1–1,8 MB (`public/audio` thêm khoảng 14 MB). Còn thiếu: nhạc Tháp Thí Luyện, Tháp Thiên Mệnh, Đấu trường, kết cục, nhạc đang chơi và kết quả Trận Đồ, âm nền bản đồ.
 

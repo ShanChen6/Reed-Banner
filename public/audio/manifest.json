@@ -358,6 +358,14 @@
     "battle_normal": {
       "file": "music/battle_normal",
       "volume": 0.5
+    },
+    "arena": {
+      "file": "music/arena",
+      "volume": 0.5
+    },
+    "pvp": {
+      "file": "music/pvp",
+      "volume": 0.5
     }
   },
   "ambience": {}
