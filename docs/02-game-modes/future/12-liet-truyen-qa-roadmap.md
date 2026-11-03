@@ -59,7 +59,8 @@ Nếu mở reward/chiêu mộ tương lai:
 
 - [x] Concept và tài liệu draft.
 - [x] LT-00 bản chốt đề xuất và 10 quyết định của Shan (03/11/2026): [14 — Design Freeze](14-tam-tuong-ky-design-freeze.md). Roadmap mới ở [mục 9](14-tam-tuong-ky-design-freeze.md#9-roadmap) thay bảng trên.
-- [ ] LT-00 sign-off.
+- [x] LT-00 sign-off (Design Freeze FROZEN, 03/11/2026).
+- [x] LT-01 catalog slice và validator: [15 — catalog LT-01](15-tam-tuong-ky-lt01-catalog.md) (03/11/2026).
 - [ ] Engine/tests.
 - [ ] UI/asset approved.
 - [ ] Persistence.
