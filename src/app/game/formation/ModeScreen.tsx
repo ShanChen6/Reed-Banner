@@ -225,7 +225,13 @@ export default function ModeScreen({
           <p className="max-w-2xl text-[15px] text-[var(--atlas-ink-on-wood)]/90">
             Mỗi kỳ mỗi bậc chỉ một ván, cả kỳ ai cũng gặp cùng một bản đồ. Thắng mới có hạng: điểm cao hơn, rồi ít nước hơn, rồi nộp sớm hơn thì đứng trên. Thưởng nhận sau khi kỳ khép lại.
           </p>
-          {!overview?.canPlay && (
+          {overview?.failed && (
+            <div role="alert" className="atlas-frame atlas-frame-wood flex flex-wrap items-center justify-between gap-3 p-4">
+              <p className="max-w-xl text-[15px]">Chưa tải được chế độ xếp hạng. Kiểm tra mạng rồi thử lại; chơi thường vẫn chơi được.</p>
+              <button type="button" onClick={onExpire} className="home-cta flex min-h-12 items-center rounded-lg px-6 font-serif font-bold">Thử lại</button>
+            </div>
+          )}
+          {!overview?.canPlay && !overview?.failed && (
             <div role="note" className="atlas-frame atlas-frame-wood flex flex-wrap items-center justify-between gap-3 p-4">
               <p className="max-w-xl text-[15px]">Chế độ xếp hạng chỉ dành cho tài khoản đã đăng nhập. Chơi thường vẫn thoải mái, không cần đăng nhập.</p>
               <SceneLink scene="LOGIN" className="home-cta flex min-h-12 items-center rounded-lg px-6 font-serif font-bold">Đăng nhập</SceneLink>

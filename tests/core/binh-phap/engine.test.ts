@@ -7,6 +7,7 @@ import {
   idx,
   legalPlacements,
   parsePuzzle,
+  parseStoredPuzzle,
   replay,
   serializePuzzle,
   transition,
@@ -809,5 +810,20 @@ describe("quân mới liên quan tới quân trên bàn", () => {
       }
     }
     assert.ok(stuckRelated > 0);
+  });
+});
+
+describe("parseStoredPuzzle: ván lưu trên server qua các lần tăng version", () => {
+  it("đúng phiên bản thì như parsePuzzle; phiên bản cũ còn hợp lệ thì nâng lên; bậc lạ, tùy chỉnh hoặc rác thì null", () => {
+    const rules = RULESETS[1]!;
+    const s = createPuzzle(rules, 11);
+    assert.deepEqual(parseStoredPuzzle(serializePuzzle(s)), s);
+    const old = { ...s, rulesVersion: rules.version - 1 };
+    assert.equal(parsePuzzle(old), null);
+    assert.deepEqual(parseStoredPuzzle(old), s);
+    assert.equal(parseStoredPuzzle({ ...s, rulesetId: "khong-co" }), null);
+    assert.equal(parseStoredPuzzle({ ...s, cells: [] }), null);
+    assert.equal(parseStoredPuzzle("{rác"), null);
+    assert.equal(parseStoredPuzzle(null), null);
   });
 });

@@ -113,6 +113,7 @@ test("Kiều Công Hãn có đủ bốn tranh, sét hệ Lôi, khớp nằm tron
   assert.equal(rig.poses?.cast?.name, "pose-cast");
   assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
   assert.equal(rig.down?.name, "pose-down");
+  assert.equal(rig.cloth.length, 0);
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
     assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
   contains(rig.joints.shoulder, rig.parts.arm);
@@ -136,17 +137,16 @@ test("Kiều Công Hãn có đủ bốn tranh, sét hệ Lôi, khớp nằm tron
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Nguyễn Khoan có tranh đánh thường, tuyệt chiêu, bị hạ gục; khiên nâng được, khớp nằm trong lớp", () => {
+test("Nguyễn Khoan có đủ bốn tranh; khiên nâng được, khớp nằm trong lớp", () => {
   const rig = rigOf("nguyenKhoan");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, "spear");
   assert.equal(rig.strikeFx, "earthWard");
   assert.equal(rig.fxColor, 0xa5772f);
   assert.ok((rig.shieldRaise ?? 0) < 0, "khiên nâng lên ngược chiều kim đồng hồ quanh khuỷu");
-  assert.equal(rig.poses?.attack?.name, "pose-attack");
-  assert.equal(rig.poses?.cast, undefined);
-  assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
+  for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
+  assert.equal(rig.cloth.length, 0);
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
     assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
   contains(rig.joints.shoulder, rig.parts.arm);
@@ -173,6 +173,7 @@ test("Kiều Thuận có bốn tranh, vòng lá hệ Mộc, hồ lô lắc quanh
   assert.equal(rig.fxColor, 0x4f9a4a);
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
+  assert.equal(rig.cloth.length, 0);
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
     assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
   contains(rig.grip!, rig.parts.arm);
@@ -905,7 +906,7 @@ test("Hồng Đan có bốn tranh, đan hỏa hệ Hỏa, hồ lô lắc quanh n
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Ninh Hỏa có bốn tranh, hỏa thiêu kho lương hệ Hỏa, quạt phẩy theo nắm tay và texture khớp tọa độ", () => {
+test("Ninh Hỏa bộ mới có bốn tranh, hỏa thiêu kho lương hệ Hỏa, quạt lá phẩy theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("ninhHoa");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, "fan");
@@ -1007,7 +1008,7 @@ test("Bế Liên có bốn tranh, hồi phục hệ Thổ, bầu nậm xoay quan
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Mã Nhạc có bốn tranh, đoạn đạo tuyệt lương hệ Thổ, quạt nan phẩy theo nắm tay và texture khớp tọa độ", () => {
+test("Mã Nhạc bộ mới có bốn tranh, đoạn đạo tuyệt lương hệ Thổ, quạt cói phẩy theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("maNhac");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, "fan");
@@ -1789,6 +1790,140 @@ test("Lê Hoàn bộ mới cầm kiếm: khớp nằm trong lớp và texture kh
   contains(rig.joints.elbowR, rig.parts.armR);
   contains(rig.joints.neck, rig.parts.head);
   contains(rig.joints.neck, rig.parts.body);
+  for (const [name, box] of Object.entries(rig.parts)) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+});
+
+test("Đinh Liễn bộ mới cầm thủ bản: đủ bốn tranh tư thế, khớp nằm trong lớp và texture khớp tọa độ", () => {
+  const rig = rigOf("dinhLien");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "staff");
+  assert.deepEqual(rig.cloth, []);
+  assert.equal(rig.poses?.attack?.name, "pose-attack");
+  assert.equal(rig.poses?.cast?.name, "pose-cast");
+  assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  let bytes = 0;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+  for (const [name, box] of Object.entries(rig.parts)) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+});
+
+test("Trần Lãm bộ mới cầm gậy: đủ bốn tranh tư thế, khớp nằm trong lớp và texture khớp tọa độ", () => {
+  const rig = rigOf("tranLam");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "staff");
+  assert.deepEqual(rig.cloth, []);
+  assert.deepEqual(rig.covers, []);
+  assert.equal(rig.poses?.attack?.name, "pose-attack");
+  assert.equal(rig.poses?.cast?.name, "pose-cast");
+  assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  let bytes = 0;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+  for (const [name, box] of Object.entries(rig.parts)) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+});
+
+test("Ngô Nhật Khánh cầm giáo: đủ bốn tranh tư thế, khớp nằm trong lớp và texture khớp tọa độ", () => {
+  const rig = rigOf("ngoNhatKhanh");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "spear");
+  assert.deepEqual(rig.cloth, []);
+  assert.deepEqual(rig.covers, []);
+  assert.equal(rig.poses?.attack?.name, "pose-attack");
+  assert.equal(rig.poses?.cast?.name, "pose-cast");
+  assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  let bytes = 0;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+  for (const [name, box] of Object.entries(rig.parts)) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+});
+
+test("Phạm Bạch Hổ bộ mới cầm đao: đủ bốn tranh tư thế, khớp nằm trong lớp và texture khớp tọa độ", () => {
+  const rig = rigOf("phamBachHo");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, undefined);
+  assert.deepEqual(rig.cloth, []);
+  assert.deepEqual(rig.covers, []);
+  assert.equal(rig.poses?.attack?.name, "pose-attack");
+  assert.equal(rig.poses?.cast?.name, "pose-cast");
+  assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  let bytes = 0;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
+  for (const [name, box] of Object.entries(rig.parts)) {
+    const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
+    assert.equal(data.toString("ascii", 12, 16), "VP8X");
+    assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
+    assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
+  }
+});
+
+test("Ngô Xương Xí bộ mới cầm quạt lông: đủ bốn tranh tư thế, khớp nằm trong lớp và texture khớp tọa độ", () => {
+  const rig = rigOf("ngoXuongXi");
+  assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, "fan");
+  assert.deepEqual(rig.cloth, []);
+  assert.deepEqual(rig.covers, []);
+  assert.equal(rig.poses?.attack?.name, "pose-attack");
+  assert.equal(rig.poses?.cast?.name, "pose-cast");
+  assert.equal(rig.poses?.ultimate?.name, "pose-ultimate");
+  assert.equal(rig.down?.name, "pose-down");
+  const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
+    assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
+  contains(rig.joints.shoulder, rig.parts.arm);
+  contains(rig.joints.elbowR, rig.parts.armR);
+  contains(rig.joints.neck, rig.parts.head);
+  contains(rig.joints.neck, rig.parts.body);
+  let bytes = 0;
+  for (const name of partsOf(rig)) bytes += statSync(`public${partUrl(rig, name)}`).size;
+  assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
   for (const [name, box] of Object.entries(rig.parts)) {
     const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
     assert.equal(data.toString("ascii", 12, 16), "VP8X");

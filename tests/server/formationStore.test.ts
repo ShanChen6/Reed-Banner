@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
+import { sql } from "drizzle-orm";
 import { RULESETS, createPuzzle } from "../../src/core/binh-phap";
 import { DrizzleFormationStore } from "../../src/server/db/formation";
 import type { Db } from "../../src/server/db/store";
@@ -113,4 +114,35 @@ contract("kho Trận Đồ trong Postgres (PGlite, cùng migration với Neon)",
   const db = drizzle(new PGlite());
   await migrate(db, { migrationsFolder: "drizzle" });
   return new DrizzleFormationStore(db as unknown as Db);
+});
+
+describe("kho Trận Đồ trong Postgres: ván lưu từ phiên bản luật cũ", () => {
+  // Lỗi 03/11/2026: tăng `version` của bậc Khó/Đại trận làm ván đã lưu không đọc được, kho ném lỗi, GET /api/formation
+  // trả 500 cho mọi tài khoản đăng nhập và màn Trận Đồ mất thẻ Xếp hạng/Chơi thường. Khách không bị vì không qua kho.
+  async function setup() {
+    const db = drizzle(new PGlite());
+    await migrate(db, { migrationsFolder: "drizzle" });
+    const s = new DrizzleFormationStore(db as unknown as Db);
+    await s.create(entry({ id: "cu", ownerId: "a", score: 1200 }));
+    await s.create(entry({ id: "hong", ownerId: "b", score: 900 }));
+    await db.execute(sql`update formation_entries set state = jsonb_set(state, '{rulesVersion}', '0') where id = 'cu'`);
+    await db.execute(sql`update formation_entries set state = '{"hong":true}'::jsonb where id = 'hong'`);
+    return s;
+  }
+
+  it("bảng, đếm, hạng và thưởng chờ nhận vẫn đọc được, không ném lỗi", async () => {
+    const s = await setup();
+    assert.deepEqual((await s.top("thuong", "2026-11-04", 10)).map((e) => e.ownerId), ["a", "b"]);
+    assert.equal(await s.countWinners("thuong", "2026-11-04"), 2);
+    assert.equal(await s.rankOf((await s.get("thuong", "2026-11-04", "b"))!), 2);
+    assert.deepEqual((await s.unclaimed("b", "thuong", "2026-11-05", 10)).map((e) => e.id), ["hong"]);
+  });
+
+  it("ván phiên bản cũ còn hợp lệ được nâng lên phiên bản hiện tại; ván hỏng hẳn thì state null", async () => {
+    const s = await setup();
+    const cu = (await s.get("thuong", "2026-11-04", "a"))!;
+    assert.equal(cu.state?.rulesVersion, RULESETS[1]!.version);
+    assert.deepEqual(cu.state?.cells, state.cells);
+    assert.equal((await s.get("thuong", "2026-11-04", "b"))!.state, null);
+  });
 });

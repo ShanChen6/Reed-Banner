@@ -247,11 +247,124 @@
         "sfx/battle/match3_c"
       ],
       "volume": 0.8
+    },
+    "battle.win": {
+      "files": [
+        "sfx/battle/win_a"
+      ],
+      "volume": 0.9
+    },
+    "battle.lose": {
+      "files": [
+        "sfx/battle/lose_a",
+        "sfx/battle/lose_b"
+      ],
+      "volume": 0.9
+    },
+    "battle.ko": {
+      "files": [
+        "sfx/battle/ko_a",
+        "sfx/battle/ko_b",
+        "sfx/battle/ko_c"
+      ],
+      "volume": 0.85
+    },
+    "battle.damage": {
+      "files": [
+        "sfx/battle/damage_a",
+        "sfx/battle/damage_b",
+        "sfx/battle/damage_c"
+      ],
+      "volume": 0.85
+    },
+    "battle.skill.kim": {
+      "files": [
+        "sfx/battle/skill_a",
+        "sfx/battle/skill_b",
+        "sfx/battle/skill_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.skill.moc": {
+      "files": [
+        "sfx/battle/skill_a",
+        "sfx/battle/skill_b",
+        "sfx/battle/skill_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.skill.thuy": {
+      "files": [
+        "sfx/battle/skill_a",
+        "sfx/battle/skill_b",
+        "sfx/battle/skill_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.skill.hoa": {
+      "files": [
+        "sfx/battle/skill_a",
+        "sfx/battle/skill_b",
+        "sfx/battle/skill_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.skill.tho": {
+      "files": [
+        "sfx/battle/skill_a",
+        "sfx/battle/skill_b",
+        "sfx/battle/skill_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.skill.loi": {
+      "files": [
+        "sfx/battle/skill_a",
+        "sfx/battle/skill_b",
+        "sfx/battle/skill_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.skill.phong": {
+      "files": [
+        "sfx/battle/skill_a",
+        "sfx/battle/skill_b",
+        "sfx/battle/skill_c"
+      ],
+      "volume": 0.8
     }
   },
   "music": {
     "formation_menu": {
       "file": "music/formation_menu",
+      "volume": 0.5
+    },
+    "atlas": {
+      "file": "music/atlas",
+      "volume": 0.5
+    },
+    "dialogue": {
+      "file": "music/dialogue",
+      "volume": 0.4
+    },
+    "survival": {
+      "file": "music/survival",
+      "volume": 0.5
+    },
+    "battle_boss": {
+      "file": "music/battle_boss",
+      "volume": 0.5
+    },
+    "battle_normal": {
+      "file": "music/battle_normal",
+      "volume": 0.5
+    },
+    "arena": {
+      "file": "music/arena",
+      "volume": 0.5
+    },
+    "pvp": {
+      "file": "music/pvp",
       "volume": 0.5
     }
   },
