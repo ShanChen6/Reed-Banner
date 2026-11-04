@@ -2,6 +2,16 @@
 
 ## 04/11/2026
 
+**Tầm Tướng Ký: Shan duyệt cân bằng nguyên tố và cảnh báo**
+- Duyệt 11 cặp ghép mới và lời cảnh báo cặp đã thử ([tài liệu 23](../02-game-modes/future/23-tam-tuong-ky-can-bang-va-canh-bao.md), **DRAFT → APPROVED**). Có hiệu lực khi merge vào `develop` và deploy.
+
+**Tầm Tướng Ký: cân bằng nguyên tố, cảnh báo cặp đã thử (DRAFT, có code)**
+- Shan: bước ghép đầu lệch về Mộc, Thủy, Thổ. Thêm 11 cặp ghép (Hỏa, Phong, Lôi, Kim) ra vật liệu bậc 1 sẵn có; 27/49 cặp gốc có công thức, mỗi hệ 7 cặp (Thổ 8). Không đổi số lần ghép của tướng nào. `PACK_1.contentVersion` 2 → 3.
+- Shan: lần đầu ghép sai vẫn mất; lần sau đặt lại đúng cặp đó thì cảnh báo trước, không nói công thức sai. Server ghi `Profile.tamTuongKy.triedPairs` (tối đa 400). Xem [cân bằng và cảnh báo](../02-game-modes/future/23-tam-tuong-ky-can-bang-va-canh-bao.md).
+
+**Tầm Tướng Ký: Gói 3 đã bật**
+- PR #262 merge vào `develop`; Shan bật Gói 3 (một biến `TAM_TUONG_KY_ENABLED`). [Gói 3](../02-game-modes/future/22-tam-tuong-ky-pack-3.md) **APPROVED → IMPLEMENTED**; sổ đủ 77 tướng. Bật giữa tuần (thứ Tư) nên nếu Hạng đang bật thì danh sách đề cử tuần 2026-11-02 đổi từ lúc deploy; điểm đã ghi giữ nguyên.
+
 **Viễn Chinh: code kịch bản Cửa Biển**
 - Cửa Biển thành kịch bản cố định theo [thiết kế](../02-game-modes/expedition/03-cua-bien-thiet-ke.md): bố cục 11 ô mới, lệnh Trinh sát, đường bị phá, con nước, rút dân, thuyền viện, phản công Chợ, trận giữ cầu, hộ tống và phá cổng (công trình trong engine), bốn kết thúc. Mô phỏng ngắn 6 lượt Bậc I chỉ để soát chơi được (kế hoạch tham lam không làm việc phụ), không cân bằng.
 

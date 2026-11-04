@@ -3,7 +3,7 @@
 // vàng hiện có; file này không đọc đồng hồ, không import progress.
 
 import { combineRanked, initialRanked, type Catalog, type RankedState, type Stock } from "./engine";
-import { replayReceipt, withReceipt, validRequestId, type TtkAccount, type TtkResponse, type TtkResult } from "./account";
+import { replayReceipt, withReceipt, withTriedPair, validRequestId, type TtkAccount, type TtkResponse, type TtkResult } from "./account";
 import type { HeroTier, NodeId, Pack } from "./types";
 
 /** Một bó = 7 đơn vị nguyên tố tự chọn (P-11). */
@@ -118,7 +118,7 @@ export function combineInRanked(
     gained = TTK_HERO_POINTS[catalog.nodes.get(out.nodeId)?.tier ?? "thuong"];
   }
   const next: TtkAccount = {
-    ...entered,
+    ...(out.status === "noRecipe" ? withTriedPair(entered, first, second) : entered),
     units: out.next.units,
     discovery: out.nextDiscovery,
     ranked: { ...w, stock: out.next.stock, heroesCreated: out.next.heroesCreated, unitsSpent: out.next.unitsSpent, points: w.points + gained },

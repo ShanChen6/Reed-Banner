@@ -35,7 +35,7 @@ import {
   type ProfileAction,
   type SkillDef,
 } from "@/core";
-import { GearIcon } from "../art/gear";
+import { EmptySlotIcon, GearIcon, SetEmblem } from "../art/gear";
 import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
 import { ProfileArt } from "../art/ProfileArt";
 import { ELEMENT_NAME, gearText, PROFESSION_NAME, skillText, SLOT_NAME, TIER_CLASS } from "../battle/labels";
@@ -248,7 +248,6 @@ function TeamControl({
 export function GearSlotButton({
   slot,
   item,
-  element,
   profession,
   selected,
   onClick,
@@ -271,13 +270,18 @@ export function GearSlotButton({
       title={item ? gearText(item) : `${SLOT_NAME[slot]}: trống`}
       className={`gear-slot relative flex items-center justify-center rounded-lg p-0.5 ${item ? "" : "is-empty"} ${selected ? "is-selected" : ""}`}
     >
-      <GearIcon
-        slot={slot}
-        element={item?.element ?? element}
-        tier={item?.tier}
-        profession={slot === "vuKhi" ? (item?.profession ?? profession) : undefined}
-        className={`${size} ${item ? "" : "opacity-30 grayscale"}`}
-      />
+      {item ? (
+        <GearIcon
+          slot={slot}
+          element={item.element}
+          tier={item.tier}
+          set={item.set}
+          profession={slot === "vuKhi" ? (item.profession ?? profession) : undefined}
+          className={size}
+        />
+      ) : (
+        <EmptySlotIcon slot={slot} className={size} />
+      )}
       {!item && <PlusGlyph className="absolute right-1 bottom-1 size-3.5 text-[var(--bk-soft)]" />}
     </button>
   );
@@ -325,7 +329,9 @@ function Overview({ profile, id, fighter, bare, worn }: { profile: Profile; id: 
       {bonuses.length > 0 && (
         <ul className="flex flex-col gap-1 text-sm text-emerald-300" aria-label="Thưởng bộ và cộng hưởng đang kích hoạt">
           {bonuses.map((b) => (
-            <li key={`${b.kind}-${b.id}-${b.level}`}>✦ {bonusText(b)}</li>
+            <li key={`${b.kind}-${b.id}-${b.level}`} className="flex items-center gap-1.5">
+              {b.kind === "set" ? <SetEmblem set={b.id} className="size-5 shrink-0" /> : "✦"} {bonusText(b)}
+            </li>
           ))}
         </ul>
       )}

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ELEMENTS, GEAR_SLOTS, mainCharacter, characterSkills, PROFESSIONS, professionSkills, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
+import { dinhBoLinhUltimate, ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PROFESSIONS, ROLE_SKILLS, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, SPECIAL_NAME, TIER_COLOR_NAME, TILE_NAME } from "@/app/game/battle/labels";
-import { GearIcon } from "@/app/game/art/gear";
+import { EmptySlotIcon, GearIcon, SetEmblem } from "@/app/game/art/gear";
 import { ElementIcon, FoodIcon, LeaderFlag, ProfessionIcon, ShieldIcon } from "@/app/game/art/icons";
 import { Portrait } from "@/app/game/art/portraits";
 import { SkillIcon } from "@/app/game/art/skills";
@@ -131,12 +131,27 @@ export default function ArtPage() {
         </section>
 
         <section className="space-y-2">
+          <h2 className="font-semibold">Tuyệt chiêu ô 4 Đinh Bộ Lĩnh theo nghề (hệ Kim; huy hiệu nghề ở góc)</h2>
+          <div className="flex flex-wrap items-start gap-3">
+            {PROFESSIONS.map((p) => {
+              const d = dinhBoLinhUltimate(p, "kim");
+              return (
+                <figure key={d.id} className="flex w-20 flex-col items-center gap-1">
+                  <SkillIcon def={d} className="size-12" />
+                  <figcaption className="text-center text-[11px] leading-tight opacity-80">{d.name}</figcaption>
+                </figure>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="space-y-2">
           <h2 className="font-semibold">Chiêu nghề</h2>
           <div className="space-y-3">
             {PROFESSIONS.map((p) => (
               <div key={p} className="flex flex-wrap items-start gap-3">
                 <span className="w-16 pt-3 text-sm">{PROFESSION_NAME[p]}</span>
-                {professionSkills(p).map((d) => (
+                {ROLE_SKILLS.filter((d) => d.profession === p).map((d) => (
                   <figure key={d.id} className="flex w-20 flex-col items-center gap-1">
                     <SkillIcon def={d} className="size-12" />
                     <figcaption className="text-center text-[11px] leading-tight opacity-80">{d.name}</figcaption>
@@ -153,7 +168,7 @@ export default function ArtPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-semibold">Trang bị: 9 ô theo phẩm (hệ Mộc)</h2>
+          <h2 className="font-semibold">Trang bị: 9 ô theo phẩm (hệ Mộc, bộ Cờ Lau)</h2>
           <div className="grid grid-cols-[auto_repeat(9,minmax(0,1fr))] items-center gap-2 text-xs">
             <span />
             {GEAR_SLOTS.map((s) => (
@@ -165,9 +180,73 @@ export default function ArtPage() {
               <div key={t} className="contents">
                 <span>{TIER_COLOR_NAME[t]}</span>
                 {GEAR_SLOTS.map((s) => (
-                  <GearIcon key={s} slot={s} element="moc" tier={t} className="mx-auto size-12" />
+                  <GearIcon key={s} slot={s} element="moc" tier={t} set="coLau" className="mx-auto size-12" />
                 ))}
               </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="font-semibold">Ô trống (chưa mặc)</h2>
+          <div className="grid grid-cols-9 gap-2 text-xs">
+            {GEAR_SLOTS.map((s) => (
+              <figure key={s} className="flex flex-col items-center gap-1">
+                <EmptySlotIcon slot={s} className="size-12" />
+                <figcaption className="opacity-70">{SLOT_NAME[s]}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="font-semibold">Huy hiệu bộ</h2>
+          <div className="flex flex-wrap gap-4 text-xs">
+            {GEAR_SETS.map((g) => (
+              <figure key={g.id} className="flex flex-col items-center gap-1">
+                <SetEmblem set={g.id} className="size-16" />
+                <figcaption className="opacity-80">Bộ {g.name}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="font-semibold">Bộ Hoa Lư (phẩm Tím, hệ Hỏa; vũ khí theo nghề)</h2>
+          <div className="grid grid-cols-9 gap-2 text-xs">
+            {GEAR_SLOTS.map((s) => (
+              <figure key={s} className="flex flex-col items-center gap-1">
+                <GearIcon slot={s} element="hoa" tier={4} set="hoaLu" className="size-12" />
+                <figcaption className="opacity-70">{SLOT_NAME[s]}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-3 text-xs">
+            {PROFESSIONS.map((p) => (
+              <figure key={p} className="flex flex-col items-center gap-1">
+                <GearIcon slot="vuKhi" profession={p} element="hoa" tier={4} set="hoaLu" className="size-14" />
+                <figcaption className="opacity-80">{PROFESSION_NAME[p]}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="font-semibold">Bộ Đồng Cổ (phẩm Cam, hệ Thổ; vũ khí theo nghề)</h2>
+          <div className="grid grid-cols-9 gap-2 text-xs">
+            {GEAR_SLOTS.map((s) => (
+              <figure key={s} className="flex flex-col items-center gap-1">
+                <GearIcon slot={s} element="tho" tier={5} set="dongCo" className="size-12" />
+                <figcaption className="opacity-70">{SLOT_NAME[s]}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-3 text-xs">
+            {PROFESSIONS.map((p) => (
+              <figure key={p} className="flex flex-col items-center gap-1">
+                <GearIcon slot="vuKhi" profession={p} element="tho" tier={5} set="dongCo" className="size-14" />
+                <figcaption className="opacity-80">{PROFESSION_NAME[p]}</figcaption>
+              </figure>
             ))}
           </div>
         </section>
@@ -177,7 +256,7 @@ export default function ArtPage() {
           <div className="flex flex-wrap gap-3 text-xs">
             {PROFESSIONS.map((p) => (
               <figure key={p} className="flex flex-col items-center gap-1">
-                <GearIcon slot="vuKhi" profession={p} element="moc" tier={3} className="size-14" />
+                <GearIcon slot="vuKhi" profession={p} element="moc" tier={3} set="coLau" className="size-14" />
                 <figcaption className="opacity-80">{PROFESSION_NAME[p]}</figcaption>
               </figure>
             ))}

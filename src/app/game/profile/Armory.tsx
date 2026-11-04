@@ -19,11 +19,11 @@ import {
   type Profile,
   type ProfileAction,
 } from "@/core";
-import { GearIcon } from "../art/gear";
+import { GearIcon, GearActionIcon } from "../art/gear";
 import { gearText, PROFESSION_NAME, SLOT_NAME, TIER_CLASS } from "../battle/labels";
 import { SceneLink } from "../SceneContext";
 import { fighterOf, STAT_NAME } from "./HeroDetail";
-import { MergeGlyph, ShopGlyph, XGlyph } from "./glyphs";
+import { ShopGlyph, XGlyph } from "./glyphs";
 import { nameOf, ownedIds } from "./roster";
 
 type Shelf = "all" | "weapon" | "armor" | "jewelry";
@@ -93,7 +93,7 @@ export default function Armory({
             }}
             className={`barracks-btn flex min-h-10 items-center gap-1.5 rounded-md px-3 text-[15px] ${merging ? "is-on" : ""}`}
           >
-            <MergeGlyph className="size-4" />
+            <GearActionIcon action="merge" className="size-6" />
             {merging ? "Thoát ghép" : "Ghép đồ"}
           </button>
         </div>
@@ -162,7 +162,7 @@ export default function Armory({
                       title={`${gearText(it)}${by ? ` · ${nameOf(by)} đang dùng` : ""}`}
                       className={`gear-slot relative flex aspect-square w-full items-center justify-center rounded-lg p-0.5 ${on ? "is-selected" : ""} ${dim ? "opacity-35" : ""}`}
                     >
-                      <GearIcon slot={it.slot} element={it.element} tier={it.tier} profession={it.profession} className="size-full" />
+                      <GearIcon slot={it.slot} element={it.element} tier={it.tier} set={it.set} profession={it.profession} className="size-full" />
                     </button>
                     {by && (
                       <span className="pointer-events-none absolute right-1 bottom-1 rounded bg-emerald-800 px-1 text-[11px] leading-tight font-bold text-emerald-50" aria-hidden>
@@ -223,7 +223,7 @@ function ItemPanel({
   return (
     <div className="flex flex-col gap-3">
       <div className="flex gap-3">
-        <GearIcon slot={item.slot} element={item.element} tier={item.tier} profession={item.profession} className="size-20 shrink-0" />
+        <GearIcon slot={item.slot} element={item.element} tier={item.tier} set={item.set} profession={item.profession} className="size-20 shrink-0" />
         <div className="min-w-0">
           <h3 className={`font-serif text-lg leading-snug font-bold ${TIER_CLASS[item.tier]}`}>{gearText(item)}</h3>
           <p className="text-sm text-[var(--bk-soft)]">
@@ -265,7 +265,8 @@ function ItemPanel({
         </div>
       </div>
 
-      <button type="button" disabled={busy} onClick={() => onAction({ type: "sell", item: item.id }, onSold)} className="barracks-btn min-h-10 self-start rounded-md px-3 disabled:opacity-50">
+      <button type="button" disabled={busy} onClick={() => onAction({ type: "sell", item: item.id }, onSold)} className="barracks-btn flex min-h-10 items-center gap-1.5 self-start rounded-md px-3 disabled:opacity-50">
+        <GearActionIcon action="sell" className="size-6" />
         Bán lấy {SELL_GOLD[item.tier]} vàng{wearer ? " (tháo ra trước)" : ""}
       </button>
     </div>
@@ -298,7 +299,7 @@ function MergePanel({
             <li key={it?.id ?? `empty-${i}`}>
               {it ? (
                 <button type="button" onClick={() => onRemove(it.id)} aria-label={`Bỏ ${gearText(it)} khỏi ghép`} className="gear-slot is-selected relative flex aspect-square w-full items-center justify-center rounded-lg p-0.5">
-                  <GearIcon slot={it.slot} element={it.element} tier={it.tier} profession={it.profession} className="size-full" />
+                  <GearIcon slot={it.slot} element={it.element} tier={it.tier} set={it.set} profession={it.profession} className="size-full" />
                   <XGlyph className="absolute top-1 right-1 size-4 rounded-full bg-black/70 p-0.5" />
                 </button>
               ) : (
@@ -309,7 +310,8 @@ function MergePanel({
         })}
       </ul>
       {items[0] && <p className={`text-sm ${TIER_CLASS[items[0].tier]}`}>{gearText(items[0])}</p>}
-      <button type="button" disabled={busy || !ready || (cost !== null && profile.gold < cost)} onClick={onMerge} className="barracks-btn is-action min-h-11 rounded-md px-4 disabled:opacity-50">
+      <button type="button" disabled={busy || !ready || (cost !== null && profile.gold < cost)} onClick={onMerge} className="barracks-btn is-action flex min-h-11 items-center justify-center gap-1.5 rounded-md px-4 disabled:opacity-50">
+        <GearActionIcon action="merge" className="size-6" />
         Ghép{cost !== null ? ` (−${cost} vàng)` : ""}
       </button>
       {cost !== null && profile.gold < cost && <p className="text-sm text-rose-300">Không đủ vàng: cần {cost}, có {profile.gold}.</p>}
