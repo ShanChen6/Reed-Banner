@@ -10,7 +10,6 @@ import {
   type ExpeditionResult,
   type Match,
 } from "@/core";
-import { submitProfile, type LeaderboardStore } from "./leaderboard";
 import { updateProfile, type ProfileStore } from "./profiles";
 
 export interface ExpeditionMatchResult {
@@ -25,7 +24,7 @@ export async function settleExpeditionMatch(
   ownerId: string,
   matchId: string,
   match: Match,
-  deps: { readonly profiles: ProfileStore; readonly leaderboard?: LeaderboardStore; readonly now: number },
+  deps: { readonly profiles: ProfileStore; readonly now: number },
 ): Promise<ExpeditionMatchResult | undefined> {
   const tag = match.expedition;
   if (!tag) return undefined;
@@ -56,7 +55,5 @@ export async function settleExpeditionMatch(
     if (updated.error !== "stale") console.error("Không chốt được trận Viễn Chinh", matchId, updated.error);
     return undefined;
   }
-  // Thắng thành đích đổi sao và ngày: ghi lại bảng xếp hạng Viễn Chinh.
-  if (result?.end?.won) await submitProfile(deps.leaderboard, ownerId, updated.stored.profile, deps.now);
   return result;
 }

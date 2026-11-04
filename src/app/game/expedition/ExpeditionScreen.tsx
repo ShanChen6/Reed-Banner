@@ -13,6 +13,12 @@ import {
   EXPEDITION_GRANARY_FOOD,
   MAIN_ID,
   companionById,
+  EXPEDITION_WATCHTOWER_SIGHT,
+  EXPEDITION_SCOUT_SIGHT,
+  expeditionEdgeDays,
+  expeditionEdgeKey,
+  expeditionEdgeKind,
+  expeditionEndingName,
   expeditionNeighbors,
   type ArmyIndex,
   type Element,
@@ -59,6 +65,24 @@ interface EncounterPreview {
   readonly power: number;
   readonly pincer: boolean;
   readonly foes: readonly FoePreview[];
+  readonly mode?: "chase" | "counter" | "gate";
+  readonly objective?: { readonly type: "hold" | "escort"; readonly turns: number } | { readonly type: "gate"; readonly fighter: number };
+}
+
+/** Kịch bản của lượt (Cửa Biển), server gửi: không có đường bị phá chưa lộ, lịch con nước chỉ khi đã biết. */
+interface ScenarioView {
+  readonly village: string;
+  readonly home: string;
+  readonly chaseUnless: string;
+  readonly market: string;
+  readonly counterAfterDays: number;
+  readonly reinforcementDays: readonly number[];
+  readonly tideDays: readonly number[] | null;
+  readonly tideRevealedBy: string;
+  readonly bridgeTurns: number;
+  readonly gateSkipFrom: string;
+  readonly chase?: EncounterPreview;
+  readonly counter?: EncounterPreview & { readonly army: ArmyIndex };
 }
 
 interface Overview {
@@ -68,11 +92,15 @@ interface Overview {
   readonly runsLeft: number;
   readonly runsPerDay: number;
   readonly encounters: Readonly<Record<string, readonly [EncounterPreview, EncounterPreview]>>;
+  /** Ô đang thấy (ngoài sương mù), server tính. */
+  readonly visible: readonly string[];
+  readonly scenario: ScenarioView | null;
 }
 
 interface ApiResult {
   readonly ok?: boolean;
-  readonly kind?: "moved" | "battle";
+  readonly kind?: "moved" | "battle" | "blocked";
+  readonly reason?: "broken" | "tide";
   readonly id?: string;
   readonly error?: string;
 }
@@ -89,25 +117,39 @@ const ERROR_TEXT: Record<string, string> = {
   conflict: "Dữ liệu vừa đổi ở nơi khác. Đang tải lại.",
   dailyLimit: "Hôm nay đã hết lượt xuất quân. Lượt mới mở lúc 0 giờ (giờ Việt Nam).",
   featureDisabled: "Viễn Chinh chưa mở.",
-  loginRequired: "Viễn Chinh cần tài khoản đã đăng nhập.",
+  roadBroken: "Đường này đã bị phá, hãy đi đường khác.",
+  highTide: "Cửa nước đang lên. Chờ ngày nước rút.",
+  counterPending: "Giặc đang phản công Chợ: đạo giữ chợ phải đánh trước.",
+  noScout: "Sa bàn này không có lệnh trinh sát.",
 };
+
+const BLOCK_TEXT = {
+  broken: "Đường bị phá! Đạo quân đứng yên và mất ngày này. Từ giờ đường hiện là bị phá.",
+  tide: "Cửa nước đang lên! Đạo quân đứng yên và mất ngày này. Đã biết lịch con nước.",
+} as const;
 
 const KIND_NAME: Record<ExpeditionNodeKind, string> = {
   camp: "Trại",
   outpost: "Đồn",
+  watchtower: "Chòi canh",
   granary: "Kho lương",
   fort: "Lũy",
   village: "Làng",
   citadel: "Thành đích",
+  bridge: "Cầu",
+  shoal: "Bãi cạn",
 };
 
 const KIND_TEXT: Record<ExpeditionNodeKind, string> = {
   camp: "Trại xuất phát. Không có địch.",
   outpost: "Đồn nhỏ, 2 địch.",
+  watchtower: `Chòi canh, 2 địch. Chiếm được: vén sương mù mọi ô trong ${EXPEDITION_WATCHTOWER_SIGHT} bước.`,
   granary: `Kho lương có lính giữ, 2 địch. Chiếm được: cả hai đạo thêm ${EXPEDITION_GRANARY_FOOD} lương.`,
   fort: "Lũy, 3 địch.",
   village: `Làng. Lần đầu ghé: cả đạo hồi ${Math.round(EXPEDITION_VILLAGE_HEAL * 100)}% máu (kể cả người gục) và thêm lương.`,
   citadel: "Thành đích, 3 địch, tướng giữ thành máu ×1,5. Chiếm được là thắng viễn chinh.",
+  bridge: "Cầu, 3 địch. Trận giữ cầu: cầm cự đủ lượt (hoặc hạ hết) là chiếm được, chặn thuyền viện của giặc.",
+  shoal: "Bãi cạn, không có địch. Đứng chờ con nước được; ngày nước rút đi được cửa nước vào thành.",
 };
 
 const ARMY_NAME = ["Đạo Chính", "Biệt đạo"] as const;
@@ -155,6 +197,7 @@ export default function ExpeditionScreen() {
   const [failed, setFailed] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   // Chuẩn bị
   const [mapId, setMapId] = useState<string>("aiBac");
   const [tier, setTier] = useState<ExpeditionTier>(1);
@@ -192,6 +235,7 @@ export default function ExpeditionScreen() {
   const act = async (url: string, body?: unknown) => {
     setBusy(true);
     setMessage(null);
+    setNotice(null);
     const r = await post<ApiResult>(url, body);
     if (!r?.ok) {
       fail(r?.error);
@@ -209,6 +253,7 @@ export default function ExpeditionScreen() {
       return r;
     }
     await load();
+    if (r.kind === "blocked" && r.reason) setNotice(BLOCK_TEXT[r.reason]);
     setBusy(false);
     return r;
   };
@@ -246,12 +291,15 @@ export default function ExpeditionScreen() {
         </header>
 
         {message && <p role="alert" className="rounded-lg border border-rose-400/30 bg-rose-950/50 p-3 text-rose-100">{message}</p>}
+        {notice && <p role="status" className="rounded-lg border border-amber-400/40 bg-amber-950/50 p-3 text-amber-100">{notice}</p>}
 
         {active && run ? (
           <RunView
             run={run}
             map={mapOf(run.map)}
             encounters={overview.encounters}
+            visible={overview.visible}
+            scenario={overview.scenario}
             army={army}
             setArmy={(a) => { setArmy(a); setTarget(null); }}
             target={target}
@@ -259,6 +307,8 @@ export default function ExpeditionScreen() {
             busy={busy}
             onMarch={(to) => void act("/api/expedition/march", { army, to })}
             onCamp={() => void act("/api/expedition/camp")}
+            onScout={() => void act("/api/expedition/scout", { army })}
+            onCounter={(a) => void act("/api/expedition/march", { army: a, to: run.armies[a].at })}
             onAbandon={() => void act("/api/expedition/abandon")}
             onResume={() => void act("/api/expedition/march", { army: run.battle?.army ?? 0, to: run.battle?.node ?? "" })}
           />
@@ -338,8 +388,10 @@ function SetupView(props: {
                 type="button"
                 aria-pressed={m.id === map.id}
                 onClick={() => props.setMapId(m.id)}
-                className={`tower-screen__choice p-3 text-left ${m.id === map.id ? "border-amber-400 bg-amber-500/15" : "border-white/10 bg-white/5"}`}
+                className={`tower-screen__choice overflow-hidden p-0 text-left ${m.id === map.id ? "border-amber-400 bg-amber-500/15" : "border-white/10 bg-white/5"}`}
               >
+                <span aria-hidden className="block aspect-[5/2] w-full bg-no-repeat opacity-90" style={mapArtStyle(m)} />
+                <span className="block p-3">
                 <span className="flex items-center gap-2">
                   <ElementIcon element={m.element} className="size-5" />
                   <strong className="font-serif text-lg text-amber-100">{m.name}</strong>
@@ -348,6 +400,7 @@ function SetupView(props: {
                 <span className="mt-1 block text-sm text-muted">{m.blurb}</span>
                 <span className="mt-2 block text-xs text-foreground-secondary">
                   Chiến địa hệ {ELEMENT_NAME[m.element]} · {m.days} ngày · chuẩn {m.parDays} ngày
+                </span>
                 </span>
               </button>
             );
@@ -459,17 +512,194 @@ function NodeGlyph({ kind, x, y }: { kind: ExpeditionNodeKind; x: number; y: num
       return <ellipse cx={x} cy={y} rx={s} ry={s * 0.8} fill="currentColor" />;
     case "outpost":
       return <rect x={x - s * 0.7} y={y - s} width={s * 1.4} height={s * 2} fill="currentColor" />;
+    case "watchtower":
+      return <path d={`M${x - s * 0.9} ${y + s} L${x - s * 0.45} ${y - s * 0.5} H${x - s * 0.9} L${x} ${y - s * 1.2} L${x + s * 0.9} ${y - s * 0.5} H${x + s * 0.45} L${x + s * 0.9} ${y + s} Z`} fill="currentColor" />;
     case "fort":
       return <path d={`M${x - s} ${y + s} V${y - s} h${s * 0.6} v${s * 0.6} h${s * 0.8} v${-s * 0.6} h${s * 0.6} V${y + s} Z`} fill="currentColor" />;
     case "citadel":
       return <path d={`M${x - s * 1.3} ${y + s} V${y - s * 0.4} L${x} ${y - s * 1.4} L${x + s * 1.3} ${y - s * 0.4} V${y + s} Z`} fill="currentColor" />;
+    case "bridge":
+      return <path d={`M${x - s * 1.2} ${y + s * 0.6} Q${x} ${y - s * 1.4} ${x + s * 1.2} ${y + s * 0.6} M${x - s * 0.6} ${y - s * 0.1} V${y + s * 0.6} M${x + s * 0.6} ${y - s * 0.1} V${y + s * 0.6}`} fill="none" stroke="currentColor" strokeWidth={0.6} />;
+    case "shoal":
+      return <path d={`M${x - s * 1.2} ${y + s * 0.2} q${s * 0.6} ${-s * 0.6} ${s * 1.2} 0 t${s * 1.2} 0 M${x - s * 1.2} ${y + s * 0.9} q${s * 0.6} ${-s * 0.6} ${s * 1.2} 0 t${s * 1.2} 0`} fill="none" stroke="currentColor" strokeWidth={0.5} />;
   }
+}
+
+/**
+ * Tranh riêng của từng sa bàn (5:3, `public/art/expedition/<id>.webp`, vẽ theo docs/06-art/prompts/vien-chinh-sa-ban.md).
+ * Sa bàn chưa có tranh thì tạm lấy một vùng của bản đồ tổng Bình Loạn (`ExpeditionMap.art`) cho tới khi có tranh.
+ */
+const EXPEDITION_MAP_IMAGES: Partial<Record<ExpeditionMap["id"], string>> = {};
+const WORLD_ART = "/art/campaign/world-map.webp";
+const WORLD_W = 1536;
+const WORLD_H = 1024;
+
+/** Ảnh nền của một sa bàn, phủ đúng khung 100 × 60 của SVG. */
+function MapArt({ map }: { map: ExpeditionMap }) {
+  const own = EXPEDITION_MAP_IMAGES[map.id];
+  if (own) return <image href={own} x={0} y={0} width={100} height={60} preserveAspectRatio="xMidYMid slice" />;
+  const art = map.art;
+  const k = 100 / art.w;
+  return (
+    <image
+      href={WORLD_ART}
+      x={-art.x * k}
+      y={-art.y * k}
+      width={WORLD_W * k}
+      height={WORLD_H * k}
+      preserveAspectRatio="none"
+    />
+  );
+}
+
+/** Nền CSS cho thẻ chọn sa bàn: cùng tranh với sa bàn. */
+export function mapArtStyle(map: ExpeditionMap): React.CSSProperties {
+  const own = EXPEDITION_MAP_IMAGES[map.id];
+  if (own) return { backgroundImage: `url(${own})`, backgroundSize: "cover", backgroundPosition: "center" };
+  const art = map.art;
+  const h = art.w * 0.6;
+  return {
+    backgroundImage: `url(${WORLD_ART})`,
+    // Thẻ thấp hơn khung 5:3 nên giữ tỉ lệ tranh và lấy dải giữa vùng tranh theo chiều dọc.
+    backgroundSize: `${(WORLD_W / art.w) * 100}% auto`,
+    backgroundPosition: `${(art.x / (WORLD_W - art.w)) * 100}% ${((art.y + h / 2) / WORLD_H) * 100}%`,
+  };
+}
+
+const LABEL_HALO = { paintOrder: "stroke", stroke: "#1b1411", strokeWidth: 0.7, strokeLinejoin: "round" } as const;
+
+/** Tên ô; ô sát mép trái/phải thì canh chữ vào trong để không bị cắt. */
+function NodeLabel({ x, y, text }: { x: number; y: number; text: string }) {
+  const anchor = x < 12 ? "start" : x > 88 ? "end" : "middle";
+  const tx = anchor === "start" ? Math.max(0.6, x - 3) : anchor === "end" ? Math.min(99.4, x + 3) : x;
+  return <text x={tx} y={y} textAnchor={anchor} fontSize="2.2" fill="#f3dfae" style={LABEL_HALO}>{text}</text>;
+}
+
+function SandTable(props: {
+  run: Omit<ExpeditionRun, "seed">;
+  map: MapView;
+  seen: ReadonlySet<string>;
+  army: ArmyIndex;
+  target: string | null;
+  reachable: readonly string[];
+  setArmy: (a: ArmyIndex) => void;
+  setTarget: (id: string | null) => void;
+}) {
+  const { run, map, seen, army, target, reachable } = props;
+  const byId = (id: string) => map.nodes.find((n) => n.id === id)!;
+  const selected = run.armies[army];
+  const canFight = (a: ArmyIndex) => run.armies[a].ids.some((id) => (run.armies[a].fighters[id]?.hp ?? 0) > 0);
+  const citadel = byId(map.citadel);
+  const fogId = `exp-fog-${map.id}`;
+  return (
+    <svg viewBox="0 0 100 60" className="mt-3 w-full overflow-hidden rounded-lg border border-[#85602e] bg-[#2a1f14]" role="group" aria-label={`Sa bàn ${map.name}`}>
+      <defs>
+        <radialGradient id={`${fogId}-hole`}>
+          <stop offset="45%" stopColor="#000" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0" />
+        </radialGradient>
+        <filter id={`${fogId}-cloud`} x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="3" seed="7" />
+          <feColorMatrix values="0 0 0 0 0.86  0 0 0 0 0.79  0 0 0 0 0.66  0 0 0 0.9 0.15" />
+        </filter>
+        <mask id={`${fogId}-mask`} maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="60">
+          <rect width="100" height="60" fill="#fff" />
+          {map.nodes.filter((n) => seen.has(n.id)).map((n) => (
+            <circle key={n.id} cx={n.x} cy={n.y} r={10} fill={`url(#${fogId}-hole)`} />
+          ))}
+        </mask>
+      </defs>
+      <MapArt map={map} />
+      {/* Đường đi: chỉ vẽ đường có ít nhất một đầu đã thấy; phần chạy vào sương bị sương phủ. */}
+      {map.edges.map(([a, b, kind]) => {
+        if (!seen.has(a) && !seen.has(b)) return null;
+        const na = byId(a);
+        const nb = byId(b);
+        const broken = run.knownBroken?.includes(expeditionEdgeKey(a, b)) ?? false;
+        const hot = !broken && ((a === selected.at && reachable.includes(b)) || (b === selected.at && reachable.includes(a)));
+        const wet = kind === "water" || kind === "tide";
+        const base = broken ? "#e06a4f" : wet ? "#7fd0e6" : kind === "marsh" ? "#9fc47a" : "#f3dfae";
+        const mx = (na.x + nb.x) / 2;
+        const my = (na.y + nb.y) / 2;
+        return (
+          <g key={`${a}-${b}`}>
+            <line
+              x1={na.x} y1={na.y} x2={nb.x} y2={nb.y}
+              stroke={hot ? ARMY_COLOR[army] : base}
+              strokeOpacity={hot ? 1 : 0.85}
+              strokeWidth={hot ? 0.75 : 0.5}
+              strokeDasharray={kind === "tide" ? "0.4 0.7" : wet || kind === "marsh" || broken ? "1.4 0.9" : hot ? undefined : "0.9 0.6"}
+              style={{ filter: "drop-shadow(0 0 0.4px #1b1411)" }}
+            />
+            {broken && <text x={mx} y={my + 0.9} textAnchor="middle" fontSize="2.6" fontWeight="bold" fill="#e06a4f" style={LABEL_HALO}>✕</text>}
+            {kind === "tide" && !broken && <text x={mx} y={my + 0.8} textAnchor="middle" fontSize="2.2" fill="#7fd0e6" style={LABEL_HALO}>≈</text>}
+          </g>
+        );
+      })}
+      {/* Sương mù: phủ cả sa bàn, khoét lỗ mờ quanh các ô đang thấy. */}
+      <g mask={`url(#${fogId}-mask)`} pointerEvents="none">
+        <rect width="100" height="60" fill="#2a2118" fillOpacity="0.72" />
+        <rect width="100" height="60" filter={`url(#${fogId}-cloud)`} opacity="0.55" />
+      </g>
+      {!seen.has(citadel.id) && (
+        <g aria-label={`${citadel.name}: thành đích, chưa trinh sát`} opacity={0.85}>
+          <circle cx={citadel.x} cy={citadel.y} r={3.6} fill="#1b1411aa" stroke="#e06a4f" strokeWidth={0.4} strokeDasharray="0.8 0.6" />
+          <text x={citadel.x} y={citadel.y + 1.1} textAnchor="middle" fontSize="3.2" fontWeight="bold" fill="#e06a4f">?</text>
+          <NodeLabel x={citadel.x} y={citadel.y + 6.4} text={citadel.name} />
+        </g>
+      )}
+      {map.nodes.filter((n) => seen.has(n.id)).map((n) => {
+        const can = reachable.includes(n.id);
+        const done = run.nodes[n.id]?.cleared === true;
+        const damaged = !done && (run.nodes[n.id]?.foeHp?.length ?? 0) > 0;
+        const color = done ? "#8fd39a" : n.kind === "citadel" ? "#ff8a6a" : n.kind === "village" ? "#f0d77f" : "#f3dfae";
+        const r = n.kind === "citadel" ? 3.6 : 2.8;
+        return (
+          <g
+            key={n.id}
+            role="button"
+            tabIndex={0}
+            aria-label={`${n.name} (${KIND_NAME[n.kind]}${done ? ", đã chiếm" : ""})`}
+            onClick={() => props.setTarget(n.id)}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") props.setTarget(n.id); }}
+            className="cursor-pointer focus:outline-none"
+            style={{ color }}
+          >
+            <circle cx={n.x} cy={n.y} r={r} fill="#1b1411cc" stroke={target === n.id ? "#fff" : can ? ARMY_COLOR[army] : color} strokeWidth={target === n.id || can ? 0.8 : 0.4} />
+            <g transform={`translate(${n.x} ${n.y}) scale(0.8) translate(${-n.x} ${-n.y})`}>
+              <NodeGlyph kind={n.kind} x={n.x} y={n.y} />
+            </g>
+            {damaged && <circle cx={n.x + r * 0.8} cy={n.y - r * 0.8} r={0.8} fill="#e06a4f" />}
+            <NodeLabel x={n.x} y={n.y + r + 2.6} text={n.name} />
+          </g>
+        );
+      })}
+      {run.armies.map((a, i) => {
+        const n = byId(a.at);
+        // Hai cờ cùng hướng phải, cờ Chính cao hơn cờ Biệt để đứng chung một ô vẫn đọc được.
+        const px = n.x + (i === 0 ? -1.4 : 1.4);
+        const top = Math.max(0.4, n.y - (i === 0 ? 10 : 6.8));
+        return (
+          <g key={i} onClick={() => props.setArmy(i as ArmyIndex)} className="cursor-pointer" opacity={canFight(i as ArmyIndex) ? 1 : 0.45}>
+            <line x1={px} y1={n.y - 2.2} x2={px} y2={top} stroke="#1b1411" strokeWidth={0.5} />
+            <path d={`M${px} ${top} h7 l-1.2 1.5 l1.2 1.5 h-7 Z`} fill={ARMY_COLOR[i]} stroke={army === i ? "#fff" : "#1b1411"} strokeWidth={0.3} />
+            <text x={px + 3.2} y={top + 2.15} textAnchor="middle" fontSize="1.9" fill="#1b1411" fontWeight="bold">{i === 0 ? "Chính" : "Biệt"}</text>
+            {run.refugees === i && (
+              <text x={px + 8} y={top + 2.15} fontSize="1.9" fill="#f0d77f" style={LABEL_HALO} aria-label="đang mang đoàn dân">⛵ dân</text>
+            )}
+          </g>
+        );
+      })}
+    </svg>
+  );
 }
 
 function RunView(props: {
   run: Omit<ExpeditionRun, "seed">;
   map: MapView;
   encounters: Overview["encounters"];
+  visible: readonly string[];
+  scenario: ScenarioView | null;
   army: ArmyIndex;
   setArmy: (a: ArmyIndex) => void;
   target: string | null;
@@ -477,14 +707,25 @@ function RunView(props: {
   busy: boolean;
   onMarch: (to: string) => void;
   onCamp: () => void;
+  onScout: () => void;
+  onCounter: (army: ArmyIndex) => void;
   onAbandon: () => void;
   onResume: () => void;
 }) {
-  const { run, map, encounters, army, target } = props;
+  const { run, map, encounters, army, target, scenario } = props;
+  const seen = new Set(props.visible);
   const selected = run.armies[army];
   const reachable = run.phase === "march" ? expeditionNeighbors(map, selected.at) : [];
-  const node = target ? map.nodes.find((n) => n.id === target) : undefined;
-  const preview = target ? encounters[target]?.[army] : undefined;
+  const node = target && seen.has(target) ? map.nodes.find((n) => n.id === target) : undefined;
+  const nameOf = (id: string) => map.nodes.find((n) => n.id === id)?.name ?? id;
+  // Đạo mang dân rời làng tới ô không có trận khi đồn chặn chưa chiếm: gặp truy binh (server đã tính sẵn).
+  const hasFight = (id: string) => !!encounters[id];
+  const chase = node && scenario?.chase && run.refugees === army && !hasFight(node.id) ? scenario.chase : undefined;
+  const preview = chase ?? (target ? encounters[target]?.[army] : undefined);
+  const roadKind = node && reachable.includes(node.id) ? expeditionEdgeKind(map, selected.at, node.id) : undefined;
+  const roadBroken = !!node && !!run.knownBroken?.includes(expeditionEdgeKey(selected.at, node.id));
+  const tideClosed = roadKind === "tide" && !!scenario?.tideDays && !scenario.tideDays.includes(run.day);
+  const counter = scenario?.counter;
   const cleared = (id: string) => run.nodes[id]?.cleared === true;
   const canFight = (a: ArmyIndex) => run.armies[a].ids.some((id) => (run.armies[a].fighters[id]?.hp ?? 0) > 0);
   const reinforce = Math.round(EXPEDITION_REINFORCE_PER_DAY * (run.day - 1) * 100);
@@ -500,63 +741,39 @@ function RunView(props: {
             {reinforce > 0 && <> · giặc tăng viện <strong className="text-rose-300">+{reinforce}%</strong></>}
           </p>
         </div>
-        <svg viewBox="0 -4 100 66" className="mt-3 w-full rounded-lg border border-[#85602e] bg-[#2a1f14]" role="group" aria-label={`Sa bàn ${map.name}`}>
-          <defs>
-            <pattern id="exp-grid" width="5" height="5" patternUnits="userSpaceOnUse">
-              <path d="M5 0H0V5" fill="none" stroke="#e7d2a10f" strokeWidth="0.2" />
-            </pattern>
-          </defs>
-          <rect y="-4" width="100" height="66" fill="url(#exp-grid)" />
-          {map.edges.map(([a, b]) => {
-            const na = map.nodes.find((n) => n.id === a)!;
-            const nb = map.nodes.find((n) => n.id === b)!;
-            const hot = (a === selected.at && reachable.includes(b)) || (b === selected.at && reachable.includes(a));
-            return <line key={`${a}-${b}`} x1={na.x} y1={na.y} x2={nb.x} y2={nb.y} stroke={hot ? ARMY_COLOR[army] : "#a47a3f88"} strokeWidth={hot ? 0.7 : 0.45} strokeDasharray={hot ? undefined : "1.2 0.8"} />;
-          })}
-          {map.nodes.map((n) => {
-            const can = reachable.includes(n.id);
-            const done = cleared(n.id);
-            const damaged = !done && (run.nodes[n.id]?.foeHp?.length ?? 0) > 0;
-            const color = done ? "#7fb685" : n.kind === "citadel" ? "#e06a4f" : n.kind === "village" ? "#d9c27a" : "#e7d2a1";
-            return (
-              <g
-                key={n.id}
-                role="button"
-                tabIndex={0}
-                aria-label={`${n.name} (${KIND_NAME[n.kind]}${done ? ", đã chiếm" : ""})`}
-                onClick={() => props.setTarget(n.id)}
-                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") props.setTarget(n.id); }}
-                className="cursor-pointer focus:outline-none"
-                style={{ color }}
-              >
-                <circle cx={n.x} cy={n.y} r={n.kind === "citadel" ? 4.4 : 3.4} fill="#1b1411" stroke={target === n.id ? "#fff" : can ? ARMY_COLOR[army] : color} strokeWidth={target === n.id || can ? 0.8 : 0.4} />
-                <NodeGlyph kind={n.kind} x={n.x} y={n.y} />
-                {damaged && <circle cx={n.x + 3} cy={n.y - 3} r={0.9} fill="#e06a4f" />}
-                <text x={n.x} y={n.y + (n.kind === "citadel" ? 7.4 : 6.2)} textAnchor="middle" fontSize="2.3" fill="#e7d2a1cc">{n.name}</text>
-              </g>
-            );
-          })}
-          {run.armies.map((a, i) => {
-            const n = map.nodes.find((x) => x.id === a.at)!;
-            // Hai cờ cùng hướng phải, cờ Chính cao hơn cờ Biệt để đứng chung một ô vẫn đọc được.
-            const px = n.x + (i === 0 ? -1.6 : 1.6);
-            const top = n.y - (i === 0 ? 11 : 7.4);
-            return (
-              <g key={i} onClick={() => props.setArmy(i as ArmyIndex)} className="cursor-pointer" opacity={canFight(i as ArmyIndex) ? 1 : 0.45}>
-                <line x1={px} y1={n.y - 2.5} x2={px} y2={top} stroke="#1b1411" strokeWidth={0.5} />
-                <path d={`M${px} ${top} h7 l-1.2 1.5 l1.2 1.5 h-7 Z`} fill={ARMY_COLOR[i]} stroke={army === i ? "#fff" : "#1b1411"} strokeWidth={0.3} />
-                <text x={px + 3.2} y={top + 2.15} textAnchor="middle" fontSize="1.9" fill="#1b1411" fontWeight="bold">{i === 0 ? "Chính" : "Biệt"}</text>
-              </g>
-            );
-          })}
-        </svg>
+        <SandTable
+          run={run}
+          map={map}
+          seen={seen}
+          army={army}
+          target={target}
+          reachable={reachable}
+          setArmy={props.setArmy}
+          setTarget={props.setTarget}
+        />
         <p className="mt-2 text-xs text-muted">
           Chạm cờ để chọn đạo quân, chạm ô kề (viền màu đạo) để xem rồi tiến quân. Đạo không tiến được nghỉ, hồi
-          {` ${Math.round(EXPEDITION_REST_HEAL * 100)}% `}máu mỗi ngày (kể cả người gục). Chấm đỏ: đồn đánh dở, địch giữ thương vong.
+          {` ${Math.round(EXPEDITION_REST_HEAL * 100)}% `}máu mỗi ngày (kể cả người gục). Đường xanh đứt nét là vượt nước, mất
+          2 ngày; xanh lá đứt nét là lội đầm (2 ngày); chấm xanh ≈ là cửa nước, chỉ qua lúc nước rút; đỏ ✕ là đường đã biết bị
+          phá. Sương mù che các ô chưa trinh sát; chiếm chòi canh để nhìn xa. Chấm đỏ: đồn đánh dở, địch giữ thương vong.
         </p>
       </div>
 
       <div className="space-y-4">
+        {counter && run.phase === "march" && (
+          <div className="tower-screen__panel border-rose-400/60">
+            <h3 className="font-serif text-lg font-bold text-rose-200">Giặc phản công {nameOf(scenario!.market)}</h3>
+            <p className="mt-1 text-sm text-foreground-secondary">
+              {ARMY_NAME[counter.army]} đang giữ chợ phải đánh trước: cầm cự{" "}
+              {counter.objective && "turns" in counter.objective ? counter.objective.turns : 4} lượt (hoặc hạ hết) là giữ được,
+              thêm lương và đưa dân về chợ được. Thua thì rút khỏi chợ.
+            </p>
+            <Button variant="primary" className="mt-3" disabled={props.busy || !canFight(counter.army)} onClick={() => props.onCounter(counter.army)}>
+              {ARMY_NAME[counter.army]} giữ chợ
+            </Button>
+          </div>
+        )}
+        {scenario && <MissionPanel run={run} scenario={scenario} nameOf={nameOf} />}
         {run.phase === "battle" && run.battle ? (
           <div className="tower-screen__panel">
             <h3 className="font-serif text-lg font-bold">Trận đang đánh</h3>
@@ -576,6 +793,24 @@ function RunView(props: {
                   {node.name} <span className="text-xs font-normal text-muted">{KIND_NAME[node.kind]}{cleared(node.id) ? " · đã chiếm" : ""}</span>
                 </h3>
                 <p className="mt-1 text-sm text-foreground-secondary">{KIND_TEXT[node.kind]}</p>
+                {chase && (
+                  <p className="mt-2 rounded bg-rose-900/40 p-2 text-xs text-rose-100">
+                    Truy binh đuổi đoàn dân vì {nameOf(scenario!.chaseUnless)} chưa chiếm: rời làng là vào trận hộ tống
+                    (giữ {chase.objective && "turns" in chase.objective ? chase.objective.turns : 4} lượt hoặc hạ hết). Thua thì mất dân.
+                  </p>
+                )}
+                {!chase && preview && run.refugees === army && (
+                  <p className="mt-2 rounded bg-rose-900/40 p-2 text-xs text-rose-100">Đạo này đang mang dân: thua trận này thì đoàn dân bị bắt.</p>
+                )}
+                {preview?.objective?.type === "hold" && (
+                  <p className="mt-2 text-xs text-amber-200">Trận giữ cầu: cầm cự {preview.objective.turns} lượt của bạn (hoặc hạ hết) là thắng.</p>
+                )}
+                {preview?.mode === "gate" && (
+                  <p className="mt-2 text-xs text-amber-200">
+                    Phase 1 phá cổng: hạ Cổng thành là qua (lính giữ còn lại theo sang trận sau). Vào bằng cửa nước từ{" "}
+                    {nameOf(scenario?.gateSkipFrom ?? "")} thì bỏ qua cổng.
+                  </p>
+                )}
                 {preview && (
                   <div className="mt-2 space-y-1.5">
                     <p className="text-xs text-muted">
@@ -598,9 +833,19 @@ function RunView(props: {
                     ))}
                   </div>
                 )}
-                {reachable.includes(node.id) ? (
-                  <Button variant="primary" className="mt-3" disabled={props.busy || !canFight(army)} onClick={() => props.onMarch(node.id)}>
-                    {preview ? `${ARMY_NAME[army]} tấn công` : `${ARMY_NAME[army]} tiến quân`}
+                {reachable.includes(node.id) && expeditionEdgeDays(map, selected.at, node.id) > 1 && (
+                  <p className="mt-2 text-xs text-sky-200">Vượt nước: đi mất {expeditionEdgeDays(map, selected.at, node.id)} ngày, đạo kia nghỉ cả {expeditionEdgeDays(map, selected.at, node.id)} ngày.</p>
+                )}
+                {roadKind === "tide" && (
+                  <p className="mt-2 text-xs text-sky-200">
+                    Cửa nước: {scenario?.tideDays ? `nước rút các ngày ${scenario.tideDays.join(", ")}${tideClosed ? "; hôm nay nước đang lên" : "; hôm nay đi được"}.` : `chưa rõ con nước (chiếm ${nameOf(scenario?.tideRevealedBy ?? "")} hoặc đưa dân về để biết). Đi trúng ngày nước lên thì mất ngày.`}
+                  </p>
+                )}
+                {roadBroken ? (
+                  <p className="mt-3 text-xs text-rose-300">Đường từ {nameOf(selected.at)} tới đây đã bị phá.</p>
+                ) : reachable.includes(node.id) ? (
+                  <Button variant="primary" className="mt-3" disabled={props.busy || !canFight(army) || tideClosed || !!counter} onClick={() => props.onMarch(node.id)}>
+                    {chase ? `${ARMY_NAME[army]} đưa dân đi, đánh truy binh` : preview ? `${ARMY_NAME[army]} tấn công` : `${ARMY_NAME[army]} tiến quân`}
                   </Button>
                 ) : (
                   <p className="mt-3 text-xs text-muted">{ARMY_NAME[army]} chưa tới được ô này (chỉ đi sang ô kề).</p>
@@ -648,13 +893,74 @@ function RunView(props: {
 
         {run.phase === "march" && (
           <div className="tower-screen__panel flex flex-wrap gap-2">
-            <Button variant="secondary" disabled={props.busy} onClick={props.onCamp}>Đóng quân (cả hai đạo nghỉ 1 ngày)</Button>
+            {scenario && (
+              <Button variant="secondary" disabled={props.busy || !!counter} onClick={props.onScout}>
+                {ARMY_NAME[army]} trinh sát
+              </Button>
+            )}
+            <Button variant="secondary" disabled={props.busy || !!counter} onClick={props.onCamp}>Đóng quân (cả hai đạo nghỉ 1 ngày)</Button>
             <Button variant="secondary" disabled={props.busy} onClick={props.onAbandon}>Rút khỏi viễn chinh</Button>
             <p className="w-full text-xs text-muted">Thua một trận: đạo đó rút về ô cũ, cả ba gục, phải nghỉ để hồi. Không mất lượt viễn chinh.</p>
+            {scenario && (
+              <p className="w-full text-xs text-muted">
+                Trinh sát: đạo đang chọn đứng yên 1 ngày (không hồi sức), vén sương mọi ô trong {EXPEDITION_SCOUT_SIGHT} bước và
+                phát hiện đường bị phá quanh đó. Đường bị phá trông như đường thường; đi trúng thì mất ngày.
+              </p>
+            )}
           </div>
         )}
       </div>
     </section>
+  );
+}
+
+function MissionPanel({ run, scenario, nameOf }: { run: Omit<ExpeditionRun, "seed">; scenario: ScenarioView; nameOf: (id: string) => string }) {
+  const nextShip = scenario.reinforcementDays.find((d) => d >= run.day);
+  const refugees =
+    run.refugees === "saved"
+      ? { done: true, text: "Đã đưa dân về." }
+      : run.refugees === "lost"
+        ? { done: false, text: "Đoàn dân đã bị bắt." }
+        : run.refugees === 0 || run.refugees === 1
+          ? { done: false, text: `${ARMY_NAME[run.refugees]} đang mang dân, đưa về ${nameOf(scenario.home)}${run.market?.status === "held" ? ` hoặc ${nameOf(scenario.market)}` : ""}.` }
+          : { done: false, text: `Ghé ${nameOf(scenario.village)} nhận đoàn dân.` };
+  const ships = run.reinforcementsCut
+    ? { done: true, text: "Đã giữ cầu, thuyền viện bị chặn." }
+    : { done: false, text: nextShip ? `Thuyền viện tới cuối ngày ${nextShip}${run.arrivals ? ` (đã tới ${run.arrivals} lần)` : ""}. Giữ cầu để chặn.` : `Thuyền viện đã tới ${run.arrivals ?? 0} lần.` };
+  const tide = scenario.tideDays
+    ? { done: true, text: `Nước rút các ngày ${scenario.tideDays.join(", ")}.` }
+    : { done: false, text: `Chưa rõ con nước: chiếm ${nameOf(scenario.tideRevealedBy)} hoặc đưa dân về.` };
+  const market = run.market
+    ? run.market.status === "held"
+      ? "Đã giữ được chợ."
+      : run.market.status === "lost"
+        ? "Giặc đã chiếm lại chợ."
+        : run.market.status === "due"
+          ? "Giặc đang phản công chợ."
+          : `Giặc sẽ phản công cuối ngày ${run.market.taken + scenario.counterAfterDays}; cần một đạo đứng giữ.`
+    : null;
+  const row = (r: { done: boolean; text: string }, label: string) => (
+    <li className="flex gap-2">
+      <span className={r.done ? "text-emerald-300" : "text-stone-500"} aria-hidden>{r.done ? "✔" : "○"}</span>
+      <span><strong>{label}:</strong> {r.text}</span>
+    </li>
+  );
+  return (
+    <div className="tower-screen__panel">
+      <h3 className="font-serif text-lg font-bold">Nhiệm vụ</h3>
+      <ul className="mt-2 space-y-1 text-sm">
+        {row(refugees, "Rút dân")}
+        {row(ships, "Cắt thuyền viện")}
+        {row(tide, "Cửa nước")}
+        {market && <li className="text-xs text-muted">Chợ: {market}</li>}
+      </ul>
+      <p className="mt-2 text-xs text-muted">Chiếm thành sau khi rút dân và cắt viện là Toàn thắng. Chưa chiếm được thành mà đã làm đủ hai việc đó vẫn tính là Giữ dân.</p>
+      {run.log && run.log.length > 0 && (
+        <ol className="mt-3 space-y-0.5 border-t border-white/10 pt-2 text-xs text-foreground-secondary">
+          {run.log.map((line, i) => <li key={i}>{line}</li>)}
+        </ol>
+      )}
+    </div>
   );
 }
 
@@ -665,17 +971,26 @@ function ResultView({ run, map, result, onNew }: { run: Omit<ExpeditionRun, "see
   const reason = run.endReason === "timeout" ? "Hết ngày hành quân mà chưa chiếm được thành." : run.endReason === "abandoned" ? "Đã rút quân." : "";
   return (
     <section className="tower-screen__panel text-center">
-      <h2 className={`font-serif text-2xl font-bold ${result.won ? "text-amber-200" : "text-rose-200"}`}>
-        {result.won ? `Đã chiếm ${map.nodes.find((n) => n.id === map.citadel)?.name}!` : "Viễn chinh thất bại"}
+      <h2 className={`font-serif text-2xl font-bold ${result.won || result.ending ? "text-amber-200" : "text-rose-200"}`}>
+        {result.ending
+          ? `${expeditionEndingName(result.ending)}${result.won ? `: đã chiếm ${map.nodes.find((n) => n.id === map.citadel)?.name}!` : ": chưa chiếm được thành, nhưng đã cứu dân và chặn viện."}`
+          : result.won
+            ? `Đã chiếm ${map.nodes.find((n) => n.id === map.citadel)?.name}!`
+            : "Viễn chinh thất bại"}
       </h2>
       <p className="mt-1 text-sm text-muted">{map.name} · {tierName} · {result.days} ngày</p>
-      {result.won ? (
+      {result.won || result.ending ? (
         <>
           <Stars n={result.stars} className="mt-2 block text-3xl" />
-          <p className="mt-1 text-xs text-muted">★ chiếm thành · ★ xong trong {map.parDays} ngày · ★ không thua trận nào</p>
+          <p className="mt-1 text-xs text-muted">
+            {result.ending
+              ? `★★★ toàn thắng · ★★ chiếm trại trong ${map.parDays} ngày · ★ chiếm trại muộn hoặc giữ dân`
+              : `★ chiếm thành · ★ xong trong ${map.parDays} ngày · ★ không thua trận nào`}
+          </p>
           <p className="mt-3 font-semibold text-amber-300">
             +{result.gold} vàng{result.firstClear ? " (thắng lần đầu)" : ""}
             {result.item && ` · ${SLOT_NAME[result.item.slot]} phẩm ${TIER_COLOR_NAME[result.item.tier]} hệ ${ELEMENT_NAME[result.item.element]}`}
+            {result.bonusItem && ` · thưởng toàn thắng: ${SLOT_NAME[result.bonusItem.slot]} phẩm ${TIER_COLOR_NAME[result.bonusItem.tier]}`}
             {result.soldFor > 0 && ` · túi đầy, món thưởng bán được ${result.soldFor} vàng`}
           </p>
         </>

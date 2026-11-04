@@ -13,15 +13,14 @@ import {
   applyExpeditionEnd,
   boardScores,
   countExpeditionRun,
-  describeScore,
   beginExpeditionBattle,
   campExpedition,
   createBattle,
   createExpeditionRun,
   createRng,
   expeditionArmySide,
-  expeditionBoardScore,
   expeditionDistance,
+  expeditionEdgeDays,
   expeditionEncounter,
   expeditionFoeSide,
   expeditionNeighbors,
@@ -29,12 +28,14 @@ import {
   expeditionSimProfile,
   expeditionStars,
   expeditionTierUnlocked,
+  expeditionVisible,
   marchExpedition,
   parseExpedition,
   parseExpeditionStart,
   parseProfile,
   settleExpeditionBattle,
   type BattleState,
+  type ExpeditionMapId,
   type ExpeditionMatchTag,
   type ExpeditionRun,
   type ExpeditionState,
@@ -43,8 +44,8 @@ import {
 const IDS = STARTER_COMPANIONS.map((c) => c.id);
 const INPUT = { map: "aiBac", tier: 1, main: IDS.slice(0, 2), second: IDS.slice(2, 5) } as const;
 
-function newRun(seed = 7): ExpeditionRun {
-  const made = createExpeditionRun(expeditionSimProfile(10), NEW_EXPEDITION, INPUT, "run1", seed);
+function newRun(seed = 7, map: ExpeditionMapId = INPUT.map): ExpeditionRun {
+  const made = createExpeditionRun(expeditionSimProfile(10), NEW_EXPEDITION, { ...INPUT, map }, "run1", seed);
   if (!made.ok) throw new Error(made.error);
   return made.run;
 }
@@ -258,16 +259,54 @@ describe("Viễn Chinh: lưu hồ sơ", () => {
     assert.deepEqual(parseExpedition(JSON.parse(JSON.stringify(state)))?.daily, state.daily);
   });
 
-  it("bảng xếp hạng: nhiều sao đứng trên, bằng sao thì ít ngày hơn đứng trên", () => {
-    assert.equal(expeditionBoardScore(NEW_EXPEDITION), 0);
-    const a: ExpeditionState = { ...NEW_EXPEDITION, stars: { "aiBac:1": 3, "aiBac:2": 2 }, bestDays: { "aiBac:1": 8, "aiBac:2": 11 } };
-    const b: ExpeditionState = { ...a, bestDays: { "aiBac:1": 7, "aiBac:2": 11 } };
-    const c: ExpeditionState = { ...NEW_EXPEDITION, stars: { "aiBac:1": 3, "aiBac:2": 3 }, bestDays: { "aiBac:1": 12, "aiBac:2": 12 } };
-    assert.ok(expeditionBoardScore(b) > expeditionBoardScore(a));
-    assert.ok(expeditionBoardScore(c) > expeditionBoardScore(b));
-    assert.deepEqual(describeScore("expedition", expeditionBoardScore(a)), { main: 5, turns: 19 });
-    const profile = { ...expeditionSimProfile(5), expedition: a };
-    assert.deepEqual(boardScores(profile).find((x) => x.board === "expedition"), { board: "expedition", score: expeditionBoardScore(a) });
+  it("ghi số ngày nhanh nhất của từng bậc, không có bảng xếp hạng (chế độ offline)", () => {
+    const a: ExpeditionState = { ...NEW_EXPEDITION, stars: { "aiBac:1": 3 }, bestDays: { "aiBac:1": 8 } };
     assert.deepEqual(parseExpedition(JSON.parse(JSON.stringify(a)))?.bestDays, a.bestDays);
+    const profile = { ...expeditionSimProfile(5), expedition: a };
+    assert.ok(!boardScores(profile).some((x) => (x.board as string) === "expedition"));
+  });
+
+  it("vượt nước mất 2 ngày, đạo kia nghỉ cả 2 ngày; đánh qua nước thắng hay thua cũng 2 ngày", () => {
+    const map = EXPEDITION_MAPS.chauTho;
+    assert.equal(expeditionEdgeDays(map, "ben-lau", "cau-go"), 2);
+    assert.equal(expeditionEdgeDays(map, "trai-tay", "ben-lau"), 1);
+    assert.equal(expeditionEdgeDays(map, "trai-tay", "kho-thoc"), Infinity);
+    // Đường bộ dài hơn nhưng không chậm hơn đường nước bao nhiêu: khoảng cách tính theo ngày.
+    assert.equal(expeditionDistance(map, "cau-go", "thanh-nga-ba"), 2);
+    let run = newRun(7, "chauTho");
+    run = { ...run, armies: [{ ...run.armies[0], at: "ben-lau" }, run.armies[1]], nodes: { ...run.nodes, "ben-lau": { cleared: true } } };
+    const hurt = { ...run.armies[1], fighters: Object.fromEntries(Object.entries(run.armies[1].fighters).map(([id, f]) => [id, { ...f, hp: 1 }])) };
+    run = { ...run, armies: [run.armies[0], hurt] };
+    const won = fight(run, 0, "cau-go", 0);
+    assert.equal(won.run.day, run.day + 2);
+    const healed = Object.values(won.run.armies[1].fighters)[0]!;
+    assert.equal(healed.hp, Math.min(healed.config.maxHp, 1 + 2 * Math.round(healed.config.maxHp * EXPEDITION_REST_HEAL)));
+    const lost = fight(run, 0, "cau-go", 1);
+    assert.equal(lost.run.day, run.day + 2);
+    assert.equal(lost.run.armies[0].at, "ben-lau");
+  });
+
+  it("vượt nước sát hạn: hết ngày giữa chặng là thua, không đếm quá", () => {
+    let run = newRun(7, "quanDao");
+    const map = EXPEDITION_MAPS.quanDao;
+    run = { ...run, day: map.days, armies: [{ ...run.armies[0], at: "mui-da" }, run.armies[1]], nodes: { ...run.nodes, "mui-da": { cleared: true }, "dao-bac": { cleared: true } } };
+    const m = marchExpedition(run, 0, "dao-bac");
+    assert.ok(m.ok && m.kind === "moved");
+    if (!m.ok || m.kind !== "moved") return;
+    assert.equal(m.run.phase, "lost");
+    assert.equal(m.run.endReason, "timeout");
+    assert.equal(m.run.day, map.days + 1);
+  });
+
+  it("sương mù: chỉ thấy ô đứng, ô kề, trại và ô đã chiếm; chòi canh vén 2 bước", () => {
+    const run = newRun(7, "chauTho");
+    const seen = expeditionVisible(run);
+    for (const id of ["trai-tay", "trai-dong", "ben-lau", "doi-tram", "lang-ben", "bai-dong"]) assert.ok(seen.has(id), id);
+    for (const id of ["cau-go", "thanh-nga-ba", "kho-thoc", "luy-son", "bai-bac"]) assert.ok(!seen.has(id), id);
+    const tower = fight(run, 0, "doi-tram", 0).run;
+    const after = expeditionVisible(tower);
+    // Chòi Đồi Trám: 2 bước tới Đồn Bãi Bắc, Thành Ngã Ba, Đồn Cầu Gỗ.
+    for (const id of ["bai-bac", "thanh-nga-ba", "cau-go", "lang-ruong"]) assert.ok(after.has(id), id);
+    assert.ok(!after.has("kho-thoc"));
   });
 });
