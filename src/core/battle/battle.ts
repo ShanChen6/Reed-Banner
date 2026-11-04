@@ -724,7 +724,7 @@ class Ctx {
 
     if (s.audit) this.emit({ type: "auditTurn", side, number: s.turn.number, living: aliveIndices(own), food: own.food });
     own.fighters.forEach((f, i) => {
-      if (own.food === 0 && isAlive(f)) {
+      if (own.food === 0 && isAlive(f) && !f.structure) {
         this.damage(
           { side, fighter: i },
           Math.max(1, Math.round(f.maxHp * R.STARVATION_HP_RATIO)),
@@ -1116,6 +1116,8 @@ class Ctx {
   }
 
   private applyEffect(ref: FighterRef, effect: Effect, alreadyScaled = false): void {
+    // Công trình chỉ bị Phá giáp; mọi hiệu ứng khác (khiên, khống chế, độc, thiêu…) không bám.
+    if (this.fighter(ref).structure && effect.kind !== "defDown") return;
     if (effect.kind === "shield") {
       const before = findEffect(this.fighter(ref).effects, "shield")?.value ?? 0;
       const ratio = alreadyScaled ? 1 : this.combo.sustainRatio(Math.round(effect.value * this.combo.sustainPotential() * R.spiritHealMultiplier(this.fighter(ref).spirit, this.state.experimentalSpirit)) > before);
@@ -1297,7 +1299,7 @@ class Ctx {
 
   private heal(ref: FighterRef, amount: number, convertOverflow = false, directSkill = false): void {
     const f = this.fighter(ref);
-    if (!isAlive(f)) return;
+    if (!isAlive(f) || f.structure) return;
     amount = Math.round(amount * (directSkill ? this.combo.sustainRatio(f.hp < f.maxHp && Math.round(amount * this.combo.sustainPotential() * R.spiritHealMultiplier(f.spirit, this.state.experimentalSpirit)) > 0) : 1));
     const scaled = Math.round(amount * R.spiritHealMultiplier(f.spirit, this.state.experimentalSpirit));
     const actual = Math.min(f.maxHp - f.hp, scaled);

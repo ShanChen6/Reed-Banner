@@ -8,7 +8,7 @@ import {
   campExpedition,
   createExpeditionRun,
   expeditionDistance,
-  expeditionEncounter,
+  expeditionEdgeDays,
   expeditionMapOf,
   expeditionNeighbors,
   expeditionNode,
@@ -17,6 +17,12 @@ import {
   expeditionStars,
   marchExpedition,
   beginExpeditionBattle,
+  expeditionBattleRef,
+  expeditionMatchTag,
+  expeditionObjectiveMet,
+  expeditionEdgeKey,
+  expeditionScenarioOf,
+  type ExpeditionEncounter,
   settleExpeditionBattle,
   NEW_EXPEDITION,
   type ArmyIndex,
@@ -65,7 +71,7 @@ export function expeditionSimProfile(level: number): Profile {
 }
 
 const THREAT: Readonly<Record<ExpeditionNodeKind, number>> = {
-  camp: 0, village: -1, outpost: 2, granary: 2, fort: 3, citadel: 9,
+  camp: 0, village: -1, outpost: 2, watchtower: 2, granary: 2, fort: 3, citadel: 9, bridge: 4, shoal: 0,
 };
 
 const hpRatio = (run: ExpeditionRun, i: ArmyIndex) => {
@@ -81,7 +87,12 @@ function stepToward(run: ExpeditionRun, i: ArmyIndex, targets: readonly string[]
   const dist = (from: string) => Math.min(...targets.map((t) => expeditionDistance(map, from, t)));
   const here = dist(at);
   if (here === 0 || here === Infinity) return null;
-  const options = expeditionNeighbors(map, at).filter((n) => n !== map.citadel && dist(n) === here - 1);
+  const options = expeditionNeighbors(map, at).filter(
+    (n) =>
+      n !== map.citadel &&
+      !run.knownBroken?.includes(expeditionEdgeKey(at, n)) &&
+      dist(n) + expeditionEdgeDays(map, at, n) === here,
+  );
   if (options.length === 0) return null;
   const threat = (n: string) => (run.nodes[n]?.cleared ? -2 : THREAT[expeditionNode(map, n)!.kind]);
   return options.sort((a, b) => threat(a) - threat(b))[0]!;
@@ -92,6 +103,11 @@ type Decision = Plan | { readonly kind: "camp" };
 
 function decide(run: ExpeditionRun): Decision {
   const map = expeditionMapOf(run);
+  // Giặc phản công kho lương: đạo đứng đó phải đánh trước.
+  if (run.market?.status === "due") {
+    const i: ArmyIndex = run.armies[0].at === marketNode(run) ? 0 : 1;
+    return { kind: "march", army: i, to: run.armies[i].at };
+  }
   const gates = expeditionNeighbors(map, map.citadel);
   const alive = ([0, 1] as const).filter((i) => hpRatio(run, i) > 0);
   const daysLeft = map.days - run.day + 1;
@@ -122,8 +138,9 @@ function decide(run: ExpeditionRun): Decision {
   return { kind: "camp" };
 }
 
-function fight(run: ExpeditionRun, army: ArmyIndex, node: string, seed: number, player: Difficulty) {
-  const encounter = expeditionEncounter(run, node, army)!;
+const marketNode = (run: ExpeditionRun) => expeditionScenarioOf(run)?.counter.node;
+
+function fight(run: ExpeditionRun, army: ArmyIndex, encounter: ExpeditionEncounter, seed: number, player: Difficulty) {
   let { state } = createBattle({
     sides: [expeditionArmySide(run, army), expeditionFoeSide(encounter)],
     seed,
@@ -134,6 +151,7 @@ function fight(run: ExpeditionRun, army: ArmyIndex, node: string, seed: number, 
   while (state.winner === null && state.turn.number <= DEFAULT_MAX_TURNS) {
     const difficulty = state.turn.side === 0 ? player : encounter.difficulty;
     state = playAiTurn(state, difficulty).state;
+    if (expeditionObjectiveMet(encounter.objective, state)) state = { ...state, winner: 0 } as BattleState;
   }
   if (state.winner === null) state = { ...state, winner: 1 } as BattleState;
   return { state, encounter };
@@ -170,13 +188,14 @@ export function simulateExpedition(o: ExpeditionSimOptions): ExpeditionSimResult
       camps++;
       continue;
     }
-    if (m.kind === "moved") { run = m.run; continue; }
+    if (m.kind === "moved" || m.kind === "blocked") { run = m.run; continue; }
     battles++;
     if (m.encounter.pincer) pincers++;
-    const { state } = fight(run, d.army, d.to, rng.int(0, 0x7fffffff), player);
+    const { state } = fight(run, d.army, m.encounter, rng.int(0, 0x7fffffff), player);
     turns += state.turn.number;
-    run = beginExpeditionBattle(run, { army: d.army, node: d.to, matchId: "sim", pincer: m.encounter.pincer });
-    const s = settleExpeditionBattle(run, { runId: run.id, map: run.map, tier: run.tier, node: d.to, army: d.army, day: run.day }, state);
+    const tag = expeditionMatchTag(run, d.army, m.encounter);
+    run = beginExpeditionBattle(run, expeditionBattleRef(d.army, m.encounter, "sim"));
+    const s = settleExpeditionBattle(run, tag, state);
     if (!s.ok) throw new Error(s.error);
     if (!s.won) battlesLost++;
     o.trace?.(`  trận ${s.won ? "thắng" : "thua"} sau ${state.turn.number} lượt${m.encounter.pincer ? " (giáp công)" : ""}`);
