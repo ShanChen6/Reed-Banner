@@ -659,18 +659,23 @@ function FighterCard({
       </div>
       <div className="space-y-1">
         <Bar
-          label="Máu"
+          label={fighter.structure ? "Độ bền" : "Máu"}
           value={fighter.hp}
           max={fighter.maxHp}
-          color="bg-rose-500"
+          color={fighter.structure ? "bg-amber-600" : "bg-rose-500"}
         />
-        <Bar label="NL" value={fighter.energy} max={100} color="bg-sky-500" />
-        <Bar
-          label="TT"
-          value={fighter.spirit}
-          max={100}
-          color="bg-emerald-500"
-        />
+        {/* Công trình (cổng thành) không ra tay: không có năng lượng, tinh thần. */}
+        {!fighter.structure && (
+          <>
+            <Bar label="NL" value={fighter.energy} max={100} color="bg-sky-500" />
+            <Bar
+              label="TT"
+              value={fighter.spirit}
+              max={100}
+              color="bg-emerald-500"
+            />
+          </>
+        )}
         {rage !== null && (
           <Bar label="Nộ" value={rage} max={100} color="bg-orange-500" />
         )}
