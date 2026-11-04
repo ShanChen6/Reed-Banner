@@ -125,6 +125,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
   const found = entries.filter((e) => e.found).length;
   const left = view?.session?.combinesLeft ?? 0;
   const ready = !pending && slots[0] !== null && slots[1] !== null && left > 0;
+  const tried = triedPair(view?.triedPairs, slots);
 
   /** Chạy một thao tác: khóa nút trong lúc chờ (chống bấm đúp), cập nhật view, báo lỗi. */
   const run = useCallback(async (key: string, call: (id: string) => Promise<ApiResult>, onOk: (r: Extract<ApiResult, { ok: true }>) => void) => {
@@ -196,6 +197,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
             pending={pending}
             notice={notice ?? (tip ? { tone: "repeat", text: tip } : null)}
             recent={recent}
+            tried={tried}
             onClear={(i) => setSlots((s) => clearSlot(s, i))}
             onSwap={() => setSlots(swapSlots)}
             onCombine={combine}
@@ -227,9 +229,26 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
           <Ledger entries={entries} found={found} hidden={tab !== "ledger"} />
         </div>
       </div>
-      <MobileBar slots={slots} ready={ready} onCombine={combine} />
+      <MobileBar slots={slots} ready={ready} tried={tried} onCombine={combine} />
     </main>
     </CatalogContext.Provider>
+  );
+}
+
+/** Hai ô đang đặt đúng một cặp đã ghép trước đây mà không ra gì. */
+function triedPair(list: readonly string[] | undefined, [a, b]: Slots): boolean {
+  return a !== null && b !== null && (list ?? []).includes(`${a}>${b}`);
+}
+
+/**
+ * Cảnh báo khi đặt lại cặp đã ghép (Shan, 04/11/2026): lần đầu ghép sai vẫn mất, lần sau báo trước. Không nói thẳng
+ * là công thức sai, chỉ nhắc đã thử và cái giá nếu ghép lại.
+ */
+function TriedWarning({ cost }: { cost: string }) {
+  return (
+    <p role="note" className="rounded-lg border border-[var(--atlas-red-hi)] px-3 py-2 text-sm">
+      Bạn đã ghép cặp này ở lần trước. Ghép lại vẫn {cost}.
+    </p>
   );
 }
 
@@ -278,6 +297,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
 
   const catalog = catalogForPack(view.packId);
   const ready = !pending && slots[0] !== null && slots[1] !== null;
+  const tried = triedPair(view.triedPairs, slots);
   const combine = () => {
     const [a, b] = slots;
     if (a === null || b === null || !ready) return;
@@ -320,8 +340,9 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
               <Slot label="Ô sau" id={slots[1]} onClear={() => setSlots((s) => clearSlot(s, 1))} />
             </div>
             <p className="text-xs text-[var(--atlas-muted)]">Nguyên tố lấy từ túi, dùng cho hệ nào cũng được.</p>
+            {tried && <TriedWarning cost="tiêu nguyên liệu" />}
             <button type="button" disabled={!ready} aria-busy={pending} onClick={combine} className="home-cta min-h-12 rounded-lg font-serif text-lg font-bold tracking-[0.12em] uppercase disabled:cursor-not-allowed disabled:opacity-50">
-              Hợp Nguyên
+              {tried ? "Vẫn hợp nguyên" : "Hợp Nguyên"}
             </button>
             <div aria-live="polite" role="status" className="min-h-12 rounded-lg border border-[var(--atlas-border-soft)] px-3 py-2 text-sm">
               {notice?.text ?? "Đoán tướng từ lời dẫn, rồi ghép theo công thức đã học ở chế độ Thường."}
@@ -367,14 +388,14 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
           </Panel>
         </div>
       </div>
-      <MobileBar slots={slots} ready={ready} onCombine={combine} />
+      <MobileBar slots={slots} ready={ready} tried={tried} onCombine={combine} />
     </main>
     </CatalogContext.Provider>
   );
 }
 
 /** Điện thoại: thanh ghép cố định ở đáy để chọn ở Vạn Vật Lục xong bấm ngay, không phải cuộn lên. */
-function MobileBar({ slots, ready, onCombine }: { slots: Slots; ready: boolean; onCombine: () => void }) {
+function MobileBar({ slots, ready, tried, onCombine }: { slots: Slots; ready: boolean; tried: boolean; onCombine: () => void }) {
   const catalog = useCatalog();
   const label = (id: NodeId | null) => (id ? nameOf(catalog, id) : "…");
   return (
@@ -382,9 +403,10 @@ function MobileBar({ slots, ready, onCombine }: { slots: Slots; ready: boolean; 
       <div className="mx-auto flex max-w-xl items-center gap-3">
         <p className="min-w-0 flex-1 truncate text-sm" aria-hidden>
           {label(slots[0])} <span className="text-[var(--atlas-muted)]">+</span> {label(slots[1])}
+          {tried && <span className="block text-xs text-[var(--atlas-muted)]">Đã ghép cặp này ở lần trước</span>}
         </p>
         <button type="button" disabled={!ready} onClick={onCombine} className="home-cta min-h-11 shrink-0 rounded-lg px-5 font-serif font-bold disabled:opacity-50">
-          Hợp Nguyên
+          {tried ? "Vẫn ghép" : "Hợp Nguyên"}
         </button>
       </div>
     </div>
@@ -504,6 +526,7 @@ function Altar(props: {
   pending: boolean;
   notice: Notice | null;
   recent: readonly string[];
+  tried: boolean;
   onClear: (i: 0 | 1) => void;
   onSwap: () => void;
   onCombine: () => void;
@@ -533,6 +556,7 @@ function Altar(props: {
         <Slot label="Ô sau" id={slots[1]} onClear={() => props.onClear(1)} />
       </div>
       <p className="text-xs text-[var(--atlas-muted)]">Thứ tự ô có nghĩa: “Mộc + Thủy” khác “Thủy + Mộc”.</p>
+      {session && props.tried && <TriedWarning cost="trừ 1 lần ghép" />}
       {session ? (
         <button
           type="button"
@@ -541,7 +565,7 @@ function Altar(props: {
           onClick={props.onCombine}
           className="home-cta min-h-12 rounded-lg font-serif text-lg font-bold tracking-[0.12em] uppercase disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Hợp Nguyên
+          {props.tried ? "Vẫn hợp nguyên" : "Hợp Nguyên"}
         </button>
       ) : (
         <button

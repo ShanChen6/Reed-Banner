@@ -187,6 +187,19 @@ const PACK_1_RECIPES: readonly Recipe[] = [
   r("boulder", "elt.tho", "elt.hoa", "mat.boulder", "Đất nung trong lửa thành đá tảng"),
   r("estuary", "elt.thuy", "elt.tho", "mat.estuary", "Nước gặp đất thành cửa sông"),
   r("cloud", "elt.thuy", "elt.phong", "mat.cloud", "Hơi nước theo gió thành mây"),
+  // Cân bằng nguyên tố (Shan, 04/11/2026): Hỏa, Phong, Lôi, Kim có thêm cặp ghép ở bước đầu, ra vật liệu bậc 1 sẵn có
+  // bằng đường khác. Không thêm yếu tố mới, không đổi số lần ghép của tướng nào.
+  r("bronzeCast", "elt.hoa", "elt.kim", "mat.blackBronze", "Lửa nấu kim, đúc thành đồng đen"),
+  r("steam", "elt.hoa", "elt.thuy", "mat.cloud", "Lửa hong nước, hơi bốc thành mây"),
+  r("fireStorm", "elt.hoa", "elt.loi", "mat.storm", "Lửa trời gặp sấm, nổi cơn giông"),
+  r("bellows", "elt.phong", "elt.kim", "mat.forgedIron", "Bễ gió thổi lò, kim thành sắt rèn"),
+  r("oreJade", "elt.kim", "elt.kim", "mat.jadeStone", "Kim thạch tụ lại thành đá ngọc thô"),
+  r("windFire", "elt.phong", "elt.hoa", "mat.charcoal", "Gió quạt lửa, củi cháy còn than"),
+  r("rainStorm", "elt.loi", "elt.thuy", "mat.storm", "Sấm gọi mưa thành giông tố"),
+  r("lightningTree", "elt.loi", "elt.moc", "mat.charcoal", "Sét đánh cây cháy thành than"),
+  r("fulgurite", "elt.loi", "elt.tho", "mat.jadeStone", "Sét đánh xuống đất kết đá ngọc thô"),
+  r("thunderSteel", "elt.kim", "elt.loi", "mat.forgedIron", "Kim hứng sét tôi thành sắt"),
+  r("thunderCloud", "elt.phong", "elt.loi", "mat.cloud", "Gió cuốn tiếng sấm, kéo mây về"),
   // Vật dụng chung.
   r("ink", "mat.charcoal", "elt.thuy", "mat.ink", "Than củi mài với nước thành mực"),
   r("bambooSlips", "mat.bamboo", "elt.kim", "mat.bambooSlips", "Dao kim chẻ tre thành thẻ"),
@@ -253,7 +266,7 @@ const set = (id: string, title: string, gold: number, heroIds: readonly string[]
 export const PACK_1: Pack = {
   id: "pack-1",
   nameVi: "Gói 1: Dẹp loạn",
-  contentVersion: 2,
+  contentVersion: 3,
   // Shan duyệt công thức và lời dẫn (L5-6, 04/11/2026). Phát hành tới người chơi do cờ TAM_TUONG_KY_ENABLED quyết định.
   status: "published",
   nodes: PACK_1_NODES,
