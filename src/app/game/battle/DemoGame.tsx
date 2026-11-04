@@ -287,6 +287,12 @@ interface Outcome {
   /** Chỉ có ở trận đánh trùm online. */
   readonly raid?: RaidResult;
   readonly destiny?: { readonly floor: number; readonly won: boolean; readonly phase: "reward" | "done" };
+  /** Trận Viễn Chinh: kết quả trên sa bàn, có `end` khi trận này kết thúc lượt viễn chinh. */
+  readonly expedition?: {
+    readonly won: boolean;
+    readonly phase: "march" | "won" | "lost";
+    readonly end?: { readonly won: boolean; readonly stars: number; readonly gold: number; readonly firstClear: boolean };
+  };
   readonly survival?: SurvivalResult;
   readonly daily?: { readonly score: DailyScore; readonly rank: number | null };
   readonly arena?: ArenaResult;
@@ -754,6 +760,7 @@ export default function DemoGame({
   /** Campaign V2: mục tiêu nhiệm vụ (có thể xong trước khi phân thắng bại, ví dụ cầm cự đủ lượt). */
   const [scenario, setScenario] = useState<CampaignScenarioTag | null>(null);
   const [destinyFloorNo, setDestinyFloorNo] = useState<number | null>(null);
+  const [expeditionMatch, setExpeditionMatch] = useState(false);
   /** Sinh tồn: đợt, người gục, báo trước đợt kế. */
   const [survival, setSurvival] = useState<SurvivalView | null>(null);
   /** Thử thách hằng ngày: khóa ngày của trận đang chơi. */
@@ -1590,6 +1597,7 @@ export default function DemoGame({
     setSurvival(null);
     setDailyDay(null);
     setArenaFoe(null);
+    setExpeditionMatch(false);
   };
 
   /** Về màn chờ trước trận để đổi nguyên tố, nghề, trang bị hoặc nâng kỹ năng. */
@@ -1645,6 +1653,7 @@ export default function DemoGame({
     setRaidBoss(res.view.raidBoss ?? null);
     setScenario(res.view.campaignScenario ?? null);
     setDestinyFloorNo(res.view.destiny?.floor ?? null);
+    setExpeditionMatch(res.view.expedition !== undefined);
     setSurvival(res.view.survival ?? null);
     setDailyDay(res.view.daily ?? null);
     setArenaFoe(res.view.arena ?? null);
@@ -2198,6 +2207,17 @@ export default function DemoGame({
                               : `Thiên Mệnh: đội hình gục ở tầng ${outcome.destiny.floor}. Run đã kết thúc.`}
                           </p>
                         )}
+                        {outcome.expedition && (
+                          <p className={`font-semibold ${outcome.expedition.won ? "text-amber-300" : "text-rose-300"}`}>
+                            {outcome.expedition.phase === "won"
+                              ? `Viễn Chinh: đã chiếm thành đích! ${"★".repeat(outcome.expedition.end?.stars ?? 1)} +${outcome.expedition.end?.gold ?? 0} vàng${outcome.expedition.end?.firstClear ? " (lần đầu)" : ""}.`
+                              : outcome.expedition.phase === "lost"
+                                ? "Viễn Chinh: hết ngày hành quân, lượt viễn chinh kết thúc."
+                                : outcome.expedition.won
+                                  ? "Viễn Chinh: đã chiếm ô. Về sa bàn để đi tiếp."
+                                  : "Viễn Chinh: đạo quân thua, rút về ô cũ để nghỉ sức."}
+                          </p>
+                        )}
                         {outcome.daily && (
                           <p className="font-semibold text-amber-300">
                             Nhật Lệnh:{" "}
@@ -2270,6 +2290,14 @@ export default function DemoGame({
                           className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
                         >
                           {outcome?.destiny?.won ? "Chọn thưởng Thiên Mệnh" : "Về Tháp Thiên Mệnh"}
+                        </SceneLink>
+                      )}
+                      {expeditionMatch && (
+                        <SceneLink
+                          scene="EXPEDITION"
+                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                        >
+                          Về sa bàn Viễn Chinh
                         </SceneLink>
                       )}
                       {dailyDay && (
