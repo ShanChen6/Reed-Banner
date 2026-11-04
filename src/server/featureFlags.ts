@@ -67,3 +67,11 @@ export function tamTuongKyFlagStatus(env: Readonly<Record<string, string | undef
     pack2Ignored: ttkFlag(env.TAM_TUONG_KY_PACK2_ENABLED) && !enabled,
   };
 }
+
+/** Viễn Chinh. Chỉ chuỗi `true` mới bật; mặc định tắt, thẻ Home giữ ở hàng “Đang dựng”. */
+export function expeditionFlag(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
+  return env.EXPEDITION_ENABLED === "true";
+}
+
+export const expeditionEnabled = (deps: { readonly expeditionEnabled?: boolean }): boolean =>
+  deps.expeditionEnabled === true;

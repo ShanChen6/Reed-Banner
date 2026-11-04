@@ -24,6 +24,7 @@ import type { CampaignScenarioTag } from "../campaign/scenarios";
 import type { GearItem } from "../gear";
 import type { CharacterProgress } from "../progress";
 import type { DestinyMatchTag, TowerMatchTag } from "../tower";
+import type { ExpeditionMatchTag } from "../expedition/expedition";
 import {
   planBreak,
   autoReviveFighterId,
@@ -86,6 +87,8 @@ export interface Match {
   readonly trial?: TrialMatch;
   /** Tháp Vận Mệnh (Song Tháp). */
   readonly destiny?: DestinyMatch;
+  /** Viễn Chinh: trận của một đạo quân đánh vào một ô sa bàn. */
+  readonly expedition?: ExpeditionMatchTag;
 }
 
 /** Danh tính tầng của trận Trial và giới hạn lượt của người chơi. */
@@ -122,6 +125,7 @@ export interface MatchConfig {
   readonly arena?: ArenaOpponent;
   readonly trial?: TrialMatch;
   readonly destiny?: DestinyMatch;
+  readonly expedition?: ExpeditionMatchTag;
 }
 
 export interface MatchStep {
@@ -156,6 +160,7 @@ export function startMatch(config: MatchConfig): MatchStep {
     ...(config.arena ? { arena: config.arena } : {}),
     ...(config.trial ? { trial: config.trial } : {}),
     ...(config.destiny ? { destiny: config.destiny } : {}),
+    ...(config.expedition ? { expedition: config.expedition } : {}),
   };
   const ai = runAi(match, config.now, config.difficulty);
   return { match: ai.match, events: [...events, ...ai.events] };
@@ -455,6 +460,8 @@ export interface MatchView {
   /** Trial: tầng đang đánh và giới hạn lượt; không lộ seed hay dấu vân tay. */
   readonly trial?: { readonly floor: number; readonly turnLimit: number };
   readonly destiny?: { readonly cycleId: string; readonly floor: number };
+  /** Viễn Chinh: sa bàn, ô và đạo quân của trận. */
+  readonly expedition?: { readonly map: string; readonly node: string; readonly army: 0 | 1 };
   /** Đấu trường: tên đối thủ (không lộ id chủ đội). */
   readonly arena?: { readonly name: string; readonly rating: number };
 }
@@ -665,6 +672,9 @@ export function viewOf(m: Match): MatchView {
       : {}),
     ...(m.arena
       ? { arena: { name: m.arena.name, rating: m.arena.rating } }
+      : {}),
+    ...(m.expedition
+      ? { expedition: { map: m.expedition.map, node: m.expedition.node, army: m.expedition.army } }
       : {}),
   };
 }

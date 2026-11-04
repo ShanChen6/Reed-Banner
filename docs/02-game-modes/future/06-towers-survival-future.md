@@ -59,4 +59,4 @@
 ## D. Không trộn nhiệm vụ
 
 - TOWER-UPGRADE và SURVIVAL-RENAME là 2 streams độc lập ngoài BP; không phụ thuộc BP.
-- Viễn Chinh và Liệt Truyện vẫn DEFERRED.
+- Liệt Truyện vẫn DEFERRED. Viễn Chinh đã có thiết kế riêng từ 04/11/2026: [GDD Viễn Chinh](../expedition/01-vien-chinh-gdd.md).
