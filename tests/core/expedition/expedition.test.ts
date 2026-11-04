@@ -13,14 +13,12 @@ import {
   applyExpeditionEnd,
   boardScores,
   countExpeditionRun,
-  describeScore,
   beginExpeditionBattle,
   campExpedition,
   createBattle,
   createExpeditionRun,
   createRng,
   expeditionArmySide,
-  expeditionBoardScore,
   expeditionDistance,
   expeditionEdgeDays,
   expeditionEncounter,
@@ -261,17 +259,11 @@ describe("Viễn Chinh: lưu hồ sơ", () => {
     assert.deepEqual(parseExpedition(JSON.parse(JSON.stringify(state)))?.daily, state.daily);
   });
 
-  it("bảng xếp hạng: nhiều sao đứng trên, bằng sao thì ít ngày hơn đứng trên", () => {
-    assert.equal(expeditionBoardScore(NEW_EXPEDITION), 0);
-    const a: ExpeditionState = { ...NEW_EXPEDITION, stars: { "aiBac:1": 3, "aiBac:2": 2 }, bestDays: { "aiBac:1": 8, "aiBac:2": 11 } };
-    const b: ExpeditionState = { ...a, bestDays: { "aiBac:1": 7, "aiBac:2": 11 } };
-    const c: ExpeditionState = { ...NEW_EXPEDITION, stars: { "aiBac:1": 3, "aiBac:2": 3 }, bestDays: { "aiBac:1": 12, "aiBac:2": 12 } };
-    assert.ok(expeditionBoardScore(b) > expeditionBoardScore(a));
-    assert.ok(expeditionBoardScore(c) > expeditionBoardScore(b));
-    assert.deepEqual(describeScore("expedition", expeditionBoardScore(a)), { main: 5, turns: 19 });
-    const profile = { ...expeditionSimProfile(5), expedition: a };
-    assert.deepEqual(boardScores(profile).find((x) => x.board === "expedition"), { board: "expedition", score: expeditionBoardScore(a) });
+  it("ghi số ngày nhanh nhất của từng bậc, không có bảng xếp hạng (chế độ offline)", () => {
+    const a: ExpeditionState = { ...NEW_EXPEDITION, stars: { "aiBac:1": 3 }, bestDays: { "aiBac:1": 8 } };
     assert.deepEqual(parseExpedition(JSON.parse(JSON.stringify(a)))?.bestDays, a.bestDays);
+    const profile = { ...expeditionSimProfile(5), expedition: a };
+    assert.ok(!boardScores(profile).some((x) => (x.board as string) === "expedition"));
   });
 
   it("vượt nước mất 2 ngày, đạo kia nghỉ cả 2 ngày; đánh qua nước thắng hay thua cũng 2 ngày", () => {

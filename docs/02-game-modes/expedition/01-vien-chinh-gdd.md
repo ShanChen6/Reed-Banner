@@ -1,7 +1,7 @@
 # Viễn Chinh — Hai đạo quân trên sa bàn
 
 > Cập nhật: 04/11/2026
-> Trạng thái: **APPROVED** — Shan chọn cơ chế "Hai đạo quân trên sa bàn" ngày 04/11/2026; Shan chốt mục 8 cùng ngày (thua trận rút về, giới hạn lượt mỗi ngày, có bảng xếp hạng); số liệu ở mục 5 và số lượt mỗi ngày là điểm xuất phát do Claude đặt, chờ Shan chơi thử. Code nằm sau cờ `EXPEDITION_ENABLED` (mặc định tắt).
+> Trạng thái: **APPROVED** — Shan chọn cơ chế "Hai đạo quân trên sa bàn" ngày 04/11/2026; Shan chốt mục 8 cùng ngày (thua trận rút về, giới hạn lượt mỗi ngày; sau đó chốt chơi offline, không bảng xếp hạng); số liệu ở mục 5 và số lượt mỗi ngày là điểm xuất phát do Claude đặt, chờ Shan chơi thử. Code nằm sau cờ `EXPEDITION_ENABLED` (mặc định tắt).
 
 File này là **nguồn chính cho luật Viễn Chinh**. Code ở `src/core/expedition/` (luật thuần), `src/server/expedition.ts`
 và `src/server/expeditionSettle.ts` (server), `src/app/game/expedition/ExpeditionScreen.tsx` (màn chơi), mô phỏng ở
@@ -97,17 +97,14 @@ rồi một đạo đánh.
 - Con số 3 do Claude đặt: một lượt khoảng 6–10 trận, thắng lần đầu mỗi bậc chỉ có một lần, nên giới hạn chủ yếu chặn
   cày vàng thắng lại và giữ bảng xếp hạng công bằng. Đổi số chỉ cần sửa hằng số.
 
-### 3.7 Bảng xếp hạng (Shan chốt 04/11/2026)
+### 3.7 Chơi offline, không bảng xếp hạng (Shan chốt 04/11/2026)
 
-- Tab **Viễn Chinh** ở trang Xếp hạng, bảng mọi thời đại (không có mùa). Điểm: **tổng sao tốt nhất** của mọi sa bàn ×
-  bậc (tối đa 27); bằng sao thì **tổng số ngày ít nhất** của các bậc đã thắng nhỏ hơn đứng trên; bằng nữa thì ai đạt
-  trước đứng trên. Code: `expeditionBoardScore` (`src/core/expedition/state.ts`), bảng `expedition` trong
-  `boardScores`; hồ sơ lưu `bestDays` theo `${map}:${tier}`.
-- Server ghi điểm ngay sau khi chốt lượt thắng (`settleExpeditionMatch`), và khi người chơi mở trang Xếp hạng.
-- Theo luật chung chế độ có bảng xếp hạng ([README chế độ mục 6.1](../README.md#61-ai-chơi-được-chế-độ-nào-shan-01112026)),
-  Viễn Chinh **chỉ cho tài khoản đã đăng nhập**: khách không xem `GET /api/expedition` (401), không xuất quân, tiến
-  quân hay đóng quân (`loginRequired`), trận Viễn Chinh dở không mở tiếp được khi đã đăng xuất. Rút quân vẫn cho để kết
-  thúc lượt có sẵn.
+- Viễn Chinh là chế độ **offline** như Bình Loạn: **khách chơi được**, không cần đăng nhập, **không có bảng xếp
+  hạng**. Thưởng vẫn do server chốt và vẫn giới hạn lượt mỗi ngày (mục 3.6).
+- Lý do: hướng tiếp theo là nhiệm vụ kịch bản cố định, nhiều kết thúc
+  ([đề xuất](02-map-va-nhiem-vu-proposal.md)); bảng xếp hạng trên đề cố định dễ bị chép đường đi tốt nhất.
+- Cùng ngày Shan từng chốt có bảng xếp hạng (bản đó cần đăng nhập); quyết định offline thay cho quyết định đó. Hồ sơ vẫn
+  lưu `bestDays` (số ngày nhanh nhất từng bậc) để hiện "Nhanh nhất N ngày" ở màn chọn bậc.
 
 ### 3.8 Sương mù (Shan yêu cầu 04/11/2026)
 
@@ -223,7 +220,7 @@ lượt viễn chinh là 5–11 trận. Thượng Du III để khó có chủ ý
 | Route | Việc |
 |---|---|
 | `GET /api/expedition` | Sáu sa bàn, bậc đã mở, sao, ngày nhanh nhất, lượt xuất quân còn trong ngày, lượt đang đi (không có seed), `visible` (ô ngoài sương mù), đối thủ báo trước của các ô còn địch đang thấy, theo từng đạo. Trận đã xong mà chưa chốt thì chốt luôn |
-| `POST /api/expedition/run` `{ map, tier, main: [2], second: [3] }` | Xuất quân. Cần đăng nhập; hết lượt trong ngày báo `dailyLimit` |
+| `POST /api/expedition/run` `{ map, tier, main: [2], second: [3] }` | Xuất quân. Khách chưa có cookie thì được cấp; hết lượt trong ngày báo `dailyLimit` |
 | `POST /api/expedition/march` `{ army, to }` | Tiến quân; gặp địch thì mở trận và trả id (đang có trận thì trả lại trận đó) |
 | `POST /api/expedition/camp` | Đóng quân |
 | `POST /api/expedition/abandon` | Rút quân; trận đang dở tính thua trước |
@@ -242,4 +239,4 @@ lượt viễn chinh là 5–11 trận. Thượng Du III để khó có chủ ý
 
 - **Thua trận chỉ rút về** như mục 3.4 (không làm đạo tan hẳn).
 - **Giới hạn lượt mỗi ngày như các chế độ khác:** 3 lượt xuất quân mỗi ngày, mục 3.6.
-- **Có bảng xếp hạng:** mục 3.7. Vì vậy chế độ chỉ cho tài khoản đã đăng nhập (luật chung từ 01/11/2026).
+- ~~Có bảng xếp hạng, cần đăng nhập.~~ Thay bằng: **chơi offline, khách chơi được, không bảng xếp hạng** (mục 3.7).

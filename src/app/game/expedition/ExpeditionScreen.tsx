@@ -93,7 +93,6 @@ const ERROR_TEXT: Record<string, string> = {
   conflict: "Dữ liệu vừa đổi ở nơi khác. Đang tải lại.",
   dailyLimit: "Hôm nay đã hết lượt xuất quân. Lượt mới mở lúc 0 giờ (giờ Việt Nam).",
   featureDisabled: "Viễn Chinh chưa mở.",
-  loginRequired: "Viễn Chinh cần tài khoản đã đăng nhập.",
 };
 
 const KIND_NAME: Record<ExpeditionNodeKind, string> = {

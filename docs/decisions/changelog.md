@@ -2,6 +2,10 @@
 
 ## 04/11/2026
 
+**Viễn Chinh: chơi offline, bỏ bảng xếp hạng**
+- Shan chọn Viễn Chinh (cả hướng nhiệm vụ sắp tới) chơi offline như Bình Loạn: khách chơi được, không bảng xếp hạng, vẫn giới hạn 3 lượt xuất quân mỗi ngày. Thay cho quyết định có bảng xếp hạng và cần đăng nhập sáng cùng ngày. Gỡ bảng `expedition`, tab trên trang Xếp hạng và chặn khách. Xem [GDD mục 3.7](../02-game-modes/expedition/01-vien-chinh-gdd.md#37-chơi-offline-không-bảng-xếp-hạng-shan-chốt-04112026).
+- Đề xuất nhiệm vụ: Shan chốt mỗi lệnh đi một cạnh; bản đầu có nhiệm vụ không cần đánh và ba loại trận riêng (giữ cầu, phá cổng, hộ tống); chọn trúng đường bị phá thì mất ngày đó. Xem [đề xuất mục 11](../02-game-modes/expedition/02-map-va-nhiem-vu-proposal.md#11-shan-đã-chốt-04112026).
+
 **Viễn Chinh: sáu sa bàn, sương mù, vượt nước, chòi canh, tranh nền riêng**
 - Shan yêu cầu sa bàn đa dạng, sương mù chỉ hiện ô đi được, nền là tranh bản đồ có gắn vị trí. Thêm ba sa bàn Ngã Ba Sông (Thổ), Kinh Thành (Hỏa), Quần Đảo (Phong); đường vượt nước mất 2 ngày; ô chòi canh vén sương mù trong 2 bước. Thành đích luôn hiện vị trí nhưng không báo địch tới khi thấy. Xem [GDD Viễn Chinh mục 3.8–4.1](../02-game-modes/expedition/01-vien-chinh-gdd.md#38-sương-mù-shan-yêu-cầu-04112026).
 - Tranh nền: Shan chốt mỗi sa bàn một tranh mới (không cắt bản đồ tổng); câu lệnh vẽ ở [Prompt tranh sa bàn](../06-art/prompts/vien-chinh-sa-ban.md). Chưa có tranh thì tạm hiện một vùng bản đồ tổng Bình Loạn.
