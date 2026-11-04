@@ -1,7 +1,7 @@
 # Prompt biểu tượng kỹ năng
 
 > Cập nhật: 03/11/2026
-> Trạng thái: **DRAFT** — chưa có ảnh; 42 ảnh kỹ năng hệ Shan gửi ở `public/art/skills/` là chuẩn phong cách.
+> Trạng thái: **DRAFT** — đã có ảnh đủ 24 chiêu nghề của 8 nghề (04/11/2026); 42 ảnh kỹ năng hệ Shan gửi ở `public/art/skills/` là chuẩn phong cách.
 
 Prompt ráp sẵn để tạo ảnh cho mọi kỹ năng còn vẽ bằng SVG (`src/app/game/art/skills.tsx`): chiêu nghề, tuyệt chiêu/chiêu riêng của nhân vật kèm, tướng lịch sử, sứ quân, Xạ thủ/Sát thủ, tuyệt chiêu ô 4 của Đinh Bộ Lĩnh và hai nhân vật đặc biệt. Danh sách lấy từ code ngày 03/11/2026 (`ROLE_SKILLS`, `CHARACTER_SKILLS`, `DBL_ULTIMATES`, `SPECIAL_SKILLS` trong `src/core/battle/`). Luật kỹ năng ở [Kỹ năng](../../03-characters/ky-nang/README.md), bảng từng nhân vật ở [kỹ năng đồng hành](../../03-characters/ky-nang/data/ky-nang-dong-hanh.md). Giải thích bằng tiếng Việt, prompt bằng tiếng Anh. Prompt trang bị ở [Prompt trang bị](trang-bi.md).
 
@@ -34,7 +34,7 @@ Chiêu nghề không có hệ nên lấy màu theo `PROFESSION_COLOR` (đỏ son
 
 | Phần | Số ảnh | Đang dùng ở đâu | Cách dùng lại |
 |---|---|---|---|
-| Ô 2 và ô 6 hệ (ví dụ Phóng Hỏa Thiêu Doanh, Thạch Giáp) | 14 | Ô 2/6 của **mọi** nhân vật chơi được, kể cả Đinh Bộ Lĩnh | Dùng thẳng, không cần tạo mới. Code đặt mã các chiêu này là `element_<mã>` nên `SkillIcon` phải bỏ tiền tố `element_` khi tra `SKILL_ART`; chưa sửa thì ô 2/6 vẫn hiện SVG |
+| Ô 2 và ô 6 hệ (ví dụ Phóng Hỏa Thiêu Doanh, Thạch Giáp) | 14 | Ô 2/6 của **mọi** nhân vật chơi được, kể cả Đinh Bộ Lĩnh | Dùng thẳng, không cần tạo mới. `skillArt` trong `skills.tsx` bỏ tiền tố `element_` khi tra ảnh (đã nối 04/11/2026) |
 | Ô 1/3/4/5 hệ cũ (ví dụ Hàn Băng Tiễn, Kim Ấn Phá Thiên) | 28 | Bộ kỹ năng preset của AI chiến dịch ([preset AI hệ cũ](../../03-characters/ky-nang/preset-ai-he-cu.md)) | Giữ cho AI. Bảy ảnh ô 5 cũ dùng làm tuyệt chiêu ô 4 của Đinh Bộ Lĩnh (mục 5, phương án A); một số ảnh khác làm ảnh tham chiếu cho tuyệt chiêu cùng chủ đề (ghi trong từng khối) |
 
 Không dùng **cùng một ảnh** cho hai kỹ năng khác nhau mà cùng hiện trên một màn: người chơi sẽ tưởng là một chiêu. Ngoại lệ duy nhất là phương án A ở mục 5, vì 8 tuyệt chiêu ô 4 của Đinh Bộ Lĩnh không bao giờ hiện cùng lúc (mỗi trận chỉ một nghề).
@@ -270,7 +270,7 @@ Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: 
 
 `DBL_ULTIMATES` có 56 mã `dbl_<nghề>_<hệ>`: 8 đòn kết theo nghề, mỗi đòn có thêm một hiệu ứng nhỏ theo hệ. Hai cách:
 
-- **Phương án A (đề xuất, 0 ảnh mới):** mỗi hệ dùng lại ảnh ô 5 cũ của chính Đinh Bộ Lĩnh: Kim `kimAnPhaThien`, Mộc `coThuTranThien`, Thủy `thuyKiepVanTrung`, Hỏa `lietDiemPhanThanh`, Thổ `thaiSonApDinh`, Lôi `cuuTieuLoiPhat`, Phong `baoTapCanKhon`. Code vẽ thêm biểu tượng nghề (`public/art/professions/`) nhỏ ở góc để phân biệt 8 nghề. Hợp vì đây vốn là tuyệt chiêu hệ của Đinh Bộ Lĩnh và người chơi đã quen.
+- **Phương án A (đề xuất, 0 ảnh mới):** mỗi hệ dùng lại ảnh ô 5 cũ của chính Đinh Bộ Lĩnh: Kim `kimAnPhaThien`, Mộc `coThuTranThien`, Thủy `thuyKiepVanTrung`, Hỏa `lietDiemPhanThanh`, Thổ `thaiSonApDinh`, Lôi `cuuTieuLoiPhat`, Phong `baoTapCanKhon`. Code vẽ thêm biểu tượng nghề (`public/art/professions/`) nhỏ ở góc để phân biệt 8 nghề (đã dùng từ 04/11/2026, `DBL_ULTIMATE_ART` trong `skills.tsx`). Hợp vì đây vốn là tuyệt chiêu hệ của Đinh Bộ Lĩnh và người chơi đã quen.
 - **Phương án B (8 ảnh × 7 màu):** 8 prompt dưới đây, mỗi prompt thay `[ELEMENT]` và `[BACKGROUND]` theo bảng để ra 7 bản (56 ảnh), hoặc chỉ tạo 8 bản theo một hệ rồi để code nhuộm màu năng lượng. Chủ thể có cờ lau trắng để nhận ra là chiêu của Đinh Bộ Lĩnh.
 
 | Hệ | `[ELEMENT]` | `[BACKGROUND]` |
