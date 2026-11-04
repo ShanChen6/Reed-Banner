@@ -25,7 +25,8 @@
 17. [17 — Tầm Tướng Ký: server chế độ Thường LT-04](17-tam-tuong-ky-lt04-server.md) (DRAFT, có code)
 18. [18 — Tầm Tướng Ký: Gói 1 và mô phỏng LT-05](18-tam-tuong-ky-lt05-pack-1.md) (APPROVED, có code)
 19. [19 — Tầm Tướng Ký: chế độ Hạng tuần LT-06](19-tam-tuong-ky-lt06-ranked.md) (DRAFT, có code)
-20. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
+20. [20 — Tầm Tướng Ký: nghiệm thu và phát hành LT-07](20-tam-tuong-ky-lt07-acceptance.md) (DRAFT)
+21. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
 
 ## Quy ước quyết định
 

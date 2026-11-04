@@ -140,7 +140,7 @@ function SceneView({
       if (!towerFeatures.tamTuongKy) return <DisabledTowerMode name={SCENE_TITLE.TAM_TUONG_KY} />;
       return account ? <TamTuongKyScreen ranked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate name={SCENE_TITLE.TAM_TUONG_KY} reason="Chế độ này cần tài khoản đã đăng nhập vì mỗi lượt chơi tốn một phiếu, và tiến trình Tướng Lục lưu theo tài khoản." />;
     case "QUESTS":
-      return <QuestsScreen />;
+      return <QuestsScreen tamTuongKy={towerFeatures.tamTuongKy === true} />;
     case "SHOP":
       return <ShopScreen />;
     case "LEADERBOARD":

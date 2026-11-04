@@ -2,6 +2,10 @@
 
 ## 04/11/2026
 
+**Tầm Tướng Ký: LT-07 nghiệm thu, sẵn sàng bật theo cờ**
+- Gói 1 đặt `published` (Shan đã duyệt nội dung); phát hành chỉ còn do cờ `TAM_TUONG_KY_ENABLED` / `TAM_TUONG_KY_RANKED_ENABLED`. Trang Nhiệm vụ ẩn thành tựu `ttk.*` khi cờ tắt.
+- Kiểm: toàn bộ test, typecheck, lint, docs, `next build`; chạy bản production với cờ tắt và bật (Home, màn, API, Nhiệm vụ, thưởng hạng, 6 màn khác, luồng Thường và Hạng, điện thoại). Thêm Tầm Tướng Ký vào [bảng chế độ](../02-game-modes/README.md#1-tổng-quan) và [ai chơi được chế độ nào](../02-game-modes/README.md#61-ai-chơi-được-chế-độ-nào-shan-01112026). Xem [nghiệm thu LT-07](../02-game-modes/future/20-tam-tuong-ky-lt07-acceptance.md).
+
 **Tầm Tướng Ký: Shan duyệt L5-1…L5-7; LT-06 chế độ Hạng tuần (DRAFT, có code)**
 - Duyệt: 15 lần ghép mỗi phiếu; bó nguyên tố **tự chọn** (7 đơn vị dùng cho hệ nào cũng được); **7 tướng đề cử** mỗi tuần; dấu “còn công thức chưa tìm”; gợi ý nhắm tướng; 69 công thức và 12 lời dẫn Gói 1; ô đề cử kèm điểm. Design Freeze P-8, P-9, P-11, P-17 sửa theo; [Gói 1](../02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md) **DRAFT → APPROVED**.
 - Chế độ Hạng sau cờ `TAM_TUONG_KY_RANKED_ENABLED`: túi tự chọn, cấp nền 3 bó/tuần, kho tuần, đề cử xoay vòng chỉ hiện lời dẫn + điểm, điểm 300/200 một lần, bảng tuần `season_scores` chế độ `tamTuongKy`, cửa hàng 300 vàng (tối đa 2/tuần), thưởng hạng vàng như Trấn Ải. API `/api/tam-tuong-ky/ranked` (GET, `combine`, `buy`). Xem [Hạng tuần LT-06](../02-game-modes/future/19-tam-tuong-ky-lt06-ranked.md).
