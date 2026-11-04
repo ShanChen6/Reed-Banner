@@ -1,7 +1,7 @@
 # Prompt trang bị
 
 > Cập nhật: 03/11/2026
-> Trạng thái: **DRAFT** — đã có 5 khung phẩm (mục 4, 04/11/2026), các hình khác chưa có ảnh; thay mục 4 cũ của [Prompt đồ họa](do-hoa.md#4-trang-bị) (nét phẳng, 6 vũ khí).
+> Trạng thái: **DRAFT** — đã có 5 khung phẩm (mục 4) và 8 món không phải vũ khí của bộ Cờ Lau (mục 5), 04/11/2026; các hình khác chưa có ảnh; thay mục 4 cũ của [Prompt đồ họa](do-hoa.md#4-trang-bị) (nét phẳng, 6 vũ khí).
 
 Prompt ráp sẵn cho hệ thống trang bị: hình từng món theo **9 ô** và **3 bộ**, vũ khí cho đủ **8 nghề**, khung **5 phẩm**, huy hiệu bộ, bóng ô trống và hai biểu tượng thao tác. Luật trang bị (chỉ số, thưởng bộ, phẩm, ghép) ở [Trang bị](../../04-equipment/trang-bi.md); danh sách lấy từ code ngày 03/11/2026 (`GEAR_SLOTS`, `GEAR_SETS`, `TIERS` trong `src/core/gear/gear.ts`, `PROFESSIONS` trong `src/core/battle/rules.ts`). Phong cách theo [Prompt biểu tượng kỹ năng](icon-ky-nang.md) để món đồ và kỹ năng nằm cạnh nhau không lệch nhau. Giải thích bằng tiếng Việt, prompt bằng tiếng Anh.
 
@@ -98,6 +98,8 @@ Khung Lục làm trên nền hồng vì tre màu xanh lá.
 Chủ đề ba bộ: **Cờ Lau** là đồ của nghĩa quân làng (bông lau trắng, gỗ, da, cói), **Hoa Lư** là đồ cấm quân kinh đô Đại Cồ Việt (sơn son thếp vàng, núi đá vôi, sóng) hợp thưởng bộ thiên thủ, **Đồng Cổ** là đồ nghi lễ đúc đồng Đông Sơn (mặt trời, chim Lạc, gỉ xanh) hợp thưởng bộ thiên công.
 
 ### Bộ Cờ Lau (`coLau`)
+
+> Đã có ảnh 8 ô không phải vũ khí (04/11/2026): `public/art/gear/coLau/<ô>.webp` 192 px, `GearIcon` nhận `set` và vẽ ảnh khi có (bảng `SET_ART` trong `gear.tsx`), kèm huy hiệu nguyên tố ở góc. Vũ khí bộ Cờ Lau chưa có ảnh nên vẫn dùng SVG.
 
 Thưởng bộ: ATK +4%, Máu +3% ở mốc 6 món, thêm lần nữa ở mốc 9 món. Nền khi tạo: xanh lá.
 

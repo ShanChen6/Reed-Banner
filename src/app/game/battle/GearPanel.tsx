@@ -245,6 +245,7 @@ export default function GearPanel({
                 slot={slot}
                 element={item?.element ?? elementOf(profile, character)}
                 tier={item?.tier}
+                set={item?.set}
                 profession={slot === "vuKhi" ? profession : undefined}
                 className="size-9"
               />
@@ -286,6 +287,7 @@ export default function GearPanel({
                     slot={it.slot}
                     element={it.element}
                     tier={it.tier}
+                    set={it.set}
                     profession={it.profession}
                     className="size-9"
                   />

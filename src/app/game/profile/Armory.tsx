@@ -162,7 +162,7 @@ export default function Armory({
                       title={`${gearText(it)}${by ? ` · ${nameOf(by)} đang dùng` : ""}`}
                       className={`gear-slot relative flex aspect-square w-full items-center justify-center rounded-lg p-0.5 ${on ? "is-selected" : ""} ${dim ? "opacity-35" : ""}`}
                     >
-                      <GearIcon slot={it.slot} element={it.element} tier={it.tier} profession={it.profession} className="size-full" />
+                      <GearIcon slot={it.slot} element={it.element} tier={it.tier} set={it.set} profession={it.profession} className="size-full" />
                     </button>
                     {by && (
                       <span className="pointer-events-none absolute right-1 bottom-1 rounded bg-emerald-800 px-1 text-[11px] leading-tight font-bold text-emerald-50" aria-hidden>
@@ -223,7 +223,7 @@ function ItemPanel({
   return (
     <div className="flex flex-col gap-3">
       <div className="flex gap-3">
-        <GearIcon slot={item.slot} element={item.element} tier={item.tier} profession={item.profession} className="size-20 shrink-0" />
+        <GearIcon slot={item.slot} element={item.element} tier={item.tier} set={item.set} profession={item.profession} className="size-20 shrink-0" />
         <div className="min-w-0">
           <h3 className={`font-serif text-lg leading-snug font-bold ${TIER_CLASS[item.tier]}`}>{gearText(item)}</h3>
           <p className="text-sm text-[var(--bk-soft)]">
@@ -298,7 +298,7 @@ function MergePanel({
             <li key={it?.id ?? `empty-${i}`}>
               {it ? (
                 <button type="button" onClick={() => onRemove(it.id)} aria-label={`Bỏ ${gearText(it)} khỏi ghép`} className="gear-slot is-selected relative flex aspect-square w-full items-center justify-center rounded-lg p-0.5">
-                  <GearIcon slot={it.slot} element={it.element} tier={it.tier} profession={it.profession} className="size-full" />
+                  <GearIcon slot={it.slot} element={it.element} tier={it.tier} set={it.set} profession={it.profession} className="size-full" />
                   <XGlyph className="absolute top-1 right-1 size-4 rounded-full bg-black/70 p-0.5" />
                 </button>
               ) : (
