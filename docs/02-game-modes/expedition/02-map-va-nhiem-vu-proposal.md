@@ -324,9 +324,8 @@ Làm một chiến dịch dọc hoàn chỉnh trên **Cửa Biển** trước:
 - **Bản đầu có nhiệm vụ không cần đánh** như hộ tống, rút dân (câu 12.2).
 - **Bản đầu có loại trận riêng:** giữ cầu, phá cổng, hộ tống (câu 12.5). Cần mở rộng engine trận.
 - **Chọn trúng đường bị phá thì mất ngày đó** (đạo đứng yên, đạo kia nghỉ như thường); từ đó đường hiện là bị phá.
-- **Chưa chốt:** tài nguyên mới (câu 12.3) và nhiệm vụ phụ mở bậc hay chỉ đổi thưởng/kết thúc (câu 12.4). Claude đề
-  xuất cho bản đầu: không thêm tài nguyên ngoài máu, lương và cờ trạng thái nhiệm vụ; nhiệm vụ phụ chỉ đổi thưởng và
-  kết thúc, không khóa bậc. Chờ Shan duyệt.
+- **Không thêm tài nguyên mới** ngoài máu, lương và cờ trạng thái nhiệm vụ (câu 12.3); nhiệm vụ phụ chỉ đổi thưởng và
+  kết thúc, không khóa bậc (câu 12.4). Shan chốt 04/11/2026 khi duyệt [thiết kế Cửa Biển](03-cua-bien-thiet-ke.md).
 - **Chơi offline, không bảng xếp hạng**, khách chơi được (Shan 04/11/2026). Đã áp dụng cho Viễn Chinh hiện tại.
 
 ## 12. Câu hỏi cần chốt trước khi thay GDD

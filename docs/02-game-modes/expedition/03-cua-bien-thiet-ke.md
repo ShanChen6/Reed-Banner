@@ -1,7 +1,7 @@
 # Viễn Chinh — Thiết kế chi tiết Cửa Biển
 
 > Cập nhật: 04/11/2026  
-> Trạng thái: **DRAFT** — thiết kế chi tiết bản đầu, chờ Shan duyệt rồi mới viết code  
+> Trạng thái: **APPROVED** — Shan duyệt 04/11/2026 (mục 9), đang viết code  
 > Phạm vi: kịch bản Cửa Biển (nhiệm vụ, Trinh sát, đường bị phá, con nước, ba loại trận riêng) và phần engine cần
 > mở rộng. Năm sa bàn còn lại giữ luật của [GDD](01-vien-chinh-gdd.md).  
 > Dựa trên: [đề xuất sa bàn và nhiệm vụ](02-map-va-nhiem-vu-proposal.md) mục 5.3, 9 và các điểm Shan chốt ở mục 11.
@@ -263,10 +263,9 @@ con nước chưa biết cho client.
 4. **Mô phỏng:** `scripts/expedition-sim.ts` thêm chiến thuật Toàn thắng; chỉ chạy ngắn để soát lượt chơi được, không
    cân bằng lâu (Shan dừng cân bằng 04/11/2026).
 
-## 9. Cần Shan duyệt
+## 9. Shan đã chốt (04/11/2026)
 
-1. Bốn kết thúc và cách tính sao riêng của Cửa Biển (mục 4.1), có cho "Giữ dân" mở bậc kế tiếp không.
-2. Hệ số thưởng ×1,5 / ×1 / ×0,6 và món thêm khi Toàn thắng lần đầu (mục 4.2).
-3. Giữ hay cắt phản công Chợ ở bản đầu (mục 3.6).
-4. Đề xuất của Claude cho câu 12.3 và 12.4 (không tài nguyên mới; việc phụ chỉ đổi thưởng và kết thúc) coi như đã duyệt
-   nếu Shan đồng ý bản này.
+1. **Sao:** Shan không đặt nặng cách tính sao; dùng đúng bảng mục 4.1, kể cả "Giữ dân" mở bậc kế tiếp.
+2. **Thưởng:** giữ hệ số ×1,5 / ×1 / ×0,6 và món thêm khi Toàn thắng lần đầu (mục 4.2), Shan không đổi.
+3. **Giữ phản công Chợ** trong bản đầu (mục 3.6).
+4. **Không thêm tài nguyên mới** (câu 12.3); việc phụ chỉ đổi thưởng và kết thúc, không khóa bậc (câu 12.4).
