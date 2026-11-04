@@ -68,7 +68,7 @@ describe("Vạn Vật Lục", () => {
   it("tìm không dấu: “thap dao”, “dai dao” ra đúng yếu tố; không liệt kê tướng", () => {
     const all = discoverAll();
     assert.deepEqual(libraryNodes(catalog, all, "thap dao", null).map((n) => n.nameVi), ["Thập đạo"]);
-    assert.ok(libraryNodes(catalog, all, "Đại đao", null).some((n) => n.nameVi === "Đại đao"));
+    assert.ok(libraryNodes(catalog, all, "binh khi", null).some((n) => n.nameVi === "Binh khí"));
     assert.equal(foldVi("Đường xa"), "duong xa");
     assert.equal(libraryNodes(catalog, all, "", null).some((n) => n.kind === "character"), false);
   });
@@ -98,7 +98,7 @@ describe("Thông báo và gợi ý", () => {
       discoveredNodeIds: all.discoveredNodeIds.filter((id) => id !== "hero.leHoan"),
       discoveredRecipeIds: all.discoveredRecipeIds.filter((id) => id !== "r.leHoan"),
     };
-    const n = noticeFor(catalog, combineNormal(catalog, s, "know.tenCircuits", "know.warManual"));
+    const n = noticeFor(catalog, combineNormal(catalog, s, "role.quanSuLoi", "know.tenCircuits"));
     assert.equal(n.tone, "hero");
     assert.match(n.text, /Lê Hoàn/);
   });
@@ -123,7 +123,7 @@ describe("Tướng Lục", () => {
     const e = ledger(catalog, discoverAll()).find((x) => x.nodeId === "hero.nguyenBac");
     assert.ok(e && e.found);
     assert.deepEqual([e.info.profession, e.info.element, e.tier], ["tuongSi", "hoa", "lichSu"]);
-    assert.deepEqual(e.symbols, ["Đại đao buộc vải đỏ", "Hỏa kỳ"]);
+    assert.deepEqual(e.symbols, ["Cờ lau"]);
   });
 });
 

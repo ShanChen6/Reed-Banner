@@ -37,7 +37,7 @@ Tông gỗ tối, giấy dó, đồng cổ dùng token `--atlas-*` và khung `at
 
 **Tướng Lục**
 - Đủ số tướng của pack (A-15). Tướng chưa tìm: vòng “?”, chữ “Tướng chưa tìm thấy” và bậc; không có tên, chân dung hay nghề/hệ trong HTML lẫn aria.
-- Tướng đã tìm: chân dung thật (`Portrait`), tên, bậc, icon và tên nghề/hệ đọc từ roster, vật biểu trưng là hai nguyên liệu công thức cuối (A-16). Chưa có tiểu sử.
+- Tướng đã tìm: chân dung thật (`Portrait`), tên, bậc, icon và tên nghề/hệ đọc từ roster, **dấu tích** là nguyên liệu danh tính của công thức cuối (tước hiệu, địa danh, chiêu, lore; không lấy từ art, A-22). Chưa có tiểu sử.
 - Dòng “Tìm thấy chân dung chỉ ghi vào Tướng Lục, không thêm tướng vào đội”. Không có chữ nhận tướng, chiêu mộ hay vàng.
 - Ghép ra tướng trên điện thoại thì tự chuyển sang Tướng Lục.
 

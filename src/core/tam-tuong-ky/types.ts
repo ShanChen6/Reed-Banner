@@ -10,6 +10,32 @@ export type NodeKind = "element" | "material" | "knowledge" | "character";
 /** Bậc tướng; số lần ghép tối thiểu cố định theo bậc: thường 7, đặc biệt 9, lịch sử 12 (Design Freeze A-11, P-5). */
 export type HeroTier = "thuong" | "dacBiet" | "lichSu";
 
+/**
+ * Thứ mà công thức của một tướng được phép dựa vào (Shan, 04/11/2026): không dựa vào art nhân vật (vũ khí, trang phục,
+ * phụ kiện) vì art sẽ đổi. `title`, `place` của tướng lịch sử cần nguồn sử.
+ */
+export type AnchorKind = "title" | "place" | "campaign" | "skill" | "lore";
+
+export interface HeroAnchor {
+  readonly kind: AnchorKind;
+  readonly text: string;
+}
+
+/** Nghề và hệ mà một node “vai trò” biểu thị; tướng đặc biệt dung hợp dùng `hybrid`. Validator đối chiếu với roster. */
+export interface RoleHint {
+  readonly profession?: Profession;
+  readonly element?: Element;
+  readonly hybrid?: boolean;
+}
+
+/** Lời dẫn chế độ Hạng (Shan, 04/11/2026): mô tả tướng đề cử thay cho tên và chân dung. Không được chứa tên tướng. */
+export interface HeroClue {
+  readonly kind: "text" | "image";
+  readonly text: string;
+  /** Chỉ `image`: mã ảnh trong kho asset, khi có. */
+  readonly imageRef?: string;
+}
+
 export interface CatalogNode {
   readonly id: NodeId;
   readonly kind: NodeKind;
@@ -20,11 +46,17 @@ export interface CatalogNode {
   readonly element?: Element;
   /** Chỉ tri thức: nghề mà tri thức này gợi tới, để validator cảnh báo công thức “Hệ + Nghề”. */
   readonly professionHint?: Profession;
+  /** Node vai trò (nghề × hệ) dùng trong công thức cuối của tướng. */
+  readonly role?: RoleHint;
   /** Chỉ tướng. */
   readonly characterId?: string;
   readonly tier?: HeroTier;
   /** Chỉ tướng lịch sử: mã nguồn trong `HISTORY_SOURCES` (Campaign). */
   readonly historySourceIds?: readonly string[];
+  /** Chỉ tướng: những gì công thức dựa vào (không có art). */
+  readonly anchors?: readonly HeroAnchor[];
+  /** Chỉ tướng: lời dẫn chế độ Hạng. */
+  readonly clue?: HeroClue;
   /** Lý do biểu trưng, dùng cho audit và mô tả; không phải tiểu sử. */
   readonly note?: string;
 }
@@ -93,7 +125,11 @@ export type IssueCode =
   | "missingPortrait"
   | "elementPlusProfession"
   | "unusedStarter"
-  | "badAchievementSet";
+  | "badAchievementSet"
+  | "missingAnchor"
+  | "roleMismatch"
+  | "missingClue"
+  | "clueSpoils";
 
 export interface CatalogIssue {
   readonly severity: "error" | "warning";

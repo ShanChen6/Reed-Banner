@@ -7,6 +7,7 @@ import { describe, it } from "node:test";
 import { ELEMENTS } from "../../../src/core/battle";
 import {
   CORE_CATALOG_DEPS,
+  PACK_1,
   SLICE_PACK,
   TIER_COMBINES,
   computeMetrics,
@@ -70,19 +71,29 @@ describe("slice-1", () => {
     for (const n of SLICE_PACK.nodes) assert.ok(m.has(n.id), n.id);
   });
 
-  it("có cặp gương ra hai kết quả khác nhau và có công thức A+A", () => {
-    const key = (a: string, b: string) => SLICE_PACK.recipes.find((r) => recipeKey(r.first, r.second) === recipeKey(a, b));
+  it("Gói 1 có cặp gương ra hai kết quả khác nhau; slice có công thức A+A", () => {
+    const key = (a: string, b: string) => PACK_1.recipes.find((r) => recipeKey(r.first, r.second) === recipeKey(a, b));
     assert.equal(key("elt.moc", "elt.thuy")?.result, "mat.reed");
     assert.equal(key("elt.thuy", "elt.moc")?.result, "mat.herbs");
+    assert.equal(key("elt.kim", "elt.tho")?.result, "mat.blackBronze");
+    assert.equal(key("elt.tho", "elt.kim")?.result, "mat.jadeStone");
     assert.ok(SLICE_PACK.recipes.some((r) => r.first === r.second));
+  });
+
+  it("công thức cuối = một node vai trò khớp nghề/hệ roster (đặc biệt: dung hợp) + dấu danh tính", () => {
+    for (const h of PACK_1.nodes.filter((n) => n.kind === "character")) {
+      const final = PACK_1.recipes.find((r) => r.result === h.id)!;
+      const inputs = [final.first, final.second].map((id) => PACK_1.nodes.find((n) => n.id === id)!);
+      assert.equal(inputs.filter((n) => n.role).length, 1, h.id);
+      assert.ok(h.anchors && h.anchors.length > 0, h.id);
+    }
   });
 
   it("có node trung gian dùng chung giữa các nhánh tướng", () => {
     const uses = (id: string) => SLICE_PACK.recipes.filter((r) => r.first === id || r.second === id).length;
-    assert.ok(uses("mat.cloth") >= 2);
-    assert.ok(uses("mat.redSash") >= 2);
+    assert.ok(uses("mat.commandFlag") >= 2);
+    assert.ok(uses("mat.rampart") >= 2);
     assert.ok(uses("mat.bamboo") >= 3);
-    assert.ok(uses("mat.forgedIron") >= 2);
   });
 
   it("bậc tướng khớp roster, tướng lịch sử có mã nguồn có thật", () => {
@@ -118,7 +129,7 @@ describe("validator: lỗi", () => {
   });
 
   it("mirrorSameResult: A>B và B>A cùng kết quả", () => {
-    const pack = withRecipes(replaceRecipe("r.herbs", { result: "mat.reed" }));
+    const pack = withRecipes([...SLICE_PACK.recipes, recipe("r.mirror", "elt.thuy", "elt.moc", "mat.reed")]);
     assert.ok(codes(pack, "error").includes("mirrorSameResult"));
   });
 
@@ -143,7 +154,7 @@ describe("validator: lỗi", () => {
   });
 
   it("cycle: vòng phụ thuộc giữa node trung gian", () => {
-    const pack = withRecipes([...SLICE_PACK.recipes, recipe("r.loop", "mat.greatBlade", "elt.tho", "mat.forgedIron")]);
+    const pack = withRecipes([...SLICE_PACK.recipes, recipe("r.loop", "mat.weapon", "elt.tho", "mat.forgedIron")]);
     assert.ok(codes(pack, "error").includes("cycle"));
     assert.equal(findCycles(SLICE_PACK.recipes).length, 0);
   });
@@ -173,15 +184,38 @@ describe("validator: lỗi", () => {
   });
 
   it("tierCombines: tướng ít hoặc nhiều lần ghép hơn số của bậc", () => {
-    // Lê Hoàn rút xuống 4 lần ghép.
-    const short = withRecipes(replaceRecipe("r.leHoan", { first: "mat.warDrum", second: "mat.cloth" }));
+    // Lê Hoàn rút xuống 5 lần ghép.
+    const short = withRecipes(replaceRecipe("r.leHoan", { first: "mat.storm", second: "mat.commandFlag" }));
     assert.ok(codes(short, "error").includes("tierCombines"));
-    // Nguyễn Bặc lên 13 lần ghép: Hỏa kỳ cần thêm một bước.
+    // Nguyễn Bặc lên 13 lần ghép: Cờ lau cần thêm một bước.
     const long = withRecipes(
-      [...replaceRecipe("r.nguyenBac", { second: "know.fireBanner2" }), recipe("r.fb2", "know.fireBanner", "elt.kim", "know.fireBanner2")],
-      withNodes([...SLICE_PACK.nodes, { id: "know.fireBanner2", kind: "knowledge", nameVi: "Hỏa kỳ 2" }]),
+      [...replaceRecipe("r.nguyenBac", { second: "know.reedBanner2" }), recipe("r.rb2", "know.reedBanner", "elt.kim", "know.reedBanner2")],
+      withNodes([...SLICE_PACK.nodes, { id: "know.reedBanner2", kind: "knowledge", nameVi: "Cờ lau 2" }]),
     );
     assert.ok(codes(long, "error").includes("tierCombines"));
+  });
+
+  it("roleMismatch: công thức cuối không có node vai trò, hoặc vai trò sai nghề/hệ roster", () => {
+    const noRole = withRecipes(replaceRecipe("r.leHoan", { first: "know.warManual" }));
+    assert.ok(codes(noRole, "error").includes("roleMismatch"));
+    const wrong = withNodes(SLICE_PACK.nodes.map((n) => (n.id === "role.quanSuLoi" ? { ...n, role: { profession: "quanSu" as const, element: "thuy" as const } } : n)));
+    assert.ok(codes(wrong, "error").includes("roleMismatch"));
+    const specialAsNormal = withNodes(SLICE_PACK.nodes.map((n) => (n.id === "role.hybrid" ? { ...n, role: { profession: "tuongSi" as const, element: "kim" as const } } : n)));
+    assert.ok(codes(specialAsNormal, "error").includes("roleMismatch"));
+  });
+
+  it("missingAnchor, missingClue, clueSpoils", () => {
+    const strip = withNodes(SLICE_PACK.nodes.map((n) => (n.id === "hero.leHoan" ? { ...n, anchors: [], clue: undefined } : n)));
+    assert.ok(codes(strip, "error").includes("missingAnchor"));
+    assert.ok(codes(strip, "error").includes("missingClue"));
+    const spoil = withNodes(SLICE_PACK.nodes.map((n) => (n.id === "hero.leHoan" ? { ...n, clue: { kind: "text" as const, text: "Đây là LE HOAN đấy." } } : n)));
+    assert.ok(codes(spoil, "error").includes("clueSpoils"));
+  });
+
+  it("lời dẫn Gói 1 không chứa tên tướng nào trong gói", () => {
+    const fold = (t: string) => t.normalize("NFD").replace(/\p{M}/gu, "").replace(/đ/gi, "d").toLowerCase();
+    const heroes = PACK_1.nodes.filter((n) => n.kind === "character");
+    for (const h of heroes) for (const other of heroes) assert.doesNotMatch(fold(h.clue!.text), new RegExp(fold(other.nameVi)), `${h.id} lộ ${other.nameVi}`);
   });
 
   it("missingHistorySource: tướng lịch sử không có mã nguồn hợp lệ", () => {
