@@ -3,7 +3,7 @@
 // Chỉ dùng thuộc tính có thật trong game (tên, cấp, hệ, nghề, đang ra trận); không tự đặt lực chiến hay phẩm chất.
 
 import {
-  ALL_COMPANIONS,
+  PLAYABLE_COMPANIONS,
   companionById,
   MAIN_ID,
   ownsCompanion,
@@ -32,7 +32,7 @@ export const nameOf = (id: string) => (id === MAIN_ID ? MAIN_NAME : (companionBy
 
 /** Id các nhân vật đã có: chủ tướng trước, rồi nhân vật kèm theo thứ tự roster. */
 export function ownedIds(profile: Profile): string[] {
-  return [MAIN_ID, ...ALL_COMPANIONS.filter((c) => ownsCompanion(profile, c.id)).map((c) => c.id)];
+  return [MAIN_ID, ...PLAYABLE_COMPANIONS.filter((c) => ownsCompanion(profile, c.id)).map((c) => c.id)];
 }
 
 export function rosterEntry(profile: Profile, id: string, key = id): RosterEntry {

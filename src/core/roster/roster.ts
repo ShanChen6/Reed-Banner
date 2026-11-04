@@ -201,9 +201,10 @@ export const ALL_COMPANIONS: readonly FighterConfig[] = [
 ];
 
 /**
- * Nhân vật đặc biệt dung hợp tám nghề/bảy hệ (docs/03-characters/dinh-ngoc.md, vu-phong.md; DRAFT, số liệu là điểm xuất
- * phát chưa mô phỏng). Loadout cố định 6 chủ động + 4 nội tại; `special` bỏ nội tại nghề mặc định. Chưa nằm trong
- * `ALL_COMPANIONS` nên chưa có trong shop, Chiến dịch, Tháp hay Sinh tồn; mở ở chế độ nào là quyết định sản phẩm sau.
+ * Nhân vật đặc biệt dung hợp tám nghề/bảy hệ (docs/03-characters/dinh-ngoc.md, vu-phong.md; số liệu là điểm xuất phát
+ * chưa mô phỏng). Loadout cố định 6 chủ động + 4 nội tại; `special` bỏ nội tại nghề mặc định. Mở bằng chuỗi nhiệm vụ
+ * phụ (progress/specialQuests.ts), gia nhập cấp 1. Không nằm trong `ALL_COMPANIONS` để không bị bán ở cửa hàng hay
+ * làm đối thủ ngẫu nhiên ở Tháp, Sinh tồn, Trận Đồ; đã có thì ra trận như mọi nhân vật kèm (`PLAYABLE_COMPANIONS`).
  */
 export const SPECIAL_COMPANIONS: readonly FighterConfig[] = [
   {
@@ -213,7 +214,7 @@ export const SPECIAL_COMPANIONS: readonly FighterConfig[] = [
     skills: characterSkills("tuongSi", "kim", "dinhNgoc").map((s) => s.id),
   },
   {
-    id: "vuPhong", name: "Vũ Phong", special: true, element: "phong", profession: "quanSu",
+    id: "vuPhong", name: "Trần Vũ Phong", special: true, element: "phong", profession: "quanSu",
     maxHp: 480, atk: 52, def: 9,
     chasePassives: ["vp_truongThietHoiDap", "vp_phiDiepTheoGio", "vp_hoaAnVanSau", "vp_loiVanTranPhap"],
     skills: characterSkills("quanSu", "phong", "vuPhong").map((s) => s.id),
@@ -224,8 +225,11 @@ export function specialById(id: string): FighterConfig | undefined {
   return SPECIAL_COMPANIONS.find((c) => c.id === id);
 }
 
+/** Mọi nhân vật kèm người chơi có thể sở hữu và mang ra trận: `ALL_COMPANIONS` cộng hai nhân vật đặc biệt. */
+export const PLAYABLE_COMPANIONS: readonly FighterConfig[] = [...ALL_COMPANIONS, ...SPECIAL_COMPANIONS];
+
 export function companionById(id: string): FighterConfig | undefined {
-  return [...ALL_COMPANIONS, ...EXPANSION_COMPANIONS].find((c) => c.id === id);
+  return [...PLAYABLE_COMPANIONS, ...EXPANSION_COMPANIONS].find((c) => c.id === id);
 }
 
 export function shopPrice(id: string): number | undefined {

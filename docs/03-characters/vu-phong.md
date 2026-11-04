@@ -1,7 +1,7 @@
 # Trần Vũ Phong — Vân Du Tử
 
 > Cập nhật: 03/11/2026
-> Trạng thái: **APPROVED** — Shan chốt 03/11/2026: Trần Vũ Phong là nhân vật đặc biệt chính thức, họ Trần. Số liệu kỹ năng vẫn là điểm xuất phát chờ cân bằng; code còn tên “Vũ Phong” và chưa mở trong game.
+> Trạng thái: **APPROVED** — Shan chốt 03/11/2026: Trần Vũ Phong là nhân vật đặc biệt chính thức, họ Trần. Số liệu kỹ năng vẫn là điểm xuất phát chờ cân bằng. Tên trong game là “Trần Vũ Phong” (id `vuPhong`); đã mở bằng chuỗi nhiệm vụ phụ (04/11/2026, xem [Triển khai trong core](#triển-khai-trong-core-02112026)).
 >
 > Bản ghi trước (02/11/2026): **DRAFT** — có hình tượng, sáu ảnh khung và rig hình động (chỉ có trên trang xem thử) và bộ kỹ năng đề xuất: nhân vật đặc biệt dung hợp tám nghề/bảy hệ qua 6 chủ động + 4 nội tại, cùng khuôn với Đinh Ngọc nhưng đảo vai. Mọi số liệu là điểm xuất phát chưa mô phỏng; kỹ năng và nội tại đã chạy được trong core (chưa mở ở chế độ nào, xem [Triển khai trong core](#triển-khai-trong-core-02112026)); chưa Shan duyệt.
 
@@ -223,7 +223,7 @@ Shan chốt 03/11/2026: chuỗi nhiệm vụ phụ 3 bước, hiện sau khi qua
 
 ## Triển khai trong core (02/11/2026)
 
-Kỹ năng đã chạy được trong engine chiến đấu (`src/core`), kiểm bằng `tests/core/battle/special-characters.test.ts`. **Chưa mở ở chế độ nào**: nhân vật nằm ở `SPECIAL_COMPANIONS` ([roster.ts](../../src/core/roster/roster.ts)), không thuộc `ALL_COMPANIONS`, nên chưa có trong shop, Thường, Chiến dịch, Tháp, Sinh tồn hay Practice; mở ở đâu và cách mở khóa là quyết định sản phẩm sau. Trang `/demo` cũng chưa chọn được hai nhân vật này.
+Kỹ năng đã chạy được trong engine chiến đấu (`src/core`), kiểm bằng `tests/core/battle/special-characters.test.ts`. **Đã mở trong game (04/11/2026, Shan chọn chuỗi nhiệm vụ phụ 3 bước):** nhân vật nằm ở `SPECIAL_COMPANIONS` ([roster.ts](../../src/core/roster/roster.ts)), thuộc `PLAYABLE_COMPANIONS` nhưng không thuộc `ALL_COMPANIONS`, nên không bán ở cửa hàng và không làm đối thủ ngẫu nhiên ở Tháp, Sinh tồn hay Trận Đồ. Chuỗi nhiệm vụ ở [specialQuests.ts](../../src/core/progress/specialQuests.ts), hồ sơ có `specialQuests`; server đếm bước 1 ở mọi trận có thưởng (trừ Nhật Lệnh), bước 2 ở `settleTrial`, trận cuối là `specialQuest` khi tạo trận (3vs3 Khó, nhân vật + hai người đi cùng, cùng cấp nhân vật chính). Thắng thì gia nhập cấp 1 đúng một lần, ra trận như mọi nhân vật kèm. Màn Nhiệm vụ có thẻ "Nhiệm vụ phụ: nhân vật đặc biệt". Bước 2 cần Tháp Thí Luyện bật (`TRIAL_ENABLED`). Kiểm bằng `tests/server/specialQuests.test.ts`.
 
 | Hạng mục | Cách làm |
 |---|---|
