@@ -1,4 +1,4 @@
-// GET /api/expedition: ba sa bàn, bậc đã mở, sao, lượt xuất quân còn trong ngày, lượt viễn chinh đang đi và đối thủ
+// GET /api/expedition: sáu sa bàn, bậc đã mở, sao, lượt xuất quân còn trong ngày, lượt viễn chinh đang đi và đối thủ
 // của các ô còn địch. Viễn Chinh có bảng xếp hạng nên khách không xem (401), như Quần Hùng.
 import { NextResponse, type NextRequest } from "next/server";
 import { expeditionOverview } from "@/server/expedition";
