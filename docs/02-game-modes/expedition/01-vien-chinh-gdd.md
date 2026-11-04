@@ -234,7 +234,7 @@ lượt viễn chinh là 5–11 trận. Thượng Du III để khó có chủ ý
 ## 7. Ngoài phạm vi bản đầu
 
 - Mùa cho bảng xếp hạng và thưởng theo hạng.
-- Sự kiện ngẫu nhiên trên đường, địch phản công ô đã chiếm.
+- Sự kiện ngẫu nhiên trên đường, địch phản công ô đã chiếm. Hướng mở rộng tiếp theo (nhiệm vụ, lệnh Trinh sát, sa bàn đổi theo kết quả) ở [Đề xuất sa bàn và nhiệm vụ](02-map-va-nhiem-vu-proposal.md) (DRAFT; Shan đã chốt sương mù và đường bị phá ở mục 11, còn câu hỏi mục 12).
 - Tranh thumbnail Home riêng (`public/art/home/vien-chinh.webp`); banner tạm dùng tranh Bình Loạn.
 - Thêm sa bàn: chỉ cần thêm một mục trong `EXPEDITION_MAPS`; test kiểm đồ thị tự chạy cho mọi sa bàn.
 
