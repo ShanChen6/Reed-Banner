@@ -326,7 +326,7 @@ Làm một chiến dịch dọc hoàn chỉnh trên **Cửa Biển** trước:
 - **Chưa chốt:** tài nguyên mới (câu 12.3) và nhiệm vụ phụ mở bậc hay chỉ đổi thưởng/kết thúc (câu 12.4). Claude đề
   xuất cho bản đầu: không thêm tài nguyên ngoài máu, lương và cờ trạng thái nhiệm vụ; nhiệm vụ phụ chỉ đổi thưởng và
   kết thúc, không khóa bậc. Chờ Shan duyệt.
-- **Offline hay online có bảng xếp hạng:** đang hỏi Shan (04/11/2026).
+- **Chơi offline, không bảng xếp hạng**, khách chơi được (Shan 04/11/2026). Đã áp dụng cho Viễn Chinh hiện tại.
 
 ## 12. Câu hỏi cần chốt trước khi thay GDD
 

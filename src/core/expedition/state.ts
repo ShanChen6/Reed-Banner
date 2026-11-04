@@ -90,7 +90,7 @@ export interface ExpeditionState {
   readonly cleared: Readonly<Partial<Record<ExpeditionMapId, number>>>;
   /** Sao tốt nhất theo `${map}:${tier}`: số 0–3. */
   readonly stars: Readonly<Record<string, number>>;
-  /** Số ngày ít nhất của một lượt thắng theo `${map}:${tier}` (cho bảng xếp hạng). */
+  /** Số ngày ít nhất của một lượt thắng theo `${map}:${tier}`. */
   readonly bestDays?: Readonly<Record<string, number>>;
   /** Số lượt đã xuất quân trong ngày (giờ Việt Nam) để giới hạn mỗi ngày. */
   readonly daily?: { readonly day: string; readonly runs: number };
@@ -197,17 +197,4 @@ export function parseExpedition(raw: unknown): ExpeditionState | null {
     ...(daily ? { daily } : {}),
     run: parseRun(raw.run),
   };
-}
-
-// ——— Bảng xếp hạng ———
-
-/** Mỗi sao đáng giá hơn mọi chênh lệch tổng ngày. */
-export const EXPEDITION_STAR_WEIGHT = 1000;
-
-/** Điểm bảng Viễn Chinh: tổng sao tốt nhất của mọi sa bàn × bậc, rồi tổng ngày ít nhất của các bậc đã thắng. */
-export function expeditionBoardScore(state: ExpeditionState): number {
-  const stars = Object.values(state.stars).reduce((a, b) => a + b, 0);
-  if (stars <= 0) return 0;
-  const days = Object.values(state.bestDays ?? {}).reduce((a, b) => a + b, 0);
-  return stars * EXPEDITION_STAR_WEIGHT - Math.min(EXPEDITION_STAR_WEIGHT - 1, days);
 }

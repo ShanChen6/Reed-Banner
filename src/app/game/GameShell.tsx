@@ -147,13 +147,13 @@ function SceneView({
       if (!towerFeatures.tamTuongKy) return <DisabledTowerMode name={SCENE_TITLE.TAM_TUONG_KY} />;
       return account ? <TamTuongKyScreen ranked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate name={SCENE_TITLE.TAM_TUONG_KY} reason="Chế độ này cần tài khoản đã đăng nhập vì mỗi lượt chơi tốn một phiếu, và tiến trình Tướng Lục lưu theo tài khoản." />;
     case "EXPEDITION":
-      return !towerFeatures.expedition ? <DisabledTowerMode name={SCENE_TITLE.EXPEDITION} /> : account ? <ExpeditionScreen /> : <LoginGate name={SCENE_TITLE.EXPEDITION} />;
+      return !towerFeatures.expedition ? <DisabledTowerMode name={SCENE_TITLE.EXPEDITION} /> : <ExpeditionScreen />;
     case "QUESTS":
       return <QuestsScreen tamTuongKy={towerFeatures.tamTuongKy === true} tamTuongKyPack2={towerFeatures.tamTuongKyPack2 === true} tamTuongKyPack3={towerFeatures.tamTuongKyPack3 === true} />;
     case "SHOP":
       return <ShopScreen />;
     case "LEADERBOARD":
-      return account ? <LeaderboardScreen destinyEnabled={towerFeatures.destiny} tamTuongKyRanked={towerFeatures.tamTuongKyRanked === true} expeditionEnabled={towerFeatures.expedition === true} /> : <LoginGate name={SCENE_TITLE.LEADERBOARD} />;
+      return account ? <LeaderboardScreen destinyEnabled={towerFeatures.destiny} tamTuongKyRanked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate name={SCENE_TITLE.LEADERBOARD} />;
     case "PROFILE":
       return <ProfileScreen playerName={account?.name ?? null} />;
     case "LOGIN":

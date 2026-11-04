@@ -131,7 +131,7 @@ export interface Deps {
 }
 
 /** Trận thuộc chế độ online có bảng xếp hạng và thưởng. */
-const rankedMatch = (m: Match): boolean => !!(m.survival || m.daily || m.arena || m.destiny || m.expedition);
+const rankedMatch = (m: Match): boolean => !!(m.survival || m.daily || m.arena || m.destiny);
 
 /** Khách bị từ chối khi `deps.isSignedIn` có mặt và trả false. */
 async function guestBlocked(deps: Pick<Deps, "isSignedIn">, ownerId: string): Promise<boolean> {
