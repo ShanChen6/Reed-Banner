@@ -274,7 +274,7 @@ export const PACK_1: Pack = {
 };
 
 // ——— Gói 2 (Shan chọn 04/11/2026): 8 sứ quân còn lại + Đinh Bộ Lĩnh (bậc đặc biệt, A-21). ———
-// Dùng chung sổ với Gói 1 (gộp bằng `mergePacks`), bật bằng cờ TAM_TUONG_KY_PACK2_ENABLED. Cùng cách dựng: vai trò +
+// Dùng chung sổ với Gói 1 (gộp bằng `mergePacks`), bật cùng cờ chế độ khi đã duyệt (`published`). Cùng cách dựng: vai trò +
 // dấu danh tính (đất phong, tên chiêu riêng), không dựa vào art. Báo cáo: docs/02-game-modes/future/21-tam-tuong-ky-pack-2.md.
 
 const PACK_2_NODES: readonly CatalogNode[] = [
@@ -352,7 +352,7 @@ export const PACK_2: Pack = {
   id: "pack-2",
   nameVi: "Gói 2: Thập nhị sứ quân",
   contentVersion: 1,
-  // Shan duyệt công thức, lời dẫn và vàng thành tựu ngày 04/11/2026. Người chơi thấy Gói 2 khi cờ TAM_TUONG_KY_PACK2_ENABLED bật.
+  // Shan duyệt công thức, lời dẫn và vàng thành tựu ngày 04/11/2026. Người chơi thấy Gói 2 khi cờ TAM_TUONG_KY_ENABLED bật.
   status: "published",
   nodes: PACK_2_NODES,
   recipes: PACK_2_RECIPES,
@@ -372,7 +372,7 @@ export const PACK_2: Pack = {
 
 // ——— Gói 3 (Shan, 04/11/2026: “đưa mọi tướng vào Tầm Tướng Ký”): 56 tướng thường, 8 nghề × 7 hệ, mỗi tổ hợp một người. ———
 // Bậc thường, đúng 7 lần ghép: công thức cuối = vai trò sơ học (nghề × hệ, 3 lần ghép) + tuyệt chiêu riêng (3 lần ghép).
-// Không dựa vào art. Cần Gói 2 (dùng Lúa). Bật bằng cờ TAM_TUONG_KY_PACK3_ENABLED.
+// Không dựa vào art. Cần Gói 2 (dùng Lúa). Ra mắt khi Shan duyệt và đổi `status` sang `published` (cùng cờ TAM_TUONG_KY_ENABLED).
 // Báo cáo: docs/02-game-modes/future/22-tam-tuong-ky-pack-3.md.
 
 const PROFESSION_VI: Readonly<Record<Profession, string>> = {

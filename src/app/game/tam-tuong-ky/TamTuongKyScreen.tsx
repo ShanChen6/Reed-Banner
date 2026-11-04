@@ -56,7 +56,7 @@ type Tab = "library" | "ledger";
 
 type Mode = "normal" | "ranked";
 
-/** Màn chế độ: tab Thường / Hạng tuần (Hạng chỉ có khi cờ `TAM_TUONG_KY_RANKED_ENABLED` bật). */
+/** Màn chế độ: tab Thường / Hạng tuần (Hạng bật cùng cờ `TAM_TUONG_KY_ENABLED`). */
 export default function TamTuongKyScreen({
   initial = null,
   ranked = false,

@@ -141,7 +141,7 @@ Shan duyệt toàn bộ ngày 03/11/2026; riêng P-5 Shan đổi thành số c�
 | P-25 | Nhãn: màn chơi luôn có “Công thức biểu trưng của trò chơi, không phải diễn giải sử học”; tướng lịch sử có nhãn và nguồn theo sổ nguồn |
 | P-26 | ID đã phát hành không đổi nghĩa, không xóa; sửa phải tăng `contentVersion` kèm migration và test |
 | P-27 | Đinh Bộ Lĩnh vào Tầm Tướng Ký ở **bậc đặc biệt** (A-21), hiện biểu tượng dung hợp thay vì một hệ/nghề, không thuộc bộ thành tựu theo hệ/nghề. Vì gói đầu đã chốt 12 tướng, đề xuất đưa vào **gói 2**, kèm thành tựu bộ đặc biệt mới (Đinh Bộ Lĩnh + Đinh Ngọc + Trần Vũ Phong) |
-| P-28 | Cờ `TAM_TUONG_KY_ENABLED` và `TAM_TUONG_KY_RANKED_ENABLED` mặc định tắt |
+| P-28 | Cờ `TAM_TUONG_KY_ENABLED` và `TAM_TUONG_KY_RANKED_ENABLED` mặc định tắt. Sửa 04/11/2026 (Shan): gộp còn một biến `TAM_TUONG_KY_ENABLED` cho chế độ, Hạng và các gói đã duyệt |
 | P-29 | Code: `src/core/tam-tuong-ky/` (không import `battle` ngoài `ELEMENTS` và nhãn nghề), `src/app/game/tam-tuong-ky/`, `src/server/tamTuongKy.ts` |
 | P-30 | Slice LT-01: 3 tướng trong gói đầu (Nguyễn Bặc, Lê Hoàn, Đinh Ngọc) để thử cả hai bậc. Ba cây tướng thường ở 09 chỉ làm dữ liệu test |
 
