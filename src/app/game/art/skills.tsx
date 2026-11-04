@@ -2,7 +2,7 @@
 // (nhân vật kèm), hình giữa nói kỹ năng làm gì, dấu nhỏ ở góc nói thêm tác dụng phụ (tăng, giảm, cả đội…).
 // Tuyệt chiêu ô 4 có vòng tia vàng như ô đặc biệt bản mạnh.
 
-import type { Element, GameProfession, SkillDef } from "@/core";
+import type { Element, GameProfession, Profession, SkillDef } from "@/core";
 import { ELEMENT_COLOR } from "./icons";
 import { INK, starPoints } from "./tiles";
 
@@ -517,8 +517,35 @@ const SKILL_ART = new Set([
   "phongQuyenTanVan", "thanhPhongTuKhi", "phongNhanLietKhong", "cuongPhongQuetTran", "baoTapCanKhon", "phongHanhVanLy",
 ]);
 
+/** Tuyệt chiêu ô 4 của Đinh Bộ Lĩnh (`dbl_<nghề>_<hệ>`) dùng lại ảnh tuyệt chiêu hệ cũ của chính ông. */
+const DBL_ULTIMATE_ART: Readonly<Record<Element, string>> = {
+  kim: "kimAnPhaThien",
+  moc: "coThuTranThien",
+  thuy: "thuyKiepVanTrung",
+  hoa: "lietDiemPhanThanh",
+  tho: "thaiSonApDinh",
+  loi: "cuuTieuLoiPhat",
+  phong: "baoTapCanKhon",
+};
+
+/**
+ * Ảnh vẽ tay cho một kỹ năng (mã file trong public/art/skills/) và có cần huy hiệu nghề ở góc không.
+ * - Mã gốc trong SKILL_ART: ảnh của chính nó.
+ * - `element_<mã>` (ô 2/6 hệ của mọi nhân vật chơi được): bỏ tiền tố, dùng ảnh hệ cũ.
+ * - `dbl_<nghề>_<hệ>`: ảnh tuyệt chiêu hệ cũ + huy hiệu nghề để phân biệt 8 nghề (mỗi trận chỉ một nghề).
+ */
+export function skillArt(def: Pick<SkillDef, "id" | "element" | "profession">): { file: string; badge?: Profession } | undefined {
+  if (SKILL_ART.has(def.id)) return { file: def.id };
+  if (def.id.startsWith("element_")) {
+    const file = def.id.slice("element_".length);
+    return SKILL_ART.has(file) ? { file } : undefined;
+  }
+  if (def.id.startsWith("dbl_") && def.element && def.profession) return { file: DBL_ULTIMATE_ART[def.element], badge: def.profession };
+  return undefined;
+}
+
 /** Ô kỹ năng có ảnh vẽ tay: nền sơn mài thẫm viền màu hệ, tuyệt chiêu viền vàng có hào quang. */
-function SkillArtIcon({ def, className }: { def: SkillDef; className: string }) {
+function SkillArtIcon({ def, art, className }: { def: SkillDef; art: { file: string; badge?: Profession }; className: string }) {
   const edge = def.element ? ELEMENT_COLOR[def.element] : "#b98a3e";
   const ultimate = def.ultimate === true;
   return (
@@ -526,13 +553,20 @@ function SkillArtIcon({ def, className }: { def: SkillDef; className: string }) 
       <rect x={1.5} y={1.5} width={45} height={45} rx={9} fill="#17120d" stroke={ultimate ? "#ffe08a" : edge} strokeWidth={2.4} />
       <rect x={4} y={4} width={40} height={40} rx={7} fill={edge} opacity={0.18} />
       {ultimate && <polygon points={starPoints(24, 24, 22, 17, 16)} fill="#ffe08a" opacity={0.3} />}
-      <image href={`/art/skills/${def.id}.webp`} x={4} y={4} width={40} height={40} />
+      <image href={`/art/skills/${art.file}.webp`} x={4} y={4} width={40} height={40} />
+      {art.badge && (
+        <g>
+          <circle cx={38} cy={38} r={8} fill="#17120d" stroke="#ffe08a" strokeWidth={1.2} />
+          <image href={`/art/professions/${art.badge}.webp`} x={31.5} y={31.5} width={13} height={13} />
+        </g>
+      )}
     </svg>
   );
 }
 
 export function SkillIcon({ def, className = "size-8" }: { def: SkillDef; className?: string }) {
-  if (SKILL_ART.has(def.id)) return <SkillArtIcon def={def} className={className} />;
+  const art = skillArt(def);
+  if (art) return <SkillArtIcon def={def} art={art} className={className} />;
   const spec = SKILL_ICON[def.id] ?? (def.id.startsWith("role_") ? SKILL_ICON[def.id.slice(5)] : undefined) ?? fallbackSpec(def);
   const bg = def.element ? (SKILL_ELEMENT_BG[def.element] ?? ELEMENT_COLOR[def.element]) : def.profession ? PROFESSION_COLOR[def.profession] : "#5a4a3a";
   const ultimate = def.ultimate === true;

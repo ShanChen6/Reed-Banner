@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PROFESSIONS, professionSkills, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
+import { dinhBoLinhUltimate, ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PROFESSIONS, professionSkills, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, SPECIAL_NAME, TIER_COLOR_NAME, TILE_NAME } from "@/app/game/battle/labels";
 import { EmptySlotIcon, GearIcon, SetEmblem } from "@/app/game/art/gear";
 import { ElementIcon, FoodIcon, LeaderFlag, ProfessionIcon, ShieldIcon } from "@/app/game/art/icons";
@@ -127,6 +127,21 @@ export default function ArtPage() {
                 ))}
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="font-semibold">Tuyệt chiêu ô 4 Đinh Bộ Lĩnh theo nghề (hệ Kim; huy hiệu nghề ở góc)</h2>
+          <div className="flex flex-wrap items-start gap-3">
+            {PROFESSIONS.map((p) => {
+              const d = dinhBoLinhUltimate(p, "kim");
+              return (
+                <figure key={d.id} className="flex w-20 flex-col items-center gap-1">
+                  <SkillIcon def={d} className="size-12" />
+                  <figcaption className="text-center text-[11px] leading-tight opacity-80">{d.name}</figcaption>
+                </figure>
+              );
+            })}
           </div>
         </section>
 
