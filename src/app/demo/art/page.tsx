@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ELEMENTS, GEAR_SLOTS, mainCharacter, characterSkills, PROFESSIONS, professionSkills, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
+import { ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PROFESSIONS, professionSkills, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, SPECIAL_NAME, TIER_COLOR_NAME, TILE_NAME } from "@/app/game/battle/labels";
-import { GearIcon } from "@/app/game/art/gear";
+import { GearIcon, SetEmblem } from "@/app/game/art/gear";
 import { ElementIcon, FoodIcon, LeaderFlag, ProfessionIcon, ShieldIcon } from "@/app/game/art/icons";
 import { Portrait } from "@/app/game/art/portraits";
 import { SkillIcon } from "@/app/game/art/skills";
@@ -168,6 +168,18 @@ export default function ArtPage() {
                   <GearIcon key={s} slot={s} element="moc" tier={t} set="coLau" className="mx-auto size-12" />
                 ))}
               </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="font-semibold">Huy hiệu bộ</h2>
+          <div className="flex flex-wrap gap-4 text-xs">
+            {GEAR_SETS.map((g) => (
+              <figure key={g.id} className="flex flex-col items-center gap-1">
+                <SetEmblem set={g.id} className="size-16" />
+                <figcaption className="opacity-80">Bộ {g.name}</figcaption>
+              </figure>
             ))}
           </div>
         </section>

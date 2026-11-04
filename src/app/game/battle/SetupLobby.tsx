@@ -22,7 +22,7 @@ import {
   type Tier,
 } from "@/core";
 import { ELEMENT_TRAIT, PROFESSION_PERK } from "../../home/data";
-import { GearIcon } from "../art/gear";
+import { GearIcon, SetEmblem } from "../art/gear";
 import { DongSonBand, ELEMENT_COLOR, ElementIcon, LeaderFlag, PROFESSION_COLOR, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import SkillDetails from "./SkillDetails";
@@ -266,8 +266,9 @@ export default function SetupLobby({
                       role="radio"
                       aria-checked={gear.set === id}
                       onClick={() => onGear({ ...gear, set: id })}
-                      className={chip(gear.set === id)}
+                      className={`${chip(gear.set === id)} inline-flex items-center gap-1`}
                     >
+                      {id && <SetEmblem set={id} className="size-4" />}
                       {id ? `Bộ ${getGearSet(id)!.name}` : "Không bộ"}
                     </button>
                   ))}

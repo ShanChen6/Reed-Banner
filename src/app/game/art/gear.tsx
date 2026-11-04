@@ -198,9 +198,9 @@ export function tierFrameSrc(tier: Tier): string {
 
 /**
  * Ảnh vẽ tay theo bộ ở public/art/gear/<bộ>/<ô>.webp, vũ khí là vuKhi-<nghề>.webp (192 px).
- * Bộ chưa có ảnh (Hoa Lư, Đồng Cổ) vẫn vẽ SVG. Xem docs/06-art/prompts/trang-bi.md.
+ * Bộ không có trong bảng (hoặc món không bộ) vẫn vẽ SVG; `weapons` = đã có ảnh vũ khí theo nghề.
+ * Xem docs/06-art/prompts/trang-bi.md.
  */
-/** Bộ có ảnh vẽ tay; `weapons` = đã có ảnh vũ khí theo nghề (chưa có thì vũ khí vẫn vẽ SVG). */
 const SET_ART: Readonly<Record<string, { weapons: boolean }>> = {
   coLau: { weapons: true },
   hoaLu: { weapons: true },
@@ -212,6 +212,22 @@ export function gearArtSrc(slot: GearSlot, set: string | undefined, profession?:
   if (art === undefined) return undefined;
   if (slot === "vuKhi" && !art.weapons) return undefined;
   return slot === "vuKhi" ? `/art/gear/${set}/vuKhi-${profession ?? "tuongSi"}.webp` : `/art/gear/${set}/${slot}.webp`;
+}
+
+/** Huy hiệu tròn của bộ ở public/art/gear/sets/<bộ>.webp (128 px). */
+export function setEmblemSrc(set: string): string | undefined {
+  return set in SET_ART ? `/art/gear/sets/${set}.webp` : undefined;
+}
+
+/** Huy hiệu bộ đứng riêng, đặt cạnh tên bộ (thưởng bộ, nút chọn bộ). Bộ chưa có huy hiệu thì không vẽ gì. */
+export function SetEmblem({ set, className }: { set: string; className?: string }) {
+  const src = setEmblemSrc(set);
+  if (!src) return null;
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden>
+      <image href={src} x={0} y={0} width={48} height={48} preserveAspectRatio="xMidYMid meet" />
+    </svg>
+  );
 }
 
 function TierFrame({ tier }: { tier: Tier }) {
