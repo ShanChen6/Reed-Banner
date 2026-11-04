@@ -5,7 +5,9 @@
 
 import { seasonKey, vnDay } from "@/core";
 import {
-  ACTIVE_PACK,
+  KNOWN_NODE_IDS,
+  KNOWN_RECIPE_IDS,
+  activePack,
   activeSession,
   buildCatalog,
   combineInSession,
@@ -37,7 +39,10 @@ import {
 import { loadProfile, updateProfile, type ProfileStore } from "./profiles";
 import { recordSeason, type SeasonStore } from "./seasons";
 
-const catalog = buildCatalog(ACTIVE_PACK);
+/** Hai sổ dựng sẵn: Gói 1, và Gói 1 + Gói 2 (cờ TAM_TUONG_KY_PACK2_ENABLED). */
+const CATALOG_1 = buildCatalog(activePack(false));
+const CATALOG_1_2 = buildCatalog(activePack(true));
+const catalogOf = (deps: { readonly pack2?: boolean }) => (deps.pack2 ? CATALOG_1_2 : CATALOG_1);
 
 export interface TamTuongKyDeps {
   readonly profiles: ProfileStore;
@@ -46,6 +51,8 @@ export interface TamTuongKyDeps {
   readonly isSignedIn: (ownerId: string) => Promise<boolean>;
   /** Chế độ Hạng tuần (`TAM_TUONG_KY_RANKED_ENABLED`). */
   readonly rankedEnabled?: boolean;
+  /** Gói 2 (`TAM_TUONG_KY_PACK2_ENABLED`): sổ gộp Gói 1 + Gói 2. */
+  readonly pack2?: boolean;
   readonly seasons?: SeasonStore;
 }
 
@@ -85,7 +92,9 @@ export function ttkHttpStatus(error: TtkServiceError): number {
   }
 }
 
-function viewOf(account: TtkAccount, now: number): TtkView {
+function viewOf(deps: TamTuongKyDeps, account: TtkAccount): TtkView {
+  const catalog = catalogOf(deps);
+  const now = deps.now;
   const session = activeSession(account, now);
   return {
     packId: catalog.pack.id,
@@ -100,7 +109,11 @@ function viewOf(account: TtkAccount, now: number): TtkView {
 }
 
 /** Tài khoản Tầm Tướng Ký trong hồ sơ, khớp catalog đang chạy; chưa có thì tạo mới (3 phiếu). */
-const accountOf = (p: { readonly tamTuongKy?: TtkAccount }) => normalizeTtkAccount(p.tamTuongKy ?? newTtkAccount(catalog), catalog);
+const accountOf = (deps: TamTuongKyDeps, p: { readonly tamTuongKy?: TtkAccount }) => {
+  const catalog = catalogOf(deps);
+  // Giữ mọi ID của mọi gói đã viết: tắt Gói 2 không làm mất khám phá Gói 2 trong sổ.
+  return normalizeTtkAccount(p.tamTuongKy ?? newTtkAccount(catalog), catalog, { nodes: KNOWN_NODE_IDS, recipes: KNOWN_RECIPE_IDS });
+};
 
 async function gate(deps: TamTuongKyDeps, ownerId: string | null): Promise<TtkServiceError | null> {
   if (!deps.enabled) return "featureDisabled";
@@ -113,7 +126,7 @@ export async function getTamTuongKy(deps: TamTuongKyDeps, ownerId: string | null
   const blocked = await gate(deps, ownerId);
   if (blocked) return { ok: false, error: blocked };
   const { profile } = await loadProfile(deps.profiles, ownerId!);
-  return { ok: true, view: viewOf(accountOf(profile), deps.now) };
+  return { ok: true, view: viewOf(deps, accountOf(deps, profile)) };
 }
 
 async function act(deps: TamTuongKyDeps, ownerId: string | null, step: (account: TtkAccount) => TtkResult): Promise<TtkServiceResult> {
@@ -125,7 +138,7 @@ async function act(deps: TamTuongKyDeps, ownerId: string | null, step: (account:
     deps.profiles,
     ownerId!,
     (p) => {
-      const account = accountOf(p);
+      const account = accountOf(deps, p);
       lastAccount = account;
       const out = step(account);
       if (!out.ok) return out;
@@ -134,18 +147,18 @@ async function act(deps: TamTuongKyDeps, ownerId: string | null, step: (account:
     },
     deps.now,
   );
-  if (!r.ok) return { ok: false, error: r.error, view: lastAccount ? viewOf(lastAccount, deps.now) : undefined };
-  return { ok: true, view: viewOf(r.stored.profile.tamTuongKy!, deps.now), response };
+  if (!r.ok) return { ok: false, error: r.error, view: lastAccount ? viewOf(deps, lastAccount) : undefined };
+  return { ok: true, view: viewOf(deps, r.stored.profile.tamTuongKy!), response };
 }
 
 export const openTamTuongKySession = (deps: TamTuongKyDeps, ownerId: string | null, requestId: unknown) =>
   act(deps, ownerId, (a) => openSession(a, requestId, deps.now));
 
 export const combineTamTuongKy = (deps: TamTuongKyDeps, ownerId: string | null, requestId: unknown, first: unknown, second: unknown) =>
-  act(deps, ownerId, (a) => combineInSession(catalog, a, requestId, first, second, deps.now));
+  act(deps, ownerId, (a) => combineInSession(catalogOf(deps), a, requestId, first, second, deps.now));
 
 export const hintTamTuongKy = (deps: TamTuongKyDeps, ownerId: string | null, requestId: unknown, level: unknown) =>
-  act(deps, ownerId, (a) => spendHint(catalog, a, requestId, level, vnDay(deps.now)));
+  act(deps, ownerId, (a) => spendHint(catalogOf(deps), a, requestId, level, vnDay(deps.now)));
 
 // ——— Chế độ Hạng tuần (LT-06) ———
 
@@ -159,6 +172,8 @@ export interface TtkFeaturedSlot {
 }
 
 export interface TtkRankedView {
+  /** Sổ đang chạy (`pack-1` hoặc `pack-1-2`): client chọn catalog theo mã này. */
+  readonly packId: string;
   readonly week: string;
   readonly units: number;
   readonly stock: Readonly<Record<string, number>>;
@@ -176,6 +191,7 @@ export type TtkRankedResult =
   | { readonly ok: false; readonly error: TtkServiceError; readonly view?: TtkRankedView };
 
 async function rankedView(deps: TamTuongKyDeps, account: TtkAccount, gold: number, ownerId: string): Promise<TtkRankedView> {
+  const catalog = catalogOf(deps);
   const week = seasonKey(deps.now);
   const w = account.ranked?.week === week ? account.ranked : null;
   const featured = featuredFor(catalog.pack, week).map((id, slot): TtkFeaturedSlot => {
@@ -192,6 +208,7 @@ async function rankedView(deps: TamTuongKyDeps, account: TtkAccount, gold: numbe
     };
   }
   return {
+    packId: catalog.pack.id,
     week,
     units: account.units,
     stock: w?.stock ?? {},
@@ -220,7 +237,7 @@ export async function getTamTuongKyRanked(deps: TamTuongKyDeps, ownerId: string 
     deps.profiles,
     ownerId!,
     (p) => {
-      const cur = accountOf(p);
+      const cur = accountOf(deps, p);
       const next = enterRankedWeek(cur, week);
       return { ok: true, profile: next === cur && p.tamTuongKy ? p : { ...p, tamTuongKy: next } };
     },
@@ -240,7 +257,7 @@ export async function combineTamTuongKyRanked(deps: TamTuongKyDeps, ownerId: str
     deps.profiles,
     ownerId!,
     (p) => {
-      const out = combineInRanked(catalog, accountOf(p), requestId, first, second, week);
+      const out = combineInRanked(catalogOf(deps), accountOf(deps, p), requestId, first, second, week);
       if (!out.ok) return out;
       response = out.response;
       return { ok: true, profile: { ...p, tamTuongKy: out.account } };
@@ -264,7 +281,7 @@ export async function buyTamTuongKyBundle(deps: TamTuongKyDeps, ownerId: string 
     deps.profiles,
     ownerId!,
     (p) => {
-      const out = buyBundle(accountOf(p), requestId, p.gold, week);
+      const out = buyBundle(accountOf(deps, p), requestId, p.gold, week);
       if (!out.ok) return out;
       response = out.response;
       return { ok: true, profile: { ...p, gold: p.gold - out.goldSpent, tamTuongKy: out.account } };
@@ -273,7 +290,7 @@ export async function buyTamTuongKyBundle(deps: TamTuongKyDeps, ownerId: string 
   );
   if (!r.ok) {
     const { profile } = await loadProfile(deps.profiles, ownerId!);
-    return { ok: false, error: r.error, view: await rankedView(deps, accountOf(profile), profile.gold, ownerId!) };
+    return { ok: false, error: r.error, view: await rankedView(deps, accountOf(deps, profile), profile.gold, ownerId!) };
   }
   return { ok: true, view: await rankedView(deps, r.stored.profile.tamTuongKy!, r.stored.profile.gold, ownerId!), response };
 }

@@ -173,3 +173,20 @@ describe("bảng tuần trên trang Xếp hạng", () => {
     assert.deepEqual(r.mine, { rank: 2, points: 300, unitsSpent: 13 });
   });
 });
+
+describe("Gói 2 trên server", () => {
+  it("cờ Gói 2 bật: view dùng sổ gộp, ghép ra tướng Gói 2 được; tắt: sổ Gói 1", async () => {
+    const { getTamTuongKy, openTamTuongKySession, combineTamTuongKy } = await import("../../src/server/tamTuongKy");
+    const off = await getTamTuongKy(deps(), OWNER);
+    assert.ok(off.ok && off.view.packId === "pack-1");
+    const d = deps({ pack2: true });
+    const on = await getTamTuongKy(d, OWNER);
+    assert.ok(on.ok && on.view.packId === "pack-1-2");
+    await openTamTuongKySession(d, OWNER, rid());
+    const r = await combineTamTuongKy(d, OWNER, rid(), "elt.tho", "elt.moc");
+    assert.ok(r.ok && r.response?.kind === "combine" && r.response.status === "created" && r.response.nodeId === "mat.grain");
+    // Tắt Gói 2: Lúa vẫn trong sổ, nhưng ghép Thổ + Mộc không còn công thức.
+    const back = await getTamTuongKy(deps({ profiles: d.profiles }), OWNER);
+    assert.ok(back.ok && back.view.discovery.discoveredNodeIds.includes("mat.grain"));
+  });
+});
