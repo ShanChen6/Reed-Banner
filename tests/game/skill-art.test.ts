@@ -19,7 +19,7 @@ test("56 tuyệt chiêu ô 4 Đinh Bộ Lĩnh: Tướng sĩ, Pháp sư, Binh lí
     const art = skillArt(def);
     assert.ok(art, def.id);
     assert.ok(existsSync(`public/art/skills/${art.file}.webp`), art.file);
-    if (["tuongSi", "phapSu", "binhLinh", "ySu", "muuSi"].includes(def.profession ?? "")) {
+    if (["tuongSi", "phapSu", "binhLinh", "ySu", "muuSi", "quanSu", "xaThu"].includes(def.profession ?? "")) {
       assert.equal(art.file, def.id);
       assert.equal(art.badge, undefined);
     } else {
