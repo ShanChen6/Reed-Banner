@@ -1,7 +1,7 @@
 # Viễn Chinh — Thiết kế chi tiết Cửa Biển
 
 > Cập nhật: 04/11/2026  
-> Trạng thái: **APPROVED** — Shan duyệt 04/11/2026 (mục 9), đang viết code  
+> Trạng thái: **APPROVED** — Shan duyệt 04/11/2026 (mục 9); có code ở nhánh `feat/vien-chinh-cua-bien`, chờ merge  
 > Phạm vi: kịch bản Cửa Biển (nhiệm vụ, Trinh sát, đường bị phá, con nước, ba loại trận riêng) và phần engine cần
 > mở rộng. Năm sa bàn còn lại giữ luật của [GDD](01-vien-chinh-gdd.md).  
 > Dựa trên: [đề xuất sa bàn và nhiệm vụ](02-map-va-nhiem-vu-proposal.md) mục 5.3, 9 và các điểm Shan chốt ở mục 11.
@@ -44,7 +44,7 @@ Loại mới: `bridge` (cầu, trận riêng giữ cầu) và `shoal` (bãi, kh�
 
 ### 2.2 Cạnh
 
-17 cạnh, mỗi cạnh có id để lưu trạng thái "bị phá" và "đã biết".
+17 cạnh. Code không đặt id riêng: trạng thái "bị phá" và "đã biết" lưu theo khóa `a~b` của hai đầu (`expeditionEdgeKey`); id `e1`–`e17` dưới đây chỉ để đọc tài liệu.
 
 | id | Nối | Loại | Ngày | Ghi chú |
 |---|---|---|---|---|
@@ -203,14 +203,15 @@ dùng lại chúng thay vì viết luật mới; chỉ phá cổng cần một t
   - Phe chỉ còn công trình thì lượt phe đó trôi qua ngay (không treo trận).
   - Hiện là "Cổng" với thanh bền, không chân dung; cần một hình cổng (thêm vào bộ prompt đồ họa).
 
-## 6. Dữ liệu
+## 6. Dữ liệu (như đã code)
 
-### 6.1 Sa bàn
+### 6.1 Sa bàn và kịch bản
 
-- `ExpeditionNodeKind` thêm `bridge`, `shoal`. `ExpeditionMap` thêm `edgeIds` (hoặc chuyển cạnh sang dạng đối tượng
-  `{ id, a, b, kind, breakable?, tide? }`; nên chuyển hẳn vì cạnh có thêm thuộc tính).
-- Kịch bản là dữ liệu riêng `EXPEDITION_SCENARIOS.cuaBien` cạnh `EXPEDITION_MAPS`: nhiệm vụ, lịch thuyền viện, lịch con
-  nước, cấu hình trận riêng. Sa bàn không có kịch bản chạy luật cũ.
+- `src/core/expedition/maps.ts`: loại ô thêm `bridge`, `shoal`; loại cạnh thêm `marsh` (2 ngày) và `tide` (cửa nước);
+  `expeditionEdgeKey`, `expeditionEdgeKind`. Sa bàn `cuaBien` thay bằng bố cục mục 2.
+- `src/core/expedition/scenario.ts`: `EXPEDITION_SCENARIOS.cuaBien` giữ mọi số liệu của tài liệu này (đường có thể phá,
+  lịch con nước, đoàn dân, thuyền viện, cầu, phản công, cổng, hệ số thưởng). Sa bàn không có kịch bản chạy luật cũ.
+- `src/core/expedition/objective.ts`: mục tiêu trận `hold` / `escort` / `gate` và `expeditionObjectiveMet`.
 
 ### 6.2 Trạng thái lượt
 
@@ -218,27 +219,35 @@ dùng lại chúng thay vì viết luật mới; chỉ phá cổng cần một t
 
 | Trường | Kiểu | Ý nghĩa |
 |---|---|---|
-| `broken` | `string[]` | Cạnh bị phá của lượt (chọn từ seed lúc tạo lượt) |
-| `knownBroken` | `string[]` | Cạnh bị phá đã lộ |
-| `scouted` | `string[]` | Ô đã từng thấy (để sương không phủ lại sau trinh sát) |
+| `broken` | `string[]` | Đường bị phá của lượt (chọn từ seed lúc tạo lượt); server không gửi cho client |
+| `knownBroken` | `string[]` | Đường bị phá đã lộ |
+| `scouted` | `string[]` | Ô đã vén sương bằng trinh sát |
 | `tideKnown` | `boolean` | Đã biết lịch con nước |
-| `escort` | `ArmyIndex \| "saved" \| "lost"` | Đạo đang mang dân, hoặc kết quả |
-| `reinforcements` | `"active" \| "cut"` | Thuyền viện |
-| `market` | `{ takenDay, defended? }` | Phản công Chợ |
-| `nodes[id].phase` | `number` | Phase đã qua của trận nhiều phase (cổng đã sụp) |
+| `refugees` | `0 \| 1 \| "saved" \| "lost"` | Đạo đang mang dân, hoặc kết quả |
+| `arrivals` | `number` | Số lần thuyền viện đã tới |
+| `reinforcementsCut` | `boolean` | Đã giữ được cầu |
+| `market` | `{ taken, status }` | Phản công Chợ: `pending`, `due` (đạo giữ chợ phải đánh), `held`, `lost` |
+| `log` | `string[]` | 6 dòng nhật ký gần nhất |
+| `nodes[id].gateDown` | `boolean` | Cổng thành đã sụp |
 
-`ExpeditionBattleRef` thêm `objective` (loại trận và phase) để server chốt đúng luật. Sương mù (`expeditionVisible`)
-cộng thêm `scouted`; server vẫn lọc `previews` theo tập thấy được như hiện tại, và **không bao giờ** gửi `broken` hay lịch
-con nước chưa biết cho client.
+`ExpeditionBattleRef` thêm `mode` (`chase`, `counter`, `gate`), `to` (truy binh) và `objective`. `ExpeditionMatchTag`
+thêm `objective`; lớp Match (`closeObjective` trong `src/core/match/match.ts`) cho phe người chơi thắng ngay khi đạt mục
+tiêu, kể cả giữa lượt (cổng sụp thì AI không đánh tiếp). Sương mù cộng thêm `scouted`.
 
 ### 6.3 Hành động
 
 | Hành động | Mới / đổi |
 |---|---|
-| `march { army, to }` | Đổi: trúng cạnh bị phá hoặc nước lên thì trả `{ ok: true, blocked: "broken" \| "tide" }`, tốn ngày |
-| `scout { army }` | Mới |
-| `camp` | Giữ nguyên |
-| Cuối ngày | Thêm bước kịch bản: thuyền viện, phản công Chợ, truy binh |
+| `POST /api/expedition/march { army, to }` | Trúng đường bị phá hay nước lên mà chưa biết: `{ kind: "blocked", reason }`, tốn ngày. Đường đã biết bị phá: lỗi `roadBroken`; nước lên đã biết: `highTide`. Giặc đang phản công Chợ: chỉ đạo giữ chợ "tiến" vào chính ô mình để đánh, việc khác báo `counterPending` |
+| `POST /api/expedition/scout { army }` | Mới |
+| `POST /api/expedition/camp` | Bị chặn khi đang phản công Chợ |
+| `GET /api/expedition` | Thêm `scenario`: lịch thuyền viện, lịch con nước khi đã biết, trận truy binh và phản công đang chờ |
+
+### 6.4 Công trình trong engine
+
+`FighterConfig.structure` (`src/core/battle/state.ts`): `canAct` luôn sai (không bao giờ là người hành động, phe chỉ còn
+công trình thì lượt trôi như bị Đóng băng cả phe), không hồi máu, chỉ nhận Phá giáp, không đói lương. Thủ lĩnh phe địch
+là người đứng đầu tiên không phải công trình.
 
 ## 7. Giao diện
 
