@@ -95,7 +95,7 @@ rồi một đạo đánh.
   quân, kể cả lượt rút quân sớm hay thua. Hết lượt thì `POST /api/expedition/run` báo `dailyLimit`.
 - Lượt đang đi dở qua 0 giờ vẫn đi tiếp, đánh tiếp được; giới hạn chỉ chặn xuất quân mới.
 - Con số 3 do Claude đặt: một lượt khoảng 6–10 trận, thắng lần đầu mỗi bậc chỉ có một lần, nên giới hạn chủ yếu chặn
-  cày vàng thắng lại và giữ bảng xếp hạng công bằng. Đổi số chỉ cần sửa hằng số.
+  cày vàng thắng lại. Đổi số chỉ cần sửa hằng số.
 
 ### 3.7 Chơi offline, không bảng xếp hạng (Shan chốt 04/11/2026)
 

@@ -3,7 +3,8 @@
 > Cập nhật: 04/11/2026  
 > Trạng thái: **DRAFT** — đề xuất, chờ Shan duyệt  
 > Phạm vi: đề xuất mở rộng gameplay và nội dung map. Không thay thế GDD luật hiện hành, không phải đặc tả runtime.  
-> Tài liệu luật gốc: [01-vien-chinh-gdd.md](./01-vien-chinh-gdd.md)
+> Tài liệu luật gốc: [01-vien-chinh-gdd.md](./01-vien-chinh-gdd.md)  
+> Thiết kế chi tiết bản đầu: [03-cua-bien-thiet-ke.md](./03-cua-bien-thiet-ke.md)
 
 ## 1. Mục tiêu thiết kế
 
