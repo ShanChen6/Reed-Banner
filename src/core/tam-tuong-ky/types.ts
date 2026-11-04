@@ -53,6 +53,8 @@ export interface CatalogNode {
   readonly tier?: HeroTier;
   /** Chỉ tướng lịch sử: mã nguồn trong `HISTORY_SOURCES` (Campaign). */
   readonly historySourceIds?: readonly string[];
+  /** Chỉ tướng: gói nội dung (`pack-1`, `pack-2`…), để Tướng Lục chia mục khi gộp nhiều gói. */
+  readonly pack?: string;
   /** Chỉ tướng: những gì công thức dựa vào (không có art). */
   readonly anchors?: readonly HeroAnchor[];
   /** Chỉ tướng: lời dẫn chế độ Hạng. */
