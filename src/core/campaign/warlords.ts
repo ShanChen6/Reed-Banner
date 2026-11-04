@@ -99,6 +99,12 @@ export const HOME_RULE: Readonly<Record<Element, string>> = {
 /** Trùm có thêm chừng này lần máu. */
 export const BOSS_HP = 1.5;
 
+/**
+ * Hệ số Máu và Công của sứ quân làm địch. Bộ 10 kỹ năng (giống khi người chơi dùng) yếu hơn preset cũ, nên
+ * bù để tỉ lệ qua màn chiến dịch về gần trước khi đổi (sim scripts/campaign-balance.ts, Shan chốt 04/11/2026).
+ */
+export const WARLORD_FOE_POWER = 1.12;
+
 const hero = (
   id: string,
   name: string,
@@ -392,7 +398,15 @@ export function encounterFighter(
       sig && !kit.skills!.includes(sig.id)
         ? { ...levels, [sig.id]: Math.max(1, ...Object.values(levels)) }
         : levels;
-    return { ...kit, skills, skillLevels, id: foe.id, name: foe.name };
+    return {
+      ...kit,
+      maxHp: Math.round(kit.maxHp * WARLORD_FOE_POWER),
+      atk: Math.round(kit.atk * WARLORD_FOE_POWER),
+      skills,
+      skillLevels,
+      id: foe.id,
+      name: foe.name,
+    };
   }
   const base: FighterConfig = {
     id: foe.id,
