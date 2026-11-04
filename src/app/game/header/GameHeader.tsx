@@ -10,7 +10,7 @@ import { SCENE_TITLE, type Scene } from "../scene";
 import { SceneLink } from "../SceneContext";
 import HeaderAccountMenu from "./HeaderAccountMenu";
 import HeaderGold from "./HeaderGold";
-import { HeaderCloud, HeaderOrnament } from "./HeaderOrnament";
+import { HeaderOrnament } from "./HeaderOrnament";
 
 export default function GameHeader({ scene, account }: { scene: Scene; account: ShellAccount | null }) {
   return (
@@ -67,18 +67,13 @@ function HomeButton({ current }: { current: boolean }) {
   );
 }
 
-/**
- * Giữa: bảng tên phân cảnh trên khung đồng Shan vẽ (kéo giãn theo độ dài tên, xem .game-header-title), hai cụm mây
- * đè lên hai đầu khung. Tên dài thì cắt bớt, không đẩy hai cột bên.
- */
+/** Giữa: bảng tên phân cảnh trên khung đồng Shan vẽ (kéo giãn theo độ dài tên, xem .game-header-title). Tên dài thì cắt bớt, không đẩy hai cột bên. */
 function SceneTitle({ title }: { title: string }) {
   return (
     <div className="relative flex min-w-0 items-center justify-center">
       <p className="game-header-title max-w-[46vw] truncate px-2 pt-[0.12em] text-center font-serif text-[13px] leading-[1.9] font-bold tracking-[0.06em] uppercase sm:max-w-none sm:px-4 sm:text-sm sm:tracking-[0.14em] md:px-5 lg:px-6 lg:text-lg lg:tracking-[0.2em] xl:text-xl">
         {title}
       </p>
-      <HeaderCloud side="left" className="absolute top-1/2 left-0 hidden h-[64%] -translate-x-[62%] -translate-y-1/2 md:block" />
-      <HeaderCloud side="right" className="absolute top-1/2 right-0 hidden h-[64%] translate-x-[62%] -translate-y-1/2 md:block" />
     </div>
   );
 }
