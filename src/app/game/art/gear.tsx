@@ -197,15 +197,14 @@ export function tierFrameSrc(tier: Tier): string {
 }
 
 /**
- * Ảnh vẽ tay theo bộ ở public/art/gear/<bộ>/<ô>.webp (192 px). Ô chưa có ảnh (vũ khí, bộ Hoa Lư, Đồng Cổ) vẫn vẽ SVG.
- * Xem docs/06-art/prompts/trang-bi.md.
+ * Ảnh vẽ tay theo bộ ở public/art/gear/<bộ>/<ô>.webp, vũ khí là vuKhi-<nghề>.webp (192 px).
+ * Bộ chưa có ảnh (Hoa Lư, Đồng Cổ) vẫn vẽ SVG. Xem docs/06-art/prompts/trang-bi.md.
  */
-const SET_ART: Readonly<Record<string, ReadonlySet<GearSlot>>> = {
-  coLau: new Set<GearSlot>(["dinhMao", "yPhuc", "hoThu", "baoNgoa", "gioiChi", "hangLien", "hoPhu", "ngocBoi"]),
-};
+const SET_ART: ReadonlySet<string> = new Set(["coLau"]);
 
-export function gearArtSrc(slot: GearSlot, set: string | undefined): string | undefined {
-  return set !== undefined && SET_ART[set]?.has(slot) ? `/art/gear/${set}/${slot}.webp` : undefined;
+export function gearArtSrc(slot: GearSlot, set: string | undefined, profession?: Profession): string | undefined {
+  if (set === undefined || !SET_ART.has(set)) return undefined;
+  return slot === "vuKhi" ? `/art/gear/${set}/vuKhi-${profession ?? "tuongSi"}.webp` : `/art/gear/${set}/${slot}.webp`;
 }
 
 function TierFrame({ tier }: { tier: Tier }) {
@@ -233,7 +232,7 @@ export function GearIcon({
   className?: string;
 }) {
   const accent = ELEMENT_COLOR[element];
-  const src = gearArtSrc(slot, set);
+  const src = gearArtSrc(slot, set, profession);
   const art = src ? (
     <image href={src} x={1} y={1} width={46} height={46} preserveAspectRatio="xMidYMid meet" />
   ) : slot === "vuKhi" ? (
