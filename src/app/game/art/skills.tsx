@@ -1,7 +1,8 @@
 // Biểu tượng kỹ năng vẽ bằng SVG: huy hiệu vuông màu theo nguyên tố (nhân vật chính) hoặc theo nghề
 // (nhân vật kèm), hình giữa nói kỹ năng làm gì, dấu nhỏ ở góc nói thêm tác dụng phụ (tăng, giảm, cả đội…).
-// Tuyệt chiêu ô 4 có vòng tia vàng như ô đặc biệt bản mạnh.
+// Tuyệt chiêu: viền vàng đôi và quầng sáng vàng tỏa từ tâm (Shan chọn 04/11/2026, thay ngôi sao 16 cánh).
 
+import { useId } from "react";
 import type { Element, GameProfession, Profession, SkillDef } from "@/core";
 import { ELEMENT_COLOR } from "./icons";
 import { INK, starPoints } from "./tiles";
@@ -597,15 +598,31 @@ export function skillArt(def: Pick<SkillDef, "id" | "element" | "profession">): 
   return undefined;
 }
 
-/** Ô kỹ năng có ảnh vẽ tay: nền sơn mài thẫm viền màu hệ, tuyệt chiêu viền vàng có hào quang. */
+/** Quầng sáng của tuyệt chiêu: ánh vàng ở tâm chuyển sang màu hệ rồi tan vào nền, kèm viền trong mảnh màu đồng. */
+function UltimateGlow({ color }: { color: string }) {
+  const id = `ult-glow-${useId().replace(/:/g, "")}`;
+  return (
+    <>
+      <defs>
+        <radialGradient id={id} cx="50%" cy="50%" r="60%">
+          <stop offset="0" stopColor="#ffe9a8" stopOpacity={0.55} />
+          <stop offset="0.45" stopColor={color} stopOpacity={0.35} />
+          <stop offset="1" stopColor="#17120d" stopOpacity={0} />
+        </radialGradient>
+      </defs>
+      <rect x={3.6} y={3.6} width={40.8} height={40.8} rx={7.2} fill={`url(#${id})`} stroke="#b98a3e" strokeWidth={0.7} />
+    </>
+  );
+}
+
+/** Ô kỹ năng có ảnh vẽ tay: nền sơn mài thẫm viền màu hệ; tuyệt chiêu viền vàng đôi và quầng sáng. */
 function SkillArtIcon({ def, art, className }: { def: SkillDef; art: { file: string; badge?: Profession }; className: string }) {
   const edge = def.element ? ELEMENT_COLOR[def.element] : def.profession ? PROFESSION_COLOR[def.profession] : "#b98a3e";
   const ultimate = def.ultimate === true;
   return (
     <svg viewBox="0 0 48 48" className={className} aria-hidden focusable="false">
       <rect x={1.5} y={1.5} width={45} height={45} rx={9} fill="#17120d" stroke={ultimate ? "#ffe08a" : edge} strokeWidth={2.4} />
-      <rect x={4} y={4} width={40} height={40} rx={7} fill={edge} opacity={0.18} />
-      {ultimate && <polygon points={starPoints(24, 24, 22, 17, 16)} fill="#ffe08a" opacity={0.3} />}
+      {ultimate ? <UltimateGlow color={edge} /> : <rect x={4} y={4} width={40} height={40} rx={7} fill={edge} opacity={0.18} />}
       <image href={`/art/skills/${art.file}.webp`} x={4} y={4} width={40} height={40} />
       {art.badge && (
         <g>
@@ -630,8 +647,8 @@ export function SkillIcon({ def, className = "size-8" }: { def: SkillDef; classN
       <path d="M7 4 H41 A6 6 0 0 1 44 7 V16 Q24 11 4 16 V7 A6 6 0 0 1 7 4 Z" fill="#fff" opacity={0.12} />
       {ultimate && (
         <g>
-          <polygon points={starPoints(24, 24, 22, 17, 16)} fill="#ffe08a" opacity={0.55} />
-          <rect x={4} y={4} width={40} height={40} rx={7} fill="none" stroke="#ffe08a" strokeWidth={1.5} />
+          <rect x={4} y={4} width={40} height={40} rx={7} fill="#ffe9a8" opacity={0.18} />
+          <rect x={3.6} y={3.6} width={40.8} height={40.8} rx={7.2} fill="none" stroke="#ffe08a" strokeWidth={1.5} />
         </g>
       )}
       {spec.triple ? (
