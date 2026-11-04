@@ -35,47 +35,47 @@ Ba chiêu nghề (ô1/3/5), hai chiêu hệ (ô2/6), một tuyệt chiêu nghề
 
 | Nghề | Hệ | Tuyệt chiêu | Năng lượng gốc |
 |---|---|---|---:|
-| tuongSi | kim | Bình định · Kim | 80 |
-| tuongSi | moc | Bình định · Mộc | 80 |
-| tuongSi | thuy | Bình định · Thủy | 80 |
-| tuongSi | hoa | Bình định · Hỏa | 80 |
-| tuongSi | tho | Bình định · Thổ | 80 |
-| tuongSi | loi | Bình định · Lôi | 80 |
-| tuongSi | phong | Bình định · Phong | 80 |
-| phapSu | kim | Thiên uy · Kim | 80 |
-| phapSu | moc | Thiên uy · Mộc | 80 |
-| phapSu | thuy | Thiên uy · Thủy | 80 |
-| phapSu | hoa | Thiên uy · Hỏa | 80 |
-| phapSu | tho | Thiên uy · Thổ | 80 |
-| phapSu | loi | Thiên uy · Lôi | 80 |
-| phapSu | phong | Thiên uy · Phong | 80 |
-| binhLinh | kim | Trấn quốc · Kim | 80 |
-| binhLinh | moc | Trấn quốc · Mộc | 80 |
-| binhLinh | thuy | Trấn quốc · Thủy | 80 |
-| binhLinh | hoa | Trấn quốc · Hỏa | 80 |
-| binhLinh | tho | Trấn quốc · Thổ | 80 |
-| binhLinh | loi | Trấn quốc · Lôi | 80 |
-| binhLinh | phong | Trấn quốc · Phong | 80 |
-| ySu | kim | Hưng sinh · Kim | 80 |
-| ySu | moc | Hưng sinh · Mộc | 80 |
-| ySu | thuy | Hưng sinh · Thủy | 80 |
-| ySu | hoa | Hưng sinh · Hỏa | 80 |
-| ySu | tho | Hưng sinh · Thổ | 80 |
-| ySu | loi | Hưng sinh · Lôi | 80 |
-| ySu | phong | Hưng sinh · Phong | 80 |
-| muuSi | kim | Định kế · Kim | 80 |
-| muuSi | moc | Định kế · Mộc | 80 |
-| muuSi | thuy | Định kế · Thủy | 80 |
-| muuSi | hoa | Định kế · Hỏa | 80 |
-| muuSi | tho | Định kế · Thổ | 80 |
-| muuSi | loi | Định kế · Lôi | 80 |
-| muuSi | phong | Định kế · Phong | 80 |
-| quanSu | kim | Nhất thống · Kim | 80 |
-| quanSu | moc | Nhất thống · Mộc | 80 |
-| quanSu | thuy | Nhất thống · Thủy | 80 |
-| quanSu | hoa | Nhất thống · Hỏa | 80 |
-| quanSu | tho | Nhất thống · Thổ | 80 |
-| quanSu | loi | Nhất thống · Lôi | 80 |
-| quanSu | phong | Nhất thống · Phong | 80 |
+| tuongSi | kim | Bạch Kim Phá Giáp Trảm | 80 |
+| tuongSi | moc | Thanh Mộc Hoành Đao | 80 |
+| tuongSi | thuy | Hắc Thủy Đoạn Giang | 80 |
+| tuongSi | hoa | Xích Viêm Liệt Trảm | 80 |
+| tuongSi | tho | Hoàng Thổ Khai Sơn Trảm | 80 |
+| tuongSi | loi | Tử Lôi Phá Trận Kích | 80 |
+| tuongSi | phong | Cuồng Phong Tảo Diệp | 80 |
+| phapSu | kim | Kim Cương Pháp Ấn | 80 |
+| phapSu | moc | Vạn Mộc Tịch Diệt | 80 |
+| phapSu | thuy | Băng Phách Trấn Hồn | 80 |
+| phapSu | hoa | Cửu U Phần Thế Chú | 80 |
+| phapSu | tho | Đại Địa Phong Ấn | 80 |
+| phapSu | loi | Cửu Tiêu Lôi Ngục | 80 |
+| phapSu | phong | Hư Không Cuồng Khiếu | 80 |
+| binhLinh | kim | Kim Giáp Hộ Vực | 80 |
+| binhLinh | moc | Đằng Giáp Trấn Ải | 80 |
+| binhLinh | thuy | Hải Triều Hộ Vệ | 80 |
+| binhLinh | hoa | Liệt Hỏa Tường Vi | 80 |
+| binhLinh | tho | Thạch Bích Trường Thành | 80 |
+| binhLinh | loi | Lôi Trì Thiết Vệ | 80 |
+| binhLinh | phong | Phong Nhãn Hộ Thuẫn | 80 |
+| ySu | kim | Kim Châm Tục Mệnh | 80 |
+| ySu | moc | Xuân Phong Hóa Vũ | 80 |
+| ySu | thuy | Cam Lộ Tẩy Trần | 80 |
+| ySu | hoa | Hồi Dương Chi Diễm | 80 |
+| ySu | tho | Đại Địa Chi Ân | 80 |
+| ySu | loi | Lôi Âm Tỉnh Thần | 80 |
+| ySu | phong | Thanh Phong Tán Độc | 80 |
+| muuSi | kim | Kim Phách Đoạt Hồn | 80 |
+| muuSi | moc | Đằng Xà Phược Mưu | 80 |
+| muuSi | thuy | Hư Không Đảo Hải | 80 |
+| muuSi | hoa | Phần Tâm Đoạt Kế | 80 |
+| muuSi | tho | Quỷ Mưu Mai Phục | 80 |
+| muuSi | loi | Lôi Khiếu Đoạt Khí | 80 |
+| muuSi | phong | Loạn Phong Phá Trận | 80 |
+| quanSu | kim | Kim Bài Hiệu Lệnh | 80 |
+| quanSu | moc | Mộc Khí Hưng Bang | 80 |
+| quanSu | thuy | Nhất Hô Bách Ứng | 80 |
+| quanSu | hoa | Hừng Hực Tiến Công | 80 |
+| quanSu | tho | Vững Tựa Thái Sơn | 80 |
+| quanSu | loi | Lôi Đình Vạn Quân | 80 |
+| quanSu | phong | Thần Tốc Hành Quân | 80 |
 
 Dữ liệu chi tiết sáu ô, bốn bị động và từng bước tuyệt chiêu: [JSON](skill-chase-v3.json).

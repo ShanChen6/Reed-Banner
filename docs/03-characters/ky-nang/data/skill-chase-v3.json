@@ -298,7 +298,7 @@
   "dinhBoLinhUltimates": [
     {
       "id": "dbl_tuongSi_kim",
-      "name": "Bình định · Kim",
+      "name": "Bạch Kim Phá Giáp Trảm",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "tuongSi",
@@ -331,7 +331,7 @@
     },
     {
       "id": "dbl_tuongSi_moc",
-      "name": "Bình định · Mộc",
+      "name": "Thanh Mộc Hoành Đao",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "tuongSi",
@@ -362,7 +362,7 @@
     },
     {
       "id": "dbl_tuongSi_thuy",
-      "name": "Bình định · Thủy",
+      "name": "Hắc Thủy Đoạn Giang",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "tuongSi",
@@ -400,7 +400,7 @@
     },
     {
       "id": "dbl_tuongSi_hoa",
-      "name": "Bình định · Hỏa",
+      "name": "Xích Viêm Liệt Trảm",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "tuongSi",
@@ -433,7 +433,7 @@
     },
     {
       "id": "dbl_tuongSi_tho",
-      "name": "Bình định · Thổ",
+      "name": "Hoàng Thổ Khai Sơn Trảm",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "tuongSi",
@@ -467,7 +467,7 @@
     },
     {
       "id": "dbl_tuongSi_loi",
-      "name": "Bình định · Lôi",
+      "name": "Tử Lôi Phá Trận Kích",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "tuongSi",
@@ -498,7 +498,7 @@
     },
     {
       "id": "dbl_tuongSi_phong",
-      "name": "Bình định · Phong",
+      "name": "Cuồng Phong Tảo Diệp",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "tuongSi",
@@ -529,7 +529,7 @@
     },
     {
       "id": "dbl_phapSu_kim",
-      "name": "Thiên uy · Kim",
+      "name": "Kim Cương Pháp Ấn",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "phapSu",
@@ -561,7 +561,7 @@
     },
     {
       "id": "dbl_phapSu_moc",
-      "name": "Thiên uy · Mộc",
+      "name": "Vạn Mộc Tịch Diệt",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "phapSu",
@@ -591,7 +591,7 @@
     },
     {
       "id": "dbl_phapSu_thuy",
-      "name": "Thiên uy · Thủy",
+      "name": "Băng Phách Trấn Hồn",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "phapSu",
@@ -628,7 +628,7 @@
     },
     {
       "id": "dbl_phapSu_hoa",
-      "name": "Thiên uy · Hỏa",
+      "name": "Cửu U Phần Thế Chú",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "phapSu",
@@ -660,7 +660,7 @@
     },
     {
       "id": "dbl_phapSu_tho",
-      "name": "Thiên uy · Thổ",
+      "name": "Đại Địa Phong Ấn",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "phapSu",
@@ -693,7 +693,7 @@
     },
     {
       "id": "dbl_phapSu_loi",
-      "name": "Thiên uy · Lôi",
+      "name": "Cửu Tiêu Lôi Ngục",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "phapSu",
@@ -723,7 +723,7 @@
     },
     {
       "id": "dbl_phapSu_phong",
-      "name": "Thiên uy · Phong",
+      "name": "Hư Không Cuồng Khiếu",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "phapSu",
@@ -753,7 +753,7 @@
     },
     {
       "id": "dbl_binhLinh_kim",
-      "name": "Trấn quốc · Kim",
+      "name": "Kim Giáp Hộ Vực",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "binhLinh",
@@ -786,7 +786,7 @@
     },
     {
       "id": "dbl_binhLinh_moc",
-      "name": "Trấn quốc · Mộc",
+      "name": "Đằng Giáp Trấn Ải",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "binhLinh",
@@ -817,7 +817,7 @@
     },
     {
       "id": "dbl_binhLinh_thuy",
-      "name": "Trấn quốc · Thủy",
+      "name": "Hải Triều Hộ Vệ",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "binhLinh",
@@ -855,7 +855,7 @@
     },
     {
       "id": "dbl_binhLinh_hoa",
-      "name": "Trấn quốc · Hỏa",
+      "name": "Liệt Hỏa Tường Vi",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "binhLinh",
@@ -888,7 +888,7 @@
     },
     {
       "id": "dbl_binhLinh_tho",
-      "name": "Trấn quốc · Thổ",
+      "name": "Thạch Bích Trường Thành",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "binhLinh",
@@ -922,7 +922,7 @@
     },
     {
       "id": "dbl_binhLinh_loi",
-      "name": "Trấn quốc · Lôi",
+      "name": "Lôi Trì Thiết Vệ",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "binhLinh",
@@ -953,7 +953,7 @@
     },
     {
       "id": "dbl_binhLinh_phong",
-      "name": "Trấn quốc · Phong",
+      "name": "Phong Nhãn Hộ Thuẫn",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "binhLinh",
@@ -984,7 +984,7 @@
     },
     {
       "id": "dbl_ySu_kim",
-      "name": "Hưng sinh · Kim",
+      "name": "Kim Châm Tục Mệnh",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "ySu",
@@ -1014,7 +1014,7 @@
     },
     {
       "id": "dbl_ySu_moc",
-      "name": "Hưng sinh · Mộc",
+      "name": "Xuân Phong Hóa Vũ",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "ySu",
@@ -1042,7 +1042,7 @@
     },
     {
       "id": "dbl_ySu_thuy",
-      "name": "Hưng sinh · Thủy",
+      "name": "Cam Lộ Tẩy Trần",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "ySu",
@@ -1077,7 +1077,7 @@
     },
     {
       "id": "dbl_ySu_hoa",
-      "name": "Hưng sinh · Hỏa",
+      "name": "Hồi Dương Chi Diễm",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "ySu",
@@ -1107,7 +1107,7 @@
     },
     {
       "id": "dbl_ySu_tho",
-      "name": "Hưng sinh · Thổ",
+      "name": "Đại Địa Chi Ân",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "ySu",
@@ -1138,7 +1138,7 @@
     },
     {
       "id": "dbl_ySu_loi",
-      "name": "Hưng sinh · Lôi",
+      "name": "Lôi Âm Tỉnh Thần",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "ySu",
@@ -1166,7 +1166,7 @@
     },
     {
       "id": "dbl_ySu_phong",
-      "name": "Hưng sinh · Phong",
+      "name": "Thanh Phong Tán Độc",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "ySu",
@@ -1194,7 +1194,7 @@
     },
     {
       "id": "dbl_muuSi_kim",
-      "name": "Định kế · Kim",
+      "name": "Kim Phách Đoạt Hồn",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "muuSi",
@@ -1228,7 +1228,7 @@
     },
     {
       "id": "dbl_muuSi_moc",
-      "name": "Định kế · Mộc",
+      "name": "Đằng Xà Phược Mưu",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "muuSi",
@@ -1260,7 +1260,7 @@
     },
     {
       "id": "dbl_muuSi_thuy",
-      "name": "Định kế · Thủy",
+      "name": "Hư Không Đảo Hải",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "muuSi",
@@ -1299,7 +1299,7 @@
     },
     {
       "id": "dbl_muuSi_hoa",
-      "name": "Định kế · Hỏa",
+      "name": "Phần Tâm Đoạt Kế",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "muuSi",
@@ -1333,7 +1333,7 @@
     },
     {
       "id": "dbl_muuSi_tho",
-      "name": "Định kế · Thổ",
+      "name": "Quỷ Mưu Mai Phục",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "muuSi",
@@ -1368,7 +1368,7 @@
     },
     {
       "id": "dbl_muuSi_loi",
-      "name": "Định kế · Lôi",
+      "name": "Lôi Khiếu Đoạt Khí",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "muuSi",
@@ -1400,7 +1400,7 @@
     },
     {
       "id": "dbl_muuSi_phong",
-      "name": "Định kế · Phong",
+      "name": "Loạn Phong Phá Trận",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "muuSi",
@@ -1432,7 +1432,7 @@
     },
     {
       "id": "dbl_quanSu_kim",
-      "name": "Nhất thống · Kim",
+      "name": "Kim Bài Hiệu Lệnh",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "quanSu",
@@ -1465,7 +1465,7 @@
     },
     {
       "id": "dbl_quanSu_moc",
-      "name": "Nhất thống · Mộc",
+      "name": "Mộc Khí Hưng Bang",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "quanSu",
@@ -1496,7 +1496,7 @@
     },
     {
       "id": "dbl_quanSu_thuy",
-      "name": "Nhất thống · Thủy",
+      "name": "Nhất Hô Bách Ứng",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "quanSu",
@@ -1534,7 +1534,7 @@
     },
     {
       "id": "dbl_quanSu_hoa",
-      "name": "Nhất thống · Hỏa",
+      "name": "Hừng Hực Tiến Công",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "quanSu",
@@ -1567,7 +1567,7 @@
     },
     {
       "id": "dbl_quanSu_tho",
-      "name": "Nhất thống · Thổ",
+      "name": "Vững Tựa Thái Sơn",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "quanSu",
@@ -1601,7 +1601,7 @@
     },
     {
       "id": "dbl_quanSu_loi",
-      "name": "Nhất thống · Lôi",
+      "name": "Lôi Đình Vạn Quân",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "quanSu",
@@ -1632,7 +1632,7 @@
     },
     {
       "id": "dbl_quanSu_phong",
-      "name": "Nhất thống · Phong",
+      "name": "Thần Tốc Hành Quân",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "quanSu",
