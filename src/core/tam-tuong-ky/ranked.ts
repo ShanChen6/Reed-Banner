@@ -56,12 +56,21 @@ export function rotationOrder(pack: Pack): readonly NodeId[] {
   return out;
 }
 
-/** Danh sách đề cử của tuần: giống nhau cho mọi người, xoay vòng đều. */
+/**
+ * Danh sách đề cử của tuần: giống nhau cho mọi người, xoay vòng đều. Tuần nào cửa sổ xoay vòng không có tướng đặc biệt
+ * (gói nhiều tướng thường, ít tướng đặc biệt) thì ô cuối thay bằng một tướng đặc biệt, lần lượt theo tuần (P-16).
+ * Với gói đã đủ tướng đặc biệt trong mỗi cửa sổ (Gói 1, Gói 1 + 2), danh sách không đổi.
+ */
 export function featuredFor(pack: Pack, week: string, count = TTK_FEATURED_PER_WEEK): readonly NodeId[] {
   const order = rotationOrder(pack);
   const n = Math.min(count, order.length);
-  const start = (((weekIndex(week) * n) % order.length) + order.length) % order.length;
-  return Array.from({ length: n }, (_, i) => order[(start + i) % order.length]!);
+  const index = weekIndex(week);
+  const start = (((index * n) % order.length) + order.length) % order.length;
+  const list = Array.from({ length: n }, (_, i) => order[(start + i) % order.length]!);
+  const special = pack.nodes.filter((x) => x.kind === "character" && x.tier === "dacBiet").map((x) => x.id);
+  if (special.length === 0 || list.some((id) => special.includes(id))) return list;
+  list[n - 1] = special[((index % special.length) + special.length) % special.length]!;
+  return list;
 }
 
 /** Điểm bảng mùa: điểm tướng trước, bằng điểm thì ít nguyên tố tiêu hơn xếp trên (P-18). */

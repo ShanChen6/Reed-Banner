@@ -163,9 +163,9 @@ describe("Màn chơi", () => {
   it("Hạng cần cả hai cờ; trạng thái cờ chỉ ra biến đặt sai hoặc thiếu cờ chế độ", () => {
     assert.equal(tamTuongKyRankedEnabled({ TAM_TUONG_KY_RANKED_ENABLED: "true" }), false);
     assert.equal(tamTuongKyRankedEnabled({ TAM_TUONG_KY_ENABLED: "true", TAM_TUONG_KY_RANKED_ENABLED: "true\n" }), true);
-    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true" }), { enabled: true, ranked: false, pack2: false, invalid: [], rankedIgnored: false, pack2Ignored: false });
-    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true", TAM_TUONG_KY_RANKED_ENABLED: "1" }), { enabled: true, ranked: false, pack2: false, invalid: ["TAM_TUONG_KY_RANKED_ENABLED"], rankedIgnored: false, pack2Ignored: false });
-    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_RANKED_ENABLED: "true" }), { enabled: false, ranked: false, pack2: false, invalid: [], rankedIgnored: true, pack2Ignored: false });
+    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true" }), { enabled: true, ranked: false, pack2: false, pack3: false, invalid: [], rankedIgnored: false, pack2Ignored: false, pack3Ignored: false });
+    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true", TAM_TUONG_KY_RANKED_ENABLED: "1" }), { enabled: true, ranked: false, pack2: false, pack3: false, invalid: ["TAM_TUONG_KY_RANKED_ENABLED"], rankedIgnored: false, pack2Ignored: false, pack3Ignored: false });
+    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_RANKED_ENABLED: "true" }), { enabled: false, ranked: false, pack2: false, pack3: false, invalid: [], rankedIgnored: true, pack2Ignored: false, pack3Ignored: false });
   });
 
   it("chế độ Thường: yếu tố có dấu “còn công thức chưa tìm” trong nhãn đọc màn hình", async () => {

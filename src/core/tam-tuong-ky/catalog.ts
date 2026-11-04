@@ -3,7 +3,7 @@
 // công thức cuối của mỗi tướng = node vai trò (nghề × hệ theo roster, tướng đặc biệt: dung hợp) + dấu danh tính lấy từ
 // tước hiệu, địa danh, mốc chiến dịch, tên chiêu hoặc lore đã duyệt. Báo cáo: docs/02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md.
 
-import { ELEMENTS, type Element } from "../battle";
+import { ELEMENTS, type Element, type Profession } from "../battle";
 import { historySource } from "../campaign/history";
 import { companionById, isHero, isWarlord, specialById } from "../roster/roster";
 import { buildCatalog, type Catalog } from "./engine";
@@ -28,6 +28,7 @@ export const HINT_GROUP_NAMES: Readonly<Record<string, string>> = {
   "thu-tich": "Thư tịch",
   ngoc: "Ngọc",
   "vai-tro": "Vai trò",
+  "tuyet-chieu": "Tuyệt chiêu",
 };
 
 export const STARTER_NODES: readonly CatalogNode[] = ELEMENTS.map((element) => ({
@@ -369,6 +370,155 @@ export const PACK_2: Pack = {
   ],
 };
 
+// ——— Gói 3 (Shan, 04/11/2026: “đưa mọi tướng vào Tầm Tướng Ký”): 56 tướng thường, 8 nghề × 7 hệ, mỗi tổ hợp một người. ———
+// Bậc thường, đúng 7 lần ghép: công thức cuối = vai trò sơ học (nghề × hệ, 3 lần ghép) + tuyệt chiêu riêng (3 lần ghép).
+// Không dựa vào art. Cần Gói 2 (dùng Lúa). Bật bằng cờ TAM_TUONG_KY_PACK3_ENABLED.
+// Báo cáo: docs/02-game-modes/future/22-tam-tuong-ky-pack-3.md.
+
+const PROFESSION_VI: Readonly<Record<Profession, string>> = {
+  tuongSi: "Tướng sĩ",
+  phapSu: "Pháp sư",
+  binhLinh: "Binh lính",
+  ySu: "Y sư",
+  muuSi: "Mưu sĩ",
+  quanSu: "Quân sư",
+  xaThu: "Xạ thủ",
+  satThu: "Sát thủ",
+};
+
+/** Tri thức sơ học của từng nghề (2 lần ghép): một yếu tố cơ bản + một nguyên tố. */
+const BASICS: readonly { profession: Profession; nameVi: string; first: string; second: string; reason: string }[] = [
+  { profession: "tuongSi", nameVi: "Võ nghệ sơ học", first: "mat.forgedIron", second: "elt.tho", reason: "Cầm sắt rèn tập trên bãi đất" },
+  { profession: "binhLinh", nameVi: "Đội ngũ sơ học", first: "mat.rampart", second: "elt.kim", reason: "Đứng sau lũy, tay cầm giáo" },
+  { profession: "ySu", nameVi: "Y thuật sơ học", first: "mat.herbs", second: "elt.thuy", reason: "Sắc dược thảo với nước" },
+  { profession: "muuSi", nameVi: "Mưu kế sơ học", first: "mat.charcoal", second: "elt.tho", reason: "Lấy than vạch kế lên đất" },
+  { profession: "quanSu", nameVi: "Binh thư sơ học", first: "mat.bamboo", second: "elt.phong", reason: "Phất cờ tre trong gió làm hiệu" },
+  { profession: "phapSu", nameVi: "Pháp thuật sơ học", first: "mat.jadeStone", second: "elt.loi", reason: "Đá ngọc hút sấm" },
+  { profession: "xaThu", nameVi: "Cung nỏ sơ học", first: "mat.reed", second: "elt.kim", reason: "Thân lau, mũi kim thành mũi tên" },
+  { profession: "satThu", nameVi: "Ẩn thân sơ học", first: "mat.cloud", second: "elt.moc", reason: "Ẩn mình như mây trong rừng" },
+];
+
+/** 56 tướng thường: tuyệt chiêu riêng và hai yếu tố cơ bản gợi tới nó (ô trước + ô sau). */
+const COMMONERS: readonly { id: string; skill: string; first: string; second: string; fullSkill?: string }[] = [
+  // Tướng sĩ
+  { id: "tranCuong", skill: "Kim Qua Thiết Mã", first: "blackBronze", second: "forgedIron" },
+  { id: "lyLiet", skill: "Xích Hỏa Đoạt Kỳ", first: "charcoal", second: "cloth" },
+  { id: "lamTung", skill: "Trúc Lâm Phá Trận", first: "bamboo", second: "bamboo" },
+  { id: "hoLang", skill: "Lãng Đào Trảm", first: "estuary", second: "storm" },
+  { id: "khaSon", skill: "Sơn Hà Trấn Kích", first: "mountain", second: "estuary" },
+  { id: "tongTan", skill: "Lôi Đao Liên Trảm", first: "storm", second: "forgedIron" },
+  { id: "huaLang", skill: "Truy Phong Đoạt Mệnh", first: "cloud", second: "cloud" },
+  // Binh lính
+  { id: "leThach", skill: "Trấn Sơn Hộ Quân", first: "mountain", second: "rampart" },
+  { id: "hoangMoc", skill: "Rễ Già Giữ Thành", first: "herbs", second: "rampart" },
+  { id: "caoKien", skill: "Thiết Bích Đồng Thành", first: "blackBronze", second: "rampart" },
+  { id: "thaiHa", skill: "Thủy Trại Liên Hoàn", first: "estuary", second: "rampart" },
+  { id: "truongViem", skill: "Viêm Giáp Hộ Doanh", first: "charcoal", second: "forgedIron" },
+  { id: "ongChan", skill: "Chấn Lôi Thiết Vệ", first: "storm", second: "rampart" },
+  { id: "manhTuong", skill: "Phong Lũy Hộ Kỳ", first: "cloth", second: "rampart" },
+  // Y sư
+  { id: "maiThanh", skill: "Cam Lộ Hồi Xuân", first: "dew", second: "herbs" },
+  { id: "lucDiep", skill: "Xuân Mộc Vạn Sinh", first: "herbs", second: "herbs" },
+  { id: "bachSuong", skill: "Gió Lành Tẩy Uế", first: "cloud", second: "herbs" },
+  { id: "chauNgoc", skill: "Kim Châm Độ Mệnh", first: "forgedIron", second: "herbs" },
+  { id: "hongDan", skill: "Đan Hỏa Hồi Nguyên", first: "charcoal", second: "herbs" },
+  { id: "beLien", skill: "Hậu Thổ Dưỡng Nguyên", first: "grain", second: "herbs" },
+  { id: "tieuMinh", skill: "Lôi Châm Khởi Tử", first: "storm", second: "herbs" },
+  // Mưu sĩ
+  { id: "toKim", skill: "Kim Ngân Ly Tán", first: "blackBronze", second: "cloud" },
+  { id: "ninhHoa", skill: "Hỏa Thiêu Kho Lương", first: "charcoal", second: "grain" },
+  { id: "quachAn", skill: "Thủy Độn Ly Gián", first: "dew", second: "cloud" },
+  { id: "nhanTruc", skill: "Trúc Độc Mê Hồn", first: "bamboo", second: "herbs" },
+  { id: "maNhac", skill: "Đoạn Đạo Tuyệt Lương", first: "boulder", second: "grain" },
+  { id: "tuKinh", skill: "Kinh Lôi Đoạt Khí", first: "storm", second: "cloud" },
+  { id: "buiPhieu", skill: "Phiêu Phong Ly Gián", first: "cloud", second: "reed" },
+  // Quân sư
+  { id: "phungPhong", skill: "Phong Vân Biến Trận", first: "cloud", second: "storm" },
+  { id: "taThach", skill: "Bát Trận Thạch Lũy", first: "boulder", second: "rampart" },
+  { id: "macVan", skill: "Lôi Trận Kinh Hồn", first: "storm", second: "storm" },
+  { id: "nghiemThiet", skill: "Thiết Trận Phá Giáp", first: "forgedIron", second: "forgedIron" },
+  { id: "samTue", skill: "Thanh Lâm Bày Trận", first: "bamboo", second: "reed" },
+  { id: "viTrieu", skill: "Triều Dâng Vây Thành", first: "estuary", second: "estuary" },
+  { id: "tonDiem", skill: "Hỏa Công Liên Kế", first: "charcoal", second: "charcoal" },
+  // Pháp sư
+  { id: "haVan", skill: "Hỏa Vũ Liệu Nguyên", first: "charcoal", second: "reed" },
+  { id: "daoLam", skill: "Băng Hà Phong Tỏa", first: "dew", second: "mountain" },
+  { id: "vuLoi", skill: "Thiên Lôi Giáng Thế", first: "storm", second: "mountain" },
+  { id: "chuNgan", skill: "Ngân Châm Tán Xạ", first: "forgedIron", second: "cloud" },
+  { id: "damThao", skill: "Kinh Cức Triền Thân", first: "herbs", second: "bamboo" },
+  { id: "doanNham", skill: "Địa Mạch Bùng Phát", first: "boulder", second: "boulder" },
+  { id: "lieuYen", skill: "Phong Ấn Cuồng Lưu", first: "cloud", second: "estuary" },
+  // Xạ thủ
+  { id: "bachNoLang", skill: "Thiết Nỏ Phá Thành", first: "forgedIron", second: "rampart" },
+  { id: "thanhLamXa", skill: "Lục Tiễn Trói Đường", first: "reed", second: "reed" },
+  { id: "lamGiangPhiDiep", skill: "Liễu Diệp Tỏa Giang", first: "reed", second: "estuary" },
+  { id: "xichDiemLuan", skill: "Xích Luân Liệt Trận", first: "charcoal", second: "storm" },
+  { id: "tranSonThach", skill: "Trấn Sơn Hộ Trận", first: "mountain", second: "mountain" },
+  { id: "loiMinhXa", skill: "Lôi Châm Tước Khí", first: "storm", second: "reed" },
+  { id: "tatPhongLang", skill: "Phong Lăng Nhiễu Trận", first: "cloud", second: "bamboo" },
+  // Sát thủ
+  { id: "bachPhongDao", skill: "Thiết Ấn Đoạt Mệnh", first: "blackBronze", second: "blackBronze" },
+  // Tên chiêu chứa tên tướng: yếu tố và lời dẫn dùng phần còn lại, dấu danh tính ghi đủ tên chiêu.
+  { id: "docAnh", skill: "Tiềm Châm", first: "herbs", second: "forgedIron", fullSkill: "Độc Ảnh Tiềm Châm" },
+  { id: "hanGiangKhach", skill: "Hàn Giang Tàng Nhận", first: "estuary", second: "forgedIron" },
+  { id: "xichDa", skill: "Song Sát", first: "charcoal", second: "blackBronze", fullSkill: "Xích Dạ Song Sát" },
+  { id: "diaAn", skill: "Địa Phục Liệt Trảo", first: "boulder", second: "forgedIron" },
+  { id: "loiAnh", skill: "Bạo Vũ Lê Hoa", first: "storm", second: "dew" },
+  { id: "voAnh", skill: "Vô Thanh Đoạt Phách", first: "cloud", second: "forgedIron" },
+];
+
+function buildPack3(): { nodes: CatalogNode[]; recipes: Recipe[] } {
+  const nodes: CatalogNode[] = [];
+  const recipes: Recipe[] = [];
+  for (const b of BASICS) {
+    nodes.push({ ...know(`basic.${b.profession}`, b.nameVi, "vai-tro"), professionHint: b.profession });
+    recipes.push(r(`basic.${b.profession}`, b.first, b.second, `know.basic.${b.profession}`, b.reason));
+  }
+  for (const c of COMMONERS) {
+    const info = rosterCharacter(c.id);
+    if (!info) throw new Error(`Gói 3: không có ${c.id} trong roster`);
+    const { profession, element } = info;
+    const roleId = `role.basic.${profession}.${element}`;
+    if (!nodes.some((n) => n.id === roleId)) {
+      nodes.push(role(`basic.${profession}.${element}`, `${PROFESSION_VI[profession]} hệ ${ELEMENT_NAMES[element]}`, { profession, element }));
+      recipes.push(r(`basic.${profession}.${element}`, `know.basic.${profession}`, `elt.${element}`, roleId, `${PROFESSION_VI[profession]} theo hệ ${ELEMENT_NAMES[element]}`));
+    }
+    nodes.push(know(`skill.${c.id}`, c.skill, "tuyet-chieu", `Tuyệt chiêu riêng của tướng thường ${c.id}`));
+    recipes.push(r(`skill.${c.id}`, `mat.${c.first}`, `mat.${c.second}`, `know.skill.${c.id}`, `Hai thứ gợi tới tuyệt chiêu “${c.skill}”`));
+    const name = companionById(c.id)!.name;
+    nodes.push({
+      ...hero(c.id, name, "thuong", [{ kind: "skill", text: c.fullSkill ?? c.skill }], `${PROFESSION_VI[profession]} hệ ${ELEMENT_NAMES[element]}, tuyệt chiêu mang tên “${c.skill}”.`, undefined, "pack-3"),
+    });
+    recipes.push(r(c.id, roleId, `know.skill.${c.id}`, `hero.${c.id}`, `${PROFESSION_VI[profession]} hệ ${ELEMENT_NAMES[element]} dùng “${c.skill}”`));
+  }
+  return { nodes, recipes };
+}
+
+const PACK_3_CONTENT = buildPack3();
+
+const commonersOf = (profession: Profession) =>
+  COMMONERS.filter((c) => rosterCharacter(c.id)?.profession === profession).map((c) => `hero.${c.id}`);
+
+export const PACK_3: Pack = {
+  id: "pack-3",
+  nameVi: "Gói 3: Tướng thường",
+  contentVersion: 1,
+  // Chờ Shan duyệt công thức, lời dẫn và vàng thành tựu.
+  status: "draft",
+  nodes: PACK_3_CONTENT.nodes,
+  recipes: PACK_3_CONTENT.recipes,
+  // Đề xuất: mỗi nghề đủ 7 tướng 250 vàng (8 bộ), đủ 56 tướng thường 1 500.
+  achievementSets: [
+    ...(Object.keys(PROFESSION_VI) as Profession[]).map((p) => ({
+      id: `ttk.pack-3.${p}`,
+      title: `Tầm Tướng Ký: đủ bảy ${PROFESSION_VI[p].toLowerCase()} thường`,
+      gold: 250,
+      heroIds: commonersOf(p),
+    })),
+    { id: "ttk.pack-3.all", title: "Tầm Tướng Ký: đủ Gói 3", gold: 1500, heroIds: COMMONERS.map((c) => `hero.${c.id}`) },
+  ],
+};
+
 /**
  * Gộp các gói thành một sổ: node và công thức trùng ID chỉ giữ một bản (gói sau không được đổi nghĩa ID đã có).
  * Thành tựu của từng gói giữ nguyên.
@@ -393,16 +543,18 @@ export function mergePacks(id: string, nameVi: string, packs: readonly Pack[]): 
 
 /** Sổ gộp Gói 1 + Gói 2 (khi cờ Gói 2 bật). */
 export const PACK_1_2: Pack = mergePacks("pack-1-2", "Gói 1 + Gói 2", [PACK_1, PACK_2]);
+/** Sổ gộp ba gói (khi cờ Gói 3 bật; Gói 3 cần Gói 2). */
+export const PACK_1_2_3: Pack = mergePacks("pack-1-2-3", "Gói 1 + Gói 2 + Gói 3", [PACK_1, PACK_2, PACK_3]);
 
 /** Tên các gói theo `pack` của tướng, cho Tướng Lục chia mục. */
-export const PACK_NAMES: Readonly<Record<string, string>> = { "pack-1": PACK_1.nameVi, "pack-2": PACK_2.nameVi };
+export const PACK_NAMES: Readonly<Record<string, string>> = { "pack-1": PACK_1.nameVi, "pack-2": PACK_2.nameVi, "pack-3": PACK_3.nameVi };
 
 /** Mọi node và công thức của mọi gói đã viết: khi rút một gói, sổ người chơi không mất khám phá của gói đó. */
-export const KNOWN_NODE_IDS: ReadonlySet<string> = new Set(PACK_1_2.nodes.map((n) => n.id));
-export const KNOWN_RECIPE_IDS: ReadonlySet<string> = new Set(PACK_1_2.recipes.map((x) => x.id));
+export const KNOWN_NODE_IDS: ReadonlySet<string> = new Set(PACK_1_2_3.nodes.map((n) => n.id));
+export const KNOWN_RECIPE_IDS: ReadonlySet<string> = new Set(PACK_1_2_3.recipes.map((x) => x.id));
 
 /** Sổ theo mã server trả về (`TtkView.packId`), để client vẽ đúng sổ đang chạy. Mã lạ thì dùng Gói 1. */
-const PACKS_BY_ID: Readonly<Record<string, Pack>> = { "pack-1": PACK_1, "pack-1-2": PACK_1_2 };
+const PACKS_BY_ID: Readonly<Record<string, Pack>> = { "pack-1": PACK_1, "pack-1-2": PACK_1_2, "pack-1-2-3": PACK_1_2_3 };
 const CATALOG_CACHE = new Map<string, Catalog>();
 export function catalogForPack(packId: string | undefined): Catalog {
   const pack = (packId && PACKS_BY_ID[packId]) || PACK_1;
@@ -411,8 +563,9 @@ export function catalogForPack(packId: string | undefined): Catalog {
   return hit;
 }
 
-/** Sổ server đang chạy theo cờ: Gói 1, hoặc Gói 1 + Gói 2. */
-export function activePack(pack2: boolean): Pack {
+/** Sổ server đang chạy theo cờ: Gói 1; Gói 1 + 2; hoặc cả ba gói (Gói 3 cần Gói 2). */
+export function activePack(pack2: boolean, pack3 = false): Pack {
+  if (pack2 && pack3) return PACK_1_2_3;
   return pack2 ? PACK_1_2 : PACK_1;
 }
 
@@ -454,7 +607,7 @@ export const ACTIVE_PACK: Pack = PACK_1;
  * Gói đã duyệt nội dung: thành tựu của chúng nằm trong danh sách thành tựu. Trang Nhiệm vụ chỉ hiện thành tựu `ttk.*` khi
  * cờ TAM_TUONG_KY_ENABLED bật; cờ tắt thì không ai có tiến độ nên cũng không nhận được.
  */
-export const PUBLISHED_PACKS: readonly Pack[] = [PACK_1, PACK_2].filter((p) => p.status === "published");
+export const PUBLISHED_PACKS: readonly Pack[] = [PACK_1, PACK_2, PACK_3].filter((p) => p.status === "published");
 
 /** Bậc và nghề/hệ đọc từ roster, không chép vào catalog. Đinh Bộ Lĩnh chưa có (P-27, gói 2). */
 export function rosterCharacter(characterId: string): CharacterInfo | undefined {

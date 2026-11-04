@@ -56,6 +56,8 @@ Khách (chưa đăng nhập) thấy màn nhắc đăng nhập; API trả 401 (te
 
 **Gói 2:** đặt thêm `TAM_TUONG_KY_PACK2_ENABLED=true` (cần cờ chế độ; nên bật vào thứ Hai). Tắt thì sổ người chơi vẫn giữ khám phá Gói 2. Xem [Gói 2](21-tam-tuong-ky-pack-2.md#2-gộp-sổ).
 
+**Gói 3:** đặt thêm `TAM_TUONG_KY_PACK3_ENABLED=true` (cần cờ chế độ và cờ Gói 2; nên bật vào thứ Hai). Xem [Gói 3](22-tam-tuong-ky-pack-3.md#3-gộp-sổ-và-xoay-vòng-hạng).
+
 **Kiểm cờ sau khi deploy:** mở `/api/health`, mục `features.tamTuongKy`:
 
 - `enabled`, `ranked`, `pack2`: server đang đọc cờ chế độ, cờ Hạng, cờ Gói 2 là bật hay tắt; `pack2Ignored` như `rankedIgnored` cho cờ Gói 2.

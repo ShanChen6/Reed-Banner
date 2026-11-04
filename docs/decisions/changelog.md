@@ -2,6 +2,9 @@
 
 ## 04/11/2026
 
+**Tầm Tướng Ký: Gói 3 — mọi tướng vào sổ (DRAFT, có code)**
+- Shan: đưa mọi tướng vào Tầm Tướng Ký. [Gói 3](../02-game-modes/future/22-tam-tuong-ky-pack-3.md) thêm 56 tướng thường (8 nghề × 7 hệ), 7 lần ghép: vai trò sơ học + tuyệt chiêu riêng. Sổ ba gói 77 tướng, validator sạch. Cờ `TAM_TUONG_KY_PACK3_ENABLED` (cần Gói 2). Xoay vòng Hạng thêm bước bảo đảm tuần nào cũng có tướng đặc biệt; đề cử Gói 1, Gói 1 + 2 không đổi. Thành tựu đề xuất 9 bộ (3 500 vàng), chờ duyệt.
+
 **Tầm Tướng Ký: Gói 2 đã bật**
 - PR #258 merge vào `develop`; Shan bật `TAM_TUONG_KY_PACK2_ENABLED`. [Gói 2](../02-game-modes/future/21-tam-tuong-ky-pack-2.md) **APPROVED → IMPLEMENTED**. Bật giữa tuần (thứ Tư) nên nếu chế độ Hạng đang bật thì danh sách đề cử tuần 2026-11-02 đổi từ lúc bật; điểm đã ghi giữ nguyên.
 
