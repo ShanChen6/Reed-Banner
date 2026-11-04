@@ -23,6 +23,7 @@ import {
   expeditionMapOf,
   expeditionRunsLeft,
   expeditionTierUnlocked,
+  expeditionVisible,
   isExpeditionCombatNode,
   marchExpedition,
   matchOver,
@@ -80,8 +81,10 @@ export interface EncounterPreview {
 /** Đối thủ của mọi ô còn địch, theo từng đạo (giáp công khác nhau tùy đạo nào đánh). Không có seed. */
 function previews(run: ExpeditionRun): Record<string, readonly [EncounterPreview, EncounterPreview]> {
   const out: Record<string, readonly [EncounterPreview, EncounterPreview]> = {};
+  // Sương mù: chỉ báo trước địch ở ô đang thấy.
+  const visible = expeditionVisible(run);
   for (const node of expeditionMapOf(run).nodes) {
-    if (!isExpeditionCombatNode(node.kind) || run.nodes[node.id]?.cleared) continue;
+    if (!isExpeditionCombatNode(node.kind) || run.nodes[node.id]?.cleared || !visible.has(node.id)) continue;
     const one = (army: 0 | 1): EncounterPreview => {
       const e = expeditionEncounter(run, node.id, army)!;
       return {
@@ -143,6 +146,7 @@ export async function expeditionOverview(ownerId: string | null, deps: Deps) {
     runsPerDay: EXPEDITION_RUNS_PER_DAY,
     run: publicRun(state.run),
     encounters: state.run && state.run.phase === "march" ? previews(state.run) : {},
+    visible: state.run ? [...expeditionVisible(state.run)] : [],
   };
 }
 

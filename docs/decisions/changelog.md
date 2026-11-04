@@ -2,6 +2,10 @@
 
 ## 04/11/2026
 
+**Viễn Chinh: sáu sa bàn, sương mù, vượt nước, chòi canh, tranh nền riêng**
+- Shan yêu cầu sa bàn đa dạng, sương mù chỉ hiện ô đi được, nền là tranh bản đồ có gắn vị trí. Thêm ba sa bàn Ngã Ba Sông (Thổ), Kinh Thành (Hỏa), Quần Đảo (Phong); đường vượt nước mất 2 ngày; ô chòi canh vén sương mù trong 2 bước. Thành đích luôn hiện vị trí nhưng không báo địch tới khi thấy. Xem [GDD Viễn Chinh mục 3.8–4.1](../02-game-modes/expedition/01-vien-chinh-gdd.md#38-sương-mù-shan-yêu-cầu-04112026).
+- Tranh nền: Shan chốt mỗi sa bàn một tranh mới (không cắt bản đồ tổng); câu lệnh vẽ ở [Prompt tranh sa bàn](../06-art/prompts/vien-chinh-sa-ban.md). Chưa có tranh thì tạm hiện một vùng bản đồ tổng Bình Loạn.
+
 **Tầm Tướng Ký: Shan duyệt Gói 3**
 - Duyệt 8 tri thức sơ học, 56 công thức tuyệt chiêu, 56 lời dẫn và 9 thành tựu (3 500 vàng) của [Gói 3](../02-game-modes/future/22-tam-tuong-ky-pack-3.md) (**DRAFT → APPROVED**); `PACK_3` đặt `published`. Ra mắt cùng cờ `TAM_TUONG_KY_ENABLED` khi merge vào `develop` và deploy.
 

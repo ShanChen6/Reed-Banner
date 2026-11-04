@@ -65,6 +65,8 @@ describe("Viễn Chinh trên server", () => {
     const overview = await expeditionOverview("u", deps);
     assert.ok(overview.enabled && overview.run && !("seed" in overview.run));
     assert.ok(overview.enabled && overview.encounters["khe-da"]);
+    // Sương mù: ô xa chưa thấy thì không báo trước địch.
+    assert.ok(overview.enabled && !overview.encounters["gac-bac"] && !overview.visible.includes("gac-bac"));
 
     const moved = await marchExpeditionArmy("u", { army: 1, to: "ban-na" }, deps);
     assert.ok(moved.ok && moved.kind === "moved");

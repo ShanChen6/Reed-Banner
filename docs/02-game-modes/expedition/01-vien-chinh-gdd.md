@@ -27,7 +27,7 @@ nào đóng quân dù giặc đang tăng viện. Trận vẫn là trận match-3
 
 ## 2. Vòng chơi
 
-1. **Chọn sa bàn và bậc.** Ba sa bàn (mục 4), mỗi sa bàn ba bậc. Bậc I luôn mở; bậc sau mở khi đã thắng bậc trước của
+1. **Chọn sa bàn và bậc.** Sáu sa bàn (mục 4), mỗi sa bàn ba bậc. Bậc I luôn mở; bậc sau mở khi đã thắng bậc trước của
    cùng sa bàn.
 2. **Chia hai đạo.** Đạo Chính: Đinh Bộ Lĩnh (nghề và hệ đang chọn ở Doanh Trại) và 2 tướng. Biệt đạo: 3 tướng, người đầu
    là thống lĩnh. Sáu người khác nhau, đều đã chiêu mộ. Người mới có đúng 5 tướng khởi đầu nên vào được ngay.
@@ -35,7 +35,7 @@ nào đóng quân dù giặc đang tăng viện. Trận vẫn là trận match-3
 3. **Hành quân theo ngày.** Mỗi ngày chọn **một** việc:
    - **Tiến quân:** một đạo đi sang ô kề. Ô có địch thì đánh; ô đã chiếm hoặc làng thì đi luôn.
    - **Đóng quân:** cả hai đạo nghỉ.
-   Việc nào cũng tốn một ngày. Đạo không tiến quân trong ngày thì **nghỉ**: mọi người hồi 15% máu tối đa (kể cả người
+   Việc nào cũng tốn một ngày; riêng đường **vượt nước** tốn 2 ngày (mục 3.9). Đạo không tiến quân trong ngày thì **nghỉ**: mọi người hồi 15% máu tối đa (kể cả người
    gục, họ đứng dậy) và thêm 10 lương.
 4. **Thắng** khi chiếm được thành đích. **Thua** khi hết số ngày của sa bàn mà chưa chiếm, hoặc khi rút quân.
 
@@ -47,6 +47,7 @@ nào đóng quân dù giặc đang tăng viện. Trận vẫn là trận match-3
 |---|---|---|
 | Trại | — | Điểm xuất phát của mỗi đạo |
 | Đồn | 2 | AI Dễ ở Bậc I |
+| Chòi canh | 2 | AI Dễ ở Bậc I. Chiếm được: vén sương mù mọi ô trong 2 bước (mục 3.8) |
 | Kho lương | 2 | Chiếm được: cả hai đạo +20 lương |
 | Lũy | 3 | AI Thường ở Bậc I |
 | Làng | — | Lần đầu ghé: cả đạo hồi 35% máu (kể cả người gục), +20 lương |
@@ -54,7 +55,8 @@ nào đóng quân dù giặc đang tăng viện. Trận vẫn là trận match-3
 
 - Đường đi hai chiều. Hai đạo được đứng chung một ô.
 - Đối thủ của mỗi ô sinh theo seed của lượt (cố định suốt lượt) từ 42 nhân vật kèm; khoảng nửa số địch cùng hệ với
-  chiến địa. Màn chơi **báo trước** đối thủ của mọi ô còn địch (tên, hệ, nghề, cấp, máu, độ khó AI).
+  chiến địa. Màn chơi **báo trước** đối thủ của các ô còn địch **đang thấy** (tên, hệ, nghề, cấp, máu, độ khó AI); ô
+  trong sương mù không báo.
 - Bàn cờ mọi trận nghiêng về loại ô hợp hệ chiến địa (cùng bảng `HOME_TERRAIN` với sân nhà của Tái đấu sứ quân).
 - Người chơi luôn đi trước.
 
@@ -107,16 +109,44 @@ rồi một đạo đánh.
   quân hay đóng quân (`loginRequired`), trận Viễn Chinh dở không mở tiếp được khi đã đăng xuất. Rút quân vẫn cho để kết
   thúc lượt có sẵn.
 
-## 4. Ba sa bàn
+### 3.8 Sương mù (Shan yêu cầu 04/11/2026)
+
+- Sa bàn phủ sương mù. Chỉ thấy: ô hai đạo đang đứng và **các ô kề** (ô đi được), hai trại, ô đã chiếm hay đã đánh,
+  và mọi ô trong **2 bước** quanh một chòi canh đã chiếm. Ô đã thấy vẫn thấy khi đạo quân đi xa nếu đã chiếm hay đã
+  đánh; ô chỉ đi ngang qua tầm nhìn thì lại chìm vào sương.
+- Thành đích luôn hiện vị trí (dấu "?" và tên) để người chơi biết hướng đi, nhưng không báo địch tới khi thấy.
+- Đường đi chỉ vẽ khi có ít nhất một đầu đang thấy; đoạn chạy vào sương bị sương phủ.
+- Server chỉ gửi báo trước địch của ô đang thấy (`expeditionVisible`). Định nghĩa sa bàn nằm trong code chung nên
+  người đọc mã nguồn vẫn biết bố cục; sương mù là luật chơi, không phải bảo mật.
+- Mô phỏng (mục 5.1) vẫn đi theo cả bản đồ, nên số liệu mô phỏng là trần trên của người chơi thật.
+
+### 3.9 Vượt nước
+
+- Một số đường là **vượt sông hay biển** (đường xanh đứt nét). Đi qua mất **2 ngày**: đạo kia nghỉ cả 2 ngày, giặc
+  tăng viện theo 2 ngày. Đánh một ô qua đường vượt nước cũng mất 2 ngày, thắng hay thua.
+- Màn chơi báo "Vượt nước: đi mất 2 ngày" trước khi tiến. Quá hạn giữa chừng thì lượt thua như hết ngày.
+
+## 4. Sáu sa bàn
 
 | Sa bàn | Hệ | Ô | Số ngày / chuẩn | Hình dạng |
 |---|---|---|---|---|
 | **Ải Bắc** | Kim | 11 | 12 / 8 | Đường đan nhau, có làng và kho lương ở giữa; dễ dồn quân giáp công. Hai cổng thành đều là lũy. Sa bàn nhập môn |
-| **Thượng Du** | Mộc | 12 | 17 / 12 | Hai thung lũng tách rời, mỗi bên một làng, chỉ nối qua Đèo Ngang Núi (lũy). Đường dài, giáp công chỉ ở cổng thành. Sa bàn khó nhất |
+| **Thượng Du** | Mộc | 12 | 17 / 12 | Hai thung lũng tách rời, mỗi bên một làng, chỉ nối qua Đèo Ngang Núi (lũy). Đường dài, giáp công chỉ ở cổng thành |
 | **Cửa Biển** | Thủy | 11 | 12 / 8 | Chợ Cửa Sông (kho lương) là nút giao giữa bãi; thành đích có ba ngả vào, cả ba là lũy hoặc đồn |
+| **Ngã Ba Sông** | Thổ | 13 | 15 / 11 | Hai trại ở hai bờ đối diện, thành giữa ngã ba sông. Lội sông vào thẳng thành mất 2 ngày; đi vòng qua Lũy Bến Đò, Lũy Núi Sơn bằng đường bộ thì xa hơn. Có một chòi canh |
+| **Kinh Thành** | Hỏa | 14 | 16 / 11 | Kinh thành có ba cổng lũy, chỉ vào thành qua cổng. Hai chòi canh ở hai cánh nhìn thấu đường vây; Chợ Phiên ở giữa hai trại nhưng phải vượt sông |
+| **Quần Đảo** | Phong | 12 | 15 / 10 | Thành đảo giữa vịnh, chỉ Lũy Cầu Dài nối vào bằng đường bộ; còn lại đi thuyền giữa các đảo (2 ngày mỗi chặng). Một chòi canh ở đảo bắc |
 
-Tên ô là địa danh hư cấu ở vùng biên (không dùng tên nước láng giềng, không gắn với sự kiện lịch sử); đối thủ là tướng
-kèm của game, không phải sứ quân. Tọa độ và cạnh ở `src/core/expedition/maps.ts`.
+Tên ô là địa danh hư cấu (không dùng tên nước láng giềng, không gắn với sự kiện lịch sử); đối thủ là tướng kèm của
+game, không phải sứ quân. Tọa độ và cạnh ở `src/core/expedition/maps.ts`.
+
+### 4.1 Tranh nền
+
+- Mỗi sa bàn một **tranh riêng** 5:3 (Shan chốt 04/11/2026: tranh mới, không cắt từ bản đồ tổng). Câu lệnh vẽ ở
+  [Prompt tranh sa bàn](../../06-art/prompts/vien-chinh-sa-ban.md). Tranh đặt ở `public/art/expedition/<tên>.webp`,
+  khai báo trong `EXPEDITION_MAP_IMAGES`; khi có tranh, Claude dời tọa độ từng ô cho khớp thành, làng, bến trên tranh.
+- Chưa có tranh thì sa bàn tạm hiện một vùng của bản đồ tổng Bình Loạn (`ExpeditionMap.art`). Không dùng ảnh nền của
+  Trận Đồ.
 
 ## 5. Số liệu (điểm xuất phát)
 
@@ -161,6 +191,19 @@ một luật tham lam: đi đường ngắn nhất tới hai cổng thành khác
 | Cửa Biển I (lần 4) | 90% | 8,0 | 73% | 50% | 0,8 | 49% |
 | Cửa Biển II (lần 4) | 93% | 8,5 | 63% | 20% | 1,3 | 39% |
 | Cửa Biển III (lần 4) | 53% | 9,9 | 13% | 7% | 2,9 | 33% |
+| Ngã Ba Sông I | 87% | 6,5 | 70% | 70% | 0,5 | 25% |
+| Ngã Ba Sông II | 90% | 7,0 | 50% | 50% | 0,7 | 22% |
+| Ngã Ba Sông III | 67% | 7,8 | 20% | 17% | 1,4 | 19% |
+| Kinh Thành I | 93% | 6,1 | 70% | 50% | 0,9 | 15% |
+| Kinh Thành II | 87% | 7,1 | 47% | 13% | 1,6 | 11% |
+| Kinh Thành III | 83% | 8,0 | 23% | 13% | 2,0 | 11% |
+| Quần Đảo I | 97% | 5,3 | 77% | 60% | 0,6 | 53% |
+| Quần Đảo II | 97% | 5,4 | 77% | 53% | 0,8 | 52% |
+| Quần Đảo III | 87% | 5,5 | 67% | 40% | 1,1 | 51% |
+
+Ba sa bàn mới đo sau lần chỉnh thứ 3 (giảm số ngày, tăng độ sâu cổng Kinh Thành và Lũy Cầu Dài); Shan cho dừng
+cân bằng ở đây nên Bậc III của ba sa bàn này còn dễ hơn ba sa bàn cũ (67–87%). Mô phỏng thấy cả bản đồ (không có
+sương mù), nên người chơi thật sẽ khó hơn một chút.
 
 Thua gần như toàn bộ là hết ngày. Trận trung bình 13–22 lượt (hai phe cộng lại), tức khoảng 3–6 phút. Đánh hết một
 lượt viễn chinh là 5–11 trận. Thượng Du III để khó có chủ ý (đội khởi đầu, không đồ); người chơi tới Bậc III thường đã có
@@ -179,7 +222,7 @@ lượt viễn chinh là 5–11 trận. Thượng Du III để khó có chủ ý
 
 | Route | Việc |
 |---|---|
-| `GET /api/expedition` | Ba sa bàn, bậc đã mở, sao, ngày nhanh nhất, lượt xuất quân còn trong ngày, lượt đang đi (không có seed), đối thủ báo trước của mọi ô còn địch theo từng đạo. Trận đã xong mà chưa chốt thì chốt luôn |
+| `GET /api/expedition` | Sáu sa bàn, bậc đã mở, sao, ngày nhanh nhất, lượt xuất quân còn trong ngày, lượt đang đi (không có seed), `visible` (ô ngoài sương mù), đối thủ báo trước của các ô còn địch đang thấy, theo từng đạo. Trận đã xong mà chưa chốt thì chốt luôn |
 | `POST /api/expedition/run` `{ map, tier, main: [2], second: [3] }` | Xuất quân. Cần đăng nhập; hết lượt trong ngày báo `dailyLimit` |
 | `POST /api/expedition/march` `{ army, to }` | Tiến quân; gặp địch thì mở trận và trả id (đang có trận thì trả lại trận đó) |
 | `POST /api/expedition/camp` | Đóng quân |
@@ -191,7 +234,7 @@ lượt viễn chinh là 5–11 trận. Thượng Du III để khó có chủ ý
 ## 7. Ngoài phạm vi bản đầu
 
 - Mùa cho bảng xếp hạng và thưởng theo hạng.
-- Sự kiện ngẫu nhiên trên đường, sương mù che ô chưa tới, địch phản công ô đã chiếm.
+- Sự kiện ngẫu nhiên trên đường, địch phản công ô đã chiếm.
 - Tranh thumbnail Home riêng (`public/art/home/vien-chinh.webp`); banner tạm dùng tranh Bình Loạn.
 - Thêm sa bàn: chỉ cần thêm một mục trong `EXPEDITION_MAPS`; test kiểm đồ thị tự chạy cho mọi sa bàn.
 

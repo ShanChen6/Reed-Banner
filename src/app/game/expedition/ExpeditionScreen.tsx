@@ -13,6 +13,8 @@ import {
   EXPEDITION_GRANARY_FOOD,
   MAIN_ID,
   companionById,
+  EXPEDITION_WATCHTOWER_SIGHT,
+  expeditionEdgeDays,
   expeditionNeighbors,
   type ArmyIndex,
   type Element,
@@ -68,6 +70,8 @@ interface Overview {
   readonly runsLeft: number;
   readonly runsPerDay: number;
   readonly encounters: Readonly<Record<string, readonly [EncounterPreview, EncounterPreview]>>;
+  /** Ô đang thấy (ngoài sương mù), server tính. */
+  readonly visible: readonly string[];
 }
 
 interface ApiResult {
@@ -95,6 +99,7 @@ const ERROR_TEXT: Record<string, string> = {
 const KIND_NAME: Record<ExpeditionNodeKind, string> = {
   camp: "Trại",
   outpost: "Đồn",
+  watchtower: "Chòi canh",
   granary: "Kho lương",
   fort: "Lũy",
   village: "Làng",
@@ -104,6 +109,7 @@ const KIND_NAME: Record<ExpeditionNodeKind, string> = {
 const KIND_TEXT: Record<ExpeditionNodeKind, string> = {
   camp: "Trại xuất phát. Không có địch.",
   outpost: "Đồn nhỏ, 2 địch.",
+  watchtower: `Chòi canh, 2 địch. Chiếm được: vén sương mù mọi ô trong ${EXPEDITION_WATCHTOWER_SIGHT} bước.`,
   granary: `Kho lương có lính giữ, 2 địch. Chiếm được: cả hai đạo thêm ${EXPEDITION_GRANARY_FOOD} lương.`,
   fort: "Lũy, 3 địch.",
   village: `Làng. Lần đầu ghé: cả đạo hồi ${Math.round(EXPEDITION_VILLAGE_HEAL * 100)}% máu (kể cả người gục) và thêm lương.`,
@@ -252,6 +258,7 @@ export default function ExpeditionScreen() {
             run={run}
             map={mapOf(run.map)}
             encounters={overview.encounters}
+            visible={overview.visible}
             army={army}
             setArmy={(a) => { setArmy(a); setTarget(null); }}
             target={target}
@@ -338,8 +345,10 @@ function SetupView(props: {
                 type="button"
                 aria-pressed={m.id === map.id}
                 onClick={() => props.setMapId(m.id)}
-                className={`tower-screen__choice p-3 text-left ${m.id === map.id ? "border-amber-400 bg-amber-500/15" : "border-white/10 bg-white/5"}`}
+                className={`tower-screen__choice overflow-hidden p-0 text-left ${m.id === map.id ? "border-amber-400 bg-amber-500/15" : "border-white/10 bg-white/5"}`}
               >
+                <span aria-hidden className="block aspect-[5/2] w-full bg-no-repeat opacity-90" style={mapArtStyle(m)} />
+                <span className="block p-3">
                 <span className="flex items-center gap-2">
                   <ElementIcon element={m.element} className="size-5" />
                   <strong className="font-serif text-lg text-amber-100">{m.name}</strong>
@@ -348,6 +357,7 @@ function SetupView(props: {
                 <span className="mt-1 block text-sm text-muted">{m.blurb}</span>
                 <span className="mt-2 block text-xs text-foreground-secondary">
                   Chiến địa hệ {ELEMENT_NAME[m.element]} · {m.days} ngày · chuẩn {m.parDays} ngày
+                </span>
                 </span>
               </button>
             );
@@ -459,6 +469,8 @@ function NodeGlyph({ kind, x, y }: { kind: ExpeditionNodeKind; x: number; y: num
       return <ellipse cx={x} cy={y} rx={s} ry={s * 0.8} fill="currentColor" />;
     case "outpost":
       return <rect x={x - s * 0.7} y={y - s} width={s * 1.4} height={s * 2} fill="currentColor" />;
+    case "watchtower":
+      return <path d={`M${x - s * 0.9} ${y + s} L${x - s * 0.45} ${y - s * 0.5} H${x - s * 0.9} L${x} ${y - s * 1.2} L${x + s * 0.9} ${y - s * 0.5} H${x + s * 0.45} L${x + s * 0.9} ${y + s} Z`} fill="currentColor" />;
     case "fort":
       return <path d={`M${x - s} ${y + s} V${y - s} h${s * 0.6} v${s * 0.6} h${s * 0.8} v${-s * 0.6} h${s * 0.6} V${y + s} Z`} fill="currentColor" />;
     case "citadel":
@@ -466,10 +478,170 @@ function NodeGlyph({ kind, x, y }: { kind: ExpeditionNodeKind; x: number; y: num
   }
 }
 
+/**
+ * Tranh riêng của từng sa bàn (5:3, `public/art/expedition/<id>.webp`, vẽ theo docs/06-art/prompts/vien-chinh-sa-ban.md).
+ * Sa bàn chưa có tranh thì tạm lấy một vùng của bản đồ tổng Bình Loạn (`ExpeditionMap.art`) cho tới khi có tranh.
+ */
+const EXPEDITION_MAP_IMAGES: Partial<Record<ExpeditionMap["id"], string>> = {};
+const WORLD_ART = "/art/campaign/world-map.webp";
+const WORLD_W = 1536;
+const WORLD_H = 1024;
+
+/** Ảnh nền của một sa bàn, phủ đúng khung 100 × 60 của SVG. */
+function MapArt({ map }: { map: ExpeditionMap }) {
+  const own = EXPEDITION_MAP_IMAGES[map.id];
+  if (own) return <image href={own} x={0} y={0} width={100} height={60} preserveAspectRatio="xMidYMid slice" />;
+  const art = map.art;
+  const k = 100 / art.w;
+  return (
+    <image
+      href={WORLD_ART}
+      x={-art.x * k}
+      y={-art.y * k}
+      width={WORLD_W * k}
+      height={WORLD_H * k}
+      preserveAspectRatio="none"
+    />
+  );
+}
+
+/** Nền CSS cho thẻ chọn sa bàn: cùng tranh với sa bàn. */
+export function mapArtStyle(map: ExpeditionMap): React.CSSProperties {
+  const own = EXPEDITION_MAP_IMAGES[map.id];
+  if (own) return { backgroundImage: `url(${own})`, backgroundSize: "cover", backgroundPosition: "center" };
+  const art = map.art;
+  const h = art.w * 0.6;
+  return {
+    backgroundImage: `url(${WORLD_ART})`,
+    // Thẻ thấp hơn khung 5:3 nên giữ tỉ lệ tranh và lấy dải giữa vùng tranh theo chiều dọc.
+    backgroundSize: `${(WORLD_W / art.w) * 100}% auto`,
+    backgroundPosition: `${(art.x / (WORLD_W - art.w)) * 100}% ${((art.y + h / 2) / WORLD_H) * 100}%`,
+  };
+}
+
+const LABEL_HALO = { paintOrder: "stroke", stroke: "#1b1411", strokeWidth: 0.7, strokeLinejoin: "round" } as const;
+
+/** Tên ô; ô sát mép trái/phải thì canh chữ vào trong để không bị cắt. */
+function NodeLabel({ x, y, text }: { x: number; y: number; text: string }) {
+  const anchor = x < 12 ? "start" : x > 88 ? "end" : "middle";
+  const tx = anchor === "start" ? Math.max(0.6, x - 3) : anchor === "end" ? Math.min(99.4, x + 3) : x;
+  return <text x={tx} y={y} textAnchor={anchor} fontSize="2.2" fill="#f3dfae" style={LABEL_HALO}>{text}</text>;
+}
+
+function SandTable(props: {
+  run: Omit<ExpeditionRun, "seed">;
+  map: MapView;
+  seen: ReadonlySet<string>;
+  army: ArmyIndex;
+  target: string | null;
+  reachable: readonly string[];
+  setArmy: (a: ArmyIndex) => void;
+  setTarget: (id: string | null) => void;
+}) {
+  const { run, map, seen, army, target, reachable } = props;
+  const byId = (id: string) => map.nodes.find((n) => n.id === id)!;
+  const selected = run.armies[army];
+  const canFight = (a: ArmyIndex) => run.armies[a].ids.some((id) => (run.armies[a].fighters[id]?.hp ?? 0) > 0);
+  const citadel = byId(map.citadel);
+  const fogId = `exp-fog-${map.id}`;
+  return (
+    <svg viewBox="0 0 100 60" className="mt-3 w-full overflow-hidden rounded-lg border border-[#85602e] bg-[#2a1f14]" role="group" aria-label={`Sa bàn ${map.name}`}>
+      <defs>
+        <radialGradient id={`${fogId}-hole`}>
+          <stop offset="45%" stopColor="#000" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0" />
+        </radialGradient>
+        <filter id={`${fogId}-cloud`} x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="3" seed="7" />
+          <feColorMatrix values="0 0 0 0 0.86  0 0 0 0 0.79  0 0 0 0 0.66  0 0 0 0.9 0.15" />
+        </filter>
+        <mask id={`${fogId}-mask`} maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="60">
+          <rect width="100" height="60" fill="#fff" />
+          {map.nodes.filter((n) => seen.has(n.id)).map((n) => (
+            <circle key={n.id} cx={n.x} cy={n.y} r={10} fill={`url(#${fogId}-hole)`} />
+          ))}
+        </mask>
+      </defs>
+      <MapArt map={map} />
+      {/* Đường đi: chỉ vẽ đường có ít nhất một đầu đã thấy; phần chạy vào sương bị sương phủ. */}
+      {map.edges.map(([a, b, kind]) => {
+        if (!seen.has(a) && !seen.has(b)) return null;
+        const na = byId(a);
+        const nb = byId(b);
+        const hot = (a === selected.at && reachable.includes(b)) || (b === selected.at && reachable.includes(a));
+        const water = kind === "water";
+        return (
+          <line
+            key={`${a}-${b}`}
+            x1={na.x} y1={na.y} x2={nb.x} y2={nb.y}
+            stroke={hot ? ARMY_COLOR[army] : water ? "#7fd0e6" : "#f3dfae"}
+            strokeOpacity={hot ? 1 : 0.85}
+            strokeWidth={hot ? 0.75 : 0.5}
+            strokeDasharray={water ? "1.4 0.9" : hot ? undefined : "0.9 0.6"}
+            style={{ filter: "drop-shadow(0 0 0.4px #1b1411)" }}
+          />
+        );
+      })}
+      {/* Sương mù: phủ cả sa bàn, khoét lỗ mờ quanh các ô đang thấy. */}
+      <g mask={`url(#${fogId}-mask)`} pointerEvents="none">
+        <rect width="100" height="60" fill="#2a2118" fillOpacity="0.72" />
+        <rect width="100" height="60" filter={`url(#${fogId}-cloud)`} opacity="0.55" />
+      </g>
+      {!seen.has(citadel.id) && (
+        <g aria-label={`${citadel.name}: thành đích, chưa trinh sát`} opacity={0.85}>
+          <circle cx={citadel.x} cy={citadel.y} r={3.6} fill="#1b1411aa" stroke="#e06a4f" strokeWidth={0.4} strokeDasharray="0.8 0.6" />
+          <text x={citadel.x} y={citadel.y + 1.1} textAnchor="middle" fontSize="3.2" fontWeight="bold" fill="#e06a4f">?</text>
+          <NodeLabel x={citadel.x} y={citadel.y + 6.4} text={citadel.name} />
+        </g>
+      )}
+      {map.nodes.filter((n) => seen.has(n.id)).map((n) => {
+        const can = reachable.includes(n.id);
+        const done = run.nodes[n.id]?.cleared === true;
+        const damaged = !done && (run.nodes[n.id]?.foeHp?.length ?? 0) > 0;
+        const color = done ? "#8fd39a" : n.kind === "citadel" ? "#ff8a6a" : n.kind === "village" ? "#f0d77f" : "#f3dfae";
+        const r = n.kind === "citadel" ? 3.6 : 2.8;
+        return (
+          <g
+            key={n.id}
+            role="button"
+            tabIndex={0}
+            aria-label={`${n.name} (${KIND_NAME[n.kind]}${done ? ", đã chiếm" : ""})`}
+            onClick={() => props.setTarget(n.id)}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") props.setTarget(n.id); }}
+            className="cursor-pointer focus:outline-none"
+            style={{ color }}
+          >
+            <circle cx={n.x} cy={n.y} r={r} fill="#1b1411cc" stroke={target === n.id ? "#fff" : can ? ARMY_COLOR[army] : color} strokeWidth={target === n.id || can ? 0.8 : 0.4} />
+            <g transform={`translate(${n.x} ${n.y}) scale(0.8) translate(${-n.x} ${-n.y})`}>
+              <NodeGlyph kind={n.kind} x={n.x} y={n.y} />
+            </g>
+            {damaged && <circle cx={n.x + r * 0.8} cy={n.y - r * 0.8} r={0.8} fill="#e06a4f" />}
+            <NodeLabel x={n.x} y={n.y + r + 2.6} text={n.name} />
+          </g>
+        );
+      })}
+      {run.armies.map((a, i) => {
+        const n = byId(a.at);
+        // Hai cờ cùng hướng phải, cờ Chính cao hơn cờ Biệt để đứng chung một ô vẫn đọc được.
+        const px = n.x + (i === 0 ? -1.4 : 1.4);
+        const top = Math.max(0.4, n.y - (i === 0 ? 10 : 6.8));
+        return (
+          <g key={i} onClick={() => props.setArmy(i as ArmyIndex)} className="cursor-pointer" opacity={canFight(i as ArmyIndex) ? 1 : 0.45}>
+            <line x1={px} y1={n.y - 2.2} x2={px} y2={top} stroke="#1b1411" strokeWidth={0.5} />
+            <path d={`M${px} ${top} h7 l-1.2 1.5 l1.2 1.5 h-7 Z`} fill={ARMY_COLOR[i]} stroke={army === i ? "#fff" : "#1b1411"} strokeWidth={0.3} />
+            <text x={px + 3.2} y={top + 2.15} textAnchor="middle" fontSize="1.9" fill="#1b1411" fontWeight="bold">{i === 0 ? "Chính" : "Biệt"}</text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
 function RunView(props: {
   run: Omit<ExpeditionRun, "seed">;
   map: MapView;
   encounters: Overview["encounters"];
+  visible: readonly string[];
   army: ArmyIndex;
   setArmy: (a: ArmyIndex) => void;
   target: string | null;
@@ -481,9 +653,10 @@ function RunView(props: {
   onResume: () => void;
 }) {
   const { run, map, encounters, army, target } = props;
+  const seen = new Set(props.visible);
   const selected = run.armies[army];
   const reachable = run.phase === "march" ? expeditionNeighbors(map, selected.at) : [];
-  const node = target ? map.nodes.find((n) => n.id === target) : undefined;
+  const node = target && seen.has(target) ? map.nodes.find((n) => n.id === target) : undefined;
   const preview = target ? encounters[target]?.[army] : undefined;
   const cleared = (id: string) => run.nodes[id]?.cleared === true;
   const canFight = (a: ArmyIndex) => run.armies[a].ids.some((id) => (run.armies[a].fighters[id]?.hp ?? 0) > 0);
@@ -500,59 +673,20 @@ function RunView(props: {
             {reinforce > 0 && <> · giặc tăng viện <strong className="text-rose-300">+{reinforce}%</strong></>}
           </p>
         </div>
-        <svg viewBox="0 -4 100 66" className="mt-3 w-full rounded-lg border border-[#85602e] bg-[#2a1f14]" role="group" aria-label={`Sa bàn ${map.name}`}>
-          <defs>
-            <pattern id="exp-grid" width="5" height="5" patternUnits="userSpaceOnUse">
-              <path d="M5 0H0V5" fill="none" stroke="#e7d2a10f" strokeWidth="0.2" />
-            </pattern>
-          </defs>
-          <rect y="-4" width="100" height="66" fill="url(#exp-grid)" />
-          {map.edges.map(([a, b]) => {
-            const na = map.nodes.find((n) => n.id === a)!;
-            const nb = map.nodes.find((n) => n.id === b)!;
-            const hot = (a === selected.at && reachable.includes(b)) || (b === selected.at && reachable.includes(a));
-            return <line key={`${a}-${b}`} x1={na.x} y1={na.y} x2={nb.x} y2={nb.y} stroke={hot ? ARMY_COLOR[army] : "#a47a3f88"} strokeWidth={hot ? 0.7 : 0.45} strokeDasharray={hot ? undefined : "1.2 0.8"} />;
-          })}
-          {map.nodes.map((n) => {
-            const can = reachable.includes(n.id);
-            const done = cleared(n.id);
-            const damaged = !done && (run.nodes[n.id]?.foeHp?.length ?? 0) > 0;
-            const color = done ? "#7fb685" : n.kind === "citadel" ? "#e06a4f" : n.kind === "village" ? "#d9c27a" : "#e7d2a1";
-            return (
-              <g
-                key={n.id}
-                role="button"
-                tabIndex={0}
-                aria-label={`${n.name} (${KIND_NAME[n.kind]}${done ? ", đã chiếm" : ""})`}
-                onClick={() => props.setTarget(n.id)}
-                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") props.setTarget(n.id); }}
-                className="cursor-pointer focus:outline-none"
-                style={{ color }}
-              >
-                <circle cx={n.x} cy={n.y} r={n.kind === "citadel" ? 4.4 : 3.4} fill="#1b1411" stroke={target === n.id ? "#fff" : can ? ARMY_COLOR[army] : color} strokeWidth={target === n.id || can ? 0.8 : 0.4} />
-                <NodeGlyph kind={n.kind} x={n.x} y={n.y} />
-                {damaged && <circle cx={n.x + 3} cy={n.y - 3} r={0.9} fill="#e06a4f" />}
-                <text x={n.x} y={n.y + (n.kind === "citadel" ? 7.4 : 6.2)} textAnchor="middle" fontSize="2.3" fill="#e7d2a1cc">{n.name}</text>
-              </g>
-            );
-          })}
-          {run.armies.map((a, i) => {
-            const n = map.nodes.find((x) => x.id === a.at)!;
-            // Hai cờ cùng hướng phải, cờ Chính cao hơn cờ Biệt để đứng chung một ô vẫn đọc được.
-            const px = n.x + (i === 0 ? -1.6 : 1.6);
-            const top = n.y - (i === 0 ? 11 : 7.4);
-            return (
-              <g key={i} onClick={() => props.setArmy(i as ArmyIndex)} className="cursor-pointer" opacity={canFight(i as ArmyIndex) ? 1 : 0.45}>
-                <line x1={px} y1={n.y - 2.5} x2={px} y2={top} stroke="#1b1411" strokeWidth={0.5} />
-                <path d={`M${px} ${top} h7 l-1.2 1.5 l1.2 1.5 h-7 Z`} fill={ARMY_COLOR[i]} stroke={army === i ? "#fff" : "#1b1411"} strokeWidth={0.3} />
-                <text x={px + 3.2} y={top + 2.15} textAnchor="middle" fontSize="1.9" fill="#1b1411" fontWeight="bold">{i === 0 ? "Chính" : "Biệt"}</text>
-              </g>
-            );
-          })}
-        </svg>
+        <SandTable
+          run={run}
+          map={map}
+          seen={seen}
+          army={army}
+          target={target}
+          reachable={reachable}
+          setArmy={props.setArmy}
+          setTarget={props.setTarget}
+        />
         <p className="mt-2 text-xs text-muted">
           Chạm cờ để chọn đạo quân, chạm ô kề (viền màu đạo) để xem rồi tiến quân. Đạo không tiến được nghỉ, hồi
-          {` ${Math.round(EXPEDITION_REST_HEAL * 100)}% `}máu mỗi ngày (kể cả người gục). Chấm đỏ: đồn đánh dở, địch giữ thương vong.
+          {` ${Math.round(EXPEDITION_REST_HEAL * 100)}% `}máu mỗi ngày (kể cả người gục). Đường xanh đứt nét là vượt nước, mất
+          2 ngày. Sương mù che các ô chưa trinh sát; chiếm chòi canh để nhìn xa. Chấm đỏ: đồn đánh dở, địch giữ thương vong.
         </p>
       </div>
 
@@ -597,6 +731,9 @@ function RunView(props: {
                       </div>
                     ))}
                   </div>
+                )}
+                {reachable.includes(node.id) && expeditionEdgeDays(map, selected.at, node.id) > 1 && (
+                  <p className="mt-2 text-xs text-sky-200">Vượt nước: đi mất {expeditionEdgeDays(map, selected.at, node.id)} ngày, đạo kia nghỉ cả {expeditionEdgeDays(map, selected.at, node.id)} ngày.</p>
                 )}
                 {reachable.includes(node.id) ? (
                   <Button variant="primary" className="mt-3" disabled={props.busy || !canFight(army)} onClick={() => props.onMarch(node.id)}>

@@ -8,6 +8,7 @@ import {
   campExpedition,
   createExpeditionRun,
   expeditionDistance,
+  expeditionEdgeDays,
   expeditionEncounter,
   expeditionMapOf,
   expeditionNeighbors,
@@ -65,7 +66,7 @@ export function expeditionSimProfile(level: number): Profile {
 }
 
 const THREAT: Readonly<Record<ExpeditionNodeKind, number>> = {
-  camp: 0, village: -1, outpost: 2, granary: 2, fort: 3, citadel: 9,
+  camp: 0, village: -1, outpost: 2, watchtower: 2, granary: 2, fort: 3, citadel: 9,
 };
 
 const hpRatio = (run: ExpeditionRun, i: ArmyIndex) => {
@@ -81,7 +82,9 @@ function stepToward(run: ExpeditionRun, i: ArmyIndex, targets: readonly string[]
   const dist = (from: string) => Math.min(...targets.map((t) => expeditionDistance(map, from, t)));
   const here = dist(at);
   if (here === 0 || here === Infinity) return null;
-  const options = expeditionNeighbors(map, at).filter((n) => n !== map.citadel && dist(n) === here - 1);
+  const options = expeditionNeighbors(map, at).filter(
+    (n) => n !== map.citadel && dist(n) + expeditionEdgeDays(map, at, n) === here,
+  );
   if (options.length === 0) return null;
   const threat = (n: string) => (run.nodes[n]?.cleared ? -2 : THREAT[expeditionNode(map, n)!.kind]);
   return options.sort((a, b) => threat(a) - threat(b))[0]!;
