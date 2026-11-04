@@ -25,6 +25,7 @@ import type { GearItem } from "../gear";
 import type { CharacterProgress } from "../progress";
 import type { DestinyMatchTag, TowerMatchTag } from "../tower";
 import type { ExpeditionMatchTag } from "../expedition/expedition";
+import { expeditionObjectiveMet, type ExpeditionObjective } from "../expedition/objective";
 import {
   planBreak,
   autoReviveFighterId,
@@ -275,6 +276,7 @@ const isSurvivalAction = (a: MatchAction): a is SurvivalAction =>
  * Trial: quá `turnLimit` lượt của người chơi mà chưa thắng thì thua (số lượt tính theo lượt phe của engine).
  */
 function closeLost(m: Match): Match {
+  m = closeObjective(m);
   if (
     m.trial &&
     m.battle.winner === null &&
@@ -292,6 +294,18 @@ function closeLost(m: Match): Match {
         survival: { ...m.survival, done: true },
       }
     : m;
+}
+
+/**
+ * Viễn Chinh: trận có mục tiêu riêng (giữ cầu, hộ tống, phá cổng) mà phe người chơi đã đạt thì phe người chơi thắng
+ * ngay, dù đối thủ còn người. Bước cộng thưởng và chốt sa bàn chạy như trận thắng thường.
+ */
+function closeObjective(m: Match): Match {
+  if (!expeditionObjectiveMet(m.expedition?.objective, m.battle)) return m;
+  const battle = structuredClone(m.battle);
+  battle.winner = HUMAN;
+  battle.turn.deadline = null;
+  return { ...m, battle, seq: m.seq + 1 };
 }
 
 /**
@@ -430,12 +444,13 @@ export function humanAct(
   if (m.battle.turn.side !== HUMAN) return fail("notYourTurn");
   const r = act(m.battle, action, now);
   if (!r.ok) return fail(r.error);
-  const next: Match = {
+  // Phá cổng ngay trong lượt người chơi: thắng luôn, AI không đánh tiếp.
+  const next: Match = closeObjective({
     ...m,
     battle: r.state,
     seq: m.seq + 1,
     lastHumanAt: now,
-  };
+  });
   const ai = runAi(next, now, m.difficulty);
   return {
     ok: true,
@@ -461,7 +476,13 @@ export interface MatchView {
   readonly trial?: { readonly floor: number; readonly turnLimit: number };
   readonly destiny?: { readonly cycleId: string; readonly floor: number };
   /** Viễn Chinh: sa bàn, ô và đạo quân của trận. */
-  readonly expedition?: { readonly map: string; readonly node: string; readonly army: 0 | 1 };
+  readonly expedition?: {
+    readonly map: string;
+    readonly node: string;
+    readonly army: 0 | 1;
+    /** Mục tiêu riêng của trận (giữ cầu, hộ tống, phá cổng); không có là hạ hết đối thủ. */
+    readonly objective?: ExpeditionObjective;
+  };
   /** Đấu trường: tên đối thủ (không lộ id chủ đội). */
   readonly arena?: { readonly name: string; readonly rating: number };
 }
@@ -674,7 +695,14 @@ export function viewOf(m: Match): MatchView {
       ? { arena: { name: m.arena.name, rating: m.arena.rating } }
       : {}),
     ...(m.expedition
-      ? { expedition: { map: m.expedition.map, node: m.expedition.node, army: m.expedition.army } }
+      ? {
+          expedition: {
+            map: m.expedition.map,
+            node: m.expedition.node,
+            army: m.expedition.army,
+            ...(m.expedition.objective ? { objective: m.expedition.objective } : {}),
+          },
+        }
       : {}),
   };
 }

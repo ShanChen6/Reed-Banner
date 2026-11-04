@@ -129,7 +129,7 @@ rồi một đạo đánh.
 |---|---|---|---|---|
 | **Ải Bắc** | Kim | 11 | 12 / 8 | Đường đan nhau, có làng và kho lương ở giữa; dễ dồn quân giáp công. Hai cổng thành đều là lũy. Sa bàn nhập môn |
 | **Thượng Du** | Mộc | 12 | 17 / 12 | Hai thung lũng tách rời, mỗi bên một làng, chỉ nối qua Đèo Ngang Núi (lũy). Đường dài, giáp công chỉ ở cổng thành |
-| **Cửa Biển** | Thủy | 11 | 12 / 8 | Chợ Cửa Sông (kho lương) là nút giao giữa bãi; thành đích có ba ngả vào, cả ba là lũy hoặc đồn |
+| **Cửa Biển** | Thủy | 11 | 12 / 9 | **Kịch bản cố định** (từ 04/11/2026): rút dân, giữ cầu chặn thuyền viện, con nước, đường bị phá, phản công Chợ, phá cổng. Luật riêng ở [thiết kế Cửa Biển](03-cua-bien-thiet-ke.md) |
 | **Ngã Ba Sông** | Thổ | 13 | 15 / 11 | Hai trại ở hai bờ đối diện, thành giữa ngã ba sông. Lội sông vào thẳng thành mất 2 ngày; đi vòng qua Lũy Bến Đò, Lũy Núi Sơn bằng đường bộ thì xa hơn. Có một chòi canh |
 | **Kinh Thành** | Hỏa | 14 | 16 / 11 | Kinh thành có ba cổng lũy, chỉ vào thành qua cổng. Hai chòi canh ở hai cánh nhìn thấu đường vây; Chợ Phiên ở giữa hai trại nhưng phải vượt sông |
 | **Quần Đảo** | Phong | 12 | 15 / 10 | Thành đảo giữa vịnh, chỉ Lũy Cầu Dài nối vào bằng đường bộ; còn lại đi thuyền giữa các đảo (2 ngày mỗi chặng). Một chòi canh ở đảo bắc |

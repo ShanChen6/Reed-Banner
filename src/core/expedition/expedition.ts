@@ -22,6 +22,8 @@ import {
   EXPEDITION_MAPS,
   EXPEDITION_WATCHTOWER_SIGHT,
   expeditionEdgeDays,
+  expeditionEdgeKey,
+  expeditionEdgeKind,
   expeditionHops,
   expeditionNeighbors,
   expeditionNode,
@@ -32,12 +34,16 @@ import {
   type ExpeditionNode,
   type ExpeditionNodeKind,
 } from "./maps";
+import type { ExpeditionObjective } from "./objective";
+import { expeditionScenarioOf, EXPEDITION_ENDING_NAME, type ExpeditionEnding, type ExpeditionScenario } from "./scenario";
 import {
   EXPEDITION_ARMY_SIZE,
+  EXPEDITION_LOG_SIZE,
   clampExpeditionFood,
   isExpeditionTier,
   type ArmyIndex,
   type ExpeditionArmy,
+  type ExpeditionBattleMode,
   type ExpeditionBattleRef,
   type ExpeditionResult,
   type ExpeditionRun,
@@ -93,6 +99,8 @@ const BASE_DIFFICULTY: Readonly<Record<ExpeditionNodeKind, Difficulty>> = {
   granary: "easy",
   fort: "normal",
   citadel: "hard",
+  bridge: "normal",
+  shoal: "easy",
 };
 const FOE_COUNT: Readonly<Record<ExpeditionNodeKind, number>> = {
   camp: 0,
@@ -102,6 +110,8 @@ const FOE_COUNT: Readonly<Record<ExpeditionNodeKind, number>> = {
   granary: 2,
   fort: 3,
   citadel: 3,
+  bridge: 3,
+  shoal: 0,
 };
 
 export const expeditionMapOf = (run: Pick<ExpeditionRun, "map">): ExpeditionMap => EXPEDITION_MAPS[run.map];
@@ -161,42 +171,139 @@ export interface ExpeditionEncounter {
   /** Máu lúc vào trận theo tỉ lệ (đánh dở thì thấp hơn 1). */
   readonly hpRatio: readonly number[];
   readonly weights: SpawnWeights;
+  /** Trận riêng của kịch bản (truy binh, phản công, phá cổng); không có là trận chiếm ô. */
+  readonly mode?: ExpeditionBattleMode;
+  /** Mục tiêu riêng (giữ cầu, hộ tống, phá cổng); không có là hạ hết đối thủ. */
+  readonly objective?: ExpeditionObjective;
+  /** Truy binh: ô đạo định tới. */
+  readonly to?: string;
 }
 
-/**
- * Đối thủ của một ô có trận nếu đạo `army` đánh vào hôm nay. Danh sách địch chỉ phụ thuộc seed và ô; cấp theo độ
- * sâu, sức mạnh theo ngày, máu giảm khi giáp công.
- */
-export function expeditionEncounter(run: ExpeditionRun, nodeId: string, army: ArmyIndex): ExpeditionEncounter | null {
+/** Id của cổng thành (công trình) trong trận phá cổng. */
+export const EXPEDITION_GATE_ID = "congThanh";
+
+function rollFoes(
+  run: ExpeditionRun,
+  key: string,
+  node: ExpeditionNode,
+  count: number,
+  power: number,
+  pincer: boolean,
+  bossFirst: boolean,
+): FighterConfig[] {
   const map = expeditionMapOf(run);
-  const node = expeditionNode(map, nodeId);
-  if (!node || !isExpeditionCombatNode(node.kind)) return null;
-  const rng = createRng((run.seed ^ hash(`${run.map}|${nodeId}`)) >>> 0);
+  const rng = createRng((run.seed ^ hash(`${run.map}|${key}`)) >>> 0);
   const level = expeditionFoeLevel(node, run.tier);
-  const power = expeditionPower(run.tier, run.day);
-  const pincer = expeditionPincer(run, nodeId, army);
   const hpScale = power * EXPEDITION_FOE_HP * (pincer ? EXPEDITION_PINCER_HP : 1);
-  const foes = pickFoes(rng, map.element, FOE_COUNT[node.kind]).map((base, i) => {
+  return pickFoes(rng, map.element, count).map((base, i) => {
     const f = leveledFoe(base, level);
-    const boss = node.kind === "citadel" && i === 0;
+    const boss = bossFirst && i === 0;
     return {
       ...f,
       maxHp: Math.max(1, Math.round(f.maxHp * hpScale * (boss ? BOSS_HP : 1))),
       atk: Math.max(1, Math.round(f.atk * power)),
     };
   });
-  const saved = run.nodes[nodeId]?.foeHp;
-  const hpRatio = foes.map((_, i) => Math.max(0, Math.min(1, saved?.[i] ?? 1)));
+}
+
+/** Cổng thành: công trình không ra tay, bền bằng tướng giữ thành × hệ số, giáp dày gấp đôi lính giữ. */
+function gateFighter(boss: FighterConfig, guards: readonly FighterConfig[], scenario: ExpeditionScenario, element: FighterConfig["element"]): FighterConfig {
+  const guardDef = guards.reduce((sum, g) => sum + g.def, 0) / Math.max(1, guards.length);
   return {
+    id: EXPEDITION_GATE_ID,
+    name: "Cổng thành",
+    element,
+    profession: boss.profession,
+    maxHp: Math.max(1, Math.round(boss.maxHp * scenario.gate.hpScale)),
+    atk: 1,
+    def: Math.max(1, Math.round(guardDef * scenario.gate.defScale)),
+    skills: [],
+    ...(boss.level ? { level: boss.level } : {}),
+    structure: true,
+  };
+}
+
+const savedHp = (run: ExpeditionRun, nodeId: string, count: number) =>
+  Array.from({ length: count }, (_, i) => Math.max(0, Math.min(1, run.nodes[nodeId]?.foeHp?.[i] ?? 1)));
+
+/**
+ * Đối thủ của một ô có trận nếu đạo `army` đánh vào hôm nay (từ ô đạo đang đứng). Danh sách địch chỉ phụ thuộc seed và
+ * ô; cấp theo độ sâu, sức mạnh theo ngày, máu giảm khi giáp công. Sa bàn có kịch bản: cầu là trận giữ cầu, thành đích
+ * mạnh thêm theo thuyền viện và có phase phá cổng (trừ khi vào bằng cửa nước).
+ */
+export function expeditionEncounter(run: ExpeditionRun, nodeId: string, army: ArmyIndex): ExpeditionEncounter | null {
+  const map = expeditionMapOf(run);
+  const node = expeditionNode(map, nodeId);
+  if (!node || !isExpeditionCombatNode(node.kind)) return null;
+  const scenario = expeditionScenarioOf(run);
+  let power = expeditionPower(run.tier, run.day);
+  if (scenario && node.kind === "bridge") power *= scenario.bridge.power;
+  if (scenario && node.kind === "citadel") power *= 1 + scenario.reinforcements.power * (run.arrivals ?? 0);
+  const pincer = expeditionPincer(run, nodeId, army);
+  const foes = rollFoes(run, nodeId, node, FOE_COUNT[node.kind], power, pincer, node.kind === "citadel");
+  const base = {
     node: nodeId,
     kind: node.kind,
-    level,
+    level: expeditionFoeLevel(node, run.tier),
     difficulty: expeditionDifficulty(node.kind, run.tier),
     power,
     pincer,
-    foes,
-    hpRatio,
     weights: HOME_TERRAIN[map.element],
+  };
+  const hpRatio = savedHp(run, nodeId, foes.length);
+  if (scenario && node.kind === "bridge")
+    return { ...base, foes, hpRatio, objective: { type: "hold", turns: scenario.bridge.turns } };
+  const from = run.armies[army].at;
+  if (scenario && node.kind === "citadel" && !run.nodes[nodeId]?.gateDown && from !== scenario.gate.skipFrom) {
+    const gate = gateFighter(foes[0]!, foes.slice(1), scenario, map.element);
+    return { ...base, mode: "gate", foes: [gate, ...foes.slice(1)], hpRatio, objective: { type: "gate", fighter: 0 } };
+  }
+  return { ...base, foes, hpRatio };
+}
+
+/** Truy binh đuổi đoàn dân: đạo `army` đang mang dân rời làng tới `to`. */
+export function expeditionChaseEncounter(run: ExpeditionRun, army: ArmyIndex, to: string): ExpeditionEncounter | null {
+  const scenario = expeditionScenarioOf(run);
+  const map = expeditionMapOf(run);
+  if (!scenario) return null;
+  const village = expeditionNode(map, scenario.refugees.village)!;
+  const power = expeditionPower(run.tier, run.day) * scenario.refugees.chasePower;
+  return {
+    node: village.id,
+    kind: village.kind,
+    level: expeditionFoeLevel(village, run.tier),
+    difficulty: expeditionDifficulty("outpost", run.tier),
+    power,
+    pincer: false,
+    foes: rollFoes(run, "chase", village, scenario.refugees.chaseFoes, power, false, false),
+    hpRatio: Array(scenario.refugees.chaseFoes).fill(1),
+    weights: HOME_TERRAIN[map.element],
+    mode: "chase",
+    to,
+    objective: { type: "escort", turns: scenario.refugees.chaseTurns },
+  };
+}
+
+/** Địch phản công kho lương đạo `army` đang giữ. */
+export function expeditionCounterEncounter(run: ExpeditionRun, army: ArmyIndex): ExpeditionEncounter | null {
+  const scenario = expeditionScenarioOf(run);
+  const map = expeditionMapOf(run);
+  if (!scenario) return null;
+  const node = expeditionNode(map, scenario.counter.node)!;
+  const power = expeditionPower(run.tier, run.day) * scenario.counter.power;
+  const pincer = expeditionPincer(run, node.id, army);
+  return {
+    node: node.id,
+    kind: node.kind,
+    level: expeditionFoeLevel(node, run.tier),
+    difficulty: expeditionDifficulty("fort", run.tier),
+    power,
+    pincer,
+    foes: rollFoes(run, "counter", node, scenario.counter.foes, power, pincer, false),
+    hpRatio: Array(scenario.counter.foes).fill(1),
+    weights: HOME_TERRAIN[map.element],
+    mode: "counter",
+    objective: { type: "hold", turns: scenario.counter.turns },
   };
 }
 
@@ -273,6 +380,7 @@ export function createExpeditionRun(
       return [fid, { config, hp: config.maxHp }];
     })),
   });
+  const scenario = EXPEDITION_SCENARIOS_OF(input.map);
   return {
     ok: true,
     run: {
@@ -287,16 +395,45 @@ export function createExpeditionRun(
       phase: "march",
       battle: null,
       rewarded: false,
+      ...(scenario ? { broken: pickBroken(scenario, seed >>> 0, input.map) } : {}),
     },
   };
 }
 
+const EXPEDITION_SCENARIOS_OF = (map: ExpeditionMapId) => expeditionScenarioOf({ map });
+
+/** Đường bị phá của lượt: `brokenCount` đường trong danh sách có thể phá, chọn theo seed. */
+function pickBroken(scenario: ExpeditionScenario, seed: number, map: ExpeditionMapId): string[] {
+  const rng = createRng((seed ^ hash(`${map}|broken`)) >>> 0);
+  const pool = scenario.breakable.map(([a, b]) => expeditionEdgeKey(a, b));
+  const out: string[] = [];
+  while (out.length < Math.min(scenario.brokenCount, pool.length)) {
+    const left = pool.filter((k) => !out.includes(k));
+    out.push(left[rng.int(0, left.length - 1)]!);
+  }
+  return out.sort();
+}
+
 // ——— Hành quân ———
 
-export type ExpeditionMarchError = "notMarching" | "badArmy" | "notAdjacent" | "armyDown";
+export type ExpeditionMarchError =
+  | "notMarching"
+  | "badArmy"
+  | "notAdjacent"
+  | "armyDown"
+  /** Đường đã biết là bị phá. */
+  | "roadBroken"
+  /** Cửa nước đang lên (đã biết lịch con nước). */
+  | "highTide"
+  /** Giặc đang phản công kho lương: đạo đứng ở đó phải đánh trước. */
+  | "counterPending";
+
+/** Lý do một đạo đứng yên mất ngày: chọn trúng đường bị phá hay cửa nước đang lên mà chưa biết. */
+export type ExpeditionBlock = "broken" | "tide";
 
 export type ExpeditionMarchResult =
   | { readonly ok: true; readonly kind: "moved"; readonly run: ExpeditionRun }
+  | { readonly ok: true; readonly kind: "blocked"; readonly reason: ExpeditionBlock; readonly run: ExpeditionRun }
   | { readonly ok: true; readonly kind: "battle"; readonly encounter: ExpeditionEncounter }
   | { readonly ok: false; readonly error: ExpeditionMarchError };
 
@@ -315,10 +452,50 @@ function healArmy(army: ExpeditionArmy, ratio: number, food: number): Expedition
   return { ...army, fighters, food: clampExpeditionFood(army.food + food) };
 }
 
+/** Thêm một dòng nhật ký (giữ vài dòng gần nhất). */
+function logLine(run: ExpeditionRun, line: string): ExpeditionRun {
+  return { ...run, log: [...(run.log ?? []), `Ngày ${run.day}: ${line}`].slice(-EXPEDITION_LOG_SIZE) };
+}
+
+export const EXPEDITION_ARMY_NAME: Readonly<Record<ArmyIndex, string>> = { 0: "Đạo Chính", 1: "Biệt đạo" };
+
+/** Cuối ngày của sa bàn có kịch bản: thuyền viện tới thành đích, giặc phản công kho lương. */
+function scenarioDayEnd(run: ExpeditionRun, scenario: ExpeditionScenario): ExpeditionRun {
+  let next = run;
+  const map = expeditionMapOf(run);
+  if (!next.reinforcementsCut && scenario.reinforcements.days.includes(next.day)) {
+    // Thuyền viện cập bến: thành đích mạnh thêm, quân đang đánh dở được bổ sung đủ (cổng đã sụp thì vẫn sụp).
+    const citadel = next.nodes[map.citadel];
+    next = {
+      ...next,
+      arrivals: (next.arrivals ?? 0) + 1,
+      nodes: { ...next.nodes, [map.citadel]: citadel?.gateDown ? { gateDown: true } : {} },
+    };
+    next = logLine(next, `thuyền viện cập ${expeditionNode(map, map.citadel)!.name}, giặc mạnh thêm.`);
+  }
+  const market = next.market;
+  if (market?.status === "pending" && next.day >= market.taken + scenario.counter.afterDays) {
+    const name = expeditionNode(map, scenario.counter.node)!.name;
+    if (next.armies.some((a) => a.at === scenario.counter.node && armyCanFight(a))) {
+      next = logLine({ ...next, market: { ...market, status: "due" } }, `giặc phản công ${name}, phải giữ chợ.`);
+    } else {
+      next = {
+        ...next,
+        market: { ...market, status: "lost" },
+        nodes: { ...next.nodes, [scenario.counter.node]: { foeHp: Array(FOE_COUNT.granary).fill(scenario.counter.retakenHp) } },
+      };
+      next = logLine(next, `không ai giữ, giặc chiếm lại ${name}.`);
+    }
+  }
+  return next;
+}
+
 /** Một ngày trôi qua: đạo nghỉ hồi máu; quá hạn mà chưa thắng thì thua. */
 function endDay(run: ExpeditionRun, resting: readonly ArmyIndex[]): ExpeditionRun {
   let next = run;
   for (const i of resting) next = withArmy(next, i, healArmy(next.armies[i], EXPEDITION_REST_HEAL, EXPEDITION_REST_FOOD));
+  const scenario = expeditionScenarioOf(next);
+  if (scenario) next = scenarioDayEnd(next, scenario);
   next = { ...next, day: next.day + 1 };
   if (next.phase === "march" && next.day > expeditionMapOf(next).days)
     return { ...next, phase: "lost", endReason: "timeout" };
@@ -336,36 +513,127 @@ function visitVillage(army: ExpeditionArmy): ExpeditionArmy {
   return healArmy(army, EXPEDITION_VILLAGE_HEAL, EXPEDITION_VILLAGE_FOOD);
 }
 
+/** Đạo vào ô `to` (đã đi hoặc đã thắng trận): ghé làng lần đầu, nhận và đưa đoàn dân, ghi ô đã chiếm. */
+function arrive(run: ExpeditionRun, index: ArmyIndex, to: string): ExpeditionRun {
+  const map = expeditionMapOf(run);
+  const node = expeditionNode(map, to)!;
+  let next = run;
+  let army = { ...next.armies[index], at: to };
+  if (node.kind === "village" && !next.nodes[to]?.cleared) {
+    army = visitVillage(army);
+    next = { ...next, nodes: { ...next.nodes, [to]: { cleared: true } } };
+  }
+  next = withArmy(next, index, army);
+  const scenario = expeditionScenarioOf(next);
+  if (!scenario) return next;
+  const name = EXPEDITION_ARMY_NAME[index];
+  if (to === scenario.refugees.village && next.refugees === undefined)
+    next = logLine({ ...next, refugees: index }, `${name} nhận đoàn dân ${node.name}.`);
+  const home = to === scenario.refugees.home || (to === scenario.counter.node && next.market?.status === "held");
+  if (next.refugees === index && home)
+    next = logLine({ ...next, refugees: "saved", tideKnown: true }, `${name} đưa dân về ${node.name}; dân chài báo lịch con nước.`);
+  if (to === scenario.tide.revealedBy && !next.tideKnown) next = { ...next, tideKnown: true };
+  return next;
+}
+
+/** Ô có trận còn địch. */
+const hasFight = (run: ExpeditionRun, id: string) => {
+  const node = expeditionNode(expeditionMapOf(run), id);
+  return !!node && isExpeditionCombatNode(node.kind) && run.nodes[id]?.cleared !== true;
+};
+
+/** Cửa nước qua được hôm nay. */
+export function expeditionTideOpen(run: Pick<ExpeditionRun, "map" | "day">): boolean {
+  return !!expeditionScenarioOf(run)?.tide.days.includes(run.day);
+}
+
 /**
  * Đạo `army` tiến sang ô kề `to`. Ô đã chiếm hay làng: đi ngay và hết ngày. Ô có địch: trả về trận phải đánh
- * (server tạo trận rồi gọi `beginExpeditionBattle`).
+ * (server tạo trận rồi gọi `beginExpeditionBattle`). Sa bàn có kịch bản: chọn trúng đường bị phá hay cửa nước đang lên
+ * mà chưa biết thì đứng yên mất ngày; đạo mang dân rời làng khi đồn chặn chưa chiếm thì gặp truy binh; giặc phản công
+ * kho lương thì đạo đứng đó đánh bằng cách "tiến" vào chính ô mình (`to` là ô đang đứng).
  */
 export function marchExpedition(run: ExpeditionRun, army: ArmyIndex, to: string): ExpeditionMarchResult {
   if (run.phase !== "march") return { ok: false, error: "notMarching" };
   if (army !== 0 && army !== 1) return { ok: false, error: "badArmy" };
   const a = run.armies[army];
-  if (!armyCanFight(a)) return { ok: false, error: "armyDown" };
   const map = expeditionMapOf(run);
+  const scenario = expeditionScenarioOf(run);
+  if (scenario && run.market?.status === "due") {
+    const holder = run.armies.findIndex((x) => x.at === scenario.counter.node);
+    if (army !== holder || to !== a.at) return { ok: false, error: "counterPending" };
+    if (!armyCanFight(a)) return { ok: false, error: "armyDown" };
+    const encounter = expeditionCounterEncounter(run, army);
+    return encounter ? { ok: true, kind: "battle", encounter } : { ok: false, error: "counterPending" };
+  }
+  if (!armyCanFight(a)) return { ok: false, error: "armyDown" };
   const node = expeditionNode(map, to);
   if (!node || !expeditionNeighbors(map, a.at).includes(to)) return { ok: false, error: "notAdjacent" };
-  const cleared = run.nodes[to]?.cleared === true;
-  if (!cleared && isExpeditionCombatNode(node.kind)) {
+  const other: ArmyIndex = army === 0 ? 1 : 0;
+  if (scenario) {
+    const key = expeditionEdgeKey(a.at, to);
+    if (run.knownBroken?.includes(key)) return { ok: false, error: "roadBroken" };
+    if (run.broken?.includes(key)) {
+      const found = logLine({ ...run, knownBroken: [...(run.knownBroken ?? []), key] }, `${EXPEDITION_ARMY_NAME[army]} gặp đường bị phá, mất ngày.`);
+      return { ok: true, kind: "blocked", reason: "broken", run: endDays(found, [other], 1) };
+    }
+    if (expeditionEdgeKind(map, a.at, to) === "tide" && !expeditionTideOpen(run)) {
+      if (run.tideKnown) return { ok: false, error: "highTide" };
+      const found = logLine({ ...run, tideKnown: true }, `${EXPEDITION_ARMY_NAME[army]} gặp nước lên ở cửa nước, mất ngày.`);
+      return { ok: true, kind: "blocked", reason: "tide", run: endDays(found, [other], 1) };
+    }
+    const r = scenario.refugees;
+    if (run.refugees === army && a.at === r.village && !run.nodes[r.chaseUnless]?.cleared && !hasFight(run, to)) {
+      const encounter = expeditionChaseEncounter(run, army, to);
+      if (encounter) return { ok: true, kind: "battle", encounter };
+    }
+  }
+  if (hasFight(run, to)) {
     const encounter = expeditionEncounter(run, to, army);
     return encounter ? { ok: true, kind: "battle", encounter } : { ok: false, error: "notAdjacent" };
   }
-  let moved = { ...a, at: to };
-  let next = run;
-  if (node.kind === "village" && !cleared) {
-    moved = visitVillage(moved);
-    next = { ...next, nodes: { ...next.nodes, [to]: { cleared: true } } };
-  }
-  next = withArmy(next, army, moved);
-  return { ok: true, kind: "moved", run: endDays(next, [army === 0 ? 1 : 0], expeditionEdgeDays(map, a.at, to)) };
+  return { ok: true, kind: "moved", run: endDays(arrive(run, army, to), [other], expeditionEdgeDays(map, a.at, to)) };
+}
+
+export type ExpeditionScoutError = "notMarching" | "badArmy" | "noScout" | "counterPending";
+
+/** Tầm trinh sát (số bước). */
+export const EXPEDITION_SCOUT_SIGHT = 2;
+
+/**
+ * Trinh sát (sa bàn có kịch bản): đạo `army` đứng yên một ngày, vén sương mọi ô trong 2 bước và lộ đường bị phá có
+ * hai đầu trong vùng đó. Đạo trinh sát không được nghỉ hồi sức; đạo kia nghỉ như thường.
+ */
+export function scoutExpedition(run: ExpeditionRun, army: ArmyIndex): { ok: true; run: ExpeditionRun } | { ok: false; error: ExpeditionScoutError } {
+  if (run.phase !== "march") return { ok: false, error: "notMarching" };
+  if (army !== 0 && army !== 1) return { ok: false, error: "badArmy" };
+  if (!expeditionScenarioOf(run)) return { ok: false, error: "noScout" };
+  if (run.market?.status === "due") return { ok: false, error: "counterPending" };
+  const map = expeditionMapOf(run);
+  const at = run.armies[army].at;
+  const area = map.nodes.filter((n) => expeditionHops(map, at, n.id) <= EXPEDITION_SCOUT_SIGHT).map((n) => n.id);
+  const found = (run.broken ?? []).filter((k) => {
+    const [x, y] = k.split("~");
+    return area.includes(x!) && area.includes(y!) && !run.knownBroken?.includes(k);
+  });
+  let next: ExpeditionRun = {
+    ...run,
+    scouted: [...new Set([...(run.scouted ?? []), ...area])],
+    ...(found.length || run.knownBroken ? { knownBroken: [...(run.knownBroken ?? []), ...found] } : {}),
+  };
+  next = logLine(
+    next,
+    `${EXPEDITION_ARMY_NAME[army]} trinh sát quanh ${expeditionNode(map, at)!.name}${found.length ? `, phát hiện ${found.length} đường bị phá` : ""}.`,
+  );
+  return { ok: true, run: endDays(next, [army === 0 ? 1 : 0], 1) };
 }
 
 /** Đóng quân: cả hai đạo nghỉ một ngày. */
-export function campExpedition(run: ExpeditionRun): { ok: true; run: ExpeditionRun } | { ok: false; error: "notMarching" } {
+export function campExpedition(
+  run: ExpeditionRun,
+): { ok: true; run: ExpeditionRun } | { ok: false; error: "notMarching" | "counterPending" } {
   if (run.phase !== "march") return { ok: false, error: "notMarching" };
+  if (run.market?.status === "due") return { ok: false, error: "counterPending" };
   return { ok: true, run: endDay(run, [0, 1]) };
 }
 
@@ -384,9 +652,11 @@ export function expeditionArmySide(run: ExpeditionRun, army: ArmyIndex): SideCon
 const firstAlive = (hp: readonly number[]) => Math.max(0, hp.findIndex((x) => x > 0));
 
 export function expeditionFoeSide(encounter: ExpeditionEncounter): SideConfig {
+  // Thủ lĩnh là người còn đứng đầu tiên, không phải cổng thành.
+  const leader = encounter.hpRatio.findIndex((x, i) => x > 0 && !encounter.foes[i]?.structure);
   return {
     fighters: encounter.foes.map((f) => structuredClone(f)),
-    leader: firstAlive(encounter.hpRatio),
+    leader: leader >= 0 ? leader : firstAlive(encounter.hpRatio),
     hpRatio: [...encounter.hpRatio],
   };
 }
@@ -404,6 +674,33 @@ export interface ExpeditionMatchTag {
   readonly node: string;
   readonly army: ArmyIndex;
   readonly day: number;
+  /** Mục tiêu riêng của trận; lớp Match cho phe người chơi thắng khi đạt. */
+  readonly objective?: ExpeditionObjective;
+}
+
+/** Ghi trận của một cuộc chạm trán vào lượt (dùng chung server và mô phỏng). */
+export function expeditionBattleRef(army: ArmyIndex, encounter: ExpeditionEncounter, matchId: string): ExpeditionBattleRef {
+  return {
+    army,
+    node: encounter.node,
+    matchId,
+    pincer: encounter.pincer,
+    ...(encounter.mode ? { mode: encounter.mode } : {}),
+    ...(encounter.to ? { to: encounter.to } : {}),
+    ...(encounter.objective ? { objective: encounter.objective } : {}),
+  };
+}
+
+export function expeditionMatchTag(run: ExpeditionRun, army: ArmyIndex, encounter: ExpeditionEncounter): ExpeditionMatchTag {
+  return {
+    runId: run.id,
+    map: run.map,
+    tier: run.tier,
+    node: encounter.node,
+    army,
+    day: run.day,
+    ...(encounter.objective ? { objective: encounter.objective } : {}),
+  };
 }
 
 export type ExpeditionSettleError = "notInBattle" | "staleMatch" | "battleNotFinished" | "badTeam";
@@ -411,7 +708,7 @@ export type ExpeditionSettleError = "notInBattle" | "staleMatch" | "battleNotFin
 /**
  * Chốt kết quả trận vào lượt viễn chinh. Thắng: chiếm ô (kho lương thêm lương, thành đích là thắng viễn chinh).
  * Thua: đạo rút về ô cũ, cả ba người gục (phải nghỉ để hồi), địch giữ nguyên thương vong cho lần đánh sau.
- * Trận nào cũng tốn một ngày, đạo kia nghỉ.
+ * Trận nào cũng tốn một ngày, đạo kia nghỉ. Trận riêng của kịch bản (truy binh, phản công, phá cổng) chốt theo loại.
  */
 export function settleExpeditionBattle(
   run: ExpeditionRun,
@@ -427,6 +724,7 @@ export function settleExpeditionBattle(
   const side = battle.sides[0].fighters;
   if (side.length !== army.ids.length || side.some((f, i) => f.id !== army.ids[i])) return { ok: false, error: "badTeam" };
   const won = battle.winner === 0;
+  const mode = run.battle.mode;
   const fighters = { ...army.fighters };
   for (const f of side) {
     const prev = army.fighters[f.id]!;
@@ -436,27 +734,63 @@ export function settleExpeditionBattle(
   const nodeId = tag.node;
   const map = expeditionMapOf(run);
   const node = expeditionNode(map, nodeId)!;
-  // Vượt nước để đánh thì mất 2 ngày dù thắng hay thua.
-  const days = Number.isFinite(expeditionEdgeDays(map, army.at, nodeId)) ? expeditionEdgeDays(map, army.at, nodeId) : 1;
-  let next: ExpeditionRun = withArmy(run, index, {
-    ...army,
-    fighters,
-    food: clampExpeditionFood(battle.sides[0].food),
-    at: won ? nodeId : army.at,
-  });
-  if (won) {
+  const scenario = expeditionScenarioOf(run);
+  const name = EXPEDITION_ARMY_NAME[index];
+  const foeHp = battle.sides[1].fighters.map((f) => Math.max(0, Math.min(1, f.hp / Math.max(1, f.maxHp))));
+  const to = mode === "chase" ? run.battle.to ?? army.at : nodeId;
+  // Vượt nước để đánh thì mất 2 ngày dù thắng hay thua; trận tại chỗ (phản công, phá cổng) một ngày.
+  const edgeDays = expeditionEdgeDays(map, army.at, to);
+  const days = mode === "counter" || mode === "gate" || !Number.isFinite(edgeDays) ? 1 : edgeDays;
+  let next: ExpeditionRun = withArmy(run, index, { ...army, fighters, food: clampExpeditionFood(battle.sides[0].food) });
+  next = { ...next, phase: "march", battle: null };
+  if (!won) next = { ...next, defeats: (next.defeats ?? 0) + 1 };
+  // Thua khi đang mang dân: đoàn dân bị bắt.
+  if (!won && next.refugees === index) next = logLine({ ...next, refugees: "lost" }, `${name} thua trận, đoàn dân bị bắt.`);
+
+  if (mode === "chase") {
+    if (won) next = logLine(arrive(next, index, to), `${name} đánh lui truy binh.`);
+  } else if (mode === "counter") {
+    const market = next.market ?? { taken: next.day, status: "due" as const };
+    if (won) {
+      next = { ...next, market: { ...market, status: "held" } };
+      for (const i of [0, 1] as const) {
+        const a = next.armies[i];
+        next = withArmy(next, i, { ...a, food: clampExpeditionFood(a.food + (scenario?.counter.food ?? 0)) });
+      }
+      next = logLine(next, `${name} giữ được ${node.name}.`);
+    } else {
+      // Rút về ô kề đã an toàn đầu tiên (luôn có: ô vừa đi qua để tới chợ).
+      const back = expeditionNeighbors(map, nodeId).find((n) => !hasFight(next, n)) ?? army.at;
+      next = withArmy(next, index, { ...next.armies[index], at: back });
+      next = {
+        ...next,
+        market: { ...market, status: "lost" },
+        nodes: { ...next.nodes, [nodeId]: { foeHp: Array(FOE_COUNT.granary).fill(scenario?.counter.retakenHp ?? 1) } },
+      };
+      next = logLine(next, `${name} không giữ được ${node.name}, rút về ${expeditionNode(map, back)!.name}.`);
+    }
+  } else if (mode === "gate") {
+    if (won) {
+      // Cổng sụp: lính giữ còn lại mang máu sang trận đánh tướng giữ thành.
+      next = { ...next, nodes: { ...next.nodes, [nodeId]: { gateDown: true, foeHp: [1, ...foeHp.slice(1)] } } };
+      next = logLine(next, `${name} phá được cổng ${node.name}.`);
+    } else next = { ...next, nodes: { ...next.nodes, [nodeId]: { foeHp } } };
+  } else if (won) {
+    next = withArmy(next, index, { ...next.armies[index], at: nodeId });
     next = { ...next, nodes: { ...next.nodes, [nodeId]: { cleared: true } } };
-    if (node.kind === "granary")
+    if (node.kind === "granary" && !(scenario && nodeId === scenario.counter.node && next.market))
       for (const i of [0, 1] as const) {
         const a = next.armies[i];
         next = withArmy(next, i, { ...a, food: clampExpeditionFood(a.food + EXPEDITION_GRANARY_FOOD) });
       }
-  } else {
-    const foeHp = battle.sides[1].fighters.map((f) => Math.max(0, Math.min(1, f.hp / Math.max(1, f.maxHp))));
-    next = { ...next, defeats: (next.defeats ?? 0) + 1, nodes: { ...next.nodes, [nodeId]: { foeHp } } };
-  }
-  next = { ...next, phase: "march", battle: null };
-  if (won && node.kind === "citadel") return { ok: true, won, run: { ...next, phase: "won", day: next.day } };
+    if (scenario) {
+      if (nodeId === scenario.counter.node && !next.market) next = { ...next, market: { taken: next.day, status: "pending" } };
+      if (node.kind === "bridge" && !next.reinforcementsCut)
+        next = logLine({ ...next, reinforcementsCut: true }, `${name} giữ được ${node.name}, thuyền viện bị chặn.`);
+      next = arrive(next, index, nodeId);
+    }
+  } else next = { ...next, nodes: { ...next.nodes, [nodeId]: { ...(node.kind === "citadel" && run.nodes[nodeId]?.gateDown ? { gateDown: true } : {}), foeHp } } };
+  if (won && node.kind === "citadel" && mode !== "gate") return { ok: true, won, run: { ...next, phase: "won", day: next.day } };
   return { ok: true, won, run: endDays(next, [index === 0 ? 1 : 0], days) };
 }
 
@@ -466,9 +800,9 @@ export function settleExpeditionBattle(
  * Các ô đang thấy được: vị trí hai đạo và ô kề (ô đi được), ô đã chiếm hay đã đánh, và mọi ô trong tầm chòi canh đã
  * chiếm. Thành đích ngoài tầm nhìn chỉ hiện là đích đến, không báo trước địch. Luật: GDD Viễn Chinh mục 3.8.
  */
-export function expeditionVisible(run: Pick<ExpeditionRun, "map" | "armies" | "nodes">): Set<string> {
+export function expeditionVisible(run: Pick<ExpeditionRun, "map" | "armies" | "nodes" | "scouted">): Set<string> {
   const map = expeditionMapOf(run);
-  const seen = new Set<string>(map.camps);
+  const seen = new Set<string>([...map.camps, ...(run.scouted ?? [])]);
   for (const a of run.armies) {
     seen.add(a.at);
     for (const n of expeditionNeighbors(map, a.at)) seen.add(n);
@@ -490,8 +824,27 @@ export function abandonExpedition(run: ExpeditionRun): ExpeditionRun {
 
 // ——— Kết thúc và thưởng ———
 
-/** Sao: thắng; xong trong số ngày chuẩn; không thua trận nào. */
+/**
+ * Kết thúc của sa bàn có kịch bản: chiếm thành đích (toàn thắng khi đã cắt viện và đưa dân về), hoặc chưa chiếm nhưng
+ * đã cắt viện và đưa dân về (giữ dân). Sa bàn không kịch bản hay chưa kết thúc: undefined.
+ */
+export function expeditionEnding(run: ExpeditionRun): ExpeditionEnding | undefined {
+  if (!expeditionScenarioOf(run)) return undefined;
+  const side = run.refugees === "saved" && run.reinforcementsCut === true;
+  if (run.phase === "won") return side ? "full" : "taken";
+  if (run.phase === "lost" && side) return "refuge";
+  return undefined;
+}
+
+/**
+ * Sao: thắng; xong trong số ngày chuẩn; không thua trận nào. Sa bàn có kịch bản: toàn thắng 3 sao, chiếm trại 2 sao
+ * (1 nếu quá ngày chuẩn), giữ dân 1 sao.
+ */
 export function expeditionStars(run: ExpeditionRun): number {
+  const ending = expeditionEnding(run);
+  if (ending === "full") return 3;
+  if (ending === "refuge") return 1;
+  if (ending === "taken") return run.day <= expeditionMapOf(run).parDays ? 2 : 1;
   if (run.phase !== "won") return 0;
   let stars = 1;
   if (run.day <= expeditionMapOf(run).parDays) stars++;
@@ -499,14 +852,14 @@ export function expeditionStars(run: ExpeditionRun): number {
   return stars;
 }
 
-export function expeditionRewardItem(rng: Rng, run: ExpeditionRun): GearItem {
+export function expeditionRewardItem(rng: Rng, run: ExpeditionRun, tierBonus = 0): GearItem {
   const map = expeditionMapOf(run);
   const slot = GEAR_SLOTS[rng.int(0, GEAR_SLOTS.length - 1)]!;
   const item: GearItem = {
     id: "",
     slot,
     element: map.element,
-    tier: EXPEDITION_TIER_INFO[run.tier].gearTier,
+    tier: Math.min(5, EXPEDITION_TIER_INFO[run.tier].gearTier + tierBonus) as Tier,
     set: GEAR_SETS[rng.int(0, GEAR_SETS.length - 1)]!.id,
   };
   const leader = run.armies[0].fighters[MAIN_ID]?.config.profession;
@@ -526,35 +879,60 @@ export function applyExpeditionEnd(
   if (!run || run.rewarded || (run.phase !== "won" && run.phase !== "lost")) return { profile, state };
   const won = run.phase === "won";
   const stars = expeditionStars(run);
-  if (!won) {
+  const ending = expeditionEnding(run);
+  const scenario = expeditionScenarioOf(run);
+  if (!won && ending !== "refuge") {
     const result: ExpeditionResult = { won, days: run.day, stars: 0, firstClear: false, gold: 0, item: null, soldFor: 0 };
     return { profile, state: { ...state, run: { ...run, rewarded: true, result } } };
   }
   const info = EXPEDITION_TIER_INFO[run.tier];
+  const key = `${run.map}:${run.tier}`;
+  // Giữ dân tính là qua bậc (mở bậc sau) nhưng chỉ có vàng, không có món.
   const firstClear = (state.cleared[run.map] ?? 0) < run.tier;
-  const gold = firstClear ? info.firstGold : info.repeatGold;
+  const mult = ending && scenario ? scenario.endingGold[ending] : 1;
+  const gold = Math.round((firstClear ? info.firstGold : info.repeatGold) * mult);
   let next: Profile = { ...profile, gold: profile.gold + gold };
   let item: GearItem | null = null;
   let soldFor = 0;
-  if (firstClear) {
+  if (firstClear && won) {
     const received = receiveDrop(next, expeditionRewardItem(rng, run));
     next = received.profile;
     item = received.item;
     soldFor = received.soldFor;
   }
-  const key = `${run.map}:${run.tier}`;
-  const result: ExpeditionResult = { won, days: run.day, stars, firstClear, gold, item, soldFor };
+  // Toàn thắng lần đầu ở bậc này: thêm một món phẩm cao hơn một nấc.
+  let bonusItem: GearItem | null = null;
+  if (ending === "full" && (state.stars[key] ?? 0) < 3) {
+    const received = receiveDrop(next, expeditionRewardItem(rng, run, 1));
+    next = received.profile;
+    bonusItem = received.item;
+    soldFor += received.soldFor;
+  }
+  const result: ExpeditionResult = {
+    won,
+    ...(ending ? { ending } : {}),
+    days: run.day,
+    stars,
+    firstClear,
+    gold,
+    item,
+    ...(bonusItem ? { bonusItem } : {}),
+    soldFor,
+  };
   return {
     profile: next,
     state: {
       ...state,
-      bestDays: { ...state.bestDays, [key]: Math.min(state.bestDays?.[key] ?? Infinity, run.day) },
+      ...(won ? { bestDays: { ...state.bestDays, [key]: Math.min(state.bestDays?.[key] ?? Infinity, run.day) } } : {}),
       cleared: { ...state.cleared, [run.map]: Math.max(state.cleared[run.map] ?? 0, run.tier) },
       stars: { ...state.stars, [key]: Math.max(state.stars[key] ?? 0, stars) },
       run: { ...run, rewarded: true, result },
     },
   };
 }
+
+/** Tên kết thúc để hiển thị. */
+export const expeditionEndingName = (ending: ExpeditionEnding) => EXPEDITION_ENDING_NAME[ending];
 
 // ——— Giới hạn mỗi ngày (Shan chốt 04/11/2026: giới hạn như các chế độ khác) ———
 

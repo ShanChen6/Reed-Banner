@@ -15,11 +15,26 @@ export type ExpeditionMapId = (typeof EXPEDITION_MAP_IDS)[number];
  * - `fort`: lũy, 3 địch.
  * - `village`: làng, không có trận; lần đầu ghé thì hồi máu, cứu một người gục và thêm lương.
  * - `citadel`: thành đích, 3 địch có tướng giữ thành máu ×1,5. Chiếm được là thắng viễn chinh.
+ * - `bridge`: cầu (sa bàn có kịch bản), 3 địch; trận giữ cầu: cầm cự đủ lượt là thắng.
+ * - `shoal`: bãi cạn (sa bàn có kịch bản), không trận, không thưởng; đứng chờ con nước được.
  */
-export type ExpeditionNodeKind = "camp" | "outpost" | "watchtower" | "granary" | "fort" | "village" | "citadel";
+export type ExpeditionNodeKind =
+  | "camp"
+  | "outpost"
+  | "watchtower"
+  | "granary"
+  | "fort"
+  | "village"
+  | "citadel"
+  | "bridge"
+  | "shoal";
 
-/** `water`: đường vượt sông hay biển, đi mất 2 ngày (đạo kia nghỉ cả 2 ngày, giặc tăng viện theo ngày). */
-export type ExpeditionEdgeKind = "land" | "water";
+/**
+ * - `water`: vượt sông hay biển, đi mất 2 ngày (đạo kia nghỉ cả 2 ngày, giặc tăng viện theo ngày).
+ * - `marsh`: lội đầm, như vượt nước (2 ngày), chỉ khác nét vẽ.
+ * - `tide`: cửa nước, 1 ngày nhưng chỉ qua được vào ngày nước rút của kịch bản.
+ */
+export type ExpeditionEdgeKind = "land" | "water" | "marsh" | "tide";
 
 /**
  * Nền tạm khi sa bàn chưa có tranh riêng: một vùng của bản đồ tổng Bình Loạn (1536×1024), góc trên trái và bề ngang;
@@ -52,7 +67,7 @@ export interface ExpeditionMap {
   /** Ngày chuẩn cho sao thứ hai. */
   readonly parDays: number;
   readonly nodes: readonly ExpeditionNode[];
-  /** Đường đi hai chiều; phần tử thứ ba `"water"` là vượt nước (2 ngày). */
+  /** Đường đi hai chiều; phần tử thứ ba là loại đường (bỏ trống là đường bộ). */
   readonly edges: readonly (readonly [string, string] | readonly [string, string, ExpeditionEdgeKind])[];
   readonly art: ExpeditionMapArt;
   /** Trại của đạo Chính (0) và Biệt đạo (1). */
@@ -134,36 +149,38 @@ export const EXPEDITION_MAPS: Readonly<Record<ExpeditionMapId, ExpeditionMap>> =
       ["ban-moc", "deo-ngang"], ["deo-ngang", "ruong-bac"],
     ],
   },
+  // Kịch bản cố định (docs/02-game-modes/expedition/03-cua-bien-thiet-ke.md): rút dân Làng Chài, giữ Cầu Phao cắt
+  // thuyền viện, vào Thủy Trại Tây bằng cửa nước lúc nước rút hoặc phá cổng.
   cuaBien: {
     id: "cuaBien",
     name: "Cửa Biển",
-    blurb: "Bãi bồi và thủy trại nơi cửa sông. Chợ giữa bãi là nút giao, thành đích có ba ngả vào.",
+    blurb: "Thủy trại giặc giữ cửa sông. Rút dân làng chài, giữ cầu phao chặn thuyền viện, canh con nước mà vào cửa sau.",
     element: "thuy",
     days: 12,
-    parDays: 8,
+    parDays: 9,
     art: { x: 840, y: 270, w: 696 },
     camps: ["trai-ben", "trai-bai"],
-    citadel: "thanh-cua-bien",
+    citadel: "trai-tay",
     nodes: [
-      node("trai-ben", "camp", "Trại Bến Thuyền", 5, 20, 0),
-      node("trai-bai", "camp", "Trại Bãi Sậy", 15, 47, 0),
-      node("ben-coi", "outpost", "Đồn Bến Cói", 14, 11, 1),
-      node("bai-su", "outpost", "Đồn Bãi Sú", 36, 50, 1),
-      node("lang-chai", "village", "Làng Chài", 35, 4, 2),
-      node("cho-song", "granary", "Chợ Cửa Sông", 25, 29, 2),
-      node("mui-cat", "fort", "Đồn Mũi Cát", 52, 47, 2),
-      node("trai-dong", "fort", "Thủy Trại Đông", 46, 13, 3),
-      node("doi-cat", "outpost", "Doi Cát", 44, 31, 3),
-      node("trai-tay", "fort", "Thủy Trại Tây", 64, 32, 3),
-      node("thanh-cua-bien", "citadel", "Thành Cửa Biển", 61, 6, 4),
+      node("trai-ben", "camp", "Trại Bến Thuyền", 6, 30, 0),
+      node("trai-bai", "camp", "Trại Bãi Sậy", 10, 52, 0),
+      node("ben-coi", "outpost", "Đồn Bến Cói", 18, 18, 1),
+      node("bai-su", "outpost", "Đồn Bãi Sú", 32, 47, 1),
+      node("lang-chai", "village", "Làng Chài", 31, 7, 2),
+      node("cho-song", "granary", "Chợ Cửa Sông", 36, 31, 2),
+      node("dai-trieu", "watchtower", "Đài Quan Triều", 56, 8, 3),
+      node("doi-cat", "bridge", "Cầu Phao Doi Cát", 60, 25, 3),
+      node("mui-cat", "fort", "Đồn Mũi Cát", 59, 44, 3),
+      node("bai-can", "shoal", "Bãi Cạn", 82, 54, 3),
+      node("trai-tay", "citadel", "Thủy Trại Tây", 84, 30, 4),
     ],
     edges: [
-      ["trai-ben", "ben-coi"], ["trai-bai", "bai-su"],
-      ["ben-coi", "lang-chai"], ["ben-coi", "cho-song"], ["bai-su", "cho-song"], ["bai-su", "mui-cat"],
-      ["lang-chai", "trai-dong"], ["cho-song", "trai-dong"], ["cho-song", "doi-cat"], ["cho-song", "trai-tay"],
-      ["mui-cat", "trai-tay"],
-      ["trai-dong", "doi-cat"], ["doi-cat", "trai-tay"],
-      ["trai-dong", "thanh-cua-bien"], ["doi-cat", "thanh-cua-bien"], ["trai-tay", "thanh-cua-bien"],
+      ["trai-ben", "ben-coi"], ["trai-ben", "cho-song", "water"], ["ben-coi", "lang-chai"], ["ben-coi", "cho-song"],
+      ["lang-chai", "dai-trieu"], ["dai-trieu", "doi-cat"],
+      ["trai-bai", "bai-su"], ["trai-bai", "bai-can", "marsh"],
+      ["bai-su", "cho-song"], ["bai-su", "doi-cat"], ["bai-su", "mui-cat"],
+      ["cho-song", "doi-cat"], ["cho-song", "mui-cat"],
+      ["doi-cat", "trai-tay"], ["mui-cat", "trai-tay"], ["mui-cat", "bai-can"], ["bai-can", "trai-tay", "tide"],
     ],
   },
   chauTho: {
@@ -283,13 +300,27 @@ export function expeditionNeighbors(map: ExpeditionMap, id: string): string[] {
 }
 
 export const isExpeditionCombatNode = (kind: ExpeditionNodeKind) =>
-  kind === "outpost" || kind === "watchtower" || kind === "granary" || kind === "fort" || kind === "citadel";
+  kind === "outpost" ||
+  kind === "watchtower" ||
+  kind === "granary" ||
+  kind === "fort" ||
+  kind === "citadel" ||
+  kind === "bridge";
 
-/** Số ngày đi qua đường `a`–`b` (vượt nước 2, đường bộ 1); không có đường thì Infinity. */
-export function expeditionEdgeDays(map: ExpeditionMap, a: string, b: string): number {
+/** Khóa của đường `a`–`b`, không phụ thuộc chiều đi (lưu đường bị phá, đường đã lộ). */
+export const expeditionEdgeKey = (a: string, b: string) => (a < b ? `${a}~${b}` : `${b}~${a}`);
+
+/** Loại đường `a`–`b`; undefined khi hai ô không kề nhau. */
+export function expeditionEdgeKind(map: ExpeditionMap, a: string, b: string): ExpeditionEdgeKind | undefined {
   const edge = map.edges.find(([x, y]) => (x === a && y === b) || (x === b && y === a));
-  if (!edge) return Infinity;
-  return edge[2] === "water" ? 2 : 1;
+  return edge ? (edge[2] ?? "land") : undefined;
+}
+
+/** Số ngày đi qua đường `a`–`b` (vượt nước và lội đầm 2, còn lại 1); không có đường thì Infinity. */
+export function expeditionEdgeDays(map: ExpeditionMap, a: string, b: string): number {
+  const kind = expeditionEdgeKind(map, a, b);
+  if (!kind) return Infinity;
+  return kind === "water" || kind === "marsh" ? 2 : 1;
 }
 
 /** Số ngày đi ít nhất từ `from` tới `to` (tính cả vượt nước); Infinity khi không tới được. */

@@ -23,7 +23,7 @@ Prompt viết bằng tiếng Anh, giải thích bằng tiếng Việt.
 |---|---|---|---|
 | Ải Bắc | `ai-bac.png` | Kim | Đèo đá, chòi gác, thành núi |
 | Thượng Du | `thuong-du.png` | Mộc | Hai thung lũng rừng, một đèo nối giữa |
-| Cửa Biển | `cua-bien.png` | Thủy | Bãi bồi, thủy trại, thành cửa sông |
+| Cửa Biển | `cua-bien.png` | Thủy | Bãi bồi, cầu phao, bãi cạn, thủy trại |
 | Ngã Ba Sông | `nga-ba-song.png` | Thổ | Thành giữa ba nhánh sông, ruộng phù sa |
 | Kinh Thành | `kinh-thanh.png` | Hỏa | Kinh thành lớn ba cổng lũy |
 | Quần Đảo | `quan-dao.png` | Phong | Thành đảo giữa vịnh, một cầu dài |
@@ -91,24 +91,26 @@ At the top-right, a forest citadel with wooden and stone walls where both valley
 
 ### 3.3 Cửa Biển (`cua-bien.png`)
 
+Kịch bản cố định ([thiết kế](../../02-game-modes/expedition/03-cua-bien-thiet-ke.md)); bố cục đổi 04/11/2026.
+
 ```text
-Layout: a river mouth meeting the sea. Land on the left and centre, open teal sea with small rocky islets on the right.
+Layout: a river mouth meeting the sea. Land on the left and centre, open teal sea and tidal flats on the right.
 Two army camps on the far left (upper boat landing, lower reed bank).
-A sedge-landing outpost (upper-left), a mangrove-flat outpost (lower-centre-left), a fishing village on stilts
-near the top, a busy river-mouth market with storehouses (centre-left, the crossroads),
-a sand-spit fort (lower-centre), an eastern water camp fort with moored war boats (upper-centre),
-a small sand-bar outpost (centre), a western water camp fort on the coast (right-centre).
-Near the top-centre-right, on the estuary, a coastal citadel with sea walls and a harbour.
-Rivers split into many channels across mud flats; bridges and causeways connect the land.
+A sedge-landing outpost (upper-left), a fishing village on stilts near the top, a signal tower on a dune
+watching the tide (top-centre-right), a busy river-mouth market with storehouses (centre-left, the crossroads),
+a mangrove-flat outpost (lower-centre-left), a long pontoon bridge of boats across a channel (centre-right),
+a sand-spit fort on a dike (lower-centre), a wide tidal shoal with a narrow water gate (bottom-right).
+On the right, a western water camp: a wooden-walled fortress on stilts with a heavy timber gate and moored war boats.
+A wide river channel separates the upper camp from the market; a reed marsh runs along the bottom.
 ```
 
 | Ô | Loại | Vị trí |
 |---|---|---|
-| Trại Bến Thuyền, Trại Bãi Sậy | trại | 5/20, 15/47 |
-| Đồn Bến Cói, Đồn Bãi Sú, Làng Chài | đồn, đồn, làng | 14/11, 36/50, 35/4 |
-| Chợ Cửa Sông, Đồn Mũi Cát | kho lương, lũy | 25/29, 52/47 |
-| Thủy Trại Đông, Doi Cát, Thủy Trại Tây | lũy, đồn, lũy | 46/13, 44/31, 64/32 |
-| Thành Cửa Biển | thành đích | 61/6 |
+| Trại Bến Thuyền, Trại Bãi Sậy | trại | 6/30, 10/52 |
+| Đồn Bến Cói, Đồn Bãi Sú, Làng Chài | đồn, đồn, làng | 18/18, 32/47, 31/7 |
+| Chợ Cửa Sông, Đài Quan Triều | kho lương, chòi canh | 36/31, 56/8 |
+| Cầu Phao Doi Cát, Đồn Mũi Cát, Bãi Cạn | cầu, lũy, bãi cạn | 60/25, 59/44, 82/54 |
+| Thủy Trại Tây | thành đích | 84/30 |
 
 ### 3.4 Ngã Ba Sông (`nga-ba-song.png`)
 

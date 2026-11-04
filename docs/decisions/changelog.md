@@ -2,6 +2,9 @@
 
 ## 04/11/2026
 
+**Viễn Chinh: code kịch bản Cửa Biển**
+- Cửa Biển thành kịch bản cố định theo [thiết kế](../02-game-modes/expedition/03-cua-bien-thiet-ke.md): bố cục 11 ô mới, lệnh Trinh sát, đường bị phá, con nước, rút dân, thuyền viện, phản công Chợ, trận giữ cầu, hộ tống và phá cổng (công trình trong engine), bốn kết thúc. Mô phỏng ngắn 6 lượt Bậc I chỉ để soát chơi được (kế hoạch tham lam không làm việc phụ), không cân bằng.
+
 **Viễn Chinh: chơi offline, bỏ bảng xếp hạng**
 - Shan chọn Viễn Chinh (cả hướng nhiệm vụ sắp tới) chơi offline như Bình Loạn: khách chơi được, không bảng xếp hạng, vẫn giới hạn 3 lượt xuất quân mỗi ngày. Thay cho quyết định có bảng xếp hạng và cần đăng nhập sáng cùng ngày. Gỡ bảng `expedition`, tab trên trang Xếp hạng và chặn khách. Xem [GDD mục 3.7](../02-game-modes/expedition/01-vien-chinh-gdd.md#37-chơi-offline-không-bảng-xếp-hạng-shan-chốt-04112026).
 - Đề xuất nhiệm vụ: Shan chốt mỗi lệnh đi một cạnh; bản đầu có nhiệm vụ không cần đánh và ba loại trận riêng (giữ cầu, phá cổng, hộ tống); chọn trúng đường bị phá thì mất ngày đó. Xem [đề xuất mục 11](../02-game-modes/expedition/02-map-va-nhiem-vu-proposal.md#11-shan-đã-chốt-04112026).
