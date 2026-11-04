@@ -1,7 +1,7 @@
 # Prompt trang bị
 
 > Cập nhật: 03/11/2026
-> Trạng thái: **DRAFT** — chưa có ảnh; thay mục 4 cũ của [Prompt đồ họa](do-hoa.md#4-trang-bị) (nét phẳng, 6 vũ khí).
+> Trạng thái: **DRAFT** — đã có 5 khung phẩm (mục 4, 04/11/2026), các hình khác chưa có ảnh; thay mục 4 cũ của [Prompt đồ họa](do-hoa.md#4-trang-bị) (nét phẳng, 6 vũ khí).
 
 Prompt ráp sẵn cho hệ thống trang bị: hình từng món theo **9 ô** và **3 bộ**, vũ khí cho đủ **8 nghề**, khung **5 phẩm**, huy hiệu bộ, bóng ô trống và hai biểu tượng thao tác. Luật trang bị (chỉ số, thưởng bộ, phẩm, ghép) ở [Trang bị](../../04-equipment/trang-bi.md); danh sách lấy từ code ngày 03/11/2026 (`GEAR_SLOTS`, `GEAR_SETS`, `TIERS` trong `src/core/gear/gear.ts`, `PROFESSIONS` trong `src/core/battle/rules.ts`). Phong cách theo [Prompt biểu tượng kỹ năng](icon-ky-nang.md) để món đồ và kỹ năng nằm cạnh nhau không lệch nhau. Giải thích bằng tiếng Việt, prompt bằng tiếng Anh.
 
@@ -26,7 +26,7 @@ Prompt ráp sẵn cho hệ thống trang bị: hình từng món theo **9 ô** v
 | Nhóm | Số hình | Dùng ở đâu |
 |---|---|---|
 | Món đồ: 8 ô dùng chung + 8 vũ khí, × 3 bộ | 48 | Ô trang bị hồ sơ, túi đồ 8×5, chiến lợi phẩm, cửa hàng, ghép |
-| Khung phẩm | 5 | Đè lên mọi ô món đồ (thay `TierFrame` SVG) |
+| Khung phẩm | 5 (đã có) | Đè lên mọi ô món đồ (đã thay `TierFrame` SVG) |
 | Huy hiệu bộ | 3 | Bảng thưởng bộ trong hồ sơ, bộ lọc túi đồ, cửa hàng |
 | Bóng ô trống | 9 | 9 ô quanh chân dung khi chưa mặc |
 | Biểu tượng thao tác | 2 | Nút Ghép, nút Bán |
@@ -44,6 +44,8 @@ Như vậy 48 ảnh món đồ phủ đủ 3 bộ × 9 ô × 8 nghề × 7 hệ 
 Thứ tự gợi ý: 5 khung phẩm → bộ Cờ Lau (bộ rơi nhiều nhất ở đầu game) → 9 bóng ô trống → bộ Hoa Lư → bộ Đồng Cổ → huy hiệu bộ → biểu tượng thao tác.
 
 ## 4. Khung phẩm (5)
+
+> Đã có ảnh (04/11/2026): Shan gửi 5 khung, Claude làm sạch viền và xuất `public/art/gear/frames/frame-<bậc>.webp` 192 px; `GearIcon` (`src/app/game/art/gear.tsx`) đè khung lên mọi ô có phẩm và thu món đồ còn 78% để nằm gọn trong lòng khung.
 
 Khung vuông bo góc, lòng khung **để trống hoàn toàn** (chiếm khoảng 76% cạnh) để ảnh món đồ nằm bên trong. Mỗi bậc khác nhau cả về **hình** chứ không chỉ màu (như `TierFrame` hiện tại), để người khó phân biệt màu vẫn đọc được phẩm. Màu khớp `TIER_FRAME` trong `gear.tsx`. Nền xanh lá; lòng khung cũng xanh lá để Claude khoét trong suốt.
 
