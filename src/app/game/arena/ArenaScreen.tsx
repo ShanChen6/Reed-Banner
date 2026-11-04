@@ -177,7 +177,7 @@ export default function ArenaScreen() {
               )}
             </div>
             <p className="text-xs text-muted">
-              Người khác đánh với bản chụp đội này. Nâng cấp hay đổi đội ở hồ sơ
+              Người khác đánh với bản chụp đội này. Nâng cấp hay đổi đội ở Doanh Trại
               xong thì bấm cập nhật.
             </p>
             {data.defense && <Members list={data.defense.members} />}
@@ -205,7 +205,7 @@ export default function ArenaScreen() {
             </Button>
           </div>
           <p className="text-xs text-muted">
-            Bạn ra trận với đội 3vs3 đang chọn ở hồ sơ. Đối thủ có điểm càng
+            Bạn ra trận với đội 3vs3 đang chọn ở Doanh Trại. Đối thủ có điểm càng
             cao, thắng càng được nhiều điểm.
           </p>
           {message && <p className="text-sm text-amber-300">{message}</p>}
