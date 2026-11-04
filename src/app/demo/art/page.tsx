@@ -146,9 +146,9 @@ export default function ArtPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-semibold">Tuyệt chiêu ô 4 Đinh Bộ Lĩnh có ảnh riêng từng hệ (Tướng sĩ, Pháp sư, Binh lính)</h2>
+          <h2 className="font-semibold">Tuyệt chiêu ô 4 Đinh Bộ Lĩnh có ảnh riêng từng hệ (Tướng sĩ, Pháp sư, Binh lính, Y sư)</h2>
           <div className="flex flex-wrap items-start gap-3">
-            {(["tuongSi", "phapSu", "binhLinh"] as const).flatMap((p) => ELEMENTS.map((e) => [p, e] as const)).map(([p, e]) => {
+            {(["tuongSi", "phapSu", "binhLinh", "ySu"] as const).flatMap((p) => ELEMENTS.map((e) => [p, e] as const)).map(([p, e]) => {
               const d = dinhBoLinhUltimate(p, e);
               return (
                 <figure key={d.id} className="flex w-20 flex-col items-center gap-1">
