@@ -3,7 +3,7 @@
 
 import type { Element, GearSlot, Profession, Tier } from "@/core";
 import { ELEMENT_COLOR } from "./icons";
-import { INK, starPoints } from "./tiles";
+import { INK } from "./tiles";
 
 const PAPER = "#f6ecd4";
 const BRONZE = "#d4a24c";
@@ -188,29 +188,74 @@ const WEAPON_ART: Record<Profession, (a: string) => React.ReactNode> = {
   ),
 };
 
-/** Khung theo phẩm: Trắng viền trơn, Lục thêm chấm góc, Lam viền đôi, Tím thêm hoa văn răng cưa, Cam tỏa tia. */
-function TierFrame({ tier }: { tier: Tier }) {
-  const c = TIER_FRAME[tier];
+/**
+ * Khung theo phẩm: ảnh vẽ tay Shan gửi (04/11/2026) ở public/art/gear/frames/frame-<bậc>.webp.
+ * Mỗi bậc khác cả hình lẫn màu: Trắng gỗ trơn, Lục tre đinh đồng, Lam men sóng bạc, Tím sơn mài răng cưa, Cam son vàng Đông Sơn.
+ */
+export function tierFrameSrc(tier: Tier): string {
+  return `/art/gear/frames/frame-${tier}.webp`;
+}
+
+/**
+ * Ảnh vẽ tay theo bộ ở public/art/gear/<bộ>/<ô>.webp, vũ khí là vuKhi-<nghề>.webp (192 px).
+ * Bộ không có trong bảng (hoặc món không bộ) vẫn vẽ SVG; `weapons` = đã có ảnh vũ khí theo nghề.
+ * Xem docs/06-art/prompts/trang-bi.md.
+ */
+const SET_ART: Readonly<Record<string, { weapons: boolean }>> = {
+  coLau: { weapons: true },
+  hoaLu: { weapons: true },
+  dongCo: { weapons: true },
+};
+
+export function gearArtSrc(slot: GearSlot, set: string | undefined, profession?: Profession): string | undefined {
+  const art = set === undefined ? undefined : SET_ART[set];
+  if (art === undefined) return undefined;
+  if (slot === "vuKhi" && !art.weapons) return undefined;
+  return slot === "vuKhi" ? `/art/gear/${set}/vuKhi-${profession ?? "tuongSi"}.webp` : `/art/gear/${set}/${slot}.webp`;
+}
+
+/** Bóng ô trống (nét đồng mờ) ở public/art/gear/empty/<ô>.webp, 128 px. */
+export function emptySlotSrc(slot: GearSlot): string {
+  return `/art/gear/empty/${slot}.webp`;
+}
+
+/** Ô chưa mặc đồ: nền ô tối + bóng nét đồng của loại món, cố ý mờ để không lẫn với món thật. */
+export function EmptySlotIcon({ slot, className }: { slot: GearSlot; className?: string }) {
   return (
-    <g>
-      <rect x={1.5} y={1.5} width={45} height={45} rx={8} fill="none" stroke={c} strokeWidth={2.5} />
-      {tier >= 3 && <rect x={4.5} y={4.5} width={39} height={39} rx={6} fill="none" stroke={c} strokeWidth={1} />}
-      {tier >= 2 &&
-        [
-          [5, 5],
-          [43, 5],
-          [5, 43],
-          [43, 43],
-        ].map(([x, y]) =>
-          tier >= 4 ? (
-            <rect key={`${x}-${y}`} x={x! - 3} y={y! - 3} width={6} height={6} transform={`rotate(45 ${x} ${y})`} fill={c} stroke={INK} strokeWidth={1} />
-          ) : (
-            <circle key={`${x}-${y}`} cx={x} cy={y} r={2.2} fill={c} stroke={INK} strokeWidth={0.8} />
-          ),
-        )}
-      {tier >= 4 && <path d="M14 45.5 L17 42.5 L20 45.5 L23 42.5 L26 45.5 L29 42.5 L32 45.5 L35 42.5" fill="none" stroke={c} strokeWidth={1} />}
-    </g>
+    <svg viewBox="0 0 48 48" className={className} aria-hidden>
+      <rect x={1.5} y={1.5} width={45} height={45} rx={8} fill="#2b211b" />
+      <image href={emptySlotSrc(slot)} x={7} y={7} width={34} height={34} opacity={0.75} preserveAspectRatio="xMidYMid meet" />
+    </svg>
   );
+}
+
+/** Biểu tượng thao tác trang bị vẽ tay ở public/art/ui/actions/<tên>.webp (96 px). */
+export function GearActionIcon({ action, className }: { action: "merge" | "sell"; className?: string }) {
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden>
+      <image href={`/art/ui/actions/${action}.webp`} x={0} y={0} width={48} height={48} preserveAspectRatio="xMidYMid meet" />
+    </svg>
+  );
+}
+
+/** Huy hiệu tròn của bộ ở public/art/gear/sets/<bộ>.webp (128 px). */
+export function setEmblemSrc(set: string): string | undefined {
+  return set in SET_ART ? `/art/gear/sets/${set}.webp` : undefined;
+}
+
+/** Huy hiệu bộ đứng riêng, đặt cạnh tên bộ (thưởng bộ, nút chọn bộ). Bộ chưa có huy hiệu thì không vẽ gì. */
+export function SetEmblem({ set, className }: { set: string; className?: string }) {
+  const src = setEmblemSrc(set);
+  if (!src) return null;
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden>
+      <image href={src} x={0} y={0} width={48} height={48} preserveAspectRatio="xMidYMid meet" />
+    </svg>
+  );
+}
+
+function TierFrame({ tier }: { tier: Tier }) {
+  return <image href={tierFrameSrc(tier)} x={0} y={0} width={48} height={48} preserveAspectRatio="xMidYMid meet" />;
 }
 
 /**
@@ -222,23 +267,35 @@ export function GearIcon({
   element,
   tier,
   profession,
+  set,
   className = "size-10",
 }: {
   slot: GearSlot;
   element: Element;
   tier?: Tier;
   profession?: Profession;
+  /** Bộ trang bị (id trong GEAR_SETS): có ảnh vẽ tay thì dùng ảnh thay SVG. */
+  set?: string;
   className?: string;
 }) {
   const accent = ELEMENT_COLOR[element];
-  const art = slot === "vuKhi" ? WEAPON_ART[profession ?? "tuongSi"](accent) : SLOT_ART[slot](accent);
+  const src = gearArtSrc(slot, set, profession);
+  const art = src ? (
+    <image href={src} x={1} y={1} width={46} height={46} preserveAspectRatio="xMidYMid meet" />
+  ) : slot === "vuKhi" ? (
+    WEAPON_ART[profession ?? "tuongSi"](accent)
+  ) : (
+    SLOT_ART[slot](accent)
+  );
   return (
     <svg viewBox="0 0 48 48" className={className} aria-hidden focusable="false">
       <rect x={1.5} y={1.5} width={45} height={45} rx={8} fill="#2b211b" />
       {tier !== undefined && <rect x={1.5} y={1.5} width={45} height={45} rx={8} fill={TIER_FRAME[tier]} opacity={0.16} />}
-      {tier === 5 && <polygon points={starPoints(24, 24, 22, 15, 16)} fill="#ffe08a" opacity={0.3} />}
-      {art}
+      {/* Có khung thì thu món đồ vào lòng khung (khung Cam dày nhất, lòng khoảng 72% cạnh). */}
+      {tier !== undefined ? <g transform="translate(24 24) scale(0.78) translate(-24 -24)">{art}</g> : art}
       {tier !== undefined && <TierFrame tier={tier} />}
+      {/* Ảnh vẽ tay giữ màu chất liệu, nên hệ hiện bằng huy hiệu nguyên tố ở góc dưới phải. */}
+      {src && <image href={`/art/elements/${element}.webp`} x={33} y={33} width={12} height={12} />}
     </svg>
   );
 }

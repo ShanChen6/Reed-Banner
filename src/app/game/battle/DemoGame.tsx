@@ -2191,6 +2191,7 @@ export default function DemoGame({
                                 slot={drop.slot}
                                 element={drop.element}
                                 tier={drop.tier}
+                                set={drop.set}
                                 profession={drop.profession}
                                 className="size-12 shrink-0"
                               />
