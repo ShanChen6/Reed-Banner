@@ -1,4 +1,4 @@
-// Hoa văn đồng cổ của thanh header chung: hai ảnh góc nền trong suốt Shan vẽ (public/art/ui/header/ornaments/),
+// Hoa văn đồng cổ của thanh header chung (ảnh nền trong suốt Shan vẽ, public/art/ui/header/ornaments/): hai góc
 // đặt ở hai đầu thanh, giữ nguyên màu đồng gốc. Chỉ để trang trí:
 // aria-hidden, không nhận chuột, giữ đúng tỉ lệ ảnh (đặt chiều cao, chiều rộng tự theo).
 

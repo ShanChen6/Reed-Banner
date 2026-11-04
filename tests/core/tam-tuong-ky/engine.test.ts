@@ -53,9 +53,9 @@ describe("chế độ Thường", () => {
     assert.equal(b.status === "created" && b.nodeId, "mat.herbs");
   });
 
-  it("chỉ có Lôi>Phong: ghép Phong+Lôi là noRecipe, state giữ nguyên tham chiếu", () => {
+  it("cặp không có công thức (Hỏa+Hỏa) là noRecipe, state giữ nguyên tham chiếu", () => {
     const s = fresh();
-    const out = combineNormal(catalog, s, "elt.phong", "elt.loi");
+    const out = combineNormal(catalog, s, "elt.hoa", "elt.hoa");
     assert.equal(out.status, "noRecipe");
     assert.equal(out.next, s);
   });
@@ -216,7 +216,7 @@ describe("chế độ Hạng", () => {
 
   it("ghép sai vẫn mất nguyên liệu, không hoàn lại, sổ không đổi", () => {
     const d = fresh();
-    const out = combineRanked(catalog, start(4), d, "elt.loi", "elt.moc");
+    const out = combineRanked(catalog, start(4), d, "elt.hoa", "elt.hoa");
     assert.equal(out.status, "noRecipe");
     assert.equal(out.next.units, 2);
     assert.equal(out.next.unitsSpent, 2);

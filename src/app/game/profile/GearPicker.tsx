@@ -74,7 +74,7 @@ export default function GearPicker({
     >
       <div className="flex max-h-[inherit] flex-col">
         <header className="flex items-center gap-3 border-b border-[var(--bk-line-soft)] px-4 py-3">
-          <GearIcon slot={slot} element={current?.element ?? fighter.element} tier={current?.tier} profession={slot === "vuKhi" ? fighter.profession : undefined} className="size-10 shrink-0" />
+          <GearIcon slot={slot} element={current?.element ?? fighter.element} tier={current?.tier} set={current?.set} profession={slot === "vuKhi" ? fighter.profession : undefined} className="size-10 shrink-0" />
           <div className="min-w-0 flex-1">
             <h2 id="gear-picker-title" className="barracks-title font-serif text-lg font-bold">
               {SLOT_NAME[slot]} · {name}
@@ -116,7 +116,7 @@ export default function GearPicker({
                       }}
                       className={`gear-row flex w-full items-center gap-3 rounded-md px-2 py-1.5 text-left ${on ? "is-selected" : ""}`}
                     >
-                      <GearIcon slot={it.slot} element={it.element} tier={it.tier} profession={it.profession} className="size-11 shrink-0" />
+                      <GearIcon slot={it.slot} element={it.element} tier={it.tier} set={it.set} profession={it.profession} className="size-11 shrink-0" />
                       <span className="min-w-0 flex-1">
                         <span className={`block text-[15px] leading-snug font-semibold ${TIER_CLASS[it.tier]}`}>{gearText(it)}</span>
                         <span className="block text-sm text-[var(--bk-soft)] tabular-nums">
