@@ -351,11 +351,11 @@ export const PACK_2: Pack = {
   id: "pack-2",
   nameVi: "Gói 2: Thập nhị sứ quân",
   contentVersion: 1,
-  // Chờ Shan duyệt công thức, lời dẫn và vàng thành tựu; chưa có thành tựu trên trang Nhiệm vụ.
-  status: "draft",
+  // Shan duyệt công thức, lời dẫn và vàng thành tựu ngày 04/11/2026. Người chơi thấy Gói 2 khi cờ TAM_TUONG_KY_PACK2_ENABLED bật.
+  status: "published",
   nodes: PACK_2_NODES,
   recipes: PACK_2_RECIPES,
-  // Đề xuất theo khung P-21: bộ hệ 200, đủ 8 sứ quân Gói 2 600, đủ 12 sứ quân (hai gói) 800, đủ 3 tướng đặc biệt 300,
+  // Theo khung P-21 (Shan duyệt 04/11/2026): bộ hệ 200, đủ 8 sứ quân Gói 2 600, đủ 12 sứ quân (hai gói) 800, đủ 3 tướng đặc biệt 300,
   // đủ Gói 2 1 000. Bộ hệ Mộc, Lôi gộp tướng hai gói (mỗi gói một tướng).
   achievementSets: [
     { id: "ttk.pack-2.kim", title: "Tầm Tướng Ký: đủ tướng hệ Kim Gói 2", gold: 200, heroIds: ["hero.ngoXuongXi", "hero.lyKhue"] },

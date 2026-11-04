@@ -2,6 +2,9 @@
 
 ## 04/11/2026
 
+**Tầm Tướng Ký: Shan duyệt Gói 2**
+- Duyệt 9 công thức, 9 lời dẫn và 8 thành tựu (3 500 vàng) của [Gói 2](../02-game-modes/future/21-tam-tuong-ky-pack-2.md) (**DRAFT → APPROVED**); `PACK_2` đặt `published`. Thành tựu Gói 2 hiện ở trang Nhiệm vụ khi cờ `TAM_TUONG_KY_PACK2_ENABLED` bật. Còn chờ ngày bật cờ.
+
 **Tầm Tướng Ký: Gói 2 (DRAFT, có code)**
 - Shan chọn Gói 2 = 8 sứ quân còn lại + Đinh Bộ Lĩnh (bậc đặc biệt), gộp chung sổ với Gói 1. `PACK_2` + `mergePacks` → `PACK_1_2` (21 tướng, 95 công thức, validator sạch; sứ quân 12 lần ghép, Đinh Bộ Lĩnh 9). Cờ `TAM_TUONG_KY_PACK2_ENABLED`; Tướng Lục chia mục theo gói; Hạng xoay vòng qua 21 tướng; tắt Gói 2 không xóa khám phá. Thành tựu Gói 2 đề xuất (8 bộ, 3 500 vàng), chờ duyệt. Xem [Gói 2](../02-game-modes/future/21-tam-tuong-ky-pack-2.md).
 
