@@ -4,7 +4,8 @@ import { Pagination } from "@/components/ui/Pagination";
 
 import { Card, CardBody, CardFooter, Input, Button } from "@/components/ui";
 
-// Bảng xếp hạng: Trấn Ải (số đợt), Quần Hùng (điểm đấu trường) và Thiên Mệnh (tầng, theo chu kỳ). Bình Loạn là chế độ
+// Bảng xếp hạng: Trấn Ải (số đợt), Quần Hùng (điểm đấu trường), Thiên Mệnh (tầng, theo chu kỳ) và Tầm Tướng Ký Hạng
+// tuần (điểm tướng đề cử, khi cờ Hạng bật). Bình Loạn là chế độ
 // offline nên không có bảng.
 // Điểm do server ghi sau mỗi lần cộng thưởng.
 
@@ -47,19 +48,28 @@ interface DestinyBoardResponse {
 
 
 const TABS: readonly {
-  id: "survival" | "arena" | "destiny";
+  id: "survival" | "arena" | "destiny" | "tamTuongKy";
   label: string;
 }[] = [
   { id: "survival", label: "Trấn Ải" },
   { id: "arena", label: "Quần Hùng" },
   { id: "destiny", label: "Thiên Mệnh" },
+  { id: "tamTuongKy", label: "Tầm Tướng Ký" },
 ];
+
+interface TtkBoardResponse {
+  readonly week?: string;
+  readonly top?: readonly { readonly rank: number; readonly name: string; readonly mine: boolean; readonly points: number; readonly unitsSpent: number }[];
+  readonly mine?: { readonly rank: number; readonly points: number; readonly unitsSpent: number } | null;
+  readonly error?: string;
+}
 
 const NOTE: Record<(typeof TABS)[number]["id"], string> = {
   survival: "Số đợt nhiều nhất đã vượt qua.",
   arena:
     "Điểm đấu trường bóng ma: thắng cộng, thua trừ, nhiều hơn khi gặp đối thủ mạnh hơn.",
   destiny: "Tầng clear cao hơn; hòa thì tổng lượt ít hơn, sau đó người hoàn thành sớm hơn.",
+  tamTuongKy: "Tuần đổi vào thứ Hai 0 giờ: điểm tướng đề cử ghép ra trong tuần (lịch sử 300, đặc biệt 200); bằng điểm thì ai tiêu ít nguyên tố hơn đứng trên, rồi ai đạt trước. Hạng cuối tuần nhận vàng và bó nguyên tố.",
 };
 
 /** Ghi chú riêng của bảng mùa theo tuần (đổi vào thứ Hai 0 giờ, điểm mùa bắt đầu lại từ 0). */
@@ -76,9 +86,12 @@ function scoreText(board: BoardId, score: number, season: boolean): string {
   return `${d.main} đợt`;
 }
 
-export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEnabled?: boolean }) {
+export default function LeaderboardScreen({ destinyEnabled = true, tamTuongKyRanked = false }: { destinyEnabled?: boolean; tamTuongKyRanked?: boolean }) {
   const { params } = useScene();
-  const [tab, setTab] = useState<(typeof TABS)[number]["id"]>(() => params.get("board") === "destiny" && destinyEnabled ? "destiny" : "survival");
+  const [tab, setTab] = useState<(typeof TABS)[number]["id"]>(() =>
+    params.get("board") === "destiny" && destinyEnabled ? "destiny" : params.get("board") === "tamTuongKy" && tamTuongKyRanked ? "tamTuongKy" : "survival",
+  );
+  const [ttk, setTtk] = useState<TtkBoardResponse | null>(null);
   const [data, setData] = useState<BoardResponse | null>(null);
   const [destiny, setDestiny] = useState<DestinyBoardResponse | null>(null);
   // Mặc định xem bảng mùa tuần này; "Mọi thời đại" là bảng cộng dồn cũ.
@@ -86,9 +99,17 @@ export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEn
   const [cycle, setCycle] = useState("");
   const [cursor, setCursor] = useState("0");
   // Bình Loạn là chế độ offline theo tuyến lịch sử, không có bảng xếp hạng (Shan, 01/11/2026).
-  const board: BoardId = tab === "destiny" ? "survival" : tab;
+  const board: BoardId = tab === "destiny" || tab === "tamTuongKy" ? "survival" : tab;
 
   useEffect(() => {
+    if (tab === "tamTuongKy") {
+      let live = true;
+      void fetch("/api/tam-tuong-ky/board?week=current", { cache: "no-store" })
+        .then((r) => r.json() as Promise<TtkBoardResponse>)
+        .catch((): TtkBoardResponse => ({ error: "network" }))
+        .then((value) => live && setTtk(value));
+      return () => { live = false; };
+    }
     if (tab === "destiny") {
       let live = true;
       const query = new URLSearchParams({ cursor, limit: "20" });
@@ -136,7 +157,7 @@ export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEn
         </div>
 
         <div role="tablist" className="mb-3 flex flex-wrap gap-1.5">
-          {TABS.filter((t) => t.id !== "destiny" || destinyEnabled).map((t) => (
+          {TABS.filter((t) => (t.id !== "destiny" || destinyEnabled) && (t.id !== "tamTuongKy" || tamTuongKyRanked)).map((t) => (
             <button
               key={t.id}
               type="button"
@@ -150,7 +171,9 @@ export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEn
           ))}
         </div>
 
-        {tab === "destiny" ? (
+        {tab === "tamTuongKy" ? (
+          <TtkBoard data={ttk} />
+        ) : tab === "destiny" ? (
           <Card padding="none">
             <CardBody className="flex flex-col gap-3">
             <label className="flex flex-wrap items-center gap-2 text-sm">Cycle lịch sử
@@ -225,5 +248,39 @@ export default function LeaderboardScreen({ destinyEnabled = true }: { destinyEn
         </Card>}
       </div>
     </main>
+  );
+}
+
+/** Bảng tuần Tầm Tướng Ký: chỉ có bảng tuần này (không có “mọi thời đại”). */
+export function TtkBoard({ data }: { data: TtkBoardResponse | null }) {
+  return (
+    <Card className="flex flex-col gap-2">
+      <p className="text-xs text-muted">{NOTE.tamTuongKy}{data?.week ? ` (tuần bắt đầu ${data.week})` : ""}</p>
+      {!data?.top ? (
+        <p className="py-6 text-center text-sm text-muted">{data?.error ? "Không tải được bảng xếp hạng." : "Đang tải…"}</p>
+      ) : data.top.length === 0 ? (
+        <p className="py-6 text-center text-sm text-muted">Tuần này chưa có ai ghép ra tướng đề cử.</p>
+      ) : (
+        <ol className="flex flex-col gap-1 text-sm">
+          {data.top.map((r) => (
+            <li key={r.rank} className={`flex items-center gap-2 rounded px-2 py-1.5 ${r.mine ? "bg-amber-500/20 font-semibold" : "bg-black/20"}`}>
+              <span className={`w-7 text-right tabular-nums ${r.rank <= 3 ? "font-black text-amber-300" : "text-muted"}`}>{r.rank}</span>
+              <span className="min-w-0 flex-1 truncate">
+                {r.name}
+                {r.mine && " (bạn)"}
+              </span>
+              <span className="text-xs text-foreground-secondary tabular-nums">
+                {r.points} điểm · tiêu {r.unitsSpent}
+              </span>
+            </li>
+          ))}
+        </ol>
+      )}
+      {data?.mine && !data.top?.some((r) => r.mine) && (
+        <p className="text-sm text-amber-200">
+          Hạng của bạn: {data.mine.rank} · {data.mine.points} điểm · tiêu {data.mine.unitsSpent}
+        </p>
+      )}
+    </Card>
   );
 }

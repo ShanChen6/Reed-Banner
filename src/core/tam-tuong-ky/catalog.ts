@@ -6,6 +6,7 @@
 import { ELEMENTS, type Element } from "../battle";
 import { historySource } from "../campaign/history";
 import { companionById, isHero, isWarlord, specialById } from "../roster/roster";
+import { buildCatalog, type Catalog } from "./engine";
 import type { CatalogDeps, CatalogNode, CharacterInfo, HeroAnchor, HeroTier, Pack, Recipe, RoleHint } from "./types";
 
 const ELEMENT_NAMES: Readonly<Record<Element, string>> = {
@@ -62,7 +63,8 @@ const hero = (
   anchors: readonly HeroAnchor[],
   clue: string,
   historySourceIds?: readonly string[],
-): CatalogNode => ({ id: `hero.${characterId}`, kind: "character", nameVi, characterId, tier, anchors, clue: { kind: "text", text: clue }, historySourceIds });
+  pack = "pack-1",
+): CatalogNode => ({ id: `hero.${characterId}`, kind: "character", nameVi, characterId, tier, anchors, clue: { kind: "text", text: clue }, historySourceIds, pack });
 
 /** Tướng theo Đinh Bộ Lĩnh: Việt Nam sử lược, mục Đinh Tiên Hoàng (S04). Sứ quân: danh sách Thập nhị sứ quân (S01, S05). */
 const DBL_SOURCES = ["S04"] as const;
@@ -270,6 +272,150 @@ export const PACK_1: Pack = {
   ],
 };
 
+// ——— Gói 2 (Shan chọn 04/11/2026): 8 sứ quân còn lại + Đinh Bộ Lĩnh (bậc đặc biệt, A-21). ———
+// Dùng chung sổ với Gói 1 (gộp bằng `mergePacks`), bật bằng cờ TAM_TUONG_KY_PACK2_ENABLED. Cùng cách dựng: vai trò +
+// dấu danh tính (đất phong, tên chiêu riêng), không dựa vào art. Báo cáo: docs/02-game-modes/future/21-tam-tuong-ky-pack-2.md.
+
+const PACK_2_NODES: readonly CatalogNode[] = [
+  mat("grain", "Lúa", "thien-nhien"),
+  mat("bridge", "Cầu tre", "thien-nhien"),
+  mat("lake", "Hồ nước", "thien-nhien"),
+  mat("granary", "Kho lương", "thien-nhien"),
+  role("tuongSiKim", "Võ nghệ hệ Kim", { profession: "tuongSi", element: "kim" }),
+  role("muuSiThuy", "Mưu kế hệ Thủy", { profession: "muuSi", element: "thuy" }),
+  role("phapSuLoi", "Pháp thuật hệ Lôi", { profession: "phapSu", element: "loi" }),
+  role("binhLinhHoa", "Đội ngũ hệ Hỏa", { profession: "binhLinh", element: "hoa" }),
+  know("ngoGia", "Ngô gia di mưu", "thu-tich", "Đất Bình Kiều, chiêu Ngô Gia Di Mưu của Ngô Xương Xí"),
+  know("tamDai", "Tam Đái kiên thành", "thien-nhien", "Đất Tam Đái, chiêu Tam Đái Kiên Thành của Nguyễn Khoan"),
+  know("phongChau", "Phong Châu lôi kích", "thien-nhien", "Đất Phong Châu, chiêu Phong Châu Lôi Kích của Kiều Công Hãn"),
+  know("hoiHo", "Hồi Hồ sinh khí", "thien-nhien", "Đất Hồi Hồ, chiêu Hồi Hồ Sinh Khí của Kiều Thuận"),
+  know("phaGiap", "Siêu Loại phá giáp", "binh-khi", "Đất Siêu Loại, chiêu Siêu Loại Phá Giáp của Lý Khuê"),
+  know("tienDu", "Tiên Du đoạt lương", "thien-nhien", "Đất Tiên Du, chiêu Tiên Du Đoạt Lương của Nguyễn Thủ Tiệp"),
+  know("teGiang", "Tế Giang thủy trận", "thien-nhien", "Đất Tế Giang, chiêu Tế Giang Thủy Trận của Lữ Đường"),
+  know("hoaLuy", "Phù Liệt hỏa lũy", "thien-nhien", "Đất Tây Phù Liệt, chiêu Phù Liệt Hỏa Lũy của Nguyễn Siêu"),
+  know("daiCoViet", "Dựng nước Đại Cồ Việt", "thien-nhien", "Đinh Bộ Lĩnh dẹp loạn, dựng nước Đại Cồ Việt ở Hoa Lư"),
+  hero("ngoXuongXi", "Ngô Xương Xí", "lichSu", [{ kind: "place", text: "Bình Kiều" }, { kind: "skill", text: "Ngô Gia Di Mưu" }],
+    "Người nhà Ngô giữ đất Bình Kiều, mưu kế sắc như kim.", WARLORD_SOURCES, "pack-2"),
+  hero("nguyenKhoan", "Nguyễn Khoan", "lichSu", [{ kind: "place", text: "Tam Đái" }, { kind: "skill", text: "Tam Đái Kiên Thành" }],
+    "Chủ thành Tam Đái, đội ngũ đứng vững như đất.", WARLORD_SOURCES, "pack-2"),
+  hero("kieuCongHan", "Kiều Công Hãn", "lichSu", [{ kind: "place", text: "Phong Châu" }, { kind: "skill", text: "Phong Châu Lôi Kích" }],
+    "Sấm nổ trên đất Phong Châu; người dùng phép gọi sét.", WARLORD_SOURCES, "pack-2"),
+  hero("kieuThuan", "Kiều Thuận", "lichSu", [{ kind: "place", text: "Hồi Hồ" }, { kind: "skill", text: "Hồi Hồ Sinh Khí" }],
+    "Thầy thuốc bên hồ Hồi Hồ, giữ sinh khí cho quân.", WARLORD_SOURCES, "pack-2"),
+  hero("lyKhue", "Lý Khuê", "lichSu", [{ kind: "place", text: "Siêu Loại" }, { kind: "skill", text: "Siêu Loại Phá Giáp" }],
+    "Võ tướng đất Siêu Loại, đòn đánh sắc phá cả giáp.", WARLORD_SOURCES, "pack-2"),
+  hero("nguyenThuTiep", "Nguyễn Thủ Tiệp", "lichSu", [{ kind: "place", text: "Tiên Du" }, { kind: "skill", text: "Tiên Du Đoạt Lương" }],
+    "Người giữ Tiên Du, mưu cướp kho lương theo đường nước.", WARLORD_SOURCES, "pack-2"),
+  hero("luDuong", "Lữ Đường", "lichSu", [{ kind: "place", text: "Tế Giang" }, { kind: "skill", text: "Tế Giang Thủy Trận" }],
+    "Bày thủy trận trên sông Tế Giang, phép mềm như nước.", WARLORD_SOURCES, "pack-2"),
+  hero("nguyenSieu", "Nguyễn Siêu", "lichSu", [{ kind: "place", text: "Tây Phù Liệt" }, { kind: "skill", text: "Phù Liệt Hỏa Lũy" }],
+    "Đốt lửa quanh lũy ở Tây Phù Liệt, đội ngũ nóng như lửa.", WARLORD_SOURCES, "pack-2"),
+  hero("dinhBoLinh", "Đinh Bộ Lĩnh", "dacBiet", [{ kind: "place", text: "Hoa Lư" }, { kind: "lore", text: "Dẹp loạn, dựng nước Đại Cồ Việt" }],
+    "Người từ đất núi sông dẹp loạn mười hai sứ quân, dựng nước Đại Cồ Việt.", DBL_SOURCES, "pack-2"),
+];
+
+const PACK_2_RECIPES: readonly Recipe[] = [
+  // Bậc 1 và vật dụng mới. Cặp gương với Gói 1: Giông tố+Lũy tre làng ≠ Lũy tre làng+Giông tố.
+  r("grain", "elt.tho", "elt.moc", "mat.grain", "Đất nuôi cây thành lúa"),
+  r("bridge", "mat.bamboo", "mat.estuary", "mat.bridge", "Tre bắc qua cửa sông thành cầu"),
+  r("lake", "mat.estuary", "mat.dew", "mat.lake", "Nước sông đọng sương thành hồ"),
+  r("granary", "mat.grain", "mat.rampart", "mat.granary", "Lúa cất sau lũy thành kho lương"),
+  // Vai trò.
+  r("tuongSiKim", "know.martial", "elt.kim", "role.tuongSiKim", "Võ nghệ sắc như kim"),
+  r("muuSiThuy", "know.stratagem", "elt.thuy", "role.muuSiThuy", "Mưu kế mềm như nước"),
+  r("phapSuLoi", "know.magic", "elt.loi", "role.phapSuLoi", "Pháp thuật gọi sấm"),
+  r("binhLinhHoa", "know.troops", "elt.hoa", "role.binhLinhHoa", "Đội ngũ nóng như lửa"),
+  // Dấu danh tính.
+  r("ngoGia", "mat.bambooSlips", "mat.bridge", "know.ngoGia", "Mưu nhà Ngô ghi trên thẻ tre, giữ ở bến cầu Bình Kiều"),
+  r("tamDai", "mat.village", "mat.rampart", "know.tamDai", "Lũy đắp quanh làng thành thành vững"),
+  r("phongChau", "mat.storm", "mat.village", "know.phongChau", "Giông sấm đánh xuống làng Phong Châu"),
+  r("hoiHo", "mat.lake", "mat.gourd", "know.hoiHo", "Bầu nước múc ở hồ Hồi Hồ giữ sinh khí"),
+  r("phaGiap", "mat.armor", "mat.forgedIron", "know.phaGiap", "Sắt rèn xuyên qua giáp"),
+  r("tienDu", "mat.granary", "mat.boat", "know.tienDu", "Thuyền chở lương rời kho"),
+  r("teGiang", "mat.estuary", "mat.waterOrb", "know.teGiang", "Ngọc tụ khí bày trận trên sông"),
+  r("hoaLuy", "mat.fortress", "mat.charcoal", "know.hoaLuy", "Than đốt quanh lũy kép thành hỏa lũy"),
+  r("daiCoViet", "mat.hoaLu", "elt.tho", "know.daiCoViet", "Đất Hoa Lư dựng nước"),
+  // Công thức cuối.
+  r("ngoXuongXi", "role.muuSiKim", "know.ngoGia", "hero.ngoXuongXi", "Mưu kế hệ Kim của nhà Ngô"),
+  r("nguyenKhoan", "role.binhLinhTho", "know.tamDai", "hero.nguyenKhoan", "Đội ngũ hệ Thổ giữ thành Tam Đái"),
+  r("kieuCongHan", "role.phapSuLoi", "know.phongChau", "hero.kieuCongHan", "Pháp thuật hệ Lôi ở Phong Châu"),
+  r("kieuThuan", "role.ySuMoc", "know.hoiHo", "hero.kieuThuan", "Y thuật hệ Mộc bên hồ Hồi Hồ"),
+  r("lyKhue", "role.tuongSiKim", "know.phaGiap", "hero.lyKhue", "Võ nghệ hệ Kim phá giáp"),
+  r("nguyenThuTiep", "role.muuSiThuy", "know.tienDu", "hero.nguyenThuTiep", "Mưu kế hệ Thủy đoạt lương"),
+  r("luDuong", "role.phapSuThuy", "know.teGiang", "hero.luDuong", "Pháp thuật hệ Thủy bày trận Tế Giang"),
+  r("nguyenSieu", "role.binhLinhHoa", "know.hoaLuy", "hero.nguyenSieu", "Đội ngũ hệ Hỏa giữ hỏa lũy"),
+  r("dinhBoLinh", "role.hybrid", "know.daiCoViet", "hero.dinhBoLinh", "Vạn tượng dựng nước Đại Cồ Việt"),
+];
+
+export const PACK_2: Pack = {
+  id: "pack-2",
+  nameVi: "Gói 2: Thập nhị sứ quân",
+  contentVersion: 1,
+  // Shan duyệt công thức, lời dẫn và vàng thành tựu ngày 04/11/2026. Người chơi thấy Gói 2 khi cờ TAM_TUONG_KY_PACK2_ENABLED bật.
+  status: "published",
+  nodes: PACK_2_NODES,
+  recipes: PACK_2_RECIPES,
+  // Theo khung P-21 (Shan duyệt 04/11/2026): bộ hệ 200, đủ 8 sứ quân Gói 2 600, đủ 12 sứ quân (hai gói) 800, đủ 3 tướng đặc biệt 300,
+  // đủ Gói 2 1 000. Bộ hệ Mộc, Lôi gộp tướng hai gói (mỗi gói một tướng).
+  achievementSets: [
+    { id: "ttk.pack-2.kim", title: "Tầm Tướng Ký: đủ tướng hệ Kim Gói 2", gold: 200, heroIds: ["hero.ngoXuongXi", "hero.lyKhue"] },
+    { id: "ttk.pack-2.thuy", title: "Tầm Tướng Ký: đủ tướng hệ Thủy Gói 2", gold: 200, heroIds: ["hero.nguyenThuTiep", "hero.luDuong"] },
+    { id: "ttk.pack-2.moc", title: "Tầm Tướng Ký: đủ tướng hệ Mộc", gold: 200, heroIds: ["hero.trinhTu", "hero.kieuThuan"] },
+    { id: "ttk.pack-2.loi", title: "Tầm Tướng Ký: đủ tướng hệ Lôi", gold: 200, heroIds: ["hero.leHoan", "hero.kieuCongHan"] },
+    { id: "ttk.pack-2.suQuan", title: "Tầm Tướng Ký: đủ tám sứ quân Gói 2", gold: 600, heroIds: ["hero.ngoXuongXi", "hero.nguyenKhoan", "hero.kieuCongHan", "hero.kieuThuan", "hero.lyKhue", "hero.nguyenThuTiep", "hero.luDuong", "hero.nguyenSieu"] },
+    { id: "ttk.pack-2.thapNhi", title: "Tầm Tướng Ký: đủ mười hai sứ quân", gold: 800, heroIds: ["hero.phamBachHo", "hero.doCanhThac", "hero.tranLam", "hero.ngoNhatKhanh", "hero.ngoXuongXi", "hero.nguyenKhoan", "hero.kieuCongHan", "hero.kieuThuan", "hero.lyKhue", "hero.nguyenThuTiep", "hero.luDuong", "hero.nguyenSieu"] },
+    { id: "ttk.pack-2.dacBiet", title: "Tầm Tướng Ký: đủ ba tướng đặc biệt", gold: 300, heroIds: ["hero.dinhNgoc", "hero.vuPhong", "hero.dinhBoLinh"] },
+    { id: "ttk.pack-2.all", title: "Tầm Tướng Ký: đủ Gói 2", gold: 1000, heroIds: ["hero.ngoXuongXi", "hero.nguyenKhoan", "hero.kieuCongHan", "hero.kieuThuan", "hero.lyKhue", "hero.nguyenThuTiep", "hero.luDuong", "hero.nguyenSieu", "hero.dinhBoLinh"] },
+  ],
+};
+
+/**
+ * Gộp các gói thành một sổ: node và công thức trùng ID chỉ giữ một bản (gói sau không được đổi nghĩa ID đã có).
+ * Thành tựu của từng gói giữ nguyên.
+ */
+export function mergePacks(id: string, nameVi: string, packs: readonly Pack[]): Pack {
+  const nodes = new Map<string, CatalogNode>();
+  const recipes = new Map<string, Recipe>();
+  for (const p of packs) {
+    for (const n of p.nodes) if (!nodes.has(n.id)) nodes.set(n.id, n);
+    for (const x of p.recipes) if (!recipes.has(x.id)) recipes.set(x.id, x);
+  }
+  return {
+    id,
+    nameVi,
+    contentVersion: Math.max(...packs.map((p) => p.contentVersion)),
+    status: packs.every((p) => p.status === "published") ? "published" : "draft",
+    nodes: [...nodes.values()],
+    recipes: [...recipes.values()],
+    achievementSets: packs.flatMap((p) => p.achievementSets ?? []),
+  };
+}
+
+/** Sổ gộp Gói 1 + Gói 2 (khi cờ Gói 2 bật). */
+export const PACK_1_2: Pack = mergePacks("pack-1-2", "Gói 1 + Gói 2", [PACK_1, PACK_2]);
+
+/** Tên các gói theo `pack` của tướng, cho Tướng Lục chia mục. */
+export const PACK_NAMES: Readonly<Record<string, string>> = { "pack-1": PACK_1.nameVi, "pack-2": PACK_2.nameVi };
+
+/** Mọi node và công thức của mọi gói đã viết: khi rút một gói, sổ người chơi không mất khám phá của gói đó. */
+export const KNOWN_NODE_IDS: ReadonlySet<string> = new Set(PACK_1_2.nodes.map((n) => n.id));
+export const KNOWN_RECIPE_IDS: ReadonlySet<string> = new Set(PACK_1_2.recipes.map((x) => x.id));
+
+/** Sổ theo mã server trả về (`TtkView.packId`), để client vẽ đúng sổ đang chạy. Mã lạ thì dùng Gói 1. */
+const PACKS_BY_ID: Readonly<Record<string, Pack>> = { "pack-1": PACK_1, "pack-1-2": PACK_1_2 };
+const CATALOG_CACHE = new Map<string, Catalog>();
+export function catalogForPack(packId: string | undefined): Catalog {
+  const pack = (packId && PACKS_BY_ID[packId]) || PACK_1;
+  let hit = CATALOG_CACHE.get(pack.id);
+  if (!hit) CATALOG_CACHE.set(pack.id, (hit = buildCatalog(pack)));
+  return hit;
+}
+
+/** Sổ server đang chạy theo cờ: Gói 1, hoặc Gói 1 + Gói 2. */
+export function activePack(pack2: boolean): Pack {
+  return pack2 ? PACK_1_2 : PACK_1;
+}
+
 /** Tập con của một pack gồm các tướng chọn và mọi node, công thức trên đường tới họ (cùng ID). */
 export function subPack(pack: Pack, id: string, nameVi: string, heroIds: readonly string[]): Pack {
   const byResult = new Map(pack.recipes.map((x) => [x.result, x]));
@@ -308,10 +454,13 @@ export const ACTIVE_PACK: Pack = PACK_1;
  * Gói đã duyệt nội dung: thành tựu của chúng nằm trong danh sách thành tựu. Trang Nhiệm vụ chỉ hiện thành tựu `ttk.*` khi
  * cờ TAM_TUONG_KY_ENABLED bật; cờ tắt thì không ai có tiến độ nên cũng không nhận được.
  */
-export const PUBLISHED_PACKS: readonly Pack[] = [PACK_1].filter((p) => p.status === "published");
+export const PUBLISHED_PACKS: readonly Pack[] = [PACK_1, PACK_2].filter((p) => p.status === "published");
 
 /** Bậc và nghề/hệ đọc từ roster, không chép vào catalog. Đinh Bộ Lĩnh chưa có (P-27, gói 2). */
 export function rosterCharacter(characterId: string): CharacterInfo | undefined {
+  // Đinh Bộ Lĩnh là nhân vật chính, nghề/hệ đổi theo người chơi; trong Tầm Tướng Ký là bậc đặc biệt (A-21, P-27).
+  // Nghề/hệ dưới đây là mặc định của hồ sơ mới, chỉ để hiển thị.
+  if (characterId === "dinhBoLinh") return { profession: "tuongSi", element: "moc", tier: "dacBiet" };
   const special = specialById(characterId);
   if (special) return { profession: special.profession, element: special.element, tier: "dacBiet" };
   const c = companionById(characterId);
