@@ -17,6 +17,7 @@
 | **Sinh tồn** | Một trận không kết thúc, đối thủ theo đợt, báo trước đợt kế tiếp | 3vs3 | Sau giai đoạn 4 |
 | **Trận Đồ** | Game xếp quân theo nghề/hệ, không đánh nhau; chơi thử offline (không thưởng) và xếp hạng có thưởng trên server (tắt mặc định, `FORMATION_RANKED_ENABLED`). Luật ở [GDD Binh Pháp](future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline) | Một người, 4 bậc 3×3–8×8 | Sau Song Tháp |
 | **Tầm Tướng Ký** | Ghép yếu tố có thứ tự từ 7 hệ để tìm chân dung tướng, không đánh nhau. Chế độ Thường tốn phiếu; Hạng tuần tiêu nguyên liệu, có bảng và thưởng. Bắt buộc đăng nhập; tắt mặc định (`TAM_TUONG_KY_ENABLED`, `TAM_TUONG_KY_RANKED_ENABLED`). Luật ở [Design Freeze](future/14-tam-tuong-ky-design-freeze.md) | Một người, Gói 1: 12 tướng | Sau Trận Đồ |
+| **Viễn Chinh** | Chia 6 tướng làm hai đạo, mỗi ngày một đạo tiến một ô trên sa bàn, đạo kia nghỉ hồi sức; giặc tăng viện theo ngày, hai đạo giáp công thành đích. Thưởng trận như trận thường, thưởng lớn lần đầu mỗi bậc. Khách chơi được; tắt mặc định (`EXPEDITION_ENABLED`). Luật ở [GDD Viễn Chinh](expedition/01-vien-chinh-gdd.md) | Hai đạo 3vs3, 3 sa bàn × 3 bậc | Sau Tầm Tướng Ký |
 
 ## 2. Chiến dịch
 
@@ -218,6 +219,10 @@ Trang `/arena`, code ở `src/core/arena/` (đội phòng thủ, bóng ma máy t
 - **Mùa và thưởng:** có mùa theo tuần và thưởng vàng theo hạng, xem [mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng).
 - **Chưa làm:** nhật ký bị đánh (chỉ có số trận giữ được và bị mất), chặn đánh lại cùng một người.
 - **Hướng sắp tới:** chế độ online hai người chơi đấu trực tiếp, xem [mục 6.2](#62-quần-hùng-online-hai-người-chơi-phát-triển-sau). Đấu trường bóng ma hiện tại giữ nguyên.
+
+### 5.4 Viễn Chinh (Shan chọn cơ chế 04/11/2026)
+
+Hai đạo quân (Đinh Bộ Lĩnh + 2 tướng, và 3 tướng) hành quân trên một trong ba sa bàn (Ải Bắc, Thượng Du, Cửa Biển) tới thành đích. Mỗi ngày một việc: một đạo tiến sang ô kề (gặp địch thì đánh) và đạo kia nghỉ hồi 15% máu, hoặc cả hai đóng quân. Giặc mạnh thêm 5% mỗi ngày; đạo kia đứng kề ô bị đánh thì giáp công (máu địch ×0,75). Thua trận chỉ rút về và gục cả đạo; hết ngày mà chưa chiếm thành là thua. Nguồn chính: [GDD Viễn Chinh](expedition/01-vien-chinh-gdd.md).
 
 ## 6. Thưởng vàng theo hạng cuối kỳ (Claude đặt 01/11/2026, chờ Shan duyệt)
 

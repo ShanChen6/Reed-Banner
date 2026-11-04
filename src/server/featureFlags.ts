@@ -33,3 +33,11 @@ export function tamTuongKyEnabled(env: Readonly<Record<string, string | undefine
 export function tamTuongKyRankedEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
   return tamTuongKyEnabled(env) && env.TAM_TUONG_KY_RANKED_ENABLED === "true";
 }
+
+/** Viễn Chinh. Chỉ chuỗi `true` mới bật; mặc định tắt, thẻ Home giữ ở hàng “Đang dựng”. */
+export function expeditionFlag(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
+  return env.EXPEDITION_ENABLED === "true";
+}
+
+export const expeditionEnabled = (deps: { readonly expeditionEnabled?: boolean }): boolean =>
+  deps.expeditionEnabled === true;

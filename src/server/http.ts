@@ -5,7 +5,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { httpStatus, type Deps, type ServiceResult } from "./battles";
 import { GUEST_COOKIE, newGuestId, signGuest, verifyGuest } from "./guest";
 import { arenaStore, dailyStore, destinyLeaderboardStore, leaderboardStore, matchStore, profileStore } from "./store";
-import { formationRankedEnabled, tamTuongKyEnabled, tamTuongKyRankedEnabled, towerFeatureFlags } from "./featureFlags";
+import { expeditionFlag, formationRankedEnabled, tamTuongKyEnabled, tamTuongKyRankedEnabled, towerFeatureFlags } from "./featureFlags";
 import type { TamTuongKyDeps, TtkRankedResult, TtkServiceResult } from "./tamTuongKy";
 import { ttkHttpStatus } from "./tamTuongKy";
 import type { FormationDeps } from "./formation";
@@ -63,6 +63,7 @@ export function serverDeps(): Deps {
     destinySecret: process.env.SESSION_SECRET,
     trialEnabled: features.trial,
     destinyEnabled: features.destiny,
+    expeditionEnabled: expeditionFlag(),
     seasons: seasonStore(),
     isSignedIn: isSignedInAccount,
   };

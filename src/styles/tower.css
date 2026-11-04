@@ -39,6 +39,8 @@
   }
   .tower-screen--trial { --tower-art: url("/art/home/trial.webp"); }
   .tower-screen--destiny { --tower-art: url("/art/home/destiny.webp"); }
+  /* Viễn Chinh chưa có tranh riêng (TODO public/art/home/vien-chinh.webp): tạm dùng tranh Bình Loạn. */
+  .tower-screen--expedition { --tower-art: url("/art/home/campaign.webp"); }
   .tower-screen__banner h1 {
     font-family: var(--font-game), Georgia, serif;
     font-size: clamp(1.65rem, 3vw, 2.4rem);
