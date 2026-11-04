@@ -72,7 +72,7 @@ export const EXPEDITION_MAPS: Readonly<Record<ExpeditionMapId, ExpeditionMap>> =
       node("kho-ngua", "granary", "Kho Ngựa Thồ", 46, 30, 2),
       node("bai-lau", "fort", "Lũy Bãi Lau", 46, 48, 2),
       node("gac-bac", "fort", "Lũy Gác Bắc", 68, 16, 3),
-      node("gac-nam", "outpost", "Chòi Gác Nam", 68, 44, 3),
+      node("gac-nam", "fort", "Lũy Gác Nam", 68, 44, 3),
       node("thanh-ai-bac", "citadel", "Thành Ải Bắc", 90, 30, 4),
     ],
     edges: [
@@ -102,7 +102,7 @@ export const EXPEDITION_MAPS: Readonly<Record<ExpeditionMapId, ExpeditionMap>> =
       node("gac-may", "outpost", "Chòi Mây Phủ", 68, 14, 3),
       node("doc-lau", "outpost", "Đồn Dốc Lau", 22, 52, 1),
       node("luy-thac", "outpost", "Đồn Thác Bạc", 36, 46, 1),
-      node("kho-ruong", "granary", "Kho Ruộng Bậc", 52, 52, 2),
+      node("ruong-bac", "village", "Bản Ruộng Bậc", 52, 52, 2),
       node("gac-khe", "outpost", "Chòi Khe Hẹp", 68, 46, 3),
       node("deo-ngang", "fort", "Đèo Ngang Núi", 46, 30, 2),
       node("thanh-thuong-du", "citadel", "Thành Thượng Du", 90, 30, 4),
@@ -110,9 +110,9 @@ export const EXPEDITION_MAPS: Readonly<Record<ExpeditionMapId, ExpeditionMap>> =
     edges: [
       ["trai-nguon", "rung-tre"], ["rung-tre", "ban-moc"], ["ban-moc", "luy-da"], ["luy-da", "gac-may"],
       ["gac-may", "thanh-thuong-du"],
-      ["trai-suoi", "doc-lau"], ["doc-lau", "luy-thac"], ["luy-thac", "kho-ruong"], ["kho-ruong", "gac-khe"],
+      ["trai-suoi", "doc-lau"], ["doc-lau", "luy-thac"], ["luy-thac", "ruong-bac"], ["ruong-bac", "gac-khe"],
       ["gac-khe", "thanh-thuong-du"],
-      ["ban-moc", "deo-ngang"], ["deo-ngang", "kho-ruong"],
+      ["ban-moc", "deo-ngang"], ["deo-ngang", "ruong-bac"],
     ],
   },
   cuaBien: {
