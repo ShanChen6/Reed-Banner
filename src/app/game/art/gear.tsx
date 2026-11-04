@@ -229,6 +229,15 @@ export function EmptySlotIcon({ slot, className }: { slot: GearSlot; className?:
   );
 }
 
+/** Biểu tượng thao tác trang bị vẽ tay ở public/art/ui/actions/<tên>.webp (96 px). */
+export function GearActionIcon({ action, className }: { action: "merge" | "sell"; className?: string }) {
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden>
+      <image href={`/art/ui/actions/${action}.webp`} x={0} y={0} width={48} height={48} preserveAspectRatio="xMidYMid meet" />
+    </svg>
+  );
+}
+
 /** Huy hiệu tròn của bộ ở public/art/gear/sets/<bộ>.webp (128 px). */
 export function setEmblemSrc(set: string): string | undefined {
   return set in SET_ART ? `/art/gear/sets/${set}.webp` : undefined;
