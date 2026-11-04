@@ -16,6 +16,7 @@
 | **Tháp Vận Mệnh (Destiny)** | Run 10 tầng theo chu kỳ tuần, roster khóa và tài nguyên xuyên tầng | 3vs3 | Song Tháp V1.0 |
 | **Sinh tồn** | Một trận không kết thúc, đối thủ theo đợt, báo trước đợt kế tiếp | 3vs3 | Sau giai đoạn 4 |
 | **Trận Đồ** | Game xếp quân theo nghề/hệ, không đánh nhau; chơi thử offline (không thưởng) và xếp hạng có thưởng trên server (tắt mặc định, `FORMATION_RANKED_ENABLED`). Luật ở [GDD Binh Pháp](future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline) | Một người, 4 bậc 3×3–8×8 | Sau Song Tháp |
+| **Tầm Tướng Ký** | Ghép yếu tố có thứ tự từ 7 hệ để tìm chân dung tướng, không đánh nhau. Chế độ Thường tốn phiếu; Hạng tuần tiêu nguyên liệu, có bảng và thưởng. Bắt buộc đăng nhập; tắt mặc định (`TAM_TUONG_KY_ENABLED`, `TAM_TUONG_KY_RANKED_ENABLED`). Luật ở [Design Freeze](future/14-tam-tuong-ky-design-freeze.md) | Một người, Gói 1: 12 tướng | Sau Trận Đồ |
 
 ## 2. Chiến dịch
 
@@ -229,8 +230,11 @@ Shan (01/11/2026): trước mắt thưởng xếp hạng của **mọi chế đ�
 | **Tháp Thiên Mệnh** | chu kỳ 7 ngày | 800 | 500 | 300 | 150 | 60 | Sổ chung `rank_reward_claims`; cộng thêm đá cuối chu kỳ; chỉ khi cờ `DESTINY_ENABLED` bật |
 | **Trấn Ải** | mùa tuần | 500 | 300 | 180 | 80 | 30 | Sổ chung `rank_reward_claims`, điểm mùa ở `season_scores` ([mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng)) |
 | **Quần Hùng** | mùa tuần | 600 | 400 | 240 | 100 | 40 | Như Trấn Ải |
+| **Tầm Tướng Ký** Hạng tuần | tuần | 500 | 300 | 180 | 80 | 30 | Sổ chung `rank_reward_claims`, điểm tuần ở `season_scores` chế độ `tamTuongKy`; chỉ khi cờ `TAM_TUONG_KY_RANKED_ENABLED` bật ([LT-06](future/19-tam-tuong-ky-lt06-ranked.md)) |
 
 **Trạng thái duyệt:** Shan đã duyệt toàn bộ bảng vàng ở trên (Trận Đồ, Nhật Lệnh, Tháp Thiên Mệnh, Trấn Ải, Quần Hùng) ngày 01/11/2026. Muốn đổi số phải qua quyết định mới.
+
+**Bó nguyên tố Tầm Tướng Ký (04/11/2026):** thưởng hạng chế độ theo tuần (Trận Đồ Đại trận, Tháp Thiên Mệnh, Trấn Ải, Quần Hùng, Tầm Tướng Ký) kèm bó 5 / 4 / 3 / 2 / 1 theo bậc cho người đã vào Tầm Tướng Ký, chỉ khi cờ `TAM_TUONG_KY_ENABLED` bật. Số vàng ở bảng trên không đổi. Xem [LT-06](future/19-tam-tuong-ky-lt06-ranked.md#2-bó-trong-thưởng-hạng-các-chế-độ).
 
 Bậc: hạng 1; hạng 2–3; hạng 4–10; từ hạng 11 tới hết nửa trên (làm tròn lên); còn lại. Code: `src/core/progress/rankRewards.ts` (bậc và bảng vàng), `src/server/rankRewards.ts` (nguồn theo chế độ, sổ nhận, nhận thưởng), `/api/rank-rewards` (danh sách chờ nhận) và `/api/rank-rewards/claim`. Chỉ nhận được các kỳ đã khép trong 7 kỳ gần nhất.
 
@@ -242,7 +246,7 @@ Khách chơi thường thoải mái; chế độ **online có bảng xếp hạn
 
 | Khách chơi được | Chỉ tài khoản đăng nhập |
 |---|---|
-| Luyện tập / Chơi thử, Giao Tranh (trận thường), Bình Loạn, Đánh trùm, Tháp Thí Luyện, **Trận Đồ chơi thường** | **Nhật Lệnh**, **Trấn Ải** (Sinh tồn), **Quần Hùng** (Đấu trường), **Tháp Thiên Mệnh**, **Trận Đồ xếp hạng**, trang **Bảng xếp hạng** |
+| Luyện tập / Chơi thử, Giao Tranh (trận thường), Bình Loạn, Đánh trùm, Tháp Thí Luyện, **Trận Đồ chơi thường** | **Nhật Lệnh**, **Trấn Ải** (Sinh tồn), **Quần Hùng** (Đấu trường), **Tháp Thiên Mệnh**, **Trận Đồ xếp hạng**, trang **Bảng xếp hạng**, **Tầm Tướng Ký** (cả chế độ Thường, vì mỗi lượt tốn phiếu; Shan 03/11/2026) |
 
 **Khách cũng không xem** bảng xếp hạng, đề Nhật Lệnh, màn Thiên Mệnh và màn Quần Hùng/Trấn Ải: các API `GET` tương ứng trả `401`, Trận Đồ xếp hạng chỉ báo "cần đăng nhập" không kèm bảng, và giao diện hiện màn nhắc đăng nhập ở cả trang Xếp hạng (Shan, 01/11/2026). Trận xếp hạng đang dở của một khách cũ (đăng xuất giữa chừng) không xem và không đi tiếp được (`getBattle` và `actBattle` trả `loginRequired`); riêng "dừng run" Thiên Mệnh vẫn cho phép để kết thúc run có sẵn. Code: `Deps.isSignedIn` ở `src/server/battles.ts`, helper `isSignedInAccount` và `loginRequiredResponse` ở `src/server/http.ts`, màn nhắc `src/app/game/LoginGate.tsx`. Tháp Thí Luyện không có bảng xếp hạng nên vẫn mở cho khách.
 

@@ -1,6 +1,52 @@
 # Nhật ký thay đổi thiết kế
 
+## 04/11/2026
+
+**Tầm Tướng Ký: LT-07 nghiệm thu, sẵn sàng bật theo cờ**
+- Gói 1 đặt `published` (Shan đã duyệt nội dung); phát hành chỉ còn do cờ `TAM_TUONG_KY_ENABLED` / `TAM_TUONG_KY_RANKED_ENABLED`. Trang Nhiệm vụ ẩn thành tựu `ttk.*` khi cờ tắt.
+- Kiểm: toàn bộ test, typecheck, lint, docs, `next build`; chạy bản production với cờ tắt và bật (Home, màn, API, Nhiệm vụ, thưởng hạng, 6 màn khác, luồng Thường và Hạng, điện thoại). Thêm Tầm Tướng Ký vào [bảng chế độ](../02-game-modes/README.md#1-tổng-quan) và [ai chơi được chế độ nào](../02-game-modes/README.md#61-ai-chơi-được-chế-độ-nào-shan-01112026). Xem [nghiệm thu LT-07](../02-game-modes/future/20-tam-tuong-ky-lt07-acceptance.md).
+
+**Tầm Tướng Ký: Shan duyệt L5-1…L5-7; LT-06 chế độ Hạng tuần (DRAFT, có code)**
+- Duyệt: 15 lần ghép mỗi phiếu; bó nguyên tố **tự chọn** (7 đơn vị dùng cho hệ nào cũng được); **7 tướng đề cử** mỗi tuần; dấu “còn công thức chưa tìm”; gợi ý nhắm tướng; 69 công thức và 12 lời dẫn Gói 1; ô đề cử kèm điểm. Design Freeze P-8, P-9, P-11, P-17 sửa theo; [Gói 1](../02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md) **DRAFT → APPROVED**.
+- Chế độ Hạng sau cờ `TAM_TUONG_KY_RANKED_ENABLED`: túi tự chọn, cấp nền 3 bó/tuần, kho tuần, đề cử xoay vòng chỉ hiện lời dẫn + điểm, điểm 300/200 một lần, bảng tuần `season_scores` chế độ `tamTuongKy`, cửa hàng 300 vàng (tối đa 2/tuần), thưởng hạng vàng như Trấn Ải. API `/api/tam-tuong-ky/ranked` (GET, `combine`, `buy`). Xem [Hạng tuần LT-06](../02-game-modes/future/19-tam-tuong-ky-lt06-ranked.md).
+- Thưởng hạng chế độ theo tuần (Đại trận, Thiên Mệnh, Trấn Ải, Quần Hùng, Tầm Tướng Ký) kèm bó 5/4/3/2/1 khi cờ Tầm Tướng Ký bật; vàng không đổi ([chế độ chơi mục 6](../02-game-modes/README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt)).
+
+**Tầm Tướng Ký: công thức không dựa vào art, lời dẫn chế độ Hạng (Shan)**
+- A-22: art nhân vật sẽ đổi nên công thức không dựa vào vũ khí, trang phục, phụ kiện. Gói 1 viết lại: công thức cuối = node vai trò (nghề × hệ theo roster; đặc biệt “Vạn tượng”) + dấu danh tính (tước hiệu, địa danh, mốc chiến dịch, tên chiêu, lore). Validator thêm `roleMismatch`, `missingAnchor`. Gói 1 còn 69 công thức, 57 yếu tố trung gian; số lần ghép giữ 12/9. Slice-1 thành tập con của Gói 1; [catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md) **APPROVED → SUPERSEDED**.
+- A-23: chế độ Hạng không hiện rõ tướng đề cử, chỉ một lời dẫn mô tả tướng (chữ; sau này ảnh, câu nói). Mỗi tướng Gói 1 có lời dẫn chữ của trò chơi; validator chặn lời dẫn chứa tên tướng (`clueSpoils`, `missingClue`). P-16 sửa theo.
+- Mô phỏng chạy lại trên gói mới: kết luận giữ nguyên ([Gói 1 LT-05](../02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md#6-cần-shan-chọn)).
+
+**Tầm Tướng Ký: LT-05 Gói 1 và mô phỏng (DRAFT, có code)**
+- `PACK_1` (bản đầu, viết lại cùng ngày theo A-22): 12 tướng Shan duyệt, 82 công thức, 70 yếu tố trung gian; lịch sử đều 12 lần ghép, đặc biệt đều 9; không ngõ cụt; giữ mọi ID của slice-1. Thành tựu bộ theo P-21 (9 bộ, 3 200 vàng). Server chuyển sang chạy Gói 1 (vẫn `draft`, sau cờ).
+- `scripts/tam-tuong-ky-sim.ts`: người mới đoán mò cần khoảng 92–136 ngày cho tướng đầu với gợi ý hiện tại; thêm dấu “còn công thức chưa tìm” và gợi ý nhắm tướng thì còn khoảng 9 ngày, đủ 12 tướng khoảng 72 ngày. Bó chia đều 7 hệ phí vì cả gói cần 51 Mộc, 3 Lôi. Đề xuất: 15 lần/phiếu, bó tự chọn, 7 tướng đề cử. Xem [Gói 1 LT-05](../02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md#6-cần-shan-chọn).
+
+**Tầm Tướng Ký: LT-04 server chế độ Thường (DRAFT, có code)**
+- Phiếu (3 khi bắt đầu, trần 10), lượt 15 lần ghép (hết hạn 24 giờ), gợi ý 2 lượt mỗi ngày, sổ khám phá lưu trong hồ sơ tài khoản (`Profile.tamTuongKy`, không thêm bảng). API `/api/tam-tuong-ky` (GET, `session`, `combine`, `hint`) sau cờ và đăng nhập; `requestId` chống trừ hai lần. Xem [server LT-04](../02-game-modes/future/17-tam-tuong-ky-lt04-server.md).
+- Phiếu kèm thưởng: nhận nốt nhiệm vụ ngày +1, “Thắng 15 trận” +2, điểm danh ngày 7 +1 (chỉ người đã vào chế độ); vàng nhiệm vụ giữ nguyên.
+- Thành tựu bộ tướng (vàng + huy hiệu) từ `Pack.achievementSets`; chỉ gói đã phát hành hiện ở trang Nhiệm vụ, gói thử chưa có.
+- Màn chơi dùng server thay bản xem trước: phiếu ở góc, nút “Mở lượt mới · 1 phiếu”, mẹo người mới, khóa nút khi chờ.
+
 ## 03/11/2026
+
+**Tầm Tướng Ký: LT-03 giao diện chế độ Thường (DRAFT, có code)**
+- Phân cảnh `/game/tam-tuong-ky` sau cờ `TAM_TUONG_KY_ENABLED` (mặc định tắt); khách thấy màn nhắc đăng nhập. Vạn Vật Lục (tìm không dấu, lọc nhóm), Đài Hợp Nguyên (ô trước/ô sau, đổi chỗ, 15 lần ghép, 2 gợi ý), Tướng Lục bóng mờ; điện thoại có thanh Hợp Nguyên ở đáy. Bản xem trước chưa lưu, chưa tốn phiếu. Xem [giao diện Tầm Tướng Ký](../05-ui-ux/screens/tam-tuong-ky.md).
+
+**Tầm Tướng Ký: LT-02 engine ghép (có code)**
+- Shan duyệt công thức slice LT-01; [catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md) **DRAFT → APPROVED**.
+- `src/core/tam-tuong-ky/engine.ts`, `hints.ts`: ghép chế độ Thường (sổ khám phá) và Hạng (kho, tiêu cả khi ghép sai, tướng không vào kho), gợi ý mức 1–2 không lộ đủ công thức; 29 test. Xem [engine LT-02](../02-game-modes/future/16-tam-tuong-ky-lt02-engine.md). Chưa có server, UI hay dữ liệu lưu.
+
+**Tầm Tướng Ký: LT-01 catalog slice (có code)**
+- Shan chốt số lần ghép tối thiểu **cố định**: thường 7, đặc biệt 9, lịch sử 12 (thay khung 5–7 / 7–9 / 9–12 duyệt trước đó trong ngày). Validator đổi `tierOrder`/`tierRange` thành một lỗi `tierCombines`; slice chỉnh lại: Đinh Ngọc 9, Lê Hoàn 12, Nguyễn Bặc 12.
+- `src/core/tam-tuong-ky/`: kiểu dữ liệu, đồ thị công thức có thứ tự, validator theo Design Freeze mục 7.2 và `SLICE_PACK` (draft) cho Nguyễn Bặc, Lê Hoàn, Đinh Ngọc; 27 test ở `tests/core/tam-tuong-ky/`. Báo cáo: [catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md). Chưa có engine, UI, route hay dữ liệu lưu.
+
+**Tầm Tướng Ký: bản chốt thiết kế LT-00 (DRAFT)**
+- Thêm [14 — Tầm Tướng Ký Design Freeze](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md): kiểm kê code (7 hệ, 8 nghề, `chauNgoc`/`toKim`/`viTrieu` và chân dung, thành tựu, mùa tuần, sổ thưởng hạng), luật, ví dụ chuẩn và 50 test Given/When/Then.
+- Shan chốt 10 quyết định: tên Tầm Tướng Ký (bỏ “Liệt Truyện”); ghép có thứ tự, `A+A` được phép; hai chế độ Thường (phiếu) và Hạng tuần (kho nguyên tố bị tiêu, thưởng); độ khó lịch sử > đặc biệt > thường; gợi ý chỉ ở Thường, 2 lượt miễn phí, không lộ đủ công thức, không tự mở; ghép ra tướng chỉ mở thành tựu; bắt buộc đăng nhập; Tướng Lục hiện bóng mờ đủ pack; tạm dùng nghề/hệ/vật biểu trưng. Thay luật “không thứ tự”, “cho khách chơi offline”, “hint 3 mức” trong GDD 08. Còn 27 đề xuất và 7 câu mở chờ duyệt; chưa mở LT-01.
+- Shan chốt đợt 2: 1 phiếu = 1 lượt 15–20 lần ghép; gợi ý 2 lượt miễn phí mỗi ngày (Claude đồng ý); thành tựu theo bộ tướng có vàng + huy hiệu, không cho tướng lẻ; ghép sai ở Hạng mất nguyên liệu, không hoàn; nguyên liệu Hạng từ thưởng hạng các chế độ, cân nhắc cửa hàng (**thay quyết định 01/11/2026 “thưởng hạng chỉ là vàng”** ở phần nguyên liệu, số vàng giữ nguyên); số tướng đề cử cố định, xoay vòng theo tuần, chốt sau cân bằng; gói đầu 10 tướng lịch sử + 2 đặc biệt.
+- Shan chốt đợt 3: bán bó nguyên tố ở cửa hàng, giới hạn mỗi tuần; duyệt 12 tướng gói đầu; Đinh Bộ Lĩnh xây theo hướng nhân vật đặc biệt; **Đinh Ngọc** và **Trần Vũ Phong** (chốt họ Trần) thành nhân vật chính thức: [Đinh Ngọc](../03-characters/dinh-ngoc.md) và [Trần Vũ Phong](../03-characters/vu-phong.md) đổi **DRAFT → APPROVED**. Code còn tên “Vũ Phong” và chưa mở hai nhân vật trong game (task riêng).
+- Shan chốt cách mở nhân vật đặc biệt: chuỗi nhiệm vụ phụ, Đinh Ngọc sau Chương II, Trần Vũ Phong sau Chương IV, gia nhập cấp 1; không bán vàng, không quay, không lấy từ Tầm Tướng Ký ([Đinh Ngọc — mở khóa](../03-characters/dinh-ngoc.md#mo-khoa-nhan-vat-dac-biet)). Nội dung 3 bước là đề xuất.
+- Shan duyệt mục 3.2 của [Design Freeze](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#32-đề-xuất-đã-duyệt), sửa khung số lần ghép tối thiểu: thường 5–7, đặc biệt 7–9, lịch sử 9–12 (thứ tự chặt trong pack). Design Freeze **DRAFT → FROZEN**; bắt đầu LT-01.
+- Sửa [danh mục chế độ](../02-game-modes/future/01-mode-portfolio.md#rủi-ro-sản-phẩm): code đã bật 8 nghề (`NEW_PROFESSIONS_ENABLED = true`), không còn là 6.
 
 **Hồ sơ đổi thành Doanh Trại**
 - Shan: màn Hồ sơ đổi tên hiển thị thành Doanh Trại, quản lý được 50–100 nhân vật; mục Tướng sĩ / Đội hình / Kho đồ, Cửa hàng là lối vào riêng; kỹ năng nằm trong chi tiết từng tướng. Đường dẫn `/game/profile` giữ nguyên, luật trang bị/ghép/đội hình không đổi ([Doanh Trại](../05-ui-ux/screens/doanh-trai.md)). Tiêu đề mục tiện ích ở màn chính đổi từ "Doanh trại" thành "Quân vụ" để không trùng.

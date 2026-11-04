@@ -1,14 +1,16 @@
-# Vũ Phong — Vân Du Tử
+# Trần Vũ Phong — Vân Du Tử
 
-> Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — có hình tượng, sáu ảnh khung và rig hình động (chỉ có trên trang xem thử) và bộ kỹ năng đề xuất: nhân vật đặc biệt dung hợp tám nghề/bảy hệ qua 6 chủ động + 4 nội tại, cùng khuôn với Đinh Ngọc nhưng đảo vai. Mọi số liệu là điểm xuất phát chưa mô phỏng; kỹ năng và nội tại đã chạy được trong core (chưa mở ở chế độ nào, xem [Triển khai trong core](#triển-khai-trong-core-02112026)); chưa Shan duyệt.
+> Cập nhật: 03/11/2026
+> Trạng thái: **APPROVED** — Shan chốt 03/11/2026: Trần Vũ Phong là nhân vật đặc biệt chính thức, họ Trần. Số liệu kỹ năng vẫn là điểm xuất phát chờ cân bằng; code còn tên “Vũ Phong” và chưa mở trong game.
+>
+> Bản ghi trước (02/11/2026): **DRAFT** — có hình tượng, sáu ảnh khung và rig hình động (chỉ có trên trang xem thử) và bộ kỹ năng đề xuất: nhân vật đặc biệt dung hợp tám nghề/bảy hệ qua 6 chủ động + 4 nội tại, cùng khuôn với Đinh Ngọc nhưng đảo vai. Mọi số liệu là điểm xuất phát chưa mô phỏng; kỹ năng và nội tại đã chạy được trong core (chưa mở ở chế độ nào, xem [Triển khai trong core](#triển-khai-trong-core-02112026)); chưa Shan duyệt.
 
 ## Hồ sơ
 
 | Mục | Đề xuất |
 |---|---|
-| Tên | Vũ Phong |
-| Tên đầy đủ | GDD [Binh Pháp](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc) gọi là **Trần Vũ Phong**; tài liệu này viết gọn Vũ Phong. Chưa chốt họ Trần có vào roster hay không |
+| Tên | **Trần Vũ Phong** (Shan chốt họ Trần 03/11/2026) |
+| Tên đầy đủ | Trần Vũ Phong, như [GDD Binh Pháp](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc); tài liệu này có chỗ viết gọn Vũ Phong. Tên hiển thị trong roster đổi thành Trần Vũ Phong ở task code riêng |
 | Danh xưng | Vân Du Tử — "kẻ rong chơi trên mây" |
 | Phân loại | Nhân vật hư cấu, nam khoảng 25–30 tuổi (chọn 28 để dựng hình); không phải nhân vật lịch sử |
 | Bối cảnh | Low fantasy lấy cảm hứng thế kỷ X thời Đinh – Cờ Lau, như [art bible](../06-art/art-bible.md) |
@@ -215,6 +217,10 @@ Trước rollout cần ma trận 1v1/3v3, cấp 1/10/20/30, chiêu 1/3/5, gear 0
 
 Không thêm "nghề Phong Du" vào `ALL_PROFESSIONS` và không dùng mô hình chính/phụ của [nhân vật tổng hợp](nhan-vat-tong-hop.md): Vũ Phong dùng khuôn `specialHybrid` cùng Đinh Ngọc (loadout cố định, per-skill `damageElement`, bốn nội tại hỗn hợp, chặn tự lắp nội tại nghề/hệ mặc định). Dữ liệu tối thiểu: identity `vuPhong`, template `specialHybrid`, defenseElement `phong`, sáu skill ID và bốn passive ID ở trên, bộ đếm P1–P4 trong snapshot. Đó là contract đề xuất, không phải API hiện có; server-authoritative cho damageElement, target, cost và trigger. Cách mở khóa theo hướng chung của [nhân vật tổng hợp](nhan-vat-tong-hop.md#cách-nhận), chưa chốt.
 
+### Mở khóa
+
+Shan chốt 03/11/2026: chuỗi nhiệm vụ phụ 3 bước, hiện sau khi qua hết **Chương IV** Chiến dịch, chủ đề rong ruổi tìm người; gia nhập ở **cấp 1**. Luật chung và các bước ở [Đinh Ngọc — mở khóa](dinh-ngoc.md#mo-khoa-nhan-vat-dac-biet).
+
 ## Triển khai trong core (02/11/2026)
 
 Kỹ năng đã chạy được trong engine chiến đấu (`src/core`), kiểm bằng `tests/core/battle/special-characters.test.ts`. **Chưa mở ở chế độ nào**: nhân vật nằm ở `SPECIAL_COMPANIONS` ([roster.ts](../../src/core/roster/roster.ts)), không thuộc `ALL_COMPANIONS`, nên chưa có trong shop, Thường, Chiến dịch, Tháp, Sinh tồn hay Practice; mở ở đâu và cách mở khóa là quyết định sản phẩm sau. Trang `/demo` cũng chưa chọn được hai nhân vật này.
@@ -356,4 +362,4 @@ Vũ Phong chưa vào roster nên không có trong trận, shop hay Practice. Tra
 - [ ] Hình xăm đúng vùng ở mọi khung; không VFX gió, mưa, mây vẽ vào ảnh nhân vật.
 - [ ] Silhouette phân biệt được với Đinh Bộ Lĩnh và các nhân vật nam khác ở 128px: tóc dài búi lỏng, vai phải trần, trượng cao.
 
-> TODO: Review hình tượng và bộ kỹ năng (nghề/hệ, chỉ số, sáu chiêu, bốn nội tại) trước khi viết ID hoặc code; mô phỏng cân bằng; chốt cách mở khóa. Theo dõi tại [câu hỏi mở](../09-roadmap/cau-hoi-mo.md).
+> TODO: Review hình tượng và bộ kỹ năng (nghề/hệ, chỉ số, sáu chiêu, bốn nội tại) trước khi viết ID hoặc code; mô phỏng cân bằng (cách mở khóa đã chốt 03/11/2026, xem [Mở khóa](#mở-khóa)). Theo dõi tại [câu hỏi mở](../09-roadmap/cau-hoi-mo.md).

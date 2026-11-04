@@ -1,6 +1,6 @@
 # Danh sách nhân vật
 
-> Nhân vật đặc biệt đang thiết kế: [Đinh Ngọc — Vạn Tượng Hành Giả](dinh-ngoc.md), nữ khoảng 25 tuổi, mã tạm RB-SP-001. Bộ6 chủ động +4 nội tại dung hợp8 nghề/7 hệ là DRAFT, chưa đăng ký roster hoặc tăng tổng nhân vật đang chơi.
+> Nhân vật đặc biệt chính thức (Shan, 03/11/2026): [Đinh Ngọc — Vạn Tượng Hành Giả](dinh-ngoc.md) và [Trần Vũ Phong — Vân Du Tử](vu-phong.md). Bộ 6 chủ động + 4 nội tại dung hợp 8 nghề/7 hệ đã chạy trong core; số liệu là điểm xuất phát, chưa mở trong game.
 
 > Thiết kế mở rộng 30/10/2026: xem [nguồn Xạ thủ](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md). Từ 31/10/2026 14 nhân vật Xạ thủ/Sát thủ (RB-062–075) đã vào trận và shop (1.500 vàng); số liệu vẫn là điểm xuất phát chờ mô phỏng, Đinh Bộ Lĩnh chưa dùng hai nghề này. Sát thủ dùng bộ W02 đa vũ khí mới, chưa triển khai runtime.
 

@@ -38,12 +38,14 @@ import {
 import {
   checkIn,
   claimQuest,
+  DAILY_QUESTS,
   NEW_QUESTS,
   parseQuests,
   type QuestError,
   type QuestState,
 } from "./quests";
 import { achievementById, achievementProgress } from "./achievements";
+import { grantTickets, parseTtkAccount, type TtkAccount } from "../tam-tuong-ky/account";
 import {
   addXp,
   autoProgress,
@@ -91,6 +93,8 @@ export interface Profile {
   readonly survival: SurvivalState;
   /** Nhiệm vụ ngày/tuần, số đếm cho thành tựu, điểm danh. */
   readonly quests: QuestState;
+  /** Tầm Tướng Ký: phiếu, lượt, gợi ý, sổ khám phá. Chưa vào chế độ lần nào thì không có. */
+  readonly tamTuongKy?: TtkAccount;
 }
 
 export interface SurvivalState {
@@ -304,6 +308,9 @@ export function parseProfile(raw: unknown): Profile {
     survival: parseSurvival(p.survival),
     quests: parseQuests(p.quests),
   };
+  const ttk = parseTtkAccount(p.tamTuongKy);
+  if (ttk) (next as { tamTuongKy?: TtkAccount }).tamTuongKy = ttk;
+  else delete (next as { tamTuongKy?: TtkAccount }).tamTuongKy;
   return Array.isArray(p.team) && validTeam(next, p.team)
     ? { ...next, team: p.team }
     : next;
@@ -422,6 +429,22 @@ function buyCompanion(profile: Profile, id: string): ProfileActionResult {
 }
 
 /**
+ * Phiếu Tầm Tướng Ký kèm thưởng nhiệm vụ (Design Freeze P-10): nhận nốt nhiệm vụ ngày cuối cùng +1, nhiệm vụ tuần
+ * “Thắng 15 trận” +2, điểm danh ngày thứ 7 +1. Chỉ cộng cho người đã vào Tầm Tướng Ký (có `tamTuongKy`); mỗi lần nhận
+ * nhiệm vụ chỉ xảy ra một lần mỗi kỳ nên phiếu cũng vậy.
+ */
+export const TTK_TICKETS_DAILY_ALL = 1;
+export const TTK_TICKETS_WEEKLY_WIN15 = 2;
+export const TTK_TICKETS_CHECKIN7 = 1;
+
+function ttkTicketsFor(action: { readonly type: "checkIn" } | { readonly type: "claimQuest"; readonly id: string }, quests: QuestState): number {
+  if (action.type === "checkIn") return quests.checkIn.streak === 7 ? TTK_TICKETS_CHECKIN7 : 0;
+  if (action.id === "w.win15") return TTK_TICKETS_WEEKLY_WIN15;
+  const daily = DAILY_QUESTS.map((q) => q.id);
+  return daily.includes(action.id) && daily.every((id) => quests.claimed.includes(id)) ? TTK_TICKETS_DAILY_ALL : 0;
+}
+
+/**
  * `now` là giờ server (ms), cần cho điểm danh và nhiệm vụ theo ngày; các thao tác khác không dùng.
  */
 export function applyProfileAction(
@@ -434,16 +457,17 @@ export function applyProfileAction(
       action.type === "checkIn"
         ? checkIn(profile.quests, now)
         : claimQuest(profile.quests, action.id, now);
-    return r.ok
-      ? {
-          ok: true,
-          profile: {
-            ...profile,
-            quests: r.quests,
-            gold: profile.gold + r.gold,
-          },
-        }
-      : r;
+    if (!r.ok) return r;
+    const tickets = ttkTicketsFor(action, r.quests);
+    return {
+      ok: true,
+      profile: {
+        ...profile,
+        quests: r.quests,
+        gold: profile.gold + r.gold,
+        ...(profile.tamTuongKy && tickets > 0 ? { tamTuongKy: grantTickets(profile.tamTuongKy, tickets) } : {}),
+      },
+    };
   }
   if (action.type === "claimAchievement") {
     const def = achievementById(action.id);
