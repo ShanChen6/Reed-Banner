@@ -43,6 +43,8 @@ export interface TowerFeatures {
   readonly tamTuongKyRanked?: boolean;
   /** Tầm Tướng Ký Gói 2 (`TAM_TUONG_KY_PACK2_ENABLED`). */
   readonly tamTuongKyPack2?: boolean;
+  /** Tầm Tướng Ký Gói 3 (`TAM_TUONG_KY_PACK3_ENABLED`). */
+  readonly tamTuongKyPack3?: boolean;
 }
 
 export default function GameShell({
@@ -142,7 +144,7 @@ function SceneView({
       if (!towerFeatures.tamTuongKy) return <DisabledTowerMode name={SCENE_TITLE.TAM_TUONG_KY} />;
       return account ? <TamTuongKyScreen ranked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate name={SCENE_TITLE.TAM_TUONG_KY} reason="Chế độ này cần tài khoản đã đăng nhập vì mỗi lượt chơi tốn một phiếu, và tiến trình Tướng Lục lưu theo tài khoản." />;
     case "QUESTS":
-      return <QuestsScreen tamTuongKy={towerFeatures.tamTuongKy === true} tamTuongKyPack2={towerFeatures.tamTuongKyPack2 === true} />;
+      return <QuestsScreen tamTuongKy={towerFeatures.tamTuongKy === true} tamTuongKyPack2={towerFeatures.tamTuongKyPack2 === true} tamTuongKyPack3={towerFeatures.tamTuongKyPack3 === true} />;
     case "SHOP":
       return <ShopScreen />;
     case "LEADERBOARD":

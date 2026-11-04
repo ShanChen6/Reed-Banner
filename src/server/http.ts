@@ -5,7 +5,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { httpStatus, type Deps, type ServiceResult } from "./battles";
 import { GUEST_COOKIE, newGuestId, signGuest, verifyGuest } from "./guest";
 import { arenaStore, dailyStore, destinyLeaderboardStore, leaderboardStore, matchStore, profileStore } from "./store";
-import { formationRankedEnabled, tamTuongKyEnabled, tamTuongKyPack2Enabled, tamTuongKyRankedEnabled, towerFeatureFlags } from "./featureFlags";
+import { formationRankedEnabled, tamTuongKyEnabled, tamTuongKyPack2Enabled, tamTuongKyPack3Enabled, tamTuongKyRankedEnabled, towerFeatureFlags } from "./featureFlags";
 import type { TamTuongKyDeps, TtkRankedResult, TtkServiceResult } from "./tamTuongKy";
 import { ttkHttpStatus } from "./tamTuongKy";
 import type { FormationDeps } from "./formation";
@@ -145,6 +145,7 @@ export function tamTuongKyDeps(): TamTuongKyDeps {
     isSignedIn: isSignedInAccount,
     rankedEnabled: tamTuongKyRankedEnabled(),
     pack2: tamTuongKyPack2Enabled(),
+    pack3: tamTuongKyPack3Enabled(),
     seasons: seasonStore(),
   };
 }
