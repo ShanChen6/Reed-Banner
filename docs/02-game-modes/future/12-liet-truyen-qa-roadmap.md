@@ -62,6 +62,7 @@ Nếu mở reward/chiêu mộ tương lai:
 - [x] LT-00 sign-off (Design Freeze FROZEN, 03/11/2026).
 - [x] LT-01 catalog slice và validator: [15 — catalog LT-01](15-tam-tuong-ky-lt01-catalog.md) (03/11/2026).
 - [x] Engine/tests: [16 — engine LT-02](16-tam-tuong-ky-lt02-engine.md) (03/11/2026).
+- [x] UI LT-03 có code, chờ Shan chơi thử: [giao diện Tầm Tướng Ký](../../05-ui-ux/screens/tam-tuong-ky.md) (03/11/2026).
 - [ ] UI/asset approved.
 - [ ] Persistence.
 - [ ] Release.

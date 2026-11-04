@@ -23,3 +23,8 @@ export const destinyEnabled = (deps: { readonly destinyEnabled?: boolean }): boo
 export function formationRankedEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
   return env.FORMATION_RANKED_ENABLED === "true";
 }
+
+/** Tầm Tướng Ký (Design Freeze P-28). Chỉ chuỗi `true` mới bật; mặc định tắt, thẻ Home giữ “sắp ra mắt”. */
+export function tamTuongKyEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
+  return env.TAM_TUONG_KY_ENABLED === "true";
+}

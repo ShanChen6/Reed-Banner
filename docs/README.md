@@ -65,6 +65,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [design-system/README.md](05-ui-ux/design-system/README.md) | UI Home và các chế độ ngoài Campaign; spec ở [game-mode-ui-spec.md](05-ui-ux/design-system/game-mode-ui-spec.md) (Home V2 mục 14) |
 | ★ [screens/battle.md](05-ui-ux/screens/battle.md) | Màn trận đấu, điều khiển |
 | ★ [screens/tran-do.md](05-ui-ux/screens/tran-do.md) | Giao diện Trận Đồ: sa bàn là bản đồ, quân, chướng ngại, yêu cầu ảnh, gợi ý màn chế độ (**DRAFT**) |
+| ★ [screens/tam-tuong-ky.md](05-ui-ux/screens/tam-tuong-ky.md) | Giao diện Tầm Tướng Ký: Vạn Vật Lục, Đài Hợp Nguyên, Tướng Lục, cờ bật (**DRAFT**) |
 | ★ [campaign/README.md](05-ui-ux/campaign/README.md) | UI riêng Campaign: thoại, Sử ký, World Atlas; [task board](05-ui-ux/campaign/task-board.md), [Polish V2](05-ui-ux/campaign/polish-v2/README.md), [audio (DEFERRED)](05-ui-ux/campaign/audio-todo/README.md): [kiến trúc và bảng cue mọi chế độ](05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md), [prompt triển khai và tạo âm thanh](05-ui-ux/campaign/audio-todo/04-prompts-trien-khai-theo-che-do.md) |
 | ★ [implementation/roadmap.md](05-ui-ux/implementation/roadmap.md) | Lộ trình UI-00…UI-09, UI-02A…E |
 

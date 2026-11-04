@@ -142,7 +142,7 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
           <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
             {UPCOMING.map((u) => (
               <li key={u.id}>
-                <UpcomingCard mode={u} />
+                <UpcomingCard mode={u.id === "tam-tuong-ky" && towerFeatures.tamTuongKy ? { ...u, scene: "TAM_TUONG_KY" } : u} />
               </li>
             ))}
           </ul>

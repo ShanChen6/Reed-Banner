@@ -2,6 +2,9 @@
 
 ## 03/11/2026
 
+**Tầm Tướng Ký: LT-03 giao diện chế độ Thường (DRAFT, có code)**
+- Phân cảnh `/game/tam-tuong-ky` sau cờ `TAM_TUONG_KY_ENABLED` (mặc định tắt); khách thấy màn nhắc đăng nhập. Vạn Vật Lục (tìm không dấu, lọc nhóm), Đài Hợp Nguyên (ô trước/ô sau, đổi chỗ, 15 lần ghép, 2 gợi ý), Tướng Lục bóng mờ; điện thoại có thanh Hợp Nguyên ở đáy. Bản xem trước chưa lưu, chưa tốn phiếu. Xem [giao diện Tầm Tướng Ký](../05-ui-ux/screens/tam-tuong-ky.md).
+
 **Tầm Tướng Ký: LT-02 engine ghép (có code)**
 - Shan duyệt công thức slice LT-01; [catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md) **DRAFT → APPROVED**.
 - `src/core/tam-tuong-ky/engine.ts`, `hints.ts`: ghép chế độ Thường (sổ khám phá) và Hạng (kho, tiêu cả khi ghép sai, tướng không vào kho), gợi ý mức 1–2 không lộ đủ công thức; 29 test. Xem [engine LT-02](../02-game-modes/future/16-tam-tuong-ky-lt02-engine.md). Chưa có server, UI hay dữ liệu lưu.
