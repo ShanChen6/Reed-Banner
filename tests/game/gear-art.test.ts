@@ -15,8 +15,19 @@ test("bộ Cờ Lau có ảnh cho cả 9 ô và vũ khí của mọi nghề", ()
   }
 });
 
+test("bộ Hoa Lư có ảnh 8 ô ngoài vũ khí, vũ khí còn vẽ SVG", () => {
+  for (const slot of GEAR_SLOTS) {
+    const src = gearArtSrc(slot, "hoaLu", "tuongSi");
+    if (slot === "vuKhi") {
+      assert.equal(src, undefined);
+      continue;
+    }
+    assert.ok(src && existsSync(`public${src}`), `${slot} ${src}`);
+  }
+});
+
 test("bộ chưa có ảnh và món không bộ giữ hình SVG", () => {
-  assert.equal(gearArtSrc("dinhMao", "hoaLu"), undefined);
+  assert.equal(gearArtSrc("dinhMao", "dongCo"), undefined);
   assert.equal(gearArtSrc("dinhMao", undefined), undefined);
 });
 

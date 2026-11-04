@@ -200,10 +200,16 @@ export function tierFrameSrc(tier: Tier): string {
  * Ảnh vẽ tay theo bộ ở public/art/gear/<bộ>/<ô>.webp, vũ khí là vuKhi-<nghề>.webp (192 px).
  * Bộ chưa có ảnh (Hoa Lư, Đồng Cổ) vẫn vẽ SVG. Xem docs/06-art/prompts/trang-bi.md.
  */
-const SET_ART: ReadonlySet<string> = new Set(["coLau"]);
+/** Bộ có ảnh vẽ tay; `weapons` = đã có ảnh vũ khí theo nghề (chưa có thì vũ khí vẫn vẽ SVG). */
+const SET_ART: Readonly<Record<string, { weapons: boolean }>> = {
+  coLau: { weapons: true },
+  hoaLu: { weapons: false },
+};
 
 export function gearArtSrc(slot: GearSlot, set: string | undefined, profession?: Profession): string | undefined {
-  if (set === undefined || !SET_ART.has(set)) return undefined;
+  const art = set === undefined ? undefined : SET_ART[set];
+  if (art === undefined) return undefined;
+  if (slot === "vuKhi" && !art.weapons) return undefined;
   return slot === "vuKhi" ? `/art/gear/${set}/vuKhi-${profession ?? "tuongSi"}.webp` : `/art/gear/${set}/${slot}.webp`;
 }
 
