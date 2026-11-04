@@ -39,7 +39,7 @@ import {
 import { loadProfile, updateProfile, type ProfileStore } from "./profiles";
 import { recordSeason, type SeasonStore } from "./seasons";
 
-/** Hai sổ dựng sẵn: Gói 1, và Gói 1 + Gói 2 (cờ TAM_TUONG_KY_PACK2_ENABLED). */
+/** Sổ dựng sẵn theo các gói đã duyệt: Gói 1, Gói 1 + 2, Gói 1 + 2 + 3. */
 const CATALOG_1 = buildCatalog(activePack(false));
 const CATALOG_1_2 = buildCatalog(activePack(true));
 const CATALOG_1_2_3 = buildCatalog(activePack(true, true));
@@ -51,11 +51,11 @@ export interface TamTuongKyDeps {
   readonly now: number;
   readonly enabled: boolean;
   readonly isSignedIn: (ownerId: string) => Promise<boolean>;
-  /** Chế độ Hạng tuần (`TAM_TUONG_KY_RANKED_ENABLED`). */
+  /** Chế độ Hạng tuần (đi cùng `TAM_TUONG_KY_ENABLED`). */
   readonly rankedEnabled?: boolean;
-  /** Gói 2 (`TAM_TUONG_KY_PACK2_ENABLED`): sổ gộp Gói 1 + Gói 2. */
+  /** Gói 2 (đã duyệt, đi cùng cờ chế độ): sổ gộp Gói 1 + Gói 2. */
   readonly pack2?: boolean;
-  /** Gói 3 (`TAM_TUONG_KY_PACK3_ENABLED`, cần Gói 2): sổ ba gói. */
+  /** Gói 3 (khi đã duyệt, cần Gói 2): sổ ba gói. */
   readonly pack3?: boolean;
   readonly seasons?: SeasonStore;
 }

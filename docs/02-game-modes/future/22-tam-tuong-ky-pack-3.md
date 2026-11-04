@@ -1,7 +1,7 @@
 # 22 — Tầm Tướng Ký: Gói 3 (tướng thường)
 
 > Cập nhật: 04/11/2026
-> Trạng thái: **DRAFT** — có code (`PACK_3`, sổ ba gói `PACK_1_2_3`), bật bằng cờ `TAM_TUONG_KY_PACK3_ENABLED` (mặc định tắt, cần Gói 2). Chờ Shan duyệt công thức, lời dẫn và vàng thành tựu ở [mục 5](#5-cần-shan-duyệt).
+> Trạng thái: **DRAFT** — có code (`PACK_3`, sổ ba gói `PACK_1_2_3`), còn `status: "draft"` nên chưa có trên bản chạy; duyệt xong đổi sang `published` là mở cùng cờ `TAM_TUONG_KY_ENABLED`, không có biến riêng. Chờ Shan duyệt công thức, lời dẫn và vàng thành tựu ở [mục 5](#5-cần-shan-duyệt).
 
 Shan (04/11/2026): **đưa mọi tướng vào Tầm Tướng Ký**. Gói 1 + Gói 2 đã có 21 tướng (lịch sử, sứ quân, đặc biệt); Gói 3 thêm **56 tướng thường** còn lại (8 nghề × 7 hệ, mỗi tổ hợp đúng một người, kể cả Xạ thủ, Sát thủ). Sau Gói 3, sổ có đủ **77 tướng**, tức mọi nhân vật chơi được trong game cùng Đinh Bộ Lĩnh (test).
 
@@ -14,7 +14,7 @@ Theo [Design Freeze](14-tam-tuong-ky-design-freeze.md): bậc thường đúng *
   - Tuyệt chiêu: 3 lần ghép, lấy tên tuyệt chiêu riêng của tướng làm dấu danh tính.
 - Tri thức sơ học (2 lần ghép) rẻ hơn tri thức nghề của Gói 1 (4–5 lần), nên tướng thường dễ hơn tướng đặc biệt và lịch sử, đúng thứ tự lịch sử > đặc biệt > thường.
 - Tuyệt chiêu ghép từ hai yếu tố cơ bản gợi tới tên chiêu, ví dụ “Băng Hà Phong Tỏa” = Giọt sương + Núi, “Hỏa Thiêu Kho Lương” = Than củi + Lúa.
-- Gói 3 không thêm công thức mới cho yếu tố có sẵn, nên không đổi độ khó yếu tố nào của Gói 1, Gói 2 (test). Gói 3 dùng Lúa của Gói 2 nên cần cờ Gói 2.
+- Gói 3 không thêm công thức mới cho yếu tố có sẵn, nên không đổi độ khó yếu tố nào của Gói 1, Gói 2 (test). Gói 3 dùng Lúa của Gói 2 nên chỉ mở khi Gói 2 đã `published`.
 - Hai tướng có tên chiêu chứa tên mình (Độc Ảnh “Độc Ảnh Tiềm Châm”, Xích Dạ “Xích Dạ Song Sát”): yếu tố và lời dẫn dùng phần còn lại (“Tiềm Châm”, “Song Sát”), dấu danh tính ghi đủ tên chiêu.
 - Lời dẫn: “<nghề> hệ <hệ>, tuyệt chiêu mang tên “…”.” — không chứa tên tướng nào (test).
 
@@ -94,7 +94,7 @@ Theo [Design Freeze](14-tam-tuong-ky-design-freeze.md): bậc thường đúng *
 
 ## 3. Gộp sổ và xoay vòng Hạng
 
-- Cờ Gói 3 bật (cùng cờ Gói 2): server chạy sổ ba gói (77 tướng, 271 công thức); Tướng Lục có thêm mục “Gói 3: Tướng thường · x/56”.
+- Gói 3 `published` và cờ chế độ bật: server chạy sổ ba gói (77 tướng, 271 công thức); Tướng Lục có thêm mục “Gói 3: Tướng thường · x/56”.
 - Tắt Gói 3: khám phá Gói 3 vẫn giữ trong sổ người chơi (như Gói 2).
 - Hạng: 7 đề cử xoay vòng qua 77 tướng; tướng thường 100 điểm. Chỉ có 3 tướng đặc biệt nên tuần nào cửa sổ xoay vòng không có tướng đặc biệt thì ô cuối thay bằng một tướng đặc biệt, lần lượt theo tuần. Đề cử của Gói 1 và Gói 1 + 2 **không đổi** (test so với cách cũ 120 tuần). Bật Gói 3 giữa tuần làm đổi đề cử tuần đó, nên bật vào thứ Hai.
 
@@ -106,4 +106,4 @@ Theo [Design Freeze](14-tam-tuong-ky-design-freeze.md): bậc thường đúng *
 
 - [ ] 8 tri thức sơ học, 56 công thức tuyệt chiêu, 56 lời dẫn (mục 1, 2).
 - [ ] Thành tựu đề xuất: đủ 7 tướng thường mỗi nghề 250 vàng (8 bộ) và đủ Gói 3 1 500 vàng, tổng 3 500 vàng.
-- [ ] Ngày bật `TAM_TUONG_KY_PACK3_ENABLED` (nên thứ Hai). Duyệt xong đổi `PACK_3.status` sang `published` để thành tựu hiện.
+- [ ] Ngày ra mắt (nên thứ Hai). Duyệt xong đổi `PACK_3.status` sang `published`, merge và deploy; không cần đặt biến môi trường mới.

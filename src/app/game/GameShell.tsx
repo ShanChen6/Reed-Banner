@@ -39,11 +39,11 @@ export interface TowerFeatures {
   readonly destiny: boolean;
   /** Tầm Tướng Ký, mặc định tắt (`TAM_TUONG_KY_ENABLED`). */
   readonly tamTuongKy?: boolean;
-  /** Tầm Tướng Ký chế độ Hạng tuần (`TAM_TUONG_KY_RANKED_ENABLED`). */
+  /** Tầm Tướng Ký chế độ Hạng tuần (đi cùng `TAM_TUONG_KY_ENABLED`). */
   readonly tamTuongKyRanked?: boolean;
-  /** Tầm Tướng Ký Gói 2 (`TAM_TUONG_KY_PACK2_ENABLED`). */
+  /** Tầm Tướng Ký Gói 2 (đã duyệt, đi cùng cờ chế độ). */
   readonly tamTuongKyPack2?: boolean;
-  /** Tầm Tướng Ký Gói 3 (`TAM_TUONG_KY_PACK3_ENABLED`). */
+  /** Tầm Tướng Ký Gói 3 (khi đã duyệt, đi cùng cờ chế độ). */
   readonly tamTuongKyPack3?: boolean;
 }
 
