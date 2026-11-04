@@ -146,6 +146,21 @@ export default function ArtPage() {
         </section>
 
         <section className="space-y-2">
+          <h2 className="font-semibold">Tuyệt chiêu ô 4 Đinh Bộ Lĩnh nghề Tướng sĩ (ảnh riêng từng hệ)</h2>
+          <div className="flex flex-wrap items-start gap-3">
+            {ELEMENTS.map((e) => {
+              const d = dinhBoLinhUltimate("tuongSi", e);
+              return (
+                <figure key={d.id} className="flex w-20 flex-col items-center gap-1">
+                  <SkillIcon def={d} className="size-12" />
+                  <figcaption className="text-center text-[11px] leading-tight opacity-80">{d.name}</figcaption>
+                </figure>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="space-y-2">
           <h2 className="font-semibold">Chiêu nghề</h2>
           <div className="space-y-3">
             {PROFESSIONS.map((p) => (

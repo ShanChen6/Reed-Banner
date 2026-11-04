@@ -520,6 +520,8 @@ const SKILL_ART = new Set([
   "role_thuThanh", "role_tuongKhien", "role_phanKich", "role_linhDuoc", "role_duongSinh", "role_teDo",
   "role_muaChuoc", "role_lyGian", "role_catQuanLuong", "role_nghiBinh", "role_hieuLenh", "role_phaKe",
   "role_xaThu_dinhDiem", "role_xaThu_phaGiap", "role_xaThu_tapKich", "role_satThu_thuaHu", "role_satThu_doatKhi", "role_satThu_truyMenh",
+  // Tuyệt chiêu ô 4 của Đinh Bộ Lĩnh nghề Tướng sĩ, mỗi hệ một hình (Shan vẽ 04/11/2026).
+  "dbl_tuongSi_kim", "dbl_tuongSi_moc", "dbl_tuongSi_thuy", "dbl_tuongSi_hoa", "dbl_tuongSi_tho", "dbl_tuongSi_loi", "dbl_tuongSi_phong",
 ]);
 
 /** Tuyệt chiêu ô 4 của Đinh Bộ Lĩnh (`dbl_<nghề>_<hệ>`) dùng lại ảnh tuyệt chiêu hệ cũ của chính ông. */
@@ -537,7 +539,7 @@ const DBL_ULTIMATE_ART: Readonly<Record<Element, string>> = {
  * Ảnh vẽ tay cho một kỹ năng (mã file trong public/art/skills/) và có cần huy hiệu nghề ở góc không.
  * - Mã gốc trong SKILL_ART: ảnh của chính nó.
  * - `element_<mã>` (ô 2/6 hệ của mọi nhân vật chơi được): bỏ tiền tố, dùng ảnh hệ cũ.
- * - `dbl_<nghề>_<hệ>`: ảnh tuyệt chiêu hệ cũ + huy hiệu nghề để phân biệt 8 nghề (mỗi trận chỉ một nghề).
+ * - `dbl_<nghề>_<hệ>` có ảnh riêng (Tướng sĩ) dùng ảnh đó; còn lại ảnh tuyệt chiêu hệ cũ + huy hiệu nghề để phân biệt 8 nghề (mỗi trận chỉ một nghề).
  */
 export function skillArt(def: Pick<SkillDef, "id" | "element" | "profession">): { file: string; badge?: Profession } | undefined {
   if (SKILL_ART.has(def.id)) return { file: def.id };
