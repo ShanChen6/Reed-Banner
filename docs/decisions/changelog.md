@@ -2,6 +2,9 @@
 
 ## 04/11/2026
 
+**Tầm Tướng Ký: cờ đọc dễ dãi hơn, kiểm cờ ở `/api/health`**
+- Shan báo bản deploy chưa thấy chế độ Hạng. Code trên `develop` đúng; nghi biến `TAM_TUONG_KY_RANKED_ENABLED` có giá trị khác đúng chữ `true` hoặc chưa deploy lại. Hai cờ Tầm Tướng Ký giờ chấp nhận `true` không phân biệt hoa thường, bỏ khoảng trắng/xuống dòng (cờ chế độ khác giữ nguyên). `/api/health` thêm `features` (trạng thái cờ, biến đặt sai, cờ Hạng bị bỏ qua vì thiếu cờ chế độ). Xem [nghiệm thu LT-07](../02-game-modes/future/20-tam-tuong-ky-lt07-acceptance.md#3-bật-và-rút-lại).
+
 **Tầm Tướng Ký: LT-07 nghiệm thu, sẵn sàng bật theo cờ**
 - Gói 1 đặt `published` (Shan đã duyệt nội dung); phát hành chỉ còn do cờ `TAM_TUONG_KY_ENABLED` / `TAM_TUONG_KY_RANKED_ENABLED`. Trang Nhiệm vụ ẩn thành tựu `ttk.*` khi cờ tắt.
 - Kiểm: toàn bộ test, typecheck, lint, docs, `next build`; chạy bản production với cờ tắt và bật (Home, màn, API, Nhiệm vụ, thưởng hạng, 6 màn khác, luồng Thường và Hạng, điện thoại). Thêm Tầm Tướng Ký vào [bảng chế độ](../02-game-modes/README.md#1-tổng-quan) và [ai chơi được chế độ nào](../02-game-modes/README.md#61-ai-chơi-được-chế-độ-nào-shan-01112026). Xem [nghiệm thu LT-07](../02-game-modes/future/20-tam-tuong-ky-lt07-acceptance.md).

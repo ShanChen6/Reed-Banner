@@ -54,6 +54,13 @@ Khách (chưa đăng nhập) thấy màn nhắc đăng nhập; API trả 401 (te
 2. Đặt `TAM_TUONG_KY_ENABLED=true`: mở chế độ Thường, thành tựu bộ, phiếu từ nhiệm vụ/điểm danh, bó trong thưởng hạng.
 3. Khi muốn mở Hạng tuần, đặt thêm `TAM_TUONG_KY_RANKED_ENABLED=true` (nên bật vào đầu tuần, thứ Hai giờ Việt Nam, để tuần đầu đủ 7 ngày).
 
+**Kiểm cờ sau khi deploy:** mở `/api/health`, mục `features.tamTuongKy`:
+
+- `enabled`, `ranked`: server đang đọc cờ chế độ, cờ Hạng là bật hay tắt.
+- `invalid`: tên biến đã đặt nhưng giá trị không phải `true` (ví dụ `1`, `yes`). Hai cờ Tầm Tướng Ký chấp nhận `true` không phân biệt hoa thường, bỏ khoảng trắng và xuống dòng ở hai đầu.
+- `rankedIgnored: true`: đã đặt cờ Hạng nhưng cờ chế độ chưa bật, nên Hạng vẫn tắt.
+- Biến môi trường chỉ có hiệu lực từ lần deploy **sau** khi đặt; đặt xong phải deploy lại. Trên Vercel, biến phải được chọn cho đúng môi trường (Production hoặc Preview) của bản đang mở.
+
 **Rút lại:** đặt lại cờ về giá trị khác `true` (hoặc xóa). Thẻ Home về “Sắp ra mắt”, API trả 403, thành tựu ẩn, không cộng bó. Dữ liệu người chơi (sổ, phiếu, túi, điểm tuần) giữ nguyên trong hồ sơ và `season_scores`; bật lại thì chơi tiếp. Bảng tuần đang chạy khi rút Hạng không thành nguồn thưởng cho tới khi bật lại.
 
 ## 4. Còn chờ Shan
