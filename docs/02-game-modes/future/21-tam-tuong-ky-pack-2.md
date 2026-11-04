@@ -1,7 +1,7 @@
 # 21 — Tầm Tướng Ký: Gói 2
 
 > Cập nhật: 04/11/2026
-> Trạng thái: **APPROVED** — Shan duyệt công thức, lời dẫn và thành tựu ngày 04/11/2026; `PACK_2` đặt `published`. Người chơi thấy Gói 2 khi bật cờ `TAM_TUONG_KY_PACK2_ENABLED` (mặc định tắt).
+> Trạng thái: **IMPLEMENTED** — Shan duyệt công thức, lời dẫn và thành tựu ngày 04/11/2026; code trên `develop` (PR #258); Shan bật cờ `TAM_TUONG_KY_PACK2_ENABLED` cùng ngày.
 
 Shan chọn ngày 04/11/2026: Gói 2 gồm **8 sứ quân còn lại + Đinh Bộ Lĩnh**, **gộp vào cùng một sổ** với Gói 1. Luật theo [Design Freeze](14-tam-tuong-ky-design-freeze.md); cách dựng công thức như [Gói 1](18-tam-tuong-ky-lt05-pack-1.md#1-cách-dựng-công-thức-a-22): vai trò (nghề × hệ theo roster) + dấu danh tính, không dựa vào art.
 
@@ -65,7 +65,7 @@ Tổng 3 500 vàng một lần. Hệ Thổ, Hỏa của Gói 2 mỗi hệ một 
 
 - [x] 9 công thức cuối và cây công thức (mục 6), 9 lời dẫn (mục 1) — Shan duyệt 04/11/2026.
 - [x] 8 thành tựu và số vàng (mục 4) — Shan duyệt 04/11/2026; `PACK_2.status` = `published`.
-- [ ] Ngày bật `TAM_TUONG_KY_PACK2_ENABLED` (nên thứ Hai).
+- [x] Bật `TAM_TUONG_KY_PACK2_ENABLED` (Shan, 04/11/2026, thứ Tư). Nếu chế độ Hạng đang bật, danh sách đề cử tuần 2026-11-02 đổi từ lúc bật; điểm đã ghi giữ nguyên.
 
 ## 6. Công thức Gói 2
 

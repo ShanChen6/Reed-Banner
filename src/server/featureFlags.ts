@@ -1,3 +1,5 @@
+import { PACK_2, PACK_3 } from "@/core/tam-tuong-ky/catalog";
+
 export const FEATURE_DISABLED_ERROR = "featureDisabled" as const;
 
 export interface TowerFeatureFlags {
@@ -32,24 +34,35 @@ function ttkFlag(value: string | undefined): boolean {
   return value?.trim().toLowerCase() === "true";
 }
 
-/** Tầm Tướng Ký (Design Freeze P-28). Mặc định tắt, thẻ Home giữ “sắp ra mắt”. */
+/**
+ * Tầm Tướng Ký: **một biến duy nhất** `TAM_TUONG_KY_ENABLED` mở chế độ Thường, Hạng tuần và mọi gói đã duyệt
+ * (`status: "published"` trong code). Gói mới chỉ ra mắt khi Shan duyệt và code đổi sang `published`, không cần biến riêng.
+ */
 export function tamTuongKyEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
   return ttkFlag(env.TAM_TUONG_KY_ENABLED);
 }
 
-/** Tầm Tướng Ký chế độ Hạng tuần (P-28). Cần cả cờ chế độ; chỉ chuỗi `true` mới bật. */
+/** Hạng tuần đi cùng cờ chế độ. */
 export function tamTuongKyRankedEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
-  return tamTuongKyEnabled(env) && ttkFlag(env.TAM_TUONG_KY_RANKED_ENABLED);
+  return tamTuongKyEnabled(env);
 }
 
-/** Tầm Tướng Ký Gói 2 (8 sứ quân còn lại + Đinh Bộ Lĩnh) gộp vào cùng sổ. Cần cờ chế độ. */
+/** Gói 2 (8 sứ quân còn lại + Đinh Bộ Lĩnh): bật cùng chế độ khi gói đã duyệt. */
 export function tamTuongKyPack2Enabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
-  return tamTuongKyEnabled(env) && ttkFlag(env.TAM_TUONG_KY_PACK2_ENABLED);
+  return tamTuongKyEnabled(env) && PACK_2.status === "published";
 }
+
+/** Gói 3 (56 tướng thường): bật cùng chế độ khi gói đã duyệt; cần Gói 2 (dùng yếu tố của Gói 2). */
+export function tamTuongKyPack3Enabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
+  return tamTuongKyPack2Enabled(env) && PACK_3.status === "published";
+}
+
+/** Các biến cũ, nay không còn tác dụng (gộp vào `TAM_TUONG_KY_ENABLED`). */
+const TTK_OBSOLETE_VARS = ["TAM_TUONG_KY_RANKED_ENABLED", "TAM_TUONG_KY_PACK2_ENABLED", "TAM_TUONG_KY_PACK3_ENABLED"] as const;
 
 /**
- * Trạng thái cờ cho /api/health (không có giá trị bí mật). `rankedIgnored`: đã đặt biến Hạng nhưng cờ chế độ chưa bật,
- * nên Hạng vẫn tắt. `invalid`: biến có đặt nhưng giá trị không phải `true`.
+ * Trạng thái cờ cho /api/health (không có giá trị bí mật). `invalid`: biến có đặt nhưng giá trị không phải `true`.
+ * `obsolete`: biến cũ còn đặt trong môi trường; không ảnh hưởng gì, có thể xóa.
  */
 export function tamTuongKyFlagStatus(env: Readonly<Record<string, string | undefined>> = process.env) {
   const set = (v: string | undefined) => v !== undefined && v.trim() !== "";
@@ -58,13 +71,9 @@ export function tamTuongKyFlagStatus(env: Readonly<Record<string, string | undef
     enabled,
     ranked: tamTuongKyRankedEnabled(env),
     pack2: tamTuongKyPack2Enabled(env),
-    invalid: [
-      ...(set(env.TAM_TUONG_KY_ENABLED) && !enabled ? ["TAM_TUONG_KY_ENABLED"] : []),
-      ...(set(env.TAM_TUONG_KY_RANKED_ENABLED) && !ttkFlag(env.TAM_TUONG_KY_RANKED_ENABLED) ? ["TAM_TUONG_KY_RANKED_ENABLED"] : []),
-      ...(set(env.TAM_TUONG_KY_PACK2_ENABLED) && !ttkFlag(env.TAM_TUONG_KY_PACK2_ENABLED) ? ["TAM_TUONG_KY_PACK2_ENABLED"] : []),
-    ],
-    rankedIgnored: ttkFlag(env.TAM_TUONG_KY_RANKED_ENABLED) && !enabled,
-    pack2Ignored: ttkFlag(env.TAM_TUONG_KY_PACK2_ENABLED) && !enabled,
+    pack3: tamTuongKyPack3Enabled(env),
+    invalid: set(env.TAM_TUONG_KY_ENABLED) && !enabled ? ["TAM_TUONG_KY_ENABLED"] : [],
+    obsolete: TTK_OBSOLETE_VARS.filter((k) => set(env[k])),
   };
 }
 

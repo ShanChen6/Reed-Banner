@@ -22,12 +22,13 @@
 14. [14 — Tầm Tướng Ký: Design Freeze LT-00](14-tam-tuong-ky-design-freeze.md) (FROZEN; nguồn chính luật Tầm Tướng Ký, thay luật trong 08–12)
 15. [15 — Tầm Tướng Ký: catalog slice LT-01](15-tam-tuong-ky-lt01-catalog.md) (APPROVED, có code)
 16. [16 — Tầm Tướng Ký: engine ghép LT-02](16-tam-tuong-ky-lt02-engine.md) (APPROVED, có code)
-17. [17 — Tầm Tướng Ký: server chế độ Thường LT-04](17-tam-tuong-ky-lt04-server.md) (DRAFT, có code)
+17. [17 — Tầm Tướng Ký: server chế độ Thường LT-04](17-tam-tuong-ky-lt04-server.md) (APPROVED, có code)
 18. [18 — Tầm Tướng Ký: Gói 1 và mô phỏng LT-05](18-tam-tuong-ky-lt05-pack-1.md) (APPROVED, có code)
 19. [19 — Tầm Tướng Ký: chế độ Hạng tuần LT-06](19-tam-tuong-ky-lt06-ranked.md) (DRAFT, có code)
 20. [20 — Tầm Tướng Ký: nghiệm thu và phát hành LT-07](20-tam-tuong-ky-lt07-acceptance.md) (DRAFT)
-21. [21 — Tầm Tướng Ký: Gói 2](21-tam-tuong-ky-pack-2.md) (APPROVED, có code)
-22. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
+21. [21 — Tầm Tướng Ký: Gói 2](21-tam-tuong-ky-pack-2.md) (IMPLEMENTED, đã bật)
+22. [22 — Tầm Tướng Ký: Gói 3 (tướng thường)](22-tam-tuong-ky-pack-3.md) (DRAFT, có code)
+23. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
 
 ## Quy ước quyết định
 
