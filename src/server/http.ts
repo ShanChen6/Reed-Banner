@@ -5,8 +5,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { httpStatus, type Deps, type ServiceResult } from "./battles";
 import { GUEST_COOKIE, newGuestId, signGuest, verifyGuest } from "./guest";
 import { arenaStore, dailyStore, destinyLeaderboardStore, leaderboardStore, matchStore, profileStore } from "./store";
-import { formationRankedEnabled, tamTuongKyEnabled, towerFeatureFlags } from "./featureFlags";
-import type { TamTuongKyDeps, TtkServiceResult } from "./tamTuongKy";
+import { formationRankedEnabled, tamTuongKyEnabled, tamTuongKyRankedEnabled, towerFeatureFlags } from "./featureFlags";
+import type { TamTuongKyDeps, TtkRankedResult, TtkServiceResult } from "./tamTuongKy";
 import { ttkHttpStatus } from "./tamTuongKy";
 import type { FormationDeps } from "./formation";
 import { accountStore, dailyStore as dailyStoreOf, destinyLeaderboardStore as destinyBoardOf, formationStore, rankRewardStore, seasonStore } from "./store";
@@ -113,6 +113,7 @@ export function formationDeps(): FormationDeps {
     enabled: formationRankedEnabled(),
     newId: () => `f_${randomUUID()}`,
     isSignedIn: isSignedInAccount,
+    ttkBundles: tamTuongKyEnabled(),
   };
 }
 
@@ -125,21 +126,30 @@ export function rankRewardDeps(): RankRewardDeps {
       ...(features.destiny ? [destinySource(destinyBoardOf())] : []),
       seasonSource("survival", seasonStore()),
       seasonSource("arena", seasonStore()),
+      ...(tamTuongKyRankedEnabled() ? [seasonSource("tamTuongKy", seasonStore())] : []),
     ],
     claims: rankRewardStore(),
     profiles: profileStore(),
     now: Date.now(),
     isSignedIn: isSignedInAccount,
+    ttkBundles: tamTuongKyEnabled(),
   };
 }
 
 /** Phụ thuộc của Tầm Tướng Ký: hồ sơ, giờ server, cờ bật, kiểm tài khoản đã đăng nhập. */
 export function tamTuongKyDeps(): TamTuongKyDeps {
-  return { profiles: profileStore(), now: Date.now(), enabled: tamTuongKyEnabled(), isSignedIn: isSignedInAccount };
+  return {
+    profiles: profileStore(),
+    now: Date.now(),
+    enabled: tamTuongKyEnabled(),
+    isSignedIn: isSignedInAccount,
+    rankedEnabled: tamTuongKyRankedEnabled(),
+    seasons: seasonStore(),
+  };
 }
 
 /** Phản hồi JSON chung của các API Tầm Tướng Ký. */
-export function respondTamTuongKy(result: TtkServiceResult): NextResponse {
+export function respondTamTuongKy(result: TtkServiceResult | TtkRankedResult): NextResponse {
   const headers = { "cache-control": "no-store" };
   return result.ok
     ? NextResponse.json({ view: result.view, response: result.response ?? null }, { headers })

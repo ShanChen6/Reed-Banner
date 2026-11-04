@@ -1,7 +1,7 @@
 # 18 — Tầm Tướng Ký: Gói 1 và mô phỏng LT-05
 
 > Cập nhật: 04/11/2026
-> Trạng thái: **DRAFT** — Gói 1 (12 tướng) có code (`PACK_1`, chạy sau cờ, còn `draft`), viết lại theo A-22 (không dựa vào art) và có lời dẫn A-23. Chờ Shan duyệt công thức, lời dẫn và chọn các con số ở [mục 6](#6-cần-shan-chọn).
+> Trạng thái: **APPROVED** — Shan duyệt cả 7 đề xuất ở [mục 6](#6-cần-shan-chọn) ngày 04/11/2026 (15 lần ghép, bó tự chọn, 7 tướng đề cử, dấu “còn công thức”, gợi ý nhắm tướng, 69 công thức và 12 lời dẫn, điểm ô đề cử). Gói 1 có code (`PACK_1`), pack vẫn `draft` tới khi phát hành.
 
 Luật theo [Design Freeze](14-tam-tuong-ky-design-freeze.md). File này ghi nội dung Gói 1, kết quả kiểm và mô phỏng; không đặt luật mới.
 
@@ -89,6 +89,8 @@ Giả sử đã biết công thức (học ở chế độ Thường); đề c�
 - Bó tự chọn khớp P-17 (“trung bình ghép được khoảng một nửa”) ở **7 tướng**: 4/7 với 7 bó, 5/7 khi mua thêm, 6/7 cho top 10.
 
 ## 6. Cần Shan chọn
+
+Shan duyệt cả bảy dòng theo đề xuất ngày 04/11/2026.
 
 | # | Câu hỏi | Claude đề xuất |
 |---|---|---|

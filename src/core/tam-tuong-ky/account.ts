@@ -5,6 +5,7 @@
 import { combineNormal, initialDiscovery, chargesCombine, type Catalog, type DiscoveryState, type InvalidReason } from "./engine";
 import { hintFor, type Hint, type HintLevel } from "./hints";
 import type { NodeId, RecipeId } from "./types";
+import type { TtkRankedWeek } from "./ranked";
 
 export const TTK_START_TICKETS = 3;
 export const TTK_MAX_TICKETS = 10;
@@ -34,7 +35,19 @@ export type TtkResponse =
       readonly reason?: InvalidReason;
       readonly charged: boolean;
     }
-  | { readonly kind: "hint"; readonly hint: Hint | null };
+  | { readonly kind: "hint"; readonly hint: Hint | null }
+  | {
+      readonly kind: "rankedCombine";
+      readonly status: "created" | "noRecipe" | "invalid";
+      readonly nodeId?: NodeId;
+      readonly recipeId?: RecipeId;
+      readonly isCharacter?: boolean;
+      readonly recipeAlreadyKnown?: boolean;
+      readonly reason?: InvalidReason;
+      /** Điểm cộng thêm (tướng đề cử ghép ra lần đầu trong tuần). */
+      readonly points: number;
+    }
+  | { readonly kind: "buy"; readonly bought: number; readonly units: number };
 
 export interface TtkReceipt {
   readonly requestId: string;
@@ -48,6 +61,10 @@ export interface TtkAccount {
   readonly session: TtkSession | null;
   readonly hints: { readonly day: string; readonly used: number };
   readonly receipts: readonly TtkReceipt[];
+  /** Túi nguyên tố tự chọn của chế độ Hạng (P-11): đơn vị, không reset. */
+  readonly units: number;
+  /** Tuần Hạng gần nhất đã vào; tuần mới thay thế (P-14). */
+  readonly ranked: TtkRankedWeek | null;
 }
 
 export function newTtkAccount(catalog: Catalog): TtkAccount {
@@ -58,6 +75,8 @@ export function newTtkAccount(catalog: Catalog): TtkAccount {
     session: null,
     hints: { day: "", used: 0 },
     receipts: [],
+    units: 0,
+    ranked: null,
   };
 }
 
@@ -93,6 +112,26 @@ export function parseTtkAccount(raw: unknown): TtkAccount | null {
           .filter((r): r is TtkReceipt => !!r && typeof (r as TtkReceipt).requestId === "string" && typeof (r as TtkReceipt).response === "object")
           .slice(-TTK_RECEIPTS_KEEP)
       : [],
+    units: isInt(a.units, 0, 1_000_000) ? a.units : 0,
+    ranked: parseRankedWeek(a.ranked),
+  };
+}
+
+const counts = (x: unknown): Record<string, number> =>
+  x && typeof x === "object"
+    ? Object.fromEntries(Object.entries(x as Record<string, unknown>).filter(([, v]) => isInt(v, 1, 1_000_000)) as [string, number][])
+    : {};
+
+function parseRankedWeek(raw: unknown): TtkRankedWeek | null {
+  const w = raw as Partial<TtkRankedWeek> | null;
+  if (!w || typeof w !== "object" || typeof w.week !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(w.week)) return null;
+  return {
+    week: w.week,
+    stock: counts(w.stock),
+    heroesCreated: [...new Set(strings(w.heroesCreated))],
+    unitsSpent: isInt(w.unitsSpent, 0, 1_000_000) ? w.unitsSpent : 0,
+    points: isInt(w.points, 0, 1_000_000) ? w.points : 0,
+    shopBought: isInt(w.shopBought, 0, 100) ? w.shopBought : 0,
   };
 }
 
@@ -129,22 +168,22 @@ export type TtkResult =
   | { readonly ok: true; readonly account: TtkAccount; readonly response: TtkResponse; readonly replayed: boolean }
   | { readonly ok: false; readonly error: TtkError };
 
-function withReceipt(account: TtkAccount, requestId: string, response: TtkResponse): TtkAccount {
+export function withReceipt(account: TtkAccount, requestId: string, response: TtkResponse): TtkAccount {
   return { ...account, receipts: [...account.receipts, { requestId, response }].slice(-TTK_RECEIPTS_KEEP) };
 }
 
 /** Cùng `requestId` đã xử lý thì trả lại đúng phản hồi cũ, không đổi gì (P-23). */
-function replay(account: TtkAccount, requestId: string): TtkResult | null {
+export function replayReceipt(account: TtkAccount, requestId: string): TtkResult | null {
   const r = account.receipts.find((x) => x.requestId === requestId);
   return r ? { ok: true, account, response: r.response, replayed: true } : null;
 }
 
-const validRequestId = (id: unknown): id is string => typeof id === "string" && id.length >= 8 && id.length <= 64;
+export const validRequestId = (id: unknown): id is string => typeof id === "string" && id.length >= 8 && id.length <= 64;
 
 /** Mở lượt Thường: có lượt dở thì trả lượt đó, không trừ phiếu; không thì trừ 1 phiếu. */
 export function openSession(account: TtkAccount, requestId: unknown, now: number): TtkResult {
   if (!validRequestId(requestId)) return { ok: false, error: "badRequest" };
-  const again = replay(account, requestId);
+  const again = replayReceipt(account, requestId);
   if (again) return again;
   const cur = activeSession(account, now);
   if (cur) {
@@ -160,7 +199,7 @@ export function openSession(account: TtkAccount, requestId: unknown, now: number
 /** Ghép chế độ Thường trong lượt đang mở. Chỉ `created` và `noRecipe` trừ lần ghép. */
 export function combineInSession(catalog: Catalog, account: TtkAccount, requestId: unknown, first: unknown, second: unknown, now: number): TtkResult {
   if (!validRequestId(requestId) || typeof first !== "string" || typeof second !== "string") return { ok: false, error: "badRequest" };
-  const again = replay(account, requestId);
+  const again = replayReceipt(account, requestId);
   if (again) return again;
   const session = activeSession(account, now);
   if (!session) return { ok: false, error: "noSession" };
@@ -185,7 +224,7 @@ export function combineInSession(catalog: Catalog, account: TtkAccount, requestI
 /** Gợi ý (chỉ chế độ Thường): 2 lượt mỗi ngày, không cộng dồn; không còn gì để gợi ý thì không trừ lượt. */
 export function spendHint(catalog: Catalog, account: TtkAccount, requestId: unknown, level: unknown, day: string): TtkResult {
   if (!validRequestId(requestId) || (level !== 1 && level !== 2)) return { ok: false, error: "badRequest" };
-  const again = replay(account, requestId);
+  const again = replayReceipt(account, requestId);
   if (again) return again;
   if (hintsLeft(account, day) <= 0) return { ok: false, error: "noHint" };
   const hint = hintFor(catalog, account.discovery, level as HintLevel);

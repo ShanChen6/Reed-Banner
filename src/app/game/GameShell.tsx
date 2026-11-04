@@ -39,6 +39,8 @@ export interface TowerFeatures {
   readonly destiny: boolean;
   /** Tầm Tướng Ký, mặc định tắt (`TAM_TUONG_KY_ENABLED`). */
   readonly tamTuongKy?: boolean;
+  /** Tầm Tướng Ký chế độ Hạng tuần (`TAM_TUONG_KY_RANKED_ENABLED`). */
+  readonly tamTuongKyRanked?: boolean;
 }
 
 export default function GameShell({
@@ -136,7 +138,7 @@ function SceneView({
       return <FormationScreen />;
     case "TAM_TUONG_KY":
       if (!towerFeatures.tamTuongKy) return <DisabledTowerMode name={SCENE_TITLE.TAM_TUONG_KY} />;
-      return account ? <TamTuongKyScreen /> : <LoginGate name={SCENE_TITLE.TAM_TUONG_KY} reason="Chế độ này cần tài khoản đã đăng nhập vì mỗi lượt chơi tốn một phiếu, và tiến trình Tướng Lục lưu theo tài khoản." />;
+      return account ? <TamTuongKyScreen ranked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate name={SCENE_TITLE.TAM_TUONG_KY} reason="Chế độ này cần tài khoản đã đăng nhập vì mỗi lượt chơi tốn một phiếu, và tiến trình Tướng Lục lưu theo tài khoản." />;
     case "QUESTS":
       return <QuestsScreen />;
     case "SHOP":

@@ -229,8 +229,11 @@ Shan (01/11/2026): trước mắt thưởng xếp hạng của **mọi chế đ�
 | **Tháp Thiên Mệnh** | chu kỳ 7 ngày | 800 | 500 | 300 | 150 | 60 | Sổ chung `rank_reward_claims`; cộng thêm đá cuối chu kỳ; chỉ khi cờ `DESTINY_ENABLED` bật |
 | **Trấn Ải** | mùa tuần | 500 | 300 | 180 | 80 | 30 | Sổ chung `rank_reward_claims`, điểm mùa ở `season_scores` ([mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng)) |
 | **Quần Hùng** | mùa tuần | 600 | 400 | 240 | 100 | 40 | Như Trấn Ải |
+| **Tầm Tướng Ký** Hạng tuần | tuần | 500 | 300 | 180 | 80 | 30 | Sổ chung `rank_reward_claims`, điểm tuần ở `season_scores` chế độ `tamTuongKy`; chỉ khi cờ `TAM_TUONG_KY_RANKED_ENABLED` bật ([LT-06](future/19-tam-tuong-ky-lt06-ranked.md)) |
 
 **Trạng thái duyệt:** Shan đã duyệt toàn bộ bảng vàng ở trên (Trận Đồ, Nhật Lệnh, Tháp Thiên Mệnh, Trấn Ải, Quần Hùng) ngày 01/11/2026. Muốn đổi số phải qua quyết định mới.
+
+**Bó nguyên tố Tầm Tướng Ký (04/11/2026):** thưởng hạng chế độ theo tuần (Trận Đồ Đại trận, Tháp Thiên Mệnh, Trấn Ải, Quần Hùng, Tầm Tướng Ký) kèm bó 5 / 4 / 3 / 2 / 1 theo bậc cho người đã vào Tầm Tướng Ký, chỉ khi cờ `TAM_TUONG_KY_ENABLED` bật. Số vàng ở bảng trên không đổi. Xem [LT-06](future/19-tam-tuong-ky-lt06-ranked.md#2-bó-trong-thưởng-hạng-các-chế-độ).
 
 Bậc: hạng 1; hạng 2–3; hạng 4–10; từ hạng 11 tới hết nửa trên (làm tròn lên); còn lại. Code: `src/core/progress/rankRewards.ts` (bậc và bảng vàng), `src/server/rankRewards.ts` (nguồn theo chế độ, sổ nhận, nhận thưởng), `/api/rank-rewards` (danh sách chờ nhận) và `/api/rank-rewards/claim`. Chỉ nhận được các kỳ đã khép trong 7 kỳ gần nhất.
 

@@ -101,17 +101,21 @@ export function combineNormal(catalog: Catalog, state: DiscoveryState, first: No
   };
 }
 
-/** Kho chế độ Hạng: số đơn vị mỗi node. Node trung gian chỉ sống trong tuần (P-14), starter lấy từ túi tài khoản. */
+/** Kho tuần chế độ Hạng: số đơn vị mỗi node trung gian (P-14, chỉ sống trong tuần). */
 export type Stock = Readonly<Record<NodeId, number>>;
 
 export interface RankedState {
+  /** Đơn vị nguyên tố tự chọn (P-11, Shan chốt L5-2): mỗi đơn vị dùng làm nguyên tố hệ nào cũng được. */
+  readonly units: number;
   readonly stock: Stock;
-  /** Tướng đã ghép ra trong tuần, theo thứ tự; mỗi tướng một lần (điểm tính ở server, LT-06). */
+  /** Tướng đã ghép ra trong tuần, theo thứ tự; mỗi tướng một lần (điểm tính ở lớp tài khoản). */
   readonly heroesCreated: readonly NodeId[];
+  /** Số đơn vị nguyên tố đã tiêu trong tuần (phân hạng khi bằng điểm, P-18). */
+  readonly unitsSpent: number;
 }
 
-export function initialRanked(stock: Stock): RankedState {
-  return { stock, heroesCreated: [] };
+export function initialRanked(units: number, stock: Stock = {}): RankedState {
+  return { units, stock, heroesCreated: [], unitsSpent: 0 };
 }
 
 export type RankedOutcome =
@@ -134,19 +138,10 @@ export type RankedOutcome =
       readonly nextDiscovery: DiscoveryState;
     };
 
-function consume(stock: Stock, ids: readonly NodeId[]): Stock {
-  const out: Record<NodeId, number> = { ...stock };
-  for (const id of ids) {
-    const left = (out[id] ?? 0) - 1;
-    if (left > 0) out[id] = left;
-    else delete out[id];
-  }
-  return out;
-}
-
 /**
- * Ghép ở chế độ Hạng. Tiêu 1 đơn vị mỗi nguyên liệu (`A+A` tiêu 2), cả khi `noRecipe` (A-8, không hoàn lại).
- * Thành công thì cộng 1 đơn vị kết quả, trừ tướng (không vào kho). Công thức và node mới cũng ghi vào sổ khám phá (P-15).
+ * Ghép ở chế độ Hạng. Nguyên tố lấy từ `units` (tự chọn hệ), node trung gian lấy từ kho tuần; tiêu 1 đơn vị mỗi
+ * nguyên liệu (`A+A` tiêu 2), cả khi `noRecipe` (A-8, không hoàn lại). Thành công thì cộng 1 đơn vị kết quả vào kho,
+ * trừ tướng (không vào kho). Công thức và node mới cũng ghi vào sổ khám phá (P-15).
  */
 export function combineRanked(
   catalog: Catalog,
@@ -158,31 +153,31 @@ export function combineRanked(
   const a = catalog.nodes.get(first);
   const b = catalog.nodes.get(second);
   if (!a || !b) return { status: "invalid", reason: "unknownInput", next: state, nextDiscovery: discovery };
-  const need = first === second ? 2 : 1;
-  const enough = (n: CatalogNode, count: number) => n.kind !== "character" && (state.stock[n.id] ?? 0) >= count;
-  if (!enough(a, need) || !enough(b, need))
+  if (a.kind === "character" || b.kind === "character") return { status: "invalid", reason: "lockedInput", next: state, nextDiscovery: discovery };
+  const starters = [a, b].filter((n) => n.kind === "element").length;
+  const need: Record<NodeId, number> = {};
+  for (const n of [a, b]) if (n.kind !== "element") need[n.id] = (need[n.id] ?? 0) + 1;
+  if (state.units < starters || Object.entries(need).some(([id, c]) => (state.stock[id] ?? 0) < c))
     return { status: "invalid", reason: "lockedInput", next: state, nextDiscovery: discovery };
-  const stock = consume(state.stock, [first, second]);
+  const stock: Record<NodeId, number> = { ...state.stock };
+  for (const [id, c] of Object.entries(need)) {
+    const left = stock[id]! - c;
+    if (left > 0) stock[id] = left;
+    else delete stock[id];
+  }
+  const spent: RankedState = { ...state, units: state.units - starters, unitsSpent: state.unitsSpent + starters, stock };
   const recipe = catalog.byKey.get(recipeKey(first, second));
-  if (!recipe) return { status: "noRecipe", next: { ...state, stock }, nextDiscovery: discovery };
+  if (!recipe) return { status: "noRecipe", next: spent, nextDiscovery: discovery };
   const isCharacter = catalog.nodes.get(recipe.result)?.kind === "character";
   const heroAlreadyCreated = isCharacter && state.heroesCreated.includes(recipe.result);
   const next: RankedState = {
+    ...spent,
     stock: isCharacter ? stock : { ...stock, [recipe.result]: (stock[recipe.result] ?? 0) + 1 },
     heroesCreated: isCharacter && !heroAlreadyCreated ? [...state.heroesCreated, recipe.result] : state.heroesCreated,
   };
   const recipeAlreadyKnown = discovery.discoveredRecipeIds.includes(recipe.id);
   const nextDiscovery = recipeAlreadyKnown ? discovery : record(discovery, recipe).next;
-  return {
-    status: "created",
-    recipeId: recipe.id,
-    nodeId: recipe.result,
-    recipeAlreadyKnown,
-    isCharacter,
-    heroAlreadyCreated,
-    next,
-    nextDiscovery,
-  };
+  return { status: "created", recipeId: recipe.id, nodeId: recipe.result, recipeAlreadyKnown, isCharacter, heroAlreadyCreated, next, nextDiscovery };
 }
 
 /** Phát lại chuỗi thao tác Thường; dùng cho test và kiểm save. */
