@@ -48,6 +48,9 @@
 - Shan duyệt mục 3.2 của [Design Freeze](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#32-đề-xuất-đã-duyệt), sửa khung số lần ghép tối thiểu: thường 5–7, đặc biệt 7–9, lịch sử 9–12 (thứ tự chặt trong pack). Design Freeze **DRAFT → FROZEN**; bắt đầu LT-01.
 - Sửa [danh mục chế độ](../02-game-modes/future/01-mode-portfolio.md#rủi-ro-sản-phẩm): code đã bật 8 nghề (`NEW_PROFESSIONS_ENABLED = true`), không còn là 6.
 
+**Hồ sơ đổi thành Doanh Trại**
+- Shan: màn Hồ sơ đổi tên hiển thị thành Doanh Trại, quản lý được 50–100 nhân vật; mục Tướng sĩ / Đội hình / Kho đồ, Cửa hàng là lối vào riêng; kỹ năng nằm trong chi tiết từng tướng. Đường dẫn `/game/profile` giữ nguyên, luật trang bị/ghép/đội hình không đổi ([Doanh Trại](../05-ui-ux/screens/doanh-trai.md)). Tiêu đề mục tiện ích ở màn chính đổi từ "Doanh trại" thành "Quân vụ" để không trùng.
+
 **Nhạc: Đấu trường và Quần Hùng online**
 - `music/arena` phát ở màn Đấu trường và trận Đấu trường; `music/pvp` chuẩn bị sẵn cho Quần Hùng online (chưa phát triển nên chưa phát ở đâu). Còn thiếu: Tháp Thí Luyện, Tháp Thiên Mệnh, kết cục, nhạc đang chơi và kết quả Trận Đồ, âm nền bản đồ.
 

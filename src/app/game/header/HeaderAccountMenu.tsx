@@ -1,8 +1,8 @@
 "use client";
 
 // Menu tài khoản ở góc phải thanh header: avatar + tên thật lấy từ phiên (GameShell nhận từ currentUser() ở
-// server, không gọi lại API), bấm mở danh sách hành động đã có sẵn (Hồ sơ, Trận thường, Tài khoản, Đăng xuất;
-// khách thì Đăng nhập/Đăng ký). Dưới md, lối tắt Hồ sơ/Trận thường chỉ còn trong menu này.
+// server, không gọi lại API), bấm mở danh sách hành động đã có sẵn (Doanh Trại, Trận thường, Tài khoản, Đăng xuất;
+// khách thì Đăng nhập/Đăng ký). Dưới md, lối tắt Doanh Trại/Trận thường chỉ còn trong menu này.
 
 import { useEffect, useId, useRef, useState } from "react";
 import type { ShellAccount } from "../GameShell";
