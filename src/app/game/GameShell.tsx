@@ -40,12 +40,14 @@ export interface TowerFeatures {
   readonly destiny: boolean;
   /** Tầm Tướng Ký, mặc định tắt (`TAM_TUONG_KY_ENABLED`). */
   readonly tamTuongKy?: boolean;
-  /** Tầm Tướng Ký chế độ Hạng tuần (`TAM_TUONG_KY_RANKED_ENABLED`). */
+  /** Tầm Tướng Ký chế độ Hạng tuần (đi cùng `TAM_TUONG_KY_ENABLED`). */
   readonly tamTuongKyRanked?: boolean;
   /** Viễn Chinh, mặc định tắt (`EXPEDITION_ENABLED`). */
   readonly expedition?: boolean;
-  /** Tầm Tướng Ký Gói 2 (`TAM_TUONG_KY_PACK2_ENABLED`). */
+  /** Tầm Tướng Ký Gói 2 (đã duyệt, đi cùng cờ chế độ). */
   readonly tamTuongKyPack2?: boolean;
+  /** Tầm Tướng Ký Gói 3 (khi đã duyệt, đi cùng cờ chế độ). */
+  readonly tamTuongKyPack3?: boolean;
 }
 
 export default function GameShell({
@@ -147,7 +149,7 @@ function SceneView({
     case "EXPEDITION":
       return !towerFeatures.expedition ? <DisabledTowerMode name={SCENE_TITLE.EXPEDITION} /> : account ? <ExpeditionScreen /> : <LoginGate name={SCENE_TITLE.EXPEDITION} />;
     case "QUESTS":
-      return <QuestsScreen tamTuongKy={towerFeatures.tamTuongKy === true} tamTuongKyPack2={towerFeatures.tamTuongKyPack2 === true} />;
+      return <QuestsScreen tamTuongKy={towerFeatures.tamTuongKy === true} tamTuongKyPack2={towerFeatures.tamTuongKyPack2 === true} tamTuongKyPack3={towerFeatures.tamTuongKyPack3 === true} />;
     case "SHOP":
       return <ShopScreen />;
     case "LEADERBOARD":

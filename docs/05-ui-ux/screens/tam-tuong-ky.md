@@ -52,7 +52,7 @@ Tông gỗ tối, giấy dó, đồng cổ dùng token `--atlas-*` và khung `at
 
 ## 5. Chế độ Hạng tuần (LT-06)
 
-- Khi cờ `TAM_TUONG_KY_RANKED_ENABLED` bật, đầu màn có hai nút **Thường** / **Hạng tuần**.
+- Khi cờ `TAM_TUONG_KY_ENABLED` bật, đầu màn có hai nút **Thường** / **Hạng tuần**.
 - Tiêu đề “Tầm Tướng Ký · Hạng tuần <thứ Hai>”, dòng nhắc “Không có gợi ý. Mỗi lần ghép tiêu nguyên liệu, ghép sai cũng mất.”; khung phải: túi (đơn vị nguyên tố), điểm, đã tiêu.
 - Vạn Vật Lục: 7 nguyên tố (dùng chung túi, không hiện số riêng từng hệ) và yếu tố trong kho tuần kèm `×n`; không có dấu còn công thức.
 - Đài Hợp Nguyên: hai ô, đổi chỗ, Hợp Nguyên; không có nút gợi ý. Cửa hàng: giá, số bó đã mua tuần này /2, vàng hiện có, nút “Mua 1 bó”.

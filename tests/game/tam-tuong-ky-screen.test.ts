@@ -160,12 +160,12 @@ describe("Màn chơi", () => {
     for (const v of ["1", "yes", "", "tru e"]) assert.equal(tamTuongKyEnabled({ TAM_TUONG_KY_ENABLED: v }), false, JSON.stringify(v));
   });
 
-  it("Hạng cần cả hai cờ; trạng thái cờ chỉ ra biến đặt sai hoặc thiếu cờ chế độ", () => {
+  it("một biến duy nhất: Hạng và các gói đã duyệt đi cùng cờ chế độ; biến cũ không còn tác dụng", () => {
     assert.equal(tamTuongKyRankedEnabled({ TAM_TUONG_KY_RANKED_ENABLED: "true" }), false);
-    assert.equal(tamTuongKyRankedEnabled({ TAM_TUONG_KY_ENABLED: "true", TAM_TUONG_KY_RANKED_ENABLED: "true\n" }), true);
-    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true" }), { enabled: true, ranked: false, pack2: false, invalid: [], rankedIgnored: false, pack2Ignored: false });
-    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true", TAM_TUONG_KY_RANKED_ENABLED: "1" }), { enabled: true, ranked: false, pack2: false, invalid: ["TAM_TUONG_KY_RANKED_ENABLED"], rankedIgnored: false, pack2Ignored: false });
-    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_RANKED_ENABLED: "true" }), { enabled: false, ranked: false, pack2: false, invalid: [], rankedIgnored: true, pack2Ignored: false });
+    assert.equal(tamTuongKyRankedEnabled({ TAM_TUONG_KY_ENABLED: "true\n" }), true);
+    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true" }), { enabled: true, ranked: true, pack2: true, pack3: true, invalid: [], obsolete: [] });
+    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "1", TAM_TUONG_KY_PACK3_ENABLED: "true" }), { enabled: false, ranked: false, pack2: false, pack3: false, invalid: ["TAM_TUONG_KY_ENABLED"], obsolete: ["TAM_TUONG_KY_PACK3_ENABLED"] });
+    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_RANKED_ENABLED: "true", TAM_TUONG_KY_PACK2_ENABLED: "true" }), { enabled: false, ranked: false, pack2: false, pack3: false, invalid: [], obsolete: ["TAM_TUONG_KY_RANKED_ENABLED", "TAM_TUONG_KY_PACK2_ENABLED"] });
   });
 
   it("chế độ Thường: yếu tố có dấu “còn công thức chưa tìm” trong nhãn đọc màn hình", async () => {
