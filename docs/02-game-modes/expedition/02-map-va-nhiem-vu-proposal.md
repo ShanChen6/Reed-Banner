@@ -319,6 +319,15 @@ Làm một chiến dịch dọc hoàn chỉnh trên **Cửa Biển** trước:
 - **Đường bị phá:** trên sa bàn vẫn vẽ lối đi như đường thường, **không báo trước**. Khi một đạo chọn đi lối đó thì mới
   báo "đường bị phá" (chưa chốt: mất ngày hay không). **Trinh sát** phát hiện được đường bị phá trước khi đi.
 
+- **Mỗi lệnh chỉ đi qua một cạnh** (câu 12.1).
+- **Bản đầu có nhiệm vụ không cần đánh** như hộ tống, rút dân (câu 12.2).
+- **Bản đầu có loại trận riêng:** giữ cầu, phá cổng, hộ tống (câu 12.5). Cần mở rộng engine trận.
+- **Chọn trúng đường bị phá thì mất ngày đó** (đạo đứng yên, đạo kia nghỉ như thường); từ đó đường hiện là bị phá.
+- **Chưa chốt:** tài nguyên mới (câu 12.3) và nhiệm vụ phụ mở bậc hay chỉ đổi thưởng/kết thúc (câu 12.4). Claude đề
+  xuất cho bản đầu: không thêm tài nguyên ngoài máu, lương và cờ trạng thái nhiệm vụ; nhiệm vụ phụ chỉ đổi thưởng và
+  kết thúc, không khóa bậc. Chờ Shan duyệt.
+- **Offline hay online có bảng xếp hạng:** đang hỏi Shan (04/11/2026).
+
 ## 12. Câu hỏi cần chốt trước khi thay GDD
 
 1. Có cho đi nhiều cạnh trong một ngày hay mỗi lệnh chỉ qua một cạnh?
