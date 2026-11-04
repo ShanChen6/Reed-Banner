@@ -3,8 +3,11 @@
 // nhận hai lần. Chỉ tài khoản đã đăng nhập nhận được (như xếp hạng Trận Đồ). Trận Đồ có sổ riêng ở ./formation.
 // Mức vàng ở @/core (progress/rankRewards), điểm xuất phát chờ Shan duyệt.
 
+import { TTK_RANK_BUNDLES, grantBundles } from "@/core/tam-tuong-ky";
 import {
   RANK_REWARD_MODES,
+  WEEKLY_RANK_REWARD_MODES,
+  type Profile,
   rankRewardGold,
   vnDay,
   vnWeek,
@@ -99,7 +102,7 @@ export function destinySource(board: DestinyLeaderboardStore): RankRewardSource 
 }
 
 /** Mùa theo tuần của Trấn Ải và Quần Hùng: kỳ là khóa thứ Hai đầu tuần, bảng là điểm mùa của @/server/seasons. */
-export function seasonSource(mode: "survival" | "arena", seasons: SeasonStore): RankRewardSource {
+export function seasonSource(mode: "survival" | "arena" | "tamTuongKy", seasons: SeasonStore): RankRewardSource {
   return {
     mode,
     closedPeriods(now, count) {
@@ -119,6 +122,8 @@ export interface RankRewardDeps {
   readonly profiles: ProfileStore;
   readonly now: number;
   readonly isSignedIn: (ownerId: string) => Promise<boolean>;
+  /** Thưởng kèm bó Tầm Tướng Ký: chỉ khi chế độ đã bật (cờ tắt thì không nhắc tới chế độ chưa phát hành). */
+  readonly ttkBundles?: boolean;
 }
 
 export type RankRewardError = "loginRequired" | "badRequest" | "unknownMode" | "notClaimable" | "alreadyClaimed" | "conflict";
@@ -130,6 +135,8 @@ export interface PendingRankReward {
   readonly participants: number;
   readonly tier: RewardTier;
   readonly gold: number;
+  /** Bó nguyên tố Tầm Tướng Ký kèm thưởng (chế độ theo tuần, P-11); không có khi 0. */
+  readonly bundles?: number;
 }
 
 const isMode = (v: unknown): v is RankRewardMode => typeof v === "string" && (RANK_REWARD_MODES as readonly string[]).includes(v);
@@ -145,14 +152,14 @@ export async function pendingRankRewards(deps: RankRewardDeps, ownerId: string |
       if (claimed.has(period)) continue;
       const st = await source.standing(period, ownerId);
       const reward = st ? rankRewardGold(source.mode, st.rank, st.participants) : null;
-      if (st && reward) items.push({ mode: source.mode, period, rank: st.rank, participants: st.participants, ...reward });
+      if (st && reward) items.push({ mode: source.mode, period, rank: st.rank, participants: st.participants, ...reward, ...withBundles(deps.ttkBundles ? bundlesFor(source.mode, reward.tier) : 0) });
     }
   }
   return { canClaim: true, items };
 }
 
 export type ClaimRankRewardResult =
-  | { readonly ok: true; readonly gold: number; readonly tier: RewardTier; readonly rank: number; readonly participants: number }
+  | { readonly ok: true; readonly gold: number; readonly tier: RewardTier; readonly rank: number; readonly participants: number; readonly bundles?: number }
   | { readonly ok: false; readonly error: RankRewardError };
 
 /** Nhận thưởng một kỳ đã khép: ghi sổ trước (đúng một bên thắng khi gọi song song) rồi cộng vàng; cộng hỏng thì hoàn sổ. */
@@ -169,13 +176,26 @@ export async function claimRankReward(deps: RankRewardDeps, ownerId: string, mod
   if (!st || !reward) return { ok: false, error: "notClaimable" };
   const ok = await deps.claims.claim({ mode, period, ownerId, rank: st.rank, gold: reward.gold, claimedAt: deps.now });
   if (!ok) return { ok: false, error: "alreadyClaimed" };
-  const updated = await updateProfile(deps.profiles, ownerId, (p) => ({ ok: true as const, profile: { ...p, gold: p.gold + reward.gold } }), deps.now);
+  const bundles = deps.ttkBundles ? bundlesFor(mode, reward.tier) : 0;
+  const updated = await updateProfile(deps.profiles, ownerId, (p) => ({ ok: true as const, profile: withTtkBundles({ ...p, gold: p.gold + reward.gold }, bundles) }), deps.now);
   if (!updated.ok) {
     await deps.claims.release(mode, period, ownerId);
     console.error("Không cộng được thưởng hạng", mode, period, ownerId);
     return { ok: false, error: "conflict" };
   }
-  return { ok: true, gold: reward.gold, tier: reward.tier, rank: st.rank, participants: st.participants };
+  return { ok: true, gold: reward.gold, tier: reward.tier, rank: st.rank, participants: st.participants, ...withBundles(bundles) };
+}
+
+const withBundles = (bundles: number) => (bundles > 0 ? { bundles } : {});
+
+/** Bó Tầm Tướng Ký của một bậc thưởng hạng: chỉ chế độ theo tuần (P-11). */
+export function bundlesFor(mode: RankRewardMode, tier: RewardTier): number {
+  return WEEKLY_RANK_REWARD_MODES.includes(mode) ? TTK_RANK_BUNDLES[tier] : 0;
+}
+
+/** Cộng bó vào túi Tầm Tướng Ký nếu người chơi đã vào chế độ (không tạo dữ liệu cho người chưa vào). */
+export function withTtkBundles(p: Profile, bundles: number): Profile {
+  return bundles > 0 && p.tamTuongKy ? { ...p, tamTuongKy: grantBundles(p.tamTuongKy, bundles) } : p;
 }
 
 export function rankRewardHttpStatus(error: RankRewardError): number {

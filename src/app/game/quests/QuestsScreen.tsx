@@ -42,7 +42,10 @@ function questRow(p: Profile, q: QuestDef, now: number): Row {
   };
 }
 
-export default function QuestsScreen() {
+/** Thành tựu Tầm Tướng Ký (`ttk.*`) chỉ hiện khi chế độ đã bật, để không lộ chế độ chưa phát hành. */
+export const isTamTuongKyAchievement = (id: string) => id.startsWith("ttk.");
+
+export default function QuestsScreen({ tamTuongKy = false }: { tamTuongKy?: boolean }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -99,7 +102,7 @@ export default function QuestsScreen() {
     {
       title: "Thành tựu",
       note: "Mỗi thành tựu nhận một lần.",
-      rows: ACHIEVEMENTS.map((a) => ({
+      rows: ACHIEVEMENTS.filter((a) => tamTuongKy || !isTamTuongKyAchievement(a.id)).map((a) => ({
         id: a.id,
         title: a.title,
         gold: a.gold,

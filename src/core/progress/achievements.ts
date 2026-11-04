@@ -4,6 +4,8 @@
 import { STORY_NODES } from "../campaign/storyNodes";
 import { campaignCompleted } from "./campaignState";
 import type { Profile } from "./profile";
+import { PUBLISHED_PACKS } from "../tam-tuong-ky/catalog";
+import type { Pack } from "../tam-tuong-ky/types";
 
 const CHAPTER1_NODES: readonly string[] = STORY_NODES.filter(
   (node) => node.chapter === 1,
@@ -21,6 +23,23 @@ export interface AchievementDef {
 }
 
 const wins = (p: Profile) => p.quests.totals.win ?? 0;
+
+/**
+ * Thành tựu Tầm Tướng Ký theo bộ tướng của một gói (Design Freeze A-13, P-20, P-21): mở đủ mọi tướng trong bộ thì
+ * nhận vàng một lần; tên thành tựu là huy hiệu. Tiến độ đọc từ sổ khám phá trong hồ sơ.
+ */
+export function ttkAchievements(pack: Pack): readonly AchievementDef[] {
+  return (pack.achievementSets ?? []).map((set) => ({
+    id: set.id,
+    title: set.title,
+    target: set.heroIds.length,
+    gold: set.gold,
+    value: (p: Profile) => {
+      const found = p.tamTuongKy?.discovery.discoveredNodeIds ?? [];
+      return set.heroIds.filter((id) => found.includes(id)).length;
+    },
+  }));
+}
 
 export const ACHIEVEMENTS: readonly AchievementDef[] = [
   {
@@ -97,6 +116,7 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
     gold: 1000,
     value: (p) => p.main.level,
   },
+  ...PUBLISHED_PACKS.flatMap(ttkAchievements),
 ];
 
 export const achievementById = (id: string) =>
