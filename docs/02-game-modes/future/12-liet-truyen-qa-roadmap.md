@@ -67,6 +67,7 @@ Nếu mở reward/chiêu mộ tương lai:
 - [x] Persistence theo tài khoản, phiếu, gợi ý theo ngày: [server LT-04](17-tam-tuong-ky-lt04-server.md) (04/11/2026).
 - [x] LT-05 Gói 1 (12 tướng) và mô phỏng: [18 — Gói 1](18-tam-tuong-ky-lt05-pack-1.md) (04/11/2026), chờ Shan chọn số.
 - [x] LT-06 chế độ Hạng tuần: [19 — Hạng tuần](19-tam-tuong-ky-lt06-ranked.md) (04/11/2026).
-- [ ] Release.
+- [x] LT-07 kiểm thử tổng thể, kế hoạch bật/rút lại: [20 — nghiệm thu](20-tam-tuong-ky-lt07-acceptance.md) (04/11/2026).
+- [ ] Release: chờ Shan merge và bật cờ production.
 
 **No production changes in this docs PR.**

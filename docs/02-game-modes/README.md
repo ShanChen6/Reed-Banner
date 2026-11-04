@@ -16,6 +16,7 @@
 | **Tháp Vận Mệnh (Destiny)** | Run 10 tầng theo chu kỳ tuần, roster khóa và tài nguyên xuyên tầng | 3vs3 | Song Tháp V1.0 |
 | **Sinh tồn** | Một trận không kết thúc, đối thủ theo đợt, báo trước đợt kế tiếp | 3vs3 | Sau giai đoạn 4 |
 | **Trận Đồ** | Game xếp quân theo nghề/hệ, không đánh nhau; chơi thử offline (không thưởng) và xếp hạng có thưởng trên server (tắt mặc định, `FORMATION_RANKED_ENABLED`). Luật ở [GDD Binh Pháp](future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline) | Một người, 4 bậc 3×3–8×8 | Sau Song Tháp |
+| **Tầm Tướng Ký** | Ghép yếu tố có thứ tự từ 7 hệ để tìm chân dung tướng, không đánh nhau. Chế độ Thường tốn phiếu; Hạng tuần tiêu nguyên liệu, có bảng và thưởng. Bắt buộc đăng nhập; tắt mặc định (`TAM_TUONG_KY_ENABLED`, `TAM_TUONG_KY_RANKED_ENABLED`). Luật ở [Design Freeze](future/14-tam-tuong-ky-design-freeze.md) | Một người, Gói 1: 12 tướng | Sau Trận Đồ |
 
 ## 2. Chiến dịch
 
@@ -245,7 +246,7 @@ Khách chơi thường thoải mái; chế độ **online có bảng xếp hạn
 
 | Khách chơi được | Chỉ tài khoản đăng nhập |
 |---|---|
-| Luyện tập / Chơi thử, Giao Tranh (trận thường), Bình Loạn, Đánh trùm, Tháp Thí Luyện, **Trận Đồ chơi thường** | **Nhật Lệnh**, **Trấn Ải** (Sinh tồn), **Quần Hùng** (Đấu trường), **Tháp Thiên Mệnh**, **Trận Đồ xếp hạng**, trang **Bảng xếp hạng** |
+| Luyện tập / Chơi thử, Giao Tranh (trận thường), Bình Loạn, Đánh trùm, Tháp Thí Luyện, **Trận Đồ chơi thường** | **Nhật Lệnh**, **Trấn Ải** (Sinh tồn), **Quần Hùng** (Đấu trường), **Tháp Thiên Mệnh**, **Trận Đồ xếp hạng**, trang **Bảng xếp hạng**, **Tầm Tướng Ký** (cả chế độ Thường, vì mỗi lượt tốn phiếu; Shan 03/11/2026) |
 
 **Khách cũng không xem** bảng xếp hạng, đề Nhật Lệnh, màn Thiên Mệnh và màn Quần Hùng/Trấn Ải: các API `GET` tương ứng trả `401`, Trận Đồ xếp hạng chỉ báo "cần đăng nhập" không kèm bảng, và giao diện hiện màn nhắc đăng nhập ở cả trang Xếp hạng (Shan, 01/11/2026). Trận xếp hạng đang dở của một khách cũ (đăng xuất giữa chừng) không xem và không đi tiếp được (`getBattle` và `actBattle` trả `loginRequired`); riêng "dừng run" Thiên Mệnh vẫn cho phép để kết thúc run có sẵn. Code: `Deps.isSignedIn` ở `src/server/battles.ts`, helper `isSignedInAccount` và `loginRequiredResponse` ở `src/server/http.ts`, màn nhắc `src/app/game/LoginGate.tsx`. Tháp Thí Luyện không có bảng xếp hạng nên vẫn mở cho khách.
 

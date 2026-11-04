@@ -251,7 +251,8 @@ export const PACK_1: Pack = {
   id: "pack-1",
   nameVi: "Gói 1: Dẹp loạn",
   contentVersion: 2,
-  status: "draft",
+  // Shan duyệt công thức và lời dẫn (L5-6, 04/11/2026). Phát hành tới người chơi do cờ TAM_TUONG_KY_ENABLED quyết định.
+  status: "published",
   nodes: PACK_1_NODES,
   recipes: PACK_1_RECIPES,
   // Thành tựu bộ theo P-21: bộ theo hệ có 2 tướng 200 vàng; 2 tướng đặc biệt 300; 6 tướng theo Đinh Bộ Lĩnh 500;
@@ -300,10 +301,13 @@ export function subPack(pack: Pack, id: string, nameVi: string, heroIds: readonl
 /** Slice 3 tướng (LT-01): Nguyễn Bặc, Lê Hoàn, Đinh Ngọc; tập con của Gói 1, dùng cho test. */
 export const SLICE_PACK: Pack = subPack(PACK_1, "slice-1", "Slice thử nghiệm", ["hero.nguyenBac", "hero.leHoan", "hero.dinhNgoc"]);
 
-/** Gói server đang chạy khi cờ bật. Gói 1 còn `draft`: chỉ chạy sau cờ, chưa có thành tựu trên trang Nhiệm vụ. */
+/** Gói server đang chạy khi cờ bật. */
 export const ACTIVE_PACK: Pack = PACK_1;
 
-/** Gói đã phát hành: thành tựu của chúng hiện ở trang Nhiệm vụ. Chưa có gói nào. */
+/**
+ * Gói đã duyệt nội dung: thành tựu của chúng nằm trong danh sách thành tựu. Trang Nhiệm vụ chỉ hiện thành tựu `ttk.*` khi
+ * cờ TAM_TUONG_KY_ENABLED bật; cờ tắt thì không ai có tiến độ nên cũng không nhận được.
+ */
 export const PUBLISHED_PACKS: readonly Pack[] = [PACK_1].filter((p) => p.status === "published");
 
 /** Bậc và nghề/hệ đọc từ roster, không chép vào catalog. Đinh Bộ Lĩnh chưa có (P-27, gói 2). */

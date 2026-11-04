@@ -21,15 +21,37 @@ import {
   type DiscoveryState,
 } from "../../../src/core/tam-tuong-ky";
 import { ttkAchievements } from "../../../src/core/progress/achievements";
+import { ACHIEVEMENTS, applyProfileAction, newProfile, type Profile } from "../../../src/core";
+import { isTamTuongKyAchievement } from "../../../src/app/game/quests/QuestsScreen";
 import { portraitUrl } from "../../../src/app/game/art/portrait-data";
 
 const APPROVED_12 = ["nguyenBac", "dinhDien", "luuCo", "trinhTu", "leHoan", "dinhLien", "phamBachHo", "doCanhThac", "tranLam", "ngoNhatKhanh", "dinhNgoc", "vuPhong"];
 const heroes = PACK_1.nodes.filter((n) => n.kind === "character");
 
 describe("Gói 1", () => {
-  it("là gói đang chạy, còn draft", () => {
+  it("là gói đang chạy, đã duyệt nội dung (published); phát hành do cờ quyết định", () => {
     assert.equal(ACTIVE_PACK, PACK_1);
-    assert.equal(PACK_1.status, "draft");
+    assert.equal(PACK_1.status, "published");
+  });
+
+  it("thành tựu bộ của Gói 1 có trong danh sách thành tựu và nhận được một lần khi mở đủ bộ", () => {
+    const ids = ACHIEVEMENTS.filter((a) => a.id.startsWith("ttk.")).map((a) => a.id);
+    assert.equal(ids.length, 9);
+    const account = newTtkAccount(buildCatalog(PACK_1));
+    const profile: Profile = {
+      ...newProfile(),
+      tamTuongKy: { ...account, discovery: { ...account.discovery, discoveredNodeIds: [...account.discovery.discoveredNodeIds, "hero.dinhNgoc", "hero.vuPhong"] } },
+    };
+    const first = applyProfileAction(profile, { type: "claimAchievement", id: "ttk.pack-1.dacBiet" });
+    assert.ok(first.ok);
+    assert.equal(first.profile.gold, profile.gold + 300);
+    assert.deepEqual(applyProfileAction(first.profile, { type: "claimAchievement", id: "ttk.pack-1.dacBiet" }), { ok: false, error: "questClaimed" });
+    assert.deepEqual(applyProfileAction(profile, { type: "claimAchievement", id: "ttk.pack-1.hoa" }), { ok: false, error: "questNotDone" });
+  });
+
+  it("trang Nhiệm vụ ẩn thành tựu Tầm Tướng Ký khi cờ tắt", () => {
+    assert.equal(isTamTuongKyAchievement("ttk.pack-1.all"), true);
+    assert.equal(isTamTuongKyAchievement("a.win1"), false);
   });
 
   it("đúng 12 tướng Shan duyệt: 10 lịch sử, 2 đặc biệt", () => {
