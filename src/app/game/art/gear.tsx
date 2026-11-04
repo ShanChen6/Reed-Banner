@@ -3,7 +3,7 @@
 
 import type { Element, GearSlot, Profession, Tier } from "@/core";
 import { ELEMENT_COLOR } from "./icons";
-import { INK, starPoints } from "./tiles";
+import { INK } from "./tiles";
 
 const PAPER = "#f6ecd4";
 const BRONZE = "#d4a24c";
@@ -245,7 +245,6 @@ export function GearIcon({
     <svg viewBox="0 0 48 48" className={className} aria-hidden focusable="false">
       <rect x={1.5} y={1.5} width={45} height={45} rx={8} fill="#2b211b" />
       {tier !== undefined && <rect x={1.5} y={1.5} width={45} height={45} rx={8} fill={TIER_FRAME[tier]} opacity={0.16} />}
-      {tier === 5 && <polygon points={starPoints(24, 24, 17, 12, 16)} fill="#ffe08a" opacity={0.3} />}
       {/* Có khung thì thu món đồ vào lòng khung (khung Cam dày nhất, lòng khoảng 72% cạnh). */}
       {tier !== undefined ? <g transform="translate(24 24) scale(0.78) translate(-24 -24)">{art}</g> : art}
       {tier !== undefined && <TierFrame tier={tier} />}
