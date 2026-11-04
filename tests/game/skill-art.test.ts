@@ -25,12 +25,16 @@ test("56 tuyệt chiêu ô 4 Đinh Bộ Lĩnh có ảnh theo hệ và huy hiệu
 });
 
 test("kỹ năng chưa có ảnh vẫn vẽ SVG", () => {
-  assert.equal(skillArt({ id: "role_linhDuoc" }), undefined);
+  assert.equal(skillArt({ id: "role_nghiBinh" }), undefined);
   assert.equal(skillArt({ id: "element_khongCo" }), undefined);
 });
 
-test("chiêu nghề Tướng sĩ, Pháp sư có ảnh vẽ tay", () => {
-  for (const id of ["role_tramKich", "role_phaTran", "role_doatMenh", "role_phepLan", "role_nguHanhAn", "role_thienDiaCong"]) {
+test("chiêu nghề 5 nghề đã vẽ có ảnh vẽ tay", () => {
+  for (const id of [
+    "role_tramKich", "role_phaTran", "role_doatMenh", "role_phepLan", "role_nguHanhAn", "role_thienDiaCong",
+    "role_thuThanh", "role_tuongKhien", "role_phanKich", "role_linhDuoc", "role_duongSinh", "role_teDo",
+    "role_muaChuoc", "role_lyGian", "role_catQuanLuong",
+  ]) {
     const art = skillArt({ id });
     assert.ok(art, id);
     assert.ok(existsSync(`public/art/skills/${art.file}.webp`), id);
