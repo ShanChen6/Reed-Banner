@@ -4,6 +4,7 @@
 
 import { combineNormal, initialDiscovery, chargesCombine, type Catalog, type DiscoveryState, type InvalidReason } from "./engine";
 import { hintFor, type Hint, type HintLevel } from "./hints";
+import { recipeKey } from "./graph";
 import type { NodeId, RecipeId } from "./types";
 import type { TtkRankedWeek } from "./ranked";
 
@@ -15,6 +16,8 @@ export const TTK_HINTS_PER_DAY = 2;
 export const TTK_SESSION_MS = 24 * 60 * 60 * 1000;
 /** Số phản hồi giữ lại để gửi lại cùng `requestId` không trừ hai lần. */
 export const TTK_RECEIPTS_KEEP = 16;
+/** Số cặp ghép sai giữ lại để cảnh báo khi người chơi đặt lại đúng cặp đó (Shan, 04/11/2026). */
+export const TTK_TRIED_KEEP = 400;
 
 export interface TtkSession {
   readonly id: string;
@@ -65,6 +68,11 @@ export interface TtkAccount {
   readonly units: number;
   /** Tuần Hạng gần nhất đã vào; tuần mới thay thế (P-14). */
   readonly ranked: TtkRankedWeek | null;
+  /**
+   * Cặp đã ghép mà không ra gì (khóa `a>b`), chung cho Thường và Hạng. Chỉ để màn chơi cảnh báo trước khi ghép lại;
+   * lần ghép lại vẫn trừ như thường. Cặp nào về sau có công thức (gói mới) thì bỏ khỏi danh sách.
+   */
+  readonly triedPairs?: readonly string[];
 }
 
 export function newTtkAccount(catalog: Catalog): TtkAccount {
@@ -114,7 +122,19 @@ export function parseTtkAccount(raw: unknown): TtkAccount | null {
       : [],
     units: isInt(a.units, 0, 1_000_000) ? a.units : 0,
     ranked: parseRankedWeek(a.ranked),
+    ...(Array.isArray(a.triedPairs) ? { triedPairs: [...new Set(strings(a.triedPairs).filter((k) => /^[^>]+>[^>]+$/.test(k)))].slice(-TTK_TRIED_KEEP) } : {}),
   };
+}
+
+/** Ghi một cặp ghép sai (đưa lên cuối nếu đã có), giữ tối đa `TTK_TRIED_KEEP` cặp gần nhất. */
+export function withTriedPair(account: TtkAccount, first: NodeId, second: NodeId): TtkAccount {
+  const key = recipeKey(first, second);
+  return { ...account, triedPairs: [...(account.triedPairs ?? []).filter((k) => k !== key), key].slice(-TTK_TRIED_KEEP) };
+}
+
+/** Cặp đã thử mà catalog đang chạy vẫn không có công thức: màn chơi cảnh báo khi đặt lại cặp này. */
+export function triedPairsOf(catalog: Catalog, account: TtkAccount): readonly string[] {
+  return (account.triedPairs ?? []).filter((k) => !catalog.byKey.has(k));
 }
 
 const counts = (x: unknown): Record<string, number> =>
@@ -221,7 +241,7 @@ export function combineInSession(catalog: Catalog, account: TtkAccount, requestI
           ? { kind: "combine", status: out.status, reason: out.reason, charged }
           : { kind: "combine", status: out.status, charged };
   const next: TtkAccount = {
-    ...account,
+    ...(out.status === "noRecipe" ? withTriedPair(account, first, second) : account),
     discovery: out.next,
     session: charged ? { ...session, combinesLeft: session.combinesLeft - 1 } : session,
   };

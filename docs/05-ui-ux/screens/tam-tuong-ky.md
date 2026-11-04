@@ -34,6 +34,7 @@ Tông gỗ tối, giấy dó, đồng cổ dùng token `--atlas-*` và khung `at
 - Ô thông báo `aria-live`: khám phá mới, tìm thấy chân dung, đã biết (không trừ lần ghép), chưa tìm được mối liên hệ, yếu tố không hợp lệ. Hiệu ứng sáng lên chỉ chạy khi không bật giảm chuyển động.
 - Số lần ghép còn lại của lượt (15) và nút “Lượt mới” khi hết; số gợi ý hôm nay (2), hai nút “Gợi ý nhóm” và “Gợi ý nguyên liệu”.
 - “Lần ghép gần đây”: 5 lần gần nhất, thu gọn mặc định.
+- Đặt lại một cặp đã ghép mà không ra gì (cả Thường và Hạng): hiện cảnh báo “Bạn đã ghép cặp này ở lần trước…” trên nút, nút đổi thành “Vẫn hợp nguyên” (điện thoại: “Vẫn ghép”). Không nói công thức sai. Xem [cảnh báo cặp đã thử](../../02-game-modes/future/23-tam-tuong-ky-can-bang-va-canh-bao.md#2-cảnh-báo-cặp-đã-thử).
 
 **Tướng Lục**
 - Đủ số tướng của pack (A-15). Tướng chưa tìm: vòng “?”, chữ “Tướng chưa tìm thấy” và bậc; không có tên, chân dung hay nghề/hệ trong HTML lẫn aria.

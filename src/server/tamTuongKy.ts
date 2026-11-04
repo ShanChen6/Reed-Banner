@@ -9,6 +9,7 @@ import {
   KNOWN_RECIPE_IDS,
   activePack,
   activeSession,
+  triedPairsOf,
   buildCatalog,
   combineInSession,
   discoveredCharacters,
@@ -70,6 +71,8 @@ export interface TtkView {
   readonly hintsPerDay: number;
   readonly discovery: DiscoveryState;
   readonly heroesFound: number;
+  /** Cặp đã thử mà không ra gì (khóa `a>b`): màn chơi cảnh báo khi đặt lại, không nói công thức sai. */
+  readonly triedPairs: readonly string[];
 }
 
 export type TtkServiceError = TtkError | "featureDisabled" | "loginRequired" | "conflict" | "noGold" | "shopLimit";
@@ -109,6 +112,7 @@ function viewOf(deps: TamTuongKyDeps, account: TtkAccount): TtkView {
     hintsPerDay: TTK_HINTS_PER_DAY,
     discovery: account.discovery,
     heroesFound: discoveredCharacters(catalog, account.discovery).length,
+    triedPairs: triedPairsOf(catalog, account),
   };
 }
 
@@ -187,6 +191,7 @@ export interface TtkRankedView {
   readonly shop: { readonly price: number; readonly bought: number; readonly max: number };
   readonly gold: number;
   readonly discovery: DiscoveryState;
+  readonly triedPairs: readonly string[];
   readonly board: { readonly top: readonly { readonly rank: number; readonly name: string; readonly points: number; readonly mine: boolean }[]; readonly mine: { readonly rank: number; readonly points: number } | null };
 }
 
@@ -222,6 +227,7 @@ async function rankedView(deps: TamTuongKyDeps, account: TtkAccount, gold: numbe
     shop: { price: TTK_SHOP_PRICE, bought: w?.shopBought ?? 0, max: TTK_SHOP_MAX_PER_WEEK },
     gold,
     discovery: account.discovery,
+    triedPairs: triedPairsOf(catalog, account),
     board,
   };
 }
