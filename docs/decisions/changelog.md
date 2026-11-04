@@ -2,6 +2,9 @@
 
 ## 04/11/2026
 
+**Tầm Tướng Ký: Gói 3 đã bật**
+- PR #262 merge vào `develop`; Shan bật Gói 3 (một biến `TAM_TUONG_KY_ENABLED`). [Gói 3](../02-game-modes/future/22-tam-tuong-ky-pack-3.md) **APPROVED → IMPLEMENTED**; sổ đủ 77 tướng. Bật giữa tuần (thứ Tư) nên nếu Hạng đang bật thì danh sách đề cử tuần 2026-11-02 đổi từ lúc deploy; điểm đã ghi giữ nguyên.
+
 **Tầm Tướng Ký: Shan duyệt Gói 3**
 - Duyệt 8 tri thức sơ học, 56 công thức tuyệt chiêu, 56 lời dẫn và 9 thành tựu (3 500 vàng) của [Gói 3](../02-game-modes/future/22-tam-tuong-ky-pack-3.md) (**DRAFT → APPROVED**); `PACK_3` đặt `published`. Ra mắt cùng cờ `TAM_TUONG_KY_ENABLED` khi merge vào `develop` và deploy.
 
