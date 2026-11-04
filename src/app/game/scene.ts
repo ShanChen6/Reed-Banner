@@ -54,7 +54,7 @@ export const SCENE_SLUG: Record<Scene, string> = {
 };
 
 export const SCENE_TITLE: Record<Scene, string> = {
-  MENU: "Màn chính",
+  MENU: "Chiến trường",
   PLAYING: "Giao Tranh",
   PRACTICE: "Thao Luyện",
   CAMPAIGN: "Bình Loạn",
