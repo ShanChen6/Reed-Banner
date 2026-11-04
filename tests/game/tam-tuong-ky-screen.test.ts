@@ -116,7 +116,7 @@ describe("Tướng Lục", () => {
     assert.equal(entries.length, 3);
     for (const e of entries) {
       assert.equal(e.found, false);
-      assert.deepEqual(Object.keys(e).sort(), ["found", "nodeId", "tier"]);
+      assert.deepEqual(Object.keys(e).sort(), ["found", "nodeId", "pack", "tier"]);
     }
   });
 
@@ -163,9 +163,9 @@ describe("Màn chơi", () => {
   it("Hạng cần cả hai cờ; trạng thái cờ chỉ ra biến đặt sai hoặc thiếu cờ chế độ", () => {
     assert.equal(tamTuongKyRankedEnabled({ TAM_TUONG_KY_RANKED_ENABLED: "true" }), false);
     assert.equal(tamTuongKyRankedEnabled({ TAM_TUONG_KY_ENABLED: "true", TAM_TUONG_KY_RANKED_ENABLED: "true\n" }), true);
-    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true" }), { enabled: true, ranked: false, invalid: [], rankedIgnored: false });
-    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true", TAM_TUONG_KY_RANKED_ENABLED: "1" }), { enabled: true, ranked: false, invalid: ["TAM_TUONG_KY_RANKED_ENABLED"], rankedIgnored: false });
-    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_RANKED_ENABLED: "true" }), { enabled: false, ranked: false, invalid: [], rankedIgnored: true });
+    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true" }), { enabled: true, ranked: false, pack2: false, invalid: [], rankedIgnored: false, pack2Ignored: false });
+    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true", TAM_TUONG_KY_RANKED_ENABLED: "1" }), { enabled: true, ranked: false, pack2: false, invalid: ["TAM_TUONG_KY_RANKED_ENABLED"], rankedIgnored: false, pack2Ignored: false });
+    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_RANKED_ENABLED: "true" }), { enabled: false, ranked: false, pack2: false, invalid: [], rankedIgnored: true, pack2Ignored: false });
   });
 
   it("chế độ Thường: yếu tố có dấu “còn công thức chưa tìm” trong nhãn đọc màn hình", async () => {
@@ -201,5 +201,17 @@ describe("tab Tầm Tướng Ký trên trang Xếp hạng", () => {
     assert.match(html, /Hạng của bạn: 7 · 200 điểm · tiêu 10/);
     assert.match(html, /tuần bắt đầu 2026-11-02/);
     assert.match(renderToStaticMarkup(createElement(TtkBoard, { data: { week: "2026-11-02", top: [], mine: null } })), /chưa có ai ghép ra tướng đề cử/);
+  });
+});
+
+describe("Tướng Lục khi bật Gói 2", () => {
+  it("chia hai mục theo gói, 21 bóng mờ, không lộ tên", async () => {
+    const r = await getTamTuongKy({ profiles: new MemoryProfileStore(), now: Date.parse("2026-11-04T05:00:00Z"), enabled: true, pack2: true, isSignedIn: async () => true }, "acc-1");
+    assert.ok(r.ok && r.view.packId === "pack-1-2");
+    const html = renderToStaticMarkup(createElement(TamTuongKyScreen, { initial: r.view }));
+    assert.match(html, /Gói 1: Dẹp loạn · 0\/12/);
+    assert.match(html, /Gói 2: Thập nhị sứ quân · 0\/9/);
+    assert.equal((html.match(/Tướng chưa tìm thấy/g) ?? []).length, 21);
+    for (const name of ["Đinh Bộ Lĩnh", "Lý Khuê", "Ngô Xương Xí"]) assert.doesNotMatch(html, new RegExp(name));
   });
 });

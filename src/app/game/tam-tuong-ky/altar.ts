@@ -113,8 +113,8 @@ export function hintText(hint: Hint | null): string {
 export const TIER_NAME: Readonly<Record<HeroTier, string>> = { thuong: "Tướng thường", dacBiet: "Tướng đặc biệt", lichSu: "Tướng lịch sử" };
 
 export type LedgerEntry =
-  | { readonly found: true; readonly nodeId: NodeId; readonly characterId: string; readonly name: string; readonly tier: HeroTier; readonly info: CharacterInfo; readonly symbols: readonly string[] }
-  | { readonly found: false; readonly nodeId: NodeId; readonly tier: HeroTier };
+  | { readonly found: true; readonly nodeId: NodeId; readonly pack: string; readonly characterId: string; readonly name: string; readonly tier: HeroTier; readonly info: CharacterInfo; readonly symbols: readonly string[] }
+  | { readonly found: false; readonly nodeId: NodeId; readonly pack: string; readonly tier: HeroTier };
 
 /**
  * Thẻ Tướng Lục cho đủ số tướng của pack (A-15). Tướng chưa tìm chỉ lộ bậc (P-24), không có tên hay characterId.
@@ -125,12 +125,13 @@ export function ledger(catalog: Catalog, state: DiscoveryState): readonly Ledger
     .filter((n) => n.kind === "character")
     .map((n): LedgerEntry => {
       const tier = n.tier ?? "thuong";
+      const pack = n.pack ?? catalog.pack.id;
       const info = n.characterId ? rosterCharacter(n.characterId) : undefined;
-      if (!state.discoveredNodeIds.includes(n.id) || !info || !n.characterId) return { found: false, nodeId: n.id, tier };
+      if (!state.discoveredNodeIds.includes(n.id) || !info || !n.characterId) return { found: false, nodeId: n.id, pack, tier };
       const final = catalog.pack.recipes.find((r) => r.result === n.id);
       // Dấu danh tính: nguyên liệu cuối không phải node vai trò (nghề/hệ đã hiện riêng). Không lấy từ art.
       const symbols = final ? [final.first, final.second].filter((id) => !catalog.nodes.get(id)?.role).map((id) => nameOf(catalog, id)) : [];
-      return { found: true, nodeId: n.id, characterId: n.characterId, name: n.nameVi, tier, info, symbols };
+      return { found: true, nodeId: n.id, pack, characterId: n.characterId, name: n.nameVi, tier, info, symbols };
     });
 }
 

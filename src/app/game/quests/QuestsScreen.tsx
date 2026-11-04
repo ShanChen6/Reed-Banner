@@ -49,8 +49,10 @@ function questRow(p: Profile, q: QuestDef, now: number): Row {
 
 /** Thành tựu Tầm Tướng Ký (`ttk.*`) chỉ hiện khi chế độ đã bật, để không lộ chế độ chưa phát hành. */
 export const isTamTuongKyAchievement = (id: string) => id.startsWith("ttk.");
+/** Thành tựu Gói 2 chỉ hiện khi cờ Gói 2 bật. */
+export const isTamTuongKyPack2Achievement = (id: string) => id.startsWith("ttk.pack-2.");
 
-export default function QuestsScreen({ tamTuongKy = false }: { tamTuongKy?: boolean }) {
+export default function QuestsScreen({ tamTuongKy = false, tamTuongKyPack2 = false }: { tamTuongKy?: boolean; tamTuongKyPack2?: boolean }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -112,7 +114,9 @@ export default function QuestsScreen({ tamTuongKy = false }: { tamTuongKy?: bool
     {
       title: "Thành tựu",
       note: "Mỗi thành tựu nhận một lần.",
-      rows: ACHIEVEMENTS.filter((a) => tamTuongKy || !isTamTuongKyAchievement(a.id)).map((a) => ({
+      rows: ACHIEVEMENTS.filter(
+        (a) => (tamTuongKy || !isTamTuongKyAchievement(a.id)) && (tamTuongKyPack2 || !isTamTuongKyPack2Achievement(a.id)),
+      ).map((a) => ({
         id: a.id,
         title: a.title,
         gold: a.gold,

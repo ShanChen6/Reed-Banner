@@ -5,9 +5,9 @@
 // Chế độ Hạng là LT-06. Luật: docs/02-game-modes/future/14-tam-tuong-ky-design-freeze.md.
 // Giao diện: docs/05-ui-ux/screens/tam-tuong-ky.md.
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { PROFESSION_DISPLAY_NAME, type Element } from "@/core/battle";
-import { ACTIVE_PACK, buildCatalog, openIngredients, type CatalogNode, type DiscoveryState, type HintLevel, type NodeId } from "@/core/tam-tuong-ky";
+import { PACK_NAMES, catalogForPack, openIngredients, type Catalog, type CatalogNode, type DiscoveryState, type HintLevel, type NodeId } from "@/core/tam-tuong-ky";
 import { AtlasCorners } from "../campaign/AtlasFrame";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
@@ -46,7 +46,9 @@ import {
   type TtkView,
 } from "./client";
 
-const catalog = buildCatalog(ACTIVE_PACK);
+/** Sổ đang chạy, theo `packId` server trả về (Gói 1, hoặc Gói 1 + Gói 2). */
+const CatalogContext = createContext<Catalog>(catalogForPack(undefined));
+const useCatalog = () => useContext(CatalogContext);
 
 const ELEMENT_NAME: Readonly<Record<Element, string>> = { kim: "Kim", moc: "Mộc", thuy: "Thủy", hoa: "Hỏa", tho: "Thổ", loi: "Lôi", phong: "Phong" };
 
@@ -117,8 +119,9 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
     };
   }, [initial]);
 
+  const catalog = catalogForPack(view?.packId);
   const state: DiscoveryState | null = view?.discovery ?? null;
-  const entries = useMemo(() => (state ? ledger(catalog, state) : []), [state]);
+  const entries = useMemo(() => (state ? ledger(catalog, state) : []), [catalog, state]);
   const found = entries.filter((e) => e.found).length;
   const left = view?.session?.combinesLeft ?? 0;
   const ready = !pending && slots[0] !== null && slots[1] !== null && left > 0;
@@ -172,6 +175,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
   const tip = tutorialTip(state);
 
   return (
+    <CatalogContext.Provider value={catalog}>
     <main className="campaign-atlas flex flex-1 flex-col bg-[#17110e] pb-28 text-[var(--atlas-ink-on-wood)] lg:pb-10">
       <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-4 px-4 pt-4 sm:px-6 lg:px-8">
         <header className="flex flex-wrap items-end justify-between gap-2">
@@ -225,6 +229,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
       </div>
       <MobileBar slots={slots} ready={ready} onCombine={combine} />
     </main>
+    </CatalogContext.Provider>
   );
 }
 
@@ -271,6 +276,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
       </main>
     );
 
+  const catalog = catalogForPack(view.packId);
   const ready = !pending && slots[0] !== null && slots[1] !== null;
   const combine = () => {
     const [a, b] = slots;
@@ -289,6 +295,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
   };
 
   return (
+    <CatalogContext.Provider value={catalog}>
     <main className="campaign-atlas flex flex-1 flex-col bg-[#17110e] pb-28 text-[var(--atlas-ink-on-wood)] lg:pb-10">
       <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-4 px-4 pt-4 sm:px-6 lg:px-8">
         <header className="flex flex-wrap items-end justify-between gap-2">
@@ -362,11 +369,13 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
       </div>
       <MobileBar slots={slots} ready={ready} onCombine={combine} />
     </main>
+    </CatalogContext.Provider>
   );
 }
 
 /** Điện thoại: thanh ghép cố định ở đáy để chọn ở Vạn Vật Lục xong bấm ngay, không phải cuộn lên. */
 function MobileBar({ slots, ready, onCombine }: { slots: Slots; ready: boolean; onCombine: () => void }) {
+  const catalog = useCatalog();
   const label = (id: NodeId | null) => (id ? nameOf(catalog, id) : "…");
   return (
     <div className="fixed inset-x-0 bottom-0 z-20 border-t border-[var(--atlas-border)] bg-[var(--atlas-wood)]/95 px-4 py-2 backdrop-blur lg:hidden">
@@ -580,6 +589,7 @@ function Altar(props: {
 }
 
 function Slot({ label, id, onClear }: { label: string; id: NodeId | null; onClear: () => void }) {
+  const catalog = useCatalog();
   const node = id ? catalog.nodes.get(id) : undefined;
   return (
     <div className="atlas-frame atlas-frame-paper flex min-h-24 flex-col items-center justify-center gap-1 p-2 text-center">
@@ -600,6 +610,31 @@ function Slot({ label, id, onClear }: { label: string; id: NodeId | null; onClea
 }
 
 function Ledger({ entries, found, hidden }: { entries: readonly LedgerEntry[]; found: number; hidden: boolean }) {
+  // Nhiều gói thì chia mục theo gói (A-15: bóng mờ đủ số tướng của từng gói).
+  const packs = [...new Set(entries.map((e) => e.pack))];
+  if (packs.length > 1)
+    return (
+      <Panel id="ttk-ledger" title={`Tướng Lục · ${found}/${entries.length}`} hidden={hidden}>
+        {packs.map((pack) => {
+          const list = entries.filter((e) => e.pack === pack);
+          return (
+            <section key={pack} aria-label={PACK_NAMES[pack] ?? pack} className="flex flex-col gap-2">
+              <h3 className="font-serif font-bold text-[var(--atlas-title)]">
+                {PACK_NAMES[pack] ?? pack} · {list.filter((e) => e.found).length}/{list.length}
+              </h3>
+              <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                {list.map((e) => (
+                  <li key={e.nodeId}>
+                    <LedgerCard entry={e} />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          );
+        })}
+        <p className="text-xs text-[var(--atlas-muted)]">Tìm thấy chân dung chỉ ghi vào Tướng Lục, không thêm tướng vào đội.</p>
+      </Panel>
+    );
   return (
     <Panel id="ttk-ledger" title={`Tướng Lục · ${found}/${entries.length}`} hidden={hidden}>
       <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">

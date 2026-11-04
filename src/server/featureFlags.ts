@@ -42,6 +42,11 @@ export function tamTuongKyRankedEnabled(env: Readonly<Record<string, string | un
   return tamTuongKyEnabled(env) && ttkFlag(env.TAM_TUONG_KY_RANKED_ENABLED);
 }
 
+/** Tầm Tướng Ký Gói 2 (8 sứ quân còn lại + Đinh Bộ Lĩnh) gộp vào cùng sổ. Cần cờ chế độ. */
+export function tamTuongKyPack2Enabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
+  return tamTuongKyEnabled(env) && ttkFlag(env.TAM_TUONG_KY_PACK2_ENABLED);
+}
+
 /**
  * Trạng thái cờ cho /api/health (không có giá trị bí mật). `rankedIgnored`: đã đặt biến Hạng nhưng cờ chế độ chưa bật,
  * nên Hạng vẫn tắt. `invalid`: biến có đặt nhưng giá trị không phải `true`.
@@ -52,10 +57,13 @@ export function tamTuongKyFlagStatus(env: Readonly<Record<string, string | undef
   return {
     enabled,
     ranked: tamTuongKyRankedEnabled(env),
+    pack2: tamTuongKyPack2Enabled(env),
     invalid: [
       ...(set(env.TAM_TUONG_KY_ENABLED) && !enabled ? ["TAM_TUONG_KY_ENABLED"] : []),
       ...(set(env.TAM_TUONG_KY_RANKED_ENABLED) && !ttkFlag(env.TAM_TUONG_KY_RANKED_ENABLED) ? ["TAM_TUONG_KY_RANKED_ENABLED"] : []),
+      ...(set(env.TAM_TUONG_KY_PACK2_ENABLED) && !ttkFlag(env.TAM_TUONG_KY_PACK2_ENABLED) ? ["TAM_TUONG_KY_PACK2_ENABLED"] : []),
     ],
     rankedIgnored: ttkFlag(env.TAM_TUONG_KY_RANKED_ENABLED) && !enabled,
+    pack2Ignored: ttkFlag(env.TAM_TUONG_KY_PACK2_ENABLED) && !enabled,
   };
 }

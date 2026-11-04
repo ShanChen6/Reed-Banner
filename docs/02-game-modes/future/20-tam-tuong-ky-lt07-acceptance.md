@@ -54,9 +54,11 @@ Khách (chưa đăng nhập) thấy màn nhắc đăng nhập; API trả 401 (te
 2. Đặt `TAM_TUONG_KY_ENABLED=true`: mở chế độ Thường, thành tựu bộ, phiếu từ nhiệm vụ/điểm danh, bó trong thưởng hạng.
 3. Khi muốn mở Hạng tuần, đặt thêm `TAM_TUONG_KY_RANKED_ENABLED=true` (nên bật vào đầu tuần, thứ Hai giờ Việt Nam, để tuần đầu đủ 7 ngày).
 
+**Gói 2:** đặt thêm `TAM_TUONG_KY_PACK2_ENABLED=true` (cần cờ chế độ; nên bật vào thứ Hai). Tắt thì sổ người chơi vẫn giữ khám phá Gói 2. Xem [Gói 2](21-tam-tuong-ky-pack-2.md#2-gộp-sổ).
+
 **Kiểm cờ sau khi deploy:** mở `/api/health`, mục `features.tamTuongKy`:
 
-- `enabled`, `ranked`: server đang đọc cờ chế độ, cờ Hạng là bật hay tắt.
+- `enabled`, `ranked`, `pack2`: server đang đọc cờ chế độ, cờ Hạng, cờ Gói 2 là bật hay tắt; `pack2Ignored` như `rankedIgnored` cho cờ Gói 2.
 - `invalid`: tên biến đã đặt nhưng giá trị không phải `true` (ví dụ `1`, `yes`). Hai cờ Tầm Tướng Ký chấp nhận `true` không phân biệt hoa thường, bỏ khoảng trắng và xuống dòng ở hai đầu.
 - `rankedIgnored: true`: đã đặt cờ Hạng nhưng cờ chế độ chưa bật, nên Hạng vẫn tắt.
 - Biến môi trường chỉ có hiệu lực từ lần deploy **sau** khi đặt; đặt xong phải deploy lại. Trên Vercel, biến phải được chọn cho đúng môi trường (Production hoặc Preview) của bản đang mở.
