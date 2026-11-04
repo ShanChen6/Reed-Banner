@@ -203,7 +203,7 @@ export function tierFrameSrc(tier: Tier): string {
 /** Bộ có ảnh vẽ tay; `weapons` = đã có ảnh vũ khí theo nghề (chưa có thì vũ khí vẫn vẽ SVG). */
 const SET_ART: Readonly<Record<string, { weapons: boolean }>> = {
   coLau: { weapons: true },
-  hoaLu: { weapons: false },
+  hoaLu: { weapons: true },
 };
 
 export function gearArtSrc(slot: GearSlot, set: string | undefined, profession?: Profession): string | undefined {
