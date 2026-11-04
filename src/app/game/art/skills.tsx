@@ -520,12 +520,14 @@ const SKILL_ART = new Set([
   "role_thuThanh", "role_tuongKhien", "role_phanKich", "role_linhDuoc", "role_duongSinh", "role_teDo",
   "role_muaChuoc", "role_lyGian", "role_catQuanLuong", "role_nghiBinh", "role_hieuLenh", "role_phaKe",
   "role_xaThu_dinhDiem", "role_xaThu_phaGiap", "role_xaThu_tapKich", "role_satThu_thuaHu", "role_satThu_doatKhi", "role_satThu_truyMenh",
-  // Tuyệt chiêu ô 4 của Đinh Bộ Lĩnh, mỗi hệ một hình (Shan vẽ 04/11/2026): Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ.
+  // Tuyệt chiêu ô 4 của Đinh Bộ Lĩnh, mỗi hệ một hình (Shan vẽ 04/11/2026): Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư, Xạ thủ.
   "dbl_tuongSi_kim", "dbl_tuongSi_moc", "dbl_tuongSi_thuy", "dbl_tuongSi_hoa", "dbl_tuongSi_tho", "dbl_tuongSi_loi", "dbl_tuongSi_phong",
   "dbl_phapSu_kim", "dbl_phapSu_moc", "dbl_phapSu_thuy", "dbl_phapSu_hoa", "dbl_phapSu_tho", "dbl_phapSu_loi", "dbl_phapSu_phong",
   "dbl_binhLinh_kim", "dbl_binhLinh_moc", "dbl_binhLinh_thuy", "dbl_binhLinh_hoa", "dbl_binhLinh_tho", "dbl_binhLinh_loi", "dbl_binhLinh_phong",
   "dbl_ySu_kim", "dbl_ySu_moc", "dbl_ySu_thuy", "dbl_ySu_hoa", "dbl_ySu_tho", "dbl_ySu_loi", "dbl_ySu_phong",
   "dbl_muuSi_kim", "dbl_muuSi_moc", "dbl_muuSi_thuy", "dbl_muuSi_hoa", "dbl_muuSi_tho", "dbl_muuSi_loi", "dbl_muuSi_phong",
+  "dbl_quanSu_kim", "dbl_quanSu_moc", "dbl_quanSu_thuy", "dbl_quanSu_hoa", "dbl_quanSu_tho", "dbl_quanSu_loi", "dbl_quanSu_phong",
+  "dbl_xaThu_kim", "dbl_xaThu_moc", "dbl_xaThu_thuy", "dbl_xaThu_hoa", "dbl_xaThu_tho", "dbl_xaThu_loi", "dbl_xaThu_phong",
 ]);
 
 /**
@@ -578,7 +580,7 @@ const DBL_ULTIMATE_ART: Readonly<Record<Element, string>> = {
  * Ảnh vẽ tay cho một kỹ năng (mã file trong public/art/skills/) và có cần huy hiệu nghề ở góc không.
  * - Mã gốc trong SKILL_ART: ảnh của chính nó.
  * - `element_<mã>` (ô 2/6 hệ của mọi nhân vật chơi được): bỏ tiền tố, dùng ảnh hệ cũ.
- * - `dbl_<nghề>_<hệ>` có ảnh riêng (Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ) dùng ảnh đó; còn lại ảnh tuyệt chiêu hệ cũ + huy hiệu nghề để phân biệt 8 nghề (mỗi trận chỉ một nghề).
+ * - `dbl_<nghề>_<hệ>` có ảnh riêng (Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư, Xạ thủ) dùng ảnh đó; còn lại ảnh tuyệt chiêu hệ cũ + huy hiệu nghề để phân biệt 8 nghề (mỗi trận chỉ một nghề).
  */
 export function skillArt(def: Pick<SkillDef, "id" | "element" | "profession">): { file: string; badge?: Profession } | undefined {
   if (SKILL_ART.has(def.id)) return { file: def.id };
