@@ -1,7 +1,7 @@
 # 23 — Tầm Tướng Ký: cân bằng nguyên tố và cảnh báo cặp đã thử
 
 > Cập nhật: 04/11/2026
-> Trạng thái: **DRAFT** — có code trên nhánh `feat/lt-tam-tuong-ky`, chưa merge vào `develop`. Chờ Shan duyệt 11 cặp ghép mới ở [mục 1](#1-cân-bằng-nguyên-tố) và lời cảnh báo ở [mục 2](#2-cảnh-báo-cặp-đã-thử).
+> Trạng thái: **APPROVED** — Shan duyệt 11 cặp ghép mới ([mục 1](#1-cân-bằng-nguyên-tố)) và lời cảnh báo ([mục 2](#2-cảnh-báo-cặp-đã-thử)) ngày 04/11/2026; có code, chờ merge vào `develop`. Bật cùng cờ `TAM_TUONG_KY_ENABLED` khi deploy.
 
 Shan (04/11/2026), xem trên bản đang chạy:
 
@@ -66,7 +66,7 @@ Cách làm:
 - Hai test engine trước dùng Phong + Lôi, Lôi + Mộc làm cặp sai; nay đổi sang Hỏa + Hỏa (vẫn không có công thức).
 - Validator: sổ ba gói 0 lỗi.
 
-## 4. Cần Shan duyệt
+## 4. Shan duyệt
 
-- [ ] 11 cặp mới và lý do (mục 1).
-- [ ] Lời cảnh báo và nút “Vẫn hợp nguyên” (mục 2).
+- [x] 11 cặp mới và lý do (mục 1).
+- [x] Lời cảnh báo và nút “Vẫn hợp nguyên” (mục 2).

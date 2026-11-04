@@ -2,6 +2,9 @@
 
 ## 04/11/2026
 
+**Tầm Tướng Ký: Shan duyệt cân bằng nguyên tố và cảnh báo**
+- Duyệt 11 cặp ghép mới và lời cảnh báo cặp đã thử ([tài liệu 23](../02-game-modes/future/23-tam-tuong-ky-can-bang-va-canh-bao.md), **DRAFT → APPROVED**). Có hiệu lực khi merge vào `develop` và deploy.
+
 **Tầm Tướng Ký: cân bằng nguyên tố, cảnh báo cặp đã thử (DRAFT, có code)**
 - Shan: bước ghép đầu lệch về Mộc, Thủy, Thổ. Thêm 11 cặp ghép (Hỏa, Phong, Lôi, Kim) ra vật liệu bậc 1 sẵn có; 27/49 cặp gốc có công thức, mỗi hệ 7 cặp (Thổ 8). Không đổi số lần ghép của tướng nào. `PACK_1.contentVersion` 2 → 3.
 - Shan: lần đầu ghép sai vẫn mất; lần sau đặt lại đúng cặp đó thì cảnh báo trước, không nói công thức sai. Server ghi `Profile.tamTuongKy.triedPairs` (tối đa 400). Xem [cân bằng và cảnh báo](../02-game-modes/future/23-tam-tuong-ky-can-bang-va-canh-bao.md).
