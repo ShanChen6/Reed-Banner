@@ -2,9 +2,14 @@
 
 ## 04/11/2026
 
+**Tầm Tướng Ký: công thức không dựa vào art, lời dẫn chế độ Hạng (Shan)**
+- A-22: art nhân vật sẽ đổi nên công thức không dựa vào vũ khí, trang phục, phụ kiện. Gói 1 viết lại: công thức cuối = node vai trò (nghề × hệ theo roster; đặc biệt “Vạn tượng”) + dấu danh tính (tước hiệu, địa danh, mốc chiến dịch, tên chiêu, lore). Validator thêm `roleMismatch`, `missingAnchor`. Gói 1 còn 69 công thức, 57 yếu tố trung gian; số lần ghép giữ 12/9. Slice-1 thành tập con của Gói 1; [catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md) **APPROVED → SUPERSEDED**.
+- A-23: chế độ Hạng không hiện rõ tướng đề cử, chỉ một lời dẫn mô tả tướng (chữ; sau này ảnh, câu nói). Mỗi tướng Gói 1 có lời dẫn chữ của trò chơi; validator chặn lời dẫn chứa tên tướng (`clueSpoils`, `missingClue`). P-16 sửa theo.
+- Mô phỏng chạy lại trên gói mới: kết luận giữ nguyên ([Gói 1 LT-05](../02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md#6-cần-shan-chọn)).
+
 **Tầm Tướng Ký: LT-05 Gói 1 và mô phỏng (DRAFT, có code)**
-- `PACK_1`: 12 tướng Shan duyệt, 82 công thức, 70 yếu tố trung gian; lịch sử đều 12 lần ghép, đặc biệt đều 9; không ngõ cụt; giữ mọi ID của slice-1. Thành tựu bộ theo P-21 (9 bộ, 3 200 vàng). Server chuyển sang chạy Gói 1 (vẫn `draft`, sau cờ).
-- `scripts/tam-tuong-ky-sim.ts`: người mới đoán mò cần khoảng 92–136 ngày cho tướng đầu với gợi ý hiện tại; thêm dấu “còn công thức chưa tìm” và gợi ý nhắm tướng thì còn khoảng 9 ngày, đủ 12 tướng khoảng 72 ngày. Bó chia đều 7 hệ phí vì cả gói cần 51 Mộc, 3 Lôi. Đề xuất: 15 lần/phiếu, bó tự chọn, 7 tướng đề cử. Xem [Gói 1 LT-05](../02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md#5-cần-shan-chọn).
+- `PACK_1` (bản đầu, viết lại cùng ngày theo A-22): 12 tướng Shan duyệt, 82 công thức, 70 yếu tố trung gian; lịch sử đều 12 lần ghép, đặc biệt đều 9; không ngõ cụt; giữ mọi ID của slice-1. Thành tựu bộ theo P-21 (9 bộ, 3 200 vàng). Server chuyển sang chạy Gói 1 (vẫn `draft`, sau cờ).
+- `scripts/tam-tuong-ky-sim.ts`: người mới đoán mò cần khoảng 92–136 ngày cho tướng đầu với gợi ý hiện tại; thêm dấu “còn công thức chưa tìm” và gợi ý nhắm tướng thì còn khoảng 9 ngày, đủ 12 tướng khoảng 72 ngày. Bó chia đều 7 hệ phí vì cả gói cần 51 Mộc, 3 Lôi. Đề xuất: 15 lần/phiếu, bó tự chọn, 7 tướng đề cử. Xem [Gói 1 LT-05](../02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md#6-cần-shan-chọn).
 
 **Tầm Tướng Ký: LT-04 server chế độ Thường (DRAFT, có code)**
 - Phiếu (3 khi bắt đầu, trần 10), lượt 15 lần ghép (hết hạn 24 giờ), gợi ý 2 lượt mỗi ngày, sổ khám phá lưu trong hồ sơ tài khoản (`Profile.tamTuongKy`, không thêm bảng). API `/api/tam-tuong-ky` (GET, `session`, `combine`, `hint`) sau cờ và đăng nhập; `requestId` chống trừ hai lần. Xem [server LT-04](../02-game-modes/future/17-tam-tuong-ky-lt04-server.md).

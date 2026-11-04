@@ -1,7 +1,7 @@
 # 14 — Tầm Tướng Ký — Design Freeze (LT-00)
 
 > Cập nhật: 03/11/2026
-> Trạng thái: **FROZEN** — Shan chốt mục 3.1 và duyệt mục 3.2 ngày 03/11/2026. Số liệu ở mục 3.2 là **điểm xuất phát**: LT-05 được chỉnh trong khoảng đã ghi bằng mô phỏng; đổi luật phải qua quyết định mới.
+> Trạng thái: **FROZEN** — Shan chốt mục 3.1 và duyệt mục 3.2 ngày 03/11/2026; thêm A-22, A-23 ngày 04/11/2026. Số liệu ở mục 3.2 là **điểm xuất phát**: LT-05 được chỉnh trong khoảng đã ghi bằng mô phỏng; đổi luật phải qua quyết định mới.
 
 File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây gọi “Liệt Truyện — Tầm Tướng Ký”). Nó thay các đề xuất trong [GDD](08-liet-truyen-gdd.md), [công thức](09-liet-truyen-recipes.md), [kiến trúc](10-liet-truyen-architecture.md), [UI/art](11-liet-truyen-ui-art.md) và [QA/roadmap](12-liet-truyen-qa-roadmap.md); khi khác nhau, file này thắng. Tên file 08–12 giữ nguyên `liet-truyen` để không làm hỏng link và script.
 
@@ -17,7 +17,7 @@ File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây g
 - **Gợi ý:** chỉ chế độ Thường, không lộ đủ công thức, không tự mở. Shan nghiêng về **2 lượt miễn phí mỗi ngày**; Claude đồng ý (P-8).
 - **Thành tựu:** mở **đủ một bộ** tướng (ví dụ đủ tướng hệ Hỏa) thưởng vàng + huy hiệu; mở một tướng lẻ không có thành tựu.
 - **Phải đăng nhập**, khách không chơi thử.
-- **Tướng Lục** hiện bóng mờ đủ số tướng của pack; tạm dùng nghề, hệ, vật biểu trưng và icon có sẵn.
+- **Tướng Lục** hiện bóng mờ đủ số tướng của pack; tạm dùng nghề, hệ, dấu tích (A-22: không lấy từ art) và icon có sẵn.
 - **Gói đầu tiên:** 10 tướng lịch sử + 2 tướng đặc biệt (Đinh Ngọc, Trần Vũ Phong), danh sách ở [mục 5](#5-gói-đầu-tiên-10-lịch-sử--2-đặc-biệt) đã duyệt.
 - **Đinh Bộ Lĩnh** xây theo hướng nhân vật đặc biệt.
 
@@ -48,7 +48,7 @@ File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây g
 3. **Thưởng hạng không còn chỉ là vàng.** Shan chốt 01/11/2026 “trước mắt thưởng xếp hạng mọi chế độ chỉ là vàng” ([chế độ chơi mục 6](../README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt)). Quyết định 03/11/2026 thêm nguyên liệu Tầm Tướng Ký vào thưởng hạng; khi code phải sửa mục đó. Số vàng đã duyệt không đổi.
 4. **Hai tướng đặc biệt đã chính thức, code chưa theo kịp.** Shan duyệt [Đinh Ngọc](../../03-characters/dinh-ngoc.md) và [Trần Vũ Phong](../../03-characters/vu-phong.md) ngày 03/11/2026. Code vẫn ghi tên “Vũ Phong” (`roster.ts`, `binh-phap/specials.ts`, `demo/characters/catalog.ts`) và cả hai vẫn là nhân vật xem thử, chưa có cách mở trong game. Đổi tên và mở chính thức là task code riêng, không thuộc LT-00.
 5. **Đinh Bộ Lĩnh.** Hệ và nghề đổi theo người chơi (`mainCharacter(element, profession)`), nên không xếp được vào bộ theo hệ. Shan chốt 03/11/2026: trong Tầm Tướng Ký, Đinh Bộ Lĩnh xây theo hướng **nhân vật đặc biệt** (A-21).
-6. **Tướng lịch sử cần nguồn.** Vật biểu trưng và mô tả phải theo [sổ nguồn](../campaign/history-sources.md); công thức là biểu trưng, không phải sự kiện.
+6. **Tướng lịch sử cần nguồn.** Dấu danh tính (tước hiệu, địa danh) và mô tả phải theo [sổ nguồn](../campaign/history-sources.md); công thức là biểu trưng, không phải sự kiện.
 7. **Quy định khách.** [Mục 6.1](../README.md#61-ai-chơi-được-chế-độ-nào-shan-01112026) cho khách chơi thường ở các chế độ khác; Tầm Tướng Ký là ngoại lệ. Khi phát hành phải thêm vào bảng đó.
 8. **Đường dẫn prompt cũ.** Prompt LT-00 nhắc `docs/game-modes/…` và số 13; thư mục đã chuyển ([MOVED.md](../../MOVED.md)), số 13 đã dùng cho Quần Hùng.
 
@@ -77,11 +77,13 @@ File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây g
 | A-13 | Thành tựu | Thưởng **vàng + huy hiệu** khi mở **đủ một bộ** tướng (ví dụ đủ tướng hệ Hỏa); mở một tướng lẻ không có thành tựu. Ngoài thành tựu và thưởng hạng tuần, ghép ra tướng không thưởng gì |
 | A-14 | Đăng nhập | Bắt buộc; khách không chơi thử |
 | A-15 | Tướng Lục | Bóng mờ đủ số tướng của pack |
-| A-16 | Nội dung tướng | Tạm dùng nghề, hệ, vật biểu trưng, icon nghề/hệ có sẵn |
+| A-16 | Nội dung tướng | Tạm dùng nghề, hệ, dấu tích (từ 04/11/2026 thay “vật biểu trưng”, A-22), icon nghề/hệ có sẵn |
 | A-17 | Gói đầu | **10 tướng lịch sử + 2 tướng đặc biệt**; danh sách 12 tướng ở [mục 5](#5-gói-đầu-tiên-10-lịch-sử--2-đặc-biệt) đã duyệt (Shan, 03/11/2026) |
 | A-19 | Cửa hàng | **Bán túi (bó) nguyên tố**, giới hạn mua mỗi tuần để tránh lạm phát và không ảnh hưởng tới hạng (Shan, 03/11/2026) |
 | A-20 | Tướng đặc biệt | **Đinh Ngọc** và **Trần Vũ Phong** chốt, đưa vào chính thức (Shan, 03/11/2026) |
 | A-21 | Đinh Bộ Lĩnh | Xây theo hướng nhân vật đặc biệt (Shan, 03/11/2026); xem P-27 |
+| A-22 | Công thức không dựa vào art | Thiết kế hình ảnh nhân vật sẽ đổi, nên công thức **không được dựa vào art hiện tại** (vũ khí, trang phục, phụ kiện) (Shan, 04/11/2026). Cách làm: công thức cuối = node vai trò (nghề × hệ theo roster; tướng đặc biệt: “Vạn tượng”) + dấu danh tính lấy từ tước hiệu, địa danh, mốc chiến dịch, tên chiêu hoặc lore đã duyệt. Validator báo `roleMismatch` khi vai trò lệch roster, `missingAnchor` khi tướng không ghi dấu dựa vào đâu |
+| A-23 | Đề cử Hạng không lộ tướng | Chế độ Hạng **không hiển thị rõ tướng cần ghép**; mỗi tướng đề cử chỉ có **một lời dẫn đặc biệt** mô tả tướng đó (chữ, sau này có thể là hình ảnh, câu nói…) (Shan, 04/11/2026). Lời dẫn không được chứa tên tướng (`clueSpoils`); câu nói của nhân vật lịch sử phải có nguồn, chưa có thì viết lời dẫn của trò chơi |
 | A-18 | Khám phá ≠ sở hữu | Ghép ra tướng không cấp tướng vào đội, không EXP/đá/trang bị |
 
 ### 3.2 Đề xuất đã duyệt
@@ -117,7 +119,7 @@ Shan duyệt toàn bộ ngày 03/11/2026; riêng P-5 Shan đổi thành số c�
 | P-13 | Cửa hàng (A-19): 1 bó = 300 vàng, tối đa 2 bó mỗi tuần, đổi cùng tuần hạng. Trần thấp hơn cấp nền (3 bó) để vàng không quyết định hạng; chốt số sau mô phỏng LT-05 |
 | P-14 | Node trung gian ghép ở Hạng chỉ sống trong tuần; hết tuần bỏ, nguyên tố còn dư giữ trong túi. Tướng tạo ra không vào túi |
 | P-15 | Mỗi lần ghép tiêu 1 đơn vị mỗi nguyên liệu (`A+A` tiêu 2); thành công cộng 1 đơn vị kết quả; `noRecipe` vẫn tiêu (A-8). Không tốn phiếu |
-| P-16 | Đề cử: server chọn đầu tuần, giống nhau cho mọi người, xoay vòng sao cho mỗi tướng trong gói được đề cử đều nhau. Mỗi tuần có ít nhất 1 tướng đặc biệt. Bóng mờ đề cử hiện bậc, nghề, hệ; tên và chân dung lộ khi ghép ra |
+| P-16 | Đề cử: server chọn đầu tuần, giống nhau cho mọi người, xoay vòng sao cho mỗi tướng trong gói được đề cử đều nhau. Mỗi tuần có ít nhất 1 tướng đặc biệt. Theo A-23 (04/11/2026): mỗi ô đề cử chỉ hiện **lời dẫn** và số điểm của ô (theo bậc); không hiện tên, chân dung, nghề, hệ cho tới khi ghép ra |
 | P-17 | Số tướng đề cử chọn trong 5 / 7 / 10 bằng mô phỏng LT-05: người chơi trung bình (thưởng “nửa trên” ở hai chế độ + cấp nền) ghép được khoảng một nửa danh sách nếu biết công thức |
 | P-18 | Điểm: mỗi tướng đề cử tính một lần, đặc biệt 200, lịch sử 300 (thường 100 cho gói sau). Bằng điểm thì ít nguyên tố tiêu trong tuần hơn xếp trên, rồi ai đạt trước |
 | P-19 | Thưởng hạng Tầm Tướng Ký: vàng 500 / 300 / 180 / 80 / 30 (bằng Trấn Ải) cộng bó theo P-11 |

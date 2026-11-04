@@ -416,7 +416,7 @@ function LedgerCard({ entry }: { entry: LedgerEntry }) {
           <span className="flex items-center gap-1"><ProfessionIcon profession={info.profession} /> {PROFESSION_DISPLAY_NAME[info.profession]}</span>
           <span className="flex items-center gap-1"><ElementIcon element={info.element} /> {ELEMENT_NAME[info.element]}</span>
         </p>
-        {entry.symbols.length > 0 && <p className="mt-1 text-xs">Vật biểu trưng: {entry.symbols.join(", ")}</p>}
+        {entry.symbols.length > 0 && <p className="mt-1 text-xs">Dấu tích: {entry.symbols.join(", ")}</p>}
       </div>
     </article>
   );

@@ -12,6 +12,11 @@ export const TIER_COMBINES: Readonly<Record<HeroTier, number>> = {
   lichSu: 12,
 };
 
+/** Bỏ dấu tiếng Việt, chữ thường: để so lời dẫn với tên tướng. */
+function foldVi(text: string): string {
+  return text.normalize("NFD").replace(/\p{M}/gu, "").replace(/đ/g, "d").replace(/Đ/g, "D").toLowerCase();
+}
+
 export function validatePack(pack: Pack, deps: CatalogDeps): readonly CatalogIssue[] {
   const issues: CatalogIssue[] = [];
   const error = (code: CatalogIssue["code"], message: string, ref?: string) =>
@@ -93,6 +98,18 @@ export function validatePack(pack: Pack, deps: CatalogDeps): readonly CatalogIss
     const m = metrics.get(h.id);
     if (m && m.minCombines !== TIER_COMBINES[h.tier])
       error("tierCombines", `${h.id} cần ${m.minCombines} lần ghép, bậc ${h.tier} phải đúng ${TIER_COMBINES[h.tier]}`, h.id);
+    if (!h.anchors || h.anchors.length === 0) error("missingAnchor", `${h.id} chưa ghi công thức dựa vào đâu (tước hiệu, địa danh, chiêu, lore)`, h.id);
+    if (!h.clue || h.clue.text.trim() === "") error("missingClue", `${h.id} chưa có lời dẫn chế độ Hạng`, h.id);
+    else if (foldVi(h.clue.text).includes(foldVi(h.nameVi))) error("clueSpoils", `Lời dẫn của ${h.id} chứa tên tướng`, h.id);
+    for (const r of finals) {
+      // Công thức cuối = node vai trò khớp nghề/hệ roster (đặc biệt: dung hợp) + dấu danh tính.
+      const roles = [nodes.get(r.first), nodes.get(r.second)].filter((n) => n?.role);
+      const special = h.tier === "dacBiet";
+      const ok =
+        roles.length === 1 &&
+        (special ? roles[0]!.role!.hybrid === true : roles[0]!.role!.profession === info.profession && roles[0]!.role!.element === info.element);
+      if (!ok) error("roleMismatch", `${r.id}: công thức cuối cần đúng một node vai trò ${special ? "dung hợp" : `${info.profession}/${info.element}`}`, r.id);
+    }
     for (const r of finals) {
       const [a, b] = [nodes.get(r.first), nodes.get(r.second)];
       const isOwnElement = (n?: CatalogNode) => n?.kind === "element" && n.element === info.element;

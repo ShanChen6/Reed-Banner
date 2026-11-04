@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import { ELEMENTS } from "../../../src/core/battle";
 import {
+  PACK_1,
   SLICE_PACK,
   buildCatalog,
   chargesCombine,
@@ -44,9 +45,10 @@ describe("chế độ Thường", () => {
     assert.deepEqual(fresh().discoveredRecipeIds, []);
   });
 
-  it("thứ tự ô quyết định kết quả: Mộc+Thủy ≠ Thủy+Mộc", () => {
-    const a = combineNormal(catalog, fresh(), "elt.moc", "elt.thuy");
-    const b = combineNormal(catalog, fresh(), "elt.thuy", "elt.moc");
+  it("thứ tự ô quyết định kết quả: Mộc+Thủy ≠ Thủy+Mộc (Gói 1)", () => {
+    const pack1 = buildCatalog(PACK_1);
+    const a = combineNormal(pack1, initialDiscovery(pack1), "elt.moc", "elt.thuy");
+    const b = combineNormal(pack1, initialDiscovery(pack1), "elt.thuy", "elt.moc");
     assert.equal(a.status === "created" && a.nodeId, "mat.reed");
     assert.equal(b.status === "created" && b.nodeId, "mat.herbs");
   });
@@ -144,7 +146,7 @@ describe("chế độ Thường", () => {
       discoveredNodeIds: before.discoveredNodeIds.filter((id) => id !== "hero.dinhNgoc"),
       discoveredRecipeIds: before.discoveredRecipeIds.filter((id) => id !== "r.dinhNgoc"),
     };
-    const out = combineNormal(catalog, s, "mat.jadeSword", "mat.road");
+    const out = combineNormal(catalog, s, "role.hybrid", "know.guardRoad");
     assert.equal(out.status, "created");
     assert.ok(out.status === "created" && out.isCharacter && !out.nodeAlreadyKnown);
   });
@@ -221,12 +223,12 @@ describe("chế độ Hạng", () => {
   });
 
   it("tướng không vào kho; ghép ra lần hai không tính thêm", () => {
-    const stock = { "mat.jadeSword": 2, "mat.road": 2 };
-    const one = combineRanked(catalog, start(stock), fresh(), "mat.jadeSword", "mat.road");
+    const stock = { "role.hybrid": 2, "know.guardRoad": 2 };
+    const one = combineRanked(catalog, start(stock), fresh(), "role.hybrid", "know.guardRoad");
     assert.ok(one.status === "created" && one.isCharacter && !one.heroAlreadyCreated);
-    assert.deepEqual(one.next.stock, { "mat.jadeSword": 1, "mat.road": 1 });
+    assert.deepEqual(one.next.stock, { "role.hybrid": 1, "know.guardRoad": 1 });
     assert.deepEqual(one.next.heroesCreated, ["hero.dinhNgoc"]);
-    const two = combineRanked(catalog, one.next, one.nextDiscovery, "mat.jadeSword", "mat.road");
+    const two = combineRanked(catalog, one.next, one.nextDiscovery, "role.hybrid", "know.guardRoad");
     assert.ok(two.status === "created" && two.heroAlreadyCreated);
     assert.deepEqual(two.next.heroesCreated, ["hero.dinhNgoc"]);
     assert.deepEqual(two.next.stock, {});
@@ -240,12 +242,12 @@ describe("chế độ Hạng", () => {
   it("ghép đủ Đinh Ngọc từ kho starter tiêu đúng số nguyên tố và số lần ghép", () => {
     // Đinh Ngọc: 9 lần ghép, 10 đơn vị nguyên tố (báo cáo LT-01).
     const plan: readonly (readonly [string, string])[] = [
+      ["elt.thuy", "elt.phong"], ["elt.tho", "elt.phong"], ["mat.cloud", "mat.mountain"],
       ["elt.tho", "elt.tho"], ["mat.rampart", "elt.phong"],
-      ["elt.kim", "elt.hoa"], ["mat.forgedIron", "elt.kim"],
-      ["elt.tho", "elt.kim"], ["elt.thuy", "elt.thuy"], ["mat.jadeStone", "mat.dew"],
-      ["mat.shortSword", "mat.dropJade"], ["mat.jadeSword", "mat.road"],
+      ["elt.thuy", "elt.thuy"], ["elt.moc", "mat.dew"], ["mat.road", "mat.gourd"],
+      ["role.hybrid", "know.guardRoad"],
     ];
-    const stock = { "elt.tho": 3, "elt.phong": 1, "elt.kim": 3, "elt.hoa": 1, "elt.thuy": 2 };
+    const stock = { "elt.thuy": 3, "elt.phong": 3, "elt.tho": 3, "elt.moc": 1 };
     let s = start(stock);
     let d = fresh();
     for (const [a, b] of plan) {

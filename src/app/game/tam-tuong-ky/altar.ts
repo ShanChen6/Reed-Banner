@@ -102,7 +102,7 @@ export type LedgerEntry =
 
 /**
  * Thẻ Tướng Lục cho đủ số tướng của pack (A-15). Tướng chưa tìm chỉ lộ bậc (P-24), không có tên hay characterId.
- * Vật biểu trưng là hai nguyên liệu của công thức cuối (A-16, chưa có tiểu sử).
+ * Dấu tích là nguyên liệu danh tính của công thức cuối (tước hiệu, địa danh, chiêu, lore); chưa có tiểu sử.
  */
 export function ledger(catalog: Catalog, state: DiscoveryState): readonly LedgerEntry[] {
   return catalog.pack.nodes
@@ -112,7 +112,8 @@ export function ledger(catalog: Catalog, state: DiscoveryState): readonly Ledger
       const info = n.characterId ? rosterCharacter(n.characterId) : undefined;
       if (!state.discoveredNodeIds.includes(n.id) || !info || !n.characterId) return { found: false, nodeId: n.id, tier };
       const final = catalog.pack.recipes.find((r) => r.result === n.id);
-      const symbols = final ? [nameOf(catalog, final.first), nameOf(catalog, final.second)] : [];
+      // Dấu danh tính: nguyên liệu cuối không phải node vai trò (nghề/hệ đã hiện riêng). Không lấy từ art.
+      const symbols = final ? [final.first, final.second].filter((id) => !catalog.nodes.get(id)?.role).map((id) => nameOf(catalog, id)) : [];
       return { found: true, nodeId: n.id, characterId: n.characterId, name: n.nameVi, tier, info, symbols };
     });
 }
