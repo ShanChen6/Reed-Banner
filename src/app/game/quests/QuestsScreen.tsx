@@ -51,8 +51,18 @@ function questRow(p: Profile, q: QuestDef, now: number): Row {
 export const isTamTuongKyAchievement = (id: string) => id.startsWith("ttk.");
 /** Thành tựu Gói 2 chỉ hiện khi cờ Gói 2 bật. */
 export const isTamTuongKyPack2Achievement = (id: string) => id.startsWith("ttk.pack-2.");
+/** Thành tựu Gói 3 chỉ hiện khi cờ Gói 3 bật. */
+export const isTamTuongKyPack3Achievement = (id: string) => id.startsWith("ttk.pack-3.");
 
-export default function QuestsScreen({ tamTuongKy = false, tamTuongKyPack2 = false }: { tamTuongKy?: boolean; tamTuongKyPack2?: boolean }) {
+export default function QuestsScreen({
+  tamTuongKy = false,
+  tamTuongKyPack2 = false,
+  tamTuongKyPack3 = false,
+}: {
+  tamTuongKy?: boolean;
+  tamTuongKyPack2?: boolean;
+  tamTuongKyPack3?: boolean;
+}) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -115,7 +125,10 @@ export default function QuestsScreen({ tamTuongKy = false, tamTuongKyPack2 = fal
       title: "Thành tựu",
       note: "Mỗi thành tựu nhận một lần.",
       rows: ACHIEVEMENTS.filter(
-        (a) => (tamTuongKy || !isTamTuongKyAchievement(a.id)) && (tamTuongKyPack2 || !isTamTuongKyPack2Achievement(a.id)),
+        (a) =>
+          (tamTuongKy || !isTamTuongKyAchievement(a.id)) &&
+          (tamTuongKyPack2 || !isTamTuongKyPack2Achievement(a.id)) &&
+          (tamTuongKyPack3 || !isTamTuongKyPack3Achievement(a.id)),
       ).map((a) => ({
         id: a.id,
         title: a.title,

@@ -48,22 +48,20 @@ Khách (chưa đăng nhập) thấy màn nhắc đăng nhập; API trả 401 (te
 
 ## 3. Bật và rút lại
 
-**Bật** (chỉ biến môi trường, không cần sửa code):
+**Bật:** chỉ một biến môi trường `TAM_TUONG_KY_ENABLED=true` (Shan, 04/11/2026: gộp các cờ cho gọn). Biến này mở chế độ Thường, Hạng tuần, thành tựu bộ, phiếu từ nhiệm vụ/điểm danh, bó trong thưởng hạng và **mọi gói đã duyệt**.
 
-1. Merge nhánh vào `develop` sau khi Shan duyệt.
-2. Đặt `TAM_TUONG_KY_ENABLED=true`: mở chế độ Thường, thành tựu bộ, phiếu từ nhiệm vụ/điểm danh, bó trong thưởng hạng.
-3. Khi muốn mở Hạng tuần, đặt thêm `TAM_TUONG_KY_RANKED_ENABLED=true` (nên bật vào đầu tuần, thứ Hai giờ Việt Nam, để tuần đầu đủ 7 ngày).
-
-**Gói 2:** đặt thêm `TAM_TUONG_KY_PACK2_ENABLED=true` (cần cờ chế độ; nên bật vào thứ Hai). Tắt thì sổ người chơi vẫn giữ khám phá Gói 2. Xem [Gói 2](21-tam-tuong-ky-pack-2.md#2-gộp-sổ).
+- Gói nào được chơi do code quyết định: gói có `status: "published"` (Gói 1, Gói 2) có mặt; gói `draft` (Gói 3 hiện nay) chưa. Ra mắt gói mới = Shan duyệt, đổi `status` sang `published`, merge và deploy (nên deploy vào thứ Hai để tuần Hạng đầu đủ 7 ngày và danh sách đề cử không đổi giữa tuần).
+- Các biến cũ `TAM_TUONG_KY_RANKED_ENABLED`, `TAM_TUONG_KY_PACK2_ENABLED`, `TAM_TUONG_KY_PACK3_ENABLED` **không còn tác dụng**, có thể xóa khỏi môi trường.
+- Xem [Gói 2](21-tam-tuong-ky-pack-2.md#2-gộp-sổ), [Gói 3](22-tam-tuong-ky-pack-3.md#3-gộp-sổ-và-xoay-vòng-hạng).
 
 **Kiểm cờ sau khi deploy:** mở `/api/health`, mục `features.tamTuongKy`:
 
-- `enabled`, `ranked`, `pack2`: server đang đọc cờ chế độ, cờ Hạng, cờ Gói 2 là bật hay tắt; `pack2Ignored` như `rankedIgnored` cho cờ Gói 2.
-- `invalid`: tên biến đã đặt nhưng giá trị không phải `true` (ví dụ `1`, `yes`). Hai cờ Tầm Tướng Ký chấp nhận `true` không phân biệt hoa thường, bỏ khoảng trắng và xuống dòng ở hai đầu.
-- `rankedIgnored: true`: đã đặt cờ Hạng nhưng cờ chế độ chưa bật, nên Hạng vẫn tắt.
+- `enabled`, `ranked`, `pack2`, `pack3`: chế độ, Hạng và từng gói đang bật hay tắt trên server.
+- `invalid`: đã đặt `TAM_TUONG_KY_ENABLED` nhưng giá trị không phải `true` (ví dụ `1`, `yes`). Chấp nhận `true` không phân biệt hoa thường, bỏ khoảng trắng và xuống dòng ở hai đầu.
+- `obsolete`: biến cũ còn đặt trong môi trường; không ảnh hưởng gì, nên xóa cho gọn.
 - Biến môi trường chỉ có hiệu lực từ lần deploy **sau** khi đặt; đặt xong phải deploy lại. Trên Vercel, biến phải được chọn cho đúng môi trường (Production hoặc Preview) của bản đang mở.
 
-**Rút lại:** đặt lại cờ về giá trị khác `true` (hoặc xóa). Thẻ Home về “Sắp ra mắt”, API trả 403, thành tựu ẩn, không cộng bó. Dữ liệu người chơi (sổ, phiếu, túi, điểm tuần) giữ nguyên trong hồ sơ và `season_scores`; bật lại thì chơi tiếp. Bảng tuần đang chạy khi rút Hạng không thành nguồn thưởng cho tới khi bật lại.
+**Rút lại:** đặt `TAM_TUONG_KY_ENABLED` về giá trị khác `true` (hoặc xóa); cả chế độ, Hạng và các gói cùng tắt. Muốn rút riêng một gói thì đổi `status` của gói về `draft` trong code (sổ người chơi vẫn giữ khám phá). Thẻ Home về “Sắp ra mắt”, API trả 403, thành tựu ẩn, không cộng bó. Dữ liệu người chơi (sổ, phiếu, túi, điểm tuần) giữ nguyên trong hồ sơ và `season_scores`; bật lại thì chơi tiếp. Bảng tuần đang chạy khi rút không thành nguồn thưởng cho tới khi bật lại.
 
 ## 4. Còn chờ Shan
 
