@@ -50,7 +50,17 @@ Tông gỗ tối, giấy dó, đồng cổ dùng token `--atlas-*` và khung `at
 - Mọi nút khóa trong lúc chờ server (chống bấm đúp); lỗi mạng thì bấm lại gửi cùng `requestId`.
 - Sổ, phiếu, lượt và gợi ý lưu theo tài khoản; tải lại trang hay đổi máy vẫn còn. Chi tiết ở [server LT-04](../../02-game-modes/future/17-tam-tuong-ky-lt04-server.md).
 
-## 5. Đã kiểm
+## 5. Chế độ Hạng tuần (LT-06)
+
+- Khi cờ `TAM_TUONG_KY_RANKED_ENABLED` bật, đầu màn có hai nút **Thường** / **Hạng tuần**.
+- Tiêu đề “Tầm Tướng Ký · Hạng tuần <thứ Hai>”, dòng nhắc “Không có gợi ý. Mỗi lần ghép tiêu nguyên liệu, ghép sai cũng mất.”; khung phải: túi (đơn vị nguyên tố), điểm, đã tiêu.
+- Vạn Vật Lục: 7 nguyên tố (dùng chung túi, không hiện số riêng từng hệ) và yếu tố trong kho tuần kèm `×n`; không có dấu còn công thức.
+- Đài Hợp Nguyên: hai ô, đổi chỗ, Hợp Nguyên; không có nút gợi ý. Cửa hàng: giá, số bó đã mua tuần này /2, vàng hiện có, nút “Mua 1 bó”.
+- **Đề cử tuần**: 7 ô, mỗi ô “Tướng chưa tìm thấy · <điểm>” và lời dẫn in nghiêng; ghép ra thì hiện tên và điểm cộng (A-23).
+- **Bảng tuần**: top 10 và hạng của mình.
+- Chế độ Thường thêm chấm vàng “còn công thức chưa tìm” trên yếu tố (L5-4).
+
+## 6. Đã kiểm
 
 - `tests/game/tam-tuong-ky-screen.test.ts` (14 test): màn chờ dữ liệu, phiếu và nút mở lượt, mẹo người mới; chọn ô, đổi chỗ, `A+A`; tìm không dấu và lọc nhóm; lời thông báo; Tướng Lục không lộ tướng chưa tìm; dựng màn không có tên tướng hay chữ thưởng; phân cảnh và cờ.
 - Playwright với cờ bật: khách thấy màn nhắc đăng nhập; đăng ký rồi ghép ra Đinh Ngọc ở 1440px và iPhone 13 (390px); không tràn ngang ở 320, 768, 1024px; thẻ Home dẫn vào màn.

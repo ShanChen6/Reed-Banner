@@ -7,7 +7,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { PROFESSION_DISPLAY_NAME, type Element } from "@/core/battle";
-import { ACTIVE_PACK, buildCatalog, type CatalogNode, type DiscoveryState, type HintLevel, type NodeId } from "@/core/tam-tuong-ky";
+import { ACTIVE_PACK, buildCatalog, openIngredients, type CatalogNode, type DiscoveryState, type HintLevel, type NodeId } from "@/core/tam-tuong-ky";
 import { AtlasCorners } from "../campaign/AtlasFrame";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
@@ -15,11 +15,13 @@ import {
   EMPTY_SLOTS,
   TIER_NAME,
   clearSlot,
+  discoveredNodes,
+  filterNodes,
+  groupsOf,
   hintText,
   ledger,
-  libraryGroups,
-  libraryNodes,
   nameOf,
+  rankedNodes,
   noticeFor,
   pickInto,
   swapSlots,
@@ -28,7 +30,21 @@ import {
   type Notice,
   type Slots,
 } from "./altar";
-import { ERROR_TEXT, combineApi, fetchState, hintApi, newRequestId, openSessionApi, type ApiResult, type TtkView } from "./client";
+import {
+  ERROR_TEXT,
+  buyBundleApi,
+  combineApi,
+  fetchRanked,
+  fetchState,
+  hintApi,
+  newRequestId,
+  openSessionApi,
+  rankedCombineApi,
+  type ApiResult,
+  type RankedResult,
+  type TtkRankedView,
+  type TtkView,
+} from "./client";
 
 const catalog = buildCatalog(ACTIVE_PACK);
 
@@ -36,7 +52,44 @@ const ELEMENT_NAME: Readonly<Record<Element, string>> = { kim: "Kim", moc: "Mộ
 
 type Tab = "library" | "ledger";
 
-export default function TamTuongKyScreen({ initial = null }: { initial?: TtkView | null }) {
+type Mode = "normal" | "ranked";
+
+/** Màn chế độ: tab Thường / Hạng tuần (Hạng chỉ có khi cờ `TAM_TUONG_KY_RANKED_ENABLED` bật). */
+export default function TamTuongKyScreen({
+  initial = null,
+  ranked = false,
+  initialRanked = null,
+  initialMode = "normal",
+}: {
+  initial?: TtkView | null;
+  ranked?: boolean;
+  initialRanked?: TtkRankedView | null;
+  initialMode?: Mode;
+}) {
+  const [mode, setMode] = useState<Mode>(ranked ? initialMode : "normal");
+  return (
+    <>
+      {ranked && (
+        <div role="group" aria-label="Chế độ" className="campaign-atlas mx-auto flex w-full max-w-[1480px] gap-2 px-4 pt-4 sm:px-6 lg:px-8">
+          {(["normal", "ranked"] as const).map((m) => (
+            <button
+              key={m}
+              type="button"
+              aria-pressed={mode === m}
+              onClick={() => setMode(m)}
+              className={`min-h-11 rounded-lg border px-4 font-serif font-semibold ${mode === m ? "border-[var(--atlas-gold)] bg-[var(--atlas-wood-hi)] text-[var(--atlas-title)]" : "border-[var(--atlas-border-soft)] text-[var(--atlas-ink-on-wood)]/80"}`}
+            >
+              {m === "normal" ? "Thường" : "Hạng tuần"}
+            </button>
+          ))}
+        </div>
+      )}
+      {mode === "normal" ? <NormalMode initial={initial} /> : <RankedMode initial={initialRanked} />}
+    </>
+  );
+}
+
+function NormalMode({ initial }: { initial: TtkView | null }) {
   const [view, setView] = useState<TtkView | null>(initial);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [slots, setSlots] = useState<Slots>(EMPTY_SLOTS);
@@ -161,8 +214,150 @@ export default function TamTuongKyScreen({ initial = null }: { initial?: TtkView
             ))}
           </div>
 
-          <Library state={state} onPick={(id) => setSlots((s) => pickInto(s, id))} hidden={tab !== "library"} />
+          <Library
+            nodes={discoveredNodes(catalog, state)}
+            badges={openIngredients(catalog, state)}
+            onPick={(id) => setSlots((s) => pickInto(s, id))}
+            hidden={tab !== "library"}
+          />
           <Ledger entries={entries} found={found} hidden={tab !== "ledger"} />
+        </div>
+      </div>
+      <MobileBar slots={slots} ready={ready} onCombine={combine} />
+    </main>
+  );
+}
+
+/** Chế độ Hạng tuần (LT-06): túi nguyên tố tự chọn, kho tuần, ô đề cử chỉ có lời dẫn (A-23), cửa hàng bó, bảng tuần. */
+function RankedMode({ initial }: { initial: TtkRankedView | null }) {
+  const [view, setView] = useState<TtkRankedView | null>(initial);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [slots, setSlots] = useState<Slots>(EMPTY_SLOTS);
+  const [pending, setPending] = useState(false);
+  const [notice, setNotice] = useState<Notice | null>(null);
+  const retry = useRef<{ key: string; id: string } | null>(null);
+  const requestIdFor = (key: string) => {
+    if (retry.current?.key !== key) retry.current = { key, id: newRequestId() };
+    return retry.current.id;
+  };
+
+  useEffect(() => {
+    if (initial) return;
+    let alive = true;
+    fetchRanked().then((r) => {
+      if (!alive) return;
+      if (r.ok) setView(r.view);
+      else setLoadError(ERROR_TEXT[r.error] ?? ERROR_TEXT.network!);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [initial]);
+
+  const run = useCallback(async (key: string, call: (id: string) => Promise<RankedResult>, onOk: (r: Extract<RankedResult, { ok: true }>) => void) => {
+    setPending(true);
+    const r = await call(requestIdFor(key));
+    setPending(false);
+    if (r.ok || r.error !== "network") retry.current = null;
+    if (r.view) setView(r.view);
+    if (r.ok) onOk(r);
+    else setNotice({ tone: "invalid", text: ERROR_TEXT[r.error] ?? ERROR_TEXT.network! });
+  }, []);
+
+  if (!view)
+    return (
+      <main className="campaign-atlas flex flex-1 items-center justify-center bg-[#17110e] px-4 text-[var(--atlas-ink-on-wood)]">
+        <p role="status">{loadError ?? "Đang mở tuần Hạng…"}</p>
+      </main>
+    );
+
+  const ready = !pending && slots[0] !== null && slots[1] !== null;
+  const combine = () => {
+    const [a, b] = slots;
+    if (a === null || b === null || !ready) return;
+    void run(`ranked:${a}>${b}:${view.unitsSpent}:${JSON.stringify(view.stock)}`, (id) => rankedCombineApi(id, a, b), (r) => {
+      if (r.response?.kind !== "rankedCombine") return;
+      const res = r.response;
+      const base = res.status === "noRecipe" ? "Chưa tìm được mối liên hệ. Nguyên liệu đã mất." : noticeFor(catalog, { ...res, status: res.status }).text;
+      setNotice({ tone: res.points > 0 ? "hero" : res.status === "created" ? "discovery" : res.status === "invalid" ? "invalid" : "miss", text: res.points > 0 ? `${base} +${res.points} điểm.` : base });
+      setSlots(EMPTY_SLOTS);
+    });
+  };
+  const buy = () => {
+    if (pending) return;
+    void run(`buy:${view.shop.bought}`, buyBundleApi, () => setNotice({ tone: "repeat", text: "Đã mua 1 bó: +7 đơn vị nguyên tố." }));
+  };
+
+  return (
+    <main className="campaign-atlas flex flex-1 flex-col bg-[#17110e] pb-28 text-[var(--atlas-ink-on-wood)] lg:pb-10">
+      <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-4 px-4 pt-4 sm:px-6 lg:px-8">
+        <header className="flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <h1 className="atlas-title font-serif text-2xl font-bold sm:text-3xl">Tầm Tướng Ký · Hạng tuần {view.week}</h1>
+            <p className="text-sm text-[var(--atlas-muted)]">Không có gợi ý. Mỗi lần ghép tiêu nguyên liệu, ghép sai cũng mất.</p>
+          </div>
+          <p className="flex flex-wrap gap-3 rounded border border-[var(--atlas-border-soft)] px-3 py-1 text-sm">
+            <span>Túi: <strong className="text-[var(--atlas-title)]">{view.units}</strong> đơn vị nguyên tố</span>
+            <span>Điểm: <strong className="text-[var(--atlas-title)]">{view.points}</strong></span>
+            <span>Đã tiêu: {view.unitsSpent}</span>
+          </p>
+        </header>
+
+        <div className="grid gap-4 lg:grid-cols-[minmax(16rem,26fr)_minmax(20rem,44fr)_minmax(16rem,30fr)]">
+          <Panel id="ttk-ranked-altar" title="Đài Hợp Nguyên" className="lg:sticky lg:top-4 lg:self-start">
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+              <Slot label="Ô trước" id={slots[0]} onClear={() => setSlots((s) => clearSlot(s, 0))} />
+              <button type="button" onClick={() => setSlots(swapSlots)} aria-label="Đổi chỗ ô trước và ô sau" className="grid size-11 place-items-center rounded-full border border-[var(--atlas-border-soft)] font-serif text-lg hover:border-[var(--atlas-gold)]">
+                ⇄
+              </button>
+              <Slot label="Ô sau" id={slots[1]} onClear={() => setSlots((s) => clearSlot(s, 1))} />
+            </div>
+            <p className="text-xs text-[var(--atlas-muted)]">Nguyên tố lấy từ túi, dùng cho hệ nào cũng được.</p>
+            <button type="button" disabled={!ready} aria-busy={pending} onClick={combine} className="home-cta min-h-12 rounded-lg font-serif text-lg font-bold tracking-[0.12em] uppercase disabled:cursor-not-allowed disabled:opacity-50">
+              Hợp Nguyên
+            </button>
+            <div aria-live="polite" role="status" className="min-h-12 rounded-lg border border-[var(--atlas-border-soft)] px-3 py-2 text-sm">
+              {notice?.text ?? "Đoán tướng từ lời dẫn, rồi ghép theo công thức đã học ở chế độ Thường."}
+            </div>
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <span>Cửa hàng: {view.shop.price} vàng một bó · tuần này {view.shop.bought}/{view.shop.max} · vàng: {view.gold}</span>
+              <button type="button" disabled={pending || view.shop.bought >= view.shop.max || view.gold < view.shop.price} onClick={buy} className="min-h-11 rounded border border-[var(--atlas-gold)] px-3 font-semibold disabled:opacity-50">
+                Mua 1 bó
+              </button>
+            </div>
+          </Panel>
+
+          <Library nodes={rankedNodes(catalog, view.stock)} counts={view.stock} units={view.units} onPick={(id) => setSlots((s) => pickInto(s, id))} hidden={false} />
+
+          <Panel id="ttk-featured" title={`Đề cử tuần · ${view.featured.filter((f) => f.found).length}/${view.featured.length}`}>
+            <ul className="flex flex-col gap-2">
+              {view.featured.map((f) => (
+                <li key={f.slot} className={`rounded-lg border p-3 ${f.found ? "border-[var(--atlas-gold)] bg-[var(--atlas-wood-hi)]" : "border-dashed border-[var(--atlas-border-soft)]"}`}>
+                  {f.found ? (
+                    <p className="font-serif font-bold text-[var(--atlas-title)]">{f.found.name} · +{f.points}</p>
+                  ) : (
+                    <p className="text-xs text-[var(--atlas-muted)]">Tướng chưa tìm thấy · {f.points} điểm</p>
+                  )}
+                  <p className="mt-1 text-sm italic">“{f.clue}”</p>
+                </li>
+              ))}
+            </ul>
+            <section aria-labelledby="ttk-board-title">
+              <h3 id="ttk-board-title" className="font-serif font-bold text-[var(--atlas-title)]">Bảng tuần</h3>
+              {view.board.top.length === 0 ? (
+                <p className="text-sm text-[var(--atlas-muted)]">Chưa có ai ghép ra tướng đề cử.</p>
+              ) : (
+                <ol className="mt-1 space-y-0.5 text-sm">
+                  {view.board.top.map((e) => (
+                    <li key={e.rank} className={e.mine ? "font-bold text-[var(--atlas-title)]" : ""}>
+                      {e.rank}. {e.name} · {e.points} điểm
+                    </li>
+                  ))}
+                </ol>
+              )}
+              {view.board.mine && !view.board.top.some((e) => e.mine) && <p className="mt-1 text-sm">Bạn: hạng {view.board.mine.rank} · {view.board.mine.points} điểm</p>}
+            </section>
+          </Panel>
         </div>
       </div>
       <MobileBar slots={slots} ready={ready} onCombine={combine} />
@@ -201,15 +396,18 @@ function Panel({ id, title, children, className = "", hidden = false }: { id: st
   );
 }
 
-function NodeChip({ node, onPick }: { node: CatalogNode; onPick: (id: NodeId) => void }) {
+function NodeChip({ node, onPick, badge, count }: { node: CatalogNode; onPick: (id: NodeId) => void; badge?: boolean; count?: number }) {
   return (
     <button
       type="button"
       onClick={() => onPick(node.id)}
+      aria-label={`${node.nameVi}${count !== undefined ? `, còn ${count}` : ""}${badge ? ", còn công thức chưa tìm" : ""}`}
       className="flex min-h-11 w-full items-center gap-2 rounded-lg border border-[var(--atlas-border-soft)] bg-[var(--atlas-wood-lo)] px-3 py-2 text-left text-sm transition-colors hover:border-[var(--atlas-gold)] focus-visible:outline-2 focus-visible:outline-[var(--atlas-gold-hi)]"
     >
       <NodeGlyph node={node} />
-      <span>{node.nameVi}</span>
+      <span className="flex-1">{node.nameVi}</span>
+      {count !== undefined && <span aria-hidden className="text-xs text-[var(--atlas-muted)]">×{count}</span>}
+      {badge && <span aria-hidden className="size-2 shrink-0 rounded-full bg-[var(--atlas-gold-hi)]" title="Còn công thức chưa tìm" />}
     </button>
   );
 }
@@ -223,11 +421,27 @@ function NodeGlyph({ node, className = "size-6" }: { node: CatalogNode; classNam
   );
 }
 
-function Library({ state, onPick, hidden }: { state: DiscoveryState; onPick: (id: NodeId) => void; hidden: boolean }) {
+function Library({
+  nodes: all,
+  onPick,
+  hidden,
+  badges,
+  counts,
+  units,
+}: {
+  nodes: readonly CatalogNode[];
+  onPick: (id: NodeId) => void;
+  hidden: boolean;
+  /** Chế độ Thường: dấu “còn công thức chưa tìm” (L5-4). */
+  badges?: ReadonlySet<NodeId>;
+  /** Chế độ Hạng: số đơn vị trong kho tuần; nguyên tố hiện số đơn vị trong túi. */
+  counts?: Readonly<Record<NodeId, number>>;
+  units?: number;
+}) {
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState<string | null>(null);
-  const nodes = libraryNodes(catalog, state, query, group);
-  const groups = libraryGroups(catalog, state);
+  const nodes = filterNodes(all, query, group);
+  const groups = groupsOf(all);
   return (
     <Panel id="ttk-library" title="Vạn Vật Lục" hidden={hidden} className="lg:order-first">
       <label className="flex flex-col gap-1 text-sm">
@@ -253,11 +467,19 @@ function Library({ state, onPick, hidden }: { state: DiscoveryState; onPick: (id
           </button>
         ))}
       </div>
-      <p className="text-xs text-[var(--atlas-muted)]">Bấm một yếu tố để đặt vào ô trước, bấm tiếp để đặt vào ô sau.</p>
+      <p className="text-xs text-[var(--atlas-muted)]">
+        Bấm một yếu tố để đặt vào ô trước, bấm tiếp để đặt vào ô sau.
+        {units !== undefined && ` Bảy nguyên tố dùng chung túi (còn ${units} đơn vị).`}
+      </p>
       <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2">
         {nodes.map((n) => (
           <li key={n.id}>
-            <NodeChip node={n} onPick={onPick} />
+            <NodeChip
+              node={n}
+              onPick={onPick}
+              badge={badges?.has(n.id)}
+              count={counts && n.kind !== "element" ? counts[n.id] : undefined}
+            />
           </li>
         ))}
       </ul>

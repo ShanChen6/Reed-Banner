@@ -2,6 +2,11 @@
 
 ## 04/11/2026
 
+**Tầm Tướng Ký: Shan duyệt L5-1…L5-7; LT-06 chế độ Hạng tuần (DRAFT, có code)**
+- Duyệt: 15 lần ghép mỗi phiếu; bó nguyên tố **tự chọn** (7 đơn vị dùng cho hệ nào cũng được); **7 tướng đề cử** mỗi tuần; dấu “còn công thức chưa tìm”; gợi ý nhắm tướng; 69 công thức và 12 lời dẫn Gói 1; ô đề cử kèm điểm. Design Freeze P-8, P-9, P-11, P-17 sửa theo; [Gói 1](../02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md) **DRAFT → APPROVED**.
+- Chế độ Hạng sau cờ `TAM_TUONG_KY_RANKED_ENABLED`: túi tự chọn, cấp nền 3 bó/tuần, kho tuần, đề cử xoay vòng chỉ hiện lời dẫn + điểm, điểm 300/200 một lần, bảng tuần `season_scores` chế độ `tamTuongKy`, cửa hàng 300 vàng (tối đa 2/tuần), thưởng hạng vàng như Trấn Ải. API `/api/tam-tuong-ky/ranked` (GET, `combine`, `buy`). Xem [Hạng tuần LT-06](../02-game-modes/future/19-tam-tuong-ky-lt06-ranked.md).
+- Thưởng hạng chế độ theo tuần (Đại trận, Thiên Mệnh, Trấn Ải, Quần Hùng, Tầm Tướng Ký) kèm bó 5/4/3/2/1 khi cờ Tầm Tướng Ký bật; vàng không đổi ([chế độ chơi mục 6](../02-game-modes/README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt)).
+
 **Tầm Tướng Ký: công thức không dựa vào art, lời dẫn chế độ Hạng (Shan)**
 - A-22: art nhân vật sẽ đổi nên công thức không dựa vào vũ khí, trang phục, phụ kiện. Gói 1 viết lại: công thức cuối = node vai trò (nghề × hệ theo roster; đặc biệt “Vạn tượng”) + dấu danh tính (tước hiệu, địa danh, mốc chiến dịch, tên chiêu, lore). Validator thêm `roleMismatch`, `missingAnchor`. Gói 1 còn 69 công thức, 57 yếu tố trung gian; số lần ghép giữ 12/9. Slice-1 thành tập con của Gói 1; [catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md) **APPROVED → SUPERSEDED**.
 - A-23: chế độ Hạng không hiện rõ tướng đề cử, chỉ một lời dẫn mô tả tướng (chữ; sau này ảnh, câu nói). Mỗi tướng Gói 1 có lời dẫn chữ của trò chơi; validator chặn lời dẫn chứa tên tướng (`clueSpoils`, `missingClue`). P-16 sửa theo.

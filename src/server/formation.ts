@@ -25,6 +25,8 @@ import {
   type RewardTier,
 } from "@/core/binh-phap";
 import { updateProfile, type ProfileStore } from "./profiles";
+import { TTK_RANK_BUNDLES } from "@/core/tam-tuong-ky";
+import { withTtkBundles } from "./rankRewards";
 
 export type FormationStatus = "playing" | "won" | "lost";
 
@@ -156,6 +158,8 @@ export interface FormationDeps {
    * vẫn xem được bảng.
    */
   readonly isSignedIn: (ownerId: string) => Promise<boolean>;
+  /** Thưởng Đại trận kèm bó Tầm Tướng Ký (chỉ khi chế độ đã bật). */
+  readonly ttkBundles?: boolean;
 }
 
 export type FormationError =
@@ -399,7 +403,9 @@ export async function claimFormation(deps: FormationDeps, ownerId: string, level
   const reward = rank === null ? null : rewardGold(levelId, rank, winners);
   if (!reward || rank === null) return { ok: false, error: "notClaimable" };
   if (!(await deps.store.claim(entry.id, reward.gold, deps.now))) return { ok: false, error: "alreadyClaimed" };
-  const updated = await updateProfile(deps.profiles, ownerId, (p) => ({ ok: true as const, profile: { ...p, gold: p.gold + reward.gold } }), deps.now);
+  // Đại trận là chế độ theo tuần: kèm bó Tầm Tướng Ký (Design Freeze P-11).
+  const bundles = deps.ttkBundles && levelId === "dai-tran" ? TTK_RANK_BUNDLES[reward.tier] : 0;
+  const updated = await updateProfile(deps.profiles, ownerId, (p) => ({ ok: true as const, profile: withTtkBundles({ ...p, gold: p.gold + reward.gold }, bundles) }), deps.now);
   if (!updated.ok) {
     await deps.store.release(entry.id);
     console.error("Không cộng được thưởng Trận Đồ", entry.id);

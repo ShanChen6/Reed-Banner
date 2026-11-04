@@ -1,7 +1,7 @@
 # 14 — Tầm Tướng Ký — Design Freeze (LT-00)
 
 > Cập nhật: 03/11/2026
-> Trạng thái: **FROZEN** — Shan chốt mục 3.1 và duyệt mục 3.2 ngày 03/11/2026; thêm A-22, A-23 ngày 04/11/2026. Số liệu ở mục 3.2 là **điểm xuất phát**: LT-05 được chỉnh trong khoảng đã ghi bằng mô phỏng; đổi luật phải qua quyết định mới.
+> Trạng thái: **FROZEN** — Shan chốt mục 3.1 và duyệt mục 3.2 ngày 03/11/2026; thêm A-22, A-23 và duyệt L5-1…L5-7 ngày 04/11/2026. Số liệu ở mục 3.2 là **điểm xuất phát**: LT-05 được chỉnh trong khoảng đã ghi bằng mô phỏng; đổi luật phải qua quyết định mới.
 
 File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây gọi “Liệt Truyện — Tầm Tướng Ký”). Nó thay các đề xuất trong [GDD](08-liet-truyen-gdd.md), [công thức](09-liet-truyen-recipes.md), [kiến trúc](10-liet-truyen-architecture.md), [UI/art](11-liet-truyen-ui-art.md) và [QA/roadmap](12-liet-truyen-qa-roadmap.md); khi khác nhau, file này thắng. Tên file 08–12 giữ nguyên `liet-truyen` để không làm hỏng link và script.
 
@@ -106,21 +106,21 @@ Shan duyệt toàn bộ ngày 03/11/2026; riêng P-5 Shan đổi thành số c�
 
 | # | Đề xuất |
 |---|---|
-| P-8 | **Gợi ý: 2 lượt miễn phí mỗi ngày** (đổi lúc 0 giờ giờ Việt Nam, không cộng dồn, không mua thêm). Lý do chọn theo ngày thay vì theo phiếu: người chơi nhiều phiếu không được nhiều gợi ý hơn; số gợi ý dễ đoán; không phải theo dõi gợi ý theo từng lượt. Mức 1: một nhóm còn công thức chưa tìm. Mức 2: một nguyên liệu của một công thức chưa tìm, không nói nó ở ô trước hay ô sau |
-| P-9 | Lượt bắt đầu với **15 lần ghép**, cân bằng trong khoảng 15–20. Chỉ `created` và `noRecipe` trừ lần ghép; `alreadyKnown` và `invalid` không trừ. Lượt dở giữ khi rời màn, hết hạn sau 24 giờ |
+| P-8 | **Gợi ý: 2 lượt miễn phí mỗi ngày** (đổi lúc 0 giờ giờ Việt Nam, không cộng dồn, không mua thêm). Gợi ý **nhắm tướng** (Shan duyệt L5-5, 04/11/2026): chọn công thức ghép được ngay trên đường tới tướng chưa tìm gần xong nhất. Mức 1: nhóm của kết quả công thức đó. Mức 2: một nguyên liệu của nó, không nói ở ô trước hay ô sau. Không có mức 3 |
+| P-9 | Lượt có **15 lần ghép** (Shan chốt L5-1, 04/11/2026). Chỉ `created` và `noRecipe` trừ lần ghép; `alreadyKnown` và `invalid` không trừ. Lượt dở giữ khi rời màn, hết hạn sau 24 giờ. Vạn Vật Lục có **dấu “còn công thức chưa tìm”** trên yếu tố còn là nguyên liệu của công thức chưa tìm (L5-4), chỉ ở chế độ Thường |
 | P-10 | Nguồn phiếu: tài khoản mới 3 phiếu; xong đủ nhiệm vụ ngày +1; xong nhiệm vụ tuần “Thắng trận 15” +2; điểm danh ngày 7 +1. Giữ tối đa 10. Không bán phiếu |
 
 **Chế độ Hạng tuần**
 
 | # | Đề xuất |
 |---|---|
-| P-11 | **Túi nguyên tố** lưu theo tài khoản, không reset. Đơn vị thưởng là **bó** = 1 đơn vị mỗi hệ (7 đơn vị). Thưởng hạng các chế độ **theo tuần** (Trận Đồ Đại trận, Tháp Thiên Mệnh, Trấn Ải, Quần Hùng, và chính Tầm Tướng Ký): hạng 1 → 5 bó; 2–3 → 4; 4–10 → 3; nửa trên → 2; có tên → 1. Chế độ theo ngày (Nhật Lệnh, Trận Đồ Thường/Khó) không thưởng bó, tránh lạm phát. Cộng cùng lúc nhận vàng, qua sổ `rank_reward_claims` |
+| P-11 | **Túi nguyên tố tự chọn** (Shan chốt L5-2, 04/11/2026): túi theo tài khoản, không reset, chứa **đơn vị nguyên tố dùng cho hệ nào cũng được**; một bó = 7 đơn vị. Thưởng hạng các chế độ theo tuần (Trận Đồ Đại trận, Tháp Thiên Mệnh, Trấn Ải, Quần Hùng, Tầm Tướng Ký): hạng 1 → 5 bó; 2–3 → 4; 4–10 → 3; nửa trên → 2; có tên → 1. Chế độ theo ngày không thưởng bó. Chỉ cộng cho người đã vào Tầm Tướng Ký |
 | P-12 | Cấp nền: lần đầu vào chế độ Hạng mỗi tuần nhận 3 bó, để người mới vẫn chơi được |
 | P-13 | Cửa hàng (A-19): 1 bó = 300 vàng, tối đa 2 bó mỗi tuần, đổi cùng tuần hạng. Trần thấp hơn cấp nền (3 bó) để vàng không quyết định hạng; chốt số sau mô phỏng LT-05 |
 | P-14 | Node trung gian ghép ở Hạng chỉ sống trong tuần; hết tuần bỏ, nguyên tố còn dư giữ trong túi. Tướng tạo ra không vào túi |
 | P-15 | Mỗi lần ghép tiêu 1 đơn vị mỗi nguyên liệu (`A+A` tiêu 2); thành công cộng 1 đơn vị kết quả; `noRecipe` vẫn tiêu (A-8). Không tốn phiếu |
 | P-16 | Đề cử: server chọn đầu tuần, giống nhau cho mọi người, xoay vòng sao cho mỗi tướng trong gói được đề cử đều nhau. Mỗi tuần có ít nhất 1 tướng đặc biệt. Theo A-23 (04/11/2026): mỗi ô đề cử chỉ hiện **lời dẫn** và số điểm của ô (theo bậc); không hiện tên, chân dung, nghề, hệ cho tới khi ghép ra |
-| P-17 | Số tướng đề cử chọn trong 5 / 7 / 10 bằng mô phỏng LT-05: người chơi trung bình (thưởng “nửa trên” ở hai chế độ + cấp nền) ghép được khoảng một nửa danh sách nếu biết công thức |
+| P-17 | **7 tướng đề cử mỗi tuần** (Shan chốt L5-3, 04/11/2026), cố định, xoay vòng. Mô phỏng: người chơi trung bình (7 bó) ghép được 4/7 nếu biết công thức ([Gói 1 LT-05](18-tam-tuong-ky-lt05-pack-1.md#5-mô-phỏng-chế-độ-hạng)) |
 | P-18 | Điểm: mỗi tướng đề cử tính một lần, đặc biệt 200, lịch sử 300 (thường 100 cho gói sau). Bằng điểm thì ít nguyên tố tiêu trong tuần hơn xếp trên, rồi ai đạt trước |
 | P-19 | Thưởng hạng Tầm Tướng Ký: vàng 500 / 300 / 180 / 80 / 30 (bằng Trấn Ải) cộng bó theo P-11 |
 

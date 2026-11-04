@@ -33,20 +33,36 @@ export function foldVi(text: string): string {
   return text.normalize("NFD").replace(/\p{M}/gu, "").replace(/đ/g, "d").replace(/Đ/g, "D").toLowerCase().trim();
 }
 
-/** Yếu tố trong Vạn Vật Lục: đã khám phá, không phải tướng, khớp từ khóa và nhóm. Starter luôn đứng đầu. */
-export function libraryNodes(catalog: Catalog, state: DiscoveryState, query: string, group: string | null): readonly CatalogNode[] {
+/** Lọc theo từ khóa (không dấu) và nhóm. */
+export function filterNodes(nodes: readonly CatalogNode[], query: string, group: string | null): readonly CatalogNode[] {
   const q = foldVi(query);
-  return state.discoveredNodeIds
-    .map((id) => catalog.nodes.get(id))
-    .filter((n): n is CatalogNode => !!n && n.kind !== "character")
-    .filter((n) => (group === null || n.hintGroup === group) && (q === "" || foldVi(n.nameVi).includes(q)));
+  return nodes.filter((n) => (group === null || n.hintGroup === group) && (q === "" || foldVi(n.nameVi).includes(q)));
 }
 
-/** Nhóm có trong Vạn Vật Lục hiện tại, theo thứ tự xuất hiện. */
-export function libraryGroups(catalog: Catalog, state: DiscoveryState): readonly { id: string; name: string }[] {
+/** Nhóm có trong danh sách, theo thứ tự xuất hiện. */
+export function groupsOf(nodes: readonly CatalogNode[]): readonly { id: string; name: string }[] {
   const seen: string[] = [];
-  for (const n of libraryNodes(catalog, state, "", null)) if (n.hintGroup && !seen.includes(n.hintGroup)) seen.push(n.hintGroup);
+  for (const n of nodes) if (n.hintGroup && !seen.includes(n.hintGroup)) seen.push(n.hintGroup);
   return seen.map((id) => ({ id, name: HINT_GROUP_NAMES[id] ?? id }));
+}
+
+/** Yếu tố đã khám phá, không phải tướng, theo thứ tự sổ (starter đứng đầu). */
+export function discoveredNodes(catalog: Catalog, state: DiscoveryState): readonly CatalogNode[] {
+  return state.discoveredNodeIds.map((id) => catalog.nodes.get(id)).filter((n): n is CatalogNode => !!n && n.kind !== "character");
+}
+
+/** Vạn Vật Lục chế độ Thường: yếu tố đã khám phá, khớp từ khóa và nhóm. */
+export function libraryNodes(catalog: Catalog, state: DiscoveryState, query: string, group: string | null): readonly CatalogNode[] {
+  return filterNodes(discoveredNodes(catalog, state), query, group);
+}
+
+export function libraryGroups(catalog: Catalog, state: DiscoveryState): readonly { id: string; name: string }[] {
+  return groupsOf(discoveredNodes(catalog, state));
+}
+
+/** Vạn Vật Lục chế độ Hạng: 7 nguyên tố (lấy từ túi) và yếu tố đang có trong kho tuần, theo thứ tự catalog. */
+export function rankedNodes(catalog: Catalog, stock: Readonly<Record<NodeId, number>>): readonly CatalogNode[] {
+  return catalog.pack.nodes.filter((n) => n.kind === "element" || (stock[n.id] ?? 0) > 0);
 }
 
 export const nameOf = (catalog: Catalog, id: NodeId) => catalog.nodes.get(id)?.nameVi ?? id;

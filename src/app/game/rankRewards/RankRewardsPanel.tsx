@@ -1,6 +1,7 @@
 "use client";
 
-// Thưởng vàng theo hạng cuối kỳ của một chế độ (Nhật Lệnh, Tháp Thiên Mệnh). Lấy từ GET /api/rank-rewards, nhận bằng
+// Thưởng vàng theo hạng cuối kỳ của một chế độ (Nhật Lệnh, Tháp Thiên Mệnh, Tầm Tướng Ký…); chế độ theo tuần kèm bó
+// nguyên tố Tầm Tướng Ký. Lấy từ GET /api/rank-rewards, nhận bằng
 // POST /api/rank-rewards/claim. Khách chỉ thấy lời nhắc đăng nhập; chỉ tài khoản đã đăng nhập nhận được.
 
 import { useCallback, useEffect, useState } from "react";
@@ -14,10 +15,12 @@ interface Item {
   readonly participants: number;
   readonly tier: string;
   readonly gold: number;
+  /** Bó nguyên tố Tầm Tướng Ký kèm thưởng (chế độ theo tuần). */
+  readonly bundles?: number;
 }
 
 const TIER_LABEL = Object.fromEntries(REWARD_TIERS.map((t) => [t.tier, t.label])) as Record<string, string>;
-const PERIOD_NOUN: Record<RankRewardMode, string> = { daily: "ngày", destiny: "chu kỳ", survival: "mùa", arena: "mùa" };
+const PERIOD_NOUN: Record<RankRewardMode, string> = { daily: "ngày", destiny: "chu kỳ", survival: "mùa", arena: "mùa", tamTuongKy: "tuần" };
 
 export default function RankRewardsPanel({ mode, onClaimed }: { mode: RankRewardMode; onClaimed?: () => void }) {
   const [state, setState] = useState<{ canClaim: boolean; items: Item[] } | null>(null);
@@ -72,7 +75,7 @@ export default function RankRewardsPanel({ mode, onClaimed }: { mode: RankReward
         {state.items.map((i) => (
           <li key={`${i.mode}-${i.period}`} className="flex flex-wrap items-center justify-between gap-2 text-sm">
             <span>
-              Kỳ {PERIOD_NOUN[i.mode]} {i.period}: hạng {i.rank}/{i.participants} ({TIER_LABEL[i.tier]}) · <b>{i.gold} vàng</b>
+              Kỳ {PERIOD_NOUN[i.mode]} {i.period}: hạng {i.rank}/{i.participants} ({TIER_LABEL[i.tier]}) · <b>{i.gold} vàng</b>{i.bundles ? <> · {i.bundles} bó nguyên tố Tầm Tướng Ký</> : null}
             </span>
             <button type="button" disabled={busy} onClick={() => void claim(i)} className="min-h-10 rounded bg-amber-500 px-4 font-semibold text-stone-950 disabled:opacity-60">
               Nhận

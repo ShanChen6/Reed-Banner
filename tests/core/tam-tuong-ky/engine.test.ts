@@ -181,10 +181,11 @@ describe("chế độ Thường", () => {
 });
 
 describe("chế độ Hạng", () => {
-  const start = (stock: Record<string, number>): RankedState => initialRanked(stock);
+  /** `units`: đơn vị nguyên tố tự chọn trong túi; `stock`: node trung gian trong kho tuần. */
+  const start = (units: number, stock: Record<string, number> = {}): RankedState => initialRanked(units, stock);
 
-  it("thiếu đơn vị: invalid/lockedInput, kho và sổ giữ nguyên", () => {
-    const s = start({ "elt.loi": 1 });
+  it("thiếu đơn vị nguyên tố: invalid/lockedInput, túi và sổ giữ nguyên", () => {
+    const s = start(1);
     const d = fresh();
     const out = combineRanked(catalog, s, d, "elt.loi", "elt.loi");
     assert.deepEqual([out.status, out.status === "invalid" && out.reason], ["invalid", "lockedInput"]);
@@ -192,28 +193,39 @@ describe("chế độ Hạng", () => {
     assert.equal(out.nextDiscovery, d);
   });
 
-  it("ghép thành công tiêu nguyên liệu và cộng 1 kết quả", () => {
-    const out = combineRanked(catalog, start({ "elt.loi": 2, "elt.phong": 3 }), fresh(), "elt.loi", "elt.phong");
-    assert.equal(out.status, "created");
-    assert.deepEqual(out.next.stock, { "elt.loi": 1, "elt.phong": 2, "mat.storm": 1 });
+  it("thiếu node trung gian trong kho: invalid/lockedInput", () => {
+    const out = combineRanked(catalog, start(5, { "mat.cloud": 1 }), fresh(), "mat.cloud", "mat.mountain");
+    assert.deepEqual([out.status, out.status === "invalid" && out.reason], ["invalid", "lockedInput"]);
   });
 
-  it("A+A tiêu 2 đơn vị", () => {
-    const out = combineRanked(catalog, start({ "elt.moc": 2 }), fresh(), "elt.moc", "elt.moc");
-    assert.deepEqual(out.next.stock, { "mat.bamboo": 1 });
+  it("ghép hai nguyên tố tiêu 2 đơn vị túi (hệ nào cũng được) và cộng 1 kết quả vào kho", () => {
+    const out = combineRanked(catalog, start(3), fresh(), "elt.loi", "elt.phong");
+    assert.equal(out.status, "created");
+    assert.equal(out.next.units, 1);
+    assert.equal(out.next.unitsSpent, 2);
+    assert.deepEqual(out.next.stock, { "mat.storm": 1 });
+  });
+
+  it("A+A trung gian tiêu 2 đơn vị cùng loại trong kho", () => {
+    const pack1 = buildCatalog(PACK_1);
+    const out = combineRanked(pack1, start(0, { "mat.rampart": 2 }), initialDiscovery(pack1), "mat.rampart", "mat.rampart");
+    assert.equal(out.status, "created");
+    assert.deepEqual(out.next.stock, { "mat.fortress": 1 });
+    assert.equal(combineRanked(pack1, start(0, { "mat.rampart": 1 }), initialDiscovery(pack1), "mat.rampart", "mat.rampart").status, "invalid");
   });
 
   it("ghép sai vẫn mất nguyên liệu, không hoàn lại, sổ không đổi", () => {
     const d = fresh();
-    const out = combineRanked(catalog, start({ "elt.loi": 2, "elt.moc": 3 }), d, "elt.loi", "elt.moc");
+    const out = combineRanked(catalog, start(4), d, "elt.loi", "elt.moc");
     assert.equal(out.status, "noRecipe");
-    assert.deepEqual(out.next.stock, { "elt.loi": 1, "elt.moc": 2 });
+    assert.equal(out.next.units, 2);
+    assert.equal(out.next.unitsSpent, 2);
     assert.equal(out.nextDiscovery, d);
   });
 
   it("công thức mới ở Hạng ghi vào sổ khám phá; công thức đã biết thì sổ giữ nguyên", () => {
     const d = fresh();
-    const first = combineRanked(catalog, start({ "elt.kim": 2, "elt.hoa": 2 }), d, "elt.kim", "elt.hoa");
+    const first = combineRanked(catalog, start(4), d, "elt.kim", "elt.hoa");
     assert.ok(first.status === "created" && !first.recipeAlreadyKnown);
     assert.ok(first.nextDiscovery.discoveredNodeIds.includes("mat.forgedIron"));
     const second = combineRanked(catalog, first.next, first.nextDiscovery, "elt.kim", "elt.hoa");
@@ -224,7 +236,7 @@ describe("chế độ Hạng", () => {
 
   it("tướng không vào kho; ghép ra lần hai không tính thêm", () => {
     const stock = { "role.hybrid": 2, "know.guardRoad": 2 };
-    const one = combineRanked(catalog, start(stock), fresh(), "role.hybrid", "know.guardRoad");
+    const one = combineRanked(catalog, start(0, stock), fresh(), "role.hybrid", "know.guardRoad");
     assert.ok(one.status === "created" && one.isCharacter && !one.heroAlreadyCreated);
     assert.deepEqual(one.next.stock, { "role.hybrid": 1, "know.guardRoad": 1 });
     assert.deepEqual(one.next.heroesCreated, ["hero.dinhNgoc"]);
@@ -235,20 +247,18 @@ describe("chế độ Hạng", () => {
   });
 
   it("tướng không làm nguyên liệu ở Hạng", () => {
-    const out = combineRanked(catalog, start({ "hero.dinhNgoc": 1, "elt.kim": 1 }), fresh(), "hero.dinhNgoc", "elt.kim");
+    const out = combineRanked(catalog, start(5, { "hero.dinhNgoc": 1 }), fresh(), "hero.dinhNgoc", "elt.kim");
     assert.deepEqual([out.status, out.status === "invalid" && out.reason], ["invalid", "lockedInput"]);
   });
 
-  it("ghép đủ Đinh Ngọc từ kho starter tiêu đúng số nguyên tố và số lần ghép", () => {
-    // Đinh Ngọc: 9 lần ghép, 10 đơn vị nguyên tố (báo cáo LT-01).
+  it("ghép đủ Đinh Ngọc tiêu đúng 10 đơn vị và 9 lần ghép", () => {
     const plan: readonly (readonly [string, string])[] = [
       ["elt.thuy", "elt.phong"], ["elt.tho", "elt.phong"], ["mat.cloud", "mat.mountain"],
       ["elt.tho", "elt.tho"], ["mat.rampart", "elt.phong"],
       ["elt.thuy", "elt.thuy"], ["elt.moc", "mat.dew"], ["mat.road", "mat.gourd"],
       ["role.hybrid", "know.guardRoad"],
     ];
-    const stock = { "elt.thuy": 3, "elt.phong": 3, "elt.tho": 3, "elt.moc": 1 };
-    let s = start(stock);
+    let s = start(10);
     let d = fresh();
     for (const [a, b] of plan) {
       const out = combineRanked(catalog, s, d, a, b);
@@ -257,7 +267,8 @@ describe("chế độ Hạng", () => {
       d = out.nextDiscovery;
     }
     assert.equal(plan.length, 9);
-    assert.equal(Object.values(stock).reduce((x, y) => x + y, 0), 10);
+    assert.equal(s.units, 0);
+    assert.equal(s.unitsSpent, 10);
     assert.deepEqual(s.stock, {});
     assert.deepEqual(s.heroesCreated, ["hero.dinhNgoc"]);
   });

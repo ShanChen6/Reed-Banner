@@ -28,3 +28,8 @@ export function formationRankedEnabled(env: Readonly<Record<string, string | und
 export function tamTuongKyEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
   return env.TAM_TUONG_KY_ENABLED === "true";
 }
+
+/** Tầm Tướng Ký chế độ Hạng tuần (P-28). Cần cả cờ chế độ; chỉ chuỗi `true` mới bật. */
+export function tamTuongKyRankedEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
+  return tamTuongKyEnabled(env) && env.TAM_TUONG_KY_RANKED_ENABLED === "true";
+}

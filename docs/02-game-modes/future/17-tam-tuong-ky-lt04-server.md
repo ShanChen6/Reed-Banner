@@ -56,4 +56,6 @@ Chỉ gói **đã phát hành** (`PUBLISHED_PACKS`) mới hiện thành tựu �
 - `tests/server/tamTuongKy.test.ts` (8 test): cờ tắt, khách, GET không ghi, chưa mở lượt, luồng đủ, hai request cùng `requestId` song song, hai lần mở lượt song song, hết phiếu.
 - Playwright với cờ bật: đăng ký, mở lượt (3 → 2 phiếu), ghép ra Đinh Ngọc, bấm đúp Hợp Nguyên chỉ trừ 1 lần ghép, tải lại trang vẫn giữ sổ và lượt, gợi ý trừ còn 1/2.
 
-> TODO: Chế độ Hạng tuần (LT-06); trang Nhiệm vụ chưa ghi chú phiếu Tầm Tướng Ký đi kèm thưởng; số vàng thành tựu của gói thật đặt khi phát hành gói.
+> Chế độ Hạng tuần: [LT-06](19-tam-tuong-ky-lt06-ranked.md).
+
+> TODO: trang Nhiệm vụ chưa ghi chú phiếu Tầm Tướng Ký đi kèm thưởng; số vàng thành tựu của gói thật đặt khi phát hành gói.

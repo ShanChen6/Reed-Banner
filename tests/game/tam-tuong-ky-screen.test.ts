@@ -20,7 +20,8 @@ import TamTuongKyScreen from "../../src/app/game/tam-tuong-ky/TamTuongKyScreen";
 import { SCENE_SLUG, SCENE_TITLE, sceneOfSlug } from "../../src/app/game/scene";
 import { tamTuongKyEnabled } from "../../src/server/featureFlags";
 import { MemoryProfileStore } from "../../src/server/profiles";
-import { getTamTuongKy } from "../../src/server/tamTuongKy";
+import { getTamTuongKy, getTamTuongKyRanked } from "../../src/server/tamTuongKy";
+import { MemorySeasonStore } from "../../src/server/seasons";
 import { tutorialTip } from "../../src/app/game/tam-tuong-ky/altar";
 
 const catalog = buildCatalog(SLICE_PACK);
@@ -154,5 +155,27 @@ describe("Màn chơi", () => {
     assert.equal(tamTuongKyEnabled({}), false);
     assert.equal(tamTuongKyEnabled({ TAM_TUONG_KY_ENABLED: "1" }), false);
     assert.equal(tamTuongKyEnabled({ TAM_TUONG_KY_ENABLED: "true" }), true);
+  });
+
+  it("chế độ Thường: yếu tố có dấu “còn công thức chưa tìm” trong nhãn đọc màn hình", async () => {
+    const r = await getTamTuongKy({ profiles: new MemoryProfileStore(), now: Date.parse("2026-11-04T05:00:00Z"), enabled: true, isSignedIn: async () => true }, "acc-1");
+    assert.ok(r.ok);
+    const html = renderToStaticMarkup(createElement(TamTuongKyScreen, { initial: r.view }));
+    assert.match(html, /aria-label="Lôi, còn công thức chưa tìm"/);
+  });
+
+  it("chế độ Hạng: tab Hạng tuần, 7 lời dẫn, túi và cửa hàng; không lộ tên tướng, không có gợi ý", async () => {
+    const r = await getTamTuongKyRanked(
+      { profiles: new MemoryProfileStore(), now: Date.parse("2026-11-04T05:00:00Z"), enabled: true, rankedEnabled: true, seasons: new MemorySeasonStore(), isSignedIn: async () => true },
+      "acc-1",
+    );
+    assert.ok(r.ok);
+    const html = renderToStaticMarkup(createElement(TamTuongKyScreen, { ranked: true, initialRanked: r.view, initialMode: "ranked" }));
+    assert.match(html, /Hạng tuần/);
+    assert.match(html, /Túi: <strong[^>]*>21<\/strong> đơn vị nguyên tố/);
+    assert.match(html, /Mua 1 bó/);
+    assert.equal((html.match(/Tướng chưa tìm thấy · /g) ?? []).length, 7);
+    for (const name of PACK_1_NAMES) assert.doesNotMatch(html, new RegExp(name));
+    assert.doesNotMatch(html, /Gợi ý nhóm|Gợi ý nguyên liệu/);
   });
 });
