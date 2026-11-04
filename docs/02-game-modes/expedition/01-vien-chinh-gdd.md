@@ -92,8 +92,8 @@ rồi một đạo đánh.
 
 | Sa bàn | Hệ | Ô | Số ngày / chuẩn | Hình dạng |
 |---|---|---|---|---|
-| **Ải Bắc** | Kim | 11 | 12 / 8 | Đường đan nhau, có làng và kho lương ở giữa; dễ dồn quân giáp công. Sa bàn nhập môn |
-| **Thượng Du** | Mộc | 12 | 17 / 12 | Hai thung lũng tách rời, chỉ nối qua Đèo Ngang Núi (lũy). Đường dài, giáp công chỉ ở cổng thành |
+| **Ải Bắc** | Kim | 11 | 12 / 8 | Đường đan nhau, có làng và kho lương ở giữa; dễ dồn quân giáp công. Hai cổng thành đều là lũy. Sa bàn nhập môn |
+| **Thượng Du** | Mộc | 12 | 17 / 12 | Hai thung lũng tách rời, mỗi bên một làng, chỉ nối qua Đèo Ngang Núi (lũy). Đường dài, giáp công chỉ ở cổng thành. Sa bàn khó nhất |
 | **Cửa Biển** | Thủy | 11 | 12 / 8 | Chợ Cửa Sông (kho lương) là nút giao giữa bãi; thành đích có ba ngả vào, cả ba là lũy hoặc đồn |
 
 Tên ô là địa danh hư cấu ở vùng biên (không dùng tên nước láng giềng, không gắn với sự kiện lịch sử); đối thủ là tướng
@@ -125,11 +125,27 @@ một luật tham lam: đi đường ngắn nhất tới hai cổng thành khác
 | 1 | Thua trận là đạo tan, người gục không hồi | 70% (I) | 0% (I) | 60% (I) |
 | 2 | Thua trận chỉ rút về, nghỉ hồi cả người gục; máu địch ×0,75 | 100 / 100 / 100% | 93 / 87 / 57% | 100 / 97 / 87% |
 | 3 | Máu địch ×0,85, sức mạnh 0,85–1,05, tăng viện 5%, bớt ngày | 97 / 83 / –% | 60 / – / –% | 87 / 57 / –% |
-| 4 (chốt) | Máu ×0,8, sức mạnh 0,80–0,96, Thượng Du 17 ngày | xem mục 5.2 | | |
+| 4 | Máu ×0,8, sức mạnh 0,80–0,96, Thượng Du 17 ngày | 100 / 97 / 90% | 83 / 67 / 17% | 90 / 93 / 53% |
+| 5 (chốt) | Ải Bắc: Chòi Gác Nam thành lũy; Thượng Du: kho lương phía nam thành làng | 97 / – / 77% | 87 / 77 / 27% | như lần 4 |
 
 ### 5.2 Kết quả bản chốt
 
-Điền sau lần chạy 4 (30 lượt mỗi ô).
+30 lượt mỗi ô, 04/11/2026. "Sao" là tỉ lệ lượt đạt ít nhất số sao đó.
+
+| Sa bàn · bậc | Thắng | Ngày khi thắng | ≥2 sao | 3 sao | Trận thua / lượt | Lượt đánh có giáp công |
+|---|---|---|---|---|---|---|
+| Ải Bắc I | 97% | 7,8 | 77% | 60% | 0,7 | 37% |
+| Ải Bắc III | 77% | 9,8 | 23% | 13% | 2,2 | 32% |
+| Thượng Du I | 87% | 12,2 | 47% | 27% | 1,6 | 14% |
+| Thượng Du II | 77% | 11,7 | 47% | 20% | 2,5 | 9% |
+| Thượng Du III | 27% | 13,3 | 13% | 3% | 4,8 | 5% |
+| Cửa Biển I (lần 4) | 90% | 8,0 | 73% | 50% | 0,8 | 49% |
+| Cửa Biển II (lần 4) | 93% | 8,5 | 63% | 20% | 1,3 | 39% |
+| Cửa Biển III (lần 4) | 53% | 9,9 | 13% | 7% | 2,9 | 33% |
+
+Thua gần như toàn bộ là hết ngày. Trận trung bình 13–22 lượt (hai phe cộng lại), tức khoảng 3–6 phút. Đánh hết một
+lượt viễn chinh là 5–11 trận. Thượng Du III để khó có chủ ý (đội khởi đầu, không đồ); người chơi tới Bậc III thường đã có
+đồ Tím/Cam và tướng mua, nên mức thật sẽ cao hơn.
 
 ## 6. Dữ liệu và server
 
