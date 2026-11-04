@@ -17,6 +17,7 @@
 | **Sinh tồn** | Một trận không kết thúc, đối thủ theo đợt, báo trước đợt kế tiếp | 3vs3 | Sau giai đoạn 4 |
 | **Trận Đồ** | Game xếp quân theo nghề/hệ, không đánh nhau; chơi thử offline (không thưởng) và xếp hạng có thưởng trên server (tắt mặc định, `FORMATION_RANKED_ENABLED`). Luật ở [GDD Binh Pháp](future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline) | Một người, 4 bậc 3×3–8×8 | Sau Song Tháp |
 | **Tầm Tướng Ký** | Ghép yếu tố có thứ tự từ 7 hệ để tìm chân dung tướng, không đánh nhau. Chế độ Thường tốn phiếu; Hạng tuần tiêu nguyên liệu, có bảng và thưởng. Bắt buộc đăng nhập; tắt mặc định, một biến `TAM_TUONG_KY_ENABLED` mở cả chế độ, Hạng và các gói đã duyệt. Luật ở [Design Freeze](future/14-tam-tuong-ky-design-freeze.md) | Một người, Gói 1: 12 tướng | Sau Trận Đồ |
+| **Viễn Chinh** | Chia 6 tướng làm hai đạo, mỗi ngày một đạo tiến một ô trên sa bàn, đạo kia nghỉ hồi sức; giặc tăng viện theo ngày, hai đạo giáp công thành đích. Thưởng trận như trận thường, thưởng lớn lần đầu mỗi bậc; 3 lượt xuất quân mỗi ngày, bảng xếp hạng theo sao. Cần đăng nhập; tắt mặc định (`EXPEDITION_ENABLED`). Luật ở [GDD Viễn Chinh](expedition/01-vien-chinh-gdd.md) | Hai đạo 3vs3, 3 sa bàn × 3 bậc | Sau Tầm Tướng Ký |
 
 ## 2. Chiến dịch
 
@@ -58,7 +59,7 @@
 
 ### 2.2 Bảng xếp hạng (Claude đặt 20/10/2026, chuyển sang Campaign V2 ở CAMP-08.04)
 
-- Trang bảng xếp hạng có các bảng: **Sinh tồn**, **Đấu trường**, **Vận Mệnh**. Sinh tồn và Đấu trường mặc định hiện **bảng mùa tuần này**, có nút chuyển sang **Mọi thời đại** (bảng cộng dồn cũ); xem [mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng). Mỗi bảng hiện 50 người đứng đầu và hạng của người đang xem. Thử thách hằng ngày giữ bảng riêng, Trận Đồ xếp hạng nằm trong màn Trận Đồ.
+- Trang bảng xếp hạng có các bảng: **Sinh tồn**, **Đấu trường**, **Viễn Chinh** (khi cờ `EXPEDITION_ENABLED` bật, chỉ mọi thời đại, theo tổng sao rồi tổng ngày; xem [GDD Viễn Chinh mục 3.7](expedition/01-vien-chinh-gdd.md#37-bảng-xếp-hạng-shan-chốt-04112026)), **Vận Mệnh**. Sinh tồn và Đấu trường mặc định hiện **bảng mùa tuần này**, có nút chuyển sang **Mọi thời đại** (bảng cộng dồn cũ); xem [mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng). Mỗi bảng hiện 50 người đứng đầu và hạng của người đang xem. Thử thách hằng ngày giữ bảng riêng, Trận Đồ xếp hạng nằm trong màn Trận Đồ.
 - **Bình Loạn không có bảng xếp hạng** (Shan, 01/11/2026): chiến dịch là chế độ offline theo tuyến lịch sử. Hai bảng **Chiến dịch** và **Từng trận** dưới đây đã bị gỡ khỏi giao diện; server và dữ liệu cũ (`campaign`, `mission:<M..>`) vẫn còn, chưa xóa.
 - **Chiến dịch (đã gỡ khỏi giao diện):** hoàn thành nhiều nhiệm vụ V2 hơn đứng trên (sự kiện và ngoại giao cũng tính là hoàn thành); bằng số nhiệm vụ thì tổng số lượt ít nhất của các **nhiệm vụ có trận** ít hơn đứng trên. Sự kiện không có lượt nên không cộng gì; nhiệm vụ có trận đã xong mà chưa có số lượt tính 200 lượt.
 - **Từng trận (đã gỡ khỏi giao diện)** (`mission:<M..>`): hoàn thành nhiệm vụ có trận đó với ít lượt nhất (đếm lượt của cả hai phe), lấy từ `campaign.bestBattleTurns`. Chỉ nhiệm vụ trận, phòng thủ, công thành, trùm có bảng; không tính đánh trùm.
@@ -219,6 +220,10 @@ Trang `/arena`, code ở `src/core/arena/` (đội phòng thủ, bóng ma máy t
 - **Chưa làm:** nhật ký bị đánh (chỉ có số trận giữ được và bị mất), chặn đánh lại cùng một người.
 - **Hướng sắp tới:** chế độ online hai người chơi đấu trực tiếp, xem [mục 6.2](#62-quần-hùng-online-hai-người-chơi-phát-triển-sau). Đấu trường bóng ma hiện tại giữ nguyên.
 
+### 5.4 Viễn Chinh (Shan chọn cơ chế 04/11/2026)
+
+Hai đạo quân (Đinh Bộ Lĩnh + 2 tướng, và 3 tướng) hành quân trên một trong ba sa bàn (Ải Bắc, Thượng Du, Cửa Biển) tới thành đích. Mỗi ngày một việc: một đạo tiến sang ô kề (gặp địch thì đánh) và đạo kia nghỉ hồi 15% máu, hoặc cả hai đóng quân. Giặc mạnh thêm 5% mỗi ngày; đạo kia đứng kề ô bị đánh thì giáp công (máu địch ×0,75). Thua trận chỉ rút về và gục cả đạo; hết ngày mà chưa chiếm thành là thua. Mỗi ngày 3 lượt xuất quân; bảng xếp hạng theo tổng sao rồi tổng ngày; chỉ tài khoản đã đăng nhập. Nguồn chính: [GDD Viễn Chinh](expedition/01-vien-chinh-gdd.md).
+
 ## 6. Thưởng vàng theo hạng cuối kỳ (Claude đặt 01/11/2026, chờ Shan duyệt)
 
 Shan (01/11/2026): trước mắt thưởng xếp hạng của **mọi chế độ chỉ là vàng**; các loại thưởng khác (danh hiệu, trang bị, mở tướng) bàn sau khi các chế độ ổn định. Mỗi người nhận đúng một bậc theo hạng cuối kỳ; **bảng ít người vẫn có thưởng** (một mình một bảng là hạng nhất). Nhận sau khi kỳ khép lại, đúng một lần mỗi kỳ, và **chỉ tài khoản đã đăng nhập** nhận được (khách xem bảng, không nhận).
@@ -246,7 +251,7 @@ Khách chơi thường thoải mái; chế độ **online có bảng xếp hạn
 
 | Khách chơi được | Chỉ tài khoản đăng nhập |
 |---|---|
-| Luyện tập / Chơi thử, Giao Tranh (trận thường), Bình Loạn, Đánh trùm, Tháp Thí Luyện, **Trận Đồ chơi thường** | **Nhật Lệnh**, **Trấn Ải** (Sinh tồn), **Quần Hùng** (Đấu trường), **Tháp Thiên Mệnh**, **Trận Đồ xếp hạng**, trang **Bảng xếp hạng**, **Tầm Tướng Ký** (cả chế độ Thường, vì mỗi lượt tốn phiếu; Shan 03/11/2026) |
+| Luyện tập / Chơi thử, Giao Tranh (trận thường), Bình Loạn, Đánh trùm, Tháp Thí Luyện, **Trận Đồ chơi thường** | **Nhật Lệnh**, **Trấn Ải** (Sinh tồn), **Quần Hùng** (Đấu trường), **Tháp Thiên Mệnh**, **Trận Đồ xếp hạng**, **Viễn Chinh** (có bảng xếp hạng; Shan 04/11/2026), trang **Bảng xếp hạng**, **Tầm Tướng Ký** (cả chế độ Thường, vì mỗi lượt tốn phiếu; Shan 03/11/2026) |
 
 **Khách cũng không xem** bảng xếp hạng, đề Nhật Lệnh, màn Thiên Mệnh và màn Quần Hùng/Trấn Ải: các API `GET` tương ứng trả `401`, Trận Đồ xếp hạng chỉ báo "cần đăng nhập" không kèm bảng, và giao diện hiện màn nhắc đăng nhập ở cả trang Xếp hạng (Shan, 01/11/2026). Trận xếp hạng đang dở của một khách cũ (đăng xuất giữa chừng) không xem và không đi tiếp được (`getBattle` và `actBattle` trả `loginRequired`); riêng "dừng run" Thiên Mệnh vẫn cho phép để kết thúc run có sẵn. Code: `Deps.isSignedIn` ở `src/server/battles.ts`, helper `isSignedInAccount` và `loginRequiredResponse` ở `src/server/http.ts`, màn nhắc `src/app/game/LoginGate.tsx`. Tháp Thí Luyện không có bảng xếp hạng nên vẫn mở cho khách.
 
