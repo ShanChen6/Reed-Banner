@@ -188,29 +188,16 @@ const WEAPON_ART: Record<Profession, (a: string) => React.ReactNode> = {
   ),
 };
 
-/** Khung theo phẩm: Trắng viền trơn, Lục thêm chấm góc, Lam viền đôi, Tím thêm hoa văn răng cưa, Cam tỏa tia. */
+/**
+ * Khung theo phẩm: ảnh vẽ tay Shan gửi (04/11/2026) ở public/art/gear/frames/frame-<bậc>.webp.
+ * Mỗi bậc khác cả hình lẫn màu: Trắng gỗ trơn, Lục tre đinh đồng, Lam men sóng bạc, Tím sơn mài răng cưa, Cam son vàng Đông Sơn.
+ */
+export function tierFrameSrc(tier: Tier): string {
+  return `/art/gear/frames/frame-${tier}.webp`;
+}
+
 function TierFrame({ tier }: { tier: Tier }) {
-  const c = TIER_FRAME[tier];
-  return (
-    <g>
-      <rect x={1.5} y={1.5} width={45} height={45} rx={8} fill="none" stroke={c} strokeWidth={2.5} />
-      {tier >= 3 && <rect x={4.5} y={4.5} width={39} height={39} rx={6} fill="none" stroke={c} strokeWidth={1} />}
-      {tier >= 2 &&
-        [
-          [5, 5],
-          [43, 5],
-          [5, 43],
-          [43, 43],
-        ].map(([x, y]) =>
-          tier >= 4 ? (
-            <rect key={`${x}-${y}`} x={x! - 3} y={y! - 3} width={6} height={6} transform={`rotate(45 ${x} ${y})`} fill={c} stroke={INK} strokeWidth={1} />
-          ) : (
-            <circle key={`${x}-${y}`} cx={x} cy={y} r={2.2} fill={c} stroke={INK} strokeWidth={0.8} />
-          ),
-        )}
-      {tier >= 4 && <path d="M14 45.5 L17 42.5 L20 45.5 L23 42.5 L26 45.5 L29 42.5 L32 45.5 L35 42.5" fill="none" stroke={c} strokeWidth={1} />}
-    </g>
-  );
+  return <image href={tierFrameSrc(tier)} x={0} y={0} width={48} height={48} preserveAspectRatio="xMidYMid meet" />;
 }
 
 /**
@@ -236,8 +223,9 @@ export function GearIcon({
     <svg viewBox="0 0 48 48" className={className} aria-hidden focusable="false">
       <rect x={1.5} y={1.5} width={45} height={45} rx={8} fill="#2b211b" />
       {tier !== undefined && <rect x={1.5} y={1.5} width={45} height={45} rx={8} fill={TIER_FRAME[tier]} opacity={0.16} />}
-      {tier === 5 && <polygon points={starPoints(24, 24, 22, 15, 16)} fill="#ffe08a" opacity={0.3} />}
-      {art}
+      {tier === 5 && <polygon points={starPoints(24, 24, 17, 12, 16)} fill="#ffe08a" opacity={0.3} />}
+      {/* Có khung thì thu món đồ vào lòng khung (khung Cam dày nhất, lòng khoảng 72% cạnh). */}
+      {tier !== undefined ? <g transform="translate(24 24) scale(0.78) translate(-24 -24)">{art}</g> : art}
       {tier !== undefined && <TierFrame tier={tier} />}
     </svg>
   );
