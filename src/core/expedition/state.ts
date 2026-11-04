@@ -4,6 +4,8 @@
 import type { FighterConfig } from "../battle";
 import type { GearItem } from "../gear";
 import { EXPEDITION_MAPS, expeditionNode, isExpeditionMapId, type ExpeditionMap, type ExpeditionMapId } from "./maps";
+import type { ExpeditionObjective } from "./objective";
+import type { ExpeditionEnding } from "./scenario";
 
 const MAIN = "dinhBoLinh";
 export const EXPEDITION_ARMY_SIZE = 3;
@@ -41,15 +43,39 @@ export interface ExpeditionNodeState {
   readonly cleared?: boolean;
   /** Đánh dở: máu còn lại của từng địch theo tỉ lệ (0 là đã gục); lần đánh sau vào trận với máu này. */
   readonly foeHp?: readonly number[];
+  /** Thành đích có kịch bản: cổng đã sụp, lần sau đánh thẳng tướng giữ thành. */
+  readonly gateDown?: boolean;
 }
 
 export type ExpeditionPhase = "march" | "battle" | "won" | "lost";
 
+/**
+ * Loại trận ngoài trận chiếm ô thường:
+ * - `chase`: truy binh đuổi đoàn dân (đạo đang mang dân rời làng); thắng thì đi tiếp tới `to`.
+ * - `counter`: địch phản công kho lương đạo đang đứng.
+ * - `gate`: phase phá cổng của thành đích.
+ */
+export type ExpeditionBattleMode = "chase" | "counter" | "gate";
+
 export interface ExpeditionBattleRef {
   readonly army: ArmyIndex;
+  /** Ô có trận (truy binh: ô làng đạo đang rời; phản công: ô đạo đang đứng). */
   readonly node: string;
   readonly matchId: string;
   readonly pincer: boolean;
+  readonly mode?: ExpeditionBattleMode;
+  /** Truy binh: ô định tới. */
+  readonly to?: string;
+  readonly objective?: ExpeditionObjective;
+}
+
+/** Đoàn dân: đạo đang mang, đã đưa về, hay đã mất. */
+export type ExpeditionRefugees = ArmyIndex | "saved" | "lost";
+
+/** Phản công kho lương: ngày chiếm, đang chờ đạo đứng đó đánh (`due`), đã giữ hay đã mất. */
+export interface ExpeditionMarket {
+  readonly taken: number;
+  readonly status: "pending" | "due" | "held" | "lost";
 }
 
 export interface ExpeditionRun {
@@ -73,15 +99,36 @@ export interface ExpeditionRun {
   readonly rewarded: boolean;
   /** Thưởng đã cộng, để màn kết thúc hiển thị lại. */
   readonly result?: ExpeditionResult;
+  // ——— Sa bàn có kịch bản (docs/02-game-modes/expedition/03-cua-bien-thiet-ke.md) ———
+  /** Đường bị phá của lượt (khóa `expeditionEdgeKey`); không gửi cho client. */
+  readonly broken?: readonly string[];
+  /** Đường bị phá đã lộ (trinh sát hoặc chọn đi trúng). */
+  readonly knownBroken?: readonly string[];
+  /** Ô đã vén sương bằng trinh sát (không phủ lại khi đạo đi chỗ khác). */
+  readonly scouted?: readonly string[];
+  /** Đã biết lịch con nước. */
+  readonly tideKnown?: boolean;
+  readonly refugees?: ExpeditionRefugees;
+  /** Số lần thuyền viện đã tới thành đích. */
+  readonly arrivals?: number;
+  /** Đã giữ được cầu: thuyền viện bị cắt. */
+  readonly reinforcementsCut?: boolean;
+  readonly market?: ExpeditionMarket;
+  /** Nhật ký ngắn: các dòng gần nhất, mới nhất ở cuối. */
+  readonly log?: readonly string[];
 }
 
 export interface ExpeditionResult {
   readonly won: boolean;
+  /** Sa bàn có kịch bản: kết thúc đạt được (giữ dân là thắng phụ, `won` vẫn là false vì chưa chiếm thành). */
+  readonly ending?: ExpeditionEnding;
   readonly days: number;
   readonly stars: number;
   readonly firstClear: boolean;
   readonly gold: number;
   readonly item: GearItem | null;
+  /** Toàn thắng lần đầu ở bậc: món thêm phẩm cao hơn một nấc. */
+  readonly bonusItem?: GearItem | null;
   readonly soldFor: number;
 }
 
@@ -137,13 +184,26 @@ function parseRun(raw: unknown): ExpeditionRun | null {
       nodes[id] = {
         ...(n.cleared === true ? { cleared: true } : {}),
         ...(Array.isArray(n.foeHp) && n.foeHp.every(finite) ? { foeHp: (n.foeHp as number[]).map((x) => Math.max(0, Math.min(1, x))) } : {}),
+        ...(n.gateDown === true ? { gateDown: true } : {}),
       };
     }
   let battle: ExpeditionBattleRef | null = null;
   if (isObj(raw.battle)) {
     const b = raw.battle;
-    if ((b.army === 0 || b.army === 1) && typeof b.node === "string" && typeof b.matchId === "string")
-      battle = { army: b.army, node: b.node, matchId: b.matchId, pincer: b.pincer === true };
+    if ((b.army === 0 || b.army === 1) && typeof b.node === "string" && typeof b.matchId === "string") {
+      const modes = ["chase", "counter", "gate"] as const;
+      const mode = modes.find((m) => m === b.mode);
+      const objective = parseObjective(b.objective);
+      battle = {
+        army: b.army,
+        node: b.node,
+        matchId: b.matchId,
+        pincer: b.pincer === true,
+        ...(mode ? { mode } : {}),
+        ...(typeof b.to === "string" && expeditionNode(map, b.to) ? { to: b.to } : {}),
+        ...(objective ? { objective } : {}),
+      };
+    }
   }
   const phase = raw.phase as ExpeditionPhase;
   if (phase === "battle" && !battle) return null;
@@ -163,8 +223,56 @@ function parseRun(raw: unknown): ExpeditionRun | null {
     ...(Number.isInteger(raw.defeats) && (raw.defeats as number) > 0 ? { defeats: raw.defeats as number } : {}),
     rewarded: raw.rewarded === true,
     ...(isObj(raw.result) ? { result: raw.result as unknown as ExpeditionResult } : {}),
+    ...parseScenarioFields(raw, map),
   };
 }
+
+function parseObjective(raw: unknown): ExpeditionObjective | undefined {
+  if (!isObj(raw)) return undefined;
+  if ((raw.type === "hold" || raw.type === "escort") && Number.isInteger(raw.turns) && (raw.turns as number) > 0)
+    return { type: raw.type, turns: raw.turns as number };
+  if (raw.type === "gate" && Number.isInteger(raw.fighter) && (raw.fighter as number) >= 0)
+    return { type: "gate", fighter: raw.fighter as number };
+  return undefined;
+}
+
+const strings = (x: unknown, ok: (s: string) => boolean): string[] | undefined =>
+  Array.isArray(x) ? x.filter((v): v is string => typeof v === "string" && ok(v)) : undefined;
+
+/** Các trường của sa bàn có kịch bản; trường hỏng thì bỏ (lượt vẫn đọc được). */
+function parseScenarioFields(raw: Record<string, unknown>, map: ExpeditionMap) {
+  const isNode = (id: string) => !!expeditionNode(map, id);
+  const isEdge = (k: string) => {
+    const [a, b] = k.split("~");
+    return !!a && !!b && map.edges.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
+  };
+  const broken = strings(raw.broken, isEdge);
+  const knownBroken = strings(raw.knownBroken, isEdge);
+  const scouted = strings(raw.scouted, isNode);
+  const log = strings(raw.log, (l) => l.length < 200)?.slice(-EXPEDITION_LOG_SIZE);
+  const r = raw.refugees;
+  const refugees: ExpeditionRefugees | undefined = r === 0 || r === 1 || r === "saved" || r === "lost" ? r : undefined;
+  const m = raw.market;
+  const statuses = ["pending", "due", "held", "lost"] as const;
+  const market =
+    isObj(m) && Number.isInteger(m.taken) && statuses.includes(m.status as (typeof statuses)[number])
+      ? { taken: m.taken as number, status: m.status as ExpeditionMarket["status"] }
+      : undefined;
+  return {
+    ...(broken?.length ? { broken } : {}),
+    ...(knownBroken?.length ? { knownBroken } : {}),
+    ...(scouted?.length ? { scouted } : {}),
+    ...(raw.tideKnown === true ? { tideKnown: true } : {}),
+    ...(refugees !== undefined ? { refugees } : {}),
+    ...(Number.isInteger(raw.arrivals) && (raw.arrivals as number) > 0 ? { arrivals: raw.arrivals as number } : {}),
+    ...(raw.reinforcementsCut === true ? { reinforcementsCut: true } : {}),
+    ...(market ? { market } : {}),
+    ...(log?.length ? { log } : {}),
+  };
+}
+
+/** Số dòng nhật ký giữ lại. */
+export const EXPEDITION_LOG_SIZE = 6;
 
 /** Đọc trạng thái Viễn Chinh đã lưu; null khi chưa vào chế độ lần nào hoặc dữ liệu hỏng hẳn. */
 export function parseExpedition(raw: unknown): ExpeditionState | null {
