@@ -2,6 +2,9 @@
 
 ## 04/11/2026
 
+**Tầm Tướng Ký: Gói 2 đã bật**
+- PR #258 merge vào `develop`; Shan bật `TAM_TUONG_KY_PACK2_ENABLED`. [Gói 2](../02-game-modes/future/21-tam-tuong-ky-pack-2.md) **APPROVED → IMPLEMENTED**. Bật giữa tuần (thứ Tư) nên nếu chế độ Hạng đang bật thì danh sách đề cử tuần 2026-11-02 đổi từ lúc bật; điểm đã ghi giữ nguyên.
+
 **Tầm Tướng Ký: Shan duyệt Gói 2**
 - Duyệt 9 công thức, 9 lời dẫn và 8 thành tựu (3 500 vàng) của [Gói 2](../02-game-modes/future/21-tam-tuong-ky-pack-2.md) (**DRAFT → APPROVED**); `PACK_2` đặt `published`. Thành tựu Gói 2 hiện ở trang Nhiệm vụ khi cờ `TAM_TUONG_KY_PACK2_ENABLED` bật. Còn chờ ngày bật cờ.
 
