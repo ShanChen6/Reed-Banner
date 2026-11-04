@@ -46,6 +46,7 @@ import {
 } from "./quests";
 import { achievementById, achievementProgress } from "./achievements";
 import { grantTickets, parseTtkAccount, type TtkAccount } from "../tam-tuong-ky/account";
+import { parseExpedition, type ExpeditionState } from "../expedition/state";
 import {
   addXp,
   autoProgress,
@@ -95,6 +96,8 @@ export interface Profile {
   readonly quests: QuestState;
   /** Tầm Tướng Ký: phiếu, lượt, gợi ý, sổ khám phá. Chưa vào chế độ lần nào thì không có. */
   readonly tamTuongKy?: TtkAccount;
+  /** Viễn Chinh: bậc đã thắng, sao, lượt đang đi. Chưa vào chế độ lần nào thì không có. */
+  readonly expedition?: ExpeditionState;
 }
 
 export interface SurvivalState {
@@ -311,6 +314,9 @@ export function parseProfile(raw: unknown): Profile {
   const ttk = parseTtkAccount(p.tamTuongKy);
   if (ttk) (next as { tamTuongKy?: TtkAccount }).tamTuongKy = ttk;
   else delete (next as { tamTuongKy?: TtkAccount }).tamTuongKy;
+  const expedition = parseExpedition(p.expedition);
+  if (expedition) (next as { expedition?: ExpeditionState }).expedition = expedition;
+  else delete (next as { expedition?: ExpeditionState }).expedition;
   return Array.isArray(p.team) && validTeam(next, p.team)
     ? { ...next, team: p.team }
     : next;

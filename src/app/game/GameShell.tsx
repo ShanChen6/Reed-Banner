@@ -25,6 +25,7 @@ import { isScenePath, pushScenePath, SceneContext, SceneLink, type SceneApi } fr
 import SurvivalScreen from "./survival/SurvivalScreen";
 import TrialScreen from "./trial/TrialScreen";
 import DestinyScreen from "./destiny/DestinyScreen";
+import ExpeditionScreen from "./expedition/ExpeditionScreen";
 import GameHeader from "./header/GameHeader";
 import LoginGate from "./LoginGate";
 
@@ -41,6 +42,8 @@ export interface TowerFeatures {
   readonly tamTuongKy?: boolean;
   /** Tầm Tướng Ký chế độ Hạng tuần (`TAM_TUONG_KY_RANKED_ENABLED`). */
   readonly tamTuongKyRanked?: boolean;
+  /** Viễn Chinh, mặc định tắt (`EXPEDITION_ENABLED`). */
+  readonly expedition?: boolean;
 }
 
 export default function GameShell({
@@ -139,6 +142,8 @@ function SceneView({
     case "TAM_TUONG_KY":
       if (!towerFeatures.tamTuongKy) return <DisabledTowerMode name={SCENE_TITLE.TAM_TUONG_KY} />;
       return account ? <TamTuongKyScreen ranked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate name={SCENE_TITLE.TAM_TUONG_KY} reason="Chế độ này cần tài khoản đã đăng nhập vì mỗi lượt chơi tốn một phiếu, và tiến trình Tướng Lục lưu theo tài khoản." />;
+    case "EXPEDITION":
+      return towerFeatures.expedition ? <ExpeditionScreen /> : <DisabledTowerMode name={SCENE_TITLE.EXPEDITION} />;
     case "QUESTS":
       return <QuestsScreen tamTuongKy={towerFeatures.tamTuongKy === true} />;
     case "SHOP":

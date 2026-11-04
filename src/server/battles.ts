@@ -93,10 +93,11 @@ import { recordSeason, type SeasonStore } from "./seasons";
 import { offerDefense, type ArenaStore } from "./arena";
 import { settleTrial, type TrialResult } from "./trialSettle";
 import { settleDestinyMatch, type DestinyResult } from "./destinySettle";
+import { settleExpeditionMatch, type ExpeditionMatchResult } from "./expeditionSettle";
 import { activeDestinyCycle } from "./destinyCycle";
 import { reconcileDestinyCycle } from "./destinyExpire";
 import type { DestinyLeaderboardStore } from "./destinyLeaderboard";
-import { FEATURE_DISABLED_ERROR, destinyEnabled, trialEnabled } from "./featureFlags";
+import { FEATURE_DISABLED_ERROR, destinyEnabled, expeditionEnabled, trialEnabled } from "./featureFlags";
 
 export interface Deps {
   readonly store: MatchStore;
@@ -118,6 +119,8 @@ export interface Deps {
   /** Route production luôn truyền giá trị từ env; thiếu chỉ dành cho compatibility của caller nội bộ/test cũ. */
   readonly trialEnabled?: boolean;
   readonly destinyEnabled?: boolean;
+  /** Viễn Chinh (`EXPEDITION_ENABLED`); thiếu là tắt. */
+  readonly expeditionEnabled?: boolean;
   /** Điểm mùa theo tuần của Trấn Ải và Quần Hùng; không có thì không ghi mùa. */
   readonly seasons?: SeasonStore;
   /**
@@ -203,6 +206,8 @@ export interface Outcome {
   readonly destiny?: DestinyResult;
   /** Chỉ có ở sinh tồn. */
   readonly survival?: SurvivalResult;
+  /** Chỉ có ở trận Viễn Chinh: kết quả trên sa bàn (và thưởng kết thúc nếu trận này kết thúc lượt). */
+  readonly expedition?: ExpeditionMatchResult;
   /** Chỉ có ở thử thách hằng ngày: điểm và hạng lúc vừa xong. */
   readonly daily?: { readonly score: DailyScore; readonly rank: number | null };
   /** Chỉ có ở đấu trường. */
@@ -1075,9 +1080,10 @@ async function rewardCampaignV2(
   };
 }
 
-function matchFeatureEnabled(match: Match, deps: Pick<Deps, "trialEnabled" | "destinyEnabled">): boolean {
+function matchFeatureEnabled(match: Match, deps: Pick<Deps, "trialEnabled" | "destinyEnabled" | "expeditionEnabled">): boolean {
   if (match.trial) return trialEnabled(deps);
   if (match.destiny) return destinyEnabled(deps);
+  if (match.expedition) return expeditionEnabled(deps);
   return true;
 }
 
@@ -1291,6 +1297,10 @@ async function reward(
   if (match.survival && cleared > 0)
     await recordSeason(deps.seasons, { mode: "survival", ownerId: r.ownerId, now: deps.now, best: cleared });
   const arena = await settleArena(r.ownerId, match, rewards.won, deps);
+  // Viễn Chinh: thưởng trận như trận thường ở trên, rồi chốt kết quả vào sa bàn.
+  const expedition = match.expedition
+    ? await settleExpeditionMatch(r.ownerId, r.id, match, deps)
+    : undefined;
   return {
     rewards,
     levelUps,
@@ -1299,6 +1309,7 @@ async function reward(
     ...(raid ? { raid } : {}),
     ...(survival ? { survival } : {}),
     ...(arena ? { arena } : {}),
+    ...(expedition ? { expedition } : {}),
   };
 }
 

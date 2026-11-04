@@ -2,6 +2,10 @@
 
 ## 04/11/2026
 
+**Viễn Chinh: hai đạo quân trên sa bàn (APPROVED, có code sau cờ)**
+- Shan chọn cơ chế "Hai đạo quân trên sa bàn" trong ba phương án (sai quân tự động, một đạo rẽ nhánh). Chia 6 tướng làm hai đạo; mỗi ngày một đạo tiến một ô, đạo kia nghỉ (+15% máu, cả người gục); giặc tăng viện 5%/ngày; giáp công khi đạo kia đứng kề (máu địch ×0,75); thua trận chỉ rút về; hết ngày là thua. Ba sa bàn Ải Bắc, Thượng Du, Cửa Biển × 3 bậc; thưởng trận như trận thường, thưởng lần đầu mỗi bậc 300/600/1 000 vàng + món Lam/Tím/Cam.
+- Code: `src/core/expedition/`, `Profile.expedition`, `Match.expedition`, API `/api/expedition` (GET, `run`, `march`, `camp`, `abandon`), màn `/game/expedition`, mô phỏng `scripts/expedition-sim.ts`. Cờ `EXPEDITION_ENABLED` mặc định tắt. Xem [GDD Viễn Chinh](../02-game-modes/expedition/01-vien-chinh-gdd.md).
+
 **Tầm Tướng Ký: LT-07 nghiệm thu, sẵn sàng bật theo cờ**
 - Gói 1 đặt `published` (Shan đã duyệt nội dung); phát hành chỉ còn do cờ `TAM_TUONG_KY_ENABLED` / `TAM_TUONG_KY_RANKED_ENABLED`. Trang Nhiệm vụ ẩn thành tựu `ttk.*` khi cờ tắt.
 - Kiểm: toàn bộ test, typecheck, lint, docs, `next build`; chạy bản production với cờ tắt và bật (Home, màn, API, Nhiệm vụ, thưởng hạng, 6 màn khác, luồng Thường và Hạng, điện thoại). Thêm Tầm Tướng Ký vào [bảng chế độ](../02-game-modes/README.md#1-tổng-quan) và [ai chơi được chế độ nào](../02-game-modes/README.md#61-ai-chơi-được-chế-độ-nào-shan-01112026). Xem [nghiệm thu LT-07](../02-game-modes/future/20-tam-tuong-ky-lt07-acceptance.md).
