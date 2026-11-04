@@ -139,15 +139,22 @@ function parseRankedWeek(raw: unknown): TtkRankedWeek | null {
  * Khớp sổ với catalog đang chạy (test contract 7.5): bỏ ID không còn trong catalog, luôn có đủ starter, cập nhật
  * `contentVersion`. Tướng đã mở không mất khi catalog thêm nội dung.
  */
-export function normalizeTtkAccount(account: TtkAccount, catalog: Catalog): TtkAccount {
+export function normalizeTtkAccount(
+  account: TtkAccount,
+  catalog: Catalog,
+  /** ID còn giữ trong sổ dù catalog đang chạy không có (gói đã viết nhưng đang tắt). Mặc định: chỉ ID của catalog. */
+  known?: { readonly nodes: ReadonlySet<string>; readonly recipes: ReadonlySet<string> },
+): TtkAccount {
+  const keepNode = (id: string) => catalog.nodes.has(id) || (known?.nodes.has(id) ?? false);
   const recipeIds = new Set(catalog.pack.recipes.map((r) => r.id));
-  const nodes = account.discovery.discoveredNodeIds.filter((id) => catalog.nodes.has(id));
+  const keepRecipe = (id: string) => recipeIds.has(id) || (known?.recipes.has(id) ?? false);
+  const nodes = account.discovery.discoveredNodeIds.filter(keepNode);
   const discovery: DiscoveryState = {
     ...account.discovery,
     packId: catalog.pack.id,
     contentVersion: catalog.pack.contentVersion,
     discoveredNodeIds: [...catalog.starters, ...nodes.filter((id) => !catalog.starters.includes(id))],
-    discoveredRecipeIds: account.discovery.discoveredRecipeIds.filter((id) => recipeIds.has(id)),
+    discoveredRecipeIds: account.discovery.discoveredRecipeIds.filter(keepRecipe),
   };
   return { ...account, discovery };
 }

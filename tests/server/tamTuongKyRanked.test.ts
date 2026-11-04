@@ -149,3 +149,44 @@ describe("bó nguyên tố trong thưởng hạng", () => {
     assert.deepEqual(pending.items.map((i) => [i.mode, i.period, i.rank, i.gold, i.bundles]), [["tamTuongKy", lastWeek, 1, 500, 5]]);
   });
 });
+
+describe("bảng tuần trên trang Xếp hạng", () => {
+  it("cờ Hạng tắt hoặc khách: bị chặn", async () => {
+    const { tamTuongKyBoard } = await import("../../src/server/tamTuongKy");
+    const off = await tamTuongKyBoard(deps({ rankedEnabled: false }), OWNER);
+    assert.deepEqual(off, { ok: false, error: "featureDisabled" });
+    const guest = await tamTuongKyBoard(deps(), "guest-1");
+    assert.deepEqual(guest, { ok: false, error: "loginRequired" });
+  });
+
+  it("giải điểm bảng mùa thành điểm và số nguyên tố đã tiêu, xếp đúng thứ tự", async () => {
+    const { tamTuongKyBoard } = await import("../../src/server/tamTuongKy");
+    const d = deps();
+    const week = seasonKey(T0);
+    await d.seasons!.best("tamTuongKy", week, "acc-2", 300 * 1000 + (999 - 40), T0);
+    await d.seasons!.best("tamTuongKy", week, OWNER, 300 * 1000 + (999 - 13), T0 + 1);
+    await d.seasons!.best("tamTuongKy", week, "acc-3", 500 * 1000 + (999 - 90), T0 + 2);
+    const r = await tamTuongKyBoard(d, OWNER);
+    assert.ok(r.ok);
+    assert.equal(r.week, week);
+    assert.deepEqual(r.top.map((x) => [x.rank, x.points, x.unitsSpent, x.mine]), [[1, 500, 90, false], [2, 300, 13, true], [3, 300, 40, false]]);
+    assert.deepEqual(r.mine, { rank: 2, points: 300, unitsSpent: 13 });
+  });
+});
+
+describe("Gói 2 trên server", () => {
+  it("cờ Gói 2 bật: view dùng sổ gộp, ghép ra tướng Gói 2 được; tắt: sổ Gói 1", async () => {
+    const { getTamTuongKy, openTamTuongKySession, combineTamTuongKy } = await import("../../src/server/tamTuongKy");
+    const off = await getTamTuongKy(deps(), OWNER);
+    assert.ok(off.ok && off.view.packId === "pack-1");
+    const d = deps({ pack2: true });
+    const on = await getTamTuongKy(d, OWNER);
+    assert.ok(on.ok && on.view.packId === "pack-1-2");
+    await openTamTuongKySession(d, OWNER, rid());
+    const r = await combineTamTuongKy(d, OWNER, rid(), "elt.tho", "elt.moc");
+    assert.ok(r.ok && r.response?.kind === "combine" && r.response.status === "created" && r.response.nodeId === "mat.grain");
+    // Tắt Gói 2: Lúa vẫn trong sổ, nhưng ghép Thổ + Mộc không còn công thức.
+    const back = await getTamTuongKy(deps({ profiles: d.profiles }), OWNER);
+    assert.ok(back.ok && back.view.discovery.discoveredNodeIds.includes("mat.grain"));
+  });
+});
