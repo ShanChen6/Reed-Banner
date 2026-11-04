@@ -515,10 +515,11 @@ const SKILL_ART = new Set([
   "hauThoTichLuong", "thachGiap", "sonBangDiaLiet", "diaChanTamQuan", "thaiSonApDinh", "kienThanhBatDong",
   "loiTruGiangThe", "tinhDienHoThan", "loiTienXuyenVan", "loiVongThienLa", "cuuTieuLoiPhat", "loiDinhHieuLenh",
   "phongQuyenTanVan", "thanhPhongTuKhi", "phongNhanLietKhong", "cuongPhongQuetTran", "baoTapCanKhon", "phongHanhVanLy",
-  // Chiêu nghề Shan vẽ (04/11/2026): Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ.
+  // Chiêu nghề Shan vẽ (04/11/2026), đủ 8 nghề.
   "role_tramKich", "role_phaTran", "role_doatMenh", "role_phepLan", "role_nguHanhAn", "role_thienDiaCong",
   "role_thuThanh", "role_tuongKhien", "role_phanKich", "role_linhDuoc", "role_duongSinh", "role_teDo",
-  "role_muaChuoc", "role_lyGian", "role_catQuanLuong",
+  "role_muaChuoc", "role_lyGian", "role_catQuanLuong", "role_nghiBinh", "role_hieuLenh", "role_phaKe",
+  "role_xaThu_dinhDiem", "role_xaThu_phaGiap", "role_xaThu_tapKich", "role_satThu_thuaHu", "role_satThu_doatKhi", "role_satThu_truyMenh",
 ]);
 
 /** Tuyệt chiêu ô 4 của Đinh Bộ Lĩnh (`dbl_<nghề>_<hệ>`) dùng lại ảnh tuyệt chiêu hệ cũ của chính ông. */

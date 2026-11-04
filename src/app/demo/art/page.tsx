@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { dinhBoLinhUltimate, ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PROFESSIONS, professionSkills, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
+import { dinhBoLinhUltimate, ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PROFESSIONS, ROLE_SKILLS, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, SPECIAL_NAME, TIER_COLOR_NAME, TILE_NAME } from "@/app/game/battle/labels";
 import { EmptySlotIcon, GearIcon, SetEmblem } from "@/app/game/art/gear";
 import { ElementIcon, FoodIcon, LeaderFlag, ProfessionIcon, ShieldIcon } from "@/app/game/art/icons";
@@ -151,7 +151,7 @@ export default function ArtPage() {
             {PROFESSIONS.map((p) => (
               <div key={p} className="flex flex-wrap items-start gap-3">
                 <span className="w-16 pt-3 text-sm">{PROFESSION_NAME[p]}</span>
-                {professionSkills(p).map((d) => (
+                {ROLE_SKILLS.filter((d) => d.profession === p).map((d) => (
                   <figure key={d.id} className="flex w-20 flex-col items-center gap-1">
                     <SkillIcon def={d} className="size-12" />
                     <figcaption className="text-center text-[11px] leading-tight opacity-80">{d.name}</figcaption>
