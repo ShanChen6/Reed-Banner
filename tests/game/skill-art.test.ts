@@ -13,19 +13,14 @@ test("ô 2/6 hệ (element_<mã>) dùng lại ảnh hệ cũ của Đinh Bộ L�
   }
 });
 
-test("56 tuyệt chiêu ô 4 Đinh Bộ Lĩnh: Tướng sĩ, Pháp sư, Binh lính, Y sư có ảnh riêng, nghề khác ảnh hệ + huy hiệu nghề", () => {
+test("56 tuyệt chiêu ô 4 Đinh Bộ Lĩnh: cả 8 nghề đều có ảnh riêng, không huy hiệu", () => {
   assert.equal(DBL_ULTIMATES.length, 56);
   for (const def of DBL_ULTIMATES) {
     const art = skillArt(def);
     assert.ok(art, def.id);
+    assert.equal(art.file, def.id);
+    assert.equal(art.badge, undefined);
     assert.ok(existsSync(`public/art/skills/${art.file}.webp`), art.file);
-    if (["tuongSi", "phapSu", "binhLinh", "ySu", "muuSi", "quanSu", "xaThu"].includes(def.profession ?? "")) {
-      assert.equal(art.file, def.id);
-      assert.equal(art.badge, undefined);
-    } else {
-      assert.equal(art.badge, def.profession);
-      assert.ok(existsSync(`public/art/professions/${art.badge}.webp`), art.badge);
-    }
   }
 });
 
