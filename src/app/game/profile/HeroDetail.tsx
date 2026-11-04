@@ -275,6 +275,7 @@ export function GearSlotButton({
         slot={slot}
         element={item?.element ?? element}
         tier={item?.tier}
+        set={item?.set}
         profession={slot === "vuKhi" ? (item?.profession ?? profession) : undefined}
         className={`${size} ${item ? "" : "opacity-30 grayscale"}`}
       />

@@ -153,7 +153,7 @@ export default function ArtPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-semibold">Trang bị: 9 ô theo phẩm (hệ Mộc)</h2>
+          <h2 className="font-semibold">Trang bị: 9 ô theo phẩm (hệ Mộc, bộ Cờ Lau)</h2>
           <div className="grid grid-cols-[auto_repeat(9,minmax(0,1fr))] items-center gap-2 text-xs">
             <span />
             {GEAR_SLOTS.map((s) => (
@@ -165,7 +165,7 @@ export default function ArtPage() {
               <div key={t} className="contents">
                 <span>{TIER_COLOR_NAME[t]}</span>
                 {GEAR_SLOTS.map((s) => (
-                  <GearIcon key={s} slot={s} element="moc" tier={t} className="mx-auto size-12" />
+                  <GearIcon key={s} slot={s} element="moc" tier={t} set="coLau" className="mx-auto size-12" />
                 ))}
               </div>
             ))}

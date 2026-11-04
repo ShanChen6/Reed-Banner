@@ -196,6 +196,18 @@ export function tierFrameSrc(tier: Tier): string {
   return `/art/gear/frames/frame-${tier}.webp`;
 }
 
+/**
+ * Ảnh vẽ tay theo bộ ở public/art/gear/<bộ>/<ô>.webp (192 px). Ô chưa có ảnh (vũ khí, bộ Hoa Lư, Đồng Cổ) vẫn vẽ SVG.
+ * Xem docs/06-art/prompts/trang-bi.md.
+ */
+const SET_ART: Readonly<Record<string, ReadonlySet<GearSlot>>> = {
+  coLau: new Set<GearSlot>(["dinhMao", "yPhuc", "hoThu", "baoNgoa", "gioiChi", "hangLien", "hoPhu", "ngocBoi"]),
+};
+
+export function gearArtSrc(slot: GearSlot, set: string | undefined): string | undefined {
+  return set !== undefined && SET_ART[set]?.has(slot) ? `/art/gear/${set}/${slot}.webp` : undefined;
+}
+
 function TierFrame({ tier }: { tier: Tier }) {
   return <image href={tierFrameSrc(tier)} x={0} y={0} width={48} height={48} preserveAspectRatio="xMidYMid meet" />;
 }
@@ -209,16 +221,26 @@ export function GearIcon({
   element,
   tier,
   profession,
+  set,
   className = "size-10",
 }: {
   slot: GearSlot;
   element: Element;
   tier?: Tier;
   profession?: Profession;
+  /** Bộ trang bị (id trong GEAR_SETS): có ảnh vẽ tay thì dùng ảnh thay SVG. */
+  set?: string;
   className?: string;
 }) {
   const accent = ELEMENT_COLOR[element];
-  const art = slot === "vuKhi" ? WEAPON_ART[profession ?? "tuongSi"](accent) : SLOT_ART[slot](accent);
+  const src = gearArtSrc(slot, set);
+  const art = src ? (
+    <image href={src} x={1} y={1} width={46} height={46} preserveAspectRatio="xMidYMid meet" />
+  ) : slot === "vuKhi" ? (
+    WEAPON_ART[profession ?? "tuongSi"](accent)
+  ) : (
+    SLOT_ART[slot](accent)
+  );
   return (
     <svg viewBox="0 0 48 48" className={className} aria-hidden focusable="false">
       <rect x={1.5} y={1.5} width={45} height={45} rx={8} fill="#2b211b" />
@@ -227,6 +249,8 @@ export function GearIcon({
       {/* Có khung thì thu món đồ vào lòng khung (khung Cam dày nhất, lòng khoảng 72% cạnh). */}
       {tier !== undefined ? <g transform="translate(24 24) scale(0.78) translate(-24 -24)">{art}</g> : art}
       {tier !== undefined && <TierFrame tier={tier} />}
+      {/* Ảnh vẽ tay giữ màu chất liệu, nên hệ hiện bằng huy hiệu nguyên tố ở góc dưới phải. */}
+      {src && <image href={`/art/elements/${element}.webp`} x={33} y={33} width={12} height={12} />}
     </svg>
   );
 }

@@ -274,7 +274,7 @@ export default function SetupLobby({
                 </div>
                 <div className="flex flex-wrap gap-1" aria-hidden>
                   {GEAR_SLOTS.map((slot) => (
-                    <GearIcon key={slot} slot={slot} element={element} tier={gear.tier as Tier} profession={profession} className="size-9" />
+                    <GearIcon key={slot} slot={slot} element={element} tier={gear.tier as Tier} set={gear.set ?? undefined} profession={profession} className="size-9" />
                   ))}
                 </div>
               </>
