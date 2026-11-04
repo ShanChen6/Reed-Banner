@@ -93,6 +93,7 @@ import {
   type DailyScore,
   type SurvivalView,
   type WavePreview,
+  type ExpeditionObjective,
 } from "@/core";
 import {
   DIFFICULTY_NAME,
@@ -658,18 +659,23 @@ function FighterCard({
       </div>
       <div className="space-y-1">
         <Bar
-          label="Máu"
+          label={fighter.structure ? "Độ bền" : "Máu"}
           value={fighter.hp}
           max={fighter.maxHp}
-          color="bg-rose-500"
+          color={fighter.structure ? "bg-amber-600" : "bg-rose-500"}
         />
-        <Bar label="NL" value={fighter.energy} max={100} color="bg-sky-500" />
-        <Bar
-          label="TT"
-          value={fighter.spirit}
-          max={100}
-          color="bg-emerald-500"
-        />
+        {/* Công trình (cổng thành) không ra tay: không có năng lượng, tinh thần. */}
+        {!fighter.structure && (
+          <>
+            <Bar label="NL" value={fighter.energy} max={100} color="bg-sky-500" />
+            <Bar
+              label="TT"
+              value={fighter.spirit}
+              max={100}
+              color="bg-emerald-500"
+            />
+          </>
+        )}
         {rage !== null && (
           <Bar label="Nộ" value={rage} max={100} color="bg-orange-500" />
         )}
@@ -761,6 +767,8 @@ export default function DemoGame({
   const [scenario, setScenario] = useState<CampaignScenarioTag | null>(null);
   const [destinyFloorNo, setDestinyFloorNo] = useState<number | null>(null);
   const [expeditionMatch, setExpeditionMatch] = useState(false);
+  /** Viễn Chinh: mục tiêu riêng của trận (giữ cầu, hộ tống, phá cổng). */
+  const [expeditionObjective, setExpeditionObjective] = useState<ExpeditionObjective | null>(null);
   /** Sinh tồn: đợt, người gục, báo trước đợt kế. */
   const [survival, setSurvival] = useState<SurvivalView | null>(null);
   /** Thử thách hằng ngày: khóa ngày của trận đang chơi. */
@@ -1598,6 +1606,7 @@ export default function DemoGame({
     setDailyDay(null);
     setArenaFoe(null);
     setExpeditionMatch(false);
+    setExpeditionObjective(null);
   };
 
   /** Về màn chờ trước trận để đổi nguyên tố, nghề, trang bị hoặc nâng kỹ năng. */
@@ -1654,6 +1663,7 @@ export default function DemoGame({
     setScenario(res.view.campaignScenario ?? null);
     setDestinyFloorNo(res.view.destiny?.floor ?? null);
     setExpeditionMatch(res.view.expedition !== undefined);
+    setExpeditionObjective(res.view.expedition?.objective ?? null);
     setSurvival(res.view.survival ?? null);
     setDailyDay(res.view.daily ?? null);
     setArenaFoe(res.view.arena ?? null);
@@ -1899,6 +1909,13 @@ export default function DemoGame({
                   game sáng tác.
                 </span>
               )}
+          </p>
+        )}
+        {expeditionObjective && live && state.winner === null && (
+          <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-sm text-amber-100">
+            ⚑ {expeditionObjective.type === "gate"
+              ? `Phá cổng: hạ Cổng thành là qua (cổng còn ${Math.round((Math.max(0, live.sides[1].fighters[expeditionObjective.fighter]?.hp ?? 0) / Math.max(1, live.sides[1].fighters[expeditionObjective.fighter]?.maxHp ?? 1)) * 100)}% độ bền).`
+              : `${expeditionObjective.type === "hold" ? "Giữ vị trí" : "Hộ tống đoàn dân"}: đã giữ ${Math.min(completedPlayerTurns(live), expeditionObjective.turns)}/${expeditionObjective.turns} lượt của bạn, hoặc hạ hết đối thủ.`}
           </p>
         )}
         <DongSonBand className="-mt-1 w-full opacity-70" />

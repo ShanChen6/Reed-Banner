@@ -8,6 +8,7 @@ import {
   campExpeditionArmies,
   expeditionOverview,
   marchExpeditionArmy,
+  scoutExpeditionArmy,
   startExpedition,
 } from "../../src/server/expedition";
 import { MemoryLeaderboardStore } from "../../src/server/leaderboard";
@@ -50,12 +51,11 @@ describe("Viễn Chinh trên server", () => {
     assert.equal((await expeditionOverview("u", deps)).enabled, false);
   });
 
-  it("khách chưa đăng nhập không xuất quân, không tiến quân được (Viễn Chinh có bảng xếp hạng)", async () => {
-    const deps = { ...setup(), isSignedIn: async (id: string) => id === "acc" };
-    assert.deepEqual(await startExpedition("guest", START, deps), { ok: false, error: "loginRequired" });
-    assert.deepEqual(await marchExpeditionArmy("guest", { army: 0, to: "khe-da" }, deps), { ok: false, error: "loginRequired" });
-    assert.deepEqual(await campExpeditionArmies("guest", deps), { ok: false, error: "loginRequired" });
-    assert.equal((await startExpedition("acc", START, deps)).ok, true);
+  it("khách chưa đăng nhập vẫn xuất quân được (chế độ offline)", async () => {
+    const deps = { ...setup(), isSignedIn: async () => false };
+    assert.equal((await startExpedition("guest", START, deps)).ok, true);
+    const moved = await marchExpeditionArmy("guest", { army: 1, to: "ban-na" }, deps);
+    assert.ok(moved.ok);
   });
 
   it("xuất quân, vào làng, đánh đồn, thắng thì chiếm ô và nhận thưởng trận", async () => {
@@ -65,6 +65,8 @@ describe("Viễn Chinh trên server", () => {
     const overview = await expeditionOverview("u", deps);
     assert.ok(overview.enabled && overview.run && !("seed" in overview.run));
     assert.ok(overview.enabled && overview.encounters["khe-da"]);
+    // Sương mù: ô xa chưa thấy thì không báo trước địch.
+    assert.ok(overview.enabled && !overview.encounters["gac-bac"] && !overview.visible.includes("gac-bac"));
 
     const moved = await marchExpeditionArmy("u", { army: 1, to: "ban-na" }, deps);
     assert.ok(moved.ok && moved.kind === "moved");
@@ -118,9 +120,6 @@ describe("Viễn Chinh trên server", () => {
     assert.ok(profile.gold >= gold + EXPEDITION_TIER_INFO[1].firstGold);
     const overview = await expeditionOverview("u", deps);
     assert.ok(overview.enabled && overview.maps.find((m) => m.id === "aiBac")!.tiers[1]!.unlocked);
-    // Thắng thành đích thì có tên trên bảng Viễn Chinh.
-    const mine = await deps.leaderboard!.rankOf("expedition", "u");
-    assert.equal(mine?.rank, 1);
 
     // Lượt mới, đang đánh thì rút quân.
     assert.equal((await startExpedition("u", { ...START, tier: 2 }, deps)).ok, true);
@@ -145,5 +144,45 @@ describe("Viễn Chinh trên server", () => {
     assert.deepEqual(await startExpedition("u", START, deps), { ok: false, error: "dailyLimit" });
     const tomorrow = { ...deps, now: deps.now + 24 * 3600 * 1000 };
     assert.equal((await startExpedition("u", START, tomorrow)).ok, true);
+  });
+
+  it("Cửa Biển: không gửi đường bị phá chưa lộ, trinh sát được, trận giữ cầu ghi mục tiêu vào trận", async () => {
+    const deps = setup();
+    assert.equal((await startExpedition("c", { ...START, map: "cuaBien" }, deps)).ok, true);
+    const overview = await expeditionOverview("c", deps);
+    assert.ok(overview.enabled && overview.run);
+    if (!overview.enabled || !overview.run) return;
+    assert.ok(!("broken" in overview.run));
+    assert.ok(overview.scenario && overview.scenario.tideDays === null);
+    assert.equal((await run(deps, "c"))?.broken?.length, 2);
+
+    const scouted = await scoutExpeditionArmy("c", { army: 0 }, deps);
+    assert.ok(scouted.ok);
+    assert.equal((await run(deps, "c"))?.day, 2);
+    // Sa bàn không kịch bản thì không trinh sát.
+    assert.equal((await scoutExpeditionArmy("c", { army: 2 }, deps)).ok, false);
+
+    // Đưa Biệt đạo tới Bãi Sú (đường bộ từ trại không bao giờ bị phá) rồi đánh Cầu Phao.
+    const first = await marchExpeditionArmy("c", { army: 1, to: "bai-su" }, deps);
+    assert.ok(first.ok && first.kind === "battle");
+    if (!first.ok || first.kind !== "battle") return;
+    await finishMatch(deps, first.id, 0);
+    await getBattle(first.id, "c", deps);
+    const stored = await run(deps, "c");
+    const blocked = stored?.broken?.includes("bai-su~doi-cat");
+    const known = stored?.knownBroken?.includes("bai-su~doi-cat");
+    const bridge = await marchExpeditionArmy("c", { army: 1, to: "doi-cat" }, deps);
+    if (known) {
+      assert.deepEqual(bridge, { ok: false, error: "roadBroken" });
+      return;
+    }
+    assert.ok(bridge.ok);
+    if (!bridge.ok) return;
+    if (blocked) assert.equal(bridge.kind, "blocked");
+    else {
+      assert.equal(bridge.kind, "battle");
+      if (bridge.kind !== "battle") return;
+      assert.deepEqual(bridge.view.expedition?.objective, { type: "hold", turns: 5 });
+    }
   });
 });

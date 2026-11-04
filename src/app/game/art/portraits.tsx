@@ -195,7 +195,9 @@ export function Portrait({
       <circle cx={32} cy={32} r={31} fill={BRONZE} stroke={INK} strokeWidth={1.5} />
       <circle cx={32} cy={32} r={29} fill="none" stroke={INK} strokeWidth={1.2} strokeDasharray="2 2.2" />
       <circle cx={32} cy={32} r={27} fill={accent} />
-      {photo ? (
+      {id === GATE_ID ? (
+        <GateArt clip={clip} />
+      ) : photo ? (
         <g clipPath={`url(#${clip})`}>
           <circle cx={32} cy={26} r={15} fill="#fff" opacity={0.14} />
           <image href={photo} x={5} y={5} width={54} height={54} preserveAspectRatio="xMidYMid slice" />
@@ -228,6 +230,25 @@ export function Portrait({
       <circle cx={32} cy={32} r={27} fill="none" stroke={INK} strokeWidth={1.5} />
       {level !== undefined && <LevelBadge level={level} scale={badgeScale} />}
     </svg>
+  );
+}
+
+/** Id cổng thành (công trình) trong trận phá cổng của Viễn Chinh; khớp `EXPEDITION_GATE_ID` ở core. */
+const GATE_ID = "congThanh";
+
+/** Cổng thành gỗ: lầu mái cong trên hai trụ, cánh cổng đinh tán. */
+function GateArt({ clip }: { clip: string }) {
+  const wood = "#7a4a26";
+  return (
+    <g clipPath={`url(#${clip})`}>
+      <rect x={4} y={44} width={56} height={20} fill="#5b5148" />
+      <path d="M8 44 V28 H56 V44 Z" fill="#8a7d6c" {...ink} />
+      <path d="M14 24 Q32 14 50 24 L54 26 H10 Z" fill="#3a2a22" {...ink} />
+      <rect x={18} y={26} width={28} height={6} fill={wood} {...ink} strokeWidth={1.2} />
+      <path d="M20 58 V40 Q32 32 44 40 V58 Z" fill={wood} {...ink} />
+      <path d="M32 35 V58" stroke={INK} strokeWidth={1.4} />
+      {[25, 29, 35, 39].map((x) => [44, 49, 54].map((y) => <circle key={`${x}-${y}`} cx={x} cy={y} r={0.9} fill="#d9b25f" />))}
+    </g>
   );
 }
 

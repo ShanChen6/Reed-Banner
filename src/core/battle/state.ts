@@ -28,6 +28,11 @@ export interface FighterConfig {
   readonly skillLevels?: Readonly<Record<string, number>>;
   /** Cấp nhân vật (1..30) để giao diện hiển thị; luật trận không đọc. Bỏ trống là chưa dựng theo cấp. */
   readonly level?: number;
+  /**
+   * Công trình (cổng thành ở Viễn Chinh): đứng trong phe và bị đánh như nhân vật nhưng không bao giờ ra tay, không
+   * được hồi máu, không nhận hiệu ứng nào ngoài Phá giáp, không đói lương. Phe chỉ còn công trình thì lượt trôi qua.
+   */
+  readonly structure?: boolean;
 }
 
 export interface Fighter extends FighterConfig {
@@ -113,7 +118,7 @@ export function isAlive(f: Fighter): boolean {
 }
 
 export function canAct(f: Fighter): boolean {
-  return isAlive(f) && !f.effects.some((e) => e.kind === "freeze");
+  return isAlive(f) && !f.structure && !f.effects.some((e) => e.kind === "freeze");
 }
 
 export function otherSide(side: SideIndex): SideIndex {

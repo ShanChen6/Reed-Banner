@@ -23,8 +23,17 @@ import {
   expeditionMapOf,
   expeditionRunsLeft,
   expeditionTierUnlocked,
+  expeditionVisible,
+  expeditionBattleRef,
+  expeditionChaseEncounter,
+  expeditionCounterEncounter,
+  expeditionMatchTag,
+  expeditionScenarioOf,
   isExpeditionCombatNode,
   marchExpedition,
+  scoutExpedition,
+  type ExpeditionEncounter,
+  type ExpeditionObjective,
   matchOver,
   parseExpeditionStart,
   startMatch,
@@ -56,7 +65,10 @@ export type ExpeditionError =
   | "armyDown"
   | "conflict"
   | "dailyLimit"
-  | "loginRequired"
+  | "roadBroken"
+  | "highTide"
+  | "counterPending"
+  | "noScout"
   | typeof FEATURE_DISABLED_ERROR;
 
 export interface FoePreview {
@@ -75,42 +87,80 @@ export interface EncounterPreview {
   readonly power: number;
   readonly pincer: boolean;
   readonly foes: readonly FoePreview[];
+  /** Trận riêng: truy binh, phản công, phá cổng. */
+  readonly mode?: string;
+  readonly objective?: ExpeditionObjective;
+}
+
+function preview(e: ExpeditionEncounter): EncounterPreview {
+  return {
+    node: e.node,
+    difficulty: e.difficulty,
+    power: Math.round(e.power * 100) / 100,
+    pincer: e.pincer,
+    foes: e.foes.map((f, i) => ({
+      id: f.id,
+      name: f.name,
+      element: f.element,
+      profession: f.profession,
+      level: e.level,
+      maxHp: f.maxHp,
+      hpRatio: e.hpRatio[i] ?? 1,
+    })),
+    ...(e.mode ? { mode: e.mode } : {}),
+    ...(e.objective ? { objective: e.objective } : {}),
+  };
 }
 
 /** Đối thủ của mọi ô còn địch, theo từng đạo (giáp công khác nhau tùy đạo nào đánh). Không có seed. */
 function previews(run: ExpeditionRun): Record<string, readonly [EncounterPreview, EncounterPreview]> {
   const out: Record<string, readonly [EncounterPreview, EncounterPreview]> = {};
+  // Sương mù: chỉ báo trước địch ở ô đang thấy.
+  const visible = expeditionVisible(run);
   for (const node of expeditionMapOf(run).nodes) {
-    if (!isExpeditionCombatNode(node.kind) || run.nodes[node.id]?.cleared) continue;
-    const one = (army: 0 | 1): EncounterPreview => {
-      const e = expeditionEncounter(run, node.id, army)!;
-      return {
-        node: node.id,
-        difficulty: e.difficulty,
-        power: Math.round(e.power * 100) / 100,
-        pincer: e.pincer,
-        foes: e.foes.map((f, i) => ({
-          id: f.id,
-          name: f.name,
-          element: f.element,
-          profession: f.profession,
-          level: e.level,
-          maxHp: f.maxHp,
-          hpRatio: e.hpRatio[i] ?? 1,
-        })),
-      };
-    };
+    if (!isExpeditionCombatNode(node.kind) || run.nodes[node.id]?.cleared || !visible.has(node.id)) continue;
+    const one = (army: 0 | 1): EncounterPreview => preview(expeditionEncounter(run, node.id, army)!);
     out[node.id] = [one(0), one(1)];
   }
   return out;
 }
 
-/** Lượt gửi cho client: bỏ seed (đối thủ đã có trong `encounters`). */
+/** Lượt gửi cho client: bỏ seed (đối thủ đã có trong `encounters`) và đường bị phá chưa lộ. */
 function publicRun(run: ExpeditionRun | null) {
   if (!run) return null;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { seed, ...rest } = run;
+  const { seed, broken, ...rest } = run;
   return rest;
+}
+
+/**
+ * Kịch bản của lượt cho client: lịch thuyền viện, phản công, đoàn dân; lịch con nước chỉ khi đã biết. Không gửi danh
+ * sách đường có thể bị phá. Kèm trận riêng đang chờ (phản công) và trận truy binh nếu rời làng lúc này.
+ */
+function scenarioView(run: ExpeditionRun) {
+  const scenario = expeditionScenarioOf(run);
+  if (!scenario) return null;
+  const holder = run.armies.findIndex((a) => a.at === scenario.counter.node);
+  const carrier = run.refugees === 0 || run.refugees === 1 ? run.refugees : null;
+  const chase =
+    carrier !== null && run.armies[carrier].at === scenario.refugees.village && !run.nodes[scenario.refugees.chaseUnless]?.cleared
+      ? expeditionChaseEncounter(run, carrier, scenario.refugees.village)
+      : null;
+  const counter = run.market?.status === "due" && holder >= 0 ? expeditionCounterEncounter(run, holder as 0 | 1) : null;
+  return {
+    village: scenario.refugees.village,
+    home: scenario.refugees.home,
+    chaseUnless: scenario.refugees.chaseUnless,
+    market: scenario.counter.node,
+    counterAfterDays: scenario.counter.afterDays,
+    reinforcementDays: scenario.reinforcements.days,
+    tideDays: run.tideKnown ? scenario.tide.days : null,
+    tideRevealedBy: scenario.tide.revealedBy,
+    bridgeTurns: scenario.bridge.turns,
+    gateSkipFrom: scenario.gate.skipFrom,
+    ...(chase ? { chase: preview(chase) } : {}),
+    ...(counter ? { counter: { army: holder, ...preview(counter) } } : {}),
+  };
 }
 
 export async function expeditionOverview(ownerId: string | null, deps: Deps) {
@@ -143,20 +193,17 @@ export async function expeditionOverview(ownerId: string | null, deps: Deps) {
     runsPerDay: EXPEDITION_RUNS_PER_DAY,
     run: publicRun(state.run),
     encounters: state.run && state.run.phase === "march" ? previews(state.run) : {},
+    visible: state.run ? [...expeditionVisible(state.run)] : [],
+    scenario: state.run && state.run.phase === "march" ? scenarioView(state.run) : null,
   };
 }
 
 type Ok<T> = { readonly ok: true } & T;
 type Fail = { readonly ok: false; readonly error: ExpeditionError };
 
-/** Viễn Chinh có bảng xếp hạng nên chỉ cho tài khoản đã đăng nhập (luật chung, Shan 01/11/2026). */
-async function guestBlocked(deps: Deps, ownerId: string): Promise<boolean> {
-  return deps.isSignedIn !== undefined && !(await deps.isSignedIn(ownerId));
-}
 
 export async function startExpedition(ownerId: string, raw: unknown, deps: Deps): Promise<Ok<{ run: ReturnType<typeof publicRun> }> | Fail> {
   if (!expeditionEnabled(deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
-  if (await guestBlocked(deps, ownerId)) return { ok: false, error: "loginRequired" };
   const input = parseExpeditionStart(raw);
   if (!input) return { ok: false, error: "badRequest" };
   let created: ExpeditionRun | undefined;
@@ -182,13 +229,13 @@ export async function startExpedition(ownerId: string, raw: unknown, deps: Deps)
 
 export type ExpeditionMarchResponse =
   | Ok<{ kind: "moved"; run: ReturnType<typeof publicRun> }>
+  | Ok<{ kind: "blocked"; reason: "broken" | "tide"; run: ReturnType<typeof publicRun> }>
   | Ok<{ kind: "battle"; id: string; view: MatchView; events: readonly BattleEvent[]; resumed: boolean }>
   | Fail;
 
 /** Tiến quân. Ô có địch thì mở trận (đang có trận thì trả lại trận đó). */
 export async function marchExpeditionArmy(ownerId: string, raw: unknown, deps: Deps): Promise<ExpeditionMarchResponse> {
   if (!expeditionEnabled(deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
-  if (await guestBlocked(deps, ownerId)) return { ok: false, error: "loginRequired" };
   if (!raw || typeof raw !== "object") return { ok: false, error: "badRequest" };
   const { army, to } = raw as Record<string, unknown>;
   if ((army !== 0 && army !== 1) || typeof to !== "string") return { ok: false, error: "badRequest" };
@@ -207,6 +254,12 @@ export async function marchExpeditionArmy(ownerId: string, raw: unknown, deps: D
     const saved = await saveRun(ownerId, run, planned.run, deps);
     return saved ? { ok: true, kind: "moved", run: publicRun(planned.run) } : { ok: false, error: "conflict" };
   }
+  if (planned.kind === "blocked") {
+    const saved = await saveRun(ownerId, run, planned.run, deps);
+    return saved
+      ? { ok: true, kind: "blocked", reason: planned.reason, run: publicRun(planned.run) }
+      : { ok: false, error: "conflict" };
+  }
   const encounter = planned.encounter;
   const matchId = deps.newId();
   const step = startMatch({
@@ -216,9 +269,9 @@ export async function marchExpeditionArmy(ownerId: string, raw: unknown, deps: D
     firstSide: HUMAN,
     now: deps.now,
     weights: encounter.weights,
-    expedition: { runId: run.id, map: run.map, tier: run.tier, node: to, army, day: run.day },
+    expedition: expeditionMatchTag(run, army, encounter),
   });
-  const next = beginExpeditionBattle(run, { army, node: to, matchId, pincer: encounter.pincer });
+  const next = beginExpeditionBattle(run, expeditionBattleRef(army, encounter, matchId));
   if (!(await saveRun(ownerId, run, next, deps))) return { ok: false, error: "conflict" };
   const record: MatchRecord = { id: matchId, ownerId, match: step.match, createdAt: deps.now, updatedAt: deps.now };
   await deps.store.create(record);
@@ -227,7 +280,6 @@ export async function marchExpeditionArmy(ownerId: string, raw: unknown, deps: D
 
 export async function campExpeditionArmies(ownerId: string, deps: Deps): Promise<Ok<{ run: ReturnType<typeof publicRun> }> | Fail> {
   if (!expeditionEnabled(deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
-  if (await guestBlocked(deps, ownerId)) return { ok: false, error: "loginRequired" };
   const { profile } = await loadProfile(deps.profiles, ownerId);
   const run = profile.expedition?.run;
   if (!run) return { ok: false, error: "noRun" };
@@ -235,6 +287,21 @@ export async function campExpeditionArmies(ownerId: string, deps: Deps): Promise
   if (!camped.ok) return camped;
   return (await saveRun(ownerId, run, camped.run, deps))
     ? { ok: true, run: publicRun(camped.run) }
+    : { ok: false, error: "conflict" };
+}
+
+/** Trinh sát: một đạo đứng yên một ngày vén sương quanh mình (sa bàn có kịch bản). */
+export async function scoutExpeditionArmy(ownerId: string, raw: unknown, deps: Deps): Promise<Ok<{ run: ReturnType<typeof publicRun> }> | Fail> {
+  if (!expeditionEnabled(deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
+  const army = raw && typeof raw === "object" ? (raw as Record<string, unknown>).army : undefined;
+  if (army !== 0 && army !== 1) return { ok: false, error: "badRequest" };
+  const { profile } = await loadProfile(deps.profiles, ownerId);
+  const run = profile.expedition?.run;
+  if (!run) return { ok: false, error: "noRun" };
+  const scouted = scoutExpedition(run, army);
+  if (!scouted.ok) return { ok: false, error: scouted.error === "badArmy" ? "badRequest" : scouted.error };
+  return (await saveRun(ownerId, run, scouted.run, deps))
+    ? { ok: true, run: publicRun(scouted.run) }
     : { ok: false, error: "conflict" };
 }
 
