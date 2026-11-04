@@ -45,12 +45,13 @@ const MODES: readonly Mode[] = [
  * Chế độ Shan đã duyệt tên (26/10) nhưng chưa phát hành chính thức: thẻ "Sắp ra mắt" không bấm được. Trận Đồ đã có bản
  * chơi thử offline (không thưởng) nên bấm vào được, nhưng vẫn ở hàng này, không thành card thứ bảy của sáu chế độ live.
  * TODO: khi có scene và feature flag thì chuyển lên MODES; TODO tranh: public/art/home/vien-chinh.webp
- * (xem /mnt/project-files/art/prompts/home-thumbnail-che-do.md). Viễn Chinh chưa có cơ chế.
+ * (xem /mnt/project-files/art/prompts/home-thumbnail-che-do.md). Viễn Chinh bật bằng `EXPEDITION_ENABLED` (tắt thì thẻ
+ * không bấm được); luật ở docs/02-game-modes/expedition/01-vien-chinh-gdd.md.
  */
 const UPCOMING: readonly { id: "tran-do" | "tam-tuong-ky" | "vien-chinh"; title: string; text: string; art?: string; scene?: Scene }[] = [
   { id: "tran-do", title: "Trận Đồ", text: "Bày quân lệnh theo nghề và hệ để khai thông sa bàn.", art: "tran-do", scene: "FORMATION" },
   { id: "tam-tuong-ky", title: "Tầm Tướng Ký", text: "Ghép yếu tố từ bảy hệ để tìm lại chân dung danh tướng.", art: "tam-tuong-ky" },
-  { id: "vien-chinh", title: "Viễn Chinh", text: "Đưa quân đi xa ngoài bờ cõi. Cơ chế đang được thiết kế." },
+  { id: "vien-chinh", title: "Viễn Chinh", text: "Chia sáu tướng làm hai đạo, hành quân trên sa bàn và giáp công thành đích." },
 ];
 
 
@@ -142,7 +143,15 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
           <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
             {UPCOMING.map((u) => (
               <li key={u.id}>
-                <UpcomingCard mode={u.id === "tam-tuong-ky" && towerFeatures.tamTuongKy ? { ...u, scene: "TAM_TUONG_KY" } : u} />
+                <UpcomingCard
+                  mode={
+                    u.id === "tam-tuong-ky" && towerFeatures.tamTuongKy
+                      ? { ...u, scene: "TAM_TUONG_KY" }
+                      : u.id === "vien-chinh" && towerFeatures.expedition
+                        ? { ...u, scene: "EXPEDITION" }
+                        : u
+                  }
+                />
               </li>
             ))}
           </ul>
