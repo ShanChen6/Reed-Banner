@@ -1,7 +1,7 @@
 # Prompt biểu tượng kỹ năng
 
 > Cập nhật: 03/11/2026
-> Trạng thái: **DRAFT** — đã có ảnh 15 chiêu nghề Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ (04/11/2026); 42 ảnh kỹ năng hệ Shan gửi ở `public/art/skills/` là chuẩn phong cách.
+> Trạng thái: **DRAFT** — đã có ảnh đủ 24 chiêu nghề của 8 nghề (04/11/2026); 42 ảnh kỹ năng hệ Shan gửi ở `public/art/skills/` là chuẩn phong cách.
 
 Prompt ráp sẵn để tạo ảnh cho mọi kỹ năng còn vẽ bằng SVG (`src/app/game/art/skills.tsx`): chiêu nghề, tuyệt chiêu/chiêu riêng của nhân vật kèm, tướng lịch sử, sứ quân, Xạ thủ/Sát thủ, tuyệt chiêu ô 4 của Đinh Bộ Lĩnh và hai nhân vật đặc biệt. Danh sách lấy từ code ngày 03/11/2026 (`ROLE_SKILLS`, `CHARACTER_SKILLS`, `DBL_ULTIMATES`, `SPECIAL_SKILLS` trong `src/core/battle/`). Luật kỹ năng ở [Kỹ năng](../../03-characters/ky-nang/README.md), bảng từng nhân vật ở [kỹ năng đồng hành](../../03-characters/ky-nang/data/ky-nang-dong-hanh.md). Giải thích bằng tiếng Việt, prompt bằng tiếng Anh. Prompt trang bị ở [Prompt trang bị](trang-bi.md).
 

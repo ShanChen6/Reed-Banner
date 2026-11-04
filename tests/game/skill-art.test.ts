@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { test } from "node:test";
-import { DBL_ULTIMATES, ELEMENT_SKILLS } from "../../src/core";
+import { DBL_ULTIMATES, ELEMENT_SKILLS, ROLE_SKILLS } from "../../src/core";
 import { skillArt } from "../../src/app/game/art/skills";
 
 test("ô 2/6 hệ (element_<mã>) dùng lại ảnh hệ cũ của Đinh Bộ Lĩnh", () => {
@@ -25,18 +25,14 @@ test("56 tuyệt chiêu ô 4 Đinh Bộ Lĩnh có ảnh theo hệ và huy hiệu
 });
 
 test("kỹ năng chưa có ảnh vẫn vẽ SVG", () => {
-  assert.equal(skillArt({ id: "role_nghiBinh" }), undefined);
+  assert.equal(skillArt({ id: "role_khongCo" }), undefined);
   assert.equal(skillArt({ id: "element_khongCo" }), undefined);
 });
 
-test("chiêu nghề 5 nghề đã vẽ có ảnh vẽ tay", () => {
-  for (const id of [
-    "role_tramKich", "role_phaTran", "role_doatMenh", "role_phepLan", "role_nguHanhAn", "role_thienDiaCong",
-    "role_thuThanh", "role_tuongKhien", "role_phanKich", "role_linhDuoc", "role_duongSinh", "role_teDo",
-    "role_muaChuoc", "role_lyGian", "role_catQuanLuong",
-  ]) {
-    const art = skillArt({ id });
-    assert.ok(art, id);
-    assert.ok(existsSync(`public/art/skills/${art.file}.webp`), id);
+test("mọi chiêu nghề của 8 nghề có ảnh vẽ tay", () => {
+  for (const def of ROLE_SKILLS) {
+    const art = skillArt(def);
+    assert.ok(art, def.id);
+    assert.ok(existsSync(`public/art/skills/${art.file}.webp`), def.id);
   }
 });
