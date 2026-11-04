@@ -3,6 +3,8 @@
 > Cập nhật: 03/11/2026
 > Trạng thái: **APPROVED** — Shan duyệt công thức và tên node ngày 03/11/2026. Catalog thử 3 tướng và validator đã có code (`src/core/tam-tuong-ky/`); pack vẫn để `draft` (chưa phát hành).
 
+Từ LT-05, server chạy [Gói 1](18-tam-tuong-ky-lt05-pack-1.md); slice-1 giữ làm dữ liệu test và mọi ID của nó nằm nguyên trong Gói 1.
+
 Luật theo [Design Freeze](14-tam-tuong-ky-design-freeze.md) (FROZEN). File này ghi nội dung slice và kết quả kiểm; dữ liệu thật nằm trong code, file này không định nghĩa luật mới.
 
 ## 1. Code

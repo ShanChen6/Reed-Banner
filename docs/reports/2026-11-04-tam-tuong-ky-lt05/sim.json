@@ -1,0 +1,705 @@
+{
+  "pack": "pack-1",
+  "contentVersion": 1,
+  "runs": 200,
+  "ticketsPerWeek": 10,
+  "normal": {
+    "optimal": {
+      "allHeroes": 82,
+      "perHero": {
+        "hero.nguyenBac": 10,
+        "hero.leHoan": 11,
+        "hero.dinhNgoc": 9,
+        "hero.dinhDien": 11,
+        "hero.luuCo": 11,
+        "hero.trinhTu": 12,
+        "hero.dinhLien": 12,
+        "hero.phamBachHo": 10,
+        "hero.doCanhThac": 10,
+        "hero.tranLam": 8,
+        "hero.ngoNhatKhanh": 10,
+        "hero.vuPhong": 9
+      },
+      "recipesInPack": 82
+    },
+    "novice_noHints_15": {
+      "combinesPerDay": 21,
+      "combines": {
+        "firstHero": {
+          "p25": 1447,
+          "median": 1918,
+          "p75": 2318
+        },
+        "sixHeroes": {
+          "p25": 3943,
+          "median": 4248,
+          "p75": 4526
+        },
+        "allHeroes": {
+          "p25": 5714,
+          "median": 5824,
+          "p75": 5881
+        }
+      },
+      "days": {
+        "firstHero": {
+          "p25": 69,
+          "median": 92,
+          "p75": 111
+        },
+        "sixHeroes": {
+          "p25": 188,
+          "median": 203,
+          "p75": 216
+        },
+        "allHeroes": {
+          "p25": 273,
+          "median": 278,
+          "p75": 281
+        }
+      },
+      "hintsUsed": {
+        "p25": 0,
+        "median": 0,
+        "p75": 0
+      }
+    },
+    "novice_hints_15": {
+      "combinesPerDay": 21,
+      "combines": {
+        "firstHero": {
+          "p25": 1915,
+          "median": 2025,
+          "p75": 2125
+        },
+        "sixHeroes": {
+          "p25": 2299,
+          "median": 2406,
+          "p75": 2504
+        },
+        "allHeroes": {
+          "p25": 2728,
+          "median": 2853,
+          "p75": 2974
+        }
+      },
+      "days": {
+        "firstHero": {
+          "p25": 92,
+          "median": 97,
+          "p75": 102
+        },
+        "sixHeroes": {
+          "p25": 110,
+          "median": 115,
+          "p75": 120
+        },
+        "allHeroes": {
+          "p25": 130,
+          "median": 136,
+          "p75": 142
+        }
+      },
+      "hintsUsed": {
+        "p25": 260,
+        "median": 272,
+        "p75": 284
+      }
+    },
+    "novice_hints_badges_15": {
+      "combinesPerDay": 21,
+      "combines": {
+        "firstHero": {
+          "p25": 1433,
+          "median": 1509,
+          "p75": 1576
+        },
+        "sixHeroes": {
+          "p25": 1592,
+          "median": 1654,
+          "p75": 1711
+        },
+        "allHeroes": {
+          "p25": 1658,
+          "median": 1724,
+          "p75": 1790
+        }
+      },
+      "days": {
+        "firstHero": {
+          "p25": 69,
+          "median": 72,
+          "p75": 76
+        },
+        "sixHeroes": {
+          "p25": 76,
+          "median": 79,
+          "p75": 82
+        },
+        "allHeroes": {
+          "p25": 79,
+          "median": 83,
+          "p75": 86
+        }
+      },
+      "hintsUsed": {
+        "p25": 158,
+        "median": 166,
+        "p75": 172
+      }
+    },
+    "novice_hints_badges_targeted_15": {
+      "combinesPerDay": 21,
+      "combines": {
+        "firstHero": {
+          "p25": 157,
+          "median": 173,
+          "p75": 193
+        },
+        "sixHeroes": {
+          "p25": 1097,
+          "median": 1152,
+          "p75": 1207
+        },
+        "allHeroes": {
+          "p25": 1443,
+          "median": 1509,
+          "p75": 1553
+        }
+      },
+      "days": {
+        "firstHero": {
+          "p25": 8,
+          "median": 9,
+          "p75": 10
+        },
+        "sixHeroes": {
+          "p25": 53,
+          "median": 55,
+          "p75": 58
+        },
+        "allHeroes": {
+          "p25": 69,
+          "median": 72,
+          "p75": 74
+        }
+      },
+      "hintsUsed": {
+        "p25": 138,
+        "median": 144,
+        "p75": 148
+      }
+    },
+    "novice_noHints_20": {
+      "combinesPerDay": 29,
+      "combines": {
+        "firstHero": {
+          "p25": 1447,
+          "median": 1918,
+          "p75": 2318
+        },
+        "sixHeroes": {
+          "p25": 3943,
+          "median": 4248,
+          "p75": 4526
+        },
+        "allHeroes": {
+          "p25": 5714,
+          "median": 5824,
+          "p75": 5881
+        }
+      },
+      "days": {
+        "firstHero": {
+          "p25": 50,
+          "median": 67,
+          "p75": 80
+        },
+        "sixHeroes": {
+          "p25": 136,
+          "median": 147,
+          "p75": 157
+        },
+        "allHeroes": {
+          "p25": 198,
+          "median": 201,
+          "p75": 203
+        }
+      },
+      "hintsUsed": {
+        "p25": 0,
+        "median": 0,
+        "p75": 0
+      }
+    },
+    "novice_hints_20": {
+      "combinesPerDay": 29,
+      "combines": {
+        "firstHero": {
+          "p25": 2004,
+          "median": 2095,
+          "p75": 2185
+        },
+        "sixHeroes": {
+          "p25": 2384,
+          "median": 2478,
+          "p75": 2604
+        },
+        "allHeroes": {
+          "p25": 2834,
+          "median": 2968,
+          "p75": 3084
+        }
+      },
+      "days": {
+        "firstHero": {
+          "p25": 70,
+          "median": 73,
+          "p75": 76
+        },
+        "sixHeroes": {
+          "p25": 83,
+          "median": 86,
+          "p75": 90
+        },
+        "allHeroes": {
+          "p25": 98,
+          "median": 103,
+          "p75": 107
+        }
+      },
+      "hintsUsed": {
+        "p25": 196,
+        "median": 206,
+        "p75": 214
+      }
+    },
+    "novice_hints_badges_20": {
+      "combinesPerDay": 29,
+      "combines": {
+        "firstHero": {
+          "p25": 1531,
+          "median": 1600,
+          "p75": 1679
+        },
+        "sixHeroes": {
+          "p25": 1692,
+          "median": 1761,
+          "p75": 1826
+        },
+        "allHeroes": {
+          "p25": 1759,
+          "median": 1836,
+          "p75": 1892
+        }
+      },
+      "days": {
+        "firstHero": {
+          "p25": 53,
+          "median": 56,
+          "p75": 58
+        },
+        "sixHeroes": {
+          "p25": 59,
+          "median": 61,
+          "p75": 63
+        },
+        "allHeroes": {
+          "p25": 61,
+          "median": 64,
+          "p75": 66
+        }
+      },
+      "hintsUsed": {
+        "p25": 122,
+        "median": 128,
+        "p75": 132
+      }
+    },
+    "novice_hints_badges_targeted_20": {
+      "combinesPerDay": 29,
+      "combines": {
+        "firstHero": {
+          "p25": 196,
+          "median": 211,
+          "p75": 238
+        },
+        "sixHeroes": {
+          "p25": 1221,
+          "median": 1263,
+          "p75": 1321
+        },
+        "allHeroes": {
+          "p25": 1570,
+          "median": 1629,
+          "p75": 1674
+        }
+      },
+      "days": {
+        "firstHero": {
+          "p25": 7,
+          "median": 8,
+          "p75": 9
+        },
+        "sixHeroes": {
+          "p25": 43,
+          "median": 44,
+          "p75": 46
+        },
+        "allHeroes": {
+          "p25": 55,
+          "median": 57,
+          "p75": 58
+        }
+      },
+      "hintsUsed": {
+        "p25": 110,
+        "median": 114,
+        "p75": 116
+      }
+    }
+  },
+  "ranked": {
+    "perHero": {
+      "hero.nguyenBac": {
+        "combines": 12,
+        "units": 13,
+        "byElement": {
+          "kim": 1,
+          "moc": 5,
+          "thuy": 1,
+          "hoa": 4,
+          "tho": 0,
+          "loi": 0,
+          "phong": 2
+        }
+      },
+      "hero.leHoan": {
+        "combines": 12,
+        "units": 13,
+        "byElement": {
+          "kim": 1,
+          "moc": 7,
+          "thuy": 1,
+          "hoa": 1,
+          "tho": 0,
+          "loi": 1,
+          "phong": 2
+        }
+      },
+      "hero.dinhNgoc": {
+        "combines": 9,
+        "units": 10,
+        "byElement": {
+          "kim": 3,
+          "moc": 0,
+          "thuy": 2,
+          "hoa": 1,
+          "tho": 3,
+          "loi": 0,
+          "phong": 1
+        }
+      },
+      "hero.dinhDien": {
+        "combines": 12,
+        "units": 13,
+        "byElement": {
+          "kim": 1,
+          "moc": 6,
+          "thuy": 1,
+          "hoa": 1,
+          "tho": 3,
+          "loi": 0,
+          "phong": 1
+        }
+      },
+      "hero.luuCo": {
+        "combines": 12,
+        "units": 13,
+        "byElement": {
+          "kim": 3,
+          "moc": 3,
+          "thuy": 1,
+          "hoa": 2,
+          "tho": 2,
+          "loi": 0,
+          "phong": 2
+        }
+      },
+      "hero.trinhTu": {
+        "combines": 12,
+        "units": 13,
+        "byElement": {
+          "kim": 2,
+          "moc": 6,
+          "thuy": 3,
+          "hoa": 0,
+          "tho": 1,
+          "loi": 0,
+          "phong": 1
+        }
+      },
+      "hero.dinhLien": {
+        "combines": 12,
+        "units": 13,
+        "byElement": {
+          "kim": 3,
+          "moc": 3,
+          "thuy": 3,
+          "hoa": 1,
+          "tho": 2,
+          "loi": 0,
+          "phong": 1
+        }
+      },
+      "hero.phamBachHo": {
+        "combines": 12,
+        "units": 13,
+        "byElement": {
+          "kim": 3,
+          "moc": 2,
+          "thuy": 0,
+          "hoa": 2,
+          "tho": 2,
+          "loi": 0,
+          "phong": 4
+        }
+      },
+      "hero.doCanhThac": {
+        "combines": 12,
+        "units": 13,
+        "byElement": {
+          "kim": 1,
+          "moc": 3,
+          "thuy": 0,
+          "hoa": 1,
+          "tho": 8,
+          "loi": 0,
+          "phong": 0
+        }
+      },
+      "hero.tranLam": {
+        "combines": 12,
+        "units": 13,
+        "byElement": {
+          "kim": 0,
+          "moc": 8,
+          "thuy": 2,
+          "hoa": 0,
+          "tho": 1,
+          "loi": 0,
+          "phong": 2
+        }
+      },
+      "hero.ngoNhatKhanh": {
+        "combines": 12,
+        "units": 13,
+        "byElement": {
+          "kim": 0,
+          "moc": 5,
+          "thuy": 0,
+          "hoa": 0,
+          "tho": 3,
+          "loi": 2,
+          "phong": 3
+        }
+      },
+      "hero.vuPhong": {
+        "combines": 9,
+        "units": 10,
+        "byElement": {
+          "kim": 1,
+          "moc": 3,
+          "thuy": 4,
+          "hoa": 0,
+          "tho": 1,
+          "loi": 0,
+          "phong": 1
+        }
+      }
+    },
+    "featured_5": {
+      "bundlesToFinish": {
+        "p25": 19,
+        "median": 21,
+        "p75": 25
+      },
+      "completedBySupply": {
+        "cấp nền": {
+          "p25": 1,
+          "median": 1,
+          "p75": 1
+        },
+        "cấp nền + nửa trên 2 chế độ": {
+          "p25": 2,
+          "median": 2,
+          "p75": 2
+        },
+        "cấp nền + nửa trên 2 chế độ + mua 2": {
+          "p25": 2,
+          "median": 2,
+          "p75": 3
+        },
+        "cấp nền + top 10 hai chế độ + mua 2": {
+          "p25": 2,
+          "median": 3,
+          "p75": 3
+        }
+      },
+      "flexibleBundlesToFinish": {
+        "p25": 9,
+        "median": 9,
+        "p75": 9
+      },
+      "completedBySupplyFlexible": {
+        "cấp nền": {
+          "p25": 1,
+          "median": 1,
+          "p75": 1
+        },
+        "cấp nền + nửa trên 2 chế độ": {
+          "p25": 4,
+          "median": 4,
+          "p75": 4
+        },
+        "cấp nền + nửa trên 2 chế độ + mua 2": {
+          "p25": 5,
+          "median": 5,
+          "p75": 5
+        },
+        "cấp nền + top 10 hai chế độ + mua 2": {
+          "p25": 5,
+          "median": 5,
+          "p75": 5
+        }
+      },
+      "combinesToFinish": {
+        "p25": 57,
+        "median": 57,
+        "p75": 57
+      }
+    },
+    "featured_7": {
+      "bundlesToFinish": {
+        "p25": 28,
+        "median": 30,
+        "p75": 33
+      },
+      "completedBySupply": {
+        "cấp nền": {
+          "p25": 1,
+          "median": 1,
+          "p75": 1
+        },
+        "cấp nền + nửa trên 2 chế độ": {
+          "p25": 2,
+          "median": 2,
+          "p75": 3
+        },
+        "cấp nền + nửa trên 2 chế độ + mua 2": {
+          "p25": 2,
+          "median": 3,
+          "p75": 3
+        },
+        "cấp nền + top 10 hai chế độ + mua 2": {
+          "p25": 3,
+          "median": 3,
+          "p75": 4
+        }
+      },
+      "flexibleBundlesToFinish": {
+        "p25": 13,
+        "median": 13,
+        "p75": 13
+      },
+      "completedBySupplyFlexible": {
+        "cấp nền": {
+          "p25": 1,
+          "median": 1,
+          "p75": 1
+        },
+        "cấp nền + nửa trên 2 chế độ": {
+          "p25": 4,
+          "median": 4,
+          "p75": 4
+        },
+        "cấp nền + nửa trên 2 chế độ + mua 2": {
+          "p25": 5,
+          "median": 5,
+          "p75": 5
+        },
+        "cấp nền + top 10 hai chế độ + mua 2": {
+          "p25": 6,
+          "median": 6,
+          "p75": 6
+        }
+      },
+      "combinesToFinish": {
+        "p25": 81,
+        "median": 81,
+        "p75": 81
+      }
+    },
+    "featured_10": {
+      "bundlesToFinish": {
+        "p25": 38,
+        "median": 45,
+        "p75": 46
+      },
+      "completedBySupply": {
+        "cấp nền": {
+          "p25": 1,
+          "median": 1,
+          "p75": 1
+        },
+        "cấp nền + nửa trên 2 chế độ": {
+          "p25": 3,
+          "median": 3,
+          "p75": 3
+        },
+        "cấp nền + nửa trên 2 chế độ + mua 2": {
+          "p25": 3,
+          "median": 3,
+          "p75": 3
+        },
+        "cấp nền + top 10 hai chế độ + mua 2": {
+          "p25": 3,
+          "median": 4,
+          "p75": 4
+        }
+      },
+      "flexibleBundlesToFinish": {
+        "p25": 18,
+        "median": 18,
+        "p75": 19
+      },
+      "completedBySupplyFlexible": {
+        "cấp nền": {
+          "p25": 1,
+          "median": 2,
+          "p75": 2
+        },
+        "cấp nền + nửa trên 2 chế độ": {
+          "p25": 4,
+          "median": 4,
+          "p75": 4
+        },
+        "cấp nền + nửa trên 2 chế độ + mua 2": {
+          "p25": 5,
+          "median": 5,
+          "p75": 5
+        },
+        "cấp nền + top 10 hai chế độ + mua 2": {
+          "p25": 6,
+          "median": 6,
+          "p75": 6
+        }
+      },
+      "combinesToFinish": {
+        "p25": 114,
+        "median": 114,
+        "p75": 117
+      }
+    }
+  }
+}

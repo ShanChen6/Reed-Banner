@@ -161,11 +161,188 @@ export const SLICE_PACK: Pack = {
   ],
 };
 
-/** Gói server đang chạy khi cờ bật. Slice còn `draft`: chỉ chạy sau cờ, chưa có thành tựu trên trang Nhiệm vụ. */
-export const ACTIVE_PACK: Pack = SLICE_PACK;
+// ——— Gói 1 (LT-05): 10 tướng lịch sử + 2 tướng đặc biệt (Design Freeze A-17, mục 5). ———
+// Giữ nguyên mọi node và công thức của slice-1 (ID ổn định) nên sổ khám phá cũ chuyển sang không mất gì.
+// Vật biểu trưng theo art: docs/06-art/prompts/v4-2/14-group-a-19-character-weapon-pose-audit.md (tướng lịch sử, sứ quân),
+// docs/03-characters/dinh-ngoc.md, docs/03-characters/vu-phong.md. Báo cáo: docs/02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md.
+
+const hero = (characterId: string, nameVi: string, tier: CatalogNode["tier"], historySourceIds?: readonly string[], note?: string): CatalogNode => ({
+  id: `hero.${characterId}`,
+  kind: "character",
+  nameVi,
+  characterId,
+  tier,
+  historySourceIds,
+  note,
+});
+
+/** Sứ quân: danh sách Thập nhị sứ quân trong Toàn thư (S01) và Việt Nam sử lược (S05). */
+const WARLORD_SOURCES = ["S01", "S05"] as const;
+
+const PACK_1_NEW_NODES: readonly CatalogNode[] = [
+  // Bậc 1 mới.
+  mat("rattan", "Dây mây", "thien-nhien"),
+  mat("feather", "Lông vũ", "thien-nhien"),
+  mat("blackBronze", "Đồng đen", "binh-khi"),
+  mat("mountain", "Núi", "thien-nhien"),
+  mat("boulder", "Đá tảng", "thien-nhien"),
+  mat("estuary", "Cửa sông", "thien-nhien"),
+  mat("cloud", "Mây trời", "thien-nhien"),
+  mat("staffShaft", "Cán gỗ bịt đồng", "binh-khi"),
+  // Đinh Điền: giáo cán gỗ mũi lá, chùm lông lau, khiên mây.
+  mat("spearHead", "Mũi giáo lá", "binh-khi"),
+  mat("spear", "Giáo cán gỗ", "binh-khi"),
+  mat("reedTassel", "Chùm lông lau", "co-hieu"),
+  mat("tasselSpear", "Giáo chùm lông lau", "binh-khi"),
+  mat("wovenRattan", "Mây đan", "thien-nhien"),
+  mat("rattanShield", "Khiên mây", "binh-khi"),
+  // Lưu Cơ: quạt lông trắng nan tỏa từ hoa thị đồng đen; phủ lệnh.
+  mat("bronzeRosette", "Hoa thị đồng", "binh-khi"),
+  mat("featherFan", "Quạt lông trắng", "co-hieu"),
+  mat("seal", "Ấn đồng", "thu-tich"),
+  know("decree", "Phủ lệnh", "thu-tich", "Gợi tới chiêu Đô Hộ Phủ Lệnh của Lưu Cơ"),
+  // Trịnh Tú: hồ lô thuốc nắp đồng, tua xanh; thảo dược.
+  mat("gourd", "Quả bầu", "thien-nhien"),
+  mat("cappedGourd", "Hồ lô nắp đồng", "ngoc"),
+  mat("greenTassel", "Tua xanh", "co-hieu"),
+  mat("medicineGourd", "Hồ lô thuốc", "ngoc"),
+  { ...know("herbalBook", "Sách thuốc", "thu-tich", "Gợi tới chiêu Hoa Lư Thảo Dược của Trịnh Tú"), professionHint: "ySu" },
+  // Đinh Liễn: trượng gỗ đồng đầu cầu Thủy; vương ấn.
+  mat("waterOrb", "Ngọc cầu Thủy", "ngoc", "Cặp gương với Ngọc giọt nước (Đá ngọc thô + Giọt sương)"),
+  mat("waterStaff", "Trượng đầu cầu Thủy", "binh-khi"),
+  know("royalSeal", "Vương ấn", "thu-tich", "Gợi tới chiêu Nam Việt Vương Ấn của Đinh Liễn"),
+  // Phạm Bạch Hổ: đại đao rộng sống khía, cán quấn lông trắng; bạch hổ xuất sơn.
+  mat("notchedBlade", "Đại đao sống khía", "binh-khi"),
+  mat("featherGrip", "Đại đao cán quấn lông", "binh-khi"),
+  know("whiteTiger", "Bạch hổ", "thien-nhien"),
+  know("tigerLeaves", "Hổ xuất sơn", "thien-nhien", "Gợi tới chiêu Bạch Hổ Xuất Sơn của Phạm Bạch Hổ"),
+  // Đỗ Cảnh Thạc: búa chiến cán dài đầu đồng vuông; kiên tâm.
+  mat("bronzeHead", "Đầu búa đồng vuông", "binh-khi"),
+  mat("longShaft", "Cán dài", "binh-khi"),
+  mat("warHammer", "Búa chiến", "binh-khi"),
+  mat("fortress", "Lũy kép", "thien-nhien"),
+  know("steadfast", "Kiên tâm", "thu-tich", "Gợi tới chiêu Đỗ Động Kiên Tâm của Đỗ Cảnh Thạc"),
+  // Trần Lãm: cờ lệnh, trấn giữ cửa sông; thuyền.
+  know("riverGuard", "Trấn giang", "co-hieu", "Gợi tới chiêu Bố Hải Trấn Giang của Trần Lãm"),
+  mat("boat", "Thuyền", "thien-nhien"),
+  know("navy", "Thủy quân", "co-hieu"),
+  // Ngô Nhật Khánh: cờ lệnh trong gió; làng Đường Lâm.
+  know("windRise", "Phong khởi", "thien-nhien", "Gợi tới chiêu Đường Lâm Phong Khởi của Ngô Nhật Khánh"),
+  mat("windFlag", "Cờ lệnh trong gió", "co-hieu"),
+  mat("village", "Lũy tre làng", "thien-nhien"),
+  mat("duongLam", "Làng Đường Lâm", "thien-nhien"),
+  // Trần Vũ Phong: trượng trúc bịt đồng, hồ lô nước; vân du.
+  mat("bambooStaff", "Trượng trúc", "binh-khi"),
+  mat("waterGourd", "Hồ lô nước", "ngoc"),
+  mat("travelPack", "Hành trang vân du", "thien-nhien"),
+  // Tướng.
+  hero("dinhDien", "Đinh Điền", "lichSu", ["S04"]),
+  hero("luuCo", "Lưu Cơ", "lichSu", ["S04"]),
+  hero("trinhTu", "Trịnh Tú", "lichSu", ["S04"]),
+  hero("dinhLien", "Đinh Liễn", "lichSu", ["S04"]),
+  hero("phamBachHo", "Phạm Bạch Hổ", "lichSu", WARLORD_SOURCES),
+  hero("doCanhThac", "Đỗ Cảnh Thạc", "lichSu", WARLORD_SOURCES),
+  hero("tranLam", "Trần Lãm", "lichSu", WARLORD_SOURCES),
+  hero("ngoNhatKhanh", "Ngô Nhật Khánh", "lichSu", WARLORD_SOURCES),
+  hero("vuPhong", "Trần Vũ Phong", "dacBiet"),
+];
+
+const PACK_1_NEW_RECIPES: readonly Recipe[] = [
+  // Bậc 1 mới. Cặp gương với slice: Kim>Thổ (Đồng đen) ≠ Thổ>Kim (Đá ngọc thô).
+  r("rattan", "elt.moc", "elt.tho", "mat.rattan", "Cây mọc trên đất thành dây mây"),
+  r("feather", "elt.phong", "elt.phong", "mat.feather", "Gió nối gió, chim bay để lại lông vũ"),
+  r("blackBronze", "elt.kim", "elt.tho", "mat.blackBronze", "Kim vùi trong đất lâu ngày thành đồng đen"),
+  r("mountain", "elt.tho", "elt.phong", "mat.mountain", "Đất dồn đón gió thành núi"),
+  r("boulder", "elt.tho", "elt.hoa", "mat.boulder", "Đất nung trong lửa thành đá tảng"),
+  r("estuary", "elt.thuy", "elt.tho", "mat.estuary", "Nước gặp đất thành cửa sông"),
+  r("cloud", "elt.thuy", "elt.phong", "mat.cloud", "Hơi nước theo gió thành mây"),
+  r("staffShaft", "elt.moc", "elt.kim", "mat.staffShaft", "Gỗ bịt kim thành cán bịt đồng"),
+  // Đinh Điền.
+  r("spearHead", "mat.forgedIron", "elt.moc", "mat.spearHead", "Sắt rèn theo hình lá thành mũi giáo"),
+  r("spear", "mat.spearHead", "mat.bamboo", "mat.spear", "Mũi giáo tra cán thành giáo"),
+  r("reedTassel", "mat.reed", "elt.phong", "mat.reedTassel", "Bông lau bay trong gió thành chùm lông lau"),
+  r("tasselSpear", "mat.spear", "mat.reedTassel", "mat.tasselSpear", "Giáo buộc chùm lông lau"),
+  r("wovenRattan", "mat.rattan", "mat.rattan", "mat.wovenRattan", "Dây mây đan với dây mây"),
+  r("rattanShield", "mat.wovenRattan", "elt.tho", "mat.rattanShield", "Mây đan dày như đất thành khiên"),
+  r("dinhDien", "mat.tasselSpear", "mat.rattanShield", "hero.dinhDien", "Giáo chùm lông lau và khiên mây"),
+  // Lưu Cơ.
+  r("bronzeRosette", "mat.blackBronze", "elt.hoa", "mat.bronzeRosette", "Đồng đen đúc thành hoa thị"),
+  r("featherFan", "mat.feather", "mat.bronzeRosette", "mat.featherFan", "Lông vũ tỏa nan từ hoa thị đồng"),
+  r("seal", "mat.blackBronze", "mat.ink", "mat.seal", "Đồng đen khắc chữ, chấm mực thành ấn"),
+  r("decree", "mat.bambooSlips", "mat.seal", "know.decree", "Thẻ tre đóng ấn thành phủ lệnh"),
+  r("luuCo", "mat.featherFan", "know.decree", "hero.luuCo", "Quạt lông trắng và phủ lệnh"),
+  // Trịnh Tú.
+  r("gourd", "elt.moc", "mat.dew", "mat.gourd", "Dây leo uống sương kết quả bầu"),
+  r("cappedGourd", "mat.gourd", "mat.blackBronze", "mat.cappedGourd", "Quả bầu khô đậy nắp đồng"),
+  r("greenTassel", "mat.cloth", "elt.moc", "mat.greenTassel", "Vải nhuộm lá thành tua xanh"),
+  r("medicineGourd", "mat.cappedGourd", "mat.greenTassel", "mat.medicineGourd", "Hồ lô buộc tua xanh đựng thuốc"),
+  r("herbalBook", "mat.herbs", "mat.bambooSlips", "know.herbalBook", "Dược thảo ghi lên thẻ tre thành sách thuốc"),
+  r("trinhTu", "mat.medicineGourd", "know.herbalBook", "hero.trinhTu", "Hồ lô thuốc và sách thuốc"),
+  // Đinh Liễn. Cặp gương: Giọt sương>Đá ngọc thô (Ngọc cầu Thủy) ≠ Đá ngọc thô>Giọt sương (Ngọc giọt nước).
+  r("waterOrb", "mat.dew", "mat.jadeStone", "mat.waterOrb", "Sương đọng trên đá ngọc thành cầu Thủy"),
+  r("waterStaff", "mat.staffShaft", "mat.waterOrb", "mat.waterStaff", "Cán bịt đồng gắn cầu Thủy thành trượng"),
+  r("royalSeal", "mat.seal", "mat.cloth", "know.royalSeal", "Ấn đồng bọc khăn thành vương ấn"),
+  r("dinhLien", "mat.waterStaff", "know.royalSeal", "hero.dinhLien", "Trượng cầu Thủy và vương ấn"),
+  // Phạm Bạch Hổ.
+  r("notchedBlade", "mat.greatBlade", "mat.forgedIron", "mat.notchedBlade", "Đại đao tôi thêm sắt, sống mài khía"),
+  r("featherGrip", "mat.notchedBlade", "mat.feather", "mat.featherGrip", "Cán đao quấn lông trắng"),
+  r("whiteTiger", "mat.mountain", "elt.kim", "know.whiteTiger", "Núi phương Kim sắc trắng, nơi bạch hổ ở"),
+  r("tigerLeaves", "know.whiteTiger", "mat.mountain", "know.tigerLeaves", "Bạch hổ rời núi"),
+  r("phamBachHo", "mat.featherGrip", "know.tigerLeaves", "hero.phamBachHo", "Đại đao cán lông trắng và hổ xuất sơn"),
+  // Đỗ Cảnh Thạc.
+  r("bronzeHead", "mat.blackBronze", "mat.rampart", "mat.bronzeHead", "Đồng đen đúc khối vuông như lũy"),
+  r("longShaft", "mat.bamboo", "elt.moc", "mat.longShaft", "Tre nối gỗ thành cán dài"),
+  r("warHammer", "mat.bronzeHead", "mat.longShaft", "mat.warHammer", "Đầu đồng vuông tra cán dài thành búa chiến"),
+  r("fortress", "mat.rampart", "mat.rampart", "mat.fortress", "Lũy đắp thêm lũy"),
+  r("steadfast", "mat.fortress", "mat.boulder", "know.steadfast", "Lũy kép chèn đá tảng, lòng không lay"),
+  r("doCanhThac", "mat.warHammer", "know.steadfast", "hero.doCanhThac", "Búa chiến và lòng kiên tâm"),
+  // Trần Lãm.
+  r("riverGuard", "mat.estuary", "mat.commandFlag", "know.riverGuard", "Cắm cờ lệnh giữ cửa sông"),
+  r("boat", "mat.bamboo", "elt.thuy", "mat.boat", "Tre thả xuống nước thành thuyền"),
+  r("navy", "mat.boat", "mat.commandFlag", "know.navy", "Thuyền theo cờ lệnh thành thủy quân"),
+  r("tranLam", "know.riverGuard", "know.navy", "hero.tranLam", "Trấn giữ cửa sông bằng thủy quân"),
+  // Ngô Nhật Khánh.
+  r("windRise", "mat.storm", "mat.storm", "know.windRise", "Giông dồn giông thành phong khởi"),
+  r("windFlag", "mat.commandFlag", "know.windRise", "mat.windFlag", "Cờ lệnh tung trong gió nổi"),
+  r("village", "mat.bamboo", "mat.rampart", "mat.village", "Tre trồng quanh lũy thành lũy tre làng"),
+  r("duongLam", "mat.village", "elt.tho", "mat.duongLam", "Lũy tre trên đất cổ thành làng Đường Lâm"),
+  r("ngoNhatKhanh", "mat.windFlag", "mat.duongLam", "hero.ngoNhatKhanh", "Cờ lệnh nổi gió ở Đường Lâm"),
+  // Trần Vũ Phong: chủ đề rong ruổi, tìm người.
+  r("bambooStaff", "mat.bamboo", "mat.blackBronze", "mat.bambooStaff", "Trúc già bịt đồng thành trượng đi đường"),
+  r("waterGourd", "mat.gourd", "elt.thuy", "mat.waterGourd", "Quả bầu đựng nước thành hồ lô nước"),
+  r("travelPack", "mat.waterGourd", "mat.cloud", "mat.travelPack", "Hồ lô nước theo mây thành hành trang vân du"),
+  r("vuPhong", "mat.bambooStaff", "mat.travelPack", "hero.vuPhong", "Trượng trúc và hành trang vân du"),
+];
+
+const set = (id: string, title: string, gold: number, heroIds: readonly string[]) => ({ id: `ttk.pack-1.${id}`, title: `Tầm Tướng Ký: ${title}`, gold, heroIds: heroIds.map((h) => `hero.${h}`) });
+
+export const PACK_1: Pack = {
+  id: "pack-1",
+  nameVi: "Gói 1: Dẹp loạn",
+  contentVersion: 1,
+  status: "draft",
+  nodes: [...SLICE_NODES, ...PACK_1_NEW_NODES],
+  recipes: [...SLICE_RECIPES, ...PACK_1_NEW_RECIPES],
+  // Thành tựu bộ theo P-21: bộ theo hệ có 2 tướng 200 vàng; 2 tướng đặc biệt 300; 6 tướng theo Đinh Bộ Lĩnh 500;
+  // 4 sứ quân 400; cả gói 1 000. Mộc và Lôi mỗi hệ 1 tướng nên chưa có bộ.
+  achievementSets: [
+    set("hoa", "đủ tướng hệ Hỏa", 200, ["nguyenBac", "phamBachHo"]),
+    set("tho", "đủ tướng hệ Thổ", 200, ["dinhDien", "doCanhThac"]),
+    set("kim", "đủ tướng hệ Kim", 200, ["luuCo", "dinhNgoc"]),
+    set("thuy", "đủ tướng hệ Thủy", 200, ["dinhLien", "tranLam"]),
+    set("phong", "đủ tướng hệ Phong", 200, ["ngoNhatKhanh", "vuPhong"]),
+    set("dacBiet", "đủ tướng đặc biệt", 300, ["dinhNgoc", "vuPhong"]),
+    set("dinhBoLinh", "đủ sáu tướng theo Đinh Bộ Lĩnh", 500, ["nguyenBac", "dinhDien", "luuCo", "trinhTu", "leHoan", "dinhLien"]),
+    set("suQuan", "đủ bốn sứ quân", 400, ["phamBachHo", "doCanhThac", "tranLam", "ngoNhatKhanh"]),
+    set("all", "đủ Gói 1", 1000, ["nguyenBac", "dinhDien", "luuCo", "trinhTu", "leHoan", "dinhLien", "phamBachHo", "doCanhThac", "tranLam", "ngoNhatKhanh", "dinhNgoc", "vuPhong"]),
+  ],
+};
+
+/** Gói server đang chạy khi cờ bật. Gói 1 còn `draft`: chỉ chạy sau cờ, chưa có thành tựu trên trang Nhiệm vụ. */
+export const ACTIVE_PACK: Pack = PACK_1;
 
 /** Gói đã phát hành: thành tựu của chúng hiện ở trang Nhiệm vụ. Chưa có gói nào. */
-export const PUBLISHED_PACKS: readonly Pack[] = [SLICE_PACK].filter((p) => p.status === "published");
+export const PUBLISHED_PACKS: readonly Pack[] = [PACK_1].filter((p) => p.status === "published");
 
 /** Bậc và nghề/hệ đọc từ roster, không chép vào catalog. Đinh Bộ Lĩnh chưa có (P-27, gói 2). */
 export function rosterCharacter(characterId: string): CharacterInfo | undefined {

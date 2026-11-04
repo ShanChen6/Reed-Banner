@@ -25,6 +25,8 @@ import { tutorialTip } from "../../src/app/game/tam-tuong-ky/altar";
 
 const catalog = buildCatalog(SLICE_PACK);
 const HERO_NAMES = ["Nguyễn Bặc", "Lê Hoàn", "Đinh Ngọc"];
+/** Màn chơi chạy Gói 1 (ACTIVE_PACK): 12 tướng. */
+const PACK_1_NAMES = [...HERO_NAMES, "Đinh Điền", "Lưu Cơ", "Trịnh Tú", "Đinh Liễn", "Phạm Bạch Hổ", "Đỗ Cảnh Thạc", "Trần Lãm", "Ngô Nhật Khánh", "Trần Vũ Phong"];
 
 function discoverAll(): DiscoveryState {
   let s = initialDiscovery(catalog);
@@ -139,10 +141,10 @@ describe("Màn chơi", () => {
     assert.match(html, /Mẹo: chọn Mộc vào ô trước và Mộc vào ô sau/);
     for (const t of ["Vạn Vật Lục", "Đài Hợp Nguyên", "Tướng Lục", "Ô trước", "Ô sau", "aria-live"]) assert.match(html, new RegExp(t));
     assert.equal(tutorialTip(r.view.discovery) !== null, true);
-    for (const name of HERO_NAMES) assert.doesNotMatch(html, new RegExp(name));
+    for (const name of PACK_1_NAMES) assert.doesNotMatch(html, new RegExp(name));
     assert.match(html, /Công thức biểu trưng của trò chơi, không phải diễn giải sử học/);
     for (const bad of ["Nhận tướng", "Chiêu mộ", "vàng"]) assert.doesNotMatch(html, new RegExp(bad));
-    assert.equal((html.match(/Tướng chưa tìm thấy/g) ?? []).length, 3);
+    assert.equal((html.match(/Tướng chưa tìm thấy/g) ?? []).length, 12);
   });
 
   it("có phân cảnh /game/tam-tuong-ky; cờ mặc định tắt, chỉ chuỗi true mới bật", () => {
