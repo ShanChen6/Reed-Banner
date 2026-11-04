@@ -20,8 +20,19 @@ for (const [set, name] of [
   });
 }
 
-test("bộ chưa có ảnh và món không bộ giữ hình SVG", () => {
-  assert.equal(gearArtSrc("dinhMao", "dongCo"), undefined);
+test("bộ Đồng Cổ có ảnh 8 ô ngoài vũ khí, vũ khí còn vẽ SVG", () => {
+  for (const slot of GEAR_SLOTS) {
+    const src = gearArtSrc(slot, "dongCo", "tuongSi");
+    if (slot === "vuKhi") {
+      assert.equal(src, undefined);
+      continue;
+    }
+    assert.ok(src && existsSync(`public${src}`), `${slot} ${src}`);
+  }
+});
+
+test("bộ lạ và món không bộ giữ hình SVG", () => {
+  assert.equal(gearArtSrc("dinhMao", "khongCo"), undefined);
   assert.equal(gearArtSrc("dinhMao", undefined), undefined);
 });
 

@@ -193,6 +193,18 @@ export default function ArtPage() {
         </section>
 
         <section className="space-y-2">
+          <h2 className="font-semibold">Bộ Đồng Cổ (phẩm Cam, hệ Thổ)</h2>
+          <div className="grid grid-cols-9 gap-2 text-xs">
+            {GEAR_SLOTS.map((s) => (
+              <figure key={s} className="flex flex-col items-center gap-1">
+                <GearIcon slot={s} element="tho" tier={5} set="dongCo" className="size-12" />
+                <figcaption className="opacity-70">{SLOT_NAME[s]}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-2">
           <h2 className="font-semibold">Vũ khí theo nghề và màu theo nguyên tố</h2>
           <div className="flex flex-wrap gap-3 text-xs">
             {PROFESSIONS.map((p) => (

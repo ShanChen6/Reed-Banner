@@ -204,6 +204,7 @@ export function tierFrameSrc(tier: Tier): string {
 const SET_ART: Readonly<Record<string, { weapons: boolean }>> = {
   coLau: { weapons: true },
   hoaLu: { weapons: true },
+  dongCo: { weapons: false },
 };
 
 export function gearArtSrc(slot: GearSlot, set: string | undefined, profession?: Profession): string | undefined {
