@@ -18,7 +18,7 @@ import {
 } from "../../src/app/game/tam-tuong-ky/altar";
 import TamTuongKyScreen from "../../src/app/game/tam-tuong-ky/TamTuongKyScreen";
 import { SCENE_SLUG, SCENE_TITLE, sceneOfSlug } from "../../src/app/game/scene";
-import { tamTuongKyEnabled } from "../../src/server/featureFlags";
+import { tamTuongKyEnabled, tamTuongKyFlagStatus, tamTuongKyRankedEnabled } from "../../src/server/featureFlags";
 import { MemoryProfileStore } from "../../src/server/profiles";
 import { getTamTuongKy, getTamTuongKyRanked } from "../../src/server/tamTuongKy";
 import { MemorySeasonStore } from "../../src/server/seasons";
@@ -116,7 +116,7 @@ describe("Tướng Lục", () => {
     assert.equal(entries.length, 3);
     for (const e of entries) {
       assert.equal(e.found, false);
-      assert.deepEqual(Object.keys(e).sort(), ["found", "nodeId", "tier"]);
+      assert.deepEqual(Object.keys(e).sort(), ["found", "nodeId", "pack", "tier"]);
     }
   });
 
@@ -155,6 +155,17 @@ describe("Màn chơi", () => {
     assert.equal(tamTuongKyEnabled({}), false);
     assert.equal(tamTuongKyEnabled({ TAM_TUONG_KY_ENABLED: "1" }), false);
     assert.equal(tamTuongKyEnabled({ TAM_TUONG_KY_ENABLED: "true" }), true);
+    // Giá trị dán vào bảng biến môi trường hay dính khoảng trắng, xuống dòng hoặc viết hoa.
+    for (const v of ["TRUE", " true", "true\n", "True\r\n"]) assert.equal(tamTuongKyEnabled({ TAM_TUONG_KY_ENABLED: v }), true, JSON.stringify(v));
+    for (const v of ["1", "yes", "", "tru e"]) assert.equal(tamTuongKyEnabled({ TAM_TUONG_KY_ENABLED: v }), false, JSON.stringify(v));
+  });
+
+  it("Hạng cần cả hai cờ; trạng thái cờ chỉ ra biến đặt sai hoặc thiếu cờ chế độ", () => {
+    assert.equal(tamTuongKyRankedEnabled({ TAM_TUONG_KY_RANKED_ENABLED: "true" }), false);
+    assert.equal(tamTuongKyRankedEnabled({ TAM_TUONG_KY_ENABLED: "true", TAM_TUONG_KY_RANKED_ENABLED: "true\n" }), true);
+    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true" }), { enabled: true, ranked: false, pack2: false, invalid: [], rankedIgnored: false, pack2Ignored: false });
+    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true", TAM_TUONG_KY_RANKED_ENABLED: "1" }), { enabled: true, ranked: false, pack2: false, invalid: ["TAM_TUONG_KY_RANKED_ENABLED"], rankedIgnored: false, pack2Ignored: false });
+    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_RANKED_ENABLED: "true" }), { enabled: false, ranked: false, pack2: false, invalid: [], rankedIgnored: true, pack2Ignored: false });
   });
 
   it("chế độ Thường: yếu tố có dấu “còn công thức chưa tìm” trong nhãn đọc màn hình", async () => {
@@ -177,5 +188,30 @@ describe("Màn chơi", () => {
     assert.equal((html.match(/Tướng chưa tìm thấy · /g) ?? []).length, 7);
     for (const name of PACK_1_NAMES) assert.doesNotMatch(html, new RegExp(name));
     assert.doesNotMatch(html, /Gợi ý nhóm|Gợi ý nguyên liệu/);
+  });
+});
+
+describe("tab Tầm Tướng Ký trên trang Xếp hạng", () => {
+  it("vẽ điểm và số nguyên tố đã tiêu; hạng của mình ngoài top hiện riêng", async () => {
+    const { TtkBoard } = await import("../../src/app/game/leaderboard/LeaderboardScreen");
+    const html = renderToStaticMarkup(
+      createElement(TtkBoard, { data: { week: "2026-11-02", top: [{ rank: 1, name: "Shan", mine: false, points: 500, unitsSpent: 90 }], mine: { rank: 7, points: 200, unitsSpent: 10 } } }),
+    );
+    assert.match(html, /500 điểm · tiêu 90/);
+    assert.match(html, /Hạng của bạn: 7 · 200 điểm · tiêu 10/);
+    assert.match(html, /tuần bắt đầu 2026-11-02/);
+    assert.match(renderToStaticMarkup(createElement(TtkBoard, { data: { week: "2026-11-02", top: [], mine: null } })), /chưa có ai ghép ra tướng đề cử/);
+  });
+});
+
+describe("Tướng Lục khi bật Gói 2", () => {
+  it("chia hai mục theo gói, 21 bóng mờ, không lộ tên", async () => {
+    const r = await getTamTuongKy({ profiles: new MemoryProfileStore(), now: Date.parse("2026-11-04T05:00:00Z"), enabled: true, pack2: true, isSignedIn: async () => true }, "acc-1");
+    assert.ok(r.ok && r.view.packId === "pack-1-2");
+    const html = renderToStaticMarkup(createElement(TamTuongKyScreen, { initial: r.view }));
+    assert.match(html, /Gói 1: Dẹp loạn · 0\/12/);
+    assert.match(html, /Gói 2: Thập nhị sứ quân · 0\/9/);
+    assert.equal((html.match(/Tướng chưa tìm thấy/g) ?? []).length, 21);
+    for (const name of ["Đinh Bộ Lĩnh", "Lý Khuê", "Ngô Xương Xí"]) assert.doesNotMatch(html, new RegExp(name));
   });
 });
