@@ -17,7 +17,7 @@ export default function GameHeader({ scene, account }: { scene: Scene; account: 
     <header className="game-header sticky top-0 z-40 h-14 md:h-16 xl:h-[68px]">
       <HeaderBackdrop />
       {/* Ba cột, cột giữa luôn ở đúng giữa thanh. Lề hai bên từ md chừa chỗ cho mặt trống của hai góc hoa văn. */}
-      <div className="relative mx-auto grid h-full grid-cols-[1fr_auto_1fr] items-center gap-2 px-2 sm:px-4 md:gap-3 md:px-11 xl:px-14">
+      <div className="relative mx-auto grid h-full grid-cols-[1fr_auto_1fr] items-center gap-2 px-2 sm:px-4 md:gap-3 md:px-16 xl:px-[4.5rem]">
         <HomeButton current={scene === "MENU"} />
         <SceneTitle title={SCENE_TITLE[scene]} />
         <div className="flex min-w-0 items-center justify-end gap-1.5 md:gap-3">
@@ -55,7 +55,7 @@ function HomeButton({ current }: { current: boolean }) {
         scene="MENU"
         aria-current={current ? "page" : undefined}
         title="Về Chiến trường"
-        className="game-header-btn game-header-chip flex h-10 min-w-11 shrink-0 items-center justify-center gap-2 rounded-lg px-2.5 font-serif font-semibold whitespace-nowrap md:px-4"
+        className="game-header-btn game-header-chip flex h-10 min-w-11 shrink-0 items-center justify-center gap-2 rounded-md px-2.5 font-serif font-semibold whitespace-nowrap md:px-4"
       >
         <svg aria-hidden viewBox="0 0 24 24" className="size-5 text-[var(--hdr-gold)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
           <path d="M3.5 11.5 12 4l8.5 7.5" />
@@ -74,11 +74,11 @@ function HomeButton({ current }: { current: boolean }) {
 function SceneTitle({ title }: { title: string }) {
   return (
     <div className="relative flex min-w-0 items-center justify-center">
-      <p className="game-header-title max-w-[46vw] truncate px-2 pt-[0.12em] text-center font-serif text-[13px] leading-[1.9] font-bold tracking-[0.06em] uppercase sm:max-w-none sm:px-4 sm:text-sm sm:tracking-[0.14em] md:px-6 lg:px-8 lg:text-lg lg:tracking-[0.2em] xl:text-xl">
+      <p className="game-header-title max-w-[46vw] truncate px-2 pt-[0.12em] text-center font-serif text-[13px] leading-[1.9] font-bold tracking-[0.06em] uppercase sm:max-w-none sm:px-4 sm:text-sm sm:tracking-[0.14em] md:px-5 lg:px-6 lg:text-lg lg:tracking-[0.2em] xl:text-xl">
         {title}
       </p>
-      <HeaderCloud side="left" className="absolute top-1/2 left-0 hidden h-[88%] -translate-x-[72%] -translate-y-1/2 md:block" />
-      <HeaderCloud side="right" className="absolute top-1/2 right-0 hidden h-[88%] translate-x-[72%] -translate-y-1/2 md:block" />
+      <HeaderCloud side="left" className="absolute top-1/2 left-0 hidden h-[64%] -translate-x-[62%] -translate-y-1/2 md:block" />
+      <HeaderCloud side="right" className="absolute top-1/2 right-0 hidden h-[64%] translate-x-[62%] -translate-y-1/2 md:block" />
     </div>
   );
 }
