@@ -4,22 +4,28 @@ import {
   EXPEDITION_MAPS,
   EXPEDITION_PINCER_HP,
   EXPEDITION_REST_HEAL,
+  EXPEDITION_RUNS_PER_DAY,
   EXPEDITION_TIER_INFO,
   MAIN_ID,
   NEW_EXPEDITION,
   STARTER_COMPANIONS,
   abandonExpedition,
   applyExpeditionEnd,
+  boardScores,
+  countExpeditionRun,
+  describeScore,
   beginExpeditionBattle,
   campExpedition,
   createBattle,
   createExpeditionRun,
   createRng,
   expeditionArmySide,
+  expeditionBoardScore,
   expeditionDistance,
   expeditionEncounter,
   expeditionFoeSide,
   expeditionNeighbors,
+  expeditionRunsLeft,
   expeditionSimProfile,
   expeditionStars,
   expeditionTierUnlocked,
@@ -202,6 +208,7 @@ describe("Viễn Chinh: hành quân", () => {
     assert.equal(end.profile.gold, profile.gold + EXPEDITION_TIER_INFO[1].firstGold);
     assert.equal(end.state.cleared.aiBac, 1);
     assert.equal(end.state.stars["aiBac:1"], 3);
+    assert.equal(end.state.bestDays?.["aiBac:1"], 8);
     assert.ok(end.state.run?.result?.item);
     const again = applyExpeditionEnd(end.profile, end.state, createRng(1));
     assert.equal(again.profile.gold, end.profile.gold);
@@ -236,5 +243,31 @@ describe("Viễn Chinh: lưu hồ sơ", () => {
     const profile = parseProfile(JSON.parse(JSON.stringify({ ...expeditionSimProfile(5), expedition: state })));
     assert.deepEqual(profile.expedition, state);
     assert.equal(parseProfile(JSON.parse(JSON.stringify(expeditionSimProfile(5)))).expedition, undefined);
+  });
+
+  it("giới hạn lượt xuất quân mỗi ngày, sang ngày mới thì mở lại", () => {
+    let state: ExpeditionState = NEW_EXPEDITION;
+    for (let i = 0; i < EXPEDITION_RUNS_PER_DAY; i++) {
+      assert.equal(expeditionRunsLeft(state, "2026-11-04"), EXPEDITION_RUNS_PER_DAY - i);
+      state = countExpeditionRun(state, "2026-11-04")!;
+    }
+    assert.equal(expeditionRunsLeft(state, "2026-11-04"), 0);
+    assert.equal(countExpeditionRun(state, "2026-11-04"), null);
+    assert.equal(expeditionRunsLeft(state, "2026-11-05"), EXPEDITION_RUNS_PER_DAY);
+    assert.deepEqual(countExpeditionRun(state, "2026-11-05")?.daily, { day: "2026-11-05", runs: 1 });
+    assert.deepEqual(parseExpedition(JSON.parse(JSON.stringify(state)))?.daily, state.daily);
+  });
+
+  it("bảng xếp hạng: nhiều sao đứng trên, bằng sao thì ít ngày hơn đứng trên", () => {
+    assert.equal(expeditionBoardScore(NEW_EXPEDITION), 0);
+    const a: ExpeditionState = { ...NEW_EXPEDITION, stars: { "aiBac:1": 3, "aiBac:2": 2 }, bestDays: { "aiBac:1": 8, "aiBac:2": 11 } };
+    const b: ExpeditionState = { ...a, bestDays: { "aiBac:1": 7, "aiBac:2": 11 } };
+    const c: ExpeditionState = { ...NEW_EXPEDITION, stars: { "aiBac:1": 3, "aiBac:2": 3 }, bestDays: { "aiBac:1": 12, "aiBac:2": 12 } };
+    assert.ok(expeditionBoardScore(b) > expeditionBoardScore(a));
+    assert.ok(expeditionBoardScore(c) > expeditionBoardScore(b));
+    assert.deepEqual(describeScore("expedition", expeditionBoardScore(a)), { main: 5, turns: 19 });
+    const profile = { ...expeditionSimProfile(5), expedition: a };
+    assert.deepEqual(boardScores(profile).find((x) => x.board === "expedition"), { board: "expedition", score: expeditionBoardScore(a) });
+    assert.deepEqual(parseExpedition(JSON.parse(JSON.stringify(a)))?.bestDays, a.bestDays);
   });
 });

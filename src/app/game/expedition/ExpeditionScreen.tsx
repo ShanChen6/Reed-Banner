@@ -38,6 +38,7 @@ interface TierView {
   readonly repeatGold: number;
   readonly unlocked: boolean;
   readonly stars: number;
+  readonly bestDays: number | null;
 }
 
 type MapView = ExpeditionMap & { readonly tiers: readonly TierView[] };
@@ -64,6 +65,8 @@ interface Overview {
   readonly enabled: boolean;
   readonly maps: readonly MapView[];
   readonly run: Omit<ExpeditionRun, "seed"> | null;
+  readonly runsLeft: number;
+  readonly runsPerDay: number;
   readonly encounters: Readonly<Record<string, readonly [EncounterPreview, EncounterPreview]>>;
 }
 
@@ -84,7 +87,9 @@ const ERROR_TEXT: Record<string, string> = {
   armyDown: "Cả đạo đang gục. Hãy cho đạo này nghỉ (đạo kia tiến quân hoặc đóng quân) để hồi sức.",
   notMarching: "Lượt viễn chinh đã kết thúc hoặc đang có trận.",
   conflict: "Dữ liệu vừa đổi ở nơi khác. Đang tải lại.",
+  dailyLimit: "Hôm nay đã hết lượt xuất quân. Lượt mới mở lúc 0 giờ (giờ Việt Nam).",
   featureDisabled: "Viễn Chinh chưa mở.",
+  loginRequired: "Viễn Chinh cần tài khoản đã đăng nhập.",
 };
 
 const KIND_NAME: Record<ExpeditionNodeKind, string> = {
@@ -273,6 +278,8 @@ export default function ExpeditionScreen() {
             setMain={setMain}
             setSecond={setSecond}
             busy={busy}
+            runsLeft={overview.runsLeft}
+            runsPerDay={overview.runsPerDay}
             onStart={async () => {
               const r = await act("/api/expedition/run", { map: mapId, tier, main, second });
               if (r) { setSetup(false); setArmy(0); }
@@ -299,12 +306,14 @@ function SetupView(props: {
   setMain: (ids: readonly string[]) => void;
   setSecond: (ids: readonly string[]) => void;
   busy: boolean;
+  runsLeft: number;
+  runsPerDay: number;
   onStart: () => void;
 }) {
   const { maps, mapId, tier, owned, profile, main, second, setMain, setSecond } = props;
   const map = maps.find((m) => m.id === mapId) ?? maps[0]!;
   const info = map.tiers.find((t) => t.tier === tier)!;
-  const ready = main.length === 2 && second.length === 3 && info.unlocked;
+  const ready = main.length === 2 && second.length === 3 && info.unlocked && props.runsLeft > 0;
 
   // Bấm một tướng: chưa đi → Đạo Chính (nếu còn chỗ) → Biệt đạo (nếu còn chỗ) → bỏ.
   const cycle = (id: string) => {
@@ -359,6 +368,7 @@ function SetupView(props: {
               <span className="block text-xs text-muted">
                 {t.unlocked ? `Cấp gợi ý ${t.level} · lần đầu ${t.firstGold} vàng + món ${TIER_COLOR_NAME[(t.tier + 2) as 3 | 4 | 5]}` : "Thắng bậc trước để mở"}
               </span>
+              {t.bestDays !== null && <span className="block text-xs text-amber-200">Nhanh nhất {t.bestDays} ngày</span>}
             </button>
           ))}
         </div>
@@ -421,9 +431,16 @@ function SetupView(props: {
           })}
         </div>
         {owned.length < 5 && <p className="mt-2 text-sm text-rose-300">Cần ít nhất 5 tướng ngoài Đinh Bộ Lĩnh.</p>}
-        <Button variant="primary" className="mt-4" disabled={props.busy || !ready} onClick={props.onStart}>
-          {props.busy ? "Đang xuất quân…" : `Xuất quân: ${map.name} · ${info.name}`}
-        </Button>
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <Button variant="primary" disabled={props.busy || !ready} onClick={props.onStart}>
+            {props.busy ? "Đang xuất quân…" : `Xuất quân: ${map.name} · ${info.name}`}
+          </Button>
+          <span className={`text-sm ${props.runsLeft > 0 ? "text-muted" : "text-rose-300"}`}>
+            {props.runsLeft > 0
+              ? `Hôm nay còn ${props.runsLeft}/${props.runsPerDay} lượt xuất quân.`
+              : "Hôm nay đã hết lượt xuất quân, mở lại lúc 0 giờ."}
+          </span>
+        </div>
       </section>
     </>
   );

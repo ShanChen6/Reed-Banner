@@ -5,6 +5,7 @@
 **Viễn Chinh: hai đạo quân trên sa bàn (APPROVED, có code sau cờ)**
 - Shan chọn cơ chế "Hai đạo quân trên sa bàn" trong ba phương án (sai quân tự động, một đạo rẽ nhánh). Chia 6 tướng làm hai đạo; mỗi ngày một đạo tiến một ô, đạo kia nghỉ (+15% máu, cả người gục); giặc tăng viện 5%/ngày; giáp công khi đạo kia đứng kề (máu địch ×0,75); thua trận chỉ rút về; hết ngày là thua. Ba sa bàn Ải Bắc, Thượng Du, Cửa Biển × 3 bậc; thưởng trận như trận thường, thưởng lần đầu mỗi bậc 300/600/1 000 vàng + món Lam/Tím/Cam.
 - Code: `src/core/expedition/`, `Profile.expedition`, `Match.expedition`, API `/api/expedition` (GET, `run`, `march`, `camp`, `abandon`), màn `/game/expedition`, mô phỏng `scripts/expedition-sim.ts`. Cờ `EXPEDITION_ENABLED` mặc định tắt. Xem [GDD Viễn Chinh](../02-game-modes/expedition/01-vien-chinh-gdd.md).
+- Shan chốt mục 8 cùng ngày: thua trận chỉ rút về; giới hạn 3 lượt xuất quân mỗi ngày (giờ Việt Nam); có bảng xếp hạng Viễn Chinh (tổng sao, rồi tổng ngày ít nhất). Vì có bảng xếp hạng nên chế độ chỉ cho tài khoản đã đăng nhập, theo luật 01/11/2026.
 
 **Tầm Tướng Ký: Shan duyệt Gói 2**
 - Duyệt 9 công thức, 9 lời dẫn và 8 thành tựu (3 500 vàng) của [Gói 2](../02-game-modes/future/21-tam-tuong-ky-pack-2.md) (**DRAFT → APPROVED**); `PACK_2` đặt `published`. Thành tựu Gói 2 hiện ở trang Nhiệm vụ khi cờ `TAM_TUONG_KY_PACK2_ENABLED` bật. Còn chờ ngày bật cờ.

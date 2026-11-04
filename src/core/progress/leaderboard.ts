@@ -7,17 +7,20 @@ import {
   storyNodeById,
   type CampaignMissionId,
 } from "../campaign/storyNodes";
+import { EXPEDITION_STAR_WEIGHT, expeditionBoardScore } from "../expedition/state";
 import type { Profile } from "./profile";
 
 /**
  * Bảng: chiến dịch (số nhiệm vụ V2 đã hoàn thành, rồi tổng lượt của các nhiệm vụ có trận), từng nhiệm vụ có trận
- * (ít lượt nhất), sinh tồn, đấu trường (điểm đấu trường; server ghi từ kho đấu trường, không tính từ hồ sơ).
+ * (ít lượt nhất), sinh tồn, đấu trường (điểm đấu trường; server ghi từ kho đấu trường, không tính từ hồ sơ), Viễn Chinh
+ * (tổng sao, rồi tổng ngày ít nhất).
  * Bảng `stage:<id>` của chiến dịch 13 màn cũ không còn được ghi hay đọc (CAMP-08.04); dòng cũ trong kho để nguyên.
  */
 export type BoardId =
   | "campaign"
   | "survival"
   | "arena"
+  | "expedition"
   | `mission:${CampaignMissionId}`;
 
 /** Nhiệm vụ có trận đã hoàn thành mà chưa có số lượt ghi nhận tính như chừng này lượt, tới khi thắng lại. */
@@ -62,6 +65,8 @@ export function boardScores(p: Profile): BoardScore[] {
       out.push({ board: `mission:${id}`, score: -turns });
   if (p.survival.best > 0)
     out.push({ board: "survival", score: p.survival.best });
+  const expedition = p.expedition ? expeditionBoardScore(p.expedition) : 0;
+  if (expedition > 0) out.push({ board: "expedition", score: expedition });
   return out;
 }
 
@@ -75,6 +80,10 @@ export function describeScore(
     return { main: stages, turns: stages * STAGE_WEIGHT - score };
   }
   if (board.startsWith("mission:")) return { main: -score };
+  if (board === "expedition") {
+    const stars = Math.ceil(score / EXPEDITION_STAR_WEIGHT);
+    return { main: stars, turns: stars * EXPEDITION_STAR_WEIGHT - score };
+  }
   return { main: score };
 }
 
@@ -83,6 +92,7 @@ export function isBoardId(x: unknown): x is BoardId {
     x === "campaign" ||
     x === "survival" ||
     x === "arena" ||
+    x === "expedition" ||
     (typeof x === "string" &&
       x.startsWith("mission:") &&
       combatMission(x.slice("mission:".length)))
