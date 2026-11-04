@@ -19,6 +19,9 @@ import {
 import TamTuongKyScreen from "../../src/app/game/tam-tuong-ky/TamTuongKyScreen";
 import { SCENE_SLUG, SCENE_TITLE, sceneOfSlug } from "../../src/app/game/scene";
 import { tamTuongKyEnabled } from "../../src/server/featureFlags";
+import { MemoryProfileStore } from "../../src/server/profiles";
+import { getTamTuongKy } from "../../src/server/tamTuongKy";
+import { tutorialTip } from "../../src/app/game/tam-tuong-ky/altar";
 
 const catalog = buildCatalog(SLICE_PACK);
 const HERO_NAMES = ["Nguyễn Bặc", "Lê Hoàn", "Đinh Ngọc"];
@@ -123,9 +126,19 @@ describe("Tướng Lục", () => {
 });
 
 describe("Màn chơi", () => {
-  it("dựng lúc mới vào: có ba vùng, không lộ tên tướng, không có chữ thưởng/chiêu mộ", () => {
-    const html = renderToStaticMarkup(createElement(TamTuongKyScreen));
-    for (const t of ["Vạn Vật Lục", "Đài Hợp Nguyên", "Tướng Lục", "Ô trước", "Ô sau", "Hợp Nguyên", "aria-live"]) assert.match(html, new RegExp(t));
+  it("chưa có dữ liệu server thì hiện chờ, không vẽ sổ", () => {
+    assert.match(renderToStaticMarkup(createElement(TamTuongKyScreen)), /Đang mở Tướng Lục/);
+  });
+
+  it("dựng lúc mới vào: có ba vùng, phiếu, nút mở lượt, không lộ tên tướng, không có chữ thưởng/chiêu mộ", async () => {
+    const r = await getTamTuongKy({ profiles: new MemoryProfileStore(), now: Date.parse("2026-11-04T05:00:00Z"), enabled: true, isSignedIn: async () => true }, "acc-1");
+    assert.ok(r.ok);
+    const html = renderToStaticMarkup(createElement(TamTuongKyScreen, { initial: r.view }));
+    assert.match(html, /Phiếu: <strong[^>]*>3<\/strong>\/10/);
+    assert.match(html, /Mở lượt mới · 1 phiếu/);
+    assert.match(html, /Mẹo: chọn Mộc vào ô trước và Mộc vào ô sau/);
+    for (const t of ["Vạn Vật Lục", "Đài Hợp Nguyên", "Tướng Lục", "Ô trước", "Ô sau", "aria-live"]) assert.match(html, new RegExp(t));
+    assert.equal(tutorialTip(r.view.discovery) !== null, true);
     for (const name of HERO_NAMES) assert.doesNotMatch(html, new RegExp(name));
     assert.match(html, /Công thức biểu trưng của trò chơi, không phải diễn giải sử học/);
     for (const bad of ["Nhận tướng", "Chiêu mộ", "vàng"]) assert.doesNotMatch(html, new RegExp(bad));

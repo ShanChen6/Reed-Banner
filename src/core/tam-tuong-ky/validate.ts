@@ -102,6 +102,16 @@ export function validatePack(pack: Pack, deps: CatalogDeps): readonly CatalogIss
     }
   }
 
+  // Thành tựu bộ: ID duy nhất, từ 2 tướng của pack trở lên, vàng không âm (P-20).
+  const setIds = new Set<string>();
+  for (const set of pack.achievementSets ?? []) {
+    const heroIds = new Set(set.heroIds);
+    if (setIds.has(set.id) || heroIds.size < 2 || heroIds.size !== set.heroIds.length || !Number.isInteger(set.gold) || set.gold < 0 ||
+        set.heroIds.some((id) => nodes.get(id)?.kind !== "character"))
+      error("badAchievementSet", `Thành tựu ${set.id} không hợp lệ: cần ID riêng, ≥ 2 tướng khác nhau của pack, vàng ≥ 0`, set.id);
+    setIds.add(set.id);
+  }
+
   // Mọi starter có ích.
   const used = new Set(pack.recipes.flatMap((r) => [r.first, r.second]));
   for (const s of starters) if (!used.has(s.id)) warn("unusedStarter", `Starter ${s.id} không có công thức nào`, s.id);

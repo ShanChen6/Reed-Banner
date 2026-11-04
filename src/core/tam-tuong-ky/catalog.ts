@@ -154,7 +154,18 @@ export const SLICE_PACK: Pack = {
   status: "draft",
   nodes: SLICE_NODES,
   recipes: SLICE_RECIPES,
+  // Thử nghiệm cơ chế thành tựu bộ; số vàng theo khung P-21 (bộ 2 tướng 200, cả gói 1 000), gói thật đặt riêng.
+  achievementSets: [
+    { id: "ttk.slice-1.lichSu", title: "Tầm Tướng Ký: đủ tướng lịch sử gói thử", gold: 200, heroIds: ["hero.nguyenBac", "hero.leHoan"] },
+    { id: "ttk.slice-1.all", title: "Tầm Tướng Ký: đủ gói thử", gold: 1000, heroIds: ["hero.nguyenBac", "hero.leHoan", "hero.dinhNgoc"] },
+  ],
 };
+
+/** Gói server đang chạy khi cờ bật. Slice còn `draft`: chỉ chạy sau cờ, chưa có thành tựu trên trang Nhiệm vụ. */
+export const ACTIVE_PACK: Pack = SLICE_PACK;
+
+/** Gói đã phát hành: thành tựu của chúng hiện ở trang Nhiệm vụ. Chưa có gói nào. */
+export const PUBLISHED_PACKS: readonly Pack[] = [SLICE_PACK].filter((p) => p.status === "published");
 
 /** Bậc và nghề/hệ đọc từ roster, không chép vào catalog. Đinh Bộ Lĩnh chưa có (P-27, gói 2). */
 export function rosterCharacter(characterId: string): CharacterInfo | undefined {

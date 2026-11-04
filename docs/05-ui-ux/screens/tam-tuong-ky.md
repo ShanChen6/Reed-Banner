@@ -1,7 +1,7 @@
 # Giao diện Tầm Tướng Ký
 
-> Cập nhật: 03/11/2026
-> Trạng thái: **DRAFT** — LT-03: màn chế độ Thường đã có code (`src/app/game/tam-tuong-ky/`), bật bằng cờ `TAM_TUONG_KY_ENABLED` (mặc định tắt). Bản xem trước chưa lưu, chưa tốn phiếu; chờ Shan chơi thử và góp ý.
+> Cập nhật: 04/11/2026
+> Trạng thái: **DRAFT** — màn chế độ Thường đã có code (`src/app/game/tam-tuong-ky/`), chạy trên server theo tài khoản từ LT-04; bật bằng cờ `TAM_TUONG_KY_ENABLED` (mặc định tắt). Chờ Shan chơi thử và góp ý.
 
 Luật ở [Design Freeze](../../02-game-modes/future/14-tam-tuong-ky-design-freeze.md); nội dung công thức ở [catalog LT-01](../../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md). Tài liệu này chỉ nói về giao diện.
 
@@ -41,18 +41,18 @@ Tông gỗ tối, giấy dó, đồng cổ dùng token `--atlas-*` và khung `at
 - Dòng “Tìm thấy chân dung chỉ ghi vào Tướng Lục, không thêm tướng vào đội”. Không có chữ nhận tướng, chiêu mộ hay vàng.
 - Ghép ra tướng trên điện thoại thì tự chuyển sang Tướng Lục.
 
-## 4. Bản xem trước so với bản thật
+## 4. Phiếu, lượt và lưu (LT-04)
 
-| Mục | LT-03 (bây giờ) | Sau LT-04 |
-|---|---|---|
-| Sổ khám phá | Trong bộ nhớ trang, tải lại là mất | Lưu theo tài khoản trên server |
-| Lượt | 15 lần ghép, “Lượt mới” không tốn gì | Mở lượt tốn 1 phiếu |
-| Gợi ý | Đếm trong trang | 2 lượt mỗi ngày, server đếm |
-| Chế độ Hạng | Chưa có | LT-06 |
+- Góc phải tiêu đề: **Phiếu x/10**.
+- Chưa có lượt: nút chính là **Mở lượt mới · 1 phiếu**; hết phiếu thì nút mờ và ô thông báo chỉ cách nhận phiếu (nhiệm vụ ngày, nhiệm vụ tuần “Thắng 15 trận”, điểm danh ngày thứ 7).
+- Có lượt: nút **Hợp Nguyên** và dòng “Lượt này còn x/15 lần ghép”.
+- Sổ mới (chưa ghép công thức nào): ô thông báo hiện mẹo “chọn Mộc vào ô trước và Mộc vào ô sau”.
+- Mọi nút khóa trong lúc chờ server (chống bấm đúp); lỗi mạng thì bấm lại gửi cùng `requestId`.
+- Sổ, phiếu, lượt và gợi ý lưu theo tài khoản; tải lại trang hay đổi máy vẫn còn. Chi tiết ở [server LT-04](../../02-game-modes/future/17-tam-tuong-ky-lt04-server.md).
 
 ## 5. Đã kiểm
 
-- `tests/game/tam-tuong-ky-screen.test.ts` (13 test): chọn ô, đổi chỗ, `A+A`; tìm không dấu và lọc nhóm; lời thông báo; Tướng Lục không lộ tướng chưa tìm; dựng màn không có tên tướng hay chữ thưởng; phân cảnh và cờ.
+- `tests/game/tam-tuong-ky-screen.test.ts` (14 test): màn chờ dữ liệu, phiếu và nút mở lượt, mẹo người mới; chọn ô, đổi chỗ, `A+A`; tìm không dấu và lọc nhóm; lời thông báo; Tướng Lục không lộ tướng chưa tìm; dựng màn không có tên tướng hay chữ thưởng; phân cảnh và cờ.
 - Playwright với cờ bật: khách thấy màn nhắc đăng nhập; đăng ký rồi ghép ra Đinh Ngọc ở 1440px và iPhone 13 (390px); không tràn ngang ở 320, 768, 1024px; thẻ Home dẫn vào màn.
 
 > TODO: Icon riêng cho từng yếu tố trung gian, chế độ Hạng, kéo thả (tùy chọn) và hiệu ứng mở sách; Shan chơi thử rồi góp ý.

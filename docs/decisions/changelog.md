@@ -1,5 +1,13 @@
 # Nhật ký thay đổi thiết kế
 
+## 04/11/2026
+
+**Tầm Tướng Ký: LT-04 server chế độ Thường (DRAFT, có code)**
+- Phiếu (3 khi bắt đầu, trần 10), lượt 15 lần ghép (hết hạn 24 giờ), gợi ý 2 lượt mỗi ngày, sổ khám phá lưu trong hồ sơ tài khoản (`Profile.tamTuongKy`, không thêm bảng). API `/api/tam-tuong-ky` (GET, `session`, `combine`, `hint`) sau cờ và đăng nhập; `requestId` chống trừ hai lần. Xem [server LT-04](../02-game-modes/future/17-tam-tuong-ky-lt04-server.md).
+- Phiếu kèm thưởng: nhận nốt nhiệm vụ ngày +1, “Thắng 15 trận” +2, điểm danh ngày 7 +1 (chỉ người đã vào chế độ); vàng nhiệm vụ giữ nguyên.
+- Thành tựu bộ tướng (vàng + huy hiệu) từ `Pack.achievementSets`; chỉ gói đã phát hành hiện ở trang Nhiệm vụ, gói thử chưa có.
+- Màn chơi dùng server thay bản xem trước: phiếu ở góc, nút “Mở lượt mới · 1 phiếu”, mẹo người mới, khóa nút khi chờ.
+
 ## 03/11/2026
 
 **Tầm Tướng Ký: LT-03 giao diện chế độ Thường (DRAFT, có code)**

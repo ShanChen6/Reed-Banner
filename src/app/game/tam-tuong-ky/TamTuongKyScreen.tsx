@@ -1,30 +1,18 @@
 "use client";
 
-// Tầm Tướng Ký (LT-03): Vạn Vật Lục + Đài Hợp Nguyên + Tướng Lục, chế độ Thường. Bản xem trước chạy engine ở trình duyệt,
-// chưa lưu và chưa tốn phiếu; server (phiếu, lượt, gợi ý theo ngày, sổ theo tài khoản) là LT-04, chế độ Hạng là LT-06.
-// Luật: docs/02-game-modes/future/14-tam-tuong-ky-design-freeze.md. Giao diện: docs/05-ui-ux/screens/tam-tuong-ky.md.
+// Tầm Tướng Ký chế độ Thường: Vạn Vật Lục + Đài Hợp Nguyên + Tướng Lục. Phiếu, lượt, gợi ý và sổ khám phá nằm trên
+// server theo tài khoản (LT-04, src/server/tamTuongKy.ts); màn chỉ gửi ý định và vẽ lại theo `view` server trả về.
+// Chế độ Hạng là LT-06. Luật: docs/02-game-modes/future/14-tam-tuong-ky-design-freeze.md.
+// Giao diện: docs/05-ui-ux/screens/tam-tuong-ky.md.
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { PROFESSION_DISPLAY_NAME, type Element } from "@/core/battle";
-import {
-  SLICE_PACK,
-  buildCatalog,
-  chargesCombine,
-  combineNormal,
-  hintFor,
-  initialDiscovery,
-  type CatalogNode,
-  type DiscoveryState,
-  type HintLevel,
-  type NodeId,
-} from "@/core/tam-tuong-ky";
+import { ACTIVE_PACK, buildCatalog, type CatalogNode, type DiscoveryState, type HintLevel, type NodeId } from "@/core/tam-tuong-ky";
 import { AtlasCorners } from "../campaign/AtlasFrame";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import {
-  COMBINES_PER_SESSION,
   EMPTY_SLOTS,
-  HINTS_PER_DAY,
   TIER_NAME,
   clearSlot,
   hintText,
@@ -35,53 +23,100 @@ import {
   noticeFor,
   pickInto,
   swapSlots,
+  tutorialTip,
   type LedgerEntry,
   type Notice,
   type Slots,
 } from "./altar";
+import { ERROR_TEXT, combineApi, fetchState, hintApi, newRequestId, openSessionApi, type ApiResult, type TtkView } from "./client";
 
-const catalog = buildCatalog(SLICE_PACK);
+const catalog = buildCatalog(ACTIVE_PACK);
 
 const ELEMENT_NAME: Readonly<Record<Element, string>> = { kim: "Kim", moc: "Mộc", thuy: "Thủy", hoa: "Hỏa", tho: "Thổ", loi: "Lôi", phong: "Phong" };
 
 type Tab = "library" | "ledger";
 
-export default function TamTuongKyScreen() {
-  const [state, setState] = useState<DiscoveryState>(() => initialDiscovery(catalog));
+export default function TamTuongKyScreen({ initial = null }: { initial?: TtkView | null }) {
+  const [view, setView] = useState<TtkView | null>(initial);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [slots, setSlots] = useState<Slots>(EMPTY_SLOTS);
-  const [left, setLeft] = useState(COMBINES_PER_SESSION);
-  const [hints, setHints] = useState(HINTS_PER_DAY);
+  const [pending, setPending] = useState(false);
   const [notice, setNotice] = useState<Notice | null>(null);
   const [recent, setRecent] = useState<readonly string[]>([]);
   const [tab, setTab] = useState<Tab>("library");
+  // Một requestId cho mỗi ý định; lỗi mạng thì bấm lại dùng đúng id cũ để server không trừ hai lần.
+  const retry = useRef<{ key: string; id: string } | null>(null);
+  const requestIdFor = (key: string) => {
+    if (retry.current?.key !== key) retry.current = { key, id: newRequestId() };
+    return retry.current.id;
+  };
 
-  const entries = useMemo(() => ledger(catalog, state), [state]);
+  useEffect(() => {
+    if (initial) return;
+    let alive = true;
+    fetchState().then((r) => {
+      if (!alive) return;
+      if (r.ok) setView(r.view);
+      else setLoadError(ERROR_TEXT[r.error] ?? ERROR_TEXT.network!);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [initial]);
+
+  const state: DiscoveryState | null = view?.discovery ?? null;
+  const entries = useMemo(() => (state ? ledger(catalog, state) : []), [state]);
   const found = entries.filter((e) => e.found).length;
-  const ready = slots[0] !== null && slots[1] !== null && left > 0;
+  const left = view?.session?.combinesLeft ?? 0;
+  const ready = !pending && slots[0] !== null && slots[1] !== null && left > 0;
+
+  /** Chạy một thao tác: khóa nút trong lúc chờ (chống bấm đúp), cập nhật view, báo lỗi. */
+  const run = useCallback(async (key: string, call: (id: string) => Promise<ApiResult>, onOk: (r: Extract<ApiResult, { ok: true }>) => void) => {
+    setPending(true);
+    const r = await call(requestIdFor(key));
+    setPending(false);
+    if (r.ok || r.error !== "network") retry.current = null;
+    if (r.view) setView(r.view);
+    if (r.ok) onOk(r);
+    else setNotice({ tone: "invalid", text: ERROR_TEXT[r.error] ?? ERROR_TEXT.network! });
+  }, []);
 
   const combine = () => {
     const [a, b] = slots;
-    if (a === null || b === null || left <= 0) return;
-    const out = combineNormal(catalog, state, a, b);
-    if (chargesCombine(out)) setLeft((n) => n - 1);
-    setState(out.next);
-    const n = noticeFor(catalog, out);
-    setNotice(n);
-    setRecent((r) => [`${nameOf(catalog, a)} + ${nameOf(catalog, b)}: ${n.text}`, ...r].slice(0, 5));
-    if (out.status === "created" && out.isCharacter) setTab("ledger");
-    setSlots(EMPTY_SLOTS);
+    if (a === null || b === null || !ready) return;
+    void run(`combine:${a}>${b}:${left}`, (id) => combineApi(id, a, b), (r) => {
+      if (r.response?.kind !== "combine") return;
+      const n = noticeFor(catalog, r.response);
+      setNotice(n);
+      setRecent((list) => [`${nameOf(catalog, a)} + ${nameOf(catalog, b)}: ${n.text}`, ...list].slice(0, 5));
+      if (r.response.status === "created" && r.response.isCharacter) setTab("ledger");
+      setSlots(EMPTY_SLOTS);
+    });
   };
 
   const askHint = (level: HintLevel) => {
-    if (hints <= 0) return;
-    setHints((n) => n - 1);
-    setNotice({ tone: "repeat", text: hintText(hintFor(catalog, state, level)) });
+    if (pending || !view || view.hintsLeft <= 0) return;
+    void run(`hint:${level}:${view.hintsLeft}:${view.discovery.discoveredRecipeIds.length}`, (id) => hintApi(id, level), (r) => {
+      if (r.response?.kind === "hint") setNotice({ tone: "repeat", text: hintText(r.response.hint) });
+    });
   };
 
-  const newSession = () => {
-    setLeft(COMBINES_PER_SESSION);
-    setNotice({ tone: "repeat", text: "Lượt mới (bản xem trước chưa trừ phiếu)." });
+  const openSession = () => {
+    if (pending || !view) return;
+    void run(`session:${view.tickets}`, openSessionApi, (r) => {
+      if (r.response?.kind === "session")
+        setNotice({ tone: "repeat", text: r.response.charged ? "Đã mở lượt mới, trừ 1 phiếu." : "Đang có lượt dở, chơi tiếp lượt đó." });
+    });
   };
+
+  if (!view || !state)
+    return (
+      <main className="campaign-atlas flex flex-1 items-center justify-center bg-[#17110e] px-4 text-[var(--atlas-ink-on-wood)]">
+        <p role="status">{loadError ?? "Đang mở Tướng Lục…"}</p>
+      </main>
+    );
+
+  const tip = tutorialTip(state);
 
   return (
     <main className="campaign-atlas flex flex-1 flex-col bg-[#17110e] pb-28 text-[var(--atlas-ink-on-wood)] lg:pb-10">
@@ -91,24 +126,24 @@ export default function TamTuongKyScreen() {
             <h1 className="atlas-title font-serif text-2xl font-bold sm:text-3xl">Tầm Tướng Ký</h1>
             <p className="text-sm text-[var(--atlas-muted)]">Công thức biểu trưng của trò chơi, không phải diễn giải sử học.</p>
           </div>
-          <p className="rounded border border-[var(--atlas-border-soft)] px-2 py-1 text-xs text-[var(--atlas-ink-on-wood)]/85">
-            Bản xem trước · chưa lưu, chưa tốn phiếu
+          <p className="rounded border border-[var(--atlas-border-soft)] px-3 py-1 text-sm">
+            Phiếu: <strong className="text-[var(--atlas-title)]">{view.tickets}</strong>/{view.maxTickets}
           </p>
         </header>
 
         <div className="grid gap-4 lg:grid-cols-[minmax(16rem,26fr)_minmax(20rem,44fr)_minmax(16rem,30fr)]">
           <Altar
+            view={view}
             slots={slots}
-            left={left}
-            hints={hints}
             ready={ready}
-            notice={notice}
+            pending={pending}
+            notice={notice ?? (tip ? { tone: "repeat", text: tip } : null)}
             recent={recent}
             onClear={(i) => setSlots((s) => clearSlot(s, i))}
             onSwap={() => setSlots(swapSlots)}
             onCombine={combine}
             onHint={askHint}
-            onNewSession={newSession}
+            onOpenSession={openSession}
           />
 
           <div role="group" aria-label="Chọn sổ" className="flex gap-2 lg:hidden">
@@ -232,19 +267,20 @@ function Library({ state, onPick, hidden }: { state: DiscoveryState; onPick: (id
 }
 
 function Altar(props: {
+  view: TtkView;
   slots: Slots;
-  left: number;
-  hints: number;
   ready: boolean;
+  pending: boolean;
   notice: Notice | null;
   recent: readonly string[];
   onClear: (i: 0 | 1) => void;
   onSwap: () => void;
   onCombine: () => void;
   onHint: (level: HintLevel) => void;
-  onNewSession: () => void;
+  onOpenSession: () => void;
 }) {
-  const { slots, left, hints, ready, notice, recent } = props;
+  const { view, slots, ready, pending, notice, recent } = props;
+  const session = view.session;
   const toneClass =
     notice?.tone === "hero" || notice?.tone === "discovery"
       ? "border-[var(--atlas-gold-hi)] text-[var(--atlas-title)] motion-safe:animate-[ttk-reveal_0.4s_ease-out]"
@@ -266,33 +302,44 @@ function Altar(props: {
         <Slot label="Ô sau" id={slots[1]} onClear={() => props.onClear(1)} />
       </div>
       <p className="text-xs text-[var(--atlas-muted)]">Thứ tự ô có nghĩa: “Mộc + Thủy” khác “Thủy + Mộc”.</p>
-      <button
-        type="button"
-        disabled={!ready}
-        onClick={props.onCombine}
-        className="home-cta min-h-12 rounded-lg font-serif text-lg font-bold tracking-[0.12em] uppercase disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        Hợp Nguyên
-      </button>
+      {session ? (
+        <button
+          type="button"
+          disabled={!ready}
+          aria-busy={pending}
+          onClick={props.onCombine}
+          className="home-cta min-h-12 rounded-lg font-serif text-lg font-bold tracking-[0.12em] uppercase disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Hợp Nguyên
+        </button>
+      ) : (
+        <button
+          type="button"
+          disabled={pending || view.tickets < 1}
+          onClick={props.onOpenSession}
+          className="home-cta min-h-12 rounded-lg font-serif text-lg font-bold disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Mở lượt mới · 1 phiếu
+        </button>
+      )}
       <div aria-live="polite" role="status" className={`min-h-12 rounded-lg border px-3 py-2 text-sm ${toneClass}`}>
-        {notice?.text ?? "Chọn hai yếu tố rồi bấm Hợp Nguyên."}
+        {notice?.text ?? (session ? "Chọn hai yếu tố rồi bấm Hợp Nguyên." : view.tickets > 0 ? "Mở lượt để bắt đầu ghép." : ERROR_TEXT.noTicket)}
       </div>
-      <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-        <span>
-          Lượt này còn <strong className="text-[var(--atlas-title)]">{left}</strong>/{COMBINES_PER_SESSION} lần ghép
-        </span>
-        {left === 0 && (
-          <button type="button" onClick={props.onNewSession} className="min-h-11 rounded border border-[var(--atlas-gold)] px-3 font-semibold">
-            Lượt mới
-          </button>
+      <p className="text-sm">
+        {session ? (
+          <>
+            Lượt này còn <strong className="text-[var(--atlas-title)]">{session.combinesLeft}</strong>/{session.combinesPerSession} lần ghép
+          </>
+        ) : (
+          <>Mỗi lượt 15 lần ghép; ghép trùng công thức đã biết không trừ lần.</>
         )}
-      </div>
+      </p>
       <div className="flex flex-wrap items-center gap-2 text-sm">
-        <span>Gợi ý hôm nay: {hints}/{HINTS_PER_DAY}</span>
-        <button type="button" disabled={hints <= 0} onClick={() => props.onHint(1)} className="min-h-11 rounded border border-[var(--atlas-border-soft)] px-3 disabled:opacity-50">
+        <span>Gợi ý hôm nay: {view.hintsLeft}/{view.hintsPerDay}</span>
+        <button type="button" disabled={pending || view.hintsLeft <= 0} onClick={() => props.onHint(1)} className="min-h-11 rounded border border-[var(--atlas-border-soft)] px-3 disabled:opacity-50">
           Gợi ý nhóm
         </button>
-        <button type="button" disabled={hints <= 0} onClick={() => props.onHint(2)} className="min-h-11 rounded border border-[var(--atlas-border-soft)] px-3 disabled:opacity-50">
+        <button type="button" disabled={pending || view.hintsLeft <= 0} onClick={() => props.onHint(2)} className="min-h-11 rounded border border-[var(--atlas-border-soft)] px-3 disabled:opacity-50">
           Gợi ý nguyên liệu
         </button>
       </div>
