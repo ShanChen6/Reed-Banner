@@ -35,7 +35,7 @@ import {
   type ProfileAction,
   type SkillDef,
 } from "@/core";
-import { GearIcon } from "../art/gear";
+import { GearIcon, SetEmblem } from "../art/gear";
 import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
 import { ProfileArt } from "../art/ProfileArt";
 import { ELEMENT_NAME, gearText, PROFESSION_NAME, skillText, SLOT_NAME, TIER_CLASS } from "../battle/labels";
@@ -326,7 +326,9 @@ function Overview({ profile, id, fighter, bare, worn }: { profile: Profile; id: 
       {bonuses.length > 0 && (
         <ul className="flex flex-col gap-1 text-sm text-emerald-300" aria-label="Thưởng bộ và cộng hưởng đang kích hoạt">
           {bonuses.map((b) => (
-            <li key={`${b.kind}-${b.id}-${b.level}`}>✦ {bonusText(b)}</li>
+            <li key={`${b.kind}-${b.id}-${b.level}`} className="flex items-center gap-1.5">
+              {b.kind === "set" ? <SetEmblem set={b.id} className="size-5 shrink-0" /> : "✦"} {bonusText(b)}
+            </li>
           ))}
         </ul>
       )}

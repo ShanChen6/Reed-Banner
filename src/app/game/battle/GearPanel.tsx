@@ -31,7 +31,7 @@ import {
   type ProfileAction,
   type Tier,
 } from "@/core";
-import { GearIcon } from "../art/gear";
+import { GearIcon, SetEmblem } from "../art/gear";
 import {
   ELEMENT_NAME,
   gearText,
@@ -259,7 +259,12 @@ export default function GearPanel({
       </div>
       {stats.bonuses.length > 0 && (
         <ul className="mt-1 space-y-0.5 opacity-80" aria-label="Thưởng bộ và cộng hưởng đang kích hoạt">
-          {stats.bonuses.map((bonus) => <li key={`${bonus.kind}-${bonus.id}-${bonus.level}`}>{activeBonusText(bonus)}</li>)}
+          {stats.bonuses.map((bonus) => (
+            <li key={`${bonus.kind}-${bonus.id}-${bonus.level}`} className="flex items-center gap-1">
+              {bonus.kind === "set" && <SetEmblem set={bonus.id} className="size-4 shrink-0" />}
+              {activeBonusText(bonus)}
+            </li>
+          ))}
         </ul>
       )}
 
