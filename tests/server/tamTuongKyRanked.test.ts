@@ -149,3 +149,27 @@ describe("bó nguyên tố trong thưởng hạng", () => {
     assert.deepEqual(pending.items.map((i) => [i.mode, i.period, i.rank, i.gold, i.bundles]), [["tamTuongKy", lastWeek, 1, 500, 5]]);
   });
 });
+
+describe("bảng tuần trên trang Xếp hạng", () => {
+  it("cờ Hạng tắt hoặc khách: bị chặn", async () => {
+    const { tamTuongKyBoard } = await import("../../src/server/tamTuongKy");
+    const off = await tamTuongKyBoard(deps({ rankedEnabled: false }), OWNER);
+    assert.deepEqual(off, { ok: false, error: "featureDisabled" });
+    const guest = await tamTuongKyBoard(deps(), "guest-1");
+    assert.deepEqual(guest, { ok: false, error: "loginRequired" });
+  });
+
+  it("giải điểm bảng mùa thành điểm và số nguyên tố đã tiêu, xếp đúng thứ tự", async () => {
+    const { tamTuongKyBoard } = await import("../../src/server/tamTuongKy");
+    const d = deps();
+    const week = seasonKey(T0);
+    await d.seasons!.best("tamTuongKy", week, "acc-2", 300 * 1000 + (999 - 40), T0);
+    await d.seasons!.best("tamTuongKy", week, OWNER, 300 * 1000 + (999 - 13), T0 + 1);
+    await d.seasons!.best("tamTuongKy", week, "acc-3", 500 * 1000 + (999 - 90), T0 + 2);
+    const r = await tamTuongKyBoard(d, OWNER);
+    assert.ok(r.ok);
+    assert.equal(r.week, week);
+    assert.deepEqual(r.top.map((x) => [x.rank, x.points, x.unitsSpent, x.mine]), [[1, 500, 90, false], [2, 300, 13, true], [3, 300, 40, false]]);
+    assert.deepEqual(r.mine, { rank: 2, points: 300, unitsSpent: 13 });
+  });
+});
