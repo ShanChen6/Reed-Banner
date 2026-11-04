@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { test } from "node:test";
-import { DBL_ULTIMATES, ELEMENT_SKILLS, ROLE_SKILLS } from "../../src/core";
-import { skillArt } from "../../src/app/game/art/skills";
+import { CHARACTER_SKILLS, DBL_ULTIMATES, ELEMENT_SKILLS, ROLE_SKILLS } from "../../src/core";
+import { REUSED_SKILL_ART, skillArt } from "../../src/app/game/art/skills";
 
 test("ô 2/6 hệ (element_<mã>) dùng lại ảnh hệ cũ của Đinh Bộ Lĩnh", () => {
   for (const def of ELEMENT_SKILLS) {
@@ -39,5 +39,17 @@ test("mọi chiêu nghề của 8 nghề có ảnh vẽ tay", () => {
     const art = skillArt(def);
     assert.ok(art, def.id);
     assert.ok(existsSync(`public/art/skills/${art.file}.webp`), def.id);
+  }
+});
+
+test("28 chiêu ô 4 tướng dùng lại ảnh hệ cũ: đúng mã, có file, mỗi ảnh một lần", () => {
+  const ids = new Set(CHARACTER_SKILLS.map((d) => d.id));
+  const files = Object.values(REUSED_SKILL_ART);
+  assert.equal(files.length, 28);
+  assert.equal(new Set(files).size, files.length);
+  for (const [id, file] of Object.entries(REUSED_SKILL_ART)) {
+    assert.ok(ids.has(id), id);
+    assert.ok(existsSync(`public/art/skills/${file}.webp`), file);
+    assert.deepEqual(skillArt({ id }), { file });
   }
 });

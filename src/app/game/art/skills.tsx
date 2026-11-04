@@ -526,6 +526,41 @@ const SKILL_ART = new Set([
   "dbl_binhLinh_kim", "dbl_binhLinh_moc", "dbl_binhLinh_thuy", "dbl_binhLinh_hoa", "dbl_binhLinh_tho", "dbl_binhLinh_loi", "dbl_binhLinh_phong",
 ]);
 
+/**
+ * Chiêu ô 4 của tướng kèm / tướng lịch sử / sứ quân dùng lại ảnh chiêu hệ cũ của Đinh Bộ Lĩnh (Shan duyệt 04/11/2026),
+ * ghép theo hệ và tác dụng. Mỗi ảnh chỉ gán một lần.
+ */
+export const REUSED_SKILL_ART: Readonly<Record<string, string>> = {
+  sieuLoaiPhaGiap: "kimAnPhaThien", // Lý Khuê
+  rb069_ultimate: "doanKimNhatTuyen", // Bạch Phong Đao
+  kimQuaThietMa: "thietKyTungHoanh", // Trần Cương
+  thietBichDongThanh: "giapDongHoThe", // Cao Kiên
+  hoiHoSinhKhi: "coThuTranThien", // Kiều Thuận
+  hoaLuThaoDuoc: "thanhTrucBaoPhu", // Trịnh Tú
+  trucLamPhaTran: "thanhMocHoPhap", // Lâm Tùng
+  kinhCucTrienThan: "cuongVuThienDiep", // Đàm Thảo
+  boHaiTranGiang: "thuyKiepVanTrung", // Trần Lãm
+  namVietVuongAn: "bachDangTrieuDang", // Đinh Liễn
+  rb064_lieuDiepToaGiang: "hanBangTien", // Lam Giang Phi Diệp
+  camLoHoiXuan: "linhThuyHoMenh", // Mai Thanh
+  bachHoXuatSon: "lietDiemPhanThanh", // Phạm Bạch Hổ
+  dinhQuocHoaKy: "hoaThieuLienTrai", // Nguyễn Bặc
+  rb065_xichLuanLietTran: "xichDiemTien", // Xích Diệm Luân
+  danHoaHoiNguyen: "ducHoaTrungSinh", // Hồng Đan
+  doDongKienTam: "thaiSonApDinh", // Đỗ Cảnh Thạc
+  ngoaiGiapHoQuan: "kienThanhBatDong", // Đinh Điền
+  sonHaTranKich: "sonBangDiaLiet", // Kha Sơn
+  diaMachBungPhat: "diaChanTamQuan", // Doãn Nham
+  phongChauLoiKich: "cuuTieuLoiPhat", // Kiều Công Hãn
+  thapDaoLoiBinh: "loiDinhHieuLenh", // Lê Hoàn
+  rb067_loiChamTuocKhi: "loiTienXuyenVan", // Lôi Minh Xạ
+  loiTranKinhHon: "loiVongThienLa", // Mạc Vân
+  duongLamPhongKhoi: "baoTapCanKhon", // Ngô Nhật Khánh
+  vp_vanDuThienLy: "phongHanhVanLy", // Vũ Phong
+  truyPhongDoatMenh: "phongNhanLietKhong", // Hứa Lăng
+  rb068_phongLangNhieuTran: "cuongPhongQuetTran", // Tật Phong Lăng
+};
+
 /** Tuyệt chiêu ô 4 của Đinh Bộ Lĩnh (`dbl_<nghề>_<hệ>`) dùng lại ảnh tuyệt chiêu hệ cũ của chính ông. */
 const DBL_ULTIMATE_ART: Readonly<Record<Element, string>> = {
   kim: "kimAnPhaThien",
@@ -545,6 +580,8 @@ const DBL_ULTIMATE_ART: Readonly<Record<Element, string>> = {
  */
 export function skillArt(def: Pick<SkillDef, "id" | "element" | "profession">): { file: string; badge?: Profession } | undefined {
   if (SKILL_ART.has(def.id)) return { file: def.id };
+  const reused = REUSED_SKILL_ART[def.id];
+  if (reused) return { file: reused };
   if (def.id.startsWith("element_")) {
     const file = def.id.slice("element_".length);
     return SKILL_ART.has(file) ? { file } : undefined;
