@@ -173,12 +173,20 @@ export default function ArtPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-semibold">Bộ Hoa Lư (phẩm Tím, hệ Hỏa)</h2>
+          <h2 className="font-semibold">Bộ Hoa Lư (phẩm Tím, hệ Hỏa; vũ khí theo nghề)</h2>
           <div className="grid grid-cols-9 gap-2 text-xs">
             {GEAR_SLOTS.map((s) => (
               <figure key={s} className="flex flex-col items-center gap-1">
                 <GearIcon slot={s} element="hoa" tier={4} set="hoaLu" className="size-12" />
                 <figcaption className="opacity-70">{SLOT_NAME[s]}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-3 text-xs">
+            {PROFESSIONS.map((p) => (
+              <figure key={p} className="flex flex-col items-center gap-1">
+                <GearIcon slot="vuKhi" profession={p} element="hoa" tier={4} set="hoaLu" className="size-14" />
+                <figcaption className="opacity-80">{PROFESSION_NAME[p]}</figcaption>
               </figure>
             ))}
           </div>

@@ -1,7 +1,7 @@
 # Prompt trang bị
 
 > Cập nhật: 03/11/2026
-> Trạng thái: **DRAFT** — đã có 5 khung phẩm (mục 4) và đủ 16 món bộ Cờ Lau (mục 5), 8 món ngoài vũ khí bộ Hoa Lư, 04/11/2026; các hình khác chưa có ảnh; thay mục 4 cũ của [Prompt đồ họa](do-hoa.md#4-trang-bị) (nét phẳng, 6 vũ khí).
+> Trạng thái: **DRAFT** — đã có 5 khung phẩm (mục 4) và đủ 16 món bộ Cờ Lau (mục 5), đủ 16 món bộ Hoa Lư, 04/11/2026; các hình khác chưa có ảnh; thay mục 4 cũ của [Prompt đồ họa](do-hoa.md#4-trang-bị) (nét phẳng, 6 vũ khí).
 
 Prompt ráp sẵn cho hệ thống trang bị: hình từng món theo **9 ô** và **3 bộ**, vũ khí cho đủ **8 nghề**, khung **5 phẩm**, huy hiệu bộ, bóng ô trống và hai biểu tượng thao tác. Luật trang bị (chỉ số, thưởng bộ, phẩm, ghép) ở [Trang bị](../../04-equipment/trang-bi.md); danh sách lấy từ code ngày 03/11/2026 (`GEAR_SLOTS`, `GEAR_SETS`, `TIERS` trong `src/core/gear/gear.ts`, `PROFESSIONS` trong `src/core/battle/rules.ts`). Phong cách theo [Prompt biểu tượng kỹ năng](icon-ky-nang.md) để món đồ và kỹ năng nằm cạnh nhau không lệch nhau. Giải thích bằng tiếng Việt, prompt bằng tiếng Anh.
 
