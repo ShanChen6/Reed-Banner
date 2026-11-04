@@ -31,7 +31,7 @@ import {
   type ProfileAction,
   type Tier,
 } from "@/core";
-import { GearIcon, SetEmblem } from "../art/gear";
+import { EmptySlotIcon, GearIcon, SetEmblem } from "../art/gear";
 import {
   ELEMENT_NAME,
   gearText,
@@ -239,16 +239,20 @@ export default function GearPanel({
                   ? `${gearText(item)} · bấm để tháo`
                   : `${SLOT_NAME[slot]}: trống`
               }
-              className={`rounded ${item ? "" : "opacity-30"} disabled:cursor-default`}
+              className="rounded disabled:cursor-default"
             >
-              <GearIcon
-                slot={slot}
-                element={item?.element ?? elementOf(profile, character)}
-                tier={item?.tier}
-                set={item?.set}
-                profession={slot === "vuKhi" ? profession : undefined}
-                className="size-9"
-              />
+              {item ? (
+                <GearIcon
+                  slot={slot}
+                  element={item.element}
+                  tier={item.tier}
+                  set={item.set}
+                  profession={slot === "vuKhi" ? profession : undefined}
+                  className="size-9"
+                />
+              ) : (
+                <EmptySlotIcon slot={slot} className="size-9" />
+              )}
             </button>
           );
         })}
