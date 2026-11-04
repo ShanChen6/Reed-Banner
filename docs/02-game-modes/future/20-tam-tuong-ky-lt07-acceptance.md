@@ -54,6 +54,15 @@ Khách (chưa đăng nhập) thấy màn nhắc đăng nhập; API trả 401 (te
 2. Đặt `TAM_TUONG_KY_ENABLED=true`: mở chế độ Thường, thành tựu bộ, phiếu từ nhiệm vụ/điểm danh, bó trong thưởng hạng.
 3. Khi muốn mở Hạng tuần, đặt thêm `TAM_TUONG_KY_RANKED_ENABLED=true` (nên bật vào đầu tuần, thứ Hai giờ Việt Nam, để tuần đầu đủ 7 ngày).
 
+**Gói 2:** đặt thêm `TAM_TUONG_KY_PACK2_ENABLED=true` (cần cờ chế độ; nên bật vào thứ Hai). Tắt thì sổ người chơi vẫn giữ khám phá Gói 2. Xem [Gói 2](21-tam-tuong-ky-pack-2.md#2-gộp-sổ).
+
+**Kiểm cờ sau khi deploy:** mở `/api/health`, mục `features.tamTuongKy`:
+
+- `enabled`, `ranked`, `pack2`: server đang đọc cờ chế độ, cờ Hạng, cờ Gói 2 là bật hay tắt; `pack2Ignored` như `rankedIgnored` cho cờ Gói 2.
+- `invalid`: tên biến đã đặt nhưng giá trị không phải `true` (ví dụ `1`, `yes`). Hai cờ Tầm Tướng Ký chấp nhận `true` không phân biệt hoa thường, bỏ khoảng trắng và xuống dòng ở hai đầu.
+- `rankedIgnored: true`: đã đặt cờ Hạng nhưng cờ chế độ chưa bật, nên Hạng vẫn tắt.
+- Biến môi trường chỉ có hiệu lực từ lần deploy **sau** khi đặt; đặt xong phải deploy lại. Trên Vercel, biến phải được chọn cho đúng môi trường (Production hoặc Preview) của bản đang mở.
+
 **Rút lại:** đặt lại cờ về giá trị khác `true` (hoặc xóa). Thẻ Home về “Sắp ra mắt”, API trả 403, thành tựu ẩn, không cộng bó. Dữ liệu người chơi (sổ, phiếu, túi, điểm tuần) giữ nguyên trong hồ sơ và `season_scores`; bật lại thì chơi tiếp. Bảng tuần đang chạy khi rút Hạng không thành nguồn thưởng cho tới khi bật lại.
 
 ## 4. Còn chờ Shan
@@ -61,4 +70,4 @@ Khách (chưa đăng nhập) thấy màn nhắc đăng nhập; API trả 401 (te
 - [ ] Chơi thử cả hai chế độ và góp ý giao diện.
 - [ ] Thêm claim tước hiệu tướng Gói 1 vào [sổ nguồn](../campaign/history-sources.md) và đối chiếu `S04`, `S05` (phiên làm việc không mở được Wikisource); tới lúc đó Tướng Lục không hiện mô tả lịch sử.
 - [ ] Quyết định merge và ngày bật cờ production.
-- Việc làm sau, không chặn phát hành: tab Tầm Tướng Ký trên trang Xếp hạng chung; lời dẫn dạng ảnh; icon riêng cho yếu tố trung gian; Đinh Bộ Lĩnh vào gói 2 (P-27).
+- Việc làm sau, không chặn phát hành: lời dẫn dạng ảnh; icon riêng cho yếu tố trung gian; Đinh Bộ Lĩnh vào gói 2 (P-27).
