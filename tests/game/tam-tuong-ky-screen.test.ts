@@ -18,7 +18,7 @@ import {
 } from "../../src/app/game/tam-tuong-ky/altar";
 import TamTuongKyScreen from "../../src/app/game/tam-tuong-ky/TamTuongKyScreen";
 import { SCENE_SLUG, SCENE_TITLE, sceneOfSlug } from "../../src/app/game/scene";
-import { tamTuongKyEnabled } from "../../src/server/featureFlags";
+import { tamTuongKyEnabled, tamTuongKyFlagStatus, tamTuongKyRankedEnabled } from "../../src/server/featureFlags";
 import { MemoryProfileStore } from "../../src/server/profiles";
 import { getTamTuongKy, getTamTuongKyRanked } from "../../src/server/tamTuongKy";
 import { MemorySeasonStore } from "../../src/server/seasons";
@@ -155,6 +155,17 @@ describe("Màn chơi", () => {
     assert.equal(tamTuongKyEnabled({}), false);
     assert.equal(tamTuongKyEnabled({ TAM_TUONG_KY_ENABLED: "1" }), false);
     assert.equal(tamTuongKyEnabled({ TAM_TUONG_KY_ENABLED: "true" }), true);
+    // Giá trị dán vào bảng biến môi trường hay dính khoảng trắng, xuống dòng hoặc viết hoa.
+    for (const v of ["TRUE", " true", "true\n", "True\r\n"]) assert.equal(tamTuongKyEnabled({ TAM_TUONG_KY_ENABLED: v }), true, JSON.stringify(v));
+    for (const v of ["1", "yes", "", "tru e"]) assert.equal(tamTuongKyEnabled({ TAM_TUONG_KY_ENABLED: v }), false, JSON.stringify(v));
+  });
+
+  it("Hạng cần cả hai cờ; trạng thái cờ chỉ ra biến đặt sai hoặc thiếu cờ chế độ", () => {
+    assert.equal(tamTuongKyRankedEnabled({ TAM_TUONG_KY_RANKED_ENABLED: "true" }), false);
+    assert.equal(tamTuongKyRankedEnabled({ TAM_TUONG_KY_ENABLED: "true", TAM_TUONG_KY_RANKED_ENABLED: "true\n" }), true);
+    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true" }), { enabled: true, ranked: false, invalid: [], rankedIgnored: false });
+    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true", TAM_TUONG_KY_RANKED_ENABLED: "1" }), { enabled: true, ranked: false, invalid: ["TAM_TUONG_KY_RANKED_ENABLED"], rankedIgnored: false });
+    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_RANKED_ENABLED: "true" }), { enabled: false, ranked: false, invalid: [], rankedIgnored: true });
   });
 
   it("chế độ Thường: yếu tố có dấu “còn công thức chưa tìm” trong nhãn đọc màn hình", async () => {
