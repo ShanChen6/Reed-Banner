@@ -2,6 +2,16 @@
 
 ## 04/11/2026
 
+**Tầm Tướng Ký: Shan duyệt Gói 3**
+- Duyệt 8 tri thức sơ học, 56 công thức tuyệt chiêu, 56 lời dẫn và 9 thành tựu (3 500 vàng) của [Gói 3](../02-game-modes/future/22-tam-tuong-ky-pack-3.md) (**DRAFT → APPROVED**); `PACK_3` đặt `published`. Ra mắt cùng cờ `TAM_TUONG_KY_ENABLED` khi merge vào `develop` và deploy.
+
+**Tầm Tướng Ký: Gói 3 — mọi tướng vào sổ (DRAFT, có code)**
+- Shan: gộp các cờ Tầm Tướng Ký còn **một biến** `TAM_TUONG_KY_ENABLED`, mở chế độ Thường, Hạng tuần và mọi gói `published`. `TAM_TUONG_KY_RANKED_ENABLED`, `TAM_TUONG_KY_PACK2_ENABLED`, `TAM_TUONG_KY_PACK3_ENABLED` không còn tác dụng; `/api/health` liệt kê chúng ở `obsolete` nếu còn đặt. Gói 3 ra mắt khi đổi `PACK_3.status` sang `published`. Sửa P-28 ở [Design Freeze](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md). Xem [nghiệm thu LT-07](../02-game-modes/future/20-tam-tuong-ky-lt07-acceptance.md#3-bật-và-rút-lại).
+- Shan: đưa mọi tướng vào Tầm Tướng Ký. [Gói 3](../02-game-modes/future/22-tam-tuong-ky-pack-3.md) thêm 56 tướng thường (8 nghề × 7 hệ), 7 lần ghép: vai trò sơ học + tuyệt chiêu riêng. Sổ ba gói 77 tướng, validator sạch. Xoay vòng Hạng thêm bước bảo đảm tuần nào cũng có tướng đặc biệt; đề cử Gói 1, Gói 1 + 2 không đổi. Thành tựu đề xuất 9 bộ (3 500 vàng), chờ duyệt.
+
+**Tầm Tướng Ký: Gói 2 đã bật**
+- PR #258 merge vào `develop`; Shan bật `TAM_TUONG_KY_PACK2_ENABLED`. [Gói 2](../02-game-modes/future/21-tam-tuong-ky-pack-2.md) **APPROVED → IMPLEMENTED**. Bật giữa tuần (thứ Tư) nên nếu chế độ Hạng đang bật thì danh sách đề cử tuần 2026-11-02 đổi từ lúc bật; điểm đã ghi giữ nguyên.
+
 **Viễn Chinh: hai đạo quân trên sa bàn (APPROVED, có code sau cờ)**
 - Shan chọn cơ chế "Hai đạo quân trên sa bàn" trong ba phương án (sai quân tự động, một đạo rẽ nhánh). Chia 6 tướng làm hai đạo; mỗi ngày một đạo tiến một ô, đạo kia nghỉ (+15% máu, cả người gục); giặc tăng viện 5%/ngày; giáp công khi đạo kia đứng kề (máu địch ×0,75); thua trận chỉ rút về; hết ngày là thua. Ba sa bàn Ải Bắc, Thượng Du, Cửa Biển × 3 bậc; thưởng trận như trận thường, thưởng lần đầu mỗi bậc 300/600/1 000 vàng + món Lam/Tím/Cam.
 - Code: `src/core/expedition/`, `Profile.expedition`, `Match.expedition`, API `/api/expedition` (GET, `run`, `march`, `camp`, `abandon`), màn `/game/expedition`, mô phỏng `scripts/expedition-sim.ts`. Cờ `EXPEDITION_ENABLED` mặc định tắt. Xem [GDD Viễn Chinh](../02-game-modes/expedition/01-vien-chinh-gdd.md).
