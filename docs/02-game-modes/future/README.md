@@ -13,13 +13,20 @@
 5. [05 — Mô phỏng, QA và cân bằng](05-binh-phap-balance-qa.md)
 6. [06 — Định hướng Tháp và Sinh tồn](06-towers-survival-future.md)
 7. [07 — Roadmap task triển khai](07-implementation-roadmap.md)
-8. [08 — Liệt Truyện: Tầm Tướng Ký — GDD](08-liet-truyen-gdd.md)
+8. [08 — Tầm Tướng Ký (trước gọi Liệt Truyện) — GDD](08-liet-truyen-gdd.md)
 9. [09 — Công thức và quy chuẩn nội dung Liệt Truyện](09-liet-truyen-recipes.md)
 10. [10 — Kiến trúc engine ghép yếu tố](10-liet-truyen-architecture.md)
 11. [11 — UX, Art Bible của Liệt Truyện](11-liet-truyen-ui-art.md)
 12. [12 — QA và roadmap Liệt Truyện](12-liet-truyen-qa-roadmap.md)
 13. [13 — Quần Hùng online: đấu trực tiếp hai người chơi](13-quan-hung-pvp-truc-tiep.md) (DRAFT, phát triển sau)
-14. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
+14. [14 — Tầm Tướng Ký: Design Freeze LT-00](14-tam-tuong-ky-design-freeze.md) (FROZEN; nguồn chính luật Tầm Tướng Ký, thay luật trong 08–12)
+15. [15 — Tầm Tướng Ký: catalog slice LT-01](15-tam-tuong-ky-lt01-catalog.md) (APPROVED, có code)
+16. [16 — Tầm Tướng Ký: engine ghép LT-02](16-tam-tuong-ky-lt02-engine.md) (APPROVED, có code)
+17. [17 — Tầm Tướng Ký: server chế độ Thường LT-04](17-tam-tuong-ky-lt04-server.md) (DRAFT, có code)
+18. [18 — Tầm Tướng Ký: Gói 1 và mô phỏng LT-05](18-tam-tuong-ky-lt05-pack-1.md) (APPROVED, có code)
+19. [19 — Tầm Tướng Ký: chế độ Hạng tuần LT-06](19-tam-tuong-ky-lt06-ranked.md) (DRAFT, có code)
+20. [20 — Tầm Tướng Ký: nghiệm thu và phát hành LT-07](20-tam-tuong-ky-lt07-acceptance.md) (DRAFT)
+21. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
 
 ## Quy ước quyết định
 

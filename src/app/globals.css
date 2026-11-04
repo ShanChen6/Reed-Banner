@@ -1046,6 +1046,18 @@
   filter: drop-shadow(0 0 5px rgb(255 140 40 / 0.8));
 }
 
+/* Tầm Tướng Ký: ô thông báo sáng lên khi khám phá mới (chỉ chạy khi không bật giảm chuyển động, qua motion-safe). */
+@keyframes ttk-reveal {
+  from {
+    opacity: 0.4;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* Doanh Trại (src/app/game/profile/): gỗ sơn tối, chữ kem, đỏ trầm cho thẻ chưa chọn, vàng cổ chỉ để đánh dấu lựa
    chọn và hành động chính. Một lớp viền mảnh cho mỗi khung, không chồng nhiều khung vàng. Token --bk-* chỉ áp ở đây. */
 .barracks {
