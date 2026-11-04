@@ -35,7 +35,7 @@ describe("Gói 1", () => {
   });
 
   it("thành tựu bộ của Gói 1 có trong danh sách thành tựu và nhận được một lần khi mở đủ bộ", () => {
-    const ids = ACHIEVEMENTS.filter((a) => a.id.startsWith("ttk.")).map((a) => a.id);
+    const ids = ACHIEVEMENTS.filter((a) => a.id.startsWith("ttk.pack-1.")).map((a) => a.id);
     assert.equal(ids.length, 9);
     const account = newTtkAccount(buildCatalog(PACK_1));
     const profile: Profile = {

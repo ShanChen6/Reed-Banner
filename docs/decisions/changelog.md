@@ -2,6 +2,18 @@
 
 ## 04/11/2026
 
+**Tầm Tướng Ký: Shan duyệt Gói 2**
+- Duyệt 9 công thức, 9 lời dẫn và 8 thành tựu (3 500 vàng) của [Gói 2](../02-game-modes/future/21-tam-tuong-ky-pack-2.md) (**DRAFT → APPROVED**); `PACK_2` đặt `published`. Thành tựu Gói 2 hiện ở trang Nhiệm vụ khi cờ `TAM_TUONG_KY_PACK2_ENABLED` bật. Còn chờ ngày bật cờ.
+
+**Tầm Tướng Ký: Gói 2 (DRAFT, có code)**
+- Shan chọn Gói 2 = 8 sứ quân còn lại + Đinh Bộ Lĩnh (bậc đặc biệt), gộp chung sổ với Gói 1. `PACK_2` + `mergePacks` → `PACK_1_2` (21 tướng, 95 công thức, validator sạch; sứ quân 12 lần ghép, Đinh Bộ Lĩnh 9). Cờ `TAM_TUONG_KY_PACK2_ENABLED`; Tướng Lục chia mục theo gói; Hạng xoay vòng qua 21 tướng; tắt Gói 2 không xóa khám phá. Thành tựu Gói 2 đề xuất (8 bộ, 3 500 vàng), chờ duyệt. Xem [Gói 2](../02-game-modes/future/21-tam-tuong-ky-pack-2.md).
+
+**Tầm Tướng Ký: tab Xếp hạng, phiếu trên trang Nhiệm vụ**
+- Trang Xếp hạng thêm tab Tầm Tướng Ký (bảng tuần, khi cờ Hạng bật), API `GET /api/tam-tuong-ky/board`. Trang Nhiệm vụ ghi rõ thưởng nào kèm phiếu và số phiếu hiện có, chỉ cho người đã vào chế độ khi cờ bật ([giao diện](../05-ui-ux/screens/tam-tuong-ky.md)).
+
+**Tầm Tướng Ký: cờ đọc dễ dãi hơn, kiểm cờ ở `/api/health`**
+- Shan báo bản deploy chưa thấy chế độ Hạng. Code trên `develop` đúng; nghi biến `TAM_TUONG_KY_RANKED_ENABLED` có giá trị khác đúng chữ `true` hoặc chưa deploy lại. Hai cờ Tầm Tướng Ký giờ chấp nhận `true` không phân biệt hoa thường, bỏ khoảng trắng/xuống dòng (cờ chế độ khác giữ nguyên). `/api/health` thêm `features` (trạng thái cờ, biến đặt sai, cờ Hạng bị bỏ qua vì thiếu cờ chế độ). Xem [nghiệm thu LT-07](../02-game-modes/future/20-tam-tuong-ky-lt07-acceptance.md#3-bật-và-rút-lại).
+
 **Tầm Tướng Ký: LT-07 nghiệm thu, sẵn sàng bật theo cờ**
 - Gói 1 đặt `published` (Shan đã duyệt nội dung); phát hành chỉ còn do cờ `TAM_TUONG_KY_ENABLED` / `TAM_TUONG_KY_RANKED_ENABLED`. Trang Nhiệm vụ ẩn thành tựu `ttk.*` khi cờ tắt.
 - Kiểm: toàn bộ test, typecheck, lint, docs, `next build`; chạy bản production với cờ tắt và bật (Home, màn, API, Nhiệm vụ, thưởng hạng, 6 màn khác, luồng Thường và Hạng, điện thoại). Thêm Tầm Tướng Ký vào [bảng chế độ](../02-game-modes/README.md#1-tổng-quan) và [ai chơi được chế độ nào](../02-game-modes/README.md#61-ai-chơi-được-chế-độ-nào-shan-01112026). Xem [nghiệm thu LT-07](../02-game-modes/future/20-tam-tuong-ky-lt07-acceptance.md).

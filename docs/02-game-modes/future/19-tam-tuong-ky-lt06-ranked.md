@@ -39,6 +39,7 @@ Cờ tắt: `403 featureDisabled`; khách: `401 loginRequired`; POST cùng Origi
 | `GET /api/tam-tuong-ky/ranked` | Tuần hiện tại: túi, kho tuần, điểm, đơn vị đã tiêu, 7 ô đề cử, cửa hàng, vàng, top 10 bảng tuần và hạng của mình. Vào tuần lần đầu thì ghi cấp nền | |
 | `POST /api/tam-tuong-ky/ranked/combine {requestId, first, second}` | Ghép; tướng đề cử mới thì ghi bảng tuần | `409 conflict` |
 | `POST /api/tam-tuong-ky/ranked/buy {requestId}` | Mua một bó | `409 noGold`, `409 shopLimit` |
+| `GET /api/tam-tuong-ky/board[?week=current\|<thứ Hai>]` | Bảng tuần cho trang Xếp hạng: top 50, điểm và số nguyên tố đã tiêu, hạng của mình | `400 badRequest` |
 
 ## 4. Thay đổi kèm ở chế độ Thường
 
@@ -53,4 +54,6 @@ Cờ tắt: `403 featureDisabled`; khách: `401 loginRequired`; POST cùng Origi
 - `tests/game/tam-tuong-ky-screen.test.ts`: dấu còn công thức; màn Hạng có 7 lời dẫn, không lộ tên, không có nút gợi ý.
 - Playwright với hai cờ bật: ghép ra tướng đặc biệt đề cử (+200 điểm, túi 21 → 11), bảng tuần có tên, tải lại vẫn giữ, nút mua khóa khi không có vàng; iPhone 13 không tràn ngang.
 
-> TODO: Tab Tầm Tướng Ký trên trang Xếp hạng chung (hiện bảng tuần nằm trong màn chế độ); lời dẫn dạng ảnh; LT-07 QA và phát hành.
+Trang Xếp hạng có tab **Tầm Tướng Ký** (chỉ khi cờ Hạng bật, mở thẳng bằng `/game/leaderboard?board=tamTuongKy`): chỉ bảng tuần này, mỗi dòng ghi điểm và số nguyên tố đã tiêu.
+
+> TODO: lời dẫn dạng ảnh.

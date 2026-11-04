@@ -9,6 +9,9 @@ import { useEffect, useState } from "react";
 import {
   ACHIEVEMENTS,
   achievementProgress,
+  TTK_TICKETS_CHECKIN7,
+  TTK_TICKETS_DAILY_ALL,
+  TTK_TICKETS_WEEKLY_WIN15,
   CHECKIN_GOLD,
   DAILY_QUESTS,
   nextStreak,
@@ -32,6 +35,8 @@ interface Row {
   readonly done: boolean;
   readonly claimed: boolean;
   readonly action: ProfileAction;
+  /** Phiếu Tầm Tướng Ký kèm thưởng (chỉ khi chế độ bật và người chơi đã vào chế độ). */
+  readonly tickets?: number;
 }
 
 function questRow(p: Profile, q: QuestDef, now: number): Row {
@@ -44,8 +49,10 @@ function questRow(p: Profile, q: QuestDef, now: number): Row {
 
 /** Thành tựu Tầm Tướng Ký (`ttk.*`) chỉ hiện khi chế độ đã bật, để không lộ chế độ chưa phát hành. */
 export const isTamTuongKyAchievement = (id: string) => id.startsWith("ttk.");
+/** Thành tựu Gói 2 chỉ hiện khi cờ Gói 2 bật. */
+export const isTamTuongKyPack2Achievement = (id: string) => id.startsWith("ttk.pack-2.");
 
-export default function QuestsScreen({ tamTuongKy = false }: { tamTuongKy?: boolean }) {
+export default function QuestsScreen({ tamTuongKy = false, tamTuongKyPack2 = false }: { tamTuongKy?: boolean; tamTuongKyPack2?: boolean }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -82,6 +89,9 @@ export default function QuestsScreen({ tamTuongKy = false }: { tamTuongKy?: bool
     );
   };
 
+  // Phiếu Tầm Tướng Ký kèm thưởng (Design Freeze P-10): chỉ hiện khi chế độ bật và người chơi đã vào chế độ,
+  // vì phiếu chỉ cộng cho người đã vào.
+  const ttk = tamTuongKy ? profile.tamTuongKy : undefined;
   const checkedToday = profile.quests.checkIn.last === vnDay(now);
   // Ô đang tới lượt: hôm nay đã điểm danh thì là ô vừa nhận, chưa thì là ô sẽ nhận.
   const streak = checkedToday
@@ -91,18 +101,22 @@ export default function QuestsScreen({ tamTuongKy = false }: { tamTuongKy?: bool
   const sections: { title: string; note: string; rows: Row[] }[] = [
     {
       title: "Nhiệm vụ ngày",
-      note: "Làm lại lúc 0 giờ mỗi ngày.",
+      note: ttk
+        ? `Làm lại lúc 0 giờ mỗi ngày. Nhận đủ nhiệm vụ ngày: +${TTK_TICKETS_DAILY_ALL} phiếu Tầm Tướng Ký.`
+        : "Làm lại lúc 0 giờ mỗi ngày.",
       rows: DAILY_QUESTS.map((q) => questRow(profile, q, now)),
     },
     {
       title: "Nhiệm vụ tuần",
       note: "Làm lại lúc 0 giờ thứ Hai.",
-      rows: WEEKLY_QUESTS.map((q) => questRow(profile, q, now)),
+      rows: WEEKLY_QUESTS.map((q) => ({ ...questRow(profile, q, now), ...(ttk && q.id === "w.win15" ? { tickets: TTK_TICKETS_WEEKLY_WIN15 } : {}) })),
     },
     {
       title: "Thành tựu",
       note: "Mỗi thành tựu nhận một lần.",
-      rows: ACHIEVEMENTS.filter((a) => tamTuongKy || !isTamTuongKyAchievement(a.id)).map((a) => ({
+      rows: ACHIEVEMENTS.filter(
+        (a) => (tamTuongKy || !isTamTuongKyAchievement(a.id)) && (tamTuongKyPack2 || !isTamTuongKyPack2Achievement(a.id)),
+      ).map((a) => ({
         id: a.id,
         title: a.title,
         gold: a.gold,
@@ -118,7 +132,9 @@ export default function QuestsScreen({ tamTuongKy = false }: { tamTuongKy?: bool
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-black text-amber-100">Nhiệm vụ</h1>
-          <p className="text-sm text-muted">{profile.gold} vàng</p>
+          <p className="text-sm text-muted">
+            {profile.gold} vàng{ttk && <> · {ttk.tickets} phiếu Tầm Tướng Ký</>}
+          </p>
         </div>
         <div className="flex gap-2 text-sm">
           <SceneLink
@@ -164,6 +180,7 @@ export default function QuestsScreen({ tamTuongKy = false }: { tamTuongKy?: bool
                 <span className="text-[10px] text-muted">
                   {got ? "Đã nhận" : "vàng"}
                 </span>
+                {ttk && n === CHECKIN_GOLD.length && <span className="text-[10px] text-amber-300">+{TTK_TICKETS_CHECKIN7} phiếu</span>}
               </li>
             );
           })}
@@ -215,7 +232,7 @@ export default function QuestsScreen({ tamTuongKy = false }: { tamTuongKy?: bool
                     onClick={() => void act(r.action)}
                     className={`w-20 shrink-0 rounded px-2 py-1.5 text-xs font-semibold ${r.claimed ? "bg-white/5 text-stone-500" : r.done ? "bg-amber-500 text-stone-950" : "bg-white/10 text-muted"}`}
                   >
-                    {r.claimed ? "Đã nhận" : `${r.gold} vàng`}
+                    {r.claimed ? "Đã nhận" : `${r.gold} vàng${r.tickets ? ` +${r.tickets} phiếu` : ""}`}
                   </button>
                 </li>
               ))}

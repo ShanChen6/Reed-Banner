@@ -60,6 +60,11 @@ Tông gỗ tối, giấy dó, đồng cổ dùng token `--atlas-*` và khung `at
 - **Bảng tuần**: top 10 và hạng của mình.
 - Chế độ Thường thêm chấm vàng “còn công thức chưa tìm” trên yếu tố (L5-4).
 
+### Ngoài màn chế độ (cờ bật)
+
+- **Trang Xếp hạng**: tab “Tầm Tướng Ký” (khi cờ Hạng bật) với bảng tuần, “x điểm · tiêu y” mỗi dòng.
+- **Trang Nhiệm vụ** (người đã vào chế độ): đầu trang ghi số phiếu; ô điểm danh ngày 7 ghi “+1 phiếu”; ghi chú nhiệm vụ ngày nhắc “Nhận đủ nhiệm vụ ngày: +1 phiếu”; nút “Thắng 15 trận” ghi “400 vàng +2 phiếu”. Thành tựu bộ `ttk.*` chỉ hiện khi cờ bật.
+
 ## 6. Đã kiểm
 
 - `tests/game/tam-tuong-ky-screen.test.ts` (14 test): màn chờ dữ liệu, phiếu và nút mở lượt, mẹo người mới; chọn ô, đổi chỗ, `A+A`; tìm không dấu và lọc nhóm; lời thông báo; Tướng Lục không lộ tướng chưa tìm; dựng màn không có tên tướng hay chữ thưởng; phân cảnh và cờ.
