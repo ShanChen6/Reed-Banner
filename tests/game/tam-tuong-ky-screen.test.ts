@@ -163,7 +163,7 @@ describe("Màn chơi", () => {
   it("một biến duy nhất: Hạng và các gói đã duyệt đi cùng cờ chế độ; biến cũ không còn tác dụng", () => {
     assert.equal(tamTuongKyRankedEnabled({ TAM_TUONG_KY_RANKED_ENABLED: "true" }), false);
     assert.equal(tamTuongKyRankedEnabled({ TAM_TUONG_KY_ENABLED: "true\n" }), true);
-    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true" }), { enabled: true, ranked: true, pack2: true, pack3: false, invalid: [], obsolete: [] });
+    assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "true" }), { enabled: true, ranked: true, pack2: true, pack3: true, invalid: [], obsolete: [] });
     assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_ENABLED: "1", TAM_TUONG_KY_PACK3_ENABLED: "true" }), { enabled: false, ranked: false, pack2: false, pack3: false, invalid: ["TAM_TUONG_KY_ENABLED"], obsolete: ["TAM_TUONG_KY_PACK3_ENABLED"] });
     assert.deepEqual(tamTuongKyFlagStatus({ TAM_TUONG_KY_RANKED_ENABLED: "true", TAM_TUONG_KY_PACK2_ENABLED: "true" }), { enabled: false, ranked: false, pack2: false, pack3: false, invalid: [], obsolete: ["TAM_TUONG_KY_RANKED_ENABLED", "TAM_TUONG_KY_PACK2_ENABLED"] });
   });

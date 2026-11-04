@@ -504,7 +504,8 @@ export const PACK_3: Pack = {
   nameVi: "Gói 3: Tướng thường",
   contentVersion: 1,
   // Chờ Shan duyệt công thức, lời dẫn và vàng thành tựu.
-  status: "draft",
+  // Shan duyệt công thức, lời dẫn và vàng thành tựu ngày 04/11/2026; mở cùng cờ TAM_TUONG_KY_ENABLED.
+  status: "published",
   nodes: PACK_3_CONTENT.nodes,
   recipes: PACK_3_CONTENT.recipes,
   // Đề xuất: mỗi nghề đủ 7 tướng 250 vàng (8 bộ), đủ 56 tướng thường 1 500.
