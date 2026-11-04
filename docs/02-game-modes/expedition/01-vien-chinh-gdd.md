@@ -1,7 +1,7 @@
 # Viễn Chinh — Hai đạo quân trên sa bàn
 
 > Cập nhật: 04/11/2026
-> Trạng thái: **APPROVED** — Shan chọn cơ chế "Hai đạo quân trên sa bàn" ngày 04/11/2026; số liệu ở mục 5 là điểm xuất phát do Claude đặt theo mô phỏng, chờ Shan chơi thử. Code nằm sau cờ `EXPEDITION_ENABLED` (mặc định tắt).
+> Trạng thái: **APPROVED** — Shan chọn cơ chế "Hai đạo quân trên sa bàn" ngày 04/11/2026; Shan chốt mục 8 cùng ngày (thua trận rút về, giới hạn lượt mỗi ngày, có bảng xếp hạng); số liệu ở mục 5 và số lượt mỗi ngày là điểm xuất phát do Claude đặt, chờ Shan chơi thử. Code nằm sau cờ `EXPEDITION_ENABLED` (mặc định tắt).
 
 File này là **nguồn chính cho luật Viễn Chinh**. Code ở `src/core/expedition/` (luật thuần), `src/server/expedition.ts`
 và `src/server/expeditionSettle.ts` (server), `src/app/game/expedition/ExpeditionScreen.tsx` (màn chơi), mô phỏng ở
@@ -86,7 +86,26 @@ rồi một đạo đánh.
 - **Thắng viễn chinh lần đầu ở một bậc:** vàng và một món trang bị theo hệ chiến địa (vũ khí theo nghề Đinh Bộ Lĩnh).
 - **Thắng lại:** vàng nhỏ, không món.
 - Thua viễn chinh không có thưởng thêm. Mọi thưởng do server chốt đúng một lần (`rewarded` trong lượt).
-- Không có bảng xếp hạng ở bản đầu; khách chơi được (giống Bình Loạn).
+
+### 3.6 Giới hạn mỗi ngày (Shan chốt 04/11/2026)
+
+- Mỗi ngày (giờ Việt Nam, đổi lúc 0 giờ) được **xuất quân 3 lượt** (`EXPEDITION_RUNS_PER_DAY`). Lượt tính lúc xuất
+  quân, kể cả lượt rút quân sớm hay thua. Hết lượt thì `POST /api/expedition/run` báo `dailyLimit`.
+- Lượt đang đi dở qua 0 giờ vẫn đi tiếp, đánh tiếp được; giới hạn chỉ chặn xuất quân mới.
+- Con số 3 do Claude đặt: một lượt khoảng 6–10 trận, thắng lần đầu mỗi bậc chỉ có một lần, nên giới hạn chủ yếu chặn
+  cày vàng thắng lại và giữ bảng xếp hạng công bằng. Đổi số chỉ cần sửa hằng số.
+
+### 3.7 Bảng xếp hạng (Shan chốt 04/11/2026)
+
+- Tab **Viễn Chinh** ở trang Xếp hạng, bảng mọi thời đại (không có mùa). Điểm: **tổng sao tốt nhất** của mọi sa bàn ×
+  bậc (tối đa 27); bằng sao thì **tổng số ngày ít nhất** của các bậc đã thắng nhỏ hơn đứng trên; bằng nữa thì ai đạt
+  trước đứng trên. Code: `expeditionBoardScore` (`src/core/expedition/state.ts`), bảng `expedition` trong
+  `boardScores`; hồ sơ lưu `bestDays` theo `${map}:${tier}`.
+- Server ghi điểm ngay sau khi chốt lượt thắng (`settleExpeditionMatch`), và khi người chơi mở trang Xếp hạng.
+- Theo luật chung chế độ có bảng xếp hạng ([README chế độ mục 6.1](../README.md#61-ai-chơi-được-chế-độ-nào-shan-01112026)),
+  Viễn Chinh **chỉ cho tài khoản đã đăng nhập**: khách không xem `GET /api/expedition` (401), không xuất quân, tiến
+  quân hay đóng quân (`loginRequired`), trận Viễn Chinh dở không mở tiếp được khi đã đăng xuất. Rút quân vẫn cho để kết
+  thúc lượt có sẵn.
 
 ## 4. Ba sa bàn
 
@@ -149,7 +168,8 @@ lượt viễn chinh là 5–11 trận. Thượng Du III để khó có chủ ý
 
 ## 6. Dữ liệu và server
 
-- Hồ sơ có `expedition?: { cleared, stars, run }` (chưa vào chế độ thì không có). `run` chụp 6 người
+- Hồ sơ có `expedition?: { cleared, stars, bestDays?, daily?, run }` (chưa vào chế độ thì không có; `daily` là
+  `{ day, runs }` để giới hạn mỗi ngày). `run` chụp 6 người
   (`FighterConfig` đã gồm đồ) và máu, lương, vị trí từng đạo; ô đã chiếm và máu địch đánh dở; ngày; pha
   (`march` | `battle` | `won` | `lost`); trận đang đánh. Đọc bằng `parseExpedition` (bỏ dữ liệu hỏng).
 - Trận Viễn Chinh là `Match` thường có thẻ `expedition: { runId, map, tier, node, army, day }`. Cộng thưởng trận chạy
@@ -159,8 +179,8 @@ lượt viễn chinh là 5–11 trận. Thượng Du III để khó có chủ ý
 
 | Route | Việc |
 |---|---|
-| `GET /api/expedition` | Ba sa bàn, bậc đã mở, sao, lượt đang đi (không có seed), đối thủ báo trước của mọi ô còn địch theo từng đạo. Trận đã xong mà chưa chốt thì chốt luôn |
-| `POST /api/expedition/run` `{ map, tier, main: [2], second: [3] }` | Xuất quân. Khách chưa có cookie thì được cấp |
+| `GET /api/expedition` | Ba sa bàn, bậc đã mở, sao, ngày nhanh nhất, lượt xuất quân còn trong ngày, lượt đang đi (không có seed), đối thủ báo trước của mọi ô còn địch theo từng đạo. Trận đã xong mà chưa chốt thì chốt luôn |
+| `POST /api/expedition/run` `{ map, tier, main: [2], second: [3] }` | Xuất quân. Cần đăng nhập; hết lượt trong ngày báo `dailyLimit` |
 | `POST /api/expedition/march` `{ army, to }` | Tiến quân; gặp địch thì mở trận và trả id (đang có trận thì trả lại trận đó) |
 | `POST /api/expedition/camp` | Đóng quân |
 | `POST /api/expedition/abandon` | Rút quân; trận đang dở tính thua trước |
@@ -170,14 +190,13 @@ lượt viễn chinh là 5–11 trận. Thượng Du III để khó có chủ ý
 
 ## 7. Ngoài phạm vi bản đầu
 
-- Bảng xếp hạng (ví dụ ít ngày nhất ở Bậc III) và mùa.
+- Mùa cho bảng xếp hạng và thưởng theo hạng.
 - Sự kiện ngẫu nhiên trên đường, sương mù che ô chưa tới, địch phản công ô đã chiếm.
 - Tranh thumbnail Home riêng (`public/art/home/vien-chinh.webp`); banner tạm dùng tranh Bình Loạn.
 - Thêm sa bàn: chỉ cần thêm một mục trong `EXPEDITION_MAPS`; test kiểm đồ thị tự chạy cho mọi sa bàn.
 
-## 8. Cần Shan quyết
+## 8. Shan đã quyết (04/11/2026)
 
-- Thua trận chỉ rút về và tốn ngày (bản này) hay đạo tan hẳn (khó hơn nhiều, mô phỏng lần 1)?
-- Có nên giới hạn số lượt viễn chinh có thưởng mỗi ngày không (bản này: không giới hạn, vì thưởng trận như trận thường,
-  thưởng lớn chỉ có một lần mỗi bậc).
-- Có cần bảng xếp hạng và bắt đăng nhập không.
+- **Thua trận chỉ rút về** như mục 3.4 (không làm đạo tan hẳn).
+- **Giới hạn lượt mỗi ngày như các chế độ khác:** 3 lượt xuất quân mỗi ngày, mục 3.6.
+- **Có bảng xếp hạng:** mục 3.7. Vì vậy chế độ chỉ cho tài khoản đã đăng nhập (luật chung từ 01/11/2026).

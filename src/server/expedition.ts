@@ -12,6 +12,8 @@ import {
   applyExpeditionEnd,
   beginExpeditionBattle,
   campExpedition,
+  EXPEDITION_RUNS_PER_DAY,
+  countExpeditionRun,
   createExpeditionRun,
   createRng,
   expeditionActive,
@@ -19,6 +21,7 @@ import {
   expeditionEncounter,
   expeditionFoeSide,
   expeditionMapOf,
+  expeditionRunsLeft,
   expeditionTierUnlocked,
   isExpeditionCombatNode,
   marchExpedition,
@@ -26,6 +29,7 @@ import {
   parseExpeditionStart,
   startMatch,
   viewOf,
+  vnDay,
   type BattleEvent,
   type Element,
   type ExpeditionRun,
@@ -51,6 +55,8 @@ export type ExpeditionError =
   | "notAdjacent"
   | "armyDown"
   | "conflict"
+  | "dailyLimit"
+  | "loginRequired"
   | typeof FEATURE_DISABLED_ERROR;
 
 export interface FoePreview {
@@ -129,9 +135,12 @@ export async function expeditionOverview(ownerId: string | null, deps: Deps) {
         ...EXPEDITION_TIER_INFO[tier],
         unlocked: expeditionTierUnlocked(state, map.id, tier),
         stars: state.stars[`${map.id}:${tier}`] ?? 0,
+        bestDays: state.bestDays?.[`${map.id}:${tier}`] ?? null,
       })),
     })),
     cleared: state.cleared,
+    runsLeft: expeditionRunsLeft(state, vnDay(deps.now)),
+    runsPerDay: EXPEDITION_RUNS_PER_DAY,
     run: publicRun(state.run),
     encounters: state.run && state.run.phase === "march" ? previews(state.run) : {},
   };
@@ -140,8 +149,14 @@ export async function expeditionOverview(ownerId: string | null, deps: Deps) {
 type Ok<T> = { readonly ok: true } & T;
 type Fail = { readonly ok: false; readonly error: ExpeditionError };
 
+/** Viễn Chinh có bảng xếp hạng nên chỉ cho tài khoản đã đăng nhập (luật chung, Shan 01/11/2026). */
+async function guestBlocked(deps: Deps, ownerId: string): Promise<boolean> {
+  return deps.isSignedIn !== undefined && !(await deps.isSignedIn(ownerId));
+}
+
 export async function startExpedition(ownerId: string, raw: unknown, deps: Deps): Promise<Ok<{ run: ReturnType<typeof publicRun> }> | Fail> {
   if (!expeditionEnabled(deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
+  if (await guestBlocked(deps, ownerId)) return { ok: false, error: "loginRequired" };
   const input = parseExpeditionStart(raw);
   if (!input) return { ok: false, error: "badRequest" };
   let created: ExpeditionRun | undefined;
@@ -153,8 +168,11 @@ export async function startExpedition(ownerId: string, raw: unknown, deps: Deps)
       const state = profile.expedition ?? NEW_EXPEDITION;
       const made = createExpeditionRun(profile, state, input, runId, deps.seed);
       if (!made.ok) return made;
+      // Giới hạn mỗi ngày tính lúc xuất quân; lượt đang đi dở qua ngày vẫn đi tiếp.
+      const counted = countExpeditionRun(state, vnDay(deps.now));
+      if (!counted) return { ok: false as const, error: "dailyLimit" as const };
       created = made.run;
-      return { ok: true as const, profile: { ...profile, expedition: { ...state, run: made.run } } };
+      return { ok: true as const, profile: { ...profile, expedition: { ...counted, run: made.run } } };
     },
     deps.now,
   );
@@ -170,6 +188,7 @@ export type ExpeditionMarchResponse =
 /** Tiến quân. Ô có địch thì mở trận (đang có trận thì trả lại trận đó). */
 export async function marchExpeditionArmy(ownerId: string, raw: unknown, deps: Deps): Promise<ExpeditionMarchResponse> {
   if (!expeditionEnabled(deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
+  if (await guestBlocked(deps, ownerId)) return { ok: false, error: "loginRequired" };
   if (!raw || typeof raw !== "object") return { ok: false, error: "badRequest" };
   const { army, to } = raw as Record<string, unknown>;
   if ((army !== 0 && army !== 1) || typeof to !== "string") return { ok: false, error: "badRequest" };
@@ -208,6 +227,7 @@ export async function marchExpeditionArmy(ownerId: string, raw: unknown, deps: D
 
 export async function campExpeditionArmies(ownerId: string, deps: Deps): Promise<Ok<{ run: ReturnType<typeof publicRun> }> | Fail> {
   if (!expeditionEnabled(deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
+  if (await guestBlocked(deps, ownerId)) return { ok: false, error: "loginRequired" };
   const { profile } = await loadProfile(deps.profiles, ownerId);
   const run = profile.expedition?.run;
   if (!run) return { ok: false, error: "noRun" };

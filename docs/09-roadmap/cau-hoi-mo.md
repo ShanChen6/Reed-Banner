@@ -162,5 +162,6 @@
 ## Viễn Chinh
 
 - [x] Cơ chế lõi: hai đạo quân trên sa bàn (Shan, 04/11/2026). → [GDD Viễn Chinh](../02-game-modes/expedition/01-vien-chinh-gdd.md)
-- [ ] TODO: Shan chơi thử (bật `EXPEDITION_ENABLED=true`), duyệt số liệu mục 5 và ba câu hỏi ở [mục 8](../02-game-modes/expedition/01-vien-chinh-gdd.md#8-cần-shan-quyết): thua trận rút về hay tan hẳn, giới hạn lượt có thưởng, bảng xếp hạng.
+- [x] Thua trận rút về; giới hạn 3 lượt xuất quân mỗi ngày; có bảng xếp hạng, nên cần đăng nhập (Shan, 04/11/2026). → [GDD mục 8](../02-game-modes/expedition/01-vien-chinh-gdd.md#8-shan-đã-quyết-04112026)
+- [ ] TODO: Shan chơi thử (bật `EXPEDITION_ENABLED=true`), duyệt số liệu mục 5 và số lượt mỗi ngày.
 - [ ] TODO: tranh thumbnail Home `public/art/home/vien-chinh.webp` và banner riêng.

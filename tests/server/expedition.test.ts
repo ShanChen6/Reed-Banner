@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { EXPEDITION_TIER_INFO, STARTER_COMPANIONS } from "../../src/core";
+import { EXPEDITION_RUNS_PER_DAY, EXPEDITION_TIER_INFO, STARTER_COMPANIONS } from "../../src/core";
 import type { Deps } from "../../src/server/battles";
 import { getBattle } from "../../src/server/battles";
 import {
@@ -10,6 +10,7 @@ import {
   marchExpeditionArmy,
   startExpedition,
 } from "../../src/server/expedition";
+import { MemoryLeaderboardStore } from "../../src/server/leaderboard";
 import { MemoryProfileStore, loadProfile } from "../../src/server/profiles";
 import { MemoryMatchStore } from "../../src/server/store";
 
@@ -21,6 +22,7 @@ function setup(enabled = true): Deps {
   return {
     store: new MemoryMatchStore(),
     profiles: new MemoryProfileStore(),
+    leaderboard: new MemoryLeaderboardStore(),
     now: Date.UTC(2026, 10, 4, 3),
     seed: 99,
     newId: () => `e_${++id}`,
@@ -46,6 +48,14 @@ describe("Viễn Chinh trên server", () => {
     const deps = setup(false);
     assert.deepEqual(await startExpedition("u", START, deps), { ok: false, error: "featureDisabled" });
     assert.equal((await expeditionOverview("u", deps)).enabled, false);
+  });
+
+  it("khách chưa đăng nhập không xuất quân, không tiến quân được (Viễn Chinh có bảng xếp hạng)", async () => {
+    const deps = { ...setup(), isSignedIn: async (id: string) => id === "acc" };
+    assert.deepEqual(await startExpedition("guest", START, deps), { ok: false, error: "loginRequired" });
+    assert.deepEqual(await marchExpeditionArmy("guest", { army: 0, to: "khe-da" }, deps), { ok: false, error: "loginRequired" });
+    assert.deepEqual(await campExpeditionArmies("guest", deps), { ok: false, error: "loginRequired" });
+    assert.equal((await startExpedition("acc", START, deps)).ok, true);
   });
 
   it("xuất quân, vào làng, đánh đồn, thắng thì chiếm ô và nhận thưởng trận", async () => {
@@ -108,6 +118,9 @@ describe("Viễn Chinh trên server", () => {
     assert.ok(profile.gold >= gold + EXPEDITION_TIER_INFO[1].firstGold);
     const overview = await expeditionOverview("u", deps);
     assert.ok(overview.enabled && overview.maps.find((m) => m.id === "aiBac")!.tiers[1]!.unlocked);
+    // Thắng thành đích thì có tên trên bảng Viễn Chinh.
+    const mine = await deps.leaderboard!.rankOf("expedition", "u");
+    assert.equal(mine?.rank, 1);
 
     // Lượt mới, đang đánh thì rút quân.
     assert.equal((await startExpedition("u", { ...START, tier: 2 }, deps)).ok, true);
@@ -119,5 +132,18 @@ describe("Viễn Chinh trên server", () => {
     assert.equal(ended?.endReason, "abandoned");
     assert.equal(ended?.defeats, 1);
     assert.deepEqual(await campExpeditionArmies("u", deps), { ok: false, error: "notMarching" });
+  });
+
+  it("hết lượt xuất quân trong ngày thì báo dailyLimit, sang ngày mới thì đi được", async () => {
+    const deps = setup();
+    for (let i = 0; i < EXPEDITION_RUNS_PER_DAY; i++) {
+      assert.equal((await startExpedition("u", START, deps)).ok, true);
+      assert.deepEqual(await abandonExpeditionRun("u", deps), { ok: true, stopped: true });
+    }
+    const overview = await expeditionOverview("u", deps);
+    assert.ok(overview.enabled && overview.runsLeft === 0);
+    assert.deepEqual(await startExpedition("u", START, deps), { ok: false, error: "dailyLimit" });
+    const tomorrow = { ...deps, now: deps.now + 24 * 3600 * 1000 };
+    assert.equal((await startExpedition("u", START, tomorrow)).ok, true);
   });
 });

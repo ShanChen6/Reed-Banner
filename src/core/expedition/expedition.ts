@@ -509,6 +509,8 @@ export function applyExpeditionEnd(
   return {
     profile: next,
     state: {
+      ...state,
+      bestDays: { ...state.bestDays, [key]: Math.min(state.bestDays?.[key] ?? Infinity, run.day) },
       cleared: { ...state.cleared, [run.map]: Math.max(state.cleared[run.map] ?? 0, run.tier) },
       stars: { ...state.stars, [key]: Math.max(state.stars[key] ?? 0, stars) },
       run: { ...run, rewarded: true, result },
@@ -516,3 +518,19 @@ export function applyExpeditionEnd(
   };
 }
 
+// ——— Giới hạn mỗi ngày (Shan chốt 04/11/2026: giới hạn như các chế độ khác) ———
+
+/** Số lượt xuất quân mỗi ngày (giờ Việt Nam). Hết lượt thì chờ ngày mai; lượt đang đi dở vẫn đi tiếp được. */
+export const EXPEDITION_RUNS_PER_DAY = 3;
+
+/** Số lượt xuất quân còn lại trong ngày `day` (khóa `vnDay`). */
+export function expeditionRunsLeft(state: ExpeditionState, day: string): number {
+  return Math.max(0, EXPEDITION_RUNS_PER_DAY - (state.daily?.day === day ? state.daily.runs : 0));
+}
+
+/** Ghi thêm một lượt xuất quân hôm nay; null khi đã hết lượt. */
+export function countExpeditionRun(state: ExpeditionState, day: string): ExpeditionState | null {
+  if (expeditionRunsLeft(state, day) <= 0) return null;
+  const runs = state.daily?.day === day ? state.daily.runs + 1 : 1;
+  return { ...state, daily: { day, runs } };
+}
