@@ -19,11 +19,11 @@ import {
   type Profile,
   type ProfileAction,
 } from "@/core";
-import { GearIcon } from "../art/gear";
+import { GearIcon, GearActionIcon } from "../art/gear";
 import { gearText, PROFESSION_NAME, SLOT_NAME, TIER_CLASS } from "../battle/labels";
 import { SceneLink } from "../SceneContext";
 import { fighterOf, STAT_NAME } from "./HeroDetail";
-import { MergeGlyph, ShopGlyph, XGlyph } from "./glyphs";
+import { ShopGlyph, XGlyph } from "./glyphs";
 import { nameOf, ownedIds } from "./roster";
 
 type Shelf = "all" | "weapon" | "armor" | "jewelry";
@@ -93,7 +93,7 @@ export default function Armory({
             }}
             className={`barracks-btn flex min-h-10 items-center gap-1.5 rounded-md px-3 text-[15px] ${merging ? "is-on" : ""}`}
           >
-            <MergeGlyph className="size-4" />
+            <GearActionIcon action="merge" className="size-6" />
             {merging ? "Thoát ghép" : "Ghép đồ"}
           </button>
         </div>
@@ -265,7 +265,8 @@ function ItemPanel({
         </div>
       </div>
 
-      <button type="button" disabled={busy} onClick={() => onAction({ type: "sell", item: item.id }, onSold)} className="barracks-btn min-h-10 self-start rounded-md px-3 disabled:opacity-50">
+      <button type="button" disabled={busy} onClick={() => onAction({ type: "sell", item: item.id }, onSold)} className="barracks-btn flex min-h-10 items-center gap-1.5 self-start rounded-md px-3 disabled:opacity-50">
+        <GearActionIcon action="sell" className="size-6" />
         Bán lấy {SELL_GOLD[item.tier]} vàng{wearer ? " (tháo ra trước)" : ""}
       </button>
     </div>
@@ -309,7 +310,8 @@ function MergePanel({
         })}
       </ul>
       {items[0] && <p className={`text-sm ${TIER_CLASS[items[0].tier]}`}>{gearText(items[0])}</p>}
-      <button type="button" disabled={busy || !ready || (cost !== null && profile.gold < cost)} onClick={onMerge} className="barracks-btn is-action min-h-11 rounded-md px-4 disabled:opacity-50">
+      <button type="button" disabled={busy || !ready || (cost !== null && profile.gold < cost)} onClick={onMerge} className="barracks-btn is-action flex min-h-11 items-center justify-center gap-1.5 rounded-md px-4 disabled:opacity-50">
+        <GearActionIcon action="merge" className="size-6" />
         Ghép{cost !== null ? ` (−${cost} vàng)` : ""}
       </button>
       {cost !== null && profile.gold < cost && <p className="text-sm text-rose-300">Không đủ vàng: cần {cost}, có {profile.gold}.</p>}

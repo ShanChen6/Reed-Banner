@@ -25,6 +25,14 @@ test("56 tuyệt chiêu ô 4 Đinh Bộ Lĩnh có ảnh theo hệ và huy hiệu
 });
 
 test("kỹ năng chưa có ảnh vẫn vẽ SVG", () => {
-  assert.equal(skillArt({ id: "role_tramKich" }), undefined);
+  assert.equal(skillArt({ id: "role_linhDuoc" }), undefined);
   assert.equal(skillArt({ id: "element_khongCo" }), undefined);
+});
+
+test("chiêu nghề Tướng sĩ, Pháp sư có ảnh vẽ tay", () => {
+  for (const id of ["role_tramKich", "role_phaTran", "role_doatMenh", "role_phepLan", "role_nguHanhAn", "role_thienDiaCong"]) {
+    const art = skillArt({ id });
+    assert.ok(art, id);
+    assert.ok(existsSync(`public/art/skills/${art.file}.webp`), id);
+  }
 });

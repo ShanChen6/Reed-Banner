@@ -41,3 +41,7 @@ test("mỗi bộ có huy hiệu", () => {
 test("mỗi ô có bóng ô trống", () => {
   for (const slot of GEAR_SLOTS) assert.ok(existsSync(`public${emptySlotSrc(slot)}`), slot);
 });
+
+test("biểu tượng ghép và bán có ảnh", () => {
+  for (const a of ["merge", "sell"]) assert.ok(existsSync(`public/art/ui/actions/${a}.webp`), a);
+});

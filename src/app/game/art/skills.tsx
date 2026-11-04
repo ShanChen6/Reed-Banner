@@ -506,7 +506,7 @@ function fallbackSpec(def: SkillDef): IconSpec {
   }
 }
 
-/** Kỹ năng của nhân vật chính có ảnh vẽ tay ở public/art/skills/<mã>.webp (7 hệ × 6 ô). */
+/** Kỹ năng có ảnh vẽ tay ở public/art/skills/<mã>.webp: 7 hệ × 6 ô của nhân vật chính và chiêu nghề đã có hình. */
 const SKILL_ART = new Set([
   "luyenKimThanhKiem", "kimYNgungThan", "doanKimNhatTuyen", "thietKyTungHoanh", "kimAnPhaThien", "giapDongHoThe",
   "lucDiepPhong", "linhMocHoiSinh", "thanhMocHoPhap", "cuongVuThienDiep", "coThuTranThien", "thanhTrucBaoPhu",
@@ -515,6 +515,8 @@ const SKILL_ART = new Set([
   "hauThoTichLuong", "thachGiap", "sonBangDiaLiet", "diaChanTamQuan", "thaiSonApDinh", "kienThanhBatDong",
   "loiTruGiangThe", "tinhDienHoThan", "loiTienXuyenVan", "loiVongThienLa", "cuuTieuLoiPhat", "loiDinhHieuLenh",
   "phongQuyenTanVan", "thanhPhongTuKhi", "phongNhanLietKhong", "cuongPhongQuetTran", "baoTapCanKhon", "phongHanhVanLy",
+  // Chiêu nghề Shan vẽ (04/11/2026): Tướng sĩ, Pháp sư.
+  "role_tramKich", "role_phaTran", "role_doatMenh", "role_phepLan", "role_nguHanhAn", "role_thienDiaCong",
 ]);
 
 /** Tuyệt chiêu ô 4 của Đinh Bộ Lĩnh (`dbl_<nghề>_<hệ>`) dùng lại ảnh tuyệt chiêu hệ cũ của chính ông. */
@@ -540,13 +542,15 @@ export function skillArt(def: Pick<SkillDef, "id" | "element" | "profession">): 
     const file = def.id.slice("element_".length);
     return SKILL_ART.has(file) ? { file } : undefined;
   }
+  // Chiêu nghề bản cũ của tùy tướng AI (cùng tên, mã không tiền tố) dùng chung ảnh với bản role_.
+  if (def.profession && SKILL_ART.has(`role_${def.id}`)) return { file: `role_${def.id}` };
   if (def.id.startsWith("dbl_") && def.element && def.profession) return { file: DBL_ULTIMATE_ART[def.element], badge: def.profession };
   return undefined;
 }
 
 /** Ô kỹ năng có ảnh vẽ tay: nền sơn mài thẫm viền màu hệ, tuyệt chiêu viền vàng có hào quang. */
 function SkillArtIcon({ def, art, className }: { def: SkillDef; art: { file: string; badge?: Profession }; className: string }) {
-  const edge = def.element ? ELEMENT_COLOR[def.element] : "#b98a3e";
+  const edge = def.element ? ELEMENT_COLOR[def.element] : def.profession ? PROFESSION_COLOR[def.profession] : "#b98a3e";
   const ultimate = def.ultimate === true;
   return (
     <svg viewBox="0 0 48 48" className={className} aria-hidden focusable="false">
