@@ -13,13 +13,13 @@ test("ô 2/6 hệ (element_<mã>) dùng lại ảnh hệ cũ của Đinh Bộ L�
   }
 });
 
-test("56 tuyệt chiêu ô 4 Đinh Bộ Lĩnh: Tướng sĩ, Pháp sư có ảnh riêng, nghề khác ảnh hệ + huy hiệu nghề", () => {
+test("56 tuyệt chiêu ô 4 Đinh Bộ Lĩnh: Tướng sĩ, Pháp sư, Binh lính có ảnh riêng, nghề khác ảnh hệ + huy hiệu nghề", () => {
   assert.equal(DBL_ULTIMATES.length, 56);
   for (const def of DBL_ULTIMATES) {
     const art = skillArt(def);
     assert.ok(art, def.id);
     assert.ok(existsSync(`public/art/skills/${art.file}.webp`), art.file);
-    if (def.profession === "tuongSi" || def.profession === "phapSu") {
+    if (["tuongSi", "phapSu", "binhLinh"].includes(def.profession ?? "")) {
       assert.equal(art.file, def.id);
       assert.equal(art.badge, undefined);
     } else {
