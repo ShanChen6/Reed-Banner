@@ -10,14 +10,14 @@ import { SCENE_TITLE, type Scene } from "../scene";
 import { SceneLink } from "../SceneContext";
 import HeaderAccountMenu from "./HeaderAccountMenu";
 import HeaderGold from "./HeaderGold";
-import { HeaderCloud, HeaderOrnament } from "./HeaderOrnament";
+import { HeaderOrnament } from "./HeaderOrnament";
 
 export default function GameHeader({ scene, account }: { scene: Scene; account: ShellAccount | null }) {
   return (
     <header className="game-header sticky top-0 z-40 h-14 md:h-16 xl:h-[68px]">
       <HeaderBackdrop />
       {/* Ba cột, cột giữa luôn ở đúng giữa thanh. Lề hai bên từ md chừa chỗ cho mặt trống của hai góc hoa văn. */}
-      <div className="relative mx-auto grid h-full grid-cols-[1fr_auto_1fr] items-center gap-2 px-2 sm:px-4 md:gap-3 md:px-11 xl:px-14">
+      <div className="relative mx-auto grid h-full grid-cols-[1fr_auto_1fr] items-center gap-2 px-2 sm:px-4 md:gap-3 md:px-16 xl:px-[4.5rem]">
         <HomeButton current={scene === "MENU"} />
         <SceneTitle title={SCENE_TITLE[scene]} />
         <div className="flex min-w-0 items-center justify-end gap-1.5 md:gap-3">
@@ -55,7 +55,7 @@ function HomeButton({ current }: { current: boolean }) {
         scene="MENU"
         aria-current={current ? "page" : undefined}
         title="Về Chiến trường"
-        className="game-header-btn game-header-chip flex h-10 min-w-11 shrink-0 items-center justify-center gap-2 rounded-lg px-2.5 font-serif font-semibold whitespace-nowrap md:px-4"
+        className="game-header-btn game-header-chip flex h-10 min-w-11 shrink-0 items-center justify-center gap-2 rounded-md px-2.5 font-serif font-semibold whitespace-nowrap md:px-4"
       >
         <svg aria-hidden viewBox="0 0 24 24" className="size-5 text-[var(--hdr-gold)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
           <path d="M3.5 11.5 12 4l8.5 7.5" />
@@ -67,15 +67,13 @@ function HomeButton({ current }: { current: boolean }) {
   );
 }
 
-/** Giữa: bảng tên phân cảnh, hai bên là họa tiết mây. Tên dài thì cắt bớt, không đẩy hai cột bên. */
+/** Giữa: bảng tên phân cảnh trên khung đồng Shan vẽ (kéo giãn theo độ dài tên, xem .game-header-title). Tên dài thì cắt bớt, không đẩy hai cột bên. */
 function SceneTitle({ title }: { title: string }) {
   return (
-    <div className="flex min-w-0 items-center justify-center gap-2">
-      <HeaderCloud side="left" className="hidden h-6 lg:block" />
-      <p className="game-header-title max-w-[46vw] truncate rounded-md px-2.5 py-1 text-center font-serif text-[13px] font-bold tracking-[0.06em] uppercase sm:max-w-none sm:px-3 sm:text-sm sm:tracking-[0.14em] lg:px-6 lg:text-lg lg:tracking-[0.2em] xl:text-xl">
+    <div className="relative flex min-w-0 items-center justify-center">
+      <p className="game-header-title max-w-[46vw] truncate px-2 pt-[0.12em] text-center font-serif text-[13px] leading-[1.9] font-bold tracking-[0.06em] uppercase sm:max-w-none sm:px-4 sm:text-sm sm:tracking-[0.14em] md:px-5 lg:px-6 lg:text-lg lg:tracking-[0.2em] xl:text-xl">
         {title}
       </p>
-      <HeaderCloud side="right" className="hidden h-6 lg:block" />
     </div>
   );
 }
