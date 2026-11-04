@@ -71,10 +71,12 @@ describe("Gói 3", () => {
     for (const t of texts) for (const name of names) assert.doesNotMatch(fold(t), new RegExp(`\\b${name}\\b`), `${t} lộ ${name}`);
   });
 
-  it("Gói 3 còn draft: thành tựu chưa vào danh sách; 9 bộ đề xuất", async () => {
-    assert.equal(PACK_3.status, "draft");
+  it("Gói 3 đã duyệt (published): 9 thành tựu bộ, tổng 3 500 vàng, có trong danh sách", async () => {
+    assert.equal(PACK_3.status, "published");
     const { ACHIEVEMENTS } = await import("../../../src/core");
-    assert.equal(ACHIEVEMENTS.some((a) => a.id.startsWith("ttk.pack-3.")), false);
+    const pack3 = ACHIEVEMENTS.filter((a) => a.id.startsWith("ttk.pack-3."));
+    assert.equal(pack3.length, 9);
+    assert.equal(pack3.reduce((s, a) => s + a.gold, 0), 3500);
     assert.equal(PACK_3.achievementSets!.length, 9);
     assert.ok(PACK_3.achievementSets!.slice(0, 8).every((s) => s.heroIds.length === 7));
   });

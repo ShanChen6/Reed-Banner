@@ -1,7 +1,7 @@
 # 22 — Tầm Tướng Ký: Gói 3 (tướng thường)
 
 > Cập nhật: 04/11/2026
-> Trạng thái: **DRAFT** — có code (`PACK_3`, sổ ba gói `PACK_1_2_3`), còn `status: "draft"` nên chưa có trên bản chạy; duyệt xong đổi sang `published` là mở cùng cờ `TAM_TUONG_KY_ENABLED`, không có biến riêng. Chờ Shan duyệt công thức, lời dẫn và vàng thành tựu ở [mục 5](#5-cần-shan-duyệt).
+> Trạng thái: **APPROVED** — Shan duyệt công thức, lời dẫn và thành tựu ngày 04/11/2026; `PACK_3.status` là `published`, mở cùng cờ `TAM_TUONG_KY_ENABLED` khi code vào `develop` và deploy.
 
 Shan (04/11/2026): **đưa mọi tướng vào Tầm Tướng Ký**. Gói 1 + Gói 2 đã có 21 tướng (lịch sử, sứ quân, đặc biệt); Gói 3 thêm **56 tướng thường** còn lại (8 nghề × 7 hệ, mỗi tổ hợp đúng một người, kể cả Xạ thủ, Sát thủ). Sau Gói 3, sổ có đủ **77 tướng**, tức mọi nhân vật chơi được trong game cùng Đinh Bộ Lĩnh (test).
 
@@ -102,8 +102,8 @@ Theo [Design Freeze](14-tam-tuong-ky-design-freeze.md): bậc thường đúng *
 
 `validatePack(PACK_1_2_3)`: **0 lỗi, 0 cảnh báo**, 278 node, 271 công thức, 77 tướng, không ngõ cụt. 56 tướng thường đều 7 lần ghép, 8 đơn vị nguyên tố ở chế độ Hạng; đủ chân dung. Test: `tests/core/tam-tuong-ky/pack-3.test.ts` (9).
 
-## 5. Cần Shan duyệt
+## 5. Shan duyệt
 
-- [ ] 8 tri thức sơ học, 56 công thức tuyệt chiêu, 56 lời dẫn (mục 1, 2).
-- [ ] Thành tựu đề xuất: đủ 7 tướng thường mỗi nghề 250 vàng (8 bộ) và đủ Gói 3 1 500 vàng, tổng 3 500 vàng.
-- [ ] Ngày ra mắt (nên thứ Hai). Duyệt xong đổi `PACK_3.status` sang `published`, merge và deploy; không cần đặt biến môi trường mới.
+- [x] 8 tri thức sơ học, 56 công thức tuyệt chiêu, 56 lời dẫn (mục 1, 2).
+- [x] Thành tựu: đủ 7 tướng thường mỗi nghề 250 vàng (8 bộ) và đủ Gói 3 1 500 vàng, tổng 3 500 vàng.
+- [x] `PACK_3.status` đổi sang `published` (04/11/2026). Ra mắt khi merge vào `develop` và deploy; không cần biến môi trường mới. Deploy giữa tuần thì nếu Hạng đang bật, danh sách đề cử tuần đang chạy đổi từ lúc deploy; điểm đã ghi giữ nguyên.
