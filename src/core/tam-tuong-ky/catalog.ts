@@ -19,6 +19,16 @@ const ELEMENT_NAMES: Readonly<Record<Element, string>> = {
   phong: "Phong",
 };
 
+/** Tên hiển thị của nhóm gợi ý (`hintGroup`). */
+export const HINT_GROUP_NAMES: Readonly<Record<string, string>> = {
+  "nguyen-to": "Nguyên tố",
+  "thien-nhien": "Thiên nhiên",
+  "binh-khi": "Binh khí",
+  "co-hieu": "Cờ hiệu",
+  "thu-tich": "Thư tịch",
+  ngoc: "Ngọc",
+};
+
 export const STARTER_NODES: readonly CatalogNode[] = ELEMENTS.map((element) => ({
   id: `elt.${element}`,
   kind: "element",
