@@ -55,6 +55,7 @@ import {
   spiritHealMultiplier,
   whirlStep,
   raidBossById,
+  specialQuestById,
   settleCampaignScenario,
   storyNodeById,
   missionCopy,
@@ -297,6 +298,8 @@ interface Outcome {
   readonly survival?: SurvivalResult;
   readonly daily?: { readonly score: DailyScore; readonly rank: number | null };
   readonly arena?: ArenaResult;
+  /** Trận cuối nhiệm vụ nhân vật đặc biệt: nhân vật đã gia nhập chưa. */
+  readonly specialQuest?: { readonly id: string; readonly joined: boolean };
 }
 
 function demoDrop(
@@ -763,6 +766,7 @@ export default function DemoGame({
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   /** Đánh trùm: sứ quân của trận online đang chơi. */
   const [raidBoss, setRaidBoss] = useState<string | null>(null);
+  const [specialQuestId, setSpecialQuestId] = useState<string | null>(null);
   /** Campaign V2: mục tiêu nhiệm vụ (có thể xong trước khi phân thắng bại, ví dụ cầm cự đủ lượt). */
   const [scenario, setScenario] = useState<CampaignScenarioTag | null>(null);
   const [destinyFloorNo, setDestinyFloorNo] = useState<number | null>(null);
@@ -1660,6 +1664,7 @@ export default function DemoGame({
       );
     seq.current = res.view.seq;
     setRaidBoss(res.view.raidBoss ?? null);
+    setSpecialQuestId(res.view.specialQuest ?? null);
     setScenario(res.view.campaignScenario ?? null);
     setDestinyFloorNo(res.view.destiny?.floor ?? null);
     setExpeditionMatch(res.view.expedition !== undefined);
@@ -2182,6 +2187,15 @@ export default function DemoGame({
                         ”
                       </p>
                     )}
+                    {specialQuestId && specialQuestById(specialQuestId) && (
+                      <p className="max-w-sm text-center text-sm text-amber-100 italic">
+                        {companionById(specialQuestId)?.name}: “
+                        {state.winner === PLAYER
+                          ? specialQuestById(specialQuestId)!.lines.win
+                          : specialQuestById(specialQuestId)!.lines.lose}
+                        ”
+                      </p>
+                    )}
                     {(!online || outcome) && (
                       <p className="text-sm">
                         {drop ? (
@@ -2270,6 +2284,11 @@ export default function DemoGame({
                             .{outcome.survival.newBest && " Kỷ lục mới!"}
                           </p>
                         )}
+                        {outcome.specialQuest?.joined && (
+                          <p className="font-semibold text-amber-300">
+                            {fighterName(outcome.specialQuest.id)} gia nhập đội ở cấp 1!
+                          </p>
+                        )}
                         {outcome.raid?.firstClear && (
                           <p className="font-semibold text-amber-300">
                             Thắng {RAID_TIER_INFO[outcome.raid.tier].name} lần
@@ -2340,6 +2359,14 @@ export default function DemoGame({
                           className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
                         >
                           Về sinh tồn
+                        </SceneLink>
+                      )}
+                      {specialQuestId && (
+                        <SceneLink
+                          scene="QUESTS"
+                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                        >
+                          Về nhiệm vụ
                         </SceneLink>
                       )}
                       {raidBoss && (

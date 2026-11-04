@@ -2,7 +2,6 @@
 // Không phụ thuộc Next.js; route handler chỉ đọc cookie/body rồi gọi vào đây, test gọi thẳng.
 
 import {
-  ALL_COMPANIONS,
   ARENA_ATTACKS_PER_DAY,
   ARENA_DIFFICULTY,
   ARENA_OFFERS,
@@ -39,6 +38,14 @@ import {
   humanAct,
   isRaidTier,
   leveledFoe,
+  PLAYABLE_COMPANIONS,
+  isSpecialCompanionId,
+  joinSpecialCompanion,
+  recordSpecialMatch,
+  specialFinalFoes,
+  specialFinalReady,
+  SPECIAL_FINAL_DIFFICULTY,
+  type SpecialCompanionId,
   matchOver,
   MAIN_ID,
   newSurvivalRun,
@@ -169,6 +176,8 @@ export interface NewBattleInput {
   readonly daily?: true;
   /** Đấu trường: đánh đối thủ thứ mấy trong các đối thủ đang bày. */
   readonly arena?: number;
+  /** Trận cuối nhiệm vụ nhân vật đặc biệt: 3vs3 với đội đang chọn, đối thủ là chính nhân vật. */
+  readonly specialQuest?: SpecialCompanionId;
 }
 
 export type ServiceError =
@@ -212,6 +221,8 @@ export interface Outcome {
   readonly daily?: { readonly score: DailyScore; readonly rank: number | null };
   /** Chỉ có ở đấu trường. */
   readonly arena?: ArenaResult;
+  /** Trận cuối nhiệm vụ nhân vật đặc biệt: nhân vật đã gia nhập chưa. */
+  readonly specialQuest?: { readonly id: string; readonly joined: boolean };
 }
 
 /** Kết quả đấu trường: điểm đổi và điểm mới của người đánh. */
@@ -298,6 +309,17 @@ export function parseNewBattle(body: unknown): NewBattleInput | null {
     );
   }
   if (body.campaignChoice !== undefined) return null;
+  if (body.specialQuest !== undefined) {
+    const mixed = ["stage", "raidBoss", "raid", "tower", "survival", "reserveCompanions", "daily", "arena"];
+    if (mixed.some((key) => body[key] !== undefined) || !isSpecialCompanionId(body.specialQuest)) return null;
+    const parsed = parseNewBattle({
+      ...body,
+      specialQuest: undefined,
+      mode: "3v3",
+      difficulty: SPECIAL_FINAL_DIFFICULTY,
+    });
+    return parsed && { ...parsed, specialQuest: body.specialQuest };
+  }
   // Chiến dịch 13 màn cũ đã gỡ (CAMP-08.04): id màn cũ không còn mở trận nào, kể cả đánh trùm.
   if (body.stage !== undefined) return null;
   // Leo tháp cũ đã gỡ: client cũ còn gửi `tower` thì từ chối, không mở nhầm trận thường.
@@ -335,7 +357,7 @@ export function parseNewBattle(body: unknown): NewBattleInput | null {
     if (body.survival !== true || body.raidBoss !== undefined) return null;
     const reserves =
       body.reserveCompanions === undefined ? [] : body.reserveCompanions;
-    const knownIds = new Set(ALL_COMPANIONS.map((c) => c.id));
+    const knownIds = new Set(PLAYABLE_COMPANIONS.map((c) => c.id));
     if (
       !Array.isArray(reserves) ||
       reserves.length > 2 ||
@@ -382,7 +404,7 @@ export function parseNewBattle(body: unknown): NewBattleInput | null {
   )
     return null;
   if (!oneOf(DIFFICULTIES, difficulty)) return null;
-  const ids = ALL_COMPANIONS.map((c) => c.id);
+  const ids = PLAYABLE_COMPANIONS.map((c) => c.id);
   if (
     mode === "3v3" &&
     (companions.length !== 2 ||
@@ -585,11 +607,16 @@ export async function createBattleFor(
     )
       return { ok: false, error: "badRequest" };
   }
+  // Trận cuối nhiệm vụ nhân vật đặc biệt: chỉ mở khi đã xong hai bước trước.
+  const special = input.specialQuest;
+  if (special && !specialFinalReady(profile, special)) return { ok: false, error: "badRequest" };
   // Đánh trùm: luật sân nhà, không dùng lương chiến dịch.
   const raid = boss && input.raid ? raidSetup(boss, input.raid) : undefined;
   const foes = raid
     ? raid.foes
-    : pickFoes(input, deps.seed).map((f) => leveledFoe(f, profile.main.level));
+    : special
+      ? specialFinalFoes(special, profile.main.level, leveledFoe)
+      : pickFoes(input, deps.seed).map((f) => leveledFoe(f, profile.main.level));
   const { match, events } = startMatch({
     sides: [
       { fighters: team, leader: 0 },
@@ -606,6 +633,7 @@ export async function createBattleFor(
     ...(boss && raid
       ? { raidBoss: boss.id, raid: input.raid, weights: raid.weights }
       : {}),
+    ...(special ? { specialQuest: special } : {}),
   });
   const record: MatchRecord = {
     id: deps.newId(),
@@ -911,6 +939,11 @@ async function settleArena(
   }
 }
 
+/** Hệ của các nhân vật phe người chơi lúc vào trận (nhiệm vụ nhân vật đặc biệt đếm số hệ khác nhau). */
+function humanElements(m: Match): Element[] {
+  return m.battle.sides[HUMAN].fighters.map((f) => f.element);
+}
+
 function matchMode(m: Match): MatchMode {
   if (m.arena) return "arena";
   if (m.survival) return "survival";
@@ -978,6 +1011,7 @@ async function rewardCampaignV2(
           deps.now,
         ),
       };
+      next = recordSpecialMatch(next, { won: completed, elements: humanElements(match) });
       const nodeId = verdictNode;
       const stored = next.campaign.siegePhases[nodeId] ?? 0;
       if (settlement.verdict.status === "advance") {
@@ -1237,6 +1271,7 @@ async function reward(
   let soldFor = 0;
   let raid: RaidResult | undefined;
   let survival: SurvivalResult | undefined;
+  let specialQuest: Outcome["specialQuest"];
   const raidBoss = match.raidBoss;
   const u = await updateProfile(
     deps.profiles,
@@ -1261,6 +1296,13 @@ async function reward(
           deps.now,
         ),
       };
+      next = recordSpecialMatch(next, { won: rewards.won, elements: humanElements(match) });
+      const specialId = match.specialQuest;
+      if (specialId && isSpecialCompanionId(specialId)) {
+        const joined = rewards.won ? joinSpecialCompanion(next, specialId) : { profile: next, joined: false };
+        next = joined.profile;
+        specialQuest = { id: specialId, joined: joined.joined };
+      }
       if (match.survival) {
         const c = applySurvivalResult(next, cleared);
         next = c.profile;
@@ -1310,6 +1352,7 @@ async function reward(
     ...(survival ? { survival } : {}),
     ...(arena ? { arena } : {}),
     ...(expedition ? { expedition } : {}),
+    ...(specialQuest ? { specialQuest } : {}),
   };
 }
 
