@@ -64,11 +64,15 @@ describe("Gói 2", () => {
     for (const h of heroes2) for (const o of all) assert.doesNotMatch(fold(h.clue!.text), new RegExp(fold(o.nameVi)), `${h.id} lộ ${o.nameVi}`);
   });
 
-  it("thành tựu Gói 2 hợp lệ; Gói 2 còn draft nên chưa vào danh sách thành tựu", async () => {
-    assert.equal(PACK_2.status, "draft");
+  it("Gói 2 đã duyệt: 8 thành tựu (3 500 vàng) vào danh sách; trang Nhiệm vụ chỉ hiện khi cờ Gói 2 bật", async () => {
+    assert.equal(PACK_2.status, "published");
     const { ACHIEVEMENTS } = await import("../../../src/core");
-    assert.equal(ACHIEVEMENTS.some((a) => a.id.startsWith("ttk.pack-2.")), false);
-    assert.equal(PACK_2.achievementSets!.length, 8);
+    const pack2 = ACHIEVEMENTS.filter((a) => a.id.startsWith("ttk.pack-2."));
+    assert.equal(pack2.length, 8);
+    assert.equal(pack2.reduce((s, a) => s + a.gold, 0), 3500);
+    const { isTamTuongKyPack2Achievement } = await import("../../../src/app/game/quests/QuestsScreen");
+    assert.ok(pack2.every((a) => isTamTuongKyPack2Achievement(a.id)));
+    assert.equal(isTamTuongKyPack2Achievement("ttk.pack-1.all"), false);
   });
 });
 
