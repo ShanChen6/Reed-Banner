@@ -64,7 +64,7 @@ Nếu mở reward/chiêu mộ tương lai:
 - [x] Engine/tests: [16 — engine LT-02](16-tam-tuong-ky-lt02-engine.md) (03/11/2026).
 - [x] UI LT-03 có code, chờ Shan chơi thử: [giao diện Tầm Tướng Ký](../../05-ui-ux/screens/tam-tuong-ky.md) (03/11/2026).
 - [ ] UI/asset approved.
-- [ ] Persistence.
+- [x] Persistence theo tài khoản, phiếu, gợi ý theo ngày: [server LT-04](17-tam-tuong-ky-lt04-server.md) (04/11/2026).
 - [ ] Release.
 
 **No production changes in this docs PR.**

@@ -10,8 +10,8 @@ import {
   type DiscoveryState,
   type Hint,
   type HeroTier,
+  type InvalidReason,
   type NodeId,
-  type NormalOutcome,
 } from "@/core/tam-tuong-ky";
 
 /** Hai ô có thứ tự: `[ô trước, ô sau]`. */
@@ -58,17 +58,26 @@ export interface Notice {
   readonly text: string;
 }
 
+/** Kết quả một lần ghép, từ engine (`NormalOutcome`) hoặc từ phản hồi server. */
+export interface CombineSummary {
+  readonly status: "created" | "alreadyKnown" | "noRecipe" | "invalid";
+  readonly nodeId?: NodeId;
+  readonly isCharacter?: boolean;
+  readonly nodeAlreadyKnown?: boolean;
+  readonly reason?: InvalidReason;
+}
+
 /** Lời thông báo sau một lần ghép (đọc qua aria-live). Không bao giờ nói tên tướng chưa ghép ra. */
-export function noticeFor(catalog: Catalog, outcome: NormalOutcome): Notice {
+export function noticeFor(catalog: Catalog, outcome: CombineSummary): Notice {
   switch (outcome.status) {
     case "created": {
-      const name = nameOf(catalog, outcome.nodeId);
+      const name = nameOf(catalog, outcome.nodeId ?? "");
       if (outcome.isCharacter) return { tone: "hero", text: `Tìm thấy chân dung ${name}. Đã ghi vào Tướng Lục.` };
       if (outcome.nodeAlreadyKnown) return { tone: "repeat", text: `Thêm một cách ra ${name}.` };
       return { tone: "discovery", text: `Khám phá mới: ${name}.` };
     }
     case "alreadyKnown":
-      return { tone: "repeat", text: `Đã biết: ra ${nameOf(catalog, outcome.nodeId)}. Không trừ lần ghép.` };
+      return { tone: "repeat", text: `Đã biết: ra ${nameOf(catalog, outcome.nodeId ?? "")}. Không trừ lần ghép.` };
     case "noRecipe":
       return { tone: "miss", text: "Chưa tìm được mối liên hệ." };
     case "invalid":
@@ -108,6 +117,7 @@ export function ledger(catalog: Catalog, state: DiscoveryState): readonly Ledger
     });
 }
 
-/** Số lần ghép mỗi lượt và số gợi ý mỗi ngày (P-9, P-8). Bản xem trước giữ ở trình duyệt; LT-04 chuyển lên server. */
-export const COMBINES_PER_SESSION = 15;
-export const HINTS_PER_DAY = 2;
+/** Mẹo cho người mới (sổ chỉ có 7 nguyên tố): một công thức có thật, dễ hiểu. */
+export function tutorialTip(state: DiscoveryState): string | null {
+  return state.discoveredRecipeIds.length === 0 ? "Mẹo: chọn Mộc vào ô trước và Mộc vào ô sau, rồi bấm Hợp Nguyên." : null;
+}

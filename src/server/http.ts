@@ -5,7 +5,9 @@ import { NextResponse, type NextRequest } from "next/server";
 import { httpStatus, type Deps, type ServiceResult } from "./battles";
 import { GUEST_COOKIE, newGuestId, signGuest, verifyGuest } from "./guest";
 import { arenaStore, dailyStore, destinyLeaderboardStore, leaderboardStore, matchStore, profileStore } from "./store";
-import { formationRankedEnabled, towerFeatureFlags } from "./featureFlags";
+import { formationRankedEnabled, tamTuongKyEnabled, towerFeatureFlags } from "./featureFlags";
+import type { TamTuongKyDeps, TtkServiceResult } from "./tamTuongKy";
+import { ttkHttpStatus } from "./tamTuongKy";
 import type { FormationDeps } from "./formation";
 import { accountStore, dailyStore as dailyStoreOf, destinyLeaderboardStore as destinyBoardOf, formationStore, rankRewardStore, seasonStore } from "./store";
 import { dailySource, destinySource, seasonSource, type RankRewardDeps } from "./rankRewards";
@@ -129,4 +131,17 @@ export function rankRewardDeps(): RankRewardDeps {
     now: Date.now(),
     isSignedIn: isSignedInAccount,
   };
+}
+
+/** Phụ thuộc của Tầm Tướng Ký: hồ sơ, giờ server, cờ bật, kiểm tài khoản đã đăng nhập. */
+export function tamTuongKyDeps(): TamTuongKyDeps {
+  return { profiles: profileStore(), now: Date.now(), enabled: tamTuongKyEnabled(), isSignedIn: isSignedInAccount };
+}
+
+/** Phản hồi JSON chung của các API Tầm Tướng Ký. */
+export function respondTamTuongKy(result: TtkServiceResult): NextResponse {
+  const headers = { "cache-control": "no-store" };
+  return result.ok
+    ? NextResponse.json({ view: result.view, response: result.response ?? null }, { headers })
+    : NextResponse.json({ error: result.error, view: result.view ?? null }, { status: ttkHttpStatus(result.error), headers });
 }

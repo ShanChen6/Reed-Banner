@@ -39,6 +39,15 @@ export interface Recipe {
   readonly reason: string;
 }
 
+/** Thành tựu theo bộ tướng (A-13, P-20): đủ mọi tướng trong `heroIds` thì nhận vàng + huy hiệu một lần. */
+export interface AchievementSet {
+  readonly id: string;
+  /** Tên thành tựu, cũng là tên huy hiệu. */
+  readonly title: string;
+  readonly gold: number;
+  readonly heroIds: readonly NodeId[];
+}
+
 export interface Pack {
   readonly id: string;
   readonly nameVi: string;
@@ -47,6 +56,7 @@ export interface Pack {
   readonly status: "draft" | "published";
   readonly nodes: readonly CatalogNode[];
   readonly recipes: readonly Recipe[];
+  readonly achievementSets?: readonly AchievementSet[];
 }
 
 /** Thông tin tướng lấy từ roster, không chép vào catalog. */
@@ -82,7 +92,8 @@ export type IssueCode =
   | "starterMismatch"
   | "missingPortrait"
   | "elementPlusProfession"
-  | "unusedStarter";
+  | "unusedStarter"
+  | "badAchievementSet";
 
 export interface CatalogIssue {
   readonly severity: "error" | "warning";
