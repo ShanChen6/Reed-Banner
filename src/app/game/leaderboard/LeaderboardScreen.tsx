@@ -48,12 +48,11 @@ interface DestinyBoardResponse {
 
 
 const TABS: readonly {
-  id: "survival" | "arena" | "expedition" | "destiny" | "tamTuongKy";
+  id: "survival" | "arena" | "destiny" | "tamTuongKy";
   label: string;
 }[] = [
   { id: "survival", label: "Trấn Ải" },
   { id: "arena", label: "Quần Hùng" },
-  { id: "expedition", label: "Viễn Chinh" },
   { id: "destiny", label: "Thiên Mệnh" },
   { id: "tamTuongKy", label: "Tầm Tướng Ký" },
 ];
@@ -69,7 +68,6 @@ const NOTE: Record<(typeof TABS)[number]["id"], string> = {
   survival: "Số đợt nhiều nhất đã vượt qua.",
   arena:
     "Điểm đấu trường bóng ma: thắng cộng, thua trừ, nhiều hơn khi gặp đối thủ mạnh hơn.",
-  expedition: "Tổng sao tốt nhất của mọi sa bàn và bậc; bằng sao thì tổng số ngày ít nhất của các bậc đã thắng nhỏ hơn đứng trên.",
   destiny: "Tầng clear cao hơn; hòa thì tổng lượt ít hơn, sau đó người hoàn thành sớm hơn.",
   tamTuongKy: "Tuần đổi vào thứ Hai 0 giờ: điểm tướng đề cử ghép ra trong tuần (lịch sử 300, đặc biệt 200); bằng điểm thì ai tiêu ít nguyên tố hơn đứng trên, rồi ai đạt trước. Hạng cuối tuần nhận vàng và bó nguyên tố.",
 };
@@ -85,14 +83,13 @@ function scoreText(board: BoardId, score: number, season: boolean): string {
   if (season) return board === "arena" ? `+${score} điểm` : `${score} đợt`;
   const d = describeScore(board, score);
   if (board === "arena") return `${d.main} điểm`;
-  if (board === "expedition") return `${d.main} sao · ${d.turns} ngày`;
   return `${d.main} đợt`;
 }
 
-export default function LeaderboardScreen({ destinyEnabled = true, tamTuongKyRanked = false, expeditionEnabled = false }: { destinyEnabled?: boolean; tamTuongKyRanked?: boolean; expeditionEnabled?: boolean }) {
+export default function LeaderboardScreen({ destinyEnabled = true, tamTuongKyRanked = false }: { destinyEnabled?: boolean; tamTuongKyRanked?: boolean }) {
   const { params } = useScene();
   const [tab, setTab] = useState<(typeof TABS)[number]["id"]>(() =>
-    params.get("board") === "destiny" && destinyEnabled ? "destiny" : params.get("board") === "tamTuongKy" && tamTuongKyRanked ? "tamTuongKy" : params.get("board") === "expedition" && expeditionEnabled ? "expedition" : "survival",
+    params.get("board") === "destiny" && destinyEnabled ? "destiny" : params.get("board") === "tamTuongKy" && tamTuongKyRanked ? "tamTuongKy" : "survival",
   );
   const [ttk, setTtk] = useState<TtkBoardResponse | null>(null);
   const [data, setData] = useState<BoardResponse | null>(null);
@@ -124,7 +121,7 @@ export default function LeaderboardScreen({ destinyEnabled = true, tamTuongKyRan
       return () => { live = false; };
     }
     let live = true;
-    void fetch(`/api/leaderboard?board=${encodeURIComponent(board)}${scope === "season" && tab !== "expedition" ? "&season=current" : ""}`, {
+    void fetch(`/api/leaderboard?board=${encodeURIComponent(board)}${scope === "season" ? "&season=current" : ""}`, {
       cache: "no-store",
     })
       .then((r) => r.json() as Promise<BoardResponse>)
@@ -135,9 +132,8 @@ export default function LeaderboardScreen({ destinyEnabled = true, tamTuongKyRan
     };
   }, [board, tab, cycle, cursor, scope]);
 
-  const shown = data?.board === board && Boolean(data.season) === (scope === "season" && tab !== "expedition") ? data : null;
-  // Viễn Chinh không có mùa: chỉ có bảng mọi thời đại.
-  const season = scope === "season" && tab !== "expedition";
+  const shown = data?.board === board && Boolean(data.season) === (scope === "season") ? data : null;
+  const season = scope === "season";
 
   return (
     <main className="ui-screen ui-screen--cool">
@@ -161,7 +157,7 @@ export default function LeaderboardScreen({ destinyEnabled = true, tamTuongKyRan
         </div>
 
         <div role="tablist" className="mb-3 flex flex-wrap gap-1.5">
-          {TABS.filter((t) => (t.id !== "destiny" || destinyEnabled) && (t.id !== "tamTuongKy" || tamTuongKyRanked) && (t.id !== "expedition" || expeditionEnabled)).map((t) => (
+          {TABS.filter((t) => (t.id !== "destiny" || destinyEnabled) && (t.id !== "tamTuongKy" || tamTuongKyRanked)).map((t) => (
             <button
               key={t.id}
               type="button"
@@ -198,7 +194,7 @@ export default function LeaderboardScreen({ destinyEnabled = true, tamTuongKyRan
             </CardFooter>
           </Card>
         ) : <Card className="flex flex-col gap-2">
-          {tab !== "expedition" && <div role="group" aria-label="Phạm vi bảng" className="flex gap-1.5 text-sm">
+          <div role="group" aria-label="Phạm vi bảng" className="flex gap-1.5 text-sm">
             {(["season", "all"] as const).map((s) => (
               <button
                 key={s}
@@ -210,7 +206,7 @@ export default function LeaderboardScreen({ destinyEnabled = true, tamTuongKyRan
                 {s === "season" ? "Mùa tuần này" : "Mọi thời đại"}
               </button>
             ))}
-          </div>}
+          </div>
           <p className="text-xs text-muted">{season ? `${SEASON_NOTE[tab as "survival" | "arena"]}${shown?.season ? ` (mùa bắt đầu ${shown.season})` : ""}` : NOTE[tab]}</p>
           {!shown ? (
             <p className="py-6 text-center text-sm text-muted">

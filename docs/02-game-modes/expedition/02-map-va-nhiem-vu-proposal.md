@@ -1,9 +1,10 @@
 # Viễn Chinh — Đề xuất sa bàn và nhiệm vụ
 
 > Cập nhật: 04/11/2026  
-> Trạng thái: **PROPOSAL — CHỜ SHAN DUYỆT**  
+> Trạng thái: **DRAFT** — đề xuất, chờ Shan duyệt  
 > Phạm vi: đề xuất mở rộng gameplay và nội dung map. Không thay thế GDD luật hiện hành, không phải đặc tả runtime.  
-> Tài liệu luật gốc: [01-vien-chinh-gdd.md](./01-vien-chinh-gdd.md)
+> Tài liệu luật gốc: [01-vien-chinh-gdd.md](./01-vien-chinh-gdd.md)  
+> Thiết kế chi tiết bản đầu: [03-cua-bien-thiet-ke.md](./03-cua-bien-thiet-ke.md)
 
 ## 1. Mục tiêu thiết kế
 
@@ -311,7 +312,23 @@ Làm một chiến dịch dọc hoàn chỉnh trên **Cửa Biển** trước:
 7. Thua trận gây hậu quả cụ thể nhưng còn quyết định tiếp theo.
 8. Không có một tuyến tối ưu mọi tình huống.
 
-## 11. Câu hỏi cần chốt trước khi thay GDD
+## 11. Shan đã chốt (04/11/2026)
+
+- **Sương mù:** giữ luật sương mù của GDD hiện hành ([mục 3.8](01-vien-chinh-gdd.md#38-sương-mù-shan-yêu-cầu-04112026)):
+  chỉ thấy ô đang đứng, ô kề, ô đã chiếm/đánh và tầm chòi canh. Luật này hợp với lệnh Trinh sát (trinh sát vén sương
+  một vùng). Thay cho ý "địa hình thấy từ đầu, sương mù phủ toàn map là ngoài phạm vi" ở mục 3.1 và mục 9.
+- **Đường bị phá:** trên sa bàn vẫn vẽ lối đi như đường thường, **không báo trước**. Khi một đạo chọn đi lối đó thì mới
+  báo "đường bị phá" (chưa chốt: mất ngày hay không). **Trinh sát** phát hiện được đường bị phá trước khi đi.
+
+- **Mỗi lệnh chỉ đi qua một cạnh** (câu 12.1).
+- **Bản đầu có nhiệm vụ không cần đánh** như hộ tống, rút dân (câu 12.2).
+- **Bản đầu có loại trận riêng:** giữ cầu, phá cổng, hộ tống (câu 12.5). Cần mở rộng engine trận.
+- **Chọn trúng đường bị phá thì mất ngày đó** (đạo đứng yên, đạo kia nghỉ như thường); từ đó đường hiện là bị phá.
+- **Không thêm tài nguyên mới** ngoài máu, lương và cờ trạng thái nhiệm vụ (câu 12.3); nhiệm vụ phụ chỉ đổi thưởng và
+  kết thúc, không khóa bậc (câu 12.4). Shan chốt 04/11/2026 khi duyệt [thiết kế Cửa Biển](03-cua-bien-thiet-ke.md).
+- **Chơi offline, không bảng xếp hạng**, khách chơi được (Shan 04/11/2026). Đã áp dụng cho Viễn Chinh hiện tại.
+
+## 12. Câu hỏi cần chốt trước khi thay GDD
 
 1. Có cho đi nhiều cạnh trong một ngày hay mỗi lệnh chỉ qua một cạnh?
 2. Trinh sát và nhiệm vụ không chiến đấu có vào MVP?

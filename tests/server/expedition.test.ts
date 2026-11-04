@@ -50,12 +50,11 @@ describe("Viễn Chinh trên server", () => {
     assert.equal((await expeditionOverview("u", deps)).enabled, false);
   });
 
-  it("khách chưa đăng nhập không xuất quân, không tiến quân được (Viễn Chinh có bảng xếp hạng)", async () => {
-    const deps = { ...setup(), isSignedIn: async (id: string) => id === "acc" };
-    assert.deepEqual(await startExpedition("guest", START, deps), { ok: false, error: "loginRequired" });
-    assert.deepEqual(await marchExpeditionArmy("guest", { army: 0, to: "khe-da" }, deps), { ok: false, error: "loginRequired" });
-    assert.deepEqual(await campExpeditionArmies("guest", deps), { ok: false, error: "loginRequired" });
-    assert.equal((await startExpedition("acc", START, deps)).ok, true);
+  it("khách chưa đăng nhập vẫn xuất quân được (chế độ offline)", async () => {
+    const deps = { ...setup(), isSignedIn: async () => false };
+    assert.equal((await startExpedition("guest", START, deps)).ok, true);
+    const moved = await marchExpeditionArmy("guest", { army: 1, to: "ban-na" }, deps);
+    assert.ok(moved.ok);
   });
 
   it("xuất quân, vào làng, đánh đồn, thắng thì chiếm ô và nhận thưởng trận", async () => {
@@ -65,6 +64,8 @@ describe("Viễn Chinh trên server", () => {
     const overview = await expeditionOverview("u", deps);
     assert.ok(overview.enabled && overview.run && !("seed" in overview.run));
     assert.ok(overview.enabled && overview.encounters["khe-da"]);
+    // Sương mù: ô xa chưa thấy thì không báo trước địch.
+    assert.ok(overview.enabled && !overview.encounters["gac-bac"] && !overview.visible.includes("gac-bac"));
 
     const moved = await marchExpeditionArmy("u", { army: 1, to: "ban-na" }, deps);
     assert.ok(moved.ok && moved.kind === "moved");
@@ -118,9 +119,6 @@ describe("Viễn Chinh trên server", () => {
     assert.ok(profile.gold >= gold + EXPEDITION_TIER_INFO[1].firstGold);
     const overview = await expeditionOverview("u", deps);
     assert.ok(overview.enabled && overview.maps.find((m) => m.id === "aiBac")!.tiers[1]!.unlocked);
-    // Thắng thành đích thì có tên trên bảng Viễn Chinh.
-    const mine = await deps.leaderboard!.rankOf("expedition", "u");
-    assert.equal(mine?.rank, 1);
 
     // Lượt mới, đang đánh thì rút quân.
     assert.equal((await startExpedition("u", { ...START, tier: 2 }, deps)).ok, true);

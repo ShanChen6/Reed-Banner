@@ -1,20 +1,35 @@
-// Viễn Chinh: ba sa bàn vẽ tay. Mỗi sa bàn là một đồ thị nhỏ: hai trại xuất phát, các đồn/lũy/làng/kho lương
-// và một thành đích. Tọa độ x 0–100, y 0–60 chỉ để vẽ. Luật ở docs/02-game-modes/expedition/01-vien-chinh-gdd.md.
+// Viễn Chinh: sáu sa bàn. Mỗi sa bàn là một đồ thị nhỏ: hai trại xuất phát, các đồn/chòi/lũy/làng/kho lương và
+// một thành đích. Tọa độ ô x 0–100, y 0–60 tính trên tranh nền 5:3 của sa bàn. Luật ở
+// docs/02-game-modes/expedition/01-vien-chinh-gdd.md, câu lệnh vẽ tranh ở docs/06-art/prompts/vien-chinh-sa-ban.md.
 
 import type { Element } from "../battle";
 
-export const EXPEDITION_MAP_IDS = ["aiBac", "thuongDu", "cuaBien"] as const;
+export const EXPEDITION_MAP_IDS = ["aiBac", "thuongDu", "cuaBien", "chauTho", "kinhThanh", "quanDao"] as const;
 export type ExpeditionMapId = (typeof EXPEDITION_MAP_IDS)[number];
 
 /**
  * - `camp`: trại xuất phát của một đạo quân, không có trận.
  * - `outpost`: đồn nhỏ, 2 địch.
+ * - `watchtower`: chòi canh, 2 địch; chiếm được thì vén sương mù mọi ô trong 2 bước.
  * - `granary`: kho lương có lính giữ, 2 địch; chiếm được thì cả hai đạo thêm lương.
  * - `fort`: lũy, 3 địch.
  * - `village`: làng, không có trận; lần đầu ghé thì hồi máu, cứu một người gục và thêm lương.
  * - `citadel`: thành đích, 3 địch có tướng giữ thành máu ×1,5. Chiếm được là thắng viễn chinh.
  */
-export type ExpeditionNodeKind = "camp" | "outpost" | "granary" | "fort" | "village" | "citadel";
+export type ExpeditionNodeKind = "camp" | "outpost" | "watchtower" | "granary" | "fort" | "village" | "citadel";
+
+/** `water`: đường vượt sông hay biển, đi mất 2 ngày (đạo kia nghỉ cả 2 ngày, giặc tăng viện theo ngày). */
+export type ExpeditionEdgeKind = "land" | "water";
+
+/**
+ * Nền tạm khi sa bàn chưa có tranh riêng: một vùng của bản đồ tổng Bình Loạn (1536×1024), góc trên trái và bề ngang;
+ * bề cao = bề ngang × 0,6. Có tranh riêng thì giao diện dùng tranh đó và vùng này bỏ đi.
+ */
+export interface ExpeditionMapArt {
+  readonly x: number;
+  readonly y: number;
+  readonly w: number;
+}
 
 export interface ExpeditionNode {
   readonly id: string;
@@ -37,7 +52,9 @@ export interface ExpeditionMap {
   /** Ngày chuẩn cho sao thứ hai. */
   readonly parDays: number;
   readonly nodes: readonly ExpeditionNode[];
-  readonly edges: readonly (readonly [string, string])[];
+  /** Đường đi hai chiều; phần tử thứ ba `"water"` là vượt nước (2 ngày). */
+  readonly edges: readonly (readonly [string, string] | readonly [string, string, ExpeditionEdgeKind])[];
+  readonly art: ExpeditionMapArt;
   /** Trại của đạo Chính (0) và Biệt đạo (1). */
   readonly camps: readonly [string, string];
   readonly citadel: string;
@@ -60,20 +77,21 @@ export const EXPEDITION_MAPS: Readonly<Record<ExpeditionMapId, ExpeditionMap>> =
     element: "kim",
     days: 12,
     parDays: 8,
+    art: { x: 380, y: 0, w: 800 },
     camps: ["trai-ta", "trai-huu"],
     citadel: "thanh-ai-bac",
     nodes: [
-      node("trai-ta", "camp", "Trại Tả", 8, 15, 0),
-      node("trai-huu", "camp", "Trại Hữu", 8, 45, 0),
-      node("khe-da", "outpost", "Đồn Khe Đá", 26, 10, 1),
-      node("ban-na", "village", "Bản Na", 26, 30, 1),
-      node("suoi-lanh", "outpost", "Đồn Suối Lạnh", 26, 50, 1),
-      node("deo-may", "fort", "Lũy Đèo Mây", 46, 12, 2),
-      node("kho-ngua", "granary", "Kho Ngựa Thồ", 46, 30, 2),
-      node("bai-lau", "fort", "Lũy Bãi Lau", 46, 48, 2),
-      node("gac-bac", "fort", "Lũy Gác Bắc", 68, 16, 3),
-      node("gac-nam", "fort", "Lũy Gác Nam", 68, 44, 3),
-      node("thanh-ai-bac", "citadel", "Thành Ải Bắc", 90, 30, 4),
+      node("trai-ta", "camp", "Trại Tả", 6, 25, 0),
+      node("trai-huu", "camp", "Trại Hữu", 6, 45, 0),
+      node("khe-da", "outpost", "Đồn Khe Đá", 17, 13, 1),
+      node("ban-na", "village", "Bản Na", 15, 36, 1),
+      node("suoi-lanh", "outpost", "Đồn Suối Lạnh", 21, 53, 1),
+      node("deo-may", "fort", "Lũy Đèo Mây", 27, 22, 2),
+      node("kho-ngua", "granary", "Kho Ngựa Thồ", 42, 28, 2),
+      node("bai-lau", "fort", "Lũy Bãi Lau", 37, 47, 2),
+      node("gac-bac", "fort", "Lũy Gác Bắc", 57, 15, 3),
+      node("gac-nam", "fort", "Lũy Gác Nam", 66, 43, 3),
+      node("thanh-ai-bac", "citadel", "Thành Ải Bắc", 76, 29, 4),
     ],
     edges: [
       ["trai-ta", "khe-da"], ["trai-ta", "ban-na"], ["trai-huu", "ban-na"], ["trai-huu", "suoi-lanh"],
@@ -91,21 +109,22 @@ export const EXPEDITION_MAPS: Readonly<Record<ExpeditionMapId, ExpeditionMap>> =
     element: "moc",
     days: 17,
     parDays: 12,
+    art: { x: 0, y: 140, w: 700 },
     camps: ["trai-nguon", "trai-suoi"],
     citadel: "thanh-thuong-du",
     nodes: [
-      node("trai-nguon", "camp", "Trại Đầu Nguồn", 6, 12, 0),
-      node("trai-suoi", "camp", "Trại Bến Suối", 6, 48, 0),
-      node("rung-tre", "outpost", "Đồn Rừng Tre", 22, 8, 1),
-      node("ban-moc", "village", "Bản Mộc", 36, 14, 1),
-      node("luy-da", "fort", "Lũy Đá Chồng", 52, 8, 2),
-      node("gac-may", "outpost", "Chòi Mây Phủ", 68, 14, 3),
-      node("doc-lau", "outpost", "Đồn Dốc Lau", 22, 52, 1),
-      node("luy-thac", "outpost", "Đồn Thác Bạc", 36, 46, 1),
-      node("ruong-bac", "village", "Bản Ruộng Bậc", 52, 52, 2),
-      node("gac-khe", "outpost", "Chòi Khe Hẹp", 68, 46, 3),
-      node("deo-ngang", "fort", "Đèo Ngang Núi", 46, 30, 2),
-      node("thanh-thuong-du", "citadel", "Thành Thượng Du", 90, 30, 4),
+      node("trai-nguon", "camp", "Trại Đầu Nguồn", 9, 12, 0),
+      node("trai-suoi", "camp", "Trại Bến Suối", 8, 46, 0),
+      node("rung-tre", "outpost", "Đồn Rừng Tre", 21, 22, 1),
+      node("ban-moc", "village", "Bản Mộc", 36, 17, 1),
+      node("luy-da", "fort", "Lũy Đá Chồng", 55, 11, 2),
+      node("gac-may", "outpost", "Chòi Mây Phủ", 72, 15, 3),
+      node("doc-lau", "outpost", "Đồn Dốc Lau", 24, 52, 1),
+      node("luy-thac", "outpost", "Đồn Thác Bạc", 38, 37, 1),
+      node("ruong-bac", "village", "Bản Ruộng Bậc", 63, 41, 2),
+      node("gac-khe", "outpost", "Chòi Khe Hẹp", 82, 30, 3),
+      node("deo-ngang", "fort", "Đèo Ngang Núi", 58, 32, 2),
+      node("thanh-thuong-du", "citadel", "Thành Thượng Du", 87, 5, 4),
     ],
     edges: [
       ["trai-nguon", "rung-tre"], ["rung-tre", "ban-moc"], ["ban-moc", "luy-da"], ["luy-da", "gac-may"],
@@ -122,20 +141,21 @@ export const EXPEDITION_MAPS: Readonly<Record<ExpeditionMapId, ExpeditionMap>> =
     element: "thuy",
     days: 12,
     parDays: 8,
+    art: { x: 840, y: 270, w: 696 },
     camps: ["trai-ben", "trai-bai"],
     citadel: "thanh-cua-bien",
     nodes: [
-      node("trai-ben", "camp", "Trại Bến Thuyền", 8, 12, 0),
-      node("trai-bai", "camp", "Trại Bãi Sậy", 8, 48, 0),
-      node("ben-coi", "outpost", "Đồn Bến Cói", 24, 12, 1),
-      node("bai-su", "outpost", "Đồn Bãi Sú", 24, 48, 1),
-      node("lang-chai", "village", "Làng Chài", 40, 6, 2),
-      node("cho-song", "granary", "Chợ Cửa Sông", 40, 30, 2),
-      node("mui-cat", "fort", "Đồn Mũi Cát", 40, 54, 2),
-      node("trai-dong", "fort", "Thủy Trại Đông", 62, 14, 3),
-      node("doi-cat", "outpost", "Doi Cát", 62, 30, 3),
-      node("trai-tay", "fort", "Thủy Trại Tây", 62, 46, 3),
-      node("thanh-cua-bien", "citadel", "Thành Cửa Biển", 86, 30, 4),
+      node("trai-ben", "camp", "Trại Bến Thuyền", 5, 20, 0),
+      node("trai-bai", "camp", "Trại Bãi Sậy", 15, 47, 0),
+      node("ben-coi", "outpost", "Đồn Bến Cói", 14, 11, 1),
+      node("bai-su", "outpost", "Đồn Bãi Sú", 36, 50, 1),
+      node("lang-chai", "village", "Làng Chài", 35, 4, 2),
+      node("cho-song", "granary", "Chợ Cửa Sông", 25, 29, 2),
+      node("mui-cat", "fort", "Đồn Mũi Cát", 52, 47, 2),
+      node("trai-dong", "fort", "Thủy Trại Đông", 46, 13, 3),
+      node("doi-cat", "outpost", "Doi Cát", 44, 31, 3),
+      node("trai-tay", "fort", "Thủy Trại Tây", 64, 32, 3),
+      node("thanh-cua-bien", "citadel", "Thành Cửa Biển", 61, 6, 4),
     ],
     edges: [
       ["trai-ben", "ben-coi"], ["trai-bai", "bai-su"],
@@ -144,6 +164,108 @@ export const EXPEDITION_MAPS: Readonly<Record<ExpeditionMapId, ExpeditionMap>> =
       ["mui-cat", "trai-tay"],
       ["trai-dong", "doi-cat"], ["doi-cat", "trai-tay"],
       ["trai-dong", "thanh-cua-bien"], ["doi-cat", "thanh-cua-bien"], ["trai-tay", "thanh-cua-bien"],
+    ],
+  },
+  chauTho: {
+    id: "chauTho",
+    name: "Ngã Ba Sông",
+    blurb: "Thành đích nằm giữa ba nhánh sông. Hai đạo xuất phát từ hai phía; lội sông nhanh đường mà mất hai ngày, đi vòng qua cầu thì xa.",
+    element: "tho",
+    days: 10,
+    parDays: 7,
+    art: { x: 400, y: 250, w: 700 },
+    camps: ["trai-tay", "trai-dong"],
+    citadel: "thanh-nga-ba",
+    nodes: [
+      node("trai-tay", "camp", "Trại Bờ Tây", 5, 15, 0),
+      node("trai-dong", "camp", "Trại Bờ Đông", 87, 33, 0),
+      node("ben-lau", "outpost", "Đồn Bến Lau", 20, 26, 1),
+      node("doi-tram", "watchtower", "Chòi Đồi Trám", 25, 8, 1),
+      node("lang-ruong", "village", "Làng Ruộng Chiêm", 16, 52, 1),
+      node("bai-dong", "outpost", "Đồn Bãi Đông", 78, 45, 1),
+      node("lang-ben", "village", "Làng Bến Thượng", 76, 11, 1),
+      node("cau-go", "outpost", "Đồn Cầu Gỗ", 37, 33, 2),
+      node("bai-bac", "outpost", "Đồn Bãi Bắc", 60, 8, 2),
+      node("kho-thoc", "granary", "Kho Thóc Bãi Giữa", 48, 53, 2),
+      node("ben-do", "fort", "Lũy Bến Đò", 63, 33, 2),
+      node("luy-son", "fort", "Lũy Núi Sơn", 54, 42, 3),
+      node("thanh-nga-ba", "citadel", "Thành Ngã Ba", 51, 22, 4),
+    ],
+    edges: [
+      ["trai-tay", "ben-lau"], ["trai-tay", "doi-tram"], ["ben-lau", "doi-tram"], ["ben-lau", "lang-ruong"],
+      ["ben-lau", "cau-go", "water"], ["lang-ruong", "kho-thoc"], ["kho-thoc", "luy-son"], ["cau-go", "luy-son"],
+      ["cau-go", "thanh-nga-ba", "water"], ["doi-tram", "bai-bac", "water"], ["bai-bac", "thanh-nga-ba", "water"],
+      ["trai-dong", "lang-ben"], ["trai-dong", "bai-dong"], ["lang-ben", "bai-bac"], ["bai-dong", "ben-do"],
+      ["bai-dong", "kho-thoc", "water"], ["ben-do", "luy-son"], ["ben-do", "thanh-nga-ba"], ["luy-son", "thanh-nga-ba"],
+    ],
+  },
+  kinhThanh: {
+    id: "kinhThanh",
+    name: "Kinh Thành",
+    blurb: "Kinh thành lớn phía nam có ba cổng lũy. Phải phá một cổng mới vào được thành; chòi canh hai bên giúp nhìn thấu đường vây.",
+    element: "hoa",
+    days: 10,
+    parDays: 7,
+    art: { x: 380, y: 520, w: 800 },
+    camps: ["trai-bac", "trai-dong"],
+    citadel: "kinh-thanh",
+    nodes: [
+      node("trai-bac", "camp", "Trại Bắc Thành", 18, 5, 0),
+      node("trai-dong", "camp", "Trại Thủy Đông", 70, 10, 0),
+      node("lang-dau", "village", "Làng Đầu Bãi", 14, 19, 1),
+      node("don-ruong", "outpost", "Đồn Ruộng Mạ", 28, 30, 1),
+      node("cho-phien", "granary", "Chợ Phiên", 52, 16, 1),
+      node("ben-nuoc", "outpost", "Đồn Bến Nước", 74, 27, 1),
+      node("choi-nui", "watchtower", "Chòi Núi Tây", 12, 36, 2),
+      node("cau-tay", "fort", "Lũy Cầu Tây", 38, 22, 2),
+      node("luy-bien", "watchtower", "Chòi Mép Nước", 84, 38, 2),
+      node("cong-tay", "fort", "Cổng Tây", 38, 43, 4),
+      node("cong-bac", "fort", "Cổng Bắc", 56, 26, 4),
+      node("cong-dong", "fort", "Cổng Đông", 72, 44, 4),
+      node("lang-nam", "village", "Làng Bến Nam", 69, 53, 3),
+      node("kinh-thanh", "citadel", "Kinh Thành", 55, 38, 5),
+    ],
+    edges: [
+      ["trai-bac", "lang-dau"], ["trai-bac", "don-ruong"], ["trai-bac", "cho-phien", "water"],
+      ["lang-dau", "choi-nui"], ["lang-dau", "don-ruong"], ["choi-nui", "cong-tay"], ["don-ruong", "cau-tay"],
+      ["don-ruong", "cong-tay"], ["cau-tay", "cho-phien", "water"], ["cau-tay", "cong-bac"],
+      ["trai-dong", "cho-phien", "water"], ["trai-dong", "ben-nuoc"], ["cho-phien", "cong-bac"],
+      ["ben-nuoc", "cong-bac"], ["ben-nuoc", "luy-bien"], ["luy-bien", "cong-dong"], ["cong-dong", "lang-nam"],
+      ["lang-nam", "cong-tay", "water"],
+      ["cong-tay", "kinh-thanh"], ["cong-bac", "kinh-thanh"], ["cong-dong", "kinh-thanh"],
+    ],
+  },
+  quanDao: {
+    id: "quanDao",
+    name: "Quần Đảo",
+    blurb: "Thành đảo giữa vịnh, chỉ một cây cầu dài nối vào bờ. Còn lại phải vượt biển từ đảo này sang đảo khác.",
+    element: "phong",
+    days: 9,
+    parDays: 6,
+    art: { x: 960, y: 500, w: 576 },
+    camps: ["trai-bo", "trai-cat"],
+    citadel: "thanh-dao",
+    nodes: [
+      node("trai-bo", "camp", "Trại Bờ Bắc", 6, 9, 0),
+      node("trai-cat", "camp", "Trại Bãi Cát", 5, 47, 0),
+      node("mui-da", "outpost", "Đồn Mũi Đá", 22, 15, 1),
+      node("bai-nam", "outpost", "Đồn Bãi Nam", 17, 54, 1),
+      node("cau-dai", "fort", "Lũy Cầu Dài", 23, 34, 3),
+      node("dao-bac", "watchtower", "Chòi Đảo Bắc", 41, 8, 2),
+      node("dao-rua", "village", "Làng Đảo Rùa", 48, 22, 2),
+      node("dao-nam", "granary", "Kho Đảo Nam", 50, 56, 2),
+      node("dao-dong", "fort", "Lũy Đảo Đông", 67, 18, 3),
+      node("hon-nho", "outpost", "Đồn Hòn Nhỏ", 85, 26, 3),
+      node("hon-dong", "fort", "Lũy Hòn Đông", 68, 43, 3),
+      node("thanh-dao", "citadel", "Thành Đảo", 42, 38, 5),
+    ],
+    edges: [
+      ["trai-bo", "mui-da"], ["mui-da", "cau-dai"], ["trai-cat", "cau-dai"], ["trai-cat", "bai-nam"],
+      ["cau-dai", "thanh-dao"],
+      ["mui-da", "dao-bac", "water"], ["dao-bac", "dao-rua", "water"], ["dao-rua", "thanh-dao", "water"],
+      ["dao-rua", "dao-dong", "water"], ["dao-dong", "hon-nho", "water"], ["dao-dong", "hon-dong", "water"],
+      ["hon-nho", "hon-dong", "water"], ["bai-nam", "dao-nam", "water"], ["dao-nam", "hon-dong", "water"],
+      ["dao-nam", "thanh-dao", "water"], ["hon-dong", "thanh-dao", "water"],
     ],
   },
 };
@@ -161,10 +283,35 @@ export function expeditionNeighbors(map: ExpeditionMap, id: string): string[] {
 }
 
 export const isExpeditionCombatNode = (kind: ExpeditionNodeKind) =>
-  kind === "outpost" || kind === "granary" || kind === "fort" || kind === "citadel";
+  kind === "outpost" || kind === "watchtower" || kind === "granary" || kind === "fort" || kind === "citadel";
 
-/** Số bước ít nhất từ `from` tới `to`; Infinity khi không tới được. */
+/** Số ngày đi qua đường `a`–`b` (vượt nước 2, đường bộ 1); không có đường thì Infinity. */
+export function expeditionEdgeDays(map: ExpeditionMap, a: string, b: string): number {
+  const edge = map.edges.find(([x, y]) => (x === a && y === b) || (x === b && y === a));
+  if (!edge) return Infinity;
+  return edge[2] === "water" ? 2 : 1;
+}
+
+/** Số ngày đi ít nhất từ `from` tới `to` (tính cả vượt nước); Infinity khi không tới được. */
 export function expeditionDistance(map: ExpeditionMap, from: string, to: string): number {
+  const dist = new Map<string, number>([[from, 0]]);
+  const open = new Set([from]);
+  while (open.size > 0) {
+    let id = "";
+    let best = Infinity;
+    for (const x of open) if (dist.get(x)! < best) { best = dist.get(x)!; id = x; }
+    open.delete(id);
+    if (id === to) return best;
+    for (const n of expeditionNeighbors(map, id)) {
+      const d = best + expeditionEdgeDays(map, id, n);
+      if (d < (dist.get(n) ?? Infinity)) { dist.set(n, d); open.add(n); }
+    }
+  }
+  return Infinity;
+}
+
+/** Số bước (không tính ngày) giữa hai ô; dùng cho tầm nhìn của chòi canh. */
+export function expeditionHops(map: ExpeditionMap, from: string, to: string): number {
   if (from === to) return 0;
   const seen = new Set([from]);
   let frontier = [from];
@@ -173,12 +320,12 @@ export function expeditionDistance(map: ExpeditionMap, from: string, to: string)
     for (const id of frontier)
       for (const n of expeditionNeighbors(map, id)) {
         if (n === to) return d;
-        if (!seen.has(n)) {
-          seen.add(n);
-          next.push(n);
-        }
+        if (!seen.has(n)) { seen.add(n); next.push(n); }
       }
     frontier = next;
   }
   return Infinity;
 }
+
+/** Tầm nhìn của chòi canh đã chiếm (số bước). */
+export const EXPEDITION_WATCHTOWER_SIGHT = 2;

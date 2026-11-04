@@ -23,6 +23,7 @@ import {
   expeditionMapOf,
   expeditionRunsLeft,
   expeditionTierUnlocked,
+  expeditionVisible,
   isExpeditionCombatNode,
   marchExpedition,
   matchOver,
@@ -56,7 +57,6 @@ export type ExpeditionError =
   | "armyDown"
   | "conflict"
   | "dailyLimit"
-  | "loginRequired"
   | typeof FEATURE_DISABLED_ERROR;
 
 export interface FoePreview {
@@ -80,8 +80,10 @@ export interface EncounterPreview {
 /** Đối thủ của mọi ô còn địch, theo từng đạo (giáp công khác nhau tùy đạo nào đánh). Không có seed. */
 function previews(run: ExpeditionRun): Record<string, readonly [EncounterPreview, EncounterPreview]> {
   const out: Record<string, readonly [EncounterPreview, EncounterPreview]> = {};
+  // Sương mù: chỉ báo trước địch ở ô đang thấy.
+  const visible = expeditionVisible(run);
   for (const node of expeditionMapOf(run).nodes) {
-    if (!isExpeditionCombatNode(node.kind) || run.nodes[node.id]?.cleared) continue;
+    if (!isExpeditionCombatNode(node.kind) || run.nodes[node.id]?.cleared || !visible.has(node.id)) continue;
     const one = (army: 0 | 1): EncounterPreview => {
       const e = expeditionEncounter(run, node.id, army)!;
       return {
@@ -143,20 +145,16 @@ export async function expeditionOverview(ownerId: string | null, deps: Deps) {
     runsPerDay: EXPEDITION_RUNS_PER_DAY,
     run: publicRun(state.run),
     encounters: state.run && state.run.phase === "march" ? previews(state.run) : {},
+    visible: state.run ? [...expeditionVisible(state.run)] : [],
   };
 }
 
 type Ok<T> = { readonly ok: true } & T;
 type Fail = { readonly ok: false; readonly error: ExpeditionError };
 
-/** Viễn Chinh có bảng xếp hạng nên chỉ cho tài khoản đã đăng nhập (luật chung, Shan 01/11/2026). */
-async function guestBlocked(deps: Deps, ownerId: string): Promise<boolean> {
-  return deps.isSignedIn !== undefined && !(await deps.isSignedIn(ownerId));
-}
 
 export async function startExpedition(ownerId: string, raw: unknown, deps: Deps): Promise<Ok<{ run: ReturnType<typeof publicRun> }> | Fail> {
   if (!expeditionEnabled(deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
-  if (await guestBlocked(deps, ownerId)) return { ok: false, error: "loginRequired" };
   const input = parseExpeditionStart(raw);
   if (!input) return { ok: false, error: "badRequest" };
   let created: ExpeditionRun | undefined;
@@ -188,7 +186,6 @@ export type ExpeditionMarchResponse =
 /** Tiến quân. Ô có địch thì mở trận (đang có trận thì trả lại trận đó). */
 export async function marchExpeditionArmy(ownerId: string, raw: unknown, deps: Deps): Promise<ExpeditionMarchResponse> {
   if (!expeditionEnabled(deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
-  if (await guestBlocked(deps, ownerId)) return { ok: false, error: "loginRequired" };
   if (!raw || typeof raw !== "object") return { ok: false, error: "badRequest" };
   const { army, to } = raw as Record<string, unknown>;
   if ((army !== 0 && army !== 1) || typeof to !== "string") return { ok: false, error: "badRequest" };
@@ -227,7 +224,6 @@ export async function marchExpeditionArmy(ownerId: string, raw: unknown, deps: D
 
 export async function campExpeditionArmies(ownerId: string, deps: Deps): Promise<Ok<{ run: ReturnType<typeof publicRun> }> | Fail> {
   if (!expeditionEnabled(deps)) return { ok: false, error: FEATURE_DISABLED_ERROR };
-  if (await guestBlocked(deps, ownerId)) return { ok: false, error: "loginRequired" };
   const { profile } = await loadProfile(deps.profiles, ownerId);
   const run = profile.expedition?.run;
   if (!run) return { ok: false, error: "noRun" };
