@@ -277,3 +277,35 @@ export async function buyTamTuongKyBundle(deps: TamTuongKyDeps, ownerId: string 
   }
   return { ok: true, view: await rankedView(deps, r.stored.profile.tamTuongKy!, r.stored.profile.gold, ownerId!), response };
 }
+
+// ——— Bảng tuần trên trang Xếp hạng ———
+
+export interface TtkBoardRow {
+  readonly rank: number;
+  readonly name: string;
+  readonly mine: boolean;
+  readonly points: number;
+  readonly unitsSpent: number;
+}
+
+export type TtkBoardResult =
+  | { readonly ok: true; readonly week: string; readonly top: readonly TtkBoardRow[]; readonly mine: Omit<TtkBoardRow, "name" | "mine"> | null }
+  | { readonly ok: false; readonly error: TtkServiceError };
+
+/** Số nguyên tố đã tiêu từ điểm bảng mùa (`rankedSeasonScore`). */
+const unitsOfSeasonScore = (score: number) => 999 - (score % 1000);
+
+/** Bảng tuần Tầm Tướng Ký (top 50 và hạng của mình). `week`: khóa thứ Hai, mặc định tuần hiện tại. */
+export async function tamTuongKyBoard(deps: TamTuongKyDeps, ownerId: string | null, week?: string): Promise<TtkBoardResult> {
+  const blocked = await rankedGate(deps, ownerId);
+  if (blocked) return { ok: false, error: blocked };
+  if (!deps.seasons) return { ok: true, week: week ?? seasonKey(deps.now), top: [], mine: null };
+  const key = week ?? seasonKey(deps.now);
+  const [top, mine] = await Promise.all([deps.seasons.top("tamTuongKy", key, 50), deps.seasons.rankOf("tamTuongKy", key, ownerId!)]);
+  return {
+    ok: true,
+    week: key,
+    top: top.map((e, i) => ({ rank: i + 1, name: e.name ?? `Khách ${e.ownerId.slice(-4)}`, mine: e.ownerId === ownerId, points: pointsOfSeasonScore(e.score), unitsSpent: unitsOfSeasonScore(e.score) })),
+    mine: mine ? { rank: mine.rank, points: pointsOfSeasonScore(mine.score), unitsSpent: unitsOfSeasonScore(mine.score) } : null,
+  };
+}

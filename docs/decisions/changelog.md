@@ -2,6 +2,9 @@
 
 ## 04/11/2026
 
+**Tầm Tướng Ký: tab Xếp hạng, phiếu trên trang Nhiệm vụ**
+- Trang Xếp hạng thêm tab Tầm Tướng Ký (bảng tuần, khi cờ Hạng bật), API `GET /api/tam-tuong-ky/board`. Trang Nhiệm vụ ghi rõ thưởng nào kèm phiếu và số phiếu hiện có, chỉ cho người đã vào chế độ khi cờ bật ([giao diện](../05-ui-ux/screens/tam-tuong-ky.md)).
+
 **Tầm Tướng Ký: cờ đọc dễ dãi hơn, kiểm cờ ở `/api/health`**
 - Shan báo bản deploy chưa thấy chế độ Hạng. Code trên `develop` đúng; nghi biến `TAM_TUONG_KY_RANKED_ENABLED` có giá trị khác đúng chữ `true` hoặc chưa deploy lại. Hai cờ Tầm Tướng Ký giờ chấp nhận `true` không phân biệt hoa thường, bỏ khoảng trắng/xuống dòng (cờ chế độ khác giữ nguyên). `/api/health` thêm `features` (trạng thái cờ, biến đặt sai, cờ Hạng bị bỏ qua vì thiếu cờ chế độ). Xem [nghiệm thu LT-07](../02-game-modes/future/20-tam-tuong-ky-lt07-acceptance.md#3-bật-và-rút-lại).
 

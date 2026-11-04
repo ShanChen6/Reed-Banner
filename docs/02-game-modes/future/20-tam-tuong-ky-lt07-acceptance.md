@@ -68,4 +68,4 @@ Khách (chưa đăng nhập) thấy màn nhắc đăng nhập; API trả 401 (te
 - [ ] Chơi thử cả hai chế độ và góp ý giao diện.
 - [ ] Thêm claim tước hiệu tướng Gói 1 vào [sổ nguồn](../campaign/history-sources.md) và đối chiếu `S04`, `S05` (phiên làm việc không mở được Wikisource); tới lúc đó Tướng Lục không hiện mô tả lịch sử.
 - [ ] Quyết định merge và ngày bật cờ production.
-- Việc làm sau, không chặn phát hành: tab Tầm Tướng Ký trên trang Xếp hạng chung; lời dẫn dạng ảnh; icon riêng cho yếu tố trung gian; Đinh Bộ Lĩnh vào gói 2 (P-27).
+- Việc làm sau, không chặn phát hành: lời dẫn dạng ảnh; icon riêng cho yếu tố trung gian; Đinh Bộ Lĩnh vào gói 2 (P-27).
