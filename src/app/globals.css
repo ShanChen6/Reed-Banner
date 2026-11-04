@@ -751,9 +751,6 @@
   filter: drop-shadow(0 2px 6px #000000b3);
   text-shadow: 0 1px 2px #000;
 }
-.game-header-cloud {
-  filter: drop-shadow(0 1px 2px #000000cc);
-}
 .game-header-gold {
   color: #f3e2b8;
 }
