@@ -177,7 +177,7 @@ export default function ArtPage() {
           <div className="flex flex-wrap gap-3 text-xs">
             {PROFESSIONS.map((p) => (
               <figure key={p} className="flex flex-col items-center gap-1">
-                <GearIcon slot="vuKhi" profession={p} element="moc" tier={3} className="size-14" />
+                <GearIcon slot="vuKhi" profession={p} element="moc" tier={3} set="coLau" className="size-14" />
                 <figcaption className="opacity-80">{PROFESSION_NAME[p]}</figcaption>
               </figure>
             ))}
