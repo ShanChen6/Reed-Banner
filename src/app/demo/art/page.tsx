@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PROFESSIONS, professionSkills, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, SPECIAL_NAME, TIER_COLOR_NAME, TILE_NAME } from "@/app/game/battle/labels";
-import { GearIcon, SetEmblem } from "@/app/game/art/gear";
+import { EmptySlotIcon, GearIcon, SetEmblem } from "@/app/game/art/gear";
 import { ElementIcon, FoodIcon, LeaderFlag, ProfessionIcon, ShieldIcon } from "@/app/game/art/icons";
 import { Portrait } from "@/app/game/art/portraits";
 import { SkillIcon } from "@/app/game/art/skills";
@@ -168,6 +168,18 @@ export default function ArtPage() {
                   <GearIcon key={s} slot={s} element="moc" tier={t} set="coLau" className="mx-auto size-12" />
                 ))}
               </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="font-semibold">Ô trống (chưa mặc)</h2>
+          <div className="grid grid-cols-9 gap-2 text-xs">
+            {GEAR_SLOTS.map((s) => (
+              <figure key={s} className="flex flex-col items-center gap-1">
+                <EmptySlotIcon slot={s} className="size-12" />
+                <figcaption className="opacity-70">{SLOT_NAME[s]}</figcaption>
+              </figure>
             ))}
           </div>
         </section>

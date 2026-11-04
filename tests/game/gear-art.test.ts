@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { test } from "node:test";
 import { GEAR_SETS, GEAR_SLOTS, PROFESSIONS, TIERS } from "../../src/core";
-import { gearArtSrc, setEmblemSrc, tierFrameSrc } from "../../src/app/game/art/gear";
+import { emptySlotSrc, gearArtSrc, setEmblemSrc, tierFrameSrc } from "../../src/app/game/art/gear";
 
 for (const [set, name] of [
   ["coLau", "Cờ Lau"],
@@ -36,4 +36,8 @@ test("mỗi bộ có huy hiệu", () => {
     assert.ok(src && existsSync(`public${src}`), set.id);
   }
   assert.equal(setEmblemSrc("khongCo"), undefined);
+});
+
+test("mỗi ô có bóng ô trống", () => {
+  for (const slot of GEAR_SLOTS) assert.ok(existsSync(`public${emptySlotSrc(slot)}`), slot);
 });

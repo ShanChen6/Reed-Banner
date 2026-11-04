@@ -214,6 +214,21 @@ export function gearArtSrc(slot: GearSlot, set: string | undefined, profession?:
   return slot === "vuKhi" ? `/art/gear/${set}/vuKhi-${profession ?? "tuongSi"}.webp` : `/art/gear/${set}/${slot}.webp`;
 }
 
+/** Bóng ô trống (nét đồng mờ) ở public/art/gear/empty/<ô>.webp, 128 px. */
+export function emptySlotSrc(slot: GearSlot): string {
+  return `/art/gear/empty/${slot}.webp`;
+}
+
+/** Ô chưa mặc đồ: nền ô tối + bóng nét đồng của loại món, cố ý mờ để không lẫn với món thật. */
+export function EmptySlotIcon({ slot, className }: { slot: GearSlot; className?: string }) {
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden>
+      <rect x={1.5} y={1.5} width={45} height={45} rx={8} fill="#2b211b" />
+      <image href={emptySlotSrc(slot)} x={7} y={7} width={34} height={34} opacity={0.75} preserveAspectRatio="xMidYMid meet" />
+    </svg>
+  );
+}
+
 /** Huy hiệu tròn của bộ ở public/art/gear/sets/<bộ>.webp (128 px). */
 export function setEmblemSrc(set: string): string | undefined {
   return set in SET_ART ? `/art/gear/sets/${set}.webp` : undefined;
