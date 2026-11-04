@@ -65,6 +65,7 @@ Nếu mở reward/chiêu mộ tương lai:
 - [x] UI LT-03 có code, chờ Shan chơi thử: [giao diện Tầm Tướng Ký](../../05-ui-ux/screens/tam-tuong-ky.md) (03/11/2026).
 - [ ] UI/asset approved.
 - [x] Persistence theo tài khoản, phiếu, gợi ý theo ngày: [server LT-04](17-tam-tuong-ky-lt04-server.md) (04/11/2026).
+- [x] LT-05 Gói 1 (12 tướng) và mô phỏng: [18 — Gói 1](18-tam-tuong-ky-lt05-pack-1.md) (04/11/2026), chờ Shan chọn số.
 - [ ] Release.
 
 **No production changes in this docs PR.**

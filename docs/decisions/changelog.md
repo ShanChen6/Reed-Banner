@@ -2,6 +2,10 @@
 
 ## 04/11/2026
 
+**Tầm Tướng Ký: LT-05 Gói 1 và mô phỏng (DRAFT, có code)**
+- `PACK_1`: 12 tướng Shan duyệt, 82 công thức, 70 yếu tố trung gian; lịch sử đều 12 lần ghép, đặc biệt đều 9; không ngõ cụt; giữ mọi ID của slice-1. Thành tựu bộ theo P-21 (9 bộ, 3 200 vàng). Server chuyển sang chạy Gói 1 (vẫn `draft`, sau cờ).
+- `scripts/tam-tuong-ky-sim.ts`: người mới đoán mò cần khoảng 92–136 ngày cho tướng đầu với gợi ý hiện tại; thêm dấu “còn công thức chưa tìm” và gợi ý nhắm tướng thì còn khoảng 9 ngày, đủ 12 tướng khoảng 72 ngày. Bó chia đều 7 hệ phí vì cả gói cần 51 Mộc, 3 Lôi. Đề xuất: 15 lần/phiếu, bó tự chọn, 7 tướng đề cử. Xem [Gói 1 LT-05](../02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md#5-cần-shan-chọn).
+
 **Tầm Tướng Ký: LT-04 server chế độ Thường (DRAFT, có code)**
 - Phiếu (3 khi bắt đầu, trần 10), lượt 15 lần ghép (hết hạn 24 giờ), gợi ý 2 lượt mỗi ngày, sổ khám phá lưu trong hồ sơ tài khoản (`Profile.tamTuongKy`, không thêm bảng). API `/api/tam-tuong-ky` (GET, `session`, `combine`, `hint`) sau cờ và đăng nhập; `requestId` chống trừ hai lần. Xem [server LT-04](../02-game-modes/future/17-tam-tuong-ky-lt04-server.md).
 - Phiếu kèm thưởng: nhận nốt nhiệm vụ ngày +1, “Thắng 15 trận” +2, điểm danh ngày 7 +1 (chỉ người đã vào chế độ); vàng nhiệm vụ giữ nguyên.

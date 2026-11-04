@@ -23,7 +23,8 @@
 15. [15 — Tầm Tướng Ký: catalog slice LT-01](15-tam-tuong-ky-lt01-catalog.md) (APPROVED, có code)
 16. [16 — Tầm Tướng Ký: engine ghép LT-02](16-tam-tuong-ky-lt02-engine.md) (APPROVED, có code)
 17. [17 — Tầm Tướng Ký: server chế độ Thường LT-04](17-tam-tuong-ky-lt04-server.md) (DRAFT, có code)
-18. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
+18. [18 — Tầm Tướng Ký: Gói 1 và mô phỏng LT-05](18-tam-tuong-ky-lt05-pack-1.md) (DRAFT, có code)
+19. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
 
 ## Quy ước quyết định
 
