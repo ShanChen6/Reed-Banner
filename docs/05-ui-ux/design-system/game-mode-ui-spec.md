@@ -6,7 +6,7 @@
 
 ## 1. Product decisions và ranh giới
 
-- Không thiết kế lại Global Game Header hiện hành (breadcrumb/back, banner trung tâm, Hồ sơ, Trận thường, tài khoản); dùng `GameShell` và hệ scene/navigation sẵn có. Không lặp header trong màn.
+- Không tự thiết kế lại Global Game Header; dùng `GameShell` và hệ scene/navigation sẵn có. Không lặp header trong màn. Từ 04/11/2026 (Shan duyệt) header có ba cột: trái là nút nhà **Chiến trường** (về màn chính); giữa là bảng tên màn, hai bên có mây; phải là vàng hiện có và avatar + tên. Doanh Trại, Tài khoản, Cài đặt âm thanh và đăng nhập/đăng xuất nằm trong menu tài khoản. Tranh banner trải hết chiều dài thanh. Code ở `src/app/game/header/`.
 - Giữ hình ảnh **gỗ tối / đồng cổ / giấy dó / vàng kim / đỏ son**, hoa văn Đông Sơn Việt Nam; không đưa mỹ thuật Á Đông chung chung (cung điện Trung Hoa, torii, giáp samurai) vào key art.
 - Campaign hiện có Sử Ký, atlas ba cột và chi tiết nhiệm vụ: **reference về độ hoàn thiện và chất liệu**, không áp 3 cột máy móc lên mọi mode.
 - `TRIAL`, `DESTINY` chỉ hiện click được khi server feature flag cho phép; không giả tạo trạng thái tiến độ hoặc phần thưởng ở client.

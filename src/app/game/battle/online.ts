@@ -207,6 +207,9 @@ export interface ProfileResponse {
   readonly error?: string;
 }
 
+/** Sự kiện trên window báo vàng trong hồ sơ vừa đổi (detail là số vàng mới), để thanh header cập nhật theo. */
+export const PROFILE_GOLD_EVENT = "colau:profile-gold";
+
 async function callProfile(init?: RequestInit): Promise<ProfileResponse> {
   try {
     const res = await fetch("/api/profile", {
@@ -214,7 +217,9 @@ async function callProfile(init?: RequestInit): Promise<ProfileResponse> {
       headers: { "content-type": "application/json" },
       cache: "no-store",
     });
-    return (await res.json()) as ProfileResponse;
+    const body = (await res.json()) as ProfileResponse;
+    if (body.profile) window.dispatchEvent(new CustomEvent(PROFILE_GOLD_EVENT, { detail: body.profile.gold }));
+    return body;
   } catch {
     return { error: "network" };
   }

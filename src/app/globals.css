@@ -725,21 +725,39 @@
     linear-gradient(180deg, var(--hdr-wood-hi) 0%, var(--hdr-wood) 70%, #140c08 100%);
   box-shadow: 0 6px 16px -8px #000000d9;
 }
-/* Tranh: phóng theo chiều cao (không kéo giãn), cổng thành ở đúng giữa màn hình. Mặt nạ hai lớp làm tan cả hai
-   đầu lẫn mép trên/dưới; hạ sáng và độ rực để cùng tông gỗ, chữ và nút đặt lên vẫn đọc rõ. */
+/* Tranh trải hết chiều dài thanh: phủ kín (không kéo giãn), cổng thành ở giữa; màn hẹp thì cắt bớt hai bên. Hạ sáng
+   và độ rực để cùng tông gỗ, mép trên/dưới tan nhẹ vào gỗ. */
 .game-header-panorama {
-  width: min(100%, 66rem);
-  background: url("/art/ui/header/header-panorama.webp") center 48% / auto 122% no-repeat;
-  filter: brightness(0.74) saturate(0.85) sepia(0.12);
-  mask-image:
-    linear-gradient(90deg, transparent 0%, #000 30%, #000 70%, transparent 100%),
-    linear-gradient(180deg, #0000 0%, #000 22%, #000 72%, #0000 100%);
-  mask-composite: intersect;
+  background: url("/art/ui/header/header-panorama.webp") center 48% / cover no-repeat;
+  filter: brightness(0.72) saturate(0.85) sepia(0.12);
+  mask-image: linear-gradient(180deg, #0000 0%, #000 14%, #000 80%, #0000 100%);
+}
+/* Hai đầu tối dần (chỗ nút Chiến trường, vàng, avatar) để chữ và viền nút đọc rõ trên tranh. */
+.game-header-shade {
+  background: linear-gradient(90deg, #140c08d9 0%, #140c0866 22%, transparent 38%, transparent 62%, #140c0866 78%, #140c08d9 100%);
 }
 @media (max-width: 767px) {
   .game-header-panorama {
     filter: brightness(0.58) saturate(0.78) sepia(0.15);
   }
+}
+/* Bảng tên phân cảnh ở giữa: nền sơn mài đậm viền đồng kép, chữ vàng giấy giãn rộng; mây cuộn hai bên cùng sắc đồng. */
+.game-header-title {
+  color: #f3e2b8;
+  border: 1px solid var(--hdr-bronze);
+  background: linear-gradient(180deg, #2a1a12f2, #170e0af2);
+  box-shadow:
+    inset 0 0 0 2px #170e0a,
+    inset 0 0 0 3px color-mix(in srgb, var(--hdr-bronze) 55%, transparent),
+    0 2px 10px #000000b3;
+  text-shadow: 0 1px 2px #000;
+}
+.game-header-cloud {
+  color: var(--hdr-gold);
+  filter: drop-shadow(0 1px 1px #000);
+}
+.game-header-gold {
+  color: #f3e2b8;
 }
 /* Đường chỉ đồng trên/dưới: một nét mảnh, cùng sắc với viền nút. */
 .game-header-rule {
@@ -765,7 +783,7 @@
   outline: 2px solid var(--hdr-gold);
   outline-offset: 2px;
 }
-/* Nút Hồ sơ/Trận thường và khung avatar dùng chung một khung: viền đồng 1px trên nền sơn mài trong mờ (tranh phía
+/* Nút Chiến trường, ô vàng và khung avatar dùng chung một khung: viền đồng 1px trên nền sơn mài trong mờ (tranh phía
    sau vẫn ẩn hiện), rê chuột thì viền sáng lên, màn đang mở thì nền đỏ son. */
 .game-header-chip {
   border: 1px solid var(--hdr-bronze);
