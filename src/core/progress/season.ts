@@ -6,8 +6,10 @@
 
 import { vnWeek } from "./quests";
 
-export type SeasonMode = "survival" | "arena";
+/** `tamTuongKy`: điểm tuần chế độ Hạng Tầm Tướng Ký; bảng riêng ở màn chế độ, không nằm trong `SEASON_MODES` của trang Xếp hạng. */
+export type SeasonMode = "survival" | "arena" | "tamTuongKy";
 
+/** Bảng mùa trên trang Xếp hạng. */
 export const SEASON_MODES: readonly SeasonMode[] = ["survival", "arena"];
 
 export const isSeasonMode = (v: unknown): v is SeasonMode => typeof v === "string" && (SEASON_MODES as readonly string[]).includes(v);

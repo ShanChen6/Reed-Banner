@@ -1,7 +1,9 @@
 # Đinh Ngọc — Vạn Tượng Hành Giả
 
-> Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — đã thống nhất hướng một nhân vật dung hợp tám nghề/bảy hệ qua sáu chủ động và bốn nội tại; tên Đinh Ngọc, nữ khoảng 25 tuổi đã chốt; ngoại hình chi tiết, chiêu thức, thông số và cách mở khóa dưới đây là đề xuất hoàn chỉnh để review. Kỹ năng và nội tại đã chạy được trong core (chưa mở ở chế độ nào, xem [Triển khai trong core](#triển-khai-trong-core-02112026)); chưa có kết quả mô phỏng cân bằng.
+> Cập nhật: 03/11/2026
+> Trạng thái: **APPROVED** — Shan chốt 03/11/2026: Đinh Ngọc là nhân vật đặc biệt chính thức. Số liệu kỹ năng vẫn là điểm xuất phát chờ cân bằng; code chưa mở trong game.
+>
+> Bản ghi trước (02/11/2026): **DRAFT** — đã thống nhất hướng một nhân vật dung hợp tám nghề/bảy hệ qua sáu chủ động và bốn nội tại; tên Đinh Ngọc, nữ khoảng 25 tuổi đã chốt; ngoại hình chi tiết, chiêu thức, thông số và cách mở khóa dưới đây là đề xuất hoàn chỉnh để review. Kỹ năng và nội tại đã chạy được trong core (chưa mở ở chế độ nào, xem [Triển khai trong core](#triển-khai-trong-core-02112026)); chưa có kết quả mô phỏng cân bằng.
 
 ## Hồ sơ và vị trí trong Reed Banner
 
@@ -129,7 +131,25 @@ Một kiếm ngắn thẳng và một mặt ngọc giọt nước cố định �
 
 ## Mở khóa và tích hợp dự kiến
 
-Đề xuất mở qua một nhiệm vụ phụ ngắn về cứu trợ/giữ đường sau giai đoạn làm quen; không bắt quay gacha, không khóa sau nhiệm vụ lịch sử chưa được thiết kế. Nhánh này chỉ là phương án sản phẩm, chưa sửa phần thưởng Campaign hoặc shop. Là đồng hành chiếm một trong hai slot, không thay Đinh Bộ Lĩnh.
+<a id="mo-khoa-nhan-vat-dac-biet"></a>
+**Shan chốt 03/11/2026:** nhân vật đặc biệt mở bằng **chuỗi nhiệm vụ phụ**, gia nhập ở **cấp 1**. Luật chung cho Đinh Ngọc và [Trần Vũ Phong](vu-phong.md#mở-khóa):
+
+| Mục | Đinh Ngọc | Trần Vũ Phong |
+|---|---|---|
+| Điều kiện hiện nhiệm vụ | Qua hết **Chương II** Chiến dịch | Qua hết **Chương IV** Chiến dịch |
+| Chủ đề | Cứu trợ, giữ đường | Rong ruổi, tìm người (Vân Du Tử) |
+
+Chuỗi 3 bước theo chủ đề “dung hợp nghề/hệ” (nội dung bước là **đề xuất**, chờ duyệt):
+
+1. Thắng 3 trận, mỗi trận đội có ít nhất 3 hệ khác nhau.
+2. Thắng một trận có luật nghề/hệ, ví dụ tầng Tháp Thí Luyện “Ba Vai Trò” hoặc “Tam Hành”.
+3. Trận cuối đấu với chính nhân vật (có thoại ngắn); thắng thì nhân vật gia nhập ở cấp 1.
+
+- Không bán bằng vàng, không quay ngẫu nhiên, không lấy từ [Tầm Tướng Ký](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md) (khám phá ở đó không cấp sở hữu).
+- Server ghi tiến độ từng bước và cấp nhân vật đúng một lần, như nhiệm vụ và thành tựu hiện có.
+- Là đồng hành chiếm một trong hai slot, không thay Đinh Bộ Lĩnh.
+
+> TODO: Duyệt nội dung 3 bước, thoại và đội hình trận cuối; chưa có code.
 
 Không tự thêm profession “Vạn Tượng” vào ALL_PROFESSIONS. Cần một special character template rõ ràng trước implement: loadout cố định, per-skill damageElement, bốn passive dạng hỗn hợp, chặn tự lắp passive nghề/hệ mặc định. Nếu schema bắt buộc profession, task triển khai phải chốt mapping và bypass intrinsic có kiểm thử; không giả danh Tướng sĩ rồi ngầm nhận bonus kiếm30%.
 
@@ -152,7 +172,7 @@ Ví dụ trung tính, không gear/buff/Sĩ khí/quan hệ hệ, ATK100, DEF đ�
 
 Đây chỉ là kiểm số học, không phải mô phỏng trận. Trước rollout cần ma trận 1v1/3v3, cấp1/10/20/30, chiêu1/3/5, gear0/đại diện, các phe/hệ đối thủ, F100/20%, có/không đồng đội khống chế. So với đấu sĩ và hỗ trợ chuyên môn; báo tỷ lệ thắng kèm CI95%, thời lượng/censored, nguồn sát thương/hồi/Khiên, P4 cơ hội mở/tiêu/hết hạn và tài nguyên thực. Kiểm riêng freeze/silence, shield hết hạn/dispel, nguồn chết, nhiều hit/AoE, tải snapshot và reset Survival.
 
-> TODO: Review hình Master, mapping special template/slot và cách mở khóa trước implement. Các chi tiết gameplay/ID/chỉ số ở đây là proposal, không coi đã được cân bằng hoặc đã triển khai. Theo dõi tại [câu hỏi mở](../09-roadmap/cau-hoi-mo.md).
+> TODO: Review hình Master, mapping special template/slot trước implement (cách mở khóa đã chốt 03/11/2026 ở mục trên). Các chi tiết gameplay/ID/chỉ số ở đây là proposal, không coi đã được cân bằng hoặc đã triển khai. Theo dõi tại [câu hỏi mở](../09-roadmap/cau-hoi-mo.md).
 
 ## Triển khai trong core (02/11/2026)
 

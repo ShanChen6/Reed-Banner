@@ -14,6 +14,7 @@ import DemoGame from "./battle/DemoGame";
 import CampaignScreen from "./campaign/CampaignScreen";
 import DailyScreen from "./daily/DailyScreen";
 import FormationScreen from "./formation/FormationScreen";
+import TamTuongKyScreen from "./tam-tuong-ky/TamTuongKyScreen";
 import LeaderboardScreen from "./leaderboard/LeaderboardScreen";
 import MenuScene from "./MenuScene";
 import ProfileScreen from "./profile/ProfileScreen";
@@ -32,9 +33,14 @@ export interface ShellAccount {
   readonly avatarUrl: string | null;
 }
 
+/** Cờ tính năng server truyền xuống (tên giữ từ lúc chỉ có hai tháp). */
 export interface TowerFeatures {
   readonly trial: boolean;
   readonly destiny: boolean;
+  /** Tầm Tướng Ký, mặc định tắt (`TAM_TUONG_KY_ENABLED`). */
+  readonly tamTuongKy?: boolean;
+  /** Tầm Tướng Ký chế độ Hạng tuần (`TAM_TUONG_KY_RANKED_ENABLED`). */
+  readonly tamTuongKyRanked?: boolean;
 }
 
 export default function GameShell({
@@ -130,8 +136,11 @@ function SceneView({
       return account ? <ArenaScreen /> : <LoginGate name={SCENE_TITLE.ARENA} />;
     case "FORMATION":
       return <FormationScreen />;
+    case "TAM_TUONG_KY":
+      if (!towerFeatures.tamTuongKy) return <DisabledTowerMode name={SCENE_TITLE.TAM_TUONG_KY} />;
+      return account ? <TamTuongKyScreen ranked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate name={SCENE_TITLE.TAM_TUONG_KY} reason="Chế độ này cần tài khoản đã đăng nhập vì mỗi lượt chơi tốn một phiếu, và tiến trình Tướng Lục lưu theo tài khoản." />;
     case "QUESTS":
-      return <QuestsScreen />;
+      return <QuestsScreen tamTuongKy={towerFeatures.tamTuongKy === true} />;
     case "SHOP":
       return <ShopScreen />;
     case "LEADERBOARD":
