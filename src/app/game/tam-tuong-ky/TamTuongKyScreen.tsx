@@ -441,6 +441,11 @@ function NodeChip({ node, onPick, badge, count }: { node: CatalogNode; onPick: (
 const NODE_ART: Readonly<Record<NodeId, string>> = {
   "mat.hoaLu": "hoaLu",
   "know.daiCoViet": "daiCoViet",
+  "know.duongLam": "duongLam",
+  "know.guardRoad": "guardRoad",
+  "know.hoaLuHerbs": "hoaLuHerbs",
+  "know.hoaLuy": "hoaLuy",
+  "know.hoiHo": "hoiHo",
 };
 
 /**
