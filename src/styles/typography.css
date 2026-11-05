@@ -29,7 +29,27 @@
   text-wrap: balance;
 }
 
-@utility text-caption {
+/* Tiêu đề khối (thẻ, panel): 20px. */
+@utility text-title {
+  font-family: var(--font-game), Georgia, serif;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: normal;
+  text-wrap: balance;
+}
+
+/* Nhãn nhỏ viết hoa trên tiêu đề ("Song tháp", "Mỗi ngày"). */
+@utility text-kicker {
   font-size: 0.75rem;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Chữ phụ nhỏ nhất của giao diện: 13px (đồng bộ UI 05/11/2026). */
+@utility text-caption {
+  font-size: 0.8125rem;
   line-height: 1.5;
 }

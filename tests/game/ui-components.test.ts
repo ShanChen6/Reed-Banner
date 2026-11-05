@@ -68,3 +68,34 @@ describe("shared UI contracts", () => {
     assert.doesNotMatch(html.split(">")[0]!, /\bp-4\b/);
   });
 });
+
+describe("đồng bộ UI 05/11/2026", async () => {
+  const { ChoiceChip, Tabs } = await import("../../src/components/ui");
+  const { OrnateFrame } = await import("../../src/components/game-ui/OrnateFrame");
+
+  it("nút chính là sơn mài, nút phụ gỗ viền đồng; ornate là tên cũ của nút chính", () => {
+    assert.match(buttonVariants(), /ui-button--primary/);
+    assert.match(buttonVariants({ variant: "secondary" }), /ui-button--secondary/);
+    assert.match(buttonVariants({ variant: "ornate" }), /ui-button--primary/);
+    assert.doesNotMatch(buttonVariants(), /border-transparent/);
+  });
+
+  it("tab đánh dấu aria-selected và chỉ tab đang chọn nhận Tab", () => {
+    const html = renderToStaticMarkup(createElement(Tabs<"a" | "b">, {
+      label: "Thử", value: "b", onChange() {}, items: [{ value: "a", label: "A" }, { value: "b", label: "B" }],
+    }));
+    assert.match(html, /role="tablist"[^>]*aria-label="Thử"/);
+    assert.match(html, /aria-selected="false" tabindex="-1"[^>]*>A</);
+    assert.match(html, /aria-selected="true" tabindex="0"[^>]*>B</);
+  });
+
+  it("chip lựa chọn dùng aria-pressed", () => {
+    assert.match(renderToStaticMarkup(createElement(ChoiceChip, { selected: true }, "Khó")), /aria-pressed="true"/);
+  });
+
+  it("khung mức 1 không có góc hoa văn, mức 2 có bốn góc", () => {
+    const corners = (html: string) => (html.match(/<svg/g) ?? []).length;
+    assert.equal(corners(renderToStaticMarkup(createElement(OrnateFrame, null, "x"))), 0);
+    assert.equal(corners(renderToStaticMarkup(createElement(OrnateFrame, { level: "raised" }, "x"))), 4);
+  });
+});
