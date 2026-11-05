@@ -158,7 +158,7 @@ export default function RouteSummary({
           onClick={() => onPick(finale.id)}
           className={`atlas-mission flex min-h-11 items-center gap-2 rounded-md border px-3 py-1 font-semibold disabled:cursor-not-allowed ${FOCUS}`}
         >
-          {finaleDone ? "✓ " : gate.ready ? "" : "🔒 "}
+          {finaleDone ? "✓ " : ""}
           {finale.title}
         </button>
         <span className="atlas-muted min-w-0 flex-1 text-xs">
