@@ -132,7 +132,7 @@ export default function ArtPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-semibold">Bị động dùng chung (29 ảnh tròn: nghề 1, truy kích theo nghề, theo hệ)</h2>
+          <h2 className="font-semibold">Bị động (50 ảnh tròn: nghề 1, truy kích theo nghề, theo hệ, bị động riêng)</h2>
           <div className="flex flex-wrap items-start gap-3">
             {[...PASSIVE_ART].map((id) => {
               const name = (COMBO_PASSIVES as Record<string, { name: string }>)[id]?.name ?? (CHASE_PASSIVES as Record<string, { name: string }>)[id]?.name ?? id;
