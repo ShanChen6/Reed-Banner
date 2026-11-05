@@ -83,6 +83,9 @@ bị phá là đường duy nhất tới một ô, nên mọi tổ hợp đườ
 
 - Hạn **17 ngày**, chuẩn **12 ngày** (từ 05/11/2026; trước là 12/9). Mô phỏng theo nhiệm vụ cho thấy làm đủ việc phụ
   rồi đánh thành cần 14–16 ngày ([GDD mục 5.2](01-vien-chinh-gdd.md#52-kết-quả-bản-chốt-05112026)).
+- **Sức địch ×0,87** (`foePower`, Shan chọn 05/11/2026): mọi địch trên sa bàn, cả truy binh và phản công, nhẹ hơn các
+  sa bàn khác vì việc phụ ăn hết ngày. Bậc I / II / III thắng 85 / 70 / 40% (trước 50 / 28 / 8%), xem
+  [GDD mục 5.3](01-vien-chinh-gdd.md#53-nhiệm-vụ-và-sức-địch-cửa-biển-05112026-lần-8).
 - Đường ngắn nhất chỉ chiếm thành: Biệt đạo trai-bai → bai-su → doi-cat → trai-tay = 3 ngày, nhưng đánh 3 trận liền không
   nghỉ và trận cuối có phase phá cổng.
 - Đường Toàn thắng thường gặp (ước tính tay, chưa mô phỏng): Biệt đạo giữ cầu ở ngày 2; đạo Chính rút dân ngày 3–6

@@ -77,6 +77,11 @@ interface ScenarioView {
   readonly brokenRoads: boolean;
   readonly village?: string;
   readonly home?: string;
+  /** Tên việc hộ tống (Rút dân, Giải cứu tù binh…) và người được đưa về. */
+  readonly refugeeTitle?: string;
+  readonly refugeeNoun?: string;
+  /** Sa bàn thường: hệ số vàng khi thắng mà xong nhiệm vụ. */
+  readonly missionGold?: number;
   readonly chaseUnless?: string;
   readonly market?: string;
   readonly counterAfterDays?: number;
@@ -691,7 +696,7 @@ function SandTable(props: {
             <path d={`M${px} ${top} h7 l-1.2 1.5 l1.2 1.5 h-7 Z`} fill={ARMY_COLOR[i]} stroke={army === i ? "#fff" : "#1b1411"} strokeWidth={0.3} />
             <text x={px + 3.2} y={top + 2.15} textAnchor="middle" fontSize="1.9" fill="#1b1411" fontWeight="bold">{i === 0 ? "Chính" : "Biệt"}</text>
             {run.refugees === i && (
-              <text x={px + 8} y={top + 2.15} fontSize="1.9" fill="#f0d77f" style={LABEL_HALO} aria-label="đang mang đoàn dân">⛵ dân</text>
+              <text x={px + 8} y={top + 2.15} fontSize="1.9" fill="#f0d77f" style={LABEL_HALO} aria-label="đang hộ tống">⚑ hộ tống</text>
             )}
           </g>
         );
@@ -727,6 +732,7 @@ function RunView(props: {
   // Đạo mang dân rời làng tới ô không có trận khi đồn chặn chưa chiếm: gặp truy binh (server đã tính sẵn).
   const hasFight = (id: string) => !!encounters[id];
   const chase = node && scenario?.chase && run.refugees === army && !hasFight(node.id) ? scenario.chase : undefined;
+  const noun = scenario?.refugeeNoun ?? "đoàn dân";
   const preview = chase ?? (target ? encounters[target]?.[army] : undefined);
   const roadKind = node && reachable.includes(node.id) ? expeditionEdgeKind(map, selected.at, node.id) : undefined;
   const roadBroken = !!node && !!run.knownBroken?.includes(expeditionEdgeKey(selected.at, node.id));
@@ -801,12 +807,12 @@ function RunView(props: {
                 <p className="mt-1 text-sm text-foreground-secondary">{KIND_TEXT[node.kind]}</p>
                 {chase && (
                   <p className="mt-2 rounded bg-rose-900/40 p-2 text-xs text-rose-100">
-                    Truy binh đuổi đoàn dân vì {nameOf(scenario?.chaseUnless ?? "")} chưa chiếm: rời làng là vào trận hộ tống
-                    (giữ {chase.objective && "turns" in chase.objective ? chase.objective.turns : 6} lượt hoặc hạ hết). Thua thì mất dân.
+                    Truy binh đuổi {noun} vì {nameOf(scenario?.chaseUnless ?? "")} chưa chiếm: rời {nameOf(scenario?.village ?? "")} là vào
+                    trận hộ tống (giữ {chase.objective && "turns" in chase.objective ? chase.objective.turns : 6} lượt hoặc hạ hết). Thua thì {noun} bị bắt lại.
                   </p>
                 )}
                 {!chase && preview && run.refugees === army && (
-                  <p className="mt-2 rounded bg-rose-900/40 p-2 text-xs text-rose-100">Đạo này đang mang dân: thua trận này thì đoàn dân bị bắt.</p>
+                  <p className="mt-2 rounded bg-rose-900/40 p-2 text-xs text-rose-100">Đạo này đang hộ tống {noun}: thua trận này thì {noun} bị bắt lại.</p>
                 )}
                 {preview?.objective?.type === "hold" && (
                   <p className="mt-2 text-xs text-amber-200">
@@ -926,15 +932,17 @@ function MissionPanel({ run, scenario, nameOf }: { run: Omit<ExpeditionRun, "see
   if (scenario.village && scenario.home) {
     const home = nameOf(scenario.home);
     const market = scenario.market && run.market?.status === "held" ? ` hoặc ${nameOf(scenario.market)}` : "";
+    const noun = scenario.refugeeNoun ?? "đoàn dân";
+    const Noun = `${noun[0]!.toUpperCase()}${noun.slice(1)}`;
     rows.push({
-      label: "Rút dân",
+      label: scenario.refugeeTitle ?? "Rút dân",
       ...(run.refugees === "saved"
-        ? { done: true, text: "Đã đưa dân về." }
+        ? { done: true, text: `Đã đưa ${noun} về.` }
         : run.refugees === "lost"
-          ? { done: false, text: "Đoàn dân đã bị bắt." }
+          ? { done: false, text: `${Noun} đã bị bắt lại.` }
           : run.refugees === 0 || run.refugees === 1
-            ? { done: false, text: `${ARMY_NAME[run.refugees]} đang mang dân, đưa về ${home}${market}.` }
-            : { done: false, text: `Ghé ${nameOf(scenario.village)} nhận đoàn dân.` }),
+            ? { done: false, text: `${ARMY_NAME[run.refugees]} đang hộ tống ${noun}, đưa về ${home}${market}.` }
+            : { done: false, text: `Tới ${nameOf(scenario.village)} nhận ${noun}, đưa về ${home}${market}.` }),
     });
   }
   if (scenario.reinforcementDays) {
@@ -984,7 +992,7 @@ function MissionPanel({ run, scenario, nameOf }: { run: Omit<ExpeditionRun, "see
     rows.push({ label: "Đường bị phá", done: false, text: `Đã biết ${run.knownBroken?.length ?? 0} đường. Trinh sát để phát hiện trước.` });
   return (
     <div className="tower-screen__panel">
-      <h3 className="font-serif text-lg font-bold">{scenario.endings ? "Nhiệm vụ" : "Luật sa bàn"}</h3>
+      <h3 className="font-serif text-lg font-bold">{scenario.endings || scenario.missionGold ? "Nhiệm vụ" : "Luật sa bàn"}</h3>
       <ul className="mt-2 space-y-1 text-sm">
         {rows.map((r) => (
           <li key={r.label} className="flex gap-2">
@@ -995,6 +1003,12 @@ function MissionPanel({ run, scenario, nameOf }: { run: Omit<ExpeditionRun, "see
       </ul>
       {scenario.endings && (
         <p className="mt-2 text-xs text-muted">Chiếm thành sau khi rút dân và cắt viện là Toàn thắng. Chưa chiếm được thành mà đã làm đủ hai việc đó là Giữ dân: có ít vàng nhưng chưa tính qua bậc.</p>
+      )}
+      {!scenario.endings && scenario.missionGold && (
+        <p className="mt-2 text-xs text-muted">
+          Nhiệm vụ không bắt buộc: chiếm thành sau khi xong {scenario.village && scenario.reinforcementDays ? "cả hai việc hộ tống và chặn viện" : "nhiệm vụ"} thì
+          vàng thưởng ×{String(scenario.missionGold).replace(".", ",")}.
+        </p>
       )}
       {run.log && run.log.length > 0 && (
         <ol className="mt-3 space-y-0.5 border-t border-white/10 pt-2 text-xs text-foreground-secondary">
@@ -1029,7 +1043,7 @@ function ResultView({ run, map, result, onNew }: { run: Omit<ExpeditionRun, "see
               : `★ chiếm thành · ★ xong trong ${map.parDays} ngày · ★ không thua trận nào`}
           </p>
           <p className="mt-3 font-semibold text-amber-300">
-            +{result.gold} vàng{result.firstClear ? " (thắng lần đầu)" : ""}
+            +{result.gold} vàng{result.firstClear ? " (thắng lần đầu)" : ""}{result.mission ? " · xong nhiệm vụ" : ""}
             {result.item && ` · ${SLOT_NAME[result.item.slot]} phẩm ${TIER_COLOR_NAME[result.item.tier]} hệ ${ELEMENT_NAME[result.item.element]}`}
             {result.bonusItem && ` · thưởng toàn thắng: ${SLOT_NAME[result.bonusItem.slot]} phẩm ${TIER_COLOR_NAME[result.bonusItem.tier]}`}
             {result.soldFor > 0 && ` · túi đầy, món thưởng bán được ${result.soldFor} vàng`}

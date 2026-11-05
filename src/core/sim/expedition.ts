@@ -22,6 +22,7 @@ import {
   expeditionEdgeKey,
   expeditionEdgeKind,
   expeditionEnding,
+  expeditionMissionDone,
   expeditionHops,
   expeditionScenarioOf,
   expeditionTideOpen,
@@ -49,6 +50,11 @@ export interface ExpeditionSimOptions {
   readonly seed: number;
   /** AI đánh thay người chơi. */
   readonly player?: Difficulty;
+  /**
+   * Sa bàn thường: có đi làm nhiệm vụ hộ tống không (mặc định có). Tắt để đo độ khó khi người chơi bỏ nhiệm vụ. Cửa
+   * Biển luôn làm vì kết thúc phụ thuộc vào đó.
+   */
+  readonly escort?: boolean;
   /** Ghi từng ngày (gỡ lỗi kế hoạch). */
   readonly trace?: (line: string) => void;
 }
@@ -70,6 +76,8 @@ export interface ExpeditionSimResult {
   readonly cut: boolean;
   readonly saved: boolean;
   readonly marketHeld: boolean;
+  /** Thắng và đã xong nhiệm vụ của sa bàn (đưa người về, chặn viện binh). */
+  readonly mission: boolean;
 }
 
 /** Hồ sơ mô phỏng: Đinh Bộ Lĩnh và 5 nhân vật khởi đầu cùng cấp, không trang bị. */
@@ -148,7 +156,7 @@ const dist = (run: ExpeditionRun, from: string, to: string) => route(run, from, 
  * về. Chia cho đạo gần hơn; hai việc rơi vào cùng một đạo thì việc giữ ải sang đạo kia. Trả về đích của từng đạo
  * (undefined là đi thẳng tới cổng thành).
  */
-function missionTargets(run: ExpeditionRun, alive: readonly ArmyIndex[]): Partial<Record<ArmyIndex, readonly string[]>> {
+function missionTargets(run: ExpeditionRun, alive: readonly ArmyIndex[], escort: boolean): Partial<Record<ArmyIndex, readonly string[]>> {
   const scenario = expeditionScenarioOf(run);
   const out: Partial<Record<ArmyIndex, readonly string[]>> = {};
   if (!scenario) return out;
@@ -157,14 +165,16 @@ function missionTargets(run: ExpeditionRun, alive: readonly ArmyIndex[]): Partia
   const nearest = (targets: readonly string[], among: readonly ArmyIndex[]) =>
     [...among].sort((a, b) => Math.min(...targets.map((t) => dist(run, run.armies[a].at, t))) - Math.min(...targets.map((t) => dist(run, run.armies[b].at, t))))[0];
   // Đoàn dân: đạo đang mang dân đưa về; chưa ai nhận thì đạo gần làng đi nhận (khi còn đủ ngày).
-  const r = scenario.refugees;
+  const r = escort || scenario.endingGold ? scenario.refugees : undefined;
   if (r) {
     const carrier = run.refugees === 0 || run.refugees === 1 ? run.refugees : undefined;
     const homes = [r.home, ...(scenario.counter && run.market?.status === "held" ? [scenario.counter.node] : [])];
     if (carrier !== undefined && alive.includes(carrier)) {
-      // Rời làng khi đồn chặn chưa chiếm thì gặp truy binh: dọn đồn trước nếu nó kề làng.
+      // Rời làng khi đồn chặn chưa chiếm thì gặp truy binh: dọn đồn trước nếu nó kề làng và nằm trên đường về
+      // (đồn lệch đường thì đánh truy binh còn nhanh hơn quay lui).
+      const toHome = (from: string) => Math.min(...homes.map((h) => dist(run, from, h)));
       const blocker = run.armies[carrier].at === r.village && !run.nodes[r.chaseUnless]?.cleared
-        && expeditionNeighbors(map, r.village).includes(r.chaseUnless);
+        && expeditionNeighbors(map, r.village).includes(r.chaseUnless) && toHome(r.chaseUnless) < toHome(r.village);
       out[carrier] = blocker ? [r.chaseUnless] : homes;
     } else if (run.refugees === undefined) {
       const who = nearest([r.village], alive);
@@ -198,7 +208,7 @@ function worthScouting(run: ExpeditionRun, i: ArmyIndex): boolean {
   return unknown.length >= 2;
 }
 
-function decide(run: ExpeditionRun): Decision {
+function decide(run: ExpeditionRun, escort: boolean): Decision {
   const map = expeditionMapOf(run);
   const scenario = expeditionScenarioOf(run);
   // Giặc phản công kho lương: đạo đứng đó phải đánh trước.
@@ -213,12 +223,12 @@ function decide(run: ExpeditionRun): Decision {
   const urgentHold = (i: ArmyIndex, goals: readonly string[] | undefined) =>
     nextReinf !== undefined && !!goals?.some((g) => scenario?.hold?.nodes.includes(g))
       && nextReinf - run.day <= routeTo(run, run.armies[i].at, goals!) + 1;
-  const allMissions = missionTargets(run, alive);
+  const allMissions = missionTargets(run, alive, escort);
   const sitter = scenario?.counter && run.market?.status === "pending"
     ? alive.find((i) => run.armies[i].at === scenario.counter!.node)
     : undefined;
   const holding = sitter !== undefined && !urgentHold(sitter, allMissions[sitter]) ? sitter : undefined;
-  const missions = holding === undefined ? allMissions : missionTargets(run, alive.filter((i) => i !== holding));
+  const missions = holding === undefined ? allMissions : missionTargets(run, alive.filter((i) => i !== holding), escort);
   const daysLeft = map.days - run.day + 1;
   const atGate = alive.filter((i) => gates.includes(run.armies[i].at) && missions[i] === undefined && i !== holding);
   const away = alive.filter((i) => !atGate.includes(i) && i !== holding);
@@ -315,7 +325,7 @@ export function simulateExpedition(o: ExpeditionSimOptions): ExpeditionSimResult
   let battles = 0, battlesLost = 0, camps = 0, pincers = 0, turns = 0, scouts = 0;
   const player = o.player ?? "normal";
   for (let guard = 0; guard < 64 && run.phase === "march"; guard++) {
-    const d = decide(run);
+    const d = decide(run, o.escort ?? true);
     o.trace?.(`ngày ${run.day}: ${d.kind === "camp" ? "đóng quân" : d.kind === "scout" ? `đạo ${d.army} trinh sát` : `đạo ${d.army} → ${d.to}`} | máu ${hpRatio(run, 0).toFixed(2)} / ${hpRatio(run, 1).toFixed(2)}`);
     if (d.kind === "scout") {
       scouts++;
@@ -363,6 +373,7 @@ export function simulateExpedition(o: ExpeditionSimOptions): ExpeditionSimResult
     cut: run.reinforcementsCut === true,
     saved: run.refugees === "saved",
     marketHeld: run.market?.status === "held",
+    mission: run.phase === "won" && expeditionMissionDone(run) === true,
   };
 }
 

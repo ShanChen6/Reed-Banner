@@ -22,6 +22,9 @@ export interface ExpeditionScenario {
     readonly chaseTurns: number;
     readonly chaseFoes: number;
     readonly chasePower: number;
+    /** Tên việc trên bảng nhiệm vụ (mặc định "Rút dân") và người được đưa về (mặc định "đoàn dân"). */
+    readonly title?: string;
+    readonly noun?: string;
   };
   /**
    * Viện binh tới thành đích cuối các ngày này, mỗi lần địch ở thành mạnh thêm `power`; thắng trận giữ ở một ô `hold`
@@ -43,12 +46,21 @@ export interface ExpeditionScenario {
   };
   /** Phá cổng ở thành đích, trừ khi đánh vào từ `skipFrom` (cửa sau). */
   readonly gate?: { readonly skipFrom?: string; readonly hpScale: number; readonly defScale: number };
+  /** Hệ số sức mạnh của mọi địch trên sa bàn (bỏ trống là 1): sa bàn nhiều việc phụ thì địch nhẹ hơn để còn ngày. */
+  readonly foePower?: number;
+  /**
+   * Sa bàn không có bốn kết thúc riêng: thắng mà đã làm xong mọi nhiệm vụ (đưa người về, chặn viện binh) thì vàng
+   * thưởng nhân hệ số này. Không chặn qua bậc, không đổi sao.
+   */
+  readonly missionGold?: number;
   /** Bốn kết thúc riêng (cần cả rút dân và viện binh): hệ số vàng thưởng. Không có thì dùng luật sao chung. */
   readonly endingGold?: { readonly full: number; readonly taken: number; readonly refuge: number };
 }
 
 const HOLD = { turns: 8, power: 1.2 };
 const GATE = { hpScale: 1.2, defScale: 2 };
+const MISSION_GOLD = 1.3;
+const CHASE = { chaseTurns: 6, chaseFoes: 3, chasePower: 1.2 };
 const COUNTER = { afterDays: 2, turns: 6, foes: 3, power: 1.4, retakenHp: 0.6, food: 20 };
 
 export const EXPEDITION_SCENARIOS: Readonly<Partial<Record<ExpeditionMapId, ExpeditionScenario>>> = {
@@ -64,25 +76,39 @@ export const EXPEDITION_SCENARIOS: Readonly<Partial<Record<ExpeditionMapId, Expe
       count: 2,
     },
     gate: GATE,
+    // Tù binh bị giam ở Kho Ngựa Thồ: chiếm kho, đưa về Bản Na; Lũy Đèo Mây chưa chiếm thì truy binh đuổi theo.
+    refugees: { village: "kho-ngua", home: "ban-na", chaseUnless: "deo-may", ...CHASE, title: "Giải cứu tù binh", noun: "tù binh" },
+    missionGold: MISSION_GOLD,
   },
   /** Hai thung lũng: giặc kéo viện binh xuống thành ngày 8 và 13; giữ được Đèo Ngang (lối hội quân) thì chặn. */
   thuongDu: {
     reinforcements: { days: [8, 13], power: 0.15, label: "viện binh" },
     // Đèo là lũy 3 địch trên đường dài nhất trong sáu sa bàn: giữ ngắn hơn, địch không mạnh thêm.
     hold: { nodes: ["deo-ngang"], turns: 6, power: 1 },
+    // Dân thung lũng đông sang Bản Mộc bên tây qua đèo: giữ đèo trước thì đi yên.
+    refugees: { village: "ruong-bac", home: "ban-moc", chaseUnless: "deo-ngang", ...CHASE, title: "Đưa dân qua đèo" },
+    missionGold: MISSION_GOLD,
   },
   /** Ngã ba sông: chiếm Kho Thóc Bãi Giữa thì hai ngày sau giặc lội sông phản công. */
   chauTho: {
     counter: { node: "kho-thoc", ...COUNTER },
+    // Dân bờ tây sang Trại Bờ Đông, hoặc vào Kho Thóc nếu đã giữ kho qua đợt phản công.
+    refugees: { village: "lang-ruong", home: "trai-dong", chaseUnless: "ben-lau", ...CHASE },
+    missionGold: MISSION_GOLD,
   },
   /** Kinh thành: viện binh vào thành ngày 4 và 7; giữ được Lũy Cầu Tây thì chặn đường viện. */
   kinhThanh: {
     reinforcements: { days: [4, 7], power: 0.15, label: "viện binh" },
     hold: { nodes: ["cau-tay"], ...HOLD },
+    missionGold: MISSION_GOLD,
   },
   /** Thành đảo: cổng thành phải phá, trừ khi đổ bộ từ Làng Đảo Rùa vào bến sau. */
   quanDao: {
     gate: { skipFrom: "dao-rua", ...GATE },
+    // Thuyền viện vào thành ngày 4 và 7; giữ Lũy Cầu Dài thì chặn. Đi vòng Đảo Rùa thì tránh cổng mà không chặn được.
+    reinforcements: { days: [4, 7], power: 0.15, label: "thuyền viện" },
+    hold: { nodes: ["cau-dai"], ...HOLD },
+    missionGold: MISSION_GOLD,
   },
   cuaBien: {
     broken: {
@@ -99,15 +125,14 @@ export const EXPEDITION_SCENARIOS: Readonly<Partial<Record<ExpeditionMapId, Expe
       village: "lang-chai",
       home: "trai-ben",
       chaseUnless: "ben-coi",
-      chaseTurns: 6,
-      chaseFoes: 3,
-      chasePower: 1.2,
+      ...CHASE,
     },
     reinforcements: { days: [5, 9], power: 0.15, label: "thuyền viện" },
     hold: { nodes: ["doi-cat"], ...HOLD },
     counter: { node: "cho-song", ...COUNTER },
     gate: { skipFrom: "bai-can", ...GATE },
     endingGold: { full: 1.5, taken: 1, refuge: 0.6 },
+    foePower: 0.87,
   },
 };
 
