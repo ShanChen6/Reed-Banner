@@ -1,7 +1,7 @@
 # Prompt icon bị động dùng chung (29 hình)
 
 > Cập nhật: 05/11/2026
-> Trạng thái: **DRAFT** — chưa có ảnh; code chưa có khung tròn cho bị động (hiện chỉ chữ ở `SkillDetails`).
+> Trạng thái: **IMPLEMENTED** (05/11/2026) — 29 ảnh Shan gửi ở `public/art/passives/<mã>.webp` (128 px, cắt theo vòng tròn đều), vẽ qua `PassiveIcon` (`src/app/game/art/passives.tsx`) ở landing, `SkillDetails`, dấu Cơ hội trong trận và `/demo/art`.
 
 29 bị động dùng chung: 7 bị động nghề 1 (Cơ hội) và 22 truy kích dùng chung theo nghề và hệ. Mỗi cái hiện ở nhiều nhân vật. 21 bị động riêng của từng tướng làm sau. Prompt chiêu chủ động ở [Prompt biểu tượng kỹ năng](icon-ky-nang.md). Danh sách lấy từ `COMBO_PASSIVES` và `CHASE_PASSIVES` trong `src/core/battle/` ngày 05/11.
 
