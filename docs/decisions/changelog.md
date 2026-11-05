@@ -2,8 +2,12 @@
 
 ## 05/11/2026
 
+**Viễn Chinh: luật riêng cho năm sa bàn, Trinh sát chung**
+- Sau bản review, Shan cho mỗi sa bàn ngoài Cửa Biển một hai khối luật nhẹ lấy từ Cửa Biển: Ải Bắc đường bị phá và phá cổng; Thượng Du viện binh, giữ Đèo Ngang để chặn; Ngã Ba Sông phản công Kho Thóc; Kinh Thành viện binh, giữ Lũy Cầu Tây để chặn; Quần Đảo phá cổng, trừ khi đổ bộ từ Làng Đảo Rùa. Lệnh Trinh sát có ở mọi sa bàn. Xem [GDD mục 4.2](../02-game-modes/expedition/01-vien-chinh-gdd.md#42-luật-riêng-từng-sa-bàn-shan-yêu-cầu-05112026).
+
 **Viễn Chinh: siết ba trận có mục tiêu ở Cửa Biển**
 - Sau bản review, Shan cho siết: giữ cầu 5 → 8 lượt; truy binh 2 → 3 địch, 4 → 6 lượt, sức mạnh ×0,9 → ×1,2; phản công Chợ 4 → 6 lượt, sức mạnh ×1,2 → ×1,4. Trước đây cả ba thắng 100% khi đủ máu và tốn ít máu hơn một lũy thường. Số đo ở [thiết kế Cửa Biển mục 5](../02-game-modes/expedition/03-cua-bien-thiet-ke.md#5-ba-loại-trận-riêng).
+
 **Viễn Chinh: Giữ dân không còn mở bậc**
 - Sau bản review, Shan cho sửa lối tắt: làm xong rút dân và cắt viện rồi rút quân thì trước đây vẫn tính qua bậc. Giờ kết thúc Giữ dân không mở bậc sau, không có món, vàng chỉ bằng mức thắng lại × 0,6. Xem [thiết kế Cửa Biển mục 4](../02-game-modes/expedition/03-cua-bien-thiet-ke.md#4-kết-thúc-và-thưởng).
 

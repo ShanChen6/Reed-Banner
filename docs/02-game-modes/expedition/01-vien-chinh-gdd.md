@@ -123,16 +123,22 @@ rồi một đạo đánh.
   tăng viện theo 2 ngày. Đánh một ô qua đường vượt nước cũng mất 2 ngày, thắng hay thua.
 - Màn chơi báo "Vượt nước: đi mất 2 ngày" trước khi tiến. Quá hạn giữa chừng thì lượt thua như hết ngày.
 
+### 3.10 Trinh sát (mọi sa bàn từ 05/11/2026)
+
+- Lệnh **Trinh sát**: đạo đang chọn đứng yên 1 ngày, không được nghỉ hồi sức (đạo kia nghỉ như thường), vén sương mọi ô
+  trong 2 bước quanh nó và phát hiện đường bị phá có hai đầu trong vùng đó (sa bàn có đường bị phá).
+- Trước đây chỉ Cửa Biển có lệnh này; Shan cho bật chung sau bản review ngày 05/11/2026.
+
 ## 4. Sáu sa bàn
 
 | Sa bàn | Hệ | Ô | Số ngày / chuẩn | Hình dạng |
 |---|---|---|---|---|
 | **Ải Bắc** | Kim | 11 | 12 / 8 | Đường đan nhau, có làng và kho lương ở giữa; dễ dồn quân giáp công. Hai cổng thành đều là lũy. Sa bàn nhập môn |
 | **Thượng Du** | Mộc | 12 | 17 / 12 | Hai thung lũng tách rời, mỗi bên một làng, chỉ nối qua Đèo Ngang Núi (lũy). Đường dài, giáp công chỉ ở cổng thành |
-| **Cửa Biển** | Thủy | 11 | 12 / 9 | **Kịch bản cố định** (từ 04/11/2026): rút dân, giữ cầu chặn thuyền viện, con nước, đường bị phá, phản công Chợ, phá cổng. Luật riêng ở [thiết kế Cửa Biển](03-cua-bien-thiet-ke.md) |
-| **Ngã Ba Sông** | Thổ | 13 | 15 / 11 | Hai trại ở hai bờ đối diện, thành giữa ngã ba sông. Lội sông vào thẳng thành mất 2 ngày; đi vòng qua Lũy Bến Đò, Lũy Núi Sơn bằng đường bộ thì xa hơn. Có một chòi canh |
-| **Kinh Thành** | Hỏa | 14 | 16 / 11 | Kinh thành có ba cổng lũy, chỉ vào thành qua cổng. Hai chòi canh ở hai cánh nhìn thấu đường vây; Chợ Phiên ở giữa hai trại nhưng phải vượt sông |
-| **Quần Đảo** | Phong | 12 | 15 / 10 | Thành đảo giữa vịnh, chỉ Lũy Cầu Dài nối vào bằng đường bộ; còn lại đi thuyền giữa các đảo (2 ngày mỗi chặng). Một chòi canh ở đảo bắc |
+| **Cửa Biển** | Thủy | 11 | 12 / 9 | **Kịch bản đầy đủ** (từ 04/11/2026): rút dân, giữ cầu chặn thuyền viện, con nước, đường bị phá, phản công Chợ, phá cổng. Luật riêng ở [thiết kế Cửa Biển](03-cua-bien-thiet-ke.md) |
+| **Ngã Ba Sông** | Thổ | 13 | 10 / 7 | Hai trại ở hai bờ đối diện, thành giữa ngã ba sông. Lội sông vào thẳng thành mất 2 ngày; đi vòng qua Lũy Bến Đò, Lũy Núi Sơn bằng đường bộ thì xa hơn. Có một chòi canh |
+| **Kinh Thành** | Hỏa | 14 | 10 / 7 | Kinh thành có ba cổng lũy, chỉ vào thành qua cổng. Hai chòi canh ở hai cánh nhìn thấu đường vây; Chợ Phiên ở giữa hai trại nhưng phải vượt sông |
+| **Quần Đảo** | Phong | 12 | 9 / 6 | Thành đảo giữa vịnh, chỉ Lũy Cầu Dài nối vào bằng đường bộ; còn lại đi thuyền giữa các đảo (2 ngày mỗi chặng). Một chòi canh ở đảo bắc |
 
 Tên ô là địa danh hư cấu (không dùng tên nước láng giềng, không gắn với sự kiện lịch sử); đối thủ là tướng kèm của
 game, không phải sứ quân. Tọa độ và cạnh ở `src/core/expedition/maps.ts`.
@@ -144,6 +150,25 @@ game, không phải sứ quân. Tọa độ và cạnh ở `src/core/expedition/
   khai báo trong `EXPEDITION_MAP_IMAGES`; khi có tranh, Claude dời tọa độ từng ô cho khớp thành, làng, bến trên tranh.
 - Chưa có tranh thì sa bàn tạm hiện một vùng của bản đồ tổng Bình Loạn (`ExpeditionMap.art`). Không dùng ảnh nền của
   Trận Đồ.
+
+### 4.2 Luật riêng từng sa bàn (Shan yêu cầu 05/11/2026)
+
+Sau bản review, Shan cho mỗi sa bàn ngoài Cửa Biển một hai khối luật nhẹ. Không thêm luật mới: mọi khối đã có từ Cửa
+Biển ([thiết kế Cửa Biển](03-cua-bien-thiet-ke.md) mục 3 và 5), số liệu dùng chung (trận giữ 8 lượt ×1,2; phản công
+6 lượt, 3 địch ×1,4; cổng thành bền ×1,2 máu tướng giữ, giáp ×2). Khai báo ở `EXPEDITION_SCENARIOS`
+(`src/core/expedition/scenario.ts`); không đổi ô hay đường của sa bàn.
+
+| Sa bàn | Khối luật | Ý đồ |
+|---|---|---|
+| **Ải Bắc** | Đường bị phá: 2 trong 4 lối đèo (Khe Đá–Đèo Mây, Đèo Mây–Gác Bắc, Suối Lạnh–Bãi Lau, Bãi Lau–Gác Nam). Phá cổng ở thành đích | Nhập môn hai khối dễ hiểu nhất: trinh sát trước khi qua đèo, và trận phá cổng |
+| **Thượng Du** | Viện binh vào thành cuối ngày 8 và 13 (mỗi lần +15%). Đèo Ngang Núi thành trận giữ; giữ được thì chặn viện binh | Đèo là lối hội quân duy nhất: ai giữ đèo thì cả hai đạo đỡ đánh thành mạnh lên |
+| **Ngã Ba Sông** | Phản công Kho Thóc Bãi Giữa hai ngày sau khi chiếm | Kho ở giữa hai bờ: lấy lương rồi phải để một đạo đứng giữ, hoặc chịu mất kho |
+| **Kinh Thành** | Viện binh vào thành cuối ngày 4 và 7. Lũy Cầu Tây thành trận giữ; giữ được thì chặn | Sa bàn dễ nhất trong mô phỏng: thêm áp lực thời gian, thưởng cho đạo đi cánh tây |
+| **Quần Đảo** | Phá cổng ở Thành Đảo, trừ khi đổ bộ từ Làng Đảo Rùa | Đường bộ qua Lũy Cầu Dài thì nhanh nhưng gặp cổng; vượt biển qua Đảo Rùa thì chậm mà vào thẳng |
+
+- Năm sa bàn này giữ luật sao chung (mục 3.5) và kết thúc thường (chiếm thành hoặc thua); bốn kết thúc riêng chỉ có ở
+  Cửa Biển vì cần cả rút dân và viện binh.
+- Viện binh và phản công chỉ ghi vào nhật ký sa bàn và bảng "Luật sa bàn" bên cạnh, không thêm tài nguyên mới.
 
 ## 5. Số liệu (điểm xuất phát)
 

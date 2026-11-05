@@ -138,7 +138,7 @@ function decide(run: ExpeditionRun): Decision {
   return { kind: "camp" };
 }
 
-const marketNode = (run: ExpeditionRun) => expeditionScenarioOf(run)?.counter.node;
+const marketNode = (run: ExpeditionRun) => expeditionScenarioOf(run)?.counter?.node;
 
 function fight(run: ExpeditionRun, army: ArmyIndex, encounter: ExpeditionEncounter, seed: number, player: Difficulty) {
   let { state } = createBattle({

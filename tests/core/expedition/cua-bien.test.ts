@@ -4,6 +4,7 @@ import {
   EXPEDITION_GATE_ID,
   EXPEDITION_MAPS,
   EXPEDITION_SCENARIOS,
+  type ExpeditionScenario,
   EXPEDITION_TIER_INFO,
   NEW_EXPEDITION,
   STARTER_COMPANIONS,
@@ -37,7 +38,7 @@ import {
 } from "../../../src/core";
 
 const IDS = STARTER_COMPANIONS.map((c) => c.id);
-const SCENARIO = EXPEDITION_SCENARIOS.cuaBien!;
+const SCENARIO = EXPEDITION_SCENARIOS.cuaBien! as Required<ExpeditionScenario>;
 const MAP = EXPEDITION_MAPS.cuaBien;
 
 function newRun(seed = 7): ExpeditionRun {
@@ -104,7 +105,7 @@ describe("Cửa Biển: đường bị phá", () => {
   it("mỗi lượt chọn 2 trong 4 đường theo seed, cùng seed thì như nhau", () => {
     const run = newRun(11);
     assert.equal(run.broken?.length, 2);
-    const pool = SCENARIO.breakable.map(([a, b]) => expeditionEdgeKey(a, b));
+    const pool = SCENARIO.broken.edges.map(([a, b]) => expeditionEdgeKey(a, b));
     for (const k of run.broken!) assert.ok(pool.includes(k));
     assert.deepEqual(newRun(11).broken, run.broken);
     const seen = new Set(Array.from({ length: 40 }, (_, i) => newRun(i).broken!.join("|")));
@@ -112,7 +113,7 @@ describe("Cửa Biển: đường bị phá", () => {
   });
 
   it("mọi tổ hợp 2 đường bị phá vẫn còn đường tới thành đích, làng và bãi cạn", () => {
-    const pool = SCENARIO.breakable.map(([a, b]) => expeditionEdgeKey(a, b));
+    const pool = SCENARIO.broken.edges.map(([a, b]) => expeditionEdgeKey(a, b));
     for (let i = 0; i < pool.length; i++)
       for (let j = i + 1; j < pool.length; j++) {
         const broken = [pool[i]!, pool[j]!];
@@ -149,13 +150,17 @@ describe("Cửa Biển: đường bị phá", () => {
     assert.ok(s.run.armies[0].food > run.armies[0].food);
   });
 
-  it("sa bàn không có kịch bản không trinh sát được", () => {
-    const made = createExpeditionRun(expeditionSimProfile(10), NEW_EXPEDITION, { map: "aiBac", tier: 1, main: IDS.slice(0, 2), second: IDS.slice(2, 5) }, "r", 1);
+  it("mọi sa bàn trinh sát được; sa bàn không có đường bị phá thì không lộ đường nào", () => {
+    const made = createExpeditionRun(expeditionSimProfile(10), NEW_EXPEDITION, { map: "kinhThanh", tier: 1, main: IDS.slice(0, 2), second: IDS.slice(2, 5) }, "r", 1);
     assert.ok(made.ok);
     if (!made.ok) return;
     assert.equal(made.run.broken, undefined);
     const s = scoutExpedition(made.run, 0);
-    assert.ok(!s.ok && s.error === "noScout");
+    assert.ok(s.ok);
+    if (!s.ok) return;
+    assert.equal(s.run.day, 2);
+    assert.ok((s.run.scouted ?? []).length > 0);
+    assert.equal(s.run.knownBroken, undefined);
   });
 });
 
@@ -235,7 +240,7 @@ describe("Cửa Biển: cầu và thuyền viện", () => {
     let run = clean(newRun());
     run = fight(run, 1, "bai-su", 0).run;
     const r = fight(run, 1, "doi-cat", 0);
-    assert.deepEqual(r.encounter.objective, { type: "hold", turns: SCENARIO.bridge.turns });
+    assert.deepEqual(r.encounter.objective, { type: "hold", turns: SCENARIO.hold.turns });
     assert.equal(r.encounter.foes.length, 3);
     assert.equal(r.run.reinforcementsCut, true);
   });
