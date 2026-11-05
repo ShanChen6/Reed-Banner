@@ -1331,7 +1331,7 @@
 }
 .kl-timebar {
   background: #0d0906;
-  border: 1px solid var(--atlas-bronze);
+  border: 1px solid var(--frame-bronze);
 }
 .kl-timebar > div {
   background: linear-gradient(90deg, #c9a25a, #f3dfae);

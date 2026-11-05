@@ -2,7 +2,9 @@
 
 import { Pagination } from "@/components/ui/Pagination";
 
-import { Card, CardBody, CardFooter, Input, Button } from "@/components/ui";
+import { Button, ChoiceChip, Input, Tabs } from "@/components/ui";
+import { ModeScreen, OrnateFrame } from "@/components/game-ui";
+import type { ReactNode } from "react";
 
 // Bảng xếp hạng: Trấn Ải (số đợt), Quần Hùng (điểm đấu trường), Thiên Mệnh (tầng, theo chu kỳ) và Tầm Tướng Ký Hạng
 // tuần (điểm tướng đề cử, khi cờ Hạng bật). Bình Loạn là chế độ
@@ -14,7 +16,6 @@ import {
   describeScore,
   type BoardId,
 } from "@/core";
-import { SceneLink } from "../SceneContext";
 import { useScene } from "../SceneContext";
 
 interface BoardResponse {
@@ -135,152 +136,125 @@ export default function LeaderboardScreen({ destinyEnabled = true, tamTuongKyRan
   const shown = data?.board === board && Boolean(data.season) === (scope === "season") ? data : null;
   const season = scope === "season";
 
-  return (
-    <main className="ui-screen ui-screen--cool">
-      <div className="mx-auto max-w-3xl">
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-          <h1 className="text-2xl font-black text-amber-100">Bảng xếp hạng</h1>
-          <div className="flex gap-2 text-sm">
-            <SceneLink
-              scene="PLAYING"
-              className="rounded bg-white/10 px-3 py-1.5 hover:bg-white/15"
-            >
-              Chơi
-            </SceneLink>
-            <SceneLink
-              scene="DAILY"
-              className="rounded bg-white/10 px-3 py-1.5 hover:bg-white/15"
-            >
-              Nhật Lệnh
-            </SceneLink>
-          </div>
-        </div>
+  const tabs = TABS.filter((t) => (t.id !== "destiny" || destinyEnabled) && (t.id !== "tamTuongKy" || tamTuongKyRanked));
 
-        <div role="tablist" className="mb-3 flex flex-wrap gap-1.5">
-          {TABS.filter((t) => (t.id !== "destiny" || destinyEnabled) && (t.id !== "tamTuongKy" || tamTuongKyRanked)).map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              role="tab"
-              aria-selected={tab === t.id}
-              onClick={() => setTab(t.id)}
-              className={`rounded-full px-3 py-1 text-sm font-semibold ${tab === t.id ? "bg-amber-500 text-stone-950" : "bg-white/10 hover:bg-white/15"}`}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
+  return (
+    <ModeScreen label="Bảng xếp hạng">
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
+        <Tabs label="Chế độ" items={tabs.map((t) => ({ value: t.id, label: t.label }))} value={tab} onChange={setTab} fullWidth />
 
         {tab === "tamTuongKy" ? (
           <TtkBoard data={ttk} />
         ) : tab === "destiny" ? (
-          <Card padding="none">
-            <CardBody className="flex flex-col gap-3">
-            <label className="flex flex-wrap items-center gap-2 text-sm">Cycle lịch sử
-              <Input type="date" value={cycle || destiny?.cycle?.cycleId || ""} onChange={(event) => { setCycle(event.target.value); setCursor("0"); }}  />
-              {cycle && <Button variant="secondary" type="button" onClick={() => { setCycle(""); setCursor("0"); }} >Cycle hiện tại</Button>}
+          <OrnateFrame className="flex flex-col gap-3">
+            <label className="flex flex-wrap items-center gap-2 text-sm">Chu kỳ đã qua
+              <Input type="date" className="w-auto" value={cycle || destiny?.cycle?.cycleId || ""} onChange={(event) => { setCycle(event.target.value); setCursor("0"); }} />
+              {cycle && <Button variant="secondary" size="sm" onClick={() => { setCycle(""); setCursor("0"); }}>Chu kỳ hiện tại</Button>}
             </label>
-            <p className="text-xs text-muted">{NOTE.destiny}</p>
-            {!destiny?.entries ? <p className="py-6 text-center text-sm text-muted">{destiny?.error ? "Cycle hoặc truy vấn không hợp lệ." : "Đang tải…"}</p> : destiny.entries.length === 0 ? <p className="py-6 text-center text-sm text-muted">Chưa có thành tích trong cycle này.</p> : <ol className="flex flex-col gap-1 text-sm">{destiny.entries.map((entry) => <li key={entry.rank} className={`flex items-center gap-2 rounded px-2 py-1.5 ${entry.mine ? "bg-amber-500/20 font-semibold" : "bg-black/20"}`}><span className="w-7 text-right tabular-nums text-amber-300">{entry.rank}</span><span className="min-w-0 flex-1 truncate">{entry.name}{entry.mine && " (bạn)"}</span><span className="text-xs tabular-nums text-foreground-secondary">Tầng {entry.clearedFloor} · {entry.totalTurns} lượt</span></li>)}</ol>}
-            {destiny?.mine && !destiny.entries?.some((entry) => entry.mine) && <p className="text-sm text-amber-200">Hạng của bạn: {destiny.mine.rank} · tầng {destiny.mine.clearedFloor} · {destiny.mine.totalTurns} lượt</p>}
-            </CardBody>
-            <CardFooter className="justify-end">
-            <Pagination
-              hasPrevious={cursor !== "0"}
-              hasNext={Boolean(destiny?.nextCursor)}
-              onPrevious={() => setCursor(String(Math.max(0, Number(cursor) - 20)))}
-              onNext={() => destiny?.nextCursor && setCursor(destiny.nextCursor)}
-            />
-            </CardFooter>
-          </Card>
-        ) : <Card className="flex flex-col gap-2">
-          <div role="group" aria-label="Phạm vi bảng" className="flex gap-1.5 text-sm">
-            {(["season", "all"] as const).map((s) => (
-              <button
-                key={s}
-                type="button"
-                aria-pressed={scope === s}
-                onClick={() => setScope(s)}
-                className={`rounded-full px-3 py-1 font-semibold ${scope === s ? "bg-amber-500 text-stone-950" : "bg-white/10 hover:bg-white/15"}`}
-              >
-                {s === "season" ? "Mùa tuần này" : "Mọi thời đại"}
-              </button>
-            ))}
-          </div>
-          <p className="text-xs text-muted">{season ? `${SEASON_NOTE[tab as "survival" | "arena"]}${shown?.season ? ` (mùa bắt đầu ${shown.season})` : ""}` : NOTE[tab]}</p>
-          {!shown ? (
-            <p className="py-6 text-center text-sm text-muted">
-              {data?.error ? "Không tải được bảng xếp hạng." : "Đang tải…"}
-            </p>
-          ) : shown.top!.length === 0 ? (
-            <p className="py-6 text-center text-sm text-muted">
-              Chưa có ai trên bảng này.
-            </p>
-          ) : (
-            <ol className="flex flex-col gap-1 text-sm">
-              {shown.top!.map((r) => (
-                <li
-                  key={r.rank}
-                  className={`flex items-center gap-2 rounded px-2 py-1.5 ${r.mine ? "bg-amber-500/20 font-semibold" : "bg-black/20"}`}
-                >
-                  <span
-                    className={`w-7 text-right tabular-nums ${r.rank <= 3 ? "font-black text-amber-300" : "text-muted"}`}
-                  >
-                    {r.rank}
-                  </span>
-                  <span className="min-w-0 flex-1 truncate">
-                    {r.name}
-                    {r.mine && " (bạn)"}
-                  </span>
-                  <span className="text-xs text-foreground-secondary tabular-nums">
-                    {scoreText(board, r.score, season)}
-                  </span>
-                </li>
+            <BoardNote>{NOTE.destiny}</BoardNote>
+            {!destiny?.entries ? (
+              <BoardEmpty>{destiny?.error ? "Chu kỳ hoặc truy vấn không hợp lệ." : "Đang tải…"}</BoardEmpty>
+            ) : destiny.entries.length === 0 ? (
+              <BoardEmpty>Chưa có thành tích trong chu kỳ này.</BoardEmpty>
+            ) : (
+              <RankList>
+                {destiny.entries.map((entry) => (
+                  <RankRow key={entry.rank} rank={entry.rank} name={entry.name} mine={entry.mine}
+                    score={`Tầng ${entry.clearedFloor} · ${entry.totalTurns} lượt`} />
+                ))}
+              </RankList>
+            )}
+            {destiny?.mine && !destiny.entries?.some((entry) => entry.mine) && (
+              <MyRank>Hạng của bạn: {destiny.mine.rank} · tầng {destiny.mine.clearedFloor} · {destiny.mine.totalTurns} lượt</MyRank>
+            )}
+            <div className="flex justify-end border-t border-frame-line-soft pt-3">
+              <Pagination
+                hasPrevious={cursor !== "0"}
+                hasNext={Boolean(destiny?.nextCursor)}
+                onPrevious={() => setCursor(String(Math.max(0, Number(cursor) - 20)))}
+                onNext={() => destiny?.nextCursor && setCursor(destiny.nextCursor)}
+              />
+            </div>
+          </OrnateFrame>
+        ) : (
+          <OrnateFrame className="flex flex-col gap-3">
+            <div role="group" aria-label="Phạm vi bảng" className="flex flex-wrap gap-2">
+              {(["season", "all"] as const).map((s) => (
+                <ChoiceChip key={s} selected={scope === s} onClick={() => setScope(s)}>
+                  {s === "season" ? "Mùa tuần này" : "Mọi thời đại"}
+                </ChoiceChip>
               ))}
-            </ol>
-          )}
-          {shown?.mine && !shown.top!.some((r) => r.mine) && (
-            <p className="text-sm text-amber-200">
-              Hạng của bạn: {shown.mine.rank} ·{" "}
-              {scoreText(board, shown.mine.score, season)}
-            </p>
-          )}
-        </Card>}
+            </div>
+            <BoardNote>{season ? `${SEASON_NOTE[tab as "survival" | "arena"]}${shown?.season ? ` (mùa bắt đầu ${shown.season})` : ""}` : NOTE[tab]}</BoardNote>
+            {!shown ? (
+              <BoardEmpty>{data?.error ? "Không tải được bảng xếp hạng." : "Đang tải…"}</BoardEmpty>
+            ) : shown.top!.length === 0 ? (
+              <BoardEmpty>Chưa có ai trên bảng này.</BoardEmpty>
+            ) : (
+              <RankList>
+                {shown.top!.map((r) => (
+                  <RankRow key={r.rank} rank={r.rank} name={r.name} mine={r.mine} score={scoreText(board, r.score, season)} />
+                ))}
+              </RankList>
+            )}
+            {shown?.mine && !shown.top!.some((r) => r.mine) && (
+              <MyRank>Hạng của bạn: {shown.mine.rank} · {scoreText(board, shown.mine.score, season)}</MyRank>
+            )}
+          </OrnateFrame>
+        )}
       </div>
-    </main>
+    </ModeScreen>
+  );
+}
+
+function BoardNote({ children }: { children: ReactNode }) {
+  return <p className="text-caption text-on-wood-soft">{children}</p>;
+}
+function BoardEmpty({ children }: { children: ReactNode }) {
+  return <p className="py-6 text-center text-sm text-on-wood-soft">{children}</p>;
+}
+function RankList({ children }: { children: ReactNode }) {
+  return <ol className="flex flex-col gap-1 text-sm">{children}</ol>;
+}
+function MyRank({ children }: { children: ReactNode }) {
+  return <p className="text-sm font-semibold text-title-on-wood">{children}</p>;
+}
+
+/** Một dòng bảng: hạng 1–3 vàng đậm, dòng của mình nền giấy dó. */
+function RankRow({ rank, name, mine, score }: { rank: number; name: string; mine?: boolean; score: ReactNode }) {
+  return (
+    <li className={`flex items-center gap-2 rounded-control border px-2.5 py-2 ${mine ? "ui-choice is-selected font-semibold" : "border-frame-line-soft bg-wood-inset"}`}>
+      <span className={`w-7 text-right tabular-nums ${rank <= 3 ? "font-black" : ""} ${mine ? "" : rank <= 3 ? "text-frame-gold" : "text-on-wood-soft"}`}>{rank}</span>
+      <span className="min-w-0 flex-1 truncate">
+        {name}
+        {mine && " (bạn)"}
+      </span>
+      <span className={`text-caption tabular-nums ${mine ? "" : "text-on-wood-soft"}`}>{score}</span>
+    </li>
   );
 }
 
 /** Bảng tuần Tầm Tướng Ký: chỉ có bảng tuần này (không có “mọi thời đại”). */
 export function TtkBoard({ data }: { data: TtkBoardResponse | null }) {
   return (
-    <Card className="flex flex-col gap-2">
-      <p className="text-xs text-muted">{NOTE.tamTuongKy}{data?.week ? ` (tuần bắt đầu ${data.week})` : ""}</p>
+    <OrnateFrame className="flex flex-col gap-3">
+      <BoardNote>{NOTE.tamTuongKy}{data?.week ? ` (tuần bắt đầu ${data.week})` : ""}</BoardNote>
       {!data?.top ? (
-        <p className="py-6 text-center text-sm text-muted">{data?.error ? "Không tải được bảng xếp hạng." : "Đang tải…"}</p>
+        <BoardEmpty>{data?.error ? "Không tải được bảng xếp hạng." : "Đang tải…"}</BoardEmpty>
       ) : data.top.length === 0 ? (
-        <p className="py-6 text-center text-sm text-muted">Tuần này chưa có ai ghép ra tướng đề cử.</p>
+        <BoardEmpty>Tuần này chưa có ai ghép ra tướng đề cử.</BoardEmpty>
       ) : (
-        <ol className="flex flex-col gap-1 text-sm">
+        <RankList>
           {data.top.map((r) => (
-            <li key={r.rank} className={`flex items-center gap-2 rounded px-2 py-1.5 ${r.mine ? "bg-amber-500/20 font-semibold" : "bg-black/20"}`}>
-              <span className={`w-7 text-right tabular-nums ${r.rank <= 3 ? "font-black text-amber-300" : "text-muted"}`}>{r.rank}</span>
-              <span className="min-w-0 flex-1 truncate">
-                {r.name}
-                {r.mine && " (bạn)"}
-              </span>
-              <span className="text-xs text-foreground-secondary tabular-nums">
-                {r.points} điểm · tiêu {r.unitsSpent}
-              </span>
-            </li>
+            <RankRow key={r.rank} rank={r.rank} name={r.name} mine={r.mine} score={`${r.points} điểm · tiêu ${r.unitsSpent}`} />
           ))}
-        </ol>
+        </RankList>
       )}
       {data?.mine && !data.top?.some((r) => r.mine) && (
-        <p className="text-sm text-amber-200">
+        <MyRank>
           Hạng của bạn: {data.mine.rank} · {data.mine.points} điểm · tiêu {data.mine.unitsSpent}
-        </p>
+        </MyRank>
       )}
-    </Card>
+    </OrnateFrame>
   );
 }

@@ -276,6 +276,9 @@ export const TRIAL_ERROR_TEXT: Record<string, string> = {
   overflow: "Ví đá đã đạt giới hạn an toàn",
 };
 
+/** Nhãn chữ cho từng loại luật (thay emoji ⛔ ✔ ⚖). */
+export const RULE_TAG = { ban: "Cấm", need: "Bắt buộc", limit: "Giới hạn" } as const;
+
 export const FLOOR_STATE_TEXT: Record<FloorState, string> = {
   locked: "Chưa mở",
   open: "Đang mở",

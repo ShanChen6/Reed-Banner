@@ -145,3 +145,21 @@ Sau khi kiểm tra baseline, chủ dự án chọn **Home V2 illustration-led** 
 - Phải cho người duyệt thấy screenshot Home mới cạnh màn Campaign reference trước khi chuyển mode khác.
 - Không sửa header, campaign scene, battle logic, API contract hoặc feature flag.
 - Ưu tiên Home trong task UI-02, sau đó Trial → Destiny → Survival → Daily → Arena như roadmap hiện tại; không gộp hết vào một PR.
+
+## 4. Đồng bộ UI toàn game (05/11/2026)
+
+Shan duyệt đề xuất đồng bộ sau đợt kiểm kê 20 màn ngày 05/11/2026 và yêu cầu chia nhỏ: mỗi bước một PR nhỏ vào `develop`, có ảnh trước/sau, không đổi luật chơi, API hay dữ liệu. Quy tắc ở [theme.md](../design-system/theme.md#quy-tắc-chung-đồng-bộ-ui-05112026).
+
+| Bước | Phạm vi |
+| --- | --- |
+| UI-S1 | (PR #295, đã merge) Nền tảng: token, nút chính/phụ, `Tabs`, `ChoiceChip`, `OrnateFrame`, `ModeScreen`, `ModeBanner`, trang `/demo/ui` |
+| UI-S2 | Màn cần đăng nhập dùng chung (`LoginGate` + `src/app/game/modeInfo.ts`): banner, luật và phần thưởng chính, nút "Đăng nhập để chơi" |
+| UI-S3 | Nhiệm vụ, Xếp hạng, Đăng nhập/Đăng ký/Tài khoản |
+| UI-S4 | Khai Lộ, Tháp Thí Luyện, Tháp Thiên Mệnh |
+| UI-S5 | Cửa Hàng thành trang thường; thẻ tướng chung với Doanh Trại; tách cửa hàng khỏi sảnh trận |
+| UI-S6 | Trận Đồ, Tầm Tướng Ký, Trấn Ải, Nhật Lệnh, Quần Hùng (mỗi màn một PR) |
+| UI-S7 | Bình Loạn: thay màu thô bằng token, đưa Tái đấu sứ quân vào khung atlas |
+| UI-S8 | Màn trận trên điện thoại: bàn cờ lên trước, hai phe gọn trên/dưới |
+
+Header (luồng riêng) và lõi Viễn Chinh không nằm trong đợt này; Viễn Chinh chỉ đổi mã màu sang token khi luồng của nó xong.
+

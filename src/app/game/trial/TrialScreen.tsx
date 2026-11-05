@@ -1,4 +1,5 @@
 "use client";
+import { ModeScreen } from "@/components/game-ui";
 import { Button } from "@/components/ui";
 
 
@@ -42,9 +43,9 @@ async function json<T>(url: string, init?: RequestInit): Promise<T | null> {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="ui-screen tower-screen tower-screen--trial">
-      <div className="tower-screen__content">{children}</div>
-    </main>
+    <ModeScreen wide label="Tháp Thí Luyện">
+      {children}
+    </ModeScreen>
   );
 }
 
@@ -103,7 +104,7 @@ export default function TrialScreen() {
   if (!overview || !profile) {
     return (
       <Shell>
-        <div className="py-24 text-center text-foreground-secondary">
+        <div className="py-24 text-center text-on-wood-soft">
           {loadError ? (
             <>
               <p role="alert">Không tải được Tháp Thí Luyện. Hãy kiểm tra kết nối rồi thử lại.</p>
