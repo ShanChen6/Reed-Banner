@@ -61,7 +61,7 @@ export default function ShopScreen() {
           <Tabs label="Mục cửa hàng" items={TABS} value={tab} onChange={setTab} fullWidth panelId="shop-panel" className="[&>button]:whitespace-nowrap [&>button]:px-2" />
           {message && <Alert className="p-3 text-sm">{message}</Alert>}
           <div id="shop-panel" role="tabpanel" className="min-w-0">
-            {tab === "heroes" && <ShopPanel profile={profile} locked={busy} onAction={act} />}
+            {tab === "heroes" && <ShopPanel sellOnly profile={profile} locked={busy} onAction={act} />}
             {tab === "gear" && (
               <section aria-label="Cửa hàng trang bị" className="ui-frame-inset p-3 text-sm">
                 <h2 className="ui-title-on-wood mb-1 text-base">Trang bị</h2>
