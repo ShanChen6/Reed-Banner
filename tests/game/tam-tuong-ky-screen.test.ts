@@ -137,7 +137,7 @@ describe("Màn chơi", () => {
     const r = await getTamTuongKy({ profiles: new MemoryProfileStore(), now: Date.parse("2026-11-04T05:00:00Z"), enabled: true, isSignedIn: async () => true }, "acc-1");
     assert.ok(r.ok);
     const html = renderToStaticMarkup(createElement(TamTuongKyScreen, { initial: r.view }));
-    assert.match(html, /Phiếu: <strong[^>]*>3<\/strong>\/10/);
+    assert.match(html, />Phiếu<\/div><div[^>]*>3\/10<\/div>/);
     assert.match(html, /Mở lượt mới · 1 phiếu/);
     assert.match(html, /Mẹo: chọn Mộc vào ô trước và Mộc vào ô sau/);
     for (const t of ["Vạn Vật Lục", "Đài Hợp Nguyên", "Tướng Lục", "Ô trước", "Ô sau", "aria-live"]) assert.match(html, new RegExp(t));
@@ -183,7 +183,7 @@ describe("Màn chơi", () => {
     assert.ok(r.ok);
     const html = renderToStaticMarkup(createElement(TamTuongKyScreen, { ranked: true, initialRanked: r.view, initialMode: "ranked" }));
     assert.match(html, /Hạng tuần/);
-    assert.match(html, /Túi: <strong[^>]*>21<\/strong> đơn vị nguyên tố/);
+    assert.match(html, />Túi nguyên tố<\/div><div[^>]*>21<\/div>/);
     assert.match(html, /Mua 1 bó/);
     assert.equal((html.match(/Tướng chưa tìm thấy · /g) ?? []).length, 7);
     for (const name of PACK_1_NAMES) assert.doesNotMatch(html, new RegExp(name));
