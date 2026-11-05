@@ -3,7 +3,7 @@
 // phải dồn sang trái. Không có ô mới rơi vào, nên mỗi màn là một bài toán tất định theo seed. Logic thuần, không đọc giờ.
 
 import { createRng, type Rng } from "../rng";
-import { TILE_KINDS, type TileKind } from "../board/tiles";
+import { ELEMENTS, type Element } from "../battle/elements";
 
 export const KL_WIDTH = 10;
 export const KL_HEIGHT = 8;
@@ -20,10 +20,23 @@ export const KL_MIN_GROUP = 2;
 
 export type KlTool = "whirl" | "thunder";
 
+/** Thường: không giới hạn thời gian. Cấp tốc: mỗi màn có đồng hồ, hết giờ là hết màn, dọn sạch thì giây dư thành điểm. */
+export type KlMode = "classic" | "timed";
+
+export const KL_MODES: readonly KlMode[] = ["classic", "timed"];
+/** Cấp tốc: điểm thưởng cho mỗi giây còn lại khi dọn sạch bàn. */
+export const KL_TIME_BONUS_PER_SECOND = 25;
+
+/** Thời gian mỗi màn ở Cấp tốc (giây): 60 giây với 3 loại quân, mỗi loại thêm 15 giây. */
+export function levelTimeLimit(level: number): number {
+  return 60 + 15 * (levelConfig(level).kinds - 3);
+}
+
 export interface KlCell {
   /** Mã riêng của ô, giữ nguyên khi ô rơi/dồn để giao diện làm hoạt ảnh. */
   readonly id: number;
-  readonly kind: TileKind;
+  /** Quân nguyên tố (7 hệ của game), mỗi hệ một màu riêng. */
+  readonly kind: Element;
   /** Ô hào quang: nhóm chứa nó được nhân điểm (×1 thêm cho mỗi ô hào quang). */
   readonly banner?: true;
 }
@@ -35,11 +48,16 @@ export interface KlLevelSummary {
   readonly cleared: boolean;
   readonly left: number;
   readonly bonus: number;
+  /** Cấp tốc: phần thưởng giây dư (đã gồm trong bonus). */
+  readonly timeBonus: number;
+  /** Cấp tốc: màn kết thúc vì hết giờ. */
+  readonly timeout: boolean;
   readonly troopsDelta: number;
 }
 
 export interface KlState {
   readonly version: 1;
+  readonly mode: KlMode;
   readonly seed: number;
   readonly level: number;
   readonly width: number;
@@ -59,11 +77,11 @@ export interface KlState {
 }
 
 export type KlAction =
-  | { readonly type: "pick"; readonly index: number }
-  | { readonly type: "whirl"; readonly index: number }
-  | { readonly type: "thunder"; readonly index: number }
+  | { readonly type: "pick"; readonly index: number; readonly timeLeft?: number }
+  | { readonly type: "whirl"; readonly index: number; readonly timeLeft?: number }
+  | { readonly type: "thunder"; readonly index: number; readonly timeLeft?: number }
   | { readonly type: "undo" }
-  | { readonly type: "endLevel" }
+  | { readonly type: "endLevel"; readonly timeout?: boolean }
   | { readonly type: "nextLevel" };
 
 export type KlEvent =
@@ -117,10 +135,10 @@ const shuffled = <T>(xs: readonly T[], rng: Rng): T[] => {
 export function generateBoard(seed: number, level: number, firstId: number, width = KL_WIDTH, height = KL_HEIGHT): { cells: (KlCell | null)[]; nextId: number } {
   const rng = createRng(levelSeed(seed, level));
   const { kinds, banners } = levelConfig(level);
-  const pool = shuffled(TILE_KINDS, rng).slice(0, kinds);
+  const pool = shuffled(ELEMENTS, rng).slice(0, kinds);
   for (;;) {
     let id = firstId;
-    const cells: (KlCell | null)[] = Array.from({ length: width * height }, () => ({ id: id++, kind: pool[rng.int(0, pool.length - 1)] as TileKind }));
+    const cells: (KlCell | null)[] = Array.from({ length: width * height }, () => ({ id: id++, kind: pool[rng.int(0, pool.length - 1)] as Element }));
     const order = shuffled(
       cells.map((_, i) => i),
       rng,
@@ -130,11 +148,12 @@ export function generateBoard(seed: number, level: number, firstId: number, widt
   }
 }
 
-export function createGame(seed: number, width = KL_WIDTH, height = KL_HEIGHT): KlState {
+export function createGame(seed: number, mode: KlMode = "classic", width = KL_WIDTH, height = KL_HEIGHT): KlState {
   const s = seed >>> 0;
   const { cells, nextId } = generateBoard(s, 1, 1, width, height);
   return {
     version: 1,
+    mode,
     seed: s,
     level: 1,
     width,
@@ -253,21 +272,23 @@ export function tilesLeft(cells: readonly (KlCell | null)[]): number {
 }
 
 /** Sau mỗi nước: bàn sạch hoặc hết nhóm mà cũng hết đạo cụ thì tự kết thúc màn; hết nhóm còn đạo cụ thì "bế tắc". */
-function afterMove(s: KlState, events: KlEvent[]): KlState {
+function afterMove(s: KlState, events: KlEvent[], timeLeft: number | undefined): KlState {
   const left = tilesLeft(s.cells);
-  if (left === 0) return finishLevel(s, events);
+  if (left === 0) return finishLevel(s, events, timeLeft);
   if (hasGroup(s.cells, s.width, s.height)) return { ...s, phase: "playing" };
   if (s.tools.whirl + s.tools.thunder > 0) return { ...s, phase: "stuck" };
-  return finishLevel(s, events);
+  return finishLevel(s, events, timeLeft);
 }
 
-function finishLevel(s: KlState, events: KlEvent[]): KlState {
+function finishLevel(s: KlState, events: KlEvent[], timeLeft?: number, timeout = false): KlState {
   const left = tilesLeft(s.cells);
   const cleared = left === 0;
-  const bonus = cleared ? KL_CLEAR_BONUS_PER_LEVEL * s.level : 0;
+  const secs = s.mode === "timed" && cleared && timeLeft !== undefined ? Math.max(0, Math.min(levelTimeLimit(s.level), Math.floor(timeLeft))) : 0;
+  const timeBonus = secs * KL_TIME_BONUS_PER_SECOND;
+  const bonus = (cleared ? KL_CLEAR_BONUS_PER_LEVEL * s.level : 0) + timeBonus;
   const troopsDelta = cleared ? KL_CLEAR_TROOPS : -left;
   const troops = s.troops + troopsDelta;
-  const summary: KlLevelSummary = { level: s.level, cleared, left, bonus, troopsDelta };
+  const summary: KlLevelSummary = { level: s.level, cleared, left, bonus, timeBonus, timeout: timeout && s.mode === "timed", troopsDelta };
   const tools = cleared
     ? { whirl: Math.min(KL_MAX_TOOLS, s.tools.whirl + 1), thunder: Math.min(KL_MAX_TOOLS, s.tools.thunder + 1) }
     : s.tools;
@@ -302,7 +323,7 @@ export function transition(state: KlState, action: KlAction): KlResult {
         moves: state.moves + 1,
         prev: withPrev(state),
       };
-      return { ok: true, state: afterMove(next, events), events };
+      return { ok: true, state: afterMove(next, events, action.timeLeft), events };
     }
     case "whirl": {
       if (!active) return { ok: false, reason: "notPlaying" };
@@ -320,7 +341,7 @@ export function transition(state: KlState, action: KlAction): KlResult {
         moves: state.moves + 1,
         prev: withPrev(state),
       };
-      return { ok: true, state: afterMove(next, events), events };
+      return { ok: true, state: afterMove(next, events, action.timeLeft), events };
     }
     case "thunder": {
       if (!active) return { ok: false, reason: "notPlaying" };
@@ -338,7 +359,7 @@ export function transition(state: KlState, action: KlAction): KlResult {
         moves: state.moves + 1,
         prev: withPrev(state),
       };
-      return { ok: true, state: afterMove(next, events), events };
+      return { ok: true, state: afterMove(next, events, action.timeLeft), events };
     }
     case "undo": {
       if (!active || !state.prev) return { ok: false, reason: "noUndo" };
@@ -348,7 +369,7 @@ export function transition(state: KlState, action: KlAction): KlResult {
     }
     case "endLevel": {
       if (!active) return { ok: false, reason: "notPlaying" };
-      return { ok: true, state: finishLevel(state, events), events };
+      return { ok: true, state: finishLevel(state, events, undefined, action.timeout === true), events };
     }
     case "nextLevel": {
       if (state.phase !== "levelDone") return { ok: false, reason: "notPlaying" };
@@ -374,7 +395,7 @@ const isCell = (v: unknown): v is KlCell | null =>
   (typeof v === "object" &&
     v !== null &&
     Number.isInteger((v as KlCell).id) &&
-    (TILE_KINDS as readonly string[]).includes((v as KlCell).kind) &&
+    (ELEMENTS as readonly string[]).includes((v as KlCell).kind) &&
     ((v as KlCell).banner === undefined || (v as KlCell).banner === true));
 
 /** Đọc lại ván đã lưu; dữ liệu hỏng hoặc khác phiên bản trả về null. */
@@ -389,7 +410,9 @@ export function parseGame(text: string | null): KlState | null {
     if (!Array.isArray(v.cells) || v.cells.length !== (v.width as number) * (v.height as number) || !v.cells.every(isCell)) return null;
     if (!v.tools || !num(v.tools.whirl) || !num(v.tools.thunder)) return null;
     if (!phases.includes(v.phase as KlPhase)) return null;
-    return { ...(v as KlState), summary: v.summary ?? null, prev: null };
+    const mode: KlMode = v.mode === "timed" ? "timed" : "classic";
+    const summary = v.summary ? { ...v.summary, timeBonus: v.summary.timeBonus ?? 0, timeout: v.summary.timeout ?? false } : null;
+    return { ...(v as KlState), mode, summary, prev: null };
   } catch {
     return null;
   }
