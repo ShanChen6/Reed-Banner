@@ -106,7 +106,15 @@ describe("Viễn Chinh trên server", () => {
       expedition: { ...stored.profile.expedition!, run: { ...r, armies: [{ ...r.armies[0], at: "gac-bac" }, { ...r.armies[1], at: "gac-nam" }] } },
     }, stored.version, deps.now);
     const gold = stored.profile.gold;
-    const opened = await marchExpeditionArmy("u", { army: 0, to: "thanh-ai-bac" }, deps);
+    // Ải Bắc có cổng thành: trận đầu phá cổng, trận sau mới đánh tướng giữ thành.
+    const gate = await marchExpeditionArmy("u", { army: 0, to: "thanh-ai-bac" }, deps);
+    assert.ok(gate.ok && gate.kind === "battle");
+    if (!gate.ok || gate.kind !== "battle") return;
+    await finishMatch(deps, gate.id, 0);
+    const gateDone = await getBattle(gate.id, "u", deps);
+    assert.ok(gateDone.ok && gateDone.outcome?.expedition?.phase === "march");
+    assert.equal((await run(deps, "u"))?.nodes["thanh-ai-bac"]?.gateDown, true);
+    const opened = await marchExpeditionArmy("u", { army: 1, to: "thanh-ai-bac" }, deps);
     assert.ok(opened.ok && opened.kind === "battle");
     if (!opened.ok || opened.kind !== "battle") return;
     await finishMatch(deps, opened.id, 0);
@@ -182,7 +190,7 @@ describe("Viễn Chinh trên server", () => {
     else {
       assert.equal(bridge.kind, "battle");
       if (bridge.kind !== "battle") return;
-      assert.deepEqual(bridge.view.expedition?.objective, { type: "hold", turns: 5 });
+      assert.deepEqual(bridge.view.expedition?.objective, { type: "hold", turns: 8 });
     }
   });
 });
