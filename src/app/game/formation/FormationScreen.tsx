@@ -5,6 +5,7 @@
 // server, client chỉ giữ bản công khai). Luật ở src/core/binh-phap, spec ở docs/02-game-modes/future/02-binh-phap-gdd.md,
 // giao diện ở docs/05-ui-ux/screens/tran-do.md.
 
+import { ModeScreen as GameModeScreen } from "@/components/game-ui";
 import { buttonVariants } from "@/components/ui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -272,7 +273,7 @@ export default function FormationScreen() {
     [ranked, applyRanked, apply],
   );
 
-  if (!ready) return <Shell><p className="py-20 text-center text-[var(--atlas-muted)]">Đang bày sa bàn…</p></Shell>;
+  if (!ready) return <Shell><p className="py-20 text-center text-on-wood-soft">Đang bày sa bàn…</p></Shell>;
 
   if (!playState || !playRules)
     return (
@@ -329,9 +330,9 @@ export default function FormationScreen() {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="campaign-atlas demo-bg flex flex-1 flex-col bg-[#17110e] pb-10 text-[var(--atlas-ink-on-wood)]">
-      <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-6 px-4 pt-4 sm:px-6 lg:pt-6">{children}</div>
-    </main>
+    <GameModeScreen label="Trận Đồ" className="campaign-atlas pb-10">
+      {children}
+    </GameModeScreen>
   );
 }
 
@@ -405,10 +406,10 @@ function PlayView({
     <>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <header>
-          <p className="text-xs font-semibold tracking-[0.25em] text-[var(--atlas-gold)] uppercase">
+          <p className="text-xs font-semibold tracking-[0.25em] text-frame-gold uppercase">
             {ranked ? `Kỳ ${ranked.period} · ` : ""}Sa bàn {width}×{height}
           </p>
-          <h1 className="atlas-title font-serif text-3xl font-bold">Trận Đồ · {rules.name}{ranked ? " · Xếp hạng" : ""}</h1>
+          <h1 className="ui-title-on-wood font-serif text-3xl font-bold">Trận Đồ · {rules.name}{ranked ? " · Xếp hạng" : ""}</h1>
         </header>
         <div className="flex gap-2">
           {ranked ? (
@@ -425,8 +426,8 @@ function PlayView({
       <div className={`grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px] ${finished ? "" : "pb-28 lg:pb-0"}`}>
         <div className="flex flex-col items-center gap-3">
           <BoardView state={state} map={map} legal={legal} showHints={hintsOn} playing={playing} last={last} focus={focus} setFocus={setFocus} setPeek={setPeek} boardRef={boardRef} sweeps={sweeps} onPlace={(row, col) => onCommand({ kind: "place", row, col })} />
-          <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-[var(--atlas-title)]">{message}</p>
-          <p aria-hidden className="-mt-2 min-h-5 text-center text-sm text-[var(--atlas-muted)]">{peekText}</p>
+          <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-title-on-wood">{message}</p>
+          <p aria-hidden className="-mt-2 min-h-5 text-center text-sm text-on-wood-soft">{peekText}</p>
           {tip && <div className="w-full max-w-xl"><TutorialTip text={tip} onDismiss={onDismissTip} /></div>}
           {!finished && <HintToggle on={hintsOn} onToggle={onToggleHints} />}
         </div>
@@ -437,10 +438,10 @@ function PlayView({
           ) : (
             <div className="hidden flex-col gap-4 lg:flex">
               <CommandCard state={state} />
-              <div className="atlas-frame atlas-frame-wood flex flex-col gap-3 p-4">
+              <div className="ui-frame flex flex-col gap-3 p-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm text-[var(--atlas-muted)]">Bỏ Lệnh {state.discardHeat}/{rules.maxHeat}{state.discardHeat >= rules.maxHeat ? " · bỏ nữa là thua" : ""}</p>
+                    <p className="text-sm text-on-wood-soft">Bỏ Lệnh {state.discardHeat}/{rules.maxHeat}{state.discardHeat >= rules.maxHeat ? " · bỏ nữa là thua" : ""}</p>
                     <HeatFlames heat={state.discardHeat} max={rules.maxHeat} />
                   </div>
                   <button type="button" disabled={busy} onClick={() => onCommand({ kind: "discard" })} className={buttonVariants({ variant: "secondary", className: "min-h-12 px-4" })}>
@@ -451,21 +452,21 @@ function PlayView({
               </div>
             </div>
           )}
-          {finished && <div className="atlas-frame atlas-frame-wood p-4"><ProgressMeter covered={state.coveredCount} total={total} /></div>}
-          <details className="atlas-frame atlas-frame-wood p-4">
-            <summary className="cursor-pointer font-serif font-bold text-[var(--atlas-title)]">Thống kê ván</summary>
+          {finished && <div className="ui-frame p-4"><ProgressMeter covered={state.coveredCount} total={total} /></div>}
+          <details className="ui-frame p-4">
+            <summary className="cursor-pointer font-serif font-bold text-title-on-wood">Thống kê ván</summary>
             <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-[15px]">
-              <dt className="text-[var(--atlas-muted)]">Điểm</dt>
+              <dt className="text-on-wood-soft">Điểm</dt>
               <dd className="text-right font-semibold">{state.score}</dd>
-              <dt className="text-[var(--atlas-muted)]">Quân đã đặt</dt>
+              <dt className="text-on-wood-soft">Quân đã đặt</dt>
               <dd className="text-right font-semibold">{state.placed}</dd>
-              <dt className="text-[var(--atlas-muted)]">Hàng/cột đã dọn</dt>
+              <dt className="text-on-wood-soft">Hàng/cột đã dọn</dt>
               <dd className="text-right font-semibold">{state.linesCleared}</dd>
-              {best > 0 && !ranked && (<><dt className="text-[var(--atlas-muted)]">Điểm cao nhất</dt><dd className="text-right font-semibold">{best}</dd></>)}
+              {best > 0 && !ranked && (<><dt className="text-on-wood-soft">Điểm cao nhất</dt><dd className="text-right font-semibold">{best}</dd></>)}
             </dl>
           </details>
-          <details className="atlas-frame atlas-frame-wood p-4">
-            <summary className="cursor-pointer font-serif font-bold text-[var(--atlas-title)]">Luật chơi</summary>
+          <details className="ui-frame p-4">
+            <summary className="cursor-pointer font-serif font-bold text-title-on-wood">Luật chơi</summary>
             <div className="mt-2"><Rules /></div>
           </details>
         </aside>
@@ -483,11 +484,11 @@ function CompletedMap({ map }: { map: FormationMap }) {
   return (
     <figure className="m-0 flex flex-col gap-1.5">
       {/* eslint-disable-next-line @next/next/no-img-element -- ảnh bản đồ tĩnh, kích thước theo khung */}
-      <img src={map.src} alt={`Bản đồ hoàn chỉnh: ${map.place}`} className="aspect-[16/10] w-full rounded border border-[#8F6A32] object-cover" />
+      <img src={map.src} alt={`Bản đồ hoàn chỉnh: ${map.place}`} className="aspect-[16/10] w-full rounded border border-frame-bronze object-cover" />
       <figcaption className="text-sm leading-snug">
-        <b className="font-serif text-base text-[var(--atlas-title)]">{map.place}</b>
-        <span className="block text-[var(--atlas-muted)]">{map.blurb}</span>
-        <span className="block text-xs text-[var(--atlas-muted)]">
+        <b className="font-serif text-base text-title-on-wood">{map.place}</b>
+        <span className="block text-on-wood-soft">{map.blurb}</span>
+        <span className="block text-xs text-on-wood-soft">
           {map.kind === "lich-su" ? "Tranh minh họa tái dựng, không phải bản đồ lịch sử chính xác." : "Cảnh quan minh họa, không phải địa danh cụ thể."}
         </span>
       </figcaption>
@@ -498,8 +499,8 @@ function CompletedMap({ map }: { map: FormationMap }) {
 function RankedResult({ state, rank, score, period, map, onLeave }: { state: PuzzleState; rank: number | null; score: number | null; period: string; map: FormationMap; onLeave: () => void }) {
   const won = state.phase === "won";
   return (
-    <section role="status" aria-label="Kết quả xếp hạng" className="atlas-frame atlas-frame-wood flex flex-col gap-3 p-4">
-      <h2 className="font-serif text-2xl font-bold text-[var(--atlas-title)]">{won ? "Khai thông sa bàn!" : "Trận đồ vỡ"}</h2>
+    <section role="status" aria-label="Kết quả xếp hạng" className="ui-frame flex flex-col gap-3 p-4">
+      <h2 className="font-serif text-2xl font-bold text-title-on-wood">{won ? "Khai thông sa bàn!" : "Trận đồ vỡ"}</h2>
       {won ? (
         <p className="text-[15px]">
           Bạn đạt <b>{score ?? state.score} điểm</b>{rank ? `, hạng tạm thời ${rank}` : ""}. Hạng chốt và thưởng nhận được sau khi kỳ {period} khép lại.
@@ -516,12 +517,12 @@ function RankedResult({ state, rank, score, period, map, onLeave }: { state: Puz
 function Result({ state, best, map, custom, onRestart, onLeave }: { state: PuzzleState; best: number; map: FormationMap; custom: boolean; onRestart: () => void; onLeave: () => void }) {
   const won = state.phase === "won";
   return (
-    <section role="status" aria-label="Kết quả" className="atlas-frame atlas-frame-wood flex flex-col gap-3 p-4">
-      <h2 className="font-serif text-2xl font-bold text-[var(--atlas-title)]">{won ? "Khai thông sa bàn!" : "Trận đồ vỡ"}</h2>
+    <section role="status" aria-label="Kết quả" className="ui-frame flex flex-col gap-3 p-4">
+      <h2 className="font-serif text-2xl font-bold text-title-on-wood">{won ? "Khai thông sa bàn!" : "Trận đồ vỡ"}</h2>
       <p className="text-[15px]">
         {won ? `Bạn đạt ${state.score} điểm${!custom && state.score >= best ? " (cao nhất từ trước tới nay)" : ""}.` : "Bỏ lệnh quá nhiều lần liên tiếp. Thử lại với seed mới nhé."}
       </p>
-      <p className="text-sm text-[var(--atlas-muted)]">Chế độ chơi thường: không có thưởng và không lên bảng xếp hạng.</p>
+      <p className="text-sm text-on-wood-soft">Chế độ chơi thường: không có thưởng và không lên bảng xếp hạng.</p>
       {won && <CompletedMap map={map} />}
       <div className="flex flex-wrap gap-2">
         <button type="button" onClick={onRestart} className={buttonVariants({ className: "min-h-12 px-6" })}>Chơi lại</button>

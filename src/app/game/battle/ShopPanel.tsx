@@ -1,6 +1,7 @@
 "use client";
 
 import { Select, Button, ChoiceChip, buttonVariants } from "@/components/ui";
+import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { cn } from "@/lib/cn";
 
 // Cửa hàng nhân vật kèm và chọn đội 3vs3 của Chơi thử và Chơi online. Luật nằm trong @/core (applyProfileAction);
@@ -104,6 +105,23 @@ function CompanionCard({
   );
 }
 
+/** Số thẻ mỗi trang của danh sách bán: 4 hàng ở màn rộng (3 cột), tránh phải cuộn dài. */
+export const SHOP_PAGE_SIZE = 12;
+
+type ShopGroup = "regular" | "warlord" | "hero";
+const GROUP_NAME: Record<ShopGroup, string> = { regular: "Tướng thường", warlord: "Sứ quân", hero: "Tướng lịch sử" };
+
+/** Lưới thẻ có phân trang. */
+function PagedGrid({ items, label, className }: { items: readonly React.ReactNode[]; label: string; className?: string }) {
+  const paged = usePagedItems(items, SHOP_PAGE_SIZE);
+  return (
+    <>
+      <ul className={cn("grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3", className)}>{paged.pageItems}</ul>
+      <PageControls paged={paged} label={`Phân trang ${label}`} className="mt-2" />
+    </>
+  );
+}
+
 /**
  * `locked` khi đang đánh: chỉ xem. Chọn đội: bấm một nhân vật chưa ra trận thì người đó thay người được
  * chọn sớm nhất. `onAction` trả về mã lỗi, hoặc null khi thành công.
@@ -113,17 +131,21 @@ export default function ShopPanel({
   locked,
   onAction,
   compact,
+  sellOnly,
 }: {
   profile: Profile;
   locked: boolean;
   onAction: (a: ProfileAction) => Promise<string | null>;
   /** Chỉ chọn đội (sảnh Giao Tranh): ẩn phần bán tướng, thay bằng lối sang Cửa Hàng. */
   compact?: boolean;
+  /** Chỉ bán tướng (màn Cửa Hàng): ẩn khối chọn đội, việc chọn đội ở Doanh Trại và sảnh Giao Tranh. */
+  sellOnly?: boolean;
 }) {
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [profFilter, setProfFilter] = useState<Profession | "all">("all");
   const [elemFilter, setElemFilter] = useState<Element | "all">("all");
+  const [shownGroup, setShownGroup] = useState<ShopGroup>("regular");
   const shown = (c: FighterConfig) =>
     (profFilter === "all" || c.profession === profFilter) && (elemFilter === "all" || c.element === elemFilter);
 
@@ -145,6 +167,17 @@ export default function ShopPanel({
   );
   const warlordsLeft = WARLORD_COMPANIONS.map((w) => w.fighter).filter((c) => !ownsCompanion(profile, c.id) && shown(c));
   const heroesLeft = HERO_COMPANIONS.filter((c) => !ownsCompanion(profile, c.id) && shown(c));
+  const groups: { id: ShopGroup; title: string; label: string; note?: string; items: FighterConfig[] }[] = [
+    { id: "regular", title: "Cửa hàng tướng thường", label: "tướng thường", items: forSale },
+    {
+      id: "warlord",
+      title: "Sứ quân (mở bán khi đánh bại ở chiến dịch)",
+      label: "sứ quân",
+      note: "Mở bán khi đánh bại ở chiến dịch. Khi tuyển về, sứ quân dùng 3 chiêu nghề + 2 chiêu hệ + chiêu riêng ô 4 mở cấp 10. Khi làm đối thủ chiến dịch, họ giữ bộ hệ của màn và luôn có chiêu riêng; bộ chiêu có thể khác.",
+      items: warlordsLeft,
+    },
+    { id: "hero", title: "Tướng lịch sử (gia nhập qua chiến dịch)", label: "tướng lịch sử", note: sellOnly ? "Không bán: gia nhập đội khi qua mốc chiến dịch." : undefined, items: heroesLeft },
+  ];
   const card = (c: FighterConfig) => (
     <CompanionCard
       key={c.id}
@@ -158,13 +191,23 @@ export default function ShopPanel({
   );
 
   return (
-    <section aria-label="Đội hình và cửa hàng" className="text-xs text-on-wood">
+    <section aria-label={sellOnly ? "Tuyển tướng" : "Đội hình và cửa hàng"} className="text-xs text-on-wood">
+      {sellOnly ? (
+        <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
+          <p className="text-caption text-on-wood-soft">
+            Đã có {owned.length} tướng kèm. Chọn đội ra trận ở{" "}
+            <SceneLink scene="PROFILE" className="text-frame-gold underline underline-offset-2">Doanh Trại</SceneLink>.
+          </p>
+          {message && <span role="alert" className="text-danger">{message}</span>}
+        </div>
+      ) : (<>
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <h2 className="ui-title-on-wood text-base">Đội hình 3vs3</h2>
         {message && <span role="alert" className="text-danger">{message}</span>}
       </div>
       {locked && <p className="mb-2 text-on-wood-soft">Đang trong trận: đổi đội và mua nhân vật sau khi trận kết thúc.</p>}
       <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">{owned.map(card)}</ul>
+      </>)}
       {compact ? (
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <span className="text-caption text-on-wood-soft">Tuyển thêm tướng hoặc đổi đội chi tiết:</span>
@@ -173,7 +216,16 @@ export default function ShopPanel({
         </div>
       ) : (<>
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <span className="font-semibold text-on-wood-soft">Lọc nhân vật chưa có:</span>
+        {sellOnly && (
+          <div role="group" aria-label="Nhóm tướng" className="flex flex-wrap gap-2 sm:mr-auto">
+            {groups.map((g) => (
+              <ChoiceChip key={g.id} selected={shownGroup === g.id} onClick={() => setShownGroup(g.id)} className="text-sm">
+                {GROUP_NAME[g.id]} <span className="tabular-nums opacity-70">({g.items.length})</span>
+              </ChoiceChip>
+            ))}
+          </div>
+        )}
+        <span className="font-semibold text-on-wood-soft">{sellOnly ? "Lọc:" : "Lọc nhân vật chưa có:"}</span>
         <Select
           aria-label="Lọc theo nghề"
           value={profFilter}
@@ -201,27 +253,19 @@ export default function ShopPanel({
           ))}
         </Select>
       </div>
-      {forSale.length > 0 && (
-        <>
-          <h3 className="ui-title-on-wood mt-4 mb-2 text-base">Cửa hàng tướng thường</h3>
-          <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">{forSale.map(card)}</ul>
-        </>
-      )}
-      {warlordsLeft.length > 0 && (
-        <>
-          <h3 className="ui-title-on-wood mt-4 mb-1 text-base">Sứ quân (mở bán khi đánh bại ở chiến dịch)</h3>
-          <p className="mb-2 text-caption text-on-wood-soft">Khi tuyển về, sứ quân dùng 3 chiêu nghề + 2 chiêu hệ + chiêu riêng ô 4 mở cấp 10. Khi làm đối thủ chiến dịch, họ giữ bộ hệ của màn và luôn có chiêu riêng; bộ chiêu có thể khác.</p>
-          <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">{warlordsLeft.map(card)}</ul>
-        </>
-      )}
-      {heroesLeft.length > 0 && (
-        <>
-          <h3 className="ui-title-on-wood mt-4 mb-2 text-base">Tướng lịch sử (gia nhập qua chiến dịch)</h3>
-          <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">{heroesLeft.map(card)}</ul>
-        </>
-      )}
+      {(sellOnly ? groups.filter((g) => g.id === shownGroup) : groups.filter((g) => g.items.length > 0)).map((g) => (
+        <div key={g.id}>
+          {!sellOnly && <h3 className="ui-title-on-wood mt-4 mb-1 text-base">{g.title}</h3>}
+          {g.note && <p className={cn("mb-2 text-caption text-on-wood-soft", sellOnly && "mt-3")}>{g.note}</p>}
+          {g.items.length > 0 ? (
+            <PagedGrid key={`${g.id}-${profFilter}-${elemFilter}`} label={g.label} items={g.items.map(card)} className={sellOnly && !g.note ? "mt-3" : undefined} />
+          ) : (
+            <p className="mt-4 text-caption text-on-wood-soft">Không còn tướng nào để tuyển theo bộ lọc này.</p>
+          )}
+        </div>
+      ))}
       <p className="mt-3 text-caption text-on-wood-soft">
-        Mọi nhân vật kèm có 3 chiêu nghề, 2 chiêu hệ và 1 tuyệt chiêu như Đinh Bộ Lĩnh, nâng theo ô; ô 4 là tuyệt chiêu (tướng thường) hoặc chiêu riêng (tướng lịch sử, sứ quân). Chọn 2 nhân vật kèm ra trận cùng Đinh Bộ Lĩnh. Nhân vật mua về bắt đầu ở cấp 1.
+        Mọi nhân vật kèm có 3 chiêu nghề, 2 chiêu hệ và 1 tuyệt chiêu như Đinh Bộ Lĩnh, nâng theo ô; ô 4 là tuyệt chiêu (tướng thường) hoặc chiêu riêng (tướng lịch sử, sứ quân).{!sellOnly && " Chọn 2 nhân vật kèm ra trận cùng Đinh Bộ Lĩnh."} Nhân vật mua về bắt đầu ở cấp 1.
       </p>
       </>)}
     </section>
