@@ -128,6 +128,21 @@
   .ui-floor[data-state="open"]:not([aria-pressed="true"]) .ui-floor__state { color: var(--frame-gold-hi); }
   .ui-floor[data-state="locked"]:not([aria-pressed="true"]) { color: var(--on-wood-soft); background: var(--wood-inset); }
 
+  /* Thẻ tướng (cửa hàng, đội hình): ô lõm viền đồng; đang ra trận viền vàng sáng; chưa sở hữu mờ hơn. */
+  .ui-hero-card {
+    border: 1px solid var(--frame-line-soft);
+    border-radius: 0.5rem;
+    background: var(--wood-inset);
+    transition: border-color 0.15s;
+  }
+  .ui-hero-card:hover { border-color: var(--frame-line); }
+  .ui-hero-card[data-selected] {
+    border-color: var(--frame-gold-hi);
+    background: var(--wood-hi);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--frame-gold-hi) 35%, transparent);
+  }
+  .ui-hero-card--unowned > :first-child { opacity: 0.85; }
+
   /* Nhãn luật (Cấm / Bắt buộc / Giới hạn): chữ, không emoji. */
   .ui-rule-tag {
     border: 1px solid currentColor;
