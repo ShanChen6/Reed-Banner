@@ -14,6 +14,7 @@ Tham khảo cách tổ chức của [ShanVerse](https://github.com/ShanChen6/sha
 | `src/styles/base.css` | Quy tắc nền, chữ, focus, selection dùng toàn ứng dụng |
 | `src/styles/components.css` | Hành vi control, trang trí nút sơn mài, nền màn chơi |
 | `src/components/ui/` | Component nhỏ, mỗi loại một file; `index.ts` export API chung |
+| `src/components/game-ui/` | Khung game dùng chung: khung 3 mức, góc hoa văn, khung màn và banner chế độ |
 | `src/lib/cn.ts` | Ghép class bằng clsx và tailwind-merge; class của nơi gọi được ưu tiên |
 
 Nguồn tham khảo: [semantic tokens](https://github.com/ShanChen6/shanverse/blob/main/src/styles/theme.css), [card composition](https://github.com/ShanChen6/shanverse/blob/main/src/components/ui/card.tsx), [button variants](https://github.com/ShanChen6/shanverse/blob/main/src/components/ui/button.tsx), [cn](https://github.com/ShanChen6/shanverse/blob/main/src/lib/cn.ts).
@@ -31,6 +32,27 @@ Dùng **Noto Serif** cho toàn bộ giao diện, phù hợp phong cách sử ký
 - Bo góc và bóng: `rounded-control`, `rounded-card`, `shadow-card`, `shadow-card-inset`.
 
 Chỉnh nhận diện chung tại `theme.css`; không khai báo mã màu tại component UI. Màu hệ nguyên tố, độ hiếm, bản đồ và hiệu ứng trận đấu vẫn là bảng màu chuyên biệt. Các biến cũ `--bg`, `--panel`, `--fg`, `--gold`, `--frame`, `--cell` là alias cho phần giao diện cũ. Tùy chọn hiển thị riêng có sẵn của màn chiến đấu được giữ nguyên; hệ thống này không thêm cơ chế đổi theme.
+
+## Quy tắc chung (đồng bộ UI 05/11/2026)
+
+Shan duyệt 05/11/2026 sau đợt kiểm kê 20 màn. Chuẩn lấy từ Chiến trường (Home V2) và Doanh Trại. Màn mới và màn được chuyển đổi dùng đúng các quy tắc này; màn cũ chuyển dần theo [lộ trình](../implementation/roadmap.md#4-đồng-bộ-ui-toàn-game-05112026).
+
+| Phần | Quy tắc | Dùng |
+| --- | --- | --- |
+| Bề mặt | Gỗ tối là mặc định (chữ sáng). Giấy dó chỉ cho nội dung đọc dài (Bình Loạn, sử ký, luật chi tiết, thoại) và trạng thái đang chọn | `--wood*`, `--paper*`, `--ink*`; lớp Tailwind `bg-wood-panel`, `text-on-wood`, `text-ink` |
+| Khung | 3 mức: panel, raised (vạch vàng trong + góc hoa văn), hero (banner có tranh). Không lồng mức 2/3 trong mức 2/3 | `OrnateFrame level`, `FrameInset` |
+| Nút chính | Sơn mài đỏ viền vàng; mỗi màn tối đa một | `Button` (mặc định `primary`) |
+| Nút phụ | Gỗ sẫm viền đồng; nút chữ màu vàng cho thao tác nhỏ | `Button variant="secondary" \| "ghost"` |
+| Lựa chọn | Tab, chip, độ khó, ô chọn: chưa chọn gỗ viền đồng, đang chọn giấy dó chữ mực | `Tabs`, `ChoiceChip`, `choiceVariants()` |
+| Màu có nghĩa | Vàng = tiền, phần thưởng; đỏ = hành động, máu; ngọc lục `--jade` = xong, đủ điều kiện; tro `--ash` = khóa. Màu 7 hệ chỉ dùng cho hệ | Không dùng xanh lá, tím, cam tùy màn |
+| Chữ | Noto Serif; `text-heading` / `text-title` (20px) / nội dung 15–16px / `text-caption` (13px, nhỏ nhất); nhãn viết hoa `text-kicker` | Không dùng chữ 10–12px |
+| Khoảng cách | Thang 4/8/12/16/24/32px; lề 16px điện thoại, 24px máy tính; nội dung rộng tối đa 1280px | `ModeScreen` |
+| Biểu tượng | Icon vẽ tay cho nội dung game; Lucide chỉ cho tiện ích (tìm, lọc, đóng, mũi tên); không emoji | `src/app/game/art/` |
+| Tương tác | Vòng focus vàng 2px, vùng chạm tối thiểu 44px, hover sáng nhẹ, bấm lún 1px | `.ui-mode-screen`, `.ui-button` |
+
+Khung màn chế độ: `ModeScreen` bọc cả màn, `ModeBanner` là banner tranh (nhãn nhỏ, một câu mô tả, số liệu; tên chế độ mặc định chỉ cho trình đọc màn hình vì header đã hiện), `SectionTitle` cho tiêu đề khối, `.ui-action-bar` cho nút chính dính đáy trên điện thoại. Trang `/demo/ui` hiển thị mọi thành phần.
+
+Không tự khai màu nút, tab, khung trong component màn; không thêm `bg-amber-*`, `bg-stone-*`, `#hex` mới. Token `--atlas-*` (Bình Loạn) và `--bk-*` (Doanh Trại) cùng giá trị với token chung và sẽ được thay dần.
 
 ## Component dùng chung
 
@@ -62,7 +84,10 @@ import {
 | `Card` | `as`: section/article/div; `variant`: default/elevated/inset; `padding`: default/none |
 | `CardHeader`, `CardBody`, `CardFooter` | Composition với padding và đường ngăn thống nhất; `CardContent` là alias của CardBody |
 | `CardTitle`, `CardDescription` | Tiêu đề h2 và mô tả theo token |
-| `Button` | `variant`: primary/secondary/outline/ghost/danger/ornate/link; `size`: sm/md/lg/icon; `fullWidth` |
+| `Button` | `variant`: primary (sơn mài)/secondary (gỗ viền đồng)/outline/ghost/danger/link, `ornate` là tên cũ của primary; `size`: sm/md/lg/icon; `fullWidth` |
+| `Tabs`, `ChoiceChip`, `choiceVariants()` | Lựa chọn: `role=tab` + `aria-selected`, chip `aria-pressed`; mũi tên/Home/End chuyển tab |
+| `OrnateFrame`, `FrameInset`, `FrameCorners` | `@/components/game-ui`; `level`: panel/raised/hero, `paper` |
+| `ModeScreen`, `ModeBanner`, `SectionTitle` | `@/components/game-ui`; khung màn chế độ |
 | `buttonVariants()` | Dùng cùng style với Link, SceneLink, a; `buttonClassName()` là alias tương thích |
 | `Input`, `Select`, `Textarea` | Thuộc tính native, ref, sự kiện, validation, disabled và aria-invalid |
 | `FormField` | Label bao quanh control, hint tùy chọn |

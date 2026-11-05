@@ -48,6 +48,36 @@
     --panel-border-gradient: linear-gradient(160deg, var(--color-brand-gold-light), var(--border) 45%, var(--primary));
     --panel-highlight-gradient: radial-gradient(ellipse at 50% 0%, var(--accent-deep), var(--decorative-frame) 70%);
     --lacquer-gradient: linear-gradient(180deg, var(--accent-hover), var(--accent) 55%, var(--accent-deep));
+
+    /* Đồng bộ UI toàn game (05/11/2026): cùng giá trị với khung Sử ký/Home V2 (--atlas-*) để mọi màn dùng chung.
+       Gỗ tối là bề mặt mặc định; giấy dó cho nội dung đọc dài và trạng thái "đang chọn". */
+    --wood: #2b1f15;
+    --wood-hi: #3d2c1d;
+    --wood-lo: #1a120c;
+    --wood-panel: #211611;
+    --wood-inset: #140d0a;
+    --on-wood: #ecd9ab;
+    --on-wood-soft: #c2ad8b;
+    --title-on-wood: #f3dfae;
+    --paper: #e4cc99;
+    --paper-hi: #f4e6c3;
+    --paper-card: #f2e1b8;
+    --paper-deep: #d2b47b;
+    --ink: #3b2a1a;
+    --ink-soft: #5c4430;
+    --ink-strong: #4a1a12;
+    --frame-line: #6b4a22;
+    --frame-line-soft: #3e2c1e;
+    --frame-gold: #c9a25a;
+    --frame-gold-hi: #d4a24c;
+    --frame-bronze: #8f6a32;
+    --frame-inner: #c9a25a73;
+    --lacquer: #8f241d;
+    --lacquer-hi: #b4382c;
+    --lacquer-lo: #5e1712;
+    --on-lacquer: #fbecc8;
+    --jade: #6fbf8f;
+    --ash: #8a7458;
   }
 
   /* Compatibility aliases for existing board/art components. */
@@ -97,6 +127,27 @@
   --color-info-surface: var(--info-surface);
   --color-gold: var(--primary);
   --color-frame: var(--decorative-frame);
+  --color-wood: var(--wood);
+  --color-wood-hi: var(--wood-hi);
+  --color-wood-lo: var(--wood-lo);
+  --color-wood-panel: var(--wood-panel);
+  --color-wood-inset: var(--wood-inset);
+  --color-on-wood: var(--on-wood);
+  --color-on-wood-soft: var(--on-wood-soft);
+  --color-title-on-wood: var(--title-on-wood);
+  --color-paper: var(--paper);
+  --color-paper-hi: var(--paper-hi);
+  --color-paper-card: var(--paper-card);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-frame-line: var(--frame-line);
+  --color-frame-gold: var(--frame-gold);
+  --color-frame-bronze: var(--frame-bronze);
+  --color-lacquer: var(--lacquer);
+  --color-lacquer-hi: var(--lacquer-hi);
+  --color-on-lacquer: var(--on-lacquer);
+  --color-jade: var(--jade);
+  --color-ash: var(--ash);
 }
 
 @theme {
