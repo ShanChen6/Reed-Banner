@@ -39,11 +39,11 @@ export function ProgressMeter({ covered, total }: { covered: number; total: numb
   return (
     <div>
       <p className="mb-1 flex items-center justify-between text-sm">
-        <span className="text-[var(--atlas-muted)]">Khai thông</span>
+        <span className="text-on-wood-soft">Khai thông</span>
         <b className="tabular-nums">{covered}/{total} ({pct}%)</b>
       </p>
       <div role="progressbar" aria-label="Tiến độ khai thông" aria-valuemin={0} aria-valuemax={total} aria-valuenow={covered} className="h-2.5 overflow-hidden rounded-full bg-[#2b2118]">
-        <div className="h-full rounded-full bg-gradient-to-r from-[#8F6A32] to-[#E8C477] transition-[width] duration-500 motion-reduce:transition-none" style={{ width: `${pct}%` }} />
+        <div className="h-full rounded-full bg-gradient-to-r from-frame-bronze to-[#E8C477] transition-[width] duration-500 motion-reduce:transition-none" style={{ width: `${pct}%` }} />
       </div>
     </div>
   );
@@ -85,10 +85,10 @@ function PieceText({ hand }: { hand: PuzzleState["hand"] }) {
 /** "Lệnh bài": tấm bài giấy dó có dấu son, hiện quân đang cầm. */
 export function CommandCard({ state }: { state: PuzzleState }) {
   return (
-    <section aria-label="Quân đang cầm" className="relative overflow-hidden rounded-lg border-2 border-[#8F6A32] bg-gradient-to-br from-[#EBD6A4] to-[#D3B77F] p-3 text-[#2B1F15] shadow-[0_4px_14px_rgb(0_0_0/0.55)]">
-      <span aria-hidden className="absolute top-0 right-3 rounded-b bg-[#8F241D] px-2 pt-0.5 pb-1 font-serif text-[11px] font-bold tracking-[0.2em] text-[#FFE9B0]">LỆNH BÀI</span>
+    <section aria-label="Quân đang cầm" className="relative overflow-hidden rounded-lg border-2 border-frame-bronze bg-gradient-to-br from-[#EBD6A4] to-[#D3B77F] p-3 text-wood shadow-[0_4px_14px_rgb(0_0_0/0.55)]">
+      <span aria-hidden className="absolute top-0 right-3 rounded-b bg-lacquer px-2 pt-0.5 pb-1 font-serif text-[11px] font-bold tracking-[0.2em] text-[#FFE9B0]">LỆNH BÀI</span>
       <div className="flex items-center gap-3 pt-3">
-        <div className="size-24 shrink-0 rounded-md bg-[#2B1F15]/10 p-1"><PieceFace piece={state.hand} large /></div>
+        <div className="size-24 shrink-0 rounded-md bg-wood/10 p-1"><PieceFace piece={state.hand} large /></div>
         <div className="min-w-0 text-[15px] leading-snug"><PieceText hand={state.hand} /></div>
       </div>
     </section>
@@ -98,7 +98,7 @@ export function CommandCard({ state }: { state: PuzzleState }) {
 /** Nút gợi ý ô đặt được (bật tắt, nhớ lựa chọn). */
 export function HintToggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
   return (
-    <button type="button" aria-pressed={on} onClick={onToggle} className={`flex min-h-11 items-center gap-2 rounded-full border px-4 text-[15px] ${on ? "border-[#C9A25A] bg-[#C9A25A]/25 font-semibold" : "border-[#8F6A32]/50 bg-black/20 text-[var(--atlas-muted)]"}`}>
+    <button type="button" aria-pressed={on} onClick={onToggle} className={`flex min-h-11 items-center gap-2 rounded-full border px-4 text-[15px] ${on ? "border-frame-gold bg-frame-gold/25 font-semibold" : "border-frame-bronze/50 bg-black/20 text-on-wood-soft"}`}>
       <span aria-hidden className={`size-2.5 rounded-full ${on ? "bg-[#E8C477] shadow-[0_0_6px_#E8C477]" : "bg-[#5a4229]"}`} />
       Gợi ý ô đặt được: {on ? "Bật" : "Tắt"}
     </button>
@@ -113,15 +113,15 @@ export function MobileBar({ state, rules, noMove, disabled, covered, total, onDi
   const h = state.hand;
   const pct = total > 0 ? Math.round((100 * covered) / total) : 0;
   return (
-    <div className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-[#8F6A32] bg-[#1d140d]/95 px-3 pt-2 pb-3 shadow-[0_-6px_18px_rgb(0_0_0/0.6)] backdrop-blur lg:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-frame-bronze bg-wood-lo/95 px-3 pt-2 pb-3 shadow-[0_-6px_18px_rgb(0_0_0/0.6)] backdrop-blur lg:hidden">
       <div className="mx-auto flex max-w-md items-center gap-3">
-        <div className="size-14 shrink-0 rounded-md border border-[#8F6A32] bg-[#E4CC99] p-0.5"><PieceFace piece={h} large /></div>
+        <div className="size-14 shrink-0 rounded-md border border-frame-bronze bg-paper p-0.5"><PieceFace piece={h} large /></div>
         <div className="min-w-0 flex-1 text-sm leading-tight">
-          <p className="truncate font-serif font-bold text-[var(--atlas-title)]">{h.kind === "normal" || h.kind === "fusion" ? nameOf(h.characterId) : h.kind === "wild" ? "Quân Lệnh" : "Thu Hồi"}</p>
-          <p className="truncate text-[var(--atlas-muted)]">
+          <p className="truncate font-serif font-bold text-title-on-wood">{h.kind === "normal" || h.kind === "fusion" ? nameOf(h.characterId) : h.kind === "wild" ? "Quân Lệnh" : "Thu Hồi"}</p>
+          <p className="truncate text-on-wood-soft">
             {h.kind === "normal" ? `${PROFESSION_NAME[h.profession]} · ${ELEMENT_NAME[h.element]}` : h.kind === "fusion" ? "Dung hợp: khớp mọi quân" : h.kind === "wild" ? "Đặt ở ô trống bất kỳ" : "Chạm vào quân để xóa"}
           </p>
-          <p className="text-xs text-[var(--atlas-muted)]">Khai thông {pct}%</p>
+          <p className="text-xs text-on-wood-soft">Khai thông {pct}%</p>
         </div>
         <div className="flex flex-col items-center gap-1">
           <HeatFlames heat={state.discardHeat} max={rules.maxHeat} />
@@ -146,10 +146,10 @@ export function tutorialText(state: PuzzleState, noMove: boolean): string | null
 
 export function TutorialTip({ text, onDismiss }: { text: string; onDismiss: () => void }) {
   return (
-    <div role="note" className="flex items-start gap-3 rounded-lg border border-[#C9A25A]/60 bg-[#C9A25A]/15 p-3 text-[15px] leading-snug">
-      <span aria-hidden className="mt-0.5 rounded-full bg-[#8F241D] px-2 py-0.5 text-xs font-bold text-[#FFE9B0]">Mẹo</span>
+    <div role="note" className="flex items-start gap-3 rounded-lg border border-frame-gold/60 bg-frame-gold/15 p-3 text-[15px] leading-snug">
+      <span aria-hidden className="mt-0.5 rounded-full bg-lacquer px-2 py-0.5 text-xs font-bold text-[#FFE9B0]">Mẹo</span>
       <p className="flex-1">{text}</p>
-      <button type="button" onClick={onDismiss} className="min-h-9 shrink-0 rounded border border-[#8F6A32]/60 px-3 text-sm font-semibold">Đã hiểu</button>
+      <button type="button" onClick={onDismiss} className="min-h-9 shrink-0 rounded border border-frame-bronze/60 px-3 text-sm font-semibold">Đã hiểu</button>
     </div>
   );
 }
