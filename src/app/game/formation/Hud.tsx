@@ -3,6 +3,7 @@
 // Các mảnh giao diện quanh sa bàn Trận Đồ: lệnh bài (quân đang cầm), ngọn lửa Bỏ Lệnh, thanh tiến độ, thanh dưới màn hình
 // cho điện thoại, nút gợi ý và hướng dẫn từng bước.
 
+import { buttonVariants } from "@/components/ui";
 import type { PuzzleState, Ruleset } from "@/core/binh-phap";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
@@ -124,7 +125,7 @@ export function MobileBar({ state, rules, noMove, disabled, covered, total, onDi
         </div>
         <div className="flex flex-col items-center gap-1">
           <HeatFlames heat={state.discardHeat} max={rules.maxHeat} />
-          <button type="button" disabled={disabled} onClick={onDiscard} className="home-secondary min-h-11 rounded-lg px-3 font-serif text-sm font-semibold disabled:opacity-60">
+          <button type="button" disabled={disabled} onClick={onDiscard} className={buttonVariants({ variant: "secondary", className: "min-h-11 px-3 text-sm" })}>
             Bỏ Lệnh{noMove ? " !" : ""}
           </button>
         </div>
