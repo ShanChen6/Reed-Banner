@@ -38,10 +38,10 @@ test("mọi chiêu nghề của 8 nghề có ảnh vẽ tay", () => {
   }
 });
 
-test("28 chiêu ô 4 tướng dùng lại ảnh hệ cũ: đúng mã, có file, mỗi ảnh một lần", () => {
+test("27 chiêu ô 4 tướng dùng lại ảnh hệ cũ: đúng mã, có file, mỗi ảnh một lần", () => {
   const ids = new Set(CHARACTER_SKILLS.map((d) => d.id));
   const files = Object.values(REUSED_SKILL_ART);
-  assert.equal(files.length, 28);
+  assert.equal(files.length, 27);
   assert.equal(new Set(files).size, files.length);
   for (const [id, file] of Object.entries(REUSED_SKILL_ART)) {
     assert.ok(ids.has(id), id);
@@ -68,10 +68,8 @@ test("chiêu ô 4 riêng Shan vẽ cho 47 tướng: ảnh trùng mã kỹ năng"
   }
 });
 
-test("Đinh Ngọc: cả 6 chiêu có ảnh riêng", () => {
-  const set = SPECIAL_SKILL_SETS.dinhNgoc!;
-  assert.equal(set.length, 6);
-  for (const def of set) {
+test("Đinh Ngọc và Trần Vũ Phong: cả 6 chiêu có ảnh riêng", () => {
+  for (const def of [...SPECIAL_SKILL_SETS.dinhNgoc!, ...SPECIAL_SKILL_SETS.vuPhong!]) {
     assert.deepEqual(skillArt(def), { file: def.id });
     assert.ok(existsSync(`public/art/skills/${def.id}.webp`), def.id);
   }
