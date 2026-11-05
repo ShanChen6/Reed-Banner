@@ -4,6 +4,7 @@
 // Chỉ là trình bày: chọn chương chỉ đổi chương đang xem, không mở hay hoàn thành nhiệm vụ nào. Tiến độ lấy từ
 // hồ sơ server qua chapterStatus.
 
+import { buttonVariants } from "@/components/ui";
 import Image from "next/image";
 import {
   CAMPAIGN_CHAPTERS,
@@ -64,7 +65,7 @@ export function ChapterRail({
       className="atlas-frame atlas-frame-paper flex flex-col p-2 xl:h-full"
     >
       <AtlasCorners />
-      <h2 className="mb-2 hidden px-1 text-center text-sm font-bold tracking-widest text-[#3b2a1a] uppercase xl:block">
+      <h2 className="mb-2 hidden px-1 text-center text-sm font-bold tracking-widest text-ink uppercase xl:block">
         Chương chiến dịch
       </h2>
       <div
@@ -196,10 +197,10 @@ function MissionList({
               <span
                 className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
                   s === "completed"
-                    ? "bg-emerald-700 text-white"
+                    ? "bg-jade text-on-lacquer"
                     : usable
-                      ? "bg-[#a8322b] text-amber-50"
-                      : "bg-[#cdb68a] text-[#3b2a1a]"
+                      ? "bg-lacquer text-on-lacquer"
+                      : "border border-frame-line-soft bg-paper-card text-ink-soft"
                 }`}
               >
                 {s === "completed"
@@ -208,7 +209,7 @@ function MissionList({
                     ? id.slice(1)
                     : s === "comingSoon"
                       ? "…"
-                      : "🔒"}
+                      : id.slice(1)}
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block truncate font-semibold">{n.title}</span>
@@ -258,7 +259,7 @@ export function ChapterPanel({
         </header>
 
         {chapterCompleted(campaign, chapter.chapter) && (
-          <p className="rounded-lg border border-emerald-800/40 bg-emerald-800/10 p-2 text-sm leading-relaxed">
+          <p className="rounded-lg border border-jade/40 bg-jade/10 p-2 text-sm leading-relaxed">
             <span className="font-bold">Hoàn thành Chương {roman}.</span>{" "}
             {chapter.completeLine}
           </p>
@@ -490,7 +491,7 @@ export function StrongholdPanel({
             type="button"
             onClick={onClose}
             aria-label="Đóng thông tin cứ điểm, về thông tin chương"
-            className="flex size-11 shrink-0 items-center justify-center rounded-lg border border-[#8a6a3b80] bg-[#f6ead0] text-xl font-bold hover:bg-[#fff4dc]"
+            className="flex size-11 shrink-0 items-center justify-center rounded-lg border border-frame-line-soft bg-paper-card text-xl font-bold text-ink hover:bg-paper-hi"
           >
             ×
           </button>
@@ -499,7 +500,7 @@ export function StrongholdPanel({
         {/* Ảnh minh họa lấy từ ảnh nền thoại của vùng; ảnh lỗi thì chỉ còn màu nền. */}
         <div
           aria-hidden
-          className="aspect-[16/8] rounded-lg border border-[#8a6a3b80] bg-[#cdb68a] bg-cover bg-center"
+          className="aspect-[16/8] rounded-lg border border-frame-line-soft bg-paper-card bg-cover bg-center"
           style={{ backgroundImage: `url(${backdrop})` }}
         />
 
@@ -557,7 +558,7 @@ export function StrongholdPanel({
             status={rewardFor.status}
           />
         ) : (
-          <p className="rounded-lg border border-[#8a6a3b66] p-2 text-center text-sm opacity-80">
+          <p className="rounded-lg border border-frame-line-soft p-2 text-center text-sm opacity-80">
             Chưa có nhiệm vụ nào gắn với vùng này.
           </p>
         )}
@@ -583,7 +584,7 @@ export function StrongholdPanel({
                   ? "Tiếp tục"
                   : "Bắt đầu"
             }: ${storyNodeById(focus.id)?.title ?? ""}`}
-            className="min-h-12 rounded-lg border-2 border-[#d4a24c] bg-gradient-to-b from-[#b4382c] to-[#7a2c1d] px-4 text-base font-bold tracking-wide text-amber-50 uppercase shadow"
+            className={buttonVariants({ size: "lg", className: "min-h-12 w-full" })}
           >
             {focus.status === "completed"
               ? "Xem lại"
@@ -592,8 +593,8 @@ export function StrongholdPanel({
                 : "Bắt đầu"}
           </button>
         ) : (
-          <p className="rounded-lg border border-[#8a6a3b66] p-2 text-center text-sm opacity-80">
-            🔒 Chưa mở nhiệm vụ nào ở đây.
+          <p className="rounded-lg border border-frame-line-soft p-2 text-center text-sm opacity-80">
+            Chưa mở nhiệm vụ nào ở đây.
           </p>
         )}
       </div>
@@ -720,7 +721,7 @@ export function AtlasHeader({
         >
           Sử ký Đại Việt
         </h1>
-        <p className="text-xs text-amber-100/70">Loạn 12 sứ quân · thế kỷ X</p>
+        <p className="text-xs text-on-wood-soft">Loạn 12 sứ quân · thế kỷ X</p>
       </div>
       <nav
         aria-label="Màn Sử ký"
