@@ -1943,8 +1943,8 @@ export default function DemoGame({
           </p>
         )}
         {expeditionObjective && live && state.winner === null && (
-          <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-sm text-amber-100">
-            ⚑ {expeditionObjective.type === "gate"
+          <p className="rounded-md border border-frame-line bg-wood-inset px-3 py-1 text-sm text-on-wood">
+            {expeditionObjective.type === "gate"
               ? `Phá cổng: hạ Cổng thành là qua (cổng còn ${Math.round((Math.max(0, live.sides[1].fighters[expeditionObjective.fighter]?.hp ?? 0) / Math.max(1, live.sides[1].fighters[expeditionObjective.fighter]?.maxHp ?? 1)) * 100)}% độ bền).`
               : `${expeditionObjective.type === "hold" ? "Giữ vị trí" : "Hộ tống đoàn dân"}: đã giữ ${Math.min(completedPlayerTurns(live), expeditionObjective.turns)}/${expeditionObjective.turns} lượt của bạn, hoặc hạ hết đối thủ.`}
           </p>
