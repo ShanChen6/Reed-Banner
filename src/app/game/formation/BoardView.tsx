@@ -70,7 +70,7 @@ export default function BoardView({
   const cell = `min(${maxCell}px, calc((100vw - 3rem - 20px) / ${width}))`;
 
   return (
-    <div ref={boardRef} role="grid" aria-label={`Sa bàn ${height} hàng ${width} cột`} data-won={state.phase === "won"} className="atlas-frame atlas-frame-wood w-fit p-2">
+    <div ref={boardRef} role="grid" aria-label={`Sa bàn ${height} hàng ${width} cột`} data-won={state.phase === "won"} className="ui-frame w-fit p-2">
       <div
         className="fm-board relative grid overflow-hidden rounded-sm"
         style={{ gridTemplateColumns: `repeat(${width}, ${cell})`, gridAutoRows: cell, backgroundImage: `url(${map.src})` }}
@@ -99,7 +99,7 @@ export default function BoardView({
                 aria-label={`Hàng ${r + 1}, cột ${col + 1}: ${c.blocked ? `${obstacleLabel(obstacleKind(i))} (chướng ngại), không đặt được` : c.piece ? pieceLabel(c.piece) : c.covered ? "trống, đã khai thông" : "trống, chưa khai thông"}${ok ? ", đặt được" : ""}`}
                 data-state={c.blocked ? "rock" : c.covered ? "lit" : "fog"}
                 className={[
-                  "fm-cell flex items-center justify-center focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--atlas-gold)]",
+                  "fm-cell flex items-center justify-center focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-frame-gold",
                   ok && showHints ? "ring-2 ring-[#E8C477] ring-inset" : "",
                   last === i && state.phase !== "won" ? "z-10 outline-2 outline-offset-[-2px] outline-[#E8C477]" : "",
                 ].join(" ")}
