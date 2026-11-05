@@ -81,7 +81,11 @@ bị phá là đường duy nhất tới một ô, nên mọi tổ hợp đườ
 
 ### 2.4 Số ngày
 
-- Hạn **12 ngày**, chuẩn **9 ngày** (hiện tại 12/8; tăng chuẩn vì thêm việc phụ và mỗi ngày chỉ một đạo đi).
+- Hạn **17 ngày**, chuẩn **12 ngày** (từ 05/11/2026; trước là 12/9). Mô phỏng theo nhiệm vụ cho thấy làm đủ việc phụ
+  rồi đánh thành cần 14–16 ngày ([GDD mục 5.2](01-vien-chinh-gdd.md#52-kết-quả-bản-chốt-05112026)).
+- **Sức địch ×0,87** (`foePower`, Shan chọn 05/11/2026): mọi địch trên sa bàn, cả truy binh và phản công, nhẹ hơn các
+  sa bàn khác vì việc phụ ăn hết ngày. Bậc I / II / III thắng 85 / 70 / 40% (trước 50 / 28 / 8%), xem
+  [GDD mục 5.3](01-vien-chinh-gdd.md#53-nhiệm-vụ-và-sức-địch-cửa-biển-05112026-lần-8).
 - Đường ngắn nhất chỉ chiếm thành: Biệt đạo trai-bai → bai-su → doi-cat → trai-tay = 3 ngày, nhưng đánh 3 trận liền không
   nghỉ và trận cuối có phase phá cổng.
 - Đường Toàn thắng thường gặp (ước tính tay, chưa mô phỏng): Biệt đạo giữ cầu ở ngày 2; đạo Chính rút dân ngày 3–6
@@ -139,7 +143,7 @@ bị phá là đường duy nhất tới một ô, nên mọi tổ hợp đườ
 ### 3.6 Phản công Chợ Cửa Sông
 
 - Chiếm Chợ được +20 lương cho cả hai đạo như kho lương thường. **Hai ngày sau** (cuối ngày chiếm + 2), địch phản công:
-  - Có đạo đứng ở Chợ: vào trận **giữ cầu** (cùng loại, giữ 4 lượt). Thắng thì thêm +20 lương và Chợ thành nơi đưa dân
+  - Có đạo đứng ở Chợ: vào trận **giữ cầu** (cùng loại, giữ 6 lượt, 3 địch sức mạnh ×1,4). Thắng thì thêm +20 lương và Chợ thành nơi đưa dân
     về được. Thua thì đạo rút về ô kề gần nhất (theo id cạnh), Chợ trở lại có địch với 60% máu.
   - Không có đạo ở Chợ: Chợ trở lại có địch với 60% máu, không mất gì khác.
 - Phản công chỉ xảy ra một lần mỗi lượt. Nếu cần gọn bản đầu, đây là phần cắt được mà không ảnh hưởng ba việc chính.
@@ -151,19 +155,22 @@ bị phá là đường duy nhất tới một ô, nên mọi tổ hợp đườ
 | Kết thúc | Điều kiện | Sao |
 |---|---|---|
 | **Toàn thắng** | Chiếm Thủy Trại Tây, đã cắt thuyền viện **và** đã đưa dân về | ★★★ |
-| **Chiếm trại** | Chiếm Thủy Trại Tây | ★★ nếu xong trong chuẩn 9 ngày, không thì ★ |
+| **Chiếm trại** | Chiếm Thủy Trại Tây | ★★ nếu xong trong chuẩn 12 ngày, không thì ★ |
 | **Giữ dân** | Hết hạn hoặc rút quân, chưa chiếm trại, nhưng đã đưa dân về **và** đã cắt viện | ★ (thắng phụ) |
 | **Thất bại** | Còn lại | — |
 
 - Thay luật sao chung (chiếm thành · trong chuẩn · không thua) **chỉ ở Cửa Biển**, vì ở đây việc phụ mới là thử thách.
   Năm sa bàn khác giữ luật cũ.
-- "Giữ dân" tính là **thắng** để mở bậc kế tiếp. Lý do: người chơi đã làm được việc khó nhất về điều quân; cho họ đi tiếp.
+- "Giữ dân" **không** tính là qua bậc, không mở bậc kế tiếp (Shan chốt 05/11/2026, thay quyết định cũ). Lý do: làm xong
+  hai việc phụ rồi rút quân thì lách được thành đích mà vẫn lên bậc.
 - `bestDays` chỉ ghi khi chiếm được trại.
 
 ### 4.2 Thưởng
 
 - Mỗi trận: như trận viễn chinh hiện tại (kinh nghiệm, vàng và sách nhặt trên bàn, đồ rơi theo độ khó).
-- Kết thúc: vàng theo bậc như hiện tại, nhân hệ số theo kết thúc: Toàn thắng ×1,5, Chiếm trại ×1, Giữ dân ×0,6.
+- Kết thúc: vàng theo bậc như hiện tại, nhân hệ số theo kết thúc: Toàn thắng ×1,5, Chiếm trại ×1, Giữ dân ×0,6. Giữ dân
+  luôn lấy mức vàng thắng lại (`repeatGold`), không lấy mức thắng lần đầu, vì không ghi qua bậc nên nếu lấy mức lần đầu
+  thì mỗi lượt Giữ dân đều được vàng lần đầu.
 - Món trang bị lần đầu mỗi bậc: chỉ khi Chiếm trại hoặc Toàn thắng. Toàn thắng lần đầu ở một bậc cho thêm một món phẩm
   cao hơn một nấc (lấy lại `expeditionRewardItem`, phẩm +1, tối đa Cam).
 - Không thêm tài nguyên mới ngoài máu, lương và các cờ nhiệm vụ (đề xuất của Claude ở mục 11 bản đề xuất).
@@ -176,8 +183,12 @@ dùng lại chúng thay vì viết luật mới; chỉ phá cổng cần một t
 
 ### 5.1 Giữ cầu (Cầu Phao Doi Cát, phản công Chợ)
 
-- Mục tiêu: **giữ 5 lượt** của người chơi mà còn ít nhất một người đứng; hạ hết địch sớm cũng thắng. Phản công Chợ giữ
-  4 lượt.
+- Mục tiêu: **giữ 8 lượt** của người chơi mà còn ít nhất một người đứng; hạ hết địch sớm cũng thắng. Phản công Chợ giữ
+  6 lượt, sức mạnh ×1,4.
+- Số lượt tăng ngày 05/11/2026 sau bản review (trước là 5 và 4 lượt): đủ máu thì mức cũ thắng 100% ở mọi bậc và tốn ít máu
+  hơn đánh một lũy thường. Đo ngắn 10 trận mỗi mức (vào trận ngày 4): giữ cầu 8 lượt vào đủ máu thắng 90–100%, còn 55–64%
+  máu (lũy thường còn 73%); vào 60% máu thắng 70–80%. Phản công Chợ 6 lượt ×1,4: đủ máu còn 49–67%, vào 60% máu thắng
+  80–100%.
 - Địch đông và mạnh hơn ô cùng bậc vì không bắt buộc hạ: 3 địch, sức mạnh ×1,2.
 - Bàn cờ nghiêng về ô Khiên và ô hồi máu (trọng số `weights` riêng, engine đã kiểm tra hợp lệ).
 - Thua: rút về như luật thường; cầu giữ thương vong; đánh lại được nếu còn trước ngày 9.
@@ -185,7 +196,9 @@ dùng lại chúng thay vì viết luật mới; chỉ phá cổng cần một t
 
 ### 5.2 Hộ tống (truy binh đoàn dân)
 
-- Mục tiêu: **giữ 4 lượt** hoặc hạ hết toán truy binh (2 địch, sức mạnh ×0,9 vì đạo không chọn được lúc đánh).
+- Mục tiêu: **giữ 6 lượt** hoặc hạ hết toán truy binh (3 địch, sức mạnh ×1,2). Trước 05/11/2026 là 4 lượt, 2 địch ×0,9:
+  người chơi hạ hết 2 địch trong chừng 3 lượt nên mục tiêu hộ tống gần như không có tác dụng. Mức mới (đo ngắn như mục
+  5.1): đủ máu thắng 80–100%, còn 48–71% máu; vào 60% máu thắng 90%.
 - Thua: đạo rút về Làng Chài, **mất dân**; nhiệm vụ rút dân thất bại.
 - Thắng: đạo vào ô định đi như thường, vẫn mang dân.
 - Dùng `breakSiege` stage `escort` một phase.
@@ -274,7 +287,8 @@ là người đứng đầu tiên không phải công trình.
 
 ## 9. Shan đã chốt (04/11/2026)
 
-1. **Sao:** Shan không đặt nặng cách tính sao; dùng đúng bảng mục 4.1, kể cả "Giữ dân" mở bậc kế tiếp.
+1. **Sao:** Shan không đặt nặng cách tính sao; dùng đúng bảng mục 4.1. ~~"Giữ dân" mở bậc kế tiếp~~: Shan đổi ngày
+   05/11/2026 sau bản review, Giữ dân không mở bậc và chỉ có vàng thắng lại × 0,6 (mục 4.1, 4.2).
 2. **Thưởng:** giữ hệ số ×1,5 / ×1 / ×0,6 và món thêm khi Toàn thắng lần đầu (mục 4.2), Shan không đổi.
 3. **Giữ phản công Chợ** trong bản đầu (mục 3.6).
 4. **Không thêm tài nguyên mới** (câu 12.3); việc phụ chỉ đổi thưởng và kết thúc, không khóa bậc (câu 12.4).

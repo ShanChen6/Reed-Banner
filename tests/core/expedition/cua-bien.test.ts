@@ -4,6 +4,7 @@ import {
   EXPEDITION_GATE_ID,
   EXPEDITION_MAPS,
   EXPEDITION_SCENARIOS,
+  type ExpeditionScenario,
   EXPEDITION_TIER_INFO,
   NEW_EXPEDITION,
   STARTER_COMPANIONS,
@@ -37,7 +38,7 @@ import {
 } from "../../../src/core";
 
 const IDS = STARTER_COMPANIONS.map((c) => c.id);
-const SCENARIO = EXPEDITION_SCENARIOS.cuaBien!;
+const SCENARIO = EXPEDITION_SCENARIOS.cuaBien! as Required<ExpeditionScenario>;
 const MAP = EXPEDITION_MAPS.cuaBien;
 
 function newRun(seed = 7): ExpeditionRun {
@@ -104,7 +105,7 @@ describe("Cửa Biển: đường bị phá", () => {
   it("mỗi lượt chọn 2 trong 4 đường theo seed, cùng seed thì như nhau", () => {
     const run = newRun(11);
     assert.equal(run.broken?.length, 2);
-    const pool = SCENARIO.breakable.map(([a, b]) => expeditionEdgeKey(a, b));
+    const pool = SCENARIO.broken.edges.map(([a, b]) => expeditionEdgeKey(a, b));
     for (const k of run.broken!) assert.ok(pool.includes(k));
     assert.deepEqual(newRun(11).broken, run.broken);
     const seen = new Set(Array.from({ length: 40 }, (_, i) => newRun(i).broken!.join("|")));
@@ -112,7 +113,7 @@ describe("Cửa Biển: đường bị phá", () => {
   });
 
   it("mọi tổ hợp 2 đường bị phá vẫn còn đường tới thành đích, làng và bãi cạn", () => {
-    const pool = SCENARIO.breakable.map(([a, b]) => expeditionEdgeKey(a, b));
+    const pool = SCENARIO.broken.edges.map(([a, b]) => expeditionEdgeKey(a, b));
     for (let i = 0; i < pool.length; i++)
       for (let j = i + 1; j < pool.length; j++) {
         const broken = [pool[i]!, pool[j]!];
@@ -149,13 +150,17 @@ describe("Cửa Biển: đường bị phá", () => {
     assert.ok(s.run.armies[0].food > run.armies[0].food);
   });
 
-  it("sa bàn không có kịch bản không trinh sát được", () => {
-    const made = createExpeditionRun(expeditionSimProfile(10), NEW_EXPEDITION, { map: "aiBac", tier: 1, main: IDS.slice(0, 2), second: IDS.slice(2, 5) }, "r", 1);
+  it("mọi sa bàn trinh sát được; sa bàn không có đường bị phá thì không lộ đường nào", () => {
+    const made = createExpeditionRun(expeditionSimProfile(10), NEW_EXPEDITION, { map: "kinhThanh", tier: 1, main: IDS.slice(0, 2), second: IDS.slice(2, 5) }, "r", 1);
     assert.ok(made.ok);
     if (!made.ok) return;
     assert.equal(made.run.broken, undefined);
     const s = scoutExpedition(made.run, 0);
-    assert.ok(!s.ok && s.error === "noScout");
+    assert.ok(s.ok);
+    if (!s.ok) return;
+    assert.equal(s.run.day, 2);
+    assert.ok((s.run.scouted ?? []).length > 0);
+    assert.equal(s.run.knownBroken, undefined);
   });
 });
 
@@ -235,7 +240,7 @@ describe("Cửa Biển: cầu và thuyền viện", () => {
     let run = clean(newRun());
     run = fight(run, 1, "bai-su", 0).run;
     const r = fight(run, 1, "doi-cat", 0);
-    assert.deepEqual(r.encounter.objective, { type: "hold", turns: SCENARIO.bridge.turns });
+    assert.deepEqual(r.encounter.objective, { type: "hold", turns: SCENARIO.hold.turns });
     assert.equal(r.encounter.foes.length, 3);
     assert.equal(r.run.reinforcementsCut, true);
   });
@@ -319,8 +324,8 @@ describe("Cửa Biển: kết thúc và thưởng", () => {
   it("toàn thắng 3 sao và thêm một món phẩm cao hơn; chiếm trại 2 sao", () => {
     const full = ended({ phase: "won", day: 10, refugees: "saved", reinforcementsCut: true });
     assert.equal(expeditionStars(full), 3);
-    assert.equal(expeditionStars(ended({ phase: "won", day: 9 })), 2);
-    assert.equal(expeditionStars(ended({ phase: "won", day: 11 })), 1);
+    assert.equal(expeditionStars(ended({ phase: "won", day: MAP.parDays })), 2);
+    assert.equal(expeditionStars(ended({ phase: "won", day: MAP.parDays + 1 })), 1);
     const r = applyExpeditionEnd(expeditionSimProfile(10), { ...NEW_EXPEDITION, run: full }, createRng(1));
     const result = r.state.run!.result!;
     assert.equal(result.ending, "full");
@@ -329,18 +334,20 @@ describe("Cửa Biển: kết thúc và thưởng", () => {
     assert.equal(result.bonusItem?.tier, EXPEDITION_TIER_INFO[1].gearTier + 1);
   });
 
-  it("giữ dân: hết ngày nhưng đã cứu dân và cắt viện thì vẫn qua bậc, chỉ có vàng", () => {
-    const run = ended({ phase: "lost", endReason: "timeout", refugees: "saved", reinforcementsCut: true });
-    assert.equal(expeditionStars(run), 1);
-    const r = applyExpeditionEnd(expeditionSimProfile(10), { ...NEW_EXPEDITION, run }, createRng(1));
-    const result = r.state.run!.result!;
-    assert.equal(result.ending, "refuge");
-    assert.equal(result.won, false);
-    assert.equal(result.item, null);
-    assert.equal(result.gold, Math.round(EXPEDITION_TIER_INFO[1].firstGold * SCENARIO.endingGold.refuge));
-    assert.equal(r.state.cleared.cuaBien, 1);
-    assert.equal(r.state.bestDays, undefined);
-  });
+  for (const endReason of ["timeout", "abandoned"] as const)
+    it(`giữ dân (${endReason}): chỉ có vàng thắng lại × hệ số, không qua bậc, không có món`, () => {
+      const run = ended({ phase: "lost", endReason, refugees: "saved", reinforcementsCut: true });
+      assert.equal(expeditionStars(run), 1);
+      const r = applyExpeditionEnd(expeditionSimProfile(10), { ...NEW_EXPEDITION, run }, createRng(1));
+      const result = r.state.run!.result!;
+      assert.equal(result.ending, "refuge");
+      assert.equal(result.won, false);
+      assert.equal(result.firstClear, false);
+      assert.equal(result.item, null);
+      assert.equal(result.gold, Math.round(EXPEDITION_TIER_INFO[1].repeatGold * SCENARIO.endingGold.refuge));
+      assert.equal(r.state.cleared.cuaBien, undefined);
+      assert.equal(r.state.bestDays, undefined);
+    });
 
   it("hết ngày mà chưa làm đủ hai việc phụ thì không thưởng", () => {
     const run = ended({ phase: "lost", endReason: "timeout", refugees: "saved" });
