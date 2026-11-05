@@ -4,7 +4,8 @@
 // (/api/expedition); màn này chỉ hiển thị và gửi ý định. Luật: docs/02-game-modes/expedition/01-vien-chinh-gdd.md.
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui";
+import { ModeBanner, ModeScreen } from "@/components/game-ui";
+import { Alert, Button, choiceVariants } from "@/components/ui";
 import {
   EXPEDITION_PINCER_HP,
   EXPEDITION_REINFORCE_PER_DAY,
@@ -186,7 +187,7 @@ function Stars({ n, className = "" }: { n: number; className?: string }) {
   return (
     <span className={className} aria-label={`${n} sao`}>
       {[0, 1, 2].map((i) => (
-        <span key={i} className={i < n ? "text-amber-300" : "text-stone-600"}>★</span>
+        <span key={i} className={i < n ? "text-frame-gold" : "text-on-wood-soft/40"}>★</span>
       ))}
     </span>
   );
@@ -195,8 +196,8 @@ function Stars({ n, className = "" }: { n: number; className?: string }) {
 function HpBar({ ratio }: { ratio: number }) {
   const pct = Math.max(0, Math.min(100, Math.round(ratio * 100)));
   return (
-    <div className="h-1.5 overflow-hidden rounded bg-black/40">
-      <div className={`h-full ${pct > 50 ? "bg-emerald-500" : pct > 0 ? "bg-amber-500" : "bg-rose-700"}`} style={{ width: `${pct}%` }} />
+    <div className="h-1.5 overflow-hidden rounded bg-wood-inset">
+      <div className={`h-full ${pct > 50 ? "bg-jade" : pct > 0 ? "bg-frame-gold" : "bg-danger"}`} style={{ width: `${pct}%` }} />
     </div>
   );
 }
@@ -271,7 +272,8 @@ export default function ExpeditionScreen() {
 
   if (!overview || !profile)
     return (
-      <main className="flex flex-1 items-center justify-center bg-[#17110e] p-6 text-stone-200">
+      <ModeScreen label="Viễn Chinh">
+        <div className="py-24 text-center text-on-wood-soft">
         {failed ? (
           <div className="text-center">
             <p role="alert">Không tải được Viễn Chinh.</p>
@@ -280,7 +282,8 @@ export default function ExpeditionScreen() {
         ) : (
           <p role="status">Đang tải sa bàn…</p>
         )}
-      </main>
+        </div>
+      </ModeScreen>
     );
 
   const run = overview.run;
@@ -288,21 +291,17 @@ export default function ExpeditionScreen() {
   const mapOf = (id: string) => overview.maps.find((m) => m.id === id)!;
 
   return (
-    <main className="ui-screen tower-screen tower-screen--expedition">
-      <div className="tower-screen__content space-y-5">
-        <header className="tower-screen__banner">
-          <div>
-            <p className="text-xs uppercase tracking-[.2em] text-amber-400">Hai đạo quân trên sa bàn</p>
-            <h1 className="font-serif text-3xl font-bold text-amber-100">Viễn Chinh</h1>
-            <p className="mt-1 max-w-2xl text-sm text-foreground-secondary">
-              Chia sáu tướng làm hai đạo. Mỗi ngày một đạo tiến một ô, đạo kia nghỉ hồi sức. Giặc tăng viện theo
-              ngày; đứng kề ô bị đánh thì hai đạo giáp công. Chiếm thành đích trước khi hết ngày.
-            </p>
-          </div>
-        </header>
+    <ModeScreen wide label="Viễn Chinh">
+      <div className="space-y-5">
+        <ModeBanner
+          title="Viễn Chinh"
+          kicker="Hai đạo quân trên sa bàn"
+          art="/art/home/campaign.webp"
+          description="Chia sáu tướng làm hai đạo. Mỗi ngày một đạo tiến một ô, đạo kia nghỉ hồi sức. Giặc tăng viện theo ngày; đứng kề ô bị đánh thì hai đạo giáp công. Chiếm thành đích trước khi hết ngày."
+        />
 
-        {message && <p role="alert" className="rounded-lg border border-rose-400/30 bg-rose-950/50 p-3 text-rose-100">{message}</p>}
-        {notice && <p role="status" className="rounded-lg border border-amber-400/40 bg-amber-950/50 p-3 text-amber-100">{notice}</p>}
+        {message && <Alert>{message}</Alert>}
+        {notice && <Alert tone="success">{notice}</Alert>}
 
         {active && run ? (
           <RunView
@@ -348,7 +347,7 @@ export default function ExpeditionScreen() {
           />
         )}
       </div>
-    </main>
+    </ModeScreen>
   );
 }
 
@@ -388,7 +387,7 @@ function SetupView(props: {
 
   return (
     <>
-      <section className="tower-screen__panel">
+      <section className="ui-frame p-4 sm:p-5">
         <h2 className="font-serif text-xl font-bold">1. Chọn sa bàn</h2>
         <div className="mt-3 grid gap-3 md:grid-cols-3">
           {maps.map((m) => {
@@ -399,17 +398,17 @@ function SetupView(props: {
                 type="button"
                 aria-pressed={m.id === map.id}
                 onClick={() => props.setMapId(m.id)}
-                className={`tower-screen__choice overflow-hidden p-0 text-left ${m.id === map.id ? "border-amber-400 bg-amber-500/15" : "border-white/10 bg-white/5"}`}
+                className={choiceVariants({ className: "flex-col items-stretch justify-start overflow-hidden p-0 text-left font-normal" })}
               >
                 <span aria-hidden className="block aspect-[5/2] w-full bg-no-repeat opacity-90" style={mapArtStyle(m)} />
                 <span className="block p-3">
                 <span className="flex items-center gap-2">
                   <ElementIcon element={m.element} className="size-5" />
-                  <strong className="font-serif text-lg text-amber-100">{m.name}</strong>
-                  {best > 0 && <span className="ml-auto text-xs text-amber-300">Đã thắng bậc {best}</span>}
+                  <strong className="font-serif text-lg">{m.name}</strong>
+                  {best > 0 && <span className="ml-auto text-xs font-semibold">Đã thắng bậc {best}</span>}
                 </span>
-                <span className="mt-1 block text-sm text-muted">{m.blurb}</span>
-                <span className="mt-2 block text-xs text-foreground-secondary">
+                <span className="mt-1 block text-sm opacity-80">{m.blurb}</span>
+                <span className="mt-2 block text-xs opacity-80">
                   Chiến địa hệ {ELEMENT_NAME[m.element]} · {m.days} ngày · chuẩn {m.parDays} ngày
                 </span>
                 </span>
@@ -417,7 +416,7 @@ function SetupView(props: {
             );
           })}
         </div>
-        <h3 className="mt-4 font-semibold">Bậc</h3>
+        <h3 className="mt-4 font-semibold text-frame-gold">Bậc</h3>
         <div className="mt-2 flex flex-wrap gap-2">
           {map.tiers.map((t) => (
             <button
@@ -426,21 +425,21 @@ function SetupView(props: {
               disabled={!t.unlocked}
               aria-pressed={t.tier === tier}
               onClick={() => props.setTier(t.tier)}
-              className={`rounded-lg border px-3 py-2 text-left text-sm disabled:opacity-40 ${t.tier === tier ? "border-amber-400 bg-amber-500/15" : "border-white/10 bg-white/5"}`}
+              className={choiceVariants({ className: "flex-col items-start gap-0.5 text-left text-sm" })}
             >
-              <strong>{t.name}</strong> <Stars n={t.stars} className="ml-1" />
-              <span className="block text-xs text-muted">
+              <span><strong>{t.name}</strong> <Stars n={t.stars} className="ml-1" /></span>
+              <span className="block text-xs font-normal opacity-80">
                 {t.unlocked ? `Cấp gợi ý ${t.level} · lần đầu ${t.firstGold} vàng + món ${TIER_COLOR_NAME[(t.tier + 2) as 3 | 4 | 5]}` : "Thắng bậc trước để mở"}
               </span>
-              {t.bestDays !== null && <span className="block text-xs text-amber-200">Nhanh nhất {t.bestDays} ngày</span>}
+              {t.bestDays !== null && <span className="block text-xs font-normal">Nhanh nhất {t.bestDays} ngày</span>}
             </button>
           ))}
         </div>
       </section>
 
-      <section className="tower-screen__panel">
+      <section className="ui-frame p-4 sm:p-5">
         <h2 className="font-serif text-xl font-bold">2. Chia hai đạo quân</h2>
-        <p className="mt-1 text-sm text-muted">
+        <p className="mt-1 text-sm text-on-wood-soft">
           Bấm tướng để đưa vào Đạo Chính (đi cùng Đinh Bộ Lĩnh, 2 chỗ), bấm lần nữa để chuyển sang Biệt đạo (3 chỗ, người
           đầu là thống lĩnh), bấm lần ba để bỏ ra. Chỉ số và trang bị được chụp lúc xuất quân.
         </p>
@@ -449,7 +448,7 @@ function SetupView(props: {
             const ids = a === 0 ? [MAIN_ID, ...main] : second;
             const size = 3;
             return (
-              <div key={a} className="rounded-lg border border-white/10 bg-black/20 p-3">
+              <div key={a} className="ui-frame-inset p-3">
                 <h3 className="font-semibold" style={{ color: ARMY_COLOR[a] }}>{ARMY_NAME[a]} · {ids.length}/{size}</h3>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {ids.map((id) => {
@@ -457,7 +456,7 @@ function SetupView(props: {
                     const element = c?.element ?? profile.element;
                     const profession = c?.profession ?? profile.profession;
                     return (
-                      <span key={id} className="flex items-center gap-1.5 rounded bg-white/5 px-2 py-1 text-sm">
+                      <span key={id} className="flex items-center gap-1.5 rounded bg-wood-hi px-2 py-1 text-sm">
                         <Portrait id={id} element={element} profession={profession} className="size-7" />
                         {c?.name ?? "Đinh Bộ Lĩnh"}
                       </span>
@@ -478,13 +477,13 @@ function SetupView(props: {
                 key={id}
                 type="button"
                 onClick={() => cycle(id)}
-                className="tower-screen__choice flex items-center gap-2 p-2 text-left"
+                className={choiceVariants({ className: "justify-start p-2 text-left font-normal" })}
                 style={{ borderColor: where === null ? undefined : ARMY_COLOR[where] }}
               >
                 <Portrait id={id} element={c.element} profession={c.profession} className="size-10" level={lv} />
                 <span className="min-w-0">
                   <strong className="block truncate">{c.name}</strong>
-                  <span className="flex items-center gap-1 text-xs text-muted">
+                  <span className="flex items-center gap-1 text-xs opacity-80">
                     <ElementIcon element={c.element} className="size-3.5" /> {ELEMENT_NAME[c.element]}
                     <ProfessionIcon profession={c.profession} className="size-3.5" /> {PROFESSION_NAME[c.profession]}
                   </span>
@@ -494,12 +493,12 @@ function SetupView(props: {
             );
           })}
         </div>
-        {owned.length < 5 && <p className="mt-2 text-sm text-rose-300">Cần ít nhất 5 tướng ngoài Đinh Bộ Lĩnh.</p>}
+        {owned.length < 5 && <p className="mt-2 text-sm text-danger">Cần ít nhất 5 tướng ngoài Đinh Bộ Lĩnh.</p>}
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <Button variant="primary" disabled={props.busy || !ready} onClick={props.onStart}>
             {props.busy ? "Đang xuất quân…" : `Xuất quân: ${map.name} · ${info.name}`}
           </Button>
-          <span className={`text-sm ${props.runsLeft > 0 ? "text-muted" : "text-rose-300"}`}>
+          <span className={`text-sm ${props.runsLeft > 0 ? "text-on-wood-soft" : "text-danger"}`}>
             {props.runsLeft > 0
               ? `Hôm nay còn ${props.runsLeft}/${props.runsPerDay} lượt xuất quân.`
               : "Hôm nay đã hết lượt xuất quân, mở lại lúc 0 giờ."}
@@ -603,7 +602,7 @@ function SandTable(props: {
   const citadel = byId(map.citadel);
   const fogId = `exp-fog-${map.id}`;
   return (
-    <svg viewBox="0 0 100 60" className="mt-3 w-full overflow-hidden rounded-lg border border-[#85602e] bg-[#2a1f14]" role="group" aria-label={`Sa bàn ${map.name}`}>
+    <svg viewBox="0 0 100 60" className="mt-3 w-full overflow-hidden rounded-lg border border-frame-line bg-wood-lo" role="group" aria-label={`Sa bàn ${map.name}`}>
       <defs>
         <radialGradient id={`${fogId}-hole`}>
           <stop offset="45%" stopColor="#000" />
@@ -745,12 +744,12 @@ function RunView(props: {
 
   return (
     <section className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
-      <div className="tower-screen__panel">
+      <div className="ui-frame p-4 sm:p-5">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="font-serif text-xl font-bold">{map.name} · {tierInfo.name}</h2>
           <p className="text-sm">
-            Ngày <strong className="text-amber-300">{run.day}</strong>/{map.days} · chuẩn {map.parDays} ngày
-            {reinforce > 0 && <> · giặc tăng viện <strong className="text-rose-300">+{reinforce}%</strong></>}
+            Ngày <strong className="text-frame-gold">{run.day}</strong>/{map.days} · chuẩn {map.parDays} ngày
+            {reinforce > 0 && <> · giặc tăng viện <strong className="text-danger">+{reinforce}%</strong></>}
           </p>
         </div>
         <SandTable
@@ -763,7 +762,7 @@ function RunView(props: {
           setArmy={props.setArmy}
           setTarget={props.setTarget}
         />
-        <p className="mt-2 text-xs text-muted">
+        <p className="mt-2 text-xs text-on-wood-soft">
           Chạm cờ để chọn đạo quân, chạm ô kề (viền màu đạo) để xem rồi tiến quân. Đạo không tiến được nghỉ, hồi
           {` ${Math.round(EXPEDITION_REST_HEAL * 100)}% `}máu mỗi ngày (kể cả người gục). Đường xanh đứt nét là vượt nước, mất
           2 ngày; xanh lá đứt nét là lội đầm (2 ngày); chấm xanh ≈ là cửa nước, chỉ qua lúc nước rút; đỏ ✕ là đường đã biết bị
@@ -773,9 +772,9 @@ function RunView(props: {
 
       <div className="space-y-4">
         {counter && run.phase === "march" && (
-          <div className="tower-screen__panel border-rose-400/60">
-            <h3 className="font-serif text-lg font-bold text-rose-200">Giặc phản công {nameOf(scenario?.market ?? "")}</h3>
-            <p className="mt-1 text-sm text-foreground-secondary">
+          <div className="ui-frame p-4 sm:p-5 border-danger/60">
+            <h3 className="font-serif text-lg font-bold text-danger">Giặc phản công {nameOf(scenario?.market ?? "")}</h3>
+            <p className="mt-1 text-sm text-on-wood-soft">
               {ARMY_NAME[counter.army]} đang giữ {nameOf(scenario?.market ?? "")} phải đánh trước: cầm cự{" "}
               {counter.objective && "turns" in counter.objective ? counter.objective.turns : 6} lượt (hoặc hạ hết) là giữ được,
               thêm lương{scenario?.village ? " và đưa dân về đây được" : ""}. Thua thì rút khỏi kho.
@@ -787,9 +786,9 @@ function RunView(props: {
         )}
         {scenario && <MissionPanel run={run} scenario={scenario} nameOf={nameOf} />}
         {run.phase === "battle" && run.battle ? (
-          <div className="tower-screen__panel">
+          <div className="ui-frame p-4 sm:p-5">
             <h3 className="font-serif text-lg font-bold">Trận đang đánh</h3>
-            <p className="mt-1 text-sm text-foreground-secondary">
+            <p className="mt-1 text-sm text-on-wood-soft">
               {ARMY_NAME[run.battle.army]} đánh {map.nodes.find((n) => n.id === run.battle!.node)?.name}.
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -798,49 +797,49 @@ function RunView(props: {
             </div>
           </div>
         ) : (
-          <div className="tower-screen__panel">
+          <div className="ui-frame p-4 sm:p-5">
             {node ? (
               <>
                 <h3 className="flex items-center gap-2 font-serif text-lg font-bold">
-                  {node.name} <span className="text-xs font-normal text-muted">{KIND_NAME[node.kind]}{cleared(node.id) ? " · đã chiếm" : ""}</span>
+                  {node.name} <span className="text-xs font-normal text-on-wood-soft">{KIND_NAME[node.kind]}{cleared(node.id) ? " · đã chiếm" : ""}</span>
                 </h3>
-                <p className="mt-1 text-sm text-foreground-secondary">{KIND_TEXT[node.kind]}</p>
+                <p className="mt-1 text-sm text-on-wood-soft">{KIND_TEXT[node.kind]}</p>
                 {chase && (
-                  <p className="mt-2 rounded bg-rose-900/40 p-2 text-xs text-rose-100">
+                  <p className="mt-2 rounded bg-danger-surface p-2 text-xs text-on-wood">
                     Truy binh đuổi {noun} vì {nameOf(scenario?.chaseUnless ?? "")} chưa chiếm: rời {nameOf(scenario?.village ?? "")} là vào
                     trận hộ tống (giữ {chase.objective && "turns" in chase.objective ? chase.objective.turns : 6} lượt hoặc hạ hết). Thua thì {noun} bị bắt lại.
                   </p>
                 )}
                 {!chase && preview && run.refugees === army && (
-                  <p className="mt-2 rounded bg-rose-900/40 p-2 text-xs text-rose-100">Đạo này đang hộ tống {noun}: thua trận này thì {noun} bị bắt lại.</p>
+                  <p className="mt-2 rounded bg-danger-surface p-2 text-xs text-on-wood">Đạo này đang hộ tống {noun}: thua trận này thì {noun} bị bắt lại.</p>
                 )}
                 {preview?.objective?.type === "hold" && (
-                  <p className="mt-2 text-xs text-amber-200">
+                  <p className="mt-2 text-xs text-frame-gold">
                     Trận giữ: cầm cự {preview.objective.turns} lượt của bạn (hoặc hạ hết) là thắng
                     {scenario?.reinforcementLabel && !run.reinforcementsCut ? `, chặn được ${scenario.reinforcementLabel}` : ""}.
                   </p>
                 )}
                 {preview?.mode === "gate" && (
-                  <p className="mt-2 text-xs text-amber-200">
+                  <p className="mt-2 text-xs text-frame-gold">
                     Phase 1 phá cổng: hạ Cổng thành là qua (lính giữ còn lại theo sang trận sau).
                     {scenario?.gateSkipFrom ? ` Đánh vào từ ${nameOf(scenario.gateSkipFrom)} thì bỏ qua cổng.` : ""}
                   </p>
                 )}
                 {preview && (
                   <div className="mt-2 space-y-1.5">
-                    <p className="text-xs text-muted">
+                    <p className="text-xs text-on-wood-soft">
                       AI {DIFFICULTY_NAME[preview.difficulty]} · cấp {preview.foes[0]?.level}
-                      {preview.pincer && <span className="ml-2 rounded bg-emerald-700/50 px-1.5 py-0.5 text-emerald-100">Giáp công: máu địch −{Math.round((1 - EXPEDITION_PINCER_HP) * 100)}%</span>}
+                      {preview.pincer && <span className="ml-2 rounded bg-jade/20 px-1.5 py-0.5 text-jade">Giáp công: máu địch −{Math.round((1 - EXPEDITION_PINCER_HP) * 100)}%</span>}
                     </p>
                     {preview.foes.map((f, i) => (
-                      <div key={`${f.id}-${i}`} className="flex items-center gap-2 rounded bg-white/5 p-1.5">
+                      <div key={`${f.id}-${i}`} className="flex items-center gap-2 rounded bg-wood-inset p-1.5">
                         <Portrait id={f.id} element={f.element} profession={f.profession} className="size-8" level={f.level} />
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1 text-sm">
                             <strong className="truncate">{f.name}</strong>
                             <ElementIcon element={f.element} className="size-3.5" />
                             <ProfessionIcon profession={f.profession} className="size-3.5" />
-                            <span className="ml-auto text-xs text-muted">{Math.round(f.maxHp * f.hpRatio)} máu</span>
+                            <span className="ml-auto text-xs text-on-wood-soft">{Math.round(f.maxHp * f.hpRatio)} máu</span>
                           </div>
                           <HpBar ratio={f.hpRatio} />
                         </div>
@@ -849,25 +848,25 @@ function RunView(props: {
                   </div>
                 )}
                 {reachable.includes(node.id) && expeditionEdgeDays(map, selected.at, node.id) > 1 && (
-                  <p className="mt-2 text-xs text-sky-200">Vượt nước: đi mất {expeditionEdgeDays(map, selected.at, node.id)} ngày, đạo kia nghỉ cả {expeditionEdgeDays(map, selected.at, node.id)} ngày.</p>
+                  <p className="mt-2 text-xs text-info">Vượt nước: đi mất {expeditionEdgeDays(map, selected.at, node.id)} ngày, đạo kia nghỉ cả {expeditionEdgeDays(map, selected.at, node.id)} ngày.</p>
                 )}
                 {roadKind === "tide" && (
-                  <p className="mt-2 text-xs text-sky-200">
+                  <p className="mt-2 text-xs text-info">
                     Cửa nước: {scenario?.tideDays ? `nước rút các ngày ${scenario.tideDays.join(", ")}${tideClosed ? "; hôm nay nước đang lên" : "; hôm nay đi được"}.` : `chưa rõ con nước (chiếm ${nameOf(scenario?.tideRevealedBy ?? "")} hoặc đưa dân về để biết). Đi trúng ngày nước lên thì mất ngày.`}
                   </p>
                 )}
                 {roadBroken ? (
-                  <p className="mt-3 text-xs text-rose-300">Đường từ {nameOf(selected.at)} tới đây đã bị phá.</p>
+                  <p className="mt-3 text-xs text-danger">Đường từ {nameOf(selected.at)} tới đây đã bị phá.</p>
                 ) : reachable.includes(node.id) ? (
                   <Button variant="primary" className="mt-3" disabled={props.busy || !canFight(army) || tideClosed || !!counter} onClick={() => props.onMarch(node.id)}>
                     {chase ? `${ARMY_NAME[army]} đưa dân đi, đánh truy binh` : preview ? `${ARMY_NAME[army]} tấn công` : `${ARMY_NAME[army]} tiến quân`}
                   </Button>
                 ) : (
-                  <p className="mt-3 text-xs text-muted">{ARMY_NAME[army]} chưa tới được ô này (chỉ đi sang ô kề).</p>
+                  <p className="mt-3 text-xs text-on-wood-soft">{ARMY_NAME[army]} chưa tới được ô này (chỉ đi sang ô kề).</p>
                 )}
               </>
             ) : (
-              <p className="text-sm text-muted">Chọn một ô trên sa bàn để xem địch và tiến quân.</p>
+              <p className="text-sm text-on-wood-soft">Chọn một ô trên sa bàn để xem địch và tiến quân.</p>
             )}
           </div>
         )}
@@ -880,12 +879,12 @@ function RunView(props: {
               type="button"
               aria-pressed={army === i}
               onClick={() => props.setArmy(i as ArmyIndex)}
-              className="tower-screen__panel block w-full text-left"
+              className="ui-frame p-4 sm:p-5 block w-full text-left"
               style={{ borderColor: army === i ? ARMY_COLOR[i] : undefined }}
             >
               <div className="flex items-baseline justify-between">
                 <strong style={{ color: ARMY_COLOR[i] }}>{ARMY_NAME[i]}</strong>
-                <span className="flex items-center gap-1 text-xs text-muted"><FoodIcon className="size-3.5" />{a.food} · tại {at?.name}</span>
+                <span className="flex items-center gap-1 text-xs text-on-wood-soft"><FoodIcon className="size-3.5" />{a.food} · tại {at?.name}</span>
               </div>
               <div className="mt-2 space-y-1.5">
                 {a.ids.map((id) => {
@@ -894,27 +893,27 @@ function RunView(props: {
                     <div key={id} className="flex items-center gap-2">
                       <Portrait id={id} element={f.config.element} profession={f.config.profession} className="size-7" />
                       <div className="flex-1">
-                        <div className="flex justify-between text-xs"><span>{f.config.name}</span><span className={f.hp <= 0 ? "text-rose-400" : "text-muted"}>{f.hp <= 0 ? "Gục" : `${f.hp}/${f.config.maxHp}`}</span></div>
+                        <div className="flex justify-between text-xs"><span>{f.config.name}</span><span className={f.hp <= 0 ? "text-danger" : "text-on-wood-soft"}>{f.hp <= 0 ? "Gục" : `${f.hp}/${f.config.maxHp}`}</span></div>
                         <HpBar ratio={f.hp / f.config.maxHp} />
                       </div>
                     </div>
                   );
                 })}
               </div>
-              {!canFight(i as ArmyIndex) && <p className="mt-2 text-xs text-rose-300">Cả đạo đang gục, cần nghỉ để hồi sức.</p>}
+              {!canFight(i as ArmyIndex) && <p className="mt-2 text-xs text-danger">Cả đạo đang gục, cần nghỉ để hồi sức.</p>}
             </button>
           );
         })}
 
         {run.phase === "march" && (
-          <div className="tower-screen__panel flex flex-wrap gap-2">
+          <div className="ui-frame p-4 sm:p-5 flex flex-wrap gap-2">
             <Button variant="secondary" disabled={props.busy || !!counter} onClick={props.onScout}>
               {ARMY_NAME[army]} trinh sát
             </Button>
             <Button variant="secondary" disabled={props.busy || !!counter} onClick={props.onCamp}>Đóng quân (cả hai đạo nghỉ 1 ngày)</Button>
             <Button variant="secondary" disabled={props.busy} onClick={props.onAbandon}>Rút khỏi viễn chinh</Button>
-            <p className="w-full text-xs text-muted">Thua một trận: đạo đó rút về ô cũ, cả ba gục, phải nghỉ để hồi. Không mất lượt viễn chinh.</p>
-            <p className="w-full text-xs text-muted">
+            <p className="w-full text-xs text-on-wood-soft">Thua một trận: đạo đó rút về ô cũ, cả ba gục, phải nghỉ để hồi. Không mất lượt viễn chinh.</p>
+            <p className="w-full text-xs text-on-wood-soft">
               Trinh sát: đạo đang chọn đứng yên 1 ngày (không hồi sức), vén sương mọi ô trong {EXPEDITION_SCOUT_SIGHT} bước
               {scenario?.brokenRoads
                 ? " và phát hiện đường bị phá quanh đó. Đường bị phá trông như đường thường; đi trúng thì mất ngày."
@@ -991,27 +990,27 @@ function MissionPanel({ run, scenario, nameOf }: { run: Omit<ExpeditionRun, "see
   if (scenario.brokenRoads)
     rows.push({ label: "Đường bị phá", done: false, text: `Đã biết ${run.knownBroken?.length ?? 0} đường. Trinh sát để phát hiện trước.` });
   return (
-    <div className="tower-screen__panel">
+    <div className="ui-frame p-4 sm:p-5">
       <h3 className="font-serif text-lg font-bold">{scenario.endings || scenario.missionGold ? "Nhiệm vụ" : "Luật sa bàn"}</h3>
       <ul className="mt-2 space-y-1 text-sm">
         {rows.map((r) => (
           <li key={r.label} className="flex gap-2">
-            <span className={r.done ? "text-emerald-300" : "text-stone-500"} aria-hidden>{r.done ? "✔" : "○"}</span>
+            <span className={r.done ? "text-jade" : "text-on-wood-soft/70"} aria-hidden>{r.done ? "✔" : "○"}</span>
             <span><strong>{r.label}:</strong> {r.text}</span>
           </li>
         ))}
       </ul>
       {scenario.endings && (
-        <p className="mt-2 text-xs text-muted">Chiếm thành sau khi rút dân và cắt viện là Toàn thắng. Chưa chiếm được thành mà đã làm đủ hai việc đó là Giữ dân: có ít vàng nhưng chưa tính qua bậc.</p>
+        <p className="mt-2 text-xs text-on-wood-soft">Chiếm thành sau khi rút dân và cắt viện là Toàn thắng. Chưa chiếm được thành mà đã làm đủ hai việc đó là Giữ dân: có ít vàng nhưng chưa tính qua bậc.</p>
       )}
       {!scenario.endings && scenario.missionGold && (
-        <p className="mt-2 text-xs text-muted">
+        <p className="mt-2 text-xs text-on-wood-soft">
           Nhiệm vụ không bắt buộc: chiếm thành sau khi xong {scenario.village && scenario.reinforcementDays ? "cả hai việc hộ tống và chặn viện" : "nhiệm vụ"} thì
           vàng thưởng ×{String(scenario.missionGold).replace(".", ",")}.
         </p>
       )}
       {run.log && run.log.length > 0 && (
-        <ol className="mt-3 space-y-0.5 border-t border-white/10 pt-2 text-xs text-foreground-secondary">
+        <ol className="mt-3 space-y-0.5 border-t border-frame-line-soft pt-2 text-xs text-on-wood-soft">
           {run.log.map((line, i) => <li key={i}>{line}</li>)}
         </ol>
       )}
@@ -1025,35 +1024,35 @@ function ResultView({ run, map, result, onNew }: { run: Omit<ExpeditionRun, "see
   const tierName = map.tiers.find((t) => t.tier === run.tier)?.name;
   const reason = run.endReason === "timeout" ? "Hết ngày hành quân mà chưa chiếm được thành." : run.endReason === "abandoned" ? "Đã rút quân." : "";
   return (
-    <section className="tower-screen__panel text-center">
-      <h2 className={`font-serif text-2xl font-bold ${result.won || result.ending ? "text-amber-200" : "text-rose-200"}`}>
+    <section className="ui-frame p-4 sm:p-5 text-center">
+      <h2 className={`font-serif text-2xl font-bold ${result.won || result.ending ? "text-frame-gold" : "text-danger"}`}>
         {result.ending
           ? `${expeditionEndingName(result.ending)}${result.won ? `: đã chiếm ${map.nodes.find((n) => n.id === map.citadel)?.name}!` : ": chưa chiếm được thành, nhưng đã cứu dân và chặn viện."}`
           : result.won
             ? `Đã chiếm ${map.nodes.find((n) => n.id === map.citadel)?.name}!`
             : "Viễn chinh thất bại"}
       </h2>
-      <p className="mt-1 text-sm text-muted">{map.name} · {tierName} · {result.days} ngày</p>
+      <p className="mt-1 text-sm text-on-wood-soft">{map.name} · {tierName} · {result.days} ngày</p>
       {result.won || result.ending ? (
         <>
           <Stars n={result.stars} className="mt-2 block text-3xl" />
-          <p className="mt-1 text-xs text-muted">
+          <p className="mt-1 text-xs text-on-wood-soft">
             {result.ending
               ? `★★★ toàn thắng · ★★ chiếm trại trong ${map.parDays} ngày · ★ chiếm trại muộn hoặc giữ dân`
               : `★ chiếm thành · ★ xong trong ${map.parDays} ngày · ★ không thua trận nào`}
           </p>
-          <p className="mt-3 font-semibold text-amber-300">
+          <p className="mt-3 font-semibold text-frame-gold">
             +{result.gold} vàng{result.firstClear ? " (thắng lần đầu)" : ""}{result.mission ? " · xong nhiệm vụ" : ""}
             {result.item && ` · ${SLOT_NAME[result.item.slot]} phẩm ${TIER_COLOR_NAME[result.item.tier]} hệ ${ELEMENT_NAME[result.item.element]}`}
             {result.bonusItem && ` · thưởng toàn thắng: ${SLOT_NAME[result.bonusItem.slot]} phẩm ${TIER_COLOR_NAME[result.bonusItem.tier]}`}
             {result.soldFor > 0 && ` · túi đầy, món thưởng bán được ${result.soldFor} vàng`}
           </p>
           {!result.won && result.ending && (
-            <p className="mt-1 text-xs text-muted">Giữ dân chưa tính là qua bậc: phải chiếm thành mới mở bậc sau.</p>
+            <p className="mt-1 text-xs text-on-wood-soft">Giữ dân chưa tính là qua bậc: phải chiếm thành mới mở bậc sau.</p>
           )}
         </>
       ) : (
-        <p className="mt-3 text-sm text-foreground-secondary">{reason} Vàng, kinh nghiệm và đồ rơi của từng trận vẫn được giữ.</p>
+        <p className="mt-3 text-sm text-on-wood-soft">{reason} Vàng, kinh nghiệm và đồ rơi của từng trận vẫn được giữ.</p>
       )}
       <Button variant="primary" className="mt-4" onClick={onNew}>Viễn chinh mới</Button>
     </section>
