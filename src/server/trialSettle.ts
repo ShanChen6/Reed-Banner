@@ -7,6 +7,8 @@ import {
   HUMAN,
   isDualTowerV1,
   planTrialSettle,
+  recordSpecialMatch,
+  recordSpecialTrialWin,
   TRIAL_FLOORS,
   type Match,
   type TrialFloorRecord,
@@ -14,6 +16,13 @@ import {
 } from "@/core";
 import { updateProfile, type ProfileStore } from "./profiles";
 import { trialEnabled } from "./featureFlags";
+import { TRIAL_FLOOR_DATA } from "./trialContent";
+
+/** Tầng có luật nghề/hệ (bước 2 nhiệm vụ nhân vật đặc biệt). */
+function floorHasRules(floor: number): boolean {
+  const rules = TRIAL_FLOOR_DATA.find((f) => f.floor === floor)?.rules;
+  return !!rules && Object.keys(rules).length > 0;
+}
 
 export interface TrialResult {
   readonly floor: number;
@@ -78,9 +87,15 @@ export async function settleTrial(
         };
         const dt = profile.dualTower;
         if (!isDualTowerV1(dt)) return { ok: false as const, error: "unsupported_schema" as const };
+        // Nhiệm vụ nhân vật đặc biệt: bước 1 đếm trận thắng đội đa hệ, bước 2 cần thắng tầng có luật.
+        // Bước 2 tính trước để một trận không vừa xong bước 1 vừa xong luôn bước 2.
+        const special = recordSpecialMatch(
+          recordSpecialTrialWin(profile, won && floorHasRules(floor)),
+          { won, elements: match.battle.sides[HUMAN].fighters.map((f) => f.element) },
+        );
         return {
           ok: true as const,
-          profile: { ...profile, dualTower: { ...dt, trial: { ...trial, ...keepActive } } },
+          profile: { ...special, dualTower: { ...dt, trial: { ...trial, ...keepActive } } },
         };
       };
       if (!won || floor < 1 || floor > TRIAL_FLOORS || floor > cur.cleared + 1)
