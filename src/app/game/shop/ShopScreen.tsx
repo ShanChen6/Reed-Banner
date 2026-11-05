@@ -5,18 +5,14 @@
 // màn này chỉ hiển thị và gửi thao tác, dùng lại ShopPanel và GearShop của hồ sơ.
 
 import { useEffect, useState } from "react";
-import {
-  CAMPAIGN_FOOD_MAX,
-  FOOD_PRICE,
-  type Profile,
-  type ProfileAction,
-} from "@/core";
+import type { Profile, ProfileAction } from "@/core";
 import { ModeScreen, OrnateFrame } from "@/components/game-ui";
-import { Alert, Button, Tabs, type TabItem } from "@/components/ui";
+import { Alert, Tabs, type TabItem } from "@/components/ui";
 import { GearShop } from "../battle/GearPanel";
 import { fetchProfile, sendProfileAction } from "../battle/online";
 import { PROFILE_ERROR } from "../battle/ProgressPanel";
 import ShopPanel from "../battle/ShopPanel";
+import ItemsStore from "./ItemsStore";
 
 type Tab = "heroes" | "gear" | "items";
 const TABS: readonly TabItem<Tab>[] = [
@@ -69,51 +65,10 @@ export default function ShopScreen() {
                 <GearShop profile={profile} disabled={busy} onBuy={(a) => void act(a)} />
               </section>
             )}
-            {tab === "items" && <ItemsTab profile={profile} busy={busy} onAction={act} />}
+            {tab === "items" && <ItemsStore profile={profile} busy={busy} onAction={(a) => void act(a)} />}
           </div>
         </OrnateFrame>
       )}
     </ModeScreen>
-  );
-}
-
-/** Vật phẩm: hiện chỉ có lương cho Bình Loạn (giá và mức chứa tối đa do @/core quy định). */
-function ItemsTab({
-  profile,
-  busy,
-  onAction,
-}: {
-  profile: Profile;
-  busy: boolean;
-  onAction: (a: ProfileAction) => Promise<string | null>;
-}) {
-  const supply = profile.campaign.supply;
-  const room = CAMPAIGN_FOOD_MAX - supply;
-  const affordable = Math.floor(profile.gold / FOOD_PRICE);
-  const options = [1, 10, room].filter((n, i, a) => n > 0 && n <= room && a.indexOf(n) === i);
-  return (
-    <section aria-label="Vật phẩm" className="ui-frame-inset p-3 text-sm">
-      <h2 className="ui-title-on-wood mb-1 text-base">Lương thực</h2>
-      <p className="mb-3 text-caption text-on-wood-soft">
-        Lương mang vào trận Bình Loạn kế tiếp. Có {supply}/{CAMPAIGN_FOOD_MAX}; mỗi phần giá {FOOD_PRICE} vàng.
-      </p>
-      {room <= 0 ? (
-        <p className="text-caption text-on-wood-soft">Kho lương đã đầy.</p>
-      ) : (
-        <div className="flex flex-wrap gap-2">
-          {options.map((n) => (
-            <Button
-              key={n}
-              type="button"
-              disabled={busy || affordable < n}
-              onClick={() => void onAction({ type: "buyFood", amount: n })}
-              className="min-h-11"
-            >
-              Mua {n} lương ({n * FOOD_PRICE} vàng)
-            </Button>
-          ))}
-        </div>
-      )}
-    </section>
   );
 }
