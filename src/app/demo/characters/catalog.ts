@@ -13,7 +13,7 @@ const PREVIEW_ONLY: Readonly<Record<string, { readonly name: string; readonly el
   // Nhân vật đặc biệt dung hợp tám nghề; nghề ghi Tướng sĩ chỉ để dùng hình dự phòng, trang hiện danh xưng.
   dinhNgoc: { name: "Đinh Ngọc", element: "kim", profession: "tuongSi", title: "Vạn Tượng Hành Giả" },
   // Nhân vật đặc biệt dung hợp tám nghề, phòng thủ Phong; nghề ghi Quân sư chỉ để dùng hình dự phòng.
-  vuPhong: { name: "Vũ Phong", element: "phong", profession: "quanSu", title: "Vân Du Tử" },
+  vuPhong: { name: "Trần Vũ Phong", element: "phong", profession: "quanSu", title: "Vân Du Tử" },
 };
 
 /** Chỉ đọc file tĩnh lúc dựng trang; trình duyệt không cần API hay hồ sơ. */

@@ -47,6 +47,7 @@ import {
 import { achievementById, achievementProgress } from "./achievements";
 import { grantTickets, parseTtkAccount, type TtkAccount } from "../tam-tuong-ky/account";
 import { parseExpedition, type ExpeditionState } from "../expedition/state";
+import { parseSpecialQuests, type SpecialQuestState } from "./specialQuests";
 import {
   addXp,
   autoProgress,
@@ -98,6 +99,8 @@ export interface Profile {
   readonly tamTuongKy?: TtkAccount;
   /** Viễn Chinh: bậc đã thắng, sao, lượt đang đi. Chưa vào chế độ lần nào thì không có. */
   readonly expedition?: ExpeditionState;
+  /** Chuỗi nhiệm vụ phụ mở Đinh Ngọc và Trần Vũ Phong. Chưa có tiến độ thì không có. */
+  readonly specialQuests?: SpecialQuestState;
 }
 
 export interface SurvivalState {
@@ -317,6 +320,9 @@ export function parseProfile(raw: unknown): Profile {
   const expedition = parseExpedition(p.expedition);
   if (expedition) (next as { expedition?: ExpeditionState }).expedition = expedition;
   else delete (next as { expedition?: ExpeditionState }).expedition;
+  const special = parseSpecialQuests(p.specialQuests);
+  if (special) (next as { specialQuests?: SpecialQuestState }).specialQuests = special;
+  else delete (next as { specialQuests?: SpecialQuestState }).specialQuests;
   return Array.isArray(p.team) && validTeam(next, p.team)
     ? { ...next, team: p.team }
     : next;

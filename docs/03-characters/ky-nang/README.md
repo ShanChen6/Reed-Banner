@@ -42,6 +42,8 @@ Bốn bị động này có sẵn theo bộ nghề/hệ, không chiếm ô chủ
 | Mưu sĩ | Định kế | Xua tan, đánh và phá năng lượng |
 | Quân sư | Nhất thống | Tăng Công và tiếp năng lượng đội |
 
+Mỗi tổ hợp có **tên riêng** (Shan chốt 04/11/2026, ví dụ `dbl_tuongSi_hoa` = Xích Viêm Liệt Trảm), lưu ở `DBL_ULTIMATE_NAMES` trong `src/core/battle/skills.ts`; tên phần nghề ở bảng trên là `lineName`, hiện ở dòng phụ.
+
 Phần hệ lần lượt bổ sung: Kim tăng Công; Mộc hồi; Thủy giải bất lợi/Khiên; Hỏa phá giáp; Thổ Khiên; Lôi trừ năng lượng; Phong tiếp năng lượng. Tất cả chi phí gốc80 là **giá trị ban đầu chưa cân bằng**. Điểm nâng ô4 cũ đi theo tuyệt chiêu mới của nghề/hệ hiện chọn, không mất đầu tư; không cần thêm một lần swap hồ sơ.
 
 [Danh mục tên và thông số](data/skill-chase-v3.md) · [Dữ liệu đầy đủ42 bộ ĐBL và60 đồng hành](data/skill-chase-v3.json).

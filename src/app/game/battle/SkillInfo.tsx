@@ -13,7 +13,7 @@ export default function SkillInfo({ def }: { def: SkillDef }) {
         <div>
           <p className="font-serif text-lg font-bold leading-tight text-stone-100">{def.name}</p>
           <p className="text-xs text-stone-400">
-            {skillSourceName(def)} · ô {def.slot ?? "—"} · mở ở cấp {SKILL_SLOT_UNLOCK[def.slot ?? 0] ?? 1}
+            {def.lineName ? `${def.lineName} · ` : ""}{skillSourceName(def)} · ô {def.slot ?? "—"} · mở ở cấp {SKILL_SLOT_UNLOCK[def.slot ?? 0] ?? 1}
           </p>
           <p className="mt-1 text-xs text-stone-300">
             <span className="text-[var(--gold)]">{def.cost} năng lượng</span> · Mục tiêu: {SKILL_TARGET_NAME[def.target]}

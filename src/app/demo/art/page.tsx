@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { dinhBoLinhUltimate, ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PROFESSIONS, ROLE_SKILLS, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
+import { CHARACTER_SKILLS, CHASE_PASSIVES, COMBO_PASSIVES, dinhBoLinhUltimate, ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PASSIVES, PROFESSIONS, ROLE_SKILLS, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, SPECIAL_NAME, TIER_COLOR_NAME, TILE_NAME } from "@/app/game/battle/labels";
 import { EmptySlotIcon, GearIcon, SetEmblem } from "@/app/game/art/gear";
 import { ElementIcon, FoodIcon, LeaderFlag, ProfessionIcon, ShieldIcon } from "@/app/game/art/icons";
+import { PASSIVE_ART, PassiveIcon } from "@/app/game/art/passives";
 import { Portrait } from "@/app/game/art/portraits";
-import { SkillIcon } from "@/app/game/art/skills";
+import { REUSED_SKILL_ART, SkillIcon } from "@/app/game/art/skills";
 import { TILE_COLOR, TileArt } from "@/app/game/art/tiles";
 
 export const metadata: Metadata = {
@@ -131,6 +132,21 @@ export default function ArtPage() {
         </section>
 
         <section className="space-y-2">
+          <h2 className="font-semibold">Bị động (57 ảnh tròn: nghề 1, truy kích theo nghề, theo hệ, bị động riêng, bị động Nộ)</h2>
+          <div className="flex flex-wrap items-start gap-3">
+            {[...PASSIVE_ART].map((id) => {
+              const name = (COMBO_PASSIVES as Record<string, { name: string }>)[id]?.name ?? (CHASE_PASSIVES as Record<string, { name: string }>)[id]?.name ?? (PASSIVES as Record<string, { name: string }>)[id.slice(5)]?.name ?? id;
+              return (
+                <figure key={id} className="flex w-20 flex-col items-center gap-1">
+                  <PassiveIcon id={id} name={name} className="size-12" />
+                  <figcaption className="text-center text-[11px] leading-tight opacity-80">{name}</figcaption>
+                </figure>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="space-y-2">
           <h2 className="font-semibold">Tuyệt chiêu ô 4 Đinh Bộ Lĩnh theo nghề (hệ Kim; huy hiệu nghề ở góc)</h2>
           <div className="flex flex-wrap items-start gap-3">
             {PROFESSIONS.map((p) => {
@@ -142,6 +158,33 @@ export default function ArtPage() {
                 </figure>
               );
             })}
+          </div>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="font-semibold">Tuyệt chiêu ô 4 Đinh Bộ Lĩnh có ảnh riêng từng hệ (cả 8 nghề)</h2>
+          <div className="flex flex-wrap items-start gap-3">
+            {(["tuongSi", "phapSu", "binhLinh", "ySu", "muuSi", "quanSu", "xaThu", "satThu"] as const).flatMap((p) => ELEMENTS.map((e) => [p, e] as const)).map(([p, e]) => {
+              const d = dinhBoLinhUltimate(p, e);
+              return (
+                <figure key={d.id} className="flex w-20 flex-col items-center gap-1">
+                  <SkillIcon def={d} className="size-12" />
+                  <figcaption className="text-center text-[11px] leading-tight opacity-80">{d.name}</figcaption>
+                </figure>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="font-semibold">Chiêu ô 4 của tướng dùng lại ảnh hệ cũ</h2>
+          <div className="flex flex-wrap items-start gap-3">
+            {CHARACTER_SKILLS.filter((d) => d.id in REUSED_SKILL_ART).map((d) => (
+              <figure key={d.id} className="flex w-20 flex-col items-center gap-1">
+                <SkillIcon def={d} className="size-12" />
+                <figcaption className="text-center text-[11px] leading-tight opacity-80">{d.name}</figcaption>
+              </figure>
+            ))}
           </div>
         </section>
 

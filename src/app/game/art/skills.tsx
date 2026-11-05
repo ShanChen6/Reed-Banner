@@ -1,7 +1,8 @@
 // Biểu tượng kỹ năng vẽ bằng SVG: huy hiệu vuông màu theo nguyên tố (nhân vật chính) hoặc theo nghề
 // (nhân vật kèm), hình giữa nói kỹ năng làm gì, dấu nhỏ ở góc nói thêm tác dụng phụ (tăng, giảm, cả đội…).
-// Tuyệt chiêu ô 4 có vòng tia vàng như ô đặc biệt bản mạnh.
+// Tuyệt chiêu: viền vàng đôi và quầng sáng vàng tỏa từ tâm (Shan chọn 04/11/2026, thay ngôi sao 16 cánh).
 
+import { useId } from "react";
 import type { Element, GameProfession, Profession, SkillDef } from "@/core";
 import { ELEMENT_COLOR } from "./icons";
 import { INK, starPoints } from "./tiles";
@@ -520,7 +521,70 @@ const SKILL_ART = new Set([
   "role_thuThanh", "role_tuongKhien", "role_phanKich", "role_linhDuoc", "role_duongSinh", "role_teDo",
   "role_muaChuoc", "role_lyGian", "role_catQuanLuong", "role_nghiBinh", "role_hieuLenh", "role_phaKe",
   "role_xaThu_dinhDiem", "role_xaThu_phaGiap", "role_xaThu_tapKich", "role_satThu_thuaHu", "role_satThu_doatKhi", "role_satThu_truyMenh",
+  // Tuyệt chiêu ô 4 của Đinh Bộ Lĩnh, mỗi hệ một hình (Shan vẽ 04/11/2026): Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư, Xạ thủ, Sát thủ.
+  "dbl_tuongSi_kim", "dbl_tuongSi_moc", "dbl_tuongSi_thuy", "dbl_tuongSi_hoa", "dbl_tuongSi_tho", "dbl_tuongSi_loi", "dbl_tuongSi_phong",
+  "dbl_phapSu_kim", "dbl_phapSu_moc", "dbl_phapSu_thuy", "dbl_phapSu_hoa", "dbl_phapSu_tho", "dbl_phapSu_loi", "dbl_phapSu_phong",
+  "dbl_binhLinh_kim", "dbl_binhLinh_moc", "dbl_binhLinh_thuy", "dbl_binhLinh_hoa", "dbl_binhLinh_tho", "dbl_binhLinh_loi", "dbl_binhLinh_phong",
+  "dbl_ySu_kim", "dbl_ySu_moc", "dbl_ySu_thuy", "dbl_ySu_hoa", "dbl_ySu_tho", "dbl_ySu_loi", "dbl_ySu_phong",
+  "dbl_muuSi_kim", "dbl_muuSi_moc", "dbl_muuSi_thuy", "dbl_muuSi_hoa", "dbl_muuSi_tho", "dbl_muuSi_loi", "dbl_muuSi_phong",
+  "dbl_quanSu_kim", "dbl_quanSu_moc", "dbl_quanSu_thuy", "dbl_quanSu_hoa", "dbl_quanSu_tho", "dbl_quanSu_loi", "dbl_quanSu_phong",
+  "dbl_xaThu_kim", "dbl_xaThu_moc", "dbl_xaThu_thuy", "dbl_xaThu_hoa", "dbl_xaThu_tho", "dbl_xaThu_loi", "dbl_xaThu_phong",
+  "dbl_satThu_kim", "dbl_satThu_moc", "dbl_satThu_thuy", "dbl_satThu_hoa", "dbl_satThu_tho", "dbl_satThu_loi", "dbl_satThu_phong",
+  // Chiêu ô 4 riêng của tướng (Shan vẽ 05/11/2026). Tướng sĩ Lý Liệt, Hồ Lãng, Tống Tấn; Pháp sư Hà Vân, Đào Lam, Vũ Lôi, Chu Ngân, Liễu Yên; sứ quân Lữ Đường.
+  "xichHoaDoatKy", "langDaoTram", "loiDaoLienTram",
+  "hoaVuLieuNguyen", "bangHaPhongToa", "thienLoiGiangThe", "nganChamTanXa", "phongAnCuongLuu", "teGiangThuyTran",
+  // Binh lính Lê Thạch, Hoàng Mộc, Thái Hà, Trương Viêm, Ông Chấn, Mạnh Tường; sứ quân Nguyễn Khoan, Nguyễn Siêu.
+  "tranSonHoQuan", "reGiaGiuThanh", "thuyTraiLienHoan", "viemGiapHoDoanh", "chanLoiThietVe", "phongLuyHoKy",
+  "tamDaiKienThanh", "phuLietHoaLuy",
+  // Y sư Lục Diệp, Bạch Sương, Châu Ngọc, Bế Liên, Tiêu Minh.
+  "xuanMocVanSinh", "gioLanhTayUe", "kimChamDoMenh", "hauThoDuongNguyen", "loiChamKhoiTu",
+  // Mưu sĩ Tô Kim, Ninh Hỏa, Quách Ẩn, Nhan Trúc, Mã Nhạc, Từ Kinh, Bùi Phiêu; tướng lịch sử Lưu Cơ; sứ quân Ngô Xương Xí, Nguyễn Thủ Tiệp.
+  "kimNganLyTan", "hoaThieuKhoLuong", "thuyDonLyGian", "trucDocMeHon", "doanDaoTuyetLuong", "kinhLoiDoatKhi", "phieuPhongLyGian",
+  "doHoPhuLenh", "ngoGiaDiMuu", "tienDuDoatLuong",
+  // Quân sư Phùng Phong, Tạ Thạch, Nghiêm Thiết, Sầm Tuệ, Vi Triều, Tôn Diệm.
+  "phongVanBienTran", "batTranThachLuy", "thietTranPhaGiap", "thanhLamBayTran", "trieuDangVayThanh", "hoaCongLienKe",
+  // Xạ thủ Bạch Nỏ Lang, Thanh Lâm Xạ, Trấn Sơn Thạch; Sát thủ Độc Ảnh, Hàn Giang Khách, Xích Dạ, Địa Ẩn, Lôi Ảnh, Vô Ảnh.
+  "rb_bnl_thietNoPhaThanh", "rb_tlx_lucTienTroiDuong", "rb066_tranSonHoTran",
+  "rb070_ultimate", "rb071_ultimate", "rb072_ultimate", "rb073_ultimate", "rb074_ultimate", "rb075_ultimate",
+  // Nhân vật đặc biệt Đinh Ngọc: đủ 6 ô.
+  "dn_kimQuangPhaTran", "dn_thuyAnhXuyenLuu", "dn_hoaBoDoatMenh", "dn_vanTuongQuyNhat", "dn_thoAnTranTam", "dn_loiVanKhaiLo",
+  // Nhân vật đặc biệt Trần Vũ Phong: đủ 6 ô (ô 4 thay ảnh Phong Hành Vạn Lý dùng tạm trước đó).
+  "vp_phongKhoiVanDong", "vp_muaGiangYLoan", "vp_lucDiepDanLo", "vp_vanDuThienLy", "vp_diaMachHoDoi", "vp_cuongPhongDoiCuc",
 ]);
+
+/**
+ * Chiêu ô 4 của tướng kèm / tướng lịch sử / sứ quân dùng lại ảnh chiêu hệ cũ của Đinh Bộ Lĩnh (Shan duyệt 04/11/2026),
+ * ghép theo hệ và tác dụng. Mỗi ảnh chỉ gán một lần.
+ */
+export const REUSED_SKILL_ART: Readonly<Record<string, string>> = {
+  sieuLoaiPhaGiap: "kimAnPhaThien", // Lý Khuê
+  rb069_ultimate: "doanKimNhatTuyen", // Bạch Phong Đao
+  kimQuaThietMa: "thietKyTungHoanh", // Trần Cương
+  thietBichDongThanh: "giapDongHoThe", // Cao Kiên
+  hoiHoSinhKhi: "coThuTranThien", // Kiều Thuận
+  hoaLuThaoDuoc: "thanhTrucBaoPhu", // Trịnh Tú
+  trucLamPhaTran: "thanhMocHoPhap", // Lâm Tùng
+  kinhCucTrienThan: "cuongVuThienDiep", // Đàm Thảo
+  boHaiTranGiang: "thuyKiepVanTrung", // Trần Lãm
+  namVietVuongAn: "bachDangTrieuDang", // Đinh Liễn
+  rb064_lieuDiepToaGiang: "hanBangTien", // Lam Giang Phi Diệp
+  camLoHoiXuan: "linhThuyHoMenh", // Mai Thanh
+  bachHoXuatSon: "lietDiemPhanThanh", // Phạm Bạch Hổ
+  dinhQuocHoaKy: "hoaThieuLienTrai", // Nguyễn Bặc
+  rb065_xichLuanLietTran: "xichDiemTien", // Xích Diệm Luân
+  danHoaHoiNguyen: "ducHoaTrungSinh", // Hồng Đan
+  doDongKienTam: "thaiSonApDinh", // Đỗ Cảnh Thạc
+  ngoaiGiapHoQuan: "kienThanhBatDong", // Đinh Điền
+  sonHaTranKich: "sonBangDiaLiet", // Kha Sơn
+  diaMachBungPhat: "diaChanTamQuan", // Doãn Nham
+  phongChauLoiKich: "cuuTieuLoiPhat", // Kiều Công Hãn
+  thapDaoLoiBinh: "loiDinhHieuLenh", // Lê Hoàn
+  rb067_loiChamTuocKhi: "loiTienXuyenVan", // Lôi Minh Xạ
+  loiTranKinhHon: "loiVongThienLa", // Mạc Vân
+  duongLamPhongKhoi: "baoTapCanKhon", // Ngô Nhật Khánh
+  truyPhongDoatMenh: "phongNhanLietKhong", // Hứa Lăng
+  rb068_phongLangNhieuTran: "cuongPhongQuetTran", // Tật Phong Lăng
+};
 
 /** Tuyệt chiêu ô 4 của Đinh Bộ Lĩnh (`dbl_<nghề>_<hệ>`) dùng lại ảnh tuyệt chiêu hệ cũ của chính ông. */
 const DBL_ULTIMATE_ART: Readonly<Record<Element, string>> = {
@@ -537,10 +601,12 @@ const DBL_ULTIMATE_ART: Readonly<Record<Element, string>> = {
  * Ảnh vẽ tay cho một kỹ năng (mã file trong public/art/skills/) và có cần huy hiệu nghề ở góc không.
  * - Mã gốc trong SKILL_ART: ảnh của chính nó.
  * - `element_<mã>` (ô 2/6 hệ của mọi nhân vật chơi được): bỏ tiền tố, dùng ảnh hệ cũ.
- * - `dbl_<nghề>_<hệ>`: ảnh tuyệt chiêu hệ cũ + huy hiệu nghề để phân biệt 8 nghề (mỗi trận chỉ một nghề).
+ * - `dbl_<nghề>_<hệ>`: cả 8 nghề đều có ảnh riêng; dự phòng (mã mới chưa vẽ) là ảnh tuyệt chiêu hệ cũ + huy hiệu nghề.
  */
 export function skillArt(def: Pick<SkillDef, "id" | "element" | "profession">): { file: string; badge?: Profession } | undefined {
   if (SKILL_ART.has(def.id)) return { file: def.id };
+  const reused = REUSED_SKILL_ART[def.id];
+  if (reused) return { file: reused };
   if (def.id.startsWith("element_")) {
     const file = def.id.slice("element_".length);
     return SKILL_ART.has(file) ? { file } : undefined;
@@ -551,15 +617,31 @@ export function skillArt(def: Pick<SkillDef, "id" | "element" | "profession">): 
   return undefined;
 }
 
-/** Ô kỹ năng có ảnh vẽ tay: nền sơn mài thẫm viền màu hệ, tuyệt chiêu viền vàng có hào quang. */
+/** Quầng sáng của tuyệt chiêu: ánh vàng ở tâm chuyển sang màu hệ rồi tan vào nền, kèm viền trong mảnh màu đồng. */
+function UltimateGlow({ color }: { color: string }) {
+  const id = `ult-glow-${useId().replace(/:/g, "")}`;
+  return (
+    <>
+      <defs>
+        <radialGradient id={id} cx="50%" cy="50%" r="60%">
+          <stop offset="0" stopColor="#ffe9a8" stopOpacity={0.55} />
+          <stop offset="0.45" stopColor={color} stopOpacity={0.35} />
+          <stop offset="1" stopColor="#17120d" stopOpacity={0} />
+        </radialGradient>
+      </defs>
+      <rect x={3.6} y={3.6} width={40.8} height={40.8} rx={7.2} fill={`url(#${id})`} stroke="#b98a3e" strokeWidth={0.7} />
+    </>
+  );
+}
+
+/** Ô kỹ năng có ảnh vẽ tay: nền sơn mài thẫm viền màu hệ; tuyệt chiêu viền vàng đôi và quầng sáng. */
 function SkillArtIcon({ def, art, className }: { def: SkillDef; art: { file: string; badge?: Profession }; className: string }) {
   const edge = def.element ? ELEMENT_COLOR[def.element] : def.profession ? PROFESSION_COLOR[def.profession] : "#b98a3e";
   const ultimate = def.ultimate === true;
   return (
     <svg viewBox="0 0 48 48" className={className} aria-hidden focusable="false">
       <rect x={1.5} y={1.5} width={45} height={45} rx={9} fill="#17120d" stroke={ultimate ? "#ffe08a" : edge} strokeWidth={2.4} />
-      <rect x={4} y={4} width={40} height={40} rx={7} fill={edge} opacity={0.18} />
-      {ultimate && <polygon points={starPoints(24, 24, 22, 17, 16)} fill="#ffe08a" opacity={0.3} />}
+      {ultimate ? <UltimateGlow color={edge} /> : <rect x={4} y={4} width={40} height={40} rx={7} fill={edge} opacity={0.18} />}
       <image href={`/art/skills/${art.file}.webp`} x={4} y={4} width={40} height={40} />
       {art.badge && (
         <g>
@@ -584,8 +666,8 @@ export function SkillIcon({ def, className = "size-8" }: { def: SkillDef; classN
       <path d="M7 4 H41 A6 6 0 0 1 44 7 V16 Q24 11 4 16 V7 A6 6 0 0 1 7 4 Z" fill="#fff" opacity={0.12} />
       {ultimate && (
         <g>
-          <polygon points={starPoints(24, 24, 22, 17, 16)} fill="#ffe08a" opacity={0.55} />
-          <rect x={4} y={4} width={40} height={40} rx={7} fill="none" stroke="#ffe08a" strokeWidth={1.5} />
+          <rect x={4} y={4} width={40} height={40} rx={7} fill="#ffe9a8" opacity={0.18} />
+          <rect x={3.6} y={3.6} width={40.8} height={40.8} rx={7.2} fill="none" stroke="#ffe08a" strokeWidth={1.5} />
         </g>
       )}
       {spec.triple ? (

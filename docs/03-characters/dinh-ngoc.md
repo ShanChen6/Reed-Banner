@@ -1,7 +1,7 @@
 # Đinh Ngọc — Vạn Tượng Hành Giả
 
 > Cập nhật: 03/11/2026
-> Trạng thái: **APPROVED** — Shan chốt 03/11/2026: Đinh Ngọc là nhân vật đặc biệt chính thức. Số liệu kỹ năng vẫn là điểm xuất phát chờ cân bằng; code chưa mở trong game.
+> Trạng thái: **APPROVED** — Shan chốt 03/11/2026: Đinh Ngọc là nhân vật đặc biệt chính thức. Số liệu kỹ năng vẫn là điểm xuất phát chờ cân bằng. Đã mở trong game bằng chuỗi nhiệm vụ phụ (04/11/2026, xem [Triển khai trong core](#triển-khai-trong-core-02112026)).
 >
 > Bản ghi trước (02/11/2026): **DRAFT** — đã thống nhất hướng một nhân vật dung hợp tám nghề/bảy hệ qua sáu chủ động và bốn nội tại; tên Đinh Ngọc, nữ khoảng 25 tuổi đã chốt; ngoại hình chi tiết, chiêu thức, thông số và cách mở khóa dưới đây là đề xuất hoàn chỉnh để review. Kỹ năng và nội tại đã chạy được trong core (chưa mở ở chế độ nào, xem [Triển khai trong core](#triển-khai-trong-core-02112026)); chưa có kết quả mô phỏng cân bằng.
 
@@ -149,7 +149,9 @@ Chuỗi 3 bước theo chủ đề “dung hợp nghề/hệ” (nội dung bư�
 - Server ghi tiến độ từng bước và cấp nhân vật đúng một lần, như nhiệm vụ và thành tựu hiện có.
 - Là đồng hành chiếm một trong hai slot, không thay Đinh Bộ Lĩnh.
 
-> TODO: Duyệt nội dung 3 bước, thoại và đội hình trận cuối; chưa có code.
+Đã làm (04/11/2026) đúng ba bước trên; bước 2 tính mọi tầng Tháp Thí Luyện có luật (tầng 1–10, 16–20). Trận cuối 3vs3 Khó: Đinh Ngọc + Mai Thanh + Lê Thạch; Trần Vũ Phong + Hà Vân + Tô Kim. Thoại trước/thắng/thua là bản Claude viết trong `SPECIAL_QUESTS`.
+
+> TODO: Shan duyệt thoại và đội hình trận cuối; cân bằng trận cuối bằng mô phỏng.
 
 Không tự thêm profession “Vạn Tượng” vào ALL_PROFESSIONS. Cần một special character template rõ ràng trước implement: loadout cố định, per-skill damageElement, bốn passive dạng hỗn hợp, chặn tự lắp passive nghề/hệ mặc định. Nếu schema bắt buộc profession, task triển khai phải chốt mapping và bypass intrinsic có kiểm thử; không giả danh Tướng sĩ rồi ngầm nhận bonus kiếm30%.
 
@@ -176,7 +178,7 @@ Ví dụ trung tính, không gear/buff/Sĩ khí/quan hệ hệ, ATK100, DEF đ�
 
 ## Triển khai trong core (02/11/2026)
 
-Kỹ năng đã chạy được trong engine chiến đấu (`src/core`), kiểm bằng `tests/core/battle/special-characters.test.ts`. **Chưa mở ở chế độ nào**: nhân vật nằm ở `SPECIAL_COMPANIONS` ([roster.ts](../../src/core/roster/roster.ts)), không thuộc `ALL_COMPANIONS`, nên chưa có trong shop, Thường, Chiến dịch, Tháp, Sinh tồn hay Practice; mở ở đâu và cách mở khóa là quyết định sản phẩm sau. Trang `/demo` cũng chưa chọn được hai nhân vật này.
+Kỹ năng đã chạy được trong engine chiến đấu (`src/core`), kiểm bằng `tests/core/battle/special-characters.test.ts`. **Đã mở trong game (04/11/2026, Shan chọn chuỗi nhiệm vụ phụ 3 bước):** nhân vật nằm ở `SPECIAL_COMPANIONS` ([roster.ts](../../src/core/roster/roster.ts)), thuộc `PLAYABLE_COMPANIONS` nhưng không thuộc `ALL_COMPANIONS`, nên không bán ở cửa hàng và không làm đối thủ ngẫu nhiên ở Tháp, Sinh tồn hay Trận Đồ. Chuỗi nhiệm vụ ở [specialQuests.ts](../../src/core/progress/specialQuests.ts), hồ sơ có `specialQuests`; server đếm bước 1 ở mọi trận có thưởng (trừ Nhật Lệnh), bước 2 ở `settleTrial`, trận cuối là `specialQuest` khi tạo trận (3vs3 Khó, nhân vật + hai người đi cùng, cùng cấp nhân vật chính). Thắng thì gia nhập cấp 1 đúng một lần, ra trận như mọi nhân vật kèm. Màn Nhiệm vụ có thẻ "Nhiệm vụ phụ: nhân vật đặc biệt". Bước 2 cần Tháp Thí Luyện bật (`TRIAL_ENABLED`). Kiểm bằng `tests/server/specialQuests.test.ts`.
 
 | Hạng mục | Cách làm |
 |---|---|

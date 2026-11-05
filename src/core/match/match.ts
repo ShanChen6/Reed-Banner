@@ -90,6 +90,8 @@ export interface Match {
   readonly destiny?: DestinyMatch;
   /** Viễn Chinh: trận của một đạo quân đánh vào một ô sa bàn. */
   readonly expedition?: ExpeditionMatchTag;
+  /** Trận cuối nhiệm vụ nhân vật đặc biệt: id nhân vật (Đinh Ngọc, Trần Vũ Phong). */
+  readonly specialQuest?: string;
 }
 
 /** Danh tính tầng của trận Trial và giới hạn lượt của người chơi. */
@@ -127,6 +129,7 @@ export interface MatchConfig {
   readonly trial?: TrialMatch;
   readonly destiny?: DestinyMatch;
   readonly expedition?: ExpeditionMatchTag;
+  readonly specialQuest?: string;
 }
 
 export interface MatchStep {
@@ -162,6 +165,7 @@ export function startMatch(config: MatchConfig): MatchStep {
     ...(config.trial ? { trial: config.trial } : {}),
     ...(config.destiny ? { destiny: config.destiny } : {}),
     ...(config.expedition ? { expedition: config.expedition } : {}),
+    ...(config.specialQuest ? { specialQuest: config.specialQuest } : {}),
   };
   const ai = runAi(match, config.now, config.difficulty);
   return { match: ai.match, events: [...events, ...ai.events] };
@@ -470,6 +474,8 @@ export interface MatchView {
   readonly raidBoss?: string;
   readonly campaignScenario?: CampaignScenarioTag;
   readonly raid?: RaidTier;
+  /** Trận cuối nhiệm vụ nhân vật đặc biệt. */
+  readonly specialQuest?: string;
   readonly survival?: SurvivalView;
   readonly daily?: string;
   /** Trial: tầng đang đánh và giới hạn lượt; không lộ seed hay dấu vân tay. */
@@ -683,6 +689,7 @@ export function viewOf(m: Match): MatchView {
     ...(m.raidBoss ? { raidBoss: m.raidBoss } : {}),
     ...(m.campaignScenario ? { campaignScenario: m.campaignScenario } : {}),
     ...(m.raid ? { raid: m.raid } : {}),
+    ...(m.specialQuest ? { specialQuest: m.specialQuest } : {}),
     ...(m.survival ? { survival: survivalView(m.survival, m.battle) } : {}),
     ...(m.daily ? { daily: m.daily } : {}),
     ...(m.trial

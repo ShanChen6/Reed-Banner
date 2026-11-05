@@ -74,6 +74,8 @@ export interface SkillDef {
   readonly slot?: number;
   readonly ultimate?: boolean;
   readonly characterKind?: "ultimate" | "signature";
+  /** Dòng chiêu chung (tuyệt chiêu Đinh Bộ Lĩnh: tên phần nghề, ví dụ "Bình định"), hiện ở dòng phụ. */
+  readonly lineName?: string;
   readonly cost: number;
   readonly target: SkillTarget;
   readonly steps: readonly SkillStep[];
@@ -955,9 +957,20 @@ const DBL_ELEMENT_FINISHERS:Record<Element,{name:string;steps:readonly SkillStep
  loi:{name:"Lôi",steps:[{type:"energy",to:"enemies",amount:-15}]},
  phong:{name:"Phong",steps:[{type:"energy",to:"team",amount:15}]},
 };
+/** Tên riêng từng tuyệt chiêu Đinh Bộ Lĩnh (Shan chốt 04/11/2026); tên phần nghề thành dòng phụ `lineName`. */
+const DBL_ULTIMATE_NAMES: Record<GameProfession, Record<Element, string>> = {
+ tuongSi: {kim: "Bạch Kim Phá Giáp Trảm", moc: "Thanh Mộc Hoành Đao", thuy: "Hắc Thủy Đoạn Giang", hoa: "Xích Viêm Liệt Trảm", tho: "Hoàng Thổ Khai Sơn Trảm", loi: "Tử Lôi Phá Trận Kích", phong: "Cuồng Phong Tảo Diệp"},
+ phapSu: {kim: "Kim Cương Pháp Ấn", moc: "Vạn Mộc Tịch Diệt", thuy: "Băng Phách Trấn Hồn", hoa: "Cửu U Phần Thế Chú", tho: "Đại Địa Phong Ấn", loi: "Cửu Tiêu Lôi Ngục", phong: "Hư Không Cuồng Khiếu"},
+ binhLinh: {kim: "Kim Giáp Hộ Vực", moc: "Đằng Giáp Trấn Ải", thuy: "Hải Triều Hộ Vệ", hoa: "Liệt Hỏa Tường Vi", tho: "Thạch Bích Trường Thành", loi: "Lôi Trì Thiết Vệ", phong: "Phong Nhãn Hộ Thuẫn"},
+ ySu: {kim: "Kim Châm Tục Mệnh", moc: "Xuân Phong Hóa Vũ", thuy: "Cam Lộ Tẩy Trần", hoa: "Hồi Dương Chi Diễm", tho: "Đại Địa Chi Ân", loi: "Lôi Âm Tỉnh Thần", phong: "Thanh Phong Tán Độc"},
+ muuSi: {kim: "Kim Phách Đoạt Hồn", moc: "Đằng Xà Phược Mưu", thuy: "Hư Không Đảo Hải", hoa: "Phần Tâm Đoạt Kế", tho: "Quỷ Mưu Mai Phục", loi: "Lôi Khiếu Đoạt Khí", phong: "Loạn Phong Phá Trận"},
+ xaThu: {kim: "Xuyên Tâm Vạn Tiễn", moc: "Đằng Mạn Tróc Ảnh", thuy: "Băng Tiễn Vũ Bão", hoa: "Liệt Hỏa Phần Trại", tho: "Toái Thạch Lưu Tinh", loi: "Thiểm Điện Xuyên Vân", phong: "Bão Táp Cuồng Long"},
+ satThu: {kim: "Ảnh Nha Đoạt Hộ", moc: "Quỷ Mộc Ẩn Sát", thuy: "U Thủy Vô Ngân", hoa: "U Minh Phách Viêm", tho: "Địa Hành Độn Sát", loi: "Thuấn Sát Thần Kiếm", phong: "Phong Nhận Vô Hình"},
+ quanSu: {kim: "Kim Bài Hiệu Lệnh", moc: "Mộc Khí Hưng Bang", thuy: "Nhất Hô Bách Ứng", hoa: "Hừng Hực Tiến Công", tho: "Vững Tựa Thái Sơn", loi: "Lôi Đình Vạn Quân", phong: "Thần Tốc Hành Quân"},
+};
 export const DBL_ULTIMATES:readonly SkillDef[]=Object.entries(DBL_ROLE_FINISHERS).flatMap(([profession,role])=>
  Object.entries(DBL_ELEMENT_FINISHERS).map(([element,flavor])=>({
- id:`dbl_${profession}_${element}`,name:`${role.name} · ${flavor.name}`,character:"dinhBoLinh",characterKind:"ultimate" as const,
+ id:`dbl_${profession}_${element}`,name:DBL_ULTIMATE_NAMES[profession as GameProfession][element as Element],lineName:role.name,character:"dinhBoLinh",characterKind:"ultimate" as const,
  profession:profession as Profession,element:element as Element,slot:4,ultimate:true,cost:80,target:role.target,steps:[...role.steps,...flavor.steps],
  })));
 export function dinhBoLinhUltimate(profession:Profession,element:Element):SkillDef {
