@@ -152,13 +152,13 @@ export default function DailyScreen() {
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <h3 className="mb-1 text-sm font-semibold text-title">
+              <h3 className="mb-1 text-sm font-semibold text-frame-gold">
                 Đội của bạn
               </h3>
               <Fighters list={setup.team} />
             </div>
             <div>
-              <h3 className="mb-1 text-sm font-semibold text-title">
+              <h3 className="mb-1 text-sm font-semibold text-frame-gold">
                 Đối thủ
               </h3>
               <Fighters list={setup.foes} />
@@ -227,7 +227,7 @@ export default function DailyScreen() {
             </ol>
           )}
           {mine?.rank != null && !top.some((r) => r.mine) && (
-            <p className="text-sm text-title">Hạng của bạn: {mine.rank}</p>
+            <p className="text-sm text-frame-gold">Hạng của bạn: {mine.rank}</p>
           )}
         </OrnateFrame>
       </div>
