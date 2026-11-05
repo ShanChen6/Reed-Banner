@@ -437,8 +437,90 @@ function NodeChip({ node, onPick, badge, count }: { node: CatalogNode; onPick: (
   );
 }
 
+/** Yếu tố có tranh riêng ở public/art/tam-tuong-ky/yeu-to/<mã yếu tố>.webp. */
+const NODE_ART: ReadonlySet<NodeId> = new Set([
+  "know.daiCoViet",
+  "know.duongLam",
+  "know.guardRoad",
+  "know.hoaLuHerbs",
+  "know.hoaLuy",
+  "know.hoiHo",
+  "know.magic",
+  "know.martial",
+  "know.medicine",
+  "know.ngoGia",
+  "know.outerArmor",
+  "know.phaGiap",
+  "know.phongChau",
+  "know.reedBanner",
+  "know.riverGuard",
+  "know.royalSeal",
+  "know.steadfast",
+  "know.stratagem",
+  "know.tamDai",
+  "know.teGiang",
+  "know.tenCircuits",
+  "know.tienDu",
+  "know.tigerLeaves",
+  "know.troops",
+  "know.wandering",
+  "know.warManual",
+  "know.whiteTiger",
+  "mat.armor",
+  "mat.bamboo",
+  "mat.bambooSlips",
+  "mat.blackBronze",
+  "mat.boat",
+  "mat.boulder",
+  "mat.bridge",
+  "mat.charcoal",
+  "mat.cloth",
+  "mat.cloud",
+  "mat.commandFlag",
+  "mat.dew",
+  "mat.estuary",
+  "mat.forgedIron",
+  "mat.fortress",
+  "mat.gourd",
+  "mat.grain",
+  "mat.granary",
+  "mat.herbs",
+  "mat.hoaLu",
+  "mat.ink",
+  "mat.jadeStone",
+  "mat.lake",
+  "mat.mountain",
+  "mat.rampart",
+  "mat.reed",
+  "mat.road",
+  "mat.seal",
+  "mat.storm",
+  "mat.village",
+  "mat.waterOrb",
+  "mat.weapon",
+  "role.hybrid",
+]);
+
+/**
+ * Tranh của yếu tố, nếu có. Không có tranh riêng thì tri thức sơ học và node vai trò (tri thức nghề nhuộm hệ) dùng tranh
+ * của nghề ở public/art/tam-tuong-ky/nghe/<nghề>.webp.
+ */
+function nodeArt(node: CatalogNode): string | undefined {
+  if (NODE_ART.has(node.id)) return `/art/tam-tuong-ky/yeu-to/${node.id}.webp`;
+  const profession = node.professionHint ?? (node.role?.hybrid ? undefined : node.role?.profession);
+  return profession && `/art/tam-tuong-ky/nghe/${profession}.webp`;
+}
+
 function NodeGlyph({ node, className = "size-6" }: { node: CatalogNode; className?: string }) {
   if (node.element) return <ElementIcon element={node.element} className={className} />;
+  const art = nodeArt(node);
+  if (art) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} aria-hidden focusable="false">
+        <image href={art} width={24} height={24} />
+      </svg>
+    );
+  }
   return (
     <span aria-hidden className={`${className} grid shrink-0 place-items-center rounded-full border border-[var(--atlas-bronze)] bg-[var(--atlas-paper-deep)] font-serif text-xs font-bold text-[var(--atlas-ink)]`}>
       {node.nameVi.charAt(0)}
