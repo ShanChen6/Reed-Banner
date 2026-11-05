@@ -2,6 +2,9 @@
 
 ## 05/11/2026
 
+**Viễn Chinh: Giữ dân không còn mở bậc**
+- Sau bản review, Shan cho sửa lối tắt: làm xong rút dân và cắt viện rồi rút quân thì trước đây vẫn tính qua bậc. Giờ kết thúc Giữ dân không mở bậc sau, không có món, vàng chỉ bằng mức thắng lại × 0,6. Xem [thiết kế Cửa Biển mục 4](../02-game-modes/expedition/03-cua-bien-thiet-ke.md#4-kết-thúc-và-thưởng).
+
 **Khai Lộ: mini game giải đố mới (DRAFT, có bản chơi thử)**
 - Shan muốn một mini game giải đố kiểu Block'D (xóa nhóm cùng màu) dùng ô ngọc của game, chốt tên **Khai Lộ**. Chạm một ô xóa cả khối cùng loại liền cạnh, ô rơi và cột dồn, không có ô mới; điểm n², quân lực, đạo cụ Lốc Phong và Sấm Sét. Xem [GDD Khai Lộ](../02-game-modes/future/24-khai-lo-gdd.md).
 

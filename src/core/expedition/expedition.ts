@@ -887,8 +887,9 @@ export function applyExpeditionEnd(
   }
   const info = EXPEDITION_TIER_INFO[run.tier];
   const key = `${run.map}:${run.tier}`;
-  // Giữ dân tính là qua bậc (mở bậc sau) nhưng chỉ có vàng, không có món.
-  const firstClear = (state.cleared[run.map] ?? 0) < run.tier;
+  // Giữ dân (thắng phụ) chỉ có vàng thắng lại × hệ số: không tính qua bậc, không mở bậc sau, không có món, để không
+  // lách được thành đích bằng cách làm xong nhiệm vụ rồi rút quân (Shan chốt 05/11/2026).
+  const firstClear = won && (state.cleared[run.map] ?? 0) < run.tier;
   const mult = ending && scenario ? scenario.endingGold[ending] : 1;
   const gold = Math.round((firstClear ? info.firstGold : info.repeatGold) * mult);
   let next: Profile = { ...profile, gold: profile.gold + gold };
@@ -924,7 +925,7 @@ export function applyExpeditionEnd(
     state: {
       ...state,
       ...(won ? { bestDays: { ...state.bestDays, [key]: Math.min(state.bestDays?.[key] ?? Infinity, run.day) } } : {}),
-      cleared: { ...state.cleared, [run.map]: Math.max(state.cleared[run.map] ?? 0, run.tier) },
+      ...(won ? { cleared: { ...state.cleared, [run.map]: Math.max(state.cleared[run.map] ?? 0, run.tier) } } : {}),
       stars: { ...state.stars, [key]: Math.max(state.stars[key] ?? 0, stars) },
       run: { ...run, rewarded: true, result },
     },
