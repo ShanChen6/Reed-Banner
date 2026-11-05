@@ -19,6 +19,7 @@ import {
   fetchProfile,
   ONLINE_ERROR_TEXT,
 } from "../battle/online";
+import { buttonVariants, choiceVariants } from "@/components/ui";
 import DialoguePlayer from "./DialoguePlayer";
 import { MAIN_SPEAKER, speakerSide } from "./dialogue";
 import { FACTION_STATUS_TEXT, SourceNotes, TONE_TEXT } from "./StoryBeats";
@@ -27,9 +28,6 @@ const OUTCOME_TEXT: Record<string, string> = {
   allianced: FACTION_STATUS_TEXT.allied,
   submitted: FACTION_STATUS_TEXT.submitted,
 };
-
-const FOCUS =
-  "focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1c140f] focus-visible:outline-none";
 
 export type DiplomacyPhase = "intro" | "choice";
 
@@ -113,16 +111,16 @@ export default function DiplomacyScene({
       aria-labelledby={`diplomacy-${nodeId}`}
       className="flex flex-col gap-3"
     >
-      <header className="rounded-lg border border-amber-500/30 bg-black/30 px-3 py-2">
-        <p className="text-[11px] tracking-widest text-amber-300/90 uppercase">
+      <header className="rounded-lg border border-frame-line-soft bg-wood-inset px-3 py-2">
+        <p className="text-kicker text-frame-gold">
           Hội kiến · {node.location.name}
           {node.location.modernRegion ? `, ${node.location.modernRegion}` : ""}
         </p>
         <h3
           id={`diplomacy-${nodeId}`}
-          className="text-sm font-semibold text-amber-50"
+          className="text-sm font-semibold text-on-wood"
         >
-          {MAIN_SPEAKER} <span className="text-amber-300/70">⟷</span>{" "}
+          {MAIN_SPEAKER} <span className="text-frame-gold/70">⟷</span>{" "}
           {counterpart
             ? `${counterpartVoice ?? counterpart.name}${counterpartVoice && counterpartVoice !== counterpart.name ? ` (${counterpart.name})` : ""}`
             : node.title}
@@ -130,9 +128,9 @@ export default function DiplomacyScene({
       </header>
 
       {outcome && (
-        <p className="text-xs text-foreground-secondary">
+        <p className="text-xs text-on-wood-soft">
           Không có trận, không có thanh máu. Kết cục đã cố định:{" "}
-          <strong className="text-sky-200">{outcome}</strong>
+          <strong className="text-info">{outcome}</strong>
           {counterpart ? ` (${counterpart.name})` : ""}. Lời đáp chỉ đổi cách
           kể; không có thưởng riêng theo lựa chọn. Server ghi kết quả vào thế
           cục sứ quân một lần.
@@ -161,9 +159,9 @@ export default function DiplomacyScene({
         <button
           type="button"
           onClick={() => onMove("intro", done ? undefined : choice)}
-          className={`min-h-11 self-start rounded-lg bg-white/10 px-4 text-sm hover:bg-white/15 ${FOCUS}`}
+          className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-11 self-start" })}
         >
-          ↺ Xem lại hội kiến
+          Xem lại hội kiến
         </button>
       )}
       <SourceNotes nodeId={nodeId} label="Xem chú thích sử liệu" />
@@ -172,7 +170,7 @@ export default function DiplomacyScene({
         <div className="flex flex-col gap-2">
           <p
             id={`diplomacy-prompt-${nodeId}`}
-            className="font-semibold text-amber-200"
+            className="font-semibold text-frame-gold"
           >
             {copy.prompt}
           </p>
@@ -192,30 +190,28 @@ export default function DiplomacyScene({
                   aria-pressed={selected}
                   disabled={done || pending}
                   onClick={() => onMove("choice", c.id)}
-                  className={`flex min-h-14 flex-col gap-1 rounded-lg border-2 p-3 text-left transition ${FOCUS} ${
-                    selected
-                      ? "border-amber-300 bg-amber-500/20"
-                      : "border-white/15 bg-black/35 hover:border-amber-400/60"
-                  } disabled:cursor-not-allowed ${done && !selected ? "opacity-40" : ""}`}
+                  className={choiceVariants({
+                    className: `min-h-14 flex-col items-stretch gap-1 p-3 text-left ${done && !selected ? "opacity-40" : ""}`,
+                  })}
                 >
                   <span className="flex items-center justify-between gap-2">
-                    <span className="font-semibold text-amber-50">
+                    <span className="font-semibold text-on-wood">
                       {c.label}
                     </span>
                     {tone && (
-                      <span className="shrink-0 rounded border border-stone-400/50 px-1.5 py-0.5 text-[10px] text-stone-200 uppercase">
+                      <span className="shrink-0 rounded border border-frame-line px-1.5 py-0.5 text-[10px] text-on-wood uppercase">
                         {TONE_TEXT[tone]}
                       </span>
                     )}
                   </span>
                   {preview && (
-                    <span className="line-clamp-2 text-xs text-foreground-secondary">
+                    <span className="line-clamp-2 text-xs text-on-wood-soft">
                       {preview.text}
                     </span>
                   )}
                   {done && selected && (
-                    <span className="text-xs text-emerald-300">
-                      Lời đáp đã ghi trên server
+                    <span className="text-xs text-jade">
+                      Lời đáp đã ghi trên máy chủ
                     </span>
                   )}
                 </button>
@@ -240,7 +236,7 @@ export default function DiplomacyScene({
               disabled={!choice || pending}
               aria-busy={pending}
               onClick={() => void submit()}
-              className={`min-h-12 self-start rounded-lg border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-6 font-bold text-amber-50 disabled:cursor-not-allowed disabled:opacity-50 ${FOCUS}`}
+              className={buttonVariants({ size: "lg", className: "min-h-12 self-start" })}
             >
               {pending ? "Đang ghi…" : choice ? "Trao lời" : "Chọn một lời đáp"}
             </button>
@@ -249,15 +245,15 @@ export default function DiplomacyScene({
       )}
 
       <div role="status" aria-live="polite" className="flex flex-col gap-2">
-        {message && <p className="text-sm text-rose-300">{message}</p>}
+        {message && <p className="text-sm text-danger">{message}</p>}
         {done && phase === "choice" && (
-          <div className="rounded-xl border-2 border-sky-400/50 bg-sky-950/40 p-3">
+          <div className="rounded-xl border-2 border-info/50 bg-info/10 p-3">
             <p className="flex flex-wrap items-baseline gap-2">
-              <span className="rounded border-2 border-sky-300 px-2 py-0.5 text-lg font-black tracking-widest text-sky-100 uppercase">
+              <span className="rounded border-2 border-info px-2 py-0.5 text-lg font-black tracking-widest text-info uppercase">
                 {outcome ?? "Hoàn thành"}
               </span>
               {counterpart && (
-                <span className="text-sm text-stone-200">
+                <span className="text-sm text-on-wood">
                   {counterpart.name} · ghi vào thế cục sứ quân một lần
                 </span>
               )}

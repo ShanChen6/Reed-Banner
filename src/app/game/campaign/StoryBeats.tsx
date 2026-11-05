@@ -36,27 +36,27 @@ export function Beats({ beats }: { beats: readonly StoryBeat[] }) {
       {beats.map((b, i) => {
         const sources = (b.refs ?? []).filter((r) => r.startsWith("S"));
         return (
-          <li key={i} className="rounded-md bg-black/25 p-2 text-sm">
+          <li key={i} className="rounded-md bg-wood-inset p-2 text-sm">
             <div className="mb-1 flex flex-wrap items-center gap-1.5">
               <BasisBadge basis={b.basis} />
               {b.speaker && (
-                <span className="text-xs text-muted">
+                <span className="text-xs text-on-wood-soft">
                   Thoại của {b.speaker}, không phải trích dẫn sử
                 </span>
               )}
             </div>
             <p
-              className={b.speaker ? "text-amber-50" : "text-stone-200 italic"}
+              className={b.speaker ? "text-on-wood" : "text-on-wood italic"}
             >
               {b.speaker && (
-                <span className="font-semibold text-amber-300 not-italic">
+                <span className="font-semibold text-frame-gold not-italic">
                   {b.speaker}:{" "}
                 </span>
               )}
               {b.speaker ? `“${b.text}”` : b.text}
             </p>
             {b.refs && b.refs.length > 0 && (
-              <p className="mt-1 text-[11px] text-muted">
+              <p className="mt-1 text-[11px] text-on-wood-soft">
                 Nguồn: {b.refs.join(", ")}
                 {sources.length > 0 &&
                   ` · ${sources.map((s) => SOURCE_TITLE[s] ?? s).join("; ")}`}
@@ -87,12 +87,12 @@ export function Cinematic({ nodeId }: { nodeId: string }) {
   const beats = missionCopy(nodeId)?.cinematic;
   if (!beats?.length) return null;
   return (
-    <figure className="rounded-lg border border-amber-500/30 bg-gradient-to-b from-black/50 to-[#3a2a1c]/60 p-3">
-      <figcaption className="mb-1 text-[10px] tracking-widest text-amber-300/70 uppercase">
+    <figure className="rounded-lg border border-frame-line-soft bg-gradient-to-b from-wood-lo/60 to-wood/60 p-3">
+      <figcaption className="mb-1 text-kicker text-frame-gold/80">
         Cảnh dựng · game sáng tác
       </figcaption>
       {beats.map((b, i) => (
-        <p key={i} className="font-serif text-sm text-amber-50/90 italic">
+        <p key={i} className="font-serif text-sm text-on-wood/90 italic">
           {b.text}
         </p>
       ))}
@@ -110,14 +110,14 @@ export function SourceNotes({
   const notes = missionCopy(nodeId)?.sourceNotes;
   if (!notes?.length) return null;
   return (
-    <details className="rounded-md border border-sky-400/30 bg-sky-500/5 p-2 text-sm">
-      <summary className="flex min-h-11 cursor-pointer items-center rounded font-semibold text-sky-200 focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:outline-none">
+    <details className="rounded-md border border-info/30 bg-info/5 p-2 text-sm">
+      <summary className="flex min-h-11 cursor-pointer items-center rounded font-semibold text-info focus-visible:ring-2 focus-visible:ring-info focus-visible:outline-none">
         {label}
       </summary>
       <div className="mt-2 flex flex-col gap-3">
         {notes.map((n) => (
           <section key={n.title}>
-            <h3 className="mb-1 text-xs font-semibold text-sky-100">
+            <h3 className="mb-1 text-xs font-semibold text-info">
               {n.title}
             </h3>
             <Beats beats={n.beats} />
