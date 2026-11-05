@@ -147,6 +147,7 @@ import {
 } from "./online";
 import { SceneLink } from "../SceneContext";
 import BattleStage from "../stage/BattleStage";
+import { buttonVariants } from "@/components/ui";
 import { createCueBus, stageCues } from "../stage/director";
 
 const PLAYER = 0;
@@ -1863,11 +1864,11 @@ export default function DemoGame({
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-3">
         <header className="flex flex-wrap items-center justify-between gap-2">
-          <h1 className="flex items-center gap-1.5 text-lg font-bold">
-            <LeaderFlag className="size-6" />
+          {/* Tên chế độ đã ở header chung; giữ h1 cho trình đọc màn hình. */}
+          <h1 className="sr-only">
             {online ? "Cờ Lau · Giao Tranh" : "Cờ Lau · Thao Luyện"}
           </h1>
-          <div className="text-sm font-semibold" aria-live="polite">
+          <div className="text-sm font-semibold text-title-on-wood" aria-live="polite">
             {!started
               ? "Chuẩn bị xuất trận"
               : atBreak
@@ -1894,18 +1895,18 @@ export default function DemoGame({
             <button
               type="button"
               onClick={() => { setProfile(loadProfile()); setStarted(false); }}
-              className="flex items-center gap-1.5 rounded bg-[var(--panel)] px-2.5 py-1 text-xs font-semibold"
+              className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-9 gap-1.5 text-xs" })}
             >
               <ProfessionIcon profession={profession} className="size-4" />
               Đổi đội hình
             </button>
           )}
-          <label className="flex items-center gap-2 text-xs">
+          <label className="flex items-center gap-2 text-xs text-on-wood-soft">
             Độ khó
             <select
               value={difficulty}
               onChange={(e) => setDifficulty(e.target.value as Difficulty)}
-              className="rounded bg-[var(--panel)] px-2 py-1"
+              className="min-h-9 rounded-control border border-frame-line-soft bg-wood-inset px-2 py-1 text-on-wood"
             >
               {DIFFICULTIES.map((d) => (
                 <option key={d} value={d}>
@@ -1916,10 +1917,10 @@ export default function DemoGame({
           </label>
         </header>
         {scenario && live && !scenarioOver && (phaseTurns || labels.length > 1) && (
-          <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-sm text-amber-100">
-            ⚑ {storyNodeById(scenario.nodeId)?.title}
+          <p className="rounded-md border border-frame-line bg-frame-gold/10 px-3 py-1 text-sm text-title-on-wood">
+            {storyNodeById(scenario.nodeId)?.title}
             {labels.length > 1 &&
-              ` · phase ${scenario.phaseIndex + 1}/${labels.length}: ${labels[scenario.phaseIndex]}`}
+              ` · giai đoạn ${scenario.phaseIndex + 1}/${labels.length}: ${labels[scenario.phaseIndex]}`}
             {phaseTurns ? (
               <>
                 : {labels.length > 1 ? "đã giữ" : "cầm cự"}{" "}
@@ -1930,7 +1931,7 @@ export default function DemoGame({
             ) : bossThreshold && phaseBoss ? (
               `: đẩy ${phaseBoss.name} xuống ${Math.round(bossThreshold * 100)}% máu (đang ${Math.round((Math.max(0, phaseBoss.hp) / phaseBoss.maxHp) * 100)}%).`
             ) : phaseBoss && labels.length > 1 ? (
-              `: hạ ${phaseBoss.name}; máu mất ở phase trước không hồi.`
+              `: hạ ${phaseBoss.name}; máu mất ở giai đoạn trước không hồi.`
             ) : (
               ": hạ hết đối thủ."
             )}
