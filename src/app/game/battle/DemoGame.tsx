@@ -147,6 +147,7 @@ import {
 } from "./online";
 import { SceneLink } from "../SceneContext";
 import BattleStage from "../stage/BattleStage";
+import { buttonVariants } from "@/components/ui";
 import { createCueBus, stageCues } from "../stage/director";
 
 const PLAYER = 0;
@@ -448,7 +449,7 @@ function TurnClock({
   const left = seconds ?? total;
   const urgent = mine && seconds !== null && left <= 10;
   const label = waiting
-    ? "Đang chờ server…"
+    ? "Đang chờ máy chủ…"
     : mine
       ? extra
         ? "Lượt thêm của bạn"
@@ -529,11 +530,14 @@ function Bar({
   max,
   color,
   label,
+  keepValue = false,
 }: {
   value: number;
   max: number;
   color: string;
   label: string;
+  /** Trên điện thoại thẻ gọn chỉ còn thanh; giữ số (máu) khi cần. */
+  keepValue?: boolean;
 }) {
   const pct = max > 0 ? Math.max(0, Math.min(100, (value / max) * 100)) : 0;
   return (
@@ -541,15 +545,16 @@ function Bar({
       className="flex items-center gap-1.5 text-[11px] leading-none"
       aria-label={`${label} ${Math.round(value)}/${max}`}
     >
-      <span className="w-6 shrink-0 opacity-70">{label}</span>
-      <div className="h-2 flex-1 overflow-hidden rounded bg-black/30">
+      <span className="hidden w-6 shrink-0 opacity-70 md:block">{label}</span>
+      <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded bg-black/30 md:h-2">
         <div
           className={`h-full ${color} transition-[width] duration-300`}
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className="w-14 shrink-0 text-right tabular-nums">
-        {Math.round(value)}/{max}
+      <span className={`${keepValue ? "" : "hidden md:block"} shrink-0 text-right tabular-nums md:w-14`}>
+        {Math.round(value)}
+        <span className="hidden md:inline">/{max}</span>
       </span>
     </div>
   );
@@ -639,28 +644,28 @@ function FighterCard({
       type="button"
       onClick={onClick}
       disabled={!onClick || !alive}
-      className={`relative w-full rounded-lg border-l-4 bg-[var(--panel)] p-2 text-left ${ring} ${alive ? "" : "opacity-40 grayscale"} disabled:cursor-default`}
+      className={`relative w-full min-w-0 rounded-lg border-l-4 bg-[var(--panel)] p-1.5 text-left md:p-2 ${ring} ${alive ? "" : "opacity-40 grayscale"} disabled:cursor-default`}
       style={{ borderLeftColor: ELEMENT_COLOR[fighter.element] }}
       title={cardTitle}
     >
-      <div className="mb-1 flex items-center gap-2">
+      <div className="mb-1 flex items-center gap-1.5 md:gap-2">
         <Portrait
           id={fighter.id}
           element={fighter.element}
           profession={fighter.profession}
           level={fighter.level}
-          className="size-9 shrink-0 md:size-7 lg:size-11"
+          className="size-8 shrink-0 md:size-7 lg:size-11"
         />
         <div className="min-w-0 flex-1">
-          <span className="flex min-w-0 items-center gap-1 text-sm font-semibold">
+          <span className="flex min-w-0 items-center gap-1 text-xs font-semibold md:text-sm">
             {leader && (
               <span title="Thủ lĩnh" className="shrink-0">
-                <LeaderFlag className="size-4" />
+                <LeaderFlag className="size-3 md:size-4" />
               </span>
             )}
             <span className="truncate">{fighter.name}</span>
           </span>
-          <span className="flex items-center gap-1 text-[10px] opacity-75">
+          <span className="hidden items-center gap-1 text-[10px] opacity-75 md:flex">
             <FighterKindIcons fighter={fighter} showName />
           </span>
         </div>
@@ -671,17 +676,20 @@ function FighterCard({
           value={fighter.hp}
           max={fighter.maxHp}
           color={fighter.structure ? "bg-amber-600" : "bg-rose-500"}
+          keepValue
         />
         {/* Công trình (cổng thành) không ra tay: không có năng lượng, tinh thần. */}
         {!fighter.structure && (
           <>
             <Bar label="NL" value={fighter.energy} max={100} color="bg-sky-500" />
-            <Bar
-              label="TT"
-              value={fighter.spirit}
-              max={100}
-              color="bg-emerald-500"
-            />
+            <div className="hidden md:block">
+              <Bar
+                label="TT"
+                value={fighter.spirit}
+                max={100}
+                color="bg-emerald-500"
+              />
+            </div>
           </>
         )}
         {rage !== null && (
@@ -754,12 +762,10 @@ const CORNERS = [
  * lại chạy hoàn toàn trong trình duyệt (PRACTICE).
  */
 export default function DemoGame({
-  theme,
   online = false,
   autoResume = false,
   towerFeatures = { trial: true, destiny: true },
 }: {
-  theme: "light" | "dark";
   online?: boolean;
   /** Vào phân cảnh là tiếp tục ngay trận online đã lưu (Chiến dịch, Sinh tồn, … vừa tạo trận rồi chuyển sang). */
   autoResume?: boolean;
@@ -1763,10 +1769,9 @@ export default function DemoGame({
     return r.error ?? null;
   };
 
+  // Game chỉ có một giao diện (gỗ tối), không có chế độ sáng.
   const palette =
-    theme === "light"
-      ? "[--bg:#f3ebdc] [--panel:#fffaf0] [--cell:#e2d3b6] [--frame:#7a2c1d] [--gold:#b8862f] text-stone-900"
-      : "[--bg:#17110e] [--panel:#271d18] [--cell:#14251c] [--frame:#1b2a21] [--gold:#d4a24c] text-stone-100";
+    "[--bg:#17110e] [--panel:#271d18] [--cell:#14251c] [--frame:#1b2a21] [--gold:#d4a24c] text-on-wood";
 
   const frame = anim ? anim.frames[anim.i] : undefined;
   const board = frame?.board ?? heldBoard ?? state.board;
@@ -1788,11 +1793,16 @@ export default function DemoGame({
   const aimingAlly = aim?.choose && aim.skill.target === "ally";
   const aimMark = aim?.target ?? aimIndex;
 
-  const side = (s: 0 | 1) => {
+  /** `inline`: bản phe mình đặt ngay dưới bàn cờ, chỉ hiện trên điện thoại. */
+  const side = (s: 0 | 1, inline = false) => {
     const own = (heldSides ?? state.sides)[s];
     return (
-      <div className="flex w-full flex-col gap-2 md:w-40 md:shrink-0 lg:w-56">
-        <div className="flex items-center justify-between text-xs opacity-80">
+      <div
+        className={`w-full grid-cols-3 gap-1.5 md:w-40 md:shrink-0 md:flex-col md:gap-2 lg:w-56 ${
+          s === AI ? "order-1 grid md:order-none md:flex" : inline ? "grid md:hidden" : "hidden md:flex"
+        }`}
+      >
+        <div className="col-span-3 flex items-center justify-between text-xs opacity-80">
           <span className="font-semibold">
             {s === PLAYER
               ? "Phe bạn"
@@ -1852,11 +1862,11 @@ export default function DemoGame({
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-3">
         <header className="flex flex-wrap items-center justify-between gap-2">
-          <h1 className="flex items-center gap-1.5 text-lg font-bold">
-            <LeaderFlag className="size-6" />
+          {/* Tên chế độ đã ở header chung; giữ h1 cho trình đọc màn hình. */}
+          <h1 className="sr-only">
             {online ? "Cờ Lau · Giao Tranh" : "Cờ Lau · Thao Luyện"}
           </h1>
-          <div className="text-sm font-semibold" aria-live="polite">
+          <div className="text-sm font-semibold text-title-on-wood" aria-live="polite">
             {!started
               ? "Chuẩn bị xuất trận"
               : atBreak
@@ -1872,7 +1882,7 @@ export default function DemoGame({
                       ? "Bạn thắng!"
                       : "Tianwu thắng"
                     : pending
-                      ? "Đang chờ server…"
+                      ? "Đang chờ máy chủ…"
                       : playerTurn
                         ? state.turn.extra
                           ? "Lượt thêm của bạn"
@@ -1883,18 +1893,18 @@ export default function DemoGame({
             <button
               type="button"
               onClick={() => { setProfile(loadProfile()); setStarted(false); }}
-              className="flex items-center gap-1.5 rounded bg-[var(--panel)] px-2.5 py-1 text-xs font-semibold"
+              className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-9 gap-1.5 text-xs" })}
             >
               <ProfessionIcon profession={profession} className="size-4" />
               Đổi đội hình
             </button>
           )}
-          <label className="flex items-center gap-2 text-xs">
+          <label className="flex items-center gap-2 text-xs text-on-wood-soft">
             Độ khó
             <select
               value={difficulty}
               onChange={(e) => setDifficulty(e.target.value as Difficulty)}
-              className="rounded bg-[var(--panel)] px-2 py-1"
+              className="min-h-9 rounded-control border border-frame-line-soft bg-wood-inset px-2 py-1 text-on-wood"
             >
               {DIFFICULTIES.map((d) => (
                 <option key={d} value={d}>
@@ -1905,10 +1915,10 @@ export default function DemoGame({
           </label>
         </header>
         {scenario && live && !scenarioOver && (phaseTurns || labels.length > 1) && (
-          <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-sm text-amber-100">
-            ⚑ {storyNodeById(scenario.nodeId)?.title}
+          <p className="rounded-md border border-frame-line bg-frame-gold/10 px-3 py-1 text-sm text-title-on-wood">
+            {storyNodeById(scenario.nodeId)?.title}
             {labels.length > 1 &&
-              ` · phase ${scenario.phaseIndex + 1}/${labels.length}: ${labels[scenario.phaseIndex]}`}
+              ` · giai đoạn ${scenario.phaseIndex + 1}/${labels.length}: ${labels[scenario.phaseIndex]}`}
             {phaseTurns ? (
               <>
                 : {labels.length > 1 ? "đã giữ" : "cầm cự"}{" "}
@@ -1919,22 +1929,22 @@ export default function DemoGame({
             ) : bossThreshold && phaseBoss ? (
               `: đẩy ${phaseBoss.name} xuống ${Math.round(bossThreshold * 100)}% máu (đang ${Math.round((Math.max(0, phaseBoss.hp) / phaseBoss.maxHp) * 100)}%).`
             ) : phaseBoss && labels.length > 1 ? (
-              `: hạ ${phaseBoss.name}; máu mất ở phase trước không hồi.`
+              `: hạ ${phaseBoss.name}; máu mất ở giai đoạn trước không hồi.`
             ) : (
               ": hạ hết đối thủ."
             )}
             {phaseObjective?.type === "breakSiege" &&
               phaseObjective.stage === "escort" && (
                 <span className="block text-xs text-violet-200">
-                  Tình tiết phục vụ gameplay: đoàn lương và toán chặn đường do
+                  Tình tiết phục vụ lối chơi: đoàn lương và toán chặn đường do
                   game sáng tác.
                 </span>
               )}
           </p>
         )}
         {expeditionObjective && live && state.winner === null && (
-          <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-sm text-amber-100">
-            ⚑ {expeditionObjective.type === "gate"
+          <p className="rounded-md border border-frame-line bg-wood-inset px-3 py-1 text-sm text-on-wood">
+            {expeditionObjective.type === "gate"
               ? `Phá cổng: hạ Cổng thành là qua (cổng còn ${Math.round((Math.max(0, live.sides[1].fighters[expeditionObjective.fighter]?.hp ?? 0) / Math.max(1, live.sides[1].fighters[expeditionObjective.fighter]?.maxHp ?? 1)) * 100)}% độ bền).`
               : `${expeditionObjective.type === "hold" ? "Giữ vị trí" : "Hộ tống đoàn dân"}: đã giữ ${Math.min(completedPlayerTurns(live), expeditionObjective.turns)}/${expeditionObjective.turns} lượt của bạn, hoặc hạ hết đối thủ.`}
           </p>
@@ -1990,7 +2000,7 @@ export default function DemoGame({
         >
           {side(PLAYER)}
 
-          <div className="flex min-w-0 flex-1 flex-col gap-2">
+          <div className="order-2 flex min-w-0 flex-1 flex-col gap-2 md:order-none">
             {started && state.winner === null && !atBreak && (
               <TurnClock
                 seconds={playerTurn ? secondsLeft : null}
@@ -2128,20 +2138,20 @@ export default function DemoGame({
                   />
                 )}
                 {scenario && (scenarioOver || state.winner !== null) && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-black/75 p-4 text-center text-white">
-                    <p className="text-xs tracking-widest text-amber-300/80 uppercase">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-wood-lo/90 p-4 text-center text-on-wood">
+                    <p className="text-kicker text-frame-gold">
                       {scenario.nodeId} · {storyNodeById(scenario.nodeId)?.title}
                     </p>
                     <p className="text-xl font-bold">
                       {scenarioFailed
                         ? "Phòng tuyến chưa giữ được"
                         : phaseAdvanced
-                          ? `Qua phase ${scenario.phaseIndex + 1}/${labels.length}: ${labels[scenario.phaseIndex]}`
+                          ? `Qua giai đoạn ${scenario.phaseIndex + 1}/${labels.length}: ${labels[scenario.phaseIndex]}`
                           : "Hoàn thành mục tiêu!"}
                     </p>
                     {phaseAdvanced ? (
-                      <p className="max-w-sm text-sm text-amber-100 italic">
-                        {`${bossThreshold ? `${phaseBoss?.name ?? "Trùm"} lui về tuyến trong với ${Math.round((Math.max(0, phaseBoss?.hp ?? 0) / (phaseBoss?.maxHp ?? 1)) * 100)}% máu. ` : ""}Trận chưa kết thúc, nhiệm vụ chưa hoàn thành. Phase tiếp theo: ${labels[scenario.phaseIndex + 1]}. Lương còn lại mang sang trận sau.`}
+                      <p className="max-w-sm text-sm text-on-wood-soft italic">
+                        {`${bossThreshold ? `${phaseBoss?.name ?? "Trùm"} lui về tuyến trong với ${Math.round((Math.max(0, phaseBoss?.hp ?? 0) / (phaseBoss?.maxHp ?? 1)) * 100)}% máu. ` : ""}Trận chưa kết thúc, nhiệm vụ chưa hoàn thành. Giai đoạn tiếp theo: ${labels[scenario.phaseIndex + 1]}. Lương còn lại mang sang trận sau.`}
                       </p>
                     ) : (
                       // Thắng thì lời kết, thua thì lời thua: đọc đủ mọi câu, không chiếu lời thắng sau trận thua.
@@ -2154,11 +2164,11 @@ export default function DemoGame({
                           <p
                             key={i}
                             className={
-                              b.speaker ? "text-amber-50" : "text-amber-100 italic"
+                              b.speaker ? "text-on-wood" : "text-on-wood-soft italic"
                             }
                           >
                             {b.speaker && (
-                              <span className="font-semibold text-amber-300">
+                              <span className="font-semibold text-frame-gold">
                                 {b.speaker}:{" "}
                               </span>
                             )}
@@ -2177,14 +2187,14 @@ export default function DemoGame({
                     )}
                     <SceneLink
                       scene="CAMPAIGN"
-                      className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                      className={buttonVariants({ size: "sm" })}
                     >
-                      {phaseAdvanced ? "Chuẩn bị phase tiếp" : "Về Bình Loạn"}
+                      {phaseAdvanced ? "Chuẩn bị giai đoạn tiếp" : "Về Bình Loạn"}
                     </SceneLink>
                   </div>
                 )}
                 {!scenario && state.winner !== null && !atBreak && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-black/70 text-white">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-wood-lo/90 text-on-wood">
                     <p className="text-xl font-bold">
                       {survival
                         ? state.winner === PLAYER
@@ -2195,7 +2205,7 @@ export default function DemoGame({
                           : "Tianwu thắng"}
                     </p>
                     {raidBoss && raidBossById(raidBoss) && (
-                      <p className="max-w-sm text-center text-sm text-amber-100 italic">
+                      <p className="max-w-sm text-center text-sm text-on-wood-soft italic">
                         {raidBossById(raidBoss)!.foes[0]!.name}: “
                         {state.winner === PLAYER
                           ? raidBossById(raidBoss)!.lines.win
@@ -2204,7 +2214,7 @@ export default function DemoGame({
                       </p>
                     )}
                     {specialQuestId && specialQuestById(specialQuestId) && (
-                      <p className="max-w-sm text-center text-sm text-amber-100 italic">
+                      <p className="max-w-sm text-center text-sm text-on-wood-soft italic">
                         {companionById(specialQuestId)?.name}: “
                         {state.winner === PLAYER
                           ? specialQuestById(specialQuestId)!.lines.win
@@ -2249,14 +2259,14 @@ export default function DemoGame({
                           {outcome.rewards.gold} vàng
                         </p>
                         {outcome.destiny && (
-                          <p className={`font-semibold ${outcome.destiny.won ? "text-amber-300" : "text-rose-300"}`}>
+                          <p className={`font-semibold ${outcome.destiny.won ? "text-frame-gold" : "text-danger"}`}>
                             {outcome.destiny.won
                               ? `Thiên Mệnh: đã vượt tầng ${outcome.destiny.floor}. Hãy chọn một phần thưởng.`
                               : `Thiên Mệnh: đội hình gục ở tầng ${outcome.destiny.floor}. Run đã kết thúc.`}
                           </p>
                         )}
                         {outcome.expedition && (
-                          <p className={`font-semibold ${outcome.expedition.won ? "text-amber-300" : "text-rose-300"}`}>
+                          <p className={`font-semibold ${outcome.expedition.won ? "text-frame-gold" : "text-danger"}`}>
                             {outcome.expedition.phase === "won"
                               ? `Viễn Chinh: đã chiếm thành đích! ${"★".repeat(outcome.expedition.end?.stars ?? 1)} +${outcome.expedition.end?.gold ?? 0} vàng${outcome.expedition.end?.firstClear ? " (lần đầu)" : ""}.`
                               : outcome.expedition.phase === "lost"
@@ -2267,7 +2277,7 @@ export default function DemoGame({
                           </p>
                         )}
                         {outcome.daily && (
-                          <p className="font-semibold text-amber-300">
+                          <p className="font-semibold text-frame-gold">
                             Nhật Lệnh:{" "}
                             {outcome.daily.score.won
                               ? `thắng sau ${outcome.daily.score.turns} lượt`
@@ -2279,7 +2289,7 @@ export default function DemoGame({
                         )}
                         {outcome.arena && (
                           <p
-                            className={`font-semibold ${outcome.arena.won ? "text-amber-300" : "text-rose-300"}`}
+                            className={`font-semibold ${outcome.arena.won ? "text-frame-gold" : "text-danger"}`}
                           >
                             Quần Hùng: {outcome.arena.won ? "thắng" : "thua"}{" "}
                             {outcome.arena.opponent},{" "}
@@ -2293,7 +2303,7 @@ export default function DemoGame({
                           </p>
                         )}
                         {outcome.survival && (
-                          <p className="font-semibold text-amber-300">
+                          <p className="font-semibold text-frame-gold">
                             Vượt qua {outcome.survival.cleared} đợt
                             {outcome.survival.gold > 0 &&
                               `, +${outcome.survival.gold} vàng theo đợt`}
@@ -2301,12 +2311,12 @@ export default function DemoGame({
                           </p>
                         )}
                         {outcome.specialQuest?.joined && (
-                          <p className="font-semibold text-amber-300">
+                          <p className="font-semibold text-frame-gold">
                             {fighterName(outcome.specialQuest.id)} gia nhập đội ở cấp 1!
                           </p>
                         )}
                         {outcome.raid?.firstClear && (
-                          <p className="font-semibold text-amber-300">
+                          <p className="font-semibold text-frame-gold">
                             Thắng {RAID_TIER_INFO[outcome.raid.tier].name} lần
                             đầu: +{outcome.raid.bonusGold} vàng
                             {outcome.raid.item
@@ -2319,7 +2329,7 @@ export default function DemoGame({
                         {outcome.levelUps.map((u) => (
                           <p
                             key={u.id}
-                            className="font-semibold text-amber-300"
+                            className="font-semibold text-frame-gold"
                           >
                             {fighterName(u.id)} lên cấp {u.level}!
                           </p>
@@ -2332,7 +2342,7 @@ export default function DemoGame({
                           href="/game"
                           target="_blank"
                           rel="noopener"
-                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                          className={buttonVariants({ size: "sm" })}
                         >
                           Lưu tiến độ &amp; chơi chiến dịch
                         </a>
@@ -2340,7 +2350,7 @@ export default function DemoGame({
                       {destinyFloorNo !== null && towerFeatures.destiny && (
                         <SceneLink
                           scene="DESTINY"
-                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                          className={buttonVariants({ size: "sm" })}
                         >
                           {outcome?.destiny?.won ? "Chọn thưởng Thiên Mệnh" : "Về Tháp Thiên Mệnh"}
                         </SceneLink>
@@ -2348,7 +2358,7 @@ export default function DemoGame({
                       {expeditionMatch && (
                         <SceneLink
                           scene="EXPEDITION"
-                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                          className={buttonVariants({ size: "sm" })}
                         >
                           Về sa bàn Viễn Chinh
                         </SceneLink>
@@ -2356,7 +2366,7 @@ export default function DemoGame({
                       {dailyDay && (
                         <SceneLink
                           scene="DAILY"
-                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                          className={buttonVariants({ size: "sm" })}
                         >
                           Xem bảng xếp hạng
                         </SceneLink>
@@ -2364,23 +2374,23 @@ export default function DemoGame({
                       {arenaFoe && (
                         <SceneLink
                           scene="ARENA"
-                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                          className={buttonVariants({ size: "sm" })}
                         >
-                          Về đấu trường
+                          Về Quần Hùng
                         </SceneLink>
                       )}
                       {survival && (
                         <SceneLink
                           scene="SURVIVAL"
-                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                          className={buttonVariants({ size: "sm" })}
                         >
-                          Về sinh tồn
+                          Về Trấn Ải
                         </SceneLink>
                       )}
                       {specialQuestId && (
                         <SceneLink
                           scene="QUESTS"
-                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                          className={buttonVariants({ size: "sm" })}
                         >
                           Về nhiệm vụ
                         </SceneLink>
@@ -2388,16 +2398,16 @@ export default function DemoGame({
                       {raidBoss && (
                         <SceneLink
                           scene="CAMPAIGN"
-                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                          className={buttonVariants({ size: "sm" })}
                         >
-                          Về chiến dịch
+                          Về Bình Loạn
                         </SceneLink>
                       )}
                       {!online && mode === "practice" && (
                         <button
                           type="button"
                           onClick={replay}
-                          className="rounded bg-white/20 px-4 py-2"
+                          className={buttonVariants({ variant: "secondary", size: "sm" })}
                         >
                           Chơi lại
                         </button>
@@ -2405,7 +2415,7 @@ export default function DemoGame({
                       <button
                         type="button"
                         onClick={restart}
-                        className="rounded bg-white/20 px-4 py-2"
+                        className={buttonVariants({ variant: "secondary", size: "sm" })}
                       >
                         {mode === "progress"
                           ? "Nâng kỹ năng & đánh tiếp"
@@ -2416,6 +2426,8 @@ export default function DemoGame({
                 )}
               </div>
             </div>
+
+            {started && side(PLAYER, true)}
 
             <div
               className="flex flex-wrap items-stretch gap-1.5"
@@ -2520,7 +2532,10 @@ export default function DemoGame({
                     }. Esc để hủy.`}
               </p>
             )}
-            <p className="text-[11px] opacity-60">
+            <p className="text-[11px] opacity-60 md:hidden">
+              Vuốt hoặc chạm hai ô kề nhau để đổi chỗ.
+            </p>
+            <p className="hidden text-[11px] opacity-60 md:block">
               Vuốt, kéo hoặc click hai ô kề nhau để đổi chỗ. Bàn phím: mũi tên
               hoặc WASD, Enter chọn ô, 1–6 dùng kỹ năng, Tab đổi người hành
               động, Esc hủy.
@@ -2532,6 +2547,7 @@ export default function DemoGame({
 
         {mode === "progress" && (
           <ShopPanel
+            compact={online}
             profile={profile}
             locked={started && state.winner === null}
             onAction={profileAction}
@@ -2540,6 +2556,7 @@ export default function DemoGame({
 
         {mode === "progress" && (
           <GearPanel
+            noShop={online}
             profile={{ ...profile, element, profession }}
             teamIds={[MAIN_ID, ...profile.team]}
             locked={started && state.winner === null}
@@ -2552,7 +2569,7 @@ export default function DemoGame({
             profile={{ ...profile, element }}
             teamIds={[MAIN_ID, ...profile.team]}
             locked={started && state.winner === null}
-            storage={online ? "lưu trên server" : "lưu trên trình duyệt này"}
+            storage={online ? "lưu trên máy chủ" : "lưu trên trình duyệt này"}
             onAction={profileAction}
             onReset={online ? undefined : () => changeProfile(newProfile())}
           />

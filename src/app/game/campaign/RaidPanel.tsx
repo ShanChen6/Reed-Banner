@@ -4,6 +4,8 @@
 // mỗi người mở sau nhiệm vụ mốc của Campaign V2, 3 bậc trên sân nhà. Luật ở @/core/campaign/raids, server kiểm tra lại.
 
 import { useState } from "react";
+import { OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { Button, choiceVariants } from "@/components/ui";
 import {
   RAID_BOSSES,
   RAID_TIER_INFO,
@@ -50,30 +52,30 @@ function RaidPanel({
   return (
     <div className="flex flex-col gap-3">
       <div>
-        <p className="text-xs tracking-widest text-rose-300/80 uppercase">
+        <p className="text-kicker text-frame-gold">
           Tái đấu · {boss.place}
         </p>
-        <h3 className="text-lg font-bold text-amber-100">
+        <h3 className="text-lg font-bold text-frame-gold">
           {leader.name} trên sân nhà
-          <span className="ml-2 text-sm font-normal text-amber-200/80">
+          <span className="ml-2 text-sm font-normal text-on-wood-soft">
             {leader.title}
           </span>
         </h3>
-        <p className="mt-1 rounded border border-stone-400/40 bg-stone-500/15 p-2 text-sm text-stone-200">
+        <p className="ui-frame-inset mt-1 p-2 text-sm text-on-wood">
           Cốt truyện kể {leader.name} bị đánh dẹp theo tổng thuật. Trận này là tái đấu do game sáng tác ở bậc khó
           hơn, không thêm sự kiện lịch sử nào.
         </p>
-        <p className="mt-1 flex items-center gap-1.5 text-sm text-foreground-secondary">
+        <p className="mt-1 flex items-center gap-1.5 text-sm text-on-wood">
           <ElementIcon element={leader.element} className="size-4 shrink-0" />
           {raidSetup(boss, 1).rule}
           {boss.mode === "3v3" && " Thủ lĩnh máu ×1,5."}
         </p>
-        <p className="mt-1 text-xs text-muted">
+        <p className="mt-1 text-caption text-on-wood-soft">
           Thể thức {boss.mode === "3v3" ? "3vs3, ra trận cùng đội đã chọn ở Doanh Trại" : "1vs1"}. Tái đấu sứ quân
           không dùng lương Bình Loạn và không đổi tiến độ Bình Loạn.
         </p>
       </div>
-      {!open && <p className="text-sm text-muted">{gateText(boss)}.</p>}
+      {!open && <p className="text-sm text-on-wood-soft">{gateText(boss)}.</p>}
       <ul className="grid gap-2 sm:grid-cols-3">
         {RAID_TIERS.map((tier) => {
           const info = RAID_TIER_INFO[tier];
@@ -83,41 +85,37 @@ function RaidPanel({
           return (
             <li
               key={tier}
-              className={`flex flex-col gap-1 rounded-lg border p-2 text-xs ${
-                won
-                  ? "border-emerald-500/40 bg-emerald-500/10"
-                  : unlocked
-                    ? "border-rose-400/50 bg-rose-500/10"
-                    : "border-white/10 bg-black/25 opacity-60"
-              }`}
+              data-state={won ? "cleared" : unlocked ? "open" : "locked"}
+              className={`ui-raid-tier flex flex-col gap-1 p-2 text-xs ${unlocked || won ? "" : "opacity-60"}`}
             >
-              <p className="flex items-center justify-between text-sm font-bold text-amber-100">
+              <p className="flex items-center justify-between text-sm font-bold text-on-wood">
                 {info.name}
-                {won && <span className="text-emerald-300">✓ Đã thắng</span>}
+                {won && <span className="text-jade">Đã thắng</span>}
               </p>
-              <p className="text-foreground-secondary">
+              <p className="text-on-wood-soft">
                 Đối thủ cấp {raidLevel(boss, tier)} ·{" "}
                 {DIFFICULTY_NAME[raidDifficulty(boss, tier)]}
               </p>
               <p
                 className={
                   profile.main.level < recommended
-                    ? "text-rose-300"
-                    : "text-emerald-300"
+                    ? "text-danger"
+                    : "text-jade"
                 }
               >
                 Cấp gợi ý {recommended}
               </p>
-              <p className="text-amber-200">
+              <p className="text-frame-gold">
                 {won
                   ? "Thưởng lần đầu đã nhận"
                   : `+${info.gold} vàng, 1 món ${TIER_INFO[info.gearTier].name} hệ ${ELEMENT_NAME[leader.element]}`}
               </p>
-              <button
+              <Button
                 type="button"
+                variant={won ? "secondary" : "primary"}
                 disabled={busy || !unlocked}
                 onClick={() => onStart(tier)}
-                className="mt-1 min-h-11 rounded border border-[var(--gold)] bg-gradient-to-b from-[#9b2c2c] to-[#5c1a1a] px-3 py-1 font-bold text-amber-50 disabled:cursor-not-allowed disabled:opacity-40"
+                className="mt-1 min-h-11 w-full"
               >
                 {unlocked
                   ? won
@@ -126,7 +124,7 @@ function RaidPanel({
                   : open
                     ? `Thắng ${RAID_TIER_INFO[(tier - 1) as RaidTier].name} trước`
                     : "Chưa mở"}
-              </button>
+              </Button>
             </li>
           );
         })}
@@ -158,17 +156,19 @@ export default function RaidHall({
     raidBossOpen(profile.campaign, b.id),
   ).length;
   return (
-    <section
+    <OrnateFrame
+      as="section"
       aria-labelledby="raid-hall-title"
-      className="mt-6 rounded-xl border-2 border-[#7a2c1d] bg-[#2a1719]/90 p-4 shadow-card-inset"
+      level="raised"
+      className="mt-6"
     >
-      <h2 id="raid-hall-title" className="text-xl font-black text-amber-100">
-        Tái đấu sứ quân · {openCount}/{RAID_BOSSES.length} sứ quân đã mở
-      </h2>
-      <p className="mb-3 text-sm text-muted">
-        Chế độ lặp lại riêng, không phải nhiệm vụ chiến dịch: tái đấu các sứ
-        quân bị đánh dẹp, mỗi người mở sau nhiệm vụ mốc của họ trong chiến dịch.
-      </p>
+      <SectionTitle
+        id="raid-hall-title"
+        description="Chế độ lặp lại riêng, không phải nhiệm vụ chiến dịch: tái đấu các sứ quân bị đánh dẹp, mỗi người mở sau nhiệm vụ mốc của họ trong chiến dịch."
+        action={<span className="text-sm text-on-wood-soft">{openCount}/{RAID_BOSSES.length} sứ quân đã mở</span>}
+      >
+        Tái đấu sứ quân
+      </SectionTitle>
       <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <ol className="flex flex-col gap-1.5" aria-label="Sứ quân tái đấu">
           {RAID_BOSSES.map((b) => {
@@ -180,13 +180,9 @@ export default function RaidHall({
                 <button
                   type="button"
                   disabled={!open}
-                  aria-current={boss?.id === b.id}
+                  aria-pressed={boss?.id === b.id}
                   onClick={() => setPicked(b.id)}
-                  className={`flex min-h-11 w-full items-center gap-2 rounded-lg border px-2 py-1.5 text-left text-sm transition ${
-                    boss?.id === b.id
-                      ? "border-amber-300 bg-amber-500/20"
-                      : "border-white/10 bg-black/25 hover:bg-black/40"
-                  } disabled:cursor-not-allowed disabled:opacity-50`}
+                  className={choiceVariants({ className: "min-h-11 w-full justify-start gap-2 px-2 py-1.5 text-left font-normal" })}
                 >
                   {open ? (
                     <Portrait
@@ -198,16 +194,14 @@ export default function RaidHall({
                   ) : (
                     <span
                       aria-hidden
-                      className="flex size-8 shrink-0 items-center justify-center rounded-full bg-stone-700"
-                    >
-                      🔒
-                    </span>
+                      className="size-8 shrink-0 rounded-full border border-dashed border-frame-line"
+                    />
                   )}
                   <span className="min-w-0 flex-1">
                     <span className="block truncate font-semibold">
                       {open ? leader.name : "Sứ quân chưa gặp"}
                     </span>
-                    <span className="block truncate text-xs text-muted">
+                    <span className="block truncate text-xs opacity-75">
                       {open
                         ? `Tái đấu · ${best > 0 ? `đã thắng ${RAID_TIER_INFO[best as RaidTier].name}` : "chưa thắng bậc nào"}`
                         : gateText(b)}
@@ -232,12 +226,12 @@ export default function RaidHall({
             onStart={(tier) => onStart(boss.id, tier)}
           />
         ) : (
-          <p className="self-center text-sm text-muted">
+          <p className="ui-frame-inset self-center p-4 text-center text-sm text-on-wood-soft">
             Chưa có sứ quân nào mở. Sứ quân đầu tiên mở sau nhiệm vụ{" "}
             {gateText(RAID_BOSSES[0]!).replace("Mở sau nhiệm vụ ", "")}.
           </p>
         )}
       </div>
-    </section>
+    </OrnateFrame>
   );
 }

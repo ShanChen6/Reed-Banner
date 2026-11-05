@@ -37,11 +37,11 @@ export default function WorldLedger({
   return (
     <section
       aria-labelledby="world-ledger-title"
-      className="rounded-xl border border-white/10 bg-black/25 p-3 text-sm"
+      className="rounded-xl border border-frame-line-soft bg-wood-inset p-3 text-sm"
     >
       <h3
         id="world-ledger-title"
-        className="mb-1 text-xs tracking-widest text-amber-300/80 uppercase"
+        className="mb-1 text-kicker text-frame-gold"
       >
         Sổ thế cục 12 vùng · {ledger.resolvedCount}/12 có kết cục
       </h3>
@@ -49,18 +49,18 @@ export default function WorldLedger({
         {CAMPAIGN_LEDGER_GROUPS.map((group) => (
           <li
             key={group}
-            className="rounded border border-white/10 bg-black/30 px-2 py-1"
+            className="rounded border border-frame-line-soft bg-wood-inset px-2 py-1"
           >
-            <span className="font-bold text-amber-50">
+            <span className="font-bold text-on-wood">
               {ledger.resolved[group]}/{CAMPAIGN_LEDGER_EXPECTED[group]}
             </span>{" "}
-            <span className="text-foreground-secondary">{GROUP_NAME[group]}</span>
+            <span className="text-on-wood-soft">{GROUP_NAME[group]}</span>
           </li>
         ))}
       </ul>
       {CAMPAIGN_LEDGER_GROUPS.map((group) => (
         <div key={group} className="mb-1">
-          <p className="text-xs font-semibold text-amber-200">
+          <p className="text-xs font-semibold text-frame-gold">
             {GROUP_NAME[group]}
           </p>
           <ul className="flex flex-col gap-0.5">
@@ -74,7 +74,7 @@ export default function WorldLedger({
                   <span className="shrink-0">
                     {companionById(r.faction)?.name ?? r.faction}
                   </span>
-                  <span className="text-right text-muted">
+                  <span className="text-right text-on-wood-soft">
                     {view.resolved
                       ? `${METHOD_TEXT[view.resolutionMethod] ?? view.status} · ${CONFIDENCE_TEXT[view.confidence]} · ${view.mission}`
                       : `chưa có kết cục · ${r.mission}`}
@@ -84,7 +84,7 @@ export default function WorldLedger({
           </ul>
         </div>
       ))}
-      <p className="mt-2 text-xs text-foreground-secondary">
+      <p className="mt-2 text-xs text-on-wood-soft">
         {ledger.allResolved
           ? `Đủ 12 vùng có kết cục; ${CAMPAIGN_UNIFICATION_NODE} đã có thể mở. Đây là bốn loại kết cục khác nhau, không phải mười hai trận thắng.`
           : `${CAMPAIGN_UNIFICATION_NODE} chỉ mở khi đủ 12 vùng có kết cục. Còn thiếu: ${ledger.missingMissions.join(", ")}.`}
