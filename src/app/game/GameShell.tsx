@@ -53,12 +53,10 @@ export interface TowerFeatures {
 
 export default function GameShell({
   account,
-  theme,
   auth,
   towerFeatures,
 }: {
   account: ShellAccount | null;
-  theme: "light" | "dark";
   auth: Partial<Record<AuthScene, React.ReactNode>>;
   towerFeatures: TowerFeatures;
 }) {
@@ -100,7 +98,7 @@ export default function GameShell({
           </p>
         )}
         <div key={currentScene} className="scene-enter flex flex-1 flex-col">
-          <SceneView scene={currentScene} account={account} theme={theme} auth={auth} resume={api.params.get("resume") === "1"} towerFeatures={towerFeatures} />
+          <SceneView scene={currentScene} account={account} auth={auth} resume={api.params.get("resume") === "1"} towerFeatures={towerFeatures} />
         </div>
       </div>
       </AudioProvider>
@@ -111,14 +109,12 @@ export default function GameShell({
 function SceneView({
   scene,
   account,
-  theme,
   auth,
   resume,
   towerFeatures,
 }: {
   scene: Scene;
   account: ShellAccount | null;
-  theme: "light" | "dark";
   auth: Partial<Record<AuthScene, React.ReactNode>>;
   resume: boolean;
   towerFeatures: TowerFeatures;
@@ -127,9 +123,9 @@ function SceneView({
     case "MENU":
       return <MenuScene account={account} towerFeatures={towerFeatures} />;
     case "PLAYING":
-      return <DemoGame theme={theme} online autoResume={resume} towerFeatures={towerFeatures} />;
+      return <DemoGame online autoResume={resume} towerFeatures={towerFeatures} />;
     case "PRACTICE":
-      return <DemoGame theme={theme} />;
+      return <DemoGame />;
     case "CAMPAIGN":
       return <CampaignScreen />;
     case "TRIAL":

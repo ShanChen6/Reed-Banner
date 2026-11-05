@@ -74,7 +74,7 @@ Cờ Lau viết mới hoàn toàn bằng **TypeScript**. Không dùng Java và k
 - Dùng chế độ Luyện tập offline: 1 trận cố định, nhân vật chính và nhân vật kèm khởi đầu, đối đầu Tianwu.
 - Không cần đăng nhập, không gọi server, không lưu gì.
 - Kết thúc trận: hiện nút **"Lưu tiến độ & chơi chiến dịch"**, mở màn chơi `/game` trong tab mới.
-- Nhận tham số `?theme=light|dark` để khớp giao diện ShanVerse.
+- Chỉ có một giao diện (gỗ tối); tham số `?theme=` ShanVerse gửi kèm bị bỏ qua (Shan chốt 05/11/2026: không có chế độ sáng/tối).
 - Báo chiều cao nội dung cho trang cha qua `postMessage`, hoặc dùng khung có tỉ lệ cố định (bàn ngang 12×8 hợp với khung 16:9).
 - Nội dung trận demo có thể thay đổi theo mùa mà không cần sửa ShanVerse.
 

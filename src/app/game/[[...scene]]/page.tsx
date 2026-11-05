@@ -33,7 +33,7 @@ export default async function GamePage({
   searchParams,
 }: {
   params: Params;
-  searchParams: Promise<AuthSearchParams & { theme?: string }>;
+  searchParams: Promise<AuthSearchParams>;
 }) {
   if (!sceneOf((await params).scene)) notFound();
   const q = await searchParams;
@@ -48,7 +48,6 @@ export default async function GamePage({
   return (
     <GameShell
       account={account && { name: account.name, avatarUrl: account.avatarUrl }}
-      theme={q.theme === "light" ? "light" : "dark"}
       towerFeatures={towerFeatures}
       auth={
         account
