@@ -543,6 +543,9 @@ const SKILL_ART = new Set([
   "doHoPhuLenh", "ngoGiaDiMuu", "tienDuDoatLuong",
   // Quân sư Phùng Phong, Tạ Thạch, Nghiêm Thiết, Sầm Tuệ, Vi Triều, Tôn Diệm.
   "phongVanBienTran", "batTranThachLuy", "thietTranPhaGiap", "thanhLamBayTran", "trieuDangVayThanh", "hoaCongLienKe",
+  // Xạ thủ Bạch Nỏ Lang, Thanh Lâm Xạ, Trấn Sơn Thạch; Sát thủ Độc Ảnh, Hàn Giang Khách, Xích Dạ, Địa Ẩn, Lôi Ảnh, Vô Ảnh.
+  "rb_bnl_thietNoPhaThanh", "rb_tlx_lucTienTroiDuong", "rb066_tranSonHoTran",
+  "rb070_ultimate", "rb071_ultimate", "rb072_ultimate", "rb073_ultimate", "rb074_ultimate", "rb075_ultimate",
 ]);
 
 /**
