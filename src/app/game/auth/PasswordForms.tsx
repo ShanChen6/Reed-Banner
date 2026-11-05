@@ -96,14 +96,14 @@ export function RegisterForm({
       {mail ? (
         <>
           <EmailField />
-          <p className="rounded bg-amber-900/30 px-3 py-2 text-xs text-amber-200">
+          <Alert tone="warning" className="text-caption">
             Thêm email để lấy lại mật khẩu khi quên (chúng tôi gửi thư xác nhận trước). Không có email thì quên mật khẩu là mất tài khoản.
-          </p>
+          </Alert>
         </>
       ) : (
-        <p className="rounded bg-amber-900/30 px-3 py-2 text-xs text-amber-200">
+        <Alert tone="warning" className="text-caption">
           Chưa có cách lấy lại mật khẩu: quên là mất tài khoản. Nên liên kết thêm Google hoặc GitHub sau khi đăng ký.
-        </p>
+        </Alert>
       )}
       <Button type="submit">
         {label}
