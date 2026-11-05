@@ -63,8 +63,9 @@ export default function ShopScreen() {
           <div id="shop-panel" role="tabpanel" className="min-w-0">
             {tab === "heroes" && <ShopPanel profile={profile} locked={busy} onAction={act} />}
             {tab === "gear" && (
-              <section aria-label="Cửa hàng trang bị" className="rounded-lg bg-[var(--panel)] p-2 text-xs">
-                <h2 className="mb-2 font-semibold">Trang bị</h2>
+              <section aria-label="Cửa hàng trang bị" className="ui-frame-inset p-3 text-sm">
+                <h2 className="ui-title-on-wood mb-1 text-base">Trang bị</h2>
+                <p className="mb-3 text-caption text-on-wood-soft">Chọn ô, hệ, bộ và phẩm rồi mua; món mới vào túi đồ ở Hồ sơ.</p>
                 <GearShop profile={profile} disabled={busy} onBuy={(a) => void act(a)} />
               </section>
             )}
