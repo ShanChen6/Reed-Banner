@@ -48,8 +48,10 @@ const MODES: readonly Mode[] = [
  * (xem /mnt/project-files/art/prompts/home-thumbnail-che-do.md). Viễn Chinh bật bằng `EXPEDITION_ENABLED` (tắt thì thẻ
  * không bấm được); luật ở docs/02-game-modes/expedition/01-vien-chinh-gdd.md.
  */
-const UPCOMING: readonly { id: "tran-do" | "tam-tuong-ky" | "vien-chinh"; title: string; text: string; art?: string; scene?: Scene }[] = [
+const UPCOMING: readonly { id: "tran-do" | "khai-lo" | "tam-tuong-ky" | "vien-chinh"; title: string; text: string; art?: string; scene?: Scene; note?: string }[] = [
   { id: "tran-do", title: "Trận Đồ", text: "Bày quân lệnh theo nghề và hệ để khai thông sa bàn.", art: "tran-do", scene: "FORMATION" },
+  // Khai Lộ: giải đố xóa khối ô ngọc, bản chơi thử offline (docs/02-game-modes/future/24-khai-lo-gdd.md). TODO tranh: public/art/home/khai-lo.webp.
+  { id: "khai-lo", title: "Khai Lộ", text: "Chạm để xóa cả khối ô ngọc cùng loại, mở đường xuyên bàn cờ.", scene: "KHAI_LO", note: "Chơi thử offline" },
   { id: "tam-tuong-ky", title: "Tầm Tướng Ký", text: "Ghép yếu tố từ bảy hệ để tìm lại chân dung danh tướng.", art: "tam-tuong-ky" },
   { id: "vien-chinh", title: "Viễn Chinh", text: "Chia sáu tướng làm hai đạo, hành quân trên sa bàn và giáp công thành đích." },
 ];
@@ -269,7 +271,7 @@ function UpcomingCard({ mode }: { mode: (typeof UPCOMING)[number] }) {
         <p className="text-[15px] leading-snug text-[var(--atlas-ink-on-wood)]/90">{mode.text}</p>
         {mode.scene ? (
           <div className="mt-auto flex items-center justify-between gap-2 text-sm">
-            <span className="text-[var(--atlas-muted)]">Chơi thường · có xếp hạng khi bật</span>
+            <span className="text-[var(--atlas-muted)]">{mode.note ?? "Chơi thường · có xếp hạng khi bật"}</span>
             <span className="home-enter flex items-center gap-1 font-serif font-semibold">Vào <span aria-hidden>›</span></span>
           </div>
         ) : (

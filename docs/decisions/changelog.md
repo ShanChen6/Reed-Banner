@@ -1,5 +1,10 @@
 # Nhật ký thay đổi thiết kế
 
+## 05/11/2026
+
+**Khai Lộ: mini game giải đố mới (DRAFT, có bản chơi thử)**
+- Shan muốn một mini game giải đố kiểu Block'D (xóa nhóm cùng màu) dùng ô ngọc của game, chốt tên **Khai Lộ**. Chạm một ô xóa cả khối cùng loại liền cạnh, ô rơi và cột dồn, không có ô mới; điểm n², quân lực, đạo cụ Lốc Phong và Sấm Sét. Xem [GDD Khai Lộ](../02-game-modes/future/24-khai-lo-gdd.md).
+
 ## 04/11/2026
 
 **Tầm Tướng Ký: Shan duyệt cân bằng nguyên tố và cảnh báo**

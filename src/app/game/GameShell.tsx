@@ -14,6 +14,7 @@ import DemoGame from "./battle/DemoGame";
 import CampaignScreen from "./campaign/CampaignScreen";
 import DailyScreen from "./daily/DailyScreen";
 import FormationScreen from "./formation/FormationScreen";
+import KhaiLoScreen from "./khai-lo/KhaiLoScreen";
 import TamTuongKyScreen from "./tam-tuong-ky/TamTuongKyScreen";
 import LeaderboardScreen from "./leaderboard/LeaderboardScreen";
 import MenuScene from "./MenuScene";
@@ -148,6 +149,8 @@ function SceneView({
       return account ? <TamTuongKyScreen ranked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate name={SCENE_TITLE.TAM_TUONG_KY} reason="Chế độ này cần tài khoản đã đăng nhập vì mỗi lượt chơi tốn một phiếu, và tiến trình Tướng Lục lưu theo tài khoản." />;
     case "EXPEDITION":
       return !towerFeatures.expedition ? <DisabledTowerMode name={SCENE_TITLE.EXPEDITION} /> : <ExpeditionScreen />;
+    case "KHAI_LO":
+      return <KhaiLoScreen />;
     case "QUESTS":
       return <QuestsScreen tamTuongKy={towerFeatures.tamTuongKy === true} tamTuongKyPack2={towerFeatures.tamTuongKyPack2 === true} tamTuongKyPack3={towerFeatures.tamTuongKyPack3 === true} />;
     case "SHOP":
