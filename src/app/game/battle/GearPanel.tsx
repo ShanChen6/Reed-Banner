@@ -103,15 +103,18 @@ function Select<T extends string>({
   value,
   options,
   onChange,
+  stacked,
 }: {
   label: string;
   value: T;
   options: readonly { value: T; text: string }[];
   onChange: (v: T) => void;
+  /** Nhãn nằm trên ô chọn (form mua đồ). */
+  stacked?: boolean;
 }) {
   return (
-    <label className="flex items-center gap-1">
-      <span className="opacity-70">{label}</span>
+    <label className={stacked ? "flex min-w-0 flex-col gap-1 text-caption text-on-wood-soft" : "flex items-center gap-1"}>
+      <span className={stacked ? undefined : "opacity-70"}>{label}</span>
       <UISelect
         value={value}
         onChange={(e) => onChange(e.target.value as T)}
@@ -429,8 +432,9 @@ export function GearShop({
   });
   const price = SHOP_GEAR_PRICE[order.tier] ?? 0;
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="grid grid-cols-2 items-end gap-3 sm:grid-cols-3 lg:grid-cols-6">
       <Select
+        stacked
         label="Ô"
         value={order.slot}
         options={GEAR_SLOTS.map((s) => ({ value: s, text: SLOT_NAME[s] }))}
@@ -438,6 +442,7 @@ export function GearShop({
       />
       {order.slot === "vuKhi" && (
         <Select
+        stacked
           label="Nghề"
           value={order.profession}
           options={PROFESSIONS.map((p) => ({
@@ -448,18 +453,21 @@ export function GearShop({
         />
       )}
       <Select
+        stacked
         label="Hệ"
         value={order.element}
         options={ELEMENTS.map((e) => ({ value: e, text: ELEMENT_NAME[e] }))}
         onChange={(element) => setOrder({ ...order, element })}
       />
       <Select
+        stacked
         label="Bộ"
         value={order.set}
         options={GEAR_SETS.map((g) => ({ value: g.id, text: g.name }))}
         onChange={(set) => setOrder({ ...order, set })}
       />
       <Select
+        stacked
         label="Phẩm"
         value={String(order.tier)}
         options={SHOP_TIERS.map((t) => ({
@@ -468,8 +476,9 @@ export function GearShop({
         }))}
         onChange={(t) => setOrder({ ...order, tier: Number(t) as Tier })}
       />
-      <Button variant="primary"
+      <Button
         type="button"
+        className="col-span-2 min-h-11 sm:col-span-1"
         disabled={disabled || profile.gold < price}
         onClick={() =>
           onBuy({
@@ -481,9 +490,8 @@ export function GearShop({
             ...(order.slot === "vuKhi" ? { profession: order.profession } : {}),
           })
         }
-
       >
-        Mua {price}
+        Mua · {price} vàng
       </Button>
     </div>
   );
