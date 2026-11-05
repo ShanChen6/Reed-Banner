@@ -12,7 +12,7 @@ export default function AudioSettings() {
   const audio = useAudio();
   const on = !audio.muted;
   return (
-    <div role="group" aria-label="Âm thanh" className="mx-1 mt-1 mb-1.5 rounded-md border border-[var(--hdr-bronze)]/40 bg-[#140c08]/70 p-3">
+    <div role="group" aria-label="Âm thanh" className="mx-1 mt-1 mb-1.5 rounded-md border border-[var(--hdr-bronze)]/40 bg-wood-inset/70 p-3">
       <label className="mb-3 flex cursor-pointer items-center justify-between gap-3 text-sm text-[var(--hdr-text)]">
         Âm thanh
         <button
@@ -20,7 +20,7 @@ export default function AudioSettings() {
           role="switch"
           aria-checked={on}
           onClick={() => audio.setMuted(on)}
-          className={`relative h-6 w-11 shrink-0 rounded-full border border-[var(--hdr-bronze)] transition-colors motion-reduce:transition-none ${on ? "bg-[var(--hdr-active)]" : "bg-[#2a1c13]"}`}
+          className={`relative h-6 w-11 shrink-0 rounded-full border border-[var(--hdr-bronze)] transition-colors motion-reduce:transition-none ${on ? "bg-[var(--hdr-active)]" : "bg-wood"}`}
         >
           <span className={`absolute top-0.5 left-0.5 size-[18px] rounded-full bg-[var(--hdr-gold)] transition-transform motion-reduce:transition-none ${on ? "translate-x-5" : ""}`} />
         </button>
