@@ -81,7 +81,8 @@ bị phá là đường duy nhất tới một ô, nên mọi tổ hợp đườ
 
 ### 2.4 Số ngày
 
-- Hạn **12 ngày**, chuẩn **9 ngày** (hiện tại 12/8; tăng chuẩn vì thêm việc phụ và mỗi ngày chỉ một đạo đi).
+- Hạn **17 ngày**, chuẩn **12 ngày** (từ 05/11/2026; trước là 12/9). Mô phỏng theo nhiệm vụ cho thấy làm đủ việc phụ
+  rồi đánh thành cần 14–16 ngày ([GDD mục 5.2](01-vien-chinh-gdd.md#52-kết-quả-bản-chốt-05112026)).
 - Đường ngắn nhất chỉ chiếm thành: Biệt đạo trai-bai → bai-su → doi-cat → trai-tay = 3 ngày, nhưng đánh 3 trận liền không
   nghỉ và trận cuối có phase phá cổng.
 - Đường Toàn thắng thường gặp (ước tính tay, chưa mô phỏng): Biệt đạo giữ cầu ở ngày 2; đạo Chính rút dân ngày 3–6
@@ -151,7 +152,7 @@ bị phá là đường duy nhất tới một ô, nên mọi tổ hợp đườ
 | Kết thúc | Điều kiện | Sao |
 |---|---|---|
 | **Toàn thắng** | Chiếm Thủy Trại Tây, đã cắt thuyền viện **và** đã đưa dân về | ★★★ |
-| **Chiếm trại** | Chiếm Thủy Trại Tây | ★★ nếu xong trong chuẩn 9 ngày, không thì ★ |
+| **Chiếm trại** | Chiếm Thủy Trại Tây | ★★ nếu xong trong chuẩn 12 ngày, không thì ★ |
 | **Giữ dân** | Hết hạn hoặc rút quân, chưa chiếm trại, nhưng đã đưa dân về **và** đã cắt viện | ★ (thắng phụ) |
 | **Thất bại** | Còn lại | — |
 

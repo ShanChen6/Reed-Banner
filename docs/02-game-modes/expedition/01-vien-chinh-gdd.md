@@ -133,11 +133,11 @@ rồi một đạo đánh.
 
 | Sa bàn | Hệ | Ô | Số ngày / chuẩn | Hình dạng |
 |---|---|---|---|---|
-| **Ải Bắc** | Kim | 11 | 12 / 8 | Đường đan nhau, có làng và kho lương ở giữa; dễ dồn quân giáp công. Hai cổng thành đều là lũy. Sa bàn nhập môn |
-| **Thượng Du** | Mộc | 12 | 17 / 12 | Hai thung lũng tách rời, mỗi bên một làng, chỉ nối qua Đèo Ngang Núi (lũy). Đường dài, giáp công chỉ ở cổng thành |
-| **Cửa Biển** | Thủy | 11 | 12 / 9 | **Kịch bản đầy đủ** (từ 04/11/2026): rút dân, giữ cầu chặn thuyền viện, con nước, đường bị phá, phản công Chợ, phá cổng. Luật riêng ở [thiết kế Cửa Biển](03-cua-bien-thiet-ke.md) |
+| **Ải Bắc** | Kim | 11 | 13 / 9 | Đường đan nhau, có làng và kho lương ở giữa; dễ dồn quân giáp công. Hai cổng thành đều là lũy. Sa bàn nhập môn |
+| **Thượng Du** | Mộc | 12 | 19 / 14 | Hai thung lũng tách rời, mỗi bên một làng, chỉ nối qua Đèo Ngang Núi (lũy). Đường dài, giáp công chỉ ở cổng thành |
+| **Cửa Biển** | Thủy | 11 | 17 / 12 | **Kịch bản đầy đủ** (từ 04/11/2026): rút dân, giữ cầu chặn thuyền viện, con nước, đường bị phá, phản công Chợ, phá cổng. Luật riêng ở [thiết kế Cửa Biển](03-cua-bien-thiet-ke.md) |
 | **Ngã Ba Sông** | Thổ | 13 | 10 / 7 | Hai trại ở hai bờ đối diện, thành giữa ngã ba sông. Lội sông vào thẳng thành mất 2 ngày; đi vòng qua Lũy Bến Đò, Lũy Núi Sơn bằng đường bộ thì xa hơn. Có một chòi canh |
-| **Kinh Thành** | Hỏa | 14 | 10 / 7 | Kinh thành có ba cổng lũy, chỉ vào thành qua cổng. Hai chòi canh ở hai cánh nhìn thấu đường vây; Chợ Phiên ở giữa hai trại nhưng phải vượt sông |
+| **Kinh Thành** | Hỏa | 14 | 11 / 8 | Kinh thành có ba cổng lũy, chỉ vào thành qua cổng. Hai chòi canh ở hai cánh nhìn thấu đường vây; Chợ Phiên ở giữa hai trại nhưng phải vượt sông |
 | **Quần Đảo** | Phong | 12 | 9 / 6 | Thành đảo giữa vịnh, chỉ Lũy Cầu Dài nối vào bằng đường bộ; còn lại đi thuyền giữa các đảo (2 ngày mỗi chặng). Một chòi canh ở đảo bắc |
 
 Tên ô là địa danh hư cấu (không dùng tên nước láng giềng, không gắn với sự kiện lịch sử); đối thủ là tướng kèm của
@@ -161,7 +161,7 @@ Biển ([thiết kế Cửa Biển](03-cua-bien-thiet-ke.md) mục 3 và 5), s�
 | Sa bàn | Khối luật | Ý đồ |
 |---|---|---|
 | **Ải Bắc** | Đường bị phá: 2 trong 4 lối đèo (Khe Đá–Đèo Mây, Đèo Mây–Gác Bắc, Suối Lạnh–Bãi Lau, Bãi Lau–Gác Nam). Phá cổng ở thành đích | Nhập môn hai khối dễ hiểu nhất: trinh sát trước khi qua đèo, và trận phá cổng |
-| **Thượng Du** | Viện binh vào thành cuối ngày 8 và 13 (mỗi lần +15%). Đèo Ngang Núi thành trận giữ; giữ được thì chặn viện binh | Đèo là lối hội quân duy nhất: ai giữ đèo thì cả hai đạo đỡ đánh thành mạnh lên |
+| **Thượng Du** | Viện binh vào thành cuối ngày 8 và 13 (mỗi lần +15%). Đèo Ngang Núi thành trận giữ (6 lượt, địch không mạnh thêm vì đây là lũy trên đường dài nhất); giữ được thì chặn viện binh | Đèo là lối hội quân duy nhất: ai giữ đèo thì cả hai đạo đỡ đánh thành mạnh lên |
 | **Ngã Ba Sông** | Phản công Kho Thóc Bãi Giữa hai ngày sau khi chiếm | Kho ở giữa hai bờ: lấy lương rồi phải để một đạo đứng giữ, hoặc chịu mất kho |
 | **Kinh Thành** | Viện binh vào thành cuối ngày 4 và 7. Lũy Cầu Tây thành trận giữ; giữ được thì chặn | Sa bàn dễ nhất trong mô phỏng: thêm áp lực thời gian, thưởng cho đạo đi cánh tây |
 | **Quần Đảo** | Phá cổng ở Thành Đảo, trừ khi đổ bộ từ Làng Đảo Rùa | Đường bộ qua Lũy Cầu Dài thì nhanh nhưng gặp cổng; vượt biển qua Đảo Rùa thì chậm mà vào thẳng |
@@ -186,50 +186,51 @@ Biển ([thiết kế Cửa Biển](03-cua-bien-thiet-ke.md) mục 3 và 5), s�
 
 ### 5.1 Mô phỏng
 
-`pnpm exec tsx scripts/expedition-sim.ts --runs 30 [--maps aiBac] [--tiers 1,2,3] [--offset 0]`. Đội khởi đầu (Đinh Bộ Lĩnh
-Mộc · Tướng sĩ và 5 tướng khởi đầu) ở đúng cấp gợi ý, không đồ, AI Thường đánh thay người chơi. Kế hoạch điều quân là
-một luật tham lam: đi đường ngắn nhất tới hai cổng thành khác nhau, chờ đạo kia tới cổng để giáp công, đóng quân khi
-đạo sắp đi còn dưới 55% máu. Người chơi thật chọn đội theo khắc hệ và điều quân khéo hơn, nên số dưới đây là cận dưới.
+`pnpm exec tsx scripts/expedition-sim.ts --runs 40 [--maps aiBac] [--tiers 1,2,3] [--offset 0]`. Đội khởi đầu (Đinh Bộ Lĩnh
+Mộc · Tướng sĩ và 5 tướng khởi đầu) ở đúng cấp gợi ý, không đồ, AI Thường đánh thay người chơi.
 
-| Lần | Thay đổi | Ải Bắc I/II/III | Thượng Du I/II/III | Cửa Biển I/II/III |
-|---|---|---|---|---|
-| 1 | Thua trận là đạo tan, người gục không hồi | 70% (I) | 0% (I) | 60% (I) |
-| 2 | Thua trận chỉ rút về, nghỉ hồi cả người gục; máu địch ×0,75 | 100 / 100 / 100% | 93 / 87 / 57% | 100 / 97 / 87% |
-| 3 | Máu địch ×0,85, sức mạnh 0,85–1,05, tăng viện 5%, bớt ngày | 97 / 83 / –% | 60 / – / –% | 87 / 57 / –% |
-| 4 | Máu ×0,8, sức mạnh 0,80–0,96, Thượng Du 17 ngày | 100 / 97 / 90% | 83 / 67 / 17% | 90 / 93 / 53% |
-| 5 (chốt) | Ải Bắc: Chòi Gác Nam thành lũy; Thượng Du: kho lương phía nam thành làng | 97 / – / 77% | 87 / 77 / 27% | như lần 4 |
+Kế hoạch điều quân (`src/core/sim/expedition.ts`, dạy đi theo nhiệm vụ ngày 05/11/2026):
 
-### 5.2 Kết quả bản chốt
+- Chia cổng thành cho hai đạo sao cho đạo về muộn hơn về sớm nhất (không vòng quá một ngày so với cổng gần), chờ đạo kia
+  tới cổng để giáp công, đóng quân khi đạo sắp đi còn dưới 55% máu. Mỗi ngày đạo còn đường dài nhất đi trước.
+- Việc phụ của kịch bản: đạo gần hơn đi chặn viện binh ở ô giữ (ưu tiên khi đợt viện binh kế tiếp sắp tới); đạo gần
+  làng nhận dân, dọn đồn chặn truy binh rồi đưa dân về; đạo chiếm kho lương có phản công thì đứng giữ.
+- Trinh sát khi quanh đạo còn ít nhất hai đường có thể bị phá chưa rõ. Tính đường theo những gì đã biết: bỏ đường đã
+  biết bị phá và cửa nước đã biết đang lên.
 
-30 lượt mỗi ô, 04/11/2026. "Sao" là tỉ lệ lượt đạt ít nhất số sao đó.
+Mô phỏng thấy cả bản đồ (không có sương mù) nhưng chỉ biết đường bị phá khi trinh sát hay đi trúng.
 
-| Sa bàn · bậc | Thắng | Ngày khi thắng | ≥2 sao | 3 sao | Trận thua / lượt | Lượt đánh có giáp công |
+### 5.2 Kết quả bản chốt (05/11/2026)
+
+40 lượt mỗi ô (nhiễu khoảng ±8 điểm). "Sao" là tỉ lệ lượt đạt ít nhất số sao đó. Mục tiêu: Bậc I khoảng 85–95%, Bậc
+II 65–85%, Bậc III 30–60% (Thượng Du III khó có chủ ý).
+
+| Sa bàn · bậc | Thắng | Ngày khi thắng | ≥2 sao | 3 sao | Trận thua / lượt | Giáp công |
 |---|---|---|---|---|---|---|
-| Ải Bắc I | 97% | 7,8 | 77% | 60% | 0,7 | 37% |
-| Ải Bắc III | 77% | 9,8 | 23% | 13% | 2,2 | 32% |
-| Thượng Du I | 87% | 12,2 | 47% | 27% | 1,6 | 14% |
-| Thượng Du II | 77% | 11,7 | 47% | 20% | 2,5 | 9% |
-| Thượng Du III | 27% | 13,3 | 13% | 3% | 4,8 | 5% |
-| Cửa Biển I (lần 4) | 90% | 8,0 | 73% | 50% | 0,8 | 49% |
-| Cửa Biển II (lần 4) | 93% | 8,5 | 63% | 20% | 1,3 | 39% |
-| Cửa Biển III (lần 4) | 53% | 9,9 | 13% | 7% | 2,9 | 33% |
-| Ngã Ba Sông I | 87% | 6,5 | 70% | 70% | 0,5 | 25% |
-| Ngã Ba Sông II | 90% | 7,0 | 50% | 50% | 0,7 | 22% |
-| Ngã Ba Sông III | 67% | 7,8 | 20% | 17% | 1,4 | 19% |
-| Kinh Thành I | 93% | 6,1 | 70% | 50% | 0,9 | 15% |
-| Kinh Thành II | 87% | 7,1 | 47% | 13% | 1,6 | 11% |
-| Kinh Thành III | 83% | 8,0 | 23% | 13% | 2,0 | 11% |
-| Quần Đảo I | 97% | 5,3 | 77% | 60% | 0,6 | 53% |
-| Quần Đảo II | 97% | 5,4 | 77% | 53% | 0,8 | 52% |
-| Quần Đảo III | 87% | 5,5 | 67% | 40% | 1,1 | 51% |
+| Ải Bắc I / II / III | 85 / 75 / 55% | 10,4 / 11,1 / 11,8 | 53 / 30 / 10% | 35 / 23 / 5% | 1,0 / 1,4 / 2,1 | 58–69% |
+| Thượng Du I / II / III | 80 / 60 / 30% | 15,3 / 16,1 / 14,4 | 30 / 15 / 18% | 10 / 3 / 3% | 2,3 / 3,7 / 4,6 | 5–13% |
+| Ngã Ba Sông I / II / III | 93 / 98 / 75% | 6,8 / 6,7 / 7,3 | 63 / 68 / 43% | 60 / 63 / 23% | 0,6 / 0,4 / 1,2 | 19–23% |
+| Kinh Thành I / II / III | 83 / 70 / 50% | 8,8 / 9,3 / 9,2 | 38 / 23 / 23% | 30 / 15 / 8% | 1,5 / 2,1 / 2,7 | 12–19% |
+| Quần Đảo I / II / III | 93 / 88 / 80% | 6,2 / 6,1 / 6,4 | 73 / 65 / 50% | 53 / 50 / 35% | 0,5 / 0,7 / 1,1 | 57–61% |
+| Cửa Biển I / II / III | 50 / 28 / 8% | 15,2 / 15,5 / 14,0 | 50 / 28 / 8% | 50 / 28 / 8% | 2,2 / 2,9 / 4,1 | 29–39% |
 
-Ba sa bàn mới đo sau lần chỉnh thứ 3 (giảm số ngày, tăng độ sâu cổng Kinh Thành và Lũy Cầu Dài); Shan cho dừng
-cân bằng ở đây nên Bậc III của ba sa bàn này còn dễ hơn ba sa bàn cũ (67–87%). Mô phỏng thấy cả bản đồ (không có
-sương mù), nên người chơi thật sẽ khó hơn một chút.
+Cửa Biển: chặn thuyền viện 98 / 88 / 70%, đưa dân về gần 100%, giữ được Chợ 43–57%. Phần lớn lượt không chiếm được
+trại kết thúc Giữ dân (19 / 23 / 24 trên 40 lượt): việc phụ ăn hết ngày, rồi phá cổng và tướng giữ thành là hai trận
+khó liên tiếp.
 
-Thua gần như toàn bộ là hết ngày. Trận trung bình 13–22 lượt (hai phe cộng lại), tức khoảng 3–6 phút. Đánh hết một
-lượt viễn chinh là 5–11 trận. Thượng Du III để khó có chủ ý (đội khởi đầu, không đồ); người chơi tới Bậc III thường đã có
-đồ Tím/Cam và tướng mua, nên mức thật sẽ cao hơn.
+Các lần chỉnh trong ngày 05/11/2026 (mọi lượt thua đều do hết ngày):
+
+| Lần | Thay đổi | Kết quả chính |
+|---|---|---|
+| 1 | Luật riêng năm sa bàn, kế hoạch theo nhiệm vụ | Cửa Biển I 18%, Thượng Du I 58%, Ải Bắc III 60% |
+| 2 | Thêm ngày: Cửa Biển 12→15, Thượng Du 17→19, Ải Bắc 12→13, Kinh Thành 10→11 | Cửa Biển I 40%; Thượng Du không đổi |
+| 3 | Cửa Biển 15→17; giữ Đèo Ngang 6 lượt ×1,0 | Cửa Biển I 55%; Thượng Du không đổi |
+| 4 | Sửa kế hoạch: chia cổng cho hai đạo (trước đây hai đạo dồn một ngả) | Thượng Du I 78%, Quần Đảo I tụt 65% |
+| 5 (chốt) | Chỉ chia cổng khi không vòng xa | Bảng trên |
+| 6 | Thử Cửa Biển phản công ×1,2, truy binh ×1,0 | Không đổi (53 / 28 / 8%), đã bỏ |
+| 7 | Thử Cửa Biển bỏ phá cổng | 60 / 33 / 15%, chỉ hơn 10 điểm, đã bỏ |
+
+Thua gần như toàn bộ là hết ngày. Người chơi tới Bậc III thường đã có đồ Tím/Cam và tướng mua, nên mức thật sẽ cao hơn.
 
 ## 6. Dữ liệu và server
 

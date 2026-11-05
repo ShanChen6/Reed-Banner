@@ -68,7 +68,8 @@ export const EXPEDITION_SCENARIOS: Readonly<Partial<Record<ExpeditionMapId, Expe
   /** Hai thung lũng: giặc kéo viện binh xuống thành ngày 8 và 13; giữ được Đèo Ngang (lối hội quân) thì chặn. */
   thuongDu: {
     reinforcements: { days: [8, 13], power: 0.15, label: "viện binh" },
-    hold: { nodes: ["deo-ngang"], ...HOLD },
+    // Đèo là lũy 3 địch trên đường dài nhất trong sáu sa bàn: giữ ngắn hơn, địch không mạnh thêm.
+    hold: { nodes: ["deo-ngang"], turns: 6, power: 1 },
   },
   /** Ngã ba sông: chiếm Kho Thóc Bãi Giữa thì hai ngày sau giặc lội sông phản công. */
   chauTho: {
