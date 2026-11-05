@@ -153,7 +153,7 @@ export default function ArenaScreen() {
               description="Người khác đánh với bản chụp đội này. Nâng cấp hay đổi đội ở Doanh Trại xong thì bấm cập nhật."
               action={
                 data.defense ? (
-                  <span className="text-xs text-caption">Lực chiến {data.defense.power}</span>
+                  <span className="text-caption text-on-wood-soft">Lực chiến {data.defense.power}</span>
                 ) : undefined
               }
             >
@@ -243,7 +243,7 @@ export default function ArenaScreen() {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="ui-frame-inset p-2">
-      <p className="text-[11px] tracking-wide text-caption uppercase">{label}</p>
+      <p className="text-caption tracking-wide text-on-wood-soft uppercase">{label}</p>
       <p className="text-xs font-bold text-on-wood tabular-nums">{value}</p>
     </div>
   );
