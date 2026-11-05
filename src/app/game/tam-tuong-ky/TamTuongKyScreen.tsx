@@ -5,6 +5,8 @@
 // Chế độ Hạng là LT-06. Luật: docs/02-game-modes/future/14-tam-tuong-ky-design-freeze.md.
 // Giao diện: docs/05-ui-ux/screens/tam-tuong-ky.md.
 
+import { ModeBanner } from "@/components/game-ui";
+import { ChoiceChip, buttonVariants } from "@/components/ui";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { PROFESSION_DISPLAY_NAME, type Element } from "@/core/battle";
 import { PACK_NAMES, catalogForPack, openIngredients, type Catalog, type CatalogNode, type DiscoveryState, type HintLevel, type NodeId } from "@/core/tam-tuong-ky";
@@ -74,15 +76,9 @@ export default function TamTuongKyScreen({
       {ranked && (
         <div role="group" aria-label="Chế độ" className="campaign-atlas mx-auto flex w-full max-w-[1480px] gap-2 px-4 pt-4 sm:px-6 lg:px-8">
           {(["normal", "ranked"] as const).map((m) => (
-            <button
-              key={m}
-              type="button"
-              aria-pressed={mode === m}
-              onClick={() => setMode(m)}
-              className={`min-h-11 rounded-lg border px-4 font-serif font-semibold ${mode === m ? "border-[var(--atlas-gold)] bg-[var(--atlas-wood-hi)] text-[var(--atlas-title)]" : "border-[var(--atlas-border-soft)] text-[var(--atlas-ink-on-wood)]/80"}`}
-            >
+            <ChoiceChip key={m} size="md" selected={mode === m} onClick={() => setMode(m)}>
               {m === "normal" ? "Thường" : "Hạng tuần"}
-            </button>
+            </ChoiceChip>
           ))}
         </div>
       )}
@@ -177,17 +173,15 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
 
   return (
     <CatalogContext.Provider value={catalog}>
-    <main className="campaign-atlas flex flex-1 flex-col bg-[#17110e] pb-28 text-[var(--atlas-ink-on-wood)] lg:pb-10">
+    <main aria-label="Tầm Tướng Ký" className="campaign-atlas flex flex-1 flex-col bg-[#17110e] pb-28 text-[var(--atlas-ink-on-wood)] lg:pb-10">
       <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-4 px-4 pt-4 sm:px-6 lg:px-8">
-        <header className="flex flex-wrap items-end justify-between gap-2">
-          <div>
-            <h1 className="atlas-title font-serif text-2xl font-bold sm:text-3xl">Tầm Tướng Ký</h1>
-            <p className="text-sm text-[var(--atlas-muted)]">Công thức biểu trưng của trò chơi, không phải diễn giải sử học.</p>
-          </div>
-          <p className="rounded border border-[var(--atlas-border-soft)] px-3 py-1 text-sm">
-            Phiếu: <strong className="text-[var(--atlas-title)]">{view.tickets}</strong>/{view.maxTickets}
-          </p>
-        </header>
+        <ModeBanner
+          title="Tầm Tướng Ký"
+          kicker="Ghép yếu tố"
+          art="/art/home/tam-tuong-ky.webp"
+          description="Ghép yếu tố từ bảy hệ để tìm lại chân dung danh tướng. Công thức biểu trưng của trò chơi, không phải diễn giải sử học."
+          stats={[{ label: "Phiếu", value: `${view.tickets}/${view.maxTickets}` }]}
+        />
 
         <div className="grid gap-4 lg:grid-cols-[minmax(16rem,26fr)_minmax(20rem,44fr)_minmax(16rem,30fr)]">
           <Altar
@@ -207,16 +201,16 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
 
           <div role="group" aria-label="Chọn sổ" className="flex gap-2 lg:hidden">
             {(["library", "ledger"] as const).map((t) => (
-              <button
+              <ChoiceChip
                 key={t}
-                type="button"
-                aria-pressed={tab === t}
+                size="md"
+                selected={tab === t}
                 aria-controls={`ttk-${t}`}
                 onClick={() => setTab(t)}
-                className={`min-h-11 flex-1 rounded-lg border px-3 font-serif font-semibold ${tab === t ? "border-[var(--atlas-gold)] bg-[var(--atlas-wood-hi)] text-[var(--atlas-title)]" : "border-[var(--atlas-border-soft)] text-[var(--atlas-ink-on-wood)]/80"}`}
+                className="flex-1"
               >
                 {t === "library" ? "Vạn Vật Lục" : `Tướng Lục ${found}/${entries.length}`}
-              </button>
+              </ChoiceChip>
             ))}
           </div>
 
@@ -316,19 +310,19 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
 
   return (
     <CatalogContext.Provider value={catalog}>
-    <main className="campaign-atlas flex flex-1 flex-col bg-[#17110e] pb-28 text-[var(--atlas-ink-on-wood)] lg:pb-10">
+    <main aria-label="Tầm Tướng Ký" className="campaign-atlas flex flex-1 flex-col bg-[#17110e] pb-28 text-[var(--atlas-ink-on-wood)] lg:pb-10">
       <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-4 px-4 pt-4 sm:px-6 lg:px-8">
-        <header className="flex flex-wrap items-end justify-between gap-2">
-          <div>
-            <h1 className="atlas-title font-serif text-2xl font-bold sm:text-3xl">Tầm Tướng Ký · Hạng tuần {view.week}</h1>
-            <p className="text-sm text-[var(--atlas-muted)]">Không có gợi ý. Mỗi lần ghép tiêu nguyên liệu, ghép sai cũng mất.</p>
-          </div>
-          <p className="flex flex-wrap gap-3 rounded border border-[var(--atlas-border-soft)] px-3 py-1 text-sm">
-            <span>Túi: <strong className="text-[var(--atlas-title)]">{view.units}</strong> đơn vị nguyên tố</span>
-            <span>Điểm: <strong className="text-[var(--atlas-title)]">{view.points}</strong></span>
-            <span>Đã tiêu: {view.unitsSpent}</span>
-          </p>
-        </header>
+        <ModeBanner
+          title={`Tầm Tướng Ký · Hạng tuần ${view.week}`}
+          kicker={`Hạng tuần ${view.week}`}
+          art="/art/home/tam-tuong-ky.webp"
+          description="Không có gợi ý. Mỗi lần ghép tiêu nguyên liệu, ghép sai cũng mất."
+          stats={[
+            { label: "Túi nguyên tố", value: view.units },
+            { label: "Điểm", value: view.points },
+            { label: "Đã tiêu", value: view.unitsSpent },
+          ]}
+        />
 
         <div className="grid gap-4 lg:grid-cols-[minmax(16rem,26fr)_minmax(20rem,44fr)_minmax(16rem,30fr)]">
           <Panel id="ttk-ranked-altar" title="Đài Hợp Nguyên" className="lg:sticky lg:top-4 lg:self-start">
@@ -341,7 +335,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
             </div>
             <p className="text-xs text-[var(--atlas-muted)]">Nguyên tố lấy từ túi, dùng cho hệ nào cũng được.</p>
             {tried && <TriedWarning cost="tiêu nguyên liệu" />}
-            <button type="button" disabled={!ready} aria-busy={pending} onClick={combine} className="home-cta min-h-12 rounded-lg font-serif text-lg font-bold tracking-[0.12em] uppercase disabled:cursor-not-allowed disabled:opacity-50">
+            <button type="button" disabled={!ready} aria-busy={pending} onClick={combine} className={buttonVariants({ className: "min-h-12 text-lg tracking-[0.12em] uppercase" })}>
               {tried ? "Vẫn hợp nguyên" : "Hợp Nguyên"}
             </button>
             <div aria-live="polite" role="status" className="min-h-12 rounded-lg border border-[var(--atlas-border-soft)] px-3 py-2 text-sm">
@@ -405,7 +399,7 @@ function MobileBar({ slots, ready, tried, onCombine }: { slots: Slots; ready: bo
           {label(slots[0])} <span className="text-[var(--atlas-muted)]">+</span> {label(slots[1])}
           {tried && <span className="block text-xs text-[var(--atlas-muted)]">Đã ghép cặp này ở lần trước</span>}
         </p>
-        <button type="button" disabled={!ready} onClick={onCombine} className="home-cta min-h-11 shrink-0 rounded-lg px-5 font-serif font-bold disabled:opacity-50">
+        <button type="button" disabled={!ready} onClick={onCombine} className={buttonVariants({ className: "min-h-11 shrink-0 px-5" })}>
           {tried ? "Vẫn ghép" : "Hợp Nguyên"}
         </button>
       </div>
@@ -563,7 +557,7 @@ function Altar(props: {
           disabled={!ready}
           aria-busy={pending}
           onClick={props.onCombine}
-          className="home-cta min-h-12 rounded-lg font-serif text-lg font-bold tracking-[0.12em] uppercase disabled:cursor-not-allowed disabled:opacity-50"
+          className={buttonVariants({ className: "min-h-12 text-lg tracking-[0.12em] uppercase" })}
         >
           {props.tried ? "Vẫn hợp nguyên" : "Hợp Nguyên"}
         </button>
@@ -572,7 +566,7 @@ function Altar(props: {
           type="button"
           disabled={pending || view.tickets < 1}
           onClick={props.onOpenSession}
-          className="home-cta min-h-12 rounded-lg font-serif text-lg font-bold disabled:cursor-not-allowed disabled:opacity-50"
+          className={buttonVariants({ className: "min-h-12 text-lg" })}
         >
           Mở lượt mới · 1 phiếu
         </button>
