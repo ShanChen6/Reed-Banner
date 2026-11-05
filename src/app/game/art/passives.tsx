@@ -3,11 +3,15 @@
  * Mã là khóa của COMBO_PASSIVES (bị động nghề 1) hoặc CHASE_PASSIVES (truy kích). Bị động chưa có ảnh vẽ chấm tròn chữ cái đầu.
  */
 
-/** 29 bị động dùng chung: 7 nghề 1 (Cơ hội), 8 truy kích theo nghề, 14 truy kích theo hệ. */
+/** 29 bị động dùng chung (7 nghề 1 Cơ hội, 8 truy kích theo nghề, 14 theo hệ) và 21 bị động riêng (14 Xạ thủ/Sát thủ mở rộng, Đinh Ngọc, Trần Vũ Phong). */
 export const PASSIVE_ART = new Set([
   "pursuit", "resonance", "retaliation", "renewal", "phongLenh", "interdiction", "coordination",
   "martial", "arcane", "guardian", "medic", "strategist", "commander", "marksmanPrepared", "assassinPrepared",
   "kim1", "kim2", "moc1", "moc2", "thuy1", "thuy2", "hoa1", "hoa2", "tho1", "tho2", "loi1", "loi2", "phong1", "phong2",
+  "rb_bnl_passive", "rb_tlx_passive", "rb064_canhGioi", "rb065_hoaCot", "rb066_kienThu", "rb067_chopThoiCo", "rb068_hoiNhip",
+  "rb069_passive", "rb070_passive", "rb071_passive", "rb072_passive", "rb073_passive", "rb074_passive", "rb075_passive",
+  "dn_thoMachHoThan", "dn_mocTucDuongSinh", "dn_loiYDoatCo",
+  "vp_truongThietHoiDap", "vp_phiDiepTheoGio", "vp_hoaAnVanSau", "vp_loiVanTranPhap",
 ]);
 
 export function passiveArt(id: string): string | undefined {
