@@ -182,7 +182,7 @@ describe("Viễn Chinh trên server", () => {
     else {
       assert.equal(bridge.kind, "battle");
       if (bridge.kind !== "battle") return;
-      assert.deepEqual(bridge.view.expedition?.objective, { type: "hold", turns: 5 });
+      assert.deepEqual(bridge.view.expedition?.objective, { type: "hold", turns: 8 });
     }
   });
 });

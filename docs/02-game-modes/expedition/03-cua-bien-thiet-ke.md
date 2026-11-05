@@ -139,7 +139,7 @@ bị phá là đường duy nhất tới một ô, nên mọi tổ hợp đườ
 ### 3.6 Phản công Chợ Cửa Sông
 
 - Chiếm Chợ được +20 lương cho cả hai đạo như kho lương thường. **Hai ngày sau** (cuối ngày chiếm + 2), địch phản công:
-  - Có đạo đứng ở Chợ: vào trận **giữ cầu** (cùng loại, giữ 4 lượt). Thắng thì thêm +20 lương và Chợ thành nơi đưa dân
+  - Có đạo đứng ở Chợ: vào trận **giữ cầu** (cùng loại, giữ 6 lượt, 3 địch sức mạnh ×1,4). Thắng thì thêm +20 lương và Chợ thành nơi đưa dân
     về được. Thua thì đạo rút về ô kề gần nhất (theo id cạnh), Chợ trở lại có địch với 60% máu.
   - Không có đạo ở Chợ: Chợ trở lại có địch với 60% máu, không mất gì khác.
 - Phản công chỉ xảy ra một lần mỗi lượt. Nếu cần gọn bản đầu, đây là phần cắt được mà không ảnh hưởng ba việc chính.
@@ -176,8 +176,12 @@ dùng lại chúng thay vì viết luật mới; chỉ phá cổng cần một t
 
 ### 5.1 Giữ cầu (Cầu Phao Doi Cát, phản công Chợ)
 
-- Mục tiêu: **giữ 5 lượt** của người chơi mà còn ít nhất một người đứng; hạ hết địch sớm cũng thắng. Phản công Chợ giữ
-  4 lượt.
+- Mục tiêu: **giữ 8 lượt** của người chơi mà còn ít nhất một người đứng; hạ hết địch sớm cũng thắng. Phản công Chợ giữ
+  6 lượt, sức mạnh ×1,4.
+- Số lượt tăng ngày 05/11/2026 sau bản review (trước là 5 và 4 lượt): đủ máu thì mức cũ thắng 100% ở mọi bậc và tốn ít máu
+  hơn đánh một lũy thường. Đo ngắn 10 trận mỗi mức (vào trận ngày 4): giữ cầu 8 lượt vào đủ máu thắng 90–100%, còn 55–64%
+  máu (lũy thường còn 73%); vào 60% máu thắng 70–80%. Phản công Chợ 6 lượt ×1,4: đủ máu còn 49–67%, vào 60% máu thắng
+  80–100%.
 - Địch đông và mạnh hơn ô cùng bậc vì không bắt buộc hạ: 3 địch, sức mạnh ×1,2.
 - Bàn cờ nghiêng về ô Khiên và ô hồi máu (trọng số `weights` riêng, engine đã kiểm tra hợp lệ).
 - Thua: rút về như luật thường; cầu giữ thương vong; đánh lại được nếu còn trước ngày 9.
@@ -185,7 +189,9 @@ dùng lại chúng thay vì viết luật mới; chỉ phá cổng cần một t
 
 ### 5.2 Hộ tống (truy binh đoàn dân)
 
-- Mục tiêu: **giữ 4 lượt** hoặc hạ hết toán truy binh (2 địch, sức mạnh ×0,9 vì đạo không chọn được lúc đánh).
+- Mục tiêu: **giữ 6 lượt** hoặc hạ hết toán truy binh (3 địch, sức mạnh ×1,2). Trước 05/11/2026 là 4 lượt, 2 địch ×0,9:
+  người chơi hạ hết 2 địch trong chừng 3 lượt nên mục tiêu hộ tống gần như không có tác dụng. Mức mới (đo ngắn như mục
+  5.1): đủ máu thắng 80–100%, còn 48–71% máu; vào 60% máu thắng 90%.
 - Thua: đạo rút về Làng Chài, **mất dân**; nhiệm vụ rút dân thất bại.
 - Thắng: đạo vào ô định đi như thường, vẫn mang dân.
 - Dùng `breakSiege` stage `escort` một phase.

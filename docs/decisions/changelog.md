@@ -2,6 +2,9 @@
 
 ## 05/11/2026
 
+**Viễn Chinh: siết ba trận có mục tiêu ở Cửa Biển**
+- Sau bản review, Shan cho siết: giữ cầu 5 → 8 lượt; truy binh 2 → 3 địch, 4 → 6 lượt, sức mạnh ×0,9 → ×1,2; phản công Chợ 4 → 6 lượt, sức mạnh ×1,2 → ×1,4. Trước đây cả ba thắng 100% khi đủ máu và tốn ít máu hơn một lũy thường. Số đo ở [thiết kế Cửa Biển mục 5](../02-game-modes/expedition/03-cua-bien-thiet-ke.md#5-ba-loại-trận-riêng).
+
 **Khai Lộ: mini game giải đố mới (DRAFT, có bản chơi thử)**
 - Shan muốn một mini game giải đố kiểu Block'D (xóa nhóm cùng màu) dùng ô ngọc của game, chốt tên **Khai Lộ**. Chạm một ô xóa cả khối cùng loại liền cạnh, ô rơi và cột dồn, không có ô mới; điểm n², quân lực, đạo cụ Lốc Phong và Sấm Sét. Xem [GDD Khai Lộ](../02-game-modes/future/24-khai-lo-gdd.md).
 
