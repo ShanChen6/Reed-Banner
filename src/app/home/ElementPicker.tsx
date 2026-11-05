@@ -7,6 +7,7 @@ import { type Element, ELEMENTS, elementRelation, characterSkills, PROFESSIONS, 
 import { chaseTriggerText, comboTriggerText, ELEMENT_NAME, PROFESSION_NAME, passiveText, rageTriggerText } from "../game/battle/labels";
 import { ELEMENT_COLOR, ElementIcon } from "../game/art/icons";
 import { Portrait } from "../game/art/portraits";
+import { PassiveIcon } from "../game/art/passives";
 import { SkillIcon } from "../game/art/skills";
 import SkillInfo from "../game/battle/SkillInfo";
 import { ELEMENT_TRAIT } from "./data";
@@ -151,14 +152,20 @@ export default function ElementPicker() {
           <div className="text-sm">
             <p className="mb-2 text-xs uppercase tracking-wider text-stone-500">4 bị động phối hợp</p>
             <ul className="space-y-2 text-stone-300">
-              <li>
-                <span className="font-semibold text-stone-100">Nghề · {combo.name}:</span> {combo.description}
-                <Trigger lines={comboTriggerText(combo)} />
+              <li className="flex gap-2">
+                <PassiveIcon id={PROFESSION_COMBO[profession]} name={combo.name} className="size-9" />
+                <div>
+                  <span className="font-semibold text-stone-100">Nghề · {combo.name}:</span> {combo.description}
+                  <Trigger lines={comboTriggerText(combo)} />
+                </div>
               </li>
               {chase.map((id, i) => (
-                <li key={id}>
-                  <span className="font-semibold text-stone-100">{i === 0 ? "Nghề" : "Hệ"} · {CHASE_PASSIVES[id].name}:</span> {CHASE_PASSIVES[id].description}
-                  <Trigger lines={chaseTriggerText(CHASE_PASSIVES[id])} />
+                <li key={id} className="flex gap-2">
+                  <PassiveIcon id={id} name={CHASE_PASSIVES[id].name} className="size-9" />
+                  <div>
+                    <span className="font-semibold text-stone-100">{i === 0 ? "Nghề" : "Hệ"} · {CHASE_PASSIVES[id].name}:</span> {CHASE_PASSIVES[id].description}
+                    <Trigger lines={chaseTriggerText(CHASE_PASSIVES[id])} />
+                  </div>
                 </li>
               ))}
             </ul>

@@ -125,6 +125,7 @@ import {
 import { GearIcon } from "../art/gear";
 import { Portrait } from "../art/portraits";
 import { SkillIcon } from "../art/skills";
+import { PassiveIcon } from "../art/passives";
 import SurvivalBreakScreen from "../survival/SurvivalBreakScreen";
 import { BoardCrest, TileArt } from "../art/tiles";
 import ProgressPanel from "./ProgressPanel";
@@ -687,9 +688,10 @@ function FighterCard({
         <div className="mt-1.5 flex flex-wrap gap-1">
           {fighter.comboReady && fighter.comboPassive && (
             <span
-              className={`rounded px-1 py-0.5 text-[10px] ${comboBlocked ? "bg-zinc-600/50" : "bg-amber-600/40"}`}
+              className={`inline-flex items-center gap-1 rounded px-1 py-0.5 text-[10px] ${comboBlocked ? "bg-zinc-600/50" : "bg-amber-600/40"}`}
               title={`Do ${comboSource} mở${comboTarget ? ` · mục tiêu ${comboTarget}` : ""} · ${comboTurns ? `${comboTurns} lượt thường kế tiếp` : "lượt hiện tại"}. Chọn hành động để tận dụng.`}
             >
+              <PassiveIcon id={fighter.comboPassive} name={COMBO_PASSIVES[fighter.comboPassive].name} className="size-3.5" />
               {COMBO_PASSIVES[fighter.comboPassive].name}
               {comboBlocked ? " · bị chặn" : ""}
             </span>
