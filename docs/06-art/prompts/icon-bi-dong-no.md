@@ -1,7 +1,7 @@
 # Prompt icon bị động Nộ của Đinh Bộ Lĩnh (7 hình)
 
 > Cập nhật: 05/11/2026
-> Trạng thái: **DRAFT** — chưa có ảnh; bộ bị động khác ở [dùng chung](icon-bi-dong.md) và [riêng](icon-bi-dong-rieng.md).
+> Trạng thái: **IMPLEMENTED** — đủ 7 ảnh ở `public/art/passives/rage_<hệ>.webp` (ô "Bị động khi đầy Nộ" ở landing, chip trên thẻ thủ lĩnh khi bị động đang chạy); bộ bị động khác ở [dùng chung](icon-bi-dong.md) và [riêng](icon-bi-dong-rieng.md).
 
 Bị động thủ lĩnh kích hoạt khi Nộ đạt tối đa, mỗi hệ một cái (`PASSIVES` trong `src/core/battle/skills.ts`, chữ mô tả ở `passiveText` trong `labels.ts`). Hiện chỉ có chữ ở landing (ô "Bị động khi đầy Nộ") và màn chờ trận.
 
