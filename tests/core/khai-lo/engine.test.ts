@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { TileKind } from "../../../src/core/board/tiles";
+import type { Element } from "../../../src/core/battle/elements";
 import {
   KL_CLEAR_BONUS_PER_LEVEL,
+  KL_TIME_BONUS_PER_SECOND,
+  levelTimeLimit,
   KL_START_TROOPS,
   allGroups,
   createGame,
@@ -20,20 +22,20 @@ import {
   type KlState,
 } from "../../../src/core/khai-lo";
 
-const K: Record<string, TileKind> = { a: "kiem", b: "vang", c: "sach", d: "trong" };
+const K: Record<string, Element> = { a: "kim", b: "moc", c: "thuy", d: "hoa" };
 
 /** Dựng bàn từ chuỗi: mỗi dòng là một hàng, "." là ô trống, chữ hoa là ô hào quang. */
 function board(rows: string[]): { cells: (KlCell | null)[]; width: number; height: number } {
   let id = 1;
   const cells = rows.flatMap((row) =>
-    [...row].map((ch) => (ch === "." ? null : { id: id++, kind: K[ch.toLowerCase()] as TileKind, ...(ch !== ch.toLowerCase() ? { banner: true as const } : {}) })),
+    [...row].map((ch) => (ch === "." ? null : { id: id++, kind: K[ch.toLowerCase()] as Element, ...(ch !== ch.toLowerCase() ? { banner: true as const } : {}) })),
   );
   return { cells, width: (rows[0] as string).length, height: rows.length };
 }
 
 function stateOf(rows: string[], over: Partial<KlState> = {}): KlState {
   const b = board(rows);
-  return { ...createGame(1, b.width, b.height), ...b, nextId: 1000, ...over };
+  return { ...createGame(1, "classic", b.width, b.height), ...b, nextId: 1000, ...over };
 }
 
 const draw = (s: Pick<KlState, "cells" | "width">) => {
@@ -184,5 +186,46 @@ describe("Khai Lộ: sinh bàn và lưu ván", () => {
     assert.deepEqual(parseGame(serializeGame(s)), s);
     assert.equal(parseGame("{"), null);
     assert.equal(parseGame(JSON.stringify({ ...s, version: 2 })), null);
+  });
+});
+
+describe("Khai Lộ: Cấp tốc", () => {
+  it("dọn sạch bàn được cộng điểm theo giây dư, chặn trên bằng thời gian của màn", () => {
+    const s = stateOf(["aa", "aa"], { mode: "timed" });
+    const r = transition(s, { type: "pick", index: 0, timeLeft: 12.7 });
+    assert.ok(r.ok);
+    assert.equal(r.state.summary?.timeBonus, 12 * KL_TIME_BONUS_PER_SECOND);
+    assert.equal(r.state.score, 16 + KL_CLEAR_BONUS_PER_LEVEL + 12 * KL_TIME_BONUS_PER_SECOND);
+    const capped = transition(s, { type: "pick", index: 0, timeLeft: 9999 });
+    assert.ok(capped.ok);
+    assert.equal(capped.state.summary?.timeBonus, levelTimeLimit(1) * KL_TIME_BONUS_PER_SECOND);
+  });
+
+  it("chế độ Thường bỏ qua giây dư", () => {
+    const r = transition(stateOf(["aa", "aa"]), { type: "pick", index: 0, timeLeft: 30 });
+    assert.ok(r.ok);
+    assert.equal(r.state.summary?.timeBonus, 0);
+  });
+
+  it("hết giờ kết thúc màn, trừ quân lực theo ô còn lại", () => {
+    const s = stateOf(["aab", "ccd"], { mode: "timed" });
+    const r = transition(s, { type: "endLevel", timeout: true });
+    assert.ok(r.ok);
+    assert.equal(r.state.summary?.timeout, true);
+    assert.equal(r.state.troops, KL_START_TROOPS - 6);
+  });
+
+  it("thời gian mỗi màn tăng theo số loại quân", () => {
+    assert.equal(levelTimeLimit(1), 60);
+    assert.equal(levelTimeLimit(5), 75);
+    assert.equal(levelTimeLimit(17), 105);
+  });
+
+  it("lưu/đọc giữ chế độ; bản lưu cũ không có chế độ là Thường", () => {
+    const t = createGame(5, "timed");
+    assert.equal(parseGame(serializeGame(t))?.mode, "timed");
+    const old = JSON.parse(serializeGame(createGame(5))) as Record<string, unknown>;
+    delete old.mode;
+    assert.equal(parseGame(JSON.stringify(old))?.mode, "classic");
   });
 });
