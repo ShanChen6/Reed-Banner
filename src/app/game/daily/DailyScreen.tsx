@@ -1,6 +1,7 @@
 "use client";
 
-import { Card, Button } from "@/components/ui";
+import { ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { Alert, Button, buttonVariants } from "@/components/ui";
 
 // Thử thách hằng ngày: đề chung hôm nay (đội cho sẵn, đối thủ, sân nhà), lượt của mình và bảng xếp hạng.
 // Mỗi người một lượt mỗi ngày; server giữ chỗ lượt trước khi tạo trận.
@@ -38,7 +39,7 @@ function Fighters({ list }: { list: readonly FighterConfig[] }) {
       {list.map((f) => (
         <li
           key={f.id}
-          className="flex items-center gap-2 rounded-lg bg-black/30 p-2"
+          className="ui-frame-inset flex items-center gap-2 p-2"
         >
           <Portrait
             id={f.id}
@@ -47,8 +48,8 @@ function Fighters({ list }: { list: readonly FighterConfig[] }) {
             className="size-10 shrink-0"
           />
           <div className="min-w-0 text-xs">
-            <p className="truncate text-sm font-semibold">{f.name}</p>
-            <p className="flex items-center gap-1 text-foreground-secondary">
+            <p className="truncate text-sm font-semibold text-on-wood">{f.name}</p>
+            <p className="flex items-center gap-1 text-on-wood-soft">
               <ElementIcon element={f.element} className="size-3.5" />
               {ELEMENT_NAME[f.element]} · {PROFESSION_NAME[f.profession]} ·{" "}
               {f.maxHp} máu
@@ -72,13 +73,13 @@ export default function DailyScreen() {
 
   if (!data?.setup) {
     return (
-      <Shell>
-        <p className="py-24 text-center text-foreground-secondary">
+      <ModeScreen label="Nhật Lệnh">
+        <p className="py-24 text-center text-on-wood-soft">
           {data
             ? "Không tải được thử thách hôm nay, thử tải lại trang."
             : "Đang tải…"}
         </p>
-      </Shell>
+      </ModeScreen>
     );
   }
 
@@ -120,43 +121,27 @@ export default function DailyScreen() {
     go("PLAYING", { resume: "1" });
   };
 
-  return (
-    <Shell>
-      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="text-xs tracking-widest text-amber-300/80 uppercase">
-            Ngày {data.day?.split("-").reverse().join("/")}
-          </p>
-          <h1 className="text-2xl font-black text-amber-100">Nhật Lệnh</h1>
-          <p className="text-sm text-muted">
-            Một đề chung cho mọi người, mỗi người đánh một lần. Đề mới lúc 0
-            giờ.
-          </p>
-        </div>
-        <div className="flex gap-2 text-sm">
-          <SceneLink
-            scene="PLAYING"
-            className="rounded bg-white/10 px-3 py-1.5 hover:bg-white/15"
-          >
-            Chơi
-          </SceneLink>
-          <SceneLink
-            scene="SURVIVAL"
-            className="rounded bg-white/10 px-3 py-1.5 hover:bg-white/15"
-          >
-            Trấn Ải
-          </SceneLink>
-        </div>
-      </div>
+  const day = data.day?.split("-").reverse().join("/");
 
-      <div className="mb-4">
-        <RankRewardsPanel mode="daily" />
-      </div>
+  return (
+    <ModeScreen wide label="Nhật Lệnh">
+      <ModeBanner
+        title="Nhật Lệnh"
+        kicker={day ? `Ngày ${day}` : "Mỗi ngày"}
+        art="/art/home/daily.webp"
+        description="Một đề chung cho mọi người, mỗi người đánh một lần. Đề mới lúc 0 giờ."
+        stats={[
+          { label: "Thắng", value: `${DAILY_GOLD.win} vàng` },
+          { label: "Thua", value: `${DAILY_GOLD.loss} vàng` },
+        ]}
+      />
+
+      <RankRewardsPanel mode="daily" />
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-        <Card className="flex flex-col gap-3 shadow-card-inset">
-          <h2 className="text-lg font-bold text-amber-100">Đề hôm nay</h2>
-          <p className="text-sm text-foreground-secondary">
+        <OrnateFrame level="raised" className="flex min-w-0 flex-col gap-3">
+          <SectionTitle>Đề hôm nay</SectionTitle>
+          <p className="text-sm text-on-wood">
             Đội cho sẵn, cấp {DAILY_LEVEL}, không trang bị. Đối thủ đánh ở mức{" "}
             {DIFFICULTY_NAME[setup.difficulty]}
             {warlord
@@ -167,35 +152,41 @@ export default function DailyScreen() {
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <h3 className="mb-1 text-sm font-semibold text-amber-200">
+              <h3 className="mb-1 text-sm font-semibold text-title">
                 Đội của bạn
               </h3>
               <Fighters list={setup.team} />
             </div>
             <div>
-              <h3 className="mb-1 text-sm font-semibold text-rose-300">
+              <h3 className="mb-1 text-sm font-semibold text-title">
                 Đối thủ
               </h3>
               <Fighters list={setup.foes} />
             </div>
           </div>
-          <p className="text-xs text-muted">
+          <p className="text-xs text-caption">
             Xếp hạng: thắng đứng trên thua; cùng thắng thì ít lượt hơn đứng
             trên, rồi còn nhiều máu hơn. Thưởng {DAILY_GOLD.win} vàng khi thắng,{" "}
             {DAILY_GOLD.loss} vàng khi thua.
           </p>
+          {message && (
+            <Alert tone="error" className="p-3 text-sm">
+              {message}
+            </Alert>
+          )}
           <div className="flex flex-wrap items-center gap-3">
             {mine?.result ? (
-              <p className="font-semibold text-amber-200">
+              <Alert tone="success" className="p-3 text-sm font-semibold">
                 Bạn đã đánh hôm nay: {scoreText(mine.result)}
                 {mine.rank !== null && ` · hạng ${mine.rank}`}
-              </p>
+              </Alert>
             ) : (
-              <Button variant="ornate"
+              <Button
+                size="lg"
                 type="button"
                 disabled={busy}
                 onClick={() => void play()}
-                className="tracking-wider uppercase"
+                className="min-h-11"
               >
                 {busy
                   ? "Đang vào trận…"
@@ -204,31 +195,31 @@ export default function DailyScreen() {
                     : "Đánh (1 lần)"}
               </Button>
             )}
-            {message && (
-              <span className="text-sm text-rose-400">{message}</span>
-            )}
+            <SceneLink scene="SURVIVAL" className={buttonVariants({ variant: "secondary", className: "min-h-11" })}>
+              Sang Trấn Ải
+            </SceneLink>
           </div>
-        </Card>
+        </OrnateFrame>
 
-        <Card className="flex flex-col gap-2">
-          <h2 className="font-bold text-amber-200">Bảng xếp hạng</h2>
+        <OrnateFrame className="flex min-w-0 flex-col gap-2 self-start">
+          <SectionTitle>Bảng hôm nay</SectionTitle>
           {top.length === 0 ? (
-            <p className="text-sm text-muted">Chưa ai đánh xong hôm nay.</p>
+            <p className="text-sm text-caption">Chưa ai đánh xong hôm nay.</p>
           ) : (
-            <ol className="flex flex-col gap-1 text-sm">
+            <ol className="flex flex-col gap-1.5 text-sm">
               {top.map((r) => (
                 <li
                   key={r.rank}
-                  className={`flex items-center gap-2 rounded px-2 py-1 ${r.mine ? "bg-amber-500/20 font-semibold" : "bg-black/20"}`}
+                  className={`flex items-center gap-2 rounded-control border px-2.5 py-2 ${r.mine ? "ui-choice is-selected font-semibold" : "border-frame-line-soft bg-wood-inset text-on-wood"}`}
                 >
-                  <span className="w-6 text-right tabular-nums text-amber-300">
+                  <span className={`w-6 text-right tabular-nums ${r.rank <= 3 ? "font-black" : ""} ${r.mine ? "" : r.rank <= 3 ? "text-frame-gold" : "text-on-wood-soft"}`}>
                     {r.rank}
                   </span>
                   <span className="min-w-0 flex-1 truncate">
                     {r.name}
                     {r.mine && " (bạn)"}
                   </span>
-                  <span className="text-xs text-foreground-secondary">
+                  <span className={`text-xs ${r.mine ? "" : "text-on-wood-soft"}`}>
                     {scoreText(r.score)}
                   </span>
                 </li>
@@ -236,18 +227,10 @@ export default function DailyScreen() {
             </ol>
           )}
           {mine?.rank != null && !top.some((r) => r.mine) && (
-            <p className="text-sm text-amber-200">Hạng của bạn: {mine.rank}</p>
+            <p className="text-sm text-title">Hạng của bạn: {mine.rank}</p>
           )}
-        </Card>
+        </OrnateFrame>
       </div>
-    </Shell>
-  );
-}
-
-function Shell({ children }: { children: React.ReactNode }) {
-  return (
-    <main className="ui-screen ui-screen--cool">
-      <div className="mx-auto max-w-6xl">{children}</div>
-    </main>
+    </ModeScreen>
   );
 }
