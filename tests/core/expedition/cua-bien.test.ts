@@ -329,18 +329,20 @@ describe("Cửa Biển: kết thúc và thưởng", () => {
     assert.equal(result.bonusItem?.tier, EXPEDITION_TIER_INFO[1].gearTier + 1);
   });
 
-  it("giữ dân: hết ngày nhưng đã cứu dân và cắt viện thì vẫn qua bậc, chỉ có vàng", () => {
-    const run = ended({ phase: "lost", endReason: "timeout", refugees: "saved", reinforcementsCut: true });
-    assert.equal(expeditionStars(run), 1);
-    const r = applyExpeditionEnd(expeditionSimProfile(10), { ...NEW_EXPEDITION, run }, createRng(1));
-    const result = r.state.run!.result!;
-    assert.equal(result.ending, "refuge");
-    assert.equal(result.won, false);
-    assert.equal(result.item, null);
-    assert.equal(result.gold, Math.round(EXPEDITION_TIER_INFO[1].firstGold * SCENARIO.endingGold.refuge));
-    assert.equal(r.state.cleared.cuaBien, 1);
-    assert.equal(r.state.bestDays, undefined);
-  });
+  for (const endReason of ["timeout", "abandoned"] as const)
+    it(`giữ dân (${endReason}): chỉ có vàng thắng lại × hệ số, không qua bậc, không có món`, () => {
+      const run = ended({ phase: "lost", endReason, refugees: "saved", reinforcementsCut: true });
+      assert.equal(expeditionStars(run), 1);
+      const r = applyExpeditionEnd(expeditionSimProfile(10), { ...NEW_EXPEDITION, run }, createRng(1));
+      const result = r.state.run!.result!;
+      assert.equal(result.ending, "refuge");
+      assert.equal(result.won, false);
+      assert.equal(result.firstClear, false);
+      assert.equal(result.item, null);
+      assert.equal(result.gold, Math.round(EXPEDITION_TIER_INFO[1].repeatGold * SCENARIO.endingGold.refuge));
+      assert.equal(r.state.cleared.cuaBien, undefined);
+      assert.equal(r.state.bestDays, undefined);
+    });
 
   it("hết ngày mà chưa làm đủ hai việc phụ thì không thưởng", () => {
     const run = ended({ phase: "lost", endReason: "timeout", refugees: "saved" });
