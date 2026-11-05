@@ -2,6 +2,9 @@
 
 ## 05/11/2026
 
+**Đồng bộ UI/UX toàn game: quy tắc chung (APPROVED)**
+- Shan duyệt đề xuất sau kiểm kê 20 màn: nút chính sơn mài đỏ viền vàng (bỏ nút vàng/cam), đang chọn là giấy dó chữ mực, giấy dó chỉ cho nội dung đọc dài, Cửa Hàng thành trang thường, khách vẫn xem được banner/luật/thưởng của chế độ cần đăng nhập, bỏ emoji. Làm theo từng PR nhỏ. Xem [theme.md](../05-ui-ux/design-system/theme.md#quy-tắc-chung-đồng-bộ-ui-05112026) và [lộ trình](../05-ui-ux/implementation/roadmap.md#4-đồng-bộ-ui-toàn-game-05112026).
+
 **Viễn Chinh: nhiệm vụ cho mọi sa bàn, hạ sức địch Cửa Biển**
 - Shan cho thêm nhiệm vụ cho các sa bàn và hạ sức địch Cửa Biển. Nhiệm vụ không bắt buộc, ghép từ hộ tống và chặn viện binh: Ải Bắc giải cứu tù binh (Kho Ngựa Thồ → Bản Na), Thượng Du đưa dân lên Đèo Ngang, Ngã Ba Sông rút dân (Làng Ruộng Chiêm → Trại Bờ Đông hoặc Kho Thóc đã giữ), Kinh Thành chặn viện binh, Quần Đảo chặn thuyền viện ở Lũy Cầu Dài (mới). Thắng kèm xong nhiệm vụ thì vàng ×1,3. Shan cho giảm nhẹ: truy binh 2 địch ×1,0, 5 lượt; hạn Ải Bắc 13 → 14, Thượng Du 19 → 20, Ngã Ba Sông 10 → 12 ngày. Shan chốt sàn 30% thắng: Bậc III Ải Bắc, Thượng Du, Ngã Ba Sông địch ×0,97 / ×0,9 / ×0,95, ô khác giữ nguyên. Cửa Biển địch ×0,87: Bậc I 50 → 85%. Xem [GDD mục 4.3](../02-game-modes/expedition/01-vien-chinh-gdd.md#43-nhiệm-vụ-từng-sa-bàn-shan-yêu-cầu-05112026) và [mục 5.3](../02-game-modes/expedition/01-vien-chinh-gdd.md#53-nhiệm-vụ-và-sức-địch-cửa-biển-05112026-lần-8).
 

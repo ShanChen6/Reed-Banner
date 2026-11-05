@@ -5,3 +5,4 @@ export * from "./form-field";
 export * from "./alert";
 export * from "./badge";
 export * from "./divider";
+export * from "./choice";

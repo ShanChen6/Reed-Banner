@@ -1,8 +1,7 @@
 "use client";
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
-import { Button } from "@/components/ui";
-
-
+import { FrameInset, ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { Alert, Button, ChoiceChip, buttonVariants } from "@/components/ui";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   DESTINY_BOON_CATALOG,
@@ -16,9 +15,9 @@ import {
   type Profile,
 } from "@/core";
 import { ONLINE_BATTLE_KEY } from "../battle/online";
-import { ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
+import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
 import { useScene, SceneLink } from "../SceneContext";
-import { describeRules } from "../trial/trial-ui";
+import { describeRules, RULE_TAG } from "../trial/trial-ui";
 import {
   DESTINY_ERROR_TEXT,
   aliveIds,
@@ -74,6 +73,8 @@ const offerText = (offer: DestinyRewardOffer): { title: string; body: string } =
     }
   }
 };
+
+const difficultyName = (d?: string) => (d ? DIFFICULTY_NAME[d as keyof typeof DIFFICULTY_NAME] ?? d : "");
 
 function rememberBattle(id: string) {
   try { window.localStorage.setItem(ONLINE_BATTLE_KEY, id); } catch { /* server vẫn giữ matchId */ }
@@ -173,65 +174,215 @@ export default function DestinyScreen() {
   };
 
   if (!overview || !profile) return (
-    <main className="flex flex-1 items-center justify-center bg-[#17110e] p-6 text-stone-200">
-      <div className="text-center">{failed ? <><p role="alert">Không tải được Tháp Thiên Mệnh.</p><Button variant="secondary" className="mt-3" onClick={() => void load()}>Tải lại</Button></> : <p role="status">Đang tải Tháp Vận Mệnh…</p>}</div>
-    </main>
+    <ModeScreen label="Tháp Thiên Mệnh">
+      <div className="py-24 text-center text-on-wood-soft">
+        {failed ? (
+          <>
+            <p role="alert">Không tải được Tháp Thiên Mệnh.</p>
+            <Button variant="secondary" className="mt-3 min-h-11" onClick={() => void load()}>Tải lại</Button>
+          </>
+        ) : <p role="status">Đang tải Tháp Thiên Mệnh…</p>}
+      </div>
+    </ModeScreen>
   );
 
   const fighterName = (id: string) => run?.fighters?.[id]?.config.name ?? (id === MAIN_ID ? "Đinh Bộ Lĩnh" : companionById(id)?.name ?? id);
   const noActiveRun = !run?.active && run?.phase !== "reward";
 
   return (
-    <main className="ui-screen tower-screen tower-screen--destiny">
-      <div className="tower-screen__content space-y-5">
-        <header className="tower-screen__banner">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div><p className="text-xs uppercase tracking-[.2em] text-amber-400">Chu kỳ {overview.cycleId ?? "—"}</p><h1 className="font-serif text-3xl font-bold text-amber-100">Tháp Thiên Mệnh</h1><p className="mt-1 text-sm text-muted">HP, năng lượng và lương được giữ xuyên tầng. Roster khóa cho cả run.</p></div>
-            <div className="tower-screen__metric text-sm"><p>Đá Cường Hóa: <strong className="text-amber-300">{overview.stones}</strong></p><p>Kỷ lục chu kỳ: tầng {overview.progress?.cycleBest ?? 0}</p><SceneLink scene="LEADERBOARD" params={{ board: "destiny" }} className="text-amber-300 underline">BXH Vận Mệnh</SceneLink></div>
+    <ModeScreen wide label="Tháp Thiên Mệnh">
+      <ModeBanner
+        title="Tháp Thiên Mệnh"
+        kicker={`Song Tháp · chu kỳ ${overview.cycleId ?? "—"}`}
+        art="/art/home/destiny.webp"
+        artPosition="center 42%"
+        description="Máu, năng lượng và lương giữ xuyên tầng. Đội khóa cho cả lượt leo."
+        stats={[
+          { label: "Kỷ lục chu kỳ", value: `Tầng ${overview.progress?.cycleBest ?? 0}` },
+          { label: "Đá Cường Hóa", value: overview.stones },
+        ]}
+        actions={
+          <SceneLink scene="LEADERBOARD" params={{ board: "destiny" }} className={buttonVariants({ variant: "secondary", className: "min-h-11" })}>
+            Bảng xếp hạng
+          </SceneLink>
+        }
+      />
+
+      {message && <Alert className="p-3 text-sm">{message}</Alert>}
+
+      <RankRewardsPanel mode="destiny" />
+
+      {noActiveRun && (
+        <OrnateFrame level="raised">
+          <SectionTitle description={run?.phase === "done" ? `Lượt trước đã kết thúc ở tầng ${run.floor}.` : undefined}>
+            Khóa đội mới
+          </SectionTitle>
+          <p className="text-sm text-on-wood">
+            Cần tối thiểu {DESTINY_ROSTER_MIN} tướng: Đinh Bộ Lĩnh và ít nhất 2 tướng sở hữu. Có thể mang toàn bộ tướng đã sở hữu.
+          </p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {Object.keys(profile.companions).sort().map((id) => {
+              const companion = companionById(id);
+              if (!companion) return null;
+              const selected = roster.includes(id);
+              return (
+                <ChoiceChip key={id} size="md" selected={selected}
+                  onClick={() => setRoster(selected ? roster.filter((x) => x !== id) : [...roster, id])}
+                  className="flex-col items-start gap-0 p-3 text-left">
+                  <strong>{companion.name}</strong>
+                  <span className="text-caption font-normal opacity-80">{ELEMENT_NAME[companion.element]} · {PROFESSION_NAME[companion.profession]}</span>
+                </ChoiceChip>
+              );
+            })}
           </div>
-        </header>
+          <Button disabled={busy || roster.length < DESTINY_ROSTER_MIN} onClick={() => void startRun()} className="mt-4 min-h-11">
+            {busy ? "Đang bắt đầu…" : `Bắt đầu với ${roster.length} tướng`}
+          </Button>
+        </OrnateFrame>
+      )}
 
-        {message && <p role="alert" className="rounded-lg border border-rose-400/30 bg-rose-950/50 p-3 text-rose-100">{message}</p>}
-
-        <RankRewardsPanel mode="destiny" />
-
-        {noActiveRun && (
-          <section className="tower-screen__panel">
-            <h2 className="font-serif text-xl font-bold">Khóa roster mới</h2>
-            {run?.phase === "done" && <p className="mt-1 text-sm text-muted">Run trước đã kết thúc ở tầng {run.floor}.</p>}
-            <p className="mt-2 text-sm text-foreground-secondary">Chỉ cần tổng cộng tối thiểu {DESTINY_ROSTER_MIN} tướng: Đinh Bộ Lĩnh và ít nhất 2 tướng sở hữu. Có thể mang toàn bộ tướng đã sở hữu.</p>
-            <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {Object.keys(profile.companions).sort().map((id) => {
-                const companion = companionById(id);
-                if (!companion) return null;
-                const selected = roster.includes(id);
-                return <button key={id} type="button" onClick={() => setRoster(selected ? roster.filter((x) => x !== id) : [...roster, id])} aria-pressed={selected} className={`tower-screen__choice p-3 text-left ${selected ? "border-amber-400 bg-amber-500/15" : "border-white/10 bg-white/5"}`}><strong>{companion.name}</strong><span className="block text-xs text-muted">{ELEMENT_NAME[companion.element]} · {PROFESSION_NAME[companion.profession]}</span></button>;
+      {run && run.active && (
+        <section className="grid gap-4 sm:gap-5 lg:grid-cols-[1fr_1.4fr]">
+          <OrnateFrame className="order-2 min-w-0 self-start lg:order-1">
+            <SectionTitle description={`Lương ${run.food} · Nộ khí ${run.rage ?? 0}`}>Đội · tầng {run.floor}</SectionTitle>
+            <ul className="space-y-2">
+              {run.roster.map((id) => {
+                const f = run.fighters?.[id];
+                if (!f) return null;
+                const ratio = Math.round(100 * f.hp / f.config.maxHp);
+                return (
+                  <li key={id}>
+                    <FrameInset>
+                      <div className="flex justify-between gap-2 text-sm">
+                        <strong className="text-on-wood">{f.config.name}</strong>
+                        <span className={f.downed ? "text-danger" : "text-on-wood-soft"}>
+                          {f.downed ? "Đã gục" : `${f.hp}/${f.config.maxHp} HP · ${f.energy} NL`}
+                        </span>
+                      </div>
+                      <div className="mt-2 h-1.5 overflow-hidden rounded bg-black/40">
+                        <div className="h-full bg-jade" style={{ width: `${ratio}%` }} />
+                      </div>
+                    </FrameInset>
+                  </li>
+                );
               })}
-            </div>
-            <Button variant="primary" disabled={busy || roster.length < DESTINY_ROSTER_MIN} onClick={() => void startRun()} className="mt-4">{busy ? "Đang bắt đầu…" : `Bắt đầu với ${roster.length} tướng`}</Button>
-          </section>
-        )}
+            </ul>
+            <h3 className="ui-title-on-wood mt-4 text-base">Phúc đang có</h3>
+            <p className="text-sm text-on-wood-soft">{run.boons?.length ? run.boons.map((b) => `${b.id} ×${b.stacks}`).join(" · ") : "Chưa có Phúc"}</p>
+          </OrnateFrame>
 
-        {run && run.active && (
-          <section className="grid gap-5 lg:grid-cols-[1fr_1.4fr]">
-            <div className="tower-screen__panel">
-              <h2 className="font-serif text-xl font-bold">Run · tầng {run.floor}</h2>
-              <p className="mt-1">Lương: <strong className="text-amber-300">{run.food}</strong> · Nộ khí: {run.rage ?? 0}</p>
-              <div className="mt-4 space-y-2">{run.roster.map((id) => { const f = run.fighters?.[id]; if (!f) return null; const ratio = Math.round(100 * f.hp / f.config.maxHp); return <div key={id} className="rounded-lg bg-white/5 p-3"><div className="flex justify-between"><strong>{f.config.name}</strong><span className={f.downed ? "text-rose-400" : "text-foreground-secondary"}>{f.downed ? "Đã gục" : `${f.hp}/${f.config.maxHp} HP · ${f.energy} NL`}</span></div><div className="mt-2 h-1.5 overflow-hidden rounded bg-black/40"><div className="h-full bg-emerald-500" style={{ width: `${ratio}%` }} /></div></div>; })}</div>
-              <h3 className="mt-4 font-semibold text-amber-200">Phúc đang có</h3>
-              <p className="text-sm text-muted">{run.boons?.length ? run.boons.map((b) => `${b.id} ×${b.stacks}`).join(" · ") : "Chưa có Phúc"}</p>
-            </div>
+          <OrnateFrame level="raised" className="order-1 min-w-0 lg:order-2">
+            {run.phase === "battle" && (
+              <>
+                <SectionTitle>Trận tầng {run.floor} đang diễn ra</SectionTitle>
+                <p className="text-sm text-on-wood">Tiếp tục đúng trận đã lưu; mở tab khác không tạo trận mới.</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <Button disabled={busy || !run.matchId} onClick={resume} className="min-h-11">Tiếp tục trận</Button>
+                  <Button variant="secondary" disabled={busy} onClick={() => void stop()} className="min-h-11">Dừng và nhận thua</Button>
+                </div>
+              </>
+            )}
 
-            <div className="tower-screen__panel">
-              {run.phase === "battle" && <><h2 className="font-serif text-xl font-bold">Trận tầng {run.floor} đang diễn ra</h2><p className="mt-2 text-foreground-secondary">Tiếp tục đúng match đã lưu; mở tab khác không tạo trận mới.</p><div className="mt-4 flex flex-wrap gap-2"><Button variant="primary" disabled={busy || !run.matchId} onClick={resume} >Tiếp tục trận</Button><Button variant="secondary" disabled={busy} onClick={() => void stop()} >Dừng và nhận thua</Button></div></>}
+            {run.phase === "prepare" && rules && (
+              <>
+                <SectionTitle description={`Đối thủ: ${overview.floor?.foes.map((f) => f.name).join(", ") ?? ""} · ${difficultyName(overview.floor?.difficulty)}`}>
+                  Chuẩn bị tầng {run.floor}
+                </SectionTitle>
+                {describeRules(rules).length > 0 && (
+                  <ul className="flex flex-col gap-1.5 text-sm text-on-wood">
+                    {describeRules(rules).map((line) => (
+                      <li key={line.text} className="flex items-start gap-2">
+                        <span className="ui-rule-tag shrink-0" data-kind={line.kind}>{RULE_TAG[line.kind]}</span>
+                        <span>{line.text}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <h3 className="ui-title-on-wood mt-4 mb-1.5 text-base">Chọn 2 tướng ra trận</h3>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {run.roster.filter((id) => id !== MAIN_ID).map((id) => {
+                    const f = run.fighters?.[id];
+                    if (!f) return null;
+                    const selected = active.includes(id);
+                    const disabled = f.downed || f.hp <= 0 || (!selected && active.length >= 3);
+                    return (
+                      <ChoiceChip key={id} size="md" selected={selected} disabled={disabled}
+                        onClick={() => { setActive(selected ? active.filter((x) => x !== id) : [...active, id]); setBuild(null); }}
+                        className="flex-col items-start gap-0 p-3 text-left">
+                        <strong>{f.config.name}</strong>
+                        <span className="text-caption font-normal opacity-80">{f.hp}/{f.config.maxHp} HP · {f.energy} NL</span>
+                      </ChoiceChip>
+                    );
+                  })}
+                </div>
+                <h3 className="ui-title-on-wood mt-4 mb-1.5 text-base">Nghề và hệ của Đinh Bộ Lĩnh</h3>
+                <div className="flex flex-wrap gap-2">
+                  {builds.map((option) => {
+                    const selected = chosenBuild?.element === option.element && chosenBuild.profession === option.profession;
+                    return (
+                      <ChoiceChip key={`${option.element}-${option.profession}`} selected={selected} onClick={() => setBuild(option)}>
+                        {ELEMENT_NAME[option.element]} · {PROFESSION_NAME[option.profession]}
+                      </ChoiceChip>
+                    );
+                  })}
+                </div>
+                {builds.length === 0 && <p className="mt-2 text-sm text-danger">Đội đang chọn không có build thủ lĩnh hợp luật.</p>}
+                <div className="mt-5 flex flex-wrap gap-2">
+                  <Button disabled={busy || !chosenBuild || !lineupLegal(run, rules, active, chosenBuild)} onClick={() => void startBattle()} className="min-h-11">
+                    {busy ? "Đang mở trận…" : "Đánh tầng này"}
+                  </Button>
+                  <Button variant="secondary" disabled={busy} onClick={() => void stop()} className="min-h-11">Dừng lượt leo</Button>
+                </div>
+              </>
+            )}
 
-              {run.phase === "prepare" && rules && <><h2 className="font-serif text-xl font-bold">Chuẩn bị tầng {run.floor}</h2><div className="mt-2 flex flex-wrap gap-2 text-sm">{describeRules(rules).map((line) => <span key={line.text} className="rounded-full bg-white/10 px-3 py-1">{line.text}</span>)}</div><p className="mt-3 text-sm text-muted">Đối thủ: {overview.floor?.foes.map((f) => f.name).join(", ")} · {overview.floor?.difficulty}</p><h3 className="mt-4 font-semibold">Chọn 2 tướng active</h3><div className="mt-2 grid gap-2 sm:grid-cols-2">{run.roster.filter((id) => id !== MAIN_ID).map((id) => { const f = run.fighters?.[id]; if (!f) return null; const selected = active.includes(id); const disabled = f.downed || f.hp <= 0 || (!selected && active.length >= 3); return <button key={id} disabled={disabled} onClick={() => { setActive(selected ? active.filter((x) => x !== id) : [...active, id]); setBuild(null); }} aria-pressed={selected} className={`tower-screen__choice p-3 text-left ${selected ? "border-amber-400 bg-amber-500/15" : "border-white/10 bg-white/5"} disabled:opacity-35`}><strong>{f.config.name}</strong><span className="block text-xs text-muted">{f.hp}/{f.config.maxHp} HP · {f.energy} NL</span></button>; })}</div><h3 className="mt-4 font-semibold">Nghề và hệ của Đinh Bộ Lĩnh</h3><div className="mt-2 flex flex-wrap gap-2">{builds.map((option) => { const selected = chosenBuild?.element === option.element && chosenBuild.profession === option.profession; return <button key={`${option.element}-${option.profession}`} onClick={() => setBuild(option)} className={`rounded px-3 py-2 text-sm ${selected ? "bg-amber-500 font-bold text-stone-950" : "bg-white/10"}`}>{ELEMENT_NAME[option.element]} · {PROFESSION_NAME[option.profession]}</button>; })}</div>{builds.length === 0 && <p className="mt-2 text-sm text-rose-300">Đội đang chọn không có build thủ lĩnh hợp luật.</p>}<div className="mt-5 flex flex-wrap gap-2"><Button variant="primary" disabled={busy || !chosenBuild || !lineupLegal(run, rules, active, chosenBuild)} onClick={() => void startBattle()} >{busy ? "Đang mở trận…" : "Đánh tầng này"}</Button><Button variant="secondary" disabled={busy} onClick={() => void stop()} >Dừng run</Button></div></>}
-
-              {run.phase === "reward" && run.offer && <><h2 className="font-serif text-xl font-bold">Chọn một phần thưởng tầng {run.floor}</h2><p className="mt-1 text-sm text-muted">Ba lựa chọn đã được khóa; tải lại không đổi offer.</p>{leaderNeedsRescue && <p role="alert" className="mt-3 rounded-lg border border-rose-400/30 bg-rose-950/50 p-3 text-sm text-rose-100">Đinh Bộ Lĩnh đã gục. Phải chọn Cứu viện cho thủ lĩnh trước khi sang tầng kế.</p>}<div className="mt-4 grid gap-3">{run.offer.map((offer, index) => { const text = offerText(offer); const blocked = leaderNeedsRescue && offer.kind !== "rescue"; return <button key={`${offer.kind}-${index}`} disabled={blocked} onClick={() => { setOfferIndex(index); setTargets([]); }} aria-pressed={offerIndex === index} className={`tower-screen__choice p-4 text-left ${offerIndex === index ? "border-amber-400 bg-amber-500/15" : "border-white/10 bg-white/5"} disabled:cursor-not-allowed disabled:opacity-35`}><strong className="text-amber-100">{text.title}</strong><span className="block text-sm text-muted">{text.body}</span></button>; })}</div>{chosenOffer && chosenOffer.kind !== "boon" && <div className="mt-4"><h3 className="font-semibold">Chọn mục tiêu</h3><div className="mt-2 flex flex-wrap gap-2">{candidates.map((id) => { const selected = targets.includes(id); const max = rewardTargetLimit(chosenOffer).max; return <button key={id} disabled={(!selected && targets.length >= max) || (leaderNeedsRescue && id !== MAIN_ID)} onClick={() => setTargets(selected ? targets.filter((x) => x !== id) : [...targets, id])} className={`rounded px-3 py-2 ${selected ? "bg-emerald-600" : "bg-white/10"} disabled:opacity-40`}>{fighterName(id)}</button>; })}</div></div>}<Button variant="primary" disabled={busy || offerIndex === null || (leaderNeedsRescue && (chosenOffer?.kind !== "rescue" || targets[0] !== MAIN_ID))} onClick={() => void claim()} className="mt-5">{busy ? "Đang nhận…" : "Nhận và sang tầng kế"}</Button></>}
-            </div>
-          </section>
-        )}
-      </div>
-    </main>
+            {run.phase === "reward" && run.offer && (
+              <>
+                <SectionTitle description="Ba lựa chọn đã khóa; tải lại không đổi.">Chọn một phần thưởng tầng {run.floor}</SectionTitle>
+                {leaderNeedsRescue && (
+                  <Alert className="p-3 text-sm">Đinh Bộ Lĩnh đã gục. Phải chọn Cứu viện cho thủ lĩnh trước khi sang tầng kế.</Alert>
+                )}
+                <div className="mt-3 grid gap-2">
+                  {run.offer.map((offer, index) => {
+                    const text = offerText(offer);
+                    const blocked = leaderNeedsRescue && offer.kind !== "rescue";
+                    return (
+                      <ChoiceChip key={`${offer.kind}-${index}`} size="md" selected={offerIndex === index} disabled={blocked}
+                        onClick={() => { setOfferIndex(index); setTargets([]); }}
+                        className="flex-col items-start gap-0.5 p-4 text-left">
+                        <strong>{text.title}</strong>
+                        <span className="text-sm font-normal opacity-80">{text.body}</span>
+                      </ChoiceChip>
+                    );
+                  })}
+                </div>
+                {chosenOffer && chosenOffer.kind !== "boon" && (
+                  <div className="mt-4">
+                    <h3 className="ui-title-on-wood mb-1.5 text-base">Chọn mục tiêu</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {candidates.map((id) => {
+                        const selected = targets.includes(id);
+                        const max = rewardTargetLimit(chosenOffer).max;
+                        return (
+                          <ChoiceChip key={id} selected={selected}
+                            disabled={(!selected && targets.length >= max) || (leaderNeedsRescue && id !== MAIN_ID)}
+                            onClick={() => setTargets(selected ? targets.filter((x) => x !== id) : [...targets, id])}>
+                            {fighterName(id)}
+                          </ChoiceChip>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+                <Button disabled={busy || offerIndex === null || (leaderNeedsRescue && (chosenOffer?.kind !== "rescue" || targets[0] !== MAIN_ID))}
+                  onClick={() => void claim()} className="mt-5 min-h-11">
+                  {busy ? "Đang nhận…" : "Nhận và sang tầng kế"}
+                </Button>
+              </>
+            )}
+          </OrnateFrame>
+        </section>
+      )}
+    </ModeScreen>
   );
 }

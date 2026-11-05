@@ -2,11 +2,6 @@
 @layer components {
   .ui-button:disabled { cursor: not-allowed; opacity: 0.45; }
   .ui-button[aria-disabled="true"] { pointer-events: none; opacity: 0.45; }
-  .ui-button--ornate {
-    background: linear-gradient(180deg, var(--accent), var(--accent-deep));
-    color: var(--accent-foreground);
-  }
-  .ui-button--ornate:hover:not(:disabled) { filter: brightness(1.12); }
   .ui-control::placeholder { color: var(--muted); }
   .ui-control:disabled { cursor: not-allowed; }
   .ui-control option { background: var(--control-background); color: var(--foreground); }
@@ -73,4 +68,160 @@
     0 0 60px -10px #e2582b66,
     0 30px 60px -20px #000;
 }
+}
+
+/* Đồng bộ UI toàn game (05/11/2026, docs/05-ui-ux/design-system/theme.md mục "Quy tắc chung"). Mọi màn dùng các lớp
+   dưới đây qua component trong src/components/ui và src/components/game-ui; không tự khai màu nút/tab/khung. */
+@layer components {
+  /* Nút chính: sơn mài đỏ viền vàng, như "Vào trận" ở Chiến trường. Mỗi màn tối đa một nút chính. */
+  .ui-button--primary {
+    border: 1.5px solid var(--frame-gold-hi);
+    background: linear-gradient(180deg, var(--lacquer-hi), var(--lacquer) 55%, var(--lacquer-lo));
+    color: var(--on-lacquer);
+    text-shadow: 0 1px 2px #0009;
+    box-shadow: inset 0 1px 0 #ffd9a040, 0 6px 18px -8px #8f241dcc;
+    transition: filter 0.15s, box-shadow 0.15s, transform 0.05s;
+  }
+  .ui-button--primary:hover:not(:disabled) {
+    filter: brightness(1.1);
+    box-shadow: inset 0 1px 0 #ffd9a059, 0 8px 24px -8px #b4382ce6;
+  }
+  /* Nút phụ: gỗ sẫm viền đồng. */
+  .ui-button--secondary {
+    border: 1px solid var(--frame-bronze);
+    background: color-mix(in srgb, var(--wood-lo) 85%, transparent);
+    color: var(--on-wood);
+    transition: border-color 0.15s, background-color 0.15s, transform 0.05s;
+  }
+  .ui-button--secondary:hover:not(:disabled) {
+    border-color: var(--frame-gold);
+    background: var(--wood-hi);
+  }
+  .ui-button:active:not(:disabled) { transform: translateY(1px); }
+
+  /* Lựa chọn (tab, chip, độ khó, ô chọn): chưa chọn là gỗ viền đồng, đang chọn là giấy dó chữ mực. */
+  .ui-choice {
+    border: 1px solid var(--frame-line);
+    background: var(--wood-panel);
+    color: var(--on-wood);
+    transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+  }
+  .ui-choice:hover:not(:disabled):not([aria-selected="true"]):not([aria-pressed="true"]) {
+    border-color: var(--frame-gold);
+    background: var(--wood-hi);
+  }
+  .ui-choice[aria-selected="true"],
+  .ui-choice[aria-pressed="true"],
+  .ui-choice[aria-current="page"],
+  .ui-choice.is-selected {
+    border-color: var(--frame-gold-hi);
+    background: linear-gradient(180deg, var(--paper-hi), var(--paper-deep));
+    color: var(--ink-strong);
+    box-shadow: 0 2px 0 #0007;
+  }
+  .ui-choice:disabled { cursor: not-allowed; opacity: 0.45; }
+
+  /* Ô tầng (tháp): trạng thái theo data-state, đang chọn vẫn là giấy dó như mọi .ui-choice. */
+  .ui-floor[data-state="cleared"]:not([aria-pressed="true"]) { border-color: color-mix(in srgb, var(--jade) 70%, transparent); }
+  .ui-floor[data-state="cleared"]:not([aria-pressed="true"]) .ui-floor__state { color: var(--jade); }
+  .ui-floor[data-state="open"]:not([aria-pressed="true"]) { border-color: var(--frame-gold-hi); background: var(--wood-hi); }
+  .ui-floor[data-state="open"]:not([aria-pressed="true"]) .ui-floor__state { color: var(--frame-gold-hi); }
+  .ui-floor[data-state="locked"]:not([aria-pressed="true"]) { color: var(--on-wood-soft); background: var(--wood-inset); }
+
+  /* Nhãn luật (Cấm / Bắt buộc / Giới hạn): chữ, không emoji. */
+  .ui-rule-tag {
+    border: 1px solid currentColor;
+    border-radius: 0.25rem;
+    padding: 0 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.35rem;
+    color: var(--frame-gold);
+  }
+  .ui-rule-tag[data-kind="ban"] { color: var(--danger); }
+  .ui-rule-tag[data-kind="need"] { color: var(--jade); }
+
+  /* Khung 3 mức. 1: panel gỗ viền mảnh. 2: thêm vạch vàng trong + góc hoa văn (<FrameCorners />). 3: khung hero có
+     tranh, viền đồng đậm. Không lồng khung mức 2/3 trong khung mức 2/3. */
+  .ui-frame {
+    position: relative;
+    border: 1px solid var(--frame-line);
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, var(--wood), var(--wood-panel) 40%, var(--wood-lo));
+    color: var(--on-wood);
+    box-shadow: inset 0 1px 0 #ffffff0d, 0 8px 24px -14px #000c;
+  }
+  .ui-frame--raised,
+  .ui-frame--hero {
+    border-width: 1.5px;
+  }
+  .ui-frame--raised::after,
+  .ui-frame--hero::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border: 1px solid var(--frame-inner);
+    border-radius: 0.5rem;
+    pointer-events: none;
+  }
+  .ui-frame--hero {
+    border-color: var(--frame-bronze);
+    overflow: hidden;
+    isolation: isolate;
+    box-shadow: 0 0 0 1px #c9a25a40, 0 14px 36px #000b;
+  }
+  .ui-frame--paper {
+    background:
+      radial-gradient(ellipse at 25% 0%, var(--paper-hi) 0%, transparent 60%),
+      radial-gradient(ellipse at 100% 100%, #b98f5280 0%, transparent 55%),
+      var(--paper);
+    color: var(--ink);
+    box-shadow: inset 0 0 28px #7a52228c;
+  }
+  .ui-frame-inset {
+    border: 1px solid var(--frame-line-soft);
+    border-radius: 0.5rem;
+    background: var(--wood-inset);
+  }
+  .ui-frame-corner { color: var(--frame-bronze); }
+  .ui-frame--hero .ui-frame-corner { color: var(--frame-gold-hi); }
+
+  /* Tranh banner chế độ: phủ tối bên trái/dưới để chữ đọc rõ. */
+  .ui-mode-banner-shade {
+    background:
+      linear-gradient(0deg, #17110ef2 0%, #17110e99 35%, transparent 75%),
+      linear-gradient(90deg, #140d09e6 0%, #140d0999 40%, transparent 75%);
+  }
+  .ui-title-on-wood {
+    color: var(--title-on-wood);
+    text-shadow: 0 2px 0 #00000080;
+  }
+
+  /* Khung màn: nền gỗ tối, nội dung rộng tối đa 1280px, lề 16px điện thoại / 24px máy tính. */
+  .ui-mode-screen {
+    flex: 1;
+    background: radial-gradient(ellipse at top, var(--screen-glow), var(--background) 62%);
+    color: var(--on-wood);
+    padding: 1rem 1rem 2rem;
+  }
+  @media (min-width: 640px) { .ui-mode-screen { padding: 1.5rem 1.5rem 3rem; } }
+  .ui-mode-screen :is(button, a, select, input, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--frame-gold-hi);
+    outline-offset: 2px;
+  }
+  /* Điện thoại: thanh hành động chính dính đáy. */
+  .ui-action-bar {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    margin-inline: -1rem;
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+    background: linear-gradient(0deg, var(--wood-lo) 70%, transparent);
+  }
+  @media (min-width: 640px) {
+    .ui-action-bar { position: static; margin-inline: 0; padding: 0; background: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ui-choice, .ui-button--primary, .ui-button--secondary { transition: none; }
+  }
 }

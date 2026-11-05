@@ -135,18 +135,18 @@ function SceneView({
     case "TRIAL":
       return towerFeatures.trial ? <TrialScreen /> : <DisabledTowerMode name="Tháp Thí Luyện" />;
     case "DESTINY":
-      return !towerFeatures.destiny ? <DisabledTowerMode name="Tháp Thiên Mệnh" /> : account ? <DestinyScreen /> : <LoginGate name={SCENE_TITLE.DESTINY} />;
+      return !towerFeatures.destiny ? <DisabledTowerMode name="Tháp Thiên Mệnh" /> : account ? <DestinyScreen /> : <LoginGate scene="DESTINY" name={SCENE_TITLE.DESTINY} />;
     case "SURVIVAL":
-      return account ? <SurvivalScreen /> : <LoginGate name={SCENE_TITLE.SURVIVAL} />;
+      return account ? <SurvivalScreen /> : <LoginGate scene="SURVIVAL" name={SCENE_TITLE.SURVIVAL} />;
     case "DAILY":
-      return account ? <DailyScreen /> : <LoginGate name={SCENE_TITLE.DAILY} />;
+      return account ? <DailyScreen /> : <LoginGate scene="DAILY" name={SCENE_TITLE.DAILY} />;
     case "ARENA":
-      return account ? <ArenaScreen /> : <LoginGate name={SCENE_TITLE.ARENA} />;
+      return account ? <ArenaScreen /> : <LoginGate scene="ARENA" name={SCENE_TITLE.ARENA} />;
     case "FORMATION":
       return <FormationScreen />;
     case "TAM_TUONG_KY":
       if (!towerFeatures.tamTuongKy) return <DisabledTowerMode name={SCENE_TITLE.TAM_TUONG_KY} />;
-      return account ? <TamTuongKyScreen ranked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate name={SCENE_TITLE.TAM_TUONG_KY} reason="Chế độ này cần tài khoản đã đăng nhập vì mỗi lượt chơi tốn một phiếu, và tiến trình Tướng Lục lưu theo tài khoản." />;
+      return account ? <TamTuongKyScreen ranked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate scene="TAM_TUONG_KY" name={SCENE_TITLE.TAM_TUONG_KY} reason="Chế độ này cần tài khoản đã đăng nhập vì mỗi lượt chơi tốn một phiếu, và tiến trình Tướng Lục lưu theo tài khoản." />;
     case "EXPEDITION":
       return !towerFeatures.expedition ? <DisabledTowerMode name={SCENE_TITLE.EXPEDITION} /> : <ExpeditionScreen />;
     case "KHAI_LO":
@@ -156,7 +156,7 @@ function SceneView({
     case "SHOP":
       return <ShopScreen />;
     case "LEADERBOARD":
-      return account ? <LeaderboardScreen destinyEnabled={towerFeatures.destiny} tamTuongKyRanked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate name={SCENE_TITLE.LEADERBOARD} />;
+      return account ? <LeaderboardScreen destinyEnabled={towerFeatures.destiny} tamTuongKyRanked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate scene="LEADERBOARD" name={SCENE_TITLE.LEADERBOARD} />;
     case "PROFILE":
       return <ProfileScreen playerName={account?.name ?? null} />;
     case "LOGIN":

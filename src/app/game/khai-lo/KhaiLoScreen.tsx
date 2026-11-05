@@ -35,7 +35,8 @@ import {
 import { ELEMENT_COLOR } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
 import { readStorage, writeStorage } from "../formation/storage";
-import { SceneLink } from "../SceneContext";
+import { Button, buttonVariants, choiceVariants } from "@/components/ui";
+import { ModeScreen } from "@/components/game-ui";
 
 /** Khóa lưu theo chế độ; khóa của Thường giữ như bản đầu để không mất ván dở cũ. */
 const KEYS: Record<KlMode, { save: string; best: string; clock?: string }> = {
@@ -324,7 +325,7 @@ export default function KhaiLoScreen() {
   if (!state) {
     return (
       <Shell>
-        <p role="status" className="text-[var(--atlas-muted)]">Đang bày bàn…</p>
+        <p role="status" className="text-on-wood-soft">Đang bày bàn…</p>
       </Shell>
     );
   }
@@ -364,15 +365,12 @@ export default function KhaiLoScreen() {
     <Shell>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <header>
-          <p className="text-xs font-semibold tracking-[0.25em] text-[var(--atlas-gold)] uppercase">
+          <p className="text-kicker text-frame-gold">
             Giải đố · {MODE_NAME[state.mode]} · Màn {state.level}
           </p>
-          <h1 className="atlas-title font-serif text-3xl font-bold">Khai Lộ</h1>
+          <h1 className="sr-only">Khai Lộ</h1>
         </header>
-        <div className="flex gap-2">
-          <button type="button" onClick={newGame} className="home-secondary min-h-11 rounded-lg px-4 font-serif font-semibold">Ván mới</button>
-          <SceneLink scene="MENU" className="home-secondary flex min-h-11 items-center rounded-lg px-4 font-serif font-semibold">Về màn chính</SceneLink>
-        </div>
+        <Button variant="secondary" onClick={newGame}>Ván mới</Button>
       </div>
 
       <div role="tablist" aria-label="Chế độ chơi" className="grid w-full max-w-[560px] grid-cols-2 gap-2">
@@ -383,10 +381,10 @@ export default function KhaiLoScreen() {
             role="tab"
             aria-selected={mode === m}
             onClick={() => switchMode(m)}
-            className={`min-h-12 rounded-lg border px-3 py-1.5 text-left font-serif ${mode === m ? "border-[var(--atlas-gold)] bg-[#4a3518] text-[var(--atlas-title)]" : "home-secondary"}`}
+            className={choiceVariants({ className: "min-h-12 flex-col items-start px-3 py-1.5 text-left" })}
           >
             <span className="block font-bold">{MODE_NAME[m]}</span>
-            <span className="hidden text-xs text-[var(--atlas-muted)] sm:block">{MODE_HINT[m]}</span>
+            <span className="hidden text-caption font-normal opacity-80 sm:block">{MODE_HINT[m]}</span>
           </button>
         ))}
       </div>
@@ -395,7 +393,7 @@ export default function KhaiLoScreen() {
         <div className="flex flex-col items-center gap-3">
           <Stats state={state} best={best} left={left} msLeft={timed ? msLeft : null} />
           {timed && <TimeBar msLeft={msLeft} limitMs={limitMs} paused={active && hidden} />}
-          <div className="atlas-frame atlas-frame-wood w-fit p-2">
+          <div className="ui-frame w-fit p-2">
             <div
               ref={boardRef}
               role="grid"
@@ -438,7 +436,7 @@ export default function KhaiLoScreen() {
                       tabIndex={i === focus ? 0 : -1}
                       disabled={!active}
                       aria-label={`Hàng ${Math.floor(i / width) + 1}, cột ${(i % width) + 1}: ${c ? `hệ ${ELEMENT_NAME[c.kind]}${c.banner ? ", hào quang" : ""}` : "trống"}`}
-                      className="kl-hit focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--atlas-gold)]"
+                      className="kl-hit focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-frame-gold"
                       onPointerDown={(e) => (touchRef.current = e.pointerType === "touch")}
                       onMouseEnter={() => !touchRef.current && setPeek(i)}
                       onFocus={() => {
@@ -453,16 +451,16 @@ export default function KhaiLoScreen() {
               </div>
             </div>
           </div>
-          <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-[var(--atlas-title)]">{message}</p>
-          <p aria-hidden className="-mt-2 min-h-5 text-center text-sm text-[var(--atlas-muted)]">
+          <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-title-on-wood">{message}</p>
+          <p aria-hidden className="-mt-2 min-h-5 text-center text-sm text-on-wood-soft">
             {active ? preview.text || "Rê chuột (hoặc chạm một lần) để xem trước khối sẽ xóa." : ""}
           </p>
         </div>
 
         <aside className="flex flex-col gap-4" aria-label="Bảng điều khiển">
           {state.phase === "levelDone" && state.summary && (
-            <section role="status" className="atlas-frame atlas-frame-wood flex flex-col gap-3 p-4">
-              <h2 className="font-serif text-2xl font-bold text-[var(--atlas-title)]">
+            <section role="status" className="ui-frame flex flex-col gap-3 p-4">
+              <h2 className="ui-title-on-wood text-2xl font-bold">
                 {state.summary.cleared ? "Khai thông!" : state.summary.timeout ? "Hết giờ!" : `Hết màn ${state.summary.level}`}
               </h2>
               <p className="text-[15px]">
@@ -470,25 +468,25 @@ export default function KhaiLoScreen() {
                   ? `Dọn sạch bàn: +${state.summary.bonus} điểm${state.summary.timeBonus ? ` (gồm ${state.summary.timeBonus} điểm giây dư)` : ""}, +${state.summary.troopsDelta} quân lực, +1 mỗi đạo cụ.`
                   : `Còn ${state.summary.left} quân chưa dọn: mất ${-state.summary.troopsDelta} quân lực.`}
               </p>
-              <button type="button" autoFocus onClick={() => act({ type: "nextLevel" })} className="home-cta min-h-12 w-fit rounded-lg px-6 font-serif font-bold">
+              <button type="button" autoFocus onClick={() => act({ type: "nextLevel" })} className={buttonVariants({ size: "lg", className: "w-fit" })}>
                 Sang màn {state.level + 1}
                 {timed ? ` · ${levelTimeLimit(state.level + 1)} giây` : ""}
               </button>
             </section>
           )}
           {state.phase === "over" && (
-            <section role="status" className="atlas-frame atlas-frame-wood flex flex-col gap-3 p-4">
-              <h2 className="font-serif text-2xl font-bold text-[var(--atlas-title)]">Hết quân lực</h2>
+            <section role="status" className="ui-frame flex flex-col gap-3 p-4">
+              <h2 className="ui-title-on-wood text-2xl font-bold">Hết quân lực</h2>
               <p className="text-[15px]">
                 {MODE_NAME[state.mode]}: bạn đi tới màn {state.level}, đạt <b>{state.score} điểm</b>
                 {state.score >= best && state.score > 0 ? " (cao nhất từ trước tới nay)" : ""}.
               </p>
-              <button type="button" autoFocus onClick={newGame} className="home-cta min-h-12 w-fit rounded-lg px-6 font-serif font-bold">Chơi lại</button>
+              <button type="button" autoFocus onClick={newGame} className={buttonVariants({ size: "lg", className: "w-fit" })}>Chơi lại</button>
             </section>
           )}
           {active && (
-            <div className="atlas-frame atlas-frame-wood flex flex-col gap-3 p-4">
-              <p className="font-serif font-bold text-[var(--atlas-title)]">Đạo cụ</p>
+            <div className="ui-frame flex flex-col gap-3 p-4">
+              <p className="ui-title-on-wood font-bold">Đạo cụ</p>
               <div className="grid grid-cols-2 gap-2">
                 {(["whirl", "thunder"] as const).map((t, k) => (
                   <button
@@ -497,26 +495,26 @@ export default function KhaiLoScreen() {
                     aria-pressed={tool === t}
                     disabled={state.tools[t] <= 0}
                     onClick={() => setTool((cur) => (cur === t ? null : t))}
-                    className={`min-h-12 rounded-lg border px-2 font-serif font-semibold disabled:opacity-50 ${tool === t ? "border-[var(--atlas-gold)] bg-[#4a3518] text-[var(--atlas-title)]" : "home-secondary"}`}
+                    className={choiceVariants({ className: "min-h-12 flex-col px-2" })}
                   >
                     {TOOL_NAME[t]} ×{state.tools[t]}
-                    <span className="block text-xs font-normal text-[var(--atlas-muted)]">phím {k + 1}</span>
+                    <span className="block text-caption font-normal opacity-80">phím {k + 1}</span>
                   </button>
                 ))}
               </div>
-              {tool && <p className="text-sm text-[var(--atlas-muted)]">{tool === "whirl" ? "Chọn tâm: 8 ô quanh xoay theo chiều kim đồng hồ." : "Chọn ô: phá vùng 3×3 quanh ô đó."} Esc để bỏ chọn.</p>}
+              {tool && <p className="text-sm text-on-wood-soft">{tool === "whirl" ? "Chọn tâm: 8 ô quanh xoay theo chiều kim đồng hồ." : "Chọn ô: phá vùng 3×3 quanh ô đó."} Esc để bỏ chọn.</p>}
               <div className="grid grid-cols-2 gap-2">
-                <button type="button" disabled={!state.prev || state.undo <= 0} onClick={() => act({ type: "undo" })} className="home-secondary min-h-11 rounded-lg px-2 font-serif font-semibold disabled:opacity-50">
+                <button type="button" disabled={!state.prev || state.undo <= 0} onClick={() => act({ type: "undo" })} className={buttonVariants({ variant: "secondary", className: "px-2" })}>
                   Hoàn tác ({state.undo})
                 </button>
-                <button type="button" onClick={() => act({ type: "endLevel" })} className={`min-h-11 rounded-lg px-2 font-serif font-semibold ${state.phase === "stuck" ? "home-cta" : "home-secondary"}`}>
+                <button type="button" onClick={() => act({ type: "endLevel" })} className={buttonVariants({ variant: state.phase === "stuck" ? "primary" : "secondary", className: "px-2" })}>
                   Kết thúc màn
                 </button>
               </div>
             </div>
           )}
-          <details className="atlas-frame atlas-frame-wood p-4" open={state.level === 1 && state.moves === 0}>
-            <summary className="cursor-pointer font-serif font-bold text-[var(--atlas-title)]">Luật chơi</summary>
+          <details className="ui-frame p-4" open={state.level === 1 && state.moves === 0}>
+            <summary className="cursor-pointer ui-title-on-wood font-bold">Luật chơi</summary>
             <ul className="mt-2 list-disc space-y-1.5 pl-5 text-[15px] leading-snug">
               <li>Chạm một quân có ít nhất 1 quân cùng hệ liền cạnh (trên, dưới, trái, phải): <b>cả khối</b> biến mất. Khối n quân được n² điểm, nên gom khối to rồi mới xóa.</li>
               <li>Quân phía trên rơi xuống; cột trống hẳn thì các cột bên phải dồn sang trái. Không có quân mới rơi vào.</li>
@@ -527,7 +525,7 @@ export default function KhaiLoScreen() {
               <li><b>Cấp tốc</b>: mỗi màn {levelTimeLimit(1)} giây (thêm 15 giây mỗi hệ mới). Hết giờ là hết màn; dọn sạch bàn thì mỗi giây dư được {KL_TIME_BONUS_PER_SECOND} điểm. Đồng hồ dừng khi rời tab.</li>
             </ul>
           </details>
-          <p className="text-sm text-[var(--atlas-muted)]">Bản chơi thử offline: chưa có thưởng và bảng xếp hạng. Ván dở và điểm cao nhất mỗi chế độ lưu trên trình duyệt này.</p>
+          <p className="text-sm text-on-wood-soft">Bản chơi thử offline: chưa có thưởng và bảng xếp hạng. Ván dở và điểm cao nhất mỗi chế độ lưu trên trình duyệt này.</p>
         </aside>
       </div>
     </Shell>
@@ -547,7 +545,7 @@ function TimeBar({ msLeft, limitMs, paused }: { msLeft: number; limitMs: number;
       <div className="kl-timebar h-2.5 overflow-hidden rounded-full" data-low={low || undefined}>
         <div className="h-full rounded-full" style={{ width: `${pct}%` }} />
       </div>
-      {paused && <p className="mt-1 text-center text-xs text-[var(--atlas-muted)]">Tạm dừng</p>}
+      {paused && <p className="mt-1 text-center text-caption text-on-wood-soft">Tạm dừng</p>}
     </div>
   );
 }
@@ -562,9 +560,9 @@ function Stats({ state, best, left, msLeft }: { state: KlState; best: number; le
   return (
     <dl className="grid w-full max-w-[560px] grid-cols-4 gap-2 text-center">
       {items.map(([k, v, warn]) => (
-        <div key={k} className="atlas-frame atlas-frame-wood px-1 py-1.5">
-          <dt className="text-xs text-[var(--atlas-muted)]">{k}</dt>
-          <dd className={`font-serif text-lg font-bold tabular-nums ${warn ? "text-[#ff8a5c]" : "text-[var(--atlas-title)]"}`}>{v}</dd>
+        <div key={k} className="ui-frame px-1 py-1.5">
+          <dt className="text-caption text-on-wood-soft">{k}</dt>
+          <dd className={`text-lg font-bold tabular-nums ${warn ? "text-warning" : "text-title-on-wood"}`}>{v}</dd>
         </div>
       ))}
     </dl>
@@ -573,8 +571,8 @@ function Stats({ state, best, left, msLeft }: { state: KlState; best: number; le
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="campaign-atlas demo-bg flex flex-1 flex-col bg-[#17110e] pb-10 text-[var(--atlas-ink-on-wood)]">
-      <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-6 px-4 pt-4 sm:px-6 lg:pt-6">{children}</div>
-    </main>
+    <ModeScreen label="Khai Lộ">
+      <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-6">{children}</div>
+    </ModeScreen>
   );
 }
