@@ -133,10 +133,10 @@ rồi một đạo đánh.
 
 | Sa bàn | Hệ | Ô | Số ngày / chuẩn | Hình dạng |
 |---|---|---|---|---|
-| **Ải Bắc** | Kim | 11 | 13 / 9 | Đường đan nhau, có làng và kho lương ở giữa; dễ dồn quân giáp công. Hai cổng thành đều là lũy. Sa bàn nhập môn |
-| **Thượng Du** | Mộc | 12 | 19 / 14 | Hai thung lũng tách rời, mỗi bên một làng, chỉ nối qua Đèo Ngang Núi (lũy). Đường dài, giáp công chỉ ở cổng thành |
+| **Ải Bắc** | Kim | 11 | 14 / 9 | Đường đan nhau, có làng và kho lương ở giữa; dễ dồn quân giáp công. Hai cổng thành đều là lũy. Sa bàn nhập môn |
+| **Thượng Du** | Mộc | 12 | 20 / 14 | Hai thung lũng tách rời, mỗi bên một làng, chỉ nối qua Đèo Ngang Núi (lũy). Đường dài, giáp công chỉ ở cổng thành |
 | **Cửa Biển** | Thủy | 11 | 17 / 12 | **Kịch bản đầy đủ** (từ 04/11/2026): rút dân, giữ cầu chặn thuyền viện, con nước, đường bị phá, phản công Chợ, phá cổng. Luật riêng ở [thiết kế Cửa Biển](03-cua-bien-thiet-ke.md) |
-| **Ngã Ba Sông** | Thổ | 13 | 11 / 7 | Hai trại ở hai bờ đối diện, thành giữa ngã ba sông. Lội sông vào thẳng thành mất 2 ngày; đi vòng qua Lũy Bến Đò, Lũy Núi Sơn bằng đường bộ thì xa hơn. Có một chòi canh |
+| **Ngã Ba Sông** | Thổ | 13 | 12 / 7 | Hai trại ở hai bờ đối diện, thành giữa ngã ba sông. Lội sông vào thẳng thành mất 2 ngày; đi vòng qua Lũy Bến Đò, Lũy Núi Sơn bằng đường bộ thì xa hơn. Có một chòi canh |
 | **Kinh Thành** | Hỏa | 14 | 11 / 8 | Kinh thành có ba cổng lũy, chỉ vào thành qua cổng. Hai chòi canh ở hai cánh nhìn thấu đường vây; Chợ Phiên ở giữa hai trại nhưng phải vượt sông |
 | **Quần Đảo** | Phong | 12 | 9 / 6 | Thành đảo giữa vịnh, chỉ Lũy Cầu Dài nối vào bằng đường bộ; còn lại đi thuyền giữa các đảo (2 ngày mỗi chặng). Một chòi canh ở đảo bắc |
 
@@ -173,14 +173,15 @@ Biển ([thiết kế Cửa Biển](03-cua-bien-thiet-ke.md) mục 3 và 5), s�
 ### 4.3 Nhiệm vụ từng sa bàn (Shan yêu cầu 05/11/2026)
 
 Mỗi sa bàn có một hai nhiệm vụ không bắt buộc, ghép từ hai khối sẵn có của Cửa Biển: **hộ tống** (khối rút dân: tới ô
-nhận người, đưa về trại; rời ô nhận khi đồn chặn chưa chiếm thì gặp truy binh 3 địch ×1,2 trong 6 lượt; thua trận khi
+nhận người, đưa về ô an toàn; rời ô nhận khi đồn chặn chưa chiếm thì gặp truy binh 2 địch ×1,0 trong 5 lượt, nhẹ hơn
+truy binh Cửa Biển 3 địch ×1,2, 6 lượt; thua trận khi
 đang hộ tống thì người bị bắt lại) và **chặn viện binh** (thắng trận giữ ở ô chặn trước đợt viện cuối). Không thêm tài
 nguyên hay luật mới.
 
 | Sa bàn | Nhiệm vụ | Ý đồ |
 |---|---|---|
 | **Ải Bắc** | Giải cứu tù binh: chiếm Kho Ngựa Thồ, đưa tù binh về Bản Na; Lũy Đèo Mây chưa chiếm thì truy binh | Kho ở giữa đường: cứu người tốn hai ngày quay lui, hoặc dọn Đèo Mây trước để đi yên |
-| **Thượng Du** | Đưa dân qua đèo: dân Bản Ruộng Bậc (thung lũng đông) sang Bản Mộc (thung lũng tây); Đèo Ngang chưa chiếm thì truy binh. Kèm chặn viện binh ở Đèo Ngang | Cả hai việc cùng xoay quanh đèo |
+| **Thượng Du** | Đưa dân lên đèo: dân Bản Ruộng Bậc (thung lũng đông) lánh lên Đèo Ngang khi ta giữ đèo; Đèo Ngang chưa chiếm thì truy binh. Kèm chặn viện binh ở Đèo Ngang | Cả hai việc cùng xoay quanh đèo |
 | **Ngã Ba Sông** | Rút dân Làng Ruộng Chiêm về Trại Bờ Đông, hoặc vào Kho Thóc nếu đã giữ kho qua đợt phản công; Đồn Bến Lau chưa chiếm thì truy binh | Giữ kho vừa có lương vừa là chỗ đưa dân về gần |
 | **Kinh Thành** | Chặn viện binh ở Lũy Cầu Tây (luật mục 4.2 nay tính là nhiệm vụ) | Thưởng cho đạo đi cánh tây |
 | **Quần Đảo** | Chặn thuyền viện: thuyền viện vào Thành Đảo cuối ngày 4 và 7 (+15%); giữ Lũy Cầu Dài thì chặn | Đường bộ qua Cầu Dài chặn được viện nhưng gặp cổng; vòng Đảo Rùa tránh cổng mà không chặn được |
@@ -260,18 +261,21 @@ Mô phỏng chạy hai kiểu: làm nhiệm vụ hộ tống (mặc định) và
 
 | Sa bàn | Bỏ hộ tống: thắng I / II / III | Làm nhiệm vụ: thắng kèm xong nhiệm vụ I / II / III |
 |---|---|---|
-| Ải Bắc | 85 / 75 / 55% | 60 / 35 / 18% |
-| Thượng Du | 80 / 60 / 30% | 55 / 30 / 5% |
-| Ngã Ba Sông (hạn 10 → 11 ngày) | 93 / 95 / 75% | 55 / 43 / 18% |
+| Ải Bắc (hạn 13 → 14 ngày) | 90 / 80 / 58% | 83 / 58 / 25% |
+| Thượng Du (hạn 19 → 20 ngày) | 80 / 55 / 30% | 60 / 38 / 13% |
+| Ngã Ba Sông (hạn 10 → 12 ngày) | 98 / 98 / 75% | 58 / 53 / 28% |
 | Kinh Thành (chỉ chặn viện) | 83 / 70 / 50% | 80 / 65 / 48% |
 | Quần Đảo (chỉ chặn thuyền viện) | 88 / 88 / 53% | 88 / 88 / 53% |
 | Cửa Biển | | 85 / 68 / 40% (thắng 85 / 70 / 40%) |
 
-- Hộ tống tốn hai đến bốn ngày, nên thắng kèm nhiệm vụ thấp hơn thắng thường khoảng 25–40 điểm. Đó là cái giá của
-  vàng ×1,3; bỏ nhiệm vụ thì độ khó như bảng mục 5.2.
+- Shan cho giảm nhẹ độ khó nhiệm vụ: truy binh năm sa bàn thường 2 địch ×1,0, 5 lượt; thêm 1 ngày ở ba sa bàn có hộ
+  tống; Thượng Du đưa dân lên Đèo Ngang thay vì về Bản Mộc. Trước khi giảm, thắng kèm nhiệm vụ Bậc I: Ải Bắc 60%,
+  Thượng Du 55%, Ngã Ba Sông 55%.
+- Hộ tống vẫn tốn một đến ba ngày, nên thắng kèm nhiệm vụ thấp hơn thắng thường khoảng 10–40 điểm. Đó là cái giá của
+  vàng ×1,3.
 - Lần đầu đo, kế hoạch quay lui dọn đồn chặn truy binh dù đồn lệch đường (Ải Bắc còn 8%); nay chỉ dọn khi đồn nằm trên
   đường về, còn lại đánh truy binh. Ải Bắc ban đầu giam tù binh ở Lũy Gác Nam, Thượng Du đưa dân về tận Trại Đầu Nguồn:
-  cả hai dưới 25%, đã rút ngắn thành Kho Ngựa Thồ → Bản Na và Bản Ruộng Bậc → Bản Mộc.
+  cả hai dưới 25%, đã rút ngắn.
 - Quần Đảo thêm thuyền viện làm Bậc III tụt 80 → 53%.
 
 Thua gần như toàn bộ là hết ngày. Người chơi tới Bậc III thường đã có đồ Tím/Cam và tướng mua, nên mức thật sẽ cao hơn.
