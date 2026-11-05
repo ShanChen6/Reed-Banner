@@ -236,10 +236,29 @@ function decide(run: ExpeditionRun): Decision {
     }
   }
   // Đạo nào còn đường dài nhất (kể cả việc phụ rồi về cổng) đi trước; đạo dưới 55% máu nghỉ trừ khi sắp hết ngày.
+  // Chia cổng: mỗi đạo một cổng khác nhau, chọn cách chia để đạo về muộn hơn về sớm nhất (tránh hai đạo dồn một
+  // ngả rồi một đạo phải vòng sang ngả kia). Đạo đang làm việc phụ tính từ đích việc phụ.
+  const from = (i: ArmyIndex) => missions[i]?.[0] ?? run.armies[i].at;
+  let gateOf: Partial<Record<ArmyIndex, string>> = {};
+  if (gates.length >= 2) {
+    let best = Infinity;
+    for (const g0 of gates)
+      for (const g1 of gates) {
+        if (g0 === g1) continue;
+        const cost = Math.max(route(run, from(0), g0), route(run, from(1), g1));
+        if (cost < best) { best = cost; gateOf = { 0: g0, 1: g1 }; }
+      }
+  }
   const goalsOf = (i: ArmyIndex) => {
+    if (missions[i]) return missions[i]!;
     const other = run.armies[i === 0 ? 1 : 0];
     const free = gates.filter((g) => g !== other.at);
-    return missions[i] ?? (free.length ? free : gates);
+    const nearest = free.length ? free : gates;
+    // Chỉ theo cổng được chia khi không xa hơn cổng gần nhất quá một ngày (Quần Đảo: vòng biển rất xa).
+    const mine = gateOf[i];
+    if (mine && alive.includes(i === 0 ? 1 : 0) && route(run, run.armies[i].at, mine) <= routeTo(run, run.armies[i].at, nearest) + 1)
+      return [mine];
+    return nearest;
   };
   const remaining = (i: ArmyIndex) => {
     const at = run.armies[i].at;

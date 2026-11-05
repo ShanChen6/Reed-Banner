@@ -2,6 +2,9 @@
 
 ## 05/11/2026
 
+**Viễn Chinh: mô phỏng đi theo nhiệm vụ, cân lại số ngày**
+- Shan cho dạy mô phỏng làm việc phụ (trinh sát, chặn viện binh, rút dân, giữ kho) và chạy dài để cân. Đổi hạn ngày: Ải Bắc 12 → 13, Thượng Du 17 → 19, Cửa Biển 12 → 17, Kinh Thành 10 → 11; trận giữ Đèo Ngang 6 lượt, không mạnh thêm. Năm sa bàn vào khoảng mục tiêu; Cửa Biển vẫn khó nhất (Bậc I 50%). Xem [GDD mục 5.2](../02-game-modes/expedition/01-vien-chinh-gdd.md#52-kết-quả-bản-chốt-05112026).
+
 **Viễn Chinh: luật riêng cho năm sa bàn, Trinh sát chung**
 - Sau bản review, Shan cho mỗi sa bàn ngoài Cửa Biển một hai khối luật nhẹ lấy từ Cửa Biển: Ải Bắc đường bị phá và phá cổng; Thượng Du viện binh, giữ Đèo Ngang để chặn; Ngã Ba Sông phản công Kho Thóc; Kinh Thành viện binh, giữ Lũy Cầu Tây để chặn; Quần Đảo phá cổng, trừ khi đổ bộ từ Làng Đảo Rùa. Lệnh Trinh sát có ở mọi sa bàn. Xem [GDD mục 4.2](../02-game-modes/expedition/01-vien-chinh-gdd.md#42-luật-riêng-từng-sa-bàn-shan-yêu-cầu-05112026).
 

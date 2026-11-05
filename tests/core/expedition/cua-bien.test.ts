@@ -324,8 +324,8 @@ describe("Cửa Biển: kết thúc và thưởng", () => {
   it("toàn thắng 3 sao và thêm một món phẩm cao hơn; chiếm trại 2 sao", () => {
     const full = ended({ phase: "won", day: 10, refugees: "saved", reinforcementsCut: true });
     assert.equal(expeditionStars(full), 3);
-    assert.equal(expeditionStars(ended({ phase: "won", day: 9 })), 2);
-    assert.equal(expeditionStars(ended({ phase: "won", day: 11 })), 1);
+    assert.equal(expeditionStars(ended({ phase: "won", day: MAP.parDays })), 2);
+    assert.equal(expeditionStars(ended({ phase: "won", day: MAP.parDays + 1 })), 1);
     const r = applyExpeditionEnd(expeditionSimProfile(10), { ...NEW_EXPEDITION, run: full }, createRng(1));
     const result = r.state.run!.result!;
     assert.equal(result.ending, "full");
