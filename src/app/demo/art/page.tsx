@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CHARACTER_SKILLS, CHASE_PASSIVES, COMBO_PASSIVES, dinhBoLinhUltimate, ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PROFESSIONS, ROLE_SKILLS, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
+import { CHARACTER_SKILLS, CHASE_PASSIVES, COMBO_PASSIVES, dinhBoLinhUltimate, ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PASSIVES, PROFESSIONS, ROLE_SKILLS, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, SPECIAL_NAME, TIER_COLOR_NAME, TILE_NAME } from "@/app/game/battle/labels";
 import { EmptySlotIcon, GearIcon, SetEmblem } from "@/app/game/art/gear";
 import { ElementIcon, FoodIcon, LeaderFlag, ProfessionIcon, ShieldIcon } from "@/app/game/art/icons";
@@ -132,10 +132,10 @@ export default function ArtPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-semibold">Bị động (50 ảnh tròn: nghề 1, truy kích theo nghề, theo hệ, bị động riêng)</h2>
+          <h2 className="font-semibold">Bị động (57 ảnh tròn: nghề 1, truy kích theo nghề, theo hệ, bị động riêng, bị động Nộ)</h2>
           <div className="flex flex-wrap items-start gap-3">
             {[...PASSIVE_ART].map((id) => {
-              const name = (COMBO_PASSIVES as Record<string, { name: string }>)[id]?.name ?? (CHASE_PASSIVES as Record<string, { name: string }>)[id]?.name ?? id;
+              const name = (COMBO_PASSIVES as Record<string, { name: string }>)[id]?.name ?? (CHASE_PASSIVES as Record<string, { name: string }>)[id]?.name ?? (PASSIVES as Record<string, { name: string }>)[id.slice(5)]?.name ?? id;
               return (
                 <figure key={id} className="flex w-20 flex-col items-center gap-1">
                   <PassiveIcon id={id} name={name} className="size-12" />

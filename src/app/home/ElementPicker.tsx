@@ -7,7 +7,7 @@ import { type Element, ELEMENTS, elementRelation, characterSkills, PROFESSIONS, 
 import { chaseTriggerText, comboTriggerText, ELEMENT_NAME, PROFESSION_NAME, passiveText, rageTriggerText } from "../game/battle/labels";
 import { ELEMENT_COLOR, ElementIcon } from "../game/art/icons";
 import { Portrait } from "../game/art/portraits";
-import { PassiveIcon } from "../game/art/passives";
+import { PassiveIcon, ragePassiveId } from "../game/art/passives";
 import { SkillIcon } from "../game/art/skills";
 import SkillInfo from "../game/battle/SkillInfo";
 import { ELEMENT_TRAIT } from "./data";
@@ -116,8 +116,13 @@ export default function ElementPicker() {
 
           <div className="rounded-lg border border-[var(--gold)]/40 bg-[var(--gold)]/5 px-3 py-2 text-sm">
             <span className="text-xs uppercase tracking-wider text-[var(--gold)]">Bị động khi đầy Nộ</span>
-            <p className="font-semibold">{PASSIVES[element].name}</p>
-            <p className="mt-0.5 text-stone-300">{passiveText(element)}</p>
+            <div className="mt-1 flex items-start gap-3">
+              <PassiveIcon id={ragePassiveId(element)} name={PASSIVES[element].name} className="size-12" />
+              <div>
+                <p className="font-semibold">{PASSIVES[element].name}</p>
+                <p className="mt-0.5 text-stone-300">{passiveText(element)}</p>
+              </div>
+            </div>
             <Trigger lines={rageTriggerText()} />
           </div>
 
