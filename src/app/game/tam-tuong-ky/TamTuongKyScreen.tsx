@@ -8,7 +8,7 @@
 import { ModeBanner } from "@/components/game-ui";
 import { ChoiceChip, buttonVariants } from "@/components/ui";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { PROFESSION_DISPLAY_NAME, type Element } from "@/core/battle";
+import { PROFESSION_DISPLAY_NAME, type Element, type Profession } from "@/core/battle";
 import { PACK_NAMES, catalogForPack, openIngredients, type Catalog, type CatalogNode, type DiscoveryState, type HintLevel, type NodeId } from "@/core/tam-tuong-ky";
 import { AtlasCorners } from "../campaign/AtlasFrame";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
@@ -437,8 +437,27 @@ function NodeChip({ node, onPick, badge, count }: { node: CatalogNode; onPick: (
   );
 }
 
+/** Icon tri thức nghề ở public/art/tam-tuong-ky/<tên>.webp, theo nghề. Nghề chưa có tranh thì dùng chữ cái đầu. */
+const KNOWLEDGE_ART: Partial<Record<Profession, string>> = {
+  tuongSi: "martial",
+  binhLinh: "troops",
+  muuSi: "stratagem",
+  quanSu: "warManual",
+  phapSu: "magic",
+};
+
 function NodeGlyph({ node, className = "size-6" }: { node: CatalogNode; className?: string }) {
   if (node.element) return <ElementIcon element={node.element} className={className} />;
+  // Tri thức nghề và node vai trò (tri thức nghề nhuộm hệ) dùng chung icon của nghề.
+  const profession = node.professionHint ?? (node.role?.hybrid ? undefined : node.role?.profession);
+  const art = profession && KNOWLEDGE_ART[profession];
+  if (art) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} aria-hidden focusable="false">
+        <image href={`/art/tam-tuong-ky/${art}.webp`} width={24} height={24} />
+      </svg>
+    );
+  }
   return (
     <span aria-hidden className={`${className} grid shrink-0 place-items-center rounded-full border border-[var(--atlas-bronze)] bg-[var(--atlas-paper-deep)] font-serif text-xs font-bold text-[var(--atlas-ink)]`}>
       {node.nameVi.charAt(0)}
