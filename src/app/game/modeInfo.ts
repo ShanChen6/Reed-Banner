@@ -16,6 +16,10 @@ export interface ModeInfo {
 }
 
 export const MODE_INFO: Partial<Record<Scene, ModeInfo>> = {
+  TRIAL: {
+    text: "Mỗi tầng một luật chọn đội riêng, vượt lần đầu nhận Đá Cường Hóa.", art: "trial", kicker: "Song Tháp",
+    perks: ["Luật cấm, bắt buộc hoặc giới hạn đội theo tầng", "Đá Cường Hóa cho lần vượt đầu tiên", "Quét tháp mỗi ngày khi đã qua tầng 1"],
+  },
   DESTINY: {
     text: "Khóa đội theo chu kỳ, giữ máu và lương xuyên tầng.", art: "destiny", kicker: "Song Tháp",
     perks: ["Đội chốt một lần cho cả chu kỳ", "Máu và lương mang sang tầng sau", "Bảng xếp hạng riêng cho từng chu kỳ"],
