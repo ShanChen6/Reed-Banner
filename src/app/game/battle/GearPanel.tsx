@@ -139,11 +139,14 @@ export default function GearPanel({
   teamIds,
   locked,
   onAction,
+  noShop,
 }: {
   profile: Profile;
   teamIds: readonly string[];
   locked: boolean;
   onAction: (a: ProfileAction) => Promise<string | null>;
+  /** Ẩn phần mua đồ (sảnh Giao Tranh): mua ở Cửa Hàng. */
+  noShop?: boolean;
 }) {
   const [who, setWho] = useState<string>(MAIN_ID);
   const [picked, setPicked] = useState<string[]>([]);
@@ -278,8 +281,8 @@ export default function GearPanel({
       <h3 className="mt-3 mb-1 font-semibold">Túi đồ</h3>
       {profile.bag.length === 0 ? (
         <p className="opacity-60">
-          Chưa có món nào. Thắng trận chắc chắn rơi 1 món; cũng có thể mua ở cửa
-          hàng bên dưới.
+          Chưa có món nào. Thắng trận chắc chắn rơi 1 món; cũng có thể mua ở{" "}
+          {noShop ? "Cửa Hàng" : "cửa hàng bên dưới"}.
         </p>
       ) : (
         <ul className="flex flex-wrap gap-1">
@@ -396,8 +399,12 @@ export default function GearPanel({
         </div>
       )}
 
-      <h3 className="mt-3 mb-1 font-semibold">Cửa hàng trang bị</h3>
-      <GearShop profile={profile} disabled={disabled} onBuy={commit} />
+      {!noShop && (
+        <>
+          <h3 className="mt-3 mb-1 font-semibold">Cửa hàng trang bị</h3>
+          <GearShop profile={profile} disabled={disabled} onBuy={commit} />
+        </>
+      )}
       <p className="mt-2 opacity-60">
         Mỗi món chỉ một người mặc. Vũ khí của Đinh Bộ Lĩnh giữ riêng theo nghề;
         nhân vật kèm chỉ mặc vũ khí đúng nghề. Ghép cần 3 món cùng ô, cùng hệ,
