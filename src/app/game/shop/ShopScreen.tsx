@@ -2,16 +2,16 @@
 
 // Cửa Hàng: một chỗ mua tướng (nhân vật kèm), trang bị và vật phẩm (lương) bằng vàng. Không có luật mới ở đây:
 // mọi giao dịch là thao tác hồ sơ (buyCompanion, buyGear, buyFood) do @/core áp dụng và server kiểm tra lại;
-// màn này chỉ hiển thị và gửi thao tác, dùng lại ShopPanel và GearShop của hồ sơ.
+// màn này chỉ hiển thị và gửi thao tác, dùng lại ShopPanel của hồ sơ; trang bị ở GearStore, vật phẩm ở ItemsStore.
 
 import { useEffect, useState } from "react";
 import type { Profile, ProfileAction } from "@/core";
 import { ModeScreen, OrnateFrame } from "@/components/game-ui";
 import { Alert, Tabs, type TabItem } from "@/components/ui";
-import { GearShop } from "../battle/GearPanel";
 import { fetchProfile, sendProfileAction } from "../battle/online";
 import { PROFILE_ERROR } from "../battle/ProgressPanel";
 import ShopPanel from "../battle/ShopPanel";
+import GearStore from "./GearStore";
 import ItemsStore from "./ItemsStore";
 
 type Tab = "heroes" | "gear" | "items";
@@ -58,13 +58,7 @@ export default function ShopScreen() {
           {message && <Alert className="p-3 text-sm">{message}</Alert>}
           <div id="shop-panel" role="tabpanel" className="min-w-0">
             {tab === "heroes" && <ShopPanel sellOnly profile={profile} locked={busy} onAction={act} />}
-            {tab === "gear" && (
-              <section aria-label="Cửa hàng trang bị" className="ui-frame-inset p-3 text-sm">
-                <h2 className="ui-title-on-wood mb-1 text-base">Trang bị</h2>
-                <p className="mb-3 text-caption text-on-wood-soft">Chọn ô, hệ, bộ và phẩm rồi mua; món mới vào túi đồ ở Hồ sơ.</p>
-                <GearShop profile={profile} disabled={busy} onBuy={(a) => void act(a)} />
-              </section>
-            )}
+            {tab === "gear" && <GearStore profile={profile} disabled={busy} onBuy={(a) => void act(a)} />}
             {tab === "items" && <ItemsStore profile={profile} busy={busy} onAction={(a) => void act(a)} />}
           </div>
         </OrnateFrame>
