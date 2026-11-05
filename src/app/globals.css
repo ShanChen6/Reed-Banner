@@ -741,15 +741,22 @@
     filter: brightness(0.58) saturate(0.78) sepia(0.15);
   }
 }
-/* Bảng tên phân cảnh ở giữa: khung đồng Shan vẽ (header-title-plaque.webp, 818×120) cắt 9 mảnh, hai đầu (góc vát
-   và nút thắt) giữ nguyên, đoạn giữa kéo giãn theo độ dài tên. Viền tính theo em nên khung to nhỏ theo cỡ chữ. */
+/* Bảng tên phân cảnh ở giữa: khung đồng Shan vẽ (header-title-plaque.webp, 1086×174) cắt 9 mảnh, hai đầu (nút thắt
+   và chim Lạc) giữ nguyên, đoạn giữa kéo giãn theo độ dài tên. Viền tính theo em nên khung to nhỏ theo cỡ chữ. */
 .game-header-title {
   color: #f3e2b8;
   border-style: solid;
-  border-width: 0.42em 0.95em;
-  border-image: url("/art/ui/header/ornaments/header-title-plaque.webp") 22 48 fill / 0.42em 0.95em stretch;
+  border-width: 0.47em 2.05em;
+  border-image: url("/art/ui/header/ornaments/header-title-plaque.webp") 30 130 fill / 0.47em 2.05em stretch;
   filter: drop-shadow(0 2px 6px #000000b3);
   text-shadow: 0 1px 2px #000;
+}
+/* Điện thoại: hai đầu khung hẹp lại một chút để tên dài như "Chiến trường" không bị cắt. */
+@media (max-width: 639px) {
+  .game-header-title {
+    border-width: 0.47em 1.7em;
+    border-image-width: 0.47em 1.7em;
+  }
 }
 .game-header-gold {
   color: #f3e2b8;

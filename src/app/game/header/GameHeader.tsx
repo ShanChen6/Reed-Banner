@@ -71,7 +71,7 @@ function HomeButton({ current }: { current: boolean }) {
 function SceneTitle({ title }: { title: string }) {
   return (
     <div className="relative flex min-w-0 items-center justify-center">
-      <p className="game-header-title max-w-[46vw] truncate px-2 pt-[0.12em] text-center font-serif text-[13px] leading-[1.9] font-bold tracking-[0.06em] uppercase sm:max-w-none sm:px-4 sm:text-sm sm:tracking-[0.14em] md:px-5 lg:px-6 lg:text-lg lg:tracking-[0.2em] xl:text-xl">
+      <p className="game-header-title max-w-[50vw] truncate px-0.5 pt-[0.12em] text-center font-serif text-[13px] leading-[1.9] font-bold tracking-[0.06em] uppercase sm:max-w-none sm:px-4 sm:text-sm sm:tracking-[0.14em] md:px-5 lg:px-6 lg:text-lg lg:tracking-[0.2em] xl:text-xl">
         {title}
       </p>
     </div>
