@@ -1,6 +1,7 @@
 "use client";
 
-import { Card, Button } from "@/components/ui";
+import { Alert, Button } from "@/components/ui";
+import { FrameInset, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 
 // Nhiệm vụ: điểm danh 7 ngày, nhiệm vụ ngày/tuần, thành tựu. Tiến độ do server cộng khi trận kết thúc; bấm
 // Nhận thì server kiểm tra lại rồi cộng vàng.
@@ -24,7 +25,6 @@ import {
 } from "@/core";
 import { fetchProfile, sendProfileAction } from "../battle/online";
 import { PROFILE_ERROR } from "../battle/ProgressPanel";
-import { SceneLink } from "../SceneContext";
 import SpecialQuestsPanel from "./SpecialQuestsPanel";
 
 interface Row {
@@ -81,7 +81,7 @@ export default function QuestsScreen({
   if (!profile) {
     return (
       <Shell>
-        <p className="py-24 text-center text-foreground-secondary">
+        <p className="py-24 text-center text-on-wood-soft">
           {loadError ? "Không tải được hồ sơ, thử tải lại trang." : "Đang tải…"}
         </p>
       </Shell>
@@ -143,87 +143,59 @@ export default function QuestsScreen({
 
   return (
     <Shell>
-      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-black text-amber-100">Nhiệm vụ</h1>
-          <p className="text-sm text-muted">
-            {profile.gold} vàng{ttk && <> · {ttk.tickets} phiếu Tầm Tướng Ký</>}
-          </p>
-        </div>
-        <div className="flex gap-2 text-sm">
-          <SceneLink
-            scene="PLAYING"
-            className="rounded bg-white/10 px-3 py-1.5 hover:bg-white/15"
-          >
-            Chơi
-          </SceneLink>
-          <SceneLink
-            scene="PROFILE"
-            className="rounded bg-white/10 px-3 py-1.5 hover:bg-white/15"
-          >
-            Doanh Trại
-          </SceneLink>
-        </div>
-      </div>
-      {message && <p className="mb-3 text-sm text-rose-400">{message}</p>}
+      {ttk && (
+        <p className="text-right text-caption text-on-wood-soft">
+          <span className="font-bold text-title-on-wood">{ttk.tickets}</span> phiếu Tầm Tướng Ký
+        </p>
+      )}
+      {message && <Alert>{message}</Alert>}
 
-      <Card className="mb-4 flex flex-col gap-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="font-bold text-amber-200">Điểm danh</h2>
-          <Button variant="ornate"
-            type="button"
-            disabled={busy || checkedToday}
-            onClick={() => void act({ type: "checkIn" })}
-
-          >
-            {checkedToday ? "Hôm nay đã điểm danh" : "Điểm danh"}
-          </Button>
-        </div>
-        <ol className="grid grid-cols-7 gap-1.5 text-center text-xs">
+      <OrnateFrame level="raised" className="flex flex-col gap-3">
+        <SectionTitle
+          description="Điểm danh liền ngày để nhận nhiều hơn; bỏ một ngày thì chuỗi về ngày 1. Đủ 7 ngày thì bắt đầu chuỗi mới."
+          action={
+            <Button disabled={busy || checkedToday} onClick={() => void act({ type: "checkIn" })}>
+              {checkedToday ? "Hôm nay đã điểm danh" : "Điểm danh"}
+            </Button>
+          }
+        >
+          Điểm danh
+        </SectionTitle>
+        <ol className="grid grid-cols-4 gap-1.5 text-center sm:grid-cols-7">
           {CHECKIN_GOLD.map((g, i) => {
             const n = i + 1;
             const got = n < streak || (checkedToday && n === streak);
-            const today = n === streak;
+            const today = n === streak && !got;
             return (
               <li
                 key={n}
-                className={`flex flex-col items-center gap-0.5 rounded-lg border px-1 py-2 ${got ? "border-emerald-500/60 bg-emerald-500/15" : today ? "border-amber-400 bg-amber-500/15" : "border-white/10 bg-black/30"}`}
+                aria-current={today ? "step" : undefined}
+                className={`flex flex-col items-center gap-0.5 rounded-control border px-1 py-2 ${got ? "border-jade/60 bg-jade/10" : today ? "ui-choice is-selected" : "border-frame-line-soft bg-wood-inset"}`}
               >
-                <span className="text-muted">Ngày {n}</span>
-                <span className="font-bold text-amber-200">{g}</span>
-                <span className="text-[10px] text-muted">
+                <span className={`text-caption ${today ? "" : "text-on-wood-soft"}`}>Ngày {n}</span>
+                <span className={`font-bold ${today ? "" : "text-title-on-wood"}`}>{g}</span>
+                <span className={`text-caption ${got ? "text-jade" : today ? "" : "text-on-wood-soft"}`}>
                   {got ? "Đã nhận" : "vàng"}
                 </span>
-                {ttk && n === CHECKIN_GOLD.length && <span className="text-[10px] text-amber-300">+{TTK_TICKETS_CHECKIN7} phiếu</span>}
+                {ttk && n === CHECKIN_GOLD.length && <span className="text-caption text-frame-gold">+{TTK_TICKETS_CHECKIN7} phiếu</span>}
               </li>
             );
           })}
         </ol>
-        <p className="text-xs text-muted">
-          Điểm danh liền ngày để nhận nhiều hơn; bỏ một ngày thì chuỗi về ngày
-          1. Đủ 7 ngày thì bắt đầu chuỗi mới.
-        </p>
-      </Card>
+      </OrnateFrame>
 
       <SpecialQuestsPanel profile={profile} />
 
       <div className="grid gap-4 lg:grid-cols-3">
         {sections.map((sec) => (
-          <Card
-            key={sec.title}
-            className="flex flex-col gap-2"
-          >
-            <h2 className="font-bold text-amber-200">{sec.title}</h2>
-            <p className="text-xs text-muted">{sec.note}</p>
+          <OrnateFrame key={sec.title} className="flex flex-col">
+            <SectionTitle description={sec.note}>{sec.title}</SectionTitle>
             <ul className="flex flex-col gap-2">
               {sec.rows.map((r) => (
-                <li
-                  key={r.id}
-                  className="flex items-center gap-2 rounded-lg bg-black/30 p-2 text-sm"
-                >
+                <FrameInset key={r.id} className="flex items-center gap-2 p-2.5">
                   <div className="min-w-0 flex-1">
                     <p className="font-semibold">{r.title}</p>
-                    <div className="mt-1 flex items-center gap-2 text-xs text-foreground-secondary">
+                    <div className="mt-1 flex items-center gap-2 text-caption text-on-wood-soft">
                       <div
                         className="h-2 flex-1 overflow-hidden rounded-full bg-black/50"
                         role="meter"
@@ -233,7 +205,7 @@ export default function QuestsScreen({
                         aria-valuemax={r.target}
                       >
                         <div
-                          className="h-full bg-gradient-to-r from-amber-300 to-amber-600"
+                          className={`h-full ${r.done ? "bg-jade" : "bg-frame-gold"}`}
                           style={{ width: `${(100 * r.value) / r.target}%` }}
                         />
                       </div>
@@ -242,18 +214,19 @@ export default function QuestsScreen({
                       </span>
                     </div>
                   </div>
-                  <button
-                    type="button"
+                  <Button
+                    size="sm"
+                    variant={r.done && !r.claimed ? "secondary" : "ghost"}
                     disabled={busy || !r.done || r.claimed}
                     onClick={() => void act(r.action)}
-                    className={`w-20 shrink-0 rounded px-2 py-1.5 text-xs font-semibold ${r.claimed ? "bg-white/5 text-stone-500" : r.done ? "bg-amber-500 text-stone-950" : "bg-white/10 text-muted"}`}
+                    className={`w-24 shrink-0 text-caption ${r.done && !r.claimed ? "border-frame-gold text-title-on-wood" : "text-on-wood-soft"}`}
                   >
                     {r.claimed ? "Đã nhận" : `${r.gold} vàng${r.tickets ? ` +${r.tickets} phiếu` : ""}`}
-                  </button>
-                </li>
+                  </Button>
+                </FrameInset>
               ))}
             </ul>
-          </Card>
+          </OrnateFrame>
         ))}
       </div>
     </Shell>
@@ -261,9 +234,5 @@ export default function QuestsScreen({
 }
 
 function Shell({ children }: { children: React.ReactNode }) {
-  return (
-    <main className="ui-screen ui-screen--cool">
-      <div className="mx-auto max-w-6xl">{children}</div>
-    </main>
-  );
+  return <ModeScreen label="Nhiệm vụ">{children}</ModeScreen>;
 }
