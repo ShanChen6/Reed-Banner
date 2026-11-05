@@ -2,6 +2,9 @@
 
 ## 05/11/2026
 
+**Khai Lộ: quân nguyên tố và chế độ Cấp tốc**
+- Shan: thay quân vật phẩm bằng quân 7 nguyên tố có màu riêng cho dễ phân biệt; thêm chế độ tính giờ. Cấp tốc: mỗi màn 60 giây (+15 giây mỗi hệ mới), hết giờ là hết màn, giây dư khi dọn sạch thành điểm. Xem [GDD Khai Lộ](../02-game-modes/future/24-khai-lo-gdd.md#25-chế-độ).
+
 **Khai Lộ: mini game giải đố mới (DRAFT, có bản chơi thử)**
 - Shan muốn một mini game giải đố kiểu Block'D (xóa nhóm cùng màu) dùng ô ngọc của game, chốt tên **Khai Lộ**. Chạm một ô xóa cả khối cùng loại liền cạnh, ô rơi và cột dồn, không có ô mới; điểm n², quân lực, đạo cụ Lốc Phong và Sấm Sét. Xem [GDD Khai Lộ](../02-game-modes/future/24-khai-lo-gdd.md).
 
