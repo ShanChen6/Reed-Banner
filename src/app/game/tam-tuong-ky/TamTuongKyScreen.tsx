@@ -480,6 +480,11 @@ const NODE_ART: ReadonlySet<NodeId> = new Set([
   "mat.dew",
   "mat.estuary",
   "mat.forgedIron",
+  "mat.fortress",
+  "mat.gourd",
+  "mat.grain",
+  "mat.granary",
+  "mat.herbs",
   "mat.hoaLu",
 ]);
 
