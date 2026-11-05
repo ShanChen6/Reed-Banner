@@ -45,6 +45,8 @@ export interface OnlineResponse {
       readonly rank: number | null;
     };
     readonly arena?: ArenaResult;
+    /** Trận cuối nhiệm vụ nhân vật đặc biệt: nhân vật đã gia nhập chưa. */
+    readonly specialQuest?: { readonly id: string; readonly joined: boolean };
   };
   /** Giờ server lúc trả lời (ms). */
   readonly now: number;
@@ -96,6 +98,8 @@ export function createOnline(input: {
   daily?: true;
   /** Đấu trường: đánh đối thủ thứ mấy trong các đối thủ đang bày. */
   arena?: number;
+  /** Trận cuối nhiệm vụ nhân vật đặc biệt (id nhân vật). */
+  specialQuest?: string;
 }): Promise<OnlineResponse> {
   return call("/api/battles", { method: "POST", body: JSON.stringify(input) });
 }

@@ -55,6 +55,7 @@ import {
   spiritHealMultiplier,
   whirlStep,
   raidBossById,
+  specialQuestById,
   settleCampaignScenario,
   storyNodeById,
   missionCopy,
@@ -100,6 +101,7 @@ import {
   EFFECT_NAME,
   ERROR_TEXT,
   gearText,
+  passiveText,
   GOOD_EFFECTS,
   TILE_NAME,
   SPECIAL_NAME,
@@ -124,6 +126,7 @@ import {
 import { GearIcon } from "../art/gear";
 import { Portrait } from "../art/portraits";
 import { SkillIcon } from "../art/skills";
+import { PassiveIcon, ragePassiveId } from "../art/passives";
 import SurvivalBreakScreen from "../survival/SurvivalBreakScreen";
 import { BoardCrest, TileArt } from "../art/tiles";
 import ProgressPanel from "./ProgressPanel";
@@ -297,6 +300,8 @@ interface Outcome {
   readonly survival?: SurvivalResult;
   readonly daily?: { readonly score: DailyScore; readonly rank: number | null };
   readonly arena?: ArenaResult;
+  /** Trận cuối nhiệm vụ nhân vật đặc biệt: nhân vật đã gia nhập chưa. */
+  readonly specialQuest?: { readonly id: string; readonly joined: boolean };
 }
 
 function demoDrop(
@@ -556,6 +561,7 @@ function FighterCard({
   comboTurns, comboSource, comboTarget,
   leader,
   rage,
+  rageTurns = 0,
   active,
   selectable,
   targetable,
@@ -567,6 +573,8 @@ function FighterCard({
   comboTurns?: number; comboSource?: string; comboTarget?: string;
   leader: boolean;
   rage: number | null;
+  /** Số lượt còn lại của bị động thủ lĩnh khi đầy Nộ (chỉ thẻ thủ lĩnh). */
+  rageTurns?: number;
   active: boolean;
   selectable: boolean;
   targetable: boolean;
@@ -680,13 +688,23 @@ function FighterCard({
           <Bar label="Nộ" value={rage} max={100} color="bg-orange-500" />
         )}
       </div>
-      {(fighter.effects.length > 0 || fighter.comboReady) && (
+      {(fighter.effects.length > 0 || fighter.comboReady || rageTurns > 0) && (
         <div className="mt-1.5 flex flex-wrap gap-1">
+          {rageTurns > 0 && (
+            <span
+              className="inline-flex items-center gap-1 rounded bg-orange-600/40 px-1 py-0.5 text-[10px]"
+              title={`Bị động khi đầy Nộ · ${passiveText(fighter.element)} · còn ${rageTurns} lượt`}
+            >
+              <PassiveIcon id={ragePassiveId(fighter.element)} name={PASSIVES[fighter.element].name} className="size-3.5" />
+              {PASSIVES[fighter.element].name} · {rageTurns}
+            </span>
+          )}
           {fighter.comboReady && fighter.comboPassive && (
             <span
-              className={`rounded px-1 py-0.5 text-[10px] ${comboBlocked ? "bg-zinc-600/50" : "bg-amber-600/40"}`}
+              className={`inline-flex items-center gap-1 rounded px-1 py-0.5 text-[10px] ${comboBlocked ? "bg-zinc-600/50" : "bg-amber-600/40"}`}
               title={`Do ${comboSource} mở${comboTarget ? ` · mục tiêu ${comboTarget}` : ""} · ${comboTurns ? `${comboTurns} lượt thường kế tiếp` : "lượt hiện tại"}. Chọn hành động để tận dụng.`}
             >
+              <PassiveIcon id={fighter.comboPassive} name={COMBO_PASSIVES[fighter.comboPassive].name} className="size-3.5" />
               {COMBO_PASSIVES[fighter.comboPassive].name}
               {comboBlocked ? " · bị chặn" : ""}
             </span>
@@ -763,6 +781,7 @@ export default function DemoGame({
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   /** Đánh trùm: sứ quân của trận online đang chơi. */
   const [raidBoss, setRaidBoss] = useState<string | null>(null);
+  const [specialQuestId, setSpecialQuestId] = useState<string | null>(null);
   /** Campaign V2: mục tiêu nhiệm vụ (có thể xong trước khi phân thắng bại, ví dụ cầm cự đủ lượt). */
   const [scenario, setScenario] = useState<CampaignScenarioTag | null>(null);
   const [destinyFloorNo, setDestinyFloorNo] = useState<number | null>(null);
@@ -1660,6 +1679,7 @@ export default function DemoGame({
       );
     seq.current = res.view.seq;
     setRaidBoss(res.view.raidBoss ?? null);
+    setSpecialQuestId(res.view.specialQuest ?? null);
     setScenario(res.view.campaignScenario ?? null);
     setDestinyFloorNo(res.view.destiny?.floor ?? null);
     setExpeditionMatch(res.view.expedition !== undefined);
@@ -1806,6 +1826,7 @@ export default function DemoGame({
               comboTarget={f.comboReady?.target ? state.sides[f.comboReady.target.side].fighters[f.comboReady.target.fighter]?.name : undefined}
               leader={own.leader === i}
               rage={own.leader === i ? own.rage : null}
+              rageTurns={own.leader === i ? own.passiveTurns : 0}
               active={isActor}
               selectable={canPick && !aim}
               targetable={!!target && aimMark === i && isAlive(f)}
@@ -2182,6 +2203,15 @@ export default function DemoGame({
                         ”
                       </p>
                     )}
+                    {specialQuestId && specialQuestById(specialQuestId) && (
+                      <p className="max-w-sm text-center text-sm text-amber-100 italic">
+                        {companionById(specialQuestId)?.name}: “
+                        {state.winner === PLAYER
+                          ? specialQuestById(specialQuestId)!.lines.win
+                          : specialQuestById(specialQuestId)!.lines.lose}
+                        ”
+                      </p>
+                    )}
                     {(!online || outcome) && (
                       <p className="text-sm">
                         {drop ? (
@@ -2270,6 +2300,11 @@ export default function DemoGame({
                             .{outcome.survival.newBest && " Kỷ lục mới!"}
                           </p>
                         )}
+                        {outcome.specialQuest?.joined && (
+                          <p className="font-semibold text-amber-300">
+                            {fighterName(outcome.specialQuest.id)} gia nhập đội ở cấp 1!
+                          </p>
+                        )}
                         {outcome.raid?.firstClear && (
                           <p className="font-semibold text-amber-300">
                             Thắng {RAID_TIER_INFO[outcome.raid.tier].name} lần
@@ -2340,6 +2375,14 @@ export default function DemoGame({
                           className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
                         >
                           Về sinh tồn
+                        </SceneLink>
+                      )}
+                      {specialQuestId && (
+                        <SceneLink
+                          scene="QUESTS"
+                          className="rounded bg-amber-500 px-4 py-2 font-semibold text-stone-950"
+                        >
+                          Về nhiệm vụ
                         </SceneLink>
                       )}
                       {raidBoss && (

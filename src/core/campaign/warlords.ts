@@ -5,7 +5,7 @@
 // Thoại là lời game sáng tác cho trận Đánh trùm (chỉ 6 sứ quân bị đánh dẹp dùng, raids.ts), không phải lời nhân vật
 // lịch sử.
 
-import { BASE_STATS } from "../roster";
+import { BASE_STATS, companionById } from "../roster";
 import {
   professionSkills,
   signatureOf,
@@ -15,7 +15,7 @@ import {
 } from "../battle";
 import type { Difficulty } from "../ai";
 import { STANDARD_WEIGHTS, type SpawnWeights } from "../board";
-import { buildCampaignLeader, leveledFoe } from "../progress";
+import { leveledFoe } from "../progress";
 import type { CampaignFactionId } from "./factions";
 
 export interface EncounterFoe {
@@ -98,6 +98,12 @@ export const HOME_RULE: Readonly<Record<Element, string>> = {
 
 /** Trùm có thêm chừng này lần máu. */
 export const BOSS_HP = 1.5;
+
+/**
+ * Hệ số Máu và Công của sứ quân làm địch. Bộ 10 kỹ năng (giống khi người chơi dùng) yếu hơn preset cũ, nên
+ * bù để tỉ lệ qua màn chiến dịch về gần trước khi đổi (sim scripts/campaign-balance.ts, Shan chốt 04/11/2026).
+ */
+export const WARLORD_FOE_POWER = 1.12;
 
 const hero = (
   id: string,
@@ -377,18 +383,30 @@ export function encounterFighter(
   level: number,
 ): FighterConfig {
   if (foe.hero) {
-    const kit = buildCampaignLeader(level, foe.element, foe.profession, foe.id);
-    // Sứ quân luôn mang chiêu riêng (ô 5), kể cả khi cấp chưa tới mốc mở ô 5, ở cấp kỹ năng cao nhất trong bộ.
+    // Sứ quân làm địch dựng y như khi người chơi dùng (bộ 6 chủ động + 4 bị động, chiêu riêng ở ô 4).
+    const companion = companionById(foe.id);
+    if (!companion) throw new RangeError(`Sứ quân thiếu trong danh sách nhân vật: ${foe.id}`);
+    const kit = leveledFoe(companion, level);
+    // Sứ quân luôn mang chiêu riêng, kể cả khi cấp chưa mở ô 4, ở cấp kỹ năng cao nhất trong bộ.
     const sig = signatureOf(foe.id);
     const levels = kit.skillLevels ?? {};
     const skills =
       sig && !kit.skills!.includes(sig.id)
         ? [...kit.skills!, sig.id]
         : kit.skills!;
-    const skillLevels = sig
-      ? { ...levels, [sig.id]: Math.max(1, ...Object.values(levels)) }
-      : levels;
-    return { ...kit, skills, skillLevels, id: foe.id, name: foe.name };
+    const skillLevels =
+      sig && !kit.skills!.includes(sig.id)
+        ? { ...levels, [sig.id]: Math.max(1, ...Object.values(levels)) }
+        : levels;
+    return {
+      ...kit,
+      maxHp: Math.round(kit.maxHp * WARLORD_FOE_POWER),
+      atk: Math.round(kit.atk * WARLORD_FOE_POWER),
+      skills,
+      skillLevels,
+      id: foe.id,
+      name: foe.name,
+    };
   }
   const base: FighterConfig = {
     id: foe.id,

@@ -13,7 +13,6 @@ import {
   HOME_TERRAIN,
   legacyHeroSkills,
   characterSkills,
-  legacyElementSkills,
   newProfile,
   parseProfile,
   profileTeam,
@@ -56,14 +55,16 @@ describe("danh mục 12 sứ quân", () => {
     }
   });
 
-  it("sứ quân có bộ kỹ năng theo nguyên tố như nhân vật chính (ô 5 là chiêu riêng)", () => {
-    const tran = warlordEncounter("tranLam")!;
-    const lv20 = warlordLeader(tran, 20);
-    assert.deepEqual(
-      lv20.skills,
-      legacyHeroSkills(tran.foes[0]!.element, "tranLam").map((s) => s.id),
-    );
-    assert.equal(lv20.name, "Trần Lãm");
+  it("sứ quân làm địch dùng đúng bộ kỹ năng như khi người chơi dùng (ô 4 là chiêu riêng, có bị động)", () => {
+    for (const w of WARLORD_ENCOUNTERS) {
+      const f = w.foes[0]!;
+      const leader = warlordLeader(w, 30);
+      const kit = characterSkills(f.profession, f.element, f.id);
+      assert.deepEqual(leader.skills, kit.map((s) => s.id), f.id);
+      assert.equal(kit.find((s) => s.slot === 4)?.id, signatureOf(f.id)!.id, f.id);
+      assert.ok((leader.chasePassives ?? []).length > 0, f.id);
+    }
+    assert.equal(warlordLeader(warlordEncounter("tranLam")!, 20).name, "Trần Lãm");
   });
 });
 
@@ -152,7 +153,7 @@ describe("tướng lịch sử", () => {
 });
 
 describe("chiêu riêng", () => {
-  it("sứ quân luôn mang chiêu riêng thay ô 5, kể cả khi cấp chưa mở ô 5", () => {
+  it("sứ quân luôn mang chiêu riêng ở ô 4, kể cả khi cấp chưa mở ô 4", () => {
     const warlords = WARLORD_ENCOUNTERS.map((w) => w.foes[0]!);
     assert.equal(new Set(warlords.map((f) => f.id)).size, 12);
     for (const f of warlords) {
@@ -161,8 +162,8 @@ describe("chiêu riêng", () => {
       assert.equal(sig.slot, 4);
       const fighter = encounterFighter(f, 2);
       assert.ok(fighter.skills!.includes(sig.id), f.id);
-      const slot5 = legacyElementSkills(f.element).find((d) => d.slot === 5)!;
-      assert.ok(!encounterFighter(f, 25).skills!.includes(slot5.id), f.id);
+      const kit = new Set(characterSkills(f.profession, f.element, f.id).map((d) => d.id));
+      assert.ok(encounterFighter(f, 25).skills!.every((id) => kit.has(id)), f.id);
     }
   });
 
