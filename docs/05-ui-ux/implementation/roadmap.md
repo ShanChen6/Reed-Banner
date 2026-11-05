@@ -152,8 +152,8 @@ Shan duyệt đề xuất đồng bộ sau đợt kiểm kê 20 màn ngày 05/11
 
 | Bước | Phạm vi |
 | --- | --- |
-| UI-S1 | Nền tảng: token, nút chính/phụ, `Tabs`, `ChoiceChip`, `OrnateFrame`, `ModeScreen`, `ModeBanner`, trang `/demo/ui` |
-| UI-S2 | Màn cần đăng nhập dùng chung: banner, luật và phần thưởng chính, nút "Đăng nhập để chơi" |
+| UI-S1 | (PR #295, đã merge) Nền tảng: token, nút chính/phụ, `Tabs`, `ChoiceChip`, `OrnateFrame`, `ModeScreen`, `ModeBanner`, trang `/demo/ui` |
+| UI-S2 | Màn cần đăng nhập dùng chung (`LoginGate` + `src/app/game/modeInfo.ts`): banner, luật và phần thưởng chính, nút "Đăng nhập để chơi" |
 | UI-S3 | Nhiệm vụ, Xếp hạng, Đăng nhập/Đăng ký/Tài khoản |
 | UI-S4 | Khai Lộ, Tháp Thí Luyện, Tháp Thiên Mệnh |
 | UI-S5 | Cửa Hàng thành trang thường; thẻ tướng chung với Doanh Trại; tách cửa hàng khỏi sảnh trận |
