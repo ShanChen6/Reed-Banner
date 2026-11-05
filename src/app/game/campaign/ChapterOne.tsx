@@ -356,7 +356,7 @@ function BattlePrep({
         </p>
       )}
       {labels.length > 1 && (
-        <ol className="flex flex-wrap gap-1 text-xs" aria-label="Các phase">
+        <ol className="flex flex-wrap gap-1 text-xs" aria-label="Các giai đoạn">
           {labels.map((label, i) => (
             <li
               key={label}
@@ -398,7 +398,7 @@ function BattlePrep({
         </p>
         {labels.length > 1 && (
           <p className="mt-1 text-xs text-frame-gold/80">
-            Mỗi phase là một trận. Qua phase chưa hoàn thành nhiệm vụ; thua thì
+            Mỗi giai đoạn là một trận. Qua giai đoạn chưa hoàn thành nhiệm vụ; thua thì
             đánh lại đúng giai đoạn đó. Lương còn lại mang sang giai đoạn sau.
           </p>
         )}
