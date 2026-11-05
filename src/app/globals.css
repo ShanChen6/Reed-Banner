@@ -1263,3 +1263,54 @@
   .barracks .barracks-art { animation: none; }
   .barracks * { transition: none !important; }
 }
+
+/* Khai Lộ: ô ngọc đặt tuyệt đối, đổi vị trí bằng transform để ô rơi/dồn cột có hoạt ảnh. */
+.kl-board {
+  background: radial-gradient(ellipse at 50% 40%, #233042 0%, #141c27 80%);
+}
+.kl-tile {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--kl-cell);
+  height: var(--kl-cell);
+  padding: 2px;
+  transition: transform 0.24s cubic-bezier(0.3, 0.7, 0.4, 1), filter 0.12s;
+  pointer-events: none;
+}
+.kl-board[data-peek] .kl-tile:not([data-hl]):not(.kl-ghost) {
+  filter: brightness(0.55) saturate(0.7);
+}
+.kl-tile[data-hl] {
+  filter: brightness(1.2) drop-shadow(0 0 6px #e8c477);
+}
+.kl-tile[data-hl][data-tool="thunder"] {
+  filter: brightness(1.15) drop-shadow(0 0 6px #ff8a5c);
+}
+.kl-tile[data-hl][data-tool="whirl"] {
+  filter: brightness(1.15) drop-shadow(0 0 6px #8fe3d4);
+}
+.kl-ghost {
+  animation: kl-pop 0.3s ease-out forwards;
+}
+@keyframes kl-pop {
+  to {
+    opacity: 0;
+    scale: 1.35;
+  }
+}
+.kl-hit {
+  background: transparent;
+  cursor: pointer;
+}
+.kl-hit:disabled {
+  cursor: default;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kl-tile {
+    transition: none;
+  }
+  .kl-ghost {
+    animation-duration: 0.01s;
+  }
+}
