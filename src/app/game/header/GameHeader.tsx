@@ -18,7 +18,8 @@ export default function GameHeader({ scene, account }: { scene: Scene; account: 
       <HeaderBackdrop />
       {/* Ba cột, cột giữa luôn ở đúng giữa thanh. Lề hai bên từ md chừa chỗ cho mặt trống của hai góc hoa văn. */}
       <div className="relative mx-auto grid h-full grid-cols-[1fr_auto_1fr] items-center gap-2 px-2 sm:px-4 md:gap-3 md:px-16 xl:px-[4.5rem]">
-        <HomeButton current={scene === "MENU"} />
+        {/* Ở màn chính, tên giữa đã là "Chiến trường" nên không hiện thêm nút về; ô trái để trống giữ bảng tên ở giữa. */}
+        {scene === "MENU" ? <span /> : <HomeButton />}
         <SceneTitle title={SCENE_TITLE[scene]} />
         <div className="flex min-w-0 items-center justify-end gap-1.5 md:gap-3">
           <HeaderGold scene={scene} />
@@ -47,13 +48,12 @@ function HeaderBackdrop() {
   );
 }
 
-/** Trái: về Chiến trường (màn chính). Ở màn chính thì nút sáng lên như đang chọn. Dưới md chỉ còn icon. */
-function HomeButton({ current }: { current: boolean }) {
+/** Trái: về Chiến trường (màn chính); không hiện ở chính màn đó. Dưới md chỉ còn icon. */
+function HomeButton() {
   return (
     <nav aria-label="Điều hướng" className="flex min-w-0 justify-self-start">
       <SceneLink
         scene="MENU"
-        aria-current={current ? "page" : undefined}
         title="Về Chiến trường"
         className="game-header-btn game-header-chip flex h-10 min-w-11 shrink-0 items-center justify-center gap-2 rounded-md px-2.5 font-serif font-semibold whitespace-nowrap md:px-4"
       >
