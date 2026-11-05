@@ -4,6 +4,7 @@
 // CAMP-08.04. Mọi luật ở @/core, server kiểm tra lại.
 
 import { useEffect, useState } from "react";
+import { Alert } from "@/components/ui";
 import {
   raidBossById,
   raidSetup,
@@ -40,7 +41,7 @@ export default function CampaignScreen() {
   if (!profile) {
     return (
       <Shell>
-        <p className="py-24 text-center text-foreground-secondary">
+        <p className="py-24 text-center text-on-wood-soft">
           {loadError
             ? "Không tải được hồ sơ, thử tải lại trang."
             : "Đang tải chiến dịch…"}
@@ -98,7 +99,11 @@ export default function CampaignScreen() {
         onAction={(a) => void act(a)}
         busy={busy}
       />
-      {message && <p className="mt-2 text-sm text-rose-400">{message}</p>}
+      {message && (
+        <Alert tone="error" className="mt-2 p-3 text-sm">
+          {message}
+        </Alert>
+      )}
 
       <RaidHall
         profile={profile}
