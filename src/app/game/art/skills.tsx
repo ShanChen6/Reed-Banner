@@ -530,6 +530,14 @@ const SKILL_ART = new Set([
   "dbl_quanSu_kim", "dbl_quanSu_moc", "dbl_quanSu_thuy", "dbl_quanSu_hoa", "dbl_quanSu_tho", "dbl_quanSu_loi", "dbl_quanSu_phong",
   "dbl_xaThu_kim", "dbl_xaThu_moc", "dbl_xaThu_thuy", "dbl_xaThu_hoa", "dbl_xaThu_tho", "dbl_xaThu_loi", "dbl_xaThu_phong",
   "dbl_satThu_kim", "dbl_satThu_moc", "dbl_satThu_thuy", "dbl_satThu_hoa", "dbl_satThu_tho", "dbl_satThu_loi", "dbl_satThu_phong",
+  // Chiêu ô 4 riêng của tướng (Shan vẽ 05/11/2026). Tướng sĩ Lý Liệt, Hồ Lãng, Tống Tấn; Pháp sư Hà Vân, Đào Lam, Vũ Lôi, Chu Ngân, Liễu Yên; sứ quân Lữ Đường.
+  "xichHoaDoatKy", "langDaoTram", "loiDaoLienTram",
+  "hoaVuLieuNguyen", "bangHaPhongToa", "thienLoiGiangThe", "nganChamTanXa", "phongAnCuongLuu", "teGiangThuyTran",
+  // Binh lính Lê Thạch, Hoàng Mộc, Thái Hà, Trương Viêm, Ông Chấn, Mạnh Tường; sứ quân Nguyễn Khoan, Nguyễn Siêu.
+  "tranSonHoQuan", "reGiaGiuThanh", "thuyTraiLienHoan", "viemGiapHoDoanh", "chanLoiThietVe", "phongLuyHoKy",
+  "tamDaiKienThanh", "phuLietHoaLuy",
+  // Y sư Lục Diệp, Bạch Sương, Châu Ngọc, Bế Liên, Tiêu Minh.
+  "xuanMocVanSinh", "gioLanhTayUe", "kimChamDoMenh", "hauThoDuongNguyen", "loiChamKhoiTu",
 ]);
 
 /**
