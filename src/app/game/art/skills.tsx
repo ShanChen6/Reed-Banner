@@ -541,6 +541,8 @@ const SKILL_ART = new Set([
   // Mưu sĩ Tô Kim, Ninh Hỏa, Quách Ẩn, Nhan Trúc, Mã Nhạc, Từ Kinh, Bùi Phiêu; tướng lịch sử Lưu Cơ; sứ quân Ngô Xương Xí, Nguyễn Thủ Tiệp.
   "kimNganLyTan", "hoaThieuKhoLuong", "thuyDonLyGian", "trucDocMeHon", "doanDaoTuyetLuong", "kinhLoiDoatKhi", "phieuPhongLyGian",
   "doHoPhuLenh", "ngoGiaDiMuu", "tienDuDoatLuong",
+  // Quân sư Phùng Phong, Tạ Thạch, Nghiêm Thiết, Sầm Tuệ, Vi Triều, Tôn Diệm.
+  "phongVanBienTran", "batTranThachLuy", "thietTranPhaGiap", "thanhLamBayTran", "trieuDangVayThanh", "hoaCongLienKe",
 ]);
 
 /**
