@@ -449,7 +449,7 @@ function TurnClock({
   const left = seconds ?? total;
   const urgent = mine && seconds !== null && left <= 10;
   const label = waiting
-    ? "Đang chờ server…"
+    ? "Đang chờ máy chủ…"
     : mine
       ? extra
         ? "Lượt thêm của bạn"
@@ -1885,7 +1885,7 @@ export default function DemoGame({
                       ? "Bạn thắng!"
                       : "Tianwu thắng"
                     : pending
-                      ? "Đang chờ server…"
+                      ? "Đang chờ máy chủ…"
                       : playerTurn
                         ? state.turn.extra
                           ? "Lượt thêm của bạn"
@@ -2572,7 +2572,7 @@ export default function DemoGame({
             profile={{ ...profile, element }}
             teamIds={[MAIN_ID, ...profile.team]}
             locked={started && state.winner === null}
-            storage={online ? "lưu trên server" : "lưu trên trình duyệt này"}
+            storage={online ? "lưu trên máy chủ" : "lưu trên trình duyệt này"}
             onAction={profileAction}
             onReset={online ? undefined : () => changeProfile(newProfile())}
           />

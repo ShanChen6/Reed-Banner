@@ -1,6 +1,6 @@
 "use client";
 
-import { Select as UISelect, Button } from "@/components/ui";
+import { Select as UISelect, Button, buttonVariants, choiceVariants } from "@/components/ui";
 
 // Túi đồ và 9 ô trang bị của Chơi thử (Tiến trình) và Chơi online, kèm cửa hàng trang bị. Luật nằm trong
 // @/core (applyProfileAction); ở đây chỉ hiển thị và gửi thao tác, giống ProgressPanel.
@@ -219,7 +219,7 @@ export default function GearPanel({
             role="tab"
             aria-selected={character === id}
             onClick={() => setWho(id)}
-            className={`rounded px-2 py-0.5 ${character === id ? "bg-amber-500 font-semibold text-stone-950" : "bg-black/15"}`}
+            className={choiceVariants({ size: "sm", className: "min-h-8 px-2 text-xs" })}
           >
             {nameOf(id)}
           </button>
@@ -296,7 +296,7 @@ export default function GearPanel({
                   aria-pressed={on}
                   onClick={() => toggle(it.id)}
                   title={`${gearText(it)}${worn ? ` · ${nameOf(worn)} đang mặc` : ""}`}
-                  className={`rounded ${on ? "ring-2 ring-amber-400" : ""}`}
+                  className={`rounded ${on ? "ring-2 ring-frame-gold" : ""}`}
                 >
                   <GearIcon
                     slot={it.slot}
@@ -308,7 +308,7 @@ export default function GearPanel({
                   />
                 </button>
                 {worn && (
-                  <span className="pointer-events-none absolute -top-1 -right-1 rounded-full bg-emerald-600 px-1 text-[9px] text-white">
+                  <span className="pointer-events-none absolute -top-1 -right-1 rounded-full bg-jade px-1 text-[9px] font-bold text-ink">
                     {nameOf(worn).split(" ").at(-1)![0]}
                   </span>
                 )}
@@ -319,7 +319,7 @@ export default function GearPanel({
       )}
 
       {items.length > 0 && (
-        <div className="mt-2 flex flex-wrap items-center gap-1.5 rounded bg-black/10 p-1.5">
+        <div className="mt-2 flex flex-wrap items-center gap-1.5 rounded border border-frame-line-soft bg-black/10 p-1.5">
           {one ? (
             <>
               <span className="min-w-0 flex-1">
@@ -341,7 +341,7 @@ export default function GearPanel({
                   onClick={() =>
                     commit({ type: "equip", character, item: one.id })
                   }
-                  className="rounded bg-emerald-600 px-2 py-0.5 text-white disabled:opacity-40"
+                  className={buttonVariants({ size: "sm", className: "min-h-8 px-2 text-xs" })}
                 >
                   Mặc cho {nameOf(character)}
                 </button>
@@ -353,7 +353,7 @@ export default function GearPanel({
                   onClick={() =>
                     commit({ type: "unequip", character: wearer, item: one.id })
                   }
-                  className="rounded bg-black/20 px-2 py-0.5 disabled:opacity-40"
+                  className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 px-2 text-xs" })}
                 >
                   Tháo
                 </button>
@@ -362,7 +362,7 @@ export default function GearPanel({
                 type="button"
                 disabled={disabled}
                 onClick={() => commit({ type: "sell", item: one.id })}
-                className="rounded bg-black/20 px-2 py-0.5 disabled:opacity-40"
+                className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 px-2 text-xs" })}
               >
                 Bán +{SELL_GOLD[one.tier]}
               </button>
@@ -392,7 +392,7 @@ export default function GearPanel({
           <button
             type="button"
             onClick={() => setPicked([])}
-            className="rounded bg-black/20 px-2 py-0.5"
+            className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 px-2 text-xs" })}
           >
             Bỏ chọn
           </button>
