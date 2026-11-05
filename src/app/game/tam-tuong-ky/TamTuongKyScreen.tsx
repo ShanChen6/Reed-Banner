@@ -495,11 +495,15 @@ const NODE_ART: ReadonlySet<NodeId> = new Set([
   "mat.road",
   "mat.seal",
   "mat.storm",
+  "mat.village",
+  "mat.waterOrb",
+  "mat.weapon",
+  "role.hybrid",
 ]);
 
 /**
  * Tranh của yếu tố, nếu có. Không có tranh riêng thì tri thức sơ học và node vai trò (tri thức nghề nhuộm hệ) dùng tranh
- * của nghề ở public/art/tam-tuong-ky/nghe/<nghề>.webp; vai trò dung hợp chưa có tranh.
+ * của nghề ở public/art/tam-tuong-ky/nghe/<nghề>.webp.
  */
 function nodeArt(node: CatalogNode): string | undefined {
   if (NODE_ART.has(node.id)) return `/art/tam-tuong-ky/yeu-to/${node.id}.webp`;
