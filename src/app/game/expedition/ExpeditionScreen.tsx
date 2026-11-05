@@ -954,7 +954,7 @@ function MissionPanel({ run, scenario, nameOf }: { run: Omit<ExpeditionRun, "see
         {row(tide, "Cửa nước")}
         {market && <li className="text-xs text-muted">Chợ: {market}</li>}
       </ul>
-      <p className="mt-2 text-xs text-muted">Chiếm thành sau khi rút dân và cắt viện là Toàn thắng. Chưa chiếm được thành mà đã làm đủ hai việc đó vẫn tính là Giữ dân.</p>
+      <p className="mt-2 text-xs text-muted">Chiếm thành sau khi rút dân và cắt viện là Toàn thắng. Chưa chiếm được thành mà đã làm đủ hai việc đó là Giữ dân: có ít vàng nhưng chưa tính qua bậc.</p>
       {run.log && run.log.length > 0 && (
         <ol className="mt-3 space-y-0.5 border-t border-white/10 pt-2 text-xs text-foreground-secondary">
           {run.log.map((line, i) => <li key={i}>{line}</li>)}
@@ -993,6 +993,9 @@ function ResultView({ run, map, result, onNew }: { run: Omit<ExpeditionRun, "see
             {result.bonusItem && ` · thưởng toàn thắng: ${SLOT_NAME[result.bonusItem.slot]} phẩm ${TIER_COLOR_NAME[result.bonusItem.tier]}`}
             {result.soldFor > 0 && ` · túi đầy, món thưởng bán được ${result.soldFor} vàng`}
           </p>
+          {!result.won && result.ending && (
+            <p className="mt-1 text-xs text-muted">Giữ dân chưa tính là qua bậc: phải chiếm thành mới mở bậc sau.</p>
+          )}
         </>
       ) : (
         <p className="mt-3 text-sm text-foreground-secondary">{reason} Vàng, kinh nghiệm và đồ rơi của từng trận vẫn được giữ.</p>

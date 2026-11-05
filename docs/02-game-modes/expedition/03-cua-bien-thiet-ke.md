@@ -157,13 +157,16 @@ bị phá là đường duy nhất tới một ô, nên mọi tổ hợp đườ
 
 - Thay luật sao chung (chiếm thành · trong chuẩn · không thua) **chỉ ở Cửa Biển**, vì ở đây việc phụ mới là thử thách.
   Năm sa bàn khác giữ luật cũ.
-- "Giữ dân" tính là **thắng** để mở bậc kế tiếp. Lý do: người chơi đã làm được việc khó nhất về điều quân; cho họ đi tiếp.
+- "Giữ dân" **không** tính là qua bậc, không mở bậc kế tiếp (Shan chốt 05/11/2026, thay quyết định cũ). Lý do: làm xong
+  hai việc phụ rồi rút quân thì lách được thành đích mà vẫn lên bậc.
 - `bestDays` chỉ ghi khi chiếm được trại.
 
 ### 4.2 Thưởng
 
 - Mỗi trận: như trận viễn chinh hiện tại (kinh nghiệm, vàng và sách nhặt trên bàn, đồ rơi theo độ khó).
-- Kết thúc: vàng theo bậc như hiện tại, nhân hệ số theo kết thúc: Toàn thắng ×1,5, Chiếm trại ×1, Giữ dân ×0,6.
+- Kết thúc: vàng theo bậc như hiện tại, nhân hệ số theo kết thúc: Toàn thắng ×1,5, Chiếm trại ×1, Giữ dân ×0,6. Giữ dân
+  luôn lấy mức vàng thắng lại (`repeatGold`), không lấy mức thắng lần đầu, vì không ghi qua bậc nên nếu lấy mức lần đầu
+  thì mỗi lượt Giữ dân đều được vàng lần đầu.
 - Món trang bị lần đầu mỗi bậc: chỉ khi Chiếm trại hoặc Toàn thắng. Toàn thắng lần đầu ở một bậc cho thêm một món phẩm
   cao hơn một nấc (lấy lại `expeditionRewardItem`, phẩm +1, tối đa Cam).
 - Không thêm tài nguyên mới ngoài máu, lương và các cờ nhiệm vụ (đề xuất của Claude ở mục 11 bản đề xuất).
@@ -274,7 +277,8 @@ là người đứng đầu tiên không phải công trình.
 
 ## 9. Shan đã chốt (04/11/2026)
 
-1. **Sao:** Shan không đặt nặng cách tính sao; dùng đúng bảng mục 4.1, kể cả "Giữ dân" mở bậc kế tiếp.
+1. **Sao:** Shan không đặt nặng cách tính sao; dùng đúng bảng mục 4.1. ~~"Giữ dân" mở bậc kế tiếp~~: Shan đổi ngày
+   05/11/2026 sau bản review, Giữ dân không mở bậc và chỉ có vàng thắng lại × 0,6 (mục 4.1, 4.2).
 2. **Thưởng:** giữ hệ số ×1,5 / ×1 / ×0,6 và món thêm khi Toàn thắng lần đầu (mục 4.2), Shan không đổi.
 3. **Giữ phản công Chợ** trong bản đầu (mục 3.6).
 4. **Không thêm tài nguyên mới** (câu 12.3); việc phụ chỉ đổi thưởng và kết thúc, không khóa bậc (câu 12.4).
