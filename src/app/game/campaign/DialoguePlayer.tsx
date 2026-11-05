@@ -8,6 +8,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import type { Element, Profession } from "@/core";
 import { useAudio } from "../audio/AudioProvider";
+import { buttonVariants } from "@/components/ui";
 import { Portrait } from "../art/portraits";
 import { BasisBadge } from "./StoryBeats";
 import {
@@ -46,8 +47,7 @@ function writeViewed(map: ViewedMap) {
 }
 
 const FOCUS =
-  "focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1c140f] focus-visible:outline-none";
-const BTN = `min-h-11 rounded-lg px-3 text-sm sm:px-4 font-semibold disabled:cursor-not-allowed disabled:opacity-40 ${FOCUS}`;
+  "focus-visible:ring-2 focus-visible:ring-frame-gold focus-visible:ring-offset-2 focus-visible:ring-offset-wood-lo focus-visible:outline-none";
 
 function StagePortrait({
   speaker,
@@ -78,11 +78,11 @@ function StagePortrait({
           className={`size-16 sm:size-20 ${active ? "drop-shadow-[0_0_10px_#f2c14e88]" : ""}`}
         />
       ) : (
-        <span className="flex size-16 items-center justify-center rounded-full border-2 border-stone-500/60 bg-black/40 text-2xl text-stone-300 sm:size-20">
+        <span className="flex size-16 items-center justify-center rounded-full border-2 border-frame-line-soft bg-black/40 text-2xl text-on-wood-soft sm:size-20">
           {speaker.charAt(0).toUpperCase()}
         </span>
       )}
-      <figcaption className="max-w-28 truncate rounded bg-black/55 px-1.5 text-[11px] text-stone-100">
+      <figcaption className="max-w-28 truncate rounded bg-black/55 px-1.5 text-[11px] text-on-wood">
         {speaker}
       </figcaption>
     </figure>
@@ -95,28 +95,28 @@ function LineText({ line }: { line: DialogueLine }) {
     <>
       <div className="mb-1 flex flex-wrap items-center gap-1.5">
         {line.cinematic ? (
-          <span className="text-[10px] tracking-widest text-amber-300/80 uppercase">
+          <span className="text-kicker text-frame-gold">
             Cảnh dựng · game sáng tác
           </span>
         ) : (
           <BasisBadge basis={beat.basis} />
         )}
         {beat.speaker && (
-          <span className="text-xs text-stone-400">
+          <span className="text-xs text-on-wood-soft">
             thoại hư cấu, không phải trích dẫn sử
           </span>
         )}
       </div>
       {beat.speaker && (
-        <p className="text-sm font-bold text-amber-300">{beat.speaker}</p>
+        <p className="text-sm font-bold text-frame-gold">{beat.speaker}</p>
       )}
       <p
         className={
           beat.speaker
-            ? "text-base leading-relaxed text-amber-50"
+            ? "text-base leading-relaxed text-on-wood"
             : line.cinematic
-              ? "font-serif text-base leading-relaxed text-amber-50/90 italic"
-              : "text-base leading-relaxed text-stone-200 italic"
+              ? "font-serif text-base leading-relaxed text-on-wood/90 italic"
+              : "text-base leading-relaxed text-on-wood italic"
         }
       >
         {beat.speaker ? `“${beat.text}”` : beat.text}
@@ -151,15 +151,15 @@ function Backlog({
         aria-label="Nhật ký thoại"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.key === "Escape" && onClose()}
-        className="flex max-h-[80vh] w-full max-w-xl flex-col rounded-t-2xl border-2 border-[#8a6a3b] bg-[#2a1f19] text-stone-100 shadow-2xl sm:rounded-2xl"
+        className="flex max-h-[80vh] w-full max-w-xl flex-col rounded-t-2xl border-2 border-frame-line bg-wood text-on-wood shadow-2xl sm:rounded-2xl"
       >
         <div className="flex items-center justify-between border-b border-white/10 px-4 py-2">
-          <h2 className="font-bold text-amber-100">Nhật ký</h2>
+          <h2 className="font-bold text-title-on-wood">Nhật ký</h2>
           <button
             ref={closeRef}
             type="button"
             onClick={onClose}
-            className={`${BTN} bg-white/10 hover:bg-white/15`}
+            className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-11" })}
           >
             Đóng
           </button>
@@ -173,7 +173,7 @@ function Backlog({
                 aria-current={i === current ? "step" : undefined}
                 className={`w-full rounded-md border p-2 text-left text-sm ${FOCUS} ${
                   i === current
-                    ? "border-amber-300/70 bg-amber-500/10"
+                    ? "border-frame-gold/70 bg-frame-gold/10"
                     : "border-transparent bg-black/25 hover:bg-black/40"
                 }`}
               >
@@ -182,7 +182,7 @@ function Backlog({
             </li>
           ))}
         </ol>
-        <p className="border-t border-white/10 px-4 py-2 text-xs text-stone-400">
+        <p className="border-t border-white/10 px-4 py-2 text-xs text-on-wood-soft">
           Chỉ có những câu đã đọc. Chạm một câu để quay lại đó.
         </p>
       </div>
@@ -270,7 +270,7 @@ export default function DialoguePlayer({
   return (
     <section
       aria-label={label ?? "Thoại"}
-      className="flex flex-col gap-2 rounded-xl border border-amber-500/40 bg-cover bg-center p-3"
+      className="flex flex-col gap-2 rounded-xl border border-frame-line bg-cover bg-center p-3"
       style={{
         // Tranh nền sáng ở trên cho thấy cảnh, tối dần xuống khung chữ; ảnh chưa tải hay lỗi thì còn lớp nâu cuối.
         backgroundImage: `linear-gradient(#140d0914 0%, #140d0955 45%, #140d09e6 100%), url(${art}), radial-gradient(ellipse at top, #5b3a22 0%, #2a1b12 60%, #140d09 100%)`,
@@ -305,11 +305,11 @@ export default function DialoguePlayer({
         onClick={forward}
         className={`min-h-28 cursor-pointer rounded-lg border-2 p-3 ${FOCUS} ${
           line.cinematic
-            ? "border-amber-500/30 bg-gradient-to-b from-black/50 to-[#3a2a1c]/60"
+            ? "border-frame-line-soft bg-gradient-to-b from-black/50 to-[#3a2a1c]/60"
             : activeSide === "left"
-              ? "border-amber-500/50 bg-amber-950/50"
+              ? "border-frame-line bg-wood-lo/60"
               : activeSide === "right"
-                ? "border-sky-400/40 bg-sky-950/50"
+                ? "border-info/40 bg-wood-lo/60"
                 : "border-white/10 bg-black/40"
         }`}
       >
@@ -322,7 +322,7 @@ export default function DialoguePlayer({
           type="button"
           onClick={() => goTo(index - 1)}
           disabled={index === 0}
-          className={`${BTN} bg-white/10 hover:bg-white/15`}
+          className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-11" })}
         >
           ← Trước
         </button>
@@ -330,12 +330,12 @@ export default function DialoguePlayer({
           <button
             type="button"
             onClick={forward}
-            className={`${BTN} bg-amber-500 text-stone-950`}
+            className={buttonVariants({ size: "sm", className: "min-h-11" })}
           >
             {index < last ? "Tiếp →" : finishLabel}
           </button>
         )}
-        <span className="text-xs text-stone-400" aria-hidden>
+        <span className="text-xs text-on-wood-soft" aria-hidden>
           {index + 1}/{lines.length}
         </span>
         <span className="flex-1" />
@@ -343,7 +343,7 @@ export default function DialoguePlayer({
           <button
             type="button"
             onClick={() => goTo(viewed)}
-            className={`${BTN} bg-white/10 hover:bg-white/15`}
+            className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-11" })}
           >
             Bỏ qua thoại đã xem
           </button>
@@ -351,7 +351,7 @@ export default function DialoguePlayer({
         <button
           type="button"
           onClick={() => setBacklog(true)}
-          className={`${BTN} bg-white/10 hover:bg-white/15`}
+          className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-11" })}
         >
           Nhật ký
         </button>
