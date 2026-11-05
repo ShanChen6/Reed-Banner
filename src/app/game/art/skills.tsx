@@ -546,6 +546,8 @@ const SKILL_ART = new Set([
   // Xạ thủ Bạch Nỏ Lang, Thanh Lâm Xạ, Trấn Sơn Thạch; Sát thủ Độc Ảnh, Hàn Giang Khách, Xích Dạ, Địa Ẩn, Lôi Ảnh, Vô Ảnh.
   "rb_bnl_thietNoPhaThanh", "rb_tlx_lucTienTroiDuong", "rb066_tranSonHoTran",
   "rb070_ultimate", "rb071_ultimate", "rb072_ultimate", "rb073_ultimate", "rb074_ultimate", "rb075_ultimate",
+  // Nhân vật đặc biệt Minh Nguyệt: đủ 6 ô.
+  "mn_kimQuangPhaTran", "mn_thuyAnhXuyenLuu", "mn_hoaBoDoatMenh", "mn_vanTuongQuyNhat", "mn_thoAnTranTam", "mn_loiVanKhaiLo",
 ]);
 
 /**
