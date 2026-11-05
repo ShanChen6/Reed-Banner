@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { test } from "node:test";
 import { CHARACTER_SKILLS, DBL_ULTIMATES, ELEMENT_SKILLS, personalSkillOf, ROLE_SKILLS } from "../../src/core";
+import { SPECIAL_SKILL_SETS } from "../../src/core/battle/special-skills";
 import { REUSED_SKILL_ART, skillArt } from "../../src/app/game/art/skills";
 
 test("ô 2/6 hệ (element_<mã>) dùng lại ảnh hệ cũ của Đinh Bộ Lĩnh", () => {
@@ -64,5 +65,14 @@ test("chiêu ô 4 riêng Shan vẽ cho 47 tướng: ảnh trùng mã kỹ năng"
     assert.deepEqual(skillArt(def), { file: def.id }, character);
     assert.ok(existsSync(`public/art/skills/${def.id}.webp`), def.id);
     assert.equal(REUSED_SKILL_ART[def.id], undefined, def.id);
+  }
+});
+
+test("Đinh Ngọc: cả 6 chiêu có ảnh riêng", () => {
+  const set = SPECIAL_SKILL_SETS.dinhNgoc!;
+  assert.equal(set.length, 6);
+  for (const def of set) {
+    assert.deepEqual(skillArt(def), { file: def.id });
+    assert.ok(existsSync(`public/art/skills/${def.id}.webp`), def.id);
   }
 });
