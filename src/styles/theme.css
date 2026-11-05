@@ -141,6 +141,7 @@
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
   --color-frame-line: var(--frame-line);
+  --color-frame-line-soft: var(--frame-line-soft);
   --color-frame-gold: var(--frame-gold);
   --color-frame-bronze: var(--frame-bronze);
   --color-lacquer: var(--lacquer);
