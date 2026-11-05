@@ -49,12 +49,13 @@ test("28 chiêu ô 4 tướng dùng lại ảnh hệ cũ: đúng mã, có file, 
   }
 });
 
-test("chiêu ô 4 riêng Shan vẽ cho 32 tướng: ảnh trùng mã kỹ năng", () => {
+test("chiêu ô 4 riêng Shan vẽ cho 38 tướng: ảnh trùng mã kỹ năng", () => {
   const owners = [
     "lyLiet", "hoLang", "tongTan", "haVan", "daoLam", "vuLoi", "chuNgan", "lieuYen", "luDuong",
     "leThach", "hoangMoc", "thaiHa", "truongViem", "ongChan", "manhTuong", "nguyenKhoan", "nguyenSieu",
     "lucDiep", "bachSuong", "chauNgoc", "beLien", "tieuMinh",
     "toKim", "ninhHoa", "quachAn", "nhanTruc", "maNhac", "tuKinh", "buiPhieu", "luuCo", "ngoXuongXi", "nguyenThuTiep",
+    "phungPhong", "taThach", "nghiemThiet", "samTue", "viTrieu", "tonDiem",
   ];
   for (const character of owners) {
     const def = personalSkillOf(character);
