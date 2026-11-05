@@ -451,6 +451,11 @@ const NODE_ART: Readonly<Record<NodeId, string>> = {
   "know.medicine": "medicine",
   "know.ngoGia": "ngoGia",
   "know.outerArmor": "outerArmor",
+  "know.phaGiap": "phaGiap",
+  "know.phongChau": "phongChau",
+  "know.reedBanner": "reedBanner",
+  "know.riverGuard": "riverGuard",
+  "know.royalSeal": "royalSeal",
 };
 
 /**
