@@ -261,9 +261,9 @@ Mô phỏng chạy hai kiểu: làm nhiệm vụ hộ tống (mặc định) và
 
 | Sa bàn | Bỏ hộ tống: thắng I / II / III | Làm nhiệm vụ: thắng kèm xong nhiệm vụ I / II / III |
 |---|---|---|
-| Ải Bắc (hạn 13 → 14 ngày) | 90 / 80 / 58% | 83 / 58 / 25% |
-| Thượng Du (hạn 19 → 20 ngày) | 80 / 55 / 30% | 60 / 38 / 13% |
-| Ngã Ba Sông (hạn 10 → 12 ngày) | 98 / 98 / 75% | 58 / 53 / 28% |
+| Ải Bắc (hạn 13 → 14 ngày, Bậc III địch ×0,97) | 90 / 80 / 65% | 83 / 58 / 40% |
+| Thượng Du (hạn 19 → 20 ngày, Bậc III địch ×0,9) | 80 / 55 / 58% | 60 / 38 / 33% |
+| Ngã Ba Sông (hạn 10 → 12 ngày, Bậc III địch ×0,95) | 98 / 98 / 78% | 58 / 53 / 35% |
 | Kinh Thành (chỉ chặn viện) | 83 / 70 / 50% | 80 / 65 / 48% |
 | Quần Đảo (chỉ chặn thuyền viện) | 88 / 88 / 53% | 88 / 88 / 53% |
 | Cửa Biển | | 85 / 68 / 40% (thắng 85 / 70 / 40%) |
@@ -271,6 +271,9 @@ Mô phỏng chạy hai kiểu: làm nhiệm vụ hộ tống (mặc định) và
 - Shan cho giảm nhẹ độ khó nhiệm vụ: truy binh năm sa bàn thường 2 địch ×1,0, 5 lượt; thêm 1 ngày ở ba sa bàn có hộ
   tống; Thượng Du đưa dân lên Đèo Ngang thay vì về Bản Mộc. Trước khi giảm, thắng kèm nhiệm vụ Bậc I: Ải Bắc 60%,
   Thượng Du 55%, Ngã Ba Sông 55%.
+- Shan đặt sàn: ô nào dưới 30% thắng là quá khó, ô đã đạt thì giữ nguyên. Chỉ Bậc III của ba sa bàn có hộ tống còn
+  dưới 30% khi làm nhiệm vụ (25 / 13 / 28%), nên `foePower` nhận ba số theo bậc và chỉ hạ Bậc III ở ba sa bàn đó.
+  Đo thử Ải Bắc ×0,93 và Thượng Du ×0,85 thì Bậc III dễ hơn Bậc II, đã nâng lại.
 - Hộ tống vẫn tốn một đến ba ngày, nên thắng kèm nhiệm vụ thấp hơn thắng thường khoảng 10–40 điểm. Đó là cái giá của
   vàng ×1,3.
 - Lần đầu đo, kế hoạch quay lui dọn đồn chặn truy binh dù đồn lệch đường (Ải Bắc còn 8%); nay chỉ dọn khi đồn nằm trên

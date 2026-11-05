@@ -17,6 +17,7 @@ import {
   expeditionBattleRef,
   expeditionFoeSide,
   expeditionMatchTag,
+  expeditionFoePower,
   expeditionMissionDone,
   expeditionSimProfile,
   marchExpedition,
@@ -114,6 +115,15 @@ describe("Viễn Chinh: nhiệm vụ các sa bàn", () => {
     }
     // Thượng Du có hai nhiệm vụ: chỉ đưa dân về mà chưa chặn viện thì chưa tính.
     assert.equal(expeditionMissionDone(ended("thuongDu", { refugees: "saved" })), false);
+  });
+
+  it("sức địch riêng theo bậc: một số cho mọi bậc hoặc ba số cho từng bậc", () => {
+    assert.equal(expeditionFoePower({ map: "kinhThanh", tier: 3 }), 1);
+    assert.equal(expeditionFoePower({ map: "cuaBien", tier: 1 }), EXPEDITION_SCENARIOS.cuaBien!.foePower);
+    const td = EXPEDITION_SCENARIOS.thuongDu!.foePower as readonly number[];
+    assert.equal(expeditionFoePower({ map: "thuongDu", tier: 1 }), td[0]);
+    assert.equal(expeditionFoePower({ map: "thuongDu", tier: 3 }), td[2]);
+    assert.ok(td[2]! < 1);
   });
 
   it("thua viễn chinh dù xong nhiệm vụ thì không có thưởng", () => {

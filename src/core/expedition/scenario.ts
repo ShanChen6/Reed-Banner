@@ -46,8 +46,11 @@ export interface ExpeditionScenario {
   };
   /** Phá cổng ở thành đích, trừ khi đánh vào từ `skipFrom` (cửa sau). */
   readonly gate?: { readonly skipFrom?: string; readonly hpScale: number; readonly defScale: number };
-  /** Hệ số sức mạnh của mọi địch trên sa bàn (bỏ trống là 1): sa bàn nhiều việc phụ thì địch nhẹ hơn để còn ngày. */
-  readonly foePower?: number;
+  /**
+   * Hệ số sức mạnh của mọi địch trên sa bàn (bỏ trống là 1), một số cho mọi bậc hoặc ba số cho Bậc I / II / III: sa bàn
+   * nhiều việc phụ thì địch nhẹ hơn để còn ngày.
+   */
+  readonly foePower?: number | readonly [number, number, number];
   /**
    * Sa bàn không có bốn kết thúc riêng: thắng mà đã làm xong mọi nhiệm vụ (đưa người về, chặn viện binh) thì vàng
    * thưởng nhân hệ số này. Không chặn qua bậc, không đổi sao.
@@ -80,6 +83,8 @@ export const EXPEDITION_SCENARIOS: Readonly<Partial<Record<ExpeditionMapId, Expe
     gate: GATE,
     // Tù binh bị giam ở Kho Ngựa Thồ: chiếm kho, đưa về Bản Na; Lũy Đèo Mây chưa chiếm thì truy binh đuổi theo.
     refugees: { village: "kho-ngua", home: "ban-na", chaseUnless: "deo-may", ...LIGHT_CHASE, title: "Giải cứu tù binh", noun: "tù binh" },
+    // Bậc III làm nhiệm vụ còn dưới 30% thắng (Shan muốn mọi bậc từ 30%): chỉ hạ bậc III.
+    foePower: [1, 1, 0.97],
     missionGold: MISSION_GOLD,
   },
   /** Hai thung lũng: giặc kéo viện binh xuống thành ngày 8 và 13; giữ được Đèo Ngang (lối hội quân) thì chặn. */
@@ -89,6 +94,7 @@ export const EXPEDITION_SCENARIOS: Readonly<Partial<Record<ExpeditionMapId, Expe
     hold: { nodes: ["deo-ngang"], turns: 6, power: 1 },
     // Dân thung lũng đông lánh lên Đèo Ngang (lũy của ta khi đã giữ): giữ đèo trước thì đi yên.
     refugees: { village: "ruong-bac", home: "deo-ngang", chaseUnless: "deo-ngang", ...LIGHT_CHASE, title: "Đưa dân lên đèo" },
+    foePower: [1, 1, 0.9],
     missionGold: MISSION_GOLD,
   },
   /** Ngã ba sông: chiếm Kho Thóc Bãi Giữa thì hai ngày sau giặc lội sông phản công. */
@@ -96,6 +102,7 @@ export const EXPEDITION_SCENARIOS: Readonly<Partial<Record<ExpeditionMapId, Expe
     counter: { node: "kho-thoc", ...COUNTER },
     // Dân bờ tây sang Trại Bờ Đông, hoặc vào Kho Thóc nếu đã giữ kho qua đợt phản công.
     refugees: { village: "lang-ruong", home: "trai-dong", chaseUnless: "ben-lau", ...LIGHT_CHASE },
+    foePower: [1, 1, 0.95],
     missionGold: MISSION_GOLD,
   },
   /** Kinh thành: viện binh vào thành ngày 4 và 7; giữ được Lũy Cầu Tây thì chặn đường viện. */
