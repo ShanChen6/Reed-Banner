@@ -94,9 +94,9 @@ import {
 | `Alert` | error/warning/success/info; role alert cho lỗi, status cho thông báo |
 | `Badge` | default/muted/success/warning/danger |
 | `Divider` | Đường ngăn có chữ ở giữa |
-| `Pagination` | Import riêng từ `@/components/ui/Pagination`; hỗ trợ API cursor, busy, nhãn và className |
+| `Pagination`, `usePagedItems`, `PageControls` | Import riêng từ `@/components/ui/Pagination`. `Pagination` cho API cursor (busy, nhãn, className); `usePagedItems(items, pageSize)` + `PageControls` cắt trang danh sách có sẵn ở client, hiện "Trang x/y", ẩn khi chỉ một trang |
 
-`Button` mặc định `type="button"`; nút gửi form phải đặt `type="submit"`. Dùng link thật khi điều hướng; không bọc link bên trong button. `Pagination` nhận hasPrevious/hasNext/onPrevious/onNext; logic cursor và truy vấn nằm ở màn gọi.
+`Button` mặc định `type="button"`; nút gửi form phải đặt `type="submit"`. Dùng link thật khi điều hướng; không bọc link bên trong button. `Pagination` nhận hasPrevious/hasNext/onPrevious/onNext; logic cursor và truy vấn nằm ở màn gọi. Danh sách dài (thẻ bán, túi đồ, lưới tướng) cắt trang bằng `usePagedItems` thay vì bắt người chơi cuộn; đặt `key` theo bộ lọc để về trang đầu khi đổi lọc.
 
 Component không có hook dùng được ở cả server và client. Pagination có client boundary riêng, không đưa toàn bộ UI vào client bundle. ClassName được merge theo nhóm utility: ví dụ `CardBody className="p-6"` thay p-4 mặc định, `Button className="text-sm"` thay cỡ chữ mặc định nhưng giữ màu chữ. Các utility typography riêng của Cờ Lau được khai báo trong cấu hình merge để không bị nhầm với màu chữ.
 

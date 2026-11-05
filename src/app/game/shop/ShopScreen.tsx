@@ -61,7 +61,7 @@ export default function ShopScreen() {
           <Tabs label="Mục cửa hàng" items={TABS} value={tab} onChange={setTab} fullWidth panelId="shop-panel" className="[&>button]:whitespace-nowrap [&>button]:px-2" />
           {message && <Alert className="p-3 text-sm">{message}</Alert>}
           <div id="shop-panel" role="tabpanel" className="min-w-0">
-            {tab === "heroes" && <ShopPanel profile={profile} locked={busy} onAction={act} />}
+            {tab === "heroes" && <ShopPanel sellOnly profile={profile} locked={busy} onAction={act} />}
             {tab === "gear" && <GearStore profile={profile} disabled={busy} onBuy={(a) => void act(a)} />}
             {tab === "items" && <ItemsTab profile={profile} busy={busy} onAction={act} />}
           </div>
