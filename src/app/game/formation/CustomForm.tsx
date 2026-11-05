@@ -3,6 +3,7 @@
 // Chế độ tùy chỉnh của Chơi thường: tự chọn cỡ bàn (cột × hàng), nghề, hệ và quân đặc biệt xuất hiện. Không thưởng, không
 // xếp hạng, không ghi điểm cao nhất. Giới hạn ở CUSTOM_LIMITS (src/core/binh-phap/rulesets.ts); engine kiểm lại khi tạo ván.
 
+import { buttonVariants } from "@/components/ui";
 import { useState } from "react";
 import { ELEMENTS, PROFESSIONS, type Element, type Profession } from "@/core/battle";
 import { CUSTOM_LIMITS, FUSION_CHARACTERS, customRuleset, type CustomOptions, type Ruleset } from "@/core/binh-phap";
@@ -121,7 +122,7 @@ export default function CustomForm({ onStart }: { onStart: (rules: Ruleset) => v
             }
             onStart(rules);
           }}
-          className="home-cta min-h-12 rounded-lg px-8 font-serif font-bold disabled:opacity-60"
+          className={buttonVariants({ className: "min-h-12 px-8" })}
         >
           Chơi sa bàn tùy chỉnh
         </button>
