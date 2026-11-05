@@ -25,6 +25,7 @@ import {
   navigateIndex,
   NAV_KEYS,
   previewLineup,
+  RULE_TAG,
   sweepButtonState,
   type LeaderBuild,
   type TrialFloorEntry,
@@ -33,9 +34,6 @@ import {
 
 /** Số cột của lưới tầng theo breakpoint (khớp class grid-cols bên dưới). Dùng cho phím lên/xuống. */
 export const FLOOR_GRID_COLUMNS = 5;
-
-/** Nhãn chữ cho từng loại luật (thay emoji ⛔ ✔ ⚖). */
-const RULE_TAG = { ban: "Cấm", need: "Bắt buộc", limit: "Giới hạn" } as const;
 
 export interface TrialViewProps {
   readonly overview: TrialOverview;
