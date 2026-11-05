@@ -2,6 +2,9 @@
 
 ## 05/11/2026
 
+**Đồng bộ UI/UX toàn game: quy tắc chung (APPROVED)**
+- Shan duyệt đề xuất sau kiểm kê 20 màn: nút chính sơn mài đỏ viền vàng (bỏ nút vàng/cam), đang chọn là giấy dó chữ mực, giấy dó chỉ cho nội dung đọc dài, Cửa Hàng thành trang thường, khách vẫn xem được banner/luật/thưởng của chế độ cần đăng nhập, bỏ emoji. Làm theo từng PR nhỏ. Xem [theme.md](../05-ui-ux/design-system/theme.md#quy-tắc-chung-đồng-bộ-ui-05112026) và [lộ trình](../05-ui-ux/implementation/roadmap.md#4-đồng-bộ-ui-toàn-game-05112026).
+
 **Khai Lộ: mini game giải đố mới (DRAFT, có bản chơi thử)**
 - Shan muốn một mini game giải đố kiểu Block'D (xóa nhóm cùng màu) dùng ô ngọc của game, chốt tên **Khai Lộ**. Chạm một ô xóa cả khối cùng loại liền cạnh, ô rơi và cột dồn, không có ô mới; điểm n², quân lực, đạo cụ Lốc Phong và Sấm Sét. Xem [GDD Khai Lộ](../02-game-modes/future/24-khai-lo-gdd.md).
 
