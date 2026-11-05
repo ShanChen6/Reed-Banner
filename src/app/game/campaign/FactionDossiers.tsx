@@ -34,12 +34,12 @@ export default function FactionDossiers({
   return (
     <section
       aria-labelledby="dossiers-title"
-      className="rounded-xl border border-amber-500/30 bg-black/30 p-3 text-sm"
+      className="rounded-xl border border-frame-line-soft bg-wood-inset p-3 text-sm"
     >
-      <h3 id="dossiers-title" className="font-semibold text-amber-200">
+      <h3 id="dossiers-title" className="font-semibold text-frame-gold">
         Hồ sơ 12 sứ quân · {ledger.resolvedCount}/12 có kết cục
       </h3>
-      <p className="mb-2 text-xs text-muted">
+      <p className="mb-2 text-xs text-on-wood-soft">
         Đọc từ thế cục đã ghi trong hồ sơ của bạn. Nhãn độ tin cậy theo bảng
         nguồn của game.
       </p>
@@ -48,32 +48,32 @@ export default function FactionDossiers({
           const node = storyNodeById(r.mission);
           return (
             <li key={r.faction}>
-              <details className="rounded-md border border-white/10 bg-black/30 p-2">
-                <summary className="cursor-pointer font-semibold text-amber-50">
+              <details className="rounded-md border border-frame-line-soft bg-wood-inset p-2">
+                <summary className="cursor-pointer font-semibold text-on-wood">
                   {companionById(r.faction)?.name ?? r.faction}
-                  <span className="ml-1 text-xs font-normal text-muted">
+                  <span className="ml-1 text-xs font-normal text-on-wood-soft">
                     · {GROUP_NAME[r.group]}
                   </span>
                 </summary>
-                <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-2 text-xs text-foreground-secondary">
-                  <dt className="text-stone-500">Vùng</dt>
+                <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-2 text-xs text-on-wood-soft">
+                  <dt className="text-on-wood-soft/80">Vùng</dt>
                   <dd>
                     {node?.location.name}
                     {node?.location.modernRegion
                       ? ` (nay ${node.location.modernRegion})`
                       : ""}
                   </dd>
-                  <dt className="text-stone-500">Nhiệm vụ</dt>
+                  <dt className="text-on-wood-soft/80">Nhiệm vụ</dt>
                   <dd>
                     {r.mission} · {node?.title}
                   </dd>
-                  <dt className="text-stone-500">Kết cục</dt>
+                  <dt className="text-on-wood-soft/80">Kết cục</dt>
                   <dd>
                     {view.resolved
                       ? (METHOD_TEXT[view.resolutionMethod] ?? view.status)
                       : "chưa có kết cục"}
                   </dd>
-                  <dt className="text-stone-500">Độ tin cậy</dt>
+                  <dt className="text-on-wood-soft/80">Độ tin cậy</dt>
                   <dd>{CONFIDENCE_TEXT[r.confidence]}</dd>
                 </dl>
               </details>
