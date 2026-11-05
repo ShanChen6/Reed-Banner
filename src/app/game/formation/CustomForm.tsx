@@ -37,7 +37,7 @@ function toggle<T>(list: readonly T[], item: T, order: readonly T[]): T[] {
   return order.filter((x) => next.includes(x));
 }
 
-const rangeClass = "h-2 w-full cursor-pointer accent-[#C9A25A]";
+const rangeClass = "h-2 w-full cursor-pointer accent-frame-gold";
 
 function Slider({ id, label, value, min, max, step = 1, unit, onChange, disabled = false }: { id: string; label: string; value: number; min: number; max: number; step?: number; unit: string; onChange: (n: number) => void; disabled?: boolean }) {
   return (
@@ -61,15 +61,15 @@ export default function CustomForm({ onStart }: { onStart: (rules: Ruleset) => v
   const area = o.width * o.height;
 
   return (
-    <details className="atlas-frame atlas-frame-wood p-4">
-      <summary className="cursor-pointer font-serif text-xl font-bold text-[var(--atlas-title)]">Tùy chỉnh</summary>
-      <p className="mt-1 text-sm text-[var(--atlas-muted)]">Tự dựng sa bàn của riêng bạn. Không thưởng, không xếp hạng, không lưu điểm cao nhất.</p>
+    <details className="ui-frame p-4">
+      <summary className="cursor-pointer font-serif text-xl font-bold text-title-on-wood">Tùy chỉnh</summary>
+      <p className="mt-1 text-sm text-on-wood-soft">Tự dựng sa bàn của riêng bạn. Không thưởng, không xếp hạng, không lưu điểm cao nhất.</p>
 
       <div className="mt-3 grid gap-4 md:grid-cols-2">
         <div className="flex flex-col gap-3">
           <Slider id="fm-w" label="Số cột (x)" value={o.width} min={L.minSide} max={L.maxSide} unit="" onChange={(n) => set({ width: n })} />
           <Slider id="fm-h" label="Số hàng (y)" value={o.height} min={L.minSide} max={L.maxSide} unit="" onChange={(n) => set({ height: n })} />
-          <p className="text-sm text-[var(--atlas-muted)]">Sa bàn {o.width}×{o.height} = {area} ô.</p>
+          <p className="text-sm text-on-wood-soft">Sa bàn {o.width}×{o.height} = {area} ô.</p>
           <Slider id="fm-ob" label="Chướng ngại" value={o.obstaclePercent} min={0} max={L.maxObstaclePercent} unit="%" onChange={(n) => set({ obstaclePercent: n })} />
         </div>
 
@@ -77,17 +77,17 @@ export default function CustomForm({ onStart }: { onStart: (rules: Ruleset) => v
           <Slider id="fm-wild" label="Quân Lệnh" value={o.wildPermille / 10} min={0} max={L.maxWildPermille / 10} step={0.5} unit="%" onChange={(n) => set({ wildPermille: Math.round(n * 10) })} />
           <Slider id="fm-eraser" label="Thu Hồi" value={o.eraserPermille / 10} min={0} max={L.maxEraserPermille / 10} step={0.5} unit="%" onChange={(n) => set({ eraserPermille: Math.round(n * 10) })} />
           <Slider id="fm-fusion" label="Nhân vật dung hợp" value={o.fusionPermille / 10} min={0} max={L.maxFusionPermille / 10} step={0.5} unit="%" disabled={!hasFusion} onChange={(n) => set({ fusionPermille: Math.round(n * 10) })} />
-          {!hasFusion && <p className="text-sm text-[var(--atlas-muted)]">Chưa có nhân vật dung hợp nào được duyệt nên chưa dùng được.</p>}
+          {!hasFusion && <p className="text-sm text-on-wood-soft">Chưa có nhân vật dung hợp nào được duyệt nên chưa dùng được.</p>}
         </div>
       </div>
 
       <fieldset className="mt-4">
-        <legend className="mb-1.5 font-serif font-bold text-[var(--atlas-title)]">Nghề xuất hiện ({o.professions.length}, tối thiểu {L.minProfessions})</legend>
+        <legend className="mb-1.5 font-serif font-bold text-title-on-wood">Nghề xuất hiện ({o.professions.length}, tối thiểu {L.minProfessions})</legend>
         <div className="flex flex-wrap gap-2">
           {(PROFESSIONS as readonly Profession[]).map((p) => {
             const on = o.professions.includes(p);
             return (
-              <button key={p} type="button" role="checkbox" aria-checked={on} disabled={on && o.professions.length <= L.minProfessions} onClick={() => set({ professions: toggle(o.professions, p, PROFESSIONS as readonly Profession[]) })} className={`flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-[15px] ${on ? "border-[#C9A25A] bg-[#C9A25A]/25 font-semibold" : "border-[#8F6A32]/50 bg-black/20 text-[var(--atlas-muted)]"} disabled:opacity-60`}>
+              <button key={p} type="button" role="checkbox" aria-checked={on} disabled={on && o.professions.length <= L.minProfessions} onClick={() => set({ professions: toggle(o.professions, p, PROFESSIONS as readonly Profession[]) })} className={`flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-[15px] ${on ? "border-frame-gold bg-frame-gold/25 font-semibold" : "border-frame-bronze/50 bg-black/20 text-on-wood-soft"} disabled:opacity-60`}>
                 <ProfessionIcon profession={p} className="size-5" /> {PROFESSION_NAME[p]}
               </button>
             );
@@ -96,12 +96,12 @@ export default function CustomForm({ onStart }: { onStart: (rules: Ruleset) => v
       </fieldset>
 
       <fieldset className="mt-3">
-        <legend className="mb-1.5 font-serif font-bold text-[var(--atlas-title)]">Hệ xuất hiện ({o.elements.length}, tối thiểu {L.minElements})</legend>
+        <legend className="mb-1.5 font-serif font-bold text-title-on-wood">Hệ xuất hiện ({o.elements.length}, tối thiểu {L.minElements})</legend>
         <div className="flex flex-wrap gap-2">
           {(ELEMENTS as readonly Element[]).map((e) => {
             const on = o.elements.includes(e);
             return (
-              <button key={e} type="button" role="checkbox" aria-checked={on} disabled={on && o.elements.length <= L.minElements} onClick={() => set({ elements: toggle(o.elements, e, ELEMENTS as readonly Element[]) })} className={`flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-[15px] ${on ? "border-[#C9A25A] bg-[#C9A25A]/25 font-semibold" : "border-[#8F6A32]/50 bg-black/20 text-[var(--atlas-muted)]"} disabled:opacity-60`}>
+              <button key={e} type="button" role="checkbox" aria-checked={on} disabled={on && o.elements.length <= L.minElements} onClick={() => set({ elements: toggle(o.elements, e, ELEMENTS as readonly Element[]) })} className={`flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-[15px] ${on ? "border-frame-gold bg-frame-gold/25 font-semibold" : "border-frame-bronze/50 bg-black/20 text-on-wood-soft"} disabled:opacity-60`}>
                 <ElementIcon element={e} className="size-5" /> {ELEMENT_NAME[e]}
               </button>
             );
@@ -126,7 +126,7 @@ export default function CustomForm({ onStart }: { onStart: (rules: Ruleset) => v
         >
           Chơi sa bàn tùy chỉnh
         </button>
-        <span className="text-sm text-[var(--atlas-muted)]">{o.professions.length} nghề × {o.elements.length} hệ = {o.professions.length * o.elements.length} loại quân</span>
+        <span className="text-sm text-on-wood-soft">{o.professions.length} nghề × {o.elements.length} hệ = {o.professions.length * o.elements.length} loại quân</span>
       </div>
     </details>
   );
