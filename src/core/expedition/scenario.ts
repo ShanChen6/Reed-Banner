@@ -61,6 +61,8 @@ const HOLD = { turns: 8, power: 1.2 };
 const GATE = { hpScale: 1.2, defScale: 2 };
 const MISSION_GOLD = 1.3;
 const CHASE = { chaseTurns: 6, chaseFoes: 3, chasePower: 1.2 };
+/** Truy binh ở năm sa bàn thường (nhiệm vụ không bắt buộc): nhẹ hơn Cửa Biển. */
+const LIGHT_CHASE = { chaseTurns: 5, chaseFoes: 2, chasePower: 1 };
 const COUNTER = { afterDays: 2, turns: 6, foes: 3, power: 1.4, retakenHp: 0.6, food: 20 };
 
 export const EXPEDITION_SCENARIOS: Readonly<Partial<Record<ExpeditionMapId, ExpeditionScenario>>> = {
@@ -77,7 +79,7 @@ export const EXPEDITION_SCENARIOS: Readonly<Partial<Record<ExpeditionMapId, Expe
     },
     gate: GATE,
     // Tù binh bị giam ở Kho Ngựa Thồ: chiếm kho, đưa về Bản Na; Lũy Đèo Mây chưa chiếm thì truy binh đuổi theo.
-    refugees: { village: "kho-ngua", home: "ban-na", chaseUnless: "deo-may", ...CHASE, title: "Giải cứu tù binh", noun: "tù binh" },
+    refugees: { village: "kho-ngua", home: "ban-na", chaseUnless: "deo-may", ...LIGHT_CHASE, title: "Giải cứu tù binh", noun: "tù binh" },
     missionGold: MISSION_GOLD,
   },
   /** Hai thung lũng: giặc kéo viện binh xuống thành ngày 8 và 13; giữ được Đèo Ngang (lối hội quân) thì chặn. */
@@ -85,15 +87,15 @@ export const EXPEDITION_SCENARIOS: Readonly<Partial<Record<ExpeditionMapId, Expe
     reinforcements: { days: [8, 13], power: 0.15, label: "viện binh" },
     // Đèo là lũy 3 địch trên đường dài nhất trong sáu sa bàn: giữ ngắn hơn, địch không mạnh thêm.
     hold: { nodes: ["deo-ngang"], turns: 6, power: 1 },
-    // Dân thung lũng đông sang Bản Mộc bên tây qua đèo: giữ đèo trước thì đi yên.
-    refugees: { village: "ruong-bac", home: "ban-moc", chaseUnless: "deo-ngang", ...CHASE, title: "Đưa dân qua đèo" },
+    // Dân thung lũng đông lánh lên Đèo Ngang (lũy của ta khi đã giữ): giữ đèo trước thì đi yên.
+    refugees: { village: "ruong-bac", home: "deo-ngang", chaseUnless: "deo-ngang", ...LIGHT_CHASE, title: "Đưa dân lên đèo" },
     missionGold: MISSION_GOLD,
   },
   /** Ngã ba sông: chiếm Kho Thóc Bãi Giữa thì hai ngày sau giặc lội sông phản công. */
   chauTho: {
     counter: { node: "kho-thoc", ...COUNTER },
     // Dân bờ tây sang Trại Bờ Đông, hoặc vào Kho Thóc nếu đã giữ kho qua đợt phản công.
-    refugees: { village: "lang-ruong", home: "trai-dong", chaseUnless: "ben-lau", ...CHASE },
+    refugees: { village: "lang-ruong", home: "trai-dong", chaseUnless: "ben-lau", ...LIGHT_CHASE },
     missionGold: MISSION_GOLD,
   },
   /** Kinh thành: viện binh vào thành ngày 4 và 7; giữ được Lũy Cầu Tây thì chặn đường viện. */
