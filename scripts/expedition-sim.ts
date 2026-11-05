@@ -55,7 +55,13 @@ for (const map of maps)
       pincerRate: mean(results.map((r) => (r.battles ? r.pincers / r.battles : 0))),
       meanTurnsPerBattle: mean(results.map((r) => (r.battles ? r.turns / r.battles : 0))),
       losses: reasons,
+      meanScouts: mean(results.map((r) => r.scouts)),
+      cutRate: mean(results.map((r) => (r.cut ? 1 : 0))),
+      savedRate: mean(results.map((r) => (r.saved ? 1 : 0))),
+      marketHeldRate: mean(results.map((r) => (r.marketHeld ? 1 : 0))),
+      endings: results.reduce<Record<string, number>>((acc, r) => (r.ending ? { ...acc, [r.ending]: (acc[r.ending] ?? 0) + 1 } : acc), {}),
     });
-    console.error(`${map} bậc ${tier}: thắng ${(100 * wins.length / runs).toFixed(0)}%`);
+    const pct = (f: (r: (typeof results)[number]) => boolean) => `${Math.round((100 * results.filter(f).length) / runs)}%`;
+    console.error(`${map} bậc ${tier}: thắng ${pct((r) => r.won)} · chặn viện ${pct((r) => r.cut)} · cứu dân ${pct((r) => r.saved)} · giữ kho ${pct((r) => r.marketHeld)} · trinh sát ${mean(results.map((r) => r.scouts))}`);
   }
 console.log(JSON.stringify(out, null, 2));
