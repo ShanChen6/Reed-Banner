@@ -48,7 +48,7 @@ function ExternalLink({ href, children }: { href: string; children: string }) {
       target="_blank"
       rel="noopener noreferrer external"
       referrerPolicy="no-referrer"
-      className="text-sky-300 underline decoration-sky-500/50 underline-offset-2 hover:text-sky-200 focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:outline-none"
+      className="text-info underline decoration-info/50 underline-offset-2 hover:text-on-wood focus-visible:ring-2 focus-visible:ring-info focus-visible:outline-none"
     >
       {children}
       <span aria-hidden> ↗</span>
@@ -61,13 +61,13 @@ function SourceList({ sources }: { sources: readonly HistorySource[] }) {
   return (
     <ul className="flex flex-col gap-1.5">
       {sources.map((s) => (
-        <li key={s.id} className="text-xs text-foreground-secondary">
-          <span className="font-mono text-stone-500">{s.id}</span>{" "}
+        <li key={s.id} className="text-xs text-on-wood-soft">
+          <span className="font-mono text-on-wood-soft/80">{s.id}</span>{" "}
           <ExternalLink href={s.url}>{s.title}</ExternalLink>
-          <span className="block text-muted">
+          <span className="block text-on-wood-soft">
             {s.publisher} · {KIND_TEXT[s.kind]} · chỗ cần xem: {s.locator}
           </span>
-          <span className="block text-stone-500">Giới hạn: {s.limits}</span>
+          <span className="block text-on-wood-soft/80">Giới hạn: {s.limits}</span>
         </li>
       ))}
     </ul>
@@ -77,35 +77,35 @@ function SourceList({ sources }: { sources: readonly HistorySource[] }) {
 export function MissionSources({ nodeId }: { nodeId: CampaignMissionId }) {
   const h = missionHistory(nodeId);
   return (
-    <details className="rounded-md border border-sky-400/40 bg-sky-950/30 p-2 text-sm">
-      <summary className="flex min-h-11 cursor-pointer items-center gap-2 rounded font-semibold text-sky-200 focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:outline-none">
+    <details className="rounded-md border border-info/40 bg-info/10 p-2 text-sm">
+      <summary className="flex min-h-11 cursor-pointer items-center gap-2 rounded font-semibold text-info focus-visible:ring-2 focus-visible:ring-info focus-visible:outline-none">
         Sử liệu
-        <span className="text-xs font-normal text-muted">
+        <span className="text-xs font-normal text-on-wood-soft">
           sự kiện, nguồn và phần game dựng
         </span>
       </summary>
       <div className="mt-2 flex flex-col gap-3">
-        <p className="text-xs text-muted">
+        <p className="text-xs text-on-wood-soft">
           Đây là ghi chú nguồn của game, tóm tắt theo sổ nguồn, không phải lời
           nhân vật và không phải trích nguyên văn.
         </p>
 
         <section aria-label="Loại nội dung">
-          <h3 className="mb-1 text-xs font-semibold text-sky-100">
+          <h3 className="mb-1 text-xs font-semibold text-info">
             Nhiệm vụ này gồm
           </h3>
           <ul className="flex flex-col gap-1">
             {h.basis.map((b) => (
               <li
                 key={b}
-                className="flex items-start gap-2 text-xs text-foreground-secondary"
+                className="flex items-start gap-2 text-xs text-on-wood-soft"
               >
                 <BasisBadge basis={b} />
                 <span>{BASIS_LABEL[b].hint}</span>
               </li>
             ))}
           </ul>
-          <p className="mt-1 text-xs text-muted">
+          <p className="mt-1 text-xs text-on-wood-soft">
             Địa danh: {h.location.name} ({CERTAINTY_TEXT[h.location.certainty]})
             {h.location.modernRegion
               ? ` · ngày nay: ${h.location.modernRegion}`
@@ -115,23 +115,23 @@ export function MissionSources({ nodeId }: { nodeId: CampaignMissionId }) {
 
         {h.claims.length > 0 && (
           <section aria-label="Mốc có ghi chép">
-            <h3 className="mb-1 text-xs font-semibold text-sky-100">
+            <h3 className="mb-1 text-xs font-semibold text-info">
               Sự kiện theo sổ nguồn
             </h3>
             <ul className="flex flex-col gap-1.5">
               {h.claims.map((c) => (
-                <li key={c.id} className="rounded bg-black/25 p-2 text-xs">
+                <li key={c.id} className="rounded bg-wood-inset p-2 text-xs">
                   <div className="mb-1 flex flex-wrap items-center gap-1.5">
                     {c.basis.map((b) => (
                       <BasisBadge key={b} basis={b} />
                     ))}
-                    <span className="text-stone-500">
+                    <span className="text-on-wood-soft/80">
                       {c.id} · độ tin cậy {CONFIDENCE_TEXT[c.confidence]} ·
                       nguồn {c.sources.join(", ")}
                     </span>
                   </div>
-                  <p className="text-stone-200">{c.summary}</p>
-                  <p className="mt-0.5 text-muted">Lưu ý: {c.caveat}</p>
+                  <p className="text-on-wood">{c.summary}</p>
+                  <p className="mt-0.5 text-on-wood-soft">Lưu ý: {c.caveat}</p>
                 </li>
               ))}
             </ul>
@@ -140,17 +140,17 @@ export function MissionSources({ nodeId }: { nodeId: CampaignMissionId }) {
 
         {h.unresolved.length > 0 && (
           <section aria-label="Điểm còn tranh luận">
-            <h3 className="mb-1 text-xs font-semibold text-rose-200">
+            <h3 className="mb-1 text-xs font-semibold text-danger">
               Còn tranh luận hoặc chưa rõ
             </h3>
             <ul className="flex flex-col gap-1.5">
               {h.unresolved.map((u) => (
-                <li key={u.id} className="rounded bg-black/25 p-2 text-xs">
-                  <p className="text-stone-200">
-                    <span className="text-stone-500">{u.id} · </span>
+                <li key={u.id} className="rounded bg-wood-inset p-2 text-xs">
+                  <p className="text-on-wood">
+                    <span className="text-on-wood-soft/80">{u.id} · </span>
                     {u.question}
                   </p>
-                  <p className="mt-0.5 text-muted">
+                  <p className="mt-0.5 text-on-wood-soft">
                     Game chọn: {u.decision}
                   </p>
                 </li>
@@ -161,22 +161,22 @@ export function MissionSources({ nodeId }: { nodeId: CampaignMissionId }) {
 
         {h.warlords.length > 0 && (
           <section aria-label="Sứ quân liên quan">
-            <h3 className="mb-1 text-xs font-semibold text-sky-100">
+            <h3 className="mb-1 text-xs font-semibold text-info">
               Sứ quân liên quan
             </h3>
             <ul className="flex flex-col gap-1.5">
               {h.warlords.map((w) => (
-                <li key={w.id} className="rounded bg-black/25 p-2 text-xs">
+                <li key={w.id} className="rounded bg-wood-inset p-2 text-xs">
                   <div className="mb-1 flex flex-wrap items-center gap-1.5">
                     {w.outcomeBasis.map((b) => (
                       <BasisBadge key={b} basis={b} />
                     ))}
-                    <span className="font-semibold text-amber-100">
+                    <span className="font-semibold text-title-on-wood">
                       {w.name}
                     </span>
-                    <span className="text-muted">({w.title})</span>
+                    <span className="text-on-wood-soft">({w.title})</span>
                   </div>
-                  <p className="text-foreground-secondary">{w.outcome}</p>
+                  <p className="text-on-wood-soft">{w.outcome}</p>
                 </li>
               ))}
             </ul>
@@ -185,7 +185,7 @@ export function MissionSources({ nodeId }: { nodeId: CampaignMissionId }) {
 
         {h.sources.length > 0 && (
           <section aria-label="Nguồn tham khảo">
-            <h3 className="mb-1 text-xs font-semibold text-sky-100">
+            <h3 className="mb-1 text-xs font-semibold text-info">
               Nguồn tham khảo
             </h3>
             <SourceList sources={h.sources} />
@@ -193,10 +193,10 @@ export function MissionSources({ nodeId }: { nodeId: CampaignMissionId }) {
         )}
 
         <section aria-label="Phần do game dựng">
-          <h3 className="mb-1 text-xs font-semibold text-stone-200">
+          <h3 className="mb-1 text-xs font-semibold text-on-wood">
             Phần do game dựng
           </h3>
-          <ul className="list-disc pl-5 text-xs text-foreground-secondary">
+          <ul className="list-disc pl-5 text-xs text-on-wood-soft">
             {h.fiction.map((f) => (
               <li key={f}>{f}</li>
             ))}
@@ -224,12 +224,12 @@ export default function WarlordCodex({
   return (
     <section
       aria-labelledby="warlord-codex-title"
-      className="rounded-xl border border-amber-500/30 bg-black/30 p-3 text-sm"
+      className="rounded-xl border border-frame-line-soft bg-wood-inset p-3 text-sm"
     >
-      <h2 id="warlord-codex-title" className="font-semibold text-amber-200">
+      <h2 id="warlord-codex-title" className="font-semibold text-frame-gold">
         Sứ quân ký · {known}/12 hồ sơ đã mở
       </h2>
-      <p className="mb-2 text-xs text-muted">
+      <p className="mb-2 text-xs text-on-wood-soft">
         Hồ sơ mở khi nhiệm vụ của sứ quân đó mở; kết cục chỉ hiện khi bạn đã đi
         qua. Số thứ tự là của sổ nguồn, không phải thứ tự đánh dẹp.
       </p>
@@ -237,50 +237,50 @@ export default function WarlordCodex({
         {entries.map(({ record: w, resolution: r, stage, location }) => (
           <li
             key={w.id}
-            className="rounded-md border border-white/10 bg-black/30 p-2"
+            className="rounded-md border border-frame-line-soft bg-wood-inset p-2"
           >
             {stage === "unknown" ? (
-              <p className="text-stone-500">
+              <p className="text-on-wood-soft/80">
                 <span className="font-mono">{w.id}</span> · Chưa gặp. Hồ sơ mở
                 khi tới nhiệm vụ của vùng này.
               </p>
             ) : (
               <details>
-                <summary className="flex min-h-11 cursor-pointer flex-wrap items-center gap-x-1.5 font-semibold text-amber-50 focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:outline-none">
-                  <span className="font-mono text-xs text-stone-500">
+                <summary className="flex min-h-11 cursor-pointer flex-wrap items-center gap-x-1.5 font-semibold text-on-wood focus-visible:ring-2 focus-visible:ring-frame-gold focus-visible:outline-none">
+                  <span className="font-mono text-xs text-on-wood-soft/80">
                     {w.id}
                   </span>
                   {w.name}
-                  <span className="text-xs font-normal text-muted">
+                  <span className="text-xs font-normal text-on-wood-soft">
                     · {location.name} ·{" "}
                     {stage === "resolved"
                       ? GROUP_TEXT[r.group]
                       : "chưa có kết cục"}
                   </span>
                 </summary>
-                <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5 text-xs text-foreground-secondary">
-                  <dt className="text-stone-500">Danh hiệu</dt>
+                <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5 text-xs text-on-wood-soft">
+                  <dt className="text-on-wood-soft/80">Danh hiệu</dt>
                   <dd>
                     {w.title}
                     {w.aliases.length > 0
                       ? ` (còn chép: ${w.aliases.join(", ")})`
                       : ""}
                   </dd>
-                  <dt className="text-stone-500">Vùng</dt>
+                  <dt className="text-on-wood-soft/80">Vùng</dt>
                   <dd>
                     {location.name}
                     {location.modernRegion
                       ? ` · ngày nay: ${location.modernRegion}`
                       : ""}
                   </dd>
-                  <dt className="text-stone-500">Nhiệm vụ</dt>
+                  <dt className="text-on-wood-soft/80">Nhiệm vụ</dt>
                   <dd>{r.mission}</dd>
-                  <dt className="text-stone-500">Kết cục</dt>
+                  <dt className="text-on-wood-soft/80">Kết cục</dt>
                   <dd>
                     {stage === "resolved" ? (
                       <>
                         {w.outcome}{" "}
-                        <span className="text-stone-500">
+                        <span className="text-on-wood-soft/80">
                           (game kể: {METHOD_TEXT[r.settlement] ?? r.settlement})
                         </span>
                       </>
@@ -288,7 +288,7 @@ export default function WarlordCodex({
                       "Chưa hiện: đi qua nhiệm vụ để mở."
                     )}
                   </dd>
-                  <dt className="text-stone-500">Nguồn</dt>
+                  <dt className="text-on-wood-soft/80">Nguồn</dt>
                   <dd className="flex flex-wrap gap-x-2">
                     {w.sources.map((id) => {
                       const s = historySource(id);
