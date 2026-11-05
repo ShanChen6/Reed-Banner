@@ -25,6 +25,7 @@ import {
 import { fetchProfile, sendProfileAction } from "../battle/online";
 import { PROFILE_ERROR } from "../battle/ProgressPanel";
 import { SceneLink } from "../SceneContext";
+import SpecialQuestsPanel from "./SpecialQuestsPanel";
 
 interface Row {
   readonly id: string;
@@ -203,6 +204,8 @@ export default function QuestsScreen({
           1. Đủ 7 ngày thì bắt đầu chuỗi mới.
         </p>
       </Card>
+
+      <SpecialQuestsPanel profile={profile} />
 
       <div className="grid gap-4 lg:grid-cols-3">
         {sections.map((sec) => (
