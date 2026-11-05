@@ -1,6 +1,6 @@
 "use client";
 
-import { Select, Button, ChoiceChip } from "@/components/ui";
+import { Select, Button, ChoiceChip, buttonVariants } from "@/components/ui";
 import { cn } from "@/lib/cn";
 
 // Cửa hàng nhân vật kèm và chọn đội 3vs3 của Chơi thử và Chơi online. Luật nằm trong @/core (applyProfileAction);
@@ -32,6 +32,7 @@ import { ElementIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { ELEMENT_NAME, PROFESSION_NAME } from "./labels";
 import { PROFILE_ERROR } from "./ProgressPanel";
+import { SceneLink } from "../SceneContext";
 
 function CompanionCard({
   c,
@@ -111,10 +112,13 @@ export default function ShopPanel({
   profile,
   locked,
   onAction,
+  compact,
 }: {
   profile: Profile;
   locked: boolean;
   onAction: (a: ProfileAction) => Promise<string | null>;
+  /** Chỉ chọn đội (sảnh Giao Tranh): ẩn phần bán tướng, thay bằng lối sang Cửa Hàng. */
+  compact?: boolean;
 }) {
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -161,6 +165,13 @@ export default function ShopPanel({
       </div>
       {locked && <p className="mb-2 text-on-wood-soft">Đang trong trận: đổi đội và mua nhân vật sau khi trận kết thúc.</p>}
       <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">{owned.map(card)}</ul>
+      {compact ? (
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <span className="text-caption text-on-wood-soft">Tuyển thêm tướng hoặc đổi đội chi tiết:</span>
+          <SceneLink scene="SHOP" className={buttonVariants({ variant: "secondary", size: "sm" })}>Cửa Hàng</SceneLink>
+          <SceneLink scene="PROFILE" className={buttonVariants({ variant: "secondary", size: "sm" })}>Doanh Trại</SceneLink>
+        </div>
+      ) : (<>
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <span className="font-semibold text-on-wood-soft">Lọc nhân vật chưa có:</span>
         <Select
@@ -212,6 +223,7 @@ export default function ShopPanel({
       <p className="mt-3 text-caption text-on-wood-soft">
         Mọi nhân vật kèm có 3 chiêu nghề, 2 chiêu hệ và 1 tuyệt chiêu như Đinh Bộ Lĩnh, nâng theo ô; ô 4 là tuyệt chiêu (tướng thường) hoặc chiêu riêng (tướng lịch sử, sứ quân). Chọn 2 nhân vật kèm ra trận cùng Đinh Bộ Lĩnh. Nhân vật mua về bắt đầu ở cấp 1.
       </p>
+      </>)}
     </section>
   );
 }
