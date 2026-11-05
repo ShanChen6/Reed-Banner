@@ -437,44 +437,48 @@ function NodeChip({ node, onPick, badge, count }: { node: CatalogNode; onPick: (
   );
 }
 
-/** Yếu tố có tranh riêng ở public/art/tam-tuong-ky/yeu-to/<tên>.webp. */
-const NODE_ART: Readonly<Record<NodeId, string>> = {
-  "mat.hoaLu": "hoaLu",
-  "know.daiCoViet": "daiCoViet",
-  "know.duongLam": "duongLam",
-  "know.guardRoad": "guardRoad",
-  "know.hoaLuHerbs": "hoaLuHerbs",
-  "know.hoaLuy": "hoaLuy",
-  "know.hoiHo": "hoiHo",
-  "know.magic": "magic",
-  "know.martial": "martial",
-  "know.medicine": "medicine",
-  "know.ngoGia": "ngoGia",
-  "know.outerArmor": "outerArmor",
-  "know.phaGiap": "phaGiap",
-  "know.phongChau": "phongChau",
-  "know.reedBanner": "reedBanner",
-  "know.riverGuard": "riverGuard",
-  "know.royalSeal": "royalSeal",
-  "know.steadfast": "steadfast",
-  "know.stratagem": "stratagem",
-  "know.tamDai": "tamDai",
-  "know.teGiang": "teGiang",
-  "know.tenCircuits": "tenCircuits",
-  "know.tienDu": "tienDu",
-  "know.tigerLeaves": "tigerLeaves",
-  "know.troops": "troops",
-  "know.wandering": "wandering",
-  "know.warManual": "warManual",
-};
+/** Yếu tố có tranh riêng ở public/art/tam-tuong-ky/yeu-to/<mã yếu tố>.webp. */
+const NODE_ART: ReadonlySet<NodeId> = new Set([
+  "know.daiCoViet",
+  "know.duongLam",
+  "know.guardRoad",
+  "know.hoaLuHerbs",
+  "know.hoaLuy",
+  "know.hoiHo",
+  "know.magic",
+  "know.martial",
+  "know.medicine",
+  "know.ngoGia",
+  "know.outerArmor",
+  "know.phaGiap",
+  "know.phongChau",
+  "know.reedBanner",
+  "know.riverGuard",
+  "know.royalSeal",
+  "know.steadfast",
+  "know.stratagem",
+  "know.tamDai",
+  "know.teGiang",
+  "know.tenCircuits",
+  "know.tienDu",
+  "know.tigerLeaves",
+  "know.troops",
+  "know.wandering",
+  "know.warManual",
+  "know.whiteTiger",
+  "mat.armor",
+  "mat.bamboo",
+  "mat.bambooSlips",
+  "mat.blackBronze",
+  "mat.hoaLu",
+]);
 
 /**
- * Tranh của yếu tố, nếu có. Tri thức nghề, tri thức sơ học và node vai trò (tri thức nghề nhuộm hệ) dùng chung tranh
+ * Tranh của yếu tố, nếu có. Không có tranh riêng thì tri thức sơ học và node vai trò (tri thức nghề nhuộm hệ) dùng tranh
  * của nghề ở public/art/tam-tuong-ky/nghe/<nghề>.webp; vai trò dung hợp chưa có tranh.
  */
 function nodeArt(node: CatalogNode): string | undefined {
-  const own = NODE_ART[node.id];
-  if (own) return `/art/tam-tuong-ky/yeu-to/${own}.webp`;
+  if (NODE_ART.has(node.id)) return `/art/tam-tuong-ky/yeu-to/${node.id}.webp`;
   const profession = node.professionHint ?? (node.role?.hybrid ? undefined : node.role?.profession);
   return profession && `/art/tam-tuong-ky/nghe/${profession}.webp`;
 }
