@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { test } from "node:test";
-import { CHASE_PASSIVES, COMBO_PASSIVES, PLAYABLE_COMPANIONS, chasePassives } from "../../src/core";
-import { PASSIVE_ART, passiveArt } from "../../src/app/game/art/passives";
+import { CHASE_PASSIVES, COMBO_PASSIVES, PASSIVES, PLAYABLE_COMPANIONS, chasePassives } from "../../src/core";
+import { PASSIVE_ART, passiveArt, ragePassiveId } from "../../src/app/game/art/passives";
 
-test("50 ảnh bị động: đúng mã COMBO/CHASE, có file", () => {
-  assert.equal(PASSIVE_ART.size, 50);
+test("57 ảnh bị động: đúng mã COMBO/CHASE, có file", () => {
+  assert.equal(PASSIVE_ART.size, 57);
   for (const id of PASSIVE_ART) {
-    assert.ok(id in COMBO_PASSIVES || id in CHASE_PASSIVES, id);
+    assert.ok(id in COMBO_PASSIVES || id in CHASE_PASSIVES || (id.startsWith("rage_") && id.slice(5) in PASSIVES), id);
     assert.ok(existsSync(`public/art/passives/${id}.webp`), id);
   }
   for (const id of Object.keys(COMBO_PASSIVES)) assert.ok(passiveArt(id), id);
@@ -21,4 +21,8 @@ test("mọi bị động truy kích dùng chung từ 2 nhân vật trở lên đ
 
 test("mọi bị động truy kích của nhân vật chơi được đều có ảnh", () => {
   for (const f of PLAYABLE_COMPANIONS) for (const id of chasePassives(f)) assert.ok(passiveArt(id), id);
+});
+
+test("7 bị động Nộ của thủ lĩnh đều có ảnh", () => {
+  for (const el of Object.keys(PASSIVES)) assert.ok(passiveArt(ragePassiveId(el)), el);
 });

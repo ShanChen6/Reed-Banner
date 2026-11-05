@@ -101,6 +101,7 @@ import {
   EFFECT_NAME,
   ERROR_TEXT,
   gearText,
+  passiveText,
   GOOD_EFFECTS,
   TILE_NAME,
   SPECIAL_NAME,
@@ -125,7 +126,7 @@ import {
 import { GearIcon } from "../art/gear";
 import { Portrait } from "../art/portraits";
 import { SkillIcon } from "../art/skills";
-import { PassiveIcon } from "../art/passives";
+import { PassiveIcon, ragePassiveId } from "../art/passives";
 import SurvivalBreakScreen from "../survival/SurvivalBreakScreen";
 import { BoardCrest, TileArt } from "../art/tiles";
 import ProgressPanel from "./ProgressPanel";
@@ -560,6 +561,7 @@ function FighterCard({
   comboTurns, comboSource, comboTarget,
   leader,
   rage,
+  rageTurns = 0,
   active,
   selectable,
   targetable,
@@ -571,6 +573,8 @@ function FighterCard({
   comboTurns?: number; comboSource?: string; comboTarget?: string;
   leader: boolean;
   rage: number | null;
+  /** Số lượt còn lại của bị động thủ lĩnh khi đầy Nộ (chỉ thẻ thủ lĩnh). */
+  rageTurns?: number;
   active: boolean;
   selectable: boolean;
   targetable: boolean;
@@ -684,8 +688,17 @@ function FighterCard({
           <Bar label="Nộ" value={rage} max={100} color="bg-orange-500" />
         )}
       </div>
-      {(fighter.effects.length > 0 || fighter.comboReady) && (
+      {(fighter.effects.length > 0 || fighter.comboReady || rageTurns > 0) && (
         <div className="mt-1.5 flex flex-wrap gap-1">
+          {rageTurns > 0 && (
+            <span
+              className="inline-flex items-center gap-1 rounded bg-orange-600/40 px-1 py-0.5 text-[10px]"
+              title={`Bị động khi đầy Nộ · ${passiveText(fighter.element)} · còn ${rageTurns} lượt`}
+            >
+              <PassiveIcon id={ragePassiveId(fighter.element)} name={PASSIVES[fighter.element].name} className="size-3.5" />
+              {PASSIVES[fighter.element].name} · {rageTurns}
+            </span>
+          )}
           {fighter.comboReady && fighter.comboPassive && (
             <span
               className={`inline-flex items-center gap-1 rounded px-1 py-0.5 text-[10px] ${comboBlocked ? "bg-zinc-600/50" : "bg-amber-600/40"}`}
@@ -1813,6 +1826,7 @@ export default function DemoGame({
               comboTarget={f.comboReady?.target ? state.sides[f.comboReady.target.side].fighters[f.comboReady.target.fighter]?.name : undefined}
               leader={own.leader === i}
               rage={own.leader === i ? own.rage : null}
+              rageTurns={own.leader === i ? own.passiveTurns : 0}
               active={isActor}
               selectable={canPick && !aim}
               targetable={!!target && aimMark === i && isAlive(f)}
