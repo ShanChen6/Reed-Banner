@@ -52,7 +52,7 @@ function RaidPanel({
   return (
     <div className="flex flex-col gap-3">
       <div>
-        <p className="text-kicker">
+        <p className="text-kicker text-frame-gold">
           Tái đấu · {boss.place}
         </p>
         <h3 className="text-lg font-bold text-frame-gold">
@@ -70,12 +70,12 @@ function RaidPanel({
           {raidSetup(boss, 1).rule}
           {boss.mode === "3v3" && " Thủ lĩnh máu ×1,5."}
         </p>
-        <p className="mt-1 text-xs text-caption">
+        <p className="mt-1 text-caption text-on-wood-soft">
           Thể thức {boss.mode === "3v3" ? "3vs3, ra trận cùng đội đã chọn ở Doanh Trại" : "1vs1"}. Tái đấu sứ quân
           không dùng lương Bình Loạn và không đổi tiến độ Bình Loạn.
         </p>
       </div>
-      {!open && <p className="text-sm text-caption">{gateText(boss)}.</p>}
+      {!open && <p className="text-sm text-on-wood-soft">{gateText(boss)}.</p>}
       <ul className="grid gap-2 sm:grid-cols-3">
         {RAID_TIERS.map((tier) => {
           const info = RAID_TIER_INFO[tier];
