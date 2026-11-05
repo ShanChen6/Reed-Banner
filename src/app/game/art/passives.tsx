@@ -1,6 +1,6 @@
 /**
  * Biểu tượng bị động: ảnh tròn Shan vẽ (05/11/2026) ở public/art/passives/<mã>.webp, đã cắt theo một vòng tròn đều.
- * Mã là khóa của COMBO_PASSIVES (bị động nghề 1) hoặc CHASE_PASSIVES (truy kích). Bị động chưa có ảnh vẽ chấm tròn chữ cái đầu.
+ * Mã là khóa của COMBO_PASSIVES (bị động nghề 1), CHASE_PASSIVES (truy kích) hoặc rage_<hệ> (bị động thủ lĩnh khi đầy Nộ, PASSIVES). Bị động chưa có ảnh vẽ chấm tròn chữ cái đầu.
  */
 
 /** 29 bị động dùng chung (7 nghề 1 Cơ hội, 8 truy kích theo nghề, 14 theo hệ) và 21 bị động riêng (14 Xạ thủ/Sát thủ mở rộng, Đinh Ngọc, Trần Vũ Phong). */
@@ -12,7 +12,11 @@ export const PASSIVE_ART = new Set([
   "rb069_passive", "rb070_passive", "rb071_passive", "rb072_passive", "rb073_passive", "rb074_passive", "rb075_passive",
   "dn_thoMachHoThan", "dn_mocTucDuongSinh", "dn_loiYDoatCo",
   "vp_truongThietHoiDap", "vp_phiDiepTheoGio", "vp_hoaAnVanSau", "vp_loiVanTranPhap",
+  "rage_kim", "rage_moc", "rage_thuy", "rage_hoa", "rage_tho", "rage_loi", "rage_phong",
 ]);
+
+/** Mã ảnh bị động thủ lĩnh khi đầy Nộ của một hệ. */
+export const ragePassiveId = (element: string) => `rage_${element}`;
 
 export function passiveArt(id: string): string | undefined {
   return PASSIVE_ART.has(id) ? `/art/passives/${id}.webp` : undefined;
