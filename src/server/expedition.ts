@@ -151,7 +151,16 @@ function scenarioView(run: ExpeditionRun) {
   return {
     endings: !!scenario.endingGold,
     brokenRoads: !!scenario.broken,
-    ...(refugees ? { village: refugees.village, home: refugees.home, chaseUnless: refugees.chaseUnless } : {}),
+    ...(refugees
+      ? {
+          village: refugees.village,
+          home: refugees.home,
+          chaseUnless: refugees.chaseUnless,
+          refugeeTitle: refugees.title ?? "Rút dân",
+          refugeeNoun: refugees.noun ?? "đoàn dân",
+        }
+      : {}),
+    ...(scenario.missionGold && !scenario.endingGold ? { missionGold: scenario.missionGold } : {}),
     ...(counterRule ? { market: counterRule.node, counterAfterDays: counterRule.afterDays } : {}),
     ...(reinforcements ? { reinforcementDays: reinforcements.days, reinforcementLabel: reinforcements.label } : {}),
     ...(tide ? { tideDays: run.tideKnown ? tide.days : null, tideRevealedBy: tide.revealedBy } : {}),

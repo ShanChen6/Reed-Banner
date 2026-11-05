@@ -2,6 +2,9 @@
 
 ## 05/11/2026
 
+**Viễn Chinh: nhiệm vụ cho mọi sa bàn, hạ sức địch Cửa Biển**
+- Shan cho thêm nhiệm vụ cho các sa bàn và hạ sức địch Cửa Biển. Nhiệm vụ không bắt buộc, ghép từ hộ tống và chặn viện binh: Ải Bắc giải cứu tù binh (Kho Ngựa Thồ → Bản Na), Thượng Du đưa dân qua đèo (Bản Ruộng Bậc → Bản Mộc), Ngã Ba Sông rút dân (Làng Ruộng Chiêm → Trại Bờ Đông hoặc Kho Thóc đã giữ), Kinh Thành chặn viện binh, Quần Đảo chặn thuyền viện ở Lũy Cầu Dài (mới). Thắng kèm xong nhiệm vụ thì vàng ×1,3. Ngã Ba Sông hạn 10 → 11 ngày. Cửa Biển địch ×0,87: Bậc I 50 → 85%. Xem [GDD mục 4.3](../02-game-modes/expedition/01-vien-chinh-gdd.md#43-nhiệm-vụ-từng-sa-bàn-shan-yêu-cầu-05112026) và [mục 5.3](../02-game-modes/expedition/01-vien-chinh-gdd.md#53-nhiệm-vụ-và-sức-địch-cửa-biển-05112026-lần-8).
+
 **Viễn Chinh: mô phỏng đi theo nhiệm vụ, cân lại số ngày**
 - Shan cho dạy mô phỏng làm việc phụ (trinh sát, chặn viện binh, rút dân, giữ kho) và chạy dài để cân. Đổi hạn ngày: Ải Bắc 12 → 13, Thượng Du 17 → 19, Cửa Biển 12 → 17, Kinh Thành 10 → 11; trận giữ Đèo Ngang 6 lượt, không mạnh thêm. Năm sa bàn vào khoảng mục tiêu; Cửa Biển vẫn khó nhất (Bậc I 50%). Xem [GDD mục 5.2](../02-game-modes/expedition/01-vien-chinh-gdd.md#52-kết-quả-bản-chốt-05112026).
 

@@ -188,7 +188,7 @@ export const EXPEDITION_MAPS: Readonly<Record<ExpeditionMapId, ExpeditionMap>> =
     name: "Ngã Ba Sông",
     blurb: "Thành đích nằm giữa ba nhánh sông. Hai đạo xuất phát từ hai phía; lội sông nhanh đường mà mất hai ngày, đi vòng qua cầu thì xa.",
     element: "tho",
-    days: 10,
+    days: 11,
     parDays: 7,
     art: { x: 400, y: 250, w: 700 },
     camps: ["trai-tay", "trai-dong"],

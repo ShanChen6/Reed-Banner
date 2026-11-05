@@ -122,6 +122,8 @@ export interface ExpeditionResult {
   readonly won: boolean;
   /** Sa bàn có kịch bản: kết thúc đạt được (giữ dân là thắng phụ, `won` vẫn là false vì chưa chiếm thành). */
   readonly ending?: ExpeditionEnding;
+  /** Sa bàn thường: thắng và đã xong nhiệm vụ (vàng nhân `missionGold`). */
+  readonly mission?: boolean;
   readonly days: number;
   readonly stars: number;
   readonly firstClear: boolean;

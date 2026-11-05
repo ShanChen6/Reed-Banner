@@ -236,7 +236,7 @@ export function expeditionEncounter(run: ExpeditionRun, nodeId: string, army: Ar
   const node = expeditionNode(map, nodeId);
   if (!node || !isExpeditionCombatNode(node.kind)) return null;
   const scenario = expeditionScenarioOf(run);
-  let power = expeditionPower(run.tier, run.day);
+  let power = expeditionPower(run.tier, run.day) * (expeditionScenarioOf(run)?.foePower ?? 1);
   const hold = scenario?.hold?.nodes.includes(nodeId) ? scenario.hold : undefined;
   if (hold) power *= hold.power;
   if (scenario?.reinforcements && node.kind === "citadel") power *= 1 + scenario.reinforcements.power * (run.arrivals ?? 0);
@@ -268,7 +268,7 @@ export function expeditionChaseEncounter(run: ExpeditionRun, army: ArmyIndex, to
   const map = expeditionMapOf(run);
   if (!refugees) return null;
   const village = expeditionNode(map, refugees.village)!;
-  const power = expeditionPower(run.tier, run.day) * refugees.chasePower;
+  const power = expeditionPower(run.tier, run.day) * (expeditionScenarioOf(run)?.foePower ?? 1) * refugees.chasePower;
   return {
     node: village.id,
     kind: village.kind,
@@ -291,7 +291,7 @@ export function expeditionCounterEncounter(run: ExpeditionRun, army: ArmyIndex):
   const map = expeditionMapOf(run);
   if (!counter) return null;
   const node = expeditionNode(map, counter.node)!;
-  const power = expeditionPower(run.tier, run.day) * counter.power;
+  const power = expeditionPower(run.tier, run.day) * (expeditionScenarioOf(run)?.foePower ?? 1) * counter.power;
   const pincer = expeditionPincer(run, node.id, army);
   return {
     node: node.id,
@@ -531,13 +531,14 @@ function arrive(run: ExpeditionRun, index: ArmyIndex, to: string): ExpeditionRun
   if (!scenario) return next;
   const name = EXPEDITION_ARMY_NAME[index];
   const refugees = scenario.refugees;
+  const noun = expeditionRefugeeNoun(scenario);
   if (refugees && to === refugees.village && next.refugees === undefined)
-    next = logLine({ ...next, refugees: index }, `${name} nhận đoàn dân ${node.name}.`);
+    next = logLine({ ...next, refugees: index }, `${name} nhận ${noun} ${node.name}.`);
   const home = to === refugees?.home || (to === scenario.counter?.node && next.market?.status === "held");
   if (refugees && next.refugees === index && home)
     next = scenario.tide
-      ? logLine({ ...next, refugees: "saved", tideKnown: true }, `${name} đưa dân về ${node.name}; dân chài báo lịch con nước.`)
-      : logLine({ ...next, refugees: "saved" }, `${name} đưa dân về ${node.name}.`);
+      ? logLine({ ...next, refugees: "saved", tideKnown: true }, `${name} đưa ${noun} về ${node.name}; dân chài báo lịch con nước.`)
+      : logLine({ ...next, refugees: "saved" }, `${name} đưa ${noun} về ${node.name}.`);
   if (to === scenario.tide?.revealedBy && !next.tideKnown) next = { ...next, tideKnown: true };
   return next;
 }
@@ -751,7 +752,8 @@ export function settleExpeditionBattle(
   next = { ...next, phase: "march", battle: null };
   if (!won) next = { ...next, defeats: (next.defeats ?? 0) + 1 };
   // Thua khi đang mang dân: đoàn dân bị bắt.
-  if (!won && next.refugees === index) next = logLine({ ...next, refugees: "lost" }, `${name} thua trận, đoàn dân bị bắt.`);
+  if (!won && next.refugees === index)
+    next = logLine({ ...next, refugees: "lost" }, `${name} thua trận, ${expeditionRefugeeNoun(expeditionScenarioOf(next))} bị bắt lại.`);
 
   if (mode === "chase") {
     if (won) next = logLine(arrive(next, index, to), `${name} đánh lui truy binh.`);
@@ -764,6 +766,12 @@ export function settleExpeditionBattle(
         next = withArmy(next, i, { ...a, food: clampExpeditionFood(a.food + (scenario?.counter?.food ?? 0)) });
       }
       next = logLine(next, `${name} giữ được ${node.name}.`);
+      // Đạo đang hộ tống đứng ngay ở kho vừa giữ: kho thành chỗ đưa người về.
+      if (next.refugees === index && scenario?.refugees)
+        next = logLine(
+          { ...next, refugees: "saved", ...(scenario.tide ? { tideKnown: true } : {}) },
+          `${name} đưa ${expeditionRefugeeNoun(scenario)} vào ${node.name}.`,
+        );
     } else {
       // Rút về ô kề đã an toàn đầu tiên (luôn có: ô vừa đi qua để tới chợ).
       const back = expeditionNeighbors(map, nodeId).find((n) => !hasFight(next, n)) ?? army.at;
@@ -842,6 +850,19 @@ export function expeditionEnding(run: ExpeditionRun): ExpeditionEnding | undefin
   return undefined;
 }
 
+/** Người được hộ tống trên sa bàn (đoàn dân, tù binh). */
+export const expeditionRefugeeNoun = (scenario: ExpeditionScenario | undefined) => scenario?.refugees?.noun ?? "đoàn dân";
+
+/**
+ * Nhiệm vụ của sa bàn đã xong chưa: đã đưa người về (nếu có khối rút dân) và đã chặn viện binh (nếu có khối viện
+ * binh). Sa bàn không có nhiệm vụ nào: undefined.
+ */
+export function expeditionMissionDone(run: ExpeditionRun): boolean | undefined {
+  const scenario = expeditionScenarioOf(run);
+  if (!scenario?.refugees && !scenario?.reinforcements) return undefined;
+  return (!scenario.refugees || run.refugees === "saved") && (!scenario.reinforcements || run.reinforcementsCut === true);
+}
+
 /**
  * Sao: thắng; xong trong số ngày chuẩn; không thua trận nào. Sa bàn có kịch bản: toàn thắng 3 sao, chiếm trại 2 sao
  * (1 nếu quá ngày chuẩn), giữ dân 1 sao.
@@ -896,7 +917,9 @@ export function applyExpeditionEnd(
   // Giữ dân (thắng phụ) chỉ có vàng thắng lại × hệ số: không tính qua bậc, không mở bậc sau, không có món, để không
   // lách được thành đích bằng cách làm xong nhiệm vụ rồi rút quân (Shan chốt 05/11/2026).
   const firstClear = won && (state.cleared[run.map] ?? 0) < run.tier;
-  const mult = ending && scenario?.endingGold ? scenario.endingGold[ending] : 1;
+  // Sa bàn thường: thắng mà xong nhiệm vụ thì vàng nhân missionGold.
+  const mission = won && !scenario?.endingGold && !!scenario?.missionGold && expeditionMissionDone(run) === true;
+  const mult = ending && scenario?.endingGold ? scenario.endingGold[ending] : mission ? scenario!.missionGold! : 1;
   const gold = Math.round((firstClear ? info.firstGold : info.repeatGold) * mult);
   let next: Profile = { ...profile, gold: profile.gold + gold };
   let item: GearItem | null = null;
@@ -918,6 +941,7 @@ export function applyExpeditionEnd(
   const result: ExpeditionResult = {
     won,
     ...(ending ? { ending } : {}),
+    ...(mission ? { mission: true } : {}),
     days: run.day,
     stars,
     firstClear,
