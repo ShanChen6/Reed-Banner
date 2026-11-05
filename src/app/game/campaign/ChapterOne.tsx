@@ -1,6 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui";
+import { OrnateFrame } from "@/components/game-ui";
+import { Alert, Button, buttonVariants, choiceVariants } from "@/components/ui";
 
 // Các chương Campaign V2 đã có nội dung (Chương I–III, Chương IV có M13, M15, M16): intro → lựa chọn trình diễn → hoàn thành (story) hoặc chuẩn bị xuất quân
 // (trận). Mọi tiến độ, lựa chọn và thưởng lấy từ hồ sơ server; trình duyệt chỉ nhớ bước đang xem và màn
@@ -210,13 +211,13 @@ function RewardModal({
       aria-labelledby="first-clear-title"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
     >
-      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border-2 border-[var(--gold)] bg-[#2a1f19] p-4 text-foreground shadow-2xl">
-        <p className="text-xs tracking-widest text-amber-300/80 uppercase">
+      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border-2 border-frame-gold bg-wood p-4 text-on-wood shadow-2xl">
+        <p className="text-kicker text-frame-gold">
           Hoàn thành lần đầu
         </p>
         <h2
           id="first-clear-title"
-          className="text-xl font-black text-amber-100"
+          className="text-xl font-black text-title-on-wood"
         >
           {node.title}
         </h2>
@@ -230,19 +231,19 @@ function RewardModal({
             />
           </div>
         )}
-        <ul className="mt-3 flex flex-col gap-1 rounded-md bg-black/30 p-2 text-sm">
-          <li className="font-semibold text-amber-300">
+        <ul className="ui-frame-inset mt-3 flex flex-col gap-1 p-2 text-sm">
+          <li className="font-semibold text-frame-gold">
             +{reward.missionGold} vàng thưởng nhiệm vụ
           </li>
           {reward.chapterGold > 0 && (
-            <li className="font-semibold text-amber-300">
+            <li className="font-semibold text-frame-gold">
               +{reward.chapterGold} vàng hoàn thành chương
             </li>
           )}
           {(() => {
             const faction = campaignEventByNode(node.id)?.faction;
             return faction ? (
-              <li className="text-sky-200">
+              <li className="text-info">
                 Thế cục:{" "}
                 {companionById(faction.faction)?.name ?? faction.faction}{" "}
                 {FACTION_STATUS_TEXT[faction.status].toLowerCase()} (không tính
@@ -251,11 +252,11 @@ function RewardModal({
             ) : null;
           })()}
           {reward.unlockedHeroes.map((id) => (
-            <li key={id} className="text-emerald-300">
+            <li key={id} className="text-jade">
               Mở khóa đồng hành: {companionById(id)?.name ?? id}
             </li>
           ))}
-          <li className="text-xs text-muted">
+          <li className="text-xs text-on-wood-soft">
             Server đã ghi thưởng một lần; đánh lại hoặc xem lại không nhận thêm.
           </li>
         </ul>
@@ -349,7 +350,7 @@ function BattlePrep({
   return (
     <div className="flex flex-col gap-3">
       {profile.campaign.completed.includes(nodeId) && (
-        <p className="rounded-md border border-sky-400/40 bg-sky-500/10 p-2 text-xs text-sky-100">
+        <p className="rounded-md border border-info/40 bg-info/10 p-2 text-xs text-info">
           Đánh lại: chỉ nhận thưởng trận thường và có thể ghi số lượt tốt hơn.
           Thưởng nhiệm vụ, thế cục sứ quân và lựa chọn đã ghi không đổi.
         </p>
@@ -362,13 +363,13 @@ function BattlePrep({
               aria-current={i === phase ? "step" : undefined}
               className={`rounded border px-2 py-1 ${
                 i < phase
-                  ? "border-emerald-400/50 bg-emerald-500/15 text-emerald-200"
+                  ? "border-jade/50 bg-jade/15 text-jade"
                   : i === phase
-                    ? "border-amber-300 bg-amber-500/25 font-semibold text-amber-50"
-                    : "border-white/10 bg-black/30 text-muted"
+                    ? "border-frame-gold bg-frame-gold/25 font-semibold text-on-wood"
+                    : "border-frame-line-soft bg-wood-inset text-on-wood-soft"
               }`}
             >
-              {i < phase ? "✓ " : ""}Phase {i + 1}/{labels.length}: {label}
+              {i < phase ? "✓ " : ""}Giai đoạn {i + 1}/{labels.length}: {label}
             </li>
           ))}
         </ol>
@@ -380,15 +381,15 @@ function BattlePrep({
           trên đường tiếp viện.
         </p>
       )}
-      <div className="rounded-md border border-amber-500/40 bg-amber-500/10 p-2 text-sm text-amber-100">
-        <p className="font-semibold">⚑ Mục tiêu</p>
+      <div className="rounded-md border border-frame-line bg-frame-gold/10 p-2 text-sm text-title-on-wood">
+        <p className="font-semibold">Mục tiêu</p>
         <p>
           {stage === "escort"
             ? `Giữ đoàn lương ${turns} lượt của bạn hoặc hạ hết toán chặn đường.`
             : stage === "breach"
               ? `${labels[phase] ?? "Phá lũy"}: hạ hết quân giữ đường để mở lối vào thành.`
               : objective?.type === "bossPhases" && objective.hpThreshold
-                ? `Đẩy ${foes[0]?.name} xuống còn ${Math.round(objective.hpThreshold * 100)}% máu. Trận dừng ở đó và chuyển sang phase sau; máu đã mất không hồi lại.`
+                ? `Đẩy ${foes[0]?.name} xuống còn ${Math.round(objective.hpThreshold * 100)}% máu. Trận dừng ở đó và chuyển sang giai đoạn sau; máu đã mất không hồi lại.`
                 : objective?.type === "bossPhases" && labels.length > 1
                   ? `Hạ ${foes[0]?.name}${bossHp ? `, vào trận với ${Math.round(bossHp * 100)}% máu còn lại từ phase trước` : ""}, cùng hai tùy tướng.`
                   : turns
@@ -396,38 +397,38 @@ function BattlePrep({
                     : copy?.objective}
         </p>
         {labels.length > 1 && (
-          <p className="mt-1 text-xs text-amber-200/80">
+          <p className="mt-1 text-xs text-frame-gold/80">
             Mỗi phase là một trận. Qua phase chưa hoàn thành nhiệm vụ; thua thì
-            đánh lại đúng phase đó. Lương còn lại mang sang phase sau.
+            đánh lại đúng giai đoạn đó. Lương còn lại mang sang giai đoạn sau.
           </p>
         )}
         {terrain && (
-          <p className="mt-1 text-xs text-amber-200/80">
+          <p className="mt-1 text-xs text-frame-gold/80">
             {terrain.name}: {terrain.summary}. Địa hình do game dựng, không phải
             sơ đồ một trận có sử chép.
           </p>
         )}
         {encounter.foeFood !== undefined && (
-          <p className="mt-1 text-xs text-amber-200/80">
+          <p className="mt-1 text-xs text-frame-gold/80">
             Đối thủ vào trận với {encounter.foeFood} lương (luật game). Mang đủ
             lương để không đói giữa trận.
           </p>
         )}
       </div>
-      <dl className="grid grid-cols-2 gap-x-3 gap-y-1 rounded-md bg-black/25 p-2 text-sm sm:grid-cols-4">
-        <dt className="text-muted">Thể thức</dt>
+      <dl className="ui-frame-inset grid grid-cols-2 gap-x-3 gap-y-1 p-2 text-sm sm:grid-cols-4">
+        <dt className="text-on-wood-soft">Thể thức</dt>
         <dd className="font-semibold">
           {scenario.mode === "3v3" ? "3vs3" : "1vs1"}
         </dd>
-        <dt className="text-muted">Độ khó</dt>
+        <dt className="text-on-wood-soft">Độ khó</dt>
         <dd className="font-semibold">
           {DIFFICULTY_NAME[scenario.difficulty]}
         </dd>
-        <dt className="text-muted">Cấp đối thủ</dt>
+        <dt className="text-on-wood-soft">Cấp đối thủ</dt>
         <dd className="font-semibold">{encounter.level}</dd>
-        <dt className="text-muted">Cấp gợi ý</dt>
+        <dt className="text-on-wood-soft">Cấp gợi ý</dt>
         <dd
-          className={`font-semibold ${advice.underLevel ? "text-rose-400" : "text-emerald-400"}`}
+          className={`font-semibold ${advice.underLevel ? "text-danger" : "text-jade"}`}
         >
           {advice.recommendedLevel}
         </dd>
@@ -436,7 +437,7 @@ function BattlePrep({
         {foes.map((f, i) => (
           <li
             key={f.id}
-            className="flex items-center gap-2 rounded-lg bg-black/30 p-2"
+            className="ui-frame-inset flex items-center gap-2 p-2"
           >
             <Portrait
               id={f.id}
@@ -446,11 +447,11 @@ function BattlePrep({
             />
             <div className="min-w-0 text-xs">
               <p className="truncate text-sm font-semibold">{f.name}</p>
-              <p className="flex items-center gap-1 text-foreground-secondary">
+              <p className="flex items-center gap-1 text-on-wood-soft">
                 <ElementIcon element={f.element} className="size-3.5" />
                 {ELEMENT_NAME[f.element]} · {PROFESSION_NAME[f.profession]}
               </p>
-              <p className="text-muted">
+              <p className="text-on-wood-soft">
                 {encounter.foes[i]?.hero
                   ? "Sứ quân có tên trong sử · trận do game dựng"
                   : "Nhân vật hư cấu"}
@@ -461,11 +462,11 @@ function BattlePrep({
       </ul>
 
       <section
-        className="rounded-md bg-black/25 p-2 text-sm"
+        className="ui-frame-inset p-2 text-sm"
         aria-label="Gợi ý đội hình"
       >
-        <h3 className="mb-1 font-semibold text-amber-200">Gợi ý đội hình</h3>
-        <p className="text-foreground-secondary">
+        <h3 className="mb-1 font-semibold text-frame-gold">Gợi ý đội hình</h3>
+        <p className="text-on-wood-soft">
           {advice.mode === "1v1"
             ? "Trận 1vs1: chỉ Đinh Bộ Lĩnh ra trận."
             : "Trận 3vs3: Đinh Bộ Lĩnh cùng hai người bạn chọn dưới đây."}{" "}
@@ -475,7 +476,7 @@ function BattlePrep({
         </p>
         {advice.mode === "3v3" && (
           <div className="mt-2">
-            <p className="text-xs text-muted" id={`team-${nodeId}`}>
+            <p className="text-xs text-on-wood-soft" id={`team-${nodeId}`}>
               Đi cùng ({team.length}/2):{" "}
               {team.map((id) => companionById(id)?.name ?? id).join(", ") ||
                 "chưa chọn"}
@@ -495,15 +496,11 @@ function BattlePrep({
                     aria-pressed={on}
                     disabled={!on && team.length >= 2}
                     onClick={() => toggleTeam(id)}
-                    className={`flex min-h-9 items-center gap-1 rounded border px-2 py-1 text-xs ${
-                      on
-                        ? "border-amber-300 bg-amber-500/25"
-                        : "border-white/10 bg-black/30"
-                    } disabled:opacity-40`}
+                    className={choiceVariants({ size: "sm", className: "min-h-9 gap-1 px-2 py-1 text-xs font-normal" })}
                   >
                     <ElementIcon element={c.element} className="size-3.5" />
                     {c.name}
-                    <span className="text-muted">
+                    <span className="opacity-75">
                       {PROFESSION_NAME[c.profession]}
                     </span>
                   </button>
@@ -524,18 +521,14 @@ function BattlePrep({
               role="radio"
               aria-checked={profession === p}
               onClick={() => setProfession(p)}
-              className={`flex items-center gap-1 rounded border px-2 py-1 text-xs ${
-                profession === p
-                  ? "border-amber-300 bg-amber-500/25"
-                  : "border-white/10 bg-black/30"
-              }`}
+              className={choiceVariants({ size: "sm", className: `gap-1 px-2 py-1 text-xs font-normal ${profession === p ? "is-selected" : ""}` })}
             >
               <ProfessionIcon profession={p} className="size-4" />
               {PROFESSION_NAME[p]}
             </button>
           ))}
         </div>
-        <p className="mt-1 text-xs text-muted">
+        <p className="mt-1 text-xs text-on-wood-soft">
           Vũ khí nghề {PROFESSION_NAME[profession]}:{" "}
           {weapon ? gearText(weapon) : "chưa trang bị (đổi ở Doanh Trại)"}. Mỗi nghề
           dùng vũ khí riêng; nghề và hệ chọn ở đây được lưu khi xuất quân.
@@ -552,22 +545,18 @@ function BattlePrep({
               role="radio"
               aria-checked={element === e}
               onClick={() => setElement(e)}
-              className={`flex items-center gap-1 rounded border px-2 py-1 text-xs ${
-                element === e
-                  ? "border-amber-300 bg-amber-500/25"
-                  : "border-white/10 bg-black/30"
-              }`}
+              className={choiceVariants({ size: "sm", className: `gap-1 px-2 py-1 text-xs font-normal ${element === e ? "is-selected" : ""}` })}
             >
               <ElementIcon element={e} className="size-4" />
               {ELEMENT_NAME[e]}
               {advice.counterElements.includes(e) && (
-                <span className="text-emerald-300">★</span>
+                <span className="text-jade">★</span>
               )}
             </button>
           ))}
         </div>
         <p
-          className={`mt-1 text-xs ${counters ? "text-emerald-300" : weak ? "text-rose-300" : "text-muted"}`}
+          className={`mt-1 text-xs ${counters ? "text-jade" : weak ? "text-danger" : "text-on-wood-soft"}`}
         >
           {counters
             ? "Hệ đang chọn khắc thủ lĩnh đối phương."
@@ -578,11 +567,11 @@ function BattlePrep({
       </section>
 
       <section
-        className="rounded-md bg-black/25 p-2 text-sm"
+        className="ui-frame-inset p-2 text-sm"
         aria-label="Gợi ý lương"
       >
-        <h3 className="mb-1 font-semibold text-amber-200">Lương mang theo</h3>
-        <p className={advice.lowFood ? "text-rose-300" : "text-foreground-secondary"}>
+        <h3 className="mb-1 font-semibold text-frame-gold">Lương mang theo</h3>
+        <p className={advice.lowFood ? "text-danger" : "text-on-wood-soft"}>
           Đang có {advice.food}/{CAMPAIGN_FOOD_MAX} lương; gợi ý từ{" "}
           {advice.suggestedFood} để quân không đói suốt trận.
           {advice.lowFood &&
@@ -601,7 +590,7 @@ function BattlePrep({
       </section>
 
       {advice.underLevel && (
-        <p className="rounded-md border border-rose-400/50 bg-rose-500/10 p-2 text-sm text-rose-200">
+        <p className="rounded-md border border-danger/50 bg-danger/10 p-2 text-sm text-danger">
           Đinh Bộ Lĩnh mới cấp {advice.playerLevel}, thấp hơn cấp gợi ý{" "}
           {advice.recommendedLevel}. Bạn vẫn có thể xuất quân; thua thì giữ
           nguyên tiến độ và thử lại.
@@ -946,23 +935,23 @@ export default function ChapterOne({
             <button
               type="button"
               onClick={() => updateAtlas({ ...atlas, view: "atlas" })}
-              className="min-h-11 rounded-lg border border-[#8a6a3b] bg-[#2a1f19] px-4 font-semibold text-amber-100 hover:bg-[#3a2b22]"
+              className={buttonVariants({ variant: "secondary", className: "min-h-11" })}
             >
               ← Về bản đồ Sử ký
             </button>
-            <p className="text-sm text-muted">
+            <p className="text-sm text-on-wood-soft">
               Chương {ROMAN[chapter.chapter]} · {chapter.title}
               {stronghold ? ` · ${stronghold.place}` : ""}
             </p>
           </nav>
 
-          <article className="flex flex-col gap-3 rounded-xl border-2 border-[#8a6a3b] bg-[#2a1f19]/90 p-4 shadow-[inset_0_0_24px_#0009]">
+          <OrnateFrame as="article" level="raised" className="flex flex-col gap-3">
             <header>
-              <p className="text-xs tracking-widest text-amber-300/80 uppercase">
+              <p className="text-kicker text-frame-gold">
                 {node.location.name} ·{" "}
                 {CERTAINTY_TEXT[node.location.certainty]}
                 {node.location.modernRegion && (
-                  <span className="text-muted normal-case">
+                  <span className="text-on-wood-soft normal-case">
                     {" "}
                     (ngày nay: {node.location.modernRegion})
                   </span>
@@ -972,7 +961,7 @@ export default function ChapterOne({
                 id="mission-title"
                 ref={missionHeadingRef}
                 tabIndex={-1}
-                className="text-xl font-bold text-amber-100 focus:outline-none"
+                className="text-xl font-bold text-title-on-wood focus:outline-none"
               >
                 {node.title}
               </h2>
@@ -982,7 +971,7 @@ export default function ChapterOne({
                 ))}
               </div>
               {node.type === "diplomacy" && !copy && (
-                <p className="mt-2 text-xs text-muted">
+                <p className="mt-2 text-xs text-on-wood-soft">
                   Hội kiến: không có trận, không có thanh máu. Hoàn thành bằng
                   lựa chọn lời đáp; server ghi kết quả.
                 </p>
@@ -992,7 +981,7 @@ export default function ChapterOne({
                 (() => {
                   const fate = factionResolutionOfMission(node.id);
                   return fate ? (
-                    <p className="mt-1 text-xs text-sky-200">
+                    <p className="mt-1 text-xs text-info">
                       Kết cục cố định của{" "}
                       {companionById(fate.faction)?.name ?? fate.faction}:{" "}
                       {FACTION_STATUS_TEXT[fate.status].toLowerCase()} theo tổng
@@ -1004,7 +993,7 @@ export default function ChapterOne({
                   ) : null;
                 })()}
               {event?.faction && node.type !== "diplomacy" && (
-                <p className="mt-1 text-xs text-sky-200">
+                <p className="mt-1 text-xs text-info">
                   Kết cục cố định:{" "}
                   {companionById(event.faction.faction)?.name ??
                     event.faction.faction}{" "}
@@ -1017,7 +1006,7 @@ export default function ChapterOne({
             </header>
 
             {!copy ? (
-              <p className="text-foreground-secondary">
+              <p className="text-on-wood-soft">
                 Nội dung nhiệm vụ này sẽ mở ở bản sau.
               </p>
             ) : node.type === "diplomacy" ? (
@@ -1038,8 +1027,8 @@ export default function ChapterOne({
             ) : (
               <>
                 {step.nodeId === "M23" && (
-                  <p className="rounded-xl border border-amber-500/30 bg-black/30 p-3 text-sm text-amber-100">
-                    <span className="font-semibold text-amber-200">
+                  <p className="ui-frame-inset p-3 text-sm text-on-wood">
+                    <span className="font-semibold text-frame-gold">
                       Trích đoạn xây dựng quốc gia.
                     </span>{" "}
                     Chọn một việc ưu tiên rồi đọc kết quả. Không có trận, đồng
@@ -1081,9 +1070,9 @@ export default function ChapterOne({
                         ...(step.choice ? { choice: step.choice } : {}),
                       })
                     }
-                    className="min-h-11 self-start rounded-lg bg-white/10 px-4 text-sm hover:bg-white/15"
+                    className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-11 self-start" })}
                   >
-                    ↺ Xem lại lời dẫn
+                    Xem lại lời dẫn
                   </button>
                 )}
                 {step.nodeId === CAMPAIGN_UNIFICATION_NODE && (
@@ -1092,7 +1081,7 @@ export default function ChapterOne({
                 <SourceNotes nodeId={step.nodeId} />
                 {step.phase !== "intro" && (
                   <div className="flex flex-col gap-2">
-                    <p className="font-semibold text-amber-200">
+                    <p className="font-semibold text-frame-gold">
                       {copy.prompt}
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -1113,11 +1102,7 @@ export default function ChapterOne({
                                 choice: c.id,
                               })
                             }
-                            className={`rounded border px-3 py-1.5 text-sm ${
-                              choice === c.id
-                                ? "border-amber-300 bg-amber-500/25"
-                                : "border-white/15 bg-black/30"
-                            } disabled:opacity-40`}
+                            className={choiceVariants({ className: "px-3 py-1.5 text-sm font-normal" })}
                           >
                             {c.label}
                             {(() => {
@@ -1125,7 +1110,7 @@ export default function ChapterOne({
                                 (x) => x.id === c.id,
                               )?.tone;
                               return tone ? (
-                                <span className="ml-1.5 text-[10px] text-muted uppercase">
+                                <span className="ml-1.5 text-[10px] uppercase opacity-75">
                                   {TONE_TEXT[tone]}
                                 </span>
                               ) : null;
@@ -1134,7 +1119,7 @@ export default function ChapterOne({
                         );
                       })}
                     </div>
-                    <p className="text-xs text-muted">
+                    <p className="text-xs text-on-wood-soft">
                       Lựa chọn chỉ đổi lời kể; kết quả nhiệm vụ và phần thưởng
                       như nhau.
                     </p>
@@ -1149,7 +1134,7 @@ export default function ChapterOne({
                         type="button"
                         disabled={!choice || busy}
                         onClick={() => void submitEvent()}
-                        className="self-start rounded-lg border-2 border-[var(--gold)] bg-gradient-to-b from-[#c0392b] to-[#7a2c1d] px-5 py-2 font-bold text-amber-50 disabled:opacity-50"
+                        className={buttonVariants({ size: "lg", className: "min-h-11 self-start" })}
                       >
                         {busy ? "Đang ghi…" : "Hoàn thành nhiệm vụ"}
                       </button>
@@ -1161,7 +1146,7 @@ export default function ChapterOne({
                         onClick={() =>
                           move({ nodeId: step.nodeId, phase: "prep", choice })
                         }
-                        className="self-start rounded bg-amber-500 px-4 py-1.5 font-semibold text-stone-950 disabled:opacity-40"
+                        className={buttonVariants({ className: "min-h-11 self-start" })}
                       >
                         Chuẩn bị xuất quân
                       </button>
@@ -1186,8 +1171,12 @@ export default function ChapterOne({
               </>
             )}
             {copy && <MissionSources nodeId={step.nodeId} />}
-            {message && <p className="text-sm text-rose-400">{message}</p>}
-          </article>
+            {message && (
+              <Alert tone="error" className="p-3 text-sm">
+                {message}
+              </Alert>
+            )}
+          </OrnateFrame>
         </>
       )}
     </section>
