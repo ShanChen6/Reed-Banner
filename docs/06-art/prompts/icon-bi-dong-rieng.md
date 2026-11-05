@@ -1,7 +1,7 @@
 # Prompt icon bị động riêng (21 hình)
 
 > Cập nhật: 05/11/2026
-> Trạng thái: **DRAFT** — chưa có ảnh; bộ 29 bị động dùng chung ở [Prompt icon bị động dùng chung](icon-bi-dong.md).
+> Trạng thái: **IMPLEMENTED** — đủ 21 ảnh ở `public/art/passives/<mã>.webp` (PASSIVE_ART trong `src/app/game/art/passives.tsx`); bộ 29 bị động dùng chung ở [Prompt icon bị động dùng chung](icon-bi-dong.md).
 
 21 bị động chỉ một nhân vật có: 14 của Xạ thủ/Sát thủ bản mở rộng, 3 của Đinh Ngọc, 4 của Trần Vũ Phong. Danh sách lấy từ `CHASE_PASSIVES` (`src/core/battle/`) ngày 05/11.
 
