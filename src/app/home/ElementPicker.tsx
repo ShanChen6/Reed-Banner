@@ -19,7 +19,7 @@ function related(e: Element, test: (other: Element) => boolean) {
 /** Điều kiện kích hoạt của một bị động. */
 function Trigger({ lines }: { lines: readonly string[] }) {
   return (
-    <div className="mt-1 border-l-2 border-[var(--gold)]/40 pl-2 text-xs text-stone-400">
+    <div className="mt-1 border-l-2 border-frame-gold/40 pl-2 text-xs text-on-wood-soft">
       <span className="text-[0.65rem] uppercase tracking-wider text-[var(--gold)]/80">Điều kiện kích hoạt</span>
       <ul className="list-disc space-y-0.5 pl-4">{lines.map((l, i) => <li key={i}>{l}</li>)}</ul>
     </div>
@@ -57,8 +57,8 @@ export default function ElementPicker() {
             onClick={() => setElement(e)}
             className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
               e === element
-                ? "border-[var(--gold)] bg-[var(--gold)]/15 text-amber-100"
-                : "border-stone-700 text-stone-300 hover:border-stone-500"
+                ? "border-frame-gold bg-[var(--gold)]/15 text-title-on-wood"
+                : "border-frame-line-soft text-on-wood-soft hover:border-frame-line"
             }`}
           >
             <ElementIcon element={e} className="size-5" />
@@ -75,7 +75,7 @@ export default function ElementPicker() {
         <div className="flex flex-col items-center gap-2 text-center">
           <Portrait id="dinhBoLinh" element={element} profession={profession} className="size-36 md:size-44" />
           <p className="font-serif text-xl font-bold">Đinh Bộ Lĩnh</p>
-          <p className="text-sm text-stone-400">Hệ {ELEMENT_NAME[element]}</p>
+          <p className="text-sm text-on-wood-soft">Hệ {ELEMENT_NAME[element]}</p>
         </div>
 
         <div className="space-y-4">
@@ -85,7 +85,7 @@ export default function ElementPicker() {
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {trait.tags.map((t) => (
-                <span key={t} className="rounded-full bg-stone-800 px-2.5 py-0.5 text-xs text-stone-300">
+                <span key={t} className="rounded-full bg-wood-hi px-2.5 py-0.5 text-xs text-on-wood-soft">
                   {t}
                 </span>
               ))}
@@ -98,8 +98,8 @@ export default function ElementPicker() {
               ["Bị khắc bởi", counteredBy],
               ["Sinh ra", feeds],
             ].map(([label, list]) => (
-              <div key={label as string} className="rounded-lg bg-stone-900/60 px-3 py-2">
-                <dt className="text-xs uppercase tracking-wider text-stone-500">{label as string}</dt>
+              <div key={label as string} className="rounded-lg bg-wood-inset px-3 py-2">
+                <dt className="text-kicker text-on-wood-soft">{label as string}</dt>
                 <dd className="mt-1 flex flex-wrap items-center gap-2">
                   {(list as Element[]).length === 0
                     ? "—"
@@ -114,20 +114,20 @@ export default function ElementPicker() {
             ))}
           </dl>
 
-          <div className="rounded-lg border border-[var(--gold)]/40 bg-[var(--gold)]/5 px-3 py-2 text-sm">
+          <div className="rounded-lg border border-frame-gold/40 bg-[var(--gold)]/5 px-3 py-2 text-sm">
             <span className="text-xs uppercase tracking-wider text-[var(--gold)]">Bị động khi đầy Nộ</span>
             <div className="mt-1 flex items-start gap-3">
               <PassiveIcon id={ragePassiveId(element)} name={PASSIVES[element].name} className="size-12" />
               <div>
                 <p className="font-semibold">{PASSIVES[element].name}</p>
-                <p className="mt-0.5 text-stone-300">{passiveText(element)}</p>
+                <p className="mt-0.5 text-on-wood-soft">{passiveText(element)}</p>
               </div>
             </div>
             <Trigger lines={rageTriggerText()} />
           </div>
 
           <div>
-            <p className="mb-2 text-xs uppercase tracking-wider text-stone-500">6 kỹ năng chủ động · chạm để xem chi tiết</p>
+            <p className="mb-2 text-kicker text-on-wood-soft">6 kỹ năng chủ động · chạm để xem chi tiết</p>
             <ul role="tablist" aria-label="Chọn kỹ năng" className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {skills.map((s) => (
                 <li key={s.id}>
@@ -137,30 +137,30 @@ export default function ElementPicker() {
                     aria-selected={s.id === skill.id}
                     onClick={() => setSlot(s.slot!)}
                     className={`flex w-full items-center gap-2 rounded-lg p-2 text-left text-xs transition ${
-                      s.id === skill.id ? "bg-[var(--gold)]/15 ring-1 ring-[var(--gold)]/60" : "bg-stone-900/60 hover:bg-stone-800/80"
+                      s.id === skill.id ? "bg-[var(--gold)]/15 ring-1 ring-[var(--gold)]/60" : "bg-wood-inset hover:bg-wood-hi"
                     }`}
                   >
                     <SkillIcon def={s} className="size-9 shrink-0" />
                     <span className="leading-tight">
-                      <span className="block font-semibold text-stone-100">{s.name}</span>
-                      <span className="text-stone-500">{s.cost} năng lượng</span>
+                      <span className="block font-semibold text-on-wood">{s.name}</span>
+                      <span className="text-on-wood-soft/80">{s.cost} năng lượng</span>
                     </span>
                   </button>
                 </li>
               ))}
             </ul>
-            <div role="tabpanel" className="mt-2 rounded-lg bg-stone-900/70 p-3">
+            <div role="tabpanel" className="mt-2 rounded-lg bg-wood-inset p-3">
               <SkillInfo def={skill} />
             </div>
           </div>
 
           <div className="text-sm">
-            <p className="mb-2 text-xs uppercase tracking-wider text-stone-500">4 bị động phối hợp</p>
-            <ul className="space-y-2 text-stone-300">
+            <p className="mb-2 text-kicker text-on-wood-soft">4 bị động phối hợp</p>
+            <ul className="space-y-2 text-on-wood-soft">
               <li className="flex gap-2">
                 <PassiveIcon id={PROFESSION_COMBO[profession]} name={combo.name} className="size-9" />
                 <div>
-                  <span className="font-semibold text-stone-100">Nghề · {combo.name}:</span> {combo.description}
+                  <span className="font-semibold text-on-wood">Nghề · {combo.name}:</span> {combo.description}
                   <Trigger lines={comboTriggerText(combo)} />
                 </div>
               </li>
@@ -168,7 +168,7 @@ export default function ElementPicker() {
                 <li key={id} className="flex gap-2">
                   <PassiveIcon id={id} name={CHASE_PASSIVES[id].name} className="size-9" />
                   <div>
-                    <span className="font-semibold text-stone-100">{i === 0 ? "Nghề" : "Hệ"} · {CHASE_PASSIVES[id].name}:</span> {CHASE_PASSIVES[id].description}
+                    <span className="font-semibold text-on-wood">{i === 0 ? "Nghề" : "Hệ"} · {CHASE_PASSIVES[id].name}:</span> {CHASE_PASSIVES[id].description}
                     <Trigger lines={chaseTriggerText(CHASE_PASSIVES[id])} />
                   </div>
                 </li>
