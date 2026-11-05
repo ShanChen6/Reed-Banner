@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CHARACTER_SKILLS, dinhBoLinhUltimate, ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PROFESSIONS, ROLE_SKILLS, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
+import { CHARACTER_SKILLS, CHASE_PASSIVES, COMBO_PASSIVES, dinhBoLinhUltimate, ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PROFESSIONS, ROLE_SKILLS, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, SPECIAL_NAME, TIER_COLOR_NAME, TILE_NAME } from "@/app/game/battle/labels";
 import { EmptySlotIcon, GearIcon, SetEmblem } from "@/app/game/art/gear";
 import { ElementIcon, FoodIcon, LeaderFlag, ProfessionIcon, ShieldIcon } from "@/app/game/art/icons";
+import { PASSIVE_ART, PassiveIcon } from "@/app/game/art/passives";
 import { Portrait } from "@/app/game/art/portraits";
 import { REUSED_SKILL_ART, SkillIcon } from "@/app/game/art/skills";
 import { TILE_COLOR, TileArt } from "@/app/game/art/tiles";
@@ -127,6 +128,21 @@ export default function ArtPage() {
                 ))}
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="font-semibold">Bị động dùng chung (29 ảnh tròn: nghề 1, truy kích theo nghề, theo hệ)</h2>
+          <div className="flex flex-wrap items-start gap-3">
+            {[...PASSIVE_ART].map((id) => {
+              const name = (COMBO_PASSIVES as Record<string, { name: string }>)[id]?.name ?? (CHASE_PASSIVES as Record<string, { name: string }>)[id]?.name ?? id;
+              return (
+                <figure key={id} className="flex w-20 flex-col items-center gap-1">
+                  <PassiveIcon id={id} name={name} className="size-12" />
+                  <figcaption className="text-center text-[11px] leading-tight opacity-80">{name}</figcaption>
+                </figure>
+              );
+            })}
           </div>
         </section>
 
