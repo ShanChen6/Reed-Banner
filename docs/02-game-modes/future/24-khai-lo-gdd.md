@@ -1,14 +1,14 @@
 # 24 — Khai Lộ: giải đố xóa khối ô ngọc
 
-> Cập nhật: 05/11/2026
-> Trạng thái: **DRAFT** — Shan duyệt ý tưởng và chốt tên **Khai Lộ** ngày 05/11/2026; có bản chơi thử offline (không thưởng, không xếp hạng). Các số ở [mục 4](#4-số-liệu-bản-đầu) do Claude đặt theo mô phỏng, chờ Shan chơi thử.
+> Cập nhật: 05/11/2026 (thêm Cấp tốc, quân nguyên tố)
+> Trạng thái: **DRAFT** — Shan duyệt ý tưởng và chốt tên **Khai Lộ** ngày 05/11/2026; có bản chơi thử offline (không thưởng, không xếp hạng) với hai chế độ Thường và Cấp tốc, quân là 7 nguyên tố. Các số ở [mục 4](#4-số-liệu-bản-đầu) do Claude đặt theo mô phỏng, chờ Shan chơi thử.
 
 ## 1. Định vị
 
-Mini game giải đố một chạm trên bàn ô ngọc của Cờ Lau. Người chơi chạm một ô; cả **khối** ô cùng loại liền cạnh với nó biến mất, ô phía trên rơi xuống, cột trống thì các cột dồn lại. Cái hay nằm ở việc tính trước: xóa khối nhỏ nào để các khối khác dồn lại thành khối lớn, rồi mới xóa khối lớn lấy điểm.
+Mini game giải đố một chạm trên bàn cờ của Cờ Lau. Người chơi chạm một quân; cả **khối** quân cùng hệ liền cạnh với nó biến mất, ô phía trên rơi xuống, cột trống thì các cột dồn lại. Cái hay nằm ở việc tính trước: xóa khối nhỏ nào để các khối khác dồn lại thành khối lớn, rồi mới xóa khối lớn lấy điểm.
 
 - Thể loại: "xóa nhóm cùng màu" (SameGame, 1985), cảm hứng từ Block'D (EA Mobile, J2ME). Làm clean-room: không dùng tên, hình, âm thanh hay số liệu của game gốc.
-- Dùng 7 loại ô ngọc và tranh ô có sẵn (`public/art/tiles/`), không cần đồ họa mới để chơi được.
+- Quân là **7 nguyên tố** của game (Kim, Mộc, Thủy, Hỏa, Thổ, Lôi, Phong): nền ngọc nhuộm màu riêng của từng hệ (`ELEMENT_COLOR`) và biểu tượng hệ vẽ tay (`public/art/elements/`). Shan đổi từ ô ngọc vật phẩm sang nguyên tố ngày 05/11/2026 vì màu hệ dễ phân biệt hơn.
 - Khác các chế độ khác: không đánh nhau, không đổi hai ô như match-3 (Giao Tranh), không đặt quân như Trận Đồ, không ghép công thức như Tầm Tướng Ký.
 - Không có ô mới rơi vào: mỗi màn là một bài toán tất định theo seed, nên sau này phát lại được trên server để chấm điểm.
 
@@ -17,13 +17,13 @@ Mini game giải đố một chạm trên bàn ô ngọc của Cờ Lau. Ngườ
 ### 2.1. Bàn cờ
 
 - Bàn 10 cột × 8 hàng, đầy ô khi bắt đầu màn.
-- Màn 1–4 có 3 loại ô, màn 5–9 có 4, màn 10–16 có 5, từ màn 17 có 6. Loại ô của mỗi màn được xáo theo seed.
-- Từ màn 3 có **ô hào quang** (vẽ bằng bản yếu của ô): 1 ô ở màn 3–5, thêm 1 mỗi 3 màn, tối đa 4.
+- Màn 1–4 có 3 hệ, màn 5–9 có 4, màn 10–16 có 5, từ màn 17 có 6. Hệ của mỗi màn được xáo theo seed.
+- Từ màn 3 có **quân hào quang** (viền vàng dày, ánh sáng lướt qua): 1 quân ở màn 3–5, thêm 1 mỗi 3 màn, tối đa 4.
 - Bàn sinh ra luôn có ít nhất một khối xóa được.
 
 ### 2.2. Xóa khối
 
-- **Khối** là các ô cùng loại nối nhau theo cạnh (trên, dưới, trái, phải; không tính chéo).
+- **Khối** là các quân cùng hệ nối nhau theo cạnh (trên, dưới, trái, phải; không tính chéo).
 - Chạm vào bất kỳ ô nào của một khối từ **2 ô** trở lên: cả khối biến mất. Ô lẻ không xóa được.
 - Ô phía trên rơi thẳng xuống lấp chỗ trống. Cột trống hẳn thì các cột bên phải dồn sang trái.
 - Điểm: khối n ô được **n²** điểm, nhân thêm (1 + số ô hào quang trong khối). Ví dụ khối 6 ô có 1 ô hào quang được 72 điểm.
@@ -45,6 +45,15 @@ Mini game giải đố một chạm trên bàn ô ngọc của Cờ Lau. Ngườ
 
 - Mỗi loại giữ tối đa 9.
 - **Hoàn tác**: mỗi màn 1 lần, chỉ lùi được nước vừa đi. Không lùi qua khi màn đã kết thúc.
+
+### 2.5. Chế độ
+
+| Chế độ | Luật riêng |
+|---|---|
+| **Thường** | Không giới hạn thời gian. |
+| **Cấp tốc** | Mỗi màn có đồng hồ: 60 giây với 3 hệ, thêm 15 giây mỗi hệ mới (75 / 90 / 105 giây). Hết giờ là hết màn (quân còn sót trừ quân lực như thường). Dọn sạch bàn thì mỗi giây dư được **25 điểm** (`KL_TIME_BONUS_PER_SECOND`). Đồng hồ chỉ chạy khi đang chơi màn và tab đang mở; giờ còn lại lưu cùng ván dở. |
+
+Hai chế độ có ván dở và điểm cao nhất riêng. Lõi không đọc giờ: giao diện truyền số giây còn lại (`timeLeft`) kèm nước đi và gửi `endLevel` với `timeout` khi hết giờ.
 
 ## 3. Điều khiển
 
@@ -77,10 +86,9 @@ Người chơi thật có đạo cụ và tính sâu hơn, nên kỳ vọng đi 
 
 ## 6. Hướng phát triển (chưa làm, chờ Shan chọn)
 
-1. **Cấp tốc**: thêm đồng hồ cho mỗi màn, hết giờ là kết thúc màn.
-2. **Đề ngày**: một seed chung mỗi ngày (kiểu Nhật Lệnh), server phát lại chuỗi nước để chấm điểm và xếp hạng; cần đăng nhập.
-3. **Thưởng**: vàng/sách theo mốc điểm hoặc nhiệm vụ ngày (`quests.ts`), cần server xác nhận ván.
-4. **Màn soạn sẵn**: chuỗi đề có sao (ví dụ "dọn sạch trong 12 nước"), dùng chung lõi.
+1. **Đề ngày**: một seed chung mỗi ngày (kiểu Nhật Lệnh), server phát lại chuỗi nước để chấm điểm và xếp hạng; cần đăng nhập.
+2. **Thưởng**: vàng/sách theo mốc điểm hoặc nhiệm vụ ngày (`quests.ts`), cần server xác nhận ván.
+3. **Màn soạn sẵn**: chuỗi đề có sao (ví dụ "dọn sạch trong 12 nước"), dùng chung lõi.
 
 ## 7. Câu hỏi mở
 

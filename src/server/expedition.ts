@@ -68,7 +68,6 @@ export type ExpeditionError =
   | "roadBroken"
   | "highTide"
   | "counterPending"
-  | "noScout"
   | typeof FEATURE_DISABLED_ERROR;
 
 export interface FoePreview {
@@ -134,30 +133,39 @@ function publicRun(run: ExpeditionRun | null) {
 }
 
 /**
- * Kịch bản của lượt cho client: lịch thuyền viện, phản công, đoàn dân; lịch con nước chỉ khi đã biết. Không gửi danh
- * sách đường có thể bị phá. Kèm trận riêng đang chờ (phản công) và trận truy binh nếu rời làng lúc này.
+ * Kịch bản của lượt cho client, chỉ những khối sa bàn có: viện binh, phản công, đoàn dân, trận giữ, phá cổng; lịch con
+ * nước chỉ khi đã biết. Không gửi danh sách đường có thể bị phá, chỉ báo sa bàn có đường bị phá. Kèm trận riêng đang chờ
+ * (phản công) và trận truy binh nếu rời làng lúc này.
  */
 function scenarioView(run: ExpeditionRun) {
   const scenario = expeditionScenarioOf(run);
   if (!scenario) return null;
-  const holder = run.armies.findIndex((a) => a.at === scenario.counter.node);
+  const { refugees, counter: counterRule, reinforcements, tide, hold, gate } = scenario;
+  const holder = counterRule ? run.armies.findIndex((a) => a.at === counterRule.node) : -1;
   const carrier = run.refugees === 0 || run.refugees === 1 ? run.refugees : null;
   const chase =
-    carrier !== null && run.armies[carrier].at === scenario.refugees.village && !run.nodes[scenario.refugees.chaseUnless]?.cleared
-      ? expeditionChaseEncounter(run, carrier, scenario.refugees.village)
+    refugees && carrier !== null && run.armies[carrier].at === refugees.village && !run.nodes[refugees.chaseUnless]?.cleared
+      ? expeditionChaseEncounter(run, carrier, refugees.village)
       : null;
   const counter = run.market?.status === "due" && holder >= 0 ? expeditionCounterEncounter(run, holder as 0 | 1) : null;
   return {
-    village: scenario.refugees.village,
-    home: scenario.refugees.home,
-    chaseUnless: scenario.refugees.chaseUnless,
-    market: scenario.counter.node,
-    counterAfterDays: scenario.counter.afterDays,
-    reinforcementDays: scenario.reinforcements.days,
-    tideDays: run.tideKnown ? scenario.tide.days : null,
-    tideRevealedBy: scenario.tide.revealedBy,
-    bridgeTurns: scenario.bridge.turns,
-    gateSkipFrom: scenario.gate.skipFrom,
+    endings: !!scenario.endingGold,
+    brokenRoads: !!scenario.broken,
+    ...(refugees
+      ? {
+          village: refugees.village,
+          home: refugees.home,
+          chaseUnless: refugees.chaseUnless,
+          refugeeTitle: refugees.title ?? "Rút dân",
+          refugeeNoun: refugees.noun ?? "đoàn dân",
+        }
+      : {}),
+    ...(scenario.missionGold && !scenario.endingGold ? { missionGold: scenario.missionGold } : {}),
+    ...(counterRule ? { market: counterRule.node, counterAfterDays: counterRule.afterDays } : {}),
+    ...(reinforcements ? { reinforcementDays: reinforcements.days, reinforcementLabel: reinforcements.label } : {}),
+    ...(tide ? { tideDays: run.tideKnown ? tide.days : null, tideRevealedBy: tide.revealedBy } : {}),
+    ...(hold ? { holdNodes: hold.nodes, holdTurns: hold.turns } : {}),
+    ...(gate ? { gate: true, gateSkipFrom: gate.skipFrom ?? null } : {}),
     ...(chase ? { chase: preview(chase) } : {}),
     ...(counter ? { counter: { army: holder, ...preview(counter) } } : {}),
   };
