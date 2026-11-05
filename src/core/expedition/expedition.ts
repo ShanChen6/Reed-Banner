@@ -236,7 +236,7 @@ export function expeditionEncounter(run: ExpeditionRun, nodeId: string, army: Ar
   const node = expeditionNode(map, nodeId);
   if (!node || !isExpeditionCombatNode(node.kind)) return null;
   const scenario = expeditionScenarioOf(run);
-  let power = expeditionPower(run.tier, run.day) * (expeditionScenarioOf(run)?.foePower ?? 1);
+  let power = expeditionPower(run.tier, run.day) * expeditionFoePower(run);
   const hold = scenario?.hold?.nodes.includes(nodeId) ? scenario.hold : undefined;
   if (hold) power *= hold.power;
   if (scenario?.reinforcements && node.kind === "citadel") power *= 1 + scenario.reinforcements.power * (run.arrivals ?? 0);
@@ -268,7 +268,7 @@ export function expeditionChaseEncounter(run: ExpeditionRun, army: ArmyIndex, to
   const map = expeditionMapOf(run);
   if (!refugees) return null;
   const village = expeditionNode(map, refugees.village)!;
-  const power = expeditionPower(run.tier, run.day) * (expeditionScenarioOf(run)?.foePower ?? 1) * refugees.chasePower;
+  const power = expeditionPower(run.tier, run.day) * expeditionFoePower(run) * refugees.chasePower;
   return {
     node: village.id,
     kind: village.kind,
@@ -291,7 +291,7 @@ export function expeditionCounterEncounter(run: ExpeditionRun, army: ArmyIndex):
   const map = expeditionMapOf(run);
   if (!counter) return null;
   const node = expeditionNode(map, counter.node)!;
-  const power = expeditionPower(run.tier, run.day) * (expeditionScenarioOf(run)?.foePower ?? 1) * counter.power;
+  const power = expeditionPower(run.tier, run.day) * expeditionFoePower(run) * counter.power;
   const pincer = expeditionPincer(run, node.id, army);
   return {
     node: node.id,
@@ -848,6 +848,12 @@ export function expeditionEnding(run: ExpeditionRun): ExpeditionEnding | undefin
   if (run.phase === "won") return side ? "full" : "taken";
   if (run.phase === "lost" && side) return "refuge";
   return undefined;
+}
+
+/** Hệ số sức mạnh địch riêng của sa bàn ở bậc của lượt (khối `foePower`; không có là 1). */
+export function expeditionFoePower(run: Pick<ExpeditionRun, "map" | "tier">): number {
+  const f = expeditionScenarioOf(run)?.foePower;
+  return f === undefined ? 1 : typeof f === "number" ? f : f[run.tier - 1]!;
 }
 
 /** Người được hộ tống trên sa bàn (đoàn dân, tù binh). */
