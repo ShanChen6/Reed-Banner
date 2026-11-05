@@ -529,11 +529,14 @@ function Bar({
   max,
   color,
   label,
+  keepValue = false,
 }: {
   value: number;
   max: number;
   color: string;
   label: string;
+  /** Trên điện thoại thẻ gọn chỉ còn thanh; giữ số (máu) khi cần. */
+  keepValue?: boolean;
 }) {
   const pct = max > 0 ? Math.max(0, Math.min(100, (value / max) * 100)) : 0;
   return (
@@ -541,15 +544,16 @@ function Bar({
       className="flex items-center gap-1.5 text-[11px] leading-none"
       aria-label={`${label} ${Math.round(value)}/${max}`}
     >
-      <span className="w-6 shrink-0 opacity-70">{label}</span>
-      <div className="h-2 flex-1 overflow-hidden rounded bg-black/30">
+      <span className="hidden w-6 shrink-0 opacity-70 md:block">{label}</span>
+      <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded bg-black/30 md:h-2">
         <div
           className={`h-full ${color} transition-[width] duration-300`}
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className="w-14 shrink-0 text-right tabular-nums">
-        {Math.round(value)}/{max}
+      <span className={`${keepValue ? "" : "hidden md:block"} shrink-0 text-right tabular-nums md:w-14`}>
+        {Math.round(value)}
+        <span className="hidden md:inline">/{max}</span>
       </span>
     </div>
   );
@@ -639,28 +643,28 @@ function FighterCard({
       type="button"
       onClick={onClick}
       disabled={!onClick || !alive}
-      className={`relative w-full rounded-lg border-l-4 bg-[var(--panel)] p-2 text-left ${ring} ${alive ? "" : "opacity-40 grayscale"} disabled:cursor-default`}
+      className={`relative w-full min-w-0 rounded-lg border-l-4 bg-[var(--panel)] p-1.5 text-left md:p-2 ${ring} ${alive ? "" : "opacity-40 grayscale"} disabled:cursor-default`}
       style={{ borderLeftColor: ELEMENT_COLOR[fighter.element] }}
       title={cardTitle}
     >
-      <div className="mb-1 flex items-center gap-2">
+      <div className="mb-1 flex items-center gap-1.5 md:gap-2">
         <Portrait
           id={fighter.id}
           element={fighter.element}
           profession={fighter.profession}
           level={fighter.level}
-          className="size-9 shrink-0 md:size-7 lg:size-11"
+          className="size-8 shrink-0 md:size-7 lg:size-11"
         />
         <div className="min-w-0 flex-1">
-          <span className="flex min-w-0 items-center gap-1 text-sm font-semibold">
+          <span className="flex min-w-0 items-center gap-1 text-xs font-semibold md:text-sm">
             {leader && (
               <span title="Thủ lĩnh" className="shrink-0">
-                <LeaderFlag className="size-4" />
+                <LeaderFlag className="size-3 md:size-4" />
               </span>
             )}
             <span className="truncate">{fighter.name}</span>
           </span>
-          <span className="flex items-center gap-1 text-[10px] opacity-75">
+          <span className="hidden items-center gap-1 text-[10px] opacity-75 md:flex">
             <FighterKindIcons fighter={fighter} showName />
           </span>
         </div>
@@ -671,17 +675,20 @@ function FighterCard({
           value={fighter.hp}
           max={fighter.maxHp}
           color={fighter.structure ? "bg-amber-600" : "bg-rose-500"}
+          keepValue
         />
         {/* Công trình (cổng thành) không ra tay: không có năng lượng, tinh thần. */}
         {!fighter.structure && (
           <>
             <Bar label="NL" value={fighter.energy} max={100} color="bg-sky-500" />
-            <Bar
-              label="TT"
-              value={fighter.spirit}
-              max={100}
-              color="bg-emerald-500"
-            />
+            <div className="hidden md:block">
+              <Bar
+                label="TT"
+                value={fighter.spirit}
+                max={100}
+                color="bg-emerald-500"
+              />
+            </div>
           </>
         )}
         {rage !== null && (
@@ -1791,8 +1798,12 @@ export default function DemoGame({
   const side = (s: 0 | 1) => {
     const own = (heldSides ?? state.sides)[s];
     return (
-      <div className="flex w-full flex-col gap-2 md:w-40 md:shrink-0 lg:w-56">
-        <div className="flex items-center justify-between text-xs opacity-80">
+      <div
+        className={`grid w-full grid-cols-3 gap-1.5 md:flex md:w-40 md:shrink-0 md:flex-col md:gap-2 lg:w-56 ${
+          s === PLAYER ? "order-3 md:order-none" : "order-1 md:order-none"
+        }`}
+      >
+        <div className="col-span-3 flex items-center justify-between text-xs opacity-80">
           <span className="font-semibold">
             {s === PLAYER
               ? "Phe bạn"
@@ -1990,7 +2001,7 @@ export default function DemoGame({
         >
           {side(PLAYER)}
 
-          <div className="flex min-w-0 flex-1 flex-col gap-2">
+          <div className="order-2 flex min-w-0 flex-1 flex-col gap-2 md:order-none">
             {started && state.winner === null && !atBreak && (
               <TurnClock
                 seconds={playerTurn ? secondsLeft : null}
@@ -2520,7 +2531,10 @@ export default function DemoGame({
                     }. Esc để hủy.`}
               </p>
             )}
-            <p className="text-[11px] opacity-60">
+            <p className="text-[11px] opacity-60 md:hidden">
+              Vuốt hoặc chạm hai ô kề nhau để đổi chỗ.
+            </p>
+            <p className="hidden text-[11px] opacity-60 md:block">
               Vuốt, kéo hoặc click hai ô kề nhau để đổi chỗ. Bàn phím: mũi tên
               hoặc WASD, Enter chọn ô, 1–6 dùng kỹ năng, Tab đổi người hành
               động, Esc hủy.
