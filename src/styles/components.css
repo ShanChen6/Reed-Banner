@@ -121,6 +121,26 @@
   }
   .ui-choice:disabled { cursor: not-allowed; opacity: 0.45; }
 
+  /* Ô tầng (tháp): trạng thái theo data-state, đang chọn vẫn là giấy dó như mọi .ui-choice. */
+  .ui-floor[data-state="cleared"]:not([aria-pressed="true"]) { border-color: color-mix(in srgb, var(--jade) 70%, transparent); }
+  .ui-floor[data-state="cleared"]:not([aria-pressed="true"]) .ui-floor__state { color: var(--jade); }
+  .ui-floor[data-state="open"]:not([aria-pressed="true"]) { border-color: var(--frame-gold-hi); background: var(--wood-hi); }
+  .ui-floor[data-state="open"]:not([aria-pressed="true"]) .ui-floor__state { color: var(--frame-gold-hi); }
+  .ui-floor[data-state="locked"]:not([aria-pressed="true"]) { color: var(--on-wood-soft); background: var(--wood-inset); }
+
+  /* Nhãn luật (Cấm / Bắt buộc / Giới hạn): chữ, không emoji. */
+  .ui-rule-tag {
+    border: 1px solid currentColor;
+    border-radius: 0.25rem;
+    padding: 0 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.35rem;
+    color: var(--frame-gold);
+  }
+  .ui-rule-tag[data-kind="ban"] { color: var(--danger); }
+  .ui-rule-tag[data-kind="need"] { color: var(--jade); }
+
   /* Khung 3 mức. 1: panel gỗ viền mảnh. 2: thêm vạch vàng trong + góc hoa văn (<FrameCorners />). 3: khung hero có
      tranh, viền đồng đậm. Không lồng khung mức 2/3 trong khung mức 2/3. */
   .ui-frame {
