@@ -157,7 +157,7 @@ describe("màn nghỉ Sinh tồn", () => {
     assert.match(html, /300 → 400\/500/);
     assert.match(html, /Năng lượng: 28/);
     assert.match(html, /Lương hiện tại: <strong>35/);
-    assert.match(html, /Sau tiếp tế: <strong class="text-emerald-200">60/);
+    assert.match(html, /Sau tiếp tế: <strong class="text-jade">60/);
     assert.match(html, /Sau hồi sinh: <strong>20/);
     assert.match(html, /Dự bị/);
     assert.match(html, /Đủ điều kiện · chờ lượt hồi sinh/);
