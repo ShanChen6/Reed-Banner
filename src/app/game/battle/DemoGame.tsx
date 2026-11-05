@@ -1795,12 +1795,13 @@ export default function DemoGame({
   const aimingAlly = aim?.choose && aim.skill.target === "ally";
   const aimMark = aim?.target ?? aimIndex;
 
-  const side = (s: 0 | 1) => {
+  /** `inline`: bản phe mình đặt ngay dưới bàn cờ, chỉ hiện trên điện thoại. */
+  const side = (s: 0 | 1, inline = false) => {
     const own = (heldSides ?? state.sides)[s];
     return (
       <div
-        className={`grid w-full grid-cols-3 gap-1.5 md:flex md:w-40 md:shrink-0 md:flex-col md:gap-2 lg:w-56 ${
-          s === PLAYER ? "order-3 md:order-none" : "order-1 md:order-none"
+        className={`w-full grid-cols-3 gap-1.5 md:w-40 md:shrink-0 md:flex-col md:gap-2 lg:w-56 ${
+          s === AI ? "order-1 grid md:order-none md:flex" : inline ? "grid md:hidden" : "hidden md:flex"
         }`}
       >
         <div className="col-span-3 flex items-center justify-between text-xs opacity-80">
@@ -2427,6 +2428,8 @@ export default function DemoGame({
                 )}
               </div>
             </div>
+
+            {started && side(PLAYER, true)}
 
             <div
               className="flex flex-wrap items-stretch gap-1.5"
