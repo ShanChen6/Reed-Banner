@@ -70,17 +70,29 @@ interface EncounterPreview {
 }
 
 /** Kịch bản của lượt (Cửa Biển), server gửi: không có đường bị phá chưa lộ, lịch con nước chỉ khi đã biết. */
+/** Kịch bản của sa bàn (server gửi chỉ những khối sa bàn có). */
 interface ScenarioView {
-  readonly village: string;
-  readonly home: string;
-  readonly chaseUnless: string;
-  readonly market: string;
-  readonly counterAfterDays: number;
-  readonly reinforcementDays: readonly number[];
-  readonly tideDays: readonly number[] | null;
-  readonly tideRevealedBy: string;
-  readonly bridgeTurns: number;
-  readonly gateSkipFrom: string;
+  /** Có bốn kết thúc riêng (Cửa Biển). */
+  readonly endings: boolean;
+  readonly brokenRoads: boolean;
+  readonly village?: string;
+  readonly home?: string;
+  /** Tên việc hộ tống (Rút dân, Giải cứu tù binh…) và người được đưa về. */
+  readonly refugeeTitle?: string;
+  readonly refugeeNoun?: string;
+  /** Sa bàn thường: hệ số vàng khi thắng mà xong nhiệm vụ. */
+  readonly missionGold?: number;
+  readonly chaseUnless?: string;
+  readonly market?: string;
+  readonly counterAfterDays?: number;
+  readonly reinforcementDays?: readonly number[];
+  readonly reinforcementLabel?: string;
+  readonly tideDays?: readonly number[] | null;
+  readonly tideRevealedBy?: string;
+  readonly holdNodes?: readonly string[];
+  readonly holdTurns?: number;
+  readonly gate?: boolean;
+  readonly gateSkipFrom?: string | null;
   readonly chase?: EncounterPreview;
   readonly counter?: EncounterPreview & { readonly army: ArmyIndex };
 }
@@ -120,7 +132,6 @@ const ERROR_TEXT: Record<string, string> = {
   roadBroken: "Đường này đã bị phá, hãy đi đường khác.",
   highTide: "Cửa nước đang lên. Chờ ngày nước rút.",
   counterPending: "Giặc đang phản công Chợ: đạo giữ chợ phải đánh trước.",
-  noScout: "Sa bàn này không có lệnh trinh sát.",
 };
 
 const BLOCK_TEXT = {
@@ -685,7 +696,7 @@ function SandTable(props: {
             <path d={`M${px} ${top} h7 l-1.2 1.5 l1.2 1.5 h-7 Z`} fill={ARMY_COLOR[i]} stroke={army === i ? "#fff" : "#1b1411"} strokeWidth={0.3} />
             <text x={px + 3.2} y={top + 2.15} textAnchor="middle" fontSize="1.9" fill="#1b1411" fontWeight="bold">{i === 0 ? "Chính" : "Biệt"}</text>
             {run.refugees === i && (
-              <text x={px + 8} y={top + 2.15} fontSize="1.9" fill="#f0d77f" style={LABEL_HALO} aria-label="đang mang đoàn dân">⛵ dân</text>
+              <text x={px + 8} y={top + 2.15} fontSize="1.9" fill="#f0d77f" style={LABEL_HALO} aria-label="đang hộ tống">⚑ hộ tống</text>
             )}
           </g>
         );
@@ -721,6 +732,7 @@ function RunView(props: {
   // Đạo mang dân rời làng tới ô không có trận khi đồn chặn chưa chiếm: gặp truy binh (server đã tính sẵn).
   const hasFight = (id: string) => !!encounters[id];
   const chase = node && scenario?.chase && run.refugees === army && !hasFight(node.id) ? scenario.chase : undefined;
+  const noun = scenario?.refugeeNoun ?? "đoàn dân";
   const preview = chase ?? (target ? encounters[target]?.[army] : undefined);
   const roadKind = node && reachable.includes(node.id) ? expeditionEdgeKind(map, selected.at, node.id) : undefined;
   const roadBroken = !!node && !!run.knownBroken?.includes(expeditionEdgeKey(selected.at, node.id));
@@ -762,14 +774,14 @@ function RunView(props: {
       <div className="space-y-4">
         {counter && run.phase === "march" && (
           <div className="tower-screen__panel border-rose-400/60">
-            <h3 className="font-serif text-lg font-bold text-rose-200">Giặc phản công {nameOf(scenario!.market)}</h3>
+            <h3 className="font-serif text-lg font-bold text-rose-200">Giặc phản công {nameOf(scenario?.market ?? "")}</h3>
             <p className="mt-1 text-sm text-foreground-secondary">
-              {ARMY_NAME[counter.army]} đang giữ chợ phải đánh trước: cầm cự{" "}
-              {counter.objective && "turns" in counter.objective ? counter.objective.turns : 4} lượt (hoặc hạ hết) là giữ được,
-              thêm lương và đưa dân về chợ được. Thua thì rút khỏi chợ.
+              {ARMY_NAME[counter.army]} đang giữ {nameOf(scenario?.market ?? "")} phải đánh trước: cầm cự{" "}
+              {counter.objective && "turns" in counter.objective ? counter.objective.turns : 6} lượt (hoặc hạ hết) là giữ được,
+              thêm lương{scenario?.village ? " và đưa dân về đây được" : ""}. Thua thì rút khỏi kho.
             </p>
             <Button variant="primary" className="mt-3" disabled={props.busy || !canFight(counter.army)} onClick={() => props.onCounter(counter.army)}>
-              {ARMY_NAME[counter.army]} giữ chợ
+              {ARMY_NAME[counter.army]} giữ {nameOf(scenario?.market ?? "")}
             </Button>
           </div>
         )}
@@ -795,20 +807,23 @@ function RunView(props: {
                 <p className="mt-1 text-sm text-foreground-secondary">{KIND_TEXT[node.kind]}</p>
                 {chase && (
                   <p className="mt-2 rounded bg-rose-900/40 p-2 text-xs text-rose-100">
-                    Truy binh đuổi đoàn dân vì {nameOf(scenario!.chaseUnless)} chưa chiếm: rời làng là vào trận hộ tống
-                    (giữ {chase.objective && "turns" in chase.objective ? chase.objective.turns : 4} lượt hoặc hạ hết). Thua thì mất dân.
+                    Truy binh đuổi {noun} vì {nameOf(scenario?.chaseUnless ?? "")} chưa chiếm: rời {nameOf(scenario?.village ?? "")} là vào
+                    trận hộ tống (giữ {chase.objective && "turns" in chase.objective ? chase.objective.turns : 6} lượt hoặc hạ hết). Thua thì {noun} bị bắt lại.
                   </p>
                 )}
                 {!chase && preview && run.refugees === army && (
-                  <p className="mt-2 rounded bg-rose-900/40 p-2 text-xs text-rose-100">Đạo này đang mang dân: thua trận này thì đoàn dân bị bắt.</p>
+                  <p className="mt-2 rounded bg-rose-900/40 p-2 text-xs text-rose-100">Đạo này đang hộ tống {noun}: thua trận này thì {noun} bị bắt lại.</p>
                 )}
                 {preview?.objective?.type === "hold" && (
-                  <p className="mt-2 text-xs text-amber-200">Trận giữ cầu: cầm cự {preview.objective.turns} lượt của bạn (hoặc hạ hết) là thắng.</p>
+                  <p className="mt-2 text-xs text-amber-200">
+                    Trận giữ: cầm cự {preview.objective.turns} lượt của bạn (hoặc hạ hết) là thắng
+                    {scenario?.reinforcementLabel && !run.reinforcementsCut ? `, chặn được ${scenario.reinforcementLabel}` : ""}.
+                  </p>
                 )}
                 {preview?.mode === "gate" && (
                   <p className="mt-2 text-xs text-amber-200">
-                    Phase 1 phá cổng: hạ Cổng thành là qua (lính giữ còn lại theo sang trận sau). Vào bằng cửa nước từ{" "}
-                    {nameOf(scenario?.gateSkipFrom ?? "")} thì bỏ qua cổng.
+                    Phase 1 phá cổng: hạ Cổng thành là qua (lính giữ còn lại theo sang trận sau).
+                    {scenario?.gateSkipFrom ? ` Đánh vào từ ${nameOf(scenario.gateSkipFrom)} thì bỏ qua cổng.` : ""}
                   </p>
                 )}
                 {preview && (
@@ -893,20 +908,18 @@ function RunView(props: {
 
         {run.phase === "march" && (
           <div className="tower-screen__panel flex flex-wrap gap-2">
-            {scenario && (
-              <Button variant="secondary" disabled={props.busy || !!counter} onClick={props.onScout}>
-                {ARMY_NAME[army]} trinh sát
-              </Button>
-            )}
+            <Button variant="secondary" disabled={props.busy || !!counter} onClick={props.onScout}>
+              {ARMY_NAME[army]} trinh sát
+            </Button>
             <Button variant="secondary" disabled={props.busy || !!counter} onClick={props.onCamp}>Đóng quân (cả hai đạo nghỉ 1 ngày)</Button>
             <Button variant="secondary" disabled={props.busy} onClick={props.onAbandon}>Rút khỏi viễn chinh</Button>
             <p className="w-full text-xs text-muted">Thua một trận: đạo đó rút về ô cũ, cả ba gục, phải nghỉ để hồi. Không mất lượt viễn chinh.</p>
-            {scenario && (
-              <p className="w-full text-xs text-muted">
-                Trinh sát: đạo đang chọn đứng yên 1 ngày (không hồi sức), vén sương mọi ô trong {EXPEDITION_SCOUT_SIGHT} bước và
-                phát hiện đường bị phá quanh đó. Đường bị phá trông như đường thường; đi trúng thì mất ngày.
-              </p>
-            )}
+            <p className="w-full text-xs text-muted">
+              Trinh sát: đạo đang chọn đứng yên 1 ngày (không hồi sức), vén sương mọi ô trong {EXPEDITION_SCOUT_SIGHT} bước
+              {scenario?.brokenRoads
+                ? " và phát hiện đường bị phá quanh đó. Đường bị phá trông như đường thường; đi trúng thì mất ngày."
+                : "."}
+            </p>
           </div>
         )}
       </div>
@@ -915,46 +928,88 @@ function RunView(props: {
 }
 
 function MissionPanel({ run, scenario, nameOf }: { run: Omit<ExpeditionRun, "seed">; scenario: ScenarioView; nameOf: (id: string) => string }) {
-  const nextShip = scenario.reinforcementDays.find((d) => d >= run.day);
-  const refugees =
-    run.refugees === "saved"
-      ? { done: true, text: "Đã đưa dân về." }
-      : run.refugees === "lost"
-        ? { done: false, text: "Đoàn dân đã bị bắt." }
-        : run.refugees === 0 || run.refugees === 1
-          ? { done: false, text: `${ARMY_NAME[run.refugees]} đang mang dân, đưa về ${nameOf(scenario.home)}${run.market?.status === "held" ? ` hoặc ${nameOf(scenario.market)}` : ""}.` }
-          : { done: false, text: `Ghé ${nameOf(scenario.village)} nhận đoàn dân.` };
-  const ships = run.reinforcementsCut
-    ? { done: true, text: "Đã giữ cầu, thuyền viện bị chặn." }
-    : { done: false, text: nextShip ? `Thuyền viện tới cuối ngày ${nextShip}${run.arrivals ? ` (đã tới ${run.arrivals} lần)` : ""}. Giữ cầu để chặn.` : `Thuyền viện đã tới ${run.arrivals ?? 0} lần.` };
-  const tide = scenario.tideDays
-    ? { done: true, text: `Nước rút các ngày ${scenario.tideDays.join(", ")}.` }
-    : { done: false, text: `Chưa rõ con nước: chiếm ${nameOf(scenario.tideRevealedBy)} hoặc đưa dân về.` };
-  const market = run.market
-    ? run.market.status === "held"
-      ? "Đã giữ được chợ."
-      : run.market.status === "lost"
-        ? "Giặc đã chiếm lại chợ."
-        : run.market.status === "due"
-          ? "Giặc đang phản công chợ."
-          : `Giặc sẽ phản công cuối ngày ${run.market.taken + scenario.counterAfterDays}; cần một đạo đứng giữ.`
-    : null;
-  const row = (r: { done: boolean; text: string }, label: string) => (
-    <li className="flex gap-2">
-      <span className={r.done ? "text-emerald-300" : "text-stone-500"} aria-hidden>{r.done ? "✔" : "○"}</span>
-      <span><strong>{label}:</strong> {r.text}</span>
-    </li>
-  );
+  const rows: { done: boolean; text: string; label: string }[] = [];
+  if (scenario.village && scenario.home) {
+    const home = nameOf(scenario.home);
+    const market = scenario.market && run.market?.status === "held" ? ` hoặc ${nameOf(scenario.market)}` : "";
+    const noun = scenario.refugeeNoun ?? "đoàn dân";
+    const Noun = `${noun[0]!.toUpperCase()}${noun.slice(1)}`;
+    rows.push({
+      label: scenario.refugeeTitle ?? "Rút dân",
+      ...(run.refugees === "saved"
+        ? { done: true, text: `Đã đưa ${noun} về.` }
+        : run.refugees === "lost"
+          ? { done: false, text: `${Noun} đã bị bắt lại.` }
+          : run.refugees === 0 || run.refugees === 1
+            ? { done: false, text: `${ARMY_NAME[run.refugees]} đang hộ tống ${noun}, đưa về ${home}${market}.` }
+            : { done: false, text: `Tới ${nameOf(scenario.village)} nhận ${noun}, đưa về ${home}${market}.` }),
+    });
+  }
+  if (scenario.reinforcementDays) {
+    const label = scenario.reinforcementLabel ?? "viện binh";
+    const holdAt = (scenario.holdNodes ?? []).map(nameOf).join(", ");
+    const next = scenario.reinforcementDays.find((d) => d >= run.day);
+    rows.push({
+      label: `Chặn ${label}`,
+      ...(run.reinforcementsCut
+        ? { done: true, text: `Đã giữ ${holdAt}, ${label} bị chặn.` }
+        : {
+            done: false,
+            text: next
+              ? `${label[0]!.toUpperCase()}${label.slice(1)} tới cuối ngày ${next}${run.arrivals ? ` (đã tới ${run.arrivals} lần)` : ""}.${holdAt ? ` Giữ ${holdAt} để chặn.` : ""}`
+              : `${label[0]!.toUpperCase()}${label.slice(1)} đã tới ${run.arrivals ?? 0} lần.`,
+          }),
+    });
+  }
+  if (scenario.tideRevealedBy)
+    rows.push({
+      label: "Cửa nước",
+      ...(scenario.tideDays
+        ? { done: true, text: `Nước rút các ngày ${scenario.tideDays.join(", ")}.` }
+        : { done: false, text: `Chưa rõ con nước: chiếm ${nameOf(scenario.tideRevealedBy)}${scenario.village ? " hoặc đưa dân về" : ""}.` }),
+    });
+  if (scenario.market)
+    rows.push({
+      label: nameOf(scenario.market),
+      ...(run.market?.status === "held"
+        ? { done: true, text: "Đã giữ được trước đợt phản công." }
+        : run.market?.status === "lost"
+          ? { done: false, text: "Giặc đã chiếm lại." }
+          : run.market?.status === "due"
+            ? { done: false, text: "Giặc đang phản công." }
+            : run.market
+              ? { done: false, text: `Giặc sẽ phản công cuối ngày ${run.market.taken + (scenario.counterAfterDays ?? 0)}; cần một đạo đứng giữ.` }
+              : { done: false, text: `Chiếm được thì ${scenario.counterAfterDays ?? 0} ngày sau giặc phản công.` }),
+    });
+  if (scenario.gate)
+    rows.push({
+      label: "Cổng thành",
+      ...(Object.values(run.nodes).some((n) => n?.gateDown)
+        ? { done: true, text: "Cổng đã sụp." }
+        : { done: false, text: `Phải phá cổng trước khi đánh tướng giữ thành${scenario.gateSkipFrom ? `, trừ khi đánh vào từ ${nameOf(scenario.gateSkipFrom)}` : ""}.` }),
+    });
+  if (scenario.brokenRoads)
+    rows.push({ label: "Đường bị phá", done: false, text: `Đã biết ${run.knownBroken?.length ?? 0} đường. Trinh sát để phát hiện trước.` });
   return (
     <div className="tower-screen__panel">
-      <h3 className="font-serif text-lg font-bold">Nhiệm vụ</h3>
+      <h3 className="font-serif text-lg font-bold">{scenario.endings || scenario.missionGold ? "Nhiệm vụ" : "Luật sa bàn"}</h3>
       <ul className="mt-2 space-y-1 text-sm">
-        {row(refugees, "Rút dân")}
-        {row(ships, "Cắt thuyền viện")}
-        {row(tide, "Cửa nước")}
-        {market && <li className="text-xs text-muted">Chợ: {market}</li>}
+        {rows.map((r) => (
+          <li key={r.label} className="flex gap-2">
+            <span className={r.done ? "text-emerald-300" : "text-stone-500"} aria-hidden>{r.done ? "✔" : "○"}</span>
+            <span><strong>{r.label}:</strong> {r.text}</span>
+          </li>
+        ))}
       </ul>
-      <p className="mt-2 text-xs text-muted">Chiếm thành sau khi rút dân và cắt viện là Toàn thắng. Chưa chiếm được thành mà đã làm đủ hai việc đó vẫn tính là Giữ dân.</p>
+      {scenario.endings && (
+        <p className="mt-2 text-xs text-muted">Chiếm thành sau khi rút dân và cắt viện là Toàn thắng. Chưa chiếm được thành mà đã làm đủ hai việc đó là Giữ dân: có ít vàng nhưng chưa tính qua bậc.</p>
+      )}
+      {!scenario.endings && scenario.missionGold && (
+        <p className="mt-2 text-xs text-muted">
+          Nhiệm vụ không bắt buộc: chiếm thành sau khi xong {scenario.village && scenario.reinforcementDays ? "cả hai việc hộ tống và chặn viện" : "nhiệm vụ"} thì
+          vàng thưởng ×{String(scenario.missionGold).replace(".", ",")}.
+        </p>
+      )}
       {run.log && run.log.length > 0 && (
         <ol className="mt-3 space-y-0.5 border-t border-white/10 pt-2 text-xs text-foreground-secondary">
           {run.log.map((line, i) => <li key={i}>{line}</li>)}
@@ -988,11 +1043,14 @@ function ResultView({ run, map, result, onNew }: { run: Omit<ExpeditionRun, "see
               : `★ chiếm thành · ★ xong trong ${map.parDays} ngày · ★ không thua trận nào`}
           </p>
           <p className="mt-3 font-semibold text-amber-300">
-            +{result.gold} vàng{result.firstClear ? " (thắng lần đầu)" : ""}
+            +{result.gold} vàng{result.firstClear ? " (thắng lần đầu)" : ""}{result.mission ? " · xong nhiệm vụ" : ""}
             {result.item && ` · ${SLOT_NAME[result.item.slot]} phẩm ${TIER_COLOR_NAME[result.item.tier]} hệ ${ELEMENT_NAME[result.item.element]}`}
             {result.bonusItem && ` · thưởng toàn thắng: ${SLOT_NAME[result.bonusItem.slot]} phẩm ${TIER_COLOR_NAME[result.bonusItem.tier]}`}
             {result.soldFor > 0 && ` · túi đầy, món thưởng bán được ${result.soldFor} vàng`}
           </p>
+          {!result.won && result.ending && (
+            <p className="mt-1 text-xs text-muted">Giữ dân chưa tính là qua bậc: phải chiếm thành mới mở bậc sau.</p>
+          )}
         </>
       ) : (
         <p className="mt-3 text-sm text-foreground-secondary">{reason} Vàng, kinh nghiệm và đồ rơi của từng trận vẫn được giữ.</p>

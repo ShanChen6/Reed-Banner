@@ -5,6 +5,24 @@
 **Đồng bộ UI/UX toàn game: quy tắc chung (APPROVED)**
 - Shan duyệt đề xuất sau kiểm kê 20 màn: nút chính sơn mài đỏ viền vàng (bỏ nút vàng/cam), đang chọn là giấy dó chữ mực, giấy dó chỉ cho nội dung đọc dài, Cửa Hàng thành trang thường, khách vẫn xem được banner/luật/thưởng của chế độ cần đăng nhập, bỏ emoji. Làm theo từng PR nhỏ. Xem [theme.md](../05-ui-ux/design-system/theme.md#quy-tắc-chung-đồng-bộ-ui-05112026) và [lộ trình](../05-ui-ux/implementation/roadmap.md#4-đồng-bộ-ui-toàn-game-05112026).
 
+**Viễn Chinh: nhiệm vụ cho mọi sa bàn, hạ sức địch Cửa Biển**
+- Shan cho thêm nhiệm vụ cho các sa bàn và hạ sức địch Cửa Biển. Nhiệm vụ không bắt buộc, ghép từ hộ tống và chặn viện binh: Ải Bắc giải cứu tù binh (Kho Ngựa Thồ → Bản Na), Thượng Du đưa dân lên Đèo Ngang, Ngã Ba Sông rút dân (Làng Ruộng Chiêm → Trại Bờ Đông hoặc Kho Thóc đã giữ), Kinh Thành chặn viện binh, Quần Đảo chặn thuyền viện ở Lũy Cầu Dài (mới). Thắng kèm xong nhiệm vụ thì vàng ×1,3. Shan cho giảm nhẹ: truy binh 2 địch ×1,0, 5 lượt; hạn Ải Bắc 13 → 14, Thượng Du 19 → 20, Ngã Ba Sông 10 → 12 ngày. Shan chốt sàn 30% thắng: Bậc III Ải Bắc, Thượng Du, Ngã Ba Sông địch ×0,97 / ×0,9 / ×0,95, ô khác giữ nguyên. Cửa Biển địch ×0,87: Bậc I 50 → 85%. Xem [GDD mục 4.3](../02-game-modes/expedition/01-vien-chinh-gdd.md#43-nhiệm-vụ-từng-sa-bàn-shan-yêu-cầu-05112026) và [mục 5.3](../02-game-modes/expedition/01-vien-chinh-gdd.md#53-nhiệm-vụ-và-sức-địch-cửa-biển-05112026-lần-8).
+
+**Viễn Chinh: mô phỏng đi theo nhiệm vụ, cân lại số ngày**
+- Shan cho dạy mô phỏng làm việc phụ (trinh sát, chặn viện binh, rút dân, giữ kho) và chạy dài để cân. Đổi hạn ngày: Ải Bắc 12 → 13, Thượng Du 17 → 19, Cửa Biển 12 → 17, Kinh Thành 10 → 11; trận giữ Đèo Ngang 6 lượt, không mạnh thêm. Năm sa bàn vào khoảng mục tiêu; Cửa Biển vẫn khó nhất (Bậc I 50%). Xem [GDD mục 5.2](../02-game-modes/expedition/01-vien-chinh-gdd.md#52-kết-quả-bản-chốt-05112026).
+
+**Viễn Chinh: luật riêng cho năm sa bàn, Trinh sát chung**
+- Sau bản review, Shan cho mỗi sa bàn ngoài Cửa Biển một hai khối luật nhẹ lấy từ Cửa Biển: Ải Bắc đường bị phá và phá cổng; Thượng Du viện binh, giữ Đèo Ngang để chặn; Ngã Ba Sông phản công Kho Thóc; Kinh Thành viện binh, giữ Lũy Cầu Tây để chặn; Quần Đảo phá cổng, trừ khi đổ bộ từ Làng Đảo Rùa. Lệnh Trinh sát có ở mọi sa bàn. Xem [GDD mục 4.2](../02-game-modes/expedition/01-vien-chinh-gdd.md#42-luật-riêng-từng-sa-bàn-shan-yêu-cầu-05112026).
+
+**Viễn Chinh: siết ba trận có mục tiêu ở Cửa Biển**
+- Sau bản review, Shan cho siết: giữ cầu 5 → 8 lượt; truy binh 2 → 3 địch, 4 → 6 lượt, sức mạnh ×0,9 → ×1,2; phản công Chợ 4 → 6 lượt, sức mạnh ×1,2 → ×1,4. Trước đây cả ba thắng 100% khi đủ máu và tốn ít máu hơn một lũy thường. Số đo ở [thiết kế Cửa Biển mục 5](../02-game-modes/expedition/03-cua-bien-thiet-ke.md#5-ba-loại-trận-riêng).
+
+**Viễn Chinh: Giữ dân không còn mở bậc**
+- Sau bản review, Shan cho sửa lối tắt: làm xong rút dân và cắt viện rồi rút quân thì trước đây vẫn tính qua bậc. Giờ kết thúc Giữ dân không mở bậc sau, không có món, vàng chỉ bằng mức thắng lại × 0,6. Xem [thiết kế Cửa Biển mục 4](../02-game-modes/expedition/03-cua-bien-thiet-ke.md#4-kết-thúc-và-thưởng).
+
+**Khai Lộ: quân nguyên tố và chế độ Cấp tốc**
+- Shan: thay quân vật phẩm bằng quân 7 nguyên tố có màu riêng cho dễ phân biệt; thêm chế độ tính giờ. Cấp tốc: mỗi màn 60 giây (+15 giây mỗi hệ mới), hết giờ là hết màn, giây dư khi dọn sạch thành điểm. Xem [GDD Khai Lộ](../02-game-modes/future/24-khai-lo-gdd.md#25-chế-độ).
+
 **Khai Lộ: mini game giải đố mới (DRAFT, có bản chơi thử)**
 - Shan muốn một mini game giải đố kiểu Block'D (xóa nhóm cùng màu) dùng ô ngọc của game, chốt tên **Khai Lộ**. Chạm một ô xóa cả khối cùng loại liền cạnh, ô rơi và cột dồn, không có ô mới; điểm n², quân lực, đạo cụ Lốc Phong và Sấm Sét. Xem [GDD Khai Lộ](../02-game-modes/future/24-khai-lo-gdd.md).
 
