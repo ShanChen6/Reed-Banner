@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { test } from "node:test";
-import { CHARACTER_SKILLS, DBL_ULTIMATES, ELEMENT_SKILLS, ROLE_SKILLS } from "../../src/core";
+import { CHARACTER_SKILLS, DBL_ULTIMATES, ELEMENT_SKILLS, personalSkillOf, ROLE_SKILLS } from "../../src/core";
+import { SPECIAL_SKILL_SETS } from "../../src/core/battle/special-skills";
 import { REUSED_SKILL_ART, skillArt } from "../../src/app/game/art/skills";
 
 test("ô 2/6 hệ (element_<mã>) dùng lại ảnh hệ cũ của Đinh Bộ Lĩnh", () => {
@@ -37,14 +38,39 @@ test("mọi chiêu nghề của 8 nghề có ảnh vẽ tay", () => {
   }
 });
 
-test("28 chiêu ô 4 tướng dùng lại ảnh hệ cũ: đúng mã, có file, mỗi ảnh một lần", () => {
+test("27 chiêu ô 4 tướng dùng lại ảnh hệ cũ: đúng mã, có file, mỗi ảnh một lần", () => {
   const ids = new Set(CHARACTER_SKILLS.map((d) => d.id));
   const files = Object.values(REUSED_SKILL_ART);
-  assert.equal(files.length, 28);
+  assert.equal(files.length, 27);
   assert.equal(new Set(files).size, files.length);
   for (const [id, file] of Object.entries(REUSED_SKILL_ART)) {
     assert.ok(ids.has(id), id);
     assert.ok(existsSync(`public/art/skills/${file}.webp`), file);
     assert.deepEqual(skillArt({ id }), { file });
+  }
+});
+
+test("chiêu ô 4 riêng Shan vẽ cho 47 tướng: ảnh trùng mã kỹ năng", () => {
+  const owners = [
+    "lyLiet", "hoLang", "tongTan", "haVan", "daoLam", "vuLoi", "chuNgan", "lieuYen", "luDuong",
+    "leThach", "hoangMoc", "thaiHa", "truongViem", "ongChan", "manhTuong", "nguyenKhoan", "nguyenSieu",
+    "lucDiep", "bachSuong", "chauNgoc", "beLien", "tieuMinh",
+    "toKim", "ninhHoa", "quachAn", "nhanTruc", "maNhac", "tuKinh", "buiPhieu", "luuCo", "ngoXuongXi", "nguyenThuTiep",
+    "phungPhong", "taThach", "nghiemThiet", "samTue", "viTrieu", "tonDiem",
+    "bachNoLang", "thanhLamXa", "tranSonThach", "docAnh", "hanGiangKhach", "xichDa", "diaAn", "loiAnh", "voAnh",
+  ];
+  for (const character of owners) {
+    const def = personalSkillOf(character);
+    assert.ok(def, character);
+    assert.deepEqual(skillArt(def), { file: def.id }, character);
+    assert.ok(existsSync(`public/art/skills/${def.id}.webp`), def.id);
+    assert.equal(REUSED_SKILL_ART[def.id], undefined, def.id);
+  }
+});
+
+test("Đinh Ngọc và Trần Vũ Phong: cả 6 chiêu có ảnh riêng", () => {
+  for (const def of [...SPECIAL_SKILL_SETS.dinhNgoc!, ...SPECIAL_SKILL_SETS.vuPhong!]) {
+    assert.deepEqual(skillArt(def), { file: def.id });
+    assert.ok(existsSync(`public/art/skills/${def.id}.webp`), def.id);
   }
 });

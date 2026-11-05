@@ -530,6 +530,26 @@ const SKILL_ART = new Set([
   "dbl_quanSu_kim", "dbl_quanSu_moc", "dbl_quanSu_thuy", "dbl_quanSu_hoa", "dbl_quanSu_tho", "dbl_quanSu_loi", "dbl_quanSu_phong",
   "dbl_xaThu_kim", "dbl_xaThu_moc", "dbl_xaThu_thuy", "dbl_xaThu_hoa", "dbl_xaThu_tho", "dbl_xaThu_loi", "dbl_xaThu_phong",
   "dbl_satThu_kim", "dbl_satThu_moc", "dbl_satThu_thuy", "dbl_satThu_hoa", "dbl_satThu_tho", "dbl_satThu_loi", "dbl_satThu_phong",
+  // Chiêu ô 4 riêng của tướng (Shan vẽ 05/11/2026). Tướng sĩ Lý Liệt, Hồ Lãng, Tống Tấn; Pháp sư Hà Vân, Đào Lam, Vũ Lôi, Chu Ngân, Liễu Yên; sứ quân Lữ Đường.
+  "xichHoaDoatKy", "langDaoTram", "loiDaoLienTram",
+  "hoaVuLieuNguyen", "bangHaPhongToa", "thienLoiGiangThe", "nganChamTanXa", "phongAnCuongLuu", "teGiangThuyTran",
+  // Binh lính Lê Thạch, Hoàng Mộc, Thái Hà, Trương Viêm, Ông Chấn, Mạnh Tường; sứ quân Nguyễn Khoan, Nguyễn Siêu.
+  "tranSonHoQuan", "reGiaGiuThanh", "thuyTraiLienHoan", "viemGiapHoDoanh", "chanLoiThietVe", "phongLuyHoKy",
+  "tamDaiKienThanh", "phuLietHoaLuy",
+  // Y sư Lục Diệp, Bạch Sương, Châu Ngọc, Bế Liên, Tiêu Minh.
+  "xuanMocVanSinh", "gioLanhTayUe", "kimChamDoMenh", "hauThoDuongNguyen", "loiChamKhoiTu",
+  // Mưu sĩ Tô Kim, Ninh Hỏa, Quách Ẩn, Nhan Trúc, Mã Nhạc, Từ Kinh, Bùi Phiêu; tướng lịch sử Lưu Cơ; sứ quân Ngô Xương Xí, Nguyễn Thủ Tiệp.
+  "kimNganLyTan", "hoaThieuKhoLuong", "thuyDonLyGian", "trucDocMeHon", "doanDaoTuyetLuong", "kinhLoiDoatKhi", "phieuPhongLyGian",
+  "doHoPhuLenh", "ngoGiaDiMuu", "tienDuDoatLuong",
+  // Quân sư Phùng Phong, Tạ Thạch, Nghiêm Thiết, Sầm Tuệ, Vi Triều, Tôn Diệm.
+  "phongVanBienTran", "batTranThachLuy", "thietTranPhaGiap", "thanhLamBayTran", "trieuDangVayThanh", "hoaCongLienKe",
+  // Xạ thủ Bạch Nỏ Lang, Thanh Lâm Xạ, Trấn Sơn Thạch; Sát thủ Độc Ảnh, Hàn Giang Khách, Xích Dạ, Địa Ẩn, Lôi Ảnh, Vô Ảnh.
+  "rb_bnl_thietNoPhaThanh", "rb_tlx_lucTienTroiDuong", "rb066_tranSonHoTran",
+  "rb070_ultimate", "rb071_ultimate", "rb072_ultimate", "rb073_ultimate", "rb074_ultimate", "rb075_ultimate",
+  // Nhân vật đặc biệt Đinh Ngọc: đủ 6 ô.
+  "dn_kimQuangPhaTran", "dn_thuyAnhXuyenLuu", "dn_hoaBoDoatMenh", "dn_vanTuongQuyNhat", "dn_thoAnTranTam", "dn_loiVanKhaiLo",
+  // Nhân vật đặc biệt Trần Vũ Phong: đủ 6 ô (ô 4 thay ảnh Phong Hành Vạn Lý dùng tạm trước đó).
+  "vp_phongKhoiVanDong", "vp_muaGiangYLoan", "vp_lucDiepDanLo", "vp_vanDuThienLy", "vp_diaMachHoDoi", "vp_cuongPhongDoiCuc",
 ]);
 
 /**
@@ -562,7 +582,6 @@ export const REUSED_SKILL_ART: Readonly<Record<string, string>> = {
   rb067_loiChamTuocKhi: "loiTienXuyenVan", // Lôi Minh Xạ
   loiTranKinhHon: "loiVongThienLa", // Mạc Vân
   duongLamPhongKhoi: "baoTapCanKhon", // Ngô Nhật Khánh
-  vp_vanDuThienLy: "phongHanhVanLy", // Vũ Phong
   truyPhongDoatMenh: "phongNhanLietKhong", // Hứa Lăng
   rb068_phongLangNhieuTran: "cuongPhongQuetTran", // Tật Phong Lăng
 };
