@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui";
+import { Button, choiceVariants } from "@/components/ui";
 
 
 // Màn chờ trước trận: xem hai đội, chọn nguyên tố, nghề, trang bị mẫu và độ khó rồi vào trận. Luôn là nền
@@ -37,16 +37,14 @@ export interface LobbyGear {
 }
 
 const chip = (on: boolean) =>
-  `rounded-full px-3 py-1 text-sm transition ${
-    on ? "bg-amber-500 font-semibold text-stone-950 shadow" : "bg-white/10 hover:bg-white/20"
-  }`;
+  choiceVariants({ size: "sm", className: `rounded-full${on ? " is-selected" : ""}` });
 
 function Section({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
     <section className="flex flex-col gap-2">
-      <h3 className="flex items-baseline gap-2 text-sm font-bold tracking-wide text-amber-200">
+      <h3 className="flex items-baseline gap-2 text-sm font-bold tracking-wide text-frame-gold">
         {title}
-        {hint && <span className="text-xs font-normal text-stone-400">{hint}</span>}
+        {hint && <span className="text-xs font-normal text-on-wood-soft">{hint}</span>}
       </h3>
       {children}
     </section>
@@ -56,7 +54,7 @@ function Section({ title, hint, children }: { title: string; hint?: string; chil
 function TeamRow({ fighters, label, align }: { fighters: readonly Fighter[]; label: string; align: "start" | "end" }) {
   return (
     <div className={`flex min-w-0 flex-1 flex-col items-center gap-1.5 ${align === "end" ? "sm:items-end" : "sm:items-start"}`}>
-      <span className="text-xs uppercase tracking-widest text-stone-400">{label}</span>
+      <span className="text-kicker text-on-wood-soft">{label}</span>
       <div className={`flex gap-2 ${align === "end" ? "sm:flex-row-reverse" : ""}`}>
         {fighters.map((f, i) => (
           <div key={f.id} className="flex w-16 flex-col items-center gap-0.5 text-center sm:w-20">
@@ -130,7 +128,7 @@ export default function SetupLobby({
 }) {
   const practice = mode === "practice";
   return (
-    <div className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-2xl border-2 border-[#d4a24c]/70 bg-[#1d1511] text-stone-100 shadow-2xl">
+    <div className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-2xl border-2 border-frame-gold/70 bg-wood-lo text-on-wood shadow-2xl">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-60"
@@ -140,8 +138,8 @@ export default function SetupLobby({
       />
       <div className="relative flex flex-col gap-4 p-4 sm:p-6">
         <header className="flex flex-col items-center gap-1 text-center">
-          <p className="text-xs uppercase tracking-[0.3em] text-amber-300/80">{online ? "Giao Tranh" : "Thao Luyện"}</p>
-          <h2 className="font-serif text-2xl font-bold sm:text-3xl">Chuẩn bị xuất trận</h2>
+          <p className="text-kicker text-frame-gold">{online ? "Giao Tranh" : "Thao Luyện"}</p>
+          <h2 className="font-serif text-2xl font-bold text-title-on-wood sm:text-3xl">Chuẩn bị xuất trận</h2>
           <DongSonBand className="mt-1 w-48 opacity-80" />
         </header>
 
@@ -154,17 +152,17 @@ export default function SetupLobby({
             ))}
           </div>
         )}
-        <p className="-mt-2 text-center text-xs text-stone-400">
+        <p className="-mt-2 text-center text-xs text-on-wood-soft">
           {online
-            ? `Đội theo hồ sơ của bạn (Đinh Bộ Lĩnh cấp ${level}). Server xử lý từng nước đi, mỗi lượt 30 giây; tải lại trang vẫn tiếp tục được trận.`
+            ? `Đội theo hồ sơ của bạn (Đinh Bộ Lĩnh cấp ${level}). Máy chủ xử lý từng nước đi, mỗi lượt 30 giây; tải lại trang vẫn tiếp tục được trận.`
             : practice
               ? "Cả hai đội cấp 30, mọi kỹ năng cấp tối đa, mặc trang bị mẫu. Không lưu gì, cứ thử thoải mái."
               : "Đội theo hồ sơ lưu trên trình duyệt này; thắng thua đều nhận kinh nghiệm, vàng và đồ rơi."}
         </p>
 
-        <div className="flex flex-col items-center gap-2 rounded-xl bg-black/30 p-3 sm:flex-row">
+        <div className="flex flex-col items-center gap-2 ui-frame-inset rounded-xl p-3 sm:flex-row">
           <TeamRow fighters={teams[0]} label="Phe bạn" align="start" />
-          <span className="font-serif text-2xl font-bold text-amber-400 sm:text-3xl">VS</span>
+          <span className="font-serif text-2xl font-bold text-frame-gold sm:text-3xl">VS</span>
           <TeamRow fighters={teams[1]} label="Tianwu" align="end" />
         </div>
 
@@ -181,7 +179,7 @@ export default function SetupLobby({
                   onClick={() => onElement(e)}
                   title={ELEMENT_TRAIT[e].role}
                   className={`flex flex-col items-center gap-1 rounded-xl border p-2 transition ${
-                    on ? "border-transparent bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10"
+                    on ? "border-transparent bg-wood-hi" : "border-frame-line-soft bg-wood-inset hover:bg-wood-hi"
                   }`}
                   style={on ? { boxShadow: `0 0 0 2px ${ELEMENT_COLOR[e]}, 0 0 18px -4px ${ELEMENT_COLOR[e]}` } : undefined}
                 >
@@ -191,7 +189,7 @@ export default function SetupLobby({
               );
             })}
           </div>
-          <p className="text-xs text-stone-300">
+          <p className="text-xs text-on-wood-soft">
             <span className="font-semibold" style={{ color: ELEMENT_COLOR[element] }}>
               {ELEMENT_NAME[element]}:
             </span>{" "}
@@ -211,14 +209,14 @@ export default function SetupLobby({
                   aria-checked={on}
                   onClick={() => onProfession(p)}
                   className={`flex items-center gap-2 rounded-xl border p-2 text-left transition ${
-                    on ? "border-transparent bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10"
+                    on ? "border-transparent bg-wood-hi" : "border-frame-line-soft bg-wood-inset hover:bg-wood-hi"
                   }`}
                   style={on ? { boxShadow: `0 0 0 2px ${PROFESSION_COLOR[p]}, 0 0 18px -4px ${PROFESSION_COLOR[p]}` } : undefined}
                 >
                   <ProfessionIcon profession={p} className="size-9 shrink-0" />
                   <span className="min-w-0">
                     <span className="block text-sm font-semibold">{PROFESSION_NAME[p]}</span>
-                    <span className="block text-[11px] leading-snug text-stone-400">{PROFESSION_PERK[p]}</span>
+                    <span className="block text-[11px] leading-snug text-on-wood-soft">{PROFESSION_PERK[p]}</span>
                   </span>
                 </button>
               );
@@ -302,7 +300,7 @@ export default function SetupLobby({
           >
             {pending ? (
               <>
-                <span aria-hidden className="size-4 animate-spin rounded-full border-2 border-stone-950 border-t-transparent" />
+                <span aria-hidden className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                 Đang tạo trận…
               </>
             ) : (
@@ -312,14 +310,14 @@ export default function SetupLobby({
             )}
           </Button>
           {canReturn && (
-            <button type="button" onClick={onReturn} className="rounded-xl bg-white/15 px-4 py-2.5 hover:bg-white/25">
+            <Button variant="secondary" type="button" onClick={onReturn}>
               Quay lại trận đang đánh
-            </button>
+            </Button>
           )}
           {onResume && (
-            <button type="button" onClick={onResume} disabled={pending} className="rounded-xl bg-white/15 px-4 py-2.5 hover:bg-white/25 disabled:opacity-60">
+            <Button variant="secondary" type="button" onClick={onResume} disabled={pending}>
               Tiếp tục trận dở
-            </button>
+            </Button>
           )}
         </div>
       </div>

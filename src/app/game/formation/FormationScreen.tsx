@@ -5,6 +5,7 @@
 // server, client chỉ giữ bản công khai). Luật ở src/core/binh-phap, spec ở docs/02-game-modes/future/02-binh-phap-gdd.md,
 // giao diện ở docs/05-ui-ux/screens/tran-do.md.
 
+import { buttonVariants } from "@/components/ui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   CUSTOM_RULESET_ID,
@@ -25,7 +26,6 @@ import {
   type Ruleset,
 } from "@/core/binh-phap";
 import { useAudio } from "../audio/AudioProvider";
-import { SceneLink } from "../SceneContext";
 import BoardView, { type Sweep } from "./BoardView";
 import { CommandCard, HeatFlames, HintToggle, MobileBar, ProgressMeter, TutorialTip, tutorialText } from "./Hud";
 import { mapFor, type FormationMap } from "./maps";
@@ -412,11 +412,11 @@ function PlayView({
         </header>
         <div className="flex gap-2">
           {ranked ? (
-            <button type="button" onClick={onLeave} className="home-secondary min-h-11 rounded-lg px-4 font-serif font-semibold">Về danh sách</button>
+            <button type="button" onClick={onLeave} className={buttonVariants({ variant: "secondary", className: "min-h-11 px-4" })}>Về danh sách</button>
           ) : (
             <>
-              <button type="button" onClick={onRestart} className="home-secondary min-h-11 rounded-lg px-4 font-serif font-semibold">Ván mới</button>
-              <button type="button" onClick={onLeave} className="home-secondary min-h-11 rounded-lg px-4 font-serif font-semibold">Đổi bậc</button>
+              <button type="button" onClick={onRestart} className={buttonVariants({ variant: "secondary", className: "min-h-11 px-4" })}>Ván mới</button>
+              <button type="button" onClick={onLeave} className={buttonVariants({ variant: "secondary", className: "min-h-11 px-4" })}>Đổi bậc</button>
             </>
           )}
         </div>
@@ -443,7 +443,7 @@ function PlayView({
                     <p className="text-sm text-[var(--atlas-muted)]">Bỏ Lệnh {state.discardHeat}/{rules.maxHeat}{state.discardHeat >= rules.maxHeat ? " · bỏ nữa là thua" : ""}</p>
                     <HeatFlames heat={state.discardHeat} max={rules.maxHeat} />
                   </div>
-                  <button type="button" disabled={busy} onClick={() => onCommand({ kind: "discard" })} className="home-secondary min-h-12 rounded-lg px-4 font-serif font-semibold disabled:opacity-60">
+                  <button type="button" disabled={busy} onClick={() => onCommand({ kind: "discard" })} className={buttonVariants({ variant: "secondary", className: "min-h-12 px-4" })}>
                     Bỏ Lệnh{noMove ? " (hết nước đặt)" : ""}
                   </button>
                 </div>
@@ -508,7 +508,7 @@ function RankedResult({ state, rank, score, period, map, onLeave }: { state: Puz
         <p className="text-[15px]">Ván thua không vào bảng xếp hạng và không có thưởng. Mỗi kỳ chỉ có một ván tính hạng; hãy thử lại ở kỳ sau, hoặc luyện ở mục Chơi thường.</p>
       )}
       {won && <CompletedMap map={map} />}
-      <button type="button" onClick={onLeave} className="home-cta min-h-12 w-fit rounded-lg px-6 font-serif font-bold">Về danh sách</button>
+      <button type="button" onClick={onLeave} className={buttonVariants({ className: "min-h-12 w-fit px-6" })}>Về danh sách</button>
     </section>
   );
 }
@@ -524,9 +524,8 @@ function Result({ state, best, map, custom, onRestart, onLeave }: { state: Puzzl
       <p className="text-sm text-[var(--atlas-muted)]">Chế độ chơi thường: không có thưởng và không lên bảng xếp hạng.</p>
       {won && <CompletedMap map={map} />}
       <div className="flex flex-wrap gap-2">
-        <button type="button" onClick={onRestart} className="home-cta min-h-12 rounded-lg px-6 font-serif font-bold">Chơi lại</button>
-        <button type="button" onClick={onLeave} className="home-secondary min-h-12 rounded-lg px-4 font-serif font-semibold">Đổi bậc</button>
-        <SceneLink scene="MENU" className="home-secondary flex min-h-12 items-center rounded-lg px-4 font-serif font-semibold">Về màn chính</SceneLink>
+        <button type="button" onClick={onRestart} className={buttonVariants({ className: "min-h-12 px-6" })}>Chơi lại</button>
+        <button type="button" onClick={onLeave} className={buttonVariants({ variant: "secondary", className: "min-h-12 px-4" })}>Đổi bậc</button>
       </div>
     </section>
   );

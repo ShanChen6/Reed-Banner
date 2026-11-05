@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui";
+import { Button, buttonVariants } from "@/components/ui";
 
 
 // Bảng tiến trình của Chơi thử và Chơi online: cấp, kinh nghiệm, điểm kỹ năng, nâng kỹ năng theo ô.
@@ -59,7 +59,7 @@ export const PROFILE_ERROR: Record<
   questNotDone: "Chưa xong",
   questClaimed: "Đã nhận thưởng",
   noQuest: "Không có nhiệm vụ này",
-  network: "Mất kết nối tới server, thử lại",
+  network: "Mất kết nối tới máy chủ, thử lại",
   conflict: "Hồ sơ vừa đổi ở nơi khác, đã tải lại",
 };
 
@@ -77,7 +77,7 @@ function XpBar({ p }: { p: CharacterProgress }) {
         aria-label="Kinh nghiệm"
       >
         <div
-          className="h-full bg-amber-500"
+          className="h-full bg-frame-gold"
           style={{ width: `${(cur / max) * 100}%` }}
         />
       </div>
@@ -126,10 +126,11 @@ function SkillRow({
             </span>
           </span>
           <Button variant="primary"
+            size="sm"
             type="button"
             disabled={!canUp || cost === null || points < cost}
             onClick={onUp}
-            className="w-12 text-[10px]"
+            className="min-h-8 w-14 shrink-0 px-1 text-[11px] whitespace-nowrap"
             title={
               cost === null
                 ? "Đã tối đa"
@@ -199,7 +200,7 @@ export default function ProgressPanel({
               onReset();
             }}
             onBlur={() => setConfirmReset(false)}
-            className="rounded bg-black/15 px-2 py-0.5"
+            className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 px-2 text-xs" })}
           >
             {confirmReset ? "Bấm lần nữa để xóa" : "Đặt lại hồ sơ"}
           </button>

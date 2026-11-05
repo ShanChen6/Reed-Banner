@@ -1,6 +1,6 @@
 "use client";
 
-import { Select as UISelect, Button } from "@/components/ui";
+import { Select as UISelect, Button, buttonVariants, choiceVariants } from "@/components/ui";
 
 // Túi đồ và 9 ô trang bị của Chơi thử (Tiến trình) và Chơi online, kèm cửa hàng trang bị. Luật nằm trong
 // @/core (applyProfileAction); ở đây chỉ hiển thị và gửi thao tác, giống ProgressPanel.
@@ -103,15 +103,18 @@ function Select<T extends string>({
   value,
   options,
   onChange,
+  stacked,
 }: {
   label: string;
   value: T;
   options: readonly { value: T; text: string }[];
   onChange: (v: T) => void;
+  /** Nhãn nằm trên ô chọn (form mua đồ). */
+  stacked?: boolean;
 }) {
   return (
-    <label className="flex items-center gap-1">
-      <span className="opacity-70">{label}</span>
+    <label className={stacked ? "flex min-w-0 flex-col gap-1 text-caption text-on-wood-soft" : "flex items-center gap-1"}>
+      <span className={stacked ? undefined : "opacity-70"}>{label}</span>
       <UISelect
         value={value}
         onChange={(e) => onChange(e.target.value as T)}
@@ -136,11 +139,14 @@ export default function GearPanel({
   teamIds,
   locked,
   onAction,
+  noShop,
 }: {
   profile: Profile;
   teamIds: readonly string[];
   locked: boolean;
   onAction: (a: ProfileAction) => Promise<string | null>;
+  /** Ẩn phần mua đồ (sảnh Giao Tranh): mua ở Cửa Hàng. */
+  noShop?: boolean;
 }) {
   const [who, setWho] = useState<string>(MAIN_ID);
   const [picked, setPicked] = useState<string[]>([]);
@@ -213,7 +219,7 @@ export default function GearPanel({
             role="tab"
             aria-selected={character === id}
             onClick={() => setWho(id)}
-            className={`rounded px-2 py-0.5 ${character === id ? "bg-amber-500 font-semibold text-stone-950" : "bg-black/15"}`}
+            className={choiceVariants({ size: "sm", className: "min-h-8 px-2 text-xs" })}
           >
             {nameOf(id)}
           </button>
@@ -275,8 +281,8 @@ export default function GearPanel({
       <h3 className="mt-3 mb-1 font-semibold">Túi đồ</h3>
       {profile.bag.length === 0 ? (
         <p className="opacity-60">
-          Chưa có món nào. Thắng trận chắc chắn rơi 1 món; cũng có thể mua ở cửa
-          hàng bên dưới.
+          Chưa có món nào. Thắng trận chắc chắn rơi 1 món; cũng có thể mua ở{" "}
+          {noShop ? "Cửa Hàng" : "cửa hàng bên dưới"}.
         </p>
       ) : (
         <ul className="flex flex-wrap gap-1">
@@ -290,7 +296,7 @@ export default function GearPanel({
                   aria-pressed={on}
                   onClick={() => toggle(it.id)}
                   title={`${gearText(it)}${worn ? ` · ${nameOf(worn)} đang mặc` : ""}`}
-                  className={`rounded ${on ? "ring-2 ring-amber-400" : ""}`}
+                  className={`rounded ${on ? "ring-2 ring-frame-gold" : ""}`}
                 >
                   <GearIcon
                     slot={it.slot}
@@ -302,7 +308,7 @@ export default function GearPanel({
                   />
                 </button>
                 {worn && (
-                  <span className="pointer-events-none absolute -top-1 -right-1 rounded-full bg-emerald-600 px-1 text-[9px] text-white">
+                  <span className="pointer-events-none absolute -top-1 -right-1 rounded-full bg-jade px-1 text-[9px] font-bold text-ink">
                     {nameOf(worn).split(" ").at(-1)![0]}
                   </span>
                 )}
@@ -313,7 +319,7 @@ export default function GearPanel({
       )}
 
       {items.length > 0 && (
-        <div className="mt-2 flex flex-wrap items-center gap-1.5 rounded bg-black/10 p-1.5">
+        <div className="mt-2 flex flex-wrap items-center gap-1.5 rounded border border-frame-line-soft bg-black/10 p-1.5">
           {one ? (
             <>
               <span className="min-w-0 flex-1">
@@ -335,7 +341,7 @@ export default function GearPanel({
                   onClick={() =>
                     commit({ type: "equip", character, item: one.id })
                   }
-                  className="rounded bg-emerald-600 px-2 py-0.5 text-white disabled:opacity-40"
+                  className={buttonVariants({ size: "sm", className: "min-h-8 px-2 text-xs" })}
                 >
                   Mặc cho {nameOf(character)}
                 </button>
@@ -347,7 +353,7 @@ export default function GearPanel({
                   onClick={() =>
                     commit({ type: "unequip", character: wearer, item: one.id })
                   }
-                  className="rounded bg-black/20 px-2 py-0.5 disabled:opacity-40"
+                  className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 px-2 text-xs" })}
                 >
                   Tháo
                 </button>
@@ -356,7 +362,7 @@ export default function GearPanel({
                 type="button"
                 disabled={disabled}
                 onClick={() => commit({ type: "sell", item: one.id })}
-                className="rounded bg-black/20 px-2 py-0.5 disabled:opacity-40"
+                className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 px-2 text-xs" })}
               >
                 Bán +{SELL_GOLD[one.tier]}
               </button>
@@ -386,15 +392,19 @@ export default function GearPanel({
           <button
             type="button"
             onClick={() => setPicked([])}
-            className="rounded bg-black/20 px-2 py-0.5"
+            className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 px-2 text-xs" })}
           >
             Bỏ chọn
           </button>
         </div>
       )}
 
-      <h3 className="mt-3 mb-1 font-semibold">Cửa hàng trang bị</h3>
-      <GearShop profile={profile} disabled={disabled} onBuy={commit} />
+      {!noShop && (
+        <>
+          <h3 className="mt-3 mb-1 font-semibold">Cửa hàng trang bị</h3>
+          <GearShop profile={profile} disabled={disabled} onBuy={commit} />
+        </>
+      )}
       <p className="mt-2 opacity-60">
         Mỗi món chỉ một người mặc. Vũ khí của Đinh Bộ Lĩnh giữ riêng theo nghề;
         nhân vật kèm chỉ mặc vũ khí đúng nghề. Ghép cần 3 món cùng ô, cùng hệ,
@@ -429,8 +439,9 @@ export function GearShop({
   });
   const price = SHOP_GEAR_PRICE[order.tier] ?? 0;
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="grid grid-cols-2 items-end gap-3 sm:grid-cols-3 lg:grid-cols-6">
       <Select
+        stacked
         label="Ô"
         value={order.slot}
         options={GEAR_SLOTS.map((s) => ({ value: s, text: SLOT_NAME[s] }))}
@@ -438,6 +449,7 @@ export function GearShop({
       />
       {order.slot === "vuKhi" && (
         <Select
+        stacked
           label="Nghề"
           value={order.profession}
           options={PROFESSIONS.map((p) => ({
@@ -448,18 +460,21 @@ export function GearShop({
         />
       )}
       <Select
+        stacked
         label="Hệ"
         value={order.element}
         options={ELEMENTS.map((e) => ({ value: e, text: ELEMENT_NAME[e] }))}
         onChange={(element) => setOrder({ ...order, element })}
       />
       <Select
+        stacked
         label="Bộ"
         value={order.set}
         options={GEAR_SETS.map((g) => ({ value: g.id, text: g.name }))}
         onChange={(set) => setOrder({ ...order, set })}
       />
       <Select
+        stacked
         label="Phẩm"
         value={String(order.tier)}
         options={SHOP_TIERS.map((t) => ({
@@ -468,8 +483,9 @@ export function GearShop({
         }))}
         onChange={(t) => setOrder({ ...order, tier: Number(t) as Tier })}
       />
-      <Button variant="primary"
+      <Button
         type="button"
+        className="col-span-2 min-h-11 sm:col-span-1"
         disabled={disabled || profile.gold < price}
         onClick={() =>
           onBuy({
@@ -481,9 +497,8 @@ export function GearShop({
             ...(order.slot === "vuKhi" ? { profession: order.profession } : {}),
           })
         }
-
       >
-        Mua {price}
+        Mua · {price} vàng
       </Button>
     </div>
   );

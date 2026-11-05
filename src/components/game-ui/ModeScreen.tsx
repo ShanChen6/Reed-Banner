@@ -70,11 +70,11 @@ export function ModeBanner({ title, showTitle, kicker, description, art, artPosi
 }
 
 /** Tiêu đề khối bên trong khung: chữ 20px màu vàng nhạt, mô tả tùy chọn. */
-export function SectionTitle({ children, description, action, as: Tag = "h2" }: { children: ReactNode; description?: ReactNode; action?: ReactNode; as?: "h2" | "h3" }) {
+export function SectionTitle({ children, description, action, id, as: Tag = "h2" }: { children: ReactNode; description?: ReactNode; action?: ReactNode; id?: string; as?: "h2" | "h3" }) {
   return (
     <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
       <div>
-        <Tag className="ui-title-on-wood text-title">{children}</Tag>
+        <Tag id={id} className="ui-title-on-wood text-title">{children}</Tag>
         {description && <p className="mt-0.5 text-caption text-on-wood-soft">{description}</p>}
       </div>
       {action}

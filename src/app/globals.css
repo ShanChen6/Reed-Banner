@@ -4,7 +4,6 @@
 @import "../styles/typography.css";
 @import "../styles/base.css";
 @import "../styles/components.css";
-@import "../styles/tower.css";
 
 /* Hoạt ảnh bàn cờ trang /demo (src/app/demo/animation.ts). --dx/--dy tính bằng số ô; 2px là khe giữa các ô. */
 .tile-anim {
@@ -708,21 +707,21 @@
 
 /* Thanh header chung của màn chơi (src/app/game/header/). Một hệ chất liệu: gỗ sơn mài tối, đồng cổ trầm (viền,
    icon, khung avatar cùng một sắc), tranh thủy mặc chìm vào gỗ; vàng chỉ để nhấn rất ít. Token --hdr-* chỉ áp trong
-   thanh này. Tranh ở public/art/ui/header/, hai góc hoa văn ở public/art/ui/header/ornaments/. */
+   thanh này và chỉ là tên gọi lại token chung (src/styles/theme.css), không đặt mã màu riêng. Tranh ở public/art/ui/header/, hai góc hoa văn ở public/art/ui/header/ornaments/. */
 .game-header {
-  --hdr-wood: #1c120d;
-  --hdr-wood-hi: #2e1d14;
-  --hdr-bronze: #8a6634;
-  --hdr-bronze-hi: #b08a4e;
-  --hdr-gold: #c9a463;
-  --hdr-text: #efdfbd;
-  --hdr-text-soft: #bfa985;
-  --hdr-active: #7e2a20;
+  --hdr-wood: var(--wood-lo);
+  --hdr-wood-hi: var(--wood);
+  --hdr-bronze: var(--frame-bronze);
+  --hdr-bronze-hi: color-mix(in srgb, var(--frame-bronze), var(--frame-gold));
+  --hdr-gold: var(--frame-gold);
+  --hdr-text: var(--on-wood);
+  --hdr-text-soft: var(--on-wood-soft);
+  --hdr-active: var(--lacquer);
   color: var(--hdr-text);
   font-family: var(--font-serif);
   background:
-    radial-gradient(ellipse 45% 160% at 50% 0%, #3a2416 0%, transparent 70%),
-    linear-gradient(180deg, var(--hdr-wood-hi) 0%, var(--hdr-wood) 70%, #140c08 100%);
+    radial-gradient(ellipse 45% 160% at 50% 0%, var(--wood-hi) 0%, transparent 70%),
+    linear-gradient(180deg, var(--hdr-wood-hi) 0%, var(--hdr-wood) 70%, var(--wood-inset) 100%);
   box-shadow: 0 6px 16px -8px #000000d9;
 }
 /* Tranh trải hết chiều dài thanh: phủ kín (không kéo giãn), cổng thành ở giữa; màn hẹp thì cắt bớt hai bên. Hạ sáng
@@ -734,7 +733,12 @@
 }
 /* Hai đầu tối dần (chỗ nút Chiến trường, vàng, avatar) để chữ và viền nút đọc rõ trên tranh. */
 .game-header-shade {
-  background: linear-gradient(90deg, #140c08d9 0%, #140c0866 22%, transparent 38%, transparent 62%, #140c0866 78%, #140c08d9 100%);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--wood-inset) 85%, transparent) 0%,
+    color-mix(in srgb, var(--wood-inset) 40%, transparent) 22%,
+    transparent 38%,
+    transparent 62%,
+    color-mix(in srgb, var(--wood-inset) 40%, transparent) 78%,
+    color-mix(in srgb, var(--wood-inset) 85%, transparent) 100%);
 }
 @media (max-width: 767px) {
   .game-header-panorama {
@@ -744,7 +748,7 @@
 /* Bảng tên phân cảnh ở giữa: khung đồng Shan vẽ (header-title-plaque.webp, 1086×174) cắt 9 mảnh, hai đầu (nút thắt
    và chim Lạc) giữ nguyên, đoạn giữa kéo giãn theo độ dài tên. Viền tính theo em nên khung to nhỏ theo cỡ chữ. */
 .game-header-title {
-  color: #f3e2b8;
+  color: var(--title-on-wood);
   border-style: solid;
   border-width: 0.47em 2.05em;
   border-image: url("/art/ui/header/ornaments/header-title-plaque.webp") 30 130 fill / 0.47em 2.05em stretch;
@@ -759,7 +763,7 @@
   }
 }
 .game-header-gold {
-  color: #f3e2b8;
+  color: var(--title-on-wood);
 }
 /* Đường chỉ đồng trên/dưới: một nét mảnh, cùng sắc với viền nút. */
 .game-header-rule {
@@ -777,8 +781,8 @@
     box-shadow 0.15s;
 }
 .game-header-btn:hover {
-  color: #fff3d6;
-  background-color: #f4e3bf12;
+  color: var(--title-on-wood);
+  background-color: color-mix(in srgb, var(--paper-hi) 7%, transparent);
 }
 .game-header-btn:focus-visible,
 .game-header-menu-item:focus-visible {
@@ -789,8 +793,8 @@
    sau vẫn ẩn hiện), rê chuột thì viền sáng lên, màn đang mở thì nền đỏ son. */
 .game-header-chip {
   border: 1px solid var(--hdr-bronze);
-  background: #160e0abf;
-  box-shadow: inset 0 1px 0 #efdfbd0f;
+  background: color-mix(in srgb, var(--wood-inset) 75%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--on-wood) 6%, transparent);
 }
 .game-header-chip:hover,
 .game-header-account:hover .game-header-avatar,
@@ -798,20 +802,24 @@
   border-color: var(--hdr-bronze-hi);
 }
 .game-header-chip:hover {
-  background: #22160fd9;
+  background: color-mix(in srgb, var(--wood-panel) 85%, transparent);
 }
 .game-header-chip[aria-current="page"] {
   border-color: var(--hdr-bronze-hi);
-  background: linear-gradient(180deg, #7e2a20e6, #561c15e6);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--lacquer) 90%, transparent),
+    color-mix(in srgb, var(--lacquer-lo) 90%, transparent)
+  );
 }
 .game-header-account:hover,
 .game-header-account[aria-expanded="true"] {
-  background-color: #160e0abf;
+  background-color: color-mix(in srgb, var(--wood-inset) 75%, transparent);
 }
 .game-header-avatar {
   border: 1px solid var(--hdr-bronze);
   box-shadow:
-    0 0 0 2px #160e0a,
+    0 0 0 2px var(--wood-inset),
     0 0 0 3px color-mix(in srgb, var(--hdr-bronze) 45%, transparent);
   transition: border-color 0.15s;
 }
@@ -822,14 +830,14 @@
 }
 .game-header-menu-item {
   color: var(--hdr-text);
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   transition: background-color 0.15s;
 }
 .game-header-menu-item:hover {
-  background-color: #f4e3bf14;
+  background-color: color-mix(in srgb, var(--paper-hi) 8%, transparent);
 }
 .game-header-menu-item[aria-current="page"] {
-  background-color: #8f2f2399;
+  background-color: color-mix(in srgb, var(--lacquer) 60%, transparent);
 }
 @media (prefers-reduced-motion: reduce) {
   .game-header-btn,

@@ -11,17 +11,18 @@ import {
   type Profile,
   type ProfileAction,
 } from "@/core";
+import { ModeScreen, OrnateFrame } from "@/components/game-ui";
+import { Alert, Button, Tabs, type TabItem } from "@/components/ui";
 import { GearShop } from "../battle/GearPanel";
 import { fetchProfile, sendProfileAction } from "../battle/online";
 import { PROFILE_ERROR } from "../battle/ProgressPanel";
 import ShopPanel from "../battle/ShopPanel";
-import { SceneLink } from "../SceneContext";
 
 type Tab = "heroes" | "gear" | "items";
-const TABS: readonly { id: Tab; name: string }[] = [
-  { id: "heroes", name: "Tướng" },
-  { id: "gear", name: "Trang bị" },
-  { id: "items", name: "Vật phẩm" },
+const TABS: readonly TabItem<Tab>[] = [
+  { value: "heroes", label: "Tướng" },
+  { value: "gear", label: "Trang bị" },
+  { value: "items", label: "Vật phẩm" },
 ];
 
 export default function ShopScreen() {
@@ -49,69 +50,30 @@ export default function ShopScreen() {
   };
 
   return (
-    <main className="ui-screen px-2 py-4 sm:px-4">
-      <div className="relative mx-auto max-w-6xl rounded-2xl border-4 border-[#c79a4a] bg-[#1d1511] p-3 pt-10 shadow-[0_0_0_2px_#3b2a1d,0_12px_40px_#000c] sm:p-4 sm:pt-12">
-        <div className="absolute -top-5 left-1/2 -translate-x-1/2 rounded-xl border-4 border-[#c79a4a] bg-gradient-to-b from-[#fbf3df] to-[#e6d3a7] px-8 py-1.5 shadow-[0_4px_0_#0006] sm:px-12">
-          <h1 className="text-lg font-black tracking-[0.2em] text-[#5a1e14] sm:text-xl">CỬA HÀNG</h1>
-        </div>
-        <SceneLink
-          scene="MENU"
-          aria-label="Đóng, về màn chính"
-          className="absolute -top-4 -right-3 flex size-10 items-center justify-center rounded-full border-4 border-amber-200 bg-gradient-to-b from-rose-500 to-red-800 text-xl font-black text-white shadow-[0_3px_0_#0007]"
-        >
-          ✕
-        </SceneLink>
-
-        {!profile ? (
-          <p className="py-24 text-center text-foreground-secondary">
-            {loadError ? "Không tải được hồ sơ, thử tải lại trang." : "Đang mở cửa hàng…"}
-          </p>
-        ) : (
-          <>
-            <div className="mb-3 flex items-center justify-between gap-2">
-              <p className="rounded-full border border-amber-500/50 bg-black/40 px-3 py-1 text-sm font-semibold text-amber-200">
-                Vàng: {profile.gold}
-              </p>
-              {message && (
-                <p role="alert" className="text-sm text-rose-300">
-                  {message}
-                </p>
-              )}
-            </div>
-
-            <div className="mb-3 grid grid-cols-3 gap-2" role="tablist" aria-label="Mục cửa hàng">
-              {TABS.map((t) => (
-                <button
-                  key={t.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={tab === t.id}
-                  onClick={() => setTab(t.id)}
-                  className={`rounded-md border-2 px-2 py-1.5 text-sm font-bold tracking-wide shadow-[0_2px_0_#0006] ${
-                    tab === t.id
-                      ? "border-amber-200 bg-gradient-to-b from-amber-300 to-amber-600 text-stone-950"
-                      : "border-[#c79a4a] bg-gradient-to-b from-[#8f2f1f] to-[#5a1e14] text-amber-100 hover:from-[#a33a26]"
-                  }`}
-                >
-                  {t.name}
-                </button>
-              ))}
-            </div>
-
+    <ModeScreen label="Cửa Hàng">
+      <h1 className="sr-only">Cửa Hàng</h1>
+      {!profile ? (
+        <OrnateFrame as="div" role="status" className="py-16 text-center text-on-wood-soft">
+          {loadError ? "Không tải được hồ sơ, thử tải lại trang." : "Đang mở cửa hàng…"}
+        </OrnateFrame>
+      ) : (
+        <OrnateFrame level="raised" className="flex flex-col gap-3">
+          <Tabs label="Mục cửa hàng" items={TABS} value={tab} onChange={setTab} fullWidth panelId="shop-panel" className="[&>button]:whitespace-nowrap [&>button]:px-2" />
+          {message && <Alert className="p-3 text-sm">{message}</Alert>}
+          <div id="shop-panel" role="tabpanel" className="min-w-0">
             {tab === "heroes" && <ShopPanel profile={profile} locked={busy} onAction={act} />}
-
             {tab === "gear" && (
-              <section aria-label="Cửa hàng trang bị" className="rounded-lg bg-[var(--panel)] p-2 text-xs">
-                <h2 className="mb-2 font-semibold">Trang bị</h2>
+              <section aria-label="Cửa hàng trang bị" className="ui-frame-inset p-3 text-sm">
+                <h2 className="ui-title-on-wood mb-1 text-base">Trang bị</h2>
+                <p className="mb-3 text-caption text-on-wood-soft">Chọn ô, hệ, bộ và phẩm rồi mua; món mới vào túi đồ ở Hồ sơ.</p>
                 <GearShop profile={profile} disabled={busy} onBuy={(a) => void act(a)} />
               </section>
             )}
-
             {tab === "items" && <ItemsTab profile={profile} busy={busy} onAction={act} />}
-          </>
-        )}
-      </div>
-    </main>
+          </div>
+        </OrnateFrame>
+      )}
+    </ModeScreen>
   );
 }
 
@@ -130,25 +92,25 @@ function ItemsTab({
   const affordable = Math.floor(profile.gold / FOOD_PRICE);
   const options = [1, 10, room].filter((n, i, a) => n > 0 && n <= room && a.indexOf(n) === i);
   return (
-    <section aria-label="Vật phẩm" className="rounded-lg bg-[var(--panel)] p-3 text-sm">
-      <h2 className="mb-1 font-semibold">Lương thực</h2>
-      <p className="mb-2 text-xs text-foreground-secondary">
+    <section aria-label="Vật phẩm" className="ui-frame-inset p-3 text-sm">
+      <h2 className="ui-title-on-wood mb-1 text-base">Lương thực</h2>
+      <p className="mb-3 text-caption text-on-wood-soft">
         Lương mang vào trận Bình Loạn kế tiếp. Có {supply}/{CAMPAIGN_FOOD_MAX}; mỗi phần giá {FOOD_PRICE} vàng.
       </p>
       {room <= 0 ? (
-        <p className="text-xs text-foreground-secondary">Kho lương đã đầy.</p>
+        <p className="text-caption text-on-wood-soft">Kho lương đã đầy.</p>
       ) : (
         <div className="flex flex-wrap gap-2">
           {options.map((n) => (
-            <button
+            <Button
               key={n}
               type="button"
               disabled={busy || affordable < n}
               onClick={() => void onAction({ type: "buyFood", amount: n })}
-              className="min-h-11 rounded bg-amber-500 px-3 font-semibold text-stone-950 disabled:opacity-35"
+              className="min-h-11"
             >
               Mua {n} lương ({n * FOOD_PRICE} vàng)
-            </button>
+            </Button>
           ))}
         </div>
       )}

@@ -1,6 +1,7 @@
 "use client";
 
-import { Select, Card, Button } from "@/components/ui";
+import { ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { Alert, Button, Select, buttonVariants } from "@/components/ui";
 
 // Sinh tồn: chọn đội phòng thủ và doanh trại trước khi bắt đầu lượt chơi mới.
 
@@ -116,8 +117,8 @@ export default function SurvivalScreen() {
 
   if (!profile) {
     return (
-      <Shell>
-        <div className="py-24 text-center text-foreground-secondary">
+      <ModeScreen label="Trấn Ải">
+        <div className="py-24 text-center text-on-wood-soft">
           {loadError ? (
             <>
               <p>Không tải được hồ sơ. Hãy kiểm tra kết nối rồi thử lại.</p>
@@ -136,7 +137,7 @@ export default function SurvivalScreen() {
             <p role="status">Đang tải hồ sơ…</p>
           )}
         </div>
-      </Shell>
+      </ModeScreen>
     );
   }
 
@@ -215,18 +216,18 @@ export default function SurvivalScreen() {
         : `Tướng dự bị ${slot + 1}`;
     const entry = fighterById.get(value);
     return (
-      <div className="min-w-0 rounded-lg border border-white/10 bg-black/25 p-2">
+      <div className="ui-frame-inset min-w-0 p-2">
         <label
           htmlFor={`${kind}-${slot}`}
-          className="mb-2 block text-xs font-bold uppercase tracking-wider text-foreground-secondary"
+          className="mb-2 block text-kicker text-frame-gold"
         >
           {label}
         </label>
         {entry ? (
           <FighterSummary fighter={entry.fighter} level={entry.level} />
         ) : (
-          <div className="mb-2 flex h-12 items-center gap-2 text-xs text-stone-500">
-            <span className="grid size-11 shrink-0 place-items-center rounded-full border border-dashed border-white/20">
+          <div className="mb-2 flex h-12 items-center gap-2 text-caption text-on-wood-soft">
+            <span className="grid size-11 shrink-0 place-items-center rounded-full border border-dashed border-frame-gold/40">
               —
             </span>
             {kind === "reserve" ? "Không chọn dự bị" : "Chưa chọn"}
@@ -260,40 +261,38 @@ export default function SurvivalScreen() {
   };
 
   return (
-    <Shell>
-      <div className="mb-4"><RankRewardsPanel mode="survival" /></div>
-      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="text-xs tracking-widest text-amber-300/80 uppercase">
-            Vô hạn
-          </p>
-          <h1 className="text-2xl font-black text-amber-100">Trấn Ải</h1>
-          <p className="text-sm text-muted">
-            Kỷ lục: {profile.survival.best} đợt · Đinh Bộ Lĩnh cấp{" "}
-            {profile.main.level} · {profile.gold} vàng
-          </p>
-        </div>
-        <div className="flex gap-2 text-sm">
-          <SceneLink
-            scene="PROFILE"
-            className="rounded bg-white/10 px-3 py-1.5 hover:bg-white/15"
-          >
-            Doanh Trại
-          </SceneLink>
-        </div>
-      </div>
+    <ModeScreen wide label="Trấn Ải">
+      <ModeBanner
+        title="Trấn Ải"
+        kicker="Giữ ải · vô hạn"
+        art="/art/home/survival.webp"
+        description="Đối thủ kéo đến theo đợt trên cùng một bàn cờ, mạnh dần qua từng đợt."
+        stats={[
+          { label: "Kỷ lục", value: `${profile.survival.best} đợt` },
+          { label: "Đinh Bộ Lĩnh", value: `Cấp ${profile.main.level}` },
+        ]}
+        actions={
+          <>
+            <SceneLink scene="LEADERBOARD" params={{ board: "survival" }} className={buttonVariants({ variant: "secondary", className: "min-h-11" })}>
+              Bảng xếp hạng
+            </SceneLink>
+            <SceneLink scene="PROFILE" className={buttonVariants({ variant: "secondary", className: "min-h-11" })}>
+              Doanh Trại
+            </SceneLink>
+          </>
+        }
+      />
+
+      <RankRewardsPanel mode="survival" />
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-        <Card className="flex flex-col gap-4 p-3 sm:">
-          <div>
-            <h2 className="font-bold text-amber-200">Đội phòng thủ</h2>
-            <p className="text-xs text-muted">
-              Ba tướng này trực tiếp chiến đấu. Đinh Bộ Lĩnh luôn giữ vị trí thủ lĩnh.
-            </p>
-          </div>
+        <OrnateFrame className="flex min-w-0 flex-col gap-4">
+          <SectionTitle description="Ba tướng này trực tiếp chiến đấu. Đinh Bộ Lĩnh luôn giữ vị trí thủ lĩnh.">
+            Đội phòng thủ
+          </SectionTitle>
           {leader && (
-            <div className="rounded-lg border border-amber-400/40 bg-amber-950/25 p-2">
-              <div className="mb-2 text-xs font-bold uppercase tracking-wider text-amber-300">
+            <div className="ui-frame-inset p-2">
+              <div className="mb-2 text-kicker text-frame-gold">
                 Thủ lĩnh · cố định
               </div>
               <FighterSummary fighter={leader} level={profile.main.level} />
@@ -303,34 +302,34 @@ export default function SurvivalScreen() {
             {slotPicker("active", 0, activeIds[0] ?? "")}
             {slotPicker("active", 1, activeIds[1] ?? "")}
           </div>
-          <div className="border-t border-white/10 pt-3">
-            <h3 className="font-bold text-emerald-200">Doanh trại · Dự bị</h3>
-            <p className="mb-2 text-xs text-muted">
-              Dự bị không tham chiến trong round. Có thể mang tối đa hai tướng; không bắt buộc đủ.
+          <div className="border-t border-frame-gold/25 pt-3">
+            <h3 className="font-bold text-title">Doanh trại · Dự bị</h3>
+            <p className="mb-2 text-caption text-on-wood-soft">
+              Dự bị không tham chiến trong đợt. Có thể mang tối đa hai tướng; không bắt buộc đủ.
             </p>
             <div className="grid gap-2 sm:grid-cols-2">
               {slotPicker("reserve", 0, reserveIds[0] ?? "")}
               {slotPicker("reserve", 1, reserveIds[1] ?? "")}
             </div>
           </div>
-          <p className="text-xs text-muted">
+          <p className="text-caption text-on-wood-soft">
             Danh sách chỉ gồm nhân vật đã sở hữu. Cấp, nghề, hệ và chỉ số được chụp vào lượt chơi khi bắt đầu.
           </p>
-        </Card>
+        </OrnateFrame>
 
-        <Card className="flex flex-col gap-3 shadow-card-inset">
-          <h2 className="text-lg font-bold text-amber-100">Lượt chơi mới</h2>
-          <ul className="list-disc space-y-1 pl-5 text-sm text-foreground-secondary">
+        <OrnateFrame level="raised" className="flex min-w-0 flex-col gap-3 self-start">
+          <SectionTitle>Lượt chơi mới</SectionTitle>
+          <ul className="list-disc space-y-1 pl-5 text-sm text-on-wood">
             <li>
               Một trận không dừng trên cùng bàn cờ. Đối thủ kéo đến theo đợt,
               mạnh dần; cứ {SURVIVAL_BOSS_EVERY} đợt có một sứ quân dẫn quân.
               Bạn luôn được biết trước đợt kế tiếp.
             </li>
             <li>
-              Hạ hết một đợt thì được nghỉ: active còn sống hồi{" "}
+              Hạ hết một đợt thì được nghỉ: tướng ra trận còn sống hồi{" "}
               {pct(SURVIVAL_HEAL)}, dự bị còn sống hồi{" "}
               {pct(SURVIVAL_RESERVE_HEAL)} máu tối đa; cả đội thêm{" "}
-              {SURVIVAL_FOOD} lương. Fighter gục không hồi máu, năng lượng giữ
+              {SURVIVAL_FOOD} lương. Tướng gục không hồi máu, năng lượng giữ
               nguyên.
             </li>
             <li>
@@ -348,33 +347,34 @@ export default function SurvivalScreen() {
               cộng vàng và sách nhặt trên bàn cờ.
             </li>
           </ul>
-          <p className="text-sm text-foreground-secondary">
+          <p className="text-sm text-on-wood-soft">
             Đợt 1: {first.foes.length} đối thủ cấp {first.level},{" "}
             {DIFFICULTY_NAME[first.difficulty]}. Đối thủ mỗi lượt chơi một khác.
           </p>
           {selectionError && (
-            <p role="alert" className="rounded-md bg-rose-950/50 px-3 py-2 text-sm text-rose-200">
+            <Alert tone="warning" className="p-3 text-sm">
               {SELECTION_ERROR[selectionError]}
-            </p>
+            </Alert>
+          )}
+          {message && (
+            <Alert tone="error" className="p-3 text-sm">
+              {message}
+            </Alert>
           )}
           <div className="flex flex-wrap items-center gap-3">
-            <Button variant="ornate"
+            <Button
+              size="lg"
               type="button"
               disabled={busy || selectionError !== null}
               onClick={() => void start()}
-              className="min-h-11 tracking-wider uppercase"
+              className="min-h-11"
             >
               {busy ? "Đang vào trận…" : "Bắt đầu Trấn Ải"}
             </Button>
-            {message && (
-              <span role="alert" className="text-sm text-rose-300">
-                {message}
-              </span>
-            )}
           </div>
-        </Card>
+        </OrnateFrame>
       </div>
-    </Shell>
+    </ModeScreen>
   );
 }
 
@@ -394,31 +394,23 @@ function FighterSummary({
         className="size-11 shrink-0"
       />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold text-foreground">
+        <p className="truncate text-sm font-semibold text-on-wood">
           {fighter.id === MAIN_ID ? "Đinh Bộ Lĩnh" : fighter.name}
-          <span className="ml-1 text-xs font-normal text-muted">
+          <span className="ml-1 text-xs font-normal text-on-wood-soft">
             cấp {level}
           </span>
         </p>
-        <p className="flex flex-wrap items-center gap-x-1 text-xs text-foreground-secondary">
+        <p className="flex flex-wrap items-center gap-x-1 text-xs text-on-wood-soft">
           <ElementIcon element={fighter.element} className="size-3.5" />
           {ELEMENT_NAME[fighter.element]}
           <span aria-hidden>·</span>
           <ProfessionIcon profession={fighter.profession} className="size-3.5" />
           {PROFESSION_NAME[fighter.profession]}
         </p>
-        <p className="text-[11px] text-muted">
+        <p className="text-caption text-on-wood-soft">
           {fighter.maxHp} máu · {fighter.atk} công · {fighter.def} thủ
         </p>
       </div>
     </div>
-  );
-}
-
-function Shell({ children }: { children: React.ReactNode }) {
-  return (
-    <main className="ui-screen ui-screen--cool">
-      <div className="mx-auto max-w-6xl">{children}</div>
-    </main>
   );
 }
