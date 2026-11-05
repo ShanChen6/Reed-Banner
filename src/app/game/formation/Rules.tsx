@@ -2,7 +2,7 @@
 
 export default function Rules() {
   return (
-    <ul className="list-disc space-y-1.5 pl-5 text-[15px] leading-snug text-[var(--atlas-ink-on-wood)]/90">
+    <ul className="list-disc space-y-1.5 pl-5 text-[15px] leading-snug text-on-wood/90">
       <li>Mỗi lượt bạn cầm một quân tướng. Chạm ô trống để đặt; ô đó phải sát (trên, dưới, trái, phải) một quân đã có, trừ khi sa bàn đang trống.</li>
       <li>Quân mới phải <b>cùng nghề hoặc cùng hệ</b> với <b>từng</b> quân kề. Có thể cùng nghề với quân này và cùng hệ với quân kia.</li>
       <li>Quân tướng mới luôn <b>dính nghề hoặc hệ</b> với một quân đang trên bàn (trừ khi có Quân Lệnh còn ô trống kề bên), nhưng chưa chắc còn chỗ đặt được; lúc đó hãy Bỏ Lệnh.</li>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button, ChoiceChip, Tabs } from "@/components/ui";
+import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { FrameInset, ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 
 const TABS = [
@@ -11,10 +12,12 @@ const TABS = [
 ] as const;
 type Tab = (typeof TABS)[number]["value"];
 const LEVELS = ["Dễ", "Thường", "Khó", "Trùm"] as const;
+const FLOORS = Array.from({ length: 20 }, (_, i) => `Tầng ${i + 1}`);
 
 export default function UiGallery() {
   const [tab, setTab] = useState<Tab>("heroes");
   const [level, setLevel] = useState<string>("Thường");
+  const paged = usePagedItems(FLOORS, 6);
   return (
     <ModeScreen label="Bộ giao diện chung">
       <ModeBanner title="Tháp Thí Luyện" kicker="Song Tháp" art="/art/home/trial.webp"
@@ -53,6 +56,14 @@ export default function UiGallery() {
           <FrameInset className="mt-3 grid grid-cols-3 gap-2 text-center">
             {["Máu 500", "Công 55", "Thủ 10"].map((s) => <div key={s} className="font-bold text-title-on-wood">{s}</div>)}
           </FrameInset>
+        </OrnateFrame>
+
+        <OrnateFrame>
+          <SectionTitle description="usePagedItems + PageControls: danh sách dài cắt trang thay vì cuộn.">Phân trang</SectionTitle>
+          <ul className="grid grid-cols-3 gap-2">
+            {paged.pageItems.map((f) => <li key={f} className="ui-frame-inset p-2 text-center">{f}</li>)}
+          </ul>
+          <PageControls paged={paged} label="Phân trang mẫu" className="mt-2" />
         </OrnateFrame>
 
         <OrnateFrame level="raised" paper>
