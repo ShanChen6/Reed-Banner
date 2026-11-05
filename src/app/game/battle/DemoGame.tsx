@@ -762,12 +762,10 @@ const CORNERS = [
  * lại chạy hoàn toàn trong trình duyệt (PRACTICE).
  */
 export default function DemoGame({
-  theme,
   online = false,
   autoResume = false,
   towerFeatures = { trial: true, destiny: true },
 }: {
-  theme: "light" | "dark";
   online?: boolean;
   /** Vào phân cảnh là tiếp tục ngay trận online đã lưu (Chiến dịch, Sinh tồn, … vừa tạo trận rồi chuyển sang). */
   autoResume?: boolean;
@@ -1771,10 +1769,9 @@ export default function DemoGame({
     return r.error ?? null;
   };
 
+  // Game chỉ có một giao diện (gỗ tối), không có chế độ sáng.
   const palette =
-    theme === "light"
-      ? "[--bg:#f3ebdc] [--panel:#fffaf0] [--cell:#e2d3b6] [--frame:#7a2c1d] [--gold:#b8862f] text-stone-900"
-      : "[--bg:#17110e] [--panel:#271d18] [--cell:#14251c] [--frame:#1b2a21] [--gold:#d4a24c] text-stone-100";
+    "[--bg:#17110e] [--panel:#271d18] [--cell:#14251c] [--frame:#1b2a21] [--gold:#d4a24c] text-on-wood";
 
   const frame = anim ? anim.frames[anim.i] : undefined;
   const board = frame?.board ?? heldBoard ?? state.board;
