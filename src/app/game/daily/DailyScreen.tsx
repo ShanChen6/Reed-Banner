@@ -164,7 +164,7 @@ export default function DailyScreen() {
               <Fighters list={setup.foes} />
             </div>
           </div>
-          <p className="text-xs text-caption">
+          <p className="text-caption text-on-wood-soft">
             Xếp hạng: thắng đứng trên thua; cùng thắng thì ít lượt hơn đứng
             trên, rồi còn nhiều máu hơn. Thưởng {DAILY_GOLD.win} vàng khi thắng,{" "}
             {DAILY_GOLD.loss} vàng khi thua.
@@ -204,7 +204,7 @@ export default function DailyScreen() {
         <OrnateFrame className="flex min-w-0 flex-col gap-2 self-start">
           <SectionTitle>Bảng hôm nay</SectionTitle>
           {top.length === 0 ? (
-            <p className="text-sm text-caption">Chưa ai đánh xong hôm nay.</p>
+            <p className="text-sm text-on-wood-soft">Chưa ai đánh xong hôm nay.</p>
           ) : (
             <ol className="flex flex-col gap-1.5 text-sm">
               {top.map((r) => (

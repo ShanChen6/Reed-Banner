@@ -219,14 +219,14 @@ export default function SurvivalScreen() {
       <div className="ui-frame-inset min-w-0 p-2">
         <label
           htmlFor={`${kind}-${slot}`}
-          className="mb-2 block text-xs font-bold uppercase tracking-wider text-kicker"
+          className="mb-2 block text-kicker text-frame-gold"
         >
           {label}
         </label>
         {entry ? (
           <FighterSummary fighter={entry.fighter} level={entry.level} />
         ) : (
-          <div className="mb-2 flex h-12 items-center gap-2 text-xs text-caption">
+          <div className="mb-2 flex h-12 items-center gap-2 text-caption text-on-wood-soft">
             <span className="grid size-11 shrink-0 place-items-center rounded-full border border-dashed border-frame-gold/40">
               —
             </span>
@@ -292,7 +292,7 @@ export default function SurvivalScreen() {
           </SectionTitle>
           {leader && (
             <div className="ui-frame-inset p-2">
-              <div className="mb-2 text-xs font-bold uppercase tracking-wider text-kicker">
+              <div className="mb-2 text-kicker text-frame-gold">
                 Thủ lĩnh · cố định
               </div>
               <FighterSummary fighter={leader} level={profile.main.level} />
@@ -304,7 +304,7 @@ export default function SurvivalScreen() {
           </div>
           <div className="border-t border-frame-gold/25 pt-3">
             <h3 className="font-bold text-title">Doanh trại · Dự bị</h3>
-            <p className="mb-2 text-xs text-caption">
+            <p className="mb-2 text-caption text-on-wood-soft">
               Dự bị không tham chiến trong đợt. Có thể mang tối đa hai tướng; không bắt buộc đủ.
             </p>
             <div className="grid gap-2 sm:grid-cols-2">
@@ -312,7 +312,7 @@ export default function SurvivalScreen() {
               {slotPicker("reserve", 1, reserveIds[1] ?? "")}
             </div>
           </div>
-          <p className="text-xs text-caption">
+          <p className="text-caption text-on-wood-soft">
             Danh sách chỉ gồm nhân vật đã sở hữu. Cấp, nghề, hệ và chỉ số được chụp vào lượt chơi khi bắt đầu.
           </p>
         </OrnateFrame>
@@ -396,7 +396,7 @@ function FighterSummary({
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-semibold text-on-wood">
           {fighter.id === MAIN_ID ? "Đinh Bộ Lĩnh" : fighter.name}
-          <span className="ml-1 text-xs font-normal text-caption">
+          <span className="ml-1 text-xs font-normal text-on-wood-soft">
             cấp {level}
           </span>
         </p>
@@ -407,7 +407,7 @@ function FighterSummary({
           <ProfessionIcon profession={fighter.profession} className="size-3.5" />
           {PROFESSION_NAME[fighter.profession]}
         </p>
-        <p className="text-[11px] text-caption">
+        <p className="text-caption text-on-wood-soft">
           {fighter.maxHp} máu · {fighter.atk} công · {fighter.def} thủ
         </p>
       </div>
