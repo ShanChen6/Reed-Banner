@@ -4,6 +4,8 @@
 // kỳ, hạng hiện tại và thang thưởng; thẻ chơi thường dẫn vào ván ngẫu nhiên. Có hai tab (Xếp hạng, Chơi thường) khi xếp
 // hạng đang mở, và bộ sưu tập địa danh đã khai thông.
 
+import { ModeBanner } from "@/components/game-ui";
+import { Tabs, buttonVariants } from "@/components/ui";
 import { useEffect, useRef, useState } from "react";
 import { useAudio } from "../audio/AudioProvider";
 import { REWARD_GOLD, REWARD_TIERS, RULESETS, rewardGold, type Ruleset } from "@/core/binh-phap";
@@ -18,15 +20,6 @@ import { formatRemaining } from "./time";
 
 const TIER_LABEL = Object.fromEntries(REWARD_TIERS.map((t) => [t.tier, t.label])) as Record<string, string>;
 const CADENCE = { day: "Kỳ theo ngày", week: "Kỳ theo tuần" } as const;
-
-function Heading({ title, sub }: { title: string; sub: string }) {
-  return (
-    <header>
-      <p className="text-xs font-semibold tracking-[0.25em] text-[var(--atlas-gold)] uppercase">{sub}</p>
-      <h1 className="atlas-title font-serif text-3xl font-bold">{title}</h1>
-    </header>
-  );
-}
 
 /**
  * Thời gian hiện tại theo giờ server (ms), cập nhật mỗi 20 giây; 0 trước khi chạy ở client (tránh lệch hydration). Gọi
@@ -97,7 +90,7 @@ function RankedCard({ l, now, busy, canPlay, onPlay }: { l: LevelOverview; now: 
           </p>
         )}
         <RewardLadder level={l.level} rank={m?.status === "won" ? (m.rank ?? null) : null} winners={l.winners} />
-        <button type="button" disabled={busy || !canPlay} onClick={() => onPlay(l.level)} className="home-cta mt-auto min-h-12 rounded-lg px-4 font-serif font-bold disabled:opacity-60">
+        <button type="button" disabled={busy || !canPlay} onClick={() => onPlay(l.level)} className={buttonVariants({ className: "mt-auto min-h-12 px-4" })}>
           {canPlay ? action : "Đăng nhập để chơi"}
         </button>
         <details>
@@ -205,19 +198,20 @@ export default function ModeScreen({
 
   return (
     <>
-      <Heading title="Trận Đồ" sub="Bày quân lệnh, lộ bản đồ" />
-      <p className="max-w-2xl font-serif text-lg text-[var(--atlas-title)]">
-        Bày quân tướng theo nghề và hệ để khai thông toàn bộ sa bàn. Mỗi ô khai thông lộ một mảnh bản đồ thời Loạn 12 sứ quân.
-      </p>
+      <ModeBanner
+        title="Trận Đồ"
+        kicker="Bày quân lệnh, lộ bản đồ"
+        art="/art/home/tran-do.webp"
+        description="Bày quân tướng theo nghề và hệ để khai thông toàn bộ sa bàn. Mỗi ô khai thông lộ một mảnh bản đồ thời Loạn 12 sứ quân."
+      />
 
       {rankedOn && (
-        <div role="tablist" aria-label="Chế độ" className="flex gap-2">
-          {(["ranked", "practice"] as const).map((t) => (
-            <button key={t} type="button" role="tab" aria-selected={active === t} onClick={() => setTab(t)} className={`min-h-11 rounded-full px-5 font-serif font-semibold ${active === t ? "bg-[#C9A25A] text-[#2B1F15]" : "bg-white/10 hover:bg-white/15"}`}>
-              {t === "ranked" ? "Xếp hạng · có thưởng" : "Chơi thường"}
-            </button>
-          ))}
-        </div>
+        <Tabs
+          label="Chế độ"
+          value={active}
+          onChange={setTab}
+          items={[{ value: "ranked", label: "Xếp hạng · có thưởng" }, { value: "practice", label: "Chơi thường" }]}
+        />
       )}
 
       {active === "ranked" && rankedOn && (
@@ -228,13 +222,13 @@ export default function ModeScreen({
           {overview?.failed && (
             <div role="alert" className="atlas-frame atlas-frame-wood flex flex-wrap items-center justify-between gap-3 p-4">
               <p className="max-w-xl text-[15px]">Chưa tải được chế độ xếp hạng. Kiểm tra mạng rồi thử lại; chơi thường vẫn chơi được.</p>
-              <button type="button" onClick={onExpire} className="home-cta flex min-h-12 items-center rounded-lg px-6 font-serif font-bold">Thử lại</button>
+              <button type="button" onClick={onExpire} className={buttonVariants({ className: "flex min-h-12 items-center px-6" })}>Thử lại</button>
             </div>
           )}
           {!overview?.canPlay && !overview?.failed && (
             <div role="note" className="atlas-frame atlas-frame-wood flex flex-wrap items-center justify-between gap-3 p-4">
               <p className="max-w-xl text-[15px]">Chế độ xếp hạng chỉ dành cho tài khoản đã đăng nhập. Chơi thường vẫn thoải mái, không cần đăng nhập.</p>
-              <SceneLink scene="LOGIN" className="home-cta flex min-h-12 items-center rounded-lg px-6 font-serif font-bold">Đăng nhập</SceneLink>
+              <SceneLink scene="LOGIN" className={buttonVariants({ className: "flex min-h-12 items-center px-6" })}>Đăng nhập</SceneLink>
             </div>
           )}
           <p role="status" aria-live="polite" className="min-h-6 text-[15px] text-[var(--atlas-title)]">{note}</p>
@@ -247,7 +241,7 @@ export default function ModeScreen({
                     <span>
                       {RULESETS.find((r) => r.id === c.level)?.name} · kỳ {c.period}: hạng {c.rank}/{c.winners} ({TIER_LABEL[c.tier]}) · <b>{c.gold} vàng</b>
                     </span>
-                    <button type="button" onClick={() => onClaim(c.level, c.period)} className="home-cta min-h-11 rounded-lg px-5 font-serif font-bold">Nhận</button>
+                    <button type="button" onClick={() => onClaim(c.level, c.period)} className={buttonVariants({ className: "min-h-11 px-5" })}>Nhận</button>
                   </li>
                 ))}
               </ul>
@@ -300,7 +294,6 @@ export default function ModeScreen({
         <h2 id="tran-do-rules" className="mb-2 font-serif text-xl font-bold text-[var(--atlas-title)]">Luật chơi</h2>
         <Rules />
       </section>
-      <SceneLink scene="MENU" className="home-secondary flex min-h-12 w-fit items-center rounded-lg px-6 font-serif font-semibold">Về màn chính</SceneLink>
     </>
   );
 }
