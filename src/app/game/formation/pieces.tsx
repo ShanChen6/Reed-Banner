@@ -17,7 +17,7 @@ export function pieceLabel(p: Piece): string {
 }
 
 /** Huy hiệu tròn nhỏ (nghề hoặc hệ) ở đáy con cờ; kích thước theo ô nhưng không nhỏ hơn 11px để còn đọc được. */
-const BADGE = "absolute bottom-[3%] flex aspect-square w-[27%] min-w-[11px] items-center justify-center overflow-hidden rounded-full border border-[#E4CC99]/70 p-0 leading-none";
+const BADGE = "absolute bottom-[3%] flex aspect-square w-[27%] min-w-[11px] items-center justify-center overflow-hidden rounded-full border border-paper/70 p-0 leading-none";
 
 /** Hai biểu tượng nghề và hệ cùng cỡ để hai huy hiệu cân nhau. */
 const ICON = "block size-[78%]";
@@ -35,7 +35,7 @@ export function PieceFace({ piece, large = false }: { piece: Piece | BoardPiece;
     return (
       <span className="fm-token relative block size-full p-[6%]">
         <Portrait id={piece.characterId} element="kim" profession="tuongSi" className="size-full" />
-        <span className={`${badge} left-1/2 -translate-x-1/2 border-[#E8C477] bg-[#8F241D] text-[#FFE9B0]`} aria-hidden>
+        <span className={`${badge} left-1/2 -translate-x-1/2 border-[#E8C477] bg-lacquer text-[#FFE9B0]`} aria-hidden>
           <svg viewBox="0 0 24 24" className="size-[70%]" fill="currentColor"><path d="M12 2.5l2.6 6 6.4.6-4.9 4.2 1.5 6.3L12 16.3 6.4 19.6l1.5-6.3L3 9.1l6.4-.6z" /></svg>
         </span>
       </span>
@@ -47,7 +47,7 @@ export function PieceFace({ piece, large = false }: { piece: Piece | BoardPiece;
       <span className={`${badge} left-[3%]`} style={{ background: ELEMENT_COLOR[piece.element] }} aria-hidden>
         <ElementIcon element={piece.element} className={ICON} />
       </span>
-      <span className={`${badge} right-[3%] bg-[#2B1F15] text-[#E4CC99]`} aria-hidden>
+      <span className={`${badge} right-[3%] bg-wood text-paper`} aria-hidden>
         <ProfessionIcon profession={piece.profession} className={ICON} />
       </span>
     </span>
