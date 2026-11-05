@@ -2532,6 +2532,7 @@ export default function DemoGame({
 
         {mode === "progress" && (
           <ShopPanel
+            compact={online}
             profile={profile}
             locked={started && state.winner === null}
             onAction={profileAction}
@@ -2540,6 +2541,7 @@ export default function DemoGame({
 
         {mode === "progress" && (
           <GearPanel
+            noShop={online}
             profile={{ ...profile, element, profession }}
             teamIds={[MAIN_ID, ...profile.team]}
             locked={started && state.winner === null}
