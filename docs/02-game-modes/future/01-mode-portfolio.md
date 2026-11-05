@@ -16,6 +16,7 @@
 | **Binh Pháp** | Không có route/engine | **APPROVED CONCEPT:** game xếp quân theo Nghề + Hệ, chân dung nhân vật; thiết kế/triển khai mới | P0 new design |
 | **Tầm Tướng Ký** (trước gọi Liệt Truyện) | Không có route/engine | **APPROVED CONCEPT:** ghép hai yếu tố khởi đầu từ 7 hệ → vật liệu/tri thức → chân dung tướng có **công thức cuối riêng**; Shan chốt luật chính 03/11/2026 ở [Design Freeze](14-tam-tuong-ky-design-freeze.md), phần còn lại chờ duyệt | Design / sau BP |
 | Viễn Chinh | `/game/expedition`, sau cờ `EXPEDITION_ENABLED` | Shan chọn cơ chế "Hai đạo quân trên sa bàn" (04/11/2026); luật ở [GDD Viễn Chinh](../expedition/01-vien-chinh-gdd.md) | Có code, chờ chơi thử |
+| **Khai Lộ** | `/game/clear-path`, bản chơi thử offline | Shan chốt tên 05/11/2026: giải đố một chạm xóa khối ô ngọc cùng loại (thể loại SameGame); luật ở [GDD Khai Lộ](24-khai-lo-gdd.md) | Có code, chờ chơi thử |
 | Thủ Thành riêng (HP thành) | Không có | **Không mở thành mode thứ hai** trùng Sinh tồn | Not planned |
 
 ## Phân biệt chính xác

@@ -29,7 +29,8 @@
 21. [21 — Tầm Tướng Ký: Gói 2](21-tam-tuong-ky-pack-2.md) (IMPLEMENTED, đã bật)
 22. [22 — Tầm Tướng Ký: Gói 3 (tướng thường)](22-tam-tuong-ky-pack-3.md) (IMPLEMENTED, đã bật)
 23. [23 — Tầm Tướng Ký: cân bằng nguyên tố và cảnh báo cặp đã thử](23-tam-tuong-ky-can-bang-va-canh-bao.md) (APPROVED, có code)
-24. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
+24. [24 — Khai Lộ: giải đố xóa khối ô ngọc](24-khai-lo-gdd.md) (DRAFT, có bản chơi thử offline)
+25. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
 
 ## Quy ước quyết định
 
