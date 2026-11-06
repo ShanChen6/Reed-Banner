@@ -147,6 +147,11 @@
 - TODO: Shan thiết kế 13 ảnh bản đồ, ảnh ô che và 4 icon chướng ngại ([yêu cầu và prompt](../05-ui-ux/screens/tran-do.md#3-yêu-cầu-ảnh-cho-họa-sĩ)); hiện dùng ảnh giữ chỗ.
 - TODO: Shan test lần 1 màn chế độ và màn chơi chi tiết đã triển khai ([mục 5 và 6](../05-ui-ux/screens/tran-do.md#5-màn-chế-độ-đã-code-chờ-shan-test-lần-1)) rồi góp ý. Kho bản đồ mở rộng lên 30 và không giới hạn; prompt đầy đủ ở [prompt hình ảnh Trận Đồ](../06-art/prompts/tran-do-hinh-anh.md).
 
+## Giao diện bản 2 (06/11/2026)
+
+- TODO: Tên tab thưởng ở Trận Đồ ("Ban thưởng" đề xuất), tab Xếp hạng có giữ ô che lộ dần không, mốc và vàng thành tựu bộ sưu tập địa danh, Nhật Lệnh/Bình Loạn có bảng xếp hạng trong màn không. → [Lộ trình UI mục 9](../05-ui-ux/implementation/roadmap.md#câu-hỏi-cho-shan)
+- TODO: Shan gửi 4 banner bậc Trận Đồ (Hướng dẫn, Thường, Khó, Đại trận). → [V2-02](../05-ui-ux/implementation/roadmap.md#v2-02--trận-đồ-banner-cho-từng-bậc-ở-chơi-thường)
+
 ## Đinh Ngọc và Vũ Phong — chạy trong trận
 
 - Đã có (02/11/2026): sáu chủ động + bốn nội tại của cả hai chạy trong `src/core`, test 38 ca; chưa mở ở chế độ nào ([Đinh Ngọc](../03-characters/dinh-ngoc.md#triển-khai-trong-core-02112026), [Vũ Phong](../03-characters/vu-phong.md#triển-khai-trong-core-02112026)).

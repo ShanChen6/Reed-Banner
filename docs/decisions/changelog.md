@@ -1,5 +1,10 @@
 # Nhật ký thay đổi thiết kế
 
+## 06/11/2026
+
+**Bản 2 UI/UX: danh sách việc (DRAFT, chưa triển khai)**
+- Shan đưa danh sách sau khi chơi: Khai Lộ thêm khung thẻ; Trận Đồ dùng banner riêng cho từng bậc ở Chơi thường, thẻ cao bằng nhau, thêm tab Bảng xếp hạng và tách thưởng hạng thành tab riêng (Shan chọn tách), Bộ sưu tập địa danh có thể vào Thành tựu; bảng xếp hạng làm cả hai: trong từng chế độ và trang thành tích theo mùa; Tháp Thiên Mệnh có chân dung như Tháp Thí Luyện. Xem [lộ trình UI mục 9](../05-ui-ux/implementation/roadmap.md#9-bản-2-sửa-lỗi-và-chỉnh-uiux-06112026).
+
 ## 05/11/2026
 
 **Đồng bộ UI/UX toàn game: quy tắc chung (APPROVED)**
