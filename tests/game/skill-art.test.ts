@@ -38,10 +38,10 @@ test("mọi chiêu nghề của 8 nghề có ảnh vẽ tay", () => {
   }
 });
 
-test("27 chiêu ô 4 tướng dùng lại ảnh hệ cũ: đúng mã, có file, mỗi ảnh một lần", () => {
+test("22 chiêu ô 4 tướng dùng lại ảnh hệ cũ: đúng mã, có file, mỗi ảnh một lần", () => {
   const ids = new Set(CHARACTER_SKILLS.map((d) => d.id));
   const files = Object.values(REUSED_SKILL_ART);
-  assert.equal(files.length, 27);
+  assert.equal(files.length, 22);
   assert.equal(new Set(files).size, files.length);
   for (const [id, file] of Object.entries(REUSED_SKILL_ART)) {
     assert.ok(ids.has(id), id);
@@ -50,7 +50,7 @@ test("27 chiêu ô 4 tướng dùng lại ảnh hệ cũ: đúng mã, có file, 
   }
 });
 
-test("chiêu ô 4 riêng Shan vẽ cho 47 tướng: ảnh trùng mã kỹ năng", () => {
+test("chiêu ô 4 riêng Shan vẽ cho 52 tướng: ảnh trùng mã kỹ năng", () => {
   const owners = [
     "lyLiet", "hoLang", "tongTan", "haVan", "daoLam", "vuLoi", "chuNgan", "lieuYen", "luDuong",
     "leThach", "hoangMoc", "thaiHa", "truongViem", "ongChan", "manhTuong", "nguyenKhoan", "nguyenSieu",
@@ -58,6 +58,7 @@ test("chiêu ô 4 riêng Shan vẽ cho 47 tướng: ảnh trùng mã kỹ năng"
     "toKim", "ninhHoa", "quachAn", "nhanTruc", "maNhac", "tuKinh", "buiPhieu", "luuCo", "ngoXuongXi", "nguyenThuTiep",
     "phungPhong", "taThach", "nghiemThiet", "samTue", "viTrieu", "tonDiem",
     "bachNoLang", "thanhLamXa", "tranSonThach", "docAnh", "hanGiangKhach", "xichDa", "diaAn", "loiAnh", "voAnh",
+    "maiThanh", "hongDan", "doanNham", "tranCuong", "damThao",
   ];
   for (const character of owners) {
     const def = personalSkillOf(character);
