@@ -37,9 +37,10 @@ export interface PagedItems<T> {
 /**
  * Cắt `items` thành trang `pageSize` phần tử. Khi danh sách ngắn lại (mua xong, đổi bộ lọc) trang tự lùi về
  * trang cuối còn hợp lệ; muốn về trang đầu khi đổi bộ lọc thì đặt `key` theo bộ lọc cho component chứa hook.
+ * `initialPage` chỉ dùng lúc component dựng (ví dụ mở thẳng trang có mục vừa tìm thấy, kèm `key` mới).
  */
-export function usePagedItems<T>(items: readonly T[], pageSize: number): PagedItems<T> {
-  const [page, setPage] = useState(0);
+export function usePagedItems<T>(items: readonly T[], pageSize: number, initialPage = 0): PagedItems<T> {
+  const [page, setPage] = useState(initialPage);
   const pages = Math.max(1, Math.ceil(items.length / pageSize));
   const current = Math.min(page, pages - 1);
   return {
