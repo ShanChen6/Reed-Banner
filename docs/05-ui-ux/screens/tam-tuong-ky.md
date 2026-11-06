@@ -87,9 +87,9 @@ Mỗi PR chụp 1440px và 390px, chạy `pnpm lint`, `pnpm typecheck`, `pnpm te
 
 ### 7.1. Yếu tố còn thiếu icon
 
-**Hiện trạng.** `NodeGlyph` lấy tranh ở `public/art/tam-tuong-ky/yeu-to/<mã>.webp` (60 yếu tố trong `NODE_ART`) hoặc tranh nghề ở `public/art/tam-tuong-ky/nghe/` cho tri thức sơ học và node vai trò. Còn **56 tuyệt chiêu riêng của tướng thường** (`know.skill.<mã tướng>`, nhóm "Tuyệt chiêu", ví dụ "Liễu Diệp Tỏa Giang", "Gió Lành Tẩy Uế") rơi về chữ cái đầu.
+**Hiện trạng.** `NodeGlyph` lấy tranh ở `public/art/tam-tuong-ky/yeu-to/<mã>.webp` (61 yếu tố trong `NODE_ART`, đủ từ 06/11/2026 khi có Đô hộ phủ) hoặc tranh nghề ở `public/art/tam-tuong-ky/tri-thuc-nghe/` cho tri thức sơ học và node vai trò. Còn **56 tuyệt chiêu riêng của tướng thường** (`know.skill.<mã tướng>`, nhóm "Tuyệt chiêu", ví dụ "Liễu Diệp Tỏa Giang", "Gió Lành Tẩy Uế") rơi về chữ cái đầu.
 
-**Cách làm.** Dùng chung icon kỹ năng: `know.skill.<id>` → `ultimateOf(id)` (`src/core/battle/skills.ts`) → `SkillIcon` (`src/app/game/art/skills.tsx`). 41/56 chiêu đã có ảnh trong `public/art/skills/`, 15 chiêu còn lại `SkillIcon` tự vẽ SVG; khi Shan gửi thêm ảnh thì không phải sửa màn này. Thêm test: mọi node không phải tướng đều có `nodeArt` hoặc icon kỹ năng, không còn node nào rơi về chữ cái (test liệt kê node thiếu để lần thêm gói sau biết ngay).
+**Cách làm.** Dùng chung icon kỹ năng: `know.skill.<id>` → `ultimateOf(id)` (`src/core/battle/skills.ts`) → `SkillIcon` (`src/app/game/art/skills.tsx`). Cả 56 chiêu đã có ảnh riêng trong `public/art/skills/` (06/11/2026; trước đó 15 chiêu mượn tạm ảnh chiêu hệ cũ của Đinh Bộ Lĩnh nên trùng hình với chiêu khác, không phải vẽ SVG; cơ chế mượn ảnh đã bỏ); khi Shan gửi thêm ảnh thì không phải sửa màn này. Thêm test: mọi node không phải tướng đều có `nodeArt` hoặc icon kỹ năng, không còn node nào rơi về chữ cái (test liệt kê node thiếu để lần thêm gói sau biết ngay).
 
 **Nghiệm thu.** Lọc "Tuyệt chiêu" không còn ô chữ cái.
 
