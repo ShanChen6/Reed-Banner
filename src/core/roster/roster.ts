@@ -114,20 +114,20 @@ const LEGACY_SHOP_COMPANIONS: readonly ShopCompanion[] = [
 
 /** Registry thử nghiệm: giữ ID/tiến trình kể cả khi release gate tắt. Chưa cấp miễn phí. */
 export const EXPANSION_COMPANIONS: readonly FighterConfig[] = [
-  {...companion("bachNoLang","Bạch Nỏ Lang","xaThu","kim"),chasePassives:["marksmanPrepared","kim1","rb_bnl_passive"]},
-  {...companion("thanhLamXa","Thanh Lâm Xạ","xaThu","moc"),chasePassives:["marksmanPrepared","moc1","rb_tlx_passive"]},
-  {...companion("lamGiangPhiDiep","Lam Giang Phi Diệp","xaThu","thuy"),chasePassives:["marksmanPrepared","thuy1","rb064_canhGioi"]},
-  {...companion("xichDiemLuan","Xích Diệm Luân","xaThu","hoa"),chasePassives:["marksmanPrepared","hoa1","rb065_hoaCot"]},
-  {...companion("tranSonThach","Trấn Sơn Thạch","xaThu","tho"),chasePassives:["marksmanPrepared","tho1","rb066_kienThu"]},
-  {...companion("loiMinhXa","Lôi Minh Xạ","xaThu","loi"),chasePassives:["marksmanPrepared","loi1","rb067_chopThoiCo"]},
-  {...companion("tatPhongLang","Tật Phong Lăng","xaThu","phong"),chasePassives:["marksmanPrepared","phong1","rb068_hoiNhip"]},
-  {...companion("bachPhongDao","Bạch Phong Đao","satThu","kim"),chasePassives:["assassinPrepared","kim1","rb069_passive"]},
-  {...companion("docAnh","Độc Ảnh","satThu","moc"),chasePassives:["assassinPrepared","moc1","rb070_passive"]},
-  {...companion("hanGiangKhach","Hàn Giang Khách","satThu","thuy"),chasePassives:["assassinPrepared","thuy1","rb071_passive"]},
-  {...companion("xichDa","Xích Dạ","satThu","hoa"),chasePassives:["assassinPrepared","hoa1","rb072_passive"]},
-  {...companion("diaAn","Địa Ẩn","satThu","tho"),chasePassives:["assassinPrepared","tho1","rb073_passive"]},
-  {...companion("loiAnh","Lôi Ảnh","satThu","loi"),chasePassives:["assassinPrepared","loi1","rb074_passive"]},
-  {...companion("voAnh","Vô Ảnh","satThu","phong"),chasePassives:["assassinPrepared","phong1","rb075_passive"]},
+  {...companion("bachNoLang","Bạch Nỏ Lang","xaThu","kim"),chasePassives:["marksmanPrepared","kim1","noThanhBenBi"]},
+  {...companion("thanhLamXa","Thanh Lâm Xạ","xaThu","moc"),chasePassives:["marksmanPrepared","moc1","reHoNguoi"]},
+  {...companion("lamGiangPhiDiep","Lam Giang Phi Diệp","xaThu","thuy"),chasePassives:["marksmanPrepared","thuy1","canhGioiBenSong"]},
+  {...companion("xichDiemLuan","Xích Diệm Luân","xaThu","hoa"),chasePassives:["marksmanPrepared","hoa1","hoaCotTruyKich"]},
+  {...companion("tranSonThach","Trấn Sơn Thạch","xaThu","tho"),chasePassives:["marksmanPrepared","tho1","sonTranKienThu"]},
+  {...companion("loiMinhXa","Lôi Minh Xạ","xaThu","loi"),chasePassives:["marksmanPrepared","loi1","chopThoiCo"]},
+  {...companion("tatPhongLang","Tật Phong Lăng","xaThu","phong"),chasePassives:["marksmanPrepared","phong1","thuanGioHoiNhip"]},
+  {...companion("bachPhongDao","Bạch Phong Đao","satThu","kim"),chasePassives:["assassinPrepared","kim1","anKhuyetQuyetTam"]},
+  {...companion("docAnh","Độc Ảnh","satThu","moc"),chasePassives:["assassinPrepared","moc1","lamAnhTiepNhip"]},
+  {...companion("hanGiangKhach","Hàn Giang Khách","satThu","thuy"),chasePassives:["assassinPrepared","thuy1","tinhThuyHoiTuc"]},
+  {...companion("xichDa","Xích Dạ","satThu","hoa"),chasePassives:["assassinPrepared","hoa1","daTapThuaHu"]},
+  {...companion("diaAn","Địa Ẩn","satThu","tho"),chasePassives:["assassinPrepared","tho1","phucDiaPhanKich"]},
+  {...companion("loiAnh","Lôi Ảnh","satThu","loi"),chasePassives:["assassinPrepared","loi1","tanVuHoiNhip"]},
+  {...companion("voAnh","Vô Ảnh","satThu","phong"),chasePassives:["assassinPrepared","phong1","duAmTiepVan"]},
 ];
 /** Product IDs remain stable independently of camelCase runtime/save IDs. */
 export const EXPANSION_CHARACTER_IDS: Readonly<Record<string,string>> = Object.fromEntries(EXPANSION_COMPANIONS.map((f,i)=>[`RB-${String(62+i).padStart(3,'0')}`,f.id]));

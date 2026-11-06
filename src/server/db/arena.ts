@@ -10,7 +10,7 @@ import {
   type ArenaRow,
   type ArenaStore,
 } from "../arena";
-import { ARENA_START } from "@/core";
+import { ARENA_START, migrateLegacyIds } from "@/core";
 import { accounts, arenaPlayers } from "./schema";
 import type { Db } from "./store";
 
@@ -18,8 +18,9 @@ type Row = typeof arenaPlayers.$inferSelect;
 
 const toRow = (r: Row): ArenaRow => ({
   ...r,
-  defense: (r.defense as ArenaDefense | null) ?? null,
-  offers: r.offers as ArenaOffer[],
+  // Đội hình lưu trước 06/11/2026 có thể còn mã kỹ năng/bị động `rb0xx_…` cũ.
+  defense: migrateLegacyIds((r.defense as ArenaDefense | null) ?? null),
+  offers: migrateLegacyIds(r.offers as ArenaOffer[]),
 });
 
 export class DrizzleArenaStore implements ArenaStore {
@@ -56,7 +57,7 @@ export class DrizzleArenaStore implements ArenaStore {
       .where(and(ne(arenaPlayers.ownerId, ownerId), isNotNull(arenaPlayers.defense)))
       .orderBy(sql`abs(${arenaPlayers.rating} - ${rating})`, asc(arenaPlayers.ownerId))
       .limit(limit);
-    return rows.map((r) => ({ ...r, defense: r.defense as ArenaDefense, name: r.name ?? null }));
+    return rows.map((r) => ({ ...r, defense: migrateLegacyIds(r.defense as ArenaDefense), name: r.name ?? null }));
   }
 
   async useAttack(ownerId: string, day: string, limit: number, now: number): Promise<boolean> {

@@ -7,14 +7,14 @@
 
 ## Cách dùng
 
-- Mỗi khối là một hình, tạo ở 1024×1024. Gửi Claude PNG đặt đúng tên trong khối (ví dụ `passive_rb065_hoaCot.png`) hoặc không cần tên, Claude ghép theo hình.
+- Mỗi khối là một hình, tạo ở 1024×1024. Gửi Claude PNG đặt đúng tên trong khối (ví dụ `passive_hoaCotTruyKich.png`) hoặc không cần tên, Claude ghép theo hình.
 - Hệ Mộc, Phong dùng nền **hồng `#ff00ff`**, còn lại **xanh lá `#00b140`**.
 - **Nền tròn phải tròn đều tuyệt đối** (Shan yêu cầu 05/11 vì bộ 29 ra hơi méo): prompt đã ghi rõ hình tròn hình học, rộng bằng cao, nhìn thẳng, không elip, không nghiêng. Ảnh ra vẫn méo thì tạo lại; Claude cũng có thể cắt theo vòng tròn khi xử lý.
 - Không chữ, không người, không khung vuông. Giữ clean-room.
 
 ## Xạ thủ (7 hình)
 
-**Nỏ thành bền bỉ** (Bạch Nỏ Lang · Kim) · `passive_rb_bnl_passive.png`
+**Nỏ thành bền bỉ** (Bạch Nỏ Lang · Kim) · `passive_noThanhBenBi.png`
 
 Đồng đội phá giáp: giảm DEF mục tiêu 8% trong 1 lượt.
 
@@ -22,7 +22,7 @@
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: A heavy iron crossbow bolt lodged in a cracked steel armor plate. Energy and color: silver steel and gold. Composition: a PERFECTLY CIRCULAR medallion, an exact geometric circle centered on the canvas, the same width and height, NOT an oval, NOT an ellipse, NOT tilted or seen in perspective, viewed straight on; a soft round glow inside it and a thin even gold filigree ring tracing its edge; the subject sits fully inside the circle, which spans about 80% of the canvas, with even empty margin on all four sides. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but simpler and calmer: one compact central object, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no ground shadow. Background outside the circle: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Rễ hộ người** (Thanh Lâm Xạ · Mộc) · `passive_rb_tlx_passive.png`
+**Rễ hộ người** (Thanh Lâm Xạ · Mộc) · `passive_reHoNguoi.png`
 
 Đồng đội hồi HP: cấp Khiên 4% HP người được hồi.
 
@@ -30,7 +30,7 @@ Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RP
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: Living tree roots curling into a small protective dome around a green healing drop. Energy and color: emerald, fresh green and gold. Composition: a PERFECTLY CIRCULAR medallion, an exact geometric circle centered on the canvas, the same width and height, NOT an oval, NOT an ellipse, NOT tilted or seen in perspective, viewed straight on; a soft round glow inside it and a thin even gold filigree ring tracing its edge; the subject sits fully inside the circle, which spans about 80% of the canvas, with even empty margin on all four sides. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but simpler and calmer: one compact central object, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no ground shadow. Background outside the circle: flat solid chroma magenta (#ff00ff), completely uniform, nothing else on it.
 ```
 
-**Cảnh giới bến sông** (Lam Giang Phi Diệp · Thủy) · `passive_rb064_canhGioi.png`
+**Cảnh giới bến sông** (Lam Giang Phi Diệp · Thủy) · `passive_canhGioiBenSong.png`
 
 Đồng đội khống chế: bản thân nhận 7 năng lượng.
 
@@ -38,7 +38,7 @@ Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RP
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: A watchful arrow resting across a calm riverbank ripple, golden energy sparks rising from the water. Energy and color: aqua blue and gold. Composition: a PERFECTLY CIRCULAR medallion, an exact geometric circle centered on the canvas, the same width and height, NOT an oval, NOT an ellipse, NOT tilted or seen in perspective, viewed straight on; a soft round glow inside it and a thin even gold filigree ring tracing its edge; the subject sits fully inside the circle, which spans about 80% of the canvas, with even empty margin on all four sides. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but simpler and calmer: one compact central object, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no ground shadow. Background outside the circle: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Hỏa cốt truy kích** (Xích Diệm Luân · Hỏa) · `passive_rb065_hoaCot.png`
+**Hỏa cốt truy kích** (Xích Diệm Luân · Hỏa) · `passive_hoaCotTruyKich.png`
 
 Đồng đội phá giáp: truy kích 35% ATK.
 
@@ -46,7 +46,7 @@ Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RP
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: A flaming arrow chasing a broken armor shard, its fletching made of fire. Energy and color: crimson, orange and gold. Composition: a PERFECTLY CIRCULAR medallion, an exact geometric circle centered on the canvas, the same width and height, NOT an oval, NOT an ellipse, NOT tilted or seen in perspective, viewed straight on; a soft round glow inside it and a thin even gold filigree ring tracing its edge; the subject sits fully inside the circle, which spans about 80% of the canvas, with even empty margin on all four sides. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but simpler and calmer: one compact central object, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no ground shadow. Background outside the circle: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Sơn trấn kiên thủ** (Trấn Sơn Thạch · Thổ) · `passive_rb066_kienThu.png`
+**Sơn trấn kiên thủ** (Trấn Sơn Thạch · Thổ) · `passive_sonTranKienThu.png`
 
 Khiên đồng minh đỡ đòn: phản kích 30% ATK.
 
@@ -54,7 +54,7 @@ Khiên đồng minh đỡ đòn: phản kích 30% ATK.
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: A stone shield deflecting a blow while a stone-tipped arrow flies back from behind it. Energy and color: ochre, amber and gold. Composition: a PERFECTLY CIRCULAR medallion, an exact geometric circle centered on the canvas, the same width and height, NOT an oval, NOT an ellipse, NOT tilted or seen in perspective, viewed straight on; a soft round glow inside it and a thin even gold filigree ring tracing its edge; the subject sits fully inside the circle, which spans about 80% of the canvas, with even empty margin on all four sides. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but simpler and calmer: one compact central object, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no ground shadow. Background outside the circle: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Chớp thời cơ** (Lôi Minh Xạ · Lôi) · `passive_rb067_chopThoiCo.png`
+**Chớp thời cơ** (Lôi Minh Xạ · Lôi) · `passive_chopThoiCo.png`
 
 Kỹ năng gây mất HP: trừ mục tiêu 5 năng lượng.
 
@@ -62,7 +62,7 @@ Kỹ năng gây mất HP: trừ mục tiêu 5 năng lượng.
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: A lightning-charged arrowhead piercing a small energy orb that leaks sparks. Energy and color: electric violet, white and gold. Composition: a PERFECTLY CIRCULAR medallion, an exact geometric circle centered on the canvas, the same width and height, NOT an oval, NOT an ellipse, NOT tilted or seen in perspective, viewed straight on; a soft round glow inside it and a thin even gold filigree ring tracing its edge; the subject sits fully inside the circle, which spans about 80% of the canvas, with even empty margin on all four sides. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but simpler and calmer: one compact central object, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no ground shadow. Background outside the circle: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Thuận gió hồi nhịp** (Tật Phong Lăng · Phong) · `passive_rb068_hoiNhip.png`
+**Thuận gió hồi nhịp** (Tật Phong Lăng · Phong) · `passive_thuanGioHoiNhip.png`
 
 Đồng đội xua tan: bản thân nhận 6 năng lượng.
 
@@ -72,7 +72,7 @@ Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RP
 
 ## Sát thủ (7 hình)
 
-**Ấn khuyết quyết tâm** (Bạch Phong Đao · Kim) · `passive_rb069_passive.png`
+**Ấn khuyết quyết tâm** (Bạch Phong Đao · Kim) · `passive_anKhuyetQuyetTam.png`
 
 Đồng đội phá giáp: truy kích 25% ATK.
 
@@ -80,7 +80,7 @@ Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RP
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: A notched steel dagger poised at a crack in an armor plate, a small chip missing from its blade. Energy and color: silver steel and gold. Composition: a PERFECTLY CIRCULAR medallion, an exact geometric circle centered on the canvas, the same width and height, NOT an oval, NOT an ellipse, NOT tilted or seen in perspective, viewed straight on; a soft round glow inside it and a thin even gold filigree ring tracing its edge; the subject sits fully inside the circle, which spans about 80% of the canvas, with even empty margin on all four sides. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but simpler and calmer: one compact central object, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no ground shadow. Background outside the circle: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Lâm ảnh tiếp nhịp** (Độc Ảnh · Mộc) · `passive_rb070_passive.png`
+**Lâm ảnh tiếp nhịp** (Độc Ảnh · Mộc) · `passive_lamAnhTiepNhip.png`
 
 Đồng đội khống chế: bản thân nhận 6 năng lượng.
 
@@ -88,7 +88,7 @@ Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RP
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: A shadowy leaf-shaped dagger hidden among dark forest leaves, a faint green energy glow. Energy and color: deep green, shadow and gold. Composition: a PERFECTLY CIRCULAR medallion, an exact geometric circle centered on the canvas, the same width and height, NOT an oval, NOT an ellipse, NOT tilted or seen in perspective, viewed straight on; a soft round glow inside it and a thin even gold filigree ring tracing its edge; the subject sits fully inside the circle, which spans about 80% of the canvas, with even empty margin on all four sides. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but simpler and calmer: one compact central object, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no ground shadow. Background outside the circle: flat solid chroma magenta (#ff00ff), completely uniform, nothing else on it.
 ```
 
-**Tĩnh thủy hồi tức** (Hàn Giang Khách · Thủy) · `passive_rb071_passive.png`
+**Tĩnh thủy hồi tức** (Hàn Giang Khách · Thủy) · `passive_tinhThuyHoiTuc.png`
 
 Đồng đội khống chế: bản thân nhận 5 năng lượng.
 
@@ -96,7 +96,7 @@ Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RP
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: A still dark-water surface with one perfect ripple and a short blade reflected in it. Energy and color: deep blue, ice white and gold. Composition: a PERFECTLY CIRCULAR medallion, an exact geometric circle centered on the canvas, the same width and height, NOT an oval, NOT an ellipse, NOT tilted or seen in perspective, viewed straight on; a soft round glow inside it and a thin even gold filigree ring tracing its edge; the subject sits fully inside the circle, which spans about 80% of the canvas, with even empty margin on all four sides. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but simpler and calmer: one compact central object, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no ground shadow. Background outside the circle: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Dạ tập thừa hư** (Xích Dạ · Hỏa) · `passive_rb072_passive.png`
+**Dạ tập thừa hư** (Xích Dạ · Hỏa) · `passive_daTapThuaHu.png`
 
 Đồng đội khống chế: truy kích 30% ATK.
 
@@ -104,7 +104,7 @@ Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RP
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: A red crescent moon behind a short blade glowing with ember light. Energy and color: crimson, night purple and gold. Composition: a PERFECTLY CIRCULAR medallion, an exact geometric circle centered on the canvas, the same width and height, NOT an oval, NOT an ellipse, NOT tilted or seen in perspective, viewed straight on; a soft round glow inside it and a thin even gold filigree ring tracing its edge; the subject sits fully inside the circle, which spans about 80% of the canvas, with even empty margin on all four sides. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but simpler and calmer: one compact central object, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no ground shadow. Background outside the circle: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Phục địa phản kích** (Địa Ẩn · Thổ) · `passive_rb073_passive.png`
+**Phục địa phản kích** (Địa Ẩn · Thổ) · `passive_phucDiaPhanKich.png`
 
 Khiên bản thân đỡ đòn: phản kích 30% ATK.
 
@@ -112,7 +112,7 @@ Khiên bản thân đỡ đòn: phản kích 30% ATK.
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: A claw-shaped blade bursting up from cracked earth beneath a small stone shield. Energy and color: ochre, amber and gold. Composition: a PERFECTLY CIRCULAR medallion, an exact geometric circle centered on the canvas, the same width and height, NOT an oval, NOT an ellipse, NOT tilted or seen in perspective, viewed straight on; a soft round glow inside it and a thin even gold filigree ring tracing its edge; the subject sits fully inside the circle, which spans about 80% of the canvas, with even empty margin on all four sides. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but simpler and calmer: one compact central object, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no ground shadow. Background outside the circle: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Tàn vũ hồi nhịp** (Lôi Ảnh · Lôi) · `passive_rb074_passive.png`
+**Tàn vũ hồi nhịp** (Lôi Ảnh · Lôi) · `passive_tanVuHoiNhip.png`
 
 Kỹ năng gây mất HP: nhận 4 năng lượng.
 
@@ -120,7 +120,7 @@ Kỹ năng gây mất HP: nhận 4 năng lượng.
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: Scattered thin steel needles falling like rain, each trailing a tiny violet spark, gathering into one glow. Energy and color: electric violet and gold. Composition: a PERFECTLY CIRCULAR medallion, an exact geometric circle centered on the canvas, the same width and height, NOT an oval, NOT an ellipse, NOT tilted or seen in perspective, viewed straight on; a soft round glow inside it and a thin even gold filigree ring tracing its edge; the subject sits fully inside the circle, which spans about 80% of the canvas, with even empty margin on all four sides. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but simpler and calmer: one compact central object, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no ground shadow. Background outside the circle: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Dư âm tiếp vận** (Vô Ảnh · Phong) · `passive_rb075_passive.png`
+**Dư âm tiếp vận** (Vô Ảnh · Phong) · `passive_duAmTiepVan.png`
 
 Đồng đội xua tan: bản thân nhận 6 năng lượng.
 

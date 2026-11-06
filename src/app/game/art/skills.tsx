@@ -544,8 +544,8 @@ const SKILL_ART = new Set([
   // Quân sư Phùng Phong, Tạ Thạch, Nghiêm Thiết, Sầm Tuệ, Vi Triều, Tôn Diệm.
   "phongVanBienTran", "batTranThachLuy", "thietTranPhaGiap", "thanhLamBayTran", "trieuDangVayThanh", "hoaCongLienKe",
   // Xạ thủ Bạch Nỏ Lang, Thanh Lâm Xạ, Trấn Sơn Thạch; Sát thủ Độc Ảnh, Hàn Giang Khách, Xích Dạ, Địa Ẩn, Lôi Ảnh, Vô Ảnh.
-  "rb_bnl_thietNoPhaThanh", "rb_tlx_lucTienTroiDuong", "rb066_tranSonHoTran",
-  "rb070_ultimate", "rb071_ultimate", "rb072_ultimate", "rb073_ultimate", "rb074_ultimate", "rb075_ultimate",
+  "thietNoPhaThanh", "lucTienTroiDuong", "tranSonHoTran",
+  "docAnhTiemCham", "hanGiangTangNhan", "xichDaSongSat", "diaPhucLietTrao", "baoVuLeHoa", "voThanhDoatPhach",
   // Nhân vật đặc biệt Đinh Ngọc: đủ 6 ô.
   "dn_kimQuangPhaTran", "dn_thuyAnhXuyenLuu", "dn_hoaBoDoatMenh", "dn_vanTuongQuyNhat", "dn_thoAnTranTam", "dn_loiVanKhaiLo",
   // Nhân vật đặc biệt Trần Vũ Phong: đủ 6 ô (ô 4 thay ảnh Phong Hành Vạn Lý dùng tạm trước đó).
@@ -554,8 +554,8 @@ const SKILL_ART = new Set([
   // Tướng thường Mai Thanh, Hồng Đan, Doãn Nham, Trần Cương, Đàm Thảo, Mạc Vân, Lam Giang Phi Diệp, Xích Diệm Luân,
   // Lôi Minh Xạ, Tật Phong Lăng, Bạch Phong Đao, Kha Sơn, Cao Kiên, Lâm Tùng, Hứa Lăng.
   "camLoHoiXuan", "danHoaHoiNguyen", "diaMachBungPhat", "kimQuaThietMa", "kinhCucTrienThan",
-  "loiTranKinhHon", "rb064_lieuDiepToaGiang", "rb065_xichLuanLietTran", "rb067_loiChamTuocKhi", "rb068_phongLangNhieuTran",
-  "rb069_ultimate", "sonHaTranKich", "thietBichDongThanh", "trucLamPhaTran", "truyPhongDoatMenh",
+  "loiTranKinhHon", "lieuDiepToaGiang", "xichLuanLietTran", "loiChamTuocKhi", "phongLangNhieuTran",
+  "thietAnDoatMenh", "sonHaTranKich", "thietBichDongThanh", "trucLamPhaTran", "truyPhongDoatMenh",
   // Tướng lịch sử Nguyễn Bặc, Đinh Điền, Trịnh Tú, Lê Hoàn, Đinh Liễn.
   "dinhQuocHoaKy", "ngoaiGiapHoQuan", "hoaLuThaoDuoc", "thapDaoLoiBinh", "namVietVuongAn",
   // Sứ quân Trần Lãm, Phạm Bạch Hổ, Ngô Nhật Khánh, Kiều Công Hãn, Kiều Thuận, Lý Khuê, Đỗ Cảnh Thạc.
