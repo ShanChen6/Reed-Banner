@@ -15,6 +15,7 @@ import {
   ledger,
   ledgerGroup,
   ledgerGroups,
+  ledgerSections,
   libraryGroups,
   libraryNodes,
   noticeFor,
@@ -136,6 +137,10 @@ describe("Tướng Lục", () => {
     // Đinh Bộ Lĩnh (bậc đặc biệt) xếp vào Hoa Lư, không vào Kỳ nhân; sứ quân ở Gói 1 vẫn vào Thập nhị sứ quân.
     assert.deepEqual(["dinhBoLinh", "nguyenBac", "phamBachHo", "dinhNgoc", "vuPhong", "docAnh"].map(ledgerGroup), ["hoaLu", "hoaLu", "suQuan", "kyNhan", "kyNhan", "nghe.satThu"]);
     assert.equal(defaultLedgerGroup(groups), "hoaLu");
+    // Bộ lọc tầng trên luôn 4 mục dù có thêm nghề; tầng dưới là 8 nghề.
+    const sections = ledgerSections(groups);
+    assert.deepEqual(sections.map((x) => [x.name, x.total]), [["Hoa Lư", 7], ["Sứ quân", 12], ["Kỳ nhân", 2], ["Tướng thường", 56]]);
+    assert.equal(sections[3]!.groups.length, 8);
   });
 
   it("nhóm mặc định là nhóm đầu tiên chưa tìm đủ", () => {
@@ -186,7 +191,8 @@ describe("Màn chơi", () => {
     // Tướng Lục chia nhóm và phân trang (mục 7.2): 12 tướng Gói 1, nhóm đầu Cờ lau Hoa Lư có 6 người, vừa một trang.
     assert.match(html, /Tướng Lục · 0\/12/);
     assert.match(html, /Cờ lau Hoa Lư/);
-    assert.equal((html.match(/Tướng chưa tìm thấy/g) ?? []).length, 6);
+    // Ô chân dung: chữ cho máy đọc màn hình, mỗi ô một lần.
+    assert.equal((html.match(/>Tướng chưa tìm thấy</g) ?? []).length, 6);
   });
 
   it("có phân cảnh /game/tam-tuong-ky; cờ mặc định tắt, chỉ chuỗi true mới bật", () => {
@@ -246,15 +252,18 @@ describe("tab Tầm Tướng Ký trên trang Xếp hạng", () => {
 });
 
 describe("Tướng Lục khi bật Gói 2", () => {
-  it("chia nhóm theo quan hệ thay cho gói, 6 thẻ mỗi trang, không lộ tên", async () => {
+  it("chia nhóm theo quan hệ thay cho gói, bộ lọc một hàng, không lộ tên", async () => {
     const r = await getTamTuongKy({ profiles: new MemoryProfileStore(), now: Date.parse("2026-11-04T05:00:00Z"), enabled: true, pack2: true, isSignedIn: async () => true }, "acc-1");
     assert.ok(r.ok && r.view.packId === "pack-1-2");
     const html = renderToStaticMarkup(createElement(TamTuongKyScreen, { initial: r.view }));
     assert.match(html, /Tướng Lục · 0\/21/);
-    for (const chip of [/Cờ lau Hoa Lư <span[^>]*>0\/7</, /Thập nhị sứ quân <span[^>]*>0\/12</, /Kỳ nhân <span[^>]*>0\/2</]) assert.match(html, chip);
+    // Tầng trên: Hoa Lư · Sứ quân · Kỳ nhân (Gói 1 + 2 chưa có tướng thường nên không có mục Tướng thường).
+    for (const chip of [/>Hoa Lư<\/span><span[^>]*>0\/7</, />Sứ quân<\/span><span[^>]*>0\/12</, />Kỳ nhân<\/span><span[^>]*>0\/2</]) assert.match(html, chip);
+    assert.doesNotMatch(html, />Tướng thường</);
     assert.doesNotMatch(html, /Gói 1: Dẹp loạn|Gói 2: Thập nhị sứ quân/);
-    assert.equal((html.match(/Tướng chưa tìm thấy/g) ?? []).length, 6);
-    assert.match(html, /Trang 1\/2/);
+    // Nhóm mặc định Cờ lau Hoa Lư: 7 ô, vừa một trang 9 ô.
+    assert.equal((html.match(/>Tướng chưa tìm thấy</g) ?? []).length, 7);
+    assert.doesNotMatch(html, /Trang 1\/2/);
     for (const name of ["Đinh Bộ Lĩnh", "Lý Khuê", "Ngô Xương Xí"]) assert.doesNotMatch(html, new RegExp(name));
   });
 });
