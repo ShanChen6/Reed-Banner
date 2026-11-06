@@ -149,6 +149,7 @@ import {
 import { SceneLink } from "../SceneContext";
 import BattleStage from "../stage/BattleStage";
 import { buttonVariants } from "@/components/ui";
+import { OrnateFrame } from "@/components/game-ui";
 import { createCueBus, stageCues } from "../stage/director";
 
 const PLAYER = 0;
@@ -458,8 +459,8 @@ function TurnClock({
       : "Đối thủ đang đi";
   return (
     <div
-      className={`flex items-center gap-3 rounded-lg border bg-[var(--panel)] px-3 py-1.5 ${
-        urgent ? "border-rose-500" : "border-[var(--gold)]/60"
+      className={`flex items-center gap-3 ui-frame-inset rounded-lg px-3 py-1.5 ${
+        urgent ? "!border-rose-500" : ""
       }`}
       role="timer"
       aria-label={seconds === null ? label : `${label}, còn ${seconds} giây`}
@@ -494,7 +495,7 @@ function WaveBanner({
 }) {
   const { current, next } = survival;
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 rounded-lg border border-[var(--gold)]/60 bg-[var(--panel)] px-3 py-1.5 text-sm">
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 ui-frame-inset rounded-lg px-3 py-1.5 text-sm">
       <span className="font-bold">
         Đợt {survival.wave}
         {current.boss && <span className="text-rose-400"> · trùm</span>}
@@ -645,7 +646,7 @@ function FighterCard({
       type="button"
       onClick={onClick}
       disabled={!onClick || !alive}
-      className={`relative w-full min-w-0 rounded-lg border-l-4 bg-[var(--panel)] p-1.5 text-left md:p-2 ${ring} ${alive ? "" : "opacity-40 grayscale"} disabled:cursor-default`}
+      className={`relative w-full min-w-0 rounded-lg border border-l-4 border-frame-line-soft bg-wood-panel p-1.5 text-left md:p-2 ${ring} ${alive ? "" : "opacity-40 grayscale"} disabled:cursor-default`}
       style={{ borderLeftColor: ELEMENT_COLOR[fighter.element] }}
       title={cardTitle}
     >
@@ -1859,17 +1860,17 @@ export default function DemoGame({
   return (
     <div
       ref={rootRef}
-      className={`${palette} demo-bg flex-1 bg-[var(--bg)] p-3 sm:p-4`}
+      className={`${palette} ui-mode-screen`}
     >
-      <div className="mx-auto flex max-w-6xl flex-col gap-3">
-        <header className="flex flex-wrap items-center justify-between gap-2">
+      <OrnateFrame level="raised" flush className="mx-auto flex w-full max-w-6xl flex-col gap-3 p-3 sm:p-5">
+        <header className="flex flex-wrap items-center justify-between gap-2 border-b border-frame-line-soft pb-2">
           {/* Tên chế độ đã ở header chung; giữ h1 cho trình đọc màn hình. */}
           <h1 className="sr-only">
             {online ? "Cờ Lau · Giao Tranh" : "Cờ Lau · Thao Luyện"}
           </h1>
           <div className="text-sm font-semibold text-title-on-wood" aria-live="polite">
             {!started
-              ? "Chuẩn bị xuất trận"
+              ? ""
               : atBreak
                 ? `Hạ hết đợt ${survival!.wave}, nghỉ giữa đợt`
                 : scenarioOver && state.winner === null
@@ -2434,7 +2435,7 @@ export default function DemoGame({
               className="flex flex-wrap items-stretch gap-1.5"
               aria-label="Kỹ năng"
             >
-              <span className="w-full text-xs opacity-70">
+              <span className="w-full text-caption text-on-wood-soft">
                 Kỹ năng của {actor.name}:
               </span>
               {skills.map((def, i) => {
@@ -2452,7 +2453,7 @@ export default function DemoGame({
                       setWhirlAim(null);
                       setPendingWhirl(null);
                     }}
-                    className={`relative flex w-[4.25rem] flex-col items-center gap-0.5 rounded p-1 text-[10px] leading-tight ${aiming ? "bg-rose-500 text-white" : "bg-[var(--panel)]"} ${
+                    className={`relative flex w-[4.25rem] flex-col items-center gap-0.5 rounded-lg p-1 text-[10px] leading-tight border ${aiming ? "border-rose-400 bg-rose-500 text-white" : "border-frame-line-soft bg-wood-panel hover:border-frame-gold"} ${
                       disabled && !aiming ? "opacity-40 grayscale" : ""
                     }`}
                     title={`${skillText(def)} · phím ${i + 1}`}
@@ -2605,7 +2606,7 @@ export default function DemoGame({
             </ul>
           )}
         </section>
-      </div>
+      </OrnateFrame>
     </div>
   );
 }

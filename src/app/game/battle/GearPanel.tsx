@@ -192,7 +192,7 @@ export default function GearPanel({
   return (
     <section
       aria-label="Trang bị"
-      className="rounded-lg bg-[var(--panel)] p-2 text-xs"
+      className="ui-frame-inset rounded-xl p-3 text-xs text-on-wood"
     >
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-semibold">
