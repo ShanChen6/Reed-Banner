@@ -5,6 +5,7 @@
 // `onAction`; luật nằm ở @/core, server kiểm tra lại. Trạng thái tìm/lọc/sắp xếp/cuộn sống ở đây nên đổi tab
 // hay mở chi tiết trên điện thoại rồi quay lại vẫn giữ nguyên.
 
+import { MODE_CONTENT_WIDTH } from "@/components/game-ui";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { MAIN_ID, type GearSlot, type Profile, type ProfileAction } from "@/core";
 import { SceneLink } from "../SceneContext";
@@ -91,7 +92,7 @@ export default function Barracks({
 
   return (
     <main className="barracks ui-mode-screen">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-3">
+      <div className={`mx-auto flex w-full flex-col gap-3 ${MODE_CONTENT_WIDTH}`}>
         <div className="flex flex-wrap items-center gap-2">
           <div className="grid min-w-0 flex-[1_1_22rem] grid-cols-3 gap-1.5 sm:max-w-[34rem]" role="tablist" aria-label="Mục Doanh Trại">
             {TABS.map((t) => (

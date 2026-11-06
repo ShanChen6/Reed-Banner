@@ -149,7 +149,7 @@ import {
 import { SceneLink } from "../SceneContext";
 import BattleStage from "../stage/BattleStage";
 import { buttonVariants } from "@/components/ui";
-import { OrnateFrame } from "@/components/game-ui";
+import { MODE_CONTENT_WIDTH, OrnateFrame } from "@/components/game-ui";
 import { createCueBus, stageCues } from "../stage/director";
 
 const PLAYER = 0;
@@ -1800,7 +1800,7 @@ export default function DemoGame({
     const own = (heldSides ?? state.sides)[s];
     return (
       <div
-        className={`w-full grid-cols-3 gap-1.5 md:w-40 md:shrink-0 md:flex-col md:gap-2 lg:w-56 ${
+        className={`w-full grid-cols-3 gap-1.5 md:w-40 md:shrink-0 md:flex-col md:gap-2 lg:w-56 3xl:w-72 ${
           s === AI ? "order-1 grid md:order-none md:flex" : inline ? "grid md:hidden" : "hidden md:flex"
         }`}
       >
@@ -1862,7 +1862,7 @@ export default function DemoGame({
       ref={rootRef}
       className={`${palette} ui-mode-screen`}
     >
-      <OrnateFrame level="raised" flush className="mx-auto flex w-full max-w-7xl flex-col gap-3 p-3 sm:p-5">
+      <OrnateFrame level="raised" flush className={`mx-auto flex w-full flex-col gap-3 p-3 sm:p-5 ${MODE_CONTENT_WIDTH}`}>
         <header className="flex flex-wrap items-center justify-between gap-2 border-b border-frame-line-soft pb-2">
           {/* Tên chế độ đã ở header chung; giữ h1 cho trình đọc màn hình. */}
           <h1 className="sr-only">
@@ -2002,7 +2002,7 @@ export default function DemoGame({
         >
           {side(PLAYER)}
 
-          <div className="order-2 flex min-w-0 flex-1 flex-col gap-2 md:order-none">
+          <div className="order-2 mx-auto flex w-full min-w-0 flex-1 flex-col gap-2 md:order-none xl:max-w-[46rem] 3xl:max-w-[56rem]">
             {started && state.winner === null && !atBreak && (
               <TurnClock
                 seconds={playerTurn ? secondsLeft : null}

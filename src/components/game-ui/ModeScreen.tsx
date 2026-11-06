@@ -7,7 +7,7 @@ import { OrnateFrame } from "./OrnateFrame";
 // Header chung đã hiện tên màn, nên banner chỉ giữ tranh, nhãn nhỏ, một câu mô tả và vài số liệu của chế độ.
 
 /** Mọi màn chế độ dùng một bề rộng nội dung duy nhất (MODE_CONTENT_WIDTH) để lề trái/phải thẳng hàng khi chuyển màn. */
-export const MODE_CONTENT_WIDTH = "max-w-7xl";
+export const MODE_CONTENT_WIDTH = "max-w-7xl 2xl:max-w-[90rem] 3xl:max-w-[105rem]";
 
 export function ModeScreen({ children, className, label }: { children: ReactNode; className?: string; /** @deprecated Bỏ từ 06/11/2026: mọi màn cùng một bề rộng; giữ để màn cũ không lỗi biên dịch. */ wide?: boolean; label?: string }) {
   return (

@@ -5,6 +5,7 @@
 // Chế độ Hạng là LT-06. Luật: docs/02-game-modes/future/14-tam-tuong-ky-design-freeze.md.
 // Giao diện: docs/05-ui-ux/screens/tam-tuong-ky.md.
 
+import { MODE_CONTENT_WIDTH } from "@/components/game-ui";
 import { ModeBanner } from "@/components/game-ui";
 import { ChoiceChip, buttonVariants } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
@@ -117,7 +118,7 @@ export default function TamTuongKyScreen({
     <>
       {ranked && (
         <div className="campaign-atlas ui-mode-screen !pb-0">
-          <div role="group" aria-label="Chế độ" className="mx-auto flex w-full max-w-7xl gap-2">
+          <div role="group" aria-label="Chế độ" className={`mx-auto flex w-full gap-2 ${MODE_CONTENT_WIDTH}`}>
             {(["normal", "ranked"] as const).map((m) => (
               <ChoiceChip key={m} size="md" selected={mode === m} onClick={() => setMode(m)}>
                 {m === "normal" ? "Thường" : "Hạng tuần"}
@@ -246,7 +247,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
   return (
     <CatalogContext.Provider value={catalog}>
     <main aria-label="Tầm Tướng Ký" className="campaign-atlas ui-mode-screen flex flex-col pb-28 lg:pb-10">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-4">
+      <div className={`mx-auto flex w-full flex-col gap-4 ${MODE_CONTENT_WIDTH}`}>
         <ModeBanner
           title="Tầm Tướng Ký"
           kicker="Ghép yếu tố"
@@ -406,7 +407,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
   return (
     <CatalogContext.Provider value={catalog}>
     <main aria-label="Tầm Tướng Ký" className="campaign-atlas ui-mode-screen flex flex-col pb-28 lg:pb-10">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-4">
+      <div className={`mx-auto flex w-full flex-col gap-4 ${MODE_CONTENT_WIDTH}`}>
         <ModeBanner
           title={`Tầm Tướng Ký · Hạng tuần ${view.week}`}
           kicker={`Hạng tuần ${view.week}`}
