@@ -163,3 +163,72 @@ Shan duyệt đề xuất đồng bộ sau đợt kiểm kê 20 màn ngày 05/11
 
 Header (luồng riêng) và lõi Viễn Chinh không nằm trong đợt này; Viễn Chinh chỉ đổi mã màu sang token khi luồng của nó xong.
 
+## 9. Bản 2: sửa lỗi và chỉnh UI/UX (06/11/2026)
+
+Trạng thái mục này: **DRAFT**. Shan đưa danh sách ngày 06/11/2026 và dặn chỉ ghi lại, **chưa triển khai**. Làm theo cách của đợt đồng bộ: mỗi bước một PR nhỏ vào `develop`, có ảnh trước/sau.
+
+| Bước | Màn | Việc | Kiểu |
+| --- | --- | --- | --- |
+| V2-01 | Khai Lộ | Gói vùng chơi vào khung thẻ | Chỉ UI |
+| V2-02 | Trận Đồ | Tab Chơi thường dùng banner riêng cho từng bậc | Chờ ảnh |
+| V2-03 | Trận Đồ | Thẻ bậc cao bằng nhau | Chỉ UI |
+| V2-04 | Trận Đồ | Thêm tab Bảng xếp hạng và tab Ban thưởng | Chỉ UI |
+| V2-05 | Trận Đồ, Nhiệm vụ | Đưa Bộ sưu tập địa danh vào Thành tựu | Đổi dữ liệu |
+| V2-06 | Mọi chế độ có xếp hạng | Bảng xếp hạng trong chế độ + trang thành tích theo mùa | UI + API đọc |
+| V2-07 | Tháp Thiên Mệnh | Thêm chân dung tướng khi khóa đội | Chỉ UI |
+
+Thứ tự đề xuất: V2-07, V2-01, V2-03 (nhỏ, chỉ UI) → V2-04 → V2-06 → V2-02 (khi có ảnh) → V2-05 (đụng dữ liệu hồ sơ, cần Shan duyệt số thưởng).
+
+### V2-01 — Khai Lộ: khung thẻ cho vùng chơi
+
+- **Hiện tại** (`src/app/game/khai-lo/KhaiLoScreen.tsx`): dòng "Giải đố · Thường · Màn 1", hai nút chọn Thường/Cấp tốc, bốn ô chỉ số và bàn cờ nằm thẳng trên nền màn; chỉ bàn cờ có viền mỏng (`ui-frame w-fit p-2`). Cột phải (Đạo cụ, Luật chơi) đã có khung, nên hai cột lệch nhau.
+- **Đề xuất**: thêm `ModeBanner` như các chế độ khác (tranh tạm tới khi có `public/art/home/khai-lo.webp`); gói chọn chế độ + chỉ số + bàn cờ + dòng gợi ý vào một `OrnateFrame`; nút "Ván mới" đưa vào góc khung đó.
+- **Nghiệm thu**: hai cột cùng kiểu khung, mép trên thẳng hàng; điện thoại không phải cuộn ngang; không đổi luật chơi hay lưu trữ.
+
+### V2-02 — Trận Đồ: banner cho từng bậc ở Chơi thường
+
+- **Hiện tại**: thẻ Hướng dẫn/Thường/Khó/Đại trận dùng `MapCard` với ô che gỗ kín 2/3 thẻ ("Bản đồ chưa lộ"), vì ván thật chọn bản đồ ngẫu nhiên.
+- **Shan chốt**: thay bằng banner riêng cho từng bậc. Shan sẽ gửi 4 ảnh.
+- **Quy ước ảnh** (đề xuất): `public/art/formation/levels/<id>.webp` với id `huong-dan`, `thuong`, `kho`, `dai-tran`; tỉ lệ 2:1 như khung hiện tại, xuất 1280×640 WebP. Chưa có ảnh thì giữ bản đồ mẫu như bây giờ.
+- **Tab Xếp hạng giữ ô che lộ dần**, vì ở đó ô che là tiến độ của kỳ, không chỉ để trang trí (chờ Shan xác nhận).
+
+### V2-03 — Trận Đồ: thẻ cao bằng nhau
+
+- **Hiện tại**: thẻ cùng hàng cao thấp khác nhau theo độ dài mô tả (Chơi thường); ở Xếp hạng, thẻ đã thắng có thêm ô "Hạng 1/1" nên thang thưởng và nút "Chơi tính hạng" của ba thẻ không thẳng hàng.
+- **Đề xuất**: mỗi thẻ giãn đủ chiều cao hàng lưới (dàn cột, nút ở đáy thẻ); vùng trạng thái (chưa chơi / hạng dự kiến) giữ chỗ cố định để thang thưởng nằm cùng một vạch.
+
+### V2-04 — Trận Đồ: tab Bảng xếp hạng và tab Ban thưởng
+
+- **Hiện tại**: hai tab "Xếp hạng · có thưởng" và "Chơi thường". Dưới mỗi thẻ xếp hạng là "Bảng xếp hạng (n)" gập lại; bảng thưởng theo hạng và thưởng chờ nhận nằm chung trong tab Xếp hạng.
+- **Shan chốt**: thêm tab Bảng xếp hạng cạnh Chơi thường; phần thưởng hạng tách thành tab riêng (Shan chọn phương án 2, không gộp vào bảng xếp hạng).
+- **Bốn tab**: Xếp hạng (chỉ ba thẻ bậc và nút chơi) · Chơi thường · Bảng xếp hạng (chọn bậc Thường/Khó/Đại trận, top của kỳ kèm hạng của mình) · **Ban thưởng** (thưởng chờ nhận và nút Nhận, thang thưởng, bảng thưởng theo hạng). Tên tab thưởng đề xuất "Ban thưởng" (hợp giọng lịch sử); phương án khác: "Phần thưởng", "Quà kỳ".
+- Khách: tab Bảng xếp hạng và Ban thưởng hiện lời nhắc đăng nhập như tab Xếp hạng hiện nay.
+- Số trên tab: Ban thưởng có chấm đỏ khi còn thưởng chưa nhận.
+
+### V2-05 — Bộ sưu tập địa danh vào Thành tựu
+
+- **Hiện tại**: bộ sưu tập `n/30` lưu ở trình duyệt (`src/app/game/formation/storage.ts`), mất khi đổi máy; Thành tựu đọc từ hồ sơ trên máy chủ (`src/core/progress/achievements.ts`).
+- **Đề xuất**: lưu bộ sưu tập vào hồ sơ (gộp một lần từ trình duyệt khi đăng nhập), thêm mốc thành tựu (ví dụ 5/15/30 địa danh), lưới địa danh hiển thị trong màn Nhiệm vụ mục Thành tựu; ở Trận Đồ chỉ còn một dòng "Bộ sưu tập: n/30" dẫn sang đó.
+- Đụng dữ liệu hồ sơ nên làm PR riêng, kèm test; mốc và vàng thưởng chờ Shan duyệt.
+
+### V2-06 — Bảng xếp hạng: trong chế độ và trang theo mùa
+
+- **Hiện tại**: Trấn Ải, Quần Hùng, Tháp Thiên Mệnh có nút dẫn sang `/game/leaderboard?board=…`; trang đó không có nút quay về chế độ (chỉ có "Chiến trường" trên header hoặc nút Back của trình duyệt).
+- **Shan chốt**: làm cả hai.
+  1. **Trong chế độ**: mỗi chế độ có xếp hạng hiện bảng hiện tại ngay trong màn (tab hoặc khối gập): top 10–20 và hạng của mình. Tách phần hiển thị bảng của `LeaderboardScreen.tsx` thành component dùng chung.
+  2. **Trang Xếp hạng** thành **bảng thành tích theo mùa**: mùa này, mùa trước, mọi thời đại, gom mọi chế độ.
+  3. Mở trang Xếp hạng từ một chế độ thì có nút "← Về <tên chế độ>" (truyền chế độ nguồn qua tham số URL); header giữ nguyên.
+- Chế độ áp dụng: Trấn Ải, Quần Hùng, Tháp Thiên Mệnh, Trận Đồ (V2-04), Tầm Tướng Ký xếp hạng; Nhật Lệnh và Bình Loạn chờ Shan chọn.
+
+### V2-07 — Tháp Thiên Mệnh: chân dung khi khóa đội
+
+- **Hiện tại** (`src/app/game/destiny/DestinyScreen.tsx`): thẻ chọn tướng chỉ có tên và "Hệ · Nghề" trên nền giấy dó; Tháp Thí Luyện đã dùng `Portrait` (`TrialView.tsx`).
+- **Đề xuất (Claude khuyên làm)**: thêm `Portrait` cỡ 48px bên trái tên, giữ kiểu đang chọn giấy dó; lưới 3 cột trên máy tính, 2 cột trên điện thoại. Không đổi luật khóa đội.
+
+### Câu hỏi cho Shan
+
+1. Tên tab thưởng ở Trận Đồ: "Ban thưởng", "Phần thưởng" hay "Quà kỳ"?
+2. Tab Xếp hạng của Trận Đồ giữ ô che lộ dần theo tiến độ, chỉ Chơi thường đổi sang banner, đúng ý anh không?
+3. Mốc thành tựu bộ sưu tập địa danh (đề xuất 5/15/30) và vàng mỗi mốc?
+4. Nhật Lệnh và Bình Loạn có cần bảng xếp hạng trong màn không?
+
