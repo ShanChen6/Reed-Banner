@@ -34,6 +34,7 @@ import ModeScreen from "./ModeScreen";
 import { preloadPortraits } from "./preload";
 import { cuesForEvents, FORMATION_PRELOAD, isPerfectPlacement, musicFor, REJECT, tensionLayer } from "./sounds";
 import { obstacleKind, obstacleLabel } from "./pieces";
+import { fetchProfile, sendProfileAction } from "../battle/online";
 import { claimRanked, fetchOverview, moveRanked, startRanked, toPuzzleState, type FormationView, type Overview } from "./rankedClient";
 import Rules from "./Rules";
 import {
@@ -77,6 +78,19 @@ let sweepId = 0;
 const sweepsOf = (events: readonly PuzzleEvent[]): Sweep[] =>
   events.flatMap((e) => (e.type === "lineCleared" ? [{ id: ++sweepId, axis: e.axis, index: e.index }] : []));
 
+/** Gộp bộ sưu tập ở máy với hồ sơ: đẩy phần còn thiếu lên server, trả bộ đã gộp (null nếu không tải được hồ sơ). */
+async function syncCollection(): Promise<string[] | null> {
+  const r = await fetchProfile();
+  if (!r.profile) return null;
+  const remote = r.profile.formation?.collection ?? [];
+  const local = readCollection();
+  const missing = local.filter((id) => !remote.includes(id));
+  const merged = missing.length > 0 ? ((await sendProfileAction({ type: "collectPlaces", ids: missing })).profile?.formation?.collection ?? remote) : remote;
+  const union = [...new Set([...local, ...merged])];
+  for (const id of union) if (!local.includes(id)) addToCollection(id);
+  return union;
+}
+
 export default function FormationScreen() {
   const [state, setState] = useState<PuzzleState | null>(null);
   const [ready, setReady] = useState(false);
@@ -95,6 +109,8 @@ export default function FormationScreen() {
   const [overview, setOverview] = useState<Overview | null>(null);
   const [busy, setBusy] = useState(false);
   const [claimNote, setClaimNote] = useState("");
+  // Đã đăng nhập thì bộ sưu tập địa danh cũng ghi vào hồ sơ (V2-05); khách chỉ lưu ở máy.
+  const signedIn = useRef(false);
   const audio = useAudio();
 
   // Nạp ván dở và lựa chọn đã lưu sau khi hiển thị lần đầu: server không có localStorage nên tránh lệch hydration.
@@ -108,7 +124,11 @@ export default function FormationScreen() {
     setTipDone(tutorialDone());
     /* eslint-enable react-hooks/set-state-in-effect */
     setReady(true);
-    void fetchOverview().then(setOverview);
+    void fetchOverview().then((o) => {
+      setOverview(o);
+      signedIn.current = o.canPlay;
+      if (o.canPlay) void syncCollection().then((c) => c && setCollection(c));
+    });
   }, []);
 
   // Vệt sáng dọn hàng tự tắt sau khi chạy xong.
@@ -120,7 +140,10 @@ export default function FormationScreen() {
 
   const refreshOverview = useCallback(() => void fetchOverview().then(setOverview), []);
 
-  const collect = useCallback((id: string) => setCollection(addToCollection(id)), []);
+  const collect = useCallback((id: string) => {
+    setCollection(addToCollection(id));
+    if (signedIn.current) void sendProfileAction({ type: "collectPlaces", ids: [id] });
+  }, []);
 
   const start = useCallback((rules: Ruleset) => {
     const s = createPuzzle(rules, freshSeed());
