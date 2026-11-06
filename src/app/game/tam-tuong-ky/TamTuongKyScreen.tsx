@@ -441,6 +441,7 @@ function NodeChip({ node, onPick, badge, count }: { node: CatalogNode; onPick: (
 /** Yếu tố có tranh riêng ở public/art/tam-tuong-ky/yeu-to/<mã yếu tố>.webp. */
 const NODE_ART: ReadonlySet<NodeId> = new Set([
   "know.daiCoViet",
+  "know.doHoPhu",
   "know.duongLam",
   "know.guardRoad",
   "know.hoaLuHerbs",
