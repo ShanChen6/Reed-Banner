@@ -169,13 +169,13 @@ Trạng thái mục này: **DRAFT**. Shan đưa danh sách ngày 06/11/2026 và 
 
 | Bước | Màn | Việc | Kiểu |
 | --- | --- | --- | --- |
-| V2-01 | Khai Lộ | Gói vùng chơi vào khung thẻ | Chỉ UI |
+| V2-01 | Khai Lộ | Gói vùng chơi vào khung thẻ | Đã làm (PR #340) |
 | V2-02 | Trận Đồ | Thẻ bậc dùng ảnh thumbnail cố định (cả Xếp hạng và Chơi thường) | Đã làm (06/11) |
-| V2-03 | Trận Đồ | Thẻ bậc cao bằng nhau | Chỉ UI |
-| V2-04 | Trận Đồ | Thêm tab Bảng xếp hạng và tab Ban thưởng | Chỉ UI |
+| V2-03 | Trận Đồ | Thẻ bậc cao bằng nhau | Đã làm (06/11) |
+| V2-04 | Trận Đồ | Thêm tab Bảng xếp hạng và tab Ban thưởng | Đã làm (06/11) |
 | V2-05 | Trận Đồ, Nhiệm vụ | Đưa Bộ sưu tập địa danh vào Thành tựu | Đổi dữ liệu |
 | V2-06 | Trang chủ, chế độ có xếp hạng | Tách: trang Công Trạng (thành tích theo mùa) và bảng xếp hạng mùa hiện tại trong từng chế độ | UI + API đọc |
-| V2-07 | Tháp Thiên Mệnh | Thêm chân dung tướng khi khóa đội | Chỉ UI |
+| V2-07 | Tháp Thiên Mệnh | Thêm chân dung tướng khi khóa đội | Đã làm (06/11) |
 
 Thứ tự đề xuất: V2-07, V2-01, V2-03 (nhỏ, chỉ UI) → V2-04 → V2-06 → V2-02 (khi có ảnh) → V2-05 (đụng dữ liệu hồ sơ, cần Shan duyệt số thưởng).
 
