@@ -14,7 +14,7 @@
 - Survival vẫn tên hiển thị **Sinh tồn** cho đến khi duyệt rename Thủ Thành; concept hình doanh trại/cổng thành không hàm ý HP thành.
 - Daily: một đề cố định/ngày, một lượt/người, đội cho sẵn, không trang bị. Arena: PvP **bất đồng bộ** chống đội phòng thủ snapshot do AI điều khiển, không matchmaking real-time.
 - Đánh trùm là phần của Campaign, không thiết kế lại. Normal/Practice thuộc luồng trận chiến chung; chỉ cân chỉnh entry/navigation, không đổi luật.
-- Liệt Truyện là **concept docs-only**, không thêm nút khả dụng khi chưa có route/engine. Viễn Chinh có màn `/game/expedition` sau cờ `EXPEDITION_ENABLED`; thẻ nằm ở hàng "Đang dựng" của Home, chỉ bấm được khi cờ bật ([GDD](../../02-game-modes/expedition/01-vien-chinh-gdd.md)). Trận Đồ (Binh Pháp) có **bản chơi thử offline** ở `/game/formation`, vào từ thẻ ở hàng "Đang dựng" của Home (không phải card thứ bảy của sáu chế độ live).
+- Liệt Truyện là **concept docs-only**, không thêm nút khả dụng khi chưa có route/engine. Từ 06/11/2026 Chiến trường hiện đủ 10 chế độ trong một lưới thẻ (Bình Loạn là thẻ nổi bật chiếm cả hàng; Trận Đồ và Khai Lộ ghi "Chơi thử offline"; Tầm Tướng Ký và Viễn Chinh, Thí Luyện và Thiên Mệnh khóa theo cờ tính năng). Mục "Sắp ra mắt · Đang dựng" vẫn giữ nhưng tự ẩn khi danh sách `UPCOMING` trong `MenuScene.tsx` trống; thêm phần tử vào đó khi có chế độ mới ([GDD Viễn Chinh](../../02-game-modes/expedition/01-vien-chinh-gdd.md)).
 
 ## 2. Khung thống nhất
 
