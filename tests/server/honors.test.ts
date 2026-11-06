@@ -5,7 +5,7 @@ import { honorsOf } from "../../src/server/honors";
 import { MemoryRankRewardStore } from "../../src/server/rankRewards";
 
 const entry = (over: Partial<FormationEntry>): FormationEntry => ({
-  id: "f1", level: "kho", period: "2026-11-01", ownerId: "u1", state: null, seq: 1, status: "won", score: 100, turns: 10,
+  id: "f1", level: "kho", period: "2026-11-01", ownerId: "u1", name: null, state: null, seq: 1, status: "won", score: 100, turns: 10,
   startedAt: 1, finishedAt: 2, claimedAt: 50, rewardGold: 150, ...over,
 });
 
