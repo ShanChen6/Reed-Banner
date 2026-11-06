@@ -1,7 +1,7 @@
 # Giao diện Tầm Tướng Ký
 
-> Cập nhật: 04/11/2026
-> Trạng thái: **DRAFT** — màn chế độ Thường đã có code (`src/app/game/tam-tuong-ky/`), chạy trên server theo tài khoản từ LT-04; bật bằng cờ `TAM_TUONG_KY_ENABLED` (mặc định tắt). Chờ Shan chơi thử và góp ý.
+> Cập nhật: 06/11/2026
+> Trạng thái: **DRAFT** — màn chế độ Thường đã có code (`src/app/game/tam-tuong-ky/`), chạy trên server theo tài khoản từ LT-04; bật bằng cờ `TAM_TUONG_KY_ENABLED` (mặc định tắt). Shan góp ý 6 điểm ngày 06/11/2026, kế hoạch sửa ở [mục 7](#7-sửa-theo-góp-ý-06112026-chờ-triển-khai) (chưa có code).
 
 Luật ở [Design Freeze](../../02-game-modes/future/14-tam-tuong-ky-design-freeze.md); nội dung công thức ở [catalog LT-01](../../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md). Tài liệu này chỉ nói về giao diện.
 
@@ -71,4 +71,105 @@ Tông gỗ tối, giấy dó, đồng cổ dùng token `--atlas-*` và khung `at
 - `tests/game/tam-tuong-ky-screen.test.ts` (14 test): màn chờ dữ liệu, phiếu và nút mở lượt, mẹo người mới; chọn ô, đổi chỗ, `A+A`; tìm không dấu và lọc nhóm; lời thông báo; Tướng Lục không lộ tướng chưa tìm; dựng màn không có tên tướng hay chữ thưởng; phân cảnh và cờ.
 - Playwright với cờ bật: khách thấy màn nhắc đăng nhập; đăng ký rồi ghép ra Đinh Ngọc ở 1440px và iPhone 13 (390px); không tràn ngang ở 320, 768, 1024px; thẻ Home dẫn vào màn.
 
-> TODO: Icon riêng cho từng yếu tố trung gian, chế độ Hạng, kéo thả (tùy chọn) và hiệu ứng mở sách; Shan chơi thử rồi góp ý.
+> TODO: kéo thả (tùy chọn); các mục ở [mục 7](#7-sửa-theo-góp-ý-06112026-chờ-triển-khai).
+
+## 7. Sửa theo góp ý 06/11/2026 (chờ triển khai)
+
+Shan chơi bản trên `co-lau.vercel.app` và góp ý 6 điểm. Mục này là kế hoạch, **chưa có code**. Đề xuất chia 3 PR nhỏ vào `develop`:
+
+| PR | Gồm | Đụng file |
+|---|---|---|
+| A. Bố cục và ô | 7.3, 7.4, 7.6 | `TamTuongKyScreen.tsx`, `globals.css` |
+| B. Icon và hiệu ứng ghép | 7.1, 7.5 | `TamTuongKyScreen.tsx`, `altar.ts`, `globals.css` |
+| C. Tướng Lục chia nhóm | 7.2 | `altar.ts`, `TamTuongKyScreen.tsx`, test |
+
+Mỗi PR chụp 1440px và 390px, chạy `pnpm lint`, `pnpm typecheck`, `pnpm test`; sửa mục 3 tài liệu này cho khớp khi xong.
+
+### 7.1. Yếu tố còn thiếu icon
+
+**Hiện trạng.** `NodeGlyph` lấy tranh ở `public/art/tam-tuong-ky/yeu-to/<mã>.webp` (60 yếu tố trong `NODE_ART`) hoặc tranh nghề ở `public/art/tam-tuong-ky/nghe/` cho tri thức sơ học và node vai trò. Còn **56 tuyệt chiêu riêng của tướng thường** (`know.skill.<mã tướng>`, nhóm "Tuyệt chiêu", ví dụ "Liễu Diệp Tỏa Giang", "Gió Lành Tẩy Uế") rơi về chữ cái đầu.
+
+**Cách làm.** Dùng chung icon kỹ năng: `know.skill.<id>` → `ultimateOf(id)` (`src/core/battle/skills.ts`) → `SkillIcon` (`src/app/game/art/skills.tsx`). 41/56 chiêu đã có ảnh trong `public/art/skills/`, 15 chiêu còn lại `SkillIcon` tự vẽ SVG; khi Shan gửi thêm ảnh thì không phải sửa màn này. Thêm test: mọi node không phải tướng đều có `nodeArt` hoặc icon kỹ năng, không còn node nào rơi về chữ cái (test liệt kê node thiếu để lần thêm gói sau biết ngay).
+
+**Nghiệm thu.** Lọc "Tuyệt chiêu" không còn ô chữ cái.
+
+### 7.2. Tướng Lục: phân trang và chia nhóm theo quan hệ
+
+**Hiện trạng.** Tướng Lục chia mục theo gói phát hành: Gói 1 "Dẹp loạn" (6 tướng theo Đinh Bộ Lĩnh, 4 sứ quân, Đinh Ngọc, Vũ Phong), Gói 2 "Thập nhị sứ quân" (8 sứ quân còn lại **và Đinh Bộ Lĩnh**, nên đếm ra 9), Gói 3 "Tướng thường" (56). Cả 77 thẻ nằm một cột dài.
+
+**Cách làm.** Tách hai khái niệm:
+
+- **Gói** giữ nguyên trong code (`pack` của node, thành tựu `ttk.pack-*`, cờ phát hành): là đơn vị ra mắt nội dung, người chơi không cần thấy.
+- **Nhóm Tướng Lục** (mới, chỉ để hiển thị) gom tướng theo quan hệ, kiểu sảnh kết nghĩa: mỗi nhóm có tên, một dòng giới thiệu mối liên hệ và số đã tìm.
+
+| Nhóm | Tướng | Số |
+|---|---|---|
+| Cờ lau Hoa Lư | Đinh Bộ Lĩnh, Nguyễn Bặc, Đinh Điền, Lưu Cơ, Trịnh Tú, Lê Hoàn, Đinh Liễn | 7 |
+| Thập nhị sứ quân | 12 sứ quân (cả 4 ở Gói 1) | 12 |
+| Kỳ nhân | Đinh Ngọc, Trần Vũ Phong | 2 |
+| Tướng thường theo nghề | 8 nhóm (Tướng sĩ, Binh lính, Y sư, Mưu sĩ, Quân sư, Pháp sư, Xạ thủ, Sát thủ), mỗi nhóm 7 tướng, một tướng mỗi hệ | 8 × 7 |
+
+Dòng giới thiệu là chữ của trò chơi, không phải trích sử (ví dụ "Những người theo cờ lau từ buổi đầu ở Hoa Lư"). Không lộ tướng chưa tìm: thẻ chưa tìm vẫn chỉ có "?" và bậc như hiện nay.
+
+Giao diện:
+
+- Đầu Tướng Lục là hàng chip nhóm (ChoiceChip) kèm `x/y`; mặc định nhóm đầu tiên chưa đủ.
+- Danh sách trong nhóm phân trang bằng `usePagedItems` + `PageControls` (`@/components/ui/Pagination`), **6 thẻ/trang** trên máy tính, 4 trên điện thoại; đặt `key` theo nhóm để đổi nhóm thì về trang 1.
+- Ghép ra tướng thì tự chuyển tới nhóm và trang có tướng đó, thẻ sáng lên (`ttk-reveal`).
+
+Code: thêm `ledgerGroup(characterId)` trong `altar.ts` đọc `isHero`, `isWarlord` (`src/core/roster/roster.ts`), bậc `dacBiet` và nghề trong roster; Đinh Bộ Lĩnh xếp vào Cờ lau Hoa Lư. `LedgerEntry` thêm trường `group` cho cả tướng chưa tìm (tên nhóm không lộ tướng vì nhóm có từ 2 người).
+
+**Ghi chú.** Thành tựu "đủ ba tướng đặc biệt" vẫn tính Đinh Bộ Lĩnh dù hiển thị ở nhóm Hoa Lư; không đổi vàng hay thành tựu trong PR này. Muốn đổi luôn tên gói phát hành cho khớp nhóm thì làm riêng.
+
+### 7.3. Đài Hợp Nguyên thụt xuống so với hai cột bên
+
+**Hiện trạng.** Ở 1600px, khung Đài Hợp Nguyên bắt đầu thấp hơn Vạn Vật Lục và Tướng Lục khoảng 15px. Cả ba `Panel` cùng một hàng lưới; chỉ Đài Hợp Nguyên có `lg:sticky lg:top-4` (`TamTuongKyScreen.tsx`, cả chế độ Thường và Hạng). Nghi nguyên nhân là `sticky` trong khung cuộn của `GameShell`; **chưa đo xác nhận**.
+
+**Cách làm.** Đo `boundingBox` ba khung bằng Playwright ở 1024, 1440, 1600px, trước và sau khi bỏ `lg:sticky lg:top-4`. Khi Vạn Vật Lục đã phân trang (7.6) thì ba cột gần bằng nhau, không cần dính khi cuộn nữa, nên bỏ `sticky`.
+
+**Nghiệm thu.** Mép trên ba khung lệch nhau ≤ 1px ở cả ba bề rộng.
+
+### 7.4. Ô trước, ô sau cố định; bấm vào ô để bỏ
+
+**Hiện trạng.** `Slot` cao theo nội dung (`min-h-24`): ô trống chỉ có chữ "Trống", ô có yếu tố thêm icon, tên và nút "Bỏ", nên đặt yếu tố vào thì cả khung cao lên và nút Hợp Nguyên nhảy xuống. Tên dài xuống hai dòng còn nhảy thêm.
+
+**Cách làm.**
+
+- Ô cao cố định (`h-36` máy tính, `h-28` điện thoại), bố cục ba hàng cố định: nhãn "Ô trước/Ô sau", vùng icon `size-12`, tên tối đa 2 dòng (`line-clamp-2`, `title` đủ tên). Ô trống vẫn giữ chỗ icon bằng vòng nét đứt.
+- Bỏ nút chữ "Bỏ". Ô có yếu tố là một `button` với `aria-label="Bỏ <tên> khỏi ô trước"`; hover/focus hiện dấu ✕ nhỏ góc phải và viền đỏ nhạt để người chơi biết bấm là bỏ. Ô trống không bấm được.
+- Thanh ghép ở đáy trên điện thoại giữ nguyên.
+
+**Nghiệm thu.** Đặt rồi bỏ yếu tố, kể cả tên dài nhất ("Dựng nước Đại Cồ Việt"), vị trí nút Hợp Nguyên không đổi (đo `boundingBox`).
+
+### 7.5. Hiệu ứng hợp nguyên và hiện thứ tạo thành
+
+**Hiện trạng.** Bấm Hợp Nguyên thì hai ô xóa ngay, chỉ có một dòng chữ trong ô thông báo; không thấy thứ vừa tạo ra.
+
+**Cách làm.** Không cần sửa server: phản hồi ghép đã có `status`, `nodeId`, `isCharacter`, `nodeAlreadyKnown`.
+
+1. Trong lúc chờ server: hai ô rung nhẹ và sáng viền vàng (`aria-busy`).
+2. Có kết quả: icon hai ô trượt vào giữa nút ⇄ rồi tan (keyframe `ttk-merge`, ~450 ms), sau đó hiện **thẻ kết quả** ngay dưới hai ô, cao cố định để không đẩy bố cục:
+
+| Kết quả | Thẻ hiện |
+|---|---|
+| Khám phá mới | Icon `size-16` + tên + nhãn "Mới", quầng vàng tỏa (`ttk-reveal`), yếu tố mới nhấp nháy 1 lần trong Vạn Vật Lục |
+| Thêm cách ra / Đã biết | Icon + tên, nhãn "Đã biết", không quầng |
+| Tìm thấy tướng | Chân dung `Portrait` + tên + bậc, quầng mạnh hơn; trên điện thoại vẫn tự chuyển Tướng Lục như hiện nay |
+| Không ra gì | Hai icon tách ra, khói xám, chữ "Chưa tìm được mối liên hệ" |
+
+3. Bấm thẻ kết quả (khi là yếu tố) thì đặt yếu tố đó vào ô trước để ghép tiếp.
+4. `prefers-reduced-motion`: bỏ chuyển động, chỉ hiện thẻ. Ô thông báo `aria-live` giữ nguyên chữ để đọc màn hình.
+
+Chế độ Hạng dùng chung thẻ kết quả, cộng dòng "+n điểm" khi ra tướng đề cử.
+
+### 7.6. Ô yếu tố tên dài làm lệch các cột
+
+**Hiện trạng.** Ô trong Vạn Vật Lục cao theo chữ: tên dài như "Liễu Diệp Tỏa Giang" xuống hai dòng nên ô đó cao hơn ô bên cạnh; danh sách càng dài thì cột Vạn Vật Lục càng cao, lệch hẳn so với hai cột kia.
+
+**Cách làm.**
+
+- Ô cao cố định `h-14`, lưới `auto-rows-fr`; tên `text-[13px] leading-tight line-clamp-2`, `title` đủ tên; chấm vàng "còn công thức" và `×n` không chiếm chỗ của tên (đặt góc trên phải).
+- **Vạn Vật Lục phân trang** (Shan dặn danh sách dài phải phân trang, không cuộn dài): `usePagedItems` + `PageControls`, 16 ô/trang (2 cột × 8 hàng) trên máy tính, 12 trên điện thoại; `key` theo ô tìm + nhóm lọc để đổi lọc thì về trang 1. 7 nguyên tố luôn ở trang 1.
+- Ba khung cùng chiều cao tối thiểu trên máy tính (`lg:min-h-[…]` theo khung cao nhất sau phân trang), không dùng `self-start` riêng lẻ.
+
+**Nghiệm thu.** Ở 1440px, ba khung cao lệch nhau không quá một hàng ô; không có ô nào cao hơn ô cùng hàng.
