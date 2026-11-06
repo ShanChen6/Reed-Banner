@@ -35,11 +35,11 @@ test('Thừa Hư refunds once only for real HP damage; fully absorbed hits never
 });
 
 test('three hits round separately, drain once, personal energy reaction once/action',()=>{
- const id='rb074_ultimate';const r=cast(setup(id,{chasePassives:['guardian','strategist','rb074_passive']}),id);
+ const id='baoVuLeHoa';const r=cast(setup(id,{chasePassives:['guardian','strategist','tanVuHoiNhip']}),id);
  const hits=r.events.filter(e=>e.type==='damage'&&e.side===1&&e.fighter===0&&e.source==='skill');
  assert.equal(hits.length,3);for(const hit of hits){assert.equal(hit.type==='damage'&&hit.amount,63);}
  assert.equal(r.state.sides[0].fighters[0]!.energy,4);
- assert.equal(r.events.filter(e=>e.type==='chase'&&e.passive==='rb074_passive').length,1);
+ assert.equal(r.events.filter(e=>e.type==='chase'&&e.passive==='tanVuHoiNhip').length,1);
  assert.ok(r.events.filter(e=>e.type==='chase').length<=CHASE_LIMITS.maxReactions);
  const low=setup(id);low.sides[1].fighters[0]!.hp=20;
  const killed=cast(low,id);assert.equal(killed.events.filter(e=>e.type==='damage'&&e.side===1).length,1);
@@ -47,7 +47,7 @@ test('three hits round separately, drain once, personal energy reaction once/act
 });
 
 test('execute evaluates HP before last hit, not at start of two-hit action',()=>{
- const id='rb072_ultimate';const s=setup(id);s.sides[1].fighters[0]!.hp=750;
+ const id='xichDaSongSat';const s=setup(id);s.sides[1].fighters[0]!.hp=750;
  const r=cast(s,id);const hits=r.events.filter(e=>e.type==='damage'&&e.side===1);
  assert.deepEqual(hits.map(e=>e.type==='damage'?e.amount:0),[96,125]);
 });
@@ -64,7 +64,7 @@ test('poison stacks distinguish instances, cap at two sources, refresh stronger 
 });
 
 test('poison snapshots ATK, survives dead source, ticks twice only at target side boundary without reactions',()=>{
- const id='rb070_ultimate';let s=cast(setup(id),id).state;
+ const id='docAnhTiemCham';let s=cast(setup(id),id).state;
  const target=s.sides[1].fighters[0]!;assert.equal(target.effects.find(e=>e.kind==='poison')?.value,12);
  s.sides[0].fighters[0]!.hp=0;
  s=end(s).state; // target side starts: no poison tick
@@ -79,9 +79,9 @@ test('poison snapshots ATK, survives dead source, ticks twice only at target sid
 });
 
 test('shield counter uses actual attacker and ignores missing provenance',()=>{
- const id='role_tramKich';const s=setup(id);s.sides[1].fighters[1]={...s.sides[1].fighters[1]!,chasePassives:['guardian','strategist','rb066_kienThu']};
+ const id='role_tramKich';const s=setup(id);s.sides[1].fighters[1]={...s.sides[1].fighters[1]!,chasePassives:['guardian','strategist','sonTranKienThu']};
  s.sides[1].fighters[0]!.effects.push({kind:'shield',value:100,turns:null});
- const r=cast(s,id);const counter=r.events.find(e=>e.type==='chase'&&e.passive==='rb066_kienThu');
+ const r=cast(s,id);const counter=r.events.find(e=>e.type==='chase'&&e.passive==='sonTranKienThu');
  assert.ok(counter&&counter.type==='chase');assert.deepEqual(counter.target,{side:0,fighter:0});
 });
 
@@ -98,7 +98,7 @@ test('every new active executes at skill 1/3/5 in solo and teams without duplica
 });
 
 test('mixed recipient support uses each teammate HP and spirit exactly once',()=>{
- const id='rb_tlx_lucTienTroiDuong';const s=setup(id);
+ const id='lucTienTroiDuong';const s=setup(id);
  s.sides[0].fighters[0]!.hp=1000;s.sides[0].fighters[0]!.spirit=0;
  s.sides[0].fighters[1]={...s.sides[0].fighters[1]!,maxHp:1000,hp:500};
  const r=cast(s,id);assert.equal(r.state.sides[0].fighters[0]!.hp,1024);assert.equal(r.state.sides[0].fighters[1]!.hp,560);
