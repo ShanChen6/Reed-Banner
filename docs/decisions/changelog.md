@@ -5,6 +5,7 @@
 **Bản 2 UI/UX: danh sách việc (DRAFT, chưa triển khai)**
 - Shan đưa danh sách sau khi chơi: Khai Lộ thêm khung thẻ; Trận Đồ dùng banner riêng cho từng bậc ở Chơi thường, thẻ cao bằng nhau, thêm tab Bảng xếp hạng và tách thưởng hạng thành tab riêng (Shan chọn tách), Bộ sưu tập địa danh có thể vào Thành tựu; bảng xếp hạng làm cả hai: trong từng chế độ và trang thành tích theo mùa; Tháp Thiên Mệnh có chân dung như Tháp Thí Luyện. Xem [lộ trình UI mục 9](../05-ui-ux/implementation/roadmap.md#9-bản-2-sửa-lỗi-và-chỉnh-uiux-06112026).
 - Shan chốt thêm: tách bảng xếp hạng thành trang Công Trạng (thành tích theo mùa, thay "Xếp hạng" ở Trang chủ) và bảng mùa hiện tại trong từng chế độ, không liên kết sang nhau; tab thưởng Trận Đồ tên Ban thưởng; Nhật Lệnh, Bình Loạn không làm bảng xếp hạng; Claude đặt mốc bộ sưu tập 5/15/30 = 200/500/1000 vàng, bấm địa danh để xem lại tranh.
+- Shan chốt: trang tên Công Trạng; thẻ bậc Trận Đồ ở cả tab Xếp hạng và Chơi thường dùng ảnh thumbnail cố định, bỏ ô che lộ dần.
 
 ## 05/11/2026
 
