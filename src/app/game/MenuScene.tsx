@@ -1,7 +1,7 @@
 "use client";
 
 // Phân cảnh MENU (Home V2, docs/05-ui-ux/design-system/game-mode-ui-spec.md mục 14): tranh Hoa Lư làm hero với logo
-// và nút Vào trận, lưới sáu chế độ dẫn bằng tranh, hàng tiện ích cuối trang. Bấm vào đâu cũng chỉ đổi phân cảnh,
+// và nút Vào trận, lưới mười chế độ dẫn bằng tranh, hàng tiện ích cuối trang. Bấm vào đâu cũng chỉ đổi phân cảnh,
 // không tải lại trang. Khung, góc hoa văn và màu lấy lại từ Sử ký (lớp .campaign-atlas) để cùng một chất liệu.
 
 import Image from "next/image";
@@ -20,9 +20,12 @@ interface Mode {
   readonly title: string;
   readonly text: string;
   /** Tranh trong public/art/home/; chế độ sắp ra mắt chưa có tranh thì dựng tạm từ biểu tượng nghề/hệ. */
-  readonly art: string;
+  /** Chưa có tranh riêng thì dùng tranh mực tạm (public/art/campaign/rail-ink.webp). */
+  readonly art?: string;
   readonly kicker?: string;
   readonly featured?: boolean;
+  /** Dòng trạng thái thay cho "Đang mở" (ví dụ bản chơi thử offline). */
+  readonly note?: string;
 }
 
 const MODES: readonly Mode[] = [
@@ -39,22 +42,18 @@ const MODES: readonly Mode[] = [
   { scene: "SURVIVAL", title: "Trấn Ải", text: "Đối thủ kéo đến theo đợt trên cùng một bàn cờ.", art: "survival" },
   { scene: "DAILY", title: "Nhật Lệnh", text: "Một đề chung cho mọi người, mỗi ngày một lần.", art: "daily" },
   { scene: "ARENA", title: "Quần Hùng", text: "Đánh đội phòng thủ người chơi khác để lại.", art: "arena" },
+  { scene: "FORMATION", title: "Trận Đồ", text: "Bày quân lệnh theo nghề và hệ để khai thông sa bàn.", art: "tran-do", kicker: "Binh pháp", note: "Chơi thử offline" },
+  { scene: "KHAI_LO", title: "Khai Lộ", text: "Chạm để xóa cả khối quân cùng hệ, mở đường xuyên bàn cờ; có chế độ Cấp tốc.", kicker: "Giải đố", note: "Chơi thử offline" },
+  { scene: "TAM_TUONG_KY", title: "Tầm Tướng Ký", text: "Ghép yếu tố từ bảy hệ để tìm lại chân dung danh tướng.", art: "tam-tuong-ky", kicker: "Ghép yếu tố" },
+  { scene: "EXPEDITION", title: "Viễn Chinh", text: "Chia sáu tướng làm hai đạo, hành quân trên sa bàn và giáp công thành đích.", kicker: "Hành quân" },
 ];
 
 /**
- * Chế độ Shan đã duyệt tên (26/10) nhưng chưa phát hành chính thức: thẻ "Sắp ra mắt" không bấm được. Trận Đồ đã có bản
- * chơi thử offline (không thưởng) nên bấm vào được, nhưng vẫn ở hàng này, không thành card thứ bảy của sáu chế độ live.
- * TODO: khi có scene và feature flag thì chuyển lên MODES; TODO tranh: public/art/home/vien-chinh.webp
- * (xem /mnt/project-files/art/prompts/home-thumbnail-che-do.md). Viễn Chinh bật bằng `EXPEDITION_ENABLED` (tắt thì thẻ
- * không bấm được); luật ở docs/02-game-modes/expedition/01-vien-chinh-gdd.md.
+ * Chế độ sắp ra mắt: thẻ không bấm được, hiện ở mục "Sắp ra mắt" dưới lưới chế độ. Mười chế độ hiện có đã vào MODES nên
+ * danh sách này đang trống và mục tự ẩn; thêm một phần tử vào đây khi có ý tưởng mới (có `scene` thì thẻ bấm được).
+ * TODO tranh: public/art/home/<id>.webp, chưa có thì thẻ dùng tranh mực tạm.
  */
-const UPCOMING: readonly { id: "tran-do" | "khai-lo" | "tam-tuong-ky" | "vien-chinh"; title: string; text: string; art?: string; scene?: Scene; note?: string }[] = [
-  { id: "tran-do", title: "Trận Đồ", text: "Bày quân lệnh theo nghề và hệ để khai thông sa bàn.", art: "tran-do", scene: "FORMATION" },
-  // Khai Lộ: giải đố xóa khối ô ngọc, bản chơi thử offline (docs/02-game-modes/future/24-khai-lo-gdd.md). TODO tranh: public/art/home/khai-lo.webp.
-  { id: "khai-lo", title: "Khai Lộ", text: "Chạm để xóa cả khối quân cùng hệ, mở đường xuyên bàn cờ; có chế độ Cấp tốc.", scene: "KHAI_LO", note: "Chơi thử offline" },
-  { id: "tam-tuong-ky", title: "Tầm Tướng Ký", text: "Ghép yếu tố từ bảy hệ để tìm lại chân dung danh tướng.", art: "tam-tuong-ky" },
-  { id: "vien-chinh", title: "Viễn Chinh", text: "Chia sáu tướng làm hai đạo, hành quân trên sa bàn và giáp công thành đích." },
-];
+const UPCOMING: readonly { id: string; title: string; text: string; art?: string; scene?: Scene; note?: string }[] = [];
 
 
 /** Tiện ích cuối trang. Hồ sơ và Tài khoản đã có trên thanh header nên không lặp lại ở đây. */
@@ -84,7 +83,16 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
     hasSavedBattle,
     () => false,
   );
-  const locked = (scene: Scene) => (scene === "TRIAL" ? !towerFeatures.trial : scene === "DESTINY" ? !towerFeatures.destiny : false);
+  const locked = (scene: Scene) =>
+    scene === "TRIAL"
+      ? !towerFeatures.trial
+      : scene === "DESTINY"
+        ? !towerFeatures.destiny
+        : scene === "TAM_TUONG_KY"
+          ? !towerFeatures.tamTuongKy
+          : scene === "EXPEDITION"
+            ? !towerFeatures.expedition
+            : false;
 
   return (
     <main className="campaign-atlas ui-mode-screen flex flex-col">
@@ -133,35 +141,29 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
           <SectionHeading id="home-modes" kicker="Chế độ chơi" title="Chọn chiến trường" />
           <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
             {MODES.map((m) => (
-              <li key={m.scene}>
+              <li key={m.scene} className={m.featured ? "sm:col-span-2 lg:col-span-3" : undefined}>
                 <ModeCard mode={m} locked={locked(m.scene)} needsLogin={!account && ONLINE_RANKED.includes(m.scene)} />
               </li>
             ))}
           </ul>
         </section>
 
+        {UPCOMING.length > 0 && (
         <section aria-labelledby="home-soon">
           <SectionHeading id="home-soon" kicker="Sắp ra mắt" title="Đang dựng" />
           <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
             {UPCOMING.map((u) => (
               <li key={u.id}>
-                <UpcomingCard
-                  mode={
-                    u.id === "tam-tuong-ky" && towerFeatures.tamTuongKy
-                      ? { ...u, scene: "TAM_TUONG_KY" }
-                      : u.id === "vien-chinh" && towerFeatures.expedition
-                        ? { ...u, scene: "EXPEDITION" }
-                        : u
-                  }
-                />
+                <UpcomingCard mode={u} />
               </li>
             ))}
           </ul>
         </section>
+        )}
 
         <section aria-labelledby="home-more">
           <SectionHeading id="home-more" kicker="Tiện ích" title="Quân vụ" />
-          <ul className="mt-5 grid gap-3 sm:grid-cols-3">
+          <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {UTILITIES.map((u) => (
               <li key={u.scene}>
                 <SceneLink scene={u.scene} className="home-utility atlas-frame flex min-h-14 items-center gap-3 px-4 font-serif font-semibold">
@@ -196,13 +198,13 @@ function SectionHeading({ id, kicker, title }: { id: string; kicker: string; tit
 function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; needsLogin: boolean }) {
   const body = (
     <>
-      <div className="relative aspect-[5/2] overflow-hidden rounded-t-[0.65rem] sm:aspect-[16/9] lg:aspect-[2/1]">
+      <div className={`relative aspect-[5/2] overflow-hidden rounded-t-[0.65rem] sm:aspect-[16/9] ${mode.featured ? "lg:aspect-[5/1]" : "lg:aspect-[2/1]"}`}>
         <Image
-          src={`/art/home/${mode.art}.webp`}
+          src={mode.art ? `/art/home/${mode.art}.webp` : "/art/campaign/rail-ink.webp"}
           alt=""
           fill
-          sizes="(min-width: 1024px) 460px, (min-width: 640px) 50vw, 100vw"
-          className={`object-cover transition duration-300 motion-reduce:transition-none ${locked ? "grayscale-[85%] brightness-50" : "group-hover:scale-[1.03]"}`}
+          sizes={mode.featured ? "(min-width: 1024px) 1280px, 100vw" : "(min-width: 1024px) 420px, (min-width: 640px) 50vw, 100vw"}
+          className={`object-cover transition duration-300 motion-reduce:transition-none ${mode.art ? "" : "object-bottom opacity-70 sepia-[.4]"} ${locked ? "grayscale-[85%] brightness-50" : "group-hover:scale-[1.03]"}`}
         />
         <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#1d140d] via-[#1d140d]/25 to-transparent" />
         {mode.kicker && (
@@ -223,7 +225,7 @@ function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; n
             </span>
           ) : (
             <>
-              <span className="text-[var(--atlas-muted)]">{needsLogin ? "Cần đăng nhập" : "Đang mở"}</span>
+              <span className="text-[var(--atlas-muted)]">{needsLogin ? "Cần đăng nhập" : (mode.note ?? "Đang mở")}</span>
               <span className="home-enter flex items-center gap-1 font-serif font-semibold">
                 Vào <span aria-hidden>›</span>
               </span>
