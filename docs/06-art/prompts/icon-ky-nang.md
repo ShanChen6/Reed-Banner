@@ -8,7 +8,7 @@ Prompt ráp sẵn để tạo ảnh cho mọi kỹ năng còn vẽ bằng SVG (`
 ## 1. Cách dùng
 
 - Mỗi khối là một hình, dán nguyên vào công cụ tạo ảnh (Copilot, ChatGPT…). Nên **đính kèm 2–3 ảnh trong `public/art/skills/`** làm ảnh tham chiếu phong cách (ví dụ `thachGiap.webp`, `hanBangTien.webp`, `kimAnPhaThien.webp`); khối nào có ghi "Ảnh tham chiếu phong cách" thì đính kèm thêm đúng ảnh đó vì chủ đề gần nhau.
-- Tạo ở 1024×1024 trên nền trơn **xanh lá `#00b140`**; hệ Mộc, Phong và nghề Y sư, Xạ thủ dùng **hồng `#ff00ff`** vì vật có màu xanh. Gửi Claude file PNG đặt tên đúng mã trong khối (ví dụ `role_tramKich.png`). Claude xóa nền, xuất `public/art/skills/<mã>.webp` 128 px như 42 ảnh hiện có và thêm mã vào `SKILL_ART`.
+- Tạo ở 1024×1024 trên nền trơn **xanh lá `#00b140`**; hệ Mộc, Phong và nghề Y sư, Xạ thủ dùng **hồng `#ff00ff`** vì vật có màu xanh. Gửi Claude file PNG đặt tên đúng mã trong khối (ví dụ `role_tramKich.png`; quy ước tên ở [Hình ảnh, mục 2.8](../art-bible.md)). Claude xóa nền, xuất `public/art/skills/<mã>.webp` 128 px như 42 ảnh hiện có và thêm mã vào `SKILL_ART`.
 - Khung ô, viền màu hệ và hào quang tuyệt chiêu do code vẽ (`SkillArtIcon`), nên prompt cấm khung, chữ và nền ô.
 - Tên chiêu là của Cờ Lau; prompt chỉ tả hình, không đưa tên chiêu vào ảnh. Giữ clean-room: không lấy hình hay tên từ game tham khảo ([Tổng quan](../../00-overview/tong-quan.md)).
 

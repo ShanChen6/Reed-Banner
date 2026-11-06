@@ -504,7 +504,7 @@ const NODE_ART: ReadonlySet<NodeId> = new Set([
 
 /**
  * Tranh của yếu tố, nếu có. Không có tranh riêng thì tri thức sơ học và node vai trò (tri thức nghề nhuộm hệ) dùng tranh
- * của nghề ở public/art/tam-tuong-ky/nghe/<nghề>.webp.
+ * của nghề ở public/art/tam-tuong-ky/tri-thuc-nghe/<nghề>.webp.
  */
 const SKILL_NODE_PREFIX = "know.skill.";
 
@@ -516,7 +516,7 @@ function nodeArt(node: CatalogNode): string | undefined {
     if (file) return `/art/skills/${file}.webp`;
   }
   const profession = node.professionHint ?? (node.role?.hybrid ? undefined : node.role?.profession);
-  return profession && `/art/tam-tuong-ky/nghe/${profession}.webp`;
+  return profession && `/art/tam-tuong-ky/tri-thuc-nghe/${profession}.webp`;
 }
 
 function NodeGlyph({ node, className = "size-6" }: { node: CatalogNode; className?: string }) {

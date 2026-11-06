@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { test } from "node:test";
-import { CHARACTER_SKILLS, DBL_ULTIMATES, ELEMENT_SKILLS, ROLE_SKILLS } from "../../src/core";
+import { ALL_PROFESSIONS, CHARACTER_SKILLS, DBL_ULTIMATES, ELEMENT_SKILLS, ROLE_SKILLS } from "../../src/core";
 import { SPECIAL_SKILL_SETS } from "../../src/core/battle/special-skills";
 import { PACK_3 } from "../../src/core/tam-tuong-ky/catalog";
 import { personalSkillArtFile, skillArt } from "../../src/app/game/art/skills";
@@ -61,5 +61,11 @@ test("Tầm Tướng Ký: 56 yếu tố tuyệt chiêu Gói 3 dùng ảnh chiêu
     const file = personalSkillArtFile(n.id.slice("know.skill.".length));
     assert.ok(file, n.id);
     assert.ok(existsSync(`public/art/skills/${file}.webp`), n.id);
+  }
+});
+
+test("Tầm Tướng Ký: đủ tranh tri thức nghề cho 8 nghề ở public/art/tam-tuong-ky/tri-thuc-nghe/", () => {
+  for (const profession of ALL_PROFESSIONS) {
+    assert.ok(existsSync(`public/art/tam-tuong-ky/tri-thuc-nghe/${profession}.webp`), profession);
   }
 });
