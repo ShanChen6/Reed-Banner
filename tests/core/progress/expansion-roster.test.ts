@@ -1,16 +1,19 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
-import {EXPANSION_COMPANIONS,EXPANSION_SHOP_COMPANIONS,ALL_COMPANIONS,companionById,buildCompanion,autoProgress,characterSkills,chasePassives,COMBO_PASSIVES,CHASE_PASSIVES,scaleSkill,newProfile,parseProfile,parseInventory,isGearItem,loadoutOf,withGear,profileTeam,applyProfileAction,NEW_PROGRESS,mainCharacter,type CharacterProgress,type GearItem} from '../../../src/core';
+import {LEGACY_IDS,EXPANSION_COMPANIONS,EXPANSION_SHOP_COMPANIONS,ALL_COMPANIONS,companionById,buildCompanion,autoProgress,characterSkills,chasePassives,COMBO_PASSIVES,CHASE_PASSIVES,scaleSkill,newProfile,parseProfile,parseInventory,isGearItem,loadoutOf,withGear,profileTeam,applyProfileAction,NEW_PROGRESS,mainCharacter,type CharacterProgress,type GearItem} from '../../../src/core';
+
+/** 14 bị động riêng của Xạ thủ/Sát thủ mở rộng (mã cũ rb0xx_…, nay theo tên). */
+const UNIQUE_PASSIVES=new Set(Object.values(LEGACY_IDS).filter(id=>id in CHASE_PASSIVES));
 
 test('14 new registry entries have exact base stats, slots, P1+P2+P3+P4 and no second element chase',()=>{
- assert.equal(EXPANSION_COMPANIONS.length,14);assert.equal(new Set(EXPANSION_COMPANIONS.map(f=>f.id)).size,14);
+ assert.equal(EXPANSION_COMPANIONS.length,14);assert.equal(UNIQUE_PASSIVES.size,14);assert.equal(new Set(EXPANSION_COMPANIONS.map(f=>f.id)).size,14);
  for(const f of EXPANSION_COMPANIONS){
   assert.deepEqual(companionById(f.id),f);
   const marksman=f.profession==='xaThu';
   assert.deepEqual([f.maxHp,f.atk,f.def],marksman?[475,55,9]:[450,58,8]);
   assert.equal(f.comboPassive,marksman?'pursuit':'resonance');assert.equal(COMBO_PASSIVES[f.comboPassive!].value,.2);
   const chase=chasePassives(f);assert.equal(chase.length,3);assert.equal(chase[0],marksman?'marksmanPrepared':'assassinPrepared');
-  assert.equal(chase[1],`${f.element}1`);assert.ok(chase[2]!.startsWith('rb'));chase.forEach(id=>assert.ok(CHASE_PASSIVES[id]));
+  assert.equal(chase[1],`${f.element}1`);assert.ok(UNIQUE_PASSIVES.has(chase[2]!),chase[2]);chase.forEach(id=>assert.ok(CHASE_PASSIVES[id]));
   const skills=characterSkills(f.profession,f.element,f.id);assert.deepEqual(skills.map(s=>s.slot),[1,2,3,4,5,6]);
   assert.equal(skills[3]!.character,f.id);assert.equal(skills[3]!.ultimate,true);
   for(const level of [1,10,20,30]){

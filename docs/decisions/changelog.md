@@ -2,6 +2,9 @@
 
 ## 06/11/2026
 
+**Đổi mã kỹ năng và bị động Xạ thủ/Sát thủ mở rộng**
+- Shan cho đổi 28 mã dạng `rb0xx_…` (14 tuyệt chiêu ô 4, 14 bị động riêng của RB-062..075) sang tên chiêu/bị động, ví dụ `rb070_ultimate` → `docAnhTiemCham`, `rb070_passive` → `lamAnhTiepNhip`; ảnh trong `public/art/skills/`, `public/art/passives/` đổi tên theo. Không đổi chỉ số hay hiệu ứng. Dữ liệu lưu trước ngày đổi (trận đang chơi, đội phòng thủ và đối thủ Đấu trường, hồ sơ) được chuyển sang mã mới khi server đọc; bảng đổi ở `src/core/battle/legacy-ids.ts`.
+
 **Bản 2 UI/UX: danh sách việc (DRAFT, chưa triển khai)**
 - Shan đưa danh sách sau khi chơi: Khai Lộ thêm khung thẻ; Trận Đồ dùng banner riêng cho từng bậc ở Chơi thường, thẻ cao bằng nhau, thêm tab Bảng xếp hạng và tách thưởng hạng thành tab riêng (Shan chọn tách), Bộ sưu tập địa danh có thể vào Thành tựu; bảng xếp hạng làm cả hai: trong từng chế độ và trang thành tích theo mùa; Tháp Thiên Mệnh có chân dung như Tháp Thí Luyện. Xem [lộ trình UI mục 9](../05-ui-ux/implementation/roadmap.md#9-bản-2-sửa-lỗi-và-chỉnh-uiux-06112026).
 - Shan chốt thêm: tách bảng xếp hạng thành trang Công Trạng (thành tích theo mùa, thay "Xếp hạng" ở Trang chủ) và bảng mùa hiện tại trong từng chế độ, không liên kết sang nhau; tab thưởng Trận Đồ tên Ban thưởng; Nhật Lệnh, Bình Loạn không làm bảng xếp hạng; Claude đặt mốc bộ sưu tập 5/15/30 = 200/500/1000 vàng, bấm địa danh để xem lại tranh.
