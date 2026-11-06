@@ -34,6 +34,7 @@ import {
   ONLINE_ERROR_TEXT,
 } from "../battle/online";
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
+import { SeasonBoardPanel } from "../leaderboard/boards";
 import { SceneLink, useScene } from "../SceneContext";
 import {
   survivalRosterPayload,
@@ -273,9 +274,6 @@ export default function SurvivalScreen() {
         ]}
         actions={
           <>
-            <SceneLink scene="LEADERBOARD" params={{ board: "survival" }} className={buttonVariants({ variant: "secondary", className: "min-h-11" })}>
-              Bảng xếp hạng
-            </SceneLink>
             <SceneLink scene="PROFILE" className={buttonVariants({ variant: "secondary", className: "min-h-11" })}>
               Doanh Trại
             </SceneLink>
@@ -284,6 +282,7 @@ export default function SurvivalScreen() {
       />
 
       <RankRewardsPanel mode="survival" />
+      <SeasonBoardPanel board="survival" />
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <OrnateFrame className="flex min-w-0 flex-col gap-4">

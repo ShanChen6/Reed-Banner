@@ -9,6 +9,7 @@ import { expeditionFlag, formationRankedEnabled, tamTuongKyEnabled, tamTuongKyPa
 import type { TamTuongKyDeps, TtkRankedResult, TtkServiceResult } from "./tamTuongKy";
 import { ttkHttpStatus } from "./tamTuongKy";
 import type { FormationDeps } from "./formation";
+import type { HonorsDeps } from "./honors";
 import { accountStore, dailyStore as dailyStoreOf, destinyLeaderboardStore as destinyBoardOf, formationStore, rankRewardStore, seasonStore } from "./store";
 import { dailySource, destinySource, seasonSource, type RankRewardDeps } from "./rankRewards";
 
@@ -119,6 +120,11 @@ export function formationDeps(): FormationDeps {
 }
 
 /** Phụ thuộc của thưởng hạng theo kỳ. Tháp Thiên Mệnh chỉ có nguồn khi cờ Destiny bật. */
+/** Phụ thuộc của trang Công Trạng (V2-06). */
+export function honorsDeps(): HonorsDeps {
+  return { claims: rankRewardStore(), formation: formationStore(), isSignedIn: isSignedInAccount };
+}
+
 export function rankRewardDeps(): RankRewardDeps {
   const features = towerFeatureFlags();
   return {
