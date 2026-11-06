@@ -174,7 +174,7 @@ Trạng thái mục này: **DRAFT**. Shan đưa danh sách ngày 06/11/2026 và 
 | V2-03 | Trận Đồ | Thẻ bậc cao bằng nhau | Chỉ UI |
 | V2-04 | Trận Đồ | Thêm tab Bảng xếp hạng và tab Ban thưởng | Chỉ UI |
 | V2-05 | Trận Đồ, Nhiệm vụ | Đưa Bộ sưu tập địa danh vào Thành tựu | Đổi dữ liệu |
-| V2-06 | Mọi chế độ có xếp hạng | Bảng xếp hạng trong chế độ + trang thành tích theo mùa | UI + API đọc |
+| V2-06 | Trang chủ, chế độ có xếp hạng | Tách: trang Công Trạng (thành tích theo mùa) và bảng xếp hạng mùa hiện tại trong từng chế độ | UI + API đọc |
 | V2-07 | Tháp Thiên Mệnh | Thêm chân dung tướng khi khóa đội | Chỉ UI |
 
 Thứ tự đề xuất: V2-07, V2-01, V2-03 (nhỏ, chỉ UI) → V2-04 → V2-06 → V2-02 (khi có ảnh) → V2-05 (đụng dữ liệu hồ sơ, cần Shan duyệt số thưởng).
@@ -190,7 +190,7 @@ Thứ tự đề xuất: V2-07, V2-01, V2-03 (nhỏ, chỉ UI) → V2-04 → V2-
 - **Hiện tại**: thẻ Hướng dẫn/Thường/Khó/Đại trận dùng `MapCard` với ô che gỗ kín 2/3 thẻ ("Bản đồ chưa lộ"), vì ván thật chọn bản đồ ngẫu nhiên.
 - **Shan chốt**: thay bằng banner riêng cho từng bậc. Shan sẽ gửi 4 ảnh.
 - **Quy ước ảnh** (đề xuất): `public/art/formation/levels/<id>.webp` với id `huong-dan`, `thuong`, `kho`, `dai-tran`; tỉ lệ 2:1 như khung hiện tại, xuất 1280×640 WebP. Chưa có ảnh thì giữ bản đồ mẫu như bây giờ.
-- **Tab Xếp hạng giữ ô che lộ dần**, vì ở đó ô che là tiến độ của kỳ, không chỉ để trang trí (chờ Shan xác nhận).
+- **Tab Xếp hạng giữ nguyên ô che**: ở tab này ô che là tiến độ thật của người chơi trong kỳ (chưa chơi thì che kín, chơi tới đâu lộ tới đó, thắng thì lộ hết kèm tên địa danh), nên chỉ thẻ Chơi thường đổi sang banner. Shan chưa rõ câu hỏi này nên Claude giữ cách trên, đổi được nếu Shan muốn.
 
 ### V2-03 — Trận Đồ: thẻ cao bằng nhau
 
@@ -201,34 +201,43 @@ Thứ tự đề xuất: V2-07, V2-01, V2-03 (nhỏ, chỉ UI) → V2-04 → V2-
 
 - **Hiện tại**: hai tab "Xếp hạng · có thưởng" và "Chơi thường". Dưới mỗi thẻ xếp hạng là "Bảng xếp hạng (n)" gập lại; bảng thưởng theo hạng và thưởng chờ nhận nằm chung trong tab Xếp hạng.
 - **Shan chốt**: thêm tab Bảng xếp hạng cạnh Chơi thường; phần thưởng hạng tách thành tab riêng (Shan chọn phương án 2, không gộp vào bảng xếp hạng).
-- **Bốn tab**: Xếp hạng (chỉ ba thẻ bậc và nút chơi) · Chơi thường · Bảng xếp hạng (chọn bậc Thường/Khó/Đại trận, top của kỳ kèm hạng của mình) · **Ban thưởng** (thưởng chờ nhận và nút Nhận, thang thưởng, bảng thưởng theo hạng). Tên tab thưởng đề xuất "Ban thưởng" (hợp giọng lịch sử); phương án khác: "Phần thưởng", "Quà kỳ".
+- **Bốn tab**: Xếp hạng (chỉ ba thẻ bậc và nút chơi) · Chơi thường · Bảng xếp hạng (chọn bậc Thường/Khó/Đại trận, top của kỳ kèm hạng của mình) · **Ban thưởng** (thưởng chờ nhận và nút Nhận, thang thưởng, bảng thưởng theo hạng). Tên tab thưởng: **Ban thưởng** (Shan chốt 06/11).
 - Khách: tab Bảng xếp hạng và Ban thưởng hiện lời nhắc đăng nhập như tab Xếp hạng hiện nay.
 - Số trên tab: Ban thưởng có chấm đỏ khi còn thưởng chưa nhận.
 
 ### V2-05 — Bộ sưu tập địa danh vào Thành tựu
 
 - **Hiện tại**: bộ sưu tập `n/30` lưu ở trình duyệt (`src/app/game/formation/storage.ts`), mất khi đổi máy; Thành tựu đọc từ hồ sơ trên máy chủ (`src/core/progress/achievements.ts`).
-- **Đề xuất**: lưu bộ sưu tập vào hồ sơ (gộp một lần từ trình duyệt khi đăng nhập), thêm mốc thành tựu (ví dụ 5/15/30 địa danh), lưới địa danh hiển thị trong màn Nhiệm vụ mục Thành tựu; ở Trận Đồ chỉ còn một dòng "Bộ sưu tập: n/30" dẫn sang đó.
-- Đụng dữ liệu hồ sơ nên làm PR riêng, kèm test; mốc và vàng thưởng chờ Shan duyệt.
+- **Đề xuất**: lưu bộ sưu tập vào hồ sơ (gộp một lần từ trình duyệt khi đăng nhập), lưới địa danh hiển thị trong màn Nhiệm vụ mục Thành tựu; ở Trận Đồ chỉ còn một dòng "Bộ sưu tập: n/30" dẫn sang đó.
+- **Xem lại tranh** (Shan yêu cầu 06/11): bấm một địa danh đã có thì mở tranh bản đồ cỡ lớn kèm tên và chú thích; địa danh chưa có vẫn là "? ? ?" và không bấm được.
+- **Mốc thành tựu** (Shan giao Claude đặt, 06/11), cùng thang với thành tựu hiện có trong `achievements.ts` (50–1000 vàng):
 
-### V2-06 — Bảng xếp hạng: trong chế độ và trang theo mùa
+  | Mốc | Tên đề xuất | Vàng |
+  | --- | --- | --- |
+  | 5 địa danh | Du khảo sơn hà | 200 |
+  | 15 địa danh | Thông tỏ địa đồ | 500 |
+  | 30 địa danh | Thu trọn giang sơn | 1000 |
 
-- **Hiện tại**: Trấn Ải, Quần Hùng, Tháp Thiên Mệnh có nút dẫn sang `/game/leaderboard?board=…`; trang đó không có nút quay về chế độ (chỉ có "Chiến trường" trên header hoặc nút Back của trình duyệt).
-- **Shan chốt**: làm cả hai.
-  1. **Trong chế độ**: mỗi chế độ có xếp hạng hiện bảng hiện tại ngay trong màn (tab hoặc khối gập): top 10–20 và hạng của mình. Tách phần hiển thị bảng của `LeaderboardScreen.tsx` thành component dùng chung.
-  2. **Trang Xếp hạng** thành **bảng thành tích theo mùa**: mùa này, mùa trước, mọi thời đại, gom mọi chế độ.
-  3. Mở trang Xếp hạng từ một chế độ thì có nút "← Về <tên chế độ>" (truyền chế độ nguồn qua tham số URL); header giữ nguyên.
-- Chế độ áp dụng: Trấn Ải, Quần Hùng, Tháp Thiên Mệnh, Trận Đồ (V2-04), Tầm Tướng Ký xếp hạng; Nhật Lệnh và Bình Loạn chờ Shan chọn.
+- Đụng dữ liệu hồ sơ nên làm PR riêng, kèm test.
+
+### V2-06 — Tách trang Công Trạng và bảng xếp hạng trong chế độ
+
+- **Hiện tại**: Trang chủ có tiện ích "Xếp hạng" mở `/game/leaderboard` (bảng mùa tuần và mọi thời đại của Trấn Ải, Quần Hùng, Tháp Thiên Mệnh, Tầm Tướng Ký). Trấn Ải, Quần Hùng, Tháp Thiên Mệnh có nút dẫn sang trang đó; trang không có nút quay về chế độ.
+- **Shan chốt 06/11**: tách làm hai, không còn liên kết giữa hai bên.
+  1. **Trang Công Trạng** (thay "Xếp hạng" ở Trang chủ): thành tích theo mùa của người chơi, gom mọi chế độ có xếp hạng (mùa này, các mùa trước, hạng và thưởng đã nhận). Tên đề xuất **Công Trạng**; phương án khác "Chiến Công", "Bảng Vàng". Route giữ `/game/leaderboard` hoặc đổi `/game/honors` kèm chuyển hướng 308.
+  2. **Bảng xếp hạng trong chế độ**: mỗi chế độ hiện bảng **mùa hiện tại** ngay trong màn (top và hạng của mình), không có nút dẫn sang Công Trạng. Bỏ các nút "Bảng xếp hạng" đang dẫn sang trang riêng ở Trấn Ải, Quần Hùng, Tháp Thiên Mệnh. Phần hiển thị bảng tách từ `LeaderboardScreen.tsx` thành component dùng chung.
+- Chế độ có bảng trong màn: Trấn Ải, Quần Hùng, Tháp Thiên Mệnh, Trận Đồ (tab ở V2-04), Tầm Tướng Ký xếp hạng. **Nhật Lệnh và Bình Loạn không làm bảng xếp hạng** (Shan chốt 06/11); bảng điểm trong ngày của Nhật Lệnh đang có giữ nguyên.
 
 ### V2-07 — Tháp Thiên Mệnh: chân dung khi khóa đội
 
 - **Hiện tại** (`src/app/game/destiny/DestinyScreen.tsx`): thẻ chọn tướng chỉ có tên và "Hệ · Nghề" trên nền giấy dó; Tháp Thí Luyện đã dùng `Portrait` (`TrialView.tsx`).
 - **Đề xuất (Claude khuyên làm)**: thêm `Portrait` cỡ 48px bên trái tên, giữ kiểu đang chọn giấy dó; lưới 3 cột trên máy tính, 2 cột trên điện thoại. Không đổi luật khóa đội.
 
-### Câu hỏi cho Shan
+### Shan chốt (06/11/2026)
 
-1. Tên tab thưởng ở Trận Đồ: "Ban thưởng", "Phần thưởng" hay "Quà kỳ"?
-2. Tab Xếp hạng của Trận Đồ giữ ô che lộ dần theo tiến độ, chỉ Chơi thường đổi sang banner, đúng ý anh không?
-3. Mốc thành tựu bộ sưu tập địa danh (đề xuất 5/15/30) và vàng mỗi mốc?
-4. Nhật Lệnh và Bình Loạn có cần bảng xếp hạng trong màn không?
+1. Tách bảng xếp hạng: trang Công Trạng (thành tích theo mùa, thay "Xếp hạng" ở Trang chủ) và bảng mùa hiện tại trong từng chế độ, không liên kết sang nhau (V2-06).
+2. Tab thưởng Trận Đồ tên **Ban thưởng** (V2-04).
+3. Bộ sưu tập địa danh: Claude đặt mốc 5/15/30 = 200/500/1000 vàng; bấm địa danh đã có để xem lại tranh (V2-05).
+4. Nhật Lệnh và Bình Loạn không làm bảng xếp hạng.
 
+Còn chờ: tên trang Công Trạng (đề xuất), ô che ở tab Xếp hạng Trận Đồ giữ nguyên (Claude giữ, V2-02), 4 banner bậc Trận Đồ.

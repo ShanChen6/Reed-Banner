@@ -149,7 +149,8 @@
 
 ## Giao diện bản 2 (06/11/2026)
 
-- TODO: Tên tab thưởng ở Trận Đồ ("Ban thưởng" đề xuất), tab Xếp hạng có giữ ô che lộ dần không, mốc và vàng thành tựu bộ sưu tập địa danh, Nhật Lệnh/Bình Loạn có bảng xếp hạng trong màn không. → [Lộ trình UI mục 9](../05-ui-ux/implementation/roadmap.md#câu-hỏi-cho-shan)
+- [x] Tên tab thưởng Trận Đồ (Ban thưởng), mốc bộ sưu tập (5/15/30 = 200/500/1000 vàng, Claude đặt), Nhật Lệnh/Bình Loạn không làm bảng xếp hạng (Shan chốt 06/11). → [Lộ trình UI mục 9](../05-ui-ux/implementation/roadmap.md#shan-chốt-06112026)
+- TODO: Tên trang thành tích theo mùa (đề xuất "Công Trạng"). → [V2-06](../05-ui-ux/implementation/roadmap.md#v2-06--tách-trang-công-trạng-và-bảng-xếp-hạng-trong-chế-độ)
 - TODO: Shan gửi 4 banner bậc Trận Đồ (Hướng dẫn, Thường, Khó, Đại trận). → [V2-02](../05-ui-ux/implementation/roadmap.md#v2-02--trận-đồ-banner-cho-từng-bậc-ở-chơi-thường)
 
 ## Đinh Ngọc và Vũ Phong — chạy trong trận
