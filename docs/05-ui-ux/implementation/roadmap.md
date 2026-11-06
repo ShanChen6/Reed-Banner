@@ -170,7 +170,7 @@ Trạng thái mục này: **DRAFT**. Shan đưa danh sách ngày 06/11/2026 và 
 | Bước | Màn | Việc | Kiểu |
 | --- | --- | --- | --- |
 | V2-01 | Khai Lộ | Gói vùng chơi vào khung thẻ | Chỉ UI |
-| V2-02 | Trận Đồ | Tab Chơi thường dùng banner riêng cho từng bậc | Chờ ảnh |
+| V2-02 | Trận Đồ | Thẻ bậc dùng ảnh thumbnail cố định (cả Xếp hạng và Chơi thường) | Chờ ảnh |
 | V2-03 | Trận Đồ | Thẻ bậc cao bằng nhau | Chỉ UI |
 | V2-04 | Trận Đồ | Thêm tab Bảng xếp hạng và tab Ban thưởng | Chỉ UI |
 | V2-05 | Trận Đồ, Nhiệm vụ | Đưa Bộ sưu tập địa danh vào Thành tựu | Đổi dữ liệu |
@@ -185,12 +185,12 @@ Thứ tự đề xuất: V2-07, V2-01, V2-03 (nhỏ, chỉ UI) → V2-04 → V2-
 - **Đề xuất**: thêm `ModeBanner` như các chế độ khác (tranh tạm tới khi có `public/art/home/khai-lo.webp`); gói chọn chế độ + chỉ số + bàn cờ + dòng gợi ý vào một `OrnateFrame`; nút "Ván mới" đưa vào góc khung đó.
 - **Nghiệm thu**: hai cột cùng kiểu khung, mép trên thẳng hàng; điện thoại không phải cuộn ngang; không đổi luật chơi hay lưu trữ.
 
-### V2-02 — Trận Đồ: banner cho từng bậc ở Chơi thường
+### V2-02 — Trận Đồ: ảnh thumbnail cố định cho từng bậc
 
-- **Hiện tại**: thẻ Hướng dẫn/Thường/Khó/Đại trận dùng `MapCard` với ô che gỗ kín 2/3 thẻ ("Bản đồ chưa lộ"), vì ván thật chọn bản đồ ngẫu nhiên.
-- **Shan chốt**: thay bằng banner riêng cho từng bậc. Shan sẽ gửi 4 ảnh.
+- **Hiện tại**: thẻ bậc ở cả hai tab dùng `MapCard`: ô che gỗ phủ kín ("Bản đồ chưa lộ") và lộ dần theo tiến độ, thắng thì lộ hết kèm tên địa danh.
+- **Shan chốt (06/11)**: mọi thẻ bậc, cả tab Xếp hạng lẫn Chơi thường, dùng ảnh thumbnail cố định của bậc đó; bỏ ô che lộ dần trên thẻ. Shan sẽ gửi 4 ảnh. Tiến độ và địa danh của kỳ vẫn xem trong ván và ở Bộ sưu tập.
 - **Quy ước ảnh** (đề xuất): `public/art/formation/levels/<id>.webp` với id `huong-dan`, `thuong`, `kho`, `dai-tran`; tỉ lệ 2:1 như khung hiện tại, xuất 1280×640 WebP. Chưa có ảnh thì giữ bản đồ mẫu như bây giờ.
-- **Tab Xếp hạng giữ nguyên ô che**: ở tab này ô che là tiến độ thật của người chơi trong kỳ (chưa chơi thì che kín, chơi tới đâu lộ tới đó, thắng thì lộ hết kèm tên địa danh), nên chỉ thẻ Chơi thường đổi sang banner. Shan chưa rõ câu hỏi này nên Claude giữ cách trên, đổi được nếu Shan muốn.
+- `MapCard` chỉ còn dùng cho khung kết quả cuối ván (hiện cả bản đồ).
 
 ### V2-03 — Trận Đồ: thẻ cao bằng nhau
 
@@ -224,7 +224,7 @@ Thứ tự đề xuất: V2-07, V2-01, V2-03 (nhỏ, chỉ UI) → V2-04 → V2-
 
 - **Hiện tại**: Trang chủ có tiện ích "Xếp hạng" mở `/game/leaderboard` (bảng mùa tuần và mọi thời đại của Trấn Ải, Quần Hùng, Tháp Thiên Mệnh, Tầm Tướng Ký). Trấn Ải, Quần Hùng, Tháp Thiên Mệnh có nút dẫn sang trang đó; trang không có nút quay về chế độ.
 - **Shan chốt 06/11**: tách làm hai, không còn liên kết giữa hai bên.
-  1. **Trang Công Trạng** (thay "Xếp hạng" ở Trang chủ): thành tích theo mùa của người chơi, gom mọi chế độ có xếp hạng (mùa này, các mùa trước, hạng và thưởng đã nhận). Tên đề xuất **Công Trạng**; phương án khác "Chiến Công", "Bảng Vàng". Route giữ `/game/leaderboard` hoặc đổi `/game/honors` kèm chuyển hướng 308.
+  1. **Trang Công Trạng** (thay "Xếp hạng" ở Trang chủ): thành tích theo mùa của người chơi, gom mọi chế độ có xếp hạng (mùa này, các mùa trước, hạng và thưởng đã nhận). Tên **Công Trạng** (Shan chốt 06/11). Route giữ `/game/leaderboard` hoặc đổi `/game/honors` kèm chuyển hướng 308.
   2. **Bảng xếp hạng trong chế độ**: mỗi chế độ hiện bảng **mùa hiện tại** ngay trong màn (top và hạng của mình), không có nút dẫn sang Công Trạng. Bỏ các nút "Bảng xếp hạng" đang dẫn sang trang riêng ở Trấn Ải, Quần Hùng, Tháp Thiên Mệnh. Phần hiển thị bảng tách từ `LeaderboardScreen.tsx` thành component dùng chung.
 - Chế độ có bảng trong màn: Trấn Ải, Quần Hùng, Tháp Thiên Mệnh, Trận Đồ (tab ở V2-04), Tầm Tướng Ký xếp hạng. **Nhật Lệnh và Bình Loạn không làm bảng xếp hạng** (Shan chốt 06/11); bảng điểm trong ngày của Nhật Lệnh đang có giữ nguyên.
 
@@ -240,4 +240,7 @@ Thứ tự đề xuất: V2-07, V2-01, V2-03 (nhỏ, chỉ UI) → V2-04 → V2-
 3. Bộ sưu tập địa danh: Claude đặt mốc 5/15/30 = 200/500/1000 vàng; bấm địa danh đã có để xem lại tranh (V2-05).
 4. Nhật Lệnh và Bình Loạn không làm bảng xếp hạng.
 
-Còn chờ: tên trang Công Trạng (đề xuất), ô che ở tab Xếp hạng Trận Đồ giữ nguyên (Claude giữ, V2-02), 4 banner bậc Trận Đồ.
+5. Tên trang thành tích theo mùa: **Công Trạng**.
+6. Thẻ bậc Trận Đồ ở cả hai tab dùng ảnh thumbnail cố định, bỏ ô che lộ dần (V2-02).
+
+Còn chờ: 4 ảnh thumbnail bậc Trận Đồ.

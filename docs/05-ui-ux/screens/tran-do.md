@@ -71,5 +71,5 @@ Cấu trúc `ModeScreen.tsx`. Hai tab khi xếp hạng đang mở (**Xếp hạn
 
 ## 8. Góp ý bản 2 (06/11/2026)
 
-Shan góp ý sau khi chơi: banner riêng cho từng bậc ở Chơi thường, thẻ cao bằng nhau, thêm tab Bảng xếp hạng và tab thưởng riêng, đưa Bộ sưu tập địa danh vào Thành tựu. Chi tiết và thứ tự làm ở [lộ trình UI, mục 9 (V2-02 … V2-05)](../implementation/roadmap.md#9-bản-2-sửa-lỗi-và-chỉnh-uiux-06112026). Chưa triển khai.
+Shan góp ý sau khi chơi: ảnh thumbnail cố định cho từng bậc ở cả hai tab, thẻ cao bằng nhau, thêm tab Bảng xếp hạng và tab thưởng riêng, đưa Bộ sưu tập địa danh vào Thành tựu. Chi tiết và thứ tự làm ở [lộ trình UI, mục 9 (V2-02 … V2-05)](../implementation/roadmap.md#9-bản-2-sửa-lỗi-và-chỉnh-uiux-06112026). Chưa triển khai.
 
