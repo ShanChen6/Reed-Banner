@@ -90,8 +90,8 @@ export default function Barracks({
   };
 
   return (
-    <main className="barracks ui-screen px-2 pt-3 pb-4 sm:px-4">
-      <div className="mx-auto flex max-w-[96rem] flex-col gap-3">
+    <main className="barracks ui-mode-screen">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <div className="grid min-w-0 flex-[1_1_22rem] grid-cols-3 gap-1.5 sm:max-w-[34rem]" role="tablist" aria-label="Mục Doanh Trại">
             {TABS.map((t) => (

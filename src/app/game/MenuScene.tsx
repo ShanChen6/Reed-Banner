@@ -87,8 +87,8 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
   const locked = (scene: Scene) => (scene === "TRIAL" ? !towerFeatures.trial : scene === "DESTINY" ? !towerFeatures.destiny : false);
 
   return (
-    <main className="campaign-atlas demo-bg flex flex-1 flex-col bg-[#17110e] pb-10 text-[var(--atlas-ink-on-wood)]">
-      <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-8 px-4 pt-4 sm:px-6 lg:gap-10 lg:px-8 lg:pt-6">
+    <main className="campaign-atlas ui-mode-screen flex flex-col">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 lg:gap-10">
         <section aria-labelledby="home-title" className="home-hero atlas-frame relative isolate overflow-hidden">
           <Image
             src={HERO_ART}

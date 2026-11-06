@@ -6,10 +6,13 @@ import { OrnateFrame } from "./OrnateFrame";
 // Khung màn chế độ dùng chung (đồng bộ UI 05/11/2026, docs/05-ui-ux/design-system/theme.md).
 // Header chung đã hiện tên màn, nên banner chỉ giữ tranh, nhãn nhỏ, một câu mô tả và vài số liệu của chế độ.
 
-export function ModeScreen({ children, className, wide, label }: { children: ReactNode; className?: string; wide?: boolean; label?: string }) {
+/** Mọi màn chế độ dùng một bề rộng nội dung duy nhất (MODE_CONTENT_WIDTH) để lề trái/phải thẳng hàng khi chuyển màn. */
+export const MODE_CONTENT_WIDTH = "max-w-7xl";
+
+export function ModeScreen({ children, className, label }: { children: ReactNode; className?: string; /** @deprecated Bỏ từ 06/11/2026: mọi màn cùng một bề rộng; giữ để màn cũ không lỗi biên dịch. */ wide?: boolean; label?: string }) {
   return (
     <main aria-label={label} className={cn("ui-mode-screen", className)}>
-      <div className={cn("mx-auto flex w-full flex-col gap-4 sm:gap-5", wide ? "max-w-[1600px]" : "max-w-7xl")}>{children}</div>
+      <div className={cn("mx-auto flex w-full flex-col gap-4 sm:gap-5", MODE_CONTENT_WIDTH)}>{children}</div>
     </main>
   );
 }

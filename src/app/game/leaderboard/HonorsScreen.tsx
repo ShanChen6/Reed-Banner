@@ -61,7 +61,7 @@ export default function HonorsScreen({ destinyEnabled = true, tamTuongKyRanked =
   const honors = useJson<{ signedIn?: boolean; items?: HonorItem[]; error?: string }>("/api/honors");
   return (
     <ModeScreen label="Công Trạng">
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
+      <div className="flex w-full flex-col gap-4">
         <OrnateFrame className="flex flex-col gap-3">
           <SectionTitle description="Hạng hiện tại của bạn ở từng chế độ có xếp hạng. Bảng đầy đủ xem ngay trong màn của chế độ đó.">Mùa này</SectionTitle>
           <ul className="grid gap-2 sm:grid-cols-2">

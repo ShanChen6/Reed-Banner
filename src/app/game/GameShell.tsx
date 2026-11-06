@@ -166,7 +166,7 @@ function SceneView({
 
 function DisabledTowerMode({ name }: { name: string }) {
   return (
-    <main className="flex flex-1 items-center justify-center bg-[#17110e] px-4 text-foreground">
+    <main className="ui-mode-screen flex items-center justify-center">
       <section role="status" className="max-w-md rounded-xl border border-amber-600/40 bg-[#271d18] p-6 text-center">
         <h1 className="font-serif text-2xl font-bold text-amber-100">{name}</h1>
         <p className="mt-2 text-foreground-secondary">Chế độ này chưa mở. Tiến trình và trận đang dở được giữ nguyên cho đến khi mở lại.</p>

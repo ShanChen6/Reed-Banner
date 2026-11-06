@@ -567,8 +567,6 @@ function Stats({ state, best, left, msLeft }: { state: KlState; best: number; le
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <ModeScreen label="Khai Lộ">
-      <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-6">{children}</div>
-    </ModeScreen>
+    <ModeScreen label="Khai Lộ">{children}</ModeScreen>
   );
 }

@@ -332,7 +332,7 @@ export default function WorldMap({
     <figure className="campaign-map atlas-frame flex flex-col self-start overflow-hidden xl:h-full xl:self-stretch">
       <AtlasCorners />
       <RotateHint />
-      <div className="map-viewport relative">
+      <div className="map-viewport relative xl:my-auto">
         <svg
           {...svgProps}
           className="block h-auto w-full select-none"

@@ -44,6 +44,7 @@ Shan duyệt 05/11/2026 sau đợt kiểm kê 20 màn. Chuẩn lấy từ Chiế
 | Nút chính | Sơn mài đỏ viền vàng; mỗi màn tối đa một | `Button` (mặc định `primary`) |
 | Nút phụ | Gỗ sẫm viền đồng; nút chữ màu vàng cho thao tác nhỏ | `Button variant="secondary" \| "ghost"` |
 | Áp dụng ở sảnh trận | Sảnh Giao Tranh/Thao Luyện: khung và hàng chọn là gỗ tối; chip đang chọn và khối luật chi tiết (Bộ 6 chủ động, bị động) là giấy dó chữ mực. Màu 7 hệ chỉ ở icon hệ, không viền phát sáng quanh ô chọn | `SetupLobby`, `SkillDetails paper` |
+| Bề rộng và lề | Mọi màn chế độ cùng một cột nội dung 1280px (`MODE_CONTENT_WIDTH`, `max-w-7xl`), lề 16px điện thoại / 24px máy tính, nền `.ui-mode-screen`. Không tự đặt `max-w-[…px]`, `px-*` hay nền `#hex`/`demo-bg` ở màn mới; prop `wide` của `ModeScreen` đã bỏ tác dụng (06/11/2026) | `ModeScreen`, `.ui-mode-screen` |
 | Lựa chọn | Tab, chip, độ khó, ô chọn: chưa chọn gỗ viền đồng, đang chọn giấy dó chữ mực | `Tabs`, `ChoiceChip`, `choiceVariants()` |
 | Màu có nghĩa | Vàng = tiền, phần thưởng; đỏ = hành động, máu; ngọc lục `--jade` = xong, đủ điều kiện; tro `--ash` = khóa. Màu 7 hệ chỉ dùng cho hệ | Không dùng xanh lá, tím, cam tùy màn |
 | Chữ | Noto Serif; `text-heading` / `text-title` (20px) / nội dung 15–16px / `text-caption` (13px, nhỏ nhất); nhãn viết hoa `text-kicker` | Không dùng chữ 10–12px |

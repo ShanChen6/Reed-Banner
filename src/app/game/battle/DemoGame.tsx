@@ -1862,7 +1862,7 @@ export default function DemoGame({
       ref={rootRef}
       className={`${palette} ui-mode-screen`}
     >
-      <OrnateFrame level="raised" flush className="mx-auto flex w-full max-w-6xl flex-col gap-3 p-3 sm:p-5">
+      <OrnateFrame level="raised" flush className="mx-auto flex w-full max-w-7xl flex-col gap-3 p-3 sm:p-5">
         <header className="flex flex-wrap items-center justify-between gap-2 border-b border-frame-line-soft pb-2">
           {/* Tên chế độ đã ở header chung; giữ h1 cho trình đọc màn hình. */}
           <h1 className="sr-only">
