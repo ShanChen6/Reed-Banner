@@ -20,6 +20,7 @@ import {
   libraryNodes,
   noticeFor,
   pickInto,
+  recipeBook,
   swapSlots,
 } from "../../src/app/game/tam-tuong-ky/altar";
 import TamTuongKyScreen from "../../src/app/game/tam-tuong-ky/TamTuongKyScreen";
@@ -156,6 +157,23 @@ describe("Tướng Lục", () => {
     assert.ok(e && e.found);
     assert.deepEqual([e.info.profession, e.info.element, e.tier], ["tuongSi", "hoa", "lichSu"]);
     assert.deepEqual(e.symbols, ["Cờ lau"]);
+  });
+});
+
+describe("Sổ công thức của yếu tố (thẻ dưới hai ô)", () => {
+  it("chỉ hiện công thức đã tự ghép ra; còn công thức chưa tìm thì báo, không nói cặp nào", () => {
+    const fresh = initialDiscovery(catalog);
+    const before = recipeBook(catalog, fresh, "elt.moc");
+    assert.deepEqual([before.madeFrom, before.usedIn], [[], []]);
+    assert.equal(before.open, true);
+    const all = discoverAll();
+    const reed = catalog.pack.recipes.find((r) => r.result === "mat.reed")!;
+    const book = recipeBook(catalog, all, "mat.reed");
+    assert.deepEqual(book.madeFrom, [[reed.first, reed.second]]);
+    const used = catalog.pack.recipes.filter((r) => all.discoveredRecipeIds.includes(r.id) && (r.first === "mat.reed" || r.second === "mat.reed"));
+    assert.ok(used.length > 0);
+    assert.deepEqual(book.usedIn, used.map((r) => ({ first: r.first, second: r.second, result: r.result })));
+    assert.equal(book.open, false);
   });
 });
 

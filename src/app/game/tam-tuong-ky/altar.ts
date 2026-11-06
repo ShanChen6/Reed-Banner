@@ -133,6 +133,35 @@ export function altarResult(outcome: CombineSummary, seq: number, from: readonly
   }
 }
 
+/**
+ * Sổ công thức của một yếu tố, chỉ từ những công thức người chơi **đã tự ghép ra** (không lộ công thức chưa tìm).
+ * `open`: yếu tố còn là nguyên liệu của công thức chưa tìm (cùng dấu chấm vàng ở Vạn Vật Lục, không nói cặp nào).
+ */
+export interface RecipeBook {
+  readonly madeFrom: readonly (readonly [NodeId, NodeId])[];
+  readonly usedIn: readonly { readonly first: NodeId; readonly second: NodeId; readonly result: NodeId }[];
+  readonly open: boolean;
+}
+
+export function recipeBook(catalog: Catalog, state: DiscoveryState, id: NodeId): RecipeBook {
+  const found = new Set(state.discoveredRecipeIds);
+  const known = catalog.pack.recipes.filter((r) => found.has(r.id));
+  const open = catalog.pack.recipes.some((r) => !found.has(r.id) && (r.first === id || r.second === id));
+  return {
+    madeFrom: known.filter((r) => r.result === id).map((r) => [r.first, r.second] as const),
+    usedIn: known.filter((r) => r.first === id || r.second === id).map((r) => ({ first: r.first, second: r.second, result: r.result })),
+    open,
+  };
+}
+
+/** Một dòng lịch sử ghép (5 dòng gần nhất): bấm để đặt lại đúng cặp vào hai ô. `result` null khi không ra gì. */
+export interface HistoryEntry {
+  readonly first: NodeId;
+  readonly second: NodeId;
+  readonly result: NodeId | null;
+  readonly text: string;
+}
+
 export function hintText(hint: Hint | null): string {
   if (!hint) return "Không còn công thức nào ghép được ngay từ những gì đã có.";
   const group = HINT_GROUP_NAMES[hint.hintGroup] ?? hint.hintGroup;
