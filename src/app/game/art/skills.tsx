@@ -550,23 +550,17 @@ const SKILL_ART = new Set([
   "dn_kimQuangPhaTran", "dn_thuyAnhXuyenLuu", "dn_hoaBoDoatMenh", "dn_vanTuongQuyNhat", "dn_thoAnTranTam", "dn_loiVanKhaiLo",
   // Nhân vật đặc biệt Trần Vũ Phong: đủ 6 ô (ô 4 thay ảnh Phong Hành Vạn Lý dùng tạm trước đó).
   "vp_phongKhoiVanDong", "vp_muaGiangYLoan", "vp_lucDiepDanLo", "vp_vanDuThienLy", "vp_diaMachHoDoi", "vp_cuongPhongDoiCuc",
-  // Chiêu ô 4 riêng Shan vẽ (06/11/2026), thay ảnh hệ dùng lại: Mai Thanh, Hồng Đan, Doãn Nham, Trần Cương, Đàm Thảo.
+  // Chiêu ô 4 riêng Shan vẽ (06/11/2026), thay ảnh chiêu hệ cũ từng mượn tạm; từ nay mọi chiêu ô 4 đều có ảnh riêng.
+  // Tướng thường Mai Thanh, Hồng Đan, Doãn Nham, Trần Cương, Đàm Thảo, Mạc Vân, Lam Giang Phi Diệp, Xích Diệm Luân,
+  // Lôi Minh Xạ, Tật Phong Lăng, Bạch Phong Đao, Kha Sơn, Cao Kiên, Lâm Tùng, Hứa Lăng.
   "camLoHoiXuan", "danHoaHoiNguyen", "diaMachBungPhat", "kimQuaThietMa", "kinhCucTrienThan",
-  // Mạc Vân, Lam Giang Phi Diệp, Xích Diệm Luân, Lôi Minh Xạ, Tật Phong Lăng.
-  "loiTranKinhHon", "rb064_lieuDiepToaGiang", "rb065_xichLuanLietTran", "rb067_loiChamTuocKhi", "rb068_phongLangNhieuTran",  // Bạch Phong Đao, Kha Sơn, Cao Kiên, Lâm Tùng, Hứa Lăng.
-  "rb069_ultimate", "sonHaTranKich", "thietBichDongThanh", "trucLamPhaTran", "truyPhongDoatMenh",  // Tướng lịch sử Đinh Điền, Lê Hoàn, Đinh Liễn; sứ quân Kiều Công Hãn, Lý Khuê.
-  "ngoaiGiapHoQuan", "thapDaoLoiBinh", "namVietVuongAn", "phongChauLoiKich", "sieuLoaiPhaGiap",  // Tướng lịch sử Nguyễn Bặc, Trịnh Tú; sứ quân Ngô Nhật Khánh, Kiều Thuận, Đỗ Cảnh Thạc.
-  "dinhQuocHoaKy", "hoaLuThaoDuoc", "duongLamPhongKhoi", "hoiHoSinhKhi", "doDongKienTam",
+  "loiTranKinhHon", "rb064_lieuDiepToaGiang", "rb065_xichLuanLietTran", "rb067_loiChamTuocKhi", "rb068_phongLangNhieuTran",
+  "rb069_ultimate", "sonHaTranKich", "thietBichDongThanh", "trucLamPhaTran", "truyPhongDoatMenh",
+  // Tướng lịch sử Nguyễn Bặc, Đinh Điền, Trịnh Tú, Lê Hoàn, Đinh Liễn.
+  "dinhQuocHoaKy", "ngoaiGiapHoQuan", "hoaLuThaoDuoc", "thapDaoLoiBinh", "namVietVuongAn",
+  // Sứ quân Trần Lãm, Phạm Bạch Hổ, Ngô Nhật Khánh, Kiều Công Hãn, Kiều Thuận, Lý Khuê, Đỗ Cảnh Thạc.
+  "boHaiTranGiang", "bachHoXuatSon", "duongLamPhongKhoi", "phongChauLoiKich", "hoiHoSinhKhi", "sieuLoaiPhaGiap", "doDongKienTam",
 ]);
-
-/**
- * Chiêu ô 4 của tướng kèm / tướng lịch sử / sứ quân dùng lại ảnh chiêu hệ cũ của Đinh Bộ Lĩnh (Shan duyệt 04/11/2026),
- * ghép theo hệ và tác dụng. Mỗi ảnh chỉ gán một lần.
- */
-export const REUSED_SKILL_ART: Readonly<Record<string, string>> = {
-  boHaiTranGiang: "thuyKiepVanTrung", // Trần Lãm
-  bachHoXuatSon: "lietDiemPhanThanh", // Phạm Bạch Hổ
-};
 
 /** Tuyệt chiêu ô 4 của Đinh Bộ Lĩnh (`dbl_<nghề>_<hệ>`) dùng lại ảnh tuyệt chiêu hệ cũ của chính ông. */
 const DBL_ULTIMATE_ART: Readonly<Record<Element, string>> = {
@@ -587,8 +581,6 @@ const DBL_ULTIMATE_ART: Readonly<Record<Element, string>> = {
  */
 export function skillArt(def: Pick<SkillDef, "id" | "element" | "profession">): { file: string; badge?: Profession } | undefined {
   if (SKILL_ART.has(def.id)) return { file: def.id };
-  const reused = REUSED_SKILL_ART[def.id];
-  if (reused) return { file: reused };
   if (def.id.startsWith("element_")) {
     const file = def.id.slice("element_".length);
     return SKILL_ART.has(file) ? { file } : undefined;

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CHARACTER_SKILLS, CHASE_PASSIVES, COMBO_PASSIVES, dinhBoLinhUltimate, ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PASSIVES, PROFESSIONS, ROLE_SKILLS, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
+import { CHASE_PASSIVES, COMBO_PASSIVES, dinhBoLinhUltimate, ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PASSIVES, PROFESSIONS, ROLE_SKILLS, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, SPECIAL_NAME, TIER_COLOR_NAME, TILE_NAME } from "@/app/game/battle/labels";
 import { EmptySlotIcon, GearIcon, SetEmblem } from "@/app/game/art/gear";
 import { ElementIcon, FoodIcon, LeaderFlag, ProfessionIcon, ShieldIcon } from "@/app/game/art/icons";
 import { PASSIVE_ART, PassiveIcon } from "@/app/game/art/passives";
 import { Portrait } from "@/app/game/art/portraits";
-import { REUSED_SKILL_ART, SkillIcon } from "@/app/game/art/skills";
+import { SkillIcon } from "@/app/game/art/skills";
 import { TILE_COLOR, TileArt } from "@/app/game/art/tiles";
 
 export const metadata: Metadata = {
@@ -173,18 +173,6 @@ export default function ArtPage() {
                 </figure>
               );
             })}
-          </div>
-        </section>
-
-        <section className="space-y-2">
-          <h2 className="font-semibold">Chiêu ô 4 của tướng dùng lại ảnh hệ cũ</h2>
-          <div className="flex flex-wrap items-start gap-3">
-            {CHARACTER_SKILLS.filter((d) => d.id in REUSED_SKILL_ART).map((d) => (
-              <figure key={d.id} className="flex w-20 flex-col items-center gap-1">
-                <SkillIcon def={d} className="size-12" />
-                <figcaption className="text-center text-[11px] leading-tight opacity-80">{d.name}</figcaption>
-              </figure>
-            ))}
           </div>
         </section>
 
