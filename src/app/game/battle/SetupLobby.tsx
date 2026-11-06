@@ -39,15 +39,15 @@ export interface LobbyGear {
 const chip = (on: boolean) =>
   choiceVariants({ size: "sm", className: `rounded-full${on ? " is-selected" : ""}` });
 
-function Section({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
+function Row({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
-    <section className="flex flex-col gap-2">
-      <h3 className="flex items-baseline gap-2 text-sm font-bold tracking-wide text-frame-gold">
+    <div className="grid gap-1.5 sm:grid-cols-[5.5rem_minmax(0,1fr)] sm:gap-3">
+      <h3 className="text-sm font-bold tracking-wide text-frame-gold sm:pt-3">
         {title}
-        {hint && <span className="text-xs font-normal text-on-wood-soft">{hint}</span>}
+        {hint && <span className="block text-caption font-normal text-on-wood-soft">{hint}</span>}
       </h3>
-      {children}
-    </section>
+      <div className="min-w-0">{children}</div>
+    </div>
   );
 }
 
@@ -166,80 +166,50 @@ export default function SetupLobby({
           <TeamRow fighters={teams[1]} label="Tianwu" align="end" />
         </div>
 
-        <Section title="Nguyên tố" hint={`Bị động thủ lĩnh: ${PASSIVES[element].name}`}>
-          <div className="grid grid-cols-4 gap-2 sm:grid-cols-7" role="radiogroup" aria-label="Nguyên tố nhân vật chính">
-            {elements.map((e) => {
-              const on = element === e;
-              return (
-                <button
-                  key={e}
-                  type="button"
-                  role="radio"
-                  aria-checked={on}
-                  onClick={() => onElement(e)}
-                  title={ELEMENT_TRAIT[e].role}
-                  className={`flex flex-col items-center gap-1 rounded-xl border p-2 transition ${
-                    on ? "border-transparent bg-wood-hi" : "border-frame-line-soft bg-wood-inset hover:bg-wood-hi"
-                  }`}
-                  style={on ? { boxShadow: `0 0 0 2px ${ELEMENT_COLOR[e]}, 0 0 18px -4px ${ELEMENT_COLOR[e]}` } : undefined}
-                >
-                  <ElementIcon element={e} className="size-8 sm:size-9" />
-                  <span className="text-sm font-semibold">{ELEMENT_NAME[e]}</span>
+        {/* Ba khối chọn gọn một hàng nhãn + chip: nhãn trái, lựa chọn phải; đang chọn là giấy dó (quy tắc bề mặt ở theme.md). */}
+        <div className="flex flex-col gap-3 ui-frame-inset rounded-xl p-3">
+          <Row title="Nguyên tố">
+            <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Nguyên tố nhân vật chính">
+              {elements.map((e) => (
+                <button key={e} type="button" role="radio" aria-checked={element === e} onClick={() => onElement(e)} title={ELEMENT_TRAIT[e].role} className={`${chip(element === e)} min-h-11 gap-1.5`}>
+                  <ElementIcon element={e} className="size-6" />
+                  {ELEMENT_NAME[e]}
                 </button>
-              );
-            })}
-          </div>
-          <p className="text-xs text-on-wood-soft">
-            <span className="font-semibold" style={{ color: ELEMENT_COLOR[element] }}>
-              {ELEMENT_NAME[element]}:
-            </span>{" "}
-            {ELEMENT_TRAIT[element].role} · {ELEMENT_TRAIT[element].tags.join(", ")}
-          </p>
-        </Section>
+              ))}
+            </div>
+            <p className="mt-1.5 text-caption text-on-wood-soft">
+              Bị động thủ lĩnh <span className="font-semibold text-on-wood">{PASSIVES[element].name}</span> · {ELEMENT_TRAIT[element].role}
+            </p>
+          </Row>
 
-        <Section title="Nghề">
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3" role="radiogroup" aria-label="Nghề nhân vật chính">
-            {PROFESSIONS.map((p) => {
-              const on = profession === p;
-              return (
-                <button
-                  key={p}
-                  type="button"
-                  role="radio"
-                  aria-checked={on}
-                  onClick={() => onProfession(p)}
-                  className={`flex items-center gap-2 rounded-xl border p-2 text-left transition ${
-                    on ? "border-transparent bg-wood-hi" : "border-frame-line-soft bg-wood-inset hover:bg-wood-hi"
-                  }`}
-                  style={on ? { boxShadow: `0 0 0 2px ${PROFESSION_COLOR[p]}, 0 0 18px -4px ${PROFESSION_COLOR[p]}` } : undefined}
-                >
-                  <ProfessionIcon profession={p} className="size-9 shrink-0" />
-                  <span className="min-w-0">
-                    <span className="block text-sm font-semibold">{PROFESSION_NAME[p]}</span>
-                    <span className="block text-[11px] leading-snug text-on-wood-soft">{PROFESSION_PERK[p]}</span>
-                  </span>
+          <Row title="Nghề">
+            <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Nghề nhân vật chính">
+              {PROFESSIONS.map((p) => (
+                <button key={p} type="button" role="radio" aria-checked={profession === p} onClick={() => onProfession(p)} title={PROFESSION_PERK[p]} className={`${chip(profession === p)} min-h-11 gap-1.5`}>
+                  <ProfessionIcon profession={p} className="size-6" />
+                  {PROFESSION_NAME[p]}
                 </button>
-              );
-            })}
-          </div>
-        </Section>
+              ))}
+            </div>
+            <p className="mt-1.5 text-caption text-on-wood-soft">{PROFESSION_PERK[profession]}</p>
+          </Row>
 
-        <Section title="Bộ kỹ năng" hint="3 nghề · 2 hệ · 1 tuyệt chiêu">
-          <ul className="grid gap-2 sm:grid-cols-3">
-            {characterSkills(profession, element).map(def => {
-              const locked = !practice && level < MAIN_SLOT_UNLOCK[def.slot!]!;
-              return <li key={def.id} title={skillText(def)} className={`flex gap-2 text-xs ${locked ? "opacity-50" : ""}`}>
-                <SkillIcon def={def} className="size-8 shrink-0" />
-                <span>{def.name}<br />Ô {def.slot} · {def.cost} NL · cấp {MAIN_SLOT_UNLOCK[def.slot!]}</span>
-              </li>;
-            })}
-          </ul>
-        </Section>
+          <Row title="Kỹ năng" hint="3 nghề · 2 hệ · 1 tuyệt chiêu">
+            <ul className="flex flex-wrap gap-2">
+              {characterSkills(profession, element).map((def) => {
+                const locked = !practice && level < MAIN_SLOT_UNLOCK[def.slot!]!;
+                return (
+                  <li key={def.id} title={`${skillText(def)}${locked ? ` (mở ở cấp ${MAIN_SLOT_UNLOCK[def.slot!]})` : ""}`} className={`flex w-[4.5rem] flex-col items-center gap-0.5 text-center ${locked ? "opacity-45" : ""}`}>
+                    <SkillIcon def={def} className="size-10" />
+                    <span className="line-clamp-2 w-full text-caption leading-tight">{def.name}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </Row>
 
-        <SkillDetails fighter={{profession,element}} skills={characterSkills(profession, element)} passive={PROFESSION_COMBO[profession]} />
-
-        {practice && !online && (
-          <Section title="Trang bị mẫu" hint="cả hai đội mặc đủ 9 món cùng hệ; Tianwu không có thưởng bộ">
+          {practice && !online && (
+          <Row title="Trang bị">
             <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Phẩm trang bị">
               {([0, ...TIERS] as const).map((t) => (
                 <button
@@ -278,10 +248,11 @@ export default function SetupLobby({
                 </div>
               </>
             )}
-          </Section>
+          <p className="mt-1.5 text-caption text-on-wood-soft">Trang bị mẫu: cả hai đội mặc đủ 9 món cùng hệ; Tianwu không có thưởng bộ.</p>
+          </Row>
         )}
 
-        <Section title="Độ khó">
+        <Row title="Độ khó">
           <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Độ khó">
             {difficulties.map((d) => (
               <button key={d} type="button" role="radio" aria-checked={difficulty === d} onClick={() => onDifficulty(d)} className={chip(difficulty === d)}>
@@ -289,7 +260,10 @@ export default function SetupLobby({
               </button>
             ))}
           </div>
-        </Section>
+        </Row>
+
+          <SkillDetails paper fighter={{ profession, element }} skills={characterSkills(profession, element)} passive={PROFESSION_COMBO[profession]} />
+        </div>
 
         <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
           <Button variant="primary"
