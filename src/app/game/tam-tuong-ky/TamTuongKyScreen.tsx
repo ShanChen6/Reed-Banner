@@ -12,6 +12,7 @@ import { PROFESSION_DISPLAY_NAME, type Element } from "@/core/battle";
 import { PACK_NAMES, catalogForPack, openIngredients, type Catalog, type CatalogNode, type DiscoveryState, type HintLevel, type NodeId } from "@/core/tam-tuong-ky";
 import { AtlasCorners } from "../campaign/AtlasFrame";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
+import { personalSkillArtFile } from "../art/skills";
 import { Portrait } from "../art/portraits";
 import {
   EMPTY_SLOTS,
@@ -505,8 +506,15 @@ const NODE_ART: ReadonlySet<NodeId> = new Set([
  * Tranh của yếu tố, nếu có. Không có tranh riêng thì tri thức sơ học và node vai trò (tri thức nghề nhuộm hệ) dùng tranh
  * của nghề ở public/art/tam-tuong-ky/nghe/<nghề>.webp.
  */
+const SKILL_NODE_PREFIX = "know.skill.";
+
 function nodeArt(node: CatalogNode): string | undefined {
   if (NODE_ART.has(node.id)) return `/art/tam-tuong-ky/yeu-to/${node.id}.webp`;
+  // Tuyệt chiêu Gói 3 (`know.skill.<mã tướng>`) dùng ảnh kỹ năng ô 4 của chính tướng đó.
+  if (node.id.startsWith(SKILL_NODE_PREFIX)) {
+    const file = personalSkillArtFile(node.id.slice(SKILL_NODE_PREFIX.length));
+    if (file) return `/art/skills/${file}.webp`;
+  }
   const profession = node.professionHint ?? (node.role?.hybrid ? undefined : node.role?.profession);
   return profession && `/art/tam-tuong-ky/nghe/${profession}.webp`;
 }

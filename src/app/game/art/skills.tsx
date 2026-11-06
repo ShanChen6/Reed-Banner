@@ -3,7 +3,7 @@
 // Tuyệt chiêu: viền vàng đôi và quầng sáng vàng tỏa từ tâm (Shan chọn 04/11/2026, thay ngôi sao 16 cánh).
 
 import { useId } from "react";
-import type { Element, GameProfession, Profession, SkillDef } from "@/core";
+import { personalSkillOf, type Element, type GameProfession, type Profession, type SkillDef } from "@/core";
 import { ELEMENT_COLOR } from "./icons";
 import { INK, starPoints } from "./tiles";
 
@@ -552,6 +552,8 @@ const SKILL_ART = new Set([
   "vp_phongKhoiVanDong", "vp_muaGiangYLoan", "vp_lucDiepDanLo", "vp_vanDuThienLy", "vp_diaMachHoDoi", "vp_cuongPhongDoiCuc",
   // Chiêu ô 4 riêng Shan vẽ (06/11/2026), thay ảnh hệ dùng lại: Mai Thanh, Hồng Đan, Doãn Nham, Trần Cương, Đàm Thảo.
   "camLoHoiXuan", "danHoaHoiNguyen", "diaMachBungPhat", "kimQuaThietMa", "kinhCucTrienThan",
+  // Mạc Vân, Lam Giang Phi Diệp, Xích Diệm Luân, Lôi Minh Xạ, Tật Phong Lăng.
+  "loiTranKinhHon", "rb064_lieuDiepToaGiang", "rb065_xichLuanLietTran", "rb067_loiChamTuocKhi", "rb068_phongLangNhieuTran",
 ]);
 
 /**
@@ -567,20 +569,15 @@ export const REUSED_SKILL_ART: Readonly<Record<string, string>> = {
   trucLamPhaTran: "thanhMocHoPhap", // Lâm Tùng
   boHaiTranGiang: "thuyKiepVanTrung", // Trần Lãm
   namVietVuongAn: "bachDangTrieuDang", // Đinh Liễn
-  rb064_lieuDiepToaGiang: "hanBangTien", // Lam Giang Phi Diệp
   bachHoXuatSon: "lietDiemPhanThanh", // Phạm Bạch Hổ
   dinhQuocHoaKy: "hoaThieuLienTrai", // Nguyễn Bặc
-  rb065_xichLuanLietTran: "xichDiemTien", // Xích Diệm Luân
   doDongKienTam: "thaiSonApDinh", // Đỗ Cảnh Thạc
   ngoaiGiapHoQuan: "kienThanhBatDong", // Đinh Điền
   sonHaTranKich: "sonBangDiaLiet", // Kha Sơn
   phongChauLoiKich: "cuuTieuLoiPhat", // Kiều Công Hãn
   thapDaoLoiBinh: "loiDinhHieuLenh", // Lê Hoàn
-  rb067_loiChamTuocKhi: "loiTienXuyenVan", // Lôi Minh Xạ
-  loiTranKinhHon: "loiVongThienLa", // Mạc Vân
   duongLamPhongKhoi: "baoTapCanKhon", // Ngô Nhật Khánh
   truyPhongDoatMenh: "phongNhanLietKhong", // Hứa Lăng
-  rb068_phongLangNhieuTran: "cuongPhongQuetTran", // Tật Phong Lăng
 };
 
 /** Tuyệt chiêu ô 4 của Đinh Bộ Lĩnh (`dbl_<nghề>_<hệ>`) dùng lại ảnh tuyệt chiêu hệ cũ của chính ông. */
@@ -612,6 +609,12 @@ export function skillArt(def: Pick<SkillDef, "id" | "element" | "profession">): 
   if (def.profession && SKILL_ART.has(`role_${def.id}`)) return { file: `role_${def.id}` };
   if (def.id.startsWith("dbl_") && def.element && def.profession) return { file: DBL_ULTIMATE_ART[def.element], badge: def.profession };
   return undefined;
+}
+
+/** Ảnh chiêu riêng (ô 4) của một nhân vật, theo `personalSkillOf`; dùng cho yếu tố tuyệt chiêu ở Vạn Vật Lục (Tầm Tướng Ký). */
+export function personalSkillArtFile(character: string): string | undefined {
+  const def = personalSkillOf(character);
+  return def && skillArt(def)?.file;
 }
 
 /** Quầng sáng của tuyệt chiêu: ánh vàng ở tâm chuyển sang màu hệ rồi tan vào nền, kèm viền trong mảnh màu đồng. */

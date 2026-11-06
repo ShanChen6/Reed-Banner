@@ -3,7 +3,8 @@ import { existsSync } from "node:fs";
 import { test } from "node:test";
 import { CHARACTER_SKILLS, DBL_ULTIMATES, ELEMENT_SKILLS, personalSkillOf, ROLE_SKILLS } from "../../src/core";
 import { SPECIAL_SKILL_SETS } from "../../src/core/battle/special-skills";
-import { REUSED_SKILL_ART, skillArt } from "../../src/app/game/art/skills";
+import { PACK_3 } from "../../src/core/tam-tuong-ky/catalog";
+import { personalSkillArtFile, REUSED_SKILL_ART, skillArt } from "../../src/app/game/art/skills";
 
 test("ô 2/6 hệ (element_<mã>) dùng lại ảnh hệ cũ của Đinh Bộ Lĩnh", () => {
   for (const def of ELEMENT_SKILLS) {
@@ -38,10 +39,10 @@ test("mọi chiêu nghề của 8 nghề có ảnh vẽ tay", () => {
   }
 });
 
-test("22 chiêu ô 4 tướng dùng lại ảnh hệ cũ: đúng mã, có file, mỗi ảnh một lần", () => {
+test("17 chiêu ô 4 tướng dùng lại ảnh hệ cũ: đúng mã, có file, mỗi ảnh một lần", () => {
   const ids = new Set(CHARACTER_SKILLS.map((d) => d.id));
   const files = Object.values(REUSED_SKILL_ART);
-  assert.equal(files.length, 22);
+  assert.equal(files.length, 17);
   assert.equal(new Set(files).size, files.length);
   for (const [id, file] of Object.entries(REUSED_SKILL_ART)) {
     assert.ok(ids.has(id), id);
@@ -50,7 +51,7 @@ test("22 chiêu ô 4 tướng dùng lại ảnh hệ cũ: đúng mã, có file, 
   }
 });
 
-test("chiêu ô 4 riêng Shan vẽ cho 52 tướng: ảnh trùng mã kỹ năng", () => {
+test("chiêu ô 4 riêng Shan vẽ cho 57 tướng: ảnh trùng mã kỹ năng", () => {
   const owners = [
     "lyLiet", "hoLang", "tongTan", "haVan", "daoLam", "vuLoi", "chuNgan", "lieuYen", "luDuong",
     "leThach", "hoangMoc", "thaiHa", "truongViem", "ongChan", "manhTuong", "nguyenKhoan", "nguyenSieu",
@@ -59,6 +60,7 @@ test("chiêu ô 4 riêng Shan vẽ cho 52 tướng: ảnh trùng mã kỹ năng"
     "phungPhong", "taThach", "nghiemThiet", "samTue", "viTrieu", "tonDiem",
     "bachNoLang", "thanhLamXa", "tranSonThach", "docAnh", "hanGiangKhach", "xichDa", "diaAn", "loiAnh", "voAnh",
     "maiThanh", "hongDan", "doanNham", "tranCuong", "damThao",
+    "macVan", "lamGiangPhiDiep", "xichDiemLuan", "loiMinhXa", "tatPhongLang",
   ];
   for (const character of owners) {
     const def = personalSkillOf(character);
@@ -73,5 +75,15 @@ test("Đinh Ngọc và Trần Vũ Phong: cả 6 chiêu có ảnh riêng", () => 
   for (const def of [...SPECIAL_SKILL_SETS.dinhNgoc!, ...SPECIAL_SKILL_SETS.vuPhong!]) {
     assert.deepEqual(skillArt(def), { file: def.id });
     assert.ok(existsSync(`public/art/skills/${def.id}.webp`), def.id);
+  }
+});
+
+test("Tầm Tướng Ký: 56 yếu tố tuyệt chiêu Gói 3 dùng ảnh chiêu ô 4 của chính tướng", () => {
+  const nodes = PACK_3.nodes.filter((n) => n.id.startsWith("know.skill."));
+  assert.equal(nodes.length, 56);
+  for (const n of nodes) {
+    const file = personalSkillArtFile(n.id.slice("know.skill.".length));
+    assert.ok(file, n.id);
+    assert.ok(existsSync(`public/art/skills/${file}.webp`), n.id);
   }
 });
