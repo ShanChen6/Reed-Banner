@@ -1,7 +1,7 @@
 # Giao diện Tầm Tướng Ký
 
 > Cập nhật: 06/11/2026
-> Trạng thái: **DRAFT** — màn chế độ Thường đã có code (`src/app/game/tam-tuong-ky/`), chạy trên server theo tài khoản từ LT-04; bật bằng cờ `TAM_TUONG_KY_ENABLED` (mặc định tắt). Shan góp ý 6 điểm ngày 06/11/2026, kế hoạch sửa ở [mục 7](#7-sửa-theo-góp-ý-06112026-chờ-triển-khai) (chưa có code).
+> Trạng thái: **DRAFT** — màn chế độ Thường đã có code (`src/app/game/tam-tuong-ky/`), chạy trên server theo tài khoản từ LT-04; bật bằng cờ `TAM_TUONG_KY_ENABLED` (mặc định tắt). Shan góp ý 6 điểm ngày 06/11/2026; đã sửa theo [mục 7](#7-sửa-theo-góp-ý-06112026-đã-triển-khai), mục 3 mô tả bản sau khi sửa.
 
 Luật ở [Design Freeze](../../02-game-modes/future/14-tam-tuong-ky-design-freeze.md); nội dung công thức ở [catalog LT-01](../../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md). Tài liệu này chỉ nói về giao diện.
 
@@ -22,25 +22,34 @@ Tông gỗ tối, giấy dó, đồng cổ dùng token `--atlas-*` và khung `at
 
 ## 3. Các vùng
 
+Ba khung cùng một hàng lưới trên máy tính, mép trên thẳng hàng và cao bằng nhau (không `sticky`, không `self-start`); danh sách dài phân trang (`usePagedItems` + `PageControls`) thay vì cuộn dài.
+
 **Vạn Vật Lục**
 - Ô tìm kiếm không phân biệt dấu (“thap dao” ra “Thập đạo”).
-- Lọc theo nhóm (Nguyên tố, Thiên nhiên, Binh khí, Cờ hiệu, Thư tịch, Ngọc); chỉ hiện nhóm đã có yếu tố.
-- Nút yếu tố cao ≥ 44px; 7 nguyên tố dùng icon hệ có sẵn, yếu tố khác dùng chữ cái đầu trong vòng đồng (chưa có icon riêng).
+- Lọc theo nhóm, một hàng: chip “Tất cả” và “Nguyên tố”, các nhóm còn lại (Thiên nhiên, Binh khí, Cờ hiệu, Thư tịch, Ngọc, Vai trò, Tuyệt chiêu) trong ô chọn “Nhóm khác…”; chỉ hiện nhóm đã có yếu tố. Câu hướng dẫn cách đặt ô chỉ hiện cho người mới (chưa ghép ra gì).
+- Ô yếu tố là thẻ vuông, icon là chính (icon 36px trên, tên tối đa 2 dòng chữ nhỏ dưới, cao cố định 84px, `title` đủ tên), lưới 4 cột (8 cột ở máy tính bảng); chấm vàng “còn công thức” (Thường) hoặc `×n` (Hạng) ở góc trên phải. Mọi yếu tố trừ tướng có icon: nguyên tố dùng icon hệ, yếu tố khác dùng tranh ở `public/art/tam-tuong-ky/`, tuyệt chiêu Gói 3 dùng ảnh kỹ năng ô 4 của chính tướng (test chốt trong `tests/game/skill-art.test.ts`).
+- Phân trang 24 ô (máy tính, 4 × 6) / 16 ô (điện thoại); đổi từ khóa hoặc nhóm thì về trang 1. Yếu tố vừa khám phá: mở trang có nó (nếu nằm trong danh sách đang lọc) và nhấp nháy một lần.
 - Bấm yếu tố: điền ô trước, rồi ô sau; đủ hai ô thì thay ô sau. Bấm cùng yếu tố hai lần được (`A+A`). Không có kéo thả.
 
 **Đài Hợp Nguyên**
-- Hai ô có nhãn **Ô trước** / **Ô sau**, mỗi ô có nút Bỏ; nút ⇄ đổi chỗ hai ô; dòng nhắc thứ tự ô có nghĩa.
+- Hai ô **Ô trước** / **Ô sau** cao cố định (144px máy tính, 112px điện thoại), ba hàng cố định: nhãn, icon (ô trống là vòng nét đứt), tên tối đa 2 dòng. Ô có yếu tố là nút: bấm để bỏ, hover/focus hiện ✕ và viền đỏ nhạt (`aria-label="Bỏ <tên> khỏi ô trước"`). Nút ⇄ đổi chỗ hai ô; dòng nhắc thứ tự ô có nghĩa.
+- **Thẻ dưới hai ô** cao cố định (112px), một trong ba loại (đổi loại không đẩy bố cục):
+  - **Sổ công thức** của yếu tố vừa bấm ở Vạn Vật Lục (chế độ Thường): tên, “còn công thức chưa tìm” nếu có, **Tạo từ** (các cặp đã biết, icon + `title`) và **Dùng ghép** (thứ đi cùng → thứ ra được, tối đa 4, “+n”). Chỉ từ công thức người chơi đã tự ghép ra, không lộ công thức chưa tìm (`recipeBook` trong `altar.ts`).
+  - **Kết quả** lần ghép vừa rồi: lúc chờ server hai ô rung nhẹ, viền vàng; có kết quả thì icon hai yếu tố trượt vào giữa rồi tan, sau đó hiện: khám phá mới (icon, tên, nhãn “Mới”, quầng vàng), đã biết (nhãn “Đã biết”), tìm thấy tướng (chân dung, tên, bậc, quầng mạnh hơn; Hạng thêm “+n điểm”), không ra gì (hai icon xám tách ra, khói, “Chưa tìm được mối liên hệ”). Bấm thẻ yếu tố thì đặt yếu tố đó vào ô trước. Giảm chuyển động: chỉ hiện thẻ.
+  - **Gợi ý** vừa xin: mức 1 “Còn công thức ra một thứ thuộc nhóm …”, bấm thẻ thì Vạn Vật Lục lọc theo nhóm đó; mức 2 hiện icon nguyên liệu, ô đó trong Vạn Vật Lục có viền vàng và đèn gợi ý (bỏ lọc, mở đúng trang), bấm thẻ thì đặt nguyên liệu vào ô trước.
 - Nút Hợp Nguyên chỉ bấm được khi đủ hai ô và còn lần ghép.
-- Ô thông báo `aria-live`: khám phá mới, tìm thấy chân dung, đã biết (không trừ lần ghép), chưa tìm được mối liên hệ, yếu tố không hợp lệ. Hiệu ứng sáng lên chỉ chạy khi không bật giảm chuyển động.
-- Số lần ghép còn lại của lượt (15) và nút “Lượt mới” khi hết; số gợi ý hôm nay (2), hai nút “Gợi ý nhóm” và “Gợi ý nguyên liệu”.
-- “Lần ghép gần đây”: 5 lần gần nhất, thu gọn mặc định.
-- Đặt lại một cặp đã ghép mà không ra gì (cả Thường và Hạng): hiện cảnh báo “Bạn đã ghép cặp này ở lần trước…” trên nút, nút đổi thành “Vẫn hợp nguyên” (điện thoại: “Vẫn ghép”). Không nói công thức sai. Xem [cảnh báo cặp đã thử](../../02-game-modes/future/23-tam-tuong-ky-can-bang-va-canh-bao.md#2-cảnh-báo-cặp-đã-thử).
+- Ô thông báo `aria-live`: khám phá mới, tìm thấy chân dung, đã biết (không trừ lần ghép), chưa tìm được mối liên hệ, yếu tố không hợp lệ, lời gợi ý. Khi thẻ dưới hai ô đã nói điều đó thì ô thông báo chỉ còn cho máy đọc màn hình (không lặp chữ); lỗi luôn hiện.
+- Số lần ghép còn lại của lượt (15) và nút “Lượt mới” khi hết; một hàng gợi ý: “Nhóm”, “Nguyên liệu” (kèm icon đèn dầu vẽ tay `HintIcon`, không dùng emoji), “còn x/2” hôm nay.
+- “Lần ghép gần đây”: 5 lần gần nhất, luôn hiện, mỗi dòng dạng icon `A + B → C` (không ra gì: `✕`); bấm một dòng thì đặt lại đúng cặp đó vào hai ô.
+- Đặt lại một cặp đã ghép mà không ra gì (cả Thường và Hạng): hiện cảnh báo “Bạn đã ghép cặp này ở lần trước…” ngay dưới nút (để nút không nhảy); nút vẫn ghi “Hợp Nguyên” (Shan, 06/11/2026: không đổi chữ trên nút). Không nói công thức sai. Xem [cảnh báo cặp đã thử](../../02-game-modes/future/23-tam-tuong-ky-can-bang-va-canh-bao.md#2-cảnh-báo-cặp-đã-thử).
 
 **Tướng Lục**
-- Đủ số tướng của pack (A-15). Tướng chưa tìm: vòng “?”, chữ “Tướng chưa tìm thấy” và bậc; không có tên, chân dung hay nghề/hệ trong HTML lẫn aria.
-- Tướng đã tìm: chân dung thật (`Portrait`), tên, bậc, icon và tên nghề/hệ đọc từ roster, **dấu tích** là nguyên liệu danh tính của công thức cuối (tước hiệu, địa danh, chiêu, lore; không lấy từ art, A-22). Chưa có tiểu sử.
+- Đủ số tướng của sổ đang chạy (A-15), chia **nhóm theo quan hệ** (chỉ để hiển thị; gói phát hành giữ nguyên trong code và thành tựu): Cờ lau Hoa Lư (Đinh Bộ Lĩnh và 6 tướng theo ông), Thập nhị sứ quân, Kỳ nhân (Đinh Ngọc, Trần Vũ Phong), 8 nhóm tướng thường theo nghề. Bộ lọc hai tầng, mỗi tầng một hàng: thanh 4 mục **Hoa Lư · Sứ quân · Kỳ nhân · Tướng thường** kèm `x/y`; chọn Tướng thường thì hiện hàng icon 8 nghề (tên và `x/y` ở nhãn, `title`). Thêm nghề hay nhóm mới không thêm hàng. Mặc định nhóm đầu tiên chưa đủ; một dòng tên nhóm và giới thiệu (chữ của trò chơi). Logic ở `ledgerGroup`, `ledgerGroups`, `ledgerSections` (`altar.ts`).
+- Thẻ là ô chân dung lưới 3 cột (6 ở máy tính bảng), phân trang 9 ô (máy tính) / 6 ô (điện thoại). Bấm tướng đã tìm mở khung chi tiết (`<dialog>`, Esc để đóng).
+- Tướng chưa tìm: vòng “?” viền màu theo bậc (vàng: lịch sử, tím: đặc biệt), chữ bậc nhỏ; “Tướng chưa tìm thấy” cho máy đọc màn hình; không có tên, chân dung hay nghề/hệ trong HTML lẫn aria.
+- Tướng đã tìm: ô hiện chân dung thật (`Portrait`) và tên; khung chi tiết có bậc, icon và tên nghề/hệ đọc từ roster, **dấu tích** là nguyên liệu danh tính của công thức cuối (tước hiệu, địa danh, chiêu, lore; không lấy từ art, A-22). Chưa có tiểu sử.
 - Dòng “Tìm thấy chân dung chỉ ghi vào Tướng Lục, không thêm tướng vào đội”. Không có chữ nhận tướng, chiêu mộ hay vàng.
-- Ghép ra tướng trên điện thoại thì tự chuyển sang Tướng Lục.
+- Ghép ra tướng thì Tướng Lục tự mở nhóm và trang có tướng đó, thẻ sáng lên; trên điện thoại tự chuyển sang Tướng Lục.
 
 ## 4. Phiếu, lượt và lưu (LT-04)
 
@@ -71,11 +80,11 @@ Tông gỗ tối, giấy dó, đồng cổ dùng token `--atlas-*` và khung `at
 - `tests/game/tam-tuong-ky-screen.test.ts` (14 test): màn chờ dữ liệu, phiếu và nút mở lượt, mẹo người mới; chọn ô, đổi chỗ, `A+A`; tìm không dấu và lọc nhóm; lời thông báo; Tướng Lục không lộ tướng chưa tìm; dựng màn không có tên tướng hay chữ thưởng; phân cảnh và cờ.
 - Playwright với cờ bật: khách thấy màn nhắc đăng nhập; đăng ký rồi ghép ra Đinh Ngọc ở 1440px và iPhone 13 (390px); không tràn ngang ở 320, 768, 1024px; thẻ Home dẫn vào màn.
 
-> TODO: kéo thả (tùy chọn); các mục ở [mục 7](#7-sửa-theo-góp-ý-06112026-chờ-triển-khai).
+> TODO: kéo thả (tùy chọn).
 
-## 7. Sửa theo góp ý 06/11/2026 (chờ triển khai)
+## 7. Sửa theo góp ý 06/11/2026 (đã triển khai)
 
-Shan chơi bản trên `co-lau.vercel.app` và góp ý 6 điểm. Mục này là kế hoạch, **chưa có code**. Đề xuất chia 3 PR nhỏ vào `develop`:
+Shan chơi bản trên `co-lau.vercel.app` và góp ý 6 điểm. Đã có code: 7.1 ở PR #341; 7.2–7.6 làm chung một PR vì cả ba nhóm A/B/C bên dưới sửa đan xen trong cùng file và ba khung chỉ cao bằng nhau (7.6) khi Tướng Lục đã phân trang (7.2). Shan xem bản đầu thấy hai sổ còn tràn lan nên chỉnh tiếp trong cùng PR: ô yếu tố và ô tướng thành lưới thẻ vuông, bộ lọc gom về một hàng mỗi tầng (chi tiết ở mục 3). Đo bằng Playwright sau khi sửa: mép trên ba khung lệch 0px ở 1024/1440/1600px (trước 16px, đúng bằng `lg:top-4` của `sticky`); nút Hợp Nguyên đứng yên khi đặt/bỏ yếu tố kể cả “Dựng nước Đại Cồ Việt”; mọi ô yếu tố cao bằng nhau (84px), ba khung cao bằng nhau (754px ở 1440px, trước khi chỉnh lần hai 902px). Kế hoạch ban đầu chia 3 PR:
 
 | PR | Gồm | Đụng file |
 |---|---|---|

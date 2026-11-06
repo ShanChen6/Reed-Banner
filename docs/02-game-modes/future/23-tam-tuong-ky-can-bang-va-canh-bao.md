@@ -1,6 +1,6 @@
 # 23 — Tầm Tướng Ký: cân bằng nguyên tố và cảnh báo cặp đã thử
 
-> Cập nhật: 04/11/2026
+> Cập nhật: 06/11/2026
 > Trạng thái: **APPROVED** — Shan duyệt 11 cặp ghép mới ([mục 1](#1-cân-bằng-nguyên-tố)) và lời cảnh báo ([mục 2](#2-cảnh-báo-cặp-đã-thử)) ngày 04/11/2026; có code, chờ merge vào `develop`. Bật cùng cờ `TAM_TUONG_KY_ENABLED` khi deploy.
 
 Shan (04/11/2026), xem trên bản đang chạy:
@@ -54,7 +54,7 @@ Cách làm:
 
 - Server ghi lại mỗi cặp đã ghép mà không ra gì (`Profile.tamTuongKy.triedPairs`, khóa `a>b` theo thứ tự ô, chung cho Thường và Hạng, giữ tối đa 400 cặp gần nhất). Hồ sơ cũ không có trường này vẫn đọc được.
 - Lần đầu ghép sai: như cũ, trừ 1 lần ghép (Thường) hoặc mất nguyên liệu (Hạng), báo “Chưa tìm được mối liên hệ”.
-- Lần sau đặt lại **đúng cặp đó, đúng thứ tự** vào hai ô: màn hiện cảnh báo trước khi bấm, và nút đổi thành “Vẫn hợp nguyên” (thanh dưới trên điện thoại: “Vẫn ghép”, kèm dòng “Đã ghép cặp này ở lần trước”).
+- Lần sau đặt lại **đúng cặp đó, đúng thứ tự** vào hai ô: màn hiện cảnh báo trước khi bấm (thanh dưới trên điện thoại kèm dòng “Đã ghép cặp này ở lần trước”). Nút giữ nguyên chữ “Hợp Nguyên” (Shan đổi ngày 06/11/2026; trước đó nút đổi thành “Vẫn hợp nguyên”, điện thoại “Vẫn ghép”).
   - Thường: “Bạn đã ghép cặp này ở lần trước. Ghép lại vẫn trừ 1 lần ghép.”
   - Hạng: “Bạn đã ghép cặp này ở lần trước. Ghép lại vẫn tiêu nguyên liệu.”
 - Lời cảnh báo không nói công thức sai, chỉ nhắc đã thử và cái giá nếu ghép lại. Người chơi vẫn được ghép lại, và vẫn bị trừ như lần đầu.
@@ -69,4 +69,4 @@ Cách làm:
 ## 4. Shan duyệt
 
 - [x] 11 cặp mới và lý do (mục 1).
-- [x] Lời cảnh báo và nút “Vẫn hợp nguyên” (mục 2).
+- [x] Lời cảnh báo (mục 2); nút giữ chữ “Hợp Nguyên” từ 06/11/2026.
