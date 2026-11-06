@@ -3,13 +3,18 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { SLICE_PACK, buildCatalog, combineNormal, initialDiscovery, makeableRecipes, type DiscoveryState } from "../../src/core/tam-tuong-ky";
+import { SLICE_PACK, buildCatalog, catalogForPack, combineNormal, initialDiscovery, makeableRecipes, type DiscoveryState } from "../../src/core/tam-tuong-ky";
 import {
   EMPTY_SLOTS,
   clearSlot,
   foldVi,
   hintText,
+  LEDGER_GROUPS,
+  altarResult,
+  defaultLedgerGroup,
   ledger,
+  ledgerGroup,
+  ledgerGroups,
   libraryGroups,
   libraryNodes,
   noticeFor,
@@ -116,8 +121,29 @@ describe("Tướng Lục", () => {
     assert.equal(entries.length, 3);
     for (const e of entries) {
       assert.equal(e.found, false);
-      assert.deepEqual(Object.keys(e).sort(), ["found", "nodeId", "pack", "tier"]);
+      // Nhóm Tướng Lục (mục 7.2) lộ được vì nhóm nào cũng có từ 2 người; không có tên hay characterId.
+      assert.deepEqual(Object.keys(e).sort(), ["found", "group", "nodeId", "pack", "tier"]);
     }
+  });
+
+  it("nhóm theo quan hệ: Cờ lau Hoa Lư 7, Thập nhị sứ quân 12, Kỳ nhân 2, tám nghề × 7", () => {
+    const groups = ledgerGroups(ledger(catalogForPack("pack-1-2-3"), { discoveredNodeIds: [], discoveredRecipeIds: [] } as unknown as DiscoveryState));
+    assert.deepEqual(
+      groups.map((g) => [g.name, g.entries.length]),
+      [["Cờ lau Hoa Lư", 7], ["Thập nhị sứ quân", 12], ["Kỳ nhân", 2], ...["Tướng sĩ", "Binh lính", "Y sư", "Mưu sĩ", "Quân sư", "Pháp sư", "Xạ thủ", "Sát thủ"].map((n) => [n, 7])],
+    );
+    assert.equal(LEDGER_GROUPS.length, 11);
+    // Đinh Bộ Lĩnh (bậc đặc biệt) xếp vào Hoa Lư, không vào Kỳ nhân; sứ quân ở Gói 1 vẫn vào Thập nhị sứ quân.
+    assert.deepEqual(["dinhBoLinh", "nguyenBac", "phamBachHo", "dinhNgoc", "vuPhong", "docAnh"].map(ledgerGroup), ["hoaLu", "hoaLu", "suQuan", "kyNhan", "kyNhan", "nghe.satThu"]);
+    assert.equal(defaultLedgerGroup(groups), "hoaLu");
+  });
+
+  it("nhóm mặc định là nhóm đầu tiên chưa tìm đủ", () => {
+    const c = catalogForPack("pack-1-2-3");
+    const hoaLu = c.pack.nodes.filter((n) => n.characterId && ledgerGroup(n.characterId) === "hoaLu").map((n) => n.id);
+    const groups = ledgerGroups(ledger(c, { discoveredNodeIds: hoaLu, discoveredRecipeIds: [] } as unknown as DiscoveryState));
+    assert.equal(groups[0]!.found, 7);
+    assert.equal(defaultLedgerGroup(groups), "suQuan");
   });
 
   it("tìm thấy thì có nghề/hệ từ roster và vật biểu trưng", () => {
@@ -125,6 +151,18 @@ describe("Tướng Lục", () => {
     assert.ok(e && e.found);
     assert.deepEqual([e.info.profession, e.info.element, e.tier], ["tuongSi", "hoa", "lichSu"]);
     assert.deepEqual(e.symbols, ["Cờ lau"]);
+  });
+});
+
+describe("Thẻ kết quả hợp nguyên", () => {
+  it("phân loại mới / đã biết / tướng / không ra gì; ghép không hợp lệ thì không hiện thẻ", () => {
+    const from = ["elt.moc", "elt.thuy"] as const;
+    assert.equal(altarResult({ status: "created", nodeId: "mat.reed" }, 1, from)?.kind, "new");
+    assert.equal(altarResult({ status: "created", nodeId: "mat.reed", nodeAlreadyKnown: true }, 2, from)?.kind, "known");
+    assert.equal(altarResult({ status: "alreadyKnown", nodeId: "mat.reed" }, 3, from)?.kind, "known");
+    assert.deepEqual(altarResult({ status: "created", nodeId: "hero.nguyenBac", isCharacter: true }, 4, from, 120), { seq: 4, from, points: 120, kind: "hero", nodeId: "hero.nguyenBac" });
+    assert.deepEqual(altarResult({ status: "noRecipe" }, 5, from), { seq: 5, from, kind: "miss" });
+    assert.equal(altarResult({ status: "invalid", reason: "unknownInput" }, 6, from), null);
   });
 });
 
@@ -145,7 +183,10 @@ describe("Màn chơi", () => {
     for (const name of PACK_1_NAMES) assert.doesNotMatch(html, new RegExp(name));
     assert.match(html, /Công thức biểu trưng của trò chơi, không phải diễn giải sử học/);
     for (const bad of ["Nhận tướng", "Chiêu mộ", "vàng"]) assert.doesNotMatch(html, new RegExp(bad));
-    assert.equal((html.match(/Tướng chưa tìm thấy/g) ?? []).length, 12);
+    // Tướng Lục chia nhóm và phân trang (mục 7.2): 12 tướng Gói 1, nhóm đầu Cờ lau Hoa Lư có 6 người, vừa một trang.
+    assert.match(html, /Tướng Lục · 0\/12/);
+    assert.match(html, /Cờ lau Hoa Lư/);
+    assert.equal((html.match(/Tướng chưa tìm thấy/g) ?? []).length, 6);
   });
 
   it("có phân cảnh /game/tam-tuong-ky; cờ mặc định tắt, chỉ chuỗi true mới bật", () => {
@@ -205,13 +246,15 @@ describe("tab Tầm Tướng Ký trên trang Xếp hạng", () => {
 });
 
 describe("Tướng Lục khi bật Gói 2", () => {
-  it("chia hai mục theo gói, 21 bóng mờ, không lộ tên", async () => {
+  it("chia nhóm theo quan hệ thay cho gói, 6 thẻ mỗi trang, không lộ tên", async () => {
     const r = await getTamTuongKy({ profiles: new MemoryProfileStore(), now: Date.parse("2026-11-04T05:00:00Z"), enabled: true, pack2: true, isSignedIn: async () => true }, "acc-1");
     assert.ok(r.ok && r.view.packId === "pack-1-2");
     const html = renderToStaticMarkup(createElement(TamTuongKyScreen, { initial: r.view }));
-    assert.match(html, /Gói 1: Dẹp loạn · 0\/12/);
-    assert.match(html, /Gói 2: Thập nhị sứ quân · 0\/9/);
-    assert.equal((html.match(/Tướng chưa tìm thấy/g) ?? []).length, 21);
+    assert.match(html, /Tướng Lục · 0\/21/);
+    for (const chip of [/Cờ lau Hoa Lư <span[^>]*>0\/7</, /Thập nhị sứ quân <span[^>]*>0\/12</, /Kỳ nhân <span[^>]*>0\/2</]) assert.match(html, chip);
+    assert.doesNotMatch(html, /Gói 1: Dẹp loạn|Gói 2: Thập nhị sứ quân/);
+    assert.equal((html.match(/Tướng chưa tìm thấy/g) ?? []).length, 6);
+    assert.match(html, /Trang 1\/2/);
     for (const name of ["Đinh Bộ Lĩnh", "Lý Khuê", "Ngô Xương Xí"]) assert.doesNotMatch(html, new RegExp(name));
   });
 });
