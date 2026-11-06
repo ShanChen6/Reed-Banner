@@ -36,7 +36,7 @@ import { ELEMENT_COLOR } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
 import { readStorage, writeStorage } from "../formation/storage";
 import { Button, buttonVariants, choiceVariants } from "@/components/ui";
-import { ModeScreen } from "@/components/game-ui";
+import { ModeBanner, ModeScreen, OrnateFrame } from "@/components/game-ui";
 
 /** Khóa lưu theo chế độ; khóa của Thường giữ như bản đầu để không mất ván dở cũ. */
 const KEYS: Record<KlMode, { save: string; best: string; clock?: string }> = {
@@ -359,41 +359,37 @@ export default function KhaiLoScreen() {
     }
   };
 
-  const cell = `min(56px, calc((100vw - 3rem - 20px) / ${width}))`;
+  const cell = `min(56px, calc((100vw - 5rem - 20px) / ${width}))`;
 
   return (
     <Shell>
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <header>
-          <p className="text-kicker text-frame-gold">
-            Giải đố · {MODE_NAME[state.mode]} · Màn {state.level}
-          </p>
-          <h1 className="sr-only">Khai Lộ</h1>
-        </header>
-        <Button variant="secondary" onClick={newGame}>Ván mới</Button>
-      </div>
-
-      <div role="tablist" aria-label="Chế độ chơi" className="grid w-full max-w-[560px] grid-cols-2 gap-2">
-        {(["classic", "timed"] as const).map((m) => (
-          <button
-            key={m}
-            type="button"
-            role="tab"
-            aria-selected={mode === m}
-            onClick={() => switchMode(m)}
-            className={choiceVariants({ className: "min-h-12 flex-col items-start px-3 py-1.5 text-left" })}
-          >
-            <span className="block font-bold">{MODE_NAME[m]}</span>
-            <span className="hidden text-caption font-normal opacity-80 sm:block">{MODE_HINT[m]}</span>
-          </button>
-        ))}
-      </div>
+      <ModeBanner
+        title="Khai Lộ"
+        kicker={`Giải đố · ${MODE_NAME[state.mode]} · Màn ${state.level}`}
+        description="Chạm để xóa cả khối quân cùng hệ, gom khối to để được nhiều điểm và mở đường xuyên bàn cờ."
+        actions={<Button variant="secondary" onClick={newGame}>Ván mới</Button>}
+      />
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <div className="flex flex-col items-center gap-3">
+        <OrnateFrame aria-label="Vùng chơi" className="flex flex-col items-center gap-3">
+          <div role="tablist" aria-label="Chế độ chơi" className="grid w-full max-w-[560px] grid-cols-2 gap-2">
+            {(["classic", "timed"] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                role="tab"
+                aria-selected={mode === m}
+                onClick={() => switchMode(m)}
+                className={choiceVariants({ className: "min-h-12 flex-col items-start px-3 py-1.5 text-left" })}
+              >
+                <span className="block font-bold">{MODE_NAME[m]}</span>
+                <span className="hidden text-caption font-normal opacity-80 sm:block">{MODE_HINT[m]}</span>
+              </button>
+            ))}
+          </div>
           <Stats state={state} best={best} left={left} msLeft={timed ? msLeft : null} />
           {timed && <TimeBar msLeft={msLeft} limitMs={limitMs} paused={active && hidden} />}
-          <div className="ui-frame w-fit p-2">
+          <div className="ui-frame-inset w-fit p-2">
             <div
               ref={boardRef}
               role="grid"
@@ -455,7 +451,7 @@ export default function KhaiLoScreen() {
           <p aria-hidden className="-mt-2 min-h-5 text-center text-sm text-on-wood-soft">
             {active ? preview.text || "Rê chuột (hoặc chạm một lần) để xem trước khối sẽ xóa." : ""}
           </p>
-        </div>
+        </OrnateFrame>
 
         <aside className="flex flex-col gap-4" aria-label="Bảng điều khiển">
           {state.phase === "levelDone" && state.summary && (
@@ -560,7 +556,7 @@ function Stats({ state, best, left, msLeft }: { state: KlState; best: number; le
   return (
     <dl className="grid w-full max-w-[560px] grid-cols-4 gap-2 text-center">
       {items.map(([k, v, warn]) => (
-        <div key={k} className="ui-frame px-1 py-1.5">
+        <div key={k} className="ui-frame-inset px-1 py-1.5">
           <dt className="text-caption text-on-wood-soft">{k}</dt>
           <dd className={`text-lg font-bold tabular-nums ${warn ? "text-warning" : "text-title-on-wood"}`}>{v}</dd>
         </div>

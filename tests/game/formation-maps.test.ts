@@ -1,11 +1,16 @@
 import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { describe, it } from "node:test";
+import { FORMATION_PLACE_IDS } from "../../src/core";
 import { MAP_POOL, mapFor } from "../../src/app/game/formation/maps";
 
 const PROMPTS = readFileSync("docs/06-art/prompts/tran-do-hinh-anh.md", "utf8");
 
 describe("kho bản đồ Trận Đồ", () => {
+  it("id địa danh hợp lệ trong hồ sơ (core) khớp kho bản đồ", () => {
+    assert.deepEqual([...FORMATION_PLACE_IDS].sort(), MAP_POOL.map((m) => m.id).sort());
+  });
+
   it("có từ 30 bản đồ, id duy nhất và đúng định dạng", () => {
     assert.ok(MAP_POOL.length >= 30, `chỉ có ${MAP_POOL.length}`);
     const ids = MAP_POOL.map((m) => m.id);

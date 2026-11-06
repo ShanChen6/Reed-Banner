@@ -16,7 +16,7 @@ import DailyScreen from "./daily/DailyScreen";
 import FormationScreen from "./formation/FormationScreen";
 import KhaiLoScreen from "./khai-lo/KhaiLoScreen";
 import TamTuongKyScreen from "./tam-tuong-ky/TamTuongKyScreen";
-import LeaderboardScreen from "./leaderboard/LeaderboardScreen";
+import HonorsScreen from "./leaderboard/HonorsScreen";
 import MenuScene from "./MenuScene";
 import ProfileScreen from "./profile/ProfileScreen";
 import QuestsScreen from "./quests/QuestsScreen";
@@ -152,7 +152,7 @@ function SceneView({
     case "SHOP":
       return <ShopScreen />;
     case "LEADERBOARD":
-      return account ? <LeaderboardScreen destinyEnabled={towerFeatures.destiny} tamTuongKyRanked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate scene="LEADERBOARD" name={SCENE_TITLE.LEADERBOARD} />;
+      return account ? <HonorsScreen destinyEnabled={towerFeatures.destiny} tamTuongKyRanked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate scene="LEADERBOARD" name={SCENE_TITLE.LEADERBOARD} />;
     case "PROFILE":
       return <ProfileScreen playerName={account?.name ?? null} />;
     case "LOGIN":

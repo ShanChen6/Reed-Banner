@@ -3,7 +3,7 @@
 
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
-import {migrateStoredProfessionAliases, type Match} from "@/core";
+import {migrateLegacyIds, migrateStoredProfessionAliases, type Match} from "@/core";
 import { MemoryAccountStore, type AccountStore } from "./accounts";
 import { DrizzleAccountStore } from "./db/accounts";
 import { DrizzleDailyStore } from "./db/daily";
@@ -61,7 +61,7 @@ export class MemoryMatchStore implements MatchStore {
 
   async get(id: string): Promise<MatchRecord | null> {
     const r = this.records.get(id);
-    return r ? migrateStoredProfessionAliases(r) : null;
+    return r ? migrateLegacyIds(migrateStoredProfessionAliases(r)) : null;
   }
 
   async save(record: MatchRecord, expectedSeq: number): Promise<boolean> {

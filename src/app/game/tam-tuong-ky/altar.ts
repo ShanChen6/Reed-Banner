@@ -13,6 +13,8 @@ import {
   type InvalidReason,
   type NodeId,
 } from "@/core/tam-tuong-ky";
+import { isHero, isWarlord } from "@/core/roster/roster";
+import type { Profession } from "@/core/battle";
 
 /** Hai ô có thứ tự: `[ô trước, ô sau]`. */
 export type Slots = readonly [NodeId | null, NodeId | null];
@@ -104,6 +106,62 @@ export function noticeFor(catalog: Catalog, outcome: CombineSummary): Notice {
   }
 }
 
+/** Kết quả hiện ở thẻ dưới hai ô sau một lần ghép (mục 7.5). `seq` tăng mỗi lần để chạy lại hiệu ứng. */
+export interface AltarResult {
+  readonly seq: number;
+  /** Hai yếu tố vừa ghép, theo thứ tự ô trước, ô sau. */
+  readonly from: readonly [NodeId, NodeId];
+  readonly kind: "new" | "known" | "hero" | "miss";
+  readonly nodeId?: NodeId;
+  /** Chế độ Hạng: điểm khi ra tướng đề cử. */
+  readonly points?: number;
+}
+
+/** Đổi kết quả ghép sang thẻ kết quả; ghép không hợp lệ thì không hiện thẻ (ô thông báo đã nói lý do). */
+export function altarResult(outcome: CombineSummary, seq: number, from: readonly [NodeId, NodeId], points?: number): AltarResult | null {
+  const base = { seq, from, ...(points ? { points } : {}) };
+  switch (outcome.status) {
+    case "created":
+      if (outcome.isCharacter) return { ...base, kind: "hero", nodeId: outcome.nodeId };
+      return { ...base, kind: outcome.nodeAlreadyKnown ? "known" : "new", nodeId: outcome.nodeId };
+    case "alreadyKnown":
+      return { ...base, kind: "known", nodeId: outcome.nodeId };
+    case "noRecipe":
+      return { ...base, kind: "miss" };
+    case "invalid":
+      return null;
+  }
+}
+
+/**
+ * Sổ công thức của một yếu tố, chỉ từ những công thức người chơi **đã tự ghép ra** (không lộ công thức chưa tìm).
+ * `open`: yếu tố còn là nguyên liệu của công thức chưa tìm (cùng dấu chấm vàng ở Vạn Vật Lục, không nói cặp nào).
+ */
+export interface RecipeBook {
+  readonly madeFrom: readonly (readonly [NodeId, NodeId])[];
+  readonly usedIn: readonly { readonly first: NodeId; readonly second: NodeId; readonly result: NodeId }[];
+  readonly open: boolean;
+}
+
+export function recipeBook(catalog: Catalog, state: DiscoveryState, id: NodeId): RecipeBook {
+  const found = new Set(state.discoveredRecipeIds);
+  const known = catalog.pack.recipes.filter((r) => found.has(r.id));
+  const open = catalog.pack.recipes.some((r) => !found.has(r.id) && (r.first === id || r.second === id));
+  return {
+    madeFrom: known.filter((r) => r.result === id).map((r) => [r.first, r.second] as const),
+    usedIn: known.filter((r) => r.first === id || r.second === id).map((r) => ({ first: r.first, second: r.second, result: r.result })),
+    open,
+  };
+}
+
+/** Một dòng lịch sử ghép (5 dòng gần nhất): bấm để đặt lại đúng cặp vào hai ô. `result` null khi không ra gì. */
+export interface HistoryEntry {
+  readonly first: NodeId;
+  readonly second: NodeId;
+  readonly result: NodeId | null;
+  readonly text: string;
+}
+
 export function hintText(hint: Hint | null): string {
   if (!hint) return "Không còn công thức nào ghép được ngay từ những gì đã có.";
   const group = HINT_GROUP_NAMES[hint.hintGroup] ?? hint.hintGroup;
@@ -112,9 +170,97 @@ export function hintText(hint: Hint | null): string {
 
 export const TIER_NAME: Readonly<Record<HeroTier, string>> = { thuong: "Tướng thường", dacBiet: "Tướng đặc biệt", lichSu: "Tướng lịch sử" };
 
+/**
+ * Nhóm Tướng Lục (mục 7.2 tài liệu giao diện): gom tướng theo quan hệ, chỉ để hiển thị. Gói phát hành (`pack`) giữ
+ * nguyên trong code và thành tựu. Tên nhóm không lộ tướng chưa tìm vì nhóm nào cũng có từ 2 người.
+ */
+export type LedgerGroupId = "hoaLu" | "suQuan" | "kyNhan" | `nghe.${Profession}`;
+
+export interface LedgerGroupInfo {
+  readonly id: LedgerGroupId;
+  readonly name: string;
+  /** Một dòng giới thiệu mối liên hệ: chữ của trò chơi, không phải trích sử. */
+  readonly intro: string;
+}
+
+const PROFESSION_GROUPS: readonly [Profession, string][] = [
+  ["tuongSi", "Tướng sĩ"],
+  ["binhLinh", "Binh lính"],
+  ["ySu", "Y sư"],
+  ["muuSi", "Mưu sĩ"],
+  ["quanSu", "Quân sư"],
+  ["phapSu", "Pháp sư"],
+  ["xaThu", "Xạ thủ"],
+  ["satThu", "Sát thủ"],
+];
+
+/** Thứ tự nhóm trong Tướng Lục. */
+export const LEDGER_GROUPS: readonly LedgerGroupInfo[] = [
+  { id: "hoaLu", name: "Cờ lau Hoa Lư", intro: "Những người theo cờ lau từ buổi đầu ở Hoa Lư." },
+  { id: "suQuan", name: "Thập nhị sứ quân", intro: "Mười hai sứ quân, mỗi người giữ một vùng đất riêng." },
+  { id: "kyNhan", name: "Kỳ nhân", intro: "Hai người lạ đi khắp các làng, không đứng về phe nào." },
+  ...PROFESSION_GROUPS.map(([p, name]): LedgerGroupInfo => ({ id: `nghe.${p}`, name, intro: `Bảy ${name.toLowerCase()}, mỗi người mang một hệ.` })),
+];
+
+/** Nhóm của một tướng: Đinh Bộ Lĩnh và tướng theo ông vào Cờ lau Hoa Lư, sứ quân, kỳ nhân, còn lại theo nghề. */
+export function ledgerGroup(characterId: string): LedgerGroupId {
+  if (characterId === "dinhBoLinh" || isHero(characterId)) return "hoaLu";
+  if (isWarlord(characterId)) return "suQuan";
+  const info = rosterCharacter(characterId);
+  if (info?.tier === "dacBiet") return "kyNhan";
+  return `nghe.${info?.profession ?? "tuongSi"}`;
+}
+
+export interface LedgerGroupView extends LedgerGroupInfo {
+  readonly entries: readonly LedgerEntry[];
+  readonly found: number;
+}
+
+/** Nhóm có tướng trong sổ đang chạy, theo thứ tự `LEDGER_GROUPS`. */
+export function ledgerGroups(entries: readonly LedgerEntry[]): readonly LedgerGroupView[] {
+  return LEDGER_GROUPS.map((g) => {
+    const list = entries.filter((e) => e.group === g.id);
+    return { ...g, entries: list, found: list.filter((e) => e.found).length };
+  }).filter((g) => g.entries.length > 0);
+}
+
+/** Tầng trên của bộ lọc Tướng Lục: ba nhóm danh tướng và một mục gộp "Tướng thường" (tầng dưới là 8 nghề). */
+export type LedgerSectionId = "hoaLu" | "suQuan" | "kyNhan" | "thuong";
+
+export interface LedgerSection {
+  readonly id: LedgerSectionId;
+  readonly name: string;
+  readonly found: number;
+  readonly total: number;
+  /** Chỉ "Tướng thường": các nhóm nghề có trong sổ. */
+  readonly groups: readonly LedgerGroupView[];
+}
+
+/** Nhãn ngắn cho hàng chip tầng trên (tên đầy đủ của nhóm hiện ở dòng giới thiệu). */
+const SECTION_NAME: Readonly<Record<LedgerSectionId, string>> = { hoaLu: "Hoa Lư", suQuan: "Sứ quân", kyNhan: "Kỳ nhân", thuong: "Tướng thường" };
+
+export const sectionOf = (group: LedgerGroupId): LedgerSectionId => (group.startsWith("nghe.") ? "thuong" : (group as LedgerSectionId));
+
+/** Gom nhóm thành tầng trên, giữ thứ tự; bỏ mục không có tướng. Thêm nghề hay nhóm mới không thêm hàng chip. */
+export function ledgerSections(groups: readonly LedgerGroupView[]): readonly LedgerSection[] {
+  const out: LedgerSection[] = [];
+  for (const g of groups) {
+    const id = sectionOf(g.id);
+    const prev = out.find((x) => x.id === id);
+    if (prev) out[out.indexOf(prev)] = { ...prev, found: prev.found + g.found, total: prev.total + g.entries.length, groups: [...prev.groups, g] };
+    else out.push({ id, name: SECTION_NAME[id], found: g.found, total: g.entries.length, groups: [g] });
+  }
+  return out;
+}
+
+/** Nhóm mở mặc định: nhóm đầu tiên chưa tìm đủ (đủ cả thì nhóm đầu). */
+export function defaultLedgerGroup(groups: readonly LedgerGroupView[]): LedgerGroupId | null {
+  return (groups.find((g) => g.found < g.entries.length) ?? groups[0])?.id ?? null;
+}
+
 export type LedgerEntry =
-  | { readonly found: true; readonly nodeId: NodeId; readonly pack: string; readonly characterId: string; readonly name: string; readonly tier: HeroTier; readonly info: CharacterInfo; readonly symbols: readonly string[] }
-  | { readonly found: false; readonly nodeId: NodeId; readonly pack: string; readonly tier: HeroTier };
+  | { readonly found: true; readonly nodeId: NodeId; readonly pack: string; readonly group: LedgerGroupId; readonly characterId: string; readonly name: string; readonly tier: HeroTier; readonly info: CharacterInfo; readonly symbols: readonly string[] }
+  | { readonly found: false; readonly nodeId: NodeId; readonly pack: string; readonly group: LedgerGroupId; readonly tier: HeroTier };
 
 /**
  * Thẻ Tướng Lục cho đủ số tướng của pack (A-15). Tướng chưa tìm chỉ lộ bậc (P-24), không có tên hay characterId.
@@ -127,11 +273,12 @@ export function ledger(catalog: Catalog, state: DiscoveryState): readonly Ledger
       const tier = n.tier ?? "thuong";
       const pack = n.pack ?? catalog.pack.id;
       const info = n.characterId ? rosterCharacter(n.characterId) : undefined;
-      if (!state.discoveredNodeIds.includes(n.id) || !info || !n.characterId) return { found: false, nodeId: n.id, pack, tier };
+      const group = ledgerGroup(n.characterId ?? "");
+      if (!state.discoveredNodeIds.includes(n.id) || !info || !n.characterId) return { found: false, nodeId: n.id, pack, group, tier };
       const final = catalog.pack.recipes.find((r) => r.result === n.id);
       // Dấu danh tính: nguyên liệu cuối không phải node vai trò (nghề/hệ đã hiện riêng). Không lấy từ art.
       const symbols = final ? [final.first, final.second].filter((id) => !catalog.nodes.get(id)?.role).map((id) => nameOf(catalog, id)) : [];
-      return { found: true, nodeId: n.id, pack, characterId: n.characterId, name: n.nameVi, tier, info, symbols };
+      return { found: true, nodeId: n.id, pack, group, characterId: n.characterId, name: n.nameVi, tier, info, symbols };
     });
 }
 

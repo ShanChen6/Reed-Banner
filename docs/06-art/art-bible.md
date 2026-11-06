@@ -1,6 +1,6 @@
 # Hình ảnh & yêu cầu cho họa sĩ
 
-> Cập nhật: 03/11/2026
+> Cập nhật: 06/11/2026
 > Trạng thái: **APPROVED** — Art Direction thống nhất 03/11/2026; hiện trạng asset/rig cũ không thay đổi cho đến khi nghiệm thu từng nhân vật.
 >
 > Kế hoạch đồ họa hoàn chỉnh (hoạt ảnh nhân vật, làm nhẹ ảnh, hiệu năng, trang trí) ở [Kế hoạch đồ họa](ke-hoach-do-hoa.md).
@@ -162,6 +162,26 @@ Canvas: 512x512. Must stay recognizable at 48 px.
 
 
 ---
+
+### 2.8 Tên ảnh icon khi gửi và khi lưu (06/11/2026)
+
+Icon (kỹ năng, bị động, yếu tố Tầm Tướng Ký) có **tên file trùng mã trong code**, nên code không cần bảng đổi tên và test kiểm được file có thật. Khi gửi ảnh cho Claude, đặt tên theo cột "Tên khi gửi"; Claude bỏ tiền tố, cắt nền thừa, xuất WebP và lưu theo cột "Lưu ở".
+
+| Loại | Tên khi gửi | Lưu ở | Danh sách mã / nơi khai báo |
+|---|---|---|---|
+| Kỹ năng (chiêu nghề, chiêu hệ, chiêu ô 4, tuyệt chiêu Đinh Bộ Lĩnh) | `skill_<mã kỹ năng>`, ví dụ `skill_camLoHoiXuan` | `public/art/skills/<mã kỹ năng>.webp`, 128 px | Prompt kèm mã ở [icon-ky-nang.md](prompts/icon-ky-nang.md); khai báo `SKILL_ART` trong `src/app/game/art/skills.tsx` |
+| Bị động | `passive_<mã>`, ví dụ `passive_kim1` | `public/art/passives/<mã>.webp` | [icon-bi-dong.md](prompts/icon-bi-dong.md); `PASSIVE_ART` trong `src/app/game/art/passives.tsx` |
+| Yếu tố Tầm Tướng Ký (vật liệu, tri thức, vai trò) | `ttk_<loại>_<mã>`, ví dụ `ttk_mat_armor`, `ttk_know_magic`, `ttk_role_hybrid` | `public/art/tam-tuong-ky/yeu-to/<loại>.<mã>.webp`, ví dụ `mat.armor.webp` | Mã yếu tố trong `src/core/tam-tuong-ky/catalog.ts`; khai báo `NODE_ART` trong `src/app/game/tam-tuong-ky/TamTuongKyScreen.tsx` |
+| Tri thức nghề Tầm Tướng Ký (dùng chung cho tri thức sơ học và node vai trò) | `ttk_nghe_<mã nghề>`, ví dụ `ttk_nghe_tuongSi` | `public/art/tam-tuong-ky/tri-thuc-nghe/<mã nghề>.webp` | Mã nghề: `tuongSi`, `binhLinh`, `ySu`, `muuSi`, `quanSu`, `phapSu`, `xaThu`, `satThu` |
+| Huy hiệu nghề (dùng khắp game) | `nghe_<mã nghề>` | `public/art/professions/<mã nghề>.webp` | Khác thư mục và khác hình với tri thức nghề Tầm Tướng Ký ở dòng trên |
+| Nguyên tố | `he_<mã hệ>` | `public/art/elements/<mã hệ>.webp` | `kim`, `moc`, `thuy`, `hoa`, `tho`, `loi`, `phong` |
+
+Quy tắc chung:
+
+- Mã viết đúng như trong code (camelCase, không dấu), không dùng tên tiếng Việt có dấu hay khoảng trắng. Không chắc mã thì gửi kèm tên tiếng Việt; Claude tra mã và báo lại.
+- Một ảnh chỉ thuộc một mã. Không dùng một file cho hai kỹ năng khác nhau (người chơi sẽ tưởng là một chiêu); cơ chế mượn ảnh hệ cũ cho chiêu ô 4 đã bỏ ngày 06/11/2026.
+- Gửi ảnh mới cho mã đã có ảnh nghĩa là **thay** ảnh cũ; Claude báo lại trước khi ghi đè.
+- Mã cũ dạng `rb0xx_…` của 14 Xạ thủ/Sát thủ đã đổi sang tên chiêu/bị động ngày 06/11/2026 (bảng đổi ở `src/core/battle/legacy-ids.ts`); ảnh cũ đặt tên `rb…` cũng đã đổi theo.
 
 ## 3. Art direction 03/11/2026 — Historical Grounded Fantasy (APPROVED)
 
