@@ -4,6 +4,7 @@
 // và nút Vào trận, lưới mười chế độ dẫn bằng tranh, hàng tiện ích cuối trang. Bấm vào đâu cũng chỉ đổi phân cảnh,
 // không tải lại trang. Khung, góc hoa văn và màu lấy lại từ Sử ký (lớp .campaign-atlas) để cùng một chất liệu.
 
+import { MODE_CONTENT_WIDTH } from "@/components/game-ui";
 import Image from "next/image";
 import { useSyncExternalStore } from "react";
 import { Logo } from "./art/logo";
@@ -96,7 +97,7 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
 
   return (
     <main className="campaign-atlas ui-mode-screen flex flex-col">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 lg:gap-10">
+      <div className={`mx-auto flex w-full flex-col gap-8 lg:gap-10 ${MODE_CONTENT_WIDTH}`}>
         <section aria-labelledby="home-title" className="home-hero atlas-frame relative isolate overflow-hidden">
           <Image
             src={HERO_ART}

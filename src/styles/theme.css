@@ -152,6 +152,8 @@
 }
 
 @theme {
+  /* Màn rộng (>=1800px): cột nội dung mode-screen nở tới 1680px, xem MODE_CONTENT_WIDTH. */
+  --breakpoint-3xl: 112.5rem;
   --radius-control: 0.5rem;
   --radius-card: 0.75rem;
   --shadow-card: 0 6px 20px -12px #0008;
