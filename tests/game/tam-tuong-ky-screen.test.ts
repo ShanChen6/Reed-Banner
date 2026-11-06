@@ -258,7 +258,7 @@ describe("Màn chơi", () => {
 
 describe("tab Tầm Tướng Ký trên trang Xếp hạng", () => {
   it("vẽ điểm và số nguyên tố đã tiêu; hạng của mình ngoài top hiện riêng", async () => {
-    const { TtkBoard } = await import("../../src/app/game/leaderboard/LeaderboardScreen");
+    const { TtkBoard } = await import("../../src/app/game/leaderboard/boards");
     const html = renderToStaticMarkup(
       createElement(TtkBoard, { data: { week: "2026-11-02", top: [{ rank: 1, name: "Shan", mine: false, points: 500, unitsSpent: 90 }], mine: { rank: 7, points: 200, unitsSpent: 10 } } }),
     );

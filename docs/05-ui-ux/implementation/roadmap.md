@@ -174,7 +174,7 @@ Trạng thái mục này: **DRAFT**. Shan đưa danh sách ngày 06/11/2026 và 
 | V2-03 | Trận Đồ | Thẻ bậc cao bằng nhau | Đã làm (06/11) |
 | V2-04 | Trận Đồ | Thêm tab Bảng xếp hạng và tab Ban thưởng | Đã làm (06/11) |
 | V2-05 | Trận Đồ, Nhiệm vụ | Đưa Bộ sưu tập địa danh vào Thành tựu | Đã làm (06/11) |
-| V2-06 | Trang chủ, chế độ có xếp hạng | Tách: trang Công Trạng (thành tích theo mùa) và bảng xếp hạng mùa hiện tại trong từng chế độ | UI + API đọc |
+| V2-06 | Trang chủ, chế độ có xếp hạng | Tách: trang Công Trạng (thành tích theo mùa) và bảng xếp hạng mùa hiện tại trong từng chế độ | Đã làm (06/11) |
 | V2-07 | Tháp Thiên Mệnh | Thêm chân dung tướng khi khóa đội | Đã làm (06/11) |
 
 Thứ tự đề xuất: V2-07, V2-01, V2-03 (nhỏ, chỉ UI) → V2-04 → V2-06 → V2-02 (khi có ảnh) → V2-05 (đụng dữ liệu hồ sơ, cần Shan duyệt số thưởng).
@@ -226,6 +226,7 @@ Thứ tự đề xuất: V2-07, V2-01, V2-03 (nhỏ, chỉ UI) → V2-04 → V2-
 - **Shan chốt 06/11**: tách làm hai, không còn liên kết giữa hai bên.
   1. **Trang Công Trạng** (thay "Xếp hạng" ở Trang chủ): thành tích theo mùa của người chơi, gom mọi chế độ có xếp hạng (mùa này, các mùa trước, hạng và thưởng đã nhận). Tên **Công Trạng** (Shan chốt 06/11). Route giữ `/game/leaderboard` hoặc đổi `/game/honors` kèm chuyển hướng 308.
   2. **Bảng xếp hạng trong chế độ**: mỗi chế độ hiện bảng **mùa hiện tại** ngay trong màn (top và hạng của mình), không có nút dẫn sang Công Trạng. Bỏ các nút "Bảng xếp hạng" đang dẫn sang trang riêng ở Trấn Ải, Quần Hùng, Tháp Thiên Mệnh. Phần hiển thị bảng tách từ `LeaderboardScreen.tsx` thành component dùng chung.
+- **Đã làm (06/11)**: trang Công Trạng giữ route `/game/leaderboard` (không cần chuyển hướng); phần "Mùa này" đọc hạng từ bảng từng chế độ, phần "Các mùa trước" đọc `GET /api/honors` (gom sổ nhận thưởng hạng chung và ván Trận Đồ đã nhận). Bảng mùa hiện tại nằm trong màn Trấn Ải, Quần Hùng, Tháp Thiên Mệnh (`leaderboard/boards.tsx`); Tầm Tướng Ký và Trận Đồ đã có bảng sẵn trong màn.
 - Chế độ có bảng trong màn: Trấn Ải, Quần Hùng, Tháp Thiên Mệnh, Trận Đồ (tab ở V2-04), Tầm Tướng Ký xếp hạng. **Nhật Lệnh và Bình Loạn không làm bảng xếp hạng** (Shan chốt 06/11); bảng điểm trong ngày của Nhật Lệnh đang có giữ nguyên.
 
 ### V2-07 — Tháp Thiên Mệnh: chân dung khi khóa đội

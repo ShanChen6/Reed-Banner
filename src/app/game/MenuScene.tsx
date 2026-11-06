@@ -64,7 +64,7 @@ const ONLINE_RANKED: readonly Scene[] = ["DAILY", "SURVIVAL", "ARENA", "DESTINY"
 const UTILITIES: readonly { scene: Scene; title: string; icon: UtilityIcon }[] = [
   { scene: "SHOP", title: "Cửa Hàng", icon: "shop" },
   { scene: "QUESTS", title: "Nhiệm vụ", icon: "scroll" },
-  { scene: "LEADERBOARD", title: "Xếp hạng", icon: "rank" },
+  { scene: "LEADERBOARD", title: "Công Trạng", icon: "rank" },
   { scene: "PRACTICE", title: "Thao Luyện", icon: "swords" },
 ];
 

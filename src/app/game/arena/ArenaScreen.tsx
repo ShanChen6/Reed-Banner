@@ -19,6 +19,7 @@ import {
   type ArenaResponse,
 } from "../battle/online";
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
+import { SeasonBoardPanel } from "../leaderboard/boards";
 import { SceneLink, useScene } from "../SceneContext";
 
 function Members({ list }: { list: readonly ArenaMember[] }) {
@@ -125,14 +126,10 @@ export default function ArenaScreen() {
           { label: "Hạng", value: data.rank != null ? `#${data.rank}` : "–" },
           { label: "Lượt hôm nay", value: `${left}/${data.attacksPerDay ?? 0}` },
         ]}
-        actions={
-          <SceneLink scene="LEADERBOARD" params={{ board: "arena" }} className={buttonVariants({ variant: "secondary", className: "min-h-11" })}>
-            Bảng xếp hạng
-          </SceneLink>
-        }
       />
 
       <RankRewardsPanel mode="arena" />
+      <SeasonBoardPanel board="arena" />
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <div className="order-2 flex min-w-0 flex-col gap-4 lg:order-1">

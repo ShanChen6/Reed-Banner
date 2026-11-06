@@ -1,7 +1,7 @@
 "use client";
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { FrameInset, ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
-import { Alert, Button, ChoiceChip, buttonVariants } from "@/components/ui";
+import { Alert, Button, ChoiceChip } from "@/components/ui";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   DESTINY_BOON_CATALOG,
@@ -17,7 +17,8 @@ import {
 import { ONLINE_BATTLE_KEY } from "../battle/online";
 import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
 import { Portrait } from "../art/portraits";
-import { useScene, SceneLink } from "../SceneContext";
+import { DestinyBoardPanel } from "../leaderboard/boards";
+import { useScene } from "../SceneContext";
 import { describeRules, RULE_TAG } from "../trial/trial-ui";
 import {
   DESTINY_ERROR_TEXT,
@@ -202,16 +203,12 @@ export default function DestinyScreen() {
           { label: "Kỷ lục chu kỳ", value: `Tầng ${overview.progress?.cycleBest ?? 0}` },
           { label: "Đá Cường Hóa", value: overview.stones },
         ]}
-        actions={
-          <SceneLink scene="LEADERBOARD" params={{ board: "destiny" }} className={buttonVariants({ variant: "secondary", className: "min-h-11" })}>
-            Bảng xếp hạng
-          </SceneLink>
-        }
       />
 
       {message && <Alert className="p-3 text-sm">{message}</Alert>}
 
       <RankRewardsPanel mode="destiny" />
+      <DestinyBoardPanel />
 
       {noActiveRun && (
         <OrnateFrame level="raised">

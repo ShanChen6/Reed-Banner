@@ -71,7 +71,7 @@ export const SCENE_TITLE: Record<Scene, string> = {
   KHAI_LO: "Khai Lộ",
   QUESTS: "Nhiệm vụ",
   SHOP: "Cửa Hàng",
-  LEADERBOARD: "Bảng xếp hạng",
+  LEADERBOARD: "Công Trạng",
   PROFILE: "Doanh Trại",
   LOGIN: "Đăng nhập",
   REGISTER: "Đăng ký",
