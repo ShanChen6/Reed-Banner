@@ -195,6 +195,35 @@ export function ledgerGroups(entries: readonly LedgerEntry[]): readonly LedgerGr
   }).filter((g) => g.entries.length > 0);
 }
 
+/** Tầng trên của bộ lọc Tướng Lục: ba nhóm danh tướng và một mục gộp "Tướng thường" (tầng dưới là 8 nghề). */
+export type LedgerSectionId = "hoaLu" | "suQuan" | "kyNhan" | "thuong";
+
+export interface LedgerSection {
+  readonly id: LedgerSectionId;
+  readonly name: string;
+  readonly found: number;
+  readonly total: number;
+  /** Chỉ "Tướng thường": các nhóm nghề có trong sổ. */
+  readonly groups: readonly LedgerGroupView[];
+}
+
+/** Nhãn ngắn cho hàng chip tầng trên (tên đầy đủ của nhóm hiện ở dòng giới thiệu). */
+const SECTION_NAME: Readonly<Record<LedgerSectionId, string>> = { hoaLu: "Hoa Lư", suQuan: "Sứ quân", kyNhan: "Kỳ nhân", thuong: "Tướng thường" };
+
+export const sectionOf = (group: LedgerGroupId): LedgerSectionId => (group.startsWith("nghe.") ? "thuong" : (group as LedgerSectionId));
+
+/** Gom nhóm thành tầng trên, giữ thứ tự; bỏ mục không có tướng. Thêm nghề hay nhóm mới không thêm hàng chip. */
+export function ledgerSections(groups: readonly LedgerGroupView[]): readonly LedgerSection[] {
+  const out: LedgerSection[] = [];
+  for (const g of groups) {
+    const id = sectionOf(g.id);
+    const prev = out.find((x) => x.id === id);
+    if (prev) out[out.indexOf(prev)] = { ...prev, found: prev.found + g.found, total: prev.total + g.entries.length, groups: [...prev.groups, g] };
+    else out.push({ id, name: SECTION_NAME[id], found: g.found, total: g.entries.length, groups: [g] });
+  }
+  return out;
+}
+
 /** Nhóm mở mặc định: nhóm đầu tiên chưa tìm đủ (đủ cả thì nhóm đầu). */
 export function defaultLedgerGroup(groups: readonly LedgerGroupView[]): LedgerGroupId | null {
   return (groups.find((g) => g.found < g.entries.length) ?? groups[0])?.id ?? null;

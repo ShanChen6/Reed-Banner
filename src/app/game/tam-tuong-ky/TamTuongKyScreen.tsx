@@ -9,7 +9,7 @@ import { ModeBanner } from "@/components/game-ui";
 import { ChoiceChip, buttonVariants } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { PROFESSION_DISPLAY_NAME, type Element } from "@/core/battle";
+import { PROFESSION_DISPLAY_NAME, type Element, type Profession } from "@/core/battle";
 import { catalogForPack, openIngredients, rosterCharacter, type Catalog, type CatalogNode, type DiscoveryState, type HintLevel, type NodeId } from "@/core/tam-tuong-ky";
 import { AtlasCorners } from "../campaign/AtlasFrame";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
@@ -28,8 +28,10 @@ import {
   ledger,
   ledgerGroup,
   ledgerGroups,
+  ledgerSections,
   nameOf,
   rankedNodes,
+  sectionOf,
   noticeFor,
   pickInto,
   swapSlots,
@@ -264,6 +266,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
             onPick={(id) => setSlots((s) => pickInto(s, id))}
             hidden={tab !== "library"}
             flash={flash}
+            showHelp={tip !== null}
           />
           <Ledger entries={entries} found={found} hidden={tab !== "ledger"} group={ledgerTab} onGroup={setLedgerTab} focus={ledgerFocus} />
         </div>
@@ -468,7 +471,10 @@ function Panel({ id, title, children, className = "", hidden = false }: { id: st
   );
 }
 
-/** Ô yếu tố cao cố định (mục 7.6): tên tối đa 2 dòng, chấm vàng và ×n nằm góc trên phải, không chiếm chỗ của tên. */
+/**
+ * Ô yếu tố dạng thẻ vuông, icon là chính (mục 7.6, chỉnh 06/11/2026): icon trên, tên tối đa 2 dòng chữ nhỏ dưới,
+ * cao cố định; chấm vàng “còn công thức” hoặc ×n ở góc trên phải. `title` và nhãn đọc màn hình có đủ tên.
+ */
 function NodeChip({ node, onPick, badge, count, flash }: { node: CatalogNode; onPick: (id: NodeId) => void; badge?: boolean; count?: number; flash?: boolean }) {
   return (
     <button
@@ -476,12 +482,12 @@ function NodeChip({ node, onPick, badge, count, flash }: { node: CatalogNode; on
       onClick={() => onPick(node.id)}
       title={node.nameVi}
       aria-label={`${node.nameVi}${count !== undefined ? `, còn ${count}` : ""}${badge ? ", còn công thức chưa tìm" : ""}`}
-      className={`relative flex h-14 w-full items-center gap-2 rounded-lg border bg-[var(--atlas-wood-lo)] py-1 pr-4 pl-2.5 text-left transition-colors hover:border-[var(--atlas-gold)] focus-visible:outline-2 focus-visible:outline-[var(--atlas-gold-hi)] ${flash ? "border-[var(--atlas-gold-hi)] motion-safe:animate-[ttk-flash_0.9s_ease-out]" : "border-[var(--atlas-border-soft)]"}`}
+      className={`relative flex h-[5.25rem] w-full flex-col items-center justify-center gap-1 rounded-lg border bg-[var(--atlas-wood-lo)] px-1 pt-1.5 pb-1 text-center transition-colors hover:border-[var(--atlas-gold)] focus-visible:outline-2 focus-visible:outline-[var(--atlas-gold-hi)] ${flash ? "border-[var(--atlas-gold-hi)] motion-safe:animate-[ttk-flash_0.9s_ease-out]" : "border-[var(--atlas-border-soft)]"}`}
     >
-      <NodeGlyph node={node} className="size-7" />
-      <span className="line-clamp-2 min-w-0 flex-1 text-[13px] leading-tight">{node.nameVi}</span>
-      {count !== undefined && <span aria-hidden className="absolute top-0.5 right-1.5 text-[10px] text-[var(--atlas-muted)] tabular-nums">×{count}</span>}
-      {badge && <span aria-hidden className="absolute top-1.5 right-1.5 size-2 rounded-full bg-[var(--atlas-gold-hi)]" title="Còn công thức chưa tìm" />}
+      <NodeGlyph node={node} className="size-9" />
+      <span aria-hidden className="line-clamp-2 w-full text-[11px] leading-[1.15]">{node.nameVi}</span>
+      {count !== undefined && <span aria-hidden className="absolute top-0.5 right-1 text-[10px] text-[var(--atlas-muted)] tabular-nums">×{count}</span>}
+      {badge && <span aria-hidden className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-[var(--atlas-gold-hi)]" title="Còn công thức chưa tìm" />}
     </button>
   );
 }
@@ -593,6 +599,7 @@ function Library({
   counts,
   units,
   flash = null,
+  showHelp = false,
 }: {
   nodes: readonly CatalogNode[];
   onPick: (id: NodeId) => void;
@@ -604,6 +611,8 @@ function Library({
   units?: number;
   /** Yếu tố vừa khám phá: mở trang có nó và nhấp nháy một lần (mục 7.5). */
   flash?: Focus | null;
+  /** Câu hướng dẫn cách đặt ô: chỉ hiện cho người mới (chưa ghép ra gì). */
+  showHelp?: boolean;
 }) {
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState<string | null>(null);
@@ -611,7 +620,10 @@ function Library({
   const groups = groupsOf(all);
   // 2 cột × 8 hàng trên máy tính, 12 ô trên điện thoại (mục 7.6). Đổi từ khóa/nhóm thì về trang 1 (key mới);
   // có yếu tố mới trong danh sách đang lọc thì mở trang có nó.
-  const pageSize = useIsDesktop() ? 16 : 12;
+  const pageSize = useIsDesktop() ? 24 : 16;
+  // Một hàng lọc: “Tất cả” + nhóm đầu (Nguyên tố) là chip, nhóm còn lại gom vào ô chọn lấp phần còn lại của hàng.
+  const shown = groups.slice(0, 1);
+  const more = groups.slice(1);
   const flashIndex = flash ? nodes.findIndex((n) => n.id === flash.id) : -1;
   const listKey = `${query}|${group ?? ""}${flashIndex >= 0 ? `|${flash!.seq}` : ""}`;
   return (
@@ -626,23 +638,42 @@ function Library({
           className="min-h-11 rounded-lg border border-[var(--atlas-border-soft)] bg-[var(--atlas-wood-lo)] px-3 text-[var(--atlas-ink-on-wood)] placeholder:text-[var(--atlas-muted)]"
         />
       </label>
-      <div className="flex flex-wrap gap-1.5" role="group" aria-label="Lọc theo nhóm">
-        {[{ id: null, name: "Tất cả" }, ...groups].map((g) => (
+      <div className="flex items-center gap-1.5" role="group" aria-label="Lọc theo nhóm">
+        {[{ id: null, name: "Tất cả" }, ...shown].map((g) => (
           <button
             key={g.id ?? "all"}
             type="button"
             aria-pressed={group === g.id}
             onClick={() => setGroup(g.id)}
-            className={`min-h-9 rounded-full border px-3 text-xs ${group === g.id ? "border-[var(--atlas-gold)] bg-[var(--atlas-wood-hi)] text-[var(--atlas-title)]" : "border-[var(--atlas-border-soft)]"}`}
+            className={`min-h-8 shrink-0 rounded-full border px-2.5 text-xs whitespace-nowrap ${group === g.id ? "border-[var(--atlas-gold)] bg-[var(--atlas-wood-hi)] text-[var(--atlas-title)]" : "border-[var(--atlas-border-soft)]"}`}
           >
             {g.name}
           </button>
         ))}
+        {more.length > 0 && (
+          <label className="min-w-0 flex-1">
+            <span className="sr-only">Nhóm khác</span>
+            <select
+              value={more.some((g) => g.id === group) ? (group ?? "") : ""}
+              onChange={(e) => setGroup(e.target.value || null)}
+              className={`min-h-8 w-full rounded-full border bg-[var(--atlas-wood-lo)] px-2.5 text-xs ${more.some((g) => g.id === group) ? "border-[var(--atlas-gold)] text-[var(--atlas-title)]" : "border-[var(--atlas-border-soft)]"}`}
+            >
+              <option value="">Nhóm khác…</option>
+              {more.map((g) => (
+                <option key={g.id} value={g.id}>
+                  {g.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
       </div>
-      <p className="text-xs text-[var(--atlas-muted)]">
-        Bấm một yếu tố để đặt vào ô trước, bấm tiếp để đặt vào ô sau.
-        {units !== undefined && ` Bảy nguyên tố dùng chung túi (còn ${units} đơn vị).`}
-      </p>
+      {(showHelp || units !== undefined) && (
+        <p className="text-xs text-[var(--atlas-muted)]">
+          {showHelp && "Bấm một yếu tố để đặt vào ô trước, bấm tiếp để đặt vào ô sau."}
+          {units !== undefined && `Bảy nguyên tố dùng chung túi (còn ${units} đơn vị).`}
+        </p>
+      )}
       <LibraryPage
         key={listKey}
         nodes={nodes}
@@ -678,7 +709,7 @@ function LibraryPage({
   const paged = usePagedItems(nodes, pageSize, initialPage);
   return (
     <>
-      <ul className="grid auto-rows-fr grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2">
+      <ul className="grid grid-cols-4 gap-1.5 sm:grid-cols-8 lg:grid-cols-4">
         {paged.pageItems.map((n) => (
           <li key={n.id}>
             <NodeChip
@@ -921,8 +952,9 @@ function ResultCard({ result, onUse }: { result: AltarResult | null; onUse: (id:
 }
 
 /**
- * Tướng Lục chia nhóm theo quan hệ (mục 7.2): hàng chip nhóm kèm x/y, dòng giới thiệu, danh sách phân trang
- * 6 thẻ (máy tính) / 4 thẻ (điện thoại). Gói phát hành không hiện ở đây. Tướng vừa tìm thấy: mở nhóm và trang của nó.
+ * Tướng Lục chia nhóm theo quan hệ (mục 7.2, chỉnh 06/11/2026). Bộ lọc hai tầng, luôn một hàng mỗi tầng: Hoa Lư ·
+ * Sứ quân · Kỳ nhân · Tướng thường; chọn Tướng thường thì hiện hàng icon 8 nghề. Thẻ là ô chân dung 3 cột, bấm tướng
+ * đã tìm thì mở khung chi tiết (nghề, hệ, dấu tích). Tướng vừa tìm thấy: mở nhóm và trang của nó, ô sáng lên.
  */
 function Ledger({
   entries,
@@ -940,48 +972,163 @@ function Ledger({
   focus: Focus | null;
 }) {
   const groups = ledgerGroups(entries);
+  const sections = ledgerSections(groups);
   const active = groups.find((g) => g.id === group) ?? groups.find((g) => g.id === defaultLedgerGroup(groups)) ?? groups[0];
-  const pageSize = useIsDesktop() ? 6 : 4;
+  const activeSection = active ? sectionOf(active.id) : undefined;
+  const pageSize = useIsDesktop() ? 9 : 6;
   const focusIndex = active && focus ? active.entries.findIndex((e) => e.nodeId === focus.id) : -1;
+  const [detail, setDetail] = useState<LedgerEntry | null>(null);
+  const pickSection = (sec: (typeof sections)[number]) => onGroup((defaultLedgerGroup(sec.groups) ?? sec.groups[0]!.id) as LedgerGroupId);
+  const professions = sections.find((x) => x.id === "thuong")?.groups ?? [];
   return (
     <Panel id="ttk-ledger" title={`Tướng Lục · ${found}/${entries.length}`} hidden={hidden}>
-      <div role="group" aria-label="Nhóm tướng" className="flex flex-wrap gap-1.5">
-        {groups.map((g) => (
-          <ChoiceChip key={g.id} selected={g.id === active?.id} onClick={() => onGroup(g.id)}>
-            {g.name} <span className="tabular-nums opacity-80">{g.found}/{g.entries.length}</span>
-          </ChoiceChip>
-        ))}
+      <div role="group" aria-label="Nhóm tướng" className="grid auto-cols-fr grid-flow-col gap-1 rounded-lg border border-[var(--atlas-border-soft)] bg-[var(--atlas-wood-lo)] p-1">
+        {sections.map((sec) => {
+          const selected = sec.id === activeSection;
+          return (
+            <button
+              key={sec.id}
+              type="button"
+              aria-pressed={selected}
+              onClick={() => pickSection(sec)}
+              className={`flex min-w-0 flex-col items-center rounded-md px-1 py-1 leading-tight ${selected ? "bg-[var(--atlas-wood-hi)] text-[var(--atlas-title)] ring-1 ring-[var(--atlas-gold)]" : "hover:bg-[var(--atlas-wood-hi)]/60"}`}
+            >
+              <span className="truncate text-xs font-semibold">{sec.name}</span>
+              <span className="text-[10px] text-[var(--atlas-muted)] tabular-nums">
+                {sec.found}/{sec.total}
+              </span>
+            </button>
+          );
+        })}
       </div>
+      {activeSection === "thuong" && professions.length > 0 && (
+        <div role="group" aria-label="Nghề" className="flex justify-between gap-1">
+          {professions.map((g) => {
+            const profession = g.id.slice("nghe.".length) as Profession;
+            const selected = g.id === active?.id;
+            return (
+              <button
+                key={g.id}
+                type="button"
+                aria-pressed={selected}
+                aria-label={`${g.name} ${g.found}/${g.entries.length}`}
+                title={`${g.name} ${g.found}/${g.entries.length}`}
+                onClick={() => onGroup(g.id)}
+                className={`flex min-w-0 flex-1 flex-col items-center rounded-md border px-0.5 py-1 ${selected ? "border-[var(--atlas-gold)] bg-[var(--atlas-wood-hi)]" : "border-transparent hover:border-[var(--atlas-border-soft)]"}`}
+              >
+                <ProfessionIcon profession={profession} className="size-7" />
+                <span aria-hidden className="text-[10px] text-[var(--atlas-muted)] tabular-nums">{g.found}/{g.entries.length}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
       {active && (
         <>
-          <p className="text-xs text-[var(--atlas-muted)] italic">{active.intro}</p>
+          <p className="text-xs text-[var(--atlas-muted)] italic">
+            <span className="font-semibold not-italic">{active.name}.</span> {active.intro}
+          </p>
           <LedgerPage
             key={`${active.id}${focusIndex >= 0 ? `|${focus!.seq}` : ""}`}
             entries={active.entries}
             pageSize={pageSize}
             initialPage={focusIndex >= 0 ? Math.floor(focusIndex / pageSize) : 0}
             focusId={focusIndex >= 0 ? focus!.id : undefined}
+            onOpen={setDetail}
           />
         </>
       )}
       <p className="text-xs text-[var(--atlas-muted)]">Tìm thấy chân dung chỉ ghi vào Tướng Lục, không thêm tướng vào đội.</p>
+      <HeroDetail entry={detail} onClose={() => setDetail(null)} />
     </Panel>
   );
 }
 
-function LedgerPage({ entries, pageSize, initialPage, focusId }: { entries: readonly LedgerEntry[]; pageSize: number; initialPage: number; focusId?: NodeId }) {
+function LedgerPage({
+  entries,
+  pageSize,
+  initialPage,
+  focusId,
+  onOpen,
+}: {
+  entries: readonly LedgerEntry[];
+  pageSize: number;
+  initialPage: number;
+  focusId?: NodeId;
+  onOpen: (e: LedgerEntry) => void;
+}) {
   const paged = usePagedItems(entries, pageSize, initialPage);
   return (
     <>
-      <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
+      <ul className="grid grid-cols-3 gap-2 sm:grid-cols-6 lg:grid-cols-3">
         {paged.pageItems.map((e) => (
           <li key={e.nodeId} className={e.nodeId === focusId ? "rounded-lg motion-safe:animate-[ttk-glow_1.1s_ease-out_2]" : undefined}>
-            <LedgerCard entry={e} />
+            <LedgerTile entry={e} onOpen={onOpen} />
           </li>
         ))}
       </ul>
       <PageControls paged={paged} label="Trang Tướng Lục" className="mt-auto" />
     </>
+  );
+}
+
+/** Viền theo bậc cho ô chưa tìm: thay cho dòng chữ, bậc vẫn đọc được qua nhãn. */
+const TIER_RING: Readonly<Record<string, string>> = {
+  thuong: "border-[var(--atlas-border-soft)]",
+  dacBiet: "border-[#9b7fd0]",
+  lichSu: "border-[var(--atlas-gold)]",
+};
+
+/** Ô chân dung trong Tướng Lục. Chưa tìm: bóng “?”, viền theo bậc, không tên, không nghề/hệ (P-24). */
+function LedgerTile({ entry, onOpen }: { entry: LedgerEntry; onOpen: (e: LedgerEntry) => void }) {
+  const tile = "flex h-[6.75rem] w-full flex-col items-center justify-center gap-1 rounded-lg border p-1.5 text-center";
+  if (!entry.found)
+    return (
+      <div className={`${tile} border-dashed border-[var(--atlas-border-soft)] opacity-80`} title={`Tướng chưa tìm thấy · ${TIER_NAME[entry.tier]}`}>
+        <span aria-hidden className={`grid size-12 place-items-center rounded-full border-2 bg-[var(--atlas-wood-lo)] font-serif text-xl text-[var(--atlas-muted)] ${TIER_RING[entry.tier]}`}>?</span>
+        <span className="sr-only">Tướng chưa tìm thấy</span>
+        <span className="text-[10px] leading-tight text-[var(--atlas-muted)]">{TIER_NAME[entry.tier]}</span>
+      </div>
+    );
+  return (
+    <button
+      type="button"
+      onClick={() => onOpen(entry)}
+      aria-label={`${entry.name}, ${TIER_NAME[entry.tier]}. Xem chi tiết`}
+      className={`${tile} border-[var(--atlas-gold)] bg-[var(--atlas-wood-hi)] hover:border-[var(--atlas-gold-hi)]`}
+    >
+      <Portrait id={entry.characterId} element={entry.info.element} profession={entry.info.profession} className="size-12 shrink-0" />
+      <span className="line-clamp-2 font-serif text-xs leading-tight font-bold text-[var(--atlas-title)]">{entry.name}</span>
+    </button>
+  );
+}
+
+/** Khung chi tiết tướng đã tìm (hộp thoại gốc của trình duyệt: Esc để đóng, giữ focus trong khung). */
+function HeroDetail({ entry, onClose }: { entry: LedgerEntry | null; onClose: () => void }) {
+  const ref = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const d = ref.current;
+    if (!d) return;
+    if (entry && !d.open) d.showModal();
+    if (!entry && d.open) d.close();
+  }, [entry]);
+  return (
+    <dialog
+      ref={ref}
+      onClose={onClose}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+      aria-label={entry?.found ? entry.name : "Chi tiết tướng"}
+      className="campaign-atlas m-auto w-[min(26rem,calc(100vw-2rem))] rounded-xl border border-[var(--atlas-gold)] bg-[var(--atlas-wood)] p-0 text-[var(--atlas-ink-on-wood)] backdrop:bg-black/60"
+    >
+      {entry?.found && (
+        <div className="flex flex-col gap-3 p-4">
+          <LedgerCard entry={entry} />
+          <button type="button" onClick={onClose} className={buttonVariants({ variant: "secondary", className: "self-end" })}>
+            Đóng
+          </button>
+        </div>
+      )}
+    </dialog>
   );
 }
 
