@@ -3,7 +3,7 @@ import { existsSync } from "node:fs";
 import { test } from "node:test";
 import { ALL_PROFESSIONS, CHARACTER_SKILLS, DBL_ULTIMATES, ELEMENT_SKILLS, ROLE_SKILLS } from "../../src/core";
 import { SPECIAL_SKILL_SETS } from "../../src/core/battle/special-skills";
-import { PACK_3 } from "../../src/core/tam-tuong-ky/catalog";
+import { PACK_1_2_3, PACK_3 } from "../../src/core/tam-tuong-ky/catalog";
 import { personalSkillArtFile, skillArt } from "../../src/app/game/art/skills";
 
 test("ô 2/6 hệ (element_<mã>) dùng lại ảnh hệ cũ của Đinh Bộ Lĩnh", () => {
@@ -68,4 +68,15 @@ test("Tầm Tướng Ký: đủ tranh tri thức nghề cho 8 nghề ở public/
   for (const profession of ALL_PROFESSIONS) {
     assert.ok(existsSync(`public/art/tam-tuong-ky/tri-thuc-nghe/${profession}.webp`), profession);
   }
+});
+
+test("Tầm Tướng Ký: mọi yếu tố (trừ tướng và nguyên tố) có icon, không còn ô chữ cái", () => {
+  const missing = PACK_1_2_3.nodes.filter((n) => {
+    if (n.kind === "character" || n.element) return false;
+    if (existsSync(`public/art/tam-tuong-ky/yeu-to/${n.id}.webp`)) return false;
+    if (n.id.startsWith("know.skill.")) return personalSkillArtFile(n.id.slice("know.skill.".length)) === undefined;
+    const profession = n.professionHint ?? (n.role?.hybrid ? undefined : n.role?.profession);
+    return !(profession && existsSync(`public/art/tam-tuong-ky/tri-thuc-nghe/${profession}.webp`));
+  });
+  assert.deepEqual(missing.map((n) => n.id), []);
 });
