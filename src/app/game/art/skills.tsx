@@ -550,6 +550,8 @@ const SKILL_ART = new Set([
   "dn_kimQuangPhaTran", "dn_thuyAnhXuyenLuu", "dn_hoaBoDoatMenh", "dn_vanTuongQuyNhat", "dn_thoAnTranTam", "dn_loiVanKhaiLo",
   // Nhân vật đặc biệt Trần Vũ Phong: đủ 6 ô (ô 4 thay ảnh Phong Hành Vạn Lý dùng tạm trước đó).
   "vp_phongKhoiVanDong", "vp_muaGiangYLoan", "vp_lucDiepDanLo", "vp_vanDuThienLy", "vp_diaMachHoDoi", "vp_cuongPhongDoiCuc",
+  // Chiêu ô 4 riêng Shan vẽ (06/11/2026), thay ảnh hệ dùng lại: Mai Thanh, Hồng Đan, Doãn Nham, Trần Cương, Đàm Thảo.
+  "camLoHoiXuan", "danHoaHoiNguyen", "diaMachBungPhat", "kimQuaThietMa", "kinhCucTrienThan",
 ]);
 
 /**
@@ -559,24 +561,19 @@ const SKILL_ART = new Set([
 export const REUSED_SKILL_ART: Readonly<Record<string, string>> = {
   sieuLoaiPhaGiap: "kimAnPhaThien", // Lý Khuê
   rb069_ultimate: "doanKimNhatTuyen", // Bạch Phong Đao
-  kimQuaThietMa: "thietKyTungHoanh", // Trần Cương
   thietBichDongThanh: "giapDongHoThe", // Cao Kiên
   hoiHoSinhKhi: "coThuTranThien", // Kiều Thuận
   hoaLuThaoDuoc: "thanhTrucBaoPhu", // Trịnh Tú
   trucLamPhaTran: "thanhMocHoPhap", // Lâm Tùng
-  kinhCucTrienThan: "cuongVuThienDiep", // Đàm Thảo
   boHaiTranGiang: "thuyKiepVanTrung", // Trần Lãm
   namVietVuongAn: "bachDangTrieuDang", // Đinh Liễn
   rb064_lieuDiepToaGiang: "hanBangTien", // Lam Giang Phi Diệp
-  camLoHoiXuan: "linhThuyHoMenh", // Mai Thanh
   bachHoXuatSon: "lietDiemPhanThanh", // Phạm Bạch Hổ
   dinhQuocHoaKy: "hoaThieuLienTrai", // Nguyễn Bặc
   rb065_xichLuanLietTran: "xichDiemTien", // Xích Diệm Luân
-  danHoaHoiNguyen: "ducHoaTrungSinh", // Hồng Đan
   doDongKienTam: "thaiSonApDinh", // Đỗ Cảnh Thạc
   ngoaiGiapHoQuan: "kienThanhBatDong", // Đinh Điền
   sonHaTranKich: "sonBangDiaLiet", // Kha Sơn
-  diaMachBungPhat: "diaChanTamQuan", // Doãn Nham
   phongChauLoiKich: "cuuTieuLoiPhat", // Kiều Công Hãn
   thapDaoLoiBinh: "loiDinhHieuLenh", // Lê Hoàn
   rb067_loiChamTuocKhi: "loiTienXuyenVan", // Lôi Minh Xạ
