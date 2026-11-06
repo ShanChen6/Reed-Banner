@@ -188,8 +188,8 @@ Thứ tự đề xuất: V2-07, V2-01, V2-03 (nhỏ, chỉ UI) → V2-04 → V2-
 ### V2-02 — Trận Đồ: ảnh thumbnail cố định cho từng bậc
 
 - **Hiện tại**: thẻ bậc ở cả hai tab dùng `MapCard`: ô che gỗ phủ kín ("Bản đồ chưa lộ") và lộ dần theo tiến độ, thắng thì lộ hết kèm tên địa danh.
-- **Shan chốt (06/11)**: mọi thẻ bậc, cả tab Xếp hạng lẫn Chơi thường, dùng ảnh thumbnail cố định của bậc đó; bỏ ô che lộ dần trên thẻ. Shan sẽ gửi 4 ảnh. Tiến độ và địa danh của kỳ vẫn xem trong ván và ở Bộ sưu tập.
-- **Quy ước ảnh** (đề xuất): `public/art/formation/levels/<id>.webp` với id `huong-dan`, `thuong`, `kho`, `dai-tran`; tỉ lệ 2:1 như khung hiện tại, xuất 1280×640 WebP. Chưa có ảnh thì giữ bản đồ mẫu như bây giờ.
+- **Shan chốt (06/11)**: mọi thẻ bậc, cả tab Xếp hạng lẫn Chơi thường, dùng ảnh thumbnail cố định của bậc đó; bỏ ô che lộ dần trên thẻ. Shan sẽ gửi ảnh. Tiến độ và địa danh của kỳ vẫn xem trong ván và ở Bộ sưu tập.
+- **Ảnh**: 7 tệp (4 bậc Chơi thường + 3 bậc Xếp hạng, bản Xếp hạng thêm hậu tố `-ranked`) ở `public/art/formation/levels/`, 2:1, 1280×640 WebP; prompt ở [prompt hình ảnh Trận Đồ mục 5](../../06-art/prompts/tran-do-hinh-anh.md#5-thumbnail-thẻ-bậc-bản-2-06112026). Thiếu bản `-ranked` thì dùng ảnh Chơi thường cùng bậc; chưa có ảnh nào thì giữ thẻ như bây giờ.
 - `MapCard` chỉ còn dùng cho khung kết quả cuối ván (hiện cả bản đồ).
 
 ### V2-03 — Trận Đồ: thẻ cao bằng nhau
@@ -243,4 +243,4 @@ Thứ tự đề xuất: V2-07, V2-01, V2-03 (nhỏ, chỉ UI) → V2-04 → V2-
 5. Tên trang thành tích theo mùa: **Công Trạng**.
 6. Thẻ bậc Trận Đồ ở cả hai tab dùng ảnh thumbnail cố định, bỏ ô che lộ dần (V2-02).
 
-Còn chờ: 4 ảnh thumbnail bậc Trận Đồ.
+Còn chờ: 7 ảnh thumbnail bậc Trận Đồ (prompt đã có).
