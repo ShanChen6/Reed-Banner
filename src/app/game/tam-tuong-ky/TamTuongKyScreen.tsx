@@ -12,7 +12,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { PROFESSION_DISPLAY_NAME, type Element, type Profession } from "@/core/battle";
 import { HINT_GROUP_NAMES, catalogForPack, openIngredients, rosterCharacter, type Catalog, type CatalogNode, type DiscoveryState, type Hint, type HintLevel, type NodeId } from "@/core/tam-tuong-ky";
 import { AtlasCorners } from "../campaign/AtlasFrame";
-import { ElementIcon, ProfessionIcon } from "../art/icons";
+import { ElementIcon, HintIcon, ProfessionIcon } from "../art/icons";
 import { personalSkillArtFile } from "../art/skills";
 import { Portrait } from "../art/portraits";
 import {
@@ -215,7 +215,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
       setNotice({ tone: "repeat", text: hintText(hint) });
       const s = ++seq.current;
       setCard({ kind: "hint", hint, seq: s });
-      // Gợi ý nguyên liệu: bỏ lọc để ô đó hiện ra, mở trang có nó và đánh dấu 💡.
+      // Gợi ý nguyên liệu: bỏ lọc để ô đó hiện ra, mở trang có nó và đánh dấu đèn gợi ý (HintIcon).
       if (hint?.level === 2) {
         setHintId(hint.ingredientId);
         setFilter({ group: null, seq: s });
@@ -423,7 +423,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
             <AltarCard card={card} onUse={(id) => setSlots([id, null])} />
             <p className="text-xs text-[var(--atlas-muted)]">Nguyên tố lấy từ túi, dùng cho hệ nào cũng được.</p>
             <button type="button" disabled={!ready} aria-busy={pending} onClick={combine} className={buttonVariants({ className: "min-h-12 text-lg tracking-[0.12em] uppercase" })}>
-              {tried ? "Vẫn hợp nguyên" : "Hợp Nguyên"}
+              Hợp Nguyên
             </button>
             {tried && <TriedWarning cost="tiêu nguyên liệu" />}
             <div aria-live="polite" role="status" className={card && notice && notice.tone !== "invalid" ? "sr-only" : "min-h-12 rounded-lg border border-[var(--atlas-border-soft)] px-3 py-2 text-sm"}>
@@ -488,7 +488,7 @@ function MobileBar({ slots, ready, tried, onCombine }: { slots: Slots; ready: bo
           {tried && <span className="block text-xs text-[var(--atlas-muted)]">Đã ghép cặp này ở lần trước</span>}
         </p>
         <button type="button" disabled={!ready} onClick={onCombine} className={buttonVariants({ className: "min-h-11 shrink-0 px-5" })}>
-          {tried ? "Vẫn ghép" : "Hợp Nguyên"}
+          Hợp Nguyên
         </button>
       </div>
     </div>
@@ -526,7 +526,7 @@ function NodeChip({ node, onPick, badge, count, flash, hint }: { node: CatalogNo
       aria-label={`${node.nameVi}${count !== undefined ? `, còn ${count}` : ""}${badge ? ", còn công thức chưa tìm" : ""}${hint ? ", được gợi ý" : ""}`}
       className={`relative flex h-[5.25rem] w-full flex-col items-center justify-center gap-1 rounded-lg border bg-[var(--atlas-wood-lo)] px-1 pt-1.5 pb-1 text-center transition-colors hover:border-[var(--atlas-gold)] focus-visible:outline-2 focus-visible:outline-[var(--atlas-gold-hi)] ${flash ? "border-[var(--atlas-gold-hi)] motion-safe:animate-[ttk-flash_0.9s_ease-out]" : "border-[var(--atlas-border-soft)]"} ${hint ? "ring-2 ring-[var(--atlas-gold-hi)]" : ""}`}
     >
-      {hint && <span aria-hidden className="absolute top-0.5 left-1 text-[11px]">💡</span>}
+      {hint && <HintIcon className="absolute top-0.5 left-0.5 size-4" />}
       <NodeGlyph node={node} className="size-9" />
       <span aria-hidden className="line-clamp-2 w-full text-[11px] leading-[1.15]">{node.nameVi}</span>
       {count !== undefined && <span aria-hidden className="absolute top-0.5 right-1 text-[10px] text-[var(--atlas-muted)] tabular-nums">×{count}</span>}
@@ -658,7 +658,7 @@ function Library({
   flash?: Focus | null;
   /** Câu hướng dẫn cách đặt ô: chỉ hiện cho người mới (chưa ghép ra gì). */
   showHelp?: boolean;
-  /** Nguyên liệu của gợi ý mức 2: viền vàng và dấu 💡. */
+  /** Nguyên liệu của gợi ý mức 2: viền vàng và đèn gợi ý (HintIcon). */
   hintId?: NodeId | null;
   /** Yêu cầu đổi bộ lọc từ thẻ gợi ý; `seq` mới thì áp dụng một lần (xóa ô tìm, đặt nhóm). */
   filter?: { readonly group: string | null; readonly seq: number } | null;
@@ -827,7 +827,7 @@ function Altar(props: {
           onClick={props.onCombine}
           className={buttonVariants({ className: "min-h-12 text-lg tracking-[0.12em] uppercase" })}
         >
-          {props.tried ? "Vẫn hợp nguyên" : "Hợp Nguyên"}
+          Hợp Nguyên
         </button>
       ) : (
         <button
@@ -856,10 +856,10 @@ function Altar(props: {
       </p>
       <div role="group" aria-label={`Gợi ý, còn ${view.hintsLeft}/${view.hintsPerDay} hôm nay`} className="flex items-center gap-2 text-sm">
         <button type="button" disabled={pending || view.hintsLeft <= 0} onClick={() => props.onHint(1)} className="min-h-10 flex-1 rounded-lg border border-[var(--atlas-border-soft)] px-2 hover:border-[var(--atlas-gold)] disabled:opacity-50">
-          💡 Nhóm
+          <HintIcon className="mr-1 inline size-4 align-[-3px]" />Nhóm
         </button>
         <button type="button" disabled={pending || view.hintsLeft <= 0} onClick={() => props.onHint(2)} className="min-h-10 flex-1 rounded-lg border border-[var(--atlas-border-soft)] px-2 hover:border-[var(--atlas-gold)] disabled:opacity-50">
-          💡 Nguyên liệu
+          <HintIcon className="mr-1 inline size-4 align-[-3px]" />Nguyên liệu
         </button>
         <span className="shrink-0 text-xs text-[var(--atlas-muted)] tabular-nums">còn {view.hintsLeft}/{view.hintsPerDay}</span>
       </div>
@@ -1015,13 +1015,18 @@ function InfoCard({ id, state }: { id: NodeId; state: DiscoveryState }) {
 /** Thẻ gợi ý: mức 1 bấm để lọc Vạn Vật Lục theo nhóm, mức 2 bấm để đặt nguyên liệu vào ô trước. */
 function HintCard({ hint, onUse, onFilterGroup }: { hint: Hint | null; onUse: (id: NodeId) => void; onFilterGroup?: (group: string) => void }) {
   const catalog = useCatalog();
-  if (!hint) return <div className={`${CARD_BOX} border-[var(--atlas-border-soft)] text-sm`}>💡 Không còn công thức nào ghép được ngay từ những gì đã có.</div>;
+  if (!hint)
+    return (
+      <div className={`${CARD_BOX} border-[var(--atlas-border-soft)] text-sm`}>
+        <HintIcon className="size-8 shrink-0" /> Không còn công thức nào ghép được ngay từ những gì đã có.
+      </div>
+    );
   const group = HINT_GROUP_NAMES[hint.hintGroup] ?? hint.hintGroup;
   const ingredient = hint.level === 2 ? catalog.nodes.get(hint.ingredientId) : undefined;
   const act = () => (ingredient ? onUse(ingredient.id) : onFilterGroup?.(hint.hintGroup));
   return (
     <button type="button" onClick={act} className={`${CARD_BOX} w-full border-[var(--atlas-gold)] hover:border-[var(--atlas-gold-hi)] motion-safe:animate-[ttk-reveal_0.3s_ease-out]`}>
-      <span aria-hidden className="text-2xl">💡</span>
+      <HintIcon className="size-8 shrink-0" />
       {ingredient && <NodeGlyph node={ingredient} className="size-12" />}
       <span className="min-w-0 flex-1 text-sm">
         {ingredient ? (
