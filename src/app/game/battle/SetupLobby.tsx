@@ -23,7 +23,7 @@ import {
 } from "@/core";
 import { ELEMENT_TRAIT, PROFESSION_PERK } from "../../home/data";
 import { GearIcon, SetEmblem } from "../art/gear";
-import { DongSonBand, ELEMENT_COLOR, ElementIcon, LeaderFlag, PROFESSION_COLOR, ProfessionIcon } from "../art/icons";
+import { DongSonBand, ElementIcon, LeaderFlag, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import SkillDetails from "./SkillDetails";
 import { SkillIcon } from "../art/skills";
@@ -128,15 +128,8 @@ export default function SetupLobby({
 }) {
   const practice = mode === "practice";
   return (
-    <div className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-2xl border-2 border-frame-gold/70 bg-wood-lo text-on-wood shadow-2xl">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-60"
-        style={{
-          background: `radial-gradient(60% 50% at 15% 0%, ${ELEMENT_COLOR[element]}55, transparent 70%), radial-gradient(50% 40% at 100% 100%, ${PROFESSION_COLOR[profession]}55, transparent 70%)`,
-        }}
-      />
-      <div className="relative flex flex-col gap-4 p-4 sm:p-6">
+    <div className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-xl text-on-wood">
+      <div className="relative flex flex-col gap-4 p-1 sm:p-2">
         <header className="flex flex-col items-center gap-1 text-center">
           <p className="text-kicker text-frame-gold">{online ? "Giao Tranh" : "Thao Luyện"}</p>
           <h2 className="font-serif text-2xl font-bold text-title-on-wood sm:text-3xl">Chuẩn bị xuất trận</h2>
