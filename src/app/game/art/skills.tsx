@@ -553,7 +553,8 @@ const SKILL_ART = new Set([
   // Chiêu ô 4 riêng Shan vẽ (06/11/2026), thay ảnh hệ dùng lại: Mai Thanh, Hồng Đan, Doãn Nham, Trần Cương, Đàm Thảo.
   "camLoHoiXuan", "danHoaHoiNguyen", "diaMachBungPhat", "kimQuaThietMa", "kinhCucTrienThan",
   // Mạc Vân, Lam Giang Phi Diệp, Xích Diệm Luân, Lôi Minh Xạ, Tật Phong Lăng.
-  "loiTranKinhHon", "rb064_lieuDiepToaGiang", "rb065_xichLuanLietTran", "rb067_loiChamTuocKhi", "rb068_phongLangNhieuTran",
+  "loiTranKinhHon", "rb064_lieuDiepToaGiang", "rb065_xichLuanLietTran", "rb067_loiChamTuocKhi", "rb068_phongLangNhieuTran",  // Bạch Phong Đao, Kha Sơn, Cao Kiên, Lâm Tùng, Hứa Lăng.
+  "rb069_ultimate", "sonHaTranKich", "thietBichDongThanh", "trucLamPhaTran", "truyPhongDoatMenh",
 ]);
 
 /**
@@ -562,22 +563,17 @@ const SKILL_ART = new Set([
  */
 export const REUSED_SKILL_ART: Readonly<Record<string, string>> = {
   sieuLoaiPhaGiap: "kimAnPhaThien", // Lý Khuê
-  rb069_ultimate: "doanKimNhatTuyen", // Bạch Phong Đao
-  thietBichDongThanh: "giapDongHoThe", // Cao Kiên
   hoiHoSinhKhi: "coThuTranThien", // Kiều Thuận
   hoaLuThaoDuoc: "thanhTrucBaoPhu", // Trịnh Tú
-  trucLamPhaTran: "thanhMocHoPhap", // Lâm Tùng
   boHaiTranGiang: "thuyKiepVanTrung", // Trần Lãm
   namVietVuongAn: "bachDangTrieuDang", // Đinh Liễn
   bachHoXuatSon: "lietDiemPhanThanh", // Phạm Bạch Hổ
   dinhQuocHoaKy: "hoaThieuLienTrai", // Nguyễn Bặc
   doDongKienTam: "thaiSonApDinh", // Đỗ Cảnh Thạc
   ngoaiGiapHoQuan: "kienThanhBatDong", // Đinh Điền
-  sonHaTranKich: "sonBangDiaLiet", // Kha Sơn
   phongChauLoiKich: "cuuTieuLoiPhat", // Kiều Công Hãn
   thapDaoLoiBinh: "loiDinhHieuLenh", // Lê Hoàn
   duongLamPhongKhoi: "baoTapCanKhon", // Ngô Nhật Khánh
-  truyPhongDoatMenh: "phongNhanLietKhong", // Hứa Lăng
 };
 
 /** Tuyệt chiêu ô 4 của Đinh Bộ Lĩnh (`dbl_<nghề>_<hệ>`) dùng lại ảnh tuyệt chiêu hệ cũ của chính ông. */
