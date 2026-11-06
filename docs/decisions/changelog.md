@@ -2,6 +2,9 @@
 
 ## 06/11/2026
 
+**Tầm Tướng Ký: nút ghép giữ chữ “Hợp Nguyên”, bỏ emoji gợi ý**
+- Shan: đặt lại cặp đã thử vẫn hiện cảnh báo, nhưng nút giữ nguyên “Hợp Nguyên”, không đổi thành “Vẫn hợp nguyên” / “Vẫn ghép”. Sửa [cảnh báo cặp đã thử](../02-game-modes/future/23-tam-tuong-ky-can-bang-va-canh-bao.md#2-cảnh-báo-cặp-đã-thử). Icon gợi ý thay emoji bằng đèn dầu vẽ tay (`HintIcon`), theo quy tắc không dùng emoji.
+
 **Tầm Tướng Ký: sửa giao diện theo góp ý (có code)**
 - Làm 7.2–7.6 của [giao diện Tầm Tướng Ký](../05-ui-ux/screens/tam-tuong-ky.md#7-sửa-theo-góp-ý-06112026-đã-triển-khai) trong một PR: ba khung thẳng hàng (bỏ `sticky`), ô trước/ô sau cao cố định và bấm vào ô để bỏ, ô yếu tố cao cố định, Vạn Vật Lục và Tướng Lục phân trang, Tướng Lục chia nhóm theo quan hệ (Cờ lau Hoa Lư, Thập nhị sứ quân, Kỳ nhân, 8 nghề), hiệu ứng hợp nguyên và thẻ kết quả. Không đổi server, gói phát hành hay thành tựu.
 
