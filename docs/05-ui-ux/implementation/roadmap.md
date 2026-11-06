@@ -173,7 +173,7 @@ Trạng thái mục này: **DRAFT**. Shan đưa danh sách ngày 06/11/2026 và 
 | V2-02 | Trận Đồ | Thẻ bậc dùng ảnh thumbnail cố định (cả Xếp hạng và Chơi thường) | Đã làm (06/11) |
 | V2-03 | Trận Đồ | Thẻ bậc cao bằng nhau | Đã làm (06/11) |
 | V2-04 | Trận Đồ | Thêm tab Bảng xếp hạng và tab Ban thưởng | Đã làm (06/11) |
-| V2-05 | Trận Đồ, Nhiệm vụ | Đưa Bộ sưu tập địa danh vào Thành tựu | Đổi dữ liệu |
+| V2-05 | Trận Đồ, Nhiệm vụ | Đưa Bộ sưu tập địa danh vào Thành tựu | Đã làm (06/11) |
 | V2-06 | Trang chủ, chế độ có xếp hạng | Tách: trang Công Trạng (thành tích theo mùa) và bảng xếp hạng mùa hiện tại trong từng chế độ | UI + API đọc |
 | V2-07 | Tháp Thiên Mệnh | Thêm chân dung tướng khi khóa đội | Đã làm (06/11) |
 

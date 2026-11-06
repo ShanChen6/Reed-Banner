@@ -119,22 +119,13 @@ function PracticeCard({ rules, best, onStart }: { rules: Ruleset; best: number; 
 
 function Collection({ collected }: { collected: readonly string[] }) {
   return (
-    <details className="ui-frame p-4">
-      <summary className="cursor-pointer font-serif text-lg font-bold text-title-on-wood">
-        Bộ sưu tập địa danh: {collected.length}/{MAP_POOL.length}
-      </summary>
-      <p className="mt-1 text-sm text-on-wood-soft">Khai thông trọn một sa bàn để thêm địa danh của bản đồ đó (ván chơi thường hay xếp hạng đều tính). Lưu ở máy này.</p>
-      <ul className="mt-2 grid grid-cols-2 gap-1.5 text-[15px] sm:grid-cols-3">
-        {MAP_POOL.map((m) => {
-          const has = collected.includes(m.id);
-          return (
-            <li key={m.id} className={`rounded border px-2 py-1 ${has ? "border-frame-gold/70 bg-frame-gold/15" : "border-frame-bronze/30 text-on-wood-soft"}`}>
-              {has ? <><span aria-hidden>✓ </span>{m.place}</> : <span aria-label="chưa khai thông">? ? ?</span>}
-            </li>
-          );
-        })}
-      </ul>
-    </details>
+    <p className="ui-frame flex flex-wrap items-center justify-between gap-2 p-4 text-[15px]">
+      <span>
+        Bộ sưu tập địa danh: <b className="text-title-on-wood">{collected.length}/{MAP_POOL.length}</b>
+        <span className="block text-sm text-on-wood-soft">Khai thông trọn một sa bàn để thêm địa danh (chơi thường hay xếp hạng đều tính).</span>
+      </span>
+      <SceneLink scene="QUESTS" className={buttonVariants({ className: "flex min-h-11 items-center px-5" })}>Xem trong Nhiệm vụ</SceneLink>
+    </p>
   );
 }
 

@@ -3,7 +3,7 @@
 // mảnh bản đồ bên dưới; hoàn thành thì hiện cả bản đồ. Bản đồ đổi theo kỳ: chọn theo `theme` của ván (suy từ seed/muối,
 // như nhau với mọi người trong kỳ).
 //
-// Thêm bản đồ mới: thả `public/art/formation/maps/<id>.webp`, thêm một dòng vào MAP_POOL, và thêm prompt vào
+// Thêm bản đồ mới (nhớ thêm id vào `FORMATION_PLACE_IDS` ở src/core/progress/formationCollection.ts): thả `public/art/formation/maps/<id>.webp`, thêm một dòng vào MAP_POOL, và thêm prompt vào
 // docs/06-art/prompts/tran-do-hinh-anh.md mục 1.3 (test kiểm đủ). Bản đồ chưa có ảnh thật dùng tranh nền chiến dịch làm
 // ảnh giữ chỗ (8 ảnh lặp); ảnh thật thêm id vào REAL_MAPS.
 
