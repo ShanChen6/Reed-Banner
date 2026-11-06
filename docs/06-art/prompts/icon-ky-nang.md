@@ -1,14 +1,14 @@
 # Prompt biểu tượng kỹ năng
 
 > Cập nhật: 03/11/2026
-> Trạng thái: **DRAFT** — đã có ảnh đủ 24 chiêu nghề của 8 nghề (04/11/2026); 42 ảnh kỹ năng hệ Shan gửi ở `public/art/skills/` là chuẩn phong cách.
+> Trạng thái: **DRAFT** — đã có ảnh đủ 24 chiêu nghề của 8 nghề (04/11/2026) và mọi chiêu ô 4 riêng của tướng (06/11/2026, không còn chiêu nào mượn ảnh hệ cũ); 42 ảnh kỹ năng hệ Shan gửi ở `public/art/skills/` là chuẩn phong cách.
 
 Prompt ráp sẵn để tạo ảnh cho mọi kỹ năng còn vẽ bằng SVG (`src/app/game/art/skills.tsx`): chiêu nghề, tuyệt chiêu/chiêu riêng của nhân vật kèm, tướng lịch sử, sứ quân, Xạ thủ/Sát thủ, tuyệt chiêu ô 4 của Đinh Bộ Lĩnh và hai nhân vật đặc biệt. Danh sách lấy từ code ngày 03/11/2026 (`ROLE_SKILLS`, `CHARACTER_SKILLS`, `DBL_ULTIMATES`, `SPECIAL_SKILLS` trong `src/core/battle/`). Luật kỹ năng ở [Kỹ năng](../../03-characters/ky-nang/README.md), bảng từng nhân vật ở [kỹ năng đồng hành](../../03-characters/ky-nang/data/ky-nang-dong-hanh.md). Giải thích bằng tiếng Việt, prompt bằng tiếng Anh. Prompt trang bị ở [Prompt trang bị](trang-bi.md).
 
 ## 1. Cách dùng
 
 - Mỗi khối là một hình, dán nguyên vào công cụ tạo ảnh (Copilot, ChatGPT…). Nên **đính kèm 2–3 ảnh trong `public/art/skills/`** làm ảnh tham chiếu phong cách (ví dụ `thachGiap.webp`, `hanBangTien.webp`, `kimAnPhaThien.webp`); khối nào có ghi "Ảnh tham chiếu phong cách" thì đính kèm thêm đúng ảnh đó vì chủ đề gần nhau.
-- Tạo ở 1024×1024 trên nền trơn **xanh lá `#00b140`**; hệ Mộc, Phong và nghề Y sư, Xạ thủ dùng **hồng `#ff00ff`** vì vật có màu xanh. Gửi Claude file PNG đặt tên đúng mã trong khối (ví dụ `role_tramKich.png`). Claude xóa nền, xuất `public/art/skills/<mã>.webp` 128 px như 42 ảnh hiện có và thêm mã vào `SKILL_ART`.
+- Tạo ở 1024×1024 trên nền trơn **xanh lá `#00b140`**; hệ Mộc, Phong và nghề Y sư, Xạ thủ dùng **hồng `#ff00ff`** vì vật có màu xanh. Gửi Claude file PNG đặt tên đúng mã trong khối (ví dụ `role_tramKich.png`; quy ước tên ở [Hình ảnh, mục 2.8](../art-bible.md)). Claude xóa nền, xuất `public/art/skills/<mã>.webp` 128 px như 42 ảnh hiện có và thêm mã vào `SKILL_ART`.
 - Khung ô, viền màu hệ và hào quang tuyệt chiêu do code vẽ (`SkillArtIcon`), nên prompt cấm khung, chữ và nền ô.
 - Tên chiêu là của Cờ Lau; prompt chỉ tả hình, không đưa tên chiêu vào ảnh. Giữ clean-room: không lấy hình hay tên từ game tham khảo ([Tổng quan](../../00-overview/tong-quan.md)).
 
