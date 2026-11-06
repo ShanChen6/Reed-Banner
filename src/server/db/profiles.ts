@@ -1,7 +1,7 @@
 // Lưu hồ sơ tiến trình vào Postgres bằng Drizzle, ghi kèm điều kiện version.
 
 import { and, eq } from "drizzle-orm";
-import type { Profile } from "@/core";
+import { migrateLegacyIds, type Profile } from "@/core";
 import type { ProfileStore, StoredProfile } from "../profiles";
 import { profiles } from "./schema";
 import type { Db } from "./store";
@@ -11,7 +11,7 @@ export class DrizzleProfileStore implements ProfileStore {
 
   async get(ownerId: string): Promise<StoredProfile | null> {
     const [row] = await this.db.select().from(profiles).where(eq(profiles.ownerId, ownerId)).limit(1);
-    return row ? { profile: row.data, version: row.version } : null;
+    return row ? { profile: migrateLegacyIds(row.data), version: row.version } : null;
   }
 
   async put(ownerId: string, profile: Profile, expected: number, now: number): Promise<boolean> {

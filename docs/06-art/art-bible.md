@@ -181,7 +181,7 @@ Quy tắc chung:
 - Mã viết đúng như trong code (camelCase, không dấu), không dùng tên tiếng Việt có dấu hay khoảng trắng. Không chắc mã thì gửi kèm tên tiếng Việt; Claude tra mã và báo lại.
 - Một ảnh chỉ thuộc một mã. Không dùng một file cho hai kỹ năng khác nhau (người chơi sẽ tưởng là một chiêu); cơ chế mượn ảnh hệ cũ cho chiêu ô 4 đã bỏ ngày 06/11/2026.
 - Gửi ảnh mới cho mã đã có ảnh nghĩa là **thay** ảnh cũ; Claude báo lại trước khi ghi đè.
-- Mã kỹ năng Xạ thủ/Sát thủ mở rộng giữ dạng `rb0xx_…` như trong code (ví dụ `rb070_ultimate`); đổi các mã này là việc riêng vì đụng core và dữ liệu.
+- Mã cũ dạng `rb0xx_…` của 14 Xạ thủ/Sát thủ đã đổi sang tên chiêu/bị động ngày 06/11/2026 (bảng đổi ở `src/core/battle/legacy-ids.ts`); ảnh cũ đặt tên `rb…` cũng đã đổi theo.
 
 ## 3. Art direction 03/11/2026 — Historical Grounded Fantasy (APPROVED)
 

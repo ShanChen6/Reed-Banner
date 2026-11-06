@@ -839,7 +839,7 @@ Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: 
 
 ### Xạ thủ và Sát thủ (14)
 
-**Thiết Nỏ Phá Thành · Bạch Nỏ Lang (Xạ thủ, ⚙️ Kim)** · `rb_bnl_thietNoPhaThanh.png`
+**Thiết Nỏ Phá Thành · Bạch Nỏ Lang (Xạ thủ, ⚙️ Kim)** · `thietNoPhaThanh.png`
 
 Địch đơn: sát thương, Thủ−, phá ô.
 
@@ -847,7 +847,7 @@ Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: 
 Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: a heavy iron crossbow firing a bolt that punches through a fortified city gate, iron shards flying. Energy and color: silver-white steel and polished gold metallic energy, sharp glints and flying metal shards. This is a character's ultimate skill: make it grander than a normal skill, with a larger burst of energy behind the subject and a more elaborate gold filigree crest, but still one clear subject. Style: match an existing set of hand-painted skill icons — rich semi-realistic digital painting, high detail, glossy highlights, bright rim light, saturated colors, strong contrast, ornate curling gold filigree scrolls wrapping around the subject like a crest, one bold central silhouette filling about 80% of the canvas that stays readable at 48 px. Culture: 10th-century Vietnam with Dong Son bronze-drum motifs where they fit; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no frame, no border, no square panel or circle badge behind the subject, no ground shadow. Background: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Lục Tiễn Trói Đường · Thanh Lâm Xạ (Xạ thủ, 🌳 Mộc)** · `rb_tlx_lucTienTroiDuong.png`
+**Lục Tiễn Trói Đường · Thanh Lâm Xạ (Xạ thủ, 🌳 Mộc)** · `lucTienTroiDuong.png`
 
 Địch đơn: sát thương, Thủ−, hồi máu.
 
@@ -855,7 +855,7 @@ Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: 
 Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: green-fletched arrows trailing vines that bind a path, healing leaves sprouting along it. Energy and color: emerald and lime-green living-wood energy with leaves and vines. This is a character's ultimate skill: make it grander than a normal skill, with a larger burst of energy behind the subject and a more elaborate gold filigree crest, but still one clear subject. Style: match an existing set of hand-painted skill icons — rich semi-realistic digital painting, high detail, glossy highlights, bright rim light, saturated colors, strong contrast, ornate curling gold filigree scrolls wrapping around the subject like a crest, one bold central silhouette filling about 80% of the canvas that stays readable at 48 px. Culture: 10th-century Vietnam with Dong Son bronze-drum motifs where they fit; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no frame, no border, no square panel or circle badge behind the subject, no ground shadow. Background: flat solid pure magenta (#ff00ff), completely uniform, nothing else on it.
 ```
 
-**Liễu Diệp Tỏa Giang · Lam Giang Phi Diệp (Xạ thủ, 💧 Thủy)** · `rb064_lieuDiepToaGiang.png`
+**Liễu Diệp Tỏa Giang · Lam Giang Phi Diệp (Xạ thủ, 💧 Thủy)** · `lieuDiepToaGiang.png`
 
 Địch đơn: sát thương, Đóng băng, năng lượng. Ảnh tham chiếu phong cách: `public/art/skills/hanBangTien.webp`.
 
@@ -863,7 +863,7 @@ Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: 
 Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: willow-leaf-shaped arrowheads raining over a river and locking its surface in ice. Energy and color: sapphire and cyan water energy with waves, droplets and frost. This is a character's ultimate skill: make it grander than a normal skill, with a larger burst of energy behind the subject and a more elaborate gold filigree crest, but still one clear subject. Style: match an existing set of hand-painted skill icons — rich semi-realistic digital painting, high detail, glossy highlights, bright rim light, saturated colors, strong contrast, ornate curling gold filigree scrolls wrapping around the subject like a crest, one bold central silhouette filling about 80% of the canvas that stays readable at 48 px. Culture: 10th-century Vietnam with Dong Son bronze-drum motifs where they fit; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no frame, no border, no square panel or circle badge behind the subject, no ground shadow. Background: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Xích Luân Liệt Trận · Xích Diệm Luân (Xạ thủ, 🔥 Hỏa)** · `rb065_xichLuanLietTran.png`
+**Xích Luân Liệt Trận · Xích Diệm Luân (Xạ thủ, 🔥 Hỏa)** · `xichLuanLietTran.png`
 
 Mọi địch: sát thương, Thiêu đốt, phá ô. Ảnh tham chiếu phong cách: `public/art/skills/xichDiemTien.webp`.
 
@@ -871,7 +871,7 @@ Mọi địch: sát thương, Thiêu đốt, phá ô. Ảnh tham chiếu phong c
 Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: a spinning wheel of flaming arrows blazing across a battlefield, scorched cracked ground. Energy and color: crimson, orange and gold flames with embers. This is a character's ultimate skill: make it grander than a normal skill, with a larger burst of energy behind the subject and a more elaborate gold filigree crest, but still one clear subject. Style: match an existing set of hand-painted skill icons — rich semi-realistic digital painting, high detail, glossy highlights, bright rim light, saturated colors, strong contrast, ornate curling gold filigree scrolls wrapping around the subject like a crest, one bold central silhouette filling about 80% of the canvas that stays readable at 48 px. Culture: 10th-century Vietnam with Dong Son bronze-drum motifs where they fit; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no frame, no border, no square panel or circle badge behind the subject, no ground shadow. Background: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Trấn Sơn Hộ Trận · Trấn Sơn Thạch (Xạ thủ, ⛰️ Thổ)** · `rb066_tranSonHoTran.png`
+**Trấn Sơn Hộ Trận · Trấn Sơn Thạch (Xạ thủ, ⛰️ Thổ)** · `tranSonHoTran.png`
 
 Địch đơn: sát thương, Công−, Khiên.
 
@@ -879,7 +879,7 @@ Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: 
 Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: a heavy arrow pinned into the ground raising a ring of standing stone shields. Energy and color: ochre, amber and gold earth energy with cracked rock and dust. This is a character's ultimate skill: make it grander than a normal skill, with a larger burst of energy behind the subject and a more elaborate gold filigree crest, but still one clear subject. Style: match an existing set of hand-painted skill icons — rich semi-realistic digital painting, high detail, glossy highlights, bright rim light, saturated colors, strong contrast, ornate curling gold filigree scrolls wrapping around the subject like a crest, one bold central silhouette filling about 80% of the canvas that stays readable at 48 px. Culture: 10th-century Vietnam with Dong Son bronze-drum motifs where they fit; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no frame, no border, no square panel or circle badge behind the subject, no ground shadow. Background: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Lôi Châm Tước Khí · Lôi Minh Xạ (Xạ thủ, ⚡ Lôi)** · `rb067_loiChamTuocKhi.png`
+**Lôi Châm Tước Khí · Lôi Minh Xạ (Xạ thủ, ⚡ Lôi)** · `loiChamTuocKhi.png`
 
 Địch đơn: sát thương, năng lượng, Câm lặng. Ảnh tham chiếu phong cách: `public/art/skills/loiTienXuyenVan.webp`.
 
@@ -887,7 +887,7 @@ Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: 
 Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: thin lightning-needle arrows piercing through and draining wisps of violet energy. Energy and color: violet and electric-purple lightning with crackling arcs. This is a character's ultimate skill: make it grander than a normal skill, with a larger burst of energy behind the subject and a more elaborate gold filigree crest, but still one clear subject. Style: match an existing set of hand-painted skill icons — rich semi-realistic digital painting, high detail, glossy highlights, bright rim light, saturated colors, strong contrast, ornate curling gold filigree scrolls wrapping around the subject like a crest, one bold central silhouette filling about 80% of the canvas that stays readable at 48 px. Culture: 10th-century Vietnam with Dong Son bronze-drum motifs where they fit; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no frame, no border, no square panel or circle badge behind the subject, no ground shadow. Background: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Phong Lăng Nhiễu Trận · Tật Phong Lăng (Xạ thủ, 🌪️ Phong)** · `rb068_phongLangNhieuTran.png`
+**Phong Lăng Nhiễu Trận · Tật Phong Lăng (Xạ thủ, 🌪️ Phong)** · `phongLangNhieuTran.png`
 
 Mọi địch: sát thương, Công−, xoay ô.
 
@@ -895,7 +895,7 @@ Mọi địch: sát thương, Công−, xoay ô.
 Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: arrows riding a cyclone and scattering a formation of small banners. Energy and color: pale teal and white wind energy with spiralling gusts and drifting leaves. This is a character's ultimate skill: make it grander than a normal skill, with a larger burst of energy behind the subject and a more elaborate gold filigree crest, but still one clear subject. Style: match an existing set of hand-painted skill icons — rich semi-realistic digital painting, high detail, glossy highlights, bright rim light, saturated colors, strong contrast, ornate curling gold filigree scrolls wrapping around the subject like a crest, one bold central silhouette filling about 80% of the canvas that stays readable at 48 px. Culture: 10th-century Vietnam with Dong Son bronze-drum motifs where they fit; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no frame, no border, no square panel or circle badge behind the subject, no ground shadow. Background: flat solid pure magenta (#ff00ff), completely uniform, nothing else on it.
 ```
 
-**Thiết Ấn Đoạt Mệnh · Bạch Phong Đao (Sát thủ, ⚙️ Kim)** · `rb069_ultimate.png`
+**Thiết Ấn Đoạt Mệnh · Bạch Phong Đao (Sát thủ, ⚙️ Kim)** · `thietAnDoatMenh.png`
 
 Địch đơn: sát thương, Thủ−.
 
@@ -903,7 +903,7 @@ Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: 
 Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: an iron dagger stamping a glowing steel seal mark onto cracked armor. Energy and color: silver-white steel and polished gold metallic energy, sharp glints and flying metal shards. This is a character's ultimate skill: make it grander than a normal skill, with a larger burst of energy behind the subject and a more elaborate gold filigree crest, but still one clear subject. Style: match an existing set of hand-painted skill icons — rich semi-realistic digital painting, high detail, glossy highlights, bright rim light, saturated colors, strong contrast, ornate curling gold filigree scrolls wrapping around the subject like a crest, one bold central silhouette filling about 80% of the canvas that stays readable at 48 px. Culture: 10th-century Vietnam with Dong Son bronze-drum motifs where they fit; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no frame, no border, no square panel or circle badge behind the subject, no ground shadow. Background: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Độc Ảnh Tiềm Châm · Độc Ảnh (Sát thủ, 🌳 Mộc)** · `rb070_ultimate.png`
+**Độc Ảnh Tiềm Châm · Độc Ảnh (Sát thủ, 🌳 Mộc)** · `docAnhTiemCham.png`
 
 Địch đơn: sát thương, Độc.
 
@@ -911,7 +911,7 @@ Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: 
 Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: a thin poison needle sliding out of a dark sleeve, dripping green venom, shadowy leaves. Energy and color: emerald and lime-green living-wood energy with leaves and vines. This is a character's ultimate skill: make it grander than a normal skill, with a larger burst of energy behind the subject and a more elaborate gold filigree crest, but still one clear subject. Style: match an existing set of hand-painted skill icons — rich semi-realistic digital painting, high detail, glossy highlights, bright rim light, saturated colors, strong contrast, ornate curling gold filigree scrolls wrapping around the subject like a crest, one bold central silhouette filling about 80% of the canvas that stays readable at 48 px. Culture: 10th-century Vietnam with Dong Son bronze-drum motifs where they fit; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no frame, no border, no square panel or circle badge behind the subject, no ground shadow. Background: flat solid pure magenta (#ff00ff), completely uniform, nothing else on it.
 ```
 
-**Hàn Giang Tàng Nhận · Hàn Giang Khách (Sát thủ, 💧 Thủy)** · `rb071_ultimate.png`
+**Hàn Giang Tàng Nhận · Hàn Giang Khách (Sát thủ, 💧 Thủy)** · `hanGiangTangNhan.png`
 
 Địch đơn: sát thương, năng lượng, Công−.
 
@@ -919,7 +919,7 @@ Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: 
 Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: a blade hidden just under the surface of a cold river, frost breath rising from the water. Energy and color: sapphire and cyan water energy with waves, droplets and frost. This is a character's ultimate skill: make it grander than a normal skill, with a larger burst of energy behind the subject and a more elaborate gold filigree crest, but still one clear subject. Style: match an existing set of hand-painted skill icons — rich semi-realistic digital painting, high detail, glossy highlights, bright rim light, saturated colors, strong contrast, ornate curling gold filigree scrolls wrapping around the subject like a crest, one bold central silhouette filling about 80% of the canvas that stays readable at 48 px. Culture: 10th-century Vietnam with Dong Son bronze-drum motifs where they fit; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no frame, no border, no square panel or circle badge behind the subject, no ground shadow. Background: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Xích Dạ Song Sát · Xích Dạ (Sát thủ, 🔥 Hỏa)** · `rb072_ultimate.png`
+**Xích Dạ Song Sát · Xích Dạ (Sát thủ, 🔥 Hỏa)** · `xichDaSongSat.png`
 
 Địch đơn: sát thương.
 
@@ -927,7 +927,7 @@ Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: 
 Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: twin crimson daggers crossing under a red moon, two fire trails curling around them. Energy and color: crimson, orange and gold flames with embers. This is a character's ultimate skill: make it grander than a normal skill, with a larger burst of energy behind the subject and a more elaborate gold filigree crest, but still one clear subject. Style: match an existing set of hand-painted skill icons — rich semi-realistic digital painting, high detail, glossy highlights, bright rim light, saturated colors, strong contrast, ornate curling gold filigree scrolls wrapping around the subject like a crest, one bold central silhouette filling about 80% of the canvas that stays readable at 48 px. Culture: 10th-century Vietnam with Dong Son bronze-drum motifs where they fit; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no frame, no border, no square panel or circle badge behind the subject, no ground shadow. Background: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Địa Phục Liệt Trảo · Địa Ẩn (Sát thủ, ⛰️ Thổ)** · `rb073_ultimate.png`
+**Địa Phục Liệt Trảo · Địa Ẩn (Sát thủ, ⛰️ Thổ)** · `diaPhucLietTrao.png`
 
 Địch đơn: sát thương, Thủ−, Thủ+.
 
@@ -935,7 +935,7 @@ Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: 
 Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: claw-like blades bursting up out of cracked earth, rock chips flying. Energy and color: ochre, amber and gold earth energy with cracked rock and dust. This is a character's ultimate skill: make it grander than a normal skill, with a larger burst of energy behind the subject and a more elaborate gold filigree crest, but still one clear subject. Style: match an existing set of hand-painted skill icons — rich semi-realistic digital painting, high detail, glossy highlights, bright rim light, saturated colors, strong contrast, ornate curling gold filigree scrolls wrapping around the subject like a crest, one bold central silhouette filling about 80% of the canvas that stays readable at 48 px. Culture: 10th-century Vietnam with Dong Son bronze-drum motifs where they fit; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no frame, no border, no square panel or circle badge behind the subject, no ground shadow. Background: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Bạo Vũ Lê Hoa · Lôi Ảnh (Sát thủ, ⚡ Lôi)** · `rb074_ultimate.png`
+**Bạo Vũ Lê Hoa · Lôi Ảnh (Sát thủ, ⚡ Lôi)** · `baoVuLeHoa.png`
 
 Địch đơn: sát thương, năng lượng.
 
@@ -943,7 +943,7 @@ Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: 
 Square 1024x1024 fantasy game skill icon for a turn-based match-3 RPG. Subject: a storm burst of white pear-blossom petals mixed with violet lightning needles. Energy and color: violet and electric-purple lightning with crackling arcs. This is a character's ultimate skill: make it grander than a normal skill, with a larger burst of energy behind the subject and a more elaborate gold filigree crest, but still one clear subject. Style: match an existing set of hand-painted skill icons — rich semi-realistic digital painting, high detail, glossy highlights, bright rim light, saturated colors, strong contrast, ornate curling gold filigree scrolls wrapping around the subject like a crest, one bold central silhouette filling about 80% of the canvas that stays readable at 48 px. Culture: 10th-century Vietnam with Dong Son bronze-drum motifs where they fit; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no frame, no border, no square panel or circle badge behind the subject, no ground shadow. Background: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Vô Thanh Đoạt Phách · Vô Ảnh (Sát thủ, 🌪️ Phong)** · `rb075_ultimate.png`
+**Vô Thanh Đoạt Phách · Vô Ảnh (Sát thủ, 🌪️ Phong)** · `voThanhDoatPhach.png`
 
 Địch đơn: sát thương, năng lượng, Câm lặng.
 
