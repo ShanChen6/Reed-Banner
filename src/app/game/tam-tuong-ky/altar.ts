@@ -13,6 +13,8 @@ import {
   type InvalidReason,
   type NodeId,
 } from "@/core/tam-tuong-ky";
+import { isHero, isWarlord } from "@/core/roster/roster";
+import type { Profession } from "@/core/battle";
 
 /** Hai ô có thứ tự: `[ô trước, ô sau]`. */
 export type Slots = readonly [NodeId | null, NodeId | null];
@@ -104,6 +106,33 @@ export function noticeFor(catalog: Catalog, outcome: CombineSummary): Notice {
   }
 }
 
+/** Kết quả hiện ở thẻ dưới hai ô sau một lần ghép (mục 7.5). `seq` tăng mỗi lần để chạy lại hiệu ứng. */
+export interface AltarResult {
+  readonly seq: number;
+  /** Hai yếu tố vừa ghép, theo thứ tự ô trước, ô sau. */
+  readonly from: readonly [NodeId, NodeId];
+  readonly kind: "new" | "known" | "hero" | "miss";
+  readonly nodeId?: NodeId;
+  /** Chế độ Hạng: điểm khi ra tướng đề cử. */
+  readonly points?: number;
+}
+
+/** Đổi kết quả ghép sang thẻ kết quả; ghép không hợp lệ thì không hiện thẻ (ô thông báo đã nói lý do). */
+export function altarResult(outcome: CombineSummary, seq: number, from: readonly [NodeId, NodeId], points?: number): AltarResult | null {
+  const base = { seq, from, ...(points ? { points } : {}) };
+  switch (outcome.status) {
+    case "created":
+      if (outcome.isCharacter) return { ...base, kind: "hero", nodeId: outcome.nodeId };
+      return { ...base, kind: outcome.nodeAlreadyKnown ? "known" : "new", nodeId: outcome.nodeId };
+    case "alreadyKnown":
+      return { ...base, kind: "known", nodeId: outcome.nodeId };
+    case "noRecipe":
+      return { ...base, kind: "miss" };
+    case "invalid":
+      return null;
+  }
+}
+
 export function hintText(hint: Hint | null): string {
   if (!hint) return "Không còn công thức nào ghép được ngay từ những gì đã có.";
   const group = HINT_GROUP_NAMES[hint.hintGroup] ?? hint.hintGroup;
@@ -112,9 +141,68 @@ export function hintText(hint: Hint | null): string {
 
 export const TIER_NAME: Readonly<Record<HeroTier, string>> = { thuong: "Tướng thường", dacBiet: "Tướng đặc biệt", lichSu: "Tướng lịch sử" };
 
+/**
+ * Nhóm Tướng Lục (mục 7.2 tài liệu giao diện): gom tướng theo quan hệ, chỉ để hiển thị. Gói phát hành (`pack`) giữ
+ * nguyên trong code và thành tựu. Tên nhóm không lộ tướng chưa tìm vì nhóm nào cũng có từ 2 người.
+ */
+export type LedgerGroupId = "hoaLu" | "suQuan" | "kyNhan" | `nghe.${Profession}`;
+
+export interface LedgerGroupInfo {
+  readonly id: LedgerGroupId;
+  readonly name: string;
+  /** Một dòng giới thiệu mối liên hệ: chữ của trò chơi, không phải trích sử. */
+  readonly intro: string;
+}
+
+const PROFESSION_GROUPS: readonly [Profession, string][] = [
+  ["tuongSi", "Tướng sĩ"],
+  ["binhLinh", "Binh lính"],
+  ["ySu", "Y sư"],
+  ["muuSi", "Mưu sĩ"],
+  ["quanSu", "Quân sư"],
+  ["phapSu", "Pháp sư"],
+  ["xaThu", "Xạ thủ"],
+  ["satThu", "Sát thủ"],
+];
+
+/** Thứ tự nhóm trong Tướng Lục. */
+export const LEDGER_GROUPS: readonly LedgerGroupInfo[] = [
+  { id: "hoaLu", name: "Cờ lau Hoa Lư", intro: "Những người theo cờ lau từ buổi đầu ở Hoa Lư." },
+  { id: "suQuan", name: "Thập nhị sứ quân", intro: "Mười hai sứ quân, mỗi người giữ một vùng đất riêng." },
+  { id: "kyNhan", name: "Kỳ nhân", intro: "Hai người lạ đi khắp các làng, không đứng về phe nào." },
+  ...PROFESSION_GROUPS.map(([p, name]): LedgerGroupInfo => ({ id: `nghe.${p}`, name, intro: `Bảy ${name.toLowerCase()}, mỗi người mang một hệ.` })),
+];
+
+/** Nhóm của một tướng: Đinh Bộ Lĩnh và tướng theo ông vào Cờ lau Hoa Lư, sứ quân, kỳ nhân, còn lại theo nghề. */
+export function ledgerGroup(characterId: string): LedgerGroupId {
+  if (characterId === "dinhBoLinh" || isHero(characterId)) return "hoaLu";
+  if (isWarlord(characterId)) return "suQuan";
+  const info = rosterCharacter(characterId);
+  if (info?.tier === "dacBiet") return "kyNhan";
+  return `nghe.${info?.profession ?? "tuongSi"}`;
+}
+
+export interface LedgerGroupView extends LedgerGroupInfo {
+  readonly entries: readonly LedgerEntry[];
+  readonly found: number;
+}
+
+/** Nhóm có tướng trong sổ đang chạy, theo thứ tự `LEDGER_GROUPS`. */
+export function ledgerGroups(entries: readonly LedgerEntry[]): readonly LedgerGroupView[] {
+  return LEDGER_GROUPS.map((g) => {
+    const list = entries.filter((e) => e.group === g.id);
+    return { ...g, entries: list, found: list.filter((e) => e.found).length };
+  }).filter((g) => g.entries.length > 0);
+}
+
+/** Nhóm mở mặc định: nhóm đầu tiên chưa tìm đủ (đủ cả thì nhóm đầu). */
+export function defaultLedgerGroup(groups: readonly LedgerGroupView[]): LedgerGroupId | null {
+  return (groups.find((g) => g.found < g.entries.length) ?? groups[0])?.id ?? null;
+}
+
 export type LedgerEntry =
-  | { readonly found: true; readonly nodeId: NodeId; readonly pack: string; readonly characterId: string; readonly name: string; readonly tier: HeroTier; readonly info: CharacterInfo; readonly symbols: readonly string[] }
-  | { readonly found: false; readonly nodeId: NodeId; readonly pack: string; readonly tier: HeroTier };
+  | { readonly found: true; readonly nodeId: NodeId; readonly pack: string; readonly group: LedgerGroupId; readonly characterId: string; readonly name: string; readonly tier: HeroTier; readonly info: CharacterInfo; readonly symbols: readonly string[] }
+  | { readonly found: false; readonly nodeId: NodeId; readonly pack: string; readonly group: LedgerGroupId; readonly tier: HeroTier };
 
 /**
  * Thẻ Tướng Lục cho đủ số tướng của pack (A-15). Tướng chưa tìm chỉ lộ bậc (P-24), không có tên hay characterId.
@@ -127,11 +215,12 @@ export function ledger(catalog: Catalog, state: DiscoveryState): readonly Ledger
       const tier = n.tier ?? "thuong";
       const pack = n.pack ?? catalog.pack.id;
       const info = n.characterId ? rosterCharacter(n.characterId) : undefined;
-      if (!state.discoveredNodeIds.includes(n.id) || !info || !n.characterId) return { found: false, nodeId: n.id, pack, tier };
+      const group = ledgerGroup(n.characterId ?? "");
+      if (!state.discoveredNodeIds.includes(n.id) || !info || !n.characterId) return { found: false, nodeId: n.id, pack, group, tier };
       const final = catalog.pack.recipes.find((r) => r.result === n.id);
       // Dấu danh tính: nguyên liệu cuối không phải node vai trò (nghề/hệ đã hiện riêng). Không lấy từ art.
       const symbols = final ? [final.first, final.second].filter((id) => !catalog.nodes.get(id)?.role).map((id) => nameOf(catalog, id)) : [];
-      return { found: true, nodeId: n.id, pack, characterId: n.characterId, name: n.nameVi, tier, info, symbols };
+      return { found: true, nodeId: n.id, pack, group, characterId: n.characterId, name: n.nameVi, tier, info, symbols };
     });
 }
 

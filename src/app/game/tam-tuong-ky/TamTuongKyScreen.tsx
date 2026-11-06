@@ -7,9 +7,10 @@
 
 import { ModeBanner } from "@/components/game-ui";
 import { ChoiceChip, buttonVariants } from "@/components/ui";
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { PageControls, usePagedItems } from "@/components/ui/Pagination";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { PROFESSION_DISPLAY_NAME, type Element } from "@/core/battle";
-import { PACK_NAMES, catalogForPack, openIngredients, type Catalog, type CatalogNode, type DiscoveryState, type HintLevel, type NodeId } from "@/core/tam-tuong-ky";
+import { catalogForPack, openIngredients, rosterCharacter, type Catalog, type CatalogNode, type DiscoveryState, type HintLevel, type NodeId } from "@/core/tam-tuong-ky";
 import { AtlasCorners } from "../campaign/AtlasFrame";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { personalSkillArtFile } from "../art/skills";
@@ -17,19 +18,25 @@ import { Portrait } from "../art/portraits";
 import {
   EMPTY_SLOTS,
   TIER_NAME,
+  altarResult,
   clearSlot,
+  defaultLedgerGroup,
   discoveredNodes,
   filterNodes,
   groupsOf,
   hintText,
   ledger,
+  ledgerGroup,
+  ledgerGroups,
   nameOf,
   rankedNodes,
   noticeFor,
   pickInto,
   swapSlots,
   tutorialTip,
+  type AltarResult,
   type LedgerEntry,
+  type LedgerGroupId,
   type Notice,
   type Slots,
 } from "./altar";
@@ -56,6 +63,26 @@ const useCatalog = () => useContext(CatalogContext);
 const ELEMENT_NAME: Readonly<Record<Element, string>> = { kim: "Kim", moc: "Mộc", thuy: "Thủy", hoa: "Hỏa", tho: "Thổ", loi: "Lôi", phong: "Phong" };
 
 type Tab = "library" | "ledger";
+
+/** Máy tính (≥ lg, 1024px): số ô mỗi trang của Vạn Vật Lục và Tướng Lục lớn hơn. Server dựng theo máy tính. */
+const DESKTOP = "(min-width: 1024px)";
+function useIsDesktop(): boolean {
+  return useSyncExternalStore(
+    (onChange) => {
+      const mq = window.matchMedia(DESKTOP);
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(DESKTOP).matches,
+    () => true,
+  );
+}
+
+/** Lần đánh dấu một mục (yếu tố mới, tướng vừa tìm thấy); `seq` tăng để chạy lại hiệu ứng và mở đúng trang. */
+interface Focus {
+  readonly id: NodeId;
+  readonly seq: number;
+}
 
 type Mode = "normal" | "ranked";
 
@@ -96,6 +123,11 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
   const [notice, setNotice] = useState<Notice | null>(null);
   const [recent, setRecent] = useState<readonly string[]>([]);
   const [tab, setTab] = useState<Tab>("library");
+  const [result, setResult] = useState<AltarResult | null>(null);
+  const [flash, setFlash] = useState<Focus | null>(null);
+  const [ledgerTab, setLedgerTab] = useState<LedgerGroupId | null>(null);
+  const [ledgerFocus, setLedgerFocus] = useState<Focus | null>(null);
+  const seq = useRef(0);
   // Một requestId cho mỗi ý định; lỗi mạng thì bấm lại dùng đúng id cũ để server không trừ hai lần.
   const retry = useRef<{ key: string; id: string } | null>(null);
   const requestIdFor = (key: string) => {
@@ -143,7 +175,16 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
       const n = noticeFor(catalog, r.response);
       setNotice(n);
       setRecent((list) => [`${nameOf(catalog, a)} + ${nameOf(catalog, b)}: ${n.text}`, ...list].slice(0, 5));
-      if (r.response.status === "created" && r.response.isCharacter) setTab("ledger");
+      const res = altarResult(r.response, ++seq.current, [a, b]);
+      setResult(res);
+      if (res?.kind === "new" && res.nodeId) setFlash({ id: res.nodeId, seq: res.seq });
+      if (res?.kind === "hero" && res.nodeId) {
+        // Tướng vừa tìm thấy: mở nhóm và trang có tướng đó trong Tướng Lục (mục 7.2).
+        const characterId = catalog.nodes.get(res.nodeId)?.characterId;
+        if (characterId) setLedgerTab(ledgerGroup(characterId));
+        setLedgerFocus({ id: res.nodeId, seq: res.seq });
+        setTab("ledger");
+      }
       setSlots(EMPTY_SLOTS);
     });
   };
@@ -193,6 +234,8 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
             notice={notice ?? (tip ? { tone: "repeat", text: tip } : null)}
             recent={recent}
             tried={tried}
+            result={result}
+            onUseResult={(id) => setSlots([id, null])}
             onClear={(i) => setSlots((s) => clearSlot(s, i))}
             onSwap={() => setSlots(swapSlots)}
             onCombine={combine}
@@ -220,8 +263,9 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
             badges={openIngredients(catalog, state)}
             onPick={(id) => setSlots((s) => pickInto(s, id))}
             hidden={tab !== "library"}
+            flash={flash}
           />
-          <Ledger entries={entries} found={found} hidden={tab !== "ledger"} />
+          <Ledger entries={entries} found={found} hidden={tab !== "ledger"} group={ledgerTab} onGroup={setLedgerTab} focus={ledgerFocus} />
         </div>
       </div>
       <MobileBar slots={slots} ready={ready} tried={tried} onCombine={combine} />
@@ -254,6 +298,8 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
   const [slots, setSlots] = useState<Slots>(EMPTY_SLOTS);
   const [pending, setPending] = useState(false);
   const [notice, setNotice] = useState<Notice | null>(null);
+  const [result, setResult] = useState<AltarResult | null>(null);
+  const seq = useRef(0);
   const retry = useRef<{ key: string; id: string } | null>(null);
   const requestIdFor = (key: string) => {
     if (retry.current?.key !== key) retry.current = { key, id: newRequestId() };
@@ -301,6 +347,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
       const res = r.response;
       const base = res.status === "noRecipe" ? "Chưa tìm được mối liên hệ. Nguyên liệu đã mất." : noticeFor(catalog, { ...res, status: res.status }).text;
       setNotice({ tone: res.points > 0 ? "hero" : res.status === "created" ? "discovery" : res.status === "invalid" ? "invalid" : "miss", text: res.points > 0 ? `${base} +${res.points} điểm.` : base });
+      setResult(altarResult({ ...res, status: res.status }, ++seq.current, [a, b], res.points));
       setSlots(EMPTY_SLOTS);
     });
   };
@@ -326,14 +373,9 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
         />
 
         <div className="grid gap-4 lg:grid-cols-[minmax(16rem,26fr)_minmax(20rem,44fr)_minmax(16rem,30fr)]">
-          <Panel id="ttk-ranked-altar" title="Đài Hợp Nguyên" className="lg:sticky lg:top-4 lg:self-start">
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-              <Slot label="Ô trước" id={slots[0]} onClear={() => setSlots((s) => clearSlot(s, 0))} />
-              <button type="button" onClick={() => setSlots(swapSlots)} aria-label="Đổi chỗ ô trước và ô sau" className="grid size-11 place-items-center rounded-full border border-[var(--atlas-border-soft)] font-serif text-lg hover:border-[var(--atlas-gold)]">
-                ⇄
-              </button>
-              <Slot label="Ô sau" id={slots[1]} onClear={() => setSlots((s) => clearSlot(s, 1))} />
-            </div>
+          <Panel id="ttk-ranked-altar" title="Đài Hợp Nguyên">
+            <SlotsRow slots={slots} busy={pending} result={result} onClear={(i) => setSlots((s) => clearSlot(s, i))} onSwap={() => setSlots(swapSlots)} />
+            <ResultCard result={result} onUse={(id) => setSlots([id, null])} />
             <p className="text-xs text-[var(--atlas-muted)]">Nguyên tố lấy từ túi, dùng cho hệ nào cũng được.</p>
             {tried && <TriedWarning cost="tiêu nguyên liệu" />}
             <button type="button" disabled={!ready} aria-busy={pending} onClick={combine} className={buttonVariants({ className: "min-h-12 text-lg tracking-[0.12em] uppercase" })}>
@@ -408,12 +450,16 @@ function MobileBar({ slots, ready, tried, onCombine }: { slots: Slots; ready: bo
   );
 }
 
+/**
+ * Khung một cột. Không dùng `self-start` hay `sticky` (mục 7.3): ba cột cùng hàng lưới giãn bằng nhau, mép trên thẳng
+ * hàng. Danh sách dài thì phân trang thay vì cuộn dài (mục 7.2, 7.6).
+ */
 function Panel({ id, title, children, className = "", hidden = false }: { id: string; title: React.ReactNode; children: React.ReactNode; className?: string; hidden?: boolean }) {
   return (
     <section
       id={id}
       aria-labelledby={`${id}-title`}
-      className={`atlas-frame atlas-frame-wood relative flex min-w-0 flex-col gap-3 p-4 lg:self-start ${hidden ? "hidden lg:flex" : ""} ${className}`}
+      className={`atlas-frame atlas-frame-wood relative flex min-w-0 flex-col gap-3 p-4 ${hidden ? "hidden lg:flex" : ""} ${className}`}
     >
       <AtlasCorners size="size-5" />
       <h2 id={`${id}-title`} className="atlas-title font-serif text-lg font-bold">{title}</h2>
@@ -422,18 +468,20 @@ function Panel({ id, title, children, className = "", hidden = false }: { id: st
   );
 }
 
-function NodeChip({ node, onPick, badge, count }: { node: CatalogNode; onPick: (id: NodeId) => void; badge?: boolean; count?: number }) {
+/** Ô yếu tố cao cố định (mục 7.6): tên tối đa 2 dòng, chấm vàng và ×n nằm góc trên phải, không chiếm chỗ của tên. */
+function NodeChip({ node, onPick, badge, count, flash }: { node: CatalogNode; onPick: (id: NodeId) => void; badge?: boolean; count?: number; flash?: boolean }) {
   return (
     <button
       type="button"
       onClick={() => onPick(node.id)}
+      title={node.nameVi}
       aria-label={`${node.nameVi}${count !== undefined ? `, còn ${count}` : ""}${badge ? ", còn công thức chưa tìm" : ""}`}
-      className="flex min-h-11 w-full items-center gap-2 rounded-lg border border-[var(--atlas-border-soft)] bg-[var(--atlas-wood-lo)] px-3 py-2 text-left text-sm transition-colors hover:border-[var(--atlas-gold)] focus-visible:outline-2 focus-visible:outline-[var(--atlas-gold-hi)]"
+      className={`relative flex h-14 w-full items-center gap-2 rounded-lg border bg-[var(--atlas-wood-lo)] py-1 pr-4 pl-2.5 text-left transition-colors hover:border-[var(--atlas-gold)] focus-visible:outline-2 focus-visible:outline-[var(--atlas-gold-hi)] ${flash ? "border-[var(--atlas-gold-hi)] motion-safe:animate-[ttk-flash_0.9s_ease-out]" : "border-[var(--atlas-border-soft)]"}`}
     >
-      <NodeGlyph node={node} />
-      <span className="flex-1">{node.nameVi}</span>
-      {count !== undefined && <span aria-hidden className="text-xs text-[var(--atlas-muted)]">×{count}</span>}
-      {badge && <span aria-hidden className="size-2 shrink-0 rounded-full bg-[var(--atlas-gold-hi)]" title="Còn công thức chưa tìm" />}
+      <NodeGlyph node={node} className="size-7" />
+      <span className="line-clamp-2 min-w-0 flex-1 text-[13px] leading-tight">{node.nameVi}</span>
+      {count !== undefined && <span aria-hidden className="absolute top-0.5 right-1.5 text-[10px] text-[var(--atlas-muted)] tabular-nums">×{count}</span>}
+      {badge && <span aria-hidden className="absolute top-1.5 right-1.5 size-2 rounded-full bg-[var(--atlas-gold-hi)]" title="Còn công thức chưa tìm" />}
     </button>
   );
 }
@@ -544,6 +592,7 @@ function Library({
   badges,
   counts,
   units,
+  flash = null,
 }: {
   nodes: readonly CatalogNode[];
   onPick: (id: NodeId) => void;
@@ -553,11 +602,18 @@ function Library({
   /** Chế độ Hạng: số đơn vị trong kho tuần; nguyên tố hiện số đơn vị trong túi. */
   counts?: Readonly<Record<NodeId, number>>;
   units?: number;
+  /** Yếu tố vừa khám phá: mở trang có nó và nhấp nháy một lần (mục 7.5). */
+  flash?: Focus | null;
 }) {
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState<string | null>(null);
   const nodes = filterNodes(all, query, group);
   const groups = groupsOf(all);
+  // 2 cột × 8 hàng trên máy tính, 12 ô trên điện thoại (mục 7.6). Đổi từ khóa/nhóm thì về trang 1 (key mới);
+  // có yếu tố mới trong danh sách đang lọc thì mở trang có nó.
+  const pageSize = useIsDesktop() ? 16 : 12;
+  const flashIndex = flash ? nodes.findIndex((n) => n.id === flash.id) : -1;
+  const listKey = `${query}|${group ?? ""}${flashIndex >= 0 ? `|${flash!.seq}` : ""}`;
   return (
     <Panel id="ttk-library" title="Vạn Vật Lục" hidden={hidden} className="lg:order-first">
       <label className="flex flex-col gap-1 text-sm">
@@ -587,20 +643,56 @@ function Library({
         Bấm một yếu tố để đặt vào ô trước, bấm tiếp để đặt vào ô sau.
         {units !== undefined && ` Bảy nguyên tố dùng chung túi (còn ${units} đơn vị).`}
       </p>
-      <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2">
-        {nodes.map((n) => (
+      <LibraryPage
+        key={listKey}
+        nodes={nodes}
+        pageSize={pageSize}
+        initialPage={flashIndex >= 0 ? Math.floor(flashIndex / pageSize) : 0}
+        onPick={onPick}
+        badges={badges}
+        counts={counts}
+        flashId={flash?.id}
+      />
+      {nodes.length === 0 && <p className="text-sm text-[var(--atlas-muted)]">Không có yếu tố nào khớp.</p>}
+    </Panel>
+  );
+}
+
+function LibraryPage({
+  nodes,
+  pageSize,
+  initialPage,
+  onPick,
+  badges,
+  counts,
+  flashId,
+}: {
+  nodes: readonly CatalogNode[];
+  pageSize: number;
+  initialPage: number;
+  onPick: (id: NodeId) => void;
+  badges?: ReadonlySet<NodeId>;
+  counts?: Readonly<Record<NodeId, number>>;
+  flashId?: NodeId;
+}) {
+  const paged = usePagedItems(nodes, pageSize, initialPage);
+  return (
+    <>
+      <ul className="grid auto-rows-fr grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2">
+        {paged.pageItems.map((n) => (
           <li key={n.id}>
             <NodeChip
               node={n}
               onPick={onPick}
               badge={badges?.has(n.id)}
               count={counts && n.kind !== "element" ? counts[n.id] : undefined}
+              flash={n.id === flashId}
             />
           </li>
         ))}
       </ul>
-      {nodes.length === 0 && <p className="text-sm text-[var(--atlas-muted)]">Không có yếu tố nào khớp.</p>}
-    </Panel>
+      <PageControls paged={paged} label="Trang Vạn Vật Lục" className="mt-auto" />
+    </>
   );
 }
 
@@ -612,6 +704,8 @@ function Altar(props: {
   notice: Notice | null;
   recent: readonly string[];
   tried: boolean;
+  result: AltarResult | null;
+  onUseResult: (id: NodeId) => void;
   onClear: (i: 0 | 1) => void;
   onSwap: () => void;
   onCombine: () => void;
@@ -627,19 +721,9 @@ function Altar(props: {
         ? "border-[var(--atlas-red-hi)] text-[var(--atlas-ink-on-wood)]"
         : "border-[var(--atlas-border-soft)] text-[var(--atlas-ink-on-wood)]/90";
   return (
-    <Panel id="ttk-altar" title="Đài Hợp Nguyên" className="lg:sticky lg:top-4 lg:self-start">
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-        <Slot label="Ô trước" id={slots[0]} onClear={() => props.onClear(0)} />
-        <button
-          type="button"
-          onClick={props.onSwap}
-          aria-label="Đổi chỗ ô trước và ô sau"
-          className="grid size-11 place-items-center rounded-full border border-[var(--atlas-border-soft)] font-serif text-lg hover:border-[var(--atlas-gold)]"
-        >
-          ⇄
-        </button>
-        <Slot label="Ô sau" id={slots[1]} onClear={() => props.onClear(1)} />
-      </div>
+    <Panel id="ttk-altar" title="Đài Hợp Nguyên">
+      <SlotsRow slots={slots} busy={pending} result={props.result} onClear={props.onClear} onSwap={props.onSwap} />
+      <ResultCard result={props.result} onUse={props.onUseResult} />
       <p className="text-xs text-[var(--atlas-muted)]">Thứ tự ô có nghĩa: “Mộc + Thủy” khác “Thủy + Mộc”.</p>
       {session && props.tried && <TriedWarning cost="trừ 1 lần ghép" />}
       {session ? (
@@ -697,64 +781,207 @@ function Altar(props: {
   );
 }
 
-function Slot({ label, id, onClear }: { label: string; id: NodeId | null; onClear: () => void }) {
+/**
+ * Ô trước ⇄ ô sau. Có kết quả mới thì icon hai yếu tố vừa ghép trượt vào giữa rồi tan (mục 7.5; ghép hụt thì không
+ * trượt, thẻ kết quả tự vẽ hai icon tách ra). Lớp hiệu ứng nằm đè lên hàng ô, không đổi bố cục.
+ */
+function SlotsRow({ slots, busy, result, onClear, onSwap }: { slots: Slots; busy: boolean; result: AltarResult | null; onClear: (i: 0 | 1) => void; onSwap: () => void }) {
   const catalog = useCatalog();
-  const node = id ? catalog.nodes.get(id) : undefined;
+  const merging = result && result.kind !== "miss" ? result.from.map((id) => catalog.nodes.get(id)) : null;
   return (
-    <div className="atlas-frame atlas-frame-paper flex min-h-24 flex-col items-center justify-center gap-1 p-2 text-center">
-      <span className="text-[11px] font-semibold tracking-[0.15em] uppercase text-[var(--atlas-ink-soft)]">{label}</span>
-      {node ? (
-        <>
-          <NodeGlyph node={node} className="size-8" />
-          <span className="font-serif font-bold text-[var(--atlas-ink)]">{node.nameVi}</span>
-          <button type="button" onClick={onClear} aria-label={`Bỏ ${node.nameVi} khỏi ${label.toLowerCase()}`} className="min-h-8 px-2 text-xs text-[var(--atlas-red)] underline">
-            Bỏ
-          </button>
-        </>
-      ) : (
-        <span className="text-sm text-[var(--atlas-ink-soft)]">Trống</span>
+    <div className="relative grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+      <Slot label="Ô trước" id={slots[0]} busy={busy} onClear={() => onClear(0)} />
+      <button
+        type="button"
+        onClick={onSwap}
+        aria-label="Đổi chỗ ô trước và ô sau"
+        className="grid size-11 place-items-center rounded-full border border-[var(--atlas-border-soft)] font-serif text-lg hover:border-[var(--atlas-gold)]"
+      >
+        ⇄
+      </button>
+      <Slot label="Ô sau" id={slots[1]} busy={busy} onClear={() => onClear(1)} />
+      {merging && merging[0] && merging[1] && (
+        <div key={result!.seq} aria-hidden className="pointer-events-none absolute inset-0 hidden motion-safe:block [--ttk-merge-dx:min(9rem,24vw)]">
+          <span className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2">
+            <span className="block opacity-0 motion-safe:animate-[ttk-merge-l_450ms_ease-in]">
+              <NodeGlyph node={merging[0]} className="size-12" />
+            </span>
+          </span>
+          <span className="absolute top-1/2 left-3/4 -translate-x-1/2 -translate-y-1/2">
+            <span className="block opacity-0 motion-safe:animate-[ttk-merge-r_450ms_ease-in]">
+              <NodeGlyph node={merging[1]} className="size-12" />
+            </span>
+          </span>
+        </div>
       )}
     </div>
   );
 }
 
-function Ledger({ entries, found, hidden }: { entries: readonly LedgerEntry[]; found: number; hidden: boolean }) {
-  // Nhiều gói thì chia mục theo gói (A-15: bóng mờ đủ số tướng của từng gói).
-  const packs = [...new Set(entries.map((e) => e.pack))];
-  if (packs.length > 1)
+/**
+ * Ô trước/ô sau cao cố định, ba hàng cố định: nhãn, icon, tên tối đa 2 dòng (mục 7.4). Ô có yếu tố là nút: bấm để bỏ,
+ * hover/focus hiện ✕ và viền đỏ nhạt. Ô trống giữ chỗ icon bằng vòng nét đứt và không bấm được.
+ */
+function Slot({ label, id, busy, onClear }: { label: string; id: NodeId | null; busy: boolean; onClear: () => void }) {
+  const catalog = useCatalog();
+  const node = id ? catalog.nodes.get(id) : undefined;
+  const frame = `atlas-frame atlas-frame-paper relative flex h-28 w-full flex-col items-center gap-1 p-2 text-center lg:h-36 lg:gap-1.5 lg:pt-3 ${busy && node ? "ring-2 ring-[var(--atlas-gold-hi)] motion-safe:animate-[ttk-shake_0.3s_ease-in-out_infinite]" : ""}`;
+  const content = (
+    <>
+      <span className="text-[11px] font-semibold tracking-[0.15em] uppercase text-[var(--atlas-ink-soft)]">{label}</span>
+      <span className="grid size-10 shrink-0 place-items-center lg:size-12">
+        {node ? (
+          <NodeGlyph node={node} className="size-10 lg:size-12" />
+        ) : (
+          <span aria-hidden className="size-9 rounded-full border-2 border-dashed border-[var(--atlas-ink-soft)]/45 lg:size-11" />
+        )}
+      </span>
+      <span className={`line-clamp-2 font-serif text-sm leading-tight ${node ? "font-bold text-[var(--atlas-ink)]" : "text-[var(--atlas-ink-soft)]"}`}>{node?.nameVi ?? "Trống"}</span>
+    </>
+  );
+  if (!node) return <div className={frame}>{content}</div>;
+  return (
+    <button
+      type="button"
+      onClick={onClear}
+      title={node.nameVi}
+      aria-label={`Bỏ ${node.nameVi} khỏi ${label.toLowerCase()}`}
+      className={`${frame} group cursor-pointer transition-shadow hover:ring-2 hover:ring-[var(--atlas-red-hi)]/60 focus-visible:ring-2 focus-visible:ring-[var(--atlas-red-hi)]/60 focus-visible:outline-none`}
+    >
+      {content}
+      <span aria-hidden className="absolute top-1 right-2 text-sm font-bold text-[var(--atlas-red)] opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+        ✕
+      </span>
+    </button>
+  );
+}
+
+/**
+ * Thẻ kết quả dưới hai ô, cao cố định để không đẩy bố cục (mục 7.5). Hiện sau khi hai icon trượt vào giữa xong.
+ * Bấm thẻ khi là yếu tố thì đặt yếu tố đó vào ô trước để ghép tiếp. Chữ cho người đọc màn hình vẫn ở ô `aria-live`.
+ */
+function ResultCard({ result, onUse }: { result: AltarResult | null; onUse: (id: NodeId) => void }) {
+  const catalog = useCatalog();
+  const box = "relative flex h-20 items-center gap-3 rounded-lg border px-3 text-left";
+  if (!result) return <div className={`${box} border-dashed border-[var(--atlas-border-soft)] text-sm text-[var(--atlas-muted)]`}>Thứ ghép ra sẽ hiện ở đây.</div>;
+  const appear = "motion-safe:animate-[ttk-reveal_0.4s_ease-out_450ms_backwards]";
+  if (result.kind === "miss") {
+    const [a, b] = result.from.map((id) => catalog.nodes.get(id));
     return (
-      <Panel id="ttk-ledger" title={`Tướng Lục · ${found}/${entries.length}`} hidden={hidden}>
-        {packs.map((pack) => {
-          const list = entries.filter((e) => e.pack === pack);
-          return (
-            <section key={pack} aria-label={PACK_NAMES[pack] ?? pack} className="flex flex-col gap-2">
-              <h3 className="font-serif font-bold text-[var(--atlas-title)]">
-                {PACK_NAMES[pack] ?? pack} · {list.filter((e) => e.found).length}/{list.length}
-              </h3>
-              <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
-                {list.map((e) => (
-                  <li key={e.nodeId}>
-                    <LedgerCard entry={e} />
-                  </li>
-                ))}
-              </ul>
-            </section>
-          );
-        })}
-        <p className="text-xs text-[var(--atlas-muted)]">Tìm thấy chân dung chỉ ghi vào Tướng Lục, không thêm tướng vào đội.</p>
-      </Panel>
+      <div key={result.seq} className={`${box} border-[var(--atlas-border-soft)] text-sm`}>
+        <span aria-hidden className="relative flex w-20 shrink-0 items-center justify-center gap-2 grayscale">
+          <span className="motion-safe:animate-[ttk-split-l_0.6s_ease-out_forwards]">{a && <NodeGlyph node={a} className="size-8" />}</span>
+          <span className="motion-safe:animate-[ttk-split-r_0.6s_ease-out_forwards]">{b && <NodeGlyph node={b} className="size-8" />}</span>
+          <span className="absolute inset-0 m-auto size-10 rounded-full bg-[radial-gradient(circle,rgb(180_170_160/0.55),transparent_70%)] opacity-0 motion-safe:animate-[ttk-smoke_0.9s_ease-out]" />
+        </span>
+        <span className="text-[var(--atlas-muted)]">Chưa tìm được mối liên hệ</span>
+      </div>
     );
+  }
+  const node = result.nodeId ? catalog.nodes.get(result.nodeId) : undefined;
+  if (!node) return <div className={`${box} border-[var(--atlas-border-soft)]`} />;
+  if (result.kind === "hero") {
+    const info = node.characterId ? rosterCharacter(node.characterId) : undefined;
+    return (
+      <div key={result.seq} className={`${box} border-[var(--atlas-gold-hi)] bg-[var(--atlas-wood-hi)] ${appear}`}>
+        <span className="rounded-full motion-safe:animate-[ttk-glow_1.1s_ease-out_450ms_2]">
+          {info && node.characterId ? <Portrait id={node.characterId} element={info.element} profession={info.profession} className="size-14 shrink-0" /> : null}
+        </span>
+        <span className="min-w-0">
+          <span className="block font-serif font-bold text-[var(--atlas-title)]">{node.nameVi}</span>
+          <span className="block text-xs text-[var(--atlas-muted)]">
+            {TIER_NAME[node.tier ?? "thuong"]} · đã ghi vào Tướng Lục{result.points ? ` · +${result.points} điểm` : ""}
+          </span>
+        </span>
+      </div>
+    );
+  }
+  const fresh = result.kind === "new";
+  return (
+    <button
+      key={result.seq}
+      type="button"
+      onClick={() => onUse(node.id)}
+      aria-label={`${node.nameVi}${fresh ? ", mới" : ", đã biết"}. Đặt vào ô trước`}
+      title="Đặt vào ô trước để ghép tiếp"
+      className={`${box} w-full hover:border-[var(--atlas-gold)] ${fresh ? "border-[var(--atlas-gold-hi)]" : "border-[var(--atlas-border-soft)]"} ${appear}`}
+    >
+      <span className={`grid shrink-0 place-items-center rounded-full ${fresh ? "motion-safe:animate-[ttk-glow_1s_ease-out_450ms]" : ""}`}>
+        <NodeGlyph node={node} className="size-16" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="line-clamp-2 font-serif font-bold leading-tight">{node.nameVi}</span>
+        <span className="block text-xs text-[var(--atlas-muted)]">Bấm để đặt vào ô trước</span>
+      </span>
+      <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[11px] font-semibold ${fresh ? "border-[var(--atlas-gold-hi)] text-[var(--atlas-title)]" : "border-[var(--atlas-border-soft)] text-[var(--atlas-muted)]"}`}>
+        {fresh ? "Mới" : "Đã biết"}
+      </span>
+    </button>
+  );
+}
+
+/**
+ * Tướng Lục chia nhóm theo quan hệ (mục 7.2): hàng chip nhóm kèm x/y, dòng giới thiệu, danh sách phân trang
+ * 6 thẻ (máy tính) / 4 thẻ (điện thoại). Gói phát hành không hiện ở đây. Tướng vừa tìm thấy: mở nhóm và trang của nó.
+ */
+function Ledger({
+  entries,
+  found,
+  hidden,
+  group,
+  onGroup,
+  focus,
+}: {
+  entries: readonly LedgerEntry[];
+  found: number;
+  hidden: boolean;
+  group: LedgerGroupId | null;
+  onGroup: (g: LedgerGroupId) => void;
+  focus: Focus | null;
+}) {
+  const groups = ledgerGroups(entries);
+  const active = groups.find((g) => g.id === group) ?? groups.find((g) => g.id === defaultLedgerGroup(groups)) ?? groups[0];
+  const pageSize = useIsDesktop() ? 6 : 4;
+  const focusIndex = active && focus ? active.entries.findIndex((e) => e.nodeId === focus.id) : -1;
   return (
     <Panel id="ttk-ledger" title={`Tướng Lục · ${found}/${entries.length}`} hidden={hidden}>
+      <div role="group" aria-label="Nhóm tướng" className="flex flex-wrap gap-1.5">
+        {groups.map((g) => (
+          <ChoiceChip key={g.id} selected={g.id === active?.id} onClick={() => onGroup(g.id)}>
+            {g.name} <span className="tabular-nums opacity-80">{g.found}/{g.entries.length}</span>
+          </ChoiceChip>
+        ))}
+      </div>
+      {active && (
+        <>
+          <p className="text-xs text-[var(--atlas-muted)] italic">{active.intro}</p>
+          <LedgerPage
+            key={`${active.id}${focusIndex >= 0 ? `|${focus!.seq}` : ""}`}
+            entries={active.entries}
+            pageSize={pageSize}
+            initialPage={focusIndex >= 0 ? Math.floor(focusIndex / pageSize) : 0}
+            focusId={focusIndex >= 0 ? focus!.id : undefined}
+          />
+        </>
+      )}
+      <p className="text-xs text-[var(--atlas-muted)]">Tìm thấy chân dung chỉ ghi vào Tướng Lục, không thêm tướng vào đội.</p>
+    </Panel>
+  );
+}
+
+function LedgerPage({ entries, pageSize, initialPage, focusId }: { entries: readonly LedgerEntry[]; pageSize: number; initialPage: number; focusId?: NodeId }) {
+  const paged = usePagedItems(entries, pageSize, initialPage);
+  return (
+    <>
       <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
-        {entries.map((e) => (
-          <li key={e.nodeId}>
+        {paged.pageItems.map((e) => (
+          <li key={e.nodeId} className={e.nodeId === focusId ? "rounded-lg motion-safe:animate-[ttk-glow_1.1s_ease-out_2]" : undefined}>
             <LedgerCard entry={e} />
           </li>
         ))}
       </ul>
-      <p className="text-xs text-[var(--atlas-muted)]">Tìm thấy chân dung chỉ ghi vào Tướng Lục, không thêm tướng vào đội.</p>
-    </Panel>
+      <PageControls paged={paged} label="Trang Tướng Lục" className="mt-auto" />
+    </>
   );
 }
 

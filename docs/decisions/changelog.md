@@ -2,6 +2,9 @@
 
 ## 06/11/2026
 
+**Tầm Tướng Ký: sửa giao diện theo góp ý (có code)**
+- Làm 7.2–7.6 của [giao diện Tầm Tướng Ký](../05-ui-ux/screens/tam-tuong-ky.md#7-sửa-theo-góp-ý-06112026-đã-triển-khai) trong một PR: ba khung thẳng hàng (bỏ `sticky`), ô trước/ô sau cao cố định và bấm vào ô để bỏ, ô yếu tố cao cố định, Vạn Vật Lục và Tướng Lục phân trang, Tướng Lục chia nhóm theo quan hệ (Cờ lau Hoa Lư, Thập nhị sứ quân, Kỳ nhân, 8 nghề), hiệu ứng hợp nguyên và thẻ kết quả. Không đổi server, gói phát hành hay thành tựu.
+
 **Đổi mã kỹ năng và bị động Xạ thủ/Sát thủ mở rộng**
 - Shan cho đổi 28 mã dạng `rb0xx_…` (14 tuyệt chiêu ô 4, 14 bị động riêng của RB-062..075) sang tên chiêu/bị động, ví dụ `rb070_ultimate` → `docAnhTiemCham`, `rb070_passive` → `lamAnhTiepNhip`; ảnh trong `public/art/skills/`, `public/art/passives/` đổi tên theo. Không đổi chỉ số hay hiệu ứng. Dữ liệu lưu trước ngày đổi (trận đang chơi, đội phòng thủ và đối thủ Đấu trường, hồ sơ) được chuyển sang mã mới khi server đọc; bảng đổi ở `src/core/battle/legacy-ids.ts`.
 
