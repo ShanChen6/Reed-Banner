@@ -1,6 +1,6 @@
 // Lưu ván Trận Đồ xếp hạng vào Postgres bằng Drizzle. Thứ tự hạng khớp compareResults: điểm ↓, số nước ↑, nộp sớm ↑.
 
-import { and, asc, count, desc, eq, getTableColumns, gt, isNull, lt, or, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, getTableColumns, gt, isNotNull, isNull, lt, or, sql } from "drizzle-orm";
 import { parseStoredPuzzle } from "@/core/binh-phap";
 import type { FormationEntry, FormationStatus, FormationStore } from "../formation";
 import { accounts, formationEntries } from "./schema";
@@ -138,6 +138,16 @@ export class DrizzleFormationStore implements FormationStore {
         ),
       )
       .orderBy(sql`${formationEntries.period} desc`)
+      .limit(limit);
+    return rows.map(toEntry);
+  }
+
+  async claimedBy(ownerId: string, limit: number): Promise<FormationEntry[]> {
+    const rows = await this.db
+      .select()
+      .from(formationEntries)
+      .where(and(eq(formationEntries.ownerId, ownerId), eq(formationEntries.status, "won"), isNotNull(formationEntries.claimedAt)))
+      .orderBy(desc(formationEntries.claimedAt))
       .limit(limit);
     return rows.map(toEntry);
   }

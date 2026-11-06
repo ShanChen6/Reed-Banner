@@ -48,6 +48,7 @@ import { achievementById, achievementProgress } from "./achievements";
 import { grantTickets, parseTtkAccount, type TtkAccount } from "../tam-tuong-ky/account";
 import { parseExpedition, type ExpeditionState } from "../expedition/state";
 import { parseSpecialQuests, type SpecialQuestState } from "./specialQuests";
+import { mergeCollection, parseFormationCollection, type FormationCollectionState } from "./formationCollection";
 import {
   addXp,
   autoProgress,
@@ -101,6 +102,8 @@ export interface Profile {
   readonly expedition?: ExpeditionState;
   /** Chuỗi nhiệm vụ phụ mở Đinh Ngọc và Trần Vũ Phong. Chưa có tiến độ thì không có. */
   readonly specialQuests?: SpecialQuestState;
+  /** Trận Đồ: bộ sưu tập địa danh đã khai thông. Chưa có địa danh nào thì không có. */
+  readonly formation?: FormationCollectionState;
 }
 
 export interface SurvivalState {
@@ -323,6 +326,9 @@ export function parseProfile(raw: unknown): Profile {
   const special = parseSpecialQuests(p.specialQuests);
   if (special) (next as { specialQuests?: SpecialQuestState }).specialQuests = special;
   else delete (next as { specialQuests?: SpecialQuestState }).specialQuests;
+  const formation = parseFormationCollection(p.formation);
+  if (formation) (next as { formation?: FormationCollectionState }).formation = formation;
+  else delete (next as { formation?: FormationCollectionState }).formation;
   return Array.isArray(p.team) && validTeam(next, p.team)
     ? { ...next, team: p.team }
     : next;
@@ -361,7 +367,9 @@ export type ProfileAction =
   | { readonly type: "checkIn" }
   /** Nhận thưởng nhiệm vụ ngày/tuần hoặc thành tựu đã xong. */
   | { readonly type: "claimQuest"; readonly id: string }
-  | { readonly type: "claimAchievement"; readonly id: string };
+  | { readonly type: "claimAchievement"; readonly id: string }
+  /** Ghi thêm địa danh Trận Đồ đã khai thông (id lạ bị bỏ qua). */
+  | { readonly type: "collectPlaces"; readonly ids: readonly string[] };
 
 export type ProfileError =
   | ProgressError
@@ -499,6 +507,8 @@ export function applyProfileAction(
       },
     };
   }
+  if (action.type === "collectPlaces")
+    return { ok: true, profile: { ...profile, formation: mergeCollection(profile.formation, action.ids) } };
   if (action.type === "chooseTeam") {
     return validTeam(profile, action.companions)
       ? { ok: true, profile: { ...profile, team: [...action.companions] } }
@@ -561,6 +571,10 @@ export function parseProfileAction(x: unknown): ProfileAction | null {
   if (a.type === "sell")
     return typeof a.item === "string" ? { type: "sell", item: a.item } : null;
   if (a.type === "checkIn") return { type: "checkIn" };
+  if (a.type === "collectPlaces")
+    return Array.isArray(a.ids) && a.ids.length <= 100 && a.ids.every((id) => typeof id === "string")
+      ? { type: "collectPlaces", ids: a.ids as string[] }
+      : null;
   if (a.type === "claimQuest" || a.type === "claimAchievement")
     return typeof a.id === "string"
       ? a.type === "claimQuest"

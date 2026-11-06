@@ -41,7 +41,7 @@ export const MODE_INFO: Partial<Record<Scene, ModeInfo>> = {
     perks: ["Mỗi lượt chơi tốn một phiếu", "Tướng tìm được ghi vào Tướng Lục theo tài khoản"],
   },
   LEADERBOARD: {
-    text: "Thứ hạng của bạn ở mọi chế độ có xếp hạng.", kicker: "Bảng vàng",
-    perks: ["Trấn Ải, Quần Hùng, Tháp Thiên Mệnh và Tầm Tướng Ký", "Điểm ghi sau khi trận được cộng thưởng"],
+    text: "Thành tích theo mùa của bạn ở mọi chế độ có xếp hạng.", kicker: "Công trạng",
+    perks: ["Hạng hiện tại ở từng chế độ", "Các mùa trước: hạng và thưởng đã nhận"],
   },
 };

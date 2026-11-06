@@ -25,6 +25,7 @@ import {
 } from "@/core";
 import { fetchProfile, sendProfileAction } from "../battle/online";
 import { PROFILE_ERROR } from "../battle/ProgressPanel";
+import PlacesPanel from "./PlacesPanel";
 import SpecialQuestsPanel from "./SpecialQuestsPanel";
 
 interface Row {
@@ -229,6 +230,8 @@ export default function QuestsScreen({
           </OrnateFrame>
         ))}
       </div>
+
+      <PlacesPanel collected={profile.formation?.collection ?? []} />
     </Shell>
   );
 }

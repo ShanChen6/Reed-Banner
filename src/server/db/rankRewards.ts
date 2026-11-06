@@ -1,6 +1,6 @@
 // Sổ nhận thưởng hạng theo kỳ trong Postgres. Khóa chính (mode, period, owner_id) làm cho `claim` đúng một lần.
 
-import { and, eq, inArray } from "drizzle-orm";
+import { and, desc, eq, inArray } from "drizzle-orm";
 import type { RankRewardMode } from "@/core";
 import type { RankRewardClaim, RankRewardStore } from "../rankRewards";
 import { rankRewardClaims } from "./schema";
@@ -25,5 +25,10 @@ export class DrizzleRankRewardStore implements RankRewardStore {
       .from(rankRewardClaims)
       .where(and(eq(rankRewardClaims.ownerId, ownerId), eq(rankRewardClaims.mode, mode), inArray(rankRewardClaims.period, [...periods])));
     return new Set(rows.map((r) => r.period));
+  }
+
+  async history(ownerId: string, limit: number): Promise<RankRewardClaim[]> {
+    const rows = await this.db.select().from(rankRewardClaims).where(eq(rankRewardClaims.ownerId, ownerId)).orderBy(desc(rankRewardClaims.claimedAt)).limit(limit);
+    return rows.map((r) => ({ mode: r.mode as RankRewardMode, period: r.period, ownerId: r.ownerId, rank: r.rank, gold: r.gold, claimedAt: r.claimedAt }));
   }
 }

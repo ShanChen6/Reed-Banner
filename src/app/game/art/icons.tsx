@@ -63,6 +63,19 @@ export function FoodIcon({ className = "size-4" }: { className?: string }) {
   );
 }
 
+/** Gợi ý (Tầm Tướng Ký): đèn dầu gốm thắp lửa, soi đường tìm công thức. Vẽ tay theo quy tắc không dùng emoji. */
+export function HintIcon({ className = "size-4" }: { className?: string }) {
+  return (
+    <svg viewBox="1 0 22 22" className={className} aria-hidden focusable="false">
+      <path d="M12 0.8 C15.4 4.6 15.8 7.6 12 10.6 C8.2 7.6 8.6 4.6 12 0.8 Z" fill="#f6a723" stroke="#b4400c" strokeWidth={1} strokeLinejoin="round" />
+      <path d="M12 4.4 C13.5 6.2 13.5 7.6 12 9 C10.5 7.6 10.5 6.2 12 4.4 Z" fill="#fff1b8" />
+      <path d="M2.5 13 C2.5 11.6 3.7 10.8 5.1 10.8 H18.9 C20.3 10.8 21.5 11.6 21.5 13 C21.5 16.6 17.3 19 12 19 C6.7 19 2.5 16.6 2.5 13 Z" fill="#b0672c" stroke={INK} strokeWidth={1.4} strokeLinejoin="round" />
+      <path d="M5.5 13.2 H18.5" stroke="#efcf94" strokeWidth={1.3} strokeLinecap="round" />
+      <path d="M8.6 18.8 L7.8 21.4 H16.2 L15.4 18.8" fill="#8a4f24" stroke={INK} strokeWidth={1.3} strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 /** Khiên đỡ đòn, dùng cạnh số sát thương bị chặn. */
 export function ShieldIcon({ className = "size-4" }: { className?: string }) {
   return (

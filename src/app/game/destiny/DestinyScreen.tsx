@@ -1,7 +1,7 @@
 "use client";
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { FrameInset, ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
-import { Alert, Button, ChoiceChip, buttonVariants } from "@/components/ui";
+import { Alert, Button, ChoiceChip } from "@/components/ui";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   DESTINY_BOON_CATALOG,
@@ -16,7 +16,9 @@ import {
 } from "@/core";
 import { ONLINE_BATTLE_KEY } from "../battle/online";
 import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
-import { useScene, SceneLink } from "../SceneContext";
+import { Portrait } from "../art/portraits";
+import { DestinyBoardPanel } from "../leaderboard/boards";
+import { useScene } from "../SceneContext";
 import { describeRules, RULE_TAG } from "../trial/trial-ui";
 import {
   DESTINY_ERROR_TEXT,
@@ -201,16 +203,12 @@ export default function DestinyScreen() {
           { label: "Kỷ lục chu kỳ", value: `Tầng ${overview.progress?.cycleBest ?? 0}` },
           { label: "Đá Cường Hóa", value: overview.stones },
         ]}
-        actions={
-          <SceneLink scene="LEADERBOARD" params={{ board: "destiny" }} className={buttonVariants({ variant: "secondary", className: "min-h-11" })}>
-            Bảng xếp hạng
-          </SceneLink>
-        }
       />
 
       {message && <Alert className="p-3 text-sm">{message}</Alert>}
 
       <RankRewardsPanel mode="destiny" />
+      <DestinyBoardPanel />
 
       {noActiveRun && (
         <OrnateFrame level="raised">
@@ -220,7 +218,7 @@ export default function DestinyScreen() {
           <p className="text-sm text-on-wood">
             Cần tối thiểu {DESTINY_ROSTER_MIN} tướng: Đinh Bộ Lĩnh và ít nhất 2 tướng sở hữu. Có thể mang toàn bộ tướng đã sở hữu.
           </p>
-          <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-3">
             {Object.keys(profile.companions).sort().map((id) => {
               const companion = companionById(id);
               if (!companion) return null;
@@ -228,9 +226,12 @@ export default function DestinyScreen() {
               return (
                 <ChoiceChip key={id} size="md" selected={selected}
                   onClick={() => setRoster(selected ? roster.filter((x) => x !== id) : [...roster, id])}
-                  className="flex-col items-start gap-0 p-3 text-left">
-                  <strong>{companion.name}</strong>
-                  <span className="text-caption font-normal opacity-80">{ELEMENT_NAME[companion.element]} · {PROFESSION_NAME[companion.profession]}</span>
+                  className="items-center gap-2.5 p-2.5 text-left">
+                  <Portrait id={id} element={companion.element} profession={companion.profession} className="size-12 shrink-0" />
+                  <span className="flex min-w-0 flex-col">
+                    <strong>{companion.name}</strong>
+                    <span className="text-caption font-normal opacity-80">{ELEMENT_NAME[companion.element]} · {PROFESSION_NAME[companion.profession]}</span>
+                  </span>
                 </ChoiceChip>
               );
             })}

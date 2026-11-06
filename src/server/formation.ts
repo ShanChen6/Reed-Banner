@@ -69,6 +69,8 @@ export interface FormationStore {
   release(id: string): Promise<void>;
   /** Ván thắng chưa nhận thưởng của người chơi ở các kỳ trước `beforePeriod`. */
   unclaimed(ownerId: string, level: string, beforePeriod: string, limit: number): Promise<FormationEntry[]>;
+  /** Ván thắng đã nhận thưởng của người chơi, mới nhận trước (trang Công Trạng). */
+  claimedBy(ownerId: string, limit: number): Promise<FormationEntry[]>;
 }
 
 const resultOf = (e: FormationEntry) => ({ score: e.score ?? 0, turns: e.turns ?? 0, finishedAt: e.finishedAt ?? 0 });
@@ -131,6 +133,14 @@ export class MemoryFormationStore implements FormationStore {
     return [...this.rows.values()]
       .filter((r) => r.ownerId === ownerId && r.level === level && r.status === "won" && r.claimedAt === null && r.period < beforePeriod)
       .sort((a, b) => (a.period < b.period ? 1 : -1))
+      .slice(0, limit)
+      .map((r) => structuredClone(r));
+  }
+
+  async claimedBy(ownerId: string, limit: number): Promise<FormationEntry[]> {
+    return [...this.rows.values()]
+      .filter((r) => r.ownerId === ownerId && r.status === "won" && r.claimedAt !== null)
+      .sort((a, b) => (b.claimedAt ?? 0) - (a.claimedAt ?? 0))
       .slice(0, limit)
       .map((r) => structuredClone(r));
   }

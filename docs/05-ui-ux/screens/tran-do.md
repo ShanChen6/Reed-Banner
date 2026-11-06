@@ -68,3 +68,8 @@ Cấu trúc `ModeScreen.tsx`. Hai tab khi xếp hạng đang mở (**Xếp hạn
 1. Kho đã mở rộng lên 30 bản đồ (Cổ Loa, Đại La, Bạch Đằng, … và cảnh quan chung) và không giới hạn; còn địa danh nào anh muốn thêm?
 2. Chọn bản đồ theo băm (có thể lặp trong vòng) hay xoay tuần tự để mỗi bản đồ xuất hiện đều?
 3. Sau khi test lần 1: chỉnh gì ở mục 5 và 6 (mặc định gợi ý, độ lớn ô trên điện thoại, nội dung thẻ)?
+
+## 8. Góp ý bản 2 (06/11/2026)
+
+Shan góp ý sau khi chơi: ảnh thumbnail cố định cho từng bậc ở cả hai tab, thẻ cao bằng nhau, thêm tab Bảng xếp hạng và tab thưởng riêng, đưa Bộ sưu tập địa danh vào Thành tựu. Chi tiết và thứ tự làm ở [lộ trình UI, mục 9 (V2-02 … V2-05)](../implementation/roadmap.md#9-bản-2-sửa-lỗi-và-chỉnh-uiux-06112026). Chưa triển khai.
+

@@ -3,7 +3,7 @@
 // Tuyệt chiêu: viền vàng đôi và quầng sáng vàng tỏa từ tâm (Shan chọn 04/11/2026, thay ngôi sao 16 cánh).
 
 import { useId } from "react";
-import type { Element, GameProfession, Profession, SkillDef } from "@/core";
+import { personalSkillOf, type Element, type GameProfession, type Profession, type SkillDef } from "@/core";
 import { ELEMENT_COLOR } from "./icons";
 import { INK, starPoints } from "./tiles";
 
@@ -544,47 +544,23 @@ const SKILL_ART = new Set([
   // Quân sư Phùng Phong, Tạ Thạch, Nghiêm Thiết, Sầm Tuệ, Vi Triều, Tôn Diệm.
   "phongVanBienTran", "batTranThachLuy", "thietTranPhaGiap", "thanhLamBayTran", "trieuDangVayThanh", "hoaCongLienKe",
   // Xạ thủ Bạch Nỏ Lang, Thanh Lâm Xạ, Trấn Sơn Thạch; Sát thủ Độc Ảnh, Hàn Giang Khách, Xích Dạ, Địa Ẩn, Lôi Ảnh, Vô Ảnh.
-  "rb_bnl_thietNoPhaThanh", "rb_tlx_lucTienTroiDuong", "rb066_tranSonHoTran",
-  "rb070_ultimate", "rb071_ultimate", "rb072_ultimate", "rb073_ultimate", "rb074_ultimate", "rb075_ultimate",
+  "thietNoPhaThanh", "lucTienTroiDuong", "tranSonHoTran",
+  "docAnhTiemCham", "hanGiangTangNhan", "xichDaSongSat", "diaPhucLietTrao", "baoVuLeHoa", "voThanhDoatPhach",
   // Nhân vật đặc biệt Đinh Ngọc: đủ 6 ô.
   "dn_kimQuangPhaTran", "dn_thuyAnhXuyenLuu", "dn_hoaBoDoatMenh", "dn_vanTuongQuyNhat", "dn_thoAnTranTam", "dn_loiVanKhaiLo",
   // Nhân vật đặc biệt Trần Vũ Phong: đủ 6 ô (ô 4 thay ảnh Phong Hành Vạn Lý dùng tạm trước đó).
   "vp_phongKhoiVanDong", "vp_muaGiangYLoan", "vp_lucDiepDanLo", "vp_vanDuThienLy", "vp_diaMachHoDoi", "vp_cuongPhongDoiCuc",
+  // Chiêu ô 4 riêng Shan vẽ (06/11/2026), thay ảnh chiêu hệ cũ từng mượn tạm; từ nay mọi chiêu ô 4 đều có ảnh riêng.
+  // Tướng thường Mai Thanh, Hồng Đan, Doãn Nham, Trần Cương, Đàm Thảo, Mạc Vân, Lam Giang Phi Diệp, Xích Diệm Luân,
+  // Lôi Minh Xạ, Tật Phong Lăng, Bạch Phong Đao, Kha Sơn, Cao Kiên, Lâm Tùng, Hứa Lăng.
+  "camLoHoiXuan", "danHoaHoiNguyen", "diaMachBungPhat", "kimQuaThietMa", "kinhCucTrienThan",
+  "loiTranKinhHon", "lieuDiepToaGiang", "xichLuanLietTran", "loiChamTuocKhi", "phongLangNhieuTran",
+  "thietAnDoatMenh", "sonHaTranKich", "thietBichDongThanh", "trucLamPhaTran", "truyPhongDoatMenh",
+  // Tướng lịch sử Nguyễn Bặc, Đinh Điền, Trịnh Tú, Lê Hoàn, Đinh Liễn.
+  "dinhQuocHoaKy", "ngoaiGiapHoQuan", "hoaLuThaoDuoc", "thapDaoLoiBinh", "namVietVuongAn",
+  // Sứ quân Trần Lãm, Phạm Bạch Hổ, Ngô Nhật Khánh, Kiều Công Hãn, Kiều Thuận, Lý Khuê, Đỗ Cảnh Thạc.
+  "boHaiTranGiang", "bachHoXuatSon", "duongLamPhongKhoi", "phongChauLoiKich", "hoiHoSinhKhi", "sieuLoaiPhaGiap", "doDongKienTam",
 ]);
-
-/**
- * Chiêu ô 4 của tướng kèm / tướng lịch sử / sứ quân dùng lại ảnh chiêu hệ cũ của Đinh Bộ Lĩnh (Shan duyệt 04/11/2026),
- * ghép theo hệ và tác dụng. Mỗi ảnh chỉ gán một lần.
- */
-export const REUSED_SKILL_ART: Readonly<Record<string, string>> = {
-  sieuLoaiPhaGiap: "kimAnPhaThien", // Lý Khuê
-  rb069_ultimate: "doanKimNhatTuyen", // Bạch Phong Đao
-  kimQuaThietMa: "thietKyTungHoanh", // Trần Cương
-  thietBichDongThanh: "giapDongHoThe", // Cao Kiên
-  hoiHoSinhKhi: "coThuTranThien", // Kiều Thuận
-  hoaLuThaoDuoc: "thanhTrucBaoPhu", // Trịnh Tú
-  trucLamPhaTran: "thanhMocHoPhap", // Lâm Tùng
-  kinhCucTrienThan: "cuongVuThienDiep", // Đàm Thảo
-  boHaiTranGiang: "thuyKiepVanTrung", // Trần Lãm
-  namVietVuongAn: "bachDangTrieuDang", // Đinh Liễn
-  rb064_lieuDiepToaGiang: "hanBangTien", // Lam Giang Phi Diệp
-  camLoHoiXuan: "linhThuyHoMenh", // Mai Thanh
-  bachHoXuatSon: "lietDiemPhanThanh", // Phạm Bạch Hổ
-  dinhQuocHoaKy: "hoaThieuLienTrai", // Nguyễn Bặc
-  rb065_xichLuanLietTran: "xichDiemTien", // Xích Diệm Luân
-  danHoaHoiNguyen: "ducHoaTrungSinh", // Hồng Đan
-  doDongKienTam: "thaiSonApDinh", // Đỗ Cảnh Thạc
-  ngoaiGiapHoQuan: "kienThanhBatDong", // Đinh Điền
-  sonHaTranKich: "sonBangDiaLiet", // Kha Sơn
-  diaMachBungPhat: "diaChanTamQuan", // Doãn Nham
-  phongChauLoiKich: "cuuTieuLoiPhat", // Kiều Công Hãn
-  thapDaoLoiBinh: "loiDinhHieuLenh", // Lê Hoàn
-  rb067_loiChamTuocKhi: "loiTienXuyenVan", // Lôi Minh Xạ
-  loiTranKinhHon: "loiVongThienLa", // Mạc Vân
-  duongLamPhongKhoi: "baoTapCanKhon", // Ngô Nhật Khánh
-  truyPhongDoatMenh: "phongNhanLietKhong", // Hứa Lăng
-  rb068_phongLangNhieuTran: "cuongPhongQuetTran", // Tật Phong Lăng
-};
 
 /** Tuyệt chiêu ô 4 của Đinh Bộ Lĩnh (`dbl_<nghề>_<hệ>`) dùng lại ảnh tuyệt chiêu hệ cũ của chính ông. */
 const DBL_ULTIMATE_ART: Readonly<Record<Element, string>> = {
@@ -605,8 +581,6 @@ const DBL_ULTIMATE_ART: Readonly<Record<Element, string>> = {
  */
 export function skillArt(def: Pick<SkillDef, "id" | "element" | "profession">): { file: string; badge?: Profession } | undefined {
   if (SKILL_ART.has(def.id)) return { file: def.id };
-  const reused = REUSED_SKILL_ART[def.id];
-  if (reused) return { file: reused };
   if (def.id.startsWith("element_")) {
     const file = def.id.slice("element_".length);
     return SKILL_ART.has(file) ? { file } : undefined;
@@ -615,6 +589,12 @@ export function skillArt(def: Pick<SkillDef, "id" | "element" | "profession">): 
   if (def.profession && SKILL_ART.has(`role_${def.id}`)) return { file: `role_${def.id}` };
   if (def.id.startsWith("dbl_") && def.element && def.profession) return { file: DBL_ULTIMATE_ART[def.element], badge: def.profession };
   return undefined;
+}
+
+/** Ảnh chiêu riêng (ô 4) của một nhân vật, theo `personalSkillOf`; dùng cho yếu tố tuyệt chiêu ở Vạn Vật Lục (Tầm Tướng Ký). */
+export function personalSkillArtFile(character: string): string | undefined {
+  const def = personalSkillOf(character);
+  return def && skillArt(def)?.file;
 }
 
 /** Quầng sáng của tuyệt chiêu: ánh vàng ở tâm chuyển sang màu hệ rồi tan vào nền, kèm viền trong mảnh màu đồng. */

@@ -23,6 +23,7 @@ export interface AchievementDef {
 }
 
 const wins = (p: Profile) => p.quests.totals.win ?? 0;
+const places = (p: Profile) => p.formation?.collection.length ?? 0;
 
 /**
  * Thành tựu Tầm Tướng Ký theo bộ tướng của một gói (Design Freeze A-13, P-20, P-21): mở đủ mọi tướng trong bộ thì
@@ -116,6 +117,10 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
     gold: 1000,
     value: (p) => p.main.level,
   },
+  // Bộ sưu tập địa danh Trận Đồ (V2-05, mốc do Claude đặt, chờ Shan duyệt).
+  { id: "a.places5", title: "Du khảo sơn hà", target: 5, gold: 200, value: places },
+  { id: "a.places15", title: "Thông tỏ địa đồ", target: 15, gold: 500, value: places },
+  { id: "a.places30", title: "Thu trọn giang sơn", target: 30, gold: 1000, value: places },
   ...PUBLISHED_PACKS.flatMap(ttkAchievements),
 ];
 

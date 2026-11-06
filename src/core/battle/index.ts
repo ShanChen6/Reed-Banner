@@ -6,4 +6,5 @@ export * from "./skills";
 export * from "./state";
 export * from "./combos";
 export * from "./chase";
+export * from "./legacy-ids";
 export * from "./profession-migration";

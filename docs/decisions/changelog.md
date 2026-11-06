@@ -1,5 +1,21 @@
 # Nhật ký thay đổi thiết kế
 
+## 06/11/2026
+
+**Tầm Tướng Ký: nút ghép giữ chữ “Hợp Nguyên”, bỏ emoji gợi ý**
+- Shan: đặt lại cặp đã thử vẫn hiện cảnh báo, nhưng nút giữ nguyên “Hợp Nguyên”, không đổi thành “Vẫn hợp nguyên” / “Vẫn ghép”. Sửa [cảnh báo cặp đã thử](../02-game-modes/future/23-tam-tuong-ky-can-bang-va-canh-bao.md#2-cảnh-báo-cặp-đã-thử). Icon gợi ý thay emoji bằng đèn dầu vẽ tay (`HintIcon`), theo quy tắc không dùng emoji.
+
+**Tầm Tướng Ký: sửa giao diện theo góp ý (có code)**
+- Làm 7.2–7.6 của [giao diện Tầm Tướng Ký](../05-ui-ux/screens/tam-tuong-ky.md#7-sửa-theo-góp-ý-06112026-đã-triển-khai) trong một PR: ba khung thẳng hàng (bỏ `sticky`), ô trước/ô sau cao cố định và bấm vào ô để bỏ, ô yếu tố cao cố định, Vạn Vật Lục và Tướng Lục phân trang, Tướng Lục chia nhóm theo quan hệ (Cờ lau Hoa Lư, Thập nhị sứ quân, Kỳ nhân, 8 nghề), hiệu ứng hợp nguyên và thẻ kết quả. Không đổi server, gói phát hành hay thành tựu.
+
+**Đổi mã kỹ năng và bị động Xạ thủ/Sát thủ mở rộng**
+- Shan cho đổi 28 mã dạng `rb0xx_…` (14 tuyệt chiêu ô 4, 14 bị động riêng của RB-062..075) sang tên chiêu/bị động, ví dụ `rb070_ultimate` → `docAnhTiemCham`, `rb070_passive` → `lamAnhTiepNhip`; ảnh trong `public/art/skills/`, `public/art/passives/` đổi tên theo. Không đổi chỉ số hay hiệu ứng. Dữ liệu lưu trước ngày đổi (trận đang chơi, đội phòng thủ và đối thủ Đấu trường, hồ sơ) được chuyển sang mã mới khi server đọc; bảng đổi ở `src/core/battle/legacy-ids.ts`.
+
+**Bản 2 UI/UX: danh sách việc (DRAFT, chưa triển khai)**
+- Shan đưa danh sách sau khi chơi: Khai Lộ thêm khung thẻ; Trận Đồ dùng banner riêng cho từng bậc ở Chơi thường, thẻ cao bằng nhau, thêm tab Bảng xếp hạng và tách thưởng hạng thành tab riêng (Shan chọn tách), Bộ sưu tập địa danh có thể vào Thành tựu; bảng xếp hạng làm cả hai: trong từng chế độ và trang thành tích theo mùa; Tháp Thiên Mệnh có chân dung như Tháp Thí Luyện. Xem [lộ trình UI mục 9](../05-ui-ux/implementation/roadmap.md#9-bản-2-sửa-lỗi-và-chỉnh-uiux-06112026).
+- Shan chốt thêm: tách bảng xếp hạng thành trang Công Trạng (thành tích theo mùa, thay "Xếp hạng" ở Trang chủ) và bảng mùa hiện tại trong từng chế độ, không liên kết sang nhau; tab thưởng Trận Đồ tên Ban thưởng; Nhật Lệnh, Bình Loạn không làm bảng xếp hạng; Claude đặt mốc bộ sưu tập 5/15/30 = 200/500/1000 vàng, bấm địa danh để xem lại tranh.
+- Shan chốt: trang tên Công Trạng; thẻ bậc Trận Đồ ở cả tab Xếp hạng và Chơi thường dùng ảnh thumbnail cố định, bỏ ô che lộ dần.
+
 ## 05/11/2026
 
 **Đồng bộ UI/UX toàn game: quy tắc chung (APPROVED)**

@@ -1086,6 +1086,49 @@
   }
 }
 
+/* Tầm Tướng Ký, hợp nguyên (mục 7.5 docs/05-ui-ux/screens/tam-tuong-ky.md). Lớp dùng các keyframe này luôn đi qua
+   motion-safe:, nên người bật giảm chuyển động chỉ thấy thẻ kết quả. */
+/* Hai ô rung nhẹ trong lúc chờ server. */
+@keyframes ttk-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+/* Icon ô trước/ô sau trượt vào giữa (nút ⇄) rồi tan. */
+@keyframes ttk-merge-l {
+  from { transform: translateX(0) scale(1); opacity: 1; }
+  80% { opacity: 1; }
+  to { transform: translateX(var(--ttk-merge-dx, 120px)) scale(0.4); opacity: 0; }
+}
+@keyframes ttk-merge-r {
+  from { transform: translateX(0) scale(1); opacity: 1; }
+  80% { opacity: 1; }
+  to { transform: translateX(calc(-1 * var(--ttk-merge-dx, 120px))) scale(0.4); opacity: 0; }
+}
+/* Không ra gì: hai icon tách ra, khói xám tan. */
+@keyframes ttk-split-l {
+  from { transform: translateX(10px); opacity: 1; }
+  to { transform: translateX(-6px); opacity: 0.55; }
+}
+@keyframes ttk-split-r {
+  from { transform: translateX(-10px); opacity: 1; }
+  to { transform: translateX(6px); opacity: 0.55; }
+}
+@keyframes ttk-smoke {
+  from { transform: scale(0.6); opacity: 0.7; }
+  to { transform: scale(1.6); opacity: 0; }
+}
+/* Quầng vàng tỏa quanh thứ vừa tạo ra. */
+@keyframes ttk-glow {
+  from { box-shadow: 0 0 0 0 rgb(255 214 120 / 0.65); }
+  to { box-shadow: 0 0 0 14px rgb(255 214 120 / 0); }
+}
+/* Yếu tố mới nhấp nháy một lần trong Vạn Vật Lục. */
+@keyframes ttk-flash {
+  0%, 100% { background-color: var(--atlas-wood-lo); }
+  35% { background-color: rgb(200 160 70 / 0.45); }
+}
+
 /* Doanh Trại (src/app/game/profile/): gỗ sơn tối, chữ kem, đỏ trầm cho thẻ chưa chọn, vàng cổ chỉ để đánh dấu lựa
    chọn và hành động chính. Một lớp viền mảnh cho mỗi khung, không chồng nhiều khung vàng. Token --bk-* chỉ áp ở đây. */
 .barracks {

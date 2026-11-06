@@ -6,6 +6,7 @@ import { migrate } from "drizzle-orm/pglite/migrator";
 import { eq } from "drizzle-orm";
 import {
   botDefense,
+  LEGACY_IDS,
   createSurvivalRoster,
   mainCharacter,
   MAIN_ID,
@@ -30,7 +31,8 @@ import { DrizzleProfileStore } from "../../src/server/db/profiles";
 import { DrizzleMatchStore, type Db } from "../../src/server/db/store";
 import { signIn } from "../../src/server/accounts";
 import { deleteExpiredTokens } from "../../src/server/db/maintenance";
-import { matches } from "../../src/server/db/schema";
+import { arenaPlayers, matches } from "../../src/server/db/schema";
+import { companionById } from "../../src/core/roster/roster";
 
 describe("lưu trận vào Postgres (PGlite, cùng migration với Neon)", () => {
   it("tạo, đọc, ghi kèm điều kiện seq", async () => {
@@ -451,5 +453,20 @@ describe("lưu trận vào Postgres (PGlite, cùng migration với Neon)", () =>
     }
     const named = await new DrizzleArenaStore(db as unknown as Db).candidates("g_a", 1100, 1);
     assert.equal(named[0]!.name, "Shan");
+  });
+
+  it("đọc đội phòng thủ đấu trường lưu với mã kỹ năng/bị động rb0xx_… cũ thì trả về mã mới", async () => {
+    const db = drizzle(new PGlite());
+    await migrate(db, { migrationsFolder: "drizzle" });
+    const store = new DrizzleArenaStore(db as unknown as Db);
+    const docAnh = companionById("docAnh")!;
+    const toOld = Object.fromEntries(Object.entries(LEGACY_IDS).map(([o, n]) => [n, o]));
+    const oldTeam = JSON.parse(JSON.stringify([docAnh]).replace(/"(\w+)"/g, (m, id: string) => (toOld[id] ? `"${toOld[id]}"` : m)));
+    assert.ok(JSON.stringify(oldTeam).includes("rb070_ultimate"));
+    await store.ensure("g_old", 10);
+    await db.update(arenaPlayers).set({ defense: { team: oldTeam, members: [], power: 1 } }).where(eq(arenaPlayers.ownerId, "g_old"));
+    await store.ensure("g_a", 10);
+    assert.deepEqual((await store.get("g_old"))!.defense!.team, [docAnh]);
+    assert.deepEqual((await store.candidates("g_a", 1000, 1))[0]!.defense.team, [docAnh]);
   });
 });

@@ -40,6 +40,8 @@ export interface RankRewardStore {
   release(mode: RankRewardMode, period: string, ownerId: string): Promise<void>;
   /** Các kỳ (trong danh sách đưa vào) mà người này đã nhận. */
   claimed(ownerId: string, mode: RankRewardMode, periods: readonly string[]): Promise<ReadonlySet<string>>;
+  /** Mọi lần nhận của người này, mới nhận trước (trang Công Trạng). */
+  history(ownerId: string, limit: number): Promise<RankRewardClaim[]>;
 }
 
 export class MemoryRankRewardStore implements RankRewardStore {
@@ -59,6 +61,10 @@ export class MemoryRankRewardStore implements RankRewardStore {
 
   async claimed(ownerId: string, mode: RankRewardMode, periods: readonly string[]): Promise<ReadonlySet<string>> {
     return new Set(periods.filter((p) => this.rows.has(this.key(mode, p, ownerId))));
+  }
+
+  async history(ownerId: string, limit: number): Promise<RankRewardClaim[]> {
+    return [...this.rows.values()].filter((r) => r.ownerId === ownerId).sort((a, b) => b.claimedAt - a.claimedAt).slice(0, limit).map((r) => ({ ...r }));
   }
 }
 
