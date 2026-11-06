@@ -1,6 +1,6 @@
 "use client";
 
-// Màn chọn chế độ Trận Đồ. Mỗi bậc là một tấm bản đồ: thẻ xếp hạng hiện bản đồ của kỳ mờ sương (lộ dần theo tiến độ), đồng hồ
+// Màn chọn chế độ Trận Đồ. Mỗi bậc có ảnh thumbnail cố định (V2-02): thẻ xếp hạng có đồng hồ
 // kỳ, hạng hiện tại và thang thưởng; thẻ chơi thường dẫn vào ván ngẫu nhiên. Có hai tab (Xếp hạng, Chơi thường) khi xếp
 // hạng đang mở, và bộ sưu tập địa danh đã khai thông.
 
@@ -11,8 +11,8 @@ import { useAudio } from "../audio/AudioProvider";
 import { REWARD_GOLD, REWARD_TIERS, RULESETS, rewardGold, type Ruleset } from "@/core/binh-phap";
 import { SceneLink } from "../SceneContext";
 import CustomForm from "./CustomForm";
-import { MAP_POOL, mapFor } from "./maps";
-import MapCard from "./MapCard";
+import LevelCard from "./LevelCard";
+import { MAP_POOL } from "./maps";
 import type { LevelOverview, Overview } from "./rankedClient";
 import RewardLadder from "./RewardLadder";
 import Rules from "./Rules";
@@ -59,7 +59,6 @@ function progressOf(l: LevelOverview): number {
 
 function RankedCard({ l, now, busy, canPlay, onPlay }: { l: LevelOverview; now: number; busy: boolean; canPlay: boolean; onPlay: (level: string) => void }) {
   const rules = RULESETS.find((r) => r.id === l.level);
-  const map = mapFor(l.level, l.theme);
   const m = l.mine;
   const reveal = progressOf(l);
   const reward = m?.status === "won" && m.rank ? rewardGold(l.level, m.rank, l.winners) : null;
@@ -73,10 +72,10 @@ function RankedCard({ l, now, busy, canPlay, onPlay }: { l: LevelOverview; now: 
         : "Đã thua, không vào bảng xếp hạng.";
   return (
     <li className="home-mode ui-frame flex flex-col">
-      <MapCard map={map} reveal={reveal} hidden={!m} caption={CADENCE[l.cadence]} />
+      <LevelCard level={l.level} ranked name={rules?.name} caption={CADENCE[l.cadence]} />
       <div className="flex flex-1 flex-col gap-3 p-4">
         <div className="flex items-baseline justify-between gap-2">
-          <h3 className="font-serif text-xl font-bold text-title-on-wood">{rules?.name}</h3>
+          <h3 className="sr-only">{rules?.name}</h3>
           <span className="text-sm text-on-wood-soft">{rules?.randomSize ? `cỡ ${rules.randomSize.min}–${rules.randomSize.max}` : `${rules?.width}×${rules?.height}`}</span>
         </div>
         <p className="text-sm text-on-wood-soft">
@@ -113,14 +112,12 @@ function RankedCard({ l, now, busy, canPlay, onPlay }: { l: LevelOverview; now: 
   );
 }
 
-function PracticeCard({ rules, best, theme, onStart }: { rules: Ruleset; best: number; theme: number; onStart: (r: Ruleset) => void }) {
-  const map = mapFor(rules.id, theme);
+function PracticeCard({ rules, best, onStart }: { rules: Ruleset; best: number; onStart: (r: Ruleset) => void }) {
   return (
     <li>
       <button type="button" aria-label={`${rules.name}: chơi thường. ${rules.blurb}`} onClick={() => onStart(rules)} className="home-mode ui-frame flex w-full flex-col text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-frame-gold">
-        <MapCard map={map} reveal={best > 0 ? 1 : 0.4} hidden caption="Bản đồ đổi mỗi ván" />
+        <LevelCard level={rules.id} name={rules.name} caption="Bản đồ đổi mỗi ván" />
         <span className="flex flex-col gap-1 p-4">
-          <span className="font-serif text-xl font-bold text-title-on-wood">{rules.name}</span>
           <span className="text-[15px] leading-snug text-on-wood/90">{rules.blurb}</span>
           <span className="text-sm text-on-wood-soft">
             {rules.randomSize ? `cỡ ngẫu nhiên ${rules.randomSize.min}–${rules.randomSize.max}` : `${rules.width}×${rules.height}`} · {rules.professions.length} nghề × {rules.elements.length} hệ{rules.obstaclePercent > 0 ? " · có chướng ngại" : ""}
@@ -194,7 +191,6 @@ export default function ModeScreen({
     return () => timers.forEach((t) => window.clearTimeout(t));
   }, [now, overview, playSound]);
   // Bản đồ mẫu trên thẻ chơi thường đổi mỗi ngày (chỉ để trang trí; ván thật chọn bản đồ ngẫu nhiên).
-  const dayTheme = Math.floor(now / 86_400_000);
 
   return (
     <>
@@ -282,7 +278,7 @@ export default function ModeScreen({
           <p className="max-w-2xl text-[15px] text-on-wood/90">Chơi thường: không thưởng, không xếp hạng, chơi bao nhiêu ván tùy thích. Bản đồ và chướng ngại ngẫu nhiên mỗi ván.</p>
           <ul className="grid gap-4 sm:grid-cols-2">
             {RULESETS.map((r) => (
-              <PracticeCard key={r.id} rules={r} best={best[r.id] ?? 0} theme={dayTheme} onStart={onStart} />
+              <PracticeCard key={r.id} rules={r} best={best[r.id] ?? 0} onStart={onStart} />
             ))}
           </ul>
           <CustomForm onStart={onStart} />
