@@ -10,6 +10,7 @@ import {
   act,
   swapCells,
   applyProfileAction,
+  BAG_LIMIT,
   applyRewards,
   battleRewards,
   canFreeWhirl,
@@ -2545,39 +2546,54 @@ export default function DemoGame({
           {side(AI)}
         </div>
 
-        {mode === "progress" && (
-          <ShopPanel
-            compact={online}
-            profile={profile}
-            locked={started && state.winner === null}
-            onAction={profileAction}
-          />
-        )}
+        {/* Giao Tranh online: chỉ giữ chọn đội nhanh và lối sang Doanh Trại (trang bị, kỹ năng chỉnh ở đó). Lúc đang đánh thì ẩn hẳn
+            để bàn cờ không bị đẩy xuống. Chơi thử Tiến trình (offline) vẫn đủ panel vì hồ sơ nằm trên trình duyệt. */}
+        {mode === "progress" && !(online && started && state.winner === null) && (
+          <div
+            className={`flex flex-col gap-3 ${started ? "" : "mx-auto w-full max-w-4xl"}`}
+          >
+            <div className="ui-frame-inset rounded-xl p-3">
+              <ShopPanel
+                compact={online}
+                profile={profile}
+                locked={started && state.winner === null}
+                onAction={profileAction}
+              />
+            </div>
 
-        {mode === "progress" && (
-          <GearPanel
-            noShop={online}
-            profile={{ ...profile, element, profession }}
-            teamIds={[MAIN_ID, ...profile.team]}
-            locked={started && state.winner === null}
-            onAction={profileAction}
-          />
-        )}
-
-        {mode === "progress" && (
-          <ProgressPanel
-            profile={{ ...profile, element }}
-            teamIds={[MAIN_ID, ...profile.team]}
-            locked={started && state.winner === null}
-            storage={online ? "lưu trên máy chủ" : "lưu trên trình duyệt này"}
-            onAction={profileAction}
-            onReset={online ? undefined : () => changeProfile(newProfile())}
-          />
+            {online ? (
+              <p className="ui-frame-inset rounded-xl p-3 text-caption text-on-wood-soft">
+                Túi đồ {profile.bag.length}/{BAG_LIMIT} món. Mặc trang bị và nâng kỹ năng ở{" "}
+                <SceneLink scene="PROFILE" className="text-frame-gold underline underline-offset-2">
+                  Doanh Trại
+                </SceneLink>
+                , đội sẽ cập nhật ở đây khi quay lại.
+              </p>
+            ) : (
+              <>
+                <GearPanel
+                  noShop={false}
+                  profile={{ ...profile, element, profession }}
+                  teamIds={[MAIN_ID, ...profile.team]}
+                  locked={started && state.winner === null}
+                  onAction={profileAction}
+                />
+                <ProgressPanel
+                  profile={{ ...profile, element }}
+                  teamIds={[MAIN_ID, ...profile.team]}
+                  locked={started && state.winner === null}
+                  storage="lưu trên trình duyệt này"
+                  onAction={profileAction}
+                  onReset={() => changeProfile(newProfile())}
+                />
+              </>
+            )}
+          </div>
         )}
 
         <section
           aria-label="Nhật ký trận"
-          className="max-h-32 overflow-y-auto rounded-lg bg-[var(--panel)] p-2 text-xs"
+          className={`ui-frame-inset max-h-32 overflow-y-auto rounded-xl p-2 text-xs text-on-wood ${started ? "" : "hidden"}`}
         >
           {log.length === 0 ? (
             <p className="opacity-60">Nhật ký trận sẽ hiện ở đây.</p>
