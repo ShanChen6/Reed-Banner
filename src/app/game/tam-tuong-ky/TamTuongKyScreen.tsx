@@ -116,12 +116,14 @@ export default function TamTuongKyScreen({
   return (
     <>
       {ranked && (
-        <div role="group" aria-label="Chế độ" className="campaign-atlas mx-auto flex w-full max-w-[1480px] gap-2 px-4 pt-4 sm:px-6 lg:px-8">
-          {(["normal", "ranked"] as const).map((m) => (
-            <ChoiceChip key={m} size="md" selected={mode === m} onClick={() => setMode(m)}>
-              {m === "normal" ? "Thường" : "Hạng tuần"}
-            </ChoiceChip>
-          ))}
+        <div className="campaign-atlas ui-mode-screen !pb-0">
+          <div role="group" aria-label="Chế độ" className="mx-auto flex w-full max-w-7xl gap-2">
+            {(["normal", "ranked"] as const).map((m) => (
+              <ChoiceChip key={m} size="md" selected={mode === m} onClick={() => setMode(m)}>
+                {m === "normal" ? "Thường" : "Hạng tuần"}
+              </ChoiceChip>
+            ))}
+          </div>
         </div>
       )}
       {mode === "normal" ? <NormalMode initial={initial} /> : <RankedMode initial={initialRanked} />}
@@ -243,8 +245,8 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
 
   return (
     <CatalogContext.Provider value={catalog}>
-    <main aria-label="Tầm Tướng Ký" className="campaign-atlas flex flex-1 flex-col bg-[#17110e] pb-28 text-[var(--atlas-ink-on-wood)] lg:pb-10">
-      <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-4 px-4 pt-4 sm:px-6 lg:px-8">
+    <main aria-label="Tầm Tướng Ký" className="campaign-atlas ui-mode-screen flex flex-col pb-28 lg:pb-10">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-4">
         <ModeBanner
           title="Tầm Tướng Ký"
           kicker="Ghép yếu tố"
@@ -403,8 +405,8 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
 
   return (
     <CatalogContext.Provider value={catalog}>
-    <main aria-label="Tầm Tướng Ký" className="campaign-atlas flex flex-1 flex-col bg-[#17110e] pb-28 text-[var(--atlas-ink-on-wood)] lg:pb-10">
-      <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-4 px-4 pt-4 sm:px-6 lg:px-8">
+    <main aria-label="Tầm Tướng Ký" className="campaign-atlas ui-mode-screen flex flex-col pb-28 lg:pb-10">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-4">
         <ModeBanner
           title={`Tầm Tướng Ký · Hạng tuần ${view.week}`}
           kicker={`Hạng tuần ${view.week}`}

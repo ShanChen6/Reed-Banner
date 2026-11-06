@@ -20,6 +20,7 @@ import {
   sendProfileAction,
 } from "../battle/online";
 import { PROFILE_ERROR } from "../battle/ProgressPanel";
+import { ModeScreen } from "@/components/game-ui";
 import ChapterOne from "./ChapterOne";
 import RaidHall from "./RaidPanel";
 import { useScene } from "../SceneContext";
@@ -116,8 +117,6 @@ export default function CampaignScreen() {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="ui-screen">
-      <div className="mx-auto max-w-[1440px]">{children}</div>
-    </main>
+    <ModeScreen label="Bình Loạn">{children}</ModeScreen>
   );
 }

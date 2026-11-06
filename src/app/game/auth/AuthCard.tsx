@@ -7,7 +7,7 @@ import { OnArrival } from "./AuthLinks";
 
 export function AuthCard({ title, oauthError, children }: { title: string; oauthError?: boolean; children: React.ReactNode }) {
   return (
-    <main className="demo-bg flex flex-1 items-center justify-center bg-background px-4 py-10 text-on-wood">
+    <main className="ui-mode-screen flex items-center justify-center">
       <OrnateFrame level="raised" flush className="w-full max-w-sm">
         <div className="border-b border-frame-line-soft p-6 text-center">
           <h1 className="ui-title-on-wood text-2xl font-bold">{title}</h1>
