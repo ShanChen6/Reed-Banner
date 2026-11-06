@@ -1,6 +1,6 @@
 # Prompt hình ảnh cho Trận Đồ
 
-> Cập nhật: 02/11/2026
+> Cập nhật: 06/11/2026
 > Trạng thái: **DRAFT** — bộ prompt để Shan tạo ảnh; ô che và 4 icon chướng ngại v1 đã có (02/11/2026), 30/30 ảnh bản đồ thật đã tích hợp (đủ bộ) (`hoaLu`, `tranLam`, `phamBachHo`, `ngoXuongXi`, `ngoNhatKhanh`, `kieuThuan`, `kieuCongHan`, `nguyenKhoan`, `doCanhThac`, `nguyenSieu`, `luDuong`, `nguyenThuTiep`, `lyKhue`, `aiChau`, `luyLau`, `daiLa`, `bachDang`, `coLoa`, `langVenSong`, `damSen`, `dongLua`, `tanVien`, `hoanChau`, `thanhDatCoHao`, `chuaCoTrenDoi`, `cuaBien`, `trungDu`, `benThuyen`, `nuiDaVoi`, `rungGia`), không còn ảnh giữ chỗ. Chưa duyệt Master phong cách.
 
 Nguồn chính của giao diện Trận Đồ là [giao diện Trận Đồ](../../05-ui-ux/screens/tran-do.md); tài liệu này chỉ chứa **prompt đầy đủ để dán thẳng vào công cụ tạo ảnh**, kèm tên tệp và thông số. Kho bản đồ **không giới hạn số ảnh**: thêm một ảnh mới theo mục 1.4. Mọi prompt viết tiếng Anh (công cụ tạo ảnh), giải thích tiếng Việt.
@@ -340,6 +340,79 @@ Hand-painted game icon of a short stone and earth fortress wall with crenellated
 ### 3.1 Trạng thái và lưu ý nền trong suốt
 
 Ô che (`public/art/formation/fog.webp`) đã duyệt; 4 icon v1 "tạm được" đã tích hợp. Công cụ tạo ảnh trả icon với **ô caro vẽ sẵn thay vì alpha thật**, nên đã dùng `scripts/cutout-formation-icon.py` (lan từ mép, bỏ mảng sáng trung tính, giữ mảng liền lớn nhất, làm mềm viền) để ra webp trong suốt 256×256 (cần Pillow, numpy, scipy). Còn vệt bóng trắng mờ ở chân vật thể. Lần tạo sau nên yêu cầu **nền một màu phẳng (#00FF00 hoặc xám đặc), không bóng đổ dưới chân** để cắt sạch hơn.
+
+## 5. Thumbnail thẻ bậc (bản 2, 06/11/2026)
+
+Shan chốt 06/11/2026: thẻ bậc ở cả tab Xếp hạng và Chơi thường dùng ảnh cố định thay cho ô che lộ dần ([lộ trình UI, V2-02](../../05-ui-ux/implementation/roadmap.md#v2-02--trận-đồ-ảnh-thumbnail-cố-định-cho-từng-bậc)). Bộ đủ **7 ảnh**: 4 bậc Chơi thường (Hướng dẫn, Thường, Khó, Đại trận) và 3 bậc Xếp hạng (Thường, Khó, Đại trận; Hướng dẫn không có xếp hạng). Nếu chỉ làm 4 ảnh thì bản Xếp hạng dùng lại ảnh Chơi thường cùng bậc.
+
+**Ý tưởng chung:** cả bộ là **sa bàn** (bàn cát bày quân lệnh), lớn dần theo bậc: bàn tập 3×3 → lều chỉ huy → phòng nghị sự thành lũy → sa bàn cả nước. Bản Xếp hạng giữ đúng khung cảnh của bậc đó nhưng chuyển sang đêm hoặc hoàng hôn, có đuốc, cờ son và vàng thưởng, để nhìn là biết thẻ thi đấu. Quân lệnh là thẻ gỗ trơn khắc hoa văn, **không vẽ mặt người** (tránh trùng chân dung quân trong ván).
+
+| Mục | Giá trị |
+|---|---|
+| Tỉ lệ | **2:1 ngang**, xuất **1280×640** WebP (chất lượng 85, dưới 400 KB) |
+| Tệp | `public/art/formation/levels/<id>.webp`; bản Xếp hạng `<id>-ranked.webp` |
+| Vùng chữ | Một phần ba dưới tối và ít chi tiết vì tên địa danh/bậc được đặt đè lên |
+| Cấm | Chữ, số, người, mặt, tay, vũ khí, khung UI, watermark |
+
+**Negative prompt dùng chung (nếu công cụ hỗ trợ):** `people, characters, faces, hands, portraits, weapons, text, letters, numbers, labels, UI, border, frame, modern objects, European castle, Chinese imperial palace, photorealistic, 3d render, watermark, signature, blurry, oversaturated, pure black shadows, blown-out highlights, vignette`
+
+#### `huong-dan` — Hướng dẫn · Chơi thường
+
+Tệp: `public/art/formation/levels/huong-dan.webp`. Một sa bàn tập nhỏ 3×3 trong sân luyện quân buổi sáng, vài quân lệnh gỗ trơn: nhẹ nhàng, dễ hiểu.
+
+```text
+High quality hand-painted 2D environment illustration for a Vietnamese historical fantasy web game set in the 10th century, inspired by Hoa Lu and Northern Vietnam; Vietnamese bamboo, thatched timber architecture, limestone karst formations, bronze Dong Son ornamental motifs used sparingly, rice-paper and woodcut texture, antique bronze and warm parchment with subtle vermilion accents, painterly brushwork, cinematic depth and atmospheric lighting, physically coherent architecture, respectful historical atmosphere, no modern objects, no European castles, no Chinese imperial palace stereotypes. No people, no characters, no faces, no hands, no weapons, no lettering, no numbers, no logos, no UI. Scene: a small square wooden practice sand table, a simple 3 by 3 tray of smooth sand, on a low lacquered stand in a quiet bamboo-fenced training courtyard; four plain wooden command tablets standing on the sand, each carved only with a small Dong Son sun motif (no faces, no portraits); a brush, an ink stone and a rolled bamboo scroll beside the table; soft early-morning light, light mist, banana leaves and a thatched roof edge in the background. Calm, welcoming, beginner mood. Composed as a mode-card thumbnail: wide 2:1 landscape, the sand table and its key landmark in the upper and central two thirds, the bottom third calmer and darker (a title will be overlaid there), mid-tone values without pure black or blown-out white, no vignette, no border, no frame.
+```
+
+#### `thuong` — Thường · Chơi thường
+
+Tệp: `public/art/formation/levels/thuong.webp`. Sa bàn 5×5 trong lều chỉ huy ban ngày, có một khúc sông nhỏ và vài ụ đất.
+
+```text
+High quality hand-painted 2D environment illustration for a Vietnamese historical fantasy web game set in the 10th century, inspired by Hoa Lu and Northern Vietnam; Vietnamese bamboo, thatched timber architecture, limestone karst formations, bronze Dong Son ornamental motifs used sparingly, rice-paper and woodcut texture, antique bronze and warm parchment with subtle vermilion accents, painterly brushwork, cinematic depth and atmospheric lighting, physically coherent architecture, respectful historical atmosphere, no modern objects, no European castles, no Chinese imperial palace stereotypes. No people, no characters, no faces, no hands, no weapons, no lettering, no numbers, no logos, no UI. Scene: a medium square sand table, about 5 by 5 sections, inside an open-sided command tent of bamboo poles and woven mats; on the sand a carved miniature landscape with a small river bend, a wooden footbridge, a few rice-field terraces and one tiny thatched village; around a dozen plain wooden command tablets and small vermilion pennants placed on it; daylight from the side, a karst ridge visible through the open tent wall. Orderly, focused mood. Composed as a mode-card thumbnail: wide 2:1 landscape, the sand table and its key landmark in the upper and central two thirds, the bottom third calmer and darker (a title will be overlaid there), mid-tone values without pure black or blown-out white, no vignette, no border, no frame.
+```
+
+#### `kho` — Khó · Chơi thường
+
+Tệp: `public/art/formation/levels/kho.webp`. Sa bàn 6×6 trong phòng nghị sự thành lũy, có mô hình núi, rừng, đầm lầy, thành lũy làm chướng ngại.
+
+```text
+High quality hand-painted 2D environment illustration for a Vietnamese historical fantasy web game set in the 10th century, inspired by Hoa Lu and Northern Vietnam; Vietnamese bamboo, thatched timber architecture, limestone karst formations, bronze Dong Son ornamental motifs used sparingly, rice-paper and woodcut texture, antique bronze and warm parchment with subtle vermilion accents, painterly brushwork, cinematic depth and atmospheric lighting, physically coherent architecture, respectful historical atmosphere, no modern objects, no European castles, no Chinese imperial palace stereotypes. No people, no characters, no faces, no hands, no weapons, no lettering, no numbers, no logos, no UI. Scene: a large square sand table, about 6 by 6 sections, in a timber council hall of an earthen fortress; the carved landscape is crowded with obstacle models: small limestone peaks, dark forest clumps, a reedy swamp and a short earthen rampart with a palisade; many plain wooden command tablets squeezed between them; warm oil-lamp light mixed with grey afternoon light from a high window; a rolled war map and a bronze drum at the edge. Tense, strategic mood. Composed as a mode-card thumbnail: wide 2:1 landscape, the sand table and its key landmark in the upper and central two thirds, the bottom third calmer and darker (a title will be overlaid there), mid-tone values without pure black or blown-out white, no vignette, no border, no frame.
+```
+
+#### `dai-tran` — Đại trận · Chơi thường
+
+Tệp: `public/art/formation/levels/dai-tran.webp`. Sa bàn khổng lồ trải cả gian điện: núi sông, thành trì, nhiều cờ, cảm giác chiến dịch lớn.
+
+```text
+High quality hand-painted 2D environment illustration for a Vietnamese historical fantasy web game set in the 10th century, inspired by Hoa Lu and Northern Vietnam; Vietnamese bamboo, thatched timber architecture, limestone karst formations, bronze Dong Son ornamental motifs used sparingly, rice-paper and woodcut texture, antique bronze and warm parchment with subtle vermilion accents, painterly brushwork, cinematic depth and atmospheric lighting, physically coherent architecture, respectful historical atmosphere, no modern objects, no European castles, no Chinese imperial palace stereotypes. No people, no characters, no faces, no hands, no weapons, no lettering, no numbers, no logos, no UI. Scene: a vast sand table filling a great timber hall, seen from a raised balcony angle; a whole miniature country carved in sand and clay: a winding river with its delta, karst mountain ranges, forests, swamps, three walled citadels connected by roads, a coastline with tiny boats; dozens of wooden command tablets and red and gold pennants spread across it; shafts of light through the roof beams, faint incense smoke. Grand, epic campaign mood. Composed as a mode-card thumbnail: wide 2:1 landscape, the sand table and its key landmark in the upper and central two thirds, the bottom third calmer and darker (a title will be overlaid there), mid-tone values without pure black or blown-out white, no vignette, no border, no frame.
+```
+
+#### `thuong-ranked` — Thường · Xếp hạng
+
+Tệp: `public/art/formation/levels/thuong-ranked.webp`. Cùng cảnh lều chỉ huy của Thường nhưng về đêm, đuốc và cờ son: cảm giác thi đấu, có thưởng.
+
+```text
+High quality hand-painted 2D environment illustration for a Vietnamese historical fantasy web game set in the 10th century, inspired by Hoa Lu and Northern Vietnam; Vietnamese bamboo, thatched timber architecture, limestone karst formations, bronze Dong Son ornamental motifs used sparingly, rice-paper and woodcut texture, antique bronze and warm parchment with subtle vermilion accents, painterly brushwork, cinematic depth and atmospheric lighting, physically coherent architecture, respectful historical atmosphere, no modern objects, no European castles, no Chinese imperial palace stereotypes. No people, no characters, no faces, no hands, no weapons, no lettering, no numbers, no logos, no UI. Scene: the same medium 5 by 5 sand table inside a bamboo command tent as a daytime version, but at dusk turning to night: torches and paper lanterns cast warm gold light, vermilion competition banners with an embossed bronze sun-disc emblem (no letters) hang at both sides, a small lacquered tray of gold coins and a bronze seal rest at the corner of the table; the carved river bend and village on the sand glow in the firelight. Proud, competitive mood. Composed as a mode-card thumbnail: wide 2:1 landscape, the sand table and its key landmark in the upper and central two thirds, the bottom third calmer and darker (a title will be overlaid there), mid-tone values without pure black or blown-out white, no vignette, no border, no frame.
+```
+
+#### `kho-ranked` — Khó · Xếp hạng
+
+Tệp: `public/art/formation/levels/kho-ranked.webp`. Phòng nghị sự thành lũy của Khó về đêm, lửa trại ngoài cửa sổ, cờ son và khay vàng thưởng.
+
+```text
+High quality hand-painted 2D environment illustration for a Vietnamese historical fantasy web game set in the 10th century, inspired by Hoa Lu and Northern Vietnam; Vietnamese bamboo, thatched timber architecture, limestone karst formations, bronze Dong Son ornamental motifs used sparingly, rice-paper and woodcut texture, antique bronze and warm parchment with subtle vermilion accents, painterly brushwork, cinematic depth and atmospheric lighting, physically coherent architecture, respectful historical atmosphere, no modern objects, no European castles, no Chinese imperial palace stereotypes. No people, no characters, no faces, no hands, no weapons, no lettering, no numbers, no logos, no UI. Scene: the same large 6 by 6 sand table crowded with miniature peaks, forests, swamp and rampart in an earthen-fortress council hall, at night: braziers burning, deep vermilion war banners with a bronze drum emblem (no letters), a bronze seal and a stack of gold coins on a lacquered stand beside the table; through the high window, campfires dot the dark walls outside. Serious, high-stakes mood. Composed as a mode-card thumbnail: wide 2:1 landscape, the sand table and its key landmark in the upper and central two thirds, the bottom third calmer and darker (a title will be overlaid there), mid-tone values without pure black or blown-out white, no vignette, no border, no frame.
+```
+
+#### `dai-tran-ranked` — Đại trận · Xếp hạng
+
+Tệp: `public/art/formation/levels/dai-tran-ranked.webp`. Sa bàn khổng lồ của Đại trận dưới trời hoàng hôn rực, cờ vàng son phủ kín, hai trống đồng lớn: đỉnh cao của chế độ.
+
+```text
+High quality hand-painted 2D environment illustration for a Vietnamese historical fantasy web game set in the 10th century, inspired by Hoa Lu and Northern Vietnam; Vietnamese bamboo, thatched timber architecture, limestone karst formations, bronze Dong Son ornamental motifs used sparingly, rice-paper and woodcut texture, antique bronze and warm parchment with subtle vermilion accents, painterly brushwork, cinematic depth and atmospheric lighting, physically coherent architecture, respectful historical atmosphere, no modern objects, no European castles, no Chinese imperial palace stereotypes. No people, no characters, no faces, no hands, no weapons, no lettering, no numbers, no logos, no UI. Scene: the same vast country-sized sand table filling a great timber hall, at golden sunset: the whole hall bathed in deep amber and vermilion light, rows of tall red-and-gold victory banners with bronze sun-disc emblems (no letters) lining both sides, two large Dong Son bronze drums flanking the head of the table, a lacquered chest of gold coins and a jade seal on a dais; the miniature rivers on the sand catch the sunset like molten gold. Triumphant, prestigious, ultimate-challenge mood. Composed as a mode-card thumbnail: wide 2:1 landscape, the sand table and its key landmark in the upper and central two thirds, the bottom third calmer and darker (a title will be overlaid there), mid-tone values without pure black or blown-out white, no vignette, no border, no frame.
+```
+
+**Sau khi có ảnh:** đặt đủ tệp vào `public/art/formation/levels/`, báo Claude để nối vào thẻ bậc (V2-02). Kiểm tra trên thẻ thật: tên bậc đọc rõ ở một phần ba dưới, bản Xếp hạng và Chơi thường cùng bậc phân biệt được khi đặt cạnh nhau.
 
 ## 4. Kiểm tra sau khi có ảnh
 

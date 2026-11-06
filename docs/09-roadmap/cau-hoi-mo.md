@@ -151,7 +151,7 @@
 
 - [x] Tên tab thưởng Trận Đồ (Ban thưởng), mốc bộ sưu tập (5/15/30 = 200/500/1000 vàng, Claude đặt), Nhật Lệnh/Bình Loạn không làm bảng xếp hạng (Shan chốt 06/11). → [Lộ trình UI mục 9](../05-ui-ux/implementation/roadmap.md#shan-chốt-06112026)
 - [x] Tên trang thành tích theo mùa: Công Trạng; thẻ bậc Trận Đồ dùng ảnh cố định ở cả hai tab (Shan chốt 06/11).
-- TODO: Shan gửi 4 ảnh thumbnail bậc Trận Đồ (Hướng dẫn, Thường, Khó, Đại trận). → [V2-02](../05-ui-ux/implementation/roadmap.md#v2-02--trận-đồ-ảnh-thumbnail-cố-định-cho-từng-bậc)
+- TODO: Shan gửi 7 ảnh thumbnail bậc Trận Đồ (4 Chơi thường + 3 Xếp hạng), [prompt mục 5](../06-art/prompts/tran-do-hinh-anh.md#5-thumbnail-thẻ-bậc-bản-2-06112026). → [V2-02](../05-ui-ux/implementation/roadmap.md#v2-02--trận-đồ-ảnh-thumbnail-cố-định-cho-từng-bậc)
 
 ## Đinh Ngọc và Vũ Phong — chạy trong trận
 
