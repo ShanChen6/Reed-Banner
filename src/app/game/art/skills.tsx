@@ -554,7 +554,8 @@ const SKILL_ART = new Set([
   "camLoHoiXuan", "danHoaHoiNguyen", "diaMachBungPhat", "kimQuaThietMa", "kinhCucTrienThan",
   // Mạc Vân, Lam Giang Phi Diệp, Xích Diệm Luân, Lôi Minh Xạ, Tật Phong Lăng.
   "loiTranKinhHon", "rb064_lieuDiepToaGiang", "rb065_xichLuanLietTran", "rb067_loiChamTuocKhi", "rb068_phongLangNhieuTran",  // Bạch Phong Đao, Kha Sơn, Cao Kiên, Lâm Tùng, Hứa Lăng.
-  "rb069_ultimate", "sonHaTranKich", "thietBichDongThanh", "trucLamPhaTran", "truyPhongDoatMenh",
+  "rb069_ultimate", "sonHaTranKich", "thietBichDongThanh", "trucLamPhaTran", "truyPhongDoatMenh",  // Tướng lịch sử Đinh Điền, Lê Hoàn, Đinh Liễn; sứ quân Kiều Công Hãn, Lý Khuê.
+  "ngoaiGiapHoQuan", "thapDaoLoiBinh", "namVietVuongAn", "phongChauLoiKich", "sieuLoaiPhaGiap",
 ]);
 
 /**
@@ -562,17 +563,12 @@ const SKILL_ART = new Set([
  * ghép theo hệ và tác dụng. Mỗi ảnh chỉ gán một lần.
  */
 export const REUSED_SKILL_ART: Readonly<Record<string, string>> = {
-  sieuLoaiPhaGiap: "kimAnPhaThien", // Lý Khuê
   hoiHoSinhKhi: "coThuTranThien", // Kiều Thuận
   hoaLuThaoDuoc: "thanhTrucBaoPhu", // Trịnh Tú
   boHaiTranGiang: "thuyKiepVanTrung", // Trần Lãm
-  namVietVuongAn: "bachDangTrieuDang", // Đinh Liễn
   bachHoXuatSon: "lietDiemPhanThanh", // Phạm Bạch Hổ
   dinhQuocHoaKy: "hoaThieuLienTrai", // Nguyễn Bặc
   doDongKienTam: "thaiSonApDinh", // Đỗ Cảnh Thạc
-  ngoaiGiapHoQuan: "kienThanhBatDong", // Đinh Điền
-  phongChauLoiKich: "cuuTieuLoiPhat", // Kiều Công Hãn
-  thapDaoLoiBinh: "loiDinhHieuLenh", // Lê Hoàn
   duongLamPhongKhoi: "baoTapCanKhon", // Ngô Nhật Khánh
 };
 
