@@ -237,7 +237,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
 
   if (!view || !state)
     return (
-      <main className="campaign-atlas flex flex-1 items-center justify-center bg-[#17110e] px-4 text-[var(--atlas-ink-on-wood)]">
+      <main className="campaign-atlas ui-mode-screen flex items-center justify-center">
         <p role="status">{loadError ?? "Đang mở Tướng Lục…"}</p>
       </main>
     );
@@ -378,7 +378,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
 
   if (!view)
     return (
-      <main className="campaign-atlas flex flex-1 items-center justify-center bg-[#17110e] px-4 text-[var(--atlas-ink-on-wood)]">
+      <main className="campaign-atlas ui-mode-screen flex items-center justify-center">
         <p role="status">{loadError ?? "Đang mở tuần Hạng…"}</p>
       </main>
     );
@@ -1259,7 +1259,7 @@ function LedgerPage({
 /** Viền theo bậc cho ô chưa tìm: thay cho dòng chữ, bậc vẫn đọc được qua nhãn. */
 const TIER_RING: Readonly<Record<string, string>> = {
   thuong: "border-[var(--atlas-border-soft)]",
-  dacBiet: "border-[#9b7fd0]",
+  dacBiet: "border-info",
   lichSu: "border-[var(--atlas-gold)]",
 };
 

@@ -190,7 +190,7 @@ export default function ProgressPanel({
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-semibold">Tiến trình ({storage})</h2>
         <span className="tabular-nums">Vàng: {profile.gold}</span>
-        {message && <span className="text-rose-500">{message}</span>}
+        {message && <span className="text-danger">{message}</span>}
         {onReset && (
           <button
             type="button"

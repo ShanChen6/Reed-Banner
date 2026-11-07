@@ -375,7 +375,7 @@ function BattlePrep({
         </ol>
       )}
       {stage === "escort" && (
-        <p className="rounded-md border border-violet-400/50 bg-violet-500/15 p-2 text-xs text-violet-100">
+        <p className="rounded-md border border-info/50 bg-info-surface p-2 text-xs text-info">
           <span className="font-semibold">Tình tiết phục vụ gameplay.</span>{" "}
           Đoàn lương và toán chặn đường do game sáng tác; sử không chép trận nào
           trên đường tiếp viện.

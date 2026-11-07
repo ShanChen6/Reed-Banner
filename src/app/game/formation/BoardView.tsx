@@ -100,8 +100,8 @@ export default function BoardView({
                 data-state={c.blocked ? "rock" : c.covered ? "lit" : "fog"}
                 className={[
                   "fm-cell flex items-center justify-center focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-frame-gold",
-                  ok && showHints ? "ring-2 ring-[#E8C477] ring-inset" : "",
-                  last === i && state.phase !== "won" ? "z-10 outline-2 outline-offset-[-2px] outline-[#E8C477]" : "",
+                  ok && showHints ? "ring-2 ring-frame-gold-hi ring-inset" : "",
+                  last === i && state.phase !== "won" ? "z-10 outline-2 outline-offset-[-2px] outline-frame-gold-hi" : "",
                 ].join(" ")}
               >
                 {c.blocked ? (
@@ -109,7 +109,7 @@ export default function BoardView({
                 ) : c.piece ? (
                   <PieceFace piece={c.piece} />
                 ) : ok && showHints ? (
-                  <span aria-hidden className="size-2 rounded-full bg-[#E8C477] shadow-[0_0_6px_#E8C477]" />
+                  <span aria-hidden className="size-2 rounded-full bg-frame-gold-hi shadow-[0_0_6px_var(--frame-gold-hi)]" />
                 ) : null}
               </button>
             </div>

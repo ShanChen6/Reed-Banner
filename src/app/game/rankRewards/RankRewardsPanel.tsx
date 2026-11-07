@@ -61,23 +61,23 @@ export default function RankRewardsPanel({ mode, onClaimed }: { mode: RankReward
   if (!state) return null;
   if (!state.canClaim)
     return (
-      <p role="note" className="rounded border border-amber-400/20 bg-black/20 px-3 py-2 text-sm text-muted">
+      <p role="note" className="rounded border border-frame-gold-hi/20 bg-black/20 px-3 py-2 text-sm text-muted">
         Thưởng vàng theo hạng cuối kỳ chỉ dành cho tài khoản đã đăng nhập.{" "}
-        <SceneLink scene="LOGIN" className="text-amber-300 underline">Đăng nhập</SceneLink>
+        <SceneLink scene="LOGIN" className="text-frame-gold underline">Đăng nhập</SceneLink>
       </p>
     );
   if (state.items.length === 0 && !note) return null;
   return (
-    <section aria-label="Thưởng hạng chờ nhận" className="rounded border border-amber-400/30 bg-black/25 p-3">
-      <h2 className="mb-1 text-sm font-bold text-amber-200">Thưởng hạng chờ nhận</h2>
-      {note && <p role="status" aria-live="polite" className="mb-1 text-sm text-amber-100">{note}</p>}
+    <section aria-label="Thưởng hạng chờ nhận" className="rounded border border-frame-gold-hi/30 bg-black/25 p-3">
+      <h2 className="mb-1 text-sm font-bold text-title-on-wood">Thưởng hạng chờ nhận</h2>
+      {note && <p role="status" aria-live="polite" className="mb-1 text-sm text-title-on-wood">{note}</p>}
       <ul className="flex flex-col gap-1.5">
         {state.items.map((i) => (
           <li key={`${i.mode}-${i.period}`} className="flex flex-wrap items-center justify-between gap-2 text-sm">
             <span>
               Kỳ {PERIOD_NOUN[i.mode]} {i.period}: hạng {i.rank}/{i.participants} ({TIER_LABEL[i.tier]}) · <b>{i.gold} vàng</b>{i.bundles ? <> · {i.bundles} bó nguyên tố Tầm Tướng Ký</> : null}
             </span>
-            <button type="button" disabled={busy} onClick={() => void claim(i)} className="min-h-10 pointer-coarse:min-h-11 rounded bg-amber-500 px-4 font-semibold text-stone-950 disabled:opacity-60">
+            <button type="button" disabled={busy} onClick={() => void claim(i)} className="min-h-10 pointer-coarse:min-h-11 rounded bg-primary px-4 font-semibold text-primary-foreground disabled:opacity-60">
               Nhận
             </button>
           </li>

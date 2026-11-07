@@ -1239,7 +1239,7 @@ export default function BattleStage({
             <div key={s.key}>
               {isActor && alive && (
                 <span
-                  className="absolute h-2.5 w-14 -translate-x-1/2 rounded-[50%] border-2 border-amber-300/80 bg-amber-300/20 md:w-20"
+                  className="absolute h-2.5 w-14 -translate-x-1/2 rounded-[50%] border-2 border-frame-gold-hi/80 bg-frame-gold-hi/20 md:w-20"
                   style={{ left, bottom: `${(1 - GROUND) * 100 - 2}%` }}
                 />
               )}

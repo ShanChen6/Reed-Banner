@@ -12,11 +12,11 @@ import {
 } from "@/core";
 
 const BASIS_STYLE: Record<StoryBeat["basis"], string> = {
-  recorded: "border-sky-400/60 bg-sky-500/15 text-sky-100",
-  legend: "border-violet-400/60 bg-violet-500/15 text-violet-100",
-  reconstructed: "border-amber-400/60 bg-amber-500/10 text-amber-100",
-  fictional: "border-stone-400/50 bg-stone-500/15 text-stone-200",
-  disputed: "border-rose-400/60 bg-rose-500/10 text-rose-100",
+  recorded: "border-info/60 bg-info-surface text-info",
+  legend: "border-frame-gold/60 bg-frame-gold/15 text-frame-gold",
+  reconstructed: "border-warning/50 bg-warning-surface text-warning",
+  fictional: "border-ash/60 bg-ash/15 text-on-wood",
+  disputed: "border-danger/50 bg-danger-surface text-danger",
 };
 
 export function BasisBadge({ basis }: { basis: StoryBeat["basis"] }) {

@@ -113,7 +113,7 @@ export default function HeroList({
             onChange={(e) => onFilter({ ...filter, query: e.target.value })}
             placeholder="Tìm theo tên…"
             aria-label="Tìm tướng sĩ theo tên, gõ có dấu hoặc không dấu"
-            className="size-full min-h-10 pointer-coarse:min-h-11 rounded-md bg-transparent pr-2 pl-9 text-[15px] text-stone-100 outline-none placeholder:text-stone-400"
+            className="size-full min-h-10 pointer-coarse:min-h-11 rounded-md bg-transparent pr-2 pl-9 text-[15px] text-on-wood outline-none placeholder:text-on-wood-soft"
           />
         </label>
         <div className="flex min-w-0 basis-full gap-2">
@@ -127,7 +127,7 @@ export default function HeroList({
             <FilterGlyph className="size-4" />
             Bộ lọc
             {active > 0 && (
-              <span className="rounded-full bg-[var(--bk-gold)] px-1.5 text-xs font-bold text-stone-950 tabular-nums">{active}</span>
+              <span className="rounded-full bg-[var(--bk-gold)] px-1.5 text-xs font-bold text-primary-foreground tabular-nums">{active}</span>
             )}
           </button>
           <label className="barracks-field relative flex min-h-10 pointer-coarse:min-h-11 min-w-0 flex-1 items-center">
@@ -136,10 +136,10 @@ export default function HeroList({
               value={sort}
               onChange={(e) => onSort(e.target.value as RosterSort)}
               aria-label="Sắp xếp tướng sĩ"
-              className="size-full min-h-10 pointer-coarse:min-h-11 cursor-pointer appearance-none rounded-md bg-transparent pr-6 pl-8 text-[15px] text-stone-100 outline-none"
+              className="size-full min-h-10 pointer-coarse:min-h-11 cursor-pointer appearance-none rounded-md bg-transparent pr-6 pl-8 text-[15px] text-on-wood outline-none"
             >
               {(Object.keys(SORT_NAME) as RosterSort[]).map((s) => (
-                <option key={s} value={s} className="bg-stone-900">
+                <option key={s} value={s} className="bg-wood-inset">
                   {SORT_NAME[s]}
                 </option>
               ))}
@@ -218,13 +218,13 @@ export default function HeroList({
       )}
 
       <p className="mt-2 px-1 text-sm text-[var(--bk-soft)]" aria-live="polite">
-        <span className="font-semibold text-stone-100 tabular-nums">{shown.length}</span> / {entries.length} tướng sĩ
+        <span className="font-semibold text-on-wood tabular-nums">{shown.length}</span> / {entries.length} tướng sĩ
       </p>
 
       {hiddenSelected && (
         <p role="status" className="barracks-inset mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-md px-3 py-2 text-sm">
           <span className="min-w-0 flex-1">
-            Đang xem <b className="text-amber-100">{selected.name}</b>, không khớp bộ lọc nên không có trong danh sách.
+            Đang xem <b className="text-title-on-wood">{selected.name}</b>, không khớp bộ lọc nên không có trong danh sách.
           </span>
           <button type="button" onClick={() => onFilter(NO_FILTER)} className="text-[var(--bk-gold)] underline-offset-2 hover:underline">
             Bỏ lọc
@@ -326,11 +326,11 @@ export function HeroCard({
             <TeamGlyph className="size-3.5" />
           </span>
         )}
-        <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent pt-4 pb-0.5 text-center text-[13px] font-semibold text-amber-50 tabular-nums">
+        <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent pt-4 pb-0.5 text-center text-[13px] font-semibold text-title-on-wood tabular-nums">
           Cấp {entry.level}
         </span>
       </span>
-      <span className="flex min-h-[2.6rem] items-center justify-center px-1 py-1 text-center text-sm leading-tight font-semibold text-stone-100">
+      <span className="flex min-h-[2.6rem] items-center justify-center px-1 py-1 text-center text-sm leading-tight font-semibold text-on-wood">
         <span className="line-clamp-2 break-words">{entry.name}</span>
       </span>
     </button>

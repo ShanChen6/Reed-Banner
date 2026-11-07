@@ -127,7 +127,7 @@ export default function Barracks({
         </div>
 
         {message && (
-          <p role="alert" className="rounded-md border border-rose-400/40 bg-rose-950/60 px-3 py-2 text-[15px] text-rose-100">
+          <p role="alert" className="rounded-md border border-danger/40 bg-danger-surface/60 px-3 py-2 text-[15px] text-danger">
             {message}
           </p>
         )}
