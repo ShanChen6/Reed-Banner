@@ -85,6 +85,11 @@
     /* Màu hiệu ứng, bản đồ, minh họa chưa gán vai (gom từ mã hex rải trong CSS, 07/11/2026). Màu mới thêm ở đây, không viết hex ở nơi khác. */
     --black: #000000;
     --white: #ffffff;
+    --tone-140d09: #140d09;
+    --tone-1b110c: #1b110c;
+    --tone-22150f: #22150f;
+    --tone-2a1b12: #2a1b12;
+    --tone-5b3a22: #5b3a22;
     --tone-0b1118: #0b1118;
     --tone-141c27: #141c27;
     --tone-18212c: #18212c;

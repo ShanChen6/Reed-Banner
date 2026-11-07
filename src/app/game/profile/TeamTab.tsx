@@ -61,7 +61,7 @@ export default function TeamTab({
             const on = pickable && slot === i - 1;
             return (
               <li key={m.id} className={`team-card relative flex flex-col overflow-hidden rounded-lg ${on ? "is-selected" : ""}`}>
-                <div className="relative flex h-44 items-end justify-center overflow-hidden" style={{ background: `radial-gradient(circle at 50% 70%, ${ELEMENT_COLOR[m.element]}88, #1b110c 72%)` }}>
+                <div className="relative flex h-44 items-end justify-center overflow-hidden" style={{ background: `radial-gradient(circle at 50% 70%, ${ELEMENT_COLOR[m.element]}88, var(--tone-1b110c) 72%)` }}>
                   <ProfileArt id={m.id} element={m.element} profession={m.profession} className="h-full max-w-full object-contain object-bottom" fallbackClassName="mb-3 size-32" />
                   <span className="absolute top-2 left-2 rounded bg-black/65 px-2 py-0.5 text-sm font-semibold text-title-on-wood">{i === 0 ? "Chủ tướng" : `Vị trí ${i + 1}`}</span>
                 </div>

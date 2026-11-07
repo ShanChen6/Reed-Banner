@@ -325,7 +325,7 @@ export function HeroCard({
     >
       <span
         className="relative block aspect-square w-full overflow-hidden"
-        style={{ background: `radial-gradient(circle at 50% 35%, ${ELEMENT_COLOR[entry.element]}99, #22150f 75%)` }}
+        style={{ background: `radial-gradient(circle at 50% 35%, ${ELEMENT_COLOR[entry.element]}99, var(--tone-22150f) 75%)` }}
       >
         {photo ? (
           // eslint-disable-next-line @next/next/no-img-element -- ảnh chân dung tĩnh 192px.

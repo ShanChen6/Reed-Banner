@@ -1791,7 +1791,7 @@ export default function DemoGame({
   // Game chỉ có một giao diện (gỗ tối), không có chế độ sáng.
   const stageVisible = useStageVisible();
   const palette =
-    "[--bg:#17110e] [--panel:#271d18] [--cell:#14251c] [--frame:#1b2a21] [--gold:#d4a24c] text-on-wood";
+    "text-on-wood";
 
   const frame = anim ? anim.frames[anim.i] : undefined;
   const board = frame?.board ?? heldBoard ?? state.board;

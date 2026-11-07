@@ -166,8 +166,8 @@ export default function HeroDetail({
               id={id}
               element={fighter.element}
               profession={fighter.profession}
-              className="barracks-art absolute inset-0 m-auto size-full object-contain object-bottom drop-shadow-[0_8px_14px_#000c]"
-              fallbackClassName="relative mb-4 size-40 drop-shadow-[0_6px_10px_#000c] sm:size-48"
+              className="barracks-art absolute inset-0 m-auto size-full object-contain object-bottom drop-shadow-[0_8px_14px_color-mix(in_srgb,var(--black)_80%,transparent)]"
+              fallbackClassName="relative mb-4 size-40 drop-shadow-[0_6px_10px_color-mix(in_srgb,var(--black)_80%,transparent)] sm:size-48"
             />
           </div>
           {slot("vuKhi")}

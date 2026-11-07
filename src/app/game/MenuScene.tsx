@@ -131,9 +131,9 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
           <AtlasCorners size="size-7" />
           <div className="flex min-h-[22rem] flex-col justify-end gap-5 px-5 py-8 sm:min-h-[26rem] sm:px-10 lg:min-h-[30rem] lg:max-w-[44rem] lg:justify-center lg:px-14">
             <h1 id="home-title" className="w-56 max-w-full sm:w-72 lg:w-80">
-              <Logo priority className="h-auto w-full drop-shadow-[0_6px_18px_#000]" />
+              <Logo priority className="h-auto w-full drop-shadow-[0_6px_18px_var(--black)]" />
             </h1>
-            <p className="max-w-md font-serif text-lg leading-snug text-[var(--title-on-wood)] [text-shadow:0_2px_6px_#000] sm:text-xl">
+            <p className="max-w-md font-serif text-lg leading-snug text-[var(--title-on-wood)] [text-shadow:0_2px_6px_var(--black)] sm:text-xl">
               Dẹp loạn mười hai sứ quân, dựng lại giang sơn Đại Việt.
             </p>
             <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
@@ -150,10 +150,10 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
               )}
             </div>
             {plan?.hint && (
-              <p className="max-w-md text-[15px] leading-snug text-[var(--on-wood)]/90 [text-shadow:0_1px_3px_#000]">{plan.hint}</p>
+              <p className="max-w-md text-[15px] leading-snug text-[var(--on-wood)]/90 [text-shadow:0_1px_3px_var(--black)]">{plan.hint}</p>
             )}
             {!account && (
-              <p className="text-sm text-[var(--on-wood)]/85 [text-shadow:0_1px_3px_#000]">
+              <p className="text-sm text-[var(--on-wood)]/85 [text-shadow:0_1px_3px_var(--black)]">
                 Đang chơi với tư cách khách, tiến độ gắn với trình duyệt này.
               </p>
             )}
@@ -244,7 +244,7 @@ function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; n
             {mode.kicker}
           </span>
         )}
-        <h3 className="absolute right-4 bottom-2.5 left-4 font-serif text-xl font-bold text-[var(--title-on-wood)] [text-shadow:0_2px_4px_#000] sm:text-2xl">
+        <h3 className="absolute right-4 bottom-2.5 left-4 font-serif text-xl font-bold text-[var(--title-on-wood)] [text-shadow:0_2px_4px_var(--black)] sm:text-2xl">
           {mode.title}
         </h3>
       </div>
@@ -300,7 +300,7 @@ function UpcomingCard({ mode }: { mode: (typeof UPCOMING)[number] }) {
         <span className="home-kicker absolute top-3 left-3 rounded px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase">
           {mode.scene ? "Đã mở" : "Sắp ra mắt"}
         </span>
-        <h3 className="absolute right-4 bottom-2.5 left-4 font-serif text-xl font-bold text-[var(--title-on-wood)] [text-shadow:0_2px_4px_#000] sm:text-2xl">
+        <h3 className="absolute right-4 bottom-2.5 left-4 font-serif text-xl font-bold text-[var(--title-on-wood)] [text-shadow:0_2px_4px_var(--black)] sm:text-2xl">
           {mode.title}
         </h3>
       </div>
