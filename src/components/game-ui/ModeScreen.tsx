@@ -41,7 +41,7 @@ export interface ModeBannerProps {
 
 export function ModeBanner({ title, showTitle, kicker, description, art, artPosition, stats, actions, children, className }: ModeBannerProps) {
   return (
-    <OrnateFrame level="hero" flush className={cn("min-h-36 sm:min-h-44", className)}>
+    <OrnateFrame level="hero" flush className={cn(art && "min-h-36 sm:min-h-44", className)}>
       {art && (
         <>
           <Image src={art} alt="" fill priority sizes="(min-width: 1280px) 1280px, 100vw" className="-z-10 object-cover"
@@ -49,7 +49,7 @@ export function ModeBanner({ title, showTitle, kicker, description, art, artPosi
           <div aria-hidden className="ui-mode-banner-shade absolute inset-0 -z-10" />
         </>
       )}
-      <div className="relative flex h-full min-h-36 flex-col justify-end gap-3 p-5 sm:min-h-44 sm:flex-row sm:items-end sm:justify-between sm:p-7">
+      <div className={cn("relative flex h-full flex-col justify-end gap-3 p-4 sm:flex-row sm:items-end sm:justify-between sm:p-7", art ? "min-h-36 p-5 sm:min-h-44" : "sm:min-h-28")}>
         <div className="max-w-2xl">
           {kicker && <p className="text-kicker text-frame-gold">{kicker}</p>}
           <h1 className={showTitle ? "ui-title-on-wood mt-1 text-2xl font-bold sm:text-3xl" : "sr-only"}>{title}</h1>

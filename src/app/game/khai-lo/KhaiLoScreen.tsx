@@ -359,19 +359,20 @@ export default function KhaiLoScreen() {
     }
   };
 
-  const cell = `min(56px, calc((100vw - 5rem - 20px) / ${width}))`;
+  // Ô bàn cờ co theo bề rộng màn hình; phần trừ đi (--kl-gutter) là lề trang + đệm khung + đệm bàn: 3,5rem trên điện thoại để ô to nhất có thể, 6,25rem từ 640px.
+  const cell = `min(56px, calc((100vw - var(--kl-gutter)) / ${width}))`;
 
   return (
     <Shell>
       <ModeBanner
         title="Khai Lộ"
         kicker={`Giải đố · ${MODE_NAME[state.mode]} · Màn ${state.level}`}
-        description="Chạm để xóa cả khối quân cùng hệ, gom khối to để được nhiều điểm và mở đường xuyên bàn cờ."
+        description={<span className="hidden sm:inline">Chạm để xóa cả khối quân cùng hệ, gom khối to để được nhiều điểm và mở đường xuyên bàn cờ.</span>}
         actions={<Button variant="secondary" onClick={newGame}>Ván mới</Button>}
       />
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <OrnateFrame aria-label="Vùng chơi" className="flex flex-col items-center gap-3">
+        <OrnateFrame aria-label="Vùng chơi" flush className="flex flex-col items-center gap-3 p-2 [--kl-gutter:3.5rem] sm:p-5 sm:[--kl-gutter:6.25rem]">
           <div role="tablist" aria-label="Chế độ chơi" className="grid w-full max-w-[560px] grid-cols-2 gap-2">
             {(["classic", "timed"] as const).map((m) => (
               <button
@@ -389,7 +390,7 @@ export default function KhaiLoScreen() {
           </div>
           <Stats state={state} best={best} left={left} msLeft={timed ? msLeft : null} />
           {timed && <TimeBar msLeft={msLeft} limitMs={limitMs} paused={active && hidden} />}
-          <div className="ui-frame-inset w-fit p-2">
+          <div className="ui-frame-inset w-fit p-1 sm:p-2">
             <div
               ref={boardRef}
               role="grid"

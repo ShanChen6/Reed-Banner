@@ -119,4 +119,5 @@ File nhiều nhất: `battle/DemoGame.tsx` (21), `profile/HeroDetail.tsx` (12), 
 | 2. Nhiệm vụ trên điện thoại | Đã làm 07/11/2026: thành tựu chia 6 nhóm gập được (nhóm có thưởng chờ nhận tự mở, món nhận được lên đầu), bộ sưu tập địa danh gập mặc định. Chiều cao trang 6597 → 2411px ở 360px, 4879 → 1194px ở 1280px; không tràn ngang |
 | 3. Màn trận trên điện thoại | Đã làm 07/11/2026: thẻ tướng xếp chân dung trên, tên đọc đủ 2 dòng; chữ trong trận 13px (`text-caption`), riêng số phím và chi phí NL phủ trên icon 11px theo ngoại lệ; thanh kỹ năng thành lưới 3 cột trên điện thoại. Đo ở 360/768/1280px: không tràn ngang, không còn chữ dưới 13px ngoài ngoại lệ (và một dòng 12px ở menu tài khoản chưa sửa) |
 | 3b. Bỏ sân khấu hình tướng trên điện thoại nhỏ | Đã làm 07/11/2026: `BattleStage` chỉ dựng từ 640px (`useStageVisible`), dưới đó bàn cờ lên đầu màn; không lỗi JS khi thao tác |
-| 4–6 | Chưa làm |
+| 4. Khai Lộ trên điện thoại | Đã làm 07/11/2026: ô bàn cờ 26–29px → 30px ở 360px, 33px ở 390px (bỏ đệm khung và bàn trên điện thoại, `--kl-gutter`); banner không tranh bỏ chiều cao tối thiểu và ẩn câu mô tả dưới 640px nên bàn cờ lên đầu màn. **Ô vẫn dưới 44px** vì 10 cột không thể đạt 44 ở 360px; giảm thiểu bằng cơ chế chạm một lần để xem trước khối rồi chạm lại để xóa. Muốn đạt 44px cần đổi số cột (ngoài phạm vi UI, phải theo GDD) |
+| 5–6 | Chưa làm |
