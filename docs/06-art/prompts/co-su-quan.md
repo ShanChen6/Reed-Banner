@@ -71,14 +71,18 @@ Subject: emblem of three diagonal claw slashes, thick tapered strokes that curve
 
 ### 3.3 Ngô Xương Xí — cầu vòm
 
+Bản đầu ra quá nhiều chi tiết (năm trụ, lan can, từng viên đá, sóng nước) nên ở cỡ 24–32px thành một cục mờ; prompt dưới đây đã rút gọn (Shan thử 07/11/2026).
+
 ```text
-Subject: emblem of a single arched stone-and-timber bridge seen from the side, one high round arch over a small band of water, simple railing posts, bold bronze gold with ink outline and a cool silver sheen on the arch top. Tiny accent: silver-grey (#9ea4ad) highlight line along the arch. Young, proud, noble-house feeling.
+Subject: emblem of a single high round stone arch bridge in side view, ONE thick semicircular arch with a flat deck line on top and two short square posts at the two ends only. No railing bars, no individual stone blocks, no water waves, no extra posts. Bold simple shapes, thick outline, at most three details in total, readable at 32 pixels. Tiny accent: one thick silver-grey (#9ea4ad) stripe along the top of the arch. Young, proud, noble-house feeling. Square 1:1 composition with the bridge centred.
 ```
 
 ### 3.4 Ngô Nhật Khánh — cổng làng
 
+Bản đầu có mái cong vút bốn góc và hàng ngói, nhìn giống cổng pailou kiểu Trung Hoa; prompt dưới đây đổi sang cổng làng Việt mộc mạc (Shan thử 07/11/2026).
+
 ```text
-Subject: emblem of an old Vietnamese village gate, two thick square posts joined by a flat lintel and a small tiled roof ridge above, a wide open passage between, bronze gold with ink outline. Tiny accent: one teal (#2e9e90) wind swirl curling through the opening. Calm, calculating, ancient-gate feeling.
+Subject: emblem of an old Vietnamese village gate (cong lang), two thick square brick posts joined by a flat lintel, a small plain two-slope tiled roof on top with a STRAIGHT ridge, roof ends only slightly lifted, no upturned dragon corners, no ridge ornaments, no individual roof tile lines, no Chinese pailou or palace look. A wide open passage between the posts. Bronze gold with ink outline, bold simple shapes. Tiny accent: one teal (#2e9e90) wind swirl curling through the opening. Calm, calculating, ancient-gate feeling.
 ```
 
 ### 3.5 Nguyễn Khoan — ba dải
