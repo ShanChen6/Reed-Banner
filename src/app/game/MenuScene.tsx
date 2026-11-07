@@ -133,7 +133,7 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
             <h1 id="home-title" className="w-56 max-w-full sm:w-72 lg:w-80">
               <Logo priority className="h-auto w-full drop-shadow-[0_6px_18px_#000]" />
             </h1>
-            <p className="max-w-md font-serif text-lg leading-snug text-[var(--atlas-title)] [text-shadow:0_2px_6px_#000] sm:text-xl">
+            <p className="max-w-md font-serif text-lg leading-snug text-[var(--title-on-wood)] [text-shadow:0_2px_6px_#000] sm:text-xl">
               Dẹp loạn mười hai sứ quân, dựng lại giang sơn Đại Việt.
             </p>
             <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
@@ -150,10 +150,10 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
               )}
             </div>
             {plan?.hint && (
-              <p className="max-w-md text-[15px] leading-snug text-[var(--atlas-ink-on-wood)]/90 [text-shadow:0_1px_3px_#000]">{plan.hint}</p>
+              <p className="max-w-md text-[15px] leading-snug text-[var(--on-wood)]/90 [text-shadow:0_1px_3px_#000]">{plan.hint}</p>
             )}
             {!account && (
-              <p className="text-sm text-[var(--atlas-ink-on-wood)]/85 [text-shadow:0_1px_3px_#000]">
+              <p className="text-sm text-[var(--on-wood)]/85 [text-shadow:0_1px_3px_#000]">
                 Đang chơi với tư cách khách, tiến độ gắn với trình duyệt này.
               </p>
             )}
@@ -192,7 +192,7 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
                 <SceneLink scene={u.scene} className="home-utility atlas-frame flex min-h-14 items-center gap-3 px-4 font-serif font-semibold">
                   <UtilityGlyph kind={u.icon} />
                   {u.title}
-                  <span aria-hidden className="ml-auto text-[var(--atlas-gold)]">›</span>
+                  <span aria-hidden className="ml-auto text-[var(--frame-gold)]">›</span>
                 </SceneLink>
               </li>
             ))}
@@ -216,7 +216,7 @@ function SectionHeading({ id, kicker, title }: { id: string; kicker: string; tit
   return (
     <div className="flex items-center gap-4">
       <div>
-        <p className="text-caption font-semibold tracking-[0.25em] text-[var(--atlas-gold)] uppercase">{kicker}</p>
+        <p className="text-caption font-semibold tracking-[0.25em] text-[var(--frame-gold)] uppercase">{kicker}</p>
         <h2 id={id} className="atlas-title font-serif text-2xl font-bold sm:text-[1.7rem]">
           {title}
         </h2>
@@ -244,20 +244,20 @@ function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; n
             {mode.kicker}
           </span>
         )}
-        <h3 className="absolute right-4 bottom-2.5 left-4 font-serif text-xl font-bold text-[var(--atlas-title)] [text-shadow:0_2px_4px_#000] sm:text-2xl">
+        <h3 className="absolute right-4 bottom-2.5 left-4 font-serif text-xl font-bold text-[var(--title-on-wood)] [text-shadow:0_2px_4px_#000] sm:text-2xl">
           {mode.title}
         </h3>
       </div>
       <div className="flex flex-1 flex-col gap-3 px-4 pt-2.5 pb-4">
-        <p className="text-[15px] leading-snug text-[var(--atlas-ink-on-wood)]/90">{mode.text}</p>
+        <p className="text-[15px] leading-snug text-[var(--on-wood)]/90">{mode.text}</p>
         <div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-2 text-sm">
           {locked ? (
-            <span className="flex items-center gap-1.5 text-[var(--atlas-muted)]">
+            <span className="flex items-center gap-1.5 text-[var(--on-wood-muted)]">
               <LockGlyph /> {mode.lockedText ?? "Sắp khai mở · tiến trình vẫn được giữ"}
             </span>
           ) : (
             <>
-              <span className="flex min-w-0 flex-1 items-center gap-1.5 text-[var(--atlas-muted)]">
+              <span className="flex min-w-0 flex-1 items-center gap-1.5 text-[var(--on-wood-muted)]">
                 {needsLogin && <LockGlyph />}
                 <span className="leading-tight">{needsLogin ? "Đăng nhập để ghi danh xếp hạng" : mode.status}</span>
               </span>
@@ -300,19 +300,19 @@ function UpcomingCard({ mode }: { mode: (typeof UPCOMING)[number] }) {
         <span className="home-kicker absolute top-3 left-3 rounded px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase">
           {mode.scene ? "Đã mở" : "Sắp ra mắt"}
         </span>
-        <h3 className="absolute right-4 bottom-2.5 left-4 font-serif text-xl font-bold text-[var(--atlas-title)] [text-shadow:0_2px_4px_#000] sm:text-2xl">
+        <h3 className="absolute right-4 bottom-2.5 left-4 font-serif text-xl font-bold text-[var(--title-on-wood)] [text-shadow:0_2px_4px_#000] sm:text-2xl">
           {mode.title}
         </h3>
       </div>
       <div className="flex flex-1 flex-col gap-3 px-4 pt-2.5 pb-4">
-        <p className="text-[15px] leading-snug text-[var(--atlas-ink-on-wood)]/90">{mode.text}</p>
+        <p className="text-[15px] leading-snug text-[var(--on-wood)]/90">{mode.text}</p>
         {mode.scene ? (
           <div className="mt-auto flex items-center justify-between gap-2 text-sm">
-            <span className="text-[var(--atlas-muted)]">{mode.note ?? "Chơi thường · có xếp hạng khi bật"}</span>
+            <span className="text-[var(--on-wood-muted)]">{mode.note ?? "Chơi thường · có xếp hạng khi bật"}</span>
             <span className="home-enter flex items-center gap-1 font-serif font-semibold">Vào <span aria-hidden>›</span></span>
           </div>
         ) : (
-          <span className="mt-auto flex items-center gap-1.5 text-sm text-[var(--atlas-muted)]">
+          <span className="mt-auto flex items-center gap-1.5 text-sm text-[var(--on-wood-muted)]">
             <LockGlyph /> Đang thiết kế, chưa chơi được
           </span>
         )}
@@ -344,7 +344,7 @@ function LockGlyph() {
 
 function UtilityGlyph({ kind }: { kind: UtilityIcon }) {
   return (
-    <svg aria-hidden viewBox="0 0 24 24" className="size-5 shrink-0 text-[var(--atlas-gold)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+    <svg aria-hidden viewBox="0 0 24 24" className="size-5 shrink-0 text-[var(--frame-gold)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
       {kind === "scroll" && <path d="M7 4h11a2 2 0 0 1 0 4H7M7 4a2 2 0 0 0 0 4v10a2 2 0 0 0 2 2h9V8M10 12h5M10 15.5h5" />}
       {kind === "rank" && <path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4ZM7 6H4.5a2.5 2.5 0 0 0 3 3.2M17 6h2.5a2.5 2.5 0 0 1-3 3.2" />}
       {kind === "shop" && <path d="M4 9l1.5-5h13L20 9M4 9h16M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0A2.7 2.7 0 0 0 20 9M5.5 12v8h13v-8M10 20v-4h4v4" />}

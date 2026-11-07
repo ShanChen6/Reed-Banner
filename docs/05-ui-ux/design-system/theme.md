@@ -58,7 +58,7 @@ Shan duyệt 05/11/2026 sau đợt kiểm kê 20 màn. Chuẩn lấy từ Chiế
 
 Khung màn chế độ: `ModeScreen` bọc cả màn, `ModeBanner` là banner tranh (nhãn nhỏ, một câu mô tả, số liệu; tên chế độ mặc định chỉ cho trình đọc màn hình vì header đã hiện), `SectionTitle` cho tiêu đề khối, `.ui-action-bar` cho nút chính dính đáy trên điện thoại. Trang `/demo/ui` hiển thị mọi thành phần.
 
-Không tự khai màu nút, tab, khung trong component màn; không thêm `bg-amber-*`, `bg-stone-*`, `#hex` mới. Token `--atlas-*` (Bình Loạn) và `--bk-*` (Doanh Trại) cùng giá trị với token chung và sẽ được thay dần.
+Không tự khai màu nút, tab, khung trong component màn; không thêm `bg-amber-*`, `bg-stone-*`, `#hex` mới. Token `--atlas-*` (Bình Loạn) đã gộp vào token chung (07/11/2026); còn `--bk-*` (Doanh Trại) cùng giá trị với token chung và sẽ được thay dần.
 
 ## Component dùng chung
 

@@ -18,7 +18,7 @@ Luật ở [Design Freeze](../../02-game-modes/future/14-tam-tuong-ky-design-fre
 | ≥ 1024px | Ba cột: Vạn Vật Lục (trái ~26%), Đài Hợp Nguyên (giữa ~44%, dính khi cuộn), Tướng Lục (phải ~30%) |
 | < 1024px | Đài Hợp Nguyên ở trên; hai nút chọn sổ “Vạn Vật Lục” / “Tướng Lục x/y” bên dưới; thanh **Hợp Nguyên** cố định ở đáy màn hình |
 
-Tông gỗ tối, giấy dó, đồng cổ dùng token `--atlas-*` và khung `atlas-frame` của Sử ký; dùng chung Global Game Header. Dòng “Công thức biểu trưng của trò chơi, không phải diễn giải sử học” luôn hiện dưới tiêu đề (P-25).
+Tông gỗ tối, giấy dó, đồng cổ dùng token chung (theme.css) và khung `atlas-frame` của Sử ký; dùng chung Global Game Header. Dòng “Công thức biểu trưng của trò chơi, không phải diễn giải sử học” luôn hiện dưới tiêu đề (P-25).
 
 ## 3. Các vùng
 
