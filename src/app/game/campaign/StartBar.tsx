@@ -36,7 +36,7 @@ const GUIDE = [
 
 function Guide() {
   return (
-    <details className="group rounded-xl border border-frame-line-soft bg-wood-lo px-4 py-2 text-caption text-on-wood-soft">
+    <details className="ui-frame-inset group px-4 py-2 text-caption text-on-wood-soft">
       <summary className="flex min-h-9 cursor-pointer list-none items-center justify-between gap-2 font-semibold text-on-wood focus-visible:outline-2 focus-visible:outline-frame-gold-hi pointer-coarse:min-h-11">
         <span>Lần đầu ra trận? Xem cách chơi</span>
         <span aria-hidden className="transition-transform group-open:rotate-90">

@@ -35,12 +35,12 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
       "Qua ba trận: mở đường vây, phá tuyến ngoài, rồi hạ Đỗ Cảnh Thạc trong trận quyết.",
     cinematic: [
       {
-        text: "Đường vào Đỗ Động men theo bờ sông và những vạt đầm. Bến đò có lính canh, trên gò cao cắm cờ của đồn.",
+        text: "Đường vào Đỗ Động men theo bờ sông và những vạt đầm. Bến đò có lính canh, trên gò cao cờ của đồn phần phật trong gió.",
         basis: "fictional",
       },
       {
         speaker: "Đỗ Cảnh Thạc",
-        text: "Đỗ Động sẽ tự quyết lấy đường của mình. Muốn đi qua, các ông phải chứng minh được sức mạnh ấy.",
+        text: "Đỗ Động sẽ tự quyết lấy đường của mình. Muốn đi qua, các ông phải chứng tỏ được sức mạnh ấy.",
         basis: "fictional",
       },
     ],
@@ -72,7 +72,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Trịnh Tú",
-            text: "Người trong đồn cũng có nhà ở ven sông. Mở cổng thì không ai bị truy xét chuyện cũ.",
+            text: "Người trong đồn cũng có nhà ở ven sông. Mở cổng ra thì chuyện cũ không ai bị truy xét.",
             basis: "fictional",
           },
         ],
@@ -83,7 +83,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
-            text: "Đường về một mối phải đi qua đây. Ai muốn giữ làng mình thì đứng sang một bên.",
+            text: "Con đường về một mối phải đi qua nơi đây. Ai muốn giữ làng mình thì đứng sang một bên!",
             basis: "fictional",
           },
         ],
@@ -103,7 +103,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
     ],
     defeat: [
       {
-        text: "Quân lui ra khỏi đầm. Đánh lại đúng phase vừa thua; những phase đã qua vẫn giữ, máu trùm đã mất không hồi.",
+        text: "Quân lui ra khỏi đầm. Đánh lại đúng phase vừa thua; những phase đã qua vẫn giữ, máu trùm đã mất không hồi lại.",
         basis: "fictional",
       },
     ],
@@ -136,7 +136,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
       "Trước khi bàn chuyện dựng triều, Đinh Bộ Lĩnh xem lại mười hai vùng theo cách nào?",
     cinematic: [
       {
-        text: "Ở Hoa Lư, người chép sổ xếp mười hai bó thẻ tre lên chiếu, mỗi bó ghi một vùng. Có bó dày, có bó chỉ vài dòng.",
+        text: "Ở Hoa Lư, người chép sổ xếp mười hai bó thẻ tre lên chiếu, mỗi bó ghi một vùng. Có bó dày cộm, có bó chỉ vài dòng.",
         basis: "fictional",
       },
     ],
@@ -168,7 +168,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
-            text: "Đọc lại từng bó. Vùng nào về bằng lời hứa thì phải giữ lời hứa ấy; vùng nào phải đánh thì phải lo cho dân ở đó trước.",
+            text: "Đọc lại từng bó. Vùng nào về bằng lời hứa thì phải giữ trọn lời hứa ấy; vùng nào phải đánh thì lo cho dân ở đó trước.",
             basis: "fictional",
           },
         ],
@@ -179,7 +179,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Lê Hoàn",
-            text: "Người từ Đằng Châu, Tế Giang, Đỗ Động đều đang ở ngoài sân. Họ không hỏi ai thắng; họ hỏi năm tới nộp thóc cho ai.",
+            text: "Người từ Đằng Châu, Tế Giang, Đỗ Động đều đang đứng ngoài sân. Họ chẳng hỏi ai thắng; họ hỏi năm tới nộp thóc cho ai.",
             basis: "fictional",
           },
           {
@@ -216,10 +216,10 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
 
   {
     id: "M23",
-    prompt: "Trước lễ lên ngôi, việc gì ở Hoa Lư được lo trước?",
+    prompt: "Trước lễ lên ngôi, việc gì ở Hoa Lư phải lo trước?",
     cinematic: [
       {
-        text: "Trong thung lũng giữa các vách đá vôi, người ta dọn sân, chặt tre dựng lán, và bàn xem kho thóc, trại quân, chỗ làm lễ nên đặt ở đâu.",
+        text: "Trong thung lũng giữa các vách đá vôi, người ta dọn sân, chặt tre dựng lán, rồi bàn xem kho thóc, trại quân và chỗ làm lễ nên đặt ở đâu.",
         basis: "fictional",
       },
     ],
@@ -241,7 +241,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Nguyễn Bặc",
-            text: "Quân các vùng mới về chung một lệnh. Phải chia trại, đặt người giữ cửa ải trước, kẻo trong thành chưa yên đã có chuyện.",
+            text: "Quân các vùng mới về chung một lệnh. Phải chia trại, đặt người giữ cửa ải trước, kẻo trong thành chưa yên đã sinh chuyện.",
             basis: "fictional",
           },
           {
@@ -256,7 +256,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Trịnh Tú",
-            text: "Dân theo về vì muốn yên. Kho thóc, đường chợ, bến đò phải sửa trước khi bắt ai đi làm việc lớn.",
+            text: "Dân theo về vì muốn được yên. Kho thóc, đường chợ, bến đò phải sửa trước khi bắt ai làm việc lớn.",
             basis: "fictional",
           },
           {
@@ -271,7 +271,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Điền",
-            text: "Các vùng đã chung một mối thì cần một lễ và một phép chung. Người nhận lệnh phải biết lệnh từ đâu ra.",
+            text: "Các vùng đã về chung một mối thì cần một lễ và một phép chung. Người nhận lệnh phải biết lệnh từ đâu ra.",
             basis: "fictional",
           },
           {
@@ -304,7 +304,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
     prompt: "Trong buổi lễ, bạn đứng nhìn từ đâu?",
     cinematic: [
       {
-        text: "Trống đồng nổi ba hồi dưới chân núi đá. Lá cờ lau năm nào giờ được cắm cạnh hàng cờ của các vùng đã theo về.",
+        text: "Trống đồng nổi ba hồi dưới chân núi đá. Lá cờ lau năm nào nay được cắm cạnh hàng cờ của các vùng đã theo về.",
         basis: "fictional",
       },
     ],
@@ -326,7 +326,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Một người lính già",
-            text: "Hồi ở Hoa Lư, mấy đứa chăn trâu cầm bông lau làm cờ. Giờ cờ ấy đứng trước cả hàng quân.",
+            text: "Ngày ở Hoa Lư, mấy đứa chăn trâu cầm bông lau làm cờ. Nay lá cờ ấy đứng trước cả hàng quân.",
             basis: "fictional",
           },
         ],
@@ -337,7 +337,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Một người dân Hoa Lư",
-            text: "Từ trên đồi chỉ thấy cờ và khói hương. Người ta bảo từ nay lệnh ra từ đây, không phải từ mười hai nơi nữa.",
+            text: "Từ trên đồi chỉ thấy cờ bay và khói hương. Người ta bảo từ nay lệnh ra từ đây, không còn ra từ mười hai nơi nữa.",
             basis: "fictional",
           },
         ],
@@ -348,7 +348,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Liễn",
-            text: "Cha đứng đó, nhưng việc giữ cho các vùng yên mới bắt đầu. Con sẽ nhớ hôm nay.",
+            text: "Cha đứng đó, nhưng việc giữ cho các vùng yên mới chỉ bắt đầu. Con sẽ nhớ mãi hôm nay.",
             basis: "fictional",
           },
         ],
