@@ -150,6 +150,8 @@ Sau khi kiểm tra baseline, chủ dự án chọn **Home V2 illustration-led** 
 
 Shan duyệt đề xuất đồng bộ sau đợt kiểm kê 20 màn ngày 05/11/2026 và yêu cầu chia nhỏ: mỗi bước một PR nhỏ vào `develop`, có ảnh trước/sau, không đổi luật chơi, API hay dữ liệu. Quy tắc ở [theme.md](../design-system/theme.md#quy-tắc-chung-đồng-bộ-ui-05112026).
 
+Kiểm kê responsive 07/11/2026 (19 màn × 4 cỡ, số đo vùng chạm, cỡ chữ, màu viết tay): [báo cáo](../../reports/ui-audit-2026-11-07/README.md).
+
 | Bước | Phạm vi |
 | --- | --- |
 | UI-S1 | (PR #295, đã merge) Nền tảng: token, nút chính/phụ, `Tabs`, `ChoiceChip`, `OrnateFrame`, `ModeScreen`, `ModeBanner`, trang `/demo/ui` |
