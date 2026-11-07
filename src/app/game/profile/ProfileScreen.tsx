@@ -35,7 +35,7 @@ export default function ProfileScreen({ playerName }: { playerName: string | nul
   if (!profile) {
     return (
       <main className="barracks ui-mode-screen flex items-center justify-center">
-        <p role="status" className="py-24 text-center text-[var(--bk-soft)]">
+        <p role="status" className="py-24 text-center text-[var(--on-wood-soft)]">
           {loadError ? "Không tải được Doanh Trại, thử tải lại trang." : "Đang mở Doanh Trại…"}
         </p>
       </main>

@@ -3,7 +3,7 @@
 // Thanh header chung của màn chơi /game, ba cột: trái là nút về Chiến trường (màn chính), giữa là bảng tên phân
 // cảnh (Doanh Trại, Cửa Hàng, chế độ chơi...), phải là vàng hiện có và menu tài khoản (Doanh Trại, cài đặt âm thanh,
 // đăng nhập/đăng xuất). Tranh phong cảnh trải hết chiều dài thanh. GameShell dựng một lần cho mọi phân cảnh; tab
-// riêng của từng màn vẫn nằm trong màn đó. Màu lấy từ token --hdr-* trong globals.css (lớp .game-header).
+// riêng của từng màn vẫn nằm trong màn đó. Màu lấy từ token chung trong theme.css (lớp .game-header).
 
 import type { ShellAccount } from "../GameShell";
 import { SCENE_TITLE, type Scene } from "../scene";
@@ -23,7 +23,7 @@ export default function GameHeader({ scene, account }: { scene: Scene; account: 
         <SceneTitle title={SCENE_TITLE[scene]} />
         <div className="flex min-w-0 items-center justify-end gap-1.5 md:gap-3">
           <HeaderGold scene={scene} />
-          <span aria-hidden className="hidden h-7 w-px shrink-0 bg-[var(--hdr-bronze)]/60 md:block" />
+          <span aria-hidden className="hidden h-7 w-px shrink-0 bg-[var(--frame-bronze)]/60 md:block" />
           <HeaderAccountMenu scene={scene} account={account} />
         </div>
       </div>
@@ -57,7 +57,7 @@ function HomeButton() {
         title="Về Chiến trường"
         className="game-header-btn game-header-chip flex h-10 pointer-coarse:h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-md px-2.5 font-serif font-semibold whitespace-nowrap md:px-4"
       >
-        <svg aria-hidden viewBox="0 0 24 24" className="size-5 text-[var(--hdr-gold)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+        <svg aria-hidden viewBox="0 0 24 24" className="size-5 text-[var(--frame-gold)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
           <path d="M3.5 11.5 12 4l8.5 7.5" />
           <path d="M5.5 10v9.5h4.5v-5.5h4v5.5h4.5V10" />
         </svg>

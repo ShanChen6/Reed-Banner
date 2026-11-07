@@ -82,7 +82,7 @@ export default function Armory({
       <section aria-label="Kho đồ" className="barracks-panel flex flex-col rounded-lg p-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="barracks-title font-serif text-xl font-bold">
-            Kho đồ <span className="text-lg text-[var(--bk-gold)] tabular-nums">{profile.bag.length}/{BAG_LIMIT}</span>
+            Kho đồ <span className="text-lg text-[var(--frame-gold-hi)] tabular-nums">{profile.bag.length}/{BAG_LIMIT}</span>
           </h2>
           <button
             type="button"
@@ -134,12 +134,12 @@ export default function Armory({
           )}
         </div>
         {merging && (
-          <p className="mt-2 text-sm text-[var(--bk-soft)]">Chọn 3 món cùng ô, cùng hệ, cùng phẩm (vũ khí cùng nghề). Món không ghép chung được sẽ mờ đi.</p>
+          <p className="mt-2 text-sm text-[var(--on-wood-soft)]">Chọn 3 món cùng ô, cùng hệ, cùng phẩm (vũ khí cùng nghề). Món không ghép chung được sẽ mờ đi.</p>
         )}
 
         <div className="barracks-scroll mt-2 max-h-[65dvh] overflow-y-auto overscroll-contain pr-1 lg:max-h-[max(20rem,calc(100dvh-17rem))]">
           {items.length === 0 ? (
-            <div className="flex flex-col items-center gap-2 py-10 text-center text-[15px] text-[var(--bk-soft)]">
+            <div className="flex flex-col items-center gap-2 py-10 text-center text-[15px] text-[var(--on-wood-soft)]">
               <p>{profile.bag.length === 0 ? "Kho đồ trống. Thắng trận chắc chắn rơi 1 món." : "Không có món nào thuộc loại này."}</p>
               <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-md px-4">
                 <ShopGlyph className="size-4" /> Mua ở Cửa hàng
@@ -191,7 +191,7 @@ export default function Armory({
             onSold={() => setSelected(null)}
           />
         ) : (
-          <p className="py-6 text-center text-[15px] text-[var(--bk-soft)]">Chọn một món để xem chỉ số, người đang dùng và thao tác.</p>
+          <p className="py-6 text-center text-[15px] text-[var(--on-wood-soft)]">Chọn một món để xem chỉ số, người đang dùng và thao tác.</p>
         )}
       </aside>
     </div>
@@ -226,7 +226,7 @@ function ItemPanel({
         <GearIcon slot={item.slot} element={item.element} tier={item.tier} set={item.set} profession={item.profession} className="size-20 shrink-0" />
         <div className="min-w-0">
           <h3 className={`font-serif text-lg leading-snug font-bold ${TIER_CLASS[item.tier]}`}>{gearText(item)}</h3>
-          <p className="text-sm text-[var(--bk-soft)]">
+          <p className="text-sm text-[var(--on-wood-soft)]">
             {item.slot === "vuKhi" && item.profession ? `Chỉ nghề ${PROFESSION_NAME[item.profession]}` : "Mọi tướng sĩ mặc được"}
           </p>
           <p className="mt-1 text-[15px]">{wearer ? <>Đang ở <b className="text-success">{nameOf(wearer)}</b></> : "Chưa ai dùng"}</p>
@@ -234,7 +234,7 @@ function ItemPanel({
       </div>
 
       <div className="barracks-inset flex flex-col gap-2 rounded-md p-2.5">
-        <label className="flex flex-col gap-1 text-sm text-[var(--bk-soft)]">
+        <label className="flex flex-col gap-1 text-sm text-[var(--on-wood-soft)]">
           Mặc cho
           <select
             value={to}
@@ -291,7 +291,7 @@ function MergePanel({
   return (
     <div className="flex flex-col gap-3">
       <h3 className="barracks-title font-serif text-lg font-bold">Ghép đồ</h3>
-      <p className="text-sm text-[var(--bk-soft)]">3 món cùng ô, cùng hệ, cùng phẩm thành 1 món phẩm cao hơn, giữ bộ của món chọn đầu tiên. Món đang mặc sẽ bị tháo.</p>
+      <p className="text-sm text-[var(--on-wood-soft)]">3 món cùng ô, cùng hệ, cùng phẩm thành 1 món phẩm cao hơn, giữ bộ của món chọn đầu tiên. Món đang mặc sẽ bị tháo.</p>
       <ul className="grid grid-cols-3 gap-2" aria-label="Món đưa vào ghép">
         {[0, 1, 2].map((i) => {
           const it = items[i];
@@ -303,7 +303,7 @@ function MergePanel({
                   <XGlyph className="absolute top-1 right-1 size-4 rounded-full bg-black/70 p-0.5" />
                 </button>
               ) : (
-                <span className="gear-slot is-empty flex aspect-square w-full items-center justify-center rounded-lg text-sm text-[var(--bk-soft)]">{i + 1}</span>
+                <span className="gear-slot is-empty flex aspect-square w-full items-center justify-center rounded-lg text-sm text-[var(--on-wood-soft)]">{i + 1}</span>
               )}
             </li>
           );

@@ -169,17 +169,17 @@ const COPY: readonly MissionCopy[] = [
     prompt: "Ai sẽ kể cho bạn nghe chuyện cờ lau?",
     intro: [
       {
-        text: "Tương truyền, thuở nhỏ Đinh Bộ Lĩnh chăn trâu ở vùng Hoa Lư, lấy bông lau làm cờ, bày trận cùng lũ trẻ trong vùng.",
+        text: "Tương truyền, thuở nhỏ Đinh Bộ Lĩnh chăn trâu ở vùng Hoa Lư, bẻ bông lau làm cờ, dàn trận cùng lũ trẻ chăn trâu trong vùng.",
         basis: "legend",
         refs: ["E12", "S04", "S07"],
       },
       {
         speaker: "Cụ già trong động",
-        text: "Mỗi mùa lau trắng bãi, người già lại kể chuyện cờ lau cho con cháu nghe.",
+        text: "Mỗi mùa lau trắng bãi, người già lại kể chuyện cờ lau cho con cháu nghe, kể mãi không chán.",
         basis: "fictional",
       },
       {
-        text: "Đây là truyền thuyết. Nó cho biết người Hoa Lư nhớ về thủ lĩnh của mình thế nào, không phải tư liệu ghi tại chỗ.",
+        text: "Đây là truyền thuyết. Nó cho ta biết người Hoa Lư nhớ về thủ lĩnh của mình ra sao, chứ không phải tư liệu ghi tại chỗ.",
         basis: "legend",
         refs: ["E12"],
       },
@@ -191,7 +191,7 @@ const COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Nguyễn Bặc",
-            text: "Tôi chỉ kể lại điều người trong vùng vẫn kể: cờ là bông lau, quân là trẻ chăn trâu. Điều đáng nhớ là họ chọn đi theo một người.",
+            text: "Tôi chỉ kể lại điều người trong vùng vẫn kể: cờ là bông lau, quân là đám trẻ chăn trâu. Điều đáng nhớ là cả bọn chịu đi theo một người.",
             basis: "fictional",
           },
         ],
@@ -201,7 +201,7 @@ const COPY: readonly MissionCopy[] = [
         label: "Xem tranh dân gian",
         beats: [
           {
-            text: "Bức tranh vẽ đứa trẻ cầm bông lau đứng giữa đám bạn chăn trâu. Tranh là cách dân gian nhớ, không phải hình vẽ từ thời ấy.",
+            text: "Bức tranh vẽ đứa trẻ cầm bông lau đứng giữa đám bạn chăn trâu. Đó là cách dân gian ghi nhớ, không phải hình vẽ từ thời ấy.",
             basis: "fictional",
           },
         ],
@@ -209,7 +209,7 @@ const COPY: readonly MissionCopy[] = [
     ],
     outro: [
       {
-        text: "Truyền thuyết khép lại. Từ đây câu chuyện chuyển sang những điều sử có ghi.",
+        text: "Truyền thuyết khép lại. Từ đây, câu chuyện bước sang những điều sử đã ghi.",
         basis: NARRATOR_GAME,
       },
     ],
@@ -224,18 +224,18 @@ const COPY: readonly MissionCopy[] = [
         refs: ["E01", "S03"],
       },
       {
-        text: "Sau khi Ngô Quyền mất, Dương Tam Kha nắm quyền. Các bản sử gắn năm cho việc này không hoàn toàn giống nhau.",
+        text: "Ngô Quyền mất, Dương Tam Kha nắm quyền. Các bản sử gắn năm cho việc này không hoàn toàn giống nhau.",
         basis: "disputed",
         refs: ["E02", "S03", "S05"],
       },
       {
-        text: "Sau đó Ngô Xương Văn lật Dương Tam Kha, nhà Ngô có hai vua cùng trị. Sử ghi mốc này vào năm 950 hoặc 951 tùy bản.",
+        text: "Rồi Ngô Xương Văn lật đổ Dương Tam Kha, nhà Ngô có hai vua cùng trị. Sử ghi mốc này vào năm 950 hoặc 951 tùy bản.",
         basis: "disputed",
         refs: ["E03", "S05"],
       },
       {
         speaker: "Người đưa tin",
-        text: "Tin từ nơi xa đến chậm. Người trong vùng chỉ biết quyền lực đã đổi chủ, còn ruộng nương thì phải tự giữ.",
+        text: "Tin từ nơi xa đến chậm. Người trong vùng chỉ biết quyền lực đã đổi chủ, còn ruộng nương thì phải tự mình giữ lấy.",
         basis: "fictional",
       },
     ],
@@ -257,7 +257,7 @@ const COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Người đưa tin",
-            text: "Làng nào cũng lo đắp lũy, cất lương. Không ai chắc nơi xa còn đủ sức che chở cho mình.",
+            text: "Làng nào cũng lo đắp lũy, cất lương. Chẳng ai dám chắc nơi xa còn đủ sức che chở cho mình.",
             basis: "fictional",
           },
         ],
@@ -265,23 +265,23 @@ const COPY: readonly MissionCopy[] = [
     ],
     outro: [
       {
-        text: "Bối cảnh đã rõ: quyền lực ở xa đổi chủ, Hoa Lư phải tự lo việc giữ mình.",
+        text: "Bối cảnh đã rõ: quyền lực ở xa đổi chủ, Hoa Lư phải tự mình lo giữ lấy đất.",
         basis: NARRATOR_GAME,
       },
     ],
   },
   {
     id: "M03",
-    prompt: "Trước khi giao chiến, ai lo việc trong động?",
+    prompt: "Trước giờ giao chiến, ai sẽ lo việc trong động?",
     objective:
-      "Cầm cự đủ số lượt (hoặc hạ thủ lĩnh) để dân và kho lương an toàn.",
+      "Giữ vững đủ số lượt (hoặc hạ thủ lĩnh địch) để dân và kho lương được yên.",
     intro: [
       {
-        text: "Một toán người có vũ khí, không rõ từ đâu, dò đường vào khe núi. Dân trong động lo cho kho lương.",
+        text: "Một toán người có vũ khí, không rõ từ đâu, lần theo lối mòn vào khe núi. Dân trong động nóng ruột lo cho kho lương.",
         basis: "fictional",
       },
       {
-        text: "Trận này do game sáng tác để mở đầu phòng bị. Sử không chép trận này và toán quân không mang tên thế lực có thật.",
+        text: "Trận này do game sáng tác để mở đầu việc phòng bị. Sử không chép trận nào như thế, và toán quân kia không mang tên thế lực có thật.",
         basis: "fictional",
       },
     ],
@@ -292,7 +292,7 @@ const COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Nguyễn Bặc",
-            text: "Người già và trẻ nhỏ vào sâu trong động. Kho lương có người canh, mọi người cứ yên lòng.",
+            text: "Người già và trẻ nhỏ vào sâu trong động. Kho lương đã có người canh, bà con cứ yên lòng.",
             basis: "fictional",
           },
         ],
@@ -303,7 +303,7 @@ const COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Điền",
-            text: "Khe núi hẹp, chỉ cần giữ được cửa là chúng không vào sâu được. Dựng chướng ngại ở lối vào.",
+            text: "Khe núi hẹp, chỉ cần giữ chắc cửa là chúng không thể tràn vào. Dựng chướng ngại ở lối vào!",
             basis: "fictional",
           },
         ],
@@ -311,21 +311,21 @@ const COPY: readonly MissionCopy[] = [
     ],
     outro: [
       {
-        text: "Lối vào khe núi được giữ. Hoa Lư bắt đầu tổ chức phòng bị cho những ngày sắp tới.",
+        text: "Cửa khe núi vững như đá. Hoa Lư bắt đầu lo toan phòng bị cho những ngày sắp tới.",
         basis: "fictional",
       },
     ],
     defeat: [
       {
-        text: "Phòng tuyến lùi lại, nhưng dân đã kịp vào sâu trong động. Chỉnh đội hình rồi thử lại.",
+        text: "Phòng tuyến phải lùi, nhưng dân đã kịp vào sâu trong động. Chỉnh lại đội hình, đánh lại!",
         basis: "fictional",
       },
     ],
   },
   {
     id: "M04",
-    prompt: "Khi quân Ngô kéo tới, Hoa Lư ưu tiên điều gì?",
-    objective: "Cầm cự đủ số lượt (hoặc hạ cả ba đối thủ) để Hoa Lư đứng vững.",
+    prompt: "Quân Ngô kéo tới, Hoa Lư lo điều gì trước hết?",
+    objective: "Giữ vững đủ số lượt (hoặc hạ cả ba đối thủ) để Hoa Lư đứng vững.",
     intro: [
       {
         text: "Năm 951, hai vua nhà Ngô đem quân đánh Hoa Lư.",
@@ -333,17 +333,17 @@ const COPY: readonly MissionCopy[] = [
         refs: ["E04", "S02", "S04"],
       },
       {
-        text: "Sử chép Đinh Liễn, con trai Đinh Bộ Lĩnh, khi ấy bị quân Ngô giữ làm con tin. Sử kể lại tình tiết này với chi tiết nặng nề; game chỉ nhắc gián tiếp, không dựng lời thoại cho cảnh ấy.",
+        text: "Sử chép Đinh Liễn, con trai Đinh Bộ Lĩnh, khi ấy bị quân Ngô giữ làm con tin. Sử kể tình tiết này rất nặng nề; game chỉ nhắc gián tiếp, không dựng lời thoại cho cảnh ấy.",
         basis: "recorded",
         refs: ["E04a", "S02"],
       },
       {
-        text: "Đội hình hai bên, các tướng đối phương và diễn biến trên bàn cờ do game tái dựng; không ai trong số họ là người có tên trong sử.",
+        text: "Đội hình hai bên, tướng đối phương và diễn biến trên bàn cờ đều do game tái dựng; không ai trong số họ là người có tên trong sử.",
         basis: "reconstructed",
       },
       {
         speaker: "Đinh Liễn",
-        text: "Nếu họ vào được khe núi, người trong động sẽ không còn đường lui.",
+        text: "Họ mà vào được khe núi thì người trong động hết đường lui.",
         basis: "fictional",
       },
     ],
@@ -354,7 +354,7 @@ const COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
-            text: "Dồn quân ra cửa núi. Họ phải dừng ở đây.",
+            text: "Dồn quân ra cửa núi. Họ chỉ được đến đây là cùng!",
             basis: "fictional",
           },
         ],
@@ -364,7 +364,7 @@ const COPY: readonly MissionCopy[] = [
         label: "Mở đường cho dân lui",
         beats: [
           {
-            text: "Người già và trẻ nhỏ được đưa vào sâu trong núi trước; quân giữ hàng phía sau để dân kịp lui.",
+            text: "Người già và trẻ nhỏ được đưa vào sâu trong núi trước; quân giữ hàng sau cùng để dân kịp lui.",
             basis: "fictional",
           },
         ],
@@ -372,18 +372,18 @@ const COPY: readonly MissionCopy[] = [
     ],
     outro: [
       {
-        text: "Cuộc tiến quân không hạ được Hoa Lư và phải rút.",
+        text: "Cuộc tiến quân không hạ nổi Hoa Lư và phải rút lui.",
         basis: "recorded",
         refs: ["E04", "S02", "S04"],
       },
       {
-        text: "Hoa Lư đứng vững. Đây là xung đột trong cục diện nhà Ngô, không phải dấu chấm hết của nhà Ngô.",
+        text: "Hoa Lư đứng vững. Đây là một cuộc xung đột trong cục diện nhà Ngô, chưa phải dấu chấm hết của nhà Ngô.",
         basis: "reconstructed",
       },
     ],
     defeat: [
       {
-        text: "Phòng tuyến lùi vào sâu trong núi. Chỉnh đội hình rồi thử lại; kết cục năm 951 trong game không đổi.",
+        text: "Phòng tuyến lùi vào sâu trong núi. Chỉnh lại đội hình, đánh lại; kết cục năm 951 trong game không đổi.",
         basis: "fictional",
       },
     ],

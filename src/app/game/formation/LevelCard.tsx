@@ -7,7 +7,7 @@ export default function LevelCard({ level, ranked = false, name, caption }: { le
       {/* eslint-disable-next-line @next/next/no-img-element -- ảnh tĩnh theo khung thẻ */}
       <img src={`/art/formation/levels/${level}${ranked ? "-ranked" : ""}.webp`} alt="" className="absolute inset-0 size-full object-cover" />
       <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-wood-lo/90 via-transparent to-transparent" />
-      <p className="absolute right-3 bottom-2 left-3 flex items-end justify-between gap-2 font-serif text-lg font-bold text-title-on-wood [text-shadow:0_2px_4px_#000]">
+      <p className="absolute right-3 bottom-2 left-3 flex items-end justify-between gap-2 font-serif text-lg font-bold text-title-on-wood [text-shadow:0_2px_4px_var(--black)]">
         <span>{name}</span>
         {caption && <span className="text-caption font-semibold tracking-wide text-on-wood-soft">{caption}</span>}
       </p>

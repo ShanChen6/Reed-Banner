@@ -1791,7 +1791,7 @@ export default function DemoGame({
   // Game chỉ có một giao diện (gỗ tối), không có chế độ sáng.
   const stageVisible = useStageVisible();
   const palette =
-    "[--bg:#17110e] [--panel:#271d18] [--cell:#14251c] [--frame:#1b2a21] [--gold:#d4a24c] text-on-wood";
+    "text-on-wood";
 
   const frame = anim ? anim.frames[anim.i] : undefined;
   const board = frame?.board ?? heldBoard ?? state.board;
@@ -2029,7 +2029,7 @@ export default function DemoGame({
                 waiting={pending}
               />
             )}
-            <div className="relative mt-3 rounded-xl border-2 border-[var(--gold)] bg-[var(--frame)] p-1.5 shadow-lg">
+            <div className="relative mt-3 rounded-xl border-2 border-[var(--primary)] bg-[var(--decorative-frame)] p-1.5 shadow-lg">
               <BoardCrest className="pointer-events-none absolute -top-4 left-1/2 z-10 h-8 w-40 -translate-x-1/2 md:-top-5 md:h-10 md:w-52" />
               {CORNERS.map((c) => (
                 <CloudCorner
@@ -2079,7 +2079,7 @@ export default function DemoGame({
                           : "Ô trống"
                       }
                       onPointerDown={(e) => onPointerDown(pos, e)}
-                      className={`relative aspect-square rounded-md bg-[var(--cell)] ${
+                      className={`relative aspect-square rounded-md bg-[var(--battle-cell)] ${
                         isSel ? "z-10 scale-110 ring-2 ring-frame-gold-hi" : ""
                       } ${isRing ? "ring-2 ring-info" : ""} ${willMatch ? "z-10 ring-2 ring-frame-gold-hi brightness-125" : ""} ${isCur ? "outline-2 outline-stat-shield" : ""} ${(aim && needsCell(aim.skill)) || whirlAim ? "cursor-crosshair" : "cursor-pointer"}`}
                     >
