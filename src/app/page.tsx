@@ -125,7 +125,7 @@ export default function Home() {
         Bỏ qua tới nội dung
       </a>
 
-      <header className="sticky top-0 z-40 border-b border-frame-gold/40 bg-wood-lo/90 shadow-[0_8px_24px_-12px_#000] backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-frame-gold/40 bg-wood-lo/90 shadow-[0_8px_24px_-12px_var(--black)] backdrop-blur">
         <nav className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-2.5">
           <Link href="/" className="flex items-center gap-2 font-serif text-lg font-black">
             <LogoMark className="size-8" /> <span className="fx-gilt-text">Cờ Lau</span>
@@ -216,7 +216,7 @@ export default function Home() {
                 id="dinhBoLinh"
                 element="moc"
                 profession="tuongSi"
-                className="absolute bottom-0 left-0 z-20 size-20 -translate-x-1/2 translate-y-1/2 drop-shadow-[0_6px_10px_#000c] md:size-28"
+                className="absolute bottom-0 left-0 z-20 size-20 -translate-x-1/2 translate-y-1/2 drop-shadow-[0_6px_10px_color-mix(in_srgb,var(--black)_80%,transparent)] md:size-28"
               />
               <div className="absolute left-12 top-full mt-2 flex gap-1.5 md:left-16">
                 {STARTER_COMPANIONS.filter((c) => c.id === "haVan" || c.id === "maiThanh").map((c) => (
@@ -233,7 +233,7 @@ export default function Home() {
           <ul className="mx-auto grid max-w-5xl grid-cols-3 gap-3 md:gap-6">
             {DBL_ERAS.map((e) => (
               <li key={e.src} className="flex flex-col items-center justify-end rounded-2xl fx-panel-hi p-2 text-center md:p-4">
-                <Image src={e.src} alt={`Đinh Bộ Lĩnh ${e.title}`} width={e.w} height={900} sizes="(min-width: 768px) 300px, 30vw" className="h-auto w-full drop-shadow-[0_12px_20px_#000a]" />
+                <Image src={e.src} alt={`Đinh Bộ Lĩnh ${e.title}`} width={e.w} height={900} sizes="(min-width: 768px) 300px, 30vw" className="h-auto w-full drop-shadow-[0_12px_20px_color-mix(in_srgb,var(--black)_67%,transparent)]" />
                 <p className="mt-2 font-serif text-base font-bold md:text-lg">{e.title}</p>
                 <p className="hidden text-xs text-on-wood-soft sm:block">{e.note}</p>
               </li>
