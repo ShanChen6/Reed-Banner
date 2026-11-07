@@ -67,18 +67,23 @@ const SOCIAL_DEFAULTS: Readonly<Record<SocialPlatform, { href: string | null; sh
   Zalo: { href: null, show: "withUrl" },
 };
 
-/** Lời chú thích từng nền tảng, giọng thư tín phong kiến (hiện khi rê chuột/focus và trong cuộn thư). */
+/** Lời chú thích từng nền tảng trong thư cuộn, giọng cổ trang (Shan góp ý 07/11/2026). */
 export const SOCIAL_BLURB: Readonly<Record<SocialPlatform, string>> = {
-  Facebook: "Gửi thư trực tiếp cho tác giả",
-  TikTok: "Xem thước phim của tác giả",
-  LinkedIn: "Kết giao nghề nghiệp",
-  GitHub: "Mã nguồn và công trình",
-  Instagram: "Hình ảnh và hậu trường",
-  Discord: "Hội ngộ cùng cộng đồng",
-  X: "Tin ngắn truyền khắp nơi",
-  YouTube: "Xem thước phim dài",
-  Zalo: "Gửi thư qua Zalo",
+  Facebook: "Gửi thư tay tới tác giả",
+  TikTok: "Xem thước phim tác giả ghi lại",
+  LinkedIn: "Kết giao đồng đạo nghề nghiệp",
+  GitHub: "Kho mã nguồn của tác giả",
+  Instagram: "Họa ảnh và chuyện hậu trường",
+  Discord: "Hội ngộ chốn quần hùng",
+  X: "Tin ngắn theo ngựa trạm",
+  YouTube: "Thước phim dài của tác giả",
+  Zalo: "Thư tay gửi qua Zalo",
 };
+
+/** Chữ trong thư cuộn: tiêu đề, lời dẫn, và dòng ghi cho nền tảng chưa có địa chỉ. */
+export const CONTACT_TITLE = "Thư tín bốn phương";
+export const CONTACT_SUB = "Trạm dịch ngựa phi, thư gửi về doanh trại tác giả";
+export const CONTACT_PENDING = "Trạm thư sắp mở";
 
 export interface SocialLink extends FooterLink {
   readonly label: SocialPlatform;
