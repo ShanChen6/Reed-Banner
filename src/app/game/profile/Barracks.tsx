@@ -157,7 +157,7 @@ export default function Barracks({
                   </span>
                 </SceneLink>
               )}
-              {/* Cửa hàng và số vàng luôn đi liền một dòng, không tách nhau khi hàng bị xuống dòng. */}
+              {/* Số vàng ẩn ở màn nhỏ vì header chung đã hiện; từ sm trở lên Cửa hàng và số vàng đi liền nhau. */}
               <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
                 <SceneLink
                   scene="SHOP"
@@ -166,7 +166,7 @@ export default function Barracks({
                   <ShopGlyph className="size-5" /> Cửa hàng
                 </SceneLink>
                 <span
-                  className="barracks-pill is-gold min-h-11 px-2! text-base sm:px-3!"
+                  className="barracks-pill is-gold max-sm:hidden! min-h-11 px-2! text-base sm:px-3!"
                   aria-label={`Vàng: ${profile.gold}`}
                 >
                   <CoinGlyph className="size-5" />
