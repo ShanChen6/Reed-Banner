@@ -424,7 +424,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
           <Panel id="ttk-ranked-altar" title="Đài Hợp Nguyên">
             <SlotsRow slots={slots} busy={pending} result={card?.kind === "result" ? card.result : null} onClear={(i) => setSlots((s) => clearSlot(s, i))} onSwap={() => setSlots(swapSlots)} />
             <AltarCard card={card} onUse={(id) => setSlots([id, null])} />
-            <p className="text-caption text-[var(--on-wood-muted)]">Nguyên tố lấy từ túi, dùng cho hệ nào cũng được.</p>
+            <p className="text-caption text-[var(--ash)]">Nguyên tố lấy từ túi, dùng cho hệ nào cũng được.</p>
             <button type="button" disabled={!ready} aria-busy={pending} onClick={combine} className={buttonVariants({ className: "min-h-12 text-lg tracking-[0.12em] uppercase" })}>
               Hợp Nguyên
             </button>
@@ -449,7 +449,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
                   {f.found ? (
                     <p className="font-serif font-bold text-[var(--title-on-wood)]">{f.found.name} · +{f.points}</p>
                   ) : (
-                    <p className="text-caption text-[var(--on-wood-muted)]">Tướng chưa tìm thấy · {f.points} điểm</p>
+                    <p className="text-caption text-[var(--ash)]">Tướng chưa tìm thấy · {f.points} điểm</p>
                   )}
                   <p className="mt-1 text-sm italic">“{f.clue}”</p>
                 </li>
@@ -458,7 +458,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
             <section aria-labelledby="ttk-board-title">
               <h3 id="ttk-board-title" className="font-serif font-bold text-[var(--title-on-wood)]">Bảng tuần</h3>
               {view.board.top.length === 0 ? (
-                <p className="text-sm text-[var(--on-wood-muted)]">Chưa có ai ghép ra tướng đề cử.</p>
+                <p className="text-sm text-[var(--ash)]">Chưa có ai ghép ra tướng đề cử.</p>
               ) : (
                 <ol className="mt-1 space-y-0.5 text-sm">
                   {view.board.top.map((e) => (
@@ -487,8 +487,8 @@ function MobileBar({ slots, ready, tried, onCombine }: { slots: Slots; ready: bo
     <div className="fixed inset-x-0 bottom-0 z-20 border-t border-[var(--frame-line)] bg-[var(--wood)]/95 px-4 py-2 backdrop-blur lg:hidden">
       <div className="mx-auto flex max-w-xl items-center gap-3">
         <p className="min-w-0 flex-1 truncate text-sm" aria-hidden>
-          {label(slots[0])} <span className="text-[var(--on-wood-muted)]">+</span> {label(slots[1])}
-          {tried && <span className="block text-caption text-[var(--on-wood-muted)]">Đã ghép cặp này ở lần trước</span>}
+          {label(slots[0])} <span className="text-[var(--ash)]">+</span> {label(slots[1])}
+          {tried && <span className="block text-caption text-[var(--ash)]">Đã ghép cặp này ở lần trước</span>}
         </p>
         <button type="button" disabled={!ready} onClick={onCombine} className={buttonVariants({ className: "min-h-11 shrink-0 px-5" })}>
           Hợp Nguyên
@@ -532,7 +532,7 @@ function NodeChip({ node, onPick, badge, count, flash, hint }: { node: CatalogNo
       {hint && <HintIcon className="absolute top-0.5 left-0.5 size-4" />}
       <NodeGlyph node={node} className="size-9" />
       <span aria-hidden className="line-clamp-2 w-full text-caption leading-[1.15]">{node.nameVi}</span>
-      {count !== undefined && <span aria-hidden className="absolute top-0.5 right-1 text-[11px] text-[var(--on-wood-muted)] tabular-nums">×{count}</span>}
+      {count !== undefined && <span aria-hidden className="absolute top-0.5 right-1 text-[11px] text-[var(--ash)] tabular-nums">×{count}</span>}
       {badge && <span aria-hidden className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-[var(--frame-gold-hi)]" title="Còn công thức chưa tìm" />}
     </button>
   );
@@ -694,7 +694,7 @@ function Library({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Tìm yếu tố, ví dụ: thap dao"
-          className="min-h-11 rounded-lg border border-[var(--frame-line-mid)] bg-[var(--wood-lo)] px-3 text-[var(--on-wood)] placeholder:text-[var(--on-wood-muted)]"
+          className="min-h-11 rounded-lg border border-[var(--frame-line-mid)] bg-[var(--wood-lo)] px-3 text-[var(--on-wood)] placeholder:text-[var(--ash)]"
         />
       </label>
       <div className="flex items-center gap-1.5" role="group" aria-label="Lọc theo nhóm">
@@ -728,7 +728,7 @@ function Library({
         )}
       </div>
       {(showHelp || units !== undefined) && (
-        <p className="text-caption text-[var(--on-wood-muted)]">
+        <p className="text-caption text-[var(--ash)]">
           {showHelp && "Bấm một yếu tố để đặt vào ô trước, bấm tiếp để đặt vào ô sau."}
           {units !== undefined && `Bảy nguyên tố dùng chung túi (còn ${units} đơn vị).`}
         </p>
@@ -744,7 +744,7 @@ function Library({
         flashId={flash?.id}
         hintId={hintId ?? undefined}
       />
-      {nodes.length === 0 && <p className="text-sm text-[var(--on-wood-muted)]">Không có yếu tố nào khớp.</p>}
+      {nodes.length === 0 && <p className="text-sm text-[var(--ash)]">Không có yếu tố nào khớp.</p>}
     </Panel>
   );
 }
@@ -821,7 +821,7 @@ function Altar(props: {
     <Panel id="ttk-altar" title="Đài Hợp Nguyên">
       <SlotsRow slots={slots} busy={pending} result={props.card?.kind === "result" ? props.card.result : null} onClear={props.onClear} onSwap={props.onSwap} />
       <AltarCard card={props.card} state={props.state} onUse={props.onUseResult} onFilterGroup={props.onFilterGroup} />
-      <p className="text-caption text-[var(--on-wood-muted)]">Thứ tự ô có nghĩa: “Mộc + Thủy” khác “Thủy + Mộc”.</p>
+      <p className="text-caption text-[var(--ash)]">Thứ tự ô có nghĩa: “Mộc + Thủy” khác “Thủy + Mộc”.</p>
       {session ? (
         <button
           type="button"
@@ -864,7 +864,7 @@ function Altar(props: {
         <button type="button" disabled={pending || view.hintsLeft <= 0} onClick={() => props.onHint(2)} className="min-h-10 pointer-coarse:min-h-11 flex-1 rounded-lg border border-[var(--frame-line-mid)] px-2 hover:border-[var(--frame-gold)] disabled:opacity-50">
           <HintIcon className="mr-1 inline size-4 align-[-3px]" />Nguyên liệu
         </button>
-        <span className="shrink-0 text-caption text-[var(--on-wood-muted)] tabular-nums">còn {view.hintsLeft}/{view.hintsPerDay}</span>
+        <span className="shrink-0 text-caption text-[var(--ash)] tabular-nums">còn {view.hintsLeft}/{view.hintsPerDay}</span>
       </div>
       <History entries={recent} onReplay={props.onReplay} />
     </Panel>
@@ -954,7 +954,7 @@ const CARD_BOX = "relative flex h-28 items-center gap-3 rounded-lg border px-3 t
  * công thức đã tự ghép ra), hoặc gợi ý vừa xin. Chữ cho người đọc màn hình của kết quả, gợi ý vẫn ở ô `aria-live`.
  */
 function AltarCard({ card, state, onUse, onFilterGroup }: { card: AltarCardState; state?: DiscoveryState; onUse: (id: NodeId) => void; onFilterGroup?: (group: string) => void }) {
-  if (!card) return <div className={`${CARD_BOX} border-dashed border-[var(--frame-line-mid)] text-sm text-[var(--on-wood-muted)]`}>Bấm một yếu tố để xem công thức đã biết; thứ ghép ra cũng hiện ở đây.</div>;
+  if (!card) return <div className={`${CARD_BOX} border-dashed border-[var(--frame-line-mid)] text-sm text-[var(--ash)]`}>Bấm một yếu tố để xem công thức đã biết; thứ ghép ra cũng hiện ở đây.</div>;
   if (card.kind === "result") return <ResultCard result={card.result} onUse={onUse} />;
   if (card.kind === "info") return state ? <InfoCard key={card.id} id={card.id} state={state} /> : null;
   return <HintCard key={card.seq} hint={card.hint} onUse={onUse} onFilterGroup={onFilterGroup} />;
@@ -988,7 +988,7 @@ function InfoCard({ id, state }: { id: NodeId; state: DiscoveryState }) {
           {book.open && <span className="shrink-0 text-caption text-[var(--frame-gold-hi)]">• còn công thức chưa tìm</span>}
         </p>
         <p className="flex items-center gap-1.5" aria-label={node.element ? "Nguyên tố gốc" : `Tạo từ: ${book.madeFrom.map(([a, b]) => `${name(a)} + ${name(b)}`).join("; ") || "chưa rõ"}`}>
-          <span className="shrink-0 text-[var(--on-wood-muted)]">Tạo từ</span>
+          <span className="shrink-0 text-[var(--ash)]">Tạo từ</span>
           {node.element ? (
             <span>nguyên tố gốc</span>
           ) : (
@@ -998,17 +998,17 @@ function InfoCard({ id, state }: { id: NodeId; state: DiscoveryState }) {
               </span>
             ))
           )}
-          {!node.element && book.madeFrom.length > 2 && <span aria-hidden className="text-[var(--on-wood-muted)]">+{book.madeFrom.length - 2}</span>}
+          {!node.element && book.madeFrom.length > 2 && <span aria-hidden className="text-[var(--ash)]">+{book.madeFrom.length - 2}</span>}
         </p>
         <p className="flex items-center gap-1.5" aria-label={`Dùng để ghép: ${book.usedIn.map((r) => `${name(r.first)} + ${name(r.second)} ra ${name(r.result)}`).join("; ") || "chưa có công thức đã biết"}`}>
-          <span className="shrink-0 text-[var(--on-wood-muted)]">Dùng ghép</span>
-          {book.usedIn.length === 0 && <span aria-hidden className="text-[var(--on-wood-muted)]">chưa có</span>}
+          <span className="shrink-0 text-[var(--ash)]">Dùng ghép</span>
+          {book.usedIn.length === 0 && <span aria-hidden className="text-[var(--ash)]">chưa có</span>}
           {book.usedIn.slice(0, USED_MAX).map((r, i) => (
             <span key={i} aria-hidden className="inline-flex items-center gap-0.5 rounded border border-[var(--frame-line-mid)] px-1">
               <MiniGlyph id={r.first === id ? r.second : r.first} />→<MiniGlyph id={r.result} />
             </span>
           ))}
-          {book.usedIn.length > USED_MAX && <span aria-hidden className="text-[var(--on-wood-muted)]">+{book.usedIn.length - USED_MAX}</span>}
+          {book.usedIn.length > USED_MAX && <span aria-hidden className="text-[var(--ash)]">+{book.usedIn.length - USED_MAX}</span>}
         </p>
       </div>
     </div>
@@ -1035,12 +1035,12 @@ function HintCard({ hint, onUse, onFilterGroup }: { hint: Hint | null; onUse: (i
         {ingredient ? (
           <>
             Thử dùng <strong>{ingredient.nameVi}</strong> trong công thức ra một thứ nhóm <strong>{group}</strong>.
-            <span className="block text-caption text-[var(--on-wood-muted)]">Bấm để đặt vào ô trước</span>
+            <span className="block text-caption text-[var(--ash)]">Bấm để đặt vào ô trước</span>
           </>
         ) : (
           <>
             Còn công thức ra một thứ thuộc nhóm <strong>{group}</strong>.
-            <span className="block text-caption text-[var(--on-wood-muted)]">Bấm để lọc Vạn Vật Lục theo nhóm này</span>
+            <span className="block text-caption text-[var(--ash)]">Bấm để lọc Vạn Vật Lục theo nhóm này</span>
           </>
         )}
       </span>
@@ -1053,7 +1053,7 @@ function History({ entries, onReplay }: { entries: readonly HistoryEntry[]; onRe
   if (entries.length === 0) return null;
   return (
     <section aria-label="Lần ghép gần đây" className="flex flex-col gap-1">
-      <h3 className="text-caption text-[var(--on-wood-muted)]">Lần ghép gần đây · bấm để ghép lại</h3>
+      <h3 className="text-caption text-[var(--ash)]">Lần ghép gần đây · bấm để ghép lại</h3>
       <ol className="flex flex-col gap-1">
         {entries.map((e, i) => (
           <li key={i}>
@@ -1062,8 +1062,8 @@ function History({ entries, onReplay }: { entries: readonly HistoryEntry[]; onRe
               <span aria-hidden>+</span>
               <MiniGlyph id={e.second} />
               <span aria-hidden>→</span>
-              {e.result ? <MiniGlyph id={e.result} /> : <span aria-hidden className="text-[var(--on-wood-muted)]">✕</span>}
-              <span aria-hidden className="min-w-0 truncate text-[var(--on-wood-muted)]">{e.result ? <ResultName id={e.result} /> : "không ra gì"}</span>
+              {e.result ? <MiniGlyph id={e.result} /> : <span aria-hidden className="text-[var(--ash)]">✕</span>}
+              <span aria-hidden className="min-w-0 truncate text-[var(--ash)]">{e.result ? <ResultName id={e.result} /> : "không ra gì"}</span>
             </button>
           </li>
         ))}
@@ -1089,7 +1089,7 @@ function ResultCard({ result, onUse }: { result: AltarResult; onUse: (id: NodeId
           <span className="motion-safe:animate-[ttk-split-r_0.6s_ease-out_forwards]">{b && <NodeGlyph node={b} className="size-8" />}</span>
           <span className="absolute inset-0 m-auto size-10 rounded-full bg-[radial-gradient(circle,rgb(180_170_160/0.55),transparent_70%)] opacity-0 motion-safe:animate-[ttk-smoke_0.9s_ease-out]" />
         </span>
-        <span className="text-[var(--on-wood-muted)]">Chưa tìm được mối liên hệ</span>
+        <span className="text-[var(--ash)]">Chưa tìm được mối liên hệ</span>
       </div>
     );
   }
@@ -1104,7 +1104,7 @@ function ResultCard({ result, onUse }: { result: AltarResult; onUse: (id: NodeId
         </span>
         <span className="min-w-0">
           <span className="block font-serif font-bold text-[var(--title-on-wood)]">{node.nameVi}</span>
-          <span className="block text-caption text-[var(--on-wood-muted)]">
+          <span className="block text-caption text-[var(--ash)]">
             {TIER_NAME[node.tier ?? "thuong"]} · đã ghi vào Tướng Lục{result.points ? ` · +${result.points} điểm` : ""}
           </span>
         </span>
@@ -1126,9 +1126,9 @@ function ResultCard({ result, onUse }: { result: AltarResult; onUse: (id: NodeId
       </span>
       <span className="min-w-0 flex-1">
         <span className="line-clamp-2 font-serif font-bold leading-tight">{node.nameVi}</span>
-        <span className="block text-caption text-[var(--on-wood-muted)]">Bấm để đặt vào ô trước</span>
+        <span className="block text-caption text-[var(--ash)]">Bấm để đặt vào ô trước</span>
       </span>
-      <span className={`shrink-0 rounded-full border px-2 py-0.5 text-caption font-semibold ${fresh ? "border-[var(--frame-gold-hi)] text-[var(--title-on-wood)]" : "border-[var(--frame-line-mid)] text-[var(--on-wood-muted)]"}`}>
+      <span className={`shrink-0 rounded-full border px-2 py-0.5 text-caption font-semibold ${fresh ? "border-[var(--frame-gold-hi)] text-[var(--title-on-wood)]" : "border-[var(--frame-line-mid)] text-[var(--ash)]"}`}>
         {fresh ? "Mới" : "Đã biết"}
       </span>
     </button>
@@ -1178,7 +1178,7 @@ function Ledger({
               className={`flex min-w-0 flex-col items-center rounded-md px-1 py-1 leading-tight ${selected ? "bg-[var(--wood-hi)] text-[var(--title-on-wood)] ring-1 ring-[var(--frame-gold)]" : "hover:bg-[var(--wood-hi)]/60"}`}
             >
               <span className="truncate text-caption font-semibold">{sec.name}</span>
-              <span className="text-caption text-[var(--on-wood-muted)] tabular-nums">
+              <span className="text-caption text-[var(--ash)] tabular-nums">
                 {sec.found}/{sec.total}
               </span>
             </button>
@@ -1201,7 +1201,7 @@ function Ledger({
                 className={`flex min-w-0 flex-1 flex-col items-center rounded-md border px-0.5 py-1 ${selected ? "border-[var(--frame-gold)] bg-[var(--wood-hi)]" : "border-transparent hover:border-[var(--frame-line-mid)]"}`}
               >
                 <ProfessionIcon profession={profession} className="size-7" />
-                <span aria-hidden className="text-caption text-[var(--on-wood-muted)] tabular-nums">{g.found}/{g.entries.length}</span>
+                <span aria-hidden className="text-caption text-[var(--ash)] tabular-nums">{g.found}/{g.entries.length}</span>
               </button>
             );
           })}
@@ -1209,7 +1209,7 @@ function Ledger({
       )}
       {active && (
         <>
-          <p className="text-caption text-[var(--on-wood-muted)] italic">
+          <p className="text-caption text-[var(--ash)] italic">
             <span className="font-semibold not-italic">{active.name}.</span> {active.intro}
           </p>
           <LedgerPage
@@ -1222,7 +1222,7 @@ function Ledger({
           />
         </>
       )}
-      <p className="text-caption text-[var(--on-wood-muted)]">Tìm thấy chân dung chỉ ghi vào Tướng Lục, không thêm tướng vào đội.</p>
+      <p className="text-caption text-[var(--ash)]">Tìm thấy chân dung chỉ ghi vào Tướng Lục, không thêm tướng vào đội.</p>
       <HeroDetail entry={detail} onClose={() => setDetail(null)} />
     </Panel>
   );
@@ -1269,9 +1269,9 @@ function LedgerTile({ entry, onOpen }: { entry: LedgerEntry; onOpen: (e: LedgerE
   if (!entry.found)
     return (
       <div className={`${tile} border-dashed border-[var(--frame-line-mid)] opacity-80`} title={`Tướng chưa tìm thấy · ${TIER_NAME[entry.tier]}`}>
-        <span aria-hidden className={`grid size-12 place-items-center rounded-full border-2 bg-[var(--wood-lo)] font-serif text-xl text-[var(--on-wood-muted)] ${TIER_RING[entry.tier]}`}>?</span>
+        <span aria-hidden className={`grid size-12 place-items-center rounded-full border-2 bg-[var(--wood-lo)] font-serif text-xl text-[var(--ash)] ${TIER_RING[entry.tier]}`}>?</span>
         <span className="sr-only">Tướng chưa tìm thấy</span>
-        <span className="text-caption leading-tight text-[var(--on-wood-muted)]">{TIER_NAME[entry.tier]}</span>
+        <span className="text-caption leading-tight text-[var(--ash)]">{TIER_NAME[entry.tier]}</span>
       </div>
     );
   return (
@@ -1320,10 +1320,10 @@ function LedgerCard({ entry }: { entry: LedgerEntry }) {
   if (!entry.found)
     return (
       <div className="flex items-center gap-3 rounded-lg border border-dashed border-[var(--frame-line-mid)] p-3 opacity-80">
-        <span aria-hidden className="grid size-14 shrink-0 place-items-center rounded-full bg-[var(--wood-lo)] font-serif text-2xl text-[var(--on-wood-muted)]">?</span>
+        <span aria-hidden className="grid size-14 shrink-0 place-items-center rounded-full bg-[var(--wood-lo)] font-serif text-2xl text-[var(--ash)]">?</span>
         <div>
           <p className="font-serif font-bold">Tướng chưa tìm thấy</p>
-          <p className="text-caption text-[var(--on-wood-muted)]">{TIER_NAME[entry.tier]}</p>
+          <p className="text-caption text-[var(--ash)]">{TIER_NAME[entry.tier]}</p>
         </div>
       </div>
     );
@@ -1335,7 +1335,7 @@ function LedgerCard({ entry }: { entry: LedgerEntry }) {
       <Portrait id={entry.characterId} element={info.element} profession={info.profession} className="size-14 shrink-0" />
       <div className="min-w-0">
         <h3 className="font-serif font-bold text-[var(--title-on-wood)]">{entry.name}</h3>
-        <p className="text-caption text-[var(--on-wood-muted)]">{TIER_NAME[entry.tier]}</p>
+        <p className="text-caption text-[var(--ash)]">{TIER_NAME[entry.tier]}</p>
         <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
           <span className="flex items-center gap-1"><ProfessionIcon profession={info.profession} /> {PROFESSION_DISPLAY_NAME[info.profession]}</span>
           <span className="flex items-center gap-1"><ElementIcon element={info.element} /> {ELEMENT_NAME[info.element]}</span>

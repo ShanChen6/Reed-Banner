@@ -104,17 +104,17 @@ export default function HeroList({
     <div className="flex h-full min-h-0 flex-col">
       <div className="flex items-center justify-between gap-2 px-1">
         <h2 className="barracks-title flex items-center gap-2 font-serif text-xl font-bold">
-          <TeamGlyph className="size-5 text-[var(--bk-gold)]" />
+          <TeamGlyph className="size-5 text-[var(--frame-gold-hi)]" />
           Tướng sĩ
         </h2>
-        <span className="font-serif text-lg font-semibold text-[var(--bk-gold)] tabular-nums" aria-label={`Có ${entries.length} tướng sĩ`}>
+        <span className="font-serif text-lg font-semibold text-[var(--frame-gold-hi)] tabular-nums" aria-label={`Có ${entries.length} tướng sĩ`}>
           {entries.length}
         </span>
       </div>
 
       <div className="mt-2 flex flex-wrap gap-2">
         <label className="barracks-field relative flex min-h-10 pointer-coarse:min-h-11 min-w-0 basis-full items-center">
-          <SearchGlyph className="pointer-events-none absolute left-3 size-4 text-[var(--bk-soft)]" />
+          <SearchGlyph className="pointer-events-none absolute left-3 size-4 text-[var(--on-wood-soft)]" />
           <input
             type="search"
             value={filter.query}
@@ -135,11 +135,11 @@ export default function HeroList({
             <FilterGlyph className="size-4" />
             Bộ lọc
             {active > 0 && (
-              <span className="rounded-full bg-[var(--bk-gold)] px-1.5 text-caption font-bold text-primary-foreground tabular-nums">{active}</span>
+              <span className="rounded-full bg-[var(--frame-gold-hi)] px-1.5 text-caption font-bold text-primary-foreground tabular-nums">{active}</span>
             )}
           </button>
           <label className="barracks-field relative flex min-h-10 pointer-coarse:min-h-11 min-w-0 flex-1 items-center">
-            <SortGlyph className="pointer-events-none absolute left-2.5 size-4 text-[var(--bk-soft)]" />
+            <SortGlyph className="pointer-events-none absolute left-2.5 size-4 text-[var(--on-wood-soft)]" />
             <select
               value={sort}
               onChange={(e) => onSort(e.target.value as RosterSort)}
@@ -152,7 +152,7 @@ export default function HeroList({
                 </option>
               ))}
             </select>
-            <span aria-hidden className="pointer-events-none absolute right-2.5 text-caption text-[var(--bk-soft)]">▾</span>
+            <span aria-hidden className="pointer-events-none absolute right-2.5 text-caption text-[var(--on-wood-soft)]">▾</span>
           </label>
         </div>
       </div>
@@ -218,14 +218,14 @@ export default function HeroList({
           )}
           {filter.team !== "all" && chip(TEAM_FILTER_NAME[filter.team], () => onFilter({ ...filter, team: "all" }))}
           <li>
-            <button type="button" onClick={() => onFilter(NO_FILTER)} className="min-h-8 pointer-coarse:min-h-11 rounded px-2 text-sm text-[var(--bk-gold)] underline-offset-2 hover:underline">
+            <button type="button" onClick={() => onFilter(NO_FILTER)} className="min-h-8 pointer-coarse:min-h-11 rounded px-2 text-sm text-[var(--frame-gold-hi)] underline-offset-2 hover:underline">
               Xóa tất cả
             </button>
           </li>
         </ul>
       )}
 
-      <p className="mt-2 px-1 text-sm text-[var(--bk-soft)]" aria-live="polite">
+      <p className="mt-2 px-1 text-sm text-[var(--on-wood-soft)]" aria-live="polite">
         <span className="font-semibold text-on-wood tabular-nums">{shown.length}</span> / {entries.length} tướng sĩ
       </p>
 
@@ -234,7 +234,7 @@ export default function HeroList({
           <span className="min-w-0 flex-1">
             Đang xem <b className="text-title-on-wood">{selected.name}</b>, không khớp bộ lọc nên không có trong danh sách.
           </span>
-          <button type="button" onClick={() => onFilter(NO_FILTER)} className="text-[var(--bk-gold)] underline-offset-2 hover:underline">
+          <button type="button" onClick={() => onFilter(NO_FILTER)} className="text-[var(--frame-gold-hi)] underline-offset-2 hover:underline">
             Bỏ lọc
           </button>
         </p>
@@ -242,7 +242,7 @@ export default function HeroList({
 
       <div ref={scrollRef} className="barracks-scroll mt-2 min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1" tabIndex={-1}>
         {shown.length === 0 ? (
-          <div className="flex flex-col items-center gap-2 py-10 text-center text-[15px] text-[var(--bk-soft)]">
+          <div className="flex flex-col items-center gap-2 py-10 text-center text-[15px] text-[var(--on-wood-soft)]">
             <p>{entries.length === 0 ? "Chưa có tướng sĩ nào." : "Không tìm thấy tướng sĩ phù hợp."}</p>
             {isFiltered(filter) && (
               <button type="button" onClick={() => onFilter(NO_FILTER)} className="barracks-btn min-h-10 pointer-coarse:min-h-11 rounded-md px-4">
@@ -279,7 +279,7 @@ export default function HeroList({
 function FilterRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-start gap-2">
-      <span className="w-11 shrink-0 pt-2 text-[var(--bk-soft)]">{label}</span>
+      <span className="w-11 shrink-0 pt-2 text-[var(--on-wood-soft)]">{label}</span>
       <div className="flex flex-wrap gap-1.5">{children}</div>
     </div>
   );
@@ -337,7 +337,7 @@ export function HeroCard({
           <ElementIcon element={entry.element} className="size-4" />
         </span>
         {status && (
-          <span className="absolute top-1 right-1 flex size-6 items-center justify-center rounded-full bg-black/60 text-[var(--bk-gold)]" title={status}>
+          <span className="absolute top-1 right-1 flex size-6 items-center justify-center rounded-full bg-black/60 text-[var(--frame-gold-hi)]" title={status}>
             <TeamGlyph className="size-3.5" />
           </span>
         )}

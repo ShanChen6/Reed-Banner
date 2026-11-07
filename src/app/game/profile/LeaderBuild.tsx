@@ -63,7 +63,7 @@ export default function LeaderBuild({
           </button>
         ))}
       </div>
-      {hint && <p className="text-caption text-[var(--bk-soft)]">{hint}</p>}
+      {hint && <p className="text-caption text-[var(--on-wood-soft)]">{hint}</p>}
     </div>
   );
 }
