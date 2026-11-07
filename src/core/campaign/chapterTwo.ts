@@ -32,7 +32,7 @@ const TOAN_THU_967 = ["E08", "S01"] as const;
 export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
   {
     id: "M05",
-    prompt: "Trịnh Tú hỏi nên đi lối nào ra cửa biển?",
+    prompt: "Trịnh Tú hỏi: ra cửa biển, ta đi lối nào?",
     intro: [
       {
         text: "Sử chép Đinh Bộ Lĩnh nghe Trần Minh Công có đức mà không con, bèn cùng con là Đinh Liễn sang nương tựa.",
@@ -45,17 +45,17 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
         refs: ["U02", "S01"],
       },
       {
-        text: "Đoàn người, lối đi và những ngày trên đường dưới đây do game dựng lại. Sử không ghi tuyến đường từ Hoa Lư ra Bố Hải.",
+        text: "Đoàn người, lối đi và những ngày trên đường dưới đây đều do game dựng lại. Sử không ghi tuyến đường từ Hoa Lư ra Bố Hải.",
         basis: "reconstructed",
       },
       {
         speaker: "Đinh Liễn",
-        text: "Cha bảo đi để tìm người cùng giữ đất, không phải để bỏ Hoa Lư. Con nhớ lời ấy.",
+        text: "Cha dặn đi là để tìm người cùng giữ đất, chứ không phải bỏ Hoa Lư. Con nhớ lời ấy.",
         basis: "fictional",
       },
       {
         speaker: "Đinh Bộ Lĩnh",
-        text: "Đứng một mình thì Hoa Lư chỉ giữ được Hoa Lư. Ta đến Bố Hải để xin nương nhờ, và để góp sức.",
+        text: "Đứng một mình thì Hoa Lư chỉ giữ nổi Hoa Lư. Ta đến Bố Hải để xin nương nhờ, và để góp sức.",
         basis: "fictional",
       },
     ],
@@ -66,7 +66,7 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Trịnh Tú",
-            text: "Xuôi thuyền theo các nhánh sông về phía biển, người đỡ mỏi, lương đỡ nặng. Chỉ cần đi thận trọng khi nước lên.",
+            text: "Xuôi thuyền theo các nhánh sông ra biển, người đỡ mỏi, lương đỡ nặng. Chỉ cần dè chừng khi nước lên.",
             basis: "fictional",
           },
           {
@@ -81,7 +81,7 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Trịnh Tú",
-            text: "Đi bộ qua các làng ven đê thì chậm hơn, nhưng gặp được người, nghe được tin tức dọc đường.",
+            text: "Đi bộ qua các làng ven đê thì chậm hơn, nhưng gặp được người, nghe được tin dọc đường.",
             basis: "fictional",
           },
           {
@@ -93,7 +93,7 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
     ],
     outro: [
       {
-        text: "Đoàn tới vùng cửa biển Bố Hải, nơi Trần Minh Công đóng giữ. Lối đi bạn chọn chỉ đổi cảnh kể; điểm đến như nhau.",
+        text: "Đoàn người tới vùng cửa biển Bố Hải, nơi Trần Minh Công đóng giữ. Lối đi bạn chọn chỉ đổi cảnh kể; điểm đến vẫn như nhau.",
         basis: "reconstructed",
       },
     ],
@@ -117,25 +117,25 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
   {
     id: "M06",
     prompt:
-      "Trần Minh Công hỏi vì sao ông tìm đến Bố Hải. Đinh Bộ Lĩnh đáp thế nào?",
+      "Trần Minh Công hỏi: vì sao ông tìm đến Bố Hải? Đinh Bộ Lĩnh đáp thế nào?",
     intro: [
       {
-        text: "Trần Lãm, hiệu Trần Minh Công, giữ cửa biển Bố Hải. Sử xếp ông trong số mười hai sứ quân; ở đây ông là chủ nhà, người nhận lời hay không là quyền của ông.",
+        text: "Trần Lãm, hiệu Trần Minh Công, giữ cửa biển Bố Hải. Sử xếp ông trong số mười hai sứ quân; ở đây ông là chủ nhà, nhận lời hay không là quyền của ông.",
         basis: "recorded",
         refs: ["W01", "S01"],
       },
       {
-        text: "Đây là một buổi hội kiến, không phải một trận đánh. Không có thanh máu, không có đấu thử: Trần Minh Công cân nhắc con người và lời cam kết.",
+        text: "Đây là buổi hội kiến, không phải trận đánh. Không có thanh máu, không đấu thử: Trần Minh Công cân nhắc con người và lời cam kết.",
         basis: "fictional",
       },
       {
         speaker: "Trần Minh Công",
-        text: "Ta cần người biết giữ lời. Ngươi cần một nơi để gom sức. Ta nghĩ đôi bên nên nói chuyện.",
+        text: "Ta cần người biết giữ lời. Ngươi cần một nơi để gom sức. Vậy hai bên nên nói chuyện cho ra lẽ.",
         basis: "fictional",
       },
       {
         speaker: "Đinh Bộ Lĩnh",
-        text: "Thưa Minh Công, Hoa Lư đã tự giữ được mình một lần, nhưng không giữ được mãi. Tôi đến xin nương nhờ, và xin được gánh việc ông giao.",
+        text: "Thưa Minh Công, Hoa Lư đã tự giữ được mình một lần, nhưng không giữ được mãi. Tôi đến xin nương nhờ, và xin gánh việc ông giao.",
         basis: "fictional",
       },
     ],
@@ -146,12 +146,12 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
-            text: "Quân tôi gom về không để cướp đất ai. Làng nào theo cờ thì làng ấy phải được yên mà cấy gặt.",
+            text: "Quân tôi gom về không phải để cướp đất của ai. Làng nào theo cờ thì làng ấy phải được yên ổn cấy gặt.",
             basis: "fictional",
           },
           {
             speaker: "Trần Minh Công",
-            text: "Người nói đến dân trước khi nói đến quân. Điều ấy ta nghe được.",
+            text: "Người nói đến dân trước khi nói đến quân. Lời ấy ta nghe lọt tai.",
             basis: "fictional",
           },
         ],
@@ -162,12 +162,12 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
-            text: "Tôi không hứa điều mình không làm nổi. Việc ông giao, tôi làm đến cùng; điều tôi đã hứa với người dưới trướng, tôi cũng giữ.",
+            text: "Tôi không hứa điều mình không làm nổi. Việc ông giao, tôi làm đến cùng; điều đã hứa với người dưới trướng, tôi cũng giữ trọn.",
             basis: "fictional",
           },
           {
             speaker: "Trần Minh Công",
-            text: "Lời ít mà nặng. Ở đất này, người giữ được lời quý hơn người giỏi gươm.",
+            text: "Lời ít mà nặng. Ở đất này, người giữ được lời quý hơn kẻ giỏi gươm.",
             basis: "fictional",
           },
         ],
@@ -178,12 +178,12 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
-            text: "Mỗi nơi tự giữ thì mỗi nơi đều yếu. Nếu ông cho phép, tôi muốn góp sức để các vùng bớt đánh nhau.",
+            text: "Mỗi nơi tự giữ thì nơi nào cũng yếu. Nếu ông cho phép, tôi xin góp sức để các vùng bớt tranh đánh nhau.",
             basis: "fictional",
           },
           {
             speaker: "Trần Minh Công",
-            text: "Chí lớn đấy. Bắt đầu từ Bố Hải đã, rồi xem người đi được bao xa.",
+            text: "Chí lớn đấy. Cứ bắt đầu từ Bố Hải đã, rồi xem người đi được bao xa.",
             basis: "fictional",
           },
         ],
@@ -191,16 +191,16 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
     ],
     outro: [
       {
-        text: "Toàn thư chép Trần Minh Công thấy Bộ Lĩnh mặt mũi khôi ngô, lại có độ lượng, bèn nhận nuôi làm con, rồi giao cho cầm quân.",
+        text: "Toàn thư chép Trần Minh Công thấy Bộ Lĩnh mặt mũi khôi ngô, lại có độ lượng, bèn nhận làm con nuôi, rồi giao cho cầm quân.",
         basis: "recorded",
         refs: [...TOAN_THU_967],
       },
       {
-        text: "Kết quả nhiệm vụ: Bố Hải và Hoa Lư thành liên minh, Đinh Bộ Lĩnh được giao trách nhiệm quân sự. Lời đáp bạn chọn chỉ đổi lời kể; kết quả và phần thưởng như nhau.",
+        text: "Kết quả nhiệm vụ: Bố Hải và Hoa Lư kết thành liên minh, Đinh Bộ Lĩnh được giao trọng trách cầm quân. Lời đáp bạn chọn chỉ đổi lời kể; kết quả và phần thưởng như nhau.",
         basis: "reconstructed",
       },
       {
-        text: "Sử không ghi rõ việc nhận nuôi và giao quân xảy ra vào năm nào, cũng không chép lời hai người nói với nhau.",
+        text: "Sử không ghi việc nhận nuôi và giao quân xảy ra năm nào, cũng không chép lời hai người nói với nhau.",
         basis: "disputed",
         refs: ["U02"],
       },
@@ -270,7 +270,7 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
       },
       {
         speaker: "Trần Minh Công",
-        text: "Quân Bố Hải thuộc nước, quân Hoa Lư thuộc núi. Hôm nay ta cần cả hai cùng một nhịp.",
+        text: "Quân Bố Hải thuộc nước, quân Hoa Lư thuộc núi. Hôm nay phải đánh cùng một nhịp trống!",
         basis: "fictional",
       },
     ],
@@ -292,7 +292,7 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Một tướng Bố Hải",
-            text: "Kho lương và bến thuyền để quân tôi giữ. Các anh cứ đánh phía trước, sau lưng không hở.",
+            text: "Kho lương và bến thuyền cứ để quân tôi giữ. Các anh cứ xông lên phía trước, sau lưng không có kẽ hở.",
             basis: "fictional",
           },
           {
@@ -304,7 +304,7 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
     ],
     outro: [
       {
-        text: "Toán cướp rút khỏi cửa sông. Quân hai nơi đứng chung dưới một cờ hiệu, lần đầu đánh cùng một nhịp.",
+        text: "Toán cướp bỏ chạy khỏi cửa sông. Quân hai nơi đứng chung dưới một cờ hiệu, lần đầu đánh cùng một nhịp.",
         basis: "fictional",
       },
       {
@@ -315,7 +315,7 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
     ],
     defeat: [
       {
-        text: "Phòng tuyến ven sông vỡ một đoạn, nhưng dân các làng đã kịp lui vào trong. Chỉnh đội hình, bổ sung lương rồi thử lại.",
+        text: "Phòng tuyến ven sông vỡ một đoạn, nhưng dân các làng đã kịp lui vào trong. Chỉnh lại đội hình, bổ sung lương rồi đánh lại!",
         basis: "fictional",
       },
     ],
@@ -325,7 +325,7 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
     prompt: "Trước hàng quân Bố Hải, Đinh Bộ Lĩnh làm gì?",
     intro: [
       {
-        text: "Trần Minh Công mất. Sử không ghi ông mất năm nào, mất ra sao, cũng không chép lời trăng trối nào. Game không gán ngày hay lời cho ông.",
+        text: "Trần Minh Công mất. Sử không ghi ông mất năm nào, mất ra sao, cũng không chép lời trăng trối. Game không gán ngày hay lời nào cho ông.",
         basis: "disputed",
         refs: ["U02", "S01"],
       },
@@ -345,7 +345,7 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
         label: "Tưởng niệm trong im lặng",
         beats: [
           {
-            text: "Đinh Bộ Lĩnh đứng lặng trước nơi thờ Trần Minh Công rất lâu rồi mới quay ra hàng quân. Không ai nói gì, nhưng cũng không ai rời hàng.",
+            text: "Đinh Bộ Lĩnh đứng lặng rất lâu trước nơi thờ Trần Minh Công rồi mới quay ra hàng quân. Không ai nói một lời, nhưng cũng không ai rời hàng.",
             basis: "fictional",
           },
         ],
@@ -356,7 +356,7 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
-            text: "Minh Công đã tin mà giao quân cho ta. Ai muốn về làng thì cứ về; ai ở lại, ta giữ các người như ông đã giữ.",
+            text: "Minh Công đã tin mà giao quân cho ta. Ai muốn về làng thì cứ về; ai ở lại, ta giữ như ông đã từng giữ các người.",
             basis: "fictional",
           },
         ],
@@ -364,7 +364,7 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
     ],
     outro: [
       {
-        text: "Quân Bố Hải nhận Đinh Bộ Lĩnh làm người cầm quân. Uy tín của ông từ đây không chỉ ở Hoa Lư mà ở cả vùng cửa biển.",
+        text: "Quân Bố Hải nhận Đinh Bộ Lĩnh làm người cầm quân. Uy danh của ông từ đây vang xa, không chỉ ở Hoa Lư mà khắp vùng cửa biển.",
         basis: "reconstructed",
         refs: ["E08"],
       },

@@ -28,7 +28,7 @@ BinhPhapScreen
 
 ## Theme token và visual hierarchy
 
-- Dùng shared `--atlas-*` hoặc mapping token tương ứng thay vì chế token bất đồng với Campaign.
+- Dùng token chung (theme.css) hoặc mapping token tương ứng thay vì chế token bất đồng với Campaign.
 - Frame: dark lacquered wood `#2B1F15` / `#3D2C1D`; kim loại matte bronze `#8F6A32`, warm gold highlight `#C9A25A`; giấy dó `#E4CC99`, viền đỏ son `#8F241D`.
 - Icon nghề và hệ dùng **nguồn asset hiện có**; màu hệ phải kèm icon chữ/shape, tránh phụ thuộc màu.
 - Quân thường: portrait là tiêu điểm (>=65% vùng quân), nghề ký hiệu góc trên trái, hệ góc dưới phải; đường viền mảnh, tránh chữ tên dài bên trong ô 8x8.

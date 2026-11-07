@@ -4,6 +4,7 @@
 // ba thẻ Tổng quan / Kỹ năng / Chi tiết. Mọi số lấy từ @/core (profileTeam, gearStats…); ở đây không có công thức
 // riêng. Bấm ô trang bị mở GearPicker cho đúng ô đó.
 
+import LeaderBuild from "./LeaderBuild";
 import { useState } from "react";
 import {
   activeBonuses,
@@ -123,7 +124,7 @@ export default function HeroDetail({
         </button>
       )}
 
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-[var(--bk-line-soft)] pb-3">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-[var(--frame-line-soft)] pb-3">
         <h2 className="barracks-title mr-1 min-w-0 font-serif text-2xl font-bold break-words sm:text-[1.7rem]">{name}</h2>
         <span className="barracks-pill">Cấp {progress.level}</span>
         <span className="barracks-pill">
@@ -136,6 +137,19 @@ export default function HeroDetail({
           <TeamControl profile={profile} id={id} busy={busy} onAction={onAction} />
         </div>
       </div>
+
+      {id === MAIN_ID && (
+        <div className="mt-3 rounded-lg border border-[var(--frame-line-soft)] p-3">
+          <h3 className="mb-2 font-serif text-base font-semibold">Hệ và nghề của thủ lĩnh</h3>
+          <LeaderBuild
+            element={profile.element}
+            profession={profile.profession}
+            disabled={busy}
+            onChange={(b) => void onAction({ type: "chooseLeader", ...b })}
+            hint="Lưu cho mọi chế độ chơi; mỗi nghề dùng vũ khí riêng nên trang bị bên dưới đổi theo nghề."
+          />
+        </div>
+      )}
 
       {/* Tranh và 9 ô: khung cao cố định nên đổi nhân vật không làm nhảy bố cục. */}
       <div
@@ -152,8 +166,8 @@ export default function HeroDetail({
               id={id}
               element={fighter.element}
               profession={fighter.profession}
-              className="barracks-art absolute inset-0 m-auto size-full object-contain object-bottom drop-shadow-[0_8px_14px_#000c]"
-              fallbackClassName="relative mb-4 size-40 drop-shadow-[0_6px_10px_#000c] sm:size-48"
+              className="barracks-art absolute inset-0 m-auto size-full object-contain object-bottom drop-shadow-[0_8px_14px_color-mix(in_srgb,var(--black)_80%,transparent)]"
+              fallbackClassName="relative mb-4 size-40 drop-shadow-[0_6px_10px_color-mix(in_srgb,var(--black)_80%,transparent)] sm:size-48"
             />
           </div>
           {slot("vuKhi")}
@@ -222,7 +236,7 @@ function TeamControl({
   // Đội 3vs3 luôn đủ 2 nhân vật kèm, nên thêm người là thay một người đang ra trận.
   return (
     <div role="group" aria-label="Chọn người được thay" className="flex flex-wrap items-center gap-1.5 text-sm">
-      <span className="text-[var(--bk-soft)]">Thay cho:</span>
+      <span className="text-[var(--on-wood-soft)]">Thay cho:</span>
       {profile.team.map((t, i) => (
         <button
           key={t}
@@ -238,7 +252,7 @@ function TeamControl({
           {nameOf(t)}
         </button>
       ))}
-      <button type="button" onClick={() => setOpen(null)} className="min-h-10 pointer-coarse:min-h-11 rounded-md px-2 text-[var(--bk-soft)] hover:text-on-wood">
+      <button type="button" onClick={() => setOpen(null)} className="min-h-10 pointer-coarse:min-h-11 rounded-md px-2 text-[var(--on-wood-soft)] hover:text-on-wood">
         Hủy
       </button>
     </div>
@@ -282,7 +296,7 @@ export function GearSlotButton({
       ) : (
         <EmptySlotIcon slot={slot} className={size} />
       )}
-      {!item && <PlusGlyph className="absolute right-1 bottom-1 size-3.5 text-[var(--bk-soft)]" />}
+      {!item && <PlusGlyph className="absolute right-1 bottom-1 size-3.5 text-[var(--on-wood-soft)]" />}
     </button>
   );
 }
@@ -290,7 +304,7 @@ export function GearSlotButton({
 function Meter({ label, value, max, text }: { label: string; value: number; max: number; text: string }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="w-24 shrink-0 text-[15px] text-[var(--bk-soft)]">{label}</span>
+      <span className="w-24 shrink-0 text-[15px] text-[var(--on-wood-soft)]">{label}</span>
       <div role="meter" aria-label={label} aria-valuenow={value} aria-valuemin={0} aria-valuemax={max} className="h-2.5 flex-1 overflow-hidden rounded-full bg-black/50 shadow-inner">
         <div className="h-full rounded-full bg-gradient-to-r from-frame-bronze to-frame-gold-hi" style={{ width: `${Math.min(100, (value / Math.max(1, max)) * 100)}%` }} />
       </div>
@@ -302,7 +316,7 @@ function Meter({ label, value, max, text }: { label: string; value: number; max:
 function StatCard({ label, value, bonus }: { label: string; value: number | string; bonus?: number }) {
   return (
     <div className="barracks-inset rounded-md px-3 py-2">
-      <dt className="text-sm text-[var(--bk-soft)]">{label}</dt>
+      <dt className="text-sm text-[var(--on-wood-soft)]">{label}</dt>
       <dd className="font-serif text-xl font-bold text-title-on-wood tabular-nums">
         {value}
         {bonus !== undefined && bonus > 0 && <span className="ml-1.5 text-sm font-semibold text-success">+{bonus}</span>}
@@ -335,7 +349,7 @@ function Overview({ profile, id, fighter, bare, worn }: { profile: Profile; id: 
           ))}
         </ul>
       )}
-      <p className="flex items-center justify-center gap-1.5 text-sm text-[var(--bk-soft)]">
+      <p className="flex items-center justify-center gap-1.5 text-sm text-[var(--on-wood-soft)]">
         <InfoGlyph className="size-4" /> Chọn ô trang bị để thay, tháo hoặc so sánh. Điểm kỹ năng: {p.skillPoints}
       </p>
     </div>
@@ -360,7 +374,7 @@ function Skills({
   return (
     <div className="flex flex-col gap-3 text-sm">
       <p className="flex flex-wrap items-center justify-between gap-2">
-        <span className="text-[var(--bk-soft)]">Kỹ năng nâng theo ô; lên cấp nhận 1 điểm.</span>
+        <span className="text-[var(--on-wood-soft)]">Kỹ năng nâng theo ô; lên cấp nhận 1 điểm.</span>
         <span className="barracks-pill">Điểm kỹ năng: {p.skillPoints}</span>
       </p>
       <ul className="flex flex-col gap-2" aria-label={`Kỹ năng của ${nameOf(id)}`}>
@@ -412,14 +426,14 @@ function SkillLine({
       <SkillIcon def={def} className="size-10 shrink-0" />
       <div className="min-w-0 flex-1">
         <p className="text-[15px] leading-snug font-semibold text-title-on-wood">
-          {def.name} <span className="text-sm font-normal text-[var(--bk-soft)]">· ô {def.slot} · {scaled.cost} NL</span>
+          {def.name} <span className="text-sm font-normal text-[var(--on-wood-soft)]">· ô {def.slot} · {scaled.cost} NL</span>
         </p>
-        <p className="line-clamp-2 text-sm text-[var(--bk-soft)]" title={skillText(scaled)}>
+        <p className="line-clamp-2 text-sm text-[var(--on-wood-soft)]" title={skillText(scaled)}>
           {skillText(scaled)}
         </p>
       </div>
       {unlock ? (
-        <span className="shrink-0 text-sm text-[var(--bk-soft)]">Mở ở cấp {unlock}</span>
+        <span className="shrink-0 text-sm text-[var(--on-wood-soft)]">Mở ở cấp {unlock}</span>
       ) : (
         <div className="flex shrink-0 flex-col items-end gap-1">
           <span className="text-sm text-frame-gold tabular-nums" aria-label={`Cấp kỹ năng ${level}/${SKILL_MAX_LEVEL}`}>
@@ -453,7 +467,7 @@ function Details({ profile, id, fighter, bare, worn }: { profile: Profile; id: s
     <div className="flex flex-col gap-3 text-[15px]">
       <table className="w-full overflow-hidden rounded-md text-left">
         <caption className="sr-only">Chỉ số gốc, phần cộng từ trang bị và tổng</caption>
-        <thead className="text-sm text-[var(--bk-soft)]">
+        <thead className="text-sm text-[var(--on-wood-soft)]">
           <tr>
             <th className="py-1 font-normal">Chỉ số</th>
             <th className="py-1 text-right font-normal">Gốc</th>
@@ -463,7 +477,7 @@ function Details({ profile, id, fighter, bare, worn }: { profile: Profile; id: s
         </thead>
         <tbody className="tabular-nums">
           {rows.map(([k, base, total]) => (
-            <tr key={k} className="border-t border-[var(--bk-line-soft)]">
+            <tr key={k} className="border-t border-[var(--frame-line-soft)]">
               <th scope="row" className="py-1.5 font-normal text-on-wood">{k}</th>
               <td className="py-1.5 text-right">{base}</td>
               <td className="py-1.5 text-right text-success">{total - base > 0 ? `+${total - base}` : "–"}</td>
@@ -473,28 +487,28 @@ function Details({ profile, id, fighter, bare, worn }: { profile: Profile; id: s
         </tbody>
       </table>
       <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5">
-        <dt className="text-[var(--bk-soft)]">Nguyên tố</dt>
+        <dt className="text-[var(--on-wood-soft)]">Nguyên tố</dt>
         <dd>{ELEMENT_NAME[fighter.element]}</dd>
-        <dt className="text-[var(--bk-soft)]">Nghề</dt>
+        <dt className="text-[var(--on-wood-soft)]">Nghề</dt>
         <dd>{PROFESSION_NAME[fighter.profession]}</dd>
-        <dt className="text-[var(--bk-soft)]">Cấp</dt>
+        <dt className="text-[var(--on-wood-soft)]">Cấp</dt>
         <dd className="tabular-nums">
           {p.level}/{MAX_LEVEL}
         </dd>
         {ultimate && (
           <>
-            <dt className="text-[var(--bk-soft)]">Kỹ năng riêng</dt>
+            <dt className="text-[var(--on-wood-soft)]">Kỹ năng riêng</dt>
             <dd>
               <span className="font-semibold text-title-on-wood">{ultimate.name}</span>
-              {p.level < MAIN_SLOT_UNLOCK[4]! && <span className="text-[var(--bk-soft)]"> · mở ở cấp {MAIN_SLOT_UNLOCK[4]}</span>}
+              {p.level < MAIN_SLOT_UNLOCK[4]! && <span className="text-[var(--on-wood-soft)]"> · mở ở cấp {MAIN_SLOT_UNLOCK[4]}</span>}
             </dd>
           </>
         )}
       </dl>
       <div>
-        <h3 className="mb-1 text-sm text-[var(--bk-soft)]">Đang mặc ({worn.length}/9)</h3>
+        <h3 className="mb-1 text-sm text-[var(--on-wood-soft)]">Đang mặc ({worn.length}/9)</h3>
         {worn.length === 0 ? (
-          <p className="text-sm text-[var(--bk-soft)]">Chưa mặc món nào.</p>
+          <p className="text-sm text-[var(--on-wood-soft)]">Chưa mặc món nào.</p>
         ) : (
           <ul className="flex flex-col gap-1 text-sm">
             {worn.map((it) => (

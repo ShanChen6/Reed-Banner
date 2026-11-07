@@ -99,18 +99,19 @@ export default function CampaignScreen() {
         onProfile={setProfile}
         onAction={(a) => void act(a)}
         busy={busy}
+        footer={
+          <RaidHall
+            profile={profile}
+            busy={busy}
+            onStart={(bossId, tier) => void startRaid(bossId, tier)}
+          />
+        }
       />
       {message && (
         <Alert tone="error" className="mt-2 p-3 text-sm">
           {message}
         </Alert>
       )}
-
-      <RaidHall
-        profile={profile}
-        busy={busy}
-        onStart={(bossId, tier) => void startRaid(bossId, tier)}
-      />
     </Shell>
   );
 }

@@ -78,7 +78,7 @@
   40% {
     transform: scale(1.7) rotate(12deg);
     opacity: 1;
-    filter: brightness(2.2) drop-shadow(0 0 6px #fde047);
+    filter: brightness(2.2) drop-shadow(0 0 6px var(--tone-fde047));
   }
   100% {
     transform: scale(0.2);
@@ -206,20 +206,20 @@
 
 /* Lòng bàn cờ trang giới thiệu: đá phiến sẫm cùng tông nền ô, tối dần ra mép như mặt bàn khảm. */
 .fx-board-well {
-  background: radial-gradient(ellipse at 50% 40%, #2c3a4b, #18212c 75%);
+  background: radial-gradient(ellipse at 50% 40%, var(--tone-2c3a4b), var(--tone-18212c) 75%);
   box-shadow:
-    inset 0 0 0 1px #0b1118,
-    inset 0 0 18px #000a;
+    inset 0 0 0 1px var(--tone-0b1118),
+    inset 0 0 18px color-mix(in srgb, var(--black) 67%, transparent);
 }
 
 /* Ô đặc biệt bản mạnh tỏa sáng nhẹ. */
 @keyframes tile-strong {
   0%,
   100% {
-    filter: drop-shadow(0 0 1px #fde68a);
+    filter: drop-shadow(0 0 1px var(--tone-fde68a));
   }
   50% {
-    filter: drop-shadow(0 0 5px #fde68a) brightness(1.08);
+    filter: drop-shadow(0 0 5px var(--tone-fde68a)) brightness(1.08);
   }
 }
 .tile-strong {
@@ -244,29 +244,29 @@
   background:
     linear-gradient(
       to bottom,
-      #17110e99,
-      #17110e55 25%,
-      #17110e88 70%,
-      #17110e
+      color-mix(in srgb, var(--wood-lo) 60%, transparent),
+      color-mix(in srgb, var(--wood-lo) 33%, transparent) 25%,
+      color-mix(in srgb, var(--wood-lo) 53%, transparent) 70%,
+      var(--wood-lo)
     ),
-    linear-gradient(#0f0a07a6, #0f0a07a6);
+    linear-gradient(color-mix(in srgb, var(--wood-inset) 65%, transparent), color-mix(in srgb, var(--wood-inset) 65%, transparent));
 }
 @media (min-width: 768px) {
   .hero-shade {
     background:
       linear-gradient(
         to bottom,
-        #17110e66,
+        color-mix(in srgb, var(--wood-lo) 40%, transparent),
         transparent 20%,
         transparent 75%,
-        #17110e
+        var(--wood-lo)
       ),
       linear-gradient(
         to right,
-        #0f0a07f0,
-        #0f0a07b3 32%,
-        #0f0a0733 55%,
-        #0f0a0700 75%
+        color-mix(in srgb, var(--wood-inset) 94%, transparent),
+        color-mix(in srgb, var(--wood-inset) 70%, transparent) 32%,
+        color-mix(in srgb, var(--wood-inset) 20%, transparent) 55%,
+        transparent 75%
       );
   }
 }
@@ -285,9 +285,9 @@
 .hero-star {
   background: radial-gradient(
     circle,
-    #fff6d6 0,
-    #ffd77acc 18%,
-    #f2a93b55 45%,
+    var(--accent-foreground) 0,
+    color-mix(in srgb, var(--tone-ffd77a) 80%, transparent) 18%,
+    color-mix(in srgb, var(--tone-f2a93b) 33%, transparent) 45%,
     transparent 70%
   );
   mix-blend-mode: screen;
@@ -321,7 +321,7 @@
   width: 4px;
   height: 4px;
   border-radius: 9999px;
-  background: radial-gradient(circle, #fff6cc 0%, #f2a93b 55%, transparent 72%);
+  background: radial-gradient(circle, var(--accent-foreground) 0%, var(--tone-f2a93b) 55%, transparent 72%);
   animation: ember-rise linear infinite;
   will-change: transform, opacity;
 }
@@ -336,222 +336,212 @@
   }
 }
 
-/* Khung Sử ký (MAP-01, Polish V2 P01): chữ Noto Serif dùng cùng font toàn ứng dụng. Mọi màu của Sử ký lấy từ các
-   token --atlas-* dưới đây (gỗ, giấy dó, mực, đồng, son); không ảnh hưởng bàn cờ hay trận đấu. */
+/* Khung Sử ký (MAP-01, Polish V2 P01): chữ Noto Serif dùng cùng font toàn ứng dụng. Mọi màu của Sử ký lấy từ token
+   chung (theme.css: gỗ, giấy dó, mực, đồng, son); không ảnh hưởng bàn cờ hay trận đấu. */
 .campaign-atlas {
-  --font-serif: var(--font-game), Georgia, serif;
-  --atlas-wood: #2b1f15;
-  --atlas-wood-hi: #3d2c1d;
-  --atlas-wood-lo: #1a120c;
-  --atlas-paper: #e4cc99;
-  --atlas-paper-hi: #f4e6c3;
-  --atlas-paper-card: #f2e1b8;
-  --atlas-paper-deep: #d2b47b;
-  --atlas-ink: #3b2a1a;
-  --atlas-ink-soft: #5c4430;
-  --atlas-ink-on-wood: #ecd9ab;
-  --atlas-title: #f3dfae;
-  --atlas-gold: #c9a25a;
-  --atlas-gold-hi: #d4a24c;
-  --atlas-bronze: #8f6a32;
-  --atlas-red: #8f241d;
-  --atlas-red-hi: #b4382c;
-  --atlas-muted: #8a7458;
-  --atlas-border: #6b4a22;
-  --atlas-border-soft: #9c7845aa;
-  --atlas-line: #c9a25a73;
   font-family: var(--font-serif);
 }
 .campaign-atlas .atlas-title {
-  color: var(--atlas-title);
-  text-shadow: 0 2px 0 #00000080;
+  color: var(--title-on-wood);
+  text-shadow: 0 2px 0 color-mix(in srgb, var(--black) 50%, transparent);
 }
 
 /* Khung đồng cổ dùng chung: viền 1.5px, một vạch vàng mảnh lùi vào trong 4px, góc hoa văn do <AtlasCorners />
    vẽ. Vạch trong là ::after nên không chắn bấm. */
 .campaign-atlas .atlas-frame {
   position: relative;
-  border: 1.5px solid var(--atlas-border);
+  border: 1.5px solid var(--frame-line);
   border-radius: 0.75rem;
 }
 .campaign-atlas .atlas-frame::after {
   content: "";
   position: absolute;
   inset: 4px;
-  border: 1px solid var(--atlas-line);
+  border: 1px solid var(--frame-inner);
   border-radius: 0.5rem;
   pointer-events: none;
 }
 .campaign-atlas .atlas-corner {
-  color: var(--atlas-bronze);
+  color: var(--frame-bronze);
 }
 .campaign-atlas .atlas-frame-wood .atlas-corner {
-  color: var(--atlas-gold-hi);
+  color: var(--frame-gold-hi);
 }
 /* Giấy dó ngả vàng như mép tranh bản đồ. */
 .campaign-atlas .atlas-frame-paper {
   background:
     radial-gradient(
       ellipse at 25% 0%,
-      var(--atlas-paper-hi) 0%,
+      var(--paper-hi) 0%,
       transparent 60%
     ),
-    radial-gradient(ellipse at 100% 100%, #b98f5280 0%, transparent 55%),
-    var(--atlas-paper);
-  color: var(--atlas-ink);
-  box-shadow: inset 0 0 28px #7a52228c;
+    radial-gradient(ellipse at 100% 100%, color-mix(in srgb, var(--tone-b98f52) 50%, transparent) 0%, transparent 55%),
+    var(--paper);
+  color: var(--ink);
+  box-shadow: inset 0 0 28px color-mix(in srgb, var(--tone-7a5222) 55%, transparent);
 }
 /* Gỗ sẫm cho thanh header. */
 .campaign-atlas .atlas-frame-wood {
-  background: linear-gradient(var(--atlas-wood-hi), #231910);
-  color: var(--atlas-ink-on-wood);
+  background: linear-gradient(var(--wood-hi), var(--wood-panel));
+  color: var(--on-wood);
+}
+/* Thẻ nhắc việc trong đại card (thanh bắt đầu, hướng dẫn): cùng viền và nền gỗ với các khung Bình Loạn, không đậm hơn. */
+.campaign-atlas .atlas-callout {
+  border: 1.5px solid var(--frame-line-mid);
+  border-radius: 0.75rem;
+  background: linear-gradient(var(--wood-hi), var(--wood-panel));
+  color: var(--on-wood);
+}
+.campaign-atlas .atlas-callout-primary {
+  border-color: var(--frame-line);
+  box-shadow: 0 0 20px -10px var(--frame-gold-hi);
 }
 .campaign-atlas .world-strip {
-  background: linear-gradient(#dcc08a, var(--atlas-paper-deep));
-  color: var(--atlas-ink);
+  background: linear-gradient(var(--tone-dcc08a), var(--paper-deep));
+  color: var(--ink);
 }
 .campaign-atlas .atlas-chapter,
 .campaign-atlas .atlas-mission {
-  border-color: var(--atlas-border-soft);
-  background: color-mix(in srgb, var(--atlas-paper-card) 85%, transparent);
-  color: var(--atlas-ink);
+  border-color: var(--frame-line-mid);
+  background: color-mix(in srgb, var(--paper-card) 85%, transparent);
+  color: var(--ink);
   transition: background-color 0.15s;
 }
 .campaign-atlas .atlas-chapter:not(:disabled):hover,
 .campaign-atlas .atlas-mission:not(:disabled):hover {
-  background: #fbefcf;
+  background: var(--on-lacquer);
 }
 .campaign-atlas .atlas-chapter:disabled,
 .campaign-atlas .atlas-mission:disabled {
   opacity: 0.55;
 }
 .campaign-atlas .atlas-chapter-active {
-  border-color: var(--atlas-gold-hi);
-  background: linear-gradient(90deg, var(--atlas-red), var(--atlas-red-hi));
-  color: #fbecc8;
-  box-shadow: 0 0 0 2px #d4a24c66;
+  border-color: var(--frame-gold-hi);
+  background: linear-gradient(90deg, var(--lacquer), var(--lacquer-hi));
+  color: var(--on-lacquer);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--tone-d4a24c) 40%, transparent);
 }
 .campaign-atlas .atlas-chapter-active:not(:disabled):hover {
-  background: linear-gradient(90deg, #9c2a22, #c0402f);
+  background: linear-gradient(90deg, var(--tone-9c2a22), var(--tone-c0402f));
 }
 /* Thẻ chương: góc hoa văn nhỏ, ảnh có viền đồng, nhãn tiến độ nền mực trên ảnh. */
 .campaign-atlas .atlas-chapter .atlas-corner {
-  color: var(--atlas-gold);
+  color: var(--frame-gold);
 }
 .campaign-atlas .atlas-chapter-active .atlas-corner {
-  color: var(--atlas-gold-hi);
+  color: var(--frame-gold-hi);
 }
 .campaign-atlas .atlas-chapter-thumb {
-  border-color: var(--atlas-border-soft);
+  border-color: var(--frame-line-mid);
 }
 .campaign-atlas .atlas-chapter-active .atlas-chapter-thumb {
-  border-color: var(--atlas-gold-hi);
+  border-color: var(--frame-gold-hi);
 }
 .campaign-atlas .atlas-chapter-progress {
-  background: #1f160fd9;
-  color: #f4e2b8;
+  background: color-mix(in srgb, var(--wood-panel) 85%, transparent);
+  color: var(--paper-card);
 }
 /* Thẻ phần thưởng trong panel phải: giấy sáng hơn, viền đồng. */
 .campaign-atlas .atlas-reward {
-  border-color: var(--atlas-bronze);
-  background: color-mix(in srgb, var(--atlas-paper-hi) 80%, transparent);
+  border-color: var(--frame-bronze);
+  background: color-mix(in srgb, var(--paper-hi) 80%, transparent);
 }
 .campaign-atlas .atlas-mission-active {
-  border-color: #b8862f;
-  background: #fff0c9;
-  box-shadow: 0 0 0 2px #d4a24c80;
+  border-color: var(--tone-b8862f);
+  background: var(--on-lacquer);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--tone-d4a24c) 50%, transparent);
 }
 /* Đại card bao toàn màn: gỗ sẫm nổi lên khỏi nền trang bằng viền đồng và bóng đổ. */
 .campaign-atlas .atlas-shell {
-  border-color: #8a6a3b;
+  border-color: var(--frame-bronze);
   background:
-    radial-gradient(ellipse at 50% 0%, #4a3622 0%, transparent 70%),
-    linear-gradient(#33251a, #1f160f);
+    radial-gradient(ellipse at 50% 0%, var(--surface-selected) 0%, transparent 70%),
+    linear-gradient(var(--surface-elevated), var(--wood-panel));
   box-shadow:
-    0 0 0 1px #c9a25a40,
-    0 12px 32px #000a;
+    0 0 0 1px color-mix(in srgb, var(--frame-gold) 25%, transparent),
+    0 12px 32px color-mix(in srgb, var(--black) 67%, transparent);
 }
 /* Header nằm trong đại card: chỉ một vạch đồng ngăn với ba cột bên dưới. */
 .campaign-atlas .atlas-header {
-  border-bottom: 1px solid var(--atlas-line);
-  color: var(--atlas-ink-on-wood);
+  border-bottom: 1px solid var(--frame-inner);
+  color: var(--on-wood);
 }
 .campaign-atlas .atlas-scroll {
-  scrollbar-color: var(--atlas-bronze) transparent;
+  scrollbar-color: var(--frame-bronze) transparent;
   scrollbar-width: thin;
 }
 .campaign-atlas .atlas-route {
-  border-color: var(--atlas-border-soft);
-  background: color-mix(in srgb, var(--atlas-paper-hi) 55%, transparent);
+  border-color: var(--frame-line-mid);
+  background: color-mix(in srgb, var(--paper-hi) 55%, transparent);
 }
 /* Tuyến của chương đang xem: viền son. */
 .campaign-atlas .atlas-route-active {
-  border-color: var(--atlas-red-hi);
-  box-shadow: inset 0 0 0 1px var(--atlas-red-hi);
+  border-color: var(--lacquer-hi);
+  box-shadow: inset 0 0 0 1px var(--lacquer-hi);
 }
 .campaign-atlas .atlas-route-done {
-  border-color: #2e7d4f;
+  border-color: var(--tone-2e7d4f);
 }
 .campaign-atlas .atlas-muted {
-  color: var(--atlas-ink-soft);
+  color: var(--ink-soft);
 }
 .campaign-atlas .atlas-poem {
-  color: #4a321b;
+  color: var(--warning-surface);
 }
 /* Tranh cuối cột chương: mờ dần ra mép để hòa vào nền giấy. */
 .campaign-atlas .atlas-rail-art {
   mask-image: radial-gradient(
     ellipse 72% 70% at 50% 50%,
-    #000 60%,
+    var(--black) 60%,
     transparent 100%
   );
 }
 /* Thanh header: thẻ đang mở là giấy dó. */
 .campaign-atlas .atlas-tab {
-  border-color: #8a6a3b99;
-  background: linear-gradient(#33261a, #241a11);
-  color: var(--atlas-ink-on-wood);
+  border-color: color-mix(in srgb, var(--frame-bronze) 60%, transparent);
+  background: linear-gradient(var(--surface-elevated), var(--wood-panel));
+  color: var(--on-wood);
 }
 .campaign-atlas .atlas-tab:hover {
-  background: linear-gradient(#45331f, #2e2115);
+  background: linear-gradient(var(--frame-line-soft), var(--wood));
 }
 .campaign-atlas .atlas-tab-active,
 .campaign-atlas .atlas-tab-active:hover {
-  border-color: var(--atlas-gold-hi);
-  background: linear-gradient(#f3e3b9, #d9bd84);
-  color: var(--atlas-ink);
+  border-color: var(--frame-gold-hi);
+  background: linear-gradient(var(--paper-card), var(--tone-d9bd84));
+  color: var(--ink);
 }
 .campaign-atlas .atlas-stat {
-  border-color: #8a6a3b99;
-  background: var(--atlas-wood-lo);
-  color: var(--atlas-title);
+  border-color: color-mix(in srgb, var(--frame-bronze) 60%, transparent);
+  background: var(--wood-lo);
+  color: var(--title-on-wood);
 }
 .campaign-atlas .atlas-stat-icon {
-  color: var(--atlas-gold-hi);
+  color: var(--frame-gold-hi);
 }
 .campaign-atlas .atlas-panel-heading {
   margin-bottom: 0.375rem;
-  border-bottom: 1px solid #8a6a3b66;
+  border-bottom: 1px solid color-mix(in srgb, var(--frame-bronze) 40%, transparent);
   padding-bottom: 0.25rem;
-  font-size: 0.8rem;
+  font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .campaign-atlas :focus-visible {
-  outline: 2px solid var(--atlas-gold-hi);
+  outline: 2px solid var(--frame-gold-hi);
   outline-offset: 2px;
 }
 
 /* Bản đồ chiến dịch: giấy dó, mực khắc gỗ, sông xanh chàm, đường hành quân đỏ son. */
 .campaign-map {
-  --map-paper: var(--atlas-paper, #e4cc99);
-  --map-paper-dark: var(--atlas-paper-deep, #d2b47b);
-  --map-ink: var(--atlas-ink, #3b2a1a);
-  --map-sea: #a9b9a8;
-  --map-sea-ink: #5e7468;
-  --map-river: #5f8a8b;
-  --map-route: #a8322b;
+  --map-paper: var(--paper);
+  --map-paper-dark: var(--paper-deep);
+  --map-ink: var(--ink);
+  --map-sea: var(--tone-a9b9a8);
+  --map-sea-ink: var(--tone-5e7468);
+  --map-river: var(--tone-5f8a8b);
+  --map-route: var(--lacquer-hi);
   background: var(--map-paper);
 }
 .campaign-map text {
@@ -560,39 +550,39 @@
 }
 /* Nhãn cứ điểm: giấy dó đặc, viền đồng; nhãn đang chọn viền vàng dày hơn. */
 .campaign-map .map-label {
-  fill: var(--atlas-paper-hi, #f4e6c3);
+  fill: var(--paper-hi);
   fill-opacity: 0.94;
-  stroke: var(--atlas-bronze, #8f6a32);
+  stroke: var(--frame-bronze);
   stroke-opacity: 0.85;
   stroke-width: 2px;
 }
 .campaign-map .map-label-selected {
-  fill: #fff0c9;
+  fill: var(--on-lacquer);
   fill-opacity: 1;
-  stroke: var(--atlas-gold-hi, #d4a24c);
+  stroke: var(--frame-gold-hi);
   stroke-opacity: 1;
   stroke-width: 4px;
 }
 /* Nút phóng/thu và ô chọn cứ điểm ngoài bản đồ dùng chung bảng màu giấy dó. */
 .campaign-map .map-control,
 .campaign-map .map-chip {
-  border-color: var(--atlas-bronze, #8f6a32);
+  border-color: var(--frame-bronze);
   background: color-mix(
     in srgb,
-    var(--atlas-paper-hi, #f4e6c3) 92%,
+    var(--paper-hi) 92%,
     transparent
   );
-  color: var(--atlas-ink, #3b2a1a);
+  color: var(--ink);
 }
 .campaign-map .map-chip-active {
-  border-color: var(--atlas-gold-hi, #d4a24c);
-  background: #fff0c9;
+  border-color: var(--frame-gold-hi);
+  background: var(--on-lacquer);
 }
 .campaign-map .world-strip {
-  border-color: var(--atlas-border, #6b4a22);
+  border-color: var(--frame-line);
 }
 .campaign-map .map-controls {
-  background: linear-gradient(#dcc08a, var(--atlas-paper-deep, #d2b47b));
+  background: linear-gradient(var(--tone-dcc08a), var(--paper-deep));
 }
 @media (min-width: 768px) {
   .campaign-map .map-controls {
@@ -635,13 +625,13 @@
   font-size: 34px;
   font-style: italic;
   letter-spacing: 0.2em;
-  fill: #34483f;
+  fill: var(--tone-34483f);
 }
 .campaign-map .map-stage:focus {
   outline: none;
 }
 .campaign-map .map-stage:focus-visible > rect:first-of-type {
-  stroke: #f2c14e;
+  stroke: var(--tone-f2c14e);
   stroke-width: 5px;
 }
 .map-pulse {
@@ -706,30 +696,22 @@
 }
 
 /* Thanh header chung của màn chơi (src/app/game/header/). Một hệ chất liệu: gỗ sơn mài tối, đồng cổ trầm (viền,
-   icon, khung avatar cùng một sắc), tranh thủy mặc chìm vào gỗ; vàng chỉ để nhấn rất ít. Token --hdr-* chỉ áp trong
-   thanh này và chỉ là tên gọi lại token chung (src/styles/theme.css), không đặt mã màu riêng. Tranh ở public/art/ui/header/, hai góc hoa văn ở public/art/ui/header/ornaments/. */
+   icon, khung avatar cùng một sắc), tranh thủy mặc chìm vào gỗ; vàng chỉ để nhấn rất ít. Màu lấy trực tiếp từ token chung
+   (src/styles/theme.css), không đặt mã màu riêng. Tranh ở public/art/ui/header/, hai góc hoa văn ở public/art/ui/header/ornaments/. */
 .game-header {
-  --hdr-wood: var(--wood-lo);
-  --hdr-wood-hi: var(--wood);
-  --hdr-bronze: var(--frame-bronze);
-  --hdr-bronze-hi: color-mix(in srgb, var(--frame-bronze), var(--frame-gold));
-  --hdr-gold: var(--frame-gold);
-  --hdr-text: var(--on-wood);
-  --hdr-text-soft: var(--on-wood-soft);
-  --hdr-active: var(--lacquer);
-  color: var(--hdr-text);
+  color: var(--on-wood);
   font-family: var(--font-serif);
   background:
     radial-gradient(ellipse 45% 160% at 50% 0%, var(--wood-hi) 0%, transparent 70%),
-    linear-gradient(180deg, var(--hdr-wood-hi) 0%, var(--hdr-wood) 70%, var(--wood-inset) 100%);
-  box-shadow: 0 6px 16px -8px #000000d9;
+    linear-gradient(180deg, var(--wood) 0%, var(--wood-lo) 70%, var(--wood-inset) 100%);
+  box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--black) 85%, transparent);
 }
 /* Tranh trải hết chiều dài thanh: phủ kín (không kéo giãn), cổng thành ở giữa; màn hẹp thì cắt bớt hai bên. Hạ sáng
    và độ rực để cùng tông gỗ, mép trên/dưới tan nhẹ vào gỗ. */
 .game-header-panorama {
   background: url("/art/ui/header/header-panorama.webp") center 48% / cover no-repeat;
   filter: brightness(0.72) saturate(0.85) sepia(0.12);
-  mask-image: linear-gradient(180deg, #0000 0%, #000 14%, #000 80%, #0000 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, var(--black) 14%, var(--black) 80%, transparent 100%);
 }
 /* Hai đầu tối dần (chỗ nút Chiến trường, vàng, avatar) để chữ và viền nút đọc rõ trên tranh. */
 .game-header-shade {
@@ -752,8 +734,8 @@
   border-style: solid;
   border-width: 0.47em 2.05em;
   border-image: url("/art/ui/header/ornaments/header-title-plaque.webp") 30 130 fill / 0.47em 2.05em stretch;
-  filter: drop-shadow(0 2px 6px #000000b3);
-  text-shadow: 0 1px 2px #000;
+  filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--black) 70%, transparent));
+  text-shadow: 0 1px 2px var(--black);
 }
 /* Điện thoại: hai đầu khung hẹp lại một chút để tên dài như "Chiến trường" không bị cắt. */
 @media (max-width: 639px) {
@@ -768,12 +750,12 @@
 /* Đường chỉ đồng trên/dưới: một nét mảnh, cùng sắc với viền nút. */
 .game-header-rule {
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--hdr-bronze) 6%, var(--hdr-bronze-hi) 50%, var(--hdr-bronze) 94%, transparent);
+  background: linear-gradient(90deg, transparent, var(--frame-bronze) 6%, var(--frame-bronze-hi) 50%, var(--frame-bronze) 94%, transparent);
   opacity: 0.85;
 }
 .game-header-btn {
-  color: var(--hdr-text);
-  text-shadow: 0 1px 2px #000000b3;
+  color: var(--on-wood);
+  text-shadow: 0 1px 2px color-mix(in srgb, var(--black) 70%, transparent);
   transition:
     color 0.15s,
     background-color 0.15s,
@@ -786,26 +768,26 @@
 }
 .game-header-btn:focus-visible,
 .game-header-menu-item:focus-visible {
-  outline: 2px solid var(--hdr-gold);
+  outline: 2px solid var(--frame-gold);
   outline-offset: 2px;
 }
 /* Nút Chiến trường, ô vàng và khung avatar dùng chung một khung: viền đồng 1px trên nền sơn mài trong mờ (tranh phía
    sau vẫn ẩn hiện), rê chuột thì viền sáng lên, màn đang mở thì nền đỏ son. */
 .game-header-chip {
-  border: 1px solid var(--hdr-bronze);
+  border: 1px solid var(--frame-bronze);
   background: color-mix(in srgb, var(--wood-inset) 75%, transparent);
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--on-wood) 6%, transparent);
 }
 .game-header-chip:hover,
 .game-header-account:hover .game-header-avatar,
 .game-header-account[aria-expanded="true"] .game-header-avatar {
-  border-color: var(--hdr-bronze-hi);
+  border-color: var(--frame-bronze-hi);
 }
 .game-header-chip:hover {
   background: color-mix(in srgb, var(--wood-panel) 85%, transparent);
 }
 .game-header-chip[aria-current="page"] {
-  border-color: var(--hdr-bronze-hi);
+  border-color: var(--frame-bronze-hi);
   background: linear-gradient(
     180deg,
     color-mix(in srgb, var(--lacquer) 90%, transparent),
@@ -817,19 +799,19 @@
   background-color: color-mix(in srgb, var(--wood-inset) 75%, transparent);
 }
 .game-header-avatar {
-  border: 1px solid var(--hdr-bronze);
+  border: 1px solid var(--frame-bronze);
   box-shadow:
     0 0 0 2px var(--wood-inset),
-    0 0 0 3px color-mix(in srgb, var(--hdr-bronze) 45%, transparent);
+    0 0 0 3px color-mix(in srgb, var(--frame-bronze) 45%, transparent);
   transition: border-color 0.15s;
 }
 .game-header-menu {
-  border: 1px solid var(--hdr-bronze);
-  background: linear-gradient(180deg, var(--hdr-wood-hi), var(--hdr-wood));
-  box-shadow: 0 14px 32px -10px #000000e6;
+  border: 1px solid var(--frame-bronze);
+  background: linear-gradient(180deg, var(--wood), var(--wood-lo));
+  box-shadow: 0 14px 32px -10px color-mix(in srgb, var(--black) 90%, transparent);
 }
 .game-header-menu-item {
-  color: var(--hdr-text);
+  color: var(--on-wood);
   font-size: 0.875rem;
   transition: background-color 0.15s;
 }
@@ -849,92 +831,92 @@
 /* Màn chính (Home V2, MenuScene): dùng lại khung/góc/màu của Sử ký trong .campaign-atlas. Hero là tranh Hoa Lư,
    lớp phủ tối bên trái (và phía dưới trên điện thoại) để logo, câu dẫn và nút đọc rõ. */
 .campaign-atlas .home-hero {
-  border-color: #8a6a3b;
+  border-color: var(--frame-bronze);
   box-shadow:
-    0 0 0 1px #c9a25a40,
-    0 14px 36px #000b;
+    0 0 0 1px color-mix(in srgb, var(--frame-gold) 25%, transparent),
+    0 14px 36px color-mix(in srgb, var(--black) 73%, transparent);
 }
 .campaign-atlas .home-hero-shade {
   background:
-    linear-gradient(0deg, #17110ef2 0%, #17110e99 30%, transparent 62%),
-    linear-gradient(90deg, #140d09d9 0%, #140d0980 34%, transparent 62%);
+    linear-gradient(0deg, color-mix(in srgb, var(--wood-lo) 95%, transparent) 0%, color-mix(in srgb, var(--wood-lo) 60%, transparent) 30%, transparent 62%),
+    linear-gradient(90deg, color-mix(in srgb, var(--wood-inset) 85%, transparent) 0%, color-mix(in srgb, var(--wood-inset) 50%, transparent) 34%, transparent 62%);
 }
 @media (min-width: 1024px) {
   .campaign-atlas .home-hero-shade {
     background:
-      linear-gradient(0deg, #17110eb3 0%, transparent 28%),
-      linear-gradient(90deg, #140d09f0 0%, #140d09b8 30%, #140d0933 52%, transparent 66%);
+      linear-gradient(0deg, color-mix(in srgb, var(--wood-lo) 70%, transparent) 0%, transparent 28%),
+      linear-gradient(90deg, color-mix(in srgb, var(--wood-inset) 94%, transparent) 0%, color-mix(in srgb, var(--wood-inset) 72%, transparent) 30%, color-mix(in srgb, var(--wood-inset) 20%, transparent) 52%, transparent 66%);
   }
 }
 /* Nút chính đỏ son viền vàng như nút hành động của Sử ký; nút phụ gỗ viền đồng. */
 .campaign-atlas .home-cta {
-  border: 1.5px solid var(--atlas-gold-hi);
-  background: linear-gradient(180deg, var(--atlas-red-hi), var(--atlas-red) 55%, #5e1712);
-  color: #fbecc8;
-  text-shadow: 0 1px 2px #0009;
+  border: 1.5px solid var(--frame-gold-hi);
+  background: linear-gradient(180deg, var(--lacquer-hi), var(--lacquer) 55%, var(--lacquer-lo));
+  color: var(--on-lacquer);
+  text-shadow: 0 1px 2px color-mix(in srgb, var(--black) 60%, transparent);
   box-shadow:
-    inset 0 1px 0 #ffd9a040,
-    0 6px 18px -6px #8f241dcc;
+    inset 0 1px 0 color-mix(in srgb, var(--tone-ffd9a0) 25%, transparent),
+    0 6px 18px -6px color-mix(in srgb, var(--lacquer) 80%, transparent);
   transition: filter 0.15s, box-shadow 0.15s;
 }
 .campaign-atlas .home-cta:hover {
   filter: brightness(1.1);
   box-shadow:
-    inset 0 1px 0 #ffd9a059,
-    0 8px 24px -6px #b4382ce6;
+    inset 0 1px 0 color-mix(in srgb, var(--tone-ffd9a0) 35%, transparent),
+    0 8px 24px -6px color-mix(in srgb, var(--lacquer-hi) 90%, transparent);
 }
 .campaign-atlas .home-secondary {
-  border: 1px solid var(--atlas-bronze);
-  background: #1d140dcc;
-  color: var(--atlas-ink-on-wood);
+  border: 1px solid var(--frame-bronze);
+  background: color-mix(in srgb, var(--wood-lo) 80%, transparent);
+  color: var(--on-wood);
   transition: border-color 0.15s, background-color 0.15s;
 }
 .campaign-atlas .home-secondary:hover {
-  border-color: var(--atlas-gold);
-  background: #2a1d13e6;
+  border-color: var(--frame-gold);
+  background: color-mix(in srgb, var(--wood) 90%, transparent);
 }
 .campaign-atlas .home-rule {
-  background: linear-gradient(90deg, var(--atlas-border-soft), transparent);
+  background: linear-gradient(90deg, var(--frame-line-mid), transparent);
 }
 /* Thẻ chế độ: gỗ sẫm, viền đồng; rê chuột sáng viền và đẩy nhẹ tranh. Thẻ Chiến dịch viền vàng để nổi hơn một chút. */
 .campaign-atlas .home-mode {
   transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
 .campaign-atlas a.home-mode:hover {
-  border-color: var(--atlas-gold);
-  box-shadow: 0 10px 26px -12px #000, 0 0 0 1px #c9a25a40;
+  border-color: var(--frame-gold);
+  box-shadow: 0 10px 26px -12px var(--black), 0 0 0 1px color-mix(in srgb, var(--frame-gold) 25%, transparent);
 }
 .campaign-atlas .home-mode-featured {
-  border-color: var(--atlas-gold);
+  border-color: var(--frame-gold);
 }
 .campaign-atlas .home-mode-featured::after {
-  border-color: #d4a24c80;
+  border-color: color-mix(in srgb, var(--tone-d4a24c) 50%, transparent);
 }
 .campaign-atlas .home-mode-locked {
-  border-color: #4a3826;
+  border-color: var(--surface-selected);
   cursor: not-allowed;
 }
 .campaign-atlas .home-mode-locked .atlas-corner {
-  color: #6b5640;
+  color: var(--tone-6b5640);
 }
 .campaign-atlas .home-kicker {
-  border: 1px solid #c9a25a99;
-  background: #1a120ccc;
-  color: var(--atlas-title);
+  border: 1px solid color-mix(in srgb, var(--frame-gold) 60%, transparent);
+  background: color-mix(in srgb, var(--wood-lo) 80%, transparent);
+  color: var(--title-on-wood);
 }
 .campaign-atlas .home-enter {
-  color: var(--atlas-gold-hi);
+  color: var(--frame-gold-hi);
 }
 .campaign-atlas a.home-mode:hover .home-enter {
-  color: var(--atlas-title);
+  color: var(--title-on-wood);
 }
 .campaign-atlas .home-utility {
-  background: linear-gradient(var(--atlas-wood-hi), #231910);
-  color: var(--atlas-ink-on-wood);
+  background: linear-gradient(var(--wood-hi), var(--wood-panel));
+  color: var(--on-wood);
   transition: border-color 0.15s;
 }
 .campaign-atlas .home-utility:hover {
-  border-color: var(--atlas-gold);
+  border-color: var(--frame-gold);
 }
 @media (prefers-reduced-motion: reduce) {
   .campaign-atlas .home-cta,
@@ -946,25 +928,25 @@
 }
 /* Thẻ "Sắp ra mắt": chưa có tranh nên nền sơn mài có lưới sa bàn mờ; viền trầm hơn thẻ đang mở. */
 .campaign-atlas .home-mode-soon {
-  border-color: #5c4630;
+  border-color: var(--ink-soft);
   border-style: dashed;
 }
 .campaign-atlas .home-mode-soon .atlas-corner {
-  color: #7a6146;
+  color: var(--tone-7a6146);
 }
 .campaign-atlas .home-soon-art {
   background:
-    radial-gradient(ellipse at 50% 40%, #4a3320 0%, transparent 70%),
-    repeating-linear-gradient(0deg, #c9a25a14 0 1px, transparent 1px 28px),
-    repeating-linear-gradient(90deg, #c9a25a14 0 1px, transparent 1px 28px),
-    #21170f;
+    radial-gradient(ellipse at 50% 40%, var(--surface-selected) 0%, transparent 70%),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--frame-gold) 8%, transparent) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--frame-gold) 8%, transparent) 0 1px, transparent 1px 28px),
+    var(--wood-panel);
 }
 
 /* Trận Đồ: sa bàn là một tấm bản đồ. Ô chưa khai thông được phủ bằng ảnh che ĐẶC KÍN (không trong suốt, để không nhầm với
    ô đã mở); ô khai thông trong suốt để lộ bản đồ; ô chướng ngại có nền riêng, không lấy ảnh của bản đồ. Lớp phủ nằm ở
    ::before và đổi bằng opacity nên có chuyển động mượt khi ô được mở. */
 .fm-board {
-  background-color: #1a130e;
+  background-color: var(--wood-lo);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -979,19 +961,19 @@
   transition: opacity 0.45s ease;
 }
 .fm-cell[data-state="fog"]::before {
-  background: #2a1f16 url("/art/formation/fog.webp") center / 100% 100%;
+  background: var(--wood) url("/art/formation/fog.webp") center / 100% 100%;
   box-shadow: inset 0 0 0 1px rgb(143 106 50 / 0.45);
   opacity: 1;
 }
 .fm-cell[data-state="lit"]::before {
-  background: #2a1f16 url("/art/formation/fog.webp") center / 100% 100%;
+  background: var(--wood) url("/art/formation/fog.webp") center / 100% 100%;
   opacity: 0;
 }
 .fm-cell[data-state="lit"] {
   box-shadow: inset 0 0 0 1px rgb(255 226 160 / 0.28), inset 0 0 16px rgb(255 214 130 / 0.16);
 }
 .fm-cell[data-state="rock"]::before {
-  background: radial-gradient(circle at 50% 40%, #4a3e30 0%, #30261c 70%);
+  background: radial-gradient(circle at 50% 40%, var(--surface-selected) 0%, var(--surface-elevated) 70%);
   box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.5), inset 0 0 10px rgb(0 0 0 / 0.5);
   opacity: 1;
 }
@@ -1026,7 +1008,7 @@
 
 /* Trận Đồ: lớp che dùng ở thẻ bản đồ (cùng họa tiết với ô che trên sa bàn). */
 .fm-fogfill {
-  background: #2a1f16 url("/art/formation/fog.webp") center / 96px 96px;
+  background: var(--wood) url("/art/formation/fog.webp") center / 96px 96px;
 }
 
 /* Trận Đồ: vệt sáng quét qua hàng hoặc cột vừa được dọn. */
@@ -1125,186 +1107,175 @@
 }
 /* Yếu tố mới nhấp nháy một lần trong Vạn Vật Lục. */
 @keyframes ttk-flash {
-  0%, 100% { background-color: var(--atlas-wood-lo); }
+  0%, 100% { background-color: var(--wood-lo); }
   35% { background-color: rgb(200 160 70 / 0.45); }
 }
 
 /* Doanh Trại (src/app/game/profile/): gỗ sơn tối, chữ kem, đỏ trầm cho thẻ chưa chọn, vàng cổ chỉ để đánh dấu lựa
-   chọn và hành động chính. Một lớp viền mảnh cho mỗi khung, không chồng nhiều khung vàng. Token --bk-* chỉ áp ở đây. */
+   chọn và hành động chính. Một lớp viền mảnh cho mỗi khung, không chồng nhiều khung vàng. Màu lấy từ token chung (theme.css). */
 .barracks {
-  --bk-panel: #211611;
-  --bk-panel-hi: #2b1d15;
-  --bk-inset: #140d0a;
-  --bk-line: #6b4c2c;
-  --bk-line-soft: #3e2c1e;
-  --bk-gold: #d4a24c;
-  --bk-gold-hi: #f1d08a;
-  --bk-cream: #efdfbd;
-  --bk-soft: #c2ad8b;
-  --bk-red: #6e2419;
-  --bk-red-hi: #8f3324;
-  color: var(--bk-cream);
+  color: var(--on-wood);
   font-family: var(--font-serif);
 }
 .barracks .barracks-title {
-  color: #f3dfae;
-  text-shadow: 0 2px 0 #00000080;
+  color: var(--title-on-wood);
+  text-shadow: 0 2px 0 color-mix(in srgb, var(--black) 50%, transparent);
 }
+/* Khung con trong khung chung của Doanh Trại: ô lõm như .ui-frame-inset (không viền vàng, không bóng nổi). */
 .barracks .barracks-panel {
-  background: linear-gradient(180deg, var(--bk-panel-hi), var(--bk-panel) 40%, #1a110d);
-  border: 1px solid var(--bk-line);
-  box-shadow: inset 0 1px 0 #ffffff0d, 0 8px 24px -12px #000000cc;
+  background: var(--wood-inset);
+  border: 1px solid var(--frame-line-soft);
 }
 .barracks .barracks-inset {
-  background: var(--bk-inset);
-  border: 1px solid var(--bk-line-soft);
+  background: var(--wood-inset);
+  border: 1px solid var(--frame-line-soft);
 }
 .barracks .barracks-field {
-  background: var(--bk-inset);
-  border: 1px solid var(--bk-line-soft);
+  background: var(--wood-inset);
+  border: 1px solid var(--frame-line-soft);
   border-radius: 0.375rem;
 }
 .barracks .barracks-field:focus-within {
-  border-color: var(--bk-gold);
+  border-color: var(--frame-gold-hi);
 }
 .barracks .barracks-btn {
-  background: #2a1c15;
-  border: 1px solid var(--bk-line);
-  color: var(--bk-cream);
+  background: var(--wood);
+  border: 1px solid var(--frame-line);
+  color: var(--on-wood);
   transition: background-color 0.15s, border-color 0.15s;
 }
 .barracks .barracks-btn:hover:not(:disabled) {
-  background: #3a281d;
+  background: var(--ink);
 }
 .barracks .barracks-btn.is-on {
-  border-color: var(--bk-gold);
-  background: #4a3418;
-  color: var(--bk-gold-hi);
+  border-color: var(--frame-gold-hi);
+  background: var(--warning-surface);
+  color: var(--frame-gold-pale);
 }
 .barracks .barracks-btn.is-action {
-  background: linear-gradient(180deg, #e5b964, #b9852f);
-  border-color: #f1d08a;
-  color: #1c120c;
+  background: linear-gradient(180deg, var(--primary-hover), var(--tone-b9852f));
+  border-color: var(--tone-f1d08a);
+  color: var(--wood-lo);
   font-weight: 700;
 }
 .barracks .barracks-btn.is-action:hover:not(:disabled) {
-  background: linear-gradient(180deg, #f1c977, #c8923a);
+  background: linear-gradient(180deg, var(--tone-f1c977), var(--tone-c8923a));
 }
 .barracks .barracks-tab {
-  background: linear-gradient(180deg, var(--bk-red-hi), var(--bk-red));
-  border: 1px solid #a06a3a;
-  color: #f6e4bf;
-  box-shadow: 0 2px 0 #0007;
+  background: linear-gradient(180deg, var(--lacquer), var(--lacquer-lo));
+  border: 1px solid var(--tone-a06a3a);
+  color: var(--paper-hi);
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--black) 47%, transparent);
   transition: filter 0.15s;
 }
 .barracks .barracks-tab:hover {
   filter: brightness(1.12);
 }
 .barracks .barracks-tab.is-on {
-  background: linear-gradient(180deg, #f7e7bf, #dcc08a);
-  border-color: var(--bk-gold);
-  color: #4a1a12;
+  background: linear-gradient(180deg, var(--paper-hi), var(--tone-dcc08a));
+  border-color: var(--frame-gold-hi);
+  color: var(--ink-strong);
 }
 .barracks .barracks-chip {
-  background: #4a1d15;
-  border: 1px solid #8f3324;
-  color: #f6e4bf;
+  background: var(--ink-strong);
+  border: 1px solid var(--tone-8f3324);
+  color: var(--paper-hi);
 }
 .barracks .barracks-chip:hover {
-  background: #5c251a;
+  background: var(--decorative-frame);
 }
 .barracks .barracks-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
   border-radius: 9999px;
-  border: 1px solid var(--bk-line);
-  background: #1a110d;
+  border: 1px solid var(--frame-line);
+  background: var(--wood-lo);
   padding: 0.25rem 0.75rem;
   font-size: 0.9375rem;
-  color: var(--bk-cream);
+  color: var(--on-wood);
   white-space: nowrap;
 }
 .barracks .barracks-pill.is-gold {
-  border-color: #a77c38;
-  color: var(--bk-gold-hi);
+  border-color: var(--tone-a77c38);
+  color: var(--frame-gold-pale);
 }
 .barracks .hero-card {
-  background: #1a110d;
-  border: 1px solid var(--bk-line-soft);
+  background: var(--wood-lo);
+  border: 1px solid var(--frame-line-soft);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .barracks .hero-card:hover {
-  border-color: var(--bk-line);
+  border-color: var(--frame-line);
 }
 .barracks .hero-card.is-selected {
-  border-color: var(--bk-gold);
-  box-shadow: 0 0 0 1px var(--bk-gold), 0 0 14px -2px #d4a24c80;
+  border-color: var(--frame-gold-hi);
+  box-shadow: 0 0 0 1px var(--frame-gold-hi), 0 0 14px -2px color-mix(in srgb, var(--tone-d4a24c) 50%, transparent);
 }
 .barracks .hero-card.is-selected > span:last-child {
-  background: #3a2914;
+  background: var(--ink);
 }
 .barracks .gear-slot {
-  background: radial-gradient(circle at 50% 40%, #2c1f17, #120b08);
-  border: 1.5px solid var(--bk-line);
-  box-shadow: inset 0 1px 4px #000a;
+  background: radial-gradient(circle at 50% 40%, var(--wood), var(--wood-inset));
+  border: 1.5px solid var(--frame-line);
+  box-shadow: inset 0 1px 4px color-mix(in srgb, var(--black) 67%, transparent);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .barracks .gear-slot.is-empty {
   border-style: dashed;
-  border-color: #5a4430;
+  border-color: var(--ink-soft);
 }
 .barracks .gear-slot:hover {
-  border-color: #9c7845;
+  border-color: var(--tone-9c7845);
 }
 .barracks .gear-slot.is-selected {
-  border-color: var(--bk-gold);
-  box-shadow: 0 0 0 1px var(--bk-gold), 0 0 12px -2px #d4a24c99;
+  border-color: var(--frame-gold-hi);
+  box-shadow: 0 0 0 1px var(--frame-gold-hi), 0 0 12px -2px color-mix(in srgb, var(--tone-d4a24c) 60%, transparent);
 }
 .barracks .gear-row {
   border: 1px solid transparent;
-  background: #1a110d;
+  background: var(--wood-lo);
 }
 .barracks .gear-row:hover {
-  border-color: var(--bk-line-soft);
+  border-color: var(--frame-line-soft);
 }
 .barracks .gear-row.is-selected {
-  border-color: var(--bk-gold);
-  background: #2c2013;
+  border-color: var(--frame-gold-hi);
+  background: var(--wood);
 }
 .barracks .barracks-stage {
   background:
-    radial-gradient(ellipse 45% 60% at 50% 62%, var(--stage-tint, #5a2a1a66), transparent 70%),
-    radial-gradient(ellipse at 50% 100%, #3a2416, transparent 70%),
-    #150e0a;
-  border: 1px solid var(--bk-line-soft);
+    radial-gradient(ellipse 45% 60% at 50% 62%, var(--stage-tint), transparent 70%),
+    radial-gradient(ellipse at 50% 100%, var(--ink), transparent 70%),
+    var(--wood-inset);
+  border: 1px solid var(--frame-line-soft);
 }
 .barracks .barracks-art {
   animation: barracks-fade 0.2s ease-out;
 }
 .barracks .team-card {
-  background: #1a110d;
-  border: 1px solid var(--bk-line-soft);
+  background: var(--wood-lo);
+  border: 1px solid var(--frame-line-soft);
 }
 .barracks .team-card.is-selected {
-  border-color: var(--bk-gold);
-  box-shadow: 0 0 0 1px var(--bk-gold);
+  border-color: var(--frame-gold-hi);
+  box-shadow: 0 0 0 1px var(--frame-gold-hi);
 }
 .barracks :is(button, a, select, input, [tabindex]):focus-visible {
-  outline: 2px solid var(--bk-gold-hi);
+  outline: 2px solid var(--frame-gold-pale);
   outline-offset: 2px;
 }
 .barracks .barracks-scroll {
   scrollbar-width: thin;
-  scrollbar-color: #6b4c2c transparent;
+  scrollbar-color: var(--frame-line) transparent;
 }
 .barracks.gear-picker {
-  background: #1d1410;
-  border: 1px solid var(--bk-line);
-  box-shadow: 0 20px 60px #000e;
+  background: var(--wood-panel);
+  border: 1px solid var(--frame-line);
+  box-shadow: 0 20px 60px color-mix(in srgb, var(--black) 93%, transparent);
 }
 .barracks.gear-picker::backdrop {
-  background: #000000b3;
+  background: color-mix(in srgb, var(--black) 70%, transparent);
 }
 @keyframes barracks-fade {
   from { opacity: 0; transform: translateY(4px); }
@@ -1317,7 +1288,7 @@
 
 /* Khai Lộ: ô ngọc đặt tuyệt đối, đổi vị trí bằng transform để ô rơi/dồn cột có hoạt ảnh. */
 .kl-board {
-  background: radial-gradient(ellipse at 50% 40%, #233042 0%, #141c27 80%);
+  background: radial-gradient(ellipse at 50% 40%, var(--tone-233042) 0%, var(--tone-141c27) 80%);
 }
 .kl-tile {
   position: absolute;
@@ -1333,24 +1304,24 @@
   filter: brightness(0.55) saturate(0.7);
 }
 .kl-tile[data-hl] {
-  filter: brightness(1.2) drop-shadow(0 0 6px #e8c477);
+  filter: brightness(1.2) drop-shadow(0 0 6px var(--tone-e8c477));
 }
 .kl-tile[data-hl][data-tool="thunder"] {
-  filter: brightness(1.15) drop-shadow(0 0 6px #ff8a5c);
+  filter: brightness(1.15) drop-shadow(0 0 6px var(--tone-ff8a5c));
 }
 .kl-tile[data-hl][data-tool="whirl"] {
-  filter: brightness(1.15) drop-shadow(0 0 6px #8fe3d4);
+  filter: brightness(1.15) drop-shadow(0 0 6px var(--tone-8fe3d4));
 }
 .kl-gem {
   position: relative;
   width: 100%;
   height: 100%;
   border-radius: 20%;
-  border: 1.5px solid #b98a3e;
+  border: 1.5px solid var(--tone-b98a3e);
   background:
-    radial-gradient(circle at 32% 26%, color-mix(in srgb, var(--el) 35%, #fff) 0%, transparent 42%),
-    radial-gradient(circle at 50% 55%, var(--el) 0%, color-mix(in srgb, var(--el) 55%, #000) 100%);
-  box-shadow: inset 0 -3px 6px #0006, inset 0 2px 3px #ffffff40, 0 1px 2px #000a;
+    radial-gradient(circle at 32% 26%, color-mix(in srgb, var(--el) 35%, var(--white)) 0%, transparent 42%),
+    radial-gradient(circle at 50% 55%, var(--el) 0%, color-mix(in srgb, var(--el) 55%, var(--black)) 100%);
+  box-shadow: inset 0 -3px 6px color-mix(in srgb, var(--black) 40%, transparent), inset 0 2px 3px color-mix(in srgb, var(--white) 25%, transparent), 0 1px 2px color-mix(in srgb, var(--black) 67%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1359,19 +1330,19 @@
   width: 78%;
   height: 78%;
   object-fit: contain;
-  filter: drop-shadow(0 2px 2px #0008);
+  filter: drop-shadow(0 2px 2px color-mix(in srgb, var(--black) 53%, transparent));
   user-select: none;
 }
 .kl-gem[data-banner] {
   overflow: hidden;
-  border: 2.5px solid #f0c867;
-  box-shadow: inset 0 -3px 6px #0006, inset 0 2px 3px #ffffff40, 0 0 8px 1px #f0c867b0;
+  border: 2.5px solid var(--tone-f0c867);
+  box-shadow: inset 0 -3px 6px color-mix(in srgb, var(--black) 40%, transparent), inset 0 2px 3px color-mix(in srgb, var(--white) 25%, transparent), 0 0 8px 1px color-mix(in srgb, var(--tone-f0c867) 69%, transparent);
 }
 .kl-gem[data-banner]::after {
   content: "";
   position: absolute;
   inset: -50%;
-  background: conic-gradient(from 0deg, transparent 0 70%, #fff6 80%, transparent 90%);
+  background: conic-gradient(from 0deg, transparent 0 70%, color-mix(in srgb, var(--white) 40%, transparent) 80%, transparent 90%);
   animation: kl-shine 3s linear infinite;
   pointer-events: none;
 }
@@ -1381,15 +1352,15 @@
   }
 }
 .kl-timebar {
-  background: #0d0906;
+  background: var(--wood-inset);
   border: 1px solid var(--frame-bronze);
 }
 .kl-timebar > div {
-  background: linear-gradient(90deg, #c9a25a, #f3dfae);
+  background: linear-gradient(90deg, var(--frame-gold), var(--title-on-wood));
   transition: width 0.1s linear;
 }
 .kl-timebar[data-low] > div {
-  background: linear-gradient(90deg, #b8321f, #ff8a5c);
+  background: linear-gradient(90deg, var(--tone-b8321f), var(--tone-ff8a5c));
 }
 .kl-ghost {
   animation: kl-pop 0.3s ease-out forwards;

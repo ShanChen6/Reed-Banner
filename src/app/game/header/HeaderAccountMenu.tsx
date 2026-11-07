@@ -62,7 +62,7 @@ export default function HeaderAccountMenu({ scene, account }: { scene: Scene; ac
         <svg
           aria-hidden
           viewBox="0 0 20 20"
-          className={`hidden size-4 shrink-0 text-[var(--hdr-bronze-hi)] transition-transform motion-reduce:transition-none sm:block ${open ? "rotate-180" : ""}`}
+          className={`hidden size-4 shrink-0 text-[var(--frame-bronze-hi)] transition-transform motion-reduce:transition-none sm:block ${open ? "rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           strokeWidth={1.6}
@@ -81,16 +81,16 @@ export default function HeaderAccountMenu({ scene, account }: { scene: Scene; ac
           open ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0"
         }`}
       >
-        <div className="border-b border-[var(--hdr-bronze)]/40 px-3 pt-2 pb-2.5">
-          <p className="font-serif font-semibold break-words text-[var(--hdr-text)]">{name}</p>
-          <p className="text-caption text-[var(--hdr-text-soft)]">
+        <div className="border-b border-[var(--frame-bronze)]/40 px-3 pt-2 pb-2.5">
+          <p className="font-serif font-semibold break-words text-[var(--on-wood)]">{name}</p>
+          <p className="text-caption text-[var(--on-wood-soft)]">
             {account ? "Đã đăng nhập" : "Tiến độ đang lưu trên trình duyệt này. Đăng nhập để giữ trên tài khoản."}
           </p>
         </div>
         <ul className="mt-1 flex flex-col">
           <li>
             <SceneLink scene="PROFILE" aria-current={scene === "PROFILE" ? "page" : undefined} className={item}>
-              <svg aria-hidden viewBox="0 0 24 24" className="size-[18px] shrink-0 text-[var(--hdr-bronze-hi)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+              <svg aria-hidden viewBox="0 0 24 24" className="size-[18px] shrink-0 text-[var(--frame-bronze-hi)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
                 <path d="M3.5 20.5h17M5 20.5V12l7-6 7 6v8.5M10 20.5v-5h4v5M12 6V2.5l3.5 1.2L12 5" />
               </svg>
               Doanh Trại
@@ -106,12 +106,12 @@ export default function HeaderAccountMenu({ scene, account }: { scene: Scene; ac
           )}
           <li>
             <button type="button" aria-expanded={settings} onClick={() => setSettings((v) => !v)} className={item}>
-              <svg aria-hidden viewBox="0 0 24 24" className="size-[18px] shrink-0 text-[var(--hdr-bronze-hi)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+              <svg aria-hidden viewBox="0 0 24 24" className="size-[18px] shrink-0 text-[var(--frame-bronze-hi)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="3" />
                 <path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1" />
               </svg>
               <span className="flex-1">Cài đặt</span>
-              <svg aria-hidden viewBox="0 0 20 20" className={`size-4 shrink-0 text-[var(--hdr-bronze-hi)] ${settings ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+              <svg aria-hidden viewBox="0 0 20 20" className={`size-4 shrink-0 text-[var(--frame-bronze-hi)] ${settings ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 8l5 5 5-5" />
               </svg>
             </button>
@@ -119,10 +119,10 @@ export default function HeaderAccountMenu({ scene, account }: { scene: Scene; ac
           </li>
           {account ? (
             <>
-              <li className="mt-1 border-t border-[var(--hdr-bronze)]/40 pt-1">
+              <li className="mt-1 border-t border-[var(--frame-bronze)]/40 pt-1">
                 <form action={`/api/auth/logout?returnTo=${encodeURIComponent(scenePath("LOGIN"))}`} method="post">
                   <button type="submit" className={item}>
-                    <svg aria-hidden viewBox="0 0 24 24" className="size-[18px] shrink-0 text-[var(--hdr-bronze-hi)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+                    <svg aria-hidden viewBox="0 0 24 24" className="size-[18px] shrink-0 text-[var(--frame-bronze-hi)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
                       <path d="M14 4h4.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H14M10 16l-4-4 4-4M6 12h10" />
                     </svg>
                     Đăng xuất
@@ -132,7 +132,7 @@ export default function HeaderAccountMenu({ scene, account }: { scene: Scene; ac
             </>
           ) : (
             <>
-              <li className="mt-1 border-t border-[var(--hdr-bronze)]/40 pt-1">
+              <li className="mt-1 border-t border-[var(--frame-bronze)]/40 pt-1">
                 <SceneLink
                   scene="LOGIN"
                   params={{ returnTo: scene === "MENU" || scene === "LOGIN" || scene === "REGISTER" ? undefined : scenePath(scene) }}
@@ -145,7 +145,7 @@ export default function HeaderAccountMenu({ scene, account }: { scene: Scene; ac
               </li>
               <li>
                 <SceneLink scene="REGISTER" aria-current={scene === "REGISTER" ? "page" : undefined} className={item}>
-                  <svg aria-hidden viewBox="0 0 24 24" className="size-[18px] shrink-0 text-[var(--hdr-bronze-hi)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round">
+                  <svg aria-hidden viewBox="0 0 24 24" className="size-[18px] shrink-0 text-[var(--frame-bronze-hi)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round">
                     <path d="M12 5v14M5 12h14" />
                   </svg>
                   Đăng ký
@@ -171,13 +171,13 @@ export function AccountAvatar({ account }: { account: ShellAccount | null }) {
   if (account) {
     const initial = [...account.name.trim()][0]?.toUpperCase() ?? "?";
     return (
-      <span aria-hidden className={`${ring} grid place-items-center bg-[var(--hdr-active)] font-serif text-sm font-bold text-[var(--hdr-text)]`}>
+      <span aria-hidden className={`${ring} grid place-items-center bg-[var(--lacquer)] font-serif text-sm font-bold text-[var(--on-wood)]`}>
         {initial}
       </span>
     );
   }
   return (
-    <span aria-hidden className={`${ring} grid place-items-center bg-[var(--hdr-wood-hi)] text-[var(--hdr-text-soft)]`}>
+    <span aria-hidden className={`${ring} grid place-items-center bg-[var(--wood)] text-[var(--on-wood-soft)]`}>
       <PersonGlyph />
     </span>
   );
@@ -185,7 +185,7 @@ export function AccountAvatar({ account }: { account: ShellAccount | null }) {
 
 function PersonGlyph() {
   return (
-    <svg aria-hidden viewBox="0 0 24 24" className="size-[18px] shrink-0 text-[var(--hdr-bronze-hi)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round">
+    <svg aria-hidden viewBox="0 0 24 24" className="size-[18px] shrink-0 text-[var(--frame-bronze-hi)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round">
       <circle cx="12" cy="8.5" r="3.5" />
       <path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5" />
     </svg>

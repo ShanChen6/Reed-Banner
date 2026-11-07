@@ -51,9 +51,9 @@ export default function TeamTab({
       <section aria-labelledby="team-title" className="barracks-panel rounded-lg p-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 id="team-title" className="barracks-title flex items-center gap-2 font-serif text-xl font-bold">
-            <TeamGlyph className="size-5 text-[var(--bk-gold)]" /> Đội hình 3vs3
+            <TeamGlyph className="size-5 text-[var(--frame-gold-hi)]" /> Đội hình 3vs3
           </h2>
-          <p className="text-sm text-[var(--bk-soft)]">Chủ tướng luôn ra trận; chọn 2 nhân vật kèm.</p>
+          <p className="text-sm text-[var(--on-wood-soft)]">Chủ tướng luôn ra trận; chọn 2 nhân vật kèm.</p>
         </div>
         <ol className="mt-3 grid gap-3 sm:grid-cols-3">
           {members.map((m, i) => {
@@ -61,7 +61,7 @@ export default function TeamTab({
             const on = pickable && slot === i - 1;
             return (
               <li key={m.id} className={`team-card relative flex flex-col overflow-hidden rounded-lg ${on ? "is-selected" : ""}`}>
-                <div className="relative flex h-44 items-end justify-center overflow-hidden" style={{ background: `radial-gradient(circle at 50% 70%, ${ELEMENT_COLOR[m.element]}88, #1b110c 72%)` }}>
+                <div className="relative flex h-44 items-end justify-center overflow-hidden" style={{ background: `radial-gradient(circle at 50% 70%, ${ELEMENT_COLOR[m.element]}88, var(--tone-1b110c) 72%)` }}>
                   <ProfileArt id={m.id} element={m.element} profession={m.profession} className="h-full max-w-full object-contain object-bottom" fallbackClassName="mb-3 size-32" />
                   <span className="absolute top-2 left-2 rounded bg-black/65 px-2 py-0.5 text-sm font-semibold text-title-on-wood">{i === 0 ? "Chủ tướng" : `Vị trí ${i + 1}`}</span>
                 </div>
@@ -70,7 +70,7 @@ export default function TeamTab({
                     <span className="font-serif text-lg font-bold text-title-on-wood">{m.name}</span>
                     <span className="text-sm text-on-wood tabular-nums">Cấp {m.level}</span>
                   </div>
-                  <p className="flex items-center gap-3 text-sm text-[var(--bk-soft)]">
+                  <p className="flex items-center gap-3 text-sm text-[var(--on-wood-soft)]">
                     <span className="flex items-center gap-1">
                       <ElementIcon element={m.element} className="size-4" /> {ELEMENT_NAME[m.element]}
                     </span>
@@ -101,7 +101,7 @@ export default function TeamTab({
             Chọn người cho vị trí {slot + 2}
           </h3>
           <label className="barracks-field relative flex min-h-10 pointer-coarse:min-h-11 min-w-0 flex-[0_1_16rem] items-center rounded-md">
-            <SearchGlyph className="pointer-events-none absolute left-3 size-4 text-[var(--bk-soft)]" />
+            <SearchGlyph className="pointer-events-none absolute left-3 size-4 text-[var(--on-wood-soft)]" />
             <input
               type="search"
               value={query}
@@ -116,7 +116,7 @@ export default function TeamTab({
           </SceneLink>
         </div>
         {bench.length === 0 ? (
-          <p className="py-6 text-center text-[15px] text-[var(--bk-soft)]">Không tìm thấy nhân vật kèm phù hợp.</p>
+          <p className="py-6 text-center text-[15px] text-[var(--on-wood-soft)]">Không tìm thấy nhân vật kèm phù hợp.</p>
         ) : (
           <ul aria-label="Nhân vật kèm đã có" className="barracks-scroll mt-3 grid max-h-[28rem] grid-cols-[repeat(auto-fill,minmax(6.5rem,1fr))] gap-2 overflow-y-auto pr-1">
             {bench.map((e) => (

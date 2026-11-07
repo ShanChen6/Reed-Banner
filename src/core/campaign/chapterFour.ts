@@ -35,7 +35,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
       "Ngô Lãm Công đòi bảo đảm cho vị thế và người theo mình. Lời cam kết được trao thế nào?",
     cinematic: [
       {
-        text: "Gió đầu mùa thổi qua những mái nhà đá ong. Trước sân đình, hai bên đặt chén rượu xuống cùng lúc. Không ai nói đến thắng thua; người ta nói đến những gì còn giữ được.",
+        text: "Gió đầu mùa thổi qua những mái nhà đá ong. Trước sân đình, hai bên đặt chén rượu xuống cùng lúc. Không ai nhắc đến thắng thua; người ta bàn xem còn giữ được những gì.",
         basis: "fictional",
       },
     ],
@@ -61,7 +61,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
       },
       {
         speaker: "Ngô Lãm Công",
-        text: "Họ Ngô từng giữ cả nước. Nay ta về theo một mối thì người theo ta lấy gì làm chỗ dựa?",
+        text: "Họ Ngô từng giữ cả nước. Nay ta về theo một mối, người theo ta lấy gì làm chỗ dựa?",
         basis: "fictional",
       },
     ],
@@ -72,12 +72,12 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
-            text: "Điều gì tôi hứa, quân hai bên cùng nghe. Đất Đường Lâm do người Đường Lâm giữ, không ai bị truy xét chuyện cũ.",
+            text: "Điều gì tôi hứa, quân hai bên cùng nghe. Đất Đường Lâm do người Đường Lâm giữ, chuyện cũ không ai bị truy xét.",
             basis: "fictional",
           },
           {
             speaker: "Ngô Lãm Công",
-            text: "Nói trước mặt quân thì khó rút lời. Được.",
+            text: "Nói trước ba quân thì khó rút lời. Được.",
             basis: "fictional",
           },
         ],
@@ -88,12 +88,12 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
-            text: "Có những điều không cần ai làm chứng ngoài hai ta. Tôi giữ họ Ngô của ông, ông giữ hòa khí cho vùng này.",
+            text: "Có những điều chẳng cần ai làm chứng ngoài hai ta. Tôi giữ họ Ngô cho ông, ông giữ hòa khí cho vùng này.",
             basis: "fictional",
           },
           {
             speaker: "Ngô Lãm Công",
-            text: "Lời riêng nặng hơn lời trước quân, nếu người nói là người giữ lời.",
+            text: "Lời riêng còn nặng hơn lời nói trước quân, nếu người nói là người biết giữ lời.",
             basis: "fictional",
           },
         ],
@@ -144,10 +144,10 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
   },
   {
     id: "M14",
-    prompt: "Người rời Tam Đái đông và rối. Việc gì làm trước?",
+    prompt: "Người rời Tam Đái đông và rối. Việc gì phải làm trước?",
     cinematic: [
       {
-        text: "Cổng lũy mở từ sáng. Người gánh gồng, người dắt trâu, xen giữa là những toán lính đã cởi giáp. Không ai biết chắc chiều nay mình sẽ ngủ ở đâu.",
+        text: "Cổng lũy mở từ sáng. Người gánh gồng, người dắt trâu, xen giữa là những toán lính đã cởi giáp. Chẳng ai biết chắc chiều nay mình sẽ ngả lưng ở đâu.",
         basis: "fictional",
       },
     ],
@@ -168,7 +168,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
       },
       {
         speaker: "Đinh Bộ Lĩnh",
-        text: "Không ai ở đây là tù binh. Ai về làng thì có đường về, ai ở lại thì có việc làm.",
+        text: "Không ai ở đây là tù binh. Ai về làng thì có đường về, ai ở lại thì có việc để làm.",
         basis: "fictional",
       },
     ],
@@ -178,7 +178,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
         label: "Mở đường cho dân trước",
         beats: [
           {
-            text: "Quân Hoa Lư dàn hai bên đường, để người già và trẻ nhỏ qua trước. Kho lúa được canh để không ai cướp phá trong lúc rối.",
+            text: "Quân Hoa Lư dàn hai bên đường, nhường người già và trẻ nhỏ qua trước. Kho lúa có người canh để không ai thừa lúc rối loạn mà cướp phá.",
             basis: "fictional",
           },
         ],
@@ -188,7 +188,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
         label: "Thu vũ khí trước",
         beats: [
           {
-            text: "Giáo mác được gom về một chỗ, ghi sổ rồi khóa lại. Lính cũ của Tam Đái được nhận phần lương để về làng, không ai bị trói.",
+            text: "Giáo mác được gom về một chỗ, ghi sổ rồi khóa lại. Lính cũ của Tam Đái được phát phần lương để về làng, không ai bị trói.",
             basis: "fictional",
           },
         ],
@@ -240,7 +240,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
       "Đánh dẹp lực lượng Phong Châu: hạ Kiều Công Hãn và hai tùy tướng trên bàn cờ đất khô.",
     cinematic: [
       {
-        text: "Con đường đất đỏ chạy dọc bờ sông, bụi bốc lên sau từng hàng quân. Phía trước, cờ hiệu trên các gò cao đã dựng sẵn.",
+        text: "Con đường đất đỏ chạy dọc bờ sông, bụi bốc mù sau từng hàng quân. Phía trước, cờ hiệu đã dựng sẵn trên các gò cao.",
         basis: "fictional",
       },
     ],
@@ -276,7 +276,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
             basis: "fictional",
           },
           {
-            text: "Sứ giả trở về không có lời đáp. Cảnh gửi thư do game dựng; sử không chép cuộc thương lượng nào ở Phong Châu.",
+            text: "Sứ giả trở về mà không có lời đáp. Cảnh gửi thư do game dựng; sử không chép cuộc thương lượng nào ở Phong Châu.",
             basis: "reconstructed",
           },
         ],
@@ -287,7 +287,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
-            text: "Đường khô, quân còn sức. Đi ngay trước khi họ kịp đắp thêm lũy.",
+            text: "Đường khô, quân còn sức. Tiến ngay, trước khi họ kịp đắp thêm lũy!",
             basis: "fictional",
           },
         ],
@@ -306,7 +306,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
     ],
     defeat: [
       {
-        text: "Hàng quân bị đẩy lùi xuống chân gò. Chỉnh đội hình, bổ sung lương rồi thử lại; kết cục của Phong Châu trong game không đổi.",
+        text: "Hàng quân bị đẩy lùi xuống chân gò. Chỉnh lại đội hình, bổ sung lương rồi đánh lại; kết cục của Phong Châu trong game không đổi.",
         basis: "fictional",
       },
     ],
@@ -340,7 +340,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
       "Đánh dẹp lực lượng Hồi Hồ: hạ Kiều Thuận và hai tùy tướng trên bàn cờ đầm lầy.",
     cinematic: [
       {
-        text: "Nước đầm đục và lặng, lau sậy cao quá đầu người. Mỗi bước chân lún xuống bùn đều chậm hơn bước trước.",
+        text: "Nước đầm đục và lặng, lau sậy cao quá đầu người. Mỗi bước chân lún xuống bùn lại nặng hơn bước trước.",
         basis: "fictional",
       },
     ],
@@ -383,7 +383,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
-            text: "Càng chần chừ thì quân càng mỏi. Vượt đầm ngay khi nước còn thấp.",
+            text: "Càng chần chừ quân càng mỏi. Vượt đầm ngay khi nước còn thấp!",
             basis: "fictional",
           },
         ],
@@ -402,7 +402,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
     ],
     defeat: [
       {
-        text: "Quân sa lầy và phải lui về bờ khô. Bổ sung lương rồi thử lại; kết cục của Hồi Hồ trong game không đổi.",
+        text: "Quân sa lầy và phải lui về bờ khô. Bổ sung lương rồi đánh lại; kết cục của Hồi Hồ trong game không đổi.",
         basis: "fictional",
       },
     ],

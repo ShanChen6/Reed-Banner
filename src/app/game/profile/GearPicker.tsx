@@ -73,13 +73,13 @@ export default function GearPicker({
       className="barracks gear-picker m-0 mt-auto max-h-[88dvh] w-full max-w-none overflow-hidden rounded-t-xl p-0 text-on-wood sm:m-auto sm:max-h-[min(42rem,90dvh)] sm:w-[min(40rem,calc(100vw-2rem))] sm:rounded-xl"
     >
       <div className="flex max-h-[inherit] flex-col">
-        <header className="flex items-center gap-3 border-b border-[var(--bk-line-soft)] px-4 py-3">
+        <header className="flex items-center gap-3 border-b border-[var(--frame-line-soft)] px-4 py-3">
           <GearIcon slot={slot} element={current?.element ?? fighter.element} tier={current?.tier} set={current?.set} profession={slot === "vuKhi" ? fighter.profession : undefined} className="size-10 shrink-0" />
           <div className="min-w-0 flex-1">
             <h2 id="gear-picker-title" className="barracks-title font-serif text-lg font-bold">
               {SLOT_NAME[slot]} · {name}
             </h2>
-            <p className="text-sm text-[var(--bk-soft)]">
+            <p className="text-sm text-[var(--on-wood-soft)]">
               {slot === "vuKhi" ? `Chỉ vũ khí nghề ${PROFESSION_NAME[fighter.profession]}.` : "Mọi tướng sĩ mặc được."} Mỗi món chỉ một người dùng.
             </p>
           </div>
@@ -89,13 +89,13 @@ export default function GearPicker({
         </header>
 
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-3">
-          <p className="mb-2 text-sm text-[var(--bk-soft)]">
+          <p className="mb-2 text-sm text-[var(--on-wood-soft)]">
             Đang mặc: {current ? <span className={TIER_CLASS[current.tier]}>{gearText(current)}</span> : "trống"}
           </p>
           {usable.length === 0 ? (
             <div className="barracks-inset flex flex-col items-center gap-2 rounded-md p-4 text-center text-[15px]">
               <p>Kho chưa có món {SLOT_NAME[slot].toLowerCase()} dùng được cho {name}.</p>
-              {otherProfession > 0 && <p className="text-sm text-[var(--bk-soft)]">{otherProfession} vũ khí của nghề khác không dùng được.</p>}
+              {otherProfession > 0 && <p className="text-sm text-[var(--on-wood-soft)]">{otherProfession} vũ khí của nghề khác không dùng được.</p>}
               <SceneLink scene="SHOP" className="barracks-btn is-action min-h-10 pointer-coarse:min-h-11 rounded-md px-4 leading-10">
                 Mua ở Cửa hàng
               </SceneLink>
@@ -119,7 +119,7 @@ export default function GearPicker({
                       <GearIcon slot={it.slot} element={it.element} tier={it.tier} set={it.set} profession={it.profession} className="size-11 shrink-0" />
                       <span className="min-w-0 flex-1">
                         <span className={`block text-[15px] leading-snug font-semibold ${TIER_CLASS[it.tier]}`}>{gearText(it)}</span>
-                        <span className="block text-sm text-[var(--bk-soft)] tabular-nums">
+                        <span className="block text-sm text-[var(--on-wood-soft)] tabular-nums">
                           {stat} +{itemStat(it, fighter.element)}
                         </span>
                       </span>
@@ -137,7 +137,7 @@ export default function GearPicker({
         </div>
 
         {chosen && (
-          <footer className="border-t border-[var(--bk-line-soft)] px-4 py-3">
+          <footer className="border-t border-[var(--frame-line-soft)] px-4 py-3">
             <p className="text-sm text-on-wood" aria-live="polite">
               {wearer === id ? "Món đang mặc." : (gearComparison(profile, id, chosen) ?? "Không mặc được món này.")}
             </p>

@@ -90,16 +90,16 @@ export function ShieldIcon({ className = "size-4" }: { className?: string }) {
 export function CloudCorner({ className, style }: { className?: string; style?: React.CSSProperties }) {
   return (
     <svg viewBox="0 0 32 32" className={className} style={style} aria-hidden focusable="false">
-      <path d="M2 30 V8 A6 6 0 0 1 8 2 H30" fill="none" stroke="var(--gold)" strokeWidth={2.5} strokeLinecap="round" />
+      <path d="M2 30 V8 A6 6 0 0 1 8 2 H30" fill="none" stroke="var(--primary)" strokeWidth={2.5} strokeLinecap="round" />
       <path
         d="M7 22 C4 22 4 17 7.5 17 C6.5 13 11 11 13 14 C14 10 19 10 19.5 14 M7 22 H16"
         fill="none"
-        stroke="var(--gold)"
+        stroke="var(--primary)"
         strokeWidth={2}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <circle cx={8} cy={8} r={2.2} fill="var(--gold)" />
+      <circle cx={8} cy={8} r={2.2} fill="var(--primary)" />
     </svg>
   );
 }
@@ -111,9 +111,9 @@ export function DongSonBand({ className }: { className?: string }) {
     <svg className={className} height={10} aria-hidden focusable="false">
       <defs>
         <pattern id={id} width={12} height={10} patternUnits="userSpaceOnUse">
-          <path d="M0 1 H12 M0 9 H12" stroke="var(--gold)" strokeWidth={1} />
-          <path d="M0 8 L4 2.5 L8 8" fill="none" stroke="var(--gold)" strokeWidth={1} />
-          <circle cx={10} cy={5} r={1.2} fill="var(--gold)" />
+          <path d="M0 1 H12 M0 9 H12" stroke="var(--primary)" strokeWidth={1} />
+          <path d="M0 8 L4 2.5 L8 8" fill="none" stroke="var(--primary)" strokeWidth={1} />
+          <circle cx={10} cy={5} r={1.2} fill="var(--primary)" />
         </pattern>
       </defs>
       <rect width="100%" height={10} fill={`url(#${id})`} />

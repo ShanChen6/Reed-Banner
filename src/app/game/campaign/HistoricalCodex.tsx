@@ -231,80 +231,79 @@ export default function WarlordCodex({
       </h2>
       <p className="mb-2 text-caption text-on-wood-soft">
         Hồ sơ mở khi nhiệm vụ của sứ quân đó mở; kết cục chỉ hiện khi bạn đã đi
-        qua. Số thứ tự là của sổ nguồn, không phải thứ tự đánh dẹp.
+        qua.
       </p>
-      <ol className="grid gap-2 sm:grid-cols-2">
-        {entries.map(({ record: w, resolution: r, stage, location }) => (
-          <li
-            key={w.id}
-            className="rounded-md border border-frame-line-soft bg-wood-inset p-2"
-          >
-            {stage === "unknown" ? (
-              <p className="text-on-wood-soft/80">
-                <span className="font-mono">{w.id}</span> · Chưa gặp. Hồ sơ mở
-                khi tới nhiệm vụ của vùng này.
-              </p>
-            ) : (
-              <details>
-                <summary className="flex min-h-11 cursor-pointer flex-wrap items-center gap-x-1.5 font-semibold text-on-wood focus-visible:ring-2 focus-visible:ring-frame-gold focus-visible:outline-none">
-                  <span className="font-mono text-caption text-on-wood-soft/80">
-                    {w.id}
-                  </span>
-                  {w.name}
-                  <span className="text-caption font-normal text-on-wood-soft">
-                    · {location.name} ·{" "}
-                    {stage === "resolved"
-                      ? GROUP_TEXT[r.group]
-                      : "chưa có kết cục"}
-                  </span>
-                </summary>
-                <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5 text-caption text-on-wood-soft">
-                  <dt className="text-on-wood-soft/80">Danh hiệu</dt>
-                  <dd>
-                    {w.title}
-                    {w.aliases.length > 0
-                      ? ` (còn chép: ${w.aliases.join(", ")})`
-                      : ""}
-                  </dd>
-                  <dt className="text-on-wood-soft/80">Vùng</dt>
-                  <dd>
-                    {location.name}
-                    {location.modernRegion
-                      ? ` · ngày nay: ${location.modernRegion}`
-                      : ""}
-                  </dd>
-                  <dt className="text-on-wood-soft/80">Nhiệm vụ</dt>
-                  <dd>{r.mission}</dd>
-                  <dt className="text-on-wood-soft/80">Kết cục</dt>
-                  <dd>
-                    {stage === "resolved" ? (
-                      <>
-                        {w.outcome}{" "}
-                        <span className="text-on-wood-soft/80">
-                          (game kể: {METHOD_TEXT[r.settlement] ?? r.settlement})
-                        </span>
-                      </>
-                    ) : (
-                      "Chưa hiện: đi qua nhiệm vụ để mở."
-                    )}
-                  </dd>
-                  <dt className="text-on-wood-soft/80">Nguồn</dt>
-                  <dd className="flex flex-wrap gap-x-2">
-                    {w.sources.map((id) => {
-                      const s = historySource(id);
-                      return s ? (
-                        <ExternalLink key={id} href={s.url}>
-                          {id}
-                        </ExternalLink>
-                      ) : null;
-                    })}
-                  </dd>
-                </dl>
-              </details>
-            )}
-          </li>
-        ))}
-      </ol>
+      {/* Chỉ liệt kê hồ sơ đã mở (không hiện hàng khóa "W01 … W12 chưa gặp", Shan yêu cầu 07/11/2026). */}
+      {known === 0 ? (
+        <p className="ui-frame-inset p-3 text-center text-on-wood-soft">
+          Chưa có hồ sơ sứ quân nào. Hồ sơ đầu tiên mở khi bạn tới nhiệm vụ của một sứ quân.
+        </p>
+      ) : (
+        <ol className="grid gap-2 sm:grid-cols-2">
+          {entries
+            .filter((e) => e.stage !== "unknown")
+            .map(({ record: w, resolution: r, stage, location }) => (
+              <li
+                key={w.id}
+                className="rounded-md border border-frame-line-soft bg-wood-inset p-2"
+              >
+                <details>
+                  <summary className="flex min-h-11 cursor-pointer flex-wrap items-center gap-x-1.5 font-semibold text-on-wood focus-visible:ring-2 focus-visible:ring-frame-gold focus-visible:outline-none">
+                    {w.name}
+                    <span className="text-caption font-normal text-on-wood-soft">
+                      · {location.name} ·{" "}
+                      {stage === "resolved"
+                        ? GROUP_TEXT[r.group]
+                        : "chưa có kết cục"}
+                    </span>
+                  </summary>
+                  <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5 text-caption text-on-wood-soft">
+                    <dt className="text-on-wood-soft/80">Danh hiệu</dt>
+                    <dd>
+                      {w.title}
+                      {w.aliases.length > 0
+                        ? ` (còn chép: ${w.aliases.join(", ")})`
+                        : ""}
+                    </dd>
+                    <dt className="text-on-wood-soft/80">Vùng</dt>
+                    <dd>
+                      {location.name}
+                      {location.modernRegion
+                        ? ` · ngày nay: ${location.modernRegion}`
+                        : ""}
+                    </dd>
+                    <dt className="text-on-wood-soft/80">Nhiệm vụ</dt>
+                    <dd>{r.mission}</dd>
+                    <dt className="text-on-wood-soft/80">Kết cục</dt>
+                    <dd>
+                      {stage === "resolved" ? (
+                        <>
+                          {w.outcome}{" "}
+                          <span className="text-on-wood-soft/80">
+                            (game kể: {METHOD_TEXT[r.settlement] ?? r.settlement})
+                          </span>
+                        </>
+                      ) : (
+                        "Chưa hiện: đi qua nhiệm vụ để mở."
+                      )}
+                    </dd>
+                    <dt className="text-on-wood-soft/80">Nguồn</dt>
+                    <dd className="flex flex-wrap gap-x-2">
+                      {w.sources.map((id) => {
+                        const s = historySource(id);
+                        return s ? (
+                          <ExternalLink key={id} href={s.url}>
+                            {id}
+                          </ExternalLink>
+                        ) : null;
+                      })}
+                    </dd>
+                  </dl>
+                </details>
+              </li>
+            ))}
+        </ol>
+      )}
     </section>
   );
 }

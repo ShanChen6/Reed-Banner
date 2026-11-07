@@ -75,7 +75,7 @@ function StagePortrait({
           id={look.id}
           element={look.element}
           profession={look.profession}
-          className={`size-16 sm:size-20 ${active ? "drop-shadow-[0_0_10px_#f2c14e88]" : ""}`}
+          className={`size-16 sm:size-20 ${active ? "drop-shadow-[0_0_10px_color-mix(in_srgb,var(--tone-f2c14e)_53%,transparent)]" : ""}`}
         />
       ) : (
         <span className="flex size-16 items-center justify-center rounded-full border-2 border-frame-line-soft bg-black/40 text-2xl text-on-wood-soft sm:size-20">
@@ -273,7 +273,7 @@ export default function DialoguePlayer({
       className="flex flex-col gap-2 rounded-xl border border-frame-line bg-cover bg-center p-3"
       style={{
         // Tranh nền sáng ở trên cho thấy cảnh, tối dần xuống khung chữ; ảnh chưa tải hay lỗi thì còn lớp nâu cuối.
-        backgroundImage: `linear-gradient(#140d0914 0%, #140d0955 45%, #140d09e6 100%), url(${art}), radial-gradient(ellipse at top, #5b3a22 0%, #2a1b12 60%, #140d09 100%)`,
+        backgroundImage: `linear-gradient(color-mix(in srgb, var(--tone-140d09) 8%, transparent) 0%, color-mix(in srgb, var(--tone-140d09) 33%, transparent) 45%, color-mix(in srgb, var(--tone-140d09) 90%, transparent) 100%), url(${art}), radial-gradient(ellipse at top, var(--tone-5b3a22) 0%, var(--tone-2a1b12) 60%, var(--tone-140d09) 100%)`,
       }}
     >
       {/* Sân khấu: chừa chỗ để tranh nền hiện ra; chân dung đứng hai bên. */}

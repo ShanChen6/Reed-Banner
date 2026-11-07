@@ -154,3 +154,11 @@ Giới hạn: chưa chạy luồng tới hết trận (server thật cần dữ 
 - **Ô bàn cờ Khai Lộ** 30–33px (xem mục 4).
 - Số đo "chữ dưới 13px" ở Thao Luyện (12 điểm) là số phím và chi phí NL phủ trên icon kỹ năng, thuộc ngoại lệ.
 - Các màn sau đăng nhập mới được đo với **hồ sơ mới trống**; trạng thái có nhiều dữ liệu (bảng xếp hạng dài, nhiều thành tựu đã nhận) chưa đo.
+
+### Doanh Trại vào khung card chung (07/11/2026)
+
+| Việc | Trạng thái |
+| --- | --- |
+| Thanh tab và nội dung ba tab (Tướng sĩ, Đội hình, Kho đồ) trước đây nằm rời, không có khung bao. Nay gói trong một `OrnateFrame level="raised"` như Cửa hàng và Nhiệm vụ; các khung con (`barracks-panel`) đổi sang kiểu ô lõm của `.ui-frame-inset` để không lồng hai lớp khung. Chiều cao danh sách tướng trừ thêm phần đệm của khung. Chụp 1440, 1024, 360px ba tab: không tràn ngang, không lỗi | Đã làm |
+| Doanh Trại trên điện thoại: nút "Đăng nhập", "Cửa hàng" và số vàng nằm trên ba dòng (hai dòng khi đã đăng nhập). Nay gom một dòng: nhãn đăng nhập rút còn "Đăng nhập" ở màn nhỏ (đủ nhãn từ 640px, `aria-label` vẫn đủ), đệm nút và khung bao giảm ở màn nhỏ; Cửa hàng và số vàng đi liền một nhóm nên không tách dòng. Đo 360, 390, 412, 600px: một dòng; 320px (dưới mức tối thiểu) nút đăng nhập xuống dòng riêng | Đã làm |
+| Doanh Trại: ẩn viên vàng ở màn nhỏ (dưới 640px) vì header chung đã hiện số vàng; từ 640px trở lên vẫn hiện cạnh nút Cửa hàng. Ở màn nhỏ còn nút "Đăng nhập" và "Cửa hàng" cùng một dòng, không tràn ngang | Đã làm |

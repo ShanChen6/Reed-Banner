@@ -20,7 +20,7 @@ function related(e: Element, test: (other: Element) => boolean) {
 function Trigger({ lines }: { lines: readonly string[] }) {
   return (
     <div className="mt-1 border-l-2 border-frame-gold/40 pl-2 text-xs text-on-wood-soft">
-      <span className="text-[0.65rem] uppercase tracking-wider text-[var(--gold)]/80">Điều kiện kích hoạt</span>
+      <span className="text-[0.65rem] uppercase tracking-wider text-[var(--primary)]/80">Điều kiện kích hoạt</span>
       <ul className="list-disc space-y-0.5 pl-4">{lines.map((l, i) => <li key={i}>{l}</li>)}</ul>
     </div>
   );
@@ -57,7 +57,7 @@ export default function ElementPicker() {
             onClick={() => setElement(e)}
             className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
               e === element
-                ? "border-frame-gold bg-[var(--gold)]/15 text-title-on-wood"
+                ? "border-frame-gold bg-[var(--primary)]/15 text-title-on-wood"
                 : "border-frame-line-soft text-on-wood-soft hover:border-frame-line"
             }`}
           >
@@ -114,8 +114,8 @@ export default function ElementPicker() {
             ))}
           </dl>
 
-          <div className="rounded-lg border border-frame-gold/40 bg-[var(--gold)]/5 px-3 py-2 text-sm">
-            <span className="text-xs uppercase tracking-wider text-[var(--gold)]">Bị động khi đầy Nộ</span>
+          <div className="rounded-lg border border-frame-gold/40 bg-[var(--primary)]/5 px-3 py-2 text-sm">
+            <span className="text-xs uppercase tracking-wider text-[var(--primary)]">Bị động khi đầy Nộ</span>
             <div className="mt-1 flex items-start gap-3">
               <PassiveIcon id={ragePassiveId(element)} name={PASSIVES[element].name} className="size-12" />
               <div>
@@ -137,7 +137,7 @@ export default function ElementPicker() {
                     aria-selected={s.id === skill.id}
                     onClick={() => setSlot(s.slot!)}
                     className={`flex w-full items-center gap-2 rounded-lg p-2 text-left text-xs transition ${
-                      s.id === skill.id ? "bg-[var(--gold)]/15 ring-1 ring-[var(--gold)]/60" : "bg-wood-inset hover:bg-wood-hi"
+                      s.id === skill.id ? "bg-[var(--primary)]/15 ring-1 ring-[var(--primary)]/60" : "bg-wood-inset hover:bg-wood-hi"
                     }`}
                   >
                     <SkillIcon def={s} className="size-9 shrink-0" />
