@@ -78,12 +78,12 @@ function Seal({ uid }: { uid: string }) {
 }
 
 /**
- * Hai dây thừng son xoắn buộc từ đinh đồng xuống hai đầu trục trên. Vẽ trong khung 640×86 và co giãn đều theo bề rộng khối nên dây luôn
+ * Hai dây thừng son xoắn từ đinh đồng xuống hai đầu trục trên; dây luồn ra sau trục (không vắt phía trước) như bản đầu. Vẽ trong khung 640×86 và co giãn đều theo bề rộng khối nên dây luôn
  * dày đúng tỉ lệ: lõi dây, dải xoắn chéo (nét đứt vuông góc với dây), vệt sáng, bóng đổ, nút thắt ở đinh và vòng buộc quanh trục.
  */
 function Cords({ uid }: { uid: string }) {
   const NAIL = { x: 320, y: 13 };
-  const ties = [44, 596].map((x) => ({ x, y: 80 }));
+  const ties = [44, 596].map((x) => ({ x, y: 84 }));
   // Hai dây hơi võng, mỗi dây một độ võng khác nhau để không trông như vẽ bằng thước.
   const sag = [4.5, 3];
   return (
@@ -111,21 +111,9 @@ function Cords({ uid }: { uid: string }) {
               <path d={d} style={{ stroke: "var(--lacquer)" }} strokeWidth="6.5" strokeLinecap="round" />
               <path d={d} style={{ stroke: "var(--lacquer-lo)" }} strokeWidth="6.5" strokeDasharray="1.7 3.1" opacity="0.8" />
               <path d={d} style={{ stroke: "var(--lacquer-hi)" }} strokeWidth="1.5" strokeDasharray="2.4 3.4" opacity="0.8" transform="translate(-1.2 -1.4)" />
-              {/* đầu dây thừa buông xuống sau nút */}
-              <path d={`M${t.x} ${t.y + 1} q${i === 0 ? -6 : 6} 7 ${i === 0 ? -3 : 3} 14`} style={{ stroke: "var(--lacquer)" }} strokeWidth="3.4" strokeLinecap="round" />
-              <path d={`M${t.x} ${t.y + 1} q${i === 0 ? 5 : -5} 6 ${i === 0 ? 2 : -2} 12`} style={{ stroke: "var(--lacquer-lo)" }} strokeWidth="3" strokeLinecap="round" />
             </g>
           );
         })}
-        {/* vòng buộc quanh trục và nút thắt */}
-        {ties.map((t) => (
-          <g key={`k${t.x}`}>
-            <ellipse cx={t.x} cy={t.y} rx="9.5" ry="6.5" fill="none" style={{ stroke: "var(--lacquer)" }} strokeWidth="3.6" />
-            <ellipse cx={t.x} cy={t.y} rx="9.5" ry="6.5" fill="none" style={{ stroke: "var(--lacquer-hi)" }} strokeWidth="0.9" opacity="0.7" />
-            <circle cx={t.x} cy={t.y - 3} r="5.4" style={{ fill: "var(--lacquer)" }} />
-            <circle cx={t.x - 1.5} cy={t.y - 4.4} r="1.7" style={{ fill: "var(--lacquer-hi)" }} />
-          </g>
-        ))}
         {/* nút thắt hai dây ở đầu đinh */}
         <circle cx={NAIL.x} cy={NAIL.y + 6.5} r="6" style={{ fill: "var(--lacquer)" }} />
         <circle cx={NAIL.x - 1.8} cy={NAIL.y + 4.8} r="1.9" style={{ fill: "var(--lacquer-hi)" }} />
