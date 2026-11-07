@@ -1,7 +1,7 @@
 # Prompt thumbnail thẻ chế độ ở Chiến trường
 
 > Cập nhật: 07/11/2026
-> Trạng thái: **DRAFT** — Claude soạn theo yêu cầu của Shan (07/11/2026: thumbnail Khai Lộ và Viễn Chinh đang dùng chung một tranh mực tạm); chưa có tranh.
+> Trạng thái: **IMPLEMENTED** — Claude soạn theo yêu cầu của Shan (07/11/2026: thumbnail Khai Lộ và Viễn Chinh đang dùng chung một tranh mực tạm); Shan tạo tranh từ hai prompt dưới đây, đã gắn vào thẻ (`public/art/home/khai-lo.webp`, `public/art/home/vien-chinh.webp`, 960×540, khoảng 145 KB mỗi tranh).
 
 Thẻ chế độ ở màn Chiến trường (`src/app/game/MenuScene.tsx`, danh sách `MODES`) dùng tranh `public/art/home/<tên>.webp`. Hiện
 **Khai Lộ** và **Viễn Chinh** chưa có tranh riêng nên cùng dùng tranh mực tạm (`public/art/campaign/rail-ink.webp`), nhìn
@@ -43,9 +43,10 @@ tới cổng thành xa.
 High quality hand-painted 2D environment illustration for a Vietnamese historical fantasy web game set in the 10th century, inspired by Hoa Lu and Northern Vietnam; Vietnamese bamboo, thatched timber architecture, limestone karst formations, bronze Dong Son ornamental motifs used sparingly, rice-paper and woodcut texture, antique bronze and warm parchment with subtle vermilion accents, painterly brushwork, cinematic depth and atmospheric lighting, physically coherent architecture, respectful historical atmosphere, no modern objects, no European castles, no Chinese imperial palace stereotypes. No people, no characters, no faces, no hands, no weapons, no lettering, no numbers, no logos, no UI. Scene: a broad stone courtyard inlaid with a grid of polished jade tiles in seven soft elemental tints (pale silver-white, leaf green, deep water blue, ember red, earthy ochre, dusk violet, sea turquoise), each tile engraved only with a tiny abstract Dong Son swirl; the near half of the grid is intact and gleaming, while the far half has been cleared in irregular blocks, leaving a pale dirt road that winds between the remaining tiles toward a distant misty fortress gate with a red-lacquered tower; a few loose jade chips and petals scattered on the road; bamboo groves and limestone peaks softly out of focus on both sides, warm afternoon light and a faint haze. Calm, satisfying, puzzle-solving mood: the viewer should read a path being opened block by block. Composed as a mode-card thumbnail: wide 16:9 landscape, the cleared road and the distant gate in the upper and central two thirds, the bottom third calmer and darker (a title will be overlaid there), mid-tone values without pure black or blown-out white, no vignette, no border, no frame.
 ```
 
-## 4. Sau khi có ảnh
+## 4. Quy trình đưa ảnh vào thẻ (đã làm ngày 07/11/2026)
 
 1. Xuất WebP 960×540 vào `public/art/home/`, kiểm tra ảnh nhẹ (dưới 150 KB) và đọc được ở thẻ nhỏ 360px.
-2. Thêm `art` cho hai thẻ trong `MODES` (`src/app/game/MenuScene.tsx`).
+2. Thêm `art` cho thẻ trong `MODES` (`src/app/game/MenuScene.tsx`).
 3. Chụp lại màn Chiến trường ở 360 và 1440px, so với các thẻ khác (cùng độ sáng vùng dưới để chữ tên đọc được).
-4. Cập nhật dòng `Trạng thái` của tài liệu này thành IMPLEMENTED.
+
+Tranh Khai Lộ là sân lát ngọc bảy sắc hệ với con đường được dọn dần tới cổng thành; tranh Viễn Chinh là hai đạo quân cờ vàng và cờ xanh ngọc tiến về một thành đất, có thuyền chiến trên sông. Cả hai có phần dưới êm và tối nên tên chế độ đè lên vẫn đọc rõ.
