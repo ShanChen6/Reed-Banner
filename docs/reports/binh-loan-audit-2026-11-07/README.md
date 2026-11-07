@@ -79,3 +79,10 @@ Bố cục co giãn tốt, nội dung sử liệu rõ nguồn (nhãn Sử chép,
 | **Tab "Binh lực"** (liên kết sang Doanh Trại, không có đường quay lại; Doanh Trại đã có sẵn trong menu tài khoản ở header) **thay bằng tab "Tái đấu"** ngay trong card: chuyển khu Tái đấu sứ quân từ cuối tab Bản đồ sang tab riêng, nên tab Bản đồ ngắn hơn và không còn liên kết rời khỏi màn. Doanh Trại vẫn vào được từ header và từ phần "ra trận cùng đội đã chọn ở Doanh Trại" trong chữ giải thích | Đã làm |
 
 Ghi chú: lỗi `reveal` (bản đồ phóng to tự kéo về giữa khi cờ nhận tiêu điểm) không tái hiện được bằng chuột ở các mức phóng thử; không sửa.
+
+### Cập nhật 07/11/2026 (lượt 3)
+
+| Việc | Trạng thái |
+| --- | --- |
+| **Về tab Bản đồ bị tự kéo trang.** Mỗi lần đổi tab code luôn gọi `scrollIntoView` và chuyển tiêu điểm (trình duyệt cuộn theo tiêu điểm) nên trang bị kéo xuống khoảng 56–76px. Sửa: tiêu điểm dùng `preventScroll`, chỉ cuộn trang khi đầu card đang nằm trên khung nhìn (ví dụ mở nhiệm vụ từ danh sách ở cuối bản đồ). Đo ở 1920, 1440, 360px × 3 tiến độ: đổi tab 0 lần cuộn; mở nhiệm vụ từ cuối trang vẫn đưa về đầu card | Đã làm |
+| **Sử ký bỏ W01–W12:** bỏ các hàng "Chưa gặp" và mã Wxx ở hồ sơ đã mở; chỉ liệt kê hồ sơ đã mở, chưa có thì một dòng. Người mới: tab Sử ký giảm từ 1886px xuống khoảng 700px ở điện thoại | Đã làm |

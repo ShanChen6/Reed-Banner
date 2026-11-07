@@ -691,19 +691,22 @@ export default function ChapterOne({
   const mapRef = useRef<HTMLDivElement>(null);
   const shownView = useRef(atlas.view);
   // Đổi màn thì đưa tiêu điểm tới tiêu đề nhiệm vụ hoặc về bản đồ (người dùng bàn phím, đọc màn hình không lạc).
+  // Không để trình duyệt tự cuộn theo tiêu điểm (preventScroll) và chỉ cuộn trang khi đầu card đang nằm trên khung nhìn
+  // (ví dụ mở nhiệm vụ từ danh sách ở cuối bản đồ); bấm tab ở đầu card thì giữ nguyên vị trí cuộn.
   useEffect(() => {
     if (shownView.current === atlas.view) return;
     shownView.current = atlas.view;
-    sectionRef.current?.scrollIntoView({ block: "start" });
+    const section = sectionRef.current;
+    if (section && section.getBoundingClientRect().top < 0) section.scrollIntoView({ block: "start" });
     if (atlas.view === "mission") {
-      missionHeadingRef.current?.focus();
+      missionHeadingRef.current?.focus({ preventScroll: true });
       return;
     }
     const map = mapRef.current;
     const target =
       map?.querySelector<SVGElement>("[aria-pressed=true]") ??
       map?.querySelector<SVGElement>("svg");
-    target?.focus();
+    target?.focus({ preventScroll: true });
   }, [atlas.view]);
   const [seen, setSeen] = useState<readonly string[]>(
     () => readJson<string[]>(SEEN_KEY) ?? [],
