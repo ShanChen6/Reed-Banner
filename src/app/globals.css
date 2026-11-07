@@ -406,6 +406,17 @@
   background: linear-gradient(var(--atlas-wood-hi), #231910);
   color: var(--atlas-ink-on-wood);
 }
+/* Thẻ nhắc việc trong đại card (thanh bắt đầu, hướng dẫn): cùng viền và nền gỗ với các khung Bình Loạn, không đậm hơn. */
+.campaign-atlas .atlas-callout {
+  border: 1.5px solid var(--atlas-border-soft);
+  border-radius: 0.75rem;
+  background: linear-gradient(var(--atlas-wood-hi), #231910);
+  color: var(--atlas-ink-on-wood);
+}
+.campaign-atlas .atlas-callout-primary {
+  border-color: var(--atlas-border);
+  box-shadow: 0 0 20px -10px var(--atlas-gold-hi);
+}
 .campaign-atlas .world-strip {
   background: linear-gradient(#dcc08a, var(--atlas-paper-deep));
   color: var(--atlas-ink);
