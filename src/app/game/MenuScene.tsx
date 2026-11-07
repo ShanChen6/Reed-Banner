@@ -25,28 +25,36 @@ interface Mode {
   readonly art?: string;
   readonly kicker?: string;
   readonly featured?: boolean;
-  /** Dòng trạng thái thay cho "Đang mở" (ví dụ bản chơi thử offline). */
-  readonly note?: string;
+  /** Một dòng thông tin có ích thay cho "Đang mở" (cách chơi, nhịp làm mới, điều kiện). */
+  readonly status: string;
+  /** Động từ trên nút kêu gọi ở góc thẻ ("Leo tháp", "Giữ ải"…). */
+  readonly cta: string;
+  /** Dòng hiện khi chế độ đang khóa theo cờ tính năng. */
+  readonly lockedText?: string;
 }
 
+// Giọng văn thẻ chế độ: một câu, mở đầu bằng động từ, nói được làm gì và được gì; tránh thuật ngữ nội bộ (khóa đội,
+// khai thông sa bàn…). Nhãn kicker theo bộ cố định: Cốt truyện, Leo tháp, Sinh tồn, Mỗi ngày, Đấu người, Binh pháp, Giải đố, Ghép tướng, Hành quân.
 const MODES: readonly Mode[] = [
   {
     scene: "CAMPAIGN",
     title: "Bình Loạn",
-    text: "Sáu chương dẹp loạn 12 sứ quân, rồi Tái đấu sứ quân đã bị đánh dẹp.",
+    text: "Dẹp loạn 12 sứ quân qua sáu chương, chiêu mộ danh tướng sử Việt.",
     art: "campaign",
-    kicker: "Cốt truyện chính",
+    kicker: "Cốt truyện · Nên chơi trước",
     featured: true,
+    status: "Sáu chương · có tái đấu sứ quân",
+    cta: "Dẹp loạn",
   },
-  { scene: "TRIAL", title: "Tháp Thí Luyện", text: "20 tầng cố định, tự chọn đội và luật riêng từng tầng.", art: "trial", kicker: "Song Tháp" },
-  { scene: "DESTINY", title: "Tháp Thiên Mệnh", text: "Khóa đội theo chu kỳ, giữ máu và lương xuyên tầng.", art: "destiny", kicker: "Song Tháp" },
-  { scene: "SURVIVAL", title: "Trấn Ải", text: "Đối thủ kéo đến theo đợt trên cùng một bàn cờ.", art: "survival" },
-  { scene: "DAILY", title: "Nhật Lệnh", text: "Một đề chung cho mọi người, mỗi ngày một lần.", art: "daily" },
-  { scene: "ARENA", title: "Quần Hùng", text: "Đánh đội phòng thủ người chơi khác để lại.", art: "arena" },
-  { scene: "FORMATION", title: "Trận Đồ", text: "Bày quân lệnh theo nghề và hệ để khai thông sa bàn.", art: "tran-do", kicker: "Binh pháp", note: "Chơi thử offline" },
-  { scene: "KHAI_LO", title: "Khai Lộ", text: "Chạm để xóa cả khối quân cùng hệ, mở đường xuyên bàn cờ; có chế độ Cấp tốc.", kicker: "Giải đố", note: "Chơi thử offline" },
-  { scene: "TAM_TUONG_KY", title: "Tầm Tướng Ký", text: "Ghép yếu tố từ bảy hệ để tìm lại chân dung danh tướng.", art: "tam-tuong-ky", kicker: "Ghép yếu tố" },
-  { scene: "EXPEDITION", title: "Viễn Chinh", text: "Chia sáu tướng làm hai đạo, hành quân trên sa bàn và giáp công thành đích.", kicker: "Hành quân" },
+  { scene: "TRIAL", title: "Tháp Thí Luyện", text: "Leo 20 tầng, mỗi tầng một luật chọn đội riêng.", art: "trial", kicker: "Leo tháp", status: "20 tầng cố định · thưởng Đá Cường Hóa", cta: "Leo tháp", lockedText: "Sắp mở · tiến trình được giữ nguyên" },
+  { scene: "DESTINY", title: "Tháp Thiên Mệnh", text: "Leo tháp theo chu kỳ, máu và lương thực mang theo từng tầng.", art: "destiny", kicker: "Leo tháp", status: "Đổi chu kỳ định kỳ · có xếp hạng", cta: "Leo tháp", lockedText: "Sắp mở · tiến trình được giữ nguyên" },
+  { scene: "SURVIVAL", title: "Trấn Ải", text: "Giữ ải trước từng đợt địch, xem bạn trụ được bao lâu.", art: "survival", kicker: "Sinh tồn", status: "Xếp hạng theo tuần", cta: "Giữ ải" },
+  { scene: "DAILY", title: "Nhật Lệnh", text: "Một thử thách chung mỗi ngày, so hạng cùng mọi người.", art: "daily", kicker: "Mỗi ngày", status: "Làm mới mỗi ngày", cta: "Nhận lệnh" },
+  { scene: "ARENA", title: "Quần Hùng", text: "Đấu với đội của người chơi khác, leo bảng hạng.", art: "arena", kicker: "Đấu người", status: "Xếp hạng theo tuần", cta: "Thách đấu" },
+  { scene: "FORMATION", title: "Trận Đồ", text: "Xếp quân theo nghề và hệ để mở dần bản đồ.", art: "tran-do", kicker: "Binh pháp", status: "Chơi ngay · không cần tài khoản", cta: "Bày trận" },
+  { scene: "KHAI_LO", title: "Khai Lộ", text: "Chạm xóa khối quân cùng hệ, mở đường qua bàn cờ.", kicker: "Giải đố", status: "Chơi ngay · không cần tài khoản", cta: "Giải đố" },
+  { scene: "TAM_TUONG_KY", title: "Tầm Tướng Ký", text: "Ghép bảy hệ để tìm lại chân dung danh tướng.", art: "tam-tuong-ky", kicker: "Ghép tướng", status: "Mỗi lượt dùng một phiếu", cta: "Ghép tướng", lockedText: "Sắp mở" },
+  { scene: "EXPEDITION", title: "Viễn Chinh", text: "Chia quân thành hai đạo, hành quân đánh thành địch.", kicker: "Hành quân", status: "Chiến thuật trên sa bàn", cta: "Hành quân", lockedText: "Sắp mở" },
 ];
 
 /**
@@ -219,16 +227,19 @@ function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; n
       </div>
       <div className="flex flex-1 flex-col gap-3 px-4 pt-2.5 pb-4">
         <p className="text-[15px] leading-snug text-[var(--atlas-ink-on-wood)]/90">{mode.text}</p>
-        <div className="mt-auto flex items-center justify-between gap-2 text-sm">
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-2 text-sm">
           {locked ? (
             <span className="flex items-center gap-1.5 text-[var(--atlas-muted)]">
-              <LockGlyph /> Chưa mở · tiến trình được giữ nguyên
+              <LockGlyph /> {mode.lockedText ?? "Sắp mở · tiến trình được giữ nguyên"}
             </span>
           ) : (
             <>
-              <span className="text-[var(--atlas-muted)]">{needsLogin ? "Cần đăng nhập" : (mode.note ?? "Đang mở")}</span>
-              <span className="home-enter flex items-center gap-1 font-serif font-semibold">
-                Vào <span aria-hidden>›</span>
+              <span className="flex min-w-0 flex-1 items-center gap-1.5 text-[var(--atlas-muted)]">
+                {needsLogin && <LockGlyph />}
+                <span className="leading-tight">{needsLogin ? "Đăng nhập để vào xếp hạng" : mode.status}</span>
+              </span>
+              <span className="home-enter flex shrink-0 items-center gap-1 rounded-full border border-frame-gold/50 bg-black/30 px-3 py-1 font-serif font-semibold transition group-hover:border-frame-gold group-hover:bg-frame-gold/20">
+                {needsLogin ? "Đăng nhập" : mode.cta} <span aria-hidden>›</span>
               </span>
             </>
           )}
