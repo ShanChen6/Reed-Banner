@@ -20,8 +20,6 @@ import { ModeIcon, type ModeIconKind } from "./game/art/mode-icons";
 import { BoardCrest, TileArt } from "./game/art/tiles";
 import { towerFeatureFlags, type TowerFeatureFlags } from "@/server/featureFlags";
 import { FAQ, PROFESSION_PERK, TILE_GIVES } from "./home/data";
-import ContactBlock from "./game/ContactBlock";
-import { socialLinks } from "./game/footerLinks";
 import DrumFace from "./home/DrumFace";
 import ElementPicker from "./home/ElementPicker";
 import { Embers, GiltCorners, OrnateDivider } from "./home/Ornaments";
@@ -450,46 +448,47 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="border-t border-frame-gold/25 px-4 py-12 text-sm text-on-wood-soft/90">
-        {/* Hai cột cùng trục dọc, cùng chiều cao tương đối: trái là nhận diện và điều hướng, phải là thư cuộn. */}
-        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-center lg:gap-14">
-          <div className="flex flex-col gap-6 lg:pr-4">
-            <div className="flex items-center gap-4">
-              <LogoMark className="size-14" />
-              <div>
-                <p className="font-serif text-2xl font-bold text-on-wood">Cờ Lau</p>
-                <p className="mt-0.5 text-base">Mini game thuộc ShanVerse</p>
-              </div>
-            </div>
-            <ul className="grid grid-cols-2 gap-x-6 gap-y-1 border-y border-frame-gold/20 py-4 text-base sm:grid-cols-3">
-              {NAV.map((n) => (
-                <li key={n.href}>
-                  <a href={n.href} className="inline-flex min-h-11 items-center hover:text-[var(--gold)]">
-                    {n.label}
-                  </a>
-                </li>
-              ))}
-              {[
-                { href: "/game", label: "Vào game" },
-                { href: "/game/practice", label: "Thao Luyện" },
-                { href: "/game/login", label: "Đăng nhập" },
-                { href: "/game/register", label: "Đăng ký" },
-              ].map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className="inline-flex min-h-11 items-center hover:text-[var(--gold)]">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <p className="max-w-md leading-relaxed">
-              Bối cảnh và tên nhân vật lịch sử là lịch sử chung; tính cách, kỹ năng và lời thoại trong game là hư cấu.
+      <footer className="border-t border-frame-gold/25 px-4 py-10 text-sm text-on-wood-soft/80">
+        <div className="mx-auto flex max-w-6xl flex-col gap-6 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="flex items-center gap-2 font-serif text-lg font-bold text-on-wood">
+              <LogoMark className="size-7" /> Cờ Lau
             </p>
+            <p className="mt-1">Mini game thuộc ShanVerse.</p>
           </div>
-          <div className="flex justify-center lg:justify-end">
-            <ContactBlock links={socialLinks()} />
-          </div>
+          <ul className="flex flex-wrap gap-x-5 gap-y-2">
+            {NAV.map((n) => (
+              <li key={n.href}>
+                <a href={n.href} className="hover:text-[var(--gold)]">
+                  {n.label}
+                </a>
+              </li>
+            ))}
+            <li>
+              <Link href="/game" className="hover:text-[var(--gold)]">
+                Vào game
+              </Link>
+            </li>
+            <li>
+              <Link href="/game/practice" className="hover:text-[var(--gold)]">
+                Thao Luyện
+              </Link>
+            </li>
+            <li>
+              <Link href="/game/login" className="hover:text-[var(--gold)]">
+                Đăng nhập
+              </Link>
+            </li>
+            <li>
+              <Link href="/game/register" className="hover:text-[var(--gold)]">
+                Đăng ký
+              </Link>
+            </li>
+          </ul>
         </div>
+        <p className="mx-auto mt-6 max-w-6xl text-xs">
+          Bối cảnh và tên nhân vật lịch sử là lịch sử chung; tính cách, kỹ năng và lời thoại trong game là hư cấu.
+        </p>
       </footer>
     </div>
   );

@@ -1,13 +1,14 @@
 "use client";
 
 // Footer của màn game: chỉ ở Chiến trường và các màn thông tin (xem FOOTER_SCENES), không bao giờ trong lúc đang chơi.
-// Gọn: nhận diện và lưu ý bên trái, liên kết bên phải. Khối liên hệ (thư cuộn mạng xã hội) nằm ở footer trang giới thiệu (src/app/page.tsx),
-// không lặp ở đây (Shan chốt 07/11/2026). Liên kết ngoài đang khóa: vẫn hiện, bấm không chuyển trang (xem footerLinks.ts).
+// Hai cột căn giữa trong khung 72rem (cùng khổ với footer trang giới thiệu để không dạt ra hai mép màn rộng): trái là nhận diện,
+// liên kết và lưu ý; phải là thư cuộn liên hệ (ContactBlock), chỉ có MỘT khối liên hệ trong cả dự án (Shan chốt 07/11/2026: để ở
+// footer màn game). Liên kết ngoài đang khóa: vẫn hiện, bấm không chuyển trang (xem footerLinks.ts).
 
 import Link from "next/link";
-import { MODE_CONTENT_WIDTH } from "@/components/game-ui";
 import { LogoMark } from "./art/logo";
-import { buildLabel, footerLinks, type FooterLink } from "./footerLinks";
+import ContactBlock from "./ContactBlock";
+import { buildLabel, footerLinks, socialLinks, type FooterLink } from "./footerLinks";
 import type { Scene } from "./scene";
 
 /** Các phân cảnh có footer. */
@@ -41,25 +42,31 @@ export default function GameFooter() {
   const links = footerLinks();
   const build = buildLabel();
   return (
-    <footer className="border-t border-frame-line-soft bg-wood-lo px-4 py-6 text-caption text-on-wood-soft sm:px-6">
-      <div className={`mx-auto grid w-full gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:gap-10 ${MODE_CONTENT_WIDTH}`}>
-        <div className="flex flex-col gap-2">
-          <p className="flex items-center gap-2 font-serif text-base font-bold text-on-wood">
-            <LogoMark className="size-7" /> Cờ Lau
-            <span className="font-sans text-caption font-normal text-on-wood-soft">· Mini game thuộc ShanVerse</span>
-          </p>
-          <p className="max-w-xl">
+    <footer className="border-t border-frame-line-soft bg-wood-lo px-4 py-10 text-caption text-on-wood-soft sm:px-6">
+      <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-center lg:gap-14">
+        <div className="flex flex-col gap-5 lg:pr-4">
+          <div className="flex items-center gap-4">
+            <LogoMark className="size-14" />
+            <div>
+              <p className="font-serif text-2xl font-bold text-on-wood">Cờ Lau</p>
+              <p className="mt-0.5 text-base">Mini game thuộc ShanVerse</p>
+            </div>
+          </div>
+          <nav aria-label="Liên kết" className="border-y border-frame-line-soft py-3">
+            <ul className="-mx-1 grid grid-cols-2 gap-x-4 text-base sm:grid-cols-3">
+              {links.map((l) => (
+                <li key={l.label}>{item(l)}</li>
+              ))}
+            </ul>
+          </nav>
+          <p className="max-w-md leading-relaxed">
             Bối cảnh và tên nhân vật lịch sử là lịch sử chung; tính cách, kỹ năng và lời thoại trong game là hư cấu.
             {build && <span className="whitespace-nowrap"> · Bản {build}</span>}
           </p>
         </div>
-        <nav aria-label="Liên kết">
-          <ul className="-mx-1 flex flex-wrap gap-x-3 md:justify-end">
-            {links.map((l) => (
-              <li key={l.label}>{item(l)}</li>
-            ))}
-          </ul>
-        </nav>
+        <div className="flex justify-center lg:justify-end">
+          <ContactBlock links={socialLinks()} />
+        </div>
       </div>
     </footer>
   );
