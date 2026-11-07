@@ -79,7 +79,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | [ke-hoach-do-hoa.md](06-art/ke-hoach-do-hoa.md) | Kế hoạch đồ họa & hoạt ảnh Đ0–Đ9 |
 | ★ [prompts/v4-2/](06-art/prompts/v4-2/00-bao-cao.md) | Điểm vào bộ prompt; [Xạ thủ và prompt Sát thủ đa vũ khí](06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md). Năm Xạ thủ W02 là DRAFT, Kim/Mộc bảo toàn |
 | [prompts/](06-art/prompts/do-hoa.md) | [Đồ họa ngoài nhân vật](06-art/prompts/do-hoa.md), [Codex dựng rig](06-art/prompts/codex-rig-nhan-vat.md); bản cũ SUPERSEDED: [nhân vật](06-art/prompts/nhan-vat.md), [tư thế](06-art/prompts/tu-the.md) |
-| [prompts/thumbnail-chien-truong.md](06-art/prompts/thumbnail-chien-truong.md) | Prompt thumbnail thẻ Khai Lộ và Viễn Chinh ở Chiến trường (16:9, không chữ); DRAFT, chưa có tranh |
+| [prompts/thumbnail-chien-truong.md](06-art/prompts/thumbnail-chien-truong.md) | Prompt thumbnail thẻ Khai Lộ và Viễn Chinh ở Chiến trường (16:9, không chữ); IMPLEMENTED (`public/art/home/khai-lo.webp`, `vien-chinh.webp`) |
 | [prompts/vien-chinh-sa-ban.md](06-art/prompts/vien-chinh-sa-ban.md) | Prompt tranh nền 6 sa bàn Viễn Chinh (5:3, không chữ); DRAFT, chưa có tranh |
 | [prompts/icon-ky-nang.md](06-art/prompts/icon-ky-nang.md) | Prompt biểu tượng kỹ năng còn vẽ SVG: 24 chiêu nghề, tuyệt chiêu/chiêu riêng 74 nhân vật, tuyệt chiêu ô 4 Đinh Bộ Lĩnh, cách dùng lại 42 ảnh kỹ năng hệ; DRAFT, chưa có ảnh |
 | [prompts/icon-bi-dong.md](06-art/prompts/icon-bi-dong.md) | Prompt icon 29 bị động dùng chung: 7 bị động nghề 1, 8 truy kích theo nghề, 14 truy kích theo hệ; IMPLEMENTED (`public/art/passives/`) |
