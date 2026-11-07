@@ -38,12 +38,18 @@ function PlaceViewer({ place, onClose }: { place: FormationMap; onClose: () => v
 
 export default function PlacesPanel({ collected }: { collected: readonly string[] }) {
   const [open, setOpen] = useState<FormationMap | null>(null);
+  const [showAll, setShowAll] = useState(false);
   const have = MAP_POOL.filter((m) => collected.includes(m.id)).length;
   return (
     <OrnateFrame className="flex flex-col">
       <SectionTitle description="Khai thông trọn một sa bàn Trận Đồ để thêm địa danh. Bấm địa danh đã có để xem lại tranh.">
         Bộ sưu tập địa danh: {have}/{MAP_POOL.length}
       </SectionTitle>
+      <details className="group" open={showAll} onToggle={(e) => setShowAll(e.currentTarget.open)}>
+      <summary className="flex min-h-11 cursor-pointer items-center gap-2 font-semibold text-title-on-wood">
+        <span aria-hidden className="text-frame-gold transition group-open:rotate-90">›</span>
+        {showAll ? "Thu gọn danh sách" : `Xem ${MAP_POOL.length} địa danh`}
+      </summary>
       <ul className="grid grid-cols-2 gap-1.5 text-[15px] sm:grid-cols-3 lg:grid-cols-5">
         {MAP_POOL.map((m) => {
           const has = collected.includes(m.id);
@@ -60,6 +66,7 @@ export default function PlacesPanel({ collected }: { collected: readonly string[
           );
         })}
       </ul>
+      </details>
       {open && <PlaceViewer place={open} onClose={() => setOpen(null)} />}
     </OrnateFrame>
   );
