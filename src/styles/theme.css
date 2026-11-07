@@ -42,8 +42,8 @@
     --screen-glow: #4a2418;
     --screen-glow-cool: #2b2440;
     /* Decorative gradients are shared by the landing page's fantasy frames. */
-    --gilt-gradient: linear-gradient(180deg, #fff6cc 0%, var(--primary) 38%, #b77a26 62%, var(--color-brand-gold-light) 100%);
-    --bronze-gradient: linear-gradient(160deg, #fff4c4, var(--primary) 40%, var(--border) 70%, var(--color-brand-gold-light));
+    --gilt-gradient: linear-gradient(180deg, var(--accent-foreground) 0%, var(--primary) 38%, var(--tone-b77a26) 62%, var(--color-brand-gold-light) 100%);
+    --bronze-gradient: linear-gradient(160deg, var(--on-lacquer), var(--primary) 40%, var(--border) 70%, var(--color-brand-gold-light));
     --panel-gradient: linear-gradient(180deg, var(--surface), var(--background));
     --panel-border-gradient: linear-gradient(160deg, var(--color-brand-gold-light), var(--border) 45%, var(--primary));
     --panel-highlight-gradient: radial-gradient(ellipse at 50% 0%, var(--accent-deep), var(--decorative-frame) 70%);
@@ -82,6 +82,51 @@
     --on-lacquer: #fbecc8;
     --jade: #6fbf8f;
     --ash: #8a7458;
+    /* Màu hiệu ứng, bản đồ, minh họa chưa gán vai (gom từ mã hex rải trong CSS, 07/11/2026). Màu mới thêm ở đây, không viết hex ở nơi khác. */
+    --black: #000000;
+    --white: #ffffff;
+    --tone-0b1118: #0b1118;
+    --tone-141c27: #141c27;
+    --tone-18212c: #18212c;
+    --tone-233042: #233042;
+    --tone-2c3a4b: #2c3a4b;
+    --tone-2e7d4f: #2e7d4f;
+    --tone-34483f: #34483f;
+    --tone-5e7468: #5e7468;
+    --tone-5f8a8b: #5f8a8b;
+    --tone-6b5640: #6b5640;
+    --tone-7a5222: #7a5222;
+    --tone-7a6146: #7a6146;
+    --tone-8f3324: #8f3324;
+    --tone-8fe3d4: #8fe3d4;
+    --tone-9c2a22: #9c2a22;
+    --tone-9c7845: #9c7845;
+    --tone-a06a3a: #a06a3a;
+    --tone-a77c38: #a77c38;
+    --tone-a9b9a8: #a9b9a8;
+    --tone-b77a26: #b77a26;
+    --tone-b8321f: #b8321f;
+    --tone-b8862f: #b8862f;
+    --tone-b9852f: #b9852f;
+    --tone-b98a3e: #b98a3e;
+    --tone-b98f52: #b98f52;
+    --tone-c0402f: #c0402f;
+    --tone-c8923a: #c8923a;
+    --tone-d4a24c: #d4a24c;
+    --tone-d9bd84: #d9bd84;
+    --tone-dcc08a: #dcc08a;
+    --tone-e2582b: #e2582b;
+    --tone-e8c477: #e8c477;
+    --tone-f0c867: #f0c867;
+    --tone-f1c977: #f1c977;
+    --tone-f1d08a: #f1d08a;
+    --tone-f2a93b: #f2a93b;
+    --tone-f2c14e: #f2c14e;
+    --tone-fde047: #fde047;
+    --tone-fde68a: #fde68a;
+    --tone-ff8a5c: #ff8a5c;
+    --tone-ffd77a: #ffd77a;
+    --tone-ffd9a0: #ffd9a0;
     /* Chỉ số trong trận: máu, năng lượng, tinh thần, nộ, khiên. Màu bão hòa để đọc trên thanh nhỏ; không dùng cho việc khác. */
     --stat-hp: #f43f5e;
     --stat-energy: #0ea5e9;
@@ -167,6 +212,6 @@
   --breakpoint-3xl: 112.5rem;
   --radius-control: 0.5rem;
   --radius-card: 0.75rem;
-  --shadow-card: 0 6px 20px -12px #0008;
-  --shadow-card-inset: inset 0 0 24px #0006;
+  --shadow-card: 0 6px 20px -12px color-mix(in srgb, var(--black) 53%, transparent);
+  --shadow-card-inset: inset 0 0 24px color-mix(in srgb, var(--black) 40%, transparent);
 }
