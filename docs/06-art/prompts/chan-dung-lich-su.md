@@ -119,7 +119,7 @@ Keep the same person, face structure, hair, clothing colours and accessories as 
 2. Đồng tông giữa hai ảnh (cùng nền sương nâu đỏ) **và nhân vật tách khỏi nền rõ** ở cỡ ô thật (không chìm như lần thử 1).
 3. Soát theo mục 4: không hiệu ứng phép, không trang sức lộng lẫy; **nhưng vẫn là minh họa nhân vật** (nét viền rõ, mặt hơi lý tưởng hóa), không như ảnh chụp.
 4. Đối chiếu với `standing.webp` cũ: cùng khuôn mặt, cùng màu áo.
-5. Đạt cả bốn thì làm tiếp sáu nhân vật ở mục 5.1, rồi mới làm các nhân vật còn lại (chia theo hệ, 7 nhóm, để dễ duyệt).
+5. Đạt cả bốn thì làm tiếp sáu nhân vật ở mục 5.1, rồi mới làm **75 nhân vật còn lại** (chia theo hệ, 7 nhóm, để dễ duyệt). Tổng số nhân vật là **77** (77 thư mục trong `public/art/characters/`, 77 bộ hình động trong `rigs.ts`); con số 63 ở `nhan-vat.md` là cũ.
 
 ## 7. Sau khi có ảnh (kế hoạch gắn vào game)
 
@@ -128,3 +128,31 @@ Keep the same person, face structure, hair, clothing colours and accessories as 
 3. Bỏ nền màu theo hệ ở các ô dùng `bust.webp`; thể hiện hệ bằng huy hiệu nhỏ ở góc (đã có biểu tượng hệ).
 4. Chụp Doanh Trại ở 1440px và 360px, soát đọc được tên, cấp và biểu tượng đè lên phần dưới ảnh (độ tương phản chữ ít nhất 4,5:1).
 5. Cập nhật [art bible](../art-bible.md) mục 2.7 (hiện ghi phong cách in khắc gỗ) cho khớp phong cách đã duyệt, và đổi dòng `Trạng thái` của tài liệu này thành IMPLEMENTED.
+
+## 8. Các loại tranh khác của nhân vật (tranh ra chiêu, tranh lớn)
+
+Mỗi nhân vật có nhiều loại tranh, không chỉ chân dung. Phong cách mới ở tài liệu này hiện chỉ áp cho `bust.webp`. Kiểm tra 07/11/2026 (Shan hỏi về tranh ra chiêu):
+
+| Tranh | Số lượng | Dùng ở | Gắn với hình động trận? | Đề xuất |
+|---|---|---|---|---|
+| `portrait.webp` (cận mặt 192px) | 77 | Chân dung tròn nhỏ ở HUD, dự phòng khi chưa có bust | Không | Giữ làm dự phòng |
+| **`bust.webp` (mới, bán thân 384px)** | 2/77 | Ô chân dung ở Doanh Trại | Không | **Làm trước** (mục 5) |
+| `style.webp` (tranh phong thái, 250×379) | 77 | Tranh lớn ở trang chi tiết tướng (`ProfileArt`) | **Không**: chỉ `ProfileArt` đọc | **Làm thứ hai**: khi ô chân dung đã mới, tranh lớn bên cạnh vẫn kiểu cũ sẽ lệch trong cùng một màn |
+| `standing.webp` + các lớp (`head`, `body`, `arm`, `sword`, vải…) | 77 | Hình động trong trận, cắt lớp bằng tọa độ cố định | **Có** | Để sau cùng |
+| `pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down` (tranh ra chiêu và ngã) | 77 × 4 = 308 | Trận (`BattleStage`, `rigs.ts`: mỗi nhân vật có `texScale`, `origin`, `anchor`, `burst` chỉnh tay cho từng tranh) | **Có** | Để sau cùng, làm theo mục 8.2 |
+
+### 8.1 Vì sao để tranh ra chiêu sau
+
+- 308 tranh trong suốt toàn thân, mỗi tranh có tọa độ đặt chân và điểm bắn hiệu ứng chỉnh tay trong `rigs.ts`; đổi dáng là phải chỉnh lại từng điểm.
+- Phong cách hiện tại của tranh ra chiêu là **fantasy toàn thân** (ví dụ Hà Vân: dải lụa bay nhiều lớp, áo xẻ sâu, giày cao gót, quầng lụa quanh người), lệch với chân dung mới. Cần sửa, nhưng sau khi phong cách bán thân đã được chốt, vì toàn thân dễ trôi phong cách hơn.
+- Trong lúc chờ, ô chân dung mới (UI) và tranh trận (cũ) nằm ở hai màn khác nhau nên lệch ít bị lộ hơn so với hai tranh cạnh nhau trong cùng một màn (trường hợp `style.webp`).
+
+### 8.2 Khi làm tranh ra chiêu theo phong cách mới
+
+1. **Dùng chính tranh ra chiêu cũ làm ảnh tham chiếu dáng** (giữ nguyên tư thế, khung ảnh và vị trí chân), chỉ **thay cách vẽ**: màu trầm, nét viền rõ, trang phục thế kỷ X, bỏ lụa bay và trang sức lộng lẫy. Nhờ giữ dáng nên tọa độ trong `rigs.ts` gần như dùng lại được, chỉ chỉnh nhẹ.
+2. Giữ **nền trong suốt** và đúng kích thước tệp cũ (`texScale` tính theo kích thước).
+3. Chỉ làm tranh **ra chiêu và tuyệt chiêu** (`pose-cast`, `pose-ultimate`) trước; đòn thường (`pose-attack`) và ngã (`pose-down`) làm sau vì xuất hiện ít được chú ý hơn.
+4. Làm thử **một nhân vật** (Hà Vân hoặc Nguyễn Bặc) cả bốn tranh, ghép vào trận để xem hiệu ứng và tọa độ trước khi làm hàng loạt.
+5. Ảnh hưởng đến `standing.webp`: vì các lớp hình động cắt từ ảnh đứng, đổi ảnh đứng nghĩa là cắt lại lớp cho từng nhân vật (`head`, `body`, `arm`…). Chỉ làm khi đã chốt đổi toàn bộ hình trận sang phong cách mới.
+
+**Thứ tự đề xuất:** (1) `bust.webp` 77 nhân vật, (2) `style.webp` 77 nhân vật, (3) thử một nhân vật với bốn tranh ra chiêu, (4) mới quyết định có đổi cả bộ hình trận hay không.
