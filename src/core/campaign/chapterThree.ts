@@ -44,7 +44,7 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
         refs: ["S02"],
       },
       {
-        text: "Hoa Lư không gây ra cái chết ấy. Nhiệm vụ này chỉ đặt bối cảnh: khoảng trống quyền lực khiến các vùng tự giữ lấy mình. Phần hệ quả rộng là game tái dựng.",
+        text: "Hoa Lư không gây ra cái chết ấy. Nhiệm vụ chỉ đặt bối cảnh: khoảng trống quyền lực khiến các vùng đất phải tự giữ lấy mình. Phần hệ quả rộng hơn là do game tái dựng.",
         basis: "reconstructed",
       },
     ],
@@ -70,7 +70,7 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
           },
           {
             speaker: "Đinh Bộ Lĩnh",
-            text: "Vậy việc của ta không chỉ là giữ Hoa Lư. Phải tìm cách để các vùng thôi đánh nhau.",
+            text: "Vậy việc của ta không chỉ là giữ Hoa Lư. Phải tìm cách để các vùng thôi đánh nhau, về chung một mối.",
             basis: "fictional",
           },
         ],
@@ -85,7 +85,7 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
   },
   {
     id: "M10",
-    prompt: "Lưu Cơ trải bản đồ. Bạn muốn xem tuyến nào trước?",
+    prompt: "Lưu Cơ trải bản đồ ra. Bạn muốn xem tuyến nào trước?",
     intro: [
       {
         text: "Toàn thư liệt kê mười hai sứ quân cùng địa bàn truyền thống trong mục năm 966.",
@@ -104,7 +104,7 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
       },
       {
         speaker: "Lưu Cơ",
-        text: "Mười hai cái tên, mười hai vùng đất. Nếu coi nơi nào cũng là kẻ thù thì ta sẽ chẳng còn ai để cùng giữ dân.",
+        text: "Mười hai cái tên, mười hai vùng đất. Nếu coi nơi nào cũng là kẻ thù thì ta chẳng còn ai để cùng giữ dân.",
         basis: "fictional",
       },
     ],
@@ -143,7 +143,7 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
       "Phạm Phòng Át hỏi: nếu Đằng Châu về theo, người của ông sẽ ra sao?",
     cinematic: [
       {
-        text: "Bến sông Đằng Châu lúc sương còn dày. Hai lá cờ đứng cách nhau một bãi cỏ; không ai rút gươm. Giữa bãi, một chiếc chiếu được trải ra cho hai người ngồi.",
+        text: "Bến sông Đằng Châu sương còn dày. Hai lá cờ đứng cách nhau một bãi cỏ; không ai rút gươm. Giữa bãi, một chiếc chiếu được trải ra cho hai người ngồi.",
         basis: "fictional",
       },
     ],
@@ -163,7 +163,7 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
       },
       {
         speaker: "Phạm Phòng Át",
-        text: "Ta giữ Đằng Châu đã lâu. Đem quân đi đánh nhau thêm thì người chết là người của cả hai bên.",
+        text: "Ta giữ Đằng Châu đã lâu. Đem quân đánh nhau thêm thì người chết là người của cả hai bên.",
         basis: "fictional",
       },
     ],
@@ -179,7 +179,7 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
           },
           {
             speaker: "Phạm Phòng Át",
-            text: "Giữ được người theo ta thì ta không còn gì phải tiếc.",
+            text: "Giữ được người theo ta thì ta chẳng còn gì phải tiếc.",
             basis: "fictional",
           },
         ],
@@ -190,7 +190,7 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
-            text: "Ruộng Đằng Châu cứ cấy, chợ Đằng Châu cứ họp. Không ai đến đây thu lương bằng giáo mác nữa.",
+            text: "Ruộng Đằng Châu cứ cấy, chợ Đằng Châu cứ họp. Từ nay không ai đến thu lương bằng giáo mác nữa.",
             basis: "fictional",
           },
           {
@@ -245,7 +245,7 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
       "Ngô Xương Xí còn mang di sản họ Ngô. Đinh Bộ Lĩnh mở lời bằng cách nào?",
     cinematic: [
       {
-        text: "Trong một gian nhà gỗ ngoài thành Bình Kiều, đèn dầu cháy suốt đêm. Một bên là người mang họ Ngô, một bên là người từng giữ Hoa Lư trước quân Ngô. Cả hai đều biết lần này không ai muốn mở cổng bằng máu.",
+        text: "Trong gian nhà gỗ ngoài thành Bình Kiều, đèn dầu cháy suốt đêm. Một bên là người mang họ Ngô, một bên là người từng giữ vững Hoa Lư trước quân Ngô. Cả hai đều hiểu: lần này không ai muốn mở cổng bằng máu.",
         basis: "fictional",
       },
     ],
@@ -276,7 +276,7 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
       },
       {
         speaker: "Đinh Bộ Lĩnh",
-        text: "Không. Tôi muốn cái tên ấy không còn phải giữ bằng giáo mác.",
+        text: "Không. Tôi chỉ muốn cái tên ấy khỏi phải giữ bằng giáo mác.",
         basis: "fictional",
       },
     ],
@@ -286,12 +286,12 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
         label: "Bày quân ngoài thành",
         beats: [
           {
-            text: "Quân Hoa Lư dựng trại trong tầm mắt thành Bình Kiều nhưng không tiến thêm. Lời mời hội kiến được gửi kèm danh sách quân số.",
+            text: "Quân Hoa Lư dựng trại trong tầm mắt thành Bình Kiều nhưng không tiến thêm. Lời mời hội kiến được gửi đi kèm danh sách quân số.",
             basis: "fictional",
           },
           {
             speaker: "Ngô Xương Xí",
-            text: "Ông cho ta thấy quân để ta khỏi phải đoán. Thôi được, ta nói chuyện.",
+            text: "Ông cho ta thấy quân để ta khỏi phải đoán già đoán non. Được, ta nói chuyện.",
             basis: "fictional",
           },
         ],
@@ -301,12 +301,12 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
         label: "Hội kiến kín",
         beats: [
           {
-            text: "Đinh Bộ Lĩnh chỉ mang vài người tùy tùng vào gặp. Không có trống, không có cờ.",
+            text: "Đinh Bộ Lĩnh chỉ mang vài người tùy tùng vào gặp. Không trống, không cờ.",
             basis: "fictional",
           },
           {
             speaker: "Ngô Xương Xí",
-            text: "Đến tay không mà dám nói chuyện một mối. Ta nghe.",
+            text: "Đến tay không mà dám bàn chuyện một mối. Ta nghe.",
             basis: "fictional",
           },
         ],
