@@ -15,7 +15,7 @@ const variants = {
 } as const;
 
 const sizes = {
-  sm: "min-h-8 px-3 py-1.5 text-sm",
+  sm: "min-h-8 pointer-coarse:min-h-11 px-3 py-1.5 text-sm",
   md: "min-h-11 px-4 py-2.5 text-base",
   lg: "min-h-12 px-6 py-3 text-base",
   icon: "size-11 p-2",

@@ -340,7 +340,7 @@ function SurvivalBreakReady({
                   setDraftElement(currentElement);
                   setDraftReviveId(undefined);
                 }}
-                className="min-h-10"
+                className="min-h-10 pointer-coarse:min-h-11"
               >
                 Hoàn tác bản nháp
               </Button>
@@ -380,7 +380,7 @@ function SurvivalBreakReady({
                                 return updated;
                               })
                             }
-                            className="min-h-10 w-full text-sm"
+                            className="min-h-10 pointer-coarse:min-h-11 w-full text-sm"
                           >
                             {slotOptions(slot)}
                           </Select>
@@ -436,7 +436,7 @@ function SurvivalBreakReady({
                           onChange={(event) =>
                             setDraftProfession(event.target.value as Profession)
                           }
-                          className="mt-1 min-h-10 w-full text-sm"
+                          className="mt-1 min-h-10 pointer-coarse:min-h-11 w-full text-sm"
                         >
                           {PROFESSIONS.map((profession) => (
                             <option key={profession} value={profession}>
@@ -454,7 +454,7 @@ function SurvivalBreakReady({
                           onChange={(event) =>
                             setDraftElement(event.target.value as Element)
                           }
-                          className="mt-1 min-h-10 w-full text-sm"
+                          className="mt-1 min-h-10 pointer-coarse:min-h-11 w-full text-sm"
                         >
                           {ELEMENTS.map((element) => (
                             <option key={element} value={element}>

@@ -219,7 +219,7 @@ export default function GearPanel({
             role="tab"
             aria-selected={character === id}
             onClick={() => setWho(id)}
-            className={choiceVariants({ size: "sm", className: "min-h-8 px-2 text-xs" })}
+            className={choiceVariants({ size: "sm", className: "min-h-8 pointer-coarse:min-h-11 px-2 text-xs" })}
           >
             {nameOf(id)}
           </button>
@@ -341,7 +341,7 @@ export default function GearPanel({
                   onClick={() =>
                     commit({ type: "equip", character, item: one.id })
                   }
-                  className={buttonVariants({ size: "sm", className: "min-h-8 px-2 text-xs" })}
+                  className={buttonVariants({ size: "sm", className: "min-h-8 pointer-coarse:min-h-11 px-2 text-xs" })}
                 >
                   Mặc cho {nameOf(character)}
                 </button>
@@ -353,7 +353,7 @@ export default function GearPanel({
                   onClick={() =>
                     commit({ type: "unequip", character: wearer, item: one.id })
                   }
-                  className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 px-2 text-xs" })}
+                  className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 pointer-coarse:min-h-11 px-2 text-xs" })}
                 >
                   Tháo
                 </button>
@@ -362,7 +362,7 @@ export default function GearPanel({
                 type="button"
                 disabled={disabled}
                 onClick={() => commit({ type: "sell", item: one.id })}
-                className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 px-2 text-xs" })}
+                className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 pointer-coarse:min-h-11 px-2 text-xs" })}
               >
                 Bán +{SELL_GOLD[one.tier]}
               </button>
@@ -392,7 +392,7 @@ export default function GearPanel({
           <button
             type="button"
             onClick={() => setPicked([])}
-            className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 px-2 text-xs" })}
+            className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 pointer-coarse:min-h-11 px-2 text-xs" })}
           >
             Bỏ chọn
           </button>

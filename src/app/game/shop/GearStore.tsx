@@ -145,7 +145,7 @@ export default function GearStore({
       <p className="text-caption text-on-wood-soft">
         Túi đồ <span className="tabular-nums">{profile.bag.length}/{BAG_LIMIT}</span>
         {bagFull && " (đã đầy, bán bớt để mua thêm)"}. Món mới vào túi; mặc và ghép ở{" "}
-        <SceneLink scene="PROFILE" className="text-frame-gold underline underline-offset-2">Doanh Trại</SceneLink>.
+        <SceneLink scene="PROFILE" className="ui-link text-frame-gold underline underline-offset-2">Doanh Trại</SceneLink>.
       </p>
     </section>
   );

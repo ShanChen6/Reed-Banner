@@ -510,7 +510,7 @@ export default function KhaiLoScreen() {
             </div>
           )}
           <details className="ui-frame p-4" open={state.level === 1 && state.moves === 0}>
-            <summary className="cursor-pointer ui-title-on-wood font-bold">Luật chơi</summary>
+            <summary className="cursor-pointer ui-title-on-wood font-bold pointer-coarse:py-3.5">Luật chơi</summary>
             <ul className="mt-2 list-disc space-y-1.5 pl-5 text-[15px] leading-snug">
               <li>Chạm một quân có ít nhất 1 quân cùng hệ liền cạnh (trên, dưới, trái, phải): <b>cả khối</b> biến mất. Khối n quân được n² điểm, nên gom khối to rồi mới xóa.</li>
               <li>Quân phía trên rơi xuống; cột trống hẳn thì các cột bên phải dồn sang trái. Không có quân mới rơi vào.</li>

@@ -112,7 +112,7 @@ export default function Barracks({
           </div>
           <div className="ml-auto flex flex-wrap items-center gap-2">
             {playerName === null && (
-              <SceneLink scene="LOGIN" params={{ returnTo: "/game/profile" }} className="barracks-btn flex min-h-10 items-center rounded-md px-3 text-sm">
+              <SceneLink scene="LOGIN" params={{ returnTo: "/game/profile" }} className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center rounded-md px-3 text-sm">
                 Đăng nhập để giữ Doanh Trại
               </SceneLink>
             )}

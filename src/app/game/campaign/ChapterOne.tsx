@@ -496,7 +496,7 @@ function BattlePrep({
                     aria-pressed={on}
                     disabled={!on && team.length >= 2}
                     onClick={() => toggleTeam(id)}
-                    className={choiceVariants({ size: "sm", className: "min-h-9 gap-1 px-2 py-1 text-xs font-normal" })}
+                    className={choiceVariants({ size: "sm", className: "min-h-9 pointer-coarse:min-h-11 gap-1 px-2 py-1 text-xs font-normal" })}
                   >
                     <ElementIcon element={c.element} className="size-3.5" />
                     {c.name}

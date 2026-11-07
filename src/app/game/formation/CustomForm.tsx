@@ -37,7 +37,7 @@ function toggle<T>(list: readonly T[], item: T, order: readonly T[]): T[] {
   return order.filter((x) => next.includes(x));
 }
 
-const rangeClass = "h-2 w-full cursor-pointer accent-frame-gold";
+const rangeClass = "h-2 pointer-coarse:h-6 w-full cursor-pointer accent-frame-gold";
 
 function Slider({ id, label, value, min, max, step = 1, unit, onChange, disabled = false }: { id: string; label: string; value: number; min: number; max: number; step?: number; unit: string; onChange: (n: number) => void; disabled?: boolean }) {
   return (
@@ -62,7 +62,7 @@ export default function CustomForm({ onStart }: { onStart: (rules: Ruleset) => v
 
   return (
     <details className="ui-frame p-4">
-      <summary className="cursor-pointer font-serif text-xl font-bold text-title-on-wood">Tùy chỉnh</summary>
+      <summary className="cursor-pointer font-serif text-xl font-bold text-title-on-wood pointer-coarse:py-3.5">Tùy chỉnh</summary>
       <p className="mt-1 text-sm text-on-wood-soft">Tự dựng sa bàn của riêng bạn. Không thưởng, không xếp hạng, không lưu điểm cao nhất.</p>
 
       <div className="mt-3 grid gap-4 md:grid-cols-2">

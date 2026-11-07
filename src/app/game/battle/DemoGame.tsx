@@ -1895,7 +1895,7 @@ export default function DemoGame({
             <button
               type="button"
               onClick={() => { setProfile(loadProfile()); setStarted(false); }}
-              className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-9 gap-1.5 text-xs" })}
+              className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-9 pointer-coarse:min-h-11 gap-1.5 text-xs" })}
             >
               <ProfessionIcon profession={profession} className="size-4" />
               Đổi đội hình
@@ -1906,7 +1906,7 @@ export default function DemoGame({
             <select
               value={difficulty}
               onChange={(e) => setDifficulty(e.target.value as Difficulty)}
-              className="min-h-9 rounded-control border border-frame-line-soft bg-wood-inset px-2 py-1 text-on-wood"
+              className="min-h-9 pointer-coarse:min-h-11 rounded-control border border-frame-line-soft bg-wood-inset px-2 py-1 text-on-wood"
             >
               {DIFFICULTIES.map((d) => (
                 <option key={d} value={d}>
@@ -2565,7 +2565,7 @@ export default function DemoGame({
             {online ? (
               <p className="ui-frame-inset rounded-xl p-3 text-caption text-on-wood-soft">
                 Túi đồ {profile.bag.length}/{BAG_LIMIT} món. Mặc trang bị và nâng kỹ năng ở{" "}
-                <SceneLink scene="PROFILE" className="text-frame-gold underline underline-offset-2">
+                <SceneLink scene="PROFILE" className="ui-link text-frame-gold underline underline-offset-2">
                   Doanh Trại
                 </SceneLink>
                 , đội sẽ cập nhật ở đây khi quay lại.

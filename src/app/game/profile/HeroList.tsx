@@ -83,7 +83,7 @@ export default function HeroList({
         type="button"
         onClick={onRemove}
         aria-label={`Bỏ lọc ${label}`}
-        className="barracks-chip flex min-h-8 items-center gap-1.5 rounded-full px-3 text-sm"
+        className="barracks-chip flex min-h-8 pointer-coarse:min-h-11 items-center gap-1.5 rounded-full px-3 text-sm"
       >
         {icon}
         {label}
@@ -105,7 +105,7 @@ export default function HeroList({
       </div>
 
       <div className="mt-2 flex flex-wrap gap-2">
-        <label className="barracks-field relative flex min-h-10 min-w-0 basis-full items-center">
+        <label className="barracks-field relative flex min-h-10 pointer-coarse:min-h-11 min-w-0 basis-full items-center">
           <SearchGlyph className="pointer-events-none absolute left-3 size-4 text-[var(--bk-soft)]" />
           <input
             type="search"
@@ -113,7 +113,7 @@ export default function HeroList({
             onChange={(e) => onFilter({ ...filter, query: e.target.value })}
             placeholder="Tìm theo tên…"
             aria-label="Tìm tướng sĩ theo tên, gõ có dấu hoặc không dấu"
-            className="size-full min-h-10 rounded-md bg-transparent pr-2 pl-9 text-[15px] text-stone-100 outline-none placeholder:text-stone-400"
+            className="size-full min-h-10 pointer-coarse:min-h-11 rounded-md bg-transparent pr-2 pl-9 text-[15px] text-stone-100 outline-none placeholder:text-stone-400"
           />
         </label>
         <div className="flex min-w-0 basis-full gap-2">
@@ -122,7 +122,7 @@ export default function HeroList({
             aria-expanded={panel}
             aria-controls={panelId}
             onClick={() => setPanel(!panel)}
-            className={`barracks-btn flex min-h-10 shrink-0 items-center justify-center gap-1.5 rounded-md px-3 text-[15px] whitespace-nowrap ${panel ? "is-on" : ""}`}
+            className={`barracks-btn flex min-h-10 pointer-coarse:min-h-11 shrink-0 items-center justify-center gap-1.5 rounded-md px-3 text-[15px] whitespace-nowrap ${panel ? "is-on" : ""}`}
           >
             <FilterGlyph className="size-4" />
             Bộ lọc
@@ -130,13 +130,13 @@ export default function HeroList({
               <span className="rounded-full bg-[var(--bk-gold)] px-1.5 text-xs font-bold text-stone-950 tabular-nums">{active}</span>
             )}
           </button>
-          <label className="barracks-field relative flex min-h-10 min-w-0 flex-1 items-center">
+          <label className="barracks-field relative flex min-h-10 pointer-coarse:min-h-11 min-w-0 flex-1 items-center">
             <SortGlyph className="pointer-events-none absolute left-2.5 size-4 text-[var(--bk-soft)]" />
             <select
               value={sort}
               onChange={(e) => onSort(e.target.value as RosterSort)}
               aria-label="Sắp xếp tướng sĩ"
-              className="size-full min-h-10 cursor-pointer appearance-none rounded-md bg-transparent pr-6 pl-8 text-[15px] text-stone-100 outline-none"
+              className="size-full min-h-10 pointer-coarse:min-h-11 cursor-pointer appearance-none rounded-md bg-transparent pr-6 pl-8 text-[15px] text-stone-100 outline-none"
             >
               {(Object.keys(SORT_NAME) as RosterSort[]).map((s) => (
                 <option key={s} value={s} className="bg-stone-900">
@@ -182,7 +182,7 @@ export default function HeroList({
                 type="button"
                 aria-pressed={filter.team === t}
                 onClick={() => onFilter({ ...filter, team: t })}
-                className={`barracks-btn min-h-9 rounded-md px-3 ${filter.team === t ? "is-on" : ""}`}
+                className={`barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-3 ${filter.team === t ? "is-on" : ""}`}
               >
                 {t === "all" ? "Tất cả" : TEAM_FILTER_NAME[t]}
               </button>
@@ -210,7 +210,7 @@ export default function HeroList({
           )}
           {filter.team !== "all" && chip(TEAM_FILTER_NAME[filter.team], () => onFilter({ ...filter, team: "all" }))}
           <li>
-            <button type="button" onClick={() => onFilter(NO_FILTER)} className="min-h-8 rounded px-2 text-sm text-[var(--bk-gold)] underline-offset-2 hover:underline">
+            <button type="button" onClick={() => onFilter(NO_FILTER)} className="min-h-8 pointer-coarse:min-h-11 rounded px-2 text-sm text-[var(--bk-gold)] underline-offset-2 hover:underline">
               Xóa tất cả
             </button>
           </li>
@@ -237,7 +237,7 @@ export default function HeroList({
           <div className="flex flex-col items-center gap-2 py-10 text-center text-[15px] text-[var(--bk-soft)]">
             <p>{entries.length === 0 ? "Chưa có tướng sĩ nào." : "Không tìm thấy tướng sĩ phù hợp."}</p>
             {isFiltered(filter) && (
-              <button type="button" onClick={() => onFilter(NO_FILTER)} className="barracks-btn min-h-10 rounded-md px-4">
+              <button type="button" onClick={() => onFilter(NO_FILTER)} className="barracks-btn min-h-10 pointer-coarse:min-h-11 rounded-md px-4">
                 Xóa bộ lọc
               </button>
             )}

@@ -54,7 +54,7 @@ export default function HeaderAccountMenu({ scene, account }: { scene: Scene; ac
         aria-controls={panelId}
         title={name}
         onClick={() => setOpen((v) => !v)}
-        className="game-header-btn game-header-account flex h-11 items-center gap-2 rounded-md py-1 pr-1.5 pl-1 sm:pr-2"
+        className="game-header-btn game-header-account flex h-11 min-w-11 items-center gap-2 rounded-md py-1 pr-1.5 pl-1 sm:pr-2"
       >
         <AccountAvatar account={account} />
         <span className="hidden max-w-[6.5rem] truncate font-serif text-sm font-semibold lg:block xl:max-w-[8rem] xl:text-base">{name}</span>
