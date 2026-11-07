@@ -21,8 +21,8 @@ import { FACTION_MARKS, flagPath } from "./factionMarks";
 import RotateHint from "./RotateHint";
 import { fitView, useMapView, MAX_ZOOM } from "./useMapView";
 import {
-  NAME_FONT,
   PLACED_STRONGHOLDS,
+  MIN_LABEL_PX,
   PLACE_FONT,
   UNPLACED_STRONGHOLDS,
   WORLD_H as H,
@@ -297,7 +297,10 @@ export default function WorldMap({
   selected: StrongholdId | null;
   onSelect: (id: StrongholdId) => void;
 }) {
-  const { view, setView, zoomBy, reset, reveal, svgProps } = useMapView(W, H);
+  const { view, setView, zoomBy, reset, reveal, svgProps, pxPerUnit } =
+    useMapView(W, H);
+  // Chữ nhãn phải ≥ 13px thật; bản đồ nhỏ hơn mức đó thì ẩn nhãn (danh sách cứ điểm bên dưới thay thế).
+  const showLabels = pxPerUnit * PLACE_FONT >= MIN_LABEL_PX - 0.2;
   const [artFailed, setArtFailed] = useState(false);
   const { play: playSound } = useAudio();
   const pick = (id: StrongholdId) => {
@@ -397,15 +400,17 @@ export default function WorldMap({
               onError={() => setArtFailed(true)}
             />
           )}
-          <text
-            x={1510}
-            y={520}
-            textAnchor="end"
-            className="map-label-sea"
-            aria-hidden
-          >
-            Biển Đông
-          </text>
+          {showLabels && (
+            <text
+              x={1510}
+              y={520}
+              textAnchor="end"
+              className="map-label-sea"
+              aria-hidden
+            >
+              Biển Đông
+            </text>
+          )}
 
           {PLACED_STRONGHOLDS.map((s) => {
             const [x, y] = s.at!;
@@ -477,34 +482,31 @@ export default function WorldMap({
                 <g transform={`translate(${g.pole[0]},${g.pole[1]})`}>
                   <Banner k={g.scale} id={s.id} color={STATE_COLOR[st]} />
                 </g>
-                <rect
-                  x={g.label[0]}
-                  y={g.label[1]}
-                  width={g.label[2] - g.label[0]}
-                  height={g.label[3] - g.label[1]}
-                  rx={8}
-                  className={
-                    isSelected ? "map-label map-label-selected" : "map-label"
-                  }
-                />
-                <text
-                  x={g.labelX}
-                  y={g.label[1] + PLACE_FONT + 2}
-                  textAnchor={g.anchor}
-                  fontSize={PLACE_FONT}
-                  fontWeight={800}
-                >
-                  {s.place}
-                </text>
-                <text
-                  x={g.labelX}
-                  y={g.label[1] + PLACE_FONT + NAME_FONT + 8}
-                  textAnchor={g.anchor}
-                  fontSize={NAME_FONT}
-                  fontStyle="italic"
-                >
-                  {strongholdLeader(s)}
-                </text>
+                {showLabels && (
+                  <>
+                    <rect
+                      x={g.label[0]}
+                      y={g.label[1]}
+                      width={g.label[2] - g.label[0]}
+                      height={g.label[3] - g.label[1]}
+                      rx={8}
+                      className={
+                        isSelected
+                          ? "map-label map-label-selected"
+                          : "map-label"
+                      }
+                    />
+                    <text
+                      x={g.labelX}
+                      y={g.label[1] + PLACE_FONT + 2}
+                      textAnchor={g.anchor}
+                      fontSize={PLACE_FONT}
+                      fontWeight={800}
+                    >
+                      {s.place}
+                    </text>
+                  </>
+                )}
               </g>
             );
           })}
@@ -524,9 +526,11 @@ export default function WorldMap({
             />
             <path d="M0,-42 L11,0 L0,42 L-11,0 Z" fill="var(--map-ink)" />
             <path d="M0,-42 L11,0 L0,0 Z" fill="#a8322b" />
-            <text y={-58} textAnchor="middle" fontSize={22} fontWeight={700}>
-              B
-            </text>
+            {showLabels && (
+              <text y={-58} textAnchor="middle" fontSize={30} fontWeight={700}>
+                B
+              </text>
+            )}
           </g>
         </svg>
 
@@ -621,13 +625,19 @@ export default function WorldMap({
       </div>
       {/* Bản đồ nhỏ trên điện thoại: chọn cứ điểm từ danh sách, không cần chạm trúng lá cờ (cờ trên bản đồ chỉ rộng 30–60px).
           Mở sẵn vì đây là cách chọn chính khi màn hẹp; cứ điểm của chương đang xem lên đầu, cứ điểm có nhiệm vụ đang mở có chấm. */}
-      <details open className="world-strip border-t px-3 py-2 text-sm lg:hidden">
+      <details
+        open
+        className="world-strip border-t px-3 py-2 text-sm lg:hidden"
+      >
         <summary className="flex min-h-11 cursor-pointer items-center font-semibold">
           Danh sách cứ điểm ({WORLD_STRONGHOLDS.length})
         </summary>
         <ul className="grid grid-cols-2 gap-1.5 pb-1">
           {[...WORLD_STRONGHOLDS]
-            .sort((x, y) => Number(inChapter.has(y.id)) - Number(inChapter.has(x.id)))
+            .sort(
+              (x, y) =>
+                Number(inChapter.has(y.id)) - Number(inChapter.has(x.id)),
+            )
             .map((s) => {
               const state = strongholdState(s, campaign.factions);
               const open = strongholdHasOpenMission(s, status);
@@ -642,20 +652,33 @@ export default function WorldMap({
                       s.id === selected ? "map-chip-active" : ""
                     } ${inChapter.has(s.id) || s.id === selected ? "" : "opacity-70"}`}
                   >
-                    <FactionFlag id={s.id} color={STATE_COLOR[state]} className="h-7 w-5 shrink-0" />
+                    <FactionFlag
+                      id={s.id}
+                      color={STATE_COLOR[state]}
+                      className="h-7 w-5 shrink-0"
+                    />
                     <span className="min-w-0 leading-tight">
                       <span className="block font-semibold">{s.place}</span>
-                      <span className="block text-caption opacity-75">{strongholdLeader(s)}</span>
+                      <span className="block text-caption opacity-75">
+                        {strongholdLeader(s)}
+                      </span>
                     </span>
                     {open && (
-                      <span aria-hidden title="Có nhiệm vụ đang mở" className="absolute top-1.5 right-1.5 size-2.5 rounded-full bg-lacquer-hi ring-2 ring-paper-hi" />
+                      <span
+                        aria-hidden
+                        title="Có nhiệm vụ đang mở"
+                        className="absolute top-1.5 right-1.5 size-2.5 rounded-full bg-lacquer-hi ring-2 ring-paper-hi"
+                      />
                     )}
                   </button>
                 </li>
               );
             })}
         </ul>
-        <p className="text-caption opacity-75">Chấm đỏ: cứ điểm có nhiệm vụ đang mở. Cứ điểm của chương đang xem nằm trên cùng.</p>
+        <p className="text-caption opacity-75">
+          Chấm đỏ: cứ điểm có nhiệm vụ đang mở. Cứ điểm của chương đang xem nằm
+          trên cùng.
+        </p>
       </details>
     </figure>
   );

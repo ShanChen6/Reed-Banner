@@ -3,7 +3,13 @@
 // Phóng, kéo và điều khiển bàn phím cho bản đồ SVG (tách từ bản đồ 24 điểm cũ): khung nhìn là một viewBox con
 // của khung W × H. Một ngón kéo khi đã phóng, hai ngón phóng quanh trung điểm; vừa kéo thì không tính là bấm.
 
-import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type PointerEvent,
+} from "react";
 
 export const MAX_ZOOM = 3;
 
@@ -46,6 +52,17 @@ export function fitView(
 export function useMapView(w: number, h: number) {
   const [view, setView] = useState<MapView>({ x: 0, y: 0, s: 1 });
   const svgRef = useRef<SVGSVGElement>(null);
+  // Bề ngang bản đồ đang hiển thị (px): để biết chữ trong SVG thực tế cao bao nhiêu px.
+  const [pxWidth, setPxWidth] = useState(0);
+  useEffect(() => {
+    const el = svgRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() =>
+      setPxWidth(el.getBoundingClientRect().width),
+    );
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   const pointers = useRef(new Map<number, { x: number; y: number }>());
   const drag = useRef<{ moved: boolean; pinch?: number }>({ moved: false });
 
@@ -159,5 +176,7 @@ export function useMapView(w: number, h: number) {
     },
   };
 
-  return { view, setView, zoomBy, reset, reveal, svgProps };
+  /** Một đơn vị bản đồ ứng với bao nhiêu px màn hình (0 khi chưa đo). */
+  const pxPerUnit = pxWidth === 0 ? 0 : (pxWidth / w) * view.s;
+  return { view, setView, zoomBy, reset, reveal, svgProps, pxPerUnit };
 }
