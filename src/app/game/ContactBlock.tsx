@@ -1,6 +1,6 @@
 "use client";
 
-// Thư cuộn liên hệ ở footer (Shan chọn phương án thư cuộn 07/11/2026): đinh và dây lụa treo, hai cuộn giấy quấn quanh trục gỗ tiện đầu,
+// Thư cuộn liên hệ ở footer (Shan chọn phương án thư cuộn 07/11/2026): đinh đồng và hai dây thừng xoắn treo, hai cuộn giấy quấn quanh trục gỗ tiện đầu,
 // tờ thư giấy dó có sợi và mép rách, ấn đỏ "Cờ Lau", tua rua son rủ ở hai đầu trục dưới. Mỗi nền tảng một dòng thư tín.
 // Liên kết ngoài đang khóa (footerLinks.ts): vẫn hiện, bấm không chuyển trang; nền tảng chờ (chưa có địa chỉ) mờ hơn.
 // Biểu tượng Simple Icons (CC0). Chuyển động nhẹ (tua rua đung đưa, dòng thư sáng lên) tắt khi bật giảm chuyển động.
@@ -77,6 +77,84 @@ function Seal({ uid }: { uid: string }) {
   );
 }
 
+/**
+ * Hai dây thừng son xoắn buộc từ đinh đồng xuống hai đầu trục trên. Vẽ trong khung 640×86 và co giãn đều theo bề rộng khối nên dây luôn
+ * dày đúng tỉ lệ: lõi dây, dải xoắn chéo (nét đứt vuông góc với dây), vệt sáng, bóng đổ, nút thắt ở đinh và vòng buộc quanh trục.
+ */
+function Cords({ uid }: { uid: string }) {
+  const NAIL = { x: 320, y: 13 };
+  const ties = [44, 596].map((x) => ({ x, y: 80 }));
+  // Hai dây hơi võng, mỗi dây một độ võng khác nhau để không trông như vẽ bằng thước.
+  const sag = [4.5, 3];
+  return (
+    <svg className={styles.cords} viewBox="0 0 640 86" aria-hidden>
+      <defs>
+        <filter id={`${uid}rs`} x="-5%" y="-5%" width="110%" height="125%">
+          <feDropShadow dx="0" dy="3.5" stdDeviation="2.4" floodColor="#000" floodOpacity="0.55" />
+        </filter>
+        <radialGradient id={`${uid}ng`} cx="35%" cy="30%" r="75%">
+          <stop offset="0" style={{ stopColor: "var(--paper-hi)" }} />
+          <stop offset="0.3" style={{ stopColor: "var(--frame-gold-hi)" }} />
+          <stop offset="0.75" style={{ stopColor: "var(--frame-bronze)" }} />
+          <stop offset="1" style={{ stopColor: "var(--wood-lo)" }} />
+        </radialGradient>
+      </defs>
+      {/* bóng của đinh trên tường */}
+      <ellipse cx={NAIL.x + 3} cy={NAIL.y + 5} rx="13" ry="5" fill="#000" opacity="0.4" />
+      <g filter={`url(#${uid}rs)`}>
+        {ties.map((t, i) => {
+          const mx = (NAIL.x + t.x) / 2 + (i === 0 ? -1 : 1) * 2;
+          const my = (NAIL.y + t.y) / 2 + sag[i]!;
+          const d = `M${NAIL.x} ${NAIL.y + 4} Q${mx} ${my} ${t.x} ${t.y - 2}`;
+          return (
+            <g key={t.x} fill="none">
+              <path d={d} style={{ stroke: "var(--lacquer)" }} strokeWidth="6.5" strokeLinecap="round" />
+              <path d={d} style={{ stroke: "var(--lacquer-lo)" }} strokeWidth="6.5" strokeDasharray="1.7 3.1" opacity="0.8" />
+              <path d={d} style={{ stroke: "var(--lacquer-hi)" }} strokeWidth="1.5" strokeDasharray="2.4 3.4" opacity="0.8" transform="translate(-1.2 -1.4)" />
+              {/* đầu dây thừa buông xuống sau nút */}
+              <path d={`M${t.x} ${t.y + 1} q${i === 0 ? -6 : 6} 7 ${i === 0 ? -3 : 3} 14`} style={{ stroke: "var(--lacquer)" }} strokeWidth="3.4" strokeLinecap="round" />
+              <path d={`M${t.x} ${t.y + 1} q${i === 0 ? 5 : -5} 6 ${i === 0 ? 2 : -2} 12`} style={{ stroke: "var(--lacquer-lo)" }} strokeWidth="3" strokeLinecap="round" />
+            </g>
+          );
+        })}
+        {/* vòng buộc quanh trục và nút thắt */}
+        {ties.map((t) => (
+          <g key={`k${t.x}`}>
+            <ellipse cx={t.x} cy={t.y} rx="9.5" ry="6.5" fill="none" style={{ stroke: "var(--lacquer)" }} strokeWidth="3.6" />
+            <ellipse cx={t.x} cy={t.y} rx="9.5" ry="6.5" fill="none" style={{ stroke: "var(--lacquer-hi)" }} strokeWidth="0.9" opacity="0.7" />
+            <circle cx={t.x} cy={t.y - 3} r="5.4" style={{ fill: "var(--lacquer)" }} />
+            <circle cx={t.x - 1.5} cy={t.y - 4.4} r="1.7" style={{ fill: "var(--lacquer-hi)" }} />
+          </g>
+        ))}
+        {/* nút thắt hai dây ở đầu đinh */}
+        <circle cx={NAIL.x} cy={NAIL.y + 6.5} r="6" style={{ fill: "var(--lacquer)" }} />
+        <circle cx={NAIL.x - 1.8} cy={NAIL.y + 4.8} r="1.9" style={{ fill: "var(--lacquer-hi)" }} />
+        <path d={`M${NAIL.x - 3} ${NAIL.y + 11} q-3 7 -1.5 13`} fill="none" style={{ stroke: "var(--lacquer)" }} strokeWidth="2.8" strokeLinecap="round" />
+        <path d={`M${NAIL.x + 3} ${NAIL.y + 11} q3 6 1.5 12`} fill="none" style={{ stroke: "var(--lacquer-lo)" }} strokeWidth="2.6" strokeLinecap="round" />
+      </g>
+      {/* đinh đồng: mũ tròn, viền, điểm sáng */}
+      <circle cx={NAIL.x} cy={NAIL.y - 1} r="8.5" fill={`url(#${uid}ng)`} style={{ stroke: "var(--wood-lo)" }} strokeWidth="1.4" />
+      <circle cx={NAIL.x - 2.6} cy={NAIL.y - 3.8} r="2.2" style={{ fill: "var(--paper-hi)" }} opacity="0.85" />
+    </svg>
+  );
+}
+
+/** Bộ lọc SVG của một thư cuộn: mép giấy rách thật (hai tầng nhiễu, thô rồi mịn) và xơ giấy. Id riêng từng khối. */
+function PaperFilters({ uid }: { uid: string }) {
+  return (
+    <svg width="0" height="0" aria-hidden style={{ position: "absolute" }}>
+      <defs>
+        <filter id={`${uid}tear`} x="-4%" y="-7%" width="108%" height="114%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.035 0.05" numOctaves="4" seed="11" result="coarse" />
+          <feDisplacementMap in="SourceGraphic" in2="coarse" scale="11" xChannelSelector="R" yChannelSelector="G" result="a" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="5" result="fine" />
+          <feDisplacementMap in="a" in2="fine" scale="3.4" xChannelSelector="G" yChannelSelector="R" />
+        </filter>
+      </defs>
+    </svg>
+  );
+}
+
 /** Cuộn giấy quanh một trục gỗ: trục nhô ra hai đầu, đầu tiện tròn. */
 function Roll() {
   return (
@@ -95,16 +173,12 @@ export default function ContactBlock({ links }: { links: readonly SocialLink[] }
   if (links.length === 0) return null;
   return (
     <section aria-label="Liên hệ" className={styles.scroll}>
-      {/* Đinh trên tường và hai dây lụa buộc vào hai đầu trục trên. */}
-      <svg className={styles.hangCord} viewBox="0 0 100 68" preserveAspectRatio="none" aria-hidden>
-        <path d="M2 68 L50 9 L98 68" fill="none" style={{ stroke: "var(--lacquer)" }} strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-        <path d="M2 68 L50 9 L98 68" fill="none" style={{ stroke: "var(--lacquer-hi)" }} strokeWidth="1.2" strokeDasharray="3 3" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-        <circle cx="50" cy="7" r="4" style={{ fill: "var(--frame-gold-hi)", stroke: "var(--wood-lo)" }} strokeWidth="1.4" vectorEffect="non-scaling-stroke" />
-        <circle cx="50" cy="7" r="1.5" style={{ fill: "var(--wood-lo)" }} />
-      </svg>
+      {/* Đinh đồng trên tường và hai dây thừng buộc vào hai đầu trục trên. */}
+      <Cords uid={uid} />
+      <PaperFilters uid={uid} />
       <Roll />
       <div className={styles.sheet}>
-        <div className={styles.sheetBg} aria-hidden />
+        <div className={styles.sheetBg} style={{ filter: `url(#${uid}tear)` }} aria-hidden />
         <div className={`${styles.curl} ${styles.curlTop}`} aria-hidden />
         <div className={`${styles.curl} ${styles.curlBottom}`} aria-hidden />
         <div className={styles.sheetBody}>
