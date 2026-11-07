@@ -43,18 +43,18 @@ const MODES: readonly Mode[] = [
     art: "campaign",
     kicker: "Cốt truyện · Nên chơi trước",
     featured: true,
-    status: "Sáu chương · có tái đấu sứ quân",
+    status: "Sáu chương sử Việt · tái đấu sứ quân",
     cta: "Dẹp loạn",
   },
-  { scene: "TRIAL", title: "Tháp Thí Luyện", text: MODE_TEXT.TRIAL, art: "trial", kicker: "Leo tháp", status: "20 tầng cố định · thưởng Đá Cường Hóa", cta: "Leo tháp", lockedText: "Sắp mở · tiến trình được giữ nguyên" },
-  { scene: "DESTINY", title: "Tháp Thiên Mệnh", text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Leo tháp", status: "Đổi chu kỳ định kỳ · có xếp hạng", cta: "Leo tháp", lockedText: "Sắp mở · tiến trình được giữ nguyên" },
-  { scene: "SURVIVAL", title: "Trấn Ải", text: MODE_TEXT.SURVIVAL, art: "survival", kicker: "Sinh tồn", status: "Xếp hạng theo tuần", cta: "Giữ ải" },
-  { scene: "DAILY", title: "Nhật Lệnh", text: MODE_TEXT.DAILY, art: "daily", kicker: "Mỗi ngày", status: "Làm mới mỗi ngày", cta: "Nhận lệnh" },
-  { scene: "ARENA", title: "Quần Hùng", text: MODE_TEXT.ARENA, art: "arena", kicker: "Đấu người", status: "Xếp hạng theo tuần", cta: "Thách đấu" },
-  { scene: "FORMATION", title: "Trận Đồ", text: MODE_TEXT.FORMATION, art: "tran-do", kicker: "Binh pháp", status: "Chơi ngay · không cần tài khoản", cta: "Bày trận" },
-  { scene: "KHAI_LO", title: "Khai Lộ", text: MODE_TEXT.KHAI_LO, kicker: "Giải đố", status: "Chơi ngay · không cần tài khoản", cta: "Giải đố" },
-  { scene: "TAM_TUONG_KY", title: "Tầm Tướng Ký", text: MODE_TEXT.TAM_TUONG_KY, art: "tam-tuong-ky", kicker: "Ghép tướng", status: "Mỗi lượt dùng một phiếu", cta: "Ghép tướng", lockedText: "Sắp mở" },
-  { scene: "EXPEDITION", title: "Viễn Chinh", text: MODE_TEXT.EXPEDITION, kicker: "Hành quân", status: "Chiến thuật trên sa bàn", cta: "Hành quân", lockedText: "Sắp mở" },
+  { scene: "TRIAL", title: "Tháp Thí Luyện", text: MODE_TEXT.TRIAL, art: "trial", kicker: "Leo tháp", status: "Hai mươi tầng · thưởng Đá Cường Hóa", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
+  { scene: "DESTINY", title: "Tháp Thiên Mệnh", text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Leo tháp", status: "Mỗi chu kỳ một vận · tranh hạng thiên hạ", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
+  { scene: "SURVIVAL", title: "Trấn Ải", text: MODE_TEXT.SURVIVAL, art: "survival", kicker: "Sinh tồn", status: "Ghi danh bảng xếp hạng mỗi tuần", cta: "Giữ ải" },
+  { scene: "DAILY", title: "Nhật Lệnh", text: MODE_TEXT.DAILY, art: "daily", kicker: "Mỗi ngày", status: "Lệnh mới ban mỗi ngày", cta: "Nhận lệnh" },
+  { scene: "ARENA", title: "Quần Hùng", text: MODE_TEXT.ARENA, art: "arena", kicker: "Đấu người", status: "Tranh ngôi đầu bảng mỗi tuần", cta: "Thách đấu" },
+  { scene: "FORMATION", title: "Trận Đồ", text: MODE_TEXT.FORMATION, art: "tran-do", kicker: "Binh pháp", status: "Vào trận ngay · không cần tài khoản", cta: "Bày trận" },
+  { scene: "KHAI_LO", title: "Khai Lộ", text: MODE_TEXT.KHAI_LO, kicker: "Giải đố", status: "Giải đố ngay · không cần tài khoản", cta: "Giải đố" },
+  { scene: "TAM_TUONG_KY", title: "Tầm Tướng Ký", text: MODE_TEXT.TAM_TUONG_KY, art: "tam-tuong-ky", kicker: "Ghép tướng", status: "Một phiếu, một lượt tìm tướng", cta: "Ghép tướng", lockedText: "Sắp khai mở" },
+  { scene: "EXPEDITION", title: "Viễn Chinh", text: MODE_TEXT.EXPEDITION, kicker: "Hành quân", status: "Bày mưu tính kế trên sa bàn", cta: "Hành quân", lockedText: "Sắp khai mở" },
 ];
 
 /**
@@ -230,13 +230,13 @@ function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; n
         <div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-2 text-sm">
           {locked ? (
             <span className="flex items-center gap-1.5 text-[var(--atlas-muted)]">
-              <LockGlyph /> {mode.lockedText ?? "Sắp mở · tiến trình được giữ nguyên"}
+              <LockGlyph /> {mode.lockedText ?? "Sắp khai mở · tiến trình vẫn được giữ"}
             </span>
           ) : (
             <>
               <span className="flex min-w-0 flex-1 items-center gap-1.5 text-[var(--atlas-muted)]">
                 {needsLogin && <LockGlyph />}
-                <span className="leading-tight">{needsLogin ? "Đăng nhập để vào xếp hạng" : mode.status}</span>
+                <span className="leading-tight">{needsLogin ? "Đăng nhập để ghi danh xếp hạng" : mode.status}</span>
               </span>
               <span className="home-enter flex shrink-0 items-center gap-1 rounded-full border border-frame-gold/50 bg-black/30 px-3 py-1 font-serif font-semibold transition group-hover:border-frame-gold group-hover:bg-frame-gold/20">
                 {needsLogin ? "Đăng nhập" : mode.cta} <span aria-hidden>›</span>
