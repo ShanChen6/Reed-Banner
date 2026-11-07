@@ -137,6 +137,17 @@ File nhiều nhất: `battle/DemoGame.tsx` (21), `profile/HeroDetail.tsx` (12), 
 
 Cả bốn cỡ: 0 tràn ngang, 0 lỗi JS. Nhãn `text-kicker` lên 13px (trước 12px) và bỏ `text-[0.65rem]` ở bảng kỹ năng; test `ui-tokens` chặn thêm cỡ chữ `rem` nhỏ. Dữ liệu giả cho bảng Nhật Lệnh dùng 50 dòng trong khi server chỉ trả 20, nên số đo Nhật Lệnh (3399px) cao hơn thực tế.
 
+### Luồng thao tác thật trên dữ liệu giả (07/11/2026)
+
+Dựng dữ liệu bằng `pnpm tsx scripts/ui-mock-data.ts mock.json`, rồi nhấp chuột như người chơi ở 390px (cảm ứng) bằng Playwright; các lời gọi ghi (bắt đầu tầng, bắt đầu lượt leo) bị chặn để xem đúng nội dung gửi đi. 20/20 bước đạt, 0 lỗi JS:
+
+- **Tháp Thiên Mệnh:** bỏ chọn 2 tướng ở trang 1, sang trang 3 rồi quay lại: lựa chọn và bộ đếm "Bắt đầu với N tướng" giữ nguyên; payload `rosterIds` gửi đi đúng 73 tướng (cả các trang không đang hiển thị).
+- **Tháp Thí Luyện:** đội mặc định đã đủ 2 tướng nên các tướng khác bị khóa (đúng luật); bỏ chọn ở mọi trang rồi chọn 2 tướng ở 2 trang khác nhau: tiêu đề báo "đã chọn 2/2", payload `companions` có đúng 2 tướng.
+- **Doanh Trại:** mặc định 24 thẻ, "Hiện thêm tướng" lên 48; chọn tướng ở đợt sau mở đúng chi tiết; quay lại danh sách vẫn giữ 48 thẻ; bộ lọc theo hệ giảm xuống 11.
+- **Công Trạng:** "Xem thêm" mở từ 10 lên 40 dòng, nút đổi thành "Thu gọn" (`aria-expanded`), bấm lại về 10 dòng.
+
+Giới hạn: chưa chạy luồng tới hết trận (server thật cần dữ liệu hợp lệ) và chưa thử bàn phím/trình đọc màn hình ở các danh sách mới.
+
 ## Còn lại sau đợt này
 
 - **Cứ điểm trên bản đồ Bình Loạn** (10 điểm ở 360px, rộng 31–63px × cao 36–49px): đã có danh sách cứ điểm dưới bản đồ cho màn dưới 1024px (nút cao 44px). Ngày 07/11/2026 hoàn thiện: mở sẵn, tên hiện đủ dòng, cứ điểm của chương đang xem lên đầu, chấm đỏ cho cứ điểm có nhiệm vụ đang mở. Lá cờ trên bản đồ vẫn nhỏ nhưng không còn là cách chọn duy nhất.
