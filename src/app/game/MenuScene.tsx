@@ -11,6 +11,7 @@ import { Logo } from "./art/logo";
 import { ONLINE_BATTLE_KEY } from "./battle/online";
 import { AtlasCorners } from "./campaign/AtlasFrame";
 import type { ShellAccount, TowerFeatures } from "./GameShell";
+import { MODE_TEXT } from "./modeInfo";
 import type { Scene } from "./scene";
 import { SceneLink } from "./SceneContext";
 
@@ -33,28 +34,27 @@ interface Mode {
   readonly lockedText?: string;
 }
 
-// Giọng văn thẻ chế độ: một câu, mở đầu bằng động từ, nói được làm gì và được gì; tránh thuật ngữ nội bộ (khóa đội,
-// khai thông sa bàn…). Nhãn kicker theo bộ cố định: Cốt truyện, Leo tháp, Sinh tồn, Mỗi ngày, Đấu người, Binh pháp, Giải đố, Ghép tướng, Hành quân.
+// Giọng văn thẻ chế độ: câu mô tả lấy từ MODE_TEXT (modeInfo.ts), hào sảng, nhịp hai vế; tránh thuật ngữ nội bộ. Nhãn kicker theo bộ cố định: Cốt truyện, Leo tháp, Sinh tồn, Mỗi ngày, Đấu người, Binh pháp, Giải đố, Ghép tướng, Hành quân.
 const MODES: readonly Mode[] = [
   {
     scene: "CAMPAIGN",
     title: "Bình Loạn",
-    text: "Dẹp loạn 12 sứ quân qua sáu chương, chiêu mộ danh tướng sử Việt.",
+    text: MODE_TEXT.CAMPAIGN,
     art: "campaign",
     kicker: "Cốt truyện · Nên chơi trước",
     featured: true,
     status: "Sáu chương · có tái đấu sứ quân",
     cta: "Dẹp loạn",
   },
-  { scene: "TRIAL", title: "Tháp Thí Luyện", text: "Leo 20 tầng, mỗi tầng một luật chọn đội riêng.", art: "trial", kicker: "Leo tháp", status: "20 tầng cố định · thưởng Đá Cường Hóa", cta: "Leo tháp", lockedText: "Sắp mở · tiến trình được giữ nguyên" },
-  { scene: "DESTINY", title: "Tháp Thiên Mệnh", text: "Leo tháp theo chu kỳ, máu và lương thực mang theo từng tầng.", art: "destiny", kicker: "Leo tháp", status: "Đổi chu kỳ định kỳ · có xếp hạng", cta: "Leo tháp", lockedText: "Sắp mở · tiến trình được giữ nguyên" },
-  { scene: "SURVIVAL", title: "Trấn Ải", text: "Giữ ải trước từng đợt địch, xem bạn trụ được bao lâu.", art: "survival", kicker: "Sinh tồn", status: "Xếp hạng theo tuần", cta: "Giữ ải" },
-  { scene: "DAILY", title: "Nhật Lệnh", text: "Một thử thách chung mỗi ngày, so hạng cùng mọi người.", art: "daily", kicker: "Mỗi ngày", status: "Làm mới mỗi ngày", cta: "Nhận lệnh" },
-  { scene: "ARENA", title: "Quần Hùng", text: "Đấu với đội của người chơi khác, leo bảng hạng.", art: "arena", kicker: "Đấu người", status: "Xếp hạng theo tuần", cta: "Thách đấu" },
-  { scene: "FORMATION", title: "Trận Đồ", text: "Xếp quân theo nghề và hệ để mở dần bản đồ.", art: "tran-do", kicker: "Binh pháp", status: "Chơi ngay · không cần tài khoản", cta: "Bày trận" },
-  { scene: "KHAI_LO", title: "Khai Lộ", text: "Chạm xóa khối quân cùng hệ, mở đường qua bàn cờ.", kicker: "Giải đố", status: "Chơi ngay · không cần tài khoản", cta: "Giải đố" },
-  { scene: "TAM_TUONG_KY", title: "Tầm Tướng Ký", text: "Ghép bảy hệ để tìm lại chân dung danh tướng.", art: "tam-tuong-ky", kicker: "Ghép tướng", status: "Mỗi lượt dùng một phiếu", cta: "Ghép tướng", lockedText: "Sắp mở" },
-  { scene: "EXPEDITION", title: "Viễn Chinh", text: "Chia quân thành hai đạo, hành quân đánh thành địch.", kicker: "Hành quân", status: "Chiến thuật trên sa bàn", cta: "Hành quân", lockedText: "Sắp mở" },
+  { scene: "TRIAL", title: "Tháp Thí Luyện", text: MODE_TEXT.TRIAL, art: "trial", kicker: "Leo tháp", status: "20 tầng cố định · thưởng Đá Cường Hóa", cta: "Leo tháp", lockedText: "Sắp mở · tiến trình được giữ nguyên" },
+  { scene: "DESTINY", title: "Tháp Thiên Mệnh", text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Leo tháp", status: "Đổi chu kỳ định kỳ · có xếp hạng", cta: "Leo tháp", lockedText: "Sắp mở · tiến trình được giữ nguyên" },
+  { scene: "SURVIVAL", title: "Trấn Ải", text: MODE_TEXT.SURVIVAL, art: "survival", kicker: "Sinh tồn", status: "Xếp hạng theo tuần", cta: "Giữ ải" },
+  { scene: "DAILY", title: "Nhật Lệnh", text: MODE_TEXT.DAILY, art: "daily", kicker: "Mỗi ngày", status: "Làm mới mỗi ngày", cta: "Nhận lệnh" },
+  { scene: "ARENA", title: "Quần Hùng", text: MODE_TEXT.ARENA, art: "arena", kicker: "Đấu người", status: "Xếp hạng theo tuần", cta: "Thách đấu" },
+  { scene: "FORMATION", title: "Trận Đồ", text: MODE_TEXT.FORMATION, art: "tran-do", kicker: "Binh pháp", status: "Chơi ngay · không cần tài khoản", cta: "Bày trận" },
+  { scene: "KHAI_LO", title: "Khai Lộ", text: MODE_TEXT.KHAI_LO, kicker: "Giải đố", status: "Chơi ngay · không cần tài khoản", cta: "Giải đố" },
+  { scene: "TAM_TUONG_KY", title: "Tầm Tướng Ký", text: MODE_TEXT.TAM_TUONG_KY, art: "tam-tuong-ky", kicker: "Ghép tướng", status: "Mỗi lượt dùng một phiếu", cta: "Ghép tướng", lockedText: "Sắp mở" },
+  { scene: "EXPEDITION", title: "Viễn Chinh", text: MODE_TEXT.EXPEDITION, kicker: "Hành quân", status: "Chiến thuật trên sa bàn", cta: "Hành quân", lockedText: "Sắp mở" },
 ];
 
 /**
