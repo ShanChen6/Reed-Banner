@@ -18,7 +18,7 @@
   display: block;
   width: 100%;
   height: auto;
-  margin-bottom: -15px;
+  margin-bottom: -12px;
   overflow: visible;
   pointer-events: none;
 }
@@ -172,15 +172,15 @@
 }
 .sheetBody {
   position: relative;
-  padding: 1.75rem 1.75rem 1.5rem;
+  padding: 1.25rem 1.5rem 1rem;
   color: var(--ink);
 }
 .paperTitle {
   margin: 0;
-  padding-bottom: 0.4rem;
+  padding-bottom: 0.3rem;
   border-bottom: 3px double color-mix(in srgb, var(--ink) 40%, transparent);
   font-family: var(--font-game, serif);
-  font-size: 1.375rem;
+  font-size: 1.25rem;
   font-weight: 800;
   letter-spacing: 0.02em;
   color: var(--ink-strong);
@@ -210,13 +210,17 @@
     padding-inline: 1.1rem;
   }
   .cords {
-    margin-bottom: -11px;
+    margin-bottom: -9px;
   }
   .sheet {
     margin-inline: 0.5rem;
   }
   .sheetBody {
-    padding: 1.5rem 1rem 4.25rem;
+    padding: 1.25rem 1rem 1rem;
+  }
+  .waiting {
+    padding-right: 3.6rem;
+    flex-wrap: wrap;
   }
   .paperTitle {
     font-size: 1.25rem;
@@ -227,8 +231,8 @@
   align-items: center;
   gap: 0.75rem;
   width: 100%;
-  min-height: 3.25rem;
-  padding: 0.25rem 0.25rem;
+  min-height: 2.75rem;
+  padding: 0.125rem 0.25rem;
   border: 0;
   border-bottom: 1px dashed color-mix(in srgb, var(--ink) 32%, transparent);
   border-radius: 2px;
@@ -268,6 +272,9 @@
 }
 .rowBlurb {
   display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 0.8125rem;
   color: var(--ink-soft);
 }
@@ -279,21 +286,65 @@
 }
 .seal {
   position: absolute;
-  right: 1.5rem;
-  bottom: 1.1rem;
-  width: 3.5rem;
-  height: 3.5rem;
+  right: 1.25rem;
+  bottom: 0.75rem;
+  width: 3.1rem;
+  height: 3.1rem;
   pointer-events: none;
   mix-blend-mode: multiply;
   transform: rotate(-7deg);
   opacity: 0.93;
 }
 
+/* ——— Dòng gộp nền tảng chờ (chưa có địa chỉ): nhãn và các biểu tượng khóa, bấm không chuyển trang ——— */
+.waiting {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  padding-right: 4.25rem;
+  border-top: 1px dashed color-mix(in srgb, var(--ink) 32%, transparent);
+}
+.waitingLabel {
+  font-size: 0.8125rem;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+.waitingList {
+  display: flex;
+  gap: 0.125rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.waitBtn {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ink-soft);
+  opacity: 0.8;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.waitBtn:hover,
+.waitBtn:focus-visible {
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+}
+.waitBtn:focus-visible {
+  outline: 2px solid var(--ink-strong);
+  outline-offset: 1px;
+}
+
 /* ——— Tua rua son rủ ở hai đầu trục dưới ——— */
 .tassels {
   position: relative;
   z-index: 3;
-  height: 3.25rem;
+  height: 2.4rem;
   margin-top: -2px;
   pointer-events: none;
 }
@@ -314,7 +365,7 @@
 .tassel i {
   display: block;
   width: 2px;
-  height: 0.75rem;
+  height: 0.5rem;
   background: var(--frame-gold);
 }
 .tassel b {
@@ -328,8 +379,8 @@
 }
 .tassel span {
   display: block;
-  width: 15px;
-  height: 1.5rem;
+  width: 14px;
+  height: 1.05rem;
   margin-top: -2px;
   background: repeating-linear-gradient(90deg, var(--lacquer-hi) 0 2px, var(--lacquer) 2px 3px, transparent 3px 4px);
   clip-path: polygon(0 0, 100% 0, 92% 100%, 8% 100%);

@@ -70,10 +70,10 @@ const SOCIAL_DEFAULTS: Readonly<Record<SocialPlatform, { href: string | null; sh
 /** Lời chú thích từng nền tảng trong thư cuộn, giọng cổ trang (Shan góp ý 07/11/2026). */
 export const SOCIAL_BLURB: Readonly<Record<SocialPlatform, string>> = {
   Facebook: "Gửi thư tay tới tác giả",
-  TikTok: "Xem thước phim tác giả ghi lại",
-  LinkedIn: "Kết giao đồng đạo nghề nghiệp",
+  TikTok: "Thước phim của tác giả",
+  LinkedIn: "Kết giao đồng đạo",
   GitHub: "Kho mã nguồn của tác giả",
-  Instagram: "Họa ảnh và chuyện hậu trường",
+  Instagram: "Họa ảnh, chuyện hậu trường",
   Discord: "Hội ngộ chốn quần hùng",
   X: "Tin ngắn theo ngựa trạm",
   YouTube: "Thước phim dài của tác giả",
@@ -84,6 +84,8 @@ export const SOCIAL_BLURB: Readonly<Record<SocialPlatform, string>> = {
 export const CONTACT_TITLE = "Thư tín bốn phương";
 export const CONTACT_SUB = "Trạm dịch ngựa phi, thư gửi về doanh trại tác giả";
 export const CONTACT_PENDING = "Trạm thư sắp mở";
+/** Nhãn của dòng gộp các nền tảng chưa có địa chỉ ở cuối thư. */
+export const CONTACT_PENDING_LABEL = "Trạm thư sắp mở:";
 
 export interface SocialLink extends FooterLink {
   readonly label: SocialPlatform;
