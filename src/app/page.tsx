@@ -20,6 +20,8 @@ import { ModeIcon, type ModeIconKind } from "./game/art/mode-icons";
 import { BoardCrest, TileArt } from "./game/art/tiles";
 import { towerFeatureFlags, type TowerFeatureFlags } from "@/server/featureFlags";
 import { FAQ, PROFESSION_PERK, TILE_GIVES } from "./home/data";
+import ContactBlock from "./game/ContactBlock";
+import { socialLinks } from "./game/footerLinks";
 import DrumFace from "./home/DrumFace";
 import ElementPicker from "./home/ElementPicker";
 import { Embers, GiltCorners, OrnateDivider } from "./home/Ornaments";
@@ -449,13 +451,14 @@ export default function Home() {
       </main>
 
       <footer className="border-t border-frame-gold/25 px-4 py-10 text-sm text-on-wood-soft/80">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="flex items-center gap-2 font-serif text-lg font-bold text-on-wood">
-              <LogoMark className="size-7" /> Cờ Lau
-            </p>
-            <p className="mt-1">Mini game thuộc ShanVerse.</p>
-          </div>
+        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-center lg:gap-12">
+          <div className="flex flex-col gap-4">
+            <div>
+              <p className="flex items-center gap-2 font-serif text-lg font-bold text-on-wood">
+                <LogoMark className="size-7" /> Cờ Lau
+              </p>
+              <p className="mt-1">Mini game thuộc ShanVerse.</p>
+            </div>
           <ul className="flex flex-wrap gap-x-5 gap-y-2">
             {NAV.map((n) => (
               <li key={n.href}>
@@ -485,10 +488,14 @@ export default function Home() {
               </Link>
             </li>
           </ul>
+            <p className="max-w-md">
+              Bối cảnh và tên nhân vật lịch sử là lịch sử chung; tính cách, kỹ năng và lời thoại trong game là hư cấu.
+            </p>
+          </div>
+          <div className="flex justify-center lg:justify-end">
+            <ContactBlock links={socialLinks()} />
+          </div>
         </div>
-        <p className="mx-auto mt-6 max-w-6xl text-xs">
-          Bối cảnh và tên nhân vật lịch sử là lịch sử chung; tính cách, kỹ năng và lời thoại trong game là hư cấu.
-        </p>
       </footer>
     </div>
   );
