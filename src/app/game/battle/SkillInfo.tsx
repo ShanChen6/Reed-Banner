@@ -27,7 +27,7 @@ export default function SkillInfo({ def }: { def: SkillDef }) {
 
       <div className="overflow-x-auto">
         <table className="w-full text-caption">
-          <caption className="mb-1 text-left text-[0.65rem] uppercase tracking-wider text-on-wood-soft/80">Theo cấp kỹ năng</caption>
+          <caption className="mb-1 text-left text-caption uppercase tracking-wider text-on-wood-soft/80">Theo cấp kỹ năng</caption>
           <thead>
             <tr className="text-on-wood-soft/80">
               <th className="py-1 pr-2 text-left font-normal">Cấp</th>
@@ -43,7 +43,7 @@ export default function SkillInfo({ def }: { def: SkillDef }) {
             ))}
           </tbody>
         </table>
-        <p className="mt-1 text-[0.65rem] text-on-wood-soft/80">Mỗi cấp +{Math.round(SKILL_LEVEL_BONUS * 100)}% hệ số chính; cấp tối đa giảm {Math.round(SKILL_MAX_LEVEL_DISCOUNT * 100)}% năng lượng. Thời lượng, số ô và xác suất giữ nguyên.</p>
+        <p className="mt-1 text-caption text-on-wood-soft/80">Mỗi cấp +{Math.round(SKILL_LEVEL_BONUS * 100)}% hệ số chính; cấp tối đa giảm {Math.round(SKILL_MAX_LEVEL_DISCOUNT * 100)}% năng lượng. Thời lượng, số ô và xác suất giữ nguyên.</p>
       </div>
 
       {partners.length > 0 && <p className="text-caption text-on-wood-soft">Mở phối hợp cho đồng đội: {partners.join(", ")}.</p>}
