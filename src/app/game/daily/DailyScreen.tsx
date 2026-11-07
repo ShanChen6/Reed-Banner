@@ -47,7 +47,7 @@ function Fighters({ list }: { list: readonly FighterConfig[] }) {
             profession={f.profession}
             className="size-10 shrink-0"
           />
-          <div className="min-w-0 text-xs">
+          <div className="min-w-0 text-caption">
             <p className="truncate text-sm font-semibold text-on-wood">{f.name}</p>
             <p className="flex items-center gap-1 text-on-wood-soft">
               <ElementIcon element={f.element} className="size-3.5" />
@@ -219,7 +219,7 @@ export default function DailyScreen() {
                     {r.name}
                     {r.mine && " (bạn)"}
                   </span>
-                  <span className={`text-xs ${r.mine ? "" : "text-on-wood-soft"}`}>
+                  <span className={`text-caption ${r.mine ? "" : "text-on-wood-soft"}`}>
                     {scoreText(r.score)}
                   </span>
                 </li>

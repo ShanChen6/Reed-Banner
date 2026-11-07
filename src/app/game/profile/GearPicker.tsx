@@ -70,7 +70,7 @@ export default function GearPicker({
         if (e.target === ref.current) onClose();
       }}
       aria-labelledby="gear-picker-title"
-      className="barracks gear-picker m-0 mt-auto max-h-[88dvh] w-full max-w-none overflow-hidden rounded-t-xl p-0 text-stone-100 sm:m-auto sm:max-h-[min(42rem,90dvh)] sm:w-[min(40rem,calc(100vw-2rem))] sm:rounded-xl"
+      className="barracks gear-picker m-0 mt-auto max-h-[88dvh] w-full max-w-none overflow-hidden rounded-t-xl p-0 text-on-wood sm:m-auto sm:max-h-[min(42rem,90dvh)] sm:w-[min(40rem,calc(100vw-2rem))] sm:rounded-xl"
     >
       <div className="flex max-h-[inherit] flex-col">
         <header className="flex items-center gap-3 border-b border-[var(--bk-line-soft)] px-4 py-3">
@@ -96,7 +96,7 @@ export default function GearPicker({
             <div className="barracks-inset flex flex-col items-center gap-2 rounded-md p-4 text-center text-[15px]">
               <p>Kho chưa có món {SLOT_NAME[slot].toLowerCase()} dùng được cho {name}.</p>
               {otherProfession > 0 && <p className="text-sm text-[var(--bk-soft)]">{otherProfession} vũ khí của nghề khác không dùng được.</p>}
-              <SceneLink scene="SHOP" className="barracks-btn is-action min-h-10 rounded-md px-4 leading-10">
+              <SceneLink scene="SHOP" className="barracks-btn is-action min-h-10 pointer-coarse:min-h-11 rounded-md px-4 leading-10">
                 Mua ở Cửa hàng
               </SceneLink>
             </div>
@@ -124,7 +124,7 @@ export default function GearPicker({
                         </span>
                       </span>
                       {by && (
-                        <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold ${by === id ? "bg-emerald-800 text-emerald-100" : "bg-stone-700 text-stone-100"}`}>
+                        <span className={`shrink-0 rounded-full px-2 py-0.5 text-caption font-semibold ${by === id ? "bg-success-surface text-success" : "bg-ash text-on-wood"}`}>
                           {by === id ? "Đang mặc" : `${nameOf(by)} đang dùng`}
                         </span>
                       )}
@@ -138,11 +138,11 @@ export default function GearPicker({
 
         {chosen && (
           <footer className="border-t border-[var(--bk-line-soft)] px-4 py-3">
-            <p className="text-sm text-stone-200" aria-live="polite">
+            <p className="text-sm text-on-wood" aria-live="polite">
               {wearer === id ? "Món đang mặc." : (gearComparison(profile, id, chosen) ?? "Không mặc được món này.")}
             </p>
             {wearer && wearer !== id && (
-              <p className="mt-1 text-sm text-amber-200">Món này đang ở {nameOf(wearer)}; trang bị sẽ tháo khỏi {nameOf(wearer)}.</p>
+              <p className="mt-1 text-sm text-title-on-wood">Món này đang ở {nameOf(wearer)}; trang bị sẽ tháo khỏi {nameOf(wearer)}.</p>
             )}
             <div className="mt-2 flex flex-wrap gap-2">
               {wearer === id ? (

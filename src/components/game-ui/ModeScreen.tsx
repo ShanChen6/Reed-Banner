@@ -6,10 +6,13 @@ import { OrnateFrame } from "./OrnateFrame";
 // Khung màn chế độ dùng chung (đồng bộ UI 05/11/2026, docs/05-ui-ux/design-system/theme.md).
 // Header chung đã hiện tên màn, nên banner chỉ giữ tranh, nhãn nhỏ, một câu mô tả và vài số liệu của chế độ.
 
-export function ModeScreen({ children, className, wide, label }: { children: ReactNode; className?: string; wide?: boolean; label?: string }) {
+/** Mọi màn chế độ dùng một bề rộng nội dung duy nhất (MODE_CONTENT_WIDTH) để lề trái/phải thẳng hàng khi chuyển màn. */
+export const MODE_CONTENT_WIDTH = "max-w-7xl 2xl:max-w-[90rem] 3xl:max-w-[105rem]";
+
+export function ModeScreen({ children, className, label }: { children: ReactNode; className?: string; /** @deprecated Bỏ từ 06/11/2026: mọi màn cùng một bề rộng; giữ để màn cũ không lỗi biên dịch. */ wide?: boolean; label?: string }) {
   return (
     <main aria-label={label} className={cn("ui-mode-screen", className)}>
-      <div className={cn("mx-auto flex w-full flex-col gap-4 sm:gap-5", wide ? "max-w-[1600px]" : "max-w-7xl")}>{children}</div>
+      <div className={cn("mx-auto flex w-full flex-col gap-4 sm:gap-5", MODE_CONTENT_WIDTH)}>{children}</div>
     </main>
   );
 }
@@ -38,7 +41,7 @@ export interface ModeBannerProps {
 
 export function ModeBanner({ title, showTitle, kicker, description, art, artPosition, stats, actions, children, className }: ModeBannerProps) {
   return (
-    <OrnateFrame level="hero" flush className={cn("min-h-36 sm:min-h-44", className)}>
+    <OrnateFrame level="hero" flush className={cn(art && "min-h-36 sm:min-h-44", className)}>
       {art && (
         <>
           <Image src={art} alt="" fill priority sizes="(min-width: 1280px) 1280px, 100vw" className="-z-10 object-cover"
@@ -46,7 +49,7 @@ export function ModeBanner({ title, showTitle, kicker, description, art, artPosi
           <div aria-hidden className="ui-mode-banner-shade absolute inset-0 -z-10" />
         </>
       )}
-      <div className="relative flex h-full min-h-36 flex-col justify-end gap-3 p-5 sm:min-h-44 sm:flex-row sm:items-end sm:justify-between sm:p-7">
+      <div className={cn("relative flex h-full flex-col justify-end gap-3 p-4 sm:flex-row sm:items-end sm:justify-between sm:p-7", art ? "min-h-36 p-5 sm:min-h-44" : "sm:min-h-28")}>
         <div className="max-w-2xl">
           {kicker && <p className="text-kicker text-frame-gold">{kicker}</p>}
           <h1 className={showTitle ? "ui-title-on-wood mt-1 text-2xl font-bold sm:text-3xl" : "sr-only"}>{title}</h1>

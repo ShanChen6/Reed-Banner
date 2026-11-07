@@ -3,7 +3,7 @@ import { cn } from "@/lib/cn";
 
 /** Shared native control styling; ref/validation/events are forwarded unchanged. */
 export function controlVariants(className?: string) {
-  return cn("ui-control min-h-10 min-w-0 max-w-full rounded-control border border-border bg-control px-3 py-2 text-sm leading-normal text-foreground disabled:bg-disabled disabled:text-foreground-disabled aria-invalid:border-danger", className);
+  return cn("ui-control min-h-10 pointer-coarse:min-h-11 min-w-0 max-w-full rounded-control border border-border bg-control px-3 py-2 text-sm leading-normal text-foreground disabled:bg-disabled disabled:text-foreground-disabled aria-invalid:border-danger", className);
 }
 
 export function Input({ className, ...props }: ComponentProps<"input">) {

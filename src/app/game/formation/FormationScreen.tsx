@@ -429,7 +429,7 @@ function PlayView({
     <>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <header>
-          <p className="text-xs font-semibold tracking-[0.25em] text-frame-gold uppercase">
+          <p className="text-caption font-semibold tracking-[0.25em] text-frame-gold uppercase">
             {ranked ? `Kỳ ${ranked.period} · ` : ""}Sa bàn {width}×{height}
           </p>
           <h1 className="ui-title-on-wood font-serif text-3xl font-bold">Trận Đồ · {rules.name}{ranked ? " · Xếp hạng" : ""}</h1>
@@ -511,7 +511,7 @@ function CompletedMap({ map }: { map: FormationMap }) {
       <figcaption className="text-sm leading-snug">
         <b className="font-serif text-base text-title-on-wood">{map.place}</b>
         <span className="block text-on-wood-soft">{map.blurb}</span>
-        <span className="block text-xs text-on-wood-soft">
+        <span className="block text-caption text-on-wood-soft">
           {map.kind === "lich-su" ? "Tranh minh họa tái dựng, không phải bản đồ lịch sử chính xác." : "Cảnh quan minh họa, không phải địa danh cụ thể."}
         </span>
       </figcaption>

@@ -79,11 +79,11 @@ export default function GearStore({
           {weapon && <span className="sr-only"> ({PROFESSION_NAME[profession]})</span>}
         </span>
         <span className="text-caption text-title-on-wood tabular-nums">+{value} {STAT_NAME[stat]}</span>
-        {owned > 0 && <span className="text-[11px] text-on-wood-soft tabular-nums">Trong túi: {owned}</span>}
+        {owned > 0 && <span className="text-caption text-on-wood-soft tabular-nums">Trong túi: {owned}</span>}
         <Button
           type="button"
           size="sm"
-          className="mt-auto w-full px-1 text-xs tabular-nums"
+          className="mt-auto w-full px-1 text-caption tabular-nums"
           disabled={disabled || short || bagFull}
           title={bagFull ? "Túi đồ đã đầy" : short ? `Cần ${price} vàng` : undefined}
           aria-label={`Mua ${SLOT_NAME[slot]}${weapon ? ` ${PROFESSION_NAME[profession]}` : ""} ${TIER_COLOR_NAME[tier]} hệ ${ELEMENT_NAME[element]}, ${price} vàng`}
@@ -145,7 +145,7 @@ export default function GearStore({
       <p className="text-caption text-on-wood-soft">
         Túi đồ <span className="tabular-nums">{profile.bag.length}/{BAG_LIMIT}</span>
         {bagFull && " (đã đầy, bán bớt để mua thêm)"}. Món mới vào túi; mặc và ghép ở{" "}
-        <SceneLink scene="PROFILE" className="text-frame-gold underline underline-offset-2">Doanh Trại</SceneLink>.
+        <SceneLink scene="PROFILE" className="ui-link text-frame-gold underline underline-offset-2">Doanh Trại</SceneLink>.
       </p>
     </section>
   );

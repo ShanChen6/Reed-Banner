@@ -35,7 +35,7 @@ export function PieceFace({ piece, large = false }: { piece: Piece | BoardPiece;
     return (
       <span className="fm-token relative block size-full p-[6%]">
         <Portrait id={piece.characterId} element="kim" profession="tuongSi" className="size-full" />
-        <span className={`${badge} left-1/2 -translate-x-1/2 border-[#E8C477] bg-lacquer text-[#FFE9B0]`} aria-hidden>
+        <span className={`${badge} left-1/2 -translate-x-1/2 border-frame-gold-hi bg-lacquer text-title-on-wood`} aria-hidden>
           <svg viewBox="0 0 24 24" className="size-[70%]" fill="currentColor"><path d="M12 2.5l2.6 6 6.4.6-4.9 4.2 1.5 6.3L12 16.3 6.4 19.6l1.5-6.3L3 9.1l6.4-.6z" /></svg>
         </span>
       </span>

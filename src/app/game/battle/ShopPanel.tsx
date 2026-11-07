@@ -83,11 +83,11 @@ function CompanionCard({
         </div>
       </div>
       {owned ? (
-        <ChoiceChip selected={selected} disabled={disabled} onClick={onPick} className="shrink-0 px-2.5 text-xs">
+        <ChoiceChip selected={selected} disabled={disabled} onClick={onPick} className="shrink-0 px-2.5 text-caption">
           {selected ? "Ra trận" : "Chọn"}
         </ChoiceChip>
       ) : lockNode ? (
-        <span className="min-w-0 max-w-[45%] text-right text-[11px] leading-snug text-on-wood-soft">
+        <span className="min-w-0 max-w-[45%] text-right text-caption leading-snug text-on-wood-soft">
           {hero ? "Mở khóa đồng hành sau" : "Mở bán sau"} {lockNode.id} “{lockNode.title}”
         </span>
       ) : (
@@ -95,7 +95,7 @@ function CompanionCard({
           type="button"
           disabled={disabled || price === undefined || profile.gold < price}
           onClick={onBuy}
-          className="min-h-8 shrink-0 px-2.5 text-xs tabular-nums"
+          className="min-h-8 pointer-coarse:min-h-11 shrink-0 px-2.5 text-caption tabular-nums"
           title={price !== undefined && profile.gold < price ? `Cần ${price} vàng` : undefined}
         >
           Mua {price}
@@ -191,12 +191,12 @@ export default function ShopPanel({
   );
 
   return (
-    <section aria-label={sellOnly ? "Tuyển tướng" : "Đội hình và cửa hàng"} className="text-xs text-on-wood">
+    <section aria-label={sellOnly ? "Tuyển tướng" : "Đội hình và cửa hàng"} className="text-caption text-on-wood">
       {sellOnly ? (
         <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
           <p className="text-caption text-on-wood-soft">
             Đã có {owned.length} tướng kèm. Chọn đội ra trận ở{" "}
-            <SceneLink scene="PROFILE" className="text-frame-gold underline underline-offset-2">Doanh Trại</SceneLink>.
+            <SceneLink scene="PROFILE" className="ui-link text-frame-gold underline underline-offset-2">Doanh Trại</SceneLink>.
           </p>
           {message && <span role="alert" className="text-danger">{message}</span>}
         </div>

@@ -41,7 +41,7 @@
 
 /* Nhãn nhỏ viết hoa trên tiêu đề ("Song tháp", "Mỗi ngày"). */
 @utility text-kicker {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   line-height: 1.4;
   font-weight: 700;
   letter-spacing: 0.06em;

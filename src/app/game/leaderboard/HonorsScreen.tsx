@@ -7,7 +7,7 @@
 import { ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { useEffect, useState } from "react";
 import { fetchOverview, type Overview } from "../formation/rankedClient";
-import { BoardEmpty, useJson, type DestinyBoardResponse, type SeasonBoardResponse, type TtkBoardResponse } from "./boards";
+import { BoardEmpty, RankList, useJson, type DestinyBoardResponse, type SeasonBoardResponse, type TtkBoardResponse } from "./boards";
 import type { HonorItem } from "@/server/honors";
 
 interface Standing {
@@ -48,10 +48,10 @@ const PERIOD_LABEL = (p: string) => p;
 function HistoryRow({ h }: { h: HonorItem }) {
   return (
     <li className="flex flex-wrap items-center gap-x-3 gap-y-0.5 rounded-control border border-frame-line-soft bg-wood-inset px-3 py-2 text-sm">
-      <span className="min-w-0 flex-1 font-semibold">{h.title}</span>
-      <span className="text-caption text-on-wood-soft">kỳ {PERIOD_LABEL(h.period)}</span>
-      <span className="tabular-nums">hạng {h.rank}{h.participants ? `/${h.participants}` : ""}</span>
-      <span className="font-bold text-frame-gold tabular-nums">+{h.gold} vàng</span>
+      <span className="min-w-0 basis-full font-semibold sm:basis-0 sm:flex-1">{h.title}</span>
+      <span className="text-caption whitespace-nowrap text-on-wood-soft">kỳ {PERIOD_LABEL(h.period)}</span>
+      <span className="whitespace-nowrap tabular-nums">hạng {h.rank}{h.participants ? `/${h.participants}` : ""}</span>
+      <span className="ml-auto font-bold whitespace-nowrap text-frame-gold tabular-nums">+{h.gold} vàng</span>
     </li>
   );
 }
@@ -61,7 +61,7 @@ export default function HonorsScreen({ destinyEnabled = true, tamTuongKyRanked =
   const honors = useJson<{ signedIn?: boolean; items?: HonorItem[]; error?: string }>("/api/honors");
   return (
     <ModeScreen label="Công Trạng">
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
+      <div className="flex w-full flex-col gap-4">
         <OrnateFrame className="flex flex-col gap-3">
           <SectionTitle description="Hạng hiện tại của bạn ở từng chế độ có xếp hạng. Bảng đầy đủ xem ngay trong màn của chế độ đó.">Mùa này</SectionTitle>
           <ul className="grid gap-2 sm:grid-cols-2">
@@ -81,9 +81,9 @@ export default function HonorsScreen({ destinyEnabled = true, tamTuongKyRanked =
           ) : honors.items.length === 0 ? (
             <BoardEmpty>Chưa có kỳ nào được nhận thưởng. Lên hạng ở một kỳ rồi nhận thưởng khi kỳ khép lại.</BoardEmpty>
           ) : (
-            <ol className="flex flex-col gap-1.5">
+            <RankList>
               {honors.items.map((h) => <HistoryRow key={`${h.source}-${h.period}`} h={h} />)}
-            </ol>
+            </RankList>
           )}
         </OrnateFrame>
       </div>

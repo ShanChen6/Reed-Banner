@@ -110,7 +110,7 @@ export function ChapterRail({
                   backgroundImage: `url(${chapterThumbUrl(c.chapter)})`,
                 }}
               >
-                <span className="atlas-chapter-progress absolute right-0 bottom-0 rounded-tl px-1 text-[10px] leading-4 font-bold">
+                <span className="atlas-chapter-progress absolute right-0 bottom-0 rounded-tl px-1 text-[11px] leading-4 font-bold">
                   {!open ? (
                     <LockGlyph />
                   ) : done ? (
@@ -124,7 +124,7 @@ export function ChapterRail({
                 <span className="line-clamp-2 block text-sm leading-tight font-bold">
                   {c.title}
                 </span>
-                <span className="mt-0.5 block truncate text-xs opacity-80">
+                <span className="mt-0.5 block truncate text-caption opacity-80">
                   {c.region.name}
                 </span>
               </span>
@@ -195,7 +195,7 @@ function MissionList({
               } disabled:cursor-not-allowed`}
             >
               <span
-                className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                className={`flex size-7 shrink-0 items-center justify-center rounded-full text-caption font-bold ${
                   s === "completed"
                     ? "bg-jade text-on-lacquer"
                     : usable
@@ -213,7 +213,7 @@ function MissionList({
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block truncate font-semibold">{n.title}</span>
-                <span className="block truncate text-xs opacity-75">
+                <span className="block truncate text-caption opacity-75">
                   {STATUS_TEXT[s]} · Chương {ROMAN[n.chapter]} ·{" "}
                   {n.rewards.firstClearGold} vàng lần đầu
                 </span>
@@ -249,7 +249,7 @@ export function ChapterPanel({
       <AtlasCorners />
       <div className="atlas-scroll flex min-h-0 flex-1 flex-col gap-3 xl:overflow-y-auto xl:pr-1">
         <header>
-          <p className="text-xs font-semibold tracking-widest uppercase opacity-75">
+          <p className="text-caption font-semibold tracking-widest uppercase opacity-75">
             Chương {roman} · {finished}/{chapter.missions.length} nhiệm vụ
           </p>
           <h2 id="atlas-panel-title" className="text-2xl font-black">
@@ -384,7 +384,7 @@ export function MissionRewardCard({
         className="atlas-panel-heading flex items-baseline justify-between gap-2"
       >
         Phần thưởng
-        <span className="text-xs font-normal tracking-normal normal-case opacity-75">
+        <span className="text-caption font-normal tracking-normal normal-case opacity-75">
           {node.title}
         </span>
       </h3>
@@ -403,12 +403,12 @@ export function MissionRewardCard({
                 <span className="min-w-0 flex-1">
                   {r.label}
                   {r.note && !r.done && (
-                    <span className="block text-xs opacity-70">{r.note}</span>
+                    <span className="block text-caption opacity-70">{r.note}</span>
                   )}
                 </span>
                 <span className="text-right font-bold">
                   {r.value}
-                  <span className="block text-xs font-normal">
+                  <span className="block text-caption font-normal">
                     {r.done ? "✓ đã nhận" : ""}
                   </span>
                 </span>
@@ -416,12 +416,12 @@ export function MissionRewardCard({
             ))}
           </ul>
           {isCombatStoryNode(node) && (
-            <p className="mt-1.5 text-xs opacity-75">
+            <p className="mt-1.5 text-caption opacity-75">
               Trận còn cho EXP, vàng nhặt được và đồ rơi; số lượng tùy trận.
             </p>
           )}
           {status === "completed" && (
-            <p className="mt-1.5 text-xs opacity-75">
+            <p className="mt-1.5 text-caption opacity-75">
               Xem lại không nhận lại thưởng lần đầu
               {isCombatStoryNode(node) ? ", chỉ nhận thưởng trận thường" : ""}.
             </p>
@@ -473,7 +473,7 @@ export function StrongholdPanel({
             className="mt-1 h-12 w-9 shrink-0"
           />
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold tracking-widest uppercase opacity-75">
+            <p className="text-caption font-semibold tracking-widest uppercase opacity-75">
               {s.faction ? "Cứ điểm sứ quân" : "Đầu não"} · {STATE_TEXT[state]}
             </p>
             <h2
@@ -709,7 +709,7 @@ export function AtlasHeader({
     { v: "codex", label: "Sử ký" },
   ];
   const tabClass = (active: boolean) =>
-    `atlas-tab flex h-[52px] min-w-0 flex-col items-center justify-center gap-0.5 rounded-md border px-1 text-xs leading-none font-bold tracking-wide whitespace-nowrap uppercase sm:h-12 sm:flex-row sm:gap-1.5 sm:px-2 sm:text-sm ${
+    `atlas-tab flex h-[52px] min-w-0 flex-col items-center justify-center gap-0.5 rounded-md border px-1 text-caption leading-none font-bold tracking-wide whitespace-nowrap uppercase sm:h-12 sm:flex-row sm:gap-1.5 sm:px-2 sm:text-sm ${
       active ? "atlas-tab-active" : ""
     }`;
   return (
@@ -721,7 +721,7 @@ export function AtlasHeader({
         >
           Sử ký Đại Việt
         </h1>
-        <p className="text-xs text-on-wood-soft">Loạn 12 sứ quân · thế kỷ X</p>
+        <p className="text-caption text-on-wood-soft">Loạn 12 sứ quân · thế kỷ X</p>
       </div>
       <nav
         aria-label="Màn Sử ký"
@@ -756,7 +756,7 @@ export function AtlasHeader({
               className="atlas-stat flex h-9 items-center gap-1.5 rounded-md border px-2.5"
             >
               <StatIcon kind={x.icon as StatKind} />
-              <dt className="text-xs opacity-75">{x.k}</dt>
+              <dt className="text-caption opacity-75">{x.k}</dt>
               <dd className="font-bold">{x.v.toLocaleString("vi-VN")}</dd>
             </div>
           ))}

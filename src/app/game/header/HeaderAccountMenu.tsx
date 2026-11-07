@@ -54,7 +54,7 @@ export default function HeaderAccountMenu({ scene, account }: { scene: Scene; ac
         aria-controls={panelId}
         title={name}
         onClick={() => setOpen((v) => !v)}
-        className="game-header-btn game-header-account flex h-11 items-center gap-2 rounded-md py-1 pr-1.5 pl-1 sm:pr-2"
+        className="game-header-btn game-header-account flex h-11 min-w-11 items-center gap-2 rounded-md py-1 pr-1.5 pl-1 sm:pr-2"
       >
         <AccountAvatar account={account} />
         <span className="hidden max-w-[6.5rem] truncate font-serif text-sm font-semibold lg:block xl:max-w-[8rem] xl:text-base">{name}</span>
@@ -83,7 +83,7 @@ export default function HeaderAccountMenu({ scene, account }: { scene: Scene; ac
       >
         <div className="border-b border-[var(--hdr-bronze)]/40 px-3 pt-2 pb-2.5">
           <p className="font-serif font-semibold break-words text-[var(--hdr-text)]">{name}</p>
-          <p className="text-xs text-[var(--hdr-text-soft)]">
+          <p className="text-caption text-[var(--hdr-text-soft)]">
             {account ? "Đã đăng nhập" : "Tiến độ đang lưu trên trình duyệt này. Đăng nhập để giữ trên tài khoản."}
           </p>
         </div>

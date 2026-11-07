@@ -12,18 +12,18 @@ import {
 } from "@/core";
 
 const BASIS_STYLE: Record<StoryBeat["basis"], string> = {
-  recorded: "border-sky-400/60 bg-sky-500/15 text-sky-100",
-  legend: "border-violet-400/60 bg-violet-500/15 text-violet-100",
-  reconstructed: "border-amber-400/60 bg-amber-500/10 text-amber-100",
-  fictional: "border-stone-400/50 bg-stone-500/15 text-stone-200",
-  disputed: "border-rose-400/60 bg-rose-500/10 text-rose-100",
+  recorded: "border-info/60 bg-info-surface text-info",
+  legend: "border-frame-gold/60 bg-frame-gold/15 text-frame-gold",
+  reconstructed: "border-warning/50 bg-warning-surface text-warning",
+  fictional: "border-ash/60 bg-ash/15 text-on-wood",
+  disputed: "border-danger/50 bg-danger-surface text-danger",
 };
 
 export function BasisBadge({ basis }: { basis: StoryBeat["basis"] }) {
   return (
     <span
       title={BASIS_LABEL[basis].hint}
-      className={`inline-block shrink-0 rounded border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase ${BASIS_STYLE[basis]}`}
+      className={`inline-block shrink-0 rounded border px-1.5 py-0.5 text-caption font-semibold tracking-wide uppercase ${BASIS_STYLE[basis]}`}
     >
       {BASIS_LABEL[basis].name}
     </span>
@@ -40,7 +40,7 @@ export function Beats({ beats }: { beats: readonly StoryBeat[] }) {
             <div className="mb-1 flex flex-wrap items-center gap-1.5">
               <BasisBadge basis={b.basis} />
               {b.speaker && (
-                <span className="text-xs text-on-wood-soft">
+                <span className="text-caption text-on-wood-soft">
                   Thoại của {b.speaker}, không phải trích dẫn sử
                 </span>
               )}
@@ -56,7 +56,7 @@ export function Beats({ beats }: { beats: readonly StoryBeat[] }) {
               {b.speaker ? `“${b.text}”` : b.text}
             </p>
             {b.refs && b.refs.length > 0 && (
-              <p className="mt-1 text-[11px] text-on-wood-soft">
+              <p className="mt-1 text-caption text-on-wood-soft">
                 Nguồn: {b.refs.join(", ")}
                 {sources.length > 0 &&
                   ` · ${sources.map((s) => SOURCE_TITLE[s] ?? s).join("; ")}`}
@@ -117,7 +117,7 @@ export function SourceNotes({
       <div className="mt-2 flex flex-col gap-3">
         {notes.map((n) => (
           <section key={n.title}>
-            <h3 className="mb-1 text-xs font-semibold text-info">
+            <h3 className="mb-1 text-caption font-semibold text-info">
               {n.title}
             </h3>
             <Beats beats={n.beats} />

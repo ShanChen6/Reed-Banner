@@ -5,6 +5,7 @@
 // `onAction`; luật nằm ở @/core, server kiểm tra lại. Trạng thái tìm/lọc/sắp xếp/cuộn sống ở đây nên đổi tab
 // hay mở chi tiết trên điện thoại rồi quay lại vẫn giữ nguyên.
 
+import { MODE_CONTENT_WIDTH } from "@/components/game-ui";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { MAIN_ID, type GearSlot, type Profile, type ProfileAction } from "@/core";
 import { SceneLink } from "../SceneContext";
@@ -90,8 +91,8 @@ export default function Barracks({
   };
 
   return (
-    <main className="barracks ui-screen px-2 pt-3 pb-4 sm:px-4">
-      <div className="mx-auto flex max-w-[96rem] flex-col gap-3">
+    <main className="barracks ui-mode-screen">
+      <div className={`mx-auto flex w-full flex-col gap-3 ${MODE_CONTENT_WIDTH}`}>
         <div className="flex flex-wrap items-center gap-2">
           <div className="grid min-w-0 flex-[1_1_22rem] grid-cols-3 gap-1.5 sm:max-w-[34rem]" role="tablist" aria-label="Mục Doanh Trại">
             {TABS.map((t) => (
@@ -111,7 +112,7 @@ export default function Barracks({
           </div>
           <div className="ml-auto flex flex-wrap items-center gap-2">
             {playerName === null && (
-              <SceneLink scene="LOGIN" params={{ returnTo: "/game/profile" }} className="barracks-btn flex min-h-10 items-center rounded-md px-3 text-sm">
+              <SceneLink scene="LOGIN" params={{ returnTo: "/game/profile" }} className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center rounded-md px-3 text-sm">
                 Đăng nhập để giữ Doanh Trại
               </SceneLink>
             )}
@@ -126,7 +127,7 @@ export default function Barracks({
         </div>
 
         {message && (
-          <p role="alert" className="rounded-md border border-rose-400/40 bg-rose-950/60 px-3 py-2 text-[15px] text-rose-100">
+          <p role="alert" className="rounded-md border border-danger/40 bg-danger-surface/60 px-3 py-2 text-[15px] text-danger">
             {message}
           </p>
         )}

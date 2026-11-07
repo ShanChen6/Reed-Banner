@@ -63,12 +63,12 @@ export default function TeamTab({
               <li key={m.id} className={`team-card relative flex flex-col overflow-hidden rounded-lg ${on ? "is-selected" : ""}`}>
                 <div className="relative flex h-44 items-end justify-center overflow-hidden" style={{ background: `radial-gradient(circle at 50% 70%, ${ELEMENT_COLOR[m.element]}88, #1b110c 72%)` }}>
                   <ProfileArt id={m.id} element={m.element} profession={m.profession} className="h-full max-w-full object-contain object-bottom" fallbackClassName="mb-3 size-32" />
-                  <span className="absolute top-2 left-2 rounded bg-black/65 px-2 py-0.5 text-sm font-semibold text-amber-100">{i === 0 ? "Chủ tướng" : `Vị trí ${i + 1}`}</span>
+                  <span className="absolute top-2 left-2 rounded bg-black/65 px-2 py-0.5 text-sm font-semibold text-title-on-wood">{i === 0 ? "Chủ tướng" : `Vị trí ${i + 1}`}</span>
                 </div>
                 <div className="flex flex-1 flex-col gap-2 p-2.5">
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="font-serif text-lg font-bold text-stone-50">{m.name}</span>
-                    <span className="text-sm text-stone-200 tabular-nums">Cấp {m.level}</span>
+                    <span className="font-serif text-lg font-bold text-title-on-wood">{m.name}</span>
+                    <span className="text-sm text-on-wood tabular-nums">Cấp {m.level}</span>
                   </div>
                   <p className="flex items-center gap-3 text-sm text-[var(--bk-soft)]">
                     <span className="flex items-center gap-1">
@@ -80,11 +80,11 @@ export default function TeamTab({
                   </p>
                   <div className="mt-auto flex flex-wrap gap-2">
                     {pickable && (
-                      <button type="button" aria-pressed={on} onClick={() => setSlot((i - 1) as 0 | 1)} className={`barracks-btn min-h-10 flex-1 rounded-md px-3 ${on ? "is-on" : ""}`}>
+                      <button type="button" aria-pressed={on} onClick={() => setSlot((i - 1) as 0 | 1)} className={`barracks-btn min-h-10 pointer-coarse:min-h-11 flex-1 rounded-md px-3 ${on ? "is-on" : ""}`}>
                         {on ? "Đang chọn vị trí này" : "Đổi người"}
                       </button>
                     )}
-                    <button type="button" onClick={() => onView(m.id)} className="barracks-btn min-h-10 flex-1 rounded-md px-3">
+                    <button type="button" onClick={() => onView(m.id)} className="barracks-btn min-h-10 pointer-coarse:min-h-11 flex-1 rounded-md px-3">
                       Xem tướng
                     </button>
                   </div>
@@ -100,7 +100,7 @@ export default function TeamTab({
           <h3 id="bench-title" className="barracks-title min-w-0 flex-1 font-serif text-lg font-bold">
             Chọn người cho vị trí {slot + 2}
           </h3>
-          <label className="barracks-field relative flex min-h-10 min-w-0 flex-[0_1_16rem] items-center rounded-md">
+          <label className="barracks-field relative flex min-h-10 pointer-coarse:min-h-11 min-w-0 flex-[0_1_16rem] items-center rounded-md">
             <SearchGlyph className="pointer-events-none absolute left-3 size-4 text-[var(--bk-soft)]" />
             <input
               type="search"
@@ -108,10 +108,10 @@ export default function TeamTab({
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Tìm theo tên…"
               aria-label="Tìm nhân vật kèm theo tên"
-              className="size-full min-h-10 bg-transparent pr-2 pl-9 text-[15px] text-stone-100 outline-none placeholder:text-stone-400"
+              className="size-full min-h-10 pointer-coarse:min-h-11 bg-transparent pr-2 pl-9 text-[15px] text-on-wood outline-none placeholder:text-on-wood-soft"
             />
           </label>
-          <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 items-center gap-1.5 rounded-md px-3">
+          <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-md px-3">
             <ShopGlyph className="size-4" /> Tuyển thêm ở Cửa hàng
           </SceneLink>
         </div>

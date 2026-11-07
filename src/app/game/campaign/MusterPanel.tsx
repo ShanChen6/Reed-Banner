@@ -84,13 +84,13 @@ export default function MusterPanel({
             >
               <span className="block text-lg font-black text-on-wood">
                 {n}
-                <span className="text-xs font-normal text-on-wood-soft">/12</span>
+                <span className="text-caption font-normal text-on-wood-soft">/12</span>
               </span>
-              <span className="text-xs text-on-wood-soft">{label}</span>
+              <span className="text-caption text-on-wood-soft">{label}</span>
             </li>
           ))}
         </ul>
-        <p className="mt-1 text-xs text-on-wood-soft">
+        <p className="mt-1 text-caption text-on-wood-soft">
           {resolved
             .map(
               (r) =>
@@ -115,14 +115,14 @@ export default function MusterPanel({
             ))}
           </ul>
           {campaign.unlockedHeroes.length > 0 && (
-            <p className="mt-1 text-xs text-jade">
+            <p className="mt-1 text-caption text-jade">
               Đồng hành đã mở khóa:{" "}
               {campaign.unlockedHeroes
                 .map((id) => companionById(id)?.name ?? id)
                 .join(", ")}
             </p>
           )}
-          <p className="mt-1 text-xs text-on-wood-soft">
+          <p className="mt-1 text-caption text-on-wood-soft">
             Đổi đội ở mục Đội hình & cửa hàng.
           </p>
         </div>
@@ -148,7 +148,7 @@ export default function MusterPanel({
         <h3 className="text-sm font-semibold text-frame-gold">
           Hai tuyến đã mở
         </h3>
-        <p className="text-xs text-on-wood-soft">
+        <p className="text-caption text-on-wood-soft">
           Đi tuyến nào trước là lựa chọn chơi, không phải thứ tự lịch sử. Sử
           không ghi trình tự giải quyết từng nơi. Cả hai tuyến phải xong mới tới
           Đỗ Động.
@@ -191,7 +191,7 @@ export default function MusterPanel({
         >
           Còn {remaining.length}/24 nhiệm vụ cho chiến dịch toàn quốc
         </summary>
-        <ul className="mt-1 grid gap-0.5 text-xs text-on-wood-soft sm:grid-cols-2">
+        <ul className="mt-1 grid gap-0.5 text-caption text-on-wood-soft sm:grid-cols-2">
           {remaining.map((id) => (
             <li key={id}>{missionLabel(id)}</li>
           ))}

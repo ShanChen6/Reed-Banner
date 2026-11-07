@@ -2,6 +2,7 @@
 
 import { FrameInset, ModeBanner, OrnateFrame } from "@/components/game-ui";
 import { Alert, Button, Select, choiceVariants } from "@/components/ui";
+import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 
 // Giao diện thuần của Tháp Thí Luyện: nhận dữ liệu và callback qua props (không tự gọi mạng, không dùng context
 // phân cảnh) nên dựng được ở mọi nơi. Server là nguồn sự thật: số đá, "đã nhận" và kỷ lục chỉ hiện đúng như
@@ -95,7 +96,7 @@ function FloorNavigator({
               className={choiceVariants({ className: "ui-floor min-h-14 w-full flex-col gap-0 px-1 py-1.5" })}
             >
               <span className="text-lg leading-none">{f.floor.floor}</span>
-              <span className="ui-floor__state mt-1 text-[11px] font-normal" aria-hidden>
+              <span className="ui-floor__state mt-1 text-caption font-normal" aria-hidden>
                 {active === f.floor.floor ? "Đang đánh" : FLOOR_STATE_TEXT[f.state]}
               </span>
             </button>
@@ -141,6 +142,8 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
   const rules = describeRules(f.rules);
   const win = describeWin(f.win);
   const options = companionOptions(profile, f.rules, companions);
+  // Hàng chục tướng kèm: cắt trang 12 để không dài trên điện thoại (lựa chọn giữ nguyên khi sang trang).
+  const pagedOptions = usePagedItems(options, 12);
   const build = props.build ?? defaultBuild(profile, f.rules, companions);
   const preview = previewLineup(profile, f.rules, companions, build);
   const choices = leaderChoices(profile, f.rules, companions);
@@ -233,7 +236,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
           <div>
             <h3 className="ui-title-on-wood mb-1.5 text-base">Chọn 2 tướng kèm (đã chọn {companions.length}/2)</h3>
             <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {options.map((o) => (
+              {pagedOptions.pageItems.map((o) => (
                 <li key={o.id}>
                   <button
                     type="button"
@@ -244,18 +247,19 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
                     className={choiceVariants({ className: "min-h-14 w-full justify-start p-2 text-left font-normal" })}
                   >
                     <Portrait id={o.id} element={o.element} profession={o.profession} className="size-10 shrink-0" />
-                    <span className="min-w-0 text-xs">
+                    <span className="min-w-0 text-caption">
                       <span className="block truncate text-sm font-semibold">{o.name}</span>
                       <span className="flex items-center gap-1 opacity-80">
                         <ElementIcon element={o.element} className="size-3.5" />
                         {ELEMENT_NAME[o.element]} · {PROFESSION_NAME[o.profession]}
                       </span>
-                      {o.reason && <span className={`block text-[11px] ${o.selected ? "text-lacquer" : "text-danger"}`}>{o.reason}</span>}
+                      {o.reason && <span className={`block text-caption ${o.selected ? "text-lacquer" : "text-danger"}`}>{o.reason}</span>}
                     </span>
                   </button>
                 </li>
               ))}
             </ul>
+            <PageControls paged={pagedOptions} label="Phân trang tướng kèm" className="mt-2" />
           </div>
 
           <FrameInset>

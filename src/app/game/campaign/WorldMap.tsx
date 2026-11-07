@@ -332,7 +332,7 @@ export default function WorldMap({
     <figure className="campaign-map atlas-frame flex flex-col self-start overflow-hidden xl:h-full xl:self-stretch">
       <AtlasCorners />
       <RotateHint />
-      <div className="map-viewport relative">
+      <div className="map-viewport relative xl:my-auto">
         <svg
           {...svgProps}
           className="block h-auto w-full select-none"
@@ -587,7 +587,7 @@ export default function WorldMap({
                 color={STATE_COLOR[strongholdState(s, campaign.factions)]}
                 className="h-8 w-6 shrink-0"
               />
-              <span className="text-xs leading-tight">
+              <span className="text-caption leading-tight">
                 <span className="block font-bold">
                   {s.place} · {strongholdLeader(s)}
                 </span>
@@ -601,7 +601,7 @@ export default function WorldMap({
         {/* Chú giải chung hàng với Bình Kiều; là div vì figcaption phải là con trực tiếp của figure. */}
         <div
           id="world-map-legend"
-          className="flex min-w-0 flex-1 flex-wrap content-start items-center gap-x-3 gap-y-1 text-xs"
+          className="flex min-w-0 flex-1 flex-wrap content-start items-center gap-x-3 gap-y-1 text-caption"
         >
           {(Object.keys(STATE_COLOR) as StrongholdState[]).map((st) => (
             <span key={st} className="flex items-center gap-1">
@@ -619,39 +619,43 @@ export default function WorldMap({
           </span>
         </div>
       </div>
-      {/* Bản đồ nhỏ trên điện thoại: chọn cứ điểm từ danh sách, không cần chạm trúng lá cờ. */}
-      <details className="world-strip border-t px-3 py-2 text-sm lg:hidden">
+      {/* Bản đồ nhỏ trên điện thoại: chọn cứ điểm từ danh sách, không cần chạm trúng lá cờ (cờ trên bản đồ chỉ rộng 30–60px).
+          Mở sẵn vì đây là cách chọn chính khi màn hẹp; cứ điểm của chương đang xem lên đầu, cứ điểm có nhiệm vụ đang mở có chấm. */}
+      <details open className="world-strip border-t px-3 py-2 text-sm lg:hidden">
         <summary className="flex min-h-11 cursor-pointer items-center font-semibold">
           Danh sách cứ điểm ({WORLD_STRONGHOLDS.length})
         </summary>
         <ul className="grid grid-cols-2 gap-1.5 pb-1">
-          {WORLD_STRONGHOLDS.map((s) => (
-            <li key={s.id}>
-              <button
-                type="button"
-                aria-pressed={s.id === selected}
-                onClick={() => pick(s.id)}
-                className={`map-chip flex min-h-11 w-full items-center gap-2 rounded-lg border px-2 py-1 text-left ${
-                  s.id === selected ? "map-chip-active" : ""
-                }`}
-              >
-                <FactionFlag
-                  id={s.id}
-                  color={STATE_COLOR[strongholdState(s, campaign.factions)]}
-                  className="h-7 w-5 shrink-0"
-                />
-                <span className="min-w-0 leading-tight">
-                  <span className="block truncate font-semibold">
-                    {s.place}
-                  </span>
-                  <span className="block truncate text-xs opacity-75">
-                    {strongholdLeader(s)}
-                  </span>
-                </span>
-              </button>
-            </li>
-          ))}
+          {[...WORLD_STRONGHOLDS]
+            .sort((x, y) => Number(inChapter.has(y.id)) - Number(inChapter.has(x.id)))
+            .map((s) => {
+              const state = strongholdState(s, campaign.factions);
+              const open = strongholdHasOpenMission(s, status);
+              return (
+                <li key={s.id}>
+                  <button
+                    type="button"
+                    aria-pressed={s.id === selected}
+                    aria-label={label(s)}
+                    onClick={() => pick(s.id)}
+                    className={`map-chip relative flex min-h-11 w-full items-center gap-2 rounded-lg border px-2 py-1 text-left ${
+                      s.id === selected ? "map-chip-active" : ""
+                    } ${inChapter.has(s.id) || s.id === selected ? "" : "opacity-70"}`}
+                  >
+                    <FactionFlag id={s.id} color={STATE_COLOR[state]} className="h-7 w-5 shrink-0" />
+                    <span className="min-w-0 leading-tight">
+                      <span className="block font-semibold">{s.place}</span>
+                      <span className="block text-caption opacity-75">{strongholdLeader(s)}</span>
+                    </span>
+                    {open && (
+                      <span aria-hidden title="Có nhiệm vụ đang mở" className="absolute top-1.5 right-1.5 size-2.5 rounded-full bg-lacquer-hi ring-2 ring-paper-hi" />
+                    )}
+                  </button>
+                </li>
+              );
+            })}
         </ul>
+        <p className="text-caption opacity-75">Chấm đỏ: cứ điểm có nhiệm vụ đang mở. Cứ điểm của chương đang xem nằm trên cùng.</p>
       </details>
     </figure>
   );
