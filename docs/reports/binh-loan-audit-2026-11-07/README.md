@@ -61,3 +61,12 @@ Bố cục co giãn tốt, nội dung sử liệu rõ nguồn (nhãn Sử chép,
 - Cảnh ngoại giao (`DiplomacyScene`), tổng kết Chương III (Hội quân Hoa Lư), màn kết thúc chiến dịch (`CampaignEnding`), Đánh trùm (`RaidPanel`) khi đã mở sứ quân.
 - Trạng thái sau khi chọn lối kể và nhấn "Hoàn thành nhiệm vụ"; bàn phím và trình đọc màn hình trên bản đồ.
 - Hồ sơ có tiến độ thật, lỗi mạng khi lưu tiến độ.
+
+## Tiến độ sửa
+
+| Việc | Trạng thái |
+| --- | --- |
+| Gom tất cả vào **một đại card** (Shan đề xuất 07/11/2026): tab Nhiệm vụ, tab Sử ký và khu Tái đấu sứ quân nằm trong cùng khung gỗ với header Sử ký, ngăn bằng đường kẻ mảnh thay cho các khung rời; bỏ khung nổi riêng của nhiệm vụ và của Tái đấu | Đã làm 07/11/2026 |
+| Gập Tái đấu sứ quân thành một dòng khi chưa mở sứ quân nào (P1.2); chỉ hiện ở tab Bản đồ, không lặp ở Nhiệm vụ và Sử ký | Đã làm 07/11/2026 |
+| Chiều cao ở 360px (mới): tab Bản đồ 2929 → 2335px, Nhiệm vụ 1686 → 970px, Sử ký 1886 → 1195px; laptop: Bản đồ 1420 → 947px, Nhiệm vụ 1395 → 900px | Đo 07/11/2026 |
+| Các mục còn lại (P1.1 nút bắt đầu nổi bật, P1.3 gập Sử ký, P1.4 vùng chạm, P1.5 trang chọn cuối, header 360px) | Chưa làm |

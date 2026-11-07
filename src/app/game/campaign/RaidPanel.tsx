@@ -4,7 +4,7 @@
 // mỗi người mở sau nhiệm vụ mốc của Campaign V2, 3 bậc trên sân nhà. Luật ở @/core/campaign/raids, server kiểm tra lại.
 
 import { useState } from "react";
-import { OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { SectionTitle } from "@/components/game-ui";
 import { Button, choiceVariants } from "@/components/ui";
 import {
   RAID_BOSSES,
@@ -155,12 +155,26 @@ export default function RaidHall({
   const openCount = RAID_BOSSES.filter((b) =>
     raidBossOpen(profile.campaign, b.id),
   ).length;
+  // Khu dưới cùng của đại card Bình Loạn (không có khung riêng). Chưa mở sứ quân nào thì chỉ một dòng, không liệt kê ô khóa.
+  if (openCount === 0)
+    return (
+      <section
+        aria-labelledby="raid-hall-title"
+        className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-t border-frame-line-soft px-1 pt-3 text-sm sm:px-2"
+      >
+        <h2 id="raid-hall-title" className="font-serif text-base font-bold text-title-on-wood">
+          Tái đấu sứ quân
+        </h2>
+        <span className="text-on-wood-soft">0/{RAID_BOSSES.length} sứ quân đã mở</span>
+        <span className="text-on-wood-soft">
+          · Sứ quân đầu tiên mở sau nhiệm vụ {gateText(RAID_BOSSES[0]!).replace("Mở sau nhiệm vụ ", "")}.
+        </span>
+      </section>
+    );
   return (
-    <OrnateFrame
-      as="section"
+    <section
       aria-labelledby="raid-hall-title"
-      level="raised"
-      className="mt-6"
+      className="flex flex-col gap-3 border-t border-frame-line-soft px-1 pt-3 sm:px-2"
     >
       <SectionTitle
         id="raid-hall-title"
@@ -232,6 +246,6 @@ export default function RaidHall({
           </p>
         )}
       </div>
-    </OrnateFrame>
+    </section>
   );
 }

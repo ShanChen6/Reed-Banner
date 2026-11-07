@@ -1,13 +1,12 @@
 "use client";
 
-import { OrnateFrame } from "@/components/game-ui";
 import { Alert, Button, buttonVariants, choiceVariants } from "@/components/ui";
 
 // Các chương Campaign V2 đã có nội dung (Chương I–III, Chương IV có M13, M15, M16): intro → lựa chọn trình diễn → hoàn thành (story) hoặc chuẩn bị xuất quân
 // (trận). Mọi tiến độ, lựa chọn và thưởng lấy từ hồ sơ server; trình duyệt chỉ nhớ bước đang xem và màn
 // thưởng đã xem để tải lại trang không phải xem lại từ đầu.
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   CAMPAIGN_CHAPTERS,
   CAMPAIGN_FINAL_NODE,
@@ -635,11 +634,14 @@ export default function ChapterOne({
   onProfile,
   onAction,
   busy: actionBusy,
+  footer,
 }: {
   profile: Profile;
   onProfile: (p: Profile) => void;
   onAction: (a: ProfileAction) => void;
   busy: boolean;
+  /** Khu dưới cùng của đại card (Tái đấu sứ quân), chỉ hiện ở tab Bản đồ. */
+  footer?: ReactNode;
 }) {
   const { go } = useScene();
   const campaign = profile.campaign;
@@ -919,14 +921,14 @@ export default function ChapterOne({
               )}
             </div>
           )}
-        </div>
-      </div>
       {atlas.view === "codex" ? (
         <>
           <WorldLedger campaign={profile.campaign} />
           <WarlordCodex campaign={campaign} />
         </>
-      ) : atlas.view === "atlas" ? null : (
+      ) : atlas.view === "atlas" ? (
+        (footer ?? null)
+      ) : (
         <>
           <nav
             aria-label="Đường dẫn"
@@ -945,7 +947,7 @@ export default function ChapterOne({
             </p>
           </nav>
 
-          <OrnateFrame as="article" level="raised" className="flex flex-col gap-3">
+          <article className="flex flex-col gap-3 border-t border-frame-line-soft px-1 pt-3 sm:px-2">
             <header>
               <p className="text-kicker text-frame-gold">
                 {node.location.name} ·{" "}
@@ -1176,9 +1178,11 @@ export default function ChapterOne({
                 {message}
               </Alert>
             )}
-          </OrnateFrame>
+          </article>
         </>
       )}
+        </div>
+      </div>
     </section>
   );
 }
