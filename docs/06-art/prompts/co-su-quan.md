@@ -48,8 +48,8 @@ Hình lấy đúng ý đã đặt trong `factionMarks.ts` (cột "Ý hình") đ�
 | `ngoNhatKhanh` | Ngô Nhật Khánh (Đường Lâm) | Phong → xanh lơ `#2e9e90` | vuông | cổng làng |
 | `nguyenKhoan` | Nguyễn Khoan (Tam Đái) | Thổ → nâu đất `#a5772f` | đuôi én | ba dải |
 | `kieuCongHan` | Kiều Công Hãn (Phong Châu) | Lôi → tím `#7d55c7` | nhọn đáy | đỉnh núi |
-| `kieuThuan` | Kiều Thuận (Hồi Hồ) | Mộc → xanh lá `#4f9a4a` | vuông | mặt hồ |
-| `lyKhue` | Lý Khuê (Siêu Loại) | Kim → xám bạc `#9ea4ad` | đuôi én | cánh sen |
+| `kieuThuan` | Kiều Thuận (Hồi Hồ) | Mộc → xanh lá `#4f9a4a` | vuông | cánh sen |
+| `lyKhue` | Lý Khuê (Siêu Loại) | Kim → xám bạc `#9ea4ad` | đuôi én | giáp vảy |
 | `nguyenThuTiep` | Nguyễn Thủ Tiệp (Tiên Du) | Thủy → xanh dương `#2f7fc1` | nhọn đáy | sao bốn cánh |
 | `luDuong` | Lữ Đường (Tế Giang) | Thủy → xanh dương `#2f7fc1` | vuông | dòng sông |
 | `nguyenSieu` | Nguyễn Siêu (Tây Phù Liệt) | Hỏa → cam `#d9502a` | đuôi én | lũy có răng cưa |
@@ -93,16 +93,16 @@ Subject: emblem of three thick horizontal bands stacked like layers of rammed ea
 Subject: emblem of a single sharp mountain peak with a smaller shoulder peak beside it, faceted planes drawn as bold bronze-gold shapes with ink outline, a thin zig-zag lightning notch splitting the main peak. Tiny accent: the lightning notch in violet (#7d55c7). Brooding, ancestral-land feeling.
 ```
 
-### 3.7 Kiều Thuận — mặt hồ
+### 3.7 Kiều Thuận — cánh sen
 
 ```text
-Subject: emblem of a round lake surface seen slightly from above: three concentric ripple rings with one broad lotus leaf and two reed stalks at the edge, bronze gold with ink outline. Tiny accent: the lotus leaf in green (#4f9a4a). Quiet, healing, marsh-lake feeling.
+Subject: emblem of a lotus flower seen from the front with five bold pointed petals around a small round seed head, two broad lotus leaves and one reed stalk at its base, bronze gold with ink outline. Tiny accent: the lotus leaves in green (#4f9a4a). Quiet, healing, marsh-lake feeling (Hoi Ho lake).
 ```
 
-### 3.8 Lý Khuê — cánh sen
+### 3.8 Lý Khuê — giáp vảy
 
 ```text
-Subject: emblem of a lotus flower seen from the front with five bold pointed petals around a small round seed head, bronze gold petals with ink outline and a bright silver edge highlight on each petal. Tiny accent: silver-grey (#9ea4ad) edge lines. Radiant, polished, silver-gold-armour feeling.
+Subject: emblem of three overlapping rows of rounded armour scales (lamellar plates) stacked like a breastplate, each row a bold scalloped bronze-gold band with ink outline and a bright silver edge highlight on every scale. Tiny accent: silver-grey (#9ea4ad) edge lines. Radiant, polished, silver-gold-armour feeling, no human figure.
 ```
 
 ### 3.9 Nguyễn Thủ Tiệp — sao bốn cánh

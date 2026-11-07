@@ -57,15 +57,15 @@ export const FACTION_MARKS: Readonly<Record<StrongholdId, FactionMark>> = {
   },
   kieuThuan: {
     shape: "square",
-    motif: "mặt hồ",
-    glyph:
-      "M0,-10 A10,10 0 1 1 0,10 A10,10 0 1 1 0,-10 Z M0,-4.5 A4.5,4.5 0 1 1 0,4.5 A4.5,4.5 0 1 1 0,-4.5 Z",
-  },
-  lyKhue: {
-    shape: "notch",
     motif: "cánh sen",
     glyph:
       "M0,9 Q-6,0 0,-10 Q6,0 0,9 Z M0,9 Q-11,5 -10,-4 Q-3,-1 0,9 M0,9 Q11,5 10,-4 Q3,-1 0,9",
+  },
+  lyKhue: {
+    shape: "notch",
+    motif: "giáp vảy",
+    glyph:
+      "M-10,-7 Q-5,-1 0,-7 Q5,-1 10,-7 M-10,0 Q-5,6 0,0 Q5,6 10,0 M-10,7 Q-5,13 0,7 Q5,13 10,7",
   },
   nguyenThuTiep: {
     shape: "point",
