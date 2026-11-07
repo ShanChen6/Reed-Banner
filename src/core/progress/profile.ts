@@ -1,7 +1,7 @@
 // Hồ sơ người chơi: tiến trình nhân vật chính và các nhân vật kèm, vàng, lựa chọn trước trận.
 // Dữ liệu thuần: /demo lưu ở trình duyệt, /play lưu trên server (bảng `profiles`).
 
-import {isLeaderProfession, normalizeProfession, type Element, type FighterConfig, type Profession} from "../battle";
+import {ELEMENTS, isLeaderProfession, normalizeProfession, type Element, type FighterConfig, type Profession} from "../battle";
 import { withGear, type GearItem, type GearSlot, type Tier } from "../gear";
 import {
   companionById,
@@ -347,6 +347,8 @@ export type ProfileAction =
   | { readonly type: "buyCompanion"; readonly character: string }
   /** Chọn 2 nhân vật kèm đã có ra trận 3vs3. */
   | { readonly type: "chooseTeam"; readonly companions: readonly string[] }
+  /** Đặt hệ và nghề mặc định của thủ lĩnh (Đinh Bộ Lĩnh); mọi chế độ mở sẵn theo lựa chọn này. */
+  | { readonly type: "chooseLeader"; readonly element: Element; readonly profession: Profession }
   /** Mặc/tháo một món trong túi cho nhân vật (chính hoặc kèm). */
   | {
       readonly type: "equip" | "unequip";
@@ -514,6 +516,11 @@ export function applyProfileAction(
       ? { ok: true, profile: { ...profile, team: [...action.companions] } }
       : { ok: false, error: "notOwned" };
   }
+  if (action.type === "chooseLeader") {
+    if (!(ELEMENTS as readonly string[]).includes(action.element) || !isLeaderProfession(action.profession))
+      return { ok: false, error: "invalidItem" };
+    return { ok: true, profile: { ...profile, element: action.element, profession: action.profession } };
+  }
   if (action.type === "buyCompanion")
     return buyCompanion(profile, action.character);
   if (action.type === "equip")
@@ -559,6 +566,10 @@ export function parseProfileAction(x: unknown): ProfileAction | null {
       ? { type: "chooseTeam", companions: ids as string[] }
       : null;
   }
+  if (a.type === "chooseLeader")
+    return typeof a.element === "string" && typeof a.profession === "string"
+      ? { type: "chooseLeader", element: a.element as Element, profession: a.profession as Profession }
+      : null;
   if (a.type === "merge") {
     const ids = a.items;
     return Array.isArray(ids) &&

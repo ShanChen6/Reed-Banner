@@ -1,23 +1,23 @@
 "use client";
 
-import { OrnateFrame } from "@/components/game-ui";
 import { Alert, Button, buttonVariants, choiceVariants } from "@/components/ui";
 
 // Các chương Campaign V2 đã có nội dung (Chương I–III, Chương IV có M13, M15, M16): intro → lựa chọn trình diễn → hoàn thành (story) hoặc chuẩn bị xuất quân
 // (trận). Mọi tiến độ, lựa chọn và thưởng lấy từ hồ sơ server; trình duyệt chỉ nhớ bước đang xem và màn
 // thưởng đã xem để tải lại trang không phải xem lại từ đầu.
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import StartBar from "./StartBar";
+import LeaderBuild from "../profile/LeaderBuild";
+import { startTarget } from "./startMission";
 import {
   CAMPAIGN_CHAPTERS,
   CAMPAIGN_FINAL_NODE,
   CAMPAIGN_UNIFICATION_NODE,
   campaignCompleted,
   CAMPAIGN_FOOD_MAX,
-  ELEMENTS,
   FOOD_PRICE,
   MAIN_ID,
-  PROFESSIONS,
   loadoutOf,
   ownsCompanion,
   campaignBattleAdvice,
@@ -47,7 +47,7 @@ import {
   type Profile,
   type ProfileAction,
 } from "@/core";
-import { ElementIcon, ProfessionIcon } from "../art/icons";
+import { ElementIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import {
   DIFFICULTY_NAME,
@@ -509,51 +509,19 @@ function BattlePrep({
             </div>
           </div>
         )}
-        <div
-          className="mt-2 flex flex-wrap gap-1"
-          role="radiogroup"
-          aria-label="Nghề của Đinh Bộ Lĩnh"
-        >
-          {PROFESSIONS.map((p) => (
-            <button
-              key={p}
-              type="button"
-              role="radio"
-              aria-checked={profession === p}
-              onClick={() => setProfession(p)}
-              className={choiceVariants({ size: "sm", className: `gap-1 px-2 py-1 text-caption font-normal ${profession === p ? "is-selected" : ""}` })}
-            >
-              <ProfessionIcon profession={p} className="size-4" />
-              {PROFESSION_NAME[p]}
-            </button>
-          ))}
-        </div>
-        <p className="mt-1 text-caption text-on-wood-soft">
-          Vũ khí nghề {PROFESSION_NAME[profession]}:{" "}
-          {weapon ? gearText(weapon) : "chưa trang bị (đổi ở Doanh Trại)"}. Mỗi nghề
-          dùng vũ khí riêng; nghề và hệ chọn ở đây được lưu khi xuất quân.
-        </p>
-        <div
-          className="mt-2 flex flex-wrap gap-1"
-          role="radiogroup"
-          aria-label="Nguyên tố ra trận"
-        >
-          {ELEMENTS.map((e) => (
-            <button
-              key={e}
-              type="button"
-              role="radio"
-              aria-checked={element === e}
-              onClick={() => setElement(e)}
-              className={choiceVariants({ size: "sm", className: `gap-1 px-2 py-1 text-caption font-normal ${element === e ? "is-selected" : ""}` })}
-            >
-              <ElementIcon element={e} className="size-4" />
-              {ELEMENT_NAME[e]}
-              {advice.counterElements.includes(e) && (
-                <span className="text-jade">★</span>
-              )}
-            </button>
-          ))}
+        <div className="mt-2">
+          <LeaderBuild
+            element={element}
+            profession={profession}
+            onChange={(b) => {
+              setElement(b.element);
+              setProfession(b.profession);
+              // Lưu ngay vào hồ sơ để mọi chế độ khác cũng dùng lựa chọn này, khỏi sang Doanh Trại.
+              onAction({ type: "chooseLeader", ...b });
+            }}
+            marks={advice.counterElements}
+            hint={`Đổi tại đây là lưu luôn cho mọi chế độ. Vũ khí nghề ${PROFESSION_NAME[profession]}: ${weapon ? gearText(weapon) : "chưa trang bị (mặc ở Doanh Trại)"}.`}
+          />
         </div>
         <p
           className={`mt-1 text-caption ${counters ? "text-jade" : weak ? "text-danger" : "text-on-wood-soft"}`}
@@ -635,11 +603,14 @@ export default function ChapterOne({
   onProfile,
   onAction,
   busy: actionBusy,
+  footer,
 }: {
   profile: Profile;
   onProfile: (p: Profile) => void;
   onAction: (a: ProfileAction) => void;
   busy: boolean;
+  /** Nội dung tab Tái đấu (khu Tái đấu sứ quân), nằm trong đại card. */
+  footer?: ReactNode;
 }) {
   const { go } = useScene();
   const campaign = profile.campaign;
@@ -667,7 +638,7 @@ export default function ChapterOne({
     const saved = readJson<AtlasState>(ATLAS_KEY);
     return {
       view:
-        saved?.view === "mission" || saved?.view === "codex"
+        saved?.view === "mission" || saved?.view === "codex" || saved?.view === "raid"
           ? saved.view
           : "atlas",
       stronghold:
@@ -689,19 +660,22 @@ export default function ChapterOne({
   const mapRef = useRef<HTMLDivElement>(null);
   const shownView = useRef(atlas.view);
   // Đổi màn thì đưa tiêu điểm tới tiêu đề nhiệm vụ hoặc về bản đồ (người dùng bàn phím, đọc màn hình không lạc).
+  // Không để trình duyệt tự cuộn theo tiêu điểm (preventScroll) và chỉ cuộn trang khi đầu card đang nằm trên khung nhìn
+  // (ví dụ mở nhiệm vụ từ danh sách ở cuối bản đồ); bấm tab ở đầu card thì giữ nguyên vị trí cuộn.
   useEffect(() => {
     if (shownView.current === atlas.view) return;
     shownView.current = atlas.view;
-    sectionRef.current?.scrollIntoView({ block: "start" });
+    const section = sectionRef.current;
+    if (section && section.getBoundingClientRect().top < 0) section.scrollIntoView({ block: "start" });
     if (atlas.view === "mission") {
-      missionHeadingRef.current?.focus();
+      missionHeadingRef.current?.focus({ preventScroll: true });
       return;
     }
     const map = mapRef.current;
     const target =
       map?.querySelector<SVGElement>("[aria-pressed=true]") ??
       map?.querySelector<SVGElement>("svg");
-    target?.focus();
+    target?.focus({ preventScroll: true });
   }, [atlas.view]);
   const [seen, setSeen] = useState<readonly string[]>(
     () => readJson<string[]>(SEEN_KEY) ?? [],
@@ -851,6 +825,10 @@ export default function ChapterOne({
           />
           {atlas.view === "atlas" && (
             <div ref={mapRef} className="flex flex-col gap-3">
+              {(() => {
+                const target = startTarget(campaign);
+                return target ? <StartBar target={target} onOpen={openMission} /> : null;
+              })()}
               {/* Ba cột cùng hàng cao bằng nhau; panel phải dài thì cuộn bên trong thay vì kéo dài hàng. */}
               <div className="grid grid-cols-[minmax(0,1fr)] gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)] xl:grid-cols-[minmax(260px,0.22fr)_minmax(0,1fr)_minmax(300px,0.3fr)]">
                 <div className="md:col-span-2 xl:col-span-1">
@@ -872,8 +850,9 @@ export default function ChapterOne({
                   selected={strongholdId}
                   onSelect={setStronghold}
                 />
-                <div className="min-w-0 xl:relative">
-                  <div className="xl:absolute xl:inset-0">
+                {/* Bảng chương/cứ điểm tự giãn theo nội dung (không cuộn lồng trong card); bản đồ bên cạnh căn đầu hàng. */}
+                <div className="min-w-0">
+                  <div className="xl:h-full">
                     {stronghold ? (
                       <StrongholdPanel
                         campaign={campaign}
@@ -919,13 +898,13 @@ export default function ChapterOne({
               )}
             </div>
           )}
-        </div>
-      </div>
       {atlas.view === "codex" ? (
         <>
           <WorldLedger campaign={profile.campaign} />
           <WarlordCodex campaign={campaign} />
         </>
+      ) : atlas.view === "raid" ? (
+        <div className="px-1 sm:px-2">{footer}</div>
       ) : atlas.view === "atlas" ? null : (
         <>
           <nav
@@ -945,7 +924,7 @@ export default function ChapterOne({
             </p>
           </nav>
 
-          <OrnateFrame as="article" level="raised" className="flex flex-col gap-3">
+          <article className="flex flex-col gap-3 border-t border-frame-line-soft px-1 pt-3 sm:px-2">
             <header>
               <p className="text-kicker text-frame-gold">
                 {node.location.name} ·{" "}
@@ -1176,9 +1155,11 @@ export default function ChapterOne({
                 {message}
               </Alert>
             )}
-          </OrnateFrame>
+          </article>
         </>
       )}
+        </div>
+      </div>
     </section>
   );
 }

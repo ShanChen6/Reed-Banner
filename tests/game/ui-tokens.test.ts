@@ -53,3 +53,27 @@ test("chữ trong màn game không nhỏ hơn 13px, trừ huy hiệu phủ lên 
   }
   assert.deepEqual(found, [], `Dùng text-caption (13px) thay cho chữ nhỏ:\n${found.join("\n")}`);
 });
+
+// CSS cũng không viết #hex: mọi màu là token trong src/styles/theme.css (và color.css); màu độ trong suốt dùng
+// color-mix(in srgb, var(--token) N%, transparent). Hai tệp token là nơi duy nhất được khai mã màu.
+const CSS_TOKEN_FILES = new Set(["src/styles/theme.css", "src/styles/color.css"]);
+
+function cssFiles(dir: string): string[] {
+  return readdirSync(dir).flatMap((name) => {
+    const path = join(dir, name);
+    return statSync(path).isDirectory() ? cssFiles(path) : path.endsWith(".css") ? [path] : [];
+  });
+}
+
+test("CSS không viết mã #hex ngoài tệp token", () => {
+  const found: string[] = [];
+  for (const file of cssFiles("src")) {
+    if (CSS_TOKEN_FILES.has(file)) continue;
+    readFileSync(file, "utf8")
+      .split("\n")
+      .forEach((line, i) => {
+        for (const m of line.matchAll(/#[0-9a-fA-F]{3,8}\b/g)) found.push(`${file}:${i + 1} ${m[0]}`);
+      });
+  }
+  assert.deepEqual(found, [], `Dùng token (theme.css) thay cho mã hex:\n${found.join("\n")}`);
+});

@@ -31,15 +31,15 @@
     var(--panel-gradient) padding-box,
     var(--panel-border-gradient) border-box;
   box-shadow:
-    inset 0 1px 0 #fff2,
-    0 14px 30px -20px #000;
+    inset 0 1px 0 color-mix(in srgb, var(--white) 13%, transparent),
+    0 14px 30px -20px var(--black);
 }
 .fx-panel-hi {
   border: 1px solid transparent;
   background:
     var(--panel-highlight-gradient) padding-box,
     var(--bronze-gradient) border-box;
-  box-shadow: 0 0 40px -14px #e2582b88;
+  box-shadow: 0 0 40px -14px color-mix(in srgb, var(--tone-e2582b) 53%, transparent);
 }
 .fx-btn {
   border: 2px solid transparent;
@@ -47,10 +47,10 @@
     var(--lacquer-gradient) padding-box,
     var(--bronze-gradient) border-box;
   color: var(--accent-foreground);
-  text-shadow: 0 1px 0 #5c120b;
+  text-shadow: 0 1px 0 var(--lacquer-lo);
   box-shadow:
-    0 0 26px -6px #e2582bcc,
-    inset 0 1px 0 #ffffff40;
+    0 0 26px -6px color-mix(in srgb, var(--tone-e2582b) 80%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--white) 25%, transparent);
 }
 .fx-btn-ghost {
   border: 1px solid transparent;
@@ -64,9 +64,9 @@
     var(--panel-highlight-gradient) padding-box,
     var(--bronze-gradient) border-box;
   box-shadow:
-    0 0 0 1px #2b1d14,
-    0 0 60px -10px #e2582b66,
-    0 30px 60px -20px #000;
+    0 0 0 1px var(--wood),
+    0 0 60px -10px color-mix(in srgb, var(--tone-e2582b) 40%, transparent),
+    0 30px 60px -20px var(--black);
 }
 }
 
@@ -78,13 +78,13 @@
     border: 1.5px solid var(--frame-gold-hi);
     background: linear-gradient(180deg, var(--lacquer-hi), var(--lacquer) 55%, var(--lacquer-lo));
     color: var(--on-lacquer);
-    text-shadow: 0 1px 2px #0009;
-    box-shadow: inset 0 1px 0 #ffd9a040, 0 6px 18px -8px #8f241dcc;
+    text-shadow: 0 1px 2px color-mix(in srgb, var(--black) 60%, transparent);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--tone-ffd9a0) 25%, transparent), 0 6px 18px -8px color-mix(in srgb, var(--lacquer) 80%, transparent);
     transition: filter 0.15s, box-shadow 0.15s, transform 0.05s;
   }
   .ui-button--primary:hover:not(:disabled) {
     filter: brightness(1.1);
-    box-shadow: inset 0 1px 0 #ffd9a059, 0 8px 24px -8px #b4382ce6;
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--tone-ffd9a0) 35%, transparent), 0 8px 24px -8px color-mix(in srgb, var(--lacquer-hi) 90%, transparent);
   }
   /* Nút phụ: gỗ sẫm viền đồng. */
   .ui-button--secondary {
@@ -117,7 +117,7 @@
     border-color: var(--frame-gold-hi);
     background: linear-gradient(180deg, var(--paper-hi), var(--paper-deep));
     color: var(--ink-strong);
-    box-shadow: 0 2px 0 #0007;
+    box-shadow: 0 2px 0 color-mix(in srgb, var(--black) 47%, transparent);
   }
   .ui-choice:disabled { cursor: not-allowed; opacity: 0.45; }
 
@@ -173,7 +173,7 @@
     border-radius: 0.75rem;
     background: linear-gradient(180deg, var(--wood), var(--wood-panel) 40%, var(--wood-lo));
     color: var(--on-wood);
-    box-shadow: inset 0 1px 0 #ffffff0d, 0 8px 24px -14px #000c;
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--white) 5%, transparent), 0 8px 24px -14px color-mix(in srgb, var(--black) 80%, transparent);
   }
   .ui-frame--raised,
   .ui-frame--hero {
@@ -192,15 +192,15 @@
     border-color: var(--frame-bronze);
     overflow: hidden;
     isolation: isolate;
-    box-shadow: 0 0 0 1px #c9a25a40, 0 14px 36px #000b;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--frame-gold) 25%, transparent), 0 14px 36px color-mix(in srgb, var(--black) 73%, transparent);
   }
   .ui-frame--paper {
     background:
       radial-gradient(ellipse at 25% 0%, var(--paper-hi) 0%, transparent 60%),
-      radial-gradient(ellipse at 100% 100%, #b98f5280 0%, transparent 55%),
+      radial-gradient(ellipse at 100% 100%, color-mix(in srgb, var(--tone-b98f52) 50%, transparent) 0%, transparent 55%),
       var(--paper);
     color: var(--ink);
-    box-shadow: inset 0 0 28px #7a52228c;
+    box-shadow: inset 0 0 28px color-mix(in srgb, var(--tone-7a5222) 55%, transparent);
   }
   /* Liên kết chữ trong câu: trên màn cảm ứng mở rộng vùng chạm tới ~44px mà không đổi bố cục dòng chữ. */
   .ui-link { position: relative; }
@@ -218,12 +218,12 @@
   /* Tranh banner chế độ: phủ tối bên trái/dưới để chữ đọc rõ. */
   .ui-mode-banner-shade {
     background:
-      linear-gradient(0deg, #17110ef2 0%, #17110e99 35%, transparent 75%),
-      linear-gradient(90deg, #140d09e6 0%, #140d0999 40%, transparent 75%);
+      linear-gradient(0deg, color-mix(in srgb, var(--wood-lo) 95%, transparent) 0%, color-mix(in srgb, var(--wood-lo) 60%, transparent) 35%, transparent 75%),
+      linear-gradient(90deg, color-mix(in srgb, var(--wood-inset) 90%, transparent) 0%, color-mix(in srgb, var(--wood-inset) 60%, transparent) 40%, transparent 75%);
   }
   .ui-title-on-wood {
     color: var(--title-on-wood);
-    text-shadow: 0 2px 0 #00000080;
+    text-shadow: 0 2px 0 color-mix(in srgb, var(--black) 50%, transparent);
   }
 
   /* Khung màn: nền gỗ tối, nội dung rộng tối đa 1280px, lề 16px điện thoại / 24px máy tính. */

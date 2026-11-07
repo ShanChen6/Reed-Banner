@@ -22,7 +22,7 @@ const CHEVRONS = Array.from({ length: 14 }, (_, i) => i * (360 / 14) + 360 / 28)
 export default function DrumFace({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 400 400" className={className} aria-hidden focusable="false">
-      <g fill="none" stroke="var(--gold)" strokeLinejoin="round">
+      <g fill="none" stroke="var(--primary)" strokeLinejoin="round">
         <circle cx={C} cy={C} r={198} strokeWidth={2} />
         <polygon points={starPoints(C, C, 196, 188, 90)} strokeWidth={1} />
         <circle cx={C} cy={C} r={185} strokeWidth={1.5} />
@@ -44,7 +44,7 @@ export default function DrumFace({ className }: { className?: string }) {
         ))}
         <circle cx={C} cy={C} r={20} strokeWidth={1.5} />
       </g>
-      <g fill="var(--gold)">
+      <g fill="var(--primary)">
         {LINKED.map(([x, y], i) => (
           <circle key={i} cx={x} cy={y} r={2.2} />
         ))}

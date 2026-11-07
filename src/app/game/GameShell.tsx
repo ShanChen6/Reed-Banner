@@ -28,6 +28,7 @@ import TrialScreen from "./trial/TrialScreen";
 import DestinyScreen from "./destiny/DestinyScreen";
 import ExpeditionScreen from "./expedition/ExpeditionScreen";
 import GameHeader from "./header/GameHeader";
+import GameFooter, { FOOTER_SCENES } from "./GameFooter";
 import LoginGate from "./LoginGate";
 
 export interface ShellAccount {
@@ -100,6 +101,7 @@ export default function GameShell({
         <div key={currentScene} className="scene-enter flex flex-1 flex-col">
           <SceneView scene={currentScene} account={account} auth={auth} resume={api.params.get("resume") === "1"} towerFeatures={towerFeatures} />
         </div>
+        {FOOTER_SCENES.has(currentScene) && <GameFooter />}
       </div>
       </AudioProvider>
     </SceneContext.Provider>

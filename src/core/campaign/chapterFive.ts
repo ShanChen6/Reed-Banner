@@ -30,11 +30,11 @@ export const CHAPTER_FIVE: ChapterContent = {
 export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
   {
     id: "M17",
-    prompt: "Trước khi vào đất Siêu Loại, ai nói với quân?",
+    prompt: "Trước khi vào đất Siêu Loại, ai sẽ nói với quân?",
     objective: "Đánh dẹp lực lượng Siêu Loại: hạ Lý Khuê và hai tùy tướng.",
     cinematic: [
       {
-        text: "Đồng bằng phẳng lặng, những rặng tre bao quanh các làng như tường thành. Phía xa, giáo của đội quân giữ đất phản ánh nắng chiều.",
+        text: "Đồng bằng phẳng lặng, rặng tre bao quanh các làng như tường thành. Phía xa, giáo của đội quân giữ đất lóe sáng trong nắng chiều.",
         basis: "fictional",
       },
     ],
@@ -66,7 +66,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Lưu Cơ",
-            text: "Đất phẳng, làng nào cũng có lũy tre. Đừng đánh vào chỗ họ mạnh nhất; tách tùy tướng khỏi chủ tướng trước.",
+            text: "Đất phẳng, làng nào cũng có lũy tre. Đừng đâm đầu vào chỗ họ mạnh nhất; tách tùy tướng khỏi chủ tướng trước đã!",
             basis: "fictional",
           },
           {
@@ -81,7 +81,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Điền",
-            text: "Đường về phía đông còn dài. Qua được Siêu Loại thì các làng phía sau không còn phải nghe hai lệnh.",
+            text: "Đường về phía đông còn dài. Qua được Siêu Loại, các làng phía sau sẽ thôi phải nghe hai lệnh.",
             basis: "fictional",
           },
         ],
@@ -101,7 +101,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
     ],
     defeat: [
       {
-        text: "Hàng quân phải lui khỏi các lũy tre. Chỉnh đội hình rồi thử lại; kết cục của Siêu Loại trong game không đổi.",
+        text: "Hàng quân phải lui khỏi các lũy tre. Chỉnh lại đội hình rồi đánh lại; kết cục của Siêu Loại trong game không đổi.",
         basis: "fictional",
       },
     ],
@@ -135,7 +135,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
       "Đánh dẹp lực lượng Tiên Du: hạ Nguyễn Thủ Tiệp và hai tùy tướng trước khi lương cạn.",
     cinematic: [
       {
-        text: "Những dãy núi thấp quanh Tiên Du chắn tầm nhìn. Ngoài tiền quân, đoàn xe lương nối đuôi nhau trên con đường hẹp, chậm hơn mọi khi.",
+        text: "Những dãy núi thấp quanh Tiên Du che mất tầm nhìn. Sau tiền quân, đoàn xe lương nối đuôi nhau trên con đường hẹp, chậm hơn mọi khi.",
         basis: "fictional",
       },
     ],
@@ -178,7 +178,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
-            text: "Đếm lại xe lương, chia quân giữ từng chặng. Đánh lâu thì bên nào còn gạo bên ấy thắng.",
+            text: "Đếm lại xe lương, chia quân giữ từng chặng. Đánh lâu thì bên nào còn gạo, bên ấy thắng.",
             basis: "fictional",
           },
         ],
@@ -197,7 +197,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
     ],
     defeat: [
       {
-        text: "Lương cạn trước khi phá được hàng quân Tiên Du. Mua thêm lương rồi thử lại; kết cục của Tiên Du trong game không đổi.",
+        text: "Lương cạn trước khi phá được hàng quân Tiên Du. Mua thêm lương rồi đánh lại; kết cục của Tiên Du trong game không đổi.",
         basis: "fictional",
       },
     ],
@@ -227,10 +227,10 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
   {
     id: "M19",
     prompt:
-      "Các làng ven sông Tế Giang muốn biết họ theo về thì được gì. Ai đến nói chuyện?",
+      "Các làng ven sông Tế Giang muốn biết theo về thì được gì. Ai sẽ đến nói chuyện?",
     cinematic: [
       {
-        text: "Bến đò vắng hơn mọi năm. Thuyền buôn đã đi đường khác, kho của quân giữ đất không còn ai nộp thóc. Mấy cụ già trong làng ngồi chờ ở đình từ sáng.",
+        text: "Bến đò vắng hơn mọi năm. Thuyền buôn đã đi đường khác, kho của quân giữ đất chẳng còn ai nộp thóc. Mấy cụ già trong làng ngồi chờ ở đình từ sáng.",
         basis: "fictional",
       },
     ],
@@ -262,7 +262,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Lê Hoàn",
-            text: "Tôi chỉ ngồi nghe. Người ta nói đường sông nào còn đi được, kho nào còn thóc, là biết vùng này đang nghiêng về đâu.",
+            text: "Tôi chỉ ngồi nghe. Nghe người ta nói đường sông nào còn đi được, kho nào còn thóc, là biết vùng này đang nghiêng về đâu.",
             basis: "fictional",
           },
           {
@@ -277,7 +277,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Sứ giả Hoa Lư",
-            text: "Không ai bắt các làng phải chọn hôm nay. Chỉ xin mở bến cho thuyền lương đi qua, và không ai bị truy xét chuyện cũ.",
+            text: "Không ai bắt các làng phải chọn ngay hôm nay. Chỉ xin mở bến cho thuyền lương đi qua, và chuyện cũ không ai bị truy xét.",
             basis: "fictional",
           },
           {
@@ -329,12 +329,12 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
   {
     id: "M20",
     prompt:
-      "Tây Phù Liệt có lũy giữ đường vào. Phá cổng thẳng, hay buộc quân trong lũy phải ra trận?",
+      "Tây Phù Liệt có lũy giữ đường vào. Phá thẳng cổng, hay buộc quân trong lũy phải ra trận?",
     objective:
       "Công thành Tây Phù Liệt qua ba trận: phá lũy, giữ đoàn lương, rồi hạ Nguyễn Siêu và hai tùy tướng.",
     cinematic: [
       {
-        text: "Lũy đất chắn ngang con đường vào Tây Phù Liệt. Phía sau quân Hoa Lư, đoàn xe lương còn cách nửa ngày đường.",
+        text: "Lũy đất chắn ngang đường vào Tây Phù Liệt. Phía sau quân Hoa Lư, đoàn xe lương còn cách nửa ngày đường.",
         basis: "fictional",
       },
     ],
@@ -366,7 +366,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Nguyễn Bặc",
-            text: "Lũy chỉ có một cổng chính. Dồn sức vào đó trước khi đoàn lương tới, đừng để quân trong lũy kịp chia ra chặn đường.",
+            text: "Lũy chỉ có một cổng chính. Dồn sức vào đó trước khi đoàn lương tới, đừng để quân trong lũy kịp chia ra chặn đường!",
             basis: "fictional",
           },
         ],
@@ -377,7 +377,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Điền",
-            text: "Vây lâu thì quân ta ăn hết lương trước. Để lộ đoàn xe một chút, họ sẽ phải ra khỏi lũy mà đánh.",
+            text: "Vây lâu thì quân ta hết lương trước. Cứ để lộ đoàn xe một chút, họ sẽ phải ra khỏi lũy mà đánh.",
             basis: "fictional",
           },
         ],
@@ -397,7 +397,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
     ],
     defeat: [
       {
-        text: "Quân phải lui về chỗ đóng trại. Thử lại đúng phase vừa thua; những phase đã qua vẫn giữ, kết cục của Tây Phù Liệt trong game không đổi.",
+        text: "Quân phải lui về chỗ đóng trại. Đánh lại đúng phase vừa thua; những phase đã qua vẫn giữ, kết cục của Tây Phù Liệt trong game không đổi.",
         basis: "fictional",
       },
     ],

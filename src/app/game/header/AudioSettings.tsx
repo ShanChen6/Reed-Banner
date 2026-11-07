@@ -12,21 +12,21 @@ export default function AudioSettings() {
   const audio = useAudio();
   const on = !audio.muted;
   return (
-    <div role="group" aria-label="Âm thanh" className="mx-1 mt-1 mb-1.5 rounded-md border border-[var(--hdr-bronze)]/40 bg-wood-inset/70 p-3">
-      <label className="mb-3 flex cursor-pointer items-center justify-between gap-3 text-sm text-[var(--hdr-text)]">
+    <div role="group" aria-label="Âm thanh" className="mx-1 mt-1 mb-1.5 rounded-md border border-[var(--frame-bronze)]/40 bg-wood-inset/70 p-3">
+      <label className="mb-3 flex cursor-pointer items-center justify-between gap-3 text-sm text-[var(--on-wood)]">
         Âm thanh
         <button
           type="button"
           role="switch"
           aria-checked={on}
           onClick={() => audio.setMuted(on)}
-          className={`relative h-6 w-11 shrink-0 rounded-full border border-[var(--hdr-bronze)] transition-colors motion-reduce:transition-none ${on ? "bg-[var(--hdr-active)]" : "bg-wood"}`}
+          className={`relative h-6 w-11 shrink-0 rounded-full border border-[var(--frame-bronze)] transition-colors motion-reduce:transition-none ${on ? "bg-[var(--lacquer)]" : "bg-wood"}`}
         >
-          <span className={`absolute top-0.5 left-0.5 size-[18px] rounded-full bg-[var(--hdr-gold)] transition-transform motion-reduce:transition-none ${on ? "translate-x-5" : ""}`} />
+          <span className={`absolute top-0.5 left-0.5 size-[18px] rounded-full bg-[var(--frame-gold)] transition-transform motion-reduce:transition-none ${on ? "translate-x-5" : ""}`} />
         </button>
       </label>
       {(Object.keys(LABEL) as Bus[]).map((b) => (
-        <label key={b} className={`mb-2 flex items-center gap-3 text-caption text-[var(--hdr-text-soft)] last:mb-0 ${on ? "" : "opacity-50"}`}>
+        <label key={b} className={`mb-2 flex items-center gap-3 text-caption text-[var(--on-wood-soft)] last:mb-0 ${on ? "" : "opacity-50"}`}>
           <span className="w-24 shrink-0">{LABEL[b]}</span>
           <input
             type="range"
@@ -35,7 +35,7 @@ export default function AudioSettings() {
             disabled={!on}
             value={Math.round(audio.volume[b] * 100)}
             onChange={(e) => audio.setVolume(b, Number(e.target.value) / 100)}
-            className="h-2 w-full accent-[var(--hdr-bronze-hi)]"
+            className="h-2 w-full accent-[var(--frame-bronze-hi)]"
             aria-label={`Âm lượng ${LABEL[b].toLowerCase()}`}
           />
         </label>

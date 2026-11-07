@@ -20,6 +20,8 @@ import { ModeIcon, type ModeIconKind } from "./game/art/mode-icons";
 import { BoardCrest, TileArt } from "./game/art/tiles";
 import { towerFeatureFlags, type TowerFeatureFlags } from "@/server/featureFlags";
 import { FAQ, PROFESSION_PERK, TILE_GIVES } from "./home/data";
+import ContactBlock from "./game/ContactBlock";
+import { socialLinks } from "./game/footerLinks";
 import DrumFace from "./home/DrumFace";
 import ElementPicker from "./home/ElementPicker";
 import { Embers, GiltCorners, OrnateDivider } from "./home/Ornaments";
@@ -118,12 +120,12 @@ export default function Home() {
   const board = heroBoard();
   const flags = towerFeatureFlags();
   return (
-    <div className="demo-bg min-h-dvh bg-[var(--bg)] text-on-wood">
+    <div className="demo-bg min-h-dvh bg-[var(--background)] text-on-wood">
       <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-wood-lo focus:p-2">
         Bỏ qua tới nội dung
       </a>
 
-      <header className="sticky top-0 z-40 border-b border-frame-gold/40 bg-wood-lo/90 shadow-[0_8px_24px_-12px_#000] backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-frame-gold/40 bg-wood-lo/90 shadow-[0_8px_24px_-12px_var(--black)] backdrop-blur">
         <nav className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-2.5">
           <Link href="/" className="flex items-center gap-2 font-serif text-lg font-black">
             <LogoMark className="size-8" /> <span className="fx-gilt-text">Cờ Lau</span>
@@ -131,13 +133,13 @@ export default function Home() {
           <ul className="ml-auto hidden items-center gap-5 text-sm text-on-wood-soft md:flex">
             {NAV.map((n) => (
               <li key={n.href}>
-                <a href={n.href} className="hover:text-[var(--gold)]">
+                <a href={n.href} className="hover:text-[var(--primary)]">
                   {n.label}
                 </a>
               </li>
             ))}
           </ul>
-          <Link href="/game/login" className="ml-auto text-sm text-on-wood-soft hover:text-[var(--gold)] md:ml-2">
+          <Link href="/game/login" className="ml-auto text-sm text-on-wood-soft hover:text-[var(--primary)] md:ml-2">
             Đăng nhập
           </Link>
           <PlayButton className="px-3 py-1.5 text-sm" />
@@ -173,7 +175,7 @@ export default function Home() {
               <ul className="mt-5 flex flex-wrap gap-2 text-sm">
                 {NAV.slice(0, 4).map((n) => (
                   <li key={n.href}>
-                    <a href={n.href} className="rounded-full border border-frame-gold/35 bg-wood-inset px-3 py-1 text-on-wood-soft hover:border-frame-gold hover:text-[var(--gold)]">
+                    <a href={n.href} className="rounded-full border border-frame-gold/35 bg-wood-inset px-3 py-1 text-on-wood-soft hover:border-frame-gold hover:text-[var(--primary)]">
                       {n.label}
                     </a>
                   </li>
@@ -214,7 +216,7 @@ export default function Home() {
                 id="dinhBoLinh"
                 element="moc"
                 profession="tuongSi"
-                className="absolute bottom-0 left-0 z-20 size-20 -translate-x-1/2 translate-y-1/2 drop-shadow-[0_6px_10px_#000c] md:size-28"
+                className="absolute bottom-0 left-0 z-20 size-20 -translate-x-1/2 translate-y-1/2 drop-shadow-[0_6px_10px_color-mix(in_srgb,var(--black)_80%,transparent)] md:size-28"
               />
               <div className="absolute left-12 top-full mt-2 flex gap-1.5 md:left-16">
                 {STARTER_COMPANIONS.filter((c) => c.id === "haVan" || c.id === "maiThanh").map((c) => (
@@ -231,7 +233,7 @@ export default function Home() {
           <ul className="mx-auto grid max-w-5xl grid-cols-3 gap-3 md:gap-6">
             {DBL_ERAS.map((e) => (
               <li key={e.src} className="flex flex-col items-center justify-end rounded-2xl fx-panel-hi p-2 text-center md:p-4">
-                <Image src={e.src} alt={`Đinh Bộ Lĩnh ${e.title}`} width={e.w} height={900} sizes="(min-width: 768px) 300px, 30vw" className="h-auto w-full drop-shadow-[0_12px_20px_#000a]" />
+                <Image src={e.src} alt={`Đinh Bộ Lĩnh ${e.title}`} width={e.w} height={900} sizes="(min-width: 768px) 300px, 30vw" className="h-auto w-full drop-shadow-[0_12px_20px_color-mix(in_srgb,var(--black)_67%,transparent)]" />
                 <p className="mt-2 font-serif text-base font-bold md:text-lg">{e.title}</p>
                 <p className="hidden text-xs text-on-wood-soft sm:block">{e.note}</p>
               </li>
@@ -345,7 +347,7 @@ export default function Home() {
             <li className="flex flex-col items-center rounded-2xl fx-panel-hi p-4 text-center">
               <Portrait id="dinhBoLinh" element="moc" profession="tuongSi" className="size-20" />
               <p className="mt-2 font-bold">Đinh Bộ Lĩnh</p>
-              <p className="text-xs text-[var(--gold)]">Thủ lĩnh · đổi được hệ</p>
+              <p className="text-xs text-[var(--primary)]">Thủ lĩnh · đổi được hệ</p>
               <p className="mt-2 text-xs text-on-wood-soft">Chọn nghề và hệ trước trận: 3 chiêu nghề, 2 chiêu hệ, 1 tuyệt chiêu và bị động thủ lĩnh.</p>
             </li>
             {STARTER_COMPANIONS.map((c) => (
@@ -381,7 +383,7 @@ export default function Home() {
                     )}
                   </span>
                   <span className="mt-2 flex-1 text-sm text-on-wood-soft">{m.body}</span>
-                  {open && <span className="mt-3 text-sm font-semibold text-[var(--gold)] group-hover:brightness-125">Vào chơi ›</span>}
+                  {open && <span className="mt-3 text-sm font-semibold text-[var(--primary)] group-hover:brightness-125">Vào chơi ›</span>}
                 </>
               );
               return (
@@ -411,7 +413,7 @@ export default function Home() {
             ].map(([slug, label], i) => (
               <span key={slug}>
                 {i > 0 && " · "}
-                <Link href={`/game/${slug}`} className="text-on-wood-soft underline-offset-4 hover:text-[var(--gold)] hover:underline">
+                <Link href={`/game/${slug}`} className="text-on-wood-soft underline-offset-4 hover:text-[var(--primary)] hover:underline">
                   {label}
                 </Link>
               </span>
@@ -426,7 +428,7 @@ export default function Home() {
               <details key={f.q} className="group rounded-xl fx-panel px-5 py-4">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold">
                   {f.q}
-                  <span aria-hidden className="text-[var(--gold)] transition group-open:rotate-45">
+                  <span aria-hidden className="text-[var(--primary)] transition group-open:rotate-45">
                     +
                   </span>
                 </summary>
@@ -448,47 +450,46 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="border-t border-frame-gold/25 px-4 py-10 text-sm text-on-wood-soft/80">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="flex items-center gap-2 font-serif text-lg font-bold text-on-wood">
-              <LogoMark className="size-7" /> Cờ Lau
+      <footer className="border-t border-frame-gold/25 px-4 py-8 text-sm text-on-wood-soft/90">
+        {/* Hai cột: trái là nhận diện, điều hướng và lưu ý (căn theo đầu thư cuộn); phải là thư cuộn liên hệ, trên điện thoại thư cuộn lên trước. */}
+        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-start lg:gap-12">
+          <div className="order-2 flex flex-col gap-4 lg:order-1 lg:pt-6">
+            <div className="flex items-center gap-4">
+              <LogoMark className="size-14" />
+              <div>
+                <p className="font-serif text-2xl font-bold text-on-wood">Cờ Lau</p>
+                <p className="mt-0.5 text-base">Mini game thuộc ShanVerse</p>
+              </div>
+            </div>
+            <ul className="grid grid-cols-2 gap-x-6 border-y border-frame-gold/20 py-3 text-base sm:grid-cols-3">
+              {NAV.map((n) => (
+                <li key={n.href}>
+                  <a href={n.href} className="inline-flex min-h-11 items-center hover:text-[var(--primary)]">
+                    {n.label}
+                  </a>
+                </li>
+              ))}
+              {[
+                { href: "/game", label: "Vào game" },
+                { href: "/game/practice", label: "Thao Luyện" },
+                { href: "/game/login", label: "Đăng nhập" },
+                { href: "/game/register", label: "Đăng ký" },
+              ].map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="inline-flex min-h-11 items-center hover:text-[var(--primary)]">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <p className="max-w-md leading-relaxed">
+              Bối cảnh và tên nhân vật lịch sử là lịch sử chung; tính cách, kỹ năng và lời thoại trong game là hư cấu.
             </p>
-            <p className="mt-1">Mini game thuộc ShanVerse.</p>
           </div>
-          <ul className="flex flex-wrap gap-x-5 gap-y-2">
-            {NAV.map((n) => (
-              <li key={n.href}>
-                <a href={n.href} className="hover:text-[var(--gold)]">
-                  {n.label}
-                </a>
-              </li>
-            ))}
-            <li>
-              <Link href="/game" className="hover:text-[var(--gold)]">
-                Vào game
-              </Link>
-            </li>
-            <li>
-              <Link href="/game/practice" className="hover:text-[var(--gold)]">
-                Thao Luyện
-              </Link>
-            </li>
-            <li>
-              <Link href="/game/login" className="hover:text-[var(--gold)]">
-                Đăng nhập
-              </Link>
-            </li>
-            <li>
-              <Link href="/game/register" className="hover:text-[var(--gold)]">
-                Đăng ký
-              </Link>
-            </li>
-          </ul>
+          <div className="order-1 flex justify-center lg:order-2 lg:justify-end">
+            <ContactBlock links={socialLinks()} />
+          </div>
         </div>
-        <p className="mx-auto mt-6 max-w-6xl text-xs">
-          Bối cảnh và tên nhân vật lịch sử là lịch sử chung; tính cách, kỹ năng và lời thoại trong game là hư cấu.
-        </p>
       </footer>
     </div>
   );
