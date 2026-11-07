@@ -48,7 +48,7 @@ export default function GameFooter({ variant }: { variant?: ContactVariant }) {
   const build = buildLabel();
   return (
     <footer className="border-t border-frame-line-soft bg-wood-lo px-4 py-6 text-caption text-on-wood-soft sm:px-6">
-      <div className={`mx-auto grid w-full gap-6 lg:grid-cols-[1fr_auto_1fr] lg:items-start ${MODE_CONTENT_WIDTH}`}>
+      <div className={`mx-auto grid w-full gap-6 lg:grid-cols-[1fr_auto_1fr] lg:items-start lg:gap-10 ${MODE_CONTENT_WIDTH}`}>
         <div className="flex flex-col gap-2">
           <p className="flex items-center gap-2 font-serif text-base font-bold text-on-wood">
             <LogoMark className="size-7" /> Cờ Lau
