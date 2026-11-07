@@ -117,4 +117,5 @@ File nhiều nhất: `battle/DemoGame.tsx` (21), `profile/HeroDetail.tsx` (12), 
 | --- | --- |
 | 1. Component chung: vùng chạm (`Button sm`, `ChoiceChip sm`, `Input`, nút header, `summary`, `ui-link`, ô Độ khó, thanh trượt) | Đã làm 07/11/2026; đo lại ở giả lập cảm ứng 390px: Nhiệm vụ 49 → 0 nút nhỏ, Chiến trường, sảnh trận 0 |
 | 2. Nhiệm vụ trên điện thoại | Đã làm 07/11/2026: thành tựu chia 6 nhóm gập được (nhóm có thưởng chờ nhận tự mở, món nhận được lên đầu), bộ sưu tập địa danh gập mặc định. Chiều cao trang 6597 → 2411px ở 360px, 4879 → 1194px ở 1280px; không tràn ngang |
-| 3–6 | Chưa làm |
+| 3. Màn trận trên điện thoại | Đã làm 07/11/2026: thẻ tướng xếp chân dung trên, tên đọc đủ 2 dòng; chữ trong trận 13px (`text-caption`), riêng số phím và chi phí NL phủ trên icon 11px theo ngoại lệ; thanh kỹ năng thành lưới 3 cột trên điện thoại. Đo ở 360/768/1280px: không tràn ngang, không còn chữ dưới 13px ngoài ngoại lệ (và một dòng 12px ở menu tài khoản chưa sửa) |
+| 4–6 | Chưa làm |
