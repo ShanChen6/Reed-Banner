@@ -86,3 +86,9 @@ Ghi chú: lỗi `reveal` (bản đồ phóng to tự kéo về giữa khi cờ n
 | --- | --- |
 | **Về tab Bản đồ bị tự kéo trang.** Mỗi lần đổi tab code luôn gọi `scrollIntoView` và chuyển tiêu điểm (trình duyệt cuộn theo tiêu điểm) nên trang bị kéo xuống khoảng 56–76px. Sửa: tiêu điểm dùng `preventScroll`, chỉ cuộn trang khi đầu card đang nằm trên khung nhìn (ví dụ mở nhiệm vụ từ danh sách ở cuối bản đồ). Đo ở 1920, 1440, 360px × 3 tiến độ: đổi tab 0 lần cuộn; mở nhiệm vụ từ cuối trang vẫn đưa về đầu card | Đã làm |
 | **Sử ký bỏ W01–W12:** bỏ các hàng "Chưa gặp" và mã Wxx ở hồ sơ đã mở; chỉ liệt kê hồ sơ đã mở, chưa có thì một dòng. Người mới: tab Sử ký giảm từ 1886px xuống khoảng 700px ở điện thoại | Đã làm |
+
+### Cập nhật 07/11/2026 (lượt 4)
+
+| Việc | Trạng thái |
+| --- | --- |
+| **Nút bắt đầu nổi bật cho người mới (P1.1).** Đầu tab Bản đồ có thanh khung vàng nêu nhiệm vụ nên làm tiếp (người mới: "Hành trình khởi đầu"; đang dở: "Nhiệm vụ đang dở"; còn lại: "Nhiệm vụ kế tiếp") và một nút lớn "Bắt đầu / Tiếp tục / Vào nhiệm vụ" mở thẳng nhiệm vụ đó. Chọn nhiệm vụ bằng `startTarget` (ưu tiên nhiệm vụ đang dở, rồi nhiệm vụ mở đầu tiên theo thứ tự chương); hết nhiệm vụ thì ẩn. Đo ở 1440 và 360px: nút 215×50 và 274×50, cách đầu trang 184px, bấm mở đúng nhiệm vụ | Đã làm |

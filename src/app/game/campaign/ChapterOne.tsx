@@ -7,6 +7,8 @@ import { Alert, Button, buttonVariants, choiceVariants } from "@/components/ui";
 // thưởng đã xem để tải lại trang không phải xem lại từ đầu.
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import StartBar from "./StartBar";
+import { startTarget } from "./startMission";
 import {
   CAMPAIGN_CHAPTERS,
   CAMPAIGN_FINAL_NODE,
@@ -856,6 +858,10 @@ export default function ChapterOne({
           />
           {atlas.view === "atlas" && (
             <div ref={mapRef} className="flex flex-col gap-3">
+              {(() => {
+                const target = startTarget(campaign);
+                return target ? <StartBar target={target} onOpen={openMission} /> : null;
+              })()}
               {/* Ba cột cùng hàng cao bằng nhau; panel phải dài thì cuộn bên trong thay vì kéo dài hàng. */}
               <div className="grid grid-cols-[minmax(0,1fr)] gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)] xl:grid-cols-[minmax(260px,0.22fr)_minmax(0,1fr)_minmax(300px,0.3fr)]">
                 <div className="md:col-span-2 xl:col-span-1">
