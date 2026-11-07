@@ -125,7 +125,7 @@ File nhiều nhất: `battle/DemoGame.tsx` (21), `profile/HeroDetail.tsx` (12), 
 
 ## Còn lại sau đợt này
 
-- **Cứ điểm trên bản đồ Bình Loạn** (10 điểm ở 360px, rộng 31–63px × cao 36–49px): các cứ điểm dày đặc, vùng bấm đã phủ cả cờ và tên nên mở rộng thêm sẽ chồng lên cứ điểm bên cạnh; bản đồ có nút phóng to. Chấp nhận là giới hạn của bản đồ; muốn cải thiện cần thiết kế lại (ví dụ danh sách cứ điểm phía dưới bản đồ).
+- **Cứ điểm trên bản đồ Bình Loạn** (10 điểm ở 360px, rộng 31–63px × cao 36–49px): đã có danh sách cứ điểm dưới bản đồ cho màn dưới 1024px (nút cao 44px). Ngày 07/11/2026 hoàn thiện: mở sẵn, tên hiện đủ dòng, cứ điểm của chương đang xem lên đầu, chấm đỏ cho cứ điểm có nhiệm vụ đang mở. Lá cờ trên bản đồ vẫn nhỏ nhưng không còn là cách chọn duy nhất.
 - **Ô bàn cờ Khai Lộ** 30–33px (xem mục 4).
 - Số đo "chữ dưới 13px" ở Thao Luyện (12 điểm) là số phím và chi phí NL phủ trên icon kỹ năng, thuộc ngoại lệ.
 - Các màn sau đăng nhập mới được đo với **hồ sơ mới trống**; trạng thái có nhiều dữ liệu (bảng xếp hạng dài, nhiều thành tựu đã nhận) chưa đo.
