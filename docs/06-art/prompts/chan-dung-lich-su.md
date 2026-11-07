@@ -1,7 +1,7 @@
 # Prompt chân dung bán thân tướng sĩ (phong cách lịch sử, bớt fantasy)
 
 > Cập nhật: 07/11/2026
-> Trạng thái: **DRAFT** — Claude soạn theo yêu cầu của Shan (07/11/2026: tranh mẫu Doanh Trại có chân dung "không fantasy quá mức mà vẫn đậm nét lịch sử, hợp dự án hơn"). Chưa có tranh; làm thử **2 nhân vật** (mục 5) rồi mới làm tiếp.
+> Trạng thái: **DRAFT** — Claude soạn theo yêu cầu của Shan (07/11/2026: tranh mẫu Doanh Trại có chân dung "không fantasy quá mức mà vẫn đậm nét lịch sử, hợp dự án hơn"). Đã làm thử **2 nhân vật** (Nguyễn Bặc, Hà Vân) bằng bản prompt 2, Shan nhận xét "ổn hơn" (07/11/2026) và đã gắn thử vào Doanh Trại; làm tiếp sáu nhân vật ở mục 5.1.
 
 Chân dung hiện tại (`public/art/characters/<tên>/portrait.webp`, 192×192) là **cận mặt** kiểu minh họa số sạch, vài nhân vật (như Hà Vân) có nét "idol/fantasy" (son môi đậm, điểm trang trán, tóc cầu kỳ). Tranh mẫu của Shan dùng **chân dung bán thân** tả thực nhẹ, màu trầm, có nền tranh mờ sương. Tài liệu này ghi lại phong cách đó thành prompt để tạo cả bộ.
 
@@ -25,6 +25,16 @@ Shan tạo Nguyễn Bặc và Hà Vân bằng bản prompt đầu. Nền sương
 - Prompt cấm quá tay: bỏ cả dải lụa đỏ và nét nữ tính nên Hà Vân gần như mất đặc trưng; mặt nhìn trung tính giới.
 
 **Bài học:** mục tiêu là **mức giữa**: lịch sử và bớt fantasy (bỏ hiệu ứng phép, trang sức lộng lẫy, trang điểm đậm) nhưng vẫn là **minh họa nhân vật game** có nét viền, mặt hơi lý tưởng hóa, tách nhân vật khỏi nền rõ. Khối phong cách ở mục 3 đã viết lại theo hướng này (bản 2).
+
+### Kết quả thử lần 2 (bản 2): đạt, đã gắn thử
+
+Nguyễn Bặc và Hà Vân bằng khối phong cách bản 2: minh họa game có nét viền rõ, mặt hơi lý tưởng hóa, giữ nền sương và trang phục thế kỷ X. Kiểm theo mục 6:
+
+- **Tách nền:** độ chênh bão hòa giữa người và nền tăng từ 0,09–0,15 (lần 1) lên 0,29–0,35; nhân vật không còn chìm ở ô nhỏ.
+- **Nhận ra đúng người:** Nguyễn Bặc giữ khăn đỏ, giáp lá đỏ, cán giáo, vết sẹo; Hà Vân giữ dải lụa đỏ, búi tóc, áo đỏ, nét nữ rõ.
+- **Đồng tông:** hai ảnh cùng nền sương nâu đỏ, nhìn thuộc một bộ. Cảnh nền lặp giống nhau (đồn lũy và cờ bên phải); khi làm cả bộ nên đổi nhẹ cảnh nền theo hệ để danh sách không như bản sao.
+- **Đã gắn:** `bust.webp` 384×384 (22–33 KB) trong `public/art/characters/nguyenBac/` và `ha-van/`; `BUST_IDS` và `bustUrl` ở `portrait-data.ts`; ô chân dung ở danh sách tướng sĩ (`HeroList.tsx`) dùng bust khi có, nền màu theo hệ chỉ dùng cho nhân vật còn lại.
+- Lúc còn lẫn chân dung cũ (tối, cận mặt), hai ô mới sáng và nổi hơn hẳn; sẽ đều tay khi làm xong cả bộ.
 
 ## 2. Thông số
 
@@ -114,7 +124,7 @@ Keep the same person, face structure, hair, clothing colours and accessories as 
 ## 7. Sau khi có ảnh (kế hoạch gắn vào game)
 
 1. Xuất `bust.webp` 384×384 vào thư mục từng nhân vật.
-2. Thêm hàm `bustUrl(id)` cạnh `portraitUrl` ở `src/app/game/art/portrait-data.ts`; ô chân dung trong danh sách tướng, đội hình và chọn người ra trận dùng `bust.webp`, thiếu thì lùi về `portrait.webp` và chân dung tròn SVG hiện tại (cơ chế lùi đã có ở `ProfileArt`).
+2. Thêm id vào `BUST_IDS` ở `src/app/game/art/portrait-data.ts` (đã có `bustUrl`; test `bust-art.test.ts` kiểm tệp tồn tại). Đã áp dụng cho danh sách tướng sĩ ở Doanh Trại; **còn lại** thẻ Đội hình (`TeamTab.tsx`), Kho đồ và màn chọn người ra trận. Thiếu `bust.webp` thì lùi về `portrait.webp` như cũ.
 3. Bỏ nền màu theo hệ ở các ô dùng `bust.webp`; thể hiện hệ bằng huy hiệu nhỏ ở góc (đã có biểu tượng hệ).
 4. Chụp Doanh Trại ở 1440px và 360px, soát đọc được tên, cấp và biểu tượng đè lên phần dưới ảnh (độ tương phản chữ ít nhất 4,5:1).
 5. Cập nhật [art bible](../art-bible.md) mục 2.7 (hiện ghi phong cách in khắc gỗ) cho khớp phong cách đã duyệt, và đổi dòng `Trạng thái` của tài liệu này thành IMPLEMENTED.
