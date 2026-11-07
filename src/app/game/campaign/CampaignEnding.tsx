@@ -72,7 +72,7 @@ export default function CampaignEnding({
                   <span className="font-semibold text-on-wood">
                     Chương {ROMAN[c.chapter]} · {c.title}
                   </span>{" "}
-                  <span className="text-xs text-on-wood-soft">
+                  <span className="text-caption text-on-wood-soft">
                     {done}/{c.missions.length}
                   </span>
                 </li>
@@ -114,14 +114,14 @@ export default function CampaignEnding({
         <summary className="flex min-h-11 cursor-pointer items-center font-semibold text-info">
           Nguồn và ghi công
         </summary>
-        <ul className="mt-1 flex flex-col gap-0.5 text-xs text-on-wood-soft">
+        <ul className="mt-1 flex flex-col gap-0.5 text-caption text-on-wood-soft">
           {sources.map(([id, title]) => (
             <li key={id}>
               <span className="text-on-wood-soft/80">{id}</span> · {title}
             </li>
           ))}
         </ul>
-        <p className="mt-2 text-xs text-on-wood-soft">
+        <p className="mt-2 text-caption text-on-wood-soft">
           Cờ Lau, mini game của ShanVerse. Lời kể là game sáng tác trên khung sử
           liệu; nhãn ở từng đoạn (sử chép, game tái dựng, hư cấu, truyền thuyết,
           còn tranh luận) cho biết đoạn đó thuộc loại nào.

@@ -1,6 +1,6 @@
 // Kiểm kê responsive tự động (docs/reports/ui-audit-2026-11-07/README.md, bước 6).
 //
-//   node scripts/ui-audit.mjs [--base http://localhost:3000] [--register] [--shots <thư mục>] [--only menu,shop]
+//   node scripts/ui-audit.mjs [--base http://localhost:3000] [--register] [--shots <thư mục>] [--only menu,shop] [--widths 360,1280] [--detail]
 //
 // Đo từng màn ở 360/768/1280/1920px: tràn ngang và lỗi JS (thất bại, thoát mã 1), vùng chạm dưới 44px trên màn cảm ứng
 // và chữ dưới 13px (cảnh báo). Cần Playwright + Chromium (không nằm trong dependencies của dự án):
@@ -29,6 +29,8 @@ const BASE = opt("--base", "http://localhost:3000").replace(/\/$/, "");
 const SHOTS = opt("--shots", "");
 const ONLY = opt("--only", "").split(",").filter(Boolean);
 const REGISTER = args.includes("--register");
+const DETAIL = args.includes("--detail");
+const WIDTHS = opt("--widths", "").split(",").filter(Boolean).map(Number);
 
 const ROUTES = [
   ["menu", ""], ["practice", "practice"], ["campaign", "campaign"], ["barracks", "profile"], ["shop", "shop"],
@@ -38,7 +40,7 @@ const ROUTES = [
 ].filter(([name]) => ONLY.length === 0 || ONLY.includes(name));
 const VIEWPORTS = [
   { w: 360, h: 800, touch: true }, { w: 768, h: 1024, touch: true }, { w: 1280, h: 800, touch: false }, { w: 1920, h: 1080, touch: false },
-];
+].filter((v) => WIDTHS.length === 0 || WIDTHS.includes(v.w));
 
 /** Chạy trong trang: đo tràn ngang, vùng chạm nhỏ, chữ nhỏ. */
 function measure() {
@@ -117,7 +119,7 @@ for (const vp of VIEWPORTS) {
       }
       const hard = m.overflowX || errors.length > 0;
       if (hard) failed = true;
-      rows.push({ name, w: vp.w, h: m.height, over: m.overflowX ? m.over.length || 1 : 0, taps: vp.touch ? m.taps.length : "-", small: m.small.length, errs: errors.length, ex: m.overflowX ? m.over.slice(0, 2).join("; ") : "" });
+      rows.push({ name, w: vp.w, h: m.height, over: m.overflowX ? m.over.length || 1 : 0, taps: vp.touch ? m.taps.length : "-", small: m.small.length, errs: errors.length, ex: m.overflowX ? m.over.slice(0, 2).join("; ") : "", detail: { taps: vp.touch ? m.taps : [], small: m.small } });
     } catch (e) {
       failed = true;
       rows.push({ name, w: vp.w, h: 0, over: "-", taps: "-", small: "-", errs: 1, ex: String(e).slice(0, 60) });
@@ -130,4 +132,11 @@ await browser.close();
 console.log(`${"màn".padEnd(14)} ${"w".padStart(5)} ${"cao".padStart(6)} ${"tràn".padStart(5)} ${"chạm<44".padStart(8)} ${"chữ<13".padStart(7)} ${"lỗi".padStart(4)}`);
 for (const r of rows) console.log(`${r.name.padEnd(14)} ${String(r.w).padStart(5)} ${String(r.h).padStart(6)} ${String(r.over).padStart(5)} ${String(r.taps).padStart(8)} ${String(r.small).padStart(7)} ${String(r.errs).padStart(4)} ${r.ex}`);
 console.log(failed ? "\nTHẤT BẠI: có tràn ngang hoặc lỗi JS." : "\nĐạt: không tràn ngang, không lỗi JS.");
+if (DETAIL) {
+  for (const r of rows) {
+    const uniq = (list) => [...new Set(list)].slice(0, 6);
+    if (r.detail?.taps.length) console.log(`\n[${r.name} ${r.w}] vùng chạm <44px:\n  ${uniq(r.detail.taps).join("\n  ")}`);
+    if (r.detail?.small.length) console.log(`\n[${r.name} ${r.w}] chữ <13px:\n  ${uniq(r.detail.small).join("\n  ")}`);
+  }
+}
 process.exit(failed ? 1 : 0);

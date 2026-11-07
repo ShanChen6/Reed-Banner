@@ -26,7 +26,7 @@ export default function AudioSettings() {
         </button>
       </label>
       {(Object.keys(LABEL) as Bus[]).map((b) => (
-        <label key={b} className={`mb-2 flex items-center gap-3 text-xs text-[var(--hdr-text-soft)] last:mb-0 ${on ? "" : "opacity-50"}`}>
+        <label key={b} className={`mb-2 flex items-center gap-3 text-caption text-[var(--hdr-text-soft)] last:mb-0 ${on ? "" : "opacity-50"}`}>
           <span className="w-24 shrink-0">{LABEL[b]}</span>
           <input
             type="range"

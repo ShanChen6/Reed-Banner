@@ -17,8 +17,8 @@ export default function RewardLadder({ level, rank, winners }: { level: string; 
         const on = t.tier === mine;
         return (
           <li key={t.tier} className={`flex min-w-0 flex-1 flex-col items-center justify-end rounded-t border px-0.5 text-center ${HEIGHT[t.tier]} ${on ? "border-frame-gold-hi bg-frame-gold/35 shadow-[0_0_10px_color-mix(in_srgb,var(--frame-gold-hi)_50%,transparent)]" : "border-frame-bronze/50 bg-black/25"}`}>
-            <span aria-label={t.label} className="truncate text-[11px] leading-tight text-on-wood-soft">{SHORT[t.tier]}</span>
-            <b className={`text-xs tabular-nums ${on ? "text-title-on-wood" : ""}`}>{gold[t.tier]}</b>
+            <span aria-label={t.label} className="truncate text-caption leading-tight text-on-wood-soft">{SHORT[t.tier]}</span>
+            <b className={`text-caption tabular-nums ${on ? "text-title-on-wood" : ""}`}>{gold[t.tier]}</b>
             {on && <span className="sr-only"> (bậc của bạn)</span>}
           </li>
         );

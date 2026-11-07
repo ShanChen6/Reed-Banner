@@ -127,7 +127,7 @@ export default function HeroList({
             <FilterGlyph className="size-4" />
             Bộ lọc
             {active > 0 && (
-              <span className="rounded-full bg-[var(--bk-gold)] px-1.5 text-xs font-bold text-primary-foreground tabular-nums">{active}</span>
+              <span className="rounded-full bg-[var(--bk-gold)] px-1.5 text-caption font-bold text-primary-foreground tabular-nums">{active}</span>
             )}
           </button>
           <label className="barracks-field relative flex min-h-10 pointer-coarse:min-h-11 min-w-0 flex-1 items-center">
@@ -144,7 +144,7 @@ export default function HeroList({
                 </option>
               ))}
             </select>
-            <span aria-hidden className="pointer-events-none absolute right-2.5 text-xs text-[var(--bk-soft)]">▾</span>
+            <span aria-hidden className="pointer-events-none absolute right-2.5 text-caption text-[var(--bk-soft)]">▾</span>
           </label>
         </div>
       </div>

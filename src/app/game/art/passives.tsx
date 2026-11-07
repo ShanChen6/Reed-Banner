@@ -33,7 +33,7 @@ export function PassiveIcon({ id, name, className = "size-6" }: { id: string; na
     <span
       title={name}
       aria-label={name}
-      className={`inline-flex shrink-0 items-center justify-center rounded-full border border-frame-bronze/60 bg-wood-inset text-[10px] font-semibold text-title-on-wood ${className}`}
+      className={`inline-flex shrink-0 items-center justify-center rounded-full border border-frame-bronze/60 bg-wood-inset text-[11px] font-semibold text-title-on-wood ${className}`}
     >
       {name.charAt(0)}
     </span>

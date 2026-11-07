@@ -87,7 +87,7 @@ function RankedCard({ l, now, busy, canPlay, onPlay }: { l: LevelOverview; now: 
           {reward && m?.rank && (
             <p className="rounded border border-frame-gold/50 bg-frame-gold/15 px-3 py-1.5 text-[15px]">
               Hạng <b>{m.rank}/{l.winners}</b> ({TIER_LABEL[reward.tier]}) · thưởng dự kiến <b>{reward.gold} vàng</b>
-              <span className="block text-xs text-on-wood-soft">Hạng có thể đổi tới hết kỳ; thưởng nhận khi kỳ khép lại.</span>
+              <span className="block text-caption text-on-wood-soft">Hạng có thể đổi tới hết kỳ; thưởng nhận khi kỳ khép lại.</span>
             </p>
           )}
         </div>

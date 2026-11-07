@@ -28,7 +28,7 @@ Bố cục co giãn tốt, không có lỗi vỡ nghiêm trọng. Vấn đề n�
 
 ## Giới hạn của lần đo này
 
-Khách chưa đăng nhập chỉ thấy **màn khóa đăng nhập** ở Nhật Lệnh, Trấn Ải, Quần Hùng, Xếp hạng, Tháp Thiên Mệnh, Tầm Tướng Ký, và Doanh Trại chỉ có danh sách 6 tướng khởi đầu. Trang của các màn này cao đúng bằng cửa sổ (844px) vì chỉ có khung khóa. **Trạng thái bên trong sau khi đăng nhập chưa được đo.** Cần một tài khoản kiểm thử có dữ liệu (hoặc hồ sơ giả) để đo tiếp trước khi nghiệm thu các màn này.
+Khách chưa đăng nhập chỉ thấy **màn khóa đăng nhập** ở Nhật Lệnh, Trấn Ải, Quần Hùng, Xếp hạng, Tháp Thiên Mệnh, Tầm Tướng Ký, và Doanh Trại chỉ có danh sách 6 tướng khởi đầu. Trang của các màn này cao đúng bằng cửa sổ (844px) vì chỉ có khung khóa. Phần này đã được đo bổ sung ở bước 6 (hồ sơ mới trống, bản dev).
 
 ## Phát hiện, xếp theo mức ưu tiên
 
@@ -121,4 +121,11 @@ File nhiều nhất: `battle/DemoGame.tsx` (21), `profile/HeroDetail.tsx` (12), 
 | 3b. Bỏ sân khấu hình tướng trên điện thoại nhỏ | Đã làm 07/11/2026: `BattleStage` chỉ dựng từ 640px (`useStageVisible`), dưới đó bàn cờ lên đầu màn; không lỗi JS khi thao tác |
 | 4. Khai Lộ trên điện thoại | Đã làm 07/11/2026: ô bàn cờ 26–29px → 30px ở 360px, 33px ở 390px (bỏ đệm khung và bàn trên điện thoại, `--kl-gutter`); banner không tranh bỏ chiều cao tối thiểu và ẩn câu mô tả dưới 640px nên bàn cờ lên đầu màn. **Ô vẫn dưới 44px** vì 10 cột không thể đạt 44 ở 360px; giảm thiểu bằng cơ chế chạm một lần để xem trước khối rồi chạm lại để xóa. Muốn đạt 44px cần đổi số cột (ngoài phạm vi UI, phải theo GDD) |
 | 5. Dọn màu viết tay | Đã làm 07/11/2026: 25 file chuyển sang token (thêm `stat-*`, `frame-gold-hi`, `paper-deep`); không còn `bg-amber-*`, `text-rose-*` hay `#hex` trong className ở `src/app/game` và `src/components` (trừ nút Google/GitHub). Thêm test `tests/game/ui-tokens.test.ts` chặn màu thô mới. Còn lại ngoài phạm vi: màu dữ liệu trong SVG bản đồ, `var(--bk-*)` của Doanh Trại và `var(--atlas-*)` của Bình Loạn (cùng giá trị token chung, thay dần) |
-| 6 | Chưa làm (đo lại sau đăng nhập, kiểm tra tự động tràn ngang và vùng chạm) |
+| 6. Đo sau đăng nhập và kiểm tra tự động | Đã làm 07/11/2026. Script `scripts/ui-audit.mjs` (`--register` tự đăng ký tài khoản tạm trên bản dev) đo 17 màn × 4 cỡ gồm các màn trước đó bị khóa: **0 tràn ngang, 0 lỗi JS ở mọi màn**. Sửa tiếp: `text-xs` (12px) và `text-[9\|10\|12px]` → `text-caption` ở 41 file (chữ dưới 13px từ 25–76 điểm mỗi màn xuống 0–7, phần còn lại là huy hiệu phủ lên biểu tượng theo ngoại lệ); thanh trượt Trận Đồ và ô gập "Đổi mật khẩu" ở Tài khoản đạt 44px trên cảm ứng. Thêm test chặn chữ nhỏ vào `tests/game/ui-tokens.test.ts` |
+
+## Còn lại sau đợt này
+
+- **Cứ điểm trên bản đồ Bình Loạn** (10 điểm ở 360px, rộng 31–63px × cao 36–49px): các cứ điểm dày đặc, vùng bấm đã phủ cả cờ và tên nên mở rộng thêm sẽ chồng lên cứ điểm bên cạnh; bản đồ có nút phóng to. Chấp nhận là giới hạn của bản đồ; muốn cải thiện cần thiết kế lại (ví dụ danh sách cứ điểm phía dưới bản đồ).
+- **Ô bàn cờ Khai Lộ** 30–33px (xem mục 4).
+- Số đo "chữ dưới 13px" ở Thao Luyện (12 điểm) là số phím và chi phí NL phủ trên icon kỹ năng, thuộc ngoại lệ.
+- Các màn sau đăng nhập mới được đo với **hồ sơ mới trống**; trạng thái có nhiều dữ liệu (bảng xếp hạng dài, nhiều thành tựu đã nhận) chưa đo.

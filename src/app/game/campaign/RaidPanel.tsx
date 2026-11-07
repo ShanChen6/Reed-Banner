@@ -86,7 +86,7 @@ function RaidPanel({
             <li
               key={tier}
               data-state={won ? "cleared" : unlocked ? "open" : "locked"}
-              className={`ui-raid-tier flex flex-col gap-1 p-2 text-xs ${unlocked || won ? "" : "opacity-60"}`}
+              className={`ui-raid-tier flex flex-col gap-1 p-2 text-caption ${unlocked || won ? "" : "opacity-60"}`}
             >
               <p className="flex items-center justify-between text-sm font-bold text-on-wood">
                 {info.name}
@@ -201,7 +201,7 @@ export default function RaidHall({
                     <span className="block truncate font-semibold">
                       {open ? leader.name : "Sứ quân chưa gặp"}
                     </span>
-                    <span className="block truncate text-xs opacity-75">
+                    <span className="block truncate text-caption opacity-75">
                       {open
                         ? `Tái đấu · ${best > 0 ? `đã thắng ${RAID_TIER_INFO[best as RaidTier].name}` : "chưa thắng bậc nào"}`
                         : gateText(b)}

@@ -36,7 +36,7 @@ function Members({ list }: { list: readonly ArenaMember[] }) {
             profession={m.profession}
             className="size-9 shrink-0"
           />
-          <div className="min-w-0 text-xs">
+          <div className="min-w-0 text-caption">
             <p className="truncate text-sm font-semibold text-on-wood">{m.name}</p>
             <p className="flex items-center gap-1 text-on-wood-soft">
               <ElementIcon element={m.element} className="size-3.5" />
@@ -214,7 +214,7 @@ export default function ArenaScreen() {
               >
                 <div>
                   <p className="truncate text-base font-bold text-on-wood" title={o.name}>{o.name}</p>
-                  <p className="text-xs text-on-wood-soft">
+                  <p className="text-caption text-on-wood-soft">
                     {o.rating} điểm · lực chiến {o.power}
                     {o.bot && " · bóng ma luyện tập"}
                   </p>
@@ -241,7 +241,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="ui-frame-inset p-2">
       <p className="text-caption tracking-wide text-on-wood-soft uppercase">{label}</p>
-      <p className="text-xs font-bold text-on-wood tabular-nums">{value}</p>
+      <p className="text-caption font-bold text-on-wood tabular-nums">{value}</p>
     </div>
   );
 }

@@ -9,7 +9,7 @@ export default function LevelCard({ level, ranked = false, name, caption }: { le
       <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-wood-lo/90 via-transparent to-transparent" />
       <p className="absolute right-3 bottom-2 left-3 flex items-end justify-between gap-2 font-serif text-lg font-bold text-title-on-wood [text-shadow:0_2px_4px_#000]">
         <span>{name}</span>
-        {caption && <span className="text-xs font-semibold tracking-wide text-on-wood-soft">{caption}</span>}
+        {caption && <span className="text-caption font-semibold tracking-wide text-on-wood-soft">{caption}</span>}
       </p>
     </div>
   );

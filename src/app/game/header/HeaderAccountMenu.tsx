@@ -83,7 +83,7 @@ export default function HeaderAccountMenu({ scene, account }: { scene: Scene; ac
       >
         <div className="border-b border-[var(--hdr-bronze)]/40 px-3 pt-2 pb-2.5">
           <p className="font-serif font-semibold break-words text-[var(--hdr-text)]">{name}</p>
-          <p className="text-xs text-[var(--hdr-text-soft)]">
+          <p className="text-caption text-[var(--hdr-text-soft)]">
             {account ? "Đã đăng nhập" : "Tiến độ đang lưu trên trình duyệt này. Đăng nhập để giữ trên tài khoản."}
           </p>
         </div>

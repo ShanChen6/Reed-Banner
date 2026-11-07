@@ -82,7 +82,7 @@ function StagePortrait({
           {speaker.charAt(0).toUpperCase()}
         </span>
       )}
-      <figcaption className="max-w-28 truncate rounded bg-black/55 px-1.5 text-[11px] text-on-wood">
+      <figcaption className="max-w-28 truncate rounded bg-black/55 px-1.5 text-caption text-on-wood">
         {speaker}
       </figcaption>
     </figure>
@@ -102,7 +102,7 @@ function LineText({ line }: { line: DialogueLine }) {
           <BasisBadge basis={beat.basis} />
         )}
         {beat.speaker && (
-          <span className="text-xs text-on-wood-soft">
+          <span className="text-caption text-on-wood-soft">
             thoại hư cấu, không phải trích dẫn sử
           </span>
         )}
@@ -182,7 +182,7 @@ function Backlog({
             </li>
           ))}
         </ol>
-        <p className="border-t border-white/10 px-4 py-2 text-xs text-on-wood-soft">
+        <p className="border-t border-white/10 px-4 py-2 text-caption text-on-wood-soft">
           Chỉ có những câu đã đọc. Chạm một câu để quay lại đó.
         </p>
       </div>
@@ -335,7 +335,7 @@ export default function DialoguePlayer({
             {index < last ? "Tiếp →" : finishLabel}
           </button>
         )}
-        <span className="text-xs text-on-wood-soft" aria-hidden>
+        <span className="text-caption text-on-wood-soft" aria-hidden>
           {index + 1}/{lines.length}
         </span>
         <span className="flex-1" />

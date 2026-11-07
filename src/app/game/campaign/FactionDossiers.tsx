@@ -39,7 +39,7 @@ export default function FactionDossiers({
       <h3 id="dossiers-title" className="font-semibold text-frame-gold">
         Hồ sơ 12 sứ quân · {ledger.resolvedCount}/12 có kết cục
       </h3>
-      <p className="mb-2 text-xs text-on-wood-soft">
+      <p className="mb-2 text-caption text-on-wood-soft">
         Đọc từ thế cục đã ghi trong hồ sơ của bạn. Nhãn độ tin cậy theo bảng
         nguồn của game.
       </p>
@@ -51,11 +51,11 @@ export default function FactionDossiers({
               <details className="rounded-md border border-frame-line-soft bg-wood-inset p-2">
                 <summary className="cursor-pointer font-semibold text-on-wood pointer-coarse:py-3.5">
                   {companionById(r.faction)?.name ?? r.faction}
-                  <span className="ml-1 text-xs font-normal text-on-wood-soft">
+                  <span className="ml-1 text-caption font-normal text-on-wood-soft">
                     · {GROUP_NAME[r.group]}
                   </span>
                 </summary>
-                <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-2 text-xs text-on-wood-soft">
+                <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-2 text-caption text-on-wood-soft">
                   <dt className="text-on-wood-soft/80">Vùng</dt>
                   <dd>
                     {node?.location.name}
