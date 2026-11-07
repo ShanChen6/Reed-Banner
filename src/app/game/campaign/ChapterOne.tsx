@@ -640,7 +640,7 @@ export default function ChapterOne({
   onProfile: (p: Profile) => void;
   onAction: (a: ProfileAction) => void;
   busy: boolean;
-  /** Khu dưới cùng của đại card (Tái đấu sứ quân), chỉ hiện ở tab Bản đồ. */
+  /** Nội dung tab Tái đấu (khu Tái đấu sứ quân), nằm trong đại card. */
   footer?: ReactNode;
 }) {
   const { go } = useScene();
@@ -669,7 +669,7 @@ export default function ChapterOne({
     const saved = readJson<AtlasState>(ATLAS_KEY);
     return {
       view:
-        saved?.view === "mission" || saved?.view === "codex"
+        saved?.view === "mission" || saved?.view === "codex" || saved?.view === "raid"
           ? saved.view
           : "atlas",
       stronghold:
@@ -874,8 +874,9 @@ export default function ChapterOne({
                   selected={strongholdId}
                   onSelect={setStronghold}
                 />
-                <div className="min-w-0 xl:relative">
-                  <div className="xl:absolute xl:inset-0">
+                {/* Bảng chương/cứ điểm tự giãn theo nội dung (không cuộn lồng trong card); bản đồ bên cạnh căn đầu hàng. */}
+                <div className="min-w-0">
+                  <div className="xl:h-full">
                     {stronghold ? (
                       <StrongholdPanel
                         campaign={campaign}
@@ -926,9 +927,9 @@ export default function ChapterOne({
           <WorldLedger campaign={profile.campaign} />
           <WarlordCodex campaign={campaign} />
         </>
-      ) : atlas.view === "atlas" ? (
-        (footer ?? null)
-      ) : (
+      ) : atlas.view === "raid" ? (
+        <div className="px-1 sm:px-2">{footer}</div>
+      ) : atlas.view === "atlas" ? null : (
         <>
           <nav
             aria-label="Đường dẫn"

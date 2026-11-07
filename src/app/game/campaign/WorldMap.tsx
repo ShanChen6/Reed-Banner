@@ -329,7 +329,7 @@ export default function WorldMap({
   };
 
   return (
-    <figure className="campaign-map atlas-frame flex flex-col self-start overflow-hidden xl:h-full xl:self-stretch">
+    <figure className="campaign-map atlas-frame flex flex-col self-start overflow-hidden xl:self-start">
       <AtlasCorners />
       <RotateHint />
       <div className="map-viewport relative xl:my-auto">
