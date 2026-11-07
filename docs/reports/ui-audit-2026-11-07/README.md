@@ -123,6 +123,20 @@ File nhiều nhất: `battle/DemoGame.tsx` (21), `profile/HeroDetail.tsx` (12), 
 | 5. Dọn màu viết tay | Đã làm 07/11/2026: 25 file chuyển sang token (thêm `stat-*`, `frame-gold-hi`, `paper-deep`); không còn `bg-amber-*`, `text-rose-*` hay `#hex` trong className ở `src/app/game` và `src/components` (trừ nút Google/GitHub). Thêm test `tests/game/ui-tokens.test.ts` chặn màu thô mới. Còn lại ngoài phạm vi: màu dữ liệu trong SVG bản đồ, `var(--bk-*)` của Doanh Trại và `var(--atlas-*)` của Bình Loạn (cùng giá trị token chung, thay dần) |
 | 6. Đo sau đăng nhập và kiểm tra tự động | Đã làm 07/11/2026. Script `scripts/ui-audit.mjs` (`--register` tự đăng ký tài khoản tạm trên bản dev) đo 17 màn × 4 cỡ gồm các màn trước đó bị khóa: **0 tràn ngang, 0 lỗi JS ở mọi màn**. Sửa tiếp: `text-xs` (12px) và `text-[9\|10\|12px]` → `text-caption` ở 41 file (chữ dưới 13px từ 25–76 điểm mỗi màn xuống 0–7, phần còn lại là huy hiệu phủ lên biểu tượng theo ngoại lệ); thanh trượt Trận Đồ và ô gập "Đổi mật khẩu" ở Tài khoản đạt 44px trên cảm ứng. Thêm test chặn chữ nhỏ vào `tests/game/ui-tokens.test.ts` |
 
+## Đo với dữ liệu giả nhiều (07/11/2026)
+
+`scripts/ui-audit.mjs --mock <file.json>` chặn các lời gọi API ở trình duyệt và trả hồ sơ đầy đủ (74 tướng, kho 200 món, thành tựu, chiến dịch xong), bảng xếp hạng 50 dòng, đấu trường, nhật lệnh, công trạng 40 dòng; không đụng tới server hay cơ sở dữ liệu. Kết quả ở 360px, trước và sau khi sửa:
+
+| Màn | Cao trước | Cao sau | Cách sửa |
+| --- | --- | --- | --- |
+| Doanh Trại (Tướng sĩ) | 7802px | 2809px | Hiện dần 24 tướng mỗi đợt, nút "Hiện thêm tướng"; tướng đang chọn luôn nằm trong phần đã hiện |
+| Tháp Thí Luyện | 6596px | 2613px | Chọn 2 tướng kèm cắt trang 12 (`usePagedItems`) |
+| Tháp Thiên Mệnh | 7383px | 1908px | Chọn đội cắt trang 12; bảng xếp hạng hiện 10 dòng đầu |
+| Công Trạng | 4024px | 1552px | Danh sách các mùa trước hiện 10 dòng đầu, nút "Xem thêm"; dòng lịch sử không còn vỡ chữ |
+| Trấn Ải, Quần Hùng | 3042 / 3852px | 2688 / 3498px | Bảng xếp hạng mùa hiện 10 dòng đầu |
+
+Cả bốn cỡ: 0 tràn ngang, 0 lỗi JS. Nhãn `text-kicker` lên 13px (trước 12px) và bỏ `text-[0.65rem]` ở bảng kỹ năng; test `ui-tokens` chặn thêm cỡ chữ `rem` nhỏ. Dữ liệu giả cho bảng Nhật Lệnh dùng 50 dòng trong khi server chỉ trả 20, nên số đo Nhật Lệnh (3399px) cao hơn thực tế.
+
 ## Còn lại sau đợt này
 
 - **Cứ điểm trên bản đồ Bình Loạn** (10 điểm ở 360px, rộng 31–63px × cao 36–49px): đã có danh sách cứ điểm dưới bản đồ cho màn dưới 1024px (nút cao 44px). Ngày 07/11/2026 hoàn thiện: mở sẵn, tên hiện đủ dòng, cứ điểm của chương đang xem lên đầu, chấm đỏ cho cứ điểm có nhiệm vụ đang mở. Lá cờ trên bản đồ vẫn nhỏ nhưng không còn là cách chọn duy nhất.

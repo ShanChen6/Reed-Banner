@@ -25,6 +25,9 @@ const TEAM_FILTER_NAME: Readonly<Record<Exclude<TeamFilter, "all">, string>> = {
   out: "Ngoài đội hình",
 };
 
+/** Số tướng hiện mỗi đợt ở danh sách Tướng sĩ. */
+const HERO_BATCH = 24;
+
 const toggle = <T,>(list: readonly T[], v: T): T[] => (list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
 
 export default function HeroList({
@@ -51,12 +54,17 @@ export default function HeroList({
   scrollRef?: Ref<HTMLDivElement>;
 }) {
   const [panel, setPanel] = useState(false);
+  // Có thể có hàng chục tướng: hiện dần từng đợt để trang không dài hàng nghìn px trên điện thoại.
+  const [limit, setLimit] = useState(HERO_BATCH);
   const panelId = useId();
   const listRef = useRef<HTMLUListElement>(null);
   const active = filter.elements.length + filter.professions.length + (filter.team === "all" ? 0 : 1);
   const selected = entries.find((e) => e.key === selectedKey) ?? null;
   const hiddenSelected = selected !== null && !shown.some((e) => e.key === selected.key);
   const focusKey = shown.some((e) => e.key === selectedKey) ? selectedKey : (shown[0]?.key ?? null);
+  // Tướng đang chọn luôn nằm trong phần đã hiện.
+  const selectedAt = shown.findIndex((e) => e.key === selectedKey);
+  const visible = shown.slice(0, Math.max(limit, selectedAt + 1));
 
   // Lưới dùng roving tabindex: Tab vào một thẻ, mũi tên đi trong lưới, Home/End về đầu/cuối.
   const onGridKey = (ev: KeyboardEvent<HTMLUListElement>) => {
@@ -249,12 +257,19 @@ export default function HeroList({
             onKeyDown={onGridKey}
             className="grid grid-cols-[repeat(auto-fill,minmax(6.5rem,1fr))] gap-2 pb-1"
           >
-            {shown.map((e) => (
+            {visible.map((e) => (
               <li key={e.key}>
                 <HeroCard entry={e} selected={e.key === selectedKey} tabbable={e.key === focusKey} onClick={() => onSelect(e)} />
               </li>
             ))}
           </ul>
+        )}
+        {shown.length > visible.length && (
+          <div className="flex justify-center py-3">
+            <button type="button" onClick={() => setLimit(visible.length + HERO_BATCH)} className="barracks-btn min-h-11 rounded-md px-5">
+              Hiện thêm tướng ({shown.length - visible.length} còn lại)
+            </button>
+          </div>
         )}
       </div>
     </div>

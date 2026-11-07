@@ -37,7 +37,7 @@ test("màn game và component không dùng màu Tailwind thô hoặc #hex trong 
 
 // Quy tắc cỡ chữ (theme.md): chữ đọc và điều khiển ≥ 13px (`text-caption`). Ngoại lệ duy nhất là chữ phủ lên biểu tượng
 // (huy hiệu `absolute` trên icon) tối thiểu 11px.
-const SMALL = /(?<![\w-])(?:[a-z-]+:)*(?:text-xs|text-\[(?:9|10|12)px\])(?![\w-])/g;
+const SMALL = /(?<![\w-])(?:[a-z-]+:)*(?:text-xs|text-\[(?:9|10|12)px\]|text-\[0\.[0-7]\d*rem\])(?![\w-])/g;
 const OVERLAY_ONLY = /(?<![\w-])(?:[a-z-]+:)*text-\[11px\](?![\w-])/g;
 const OVERLAY_FILES = new Set(["src/app/game/art/passives.tsx"]);
 

@@ -8,7 +8,7 @@
 // `--register` tự đăng ký một tài khoản tạm (chỉ dùng được trên bản dev dùng kho trong bộ nhớ) để vào các màn cần đăng nhập.
 // Tài khoản thật: truyền qua biến môi trường AUDIT_USER và AUDIT_PASS, không bao giờ qua dòng lệnh hay file.
 
-import { mkdirSync } from "node:fs";
+import { mkdirSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
@@ -31,6 +31,10 @@ const ONLY = opt("--only", "").split(",").filter(Boolean);
 const REGISTER = args.includes("--register");
 const DETAIL = args.includes("--detail");
 const WIDTHS = opt("--widths", "").split(",").filter(Boolean).map(Number);
+// `--mock <file.json>`: chặn các lời gọi API ở trình duyệt và trả dữ liệu giả nhiều (hồ sơ đầy đủ tướng, kho 200 món,
+// bảng xếp hạng 50 dòng…) để đo màn khi có nhiều dữ liệu. Tệp là JSON { profile, boards, destiny, ttk, arena, daily, honors }
+// theo đúng hình dạng phản hồi của server; không đụng tới server hay cơ sở dữ liệu.
+const MOCK = opt("--mock", "");
 
 const ROUTES = [
   ["menu", ""], ["practice", "practice"], ["campaign", "campaign"], ["barracks", "profile"], ["shop", "shop"],
@@ -90,6 +94,19 @@ for (const vp of VIEWPORTS) {
   const page = await ctx.newPage();
   const errors = [];
   page.on("pageerror", (e) => errors.push(String(e).slice(0, 100)));
+
+  if (MOCK) {
+    const bundle = JSON.parse(readFileSync(MOCK, "utf8"));
+    const reply = (pattern, body) =>
+      page.route(pattern, (route) => (route.request().method() === "GET" ? route.fulfill({ json: body() }) : route.continue()));
+    await reply(/\/api\/profile(\?|$)/, () => ({ profile: bundle.profile }));
+    await reply(/\/api\/leaderboard\?/, () => ({ board: "survival", season: "current", ...bundle.boards }));
+    await reply(/\/api\/destiny\/leaderboard/, () => bundle.destiny);
+    await reply(/\/api\/tam-tuong-ky\/board/, () => bundle.ttk);
+    await reply(/\/api\/arena(\?|$)/, () => bundle.arena);
+    await reply(/\/api\/daily(\?|$)/, () => bundle.daily);
+    await reply(/\/api\/honors(\?|$)/, () => bundle.honors);
+  }
 
   if (REGISTER || process.env.AUDIT_USER) {
     const user = process.env.AUDIT_USER ?? `audit${vp.w}${Math.random().toString(36).slice(2, 6)}`;

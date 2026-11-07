@@ -2,6 +2,7 @@
 
 import { FrameInset, ModeBanner, OrnateFrame } from "@/components/game-ui";
 import { Alert, Button, Select, choiceVariants } from "@/components/ui";
+import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 
 // Giao diện thuần của Tháp Thí Luyện: nhận dữ liệu và callback qua props (không tự gọi mạng, không dùng context
 // phân cảnh) nên dựng được ở mọi nơi. Server là nguồn sự thật: số đá, "đã nhận" và kỷ lục chỉ hiện đúng như
@@ -141,6 +142,8 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
   const rules = describeRules(f.rules);
   const win = describeWin(f.win);
   const options = companionOptions(profile, f.rules, companions);
+  // Hàng chục tướng kèm: cắt trang 12 để không dài trên điện thoại (lựa chọn giữ nguyên khi sang trang).
+  const pagedOptions = usePagedItems(options, 12);
   const build = props.build ?? defaultBuild(profile, f.rules, companions);
   const preview = previewLineup(profile, f.rules, companions, build);
   const choices = leaderChoices(profile, f.rules, companions);
@@ -233,7 +236,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
           <div>
             <h3 className="ui-title-on-wood mb-1.5 text-base">Chọn 2 tướng kèm (đã chọn {companions.length}/2)</h3>
             <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {options.map((o) => (
+              {pagedOptions.pageItems.map((o) => (
                 <li key={o.id}>
                   <button
                     type="button"
@@ -256,6 +259,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
                 </li>
               ))}
             </ul>
+            <PageControls paged={pagedOptions} label="Phân trang tướng kèm" className="mt-2" />
           </div>
 
           <FrameInset>
