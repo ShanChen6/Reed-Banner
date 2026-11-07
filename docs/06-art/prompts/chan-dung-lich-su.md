@@ -26,7 +26,7 @@ Shan tạo Nguyễn Bặc và Hà Vân bằng bản prompt đầu. Nền sương
 
 **Bài học:** mục tiêu là **mức giữa**: lịch sử và bớt fantasy (bỏ hiệu ứng phép, trang sức lộng lẫy, trang điểm đậm) nhưng vẫn là **minh họa nhân vật game** có nét viền, mặt hơi lý tưởng hóa, tách nhân vật khỏi nền rõ. Khối phong cách ở mục 3 đã viết lại theo hướng này (bản 2).
 
-### Kết quả thử lần 2 (bản 2): đạt, đã gắn thử
+### Kết quả thử lần 2 (bản 2): đạt về phong cách, nhưng mất họa tiết trang phục
 
 Nguyễn Bặc và Hà Vân bằng khối phong cách bản 2: minh họa game có nét viền rõ, mặt hơi lý tưởng hóa, giữ nền sương và trang phục thế kỷ X. Kiểm theo mục 6:
 
@@ -35,6 +35,8 @@ Nguyễn Bặc và Hà Vân bằng khối phong cách bản 2: minh họa game c
 - **Đồng tông:** hai ảnh cùng nền sương nâu đỏ, nhìn thuộc một bộ. Cảnh nền lặp giống nhau (đồn lũy và cờ bên phải); khi làm cả bộ nên đổi nhẹ cảnh nền theo hệ để danh sách không như bản sao.
 - **Đã gắn:** `bust.webp` 384×384 (22–33 KB) trong `public/art/characters/nguyenBac/` và `ha-van/`; `BUST_IDS` và `bustUrl` ở `portrait-data.ts`; ô chân dung ở danh sách tướng sĩ (`HeroList.tsx`) dùng bust khi có, nền màu theo hệ chỉ dùng cho nhân vật còn lại.
 - Lúc còn lẫn chân dung cũ (tối, cận mặt), hai ô mới sáng và nổi hơn hẳn; sẽ đều tay khi làm xong cả bộ.
+
+**Phát hiện thêm (Shan, 07/11/2026): Hà Vân mất hết họa tiết trang phục.** Tranh gốc có lớp lót cam lộ ở tay áo và vạt váy, các tấm vải thêu chỉ vàng treo ở thắt lưng (họa tiết cánh sen), dải thêu sóng mây vàng ở vạt váy, đai lưng có tấm đồng chạm hình thoi, vòng đồng ở bắp tay, tua đỏ có hạt đồng. Bản 2 chỉ còn áo đỏ trơn viền nâu vì prompt ghi `plain fabric edges` và `no jewelled ornaments`: **lại cấm quá tay**, bỏ luôn họa tiết là một phần nhận diện nhân vật. Đã sửa: mục 4 có quy tắc họa tiết, mẫu prompt có ô `Pattern`, và prompt Hà Vân ở 5.1, 9.3, 9.4 ghi lại họa tiết (Shan cần tạo lại `bust.webp` của Hà Vân).
 
 ## 2. Thông số
 
@@ -67,6 +69,7 @@ Style: stylised digital painting of a historical Vietnamese character for a stra
 ## 4. Quy tắc để không bị fantasy
 
 - Trang phục theo thế kỷ X: **áo giao lĩnh** (cổ chéo), áo vạt, khăn quấn hoặc búi tóc, nón lá, xà cạp; giáp **da** hoặc **giáp lá**; không giáp kim loại bóng kiểu phương Tây, không vai giáp khổng lồ, không áo choàng thêu lộng lẫy.
+- **Họa tiết là một phần nhận diện, phải giữ** (đừng tả áo "trơn"). Trước khi viết prompt, nhìn `body.webp` hoặc `standing.webp` của nhân vật và ghi lại các họa tiết đặc trưng: dải thêu, tấm vải thêu, lớp lót khác màu, đai và tấm đồng, tua. Vẽ lại ở dạng **hợp thời**: thêu chỉ vàng hoặc dệt viền theo mô-típ Đông Sơn (sóng, mây cuộn, răng cưa, vòng tròn đồng tâm) hoặc cánh sen kiểu cột đá Hoa Lư; tấm đồng và hạt đồng thay cho châu ngọc. **Bỏ** hạt đá quý, dát vàng kín, hoa văn dày đặc như gấm hoàng gia.
 - Phụ kiện **ít và hợp lý**: giữ **một chi tiết đặc trưng** của nhân vật từ ảnh đứng cũ (ví dụ dải lụa đỏ của Hà Vân, khăn đỏ của Nguyễn Bặc) để nhận ra người đó; không vương miện vàng, không vai giáp khổng lồ, không dải lụa bay tứ phía như có gió thổi.
 - Gương mặt: **không** trang điểm đậm, không điểm hoa trên trán; mặt **hơi lý tưởng hóa** (không chân thật như ảnh chụp), giữ nét nam hoặc nữ rõ ràng; cho phép sẹo, râu, da sạm nắng.
 - Nghề và hệ chỉ thể hiện bằng **vật dụng đời thường** (túi thuốc cho y sư, cuộn sách cho quân sư, cán giáo sau vai cho tướng sĩ) và **màu trang phục**, không bằng hiệu ứng.
@@ -79,7 +82,7 @@ Style: stylised digital painting of a historical Vietnamese character for a stra
 **Mẫu prompt** (khối phong cách ở mục 3 đứng trước):
 
 ```text
-Subject: [TÊN], [GIỚI TÍNH], about [TUỔI] years old, [NGHỀ VÀ VAI TRÒ NGẮN]. Face: [ĐẶC ĐIỂM MẶT: râu, sẹo, nếp nhăn, nét mặt]. Hair/head: [TÓC, KHĂN, NÓN]. Clothing: [ÁO, GIÁP, MÀU CHỦ ĐẠO THEO HỆ]. One small everyday detail: [PHỤ KIỆN ĐỜI THƯỜNG]. Looking slightly [TRÁI/PHẢI], calm and resolute. Keep the lower quarter of the picture calm and quiet.
+Subject: [TÊN], [GIỚI TÍNH], about [TUỔI] years old, [NGHỀ VÀ VAI TRÒ NGẮN]. Face: [ĐẶC ĐIỂM MẶT: râu, sẹo, nếp nhăn, nét mặt]. Hair/head: [TÓC, KHĂN, NÓN]. Clothing: [ÁO, GIÁP, MÀU CHỦ ĐẠO THEO HỆ]. Pattern and trim: [HỌA TIẾT ĐẶC TRƯNG LẤY TỪ TRANG PHỤC GỐC: dải thêu, lớp lót, đai và tấm đồng, tua]. One small everyday detail: [PHỤ KIỆN ĐỜI THƯỜNG]. Looking slightly [TRÁI/PHẢI], calm and resolute. Keep the lower quarter of the picture calm and quiet.
 ```
 
 ### 5.1 Làm thử 2 nhân vật trước (Shan chốt 07/11/2026: không tạo nhiều)
@@ -96,7 +99,7 @@ Keep the same person, face structure, hair, clothing colours and accessories as 
 **Hà Vân** (Pháp sư · Hỏa):
 
 ```text
-Subject: Ha Van, female, about 25 years old, a fire mage of the Dinh court, composed and a little guarded. Face: unmistakably feminine, soft jawline, fine dark brows, slightly idealised and expressive, light natural lip colour, no forehead mark, no heavy makeup. Hair/head: dark hair gathered in a bun with a red cloth band, two long red ribbon ends falling over the shoulder (her signature detail, calm, not flying). Clothing: red cross-collar robe in rich brick red with a darker brown inner layer, plain fabric edges, one small bronze hair pin. One small everyday detail: the bronze-capped top of a wooden staff behind her shoulder, no flame, no glow. Looking slightly to the right, calm and resolute. Keep the lower quarter of the picture calm and quiet.
+Subject: Ha Van, female, about 25 years old, a fire mage of the Dinh court, composed and a little guarded. Face: unmistakably feminine, soft jawline, fine dark brows, slightly idealised and expressive, light natural lip colour, no forehead mark, no heavy makeup. Hair/head: dark hair gathered in a bun with a red cloth band, two long red ribbon ends falling over the shoulder (her signature detail, calm, not flying). Clothing: red cross-collar robe in rich brick red with a darker brown inner layer and a warm orange lining peeking at the sleeve opening. Pattern and trim: a gold-thread embroidered border along the collar and cuff in a wave-and-cloud scroll, a bronze arm band with a small sawtooth (Dong Son) pattern on the upper arm, a small bronze plaque with filigree on the diagonal strap, short red tassels with bronze beads. One small bronze hair pin. One small everyday detail: the bronze-capped top of a wooden staff behind her shoulder, no flame, no glow. Looking slightly to the right, calm and resolute. Keep the lower quarter of the picture calm and quiet.
 Keep the same person, face structure, hair, clothing colours and accessories as reference image 1; repaint in the style of reference image 2.
 ```
 
@@ -185,12 +188,14 @@ Mỗi tranh ra chiêu có tọa độ chỉnh tay trong `HA_VAN` (`src/app/game/
 | `pose-ultimate.webp` | 302×454 | **Giơ cao trượng bằng tay trái**, tay phải duỗi thẳng chỉ ra bên phải, thân hơi nghiêng | đầu ngón tay phải (hướng ra ngoài) |
 | `pose-down.webp` | 457×304 (ngang) | Nằm nghiêng, mắt nhắm, một tay chống đất, **trượng nằm dưới đất cạnh chân** | không |
 
+**Họa tiết đặc trưng của Hà Vân cần giữ ở mọi tranh** (đọc từ `body.webp`): lớp lót cam ở tay áo và vạt; hai tấm vải thêu chỉ vàng treo ở thắt lưng (họa tiết cánh sen); dải thêu sóng mây vàng ở mép vạt đỏ; đai nâu có hai tấm đồng thoi; vòng đồng răng cưa ở bắp tay; tua đỏ hạt đồng ở đai và chỗ buộc giày. Tranh ra chiêu có thể che bớt vì dáng, nhưng không được bỏ hẳn.
+
 ### 9.3 Khối phong cách toàn thân (biến thể của khối bản 2)
 
 Dán khối này **thay cho khối ở mục 3** khi tạo tranh toàn thân của Hà Vân (cùng cách vẽ, bỏ nền cảnh):
 
 ```text
-Style: stylised digital painting of a historical Vietnamese character for a strategy game, FULL-BODY game sprite on a fully TRANSPARENT background (no landscape, no ground, no shadow on the ground). Clean confident ink contour lines, smooth painterly shading with simplified shadow shapes (soft cel-like planes), minimal brush texture, no photo-real skin. Slightly idealised, expressive face with clear character appeal, not anime and not photographic. Medium saturation, warm earthy colours with ONE strong accent colour (brick red). Soft diffused warm light from the upper left with a thin rim light on the shoulder. 10th-century Vietnam, Dinh dynasty era: hand-made cloth, plain fabric edges, simple cloth shoes with leg wraps. Costume must stay modest and historical: closed cross-collar neckline, long robe, no plunging neckline, no high heels, no jewelled ornaments, no layered flying silk veils, no magic glow, no flame or sparks drawn on the figure.
+Style: stylised digital painting of a historical Vietnamese character for a strategy game, FULL-BODY game sprite on a fully TRANSPARENT background (no landscape, no ground, no shadow on the ground). Clean confident ink contour lines, smooth painterly shading with simplified shadow shapes (soft cel-like planes), minimal brush texture, no photo-real skin. Slightly idealised, expressive face with clear character appeal, not anime and not photographic. Medium saturation, warm earthy colours with ONE strong accent colour (brick red). Soft diffused warm light from the upper left with a thin rim light on the shoulder. 10th-century Vietnam, Dinh dynasty era: hand-made cloth, simple cloth shoes with leg wraps. Costume must stay modest and historical: closed cross-collar neckline, long robe, no plunging neckline, no high heels, no gemstones, no layered flying silk veils, no magic glow, no flame or sparks drawn on the figure. KEEP the character's signature pattern work: gold-thread embroidered bands and hanging embroidered cloth panels with Dong Son wave-and-cloud scrolls and lotus-petal motifs (Hoa Lu stone-pillar style), a contrasting orange lining visible at sleeves and hem, bronze belt plaques and a bronze arm band with a sawtooth pattern, short red tassels with bronze beads. Patterns stay readable and moderate, not dense royal brocade.
 ```
 
 ### 9.4 Năm prompt của Hà Vân
@@ -198,7 +203,7 @@ Style: stylised digital painting of a historical Vietnamese character for a stra
 Nhân vật chung cho cả năm (dán ngay sau khối 9.3):
 
 ```text
-Subject: Ha Van, female, about 25 years old, a fire mage of the Dinh court, composed and a little guarded. Unmistakably feminine, soft jawline, fine dark brows, light natural lip colour, no forehead mark, no heavy makeup. Dark hair in a bun with a red cloth band and one bronze hair pin, two long red ribbon ends falling behind the shoulder (signature detail, kept calm and short). Brick-red cross-collar robe with a darker brown inner layer and plain edges, a simple brown sash, cloth shoes with leg wraps. Carries a wooden staff with a bronze cap and a small red lacquered orb on top (no flame, no glow).
+Subject: Ha Van, female, about 25 years old, a fire mage of the Dinh court, composed and a little guarded. Unmistakably feminine, soft jawline, fine dark brows, light natural lip colour, no forehead mark, no heavy makeup. Dark hair in a bun with a red cloth band and one bronze hair pin, two long red ribbon ends falling behind the shoulder (signature detail, kept calm and short). Brick-red cross-collar robe with a darker brown inner layer and a warm orange lining at the sleeve openings and hem; a gold-thread embroidered wave-and-cloud scroll band along the hem and cuffs; two hanging embroidered cloth panels (one dark, one red) at the waist with a lotus-petal motif; a brown sash with two diamond-shaped bronze plaques; a bronze arm band with a sawtooth pattern on the upper arm; short red tassels with bronze beads; cloth shoes with red cord leg wraps. Carries a wooden staff with a bronze cap and a small red lacquered orb on top (no flame, no glow).
 ```
 
 Rồi thêm **một dòng dáng** theo tranh:
