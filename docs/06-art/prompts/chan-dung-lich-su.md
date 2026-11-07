@@ -156,3 +156,83 @@ Mỗi nhân vật có nhiều loại tranh, không chỉ chân dung. Phong cách
 5. Ảnh hưởng đến `standing.webp`: vì các lớp hình động cắt từ ảnh đứng, đổi ảnh đứng nghĩa là cắt lại lớp cho từng nhân vật (`head`, `body`, `arm`…). Chỉ làm khi đã chốt đổi toàn bộ hình trận sang phong cách mới.
 
 **Thứ tự đề xuất:** (1) `bust.webp` 77 nhân vật, (2) `style.webp` 77 nhân vật, (3) thử một nhân vật với bốn tranh ra chiêu, (4) mới quyết định có đổi cả bộ hình trận hay không.
+
+## 9. Test đầy đủ một nhân vật: Hà Vân
+
+Shan chốt (07/11/2026): thử **trọn bộ tranh của một nhân vật** là Hà Vân trước khi làm hàng loạt. Chân dung bán thân (`bust.webp`) đã xong (mục 5.1). Còn lại: tranh lớn và bốn tranh ra chiêu.
+
+### 9.1 Phạm vi
+
+| Tranh | Làm trong lần test này? | Ghi chú |
+|---|---|---|
+| `bust.webp` | Đã xong | Đã gắn ở danh sách tướng sĩ |
+| `style.webp` (tranh lớn ở trang chi tiết) | **Có** | Không gắn với hình động trận, thay thoải mái |
+| `pose-attack.webp`, `pose-cast.webp`, `pose-ultimate.webp` | **Có** | Gắn với `rigs.ts` (xem 9.2) |
+| `pose-down.webp` (ngã) | **Có** | Gắn với `rigs.ts` |
+| `standing.webp` và các lớp (`head`, `body`, `arm`, `sword`…) | **Không** | Hình động cắt lớp từ ảnh đứng bằng tọa độ cố định; đổi ảnh đứng phải cắt lại lớp. Chỉ làm khi đã chốt đổi cả bộ |
+
+Hệ quả cần biết: trong lúc test, Hà Vân đứng yên hoặc di chuyển vẫn là hình cũ (ảnh đứng), còn ra đòn, ra chiêu và ngã là hình mới. Hai kiểu sẽ lệch nhau; đó chính là điều cần xem để quyết định có đổi cả `standing.webp` hay không.
+
+### 9.2 Tệp tham chiếu của Hà Vân và điều phải giữ
+
+Mỗi tranh ra chiêu có tọa độ chỉnh tay trong `HA_VAN` (`src/app/game/stage/rigs.ts`): `anchor` (chân đặt ở đâu), `origin` (điểm gốc trong tranh) và `burst` (nơi bắn hiệu ứng, thường là đầu trượng). Vì vậy tranh mới phải **giữ đúng dáng, khung ảnh và vị trí chân và đầu trượng** của tranh cũ.
+
+| Tranh | Kích thước cũ | Dáng cần giữ | Điểm bắn hiệu ứng |
+|---|---|---|---|
+| `style.webp` | 250×379 | Quỳ một gối, tay trái cầm trượng dựng bên người, tay phải xòe ngửa trước ngực | không |
+| `pose-attack.webp` | 290×457 | Bước tới, hạ trượng chĩa **đầu trượng ra trước bên trái**, tay kia dang ra sau | đầu trượng |
+| `pose-cast.webp` | 297×456 | Đứng chắc, trượng dựng bên trái, **tay phải xòe bàn tay ra trước** | bàn tay phải |
+| `pose-ultimate.webp` | 302×454 | **Giơ cao trượng bằng tay trái**, tay phải duỗi thẳng chỉ ra bên phải, thân hơi nghiêng | đầu ngón tay phải (hướng ra ngoài) |
+| `pose-down.webp` | 457×304 (ngang) | Nằm nghiêng, mắt nhắm, một tay chống đất, **trượng nằm dưới đất cạnh chân** | không |
+
+### 9.3 Khối phong cách toàn thân (biến thể của khối bản 2)
+
+Dán khối này **thay cho khối ở mục 3** khi tạo tranh toàn thân của Hà Vân (cùng cách vẽ, bỏ nền cảnh):
+
+```text
+Style: stylised digital painting of a historical Vietnamese character for a strategy game, FULL-BODY game sprite on a fully TRANSPARENT background (no landscape, no ground, no shadow on the ground). Clean confident ink contour lines, smooth painterly shading with simplified shadow shapes (soft cel-like planes), minimal brush texture, no photo-real skin. Slightly idealised, expressive face with clear character appeal, not anime and not photographic. Medium saturation, warm earthy colours with ONE strong accent colour (brick red). Soft diffused warm light from the upper left with a thin rim light on the shoulder. 10th-century Vietnam, Dinh dynasty era: hand-made cloth, plain fabric edges, simple cloth shoes with leg wraps. Costume must stay modest and historical: closed cross-collar neckline, long robe, no plunging neckline, no high heels, no jewelled ornaments, no layered flying silk veils, no magic glow, no flame or sparks drawn on the figure.
+```
+
+### 9.4 Năm prompt của Hà Vân
+
+Nhân vật chung cho cả năm (dán ngay sau khối 9.3):
+
+```text
+Subject: Ha Van, female, about 25 years old, a fire mage of the Dinh court, composed and a little guarded. Unmistakably feminine, soft jawline, fine dark brows, light natural lip colour, no forehead mark, no heavy makeup. Dark hair in a bun with a red cloth band and one bronze hair pin, two long red ribbon ends falling behind the shoulder (signature detail, kept calm and short). Brick-red cross-collar robe with a darker brown inner layer and plain edges, a simple brown sash, cloth shoes with leg wraps. Carries a wooden staff with a bronze cap and a small red lacquered orb on top (no flame, no glow).
+```
+
+Rồi thêm **một dòng dáng** theo tranh:
+
+```text
+style.webp   : Pose: kneeling on one knee, staff held upright at her left side in her left hand, right hand open palm-up in front of her chest, calm downward gaze. Three-quarter view.
+pose-attack  : Pose: a forward step, the staff lowered and pointed forward-left with the orb at the tip, her other arm swept back for balance, focused gaze toward the target on the left.
+pose-cast    : Pose: standing firm, staff upright at her left side, her right hand open with the palm pushed forward, a calm concentrated expression.
+pose-ultimate: Pose: left arm raised high holding the staff above her head, right arm fully extended pointing to the right, body leaning slightly, intense but controlled expression.
+pose-down    : Pose: lying on her side on the ground, eyes closed, one hand pressed to the ground, the staff lying on the ground beside her feet, robe spread naturally (no flying ribbons).
+```
+
+### 9.5 Cách tạo (giữ dáng)
+
+Với **mỗi** tranh đính hai ảnh tham chiếu và dòng chỉ dẫn:
+
+1. Ảnh 1: **tranh cũ cùng loại** trong `public/art/characters/ha-van/` (ví dụ `pose-ultimate.webp`) để giữ dáng.
+2. Ảnh 2: **chân dung mới** `bust.webp` của Hà Vân để giữ khuôn mặt và cách vẽ.
+3. Câu chỉ dẫn: `Keep the exact pose, camera angle, canvas proportions and the position of the feet and the top of the staff of reference image 1. Redraw it as the same character in the style and costume of reference image 2, full-body, transparent background.`
+
+Khung ảnh **cùng tỉ lệ với tranh cũ** (bảng 9.2: dọc 0,63 cho ba tranh đứng, ngang 1,5 cho `pose-down`), cỡ lớn (1024px cạnh dài trở lên), PNG nền trong suốt.
+
+### 9.6 Kiểm tra trước khi ghép vào trận
+
+Claude đo tự động rồi báo:
+
+- **Khớp dáng:** so bóng nhân vật mới với bóng tranh cũ trên cùng khung; mục tiêu độ chồng khít (IoU) từ 0,75 trở lên và vị trí chân, đầu trượng lệch không quá 4% khung.
+- **Nền trong suốt thật** (góc ảnh alpha = 0), không viền sáng bám quanh người.
+- **Nhận ra Hà Vân:** khớp chân dung mới (khăn đỏ, hai dải lụa, trâm đồng, áo đỏ).
+- **Không fantasy:** theo mục 4 và khối 9.3.
+
+### 9.7 Ghép vào trận
+
+1. Claude co và căn từng tranh về **đúng kích thước tệp cũ** (290×457, 297×456, 302×454, 457×304, 250×379) rồi xuất WebP đè lên tệp cũ (bản cũ còn trong lịch sử git để hoàn tác).
+2. Chạy một trận có Hà Vân, quay từng cảnh đánh thường, ra chiêu, tuyệt chiêu, ngã, kiểm tra chân đứng đúng chỗ và hiệu ứng bắn ra từ đúng đầu trượng hoặc ngón tay; chỉnh `anchor`, `origin`, `burst` trong `HA_VAN` nếu lệch.
+3. Chụp trang chi tiết tướng ở Doanh Trại (tranh lớn `style.webp` cạnh chân dung mới).
+4. Báo Shan so sánh trước và sau để quyết có làm tiếp 76 nhân vật còn lại không.
