@@ -49,7 +49,7 @@
     --panel-highlight-gradient: radial-gradient(ellipse at 50% 0%, var(--accent-deep), var(--decorative-frame) 70%);
     --lacquer-gradient: linear-gradient(180deg, var(--accent-hover), var(--accent) 55%, var(--accent-deep));
 
-    /* Đồng bộ UI toàn game (05/11/2026): cùng giá trị với khung Sử ký/Home V2 (--atlas-*) để mọi màn dùng chung.
+    /* Đồng bộ UI toàn game (05/11/2026): là bộ token duy nhất của mọi màn (đã gộp --atlas-* vào đây 07/11/2026).
        Gỗ tối là bề mặt mặc định; giấy dó cho nội dung đọc dài và trạng thái "đang chọn". */
     --wood: #2b1f15;
     --wood-hi: #3d2c1d;
@@ -72,6 +72,9 @@
     --frame-gold-hi: #d4a24c;
     --frame-bronze: #8f6a32;
     --frame-inner: #c9a25a73;
+    /* Viền vừa (giữa --frame-line-soft và --frame-line) và chữ phụ trên gỗ; trước là --atlas-border-soft, --atlas-muted. */
+    --frame-line-mid: #9c7845aa;
+    --on-wood-muted: #8a7458;
     --lacquer: #8f241d;
     --lacquer-hi: #b4382c;
     --lacquer-lo: #5e1712;

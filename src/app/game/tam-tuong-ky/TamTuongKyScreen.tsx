@@ -332,7 +332,7 @@ function triedPair(list: readonly string[] | undefined, [a, b]: Slots): boolean 
  */
 function TriedWarning({ cost }: { cost: string }) {
   return (
-    <p role="note" className="rounded-lg border border-[var(--atlas-red-hi)] px-3 py-2 text-sm">
+    <p role="note" className="rounded-lg border border-[var(--lacquer-hi)] px-3 py-2 text-sm">
       Bạn đã ghép cặp này ở lần trước. Ghép lại vẫn {cost}.
     </p>
   );
@@ -424,17 +424,17 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
           <Panel id="ttk-ranked-altar" title="Đài Hợp Nguyên">
             <SlotsRow slots={slots} busy={pending} result={card?.kind === "result" ? card.result : null} onClear={(i) => setSlots((s) => clearSlot(s, i))} onSwap={() => setSlots(swapSlots)} />
             <AltarCard card={card} onUse={(id) => setSlots([id, null])} />
-            <p className="text-caption text-[var(--atlas-muted)]">Nguyên tố lấy từ túi, dùng cho hệ nào cũng được.</p>
+            <p className="text-caption text-[var(--on-wood-muted)]">Nguyên tố lấy từ túi, dùng cho hệ nào cũng được.</p>
             <button type="button" disabled={!ready} aria-busy={pending} onClick={combine} className={buttonVariants({ className: "min-h-12 text-lg tracking-[0.12em] uppercase" })}>
               Hợp Nguyên
             </button>
             {tried && <TriedWarning cost="tiêu nguyên liệu" />}
-            <div aria-live="polite" role="status" className={card && notice && notice.tone !== "invalid" ? "sr-only" : "min-h-12 rounded-lg border border-[var(--atlas-border-soft)] px-3 py-2 text-sm"}>
+            <div aria-live="polite" role="status" className={card && notice && notice.tone !== "invalid" ? "sr-only" : "min-h-12 rounded-lg border border-[var(--frame-line-mid)] px-3 py-2 text-sm"}>
               {notice?.text ?? "Đoán tướng từ lời dẫn, rồi ghép theo công thức đã học ở chế độ Thường."}
             </div>
             <div className="flex flex-wrap items-center gap-2 text-sm">
               <span>Cửa hàng: {view.shop.price} vàng một bó · tuần này {view.shop.bought}/{view.shop.max} · vàng: {view.gold}</span>
-              <button type="button" disabled={pending || view.shop.bought >= view.shop.max || view.gold < view.shop.price} onClick={buy} className="min-h-11 rounded border border-[var(--atlas-gold)] px-3 font-semibold disabled:opacity-50">
+              <button type="button" disabled={pending || view.shop.bought >= view.shop.max || view.gold < view.shop.price} onClick={buy} className="min-h-11 rounded border border-[var(--frame-gold)] px-3 font-semibold disabled:opacity-50">
                 Mua 1 bó
               </button>
             </div>
@@ -445,24 +445,24 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
           <Panel id="ttk-featured" title={`Đề cử tuần · ${view.featured.filter((f) => f.found).length}/${view.featured.length}`}>
             <ul className="flex flex-col gap-2">
               {view.featured.map((f) => (
-                <li key={f.slot} className={`rounded-lg border p-3 ${f.found ? "border-[var(--atlas-gold)] bg-[var(--atlas-wood-hi)]" : "border-dashed border-[var(--atlas-border-soft)]"}`}>
+                <li key={f.slot} className={`rounded-lg border p-3 ${f.found ? "border-[var(--frame-gold)] bg-[var(--wood-hi)]" : "border-dashed border-[var(--frame-line-mid)]"}`}>
                   {f.found ? (
-                    <p className="font-serif font-bold text-[var(--atlas-title)]">{f.found.name} · +{f.points}</p>
+                    <p className="font-serif font-bold text-[var(--title-on-wood)]">{f.found.name} · +{f.points}</p>
                   ) : (
-                    <p className="text-caption text-[var(--atlas-muted)]">Tướng chưa tìm thấy · {f.points} điểm</p>
+                    <p className="text-caption text-[var(--on-wood-muted)]">Tướng chưa tìm thấy · {f.points} điểm</p>
                   )}
                   <p className="mt-1 text-sm italic">“{f.clue}”</p>
                 </li>
               ))}
             </ul>
             <section aria-labelledby="ttk-board-title">
-              <h3 id="ttk-board-title" className="font-serif font-bold text-[var(--atlas-title)]">Bảng tuần</h3>
+              <h3 id="ttk-board-title" className="font-serif font-bold text-[var(--title-on-wood)]">Bảng tuần</h3>
               {view.board.top.length === 0 ? (
-                <p className="text-sm text-[var(--atlas-muted)]">Chưa có ai ghép ra tướng đề cử.</p>
+                <p className="text-sm text-[var(--on-wood-muted)]">Chưa có ai ghép ra tướng đề cử.</p>
               ) : (
                 <ol className="mt-1 space-y-0.5 text-sm">
                   {view.board.top.map((e) => (
-                    <li key={e.rank} className={e.mine ? "font-bold text-[var(--atlas-title)]" : ""}>
+                    <li key={e.rank} className={e.mine ? "font-bold text-[var(--title-on-wood)]" : ""}>
                       {e.rank}. {e.name} · {e.points} điểm
                     </li>
                   ))}
@@ -484,11 +484,11 @@ function MobileBar({ slots, ready, tried, onCombine }: { slots: Slots; ready: bo
   const catalog = useCatalog();
   const label = (id: NodeId | null) => (id ? nameOf(catalog, id) : "…");
   return (
-    <div className="fixed inset-x-0 bottom-0 z-20 border-t border-[var(--atlas-border)] bg-[var(--atlas-wood)]/95 px-4 py-2 backdrop-blur lg:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-20 border-t border-[var(--frame-line)] bg-[var(--wood)]/95 px-4 py-2 backdrop-blur lg:hidden">
       <div className="mx-auto flex max-w-xl items-center gap-3">
         <p className="min-w-0 flex-1 truncate text-sm" aria-hidden>
-          {label(slots[0])} <span className="text-[var(--atlas-muted)]">+</span> {label(slots[1])}
-          {tried && <span className="block text-caption text-[var(--atlas-muted)]">Đã ghép cặp này ở lần trước</span>}
+          {label(slots[0])} <span className="text-[var(--on-wood-muted)]">+</span> {label(slots[1])}
+          {tried && <span className="block text-caption text-[var(--on-wood-muted)]">Đã ghép cặp này ở lần trước</span>}
         </p>
         <button type="button" disabled={!ready} onClick={onCombine} className={buttonVariants({ className: "min-h-11 shrink-0 px-5" })}>
           Hợp Nguyên
@@ -527,13 +527,13 @@ function NodeChip({ node, onPick, badge, count, flash, hint }: { node: CatalogNo
       onClick={() => onPick(node.id)}
       title={node.nameVi}
       aria-label={`${node.nameVi}${count !== undefined ? `, còn ${count}` : ""}${badge ? ", còn công thức chưa tìm" : ""}${hint ? ", được gợi ý" : ""}`}
-      className={`relative flex h-[5.25rem] w-full flex-col items-center justify-center gap-1 rounded-lg border bg-[var(--atlas-wood-lo)] px-1 pt-1.5 pb-1 text-center transition-colors hover:border-[var(--atlas-gold)] focus-visible:outline-2 focus-visible:outline-[var(--atlas-gold-hi)] ${flash ? "border-[var(--atlas-gold-hi)] motion-safe:animate-[ttk-flash_0.9s_ease-out]" : "border-[var(--atlas-border-soft)]"} ${hint ? "ring-2 ring-[var(--atlas-gold-hi)]" : ""}`}
+      className={`relative flex h-[5.25rem] w-full flex-col items-center justify-center gap-1 rounded-lg border bg-[var(--wood-lo)] px-1 pt-1.5 pb-1 text-center transition-colors hover:border-[var(--frame-gold)] focus-visible:outline-2 focus-visible:outline-[var(--frame-gold-hi)] ${flash ? "border-[var(--frame-gold-hi)] motion-safe:animate-[ttk-flash_0.9s_ease-out]" : "border-[var(--frame-line-mid)]"} ${hint ? "ring-2 ring-[var(--frame-gold-hi)]" : ""}`}
     >
       {hint && <HintIcon className="absolute top-0.5 left-0.5 size-4" />}
       <NodeGlyph node={node} className="size-9" />
       <span aria-hidden className="line-clamp-2 w-full text-caption leading-[1.15]">{node.nameVi}</span>
-      {count !== undefined && <span aria-hidden className="absolute top-0.5 right-1 text-[11px] text-[var(--atlas-muted)] tabular-nums">×{count}</span>}
-      {badge && <span aria-hidden className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-[var(--atlas-gold-hi)]" title="Còn công thức chưa tìm" />}
+      {count !== undefined && <span aria-hidden className="absolute top-0.5 right-1 text-[11px] text-[var(--on-wood-muted)] tabular-nums">×{count}</span>}
+      {badge && <span aria-hidden className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-[var(--frame-gold-hi)]" title="Còn công thức chưa tìm" />}
     </button>
   );
 }
@@ -631,7 +631,7 @@ function NodeGlyph({ node, className = "size-6" }: { node: CatalogNode; classNam
     );
   }
   return (
-    <span aria-hidden className={`${className} grid shrink-0 place-items-center rounded-full border border-[var(--atlas-bronze)] bg-[var(--atlas-paper-deep)] font-serif text-caption font-bold text-[var(--atlas-ink)]`}>
+    <span aria-hidden className={`${className} grid shrink-0 place-items-center rounded-full border border-[var(--frame-bronze)] bg-[var(--paper-deep)] font-serif text-caption font-bold text-[var(--ink)]`}>
       {node.nameVi.charAt(0)}
     </span>
   );
@@ -694,7 +694,7 @@ function Library({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Tìm yếu tố, ví dụ: thap dao"
-          className="min-h-11 rounded-lg border border-[var(--atlas-border-soft)] bg-[var(--atlas-wood-lo)] px-3 text-[var(--atlas-ink-on-wood)] placeholder:text-[var(--atlas-muted)]"
+          className="min-h-11 rounded-lg border border-[var(--frame-line-mid)] bg-[var(--wood-lo)] px-3 text-[var(--on-wood)] placeholder:text-[var(--on-wood-muted)]"
         />
       </label>
       <div className="flex items-center gap-1.5" role="group" aria-label="Lọc theo nhóm">
@@ -704,7 +704,7 @@ function Library({
             type="button"
             aria-pressed={group === g.id}
             onClick={() => setGroup(g.id)}
-            className={`min-h-8 pointer-coarse:min-h-11 shrink-0 rounded-full border px-2.5 text-caption whitespace-nowrap ${group === g.id ? "border-[var(--atlas-gold)] bg-[var(--atlas-wood-hi)] text-[var(--atlas-title)]" : "border-[var(--atlas-border-soft)]"}`}
+            className={`min-h-8 pointer-coarse:min-h-11 shrink-0 rounded-full border px-2.5 text-caption whitespace-nowrap ${group === g.id ? "border-[var(--frame-gold)] bg-[var(--wood-hi)] text-[var(--title-on-wood)]" : "border-[var(--frame-line-mid)]"}`}
           >
             {g.name}
           </button>
@@ -715,7 +715,7 @@ function Library({
             <select
               value={more.some((g) => g.id === group) ? (group ?? "") : ""}
               onChange={(e) => setGroup(e.target.value || null)}
-              className={`min-h-8 pointer-coarse:min-h-11 w-full rounded-full border bg-[var(--atlas-wood-lo)] px-2.5 text-caption ${more.some((g) => g.id === group) ? "border-[var(--atlas-gold)] text-[var(--atlas-title)]" : "border-[var(--atlas-border-soft)]"}`}
+              className={`min-h-8 pointer-coarse:min-h-11 w-full rounded-full border bg-[var(--wood-lo)] px-2.5 text-caption ${more.some((g) => g.id === group) ? "border-[var(--frame-gold)] text-[var(--title-on-wood)]" : "border-[var(--frame-line-mid)]"}`}
             >
               <option value="">Nhóm khác…</option>
               {more.map((g) => (
@@ -728,7 +728,7 @@ function Library({
         )}
       </div>
       {(showHelp || units !== undefined) && (
-        <p className="text-caption text-[var(--atlas-muted)]">
+        <p className="text-caption text-[var(--on-wood-muted)]">
           {showHelp && "Bấm một yếu tố để đặt vào ô trước, bấm tiếp để đặt vào ô sau."}
           {units !== undefined && `Bảy nguyên tố dùng chung túi (còn ${units} đơn vị).`}
         </p>
@@ -744,7 +744,7 @@ function Library({
         flashId={flash?.id}
         hintId={hintId ?? undefined}
       />
-      {nodes.length === 0 && <p className="text-sm text-[var(--atlas-muted)]">Không có yếu tố nào khớp.</p>}
+      {nodes.length === 0 && <p className="text-sm text-[var(--on-wood-muted)]">Không có yếu tố nào khớp.</p>}
     </Panel>
   );
 }
@@ -813,15 +813,15 @@ function Altar(props: {
   const session = view.session;
   const toneClass =
     notice?.tone === "hero" || notice?.tone === "discovery"
-      ? "border-[var(--atlas-gold-hi)] text-[var(--atlas-title)] motion-safe:animate-[ttk-reveal_0.4s_ease-out]"
+      ? "border-[var(--frame-gold-hi)] text-[var(--title-on-wood)] motion-safe:animate-[ttk-reveal_0.4s_ease-out]"
       : notice?.tone === "invalid"
-        ? "border-[var(--atlas-red-hi)] text-[var(--atlas-ink-on-wood)]"
-        : "border-[var(--atlas-border-soft)] text-[var(--atlas-ink-on-wood)]/90";
+        ? "border-[var(--lacquer-hi)] text-[var(--on-wood)]"
+        : "border-[var(--frame-line-mid)] text-[var(--on-wood)]/90";
   return (
     <Panel id="ttk-altar" title="Đài Hợp Nguyên">
       <SlotsRow slots={slots} busy={pending} result={props.card?.kind === "result" ? props.card.result : null} onClear={props.onClear} onSwap={props.onSwap} />
       <AltarCard card={props.card} state={props.state} onUse={props.onUseResult} onFilterGroup={props.onFilterGroup} />
-      <p className="text-caption text-[var(--atlas-muted)]">Thứ tự ô có nghĩa: “Mộc + Thủy” khác “Thủy + Mộc”.</p>
+      <p className="text-caption text-[var(--on-wood-muted)]">Thứ tự ô có nghĩa: “Mộc + Thủy” khác “Thủy + Mộc”.</p>
       {session ? (
         <button
           type="button"
@@ -851,20 +851,20 @@ function Altar(props: {
       <p className="text-sm">
         {session ? (
           <>
-            Lượt này còn <strong className="text-[var(--atlas-title)]">{session.combinesLeft}</strong>/{session.combinesPerSession} lần ghép
+            Lượt này còn <strong className="text-[var(--title-on-wood)]">{session.combinesLeft}</strong>/{session.combinesPerSession} lần ghép
           </>
         ) : (
           <>Mỗi lượt 15 lần ghép; ghép trùng công thức đã biết không trừ lần.</>
         )}
       </p>
       <div role="group" aria-label={`Gợi ý, còn ${view.hintsLeft}/${view.hintsPerDay} hôm nay`} className="flex items-center gap-2 text-sm">
-        <button type="button" disabled={pending || view.hintsLeft <= 0} onClick={() => props.onHint(1)} className="min-h-10 pointer-coarse:min-h-11 flex-1 rounded-lg border border-[var(--atlas-border-soft)] px-2 hover:border-[var(--atlas-gold)] disabled:opacity-50">
+        <button type="button" disabled={pending || view.hintsLeft <= 0} onClick={() => props.onHint(1)} className="min-h-10 pointer-coarse:min-h-11 flex-1 rounded-lg border border-[var(--frame-line-mid)] px-2 hover:border-[var(--frame-gold)] disabled:opacity-50">
           <HintIcon className="mr-1 inline size-4 align-[-3px]" />Nhóm
         </button>
-        <button type="button" disabled={pending || view.hintsLeft <= 0} onClick={() => props.onHint(2)} className="min-h-10 pointer-coarse:min-h-11 flex-1 rounded-lg border border-[var(--atlas-border-soft)] px-2 hover:border-[var(--atlas-gold)] disabled:opacity-50">
+        <button type="button" disabled={pending || view.hintsLeft <= 0} onClick={() => props.onHint(2)} className="min-h-10 pointer-coarse:min-h-11 flex-1 rounded-lg border border-[var(--frame-line-mid)] px-2 hover:border-[var(--frame-gold)] disabled:opacity-50">
           <HintIcon className="mr-1 inline size-4 align-[-3px]" />Nguyên liệu
         </button>
-        <span className="shrink-0 text-caption text-[var(--atlas-muted)] tabular-nums">còn {view.hintsLeft}/{view.hintsPerDay}</span>
+        <span className="shrink-0 text-caption text-[var(--on-wood-muted)] tabular-nums">còn {view.hintsLeft}/{view.hintsPerDay}</span>
       </div>
       <History entries={recent} onReplay={props.onReplay} />
     </Panel>
@@ -885,7 +885,7 @@ function SlotsRow({ slots, busy, result, onClear, onSwap }: { slots: Slots; busy
         type="button"
         onClick={onSwap}
         aria-label="Đổi chỗ ô trước và ô sau"
-        className="grid size-11 place-items-center rounded-full border border-[var(--atlas-border-soft)] font-serif text-lg hover:border-[var(--atlas-gold)]"
+        className="grid size-11 place-items-center rounded-full border border-[var(--frame-line-mid)] font-serif text-lg hover:border-[var(--frame-gold)]"
       >
         ⇄
       </button>
@@ -915,18 +915,18 @@ function SlotsRow({ slots, busy, result, onClear, onSwap }: { slots: Slots; busy
 function Slot({ label, id, busy, onClear }: { label: string; id: NodeId | null; busy: boolean; onClear: () => void }) {
   const catalog = useCatalog();
   const node = id ? catalog.nodes.get(id) : undefined;
-  const frame = `atlas-frame atlas-frame-paper relative flex h-28 w-full flex-col items-center gap-1 p-2 text-center lg:h-36 lg:gap-1.5 lg:pt-3 ${busy && node ? "ring-2 ring-[var(--atlas-gold-hi)] motion-safe:animate-[ttk-shake_0.3s_ease-in-out_infinite]" : ""}`;
+  const frame = `atlas-frame atlas-frame-paper relative flex h-28 w-full flex-col items-center gap-1 p-2 text-center lg:h-36 lg:gap-1.5 lg:pt-3 ${busy && node ? "ring-2 ring-[var(--frame-gold-hi)] motion-safe:animate-[ttk-shake_0.3s_ease-in-out_infinite]" : ""}`;
   const content = (
     <>
-      <span className="text-caption font-semibold tracking-[0.15em] uppercase text-[var(--atlas-ink-soft)]">{label}</span>
+      <span className="text-caption font-semibold tracking-[0.15em] uppercase text-[var(--ink-soft)]">{label}</span>
       <span className="grid size-10 shrink-0 place-items-center lg:size-12">
         {node ? (
           <NodeGlyph node={node} className="size-10 lg:size-12" />
         ) : (
-          <span aria-hidden className="size-9 rounded-full border-2 border-dashed border-[var(--atlas-ink-soft)]/45 lg:size-11" />
+          <span aria-hidden className="size-9 rounded-full border-2 border-dashed border-[var(--ink-soft)]/45 lg:size-11" />
         )}
       </span>
-      <span className={`line-clamp-2 font-serif text-sm leading-tight ${node ? "font-bold text-[var(--atlas-ink)]" : "text-[var(--atlas-ink-soft)]"}`}>{node?.nameVi ?? "Trống"}</span>
+      <span className={`line-clamp-2 font-serif text-sm leading-tight ${node ? "font-bold text-[var(--ink)]" : "text-[var(--ink-soft)]"}`}>{node?.nameVi ?? "Trống"}</span>
     </>
   );
   if (!node) return <div className={frame}>{content}</div>;
@@ -936,10 +936,10 @@ function Slot({ label, id, busy, onClear }: { label: string; id: NodeId | null; 
       onClick={onClear}
       title={node.nameVi}
       aria-label={`Bỏ ${node.nameVi} khỏi ${label.toLowerCase()}`}
-      className={`${frame} group cursor-pointer transition-shadow hover:ring-2 hover:ring-[var(--atlas-red-hi)]/60 focus-visible:ring-2 focus-visible:ring-[var(--atlas-red-hi)]/60 focus-visible:outline-none`}
+      className={`${frame} group cursor-pointer transition-shadow hover:ring-2 hover:ring-[var(--lacquer-hi)]/60 focus-visible:ring-2 focus-visible:ring-[var(--lacquer-hi)]/60 focus-visible:outline-none`}
     >
       {content}
-      <span aria-hidden className="absolute top-1 right-2 text-sm font-bold text-[var(--atlas-red)] opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+      <span aria-hidden className="absolute top-1 right-2 text-sm font-bold text-[var(--lacquer)] opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
         ✕
       </span>
     </button>
@@ -954,7 +954,7 @@ const CARD_BOX = "relative flex h-28 items-center gap-3 rounded-lg border px-3 t
  * công thức đã tự ghép ra), hoặc gợi ý vừa xin. Chữ cho người đọc màn hình của kết quả, gợi ý vẫn ở ô `aria-live`.
  */
 function AltarCard({ card, state, onUse, onFilterGroup }: { card: AltarCardState; state?: DiscoveryState; onUse: (id: NodeId) => void; onFilterGroup?: (group: string) => void }) {
-  if (!card) return <div className={`${CARD_BOX} border-dashed border-[var(--atlas-border-soft)] text-sm text-[var(--atlas-muted)]`}>Bấm một yếu tố để xem công thức đã biết; thứ ghép ra cũng hiện ở đây.</div>;
+  if (!card) return <div className={`${CARD_BOX} border-dashed border-[var(--frame-line-mid)] text-sm text-[var(--on-wood-muted)]`}>Bấm một yếu tố để xem công thức đã biết; thứ ghép ra cũng hiện ở đây.</div>;
   if (card.kind === "result") return <ResultCard result={card.result} onUse={onUse} />;
   if (card.kind === "info") return state ? <InfoCard key={card.id} id={card.id} state={state} /> : null;
   return <HintCard key={card.seq} hint={card.hint} onUse={onUse} onFilterGroup={onFilterGroup} />;
@@ -980,35 +980,35 @@ function InfoCard({ id, state }: { id: NodeId; state: DiscoveryState }) {
   const name = (x: NodeId) => nameOf(catalog, x);
   const USED_MAX = 4;
   return (
-    <div className={`${CARD_BOX} border-[var(--atlas-border-soft)] motion-safe:animate-[ttk-reveal_0.25s_ease-out]`}>
+    <div className={`${CARD_BOX} border-[var(--frame-line-mid)] motion-safe:animate-[ttk-reveal_0.25s_ease-out]`}>
       <NodeGlyph node={node} className="size-12" />
       <div className="flex min-w-0 flex-1 flex-col gap-1 text-caption">
         <p className="flex items-baseline gap-2">
           <span className="truncate font-serif text-sm font-bold">{node.nameVi}</span>
-          {book.open && <span className="shrink-0 text-caption text-[var(--atlas-gold-hi)]">• còn công thức chưa tìm</span>}
+          {book.open && <span className="shrink-0 text-caption text-[var(--frame-gold-hi)]">• còn công thức chưa tìm</span>}
         </p>
         <p className="flex items-center gap-1.5" aria-label={node.element ? "Nguyên tố gốc" : `Tạo từ: ${book.madeFrom.map(([a, b]) => `${name(a)} + ${name(b)}`).join("; ") || "chưa rõ"}`}>
-          <span className="shrink-0 text-[var(--atlas-muted)]">Tạo từ</span>
+          <span className="shrink-0 text-[var(--on-wood-muted)]">Tạo từ</span>
           {node.element ? (
             <span>nguyên tố gốc</span>
           ) : (
             book.madeFrom.slice(0, 2).map(([a, b], i) => (
-              <span key={i} aria-hidden className="inline-flex items-center gap-0.5 rounded border border-[var(--atlas-border-soft)] px-1">
+              <span key={i} aria-hidden className="inline-flex items-center gap-0.5 rounded border border-[var(--frame-line-mid)] px-1">
                 <MiniGlyph id={a} />+<MiniGlyph id={b} />
               </span>
             ))
           )}
-          {!node.element && book.madeFrom.length > 2 && <span aria-hidden className="text-[var(--atlas-muted)]">+{book.madeFrom.length - 2}</span>}
+          {!node.element && book.madeFrom.length > 2 && <span aria-hidden className="text-[var(--on-wood-muted)]">+{book.madeFrom.length - 2}</span>}
         </p>
         <p className="flex items-center gap-1.5" aria-label={`Dùng để ghép: ${book.usedIn.map((r) => `${name(r.first)} + ${name(r.second)} ra ${name(r.result)}`).join("; ") || "chưa có công thức đã biết"}`}>
-          <span className="shrink-0 text-[var(--atlas-muted)]">Dùng ghép</span>
-          {book.usedIn.length === 0 && <span aria-hidden className="text-[var(--atlas-muted)]">chưa có</span>}
+          <span className="shrink-0 text-[var(--on-wood-muted)]">Dùng ghép</span>
+          {book.usedIn.length === 0 && <span aria-hidden className="text-[var(--on-wood-muted)]">chưa có</span>}
           {book.usedIn.slice(0, USED_MAX).map((r, i) => (
-            <span key={i} aria-hidden className="inline-flex items-center gap-0.5 rounded border border-[var(--atlas-border-soft)] px-1">
+            <span key={i} aria-hidden className="inline-flex items-center gap-0.5 rounded border border-[var(--frame-line-mid)] px-1">
               <MiniGlyph id={r.first === id ? r.second : r.first} />→<MiniGlyph id={r.result} />
             </span>
           ))}
-          {book.usedIn.length > USED_MAX && <span aria-hidden className="text-[var(--atlas-muted)]">+{book.usedIn.length - USED_MAX}</span>}
+          {book.usedIn.length > USED_MAX && <span aria-hidden className="text-[var(--on-wood-muted)]">+{book.usedIn.length - USED_MAX}</span>}
         </p>
       </div>
     </div>
@@ -1020,7 +1020,7 @@ function HintCard({ hint, onUse, onFilterGroup }: { hint: Hint | null; onUse: (i
   const catalog = useCatalog();
   if (!hint)
     return (
-      <div className={`${CARD_BOX} border-[var(--atlas-border-soft)] text-sm`}>
+      <div className={`${CARD_BOX} border-[var(--frame-line-mid)] text-sm`}>
         <HintIcon className="size-8 shrink-0" /> Không còn công thức nào ghép được ngay từ những gì đã có.
       </div>
     );
@@ -1028,19 +1028,19 @@ function HintCard({ hint, onUse, onFilterGroup }: { hint: Hint | null; onUse: (i
   const ingredient = hint.level === 2 ? catalog.nodes.get(hint.ingredientId) : undefined;
   const act = () => (ingredient ? onUse(ingredient.id) : onFilterGroup?.(hint.hintGroup));
   return (
-    <button type="button" onClick={act} className={`${CARD_BOX} w-full border-[var(--atlas-gold)] hover:border-[var(--atlas-gold-hi)] motion-safe:animate-[ttk-reveal_0.3s_ease-out]`}>
+    <button type="button" onClick={act} className={`${CARD_BOX} w-full border-[var(--frame-gold)] hover:border-[var(--frame-gold-hi)] motion-safe:animate-[ttk-reveal_0.3s_ease-out]`}>
       <HintIcon className="size-8 shrink-0" />
       {ingredient && <NodeGlyph node={ingredient} className="size-12" />}
       <span className="min-w-0 flex-1 text-sm">
         {ingredient ? (
           <>
             Thử dùng <strong>{ingredient.nameVi}</strong> trong công thức ra một thứ nhóm <strong>{group}</strong>.
-            <span className="block text-caption text-[var(--atlas-muted)]">Bấm để đặt vào ô trước</span>
+            <span className="block text-caption text-[var(--on-wood-muted)]">Bấm để đặt vào ô trước</span>
           </>
         ) : (
           <>
             Còn công thức ra một thứ thuộc nhóm <strong>{group}</strong>.
-            <span className="block text-caption text-[var(--atlas-muted)]">Bấm để lọc Vạn Vật Lục theo nhóm này</span>
+            <span className="block text-caption text-[var(--on-wood-muted)]">Bấm để lọc Vạn Vật Lục theo nhóm này</span>
           </>
         )}
       </span>
@@ -1053,17 +1053,17 @@ function History({ entries, onReplay }: { entries: readonly HistoryEntry[]; onRe
   if (entries.length === 0) return null;
   return (
     <section aria-label="Lần ghép gần đây" className="flex flex-col gap-1">
-      <h3 className="text-caption text-[var(--atlas-muted)]">Lần ghép gần đây · bấm để ghép lại</h3>
+      <h3 className="text-caption text-[var(--on-wood-muted)]">Lần ghép gần đây · bấm để ghép lại</h3>
       <ol className="flex flex-col gap-1">
         {entries.map((e, i) => (
           <li key={i}>
-            <button type="button" onClick={() => onReplay(e)} aria-label={`${e.text} Đặt lại cặp này`} title={e.text} className="flex w-full items-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-left text-caption hover:border-[var(--atlas-border-soft)]">
+            <button type="button" onClick={() => onReplay(e)} aria-label={`${e.text} Đặt lại cặp này`} title={e.text} className="flex w-full items-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-left text-caption hover:border-[var(--frame-line-mid)]">
               <MiniGlyph id={e.first} />
               <span aria-hidden>+</span>
               <MiniGlyph id={e.second} />
               <span aria-hidden>→</span>
-              {e.result ? <MiniGlyph id={e.result} /> : <span aria-hidden className="text-[var(--atlas-muted)]">✕</span>}
-              <span aria-hidden className="min-w-0 truncate text-[var(--atlas-muted)]">{e.result ? <ResultName id={e.result} /> : "không ra gì"}</span>
+              {e.result ? <MiniGlyph id={e.result} /> : <span aria-hidden className="text-[var(--on-wood-muted)]">✕</span>}
+              <span aria-hidden className="min-w-0 truncate text-[var(--on-wood-muted)]">{e.result ? <ResultName id={e.result} /> : "không ra gì"}</span>
             </button>
           </li>
         ))}
@@ -1083,28 +1083,28 @@ function ResultCard({ result, onUse }: { result: AltarResult; onUse: (id: NodeId
   if (result.kind === "miss") {
     const [a, b] = result.from.map((id) => catalog.nodes.get(id));
     return (
-      <div key={result.seq} className={`${box} border-[var(--atlas-border-soft)] text-sm`}>
+      <div key={result.seq} className={`${box} border-[var(--frame-line-mid)] text-sm`}>
         <span aria-hidden className="relative flex w-20 shrink-0 items-center justify-center gap-2 grayscale">
           <span className="motion-safe:animate-[ttk-split-l_0.6s_ease-out_forwards]">{a && <NodeGlyph node={a} className="size-8" />}</span>
           <span className="motion-safe:animate-[ttk-split-r_0.6s_ease-out_forwards]">{b && <NodeGlyph node={b} className="size-8" />}</span>
           <span className="absolute inset-0 m-auto size-10 rounded-full bg-[radial-gradient(circle,rgb(180_170_160/0.55),transparent_70%)] opacity-0 motion-safe:animate-[ttk-smoke_0.9s_ease-out]" />
         </span>
-        <span className="text-[var(--atlas-muted)]">Chưa tìm được mối liên hệ</span>
+        <span className="text-[var(--on-wood-muted)]">Chưa tìm được mối liên hệ</span>
       </div>
     );
   }
   const node = result.nodeId ? catalog.nodes.get(result.nodeId) : undefined;
-  if (!node) return <div className={`${box} border-[var(--atlas-border-soft)]`} />;
+  if (!node) return <div className={`${box} border-[var(--frame-line-mid)]`} />;
   if (result.kind === "hero") {
     const info = node.characterId ? rosterCharacter(node.characterId) : undefined;
     return (
-      <div key={result.seq} className={`${box} border-[var(--atlas-gold-hi)] bg-[var(--atlas-wood-hi)] ${appear}`}>
+      <div key={result.seq} className={`${box} border-[var(--frame-gold-hi)] bg-[var(--wood-hi)] ${appear}`}>
         <span className="rounded-full motion-safe:animate-[ttk-glow_1.1s_ease-out_450ms_2]">
           {info && node.characterId ? <Portrait id={node.characterId} element={info.element} profession={info.profession} className="size-14 shrink-0" /> : null}
         </span>
         <span className="min-w-0">
-          <span className="block font-serif font-bold text-[var(--atlas-title)]">{node.nameVi}</span>
-          <span className="block text-caption text-[var(--atlas-muted)]">
+          <span className="block font-serif font-bold text-[var(--title-on-wood)]">{node.nameVi}</span>
+          <span className="block text-caption text-[var(--on-wood-muted)]">
             {TIER_NAME[node.tier ?? "thuong"]} · đã ghi vào Tướng Lục{result.points ? ` · +${result.points} điểm` : ""}
           </span>
         </span>
@@ -1119,16 +1119,16 @@ function ResultCard({ result, onUse }: { result: AltarResult; onUse: (id: NodeId
       onClick={() => onUse(node.id)}
       aria-label={`${node.nameVi}${fresh ? ", mới" : ", đã biết"}. Đặt vào ô trước`}
       title="Đặt vào ô trước để ghép tiếp"
-      className={`${box} w-full hover:border-[var(--atlas-gold)] ${fresh ? "border-[var(--atlas-gold-hi)]" : "border-[var(--atlas-border-soft)]"} ${appear}`}
+      className={`${box} w-full hover:border-[var(--frame-gold)] ${fresh ? "border-[var(--frame-gold-hi)]" : "border-[var(--frame-line-mid)]"} ${appear}`}
     >
       <span className={`grid shrink-0 place-items-center rounded-full ${fresh ? "motion-safe:animate-[ttk-glow_1s_ease-out_450ms]" : ""}`}>
         <NodeGlyph node={node} className="size-16" />
       </span>
       <span className="min-w-0 flex-1">
         <span className="line-clamp-2 font-serif font-bold leading-tight">{node.nameVi}</span>
-        <span className="block text-caption text-[var(--atlas-muted)]">Bấm để đặt vào ô trước</span>
+        <span className="block text-caption text-[var(--on-wood-muted)]">Bấm để đặt vào ô trước</span>
       </span>
-      <span className={`shrink-0 rounded-full border px-2 py-0.5 text-caption font-semibold ${fresh ? "border-[var(--atlas-gold-hi)] text-[var(--atlas-title)]" : "border-[var(--atlas-border-soft)] text-[var(--atlas-muted)]"}`}>
+      <span className={`shrink-0 rounded-full border px-2 py-0.5 text-caption font-semibold ${fresh ? "border-[var(--frame-gold-hi)] text-[var(--title-on-wood)]" : "border-[var(--frame-line-mid)] text-[var(--on-wood-muted)]"}`}>
         {fresh ? "Mới" : "Đã biết"}
       </span>
     </button>
@@ -1166,7 +1166,7 @@ function Ledger({
   const professions = sections.find((x) => x.id === "thuong")?.groups ?? [];
   return (
     <Panel id="ttk-ledger" title={`Tướng Lục · ${found}/${entries.length}`} hidden={hidden}>
-      <div role="group" aria-label="Nhóm tướng" className="grid auto-cols-fr grid-flow-col gap-1 rounded-lg border border-[var(--atlas-border-soft)] bg-[var(--atlas-wood-lo)] p-1">
+      <div role="group" aria-label="Nhóm tướng" className="grid auto-cols-fr grid-flow-col gap-1 rounded-lg border border-[var(--frame-line-mid)] bg-[var(--wood-lo)] p-1">
         {sections.map((sec) => {
           const selected = sec.id === activeSection;
           return (
@@ -1175,10 +1175,10 @@ function Ledger({
               type="button"
               aria-pressed={selected}
               onClick={() => pickSection(sec)}
-              className={`flex min-w-0 flex-col items-center rounded-md px-1 py-1 leading-tight ${selected ? "bg-[var(--atlas-wood-hi)] text-[var(--atlas-title)] ring-1 ring-[var(--atlas-gold)]" : "hover:bg-[var(--atlas-wood-hi)]/60"}`}
+              className={`flex min-w-0 flex-col items-center rounded-md px-1 py-1 leading-tight ${selected ? "bg-[var(--wood-hi)] text-[var(--title-on-wood)] ring-1 ring-[var(--frame-gold)]" : "hover:bg-[var(--wood-hi)]/60"}`}
             >
               <span className="truncate text-caption font-semibold">{sec.name}</span>
-              <span className="text-caption text-[var(--atlas-muted)] tabular-nums">
+              <span className="text-caption text-[var(--on-wood-muted)] tabular-nums">
                 {sec.found}/{sec.total}
               </span>
             </button>
@@ -1198,10 +1198,10 @@ function Ledger({
                 aria-label={`${g.name} ${g.found}/${g.entries.length}`}
                 title={`${g.name} ${g.found}/${g.entries.length}`}
                 onClick={() => onGroup(g.id)}
-                className={`flex min-w-0 flex-1 flex-col items-center rounded-md border px-0.5 py-1 ${selected ? "border-[var(--atlas-gold)] bg-[var(--atlas-wood-hi)]" : "border-transparent hover:border-[var(--atlas-border-soft)]"}`}
+                className={`flex min-w-0 flex-1 flex-col items-center rounded-md border px-0.5 py-1 ${selected ? "border-[var(--frame-gold)] bg-[var(--wood-hi)]" : "border-transparent hover:border-[var(--frame-line-mid)]"}`}
               >
                 <ProfessionIcon profession={profession} className="size-7" />
-                <span aria-hidden className="text-caption text-[var(--atlas-muted)] tabular-nums">{g.found}/{g.entries.length}</span>
+                <span aria-hidden className="text-caption text-[var(--on-wood-muted)] tabular-nums">{g.found}/{g.entries.length}</span>
               </button>
             );
           })}
@@ -1209,7 +1209,7 @@ function Ledger({
       )}
       {active && (
         <>
-          <p className="text-caption text-[var(--atlas-muted)] italic">
+          <p className="text-caption text-[var(--on-wood-muted)] italic">
             <span className="font-semibold not-italic">{active.name}.</span> {active.intro}
           </p>
           <LedgerPage
@@ -1222,7 +1222,7 @@ function Ledger({
           />
         </>
       )}
-      <p className="text-caption text-[var(--atlas-muted)]">Tìm thấy chân dung chỉ ghi vào Tướng Lục, không thêm tướng vào đội.</p>
+      <p className="text-caption text-[var(--on-wood-muted)]">Tìm thấy chân dung chỉ ghi vào Tướng Lục, không thêm tướng vào đội.</p>
       <HeroDetail entry={detail} onClose={() => setDetail(null)} />
     </Panel>
   );
@@ -1258,9 +1258,9 @@ function LedgerPage({
 
 /** Viền theo bậc cho ô chưa tìm: thay cho dòng chữ, bậc vẫn đọc được qua nhãn. */
 const TIER_RING: Readonly<Record<string, string>> = {
-  thuong: "border-[var(--atlas-border-soft)]",
+  thuong: "border-[var(--frame-line-mid)]",
   dacBiet: "border-info",
-  lichSu: "border-[var(--atlas-gold)]",
+  lichSu: "border-[var(--frame-gold)]",
 };
 
 /** Ô chân dung trong Tướng Lục. Chưa tìm: bóng “?”, viền theo bậc, không tên, không nghề/hệ (P-24). */
@@ -1268,10 +1268,10 @@ function LedgerTile({ entry, onOpen }: { entry: LedgerEntry; onOpen: (e: LedgerE
   const tile = "flex h-[6.75rem] w-full flex-col items-center justify-center gap-1 rounded-lg border p-1.5 text-center";
   if (!entry.found)
     return (
-      <div className={`${tile} border-dashed border-[var(--atlas-border-soft)] opacity-80`} title={`Tướng chưa tìm thấy · ${TIER_NAME[entry.tier]}`}>
-        <span aria-hidden className={`grid size-12 place-items-center rounded-full border-2 bg-[var(--atlas-wood-lo)] font-serif text-xl text-[var(--atlas-muted)] ${TIER_RING[entry.tier]}`}>?</span>
+      <div className={`${tile} border-dashed border-[var(--frame-line-mid)] opacity-80`} title={`Tướng chưa tìm thấy · ${TIER_NAME[entry.tier]}`}>
+        <span aria-hidden className={`grid size-12 place-items-center rounded-full border-2 bg-[var(--wood-lo)] font-serif text-xl text-[var(--on-wood-muted)] ${TIER_RING[entry.tier]}`}>?</span>
         <span className="sr-only">Tướng chưa tìm thấy</span>
-        <span className="text-caption leading-tight text-[var(--atlas-muted)]">{TIER_NAME[entry.tier]}</span>
+        <span className="text-caption leading-tight text-[var(--on-wood-muted)]">{TIER_NAME[entry.tier]}</span>
       </div>
     );
   return (
@@ -1279,10 +1279,10 @@ function LedgerTile({ entry, onOpen }: { entry: LedgerEntry; onOpen: (e: LedgerE
       type="button"
       onClick={() => onOpen(entry)}
       aria-label={`${entry.name}, ${TIER_NAME[entry.tier]}. Xem chi tiết`}
-      className={`${tile} border-[var(--atlas-gold)] bg-[var(--atlas-wood-hi)] hover:border-[var(--atlas-gold-hi)]`}
+      className={`${tile} border-[var(--frame-gold)] bg-[var(--wood-hi)] hover:border-[var(--frame-gold-hi)]`}
     >
       <Portrait id={entry.characterId} element={entry.info.element} profession={entry.info.profession} className="size-12 shrink-0" />
-      <span className="line-clamp-2 font-serif text-caption leading-tight font-bold text-[var(--atlas-title)]">{entry.name}</span>
+      <span className="line-clamp-2 font-serif text-caption leading-tight font-bold text-[var(--title-on-wood)]">{entry.name}</span>
     </button>
   );
 }
@@ -1302,7 +1302,7 @@ function HeroDetail({ entry, onClose }: { entry: LedgerEntry | null; onClose: ()
       onClose={onClose}
       onClick={(e) => e.target === e.currentTarget && onClose()}
       aria-label={entry?.found ? entry.name : "Chi tiết tướng"}
-      className="campaign-atlas m-auto w-[min(26rem,calc(100vw-2rem))] rounded-xl border border-[var(--atlas-gold)] bg-[var(--atlas-wood)] p-0 text-[var(--atlas-ink-on-wood)] backdrop:bg-black/60"
+      className="campaign-atlas m-auto w-[min(26rem,calc(100vw-2rem))] rounded-xl border border-[var(--frame-gold)] bg-[var(--wood)] p-0 text-[var(--on-wood)] backdrop:bg-black/60"
     >
       {entry?.found && (
         <div className="flex flex-col gap-3 p-4">
@@ -1319,23 +1319,23 @@ function HeroDetail({ entry, onClose }: { entry: LedgerEntry | null; onClose: ()
 function LedgerCard({ entry }: { entry: LedgerEntry }) {
   if (!entry.found)
     return (
-      <div className="flex items-center gap-3 rounded-lg border border-dashed border-[var(--atlas-border-soft)] p-3 opacity-80">
-        <span aria-hidden className="grid size-14 shrink-0 place-items-center rounded-full bg-[var(--atlas-wood-lo)] font-serif text-2xl text-[var(--atlas-muted)]">?</span>
+      <div className="flex items-center gap-3 rounded-lg border border-dashed border-[var(--frame-line-mid)] p-3 opacity-80">
+        <span aria-hidden className="grid size-14 shrink-0 place-items-center rounded-full bg-[var(--wood-lo)] font-serif text-2xl text-[var(--on-wood-muted)]">?</span>
         <div>
           <p className="font-serif font-bold">Tướng chưa tìm thấy</p>
-          <p className="text-caption text-[var(--atlas-muted)]">{TIER_NAME[entry.tier]}</p>
+          <p className="text-caption text-[var(--on-wood-muted)]">{TIER_NAME[entry.tier]}</p>
         </div>
       </div>
     );
   const { info } = entry;
   return (
     <article
-      className="flex items-start gap-3 rounded-lg border border-[var(--atlas-gold)] bg-[var(--atlas-wood-hi)] p-3"
+      className="flex items-start gap-3 rounded-lg border border-[var(--frame-gold)] bg-[var(--wood-hi)] p-3"
     >
       <Portrait id={entry.characterId} element={info.element} profession={info.profession} className="size-14 shrink-0" />
       <div className="min-w-0">
-        <h3 className="font-serif font-bold text-[var(--atlas-title)]">{entry.name}</h3>
-        <p className="text-caption text-[var(--atlas-muted)]">{TIER_NAME[entry.tier]}</p>
+        <h3 className="font-serif font-bold text-[var(--title-on-wood)]">{entry.name}</h3>
+        <p className="text-caption text-[var(--on-wood-muted)]">{TIER_NAME[entry.tier]}</p>
         <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
           <span className="flex items-center gap-1"><ProfessionIcon profession={info.profession} /> {PROFESSION_DISPLAY_NAME[info.profession]}</span>
           <span className="flex items-center gap-1"><ElementIcon element={info.element} /> {ELEMENT_NAME[info.element]}</span>
