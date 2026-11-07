@@ -41,7 +41,7 @@ const MODES: readonly Mode[] = [
     title: "Bình Loạn",
     text: MODE_TEXT.CAMPAIGN,
     art: "campaign",
-    kicker: "Cốt truyện · Nên chơi trước",
+    kicker: "Cốt truyện",
     featured: true,
     status: "Sáu chương sử Việt · tái đấu sứ quân",
     cta: "Dẹp loạn",
