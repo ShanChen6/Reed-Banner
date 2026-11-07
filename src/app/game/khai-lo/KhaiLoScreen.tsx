@@ -359,19 +359,20 @@ export default function KhaiLoScreen() {
     }
   };
 
-  const cell = `min(56px, calc((100vw - 5rem - 20px) / ${width}))`;
+  // Ô bàn cờ co theo bề rộng màn hình; phần trừ đi (--kl-gutter) là lề trang + đệm khung + đệm bàn: 3,5rem trên điện thoại để ô to nhất có thể, 6,25rem từ 640px.
+  const cell = `min(56px, calc((100vw - var(--kl-gutter)) / ${width}))`;
 
   return (
     <Shell>
       <ModeBanner
         title="Khai Lộ"
         kicker={`Giải đố · ${MODE_NAME[state.mode]} · Màn ${state.level}`}
-        description="Chạm để xóa cả khối quân cùng hệ, gom khối to để được nhiều điểm và mở đường xuyên bàn cờ."
+        description={<span className="hidden sm:inline">Chạm để xóa cả khối quân cùng hệ, gom khối to để được nhiều điểm và mở đường xuyên bàn cờ.</span>}
         actions={<Button variant="secondary" onClick={newGame}>Ván mới</Button>}
       />
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <OrnateFrame aria-label="Vùng chơi" className="flex flex-col items-center gap-3">
+        <OrnateFrame aria-label="Vùng chơi" flush className="flex flex-col items-center gap-3 p-2 [--kl-gutter:3.5rem] sm:p-5 sm:[--kl-gutter:6.25rem]">
           <div role="tablist" aria-label="Chế độ chơi" className="grid w-full max-w-[560px] grid-cols-2 gap-2">
             {(["classic", "timed"] as const).map((m) => (
               <button
@@ -389,7 +390,7 @@ export default function KhaiLoScreen() {
           </div>
           <Stats state={state} best={best} left={left} msLeft={timed ? msLeft : null} />
           {timed && <TimeBar msLeft={msLeft} limitMs={limitMs} paused={active && hidden} />}
-          <div className="ui-frame-inset w-fit p-2">
+          <div className="ui-frame-inset w-fit p-1 sm:p-2">
             <div
               ref={boardRef}
               role="grid"
@@ -510,7 +511,7 @@ export default function KhaiLoScreen() {
             </div>
           )}
           <details className="ui-frame p-4" open={state.level === 1 && state.moves === 0}>
-            <summary className="cursor-pointer ui-title-on-wood font-bold">Luật chơi</summary>
+            <summary className="cursor-pointer ui-title-on-wood font-bold pointer-coarse:py-3.5">Luật chơi</summary>
             <ul className="mt-2 list-disc space-y-1.5 pl-5 text-[15px] leading-snug">
               <li>Chạm một quân có ít nhất 1 quân cùng hệ liền cạnh (trên, dưới, trái, phải): <b>cả khối</b> biến mất. Khối n quân được n² điểm, nên gom khối to rồi mới xóa.</li>
               <li>Quân phía trên rơi xuống; cột trống hẳn thì các cột bên phải dồn sang trái. Không có quân mới rơi vào.</li>
@@ -567,8 +568,6 @@ function Stats({ state, best, left, msLeft }: { state: KlState; best: number; le
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <ModeScreen label="Khai Lộ">
-      <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-6">{children}</div>
-    </ModeScreen>
+    <ModeScreen label="Khai Lộ">{children}</ModeScreen>
   );
 }

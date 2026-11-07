@@ -192,14 +192,14 @@ export default function GearPanel({
   return (
     <section
       aria-label="Trang bị"
-      className="rounded-lg bg-[var(--panel)] p-2 text-xs"
+      className="ui-frame-inset rounded-xl p-3 text-caption text-on-wood"
     >
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-semibold">
           Trang bị · Túi đồ {profile.bag.length}/{BAG_LIMIT}
         </h2>
         <span className="tabular-nums">Vàng: {profile.gold}</span>
-        {message && <span className="text-rose-500">{message}</span>}
+        {message && <span className="text-danger">{message}</span>}
       </div>
       {locked && (
         <p className="mb-2 opacity-70">
@@ -219,7 +219,7 @@ export default function GearPanel({
             role="tab"
             aria-selected={character === id}
             onClick={() => setWho(id)}
-            className={choiceVariants({ size: "sm", className: "min-h-8 px-2 text-xs" })}
+            className={choiceVariants({ size: "sm", className: "min-h-8 pointer-coarse:min-h-11 px-2 text-caption" })}
           >
             {nameOf(id)}
           </button>
@@ -308,7 +308,7 @@ export default function GearPanel({
                   />
                 </button>
                 {worn && (
-                  <span className="pointer-events-none absolute -top-1 -right-1 rounded-full bg-jade px-1 text-[9px] font-bold text-ink">
+                  <span className="pointer-events-none absolute -top-1 -right-1 rounded-full bg-jade px-1 text-[11px] font-bold text-ink">
                     {nameOf(worn).split(" ").at(-1)![0]}
                   </span>
                 )}
@@ -341,7 +341,7 @@ export default function GearPanel({
                   onClick={() =>
                     commit({ type: "equip", character, item: one.id })
                   }
-                  className={buttonVariants({ size: "sm", className: "min-h-8 px-2 text-xs" })}
+                  className={buttonVariants({ size: "sm", className: "min-h-8 pointer-coarse:min-h-11 px-2 text-caption" })}
                 >
                   Mặc cho {nameOf(character)}
                 </button>
@@ -353,7 +353,7 @@ export default function GearPanel({
                   onClick={() =>
                     commit({ type: "unequip", character: wearer, item: one.id })
                   }
-                  className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 px-2 text-xs" })}
+                  className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 pointer-coarse:min-h-11 px-2 text-caption" })}
                 >
                   Tháo
                 </button>
@@ -362,7 +362,7 @@ export default function GearPanel({
                 type="button"
                 disabled={disabled}
                 onClick={() => commit({ type: "sell", item: one.id })}
-                className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 px-2 text-xs" })}
+                className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 pointer-coarse:min-h-11 px-2 text-caption" })}
               >
                 Bán +{SELL_GOLD[one.tier]}
               </button>
@@ -392,7 +392,7 @@ export default function GearPanel({
           <button
             type="button"
             onClick={() => setPicked([])}
-            className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 px-2 text-xs" })}
+            className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 pointer-coarse:min-h-11 px-2 text-caption" })}
           >
             Bỏ chọn
           </button>

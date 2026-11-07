@@ -46,14 +46,14 @@ export function LoginScene({
         <LoginForm username={q.username} error={q.error} />
         {mail && (
           <p className="-mt-1 text-right text-sm">
-            <AuthSceneLink scene="FORGOT_PASSWORD" className="text-on-wood-soft hover:text-primary hover:underline">
+            <AuthSceneLink scene="FORGOT_PASSWORD" className="ui-link text-on-wood-soft hover:text-primary hover:underline">
               Quên mật khẩu?
             </AuthSceneLink>
           </p>
         )}
         <p className="text-center text-sm text-on-wood-soft">
           Chưa có tài khoản?{" "}
-          <AuthSceneLink scene="REGISTER" className="font-semibold text-primary hover:underline">
+          <AuthSceneLink scene="REGISTER" className="ui-link font-semibold text-primary hover:underline">
             Đăng ký
           </AuthSceneLink>
         </p>
@@ -79,7 +79,7 @@ export function RegisterScene({ q, providers, mail }: { q: AuthParams; providers
         <RegisterForm username={q.username} error={q.error} mail={mail} />
         <p className="text-center text-sm text-on-wood-soft">
           Đã có tài khoản?{" "}
-          <AuthSceneLink scene="LOGIN" className="font-semibold text-primary hover:underline">
+          <AuthSceneLink scene="LOGIN" className="ui-link font-semibold text-primary hover:underline">
             Đăng nhập
           </AuthSceneLink>
         </p>
@@ -152,7 +152,7 @@ export function AccountScene({
                 </OnArrival>
               )}
               <details open={q.error !== null} className="mt-2">
-                <summary className="cursor-pointer text-on-wood-soft">Đổi mật khẩu</summary>
+                <summary className="cursor-pointer text-on-wood-soft pointer-coarse:py-3.5">Đổi mật khẩu</summary>
                 <div className="mt-3">
                   <ChangePasswordForm error={q.error} />
                 </div>
@@ -160,7 +160,7 @@ export function AccountScene({
             </>
           ) : (
             <details open={q.error !== null}>
-              <summary className="cursor-pointer text-on-wood-soft">Thêm tên đăng nhập và mật khẩu</summary>
+              <summary className="cursor-pointer text-on-wood-soft pointer-coarse:py-3.5">Thêm tên đăng nhập và mật khẩu</summary>
               <div className="mt-3">
                 <RegisterForm returnTo={here} username={q.username} error={q.error} label="Lưu tên đăng nhập" mail={mail} />
               </div>
@@ -179,7 +179,7 @@ export function AccountScene({
               <Alert tone="warning" className="p-2 text-caption">Chưa có email thì quên mật khẩu là không lấy lại được.</Alert>
             )}
             <details open={q.emailError !== null}>
-              <summary className="cursor-pointer text-on-wood-soft">{account.email ? "Đổi email" : "Thêm email để lấy lại mật khẩu"}</summary>
+              <summary className="cursor-pointer text-on-wood-soft pointer-coarse:py-3.5">{account.email ? "Đổi email" : "Thêm email để lấy lại mật khẩu"}</summary>
               <div className="mt-3">
                 <EmailForm current={account.email} error={q.emailError} />
               </div>
@@ -216,7 +216,7 @@ export function ForgotPasswordScene({ q, mail }: { q: AuthParams; mail: boolean 
           </>
         )}
         <p className="text-center text-sm text-on-wood-soft">
-          <AuthSceneLink scene="LOGIN" className="font-semibold text-primary hover:underline">
+          <AuthSceneLink scene="LOGIN" className="ui-link font-semibold text-primary hover:underline">
             Quay lại đăng nhập
           </AuthSceneLink>
         </p>
@@ -237,7 +237,7 @@ export function ResetPasswordScene({ q }: { q: AuthParams }) {
           </Alert>
         )}
         <p className="text-center text-sm text-on-wood-soft">
-          <AuthSceneLink scene="FORGOT_PASSWORD" className="font-semibold text-primary hover:underline">
+          <AuthSceneLink scene="FORGOT_PASSWORD" className="ui-link font-semibold text-primary hover:underline">
             Gửi lại thư đặt lại mật khẩu
           </AuthSceneLink>
         </p>

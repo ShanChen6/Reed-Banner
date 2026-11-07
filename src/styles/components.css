@@ -202,6 +202,11 @@
     color: var(--ink);
     box-shadow: inset 0 0 28px #7a52228c;
   }
+  /* Liên kết chữ trong câu: trên màn cảm ứng mở rộng vùng chạm tới ~44px mà không đổi bố cục dòng chữ. */
+  .ui-link { position: relative; }
+  @media (pointer: coarse) {
+    .ui-link::after { content: ""; position: absolute; inset: -0.85rem -0.5rem; }
+  }
   .ui-frame-inset {
     border: 1px solid var(--frame-line-soft);
     border-radius: 0.5rem;

@@ -4,7 +4,8 @@
 // (chu kỳ hiện tại). Không dẫn sang trang Công Trạng. Bảng Trận Đồ và Tầm Tướng Ký nằm trong màn của chúng.
 
 import { OrnateFrame, SectionTitle } from "@/components/game-ui";
-import { useEffect, useState, type ReactNode } from "react";
+import { buttonVariants } from "@/components/ui";
+import { Children, useEffect, useState, type ReactNode } from "react";
 
 export interface SeasonBoardResponse {
   readonly board?: string;
@@ -49,8 +50,26 @@ export function BoardNote({ children }: { children: ReactNode }) {
 export function BoardEmpty({ children }: { children: ReactNode }) {
   return <p className="py-6 text-center text-sm text-on-wood-soft">{children}</p>;
 }
-export function RankList({ children }: { children: ReactNode }) {
-  return <ol className="flex flex-col gap-1 text-sm">{children}</ol>;
+/** Bảng xếp hạng: hiện `initial` dòng đầu, còn lại mở bằng nút (bảng mùa có tới 50 dòng, dài trên điện thoại). */
+export function RankList({ children, initial = 10 }: { children: ReactNode; initial?: number }) {
+  const items = Children.toArray(children);
+  const [all, setAll] = useState(false);
+  const shown = all ? items : items.slice(0, initial);
+  return (
+    <>
+      <ol className="flex flex-col gap-1 text-sm">{shown}</ol>
+      {items.length > initial && (
+        <button
+          type="button"
+          aria-expanded={all}
+          onClick={() => setAll((v) => !v)}
+          className={buttonVariants({ variant: "secondary", className: "mt-2 w-full sm:w-auto" })}
+        >
+          {all ? "Thu gọn" : `Xem thêm ${items.length - initial} dòng`}
+        </button>
+      )}
+    </>
+  );
 }
 export function MyRank({ children }: { children: ReactNode }) {
   return <p className="text-sm font-semibold text-title-on-wood">{children}</p>;

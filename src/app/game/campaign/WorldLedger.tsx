@@ -45,7 +45,7 @@ export default function WorldLedger({
       >
         Sổ thế cục 12 vùng · {ledger.resolvedCount}/12 có kết cục
       </h3>
-      <ul className="mb-2 grid grid-cols-2 gap-1 text-xs">
+      <ul className="mb-2 grid grid-cols-2 gap-1 text-caption">
         {CAMPAIGN_LEDGER_GROUPS.map((group) => (
           <li
             key={group}
@@ -60,7 +60,7 @@ export default function WorldLedger({
       </ul>
       {CAMPAIGN_LEDGER_GROUPS.map((group) => (
         <div key={group} className="mb-1">
-          <p className="text-xs font-semibold text-frame-gold">
+          <p className="text-caption font-semibold text-frame-gold">
             {GROUP_NAME[group]}
           </p>
           <ul className="flex flex-col gap-0.5">
@@ -69,7 +69,7 @@ export default function WorldLedger({
               .map(({ resolution: r, view }) => (
                 <li
                   key={r.faction}
-                  className="flex justify-between gap-2 text-xs"
+                  className="flex justify-between gap-2 text-caption"
                 >
                   <span className="shrink-0">
                     {companionById(r.faction)?.name ?? r.faction}
@@ -84,7 +84,7 @@ export default function WorldLedger({
           </ul>
         </div>
       ))}
-      <p className="mt-2 text-xs text-on-wood-soft">
+      <p className="mt-2 text-caption text-on-wood-soft">
         {ledger.allResolved
           ? `Đủ 12 vùng có kết cục; ${CAMPAIGN_UNIFICATION_NODE} đã có thể mở. Đây là bốn loại kết cục khác nhau, không phải mười hai trận thắng.`
           : `${CAMPAIGN_UNIFICATION_NODE} chỉ mở khi đủ 12 vùng có kết cục. Còn thiếu: ${ledger.missingMissions.join(", ")}.`}

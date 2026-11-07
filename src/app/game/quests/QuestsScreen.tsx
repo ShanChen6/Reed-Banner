@@ -110,7 +110,7 @@ export default function QuestsScreen({
     ? profile.quests.checkIn.streak
     : nextStreak(profile.quests, now);
 
-  const sections: { title: string; note: string; rows: Row[] }[] = [
+  const sections: { title: string; note: string; rows: Row[]; grouped?: boolean }[] = [
     {
       title: "Nhiệm vụ ngày",
       note: ttk
@@ -125,7 +125,8 @@ export default function QuestsScreen({
     },
     {
       title: "Thành tựu",
-      note: "Mỗi thành tựu nhận một lần.",
+      note: "Mỗi thành tựu nhận một lần. Nhóm có thể nhận thưởng tự mở.",
+      grouped: true,
       rows: ACHIEVEMENTS.filter(
         (a) =>
           (tamTuongKy || !isTamTuongKyAchievement(a.id)) &&
@@ -191,48 +192,104 @@ export default function QuestsScreen({
         {sections.map((sec) => (
           <OrnateFrame key={sec.title} className="flex flex-col">
             <SectionTitle description={sec.note}>{sec.title}</SectionTitle>
-            <ul className="flex flex-col gap-2">
-              {sec.rows.map((r) => (
-                <FrameInset key={r.id} className="flex items-center gap-2 p-2.5">
-                  <div className="min-w-0 flex-1">
-                    <p className="font-semibold">{r.title}</p>
-                    <div className="mt-1 flex items-center gap-2 text-caption text-on-wood-soft">
-                      <div
-                        className="h-2 flex-1 overflow-hidden rounded-full bg-black/50"
-                        role="meter"
-                        aria-label={r.title}
-                        aria-valuenow={r.value}
-                        aria-valuemin={0}
-                        aria-valuemax={r.target}
-                      >
-                        <div
-                          className={`h-full ${r.done ? "bg-jade" : "bg-frame-gold"}`}
-                          style={{ width: `${(100 * r.value) / r.target}%` }}
-                        />
-                      </div>
-                      <span className="tabular-nums">
-                        {r.value}/{r.target}
-                      </span>
-                    </div>
-                  </div>
-                  <Button
-                    size="sm"
-                    variant={r.done && !r.claimed ? "secondary" : "ghost"}
-                    disabled={busy || !r.done || r.claimed}
-                    onClick={() => void act(r.action)}
-                    className={`w-24 shrink-0 text-caption ${r.done && !r.claimed ? "border-frame-gold text-title-on-wood" : "text-on-wood-soft"}`}
-                  >
-                    {r.claimed ? "Đã nhận" : `${r.gold} vàng${r.tickets ? ` +${r.tickets} phiếu` : ""}`}
-                  </Button>
-                </FrameInset>
-              ))}
-            </ul>
+            {sec.grouped ? (
+              <div className="flex flex-col gap-2">
+                {groupRows(sec.rows).map((g) => (
+                  <QuestGroup key={g.id} title={g.title} rows={g.rows} busy={busy} onClaim={(r) => void act(r.action)} />
+                ))}
+              </div>
+            ) : (
+              <ul className="flex flex-col gap-2">
+                {sec.rows.map((r) => (
+                  <QuestItem key={r.id} r={r} busy={busy} onClaim={(row) => void act(row.action)} />
+                ))}
+              </ul>
+            )}
           </OrnateFrame>
         ))}
       </div>
 
       <PlacesPanel collected={profile.formation?.collection ?? []} />
     </Shell>
+  );
+}
+
+/** Nhóm thành tựu theo chủ đề để danh sách dài gập được (trang Nhiệm vụ trên điện thoại từng cao ~6600px). */
+const ACHIEVEMENT_GROUPS: readonly { id: string; title: string; match: (id: string) => boolean }[] = [
+  { id: "battle", title: "Chiến trận", match: (id) => /^a\.(win|survival)/.test(id) },
+  { id: "campaign", title: "Bình Loạn", match: (id) => id === "a.chapter1" || id === "a.campaign" },
+  { id: "habit", title: "Chuyên cần", match: (id) => id === "a.daily7" || id === "a.streak7" },
+  { id: "level", title: "Cấp độ", match: (id) => id.startsWith("a.level") },
+  { id: "places", title: "Địa danh", match: (id) => id.startsWith("a.places") },
+  { id: "ttk", title: "Tầm Tướng Ký", match: isTamTuongKyAchievement },
+];
+
+const claimable = (r: Row) => r.done && !r.claimed;
+
+/** Chia thành tựu vào nhóm (giữ thứ tự khai báo); mỗi nhóm đưa món nhận được lên đầu, món đã nhận xuống cuối. */
+function groupRows(rows: readonly Row[]): { id: string; title: string; rows: Row[] }[] {
+  const groups = [...ACHIEVEMENT_GROUPS, { id: "other", title: "Khác", match: () => true }].map((g) => ({ id: g.id, title: g.title, rows: [] as Row[] }));
+  for (const r of rows) {
+    const i = [...ACHIEVEMENT_GROUPS].findIndex((g) => g.match(r.id));
+    groups[i === -1 ? groups.length - 1 : i]!.rows.push(r);
+  }
+  const rank = (r: Row) => (claimable(r) ? 0 : r.claimed ? 2 : 1);
+  return groups.filter((g) => g.rows.length > 0).map((g) => ({ ...g, rows: [...g.rows].sort((x, y) => rank(x) - rank(y)) }));
+}
+
+function QuestItem({ r, busy, onClaim }: { r: Row; busy: boolean; onClaim: (r: Row) => void }) {
+  return (
+    <FrameInset className="flex items-center gap-2 p-2.5">
+      <div className="min-w-0 flex-1">
+        <p className="font-semibold">{r.title}</p>
+        <div className="mt-1 flex items-center gap-2 text-caption text-on-wood-soft">
+          <div
+            className="h-2 flex-1 overflow-hidden rounded-full bg-black/50"
+            role="meter"
+            aria-label={r.title}
+            aria-valuenow={r.value}
+            aria-valuemin={0}
+            aria-valuemax={r.target}
+          >
+            <div className={`h-full ${r.done ? "bg-jade" : "bg-frame-gold"}`} style={{ width: `${(100 * r.value) / r.target}%` }} />
+          </div>
+          <span className="tabular-nums">
+            {r.value}/{r.target}
+          </span>
+        </div>
+      </div>
+      <Button
+        size="sm"
+        variant={claimable(r) ? "secondary" : "ghost"}
+        disabled={busy || !claimable(r)}
+        onClick={() => onClaim(r)}
+        className={`w-24 shrink-0 text-caption ${claimable(r) ? "border-frame-gold text-title-on-wood" : "text-on-wood-soft"}`}
+      >
+        {r.claimed ? "Đã nhận" : `${r.gold} vàng${r.tickets ? ` +${r.tickets} phiếu` : ""}`}
+      </Button>
+    </FrameInset>
+  );
+}
+
+/** Nhóm gập được: mở sẵn khi có thưởng chờ nhận; tiêu đề cho biết đã nhận bao nhiêu và còn bao nhiêu nhận được. */
+function QuestGroup({ title, rows, busy, onClaim }: { title: string; rows: Row[]; busy: boolean; onClaim: (r: Row) => void }) {
+  const ready = rows.filter(claimable).length;
+  const got = rows.filter((r) => r.claimed).length;
+  const [open, setOpen] = useState(ready > 0);
+  return (
+    <details open={open} onToggle={(e) => setOpen(e.currentTarget.open)} className="ui-frame-inset group">
+      <summary className="flex min-h-11 cursor-pointer items-center gap-2 px-3 py-2 font-semibold text-title-on-wood">
+        <span aria-hidden className="text-frame-gold transition group-open:rotate-90">›</span>
+        <span className="min-w-0 flex-1 truncate">{title}</span>
+        {ready > 0 && <span className="rounded-full bg-jade/20 px-2 text-caption font-bold text-jade">{ready} nhận được</span>}
+        <span className="text-caption tabular-nums text-on-wood-soft">{got}/{rows.length}</span>
+      </summary>
+      <ul className="flex flex-col gap-2 p-2 pt-0">
+        {rows.map((r) => (
+          <QuestItem key={r.id} r={r} busy={busy} onClaim={onClaim} />
+        ))}
+      </ul>
+    </details>
   );
 }
 

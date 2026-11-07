@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 // giấy dó chữ mực (lớp .ui-choice trong src/styles/components.css). Không có hook nên dùng được ở server lẫn client.
 
 const sizes = {
-  sm: "min-h-8 px-3 py-1 text-sm",
+  sm: "min-h-8 pointer-coarse:min-h-11 px-3 py-1 text-sm",
   md: "min-h-11 px-4 py-2 text-base",
 } as const;
 

@@ -2,6 +2,7 @@
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { FrameInset, ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { Alert, Button, ChoiceChip } from "@/components/ui";
+import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   DESTINY_BOON_CATALOG,
@@ -94,6 +95,9 @@ export default function DestinyScreen() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
+  // Danh sách tướng chọn vào đội: cắt trang 12 (chọn giữ nguyên khi sang trang). Hook đặt trước các return sớm.
+  const rosterIds = useMemo(() => (profile ? Object.keys(profile.companions).sort() : []), [profile]);
+  const pagedRoster = usePagedItems(rosterIds, 12);
 
   const load = useCallback(async () => {
     const [destiny, stored] = await Promise.all([
@@ -219,7 +223,7 @@ export default function DestinyScreen() {
             Cần tối thiểu {DESTINY_ROSTER_MIN} tướng: Đinh Bộ Lĩnh và ít nhất 2 tướng sở hữu. Có thể mang toàn bộ tướng đã sở hữu.
           </p>
           <div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-3">
-            {Object.keys(profile.companions).sort().map((id) => {
+            {pagedRoster.pageItems.map((id) => {
               const companion = companionById(id);
               if (!companion) return null;
               const selected = roster.includes(id);
@@ -236,6 +240,7 @@ export default function DestinyScreen() {
               );
             })}
           </div>
+          <PageControls paged={pagedRoster} label="Phân trang tướng" className="mt-2" />
           <Button disabled={busy || roster.length < DESTINY_ROSTER_MIN} onClick={() => void startRun()} className="mt-4 min-h-11">
             {busy ? "Đang bắt đầu…" : `Bắt đầu với ${roster.length} tướng`}
           </Button>

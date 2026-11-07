@@ -55,7 +55,7 @@ function HomeButton() {
       <SceneLink
         scene="MENU"
         title="Về Chiến trường"
-        className="game-header-btn game-header-chip flex h-10 min-w-11 shrink-0 items-center justify-center gap-2 rounded-md px-2.5 font-serif font-semibold whitespace-nowrap md:px-4"
+        className="game-header-btn game-header-chip flex h-10 pointer-coarse:h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-md px-2.5 font-serif font-semibold whitespace-nowrap md:px-4"
       >
         <svg aria-hidden viewBox="0 0 24 24" className="size-5 text-[var(--hdr-gold)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
           <path d="M3.5 11.5 12 4l8.5 7.5" />

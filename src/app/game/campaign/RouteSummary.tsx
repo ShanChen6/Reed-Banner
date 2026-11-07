@@ -18,7 +18,7 @@ import { AtlasCorners } from "./AtlasFrame";
 import { FACTION_STATUS_TEXT } from "./StoryBeats";
 
 const FOCUS =
-  "focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:outline-none";
+  "focus-visible:ring-2 focus-visible:ring-frame-gold-hi focus-visible:outline-none";
 
 /** Kết cục kèm cách kể, theo phân loại ledger (resolutionMethod). */
 export const METHOD_TEXT: Readonly<Record<string, string>> = {
@@ -57,7 +57,7 @@ function RouteColumn({
       >
         <span>
           {route.name}
-          <span className="atlas-muted ml-1.5 text-xs font-normal">
+          <span className="atlas-muted ml-1.5 text-caption font-normal">
             Chương {ROUTE_ROMAN[route.chapter]}
           </span>
         </span>
@@ -79,7 +79,7 @@ function RouteColumn({
                 {r.state === "completed" ? "✓ " : ""}
                 {regionName(r.place, r.mission)}
               </span>
-              <span className="atlas-muted text-xs">
+              <span className="atlas-muted text-caption">
                 {r.faction?.resolved
                   ? `${companionById(r.faction.faction)?.name ?? r.faction.faction}: ${METHOD_TEXT[r.faction.resolutionMethod] ?? FACTION_STATUS_TEXT[r.faction.status].toLowerCase()}`
                   : r.state === "open"
@@ -161,7 +161,7 @@ export default function RouteSummary({
           {finaleDone ? "✓ " : ""}
           {finale.title}
         </button>
-        <span className="atlas-muted min-w-0 flex-1 text-xs">
+        <span className="atlas-muted min-w-0 flex-1 text-caption">
           {finaleDone
             ? "Đã qua Đỗ Động."
             : gate.ready
@@ -170,7 +170,7 @@ export default function RouteSummary({
         </span>
       </div>
       {allDone && (
-        <p className="atlas-muted px-1 text-xs">
+        <p className="atlas-muted px-1 text-caption">
           Xem lại nhiệm vụ không ghi thêm gì. Đánh lại trận chỉ nhận thưởng trận
           thường; thưởng nhiệm vụ và thế cục sứ quân đã ghi một lần.
         </p>
