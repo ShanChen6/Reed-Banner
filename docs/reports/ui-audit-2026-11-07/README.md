@@ -154,3 +154,9 @@ Giới hạn: chưa chạy luồng tới hết trận (server thật cần dữ 
 - **Ô bàn cờ Khai Lộ** 30–33px (xem mục 4).
 - Số đo "chữ dưới 13px" ở Thao Luyện (12 điểm) là số phím và chi phí NL phủ trên icon kỹ năng, thuộc ngoại lệ.
 - Các màn sau đăng nhập mới được đo với **hồ sơ mới trống**; trạng thái có nhiều dữ liệu (bảng xếp hạng dài, nhiều thành tựu đã nhận) chưa đo.
+
+### Doanh Trại vào khung card chung (07/11/2026)
+
+| Việc | Trạng thái |
+| --- | --- |
+| Thanh tab và nội dung ba tab (Tướng sĩ, Đội hình, Kho đồ) trước đây nằm rời, không có khung bao. Nay gói trong một `OrnateFrame level="raised"` như Cửa hàng và Nhiệm vụ; các khung con (`barracks-panel`) đổi sang kiểu ô lõm của `.ui-frame-inset` để không lồng hai lớp khung. Chiều cao danh sách tướng trừ thêm phần đệm của khung. Chụp 1440, 1024, 360px ba tab: không tràn ngang, không lỗi | Đã làm |
