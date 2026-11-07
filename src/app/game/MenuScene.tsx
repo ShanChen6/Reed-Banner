@@ -6,13 +6,15 @@
 
 import { MODE_CONTENT_WIDTH } from "@/components/game-ui";
 import Image from "next/image";
-import { useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { Logo } from "./art/logo";
-import { ONLINE_BATTLE_KEY } from "./battle/online";
+import { fetchProfile, ONLINE_BATTLE_KEY } from "./battle/online";
 import { AtlasCorners } from "./campaign/AtlasFrame";
 import type { ShellAccount, TowerFeatures } from "./GameShell";
+import { heroPlan, type HeroAction } from "./heroContext";
 import { MODE_TEXT } from "./modeInfo";
 import type { Scene } from "./scene";
+import type { Profile } from "@/core";
 import { SceneLink } from "./SceneContext";
 
 const HERO_ART = "/art/campaign/bg/hoalu.webp";
@@ -92,6 +94,16 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
     hasSavedBattle,
     () => false,
   );
+  // Hồ sơ người chơi (kể cả khách) để đổi nút chính theo ngữ cảnh: undefined = đang tải, null = không tải được.
+  const [profile, setProfile] = useState<Profile | null | undefined>(undefined);
+  useEffect(() => {
+    let live = true;
+    void fetchProfile().then((r) => live && setProfile(r.profile ?? null));
+    return () => {
+      live = false;
+    };
+  }, []);
+  const plan = profile === undefined ? null : heroPlan(profile, saved);
   const locked = (scene: Scene) =>
     scene === "TRIAL"
       ? !towerFeatures.trial
@@ -125,19 +137,21 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
               Dẹp loạn mười hai sứ quân, dựng lại giang sơn Đại Việt.
             </p>
             <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
-              <SceneLink scene="PLAYING" className="home-cta flex min-h-12 items-center justify-center rounded-lg px-8 font-serif text-lg font-bold tracking-[0.12em] uppercase">
-                Vào trận
-              </SceneLink>
-              {saved && (
-                <SceneLink
-                  scene="PLAYING"
-                  params={{ resume: "1" }}
-                  className="home-secondary flex min-h-12 items-center justify-center rounded-lg px-6 font-serif font-semibold"
-                >
-                  Tiếp tục trận dở
-                </SceneLink>
+              {plan ? (
+                <>
+                  <HeroLink action={plan.primary} className="home-cta px-8 text-lg font-bold tracking-[0.12em] uppercase" />
+                  {plan.secondary && <HeroLink action={plan.secondary} className="home-secondary px-6 font-semibold" />}
+                </>
+              ) : (
+                /* Khung chờ cùng kích thước với nút chính để bố cục không nhảy khi hồ sơ tải xong. */
+                <span aria-busy="true" role="status" className="home-cta flex min-h-12 animate-pulse items-center justify-center rounded-lg px-8 font-serif text-lg font-bold tracking-[0.12em] uppercase opacity-60">
+                  Đang chuẩn bị…
+                </span>
               )}
             </div>
+            {plan?.hint && (
+              <p className="max-w-md text-[15px] leading-snug text-[var(--atlas-ink-on-wood)]/90 [text-shadow:0_1px_3px_#000]">{plan.hint}</p>
+            )}
             {!account && (
               <p className="text-sm text-[var(--atlas-ink-on-wood)]/85 [text-shadow:0_1px_3px_#000]">
                 Đang chơi với tư cách khách, tiến độ gắn với trình duyệt này.
@@ -186,6 +200,15 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
         </section>
       </div>
     </main>
+  );
+}
+
+/** Nút ở hero: dạng viên chữ serif, cùng chiều cao 48px; `className` quyết định nút chính hay phụ. */
+function HeroLink({ action, className }: { action: HeroAction; className: string }) {
+  return (
+    <SceneLink scene={action.scene} params={action.params} className={`${className} flex min-h-12 items-center justify-center rounded-lg font-serif`}>
+      {action.label}
+    </SceneLink>
   );
 }
 
