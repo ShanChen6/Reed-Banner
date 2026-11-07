@@ -49,7 +49,7 @@ export default function FactionDossiers({
           return (
             <li key={r.faction}>
               <details className="rounded-md border border-frame-line-soft bg-wood-inset p-2">
-                <summary className="cursor-pointer font-semibold text-on-wood">
+                <summary className="cursor-pointer font-semibold text-on-wood pointer-coarse:py-3.5">
                   {companionById(r.faction)?.name ?? r.faction}
                   <span className="ml-1 text-xs font-normal text-on-wood-soft">
                     · {GROUP_NAME[r.group]}

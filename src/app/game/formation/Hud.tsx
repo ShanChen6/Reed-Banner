@@ -149,7 +149,7 @@ export function TutorialTip({ text, onDismiss }: { text: string; onDismiss: () =
     <div role="note" className="flex items-start gap-3 rounded-lg border border-frame-gold/60 bg-frame-gold/15 p-3 text-[15px] leading-snug">
       <span aria-hidden className="mt-0.5 rounded-full bg-lacquer px-2 py-0.5 text-xs font-bold text-[#FFE9B0]">Mẹo</span>
       <p className="flex-1">{text}</p>
-      <button type="button" onClick={onDismiss} className="min-h-9 shrink-0 rounded border border-frame-bronze/60 px-3 text-sm font-semibold">Đã hiểu</button>
+      <button type="button" onClick={onDismiss} className="min-h-9 pointer-coarse:min-h-11 shrink-0 rounded border border-frame-bronze/60 px-3 text-sm font-semibold">Đã hiểu</button>
     </div>
   );
 }

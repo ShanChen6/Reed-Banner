@@ -91,7 +91,7 @@ export default function Armory({
               setMerging(!merging);
               setTray([]);
             }}
-            className={`barracks-btn flex min-h-10 items-center gap-1.5 rounded-md px-3 text-[15px] ${merging ? "is-on" : ""}`}
+            className={`barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-md px-3 text-[15px] ${merging ? "is-on" : ""}`}
           >
             <GearActionIcon action="merge" className="size-6" />
             {merging ? "Thoát ghép" : "Ghép đồ"}
@@ -109,19 +109,19 @@ export default function Armory({
                   setShelf(s.id);
                   setSlotFilter("all");
                 }}
-                className={`barracks-btn min-h-9 rounded-md px-3 text-[15px] ${shelf === s.id ? "is-on" : ""}`}
+                className={`barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-3 text-[15px] ${shelf === s.id ? "is-on" : ""}`}
               >
                 {s.name} <span className="text-sm opacity-75 tabular-nums">{n}</span>
               </button>
             );
           })}
           {slots.length > 1 && (
-            <label className="barracks-field ml-auto flex min-h-9 items-center rounded-md">
+            <label className="barracks-field ml-auto flex min-h-9 pointer-coarse:min-h-11 items-center rounded-md">
               <span className="sr-only">Lọc theo ô</span>
               <select
                 value={slotFilter}
                 onChange={(e) => setSlotFilter(e.target.value as GearSlot | "all")}
-                className="min-h-9 cursor-pointer bg-transparent px-2 text-[15px] text-stone-100 outline-none"
+                className="min-h-9 pointer-coarse:min-h-11 cursor-pointer bg-transparent px-2 text-[15px] text-stone-100 outline-none"
               >
                 <option value="all" className="bg-stone-900">Mọi ô</option>
                 {slots.map((s) => (
@@ -141,7 +141,7 @@ export default function Armory({
           {items.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-10 text-center text-[15px] text-[var(--bk-soft)]">
               <p>{profile.bag.length === 0 ? "Kho đồ trống. Thắng trận chắc chắn rơi 1 món." : "Không có món nào thuộc loại này."}</p>
-              <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 items-center gap-1.5 rounded-md px-4">
+              <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-md px-4">
                 <ShopGlyph className="size-4" /> Mua ở Cửa hàng
               </SceneLink>
             </div>
@@ -239,7 +239,7 @@ function ItemPanel({
           <select
             value={to}
             onChange={(e) => onTarget(e.target.value)}
-            className="barracks-field min-h-10 rounded-md bg-transparent px-2 text-[15px] text-stone-100"
+            className="barracks-field min-h-10 pointer-coarse:min-h-11 rounded-md bg-transparent px-2 text-[15px] text-stone-100"
           >
             {who.map((id) => (
               <option key={id} value={id} className="bg-stone-900">
@@ -253,19 +253,19 @@ function ItemPanel({
         </p>
         <div className="flex flex-wrap gap-2">
           {wearer !== to && (
-            <button type="button" disabled={busy} onClick={() => onAction({ type: "equip", character: to, item: item.id })} className="barracks-btn is-action min-h-10 rounded-md px-3 disabled:opacity-50">
+            <button type="button" disabled={busy} onClick={() => onAction({ type: "equip", character: to, item: item.id })} className="barracks-btn is-action min-h-10 pointer-coarse:min-h-11 rounded-md px-3 disabled:opacity-50">
               {wearer ? `Chuyển sang ${nameOf(to)}` : `Mặc cho ${nameOf(to)}`}
             </button>
           )}
           {wearer && (
-            <button type="button" disabled={busy} onClick={() => onAction({ type: "unequip", character: wearer, item: item.id })} className="barracks-btn min-h-10 rounded-md px-3 disabled:opacity-50">
+            <button type="button" disabled={busy} onClick={() => onAction({ type: "unequip", character: wearer, item: item.id })} className="barracks-btn min-h-10 pointer-coarse:min-h-11 rounded-md px-3 disabled:opacity-50">
               Tháo khỏi {nameOf(wearer)}
             </button>
           )}
         </div>
       </div>
 
-      <button type="button" disabled={busy} onClick={() => onAction({ type: "sell", item: item.id }, onSold)} className="barracks-btn flex min-h-10 items-center gap-1.5 self-start rounded-md px-3 disabled:opacity-50">
+      <button type="button" disabled={busy} onClick={() => onAction({ type: "sell", item: item.id }, onSold)} className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 self-start rounded-md px-3 disabled:opacity-50">
         <GearActionIcon action="sell" className="size-6" />
         Bán lấy {SELL_GOLD[item.tier]} vàng{wearer ? " (tháo ra trước)" : ""}
       </button>

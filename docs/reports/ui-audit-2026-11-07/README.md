@@ -105,8 +105,15 @@ File nhiều nhất: `battle/DemoGame.tsx` (21), `profile/HeroDetail.tsx` (12), 
 5. **Dọn màu và cỡ viết tay** theo danh sách file ở trên, bắt đầu từ `DemoGame.tsx`.
 6. **Đo lại sau đăng nhập** các màn đang bị khóa, rồi thêm kiểm tra tự động (đo tràn ngang, vùng chạm, cấm màu mới) để khóa chất lượng.
 
-## Cần xác nhận trước khi sửa
+## Quyết định đã chốt (07/11/2026)
 
-- Mốc thiết bị mục tiêu nhỏ nhất (đang giả định 360–390px).
-- Có chấp nhận vùng chạm 44px chỉ áp dụng cho màn cảm ứng (`pointer: coarse`) để máy tính vẫn gọn không.
-- Quy tắc chữ nhỏ nhất 13px áp dụng cho cả số liệu trong trận hay có ngoại lệ.
+- Mốc nhỏ nhất: **360px**.
+- Vùng chạm 44px chỉ áp cho màn cảm ứng (`pointer: coarse`); máy tính giữ gọn.
+- Cỡ chữ: chữ đọc và điều khiển ≥ 13px; số liệu trong trận bớt nhãn thay vì giảm chữ; ngoại lệ duy nhất là chữ phủ lên biểu tượng (≥ 11px, không phải nguồn thông tin duy nhất). Chi tiết ở [theme.md](../../05-ui-ux/design-system/theme.md).
+
+## Tiến độ sửa
+
+| Bước | Trạng thái |
+| --- | --- |
+| 1. Component chung: vùng chạm (`Button sm`, `ChoiceChip sm`, `Input`, nút header, `summary`, `ui-link`, ô Độ khó, thanh trượt) | Đã làm 07/11/2026; đo lại ở giả lập cảm ứng 390px: Nhiệm vụ 49 → 0 nút nhỏ, Chiến trường, sảnh trận 0 |
+| 2–6 | Chưa làm |

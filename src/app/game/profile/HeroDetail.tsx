@@ -173,7 +173,7 @@ export default function HeroDetail({
             aria-selected={sub === t.id}
             aria-controls="hero-sub-panel"
             onClick={() => setSub(t.id)}
-            className={`barracks-tab min-h-10 rounded-md px-2 font-serif text-[15px] font-semibold sm:text-base ${sub === t.id ? "is-on" : ""}`}
+            className={`barracks-tab min-h-10 pointer-coarse:min-h-11 rounded-md px-2 font-serif text-[15px] font-semibold sm:text-base ${sub === t.id ? "is-on" : ""}`}
           >
             {t.name}
           </button>
@@ -215,7 +215,7 @@ function TeamControl({
     );
   if (open !== id)
     return (
-      <button type="button" disabled={busy} onClick={() => setOpen(id)} className="barracks-btn is-action flex min-h-10 items-center gap-1.5 rounded-md px-3 text-[15px] disabled:opacity-50">
+      <button type="button" disabled={busy} onClick={() => setOpen(id)} className="barracks-btn is-action flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-md px-3 text-[15px] disabled:opacity-50">
         <PlusGlyph className="size-4" /> Thêm vào đội hình
       </button>
     );
@@ -233,12 +233,12 @@ function TeamControl({
               if (!e) setOpen(null);
             })
           }
-          className="barracks-btn min-h-10 rounded-md px-3 disabled:opacity-50"
+          className="barracks-btn min-h-10 pointer-coarse:min-h-11 rounded-md px-3 disabled:opacity-50"
         >
           {nameOf(t)}
         </button>
       ))}
-      <button type="button" onClick={() => setOpen(null)} className="min-h-10 rounded-md px-2 text-[var(--bk-soft)] hover:text-stone-100">
+      <button type="button" onClick={() => setOpen(null)} className="min-h-10 pointer-coarse:min-h-11 rounded-md px-2 text-[var(--bk-soft)] hover:text-stone-100">
         Hủy
       </button>
     </div>
@@ -431,7 +431,7 @@ function SkillLine({
             disabled={disabled || cost === null || points < cost}
             onClick={onUp}
             aria-label={cost === null ? `${def.name} đã tối đa` : `Nâng ${def.name} lên cấp ${level + 1}, tốn ${cost} điểm`}
-            className="barracks-btn min-h-9 rounded-md px-2.5 text-sm whitespace-nowrap disabled:opacity-45"
+            className="barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-2.5 text-sm whitespace-nowrap disabled:opacity-45"
           >
             {cost === null ? "Tối đa" : `Nâng · ${cost} điểm`}
           </button>

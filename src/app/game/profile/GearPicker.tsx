@@ -96,7 +96,7 @@ export default function GearPicker({
             <div className="barracks-inset flex flex-col items-center gap-2 rounded-md p-4 text-center text-[15px]">
               <p>Kho chưa có món {SLOT_NAME[slot].toLowerCase()} dùng được cho {name}.</p>
               {otherProfession > 0 && <p className="text-sm text-[var(--bk-soft)]">{otherProfession} vũ khí của nghề khác không dùng được.</p>}
-              <SceneLink scene="SHOP" className="barracks-btn is-action min-h-10 rounded-md px-4 leading-10">
+              <SceneLink scene="SHOP" className="barracks-btn is-action min-h-10 pointer-coarse:min-h-11 rounded-md px-4 leading-10">
                 Mua ở Cửa hàng
               </SceneLink>
             </div>

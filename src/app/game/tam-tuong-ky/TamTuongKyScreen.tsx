@@ -704,7 +704,7 @@ function Library({
             type="button"
             aria-pressed={group === g.id}
             onClick={() => setGroup(g.id)}
-            className={`min-h-8 shrink-0 rounded-full border px-2.5 text-xs whitespace-nowrap ${group === g.id ? "border-[var(--atlas-gold)] bg-[var(--atlas-wood-hi)] text-[var(--atlas-title)]" : "border-[var(--atlas-border-soft)]"}`}
+            className={`min-h-8 pointer-coarse:min-h-11 shrink-0 rounded-full border px-2.5 text-xs whitespace-nowrap ${group === g.id ? "border-[var(--atlas-gold)] bg-[var(--atlas-wood-hi)] text-[var(--atlas-title)]" : "border-[var(--atlas-border-soft)]"}`}
           >
             {g.name}
           </button>
@@ -715,7 +715,7 @@ function Library({
             <select
               value={more.some((g) => g.id === group) ? (group ?? "") : ""}
               onChange={(e) => setGroup(e.target.value || null)}
-              className={`min-h-8 w-full rounded-full border bg-[var(--atlas-wood-lo)] px-2.5 text-xs ${more.some((g) => g.id === group) ? "border-[var(--atlas-gold)] text-[var(--atlas-title)]" : "border-[var(--atlas-border-soft)]"}`}
+              className={`min-h-8 pointer-coarse:min-h-11 w-full rounded-full border bg-[var(--atlas-wood-lo)] px-2.5 text-xs ${more.some((g) => g.id === group) ? "border-[var(--atlas-gold)] text-[var(--atlas-title)]" : "border-[var(--atlas-border-soft)]"}`}
             >
               <option value="">Nhóm khác…</option>
               {more.map((g) => (
@@ -858,10 +858,10 @@ function Altar(props: {
         )}
       </p>
       <div role="group" aria-label={`Gợi ý, còn ${view.hintsLeft}/${view.hintsPerDay} hôm nay`} className="flex items-center gap-2 text-sm">
-        <button type="button" disabled={pending || view.hintsLeft <= 0} onClick={() => props.onHint(1)} className="min-h-10 flex-1 rounded-lg border border-[var(--atlas-border-soft)] px-2 hover:border-[var(--atlas-gold)] disabled:opacity-50">
+        <button type="button" disabled={pending || view.hintsLeft <= 0} onClick={() => props.onHint(1)} className="min-h-10 pointer-coarse:min-h-11 flex-1 rounded-lg border border-[var(--atlas-border-soft)] px-2 hover:border-[var(--atlas-gold)] disabled:opacity-50">
           <HintIcon className="mr-1 inline size-4 align-[-3px]" />Nhóm
         </button>
-        <button type="button" disabled={pending || view.hintsLeft <= 0} onClick={() => props.onHint(2)} className="min-h-10 flex-1 rounded-lg border border-[var(--atlas-border-soft)] px-2 hover:border-[var(--atlas-gold)] disabled:opacity-50">
+        <button type="button" disabled={pending || view.hintsLeft <= 0} onClick={() => props.onHint(2)} className="min-h-10 pointer-coarse:min-h-11 flex-1 rounded-lg border border-[var(--atlas-border-soft)] px-2 hover:border-[var(--atlas-gold)] disabled:opacity-50">
           <HintIcon className="mr-1 inline size-4 align-[-3px]" />Nguyên liệu
         </button>
         <span className="shrink-0 text-xs text-[var(--atlas-muted)] tabular-nums">còn {view.hintsLeft}/{view.hintsPerDay}</span>

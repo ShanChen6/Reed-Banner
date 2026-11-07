@@ -130,7 +130,7 @@ function SkillRow({
             type="button"
             disabled={!canUp || cost === null || points < cost}
             onClick={onUp}
-            className="min-h-8 w-14 shrink-0 px-1 text-[11px] whitespace-nowrap"
+            className="min-h-8 pointer-coarse:min-h-11 w-14 shrink-0 px-1 text-[11px] whitespace-nowrap"
             title={
               cost === null
                 ? "Đã tối đa"
@@ -200,7 +200,7 @@ export default function ProgressPanel({
               onReset();
             }}
             onBlur={() => setConfirmReset(false)}
-            className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 px-2 text-xs" })}
+            className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 pointer-coarse:min-h-11 px-2 text-xs" })}
           >
             {confirmReset ? "Bấm lần nữa để xóa" : "Đặt lại hồ sơ"}
           </button>
