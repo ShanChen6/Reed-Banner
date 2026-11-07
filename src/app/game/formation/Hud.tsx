@@ -121,7 +121,7 @@ export function MobileBar({ state, rules, noMove, disabled, covered, total, onDi
           <p className="truncate text-on-wood-soft">
             {h.kind === "normal" ? `${PROFESSION_NAME[h.profession]} · ${ELEMENT_NAME[h.element]}` : h.kind === "fusion" ? "Dung hợp: khớp mọi quân" : h.kind === "wild" ? "Đặt ở ô trống bất kỳ" : "Chạm vào quân để xóa"}
           </p>
-          <p className="text-xs text-on-wood-soft">Khai thông {pct}%</p>
+          <p className="text-caption text-on-wood-soft">Khai thông {pct}%</p>
         </div>
         <div className="flex flex-col items-center gap-1">
           <HeatFlames heat={state.discardHeat} max={rules.maxHeat} />
@@ -147,7 +147,7 @@ export function tutorialText(state: PuzzleState, noMove: boolean): string | null
 export function TutorialTip({ text, onDismiss }: { text: string; onDismiss: () => void }) {
   return (
     <div role="note" className="flex items-start gap-3 rounded-lg border border-frame-gold/60 bg-frame-gold/15 p-3 text-[15px] leading-snug">
-      <span aria-hidden className="mt-0.5 rounded-full bg-lacquer px-2 py-0.5 text-xs font-bold text-title-on-wood">Mẹo</span>
+      <span aria-hidden className="mt-0.5 rounded-full bg-lacquer px-2 py-0.5 text-caption font-bold text-title-on-wood">Mẹo</span>
       <p className="flex-1">{text}</p>
       <button type="button" onClick={onDismiss} className="min-h-9 pointer-coarse:min-h-11 shrink-0 rounded border border-frame-bronze/60 px-3 text-sm font-semibold">Đã hiểu</button>
     </div>

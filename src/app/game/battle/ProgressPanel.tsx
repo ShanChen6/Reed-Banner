@@ -67,7 +67,7 @@ function XpBar({ p }: { p: CharacterProgress }) {
   const max = p.level >= MAX_LEVEL ? 1 : xpToNext(p.level);
   const cur = p.level >= MAX_LEVEL ? 1 : p.xp - totalXpFor(p.level);
   return (
-    <div className="flex items-center gap-2 text-[11px]">
+    <div className="flex items-center gap-2 text-caption">
       <span className="font-semibold">Cấp {p.level}</span>
       <div
         className="h-1.5 flex-1 overflow-hidden rounded bg-black/20"
@@ -116,7 +116,7 @@ function SkillRow({
       </span>
       {extra}
       {lockedText ? (
-        <span className="text-[10px]">{lockedText}</span>
+        <span className="text-caption">{lockedText}</span>
       ) : (
         <>
           <span className="tabular-nums" aria-label={`Cấp kỹ năng ${level}`}>
@@ -130,7 +130,7 @@ function SkillRow({
             type="button"
             disabled={!canUp || cost === null || points < cost}
             onClick={onUp}
-            className="min-h-8 pointer-coarse:min-h-11 w-14 shrink-0 px-1 text-[11px] whitespace-nowrap"
+            className="min-h-8 pointer-coarse:min-h-11 w-14 shrink-0 px-1 text-caption whitespace-nowrap"
             title={
               cost === null
                 ? "Đã tối đa"
@@ -185,7 +185,7 @@ export default function ProgressPanel({
   return (
     <section
       aria-label="Tiến trình"
-      className="ui-frame-inset rounded-xl p-3 text-xs text-on-wood"
+      className="ui-frame-inset rounded-xl p-3 text-caption text-on-wood"
     >
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-semibold">Tiến trình ({storage})</h2>
@@ -200,7 +200,7 @@ export default function ProgressPanel({
               onReset();
             }}
             onBlur={() => setConfirmReset(false)}
-            className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 pointer-coarse:min-h-11 px-2 text-xs" })}
+            className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-8 pointer-coarse:min-h-11 px-2 text-caption" })}
           >
             {confirmReset ? "Bấm lần nữa để xóa" : "Đặt lại hồ sơ"}
           </button>

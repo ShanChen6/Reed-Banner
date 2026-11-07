@@ -37,7 +37,7 @@ function toggle<T>(list: readonly T[], item: T, order: readonly T[]): T[] {
   return order.filter((x) => next.includes(x));
 }
 
-const rangeClass = "h-2 pointer-coarse:h-6 w-full cursor-pointer accent-frame-gold";
+const rangeClass = "h-2 pointer-coarse:h-11 w-full cursor-pointer accent-frame-gold";
 
 function Slider({ id, label, value, min, max, step = 1, unit, onChange, disabled = false }: { id: string; label: string; value: number; min: number; max: number; step?: number; unit: string; onChange: (n: number) => void; disabled?: boolean }) {
   return (

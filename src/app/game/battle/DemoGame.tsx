@@ -1955,7 +1955,7 @@ export default function DemoGame({
             )}
             {phaseObjective?.type === "breakSiege" &&
               phaseObjective.stage === "escort" && (
-                <span className="block text-xs text-info">
+                <span className="block text-caption text-info">
                   Tình tiết phục vụ lối chơi: đoàn lương và toán chặn đường do
                   game sáng tác.
                 </span>

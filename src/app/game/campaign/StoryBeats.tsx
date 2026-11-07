@@ -23,7 +23,7 @@ export function BasisBadge({ basis }: { basis: StoryBeat["basis"] }) {
   return (
     <span
       title={BASIS_LABEL[basis].hint}
-      className={`inline-block shrink-0 rounded border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase ${BASIS_STYLE[basis]}`}
+      className={`inline-block shrink-0 rounded border px-1.5 py-0.5 text-caption font-semibold tracking-wide uppercase ${BASIS_STYLE[basis]}`}
     >
       {BASIS_LABEL[basis].name}
     </span>
@@ -40,7 +40,7 @@ export function Beats({ beats }: { beats: readonly StoryBeat[] }) {
             <div className="mb-1 flex flex-wrap items-center gap-1.5">
               <BasisBadge basis={b.basis} />
               {b.speaker && (
-                <span className="text-xs text-on-wood-soft">
+                <span className="text-caption text-on-wood-soft">
                   Thoại của {b.speaker}, không phải trích dẫn sử
                 </span>
               )}
@@ -56,7 +56,7 @@ export function Beats({ beats }: { beats: readonly StoryBeat[] }) {
               {b.speaker ? `“${b.text}”` : b.text}
             </p>
             {b.refs && b.refs.length > 0 && (
-              <p className="mt-1 text-[11px] text-on-wood-soft">
+              <p className="mt-1 text-caption text-on-wood-soft">
                 Nguồn: {b.refs.join(", ")}
                 {sources.length > 0 &&
                   ` · ${sources.map((s) => SOURCE_TITLE[s] ?? s).join("; ")}`}
@@ -117,7 +117,7 @@ export function SourceNotes({
       <div className="mt-2 flex flex-col gap-3">
         {notes.map((n) => (
           <section key={n.title}>
-            <h3 className="mb-1 text-xs font-semibold text-info">
+            <h3 className="mb-1 text-caption font-semibold text-info">
               {n.title}
             </h3>
             <Beats beats={n.beats} />

@@ -95,7 +95,7 @@ function FloorNavigator({
               className={choiceVariants({ className: "ui-floor min-h-14 w-full flex-col gap-0 px-1 py-1.5" })}
             >
               <span className="text-lg leading-none">{f.floor.floor}</span>
-              <span className="ui-floor__state mt-1 text-[11px] font-normal" aria-hidden>
+              <span className="ui-floor__state mt-1 text-caption font-normal" aria-hidden>
                 {active === f.floor.floor ? "Đang đánh" : FLOOR_STATE_TEXT[f.state]}
               </span>
             </button>
@@ -244,13 +244,13 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
                     className={choiceVariants({ className: "min-h-14 w-full justify-start p-2 text-left font-normal" })}
                   >
                     <Portrait id={o.id} element={o.element} profession={o.profession} className="size-10 shrink-0" />
-                    <span className="min-w-0 text-xs">
+                    <span className="min-w-0 text-caption">
                       <span className="block truncate text-sm font-semibold">{o.name}</span>
                       <span className="flex items-center gap-1 opacity-80">
                         <ElementIcon element={o.element} className="size-3.5" />
                         {ELEMENT_NAME[o.element]} · {PROFESSION_NAME[o.profession]}
                       </span>
-                      {o.reason && <span className={`block text-[11px] ${o.selected ? "text-lacquer" : "text-danger"}`}>{o.reason}</span>}
+                      {o.reason && <span className={`block text-caption ${o.selected ? "text-lacquer" : "text-danger"}`}>{o.reason}</span>}
                     </span>
                   </button>
                 </li>

@@ -72,7 +72,7 @@ function TeamRow({ fighters, label, align }: { fighters: readonly Fighter[]; lab
                 </span>
               )}
             </div>
-            <span className="w-full truncate text-xs font-semibold">{f.name}</span>
+            <span className="w-full truncate text-caption font-semibold">{f.name}</span>
           </div>
         ))}
       </div>
@@ -145,7 +145,7 @@ export default function SetupLobby({
             ))}
           </div>
         )}
-        <p className="-mt-2 text-center text-xs text-on-wood-soft">
+        <p className="-mt-2 text-center text-caption text-on-wood-soft">
           {online
             ? `Đội theo hồ sơ của bạn (Đinh Bộ Lĩnh cấp ${level}). Máy chủ xử lý từng nước đi, mỗi lượt 30 giây; tải lại trang vẫn tiếp tục được trận.`
             : practice

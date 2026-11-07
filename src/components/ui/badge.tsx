@@ -10,5 +10,5 @@ const tones = {
 } as const;
 
 export function Badge({ tone = "default", className, ...props }: ComponentProps<"span"> & { tone?: keyof typeof tones }) {
-  return <span data-slot="badge" className={cn("inline-flex items-center rounded-full border px-2 py-0.5 text-xs leading-normal", tones[tone], className)} {...props} />;
+  return <span data-slot="badge" className={cn("inline-flex items-center rounded-full border px-2 py-0.5 text-caption leading-normal", tones[tone], className)} {...props} />;
 }

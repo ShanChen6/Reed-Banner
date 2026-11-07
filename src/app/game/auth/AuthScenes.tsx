@@ -152,7 +152,7 @@ export function AccountScene({
                 </OnArrival>
               )}
               <details open={q.error !== null} className="mt-2">
-                <summary className="cursor-pointer text-on-wood-soft">Đổi mật khẩu</summary>
+                <summary className="cursor-pointer text-on-wood-soft pointer-coarse:py-3.5">Đổi mật khẩu</summary>
                 <div className="mt-3">
                   <ChangePasswordForm error={q.error} />
                 </div>
@@ -160,7 +160,7 @@ export function AccountScene({
             </>
           ) : (
             <details open={q.error !== null}>
-              <summary className="cursor-pointer text-on-wood-soft">Thêm tên đăng nhập và mật khẩu</summary>
+              <summary className="cursor-pointer text-on-wood-soft pointer-coarse:py-3.5">Thêm tên đăng nhập và mật khẩu</summary>
               <div className="mt-3">
                 <RegisterForm returnTo={here} username={q.username} error={q.error} label="Lưu tên đăng nhập" mail={mail} />
               </div>
@@ -179,7 +179,7 @@ export function AccountScene({
               <Alert tone="warning" className="p-2 text-caption">Chưa có email thì quên mật khẩu là không lấy lại được.</Alert>
             )}
             <details open={q.emailError !== null}>
-              <summary className="cursor-pointer text-on-wood-soft">{account.email ? "Đổi email" : "Thêm email để lấy lại mật khẩu"}</summary>
+              <summary className="cursor-pointer text-on-wood-soft pointer-coarse:py-3.5">{account.email ? "Đổi email" : "Thêm email để lấy lại mật khẩu"}</summary>
               <div className="mt-3">
                 <EmailForm current={account.email} error={q.emailError} />
               </div>

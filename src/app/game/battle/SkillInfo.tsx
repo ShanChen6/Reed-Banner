@@ -12,10 +12,10 @@ export default function SkillInfo({ def }: { def: SkillDef }) {
         <SkillIcon def={def} className="size-12 shrink-0" />
         <div>
           <p className="font-serif text-lg font-bold leading-tight text-on-wood">{def.name}</p>
-          <p className="text-xs text-on-wood-soft">
+          <p className="text-caption text-on-wood-soft">
             {def.lineName ? `${def.lineName} · ` : ""}{skillSourceName(def)} · ô {def.slot ?? "—"} · mở ở cấp {SKILL_SLOT_UNLOCK[def.slot ?? 0] ?? 1}
           </p>
-          <p className="mt-1 text-xs text-on-wood-soft">
+          <p className="mt-1 text-caption text-on-wood-soft">
             <span className="text-[var(--gold)]">{def.cost} năng lượng</span> · Mục tiêu: {SKILL_TARGET_NAME[def.target]}
           </p>
         </div>
@@ -26,7 +26,7 @@ export default function SkillInfo({ def }: { def: SkillDef }) {
       </ul>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-xs">
+        <table className="w-full text-caption">
           <caption className="mb-1 text-left text-[0.65rem] uppercase tracking-wider text-on-wood-soft/80">Theo cấp kỹ năng</caption>
           <thead>
             <tr className="text-on-wood-soft/80">
@@ -46,7 +46,7 @@ export default function SkillInfo({ def }: { def: SkillDef }) {
         <p className="mt-1 text-[0.65rem] text-on-wood-soft/80">Mỗi cấp +{Math.round(SKILL_LEVEL_BONUS * 100)}% hệ số chính; cấp tối đa giảm {Math.round(SKILL_MAX_LEVEL_DISCOUNT * 100)}% năng lượng. Thời lượng, số ô và xác suất giữ nguyên.</p>
       </div>
 
-      {partners.length > 0 && <p className="text-xs text-on-wood-soft">Mở phối hợp cho đồng đội: {partners.join(", ")}.</p>}
+      {partners.length > 0 && <p className="text-caption text-on-wood-soft">Mở phối hợp cho đồng đội: {partners.join(", ")}.</p>}
     </div>
   );
 }

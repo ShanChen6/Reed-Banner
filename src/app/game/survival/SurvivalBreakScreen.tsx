@@ -211,7 +211,7 @@ function SurvivalBreakReady({
           <p className="text-sm text-on-wood-soft">
             Đợt tiếp theo: {next.wave}
             {next.boss && (
-              <span className="ml-2 inline-flex rounded-full bg-lacquer px-2 py-0.5 text-xs font-bold text-on-wood">
+              <span className="ml-2 inline-flex rounded-full bg-lacquer px-2 py-0.5 text-caption font-bold text-on-wood">
                 CẢNH BÁO TRÙM
               </span>
             )}
@@ -233,7 +233,7 @@ function SurvivalBreakReady({
               <h3 id="survival-force-title" className="font-bold text-frame-gold">
                 Quân lực · máu sau hồi phục
               </h3>
-              <p className="text-xs text-on-wood-soft">
+              <p className="text-caption text-on-wood-soft">
                 Máu hiển thị là bản xem trước do máy chủ tính; năng lượng giữ nguyên.
               </p>
             </div>
@@ -273,11 +273,11 @@ function SurvivalBreakReady({
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-x-2">
                           <p className="truncate text-sm font-bold text-on-wood">{fighter.name}</p>
-                          <span className={`text-[11px] font-semibold ${isDown ? "text-danger" : "text-jade"}`}>
+                          <span className={`text-caption font-semibold ${isDown ? "text-danger" : "text-jade"}`}>
                             {status}
                           </span>
                         </div>
-                        <p className="flex flex-wrap items-center gap-1 text-xs text-on-wood-soft">
+                        <p className="flex flex-wrap items-center gap-1 text-caption text-on-wood-soft">
                           {fighter.location === "active" ? "Ra trận" : "Dự bị"}
                           <ElementIcon element={fighter.element} className="size-3.5" />
                           {ELEMENT_NAME[fighter.element]}
@@ -287,7 +287,7 @@ function SurvivalBreakReady({
                       </div>
                     </div>
                     <div className="mt-2">
-                      <div className="mb-1 flex justify-between gap-2 text-xs text-on-wood-soft">
+                      <div className="mb-1 flex justify-between gap-2 text-caption text-on-wood-soft">
                         <span>Máu</span>
                         <span className={isDown ? "text-danger" : "text-on-wood"}>
                           {fighter.hpBeforeRecovery} → {fighter.hpAfterRecovery}/{fighter.maxHp}
@@ -306,7 +306,7 @@ function SurvivalBreakReady({
                           style={{ width: `${hpWidth}%` }}
                         />
                       </div>
-                      <p className="mt-1 text-right text-xs text-on-wood-soft">
+                      <p className="mt-1 text-right text-caption text-on-wood-soft">
                         Năng lượng: {fighter.energy}
                       </p>
                     </div>
@@ -325,7 +325,7 @@ function SurvivalBreakReady({
                 <h3 id="survival-tactics-title" className="font-bold text-frame-gold">
                   Chuẩn bị chiến thuật
                 </h3>
-                <p className="text-xs text-on-wood-soft">
+                <p className="text-caption text-on-wood-soft">
                   Bản nháp chỉ thay đổi trên màn hình; máy chủ chỉ áp dụng khi xác nhận vào đợt.
                 </p>
               </div>
@@ -366,7 +366,7 @@ function SurvivalBreakReady({
                           />
                         )}
                         <span className="min-w-0 flex-1">
-                          <span className="block text-xs text-on-wood-soft">
+                          <span className="block text-caption text-on-wood-soft">
                             Đồng đội {slot} · {fighter?.hpAfterRecovery ?? 0}/{fighter?.maxHp ?? 0} HP
                           </span>
                           <Select
@@ -391,20 +391,20 @@ function SurvivalBreakReady({
                 </div>
                 <p
                   role={lineupValid ? "status" : "alert"}
-                  className={`mt-2 text-xs ${lineupValid ? "text-jade" : "text-danger"}`}
+                  className={`mt-2 text-caption ${lineupValid ? "text-jade" : "text-danger"}`}
                 >
                   {lineupValid
                     ? "Đội hình hợp lệ · Đinh Bộ Lĩnh giữ vị trí thủ lĩnh."
                     : "Đội hình chưa hợp lệ: cần đủ hai đồng đội sống; tướng gục chỉ được giữ nguyên vị trí khi không còn dự bị sống."}
                 </p>
-                <p className="mt-2 text-xs font-semibold text-on-wood-soft">
+                <p className="mt-2 text-caption font-semibold text-on-wood-soft">
                   Dự bị sau khi xác nhận:
                 </p>
                 <ul className="mt-1 flex flex-wrap gap-2">
                   {preview.fighters
                     .filter((fighter) => !draftActiveIds.includes(fighter.id))
                     .map((fighter) => (
-                      <li key={fighter.id} className="flex items-center gap-1 rounded bg-wood-inset px-2 py-1 text-xs text-on-wood">
+                      <li key={fighter.id} className="flex items-center gap-1 rounded bg-wood-inset px-2 py-1 text-caption text-on-wood">
                         <Portrait
                           id={fighter.id}
                           element={fighter.element}
@@ -427,7 +427,7 @@ function SurvivalBreakReady({
                 {preview.leaderBuildBasis && leaderPreview ? (
                   <>
                     <div className="grid gap-2 sm:grid-cols-2">
-                      <label className="text-xs text-on-wood-soft">
+                      <label className="text-caption text-on-wood-soft">
                         Nghề
                         <Select
                           aria-label="Nghề Đinh Bộ Lĩnh"
@@ -445,7 +445,7 @@ function SurvivalBreakReady({
                           ))}
                         </Select>
                       </label>
-                      <label className="text-xs text-on-wood-soft">
+                      <label className="text-caption text-on-wood-soft">
                         Nguyên tố
                         <Select
                           aria-label="Nguyên tố Đinh Bộ Lĩnh"
@@ -464,7 +464,7 @@ function SurvivalBreakReady({
                         </Select>
                       </label>
                     </div>
-                    <div className="mt-2 flex items-center gap-2 text-xs text-on-wood-soft">
+                    <div className="mt-2 flex items-center gap-2 text-caption text-on-wood-soft">
                       <Portrait
                         id="dinhBoLinh"
                         element={draftElement}
@@ -479,16 +479,16 @@ function SurvivalBreakReady({
                         ATK {leaderPreview.config.atk} · DEF {leaderPreview.config.def}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs text-on-wood-soft">
+                    <p className="mt-1 text-caption text-on-wood-soft">
                       Hiện tại: {PROFESSION_NAME[currentProfession]} · {ELEMENT_NAME[currentElement]}
                       {" → "}
                       Bản nháp: {PROFESSION_NAME[draftProfession]} · {ELEMENT_NAME[draftElement]}
                     </p>
-                    <p className="mt-1 text-xs text-on-wood-soft">
+                    <p className="mt-1 text-caption text-on-wood-soft">
                       Máu được chuyển theo tỷ lệ {Math.round(preview.leaderBuildBasis.hpRatio * 100)}%; thay đổi nghề/hệ không sửa hồ sơ.
                     </p>
                     <div className="mt-2">
-                      <p className="mb-1 text-xs font-semibold text-on-wood-soft">
+                      <p className="mb-1 text-caption font-semibold text-on-wood-soft">
                         Kỹ năng dự kiến · cấp {preview.leaderBuildBasis.progress.level}
                       </p>
                       <ul className="grid gap-1 sm:grid-cols-2">
@@ -505,10 +505,10 @@ function SurvivalBreakReady({
                               className="size-8 shrink-0"
                             />
                             <span className="min-w-0">
-                              <span className="block truncate text-xs font-semibold text-on-wood">
+                              <span className="block truncate text-caption font-semibold text-on-wood">
                                 {skill.name}
                               </span>
-                              <span className="block text-[10px] text-on-wood-soft">
+                              <span className="block text-caption text-on-wood-soft">
                                 {unlocked
                                   ? `Đã mở · cấp kỹ năng ${leaderSkillLevel(skill.slot)}`
                                   : `Mở ở cấp ${MAIN_SLOT_UNLOCK[skill.slot ?? 0] ?? 1}`}
@@ -520,7 +520,7 @@ function SurvivalBreakReady({
                     </div>
                   </>
                 ) : (
-                  <p role="status" className="ui-frame-inset p-2 text-xs text-on-wood-soft">
+                  <p role="status" className="ui-frame-inset p-2 text-caption text-on-wood-soft">
                     Bản lưu này thiếu dữ liệu tiến trình để xem trước cấu hình. Cấu hình hiện tại được giữ nguyên.
                   </p>
                 )}
@@ -548,7 +548,7 @@ function SurvivalBreakReady({
                   />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-on-wood">{foe.name}</p>
-                    <p className="flex items-center gap-1 text-xs text-on-wood-soft">
+                    <p className="flex items-center gap-1 text-caption text-on-wood-soft">
                       <ElementIcon element={foe.element} className="size-3.5" />
                       {ELEMENT_NAME[foe.element]}
                       <ProfessionIcon profession={foe.profession} className="size-3.5" />

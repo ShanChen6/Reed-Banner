@@ -34,3 +34,22 @@ test("màn game và component không dùng màu Tailwind thô hoặc #hex trong 
   }
   assert.deepEqual(found, [], `Dùng token thay cho màu thô:\n${found.join("\n")}`);
 });
+
+// Quy tắc cỡ chữ (theme.md): chữ đọc và điều khiển ≥ 13px (`text-caption`). Ngoại lệ duy nhất là chữ phủ lên biểu tượng
+// (huy hiệu `absolute` trên icon) tối thiểu 11px.
+const SMALL = /(?<![\w-])(?:[a-z-]+:)*(?:text-xs|text-\[(?:9|10|12)px\])(?![\w-])/g;
+const OVERLAY_ONLY = /(?<![\w-])(?:[a-z-]+:)*text-\[11px\](?![\w-])/g;
+const OVERLAY_FILES = new Set(["src/app/game/art/passives.tsx"]);
+
+test("chữ trong màn game không nhỏ hơn 13px, trừ huy hiệu phủ lên biểu tượng", () => {
+  const found: string[] = [];
+  for (const file of ROOTS.flatMap(files)) {
+    readFileSync(file, "utf8")
+      .split("\n")
+      .forEach((line, i) => {
+        for (const m of line.matchAll(SMALL)) found.push(`${file}:${i + 1} ${m[0]}`);
+        if (!line.includes("absolute") && !OVERLAY_FILES.has(file)) for (const m of line.matchAll(OVERLAY_ONLY)) found.push(`${file}:${i + 1} ${m[0]}`);
+      });
+  }
+  assert.deepEqual(found, [], `Dùng text-caption (13px) thay cho chữ nhỏ:\n${found.join("\n")}`);
+});

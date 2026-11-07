@@ -587,7 +587,7 @@ export default function WorldMap({
                 color={STATE_COLOR[strongholdState(s, campaign.factions)]}
                 className="h-8 w-6 shrink-0"
               />
-              <span className="text-xs leading-tight">
+              <span className="text-caption leading-tight">
                 <span className="block font-bold">
                   {s.place} · {strongholdLeader(s)}
                 </span>
@@ -601,7 +601,7 @@ export default function WorldMap({
         {/* Chú giải chung hàng với Bình Kiều; là div vì figcaption phải là con trực tiếp của figure. */}
         <div
           id="world-map-legend"
-          className="flex min-w-0 flex-1 flex-wrap content-start items-center gap-x-3 gap-y-1 text-xs"
+          className="flex min-w-0 flex-1 flex-wrap content-start items-center gap-x-3 gap-y-1 text-caption"
         >
           {(Object.keys(STATE_COLOR) as StrongholdState[]).map((st) => (
             <span key={st} className="flex items-center gap-1">
@@ -644,7 +644,7 @@ export default function WorldMap({
                   <span className="block truncate font-semibold">
                     {s.place}
                   </span>
-                  <span className="block truncate text-xs opacity-75">
+                  <span className="block truncate text-caption opacity-75">
                     {strongholdLeader(s)}
                   </span>
                 </span>

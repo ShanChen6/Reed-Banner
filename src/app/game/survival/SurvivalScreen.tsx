@@ -395,11 +395,11 @@ function FighterSummary({
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-semibold text-on-wood">
           {fighter.id === MAIN_ID ? "Đinh Bộ Lĩnh" : fighter.name}
-          <span className="ml-1 text-xs font-normal text-on-wood-soft">
+          <span className="ml-1 text-caption font-normal text-on-wood-soft">
             cấp {level}
           </span>
         </p>
-        <p className="flex flex-wrap items-center gap-x-1 text-xs text-on-wood-soft">
+        <p className="flex flex-wrap items-center gap-x-1 text-caption text-on-wood-soft">
           <ElementIcon element={fighter.element} className="size-3.5" />
           {ELEMENT_NAME[fighter.element]}
           <span aria-hidden>·</span>

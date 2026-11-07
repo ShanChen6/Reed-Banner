@@ -124,7 +124,7 @@ export default function GearPicker({
                         </span>
                       </span>
                       {by && (
-                        <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold ${by === id ? "bg-success-surface text-success" : "bg-ash text-on-wood"}`}>
+                        <span className={`shrink-0 rounded-full px-2 py-0.5 text-caption font-semibold ${by === id ? "bg-success-surface text-success" : "bg-ash text-on-wood"}`}>
                           {by === id ? "Đang mặc" : `${nameOf(by)} đang dùng`}
                         </span>
                       )}

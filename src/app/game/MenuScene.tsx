@@ -185,7 +185,7 @@ function SectionHeading({ id, kicker, title }: { id: string; kicker: string; tit
   return (
     <div className="flex items-center gap-4">
       <div>
-        <p className="text-xs font-semibold tracking-[0.25em] text-[var(--atlas-gold)] uppercase">{kicker}</p>
+        <p className="text-caption font-semibold tracking-[0.25em] text-[var(--atlas-gold)] uppercase">{kicker}</p>
         <h2 id={id} className="atlas-title font-serif text-2xl font-bold sm:text-[1.7rem]">
           {title}
         </h2>

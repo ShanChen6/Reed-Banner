@@ -256,7 +256,7 @@ function RewardModal({
               Mở khóa đồng hành: {companionById(id)?.name ?? id}
             </li>
           ))}
-          <li className="text-xs text-on-wood-soft">
+          <li className="text-caption text-on-wood-soft">
             Server đã ghi thưởng một lần; đánh lại hoặc xem lại không nhận thêm.
           </li>
         </ul>
@@ -350,13 +350,13 @@ function BattlePrep({
   return (
     <div className="flex flex-col gap-3">
       {profile.campaign.completed.includes(nodeId) && (
-        <p className="rounded-md border border-info/40 bg-info/10 p-2 text-xs text-info">
+        <p className="rounded-md border border-info/40 bg-info/10 p-2 text-caption text-info">
           Đánh lại: chỉ nhận thưởng trận thường và có thể ghi số lượt tốt hơn.
           Thưởng nhiệm vụ, thế cục sứ quân và lựa chọn đã ghi không đổi.
         </p>
       )}
       {labels.length > 1 && (
-        <ol className="flex flex-wrap gap-1 text-xs" aria-label="Các giai đoạn">
+        <ol className="flex flex-wrap gap-1 text-caption" aria-label="Các giai đoạn">
           {labels.map((label, i) => (
             <li
               key={label}
@@ -375,7 +375,7 @@ function BattlePrep({
         </ol>
       )}
       {stage === "escort" && (
-        <p className="rounded-md border border-info/50 bg-info-surface p-2 text-xs text-info">
+        <p className="rounded-md border border-info/50 bg-info-surface p-2 text-caption text-info">
           <span className="font-semibold">Tình tiết phục vụ gameplay.</span>{" "}
           Đoàn lương và toán chặn đường do game sáng tác; sử không chép trận nào
           trên đường tiếp viện.
@@ -397,19 +397,19 @@ function BattlePrep({
                     : copy?.objective}
         </p>
         {labels.length > 1 && (
-          <p className="mt-1 text-xs text-frame-gold/80">
+          <p className="mt-1 text-caption text-frame-gold/80">
             Mỗi giai đoạn là một trận. Qua giai đoạn chưa hoàn thành nhiệm vụ; thua thì
             đánh lại đúng giai đoạn đó. Lương còn lại mang sang giai đoạn sau.
           </p>
         )}
         {terrain && (
-          <p className="mt-1 text-xs text-frame-gold/80">
+          <p className="mt-1 text-caption text-frame-gold/80">
             {terrain.name}: {terrain.summary}. Địa hình do game dựng, không phải
             sơ đồ một trận có sử chép.
           </p>
         )}
         {encounter.foeFood !== undefined && (
-          <p className="mt-1 text-xs text-frame-gold/80">
+          <p className="mt-1 text-caption text-frame-gold/80">
             Đối thủ vào trận với {encounter.foeFood} lương (luật game). Mang đủ
             lương để không đói giữa trận.
           </p>
@@ -445,7 +445,7 @@ function BattlePrep({
               profession={f.profession}
               className="size-12 shrink-0"
             />
-            <div className="min-w-0 text-xs">
+            <div className="min-w-0 text-caption">
               <p className="truncate text-sm font-semibold">{f.name}</p>
               <p className="flex items-center gap-1 text-on-wood-soft">
                 <ElementIcon element={f.element} className="size-3.5" />
@@ -476,7 +476,7 @@ function BattlePrep({
         </p>
         {advice.mode === "3v3" && (
           <div className="mt-2">
-            <p className="text-xs text-on-wood-soft" id={`team-${nodeId}`}>
+            <p className="text-caption text-on-wood-soft" id={`team-${nodeId}`}>
               Đi cùng ({team.length}/2):{" "}
               {team.map((id) => companionById(id)?.name ?? id).join(", ") ||
                 "chưa chọn"}
@@ -496,7 +496,7 @@ function BattlePrep({
                     aria-pressed={on}
                     disabled={!on && team.length >= 2}
                     onClick={() => toggleTeam(id)}
-                    className={choiceVariants({ size: "sm", className: "min-h-9 pointer-coarse:min-h-11 gap-1 px-2 py-1 text-xs font-normal" })}
+                    className={choiceVariants({ size: "sm", className: "min-h-9 pointer-coarse:min-h-11 gap-1 px-2 py-1 text-caption font-normal" })}
                   >
                     <ElementIcon element={c.element} className="size-3.5" />
                     {c.name}
@@ -521,14 +521,14 @@ function BattlePrep({
               role="radio"
               aria-checked={profession === p}
               onClick={() => setProfession(p)}
-              className={choiceVariants({ size: "sm", className: `gap-1 px-2 py-1 text-xs font-normal ${profession === p ? "is-selected" : ""}` })}
+              className={choiceVariants({ size: "sm", className: `gap-1 px-2 py-1 text-caption font-normal ${profession === p ? "is-selected" : ""}` })}
             >
               <ProfessionIcon profession={p} className="size-4" />
               {PROFESSION_NAME[p]}
             </button>
           ))}
         </div>
-        <p className="mt-1 text-xs text-on-wood-soft">
+        <p className="mt-1 text-caption text-on-wood-soft">
           Vũ khí nghề {PROFESSION_NAME[profession]}:{" "}
           {weapon ? gearText(weapon) : "chưa trang bị (đổi ở Doanh Trại)"}. Mỗi nghề
           dùng vũ khí riêng; nghề và hệ chọn ở đây được lưu khi xuất quân.
@@ -545,7 +545,7 @@ function BattlePrep({
               role="radio"
               aria-checked={element === e}
               onClick={() => setElement(e)}
-              className={choiceVariants({ size: "sm", className: `gap-1 px-2 py-1 text-xs font-normal ${element === e ? "is-selected" : ""}` })}
+              className={choiceVariants({ size: "sm", className: `gap-1 px-2 py-1 text-caption font-normal ${element === e ? "is-selected" : ""}` })}
             >
               <ElementIcon element={e} className="size-4" />
               {ELEMENT_NAME[e]}
@@ -556,7 +556,7 @@ function BattlePrep({
           ))}
         </div>
         <p
-          className={`mt-1 text-xs ${counters ? "text-jade" : weak ? "text-danger" : "text-on-wood-soft"}`}
+          className={`mt-1 text-caption ${counters ? "text-jade" : weak ? "text-danger" : "text-on-wood-soft"}`}
         >
           {counters
             ? "Hệ đang chọn khắc thủ lĩnh đối phương."
@@ -971,7 +971,7 @@ export default function ChapterOne({
                 ))}
               </div>
               {node.type === "diplomacy" && !copy && (
-                <p className="mt-2 text-xs text-on-wood-soft">
+                <p className="mt-2 text-caption text-on-wood-soft">
                   Hội kiến: không có trận, không có thanh máu. Hoàn thành bằng
                   lựa chọn lời đáp; server ghi kết quả.
                 </p>
@@ -981,7 +981,7 @@ export default function ChapterOne({
                 (() => {
                   const fate = factionResolutionOfMission(node.id);
                   return fate ? (
-                    <p className="mt-1 text-xs text-info">
+                    <p className="mt-1 text-caption text-info">
                       Kết cục cố định của{" "}
                       {companionById(fate.faction)?.name ?? fate.faction}:{" "}
                       {FACTION_STATUS_TEXT[fate.status].toLowerCase()} theo tổng
@@ -993,7 +993,7 @@ export default function ChapterOne({
                   ) : null;
                 })()}
               {event?.faction && node.type !== "diplomacy" && (
-                <p className="mt-1 text-xs text-info">
+                <p className="mt-1 text-caption text-info">
                   Kết cục cố định:{" "}
                   {companionById(event.faction.faction)?.name ??
                     event.faction.faction}{" "}
@@ -1110,7 +1110,7 @@ export default function ChapterOne({
                                 (x) => x.id === c.id,
                               )?.tone;
                               return tone ? (
-                                <span className="ml-1.5 text-[10px] uppercase opacity-75">
+                                <span className="ml-1.5 text-caption uppercase opacity-75">
                                   {TONE_TEXT[tone]}
                                 </span>
                               ) : null;
@@ -1119,7 +1119,7 @@ export default function ChapterOne({
                         );
                       })}
                     </div>
-                    <p className="text-xs text-on-wood-soft">
+                    <p className="text-caption text-on-wood-soft">
                       Lựa chọn chỉ đổi lời kể; kết quả nhiệm vụ và phần thưởng
                       như nhau.
                     </p>

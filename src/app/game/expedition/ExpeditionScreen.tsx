@@ -405,10 +405,10 @@ function SetupView(props: {
                 <span className="flex items-center gap-2">
                   <ElementIcon element={m.element} className="size-5" />
                   <strong className="font-serif text-lg">{m.name}</strong>
-                  {best > 0 && <span className="ml-auto text-xs font-semibold">Đã thắng bậc {best}</span>}
+                  {best > 0 && <span className="ml-auto text-caption font-semibold">Đã thắng bậc {best}</span>}
                 </span>
                 <span className="mt-1 block text-sm opacity-80">{m.blurb}</span>
-                <span className="mt-2 block text-xs opacity-80">
+                <span className="mt-2 block text-caption opacity-80">
                   Chiến địa hệ {ELEMENT_NAME[m.element]} · {m.days} ngày · chuẩn {m.parDays} ngày
                 </span>
                 </span>
@@ -428,10 +428,10 @@ function SetupView(props: {
               className={choiceVariants({ className: "flex-col items-start gap-0.5 text-left text-sm" })}
             >
               <span><strong>{t.name}</strong> <Stars n={t.stars} className="ml-1" /></span>
-              <span className="block text-xs font-normal opacity-80">
+              <span className="block text-caption font-normal opacity-80">
                 {t.unlocked ? `Cấp gợi ý ${t.level} · lần đầu ${t.firstGold} vàng + món ${TIER_COLOR_NAME[(t.tier + 2) as 3 | 4 | 5]}` : "Thắng bậc trước để mở"}
               </span>
-              {t.bestDays !== null && <span className="block text-xs font-normal">Nhanh nhất {t.bestDays} ngày</span>}
+              {t.bestDays !== null && <span className="block text-caption font-normal">Nhanh nhất {t.bestDays} ngày</span>}
             </button>
           ))}
         </div>
@@ -483,12 +483,12 @@ function SetupView(props: {
                 <Portrait id={id} element={c.element} profession={c.profession} className="size-10" level={lv} />
                 <span className="min-w-0">
                   <strong className="block truncate">{c.name}</strong>
-                  <span className="flex items-center gap-1 text-xs opacity-80">
+                  <span className="flex items-center gap-1 text-caption opacity-80">
                     <ElementIcon element={c.element} className="size-3.5" /> {ELEMENT_NAME[c.element]}
                     <ProfessionIcon profession={c.profession} className="size-3.5" /> {PROFESSION_NAME[c.profession]}
                   </span>
                 </span>
-                {where !== null && <span className="ml-auto text-xs font-semibold" style={{ color: ARMY_COLOR[where] }}>{ARMY_NAME[where]}</span>}
+                {where !== null && <span className="ml-auto text-caption font-semibold" style={{ color: ARMY_COLOR[where] }}>{ARMY_NAME[where]}</span>}
               </button>
             );
           })}
@@ -762,7 +762,7 @@ function RunView(props: {
           setArmy={props.setArmy}
           setTarget={props.setTarget}
         />
-        <p className="mt-2 text-xs text-on-wood-soft">
+        <p className="mt-2 text-caption text-on-wood-soft">
           Chạm cờ để chọn đạo quân, chạm ô kề (viền màu đạo) để xem rồi tiến quân. Đạo không tiến được nghỉ, hồi
           {` ${Math.round(EXPEDITION_REST_HEAL * 100)}% `}máu mỗi ngày (kể cả người gục). Đường xanh đứt nét là vượt nước, mất
           2 ngày; xanh lá đứt nét là lội đầm (2 ngày); chấm xanh ≈ là cửa nước, chỉ qua lúc nước rút; đỏ ✕ là đường đã biết bị
@@ -801,33 +801,33 @@ function RunView(props: {
             {node ? (
               <>
                 <h3 className="flex items-center gap-2 font-serif text-lg font-bold">
-                  {node.name} <span className="text-xs font-normal text-on-wood-soft">{KIND_NAME[node.kind]}{cleared(node.id) ? " · đã chiếm" : ""}</span>
+                  {node.name} <span className="text-caption font-normal text-on-wood-soft">{KIND_NAME[node.kind]}{cleared(node.id) ? " · đã chiếm" : ""}</span>
                 </h3>
                 <p className="mt-1 text-sm text-on-wood-soft">{KIND_TEXT[node.kind]}</p>
                 {chase && (
-                  <p className="mt-2 rounded bg-danger-surface p-2 text-xs text-on-wood">
+                  <p className="mt-2 rounded bg-danger-surface p-2 text-caption text-on-wood">
                     Truy binh đuổi {noun} vì {nameOf(scenario?.chaseUnless ?? "")} chưa chiếm: rời {nameOf(scenario?.village ?? "")} là vào
                     trận hộ tống (giữ {chase.objective && "turns" in chase.objective ? chase.objective.turns : 6} lượt hoặc hạ hết). Thua thì {noun} bị bắt lại.
                   </p>
                 )}
                 {!chase && preview && run.refugees === army && (
-                  <p className="mt-2 rounded bg-danger-surface p-2 text-xs text-on-wood">Đạo này đang hộ tống {noun}: thua trận này thì {noun} bị bắt lại.</p>
+                  <p className="mt-2 rounded bg-danger-surface p-2 text-caption text-on-wood">Đạo này đang hộ tống {noun}: thua trận này thì {noun} bị bắt lại.</p>
                 )}
                 {preview?.objective?.type === "hold" && (
-                  <p className="mt-2 text-xs text-frame-gold">
+                  <p className="mt-2 text-caption text-frame-gold">
                     Trận giữ: cầm cự {preview.objective.turns} lượt của bạn (hoặc hạ hết) là thắng
                     {scenario?.reinforcementLabel && !run.reinforcementsCut ? `, chặn được ${scenario.reinforcementLabel}` : ""}.
                   </p>
                 )}
                 {preview?.mode === "gate" && (
-                  <p className="mt-2 text-xs text-frame-gold">
+                  <p className="mt-2 text-caption text-frame-gold">
                     Phase 1 phá cổng: hạ Cổng thành là qua (lính giữ còn lại theo sang trận sau).
                     {scenario?.gateSkipFrom ? ` Đánh vào từ ${nameOf(scenario.gateSkipFrom)} thì bỏ qua cổng.` : ""}
                   </p>
                 )}
                 {preview && (
                   <div className="mt-2 space-y-1.5">
-                    <p className="text-xs text-on-wood-soft">
+                    <p className="text-caption text-on-wood-soft">
                       AI {DIFFICULTY_NAME[preview.difficulty]} · cấp {preview.foes[0]?.level}
                       {preview.pincer && <span className="ml-2 rounded bg-jade/20 px-1.5 py-0.5 text-jade">Giáp công: máu địch −{Math.round((1 - EXPEDITION_PINCER_HP) * 100)}%</span>}
                     </p>
@@ -839,7 +839,7 @@ function RunView(props: {
                             <strong className="truncate">{f.name}</strong>
                             <ElementIcon element={f.element} className="size-3.5" />
                             <ProfessionIcon profession={f.profession} className="size-3.5" />
-                            <span className="ml-auto text-xs text-on-wood-soft">{Math.round(f.maxHp * f.hpRatio)} máu</span>
+                            <span className="ml-auto text-caption text-on-wood-soft">{Math.round(f.maxHp * f.hpRatio)} máu</span>
                           </div>
                           <HpBar ratio={f.hpRatio} />
                         </div>
@@ -848,21 +848,21 @@ function RunView(props: {
                   </div>
                 )}
                 {reachable.includes(node.id) && expeditionEdgeDays(map, selected.at, node.id) > 1 && (
-                  <p className="mt-2 text-xs text-info">Vượt nước: đi mất {expeditionEdgeDays(map, selected.at, node.id)} ngày, đạo kia nghỉ cả {expeditionEdgeDays(map, selected.at, node.id)} ngày.</p>
+                  <p className="mt-2 text-caption text-info">Vượt nước: đi mất {expeditionEdgeDays(map, selected.at, node.id)} ngày, đạo kia nghỉ cả {expeditionEdgeDays(map, selected.at, node.id)} ngày.</p>
                 )}
                 {roadKind === "tide" && (
-                  <p className="mt-2 text-xs text-info">
+                  <p className="mt-2 text-caption text-info">
                     Cửa nước: {scenario?.tideDays ? `nước rút các ngày ${scenario.tideDays.join(", ")}${tideClosed ? "; hôm nay nước đang lên" : "; hôm nay đi được"}.` : `chưa rõ con nước (chiếm ${nameOf(scenario?.tideRevealedBy ?? "")} hoặc đưa dân về để biết). Đi trúng ngày nước lên thì mất ngày.`}
                   </p>
                 )}
                 {roadBroken ? (
-                  <p className="mt-3 text-xs text-danger">Đường từ {nameOf(selected.at)} tới đây đã bị phá.</p>
+                  <p className="mt-3 text-caption text-danger">Đường từ {nameOf(selected.at)} tới đây đã bị phá.</p>
                 ) : reachable.includes(node.id) ? (
                   <Button variant="primary" className="mt-3" disabled={props.busy || !canFight(army) || tideClosed || !!counter} onClick={() => props.onMarch(node.id)}>
                     {chase ? `${ARMY_NAME[army]} đưa dân đi, đánh truy binh` : preview ? `${ARMY_NAME[army]} tấn công` : `${ARMY_NAME[army]} tiến quân`}
                   </Button>
                 ) : (
-                  <p className="mt-3 text-xs text-on-wood-soft">{ARMY_NAME[army]} chưa tới được ô này (chỉ đi sang ô kề).</p>
+                  <p className="mt-3 text-caption text-on-wood-soft">{ARMY_NAME[army]} chưa tới được ô này (chỉ đi sang ô kề).</p>
                 )}
               </>
             ) : (
@@ -884,7 +884,7 @@ function RunView(props: {
             >
               <div className="flex items-baseline justify-between">
                 <strong style={{ color: ARMY_COLOR[i] }}>{ARMY_NAME[i]}</strong>
-                <span className="flex items-center gap-1 text-xs text-on-wood-soft"><FoodIcon className="size-3.5" />{a.food} · tại {at?.name}</span>
+                <span className="flex items-center gap-1 text-caption text-on-wood-soft"><FoodIcon className="size-3.5" />{a.food} · tại {at?.name}</span>
               </div>
               <div className="mt-2 space-y-1.5">
                 {a.ids.map((id) => {
@@ -893,14 +893,14 @@ function RunView(props: {
                     <div key={id} className="flex items-center gap-2">
                       <Portrait id={id} element={f.config.element} profession={f.config.profession} className="size-7" />
                       <div className="flex-1">
-                        <div className="flex justify-between text-xs"><span>{f.config.name}</span><span className={f.hp <= 0 ? "text-danger" : "text-on-wood-soft"}>{f.hp <= 0 ? "Gục" : `${f.hp}/${f.config.maxHp}`}</span></div>
+                        <div className="flex justify-between text-caption"><span>{f.config.name}</span><span className={f.hp <= 0 ? "text-danger" : "text-on-wood-soft"}>{f.hp <= 0 ? "Gục" : `${f.hp}/${f.config.maxHp}`}</span></div>
                         <HpBar ratio={f.hp / f.config.maxHp} />
                       </div>
                     </div>
                   );
                 })}
               </div>
-              {!canFight(i as ArmyIndex) && <p className="mt-2 text-xs text-danger">Cả đạo đang gục, cần nghỉ để hồi sức.</p>}
+              {!canFight(i as ArmyIndex) && <p className="mt-2 text-caption text-danger">Cả đạo đang gục, cần nghỉ để hồi sức.</p>}
             </button>
           );
         })}
@@ -912,8 +912,8 @@ function RunView(props: {
             </Button>
             <Button variant="secondary" disabled={props.busy || !!counter} onClick={props.onCamp}>Đóng quân (cả hai đạo nghỉ 1 ngày)</Button>
             <Button variant="secondary" disabled={props.busy} onClick={props.onAbandon}>Rút khỏi viễn chinh</Button>
-            <p className="w-full text-xs text-on-wood-soft">Thua một trận: đạo đó rút về ô cũ, cả ba gục, phải nghỉ để hồi. Không mất lượt viễn chinh.</p>
-            <p className="w-full text-xs text-on-wood-soft">
+            <p className="w-full text-caption text-on-wood-soft">Thua một trận: đạo đó rút về ô cũ, cả ba gục, phải nghỉ để hồi. Không mất lượt viễn chinh.</p>
+            <p className="w-full text-caption text-on-wood-soft">
               Trinh sát: đạo đang chọn đứng yên 1 ngày (không hồi sức), vén sương mọi ô trong {EXPEDITION_SCOUT_SIGHT} bước
               {scenario?.brokenRoads
                 ? " và phát hiện đường bị phá quanh đó. Đường bị phá trông như đường thường; đi trúng thì mất ngày."
@@ -1001,16 +1001,16 @@ function MissionPanel({ run, scenario, nameOf }: { run: Omit<ExpeditionRun, "see
         ))}
       </ul>
       {scenario.endings && (
-        <p className="mt-2 text-xs text-on-wood-soft">Chiếm thành sau khi rút dân và cắt viện là Toàn thắng. Chưa chiếm được thành mà đã làm đủ hai việc đó là Giữ dân: có ít vàng nhưng chưa tính qua bậc.</p>
+        <p className="mt-2 text-caption text-on-wood-soft">Chiếm thành sau khi rút dân và cắt viện là Toàn thắng. Chưa chiếm được thành mà đã làm đủ hai việc đó là Giữ dân: có ít vàng nhưng chưa tính qua bậc.</p>
       )}
       {!scenario.endings && scenario.missionGold && (
-        <p className="mt-2 text-xs text-on-wood-soft">
+        <p className="mt-2 text-caption text-on-wood-soft">
           Nhiệm vụ không bắt buộc: chiếm thành sau khi xong {scenario.village && scenario.reinforcementDays ? "cả hai việc hộ tống và chặn viện" : "nhiệm vụ"} thì
           vàng thưởng ×{String(scenario.missionGold).replace(".", ",")}.
         </p>
       )}
       {run.log && run.log.length > 0 && (
-        <ol className="mt-3 space-y-0.5 border-t border-frame-line-soft pt-2 text-xs text-on-wood-soft">
+        <ol className="mt-3 space-y-0.5 border-t border-frame-line-soft pt-2 text-caption text-on-wood-soft">
           {run.log.map((line, i) => <li key={i}>{line}</li>)}
         </ol>
       )}
@@ -1036,7 +1036,7 @@ function ResultView({ run, map, result, onNew }: { run: Omit<ExpeditionRun, "see
       {result.won || result.ending ? (
         <>
           <Stars n={result.stars} className="mt-2 block text-3xl" />
-          <p className="mt-1 text-xs text-on-wood-soft">
+          <p className="mt-1 text-caption text-on-wood-soft">
             {result.ending
               ? `★★★ toàn thắng · ★★ chiếm trại trong ${map.parDays} ngày · ★ chiếm trại muộn hoặc giữ dân`
               : `★ chiếm thành · ★ xong trong ${map.parDays} ngày · ★ không thua trận nào`}
@@ -1048,7 +1048,7 @@ function ResultView({ run, map, result, onNew }: { run: Omit<ExpeditionRun, "see
             {result.soldFor > 0 && ` · túi đầy, món thưởng bán được ${result.soldFor} vàng`}
           </p>
           {!result.won && result.ending && (
-            <p className="mt-1 text-xs text-on-wood-soft">Giữ dân chưa tính là qua bậc: phải chiếm thành mới mở bậc sau.</p>
+            <p className="mt-1 text-caption text-on-wood-soft">Giữ dân chưa tính là qua bậc: phải chiếm thành mới mở bậc sau.</p>
           )}
         </>
       ) : (
