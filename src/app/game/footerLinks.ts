@@ -72,7 +72,7 @@ export const SOCIAL_BLURB: Readonly<Record<SocialPlatform, string>> = {
   Facebook: "Gửi thư trực tiếp cho tác giả",
   TikTok: "Xem thước phim của tác giả",
   LinkedIn: "Kết giao nghề nghiệp",
-  GitHub: "Xem mã nguồn và công trình",
+  GitHub: "Mã nguồn và công trình",
   Instagram: "Hình ảnh và hậu trường",
   Discord: "Hội ngộ cùng cộng đồng",
   X: "Tin ngắn truyền khắp nơi",
