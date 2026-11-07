@@ -7,7 +7,7 @@ import { useId, useRef, useState, type KeyboardEvent, type Ref } from "react";
 import { ELEMENTS, PROFESSIONS, type Element, type Profession } from "@/core";
 import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
-import { portraitUrl } from "../art/portrait-data";
+import { bustUrl, portraitUrl } from "../art/portrait-data";
 import { ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
 import {
   isFiltered,
@@ -312,6 +312,7 @@ export function HeroCard({
   onClick: () => void;
 }) {
   const photo = portraitUrl(entry.id);
+  const bust = bustUrl(entry.id);
   const status = entry.team === 0 ? "Chủ tướng" : entry.team !== null ? "Đang trong đội hình" : null;
   return (
     <button
@@ -325,9 +326,12 @@ export function HeroCard({
     >
       <span
         className="relative block aspect-square w-full overflow-hidden"
-        style={{ background: `radial-gradient(circle at 50% 35%, ${ELEMENT_COLOR[entry.element]}99, var(--tone-22150f) 75%)` }}
+        style={{ background: bust ? "var(--wood-inset)" : `radial-gradient(circle at 50% 35%, ${ELEMENT_COLOR[entry.element]}99, var(--tone-22150f) 75%)` }}
       >
-        {photo ? (
+        {bust ? (
+          // eslint-disable-next-line @next/next/no-img-element -- chân dung bán thân tĩnh 384px, nền tranh có sẵn.
+          <img src={bust} alt="" loading="lazy" draggable={false} className="size-full object-cover transition-transform duration-200 group-hover:scale-[1.03]" />
+        ) : photo ? (
           // eslint-disable-next-line @next/next/no-img-element -- ảnh chân dung tĩnh 192px.
           <img src={photo} alt="" loading="lazy" draggable={false} className="size-full object-cover object-top transition-transform duration-200 group-hover:scale-[1.03]" />
         ) : (
