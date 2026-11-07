@@ -356,9 +356,9 @@ interface Float {
 const FLOAT_STAGGER_MS = 160;
 const FLOAT_MS = 1100;
 const FLOAT_TONE: Record<Float["tone"], string> = {
-  damage: "text-rose-500",
-  shield: "text-sky-400",
-  heal: "text-emerald-500",
+  damage: "text-stat-hp",
+  shield: "text-stat-shield",
+  heal: "text-stat-spirit",
 };
 
 const prefersReducedMotion = () =>
@@ -460,7 +460,7 @@ function TurnClock({
   return (
     <div
       className={`flex items-center gap-3 ui-frame-inset rounded-lg px-3 py-1.5 ${
-        urgent ? "!border-rose-500" : ""
+        urgent ? "!border-stat-hp" : ""
       }`}
       role="timer"
       aria-label={seconds === null ? label : `${label}, còn ${seconds} giây`}
@@ -469,14 +469,14 @@ function TurnClock({
       <div className="h-2 min-w-0 flex-1 overflow-hidden rounded-full bg-black/30">
         <div
           className={`h-full rounded-full transition-[width] duration-300 ease-linear ${
-            !mine ? "bg-stone-400/60" : urgent ? "bg-rose-500" : "bg-amber-400"
+            !mine ? "bg-on-wood-soft/60" : urgent ? "bg-stat-hp" : "bg-frame-gold-hi"
           }`}
           style={{ width: `${(left / total) * 100}%` }}
         />
       </div>
       <span
         className={`w-12 shrink-0 text-right font-mono text-lg font-bold tabular-nums ${
-          urgent ? "animate-pulse text-rose-400" : ""
+          urgent ? "animate-pulse text-stat-hp" : ""
         }`}
       >
         {seconds === null ? "--" : `${seconds}s`}
@@ -498,7 +498,7 @@ function WaveBanner({
     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 ui-frame-inset rounded-lg px-3 py-1.5 text-sm">
       <span className="font-bold">
         Đợt {survival.wave}
-        {current.boss && <span className="text-rose-400"> · trùm</span>}
+        {current.boss && <span className="text-stat-hp"> · trùm</span>}
       </span>
       <span className="text-caption opacity-80">
         Đã vượt qua {survival.cleared} đợt
@@ -651,11 +651,11 @@ function FighterCard({
     .join("\n");
 
   const ring = targetable
-    ? "ring-2 ring-rose-400"
+    ? "ring-2 ring-stat-hp"
     : active
-      ? "ring-2 ring-amber-400"
+      ? "ring-2 ring-frame-gold-hi"
       : selectable
-        ? "ring-1 ring-amber-400/40"
+        ? "ring-1 ring-frame-gold-hi/40"
         : "ring-1 ring-white/10";
   return (
     <button
@@ -694,32 +694,32 @@ function FighterCard({
           label={fighter.structure ? "Độ bền" : "Máu"}
           value={fighter.hp}
           max={fighter.maxHp}
-          color={fighter.structure ? "bg-amber-600" : "bg-rose-500"}
+          color={fighter.structure ? "bg-frame-bronze" : "bg-stat-hp"}
           keepValue
         />
         {/* Công trình (cổng thành) không ra tay: không có năng lượng, tinh thần. */}
         {!fighter.structure && (
           <>
-            <Bar label="NL" value={fighter.energy} max={100} color="bg-sky-500" />
+            <Bar label="NL" value={fighter.energy} max={100} color="bg-stat-energy" />
             <div className="hidden md:block">
               <Bar
                 label="TT"
                 value={fighter.spirit}
                 max={100}
-                color="bg-emerald-500"
+                color="bg-stat-spirit"
               />
             </div>
           </>
         )}
         {rage !== null && (
-          <Bar label="Nộ" value={rage} max={100} color="bg-orange-500" />
+          <Bar label="Nộ" value={rage} max={100} color="bg-stat-rage" />
         )}
       </div>
       {(fighter.effects.length > 0 || fighter.comboReady || rageTurns > 0) && (
         <div className="mt-1.5 flex flex-wrap gap-1">
           {rageTurns > 0 && (
             <span
-              className="inline-flex items-center gap-1 rounded bg-orange-600/40 px-1 py-0.5 text-caption"
+              className="inline-flex items-center gap-1 rounded bg-stat-rage/40 px-1 py-0.5 text-caption"
               title={`Bị động khi đầy Nộ · ${passiveText(fighter.element)} · còn ${rageTurns} lượt`}
             >
               <PassiveIcon id={ragePassiveId(fighter.element)} name={PASSIVES[fighter.element].name} className="size-3.5" />
@@ -728,7 +728,7 @@ function FighterCard({
           )}
           {fighter.comboReady && fighter.comboPassive && (
             <span
-              className={`inline-flex items-center gap-1 rounded px-1 py-0.5 text-caption ${comboBlocked ? "bg-zinc-600/50" : "bg-amber-600/40"}`}
+              className={`inline-flex items-center gap-1 rounded px-1 py-0.5 text-caption ${comboBlocked ? "bg-ash/50" : "bg-frame-bronze/40"}`}
               title={`Do ${comboSource} mở${comboTarget ? ` · mục tiêu ${comboTarget}` : ""} · ${comboTurns ? `${comboTurns} lượt thường kế tiếp` : "lượt hiện tại"}. Chọn hành động để tận dụng.`}
             >
               <PassiveIcon id={fighter.comboPassive} name={COMBO_PASSIVES[fighter.comboPassive].name} className="size-3.5" />
@@ -739,7 +739,7 @@ function FighterCard({
           {fighter.effects.map((e) => (
             <span
               key={e.kind}
-              className={`rounded px-1 py-0.5 text-caption ${GOOD_EFFECTS.includes(e.kind) ? "bg-emerald-600/40" : "bg-rose-600/40"}`}
+              className={`rounded px-1 py-0.5 text-caption ${GOOD_EFFECTS.includes(e.kind) ? "bg-stat-spirit/40" : "bg-stat-hp/40"}`}
             >
               {EFFECT_NAME[e.kind]}
               {e.kind === "shield"
@@ -1955,7 +1955,7 @@ export default function DemoGame({
             )}
             {phaseObjective?.type === "breakSiege" &&
               phaseObjective.stage === "escort" && (
-                <span className="block text-xs text-violet-200">
+                <span className="block text-xs text-info">
                   Tình tiết phục vụ lối chơi: đoàn lương và toán chặn đường do
                   game sáng tác.
                 </span>
@@ -2080,8 +2080,8 @@ export default function DemoGame({
                       }
                       onPointerDown={(e) => onPointerDown(pos, e)}
                       className={`relative aspect-square rounded-md bg-[var(--cell)] ${
-                        isSel ? "z-10 scale-110 ring-2 ring-amber-300" : ""
-                      } ${isRing ? "ring-2 ring-teal-400" : ""} ${willMatch ? "z-10 ring-2 ring-amber-300 brightness-125" : ""} ${isCur ? "outline-2 outline-sky-400" : ""} ${(aim && needsCell(aim.skill)) || whirlAim ? "cursor-crosshair" : "cursor-pointer"}`}
+                        isSel ? "z-10 scale-110 ring-2 ring-frame-gold-hi" : ""
+                      } ${isRing ? "ring-2 ring-info" : ""} ${willMatch ? "z-10 ring-2 ring-frame-gold-hi brightness-125" : ""} ${isCur ? "outline-2 outline-stat-shield" : ""} ${(aim && needsCell(aim.skill)) || whirlAim ? "cursor-crosshair" : "cursor-pointer"}`}
                     >
                       {shown && (
                         <span
@@ -2115,7 +2115,7 @@ export default function DemoGame({
                 {frame?.chain && (
                   <div
                     key={`${anim!.id}-${anim!.i}`}
-                    className="chain-pop pointer-events-none absolute left-1/2 top-2 rounded bg-amber-500 px-3 py-1 text-sm font-bold text-stone-950 shadow"
+                    className="chain-pop pointer-events-none absolute left-1/2 top-2 rounded bg-primary px-3 py-1 text-sm font-bold text-primary-foreground shadow"
                   >
                     Chuỗi ×{frame.chain}
                   </div>
@@ -2127,8 +2127,8 @@ export default function DemoGame({
                     aria-live="polite"
                     className={`turn-banner pointer-events-none absolute inset-x-3 top-1/2 z-20 rounded border px-3 py-2 text-center font-serif text-base font-black tracking-[0.16em] shadow-lg sm:inset-x-10 sm:text-lg ${
                       turnBanner.side === AI
-                        ? "border-red-500/70 bg-red-950/90 text-red-100 shadow-red-950/60"
-                        : "border-amber-400/70 bg-emerald-950/90 text-amber-200 shadow-emerald-950/60"
+                        ? "border-stat-hp/70 bg-danger-surface/90 text-danger shadow-danger-surface/60"
+                        : "border-frame-gold-hi/70 bg-success-surface/90 text-title-on-wood shadow-success-surface/60"
                     }`}
                     style={{ "--turn-banner-ms": `${turnBanner.side === AI ? COMBAT_PACING.enemyTurnBannerMs : COMBAT_PACING.playerTurnBannerMs}ms` } as React.CSSProperties}
                   >
@@ -2471,7 +2471,7 @@ export default function DemoGame({
                       setWhirlAim(null);
                       setPendingWhirl(null);
                     }}
-                    className={`relative flex w-full flex-col items-center gap-0.5 rounded-lg p-1 text-caption leading-tight sm:w-[4.5rem] border ${aiming ? "border-rose-400 bg-rose-500 text-white" : "border-frame-line-soft bg-wood-panel hover:border-frame-gold"} ${
+                    className={`relative flex w-full flex-col items-center gap-0.5 rounded-lg p-1 text-caption leading-tight sm:w-[4.5rem] border ${aiming ? "border-stat-hp bg-stat-hp text-white" : "border-frame-line-soft bg-wood-panel hover:border-frame-gold"} ${
                       disabled && !aiming ? "opacity-40 grayscale" : ""
                     }`}
                     title={`${skillText(def)} · phím ${i + 1}`}
@@ -2480,7 +2480,7 @@ export default function DemoGame({
                     <span className="absolute left-1 top-1 rounded-br bg-black/60 px-1 text-[11px] font-bold text-white">
                       {i + 1}
                     </span>
-                    <span className="absolute right-1 top-1 rounded-bl bg-sky-700/90 px-1 text-[11px] tabular-nums text-white">
+                    <span className="absolute right-1 top-1 rounded-bl bg-stat-energy/90 px-1 text-[11px] tabular-nums text-white">
                       {comboSkillCost(actor,def)}
                     </span>
                     <span className="text-center">{def.name}</span>
@@ -2504,7 +2504,7 @@ export default function DemoGame({
                           },
                     );
                   }}
-                  className={`col-span-3 flex items-center justify-center gap-1 rounded px-2 py-2 text-caption sm:col-auto ${whirlAim && !whirlAim.skill ? "bg-rose-500 text-white" : "bg-teal-600 text-white"}`}
+                  className={`col-span-3 flex items-center justify-center gap-1 rounded px-2 py-2 text-caption sm:col-auto ${whirlAim && !whirlAim.skill ? "bg-stat-hp text-white" : "bg-info text-white"}`}
                 >
                   <ElementIcon element="phong" className="size-3.5" /> Xoay
                   miễn phí
@@ -2526,7 +2526,7 @@ export default function DemoGame({
                       onPointerLeave={() => setSpinPreview(null)}
                       onFocus={() => setSpinPreview(t)}
                       onBlur={() => setSpinPreview(null)}
-                      className="rounded bg-teal-600 px-2 py-1 font-bold text-white"
+                      className="rounded bg-info px-2 py-1 font-bold text-white"
                       aria-label={`Xoay ${Math.abs(t)} nấc ${t > 0 ? "theo" : "ngược"} chiều kim đồng hồ, ${matched.size > 0 ? `ghép được ${matched.size} ô` : "không ghép được ô nào"}`}
                     >
                       {t > 0 ? "↻" : "↺"}

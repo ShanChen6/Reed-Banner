@@ -207,7 +207,7 @@ function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; n
           sizes={mode.featured ? "(min-width: 1024px) 1280px, 100vw" : "(min-width: 1024px) 420px, (min-width: 640px) 50vw, 100vw"}
           className={`object-cover transition duration-300 motion-reduce:transition-none ${mode.art ? "" : "object-bottom opacity-70 sepia-[.4]"} ${locked ? "grayscale-[85%] brightness-50" : "group-hover:scale-[1.03]"}`}
         />
-        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#1d140d] via-[#1d140d]/25 to-transparent" />
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-wood-lo via-wood-lo/25 to-transparent" />
         {mode.kicker && (
           <span className="home-kicker absolute top-3 left-3 rounded px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase">
             {mode.kicker}
@@ -262,7 +262,7 @@ function UpcomingCard({ mode }: { mode: (typeof UPCOMING)[number] }) {
         ) : (
           <Image src="/art/campaign/rail-ink.webp" alt="" fill sizes="(min-width: 1024px) 460px, 100vw" className="object-cover object-bottom opacity-60 sepia-[.4]" />
         )}
-        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#1d140d] via-[#1d140d]/20 to-transparent" />
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-wood-lo via-wood-lo/20 to-transparent" />
         <span className="home-kicker absolute top-3 left-3 rounded px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase">
           {mode.scene ? "Đã mở" : "Sắp ra mắt"}
         </span>

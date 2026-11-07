@@ -305,7 +305,7 @@ export default function DialoguePlayer({
         onClick={forward}
         className={`min-h-28 cursor-pointer rounded-lg border-2 p-3 ${FOCUS} ${
           line.cinematic
-            ? "border-frame-line-soft bg-gradient-to-b from-black/50 to-[#3a2a1c]/60"
+            ? "border-frame-line-soft bg-gradient-to-b from-black/50 to-wood-hi/60"
             : activeSide === "left"
               ? "border-frame-line bg-wood-lo/60"
               : activeSide === "right"

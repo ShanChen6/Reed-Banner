@@ -18,7 +18,7 @@ import { AtlasCorners } from "./AtlasFrame";
 import { FACTION_STATUS_TEXT } from "./StoryBeats";
 
 const FOCUS =
-  "focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:outline-none";
+  "focus-visible:ring-2 focus-visible:ring-frame-gold-hi focus-visible:outline-none";
 
 /** Kết cục kèm cách kể, theo phân loại ledger (resolutionMethod). */
 export const METHOD_TEXT: Readonly<Record<string, string>> = {

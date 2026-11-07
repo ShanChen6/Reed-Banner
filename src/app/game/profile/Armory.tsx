@@ -121,11 +121,11 @@ export default function Armory({
               <select
                 value={slotFilter}
                 onChange={(e) => setSlotFilter(e.target.value as GearSlot | "all")}
-                className="min-h-9 pointer-coarse:min-h-11 cursor-pointer bg-transparent px-2 text-[15px] text-stone-100 outline-none"
+                className="min-h-9 pointer-coarse:min-h-11 cursor-pointer bg-transparent px-2 text-[15px] text-on-wood outline-none"
               >
-                <option value="all" className="bg-stone-900">Mọi ô</option>
+                <option value="all" className="bg-wood-inset">Mọi ô</option>
                 {slots.map((s) => (
-                  <option key={s} value={s} className="bg-stone-900">
+                  <option key={s} value={s} className="bg-wood-inset">
                     {SLOT_NAME[s]}
                   </option>
                 ))}
@@ -165,7 +165,7 @@ export default function Armory({
                       <GearIcon slot={it.slot} element={it.element} tier={it.tier} set={it.set} profession={it.profession} className="size-full" />
                     </button>
                     {by && (
-                      <span className="pointer-events-none absolute right-1 bottom-1 rounded bg-emerald-800 px-1 text-[11px] leading-tight font-bold text-emerald-50" aria-hidden>
+                      <span className="pointer-events-none absolute right-1 bottom-1 rounded bg-success-surface px-1 text-[11px] leading-tight font-bold text-success" aria-hidden>
                         Mặc
                       </span>
                     )}
@@ -229,7 +229,7 @@ function ItemPanel({
           <p className="text-sm text-[var(--bk-soft)]">
             {item.slot === "vuKhi" && item.profession ? `Chỉ nghề ${PROFESSION_NAME[item.profession]}` : "Mọi tướng sĩ mặc được"}
           </p>
-          <p className="mt-1 text-[15px]">{wearer ? <>Đang ở <b className="text-emerald-300">{nameOf(wearer)}</b></> : "Chưa ai dùng"}</p>
+          <p className="mt-1 text-[15px]">{wearer ? <>Đang ở <b className="text-success">{nameOf(wearer)}</b></> : "Chưa ai dùng"}</p>
         </div>
       </div>
 
@@ -239,10 +239,10 @@ function ItemPanel({
           <select
             value={to}
             onChange={(e) => onTarget(e.target.value)}
-            className="barracks-field min-h-10 pointer-coarse:min-h-11 rounded-md bg-transparent px-2 text-[15px] text-stone-100"
+            className="barracks-field min-h-10 pointer-coarse:min-h-11 rounded-md bg-transparent px-2 text-[15px] text-on-wood"
           >
             {who.map((id) => (
-              <option key={id} value={id} className="bg-stone-900">
+              <option key={id} value={id} className="bg-wood-inset">
                 {nameOf(id)}
               </option>
             ))}
@@ -314,7 +314,7 @@ function MergePanel({
         <GearActionIcon action="merge" className="size-6" />
         Ghép{cost !== null ? ` (−${cost} vàng)` : ""}
       </button>
-      {cost !== null && profile.gold < cost && <p className="text-sm text-rose-300">Không đủ vàng: cần {cost}, có {profile.gold}.</p>}
+      {cost !== null && profile.gold < cost && <p className="text-sm text-danger">Không đủ vàng: cần {cost}, có {profile.gold}.</p>}
     </div>
   );
 }

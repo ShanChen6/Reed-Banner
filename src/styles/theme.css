@@ -78,6 +78,12 @@
     --on-lacquer: #fbecc8;
     --jade: #6fbf8f;
     --ash: #8a7458;
+    /* Chỉ số trong trận: máu, năng lượng, tinh thần, nộ, khiên. Màu bão hòa để đọc trên thanh nhỏ; không dùng cho việc khác. */
+    --stat-hp: #f43f5e;
+    --stat-energy: #0ea5e9;
+    --stat-spirit: #10b981;
+    --stat-rage: #f97316;
+    --stat-shield: #38bdf8;
   }
 
   /* Compatibility aliases for existing board/art components. */
@@ -138,17 +144,24 @@
   --color-paper: var(--paper);
   --color-paper-hi: var(--paper-hi);
   --color-paper-card: var(--paper-card);
+  --color-paper-deep: var(--paper-deep);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
   --color-frame-line: var(--frame-line);
   --color-frame-line-soft: var(--frame-line-soft);
   --color-frame-gold: var(--frame-gold);
+  --color-frame-gold-hi: var(--frame-gold-hi);
   --color-frame-bronze: var(--frame-bronze);
   --color-lacquer: var(--lacquer);
   --color-lacquer-hi: var(--lacquer-hi);
   --color-on-lacquer: var(--on-lacquer);
   --color-jade: var(--jade);
   --color-ash: var(--ash);
+  --color-stat-hp: var(--stat-hp);
+  --color-stat-energy: var(--stat-energy);
+  --color-stat-spirit: var(--stat-spirit);
+  --color-stat-rage: var(--stat-rage);
+  --color-stat-shield: var(--stat-shield);
 }
 
 @theme {

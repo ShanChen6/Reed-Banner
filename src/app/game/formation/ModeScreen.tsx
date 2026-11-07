@@ -212,7 +212,7 @@ export default function ModeScreen({
               label: (
                 <>
                   Ban thưởng
-                  {overview?.canPlay && pending.length > 0 && <span role="img" aria-label={`${pending.length} thưởng chờ nhận`} className="ml-1.5 inline-block size-2 rounded-full bg-red-500 align-middle" />}
+                  {overview?.canPlay && pending.length > 0 && <span role="img" aria-label={`${pending.length} thưởng chờ nhận`} className="ml-1.5 inline-block size-2 rounded-full bg-lacquer-hi align-middle" />}
                 </>
               ),
             },

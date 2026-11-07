@@ -199,7 +199,7 @@ export default function GearPanel({
           Trang bị · Túi đồ {profile.bag.length}/{BAG_LIMIT}
         </h2>
         <span className="tabular-nums">Vàng: {profile.gold}</span>
-        {message && <span className="text-rose-500">{message}</span>}
+        {message && <span className="text-danger">{message}</span>}
       </div>
       {locked && (
         <p className="mb-2 opacity-70">

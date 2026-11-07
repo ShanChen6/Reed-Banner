@@ -238,7 +238,7 @@ function TeamControl({
           {nameOf(t)}
         </button>
       ))}
-      <button type="button" onClick={() => setOpen(null)} className="min-h-10 pointer-coarse:min-h-11 rounded-md px-2 text-[var(--bk-soft)] hover:text-stone-100">
+      <button type="button" onClick={() => setOpen(null)} className="min-h-10 pointer-coarse:min-h-11 rounded-md px-2 text-[var(--bk-soft)] hover:text-on-wood">
         Hủy
       </button>
     </div>
@@ -292,9 +292,9 @@ function Meter({ label, value, max, text }: { label: string; value: number; max:
     <div className="flex items-center gap-3">
       <span className="w-24 shrink-0 text-[15px] text-[var(--bk-soft)]">{label}</span>
       <div role="meter" aria-label={label} aria-valuenow={value} aria-valuemin={0} aria-valuemax={max} className="h-2.5 flex-1 overflow-hidden rounded-full bg-black/50 shadow-inner">
-        <div className="h-full rounded-full bg-gradient-to-r from-amber-600 to-amber-300" style={{ width: `${Math.min(100, (value / Math.max(1, max)) * 100)}%` }} />
+        <div className="h-full rounded-full bg-gradient-to-r from-frame-bronze to-frame-gold-hi" style={{ width: `${Math.min(100, (value / Math.max(1, max)) * 100)}%` }} />
       </div>
-      <span className="min-w-20 text-right text-[15px] text-stone-100 tabular-nums">{text}</span>
+      <span className="min-w-20 text-right text-[15px] text-on-wood tabular-nums">{text}</span>
     </div>
   );
 }
@@ -303,9 +303,9 @@ function StatCard({ label, value, bonus }: { label: string; value: number | stri
   return (
     <div className="barracks-inset rounded-md px-3 py-2">
       <dt className="text-sm text-[var(--bk-soft)]">{label}</dt>
-      <dd className="font-serif text-xl font-bold text-stone-50 tabular-nums">
+      <dd className="font-serif text-xl font-bold text-title-on-wood tabular-nums">
         {value}
-        {bonus !== undefined && bonus > 0 && <span className="ml-1.5 text-sm font-semibold text-emerald-400">+{bonus}</span>}
+        {bonus !== undefined && bonus > 0 && <span className="ml-1.5 text-sm font-semibold text-success">+{bonus}</span>}
       </dd>
     </div>
   );
@@ -327,7 +327,7 @@ function Overview({ profile, id, fighter, bare, worn }: { profile: Profile; id: 
         <StatCard label="Trang bị" value={`${worn.length}/9`} />
       </dl>
       {bonuses.length > 0 && (
-        <ul className="flex flex-col gap-1 text-sm text-emerald-300" aria-label="Thưởng bộ và cộng hưởng đang kích hoạt">
+        <ul className="flex flex-col gap-1 text-sm text-success" aria-label="Thưởng bộ và cộng hưởng đang kích hoạt">
           {bonuses.map((b) => (
             <li key={`${b.kind}-${b.id}-${b.level}`} className="flex items-center gap-1.5">
               {b.kind === "set" ? <SetEmblem set={b.id} className="size-5 shrink-0" /> : "✦"} {bonusText(b)}
@@ -411,7 +411,7 @@ function SkillLine({
     <li className={`barracks-inset flex items-center gap-3 rounded-md px-2.5 py-2 ${unlock ? "opacity-55" : ""}`}>
       <SkillIcon def={def} className="size-10 shrink-0" />
       <div className="min-w-0 flex-1">
-        <p className="text-[15px] leading-snug font-semibold text-stone-50">
+        <p className="text-[15px] leading-snug font-semibold text-title-on-wood">
           {def.name} <span className="text-sm font-normal text-[var(--bk-soft)]">· ô {def.slot} · {scaled.cost} NL</span>
         </p>
         <p className="line-clamp-2 text-sm text-[var(--bk-soft)]" title={skillText(scaled)}>
@@ -422,9 +422,9 @@ function SkillLine({
         <span className="shrink-0 text-sm text-[var(--bk-soft)]">Mở ở cấp {unlock}</span>
       ) : (
         <div className="flex shrink-0 flex-col items-end gap-1">
-          <span className="text-sm text-amber-300 tabular-nums" aria-label={`Cấp kỹ năng ${level}/${SKILL_MAX_LEVEL}`}>
+          <span className="text-sm text-frame-gold tabular-nums" aria-label={`Cấp kỹ năng ${level}/${SKILL_MAX_LEVEL}`}>
             {"★".repeat(level)}
-            <span className="text-stone-600">{"★".repeat(SKILL_MAX_LEVEL - level)}</span>
+            <span className="text-ash">{"★".repeat(SKILL_MAX_LEVEL - level)}</span>
           </span>
           <button
             type="button"
@@ -464,10 +464,10 @@ function Details({ profile, id, fighter, bare, worn }: { profile: Profile; id: s
         <tbody className="tabular-nums">
           {rows.map(([k, base, total]) => (
             <tr key={k} className="border-t border-[var(--bk-line-soft)]">
-              <th scope="row" className="py-1.5 font-normal text-stone-200">{k}</th>
+              <th scope="row" className="py-1.5 font-normal text-on-wood">{k}</th>
               <td className="py-1.5 text-right">{base}</td>
-              <td className="py-1.5 text-right text-emerald-400">{total - base > 0 ? `+${total - base}` : "–"}</td>
-              <td className="py-1.5 text-right font-semibold text-stone-50">{total}</td>
+              <td className="py-1.5 text-right text-success">{total - base > 0 ? `+${total - base}` : "–"}</td>
+              <td className="py-1.5 text-right font-semibold text-title-on-wood">{total}</td>
             </tr>
           ))}
         </tbody>
@@ -485,7 +485,7 @@ function Details({ profile, id, fighter, bare, worn }: { profile: Profile; id: s
           <>
             <dt className="text-[var(--bk-soft)]">Kỹ năng riêng</dt>
             <dd>
-              <span className="font-semibold text-amber-200">{ultimate.name}</span>
+              <span className="font-semibold text-title-on-wood">{ultimate.name}</span>
               {p.level < MAIN_SLOT_UNLOCK[4]! && <span className="text-[var(--bk-soft)]"> · mở ở cấp {MAIN_SLOT_UNLOCK[4]}</span>}
             </dd>
           </>
