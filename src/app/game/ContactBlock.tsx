@@ -7,7 +7,7 @@
 // Khi có tranh thư cuộn vẽ tay (docs/06-art/prompts/thu-cuon-lien-he.md), thay các lớp CSS bằng ảnh làm khung, giữ nguyên chữ và liên kết.
 
 import { useId, type ReactNode } from "react";
-import { CONTACT_PENDING, CONTACT_SUB, CONTACT_TITLE, SOCIAL_BLURB, type SocialLink } from "./footerLinks";
+import { CONTACT_PENDING_LABEL, CONTACT_SUB, CONTACT_TITLE, SOCIAL_BLURB, type SocialLink } from "./footerLinks";
 import styles from "./ContactBlock.module.css";
 import { SOCIAL_ICON_PATHS } from "./socialIcons";
 
@@ -24,15 +24,14 @@ function Glyph({ label }: { label: string }) {
   );
 }
 
-/** Nền tảng chờ ghi dòng "Trạm thư sắp mở"; còn lại là lời giới thiệu. */
-const blurbOf = (l: SocialLink) => (l.configured ? SOCIAL_BLURB[l.label] : CONTACT_PENDING);
+const blurbOf = (l: SocialLink) => SOCIAL_BLURB[l.label];
 /** Liên kết đang khóa đọc là tên nền tảng; liên kết thật nói thêm "mở ở thẻ mới". */
 const ariaLabel = (l: SocialLink) => (l.href ? `${l.label} (mở ở thẻ mới)` : l.label);
 
 /** Một nền tảng: liên kết thật (mở thẻ mới) hoặc nút không làm gì khi đang khóa. */
-function Control({ link, children }: { link: SocialLink; children: ReactNode }) {
+function Control({ link, children, className }: { link: SocialLink; children: ReactNode; className?: string }) {
   const common = {
-    className: styles.row ?? "",
+    className: className ?? styles.row ?? "",
     "aria-label": ariaLabel(link),
     "data-pending": link.configured ? undefined : "",
   };
@@ -82,12 +81,12 @@ function Seal({ uid }: { uid: string }) {
  * dày đúng tỉ lệ: lõi dây, dải xoắn chéo (nét đứt vuông góc với dây), vệt sáng, bóng đổ, nút thắt ở đinh và vòng buộc quanh trục.
  */
 function Cords({ uid }: { uid: string }) {
-  const NAIL = { x: 320, y: 13 };
-  const ties = [44, 596].map((x) => ({ x, y: 84 }));
+  const NAIL = { x: 320, y: 11 };
+  const ties = [44, 596].map((x) => ({ x, y: 54 }));
   // Hai dây hơi võng, mỗi dây một độ võng khác nhau để không trông như vẽ bằng thước.
-  const sag = [4.5, 3];
+  const sag = [3, 2];
   return (
-    <svg className={styles.cords} viewBox="0 0 640 86" aria-hidden>
+    <svg className={styles.cords} viewBox="0 0 640 62" aria-hidden>
       <defs>
         <filter id={`${uid}rs`} x="-5%" y="-5%" width="110%" height="125%">
           <feDropShadow dx="0" dy="3.5" stdDeviation="2.4" floodColor="#000" floodOpacity="0.55" />
@@ -159,6 +158,9 @@ function Roll() {
 export default function ContactBlock({ links }: { links: readonly SocialLink[] }) {
   const uid = `colau${useId().replace(/:/g, "")}`;
   if (links.length === 0) return null;
+  // Nền tảng đã có địa chỉ hiện từng dòng thư; nền tảng chờ gộp thành một dòng biểu tượng ở cuối thư (gọn hơn).
+  const ready = links.filter((l) => l.configured);
+  const waiting = links.filter((l) => !l.configured);
   return (
     <section aria-label="Liên hệ" className={styles.scroll}>
       {/* Đinh đồng trên tường và hai dây thừng buộc vào hai đầu trục trên. */}
@@ -173,7 +175,7 @@ export default function ContactBlock({ links }: { links: readonly SocialLink[] }
           <h2 className={styles.paperTitle}>{CONTACT_TITLE}</h2>
           <p className={styles.paperSub}>{CONTACT_SUB}</p>
           <ul className={styles.letters} aria-label="Mạng xã hội">
-            {links.map((l) => (
+            {ready.map((l) => (
               <li key={l.label}>
                 <Control link={l}>
                   <Glyph label={l.label} />
@@ -181,15 +183,27 @@ export default function ContactBlock({ links }: { links: readonly SocialLink[] }
                     <span className={styles.rowName}>{l.label}</span>
                     <span className={styles.rowBlurb}>{blurbOf(l)}</span>
                   </span>
-                  {l.configured && (
-                    <span aria-hidden className={styles.chev}>
-                      ›
-                    </span>
-                  )}
+                  <span aria-hidden className={styles.chev}>
+                    ›
+                  </span>
                 </Control>
               </li>
             ))}
           </ul>
+          {waiting.length > 0 && (
+            <div className={styles.waiting}>
+              <span className={styles.waitingLabel}>{CONTACT_PENDING_LABEL}</span>
+              <ul className={styles.waitingList} aria-label="Mạng xã hội sắp mở">
+                {waiting.map((l) => (
+                  <li key={l.label}>
+                    <Control link={l} className={styles.waitBtn ?? ""}>
+                      <Glyph label={l.label} />
+                    </Control>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           <Seal uid={uid} />
         </div>
       </div>

@@ -1,12 +1,13 @@
 "use client";
 
 // Footer của màn game: chỉ ở Chiến trường và các màn thông tin (xem FOOTER_SCENES), không bao giờ trong lúc đang chơi.
-// Hai cột căn giữa trong khung 72rem (cùng khổ với footer trang giới thiệu để không dạt ra hai mép màn rộng): trái là nhận diện,
-// liên kết và lưu ý; phải là thư cuộn liên hệ (ContactBlock), chỉ có MỘT khối liên hệ trong cả dự án (Shan chốt 07/11/2026: để ở
+// Gọn (Shan chọn hướng gọn 07/11/2026): hai cột cùng khổ với nội dung phía trên (MODE_CONTENT_WIDTH): trái là nhận diện,
+// liên kết và lưu ý (căn theo đầu thư cuộn); phải là thư cuộn liên hệ, trên điện thoại thư cuộn lên trước (ContactBlock), chỉ có MỘT khối liên hệ trong cả dự án (Shan chốt 07/11/2026: để ở
 // footer màn game). Liên kết ngoài đang khóa: vẫn hiện, bấm không chuyển trang (xem footerLinks.ts).
 
 import Link from "next/link";
 import { LogoMark } from "./art/logo";
+import { MODE_CONTENT_WIDTH } from "@/components/game-ui";
 import ContactBlock from "./ContactBlock";
 import { buildLabel, footerLinks, socialLinks, type FooterLink } from "./footerLinks";
 import type { Scene } from "./scene";
@@ -42,9 +43,9 @@ export default function GameFooter() {
   const links = footerLinks();
   const build = buildLabel();
   return (
-    <footer className="border-t border-frame-line-soft bg-wood-lo px-4 py-10 text-caption text-on-wood-soft sm:px-6">
-      <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-center lg:gap-14">
-        <div className="flex flex-col gap-5 lg:pr-4">
+    <footer className="border-t border-frame-line-soft bg-wood-lo px-4 py-6 text-caption text-on-wood-soft sm:px-6">
+      <div className={`mx-auto grid w-full gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-start lg:gap-12 ${MODE_CONTENT_WIDTH}`}>
+        <div className="order-2 flex flex-col gap-4 lg:order-1 lg:pt-6">
           <div className="flex items-center gap-4">
             <LogoMark className="size-14" />
             <div>
@@ -64,7 +65,7 @@ export default function GameFooter() {
             {build && <span className="whitespace-nowrap"> · Bản {build}</span>}
           </p>
         </div>
-        <div className="flex justify-center lg:justify-end">
+        <div className="order-1 flex justify-center lg:order-2 lg:justify-end">
           <ContactBlock links={socialLinks()} />
         </div>
       </div>
