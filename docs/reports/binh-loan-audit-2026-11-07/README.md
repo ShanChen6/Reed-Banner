@@ -70,3 +70,12 @@ Bố cục co giãn tốt, nội dung sử liệu rõ nguồn (nhãn Sử chép,
 | Gập Tái đấu sứ quân thành một dòng khi chưa mở sứ quân nào (P1.2); chỉ hiện ở tab Bản đồ, không lặp ở Nhiệm vụ và Sử ký | Đã làm 07/11/2026 |
 | Chiều cao ở 360px (mới): tab Bản đồ 2929 → 2335px, Nhiệm vụ 1686 → 970px, Sử ký 1886 → 1195px; laptop: Bản đồ 1420 → 947px, Nhiệm vụ 1395 → 900px | Đo 07/11/2026 |
 | Các mục còn lại (P1.1 nút bắt đầu nổi bật, P1.3 gập Sử ký, P1.4 vùng chạm, P1.5 trang chọn cuối, header 360px) | Chưa làm |
+
+### Cập nhật 07/11/2026 (Shan phản hồi sau khi gom đại card)
+
+| Việc | Trạng thái |
+| --- | --- |
+| **Bấm cứ điểm làm bảng bên phải cuộn lồng trong card.** Nguyên nhân: ở màn từ 1280px bảng chương/cứ điểm đặt tuyệt đối với `overflow-y: auto`, nên khi nội dung dài hơn bản đồ (ví dụ 1129px trong khung 739px) hiện thanh cuộn riêng bên trong card. Sửa: bảng tự giãn theo nội dung, bỏ khung cuộn lồng, bản đồ căn đầu hàng. Đo ở 1920, 1440, 1100, 360px: không còn khung cuộn lồng sau khi bấm 4 cứ điểm; trang không tự cuộn | Đã làm |
+| **Tab "Binh lực"** (liên kết sang Doanh Trại, không có đường quay lại; Doanh Trại đã có sẵn trong menu tài khoản ở header) **thay bằng tab "Tái đấu"** ngay trong card: chuyển khu Tái đấu sứ quân từ cuối tab Bản đồ sang tab riêng, nên tab Bản đồ ngắn hơn và không còn liên kết rời khỏi màn. Doanh Trại vẫn vào được từ header và từ phần "ra trận cùng đội đã chọn ở Doanh Trại" trong chữ giải thích | Đã làm |
+
+Ghi chú: lỗi `reveal` (bản đồ phóng to tự kéo về giữa khi cờ nhận tiêu điểm) không tái hiện được bằng chuột ở các mức phóng thử; không sửa.

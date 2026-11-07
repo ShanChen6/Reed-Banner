@@ -22,7 +22,6 @@ import {
   type ChapterContent,
   type ChapterMissionStatus,
 } from "@/core";
-import { SceneLink } from "../SceneContext";
 import { AtlasCorners } from "./AtlasFrame";
 import { BasisBadge } from "./StoryBeats";
 import { backdropUrl, missionBackdrop } from "./dialogue";
@@ -247,7 +246,7 @@ export function ChapterPanel({
       className="atlas-frame atlas-frame-paper flex flex-col p-3 xl:h-full"
     >
       <AtlasCorners />
-      <div className="atlas-scroll flex min-h-0 flex-1 flex-col gap-3 xl:overflow-y-auto xl:pr-1">
+      <div className="atlas-scroll flex min-h-0 flex-1 flex-col gap-3">
         <header>
           <p className="text-caption font-semibold tracking-widest uppercase opacity-75">
             Chương {roman} · {finished}/{chapter.missions.length} nhiệm vụ
@@ -465,7 +464,7 @@ export function StrongholdPanel({
       className="atlas-frame atlas-frame-paper flex flex-col p-3 xl:h-full"
     >
       <AtlasCorners />
-      <div className="atlas-scroll flex min-h-0 flex-1 flex-col gap-3 xl:overflow-y-auto xl:pr-1">
+      <div className="atlas-scroll flex min-h-0 flex-1 flex-col gap-3">
         <header className="flex items-start gap-3">
           <FactionFlag
             id={s.id}
@@ -602,10 +601,10 @@ export function StrongholdPanel({
   );
 }
 
-export type AtlasView = "atlas" | "mission" | "codex";
+export type AtlasView = "atlas" | "mission" | "codex" | "raid";
 
 /** Biểu tượng nét mảnh cho thanh header (bản đồ, cuộn nhiệm vụ, sách sử, binh lính). */
-function TabIcon({ kind }: { kind: AtlasView | "army" }) {
+function TabIcon({ kind }: { kind: AtlasView }) {
   const p = {
     fill: "none",
     stroke: "currentColor",
@@ -636,14 +635,10 @@ function TabIcon({ kind }: { kind: AtlasView | "army" }) {
           <path {...p} d="M12 6v14.5" />
         </>
       )}
-      {kind === "army" && (
+      {kind === "raid" && (
         <>
-          <circle {...p} cx="8" cy="7" r="2.5" />
-          <circle {...p} cx="16" cy="7" r="2.5" />
-          <path
-            {...p}
-            d="M3 20v-3a5 5 0 0 1 10 0v3M11 20v-3a5 5 0 0 1 10 0v3"
-          />
+          <path {...p} d="M4 4l9 9M6 14l-2 2 2 2 2-2M11 15l2 2" />
+          <path {...p} d="M20 4l-9 9M18 14l2 2-2 2-2-2" />
         </>
       )}
     </svg>
@@ -651,7 +646,7 @@ function TabIcon({ kind }: { kind: AtlasView | "army" }) {
 }
 
 /**
- * Thanh header của màn Sử ký: Bản đồ, Nhiệm vụ (nhiệm vụ đang xem), Sử ký (sổ thế cục và hồ sơ sứ quân), Binh lực
+ * Thanh header của màn Sử ký: Bản đồ, Nhiệm vụ (nhiệm vụ đang xem), Sử ký (sổ thế cục và hồ sơ sứ quân), Tái đấu (Tái đấu sứ quân, thay liên kết Binh lực sang Doanh Trại không có đường quay lại)
  * (đội hình ở trang Hồ sơ). Đổi thẻ chỉ đổi màn đang xem, không gọi API.
  */
 type StatKind = "level" | "gold" | "supply";
@@ -707,6 +702,7 @@ export function AtlasHeader({
     { v: "atlas", label: "Bản đồ" },
     { v: "mission", label: "Nhiệm vụ" },
     { v: "codex", label: "Sử ký" },
+    { v: "raid", label: "Tái đấu" },
   ];
   const tabClass = (active: boolean) =>
     `atlas-tab flex h-[52px] min-w-0 flex-col items-center justify-center gap-0.5 rounded-md border px-1 text-caption leading-none font-bold tracking-wide whitespace-nowrap uppercase sm:h-12 sm:flex-row sm:gap-1.5 sm:px-2 sm:text-sm ${
@@ -739,10 +735,6 @@ export function AtlasHeader({
             {t.label}
           </button>
         ))}
-        <SceneLink scene="PROFILE" className={tabClass(false)}>
-          <TabIcon kind="army" />
-          Binh lực
-        </SceneLink>
       </nav>
       <div className="flex flex-wrap items-center justify-end gap-1.5 px-1">
         <dl className="flex flex-wrap items-center justify-end gap-1.5 text-sm">
