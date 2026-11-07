@@ -164,7 +164,7 @@ export default function Barracks({
                     onBack={back}
                   />
                 ) : (
-                  <p className="py-16 text-center text-[var(--bk-soft)]">Chưa có tướng sĩ để xem.</p>
+                  <p className="py-16 text-center text-[var(--on-wood-soft)]">Chưa có tướng sĩ để xem.</p>
                 )}
               </section>
             </div>

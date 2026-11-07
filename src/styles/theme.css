@@ -69,12 +69,13 @@
     --frame-line: #6b4a22;
     --frame-line-soft: #3e2c1e;
     --frame-gold: #c9a25a;
-    --frame-gold-hi: #d4a24c;
+    --frame-gold-hi: var(--color-brand-gold);
     --frame-bronze: #8f6a32;
     --frame-inner: #c9a25a73;
+    --frame-bronze-hi: color-mix(in srgb, var(--frame-bronze), var(--frame-gold));
+    --frame-gold-pale: var(--color-brand-gold-light);
     /* Viền vừa (giữa --frame-line-soft và --frame-line) và chữ phụ trên gỗ; trước là --atlas-border-soft, --atlas-muted. */
     --frame-line-mid: #9c7845aa;
-    --on-wood-muted: #8a7458;
     --lacquer: #8f241d;
     --lacquer-hi: #b4382c;
     --lacquer-lo: #5e1712;
@@ -91,12 +92,6 @@
 
   /* Compatibility aliases for existing board/art components. */
   :root {
-    --bg: var(--background);
-    --panel: var(--surface);
-    --fg: var(--foreground);
-    --gold: var(--primary);
-    --frame: var(--decorative-frame);
-    --cell: var(--battle-cell);
   }
 }
 

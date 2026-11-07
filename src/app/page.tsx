@@ -120,7 +120,7 @@ export default function Home() {
   const board = heroBoard();
   const flags = towerFeatureFlags();
   return (
-    <div className="demo-bg min-h-dvh bg-[var(--bg)] text-on-wood">
+    <div className="demo-bg min-h-dvh bg-[var(--background)] text-on-wood">
       <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-wood-lo focus:p-2">
         Bỏ qua tới nội dung
       </a>
@@ -133,13 +133,13 @@ export default function Home() {
           <ul className="ml-auto hidden items-center gap-5 text-sm text-on-wood-soft md:flex">
             {NAV.map((n) => (
               <li key={n.href}>
-                <a href={n.href} className="hover:text-[var(--gold)]">
+                <a href={n.href} className="hover:text-[var(--primary)]">
                   {n.label}
                 </a>
               </li>
             ))}
           </ul>
-          <Link href="/game/login" className="ml-auto text-sm text-on-wood-soft hover:text-[var(--gold)] md:ml-2">
+          <Link href="/game/login" className="ml-auto text-sm text-on-wood-soft hover:text-[var(--primary)] md:ml-2">
             Đăng nhập
           </Link>
           <PlayButton className="px-3 py-1.5 text-sm" />
@@ -175,7 +175,7 @@ export default function Home() {
               <ul className="mt-5 flex flex-wrap gap-2 text-sm">
                 {NAV.slice(0, 4).map((n) => (
                   <li key={n.href}>
-                    <a href={n.href} className="rounded-full border border-frame-gold/35 bg-wood-inset px-3 py-1 text-on-wood-soft hover:border-frame-gold hover:text-[var(--gold)]">
+                    <a href={n.href} className="rounded-full border border-frame-gold/35 bg-wood-inset px-3 py-1 text-on-wood-soft hover:border-frame-gold hover:text-[var(--primary)]">
                       {n.label}
                     </a>
                   </li>
@@ -347,7 +347,7 @@ export default function Home() {
             <li className="flex flex-col items-center rounded-2xl fx-panel-hi p-4 text-center">
               <Portrait id="dinhBoLinh" element="moc" profession="tuongSi" className="size-20" />
               <p className="mt-2 font-bold">Đinh Bộ Lĩnh</p>
-              <p className="text-xs text-[var(--gold)]">Thủ lĩnh · đổi được hệ</p>
+              <p className="text-xs text-[var(--primary)]">Thủ lĩnh · đổi được hệ</p>
               <p className="mt-2 text-xs text-on-wood-soft">Chọn nghề và hệ trước trận: 3 chiêu nghề, 2 chiêu hệ, 1 tuyệt chiêu và bị động thủ lĩnh.</p>
             </li>
             {STARTER_COMPANIONS.map((c) => (
@@ -383,7 +383,7 @@ export default function Home() {
                     )}
                   </span>
                   <span className="mt-2 flex-1 text-sm text-on-wood-soft">{m.body}</span>
-                  {open && <span className="mt-3 text-sm font-semibold text-[var(--gold)] group-hover:brightness-125">Vào chơi ›</span>}
+                  {open && <span className="mt-3 text-sm font-semibold text-[var(--primary)] group-hover:brightness-125">Vào chơi ›</span>}
                 </>
               );
               return (
@@ -413,7 +413,7 @@ export default function Home() {
             ].map(([slug, label], i) => (
               <span key={slug}>
                 {i > 0 && " · "}
-                <Link href={`/game/${slug}`} className="text-on-wood-soft underline-offset-4 hover:text-[var(--gold)] hover:underline">
+                <Link href={`/game/${slug}`} className="text-on-wood-soft underline-offset-4 hover:text-[var(--primary)] hover:underline">
                   {label}
                 </Link>
               </span>
@@ -428,7 +428,7 @@ export default function Home() {
               <details key={f.q} className="group rounded-xl fx-panel px-5 py-4">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold">
                   {f.q}
-                  <span aria-hidden className="text-[var(--gold)] transition group-open:rotate-45">
+                  <span aria-hidden className="text-[var(--primary)] transition group-open:rotate-45">
                     +
                   </span>
                 </summary>
@@ -464,7 +464,7 @@ export default function Home() {
             <ul className="grid grid-cols-2 gap-x-6 border-y border-frame-gold/20 py-3 text-base sm:grid-cols-3">
               {NAV.map((n) => (
                 <li key={n.href}>
-                  <a href={n.href} className="inline-flex min-h-11 items-center hover:text-[var(--gold)]">
+                  <a href={n.href} className="inline-flex min-h-11 items-center hover:text-[var(--primary)]">
                     {n.label}
                   </a>
                 </li>
@@ -476,7 +476,7 @@ export default function Home() {
                 { href: "/game/register", label: "Đăng ký" },
               ].map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="inline-flex min-h-11 items-center hover:text-[var(--gold)]">
+                  <Link href={l.href} className="inline-flex min-h-11 items-center hover:text-[var(--primary)]">
                     {l.label}
                   </Link>
                 </li>

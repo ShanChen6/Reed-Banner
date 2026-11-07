@@ -252,12 +252,12 @@ function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; n
         <p className="text-[15px] leading-snug text-[var(--on-wood)]/90">{mode.text}</p>
         <div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-2 text-sm">
           {locked ? (
-            <span className="flex items-center gap-1.5 text-[var(--on-wood-muted)]">
+            <span className="flex items-center gap-1.5 text-[var(--ash)]">
               <LockGlyph /> {mode.lockedText ?? "Sắp khai mở · tiến trình vẫn được giữ"}
             </span>
           ) : (
             <>
-              <span className="flex min-w-0 flex-1 items-center gap-1.5 text-[var(--on-wood-muted)]">
+              <span className="flex min-w-0 flex-1 items-center gap-1.5 text-[var(--ash)]">
                 {needsLogin && <LockGlyph />}
                 <span className="leading-tight">{needsLogin ? "Đăng nhập để ghi danh xếp hạng" : mode.status}</span>
               </span>
@@ -308,11 +308,11 @@ function UpcomingCard({ mode }: { mode: (typeof UPCOMING)[number] }) {
         <p className="text-[15px] leading-snug text-[var(--on-wood)]/90">{mode.text}</p>
         {mode.scene ? (
           <div className="mt-auto flex items-center justify-between gap-2 text-sm">
-            <span className="text-[var(--on-wood-muted)]">{mode.note ?? "Chơi thường · có xếp hạng khi bật"}</span>
+            <span className="text-[var(--ash)]">{mode.note ?? "Chơi thường · có xếp hạng khi bật"}</span>
             <span className="home-enter flex items-center gap-1 font-serif font-semibold">Vào <span aria-hidden>›</span></span>
           </div>
         ) : (
-          <span className="mt-auto flex items-center gap-1.5 text-sm text-[var(--on-wood-muted)]">
+          <span className="mt-auto flex items-center gap-1.5 text-sm text-[var(--ash)]">
             <LockGlyph /> Đang thiết kế, chưa chơi được
           </span>
         )}

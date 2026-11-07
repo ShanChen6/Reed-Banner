@@ -1225,7 +1225,7 @@ export default function BattleStage({
     <div
       ref={host}
       aria-hidden
-      className="relative h-32 w-full overflow-hidden rounded-xl border border-[var(--gold)]/40 bg-gradient-to-b from-transparent via-black/5 to-black/25 sm:h-40 md:h-44"
+      className="relative h-32 w-full overflow-hidden rounded-xl border border-[var(--primary)]/40 bg-gradient-to-b from-transparent via-black/5 to-black/25 sm:h-40 md:h-44"
     >
       <div ref={camera} className="absolute inset-0">
         {/* Mặt đất: dải mờ dưới chân hai đội. */}

@@ -16,7 +16,7 @@ export default function SkillInfo({ def }: { def: SkillDef }) {
             {def.lineName ? `${def.lineName} · ` : ""}{skillSourceName(def)} · ô {def.slot ?? "—"} · mở ở cấp {SKILL_SLOT_UNLOCK[def.slot ?? 0] ?? 1}
           </p>
           <p className="mt-1 text-caption text-on-wood-soft">
-            <span className="text-[var(--gold)]">{def.cost} năng lượng</span> · Mục tiêu: {SKILL_TARGET_NAME[def.target]}
+            <span className="text-[var(--primary)]">{def.cost} năng lượng</span> · Mục tiêu: {SKILL_TARGET_NAME[def.target]}
           </p>
         </div>
       </div>
