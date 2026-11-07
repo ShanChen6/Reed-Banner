@@ -67,6 +67,19 @@ const SOCIAL_DEFAULTS: Readonly<Record<SocialPlatform, { href: string | null; sh
   Zalo: { href: null, show: "withUrl" },
 };
 
+/** Lời chú thích từng nền tảng, giọng thư tín phong kiến (hiện khi rê chuột/focus và trong cuộn thư). */
+export const SOCIAL_BLURB: Readonly<Record<SocialPlatform, string>> = {
+  Facebook: "Gửi thư trực tiếp cho tác giả",
+  TikTok: "Xem thước phim của tác giả",
+  LinkedIn: "Kết giao nghề nghiệp",
+  GitHub: "Xem mã nguồn và công trình",
+  Instagram: "Hình ảnh và hậu trường",
+  Discord: "Hội ngộ cùng cộng đồng",
+  X: "Tin ngắn truyền khắp nơi",
+  YouTube: "Xem thước phim dài",
+  Zalo: "Gửi thư qua Zalo",
+};
+
 export interface SocialLink extends FooterLink {
   readonly label: SocialPlatform;
   /** Đã có địa chỉ (dù đang khóa); false là nền tảng chờ. Dùng để chọn chú thích, không liên quan việc khóa. */
