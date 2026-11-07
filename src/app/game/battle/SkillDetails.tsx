@@ -8,7 +8,7 @@ export default function SkillDetails({skills,passive,fighter,paper=false}:{paper
   const reactions=fighter?chasePassives(fighter):[];
   const fusion=fighter?fusionPassiveLines(fighter):[];
   // Luật chi tiết là nội dung đọc dài: ở sảnh dùng giấy dó chữ mực, nơi khác giữ nền hiện có (docs/05-ui-ux/design-system/theme.md).
-  const box=paper?'ui-frame--paper w-full rounded-lg border border-frame-bronze p-3 text-sm':'w-full rounded border border-current/15 p-2 text-xs';
+  const box=paper?'ui-frame--paper col-span-full w-full rounded-lg border border-frame-bronze p-3 text-sm':'col-span-full w-full rounded border border-current/15 p-2 text-caption';
   const accent=paper?'text-[var(--ink-strong)]':'text-frame-gold';
   if(fusion.length)return <details className={box}>
     <summary className="cursor-pointer font-semibold pointer-coarse:py-3.5">Bộ 6 chủ động · 4 nội tại dung hợp</summary>
