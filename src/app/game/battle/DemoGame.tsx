@@ -5,7 +5,7 @@ import { fusionPassiveLines, fusionSummary, isFusion } from "./special-labels";
 import SkillDetails from "./SkillDetails";
 import { skillText } from "./labels";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import {
   act,
   swapCells,
@@ -526,6 +526,23 @@ function whirlHint(a: NonNullable<WhirlAim>): string {
 /** Ô nằm trong vòng 8 ô quanh tâm lốc xoáy. */
 const inRing = (c: Pos, p: Pos) =>
   Math.max(Math.abs(c.row - p.row), Math.abs(c.col - p.col)) === 1;
+
+/**
+ * Sân khấu hình tướng chỉ hiện từ 640px (sm) trở lên: trên điện thoại nhỏ nó chiếm cả màn hình đầu mà thẻ tướng bên dưới
+ * đã đủ thông tin, nên bỏ hẳn (không dựng) để bàn cờ lên trước. Không dùng CSS ẩn để khỏi tải tranh vô ích.
+ */
+const STAGE_QUERY = "(min-width: 640px)";
+function useStageVisible(): boolean {
+  return useSyncExternalStore(
+    (notify) => {
+      const mq = window.matchMedia(STAGE_QUERY);
+      mq.addEventListener("change", notify);
+      return () => mq.removeEventListener("change", notify);
+    },
+    () => window.matchMedia(STAGE_QUERY).matches,
+    () => true,
+  );
+}
 
 function Bar({
   value,
@@ -1772,6 +1789,7 @@ export default function DemoGame({
   };
 
   // Game chỉ có một giao diện (gỗ tối), không có chế độ sáng.
+  const stageVisible = useStageVisible();
   const palette =
     "[--bg:#17110e] [--panel:#271d18] [--cell:#14251c] [--frame:#1b2a21] [--gold:#d4a24c] text-on-wood";
 
@@ -1985,7 +2003,7 @@ export default function DemoGame({
           />
         )}
 
-        {started && (
+        {started && stageVisible && (
           <BattleStage
             sides={[(heldSides ?? state.sides)[PLAYER].fighters, (heldSides ?? state.sides)[AI].fighters]}
             actor={
