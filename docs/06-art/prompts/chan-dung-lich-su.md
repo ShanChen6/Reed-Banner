@@ -1,7 +1,7 @@
 # Prompt chân dung bán thân tướng sĩ (phong cách lịch sử, bớt fantasy)
 
 > Cập nhật: 07/11/2026
-> Trạng thái: **DRAFT** — Claude soạn theo yêu cầu của Shan (07/11/2026: tranh mẫu Doanh Trại có chân dung "không fantasy quá mức mà vẫn đậm nét lịch sử, hợp dự án hơn"). Chưa có tranh; làm thử **8 nhân vật** (mục 5) rồi mới làm cả bộ.
+> Trạng thái: **DRAFT** — Claude soạn theo yêu cầu của Shan (07/11/2026: tranh mẫu Doanh Trại có chân dung "không fantasy quá mức mà vẫn đậm nét lịch sử, hợp dự án hơn"). Chưa có tranh; làm thử **2 nhân vật** (mục 5) rồi mới làm tiếp.
 
 Chân dung hiện tại (`public/art/characters/<tên>/portrait.webp`, 192×192) là **cận mặt** kiểu minh họa số sạch, vài nhân vật (như Hà Vân) có nét "idol/fantasy" (son môi đậm, điểm trang trán, tóc cầu kỳ). Tranh mẫu của Shan dùng **chân dung bán thân** tả thực nhẹ, màu trầm, có nền tranh mờ sương. Tài liệu này ghi lại phong cách đó thành prompt để tạo cả bộ.
 
@@ -53,7 +53,27 @@ Style: hand-painted gouache and opaque watercolour illustration of a historical 
 Subject: [TÊN], [GIỚI TÍNH], about [TUỔI] years old, [NGHỀ VÀ VAI TRÒ NGẮN]. Face: [ĐẶC ĐIỂM MẶT: râu, sẹo, nếp nhăn, nét mặt]. Hair/head: [TÓC, KHĂN, NÓN]. Clothing: [ÁO, GIÁP, MÀU CHỦ ĐẠO THEO HỆ]. One small everyday detail: [PHỤ KIỆN ĐỜI THƯỜNG]. Looking slightly [TRÁI/PHẢI], calm and resolute. Keep the lower quarter of the picture calm and quiet.
 ```
 
-**Tám nhân vật làm thử** (đúng các ô trong tranh mẫu; chi tiết lấy từ tranh mẫu, đối chiếu với `standing.webp` khi tạo):
+### 5.1 Làm thử 2 nhân vật trước (Shan chốt 07/11/2026: không tạo nhiều)
+
+Chọn hai người thử **hai thái cực**: Nguyễn Bặc là tướng nam nặng về trang phục lịch sử (thử giáp, khăn, râu, nền); Hà Vân là nhân vật đang bị fantasy nhiều nhất (thử xem bớt trang điểm, trang sức mà vẫn nhận ra cô). Nếu hai ảnh này đạt thì các nhân vật còn lại ít rủi ro.
+
+**Nguyễn Bặc** (Tướng sĩ · Hỏa) — dán khối phong cách ở mục 3, rồi dòng dưới:
+
+```text
+Subject: Nguyen Bac, male, about 40 years old, loyal childhood friend of Dinh Bo Linh and a steady, solid general of Hoa Lu. Face: broad weathered face, short thick beard, firm jaw, a calm unyielding gaze. Hair/head: a red cloth wrapped tightly around the head, a few loose strands. Clothing: lamellar armour made of small lacquered leather plates in dull red over a coarse cross-collar tunic; the shaft of a spear rises behind his right shoulder. One small everyday detail: a worn leather strap across the chest. Looking slightly to the left, calm and resolute. Keep the lower quarter of the picture calm and quiet.
+Keep the same person, face structure, hair, clothing colours and accessories as reference image 1; repaint in the style of reference image 2.
+```
+
+**Hà Vân** (Pháp sư · Hỏa):
+
+```text
+Subject: Ha Van, female, about 25 years old, a fire mage of the Dinh court, composed and a little guarded. Face: natural unpainted face, slightly sun-touched skin, dark steady eyes, no forehead mark, no lipstick, no glamour makeup. Hair/head: dark hair in a simple low bun tied with a single plain red cloth band, no gold ornaments, no flying ribbons. Clothing: modest red cross-collar robe in dull brick red with a darker brown inner layer, plain fabric edges. One small everyday detail: the top of a simple bronze-capped wooden staff behind her shoulder, no flame, no glow. Looking slightly to the right, calm and resolute. Keep the lower quarter of the picture calm and quiet.
+Keep the same person, face structure, hair, clothing colours and accessories as reference image 1; repaint in the style of reference image 2.
+```
+
+Ảnh tham chiếu 1 là `standing.webp` hoặc `style.webp` của chính nhân vật (`public/art/characters/nguyenBac/` và `public/art/characters/ha-van/`); ảnh tham chiếu 2 là ô chân dung tương ứng trong tranh mẫu của Shan.
+
+**Nếu hai ảnh đạt**, sáu nhân vật làm tiếp theo thứ tự trong tranh mẫu:
 
 | Nhân vật | Nghề · hệ | Gợi ý tạo hình |
 |---|---|---|
@@ -61,18 +81,16 @@ Subject: [TÊN], [GIỚI TÍNH], about [TUỔI] years old, [NGHỀ VÀ VAI TRÒ 
 | Mai Thanh | Y sư · Mộc | Nữ trẻ, tóc dài buông, một trâm vàng nhỏ cài tóc; áo xanh chàm cổ chéo, túi thuốc vải đeo vai |
 | Lê Thạch | Binh lính · Thổ | Nam khoảng 30, da sạm nắng, đội nón lá; áo giáp da màu ô-liu; nét mặt rắn rỏi |
 | Đinh Liễn | Pháp sư · Thủy | Nam trẻ, búi tóc buộc dây xanh; áo xanh chàm cổ chéo; nét giống cha nhưng trẻ hơn |
-| Nguyễn Bặc | Tướng sĩ · Hỏa | Nam khoảng 40, khăn quấn đầu đỏ, râu quai nón ngắn; giáp lá sơn đỏ; cán giáo sau vai |
-| Hà Vân | Pháp sư · Hỏa | Nữ khoảng 25, tóc búi buộc dải vải đỏ (chỉ một dải, không bay); áo đỏ cổ chéo giản dị; **bỏ** điểm trang trán và son đậm |
 | Phùng Phong | Quân sư · Phong | Nam trung niên gầy, khăn quấn đầu xanh ngọc; áo vải nâu xám, một cuộn thẻ tre bên hông |
 | Tô Kim | Mưu sĩ · Kim | Nam trung niên, búi tóc gọn; áo xám bạc cổ chéo, một túi tiền vải nhỏ bên hông |
 
-## 6. Kiểm tra trước khi làm cả bộ
+## 6. Kiểm tra sau khi thử 2 nhân vật
 
-1. Đặt 8 ảnh thử cạnh nhau ở cỡ ô thật (khoảng 140×110px trên máy tính, 2x): **nhận ra từng người** chỉ bằng nhìn, không lẫn nhau.
-2. Đồng tông: cùng nền nâu đỏ, cùng độ trầm; không ảnh nào chói hơn hẳn.
+1. Đặt 2 ảnh thử cạnh các chân dung cũ khác ở cỡ ô thật (khoảng 140×110px trên máy tính, 2x): **nhận ra đúng người**, và không lạc tông so với phần còn lại của danh sách.
+2. Đồng tông giữa hai ảnh: cùng nền nâu đỏ, cùng độ trầm.
 3. Soát fantasy theo mục 4: không hiệu ứng phép, không trang sức lộng lẫy, mặt không "lọc đẹp".
 4. Đối chiếu với `standing.webp` cũ: cùng khuôn mặt, cùng màu áo.
-5. Đạt cả bốn mới làm tiếp 55 nhân vật còn lại, nên chia theo hệ để dễ duyệt (7 nhóm).
+5. Đạt cả bốn thì làm tiếp sáu nhân vật ở mục 5.1, rồi mới làm các nhân vật còn lại (chia theo hệ, 7 nhóm, để dễ duyệt).
 
 ## 7. Sau khi có ảnh (kế hoạch gắn vào game)
 
