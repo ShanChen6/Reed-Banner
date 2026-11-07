@@ -129,22 +129,22 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
           />
           <div aria-hidden className="home-hero-shade absolute inset-0 -z-10" />
           <AtlasCorners size="size-7" />
-          <div className="flex min-h-[22rem] flex-col justify-end gap-5 px-5 py-8 sm:min-h-[26rem] sm:px-10 lg:min-h-[30rem] lg:max-w-[34rem] lg:justify-center lg:px-14">
+          <div className="flex min-h-[22rem] flex-col justify-end gap-5 px-5 py-8 sm:min-h-[26rem] sm:px-10 lg:min-h-[30rem] lg:max-w-[44rem] lg:justify-center lg:px-14">
             <h1 id="home-title" className="w-56 max-w-full sm:w-72 lg:w-80">
               <Logo priority className="h-auto w-full drop-shadow-[0_6px_18px_#000]" />
             </h1>
             <p className="max-w-md font-serif text-lg leading-snug text-[var(--atlas-title)] [text-shadow:0_2px_6px_#000] sm:text-xl">
               Dẹp loạn mười hai sứ quân, dựng lại giang sơn Đại Việt.
             </p>
-            <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
+            <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
               {plan ? (
                 <>
-                  <HeroLink action={plan.primary} className="home-cta px-8 text-lg font-bold tracking-[0.12em] uppercase" />
+                  <HeroLink action={plan.primary} className="home-cta px-7 text-base font-bold tracking-[0.1em] uppercase sm:text-lg" />
                   {plan.secondary && <HeroLink action={plan.secondary} className="home-secondary px-6 font-semibold" />}
                 </>
               ) : (
                 /* Khung chờ cùng kích thước với nút chính để bố cục không nhảy khi hồ sơ tải xong. */
-                <span aria-busy="true" role="status" className="home-cta flex min-h-12 animate-pulse items-center justify-center rounded-lg px-8 font-serif text-lg font-bold tracking-[0.12em] uppercase opacity-60">
+                <span aria-busy="true" role="status" className="home-cta flex min-h-12 animate-pulse items-center justify-center rounded-lg px-7 font-serif text-base font-bold tracking-[0.1em] whitespace-nowrap uppercase opacity-60 sm:text-lg">
                   Đang chuẩn bị…
                 </span>
               )}
@@ -206,7 +206,7 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
 /** Nút ở hero: dạng viên chữ serif, cùng chiều cao 48px; `className` quyết định nút chính hay phụ. */
 function HeroLink({ action, className }: { action: HeroAction; className: string }) {
   return (
-    <SceneLink scene={action.scene} params={action.params} className={`${className} flex min-h-12 items-center justify-center rounded-lg font-serif`}>
+    <SceneLink scene={action.scene} params={action.params} className={`${className} flex min-h-12 items-center justify-center rounded-lg font-serif whitespace-nowrap`}>
       {action.label}
     </SceneLink>
   );
