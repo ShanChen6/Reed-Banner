@@ -1,11 +1,12 @@
-// Liên kết ở footer màn game.
+// Liên kết ở footer màn game và phần "Liên hệ" (quỹ đạo mạng xã hội) ở Chiến trường.
 //
 // - Liên kết nội bộ (Giới thiệu, Hỏi đáp) luôn có địa chỉ.
 // - Bốn mục Góp ý và báo lỗi, Cộng đồng, Điều khoản, Quyền riêng tư luôn hiện. Có biến môi trường NEXT_PUBLIC_*_URL (địa chỉ
 //   https) thì là liên kết thật mở ở thẻ mới; chưa có thì `href` là null và footer hiện thông báo "đang chuẩn bị" khi bấm,
 //   không chuyển trang (Shan chốt 07/11/2026: vẫn hiển thị khi chưa có địa chỉ).
-// - Mạng xã hội liên hệ chỉ hiện nền tảng nào đã có địa chỉ (NEXT_PUBLIC_SOCIAL_*), vì hiện một nền tảng không có thật sẽ
-//   gây hiểu lầm.
+// - Mạng xã hội liên hệ của chủ game: địa chỉ mặc định nằm trong SOCIAL_DEFAULTS (công khai, Shan cung cấp 07/11/2026).
+//   Instagram, Discord, X đang chờ nên vẫn hiện nhưng bấm chỉ báo "đang chuẩn bị". YouTube và Zalo chỉ hiện khi có địa chỉ.
+//   Biến NEXT_PUBLIC_SOCIAL_<TÊN> ghi đè địa chỉ mặc định, nên khi có địa chỉ mới chỉ cần đặt biến, không sửa code.
 // Biến NEXT_PUBLIC_* được nhúng vào bản build, nên chỉ đặt địa chỉ công khai (xem .env.example).
 
 export interface FooterLink {
@@ -47,30 +48,53 @@ export function footerLinks(
 }
 
 /** Nền tảng mạng xã hội hỗ trợ, theo thứ tự hiển thị. */
-export const SOCIAL_PLATFORMS = ["Facebook", "YouTube", "TikTok", "Zalo", "Discord", "Instagram", "X", "GitHub"] as const;
+export const SOCIAL_PLATFORMS = ["Facebook", "TikTok", "LinkedIn", "GitHub", "Instagram", "Discord", "X", "YouTube", "Zalo"] as const;
 export type SocialPlatform = (typeof SOCIAL_PLATFORMS)[number];
 
-/** Mạng xã hội đã có địa chỉ (NEXT_PUBLIC_SOCIAL_<TÊN IN HOA>), theo thứ tự của SOCIAL_PLATFORMS. */
+/** Địa chỉ mặc định; `always` luôn hiện (chưa có địa chỉ thì là mục chờ), `withUrl` chỉ hiện khi có địa chỉ. */
+const SOCIAL_DEFAULTS: Readonly<Record<SocialPlatform, { href: string | null; show: "always" | "withUrl" }>> = {
+  Facebook: { href: "https://www.facebook.com/tran.tieuthien.73/", show: "always" },
+  TikTok: { href: "https://www.tiktok.com/@chenhongshan611", show: "always" },
+  LinkedIn: { href: "https://www.linkedin.com/in/shanchen8/", show: "always" },
+  GitHub: { href: "https://github.com/ShanChen6", show: "always" },
+  Instagram: { href: null, show: "always" },
+  Discord: { href: null, show: "always" },
+  X: { href: null, show: "always" },
+  YouTube: { href: null, show: "withUrl" },
+  Zalo: { href: null, show: "withUrl" },
+};
+
+export interface SocialLink extends FooterLink {
+  readonly label: SocialPlatform;
+}
+
+/** Mạng xã hội hiển thị, theo thứ tự của SOCIAL_PLATFORMS; mục chưa có địa chỉ có `href` null. */
 export function socialLinks(
   env: Env = {
     NEXT_PUBLIC_SOCIAL_FACEBOOK: process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK,
-    NEXT_PUBLIC_SOCIAL_YOUTUBE: process.env.NEXT_PUBLIC_SOCIAL_YOUTUBE,
     NEXT_PUBLIC_SOCIAL_TIKTOK: process.env.NEXT_PUBLIC_SOCIAL_TIKTOK,
-    NEXT_PUBLIC_SOCIAL_ZALO: process.env.NEXT_PUBLIC_SOCIAL_ZALO,
-    NEXT_PUBLIC_SOCIAL_DISCORD: process.env.NEXT_PUBLIC_SOCIAL_DISCORD,
-    NEXT_PUBLIC_SOCIAL_INSTAGRAM: process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM,
-    NEXT_PUBLIC_SOCIAL_X: process.env.NEXT_PUBLIC_SOCIAL_X,
+    NEXT_PUBLIC_SOCIAL_LINKEDIN: process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN,
     NEXT_PUBLIC_SOCIAL_GITHUB: process.env.NEXT_PUBLIC_SOCIAL_GITHUB,
+    NEXT_PUBLIC_SOCIAL_INSTAGRAM: process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM,
+    NEXT_PUBLIC_SOCIAL_DISCORD: process.env.NEXT_PUBLIC_SOCIAL_DISCORD,
+    NEXT_PUBLIC_SOCIAL_X: process.env.NEXT_PUBLIC_SOCIAL_X,
+    NEXT_PUBLIC_SOCIAL_YOUTUBE: process.env.NEXT_PUBLIC_SOCIAL_YOUTUBE,
+    NEXT_PUBLIC_SOCIAL_ZALO: process.env.NEXT_PUBLIC_SOCIAL_ZALO,
   },
-): readonly (FooterLink & { readonly href: string })[] {
-  return SOCIAL_PLATFORMS.flatMap((label) => {
-    const href = env[`NEXT_PUBLIC_SOCIAL_${label.toUpperCase()}`];
-    return isUrl(href) ? [{ label, href: href.trim(), external: true }] : [];
+): readonly SocialLink[] {
+  return SOCIAL_PLATFORMS.flatMap((label): SocialLink[] => {
+    const override = env[`NEXT_PUBLIC_SOCIAL_${label.toUpperCase()}`];
+    const def = SOCIAL_DEFAULTS[label];
+    const href = isUrl(override) ? override.trim() : def.href;
+    if (href) return [{ label, href, external: true }];
+    return def.show === "always" ? [{ label, href: null }] : [];
   });
 }
 
 /** Thông báo khi bấm một mục chưa có địa chỉ. */
 export const pendingNotice = (label: string) => `Mục "${label}" đang được chuẩn bị, sẽ sớm ra mắt.`;
+/** Thông báo khi bấm một mạng xã hội chưa có địa chỉ. */
+export const socialPendingNotice = (label: string) => `Kênh ${label} đang được chuẩn bị, sẽ sớm kết nối cùng bạn.`;
 
 /** Mã bản dựng ngắn (Vercel đặt khi bật "expose system environment variables"); không có thì không hiện. */
 export function buildLabel(sha: string | undefined = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA): string | null {

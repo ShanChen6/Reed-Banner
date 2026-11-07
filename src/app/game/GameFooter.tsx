@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MODE_CONTENT_WIDTH } from "@/components/game-ui";
 import { LogoMark } from "./art/logo";
-import { buildLabel, footerLinks, pendingNotice, socialLinks } from "./footerLinks";
+import { buildLabel, footerLinks, pendingNotice, socialLinks, socialPendingNotice, type FooterLink } from "./footerLinks";
 import type { Scene } from "./scene";
 
 /** Các phân cảnh có footer. */
@@ -30,10 +30,10 @@ export default function GameFooter() {
     return () => window.clearTimeout(t);
   }, [notice]);
 
-  const item = (l: (typeof links)[number]) => {
+  const item = (l: FooterLink, notice = pendingNotice) => {
     if (l.href === null)
       return (
-        <button type="button" onClick={() => setNotice(pendingNotice(l.label))} className={`${LINK} cursor-pointer`}>
+        <button type="button" onClick={() => setNotice(notice(l.label))} className={`${LINK} cursor-pointer`}>
           {l.label}
         </button>
       );
@@ -70,11 +70,7 @@ export default function GameFooter() {
             <span className="text-on-wood">Liên hệ:</span>
             <ul className="flex flex-wrap items-center gap-x-4" aria-label="Mạng xã hội">
               {socials.map((s) => (
-                <li key={s.label}>
-                  <a href={s.href} target="_blank" rel="noopener noreferrer" className={LINK}>
-                    {s.label}
-                  </a>
-                </li>
+                <li key={s.label}>{item(s, socialPendingNotice)}</li>
               ))}
             </ul>
           </div>
