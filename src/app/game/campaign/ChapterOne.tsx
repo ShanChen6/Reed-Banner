@@ -8,6 +8,7 @@ import { Alert, Button, buttonVariants, choiceVariants } from "@/components/ui";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import StartBar from "./StartBar";
+import LeaderBuild from "../profile/LeaderBuild";
 import { startTarget } from "./startMission";
 import {
   CAMPAIGN_CHAPTERS,
@@ -15,10 +16,8 @@ import {
   CAMPAIGN_UNIFICATION_NODE,
   campaignCompleted,
   CAMPAIGN_FOOD_MAX,
-  ELEMENTS,
   FOOD_PRICE,
   MAIN_ID,
-  PROFESSIONS,
   loadoutOf,
   ownsCompanion,
   campaignBattleAdvice,
@@ -48,7 +47,7 @@ import {
   type Profile,
   type ProfileAction,
 } from "@/core";
-import { ElementIcon, ProfessionIcon } from "../art/icons";
+import { ElementIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import {
   DIFFICULTY_NAME,
@@ -510,51 +509,17 @@ function BattlePrep({
             </div>
           </div>
         )}
-        <div
-          className="mt-2 flex flex-wrap gap-1"
-          role="radiogroup"
-          aria-label="Nghề của Đinh Bộ Lĩnh"
-        >
-          {PROFESSIONS.map((p) => (
-            <button
-              key={p}
-              type="button"
-              role="radio"
-              aria-checked={profession === p}
-              onClick={() => setProfession(p)}
-              className={choiceVariants({ size: "sm", className: `gap-1 px-2 py-1 text-caption font-normal ${profession === p ? "is-selected" : ""}` })}
-            >
-              <ProfessionIcon profession={p} className="size-4" />
-              {PROFESSION_NAME[p]}
-            </button>
-          ))}
-        </div>
-        <p className="mt-1 text-caption text-on-wood-soft">
-          Vũ khí nghề {PROFESSION_NAME[profession]}:{" "}
-          {weapon ? gearText(weapon) : "chưa trang bị (đổi ở Doanh Trại)"}. Mỗi nghề
-          dùng vũ khí riêng; nghề và hệ chọn ở đây được lưu khi xuất quân.
-        </p>
-        <div
-          className="mt-2 flex flex-wrap gap-1"
-          role="radiogroup"
-          aria-label="Nguyên tố ra trận"
-        >
-          {ELEMENTS.map((e) => (
-            <button
-              key={e}
-              type="button"
-              role="radio"
-              aria-checked={element === e}
-              onClick={() => setElement(e)}
-              className={choiceVariants({ size: "sm", className: `gap-1 px-2 py-1 text-caption font-normal ${element === e ? "is-selected" : ""}` })}
-            >
-              <ElementIcon element={e} className="size-4" />
-              {ELEMENT_NAME[e]}
-              {advice.counterElements.includes(e) && (
-                <span className="text-jade">★</span>
-              )}
-            </button>
-          ))}
+        <div className="mt-2">
+          <LeaderBuild
+            element={element}
+            profession={profession}
+            onChange={(b) => {
+              setElement(b.element);
+              setProfession(b.profession);
+            }}
+            marks={advice.counterElements}
+            hint={`Mặc định lấy từ Doanh Trại, đổi ở đây sẽ lưu khi xuất quân. Vũ khí nghề ${PROFESSION_NAME[profession]}: ${weapon ? gearText(weapon) : "chưa trang bị (đổi ở Doanh Trại)"}.`}
+          />
         </div>
         <p
           className={`mt-1 text-caption ${counters ? "text-jade" : weak ? "text-danger" : "text-on-wood-soft"}`}

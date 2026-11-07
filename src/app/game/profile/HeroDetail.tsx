@@ -4,6 +4,7 @@
 // ba thẻ Tổng quan / Kỹ năng / Chi tiết. Mọi số lấy từ @/core (profileTeam, gearStats…); ở đây không có công thức
 // riêng. Bấm ô trang bị mở GearPicker cho đúng ô đó.
 
+import LeaderBuild from "./LeaderBuild";
 import { useState } from "react";
 import {
   activeBonuses,
@@ -136,6 +137,19 @@ export default function HeroDetail({
           <TeamControl profile={profile} id={id} busy={busy} onAction={onAction} />
         </div>
       </div>
+
+      {id === MAIN_ID && (
+        <div className="mt-3 rounded-lg border border-[var(--bk-line-soft)] p-3">
+          <h3 className="mb-2 font-serif text-base font-semibold">Hệ và nghề của thủ lĩnh</h3>
+          <LeaderBuild
+            element={profile.element}
+            profession={profile.profession}
+            disabled={busy}
+            onChange={(b) => void onAction({ type: "chooseLeader", ...b })}
+            hint="Lưu cho mọi chế độ chơi; mỗi nghề dùng vũ khí riêng nên trang bị bên dưới đổi theo nghề."
+          />
+        </div>
+      )}
 
       {/* Tranh và 9 ô: khung cao cố định nên đổi nhân vật không làm nhảy bố cục. */}
       <div
