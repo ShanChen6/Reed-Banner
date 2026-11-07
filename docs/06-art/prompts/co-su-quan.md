@@ -1,7 +1,7 @@
 # Prompt lá cờ 12 sứ quân
 
 > Cập nhật: 07/11/2026
-> Trạng thái: **DRAFT** — Claude soạn theo yêu cầu của Shan (07/11/2026); chưa có tranh. Hiện hình giữa lá cờ trên bản đồ Sử ký là nét vẽ bằng mã ([`factionMarks.ts`](../../../src/app/game/campaign/factionMarks.ts)) nên vẫn chạy bình thường khi chưa có tranh.
+> Trạng thái: **IMPLEMENTED** — Shan tạo 12 ký hiệu từ prompt dưới đây (07/11/2026), Claude xuất WebP 256×256 vào `public/art/flags/co-<id>.webp` (6–16 KB mỗi tệp) và gắn vào `WorldMap.tsx` (`MarkArt`). Hoa Lư giữ nét vẽ mã ([`factionMarks.ts`](../../../src/app/game/campaign/factionMarks.ts), cũng là dự phòng khi ảnh lỗi). Hai ký hiệu **cầu vòm (Ngô Xương Xí) và cổng làng (Ngô Nhật Khánh) đang là bản đầu quá nhiều chi tiết / kiểu pailou**, nên tạo lại theo prompt đã sửa ở mục 3.3 và 3.4 rồi thay tệp cùng tên.
 
 Mỗi sứ quân có một lá cờ trên bản đồ Bình Loạn (`WorldMap.tsx`, `FactionFlag`). **Sử không chép cờ của 12 sứ quân** ([Narrative Bible](../../02-game-modes/campaign/narrative-bible.md)), nên đây là **ký hiệu game tự đặt** lấy ý từ tên đất và tạo hình nhân vật, không phải huy hiệu lịch sử. Tranh không được kèm chữ, chữ Hán hay chú thích nào khiến người xem tưởng đó là cờ thật.
 
@@ -146,7 +146,8 @@ Subject: a single hanging flag of a 10th-century Vietnamese regional lord, verti
 
 ## 5. Sau khi có ảnh
 
-1. Xuất WebP có alpha vào `public/art/flags/` (`co-<id>.webp`), kiểm nhẹ (dưới 20 KB mỗi tệp).
-2. Trong `WorldMap.tsx` (`FlagCloth` và `FactionFlag`): vẽ ảnh ký hiệu thay `MarkGlyph`, giữ nguyên dáng cờ và màu vải thế cục; ảnh tải lỗi thì quay về nét vẽ mã như hiện nay (`artFailed` đã có sẵn kiểu này cho thành).
+Đã làm cho 12 ký hiệu (07/11/2026). Còn lại khi thay ảnh mới:
+
+1. Xuất WebP có alpha, 256×256, hình canh giữa, chừa lề 4% mỗi cạnh; thả đè lên `public/art/flags/co-<id>.webp`, kiểm nhẹ (dưới 20 KB mỗi tệp). Ảnh không vuông vẫn được, đặt vừa khung 256 theo cạnh dài.
+2. `MarkArt` (`WorldMap.tsx`) vẽ ảnh 36×36 đơn vị giữa lá cờ, giữ nguyên dáng cờ và màu vải thế cục; ảnh tải lỗi thì quay về nét vẽ mã `MarkGlyph`. Danh sách sứ quân có tranh ở `FLAG_ART` (`factionMarks.ts`), test kiểm tệp tồn tại.
 3. Chụp bản đồ ở 1440px và 360px, kiểm ký hiệu đọc được trên cả sáu màu thế cục (đầu não, chưa kết cục, liên minh, quy phục, đánh dẹp, tan rã). Chữ nội dung vẫn là chữ code, không đặt chữ vào tranh.
-4. Cập nhật dòng `Trạng thái` của tài liệu này thành IMPLEMENTED.

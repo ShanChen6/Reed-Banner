@@ -17,7 +17,7 @@ import {
   type ChapterMissionStatus,
 } from "@/core";
 import { AtlasCorners } from "./AtlasFrame";
-import { FACTION_MARKS, flagPath } from "./factionMarks";
+import { FACTION_MARKS, FLAG_ART, flagPath } from "./factionMarks";
 import RotateHint from "./RotateHint";
 import { fitView, useMapView, MAX_ZOOM } from "./useMapView";
 import {
@@ -203,6 +203,23 @@ function MarkGlyph({ id }: { id: StrongholdId }) {
   );
 }
 
+/** Ký hiệu giữa cờ: tranh vẽ tay nếu có, tải lỗi hoặc chưa có thì quay về nét vẽ mã (MarkGlyph). */
+function MarkArt({ id }: { id: StrongholdId }) {
+  const [failed, setFailed] = useState(false);
+  if (!FLAG_ART.has(id) || failed) return <MarkGlyph id={id} />;
+  return (
+    <image
+      href={`/art/flags/co-${id}.webp`}
+      x={-18}
+      y={-18}
+      width={36}
+      height={36}
+      preserveAspectRatio="xMidYMid meet"
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 /** Lá cờ (không cán): dáng + hình vẽ theo id, nền là màu thế cục. Dùng chung cho bản đồ và ô ngoài bản đồ. */
 function FlagCloth({ id, color }: { id: StrongholdId; color: string }) {
   const shape = FACTION_MARKS[id].shape;
@@ -225,7 +242,7 @@ function FlagCloth({ id, color }: { id: StrongholdId; color: string }) {
         />
       )}
       <g transform="translate(0,-84)">
-        <MarkGlyph id={id} />
+        <MarkArt id={id} />
       </g>
     </>
   );

@@ -4,6 +4,22 @@
 
 import type { StrongholdId } from "./worldAtlas";
 
+/** Sứ quân đã có tranh ký hiệu ở public/art/flags/co-<id>.webp (docs/06-art/prompts/co-su-quan.md); Hoa Lư giữ nét vẽ mã. */
+export const FLAG_ART: ReadonlySet<StrongholdId> = new Set<StrongholdId>([
+  "tranLam",
+  "phamBachHo",
+  "ngoXuongXi",
+  "ngoNhatKhanh",
+  "nguyenKhoan",
+  "kieuCongHan",
+  "kieuThuan",
+  "lyKhue",
+  "nguyenThuTiep",
+  "luDuong",
+  "nguyenSieu",
+  "doCanhThac",
+]);
+
 /** Dáng cờ: đuôi én (khía giữa), vuông, nhọn đáy, đuôi hai dải (riêng Hoa Lư). */
 export type FlagShape = "notch" | "square" | "point" | "twin";
 
