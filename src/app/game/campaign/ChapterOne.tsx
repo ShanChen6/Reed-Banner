@@ -516,9 +516,11 @@ function BattlePrep({
             onChange={(b) => {
               setElement(b.element);
               setProfession(b.profession);
+              // Lưu ngay vào hồ sơ để mọi chế độ khác cũng dùng lựa chọn này, khỏi sang Doanh Trại.
+              onAction({ type: "chooseLeader", ...b });
             }}
             marks={advice.counterElements}
-            hint={`Mặc định lấy từ Doanh Trại, đổi ở đây sẽ lưu khi xuất quân. Vũ khí nghề ${PROFESSION_NAME[profession]}: ${weapon ? gearText(weapon) : "chưa trang bị (đổi ở Doanh Trại)"}.`}
+            hint={`Đổi tại đây là lưu luôn cho mọi chế độ. Vũ khí nghề ${PROFESSION_NAME[profession]}: ${weapon ? gearText(weapon) : "chưa trang bị (mặc ở Doanh Trại)"}.`}
           />
         </div>
         <p
