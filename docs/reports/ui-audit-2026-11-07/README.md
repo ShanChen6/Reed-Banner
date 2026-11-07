@@ -160,3 +160,4 @@ Giới hạn: chưa chạy luồng tới hết trận (server thật cần dữ 
 | Việc | Trạng thái |
 | --- | --- |
 | Thanh tab và nội dung ba tab (Tướng sĩ, Đội hình, Kho đồ) trước đây nằm rời, không có khung bao. Nay gói trong một `OrnateFrame level="raised"` như Cửa hàng và Nhiệm vụ; các khung con (`barracks-panel`) đổi sang kiểu ô lõm của `.ui-frame-inset` để không lồng hai lớp khung. Chiều cao danh sách tướng trừ thêm phần đệm của khung. Chụp 1440, 1024, 360px ba tab: không tràn ngang, không lỗi | Đã làm |
+| Doanh Trại trên điện thoại: nút "Đăng nhập", "Cửa hàng" và số vàng nằm trên ba dòng (hai dòng khi đã đăng nhập). Nay gom một dòng: nhãn đăng nhập rút còn "Đăng nhập" ở màn nhỏ (đủ nhãn từ 640px, `aria-label` vẫn đủ), đệm nút và khung bao giảm ở màn nhỏ; Cửa hàng và số vàng đi liền một nhóm nên không tách dòng. Đo 360, 390, 412, 600px: một dòng; 320px (dưới mức tối thiểu) nút đăng nhập xuống dòng riêng | Đã làm |

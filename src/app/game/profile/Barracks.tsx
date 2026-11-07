@@ -121,7 +121,7 @@ export default function Barracks({
         className={`mx-auto flex w-full flex-col gap-3 ${MODE_CONTENT_WIDTH}`}
       >
         {/* Một khung chung cho cả thanh tab và nội dung (như Cửa hàng, Nhiệm vụ); các khung con là ô lõm. */}
-        <OrnateFrame level="raised" className="flex flex-col gap-3">
+        <OrnateFrame level="raised" className="flex flex-col gap-3 p-3 sm:p-5">
           <div className="flex flex-wrap items-center gap-2">
             <div
               className="grid min-w-0 flex-[1_1_22rem] grid-cols-3 gap-1.5 sm:max-w-[34rem]"
@@ -143,31 +143,38 @@ export default function Barracks({
                 </button>
               ))}
             </div>
-            <div className="ml-auto flex flex-wrap items-center gap-2">
+            <div className="flex w-full flex-wrap items-center justify-between gap-1.5 sm:gap-2 sm:ml-auto sm:w-auto sm:justify-end">
               {playerName === null && (
                 <SceneLink
                   scene="LOGIN"
                   params={{ returnTo: "/game/profile" }}
-                  className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center rounded-md px-3 text-sm"
+                  aria-label="Đăng nhập để giữ Doanh Trại"
+                  className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center rounded-md px-2 text-sm sm:px-3"
                 >
-                  Đăng nhập để giữ Doanh Trại
+                  Đăng nhập
+                  <span className="hidden sm:inline">
+                    &nbsp;để giữ Doanh Trại
+                  </span>
                 </SceneLink>
               )}
-              <SceneLink
-                scene="SHOP"
-                className="barracks-btn flex min-h-11 items-center gap-2 rounded-md px-3 font-serif text-[15px] font-semibold"
-              >
-                <ShopGlyph className="size-5" /> Cửa hàng
-              </SceneLink>
-              <span
-                className="barracks-pill is-gold min-h-11 px-3 text-base"
-                aria-label={`Vàng: ${profile.gold}`}
-              >
-                <CoinGlyph className="size-5" />
-                <span className="font-semibold tabular-nums">
-                  {profile.gold.toLocaleString("vi-VN")}
+              {/* Cửa hàng và số vàng luôn đi liền một dòng, không tách nhau khi hàng bị xuống dòng. */}
+              <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+                <SceneLink
+                  scene="SHOP"
+                  className="barracks-btn flex min-h-11 items-center gap-1 rounded-md px-2 font-serif text-[15px] font-semibold sm:gap-2 sm:px-3"
+                >
+                  <ShopGlyph className="size-5" /> Cửa hàng
+                </SceneLink>
+                <span
+                  className="barracks-pill is-gold min-h-11 px-2! text-base sm:px-3!"
+                  aria-label={`Vàng: ${profile.gold}`}
+                >
+                  <CoinGlyph className="size-5" />
+                  <span className="font-semibold tabular-nums">
+                    {profile.gold.toLocaleString("vi-VN")}
+                  </span>
                 </span>
-              </span>
+              </div>
             </div>
           </div>
 
