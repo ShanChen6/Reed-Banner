@@ -1,328 +1,55 @@
-/* Khối liên hệ ở footer, ba phương án theo chủ đề phong kiến: A giá cờ lau, B cuộn thư và ấn triện, C lệnh bài.
-   Màu lấy từ token của game (gỗ, vàng đồng, son, giấy dó); lớp là CSS Module nên không đụng lớp toàn cục.
-   A và B dựng bằng SVG và lớp chất liệu để trông như vật thật (lụa có nếp gấp, tre có đốt, giấy dó có sợi). */
+/* Thư cuộn liên hệ ở footer (phương án B, Shan chọn 07/11/2026). Bốn lớp để trông như vật thật: đinh và dây lụa treo, hai cuộn giấy
+   quấn quanh trục gỗ (có bóng trụ tròn), tờ thư giấy dó có sợi và mép rách, tua rua son rủ ở hai đầu trục dưới.
+   Màu lấy từ token của game; lớp là CSS Module nên không đụng lớp toàn cục. */
 
-/* Giá cờ và lệnh bài chỉ vừa một hàng từ 640px; điện thoại hiện thư cuộn dạng danh sách. */
-.wide {
-  display: none;
-}
-.narrow {
-  display: block;
-}
-@media (min-width: 640px) {
-  .wide {
-    display: block;
-  }
-  .narrow {
-    display: none;
-  }
-}
-
-.block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--on-wood);
-}
-.title {
-  font-family: var(--font-game, serif);
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  color: var(--title-on-wood);
-}
-.caption {
-  min-height: 1.5rem;
-  text-align: center;
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  color: var(--on-wood-soft);
-}
-.caption b {
-  color: var(--title-on-wood);
-}
-.hang {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.25rem 0.375rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.hang li {
-  display: block;
-}
-.glyph {
-  width: 22px;
-  height: 22px;
-  fill: currentColor;
-}
-
-/* ——— Điều khiển dùng chung (cờ, lệnh bài) ——— */
-.ctl {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 4.25rem;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  cursor: pointer;
-  text-decoration: none;
-}
-.ctl:focus-visible {
-  outline: 2px solid var(--frame-gold-hi);
-  outline-offset: 2px;
-  border-radius: 6px;
-}
-.ctl[data-pending] {
-  opacity: 0.62;
-  filter: grayscale(0.55);
-}
-.name {
-  margin-top: 0.125rem;
-  font-size: 0.8125rem;
-  line-height: 1.4;
-  color: var(--on-wood-soft);
-  transition: color 0.15s;
-}
-.ctl:hover .name,
-.ctl:focus-visible .name {
-  color: var(--title-on-wood);
-}
-
-/* ——— A. Giá cờ lau ——— */
-.rack {
-  position: relative;
-  width: 100%;
-  max-width: 38rem;
-  margin-top: 3.5rem;
-  padding: 0 2.25rem;
-}
-/* Sào tre: thân vàng lục có bóng trụ tròn, đốt tre đều nhau, hai đầu cắt chéo. */
-.pole {
-  position: relative;
-  z-index: 1;
-  height: 16px;
-  border-radius: 8px;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      transparent 0 84px,
-      rgb(0 0 0 / 0.38) 84px 87px,
-      rgb(255 255 255 / 0.2) 87px 90px,
-      transparent 90px 96px
-    ),
-    linear-gradient(
-      180deg,
-      rgb(255 255 255 / 0.4) 0%,
-      rgb(255 255 255 / 0.05) 28%,
-      rgb(0 0 0 / 0.15) 62%,
-      rgb(0 0 0 / 0.5) 100%
-    ),
-    color-mix(in srgb, var(--jade) 38%, var(--frame-gold) 62%);
-  box-shadow:
-    0 3px 5px rgb(0 0 0 / 0.55),
-    inset 0 0 0 1px rgb(0 0 0 / 0.3);
-}
-.pole::before,
-.pole::after {
-  content: "";
-  position: absolute;
-  top: 1px;
-  width: 8px;
-  height: 14px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at 35% 35%, var(--paper-hi), var(--frame-bronze) 70%);
-  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.4);
-}
-.pole::before {
-  left: -3px;
-}
-.pole::after {
-  right: -3px;
-}
-.reeds {
-  position: absolute;
-  top: 0;
-  z-index: 0;
-  width: 4.75rem;
-  height: 6rem;
-  pointer-events: none;
-}
-/* Bó lau cắm ở hai đầu sào, nghiêng nhẹ ra ngoài nhưng nằm trong lề của giá (không tràn sang cột bên). */
-.reedsLeft {
-  left: calc(2.25rem - 2.375rem);
-  transform: translateY(calc(-100% + 12px)) rotate(-8deg);
-  transform-origin: 50% 100%;
-}
-.reedsRight {
-  right: calc(2.25rem - 2.375rem);
-  transform: translateY(calc(-100% + 12px)) rotate(8deg);
-  transform-origin: 50% 100%;
-}
-
-.flagCtl {
-  position: relative;
-  z-index: 2;
-  margin-top: -6px;
-  transform-origin: 50% 6px;
-  filter: drop-shadow(0 5px 5px rgb(0 0 0 / 0.55));
-}
-.flagCtl[data-pending] {
-  filter: grayscale(0.55) drop-shadow(0 5px 5px rgb(0 0 0 / 0.55));
-}
-.flag {
-  display: block;
-  width: 3.25rem;
-  height: 4.9rem;
-  overflow: visible;
-  transform-origin: 50% 4px;
-}
-.flagCtl:hover .flag,
-.flagCtl:focus-visible .flag {
-  animation: flutter 1.5s ease-in-out infinite;
-}
-@keyframes flutter {
-  0%,
-  100% {
-    transform: rotate(-3.5deg) skewX(2deg);
-  }
-  50% {
-    transform: rotate(3.5deg) skewX(-2deg);
-  }
-}
-
-/* ——— C. Lệnh bài đồng: lỗ treo, chữ khắc chìm, tua son ——— */
-.rack2 {
-  position: relative;
-  width: 100%;
-  max-width: 36rem;
-}
-.rail {
-  position: relative;
-  height: 8px;
-  border-radius: 4px;
-  background: linear-gradient(90deg, var(--frame-bronze), var(--frame-gold-hi) 50%, var(--frame-bronze));
-  box-shadow:
-    0 2px 0 rgb(0 0 0 / 0.5),
-    inset 0 1px 0 rgb(255 255 255 / 0.25);
-}
-.rail::before,
-.rail::after {
-  content: "";
-  position: absolute;
-  top: -3px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--lacquer);
-  border: 2px solid var(--frame-gold-hi);
-}
-.rail::before {
-  left: -6px;
-}
-.rail::after {
-  right: -6px;
-}
-.cord {
-  width: 2px;
-  height: 8px;
-  background: var(--frame-gold);
-}
-.tabletCtl {
-  transform-origin: top center;
-}
-.tablet {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 3rem;
-  height: 4rem;
-  border: 2px solid var(--frame-gold);
-  border-radius: 0.75rem 0.75rem 0.5rem 0.5rem;
-  background: linear-gradient(160deg, var(--frame-gold-hi), var(--frame-bronze));
-  color: var(--wood-lo);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.35),
-    0 4px 8px -2px rgb(0 0 0 / 0.6);
-}
-.tablet::before {
-  content: "";
-  position: absolute;
-  top: 5px;
-  left: 50%;
-  width: 8px;
-  height: 8px;
-  margin-left: -4px;
-  border-radius: 50%;
-  background: var(--wood-lo);
-  box-shadow: inset 0 1px 1px rgb(0 0 0 / 0.6);
-}
-.tablet svg {
-  margin-top: 0.75rem;
-  filter: drop-shadow(0 1px 0 rgb(255 255 255 / 0.3));
-}
-.tassel {
-  width: 14px;
-  height: 12px;
-  background: repeating-linear-gradient(90deg, var(--lacquer-hi) 0 2px, transparent 2px 5px);
-}
-.tabletCtl:hover,
-.tabletCtl:focus-visible {
-  animation: swing 1.8s ease-in-out infinite;
-}
-@keyframes swing {
-  0%,
-  100% {
-    transform: rotate(-5deg);
-  }
-  50% {
-    transform: rotate(5deg);
-  }
-}
-
-/* ——— B. Thư cuộn: giấy dó sợi, mép rách nhẹ, hai trục gỗ tiện đầu, dây lụa treo, ấn đóng ——— */
 .scroll {
   position: relative;
   width: 100%;
-  max-width: 36rem;
-  padding-top: 2.5rem;
+  max-width: 40rem;
+  /* Lề trong đủ cho hai đầu trục nhô ra (không làm trang tràn ngang). */
+  padding: 3.75rem 1.5rem 0;
+  filter: drop-shadow(0 14px 12px rgb(0 0 0 / 0.5));
 }
+
+/* ——— Đinh và dây treo ——— */
 .hangCord {
   position: absolute;
   top: 0;
-  left: 10%;
-  width: 80%;
-  height: 2.75rem;
+  left: 6%;
+  width: 88%;
+  height: 4.25rem;
+  overflow: visible;
   pointer-events: none;
 }
-.rod {
+
+/* ——— Cuộn giấy quanh trục gỗ ——— */
+.rollWrap {
   position: relative;
   z-index: 2;
-  height: 18px;
-  margin: 0 -0.25rem;
-  border-radius: 9px;
-  background:
-    repeating-linear-gradient(90deg, transparent 0 7px, rgb(0 0 0 / 0.1) 7px 8px),
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--frame-gold-hi) 60%, white) 0%,
-      var(--frame-gold) 30%,
-      var(--frame-bronze) 62%,
-      color-mix(in srgb, var(--wood) 80%, black) 100%
-    );
-  box-shadow:
-    0 4px 7px rgb(0 0 0 / 0.55),
-    inset 0 1px 0 rgb(255 255 255 / 0.35);
+  height: 26px;
+}
+/* Trục gỗ nhô ra hai đầu cuộn giấy, đầu tiện tròn vàng đồng. */
+.dowel {
+  position: absolute;
+  left: -1.1rem;
+  right: -1.1rem;
+  top: 9px;
+  height: 9px;
+  border-radius: 5px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--frame-gold-hi) 55%, white) 0%,
+    var(--frame-gold) 38%,
+    var(--frame-bronze) 72%,
+    color-mix(in srgb, var(--wood) 80%, black) 100%
+  );
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.55);
 }
 .finial {
   position: absolute;
-  top: -5px;
-  width: 28px;
-  height: 28px;
+  top: -8px;
+  width: 25px;
+  height: 25px;
   border-radius: 50%;
   background: radial-gradient(
     circle at 34% 30%,
@@ -336,45 +63,103 @@
     inset 0 0 0 1px rgb(0 0 0 / 0.35);
 }
 .finialL {
-  left: -14px;
+  left: -9px;
 }
 .finialR {
-  right: -14px;
+  right: -9px;
 }
+/* Cuộn giấy: hình trụ nằm ngang, sáng ở giữa, tối dần về mép trên và dưới. */
+.roll {
+  position: absolute;
+  inset: 0;
+  border-radius: 13px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 11px, rgb(110 70 28 / 0.1) 11px 12px),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--paper-deep) 72%, #3a2410) 0%,
+      var(--paper-deep) 16%,
+      var(--paper-hi) 46%,
+      var(--paper) 66%,
+      color-mix(in srgb, var(--paper-deep) 70%, #3a2410) 100%
+    );
+  box-shadow:
+    inset 0 0 0 1px rgb(70 42 16 / 0.35),
+    inset 0 -2px 3px rgb(60 36 14 / 0.35);
+}
+/* Mép giấy cuộn lộ ra ở hai đầu, thấy các vòng cuốn. */
+.roll::before,
+.roll::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  width: 9px;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle at 50% 50%, var(--paper-hi) 0 1.5px, rgb(110 70 28 / 0.55) 1.5px 2.5px);
+  box-shadow: 0 0 0 1px rgb(70 42 16 / 0.4);
+}
+.roll::before {
+  left: -3px;
+}
+.roll::after {
+  right: -3px;
+}
+
+/* ——— Tờ thư ——— */
 .sheet {
   position: relative;
-  margin: -6px 0.5rem;
+  z-index: 1;
+  margin: -9px 0.9rem;
 }
 .sheetBg {
   position: absolute;
   inset: 0;
   background:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .38  0 0 0 0 .26  0 0 0 0 .1  0 0 0 .3 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .38  0 0 0 0 .26  0 0 0 0 .1  0 0 0 .32 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+    repeating-linear-gradient(0deg, transparent 0 5px, rgb(120 80 30 / 0.05) 5px 6px),
     radial-gradient(ellipse at 28% 0%, var(--paper-hi) 0%, transparent 62%),
-    linear-gradient(180deg, var(--paper) 0%, color-mix(in srgb, var(--paper) 80%, var(--paper-deep)) 100%);
+    linear-gradient(180deg, var(--paper) 0%, color-mix(in srgb, var(--paper) 78%, var(--paper-deep)) 100%);
   box-shadow:
-    inset 0 0 26px rgb(110 70 28 / 0.55),
-    0 6px 14px rgb(0 0 0 / 0.5);
+    inset 0 0 30px rgb(110 70 28 / 0.6),
+    inset 14px 0 18px -14px rgb(60 36 14 / 0.55),
+    inset -14px 0 18px -14px rgb(60 36 14 / 0.55);
 }
-/* Giấy cuốn quanh trục: đậm dần về phía trục, nhẹ như cuộn lại. */
+/* Hai nếp gấp dọc mờ như tờ thư từng được cuộn. */
+.sheetBg::before,
+.sheetBg::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 18px;
+  background: linear-gradient(90deg, transparent, rgb(110 70 28 / 0.1) 50%, transparent);
+}
+.sheetBg::before {
+  left: 33%;
+}
+.sheetBg::after {
+  left: 66%;
+}
+/* Giấy cong dần vào hai cuộn: đổ bóng sát trục. */
 .curl {
   position: absolute;
   left: 0;
   right: 0;
-  height: 16px;
+  height: 22px;
   pointer-events: none;
 }
 .curlTop {
   top: 0;
-  background: linear-gradient(180deg, rgb(70 42 16 / 0.6), rgb(70 42 16 / 0.18) 55%, transparent);
+  background: linear-gradient(180deg, rgb(60 36 14 / 0.65), rgb(60 36 14 / 0.2) 55%, transparent);
 }
 .curlBottom {
   bottom: 0;
-  background: linear-gradient(0deg, rgb(70 42 16 / 0.6), rgb(70 42 16 / 0.18) 55%, transparent);
+  background: linear-gradient(0deg, rgb(60 36 14 / 0.65), rgb(60 36 14 / 0.2) 55%, transparent);
 }
 .sheetBody {
   position: relative;
-  padding: 1.5rem 1.75rem 1.25rem;
+  padding: 1.75rem 1.75rem 1.5rem;
   color: var(--ink);
 }
 .paperTitle {
@@ -382,14 +167,14 @@
   padding-bottom: 0.4rem;
   border-bottom: 3px double color-mix(in srgb, var(--ink) 40%, transparent);
   font-family: var(--font-game, serif);
-  font-size: 1.25rem;
+  font-size: 1.375rem;
   font-weight: 800;
   letter-spacing: 0.02em;
   color: var(--ink-strong);
   text-shadow: 0 1px 0 rgb(255 255 255 / 0.35);
 }
 .paperSub {
-  margin: 0.35rem 0 0;
+  margin: 0.4rem 0 0;
   font-size: 0.8125rem;
   font-style: italic;
   color: var(--ink-soft);
@@ -401,9 +186,24 @@
   padding: 0;
   list-style: none;
 }
-@media (min-width: 640px) {
+@media (min-width: 560px) {
   .letters {
     grid-template-columns: 1fr 1fr;
+  }
+}
+/* Điện thoại: lề hẹp hơn để chữ ít xuống dòng, chừa chỗ dưới cùng cho ấn khỏi đè lên dòng thư. */
+@media (max-width: 559px) {
+  .scroll {
+    padding-inline: 1.1rem;
+  }
+  .sheet {
+    margin-inline: 0.5rem;
+  }
+  .sheetBody {
+    padding: 1.5rem 1rem 4.25rem;
+  }
+  .paperTitle {
+    font-size: 1.25rem;
   }
 }
 .row {
@@ -411,7 +211,7 @@
   align-items: center;
   gap: 0.75rem;
   width: 100%;
-  min-height: 3rem;
+  min-height: 3.25rem;
   padding: 0.25rem 0.25rem;
   border: 0;
   border-bottom: 1px dashed color-mix(in srgb, var(--ink) 32%, transparent);
@@ -434,7 +234,7 @@
 .row[data-pending] {
   opacity: 0.6;
 }
-.row svg {
+.glyph {
   width: 22px;
   height: 22px;
   flex: none;
@@ -463,24 +263,85 @@
 }
 .seal {
   position: absolute;
-  right: 1.25rem;
-  bottom: 0.9rem;
-  width: 3.75rem;
-  height: 3.75rem;
+  right: 1.5rem;
+  bottom: 1.1rem;
+  width: 3.5rem;
+  height: 3.5rem;
   pointer-events: none;
   mix-blend-mode: multiply;
   transform: rotate(-7deg);
-  opacity: 0.92;
+  opacity: 0.93;
+}
+
+/* ——— Tua rua son rủ ở hai đầu trục dưới ——— */
+.tassels {
+  position: relative;
+  z-index: 3;
+  height: 3.25rem;
+  margin-top: -2px;
+  pointer-events: none;
+}
+.tassel {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: top center;
+}
+.tasselL {
+  left: -0.9rem;
+}
+.tasselR {
+  right: -0.9rem;
+}
+.tassel i {
+  display: block;
+  width: 2px;
+  height: 0.75rem;
+  background: var(--frame-gold);
+}
+.tassel b {
+  display: block;
+  width: 11px;
+  height: 11px;
+  margin-top: -1px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--lacquer-hi), var(--lacquer));
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.4);
+}
+.tassel span {
+  display: block;
+  width: 15px;
+  height: 1.5rem;
+  margin-top: -2px;
+  background: repeating-linear-gradient(90deg, var(--lacquer-hi) 0 2px, var(--lacquer) 2px 3px, transparent 3px 4px);
+  clip-path: polygon(0 0, 100% 0, 92% 100%, 8% 100%);
+}
+.scroll:hover .tassel,
+.scroll:focus-within .tassel {
+  animation: tasselSway 2.4s ease-in-out infinite;
+}
+.scroll:hover .tasselR,
+.scroll:focus-within .tasselR {
+  animation-delay: -1.2s;
+}
+@keyframes tasselSway {
+  0%,
+  100% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .flagCtl:hover .flag,
-  .flagCtl:focus-visible .flag,
-  .tabletCtl:hover,
-  .tabletCtl:focus-visible {
-    animation: none;
-  }
   .row {
     transition: none;
+  }
+  .scroll:hover .tassel,
+  .scroll:focus-within .tassel {
+    animation: none;
   }
 }
