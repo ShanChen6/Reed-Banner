@@ -11,9 +11,7 @@ import { Logo } from "./art/logo";
 import { ONLINE_BATTLE_KEY } from "./battle/online";
 import { AtlasCorners } from "./campaign/AtlasFrame";
 import type { ShellAccount, TowerFeatures } from "./GameShell";
-import { socialLinks } from "./footerLinks";
 import { MODE_TEXT } from "./modeInfo";
-import OrbitingSocials from "./OrbitingSocials";
 import type { Scene } from "./scene";
 import { SceneLink } from "./SceneContext";
 
@@ -171,10 +169,6 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
           </ul>
         </section>
         )}
-
-        <section aria-label="Liên hệ" className="flex justify-center">
-          <OrbitingSocials links={socialLinks()} />
-        </section>
 
         <section aria-labelledby="home-more">
           <SectionHeading id="home-more" kicker="Tiện ích" title="Quân vụ" />
