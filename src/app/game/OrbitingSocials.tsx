@@ -5,12 +5,12 @@
 // Phần "Liên hệ" ở Chiến trường. Từ 768px: các nền tảng mạng xã hội quay quanh huy hiệu Cờ Lau trên một hoặc hai quỹ đạo
 // (hai vòng quay ngược chiều, biểu tượng luôn thẳng); rê chuột hoặc focus một biểu tượng thì dừng quay, vẽ đường dữ liệu chảy
 // tới huy hiệu và đổi chú thích. Dưới 768px (điện thoại): không dựng quỹ đạo, hiện danh sách liên hệ (Shan chốt 07/11/2026).
-// Mục chưa có địa chỉ vẫn hiện, bấm chỉ báo "đang chuẩn bị". Dòng chữ liên hệ ở footer là lối đi phụ cho người không dùng được
+// Liên kết đang khóa (xem footerLinks.ts) vẫn hiện nhưng bấm không chuyển trang. Dòng chữ liên hệ ở footer là lối đi phụ cho người không dùng được
 // vật đang chuyển động.
 
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { LogoMark } from "./art/logo";
-import { socialPendingNotice, type SocialLink } from "./footerLinks";
+import type { SocialLink } from "./footerLinks";
 import styles from "./OrbitingSocials.module.css";
 import { SOCIAL_ICON_PATHS } from "./socialIcons";
 import { linkPath, ORBIT_HEIGHT, ORBIT_WIDTH, slotAngles, SOCIAL_BLURB, splitRings } from "./socialOrbit";
@@ -44,18 +44,10 @@ function Glyph({ label, className }: { label: string; className?: string }) {
   );
 }
 
-/** Thông báo "đang chuẩn bị" tự ẩn sau 4 giây. */
-function useNotice() {
-  const [notice, setNotice] = useState<string | null>(null);
-  useEffect(() => {
-    if (!notice) return;
-    const t = window.setTimeout(() => setNotice(null), 4000);
-    return () => window.clearTimeout(t);
-  }, [notice]);
-  return [notice, setNotice] as const;
-}
-
-const ariaLabel = (l: SocialLink) => (l.href ? `${l.label} (mở ở thẻ mới)` : `${l.label}, sắp ra mắt`);
+/** Chú thích khi chọn một nền tảng: nền tảng chờ (chưa có địa chỉ) ghi "Sắp ra mắt", còn lại là lời giới thiệu. */
+const blurbOf = (l: SocialLink) => (l.configured ? SOCIAL_BLURB[l.label] : "Sắp ra mắt");
+/** Liên kết đang khóa vẫn đọc là tên nền tảng; chỉ liên kết thật mới nói "mở ở thẻ mới". */
+const ariaLabel = (l: SocialLink) => (l.href ? `${l.label} (mở ở thẻ mới)` : l.label);
 
 export default function OrbitingSocials({ links }: { links: readonly SocialLink[] }) {
   return useOrbitVisible() ? <Orbit links={links} /> : <SocialList links={links} />;
@@ -69,7 +61,6 @@ function Orbit({ links }: { links: readonly SocialLink[] }) {
   const [active, setActive] = useState<number | null>(null);
   const [path, setPath] = useState("");
   const [paused, setPaused] = useState(false);
-  const [notice, setNotice] = useNotice();
 
   // Đường dữ liệu: đo tâm biểu tượng đang chọn so với khung (khung 340px có thể bị co, nên chia cho tỉ lệ k).
   useLayoutEffect(() => {
@@ -110,13 +101,13 @@ function Orbit({ links }: { links: readonly SocialLink[] }) {
         <small className={`text-kicker ${styles.kick}`}>Liên hệ</small>
         <h2 className={`font-serif ${styles.title}`}>Kết giao bốn phương</h2>
         <span className={styles.cap} aria-live="polite">
-          {notice ?? (current ? (
+          {current ? (
             <>
-              <b>{current.label}</b> · {current.href ? SOCIAL_BLURB[current.label] : "Sắp ra mắt"}
+              <b>{current.label}</b> · {blurbOf(current)}
             </>
           ) : (
             DEFAULT_CAPTION
-          ))}
+          )}
         </span>
       </div>
 
@@ -144,7 +135,7 @@ function Orbit({ links }: { links: readonly SocialLink[] }) {
                   className: styles.ic,
                   "aria-label": ariaLabel(l),
                   "data-on": active === idx ? "" : undefined,
-                  "data-pending": l.href ? undefined : "",
+                  "data-pending": l.configured ? undefined : "",
                   onPointerEnter: () => setActive(idx),
                   onPointerLeave: () => setActive((cur) => (cur === idx ? null : cur)),
                   onFocus: () => setActive(idx),
@@ -158,7 +149,7 @@ function Orbit({ links }: { links: readonly SocialLink[] }) {
                           <Glyph label={l.label} />
                         </a>
                       ) : (
-                        <button {...common} type="button" onClick={() => setNotice(socialPendingNotice(l.label))}>
+                        <button {...common} type="button" aria-disabled="true">
                           <Glyph label={l.label} />
                         </button>
                       )}
@@ -180,16 +171,15 @@ function Orbit({ links }: { links: readonly SocialLink[] }) {
 /* ——— Điện thoại: danh sách ——— */
 
 function SocialList({ links }: { links: readonly SocialLink[] }) {
-  const [notice, setNotice] = useNotice();
   const row = "flex min-h-14 w-full items-center gap-3 rounded-lg border border-frame-line-soft bg-wood-inset px-3 py-2 text-left";
   const body = (l: SocialLink): ReactNode => (
     <>
       <Glyph label={l.label} className="size-6 shrink-0 fill-current text-frame-gold-hi" />
       <span className="min-w-0 flex-1">
         <span className="block font-semibold text-title-on-wood">{l.label}</span>
-        <span className="block text-caption text-on-wood-soft">{l.href ? SOCIAL_BLURB[l.label] : "Sắp ra mắt"}</span>
+        <span className="block text-caption text-on-wood-soft">{blurbOf(l)}</span>
       </span>
-      {l.href && <span aria-hidden className="text-frame-gold-hi">›</span>}
+      {l.configured && <span aria-hidden className="text-frame-gold-hi">›</span>}
     </>
   );
   return (
@@ -204,16 +194,13 @@ function SocialList({ links }: { links: readonly SocialLink[] }) {
                 {body(l)}
               </a>
             ) : (
-              <button type="button" aria-label={ariaLabel(l)} onClick={() => setNotice(socialPendingNotice(l.label))} className={`${row} cursor-pointer opacity-80`}>
+              <button type="button" aria-disabled="true" aria-label={ariaLabel(l)} className={`${row} cursor-pointer ${l.configured ? "" : "opacity-80"}`}>
                 {body(l)}
               </button>
             )}
           </li>
         ))}
       </ul>
-      <p role="status" aria-live="polite" className={notice ? "mt-3 rounded border border-frame-gold/40 bg-black/30 px-3 py-2 text-caption text-title-on-wood" : "sr-only"}>
-        {notice}
-      </p>
     </div>
   );
 }

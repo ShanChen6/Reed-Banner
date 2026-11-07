@@ -1,14 +1,13 @@
 "use client";
 
 // Footer mỏng của màn game: chỉ ở Chiến trường và các màn thông tin (xem FOOTER_SCENES), không bao giờ trong lúc đang chơi.
-// Gồm nhận diện, liên kết (mục chưa có địa chỉ vẫn hiện, bấm chỉ báo "đang chuẩn bị"), mạng xã hội liên hệ, lưu ý nội dung
-// và mã bản dựng.
+// Gồm nhận diện, liên kết (liên kết ngoài đang khóa: vẫn hiện, bấm không chuyển trang, xem footerLinks.ts), mạng xã hội liên hệ,
+// lưu ý nội dung và mã bản dựng.
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { MODE_CONTENT_WIDTH } from "@/components/game-ui";
 import { LogoMark } from "./art/logo";
-import { buildLabel, footerLinks, pendingNotice, socialLinks, socialPendingNotice, type FooterLink } from "./footerLinks";
+import { buildLabel, footerLinks, socialLinks, type FooterLink } from "./footerLinks";
 import type { Scene } from "./scene";
 
 /** Các phân cảnh có footer. */
@@ -21,19 +20,12 @@ export default function GameFooter() {
   const links = footerLinks();
   const socials = socialLinks();
   const build = buildLabel();
-  const [notice, setNotice] = useState<string | null>(null);
 
-  // Thông báo tự ẩn sau vài giây.
-  useEffect(() => {
-    if (!notice) return;
-    const t = window.setTimeout(() => setNotice(null), 5000);
-    return () => window.clearTimeout(t);
-  }, [notice]);
-
-  const item = (l: FooterLink, notice = pendingNotice) => {
+  const item = (l: FooterLink) => {
+    // Đang khóa hoặc chưa có địa chỉ: nút không làm gì (không chuyển trang, không thông báo).
     if (l.href === null)
       return (
-        <button type="button" onClick={() => setNotice(notice(l.label))} className={`${LINK} cursor-pointer`}>
+        <button type="button" aria-disabled="true" className={`${LINK} cursor-pointer`}>
           {l.label}
         </button>
       );
@@ -70,15 +62,11 @@ export default function GameFooter() {
             <span className="text-on-wood">Liên hệ:</span>
             <ul className="flex flex-wrap items-center gap-x-4" aria-label="Mạng xã hội">
               {socials.map((s) => (
-                <li key={s.label}>{item(s, socialPendingNotice)}</li>
+                <li key={s.label}>{item(s)}</li>
               ))}
             </ul>
           </div>
         )}
-
-        <p role="status" aria-live="polite" className={notice ? "rounded border border-frame-gold/40 bg-black/30 px-3 py-2 text-title-on-wood" : "sr-only"}>
-          {notice}
-        </p>
 
         <p>
           Bối cảnh và tên nhân vật lịch sử là lịch sử chung; tính cách, kỹ năng và lời thoại trong game là hư cấu.

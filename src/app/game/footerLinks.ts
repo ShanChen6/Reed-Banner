@@ -1,17 +1,17 @@
 // Liên kết ở footer màn game và phần "Liên hệ" (quỹ đạo mạng xã hội) ở Chiến trường.
 //
-// - Liên kết nội bộ (Giới thiệu, Hỏi đáp) luôn có địa chỉ.
-// - Bốn mục Góp ý và báo lỗi, Cộng đồng, Điều khoản, Quyền riêng tư luôn hiện. Có biến môi trường NEXT_PUBLIC_*_URL (địa chỉ
-//   https) thì là liên kết thật mở ở thẻ mới; chưa có thì `href` là null và footer hiện thông báo "đang chuẩn bị" khi bấm,
-//   không chuyển trang (Shan chốt 07/11/2026: vẫn hiển thị khi chưa có địa chỉ).
-// - Mạng xã hội liên hệ của chủ game: địa chỉ mặc định nằm trong SOCIAL_DEFAULTS (công khai, Shan cung cấp 07/11/2026).
-//   Instagram, Discord, X đang chờ nên vẫn hiện nhưng bấm chỉ báo "đang chuẩn bị". YouTube và Zalo chỉ hiện khi có địa chỉ.
-//   Biến NEXT_PUBLIC_SOCIAL_<TÊN> ghi đè địa chỉ mặc định, nên khi có địa chỉ mới chỉ cần đặt biến, không sửa code.
-// Biến NEXT_PUBLIC_* được nhúng vào bản build, nên chỉ đặt địa chỉ công khai (xem .env.example).
+// - Liên kết nội bộ (Giới thiệu, Hỏi đáp) luôn có địa chỉ và chuyển trang bình thường.
+// - Liên kết ngoài (Góp ý và báo lỗi, Cộng đồng, Điều khoản, Quyền riêng tư và mạng xã hội) **đang bị khóa** (Shan chốt 07/11/2026):
+//   vẫn hiện và bấm được nhưng bấm không chuyển trang, không hiện thông báo. Mở khóa bằng cách đặt NEXT_PUBLIC_LINKS_UNLOCKED=true
+//   lúc build (xem .env.example); khi đó mục nào có địa chỉ https thì thành liên kết thật mở ở thẻ mới.
+// - Địa chỉ liên kết ngoài: bốn mục footer lấy từ NEXT_PUBLIC_*_URL; mạng xã hội có địa chỉ mặc định trong SOCIAL_DEFAULTS (công khai,
+//   Shan cung cấp 07/11/2026), biến NEXT_PUBLIC_SOCIAL_<TÊN> ghi đè. Instagram, Discord, X chưa có địa chỉ nhưng vẫn hiện; YouTube
+//   và Zalo chỉ hiện khi có địa chỉ.
+// Biến NEXT_PUBLIC_* được nhúng vào bản build, nên chỉ đặt địa chỉ công khai.
 
 export interface FooterLink {
   readonly label: string;
-  /** Địa chỉ; null nghĩa là chưa có (bấm chỉ hiện thông báo). */
+  /** Địa chỉ để chuyển trang; null nghĩa là đang khóa hoặc chưa có địa chỉ (bấm không làm gì). */
   readonly href: string | null;
   /** Mở trang ngoài ở thẻ mới. */
   readonly external?: boolean;
@@ -20,15 +20,18 @@ export interface FooterLink {
 type Env = Readonly<Record<string, string | undefined>>;
 
 const isUrl = (v: string | undefined): v is string => !!v && /^https?:\/\//.test(v.trim());
+/** Liên kết ngoài chỉ chuyển trang khi đặt NEXT_PUBLIC_LINKS_UNLOCKED=true; mặc định khóa. */
+const unlockedIn = (env: Env) => env.NEXT_PUBLIC_LINKS_UNLOCKED === "true";
 
 const internal: readonly FooterLink[] = [
   { label: "Giới thiệu", href: "/" },
   { label: "Hỏi đáp", href: "/#faq" },
 ];
 
-/** Danh sách liên kết hiển thị: nội bộ trước, rồi bốn mục có thể chưa có địa chỉ. */
+/** Danh sách liên kết hiển thị: nội bộ trước, rồi bốn mục liên kết ngoài (đang khóa thì `href` null). */
 export function footerLinks(
   env: Env = {
+    NEXT_PUBLIC_LINKS_UNLOCKED: process.env.NEXT_PUBLIC_LINKS_UNLOCKED,
     NEXT_PUBLIC_FEEDBACK_URL: process.env.NEXT_PUBLIC_FEEDBACK_URL,
     NEXT_PUBLIC_COMMUNITY_URL: process.env.NEXT_PUBLIC_COMMUNITY_URL,
     NEXT_PUBLIC_TERMS_URL: process.env.NEXT_PUBLIC_TERMS_URL,
@@ -43,7 +46,7 @@ export function footerLinks(
   ];
   return [
     ...internal,
-    ...optional.map(([label, href]): FooterLink => (isUrl(href) ? { label, href: href.trim(), external: true } : { label, href: null })),
+    ...optional.map(([label, href]): FooterLink => (unlockedIn(env) && isUrl(href) ? { label, href: href.trim(), external: true } : { label, href: null })),
   ];
 }
 
@@ -66,11 +69,14 @@ const SOCIAL_DEFAULTS: Readonly<Record<SocialPlatform, { href: string | null; sh
 
 export interface SocialLink extends FooterLink {
   readonly label: SocialPlatform;
+  /** Đã có địa chỉ (dù đang khóa); false là nền tảng chờ. Dùng để chọn chú thích, không liên quan việc khóa. */
+  readonly configured: boolean;
 }
 
-/** Mạng xã hội hiển thị, theo thứ tự của SOCIAL_PLATFORMS; mục chưa có địa chỉ có `href` null. */
+/** Mạng xã hội hiển thị, theo thứ tự của SOCIAL_PLATFORMS; đang khóa hoặc chưa có địa chỉ thì `href` null. */
 export function socialLinks(
   env: Env = {
+    NEXT_PUBLIC_LINKS_UNLOCKED: process.env.NEXT_PUBLIC_LINKS_UNLOCKED,
     NEXT_PUBLIC_SOCIAL_FACEBOOK: process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK,
     NEXT_PUBLIC_SOCIAL_TIKTOK: process.env.NEXT_PUBLIC_SOCIAL_TIKTOK,
     NEXT_PUBLIC_SOCIAL_LINKEDIN: process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN,
@@ -85,16 +91,12 @@ export function socialLinks(
   return SOCIAL_PLATFORMS.flatMap((label): SocialLink[] => {
     const override = env[`NEXT_PUBLIC_SOCIAL_${label.toUpperCase()}`];
     const def = SOCIAL_DEFAULTS[label];
-    const href = isUrl(override) ? override.trim() : def.href;
-    if (href) return [{ label, href, external: true }];
-    return def.show === "always" ? [{ label, href: null }] : [];
+    const url = isUrl(override) ? override.trim() : def.href;
+    if (!url && def.show !== "always") return [];
+    const href = unlockedIn(env) ? url : null;
+    return [{ label, href, external: !!href, configured: !!url }];
   });
 }
-
-/** Thông báo khi bấm một mục chưa có địa chỉ. */
-export const pendingNotice = (label: string) => `Mục "${label}" đang được chuẩn bị, sẽ sớm ra mắt.`;
-/** Thông báo khi bấm một mạng xã hội chưa có địa chỉ. */
-export const socialPendingNotice = (label: string) => `Kênh ${label} đang được chuẩn bị, sẽ sớm kết nối cùng bạn.`;
 
 /** Mã bản dựng ngắn (Vercel đặt khi bật "expose system environment variables"); không có thì không hiện. */
 export function buildLabel(sha: string | undefined = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA): string | null {
