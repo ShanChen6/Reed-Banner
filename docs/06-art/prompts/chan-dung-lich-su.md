@@ -198,6 +198,8 @@ Mỗi tranh ra chiêu có tọa độ chỉnh tay trong `HA_VAN` (`src/app/game/
 
 **Hình động đứng đã đổi theo phong cách mới (09/11/2026):** ảnh chuẩn đứng của Shan được tách lớp bằng code (thân đã xóa trượng, nắm tay và bàn tay buông rồi vá phần vải phía sau; lớp `sword` là trượng ngắn, `arm` là nắm tay, `armR` là bàn tay buông, `head` là đầu). Các lớp khớp hoàn toàn khi ghép lại. Tọa độ mới trong `HA_VAN` (`rigs.ts`); trượng và nắm tay xoay quanh cổ tay (242, 603). Tới đây cả hình động lẫn tranh ra chiêu của Hà Vân đã cùng phong cách. Dải lụa đỏ trên tóc là lớp riêng (`ribbon`, vẽ sau thân), bay theo gió từ chỗ buộc ở búi tóc (gió trục dọc, biên độ 9); thân đã xóa dải lụa và vá lại chỗ nó phủ lên vai.
 
+**Hướng tranh ra đòn:** nhân vật phe trái đứng quay mặt sang phải, các tranh `attack`, `cast`, `ultimate` phải hướng về bên phải (phe phải được lật tự động). Bản `pose-attack` đầu quay sang trái nên đã **lật ngang tệp** (tọa độ trong `HA_VAN` là 1024 trừ x cũ). Khi tạo tranh mới, ghi rõ `facing right` trong dòng dáng. `portrait.webp` của Hà Vân (192×192, nền trong suốt) đã cắt lại từ ảnh chuẩn.
+
 ### 9.3 Khối phong cách toàn thân (biến thể của khối bản 2)
 
 Dán khối này **thay cho khối ở mục 3** khi tạo tranh toàn thân của Hà Vân (cùng cách vẽ, bỏ nền cảnh):
