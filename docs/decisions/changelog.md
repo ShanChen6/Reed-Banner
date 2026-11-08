@@ -1,5 +1,10 @@
 # Nhật ký thay đổi thiết kế
 
+## 09/11/2026
+
+**Ảnh phong thái: đủ tranh nền 7 hệ**
+- Gắn sáu tranh nền còn lại do Shan gửi (Thủy, Mộc, Kim, Thổ, Lôi, Phong) vào trang chi tiết tướng, cùng chuẩn với tranh Hỏa: WebP 1600×800, `public/art/stage/he-<hệ>.webp` ([tranh nền](../06-art/prompts/nen-phong-thai.md)).
+
 ## 08/11/2026
 
 **Ảnh phong thái: nền chung theo hệ (APPROVED, hệ Hỏa đã có code)**

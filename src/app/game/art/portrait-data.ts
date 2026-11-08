@@ -99,7 +99,7 @@ export function bustUrl(id: string): string | null {
  * prompt ở docs/06-art/prompts/nen-phong-thai.md). Thiếu thì sân khấu giữ nền gỗ tối với quầng sáng màu hệ như cũ.
  * Thêm hệ vào đây khi có tranh.
  */
-export const STAGE_BACKDROP_ELEMENTS: ReadonlySet<string> = new Set(["hoa"]);
+export const STAGE_BACKDROP_ELEMENTS: ReadonlySet<string> = new Set(["kim", "moc", "thuy", "hoa", "tho", "loi", "phong"]);
 
 export function stageBackdropUrl(element: string): string | null {
   return STAGE_BACKDROP_ELEMENTS.has(element) ? `/art/stage/he-${element}.webp` : null;
