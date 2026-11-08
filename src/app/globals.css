@@ -1253,6 +1253,24 @@
 .barracks .barracks-art {
   animation: barracks-fade 0.2s ease-out;
 }
+/* Bóng tiếp đất dưới chân nhân vật trên nền tranh: hai lớp elip tối dần, mờ nhẹ. */
+.barracks .barracks-ground {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 82%;
+  height: 20%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--black) 78%, transparent) 0%,
+    color-mix(in srgb, var(--black) 40%, transparent) 40%,
+    transparent 74%
+  );
+  filter: blur(3px);
+  pointer-events: none;
+}
 .barracks .team-card {
   background: var(--wood-lo);
   border: 1px solid var(--frame-line-soft);

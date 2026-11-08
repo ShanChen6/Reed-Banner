@@ -173,6 +173,8 @@ export default function HeroDetail({
         </div>
         <div className="flex min-h-0 min-w-0 flex-col items-center gap-2">
           <div className="relative flex min-h-0 w-full flex-1 items-end justify-center">
+            {/* Bóng tiếp đất dưới chân để nhân vật đứng trên nền tranh chứ không lơ lửng giữa vầng sáng. */}
+            {stageArt && <span aria-hidden className="barracks-ground" />}
             <ProfileArt
               key={id}
               id={id}
