@@ -1,5 +1,11 @@
 # Nhật ký thay đổi thiết kế
 
+## 08/11/2026
+
+**Thiết kế lại nhân vật: phe, tên và ngoại hiệu (DRAFT, chưa có code)**
+- Shan đồng ý hướng thiết kế lại nhân vật theo phong cách cổ trang bán hiện thực, không đổi chiêu thức: tách **vũ khí** khỏi **vật dụng đặc trưng**, mỗi nhân vật thường có **phe** (nghĩa quân Hoa Lư hoặc lính, hàng binh của một trong 12 sứ quân, dấu hiệu theo ký hiệu cờ trên bản đồ) và có thể có quan hệ với nhau mà không gò bó mở rộng ([thiết kế](../03-characters/thiet-ke-lai-nhan-vat.md), [37 hồ sơ](../03-characters/ho-so-37-tuong-thuong.md)).
+- Shan đồng ý đổi ba tên cho khớp quan hệ ruột thịt (Châu Ngọc → Trần Ngọc, Bế Liên → Mã Liên, Đào Lam → Vi Lam, không đổi `id`) và dùng 42 ngoại hiệu. Các mục còn lại (bảng vũ khí 3.2, quan hệ, vị trí mục Tiểu sử, hồ sơ) chờ duyệt.
+
 ## 06/11/2026
 
 **Tầm Tướng Ký: nút ghép giữ chữ “Hợp Nguyên”, bỏ emoji gợi ý**

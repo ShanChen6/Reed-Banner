@@ -2,6 +2,8 @@
 
 > Nhân vật đặc biệt chính thức (Shan, 03/11/2026): [Đinh Ngọc — Vạn Tượng Hành Giả](dinh-ngoc.md) và [Trần Vũ Phong — Vân Du Tử](vu-phong.md). Bộ 6 chủ động + 4 nội tại dung hợp 8 nghề/7 hệ đã chạy trong core; số liệu là điểm xuất phát, chưa mở trong game.
 
+> Thiết kế lại nhân vật (08/11/2026, DRAFT): phe, tên, ngoại hiệu, vũ khí, quan hệ và hồ sơ 37 tướng thường ở [thiet-ke-lai-nhan-vat.md](thiet-ke-lai-nhan-vat.md). Ba tên sẽ đổi khi áp dụng (Châu Ngọc → Trần Ngọc, Bế Liên → Mã Liên, Đào Lam → Vi Lam); danh sách này giữ tên hiện hành trong mã cho đến lúc đó.
+
 > Thiết kế mở rộng 30/10/2026: xem [nguồn Xạ thủ](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md). Từ 31/10/2026 14 nhân vật Xạ thủ/Sát thủ (RB-062–075) đã vào trận và shop (1.500 vàng); số liệu vẫn là điểm xuất phát chờ mô phỏng, Đinh Bộ Lĩnh chưa dùng hai nghề này. Sát thủ dùng bộ W02 đa vũ khí mới, chưa triển khai runtime.
 
 > Cập nhật tiếp theo: [kỹ năng phiên bản 2 và combo đồng đội](ky-nang/lich-su/21-combo-dong-doi.md). Layout mới đổi tuyệt chiêu sang ô 4, nghề nâng cao sang ô 5, có chuyển hồ sơ giữ điểm. Các định nghĩa legacy/lịch sử bên dưới cần đọc cùng tài liệu phiên bản 2.
