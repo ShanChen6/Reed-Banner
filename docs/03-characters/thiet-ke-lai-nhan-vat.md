@@ -1,7 +1,7 @@
 # Thiết kế lại nhân vật theo phong cách cổ trang bán hiện thực
 
 > Cập nhật: 08/11/2026
-> Trạng thái: **DRAFT** — Shan đã chốt (08/11/2026) phe, quy tắc vật dụng và vũ khí, bảng vũ khí 3.2, đồ trang bị giữ tên theo nghề, tiểu sử gộp trong Chi tiết, giữ vũ khí 14 xạ thủ và sát thủ (đổi họ tên, tên cũ thành ngoại hiệu), quan hệ, 37 hồ sơ; **ngoại hiệu bản 2 chờ duyệt**. **Chưa áp dụng vào mã** (đổi tên, trường `epithet`, mục tiểu sử trong Chi tiết, bảng quan hệ).
+> Trạng thái: **APPROVED** — Shan duyệt toàn bộ (08/11/2026). **Phần chữ đã có trong mã:** đổi tên (3 tướng thường, 14 Xạ thủ và Sát thủ), ngoại hiệu, phe, tiểu sử, quan hệ (`src/core/roster/lore.ts`, hiện ở tab Chi tiết). **Phần tranh** (làm lại nhân vật, vũ khí và tư thế theo phong cách mới, mục 6) **chưa làm**.
 
 Phong cách mục tiêu: **semi-realistic historical illustration, digital painting** (minh họa cổ trang bán hiện thực, tranh vẽ kỹ thuật số). Đã có chuẩn cho chân dung ở [prompt chân dung](../06-art/prompts/chan-dung-lich-su.md); chân dung Hà Vân mới (có họa tiết) là mẫu tham chiếu.
 
@@ -480,11 +480,15 @@ Khoảng **7 tranh** và một lần cắt lớp cho mỗi người; 77 nhân v�
 6. **Xạ thủ và Sát thủ** (3.3, 2.2): giữ nguyên 14 vũ khí; đặt họ tên mới, tên hiện nay thành ngoại hiệu.
 7. **Quan hệ** (4.2) và 15 mối khởi đầu.
 8. **37 hồ sơ** ([ho-so-37-tuong-thuong.md](ho-so-37-tuong-thuong.md)) và năm hồ sơ mẫu.
-9. Ba tên đổi họ (Trần Ngọc, Mã Liên, Vi Lam).
+9. **Tên và ngoại hiệu** (2.2): ba tên đổi họ, 42 ngoại hiệu bản 2 (rút từ câu nói), họ tên mới của 14 Xạ thủ, Sát thủ.
 
-**Còn chờ Shan:**
+**Đã áp dụng vào mã (08/11/2026):**
 
-10. **Ngoại hiệu bản 2** (mục 2.2): rút từ câu nói của từng nhân vật; ngoại hiệu nào chưa hay thì đổi.
-11. **Họ tên mới của 14 xạ thủ, sát thủ** (bảng 2.2, mười người là đề xuất mới) và giới tính của năm người thiết kế gốc chưa ghi.
+- `roster.ts`: đổi chuỗi `name` của 17 nhân vật (`id` không đổi).
+- `src/core/roster/lore.ts`: 13 phe (`FACTIONS`), ngoại hiệu, phe, xuất thân, tính cách, câu nói của 56 nhân vật (`CHARACTER_LORE`) và bảng quan hệ R1–R15 (`RELATIONS`, hai mức `chot` và `goiMo`; chỉ `chot` hiển thị). Dữ liệu sinh từ các hồ sơ ở docs; **sửa chữ ở một nơi thì sửa cả hai** (hồ sơ và `lore.ts`).
+- Tab **Chi tiết** (`profile/Biography.tsx`): ngoại hiệu, phe kèm ký hiệu cờ, tuổi và quê, tiểu sử, tính cách, câu nói, người liên quan; ghi rõ nhân vật hư cấu. Nhân vật có thật (Đinh Bộ Lĩnh, tướng lịch sử, sứ quân) không hiện mục này.
+- Test `tests/core/roster-lore.test.ts`: đủ 56 nhân vật, ngoại hiệu không trùng, tên không trùng, 13 phe (20 và 36), quan hệ hợp lệ, ruột thịt cùng họ.
+- 14 hồ sơ Xạ thủ, Sát thủ trong `lore.ts` mới có tiểu sử một câu (từ thiết kế gốc), chưa có tuổi, quê, tính cách, câu nói; mở rộng theo mẫu mục 4 khi có thời gian.
+- Tên cũ vẫn còn trong tài liệu lịch sử, prompt tranh, báo cáo và tên thư mục tranh (không đổi theo quy định "lịch sử không sửa"); trong tên của chiêu (ví dụ "Độc Ảnh Tiềm Châm") ngoại hiệu giữ nguyên.
 
-**Việc làm sau khi duyệt:** áp dụng tên vào `roster.ts` và tài liệu; thêm trường `epithet`; tiểu sử ngắn và mục người liên quan trong tab Chi tiết; bảng quan hệ; làm tranh theo quy trình mục 6 (làm thử trọn bộ Hà Vân trước, xem [prompt chân dung](../06-art/prompts/chan-dung-lich-su.md)).
+**Chưa làm:** làm lại tranh nhân vật, vũ khí và tư thế theo phong cách mới (quy trình mục 6, làm thử trọn bộ Hà Vân trước, xem [prompt chân dung](../06-art/prompts/chan-dung-lich-su.md)); tuổi, quê, tính cách, câu nói cho 14 Xạ thủ, Sát thủ; mở khóa hoặc thưởng theo phe (nếu muốn thì là thay đổi gameplay riêng).

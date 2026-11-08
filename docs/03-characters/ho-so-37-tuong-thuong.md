@@ -1,7 +1,7 @@
 # 37 hồ sơ tướng thường (hư cấu)
 
 > Cập nhật: 08/11/2026
-> Trạng thái: **DRAFT** — chờ Shan duyệt giọng văn, quê và xuất thân; phe, tên và ngoại hiệu đã được đồng ý (08/11/2026). Theo mẫu mục 4 của [thiết kế lại nhân vật](thiet-ke-lai-nhan-vat.md); vũ khí và vật dụng khớp bảng 3.2; phe khớp bảng 4.1; quan hệ khớp bảng 4.2 (R1–R15). Từ 08/11/2026, 14 xạ thủ và sát thủ có họ tên mới (tên cũ thành ngoại hiệu, xem mục 2.2 của thiết kế); trong file này các nhân vật đó được nhắc bằng họ tên mới kèm ngoại hiệu.
+> Trạng thái: **APPROVED** — Shan duyệt (08/11/2026); dữ liệu đã nằm ở `src/core/roster/lore.ts` và hiện ở tab Chi tiết (xem [thiết kế lại nhân vật](thiet-ke-lai-nhan-vat.md) mục 7). Theo mẫu mục 4; vũ khí và vật dụng khớp bảng 3.2; phe khớp bảng 4.1; quan hệ khớp bảng 4.2 (R1–R15). Từ 08/11/2026, 14 xạ thủ và sát thủ có họ tên mới (tên cũ thành ngoại hiệu); trong file này họ được nhắc bằng họ tên mới kèm ngoại hiệu.
 
 **Tất cả là nhân vật hư cấu của game**, không phải người có trong sử. Lính sứ quân chỉ là thuộc hạ, không gán hành động hay lời thoại cho sứ quân thật. Ký hiệu phe là do game đặt. Năm tướng khởi đầu (Hà Vân, Lê Thạch, Mai Thanh, Tô Kim, Phùng Phong) ở [thiết kế lại nhân vật](thiet-ke-lai-nhan-vat.md).
 

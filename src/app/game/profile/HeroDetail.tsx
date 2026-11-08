@@ -44,6 +44,7 @@ import { SkillIcon } from "../art/skills";
 import SkillDetails from "../battle/SkillDetails";
 import { BackGlyph, InfoGlyph, PlusGlyph, TeamGlyph } from "./glyphs";
 import { nameOf } from "./roster";
+import Biography from "./Biography";
 
 /** Ô trang bị hai bên tranh; vũ khí đứng giữa phía dưới. Đúng 9 ô như luật trang bị. */
 export const LEFT_SLOTS: readonly NonWeaponSlot[] = ["dinhMao", "yPhuc", "hoThu", "baoNgoa"];
@@ -465,6 +466,7 @@ function Details({ profile, id, fighter, bare, worn }: { profile: Profile; id: s
   ];
   return (
     <div className="flex flex-col gap-3 text-[15px]">
+      <Biography id={id} />
       <table className="w-full overflow-hidden rounded-md text-left">
         <caption className="sr-only">Chỉ số gốc, phần cộng từ trang bị và tổng</caption>
         <thead className="text-sm text-[var(--on-wood-soft)]">

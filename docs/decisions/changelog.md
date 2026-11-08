@@ -2,10 +2,11 @@
 
 ## 08/11/2026
 
-**Thiết kế lại nhân vật: phe, tên và ngoại hiệu (DRAFT, chưa có code)**
+**Thiết kế lại nhân vật: phe, tên và ngoại hiệu (APPROVED, phần chữ đã có code)**
 - Shan đồng ý hướng thiết kế lại nhân vật theo phong cách cổ trang bán hiện thực, không đổi chiêu thức: tách **vũ khí** khỏi **vật dụng đặc trưng**, mỗi nhân vật thường có **phe** (nghĩa quân Hoa Lư hoặc lính, hàng binh của một trong 12 sứ quân, dấu hiệu theo ký hiệu cờ trên bản đồ) và có thể có quan hệ với nhau mà không gò bó mở rộng ([thiết kế](../03-characters/thiet-ke-lai-nhan-vat.md), [37 hồ sơ](../03-characters/ho-so-37-tuong-thuong.md)).
 - Shan đồng ý đổi ba tên cho khớp quan hệ ruột thịt (Châu Ngọc → Trần Ngọc, Bế Liên → Mã Liên, Đào Lam → Vi Lam, không đổi `id`).
-- Shan duyệt (08/11/2026, lượt sau): quy tắc vật dụng ≠ vũ khí, bảng vũ khí 3.2, đồ trang bị giữ tên theo nghề, **tiểu sử ngắn gộp trong tab Chi tiết (không thêm tab)**, quan hệ, phe, 37 hồ sơ. **14 Xạ thủ và Sát thủ: giữ nguyên vũ khí, đặt họ tên mới, tên cũ thành ngoại hiệu.** Ngoại hiệu bản 1 bị nhận xét "chưa hay", đã viết lại bản 2 (rút từ câu nói của từng nhân vật), chờ duyệt. Sửa quan hệ R2: Lam Giang Phi Diệp là nam, nên cha và con trai.
+- Shan duyệt (08/11/2026, lượt sau): quy tắc vật dụng ≠ vũ khí, bảng vũ khí 3.2, đồ trang bị giữ tên theo nghề, **tiểu sử ngắn gộp trong tab Chi tiết (không thêm tab)**, quan hệ, phe, 37 hồ sơ. **14 Xạ thủ và Sát thủ: giữ nguyên vũ khí, đặt họ tên mới, tên cũ thành ngoại hiệu.** Ngoại hiệu bản 1 bị nhận xét "chưa hay", đã viết lại bản 2 (rút từ câu nói của từng nhân vật). Sửa quan hệ R2: Lam Giang Phi Diệp là nam, nên cha và con trai.
+- Shan đồng ý hết và cho **áp dụng vào mã** (08/11/2026): đổi tên 17 nhân vật ở `roster.ts` (không đổi `id`), thêm `src/core/roster/lore.ts` (13 phe, ngoại hiệu, tiểu sử, quan hệ cho 56 nhân vật) và mục Tiểu sử trong tab Chi tiết (`Biography.tsx`). Trạng thái các tài liệu `thiet-ke-lai-nhan-vat.md` và `ho-so-37-tuong-thuong.md` từ DRAFT sang APPROVED. Chưa làm: tranh theo phong cách mới.
 
 ## 06/11/2026
 
