@@ -28,8 +28,8 @@ describe("Tranh nền sân khấu theo hệ", () => {
     }
   });
 
-  it("hệ chưa có tranh thì không có đường dẫn", () => {
-    assert.equal(stageBackdropUrl("thuy"), null);
+  it("đủ tranh cho cả 7 hệ; id lạ thì không có đường dẫn", () => {
+    for (const el of ["kim", "moc", "thuy", "hoa", "tho", "loi", "phong"]) assert.ok(STAGE_BACKDROP_ELEMENTS.has(el), el);
     assert.equal(stageBackdropUrl("khongCo"), null);
   });
 });
