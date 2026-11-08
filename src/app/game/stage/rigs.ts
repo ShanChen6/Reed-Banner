@@ -2030,8 +2030,9 @@ const HA_VAN: WarriorRig = {
     // Tranh gốc quay mặt sang trái; đã lật ngang tệp để nhân vật phe trái chĩa trượng về phía đối thủ (tọa độ 1024 - x).
     attack: { name: "pose-attack", texScale: 0.4, origin: { x: 45, y: 130 },
       anchor: { x: 514, y: 1444 }, scale: 1, burst: { x: 959, y: 300 } },
-    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 158, y: 1 },
-      anchor: { x: 493, y: 1533 }, scale: 1, burst: { x: 215, y: 400 } },
+    // Đã lật ngang tệp để bàn tay xòe hướng về phía đối thủ (tọa độ 1024 - x cũ).
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 214, y: 1 },
+      anchor: { x: 531, y: 1533 }, scale: 1, burst: { x: 809, y: 400 } },
     ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 43, y: 7 },
       anchor: { x: 473, y: 1527 }, scale: 1, burst: { x: 990, y: 345 } },
   },
