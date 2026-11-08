@@ -1,0 +1,274 @@
+/* Khung thư cuộn giấy dó dùng chung (tách từ thư cuộn liên hệ ở footer, Shan chọn 07/11/2026; form đăng nhập/đăng ký dùng lại 08/11/2026).
+   Bốn lớp để trông như vật thật: đinh đồng và dây son treo, hai cuộn giấy quấn quanh trục gỗ (có bóng trụ tròn), tờ thư giấy dó
+   có sợi và mép rách, tua rua son rủ ở hai đầu trục dưới. Màu lấy từ token của game; lớp là CSS Module nên không đụng lớp toàn cục.
+   Nội dung trên tờ thư tự lo kiểu chữ (xem ContactBlock.module.css, AuthCard.module.css). */
+
+.scroll {
+  position: relative;
+  width: 100%;
+  max-width: 40rem;
+  /* Lề trong đủ cho hai đầu trục nhô ra (không làm trang tràn ngang). */
+  padding: 0.25rem 1.5rem 0;
+  filter: drop-shadow(0 16px 12px rgb(0 0 0 / 0.5));
+}
+
+/* ——— Đinh và dây treo (co giãn đều theo bề rộng; vòng buộc nằm đúng trên trục) ——— */
+.cords {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: -12px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* ——— Cuộn giấy quanh trục gỗ ——— */
+.rollWrap {
+  position: relative;
+  z-index: 2;
+  height: 26px;
+}
+/* Trục gỗ nhô ra hai đầu cuộn giấy, đầu tiện tròn vàng đồng. */
+.dowel {
+  position: absolute;
+  left: -1.1rem;
+  right: -1.1rem;
+  top: 9px;
+  height: 9px;
+  border-radius: 5px;
+  /* gỗ sẫm đã xỉn màu: không có điểm sáng trắng, chỉ chút sáng ở mép trên */
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--frame-bronze) 70%, var(--wood-hi)) 0%,
+    color-mix(in srgb, var(--frame-bronze) 62%, var(--wood)) 40%,
+    color-mix(in srgb, var(--wood) 78%, black) 100%
+  );
+  box-shadow:
+    0 2px 3px rgb(0 0 0 / 0.5),
+    inset 0 0 0 1px rgb(0 0 0 / 0.3);
+}
+.finial {
+  position: absolute;
+  top: -8px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  /* núm đồng cổ: nâu vàng xỉn, điểm sáng nhỏ và mờ, viền tối của lớp gỉ */
+  background: radial-gradient(
+    circle at 36% 32%,
+    color-mix(in srgb, var(--frame-gold) 80%, var(--paper-deep)) 0%,
+    var(--frame-bronze) 46%,
+    color-mix(in srgb, var(--wood) 70%, black) 100%
+  );
+  box-shadow:
+    0 3px 4px rgb(0 0 0 / 0.5),
+    inset 0 0 0 1px rgb(0 0 0 / 0.4),
+    inset 0 -3px 4px rgb(0 0 0 / 0.28);
+}
+.finialL {
+  left: -9px;
+}
+.finialR {
+  right: -9px;
+}
+/* Cuộn giấy: hình trụ nằm ngang, sáng ở giữa, tối dần về mép trên và dưới. */
+.roll {
+  position: absolute;
+  inset: 0;
+  border-radius: 13px;
+  /* cuộn giấy dó cũ: cùng xơ, cùng tông với tờ thư nhưng đậm hơn và mờ (không có dải sáng bóng), tối dần về mép trên và dưới */
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='60'><filter id='f' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.012 .55' numOctaves='3' seed='9' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .4  0 0 0 0 .26  0 0 0 0 .1  0 0 0 1.8 -.72'/></filter><rect width='100%' height='100%' filter='url(%23f)'/></svg>"),
+    linear-gradient(
+      180deg,
+      rgb(70 40 14 / 0.62) 0%,
+      rgb(70 40 14 / 0.2) 24%,
+      rgb(255 236 190 / 0.1) 46%,
+      transparent 64%,
+      rgb(60 34 12 / 0.5) 100%
+    ),
+    color-mix(in srgb, var(--paper) 72%, var(--paper-deep));
+  box-shadow:
+    inset 0 0 0 1px rgb(70 42 16 / 0.4),
+    inset 0 -2px 4px rgb(60 36 14 / 0.4);
+}
+/* Mép giấy cuộn lộ ra ở hai đầu, thấy các vòng cuốn. */
+.roll::before,
+.roll::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  width: 9px;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--paper) 80%, var(--paper-deep)) 0 1.5px, rgb(95 58 22 / 0.6) 1.5px 2.5px);
+  box-shadow: 0 0 0 1px rgb(70 42 16 / 0.4);
+}
+.roll::before {
+  left: -3px;
+}
+.roll::after {
+  right: -3px;
+}
+
+/* ——— Tờ thư ——— */
+.sheet {
+  position: relative;
+  z-index: 1;
+  margin: -9px 0.9rem;
+}
+.sheetBg {
+  position: absolute;
+  inset: 0;
+  background:
+    /* xơ giấy dó: vệt dài nằm ngang */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='260'><filter id='f' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.014 .7' numOctaves='3' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .3  0 0 0 0 .12  0 0 0 1.7 -.78'/></filter><rect width='100%' height='100%' filter='url(%23f)'/></svg>"),
+    /* đốm li ti */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .38  0 0 0 0 .26  0 0 0 0 .1  0 0 0 .34 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+    /* vết ố nước ở góc và vệt cháy sém ở rìa */
+    radial-gradient(circle at 7% 88%, rgb(125 72 26 / 0.42) 0%, transparent 24%),
+    radial-gradient(circle at 95% 10%, rgb(125 72 26 / 0.34) 0%, transparent 20%),
+    radial-gradient(circle at 62% 96%, rgb(125 72 26 / 0.22) 0%, transparent 16%),
+    radial-gradient(ellipse at 50% 50%, transparent 52%, rgb(112 64 22 / 0.5) 100%),
+    radial-gradient(ellipse at 28% 0%, var(--paper-hi) 0%, transparent 62%),
+    linear-gradient(180deg, var(--paper) 0%, color-mix(in srgb, var(--paper) 74%, var(--paper-deep)) 100%);
+  box-shadow:
+    inset 0 0 34px rgb(110 70 28 / 0.65),
+    inset 16px 0 20px -16px rgb(60 36 14 / 0.6),
+    inset -16px 0 20px -16px rgb(60 36 14 / 0.6);
+}
+/* Hai nếp gấp dọc mờ như tờ thư từng được cuộn. */
+.sheetBg::before,
+.sheetBg::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 18px;
+  background: linear-gradient(90deg, transparent, rgb(110 70 28 / 0.1) 50%, transparent);
+}
+.sheetBg::before {
+  left: 33%;
+}
+.sheetBg::after {
+  left: 66%;
+}
+/* Giấy cong dần vào hai cuộn: đổ bóng sát trục. */
+.curl {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 22px;
+  pointer-events: none;
+}
+.curlTop {
+  top: 0;
+  background: linear-gradient(180deg, rgb(60 36 14 / 0.65), rgb(60 36 14 / 0.2) 55%, transparent);
+}
+.curlBottom {
+  bottom: 0;
+  background: linear-gradient(0deg, rgb(60 36 14 / 0.65), rgb(60 36 14 / 0.2) 55%, transparent);
+}
+.sheetBody {
+  position: relative;
+  padding: 1.25rem 1.5rem 1rem;
+  color: var(--ink);
+}
+
+.seal {
+  position: absolute;
+  width: 3.1rem;
+  height: 3.1rem;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  transform: rotate(-7deg);
+  opacity: 0.93;
+}
+
+/* ——— Tua rua son rủ ở hai đầu trục dưới ——— */
+.tassels {
+  position: relative;
+  z-index: 3;
+  height: 2.4rem;
+  margin-top: -2px;
+  pointer-events: none;
+}
+.tassel {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: top center;
+}
+.tasselL {
+  left: -0.9rem;
+}
+.tasselR {
+  right: -0.9rem;
+}
+.tassel i {
+  display: block;
+  width: 2px;
+  height: 0.5rem;
+  background: var(--frame-gold);
+}
+.tassel b {
+  display: block;
+  width: 11px;
+  height: 11px;
+  margin-top: -1px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--lacquer-hi), var(--lacquer));
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.4);
+}
+.tassel span {
+  display: block;
+  width: 14px;
+  height: 1.05rem;
+  margin-top: -2px;
+  background: repeating-linear-gradient(90deg, var(--lacquer-hi) 0 2px, var(--lacquer) 2px 3px, transparent 3px 4px);
+  clip-path: polygon(0 0, 100% 0, 92% 100%, 8% 100%);
+}
+.scroll:hover .tassel,
+.scroll:focus-within .tassel {
+  animation: tasselSway 2.4s ease-in-out infinite;
+}
+.scroll:hover .tasselR,
+.scroll:focus-within .tasselR {
+  animation-delay: -1.2s;
+}
+@keyframes tasselSway {
+  0%,
+  100% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+}
+
+/* Điện thoại: lề hẹp hơn để nội dung ít xuống dòng. */
+@media (max-width: 559px) {
+  .scroll {
+    padding-inline: 1.1rem;
+  }
+  .cords {
+    margin-bottom: -9px;
+  }
+  .sheet {
+    margin-inline: 0.5rem;
+  }
+  .sheetBody {
+    padding: 1.25rem 1rem 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll:hover .tassel,
+  .scroll:focus-within .tassel {
+    animation: none;
+  }
+}
