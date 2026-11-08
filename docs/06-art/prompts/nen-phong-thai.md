@@ -25,7 +25,7 @@ Phe thể hiện bằng ký hiệu cờ trong mục Tiểu sử và bằng cản
 | Khổ | **Ngang 2:1**, tạo từ 2400×1200 trở lên; Claude xuất WebP 1600×800 (khoảng 80 KB) |
 | Nền | Không trong suốt; **không có người** |
 | Bố cục | **Khu giữa** (vòng tròn cao khoảng 45% khung, có vầng sáng tròn nhạt) **êm, sáng, ít chi tiết** vì nhân vật đứng ở đó; chi tiết dồn vào hai phần ba bên ngoài vì ô trang bị nằm hai bên. Ảnh được cắt `cover` ở giữa, nên màn dọc (điện thoại) chỉ thấy phần giữa |
-| **Chỗ đứng** | Phần giữa phía dưới (cao khoảng 18% khung, rộng khoảng 60%) là **một mặt phẳng để đứng**: bệ đá thấp, thềm đá hoặc bờ đất phẳng, ít chi tiết, hơi tối hơn vầng sáng, mép trên mềm, để nhân vật có nơi đặt chân (không phải mặt nước hay sương). Bản Hỏa đầu tiên **thiếu** chỗ này nên nhân vật trông lơ lửng; code đang vẽ bóng tiếp đất bù tạm |
+| **Chỗ đứng** | Phần giữa phía dưới (cao khoảng 18% khung, rộng khoảng 60%) là **một mặt phẳng để đứng**: bệ đá thấp, thềm đá hoặc bờ đất phẳng, ít chi tiết, hơi tối hơn vầng sáng, mép trên mềm, để nhân vật có nơi đặt chân (không phải mặt nước hay sương). Bản Hỏa đầu tiên **thiếu** chỗ này nên nhân vật trông lơ lửng; bản Hỏa thứ hai đã có bệ, code vẫn vẽ bóng tiếp đất nhẹ dưới chân |
 | Cấm | Chữ, khung, viền, người, mặt, sét hoặc lửa sát khu giữa |
 | Cảnh | Mô-típ Đông Sơn (sóng, mây cuộn, răng cưa, chim Lạc) dùng tiết chế; kiến trúc mái ngói Việt, tránh dáng cung điện Trung Hoa |
 
@@ -49,7 +49,7 @@ Style: hand-painted digital background illustration for a strategy game, WIDE la
 | Lôi | chưa tạo | Violet and indigo storm dusk with a large pale lilac circular halo disc centred; towering mountain peaks, heavy cloud scrolls with Dong Son patterns, very faint distant lightning veins inside the far clouds only (no glow, no bolts near the centre). Palette: indigo, violet, slate, dusty purple, antique gold edges. |
 | Phong | chưa tạo | Jade-teal and pale ivory dusk with a large pale jade circular halo disc centred; wind-swept clouds streaming sideways, bamboo leaning in the wind at one edge, a few distant birds in a loose line, cloud scrolls with Dong Son patterns. Palette: jade, pale teal, ivory, sage, touches of antique gold. |
 
-**Nhận xét tranh Hỏa đã dùng (08/11/2026):** Shan nhận xét nhân vật "hơi thiếu chỗ đứng": nền phía dưới là mặt nước và sương, không có mặt phẳng để đứng. Đã thêm bóng tiếp đất bằng mã (`.barracks-ground`) và đưa yêu cầu "chỗ đứng" vào chuẩn ở trên; nên tạo lại bản Hỏa có bệ đứng khi tiện. khu giữa rất êm và sáng (độ lệch chuẩn độ sáng 3,5 so với khoảng 40 ở hai bên), vầng sáng nằm đúng sau đầu nhân vật, hai ô trang bị đọc rõ. Hai chi tiết nên tránh ở các tranh sau: **mái đền kiểu Trung Hoa cong vút** (ở tranh Hỏa là mái cong hai bên, chấp nhận được nhưng nên thuần Việt hơn) và **lá phong kiểu Nhật** (nên dùng lá và hoa Việt: đào, sen, tre).
+**Nhận xét tranh Hỏa đã dùng (08/11/2026):** Shan nhận xét nhân vật "hơi thiếu chỗ đứng": nền phía dưới là mặt nước và sương, không có mặt phẳng để đứng. Đã thêm bóng tiếp đất bằng mã (`.barracks-ground`), đưa yêu cầu "chỗ đứng" vào chuẩn ở trên và thay bằng **bản Hỏa thứ hai có bệ đá phẳng** (1600×800, ~90KB; bệ rộng hơn 60% và cao khoảng 23%, vầng sáng hơi tương phản với trời hơn bản đầu). Ở bản đầu khu giữa rất êm và sáng (độ lệch chuẩn độ sáng 3,5 so với khoảng 40 ở hai bên), vầng sáng nằm đúng sau đầu nhân vật, hai ô trang bị đọc rõ. Hai chi tiết nên tránh ở các tranh sau: **mái đền kiểu Trung Hoa cong vút** (ở tranh Hỏa là mái cong hai bên, chấp nhận được nhưng nên thuần Việt hơn) và **lá phong kiểu Nhật** (nên dùng lá và hoa Việt: đào, sen, tre).
 
 ## 4. Gắn vào game
 
@@ -61,6 +61,6 @@ Style: hand-painted digital background illustration for a strategy game, WIDE la
 
 ## 5. Việc còn lại
 
-0. (Tùy chọn) tạo lại tranh Hỏa có bệ đứng theo chuẩn mới, thay `he-hoa.webp`.
+0. (Xong) tranh Hỏa có bệ đứng đã thay `he-hoa.webp`.
 1. Tạo sáu tranh nền còn lại (Thủy, Mộc, Kim, Thổ, Lôi, Phong), thêm hệ vào `STAGE_BACKDROP_ELEMENTS`.
 2. Ảnh phong thái mới của từng nhân vật (trong suốt, độ phân giải gấp đôi tranh cũ 250×379) để nhìn sắc nét trên nền mới; hiện ảnh cũ nhỏ nên hơi mờ trên nền lớn.
