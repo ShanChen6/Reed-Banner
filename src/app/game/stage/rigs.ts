@@ -1992,8 +1992,9 @@ const VI_TRIEU: WarriorRig = {
 };
 
 /**
- * Hà Vân, pháp sư hệ Hỏa (tướng khởi đầu). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code
- * như Vi Lam: trượng cầu lửa cùng nắm tay xoay quanh cổ tay, cầu lửa sáng riêng; bàn tay buông và đầu tách riêng.
+ * Hà Vân, pháp sư hệ Hỏa (tướng khởi đầu). Bộ tranh phong cách mới Shan gửi 09/11/2026 (ảnh chuẩn, nền trong suốt). Ảnh đứng
+ * tách lớp bằng code: trượng ngắn và nắm tay xoay quanh cổ tay, cầu lửa sáng riêng; bàn tay buông và đầu tách riêng;
+ * thân đã xóa trượng và tay rồi vá lại phần vải phía sau.
  * Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const HA_VAN: WarriorRig = {
@@ -2001,24 +2002,24 @@ const HA_VAN: WarriorRig = {
   weapon: "staff",
   dir: "ha-van",
   texScale: 0.5,
-  foot: { x: 520, y: 1515 },
-  height: 1500,
+  foot: { x: 494, y: 1535 },
+  height: 1530,
   parts: {
-    body: { x: 157, y: 1, w: 797, h: 1528 },
-    armR: { x: 746, y: 628, w: 69, h: 168 },
-    sword: { x: 100, y: 389, w: 142, h: 333 },
-    arm: { x: 168, y: 570, w: 101, h: 65 },
-    head: { x: 428, y: 10, w: 195, h: 227 },
+    body: { x: 214, y: 0, w: 563, h: 1536 },
+    armR: { x: 669, y: 745, w: 61, h: 140 },
+    sword: { x: 198, y: 304, w: 95, h: 447 },
+    arm: { x: 204, y: 561, w: 75, h: 84 },
+    head: { x: 378, y: 0, w: 211, h: 235 },
   },
   cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 250, y: 600 },
-    elbowR: { x: 775, y: 645 },
-    neck: { x: 530, y: 220 },
+    shoulder: { x: 242, y: 603 },
+    elbowR: { x: 700, y: 748 },
+    neck: { x: 525, y: 230 },
   },
-  blade: [{ x: 205, y: 600 }, { x: 160, y: 455 }],
-  orb: { x: 160, y: 455 },
+  blade: [{ x: 242, y: 610 }, { x: 240, y: 365 }],
+  orb: { x: 240, y: 365 },
   strikeFx: "fireRain",
   fxColor: 0xd9502a,
   // Chĩa trượng cầu lửa tới (đánh thường), hạ trượng xòe tay (ra chiêu), giơ cao trượng chỉ tay gọi mưa lửa (tuyệt chiêu).
