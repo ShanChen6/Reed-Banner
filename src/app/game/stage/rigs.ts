@@ -1864,46 +1864,48 @@ const THAI_HA: WarriorRig = {
 };
 
 /**
- * Mai Thanh, y sư hệ Thủy (tướng khởi đầu). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code:
- * bàn tay xách hồ lô sứ xoay quanh cổ tay, hồ lô lắc quanh nắm tay như các y sư khác; bàn tay buông và đầu tách
- * riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ * Mai Thanh, y sư hệ Thủy (tướng khởi đầu). Bộ tranh phong cách mới Shan gửi 09/11/2026 (ảnh chuẩn, nền trong suốt;
+ * prompt ở docs/06-art/prompts/mai-thanh.md). Ảnh đứng tách lớp bằng code: hồ lô men xanh lắc quanh nắm tay, nắm tay
+ * xoay quanh cổ tay; bàn tay buông và đầu tách riêng; thân đã xóa hồ lô, nắm tay và bàn tay rồi vá phần vải phía sau.
+ * Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const MAI_THANH: WarriorRig = {
   skeleton: "warrior",
   weapon: "gourd",
-  grip: { x: 265, y: 530 },
+  grip: { x: 262, y: 790 },
   dir: "mai-thanh",
   texScale: 0.5,
-  foot: { x: 590, y: 1500 },
-  height: 1490,
+  foot: { x: 445, y: 1528 },
+  height: 1520,
   parts: {
-    body: { x: 291, y: 10, w: 566, h: 1507 },
-    armR: { x: 714, y: 685, w: 57, h: 84 },
-    sword: { x: 204, y: 520, w: 162, h: 341 },
-    arm: { x: 215, y: 485, w: 110, h: 68 },
-    head: { x: 470, y: 25, w: 152, h: 238 },
+    body: { x: 234, y: 7, w: 568, h: 1524 },
+    armR: { x: 582, y: 652, w: 76, h: 108 },
+    sword: { x: 170, y: 780, w: 152, h: 330 },
+    arm: { x: 229, y: 728, w: 70, h: 100 },
+    head: { x: 372, y: 7, w: 234, h: 242 },
   },
   cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 290, y: 520 },
-    elbowR: { x: 735, y: 705 },
-    neck: { x: 545, y: 255 },
+    shoulder: { x: 266, y: 742 },
+    elbowR: { x: 628, y: 656 },
+    neck: { x: 540, y: 235 },
   },
-  blade: [{ x: 265, y: 530 }, { x: 270, y: 700 }],
+  blade: [{ x: 262, y: 790 }, { x: 258, y: 1108 }],
   strikeFx: "springDew",
   fxColor: 0x2f7fc1,
-  // Đẩy chưởng, hồ lô xách bên hông (đánh thường), ôm hồ lô mở nắp (ra chiêu), nâng hồ lô rót cam lộ (tuyệt chiêu).
+  // Bước tới đẩy chưởng, hồ lô đung đưa sau lưng (đánh thường), nâng hồ lô hai tay trước ngực (ra chiêu), giơ cao hồ lô
+  // một tay, tay kia ngửa ra trao (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 153, y: 11 },
-      anchor: { x: 600, y: 1500 }, scale: 1, burst: { x: 830, y: 265 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 129, y: 12 },
-      anchor: { x: 575, y: 1505 }, scale: 1, burst: { x: 360, y: 265 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 46, y: 11 },
-      anchor: { x: 540, y: 1505 }, scale: 1, burst: { x: 215, y: 285 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 16, y: 15 },
+      anchor: { x: 465, y: 1520 }, scale: 1, burst: { x: 940, y: 330 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 197, y: 9 },
+      anchor: { x: 441, y: 1530 }, scale: 1, burst: { x: 712, y: 190 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 50, y: 16 },
+      anchor: { x: 467, y: 1525 }, scale: 1, burst: { x: 225, y: 260 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 41, y: 50 },
-    anchor: { x: 800, y: 900 }, scale: 0.85 },
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 65, y: 29 },
+    anchor: { x: 760, y: 970 }, scale: 0.9 },
 };
 
 /**
