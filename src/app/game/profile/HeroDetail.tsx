@@ -172,7 +172,7 @@ export default function HeroDetail({
           {LEFT_SLOTS.map(slot)}
         </div>
         <div className="flex min-h-0 min-w-0 flex-col items-center gap-2">
-          <div className="relative flex min-h-0 w-full flex-1 items-end justify-center">
+          <div className={`relative flex min-h-0 w-full flex-1 items-end justify-center ${stageArt ? "-mb-7" : ""}`}>
             {/* Bóng tiếp đất dưới chân để nhân vật đứng trên nền tranh chứ không lơ lửng giữa vầng sáng. */}
             {stageArt && <span aria-hidden className="barracks-ground" />}
             <ProfileArt
@@ -184,7 +184,7 @@ export default function HeroDetail({
               fallbackClassName="relative mb-4 size-40 drop-shadow-[0_6px_10px_color-mix(in_srgb,var(--black)_80%,transparent)] sm:size-48"
             />
           </div>
-          {slot("vuKhi")}
+          <div className="relative z-10">{slot("vuKhi")}</div>
         </div>
         <div className="z-10 flex flex-col justify-between" aria-label="Ô trang bị bên phải">
           {RIGHT_SLOTS.map(slot)}
