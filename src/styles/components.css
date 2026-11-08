@@ -212,6 +212,57 @@
     border-radius: 0.5rem;
     background: var(--wood-inset);
   }
+  /* Nội dung đặt trên giấy dó (thư cuộn đăng nhập/đăng ký, 08/11/2026): đổi token vai trò sang chữ mực trên giấy để Input, Button,
+     Alert, Divider, liên kết dùng nguyên component mà vẫn đọc rõ. Chỉ đổi biến trong khối này, không đụng màn gỗ xung quanh. */
+  .ui-on-paper {
+    --foreground: var(--ink);
+    --foreground-secondary: var(--ink-soft);
+    --muted: var(--ink-soft);
+    --foreground-disabled: color-mix(in srgb, var(--ink) 50%, transparent);
+    --on-wood: var(--ink);
+    --on-wood-soft: var(--ink-soft);
+    --title-on-wood: var(--ink-strong);
+    --primary: var(--lacquer);
+    --ring: var(--lacquer);
+    --border: color-mix(in srgb, var(--ink) 38%, transparent);
+    --frame-line-soft: color-mix(in srgb, var(--ink) 28%, transparent);
+    --control-background: color-mix(in srgb, var(--paper-hi) 72%, transparent);
+    --disabled: color-mix(in srgb, var(--paper-deep) 60%, transparent);
+    --wood-hi: color-mix(in srgb, var(--ink) 8%, transparent);
+    --jade: var(--tone-2e7d4f);
+    --success: var(--tone-2e7d4f);
+    --success-surface: color-mix(in srgb, var(--tone-2e7d4f) 14%, transparent);
+    --warning: var(--ink);
+    --warning-surface: color-mix(in srgb, var(--tone-b77a26) 16%, transparent);
+    --danger: var(--lacquer-lo);
+    --danger-surface: color-mix(in srgb, var(--lacquer) 13%, transparent);
+    --info: var(--ink-soft);
+    --info-surface: color-mix(in srgb, var(--ink) 8%, transparent);
+    color: var(--ink);
+  }
+  .ui-on-paper .ui-control {
+    box-shadow: inset 0 1px 3px color-mix(in srgb, var(--ink) 18%, transparent);
+  }
+  .ui-on-paper .ui-control:focus-visible { border-color: var(--lacquer); }
+  /* Lớp lặp hai lần để thắng vòng focus vàng của .ui-mode-screen (vàng trên giấy khó thấy). */
+  .ui-on-paper.ui-on-paper :is(button, a, select, input, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--ink-strong);
+    outline-offset: 2px;
+  }
+  /* Nút phụ trên giấy: viền mực, nền giấy sáng (nút gỗ sẫm trên giấy trông như vá). */
+  .ui-on-paper .ui-button--secondary {
+    border-color: color-mix(in srgb, var(--ink) 45%, transparent);
+    background: color-mix(in srgb, var(--paper-hi) 55%, transparent);
+    color: var(--ink-strong);
+  }
+  .ui-on-paper .ui-button--secondary:hover:not(:disabled) {
+    border-color: var(--ink-strong);
+    background: color-mix(in srgb, var(--paper-hi) 85%, transparent);
+  }
+  .ui-on-paper .ui-frame-inset {
+    border: 1px dashed color-mix(in srgb, var(--ink) 32%, transparent);
+    background: color-mix(in srgb, var(--paper-deep) 28%, transparent);
+  }
   .ui-frame-corner { color: var(--frame-bronze); }
   .ui-frame--hero .ui-frame-corner { color: var(--frame-gold-hi); }
 
