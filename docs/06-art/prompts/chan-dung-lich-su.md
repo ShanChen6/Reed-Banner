@@ -194,6 +194,8 @@ Mỗi tranh ra chiêu có tọa độ chỉnh tay trong `HA_VAN` (`src/app/game/
 
 **Họa tiết đặc trưng của Hà Vân cần giữ ở mọi tranh** (đọc từ `body.webp`): lớp lót cam ở tay áo và vạt; hai tấm vải thêu chỉ vàng treo ở thắt lưng (họa tiết cánh sen); dải thêu sóng mây vàng ở mép vạt đỏ; đai nâu có hai tấm đồng thoi; vòng đồng răng cưa ở bắp tay; tua đỏ hạt đồng ở đai và chỗ buộc giày. Tranh ra chiêu có thể che bớt vì dáng, nhưng không được bỏ hẳn.
 
+**Kết quả test (09/11/2026):** Shan gửi bộ tranh mới viết lại từ đầu (ảnh chuẩn trước, các tranh sau tham chiếu ảnh chuẩn), cả 5 tranh nền trong suốt, 1024×1536 (ngã 1536×1024), có dấu ngọn lửa trên trán và trượng ngắn đồng nhất. Đã cắt sát, co 0,4 lần (phong thái 0,5 lần), thay `style`, `pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down` của Hà Vân và đổi `anchor/origin/burst` trong `HA_VAN` theo dáng mới (chân đặt đúng giữa hai bàn chân; điểm bắn là đầu trượng, bàn tay xòe, đầu ngón tay chỉ). Dáng mới không trùng tranh cũ nên các tọa độ cũ không còn dùng. `standing.webp` và các lớp rig vẫn là hình cũ (xem 9.1). Còn chờ: chân dung `bust.webp` mới có dấu trán.
+
 ### 9.3 Khối phong cách toàn thân (biến thể của khối bản 2)
 
 Dán khối này **thay cho khối ở mục 3** khi tạo tranh toàn thân của Hà Vân (cùng cách vẽ, bỏ nền cảnh):
