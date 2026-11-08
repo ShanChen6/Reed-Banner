@@ -37,10 +37,9 @@ export function LoginScene({
   mail: boolean;
 }) {
   return (
-    <AuthCard title="Đăng nhập" oauthError={q.oauthError}>
-      <div className="mt-6 flex flex-col gap-3">
+    <AuthCard title="Đăng nhập" subtitle="Đăng nhập để giữ tiến độ và chơi tiếp trên mọi thiết bị." oauthError={q.oauthError}>
+      <div className="mt-5 flex flex-col gap-3">
         <Notice show={q.emailVerified}>Đã xác nhận email. Đăng nhập để chơi tiếp nhé.</Notice>
-        <p className="text-center text-sm text-on-wood-soft">Đăng nhập để giữ tiến độ và chơi tiếp trên mọi thiết bị.</p>
         <ProviderButtons providers={providers} />
         <Divider>{providers.length > 0 ? "hoặc dùng tên đăng nhập" : "Dùng tên đăng nhập"}</Divider>
         <LoginForm username={q.username} error={q.error} />
@@ -71,9 +70,8 @@ export function LoginScene({
 
 export function RegisterScene({ q, providers, mail }: { q: AuthParams; providers: readonly ProviderId[]; mail: boolean }) {
   return (
-    <AuthCard title="Đăng ký" oauthError={q.oauthError}>
-      <div className="mt-6 flex flex-col gap-3">
-        <p className="text-center text-sm text-on-wood-soft">Tạo tài khoản để giữ tiến độ. Trận và tiến độ đang chơi được giữ nguyên.</p>
+    <AuthCard title="Đăng ký" subtitle="Tạo tài khoản để giữ tiến độ. Trận và tiến độ đang chơi được giữ nguyên." oauthError={q.oauthError}>
+      <div className="mt-5 flex flex-col gap-3">
         <ProviderButtons providers={providers} />
         <Divider>{providers.length > 0 ? "hoặc tạo tên đăng nhập" : "Tạo tên đăng nhập"}</Divider>
         <RegisterForm username={q.username} error={q.error} mail={mail} />
@@ -102,7 +100,7 @@ export function AccountScene({
   const here = scenePath("ACCOUNT");
   return (
     <AuthCard title="Tài khoản" oauthError={q.oauthError}>
-      <div className="mt-6 flex flex-col items-center gap-4">
+      <div className="mt-5 flex flex-col items-center gap-4">
         {account.avatarUrl ? (
           // Ảnh đại diện từ Google/GitHub; nhỏ nên không cần tối ưu qua next/image.
           // eslint-disable-next-line @next/next/no-img-element
@@ -199,7 +197,7 @@ export function AccountScene({
 export function ForgotPasswordScene({ q, mail }: { q: AuthParams; mail: boolean }) {
   return (
     <AuthCard title="Quên mật khẩu">
-      <div className="mt-6 flex flex-col gap-3">
+      <div className="mt-5 flex flex-col gap-3">
         {!mail ? (
           <p className="text-center text-sm text-on-wood-soft">Trò chơi chưa bật gửi email nên chưa lấy lại được mật khẩu.</p>
         ) : q.sent ? (
@@ -228,7 +226,7 @@ export function ForgotPasswordScene({ q, mail }: { q: AuthParams; mail: boolean 
 export function ResetPasswordScene({ q }: { q: AuthParams }) {
   return (
     <AuthCard title="Đặt lại mật khẩu">
-      <div className="mt-6 flex flex-col gap-3">
+      <div className="mt-5 flex flex-col gap-3">
         {q.token ? (
           <ResetPasswordForm token={q.token} error={q.error} />
         ) : (
