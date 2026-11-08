@@ -1,7 +1,7 @@
 # Prompt bộ tranh Mai Thanh (phong cách mới)
 
 > Cập nhật: 09/11/2026
-> Trạng thái: **DRAFT** — bộ prompt viết từ đầu cho Mai Thanh, theo quy trình Hà Vân (ảnh chuẩn trước, các tranh sau tham chiếu ảnh chuẩn); chưa có ảnh nào được tạo và gắn vào game.
+> Trạng thái: **DRAFT** — bộ prompt viết từ đầu cho Mai Thanh, theo quy trình Hà Vân (ảnh chuẩn trước, các tranh sau tham chiếu ảnh chuẩn); Shan đã tạo đủ 7 ảnh và đã gắn vào game (09/11/2026, xem mục 10).
 
 Căn cứ: `docs/03-characters/thiet-ke-lai-nhan-vat.md` (hồ sơ Mai Thanh: Y sư, hệ Thủy, ngoại hiệu Thanh Hồ, 22 tuổi, nghĩa quân Hoa Lư lo chữa trị) và các quy tắc đã chốt khi làm Hà Vân. Mỗi prompt **tự đủ ý, không cần ảnh tham chiếu cũ**; giữ đồng nhất bằng **một ảnh chuẩn** (mục 2).
 
@@ -141,3 +141,12 @@ Pose: sitting slumped on the ground leaning on one hand, head bowed, eyes closed
 ## 9. Quy cách gửi lại
 
 Gửi **PNG gốc**, đặt tên `chuan`, `bust`, `style`, `attack`, `cast`, `ultimate`, `down`. Tôi sẽ cắt sát, co về đúng cỡ, thay vào `public/art/characters/mai-thanh/`, chỉnh tọa độ trong `MAI_THANH` (`rigs.ts`), tách lớp lại hình động đứng (hồ lô và nắm tay, bàn tay buông, đầu, tóc/dải nếu có) và làm `portrait.webp` từ ảnh chuẩn.
+
+## 10. Kết quả (09/11/2026)
+
+Shan gửi đủ 7 ảnh theo đúng thứ tự mục 9 (chuẩn, bust, style, attack, cast, ultimate, down): tóc buông, khuôn mặt giữ nguyên ở mọi tranh, hồ lô cỡ đầu đồng nhất, các tranh ra chiêu đều quay sang phải nên **không cần lật tệp** như Hà Vân. Ảnh toàn thân nền trong suốt 1024×1536 (ngã 1536×1024), bust nền sương 1254×1254.
+
+- **Tranh tư thế:** cắt sát, co 0,4 lần (`pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down`); phong thái co 0,5 lần (`style.webp`); `standing.webp` co 0,25 lần từ ảnh chuẩn. Tọa độ mới trong `MAI_THANH` (`rigs.ts`): chân đặt giữa hai bàn chân; điểm bắn là bàn tay đẩy chưởng (đánh thường), miệng hồ lô (ra chiêu), hồ lô giơ cao (tuyệt chiêu). Tranh ngã có nhân vật lớn hơn ảnh chuẩn một chút (so cối đồng và hồ lô) nên đặt `scale` 0,9.
+- **Hình động đứng:** ảnh chuẩn được tách lớp bằng code: `sword` là hồ lô cùng dây và tua (lắc quanh chỗ nắm dây, điểm `grip`), `arm` là nắm tay xách dây (xoay quanh cổ tay), `armR` là bàn tay trái đặt trên vạt áo (xoay quanh cổ tay), `head` là đầu; thân đã xóa hồ lô, nắm tay, bàn tay, phần vạt áo sau hồ lô và dưới bàn tay được vá lại theo vân vải.
+- **Chân dung:** `bust.webp` 384×384 từ ảnh bust (đã thêm `maiThanh` vào `BUST_IDS`); `portrait.webp` 192×192 nền trong suốt cắt từ ảnh chuẩn.
+- Tổng dung lượng thư mục `mai-thanh/` khoảng 300 KB, dưới ngân sách 350 KB.
