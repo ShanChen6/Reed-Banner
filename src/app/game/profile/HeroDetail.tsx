@@ -39,6 +39,7 @@ import {
 import { EmptySlotIcon, GearIcon, SetEmblem } from "../art/gear";
 import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
 import { ProfileArt } from "../art/ProfileArt";
+import { stageBackdropUrl } from "../art/portrait-data";
 import { ELEMENT_NAME, gearText, PROFESSION_NAME, skillText, SLOT_NAME, TIER_CLASS } from "../battle/labels";
 import { SkillIcon } from "../art/skills";
 import SkillDetails from "../battle/SkillDetails";
@@ -101,6 +102,7 @@ export default function HeroDetail({
   const [sub, setSub] = useState<Sub>("overview");
   const fighter = fighterOf(profile, id);
   const bare = fighterOf(profile, id, false);
+  const stageArt = stageBackdropUrl(fighter.element);
   const progress = progressOf(profile, id);
   const worn = equippedItems(loadoutOf(profile, id), fighter.profession);
   const name = nameOf(id);
@@ -155,7 +157,16 @@ export default function HeroDetail({
       {/* Tranh và 9 ô: khung cao cố định nên đổi nhân vật không làm nhảy bố cục. */}
       <div
         className="barracks-stage relative mt-3 grid h-[clamp(18rem,42vh,26rem)] grid-cols-[auto_minmax(0,1fr)_auto] gap-2 rounded-lg p-2 sm:gap-3 sm:p-3"
-        style={{ ["--stage-tint" as string]: `${ELEMENT_COLOR[fighter.element]}66` }}
+        style={{
+          ["--stage-tint" as string]: `${ELEMENT_COLOR[fighter.element]}66`,
+          ...(stageArt
+            ? {
+                backgroundImage: `linear-gradient(180deg, transparent 60%, color-mix(in srgb, var(--wood-inset) 75%, transparent)), url(${stageArt})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }
+            : {}),
+        }}
       >
         <div className="z-10 flex flex-col justify-between" aria-label="Ô trang bị bên trái">
           {LEFT_SLOTS.map(slot)}
