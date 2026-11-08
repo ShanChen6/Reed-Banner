@@ -1,7 +1,7 @@
 # 37 hồ sơ tướng thường (hư cấu)
 
 > Cập nhật: 08/11/2026
-> Trạng thái: **DRAFT** — chờ Shan duyệt giọng văn, quê và xuất thân; phe, tên và ngoại hiệu đã được đồng ý (08/11/2026). Theo mẫu mục 4 của [thiết kế lại nhân vật](thiet-ke-lai-nhan-vat.md); vũ khí và vật dụng khớp bảng 3.2; phe khớp bảng 4.1; quan hệ khớp bảng 4.2 (R1–R15).
+> Trạng thái: **DRAFT** — chờ Shan duyệt giọng văn, quê và xuất thân; phe, tên và ngoại hiệu đã được đồng ý (08/11/2026). Theo mẫu mục 4 của [thiết kế lại nhân vật](thiet-ke-lai-nhan-vat.md); vũ khí và vật dụng khớp bảng 3.2; phe khớp bảng 4.1; quan hệ khớp bảng 4.2 (R1–R15). Từ 08/11/2026, 14 xạ thủ và sát thủ có họ tên mới (tên cũ thành ngoại hiệu, xem mục 2.2 của thiết kế); trong file này các nhân vật đó được nhắc bằng họ tên mới kèm ngoại hiệu.
 
 **Tất cả là nhân vật hư cấu của game**, không phải người có trong sử. Lính sứ quân chỉ là thuộc hạ, không gán hành động hay lời thoại cho sứ quân thật. Ký hiệu phe là do game đặt. Năm tướng khởi đầu (Hà Vân, Lê Thạch, Mai Thanh, Tô Kim, Phùng Phong) ở [thiết kế lại nhân vật](thiet-ke-lai-nhan-vat.md).
 
@@ -12,7 +12,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 ## Tướng sĩ (7)
 
 ### Trần Cương · Tướng sĩ · Kim
-- **Ngoại hiệu:** Thiết Môn (cổng sắt).
+- **Ngoại hiệu:** Bất Hạ Môn (cổng không bao giờ hạ).
 - **Phe:** lính Siêu Loại, theo về Hoa Lư. Họa tiết giáp vảy.
 - **Tuổi, quê:** khoảng 38, thành lũy tre vùng Siêu Loại.
 - **Xuất thân:** đội trưởng giữ cổng, lớn lên bên lò rèn nhà, cầm đại đao từ năm mười lăm tuổi. Khi vùng đất đổi chủ, anh dẫn em gái sang Hoa Lư vì muốn nàng có nơi yên ổn mà chữa người.
@@ -23,7 +23,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Cổng ta giữ chưa từng hở một lần."
 
 ### Lâm Tùng · Tướng sĩ · Mộc
-- **Ngoại hiệu:** Tùng Đầm (cây tùng bên đầm).
+- **Ngoại hiệu:** Cô Tùng (cây tùng lẻ bên đầm).
 - **Phe:** lính Hồi Hồ, theo về Hoa Lư. Họa tiết cánh sen.
 - **Tuổi, quê:** khoảng 30, ven đầm Hồi Hồ.
 - **Xuất thân:** người đốn lim ở bãi lau sậy, được chọn làm lính canh bờ đầm vì sức khỏe và cái đầu lạnh. Anh theo về sau khi thấy cháu mình muốn đi cùng cờ lau, không nỡ để thằng nhỏ đi một mình.
@@ -34,7 +34,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Rừng không dạy ta chạy, chỉ dạy ta đứng."
 
 ### Hồ Lãng · Tướng sĩ · Thủy
-- **Ngoại hiệu:** Giang Xoa (đinh ba bến sông).
+- **Ngoại hiệu:** Nghịch Lưu (ngược dòng).
 - **Phe:** lính Tế Giang, theo về Hoa Lư. Họa tiết dòng sông.
 - **Tuổi, quê:** khoảng 33, bến sông Tế Giang.
 - **Xuất thân:** con nhà chài, quen đâm cá bằng đinh ba rồi thành lính thủy giữ bến. Thấy bến vắng thuyền, dân đói, anh theo thuyền lương Hoa Lư vì tin ở đâu có lương, ở đó có chỗ đứng.
@@ -45,40 +45,40 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Nước chảy xuôi, ta đi ngược."
 
 ### Lý Liệt · Tướng sĩ · Hỏa
-- **Ngoại hiệu:** Hỏa Câu (đôi móc lửa).
+- **Ngoại hiệu:** Cuồng Hỏa (lửa dữ).
 - **Phe:** lính Đằng Châu, theo về Hoa Lư. Họa tiết ba vạch vuốt.
 - **Tuổi, quê:** khoảng 35, chợ bến Đằng Châu.
 - **Xuất thân:** lính giữ chợ bến, hay can thiệp khi có kẻ ăn hiếp tiểu thương. Anh theo về cùng em gái, vì cả hai không muốn thấy bến chợ cháy thêm lần nữa.
 - **Tính cách:** nóng, thẳng, dễ bực nhưng không nuốt lời; hay bẻ khớp ngón tay.
 - **Ba dấu ấn:** khăn đỏ buộc đầu, mắt sáng, vết cháy xém ở cẳng tay · áo vải đỏ gạch thêu ba vạch vuốt, màu nhấn đỏ cam · khăn đỏ ở đầu cũng là vật dụng.
 - **Vũ khí và nhịp:** **đôi hộ thủ câu** (kiếm móc, móc cổ tay đối phương) · Chém.
-- **Quan hệ:** R4, anh của Xích Diệm Luân.
+- **Quan hệ:** R4, anh của Lý Diệm (Xích Diệm Luân).
 - **Câu nói:** "Cháy thì cháy cho ra lửa."
 
 ### Kha Sơn · Tướng sĩ · Thổ
-- **Ngoại hiệu:** Phủ Sơn (rìu núi).
+- **Ngoại hiệu:** Bất Thoái (núi không lùi).
 - **Phe:** lính Tam Đái, theo về Hoa Lư. Họa tiết ba dải.
 - **Tuổi, quê:** khoảng 40, chân núi Tam Đái.
 - **Xuất thân:** thợ đẽo đá chuyển sang cầm rìu trận, tay to như cái cối. Anh theo về khi em trai mình rời đồn; anh không nói nhiều, chỉ xách rìu đi theo.
 - **Tính cách:** chậm, chắc, ít lời, tốt bụng; thích đứng nhìn núi.
 - **Ba dấu ấn:** thân to, đầu cạo, râu thưa · giáp đá mài nhẵn thêu ba dải, màu nhấn nâu đất · đai giáp đá.
 - **Vũ khí và nhịp:** **rìu lớn hai tay** · Chém.
-- **Quan hệ:** R3, anh của Trấn Sơn Thạch.
+- **Quan hệ:** R3, anh của Kha Thạch (Trấn Sơn Thạch).
 - **Câu nói:** "Núi không lùi, ta cũng vậy."
 
 ### Tống Tấn · Tướng sĩ · Lôi
-- **Ngoại hiệu:** Lôi Kích (kích sấm).
+- **Ngoại hiệu:** Nộ Lôi (sấm giận).
 - **Phe:** lính Phong Châu, theo về Hoa Lư. Họa tiết đỉnh núi và sét.
 - **Tuổi, quê:** khoảng 42, ngã ba sông vùng Phong Châu.
 - **Xuất thân:** lính kích lâu năm, dạy cả lớp trẻ cách giữ nhịp tiến quân. Anh theo về vì tin thế cục mới cần người dạy lính, không cần người chỉ chém.
 - **Tính cách:** nóng nhưng giữ lời, nghiêm với học trò, hiền với trẻ con.
 - **Ba dấu ấn:** tóc búi, sẹo ở lông mày, mắt sắc · áo giáp tím sẫm thêu đỉnh núi và vân sét, màu nhấn tím · chuông ngựa treo ở đai.
 - **Vũ khí và nhịp:** **kích** · Đâm.
-- **Quan hệ:** R13, thầy của Lôi Minh Xạ.
+- **Quan hệ:** R13, thầy của Lương Triệt (Lôi Minh Xạ).
 - **Câu nói:** "Sấm đã nổ thì không thu lại."
 
 ### Hứa Lăng · Tướng sĩ · Phong
-- **Ngoại hiệu:** Khinh Phong (gió nhẹ).
+- **Ngoại hiệu:** Khinh Phong (gió nhẹ, không chờ ai).
 - **Phe:** lính Đường Lâm, theo về Hoa Lư. Họa tiết cổng làng.
 - **Tuổi, quê:** khoảng 28, làng gốm nhà đá ong vùng Đường Lâm. Nữ.
 - **Xuất thân:** con nhà thợ gốm, học kiếm từ ông ngoại từng giữ cổng làng. Nàng theo về vì muốn gió trên đường làng thôi mang tiếng binh đao.
@@ -93,7 +93,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 ## Pháp sư (6)
 
 ### Chu Ngân · Pháp sư · Kim
-- **Ngoại hiệu:** Ngân Phù (bùa bạc).
+- **Ngoại hiệu:** Định Tâm (tâm vững, tay không run).
 - **Phe:** lính Bình Kiều, theo về Hoa Lư. Họa tiết cầu vòm.
 - **Tuổi, quê:** khoảng 45, thành Bình Kiều. Nam.
 - **Xuất thân:** thầy khắc bùa bạc, chuyên khắc lên vật dụng của thành để cầu bình an. Ông theo về vì cho rằng thanh kiếm bạc không nên chỉ giữ cho một dòng họ.
@@ -104,7 +104,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Bùa chỉ sáng khi người cầm không run."
 
 ### Đàm Thảo · Pháp sư · Mộc
-- **Ngoại hiệu:** Thảo Lâm Sư (thầy rừng cỏ).
+- **Ngoại hiệu:** Thảo Tâm (lòng thật như cây rừng).
 - **Phe:** nghĩa quân Hoa Lư.
 - **Tuổi, quê:** khoảng 26, núi tre phía Hoa Lư. Nữ.
 - **Xuất thân:** người hái thuốc kiêm thầy cúng rừng, dẫn dân qua rừng mỗi mùa lũ. Cô theo cờ lau vì quen đường rừng và thương những người lạc đường.
@@ -115,7 +115,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Cây không lừa ai, kể cả khi đi qua bão."
 
 ### Vi Lam · Pháp sư · Thủy
-- **Ngoại hiệu:** Thủy Thư (sách nước).
+- **Ngoại hiệu:** Mặc Lam (mực xanh của người ghi chép).
 - **Phe:** lính Tiên Du, theo về Hoa Lư. Họa tiết sao bốn cánh.
 - **Tuổi, quê:** khoảng 24, chân núi Tiên Du. Nữ.
 - **Xuất thân:** người đọc chú trong đội quân vùng Tiên Du, ghi chép bằng sách thẻ tre. Cô theo anh trai về Hoa Lư vì tin lời anh: nơi mới cần người biết ghi chép.
@@ -126,18 +126,18 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Chữ nhớ giúp ta, khi trí nhớ đã mệt."
 
 ### Doãn Nham · Pháp sư · Thổ
-- **Ngoại hiệu:** Nham Tế (thầy tế đá).
+- **Ngoại hiệu:** Địa Ức (đất nhớ mọi bước chân).
 - **Phe:** lính Đỗ Động, theo về Hoa Lư. Họa tiết mũi giáo.
 - **Tuổi, quê:** khoảng 50, vùng đầm Đỗ Động. Nam.
 - **Xuất thân:** thầy cúng đất đầm, quen đọc mạch nước và chân đồi. Ông theo về vì muốn đưa người học trò trẻ khỏi chỗ nguy hiểm.
 - **Tính cách:** từ tốn, hay ví von, hơi lẩm cẩm khi kể chuyện cũ.
 - **Ba dấu ấn:** thấp, rắn chắc, tóc bạc búi, mắt nheo · áo nâu đất thêu mũi giáo và vân đá, màu nhấn nâu đất · chuông đồng nhỏ ở cổ tay.
 - **Vũ khí và nhịp:** **chùy phép bằng đá** · Chém.
-- **Quan hệ:** R9, thầy của Địa Ẩn.
+- **Quan hệ:** R9, thầy của Cát Tàng (Địa Ẩn).
 - **Câu nói:** "Đất nhớ mọi bước chân, kể cả bước chân của ta."
 
 ### Vũ Lôi · Pháp sư · Lôi
-- **Ngoại hiệu:** Lôi Tế (thầy tế sấm).
+- **Ngoại hiệu:** Thiên Cảnh (trời nhắc nhở).
 - **Phe:** nghĩa quân Hoa Lư.
 - **Tuổi, quê:** khoảng 32, miếu thần sấm đầu làng. Nam.
 - **Xuất thân:** người trông miếu thần sấm, vẫn giữ tục xin mưa mỗi năm. Anh theo cờ lau khi dân làng đòi người ra giúp việc cầu mưa lúc hạn.
@@ -148,14 +148,14 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Trời không giận ai, chỉ nhắc nhở."
 
 ### Liễu Yên · Pháp sư · Phong
-- **Ngoại hiệu:** Phất Phong (phất trần và gió).
+- **Ngoại hiệu:** Hồi Phong (gió mang về).
 - **Phe:** lính Đường Lâm, theo về Hoa Lư. Họa tiết cổng làng.
 - **Tuổi, quê:** khoảng 27, vùng Đường Lâm. Nữ.
 - **Xuất thân:** lớn lên bên mái đình cổ, chuyên múa phất trần trong lễ cầu mùa. Cô theo về với hy vọng tìm được người chị thất lạc.
 - **Tính cách:** dịu dàng, giữ kẽ, hay mơ; thói quen nghe gió trước khi nói.
 - **Ba dấu ấn:** dáng thanh, tóc buông, mắt buồn · áo trắng ngà viền xanh ngọc thêu cổng làng, màu nhấn xanh ngọc · chuông gió nhỏ cài lưng.
 - **Vũ khí và nhịp:** **phất trần** · Quạt.
-- **Quan hệ:** R8, chị em thất lạc với Vô Ảnh.
+- **Quan hệ:** R8, chị em thất lạc với Liễu Thiều (Vô Ảnh).
 - **Câu nói:** "Gió từng mang chị em ta đi, gió cũng sẽ mang về."
 
 ---
@@ -163,7 +163,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 ## Binh lính (6)
 
 ### Cao Kiên · Binh lính · Kim
-- **Ngoại hiệu:** Kiên Mâu (mâu bền).
+- **Ngoại hiệu:** Trực Mâu (mâu thẳng, lòng gọn).
 - **Phe:** lính Bình Kiều, theo về Hoa Lư. Họa tiết cầu vòm.
 - **Tuổi, quê:** khoảng 36, thành Bình Kiều. Nam.
 - **Xuất thân:** lính giáo giữ thành, từng canh cổng nhiều năm. Anh theo về sau khi thấy người bạn cũ ở phía Hoa Lư vẫn nhớ tên mình.
@@ -174,7 +174,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Giáo dài, nhưng lòng phải ngắn gọn."
 
 ### Hoàng Mộc · Binh lính · Mộc
-- **Ngoại hiệu:** Quắm Đầm (dao quắm ven đầm).
+- **Ngoại hiệu:** Hồ Tử (chàng trai của đầm).
 - **Phe:** lính Hồi Hồ, theo về Hoa Lư. Họa tiết cánh sen.
 - **Tuổi, quê:** khoảng 22, ven đầm Hồi Hồ. Nam.
 - **Xuất thân:** lính trẻ, quen chèo xuồng chặt lau, mang theo dao quắm. Anh theo cờ lau vì muốn thấy thế giới ngoài đầm, kéo theo ông cậu cứng đầu.
@@ -185,29 +185,29 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Đầm lớn lắm, nhưng thế gian còn lớn hơn."
 
 ### Thái Hà · Binh lính · Thủy
-- **Ngoại hiệu:** Thiết Trạo (mái chèo sắt).
+- **Ngoại hiệu:** Nhẫn Hải (kiên nhẫn như biển).
 - **Phe:** lính Bố Hải, đi cùng Hoa Lư theo lời kết minh. Họa tiết sóng cửa biển.
 - **Tuổi, quê:** khoảng 44, cửa biển Bố Hải. Nam.
-- **Xuất thân:** lính chèo thuyền hộ tống, tay chai như gỗ chèo. Ông sang giúp Hoa Lư khi liên minh được kết, và vì con gái ông đã đi trước làm trinh sát.
+- **Xuất thân:** lính chèo thuyền hộ tống, tay chai như gỗ chèo. Ông sang giúp Hoa Lư khi liên minh được kết, và vì con trai ông đã đi trước làm trinh sát bến sông.
 - **Tính cách:** bình thản, thương con, nói ít; có thói quen đếm sóng.
 - **Ba dấu ấn:** râu muối tiêu, da sạm biển, vai rộng · áo vải xanh sẫm thêu sóng cửa biển, màu nhấn lam · lưới vắt vai.
 - **Vũ khí và nhịp:** **mái chèo sắt và khiên tre** · Chém.
-- **Quan hệ:** R2, cha của Lam Giang Phi Diệp.
+- **Quan hệ:** R2, cha của Thái Diệp (ngoại hiệu Lam Giang Phi Diệp).
 - **Câu nói:** "Biển dạy ta kiên nhẫn, không dạy ta lùi."
 
 ### Trương Viêm · Binh lính · Hỏa
-- **Ngoại hiệu:** Đăng Viêm (đuốc lửa).
+- **Ngoại hiệu:** Dạ Tiếu (cười trong đêm gác).
 - **Phe:** lính Tây Phù Liệt, theo về Hoa Lư. Họa tiết lũy răng cưa.
 - **Tuổi, quê:** khoảng 29, vùng Tây Phù Liệt. Nam.
 - **Xuất thân:** lính lũy, nóng tính, hay đùa trong giờ gác. Anh theo về cùng người đồng đội cũ vì chán cảnh gác lũy mà chẳng biết bảo vệ ai.
 - **Tính cách:** ồn ào, vui nhộn, thật bụng; thích kể chuyện tục.
 - **Ba dấu ấn:** mắt sáng, tóc cháy sém, nụ cười tinh nghịch · giáp lá đỏ thêu lũy răng cưa, màu nhấn đỏ cam · đuốc cài lưng.
 - **Vũ khí và nhịp:** **đoản đao** · Chém.
-- **Quan hệ:** R15, đồng đội cũ của Xích Dạ.
+- **Quan hệ:** R15, đồng đội cũ của Tiết Dạ (Xích Dạ).
 - **Câu nói:** "Gác đêm thì phải biết cười, không thì lạnh."
 
 ### Ông Chấn · Binh lính · Lôi
-- **Ngoại hiệu:** Lôi Cổ (trống sấm).
+- **Ngoại hiệu:** Nhịp Quân (người giữ nhịp cho quân).
 - **Phe:** lính Phong Châu, theo về Hoa Lư. Họa tiết đỉnh núi.
 - **Tuổi, quê:** khoảng 41, vùng núi Phong Châu. Nam.
 - **Xuất thân:** lính trống, đánh nhịp tiến quân cho cả đội, tay quăng lưu tinh chùy khi cần. Ông theo về vì tin rằng đội quân mới cần nhịp mới.
@@ -218,7 +218,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Trống đánh đúng nhịp thì lính bước đúng đường."
 
 ### Mạnh Tường · Binh lính · Phong
-- **Ngoại hiệu:** Phi Lao (lao bay).
+- **Ngoại hiệu:** Truy Phong (đuổi theo gió).
 - **Phe:** lính Đường Lâm, theo về Hoa Lư. Họa tiết cổng làng.
 - **Tuổi, quê:** khoảng 25, làng Đường Lâm. Nam.
 - **Xuất thân:** lính trẻ nhanh chân, chuyên đi báo tin và phóng lao. Anh theo về vì thích nhìn thế giới rộng hơn mái làng.
@@ -233,7 +233,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 ## Y sư (6)
 
 ### Trần Ngọc · Y sư · Kim
-- **Ngoại hiệu:** Ngân Châm (kim bạc).
+- **Ngoại hiệu:** Nhất Châm (một mũi kim đúng chỗ).
 - **Phe:** lính Siêu Loại, theo về Hoa Lư. Họa tiết giáp vảy.
 - **Tuổi, quê:** khoảng 30, thành lũy tre vùng Siêu Loại. Nữ.
 - **Xuất thân:** thầy thuốc quân, giỏi châm cứu cho lính bị thương. Cô theo anh trai sang Hoa Lư vì muốn mở một trạm chữa không phân phe.
@@ -244,7 +244,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Một mũi kim đúng chỗ hơn trăm lời an ủi."
 
 ### Lục Diệp · Y sư · Mộc
-- **Ngoại hiệu:** Bách Thảo (trăm loại cỏ).
+- **Ngoại hiệu:** Hồi Xuân (chữa lành).
 - **Phe:** nghĩa quân Hoa Lư. Họa tiết thảo dược.
 - **Tuổi, quê:** khoảng 24, núi thuốc phía Hoa Lư. Nữ.
 - **Xuất thân:** con nhà hái thuốc, thuộc từng chiếc lá. Cô theo cờ lau để mang thảo dược tới nơi lính cần.
@@ -255,7 +255,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Lá nào cũng là một lời hứa chữa lành."
 
 ### Hồng Đan · Y sư · Hỏa
-- **Ngoại hiệu:** Hồng Lô (lò đỏ).
+- **Ngoại hiệu:** Văn Hỏa (lửa nhỏ nấu thuốc).
 - **Phe:** lính Đằng Châu, theo về Hoa Lư. Họa tiết ba vạch vuốt.
 - **Tuổi, quê:** khoảng 31, chợ bến Đằng Châu. Nữ.
 - **Xuất thân:** thầy thuốc chuyên chữa bỏng và đau xương cho thợ lò. Cô theo quân y về Hoa Lư dù chồng vẫn ở phía bên kia, vì tin việc chữa người không nên đợi ai đồng ý.
@@ -266,7 +266,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Thuốc sắc lửa nhỏ, lòng chữa lửa lớn."
 
 ### Mã Liên · Y sư · Thổ
-- **Ngoại hiệu:** Thổ Liên (sen đất).
+- **Ngoại hiệu:** Vô Kỳ (không cờ, chữa mọi phe).
 - **Phe:** nghĩa quân Hoa Lư. Họa tiết sen đất.
 - **Tuổi, quê:** khoảng 23, quê Tam Đái. Nữ.
 - **Xuất thân:** con gái một mưu sĩ Tam Đái, lớn lên bên mẹ làm thuốc nên chọn nghề y. Cô rời cha sang cờ lau vì không muốn chữa người chỉ để họ đi đánh nhau tiếp.
@@ -277,7 +277,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Tôi chữa người, không hỏi họ thuộc cờ nào."
 
 ### Tiêu Minh · Y sư · Lôi
-- **Ngoại hiệu:** Du Y (thầy thuốc dạo).
+- **Ngoại hiệu:** Thiên Lý Y (thầy thuốc đi ngàn dặm).
 - **Phe:** nghĩa quân Hoa Lư.
 - **Tuổi, quê:** khoảng 27, thầy thuốc dạo qua các làng. Nữ.
 - **Xuất thân:** thầy thuốc rong, mang túi thuốc đi từ làng này sang làng khác, từng chữa cho cả hai phía. Cô theo cờ lau vì thấy đội này lo cho người bệnh.
@@ -288,7 +288,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Đi nhiều mới biết bệnh nào cũng có nhà."
 
 ### Bạch Sương · Y sư · Phong
-- **Ngoại hiệu:** Sương Hương (hương trong sương).
+- **Ngoại hiệu:** Sương Phủ (sương phủ lên vết thương).
 - **Phe:** nghĩa quân Hoa Lư.
 - **Tuổi, quê:** khoảng 29, vùng sương mù ven núi. Nữ.
 - **Xuất thân:** người làm hương xông và thuốc giải cảm, ở vùng đồi sương. Cô theo cờ lau khi làng bị cảm dịch mà không ai đến.
@@ -303,7 +303,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 ## Mưu sĩ (6)
 
 ### Nhan Trúc · Mưu sĩ · Mộc
-- **Ngoại hiệu:** Trúc Bút (bút trúc).
+- **Ngoại hiệu:** Vô Ngôn (kế hay không nói ra).
 - **Phe:** nghĩa quân Hoa Lư.
 - **Tuổi, quê:** khoảng 34, làng trúc. Nữ.
 - **Xuất thân:** người chép sổ cho cả làng, giỏi tính kế đường rừng. Cô theo cờ lau để lo giấy tờ và đường tiếp tế.
@@ -314,18 +314,18 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Kế hay nhất là kế không phải nói ra."
 
 ### Quách Ẩn · Mưu sĩ · Thủy
-- **Ngoại hiệu:** Điếu Ẩn (ẩn sĩ cần câu).
+- **Ngoại hiệu:** Nhàn Điếu (cần câu nhàn).
 - **Phe:** nghĩa quân Hoa Lư.
 - **Tuổi, quê:** khoảng 52, bờ sông yên tĩnh. Nam.
 - **Xuất thân:** ẩn sĩ câu cá ven sông, được dân hỏi ý kiến mỗi khi có chuyện. Ông ra giúp cờ lau khi một người học trò cũ tìm đến.
 - **Tính cách:** thong dong, hóm, nói bóng; câu cá để nghĩ.
 - **Ba dấu ấn:** râu dài bạc, nón rộng vành, mắt tinh · áo nâu lam thêu vân nước, màu nhấn lam · cần câu trúc dựng sau lưng.
 - **Vũ khí và nhịp:** **thước sắt dài** · Trượng.
-- **Quan hệ:** R10, thầy của Hàn Giang Khách (hai phe).
+- **Quan hệ:** R10, thầy của Âu Thu (Hàn Giang Khách) (hai phe).
 - **Câu nói:** "Cá cắn lúc ta không vội, như thế sự."
 
 ### Ninh Hỏa · Mưu sĩ · Hỏa
-- **Ngoại hiệu:** Vũ Phiến (quạt lông).
+- **Ngoại hiệu:** Tiếu Diện (mặt cười giấu cái cau mày).
 - **Phe:** lính Tây Phù Liệt, chưa theo về; đi cùng Hoa Lư vì nhiệm vụ riêng. Họa tiết lũy răng cưa.
 - **Tuổi, quê:** khoảng 37, vùng Tây Phù Liệt. Nam.
 - **Xuất thân:** quân sư của một đội lũy, lo mưu giữ thành. Ông vào đội Hoa Lư theo một thỏa thuận tạm, còn vợ ông ở phía Đằng Châu đã sang trước.
@@ -336,7 +336,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Lũy cao đến đâu, người giữ vẫn là người."
 
 ### Mã Nhạc · Mưu sĩ · Thổ
-- **Ngoại hiệu:** Bốc Sư (thầy gieo quẻ).
+- **Ngoại hiệu:** Hồi Thủ (ngoái đầu vì thương con).
 - **Phe:** lính Tam Đái, chưa theo về, đi cùng đội vì lệnh. Họa tiết ba dải.
 - **Tuổi, quê:** khoảng 48, chân núi Tam Đái. Nam.
 - **Xuất thân:** thầy bói, quân sư của đồn Tam Đái, gieo quẻ định ngày xuất quân. Con gái ông đã sang cờ lau, ông giả vờ không quan tâm.
@@ -347,7 +347,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Quẻ nói đi, nhưng lòng cha vẫn ngoái lại."
 
 ### Từ Kinh · Mưu sĩ · Lôi
-- **Ngoại hiệu:** Địa Đồ (bản đồ).
+- **Ngoại hiệu:** Trắc Lộ (đo từng con đường).
 - **Phe:** lính Phong Châu, theo về Hoa Lư. Họa tiết đỉnh núi.
 - **Tuổi, quê:** khoảng 39, vùng núi Phong Châu. Nam.
 - **Xuất thân:** người vẽ đường núi cho quân, dùng cửu tiết tiên để tự vệ. Ông theo về vì muốn bản đồ của mình được dùng cho việc lớn hơn.
@@ -358,7 +358,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Đường ngắn nhất là đường ta đã đo."
 
 ### Bùi Phiêu · Mưu sĩ · Phong
-- **Ngoại hiệu:** Thư Phiến (quạt thư lại).
+- **Ngoại hiệu:** Thanh Sổ (sổ sách rõ ràng).
 - **Phe:** lính Đường Lâm, theo về Hoa Lư. Họa tiết cổng làng.
 - **Tuổi, quê:** khoảng 33, vùng Đường Lâm. Nam.
 - **Xuất thân:** thư lại của đồn, giữ tráp sổ sách thuế và lương. Anh theo về vì muốn sổ sách của mình có ích cho người.
@@ -373,7 +373,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 ## Quân sư (6)
 
 ### Nghiêm Thiết · Quân sư · Kim
-- **Ngoại hiệu:** Thiết Lệnh (lệnh sắt).
+- **Ngoại hiệu:** Thiết Kỷ (kỷ luật sắt).
 - **Phe:** nghĩa quân Hoa Lư.
 - **Tuổi, quê:** khoảng 44, quê gần Hoa Lư. Nam.
 - **Xuất thân:** người giữ kỷ luật của đội nghĩa quân, từng làm đội trưởng trong thành. Ông nhớ người bạn cũ ở Bình Kiều, nhưng giữ mặt nghiêm.
@@ -384,7 +384,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Quân kỷ là sợi dây giữ cả đội khỏi tan."
 
 ### Sầm Tuệ · Quân sư · Mộc
-- **Ngoại hiệu:** Liên Kỳ (cờ sen).
+- **Ngoại hiệu:** Tĩnh Thủy (nước lặng, đọc được trước).
 - **Phe:** lính Hồi Hồ, theo về Hoa Lư. Họa tiết cánh sen.
 - **Tuổi, quê:** khoảng 36, đầm Hồi Hồ. Nữ.
 - **Xuất thân:** người cầm cờ lệnh của đội lau sậy, giỏi đọc địa hình đầm. Cô theo về vì muốn đưa kiến thức đầm vào thế trận chung.
@@ -395,7 +395,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Nước lặng chưa chắc yên, ta đọc nó trước."
 
 ### Vi Triều · Quân sư · Thủy
-- **Ngoại hiệu:** Lệnh Cổ (trống lệnh).
+- **Ngoại hiệu:** Chính Cổ (trống đúng nhịp).
 - **Phe:** lính Tiên Du, theo về Hoa Lư. Họa tiết sao bốn cánh.
 - **Tuổi, quê:** khoảng 31, chân núi Tiên Du. Nam.
 - **Xuất thân:** người cầm trống lệnh của đội quân Tiên Du, giỏi giữ nhịp. Anh theo về cùng em gái vì muốn đưa nhịp trống vào thế trận lớn hơn.
@@ -406,7 +406,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Trống đúng nhịp, quân đúng bước."
 
 ### Tôn Diệm · Quân sư · Hỏa
-- **Ngoại hiệu:** Hỏa Kỳ (cờ lửa).
+- **Ngoại hiệu:** Hỏa Lệnh (lệnh ban thì lửa cũng nghe).
 - **Phe:** nghĩa quân Hoa Lư.
 - **Tuổi, quê:** khoảng 33, làng đúc. Nữ.
 - **Xuất thân:** người cầm cờ lệnh của đội đúc, quen điều hành thợ trong lò lửa. Cô theo cờ lau vì thấy đội này cần người điều phối giỏi.
@@ -417,7 +417,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Lệnh đã ban thì lửa cũng phải nghe."
 
 ### Tạ Thạch · Quân sư · Thổ
-- **Ngoại hiệu:** Thạch Trượng (gậy đá).
+- **Ngoại hiệu:** Địa Thế (địa thế không biết dối).
 - **Phe:** lính Đỗ Động, theo về Hoa Lư. Họa tiết mũi giáo.
 - **Tuổi, quê:** khoảng 46, vùng đầm Đỗ Động. Nam.
 - **Xuất thân:** người cầm gậy chỉ huy của đồn, am hiểu địa thế sông đầm. Ông theo về vì thấy địa thế cần được dùng đúng.
@@ -428,7 +428,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Câu nói:** "Địa thế không biết nói, nhưng không biết dối."
 
 ### Mạc Vân · Quân sư · Lôi
-- **Ngoại hiệu:** Lôi Giác (tù và sấm).
+- **Ngoại hiệu:** Viễn Âm (tiếng đi xa hơn lời nói).
 - **Phe:** nghĩa quân Hoa Lư.
 - **Tuổi, quê:** khoảng 30, vùng núi nhiều sấm. Nữ.
 - **Xuất thân:** người thổi tù và báo hiệu cho các làng núi, giỏi đọc dấu hiệu trời. Cô theo cờ lau để thổi nhịp tiến cho cả đội.
