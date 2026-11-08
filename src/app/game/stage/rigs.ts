@@ -2023,15 +2023,15 @@ const HA_VAN: WarriorRig = {
   fxColor: 0xd9502a,
   // Chĩa trượng cầu lửa tới (đánh thường), hạ trượng xòe tay (ra chiêu), giơ cao trượng chỉ tay gọi mưa lửa (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 30, y: 0 },
-      anchor: { x: 630, y: 1510 }, scale: 1, burst: { x: 170, y: 270 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 18, y: 3 },
-      anchor: { x: 640, y: 1510 }, scale: 1, burst: { x: 750, y: 320 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 12, y: 7 },
-      anchor: { x: 460, y: 1505 }, scale: 1, burst: { x: 1010, y: 350 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 22, y: 130 },
+      anchor: { x: 510, y: 1444 }, scale: 1, burst: { x: 65, y: 300 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 158, y: 1 },
+      anchor: { x: 493, y: 1533 }, scale: 1, burst: { x: 215, y: 400 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 43, y: 7 },
+      anchor: { x: 473, y: 1527 }, scale: 1, burst: { x: 990, y: 345 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 7, y: 6 },
-    anchor: { x: 800, y: 900 }, scale: 0.85 },
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 32, y: 208 },
+    anchor: { x: 770, y: 941 }, scale: 0.85 },
 };
 
 /**
