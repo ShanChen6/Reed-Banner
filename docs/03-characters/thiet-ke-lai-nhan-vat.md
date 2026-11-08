@@ -1,7 +1,7 @@
 # Thiết kế lại nhân vật theo phong cách cổ trang bán hiện thực
 
 > Cập nhật: 08/11/2026
-> Trạng thái: **DRAFT** — Shan đã đồng ý **phe** (13 phe, phân bổ 20 nghĩa quân và 36 lính sứ quân, dấu hiệu theo ký hiệu cờ) và **tên, ngoại hiệu** (mục 2.2) ngày 08/11/2026; các phần còn lại ở mục 7 chờ duyệt. **Chưa áp dụng vào mã** (ba tên đổi, trường `epithet`, mục Tiểu sử, bảng quan hệ).
+> Trạng thái: **DRAFT** — Shan đã chốt (08/11/2026) phe, quy tắc vật dụng và vũ khí, bảng vũ khí 3.2, đồ trang bị giữ tên theo nghề, tiểu sử gộp trong Chi tiết, giữ vũ khí 14 xạ thủ và sát thủ (đổi họ tên, tên cũ thành ngoại hiệu), quan hệ, 37 hồ sơ; **ngoại hiệu bản 2 chờ duyệt**. **Chưa áp dụng vào mã** (đổi tên, trường `epithet`, mục tiểu sử trong Chi tiết, bảng quan hệ).
 
 Phong cách mục tiêu: **semi-realistic historical illustration, digital painting** (minh họa cổ trang bán hiện thực, tranh vẽ kỹ thuật số). Đã có chuẩn cho chân dung ở [prompt chân dung](../06-art/prompts/chan-dung-lich-su.md); chân dung Hà Vân mới (có họa tiết) là mẫu tham chiếu.
 
@@ -15,7 +15,7 @@ Phong cách mục tiêu: **semi-realistic historical illustration, digital paint
 | 4 | Vũ khí đa dạng **trong cùng một nghề** (pháp sư cầm trượng, sách hoặc kiếm; y sư dùng hồ lô hoặc kim châm, có người gắn với thảo dược…), vẫn giữ kiểu cổ điển; **không phải vật dụng đặc trưng nào cũng thành vũ khí** | Tách **vũ khí** (thứ ra đòn) khỏi **vật dụng đặc trưng** (đồ đeo hoặc cầm thụ động để nhận diện) và khỏi **nhịp chuyển động** (mục 3); mỗi nghề có 7 tướng thường nên có bảng 7 vũ khí khác nhau, gồm cả hình cổ điển (mục 3.3) |
 | 5 | Hình ảnh và tư thế làm lại theo phong cách mới | Mỗi nhân vật một bộ tranh (mục 6); làm thử trọn bộ Hà Vân trước |
 | 6 | Nhân vật có thể là **nghĩa quân** hoặc **lính của các sứ quân** | Mỗi nhân vật có một **phe** (nghĩa quân Hoa Lư hoặc một trong 12 sứ quân); phe cho dấu hiệu trên trang phục lấy từ **ký hiệu cờ đã có trên bản đồ** (mục 2.1, 4.1) |
-| 8 | **Tên và ngoại hiệu** hợp hình tượng | Mục 2.2: giữ tên, đổi ba tên để cùng họ với người thân, thêm ngoại hiệu cho 42 tướng thường; 14 xạ thủ, sát thủ đã mang tên hiệu |
+| 8 | **Tên và ngoại hiệu** hợp hình tượng | Mục 2.2: đổi ba tên để cùng họ với người thân; ngoại hiệu rút từ câu nói của từng người; 14 xạ thủ, sát thủ đặt họ tên mới, tên cũ thành ngoại hiệu |
 | 7 | Nhân vật có thể có **quan hệ** với nhau (anh chị em, cha con…) mà **không gò bó khi mở rộng sau này** | Quan hệ nằm trong **bảng riêng**, chia ba mức và để sẵn chỗ trống (mục 4.2) |
 
 ## 2. Quy tắc ba dấu ấn (mỗi nhân vật phải khác nhau)
@@ -61,107 +61,108 @@ Mỗi tướng thường có thêm một **phe** quyết định xuất thân qu
 
 ### 2.2 Tên, họ và ngoại hiệu
 
-Shan yêu cầu cập nhật **tên và ngoại hiệu** cho hợp hình tượng. Quy tắc:
+Quy tắc (Shan chốt 08/11/2026, ngoại hiệu bản 2 chờ duyệt):
 
-1. **Tên** là họ tên kiểu Việt thế kỷ X (họ + tên Hán Việt hai chữ như Trần Cương, Hà Vân). Giữ tên hiện có khi nó đã hợp; chỉ đổi khi **mâu thuẫn với quan hệ mới**.
-2. **Ruột thịt cùng họ** (con theo họ cha, anh em cùng họ). Quan hệ ở mục 4.2 buộc ba người đổi họ để khớp: Châu Ngọc thành **Trần Ngọc** (em của Trần Cương), Bế Liên thành **Mã Liên** (con của Mã Nhạc), Đào Lam thành **Vi Lam** (em của Vi Triều). Quan hệ thầy trò, vợ chồng, cậu cháu, chị em họ, bạn cũ **không** cần cùng họ.
-3. **Ngoại hiệu** là cách dân gian gọi nhân vật, hai đến ba chữ Hán Việt gợi **hình ảnh, nghề hoặc vũ khí**, kèm nghĩa ngắn. Ví dụ Hà Vân là **Hỏa Lô Nữ** (nàng lò lửa), Trần Cương là **Thiết Môn** (cổng sắt, vì giữ cổng). Ngoại hiệu **không trùng nhau** và không trùng tên người thật trong sử.
-4. **Hiển thị:** tên giữ trên ô và thẻ; ngoại hiệu hiện ở **trang chi tiết và mục Tiểu sử** (ví dụ "Hà Vân · Hỏa Lô Nữ"), không chen vào ô nhỏ.
-5. **Không đổi `id`** (`haVan`, `chauNgoc`…): `id` là khóa trong mã, hồ sơ, tên thư mục tranh. Chỉ đổi chữ hiển thị.
-6. **Tên có thật trong sử** (Đinh Bộ Lĩnh, sứ quân, tướng lịch sử) **không đổi** và không có ngoại hiệu tự đặt.
+1. **Tên** là họ tên kiểu Việt thế kỷ X (họ + tên Hán Việt, như Trần Cương, Hà Vân). Giữ tên hiện có khi đã hợp.
+2. **Ruột thịt cùng họ** (con theo họ cha, anh em cùng họ). Ba tên đổi để khớp quan hệ: Châu Ngọc thành **Trần Ngọc** (em của Trần Cương), Bế Liên thành **Mã Liên** (con của Mã Nhạc), Đào Lam thành **Vi Lam** (em của Vi Triều). Thầy trò, vợ chồng, cậu cháu, chị em họ, bạn cũ **không** cần cùng họ.
+3. **Ngoại hiệu rút từ chính câu nói đặc trưng của nhân vật** (hồ sơ ở [ho-so-37-tuong-thuong.md](ho-so-37-tuong-thuong.md)), hai đến ba chữ Hán Việt gợi **tính cách hoặc điều nhân vật theo đuổi**, không chỉ là tên món đồ. Ví dụ Trần Cương "Cổng ta giữ chưa từng hở một lần" thành **Bất Hạ Môn**; Hà Vân "lửa trận thì tôi xin nhận phần nặng" thành **Đảm Hỏa**. Không trùng nhau, không trùng tên người thật trong sử. (Bản 1 gồm Hỏa Lô Nữ, Thiết Môn, Thổ Thuẫn… bị Shan nhận xét "chưa hay" vì chỉ gọi tên món đồ; đã bỏ.)
+4. **Xạ thủ và Sát thủ:** tên hiện nay đã là tên hiệu kiểu giang hồ, nên **chuyển thành ngoại hiệu** và nhân vật được **đặt họ tên mới** (bảng dưới).
+5. **Hiển thị:** họ tên giữ trên ô và thẻ; **ngoại hiệu hiện ở tab Chi tiết** cùng tiểu sử ngắn (ví dụ "Hà Vân · Đảm Hỏa"), không chen vào ô nhỏ.
+6. **Không đổi `id`** (`haVan`, `chauNgoc`, `bachNoLang`…): `id` là khóa trong mã, hồ sơ, tên thư mục tranh. Chỉ đổi chữ hiển thị.
+7. **Tên có thật trong sử** (Đinh Bộ Lĩnh, sứ quân, tướng lịch sử) **không đổi** và không có ngoại hiệu tự đặt.
 
-**Ảnh hưởng nếu áp dụng:** ba tên đổi chỉ cần sửa chuỗi `name` ở `roster.ts` (mỗi tên một dòng), vài chuỗi trong test và chú thích (`rigs.ts`, `skills.tsx`, `rigs.test.ts`); còn lại là tài liệu (mỗi tên xuất hiện ở 14 đến 21 tệp tài liệu). Ngoại hiệu cần thêm một trường tùy chọn (`epithet`) cho nhân vật; chưa làm.
+**Ảnh hưởng khi áp dụng:** 3 tên của tướng thường và 14 tên của xạ thủ, sát thủ đổi chuỗi `name` ở `roster.ts` (mỗi tên một dòng), cùng vài chuỗi trong test và chú thích mã (`rigs.ts`, `skills.tsx`, `rigs.test.ts`); tên cũ xuất hiện ở nhiều tệp tài liệu. Ngoại hiệu cần một trường tùy chọn `epithet` cho nhân vật; chưa làm.
 
 **Tướng sĩ**
 
-| Hệ | Tên | Ngoại hiệu | Ghi chú |
+| Hệ | Tên | Ngoại hiệu (nghĩa) | Ghi chú |
 |---|---|---|---|
-| Kim | Trần Cương | Thiết Môn (cổng sắt) | giữ tên |
-| Mộc | Lâm Tùng | Tùng Đầm (cây tùng bên đầm) | giữ tên |
-| Thủy | Hồ Lãng | Giang Xoa (đinh ba bến sông) | giữ tên |
-| Hỏa | Lý Liệt | Hỏa Câu (đôi móc lửa) | giữ tên |
-| Thổ | Kha Sơn | Phủ Sơn (rìu núi) | giữ tên |
-| Lôi | Tống Tấn | Lôi Kích (kích sấm) | giữ tên |
-| Phong | Hứa Lăng | Khinh Phong (gió nhẹ) | giữ tên |
+| Kim | Trần Cương | Bất Hạ Môn (cổng không bao giờ hạ) | giữ tên |
+| Mộc | Lâm Tùng | Cô Tùng (cây tùng lẻ bên đầm) | giữ tên |
+| Thủy | Hồ Lãng | Nghịch Lưu (ngược dòng) | giữ tên |
+| Hỏa | Lý Liệt | Cuồng Hỏa (lửa dữ) | giữ tên |
+| Thổ | Kha Sơn | Bất Thoái (núi không lùi) | giữ tên |
+| Lôi | Tống Tấn | Nộ Lôi (sấm giận) | giữ tên |
+| Phong | Hứa Lăng | Khinh Phong (gió nhẹ, không chờ ai) | giữ tên |
 
 **Pháp sư**
 
-| Hệ | Tên | Ngoại hiệu | Ghi chú |
+| Hệ | Tên | Ngoại hiệu (nghĩa) | Ghi chú |
 |---|---|---|---|
-| Kim | Chu Ngân | Ngân Phù (bùa bạc) | giữ tên |
-| Mộc | Đàm Thảo | Thảo Lâm Sư (thầy rừng cỏ) | giữ tên |
-| Thủy | Vi Lam | Thủy Thư (sách nước) | đổi từ Đào Lam |
-| Hỏa | ★ Hà Vân | Hỏa Lô Nữ (nàng lò lửa) | giữ tên |
-| Thổ | Doãn Nham | Nham Tế (thầy tế đá) | giữ tên |
-| Lôi | Vũ Lôi | Lôi Tế (thầy tế sấm) | giữ tên |
-| Phong | Liễu Yên | Phất Phong (phất trần và gió) | giữ tên |
+| Kim | Chu Ngân | Định Tâm (tâm vững, tay không run) | giữ tên |
+| Mộc | Đàm Thảo | Thảo Tâm (lòng thật như cây rừng) | giữ tên |
+| Thủy | Vi Lam | Mặc Lam (mực xanh của người ghi chép) | đổi từ Đào Lam |
+| Hỏa | ★ Hà Vân | Đảm Hỏa (gánh lửa, nhận phần nặng) | giữ tên |
+| Thổ | Doãn Nham | Địa Ức (đất nhớ mọi bước chân) | giữ tên |
+| Lôi | Vũ Lôi | Thiên Cảnh (trời nhắc nhở) | giữ tên |
+| Phong | Liễu Yên | Hồi Phong (gió mang về) | giữ tên |
 
 **Binh lính**
 
-| Hệ | Tên | Ngoại hiệu | Ghi chú |
+| Hệ | Tên | Ngoại hiệu (nghĩa) | Ghi chú |
 |---|---|---|---|
-| Kim | Cao Kiên | Kiên Mâu (mâu bền) | giữ tên |
-| Mộc | Hoàng Mộc | Quắm Đầm (dao quắm ven đầm) | giữ tên |
-| Thủy | Thái Hà | Thiết Trạo (mái chèo sắt) | giữ tên |
-| Hỏa | Trương Viêm | Đăng Viêm (đuốc lửa) | giữ tên |
-| Thổ | ★ Lê Thạch | Thổ Thuẫn (khiên đất) | giữ tên |
-| Lôi | Ông Chấn | Lôi Cổ (trống sấm) | giữ tên |
-| Phong | Mạnh Tường | Phi Lao (lao bay) | giữ tên |
+| Kim | Cao Kiên | Trực Mâu (mâu thẳng, lòng gọn) | giữ tên |
+| Mộc | Hoàng Mộc | Hồ Tử (chàng trai của đầm) | giữ tên |
+| Thủy | Thái Hà | Nhẫn Hải (kiên nhẫn như biển) | giữ tên |
+| Hỏa | Trương Viêm | Dạ Tiếu (cười trong đêm gác) | giữ tên |
+| Thổ | ★ Lê Thạch | Thủ Thổ (giữ đất) | giữ tên |
+| Lôi | Ông Chấn | Nhịp Quân (người giữ nhịp cho quân) | giữ tên |
+| Phong | Mạnh Tường | Truy Phong (đuổi theo gió) | giữ tên |
 
 **Y sư**
 
-| Hệ | Tên | Ngoại hiệu | Ghi chú |
+| Hệ | Tên | Ngoại hiệu (nghĩa) | Ghi chú |
 |---|---|---|---|
-| Kim | Trần Ngọc | Ngân Châm (kim bạc) | đổi từ Châu Ngọc |
-| Mộc | Lục Diệp | Bách Thảo (trăm loại cỏ) | giữ tên |
-| Thủy | ★ Mai Thanh | Hồ Y (thầy thuốc hồ lô) | giữ tên |
-| Hỏa | Hồng Đan | Hồng Lô (lò đỏ) | giữ tên |
-| Thổ | Mã Liên | Thổ Liên (sen đất) | đổi từ Bế Liên |
-| Lôi | Tiêu Minh | Du Y (thầy thuốc dạo) | giữ tên |
-| Phong | Bạch Sương | Sương Hương (hương trong sương) | giữ tên |
+| Kim | Trần Ngọc | Nhất Châm (một mũi kim đúng chỗ) | đổi từ Châu Ngọc |
+| Mộc | Lục Diệp | Hồi Xuân (chữa lành) | giữ tên |
+| Thủy | ★ Mai Thanh | Thanh Hồ (hồ trong, thuốc trong hồ lô) | giữ tên |
+| Hỏa | Hồng Đan | Văn Hỏa (lửa nhỏ nấu thuốc) | giữ tên |
+| Thổ | Mã Liên | Vô Kỳ (không cờ, chữa mọi phe) | đổi từ Bế Liên |
+| Lôi | Tiêu Minh | Thiên Lý Y (thầy thuốc đi ngàn dặm) | giữ tên |
+| Phong | Bạch Sương | Sương Phủ (sương phủ lên vết thương) | giữ tên |
 
 **Mưu sĩ**
 
-| Hệ | Tên | Ngoại hiệu | Ghi chú |
+| Hệ | Tên | Ngoại hiệu (nghĩa) | Ghi chú |
 |---|---|---|---|
-| Kim | ★ Tô Kim | Kim Xứng (cân vàng) | giữ tên |
-| Mộc | Nhan Trúc | Trúc Bút (bút trúc) | giữ tên |
-| Thủy | Quách Ẩn | Điếu Ẩn (ẩn sĩ cần câu) | giữ tên |
-| Hỏa | Ninh Hỏa | Vũ Phiến (quạt lông) | giữ tên |
-| Thổ | Mã Nhạc | Bốc Sư (thầy gieo quẻ) | giữ tên |
-| Lôi | Từ Kinh | Địa Đồ (bản đồ) | giữ tên |
-| Phong | Bùi Phiêu | Thư Phiến (quạt thư lại) | giữ tên |
+| Kim | ★ Tô Kim | Toán Lương (tính từng hạt lương) | giữ tên |
+| Mộc | Nhan Trúc | Vô Ngôn (kế hay không nói ra) | giữ tên |
+| Thủy | Quách Ẩn | Nhàn Điếu (cần câu nhàn) | giữ tên |
+| Hỏa | Ninh Hỏa | Tiếu Diện (mặt cười giấu cái cau mày) | giữ tên |
+| Thổ | Mã Nhạc | Hồi Thủ (ngoái đầu vì thương con) | giữ tên |
+| Lôi | Từ Kinh | Trắc Lộ (đo từng con đường) | giữ tên |
+| Phong | Bùi Phiêu | Thanh Sổ (sổ sách rõ ràng) | giữ tên |
 
 **Quân sư**
 
-| Hệ | Tên | Ngoại hiệu | Ghi chú |
+| Hệ | Tên | Ngoại hiệu (nghĩa) | Ghi chú |
 |---|---|---|---|
-| Kim | Nghiêm Thiết | Thiết Lệnh (lệnh sắt) | giữ tên |
-| Mộc | Sầm Tuệ | Liên Kỳ (cờ sen) | giữ tên |
-| Thủy | Vi Triều | Lệnh Cổ (trống lệnh) | giữ tên |
-| Hỏa | Tôn Diệm | Hỏa Kỳ (cờ lửa) | giữ tên |
-| Thổ | Tạ Thạch | Thạch Trượng (gậy đá) | giữ tên |
-| Lôi | Mạc Vân | Lôi Giác (tù và sấm) | giữ tên |
-| Phong | ★ Phùng Phong | Phong Địch (sáo gió) | giữ tên |
+| Kim | Nghiêm Thiết | Thiết Kỷ (kỷ luật sắt) | giữ tên |
+| Mộc | Sầm Tuệ | Tĩnh Thủy (nước lặng, đọc được trước) | giữ tên |
+| Thủy | Vi Triều | Chính Cổ (trống đúng nhịp) | giữ tên |
+| Hỏa | Tôn Diệm | Hỏa Lệnh (lệnh ban thì lửa cũng nghe) | giữ tên |
+| Thổ | Tạ Thạch | Địa Thế (địa thế không biết dối) | giữ tên |
+| Lôi | Mạc Vân | Viễn Âm (tiếng đi xa hơn lời nói) | giữ tên |
+| Phong | ★ Phùng Phong | Báo Phong (báo gió trước trận) | giữ tên |
 
-**Xạ thủ và Sát thủ (14)**: tên hiện có **đã là tên hiệu** (kiểu giang hồ), nên coi chính tên đó là ngoại hiệu, và thêm **họ tên** khi cần (chỉ bốn người có quan hệ ruột thịt cần họ tên ngay).
+**Xạ thủ và Sát thủ (14):** Shan chốt (08/11/2026): tên hiện nay là **ngoại hiệu**, nhân vật được **đặt họ tên mới**; **vũ khí giữ nguyên**.
 
-| Hệ | Nghề | Tên hiệu (giữ nguyên) | Họ tên (nếu cần) |
-|---|---|---|---|
-| Kim | Xạ thủ | Bạch Nỏ Lang | chưa đặt, để trống |
-| Mộc | Xạ thủ | Thanh Lâm Xạ | chưa đặt, để trống |
-| Thủy | Xạ thủ | Lam Giang Phi Diệp | họ tên Thái Diệp (con gái Thái Hà) |
-| Hỏa | Xạ thủ | Xích Diệm Luân | họ tên Lý Diệm (em gái Lý Liệt) |
-| Thổ | Xạ thủ | Trấn Sơn Thạch | họ tên Kha Thạch (em của Kha Sơn) |
-| Lôi | Xạ thủ | Lôi Minh Xạ | chưa đặt, để trống |
-| Phong | Xạ thủ | Tật Phong Lăng | chưa đặt, để trống |
-| Kim | Sát thủ | Bạch Phong Đao | chưa đặt, để trống |
-| Mộc | Sát thủ | Độc Ảnh | chưa đặt, để trống |
-| Thủy | Sát thủ | Hàn Giang Khách | chưa đặt, để trống |
-| Hỏa | Sát thủ | Xích Dạ | chưa đặt, để trống |
-| Thổ | Sát thủ | Địa Ẩn | chưa đặt, để trống |
-| Lôi | Sát thủ | Lôi Ảnh | chưa đặt, để trống |
-| Phong | Sát thủ | Vô Ảnh | họ tên Liễu Thiều (chị em với Liễu Yên) |
+| Hệ | Nghề | Họ tên mới (hiển thị) | Ngoại hiệu (tên hiện nay) | Ghi chú |
+|---|---|---|---|---|
+| Kim | Xạ thủ | Đoàn Cự | Bạch Nỏ Lang | nam, cao tuổi |
+| Mộc | Xạ thủ | Quản Hiên | Thanh Lâm Xạ | nữ, thợ săn núi |
+| Thủy | Xạ thủ | Thái Diệp | Lam Giang Phi Diệp | nam; con trai của Thái Hà (R2) |
+| Hỏa | Xạ thủ | Lý Diệm | Xích Diệm Luân | nữ; em của Lý Liệt (R4) |
+| Thổ | Xạ thủ | Kha Thạch | Trấn Sơn Thạch | nam; em của Kha Sơn (R3) |
+| Lôi | Xạ thủ | Lương Triệt | Lôi Minh Xạ | giới tính chưa ghi trong thiết kế gốc, đề xuất nam; học trò của Tống Tấn (R13) |
+| Phong | Xạ thủ | Giáp Yến | Tật Phong Lăng | nữ, kỵ trạm |
+| Kim | Sát thủ | Phan Quyên | Bạch Phong Đao | nữ, cận vệ |
+| Mộc | Sát thủ | Nông Sâm | Độc Ảnh | giới tính chưa ghi, đề xuất nam |
+| Thủy | Sát thủ | Âu Thu | Hàn Giang Khách | nữ; học trò của Quách Ẩn (R10) |
+| Hỏa | Sát thủ | Tiết Dạ | Xích Dạ | giới tính chưa ghi, đề xuất nam; đồng đội cũ của Trương Viêm (R15) |
+| Thổ | Sát thủ | Cát Tàng | Địa Ẩn | giới tính chưa ghi, đề xuất nam; học trò của Doãn Nham (R9) |
+| Lôi | Sát thủ | Mẫn Tuyên | Lôi Ảnh | nữ, truyền tin |
+| Phong | Sát thủ | Liễu Thiều | Vô Ảnh | nữ; chị em với Liễu Yên (R8) |
 
 ## 3. Vũ khí, vật dụng đặc trưng và nhịp: ba thứ khác nhau
 
@@ -282,7 +283,7 @@ Kiểm tra: không nghề nào có hai người trùng cả vũ khí lẫn vật
 
 ### 3.3 Xạ thủ và Sát thủ (14 nhân vật)
 
-Hai nghề này khác bảng 3.2 ở một điểm quan trọng: **cả 14 người đã có vũ khí riêng, khác nhau hoàn toàn và đã khóa** (mỗi người một mã vũ khí trong [prompt V4.3](../06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md)), cùng một tiểu sử hư cấu ngắn. Vì **tên chiêu gắn với vũ khí** (Khoan Giáp Tiễn, Thiết Nỏ Phá Thành, Bạo Vũ Lê Hoa Châm…), đổi vũ khí là đổi tên kỹ năng, trái yêu cầu 1. **Đề xuất: giữ nguyên cả 14 vũ khí**, chỉ vẽ lại theo phong cách mới, thêm họa tiết và mở rộng hồ sơ theo mẫu mục 4.
+Hai nghề này khác bảng 3.2 ở một điểm quan trọng: **cả 14 người đã có vũ khí riêng, khác nhau hoàn toàn và đã khóa** (mỗi người một mã vũ khí trong [prompt V4.3](../06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md)), cùng một tiểu sử hư cấu ngắn. Vì **tên chiêu gắn với vũ khí** (Khoan Giáp Tiễn, Thiết Nỏ Phá Thành, Bạo Vũ Lê Hoa Châm…), đổi vũ khí là đổi tên kỹ năng, trái yêu cầu 1. **Shan chốt (08/11/2026): giữ nguyên cả 14 vũ khí**, chỉ vẽ lại theo phong cách mới, thêm họa tiết và mở rộng hồ sơ theo mẫu mục 4.
 
 **Xạ thủ**
 
@@ -310,7 +311,7 @@ Hai nghề này khác bảng 3.2 ở một điểm quan trọng: **cả 14 ngư�
 
 **Lưu ý:**
 
-- **Hai trường hợp gần với "biến vật dụng thành vũ khí":** Tật Phong Lăng (lụa hiệu của kỵ trạm thành lụa chiến) và Vô Ảnh (sáo của nhạc công thành sáo âm công). Cả hai ghi rõ là hư cấu low fantasy trong thiết kế gốc. Đề xuất: **giữ**, vì kỹ năng đã gắn với vũ khí; nếu Shan muốn tuân quy tắc mục 3 cho cả hai thì phải đổi vũ khí (ví dụ Tật Phong Lăng dùng cung ngắn, lụa thành vật dụng; Vô Ảnh dùng dao mảnh, sáo thành vật dụng) và **đặt lại tên chiêu** của hai người đó.
+- **Hai trường hợp gần với "biến vật dụng thành vũ khí" (đã chốt giữ):** Tật Phong Lăng (lụa hiệu của kỵ trạm thành lụa chiến) và Vô Ảnh (sáo của nhạc công thành sáo âm công). Cả hai ghi rõ là hư cấu low fantasy trong thiết kế gốc. Đề xuất: **giữ**, vì kỹ năng đã gắn với vũ khí; nếu Shan muốn tuân quy tắc mục 3 cho cả hai thì phải đổi vũ khí (ví dụ Tật Phong Lăng dùng cung ngắn, lụa thành vật dụng; Vô Ảnh dùng dao mảnh, sáo thành vật dụng) và **đặt lại tên chiêu** của hai người đó.
 - **Vũ khí kiểu "võ hiệp" cần vẽ thực hơn:** phi luân (Xích Diệm Luân), hộp ám khí (Lôi Ảnh), găng vuốt (Địa Ẩn), sáo âm công (Vô Ảnh) dễ trượt sang fantasy. Khi vẽ theo phong cách mới: **vật liệu thật (đồng, sắt, tre)**, không phát sáng, không hiệu ứng, kích thước và hình giữ đúng mô tả khóa.
 - **Tương tự bảng 3.2:** vật dụng đặc trưng vẽ trên thân (rẻ); vũ khí đã khóa nên chỉ vẽ lại, không đổi hình. Hồ sơ của 14 người đã có tiểu sử một câu; cần mở rộng theo mẫu mục 4 (xuất thân, tính cách, ba dấu ấn, câu nói).
 
@@ -341,13 +342,13 @@ Quy ước: mỗi hệ có 8 người (6 nghề cũ, Xạ thủ, Sát thủ). Ph
 
 | Hệ | Nghĩa quân Hoa Lư | Lính hoặc hàng binh của sứ quân |
 |---|---|---|
-| Kim | ★ Tô Kim, Nghiêm Thiết | **Bình Kiều:** Bạch Nỏ Lang (cựu xạ thủ giữ thành), Chu Ngân, Cao Kiên · **Siêu Loại:** Trần Cương, Trần Ngọc, Bạch Phong Đao (cận vệ) |
-| Mộc | Thanh Lâm Xạ (dẫn đường núi tre), Đàm Thảo, Lục Diệp, Nhan Trúc | **Hồi Hồ:** Độc Ảnh (trinh sát đầm), Lâm Tùng, Hoàng Mộc, Sầm Tuệ |
-| Thủy | ★ Mai Thanh, Quách Ẩn | **Bố Hải:** Lam Giang Phi Diệp (trinh sát bến sông), Thái Hà · **Tiên Du:** Vi Triều, Vi Lam · **Tế Giang:** Hàn Giang Khách (khách ven sông), Hồ Lãng |
-| Hỏa | ★ Hà Vân, Tôn Diệm | **Đằng Châu:** Xích Diệm Luân (hộ vệ kho lương), Lý Liệt, Hồng Đan · **Tây Phù Liệt:** Xích Dạ (đột kích đêm), Trương Viêm, Ninh Hỏa |
-| Thổ | ★ Lê Thạch, Mã Liên | **Tam Đái:** Trấn Sơn Thạch (giữ lối đèo), Kha Sơn, Mã Nhạc · **Đỗ Động:** Địa Ẩn (trinh sát công sự), Doãn Nham, Tạ Thạch |
-| Lôi | Lôi Ảnh (truyền tin), Vũ Lôi, Tiêu Minh, Mạc Vân | **Phong Châu:** Lôi Minh Xạ (truyền tin miền núi), Tống Tấn, Ông Chấn, Từ Kinh |
-| Phong | ★ Phùng Phong, Tật Phong Lăng (kỵ trạm), Vô Ảnh, Bạch Sương | **Đường Lâm:** Hứa Lăng, Liễu Yên, Mạnh Tường, Bùi Phiêu |
+| Kim | ★ Tô Kim, Nghiêm Thiết | **Bình Kiều:** Đoàn Cự (Bạch Nỏ Lang, cựu xạ thủ giữ thành), Chu Ngân, Cao Kiên · **Siêu Loại:** Trần Cương, Trần Ngọc, Phan Quyên (Bạch Phong Đao, cận vệ) |
+| Mộc | Quản Hiên (Thanh Lâm Xạ, dẫn đường núi tre), Đàm Thảo, Lục Diệp, Nhan Trúc | **Hồi Hồ:** Nông Sâm (Độc Ảnh, trinh sát đầm), Lâm Tùng, Hoàng Mộc, Sầm Tuệ |
+| Thủy | ★ Mai Thanh, Quách Ẩn | **Bố Hải:** Thái Diệp (Lam Giang Phi Diệp, trinh sát bến sông), Thái Hà · **Tiên Du:** Vi Triều, Vi Lam · **Tế Giang:** Âu Thu (Hàn Giang Khách, khách ven sông), Hồ Lãng |
+| Hỏa | ★ Hà Vân, Tôn Diệm | **Đằng Châu:** Lý Diệm (Xích Diệm Luân, hộ vệ kho lương), Lý Liệt, Hồng Đan · **Tây Phù Liệt:** Tiết Dạ (Xích Dạ, đột kích đêm), Trương Viêm, Ninh Hỏa |
+| Thổ | ★ Lê Thạch, Mã Liên | **Tam Đái:** Kha Thạch (Trấn Sơn Thạch, giữ lối đèo), Kha Sơn, Mã Nhạc · **Đỗ Động:** Cát Tàng (Địa Ẩn, trinh sát công sự), Doãn Nham, Tạ Thạch |
+| Lôi | Mẫn Tuyên (Lôi Ảnh, truyền tin), Vũ Lôi, Tiêu Minh, Mạc Vân | **Phong Châu:** Lương Triệt (Lôi Minh Xạ, truyền tin miền núi), Tống Tấn, Ông Chấn, Từ Kinh |
+| Phong | ★ Phùng Phong, Giáp Yến (Tật Phong Lăng, kỵ trạm), Liễu Thiều (Vô Ảnh), Bạch Sương | **Đường Lâm:** Hứa Lăng, Liễu Yên, Mạnh Tường, Bùi Phiêu |
 
 Tổng: **20 nghĩa quân Hoa Lư** và **36 lính hoặc hàng binh của 12 sứ quân** (từ 2 đến 4 người mỗi phe). Với nhân vật lính sứ quân, hồ sơ cần thêm một câu trả lời "vì sao theo về Hoa Lư" (hàng binh, chán cảnh tranh đánh, theo chủ tướng quy phục…).
 
@@ -364,27 +365,27 @@ Tổng: **20 nghĩa quân Hoa Lư** và **36 lính hoặc hàng binh của 12 s�
 4. **Hạn chế để khỏi đóng cửa:** mỗi người tối đa **hai** quan hệ đã chốt; mỗi gia đình tối đa **ba** người đã chốt (còn lại để ngỏ); **không** đặt quan hệ "đã kết thúc" (đã mất, đã tuyệt giao) trừ khi nhân vật liên quan đã được chốt.
 5. **Không bắt buộc cùng hệ, cùng nghề, cùng phe** (riêng **ruột thịt thì cùng họ**, xem mục 2.2). Người thân khác phe là nguồn kịch (hai anh em ở hai bên, vợ chồng chia hai phe). Các cặp ở bảng dưới trùng hệ chỉ vì đang gợi một "dòng khí", sau này có thể phá.
 6. **Không gán quan hệ huyết thống hoặc hôn nhân với người có thật trong sử** (sứ quân, Đinh Bộ Lĩnh, Đinh Liễn…). Nhân vật hư cấu chỉ làm **lính hoặc thuộc hạ**, không làm họ hàng.
-7. **Dữ liệu sau này** (chưa làm): một bảng mỏng trong mã, mỗi dòng `{a, b, loại, mức}`, id người giữ chỗ dùng tiền tố riêng; trang tiểu sử đọc bảng này để hiện mục "Người liên quan" và **mở dần** theo tiến độ.
+7. **Dữ liệu sau này** (chưa làm): một bảng mỏng trong mã, mỗi dòng `{a, b, loại, mức}`, id người giữ chỗ dùng tiền tố riêng; tab **Chi tiết** đọc bảng này để hiện mục "Người liên quan" và **mở dần** theo tiến độ (Shan chốt 08/11/2026: tiểu sử ngắn gộp trong Chi tiết, **không thêm tab**).
 
 **Bảng quan hệ khởi đầu (đề xuất, 15 mối giữa 30 người):**
 
 | Mã | Người A | Người B | Loại | Mức | Ghi chú |
 |---|---|---|---|---|---|
 | R1 | Trần Cương | Trần Ngọc | anh em ruột | đã chốt | cùng Siêu Loại; anh cầm đại đao, em cầm kim châm |
-| R2 | Thái Hà | Lam Giang Phi Diệp | cha và con gái | đã chốt | cùng Bố Hải; cha lính chèo, con trinh sát bến sông |
-| R3 | Kha Sơn | Trấn Sơn Thạch | anh em ruột | đã chốt | cùng Tam Đái; anh đẽo đá, em giữ lối đèo |
-| R4 | Lý Liệt | Xích Diệm Luân | anh và em gái | đã chốt | cùng Đằng Châu |
+| R2 | Thái Hà | Thái Diệp (ngoại hiệu Lam Giang Phi Diệp) | cha và con trai | đã chốt | cùng Bố Hải; cha lính chèo, con trinh sát bến sông |
+| R3 | Kha Sơn | Kha Thạch (ngoại hiệu Trấn Sơn Thạch) | anh em ruột | đã chốt | cùng Tam Đái; anh đẽo đá, em giữ lối đèo |
+| R4 | Lý Liệt | Lý Diệm (ngoại hiệu Xích Diệm Luân) | anh và em gái | đã chốt | cùng Đằng Châu |
 | R5 | Hồng Đan | Ninh Hỏa | vợ chồng | đã chốt | **hai phe**: Đằng Châu và Tây Phù Liệt |
 | R6 | Mã Nhạc | Mã Liên | cha và con gái | đã chốt | **hai phe**: Tam Đái và nghĩa quân Hoa Lư; con rời cha theo cờ lau |
 | R7 | Vi Triều | Vi Lam | anh và em gái | gợi mở | cùng Tiên Du |
-| R8 | Liễu Yên | Vô Ảnh | chị em thất lạc | gợi mở | **hai phe**: Đường Lâm và nghĩa quân |
-| R9 | Doãn Nham | Địa Ẩn | thầy trò | gợi mở | cùng Đỗ Động |
-| R10 | Quách Ẩn | Hàn Giang Khách | thầy trò | gợi mở | **hai phe**: nghĩa quân và Tế Giang |
+| R8 | Liễu Yên | Liễu Thiều (ngoại hiệu Vô Ảnh) | chị em thất lạc | gợi mở | **hai phe**: Đường Lâm và nghĩa quân |
+| R9 | Doãn Nham | Cát Tàng (ngoại hiệu Địa Ẩn) | thầy trò | gợi mở | cùng Đỗ Động |
+| R10 | Quách Ẩn | Âu Thu (ngoại hiệu Hàn Giang Khách) | thầy trò | gợi mở | **hai phe**: nghĩa quân và Tế Giang |
 | R11 | Nghiêm Thiết | Cao Kiên | bạn cũ | gợi mở | **hai phe**: nghĩa quân và Bình Kiều |
 | R12 | Lâm Tùng | Hoàng Mộc | cậu và cháu | gợi mở | cùng Hồi Hồ |
-| R13 | Tống Tấn | Lôi Minh Xạ | thầy trò | gợi mở | cùng Phong Châu |
+| R13 | Tống Tấn | Lương Triệt (ngoại hiệu Lôi Minh Xạ) | thầy trò | gợi mở | cùng Phong Châu |
 | R14 | Đàm Thảo | Lục Diệp | chị em họ | gợi mở | cùng nghĩa quân |
-| R15 | Xích Dạ | Trương Viêm | đồng đội cũ | gợi mở | cùng Tây Phù Liệt |
+| R15 | Tiết Dạ (ngoại hiệu Xích Dạ) | Trương Viêm | đồng đội cũ | gợi mở | cùng Tây Phù Liệt |
 
 **Chỗ trống đã đặt sẵn** (người chưa có tên): mẹ của Hà Vân (thợ dệt), cha của Mai Thanh (thầy thuốc đò), cha của Tô Kim (lái buôn bến), thầy dạy sáo của Phùng Phong, người em của Hứa Lăng. Sau này thêm nhân vật vào các chỗ này **không phải sửa hồ sơ của năm người trên**.
 
@@ -393,7 +394,7 @@ Tổng: **20 nghĩa quân Hoa Lư** và **36 lính hoặc hàng binh của 12 s�
 *Ba mươi bảy hồ sơ còn lại ở file `ho-so-37-tuong-thuong.md`.*
 
 ### Hà Vân · Pháp sư · Hỏa
-- **Ngoại hiệu:** Hỏa Lô Nữ (nàng lò lửa).
+- **Ngoại hiệu:** Đảm Hỏa (gánh lửa, nhận phần nặng).
 
 - **Phe:** nghĩa quân Hoa Lư (cờ lau); dấu hiệu mặt trời trống đồng thêu ở cổ tay áo.
 - **Tuổi, quê:** khoảng 25, làng đúc đồng ven sông (hư cấu).
@@ -404,7 +405,7 @@ Tổng: **20 nghĩa quân Hoa Lư** và **36 lính hoặc hàng binh của 12 s�
 - **Câu nói:** "Lửa lò nuôi được cả làng, lửa trận thì tôi xin nhận phần nặng."
 
 ### Lê Thạch · Binh lính · Thổ
-- **Ngoại hiệu:** Thổ Thuẫn (khiên đất).
+- **Ngoại hiệu:** Thủ Thổ (giữ đất).
 
 - **Phe:** dân binh trong nghĩa quân Hoa Lư; dấu hiệu là bông lau cài trên khiên mây.
 - **Tuổi, quê:** khoảng 30, làng ven đê (hư cấu).
@@ -415,7 +416,7 @@ Tổng: **20 nghĩa quân Hoa Lư** và **36 lính hoặc hàng binh của 12 s�
 - **Câu nói:** "Đất còn thì lũy còn. Ta đứng đây."
 
 ### Mai Thanh · Y sư · Thủy
-- **Ngoại hiệu:** Hồ Y (thầy thuốc hồ lô).
+- **Ngoại hiệu:** Thanh Hồ (hồ trong, thuốc trong hồ lô).
 
 - **Phe:** nghĩa quân Hoa Lư, lo việc chữa trị; băng tay có bông lau.
 - **Tuổi, quê:** khoảng 22, thuyền thuốc trên sông (hư cấu).
@@ -426,7 +427,7 @@ Tổng: **20 nghĩa quân Hoa Lư** và **36 lính hoặc hàng binh của 12 s�
 - **Câu nói:** "Vết thương nào cũng có thuốc. Cứ để tôi lo."
 
 ### Tô Kim · Mưu sĩ · Kim
-- **Ngoại hiệu:** Kim Xứng (cân vàng).
+- **Ngoại hiệu:** Toán Lương (tính từng hạt lương).
 
 - **Phe:** nghĩa quân Hoa Lư, lo lương thảo; thẻ đồng khắc mặt trời trống đồng trên túi tiền.
 - **Tuổi, quê:** khoảng 35, chợ bến sông (hư cấu).
@@ -437,7 +438,7 @@ Tổng: **20 nghĩa quân Hoa Lư** và **36 lính hoặc hàng binh của 12 s�
 - **Câu nói:** "Thóc nào đi đường nào, tôi đếm đủ."
 
 ### Phùng Phong · Quân sư · Phong
-- **Ngoại hiệu:** Phong Địch (sáo gió).
+- **Ngoại hiệu:** Báo Phong (báo gió trước trận).
 
 - **Phe:** nghĩa quân Hoa Lư, trinh sát đưa tin; dải vải bông lau buộc ở sáo.
 - **Tuổi, quê:** khoảng 40, vùng núi gió (hư cấu).
@@ -472,16 +473,18 @@ Khoảng **7 tranh** và một lần cắt lớp cho mỗi người; 77 nhân v�
 **Đã chốt (Shan, 08/11/2026):**
 
 1. Bảy yêu cầu ở mục 1.
-2. **Phe** (mục 2.1, 4.1): 13 phe, phân bổ 20 nghĩa quân Hoa Lư và 36 lính hoặc hàng binh của 12 sứ quân, dấu hiệu trên trang phục lấy từ ký hiệu cờ.
-3. **Tên và ngoại hiệu** (mục 2.2): đổi ba tên (Trần Ngọc, Mã Liên, Vi Lam) và dùng 42 ngoại hiệu như bảng; không đổi `id`.
+2. **Phe** (mục 2.1, 4.1): 13 phe, 20 nghĩa quân Hoa Lư và 36 lính hoặc hàng binh của 12 sứ quân.
+3. **Quy tắc "vật dụng ≠ vũ khí"** (mục 3) và **bảng phân bổ 3.2**.
+4. **Đồ trang bị giữ tên theo nghề** (3.4).
+5. **Tiểu sử ngắn gộp trong tab Chi tiết**, không thêm tab.
+6. **Xạ thủ và Sát thủ** (3.3, 2.2): giữ nguyên 14 vũ khí; đặt họ tên mới, tên hiện nay thành ngoại hiệu.
+7. **Quan hệ** (4.2) và 15 mối khởi đầu.
+8. **37 hồ sơ** ([ho-so-37-tuong-thuong.md](ho-so-37-tuong-thuong.md)) và năm hồ sơ mẫu.
+9. Ba tên đổi họ (Trần Ngọc, Mã Liên, Vi Lam).
 
 **Còn chờ Shan:**
 
-4. **Quy tắc "vật dụng ≠ vũ khí"** (mục 3) và **bảng 3.2**: vũ khí nào muốn đổi; có món nào đặt sai cột.
-5. **Đồ trang bị giữ tên theo nghề** như 3.4?
-6. **Hiển thị tiểu sử ở đâu:** thêm mục "Tiểu sử" trong trang chi tiết tướng (cạnh Tổng quan, Kỹ năng, Chi tiết), hay gộp vào "Chi tiết"?
-7. **Xạ thủ và Sát thủ** (mục 3.3): giữ nguyên 14 vũ khí đã khóa như đề xuất, hay đổi Tật Phong Lăng và Vô Ảnh (vật dụng đang làm vũ khí, kèm đặt lại tên chiêu; gợi ý địch kiếm cho Vô Ảnh).
-8. **Quan hệ** (mục 4.2): ba mức đã chốt, gợi mở, chỗ trống và 15 mối khởi đầu; có cặp nào không muốn gắn.
-9. **Duyệt 37 hồ sơ** ([ho-so-37-tuong-thuong.md](ho-so-37-tuong-thuong.md)) và năm hồ sơ mẫu ở mục 5 (giọng văn, quê, xuất thân).
+10. **Ngoại hiệu bản 2** (mục 2.2): rút từ câu nói của từng nhân vật; ngoại hiệu nào chưa hay thì đổi.
+11. **Họ tên mới của 14 xạ thủ, sát thủ** (bảng 2.2, mười người là đề xuất mới) và giới tính của năm người thiết kế gốc chưa ghi.
 
-**Việc làm sau khi duyệt:** áp dụng ba tên vào `roster.ts` và tài liệu; thêm trường `epithet`; mục Tiểu sử; bảng quan hệ; làm tranh theo quy trình mục 6 (làm thử trọn bộ Hà Vân trước, xem [prompt chân dung](../06-art/prompts/chan-dung-lich-su.md)).
+**Việc làm sau khi duyệt:** áp dụng tên vào `roster.ts` và tài liệu; thêm trường `epithet`; tiểu sử ngắn và mục người liên quan trong tab Chi tiết; bảng quan hệ; làm tranh theo quy trình mục 6 (làm thử trọn bộ Hà Vân trước, xem [prompt chân dung](../06-art/prompts/chan-dung-lich-su.md)).
