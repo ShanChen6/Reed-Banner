@@ -2027,8 +2027,9 @@ const HA_VAN: WarriorRig = {
   fxColor: 0xd9502a,
   // Chĩa trượng cầu lửa tới (đánh thường), hạ trượng xòe tay (ra chiêu), giơ cao trượng chỉ tay gọi mưa lửa (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 22, y: 130 },
-      anchor: { x: 510, y: 1444 }, scale: 1, burst: { x: 65, y: 300 } },
+    // Tranh gốc quay mặt sang trái; đã lật ngang tệp để nhân vật phe trái chĩa trượng về phía đối thủ (tọa độ 1024 - x).
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 45, y: 130 },
+      anchor: { x: 514, y: 1444 }, scale: 1, burst: { x: 959, y: 300 } },
     cast: { name: "pose-cast", texScale: 0.4, origin: { x: 158, y: 1 },
       anchor: { x: 493, y: 1533 }, scale: 1, burst: { x: 215, y: 400 } },
     ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 43, y: 7 },
