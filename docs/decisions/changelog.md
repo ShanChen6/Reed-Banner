@@ -2,6 +2,9 @@
 
 ## 08/11/2026
 
+**Ảnh phong thái: nền chung theo hệ (APPROVED, hệ Hỏa đã có code)**
+- Shan chọn phương án B cho nền ảnh phong thái: **7 tranh nền theo hệ**, nhân vật là ảnh trong suốt đặt lên trên bằng mã, thay vì nền riêng từng người. Tranh nền hệ Hỏa đã gắn vào trang chi tiết tướng ([tranh nền](../06-art/prompts/nen-phong-thai.md)); sáu hệ còn lại chưa tạo. Thay `bust.webp` của Hà Vân bằng bản có họa tiết.
+
 **Thiết kế lại nhân vật: phe, tên và ngoại hiệu (APPROVED, phần chữ đã có code)**
 - Shan đồng ý hướng thiết kế lại nhân vật theo phong cách cổ trang bán hiện thực, không đổi chiêu thức: tách **vũ khí** khỏi **vật dụng đặc trưng**, mỗi nhân vật thường có **phe** (nghĩa quân Hoa Lư hoặc lính, hàng binh của một trong 12 sứ quân, dấu hiệu theo ký hiệu cờ trên bản đồ) và có thể có quan hệ với nhau mà không gò bó mở rộng ([thiết kế](../03-characters/thiet-ke-lai-nhan-vat.md), [37 hồ sơ](../03-characters/ho-so-37-tuong-thuong.md)).
 - Shan đồng ý đổi ba tên cho khớp quan hệ ruột thịt (Châu Ngọc → Trần Ngọc, Bế Liên → Mã Liên, Đào Lam → Vi Lam, không đổi `id`).

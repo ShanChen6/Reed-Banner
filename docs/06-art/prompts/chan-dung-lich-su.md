@@ -169,7 +169,7 @@ Shan chốt (07/11/2026): thử **trọn bộ tranh của một nhân vật** l�
 | Tranh | Làm trong lần test này? | Ghi chú |
 |---|---|---|
 | `bust.webp` | Đã xong | Đã gắn ở danh sách tướng sĩ |
-| `style.webp` (tranh lớn ở trang chi tiết) | **Có** | Không gắn với hình động trận, thay thoải mái |
+| `style.webp` (tranh lớn ở trang chi tiết) | **Có** | Không gắn với hình động trận, thay thoải mái. **Nền: chung theo hệ, ảnh nhân vật trong suốt** (Shan chốt 08/11/2026, xem [tranh nền](nen-phong-thai.md)); tranh nền hệ Hỏa đã có và đã gắn |
 | `pose-attack.webp`, `pose-cast.webp`, `pose-ultimate.webp` | **Có** | Gắn với `rigs.ts` (xem 9.2) |
 | `pose-down.webp` (ngã) | **Có** | Gắn với `rigs.ts` |
 | `standing.webp` và các lớp (`head`, `body`, `arm`, `sword`…) | **Không** | Hình động cắt lớp từ ảnh đứng bằng tọa độ cố định; đổi ảnh đứng phải cắt lại lớp. Chỉ làm khi đã chốt đổi cả bộ |
@@ -203,7 +203,7 @@ Style: stylised digital painting of a historical Vietnamese character for a stra
 Nhân vật chung cho cả năm (dán ngay sau khối 9.3):
 
 ```text
-Subject: Ha Van, female, about 25 years old, a fire mage of the Dinh court, composed and a little guarded. Unmistakably feminine, soft jawline, fine dark brows, light natural lip colour, no forehead mark, no heavy makeup. Dark hair in a bun with a red cloth band and one bronze hair pin, two long red ribbon ends falling behind the shoulder (signature detail, kept calm and short). Brick-red cross-collar robe with a darker brown inner layer and a warm orange lining at the sleeve openings and hem; a gold-thread embroidered wave-and-cloud scroll band along the hem and cuffs; two hanging embroidered cloth panels (one dark, one red) at the waist with a lotus-petal motif; a brown sash with two diamond-shaped bronze plaques; a bronze arm band with a sawtooth pattern on the upper arm; short red tassels with bronze beads; cloth shoes with red cord leg wraps. Carries a wooden staff with a bronze cap and a small red lacquered orb on top (no flame, no glow).
+Subject: Ha Van, female, about 25 years old, a fire mage of the Dinh court, composed and a little guarded. Unmistakably feminine, soft jawline, fine dark brows, light natural lip colour, no forehead mark, no heavy makeup. Dark hair in a bun with a red cloth band and one bronze hair pin, two long red ribbon ends falling behind the shoulder (signature detail, kept calm and short). Brick-red cross-collar robe with a darker brown inner layer and a warm orange lining at the sleeve openings and hem; a gold-thread embroidered wave-and-cloud scroll band along the hem and cuffs; two hanging embroidered cloth panels (one dark, one red) at the waist with a lotus-petal motif; a brown sash with two diamond-shaped bronze plaques; a bronze arm band with a sawtooth pattern on the upper arm; short red tassels with bronze beads; cloth shoes with red cord leg wraps. Carries a wooden staff with a bronze cap and a small red lacquered orb on top (no flame, no glow). A small bronze incense burner hangs on a short chain at her left hip: a carried item only, never used as a weapon. A small embroidered sun-and-bronze-drum emblem (Hoa Lu volunteer army) on the left cuff.
 ```
 
 Rồi thêm **một dòng dáng** theo tranh:
@@ -235,9 +235,11 @@ Claude đo tự động rồi báo:
 - **Nhận ra Hà Vân:** khớp chân dung mới (khăn đỏ, hai dải lụa, trâm đồng, áo đỏ).
 - **Không fantasy:** theo mục 4 và khối 9.3.
 
-### 9.7 Ghép vào trận
+### 9.7 Ghép vào trận (và tranh nền)
 
 1. Claude co và căn từng tranh về **đúng kích thước tệp cũ** (290×457, 297×456, 302×454, 457×304, 250×379) rồi xuất WebP đè lên tệp cũ (bản cũ còn trong lịch sử git để hoàn tác).
 2. Chạy một trận có Hà Vân, quay từng cảnh đánh thường, ra chiêu, tuyệt chiêu, ngã, kiểm tra chân đứng đúng chỗ và hiệu ứng bắn ra từ đúng đầu trượng hoặc ngón tay; chỉnh `anchor`, `origin`, `burst` trong `HA_VAN` nếu lệch.
 3. Chụp trang chi tiết tướng ở Doanh Trại (tranh lớn `style.webp` cạnh chân dung mới).
 4. Báo Shan so sánh trước và sau để quyết có làm tiếp 76 nhân vật còn lại không.
+
+**Đã làm (08/11/2026):** thay `bust.webp` bản có họa tiết; gắn tranh nền hệ Hỏa vào trang chi tiết ([tranh nền](nen-phong-thai.md)). Còn chờ ảnh `style.webp` và bốn tranh ra chiêu của Hà Vân.

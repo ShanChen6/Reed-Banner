@@ -93,3 +93,14 @@ export function bustUrl(id: string): string | null {
   const photo = BUST_IDS.has(id) ? portraitUrl(id) : null;
   return photo ? photo.replace(/\/[^/]+$/, "/bust.webp") : null;
 }
+
+/**
+ * Hệ đã có tranh nền sân khấu ở trang chi tiết tướng (`public/art/stage/he-<hệ>.webp`, khổ ngang 2:1, vầng sáng ở giữa;
+ * prompt ở docs/06-art/prompts/nen-phong-thai.md). Thiếu thì sân khấu giữ nền gỗ tối với quầng sáng màu hệ như cũ.
+ * Thêm hệ vào đây khi có tranh.
+ */
+export const STAGE_BACKDROP_ELEMENTS: ReadonlySet<string> = new Set(["hoa"]);
+
+export function stageBackdropUrl(element: string): string | null {
+  return STAGE_BACKDROP_ELEMENTS.has(element) ? `/art/stage/he-${element}.webp` : null;
+}
