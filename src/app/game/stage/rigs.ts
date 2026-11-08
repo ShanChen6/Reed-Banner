@@ -1994,7 +1994,7 @@ const VI_TRIEU: WarriorRig = {
 /**
  * Hà Vân, pháp sư hệ Hỏa (tướng khởi đầu). Bộ tranh phong cách mới Shan gửi 09/11/2026 (ảnh chuẩn, nền trong suốt). Ảnh đứng
  * tách lớp bằng code: trượng ngắn và nắm tay xoay quanh cổ tay, cầu lửa sáng riêng; bàn tay buông và đầu tách riêng;
- * thân đã xóa trượng và tay rồi vá lại phần vải phía sau.
+ * thân đã xóa trượng, tay và dải lụa rồi vá lại phần vải phía sau; dải lụa đỏ trên tóc là lớp riêng bay theo gió.
  * Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const HA_VAN: WarriorRig = {
@@ -2011,7 +2011,10 @@ const HA_VAN: WarriorRig = {
     arm: { x: 204, y: 561, w: 75, h: 84 },
     head: { x: 378, y: 0, w: 211, h: 235 },
   },
-  cloth: [],
+  cloth: [
+    { name: "ribbon", box: { x: 288, y: 62, w: 147, h: 369 }, behind: true,
+      wind: { axis: "y", start: 0.12, amp: 9, freq: 1.5, k: 3.4, phase: 0.5 } },
+  ],
   covers: [],
   joints: {
     shoulder: { x: 242, y: 603 },
