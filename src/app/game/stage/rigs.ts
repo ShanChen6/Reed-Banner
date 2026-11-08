@@ -277,7 +277,7 @@ export function partsOf(rig: Rig): readonly string[] {
 }
 
 /**
- * Đào Lam, pháp sư hệ Thủy (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn) thay bản thử Đ0 tách bằng
+ * Vi Lam (tên cũ Đào Lam), pháp sư hệ Thủy (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn) thay bản thử Đ0 tách bằng
  * live2dlayer. Ảnh đứng tách lớp bằng code: trượng cầu nước cùng nắm tay xoay quanh cổ tay, cầu nước sáng riêng; bàn
  * tay buông và đầu tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
  */
@@ -1344,7 +1344,7 @@ const CAO_KIEN: WarriorRig = {
 };
 
 /**
- * Châu Ngọc, y sư hệ Kim (tướng cửa hàng). Bộ tranh Shan gửi 25/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
+ * Trần Ngọc (tên cũ Châu Ngọc), y sư hệ Kim (tướng cửa hàng). Bộ tranh Shan gửi 25/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
  * code: bàn tay cầm hồ lô sứ xoay quanh cổ tay, hồ lô lắc nhẹ quanh nắm tay; bàn tay buông và đầu tách riêng.
  * Hệ tọa độ: ảnh đứng 1024×1536.
  */
@@ -1993,7 +1993,7 @@ const VI_TRIEU: WarriorRig = {
 
 /**
  * Hà Vân, pháp sư hệ Hỏa (tướng khởi đầu). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code
- * như Đào Lam: trượng cầu lửa cùng nắm tay xoay quanh cổ tay, cầu lửa sáng riêng; bàn tay buông và đầu tách riêng.
+ * như Vi Lam: trượng cầu lửa cùng nắm tay xoay quanh cổ tay, cầu lửa sáng riêng; bàn tay buông và đầu tách riêng.
  * Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const HA_VAN: WarriorRig = {
@@ -2346,7 +2346,7 @@ const LE_THACH: WarriorRig = {
 };
 
 /**
- * Bế Liên, y sư hệ Thổ (tướng cửa hàng). Bộ tranh Shan gửi 28/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code như
+ * Mã Liên (tên cũ Bế Liên), y sư hệ Thổ (tướng cửa hàng). Bộ tranh Shan gửi 28/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code như
  * Hồng Đan: bàn tay đặt trên quả bầu nậm lớn cùng bầu nậm xoay quanh cổ tay (chỗ bầu che thân được vá màu), cẳng tay
  * buông bên phải và đầu quấn khăn tách riêng. Tranh tay vuốt vòng bạc làm tranh phong thái. Hệ tọa độ: ảnh đứng
  * 1024×1536.
@@ -2622,7 +2622,7 @@ const ONG_CHAN: WarriorRig = {
 
 /**
  * Tiêu Minh, y sư hệ Lôi (tướng cửa hàng). Bộ tranh Shan gửi 29/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code như
- * Bế Liên: bàn tay nắm dây cùng đôi hồ lô tím xoay quanh cổ tay (chỗ hồ lô che vạt áo được vá màu), cẳng tay buông bên
+ * Mã Liên: bàn tay nắm dây cùng đôi hồ lô tím xoay quanh cổ tay (chỗ hồ lô che vạt áo được vá màu), cẳng tay buông bên
  * phải và đầu tách riêng. Tranh ngồi chạm ống kim làm tranh phong thái. Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const TIEU_MINH: WarriorRig = {
@@ -3016,7 +3016,7 @@ const PHUNG_PHONG: WarriorRig = {
 };
 
 /**
- * Bạch Nỏ Lang, xạ thủ hệ Kim (RB-062, nghề Xạ thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
+ * Đoàn Cự (ngoại hiệu Bạch Nỏ Lang), xạ thủ hệ Kim (RB-062, nghề Xạ thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
  * 29/10 (nền trong suốt sẵn). Nỏ ôm ngang ngực bằng hai tay nên nỏ cùng bàn tay đỡ phía trước là một lớp xoay quanh nắm
  * tay cầm báng; ống tên bên hông lắc nhẹ thay bàn tay buông; đầu (cả đuôi khăn) tách riêng. Phần giáp ngực sau nỏ được vá
  * nhưng luôn bị nỏ che. Hệ tọa độ: ảnh đứng 1024×1536.
@@ -3060,7 +3060,7 @@ const BACH_NO_LANG: WarriorRig = {
 };
 
 /**
- * Thanh Lâm Xạ, xạ thủ hệ Mộc (RB-063, nghề Xạ thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
+ * Quản Hiên (ngoại hiệu Thanh Lâm Xạ), xạ thủ hệ Mộc (RB-063, nghề Xạ thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
  * 29/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: cung tre dài (cả dây) cùng bàn tay cầm cung xoay quanh cổ tay
  * như trượng, bàn tay chạm giỏ tên và đầu tách riêng; bím tóc, giỏ tên ở lại thân. Hệ tọa độ: ảnh đứng 1024×1536.
  */
@@ -3103,7 +3103,7 @@ const THANH_LAM_XA: WarriorRig = {
 };
 
 /**
- * Lam Giang Phi Diệp, xạ thủ hệ Thủy (RB-064, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
+ * Thái Diệp (ngoại hiệu Lam Giang Phi Diệp), xạ thủ hệ Thủy (RB-064, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
  * 30/10; tranh tuyệt chiêu có nền ca-rô in sẵn nên tách nền bằng code, giữ lưỡi phi tiêu thép trong viền đen. Ảnh đứng
  * tách lớp bằng code: phi tiêu lá liễu cùng nắm tay vung như kiếm ngắn, bàn tay giữ ống tiêu và đầu (cả dải buộc tóc)
  * tách riêng. Hệ tọa độ: ảnh đứng 1086×1448.
@@ -3146,7 +3146,7 @@ const LAM_GIANG_PHI_DIEP: WarriorRig = {
 };
 
 /**
- * Xích Diệm Luân, xạ thủ hệ Hỏa (RB-065, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10 (nền
+ * Lý Diệm (ngoại hiệu Xích Diệm Luân), xạ thủ hệ Hỏa (RB-065, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10 (nền
  * trong suốt sẵn). Ảnh đứng tách lớp bằng code: phi luân vành kín cùng nắm tay vung như kiếm ngắn, bàn tay chống hông và
  * đầu (cả dải buộc tóc) tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
  */
@@ -3188,7 +3188,7 @@ const XICH_DIEM_LUAN: WarriorRig = {
 };
 
 /**
- * Trấn Sơn Thạch, xạ thủ hệ Thổ (RB-066, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10 (nền
+ * Kha Thạch (ngoại hiệu Trấn Sơn Thạch), xạ thủ hệ Thổ (RB-066, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10 (nền
  * trong suốt sẵn). Ảnh đứng tách lớp bằng code: phi hoàng thạch cùng nắm tay vung như kiếm ngắn, bàn tay trái và đầu tách
  * riêng. Tranh tư thế vẽ người nhỏ hơn hình đứng nên phóng nhẹ. Hệ tọa độ: ảnh đứng 1024×1536.
  */
@@ -3230,7 +3230,7 @@ const TRAN_SON_THACH: WarriorRig = {
 };
 
 /**
- * Lôi Minh Xạ, xạ thủ hệ Lôi (RB-067, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10 (nền
+ * Lương Triệt (ngoại hiệu Lôi Minh Xạ), xạ thủ hệ Lôi (RB-067, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10 (nền
  * trong suốt sẵn). Ảnh đứng tách lớp bằng code: lôi châm cùng nắm tay giơ cao vung như kiếm ngắn, bàn tay chống hông và
  * đầu (cả dải buộc tóc tím) tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
  */
@@ -3272,7 +3272,7 @@ const LOI_MINH_XA: WarriorRig = {
 };
 
 /**
- * Tật Phong Lăng, xạ thủ hệ Phong (RB-068, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
+ * Giáp Yến (ngoại hiệu Tật Phong Lăng), xạ thủ hệ Phong (RB-068, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
  * (nền trong suốt sẵn). Ảnh đứng hai tay nâng dải lụa thành vòng nên vòng lụa giữa ở lại thân; đầu lụa rủ bên trái cùng bàn
  * tay trái lắc nhẹ quanh cổ tay như hồ lô của y sư, cổ tay áo phải và đầu tách riêng. Tranh tư thế vẽ người nhỏ hơn hình
  * đứng nên phóng 1.1. Hệ tọa độ: ảnh đứng 1086×1448.
@@ -3360,7 +3360,7 @@ const DINH_NGOC: WarriorRig = {
 };
 
 /**
- * Bạch Phong Đao, sát thủ hệ Kim (RB-069, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
+ * Phan Quyên (ngoại hiệu Bạch Phong Đao), sát thủ hệ Kim (RB-069, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
  * 30/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: dao găm cùng nắm tay phải xoay quanh cổ tay theo nhịp chém,
  * bàn tay trái giơ chưởng và đầu tách riêng; bao dao ở lại thân. Tuyệt chiêu dùng chung hiệu ứng xuyên giáp với Bạch Nỏ
  * Lang. Hệ tọa độ: ảnh đứng 1024×1536.
@@ -3403,7 +3403,7 @@ const BACH_PHONG_DAO: WarriorRig = {
 };
 
 /**
- * Độc Ảnh, sát thủ hệ Mộc (RB-070, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
+ * Nông Sâm (ngoại hiệu Độc Ảnh), sát thủ hệ Mộc (RB-070, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
  * (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: kim châm độc cùng nắm tay trái xoay quanh cổ tay, bàn tay phải và đầu
  * (cả mũ trùm) tách riêng; ống tre, bầu độc ở lại thân. Tranh ra chiêu vẽ người lớn hơn hình đứng nên thu 0.8. Hệ tọa độ:
  * ảnh đứng 1024×1536.
@@ -3445,7 +3445,7 @@ const DOC_ANH: WarriorRig = {
 };
 
 /**
- * Hàn Giang Khách, sát thủ hệ Thủy (RB-071, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan
+ * Âu Thu (ngoại hiệu Hàn Giang Khách), sát thủ hệ Thủy (RB-071, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan
  * gửi 30/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: đoản đao cùng nắm tay phải xoay quanh cổ tay, bàn tay trái
  * và đầu tách riêng; vạt áo, dải lụa ở lại thân. Hệ tọa độ: ảnh đứng 1024×1536.
  */
@@ -3486,7 +3486,7 @@ const HAN_GIANG_KHACH: WarriorRig = {
 };
 
 /**
- * Xích Dạ, sát thủ hệ Hỏa (RB-072, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
+ * Tiết Dạ (ngoại hiệu Xích Dạ), sát thủ hệ Hỏa (RB-072, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
  * (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: đao cầm thấp cùng nắm tay phải xoay quanh cổ tay, nắm tay trái cùng
  * đao dựng đứng và đầu tách riêng; khăn quàng, bao đao sau lưng ở lại thân. Hệ tọa độ: ảnh đứng 1024×1536.
  */
@@ -3528,7 +3528,7 @@ const XICH_DA: WarriorRig = {
 };
 
 /**
- * Địa Ẩn, sát thủ hệ Thổ (RB-073, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
+ * Cát Tàng (ngoại hiệu Địa Ẩn), sát thủ hệ Thổ (RB-073, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
  * (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: móng vuốt tay phải tách khỏi bàn tay để cùng xoay quanh cổ tay, bàn
  * tay trái cùng móng vuốt và đầu (cả khăn quấn) tách riêng. Tranh ra chiêu vẽ người lớn hơn hình đứng nên thu 0.92. Hệ
  * tọa độ: ảnh đứng 1024×1536.
@@ -3571,7 +3571,7 @@ const DIA_AN: WarriorRig = {
 };
 
 /**
- * Lôi Ảnh, sát thủ hệ Lôi (RB-074, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
+ * Mẫn Tuyên (ngoại hiệu Lôi Ảnh), sát thủ hệ Lôi (RB-074, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
  * (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: hộp phóng kim tách khỏi bàn tay phải để cùng xoay quanh cổ tay, bàn
  * tay trái và đầu (cả búi tóc, dây buộc) tách riêng; bím tóc, túi đeo ở lại thân. Hệ tọa độ: ảnh đứng 1024×1536.
  */
@@ -3613,7 +3613,7 @@ const LOI_ANH: WarriorRig = {
 };
 
 /**
- * Vô Ảnh, sát thủ hệ Phong (RB-075, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
+ * Liễu Thiều (ngoại hiệu Vô Ảnh), sát thủ hệ Phong (RB-075, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
  * (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: sáo trúc tách khỏi bàn tay phải để cùng xoay quanh cổ tay, bàn tay
  * trái và đầu (cả búi tóc) tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
  */
