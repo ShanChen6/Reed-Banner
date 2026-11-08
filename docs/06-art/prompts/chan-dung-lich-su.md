@@ -188,6 +188,8 @@ Mỗi tranh ra chiêu có tọa độ chỉnh tay trong `HA_VAN` (`src/app/game/
 | `pose-ultimate.webp` | 302×454 | **Giơ cao trượng bằng tay trái**, tay phải duỗi thẳng chỉ ra bên phải, thân hơi nghiêng | đầu ngón tay phải (hướng ra ngoài) |
 | `pose-down.webp` | 457×304 (ngang) | Nằm nghiêng, mắt nhắm, một tay chống đất, **trượng nằm dưới đất cạnh chân** | không |
 
+**Độ dài trượng phải đồng nhất ở mọi tranh** (Shan nhận xét 09/11/2026: bộ tranh đầu lúc dài lúc ngắn). Tranh cũ dùng **trượng ngắn**, dài khoảng **1,8 lần chiều cao đầu** (từ đỉnh búi tóc đến cằm), tức cỡ một cánh tay rưỡi, nắm một tay, đầu đồng có hạt đỏ. Bản đầu của tranh cast lại vẽ trượng dài tới sát đất (khoảng 2,5 lần chiều cao đầu) nên phải vẽ lại. Câu thêm vào mọi prompt: `the staff is a SHORT wooden rod, its total length equal to about 1.8 times the height of her head (a bit longer than her forearm), never taller than her shoulder when held upright, bronze cap with a small red orb on one end only; keep exactly this length in every picture`. Khi duyệt ảnh, so chiều dài trượng với chiều cao đầu.
+
 **Họa tiết đặc trưng của Hà Vân cần giữ ở mọi tranh** (đọc từ `body.webp`): lớp lót cam ở tay áo và vạt; hai tấm vải thêu chỉ vàng treo ở thắt lưng (họa tiết cánh sen); dải thêu sóng mây vàng ở mép vạt đỏ; đai nâu có hai tấm đồng thoi; vòng đồng răng cưa ở bắp tay; tua đỏ hạt đồng ở đai và chỗ buộc giày. Tranh ra chiêu có thể che bớt vì dáng, nhưng không được bỏ hẳn.
 
 ### 9.3 Khối phong cách toàn thân (biến thể của khối bản 2)
