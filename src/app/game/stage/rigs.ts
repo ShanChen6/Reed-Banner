@@ -1387,45 +1387,44 @@ const CHAU_NGOC: WarriorRig = {
 };
 
 /**
- * Tô Kim, mưu sĩ hệ Kim (tướng khởi đầu). Bộ tranh Shan gửi 25/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code:
- * quạt lông đen cùng nắm tay phẩy quanh cổ tay theo nhịp quạt, bàn tay chống hông, đầu và đuôi khăn đen tách riêng.
- * Hệ tọa độ: ảnh đứng 1024×1536.
+ * Tô Kim, mưu sĩ hệ Kim (tướng khởi đầu). Bộ tranh phong cách mới Shan gửi 09/11 (nền trong suốt sẵn): quạt xếp nan sắt
+ * có tua, cân đồng và túi tiền đeo hông. Ảnh đứng tách lớp bằng code: quạt cùng tua và nắm tay phẩy quanh cổ tay, phần
+ * áo sau quạt vá bằng chép tiếp dải viền vòng tròn theo chu kỳ hoa văn; bàn tay chống hông xoay quanh cổ tay, đầu tách
+ * riêng. Bộ mới chưa có tranh gục nên tạm giữ tranh gục cũ. Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const TO_KIM: WarriorRig = {
   skeleton: "warrior",
   weapon: "fan",
   dir: "to-kim",
   texScale: 0.5,
-  foot: { x: 540, y: 1500 },
-  height: 1490,
+  foot: { x: 460, y: 1525 },
+  height: 1514,
   parts: {
-    body: { x: 186, y: 10, w: 709, h: 1514 },
-    armR: { x: 645, y: 585, w: 101, h: 126 },
-    sword: { x: 94, y: 221, w: 312, h: 390 },
-    arm: { x: 255, y: 478, w: 64, h: 98 },
-    head: { x: 465, y: 11, w: 160, h: 252 },
+    body: { x: 36, y: 11, w: 772, h: 1520 },
+    armR: { x: 533, y: 573, w: 138, h: 88 },
+    sword: { x: 37, y: 408, w: 386, h: 428 },
+    arm: { x: 189, y: 625, w: 94, h: 72 },
+    head: { x: 408, y: 11, w: 190, h: 240 },
   },
-  cloth: [
-    { name: "ribbon", box: { x: 370, y: 102, w: 121, h: 229 }, behind: true,
-      wind: { axis: "y", start: 0.2, amp: 5, freq: 1.4, k: 2.8, phase: 0.6 } },
-  ],
+  cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 285, y: 540 },
-    elbowR: { x: 665, y: 610 },
-    neck: { x: 560, y: 255 },
+    shoulder: { x: 240, y: 665 },
+    elbowR: { x: 650, y: 600 },
+    neck: { x: 515, y: 235 },
   },
-  blade: [{ x: 280, y: 500 }, { x: 180, y: 300 }],
+  blade: [{ x: 240, y: 660 }, { x: 250, y: 420 }],
   strikeFx: "coinScatter",
   fxColor: 0x9ea4ad,
-  // Phẩy quạt thấp ra sau (đánh thường), chỉ tay quạt kề ngực (ra chiêu), thế tấn rộng chỉ tay quạt giơ cao (tuyệt chiêu).
+  // Bước tới vung quạt xòe về phía đối thủ (đánh thường), chĩa quạt gấp, tay kia bắt ấn hai ngón (ra chiêu), tấn rộng giơ
+  // quạt cao, tay kia xòe về phía đối thủ (tuyệt chiêu). Cỡ tranh ngang ảnh đứng.
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 8, y: 8 },
-      anchor: { x: 640, y: 1480 }, scale: 1, burst: { x: 90, y: 620 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 2, y: 8 },
-      anchor: { x: 400, y: 1480 }, scale: 1, burst: { x: 1006, y: 300 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 1, y: 8 },
-      anchor: { x: 510, y: 1490 }, scale: 1, burst: { x: 1012, y: 270 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 42, y: 17 },
+      anchor: { x: 470, y: 1520 }, scale: 1, burst: { x: 900, y: 260 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 157, y: 9 },
+      anchor: { x: 465, y: 1527 }, scale: 1, burst: { x: 985, y: 390 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 9, y: 8 },
+      anchor: { x: 465, y: 1528 }, scale: 1, burst: { x: 1000, y: 430 } },
   },
   down: { name: "pose-down", texScale: 0.3, origin: { x: 13, y: 23 },
     anchor: { x: 800, y: 900 }, scale: 0.85 },
