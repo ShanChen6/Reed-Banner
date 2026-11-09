@@ -853,7 +853,7 @@ test("Lý Liệt có bốn tranh, chém lửa hệ Hỏa, đại đao theo nhị
 test("Trương Viêm có bốn tranh, tường lửa hệ Hỏa, khiên nâng được và texture khớp tọa độ", () => {
   const rig = rigOf("truongViem");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "spear");
+  assert.equal(rig.weapon, undefined);
   assert.equal(rig.strikeFx, "flameWall");
   assert.ok((rig.shieldRaise ?? 0) < 0);
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
