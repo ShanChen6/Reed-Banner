@@ -1,7 +1,7 @@
 # Prompt bộ tranh Lý Liệt (phong cách mới)
 
 > Cập nhật: 09/11/2026
-> Trạng thái: **DRAFT** — bộ prompt viết cho Lý Liệt (Tướng sĩ, hệ Hỏa) cầm đao cán dài có ruy băng đỏ theo tranh cũ (hồ sơ ghi đôi hộ thủ câu, chưa chốt đổi; xem mục 0), áo đỏ gạch ba vạch vuốt, màu nhấn đỏ cam; chưa có ảnh nào được tạo và gắn vào game.
+> Trạng thái: **APPROVED** — bộ prompt viết cho Lý Liệt (Tướng sĩ, hệ Hỏa) cầm đao cán dài có ruy băng đỏ theo tranh cũ (hồ sơ ghi đôi hộ thủ câu, chưa chốt đổi; xem mục 0), áo đỏ gạch ba vạch vuốt, màu nhấn đỏ cam; ảnh Shan gửi 09/11/2026 đã gắn vào game (xem mục Kết quả).
 
 Căn cứ: hồ sơ Lý Liệt trong `docs/03-characters/ho-so-37-tuong-thuong.md` (Tướng sĩ, hệ Hỏa, ngoại hiệu Cuồng Hỏa, khoảng 35 tuổi, lính giữ chợ bến Đằng Châu theo về Hoa Lư, anh của Lý Diệm) và các bài học từ chín nhân vật trước: **prompt ngắn, khẳng định, mỗi tranh một khối, ảnh chuẩn làm khuôn, vật cầm đơn giản và khóa kích cỡ**.
 
@@ -146,3 +146,11 @@ Painting style: clean ink outlines, soft cel-like shading with simplified shadow
 ## 10. Quy cách gửi lại
 
 Gửi **PNG gốc**, tên `chuan`, `bust`, `style`, `attack`, `cast`, `ultimate`, `down`. Tôi sẽ cắt, co về đúng cỡ, thay vào `public/art/characters/ly-liet/`, chỉnh tọa độ trong `LY_LIET` (`rigs.ts`; vũ khí vẫn là đao nên giữ nhịp chém), tách lớp lại hình động đứng (đao cùng nắm tay, bàn tay buông, đầu và dải khăn) và làm `portrait.webp`.
+
+## Kết quả (09/11/2026)
+
+Shan gửi 7 ảnh: chuẩn, bust, ra đòn (ngang 1536×1024), ra chiêu, tuyệt chiêu, phong thái (vác đao trên vai), gục (ngang 1536×1024). Nền trong suốt sẵn; vũ khí giữ đao cán dài buộc dải vải đỏ.
+
+- **Tranh tư thế:** cắt sát, co 0,4 lần (`pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down`); phong thái co 0,5 lần; `standing.webp` co 0,25 lần. Tọa độ mới trong `LY_LIET` (`rigs.ts`). Điểm bắn ở mũi đao cả ba tranh.
+- **Hình động đứng:** `sword` là đao kèm dải vải, `arm` là nắm tay phải (cả hai xoay quanh cổ tay), `armR` là bàn tay trái chống hông, `head` là đầu. Cẳng tay và hộ uyển sau cán được vá bằng nội suy hai bên, đai lưng sau bàn tay vá bằng khuếch tán màu.
+- **Chân dung:** `bust.webp` 384×384 (đã thêm `lyLiet` vào `BUST_IDS`); `portrait.webp` là bust co về 192×192. Tổng thư mục khoảng 231 KB.
