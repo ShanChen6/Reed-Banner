@@ -1562,46 +1562,48 @@ const DAM_THAO: WarriorRig = {
 };
 
 /**
- * Hoàng Mộc, binh lính hệ Mộc (tướng cửa hàng). Bộ tranh Shan gửi 25/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
- * code như Nguyễn Khoan: giáo tre cùng nắm tay xoay quanh cổ tay, khiên mây lá trúc cùng cẳng tay là lớp tay không,
- * nâng lên khi vào thế và đỡ đòn; đầu đội nón lá tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ * Hoàng Mộc, binh lính hệ Mộc (tướng cửa hàng). Bộ tranh phong cách mới Shan gửi 10/11 (nền trong suốt sẵn), thay bộ 25/10:
+ * giáp đan cói xanh, băng đô lá, nón lá đeo lưng, giỏ ống cơm lam, liềm phát thay giáo tre, khiên mây đinh đồng. Ảnh đứng
+ * (1018×1545, giữ khổ) tách lớp bằng code: liềm cùng nắm tay xoay quanh cổ tay (nằm ngoài thân nên không cần vá), khiên mây
+ * nâng lên khi vào thế và đỡ đòn (phần giáp sau khiên vá bằng mảnh giáp bên cạnh), đầu cùng đuôi băng đô tách riêng. Shan
+ * gửi ba tranh động tác nên tranh giơ liềm sau khiên dùng cho cả ra chiêu và tuyệt chiêu; tranh ngồi thuyền ăn cơm lam làm
+ * phong thái.
  */
 const HOANG_MOC: WarriorRig = {
   skeleton: "warrior",
-  weapon: "spear",
   dir: "hoang-moc",
   texScale: 0.5,
-  foot: { x: 520, y: 1450 },
-  height: 1300,
+  foot: { x: 565, y: 1505 },
+  height: 1495,
   parts: {
-    body: { x: 248, y: 150, w: 586, h: 1334 },
-    armR: { x: 685, y: 604, w: 297, h: 462 },
-    sword: { x: 174, y: 8, w: 72, h: 1431 },
-    arm: { x: 163, y: 506, w: 93, h: 105 },
-    head: { x: 362, y: 150, w: 319, h: 251 },
+    body: { x: 94, y: 7, w: 882, h: 1534 },
+    armR: { x: 620, y: 312, w: 350, h: 448 },
+    sword: { x: 12, y: 745, w: 224, h: 490 },
+    arm: { x: 130, y: 745, w: 108, h: 136 },
+    head: { x: 380, y: 7, w: 250, h: 294 },
   },
   cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 210, y: 560 },
-    elbowR: { x: 720, y: 650 },
-    neck: { x: 500, y: 390 },
+    shoulder: { x: 200, y: 762 },
+    elbowR: { x: 700, y: 560 },
+    neck: { x: 510, y: 285 },
   },
-  blade: [{ x: 210, y: 560 }, { x: 205, y: 20 }],
+  blade: [{ x: 180, y: 880 }, { x: 60, y: 1200 }],
   shieldRaise: -0.35,
   strikeFx: "rootGuard",
   fxColor: 0x4f9a4a,
-  // Đâm giáo tre (đánh thường), giơ khiên che người (ra chiêu), thụp thấp núp sau khiên giữ thành (tuyệt chiêu).
+  // Lao tới chém liềm (đánh thường), giơ liềm sau khiên thế thủ (ra chiêu và tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 18, y: 11 },
-      anchor: { x: 770, y: 960 }, scale: 1.3, burst: { x: 1500, y: 212 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 78, y: 16 },
-      anchor: { x: 600, y: 1440 }, scale: 1.05, burst: { x: 842, y: 637 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 76, y: 12 },
-      anchor: { x: 600, y: 1420 }, scale: 1.1, burst: { x: 802, y: 787 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 133, y: 7 },
+      anchor: { x: 627, y: 970 }, scale: 1.1, burst: { x: 1287, y: 264 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 24, y: 7 },
+      anchor: { x: 657, y: 1150 }, scale: 1.1, burst: { x: 640, y: 40 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 24, y: 7 },
+      anchor: { x: 657, y: 1150 }, scale: 1.1, burst: { x: 915, y: 390 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 47, y: 118 },
-    anchor: { x: 760, y: 880 }, scale: 0.9 },
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 55, y: 4 },
+    anchor: { x: 900, y: 920 }, scale: 0.9 },
 };
 
 /**
