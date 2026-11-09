@@ -1,11 +1,11 @@
 /**
  * Trấn sơn khiêu chiến vẽ trên cả sân (hệ tọa độ của stage PixiJS): tuyệt chiêu của binh lính hệ Thổ dộng khiên xuống
  * đất, sóng đất tỏa vòng quanh chân, vòng gai đá trồi lên quanh người (phản đòn) rồi lún xuống; trên đầu từng đối thủ
- * hiện ấn khiêu khích đỏ có mũi chỉ về người tung chiêu, và luồng sáng đỏ chảy liên tục từ đối thủ về chính mình.
+ * nổi gân giận đỏ cạnh đầu, và luồng sáng đỏ chảy liên tục từ đối thủ về chính mình.
  */
 import { Container, Graphics } from "pixi.js";
 import type { Point } from "./rigs";
-import { badgeLayer } from "./badge";
+import { vein } from "./status";
 import { softLayer } from "./soft";
 
 /** Gai đá mọc tới `RISE`, giữ tới `HOLD`, lún và tan hết `LIFE` (giây). */
@@ -35,7 +35,6 @@ export function tauntRoar(parent: Container, color: number) {
   glow.blendMode = "add";
   parent.addChild(back, g, glow);
   const aura = softLayer(parent);
-  const badges = badgeLayer(parent);
   let roars: Roar[] = [];
 
   return {
@@ -52,7 +51,6 @@ export function tauntRoar(parent: Container, color: number) {
       back.clear();
       g.clear();
       glow.clear();
-      badges.begin();
       aura.begin();
       for (const r of roars) {
         if (r.wait > 0) {
@@ -93,23 +91,18 @@ export function tauntRoar(parent: Container, color: number) {
           glow.moveTo(bx - hw * 0.3, by).lineTo(tip, by - h).stroke({ color, width: w * 0.5, alpha: 0.7 * fade, cap: "round" });
         }
 
-        // Đối thủ bị khiêu khích: ấn trên đầu có hai mũi chỉ về người tung chiêu; luồng sáng đỏ chảy liên tục từ đối thủ về
-        // ngực người tung chiêu (bị kéo sự chú ý về đó).
+        // Đối thủ bị khiêu khích: dấu nổi gân giận đỏ cạnh đầu; luồng sáng đỏ chảy liên tục từ đối thủ về ngực người tung
+        // chiêu (bị kéo sự chú ý về đó).
         const show = ease((r.t - 0.1) / 0.25);
         if (show <= 0) continue;
         const a = show * fade;
         for (const f of r.foes) {
           const dir = Math.sign(x - f.x) || 1;
-          badges.draw({
-            x: f.x, y: f.y - z * 1.06, r: z * 0.06, t: r.t - 0.1, alpha: fade, color: TAUNT,
-            icon: (m, hx, hy, rad, al) => {
-              for (const kk of [-0.32, 0.22]) {
-                const cx = hx + dir * rad * kk;
-                m.poly([cx - dir * rad * 0.28, hy - rad * 0.5, cx + dir * rad * 0.4, hy, cx - dir * rad * 0.28, hy + rad * 0.5], false)
-                  .stroke({ color: 0xffe2bd, width: rad * 0.17, alpha: al, cap: "round", join: "round" });
-              }
-            },
-          });
+          const beat = (1 + 0.15 * Math.max(0, Math.sin(r.t * 9))) * (1 + 0.6 * (1 - show) ** 2);
+          const vx = f.x - dir * z * 0.13;
+          const vy = f.y - z * 0.98;
+          aura.glow({ x: vx, y: vy, w: z * 0.16 * beat, color: TAUNT, alpha: 0.6 * a });
+          vein(g, vx, vy, z * 0.045 * beat, a);
           const sx = f.x;
           const sy = f.y - z * 0.6;
           const mx = x;
@@ -123,13 +116,11 @@ export function tauntRoar(parent: Container, color: number) {
           }
         }
       }
-      badges.end();
       aura.end();
       roars = roars.filter((r) => r.wait > 0 || r.t < LIFE);
     },
     clear() {
       roars = [];
-      badges.clear();
       aura.clear();
       back.clear();
       g.clear();
