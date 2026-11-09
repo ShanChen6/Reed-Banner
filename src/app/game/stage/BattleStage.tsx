@@ -250,6 +250,7 @@ export default function BattleStage({
         import("./ripple"),
         import("./march"),
       ]);
+      const { statusLayer } = await import("./status");
       const app = new Application();
       await app.init({
         backgroundAlpha: 0,
@@ -1117,10 +1118,32 @@ export default function BattleStage({
         });
         return [fx];
       });
+      // Trạng thái hiện liên tục trên người (thiêu đốt, độc, băng, câm lặng, khiêu khích...): lớp sau lưng và lớp trước mặt.
+      const statusBack = new Container();
+      statusBack.zIndex = 1;
+      const statusFront = new Container();
+      statusFront.zIndex = 90;
+      app.stage.addChild(statusBack, statusFront);
+      const status = statusLayer(statusBack, statusFront);
+      const statusTargets = () => {
+        const { width, height } = app.screen;
+        const spotOf = (s: Slot) => ({ x: slotX(s.side, s.index) * width, y: height * GROUND });
+        return latest.current.filter((s) => isAlive(s.fighter)).map((s) => {
+          const taunter = latest.current.find((o) => o.side !== s.side && isAlive(o.fighter) && o.fighter.effects.some((e) => e.kind === "taunt"));
+          return {
+            key: s.key,
+            at: spotOf(s),
+            size: height * FIGURE,
+            kinds: s.fighter.effects.map((e) => e.kind),
+            taunter: taunter ? spotOf(taunter) : null,
+          };
+        });
+      };
       app.ticker.add((tk) => {
         const dt = Math.min(tk.deltaMS / 1000, 0.05);
         for (const p of map.values()) p.update(dt);
         for (const f of fieldFx) f.update(dt);
+        status.update(dt, statusTargets());
       });
       // Giảm chuyển động: hình đứng yên, chỉ vẽ lại thưa để cập nhật lúc gục.
       if (still) app.ticker.maxFPS = 4;
