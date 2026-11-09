@@ -1390,7 +1390,7 @@ const CHAU_NGOC: WarriorRig = {
  * Tô Kim, mưu sĩ hệ Kim (tướng khởi đầu). Bộ tranh phong cách mới Shan gửi 09/11 (nền trong suốt sẵn): quạt xếp nan sắt
  * có tua, cân đồng và túi tiền đeo hông. Ảnh đứng tách lớp bằng code: quạt cùng tua và nắm tay phẩy quanh cổ tay, phần
  * áo sau quạt vá bằng chép tiếp dải viền vòng tròn theo chu kỳ hoa văn; bàn tay chống hông xoay quanh cổ tay, đầu tách
- * riêng. Bộ mới chưa có tranh gục nên tạm giữ tranh gục cũ. Hệ tọa độ: ảnh đứng 1024×1536.
+ * riêng. Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const TO_KIM: WarriorRig = {
   skeleton: "warrior",
@@ -1426,8 +1426,9 @@ const TO_KIM: WarriorRig = {
     ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 9, y: 8 },
       anchor: { x: 465, y: 1528 }, scale: 1, burst: { x: 1000, y: 430 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 13, y: 23 },
-    anchor: { x: 800, y: 900 }, scale: 0.85 },
+  // Ngồi bệt tựa tay lên gối, quạt rơi bên tay, túi tiền đổ ra vài đồng.
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 52, y: 23 },
+    anchor: { x: 640, y: 900 }, scale: 1 },
 };
 
 /**
