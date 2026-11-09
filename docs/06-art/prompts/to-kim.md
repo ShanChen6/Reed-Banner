@@ -1,7 +1,7 @@
 # Prompt bộ tranh Tô Kim (phong cách mới)
 
 > Cập nhật: 09/11/2026
-> Trạng thái: **DRAFT** — bộ prompt viết cho Tô Kim (Mưu sĩ, hệ Kim) cầm quạt xếp nan sắt, đeo cân đồng và túi tiền ở hông; chưa có ảnh nào được tạo và gắn vào game.
+> Trạng thái: **DRAFT** — bộ prompt viết cho Tô Kim (Mưu sĩ, hệ Kim) cầm quạt xếp nan sắt, đeo cân đồng và túi tiền ở hông; Shan đã tạo 6 ảnh (thiếu tranh gục) và đã gắn vào game (09/11/2026, xem mục 11).
 
 Căn cứ: hồ sơ Tô Kim trong `docs/03-characters/thiet-ke-lai-nhan-vat.md` (Mưu sĩ, hệ Kim, ngoại hiệu Toán Lương, khoảng 35 tuổi, lo lương thảo của nghĩa quân Hoa Lư) và các bài học từ bốn nhân vật trước: **prompt ngắn, khẳng định, mỗi tranh một khối, dùng ảnh chuẩn làm khuôn, vật cầm đơn giản và khóa kích cỡ**.
 
@@ -133,3 +133,11 @@ Painting style: clean ink outlines, soft cel-like shading, medium saturation, wa
 ## 10. Quy cách gửi lại
 
 Gửi **PNG gốc**, tên `chuan`, `bust`, `style`, `attack`, `cast`, `ultimate`, `down`. Tôi sẽ cắt, co về đúng cỡ, thay vào `public/art/characters/to-kim/`, chỉnh tọa độ trong `TO_KIM` (`rigs.ts`; vũ khí vẫn là quạt nên giữ nhịp quạt), tách lớp lại hình động đứng (quạt cùng nắm tay, bàn tay chống hông, đầu và búi tóc) và làm `portrait.webp`.
+
+## 11. Kết quả (09/11/2026)
+
+Shan gửi 6 ảnh: chuẩn, bust, ra đòn, ra chiêu, tuyệt chiêu, phong thái (ngồi ghế đẩu cầm thẻ tre). Các ảnh toàn thân là khổ dọc 1024×1536, nền trong suốt sẵn, cùng cỡ với ảnh chuẩn. **Chưa có tranh gục (mục 7)**, nên `pose-down` tạm giữ tranh cũ.
+
+- **Tranh tư thế:** cắt sát, co 0,4 lần (`pose-attack`, `pose-cast`, `pose-ultimate`); phong thái co 0,5 lần; `standing.webp` co 0,25 lần. Tọa độ mới trong `TO_KIM` (`rigs.ts`). Điểm bắn: quạt xòe (ra đòn), đầu quạt gấp (ra chiêu), bàn tay xòe (tuyệt chiêu).
+- **Hình động đứng:** `sword` là quạt cùng tua, `arm` là nắm tay cầm quạt (cả hai xoay quanh cổ tay), `armR` là bàn tay chống hông, `head` là đầu. Phần áo sau quạt được vá bằng cách chép tiếp dải viền vòng tròn theo chu kỳ hoa văn. Phần ống tay và đai sau bàn tay được vá bằng khuếch tán màu. Lớp vải `ribbon` cũ đã bỏ.
+- **Chân dung:** `bust.webp` 384×384 (đã thêm `toKim` vào `BUST_IDS`); `portrait.webp` 192×192. Tổng thư mục khoảng 279 KB.
