@@ -2800,47 +2800,49 @@ const HUA_LANG: WarriorRig = {
 };
 
 /**
- * Liễu Yên, pháp sư hệ Phong (tướng cửa hàng). Bộ tranh Shan gửi 29/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
- * code: trượng trúc dài (cả cầu ngọc và chùm lông vũ) cùng nắm tay xoay quanh cổ tay, bàn tay buông và đầu tách riêng.
- * Tranh đánh thường vẽ người nhỏ trong khung ngang nên phóng lên cho bằng hình đứng. Hệ tọa độ: ảnh đứng 1024×1536.
+ * Liễu Yên, pháp sư hệ Phong (tướng cửa hàng). Bộ tranh phong cách mới Shan gửi 10/11 (nền trong suốt sẵn), thay bộ 29/10:
+ * áo vải mộc thêu cổng làng, băng đô xanh, phất trần đuôi ngựa trắng thay trượng trúc. Ảnh đứng (1006×1563, giữ khổ)
+ * tách lớp bằng code: cẳng tay giơ ngửa bàn tay xoay quanh khuỷu theo nhịp quạt (phất trần ôm bên hông nằm yên trong
+ * thân vì đuôi lông phủ lên tay áo), chuông đồng đeo thắt lưng đung đưa quanh móc, đầu tách riêng. Tranh dựng phất trần
+ * xòe tay làm ra chiêu; tranh giơ phất trần qua đầu (bản rõ hơn) làm phong thái; tranh nằm làm gục. Cỡ người các tranh
+ * tư thế so theo chiều cao đầu.
  */
 const LIEU_YEN: WarriorRig = {
   skeleton: "warrior",
-  weapon: "staff",
+  weapon: "fan",
   dir: "lieu-yen",
   texScale: 0.5,
-  foot: { x: 560, y: 1500 },
-  height: 1420,
+  foot: { x: 400, y: 1545 },
+  height: 1535,
   parts: {
-    body: { x: 236, y: 78, w: 776, h: 1426 },
-    armR: { x: 745, y: 716, w: 65, h: 116 },
-    sword: { x: 58, y: 10, w: 281, h: 1438 },
-    arm: { x: 180, y: 375, w: 67, h: 95 },
-    head: { x: 466, y: 82, w: 160, h: 194 },
+    body: { x: 213, y: 10, w: 528, h: 1544 },
+    armR: { x: 589, y: 545, w: 68, h: 204 },
+    sword: { x: 671, y: 241, w: 232, h: 254 },
+    arm: { x: 671, y: 420, w: 86, h: 76 },
+    head: { x: 380, y: 10, w: 204, h: 266 },
   },
   cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 235, y: 450 },
-    elbowR: { x: 765, y: 730 },
-    neck: { x: 545, y: 265 },
+    shoulder: { x: 712, y: 478 },
+    elbowR: { x: 612, y: 556 },
+    neck: { x: 500, y: 255 },
   },
-  blade: [{ x: 212, y: 420 }, { x: 196, y: 45 }],
-  orb: { x: 196, y: 45 },
+  blade: [{ x: 770, y: 350 }, { x: 885, y: 258 }],
   strikeFx: "galeVortex",
   fxColor: 0x2e9e90,
-  // Đẩy trượng ngang chĩa cầu ngọc tới (đánh thường), dựng trượng xòe tay (ra chiêu), nghiêng trượng vươn tay gọi lốc
+  // Lướt tới quét phất trần (đánh thường), dựng phất trần xòe tay (ra chiêu), giơ phất trần qua đầu vươn tay gọi lốc
   // (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 41, y: 8 },
-      anchor: { x: 640, y: 1005 }, scale: 1.4, burst: { x: 1505, y: 155 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 57, y: 10 },
-      anchor: { x: 575, y: 1500 }, scale: 1, burst: { x: 820, y: 630 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 0, y: 11 },
-      anchor: { x: 780, y: 1495 }, scale: 1.07, burst: { x: 1015, y: 300 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 290, y: 8 },
+      anchor: { x: 575, y: 1020 }, scale: 1.35, burst: { x: 1150, y: 250 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 73, y: 8 },
+      anchor: { x: 475, y: 1545 }, scale: 1, burst: { x: 70, y: 545 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 26, y: 2 },
+      anchor: { x: 510, y: 1495 }, scale: 1.15, burst: { x: 985, y: 410 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 20, y: 9 },
-    anchor: { x: 800, y: 900 }, scale: 0.85 },
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 18, y: 202 },
+    anchor: { x: 880, y: 850 }, scale: 0.85 },
 };
 
 /**
