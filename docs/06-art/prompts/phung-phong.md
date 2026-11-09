@@ -1,7 +1,7 @@
 # Prompt bộ tranh Phùng Phong (phong cách mới)
 
 > Cập nhật: 09/11/2026
-> Trạng thái: **DRAFT** — bộ prompt viết cho Phùng Phong (Quân sư, hệ Phong) cầm gậy trúc chỉ huy, thổi sáo trúc ở tranh ra chiêu; chưa có ảnh nào được tạo và gắn vào game.
+> Trạng thái: **DRAFT** — bộ prompt viết cho Phùng Phong (Quân sư, hệ Phong) cầm gậy trúc chỉ huy, thổi sáo trúc ở tranh ra chiêu; Shan đã tạo đủ 7 ảnh và đã gắn vào game (09/11/2026, xem mục 11).
 
 Căn cứ: hồ sơ Phùng Phong trong `docs/03-characters/thiet-ke-lai-nhan-vat.md` (Quân sư, hệ Phong, ngoại hiệu Báo Phong, khoảng 40 tuổi, trinh sát đưa tin của nghĩa quân Hoa Lư) và các bài học từ Hà Vân, Mai Thanh, Lê Thạch: **prompt ngắn, nói khẳng định, mỗi tranh một khối, từ ảnh chuẩn trở đi dùng ảnh làm khuôn, vũ khí chỉ là một cây gậy trúc đơn giản**.
 
@@ -133,3 +133,11 @@ Painting style: clean ink outlines, soft cel-like shading, medium saturation, wa
 ## 10. Quy cách gửi lại
 
 Gửi **PNG gốc**, tên `chuan`, `bust`, `style`, `attack`, `cast`, `ultimate`, `down`. Tôi sẽ cắt, co về đúng cỡ, thay vào `public/art/characters/phung-phong/`, chỉnh tọa độ trong `PHUNG_PHONG` (`rigs.ts`), đổi nhịp vũ khí sang trượng, tách lớp lại hình động đứng (gậy cùng nắm tay, bàn tay buông, đầu và khăn) và làm `portrait.webp`.
+
+## 11. Kết quả (09/11/2026)
+
+Shan gửi đủ 7 ảnh theo đúng thứ tự (chuẩn, bust, phong thái, ra đòn, ngã, tuyệt chiêu, ra chiêu), nền trong suốt sẵn, các tranh đều quay sang phải. Ảnh toàn thân 1024×1536 (ra đòn và ngã 1536×1024), bust 1254×1254.
+
+- **Tranh tư thế:** cắt sát, co 0,4 lần (`pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down`); phong thái co 0,5 lần (`style.webp`); `standing.webp` co 0,25 lần. Tọa độ mới trong `PHUNG_PHONG` (`rigs.ts`), vũ khí đổi từ giáo sang gậy (`staff`). Cỡ so theo bề ngang khăn đầu: ra đòn 1,17, tuyệt chiêu 1,27 (dáng tấn rộng nên nhân vật nhỏ hơn trong khung). Điểm bắn: đầu gậy (ra đòn), đầu sáo (ra chiêu), bàn tay xòe (tuyệt chiêu).
+- **Hình động đứng:** ảnh chuẩn tách lớp bằng code: `sword` là gậy trúc cùng dải vải xanh, `arm` là nắm tay cầm gậy (cả hai xoay quanh cổ tay), `armR` là bàn tay trái buông (xoay quanh cổ tay trong ống tay), `head` là đầu và khăn. Ống tay sau gậy vá bằng phản chiếu nếp áo bên phải gậy; vạt áo và lòng ống tay sau bàn tay trái vá bằng khuếch tán màu.
+- **Chân dung:** `bust.webp` 384×384 (đã thêm `phungPhong` vào `BUST_IDS`); `portrait.webp` 192×192 cắt từ ảnh chuẩn. Tổng thư mục khoảng 273 KB.
