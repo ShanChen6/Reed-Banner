@@ -2535,48 +2535,46 @@ const TONG_TAN: WarriorRig = {
 };
 
 /**
- * Vũ Lôi, pháp sư hệ Lôi (tướng cửa hàng). Bộ tranh Shan gửi 29/10 (nền trong suốt sẵn, khổ 1024×1536; tranh tuyệt chiêu
- * khổ ngang 1536×1024). Ảnh đứng tách lớp bằng code như Doãn Nham: trượng đầu lồng đồng gắn quả cầu tím cùng nắm tay xoay
- * quanh cổ tay, khe trượng sau nắm tay lấp bằng đoạn trượng ngay dưới; bàn tay buông và đầu tách riêng. Tranh chống trượng
- * chống nạnh làm tranh phong thái. Hệ tọa độ: ảnh đứng 1024×1536.
+ * Vũ Lôi, pháp sư hệ Lôi (tướng cửa hàng). Bộ tranh phong cách mới Shan gửi 10/11 (nền trong suốt sẵn), thay bộ 29/10:
+ * áo tím thêu mặt trời và tia sét, khăn tím buộc búi tóc, kiếm gỗ đào khắc vân sét (vũ khí đổi từ trượng sang kiếm).
+ * Ảnh đứng (983×1600, giữ khổ) tách lớp bằng code: kiếm cùng nắm tay xoay quanh cổ tay theo nhịp chém, bàn tay kết ấn
+ * hai ngón và đầu tách riêng. Tranh đứng kết ấn dùng cả cho ra chiêu; tranh hai tay dựng kiếm làm tranh phong thái.
+ * Cỡ người các tranh tư thế so theo chiều cao đầu.
  */
 const VU_LOI: WarriorRig = {
   skeleton: "warrior",
-  weapon: "staff",
   dir: "vu-loi",
   texScale: 0.5,
-  foot: { x: 510, y: 1500 },
-  height: 1495,
+  foot: { x: 460, y: 1580 },
+  height: 1575,
   parts: {
-    body: { x: 198, y: 5, w: 771, h: 1515 },
-    armR: { x: 798, y: 646, w: 76, h: 145 },
-    sword: { x: 100, y: 43, w: 124, h: 1432 },
-    arm: { x: 121, y: 413, w: 97, h: 95 },
-    head: { x: 462, y: 8, w: 190, h: 250 },
+    body: { x: 91, y: 6, w: 682, h: 1586 },
+    armR: { x: 170, y: 107, w: 108, h: 194 },
+    sword: { x: 772, y: 614, w: 98, h: 950 },
+    arm: { x: 772, y: 670, w: 88, h: 90 },
+    head: { x: 310, y: 6, w: 228, h: 240 },
   },
   cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 205, y: 462 },
-    elbowR: { x: 818, y: 668 },
-    neck: { x: 548, y: 235 },
+    shoulder: { x: 815, y: 720 },
+    elbowR: { x: 230, y: 290 },
+    neck: { x: 440, y: 235 },
   },
-  blade: [{ x: 165, y: 460 }, { x: 160, y: 127 }],
-  orb: { x: 160, y: 127 },
+  blade: [{ x: 812, y: 820 }, { x: 810, y: 1550 }],
   strikeFx: "heavenStrike",
   fxColor: 0xb48cff,
-  // Kết ấn Ngũ hành đẩy bàn tay về phía đối thủ (đánh thường), chạm đỉnh trượng gọi sét vào quả cầu (ra chiêu), giơ ngang
-  // trượng qua đầu gọi thiên lôi (tuyệt chiêu). Cỡ người so theo khóa thắt lưng.
+  // Đâm kiếm thẳng (đánh thường), kết ấn hai ngón gọi sét (ra chiêu), giơ kiếm qua đầu xòe tay (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 154, y: 7 },
-      anchor: { x: 560, y: 1490 }, scale: 1.05, burst: { x: 770, y: 300 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 96, y: 25 },
-      anchor: { x: 546, y: 1472 }, scale: 1.05, burst: { x: 270, y: 95 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 195, y: 10 },
-      anchor: { x: 827, y: 998 }, scale: 1.28, burst: { x: 1230, y: 50 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 17, y: 10 },
+      anchor: { x: 430, y: 1495 }, scale: 0.85, burst: { x: 1005, y: 372 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 91, y: 6 },
+      anchor: { x: 460, y: 1580 }, scale: 1, burst: { x: 205, y: 105 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 62, y: 11 },
+      anchor: { x: 575, y: 1335 }, scale: 1.05, burst: { x: 887, y: 24 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 8, y: 189 },
-    anchor: { x: 700, y: 1150 }, scale: 1.2 },
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 7, y: 9 },
+    anchor: { x: 600, y: 1200 }, scale: 0.7 },
 };
 
 /**

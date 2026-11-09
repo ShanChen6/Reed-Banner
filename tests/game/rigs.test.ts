@@ -1085,13 +1085,12 @@ test("Tống Tấn có bốn tranh, lôi đao liên trảm hệ Lôi, kiếm the
 test("Vũ Lôi có bốn tranh, thiên lôi giáng thế hệ Lôi, quả cầu nằm trên trượng và texture khớp tọa độ", () => {
   const rig = rigOf("vuLoi");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "staff");
+  assert.equal(rig.weapon, undefined);
   assert.equal(rig.strikeFx, "heavenStrike");
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
     assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
-  contains(rig.orb!, rig.parts.sword);
   for (const p of rig.blade) contains(p, rig.parts.sword);
   contains(rig.joints.shoulder, rig.parts.arm);
   contains(rig.joints.elbowR, rig.parts.armR);
