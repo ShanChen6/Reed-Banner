@@ -2263,48 +2263,49 @@ const NINH_HOA: WarriorRig = {
 };
 
 /**
- * Doãn Nham, pháp sư hệ Thổ (tướng cửa hàng). Bộ tranh Shan gửi 28/10 (nền trong suốt sẵn, khổ 1374×1145, ảnh đứng
- * phóng ×1.32 vào khung 1024×1536). Ảnh đứng tách lớp bằng code như Đàm Thảo: trượng đầu đá cùng nắm tay xoay quanh cổ
- * tay, viên hổ phách trên đầu trượng sáng riêng; bàn tay buông và đầu tách riêng. Tranh ngồi xổm chống trượng làm tranh
- * phong thái. Hệ tọa độ: ảnh đứng 1024×1536.
+ * Doãn Nham, pháp sư hệ Thổ (tướng cửa hàng). Bộ tranh phong cách mới Shan gửi 10/11 (nền trong suốt sẵn), thay bộ
+ * 28/10: áo nâu đất thêu dây leo, khăn cam buộc búi tóc bạc, trượng gỗ buộc đá, chuông đồng đeo cổ tay. Ảnh đứng
+ * (1037×1517, giữ khổ) tách lớp bằng code: trượng cùng nắm tay xoay quanh cổ tay, khối đá đầu trượng sáng riêng; bàn
+ * tay xòe và đầu tách riêng. Tranh ngồi xổm chống trượng làm tranh phong thái. Tranh ra đòn và tuyệt chiêu vẽ người
+ * nhỏ hơn trong khung nên phóng ×1,3 và ×1,25.
  */
 const DOAN_NHAM: WarriorRig = {
   skeleton: "warrior",
   weapon: "staff",
   dir: "doan-nham",
   texScale: 0.5,
-  foot: { x: 560, y: 1500 },
-  height: 1485,
+  foot: { x: 540, y: 1490 },
+  height: 1480,
   parts: {
-    body: { x: 108, y: 24, w: 902, h: 1484 },
-    armR: { x: 822, y: 768, w: 99, h: 144 },
-    sword: { x: 12, y: 12, w: 173, h: 1483 },
-    arm: { x: 30, y: 495, w: 120, h: 127 },
-    head: { x: 400, y: 20, w: 252, h: 270 },
+    body: { x: 159, y: 13, w: 772, h: 1492 },
+    armR: { x: 822, y: 240, w: 166, h: 192 },
+    sword: { x: 55, y: 56, w: 148, h: 1438 },
+    arm: { x: 81, y: 450, w: 132, h: 122 },
+    head: { x: 334, y: 13, w: 276, h: 252 },
   },
   cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 140, y: 560 },
-    elbowR: { x: 860, y: 785 },
-    neck: { x: 545, y: 265 },
+    shoulder: { x: 150, y: 510 },
+    elbowR: { x: 850, y: 415 },
+    neck: { x: 500, y: 250 },
   },
-  blade: [{ x: 85, y: 560 }, { x: 100, y: 130 }],
-  orb: { x: 100, y: 130 },
+  blade: [{ x: 150, y: 510 }, { x: 115, y: 100 }],
+  orb: { x: 115, y: 100 },
   strikeFx: "earthSurge",
   fxColor: 0xd8902e,
-  // Đâm trượng ngang về phía đối thủ (đánh thường), chống trượng xòe tay trấn (ra chiêu), tấn thấp nện đầu trượng xuống
-  // đất (tuyệt chiêu). Tranh nguồn cùng tỉ lệ ảnh đứng gốc nên phóng ×1.32.
+  // Chĩa trượng đầu đá ngang về phía đối thủ (đánh thường), chống trượng xòe tay trấn (ra chiêu), tấn thấp kéo đầu đá
+  // sát đất (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 63, y: 12 },
-      anchor: { x: 635, y: 1130 }, scale: 1.32, burst: { x: 1245, y: 420 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 325, y: 4 },
-      anchor: { x: 735, y: 1125 }, scale: 1.32, burst: { x: 1030, y: 260 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 101, y: 9 },
-      anchor: { x: 620, y: 1070 }, scale: 1.32, burst: { x: 1200, y: 980 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 89, y: 3 },
+      anchor: { x: 540, y: 1125 }, scale: 1.3, burst: { x: 1240, y: 450 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 55, y: 12 },
+      anchor: { x: 560, y: 1500 }, scale: 1, burst: { x: 880, y: 280 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 29, y: 5 },
+      anchor: { x: 585, y: 1140 }, scale: 1.25, burst: { x: 1240, y: 1030 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 47, y: 20 },
-    anchor: { x: 800, y: 880 }, scale: 1.12 },
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 31, y: 6 },
+    anchor: { x: 760, y: 900 }, scale: 1.15 },
 };
 
 /**
