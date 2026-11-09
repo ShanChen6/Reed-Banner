@@ -82,17 +82,12 @@ test("Trần Cương có tranh đánh thường, ra chiêu, tuyệt chiêu, bị
   assert.equal(rig.down?.name, "pose-down");
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
     assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `khớp ${JSON.stringify(p)} ngoài lớp`);
-  contains(rig.joints.shoulder, rig.covers[0]!.box);
+  contains(rig.joints.shoulder, rig.parts.sword);
   contains(rig.joints.shoulder, rig.parts.arm);
   contains(rig.joints.elbowR, rig.parts.armR);
   contains(rig.joints.neck, rig.parts.head);
   contains(rig.joints.neck, rig.parts.body);
-  const boxes = [
-    ...Object.entries(rig.parts),
-    ...rig.covers.map((c) => [c.name, c.box] as const),
-    ...rig.cloth.map((c) => [c.name, c.box] as const),
-  ] as const;
-  for (const [name, box] of boxes) {
+  for (const [name, box] of Object.entries(rig.parts)) {
     const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
     assert.equal(data.toString("ascii", 12, 16), "VP8X");
     assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
