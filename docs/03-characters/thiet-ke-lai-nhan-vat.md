@@ -1,6 +1,6 @@
 # Thiết kế lại nhân vật theo phong cách cổ trang bán hiện thực
 
-> Cập nhật: 08/11/2026
+> Cập nhật: 09/11/2026
 > Trạng thái: **APPROVED** — Shan duyệt toàn bộ (08/11/2026). **Phần chữ đã có trong mã:** đổi tên (3 tướng thường, 14 Xạ thủ và Sát thủ), ngoại hiệu, phe, tiểu sử, quan hệ (`src/core/roster/lore.ts`, hiện ở tab Chi tiết). **Phần tranh** (làm lại nhân vật, vũ khí và tư thế theo phong cách mới, mục 6) **chưa làm**.
 
 Phong cách mục tiêu: **semi-realistic historical illustration, digital painting** (minh họa cổ trang bán hiện thực, tranh vẽ kỹ thuật số). Đã có chuẩn cho chân dung ở [prompt chân dung](../06-art/prompts/chan-dung-lich-su.md); chân dung Hà Vân mới (có họa tiết) là mẫu tham chiếu.
@@ -263,7 +263,7 @@ Mỗi nghề 7 người, mỗi hệ một người. **Vũ khí** chọn trong 3.
 | Mộc | Hoàng Mộc | dao quắm và khiên mây (Chém) | giỏ cơm lam |
 | Thủy | Thái Hà | mái chèo sắt và khiên tre (Chém) | lưới vắt vai |
 | Hỏa | Trương Viêm | đoản đao (Chém) | đuốc cài lưng |
-| Thổ | ★ Lê Thạch | **rìu đồng hình thuyền** và khiên mây (Chém) | túi vải đựng nắm đất |
+| Thổ | ★ Lê Thạch | **giáo** (mũi đồng hình lá) và khiên mây (Đâm) | túi vải đựng nắm đất |
 | Lôi | Ông Chấn | **lưu tinh chùy**, quả đá buộc dây (Chém) | trống da đeo lưng |
 | Phong | Mạnh Tường | giáo ngắn và lao phóng (Đâm) | cờ hiệu nhỏ |
 
@@ -412,7 +412,7 @@ Tổng: **20 nghĩa quân Hoa Lư** và **36 lính hoặc hàng binh của 12 s�
 - **Xuất thân:** người đắp lũy và giữ đê, tay quen vác đất, từng một mình giữ kho thóc làng qua mùa nước lớn. Nghe tin cờ lau, anh dẫn thanh niên làng đi theo.
 - **Tính cách:** chắc nịch, ít nói, bền bỉ; có thói quen đặt tay lên đất trước trận.
 - **Ba dấu ấn:** da sạm nắng, nón lá, sẹo ở cằm · áo giáp da ô-liu, họa tiết ba dải đất (màu nhấn nâu đất) · **túi vải đựng nắm đất** (vật dụng).
-- **Vũ khí và nhịp:** **rìu đồng hình thuyền và khiên mây** · nhịp **chém** (đổi cho giáo cũ, nên phải cắt lại lớp).
+- **Vũ khí và nhịp:** **giáo mũi đồng hình lá và khiên mây** · nhịp **đâm** (giữ hình cổ điển, chỉ vẽ lại ảnh và cắt lại lớp theo phong cách mới). Ban đầu thiết kế là rìu đồng hình thuyền, bỏ ngày 09/11/2026 vì mô hình tạo ảnh vẽ rìu sai nhiều lần (đầu rìu hình chữ T, tay cầm sai chỗ, mỗi tranh một kiểu).
 - **Câu nói:** "Đất còn thì lũy còn. Ta đứng đây."
 
 ### Mai Thanh · Y sư · Thủy
@@ -448,7 +448,7 @@ Tổng: **20 nghĩa quân Hoa Lư** và **36 lính hoặc hàng binh của 12 s�
 - **Vũ khí và nhịp:** **gậy trúc chỉ huy** · nhịp **trượng**.
 - **Câu nói:** "Gió đã đổi. Quân ta xuất phát."
 
-> Cả năm khớp bảng 3.2. Vũ khí khác nhau và **không món nào do biến vật dụng thành vũ khí**: Hà Vân và Mai Thanh giữ hình cổ điển (ít việc nhất); Lê Thạch đổi hình (nhiều việc nhất); Tô Kim đổi hình quạt; Phùng Phong đổi vũ khí từ cờ lệnh hoặc giáo cũ sang gậy trúc. Vật dụng đặc trưng của cả năm (lư hương, túi đất, cối đồng, cân đồng, sáo) chỉ vẽ trên thân.
+> Cả năm khớp bảng 3.2. Vũ khí khác nhau và **không món nào do biến vật dụng thành vũ khí**: Hà Vân và Mai Thanh giữ hình cổ điển (ít việc nhất); Lê Thạch giữ giáo (chỉ vẽ lại ảnh và cắt lại lớp); Tô Kim đổi hình quạt; Phùng Phong đổi vũ khí từ cờ lệnh hoặc giáo cũ sang gậy trúc. Vật dụng đặc trưng của cả năm (lư hương, túi đất, cối đồng, cân đồng, sáo) chỉ vẽ trên thân.
 
 ## 6. Quy trình sản xuất mỗi nhân vật
 
