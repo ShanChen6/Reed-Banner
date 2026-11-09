@@ -277,46 +277,47 @@ export function partsOf(rig: Rig): readonly string[] {
 }
 
 /**
- * Vi Lam (tên cũ Đào Lam), pháp sư hệ Thủy (tướng cửa hàng). Bộ tranh Shan gửi 26/10 (nền trong suốt sẵn) thay bản thử Đ0 tách bằng
- * live2dlayer. Ảnh đứng tách lớp bằng code: trượng cầu nước cùng nắm tay xoay quanh cổ tay, cầu nước sáng riêng; bàn
- * tay buông và đầu tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ * Vi Lam (tên cũ Đào Lam), pháp sư hệ Thủy (tướng cửa hàng). Bộ tranh phong cách mới Shan gửi 10/11 (nền trong suốt
+ * sẵn), thay bộ 26/10: áo lam viền hoa văn sao, dải lụa xanh buộc tóc, trượng gỗ cầu đá lam. Ảnh đứng (976×1612, giữ
+ * nguyên khổ) tách lớp bằng code: trượng cùng nắm tay xoay quanh cổ tay, cầu đá sáng riêng; bàn tay buông và đầu tách
+ * riêng, lòng ống tay sau cổ tay vá bằng khuếch tán màu. Tranh đứng ngắm lòng bàn tay làm tranh phong thái.
  */
 const DAO_LAM: WarriorRig = {
   skeleton: "warrior",
   weapon: "staff",
   dir: "dao-lam",
   texScale: 0.5,
-  foot: { x: 560, y: 1510 },
-  height: 1500,
+  foot: { x: 500, y: 1595 },
+  height: 1590,
   parts: {
-    body: { x: 63, y: 6, w: 923, h: 1521 },
-    armR: { x: 785, y: 640, w: 54, h: 116 },
-    sword: { x: 162, y: 346, w: 159, h: 390 },
-    arm: { x: 232, y: 545, w: 74, h: 81 },
-    head: { x: 490, y: 40, w: 151, h: 201 },
+    body: { x: 232, y: 0, w: 586, h: 1606 },
+    armR: { x: 740, y: 715, w: 78, h: 108 },
+    sword: { x: 122, y: 360, w: 140, h: 420 },
+    arm: { x: 172, y: 585, w: 88, h: 88 },
+    head: { x: 330, y: 0, w: 286, h: 258 },
   },
   cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 270, y: 590 },
-    elbowR: { x: 800, y: 660 },
-    neck: { x: 560, y: 235 },
+    shoulder: { x: 215, y: 630 },
+    elbowR: { x: 765, y: 725 },
+    neck: { x: 505, y: 245 },
   },
-  blade: [{ x: 255, y: 580 }, { x: 200, y: 385 }],
-  orb: { x: 200, y: 385 },
+  blade: [{ x: 215, y: 630 }, { x: 155, y: 385 }],
+  orb: { x: 155, y: 385 },
   strikeFx: "waterPillar",
   fxColor: 0x2f7fc1,
-  // Hạ trượng chĩa cầu nước tới (đánh thường), giơ trượng xòe tay (ra chiêu), thế tấn đẩy chưởng kéo trượng ngang (tuyệt chiêu).
+  // Hai tay cầm trượng chĩa cầu đá tới (đánh thường), dựng trượng xòe tay (ra chiêu), thế tấn đẩy chưởng kéo trượng ngang (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 20, y: 9 },
-      anchor: { x: 630, y: 1515 }, scale: 1, burst: { x: 940, y: 605 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 17, y: 9 },
-      anchor: { x: 630, y: 1515 }, scale: 1, burst: { x: 845, y: 300 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 6, y: 61 },
-      anchor: { x: 560, y: 1425 }, scale: 1.05, burst: { x: 965, y: 365 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 153, y: 0 },
+      anchor: { x: 510, y: 1535 }, scale: 1, burst: { x: 920, y: 590 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 105, y: 0 },
+      anchor: { x: 580, y: 1530 }, scale: 1, burst: { x: 830, y: 260 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 3, y: 0 },
+      anchor: { x: 560, y: 1440 }, scale: 1, burst: { x: 1010, y: 300 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 6, y: 45 },
-    anchor: { x: 800, y: 900 }, scale: 0.85 },
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 4, y: 8 },
+    anchor: { x: 760, y: 900 }, scale: 1 },
 };
 
 /**
