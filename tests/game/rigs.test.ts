@@ -1232,16 +1232,17 @@ test("Hứa Lăng có bốn tranh, phong đao hệ Phong, khăn bay theo gió v�
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Liễu Yên có bốn tranh, cuồng lưu hệ Phong, cầu ngọc ở đầu trượng và texture khớp tọa độ", () => {
+test("Liễu Yên có bốn tranh, cuồng lưu hệ Phong, bàn tay giơ xoay quanh khuỷu và texture khớp tọa độ", () => {
   const rig = rigOf("lieuYen");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "staff");
+  assert.equal(rig.weapon, "fan");
   assert.equal(rig.strikeFx, "galeVortex");
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
     assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
-  contains(rig.orb!, rig.parts.sword);
+  for (const p of rig.blade) contains(p, rig.parts.sword);
+  contains(rig.joints.shoulder, rig.parts.sword);
   contains(rig.joints.shoulder, rig.parts.arm);
   contains(rig.joints.elbowR, rig.parts.armR);
   contains(rig.joints.neck, rig.parts.head);
