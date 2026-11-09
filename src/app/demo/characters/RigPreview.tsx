@@ -30,12 +30,6 @@ const STATUSES = [
   { kind: "silence", label: "Câm lặng" },
   { kind: "taunt", label: "Khiêu khích" },
   { kind: "tauntMark", label: "Bị khiêu khích" },
-  { kind: "atkUp", label: "Công+" },
-  { kind: "atkDown", label: "Công−" },
-  { kind: "defUp", label: "Thủ+" },
-  { kind: "defDown", label: "Thủ−" },
-  { kind: "regen", label: "Hồi máu" },
-  { kind: "shield", label: "Khiên" },
   { kind: "reflect", label: "Phản đòn" },
 ] as const;
 type StatusToggle = (typeof STATUSES)[number]["kind"];

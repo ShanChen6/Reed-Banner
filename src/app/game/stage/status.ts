@@ -4,17 +4,16 @@
  * - Thiêu đốt: lưỡi lửa liếm quanh người, tàn lửa bay lên, người hắt ánh cam.
  * - Trúng độc: làn khí xanh dưới chân, bọt độc sủi lên rồi vỡ, giọt độc nhỏ xuống.
  * - Đóng băng: tinh thể băng bọc chân, người phủ sương lam, lấp lánh tuyết.
- * - Câm lặng: vòng xích bạc quanh đầu, ấn ổ khóa trên đầu.
- * - Khiêu khích: người khiêu khích có vòng hồng tâm đỏ dưới chân; phe địch của họ có ấn mũi tên đỏ chỉ về phía người đó.
- * - Tăng/giảm Công, Thủ: ấn kiếm/khiên kèm mũi tên lên (sáng ấm) hoặc xuống (tím sẫm) trên đầu, hạt sáng bay lên khi
- *   tăng, rơi xuống khi giảm.
- * - Hồi máu: lá xanh và đốm sáng bay lên; Khiên: vòm sáng vàng bao quanh; Phản đòn: gai bạc lấp lánh xoay quanh.
- * Ánh sáng, khói là texture mờ biên (soft.ts); ấn trên đầu dùng badge.ts.
+ * - Câm lặng: lá bùa phong ấn dán trước ngực, tia năng lượng quanh vai lóe lên rồi tắt thành khói.
+ * - Khiêu khích: người khiêu khích có vòng hồng tâm đỏ dưới chân; phe địch của họ nổi gân giận đỏ cạnh đầu, bốc hơi đỏ
+ *   và có luồng chấm đỏ kéo về phía người khiêu khích.
+ * - Phản đòn: gai bạc lấp lánh xoay quanh thân.
+ * Được khiên, tăng/giảm chỉ số, hồi máu đã có hiệu ứng lúc nhận (kit.ts) nên không vẽ thêm ở đây.
+ * Ánh sáng, khói là texture mờ biên (soft.ts).
  */
 import { Container, Graphics } from "pixi.js";
 import type { EffectKind } from "@/core/battle/effects";
 import type { Point } from "./rigs";
-import { badgeLayer } from "./badge";
 import { softLayer, softTongue } from "./soft";
 
 export interface StatusTarget {
@@ -35,59 +34,51 @@ const POISON_DARK = 0x2f6b1f;
 const ICE = 0xbfe6ff;
 const ICE_DARK = 0x6fb2e6;
 const TAUNT = 0xe0482c;
-const UP = 0xffb347;
-const DOWN = 0x9a6bd6;
-const REGEN = 0x6fdc8c;
-const SHIELD = 0xffd36b;
 const SILVER = 0xe4e9f0;
+
+/** Lá bùa phong ấn: giấy vàng, viền đậm, nét chữ son dọc, ấn tròn son ở đáy; treo ở mép trên tâm (x, y), nghiêng `ang`. */
+export function paper(g: Graphics, x: number, y: number, w: number, h: number, ang: number, a: number) {
+  if (a <= 0.01) return;
+  const c = Math.cos(ang);
+  const s = Math.sin(ang);
+  const P = (u: number, v: number) => [x + u * c - v * s, y + u * s + v * c] as const;
+  const box = [...P(-w / 2, 0), ...P(w / 2, 0), ...P(w / 2, h), ...P(-w / 2, h)];
+  g.poly([...P(-w / 2 + w * 0.08, h * 0.04), ...P(w / 2 + w * 0.08, h * 0.04), ...P(w / 2 + w * 0.08, h * 1.04), ...P(-w / 2 + w * 0.08, h * 1.04)]).fill({ color: 0x000000, alpha: 0.3 * a });
+  g.poly(box).fill({ color: 0xf2d77a, alpha: a });
+  g.poly(box).stroke({ color: 0xa8812c, width: w * 0.06, alpha: a, join: "round" });
+  const ink = { color: 0xb3261e, width: w * 0.1, alpha: a, cap: "round" as const, join: "round" as const };
+  g.moveTo(...P(0, h * 0.1)).lineTo(...P(0, h * 0.62)).stroke(ink);
+  g.moveTo(...P(-w * 0.26, h * 0.2)).lineTo(...P(w * 0.26, h * 0.2)).stroke(ink);
+  g.moveTo(...P(-w * 0.22, h * 0.34)).lineTo(...P(w * 0.2, h * 0.42)).stroke(ink);
+  g.moveTo(...P(-w * 0.24, h * 0.52)).lineTo(...P(-w * 0.05, h * 0.46)).lineTo(...P(w * 0.24, h * 0.56)).stroke(ink);
+  g.circle(...P(0, h * 0.8), w * 0.24).stroke({ color: 0xb3261e, width: w * 0.08, alpha: a });
+  g.circle(...P(0, h * 0.8), w * 0.08).fill({ color: 0xb3261e, alpha: a });
+}
+
+/** Dấu nổi gân giận: bốn nét cong đỏ quay lưng vào nhau. */
+export function vein(g: Graphics, x: number, y: number, r: number, a: number) {
+  if (a <= 0.01) return;
+  for (let i = 0; i < 4; i++) {
+    const q = (i * Math.PI) / 2;
+    const cx = x + Math.cos(q) * r * 0.95;
+    const cy = y + Math.sin(q) * r * 0.95;
+    const t = q + Math.PI / 2;
+    const ax = cx + Math.cos(t) * r * 0.5;
+    const ay = cy + Math.sin(t) * r * 0.5;
+    const bx = cx - Math.cos(t) * r * 0.5;
+    const by = cy - Math.sin(t) * r * 0.5;
+    g.moveTo(ax, ay).quadraticCurveTo(x + Math.cos(q) * r * 0.25, y + Math.sin(q) * r * 0.25, bx, by)
+      .stroke({ color: 0x5a0d06, width: r * 0.42, alpha: a, cap: "round" });
+    g.moveTo(ax, ay).quadraticCurveTo(x + Math.cos(q) * r * 0.25, y + Math.sin(q) * r * 0.25, bx, by)
+      .stroke({ color: 0xff4a2e, width: r * 0.26, alpha: a, cap: "round" });
+  }
+}
 
 /** Hàm băm nhỏ cho số giả ngẫu nhiên ổn định theo chỉ số. */
 const rnd = (n: number) => {
   const s = Math.sin(n * 127.1 + 311.7) * 43758.5453;
   return s - Math.floor(s);
 };
-
-/** Mũi tên lên (dir -1) hoặc xuống (dir 1) nét tròn đầu. */
-function arrow(g: Graphics, x: number, y: number, r: number, dir: number, color: number, a: number) {
-  g.moveTo(x, y - dir * r).lineTo(x, y + dir * r).stroke({ color, width: r * 0.42, alpha: a, cap: "round" });
-  g.moveTo(x - r * 0.75, y - dir * r * 0.2).lineTo(x, y + dir * r * 0.75 + dir * r * 0.15).lineTo(x + r * 0.75, y - dir * r * 0.2)
-    .stroke({ color, width: r * 0.42, alpha: a, cap: "round", join: "round" });
-}
-
-/** Kiếm đứng nhỏ. */
-function sword(g: Graphics, x: number, y: number, r: number, a: number) {
-  g.poly([x, y - r, x + r * 0.16, y - r * 0.75, x + r * 0.13, y + r * 0.35, x - r * 0.13, y + r * 0.35, x - r * 0.16, y - r * 0.75]).fill({ color: 0xf2f4f7, alpha: a });
-  g.moveTo(x - r * 0.42, y + r * 0.4).lineTo(x + r * 0.42, y + r * 0.4).stroke({ color: 0xf2c44f, width: r * 0.16, alpha: a, cap: "round" });
-  g.moveTo(x, y + r * 0.45).lineTo(x, y + r * 0.85).stroke({ color: 0xc9a25a, width: r * 0.17, alpha: a, cap: "round" });
-}
-
-/** Khiên nhỏ; `cracked` vẽ vết nứt. */
-function shield(g: Graphics, x: number, y: number, r: number, a: number, cracked: boolean) {
-  const pts = [x - r * 0.7, y - r * 0.75, x + r * 0.7, y - r * 0.75, x + r * 0.66, y + r * 0.05, x, y + r * 0.85, x - r * 0.66, y + r * 0.05];
-  g.poly(pts).fill({ color: 0xf2f4f7, alpha: a });
-  g.poly(pts).stroke({ color: 0x5b6b80, width: r * 0.1, alpha: a, join: "round" });
-  if (cracked)
-    g.moveTo(x - r * 0.1, y - r * 0.75).lineTo(x + r * 0.12, y - r * 0.3).lineTo(x - r * 0.12, y + r * 0.05).lineTo(x + r * 0.08, y + r * 0.5)
-      .stroke({ color: 0x1a1210, width: r * 0.12, alpha: a, cap: "round", join: "round" });
-}
-
-/** Ổ khóa. */
-function lock(g: Graphics, x: number, y: number, r: number, a: number) {
-  g.moveTo(x - r * 0.3, y - r * 0.05).lineTo(x - r * 0.3, y - r * 0.3).arc(x, y - r * 0.3, r * 0.3, Math.PI, 0).lineTo(x + r * 0.3, y - r * 0.05)
-    .stroke({ color: SILVER, width: r * 0.13, alpha: a, cap: "round" });
-  g.roundRect(x - r * 0.45, y - r * 0.08, r * 0.9, r * 0.62, r * 0.1).fill({ color: SILVER, alpha: a });
-  g.circle(x, y + r * 0.15, r * 0.09).fill({ color: 0x1a1210, alpha: a });
-  g.rect(x - r * 0.035, y + r * 0.18, r * 0.07, r * 0.18).fill({ color: 0x1a1210, alpha: a });
-}
-
-/** Hai mũi nhọn lồng nhau chỉ theo `dir` (1 sang phải, -1 sang trái). */
-function chevrons(g: Graphics, x: number, y: number, r: number, dir: number, a: number) {
-  for (const k of [-0.32, 0.22]) {
-    const cx = x + dir * r * k;
-    g.poly([cx - dir * r * 0.28, y - r * 0.5, cx + dir * r * 0.4, y, cx - dir * r * 0.28, y + r * 0.5], false)
-      .stroke({ color: 0xffe2bd, width: r * 0.17, alpha: a, cap: "round", join: "round" });
-  }
-}
 
 /** Mảnh tinh thể băng gốc ở (x, y) cao h, rộng 2w, nghiêng `ang`. */
 function crystal(g: Graphics, x: number, y: number, w: number, h: number, ang: number, a: number) {
@@ -106,7 +97,6 @@ export function statusLayer(back: Container, front: Container) {
   const g = new Graphics();
   front.addChild(g);
   const glow = softLayer(front);
-  const badges = badgeLayer(front);
   /** Độ hiện (0..1) và tuổi (giây) của từng trạng thái trên từng người. */
   const seen = new Map<string, { a: number; age: number }>();
   let t = 0;
@@ -117,7 +107,6 @@ export function statusLayer(back: Container, front: Container) {
       behind.begin();
       haze.begin();
       glow.begin();
-      badges.begin();
       g.clear();
       const live = new Set<string>();
       for (const tg of targets) {
@@ -141,18 +130,6 @@ export function statusLayer(back: Container, front: Container) {
         const seed = tg.key.length * 7 + tg.key.charCodeAt(tg.key.length - 1);
         const A = (k: string) => seen.get(`${tg.key}|${k}`)?.a ?? 0;
         const age = (k: string) => seen.get(`${tg.key}|${k}`)?.age ?? 0;
-        const icons: { k: string; icon: (m: Graphics, cx: number, cy: number, r: number, a: number) => void; color: number }[] = [];
-
-        // Khiên: vòm sáng vàng mờ bao quanh người, viền lấp lánh chạy vòng.
-        const sh = A("shield");
-        if (sh > 0) {
-          behind.glow({ x, y: y - z * 0.5, w: z * 0.75, h: z * 1.15, color: SHIELD, alpha: 0.3 * sh });
-          g.ellipse(x, y - z * 0.5, z * 0.33, z * 0.56).stroke({ color: SHIELD, width: z * 0.006, alpha: 0.55 * sh });
-          for (let i = 0; i < 3; i++) {
-            const ang = t * 1.6 + (i / 3) * Math.PI * 2;
-            glow.glow({ x: x + Math.cos(ang) * z * 0.33, y: y - z * 0.5 + Math.sin(ang) * z * 0.56, w: z * 0.06, color: 0xfff1c4, alpha: 0.8 * sh });
-          }
-        }
 
         // Khiêu khích (người khiêu khích): vòng hồng tâm đỏ dưới chân, đập theo nhịp, quầng đỏ sau lưng.
         const ta = A("taunt");
@@ -221,24 +198,6 @@ export function statusLayer(back: Container, front: Container) {
           }
         }
 
-        // Hồi máu: lá xanh và đốm sáng bay lên quanh người.
-        const re = A("regen");
-        if (re > 0) {
-          for (let i = 0; i < 8; i++) {
-            const q = (t * 0.45 + rnd(seed + i * 11)) % 1;
-            const lx = x + (rnd(seed + i * 4) - 0.5) * z * 0.42 + Math.sin(t * 2 + i) * z * 0.03;
-            const ly = y - z * (0.1 + 0.8 * q);
-            const a = re * Math.sin(Math.PI * q);
-            const rot = t * 2 + i;
-            const L = z * 0.042;
-            const c = Math.cos(rot);
-            const s = Math.sin(rot);
-            g.moveTo(lx - c * L, ly - s * L).quadraticCurveTo(lx - s * L * 0.6, ly + c * L * 0.6, lx + c * L, ly + s * L)
-              .quadraticCurveTo(lx + s * L * 0.6, ly - c * L * 0.6, lx - c * L, ly - s * L).fill({ color: REGEN, alpha: 0.9 * a });
-            glow.glow({ x: lx, y: ly, w: z * 0.1, color: REGEN, alpha: 0.6 * a });
-          }
-        }
-
         // Phản đòn: gai bạc lấp lánh xoay quanh thân.
         const rf = A("reflect");
         if (rf > 0) {
@@ -254,72 +213,60 @@ export function statusLayer(back: Container, front: Container) {
           }
         }
 
-        // Câm lặng: vòng xích bạc xoay quanh đầu, nửa sau mờ.
+        // Câm lặng: lá bùa phong ấn vàng chữ son dán trước ngực, đung đưa nhẹ; quanh vai tia năng lượng lóe lên rồi tắt
+        // thành khói xám (muốn ra chiêu mà không được).
         const si = A("silence");
         if (si > 0) {
-          const hy = y - z * 0.86;
-          const rx = z * 0.18;
-          const ry = rx * 0.3;
-          const lw = z * 0.022;
-          for (let n = 0; n < 16; n++) {
-            const ang = (n / 16) * Math.PI * 2 + t * 1.1;
-            const lx = x + Math.cos(ang) * rx;
-            const ly = hy + Math.sin(ang) * ry;
-            const al = si * (Math.sin(ang) < 0 ? 0.4 : 1);
-            const tilt = Math.atan2(Math.cos(ang) * ry, -Math.sin(ang) * rx);
-            const len = n % 2 ? lw * 1.2 : lw * 0.6;
-            g.moveTo(lx - Math.cos(tilt) * len, ly - Math.sin(tilt) * len).lineTo(lx + Math.cos(tilt) * len, ly + Math.sin(tilt) * len)
-              .stroke({ color: n % 2 ? 0xe9eef5 : 0x9aa6b4, width: n % 2 ? lw * 0.7 : lw * 0.9, alpha: al, cap: "round" });
+          const k = Math.min(1, age("silence") / 0.3);
+          const stick = 1 + 0.25 * (1 - k) ** 2;
+          behind.glow({ x, y: y - z * 0.55, w: z * 0.6, h: z * 1.0, color: 0x6c7586, alpha: 0.35 * si });
+          for (let i = 0; i < 6; i++) {
+            const q = (t * 0.8 + rnd(seed + i * 13)) % 1;
+            const sx = x + (rnd(seed + i * 3) - 0.5) * z * 0.44;
+            const sy = y - z * (0.62 + 0.25 * q);
+            if (q < 0.45) glow.glow({ x: sx, y: sy, w: z * 0.035 * (1 - q), color: 0x8fd8ff, alpha: si * (1 - q / 0.45) });
+            else haze.glow({ x: sx, y: sy, w: z * 0.06 * q, color: 0x55595f, alpha: 0.5 * si * (1 - q) });
           }
-          glow.glow({ x, y: hy, w: rx * 2.8, h: ry * 4, color: 0xcfe0ff, alpha: 0.3 * si });
-          icons.push({ k: "silence", color: 0xb8c4d4, icon: lock });
+          paper(g, x, y - z * 0.66, z * 0.085 * stick, z * 0.25 * stick, Math.sin(t * 2.2 + seed) * 0.08 + 0.12, si * k);
         }
 
-        // Ấn chỉ số và khiêu khích trên đầu; hạt sáng bay lên khi tăng, rơi khi giảm.
-        const stat = (k: EffectKind, up: boolean, draw: (m: Graphics, cx: number, cy: number, r: number, a: number) => void) => {
-          const a = A(k);
-          if (a <= 0) return;
-          icons.push({
-            k,
-            color: up ? UP : DOWN,
-            icon: (m, cx, cy, r, al) => {
-              draw(m, cx - r * 0.2, cy, r * 0.62, al);
-              arrow(m, cx + r * 0.45, cy, r * 0.32, up ? -1 : 1, up ? 0xffe0a0 : 0xd8c2ff, al);
-            },
-          });
-          for (let i = 0; i < 3; i++) {
-            const q = (t * 0.6 + i / 3 + rnd(seed + k.length)) % 1;
-            const px = x + (rnd(seed + i * 9 + k.length) - 0.5) * z * 0.4;
-            const py = up ? y - z * (0.1 + 0.8 * q) : y - z * (0.9 - 0.8 * q);
-            glow.glow({ x: px, y: py, w: z * 0.035, h: z * 0.075, color: up ? UP : DOWN, alpha: 0.8 * a * Math.sin(Math.PI * q) });
-          }
-        };
-        stat("atkUp", true, sword);
-        stat("atkDown", false, sword);
-        stat("defUp", true, (m, cx, cy, r, a) => shield(m, cx, cy, r, a, false));
-        stat("defDown", false, (m, cx, cy, r, a) => shield(m, cx, cy, r, a, true));
-        if (tg.taunter) {
+        // Bị khiêu khích: dấu nổi gân giận đỏ cạnh đầu đập theo nhịp, hơi giận đỏ bốc lên, luồng chấm đỏ kéo về người
+        // khiêu khích (buộc phải đánh người đó).
+        const tm = A("tauntMark");
+        if (tm > 0 && tg.taunter) {
           const dir = Math.sign(tg.taunter.x - x) || 1;
-          icons.unshift({ k: "tauntMark", color: TAUNT, icon: (m, cx, cy, r, a) => chevrons(m, cx, cy, r, dir, a) });
+          const k = Math.min(1, age("tauntMark") / 0.25);
+          const beat = (1 + 0.15 * Math.max(0, Math.sin(t * 9))) * (1 + 0.6 * (1 - k) ** 2);
+          for (let i = 0; i < 5; i++) {
+            const q = (t * 0.9 + i / 5) % 1;
+            glow.glow({ x: x + (i - 2) * z * 0.07 + Math.sin(t * 4 + i) * z * 0.02, y: y - z * (0.6 + 0.45 * q), w: z * 0.08 * (0.6 + q), h: z * 0.12, color: TAUNT, alpha: 0.4 * tm * Math.sin(Math.PI * q) });
+          }
+          behind.glow({ x, y: y - z * 0.5, w: z * 0.55, h: z * 1.0, color: TAUNT, alpha: 0.25 * tm });
+          const vx = x + dir * z * 0.13;
+          const vy = y - z * 0.98;
+          glow.glow({ x: vx, y: vy, w: z * 0.16 * beat, color: TAUNT, alpha: 0.6 * tm });
+          vein(g, vx, vy, z * 0.045 * beat, tm * k);
+          const sx = x;
+          const sy = y - z * 0.55;
+          const ex = tg.taunter.x;
+          const ey = tg.taunter.y - z * 0.55;
+          for (let n = 0; n < 10; n++) {
+            const q = (t * 0.7 + n / 10) % 1;
+            const px = sx + (ex - sx) * q;
+            const py = sy + (ey - sy) * q - Math.sin(Math.PI * q) * z * 0.12;
+            glow.glow({ x: px, y: py, w: z * 0.035, color: n % 2 ? TAUNT : 0xffb08a, alpha: 0.7 * tm * Math.sin(Math.PI * q) });
+          }
         }
-
-        const r = z * 0.065;
-        icons.forEach((ic, n) => {
-          const cx = x + (n - (icons.length - 1) / 2) * r * 2.7;
-          badges.draw({ x: cx, y: y - z * 1.06, r, t: age(ic.k), alpha: A(ic.k), color: ic.color, icon: ic.icon });
-        });
       }
       behind.end();
       haze.end();
       glow.end();
-      badges.end();
     },
     clear() {
       seen.clear();
       behind.clear();
       haze.clear();
       glow.clear();
-      badges.clear();
       g.clear();
     },
   };
