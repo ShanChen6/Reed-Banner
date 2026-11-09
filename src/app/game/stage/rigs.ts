@@ -1298,50 +1298,48 @@ const CHU_NGAN: WarriorRig = {
 };
 
 /**
- * Cao Kiên, binh lính hệ Kim (tướng cửa hàng). Bộ tranh Shan gửi 25/10 (ảnh đứng, ra chiêu, đánh thường nền trong
- * suốt sẵn; tuyệt chiêu và tranh gục có nền ca-rô vẽ sẵn, tách bằng code). Tranh đánh thường vẽ mũi giáo chĩa sang
- * trái nên được lật ngang cho đâm về phía đối thủ. Ảnh đứng tách lớp như Nguyễn Khoan: giáo cùng nắm tay xoay quanh
- * cổ tay, khiên mây nâng lên khi vào thế và đỡ đòn, đầu và dải khăn tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ * Cao Kiên, binh lính hệ Kim (tướng cửa hàng). Bộ tranh phong cách mới Shan gửi 10/11 (nền trong suốt sẵn), thay bộ 25/10:
+ * giáp vảy da đinh bạc, dây thừng chéo vai buộc túi vải, khiên mây đinh đồng. Ảnh đứng 1024×1536 tách lớp bằng code:
+ * giáo dựng cùng nắm tay xoay quanh cổ tay (cổ tay sau cán vá bằng nội suy ngang), khiên mây nâng lên khi vào thế và đỡ
+ * đòn (phần giáp sau khiên vá bằng mảnh giáp bên cạnh), đầu tách riêng. Shan gửi ba tranh động tác nên tranh núp khiên
+ * chĩa giáo thấp dùng cho cả ra chiêu và tuyệt chiêu; tranh ngồi lau giáo làm phong thái.
  */
 const CAO_KIEN: WarriorRig = {
   skeleton: "warrior",
   weapon: "spear",
   dir: "cao-kien",
   texScale: 0.5,
-  foot: { x: 560, y: 1470 },
-  height: 1330,
+  foot: { x: 560, y: 1485 },
+  height: 1260,
   parts: {
-    body: { x: 63, y: 144, w: 906, h: 1377 },
-    armR: { x: 681, y: 538, w: 327, h: 538 },
-    sword: { x: 47, y: 9, w: 216, h: 1466 },
-    arm: { x: 92, y: 868, w: 108, h: 153 },
-    head: { x: 405, y: 144, w: 177, h: 212 },
+    body: { x: 139, y: 226, w: 754, h: 1264 },
+    armR: { x: 621, y: 500, w: 272, h: 366 },
+    sword: { x: 137, y: 12, w: 78, h: 1474 },
+    arm: { x: 133, y: 438, w: 84, h: 96 },
+    head: { x: 430, y: 226, w: 174, h: 172 },
   },
-  cloth: [
-    { name: "ribbon", box: { x: 330, y: 227, w: 101, h: 139 }, behind: true,
-      wind: { axis: "x", start: 0.15, amp: 6, freq: 1.6, k: 3, phase: 0.2, vertical: true, reverse: true } },
-  ],
+  cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 145, y: 945 },
-    elbowR: { x: 700, y: 700 },
-    neck: { x: 535, y: 352 },
+    shoulder: { x: 175, y: 500 },
+    elbowR: { x: 700, y: 690 },
+    neck: { x: 520, y: 385 },
   },
-  blade: [{ x: 150, y: 940 }, { x: 210, y: 15 }],
+  blade: [{ x: 175, y: 500 }, { x: 175, y: 20 }],
   shieldRaise: -0.35,
   strikeFx: "steelBulwark",
   fxColor: 0x9ea4ad,
-  // Đâm giáo (đánh thường), giơ khiên thế thủ (ra chiêu), núp sau khiên giáo chĩa thấp (tuyệt chiêu).
+  // Đâm giáo thẳng (đánh thường), núp sau khiên giáo chĩa thấp (ra chiêu và tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 14, y: 17 },
-      anchor: { x: 656, y: 965 }, scale: 1.35, burst: { x: 1485, y: 179 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 177, y: 7 },
-      anchor: { x: 805, y: 1075 }, scale: 1.3, burst: { x: 1168, y: 405 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 28, y: 15 },
-      anchor: { x: 900, y: 970 }, scale: 1.35, burst: { x: 1271, y: 452 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 40, y: 10 },
+      anchor: { x: 620, y: 870 }, scale: 1.03, burst: { x: 1735, y: 245 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 13, y: 21 },
+      anchor: { x: 965, y: 925 }, scale: 1.05, burst: { x: 1400, y: 480 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 13, y: 21 },
+      anchor: { x: 965, y: 925 }, scale: 1.05, burst: { x: 1400, y: 480 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 25, y: 86 },
-    anchor: { x: 820, y: 880 }, scale: 0.9 },
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 60, y: 56 },
+    anchor: { x: 1000, y: 870 }, scale: 0.95 },
 };
 
 /**
