@@ -1338,10 +1338,10 @@ test("Bùi Phiêu có bốn tranh, phiêu phong hệ Phong, quạt lông phẩy 
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Phùng Phong có bốn tranh, phong vân hệ Phong, cờ lệnh theo nhịp giáo và texture khớp tọa độ", () => {
+test("Phùng Phong có bốn tranh, phong vân hệ Phong, gậy trúc xoay quanh cổ tay và texture khớp tọa độ", () => {
   const rig = rigOf("phungPhong");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "spear");
+  assert.equal(rig.weapon, "staff");
   assert.equal(rig.strikeFx, "galeRout");
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
