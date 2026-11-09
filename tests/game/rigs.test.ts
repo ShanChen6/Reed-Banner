@@ -503,7 +503,7 @@ test("Đàm Thảo có bốn tranh, dây gai hệ Mộc, cầu ngọc nằm trê
 test("Hoàng Mộc có bốn tranh, rễ già giữ thành hệ Mộc, khiên nâng được và texture khớp tọa độ", () => {
   const rig = rigOf("hoangMoc");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "spear");
+  assert.equal(rig.weapon, undefined);
   assert.equal(rig.strikeFx, "rootGuard");
   assert.ok((rig.shieldRaise ?? 0) < 0);
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
