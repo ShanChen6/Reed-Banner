@@ -264,7 +264,7 @@ Mỗi nghề 7 người, mỗi hệ một người. **Vũ khí** chọn trong 3.
 | Thủy | Thái Hà | mái chèo sắt và khiên tre (Chém) | lưới vắt vai |
 | Hỏa | Trương Viêm | đoản đao (Chém) | đuốc cài lưng |
 | Thổ | ★ Lê Thạch | **giáo** (mũi đồng hình lá) và khiên mây (Đâm) | túi vải đựng nắm đất |
-| Lôi | Ông Chấn | **lưu tinh chùy**, quả đá buộc dây (Chém) | trống da đeo lưng |
+| Lôi | Ông Chấn | **giáo mũi lá và khiên mây** (Đâm) | tù và sừng trâu đeo hông |
 | Phong | Mạnh Tường | giáo ngắn và lao phóng (Đâm) | cờ hiệu nhỏ |
 
 **Tướng sĩ**
