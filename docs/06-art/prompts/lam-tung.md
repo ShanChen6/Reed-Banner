@@ -1,7 +1,7 @@
 # Prompt bộ tranh Lâm Tùng (phong cách mới)
 
 > Cập nhật: 09/11/2026
-> Trạng thái: **DRAFT** — bộ prompt viết cho Lâm Tùng (Tướng sĩ, hệ Mộc) cầm côn tam khúc gỗ lim thu gọn thành gậy, giáp mây bện cánh sen, màu nhấn xanh lá; chưa có ảnh nào được tạo và gắn vào game.
+> Trạng thái: **APPROVED** — bộ prompt viết cho Lâm Tùng (Tướng sĩ, hệ Mộc) cầm côn tam khúc gỗ lim thu gọn thành gậy, giáp mây bện cánh sen, màu nhấn xanh lá; ảnh Shan gửi 09/11/2026 đã gắn vào game (xem mục 11).
 
 Căn cứ: hồ sơ Lâm Tùng trong `docs/03-characters/ho-so-37-tuong-thuong.md` (Tướng sĩ, hệ Mộc, ngoại hiệu Cô Tùng, khoảng 30 tuổi, lính Hồi Hồ theo về Hoa Lư, cậu của Hoàng Mộc) và các bài học từ sáu nhân vật trước: **prompt ngắn, khẳng định, mỗi tranh một khối, ảnh chuẩn làm khuôn, vật cầm đơn giản và khóa kích cỡ**.
 
@@ -141,3 +141,11 @@ Painting style: clean ink outlines, soft cel-like shading with simplified shadow
 ## 10. Quy cách gửi lại
 
 Gửi **PNG gốc**, tên `chuan`, `bust`, `style`, `attack`, `cast`, `ultimate`, `down`. Tôi sẽ cắt, co về đúng cỡ, thay vào `public/art/characters/lam-tung/`, chỉnh tọa độ trong `LAM_TUNG` (`rigs.ts`), đổi nhịp vũ khí từ kiếm sang trượng, tách lớp lại hình động đứng (gậy cùng nắm tay, bàn tay buông, đầu và dải khăn) và làm `portrait.webp`.
+
+## 11. Kết quả (09/11/2026)
+
+Shan gửi 7 ảnh: chuẩn, bust, ra đòn (ngang 1536×1024), ra chiêu, tuyệt chiêu, phong thái (ngồi gốc cây gài nhành tùng, côn đặt ngang đùi), gục (ngang 1536×1024). Nền trong suốt sẵn.
+
+- **Tranh tư thế:** cắt sát, co 0,4 lần (`pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down`); phong thái co 0,5 lần; `standing.webp` co 0,25 lần. Tọa độ mới trong `LAM_TUNG` (`rigs.ts`), vũ khí đổi sang `staff`. Điểm bắn: đầu côn đâm tới (ra đòn), đầu côn trên (ra chiêu), đầu côn giơ cao (tuyệt chiêu).
+- **Hình động đứng:** `sword` là côn, `arm` là nắm tay phải (cả hai xoay quanh cổ tay), `armR` là bàn tay trái buông, `head` là đầu kèm khăn. Phần ống tay và cánh tay sau côn được vá bằng nội suy hai bên. Lớp `ribbon` cũ đã bỏ.
+- **Chân dung:** `bust.webp` 384×384 (đã thêm `lamTung` vào `BUST_IDS`); `portrait.webp` 192×192. Tổng thư mục khoảng 260 KB.

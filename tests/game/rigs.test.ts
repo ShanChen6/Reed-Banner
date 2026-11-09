@@ -453,7 +453,7 @@ test("Nghiêm Thiết có tranh đánh thường, ra chiêu, tuyệt chiêu, b�
 test("Lâm Tùng có bốn tranh, trúc lâm hút sinh khí hệ Mộc, khớp nằm trong lớp và texture khớp tọa độ", () => {
   const rig = rigOf("lamTung");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, undefined);
+  assert.equal(rig.weapon, "staff");
   assert.equal(rig.strikeFx, "bambooSap");
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
