@@ -210,10 +210,10 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Ngoại hiệu:** Nhịp Quân (người giữ nhịp cho quân).
 - **Phe:** lính Phong Châu, theo về Hoa Lư. Họa tiết đỉnh núi.
 - **Tuổi, quê:** khoảng 41, vùng núi Phong Châu. Nam.
-- **Xuất thân:** lính trống, đánh nhịp tiến quân cho cả đội, tay quăng lưu tinh chùy khi cần. Ông theo về vì tin rằng đội quân mới cần nhịp mới.
+- **Xuất thân:** lính giữ nhịp tiến quân cho cả đội, thổi tù và ra hiệu khi cần, tay cầm giáo. Ông theo về vì tin rằng đội quân mới cần nhịp mới.
 - **Tính cách:** thô, thật thà, trọng nghĩa; nói to.
-- **Ba dấu ấn:** bụng rắn, tai to, tóc húi · áo da tím sẫm thêu đỉnh núi, màu nhấn tím · trống da đeo lưng.
-- **Vũ khí và nhịp:** **lưu tinh chùy** (quả đá buộc dây dài) · Chém.
+- **Ba dấu ấn:** bụng rắn, tai to, tóc húi · áo da tím sẫm thêu đỉnh núi, màu nhấn tím · tù và sừng trâu đeo hông (vật dụng, thổi ra hiệu, không đánh).
+- **Vũ khí và nhịp:** **giáo mũi lá và khiên mây** (giữ hình cổ điển; lưu tinh chùy bỏ ngày 09/11/2026 vì dây vung tròn khó vẽ ổn định) · Đâm.
 - **Quan hệ:** chưa chốt.
 - **Câu nói:** "Trống đánh đúng nhịp thì lính bước đúng đường."
 

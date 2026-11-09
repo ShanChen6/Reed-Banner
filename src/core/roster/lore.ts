@@ -160,7 +160,7 @@ export const CHARACTER_LORE: Readonly<Record<string, CharacterLore>> = {
     personality: "ồn ào, vui nhộn, thật bụng; thích kể chuyện tục.",
     quote: "Gác đêm thì phải biết cười, không thì lạnh." },
   ongChan: { epithet: "Nhịp Quân", epithetMeaning: "người giữ nhịp cho quân", faction: "kieuCongHan", factionNote: "Lính Phong Châu, theo về Hoa Lư", age: 41, hometown: "vùng núi Phong Châu",
-    backstory: "Lính trống, đánh nhịp tiến quân cho cả đội, tay quăng lưu tinh chùy khi cần. Ông theo về vì tin rằng đội quân mới cần nhịp mới.",
+    backstory: "Lính giữ nhịp tiến quân cho cả đội, thổi tù và ra hiệu khi cần, tay cầm giáo. Ông theo về vì tin rằng đội quân mới cần nhịp mới.",
     personality: "thô, thật thà, trọng nghĩa; nói to.",
     quote: "Trống đánh đúng nhịp thì lính bước đúng đường." },
   manhTuong: { epithet: "Truy Phong", epithetMeaning: "đuổi theo gió", faction: "ngoNhatKhanh", factionNote: "Lính Đường Lâm, theo về Hoa Lư", age: 25, hometown: "làng Đường Lâm",
