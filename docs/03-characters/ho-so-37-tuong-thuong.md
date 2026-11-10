@@ -212,7 +212,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Tuổi, quê:** khoảng 41, vùng núi Phong Châu. Nam.
 - **Xuất thân:** lính giữ nhịp tiến quân cho cả đội, đánh trống trận khi cần, tay cầm roi sắt. Ông theo về vì tin rằng đội quân mới cần nhịp mới.
 - **Tính cách:** thô, thật thà, trọng nghĩa; nói to.
-- **Ba dấu ấn:** ngực nở, cổ dày, bụng phẳng cứng (không bụng phệ), tai to, tóc húi, mặt dữ · áo da tím sẫm thêu đỉnh núi, màu nhấn tím · dùi trống cài thắt lưng (vật dụng; trống trận chỉ là đạo cụ nền của tranh phong thái, không phải vũ khí).
+- **Ba dấu ấn:** ngực nở, cổ dày, bụng phẳng cứng (không bụng phệ), tai to, tóc húi sát, râu ngắn muối tiêu dày, sẹo nhỏ ở lông mày trái, mặt dữ · áo da tím sẫm thêu đỉnh núi, màu nhấn tím · dùi trống cài thắt lưng (vật dụng; trống trận chỉ là đạo cụ nền của tranh phong thái, không phải vũ khí).
 - **Vũ khí và nhịp:** **tiên** (roi sắt đốt thót nhọn; lưu tinh chùy bỏ 09/11/2026 vì dây vung tròn khó vẽ, giáo đổi 10/11/2026 để bóng vũ khí riêng) · Chém.
 - **Quan hệ:** chưa chốt.
 - **Câu nói:** "Trống đánh đúng nhịp thì lính bước đúng đường."
