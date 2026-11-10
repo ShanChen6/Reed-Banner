@@ -276,7 +276,7 @@ Mỗi nghề 7 người, mỗi hệ một người. **Vũ khí** chọn trong 3.
 | Thủy | Hồ Lãng | đinh ba (Đâm) | lưới cuộn ở hông |
 | Hỏa | Lý Liệt | **đôi hộ thủ câu**, kiếm móc (Chém) | khăn đỏ buộc đầu |
 | Thổ | Kha Sơn | **rìu-giáo hai tay** (rìu bán nguyệt có mũi giáo trên đầu, Chém) | đai giáp đá |
-| Lôi | Tống Tấn | kích (Đâm) | chuông ngựa |
+| Lôi | Tống Tấn | trường kiếm (Chém; giữ theo tranh hiện tại, kích giao Trương Viêm) | chuông ngựa |
 | Phong | Hứa Lăng | kiếm mảnh (Chém) | dải lụa buộc tóc |
 
 Kiểm tra: không nghề nào có hai người trùng cả vũ khí lẫn vật dụng, và sau khi đổi **Lý Liệt sang hộ thủ câu, Xích Dạ (song đao) là người duy nhất dùng song đao**; hình cổ điển vẫn có ở mỗi nghề. Đây là **đề xuất ban đầu**, Shan đổi chỗ nào cũng được, miễn vũ khí vẫn nằm trong nhịp có sẵn.
