@@ -1004,7 +1004,7 @@ test("Mã Liên có bốn tranh, hồi phục hệ Thổ, bầu nậm xoay quanh
 test("Mã Nhạc bộ mới có bốn tranh, đoạn đạo tuyệt lương hệ Thổ, quạt cói phẩy theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("maNhac");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "fan");
+  assert.equal(rig.weapon, "gourd");
   assert.equal(rig.strikeFx, "roadSever");
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
