@@ -9,6 +9,7 @@ import { ElementIcon, ProfessionIcon } from "@/app/game/art/icons";
 import { Portrait } from "@/app/game/art/portraits";
 import { isActiveProfession, PROFESSION_DISPLAY_NAME } from "@/core";
 import { ELEMENT_NAME } from "@/app/game/battle/labels";
+import CharacterFilter, { matchesCharacterFilter, NO_CHARACTER_FILTER, type CharacterFilterValue } from "../_filter/CharacterFilter";
 import RigPreview from "./RigPreview";
 import type { CharacterPreview } from "./types";
 
@@ -93,10 +94,14 @@ function CharacterDetails({ character, size }: { character: CharacterPreview; si
 export default function CharacterPreviewer({ characters }: { characters: readonly CharacterPreview[] }) {
   const query = useSearchParams();
   const [size, setSize] = useState<"battle" | "large">("battle");
+  const [filter, setFilter] = useState<CharacterFilterValue>(NO_CHARACTER_FILTER);
   const character = characters.find((c) => c.id === query.get("id")) ?? characters.find((c) => c.id === "nguyenBac") ?? characters[0];
   if (!character) return <p>Chưa có nhân vật có hình động.</p>;
+  // Giữ nhân vật đang xem trong danh sách dù không khớp bộ lọc để ô chọn không nhảy sang người khác.
+  const options = characters.filter((c) => c.id === character.id || matchesCharacterFilter(c, filter));
   return (
     <div className="space-y-5">
+      <CharacterFilter value={filter} onChange={setFilter} shown={options.length - (matchesCharacterFilter(character, filter) ? 0 : 1)} total={characters.length} />
       <div className="flex flex-wrap items-end justify-between gap-3 rounded-xl border border-amber-900/70 bg-black/20 p-3">
         <label className="flex min-w-0 flex-col gap-1 text-sm font-medium">
           Nhân vật
@@ -105,7 +110,7 @@ export default function CharacterPreviewer({ characters }: { characters: readonl
             url.searchParams.set("id", event.target.value);
             window.history.pushState(null, "", `${url.pathname}${url.search}`);
           }} className="min-w-0">
-            {characters.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            {options.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </Select>
         </label>
         <div className="flex flex-wrap gap-2" role="group" aria-label="Kích cỡ hình động">
