@@ -320,7 +320,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Xuất thân:** ẩn sĩ câu cá ven sông, được dân hỏi ý kiến mỗi khi có chuyện. Ông ra giúp cờ lau khi một người học trò cũ tìm đến.
 - **Tính cách:** thong dong, hóm, nói bóng; câu cá để nghĩ.
 - **Ba dấu ấn:** râu dài bạc, nón rộng vành, mắt tinh · áo nâu lam thêu vân nước, màu nhấn lam · cần câu trúc dựng sau lưng.
-- **Vũ khí và nhịp:** **thước sắt dài** · Trượng.
+- **Vũ khí và nhịp:** **kiếm** (kiếm thẳng hai lưỡi, hộ vệ gọn, chuôi mảnh, theo ảnh Shan gửi 10/11/2026) · Chém. Đổi từ thước sắt vì không có ảnh chuẩn để vẽ.
 - **Quan hệ:** R10, thầy của Âu Thu (Hàn Giang Khách) (hai phe).
 - **Câu nói:** "Cá cắn lúc ta không vội, như thế sự."
 
