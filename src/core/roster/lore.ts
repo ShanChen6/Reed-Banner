@@ -128,7 +128,7 @@ export const CHARACTER_LORE: Readonly<Record<string, CharacterLore>> = {
     personality: "chậm, chắc, ít lời, tốt bụng; thích đứng nhìn núi.",
     quote: "Núi không lùi, ta cũng vậy." },
   tongTan: { epithet: "Nộ Lôi", epithetMeaning: "sấm giận", faction: "kieuCongHan", factionNote: "Lính Phong Châu, theo về Hoa Lư", age: 42, hometown: "ngã ba sông vùng Phong Châu",
-    backstory: "Lính kích lâu năm, dạy cả lớp trẻ cách giữ nhịp tiến quân. Anh theo về vì tin thế cục mới cần người dạy lính, không cần người chỉ chém.",
+    backstory: "Lính kiếm lâu năm, dạy cả lớp trẻ cách giữ nhịp tiến quân. Anh theo về vì tin thế cục mới cần người dạy lính, không cần người chỉ chém.",
     personality: "nóng nhưng giữ lời, nghiêm với học trò, hiền với trẻ con.",
     quote: "Sấm đã nổ thì không thu lại." },
   huaLang: { epithet: "Khinh Phong", epithetMeaning: "gió nhẹ, không chờ ai", faction: "ngoNhatKhanh", factionNote: "Lính Đường Lâm, theo về Hoa Lư", age: 28, hometown: "làng gốm nhà đá ong vùng Đường Lâm",

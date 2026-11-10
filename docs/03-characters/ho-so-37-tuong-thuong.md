@@ -70,10 +70,10 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Ngoại hiệu:** Nộ Lôi (sấm giận).
 - **Phe:** lính Phong Châu, theo về Hoa Lư. Họa tiết đỉnh núi và sét.
 - **Tuổi, quê:** khoảng 42, ngã ba sông vùng Phong Châu.
-- **Xuất thân:** lính kích lâu năm, dạy cả lớp trẻ cách giữ nhịp tiến quân. Anh theo về vì tin thế cục mới cần người dạy lính, không cần người chỉ chém.
+- **Xuất thân:** lính kiếm lâu năm, dạy cả lớp trẻ cách giữ nhịp tiến quân. Anh theo về vì tin thế cục mới cần người dạy lính, không cần người chỉ chém.
 - **Tính cách:** nóng nhưng giữ lời, nghiêm với học trò, hiền với trẻ con.
 - **Ba dấu ấn:** tóc búi, sẹo ở lông mày, mắt sắc · áo giáp tím sẫm thêu đỉnh núi và vân sét, màu nhấn tím · chuông ngựa treo ở đai.
-- **Vũ khí và nhịp:** **kích** · Đâm.
+- **Vũ khí và nhịp:** **trường kiếm** · Chém (giữ theo tranh hiện tại; kích đã giao cho Trương Viêm ngày 10/11/2026, nên Tống Tấn không dùng kích nữa).
 - **Quan hệ:** R13, thầy của Lương Triệt (Lôi Minh Xạ).
 - **Câu nói:** "Sấm đã nổ thì không thu lại."
 
