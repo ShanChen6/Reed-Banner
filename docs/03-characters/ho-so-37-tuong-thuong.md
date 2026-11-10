@@ -57,12 +57,12 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 
 ### Kha Sơn · Tướng sĩ · Thổ
 - **Ngoại hiệu:** Bất Thoái (núi không lùi).
-- **Phe:** lính Tam Đái, theo về Hoa Lư. Họa tiết ba dải.
+- **Phe:** lính Tam Đái, theo về Hoa Lư. Họa tiết ba dải (ba thanh ngang xếp tầng, hai đầu khuyết; **thêu vào áo vải** ở hai bắp tay và vạt trước áo, không đặt lên giáp).
 - **Tuổi, quê:** khoảng 40, chân núi Tam Đái.
 - **Xuất thân:** thợ đẽo đá chuyển sang cầm rìu trận, tay to như cái cối. Anh theo về khi em trai mình rời đồn; anh không nói nhiều, chỉ xách rìu đi theo.
 - **Tính cách:** chậm, chắc, ít lời, tốt bụng; thích đứng nhìn núi.
-- **Ba dấu ấn:** thân to, đầu cạo, râu thưa · giáp đá mài nhẵn thêu ba dải, màu nhấn nâu đất · đai giáp đá.
-- **Vũ khí và nhịp:** **rìu lớn hai tay** · Chém.
+- **Ba dấu ấn:** thân to (dày kiểu thợ đẽo đá, không lực sĩ), đầu cạo, râu thưa · áo vải nâu đất tay dài thêu biểu tượng ba dải, giáp đá mài nhẵn **đơn giản một mảnh** (lưới vảy rất nhỏ, viền đồng mỏng), màu nhấn nâu đất · đai giáp đá.
+- **Vũ khí và nhịp:** **rìu-giáo hai tay** (cán gỗ cao tới ngực, đầu rìu bán nguyệt có khuyết khắc vầng mặt trời và vài nét mây, mũi giáo lá dựng trên đầu rìu, mũi nhọn nón ở cuối cán; dựng ngày 10/11/2026 từ ảnh tham khảo, bỏ đầu rồng và vân dày cho đỡ cầu kỳ) · Chém.
 - **Quan hệ:** R3, anh của Kha Thạch (Trấn Sơn Thạch).
 - **Câu nói:** "Núi không lùi, ta cũng vậy."
 
