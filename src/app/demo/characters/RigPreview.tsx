@@ -22,6 +22,17 @@ const ACTIONS = [
   { kind: "victory", label: "Chiến thắng", ms: 2600 },
 ] as const;
 type Action = CueKind | "idle" | "ko";
+/** Trạng thái bật thử trên người nhân vật (hình hiện liên tục như trong trận). */
+const STATUSES = [
+  { kind: "burn", label: "Thiêu đốt" },
+  { kind: "poison", label: "Trúng độc" },
+  { kind: "freeze", label: "Đóng băng" },
+  { kind: "silence", label: "Câm lặng" },
+  { kind: "taunt", label: "Khiêu khích" },
+  { kind: "tauntMark", label: "Bị khiêu khích" },
+  { kind: "reflect", label: "Phản đòn" },
+] as const;
+type StatusToggle = (typeof STATUSES)[number]["kind"];
 const button = "rounded-lg border border-amber-800/70 bg-stone-900 px-3 py-2 text-sm font-medium hover:bg-amber-900/40 aria-pressed:border-amber-300 aria-pressed:bg-amber-900/60 disabled:opacity-40";
 
 export default function RigPreview({ id, size, onSnapshot }: {
@@ -37,6 +48,9 @@ export default function RigPreview({ id, size, onSnapshot }: {
   const [error, setError] = useState<string | null>(null);
   const [active, setActive] = useState<Action>("idle");
   const [running, setRunning] = useState(false);
+  const [statuses, setStatuses] = useState<readonly StatusToggle[]>([]);
+  const statusRef = useRef<readonly StatusToggle[]>([]);
+  useEffect(() => { statusRef.current = statuses; }, [statuses]);
 
   useEffect(() => {
     const el = host.current;
@@ -79,6 +93,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           import("@/app/game/stage/ripple"),
           import("@/app/game/stage/march"),
         ]);
+        const { statusLayer } = await import("@/app/game/stage/status");
         if (disposed) return;
         app = new Application();
         await app.init({
@@ -477,9 +492,25 @@ export default function RigPreview({ id, size, onSnapshot }: {
         if (gust) loaded.onStrike?.((kind, at) => {
           if (kind !== "ultimate") gust.bolt(at, { x: el.clientWidth - 12, y: el.clientHeight * 0.55 }, (el.dataset.size === "large" ? 5 : 3) * (kind === "cast" ? 1.4 : 1));
         });
+        // Trạng thái thử: lớp sau lưng và lớp trước mặt nhân vật.
+        const statusBack = new Container();
+        app.stage.addChildAt(statusBack, 0);
+        const statusFront = new Container();
+        app.stage.addChild(statusFront);
+        const status = statusLayer(statusBack, statusFront);
         app.ticker.add((tick) => {
           const dt = Math.min(tick.deltaMS / 1000, 0.05);
           loaded?.update(dt);
+          if (loaded) {
+            const on = statusRef.current;
+            status.update(dt, [{
+              key: "me",
+              at: { x: loaded.view.x, y: loaded.view.y },
+              size: rig.height * loaded.view.scale.y,
+              kinds: on.filter((k) => k !== "tauntMark"),
+              taunter: on.includes("tauntMark") ? { x: el.clientWidth, y: loaded.view.y } : null,
+            }]);
+          }
           mist?.forEach((m) => m.update(dt));
           tide?.update(dt);
           storm?.forEach((f) => f.update(dt));
@@ -588,6 +619,15 @@ export default function RigPreview({ id, size, onSnapshot }: {
           className={`${button} border-amber-500 text-amber-200`}>
           {running ? "Dừng phát" : "Phát lần lượt"}
         </button>
+      </div>
+      <div className="flex flex-wrap items-center gap-2 border-t border-amber-900/50 p-3">
+        <span className="text-sm text-stone-400">Trạng thái:</span>
+        {STATUSES.map((st) => (
+          <button key={st.kind} type="button" disabled={!ready || !!error} aria-pressed={statuses.includes(st.kind)} data-status={st.kind}
+            className={button} onClick={() => setStatuses((cur) => (cur.includes(st.kind) ? cur.filter((k) => k !== st.kind) : [...cur, st.kind]))}>
+            {st.label}
+          </button>
+        ))}
       </div>
     </section>
   );

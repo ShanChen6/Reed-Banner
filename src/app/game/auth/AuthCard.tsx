@@ -1,32 +1,41 @@
 import { Alert } from "@/components/ui";
-import { OrnateFrame } from "@/components/game-ui";
-// Khung chung của các phân cảnh LOGIN, REGISTER, ACCOUNT: một khung mức 2 ở giữa màn chơi (thanh trên do màn chơi lo).
+// Khung chung của các phân cảnh tài khoản (LOGIN, REGISTER, ACCOUNT, quên/đặt lại mật khẩu): thư cuộn giấy dó treo giữa màn chơi,
+// cùng phong cách thư cuộn liên hệ ở footer (Shan chọn 08/11/2026). Tờ giấy dùng `.ui-on-paper` nên ô nhập, nút, cảnh báo
+// tự đổi sang chữ mực trên giấy; tiêu đề viền kép như "Thư tín bốn phương", ấn đỏ "Cờ Lau" ở góc phải tiêu đề.
 
-import { DongSonBand } from "../art/icons";
+import { ParchmentScroll, ScrollSeal } from "../scroll/ParchmentScroll";
 import { OnArrival } from "./AuthLinks";
+import styles from "./AuthCard.module.css";
 
-export function AuthCard({ title, oauthError, children }: { title: string; oauthError?: boolean; children: React.ReactNode }) {
+export function AuthCard({
+  title,
+  subtitle,
+  oauthError,
+  children,
+}: {
+  title: string;
+  /** Một câu nghiêng dưới tiêu đề, như lời đề thư. */
+  subtitle?: string;
+  oauthError?: boolean;
+  children: React.ReactNode;
+}) {
   return (
-    <main className="ui-mode-screen flex items-center justify-center">
-      <OrnateFrame level="raised" flush className="w-full max-w-sm">
-        <div className="border-b border-frame-line-soft p-6 text-center">
-          <h1 className="ui-title-on-wood text-2xl font-bold">{title}</h1>
-          <DongSonBand className="mx-auto mt-3 w-32" />
-        </div>
-        <div className="p-6">
-          {oauthError && (
-            <OnArrival>
-              <Alert className="mb-4">
-                Đăng nhập không thành công, bạn thử lại nhé.
-              </Alert>
-            </OnArrival>
-          )}
-          {children}
-        </div>
-      </OrnateFrame>
+    <main className={`ui-mode-screen ${styles.screen}`}>
+      <ParchmentScroll className={styles.scroll} bodyClassName={`ui-on-paper ${styles.body}`}>
+        <header className={styles.head}>
+          <h1 className={styles.title}>{title}</h1>
+          {subtitle && <p className={styles.sub}>{subtitle}</p>}
+          <ScrollSeal className={styles.seal} />
+        </header>
+        {oauthError && (
+          <OnArrival>
+            <Alert className="mt-4">Đăng nhập không thành công, bạn thử lại nhé.</Alert>
+          </OnArrival>
+        )}
+        {children}
+      </ParchmentScroll>
     </main>
   );
 }
-
 
 export { Divider } from "@/components/ui";

@@ -1,12 +1,14 @@
 /**
  * Kim ngân ly tán vẽ trên cả sân (hệ tọa độ của stage PixiJS): tuyệt chiêu của mưu sĩ hệ Kim làm đồng tiền vàng
- * bật tung khỏi đối thủ (rút năng lượng), rồi ấn câm lặng hiện trên đầu họ và tan dần.
+ * bật tung khỏi đối thủ (rút năng lượng), lá bùa phong ấn bay tới dán lên ngực họ (câm lặng), rồi tan dần.
  */
 import { Container, Graphics } from "pixi.js";
 import type { Point } from "./rigs";
+import { paper } from "./status";
+import { softLayer } from "./soft";
 
 /** Thời lượng (giây). */
-const LIFE = 1.2;
+const LIFE = 1.5;
 
 interface Burst {
   /** Giữa thân đối thủ. */
@@ -19,6 +21,9 @@ interface Burst {
 export function coinScatter(parent: Container, color: number) {
   const g = new Graphics();
   parent.addChild(g);
+  const ring = new Graphics();
+  parent.addChild(ring);
+  const chainGlow = softLayer(parent);
   let bursts: Burst[] = [];
   return {
     /** Tung tiền khỏi người đứng ở `at` (giữa thân). */
@@ -32,6 +37,8 @@ export function coinScatter(parent: Container, color: number) {
     },
     update(dt: number) {
       g.clear();
+      ring.clear();
+      chainGlow.begin();
       for (const b of bursts) {
         b.t += dt;
         if (b.t >= LIFE) continue;
@@ -50,19 +57,25 @@ export function coinScatter(parent: Container, color: number) {
           g.ellipse(cx, cy, r * Math.max(0.15, flip), r).fill({ color: 0xffcf4a, alpha: fade }).stroke({ color: 0x8a6a1e, width: r * 0.25, alpha: fade });
           if (flip > 0.4) g.rect(cx - r * 0.25 * flip, cy - r * 0.25, r * 0.5 * flip, r * 0.5).fill({ color: 0x8a6a1e, alpha: fade });
         }
-        // Ấn câm lặng trên đầu: vòng tròn gạch chéo màu kim.
+        // Câm lặng: lá bùa phong ấn bay tới dán lên ngực đối thủ, chớp sáng lúc dán (khóa kỹ năng).
         if (b.t > 0.2) {
-          const k = Math.min(1, (b.t - 0.2) / 0.15);
-          const hy = y - s * 0.45;
-          const rr = s * 0.07 * k;
-          g.circle(x, hy, rr).stroke({ color, width: s * 0.012, alpha: fade });
-          g.moveTo(x - rr * 0.7, hy - rr * 0.7).lineTo(x + rr * 0.7, hy + rr * 0.7).stroke({ color, width: s * 0.012, alpha: fade });
+          const k = Math.min(1, (b.t - 0.2) / 0.22);
+          const land = 1 - (1 - k) ** 3;
+          const px = x;
+          const py = y - s * 0.16 - (1 - land) * s * 0.35;
+          const snap = Math.max(0, 1 - Math.abs(b.t - 0.42) / 0.12);
+          chainGlow.glow({ x: px, y: py + s * 0.12, w: s * 0.3, h: s * 0.4, color, alpha: 0.35 * fade * k });
+          if (snap > 0) chainGlow.glow({ x: px, y: py + s * 0.12, w: s * 0.4, color: 0xfff1c4, alpha: 0.8 * snap });
+          paper(ring, px, py, s * 0.085 * (1 + 0.5 * (1 - land)), s * 0.25 * (1 + 0.5 * (1 - land)), 0.12 + (1 - land) * 0.6, fade * Math.min(1, k * 3));
         }
       }
+      chainGlow.end();
       bursts = bursts.filter((b) => b.t < LIFE);
     },
     clear() {
       bursts = [];
+      ring.clear();
+      chainGlow.clear();
       g.clear();
     },
   };

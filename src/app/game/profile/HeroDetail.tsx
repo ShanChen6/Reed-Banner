@@ -39,11 +39,13 @@ import {
 import { EmptySlotIcon, GearIcon, SetEmblem } from "../art/gear";
 import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
 import { ProfileArt } from "../art/ProfileArt";
+import { stageBackdropUrl } from "../art/portrait-data";
 import { ELEMENT_NAME, gearText, PROFESSION_NAME, skillText, SLOT_NAME, TIER_CLASS } from "../battle/labels";
 import { SkillIcon } from "../art/skills";
 import SkillDetails from "../battle/SkillDetails";
 import { BackGlyph, InfoGlyph, PlusGlyph, TeamGlyph } from "./glyphs";
 import { nameOf } from "./roster";
+import Biography from "./Biography";
 
 /** Ô trang bị hai bên tranh; vũ khí đứng giữa phía dưới. Đúng 9 ô như luật trang bị. */
 export const LEFT_SLOTS: readonly NonWeaponSlot[] = ["dinhMao", "yPhuc", "hoThu", "baoNgoa"];
@@ -100,6 +102,7 @@ export default function HeroDetail({
   const [sub, setSub] = useState<Sub>("overview");
   const fighter = fighterOf(profile, id);
   const bare = fighterOf(profile, id, false);
+  const stageArt = stageBackdropUrl(fighter.element);
   const progress = progressOf(profile, id);
   const worn = equippedItems(loadoutOf(profile, id), fighter.profession);
   const name = nameOf(id);
@@ -154,13 +157,24 @@ export default function HeroDetail({
       {/* Tranh và 9 ô: khung cao cố định nên đổi nhân vật không làm nhảy bố cục. */}
       <div
         className="barracks-stage relative mt-3 grid h-[clamp(18rem,42vh,26rem)] grid-cols-[auto_minmax(0,1fr)_auto] gap-2 rounded-lg p-2 sm:gap-3 sm:p-3"
-        style={{ ["--stage-tint" as string]: `${ELEMENT_COLOR[fighter.element]}66` }}
+        style={{
+          ["--stage-tint" as string]: `${ELEMENT_COLOR[fighter.element]}66`,
+          ...(stageArt
+            ? {
+                backgroundImage: `linear-gradient(180deg, transparent 60%, color-mix(in srgb, var(--wood-inset) 75%, transparent)), url(${stageArt})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }
+            : {}),
+        }}
       >
         <div className="z-10 flex flex-col justify-between" aria-label="Ô trang bị bên trái">
           {LEFT_SLOTS.map(slot)}
         </div>
         <div className="flex min-h-0 min-w-0 flex-col items-center gap-2">
-          <div className="relative flex min-h-0 w-full flex-1 items-end justify-center">
+          <div className={`relative flex min-h-0 w-full flex-1 items-end justify-center ${stageArt ? "-mb-7" : ""}`}>
+            {/* Bóng tiếp đất dưới chân để nhân vật đứng trên nền tranh chứ không lơ lửng giữa vầng sáng. */}
+            {stageArt && <span aria-hidden className="barracks-ground" />}
             <ProfileArt
               key={id}
               id={id}
@@ -170,7 +184,7 @@ export default function HeroDetail({
               fallbackClassName="relative mb-4 size-40 drop-shadow-[0_6px_10px_color-mix(in_srgb,var(--black)_80%,transparent)] sm:size-48"
             />
           </div>
-          {slot("vuKhi")}
+          <div className="relative z-10">{slot("vuKhi")}</div>
         </div>
         <div className="z-10 flex flex-col justify-between" aria-label="Ô trang bị bên phải">
           {RIGHT_SLOTS.map(slot)}
@@ -465,6 +479,7 @@ function Details({ profile, id, fighter, bare, worn }: { profile: Profile; id: s
   ];
   return (
     <div className="flex flex-col gap-3 text-[15px]">
+      <Biography id={id} />
       <table className="w-full overflow-hidden rounded-md text-left">
         <caption className="sr-only">Chỉ số gốc, phần cộng từ trang bị và tổng</caption>
         <thead className="text-sm text-[var(--on-wood-soft)]">
