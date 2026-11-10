@@ -2850,51 +2850,49 @@ const LIEU_YEN: WarriorRig = {
 };
 
 /**
- * Mạnh Tường, binh lính hệ Phong (tướng cửa hàng). Bộ tranh Shan gửi 29/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
- * code như Trương Viêm: giáo cùng nắm tay xoay quanh cổ tay, khiên mây cùng cẳng tay nâng lên khi vào thế và đỡ đòn, đầu
- * và đuôi khăn xanh tách riêng. Tranh đánh thường vẽ người nhỏ trong khung ngang nên phóng lên cho bằng hình đứng.
- * Hệ tọa độ: ảnh đứng 1024×1536.
+ * Mạnh Tường, binh lính hệ Phong (tướng cửa hàng). Bộ tranh phong cách mới Shan gửi 11/11 (nền trong suốt sẵn), thay bộ
+ * 29/10: khăn xanh ngọc quấn đầu, giáp vảy da, giáo mũi sắt buộc dải xanh và khiên mây bầu dục nẹp chéo đồng. Ảnh đứng
+ * (941×1672, giữ khổ) tách lớp bằng code: giáo cùng nắm tay xoay quanh cổ tay (cán giáo nằm ngoài thân nên không cần vá),
+ * khiên mây cùng bàn tay nắm vành nâng lên khi vào thế và đỡ đòn, đầu tách riêng. Tranh tay cầm ống tre đứng tựa giáo
+ * làm phong thái.
  */
 const MANH_TUONG: WarriorRig = {
   skeleton: "warrior",
   weapon: "spear",
   dir: "manh-tuong",
   texScale: 0.5,
-  foot: { x: 590, y: 1505 },
-  height: 1340,
+  foot: { x: 480, y: 1655 },
+  height: 1470,
   parts: {
-    body: { x: 165, y: 162, w: 731, h: 1345 },
-    armR: { x: 688, y: 402, w: 265, h: 577 },
-    sword: { x: 108, y: 6, w: 143, h: 1428 },
-    arm: { x: 111, y: 452, w: 81, h: 101 },
-    head: { x: 423, y: 162, w: 189, h: 187 },
+    body: { x: 106, y: 172, w: 770, h: 1494 },
+    armR: { x: 688, y: 438, w: 248, h: 640 },
+    sword: { x: 16, y: 6, w: 164, h: 1580 },
+    arm: { x: 17, y: 482, w: 90, h: 106 },
+    head: { x: 400, y: 180, w: 200, h: 240 },
   },
-  cloth: [
-    { name: "ribbon", box: { x: 264, y: 271, w: 186, h: 155 }, behind: true,
-      wind: { axis: "x", start: 0.2, amp: 5, freq: 1.6, k: 3, phase: 0.2, vertical: true, reverse: true } },
-  ],
+  cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 180, y: 505 },
-    elbowR: { x: 712, y: 615 },
-    neck: { x: 540, y: 335 },
+    shoulder: { x: 95, y: 555 },
+    elbowR: { x: 705, y: 650 },
+    neck: { x: 500, y: 400 },
   },
-  blade: [{ x: 152, y: 500 }, { x: 128, y: 20 }],
+  blade: [{ x: 55, y: 520 }, { x: 40, y: 30 }],
   shieldRaise: -0.35,
   strikeFx: "galeBulwark",
   fxColor: 0x2e9e90,
   // Tấn rộng núp khiên đâm giáo ngang (đánh thường), đẩy khiên ra trước (ra chiêu), hạ thấp người ghì khiên che thân
   // (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 28, y: 20 },
-      anchor: { x: 500, y: 1000 }, scale: 1.28, burst: { x: 1515, y: 175 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 127, y: 18 },
-      anchor: { x: 550, y: 1500 }, scale: 1, burst: { x: 900, y: 600 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 114, y: 12 },
-      anchor: { x: 620, y: 1485 }, scale: 1, burst: { x: 780, y: 760 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 5, y: 2 },
+      anchor: { x: 200, y: 985 }, scale: 1.15, burst: { x: 1540, y: 170 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 1, y: 0 },
+      anchor: { x: 450, y: 1620 }, scale: 1, burst: { x: 850, y: 600 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 1, y: 2 },
+      anchor: { x: 520, y: 1595 }, scale: 1, burst: { x: 850, y: 800 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 9, y: 54 },
-    anchor: { x: 800, y: 900 }, scale: 0.9 },
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 3, y: 1 },
+    anchor: { x: 1000, y: 800 }, scale: 1 },
 };
 
 /**
