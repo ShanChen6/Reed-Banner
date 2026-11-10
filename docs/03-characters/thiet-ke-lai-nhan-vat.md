@@ -1,6 +1,6 @@
 # Thiết kế lại nhân vật theo phong cách cổ trang bán hiện thực
 
-> Cập nhật: 09/11/2026
+> Cập nhật: 10/11/2026
 > Trạng thái: **APPROVED** — Shan duyệt toàn bộ (08/11/2026). **Phần chữ đã có trong mã:** đổi tên (3 tướng thường, 14 Xạ thủ và Sát thủ), ngoại hiệu, phe, tiểu sử, quan hệ (`src/core/roster/lore.ts`, hiện ở tab Chi tiết). **Phần tranh** (làm lại nhân vật, vũ khí và tư thế theo phong cách mới, mục 6) **chưa làm**.
 
 Phong cách mục tiêu: **semi-realistic historical illustration, digital painting** (minh họa cổ trang bán hiện thực, tranh vẽ kỹ thuật số). Đã có chuẩn cho chân dung ở [prompt chân dung](../06-art/prompts/chan-dung-lich-su.md); chân dung Hà Vân mới (có họa tiết) là mẫu tham chiếu.
@@ -260,11 +260,11 @@ Mỗi nghề 7 người, mỗi hệ một người. **Vũ khí** chọn trong 3.
 | Hệ | Nhân vật | Vũ khí (nhịp) | Vật dụng đặc trưng |
 |---|---|---|---|
 | Kim | Cao Kiên | **giáo dài** (Đâm) | dây lương đeo chéo |
-| Mộc | Hoàng Mộc | dao quắm và khiên mây (Chém) | giỏ cơm lam |
-| Thủy | Thái Hà | mái chèo sắt và khiên tre (Chém) | lưới vắt vai |
-| Hỏa | Trương Viêm | đoản đao (Chém) | đuốc cài lưng |
+| Mộc | Hoàng Mộc | **giản sắt** (Chém) | giỏ cơm lam |
+| Thủy | Thái Hà | **chùy gai sắt** (Chém) | lưới vắt vai |
+| Hỏa | Trương Viêm | **kích hai lưỡi trăng** (Đâm) | đuốc cài lưng |
 | Thổ | ★ Lê Thạch | **giáo** (mũi đồng hình lá) và khiên mây (Đâm) | túi vải đựng nắm đất |
-| Lôi | Ông Chấn | **giáo mũi lá và khiên mây** (Đâm) | tù và sừng trâu đeo hông |
+| Lôi | Ông Chấn | **tiên** (roi sắt, Chém) | dùi trống cài thắt lưng; trống trận chỉ ghép ở tranh phong thái |
 | Phong | Mạnh Tường | giáo ngắn và lao phóng (Đâm) | cờ hiệu nhỏ |
 
 **Tướng sĩ**
