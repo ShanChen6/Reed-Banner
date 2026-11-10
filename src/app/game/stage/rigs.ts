@@ -85,6 +85,8 @@ export interface WarriorRig {
   readonly skeleton: "warrior";
   /** Nhịp vũ khí riêng; bỏ trống giữ nhát chém của các tướng sĩ cũ. */
   readonly weapon?: "spear" | "fan" | "gourd" | "staff";
+  /** Góc giơ vũ khí khi chiến thắng/phản ứng (rad), thay mặc định theo loại vũ khí; kiếm buông thõng cần nhỏ. */
+  readonly raise?: number;
   /** Điểm cầm để hồ lô lắc nhẹ trong tay, cùng hệ tọa độ ảnh nguồn. */
   readonly grip?: Point;
   /** Tay áo dài uốn theo gió trong cùng khớp với tay cầm quạt. */
@@ -2140,6 +2142,7 @@ const LY_LIET: WarriorRig = {
  * khi vào thế và đỡ đòn, đầu tách riêng. Tranh ngồi khúc gỗ cười lớn làm phong thái.
  */
 const TRUONG_VIEM: WarriorRig = {
+  raise: -0.1,
   skeleton: "warrior",
   dir: "truong-viem",
   texScale: 0.5,
@@ -2544,6 +2547,7 @@ const TONG_TAN: WarriorRig = {
  * Cỡ người các tranh tư thế so theo chiều cao đầu.
  */
 const VU_LOI: WarriorRig = {
+  raise: -0.1,
   skeleton: "warrior",
   dir: "vu-loi",
   texScale: 0.5,
