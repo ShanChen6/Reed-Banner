@@ -1,6 +1,6 @@
 /**
- * Tường thép vẽ trên cả sân (hệ tọa độ của stage PixiJS): tuyệt chiêu tự thủ của binh lính hệ Kim dựng một dãy tấm
- * thép trước mặt người tung chiêu, ánh kim lướt qua mặt tường rồi tường chìm xuống.
+ * Thành đồng vẽ trên cả sân (hệ tọa độ của stage PixiJS): tuyệt chiêu tự thủ của binh lính hệ Kim dựng một bức thành
+ * đồng có lỗ châu mai và mặt trời trống đồng trước mặt người tung chiêu, ánh kim lướt qua rồi thành chìm xuống.
  */
 import { Container, Graphics } from "pixi.js";
 import type { Point } from "./rigs";
@@ -40,35 +40,65 @@ export function steelBulwark(parent: Container, color: number) {
         const sink = w.t < HOLD ? 1 : 1 - (w.t - HOLD) / (LIFE - HOLD);
         const h = w.size * 0.56 * grow * sink;
         const pw = w.size * 0.085;
+        // pw: đơn vị bề ngang (một phần mười hai bề cao nhân vật).
         // Đứng hẳn phía trước người tung chiêu để không che nhân vật.
         const x0 = w.at.x + w.dir * w.size * 0.5;
         // Bóng đổ và vết nứt nền dưới chân tường.
         g.ellipse(x0, w.at.y, pw * 3.2, pw * 0.45).fill({ color: 0x000000, alpha: 0.35 * sink });
-        // Năm khiên thép đứng chồng mép, khiên giữa cao nhất: nửa sáng nửa tối cho ra khối, viền đồng, gờ ngang và núm khiên.
-        for (const i of [0, 4, 1, 3, 2]) {
-          const k = i - 2;
-          const px = x0 + k * pw * 0.82;
-          const ph = h * (1 - Math.abs(k) * 0.1);
-          const top = w.at.y - ph;
-          const r = pw * 0.5;
-          const outline = [px - r, w.at.y, px - r, top + r, px, top, px + r, top + r, px + r, w.at.y];
-          g.poly(outline).fill({ color: 0x3e444c, alpha: 0.95 * sink });
-          g.poly([px - r, w.at.y, px - r, top + r, px, top, px, w.at.y]).fill({ color: 0x7d858f, alpha: 0.9 * sink });
-          g.poly([px - r * 0.78, w.at.y - pw * 0.15, px - r * 0.78, top + r * 1.05, px - r * 0.55, top + r * 0.8, px - r * 0.55, w.at.y - pw * 0.15])
-            .fill({ color: 0xc9d0d8, alpha: 0.35 * sink });
-          for (const band of [0.22, 0.78]) {
-            const by = w.at.y - ph * band;
-            g.rect(px - r, by - pw * 0.05, r * 2, pw * 0.1).fill({ color: 0xb08a4a, alpha: 0.9 * sink });
-          }
-          g.poly(outline).stroke({ color: 0xd4ae62, width: w.size * 0.007, alpha: sink });
-          const bossY = w.at.y - ph * 0.5;
-          g.circle(px, bossY, pw * 0.2).fill({ color: 0xb08a4a, alpha: sink }).stroke({ color: 0x5a4524, width: w.size * 0.003, alpha: sink });
-          g.circle(px - pw * 0.06, bossY - pw * 0.06, pw * 0.07).fill({ color: 0xf3dfa8, alpha: 0.8 * sink });
+        // Thành đồng liền khối: thân hơi thu lên trên, mặt trái sáng mặt phải tối, răng cưa lỗ châu mai trên đỉnh, mạch ghép
+        // các tấm đồng và mặt trời trống đồng chính giữa; viền vàng quanh cả bức thành.
+        const half = pw * 2.3;
+        const topHalf = half * 0.9;
+        const merlon = pw * 0.42;
+        const wallTop = w.at.y - h;
+        const xL = x0 - half;
+        const xR = x0 + half;
+        const tL = x0 - topHalf;
+        const tR = x0 + topHalf;
+        const n = 5;
+        const crest: number[] = [];
+        for (let i = 0; i < n; i++) {
+          const a0 = tL + ((tR - tL) * i) / n;
+          const a1 = tL + ((tR - tL) * (i + 0.6)) / n;
+          const a2 = tL + ((tR - tL) * (i + 1)) / n;
+          crest.push(a0, wallTop - merlon * grow, a1, wallTop - merlon * grow, a1, wallTop, a2, wallTop);
         }
+        const outline = [xL, w.at.y, tL, wallTop, ...crest, tR, wallTop - merlon * grow, tR, wallTop, xR, w.at.y];
+        g.poly(outline).fill({ color: 0x6b4a22, alpha: 0.97 * sink });
+        g.poly([xL, w.at.y, tL, wallTop, x0, wallTop, x0, w.at.y]).fill({ color: 0xa8793a, alpha: 0.85 * sink });
+        g.poly([xL + pw * 0.15, w.at.y, tL + pw * 0.15, wallTop + pw * 0.1, tL + pw * 0.38, wallTop + pw * 0.1, xL + pw * 0.38, w.at.y])
+          .fill({ color: 0xf0cf86, alpha: 0.35 * sink });
+        // Mạch ghép tấm đồng: hàng ngang và mạch đứng so le.
+        const rows = 5;
+        for (let r = 1; r < rows; r++) {
+          const ry = w.at.y - (h * r) / rows;
+          const k = r / rows;
+          const rl = xL + (tL - xL) * k;
+          const rr = xR + (tR - xR) * k;
+          g.moveTo(rl, ry).lineTo(rr, ry).stroke({ color: 0x3e2a12, width: w.size * 0.004, alpha: 0.8 * sink });
+          for (let c = 0; c < 4; c++) {
+            const cx = rl + ((rr - rl) * (c + (r % 2 ? 0.5 : 0.25) + 0.25)) / 4.5;
+            g.moveTo(cx, ry).lineTo(cx, ry + h / rows).stroke({ color: 0x3e2a12, width: w.size * 0.003, alpha: 0.6 * sink });
+          }
+        }
+        g.poly(outline).stroke({ color: 0xe2bd6c, width: w.size * 0.008, alpha: sink });
+        // Mặt trời trống đồng: đĩa, vòng tia và các vòng đồng tâm.
+        const cy = w.at.y - h * 0.55;
+        const sr = pw * 1.05 * grow;
+        g.circle(x0, cy, sr).fill({ color: 0x8a6230, alpha: sink }).stroke({ color: 0xf0cf86, width: w.size * 0.005, alpha: sink });
+        g.circle(x0, cy, sr * 0.7).stroke({ color: 0xe2bd6c, width: w.size * 0.003, alpha: sink });
+        const rays: number[] = [];
+        for (let i = 0; i < 24; i++) {
+          const ang = (i / 12) * Math.PI;
+          const rr = i % 2 ? sr * 0.22 : sr * 0.55;
+          rays.push(x0 + Math.cos(ang) * rr, cy + Math.sin(ang) * rr);
+        }
+        g.poly(rays).fill({ color: 0xf3dfa8, alpha: 0.9 * sink });
+        g.circle(x0, cy, sr * 0.14).fill({ color: 0x6b4a22, alpha: sink });
         // Vệt ánh kim chạy ngang mặt tường.
         if (w.t > RISE) {
           const s = ((w.t - RISE) / (HOLD - RISE)) % 1;
-          const sx = x0 + (s - 0.5) * pw * 4;
+          const sx = x0 + (s - 0.5) * pw * 4.2;
           shine.poly([sx - pw * 0.4, w.at.y, sx + pw * 0.1, w.at.y - h, sx + pw * 0.5, w.at.y - h, sx, w.at.y])
             .fill({ color: 0xffffff, alpha: 0.35 * sink });
         }
