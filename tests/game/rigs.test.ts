@@ -1105,12 +1105,11 @@ test("Vũ Lôi có bốn tranh, thiên lôi giáng thế hệ Lôi, quả cầu 
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Ông Chấn có bốn tranh, chấn lôi thiết vệ hệ Lôi, khiên mây nâng được và texture khớp tọa độ", () => {
+test("Ông Chấn có bốn tranh, chấn lôi thiết vệ hệ Lôi, giản xoay quanh cổ tay và texture khớp tọa độ", () => {
   const rig = rigOf("ongChan");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, "spear");
   assert.equal(rig.strikeFx, "thunderAegis");
-  assert.ok((rig.shieldRaise ?? 0) < 0);
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
