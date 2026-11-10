@@ -461,6 +461,8 @@ Tổng: **20 nghĩa quân Hoa Lư** và **36 lính hoặc hàng binh của 12 s�
 | 5 | `pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down` | Giữ dáng tranh cũ làm tham chiếu, đặt lại tọa độ trong `rigs.ts` |
 | 6 | Ghép vào trận, chỉnh tọa độ, chụp so sánh | Claude làm |
 
+**Quy tắc nét mặt (Shan, 10/11/2026):** chỉ **bán thân** và **tranh phong thái** được cười. Dáng chuẩn đứng bình thản; ra đòn, ra chiêu, tuyệt chiêu và gục xuống mặt nghiêm, tập trung (không cười, không nhe răng). Khối mô tả nhân vật dùng chung cho nhiều dáng không được ghi sẵn nụ cười; nụ cười đặc trưng chỉ viết trong dòng dáng của phong thái. Prompt mỗi dáng chiến đấu thêm `serious focused face, no smile, no grin`.
+
 Khoảng **7 tranh** và một lần cắt lớp cho mỗi người; 77 nhân vật là hơn 500 tranh, nên làm theo đợt:
 
 - **Đợt 0:** Hà Vân trọn bộ (đã chuẩn bị).
