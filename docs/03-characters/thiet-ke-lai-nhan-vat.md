@@ -275,7 +275,7 @@ Mỗi nghề 7 người, mỗi hệ một người. **Vũ khí** chọn trong 3.
 | Mộc | Lâm Tùng | **côn tam khúc gỗ lim** (Trượng) | cành tùng cài giáp |
 | Thủy | Hồ Lãng | đinh ba (Đâm) | lưới cuộn ở hông |
 | Hỏa | Lý Liệt | **đôi hộ thủ câu**, kiếm móc (Chém) | khăn đỏ buộc đầu |
-| Thổ | Kha Sơn | rìu lớn hai tay (Chém) | đai giáp đá |
+| Thổ | Kha Sơn | **rìu-giáo hai tay** (rìu bán nguyệt có mũi giáo trên đầu, Chém) | đai giáp đá |
 | Lôi | Tống Tấn | kích (Đâm) | chuông ngựa |
 | Phong | Hứa Lăng | kiếm mảnh (Chém) | dải lụa buộc tóc |
 
