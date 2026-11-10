@@ -40,6 +40,7 @@ Shan duyệt 05/11/2026 sau đợt kiểm kê 20 màn. Chuẩn lấy từ Chiế
 | Phần | Quy tắc | Dùng |
 | --- | --- | --- |
 | Bề mặt | Gỗ tối là mặc định (chữ sáng). Giấy dó chỉ cho nội dung đọc dài (Bình Loạn, sử ký, luật chi tiết, thoại) và trạng thái đang chọn | `--wood*`, `--paper*`, `--ink*`; lớp Tailwind `bg-wood-panel`, `text-on-wood`, `text-ink` |
+| Thư cuộn | Khối liên hệ footer và form tài khoản (đăng nhập, đăng ký, tài khoản, quên/đặt lại mật khẩu) là thư cuộn treo: dây son, trục gỗ đầu đồng, giấy dó mép rách, tua rua, ấn "Cờ Lau" (08/11/2026). Component đặt trên giấy bọc trong `.ui-on-paper` để đổi token sang chữ mực | `ParchmentScroll`, `ScrollSeal`, `.ui-on-paper` |
 | Khung | 3 mức: panel, raised (vạch vàng trong + góc hoa văn), hero (banner có tranh). Không lồng mức 2/3 trong mức 2/3 | `OrnateFrame level`, `FrameInset` |
 | Nút chính | Sơn mài đỏ viền vàng; mỗi màn tối đa một | `Button` (mặc định `primary`) |
 | Nút phụ | Gỗ sẫm viền đồng; nút chữ màu vàng cho thao tác nhỏ | `Button variant="secondary" \| "ghost"` |

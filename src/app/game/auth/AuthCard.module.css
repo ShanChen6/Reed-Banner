@@ -1,0 +1,61 @@
+/* Thư cuộn của các phân cảnh tài khoản: khổ hẹp hơn thư liên hệ ở footer (form một cột), tiêu đề viền kép và ấn đỏ cạnh tiêu đề.
+   Màu chữ, ô nhập, nút trên giấy lấy từ `.ui-on-paper` (src/styles/components.css). */
+
+.screen {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+/* Điện thoại: bớt lề màn để tờ giấy rộng hơn (trục gỗ vẫn nhô ra trong lề của thư cuộn). */
+@media (max-width: 559px) {
+  .screen {
+    padding-inline: 0.375rem;
+  }
+}
+.scroll {
+  max-width: 31rem;
+}
+@media (min-width: 640px) {
+  .scroll {
+    margin-top: 1rem;
+  }
+}
+.body {
+  padding: 1.5rem 1.75rem 1.5rem;
+}
+@media (max-width: 559px) {
+  .body {
+    padding: 1.25rem 1rem 1.25rem;
+  }
+}
+
+.head {
+  position: relative;
+  /* chừa chỗ cho ấn ở góc phải */
+  padding-right: 3.75rem;
+}
+.title {
+  margin: 0;
+  padding-bottom: 0.35rem;
+  border-bottom: 3px double color-mix(in srgb, var(--ink) 40%, transparent);
+  font-family: var(--font-game, serif);
+  font-size: 1.625rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  color: var(--ink-strong);
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--white) 35%, transparent);
+}
+.sub {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+.seal {
+  right: -0.25rem;
+  top: -0.35rem;
+  width: 3.4rem;
+  height: 3.4rem;
+}

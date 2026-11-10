@@ -82,17 +82,12 @@ test("Trần Cương có tranh đánh thường, ra chiêu, tuyệt chiêu, bị
   assert.equal(rig.down?.name, "pose-down");
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
     assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `khớp ${JSON.stringify(p)} ngoài lớp`);
-  contains(rig.joints.shoulder, rig.covers[0]!.box);
+  contains(rig.joints.shoulder, rig.parts.sword);
   contains(rig.joints.shoulder, rig.parts.arm);
   contains(rig.joints.elbowR, rig.parts.armR);
   contains(rig.joints.neck, rig.parts.head);
   contains(rig.joints.neck, rig.parts.body);
-  const boxes = [
-    ...Object.entries(rig.parts),
-    ...rig.covers.map((c) => [c.name, c.box] as const),
-    ...rig.cloth.map((c) => [c.name, c.box] as const),
-  ] as const;
-  for (const [name, box] of boxes) {
+  for (const [name, box] of Object.entries(rig.parts)) {
     const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
     assert.equal(data.toString("ascii", 12, 16), "VP8X");
     assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
@@ -379,7 +374,7 @@ test("Cao Kiên có bốn tranh, tường thép hệ Kim, khiên nâng được 
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Châu Ngọc có bốn tranh, mưa kim bạc hệ Kim, hồ lô lắc quanh nắm tay và texture khớp tọa độ", () => {
+test("Trần Ngọc có bốn tranh, mưa kim bạc hệ Kim, hồ lô lắc quanh nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("chauNgoc");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, "gourd");
@@ -458,7 +453,7 @@ test("Nghiêm Thiết có tranh đánh thường, ra chiêu, tuyệt chiêu, b�
 test("Lâm Tùng có bốn tranh, trúc lâm hút sinh khí hệ Mộc, khớp nằm trong lớp và texture khớp tọa độ", () => {
   const rig = rigOf("lamTung");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, undefined);
+  assert.equal(rig.weapon, "staff");
   assert.equal(rig.strikeFx, "bambooSap");
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
@@ -508,7 +503,7 @@ test("Đàm Thảo có bốn tranh, dây gai hệ Mộc, cầu ngọc nằm trê
 test("Hoàng Mộc có bốn tranh, rễ già giữ thành hệ Mộc, khiên nâng được và texture khớp tọa độ", () => {
   const rig = rigOf("hoangMoc");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "spear");
+  assert.equal(rig.weapon, undefined);
   assert.equal(rig.strikeFx, "rootGuard");
   assert.ok((rig.shieldRaise ?? 0) < 0);
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
@@ -653,7 +648,7 @@ test("Kha Sơn có bốn tranh, sơn hà trấn kích hệ Thổ, rìu theo nh�
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Đào Lam dùng rig tướng sĩ mới: bốn tranh, cột nước hệ Thủy, cầu nước nằm trên trượng và texture khớp tọa độ", () => {
+test("Vi Lam dùng rig tướng sĩ mới: bốn tranh, cột nước hệ Thủy, cầu nước nằm trên trượng và texture khớp tọa độ", () => {
   const rig = rigOf("daoLam");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, "staff");
@@ -858,7 +853,7 @@ test("Lý Liệt có bốn tranh, chém lửa hệ Hỏa, đại đao theo nhị
 test("Trương Viêm có bốn tranh, tường lửa hệ Hỏa, khiên nâng được và texture khớp tọa độ", () => {
   const rig = rigOf("truongViem");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "spear");
+  assert.equal(rig.weapon, undefined);
   assert.equal(rig.strikeFx, "flameWall");
   assert.ok((rig.shieldRaise ?? 0) < 0);
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
@@ -982,7 +977,7 @@ test("Lê Thạch có bốn tranh, khiêu khích hệ Thổ, khiên mây nâng �
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Bế Liên có bốn tranh, hồi phục hệ Thổ, bầu nậm xoay quanh cổ tay và texture khớp tọa độ", () => {
+test("Mã Liên có bốn tranh, hồi phục hệ Thổ, bầu nậm xoay quanh cổ tay và texture khớp tọa độ", () => {
   const rig = rigOf("beLien");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, "gourd");
@@ -1090,13 +1085,12 @@ test("Tống Tấn có bốn tranh, lôi đao liên trảm hệ Lôi, kiếm the
 test("Vũ Lôi có bốn tranh, thiên lôi giáng thế hệ Lôi, quả cầu nằm trên trượng và texture khớp tọa độ", () => {
   const rig = rigOf("vuLoi");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "staff");
+  assert.equal(rig.weapon, undefined);
   assert.equal(rig.strikeFx, "heavenStrike");
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
     assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
-  contains(rig.orb!, rig.parts.sword);
   for (const p of rig.blade) contains(p, rig.parts.sword);
   contains(rig.joints.shoulder, rig.parts.arm);
   contains(rig.joints.elbowR, rig.parts.armR);
@@ -1238,16 +1232,17 @@ test("Hứa Lăng có bốn tranh, phong đao hệ Phong, khăn bay theo gió v�
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Liễu Yên có bốn tranh, cuồng lưu hệ Phong, cầu ngọc ở đầu trượng và texture khớp tọa độ", () => {
+test("Liễu Yên có bốn tranh, cuồng lưu hệ Phong, bàn tay giơ xoay quanh khuỷu và texture khớp tọa độ", () => {
   const rig = rigOf("lieuYen");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "staff");
+  assert.equal(rig.weapon, "fan");
   assert.equal(rig.strikeFx, "galeVortex");
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
     assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
-  contains(rig.orb!, rig.parts.sword);
+  for (const p of rig.blade) contains(p, rig.parts.sword);
+  contains(rig.joints.shoulder, rig.parts.sword);
   contains(rig.joints.shoulder, rig.parts.arm);
   contains(rig.joints.elbowR, rig.parts.armR);
   contains(rig.joints.neck, rig.parts.head);
@@ -1338,10 +1333,10 @@ test("Bùi Phiêu có bốn tranh, phiêu phong hệ Phong, quạt lông phẩy 
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Phùng Phong có bốn tranh, phong vân hệ Phong, cờ lệnh theo nhịp giáo và texture khớp tọa độ", () => {
+test("Phùng Phong có bốn tranh, phong vân hệ Phong, gậy trúc xoay quanh cổ tay và texture khớp tọa độ", () => {
   const rig = rigOf("phungPhong");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "spear");
+  assert.equal(rig.weapon, "staff");
   assert.equal(rig.strikeFx, "galeRout");
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
@@ -1362,7 +1357,7 @@ test("Phùng Phong có bốn tranh, phong vân hệ Phong, cờ lệnh theo nh�
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Bạch Nỏ Lang có bốn tranh, nỏ phá thành hệ Kim, nỏ xoay quanh nắm tay cầm báng và texture khớp tọa độ", () => {
+test("Đoàn Cự (Bạch Nỏ Lang) có bốn tranh, nỏ phá thành hệ Kim, nỏ xoay quanh nắm tay cầm báng và texture khớp tọa độ", () => {
   const rig = rigOf("bachNoLang");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, "spear");
@@ -1386,7 +1381,7 @@ test("Bạch Nỏ Lang có bốn tranh, nỏ phá thành hệ Kim, nỏ xoay qua
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Thanh Lâm Xạ có bốn tranh, lục tiễn hệ Mộc, cung tre xoay quanh tay cầm cung và texture khớp tọa độ", () => {
+test("Quản Hiên (Thanh Lâm Xạ) có bốn tranh, lục tiễn hệ Mộc, cung tre xoay quanh tay cầm cung và texture khớp tọa độ", () => {
   const rig = rigOf("thanhLamXa");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, "staff");
@@ -1410,7 +1405,7 @@ test("Thanh Lâm Xạ có bốn tranh, lục tiễn hệ Mộc, cung tre xoay qu
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Lam Giang Phi Diệp có bốn tranh, phi tiêu hệ Thủy, tiêu vung theo nắm tay và texture khớp tọa độ", () => {
+test("Thái Diệp (Lam Giang Phi Diệp) có bốn tranh, phi tiêu hệ Thủy, tiêu vung theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("lamGiangPhiDiep");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, undefined);
@@ -1434,7 +1429,7 @@ test("Lam Giang Phi Diệp có bốn tranh, phi tiêu hệ Thủy, tiêu vung th
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Xích Diệm Luân có bốn tranh, phi luân lửa hệ Hỏa, vòng vung theo nắm tay và texture khớp tọa độ", () => {
+test("Lý Diệm (Xích Diệm Luân) có bốn tranh, phi luân lửa hệ Hỏa, vòng vung theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("xichDiemLuan");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, undefined);
@@ -1458,7 +1453,7 @@ test("Xích Diệm Luân có bốn tranh, phi luân lửa hệ Hỏa, vòng vung
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Trấn Sơn Thạch có bốn tranh, trấn sơn hệ Thổ, đá vung theo nắm tay và texture khớp tọa độ", () => {
+test("Kha Thạch (Trấn Sơn Thạch) có bốn tranh, trấn sơn hệ Thổ, đá vung theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("tranSonThach");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, undefined);
@@ -1482,7 +1477,7 @@ test("Trấn Sơn Thạch có bốn tranh, trấn sơn hệ Thổ, đá vung the
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Lôi Minh Xạ có bốn tranh, lôi châm hệ Lôi, châm vung theo nắm tay và texture khớp tọa độ", () => {
+test("Lương Triệt (Lôi Minh Xạ) có bốn tranh, lôi châm hệ Lôi, châm vung theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("loiMinhXa");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, undefined);
@@ -1506,7 +1501,7 @@ test("Lôi Minh Xạ có bốn tranh, lôi châm hệ Lôi, châm vung theo nắ
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Tật Phong Lăng có bốn tranh, phong lăng hệ Phong, đầu lụa lắc theo bàn tay và texture khớp tọa độ", () => {
+test("Giáp Yến (Tật Phong Lăng) có bốn tranh, phong lăng hệ Phong, đầu lụa lắc theo bàn tay và texture khớp tọa độ", () => {
   const rig = rigOf("tatPhongLang");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, "gourd");
@@ -1589,7 +1584,7 @@ test("Vũ Phong có bốn tranh, lốc gió hệ Phong, trượng theo nắm tay
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Bạch Phong Đao có bốn tranh, xuyên giáp hệ Kim, dao găm theo nắm tay và texture khớp tọa độ", () => {
+test("Phan Quyên (Bạch Phong Đao) có bốn tranh, xuyên giáp hệ Kim, dao găm theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("bachPhongDao");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, undefined);
@@ -1613,7 +1608,7 @@ test("Bạch Phong Đao có bốn tranh, xuyên giáp hệ Kim, dao găm theo n�
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Độc Ảnh có bốn tranh, độc châm hệ Mộc, kim châm theo nắm tay và texture khớp tọa độ", () => {
+test("Nông Sâm (Độc Ảnh) có bốn tranh, độc châm hệ Mộc, kim châm theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("docAnh");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, undefined);
@@ -1637,7 +1632,7 @@ test("Độc Ảnh có bốn tranh, độc châm hệ Mộc, kim châm theo nắ
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Hàn Giang Khách có bốn tranh, dao nước hệ Thủy, đoản đao theo nắm tay và texture khớp tọa độ", () => {
+test("Âu Thu (Hàn Giang Khách) có bốn tranh, dao nước hệ Thủy, đoản đao theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("hanGiangKhach");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, undefined);
@@ -1661,7 +1656,7 @@ test("Hàn Giang Khách có bốn tranh, dao nước hệ Thủy, đoản đao t
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Xích Dạ có bốn tranh, song sát hệ Hỏa, đao theo nắm tay và texture khớp tọa độ", () => {
+test("Tiết Dạ (Xích Dạ) có bốn tranh, song sát hệ Hỏa, đao theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("xichDa");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, undefined);
@@ -1685,7 +1680,7 @@ test("Xích Dạ có bốn tranh, song sát hệ Hỏa, đao theo nắm tay và 
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Địa Ẩn có bốn tranh, liệt trảo hệ Thổ, móng vuốt theo nắm tay và texture khớp tọa độ", () => {
+test("Cát Tàng (Địa Ẩn) có bốn tranh, liệt trảo hệ Thổ, móng vuốt theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("diaAn");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, undefined);
@@ -1709,7 +1704,7 @@ test("Địa Ẩn có bốn tranh, liệt trảo hệ Thổ, móng vuốt theo n
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Lôi Ảnh có bốn tranh, bạo vũ hệ Lôi, hộp kim theo nắm tay và texture khớp tọa độ", () => {
+test("Mẫn Tuyên (Lôi Ảnh) có bốn tranh, bạo vũ hệ Lôi, hộp kim theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("loiAnh");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, undefined);
@@ -1733,7 +1728,7 @@ test("Lôi Ảnh có bốn tranh, bạo vũ hệ Lôi, hộp kim theo nắm tay 
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Vô Ảnh có bốn tranh, sóng âm hệ Phong, sáo trúc theo nắm tay và texture khớp tọa độ", () => {
+test("Liễu Thiều (Vô Ảnh) có bốn tranh, sóng âm hệ Phong, sáo trúc theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("voAnh");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, undefined);

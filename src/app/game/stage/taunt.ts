@@ -1,10 +1,12 @@
 /**
  * Trấn sơn khiêu chiến vẽ trên cả sân (hệ tọa độ của stage PixiJS): tuyệt chiêu của binh lính hệ Thổ dộng khiên xuống
  * đất, sóng đất tỏa vòng quanh chân, vòng gai đá trồi lên quanh người (phản đòn) rồi lún xuống; trên đầu từng đối thủ
- * hiện ấn khiêu khích đỏ có mũi chỉ về người tung chiêu, kèm vệt sáng nối từ đối thủ về chính mình.
+ * nổi gân giận đỏ cạnh đầu, và luồng sáng đỏ chảy liên tục từ đối thủ về chính mình.
  */
 import { Container, Graphics } from "pixi.js";
 import type { Point } from "./rigs";
+import { vein } from "./status";
+import { softLayer } from "./soft";
 
 /** Gai đá mọc tới `RISE`, giữ tới `HOLD`, lún và tan hết `LIFE` (giây). */
 const RISE = 0.22;
@@ -32,6 +34,7 @@ export function tauntRoar(parent: Container, color: number) {
   const glow = new Graphics();
   glow.blendMode = "add";
   parent.addChild(back, g, glow);
+  const aura = softLayer(parent);
   let roars: Roar[] = [];
 
   return {
@@ -48,6 +51,7 @@ export function tauntRoar(parent: Container, color: number) {
       back.clear();
       g.clear();
       glow.clear();
+      aura.begin();
       for (const r of roars) {
         if (r.wait > 0) {
           r.wait -= dt;
@@ -87,42 +91,37 @@ export function tauntRoar(parent: Container, color: number) {
           glow.moveTo(bx - hw * 0.3, by).lineTo(tip, by - h).stroke({ color, width: w * 0.5, alpha: 0.7 * fade, cap: "round" });
         }
 
-        // Ấn khiêu khích trên đầu từng đối thủ: vòng đỏ son, mũi chỉ về người tung chiêu, đập theo nhịp.
+        // Đối thủ bị khiêu khích: dấu nổi gân giận đỏ cạnh đầu; luồng sáng đỏ chảy liên tục từ đối thủ về ngực người tung
+        // chiêu (bị kéo sự chú ý về đó).
         const show = ease((r.t - 0.1) / 0.25);
         if (show <= 0) continue;
+        const a = show * fade;
         for (const f of r.foes) {
-          const hx = f.x;
-          const hy = f.y - z * 1.04;
           const dir = Math.sign(x - f.x) || 1;
-          const beat = 1 + 0.12 * Math.max(0, Math.sin(r.t * 14));
-          const rad = z * 0.06 * show * beat;
-          glow.circle(hx, hy, rad * 1.6).fill({ color: TAUNT, alpha: 0.18 * fade });
-          g.circle(hx, hy, rad).fill({ color: 0x3a120a, alpha: 0.75 * fade }).stroke({ color: TAUNT, width: w * 0.9, alpha: fade });
-          // Hai mũi nhọn lồng nhau chỉ về phía người tung chiêu.
-          for (const k of [-0.35, 0.25]) {
-            const cx = hx + dir * rad * k;
-            g.poly([cx - dir * rad * 0.3, hy - rad * 0.55, cx + dir * rad * 0.45, hy, cx - dir * rad * 0.3, hy + rad * 0.55], false)
-              .stroke({ color: 0xffd9a8, width: w * 0.8, alpha: fade, cap: "round", join: "round" });
-          }
-          // Vệt sáng chạy từ đối thủ về ngực người tung chiêu, chỉ lúc đầu.
-          const run = (r.t - 0.1) / 0.35;
-          if (run > 0 && run < 1) {
-            const mx = x;
-            const my = y - z * 0.55;
-            const k0 = Math.max(0, run - 0.3);
-            const ax = f.x + (mx - f.x) * k0;
-            const ay = f.y - z * 0.55 + (my - f.y + z * 0.55) * k0;
-            const bx = f.x + (mx - f.x) * run;
-            const by = f.y - z * 0.55 + (my - f.y + z * 0.55) * run;
-            glow.moveTo(ax, ay).lineTo(bx, by).stroke({ color: TAUNT, width: w * 1.4, alpha: 0.8 * (1 - run), cap: "round" });
-            glow.circle(bx, by, w * 1.8).fill({ color: 0xffd9a8, alpha: 0.9 * (1 - run) });
+          const beat = (1 + 0.15 * Math.max(0, Math.sin(r.t * 9))) * (1 + 0.6 * (1 - show) ** 2);
+          const vx = f.x - dir * z * 0.13;
+          const vy = f.y - z * 0.98;
+          aura.glow({ x: vx, y: vy, w: z * 0.16 * beat, color: TAUNT, alpha: 0.6 * a });
+          vein(g, vx, vy, z * 0.045 * beat, a);
+          const sx = f.x;
+          const sy = f.y - z * 0.6;
+          const mx = x;
+          const my = y - z * 0.6;
+          const at = (q: number) => ({ x: sx + (mx - sx) * q, y: sy + (my - sy) * q - Math.sin(Math.PI * q) * z * 0.1 });
+          for (let n = 0; n < 14; n++) {
+            const q = (r.t * 1.4 + n / 14) % 1;
+            const p = at(q);
+            const edge = Math.sin(Math.PI * q);
+            aura.glow({ x: p.x, y: p.y, w: z * 0.045 * (0.6 + edge * 0.6), color: n % 3 ? TAUNT : 0xffd9a8, alpha: 0.85 * a * edge });
           }
         }
       }
+      aura.end();
       roars = roars.filter((r) => r.wait > 0 || r.t < LIFE);
     },
     clear() {
       roars = [];
+      aura.clear();
       back.clear();
       g.clear();
       glow.clear();

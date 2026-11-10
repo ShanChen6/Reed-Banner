@@ -99,7 +99,7 @@ Keep the same person, face structure, hair, clothing colours and accessories as 
 **Hà Vân** (Pháp sư · Hỏa):
 
 ```text
-Subject: Ha Van, female, about 25 years old, a fire mage of the Dinh court, composed and a little guarded. Face: unmistakably feminine, soft jawline, fine dark brows, slightly idealised and expressive, light natural lip colour, no forehead mark, no heavy makeup. Hair/head: dark hair gathered in a bun with a red cloth band, two long red ribbon ends falling over the shoulder (her signature detail, calm, not flying). Clothing: red cross-collar robe in rich brick red with a darker brown inner layer and a warm orange lining peeking at the sleeve opening. Pattern and trim: a gold-thread embroidered border along the collar and cuff in a wave-and-cloud scroll, a bronze arm band with a small sawtooth (Dong Son) pattern on the upper arm, a small bronze plaque with filigree on the diagonal strap, short red tassels with bronze beads. One small bronze hair pin. One small everyday detail: the bronze-capped top of a wooden staff behind her shoulder, no flame, no glow. Looking slightly to the right, calm and resolute. Keep the lower quarter of the picture calm and quiet.
+Subject: Ha Van, female, about 25 years old, a fire mage of the Dinh court, composed and a little guarded. Face: unmistakably feminine, soft jawline, fine dark brows, slightly idealised and expressive, light natural lip colour, a tiny red flame-shaped mark painted on the centre of the forehead (her signature fire-mage mark, small and neat, about the size of a grain of rice), no heavy makeup. Hair/head: dark hair gathered in a bun with a red cloth band, two long red ribbon ends falling over the shoulder (her signature detail, calm, not flying). Clothing: red cross-collar robe in rich brick red with a darker brown inner layer and a warm orange lining peeking at the sleeve opening. Pattern and trim: a gold-thread embroidered border along the collar and cuff in a wave-and-cloud scroll, a bronze arm band with a small sawtooth (Dong Son) pattern on the upper arm, a small bronze plaque with filigree on the diagonal strap, short red tassels with bronze beads. One small bronze hair pin. One small everyday detail: the bronze-capped top of a wooden staff behind her shoulder, no flame, no glow. Looking slightly to the right, calm and resolute. Keep the lower quarter of the picture calm and quiet.
 Keep the same person, face structure, hair, clothing colours and accessories as reference image 1; repaint in the style of reference image 2.
 ```
 
@@ -169,7 +169,7 @@ Shan chốt (07/11/2026): thử **trọn bộ tranh của một nhân vật** l�
 | Tranh | Làm trong lần test này? | Ghi chú |
 |---|---|---|
 | `bust.webp` | Đã xong | Đã gắn ở danh sách tướng sĩ |
-| `style.webp` (tranh lớn ở trang chi tiết) | **Có** | Không gắn với hình động trận, thay thoải mái |
+| `style.webp` (tranh lớn ở trang chi tiết) | **Có** | Không gắn với hình động trận, thay thoải mái. **Nền: chung theo hệ, ảnh nhân vật trong suốt** (Shan chốt 08/11/2026, xem [tranh nền](nen-phong-thai.md)); tranh nền hệ Hỏa đã có và đã gắn |
 | `pose-attack.webp`, `pose-cast.webp`, `pose-ultimate.webp` | **Có** | Gắn với `rigs.ts` (xem 9.2) |
 | `pose-down.webp` (ngã) | **Có** | Gắn với `rigs.ts` |
 | `standing.webp` và các lớp (`head`, `body`, `arm`, `sword`…) | **Không** | Hình động cắt lớp từ ảnh đứng bằng tọa độ cố định; đổi ảnh đứng phải cắt lại lớp. Chỉ làm khi đã chốt đổi cả bộ |
@@ -188,7 +188,17 @@ Mỗi tranh ra chiêu có tọa độ chỉnh tay trong `HA_VAN` (`src/app/game/
 | `pose-ultimate.webp` | 302×454 | **Giơ cao trượng bằng tay trái**, tay phải duỗi thẳng chỉ ra bên phải, thân hơi nghiêng | đầu ngón tay phải (hướng ra ngoài) |
 | `pose-down.webp` | 457×304 (ngang) | Nằm nghiêng, mắt nhắm, một tay chống đất, **trượng nằm dưới đất cạnh chân** | không |
 
+**Dấu trên trán là chủ ý của Shan** (09/11/2026): Hà Vân có một dấu ngọn lửa đỏ rất nhỏ giữa trán, là dấu hiệu pháp sư Hỏa của nàng. Mọi tranh phải có; `bust.webp` đã làm lại có dấu này.
+
+**Độ dài trượng phải đồng nhất ở mọi tranh** (Shan nhận xét 09/11/2026: bộ tranh đầu lúc dài lúc ngắn). Tranh cũ dùng **trượng ngắn**, dài khoảng **1,8 lần chiều cao đầu** (từ đỉnh búi tóc đến cằm), tức cỡ một cánh tay rưỡi, nắm một tay, đầu đồng có hạt đỏ. Bản đầu của tranh cast lại vẽ trượng dài tới sát đất (khoảng 2,5 lần chiều cao đầu) nên phải vẽ lại. Câu thêm vào mọi prompt: `the staff is a SHORT wooden rod, its total length equal to about 1.8 times the height of her head (a bit longer than her forearm), never taller than her shoulder when held upright, bronze cap with a small red orb on one end only; keep exactly this length in every picture`. Khi duyệt ảnh, so chiều dài trượng với chiều cao đầu.
+
 **Họa tiết đặc trưng của Hà Vân cần giữ ở mọi tranh** (đọc từ `body.webp`): lớp lót cam ở tay áo và vạt; hai tấm vải thêu chỉ vàng treo ở thắt lưng (họa tiết cánh sen); dải thêu sóng mây vàng ở mép vạt đỏ; đai nâu có hai tấm đồng thoi; vòng đồng răng cưa ở bắp tay; tua đỏ hạt đồng ở đai và chỗ buộc giày. Tranh ra chiêu có thể che bớt vì dáng, nhưng không được bỏ hẳn.
+
+**Kết quả test (09/11/2026):** Shan gửi bộ tranh mới viết lại từ đầu (ảnh chuẩn trước, các tranh sau tham chiếu ảnh chuẩn), cả 5 tranh nền trong suốt, 1024×1536 (ngã 1536×1024), có dấu ngọn lửa trên trán và trượng ngắn đồng nhất. Đã cắt sát, co 0,4 lần (phong thái 0,5 lần), thay `style`, `pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down` của Hà Vân và đổi `anchor/origin/burst` trong `HA_VAN` theo dáng mới (chân đặt đúng giữa hai bàn chân; điểm bắn là đầu trượng, bàn tay xòe, đầu ngón tay chỉ). Dáng mới không trùng tranh cũ nên các tọa độ cũ không còn dùng. `standing.webp` và các lớp rig đã đổi theo ảnh chuẩn (xem đoạn sau). Chân dung `bust.webp` mới (384×384, có dấu trán, nền sương lũy tre và cờ) đã thay cùng ngày.
+
+**Hình động đứng đã đổi theo phong cách mới (09/11/2026):** ảnh chuẩn đứng của Shan được tách lớp bằng code (thân đã xóa trượng, nắm tay và bàn tay buông rồi vá phần vải phía sau; lớp `sword` là trượng ngắn, `arm` là nắm tay, `armR` là bàn tay buông, `head` là đầu). Các lớp khớp hoàn toàn khi ghép lại. Tọa độ mới trong `HA_VAN` (`rigs.ts`); trượng và nắm tay xoay quanh cổ tay (242, 603). Tới đây cả hình động lẫn tranh ra chiêu của Hà Vân đã cùng phong cách. Dải lụa đỏ trên tóc là lớp riêng (`ribbon`, vẽ sau thân), bay theo gió từ chỗ buộc ở búi tóc (gió trục dọc, biên độ 9); thân đã xóa dải lụa và vá lại chỗ nó phủ lên vai.
+
+**Hướng tranh ra đòn:** nhân vật phe trái đứng quay mặt sang phải, các tranh `attack`, `cast`, `ultimate` phải hướng về bên phải (phe phải được lật tự động). Bản `pose-attack` và `pose-cast` đầu quay về trái nên đã **lật ngang tệp** (tọa độ trong `HA_VAN` là 1024 trừ x cũ); sau khi lật, tranh ra chiêu có bàn tay xòe ở bên phải nhưng mặt hơi quay trái, nên nếu tạo lại hãy ghi `palm pushed forward to the right, facing right`. Khi tạo tranh mới, ghi rõ `facing right` trong dòng dáng. `portrait.webp` của Hà Vân (192×192, nền trong suốt) đã cắt lại từ ảnh chuẩn.
 
 ### 9.3 Khối phong cách toàn thân (biến thể của khối bản 2)
 
@@ -203,7 +213,7 @@ Style: stylised digital painting of a historical Vietnamese character for a stra
 Nhân vật chung cho cả năm (dán ngay sau khối 9.3):
 
 ```text
-Subject: Ha Van, female, about 25 years old, a fire mage of the Dinh court, composed and a little guarded. Unmistakably feminine, soft jawline, fine dark brows, light natural lip colour, no forehead mark, no heavy makeup. Dark hair in a bun with a red cloth band and one bronze hair pin, two long red ribbon ends falling behind the shoulder (signature detail, kept calm and short). Brick-red cross-collar robe with a darker brown inner layer and a warm orange lining at the sleeve openings and hem; a gold-thread embroidered wave-and-cloud scroll band along the hem and cuffs; two hanging embroidered cloth panels (one dark, one red) at the waist with a lotus-petal motif; a brown sash with two diamond-shaped bronze plaques; a bronze arm band with a sawtooth pattern on the upper arm; short red tassels with bronze beads; cloth shoes with red cord leg wraps. Carries a wooden staff with a bronze cap and a small red lacquered orb on top (no flame, no glow).
+Subject: Ha Van, female, about 25 years old, a fire mage of the Dinh court, composed and a little guarded. Unmistakably feminine, soft jawline, fine dark brows, light natural lip colour, a tiny red flame-shaped mark painted on the centre of the forehead (her signature fire-mage mark, small and neat, about the size of a grain of rice), no heavy makeup. Dark hair in a bun with a red cloth band and one bronze hair pin, two long red ribbon ends falling behind the shoulder (signature detail, kept calm and short). Brick-red cross-collar robe with a darker brown inner layer and a warm orange lining at the sleeve openings and hem; a gold-thread embroidered wave-and-cloud scroll band along the hem and cuffs; two hanging embroidered cloth panels (one dark, one red) at the waist with a lotus-petal motif; a brown sash with two diamond-shaped bronze plaques; a bronze arm band with a sawtooth pattern on the upper arm; short red tassels with bronze beads; cloth shoes with red cord leg wraps. Carries a wooden staff with a bronze cap and a small red lacquered orb on top (no flame, no glow). A small bronze incense burner hangs on a short chain at her left hip: a carried item only, never used as a weapon. A small embroidered sun-and-bronze-drum emblem (Hoa Lu volunteer army) on the left cuff.
 ```
 
 Rồi thêm **một dòng dáng** theo tranh:
@@ -235,9 +245,11 @@ Claude đo tự động rồi báo:
 - **Nhận ra Hà Vân:** khớp chân dung mới (khăn đỏ, hai dải lụa, trâm đồng, áo đỏ).
 - **Không fantasy:** theo mục 4 và khối 9.3.
 
-### 9.7 Ghép vào trận
+### 9.7 Ghép vào trận (và tranh nền)
 
 1. Claude co và căn từng tranh về **đúng kích thước tệp cũ** (290×457, 297×456, 302×454, 457×304, 250×379) rồi xuất WebP đè lên tệp cũ (bản cũ còn trong lịch sử git để hoàn tác).
 2. Chạy một trận có Hà Vân, quay từng cảnh đánh thường, ra chiêu, tuyệt chiêu, ngã, kiểm tra chân đứng đúng chỗ và hiệu ứng bắn ra từ đúng đầu trượng hoặc ngón tay; chỉnh `anchor`, `origin`, `burst` trong `HA_VAN` nếu lệch.
 3. Chụp trang chi tiết tướng ở Doanh Trại (tranh lớn `style.webp` cạnh chân dung mới).
 4. Báo Shan so sánh trước và sau để quyết có làm tiếp 76 nhân vật còn lại không.
+
+**Đã làm (08/11/2026):** thay `bust.webp` bản có họa tiết; gắn tranh nền hệ Hỏa vào trang chi tiết ([tranh nền](nen-phong-thai.md)). Còn chờ ảnh `style.webp` và bốn tranh ra chiêu của Hà Vân.
