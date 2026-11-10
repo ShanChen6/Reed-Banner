@@ -461,7 +461,31 @@ Tổng: **20 nghĩa quân Hoa Lư** và **36 lính hoặc hàng binh của 12 s�
 | 5 | `pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down` | Giữ dáng tranh cũ làm tham chiếu, đặt lại tọa độ trong `rigs.ts` |
 | 6 | Ghép vào trận, chỉnh tọa độ, chụp so sánh | Claude làm |
 
-**Quy tắc nét mặt (Shan, 10/11/2026):** chỉ **bán thân** và **tranh phong thái** được cười. Dáng chuẩn đứng bình thản; ra đòn, ra chiêu, tuyệt chiêu và gục xuống mặt nghiêm, tập trung (không cười, không nhe răng). Khối mô tả nhân vật dùng chung cho nhiều dáng không được ghi sẵn nụ cười; nụ cười đặc trưng chỉ viết trong dòng dáng của phong thái. Prompt mỗi dáng chiến đấu thêm `serious focused face, no smile, no grin`.
+**Quy tắc nét mặt (Shan, 10/11/2026):** chỉ **bán thân** và **tranh phong thái** được cười. Dáng chuẩn đứng bình thản. Các dáng chiến đấu phải có **sắc thái chiến đấu**, không chỉ là "không cười":
+
+| Dáng | Nét mặt |
+|---|---|
+| Ra đòn | Mắt khóa vào địch, chân mày hạ thấp, hàm nghiến, môi mím |
+| Ra chiêu | Mắt nheo tập trung, chân mày hạ, ánh nhìn vững, miệng ngậm |
+| Tuyệt chiêu | Mắt rực tập trung, chân mày dồn, miệng há hô xung trận, cổ và hàm căng (không hề hước) |
+| Gục xuống | Đau và kiệt sức, chân mày nhíu, mắt nhắm, nhăn mặt |
+
+Khối mô tả nhân vật dùng chung cho nhiều dáng không được ghi sẵn nụ cười; nụ cười đặc trưng chỉ viết trong dòng dáng của phong thái. Prompt mỗi dáng chiến đấu có dòng `BATTLE FACE:` (hoặc `FACE:` với dáng gục) theo bảng trên.
+
+**Phong thái phải đa dạng (Shan, 10/11/2026):** mỗi nhân vật một hoạt động riêng gắn với nghề và tính cách, hạn chế trùng dáng (tránh nhiều người cùng quỳ chạm đất, cùng ngồi lau vũ khí, cùng đứng chống vũ khí). Có thể có **thú**: dắt ngựa, dắt voi, dắt trâu, cho ngựa ăn, ngồi trên lưng trâu. Kho gợi ý: dắt trâu kéo đá; dắt voi tải hàng; dắt ngựa thồ; cho ngựa uống nước; vá lưới trên thuyền; ăn cơm lam; khắc chữ lên đá; mài dao hoặc lau mũi giáo; kể chuyện bên rào lũy; đánh trống; nấu thuốc; chép sách; đếm tiền và sổ; thả diều hoặc nghe gió; nướng cá; gánh nước; buộc cờ lên cột. Trước khi viết phong thái mới, xem bảng dưới để khỏi trùng.
+
+| Nhân vật | Phong thái |
+|---|---|
+| Lê Thạch | Dắt trâu bằng dây thừng, tay vỗ cổ trâu |
+| Kha Sơn | Dắt voi non tải hàng trên đường núi |
+| Hoàng Mộc | Ngồi mép thuyền mở ống cơm lam |
+| Thái Hà | Quỳ vá lưới |
+| Trương Viêm | Ngồi rào lũy kể chuyện cười |
+| Cao Kiên | Ngồi ghế thấp lau mũi giáo |
+| Ông Chấn | Đứng cạnh trống trận đánh nhịp |
+| Doãn Nham | Ngồi trên tảng đá khắc chữ lên bia đá |
+| Hà Vân, Tô Kim, Hồ Lãng | Giữ như prompt đã duyệt (quỳ một gối; ngồi ghế sổ; ngồi mũi thuyền) |
+| Các nhân vật còn lại | Chọn từ kho gợi ý, không trùng bảng này |
 
 Khoảng **7 tranh** và một lần cắt lớp cho mỗi người; 77 nhân vật là hơn 500 tranh, nên làm theo đợt:
 

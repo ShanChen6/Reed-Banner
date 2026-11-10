@@ -82,31 +82,31 @@ Pose: standing calmly in a three-quarter view facing right, weight on both feet,
 ### 3.2 Phong thái (đính `cu-style.png`; khổ dọc 2:3)
 
 ```text
-Pose: kneeling on one knee facing right, his free hand pressed flat on the ground as he touches the earth before the battle, the long spear held upright in the other hand with its bottom on the ground, the shield lowered on his forearm, head slightly bowed, a calm resolute expression. The whole spear is inside the picture.
+Pose: standing beside a water buffalo and leading it by a rope halter, one hand resting on the animal's neck, the buffalo seen from the side at his right with its head and shoulders in the picture, the long spear carried upright in his other hand with its bottom on the ground, the shield slung on his back, head turned to the buffalo with a soft relaxed smile (a village farmer at the end of the day). The whole spear is inside the picture.
 ```
 
 ### 3.3 Ra đòn (đính `cu-pose-attack.png`; khổ ngang 3:2)
 
 ```text
-Pose: a wide steady forward lunge toward the right, the long spear thrust forward horizontally in both hands at chest height with the spearhead pointing right, the shield held close to his body, his weight low, a focused steady gaze. The whole spear is inside the picture.
+Pose: a wide steady forward lunge toward the right, the long spear thrust forward horizontally in both hands at chest height with the spearhead pointing right, the shield held close to his body, his weight low, a focused steady gaze. The whole spear is inside the picture. BATTLE FACE: eyes locked on the enemy ahead, brows drawn down, jaw set, lips pressed, an intense determined look, no smile, no grin.
 ```
 
 ### 3.4 Ra chiêu (đính `cu-pose-cast.png`; khổ dọc 2:3)
 
 ```text
-Pose: planted wide and low, the round shield pushed forward like a wall on his left forearm, the long spear held upright in his right hand beside him with its bottom on the ground, a solid steady expression. The whole spear is inside the picture.
+Pose: planted wide and low, the round shield pushed forward like a wall on his left forearm, the long spear held upright in his right hand beside him with its bottom on the ground, a solid steady expression. The whole spear is inside the picture. BATTLE FACE: narrowed concentrated eyes under lowered brows, a steady unyielding gaze, jaw set, mouth closed, no smile.
 ```
 
 ### 3.5 Tuyệt chiêu (đính `cu-pose-ultimate.png`; khổ dọc 2:3)
 
 ```text
-Pose: a wide stable stance, the shield held forward on his left forearm, the long spear drawn back low behind him in his right hand ready for a powerful thrust, leaning slightly forward, a determined expression. The whole spear is inside the picture with a margin around the tip.
+Pose: a wide stable stance, the shield held forward on his left forearm, the long spear drawn back low behind him in his right hand ready for a powerful thrust, leaning slightly forward, a determined expression. The whole spear is inside the picture with a margin around the tip. BATTLE FACE: an intense resolute face, eyes blazing with focus under drawn brows, mouth set or open in a battle cry, neck and jaw tense, never smiling and never comical.
 ```
 
 ### 3.6 Gục xuống (đính `cu-pose-down.png`; khổ ngang 3:2)
 
 ```text
-Pose: sitting exhausted on the ground, seen from the side, his back sagging, leaning on one arm with the other arm resting limp, head hanging forward, eyes closed, a tired face, the hat fallen on the ground beside him, the shield lying on the ground half under his arm, the long spear lying on the ground beside him with its whole length visible.
+Pose: sitting exhausted on the ground, seen from the side, his back sagging, leaning on one arm with the other arm resting limp, head hanging forward, eyes closed, a tired face, the hat fallen on the ground beside him, the shield lying on the ground half under his arm, the long spear lying on the ground beside him with its whole length visible. FACE: pain and exhaustion, brows drawn together, eyes closed, a grimace, no smile.
 ```
 
 ## 4. Nếu kết quả lệch

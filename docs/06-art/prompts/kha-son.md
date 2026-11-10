@@ -138,31 +138,31 @@ Pose: standing steadily in a three-quarter view facing right, weight on both fee
 ### 3.2 Phong thái
 
 ```text
-Pose: standing facing right, both hands resting on the haft with the bottom spike on the ground in front of him, his chin slightly raised as he gazes at a far mountain, a slow patient expression. The whole weapon is inside the picture. Full body, centred.
+Pose: walking slowly facing right and leading a young draught elephant by a rope, the elephant seen from the side with its head, trunk and shoulder at the right of the picture (a plain rope halter, a folded cloth pad on its back, no ornament), one hand on the rope and the other resting on the elephant's trunk, the axe-spear carried on his left shoulder with its whole length visible, a quiet half-smile. Three-quarter view.
 ```
 
 ### 3.3 Ra đòn (khổ ngang 3:2)
 
 ```text
-Pose: a wide heavy forward step toward the right, the axe-spear held in both hands and carried across at waist height in a broad horizontal sweep with the crescent head and the spearhead pointing to the right, his weight low and steady, a focused calm gaze. The whole weapon is inside the picture. Full body, wide horizontal picture, centred.
+Pose: a wide heavy forward step toward the right, the axe-spear held in both hands and carried across at waist height in a broad horizontal sweep with the crescent head and the spearhead pointing to the right, his weight low and steady, a focused calm gaze. The whole weapon is inside the picture. Full body, wide horizontal picture, centred. BATTLE FACE: eyes locked on the enemy ahead, brows drawn down, jaw set, lips pressed, an intense determined look, no smile, no grin.
 ```
 
 ### 3.4 Ra chiêu
 
 ```text
-Pose: planted wide and low, the axe-spear held upright in front of him in both hands with the haft vertical and the crescent head beside his shoulder, one foot stamping firmly, a solid immovable expression like a mountain that does not step back. The whole weapon is inside the picture, the spearhead not higher than the top of his head plus half a head. Full body, centred.
+Pose: planted wide and low, the axe-spear held upright in front of him in both hands with the haft vertical and the crescent head beside his shoulder, one foot stamping firmly, a solid immovable expression like a mountain that does not step back. The whole weapon is inside the picture, the spearhead not higher than the top of his head plus half a head. Full body, centred. BATTLE FACE: narrowed concentrated eyes under lowered brows, a steady unyielding gaze, jaw set, mouth closed, no smile.
 ```
 
 ### 3.5 Tuyệt chiêu
 
 ```text
-Pose: a wide stable stance, the axe-spear held in both hands behind his right shoulder with the crescent head up and back at shoulder height (ready to swing, NOT overhead), leaning slightly forward, a determined expression. The crescent head stays lower than the top of his head. The whole weapon is inside the picture. Full body, centred.
+Pose: a wide stable stance, the axe-spear held in both hands behind his right shoulder with the crescent head up and back at shoulder height (ready to swing, NOT overhead), leaning slightly forward, a determined expression. The crescent head stays lower than the top of his head. The whole weapon is inside the picture. Full body, centred. BATTLE FACE: an intense resolute face, eyes blazing with focus under drawn brows, mouth set or open in a battle cry, neck and jaw tense, never smiling and never comical.
 ```
 
 ### 3.6 Gục xuống (khổ ngang 3:2)
 
 ```text
-Pose: sitting exhausted on the ground, seen from the side, his back sagging, leaning on one arm with the other arm resting limp, head hanging forward, eyes closed, a tired face, the axe-spear lying on the ground beside him with its whole length visible. Full figure, wide horizontal picture.
+Pose: sitting exhausted on the ground, seen from the side, his back sagging, leaning on one arm with the other arm resting limp, head hanging forward, eyes closed, a tired face, the axe-spear lying on the ground beside him with its whole length visible. Full figure, wide horizontal picture. FACE: pain and exhaustion, brows drawn together, eyes closed, a grimace, no smile.
 ```
 
 ## 4. Nếu kết quả lệch, chỉ đổi một câu
