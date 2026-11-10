@@ -237,7 +237,7 @@ Mỗi nghề 7 người, mỗi hệ một người. **Vũ khí** chọn trong 3.
 |---|---|---|---|
 | Kim | ★ Tô Kim | quạt xếp nan sắt (Quạt) | **cân đồng**, túi tiền vải |
 | Mộc | Nhan Trúc | bút sắt (Quạt) | bó thẻ tre sau lưng |
-| Thủy | Quách Ẩn | thước sắt dài (Trượng) | cần câu trúc, nón rộng vành |
+| Thủy | Quách Ẩn | kiếm (Chém; theo ảnh Shan gửi, đổi từ thước sắt) | cần câu trúc, nón rộng vành |
 | Hỏa | Ninh Hỏa | **quạt lông** (Quạt) | túi mồi lửa |
 | Thổ | Mã Nhạc | đoản kiếm (Chém) | ống thẻ gieo quẻ |
 | Lôi | Từ Kinh | **cửu tiết tiên**, roi sắt chín khúc (Chém) | cuộn bản đồ |
