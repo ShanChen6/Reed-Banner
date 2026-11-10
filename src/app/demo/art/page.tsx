@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CHASE_PASSIVES, COMBO_PASSIVES, dinhBoLinhUltimate, ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PASSIVES, PROFESSIONS, ROLE_SKILLS, STARTER_COMPANIONS, TIERS, TILE_KINDS } from "@/core";
+import { ALL_COMPANIONS, CHASE_PASSIVES, COMBO_PASSIVES, dinhBoLinhUltimate, ELEMENTS, GEAR_SETS, GEAR_SLOTS, mainCharacter, characterSkills, PASSIVES, PROFESSIONS, ROLE_SKILLS, TIERS, TILE_KINDS } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, SPECIAL_NAME, TIER_COLOR_NAME, TILE_NAME } from "@/app/game/battle/labels";
 import { EmptySlotIcon, GearIcon, SetEmblem } from "@/app/game/art/gear";
 import { ElementIcon, FoodIcon, LeaderFlag, ProfessionIcon, ShieldIcon } from "@/app/game/art/icons";
 import { PASSIVE_ART, PassiveIcon } from "@/app/game/art/passives";
 import { Portrait } from "@/app/game/art/portraits";
+import CharacterGallery from "./CharacterGallery";
 import { SkillIcon } from "@/app/game/art/skills";
 import { TILE_COLOR, TileArt } from "@/app/game/art/tiles";
 
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
   robots: { index: false },
 };
 
-const ROSTER = [mainCharacter("moc"), ...STARTER_COMPANIONS];
+const ROSTER = [mainCharacter("moc"), ...ALL_COMPANIONS].map(({ id, name, element, profession }) => ({ id, name, element, profession }));
 const SKILL_ELEMENTS = ELEMENTS.filter((e) => characterSkills("tuongSi", e).length > 0);
 
 /** Bảng xem nhanh mọi hình SVG của /demo, để duyệt art mà không phải chờ ô đặc biệt xuất hiện trong trận. */
@@ -86,23 +87,7 @@ export default function ArtPage() {
 
         <section className="space-y-2">
           <h2 className="font-semibold">Nhân vật</h2>
-          <div className="flex flex-wrap gap-4 text-sm">
-            {ROSTER.map((f) => (
-              <figure key={f.id} className="flex flex-col items-center gap-1">
-                <div className="flex items-end gap-2">
-                  <Portrait id={f.id} element={f.element} profession={f.profession} className="size-20" />
-                  <Portrait id={f.id} element={f.element} profession={f.profession} className="size-8" />
-                </div>
-                <figcaption className="text-center text-xs">
-                  {f.name}
-                  <br />
-                  <span className="opacity-60">
-                    {PROFESSION_NAME[f.profession]} · {ELEMENT_NAME[f.element]}
-                  </span>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
+          <CharacterGallery characters={ROSTER} />
           <p className="text-xs opacity-70">Đinh Bộ Lĩnh đổi màu khung và đai áo theo hệ đã chọn:</p>
           <div className="flex flex-wrap gap-2">
             {ELEMENTS.map((e) => (
