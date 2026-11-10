@@ -554,7 +554,7 @@ test("Lục Diệp có bốn tranh, vòng lá hồi sinh hệ Mộc, hồ lô l�
 test("Nhan Trúc có bốn tranh, sương độc hệ Mộc, khớp nằm trong lớp và texture khớp tọa độ", () => {
   const rig = rigOf("nhanTruc");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "fan");
+  assert.equal(rig.weapon, "staff");
   assert.equal(rig.strikeFx, "poisonMist");
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");

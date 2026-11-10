@@ -1650,45 +1650,49 @@ const LUC_DIEP: WarriorRig = {
 };
 
 /**
- * Nhan Trúc, mưu sĩ hệ Mộc (tướng cửa hàng). Bộ tranh Shan gửi 25/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng
- * code: quạt nan lá trúc cùng nắm tay phẩy theo nhịp quạt, bàn tay buông và đầu tách riêng. Hệ tọa độ: ảnh đứng
- * 1024×1536.
+ * Nhan Trúc, mưu sĩ hệ Mộc (tướng cửa hàng). Bộ tranh phong cách mới Shan gửi 11/11/2026 (nền trong suốt sẵn), thay bộ
+ * 25/10: áo xanh rêu thêu lá trúc và mặt trời, bó thẻ tre đeo lưng, trâm đồng, bút lông cán sắt thay quạt nan. Ảnh đứng
+ * 1024×1536 tách lớp bằng code: bút cùng nắm tay xoay quanh cổ tay (vạt áo sau cán vá theo cột, sau nắm tay vá khuếch
+ * tán), bình mực treo thắt lưng đung đưa làm lớp tay không, đầu tách riêng. Tranh ghi sổ bên ngựa thồ lương làm phong
+ * thái.
  */
 const NHAN_TRUC: WarriorRig = {
   skeleton: "warrior",
-  weapon: "fan",
+  weapon: "staff",
+  raise: -0.04,
   dir: "nhan-truc",
   texScale: 0.5,
-  foot: { x: 540, y: 1500 },
-  height: 1490,
+  foot: { x: 490, y: 1532 },
+  height: 1530,
   parts: {
-    body: { x: 255, y: 9, w: 686, h: 1513 },
-    armR: { x: 685, y: 695, w: 66, h: 96 },
-    sword: { x: 146, y: 192, w: 228, h: 525 },
-    arm: { x: 196, y: 400, w: 73, h: 86 },
-    head: { x: 451, y: 12, w: 174, h: 244 },
+    body: { x: 234, y: 2, w: 500, h: 1532 },
+    armR: { x: 606, y: 662, w: 74, h: 110 },
+    sword: { x: 355, y: 575, w: 406, h: 212 },
+    arm: { x: 450, y: 574, w: 144, h: 80 },
+    head: { x: 470, y: 2, w: 156, h: 328 },
   },
   cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 255, y: 450 },
-    elbowR: { x: 700, y: 710 },
-    neck: { x: 545, y: 250 },
+    shoulder: { x: 470, y: 612 },
+    elbowR: { x: 646, y: 668 },
+    neck: { x: 545, y: 318 },
   },
-  blade: [{ x: 230, y: 440 }, { x: 260, y: 260 }],
+  blade: [{ x: 590, y: 615 }, { x: 755, y: 576 }],
   strikeFx: "poisonMist",
   fxColor: 0x4f9a4a,
-  // Phẩy quạt thấp chống hông (đánh thường), chỉ tay giơ quạt (ra chiêu), đẩy chưởng giơ quạt (tuyệt chiêu).
+  // Tấn rộng đâm bút ra trước (đánh thường), dựng bút cạnh vai, tay kia đẩy chưởng (ra chiêu), vung bút qua đầu, tay
+  // kia xòe ra (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 41, y: 12 },
-      anchor: { x: 580, y: 1490 }, scale: 1, burst: { x: 120, y: 820 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 33, y: 12 },
-      anchor: { x: 500, y: 1510 }, scale: 1, burst: { x: 990, y: 330 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 3, y: 12 },
-      anchor: { x: 560, y: 1495 }, scale: 1, burst: { x: 975, y: 350 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 128, y: 3 },
+      anchor: { x: 560, y: 1018 }, scale: 1, burst: { x: 1460, y: 238 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 150, y: 3 },
+      anchor: { x: 500, y: 1531 }, scale: 1, burst: { x: 920, y: 440 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 29, y: 20 },
+      anchor: { x: 480, y: 1534 }, scale: 1, burst: { x: 900, y: 445 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 10, y: 4 },
-    anchor: { x: 800, y: 950 }, scale: 0.85 },
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 36, y: 10 },
+    anchor: { x: 760, y: 990 }, scale: 1 },
 };
 
 /**
