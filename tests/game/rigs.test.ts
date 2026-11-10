@@ -726,7 +726,7 @@ test("Mai Thanh có bốn tranh, cam lộ hệ Thủy, hồ lô xoay quanh nắm
 test("Quách Ẩn có bốn tranh, thủy độn hệ Thủy, quạt phẩy theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("quachAn");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "fan");
+  assert.equal(rig.weapon, "staff");
   assert.equal(rig.strikeFx, "tideMist");
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
