@@ -1784,6 +1784,9 @@ const HO_LANG: WarriorRig = {
  */
 const KHA_SON: WarriorRig = {
   skeleton: "warrior",
+  // Phủ việt cán dài dựng đứng: đi nhịp vũ khí cán dài để lúc đỡ đòn, được khiên, được tăng, chiến thắng chỉ nghiêng nhẹ,
+  // không lật cả cán quanh cổ tay như kiếm.
+  weapon: "spear",
   dir: "kha-son",
   texScale: 0.5,
   foot: { x: 470, y: 1510 },

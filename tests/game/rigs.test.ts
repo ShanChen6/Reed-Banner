@@ -627,7 +627,7 @@ test("Hồ Lãng có bốn tranh, giáo băng hệ Thủy, khớp nằm trong l�
 test("Kha Sơn có bốn tranh, sơn hà trấn kích hệ Thổ, rìu theo nhịp chém và texture khớp tọa độ", () => {
   const rig = rigOf("khaSon");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, undefined);
+  assert.equal(rig.weapon, "spear");
   assert.equal(rig.strikeFx, "mountainCrush");
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
