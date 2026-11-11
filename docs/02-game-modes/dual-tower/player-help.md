@@ -1,10 +1,11 @@
 # Song Tháp — hướng dẫn người chơi
 
-> Cập nhật: 24/10/2026
+> Cập nhật: 11/11/2026
 
 ## Chọn tháp
 
-- **Tháp Thí Luyện:** 20 tầng cố định để giải luật. Mỗi lần vào tầng, HP và lương bắt đầu lại; tầng đã thắng có
+- **Tháp Thí Luyện:** 50 tầng cố định để giải luật, chia 5 chặng 10 tầng (Nhập Môn, Luyện Trận, Lệnh Mới, Song Lệnh,
+  Tam Lệnh); tầng 21 trở lên dùng đối thủ từ tướng cửa hàng và ghép dần hai, ba luật. Mỗi lần vào tầng, HP và lương bắt đầu lại; tầng đã thắng có
   thể chơi lại nhưng thưởng đá lần đầu không lặp.
 - **Tháp Vận Mệnh:** hành trình 10 tầng trong chu kỳ tuần. Roster được khóa khi bắt đầu; HP, energy và lương còn
   lại đi tiếp qua tầng. Dự bị không tự hồi.
@@ -21,11 +22,14 @@ chọn tướng khác; Destiny kiểm tra khả thi trước khi khóa roster.
 
 | Nguồn | Điều kiện | Đá |
 |---|---|---:|
-| Trial first-clear | Thắng mỗi tầng lần đầu | Tổng tối đa 77/20 tầng |
+| Trial first-clear | Thắng mỗi tầng lần đầu | Tổng tối đa 355/50 tầng (77 ở tầng 1–20, 278 ở tầng 21–50) |
 | Trial sweep tier 1 | Tầng cao nhất 1–5 | 1/ngày |
 | Trial sweep tier 2 | Tầng cao nhất 6–10 | 2/ngày |
 | Trial sweep tier 3 | Tầng cao nhất 11–15 | 3/ngày |
 | Trial sweep tier 4 | Tầng cao nhất 16–20 | 4/ngày |
+| Trial sweep tier 5 | Tầng cao nhất 21–30 | 5/ngày |
+| Trial sweep tier 6 | Tầng cao nhất 31–40 | 6/ngày |
+| Trial sweep tier 7 | Tầng cao nhất 41–50 | 7/ngày |
 | Destiny milestone | Lần đầu đạt mốc trong chu kỳ | Tối đa 18/chu kỳ |
 | Destiny settlement | Kỷ lục chu kỳ | 0–5/chu kỳ |
 | Reward giữa tầng Destiny | Chọn hồi phục/Phúc/tài nguyên | 0 |

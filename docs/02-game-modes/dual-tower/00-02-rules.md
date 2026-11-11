@@ -34,7 +34,7 @@ Design-only. Dựa trên [00-01-audit.md](./00-01-audit.md). Mọi con số ghi 
 
 | Mục | Luật |
 |---|---|
-| Số tầng | 20, thiết kế cố định ở bản đầu (nội dung từng tầng do task thiết kế/balance sau; không sinh từ seed run). Số tầng **[TBD nội dung]**. |
+| Số tầng | 50 (nâng từ 20 ngày 11/11/2026; tầng 21–50 xem [báo cáo nội dung](./02-06-trial-content-report.md)), thiết kế cố định (nội dung từng tầng do task thiết kế/balance sau; không sinh từ seed run). Số tầng **[TBD nội dung]**. |
 | Mở tầng | Phải thắng tầng N mới mở N+1. Tiến trình vĩnh viễn: `trialCleared` (tầng cao nhất đã qua). |
 | Thử lại | Đánh lại tầng đã qua tùy ý; không giới hạn lượt. |
 | Reset mỗi lần thử | HP và lương về mức khởi đầu mỗi lần thử (một "lần thử" = một trận một tầng). Không mang phúc/HP giữa các tầng. Mức khởi đầu **[TBD]**. |
@@ -183,7 +183,7 @@ Quy tắc chung: mọi action kiểm tra ở server, xác thực chủ sở hữ
 |---|---|---|
 | Giới hạn roster Destiny | Không giới hạn tối đa; có thể mang toàn bộ tướng sở hữu | Đã chốt |
 | Độ dài chu kỳ | 7 ngày, thứ Hai 00:00 VN | Mặc định, cấu hình được |
-| Số tầng Trial | 20 | Cố định ở bản đầu |
+| Số tầng Trial | 50 | 20 tầng ở bản đầu, thêm 30 tầng ngày 11/11/2026 |
 | Mọi lượng đá, mốc, mức HP/lương khởi đầu, lượng hồi, giá trị Phúc, số tầng Destiny | — | [TBD] — cần simulation + duyệt |
 
 ## 9. Decision log

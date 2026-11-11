@@ -1,14 +1,15 @@
 "use client";
 
 import { FrameInset, ModeBanner, OrnateFrame } from "@/components/game-ui";
-import { Alert, Button, Select, choiceVariants } from "@/components/ui";
+import { Alert, Button, Select, Tabs, choiceVariants } from "@/components/ui";
+import { cn } from "@/lib/cn";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 
 // Giao diện thuần của Tháp Thí Luyện: nhận dữ liệu và callback qua props (không tự gọi mạng, không dùng context
 // phân cảnh) nên dựng được ở mọi nơi. Server là nguồn sự thật: số đá, "đã nhận" và kỷ lục chỉ hiện đúng như
 // server trả; client không tự cộng.
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { MAIN_ID, type Element, type Profession, type Profile } from "@/core";
 import { ElementIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
@@ -19,9 +20,17 @@ import {
   describeRules,
   describeWin,
   firstClearText,
+  foeInfo,
+  formatDateKey,
   formatSweepTime,
+  isBossFloor,
+  nextSweepTierHint,
+  stageIndexOf,
+  trialStages,
+  unclaimedStones,
   FLOOR_STATE_TEXT,
   leaderChoices,
+  lineupErrorText,
   lockedHint,
   navigateIndex,
   NAV_KEYS,
@@ -33,7 +42,7 @@ import {
   type TrialOverview,
 } from "./trial-ui";
 
-/** Số cột của lưới tầng theo breakpoint (khớp class grid-cols bên dưới). Dùng cho phím lên/xuống. */
+/** Số cột của lưới tầng ở mọi bề rộng (khớp class grid-cols-5 bên dưới). Dùng cho phím lên/xuống. */
 export const FLOOR_GRID_COLUMNS = 5;
 
 export interface TrialViewProps {
@@ -65,45 +74,88 @@ function FloorNavigator({
   active: number | null;
   onSelect: (floor: number) => void;
 }) {
+  const stages = trialStages(floors);
+  // Chặng đang xem đi theo tầng đang chọn; người chơi vẫn lật sang chặng khác để xem trước mà không đổi tầng.
+  const selectedStage = selected === null ? 0 : stageIndexOf(selected);
+  const [view, setView] = useState({ stage: selectedStage, forFloor: selected });
+  const stageIndex = Math.min(view.forFloor === selected ? view.stage : selectedStage, Math.max(0, stages.length - 1));
+  const stage = stages[stageIndex];
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
-  const focusIndex = Math.max(0, floors.findIndex((f) => f.floor.floor === selected));
+  if (!stage) return null;
+  const shown = stage.floors;
+  const focusIndex = Math.max(0, shown.findIndex((f) => f.floor.floor === selected));
   const onKey = (e: React.KeyboardEvent, i: number) => {
     if (!NAV_KEYS.includes(e.key)) return;
     e.preventDefault();
-    const next = navigateIndex(i, e.key, floors.length, FLOOR_GRID_COLUMNS);
+    const next = navigateIndex(i, e.key, shown.length, FLOOR_GRID_COLUMNS);
     refs.current[next]?.focus();
   };
+  const left = unclaimedStones(shown);
   return (
-    <ul
-      aria-label="Danh sách tầng Thí Luyện"
-      className="grid grid-cols-4 gap-2 sm:grid-cols-5"
-    >
-      {floors.map((f, i) => {
-        const isSel = f.floor.floor === selected;
-        return (
-          <li key={f.floor.id}>
-            <button
-              type="button"
-              ref={(el) => {
-                refs.current[i] = el;
-              }}
-              tabIndex={i === focusIndex ? 0 : -1}
-              aria-pressed={isSel}
-              aria-label={`Tầng ${f.floor.floor}, ${FLOOR_STATE_TEXT[f.state]}${active === f.floor.floor ? ", đang đánh dở" : ""}`}
-              onClick={() => onSelect(f.floor.floor)}
-              onKeyDown={(e) => onKey(e, i)}
-              data-state={f.state}
-              className={choiceVariants({ className: "ui-floor min-h-14 w-full flex-col gap-0 px-1 py-1.5" })}
-            >
-              <span className="text-lg leading-none">{f.floor.floor}</span>
-              <span className="ui-floor__state mt-1 text-caption font-normal" aria-hidden>
-                {active === f.floor.floor ? "Đang đánh" : FLOOR_STATE_TEXT[f.state]}
+    <>
+      {stages.length > 1 && (
+        <Tabs
+          label="Chặng của tháp"
+          size="sm"
+          fullWidth
+          panelId="trial-stage-panel"
+          value={String(stageIndex)}
+          onChange={(value) => setView({ stage: Number(value), forFloor: selected })}
+          items={stages.map((st) => ({
+            value: String(st.index),
+            label: (
+              <span className="flex flex-col items-center leading-tight" data-state={st.state}>
+                <span>{st.roman}</span>
+                <span className="text-caption font-normal opacity-80">
+                  <span className="sr-only">{st.name}, đã qua </span>
+                  {st.cleared}/{st.floors.length}
+                </span>
               </span>
-            </button>
-          </li>
-        );
-      })}
-    </ul>
+            ),
+          }))}
+        />
+      )}
+      <div id="trial-stage-panel" role={stages.length > 1 ? "tabpanel" : undefined} className="flex flex-col gap-2">
+        <p className="flex flex-wrap items-baseline justify-between gap-x-3 text-sm text-on-wood">
+          <span>
+            <strong className="text-title-on-wood">Chặng {stage.roman}: {stage.name}</strong>
+            <span className="text-on-wood-soft"> · tầng {stage.from} đến {stage.to}</span>
+          </span>
+          <span className={left > 0 ? "text-caption text-frame-gold" : "text-caption text-jade"}>
+            {left > 0 ? `Còn ${left} đá lần đầu` : "Đã nhận hết đá lần đầu"}
+          </span>
+        </p>
+        <ul aria-label={`Tầng ${stage.from} đến ${stage.to}`} className="grid grid-cols-5 gap-2">
+          {shown.map((f, i) => {
+            const isSel = f.floor.floor === selected;
+            const boss = isBossFloor(f);
+            return (
+              <li key={f.floor.id}>
+                <button
+                  type="button"
+                  ref={(el) => {
+                    refs.current[i] = el;
+                  }}
+                  tabIndex={i === focusIndex ? 0 : -1}
+                  aria-pressed={isSel}
+                  aria-label={`Tầng ${f.floor.floor}${boss ? ", ải trùm" : ""}, ${FLOOR_STATE_TEXT[f.state]}${active === f.floor.floor ? ", đang đánh dở" : ""}`}
+                  onClick={() => onSelect(f.floor.floor)}
+                  onKeyDown={(e) => onKey(e, i)}
+                  data-state={f.state}
+                  data-boss={boss || undefined}
+                  className={choiceVariants({ className: "ui-floor min-h-14 w-full flex-col gap-0 px-0.5 py-1.5" })}
+                >
+                  <span className="text-lg leading-none">{f.floor.floor}</span>
+                  <span className="ui-floor__state mt-1 whitespace-nowrap text-caption font-normal" aria-hidden>
+                    {active === f.floor.floor ? "Đang đánh" : boss && f.state !== "cleared" ? "Ải trùm" : f.state === "locked" ? "Khóa" : FLOOR_STATE_TEXT[f.state]}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </>
   );
 }
 
@@ -136,7 +188,7 @@ function Pick({
   );
 }
 
-function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
+function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className?: string }) {
   const { entry, profile, companions, busy, message } = props;
   const f = entry.floor;
   const rules = describeRules(f.rules);
@@ -162,10 +214,11 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
   };
 
   return (
-    <OrnateFrame level="raised" aria-labelledby="trial-floor-title" className="flex min-w-0 flex-col gap-4">
+    <OrnateFrame level="raised" aria-labelledby="trial-floor-title" className={cn("flex min-w-0 flex-col gap-4", props.className)}>
       <header>
         <p className="text-kicker text-frame-gold">
-          {FLOOR_STATE_TEXT[entry.state]} · {DIFFICULTY_NAME[f.difficulty]}
+          {FLOOR_STATE_TEXT[entry.state]} · Độ khó {DIFFICULTY_NAME[f.difficulty]}
+          {isBossFloor(entry) && " · Ải trùm"}
         </p>
         <h2 id="trial-floor-title" className="ui-title-on-wood mt-1 text-title">
           Tầng {f.floor}: {f.narrative.title}
@@ -218,10 +271,21 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
 
       <div>
         <h3 className="ui-title-on-wood mb-1.5 text-base">Đối thủ</h3>
-        <ul className="flex flex-wrap gap-2">
-          {f.foeIds.map((id) => (
-            <li key={id} className="ui-frame-inset px-3 py-1 text-caption text-on-wood">
-              {id}
+        <ul className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+          {f.foeIds.map(foeInfo).map((foe) => (
+            <li key={foe.id} className="ui-frame-inset flex min-w-0 items-center gap-2 p-2">
+              {foe.element && foe.profession && (
+                <Portrait id={foe.id} element={foe.element} profession={foe.profession} className="size-10 shrink-0" />
+              )}
+              <span className="min-w-0 text-caption text-on-wood-soft">
+                <span className="block truncate text-sm font-semibold text-on-wood">{foe.name}</span>
+                {foe.element && foe.profession && (
+                  <span className="flex items-center gap-1">
+                    <ElementIcon element={foe.element} className="size-3.5 shrink-0" />
+                    <span className="truncate">{ELEMENT_NAME[foe.element]} · {PROFESSION_NAME[foe.profession]}</span>
+                  </span>
+                )}
+              </span>
             </li>
           ))}
         </ul>
@@ -234,7 +298,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
       ) : (
         <>
           <div>
-            <h3 className="ui-title-on-wood mb-1.5 text-base">Chọn 2 tướng kèm (đã chọn {companions.length}/2)</h3>
+            <h3 className="ui-title-on-wood mb-1.5 text-base">Chọn 2 tướng kèm <span className="text-sm font-normal text-on-wood-soft">(đã chọn {companions.length}/2)</span></h3>
             <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {pagedOptions.pageItems.map((o) => (
                 <li key={o.id}>
@@ -246,12 +310,16 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
                     onClick={() => props.onToggleCompanion(o.id)}
                     className={choiceVariants({ className: "min-h-14 w-full justify-start p-2 text-left font-normal" })}
                   >
-                    <Portrait id={o.id} element={o.element} profession={o.profession} className="size-10 shrink-0" />
+                    <Portrait id={o.id} element={o.element} profession={o.profession} className="size-9 shrink-0 sm:size-10" />
                     <span className="min-w-0 text-caption">
                       <span className="block truncate text-sm font-semibold">{o.name}</span>
                       <span className="flex items-center gap-1 opacity-80">
-                        <ElementIcon element={o.element} className="size-3.5" />
-                        {ELEMENT_NAME[o.element]} · {PROFESSION_NAME[o.profession]}
+                        <ElementIcon element={o.element} className="size-3.5 shrink-0" />
+                        <span className="truncate">
+                          {/* Thẻ hẹp trên điện thoại: biểu tượng đã cho biết hệ, chữ chỉ còn nghề để không bị cắt. */}
+                          <span className="max-sm:sr-only">{ELEMENT_NAME[o.element]} · </span>
+                          {PROFESSION_NAME[o.profession]}
+                        </span>
                       </span>
                       {o.reason && <span className={`block text-caption ${o.selected ? "text-lacquer" : "text-danger"}`}>{o.reason}</span>}
                     </span>
@@ -290,7 +358,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
               </div>
             ) : (
               <p className="mt-2 text-caption text-on-wood-soft">
-                {companions.length < 2 ? "Chọn đủ 2 tướng để xem các build hợp luật của thủ lĩnh." : "Không có build thủ lĩnh nào hợp luật với 2 tướng này."}
+                {companions.length < 2 ? "Chọn đủ 2 tướng để xem hệ và nghề hợp luật của thủ lĩnh." : "Thủ lĩnh không có hệ, nghề nào hợp luật khi đi cùng 2 tướng này. Hãy đổi tướng kèm."}
               </p>
             )}
             <p className="mt-2 text-caption text-on-wood-soft">Đổi nghề/hệ chỉ áp dụng cho trận này, không đổi hồ sơ.</p>
@@ -298,11 +366,11 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
 
           <div aria-live="polite" data-testid="lineup-status" className="text-sm">
             {preview.status === "incomplete" && <p className="text-on-wood-soft">Cần chọn thêm {preview.missing} tướng kèm.</p>}
-            {preview.status === "valid" && <p className="text-jade">Đội hình hợp luật (server sẽ kiểm tra lại).</p>}
+            {preview.status === "valid" && <p className="text-jade">Đội hình hợp luật, sẵn sàng vào tầng.</p>}
             {preview.status === "invalid" && (
               <ul className="list-inside list-disc text-danger">
                 {preview.errors.map((e, i) => (
-                  <li key={i}>{e.message}</li>
+                  <li key={i}>{lineupErrorText(e)}</li>
                 ))}
               </ul>
             )}
@@ -334,10 +402,66 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry }) {
   );
 }
 
+function SweepPanel({ overview, sweepBusy, onSweep, className }: Pick<TrialViewProps, "overview" | "sweepBusy" | "onSweep"> & { className?: string }) {
+  const { sweep } = overview;
+  const button = sweepButtonState(sweep, sweepBusy);
+  const hint = nextSweepTierHint(overview.cleared, overview.floors.length);
+  return (
+    <OrnateFrame aria-labelledby="trial-sweep-title" className={cn("flex min-w-0 flex-col gap-3", className)}>
+      <div className="min-w-0">
+        <h2 id="trial-sweep-title" className="ui-title-on-wood text-title">Quét tháp hằng ngày</h2>
+        {sweep.eligible ? (
+          <p className="mt-0.5 text-sm text-on-wood">
+            Bậc {sweep.tier}: mỗi ngày nhận <strong>{sweep.amount} Đá Cường Hóa</strong> mà không cần đánh lại.
+          </p>
+        ) : (
+          <p className="mt-0.5 text-sm text-on-wood-soft">Vượt tầng 1 để mở quyền quét: mỗi ngày nhận đá một lần mà không cần đánh lại.</p>
+        )}
+        {sweep.eligible && hint && <p className="mt-1 text-caption text-on-wood-soft">{hint}.</p>}
+        {sweep.claimedToday && (
+          <p className="mt-1 text-caption text-jade">
+            Hôm nay đã nhận. Lượt tiếp theo:{" "}
+            <time dateTime={new Date(sweep.nextAt).toISOString()}>{formatSweepTime(sweep.nextAt)}</time> (giờ Việt Nam).
+          </p>
+        )}
+      </div>
+      <Button
+        type="button"
+        disabled={button.disabled || !overview.supported}
+        onClick={onSweep}
+        className="min-h-11 w-full px-5"
+      >
+        {button.text}
+      </Button>
+      {sweep.history.length > 0 && (
+        <details className="text-caption text-on-wood-soft">
+          <summary className="cursor-pointer py-1 text-on-wood-soft hover:text-on-wood">Lịch sử nhận gần đây</summary>
+          <ul className="mt-1 flex flex-col gap-0.5">
+            {sweep.history.map((item) => (
+              <li key={item.dateKey} data-testid={item.dateKey === sweep.lastClaim?.dateKey ? "last-sweep" : undefined}>
+                {formatDateKey(item.dateKey)}
+                {item.amount === null ? ": đã nhận" : `: +${item.amount} đá`}
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
+    </OrnateFrame>
+  );
+}
+
 export default function TrialView(props: TrialViewProps) {
   const { overview, floor } = props;
   const entry = overview.floors.find((f) => f.floor.floor === floor) ?? null;
-  const sweepButton = sweepButtonState(overview.sweep, props.sweepBusy);
+  const detailRef = useRef<HTMLDivElement>(null);
+  const total = overview.floors.length;
+  // Bố cục một cột (dưới lg): chọn tầng xong cuộn tới khung chi tiết, khỏi phải tự kéo qua lưới tầng.
+  const selectFloor = (next: number) => {
+    props.onSelectFloor(next);
+    if (typeof window === "undefined" || window.matchMedia("(min-width: 1024px)").matches) return;
+    const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    requestAnimationFrame(() => detailRef.current?.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" }));
+  };
   return (
     <>
       <ModeBanner
@@ -345,9 +469,9 @@ export default function TrialView(props: TrialViewProps) {
         kicker="Song Tháp"
         art="/art/home/trial.webp"
         artPosition="center 42%"
-        description="Mỗi tầng một luật chọn đội riêng. Chơi lại tùy ý, Đá Cường Hóa lần đầu chỉ nhận một lần."
+        description={`${total} tầng, mỗi tầng một luật chọn đội riêng. Đánh lại tùy ý; Đá Cường Hóa lần đầu của mỗi tầng chỉ nhận một lần.`}
         stats={[
-          { label: "Đã qua", value: `${overview.cleared}/${overview.floors.length}` },
+          { label: "Đã qua", value: `${overview.cleared}/${total}` },
           { label: "Đá Cường Hóa", value: <span data-testid="stones">{overview.stones}</span> },
         ]}
       />
@@ -358,71 +482,47 @@ export default function TrialView(props: TrialViewProps) {
         </Alert>
       )}
 
-      <OrnateFrame aria-labelledby="trial-sweep-title" className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
-        <div className="min-w-0">
-          <h2 id="trial-sweep-title" className="ui-title-on-wood text-title">Quét Tháp Thí Luyện</h2>
-          {overview.sweep.eligible ? (
-            <p className="mt-0.5 text-sm text-on-wood">
-              Tier {overview.sweep.tier} · dự kiến nhận <strong>{overview.sweep.amount} Đá Cường Hóa</strong>
-            </p>
-          ) : (
-            <p className="mt-0.5 text-sm text-on-wood-soft">Vượt tầng 1 để mở quyền quét hằng ngày.</p>
-          )}
-          <p className="mt-1 text-caption text-on-wood-soft">
-            {overview.sweep.claimedToday ? "Lượt tiếp theo: " : "Có thể quét: "}
-            <time dateTime={new Date(overview.sweep.nextAt).toISOString()}>{formatSweepTime(overview.sweep.nextAt)}</time> (giờ Việt Nam)
-          </p>
-          {overview.sweep.lastClaim && (
-            <p className="mt-1 text-caption text-jade" data-testid="last-sweep">
-              Lần quét cuối: {overview.sweep.lastClaim.dateKey} · +{overview.sweep.lastClaim.amount} đá · tier {overview.sweep.lastClaim.tier}
-            </p>
-          )}
-        </div>
-        <Button
-          type="button"
-          disabled={sweepButton.disabled || !overview.supported}
-          onClick={props.onSweep}
-          aria-describedby="trial-sweep-history"
-          className="min-h-12 w-full px-5 sm:w-auto"
-        >
-          {sweepButton.text}
-        </Button>
-        <div id="trial-sweep-history" className="sm:col-span-2">
-          <h3 className="text-kicker text-on-wood-soft">Lịch sử nhận gần đây</h3>
-          {overview.sweep.history.length ? (
-            <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-caption text-on-wood-soft">
-              {overview.sweep.history.map((item) => (
-                <li key={item.dateKey}>
-                  {item.dateKey}{item.amount === null ? " · đã nhận" : ` · +${item.amount} đá`}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-1 text-caption text-on-wood-soft">Chưa có lượt quét nào được server xác nhận.</p>
-          )}
-        </div>
-      </OrnateFrame>
-
       {!overview.available ? (
-        <OrnateFrame as="div" role="status" className="p-6 text-center text-on-wood-soft">
-          Tháp Thí Luyện chưa mở: các tầng thử thách chưa được phát hành. Tiến trình của bạn được giữ nguyên.
-        </OrnateFrame>
-      ) : (
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-          <OrnateFrame aria-labelledby="trial-floors-title" className="flex min-w-0 flex-col gap-2 self-start">
-            <h2 id="trial-floors-title" className="ui-title-on-wood mb-1 text-title">
-              Các tầng
-            </h2>
-            <FloorNavigator floors={overview.floors} selected={floor} active={overview.active?.floor ?? null} onSelect={props.onSelectFloor} />
-            <p className="text-caption text-on-wood-soft">Dùng phím mũi tên để chuyển tầng, Enter để chọn.</p>
+        <>
+          <OrnateFrame as="div" role="status" className="p-6 text-center text-on-wood-soft">
+            Tháp Thí Luyện chưa mở: các tầng thử thách chưa được phát hành. Tiến trình của bạn được giữ nguyên.
           </OrnateFrame>
-          {entry ? (
-            <FloorDetail {...props} entry={entry} />
-          ) : (
-            <OrnateFrame as="div" role="status" className="p-6 text-center text-on-wood-soft">
-              Chọn một tầng để xem luật và chuẩn bị đội.
-            </OrnateFrame>
-          )}
+          <SweepPanel overview={overview} sweepBusy={props.sweepBusy} onSweep={props.onSweep} />
+        </>
+      ) : (
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:grid-rows-[auto_1fr]">
+          <OrnateFrame aria-labelledby="trial-floors-title" className="flex min-w-0 flex-col gap-3 self-start">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 id="trial-floors-title" className="ui-title-on-wood text-title">
+                Các tầng
+              </h2>
+              <p className="text-caption text-on-wood-soft">
+                {overview.cleared >= total ? "Đã chinh phục cả tháp" : `Đang ở tầng ${overview.cleared + 1}`}
+              </p>
+            </div>
+            <div
+              role="progressbar"
+              aria-label="Tiến độ leo tháp"
+              aria-valuemin={0}
+              aria-valuemax={total}
+              aria-valuenow={overview.cleared}
+              className="h-1.5 overflow-hidden rounded-full bg-wood-inset"
+            >
+              <div className="h-full rounded-full bg-jade" style={{ width: `${total ? (overview.cleared / total) * 100 : 0}%` }} />
+            </div>
+            <FloorNavigator floors={overview.floors} selected={floor} active={overview.active?.floor ?? null} onSelect={selectFloor} />
+            <p className="hidden text-caption text-on-wood-soft pointer-fine:block">Dùng phím mũi tên để chuyển tầng, Enter để chọn.</p>
+          </OrnateFrame>
+          <div ref={detailRef} className="min-w-0 scroll-mt-20 lg:col-start-2 lg:row-span-2 lg:row-start-1">
+            {entry ? (
+              <FloorDetail {...props} entry={entry} />
+            ) : (
+              <OrnateFrame as="div" role="status" className="p-6 text-center text-on-wood-soft">
+                Chọn một tầng để xem luật và chuẩn bị đội.
+              </OrnateFrame>
+            )}
+          </div>
+          <SweepPanel overview={overview} sweepBusy={props.sweepBusy} onSweep={props.onSweep} className="self-start lg:col-start-1 lg:row-start-2" />
         </div>
       )}
     </>
