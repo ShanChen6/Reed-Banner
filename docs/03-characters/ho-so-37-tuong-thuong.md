@@ -401,7 +401,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Xuất thân:** người cầm trống lệnh của đội quân Tiên Du, giỏi giữ nhịp. Anh theo về cùng em gái vì muốn đưa nhịp trống vào thế trận lớn hơn.
 - **Tính cách:** nhanh, vui, thương em; hay gõ nhịp lên mọi thứ.
 - **Ba dấu ấn:** mặt rộng, búi tóc gọn, tay thon · áo lam xám thêu sao bốn cánh, màu nhấn lam · túi quân cờ vây đeo hông (vật dụng, không dùng đánh).
-- **Vũ khí và nhịp:** **gương đồng cầm tay** (đĩa đồng tròn mặt sau chạm vân Đông Sơn, cán ngắn; vừa đỡ đòn vừa hắt nắng báo hiệu cho quân) · Quạt (đổi 11/11/2026: từ giáo ngắn cắm cờ, rồi bàn cờ vây; Shan yêu cầu không dùng trống và dùng vũ khí khác hẳn, vẫn có chất quân sư).
+- **Vũ khí và nhịp:** **thương thủy** (thương mảnh cán lam, mũi hình lá có viền gợn sóng, dải lụa lam dưới mũi; đổi 11/11/2026 từ giáo ngắn cắm cờ, rồi bàn cờ vây, rồi gương đồng; Shan chốt thương và không dùng trống) · Đâm.
 - **Quan hệ:** R7, anh của Vi Lam.
 - **Câu nói:** "Trống đúng nhịp, quân đúng bước."
 
@@ -434,7 +434,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Xuất thân:** người thổi tù và báo hiệu cho các làng núi, giỏi đọc dấu hiệu trời. Cô theo cờ lau để thổi nhịp tiến cho cả đội.
 - **Tính cách:** mạnh mẽ, thẳng, vui; thích thử gió trước khi nói.
 - **Ba dấu ấn:** mặt rắn rỏi, tóc cột sau, mắt sáng · áo tím sẫm thêu sét và mặt trời trống đồng, màu nhấn tím · tù và đeo vai.
-- **Vũ khí và nhịp:** **kiếm cong** · Chém.
+- **Vũ khí và nhịp:** **lôi kiếm** (kiếm cong lưỡi một bên, khắc vệt sét dọc sống, hộ vệ hình mặt trời trống đồng, dây tím; Shan chốt 11/11/2026, bỏ cờ lệnh trong tranh cũ) · Chém.
 - **Quan hệ:** chưa chốt.
 - **Câu nói:** "Tiếng tù và đi xa hơn tiếng nói."
 
