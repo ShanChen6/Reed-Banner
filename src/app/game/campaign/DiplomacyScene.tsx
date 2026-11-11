@@ -132,7 +132,7 @@ export default function DiplomacyScene({
           Không có trận, không có thanh máu. Kết cục đã cố định:{" "}
           <strong className="text-info">{outcome}</strong>
           {counterpart ? ` (${counterpart.name})` : ""}. Lời đáp chỉ đổi cách
-          kể; không có thưởng riêng theo lựa chọn. Server ghi kết quả vào thế
+          kể; không có thưởng riêng theo lựa chọn. Kết cục được ghi vào thế
           cục sứ quân một lần.
         </p>
       )}
@@ -195,23 +195,23 @@ export default function DiplomacyScene({
                   })}
                 >
                   <span className="flex items-center justify-between gap-2">
-                    <span className="font-semibold text-on-wood">
+                    <span className="font-semibold">
                       {c.label}
                     </span>
                     {tone && (
-                      <span className="shrink-0 rounded border border-frame-line px-1.5 py-0.5 text-caption text-on-wood uppercase">
+                      <span className="shrink-0 rounded border border-current/40 px-1.5 py-0.5 text-caption uppercase">
                         {TONE_TEXT[tone]}
                       </span>
                     )}
                   </span>
                   {preview && (
-                    <span className="line-clamp-2 text-caption text-on-wood-soft">
+                    <span className="line-clamp-2 text-caption font-normal opacity-80">
                       {preview.text}
                     </span>
                   )}
                   {done && selected && (
-                    <span className="text-caption text-jade">
-                      Lời đáp đã ghi trên máy chủ
+                    <span className="text-caption text-ink-soft">
+                      Lời đáp đã ghi vào sử ký
                     </span>
                   )}
                 </button>
