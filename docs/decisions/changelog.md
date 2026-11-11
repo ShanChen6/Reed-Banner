@@ -1,5 +1,14 @@
 # Nhật ký thay đổi thiết kế
 
+## 11/11/2026
+
+**Tháp Thiên Mệnh: 20 tầng và 8 Phúc mới (có code)**
+- Shan chọn ba phương án: sức địch **dốc vừa** (`0,72 + 0,02 × tầng`, tầng 20 là 1,12), đá mốc **giữ tổng 18 và chia lại** (tầng 5/10/15/20 cho 3/4/5/6 đá; đá cuối chu kỳ vẫn 0–5), và **8 Phúc mới chỉ dùng hook có sẵn** (Kho lương, Tiên phong, Đồng nghề, Tử chiến, Hậu quân, Địa lợi, Dưỡng sức, Quân lệnh), không sửa lõi trận đấu.
+- Áp dụng từ chu kỳ thứ Hai **16/11/2026** (luật V2); run 10 tầng đang chạy giữ luật V1 tới khi kết thúc. Bốn nhóm khó mỗi nhóm 5 tầng (Dễ, Thường, Khó, Trùm), mỗi nhóm 8 luật và không lặp luật trong một chu kỳ. Vàng theo hạng không đổi. Nguồn chính: [luật Song Tháp §11](../02-game-modes/dual-tower/00-02-rules.md#11-destiny-v2--20-tầng-shan-chốt-11112026), [Phúc](../02-game-modes/dual-tower/04-06-destiny-boons.md), [đá](../02-game-modes/dual-tower/05-04-destiny-stones.md).
+- Sửa lỗi: thắng tầng cuối trước đây vẫn mở phần thưởng rồi đưa run sang "chuẩn bị tầng 11" không có nội dung; nay thắng tầng cuối là hoàn thành run (cả V1).
+- Giao diện hiện tên và mô tả Phúc bằng tiếng Việt (trước đây hiện mã), tiến độ `tầng x/20`.
+- Mô phỏng 4 chu kỳ: AI đánh thay trung bình tới tầng 4–6 (roster 3), 8–11 (roster 5), 7–14 (roster 8), có run qua đủ 20 tầng; đá mỗi tuần thấp hơn V1 ([báo cáo](../reports/2026-11-11-destiny-v2-balance.md)). Chưa đo riêng từng Phúc mới.
+
 ## 09/11/2026
 
 **Ảnh phong thái: đủ tranh nền 7 hệ**

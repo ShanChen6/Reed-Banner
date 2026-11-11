@@ -4,6 +4,8 @@ import {
   PROFESSIONS,
   leaderBuildOptions,
   validateLineup,
+  type DestinyBoon,
+  type DestinyBoonRarity,
   type DestinyLeaderBuild,
   type DestinyRewardOffer,
   type DestinyRun,
@@ -83,3 +85,28 @@ export function rewardCandidates(run: DestinyRun, offer: DestinyRewardOffer): re
     return target.downed ? fighter.downed || fighter.hp <= 0 : !fighter.downed && fighter.hp > 0 && fighter.hp < fighter.config.maxHp;
   });
 }
+
+export const DESTINY_RARITY_NAME: Readonly<Record<DestinyBoonRarity, string>> = {
+  common: "Thường",
+  rare: "Hiếm",
+  epic: "Cực hiếm",
+};
+
+/** Tên và mô tả một lần cộng dồn; số liệu khớp DESTINY_BOON_CATALOG ở core. */
+export const DESTINY_BOON_TEXT: Readonly<Record<DestinyBoon, { readonly name: string; readonly body: string }>> = {
+  atk: { name: "Mài gươm", body: "Cả đội +10% công." },
+  def: { name: "Giáp dày", body: "Cả đội +15% thủ." },
+  hp: { name: "Cường thân", body: "Cả đội +10% máu tối đa." },
+  elementalEdge: { name: "Đồng hệ", body: "Tướng cùng hệ với thủ lĩnh +8% công." },
+  armoredFormation: { name: "Trận giáp", body: "Tướng đang mang trang bị +8% thủ." },
+  supplyCache: { name: "Tiếp tế", body: "Mỗi tướng vào trận có thêm 10 năng lượng." },
+  battleDrum: { name: "Trống trận", body: "Vào trận có thêm 10 Nộ khí." },
+  granary: { name: "Kho lương", body: "Nhận ngay 15 lương (tối đa 100)." },
+  vanguard: { name: "Tiên phong", body: "Thủ lĩnh +8% công." },
+  professionUnity: { name: "Đồng nghề", body: "Tướng cùng nghề với thủ lĩnh +8% thủ." },
+  lastStand: { name: "Tử chiến", body: "Tướng vào trận dưới 50% máu +12% công." },
+  rearGuard: { name: "Hậu quân", body: "Sau mỗi tầng thắng, tướng dự bị còn sống hồi 5% máu." },
+  terrain: { name: "Địa lợi", body: "Bàn cờ ra nhiều ô hợp hệ thủ lĩnh hơn, bớt ô vàng và sách." },
+  recuperate: { name: "Dưỡng sức", body: "Sau mỗi tầng thắng, tướng vừa ra trận còn sống hồi 4% máu." },
+  mandate: { name: "Quân lệnh", body: "Cả đội +5% công, thủ và máu tối đa. Chỉ xuất hiện từ tầng 11." },
+};

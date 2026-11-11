@@ -28,12 +28,15 @@ import { MemoryDestinyLeaderboardStore } from "../../src/server/destinyLeaderboa
 const NOW = Date.UTC(2026, 9, 19, 2);
 const SECRET = "destiny-server-secret-for-tests";
 
-function setup(): DestinyDeps {
+/** Thứ Hai 16/11/2026 09:00 giờ Việt Nam: chu kỳ đầu tiên của luật V2 (20 tầng). */
+const NOW_V2 = Date.UTC(2026, 10, 16, 2);
+
+function setup(now = NOW): DestinyDeps {
   let id = 0;
   return {
     store: new MemoryMatchStore(),
     profiles: new MemoryProfileStore(),
-    now: NOW,
+    now,
     seed: 123,
     newId: () => `destiny_${++id}`,
     destinySecret: SECRET,
@@ -215,6 +218,113 @@ describe("Destiny server lifecycle", () => {
     assert.ok(isDualTowerV1(finalProfile.dualTower));
     if (isDualTowerV1(finalProfile.dualTower)) assert.equal(finalProfile.dualTower.destiny.cycleBest, 9);
     assert.equal(finalProfile.stones, 8);
+  });
+
+  it("luật V2: thắng đủ 20 tầng thì run hoàn thành, đá mốc 3/4/5/6 và không còn phần thưởng treo", async () => {
+    const deps = setup(NOW_V2);
+    const initial = await loadProfile(deps.profiles, "u1");
+    const roster = [MAIN_ID, ...Object.keys(initial.profile.companions).slice(0, 5)];
+    const before = await destinyOverview("u1", deps);
+    assert.equal(before.floorCount, 20);
+    assert.equal(before.cycle?.rulesVersion, 2);
+    const started = await startDestinyRun("u1", { rosterIds: roster }, deps);
+    assert.ok(started.ok);
+    if (started.ok) assert.equal(started.run.rulesVersion, 2);
+
+    for (let floor = 1; floor <= 20; floor++) {
+      const run = await currentRun(deps);
+      assert.equal(run.floor, floor);
+      assert.equal(run.phase, "prepare");
+      const content = resolveDestinyFloor(run, SECRET);
+      assert.ok(content.ok);
+      if (!content.ok) return;
+      assert.equal(content.floorCount, 20);
+      const opened = await startDestinyBattle("u1", legalLineup(run, content.floor.rules, floor), deps);
+      assert.ok(opened.ok);
+      if (!opened.ok) return;
+      assert.equal(opened.view.difficulty, floor <= 5 ? "easy" : floor <= 10 ? "normal" : floor <= 15 ? "hard" : "boss");
+      await finishMatch(deps, opened.id, 0);
+      const settled = await getBattle(opened.id, "u1", deps);
+      assert.ok(settled.ok);
+      if (settled.ok) assert.equal(settled.outcome?.destiny?.completed === true, floor === 20);
+
+      const stones = (await loadProfile(deps.profiles, "u1")).profile.stones;
+      assert.equal(stones, floor >= 20 ? 18 : floor >= 15 ? 12 : floor >= 10 ? 7 : floor >= 5 ? 3 : 0);
+      assert.equal((await deps.destinyLeaderboard!.rankOf(run.cycleId!, "u1"))?.entry.clearedFloor, floor);
+      const after = await currentRun(deps);
+      if (floor === 20) {
+        assert.equal(after.phase, "done");
+        assert.equal(after.active, false);
+        assert.equal(after.completed, true);
+        assert.equal(after.offer, null);
+        assert.deepEqual(await claimDestinyReward("u1", { floor, index: 0 }, deps), { ok: false, error: "stale_reward" });
+        break;
+      }
+      assert.equal(after.phase, "reward");
+      const index = after.offer!.findIndex(({ kind }) => kind === "boon");
+      const claimed = await claimDestinyReward("u1", { floor, index: Math.max(0, index), targetIds: [MAIN_ID] }, deps);
+      assert.ok(claimed.ok);
+    }
+
+    const finalProfile = (await loadProfile(deps.profiles, "u1")).profile;
+    assert.ok(isDualTowerV1(finalProfile.dualTower));
+    if (!isDualTowerV1(finalProfile.dualTower)) return;
+    assert.equal(finalProfile.dualTower.destiny.cycleBest, 20);
+    assert.deepEqual(finalProfile.dualTower.destiny.claimedMilestones,
+      ["floor-5-v2", "floor-10-v2", "floor-15-v2", "floor-20-v2"]);
+    const overview = await destinyOverview("u1", deps);
+    assert.equal(overview.floorCount, 20);
+    const again = await startDestinyRun("u1", { rosterIds: roster }, deps);
+    assert.ok(again.ok, "hoàn thành rồi vẫn mở được run mới trong chu kỳ");
+  });
+
+  it("run V1 mở trước khi phát hành V2 vẫn chạy đủ 10 tầng cũ trong chu kỳ V2 và không nhận thêm đá mốc V2", async () => {
+    const deps = setup(NOW_V2);
+    const initial = await loadProfile(deps.profiles, "u1");
+    const roster = [MAIN_ID, ...Object.keys(initial.profile.companions).slice(0, 5)];
+    assert.ok((await startDestinyRun("u1", { rosterIds: roster }, deps)).ok);
+    const stored = await loadProfile(deps.profiles, "u1");
+    assert.ok(isDualTowerV1(stored.profile.dualTower));
+    if (!isDualTowerV1(stored.profile.dualTower)) return;
+    const destiny = stored.profile.dualTower.destiny;
+    assert.equal(await deps.profiles.put("u1", {
+      ...stored.profile,
+      stones: 3,
+      dualTower: {
+        ...stored.profile.dualTower,
+        destiny: { ...destiny, claimedMilestones: ["floor-3-v1"], run: { ...destiny.run!, rulesVersion: 1, floor: 5 } },
+      },
+    }, stored.version, deps.now), true);
+    const run = await currentRun(deps);
+    const content = resolveDestinyFloor(run, SECRET);
+    assert.ok(content.ok);
+    if (!content.ok) return;
+    assert.equal(content.floorCount, 10);
+    assert.equal(content.cycle.floors.length, 10);
+    assert.equal((await destinyOverview("u1", deps)).floorCount, 10);
+    const opened = await startDestinyBattle("u1", legalLineup(run, content.floor.rules), deps);
+    assert.ok(opened.ok);
+    if (!opened.ok) return;
+    await finishMatch(deps, opened.id, 0);
+    assert.ok((await getBattle(opened.id, "u1", deps)).ok);
+    assert.equal((await loadProfile(deps.profiles, "u1")).profile.stones, 8, "nhận mốc tầng 5 của bảng V1");
+
+    await stopDestinyRun("u1", deps);
+    assert.ok((await startDestinyRun("u1", { rosterIds: roster }, deps)).ok);
+    for (let floor = 1; floor <= 5; floor++) {
+      const next = await currentRun(deps);
+      const nextContent = resolveDestinyFloor(next, SECRET);
+      assert.ok(nextContent.ok);
+      if (!nextContent.ok) return;
+      const battle = await startDestinyBattle("u1", legalLineup(next, nextContent.floor.rules, floor), deps);
+      assert.ok(battle.ok);
+      if (!battle.ok) return;
+      await finishMatch(deps, battle.id, 0);
+      assert.ok((await getBattle(battle.id, "u1", deps)).ok);
+      const reward = await currentRun(deps);
+      assert.ok((await claimDestinyReward("u1", { floor, index: reward.offer!.findIndex(({ kind }) => kind === "boon"), targetIds: [] }, deps)).ok);
+    }
+    assert.equal((await loadProfile(deps.profiles, "u1")).profile.stones, 8, "run V2 cùng chu kỳ không phát chồng mốc");
   });
 
   it("stop idempotent ở prepare và battle", async () => {

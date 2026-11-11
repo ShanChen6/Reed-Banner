@@ -2,6 +2,7 @@ import {
   applyStoneAward,
   DESTINY_HISTORY_MAX,
   destinyCycleStoneReward,
+  destinyRulesVersionForCycle,
   isDualTowerV1,
   planDestinyCycleEnd,
   type DestinyCycleHistory,
@@ -83,7 +84,7 @@ export async function reconcileDestinyCycle(
       const planned = oldCycleId
         ? planDestinyCycleEnd(current, {
             cycleId: oldCycleId,
-            stonesForBest: destinyCycleStoneReward,
+            stonesForBest: (best) => destinyCycleStoneReward(best, destinyRulesVersionForCycle(oldCycleId)),
           })
         : { ok: true as const, next: current, events: [] };
       if (!planned.ok) return { ok: false as const, error: "invalid_reward" as const };
