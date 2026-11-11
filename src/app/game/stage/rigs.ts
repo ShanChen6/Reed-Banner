@@ -3307,48 +3307,48 @@ const LOI_MINH_XA: WarriorRig = {
 };
 
 /**
- * Giáp Yến (ngoại hiệu Tật Phong Lăng), xạ thủ hệ Phong (RB-068, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
- * (nền trong suốt sẵn). Ảnh đứng hai tay nâng dải lụa thành vòng nên vòng lụa giữa ở lại thân; đầu lụa rủ bên trái cùng bàn
- * tay trái lắc nhẹ quanh cổ tay như hồ lô của y sư, cổ tay áo phải và đầu tách riêng. Tranh tư thế vẽ người nhỏ hơn hình
- * đứng nên phóng 1.1. Hệ tọa độ: ảnh đứng 1086×1448.
+ * Giáp Yến (ngoại hiệu Tật Phong Lăng), xạ thủ hệ Phong (RB-068, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
+ * 11/11 (nền trong suốt sẵn). Ảnh đứng hai tay cầm dải lụa võng thành vòng nên vòng lụa ở lại thân; đầu lụa rủ bên trái
+ * cùng bàn tay trái lắc nhẹ quanh cổ tay như hồ lô của y sư, bàn tay phải và đầu (cả bím tóc trên) tách riêng. Hệ tọa
+ * độ: ảnh đứng 1024×1536.
  */
 const TAT_PHONG_LANG: WarriorRig = {
   skeleton: "warrior",
   weapon: "gourd",
-  grip: { x: 285, y: 530 },
+  grip: { x: 210, y: 738 },
   dir: "tat-phong-lang",
   texScale: 0.5,
-  foot: { x: 460, y: 1430 },
-  height: 1420,
+  foot: { x: 440, y: 1520 },
+  height: 1505,
   parts: {
-    body: { x: 171, y: 8, w: 877, h: 1430 },
-    armR: { x: 762, y: 447, w: 129, h: 46 },
-    sword: { x: 208, y: 520, w: 131, h: 471 },
-    arm: { x: 240, y: 450, w: 67, h: 111 },
-    head: { x: 433, y: 8, w: 190, h: 232 },
+    body: { x: 147, y: 11, w: 806, h: 1518 },
+    armR: { x: 795, y: 526, w: 86, h: 76 },
+    sword: { x: 98, y: 735, w: 146, h: 328 },
+    arm: { x: 162, y: 636, w: 104, h: 106 },
+    head: { x: 320, y: 11, w: 300, h: 252 },
   },
   cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 275, y: 465 },
-    elbowR: { x: 775, y: 470 },
-    neck: { x: 545, y: 225 },
+    shoulder: { x: 212, y: 645 },
+    elbowR: { x: 808, y: 560 },
+    neck: { x: 545, y: 245 },
   },
-  blade: [{ x: 285, y: 530 }, { x: 270, y: 970 }],
+  blade: [{ x: 210, y: 738 }, { x: 150, y: 1050 }],
   strikeFx: "silkGale",
   fxColor: 0x2e9e90,
-  // Đá quét, gom lụa cạnh hông (đánh thường), bước tới quét lụa ngang hông (ra chiêu), xoay rộng nâng lụa thành cung lớn trên
-  // đầu (tuyệt chiêu).
+  // Tấn trước đấm thẳng phóng lụa (đánh thường), đá ngang quét lụa bay vòng (ra chiêu), vung lụa thành cung lớn qua đầu
+  // (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 14, y: 6 },
-      anchor: { x: 276, y: 1185 }, scale: 1.1, burst: { x: 1290, y: 500 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 61, y: 8 },
-      anchor: { x: 600, y: 1170 }, scale: 1.1, burst: { x: 1240, y: 700 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 8, y: 8 },
-      anchor: { x: 650, y: 1170 }, scale: 1.1, burst: { x: 1300, y: 330 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 69, y: 5 },
+      anchor: { x: 390, y: 995 }, scale: 1.2, burst: { x: 1300, y: 520 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 115, y: 11 },
+      anchor: { x: 380, y: 995 }, scale: 1.2, burst: { x: 1050, y: 550 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 129, y: 11 },
+      anchor: { x: 440, y: 1000 }, scale: 1.2, burst: { x: 1240, y: 330 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 14, y: 8 },
-    anchor: { x: 660, y: 1150 }, scale: 0.85 },
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 97, y: 14 },
+    anchor: { x: 640, y: 950 }, scale: 1.1 },
 };
 
 /**
