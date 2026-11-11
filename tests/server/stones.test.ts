@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   applyStoneAward,
-  DESTINY_STONE_MILESTONES,
+  destinyStoneMilestones,
   destinyCycleStoneReward,
   isDualTowerV1,
   newProfile,
@@ -156,7 +156,7 @@ describe("đá Destiny theo cycle", () => {
       const plan = planDestinyFloorClear(profile.dualTower.destiny, {
         cycleId: "2026-10-19",
         floor,
-        milestones: DESTINY_STONE_MILESTONES,
+        milestones: destinyStoneMilestones(1),
       });
       assert.ok(plan.ok);
       if (!plan.ok) return;
@@ -171,7 +171,7 @@ describe("đá Destiny theo cycle", () => {
     const replay = planDestinyFloorClear(profile.dualTower.destiny, {
       cycleId: "2026-10-19",
       floor: 10,
-      milestones: DESTINY_STONE_MILESTONES,
+      milestones: destinyStoneMilestones(1),
     });
     assert.ok(replay.ok && replay.events.length === 0);
   });
@@ -187,7 +187,7 @@ describe("đá Destiny theo cycle", () => {
     };
     const weekly = planDestinyCycleEnd(progress, {
       cycleId: "2026-10-19",
-      stonesForBest: destinyCycleStoneReward,
+      stonesForBest: (best) => destinyCycleStoneReward(best, 1),
     });
     assert.ok(weekly.ok);
     if (!weekly.ok) return;
@@ -206,12 +206,22 @@ describe("đá Destiny theo cycle", () => {
     const next = planDestinyFloorClear(progress, {
       cycleId: "2026-10-26",
       floor: 3,
-      milestones: DESTINY_STONE_MILESTONES,
+      milestones: destinyStoneMilestones(1),
     });
     assert.ok(next.ok);
     if (!next.ok) return;
     award = applyStoneAward(profile, next.events, { destiny: next.next });
     assert.ok(award.ok && award.granted === 3 && award.profile.stones === 6);
-    assert.deepEqual([0, 1, 2, 3, 5, 9, 10].map(destinyCycleStoneReward), [0, 1, 1, 2, 3, 3, 5]);
+    assert.deepEqual([0, 1, 2, 3, 5, 9, 10].map((best) => destinyCycleStoneReward(best, 1)), [0, 1, 1, 2, 3, 3, 5]);
+  });
+
+  it("bảng đá V2 (20 tầng) giữ tổng 18 đá mốc và 0–5 đá cuối chu kỳ", () => {
+    const v2 = destinyStoneMilestones(2);
+    assert.deepEqual(v2.map(({ floor, stones }) => [floor, stones]), [[5, 3], [10, 4], [15, 5], [20, 6]]);
+    assert.equal(v2.reduce((sum, { stones }) => sum + stones, 0),
+      destinyStoneMilestones(1).reduce((sum, { stones }) => sum + stones, 0));
+    assert.ok(v2.every(({ id }) => !destinyStoneMilestones(1).some((old) => old.id === id)));
+    assert.deepEqual([0, 1, 4, 5, 9, 10, 14, 15, 19, 20].map((best) => destinyCycleStoneReward(best, 2)),
+      [0, 1, 1, 2, 2, 3, 3, 4, 4, 5]);
   });
 });

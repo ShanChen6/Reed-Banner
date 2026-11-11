@@ -1,12 +1,15 @@
 import {
   HUMAN,
   applyStoneAward,
-  DESTINY_STONE_MILESTONES,
+  destinyRunRulesVersion,
+  destinyStoneMilestones,
   generateDestinyOffer,
   isDualTowerV1,
   planDestinyFloorClear,
   settleDestinyFloor,
   validateDestinyMatchTag,
+  type DestinyProgress,
+  type DestinyRun,
   type Match,
 } from "@/core";
 import { updateProfile, type ProfileStore } from "./profiles";
@@ -20,6 +23,18 @@ export interface DestinyResult {
   readonly floor: number;
   readonly won: boolean;
   readonly phase: "reward" | "done";
+  /** Vừa thắng tầng cuối của run. */
+  readonly completed?: boolean;
+}
+
+/**
+ * Bảng mốc theo version luật của run. Nếu chu kỳ này đã nhận mốc của version khác (run V1 mở trước khi
+ * phát hành V2, rồi mở tiếp run V2 cùng chu kỳ) thì không phát thêm, để tổng đá mỗi chu kỳ không vượt 18.
+ */
+function milestonesFor(progress: DestinyProgress, run: DestinyRun) {
+  const milestones = destinyStoneMilestones(destinyRunRulesVersion(run));
+  const ids = new Set(milestones.map(({ id }) => id));
+  return progress.claimedMilestones.some((id) => !ids.has(id)) ? [] : milestones;
 }
 
 export async function settleDestinyMatch(
@@ -54,16 +69,17 @@ export async function settleDestinyMatch(
       const settled = settleDestinyFloor(run, match.battle);
       if (!settled.ok) return { ok: false as const, error: settled.error };
       const withoutMatch = { ...settled.run, matchId: undefined };
-      const nextRun = settled.won
+      const awaitsReward = settled.won && withoutMatch.phase === "reward";
+      const nextRun = awaitsReward
         ? { ...withoutMatch, offer: generateDestinyOffer(withoutMatch) }
         : { ...withoutMatch, offer: null };
-      if (settled.won && (!nextRun.offer || nextRun.offer.length !== 3))
+      if (awaitsReward && (!nextRun.offer || nextRun.offer.length !== 3))
         return { ok: false as const, error: "invalid_offer" as const };
       const planned = settled.won
         ? planDestinyFloorClear(progress, {
             cycleId: tag.cycleId,
             floor: tag.floor,
-            milestones: DESTINY_STONE_MILESTONES,
+            milestones: milestonesFor(progress, run),
           })
         : { ok: true as const, next: progress, events: [] };
       if (!planned.ok) return { ok: false as const, error: planned.error };
@@ -71,7 +87,8 @@ export async function settleDestinyMatch(
         destiny: { ...planned.next, run: nextRun },
       });
       if (!awarded.ok) return { ok: false as const, error: awarded.error };
-      result = { floor: tag.floor, won: match.battle.winner === HUMAN, phase: nextRun.phase === "reward" ? "reward" : "done" };
+      result = { floor: tag.floor, won: match.battle.winner === HUMAN, phase: nextRun.phase === "reward" ? "reward" : "done",
+        ...(nextRun.completed ? { completed: true } : {}) };
       leaderboard = settled.won ? {
         eventId: matchId,
         cycleId: tag.cycleId,

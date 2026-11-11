@@ -1,6 +1,9 @@
 import { simulateDestinyCycle, summarize, type DestinySimPolicy } from "../src/server/destinyBalanceReport";
 
-const cycles = ["2026-10-19", "2026-10-26", "2026-11-02", "2026-11-09"];
+// Mặc định đo luật V2 (20 tầng, chu kỳ từ 16/11/2026); thêm `--v1` để đo lại luật 10 tầng cũ.
+const cycles = process.argv.includes("--v1")
+  ? ["2026-10-19", "2026-10-26", "2026-11-02", "2026-11-09"]
+  : ["2026-11-16", "2026-11-23", "2026-11-30", "2026-12-07"];
 const caps = [3, 5, 8] as const;
 const levels = [5, 10, 20, 30] as const;
 const policies: readonly DestinySimPolicy[] = ["boon_first", "recovery_first"];
