@@ -292,7 +292,7 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Một tướng Bố Hải",
-            text: "Kho lương và bến thuyền cứ để quân tôi giữ. Các anh cứ xông lên phía trước, sau lưng không có kẽ hở.",
+            text: "Kho lương và bến thuyền cứ để quân tôi giữ. Anh em cứ xông lên phía trước, sau lưng không có kẽ hở.",
             basis: "fictional",
           },
           {
