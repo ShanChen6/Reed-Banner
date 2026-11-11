@@ -87,7 +87,7 @@ export function portraitUrl(id: string): string | null {
  * Nhân vật đã có chân dung bán thân phong cách mới (`bust.webp` 384×384, nền tranh sương; prompt ở
  * docs/06-art/prompts/chan-dung-lich-su.md). Thiếu thì ô chân dung dùng `portrait.webp` như cũ. Thêm id vào đây khi có ảnh.
  */
-export const BUST_IDS: ReadonlySet<string> = new Set(["nguyenBac", "haVan", "maiThanh", "leThach", "phungPhong", "toKim", "tranCuong", "lamTung", "hoLang", "lyLiet", "khaSon", "huaLang", "tongTan", "chuNgan", "damThao", "daoLam", "doanNham", "vuLoi", "lieuYen", "caoKien", "hoangMoc", "thaiHa", "truongViem", "manhTuong", "ongChan", "hongDan", "lucDiep", "chauNgoc", "beLien", "tieuMinh", "bachSuong", "ninhHoa", "quachAn", "nhanTruc", "maNhac", "buiPhieu"]);
+export const BUST_IDS: ReadonlySet<string> = new Set(["nguyenBac", "haVan", "maiThanh", "leThach", "phungPhong", "toKim", "tranCuong", "lamTung", "hoLang", "lyLiet", "khaSon", "huaLang", "tongTan", "chuNgan", "damThao", "daoLam", "doanNham", "vuLoi", "lieuYen", "caoKien", "hoangMoc", "thaiHa", "truongViem", "manhTuong", "ongChan", "hongDan", "lucDiep", "chauNgoc", "beLien", "tieuMinh", "bachSuong", "ninhHoa", "quachAn", "nhanTruc", "maNhac", "buiPhieu", "tuKinh"]);
 
 export function bustUrl(id: string): string | null {
   const photo = BUST_IDS.has(id) ? portraitUrl(id) : null;
