@@ -412,7 +412,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Xuất thân:** người cầm cờ lệnh của đội đúc, quen điều hành thợ trong lò lửa. Cô theo cờ lau vì thấy đội này cần người điều phối giỏi.
 - **Tính cách:** quyết đoán, sôi nổi, gắt khi mệt; hay bó thẻ tre trước khi họp.
 - **Ba dấu ấn:** tóc buộc cao, mắt sáng, mặt lấm than · áo đỏ gạch thêu mặt trời trống đồng, màu nhấn đỏ · bó thẻ tre.
-- **Vũ khí và nhịp:** **thương đỏ** (cán dài sơn đỏ nâu, mũi lá cao hẹp sắt tối khảm đỏ, tua nâu ở chân cán; lấy dáng từ cây thương đỏ Shan gửi 11/11/2026, giản lược, bỏ lưỡi liềm; thay cờ lệnh) · Đâm.
+- **Vũ khí và nhịp:** **thương rồng đỏ** (cán dài sơn đỏ, mũi lá rộng bạc, rồng đồng quấn hai vòng dưới mũi, vòng đồng ở chân cán; lấy dáng từ cây thương rồng Shan gửi 11/11/2026, giản lược; thay cờ lệnh) · Đâm.
 - **Quan hệ:** chưa chốt.
 - **Câu nói:** "Lệnh đã ban thì lửa cũng phải nghe."
 
