@@ -3222,45 +3222,46 @@ const XICH_DIEM_LUAN: WarriorRig = {
 };
 
 /**
- * Kha Thạch (ngoại hiệu Trấn Sơn Thạch), xạ thủ hệ Thổ (RB-066, nghề chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10 (nền
- * trong suốt sẵn). Ảnh đứng tách lớp bằng code: phi hoàng thạch cùng nắm tay vung như kiếm ngắn, bàn tay trái và đầu tách
- * riêng. Tranh tư thế vẽ người nhỏ hơn hình đứng nên phóng nhẹ. Hệ tọa độ: ảnh đứng 1024×1536.
+ * Kha Thạch (ngoại hiệu Trấn Sơn Thạch), xạ thủ hệ Thổ (RB-066). Bộ tranh phong cách mới Shan gửi 11/11/2026 (nền trong
+ * suốt sẵn), thay bộ 30/10: áo chần bông vàng đất thêu thẻ gỗ, áo trong nâu, đai đỏ, túi đá đan bên hông, đá phi dẹt.
+ * Ảnh đứng 1024×1536 tách lớp bằng code: bàn tay cầm đá cùng viên đá vung quanh cổ tay (nằm ngoài thân nên không cần
+ * vá), bàn tay chống hông và đầu tách riêng. Tranh ngồi trên tảng đá xem viên đá làm phong thái.
  */
 const TRAN_SON_THACH: WarriorRig = {
   skeleton: "warrior",
   dir: "tran-son-thach",
   texScale: 0.5,
-  foot: { x: 540, y: 1505 },
-  height: 1500,
+  foot: { x: 500, y: 1515 },
+  height: 1505,
   parts: {
-    body: { x: 93, y: 0, w: 865, h: 1514 },
-    armR: { x: 839, y: 690, w: 97, h: 162 },
-    sword: { x: 204, y: 758, w: 38, h: 45 },
-    arm: { x: 107, y: 688, w: 116, h: 126 },
-    head: { x: 364, y: 3, w: 284, h: 218 },
+    body: { x: 175, y: 9, w: 666, h: 1516 },
+    armR: { x: 641, y: 660, w: 108, h: 102 },
+    sword: { x: 175, y: 750, w: 108, h: 62 },
+    arm: { x: 150, y: 698, w: 96, h: 128 },
+    head: { x: 380, y: 10, w: 266, h: 250 },
   },
   cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 150, y: 710 },
-    elbowR: { x: 870, y: 705 },
-    neck: { x: 520, y: 205 },
+    shoulder: { x: 205, y: 712 },
+    elbowR: { x: 715, y: 668 },
+    neck: { x: 540, y: 235 },
   },
-  blade: [{ x: 185, y: 760 }, { x: 240, y: 798 }],
+  blade: [{ x: 200, y: 790 }, { x: 278, y: 760 }],
   strikeFx: "stoneGuard",
   fxColor: 0xc8963c,
-  // Bước tới đấm tay trái, tay phải giữ đá thu về (đánh thường), chùng gối vung đá về sau ngang thấp (ra chiêu), trụ sâu
-  // đưa đá trên vai ném mạnh (tuyệt chiêu).
+  // Tấn rộng phóng đá dẹt bay tới (đánh thường), giơ đá ngang vai tay kia đẩy chưởng (ra chiêu), giơ cao đá qua đầu lấy
+  // đà ném (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 30, y: 7 },
-      anchor: { x: 550, y: 1420 }, scale: 1.06, burst: { x: 1070, y: 380 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 9, y: 0 },
-      anchor: { x: 560, y: 1415 }, scale: 1.05, burst: { x: 1080, y: 590 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 33, y: 12 },
-      anchor: { x: 720, y: 1170 }, scale: 1.05, burst: { x: 1300, y: 600 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 139, y: 9 },
+      anchor: { x: 610, y: 985 }, scale: 1.05, burst: { x: 1390, y: 170 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 239, y: 6 },
+      anchor: { x: 695, y: 985 }, scale: 1.05, burst: { x: 1300, y: 260 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 235, y: 7 },
+      anchor: { x: 740, y: 995 }, scale: 1.05, burst: { x: 1300, y: 480 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 1, y: 4 },
-    anchor: { x: 660, y: 1100 }, scale: 0.85 },
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 62, y: 5 },
+    anchor: { x: 650, y: 930 }, scale: 1 },
 };
 
 /**
