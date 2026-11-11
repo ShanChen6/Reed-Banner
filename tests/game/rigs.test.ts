@@ -1160,7 +1160,7 @@ test("Tiêu Minh có bốn tranh, lôi châm hồi phục hệ Lôi, đôi hồ 
 test("Từ Kinh có bốn tranh, kinh lôi hệ Lôi, quạt sắt phẩy theo nắm tay và texture khớp tọa độ", () => {
   const rig = rigOf("tuKinh");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "fan");
+  assert.equal(rig.weapon, "gourd");
   assert.equal(rig.strikeFx, "stormSeal");
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
