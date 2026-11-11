@@ -9,6 +9,7 @@ import { Alert, Button, buttonVariants, choiceVariants } from "@/components/ui";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import StartBar from "./StartBar";
 import LeaderBuild from "../profile/LeaderBuild";
+import CompanionPicker from "./CompanionPicker";
 import { startTarget } from "./startMission";
 import {
   CAMPAIGN_CHAPTERS,
@@ -257,7 +258,7 @@ function RewardModal({
             </li>
           ))}
           <li className="text-caption text-on-wood-soft">
-            Server đã ghi thưởng một lần; đánh lại hoặc xem lại không nhận thêm.
+            Thưởng chỉ nhận một lần; đánh lại hoặc xem lại không nhận thêm.
           </li>
         </ul>
         <div className="mt-4 flex flex-wrap gap-2">
@@ -391,7 +392,7 @@ function BattlePrep({
               : objective?.type === "bossPhases" && objective.hpThreshold
                 ? `Đẩy ${foes[0]?.name} xuống còn ${Math.round(objective.hpThreshold * 100)}% máu. Trận dừng ở đó và chuyển sang giai đoạn sau; máu đã mất không hồi lại.`
                 : objective?.type === "bossPhases" && labels.length > 1
-                  ? `Hạ ${foes[0]?.name}${bossHp ? `, vào trận với ${Math.round(bossHp * 100)}% máu còn lại từ phase trước` : ""}, cùng hai tùy tướng.`
+                  ? `Hạ ${foes[0]?.name}${bossHp ? `, vào trận với ${Math.round(bossHp * 100)}% máu còn lại từ giai đoạn trước` : ""}, cùng hai tùy tướng.`
                   : turns
                     ? `Cầm cự ${turns} lượt của bạn hoặc hạ ${scenario.mode === "3v3" ? "hết đối thủ" : "thủ lĩnh"}.`
                     : copy?.objective}
@@ -474,43 +475,23 @@ function BattlePrep({
           {advice.counterElements.map((e) => ELEMENT_NAME[e]).join(", ")} khắc
           được.
         </p>
-        {advice.mode === "3v3" && (
-          <div className="mt-2">
-            <p className="text-caption text-on-wood-soft" id={`team-${nodeId}`}>
-              Đi cùng ({team.length}/2):{" "}
-              {team.map((id) => companionById(id)?.name ?? id).join(", ") ||
-                "chưa chọn"}
-            </p>
-            <div
-              className="mt-1 flex flex-wrap gap-1"
-              role="group"
-              aria-labelledby={`team-${nodeId}`}
-            >
-              {owned.map((id) => {
-                const c = companionById(id)!;
-                const on = team.includes(id);
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    aria-pressed={on}
-                    disabled={!on && team.length >= 2}
-                    onClick={() => toggleTeam(id)}
-                    className={choiceVariants({ size: "sm", className: "min-h-9 pointer-coarse:min-h-11 gap-1 px-2 py-1 text-caption font-normal" })}
-                  >
-                    <ElementIcon element={c.element} className="size-3.5" />
-                    {c.name}
-                    <span className="opacity-75">
-                      {PROFESSION_NAME[c.profession]}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-        <div className="mt-2">
+        <div className="mt-2 flex flex-col gap-2 border-t border-frame-line-soft pt-2">
+          <p className="flex items-center gap-2 font-semibold text-title-on-wood">
+            <Portrait
+              id={MAIN_ID}
+              element={element}
+              profession={profession}
+              className="size-10 shrink-0"
+            />
+            <span>
+              Thủ lĩnh: Đinh Bộ Lĩnh
+              <span className="block text-caption font-normal text-on-wood-soft">
+                {ELEMENT_NAME[element]} · {PROFESSION_NAME[profession]}
+              </span>
+            </span>
+          </p>
           <LeaderBuild
+            labeled
             element={element}
             profession={profession}
             onChange={(b) => {
@@ -522,16 +503,34 @@ function BattlePrep({
             marks={advice.counterElements}
             hint={`Đổi tại đây là lưu luôn cho mọi chế độ. Vũ khí nghề ${PROFESSION_NAME[profession]}: ${weapon ? gearText(weapon) : "chưa trang bị (mặc ở Doanh Trại)"}.`}
           />
+          <p
+            className={`text-caption ${counters ? "text-jade" : weak ? "text-danger" : "text-on-wood-soft"}`}
+          >
+            {counters
+              ? "Hệ đang chọn khắc thủ lĩnh đối phương."
+              : weak
+                ? "Hệ đang chọn bị thủ lĩnh đối phương khắc; vẫn đánh được nhưng sẽ vất vả hơn."
+                : "Hệ đang chọn không khắc cũng không bị khắc."}
+          </p>
         </div>
-        <p
-          className={`mt-1 text-caption ${counters ? "text-jade" : weak ? "text-danger" : "text-on-wood-soft"}`}
-        >
-          {counters
-            ? "Hệ đang chọn khắc thủ lĩnh đối phương."
-            : weak
-              ? "Hệ đang chọn bị thủ lĩnh đối phương khắc; vẫn đánh được nhưng sẽ vất vả hơn."
-              : "Hệ đang chọn không khắc cũng không bị khắc."}
-        </p>
+        {advice.mode === "3v3" && (
+          <div className="mt-2 flex flex-col gap-1.5 border-t border-frame-line-soft pt-2">
+            <p className="font-semibold text-title-on-wood" id={`team-${nodeId}`}>
+              Người đi cùng ({team.length}/2)
+              <span className="ml-1 font-normal text-on-wood-soft">
+                {team.map((id) => companionById(id)?.name ?? id).join(", ") ||
+                  "chưa chọn"}
+              </span>
+            </p>
+            <CompanionPicker
+              owned={owned}
+              team={team}
+              marks={advice.counterElements}
+              onToggle={toggleTeam}
+              labelId={`team-${nodeId}`}
+            />
+          </div>
+        )}
       </section>
 
       <section
@@ -587,7 +586,7 @@ function BattlePrep({
               : busy
                 ? "Đang xuất quân…"
                 : phase > 0
-                  ? `Vào phase ${phase + 1}/${labels.length}`
+                  ? `Vào giai đoạn ${phase + 1}/${labels.length}`
                   : profile.campaign.completed.includes(nodeId)
                     ? "Đánh lại"
                     : "Xuất quân"}

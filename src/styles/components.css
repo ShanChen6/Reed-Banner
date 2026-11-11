@@ -120,6 +120,8 @@
     box-shadow: 0 2px 0 color-mix(in srgb, var(--black) 47%, transparent);
   }
   .ui-choice:disabled { cursor: not-allowed; opacity: 0.45; }
+  /* Lựa chọn đã chốt (đang chọn mà khóa) vẫn đọc rõ: chỉ các ô còn lại mới mờ. */
+  .ui-choice:disabled:is([aria-pressed="true"], [aria-selected="true"]) { cursor: default; opacity: 1; }
 
   /* Ô tầng (tháp): trạng thái theo data-state, đang chọn vẫn là giấy dó như mọi .ui-choice. */
   .ui-floor[data-state="cleared"]:not([aria-pressed="true"]) { border-color: color-mix(in srgb, var(--jade) 70%, transparent); }
