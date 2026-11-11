@@ -796,7 +796,7 @@ test("Hà Vân có bốn tranh, mưa lửa hệ Hỏa, cầu lửa ở đầu tr
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Tôn Diệm có bốn tranh, hỏa công liên kế hệ Hỏa, lá cờ bay trên cán theo nhịp giáo và texture khớp tọa độ", () => {
+test("Tôn Diệm có bốn tranh, hỏa công liên kế hệ Hỏa, giáo rồng theo nhịp giáo và texture khớp tọa độ", () => {
   const rig = rigOf("tonDiem");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, "spear");
@@ -810,11 +810,8 @@ test("Tôn Diệm có bốn tranh, hỏa công liên kế hệ Hỏa, lá cờ b
   contains(rig.joints.elbowR, rig.parts.armR);
   contains(rig.joints.neck, rig.parts.head);
   contains(rig.joints.neck, rig.parts.body);
-  const flag = rig.cloth.find((c) => c.name === "flag");
-  assert.ok(flag?.onWeapon, "lá cờ phải buộc trên cán");
-  // Mép buộc của lá cờ sát cán cờ.
-  assert.ok(flag.box.x + flag.box.w >= rig.parts.sword.x);
-  for (const [name, box] of [...Object.entries(rig.parts), [flag.name, flag.box] as const]) {
+  assert.equal(rig.cloth.length, 0);
+  for (const [name, box] of Object.entries(rig.parts)) {
     const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
     assert.equal(data.toString("ascii", 12, 16), "VP8X");
     assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
