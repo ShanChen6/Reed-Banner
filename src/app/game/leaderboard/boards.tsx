@@ -135,7 +135,7 @@ export function DestinyBoardPanel() {
   const data = useJson<DestinyBoardResponse>("/api/destiny/leaderboard?cursor=0&limit=20");
   return (
     <OrnateFrame className="flex flex-col gap-3">
-      <SectionTitle description="Tầng clear cao hơn; hòa thì tổng lượt ít hơn, sau đó người hoàn thành sớm hơn.">Bảng xếp hạng chu kỳ này</SectionTitle>
+      <SectionTitle description="Xếp theo tầng cao nhất đã vượt. Bằng tầng thì ai dùng ít lượt đánh hơn đứng trên, rồi tới ai xong sớm hơn.">Bảng xếp hạng chu kỳ này</SectionTitle>
       {!data?.entries ? (
         <BoardEmpty>{data?.error ? "Không tải được bảng xếp hạng." : "Đang tải…"}</BoardEmpty>
       ) : data.entries.length === 0 ? (

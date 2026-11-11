@@ -2,6 +2,7 @@ import {
   destinyEnemyPower,
   destinyFloorCount,
   destinyRunRulesVersion,
+  destinyTierDifficulty,
   generateDestinyCycleRules,
   resolveFloor,
   type DestinyRun,
@@ -39,7 +40,7 @@ export function resolveDestinyFloor(run: DestinyRun, secret: string) {
   const rule = snapshot.snapshot.floors.find(({ floor }) => floor === run.floor);
   if (!rule) return { ok: false as const, error: "floor_not_found" as const };
   const maxLevel = Math.max(1, ...Object.values(run.fighters ?? {}).map(({ level }) => level));
-  const difficulty = rule.tier === 4 ? "boss" : rule.tier === 3 ? "hard" : rule.tier === 2 ? "normal" : "easy";
+  const difficulty = destinyTierDifficulty(rule.tier);
   const definition: FloorDefinition = {
     mode: "destiny",
     floor: run.floor,

@@ -8,6 +8,7 @@ import {
   destinyFloorCount,
   destinyRulesVersionForCycle,
   destinyRunRulesVersion,
+  destinyStoneMilestones,
   generateDestinyCycleRules,
   generateDestinyOffer,
   hashString,
@@ -17,6 +18,7 @@ import {
   profileTeam,
   viewOf,
   type DestinyLeaderBuild,
+  type DestinyRulesVersion,
   type DestinyRewardOffer,
   type DestinyRun,
   type BattleEvent,
@@ -57,12 +59,15 @@ export async function destinyOverview(ownerId: string | null, deps: Deps) {
   const scheduled = activeDestinyCycle(deps.now);
   const cycle = scheduled.ok ? publicDestinyCycle(scheduled.cycle) : null;
   const cycleId = cycle?.cycleId ?? null;
-  const cycleFloorCount = destinyFloorCount(cycleId ? destinyRulesVersionForCycle(cycleId) : undefined);
-  if (!ownerId) return { supported: true, cycleId, cycle, stones: 0, progress: null, floor: null, floorCount: cycleFloorCount };
+  const cycleVersion = cycleId ? destinyRulesVersionForCycle(cycleId) : undefined;
+  // Số tầng và mốc đá để giao diện vẽ hành trình; chưa có lượt leo thì theo luật của chu kỳ này.
+  const milestonesOf = (version: DestinyRulesVersion | undefined) =>
+    destinyStoneMilestones(version).map(({ id, floor, stones }) => ({ id, floor, stones }));
+  if (!ownerId) return { supported: true, cycleId, cycle, stones: 0, progress: null, floor: null, rulesVersion: cycleVersion ?? null, floorCount: destinyFloorCount(cycleVersion), milestones: milestonesOf(cycleVersion) };
   const reconciled = await reconcileDestinyCycle(deps.profiles, ownerId, deps.now);
   const profile = reconciled.ok ? reconciled.profile : (await loadProfile(deps.profiles, ownerId)).profile;
   if (!isDualTowerV1(profile.dualTower))
-    return { supported: false, cycleId, cycle, stones: profile.stones, progress: null, floor: null, floorCount: cycleFloorCount };
+    return { supported: false, cycleId, cycle, stones: profile.stones, progress: null, floor: null, rulesVersion: cycleVersion ?? null, floorCount: destinyFloorCount(cycleVersion), milestones: milestonesOf(cycleVersion) };
   const progress = profile.dualTower.destiny;
   const run = progress.run;
   const visibleRun = run?.phase === "reward" && run.fighters?.dinhBoLinh?.downed &&
@@ -72,6 +77,7 @@ export async function destinyOverview(ownerId: string | null, deps: Deps) {
   const resolved = run && secretValid(deps) && run.cycleId === cycleId
     ? resolveDestinyFloor(run, deps.destinySecret)
     : null;
+  const viewVersion = run && run.cycleId === cycleId ? destinyRunRulesVersion(run) : cycleVersion;
   return {
     supported: true,
     cycleId,
@@ -81,10 +87,9 @@ export async function destinyOverview(ownerId: string | null, deps: Deps) {
     floor: resolved?.ok
       ? { floor: resolved.floor.floor, rules: resolved.floor.rules, difficulty: resolved.floor.difficulty, foes: resolved.floor.foes }
       : null,
-    // Số tầng của run đang xem; chưa có run thì là số tầng run mới của chu kỳ này sẽ có.
-    floorCount: destinyFloorCount(run && run.cycleId === cycleId
-      ? destinyRunRulesVersion(run)
-      : cycleId ? destinyRulesVersionForCycle(cycleId) : undefined),
+    rulesVersion: viewVersion ?? null,
+    floorCount: destinyFloorCount(viewVersion),
+    milestones: milestonesOf(viewVersion),
   };
 }
 
