@@ -249,10 +249,10 @@ Mỗi nghề 7 người, mỗi hệ một người. **Vũ khí** chọn trong 3.
 |---|---|---|---|
 | Kim | Nghiêm Thiết | đoản đao lệnh (Chém) | lệnh bài đồng |
 | Mộc | Sầm Tuệ | **cờ lệnh** xanh (Trượng) | cuộn thẻ lệnh |
-| Thủy | Vi Triều | thương thủy (Đâm; mũi gợn sóng, dải lụa lam; Shan 11/11) | túi quân cờ vây đeo hông |
+| Thủy | Vi Triều | thương thủy (Đâm; cán kem trắng, mũi kim bạc xanh, dải lụa trắng vây sóng xanh; Shan 11/11) | túi quân cờ vây đeo hông |
 | Hỏa | Tôn Diệm | **cờ lệnh** (Trượng, giữ như hiện tại) | bó thẻ tre |
 | Thổ | Tạ Thạch | gậy chỉ huy gỗ lim (Trượng) | bản đồ da |
-| Lôi | Mạc Vân | lôi kiếm (kiếm cong khắc sét, Chém; Shan 11/11) | tù và đeo vai |
+| Lôi | Mạc Vân | lôi kiếm (kiếm lưỡi gợn sóng như tia sét, vỏ đỏ bịt đồng, Chém; Shan 11/11) | tù và đeo vai |
 | Phong | ★ Phùng Phong | **gậy trúc chỉ huy** (Trượng) | **sáo trúc** cài hông (thổi báo hiệu, không đánh) |
 
 **Binh lính**
