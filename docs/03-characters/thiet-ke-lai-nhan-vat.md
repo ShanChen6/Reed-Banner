@@ -249,7 +249,7 @@ Mỗi nghề 7 người, mỗi hệ một người. **Vũ khí** chọn trong 3.
 |---|---|---|---|
 | Kim | Nghiêm Thiết | đoản đao lệnh (Chém) | lệnh bài đồng |
 | Mộc | Sầm Tuệ | **cờ lệnh** xanh (Trượng) | cuộn thẻ lệnh |
-| Thủy | Vi Triều | giáo ngắn cắm cờ nhỏ (Đâm) | trống lệnh nhỏ đeo hông |
+| Thủy | Vi Triều | bàn cờ vây và quân cờ (Quạt; đổi từ giáo ngắn cắm cờ, Shan 11/11) | trống lệnh nhỏ đeo hông |
 | Hỏa | Tôn Diệm | **cờ lệnh** (Trượng, giữ như hiện tại) | bó thẻ tre |
 | Thổ | Tạ Thạch | gậy chỉ huy gỗ lim (Trượng) | bản đồ da |
 | Lôi | Mạc Vân | kiếm cong (Chém) | tù và đeo vai |
