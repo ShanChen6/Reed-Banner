@@ -89,3 +89,30 @@ First-clear tối đa 77 đủ cho một benchmark nhẹ, nhưng không đủ be
 2. Không thay first-clear 77 vì task này không được thay balance nội dung T02.06.
 3. Không phát đá tại bước T03.02. Task settlement kế tiếp phải atomic giữa receipt và ledger/wallet, đồng thời giữ tương thích `tower.best`, `tower.run` và settlement cũ.
 4. Destiny reward và giá nâng cấp vẫn TBD; chỉ được đưa vào production qua task riêng cùng test idempotency/concurrency.
+
+## Cập nhật 11/11/2026: tháp 50 tầng
+
+Tháp Thí Luyện nâng lên 50 tầng. Bảng tier 1–4 và 77 đá first-clear của tầng 1–20 **giữ nguyên** để người chơi cũ không mất quyền lợi; phần dưới chỉ thêm cho tầng 21–50.
+
+| Tầng cao nhất đã vượt | Tier | Đá/ngày | 7 ngày | 30 ngày | 90 ngày |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 21–30 | 5 | 5 | 35 | 150 | 450 |
+| 31–40 | 6 | 6 | 42 | 180 | 540 |
+| 41–50 | 7 | 7 | 49 | 210 | 630 |
+
+Tier cao mở chậm hơn (10 tầng một bậc thay vì 5) vì chưa có sink: trần quét mới là 7/ngày, 210/30 ngày.
+
+| Nhóm tầng | Đá/tầng | Tổng nhóm | Lũy kế |
+| --- | --- | ---: | ---: |
+| 21–24 | 6 | 24 | 101 |
+| 25–29 | 7 | 35 | 136 |
+| 30 (ải trùm) | 10 | 10 | 146 |
+| 31–34 | 8 | 32 | 178 |
+| 35–39 | 9 | 45 | 223 |
+| 40 (ải trùm) | 12 | 12 | 235 |
+| 41–44 | 10 | 40 | 275 |
+| 45 (ải trùm) | 12 | 12 | 287 |
+| 46–49 | 12 | 48 | 335 |
+| 50 (đỉnh tháp) | 20 | 20 | 355 |
+
+First-clear suốt đời là 355 đá (77 + 278). Người chơi qua hết tháp và quét đủ 90 ngày nhận tối đa 355 + 630 = 985 đá Trial; con số này vẫn chỉ là tích lũy vì giá cường hóa chưa chốt, khi GEAR-01–08 bắt đầu phải đo lại như ghi ở trên.
