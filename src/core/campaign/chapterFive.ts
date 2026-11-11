@@ -130,7 +130,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
   },
   {
     id: "M18",
-    prompt: "Lực lượng Tiên Du đông và đủ lương. Quân Hoa Lư lo việc gì trước?",
+    prompt: "Quân Tiên Du đông và đủ lương. Quân Hoa Lư lo việc gì trước?",
     objective:
       "Đánh dẹp lực lượng Tiên Du: hạ Nguyễn Thủ Tiệp và hai tùy tướng trước khi lương cạn.",
     cinematic: [
@@ -174,7 +174,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
       },
       {
         id: "prepareLogistics",
-        label: "Chuẩn bị hậu cần",
+        label: "Lo lương thảo",
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
@@ -216,7 +216,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
         title: "Tên và tước hiệu",
         beats: [
           {
-            text: "Danh hiệu “Vũ Ninh Vương” ở bản Chiến dịch cũ chưa có nguồn trong bộ ledger nên không dùng; game gọi theo Toàn thư là Nguyễn Lệnh Công.",
+            text: "Danh hiệu “Vũ Ninh Vương” ở bản Chiến dịch cũ chưa có nguồn trong bộ nguồn nên không dùng; game gọi theo Toàn thư là Nguyễn Lệnh Công.",
             basis: "disputed",
             refs: ["W09"],
           },
@@ -397,7 +397,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
     ],
     defeat: [
       {
-        text: "Quân phải lui về chỗ đóng trại. Đánh lại đúng phase vừa thua; những phase đã qua vẫn giữ, kết cục của Tây Phù Liệt trong game không đổi.",
+        text: "Quân phải lui về chỗ đóng trại. Đánh lại đúng giai đoạn vừa thua; những giai đoạn đã qua vẫn giữ, kết cục của Tây Phù Liệt trong game không đổi.",
         basis: "fictional",
       },
     ],
