@@ -400,7 +400,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Tuổi, quê:** khoảng 31, chân núi Tiên Du. Nam.
 - **Xuất thân:** người cầm trống lệnh của đội quân Tiên Du, giỏi giữ nhịp. Anh theo về cùng em gái vì muốn đưa nhịp trống vào thế trận lớn hơn.
 - **Tính cách:** nhanh, vui, thương em; hay gõ nhịp lên mọi thứ.
-- **Ba dấu ấn:** mặt rộng, tóc ngắn, tay thon · áo lam xám thêu sao bốn cánh, màu nhấn lam · trống lệnh nhỏ đeo hông.
+- **Ba dấu ấn:** mặt rộng, búi tóc gọn, tay thon · áo lam xám thêu sao bốn cánh, màu nhấn lam · trống lệnh nhỏ đeo hông.
 - **Vũ khí và nhịp:** **bàn cờ vây (tay trái) và quân cờ vây (tay phải)** · Quạt (đổi từ giáo ngắn cắm cờ nhỏ theo ý Shan 11/11/2026: bàn cờ làm vật đỡ và đòn đập, quân cờ ném; nhịp Quạt vì đòn phẩy và tung tay).
 - **Quan hệ:** R7, anh của Vi Lam.
 - **Câu nói:** "Trống đúng nhịp, quân đúng bước."
