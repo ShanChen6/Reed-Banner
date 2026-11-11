@@ -1181,10 +1181,11 @@ test("Từ Kinh có bốn tranh, kinh lôi hệ Lôi, quạt sắt phẩy theo n
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Mạc Vân có bốn tranh, lôi trận hệ Lôi, cờ lệnh theo nhịp giáo và texture khớp tọa độ", () => {
+test("Mạc Vân có bốn tranh, lôi trận hệ Lôi, kiếm trong vỏ lắc nhẹ và texture khớp tọa độ", () => {
   const rig = rigOf("macVan");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "spear");
+  assert.equal(rig.weapon, undefined);
+  assert.equal(rig.raise, 0.06);
   assert.equal(rig.strikeFx, "thunderRout");
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
