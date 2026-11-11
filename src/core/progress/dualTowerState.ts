@@ -74,6 +74,15 @@ export const DESTINY_BOON_IDS = [
   "armoredFormation",
   "supplyCache",
   "battleDrum",
+  // Thêm ở luật V2 (20 tầng); run V1 không được offer các Phúc này.
+  "granary",
+  "vanguard",
+  "professionUnity",
+  "lastStand",
+  "rearGuard",
+  "terrain",
+  "recuperate",
+  "mandate",
 ] as const;
 export type DestinyBoon = (typeof DESTINY_BOON_IDS)[number];
 export interface DestinyBoonStack {
@@ -100,6 +109,14 @@ export const DESTINY_BOON_STATE_RULES: Readonly<Record<DestinyBoon, {
   armoredFormation: { maxStacks: 2, effectVersion: 1 },
   supplyCache: { maxStacks: 2, effectVersion: 1 },
   battleDrum: { maxStacks: 2, effectVersion: 1 },
+  granary: { maxStacks: 3, effectVersion: 1 },
+  vanguard: { maxStacks: 2, effectVersion: 1 },
+  professionUnity: { maxStacks: 2, effectVersion: 1 },
+  lastStand: { maxStacks: 2, effectVersion: 1 },
+  rearGuard: { maxStacks: 2, effectVersion: 1 },
+  terrain: { maxStacks: 2, effectVersion: 1 },
+  recuperate: { maxStacks: 2, effectVersion: 1 },
+  mandate: { maxStacks: 2, effectVersion: 1 },
 };
 
 export interface DestinyFighterSnapshot {
@@ -144,6 +161,8 @@ export interface DestinyRun {
   readonly matchId?: string;
   /** Ba lựa chọn authoritative của tầng vừa thắng; null ngoài phase reward. */
   readonly offer?: readonly DestinyRewardOffer[] | null;
+  /** Đã thắng tầng cuối của run; chỉ có khi phase là done. */
+  readonly completed?: boolean;
   readonly active: boolean;
 }
 
@@ -420,6 +439,7 @@ function parseDestinyRun(raw: unknown): DestinyRun | null {
     rewardedFloor: raw.rewardedFloor === undefined ? 0 : raw.rewardedFloor as number,
     ...(matchId ? { matchId } : {}),
     offer,
+    ...(raw.completed === true && raw.phase === "done" ? { completed: true } : {}),
   };
 }
 

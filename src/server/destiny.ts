@@ -5,6 +5,9 @@ import {
   applyDestinyRecovery,
   createDestinyFloorBattle,
   createDestinyRun,
+  destinyFloorCount,
+  destinyRulesVersionForCycle,
+  destinyRunRulesVersion,
   generateDestinyCycleRules,
   generateDestinyOffer,
   hashString,
@@ -54,11 +57,12 @@ export async function destinyOverview(ownerId: string | null, deps: Deps) {
   const scheduled = activeDestinyCycle(deps.now);
   const cycle = scheduled.ok ? publicDestinyCycle(scheduled.cycle) : null;
   const cycleId = cycle?.cycleId ?? null;
-  if (!ownerId) return { supported: true, cycleId, cycle, stones: 0, progress: null, floor: null };
+  const cycleFloorCount = destinyFloorCount(cycleId ? destinyRulesVersionForCycle(cycleId) : undefined);
+  if (!ownerId) return { supported: true, cycleId, cycle, stones: 0, progress: null, floor: null, floorCount: cycleFloorCount };
   const reconciled = await reconcileDestinyCycle(deps.profiles, ownerId, deps.now);
   const profile = reconciled.ok ? reconciled.profile : (await loadProfile(deps.profiles, ownerId)).profile;
   if (!isDualTowerV1(profile.dualTower))
-    return { supported: false, cycleId, cycle, stones: profile.stones, progress: null, floor: null };
+    return { supported: false, cycleId, cycle, stones: profile.stones, progress: null, floor: null, floorCount: cycleFloorCount };
   const progress = profile.dualTower.destiny;
   const run = progress.run;
   const visibleRun = run?.phase === "reward" && run.fighters?.dinhBoLinh?.downed &&
@@ -77,6 +81,10 @@ export async function destinyOverview(ownerId: string | null, deps: Deps) {
     floor: resolved?.ok
       ? { floor: resolved.floor.floor, rules: resolved.floor.rules, difficulty: resolved.floor.difficulty, foes: resolved.floor.foes }
       : null,
+    // Số tầng của run đang xem; chưa có run thì là số tầng run mới của chu kỳ này sẽ có.
+    floorCount: destinyFloorCount(run && run.cycleId === cycleId
+      ? destinyRunRulesVersion(run)
+      : cycleId ? destinyRulesVersionForCycle(cycleId) : undefined),
   };
 }
 
@@ -179,7 +187,7 @@ export async function startDestinyBattle(
   if (!run) return { ok: false, error: "no_run" };
   const scheduled = activeDestinyCycle(deps.now);
   if (!scheduled.ok || run.cycleId !== scheduled.cycle.cycleId ||
-      (run.rulesVersion !== undefined && run.rulesVersion !== scheduled.cycle.rulesVersion))
+      destinyRunRulesVersion(run) > scheduled.cycle.rulesVersion)
     return { ok: false, error: "cycle_expired" };
   if (run.phase === "battle" && run.matchId) {
     const resumed = await getBattle(run.matchId, ownerId, deps);

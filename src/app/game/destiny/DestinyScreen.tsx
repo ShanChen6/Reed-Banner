@@ -22,7 +22,9 @@ import { DestinyBoardPanel } from "../leaderboard/boards";
 import { useScene } from "../SceneContext";
 import { describeRules, RULE_TAG } from "../trial/trial-ui";
 import {
+  DESTINY_BOON_TEXT,
   DESTINY_ERROR_TEXT,
+  DESTINY_RARITY_NAME,
   aliveIds,
   defaultDestinyBuild,
   legalLeaderBuilds,
@@ -42,6 +44,8 @@ interface DestinyOverview {
     readonly difficulty: string;
     readonly foes: readonly { readonly id: string; readonly name: string }[];
   } | null;
+  /** Số tầng của run đang xem (hoặc của run mới trong chu kỳ này); server cũ chưa gửi thì bỏ trống. */
+  readonly floorCount?: number;
 }
 
 interface ApiResult {
@@ -72,7 +76,11 @@ const offerText = (offer: DestinyRewardOffer): { title: string; body: string } =
     case "rescue": return { title: "Cứu viện", body: "Hồi sinh một tướng gục với 30% HP và 0 năng lượng." };
     case "boon": {
       const boon = DESTINY_BOON_CATALOG[offer.boonId];
-      return { title: `Phúc · ${offer.boonId}`, body: `${boon.group} · ${boon.rarity} · tối đa ${boon.maxStacks} stack` };
+      const text = DESTINY_BOON_TEXT[offer.boonId];
+      return {
+        title: `Phúc · ${text.name}`,
+        body: `${text.body} ${DESTINY_RARITY_NAME[boon.rarity]} · cộng dồn tối đa ${boon.maxStacks} lần.`,
+      };
     }
   }
 };
@@ -194,6 +202,7 @@ export default function DestinyScreen() {
 
   const fighterName = (id: string) => run?.fighters?.[id]?.config.name ?? (id === MAIN_ID ? "Đinh Bộ Lĩnh" : companionById(id)?.name ?? id);
   const noActiveRun = !run?.active && run?.phase !== "reward";
+  const floorTotal = overview.floorCount ? `/${overview.floorCount}` : "";
 
   return (
     <ModeScreen wide label="Tháp Thiên Mệnh">
@@ -202,9 +211,9 @@ export default function DestinyScreen() {
         kicker={`Song Tháp · chu kỳ ${overview.cycleId ?? "—"}`}
         art="/art/home/destiny.webp"
         artPosition="center 42%"
-        description="Máu, năng lượng và lương giữ xuyên tầng. Đội khóa cho cả lượt leo."
+        description={`${overview.floorCount ? `${overview.floorCount} tầng mỗi chu kỳ. ` : ""}Máu, năng lượng và lương giữ xuyên tầng. Đội khóa cho cả lượt leo.`}
         stats={[
-          { label: "Kỷ lục chu kỳ", value: `Tầng ${overview.progress?.cycleBest ?? 0}` },
+          { label: "Kỷ lục chu kỳ", value: `Tầng ${overview.progress?.cycleBest ?? 0}${floorTotal}` },
           { label: "Đá Cường Hóa", value: overview.stones },
         ]}
       />
@@ -216,7 +225,9 @@ export default function DestinyScreen() {
 
       {noActiveRun && (
         <OrnateFrame level="raised">
-          <SectionTitle description={run?.phase === "done" ? `Lượt trước đã kết thúc ở tầng ${run.floor}.` : undefined}>
+          <SectionTitle description={run?.completed
+            ? `Lượt trước đã chinh phục trọn ${run.floor} tầng. Có thể leo lại để rút ngắn số lượt.`
+            : run?.phase === "done" ? `Lượt trước đã kết thúc ở tầng ${run.floor}.` : undefined}>
             Khóa đội mới
           </SectionTitle>
           <p className="text-sm text-on-wood">
@@ -250,7 +261,7 @@ export default function DestinyScreen() {
       {run && run.active && (
         <section className="grid gap-4 sm:gap-5 lg:grid-cols-[1fr_1.4fr]">
           <OrnateFrame className="order-2 min-w-0 self-start lg:order-1">
-            <SectionTitle description={`Lương ${run.food} · Nộ khí ${run.rage ?? 0}`}>Đội · tầng {run.floor}</SectionTitle>
+            <SectionTitle description={`Lương ${run.food} · Nộ khí ${run.rage ?? 0}`}>Đội · tầng {run.floor}{floorTotal}</SectionTitle>
             <ul className="space-y-2">
               {run.roster.map((id) => {
                 const f = run.fighters?.[id];
@@ -274,7 +285,7 @@ export default function DestinyScreen() {
               })}
             </ul>
             <h3 className="ui-title-on-wood mt-4 text-base">Phúc đang có</h3>
-            <p className="text-sm text-on-wood-soft">{run.boons?.length ? run.boons.map((b) => `${b.id} ×${b.stacks}`).join(" · ") : "Chưa có Phúc"}</p>
+            <p className="text-sm text-on-wood-soft">{run.boons?.length ? run.boons.map((b) => `${DESTINY_BOON_TEXT[b.id].name} ×${b.stacks}`).join(" · ") : "Chưa có Phúc"}</p>
           </OrnateFrame>
 
           <OrnateFrame level="raised" className="order-1 min-w-0 lg:order-2">
@@ -292,7 +303,7 @@ export default function DestinyScreen() {
             {run.phase === "prepare" && rules && (
               <>
                 <SectionTitle description={`Đối thủ: ${overview.floor?.foes.map((f) => f.name).join(", ") ?? ""} · ${difficultyName(overview.floor?.difficulty)}`}>
-                  Chuẩn bị tầng {run.floor}
+                  Chuẩn bị tầng {run.floor}{floorTotal}
                 </SectionTitle>
                 {describeRules(rules).length > 0 && (
                   <ul className="flex flex-col gap-1.5 text-sm text-on-wood">

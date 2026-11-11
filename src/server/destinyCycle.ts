@@ -1,5 +1,5 @@
 import { createHmac } from "node:crypto";
-import { DESTINY_RULE_DATA_VERSION } from "@/core";
+import { destinyRulesVersionForCycle } from "@/core";
 
 export const DESTINY_CYCLE_DAYS = 7;
 export const DESTINY_TIME_ZONE = "Asia/Ho_Chi_Minh";
@@ -28,7 +28,7 @@ export function destinyCycleById(cycleId: string): DestinyCycle | null {
     cycleId,
     startAt,
     endAt: startAt + DESTINY_CYCLE_DAYS * DAY_MS,
-    rulesVersion: DESTINY_RULE_DATA_VERSION,
+    rulesVersion: destinyRulesVersionForCycle(cycleId),
   };
 }
 

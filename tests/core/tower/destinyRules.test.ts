@@ -4,6 +4,11 @@ import {
   analyzeFeasibility,
   DESTINY_CYCLE_FLOORS,
   DESTINY_RULE_DATA_VERSION,
+  DESTINY_V2_FIRST_CYCLE,
+  destinyEnemyPower,
+  destinyFloorCount,
+  destinyFloorTier,
+  destinyRulesVersionForCycle,
   generateDestinyCycleRules,
   newProfile,
   profileTeam,
@@ -26,10 +31,43 @@ describe("luật Destiny theo cycle seed", () => {
     assert.ok(a.ok && b.ok);
     if (!a.ok || !b.ok) return;
     assert.deepEqual(a.snapshot, b.snapshot);
-    assert.equal(a.snapshot.dataVersion, DESTINY_RULE_DATA_VERSION);
-    assert.equal(a.snapshot.floors.length, DESTINY_CYCLE_FLOORS);
+    assert.equal(a.snapshot.dataVersion, 1);
+    assert.equal(a.snapshot.floors.length, destinyFloorCount(1));
     assert.deepEqual(a.snapshot.floors.map((floor) => floor.tier), [1, 1, 1, 2, 2, 2, 3, 3, 3, 4]);
     assert.ok(a.snapshot.floors.every((floor) => analyzeFeasibility(floor.rules, roster()).status === "feasible"));
+  });
+
+  it("chu kỳ từ 16/11/2026 dùng luật V2: 20 tầng, bốn nhóm 5 tầng, không lặp luật trong nhóm", () => {
+    assert.equal(destinyRulesVersionForCycle("2026-11-09"), 1);
+    assert.equal(destinyRulesVersionForCycle(DESTINY_V2_FIRST_CYCLE), 2);
+    assert.equal(DESTINY_RULE_DATA_VERSION, 2);
+    assert.equal(DESTINY_CYCLE_FLOORS, destinyFloorCount(2));
+    for (const cycleId of ["2026-11-16", "2026-11-23", "2026-11-30", "2026-12-07"]) {
+      const a = generateDestinyCycleRules(cycleId, SECRET, roster());
+      assert.ok(a.ok);
+      if (!a.ok) return;
+      const b = generateDestinyCycleRules(cycleId, SECRET, roster());
+      assert.ok(b.ok);
+      if (b.ok) assert.deepEqual(a.snapshot, b.snapshot);
+      assert.equal(a.snapshot.dataVersion, 2);
+      assert.equal(a.snapshot.floors.length, 20);
+      assert.deepEqual(a.snapshot.floors.map((floor) => floor.tier),
+        [1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4]);
+      assert.ok(a.snapshot.floors.every((floor) => analyzeFeasibility(floor.rules, roster()).status === "feasible"));
+      for (const tier of [1, 2, 3, 4]) {
+        const inTier: string[] = a.snapshot.floors.filter((floor) => floor.tier === tier)
+          .map((floor) => JSON.stringify(floor.rules));
+        assert.equal(new Set(inTier).size, inTier.length, `nhóm ${tier} của ${cycleId} lặp luật`);
+      }
+    }
+  });
+
+  it("sức địch V2 dốc vừa: 0,74 ở tầng 1 và 1,12 ở tầng 20; V1 giữ nguyên", () => {
+    assert.equal(Number(destinyEnemyPower(1, 2).toFixed(2)), 0.74);
+    assert.equal(Number(destinyEnemyPower(20, 2).toFixed(2)), 1.12);
+    assert.equal(Number(destinyEnemyPower(10, 1).toFixed(2)), 1.02);
+    assert.deepEqual([5, 6, 10, 11, 15, 16, 20].map((floor) => destinyFloorTier(floor, 2)), [1, 2, 2, 3, 3, 4, 4]);
+    assert.deepEqual([3, 4, 9, 10].map((floor) => destinyFloorTier(floor, 1)), [1, 2, 3, 4]);
   });
 
   it("cycle khác tạo variation nhưng không lộ secret trong snapshot", () => {
