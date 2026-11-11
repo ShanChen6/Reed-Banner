@@ -3088,46 +3088,49 @@ const BACH_NO_LANG: WarriorRig = {
 };
 
 /**
- * Quản Hiên (ngoại hiệu Thanh Lâm Xạ), xạ thủ hệ Mộc (RB-063, nghề Xạ thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi
- * 29/10 (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: cung tre dài (cả dây) cùng bàn tay cầm cung xoay quanh cổ tay
- * như trượng, bàn tay chạm giỏ tên và đầu tách riêng; bím tóc, giỏ tên ở lại thân. Hệ tọa độ: ảnh đứng 1024×1536.
+ * Quản Hiên (ngoại hiệu Thanh Lâm Xạ), xạ thủ hệ Mộc (RB-063). Bộ tranh phong cách mới Shan gửi 11/11/2026 (nền trong
+ * suốt sẵn), thay bộ 29/10: áo lục thêu mặt trời, tóc tết đuôi sam, cung tre dài, giỏ tên đan bên hông. Ảnh đứng
+ * 1024×1536 tách lớp bằng code: cung tre (cả dây) cùng bàn tay cầm cung xoay quanh cổ tay như trượng (cung nằm ngoài
+ * thân nên không cần vá), bàn tay buông cạnh giỏ tên và đầu tách riêng; bím tóc, giỏ tên ở lại thân. Tranh đứng một
+ * chân đặt ngón tay lên môi làm phong thái. Tranh tư thế vẽ người nhỏ trong khung ngang nên phóng lên.
  */
 const THANH_LAM_XA: WarriorRig = {
   skeleton: "warrior",
   weapon: "staff",
+  raise: -0.03,
   dir: "thanh-lam-xa",
   texScale: 0.5,
-  foot: { x: 420, y: 1500 },
-  height: 1420,
+  foot: { x: 430, y: 1495 },
+  height: 1430,
   parts: {
-    body: { x: 256, y: 85, w: 527, h: 1423 },
-    armR: { x: 298, y: 752, w: 71, h: 77 },
-    sword: { x: 652, y: 16, w: 228, h: 1416 },
-    arm: { x: 763, y: 621, w: 101, h: 102 },
-    head: { x: 398, y: 86, w: 183, h: 215 },
+    body: { x: 196, y: 67, w: 518, h: 1432 },
+    armR: { x: 270, y: 740, w: 74, h: 142 },
+    sword: { x: 620, y: 12, w: 170, h: 1460 },
+    arm: { x: 702, y: 615, w: 88, h: 82 },
+    head: { x: 335, y: 67, w: 196, h: 264 },
   },
   cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 790, y: 670 },
-    elbowR: { x: 330, y: 765 },
-    neck: { x: 500, y: 285 },
+    shoulder: { x: 728, y: 660 },
+    elbowR: { x: 310, y: 750 },
+    neck: { x: 440, y: 300 },
   },
-  blade: [{ x: 815, y: 665 }, { x: 854, y: 20 }],
+  blade: [{ x: 745, y: 660 }, { x: 735, y: 20 }],
   strikeFx: "thicketShot",
   fxColor: 0x4f9a4a,
-  // Lách người quét chân, cung tre giữ dọc không kéo (đánh thường), đứng tĩnh kéo tên ngang vai (ra chiêu), hạ thấp người
-  // kéo cung chéo ép lối (tuyệt chiêu).
+  // Đứng tấn kéo căng cung bắn thẳng (đánh thường), lách người một chân co, tay xòe niệm chú (ra chiêu), hạ thấp người
+  // kéo cung sát má bắn phá (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 50, y: 6 },
-      anchor: { x: 520, y: 1490 }, scale: 1, burst: { x: 780, y: 700 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 135, y: 6 },
-      anchor: { x: 440, y: 1505 }, scale: 1, burst: { x: 1000, y: 395 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 10, y: 7 },
-      anchor: { x: 560, y: 975 }, scale: 1.1, burst: { x: 1525, y: 460 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 474, y: 9 },
+      anchor: { x: 680, y: 990 }, scale: 1.45, burst: { x: 1095, y: 300 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 377, y: 12 },
+      anchor: { x: 1120, y: 1000 }, scale: 1.3, burst: { x: 1310, y: 460 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 106, y: 3 },
+      anchor: { x: 620, y: 1000 }, scale: 1.15, burst: { x: 1390, y: 410 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 95, y: 19 },
-    anchor: { x: 800, y: 900 }, scale: 0.85 },
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 146, y: 40 },
+    anchor: { x: 1100, y: 960 }, scale: 1.1 },
 };
 
 /**
