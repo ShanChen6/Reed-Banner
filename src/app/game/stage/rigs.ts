@@ -3649,45 +3649,45 @@ const LOI_ANH: WarriorRig = {
 };
 
 /**
- * Liễu Thiều (ngoại hiệu Vô Ảnh), sát thủ hệ Phong (RB-075, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 30/10
- * (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: sáo trúc tách khỏi bàn tay phải để cùng xoay quanh cổ tay, bàn tay
- * trái và đầu (cả búi tóc) tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
+ * Liễu Thiều (ngoại hiệu Vô Ảnh), sát thủ hệ Phong (RB-075, nghề Sát thủ chưa mở trong trận; chỉ có trên trang xem thử). Bộ tranh Shan gửi 12/11
+ * (nền trong suốt sẵn). Ảnh đứng tách lớp bằng code: sáo trúc tách khỏi bàn tay phải để cùng xoay quanh cổ tay (vạt áo
+ * sau sáo vá bằng vải ngay trên), bàn tay trái và đầu (cả búi tóc) tách riêng. Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const VO_ANH: WarriorRig = {
   skeleton: "warrior",
   dir: "vo-anh",
   texScale: 0.5,
-  foot: { x: 540, y: 1500 },
-  height: 1490,
+  foot: { x: 500, y: 1515 },
+  height: 1475,
   parts: {
-    body: { x: 199, y: 11, w: 625, h: 1509 },
-    armR: { x: 702, y: 658, w: 67, h: 120 },
-    sword: { x: 138, y: 588, w: 326, h: 195 },
-    arm: { x: 295, y: 640, w: 88, h: 101 },
-    head: { x: 425, y: 15, w: 201, h: 204 },
+    body: { x: 170, y: 44, w: 660, h: 1480 },
+    armR: { x: 690, y: 738, w: 60, h: 78 },
+    sword: { x: 169, y: 667, w: 326, h: 236 },
+    arm: { x: 296, y: 704, w: 76, h: 116 },
+    head: { x: 395, y: 44, w: 216, h: 206 },
   },
   cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 335, y: 650 },
-    elbowR: { x: 735, y: 672 },
-    neck: { x: 540, y: 200 },
+    shoulder: { x: 330, y: 712 },
+    elbowR: { x: 718, y: 745 },
+    neck: { x: 505, y: 240 },
   },
-  blade: [{ x: 150, y: 597 }, { x: 455, y: 772 }],
+  blade: [{ x: 180, y: 670 }, { x: 475, y: 880 }],
   strikeFx: "flutePulse",
   fxColor: 0x2e9e90,
-  // Bước ngang thúc cùi chỏ, sáo thu bên hông (đánh thường), đứng nghiêng thổi sáo (ra chiêu), bước rộng xoay người vẫn
-  // thổi sáo (tuyệt chiêu).
+  // Tấn chéo vung sáo thấp, tay kia chém chưởng (đánh thường), đứng thổi sáo (ra chiêu), tấn rộng thổi sáo gọi gió
+  // (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 58, y: 16 },
-      anchor: { x: 620, y: 1490 }, scale: 1, burst: { x: 816, y: 310 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 150, y: 10 },
-      anchor: { x: 580, y: 1500 }, scale: 1, burst: { x: 552, y: 190 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 9, y: 27 },
-      anchor: { x: 560, y: 1470 }, scale: 1, burst: { x: 668, y: 222 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 394, y: 14 },
+      anchor: { x: 760, y: 1000 }, scale: 1.1, burst: { x: 1100, y: 230 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 126, y: 23 },
+      anchor: { x: 470, y: 1510 }, scale: 1, burst: { x: 640, y: 290 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 332, y: 9 },
+      anchor: { x: 820, y: 995 }, scale: 1.1, burst: { x: 1250, y: 260 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 9, y: 177 },
-    anchor: { x: 560, y: 1350 }, scale: 0.95 },
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 213, y: 10 },
+    anchor: { x: 760, y: 960 }, scale: 1.05 },
 };
 
 /**
