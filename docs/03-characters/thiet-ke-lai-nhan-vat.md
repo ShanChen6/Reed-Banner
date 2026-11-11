@@ -472,8 +472,6 @@ Tổng: **20 nghĩa quân Hoa Lư** và **36 lính hoặc hàng binh của 12 s�
 
 Khối mô tả nhân vật dùng chung cho nhiều dáng không được ghi sẵn nụ cười; nụ cười đặc trưng chỉ viết trong dòng dáng của phong thái. Prompt mỗi dáng chiến đấu có dòng `BATTLE FACE:` (hoặc `FACE:` với dáng gục) theo bảng trên.
 
-**Quy tắc tóc (Shan, 11/11/2026):** thời Đinh **nam để tóc dài, búi hoặc vấn khăn; nữ búi, tết hoặc xõa dài**. **Tránh tóc ngắn** (húi, cạo, ngang cằm, ngang vai) vì không hợp thời. Hồ sơ nào ghi tóc ngắn thì đổi thành búi hoặc vấn khăn; ngoại lệ (người có lý do cạo đầu, như thợ đá hoặc lính) phải được Shan duyệt riêng.
-
 **Phong thái phải đa dạng và mang dáng tướng (Shan, 10/11/2026):** phong thái không bắt buộc phải cười; dù đang nghỉ, nhân vật chiến đấu vẫn phải toát ra dáng của người từng ra trận (tư thế vững, ánh nhìn có hồn), không hề hước giả tạo. Nụ cười chỉ dùng khi hợp tính cách và phải tự nhiên. mỗi nhân vật một hoạt động riêng gắn với nghề và tính cách, hạn chế trùng dáng (tránh nhiều người cùng quỳ chạm đất, cùng ngồi lau vũ khí, cùng đứng chống vũ khí). Có thể có **thú**: dắt ngựa, dắt voi, dắt trâu, cho ngựa ăn, ngồi trên lưng trâu. Kho gợi ý: dắt trâu kéo đá; dắt voi tải hàng; dắt ngựa thồ; cho ngựa uống nước; vá lưới trên thuyền; ăn cơm lam; khắc chữ lên đá; mài dao hoặc lau mũi giáo; kể chuyện bên rào lũy; đánh trống; nấu thuốc; chép sách; đếm tiền và sổ; thả diều hoặc nghe gió; nướng cá; gánh nước; buộc cờ lên cột. Trước khi viết phong thái mới, xem bảng dưới để khỏi trùng.
 
 | Nhân vật | Phong thái |
