@@ -68,7 +68,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
     choices: [
       {
         id: "publicTerms",
-        label: "Công bố điều khoản trước hai quân",
+        label: "Tuyên giao ước trước hai quân",
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
@@ -125,7 +125,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
         title: "Tên và tước hiệu",
         beats: [
           {
-            text: "Tước ưu tiên là Ngô Lãm Công. Các tên “Ngô Nam công”, “Ngô Nam Chỉ” ở bản Chiến dịch cũ chưa có nguồn trong bộ ledger nên không dùng trong câu chuyện.",
+            text: "Tước ưu tiên là Ngô Lãm Công. Các tên “Ngô Nam công”, “Ngô Nam Chỉ” ở bản Chiến dịch cũ chưa có nguồn trong bộ nguồn nên không dùng trong câu chuyện.",
             basis: "disputed",
             refs: ["U04"],
           },
@@ -368,7 +368,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
     choices: [
       {
         id: "scoutWater",
-        label: "Trinh sát bờ nước",
+        label: "Dò đường bờ nước",
         beats: [
           {
             speaker: "Đinh Liễn",

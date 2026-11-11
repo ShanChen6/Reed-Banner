@@ -303,7 +303,7 @@ const COPY: readonly MissionCopy[] = [
         beats: [
           {
             speaker: "Đinh Điền",
-            text: "Khe núi hẹp, chỉ cần giữ chắc cửa là chúng không thể tràn vào. Dựng chướng ngại ở lối vào!",
+            text: "Khe núi hẹp, chỉ cần giữ chắc cửa là chúng không thể tràn vào. Đắp lũy, cắm chông chặn lối vào!",
             basis: "fictional",
           },
         ],
