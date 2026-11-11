@@ -286,7 +286,7 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
         label: "Bày quân ngoài thành",
         beats: [
           {
-            text: "Quân Hoa Lư dựng trại trong tầm mắt thành Bình Kiều nhưng không tiến thêm. Lời mời hội kiến được gửi đi kèm danh sách quân số.",
+            text: "Quân Hoa Lư dựng trại trong tầm mắt thành Bình Kiều nhưng không tiến thêm. Lời mời hội kiến được gửi đi kèm sổ quân.",
             basis: "fictional",
           },
           {
@@ -314,7 +314,7 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
     ],
     outro: [
       {
-        text: "Kết cục: một thỏa thuận được tái dựng, Bình Kiều quy phục. Không có trận thắng nào được ghi, chỉ có thế cục sứ quân được cập nhật một lần.",
+        text: "Kết cục: một thỏa thuận được tái dựng, Bình Kiều quy phục. Không có trận thắng nào được ghi, chỉ có thế cục sứ quân được ghi lại một lần.",
         basis: "reconstructed",
         refs: ["W03"],
       },

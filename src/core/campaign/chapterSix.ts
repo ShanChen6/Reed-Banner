@@ -79,7 +79,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
       },
       {
         id: "declareAdvance",
-        label: "Đinh Bộ Lĩnh tuyên bố tiến quân",
+        label: "Đinh Bộ Lĩnh truyền lệnh tiến quân",
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
@@ -103,7 +103,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
     ],
     defeat: [
       {
-        text: "Quân lui ra khỏi đầm. Đánh lại đúng phase vừa thua; những phase đã qua vẫn giữ, máu trùm đã mất không hồi lại.",
+        text: "Quân lui ra khỏi đầm. Đánh lại đúng giai đoạn vừa thua; những giai đoạn đã qua vẫn giữ, máu chủ tướng địch đã mất không hồi lại.",
         basis: "fictional",
       },
     ],
@@ -164,7 +164,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
     choices: [
       {
         id: "reviewDossiers",
-        label: "Mở hồ sơ 12 sứ quân",
+        label: "Mở sổ mười hai sứ quân",
         beats: [
           {
             speaker: "Đinh Bộ Lĩnh",
