@@ -9,6 +9,11 @@
 - Giao diện hiện tên và mô tả Phúc bằng tiếng Việt (trước đây hiện mã), tiến độ `tầng x/20`.
 - Mô phỏng 4 chu kỳ: AI đánh thay trung bình tới tầng 4–6 (roster 3), 8–11 (roster 5), 7–14 (roster 8), có run qua đủ 20 tầng; đá mỗi tuần thấp hơn V1 ([báo cáo](../reports/2026-11-11-destiny-v2-balance.md)). Chưa đo riêng từng Phúc mới.
 
+**Tháp Thiên Mệnh: làm lại giao diện và câu chữ (có code)**
+- Shan yêu cầu ưu tiên giao diện và rà câu chữ, tránh từ như "run". Chữ hiện cho người chơi bỏ run, roster, active, build, HP, NL, stack, clear, tab; quy ước ghi ở [thuật ngữ](../00-overview/thuat-ngu.md#từ-không-dùng-trên-giao-diện). [Hướng dẫn người chơi](../02-game-modes/dual-tower/player-help.md) viết lại theo cùng bộ từ.
+- Màn Tháp Thiên Mệnh: thêm khung "Hành trình" vẽ mọi tầng theo chặng độ khó, tầng đang đứng và mốc đá; đưa phần đang chơi lên trên, bảng xếp hạng và thưởng hạng xuống cuối; danh sách đội hình và thẻ chọn tướng có chân dung, hệ, nghề, thanh máu và lý do không chọn được; chọn hệ và nghề Đinh Bộ Lĩnh bằng hai hàng (trước là danh sách mọi tổ hợp, tới 56 nút); tự gợi ý cặp tướng hợp luật; thẻ phần thưởng ghi loại, độ hiếm và số lần đang có; Phúc đang có kèm mô tả; "Dừng lượt leo" phải xác nhận; dòng chu kỳ ghi ngày và thời gian còn lại.
+- Server trả thêm `rulesVersion` và `milestones` trong `GET /api/destiny` để vẽ hành trình. Không đổi luật.
+
 ## 09/11/2026
 
 **Ảnh phong thái: đủ tranh nền 7 hệ**

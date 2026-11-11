@@ -2357,10 +2357,10 @@ export default function DemoGame({
                         {outcome.destiny && (
                           <p className={`font-semibold ${outcome.destiny.won ? "text-frame-gold" : "text-danger"}`}>
                             {outcome.destiny.completed
-                              ? `Thiên Mệnh: đã chinh phục tầng cuối (tầng ${outcome.destiny.floor}). Run hoàn thành.`
+                              ? `Thiên Mệnh: đã vượt tầng ${outcome.destiny.floor}, tầng cuối của tháp. Lượt leo hoàn thành.`
                               : outcome.destiny.won
                               ? `Thiên Mệnh: đã vượt tầng ${outcome.destiny.floor}. Hãy chọn một phần thưởng.`
-                              : `Thiên Mệnh: đội hình gục ở tầng ${outcome.destiny.floor}. Run đã kết thúc.`}
+                              : `Thiên Mệnh: đội hình gục ở tầng ${outcome.destiny.floor}. Lượt leo kết thúc tại đây.`}
                           </p>
                         )}
                         {outcome.expedition && (

@@ -128,6 +128,10 @@ const POOLS: Readonly<Record<DestinyRulesVersion, Readonly<Record<DestinyFloorTi
   2: POOLS_V2,
 };
 
+/** Độ khó AI của địch theo nhóm tầng. */
+export const destinyTierDifficulty = (tier: DestinyFloorTier): "easy" | "normal" | "hard" | "boss" =>
+  tier === 4 ? "boss" : tier === 3 ? "hard" : tier === 2 ? "normal" : "easy";
+
 const CYCLE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 /** V1: tầng 1–3 / 4–6 / 7–9 / 10. V2: tầng 1–5 / 6–10 / 11–15 / 16–20. */

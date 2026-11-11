@@ -39,7 +39,7 @@ export const MODE_INFO: Partial<Record<Scene, ModeInfo>> = {
   },
   DESTINY: {
     text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Song Tháp",
-    perks: ["Đội chốt một lần cho cả chu kỳ", "Máu và lương mang sang tầng sau", "Bảng xếp hạng riêng cho từng chu kỳ"],
+    perks: ["Đội hình khóa cho cả lượt leo", "Máu, năng lượng và lương mang sang tầng sau", "Thắng mỗi tầng chọn Phúc hoặc hồi phục", "Bảng xếp hạng riêng cho từng chu kỳ tuần"],
   },
   SURVIVAL: {
     text: MODE_TEXT.SURVIVAL, art: "survival", kicker: "Giữ ải",
