@@ -1,6 +1,6 @@
 # 37 hồ sơ tướng thường (hư cấu)
 
-> Cập nhật: 08/11/2026
+> Cập nhật: 10/11/2026
 > Trạng thái: **APPROVED** — Shan duyệt (08/11/2026); dữ liệu đã nằm ở `src/core/roster/lore.ts` và hiện ở tab Chi tiết (xem [thiết kế lại nhân vật](thiet-ke-lai-nhan-vat.md) mục 7). Theo mẫu mục 4; vũ khí và vật dụng khớp bảng 3.2; phe khớp bảng 4.1; quan hệ khớp bảng 4.2 (R1–R15). Từ 08/11/2026, 14 xạ thủ và sát thủ có họ tên mới (tên cũ thành ngoại hiệu); trong file này họ được nhắc bằng họ tên mới kèm ngoại hiệu.
 
 **Tất cả là nhân vật hư cấu của game**, không phải người có trong sử. Lính sứ quân chỉ là thuộc hạ, không gán hành động hay lời thoại cho sứ quân thật. Ký hiệu phe là do game đặt. Năm tướng khởi đầu (Hà Vân, Lê Thạch, Mai Thanh, Tô Kim, Phùng Phong) ở [thiết kế lại nhân vật](thiet-ke-lai-nhan-vat.md).
@@ -57,12 +57,12 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 
 ### Kha Sơn · Tướng sĩ · Thổ
 - **Ngoại hiệu:** Bất Thoái (núi không lùi).
-- **Phe:** lính Tam Đái, theo về Hoa Lư. Họa tiết ba dải.
+- **Phe:** lính Tam Đái, theo về Hoa Lư. Họa tiết ba dải (ba thanh ngang xếp tầng, hai đầu khuyết; **thêu vào áo vải** ở hai bắp tay và vạt trước áo, không đặt lên giáp).
 - **Tuổi, quê:** khoảng 40, chân núi Tam Đái.
 - **Xuất thân:** thợ đẽo đá chuyển sang cầm rìu trận, tay to như cái cối. Anh theo về khi em trai mình rời đồn; anh không nói nhiều, chỉ xách rìu đi theo.
 - **Tính cách:** chậm, chắc, ít lời, tốt bụng; thích đứng nhìn núi.
-- **Ba dấu ấn:** thân to, đầu cạo, râu thưa · giáp đá mài nhẵn thêu ba dải, màu nhấn nâu đất · đai giáp đá.
-- **Vũ khí và nhịp:** **rìu lớn hai tay** · Chém.
+- **Ba dấu ấn:** thân to (dày kiểu thợ đẽo đá, không lực sĩ), đầu cạo, râu thưa · áo vải nâu đất tay dài thêu biểu tượng ba dải, giáp đá mài nhẵn **đơn giản một mảnh** (lưới vảy rất nhỏ, viền đồng mỏng), màu nhấn nâu đất · đai giáp đá.
+- **Vũ khí và nhịp:** **rìu-giáo hai tay** (cán gỗ cao tới ngực, đầu rìu bán nguyệt có khuyết khắc vầng mặt trời và vài nét mây, mũi giáo lá dựng trên đầu rìu, mũi nhọn nón ở cuối cán; dựng ngày 10/11/2026 từ ảnh tham khảo, bỏ đầu rồng và vân dày cho đỡ cầu kỳ) · Chém.
 - **Quan hệ:** R3, anh của Kha Thạch (Trấn Sơn Thạch).
 - **Câu nói:** "Núi không lùi, ta cũng vậy."
 
@@ -70,10 +70,10 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Ngoại hiệu:** Nộ Lôi (sấm giận).
 - **Phe:** lính Phong Châu, theo về Hoa Lư. Họa tiết đỉnh núi và sét.
 - **Tuổi, quê:** khoảng 42, ngã ba sông vùng Phong Châu.
-- **Xuất thân:** lính kích lâu năm, dạy cả lớp trẻ cách giữ nhịp tiến quân. Anh theo về vì tin thế cục mới cần người dạy lính, không cần người chỉ chém.
+- **Xuất thân:** lính kiếm lâu năm, dạy cả lớp trẻ cách giữ nhịp tiến quân. Anh theo về vì tin thế cục mới cần người dạy lính, không cần người chỉ chém.
 - **Tính cách:** nóng nhưng giữ lời, nghiêm với học trò, hiền với trẻ con.
 - **Ba dấu ấn:** tóc búi, sẹo ở lông mày, mắt sắc · áo giáp tím sẫm thêu đỉnh núi và vân sét, màu nhấn tím · chuông ngựa treo ở đai.
-- **Vũ khí và nhịp:** **kích** · Đâm.
+- **Vũ khí và nhịp:** **trường kiếm** · Chém (giữ theo tranh hiện tại; kích đã giao cho Trương Viêm ngày 10/11/2026, nên Tống Tấn không dùng kích nữa).
 - **Quan hệ:** R13, thầy của Lương Triệt (Lôi Minh Xạ).
 - **Câu nói:** "Sấm đã nổ thì không thu lại."
 
@@ -177,10 +177,10 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Ngoại hiệu:** Hồ Tử (chàng trai của đầm).
 - **Phe:** lính Hồi Hồ, theo về Hoa Lư. Họa tiết cánh sen.
 - **Tuổi, quê:** khoảng 22, ven đầm Hồi Hồ. Nam.
-- **Xuất thân:** lính trẻ, quen chèo xuồng chặt lau, mang theo dao quắm. Anh theo cờ lau vì muốn thấy thế giới ngoài đầm, kéo theo ông cậu cứng đầu.
+- **Xuất thân:** lính trẻ, quen chèo xuồng chặt lau, mang theo cây giản sắt ông cậu rèn cho. Anh theo cờ lau vì muốn thấy thế giới ngoài đầm, kéo theo ông cậu cứng đầu.
 - **Tính cách:** hồn nhiên, nhanh nhảu, hay quên đường; mê ăn cơm lam.
 - **Ba dấu ấn:** mặt tròn, tóc cháy nắng, cười hở răng · áo mây xanh nhạt thêu cánh sen, màu nhấn xanh lá · giỏ cơm lam đeo bên hông.
-- **Vũ khí và nhịp:** **dao quắm và khiên mây** · Chém.
+- **Vũ khí và nhịp:** **giản sắt** (gậy sắt bốn cạnh, đánh bằng sức nặng; đổi cho dao quắm 10/11/2026 vì dao quắm có mũi móc khó vẽ) · Chém.
 - **Quan hệ:** R12, cháu của Lâm Tùng.
 - **Câu nói:** "Đầm lớn lắm, nhưng thế gian còn lớn hơn."
 
@@ -191,7 +191,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Xuất thân:** lính chèo thuyền hộ tống, tay chai như gỗ chèo. Ông sang giúp Hoa Lư khi liên minh được kết, và vì con trai ông đã đi trước làm trinh sát bến sông.
 - **Tính cách:** bình thản, thương con, nói ít; có thói quen đếm sóng.
 - **Ba dấu ấn:** râu muối tiêu, da sạm biển, vai rộng · áo vải xanh sẫm thêu sóng cửa biển, màu nhấn lam · lưới vắt vai.
-- **Vũ khí và nhịp:** **mái chèo sắt và khiên tre** · Chém.
+- **Vũ khí và nhịp:** **chùy gai sắt cán gỗ** (đổi cho mái chèo sắt 10/11/2026: mái chèo là đồ chèo thuyền, không hợp binh khí lính tuyến đầu) · Chém.
 - **Quan hệ:** R2, cha của Thái Diệp (ngoại hiệu Lam Giang Phi Diệp).
 - **Câu nói:** "Biển dạy ta kiên nhẫn, không dạy ta lùi."
 
@@ -202,7 +202,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Xuất thân:** lính lũy, nóng tính, hay đùa trong giờ gác. Anh theo về cùng người đồng đội cũ vì chán cảnh gác lũy mà chẳng biết bảo vệ ai.
 - **Tính cách:** ồn ào, vui nhộn, thật bụng; thích kể chuyện tục.
 - **Ba dấu ấn:** mắt sáng, tóc cháy sém, nụ cười tinh nghịch · giáp lá đỏ thêu lũy răng cưa, màu nhấn đỏ cam · đuốc cài lưng.
-- **Vũ khí và nhịp:** **đoản đao** · Chém.
+- **Vũ khí và nhịp:** **kích hai lưỡi trăng** (phương thiên họa kích; đổi cho đoản đao 10/11/2026 để bóng vũ khí riêng) · Đâm.
 - **Quan hệ:** R15, đồng đội cũ của Tiết Dạ (Xích Dạ).
 - **Câu nói:** "Gác đêm thì phải biết cười, không thì lạnh."
 
@@ -210,10 +210,10 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Ngoại hiệu:** Nhịp Quân (người giữ nhịp cho quân).
 - **Phe:** lính Phong Châu, theo về Hoa Lư. Họa tiết đỉnh núi.
 - **Tuổi, quê:** khoảng 41, vùng núi Phong Châu. Nam.
-- **Xuất thân:** lính giữ nhịp tiến quân cho cả đội, thổi tù và ra hiệu khi cần, tay cầm giáo. Ông theo về vì tin rằng đội quân mới cần nhịp mới.
+- **Xuất thân:** lính giữ nhịp tiến quân cho cả đội, đánh trống trận khi cần, tay cầm roi sắt. Ông theo về vì tin rằng đội quân mới cần nhịp mới.
 - **Tính cách:** thô, thật thà, trọng nghĩa; nói to.
-- **Ba dấu ấn:** bụng rắn, tai to, tóc húi · áo da tím sẫm thêu đỉnh núi, màu nhấn tím · tù và sừng trâu đeo hông (vật dụng, thổi ra hiệu, không đánh).
-- **Vũ khí và nhịp:** **giáo mũi lá và khiên mây** (giữ hình cổ điển; lưu tinh chùy bỏ ngày 09/11/2026 vì dây vung tròn khó vẽ ổn định) · Đâm.
+- **Ba dấu ấn:** ngực nở, cổ dày, bụng phẳng cứng (không bụng phệ), tai to, tóc húi sát, râu ngắn muối tiêu dày, sẹo nhỏ ở lông mày trái, mặt dữ · áo da tím sẫm thêu đỉnh núi, màu nhấn tím · dùi trống cài thắt lưng (vật dụng; trống trận chỉ là đạo cụ nền của tranh phong thái, không phải vũ khí).
+- **Vũ khí và nhịp:** **tiên** (roi sắt đốt thót nhọn; lưu tinh chùy bỏ 09/11/2026 vì dây vung tròn khó vẽ, giáo đổi 10/11/2026 để bóng vũ khí riêng) · Chém.
 - **Quan hệ:** chưa chốt.
 - **Câu nói:** "Trống đánh đúng nhịp thì lính bước đúng đường."
 
@@ -320,7 +320,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Xuất thân:** ẩn sĩ câu cá ven sông, được dân hỏi ý kiến mỗi khi có chuyện. Ông ra giúp cờ lau khi một người học trò cũ tìm đến.
 - **Tính cách:** thong dong, hóm, nói bóng; câu cá để nghĩ.
 - **Ba dấu ấn:** râu dài bạc, nón rộng vành, mắt tinh · áo nâu lam thêu vân nước, màu nhấn lam · cần câu trúc dựng sau lưng.
-- **Vũ khí và nhịp:** **thước sắt dài** · Trượng.
+- **Vũ khí và nhịp:** **kiếm** (giữ nguyên như ảnh Shan gửi 10/11/2026: lưỡi bạc thẳng hai bên, hộ vệ hình thoi và vây cong, men xanh lục lam, đầu chuôi hình đầu rồng) · Chém. Đổi từ thước sắt vì không có ảnh chuẩn để vẽ.
 - **Quan hệ:** R10, thầy của Âu Thu (Hàn Giang Khách) (hai phe).
 - **Câu nói:** "Cá cắn lúc ta không vội, như thế sự."
 
@@ -400,8 +400,8 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Tuổi, quê:** khoảng 31, chân núi Tiên Du. Nam.
 - **Xuất thân:** người cầm trống lệnh của đội quân Tiên Du, giỏi giữ nhịp. Anh theo về cùng em gái vì muốn đưa nhịp trống vào thế trận lớn hơn.
 - **Tính cách:** nhanh, vui, thương em; hay gõ nhịp lên mọi thứ.
-- **Ba dấu ấn:** mặt rộng, tóc ngắn, tay thon · áo lam xám thêu sao bốn cánh, màu nhấn lam · trống lệnh nhỏ đeo hông.
-- **Vũ khí và nhịp:** **giáo ngắn cắm cờ nhỏ** · Đâm.
+- **Ba dấu ấn:** mặt rộng, búi tóc gọn, tay thon · áo lam xám thêu sao bốn cánh, màu nhấn lam · túi quân cờ vây đeo hông (vật dụng, không dùng đánh).
+- **Vũ khí và nhịp:** **thương thủy** (thương mảnh cán kem trắng, mũi kim bạc xanh, dải lụa trắng quấn cán mang hai vây sóng xanh, đoạn cầm xanh đậm; lấy dáng từ ảnh Shan gửi 11/11/2026, giản lược; Shan chốt thương và không dùng trống) · Đâm.
 - **Quan hệ:** R7, anh của Vi Lam.
 - **Câu nói:** "Trống đúng nhịp, quân đúng bước."
 
@@ -412,7 +412,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Xuất thân:** người cầm cờ lệnh của đội đúc, quen điều hành thợ trong lò lửa. Cô theo cờ lau vì thấy đội này cần người điều phối giỏi.
 - **Tính cách:** quyết đoán, sôi nổi, gắt khi mệt; hay bó thẻ tre trước khi họp.
 - **Ba dấu ấn:** tóc buộc cao, mắt sáng, mặt lấm than · áo đỏ gạch thêu mặt trời trống đồng, màu nhấn đỏ · bó thẻ tre.
-- **Vũ khí và nhịp:** **cờ lệnh** · Trượng (giữ như hiện tại).
+- **Vũ khí và nhịp:** **thương rồng đỏ** (cán dài sơn đỏ, mũi lá rộng bạc, rồng đồng quấn hai vòng dưới mũi, vòng đồng ở chân cán; lấy dáng từ cây thương rồng Shan gửi 11/11/2026, giản lược; thay cờ lệnh) · Đâm.
 - **Quan hệ:** chưa chốt.
 - **Câu nói:** "Lệnh đã ban thì lửa cũng phải nghe."
 
@@ -434,7 +434,7 @@ Cách đọc mỗi hồ sơ: **Phe** · tuổi, quê · xuất thân (kèm lý d
 - **Xuất thân:** người thổi tù và báo hiệu cho các làng núi, giỏi đọc dấu hiệu trời. Cô theo cờ lau để thổi nhịp tiến cho cả đội.
 - **Tính cách:** mạnh mẽ, thẳng, vui; thích thử gió trước khi nói.
 - **Ba dấu ấn:** mặt rắn rỏi, tóc cột sau, mắt sáng · áo tím sẫm thêu sét và mặt trời trống đồng, màu nhấn tím · tù và đeo vai.
-- **Vũ khí và nhịp:** **kiếm cong** · Chém.
+- **Vũ khí và nhịp:** **lôi kiếm** (kiếm thẳng hai lưỡi, lưỡi uốn lượn nhẹ như tia sét, chuôi và hộ vệ đồng, vỏ da đỏ bịt đồng chạm vân xoắn; lấy dáng từ ảnh Shan gửi 11/11/2026, giản lược, không ngọc, không phát sáng) · Chém.
 - **Quan hệ:** chưa chốt.
 - **Câu nói:** "Tiếng tù và đi xa hơn tiếng nói."
 

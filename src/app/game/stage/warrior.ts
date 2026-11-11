@@ -134,7 +134,7 @@ export function warrior(
   body.addChild(trail);
   const sparks = particles(body, rig.fxColor, 40, 220);
   const fx = cueFx(view, rig.height, rig.fxColor);
-  const raiseAngle = RAISE[rig.weapon ?? "sword"];
+  const raiseAngle = rig.raise ?? RAISE[rig.weapon ?? "sword"];
 
   // Tranh tư thế: gốc tọa độ ở chân như hình động; bóng sáng sau lưng, ảnh sáng phóng ra lúc đổi tranh.
   const poses = (Object.entries(rig.poses ?? {}) as [PoseKind, PoseArt][]).map(([kind, p]) => {

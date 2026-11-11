@@ -1,6 +1,6 @@
 # Thiết kế lại nhân vật theo phong cách cổ trang bán hiện thực
 
-> Cập nhật: 09/11/2026
+> Cập nhật: 10/11/2026
 > Trạng thái: **APPROVED** — Shan duyệt toàn bộ (08/11/2026). **Phần chữ đã có trong mã:** đổi tên (3 tướng thường, 14 Xạ thủ và Sát thủ), ngoại hiệu, phe, tiểu sử, quan hệ (`src/core/roster/lore.ts`, hiện ở tab Chi tiết). **Phần tranh** (làm lại nhân vật, vũ khí và tư thế theo phong cách mới, mục 6) **chưa làm**.
 
 Phong cách mục tiêu: **semi-realistic historical illustration, digital painting** (minh họa cổ trang bán hiện thực, tranh vẽ kỹ thuật số). Đã có chuẩn cho chân dung ở [prompt chân dung](../06-art/prompts/chan-dung-lich-su.md); chân dung Hà Vân mới (có họa tiết) là mẫu tham chiếu.
@@ -237,7 +237,7 @@ Mỗi nghề 7 người, mỗi hệ một người. **Vũ khí** chọn trong 3.
 |---|---|---|---|
 | Kim | ★ Tô Kim | quạt xếp nan sắt (Quạt) | **cân đồng**, túi tiền vải |
 | Mộc | Nhan Trúc | bút sắt (Quạt) | bó thẻ tre sau lưng |
-| Thủy | Quách Ẩn | thước sắt dài (Trượng) | cần câu trúc, nón rộng vành |
+| Thủy | Quách Ẩn | kiếm (Chém; theo ảnh Shan gửi, đổi từ thước sắt) | cần câu trúc, nón rộng vành |
 | Hỏa | Ninh Hỏa | **quạt lông** (Quạt) | túi mồi lửa |
 | Thổ | Mã Nhạc | đoản kiếm (Chém) | ống thẻ gieo quẻ |
 | Lôi | Từ Kinh | **cửu tiết tiên**, roi sắt chín khúc (Chém) | cuộn bản đồ |
@@ -249,10 +249,10 @@ Mỗi nghề 7 người, mỗi hệ một người. **Vũ khí** chọn trong 3.
 |---|---|---|---|
 | Kim | Nghiêm Thiết | đoản đao lệnh (Chém) | lệnh bài đồng |
 | Mộc | Sầm Tuệ | **cờ lệnh** xanh (Trượng) | cuộn thẻ lệnh |
-| Thủy | Vi Triều | giáo ngắn cắm cờ nhỏ (Đâm) | trống lệnh nhỏ đeo hông |
-| Hỏa | Tôn Diệm | **cờ lệnh** (Trượng, giữ như hiện tại) | bó thẻ tre |
+| Thủy | Vi Triều | thương thủy (Đâm; cán kem trắng, mũi kim bạc xanh, dải lụa trắng vây sóng xanh; Shan 11/11) | túi quân cờ vây đeo hông |
+| Hỏa | Tôn Diệm | **thương rồng đỏ** (Đâm; cán đỏ, mũi lá bạc, rồng đồng quấn cán; thay cờ lệnh, Shan 11/11) | bó thẻ tre |
 | Thổ | Tạ Thạch | gậy chỉ huy gỗ lim (Trượng) | bản đồ da |
-| Lôi | Mạc Vân | kiếm cong (Chém) | tù và đeo vai |
+| Lôi | Mạc Vân | lôi kiếm (kiếm lưỡi gợn sóng như tia sét, vỏ đỏ bịt đồng, Chém; Shan 11/11) | tù và đeo vai |
 | Phong | ★ Phùng Phong | **gậy trúc chỉ huy** (Trượng) | **sáo trúc** cài hông (thổi báo hiệu, không đánh) |
 
 **Binh lính**
@@ -260,11 +260,11 @@ Mỗi nghề 7 người, mỗi hệ một người. **Vũ khí** chọn trong 3.
 | Hệ | Nhân vật | Vũ khí (nhịp) | Vật dụng đặc trưng |
 |---|---|---|---|
 | Kim | Cao Kiên | **giáo dài** (Đâm) | dây lương đeo chéo |
-| Mộc | Hoàng Mộc | dao quắm và khiên mây (Chém) | giỏ cơm lam |
-| Thủy | Thái Hà | mái chèo sắt và khiên tre (Chém) | lưới vắt vai |
-| Hỏa | Trương Viêm | đoản đao (Chém) | đuốc cài lưng |
+| Mộc | Hoàng Mộc | **giản sắt** (Chém) | giỏ cơm lam |
+| Thủy | Thái Hà | **chùy gai sắt** (Chém) | lưới vắt vai |
+| Hỏa | Trương Viêm | **kích hai lưỡi trăng** (Đâm) | đuốc cài lưng |
 | Thổ | ★ Lê Thạch | **giáo** (mũi đồng hình lá) và khiên mây (Đâm) | túi vải đựng nắm đất |
-| Lôi | Ông Chấn | **giáo mũi lá và khiên mây** (Đâm) | tù và sừng trâu đeo hông |
+| Lôi | Ông Chấn | **tiên** (roi sắt, Chém) | dùi trống cài thắt lưng; trống trận chỉ ghép ở tranh phong thái |
 | Phong | Mạnh Tường | giáo ngắn và lao phóng (Đâm) | cờ hiệu nhỏ |
 
 **Tướng sĩ**
@@ -275,8 +275,8 @@ Mỗi nghề 7 người, mỗi hệ một người. **Vũ khí** chọn trong 3.
 | Mộc | Lâm Tùng | **côn tam khúc gỗ lim** (Trượng) | cành tùng cài giáp |
 | Thủy | Hồ Lãng | đinh ba (Đâm) | lưới cuộn ở hông |
 | Hỏa | Lý Liệt | **đôi hộ thủ câu**, kiếm móc (Chém) | khăn đỏ buộc đầu |
-| Thổ | Kha Sơn | rìu lớn hai tay (Chém) | đai giáp đá |
-| Lôi | Tống Tấn | kích (Đâm) | chuông ngựa |
+| Thổ | Kha Sơn | **rìu-giáo hai tay** (rìu bán nguyệt có mũi giáo trên đầu, Chém) | đai giáp đá |
+| Lôi | Tống Tấn | trường kiếm (Chém; giữ theo tranh hiện tại, kích giao Trương Viêm) | chuông ngựa |
 | Phong | Hứa Lăng | kiếm mảnh (Chém) | dải lụa buộc tóc |
 
 Kiểm tra: không nghề nào có hai người trùng cả vũ khí lẫn vật dụng, và sau khi đổi **Lý Liệt sang hộ thủ câu, Xích Dạ (song đao) là người duy nhất dùng song đao**; hình cổ điển vẫn có ở mỗi nghề. Đây là **đề xuất ban đầu**, Shan đổi chỗ nào cũng được, miễn vũ khí vẫn nằm trong nhịp có sẵn.
@@ -460,6 +460,32 @@ Tổng: **20 nghĩa quân Hoa Lư** và **36 lính hoặc hàng binh của 12 s�
 | 4 | `standing.webp` và các lớp | Cắt lớp lại; chỉ tốn thêm khi **đổi vũ khí** (vật dụng đặc trưng vẽ trên thân nên không tốn) |
 | 5 | `pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down` | Giữ dáng tranh cũ làm tham chiếu, đặt lại tọa độ trong `rigs.ts` |
 | 6 | Ghép vào trận, chỉnh tọa độ, chụp so sánh | Claude làm |
+
+**Quy tắc nét mặt (Shan, 10/11/2026):** chỉ **bán thân** và **tranh phong thái** được cười. Dáng chuẩn đứng bình thản. Các dáng chiến đấu phải có **sắc thái chiến đấu**, không chỉ là "không cười":
+
+| Dáng | Nét mặt |
+|---|---|
+| Ra đòn | Mắt khóa vào địch, chân mày hạ thấp, hàm nghiến, môi mím |
+| Ra chiêu | Mắt nheo tập trung, chân mày hạ, ánh nhìn vững, miệng ngậm |
+| Tuyệt chiêu | Mắt rực tập trung, chân mày dồn, miệng há hô xung trận, cổ và hàm căng (không hề hước) |
+| Gục xuống | Đau và kiệt sức, chân mày nhíu, mắt nhắm, nhăn mặt |
+
+Khối mô tả nhân vật dùng chung cho nhiều dáng không được ghi sẵn nụ cười; nụ cười đặc trưng chỉ viết trong dòng dáng của phong thái. Prompt mỗi dáng chiến đấu có dòng `BATTLE FACE:` (hoặc `FACE:` với dáng gục) theo bảng trên.
+
+**Phong thái phải đa dạng và mang dáng tướng (Shan, 10/11/2026):** phong thái không bắt buộc phải cười; dù đang nghỉ, nhân vật chiến đấu vẫn phải toát ra dáng của người từng ra trận (tư thế vững, ánh nhìn có hồn), không hề hước giả tạo. Nụ cười chỉ dùng khi hợp tính cách và phải tự nhiên. mỗi nhân vật một hoạt động riêng gắn với nghề và tính cách, hạn chế trùng dáng (tránh nhiều người cùng quỳ chạm đất, cùng ngồi lau vũ khí, cùng đứng chống vũ khí). Có thể có **thú**: dắt ngựa, dắt voi, dắt trâu, cho ngựa ăn, ngồi trên lưng trâu. Kho gợi ý: dắt trâu kéo đá; dắt voi tải hàng; dắt ngựa thồ; cho ngựa uống nước; vá lưới trên thuyền; ăn cơm lam; khắc chữ lên đá; mài dao hoặc lau mũi giáo; kể chuyện bên rào lũy; đánh trống; nấu thuốc; chép sách; đếm tiền và sổ; thả diều hoặc nghe gió; nướng cá; gánh nước; buộc cờ lên cột. Trước khi viết phong thái mới, xem bảng dưới để khỏi trùng.
+
+| Nhân vật | Phong thái |
+|---|---|
+| Lê Thạch | Dắt trâu bằng dây thừng, tay vỗ cổ trâu |
+| Kha Sơn | Dắt voi non tải hàng trên đường núi |
+| Hoàng Mộc | Ngồi mép thuyền mở ống cơm lam |
+| Thái Hà | Quỳ vá lưới |
+| Trương Viêm | Ngồi rào lũy kể chuyện cười |
+| Cao Kiên | Ngồi ghế thấp lau mũi giáo |
+| Ông Chấn | Nghỉ như tướng ở rìa trại: một chân gác bệ trống trận, tay chống tiên xuống đất, mắt nhìn quân (không cười, không đánh trống) |
+| Doãn Nham | Ngồi trên tảng đá khắc chữ lên bia đá |
+| Hà Vân, Tô Kim, Hồ Lãng | Giữ như prompt đã duyệt (quỳ một gối; ngồi ghế sổ; ngồi mũi thuyền) |
+| Các nhân vật còn lại | Chọn từ kho gợi ý, không trùng bảng này |
 
 Khoảng **7 tranh** và một lần cắt lớp cho mỗi người; 77 nhân vật là hơn 500 tranh, nên làm theo đợt:
 
