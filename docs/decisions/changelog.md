@@ -1,5 +1,19 @@
 # Nhật ký thay đổi thiết kế
 
+## 11/11/2026
+
+**Tháp Thiên Mệnh: 20 tầng và 8 Phúc mới (có code)**
+- Shan chọn ba phương án: sức địch **dốc vừa** (`0,72 + 0,02 × tầng`, tầng 20 là 1,12), đá mốc **giữ tổng 18 và chia lại** (tầng 5/10/15/20 cho 3/4/5/6 đá; đá cuối chu kỳ vẫn 0–5), và **8 Phúc mới chỉ dùng hook có sẵn** (Kho lương, Tiên phong, Đồng nghề, Tử chiến, Hậu quân, Địa lợi, Dưỡng sức, Quân lệnh), không sửa lõi trận đấu.
+- Áp dụng từ chu kỳ thứ Hai **16/11/2026** (luật V2); run 10 tầng đang chạy giữ luật V1 tới khi kết thúc. Bốn nhóm khó mỗi nhóm 5 tầng (Dễ, Thường, Khó, Trùm), mỗi nhóm 8 luật và không lặp luật trong một chu kỳ. Vàng theo hạng không đổi. Nguồn chính: [luật Song Tháp §11](../02-game-modes/dual-tower/00-02-rules.md#11-destiny-v2--20-tầng-shan-chốt-11112026), [Phúc](../02-game-modes/dual-tower/04-06-destiny-boons.md), [đá](../02-game-modes/dual-tower/05-04-destiny-stones.md).
+- Sửa lỗi: thắng tầng cuối trước đây vẫn mở phần thưởng rồi đưa run sang "chuẩn bị tầng 11" không có nội dung; nay thắng tầng cuối là hoàn thành run (cả V1).
+- Giao diện hiện tên và mô tả Phúc bằng tiếng Việt (trước đây hiện mã), tiến độ `tầng x/20`.
+- Mô phỏng 4 chu kỳ: AI đánh thay trung bình tới tầng 4–6 (roster 3), 8–11 (roster 5), 7–14 (roster 8), có run qua đủ 20 tầng; đá mỗi tuần thấp hơn V1 ([báo cáo](../reports/2026-11-11-destiny-v2-balance.md)). Chưa đo riêng từng Phúc mới.
+
+**Tháp Thiên Mệnh: làm lại giao diện và câu chữ (có code)**
+- Shan yêu cầu ưu tiên giao diện và rà câu chữ, tránh từ như "run". Chữ hiện cho người chơi bỏ run, roster, active, build, HP, NL, stack, clear, tab; quy ước ghi ở [thuật ngữ](../00-overview/thuat-ngu.md#từ-không-dùng-trên-giao-diện). [Hướng dẫn người chơi](../02-game-modes/dual-tower/player-help.md) viết lại theo cùng bộ từ.
+- Màn Tháp Thiên Mệnh: thêm khung "Hành trình" vẽ mọi tầng theo chặng độ khó, tầng đang đứng và mốc đá; đưa phần đang chơi lên trên, bảng xếp hạng và thưởng hạng xuống cuối; danh sách đội hình và thẻ chọn tướng có chân dung, hệ, nghề, thanh máu và lý do không chọn được; chọn hệ và nghề Đinh Bộ Lĩnh bằng hai hàng (trước là danh sách mọi tổ hợp, tới 56 nút); tự gợi ý cặp tướng hợp luật; thẻ phần thưởng ghi loại, độ hiếm và số lần đang có; Phúc đang có kèm mô tả; "Dừng lượt leo" phải xác nhận; dòng chu kỳ ghi ngày và thời gian còn lại.
+- Server trả thêm `rulesVersion` và `milestones` trong `GET /api/destiny` để vẽ hành trình. Không đổi luật.
+
 ## 09/11/2026
 
 **Ảnh phong thái: đủ tranh nền 7 hệ**

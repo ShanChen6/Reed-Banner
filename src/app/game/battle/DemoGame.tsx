@@ -293,7 +293,7 @@ interface Outcome {
   };
   /** Chỉ có ở trận đánh trùm online. */
   readonly raid?: RaidResult;
-  readonly destiny?: { readonly floor: number; readonly won: boolean; readonly phase: "reward" | "done" };
+  readonly destiny?: { readonly floor: number; readonly won: boolean; readonly phase: "reward" | "done"; readonly completed?: boolean };
   /** Trận Viễn Chinh: kết quả trên sa bàn, có `end` khi trận này kết thúc lượt viễn chinh. */
   readonly expedition?: {
     readonly won: boolean;
@@ -2356,9 +2356,11 @@ export default function DemoGame({
                         </p>
                         {outcome.destiny && (
                           <p className={`font-semibold ${outcome.destiny.won ? "text-frame-gold" : "text-danger"}`}>
-                            {outcome.destiny.won
+                            {outcome.destiny.completed
+                              ? `Thiên Mệnh: đã vượt tầng ${outcome.destiny.floor}, tầng cuối của tháp. Lượt leo hoàn thành.`
+                              : outcome.destiny.won
                               ? `Thiên Mệnh: đã vượt tầng ${outcome.destiny.floor}. Hãy chọn một phần thưởng.`
-                              : `Thiên Mệnh: đội hình gục ở tầng ${outcome.destiny.floor}. Run đã kết thúc.`}
+                              : `Thiên Mệnh: đội hình gục ở tầng ${outcome.destiny.floor}. Lượt leo kết thúc tại đây.`}
                           </p>
                         )}
                         {outcome.expedition && (
@@ -2448,7 +2450,7 @@ export default function DemoGame({
                           scene="DESTINY"
                           className={buttonVariants({ size: "sm" })}
                         >
-                          {outcome?.destiny?.won ? "Chọn thưởng Thiên Mệnh" : "Về Tháp Thiên Mệnh"}
+                          {outcome?.destiny?.won && !outcome.destiny.completed ? "Chọn thưởng Thiên Mệnh" : "Về Tháp Thiên Mệnh"}
                         </SceneLink>
                       )}
                       {expeditionMatch && (

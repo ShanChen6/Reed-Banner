@@ -5,6 +5,7 @@ import {
   type DestinyFighterSnapshot,
   type DestinyRun,
 } from "../progress/dualTowerState";
+import { destinyRulesVersionForCycle } from "./destinyRules";
 import { analyzeFeasibility } from "./puzzleValidator";
 import type { FloorRules, LineupMember } from "./floorRules";
 
@@ -98,6 +99,7 @@ export function createDestinyRun(
     run: {
       stateVersion: 1,
       cycleId,
+      rulesVersion: destinyRulesVersionForCycle(cycleId),
       roster: [...rosterIds],
       fighters,
       floor: 1,
