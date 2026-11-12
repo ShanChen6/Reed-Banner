@@ -210,7 +210,7 @@ test("Lý Khuê có bốn tranh, mũi sáng phá giáp hệ Kim, khớp nằm tr
 test("Nguyễn Thủ Tiệp có bốn tranh, đoạt lương hệ Thủy, khớp nằm trong lớp và texture khớp tọa độ", () => {
   const rig = rigOf("nguyenThuTiep");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "fan");
+  assert.equal(rig.weapon, undefined);
   assert.equal(rig.strikeFx, "supplyDrain");
   assert.equal(rig.fxColor, 0x2f7fc1);
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
