@@ -232,17 +232,17 @@ test("Nguyễn Thủ Tiệp có bốn tranh, đoạt lương hệ Thủy, khớp
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("Lữ Đường có bốn tranh, cột nước hệ Thủy, cầu nước nằm trên trượng và texture khớp tọa độ", () => {
+test("Lữ Đường cầm đinh ba có bốn tranh, cột nước hệ Thủy, khớp nằm trong lớp và texture khớp tọa độ", () => {
   const rig = rigOf("luDuong");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "staff");
+  assert.equal(rig.weapon, "spear");
   assert.equal(rig.strikeFx, "waterPillar");
   assert.equal(rig.fxColor, 0x2f7fc1);
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) =>
     assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h, `${JSON.stringify(p)} ngoài lớp`);
-  contains(rig.orb!, rig.parts.sword);
+  assert.equal(rig.orb, undefined);
   contains(rig.joints.shoulder, rig.parts.arm);
   contains(rig.joints.elbowR, rig.parts.armR);
   contains(rig.joints.neck, rig.parts.head);
