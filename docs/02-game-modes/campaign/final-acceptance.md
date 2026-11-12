@@ -1,5 +1,7 @@
 # Campaign V2 — Final acceptance & release gate (CAMP-09.04, 25/10/2026)
 
+> Trạng thái: **AUDIT** — nghiệm thu phát hành CAMP-09.04.
+
 Tổng kết phát hành Campaign V2 cho dự án **chưa có người chơi thật**.
 
 Phạm vi: chuỗi CAMP-02.03 → CAMP-09.03, xây trên `develop` `2c76a20` (PR #126 = CAMP-02.02). Toàn bộ còn ở dạng

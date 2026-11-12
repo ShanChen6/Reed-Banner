@@ -1,6 +1,7 @@
 # T00.02 — Chốt luật Song Tháp
 
 > Cập nhật: 11/11/2026 (thêm §11: Tháp Thiên Mệnh 20 tầng)
+> Trạng thái: **IMPLEMENTED** — §1–§10 là luật gốc Song Tháp, §11 là Tháp Thiên Mệnh 20 tầng.
 
 Design-only (§1–§10). Số liệu Destiny đang chạy nằm ở [§11](#11-destiny-v2--20-tầng-shan-chốt-11112026). Mọi con số ghi **[TBD]** hoặc **[TEST]** chưa được duyệt, không được coi là balance chính thức. Nâng cấp trang bị nằm ở [equipment-enhancement-todo.md](../../04-equipment/cuong-hoa-todo.md) (GEAR-01–08), ngoài phạm vi.
 

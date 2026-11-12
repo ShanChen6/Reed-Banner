@@ -1,6 +1,7 @@
 # T06.04 — Documentation và Release Readiness
 
 > Cập nhật: 24/10/2026
+> Trạng thái: **AUDIT** — nghiệm thu Song Tháp; cổng trước public launch còn mở.
 
 ## Phạm vi nghiệm thu
 

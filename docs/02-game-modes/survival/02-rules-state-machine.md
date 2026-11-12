@@ -1,5 +1,7 @@
 # Survival V1.1 — Rules & State Machine
 
+> Trạng thái: **IMPLEMENTED**
+
 > Đặc tả hành vi cho đội 3 active + tối đa 2 reserve.
 > Tài liệu này chuyển luật đã thống nhất thành hợp đồng để triển khai và kiểm thử. Các ghi chú implementation được rà soát cho Task 24; source hiện hành là căn cứ cuối cùng khi bản đặc tả cũ không còn khớp.
 

@@ -1,6 +1,7 @@
 # Trang bị
 
 > Cập nhật: 19/10/2026
+> Trạng thái: **IMPLEMENTED**
 
 ## 1. Chín ô trang bị
 

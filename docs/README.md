@@ -1,6 +1,7 @@
 # Tài liệu Cờ Lau (Reed Banner)
 
 > Cập nhật: 12/11/2026
+> Trạng thái: **REFERENCE** — bản đồ tài liệu.
 
 Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** nguồn chính (đánh dấu ★); file khác chỉ link tới đó. Tìm đường dẫn cũ (trước 27/10/2026) ở [MOVED.md](MOVED.md).
 
@@ -138,9 +139,9 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 
 Đầy đủ ở [quy-dinh-tai-lieu.md](00-overview/quy-dinh-tai-lieu.md). Tóm tắt:
 
-- Viết tiếng Việt; mỗi file một tiêu đề `#`, dưới là `> Cập nhật: dd/mm/yyyy` và `> Trạng thái: **...**`.
+- Viết tiếng Việt; mỗi file một tiêu đề `#`, dưới là `> Cập nhật: dd/mm/yyyy` và `> Trạng thái: **...**` (bắt buộc với mọi file, CI kiểm).
 - Một khái niệm chỉ định nghĩa ở **một** file (★ ở trên); file khác link tới đó.
 - Việc chưa chốt ghi `> TODO:` tại chỗ và trong [cau-hoi-mo.md](09-roadmap/cau-hoi-mo.md); quyết định mới ghi vào [changelog.md](decisions/changelog.md).
-- Chuyển/đổi tên file: `git mv` + thêm dòng vào [MOVED.md](MOVED.md).
+- Chuyển/đổi tên file: `git mv` + thêm dòng vào [MOVED.md](MOVED.md). Tài liệu hết hiệu lực (bị thay, kế hoạch hay QA của việc đã xong) thì **xóa** và ghi vào bảng [Đã xóa](MOVED.md#đã-xóa), không lưu trữ.
 - Chạy `pnpm check` (gồm `pnpm docs:check`) trước khi commit; xem [quy trình test](07-architecture/quy-trinh-test.md).
 

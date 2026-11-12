@@ -1,5 +1,7 @@
 # Survival V1.1 — Roster Data Architecture
 
+> Trạng thái: **IMPLEMENTED**
+
 > **Final implementation note (Task 24):** Sections marked as early-task status describe the design checkpoint at that time, not current shipping state. Current implementation supports initial roster selection, BREAK rotation/build/revive confirmation, persistence and server-side sequence validation; see the code in `src/core/survival/` and tests in `tests/core/survival/`.
 
 > Thiết kế dữ liệu cho roster tối đa 5 fighter chạy trên battle engine chỉ nhận 3 active.

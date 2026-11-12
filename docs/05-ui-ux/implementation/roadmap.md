@@ -1,5 +1,7 @@
 # Reed Banner — UI Migration Roadmap: Home & Modes
 
+> Trạng thái: **APPROVED** — danh sách việc giao diện; từng việc ghi đã làm hay chưa.
+
 > 27/10/2026 · DESIGN ONLY. Companion: [game-mode-ui-spec.md](../design-system/game-mode-ui-spec.md). Không có UI/code implementation trong PR docs này.
 
 ## 1. Workstreams

@@ -1,6 +1,6 @@
 /**
- * Kiểm tra tài liệu (DOC-03): link tương đối, anchor, một tiêu đề `#`, nhãn trạng thái,
- * docs/MOVED.md và đường dẫn docs/*.md nhắc trong code. Quy định: docs/00-overview/quy-dinh-tai-lieu.md.
+ * Kiểm tra tài liệu: link tương đối, anchor, một tiêu đề `#`, nhãn trạng thái bắt buộc,
+ * docs/MOVED.md (đã chuyển và đã xóa) và đường dẫn docs/*.md nhắc trong code. Quy định: docs/00-overview/quy-dinh-tai-lieu.md.
  * Chạy: pnpm docs:check
  */
 import { execFileSync } from "node:child_process";
@@ -96,18 +96,27 @@ export function checkDocs(root: string): Issue[] {
     if (!file.startsWith("docs/")) continue;
     const h1 = proseLines(text).filter(([, l]) => /^# /.test(l));
     if (h1.length !== 1) issues.push({ file, line: h1[1]?.[0] ?? 1, message: `cần đúng một tiêu đề "#", đang có ${h1.length}` });
+    let hasStatus = false;
     for (const [line, content] of proseLines(text)) {
       const s = content.match(/^>\s*Trạng thái:\s*\*\*([^*]+)\*\*/);
       if (!s) continue;
+      hasStatus = true;
       const word = s[1]!.trim().split(/[\s/—-]/)[0] ?? "";
       if (!(STATUSES as readonly string[]).includes(word)) {
         issues.push({ file, line, message: `trạng thái "${word}" không thuộc ${STATUSES.join(", ")}` });
       }
     }
+    if (!hasStatus) issues.push({ file, line: 1, message: `thiếu dòng "> Trạng thái: **...**" (${STATUSES.join(", ")})` });
   }
 
   if (exists("docs/MOVED.md")) {
     for (const [line, content] of proseLines(read("docs/MOVED.md"))) {
+      // Bảng "Đã xóa": | `docs/...` | Xóa dd/mm/yyyy: lý do |
+      const deleted = content.match(/^\| `(docs\/[^`]+?)\/?` \| Xóa /);
+      if (deleted) {
+        if (exists(deleted[1]!)) issues.push({ file: "docs/MOVED.md", line, message: `ghi là đã xóa nhưng vẫn còn: ${deleted[1]}` });
+        continue;
+      }
       const m = content.match(/^\| `(docs\/[^`]+)` \| \[`(docs\/[^`]+)`\]/);
       if (!m) continue;
       const [, oldPath, newPath] = m as unknown as [string, string, string];

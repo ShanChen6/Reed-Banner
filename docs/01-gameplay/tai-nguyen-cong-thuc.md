@@ -1,6 +1,7 @@
 # Tài nguyên trong trận & công thức
 
 > Cập nhật: 19/10/2026
+> Trạng thái: **IMPLEMENTED**
 >
 > Các con số dưới đây là **điểm xuất phát**. Script cân bằng sẽ chỉnh lại.
 
