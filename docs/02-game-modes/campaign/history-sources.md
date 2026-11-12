@@ -2,7 +2,7 @@
 
 Trạng thái: **frozen baseline v1**, 2026-10-24 (Asia/Saigon). Freeze quy tắc sử dụng chứng cứ, tên chuẩn và các khoảng chưa biết; không tuyên bố mọi tranh luận sử học đã được giải quyết.
 
-Phụ thuộc: [CAMP-00.01 — PASS](../../audits/CAMP-00.01-campaign-audit.md). Snapshot code đã kiểm tra: `b99f94316b1d84c185874b43096c8eff58439618`.
+Snapshot code đã kiểm tra: `b99f94316b1d84c185874b43096c8eff58439618`.
 
 ## 0. Audit repo trước nghiên cứu
 

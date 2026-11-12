@@ -79,4 +79,4 @@ Mỗi nhân vật mang đúng một nguyên tố. Nhân vật chính được đ
 | ⚡ Lôi | Trừ 10 năng lượng mục tiêu | Câm lặng mục tiêu 1 lượt |
 | 🌪️ Phong | Công −10% mục tiêu 1 lượt | Xua tan mục tiêu |
 
-- Bộ mới của mọi nhân vật chơi được chỉ Ngũ hành ấn có bước dấu ấn cường hóa; các chiêu nghề khác không tự cộng. Xem [20](../03-characters/ky-nang/lich-su/20-cai-to-ky-nang.md).
+- Bộ mới của mọi nhân vật chơi được chỉ Ngũ hành ấn có bước dấu ấn cường hóa; các chiêu nghề khác không tự cộng. Xem [bộ kỹ năng hiện hành](../03-characters/ky-nang/README.md#bộ-kỹ-năng-được-chốt).

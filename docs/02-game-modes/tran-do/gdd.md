@@ -146,7 +146,7 @@ Engine nhận mọi cỡ nên thêm bậc hay chế độ tự chọn cỡ bàn 
 - Lệnh sai không đổi state, điểm, thanh Bỏ Lệnh hay RNG (kiểm thử `tests/core/binh-phap/engine.test.ts`).
 - Không có Undo.
 
-**Code:** `src/core/binh-phap/` (luật, reducer, sinh quân và địa hình, lưu/nạp), `src/app/game/formation/FormationScreen.tsx` (scene `FORMATION`, đường dẫn `/game/formation`), mô phỏng `scripts/binh-phap-sim.ts`. Số đo ở [05 — mô phỏng và QA](../future/05-binh-phap-balance-qa.md#kết-quả-mô-phỏng-baseline-01112026). Lưu ván dở ở `localStorage`; đổi bộ luật của một bậc thì save cũ bị bỏ (fail-closed).
+**Code:** `src/core/binh-phap/` (luật, reducer, sinh quân và địa hình, lưu/nạp), `src/app/game/formation/FormationScreen.tsx` (scene `FORMATION`, đường dẫn `/game/formation`), mô phỏng `scripts/binh-phap-sim.ts`. Số đo ở [mục mô phỏng](#kết-quả-mô-phỏng-baseline-01112026). Lưu ván dở ở `localStorage`; đổi bộ luật của một bậc thì save cũ bị bỏ (fail-closed).
 
 ### 11.1 Nhân vật dung hợp (kiểu Đinh Ngọc)
 
@@ -214,3 +214,46 @@ Hạng tính theo hạng cuối kỳ của người thắng; nửa trên làm tr
 - Đổi `version` của bậc thì ván đang chơi của bậc đó không đọc được nữa (nạp fail-closed); phải triển khai vào lúc kỳ vừa đổi.
 - Chưa có tab Trận Đồ ở trang `/game/leaderboard`; bảng hiện nằm trong màn Trận Đồ (top 10 mỗi bậc).
 - Nhân vật dung hợp (mục 11.1) sẽ xuất hiện trong ván tính thưởng ở Khó và Đại trận khi được bật.
+
+## Mô phỏng cân bằng
+
+Chuyển từ tài liệu QA Binh Pháp (đã xóa 12/11/2026). Chạy lại: `pnpm exec tsx scripts/binh-phap-sim.ts --runs 2000`.
+
+### Kết quả mô phỏng baseline (01/11/2026)
+
+Lệnh: `pnpm exec tsx scripts/binh-phap-sim.ts --runs 2000 --seed 1`. Bốn bậc theo [GDD mục 11](#11-bản-triển-khai-đầu-tiên-chơi-thử-offline): 3×3, 5×5, 6×6, và Đại trận cỡ ngẫu nhiên 7–10. Mỗi ván chạy lại bằng `replay` và so sánh state; 0 nước hợp lệ bị từ chối, 0 lệch replay. Agent *random* chọn ngẫu nhiên trong các ô đặt được (bỏ lệnh khi hết nước); *greedy* ưu tiên nước cho nhiều ô khai thông và điểm nhất, chỉ dùng Thu Hồi khi thanh đã nóng. Người chơi thật nằm quanh hoặc trên greedy, nên số này là **điểm xuất phát**, không phải mục tiêu.
+
+| Bậc | Agent | Thắng | Lượt (trung vị / p90, mọi ván) | Bỏ lệnh TB | Khai thông TB |
+|---|---|---|---|---|---|
+| Hướng dẫn 3×3 | random | 97,0% | 19 / 32 | 2,5 | 98,8% |
+| Hướng dẫn 3×3 | greedy | 97,9% | 10 / 13 | 1,3 | 99,1% |
+| Thường 5×5 | random | 86,1% | 56 / 94 | 5,6 | 85,1% |
+| Thường 5×5 | greedy | 78,0% | 33 / 44 | 6,5 | 79,7% |
+| Khó 6×6 | random | 61,5% | 81 / 146 | 10,9 | 73,6% |
+| Khó 6×6 | greedy | 63,9% | 47 / 66 | 8,6 | 64,6% |
+| Đại trận 7–10 | random | 6,8% | 82 / 190 | 16,3 | 49,9% |
+| Đại trận 7–10 | greedy | 32,5% | 17 / 124 | 11,3 | 35,8% |
+
+**Cách chọn số liệu** (quét 600 ván mỗi cấu hình; bộ sweep chạy bằng script tạm, không nằm trong repo):
+
+- **Núm độ khó chính là số nghề × hệ và thanh Bỏ Lệnh**, không phải cỡ bàn. Với 5×5 và chướng ngại 8%, thanh 2 → 3 vạch đổi tỉ lệ thắng của greedy từ 57% lên 78% (3 nghề × 4 hệ); đổi từ 3×3 lên 4×4 loại quân thì từ 88% xuống 66% (thanh 3). Vì Shan chưa muốn đổi thanh Bỏ Lệnh, các bậc khác nhau chủ yếu ở bộ quân.
+- **Chướng ngại rút ngắn hàng/cột nên giúp bot random dọn dễ hơn**, trong khi greedy bị thiệt nhẹ vì đường đi hẹp. Tỉ lệ 10–30% ở Đại trận đổi random từ 12% lên 47% thắng, còn greedy từ 52% xuống 34%. Vì vậy chướng ngại không nên tăng quá nhiều: nó làm kỹ năng ít quan trọng hơn và vẫn rút ngắn ván.
+- **Đại trận chọn 8 nghề × 7 hệ, chướng ngại 10–16%** vì cho khoảng cách kỹ năng lớn nhất giữa random (khoảng 2–7%) và greedy (khoảng 33%). Đây là tính chất cần có của bậc xếp hạng. Cấu hình 5 × 5 loại quân dễ hơn nhiều (greedy 67%) nhưng random cũng thắng 49%, tức là kém phân hóa.
+- Lỗi cần nhớ khi đo: `transition` tra bộ luật theo `rulesetId` trong `RULESETS`, nên muốn thử một cấu hình khác phải thay thẳng mục trong registry (như script sweep đã làm), không chỉ truyền ruleset vào `createPuzzle`.
+
+Nhận xét: bốn bậc tăng độ khó đúng chiều; Thường và Khó chưa tách bằng chiến thuật (greedy chỉ ngang random). Cần agent mạnh hơn (lookahead) trước khi chốt. Độ dài Đại trận phụ thuộc cỡ bàn và nằm khoảng 100 nước (trung vị, ván thắng) với bot greedy, nhờ trần 72 ô chơi được.
+
+### Đo lại sau khi đổi luật sinh quân (02/11/2026)
+
+Shan chơi thử Đại trận thấy 5 lượt đầu ra 5 quân không dính gì nhau phải bỏ hết; sau bản dùng xác suất 65–80% vẫn gặp quân Sát thủ Thổ khi trên bàn không có Sát thủ hay Thổ nào. Luật chốt: khi bàn có quân thường, quân thường mới **luôn** chung ít nhất một nghề hoặc hệ với một quân thường **bất kỳ** trên bàn. Quân neo **không cần còn ô trống kề bên** (ưu tiên ô trống thì quá dễ), nên vẫn có quân liên quan mà không đặt được và Bỏ Lệnh còn tác dụng. **Ngoại lệ duy nhất**: có Quân Lệnh hoặc quân dung hợp còn ô trống kề bên thì quân mới không bị ràng buộc (đặt cạnh quân đó được). Quân đặc biệt ra theo tỉ lệ riêng. Bộ luật các bậc tăng `version` (save cũ bị bỏ). Đã thử xác suất liên quan 450–1000‰ rồi bỏ khái niệm đó.
+
+Đo `--runs 1000 --seed 1`:
+
+| Bậc | Agent | Thắng | Lượt (trung vị / p90) | Bỏ lệnh TB |
+|---|---|---|---|---|
+| Hướng dẫn | random / greedy | 100% / 100% | 17/30 · 9/9 | 0,13 / 0,00 |
+| Thường | random / greedy | 95,1% / 99,3% | 55/89 · 28/42 | 2,96 / 1,76 |
+| Khó | random / greedy | 85,0% / 97,5% | 87/141 · 44/63 | 7,82 / 3,46 |
+| Đại trận | random / greedy | 13,6% / 88,4% | 121/220 · 95/123 | 20,05 / 9,18 |
+
+Trước khi đổi luật (01/11): Khó 62% / 64%, Đại trận 7% / 33% (random / greedy). Ván dễ hơn khá nhiều vì ít phải bỏ quân. Núm bù không đụng thanh Bỏ Lệnh: tăng chướng ngại, bớt Quân Lệnh, thêm nghề/hệ (nhưng quân liên quan luôn có nên đây là hướng yếu). Cần Shan chọn độ khó mục tiêu cho từng bậc xếp hạng, xem [câu hỏi mở](../../09-roadmap/cau-hoi-mo.md).

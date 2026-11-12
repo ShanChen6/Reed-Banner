@@ -213,4 +213,4 @@ Các CI đều chứa 0; không kết luận profession/element nào tốt hơn.
 - Không đạt 200 paired seeds/cấp/treatment do chi phí chạy: pilot full-matrix được dừng trước khi có artifact; matrix hợp lệ dùng n=10 cho reserve và n=3 cho rotation/build.
 - Chưa chạy factorial 6 profession × 7 element, nhiều seed riêng cho Boss, trang bị, hoặc các cấu hình roster khác.
 - Chưa có policy mô phỏng người thật hay telemetry thời gian thao tác UI.
-- Không chạy browser E2E; task này chỉ đánh giá core simulation. Regression suite/UI coverage được ghi riêng trong [22-qa-report.md](./22-qa-report.md).
+- Không chạy browser E2E; task này chỉ đánh giá core simulation. Regression suite/UI coverage do test trong `tests/` đảm nhiệm.

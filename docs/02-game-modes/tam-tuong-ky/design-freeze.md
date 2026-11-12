@@ -3,7 +3,7 @@
 > Cập nhật: 03/11/2026
 > Trạng thái: **FROZEN** — Shan chốt mục 3.1 và duyệt mục 3.2 ngày 03/11/2026; thêm A-22, A-23 và duyệt L5-1…L5-7 ngày 04/11/2026. Số liệu ở mục 3.2 là **điểm xuất phát**: LT-05 được chỉnh trong khoảng đã ghi bằng mô phỏng; đổi luật phải qua quyết định mới.
 
-File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây gọi “Liệt Truyện — Tầm Tướng Ký”). Nó thay các đề xuất trong [GDD](../future/08-liet-truyen-gdd.md), [công thức](../future/09-liet-truyen-recipes.md), [kiến trúc](../future/10-liet-truyen-architecture.md), [UI/art](../future/11-liet-truyen-ui-art.md) và [QA/roadmap](../future/12-liet-truyen-qa-roadmap.md); khi khác nhau, file này thắng. Tên file 08–12 giữ nguyên `liet-truyen` để không làm hỏng link và script.
+File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây gọi “Liệt Truyện — Tầm Tướng Ký”). Nó thay toàn bộ đề xuất Liệt Truyện ngày 27/10/2026 (GDD, công thức, kiến trúc, UI/art, QA); các đề xuất đó đã xóa ngày 12/11/2026.
 
 Đối chiếu code `develop` ngày 03/11/2026. Không có code, route, asset hay dữ liệu nào được thêm trong task này.
 
@@ -43,8 +43,8 @@ File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây g
 
 ### 2.2 Mâu thuẫn và điểm cần lưu ý
 
-1. **Số nghề active.** Tài liệu cũ ghi 6 nghề; code đã bật 8. Đã sửa [danh mục chế độ](../future/01-mode-portfolio.md#rủi-ro-sản-phẩm).
-2. **Ví dụ công thức 09 không còn dùng được.** [09 mục 2](../future/09-liet-truyen-recipes.md#2-ba-cây-thử-nghiệm-chưa-khóa) viết cho ba tướng thường theo luật không thứ tự. Gói đầu không có tướng thường, nên ba cây đó chỉ còn làm dữ liệu test engine.
+1. **Số nghề active.** Tài liệu cũ ghi 6 nghề; code đã bật 8. Luật trong file này tính đủ 8 nghề.
+2. **Ví dụ công thức 09 không còn dùng được.** Đề xuất công thức cũ (mục 2) viết cho ba tướng thường theo luật không thứ tự. Gói đầu không có tướng thường, nên ba cây đó chỉ còn làm dữ liệu test engine.
 3. **Thưởng hạng không còn chỉ là vàng.** Shan chốt 01/11/2026 “trước mắt thưởng xếp hạng mọi chế độ chỉ là vàng” ([chế độ chơi mục 6](../README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt)). Quyết định 03/11/2026 thêm nguyên liệu Tầm Tướng Ký vào thưởng hạng; khi code phải sửa mục đó. Số vàng đã duyệt không đổi.
 4. **Hai tướng đặc biệt đã chính thức, code chưa theo kịp.** Shan duyệt [Đinh Ngọc](../../03-characters/dinh-ngoc.md) và [Trần Vũ Phong](../../03-characters/vu-phong.md) ngày 03/11/2026. Code vẫn ghi tên “Vũ Phong” (`roster.ts`, `binh-phap/specials.ts`, `demo/characters/catalog.ts`) và cả hai vẫn là nhân vật xem thử, chưa có cách mở trong game. Đổi tên và mở chính thức là task code riêng, không thuộc LT-00.
 5. **Đinh Bộ Lĩnh.** Hệ và nghề đổi theo người chơi (`mainCharacter(element, profession)`), nên không xếp được vào bộ theo hệ. Shan chốt 03/11/2026: trong Tầm Tướng Ký, Đinh Bộ Lĩnh xây theo hướng **nhân vật đặc biệt** (A-21).

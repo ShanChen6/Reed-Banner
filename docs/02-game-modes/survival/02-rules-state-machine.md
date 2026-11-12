@@ -2,7 +2,6 @@
 
 > Đặc tả hành vi cho đội 3 active + tối đa 2 reserve.
 > Tài liệu này chuyển luật đã thống nhất thành hợp đồng để triển khai và kiểm thử. Các ghi chú implementation được rà soát cho Task 24; source hiện hành là căn cứ cuối cùng khi bản đặc tả cũ không còn khớp.
-> Căn cứ hiện trạng: [01-current-state-audit.md](./01-current-state-audit.md).
 
 ## 1. Phạm vi và thuật ngữ
 

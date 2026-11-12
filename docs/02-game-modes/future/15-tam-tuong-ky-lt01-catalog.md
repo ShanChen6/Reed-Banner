@@ -91,8 +91,8 @@ Catalog không chép nghề, hệ hay tên chân dung: validator đọc từ `ro
 
 | Tướng | Vật biểu trưng | Nguồn trong repo |
 |---|---|---|
-| Nguyễn Bặc | Đại đao đơn lưỡi, dải vải đỏ ở chắn tay; chiêu Định Quốc Hỏa Kỳ | [Audit vũ khí nhóm A](../../06-art/prompts/v4-2/14-group-a-19-character-weapon-pose-audit.md#rb-002--nguyễn-bặc), [danh sách nhân vật](../../03-characters/danh-sach-nhan-vat.md#5-tướng-lịch-sử) |
-| Lê Hoàn | Cờ lệnh tam giác, bó thẻ tre; chiêu Thập Đạo Lôi Binh | [Audit vũ khí nhóm A](../../06-art/prompts/v4-2/14-group-a-19-character-weapon-pose-audit.md#rb-006--lê-hoàn), [danh sách nhân vật](../../03-characters/danh-sach-nhan-vat.md#5-tướng-lịch-sử) |
+| Nguyễn Bặc | Đại đao đơn lưỡi, dải vải đỏ ở chắn tay; chiêu Định Quốc Hỏa Kỳ | Audit vũ khí nhóm A, [danh sách nhân vật](../../03-characters/danh-sach-nhan-vat.md#5-tướng-lịch-sử) |
+| Lê Hoàn | Cờ lệnh tam giác, bó thẻ tre; chiêu Thập Đạo Lôi Binh | Audit vũ khí nhóm A, [danh sách nhân vật](../../03-characters/danh-sach-nhan-vat.md#5-tướng-lịch-sử) |
 | Đinh Ngọc | Kiếm ngắn thẳng, mặt ngọc giọt nước ở ngực; mở khóa theo chủ đề cứu trợ, giữ đường | [Đinh Ngọc](../../03-characters/dinh-ngoc.md) |
 
 Hai tướng lịch sử gắn mã nguồn `S04` (Việt Nam sử lược, mục Đinh Tiên Hoàng) trong [sổ nguồn](../campaign/history-sources.md). “Hỏa kỳ” và “Thập đạo” lấy từ tên chiêu trong game, gợi tới tước Định Quốc công và chức Thập đạo tướng quân. Sổ nguồn **chưa có claim** riêng cho hai tước này, và phiên làm LT-01 không mở được Wikisource để đối chiếu (mạng chặn).

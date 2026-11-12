@@ -2,7 +2,7 @@
 
 > Cập nhật: 20/10/2026
 >
-> Phần tiếp theo của [Prompt nhân vật](nhan-vat.md): prompt ráp sẵn cho **mọi thứ ngoài nhân vật**: trang bị, ô bàn cờ, nền trận, mẫu giao diện, tranh lớn, linh vật và hạt hiệu ứng. Danh sách lấy từ code (`src/core/gear`, `src/core/board`, `src/core/campaign`), quy tắc theo [Hình ảnh](../art-bible.md) và [Kế hoạch đồ họa](../ke-hoach-do-hoa.md). Giải thích bằng tiếng Việt, prompt bằng tiếng Anh.
+> Bổ sung cho [bộ prompt nhân vật V4.2](v4-2/00-bao-cao.md): prompt ráp sẵn cho **mọi thứ ngoài nhân vật**: trang bị, ô bàn cờ, nền trận, mẫu giao diện, tranh lớn, linh vật và hạt hiệu ứng. Danh sách lấy từ code (`src/core/gear`, `src/core/board`, `src/core/campaign`), quy tắc theo [Hình ảnh](../art-bible.md) và [Kế hoạch đồ họa](../ke-hoach-do-hoa.md). Giải thích bằng tiếng Việt, prompt bằng tiếng Anh.
 
 ## 1. Cách dùng
 

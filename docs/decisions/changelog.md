@@ -174,7 +174,7 @@
 - Shan chốt đợt 3: bán bó nguyên tố ở cửa hàng, giới hạn mỗi tuần; duyệt 12 tướng gói đầu; Đinh Bộ Lĩnh xây theo hướng nhân vật đặc biệt; **Đinh Ngọc** và **Trần Vũ Phong** (chốt họ Trần) thành nhân vật chính thức: [Đinh Ngọc](../03-characters/dinh-ngoc.md) và [Trần Vũ Phong](../03-characters/vu-phong.md) đổi **DRAFT → APPROVED**. Code còn tên “Vũ Phong” và chưa mở hai nhân vật trong game (task riêng).
 - Shan chốt cách mở nhân vật đặc biệt: chuỗi nhiệm vụ phụ, Đinh Ngọc sau Chương II, Trần Vũ Phong sau Chương IV, gia nhập cấp 1; không bán vàng, không quay, không lấy từ Tầm Tướng Ký ([Đinh Ngọc — mở khóa](../03-characters/dinh-ngoc.md#mo-khoa-nhan-vat-dac-biet)). Nội dung 3 bước là đề xuất.
 - Shan duyệt mục 3.2 của [Design Freeze](../02-game-modes/tam-tuong-ky/design-freeze.md#32-đề-xuất-đã-duyệt), sửa khung số lần ghép tối thiểu: thường 5–7, đặc biệt 7–9, lịch sử 9–12 (thứ tự chặt trong pack). Design Freeze **DRAFT → FROZEN**; bắt đầu LT-01.
-- Sửa [danh mục chế độ](../02-game-modes/future/01-mode-portfolio.md#rủi-ro-sản-phẩm): code đã bật 8 nghề (`NEW_PROFESSIONS_ENABLED = true`), không còn là 6.
+- Sửa danh mục chế độ: code đã bật 8 nghề (`NEW_PROFESSIONS_ENABLED = true`), không còn là 6.
 
 **Hồ sơ đổi thành Doanh Trại**
 - Shan: màn Hồ sơ đổi tên hiển thị thành Doanh Trại, quản lý được 50–100 nhân vật; mục Tướng sĩ / Đội hình / Kho đồ, Cửa hàng là lối vào riêng; kỹ năng nằm trong chi tiết từng tướng. Đường dẫn `/game/profile` giữ nguyên, luật trang bị/ghép/đội hình không đổi ([Doanh Trại](../05-ui-ux/screens/doanh-trai.md)). Tiêu đề mục tiện ích ở màn chính đổi từ "Doanh trại" thành "Quân vụ" để không trùng.
@@ -242,7 +242,7 @@
 - Nguyên nhân: chân dung là ảnh WebP nạp trong SVG, chỉ tải khi quân xuất hiện lần đầu nên ô nền và huy hiệu hiện ngay còn gương mặt trễ. Giờ vào màn chơi là tải sẵn (và giải mã) chân dung của mọi quân có thể ra trong bộ luật đang chơi, các bậc khác tải lúc rảnh (`src/app/game/formation/preload.ts`).
 
 **Trận Đồ: quân thường mới luôn liên quan tới quân trên bàn (Shan quyết định)**
-- Chơi thử Đại trận thấy quân không dính gì với bàn (Sát thủ Thổ khi bàn không có Sát thủ hay Thổ). Luật: quân thường mới luôn chung nghề hoặc hệ với một quân thường bất kỳ trên bàn, **không cần còn ô trống kề bên** (vẫn có quân không đặt được để Bỏ Lệnh có tác dụng); chỉ khi có Quân Lệnh hoặc quân dung hợp còn ô trống kề bên thì không ràng buộc. Bỏ khái niệm xác suất liên quan đã thử. Bộ luật các bậc tăng version. Ván dễ hơn (Đại trận greedy 33% → 88%): [số đo](../02-game-modes/future/05-binh-phap-balance-qa.md#đo-lại-sau-khi-đổi-luật-sinh-quân-02112026), chờ Shan chọn độ khó mục tiêu.
+- Chơi thử Đại trận thấy quân không dính gì với bàn (Sát thủ Thổ khi bàn không có Sát thủ hay Thổ). Luật: quân thường mới luôn chung nghề hoặc hệ với một quân thường bất kỳ trên bàn, **không cần còn ô trống kề bên** (vẫn có quân không đặt được để Bỏ Lệnh có tác dụng); chỉ khi có Quân Lệnh hoặc quân dung hợp còn ô trống kề bên thì không ràng buộc. Bỏ khái niệm xác suất liên quan đã thử. Bộ luật các bậc tăng version. Ván dễ hơn (Đại trận greedy 33% → 88%): số đo, chờ Shan chọn độ khó mục tiêu.
 
 **Trận Đồ: 5 ảnh bản đồ thật**
 - Hoa Lư, Bố Hải Khẩu, Đằng Châu, Bình Kiều, Đường Lâm thay ảnh giữ chỗ (1024², WebP). Còn 25 bản đồ.
@@ -400,18 +400,18 @@
 
 - Đổi tuyệt chiêu sang ô4/cấp10, nghề nâng cao sang ô5/cấp15; chuyển khóa đầu tư o4/o5 có marker, không mất điểm.
 - Bổ sung sáu mẫu bị động phối hợp cho 61 nhân vật và builder NPC; mở điều kiện thực, người chơi tự chọn hành động tận dụng, giới hạn cơ hội và không tạo chuỗi tự động.
-- UI/AI đọc cấu hình chung; giữ nguyên Tinh thần A, lương, chỉ số và preset trùm. [Thiết kế](../03-characters/ky-nang/lich-su/21-combo-dong-doi.md).
+- UI/AI đọc cấu hình chung; giữ nguyên Tinh thần A, lương, chỉ số và preset trùm. Thiết kế.
 
 ## 22/10/2026 — thử nghiệm Tinh thần F
 
 - Thêm F vào cấu hình thử nghiệm chung: giảm 5/lượt từ25, giữ hệ số ATK/DEF 100%, hồi/Khiên mới có sàn20% theo người nhận. Mặc định vẫn A.
-- Bổ sung telemetry Khiên hữu ích, test tương tác và [báo cáo đối chứng A/D/E/F](../reports/2026-10-22-tinh-than-F.md); giữ nguyên kỹ năng, lương, tiến trình và preset.
+- Bổ sung telemetry Khiên hữu ích, test tương tác và báo cáo đối chứng A/D/E/F; giữ nguyên kỹ năng, lương, tiến trình và preset.
 
 ## 22/10/2026 — kỹ năng theo vai trò nghề
 
 - Nhân vật chơi được: 3 chiêu nghề, 2 chiêu hệ và 1 tuyệt chiêu riêng; mở theo ô 1/2/3/5/4/6 ở cấp 1/1/5/10/15/20.
 - Giữ khóa nâng theo ô và tiến trình; hồ sơ nghề cổ hoàn điểm thực chi một lần. AI chiến dịch giữ preset cũ tường minh.
-- Thiết kế và kiểm chứng: [20](../03-characters/ky-nang/lich-su/20-cai-to-ky-nang.md). Các mục ghi bộ 6 chiêu hệ dưới đây là lịch sử trước cải tổ.
+- Thiết kế và kiểm chứng: 20. Các mục ghi bộ 6 chiêu hệ dưới đây là lịch sử trước cải tổ.
 
 
 > Mới nhất ở trên cùng. Mỗi mục ghi quyết định và lý do nếu có.
@@ -427,7 +427,7 @@
 - 56 prompt toàn thân thay dáng chữ A chung bằng dáng theo nghề và thái độ riêng từng người, vẫn giữ khe hở giữa tay và thân cho live2dlayer. Bảy nhân vật đã có hình giữ nguyên.
 
 **Tướng thường có nét riêng trong prompt ảnh (Shan đồng ý)**
-- 40 tướng thường (trừ Trần Cương, Đào Lam đã có hình) thêm tuổi, vóc dáng, tóc/râu, một dấu hiệu nhận diện riêng và kiểu đồ cầm tay riêng trong nghề, áp cho cả [Prompt nhân vật](../06-art/prompts/nhan-vat.md) và [Prompt tư thế](../06-art/prompts/tu-the.md). Sứ quân Phạm Bạch Hổ (đao bản rộng chuôi lông trắng) và Đỗ Cảnh Thạc (búa chiến cán dài) đổi vũ khí để khác Đinh Bộ Lĩnh, Nguyễn Bặc và Trần Cương cùng cầm đao.
+- 40 tướng thường (trừ Trần Cương, Đào Lam đã có hình) thêm tuổi, vóc dáng, tóc/râu, một dấu hiệu nhận diện riêng và kiểu đồ cầm tay riêng trong nghề, áp cho cả Prompt nhân vật và Prompt tư thế. Sứ quân Phạm Bạch Hổ (đao bản rộng chuôi lông trắng) và Đỗ Cảnh Thạc (búa chiến cán dài) đổi vũ khí để khác Đinh Bộ Lĩnh, Nguyễn Bặc và Trần Cương cùng cầm đao.
 
 ## 20/10/2026
 
@@ -436,7 +436,7 @@
 - So với bản Shan gửi: không thêm ô nguyên tố hay ngọc 3D động (bàn cờ giữ 7 loại ô và dáng ô); trang bị chỉ là biểu tượng, không vẽ lên người vì không dùng DragonBones; khung sơn mài viền trống đồng thay gỗ mun mây Lê–Trần; thanh chỉ số màu phẳng thay neon.
 
 **Bộ prompt ảnh cho toàn bộ nhân vật (Shan yêu cầu)**
-- Thêm [Prompt nhân vật](../06-art/prompts/nhan-vat.md): 63 prompt toàn thân ráp sẵn (Đinh Bộ Lĩnh 3 thời kỳ, 6 tướng lịch sử, 12 sứ quân, 42 tướng thường), khớp nghề và hệ trong `roster.ts`.
+- Thêm Prompt nhân vật: 63 prompt toàn thân ráp sẵn (Đinh Bộ Lĩnh 3 thời kỳ, 6 tướng lịch sử, 12 sứ quân, 42 tướng thường), khớp nghề và hệ trong `roster.ts`.
 - So với bản Shan gửi: bỏ chữ Spine; bỏ họa tiết rồng, phượng và giáp vai đầu rồng; vũ khí không kèm hiệu ứng để tách lớp sạch; tư thế ba phần tư quay phải, chừa khe giữa tay và thân; nền xanh lá (Mộc, Phong nền hồng tươi); Quân sư cầm thẻ tre và cờ lệnh. Giới tính tướng thường do Claude đặt, chưa có trong code.
 
 **Hoạt ảnh nhân vật tự viết bằng code, không mua Spine (Shan chốt sau bản thử Đ0)**
