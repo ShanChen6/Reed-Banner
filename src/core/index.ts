@@ -5,6 +5,7 @@ export * from "./gear";
 export * from "./match";
 export * from "./progress";
 export * from "./rng";
+export * from "./vnTime";
 export * from "./roster";
 export * from "./sim";
 export * from "./campaign";

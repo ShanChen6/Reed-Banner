@@ -1,9 +1,7 @@
 import { createHmac } from "node:crypto";
-import { DESTINY_CYCLE_DAYS, destinyRulesVersionForCycle } from "@/core";
+import { DAY_MS, DESTINY_CYCLE_DAYS, destinyCycleId, destinyRulesVersionForCycle, vnDayStart } from "@/core";
 
 export const DESTINY_TIME_ZONE = "Asia/Ho_Chi_Minh";
-const VN_OFFSET_MS = 7 * 60 * 60 * 1_000;
-const DAY_MS = 24 * 60 * 60 * 1_000;
 const SECRET_MIN = 16;
 
 export interface DestinyCycle {
@@ -22,7 +20,7 @@ export function destinyCycleById(cycleId: string): DestinyCycle | null {
   const localMondayUtc = Date.parse(`${cycleId}T00:00:00.000Z`);
   if (!Number.isFinite(localMondayUtc) || new Date(localMondayUtc).toISOString().slice(0, 10) !== cycleId ||
       new Date(localMondayUtc).getUTCDay() !== 1) return null;
-  const startAt = localMondayUtc - VN_OFFSET_MS;
+  const startAt = vnDayStart(cycleId);
   return {
     cycleId,
     startAt,
@@ -33,16 +31,8 @@ export function destinyCycleById(cycleId: string): DestinyCycle | null {
 
 /** Chu kỳ hiện hành được tính trực tiếp từ giờ server; không phụ thuộc cron hay locale máy chủ. */
 export function activeDestinyCycle(now: number): DestinyCycleResult {
-  if (!Number.isSafeInteger(now) || now < 0 || !Number.isFinite(now))
-    return { ok: false, error: "invalid_time" };
-  const local = new Date(now + VN_OFFSET_MS);
-  if (Number.isNaN(local.valueOf())) return { ok: false, error: "invalid_time" };
-  const daysSinceMonday = (local.getUTCDay() + 6) % 7;
-  const localMondayUtc = Date.UTC(
-    local.getUTCFullYear(), local.getUTCMonth(), local.getUTCDate() - daysSinceMonday,
-  );
-  const cycleId = new Date(localMondayUtc).toISOString().slice(0, 10);
-  const cycle = destinyCycleById(cycleId);
+  const cycleId = destinyCycleId(now);
+  const cycle = cycleId ? destinyCycleById(cycleId) : null;
   if (!cycle) return { ok: false, error: "invalid_time" };
   return {
     ok: true,
