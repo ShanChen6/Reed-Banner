@@ -1,11 +1,9 @@
 # Nhân vật, nghề & kỹ năng
 
-> Trạng thái: **SUPERSEDED một phần** — mô hình chung và luật dùng kỹ năng còn hiệu lực; bộ chiêu cụ thể xem [Kỹ năng hiện hành](README.md).
+> Cập nhật: 12/11/2026
+> Trạng thái: **IMPLEMENTED** — mô hình nhân vật, nghề, nội tại, luật dùng kỹ năng và preset chiêu nghề của tùy tướng AI chiến dịch. Bộ kỹ năng của nhân vật phe người chơi ở [Kỹ năng hiện hành](README.md).
 
-
-> Cập nhật: 20/10/2026
->
-> Các con số là **điểm xuất phát**. Script cân bằng sẽ chỉnh lại.
+Các con số là **điểm xuất phát**; số đang chạy nằm trong code `src/core/battle/`.
 
 ## 1. Mô hình chung
 
@@ -38,7 +36,7 @@ Một kỹ năng có thể thuộc nhiều loại, ví dụ vừa gây sát thư
 
 ### 2.2 Bộ kỹ năng hiện hành
 
-Danh sách đầy đủ 18 chiêu nghề, 14 chiêu hệ và ánh xạ hồ sơ ở [Cải tổ kỹ năng](README.md).
+Danh sách đầy đủ ở [Kỹ năng hiện hành](README.md) và dữ liệu sinh từ code trong [data/](data/ky-nang-dong-hanh.md).
 
 | Ô | Nguồn | Mở khóa |
 |---|---|---|
@@ -127,8 +125,6 @@ Xem [Danh sách nhân vật, mục 1](../danh-sach-nhan-vat.md#1-khung-chung-c�
 
 Đã chuyển sang [Danh sách nhân vật](../danh-sach-nhan-vat.md): tuyệt chiêu của 42 tướng thường (mục 4), tướng lịch sử (mục 5), sứ quân và chiêu riêng (mục 6).
 
-- Lịch sử mô phỏng tuyệt chiêu (19/10/2026, khung cũ): AI chấm kỹ năng theo giá trị trên mỗi điểm năng lượng nên hiếm khi để dành tới 100; sau khi AI tính cả lượt dùng kỹ năng ([10-ai](../../01-gameplay/ai.md)) cả 5 tuyệt chiêu khởi đầu đều được dùng, tỉ lệ thắng theo hệ đổi trong mức nhiễu.
-- Lịch sử mô phỏng chiêu riêng sứ quân (20/10/2026, 60 trận mỗi màn): 11/12 sứ quân dùng chiêu riêng 0,25–1,6 lần mỗi trận; Nguyễn Siêu gần như không dùng (chiêu thủ). Giá 80 đầu tiên gần như không được AI dùng nên hạ còn 60 (trùm 80); Phong Châu Lôi Kích giảm từ 140% ATK, −30 năng lượng, 6 ô vì màn Phong Châu chỉ còn 35% thắng.
 
 ## 5. Kỹ năng tác động lên bàn cờ
 

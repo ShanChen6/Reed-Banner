@@ -119,3 +119,115 @@ Rủi ro còn lại: bản web có lỗi phiên âm/đánh máy; nhiều trang c
 Next task đề xuất: **Design freeze về nguyên tắc lịch sử và narrative outline 6 chương/24 nhiệm vụ** dựa trên claim IDs; xác định lớp `recorded`/`legend`/game của từng cảnh trước khi viết thoại hoặc triển khai. Không tự gán mã task chưa tồn tại.
 
 Kết quả kiểm tra thực tế: Python **PASS** — 12/12 ID duy nhất, mỗi hàng đủ 6 cột, 11 source IDs không có tham chiếu thiếu, đủ 5 nhãn, link file nội bộ và dependency tồn tại. Kiểm tra whitespace hai tài liệu mới không báo lỗi. `docs/audits/` là artifact CAMP-00.01 có sẵn trước task, không phải thay đổi mới của CAMP-00.02.
+
+## 6. Ghi chú nguồn Chương II (M05–M08)
+
+Gộp từ `chapter-2-sources.md` ngày 12/11/2026, giữ nguyên nội dung.
+
+> Cập nhật: 24/10/2026. Áp dụng [Design Freeze 1.0](design-freeze.md) mục 2, 3, 5 và invariant 2, 3, 6, 10. Không đổi ledger ở các mục 1–5; mục này chỉ ghi locator và câu trích đã dùng trong `src/core/campaign/chapterTwo.ts`.
+
+Mã nhiệm vụ theo freeze: task CAMP-03.01 gọi hai nhiệm vụ là "M04–M05"; Shan chốt ngày 24/10/2026 giữ mã freeze, nên hành trình là **M05 "Đường ra Bố Hải"** và hội kiến là **M06 "Hội kiến Trần Minh Công"**. M04 vẫn là "Hoa Lư, năm 951".
+
+### Trích Toàn thư (S01)
+
+Nguồn: [Đại Việt sử ký toàn thư — Ngô sứ quân](https://vi.wikisource.org/wiki/Đại_Việt_sử_ký_toàn_thư/Tập_II/Cuốn_thứ_năm/Ngô_sứ_quân), bản dịch tiếng Việt do Wikisource lưu, mở ngày 24/10/2026. Không phải nguyên văn Hán; chưa đối chiếu bản in hay bản scan.
+
+| Locator | Câu trích ngắn | Dùng ở | Nhãn |
+|---|---|---|---|
+| Mục 966, danh sách sứ quân | “Trần Lãm, xưng là Trần Minh Công, giữ cửa biển Bố-Hải.” | M06 intro (diễn đạt lại) | `recorded` W01, S01 |
+| Mục Đinh Mão 967 | “Đinh Bộ Lĩnh nghe Trần Minh Công có đức mà không con, bèn cùng với con là Liễn sang nương tựa.” | M05 intro, M06 ghi chú nguồn | `recorded` E08, S01 |
+| Mục Đinh Mão 967, câu kế | “Minh Công thấy người mặt mũi khôi ngô, lại có độ lượng, bèn nuôi làm con. Nhân giao cho cầm quân…” | M06 outro, ghi chú nguồn | `recorded` E08, S01 |
+| Phụ chú số 2 (lời bàn) | Ý: Minh Công dấy binh chắc ở trước khi Xương Văn lấy lại nước; “sử cũ không rõ ngày tháng, nên chép tóm tắt cả vào đoạn này”. | M05 intro, M06 ghi chú | `disputed` U02 |
+| Lời chua cửa biển Bố Hải | Xã Kỳ Bố, huyện Vũ Tiên, phủ Kiến Xương (sổ tỉnh Nam Định) là nơi Trần Lãm đóng binh | M05 ghi chú "Vị trí Bố Hải Khẩu", khoanh vùng bản đồ | `recorded` cho việc lời chua có ghi; định vị là chú giải đời sau |
+
+Câu trích giữ ngắn và để trong ngoặc kép kèm mã nguồn. Mọi câu khác ở M05–M06 là diễn đạt lại hoặc lời game.
+
+### Điều không khẳng định
+
+- **Tuyến đường Hoa Lư → Bố Hải**: sử không ghi. Hai lựa chọn đường sông / đường bộ của Trịnh Tú là `reconstructed`, không nêu tên sông, chặng hay số ngày.
+- **Năm bắt đầu quan hệ**: chính văn đặt trong mục 967, phụ chú cho rằng sớm hơn (U02). Game không khóa năm khởi hành, năm nhận nuôi hay năm giao quân.
+- **Lời thoại** của Trần Minh Công, Đinh Bộ Lĩnh, Đinh Liễn, Trịnh Tú đều `fictional` và UI ghi "không phải trích dẫn sử". Câu mở đầu của Trần Minh Công lấy từ [narrative-bible.md](narrative-bible.md).
+- **Không có trận, đấu thử hay điều kiện thắng 1vs1** trước Trần Lãm. Kiểm tra `campaignCopyErrors()` chặn các chữ chinh phục ("đánh bại", "quy phục", "thử tài", "hạ được", "đầu hàng", "chinh phạt") trong lời kể chính của nhiệm vụ không có trận.
+
+### Truyền thuyết địa phương
+
+Truyện kể, thần tích và lễ hội ở các làng có thể kể khác về cuộc gặp và việc giao quân. Ledger mục 1 ghi rõ chưa xác minh thần tích hay văn bia địa phương, nên game chỉ nêu là có khác biệt (`legend`), không kể chi tiết nào như sử chép, cũng không gán tên làng hay di tích cụ thể.
+
+Cảnh "thử tài ở Bố Hải Khẩu" của bản Chiến dịch 13 màn cũ là sáng tác của game, không thuộc truyền thuyết đã kiểm. Màn cũ đổi thành "Luyện binh ở Bố Hải Khẩu", lời kể ghi là tập dượt hư cấu và không còn câu "giao binh quyền".
+
+### Raid Trần Lãm
+
+Theo freeze mục 5: Trần Lãm là liên minh; Raid là sparring/what-if. Từ 25/10/2026 (design-freeze bổ sung 1.1, Shan chốt) Trần Lãm không còn là trùm Raid vì là đồng minh, không bị chinh phạt: `raidBossById("tranLam")` là undefined, server từ chối. M08 chỉ mở bán ông ở cửa hàng (`warlordUnlockMission("tranLam") = "M08"`). `RAID_STAGES` không đổi để Tower, Survival, Daily, Arena giữ nguyên seed.
+
+### M07–M08 (CAMP-03.02)
+
+Task CAMP-03.02 gọi hai nhiệm vụ là "M06–M07"; theo mã freeze đó là **M07 "Hai đội một cờ hiệu"** và **M08 "Gánh quân Bố Hải"**.
+
+- **M07** giữ type `battle` (presentation tag `joint-operation` trong mission matrix) và mục tiêu `defeatEnemies`, kể như một trận cùng giữ cửa biển. Không đổi sang node `defense`, vì đó là node `battle` duy nhất và đổi type sẽ lệch mission matrix đã khóa. Đối thủ là ba nhân vật vô danh (`bo-hai-raider-*`); Trần Lãm không ra trận ở phe nào. Bàn cờ dùng `ESTUARY_WEIGHTS` (`src/core/campaign/scenarios.ts`): âm dương 22, bánh chưng 9, cùng tỉ lệ bàn sông nước của màn Bố Hải cũ và sân nhà Thủy. Đây là địa hình do game dựng (`reconstructed`), không phải sơ đồ trận. Lương: server ghi `supply = clamp(lương còn lại)` sau trận, thắng hay thua đều vậy, theo luật mang lương sẵn có.
+- **M08** là `story`, hoàn thành qua `/api/campaign/events`: không trận, không XP, không rơi đồ, không nhiệm vụ ngày, không đổi lương. Thưởng chỉ gồm vàng lần đầu của nhiệm vụ (50) và vàng hoàn thành Chương II (250), cùng mở khóa Nguyễn Bặc theo freeze 4.2.
+- **Nguồn nhận quân**: chính văn S01 mục 967 kể việc giao cầm quân khi Minh Công còn sống; phụ chú tóm sử cũ: “Minh-Công mất rồi mới coi thay đám quân ấy.” Không nguồn nào trong ledger cho năm mất, cách mất hay lời trăng trối, nên game không gán (U02). Chưa có chỉ số "uy tín" trong state; uy tín chỉ được kể trong lời dẫn.
+
+## 7. Ghi chú nguồn Chương III (M11–M13)
+
+Gộp từ `chapter-3-sources.md` ngày 12/11/2026, giữ nguyên nội dung.
+
+> Cập nhật: 24/10/2026. Áp dụng [Design Freeze 1.0](design-freeze.md) mục 2, 3, 5, 6 và invariant 3, 4, 6, 10. Ledger [history-sources.md](history-sources.md) không đổi; file này chỉ ghi locator và câu trích đã dùng trong `src/core/campaign/chapterThree.ts` và `chapterFour.ts`.
+
+### Mã nhiệm vụ
+
+Task CAMP-04.01 gọi ba nhiệm vụ là "M08–M10" của Chương III. Theo quy ước Shan chốt ngày 24/10/2026 (luôn dùng mã freeze), ba nhiệm vụ là:
+
+| Task | Freeze | Tên | Chương theo freeze | Sứ quân | Kết cục (FactionState) |
+|---|---|---|---|---|---|
+| M08 | **M11** | Đằng Châu quy phục | III | Phạm Bạch Hổ (W02) | `submitted`, `recordedSubmission`, confidence cao |
+| M09 | **M12** | Bình Kiều tự định | III | Ngô Xương Xí (W03) | `submitted`, `reconstructedAccord`, confidence vừa |
+| M10 | **M13** | Đường Lâm và lời cam kết | IV | Ngô Nhật Khánh (W04) | `submitted`, `politicalAccord`, confidence vừa |
+
+M13 vẫn ở Chương IV như freeze; đổi chương cần amendment nên không làm. Để Chương III chơi tới M11 được, bản này viết thêm lời dẫn ngắn cho hai nhiệm vụ cầu nối M09 "Tin dữ năm 965" và M10 "Bản đồ không có thứ tự" theo đúng mission matrix.
+
+**Tại sao Phạm Bạch Hổ là `submitted` chứ không `allied`**: chính văn Toàn thư mục 967 chép "đem binh về hàng" (E09), warlord-matrix W02 phân loại **quy phục**, confidence cao. Liên minh (`allied`) chỉ dùng cho Trần Lãm (W01).
+
+### Trích Toàn thư (S01)
+
+Nguồn: [Đại Việt sử ký toàn thư, Ngô sứ quân](https://vi.wikisource.org/wiki/Đại_Việt_sử_ký_toàn_thư/Tập_II/Cuốn_thứ_năm/Ngô_sứ_quân), bản dịch Wikisource, mở lại ngày 24/10/2026.
+
+| Locator | Câu trích ngắn | Dùng ở | Nhãn |
+|---|---|---|---|
+| Mục 966, danh sách | "Phạm Bạch Hổ, xưng là Phạm Phòng Át, giữ Đằng châu." | M11 intro, ghi chú | `recorded` W02, S01 |
+| Mục 967 | "Phạm Phòng Át đem binh về hàng." | M11 outro, ghi chú | `recorded` E09, S01 |
+| Lời chua Đằng Châu | Nay xã Đằng Châu, huyện Kim Động, tỉnh Hưng Yên có đền thờ Phạm sứ quân | M11 ghi chú, khoanh bản đồ Chương III | `recorded` (lời chua đời sau) |
+| Mục 966 | "Xương Xí giữ Bình Kiều"; mở mục ghi con Thiên Sách Vương | M12 intro | `recorded` W03 |
+| Lời chua Bình Kiều | "Bình Kiều, nay không rõ chỗ nào." | M12 intro, khung chương | `disputed` U03 |
+| Mục 966 | "Ngô Nhật Khánh, xưng là Ngô Lãm Công, giữ Đường Lâm — có thuyết nói là giữ Giao Thủy" | M13 intro, ghi chú | `recorded` W04 + `disputed` U04 |
+| Lời chua Nhật Khánh | "Ngô Nhật Khánh, người trong họ Ngô Quyền." | M13 intro, ghi chú | `recorded` W04 |
+
+Chức Thân vệ tướng quân của Phạm Phòng Át lấy theo tóm tắt E09 trong ledger.
+
+### Tổng thuật và truyền thuyết
+
+- **S06** (Bảo tàng Lịch sử Quốc gia): xếp Ngô Xương Xí và Ngô Nhật Khánh vào nhóm quy phục. Game ghi rõ đây là tổng thuật hiện đại, không phải chính sử.
+- **S07** (Báo Ninh Bình): chuyện khao quân trước thành Bình Kiều là `legend`. Lựa chọn "Bày quân ngoài thành" ở M12 chỉ gợi không khí, không tái hiện.
+
+### Hôn phối nhà Đinh với gia đình Ngô Nhật Khánh
+
+Task yêu cầu ghi chi tiết hôn phối **nếu được kiểm chứng**. Kết quả: **chưa kiểm chứng**.
+
+- Bản Toàn thư trên Wikisource dùng làm S01 dừng ở mục Ngô sứ quân ("HẾT TẬP THỨ HAI"); các mục kỷ nhà Đinh không có trong bộ nguồn đã mở.
+- Ledger không có claim nào về hôn phối. Một số trang tổng hợp có kể, nhưng ledger cấm dùng wiki/tổng hợp để quyết định.
+- Nếu có thì chuyện ấy thuộc giai đoạn sau năm 968, ngoài khung thời gian của Campaign.
+
+Vì vậy M13 chỉ có một ghi chú `disputed` nói rõ là chưa kiểm chứng và game không kể chi tiết. Test `factions.test.ts` chặn việc ghi chú này mang nhãn `recorded`. Muốn kể thì phải bổ sung nguồn vào ledger trước.
+
+### Điều không khẳng định
+
+- Không có trận, quyết đấu, thanh máu hay điều kiện thắng ở M11–M13. Điều khoản, nơi gặp và lời thoại đều `fictional`/`reconstructed`.
+- "Quy phục" không có nghĩa trung thành vĩnh viễn (W04). M13 ghi quan hệ về sau để ngỏ.
+- Tước "Kiều công" (Ngô Xương Xí) và "Ngô Nam công/Ngô Nam Chỉ" (Ngô Nhật Khánh) không dùng trong lời kể V2. Fighter ở màn cũ và Đánh trùm vẫn giữ tước này (Shan chốt ngày 20/10); đổi sẽ là một task riêng.
+- Thứ tự Đằng Châu → Bình Kiều → Đường Lâm là của game (U07).
+
+### Runtime
+
+- `src/core/campaign/factions.ts`: bảng 12 sứ quân → nhiệm vụ → kết cục, tự kiểm khi nạp (mỗi sứ quân một nhiệm vụ, mỗi nhiệm vụ một sứ quân).
+- `CampaignProgressV2.factions`: ghi trong `applyCampaignFirstClear`, cùng CAS với vàng và phiếu thưởng. Parser dựng lại từ `completed`, nên không thể trùng hay lệch bảng.
+- `/api/campaign/events` trả thêm `outcome.faction {id, status, recorded}`. Đường sự kiện không gọi `recordMatch`, không có XP, rơi đồ, đá hay lương, nên không cộng số trận thắng.
+- Đánh trùm: `RAID_STORY_GATE` thêm `dangChau → M11`, `binhKieu → M12`, `duongLam → M13`, nhãn "Thách đấu giả định" (`raidFraming = "whatIf"`). Ba màn cũ đổi tên và lời thoại sang trận giả định; đối thủ, cấp và thưởng giữ nguyên, nên Tower, Survival, Daily và Arena không đổi. (Đã thay ngày 25/10/2026: ba sứ quân quy phục không còn là trùm Đánh trùm, design-freeze bổ sung 1.1; mốc M11–M13 chỉ mở bán ở cửa hàng.)
