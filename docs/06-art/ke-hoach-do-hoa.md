@@ -160,7 +160,7 @@ Bổ sung vào [Hình ảnh mục 2.4](art-bible.md#24-danh-sách-hình) khi ch�
 ### 5.1 Hiện trạng
 
 - Bàn cờ 12×8 là DOM, mỗi ô một SVG (`src/app/game/art/tiles.tsx`); hoạt ảnh bàn cờ là chuỗi khung dựng từ sự kiện core (`src/app/game/battle/animation.ts`) chạy bằng CSS `@keyframes` với `transform`/`opacity` và `setTimeout`.
-- Toàn bộ màn trận nằm trong `DemoGame.tsx` (~2 200 dòng), state React đổi theo từng khung hoạt ảnh.
+- Màn trận điều khiển trong `DemoGame.tsx` (1 476 dòng sau khi tách phần hiển thị ngày 12/11/2026), state React đổi theo từng khung hoạt ảnh.
 - Nhân vật là chân dung SVG tĩnh trên thẻ.
 
 Cách này đủ cho bàn cờ, nhưng **không đủ** khi thêm 6 nhân vật có xương, hạt hiệu ứng và rung màn hình: DOM với hàng trăm phần tử chuyển động và React render lại mỗi khung sẽ giật trên điện thoại.
@@ -324,7 +324,7 @@ Mở rộng quy ước ở [Hình ảnh 2.6](art-bible.md#26-đưa-hình-vào-ga
 |---|---|
 | Đ0, Đ1 | Xong: chọn tự viết rig bằng code (mục 3.2), [art bible](art-bible.md) |
 | Đ2 Pipeline ảnh | **Chưa làm**: chưa có `art:build`/`art:check`, chưa có ngân sách dung lượng trong CI |
-| Đ3 Màn trận + đạo diễn | Một phần: có đạo diễn dòng thời gian (`src/app/game/stage/director.ts`); **chưa tách `DemoGame.tsx`** (2 647 dòng), AI chưa chạy trong worker |
+| Đ3 Màn trận + đạo diễn | Một phần: có đạo diễn dòng thời gian (`src/app/game/stage/director.ts`); `DemoGame.tsx` đã tách phần hiển thị và phím tắt ra 11 module (2 647 → 1 476 dòng, 12/11/2026), phần điều khiển trận (state, gọi core/server) còn chung một file; AI chưa chạy trong worker |
 | Đ4, Đ5 | Xong theo cách khác: mỗi nhân vật một rig riêng (`src/app/game/stage/rigs/`, mỗi nhân vật một file) thay cho 6 bộ xương theo nghề |
 | Đ6 Hiệu ứng | Xong: hiệu ứng theo hệ và tuyệt chiêu trong `src/app/game/stage/` |
 | Đ7 Trang trí | Phần lớn xong: tranh chế độ ở Chiến trường, bản đồ chiến dịch, nền phong thái theo hệ |

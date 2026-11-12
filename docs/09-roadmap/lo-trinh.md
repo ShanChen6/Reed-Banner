@@ -24,7 +24,7 @@ Chưa xếp thứ tự; Shan chọn việc làm tiếp. Mỗi việc là một h
 |---|---|---|
 | Phát hành | Bật bảo vệ nhánh `develop`/`main`; cổng trước public launch Song Tháp (Neon staging, restore drill, kiểm tra trên thiết bị); quyết định bật từng cờ chế độ trên production | [Câu hỏi còn mở](cau-hoi-mo.md), [nghiệm thu Song Tháp](../02-game-modes/dual-tower/06-04-final-acceptance.md) |
 | Cân bằng | Đo lại Tháp Thiên Mệnh 20 tầng bằng dữ liệu thật sau 1–2 chu kỳ đầu; cân lại bậc Thường của Trận Đồ | [Câu hỏi còn mở](cau-hoi-mo.md) |
-| Mã nguồn | Dọn code (đợt tiếp theo của việc dọn dẹp 12/11/2026): xóa code chết, tách các file lớn như `DemoGame.tsx` | [Kế hoạch đồ họa Đ3](../06-art/ke-hoach-do-hoa.md#9-lộ-trình-triển-khai) |
+| Mã nguồn | Phần điều khiển trận còn chung trong `DemoGame.tsx` (1 476 dòng; phần hiển thị đã tách 12/11/2026): tách tiếp thành hook trạng thái trận khi làm Đ3 | [Kế hoạch đồ họa Đ3](../06-art/ke-hoach-do-hoa.md#9-lộ-trình-triển-khai) |
 | Đồ họa | Pipeline ảnh có ngân sách dung lượng trong CI (Đ2); đo hiệu năng cuối trên thiết bị (Đ9); tranh còn ở dạng prompt DRAFT | [Kế hoạch đồ họa](../06-art/ke-hoach-do-hoa.md#9-lộ-trình-triển-khai), [prompt](../06-art/prompts/v4-2/00-bao-cao.md) |
 | Âm thanh | Phần còn thiếu của nhạc và âm thanh theo chế độ | [Âm thanh](../05-ui-ux/campaign/audio-todo/README.md) |
 | Giao diện | Các việc Bản 2 UI còn mở | [Lộ trình UI](../05-ui-ux/implementation/roadmap.md) |
