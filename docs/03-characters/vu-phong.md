@@ -331,7 +331,7 @@ Ngày 02/11/2026 người dùng cung cấp sáu ảnh nền trong suốt cho khu
 
 ### Rig hình động
 
-Ảnh đứng (1024×1536) được tách bằng code thành sáu lớp WebP ở ½ kích thước, đăng ký là `VU_PHONG` trong [rigs.ts](../../src/app/game/stage/rigs.ts) và hiện trên trang xem thử `/demo/characters?id=vuPhong`:
+Ảnh đứng (1024×1536) được tách bằng code thành sáu lớp WebP ở ½ kích thước, đăng ký là `VU_PHONG` trong [rigs/vu-phong.ts](../../src/app/game/stage/rigs/vu-phong.ts) và hiện trên trang xem thử `/demo/characters?id=vuPhong`:
 
 | Lớp | Nội dung |
 |---|---|

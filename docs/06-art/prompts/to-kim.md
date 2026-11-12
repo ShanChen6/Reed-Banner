@@ -132,12 +132,12 @@ Painting style: clean ink outlines, soft cel-like shading, medium saturation, wa
 
 ## 10. Quy cách gửi lại
 
-Gửi **PNG gốc**, tên `chuan`, `bust`, `style`, `attack`, `cast`, `ultimate`, `down`. Tôi sẽ cắt, co về đúng cỡ, thay vào `public/art/characters/to-kim/`, chỉnh tọa độ trong `TO_KIM` (`rigs.ts`; vũ khí vẫn là quạt nên giữ nhịp quạt), tách lớp lại hình động đứng (quạt cùng nắm tay, bàn tay chống hông, đầu và búi tóc) và làm `portrait.webp`.
+Gửi **PNG gốc**, tên `chuan`, `bust`, `style`, `attack`, `cast`, `ultimate`, `down`. Tôi sẽ cắt, co về đúng cỡ, thay vào `public/art/characters/to-kim/`, chỉnh tọa độ trong `TO_KIM` (`src/app/game/stage/rigs/to-kim.ts`; vũ khí vẫn là quạt nên giữ nhịp quạt), tách lớp lại hình động đứng (quạt cùng nắm tay, bàn tay chống hông, đầu và búi tóc) và làm `portrait.webp`.
 
 ## 11. Kết quả (09/11/2026)
 
 Shan gửi 6 ảnh: chuẩn, bust, ra đòn, ra chiêu, tuyệt chiêu, phong thái (ngồi ghế đẩu cầm thẻ tre). Các ảnh toàn thân là khổ dọc 1024×1536, nền trong suốt sẵn, cùng cỡ với ảnh chuẩn. Tranh gục (mục 7, khổ ngang 1536×1024) gửi sau, cũng đã thay vào `pose-down`.
 
-- **Tranh tư thế:** cắt sát, co 0,4 lần (`pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down`); phong thái co 0,5 lần; `standing.webp` co 0,25 lần. Tọa độ mới trong `TO_KIM` (`rigs.ts`). Điểm bắn: quạt xòe (ra đòn), đầu quạt gấp (ra chiêu), bàn tay xòe (tuyệt chiêu).
+- **Tranh tư thế:** cắt sát, co 0,4 lần (`pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down`); phong thái co 0,5 lần; `standing.webp` co 0,25 lần. Tọa độ mới trong `TO_KIM` (`src/app/game/stage/rigs/to-kim.ts`). Điểm bắn: quạt xòe (ra đòn), đầu quạt gấp (ra chiêu), bàn tay xòe (tuyệt chiêu).
 - **Hình động đứng:** `sword` là quạt cùng tua, `arm` là nắm tay cầm quạt (cả hai xoay quanh cổ tay), `armR` là bàn tay chống hông, `head` là đầu. Phần áo sau quạt được vá bằng cách chép tiếp dải viền vòng tròn theo chu kỳ hoa văn. Phần ống tay và đai sau bàn tay được vá bằng khuếch tán màu. Lớp vải `ribbon` cũ đã bỏ.
 - **Chân dung:** `bust.webp` 384×384 (đã thêm `toKim` vào `BUST_IDS`); `portrait.webp` 192×192. Tổng thư mục khoảng 279 KB.

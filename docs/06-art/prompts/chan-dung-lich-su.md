@@ -122,7 +122,7 @@ Keep the same person, face structure, hair, clothing colours and accessories as 
 2. Đồng tông giữa hai ảnh (cùng nền sương nâu đỏ) **và nhân vật tách khỏi nền rõ** ở cỡ ô thật (không chìm như lần thử 1).
 3. Soát theo mục 4: không hiệu ứng phép, không trang sức lộng lẫy; **nhưng vẫn là minh họa nhân vật** (nét viền rõ, mặt hơi lý tưởng hóa), không như ảnh chụp.
 4. Đối chiếu với `standing.webp` cũ: cùng khuôn mặt, cùng màu áo.
-5. Đạt cả bốn thì làm tiếp sáu nhân vật ở mục 5.1, rồi mới làm **75 nhân vật còn lại** (chia theo hệ, 7 nhóm, để dễ duyệt). Tổng số nhân vật là **77** (77 thư mục trong `public/art/characters/`, 77 bộ hình động trong `rigs.ts`); con số 63 ở `nhan-vat.md` là cũ.
+5. Đạt cả bốn thì làm tiếp sáu nhân vật ở mục 5.1, rồi mới làm **75 nhân vật còn lại** (chia theo hệ, 7 nhóm, để dễ duyệt). Tổng số nhân vật là **77** (77 thư mục trong `public/art/characters/`, 77 bộ hình động trong `stage/rigs/`); con số 63 ở `nhan-vat.md` là cũ.
 
 ## 7. Sau khi có ảnh (kế hoạch gắn vào game)
 
@@ -142,17 +142,17 @@ Mỗi nhân vật có nhiều loại tranh, không chỉ chân dung. Phong cách
 | **`bust.webp` (mới, bán thân 384px)** | 2/77 | Ô chân dung ở Doanh Trại | Không | **Làm trước** (mục 5) |
 | `style.webp` (tranh phong thái, 250×379) | 77 | Tranh lớn ở trang chi tiết tướng (`ProfileArt`) | **Không**: chỉ `ProfileArt` đọc | **Làm thứ hai**: khi ô chân dung đã mới, tranh lớn bên cạnh vẫn kiểu cũ sẽ lệch trong cùng một màn |
 | `standing.webp` + các lớp (`head`, `body`, `arm`, `sword`, vải…) | 77 | Hình động trong trận, cắt lớp bằng tọa độ cố định | **Có** | Để sau cùng |
-| `pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down` (tranh ra chiêu và ngã) | 77 × 4 = 308 | Trận (`BattleStage`, `rigs.ts`: mỗi nhân vật có `texScale`, `origin`, `anchor`, `burst` chỉnh tay cho từng tranh) | **Có** | Để sau cùng, làm theo mục 8.2 |
+| `pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down` (tranh ra chiêu và ngã) | 77 × 4 = 308 | Trận (`BattleStage`, `stage/rigs/`: mỗi nhân vật có `texScale`, `origin`, `anchor`, `burst` chỉnh tay cho từng tranh) | **Có** | Để sau cùng, làm theo mục 8.2 |
 
 ### 8.1 Vì sao để tranh ra chiêu sau
 
-- 308 tranh trong suốt toàn thân, mỗi tranh có tọa độ đặt chân và điểm bắn hiệu ứng chỉnh tay trong `rigs.ts`; đổi dáng là phải chỉnh lại từng điểm.
+- 308 tranh trong suốt toàn thân, mỗi tranh có tọa độ đặt chân và điểm bắn hiệu ứng chỉnh tay trong `stage/rigs/`; đổi dáng là phải chỉnh lại từng điểm.
 - Phong cách hiện tại của tranh ra chiêu là **fantasy toàn thân** (ví dụ Hà Vân: dải lụa bay nhiều lớp, áo xẻ sâu, giày cao gót, quầng lụa quanh người), lệch với chân dung mới. Cần sửa, nhưng sau khi phong cách bán thân đã được chốt, vì toàn thân dễ trôi phong cách hơn.
 - Trong lúc chờ, ô chân dung mới (UI) và tranh trận (cũ) nằm ở hai màn khác nhau nên lệch ít bị lộ hơn so với hai tranh cạnh nhau trong cùng một màn (trường hợp `style.webp`).
 
 ### 8.2 Khi làm tranh ra chiêu theo phong cách mới
 
-1. **Dùng chính tranh ra chiêu cũ làm ảnh tham chiếu dáng** (giữ nguyên tư thế, khung ảnh và vị trí chân), chỉ **thay cách vẽ**: màu trầm, nét viền rõ, trang phục thế kỷ X, bỏ lụa bay và trang sức lộng lẫy. Nhờ giữ dáng nên tọa độ trong `rigs.ts` gần như dùng lại được, chỉ chỉnh nhẹ.
+1. **Dùng chính tranh ra chiêu cũ làm ảnh tham chiếu dáng** (giữ nguyên tư thế, khung ảnh và vị trí chân), chỉ **thay cách vẽ**: màu trầm, nét viền rõ, trang phục thế kỷ X, bỏ lụa bay và trang sức lộng lẫy. Nhờ giữ dáng nên tọa độ trong `stage/rigs/` gần như dùng lại được, chỉ chỉnh nhẹ.
 2. Giữ **nền trong suốt** và đúng kích thước tệp cũ (`texScale` tính theo kích thước).
 3. Chỉ làm tranh **ra chiêu và tuyệt chiêu** (`pose-cast`, `pose-ultimate`) trước; đòn thường (`pose-attack`) và ngã (`pose-down`) làm sau vì xuất hiện ít được chú ý hơn.
 4. Làm thử **một nhân vật** (Hà Vân hoặc Nguyễn Bặc) cả bốn tranh, ghép vào trận để xem hiệu ứng và tọa độ trước khi làm hàng loạt.
@@ -170,15 +170,15 @@ Shan chốt (07/11/2026): thử **trọn bộ tranh của một nhân vật** l�
 |---|---|---|
 | `bust.webp` | Đã xong | Đã gắn ở danh sách tướng sĩ |
 | `style.webp` (tranh lớn ở trang chi tiết) | **Có** | Không gắn với hình động trận, thay thoải mái. **Nền: chung theo hệ, ảnh nhân vật trong suốt** (Shan chốt 08/11/2026, xem [tranh nền](nen-phong-thai.md)); tranh nền hệ Hỏa đã có và đã gắn |
-| `pose-attack.webp`, `pose-cast.webp`, `pose-ultimate.webp` | **Có** | Gắn với `rigs.ts` (xem 9.2) |
-| `pose-down.webp` (ngã) | **Có** | Gắn với `rigs.ts` |
+| `pose-attack.webp`, `pose-cast.webp`, `pose-ultimate.webp` | **Có** | Gắn với `stage/rigs/` (xem 9.2) |
+| `pose-down.webp` (ngã) | **Có** | Gắn với `stage/rigs/` |
 | `standing.webp` và các lớp (`head`, `body`, `arm`, `sword`…) | **Không** | Hình động cắt lớp từ ảnh đứng bằng tọa độ cố định; đổi ảnh đứng phải cắt lại lớp. Chỉ làm khi đã chốt đổi cả bộ |
 
 Hệ quả cần biết: trong lúc test, Hà Vân đứng yên hoặc di chuyển vẫn là hình cũ (ảnh đứng), còn ra đòn, ra chiêu và ngã là hình mới. Hai kiểu sẽ lệch nhau; đó chính là điều cần xem để quyết định có đổi cả `standing.webp` hay không.
 
 ### 9.2 Tệp tham chiếu của Hà Vân và điều phải giữ
 
-Mỗi tranh ra chiêu có tọa độ chỉnh tay trong `HA_VAN` (`src/app/game/stage/rigs.ts`): `anchor` (chân đặt ở đâu), `origin` (điểm gốc trong tranh) và `burst` (nơi bắn hiệu ứng, thường là đầu trượng). Vì vậy tranh mới phải **giữ đúng dáng, khung ảnh và vị trí chân và đầu trượng** của tranh cũ.
+Mỗi tranh ra chiêu có tọa độ chỉnh tay trong `HA_VAN` (`src/app/game/stage/rigs/ha-van.ts`): `anchor` (chân đặt ở đâu), `origin` (điểm gốc trong tranh) và `burst` (nơi bắn hiệu ứng, thường là đầu trượng). Vì vậy tranh mới phải **giữ đúng dáng, khung ảnh và vị trí chân và đầu trượng** của tranh cũ.
 
 | Tranh | Kích thước cũ | Dáng cần giữ | Điểm bắn hiệu ứng |
 |---|---|---|---|
@@ -196,7 +196,7 @@ Mỗi tranh ra chiêu có tọa độ chỉnh tay trong `HA_VAN` (`src/app/game/
 
 **Kết quả test (09/11/2026):** Shan gửi bộ tranh mới viết lại từ đầu (ảnh chuẩn trước, các tranh sau tham chiếu ảnh chuẩn), cả 5 tranh nền trong suốt, 1024×1536 (ngã 1536×1024), có dấu ngọn lửa trên trán và trượng ngắn đồng nhất. Đã cắt sát, co 0,4 lần (phong thái 0,5 lần), thay `style`, `pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down` của Hà Vân và đổi `anchor/origin/burst` trong `HA_VAN` theo dáng mới (chân đặt đúng giữa hai bàn chân; điểm bắn là đầu trượng, bàn tay xòe, đầu ngón tay chỉ). Dáng mới không trùng tranh cũ nên các tọa độ cũ không còn dùng. `standing.webp` và các lớp rig đã đổi theo ảnh chuẩn (xem đoạn sau). Chân dung `bust.webp` mới (384×384, có dấu trán, nền sương lũy tre và cờ) đã thay cùng ngày.
 
-**Hình động đứng đã đổi theo phong cách mới (09/11/2026):** ảnh chuẩn đứng của Shan được tách lớp bằng code (thân đã xóa trượng, nắm tay và bàn tay buông rồi vá phần vải phía sau; lớp `sword` là trượng ngắn, `arm` là nắm tay, `armR` là bàn tay buông, `head` là đầu). Các lớp khớp hoàn toàn khi ghép lại. Tọa độ mới trong `HA_VAN` (`rigs.ts`); trượng và nắm tay xoay quanh cổ tay (242, 603). Tới đây cả hình động lẫn tranh ra chiêu của Hà Vân đã cùng phong cách. Dải lụa đỏ trên tóc là lớp riêng (`ribbon`, vẽ sau thân), bay theo gió từ chỗ buộc ở búi tóc (gió trục dọc, biên độ 9); thân đã xóa dải lụa và vá lại chỗ nó phủ lên vai.
+**Hình động đứng đã đổi theo phong cách mới (09/11/2026):** ảnh chuẩn đứng của Shan được tách lớp bằng code (thân đã xóa trượng, nắm tay và bàn tay buông rồi vá phần vải phía sau; lớp `sword` là trượng ngắn, `arm` là nắm tay, `armR` là bàn tay buông, `head` là đầu). Các lớp khớp hoàn toàn khi ghép lại. Tọa độ mới trong `HA_VAN` (`src/app/game/stage/rigs/ha-van.ts`); trượng và nắm tay xoay quanh cổ tay (242, 603). Tới đây cả hình động lẫn tranh ra chiêu của Hà Vân đã cùng phong cách. Dải lụa đỏ trên tóc là lớp riêng (`ribbon`, vẽ sau thân), bay theo gió từ chỗ buộc ở búi tóc (gió trục dọc, biên độ 9); thân đã xóa dải lụa và vá lại chỗ nó phủ lên vai.
 
 **Hướng tranh ra đòn:** nhân vật phe trái đứng quay mặt sang phải, các tranh `attack`, `cast`, `ultimate` phải hướng về bên phải (phe phải được lật tự động). Bản `pose-attack` và `pose-cast` đầu quay về trái nên đã **lật ngang tệp** (tọa độ trong `HA_VAN` là 1024 trừ x cũ); sau khi lật, tranh ra chiêu có bàn tay xòe ở bên phải nhưng mặt hơi quay trái, nên nếu tạo lại hãy ghi `palm pushed forward to the right, facing right`. Khi tạo tranh mới, ghi rõ `facing right` trong dòng dáng. `portrait.webp` của Hà Vân (192×192, nền trong suốt) đã cắt lại từ ảnh chuẩn.
 
