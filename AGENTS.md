@@ -17,3 +17,7 @@ Trước khi đọc hoặc sửa tài liệu trong `docs/`, làm theo [quy đị
 3. Đọc dòng `> Trạng thái:`; `DRAFT`/`APPROVED` chưa chắc có code, `SUPERSEDED`/`ARCHIVED` không phải luật hiện hành.
 4. Không đổi đường dẫn trong `docs/reports/` và `docs/audits/` (script đọc/ghi vào đó).
 5. Chạy `pnpm docs:check` trước khi commit.
+
+## Kiểm tra trước khi commit
+
+Chạy `pnpm check` (lint, typecheck, docs, test). Sửa giao diện hoặc luồng màn thì chạy thêm `pnpm e2e`. Quy trình đầy đủ và nơi đặt test mới: [quy trình test](docs/07-architecture/quy-trinh-test.md).

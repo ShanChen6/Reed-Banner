@@ -1,6 +1,6 @@
 # Thuật ngữ
 
-> Cập nhật: 27/10/2026 (tách từ `docs/README.md` ở DOC-02, nội dung giữ nguyên)
+> Cập nhật: 11/11/2026 (thêm từ của Tháp Thiên Mệnh; 27/10: tách từ `docs/README.md` ở DOC-02, nội dung giữ nguyên)
 
 | Thuật ngữ | Nghĩa |
 |---|---|
@@ -22,3 +22,10 @@
 | **Lương / Sĩ khí** | Tài nguyên chung của phe và mức hệ số sát thương suy ra từ nó |
 | **Tianwu** | AI điều khiển phe đối thủ |
 | **Seed** | Số khởi tạo bộ sinh ngẫu nhiên của trận, chỉ nằm trên server |
+| **Lượt leo** | Một lần leo Tháp Thiên Mệnh từ tầng 1 với đội hình đã khóa (tên mã: `run`). Giao diện không dùng chữ "run" |
+| **Đội hình / Tướng ra trận / Dự bị** | Ở Tháp Thiên Mệnh: các tướng khóa cho lượt leo (tên mã `roster`); ba người đánh một tầng (`active`); số còn lại |
+| **Phúc** | Lợi thế chọn sau mỗi tầng thắng ở Tháp Thiên Mệnh, giữ tới hết lượt leo, chọn lại thì cộng dồn (tên mã `boon`, `stack`) |
+
+## Từ không dùng trên giao diện
+
+Chữ hiện cho người chơi viết bằng tiếng Việt: run → lượt leo; roster → đội hình; active → tướng ra trận; build → nghề và hệ; HP → máu; NL → năng lượng; stack → cộng dồn; clear → vượt (tầng); boss → trùm; tab → thẻ hoặc "nơi khác". Tên mã tiếng Anh chỉ ở trong code và tài liệu kỹ thuật.

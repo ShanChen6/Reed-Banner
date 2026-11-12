@@ -1,5 +1,7 @@
 # Nguyễn Bặc — hình động trong trận
 
+> Cập nhật 12/11/2026: rig đã dựng lại từ bộ tranh mới Shan gửi (tờ ghép 6 dáng 1536×1024 + chân dung bán thân), xem chú thích trên `NGUYEN_BAC` trong `src/app/game/stage/rigs.ts`. Các lớp vải (cape, ribbon, sash), lớp che vai và `nguyen-bac-boxes.json` không còn dùng; phần dưới đây mô tả bản cũ, giữ để tham khảo.
+
 - Roster: `nguyenBac`, tướng sĩ Hỏa; không sửa `src/core/`.
 - Thư mục: `public/art/characters/nguyenBac/`.
 - **14 WebP, 316.904 byte** (316,9 KB thập phân), gồm avatar, ảnh đứng xem thử, hai tranh kỹ năng và tranh gục; dưới 350 KB.

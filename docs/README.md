@@ -1,6 +1,6 @@
 # Tài liệu Cờ Lau (Reed Banner)
 
-> Cập nhật: 30/10/2026
+> Cập nhật: 12/11/2026
 
 Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** nguồn chính (đánh dấu ★); file khác chỉ link tới đó. Tìm đường dẫn cũ (trước 27/10/2026) ở [MOVED.md](MOVED.md).
 
@@ -117,6 +117,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 |---|---|
 | ★ [kien-truc.md](07-architecture/kien-truc.md) | Công nghệ, sơ đồ, tích hợp ShanVerse |
 | ★ [ha-tang.md](07-architecture/ha-tang.md) | Server có thẩm quyền, database, tài khoản, BXH, chống gian lận |
+| ★ [quy-trinh-test.md](07-architecture/quy-trinh-test.md) | Quy trình test ba tầng: `pnpm check` trên máy, CI (gồm smoke test trình duyệt), checklist trước phát hành |
 
 ## 09 · Lộ trình & quyết định
 
@@ -147,5 +148,5 @@ Theo dòng thời gian cải tổ kỹ năng 22–23/10/2026:
 - Một khái niệm chỉ định nghĩa ở **một** file (★ ở trên); file khác link tới đó.
 - Việc chưa chốt ghi `> TODO:` tại chỗ và trong [cau-hoi-mo.md](09-roadmap/cau-hoi-mo.md); quyết định mới ghi vào [changelog.md](decisions/changelog.md).
 - Chuyển/đổi tên file: `git mv` + thêm dòng vào [MOVED.md](MOVED.md).
-- Chạy `pnpm docs:check` trước khi commit.
+- Chạy `pnpm check` (gồm `pnpm docs:check`) trước khi commit; xem [quy trình test](07-architecture/quy-trinh-test.md).
 

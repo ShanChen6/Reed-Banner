@@ -14,6 +14,8 @@
     "docs:check": "tsx scripts/check-docs.ts",
     "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test \"tests/**/*.test.ts\"",
+    "e2e": "playwright test",
+    "check": "pnpm lint && pnpm typecheck && pnpm docs:check && pnpm test",
     "sim": "tsx scripts/balance.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx scripts/migrate.mts"
@@ -31,6 +33,7 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.3.10",
+    "@playwright/test": "1.63.0",
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "^22.20.5",
     "@types/nodemailer": "8.0.2",

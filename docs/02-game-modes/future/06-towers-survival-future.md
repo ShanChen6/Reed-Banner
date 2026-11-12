@@ -25,6 +25,10 @@
 
 ## B. Tháp Vận Mệnh — mục tiêu 20 tầng có giới hạn
 
+> **Đã triển khai (11/11/2026):** 20 tầng áp dụng từ chu kỳ 16/11/2026. Luật hiện hành ở
+> [luật Song Tháp §11](../dual-tower/00-02-rules.md#11-destiny-v2--20-tầng-shan-chốt-11112026). Phần dưới giữ lại để truy vết;
+> mục "Current" mô tả code trước ngày đó.
+
 ### Current
 - `DESTINY_CYCLE_FLOORS = 10` trong `src/core/tower/destinyRules.ts`.
 - Chu kỳ `DESTINY_CYCLE_DAYS = 7` (Monday 00:00 Việt Nam).

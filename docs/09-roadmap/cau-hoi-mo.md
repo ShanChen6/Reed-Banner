@@ -60,6 +60,8 @@
 
 - [ ] Chốt tên miền (đề xuất `colau.vercel.app`). → [Kiến trúc](../07-architecture/kien-truc.md#3-sơ-đồ)
 - [x] Triển khai hai feature flag server-authoritative, mặc định tắt, để bật/tắt Trial và Destiny độc lập; chặn cả write API và entry UI. → [RH-02](../02-game-modes/dual-tower/06-05-feature-flags.md)
+- [ ] Tháp Thiên Mệnh 20 tầng: đo lại độ khó, sức mạnh 8 Phúc mới và lượng đá mỗi tuần bằng dữ liệu người chơi thật sau 1–2 chu kỳ đầu (mô phỏng mới có 4 chu kỳ, AI đánh thay). → [Báo cáo 11/11/2026](../reports/2026-11-11-destiny-v2-balance.md#chưa-đo)
+- [ ] Shan bật bảo vệ nhánh `develop` và `main` trên GitHub, bắt buộc hai check CI xanh. → [Quy trình test](../07-architecture/quy-trinh-test.md#2-tầng-2-ci)
 - [ ] Chạy Neon staging migration + restore drill và browser smoke mobile/desktop trước public launch Song Tháp. → [Nghiệm thu Song Tháp](../02-game-modes/dual-tower/06-04-final-acceptance.md#gate-bắt-buộc-trước-public-launch)
 
 ## Đã chốt ngày 18/10/2026

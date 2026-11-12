@@ -349,10 +349,10 @@ export default function WorldMap({
   };
 
   return (
-    <figure className="campaign-map atlas-frame flex flex-col self-start overflow-hidden xl:self-start">
+    <figure className="campaign-map atlas-frame flex flex-col self-start overflow-hidden xl:self-stretch">
       <AtlasCorners />
       <RotateHint />
-      <div className="map-viewport relative xl:my-auto">
+      <div className="map-viewport relative">
         <svg
           {...svgProps}
           className="block h-auto w-full select-none"
@@ -590,7 +590,7 @@ export default function WorldMap({
       </div>
 
       {/* Bình Kiều: sử chép "nay không rõ chỗ nào", nên ở ô riêng chứ không cắm cờ lên bản đồ. */}
-      <div className="world-strip flex flex-col gap-2 border-t px-3 py-2 lg:flex-row lg:items-center xl:flex-1">
+      <div className="world-strip flex flex-col gap-2 border-t px-3 py-2 lg:flex-row lg:items-center">
         <div className="flex shrink-0 flex-wrap gap-1.5">
           {UNPLACED_STRONGHOLDS.map((s) => (
             <button
@@ -640,16 +640,16 @@ export default function WorldMap({
           </span>
         </div>
       </div>
-      {/* Bản đồ nhỏ trên điện thoại: chọn cứ điểm từ danh sách, không cần chạm trúng lá cờ (cờ trên bản đồ chỉ rộng 30–60px).
+      {/* Bản đồ nhỏ trên điện thoại (và màn rộng, để lấp phần dưới khung bản đồ khi cột bên phải dài): chọn cứ điểm từ danh sách, không cần chạm trúng lá cờ (cờ trên bản đồ chỉ rộng 30–60px).
           Mở sẵn vì đây là cách chọn chính khi màn hẹp; cứ điểm của chương đang xem lên đầu, cứ điểm có nhiệm vụ đang mở có chấm. */}
       <details
         open
-        className="world-strip border-t px-3 py-2 text-sm lg:hidden"
+        className="world-strip border-t px-3 py-2 text-sm lg:hidden xl:block xl:flex-1"
       >
         <summary className="flex min-h-11 cursor-pointer items-center font-semibold">
           Danh sách cứ điểm ({WORLD_STRONGHOLDS.length})
         </summary>
-        <ul className="grid grid-cols-2 gap-1.5 pb-1">
+        <ul className="grid grid-cols-2 gap-1.5 pb-1 xl:grid-cols-[repeat(auto-fill,minmax(11rem,1fr))]">
           {[...WORLD_STRONGHOLDS]
             .sort(
               (x, y) =>
