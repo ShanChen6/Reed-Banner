@@ -467,83 +467,46 @@ const NGUYEN_BAC: WarriorRig = {
   },
 };
 
-/** Đinh Điền, binh lính hệ Thổ. Tọa độ giữ nguyên theo ảnh nguồn 1024×1536. */
+/**
+ * Đinh Điền, binh lính hệ Thổ. Bộ tranh Shan gửi 12/11 là một tờ ghép 6 dáng (1536×1024, nền trong suốt); mỗi dáng phóng
+ * ×3 làm hệ tọa độ (ảnh đứng đặt vào khung 1024×1536). Ảnh đứng tách lớp bằng code: giáo cùng nắm tay phải xoay quanh cổ
+ * tay, khiên gỗ lớn bên trái là lớp armR lắc nhẹ (thân giữ nguyên phần sau khiên), đầu (cả nón lá, dải buộc đỏ) tách riêng.
+ */
 const DINH_DIEN: WarriorRig = {
   skeleton: "warrior",
   weapon: "spear",
   dir: "dinh-dien",
   texScale: 0.5,
-  foot: { x: 560, y: 1508 },
-  height: 1510,
+  foot: { x: 520, y: 1515 },
+  height: 1490,
   parts: {
-    body: { x: 206, y: 65, w: 808, h: 1447 },
-    armR: { x: 711, y: 439, w: 304, h: 562 },
-    sword: { x: 44, y: 3, w: 246, h: 1418 },
-    arm: { x: 164, y: 490, w: 198, h: 188 },
-    head: { x: 402, y: 65, w: 276, h: 252 }
+    body: { x: 239, y: 114, w: 700, h: 1412 },
+    armR: { x: 655, y: 375, w: 284, h: 802 },
+    sword: { x: 84, y: 34, w: 202, h: 1476 },
+    arm: { x: 150, y: 598, w: 90, h: 116 },
+    head: { x: 330, y: 114, w: 350, h: 232 },
   },
-  cloth: [
-    {
-      name: "ribbon",
-      box: { x: 285, y: 181, w: 122, h: 146 },
-      wind: { axis: "x", start: 0.2, amp: 3, freq: 1.4, k: 2.6, phase: 0.0, reverse: true, vertical: true },
-      behind: true
-    },
-    {
-      name: "sash",
-      box: { x: 350, y: 623, w: 188, h: 268 },
-      wind: { axis: "y", start: 0.2, amp: 3, freq: 1.4, k: 2.6, phase: 0.7 }
-    },
-    {
-      name: "plume",
-      box: { x: 587, y: 704, w: 252, h: 330 },
-      wind: { axis: "y", start: 0.2, amp: 3, freq: 1.4, k: 2.6, phase: 1.4 },
-      overArms: true
-    }
-  ],
-  covers: [
-    {
-      name: "sleeve",
-      box: { x: 258, y: 400, w: 118, h: 158 }
-    }
-  ],
+  cloth: [],
+  covers: [],
   joints: {
-    shoulder: { x: 331, y: 518 },
-    elbowR: { x: 767, y: 489 },
-    neck: { x: 529, y: 301 }
+    shoulder: { x: 205, y: 655 },
+    elbowR: { x: 700, y: 420 },
+    neck: { x: 500, y: 335 },
   },
-  blade: [
-    { x: 180, y: 240 },
-    { x: 145, y: 4 }
-  ],
+  blade: [{ x: 195, y: 600 }, { x: 182, y: 40 }],
   fxColor: 0xd9ad65,
+  // Đâm giáo ngang ngực sau khiên (đánh thường), tấn rộng kéo giáo ngang hông (ra chiêu), lao tới đâm giáo chếch xuống,
+  // khiên chắn sau lưng (tuyệt chiêu). Tranh tư thế lưu đúng cỡ ô trong tờ ghép (texScale 1/3).
   poses: {
-    // Đánh thường: tranh Shan gửi 03/11, đâm giáo ngang ngực, khiên mây ép sát sườn (cỡ so theo thân trên).
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 470, y: 17 }, anchor: { x: 815, y: 870 }, scale: 1.33, burst: { x: 1515, y: 262 } },
-    cast: {
-      origin: { x: 75, y: 13 },
-      scale: 0.95,
-      texScale: 1 / 3,
-      name: "pose-cast",
-      anchor: { x: 615, y: 1005 },
-      burst: { x: 1510, y: 244 }
-    },
-    ultimate: {
-      origin: { x: 35, y: 11 },
-      scale: 0.95,
-      texScale: 1 / 3,
-      name: "pose-ultimate",
-      anchor: { x: 803, y: 1000 },
-      burst: { x: 1380, y: 750 }
-    }
+    attack: { name: "pose-attack", texScale: 1 / 3, origin: { x: 0, y: 0 },
+      anchor: { x: 700, y: 1188 }, scale: 1, burst: { x: 1520, y: 325 } },
+    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 0, y: 0 },
+      anchor: { x: 640, y: 1101 }, scale: 1, burst: { x: 1480, y: 294 } },
+    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 0, y: 0 },
+      anchor: { x: 690, y: 1146 }, scale: 1, burst: { x: 1500, y: 744 } },
   },
-  down: {
-    origin: { x: 127, y: 5 },
-    scale: 0.95,
-    texScale: 1 / 3,
-    name: "pose-down",
-    anchor: { x: 725, y: 1004 }
-  }
+  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 0, y: 0 },
+    anchor: { x: 650, y: 1390 }, scale: 1 },
 };
 
 /** Lưu Cơ, mưu sĩ hệ Kim. Dùng khớp vai của rig tướng sĩ với nhịp phẩy quạt riêng. */
