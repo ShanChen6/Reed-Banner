@@ -12,7 +12,7 @@
 | Tiến trình | Cấp, điểm kỹ năng theo ô, cửa hàng tướng, 9 ô trang bị, nhiệm vụ, thành tựu, điểm danh | [Tiến trình & kinh tế](../01-gameplay/tien-trinh-kinh-te.md) |
 | Nhân vật | 77 nhân vật có rig và tranh; Đinh Bộ Lĩnh 8 nghề × 7 hệ; bộ 6 chủ động + 4 bị động | [Danh sách nhân vật](../03-characters/danh-sach-nhan-vat.md), [Kỹ năng](../03-characters/ky-nang/README.md) |
 | Chế độ mở mặc định | Thao Luyện, Giao Tranh, Bình Loạn (Campaign V2) và Tái đấu sứ quân, Nhật Lệnh, Trấn Ải, Quần Hùng (bóng ma), Trận Đồ chơi thường, Khai Lộ | [Chế độ chơi](../02-game-modes/README.md) |
-| Chế độ sau cờ (tắt mặc định) | Tháp Thí Luyện, Tháp Thiên Mệnh (20 tầng từ chu kỳ 16/11/2026), Trận Đồ xếp hạng, Tầm Tướng Ký, Viễn Chinh | [Chế độ chơi](../02-game-modes/README.md), [cờ Song Tháp](../02-game-modes/dual-tower/06-05-feature-flags.md) |
+| Chế độ sau cờ (tắt mặc định) | Tháp Thí Luyện (50 tầng từ 11/11/2026), Tháp Thiên Mệnh (20 tầng từ chu kỳ 16/11/2026), Trận Đồ xếp hạng, Tầm Tướng Ký, Viễn Chinh | [Chế độ chơi](../02-game-modes/README.md), [cờ Song Tháp](../02-game-modes/dual-tower/06-05-feature-flags.md) |
 | Đồ họa | Sân khấu PixiJS, đạo diễn trận, hiệu ứng theo hệ, tranh chế độ và bản đồ | [Kế hoạch đồ họa](../06-art/ke-hoach-do-hoa.md#9-lộ-trình-triển-khai) |
 | Quy trình | CI (lint, typecheck, docs, test, build, smoke test trình duyệt), checklist phát hành | [Quy trình test](../07-architecture/quy-trinh-test.md) |
 

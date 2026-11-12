@@ -1,7 +1,7 @@
 # T00.02 — Chốt luật Song Tháp
 
-> Cập nhật: 11/11/2026 (thêm §11: Tháp Thiên Mệnh 20 tầng)
-> Trạng thái: **IMPLEMENTED** — §1–§10 là luật gốc Song Tháp, §11 là Tháp Thiên Mệnh 20 tầng.
+> Cập nhật: 12/11/2026 (thêm §11: Tháp Thiên Mệnh 20 tầng; §12: Tháp Thí Luyện 50 tầng)
+> Trạng thái: **IMPLEMENTED** — §1–§10 là luật gốc Song Tháp, §11 là Tháp Thiên Mệnh 20 tầng, §12 là Tháp Thí Luyện 50 tầng.
 
 Design-only (§1–§10). Số liệu Destiny đang chạy nằm ở [§11](#11-destiny-v2--20-tầng-shan-chốt-11112026). Mọi con số ghi **[TBD]** hoặc **[TEST]** chưa được duyệt, không được coi là balance chính thức. Nâng cấp trang bị nằm ở [equipment-enhancement-todo.md](../../04-equipment/cuong-hoa-todo.md) (GEAR-01–08), ngoài phạm vi.
 
@@ -37,7 +37,7 @@ Design-only (§1–§10). Số liệu Destiny đang chạy nằm ở [§11](#11-
 
 | Mục | Luật |
 |---|---|
-| Số tầng | 20, thiết kế cố định ở bản đầu (nội dung từng tầng do task thiết kế/balance sau; không sinh từ seed run). Số tầng **[TBD nội dung]**. |
+| Số tầng | 50 (nâng từ 20 ngày 11/11/2026; cấu trúc và thưởng ở [§12](#12-trial-50-tầng-shan-yêu-cầu-11112026)), thiết kế cố định (nội dung từng tầng do task thiết kế/balance sau; không sinh từ seed run). Số tầng **[TBD nội dung]**. |
 | Mở tầng | Phải thắng tầng N mới mở N+1. Tiến trình vĩnh viễn: `trialCleared` (tầng cao nhất đã qua). |
 | Thử lại | Đánh lại tầng đã qua tùy ý; không giới hạn lượt. |
 | Reset mỗi lần thử | HP và lương về mức khởi đầu mỗi lần thử (một "lần thử" = một trận một tầng). Không mang phúc/HP giữa các tầng. Mức khởi đầu **[TBD]**. |
@@ -186,7 +186,7 @@ Quy tắc chung: mọi action kiểm tra ở server, xác thực chủ sở hữ
 |---|---|---|
 | Giới hạn roster Destiny | Không giới hạn tối đa; có thể mang toàn bộ tướng sở hữu | Đã chốt |
 | Độ dài chu kỳ | 7 ngày, thứ Hai 00:00 VN | Mặc định, cấu hình được |
-| Số tầng Trial | 20 | Cố định ở bản đầu |
+| Số tầng Trial | 50 | 20 tầng ở bản đầu, thêm 30 tầng ngày 11/11/2026 ([§12](#12-trial-50-tầng-shan-yêu-cầu-11112026)) |
 | Mọi lượng đá, mốc, mức HP/lương khởi đầu, lượng hồi, giá trị Phúc, số tầng Destiny | — | [TBD] ở thời điểm T00.02; giá trị đang chạy xem [§11](#11-destiny-v2--20-tầng-shan-chốt-11112026) |
 
 ## 9. Decision log
@@ -257,3 +257,54 @@ Tháp Thiên Mệnh (tên trong tài liệu cũ: Tháp Vận Mệnh, tên mã `d
 
 Mô phỏng 4 chu kỳ V2 bằng `pnpm exec tsx scripts/destiny-stone-sim.ts` (thêm `--v1` để đo luật cũ): [báo cáo 11/11/2026](../../reports/2026-11-11-destiny-v2-balance.md).
 
+## 12. Trial 50 tầng (Shan yêu cầu 11/11/2026)
+
+Số liệu đang chạy của Tháp Thí Luyện. Nội dung từng tầng (luật, đối thủ, cấp, `power`, bàn cờ, số lượt) nằm ở `src/server/trialContent.ts`; 20 tầng đầu không đổi số liệu.
+
+### 12.1 Chặng
+
+| Chặng | Tầng | Tên trên màn hình | Luật | Đối thủ | Ải trùm |
+|---|---|---|---|---|---|
+| I | 1–10 | Nhập Môn | Một lệnh cấm, rồi một điều kiện bắt buộc hoặc giới hạn | 5 tướng khởi đầu, cấp 1–5 | — |
+| II | 11–20 | Luyện Trận | Bàn cờ đặc biệt và giới hạn lượt (11–15), hai luật ghép (16–20) | 5 tướng khởi đầu, cấp 6–10 | 16–20 |
+| III | 21–30 | Lệnh Mới | Một luật chưa dùng ở 20 tầng đầu; có Xạ thủ và Sát thủ | Tướng cửa hàng, cấp 11–17 | 30 |
+| IV | 31–40 | Song Lệnh | Hai luật ghép, xen bàn thiên công, ít tim, chiến thuật | Tướng cửa hàng, cấp 18–24 | 35, 40 |
+| V | 41–50 | Tam Lệnh | Ba luật ghép | Tướng cửa hàng, cấp 25–30 | 45, 49; tầng 50 là đỉnh tháp (Ác mộng) |
+
+Mọi tầng phải có lời giải bằng 5 tướng khởi đầu: luật cần Xạ thủ, Sát thủ, hệ Lôi hay hệ Mộc được đáp ứng bằng cách đổi nghề/hệ của thủ lĩnh (test dữ liệu kiểm tra).
+
+### 12.2 Đá lần đầu
+
+| Tầng | Đá/tầng | Lũy kế |
+|---|---:|---:|
+| 1–4 | 2 | 8 |
+| 5–9 | 3 | 23 |
+| 10–14 | 4 | 43 |
+| 15–18 | 5 | 63 |
+| 19 / 20 | 6 / 8 | 77 |
+| 21–24 | 6 | 101 |
+| 25–29 | 7 | 136 |
+| 30 | 10 | 146 |
+| 31–34 | 8 | 178 |
+| 35–39 | 9 | 223 |
+| 40 | 12 | 235 |
+| 41–44 | 10 | 275 |
+| 45 | 12 | 287 |
+| 46–49 | 12 | 335 |
+| 50 | 20 | 355 |
+
+### 12.3 Quét hằng ngày
+
+| Tầng cao nhất đã vượt | 1–5 | 6–10 | 11–15 | 16–20 | 21–30 | 31–40 | 41–50 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Bậc = đá/ngày | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+
+Bậc 1–4 giữ nguyên như bản 20 tầng để người chơi cũ không mất quyền lợi. Từ tầng 21 mỗi 10 tầng mới thêm một bậc vì Đá Cường Hóa chưa có chỗ tiêu: trần là 7 đá/ngày, 210 đá/30 ngày.
+
+### 12.4 Cân bằng
+
+- Công cụ: `pnpm exec tsx scripts/trial-content-report.ts 21 50`. Mỗi tầng chạy 12 đội mẫu hợp luật; hồ sơ mẫu chỉ có 5 tướng khởi đầu ở đúng cấp đối thủ, không trang bị, phe người chơi dùng AI Khó.
+- Ngưỡng trong test: tầng 1–30 thắng ít nhất 10/12, tầng 31–49 ít nhất 8/12 (người chơi tới đó đã có trang bị và tướng cửa hàng), tầng 50 ít nhất 6/12.
+- Kết quả 11/11/2026: tầng 21–30 đạt 10–12/12, tầng 31–49 đạt 9–12/12, tầng 50 đạt 7/12.
+- `power` dò riêng từng tầng, không tăng đều theo số tầng: kết quả phụ thuộc mạnh vào cặp đấu và seed bàn cờ, nhiều tầng rơi từ 12/12 xuống dưới 6/12 chỉ sau một nấc 0,15. Tầng 47 và 48 vì vậy đang dễ hơn các tầng bên cạnh; xem lại khi có dữ liệu người chơi thật.
+- Không gian luật còn rộng: với 7 hệ, 8 nghề và sáu kiểu luật hiện có, có 32 luật đơn, 471 bộ hai luật và 3.750 bộ ba luật mà đội khởi đầu vẫn xếp được ít nhất 20 đội hình hợp lệ.

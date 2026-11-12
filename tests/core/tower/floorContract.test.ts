@@ -1,3 +1,4 @@
+import { TRIAL_FLOORS } from "../../../src/core/progress/dualTowerState";
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
@@ -51,17 +52,17 @@ describe("hợp đồng tầng", () => {
       return r.ok ? null : r.error.code;
     };
     assert.equal(code(def({ floor: 0 })), "invalid_floor");
-    assert.equal(code(def({ floor: 21 })), "invalid_floor");
+    assert.equal(code(def({ floor: TRIAL_FLOORS + 1 })), "invalid_floor");
     assert.equal(code(def(), "bad scope!"), "invalid_scope");
     assert.equal(code(def({ enemy: { level: 5, power: 0, count: 3, difficulty: "easy" } })), "invalid_enemy");
     assert.equal(code(def({ enemy: { level: 5, power: 1, count: 4 as 3, difficulty: "easy" } })), "invalid_enemy");
     assert.equal(code(def({ rules: { minElements: { hoa: 2, kim: 2 } } })), "invalid_rules");
   });
 
-  it("bộ tầng Trial: phải đủ 20 tầng liên tục", () => {
-    const full = Array.from({ length: 20 }, (_, i) => def({ floor: i + 1 }));
+  it("bộ tầng Trial: phải đủ số tầng liên tục", () => {
+    const full = Array.from({ length: TRIAL_FLOORS }, (_, i) => def({ floor: i + 1 }));
     assert.deepEqual(validateTrialFloorSet(full), []);
-    assert.ok(validateTrialFloorSet(full.slice(0, 19)).length > 0);
+    assert.ok(validateTrialFloorSet(full.slice(0, TRIAL_FLOORS - 1)).length > 0);
     assert.ok(validateTrialFloorSet([...full.slice(0, 5), ...full.slice(6)]).length > 0);
   });
 });
