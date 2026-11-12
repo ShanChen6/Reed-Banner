@@ -14,6 +14,10 @@ Trước khi đọc hoặc sửa tài liệu trong `docs/`, làm theo [quy đị
 
 1. Tìm nguồn chính (★) của chủ đề trong [docs/README.md](docs/README.md) và sửa đúng file đó; không tạo file song song.
 2. Đường dẫn cũ trong prompt hoặc ghi chú (ví dụ `docs/design/09-che-do-choi.md`) tra ở [docs/MOVED.md](docs/MOVED.md).
-3. Đọc dòng `> Trạng thái:`; `DRAFT`/`APPROVED` chưa chắc có code, `SUPERSEDED`/`ARCHIVED` không phải luật hiện hành.
-4. Không đổi đường dẫn trong `docs/reports/` và `docs/audits/` (script đọc/ghi vào đó).
+3. Đọc dòng `> Trạng thái:`; `DRAFT`/`APPROVED` chưa chắc có code, `AUDIT`/`REFERENCE` không phải luật.
+4. Việc xong thì xóa kế hoạch, prompt giao việc, QA và nghiệm thu của việc đó; ghi vào bảng "Đã xóa" của `docs/MOVED.md`. Không tạo thư mục lưu trữ.
 5. Chạy `pnpm docs:check` trước khi commit.
+
+## Kiểm tra trước khi commit
+
+Chạy `pnpm check` (lint, typecheck, docs, test). Sửa giao diện hoặc luồng màn thì chạy thêm `pnpm e2e`. Quy trình đầy đủ và nơi đặt test mới: [quy trình test](docs/07-architecture/quy-trinh-test.md).

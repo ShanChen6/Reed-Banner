@@ -129,6 +129,19 @@
   .ui-floor[data-state="open"]:not([aria-pressed="true"]) { border-color: var(--frame-gold-hi); background: var(--wood-hi); }
   .ui-floor[data-state="open"]:not([aria-pressed="true"]) .ui-floor__state { color: var(--frame-gold-hi); }
   .ui-floor[data-state="locked"]:not([aria-pressed="true"]) { color: var(--on-wood-soft); background: var(--wood-inset); }
+  /* Ải trùm: dấu thoi sơn mài ở góc trên phải, không đổi màu trạng thái của ô. */
+  .ui-floor[data-boss] { position: relative; }
+  .ui-floor[data-boss]::after {
+    content: "";
+    position: absolute;
+    top: 0.3rem;
+    right: 0.3rem;
+    width: 0.4rem;
+    height: 0.4rem;
+    transform: rotate(45deg);
+    background: var(--lacquer);
+    outline: 1px solid var(--frame-gold-hi);
+  }
 
   /* Bậc tái đấu sứ quân: ô lõm; đã thắng viền ngọc, đang mở viền vàng sáng. */
   .ui-raid-tier {

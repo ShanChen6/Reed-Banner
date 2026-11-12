@@ -1,12 +1,14 @@
 # Chốt Tinh thần F và bộ kỹ năng 6 chủ động + 4 bị động
 
+> Trạng thái: **IMPLEMENTED** — nguồn chính của luật kỹ năng hiện hành.
+
 > Thiết kế mở rộng 30/10/2026: xem [nguồn Xạ thủ](../../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md). Đây là thiết kế chưa triển khai; không tự đổi roster hoặc kỹ năng hiện hành. Sát thủ dùng bộ W02 đa vũ khí mới, chưa triển khai runtime.
 
 > Bảng thông số mở rộng 30/10/2026: [Xạ thủ và Sát thủ](../../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md) có chỉ số nền, cost/hệ số cấp1–5, P1–P4 và contract poison. Toàn bộ là DRAFT để mô phỏng, không thay bảng kỹ năng đang chạy ở tài liệu này.
 
 > Thông số cập nhật sau kiểm chứng: [giá Thủ thành, task3](#cân-bằng-f-giá-thủ-thành) (cuối file này).
 
-Tiếp nối [phiên bản phối hợp trước](lich-su/21-combo-dong-doi.md). Quyết định của người dùng trong phiên này thay thế trạng thái “A mặc định, F chỉ thử nghiệm” của các tài liệu cũ. Kiểm chứng baseline tiếp theo: [task1 — F, bản đồ kỹ năng và công thức](../../reports/2026-10-22-baseline-f/README.md). Các giới hạn kiểm chứng của phiên triển khai gốc bên dưới giữ làm lịch sử.
+Đây là nguồn chính cho luật kỹ năng hiện hành. Các phiên bản trước (cải tổ kỹ năng 22/10, combo đồng đội) và báo cáo mô phỏng của đợt đó đã xóa ngày 12/11/2026; tra [MOVED.md](../../MOVED.md#đã-xóa) nếu cần xem lại.
 
 ## Luật Tinh thần đã chốt
 
@@ -76,7 +78,7 @@ AI có ước lượng lợi ích trực tiếp nhịp đầu theo dữ liệu, 
 
 > Cập nhật: 22/10/2026. Trước 27/10/2026 mục này là file riêng `docs/design/23-can-bang-f.md` (gộp ở DOC-02, nội dung giữ nguyên).
 
-Tiếp bộ 6 chủ động + 4 bị động ở trên, [báo cáo task3](../../reports/2026-10-22-balance-f/README.md). Đây là điều chỉnh giá nhỏ dưới AI task2 cố định, không phải chốt cân bằng toàn roster.
+Tiếp bộ 6 chủ động + 4 bị động ở trên (báo cáo task3, đã xóa). Đây là điều chỉnh giá nhỏ dưới AI task2 cố định, không phải chốt cân bằng toàn roster.
 
 | Thông số hiện hành | Trước | Sau |
 |---|---:|---:|

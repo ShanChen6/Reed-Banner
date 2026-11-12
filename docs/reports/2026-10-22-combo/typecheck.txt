@@ -1,3 +1,0 @@
-
-> co-lau@0.0.0 typecheck /workspace/Reed-Banner
-> tsc --noEmit

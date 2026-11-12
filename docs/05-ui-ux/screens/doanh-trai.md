@@ -1,7 +1,7 @@
 # Doanh Trại
 
 > Cập nhật: 03/11/2026
-> Trạng thái: IMPLEMENTED
+> Trạng thái: **IMPLEMENTED**
 
 Doanh Trại thay tên hiển thị của màn Hồ sơ cũ (phân cảnh `PROFILE`). Đường dẫn giữ nguyên `/game/profile` để link cũ không hỏng. Mục Tài khoản (`/game/account`) không đổi. Code ở `src/app/game/profile/`.
 

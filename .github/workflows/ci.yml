@@ -1,3 +1,5 @@
+# Quy trình test tầng 2 (docs/07-architecture/quy-trinh-test.md): chạy trên mọi PR và mọi lần đẩy lên main/develop.
+# Hai job song song; cả hai phải xanh mới merge (bật trong GitHub: Settings → Branches → bảo vệ nhánh).
 name: CI
 
 on:
@@ -5,15 +7,22 @@ on:
     branches: [main, develop]
   pull_request:
 
+# Đẩy commit mới lên cùng nhánh thì hủy lần chạy cũ đang dở.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
+    name: Lint, typecheck, docs, test, build
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
@@ -21,3 +30,28 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
+
+  e2e:
+    name: Smoke test trình duyệt
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      # Tự build bản production với mọi cờ chế độ bật và kho trong bộ nhớ (playwright.config.ts), rồi chạy test.
+      - run: pnpm e2e
+      - name: Lưu báo cáo khi đỏ
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

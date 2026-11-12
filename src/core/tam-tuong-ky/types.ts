@@ -1,4 +1,4 @@
-// Kiểu dữ liệu catalog Tầm Tướng Ký. Luật: docs/02-game-modes/future/14-tam-tuong-ky-design-freeze.md.
+// Kiểu dữ liệu catalog Tầm Tướng Ký. Luật: docs/02-game-modes/tam-tuong-ky/design-freeze.md.
 
 import type { Element, Profession } from "../battle";
 

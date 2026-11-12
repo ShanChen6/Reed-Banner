@@ -53,9 +53,6 @@ const GOURD_SWING = {
   ultimate: { ...SWING.ultimate, windup: -0.07, strike: 0.2 },
 } as const;
 
-/** Góc nâng vũ khí khi vào thế, đỡ đòn và ăn mừng (ứng với `raise` = 1). */
-const RAISE = { sword: -0.8, spear: 0.12, fan: -0.3, gourd: 0.16, staff: 0.14 } as const;
-
 /**
  * Nhịp của tranh tư thế (giây): `swap` đổi từ hình động sang tranh, `hit` tóe tia sáng, `out` bắt đầu đổi
  * về, `end` xong. `dash` là quãng lướt tới, `lift` là độ nhảy lên (tuyệt chiêu bổ từ trên xuống).
@@ -134,7 +131,6 @@ export function warrior(
   body.addChild(trail);
   const sparks = particles(body, rig.fxColor, 40, 220);
   const fx = cueFx(view, rig.height, rig.fxColor);
-  const raiseAngle = rig.raise ?? RAISE[rig.weapon ?? "sword"];
 
   // Tranh tư thế: gốc tọa độ ở chân như hình động; bóng sáng sau lưng, ảnh sáng phóng ra lúc đổi tranh.
   const poses = (Object.entries(rig.poses ?? {}) as [PoseKind, PoseArt][]).map(([kind, p]) => {
@@ -311,8 +307,8 @@ export function warrior(
         lift = v.lift;
         lean = -0.03 * v.tilt;
         squash += v.squash;
-        armRot += raiseAngle * v.raise;
-        armRRot += -0.1 * v.raise;
+        // Không xoay cổ tay hay vũ khí: phần lớn rig xoay vũ khí quanh nắm tay nên giơ lên trông gãy cổ tay (Shan
+        // duyệt 12/11); chỉ ngẩng đầu, nhún nhảy, đung đưa và hào quang.
         headRot += -0.04 * v.raise;
         aura += v.glow;
       } else {
@@ -322,8 +318,8 @@ export function warrior(
         squash += r.squash;
         lean = -0.03 * r.tilt;
         headRot += 0.06 * r.tilt;
-        armRot += raiseAngle * r.raise;
-        // Nâng khiên che người khi vào thế, đỡ đòn.
+        // Không xoay vũ khí quanh nắm tay khi phản ứng (vào thế, đỡ đòn, được khiên, được tăng): trông như vặn cổ
+        // tay (Shan duyệt 12/11). Chỉ khiên (xoay quanh cẳng tay) vẫn nâng che người.
         armRRot += (rig.shieldRaise ?? 0) * r.raise;
         tint = r.tint;
         aura += 0.6 * r.glow;

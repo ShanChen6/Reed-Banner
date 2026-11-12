@@ -1,6 +1,7 @@
 # Tài nguyên trong trận & công thức
 
 > Cập nhật: 19/10/2026
+> Trạng thái: **IMPLEMENTED**
 >
 > Các con số dưới đây là **điểm xuất phát**. Script cân bằng sẽ chỉnh lại.
 
@@ -77,7 +78,7 @@ DEF hiệu lực = DEF đối thủ × (1 − Xuyên giáp)
 
 ## 5. Tinh thần F (riêng từng tướng, hiện hành)
 
-Chốt theo [thiết kế22](../03-characters/ky-nang/README.md), kiểm chứng tại [baseline task1](../reports/2026-10-22-baseline-f/README.md).
+Chốt theo [thiết kế22](../03-characters/ky-nang/README.md).
 
 - Bắt đầu100; đầu lượt thường25 của mỗi phe giảm5/lượt, về0 ở lượt44. Người gục không suy giảm; lượt thêm không giảm thêm. Đóng băng vẫn đếm lượt thường.
 - ATK/DEF không giảm theo Tinh thần; buff/debuff, nội tại, quân lương và xuyên giáp giữ luật riêng.
@@ -106,4 +107,4 @@ Shan yêu cầu 19/10/2026: trận kéo dài thì tinh thần chiến đấu gi�
 
 ### Kiểm chứng cũ 22/10/2026
 
-Luật mặc định ở mục5 giữ nguyên. Sửa bug Y sư: tính hồi dư từ lượng hồi đã chịu Tinh thần, rồi chuyển dư thành Khiên mà không giảm Tinh thần lần nữa. Khiên đang có không co theo Tinh thần; chỉ lượng mới chịu hệ số. Thiêu đốt (ATK gốc lúc tạo), Phản đòn (đầu vào đòn nhận), mất máu hết lương không nhân Tinh thần lần thứ hai. Các nhánh mô phỏng B–E không phải luật hiện hành. Xem [báo cáo kiểm chứng](../reports/2026-10-22-tinh-than-ai.md).
+Luật mặc định ở mục5 giữ nguyên. Sửa bug Y sư: tính hồi dư từ lượng hồi đã chịu Tinh thần, rồi chuyển dư thành Khiên mà không giảm Tinh thần lần nữa. Khiên đang có không co theo Tinh thần; chỉ lượng mới chịu hệ số. Thiêu đốt (ATK gốc lúc tạo), Phản đòn (đầu vào đòn nhận), mất máu hết lương không nhân Tinh thần lần thứ hai. Các nhánh mô phỏng B–E không phải luật hiện hành. Xem báo cáo kiểm chứng.

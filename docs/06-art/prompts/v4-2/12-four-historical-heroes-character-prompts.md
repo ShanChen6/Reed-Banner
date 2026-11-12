@@ -1,6 +1,7 @@
 # Reed Banner — 3 nhân vật thế kỷ X: hồ sơ tiếng Việt và 18 prompt nhân vật V4.4
 
 > Cập nhật: 24/10/2026. **Chỉ tài liệu mô tả và prompt. Không sinh ảnh, không sửa gameplay.** 3 hồ sơ RB-076, RB-077, RB-078 (Ninh Hữu Hưng); Nguyễn Minh Không đã loại. Master = Idle, 6 khung/nhân vật, mỗi prompt EN độc lập, giữ nguyên một bản thiết kế trang bị trong tất cả khung.
+> Trạng thái: **DRAFT** — RB-076 đến RB-078, chưa có trong code.
 
 ## Quy chuẩn phát hành
 

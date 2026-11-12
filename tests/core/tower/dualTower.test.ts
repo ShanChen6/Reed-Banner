@@ -88,7 +88,7 @@ describe("song tháp: dữ liệu", () => {
     const roster = Array.from({ length: 9 }, (_, i) => `c${i}`);
     const s = parseDualTower({
       schema: 1,
-      trial: { cleared: 99, claimedFloors: [3, 3, 1, 0, 21, "a"], lastSweepDay: "hôm nay" },
+      trial: { cleared: 99, claimedFloors: [3, 3, 1, 0, TRIAL_FLOORS + 1, "a"], lastSweepDay: "hôm nay" },
       destiny: {
         cycleId: "bad",
         cycleBest: -2,

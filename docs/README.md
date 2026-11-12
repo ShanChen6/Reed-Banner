@@ -1,6 +1,7 @@
 # Tài liệu Cờ Lau (Reed Banner)
 
-> Cập nhật: 30/10/2026
+> Cập nhật: 12/11/2026
+> Trạng thái: **REFERENCE** — bản đồ tài liệu.
 
 Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** nguồn chính (đánh dấu ★); file khác chỉ link tới đó. Tìm đường dẫn cũ (trước 27/10/2026) ở [MOVED.md](MOVED.md).
 
@@ -31,9 +32,12 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [README.md](02-game-modes/README.md) | Tổng hợp mọi chế độ đang chạy; link sang nguồn chính của từng chế độ |
 | ★ [campaign/](02-game-modes/campaign/design-freeze.md) | Campaign V2: [design freeze](02-game-modes/campaign/design-freeze.md), [mission matrix](02-game-modes/campaign/mission-matrix.md), [sổ nguồn sử](02-game-modes/campaign/history-sources.md), [contract](02-game-modes/campaign/contracts.md), [nghiệm thu](02-game-modes/campaign/final-acceptance.md) |
 | ★ [dual-tower/](02-game-modes/dual-tower/00-02-rules.md) | Song Tháp: [luật](02-game-modes/dual-tower/00-02-rules.md), [hướng dẫn người chơi](02-game-modes/dual-tower/player-help.md), [feature flags](02-game-modes/dual-tower/06-05-feature-flags.md), [runbook Neon](02-game-modes/dual-tower/06-06-neon-staging-runbook.md), [nghiệm thu](02-game-modes/dual-tower/06-04-final-acceptance.md) |
-| ★ [survival/](02-game-modes/survival/02-rules-state-machine.md) | Sinh tồn V1.1: [luật & state machine](02-game-modes/survival/02-rules-state-machine.md), [dữ liệu](02-game-modes/survival/03-data-architecture.md), [nghiệm thu](02-game-modes/survival/24-final-acceptance.md) |
+| ★ [survival/](02-game-modes/survival/02-rules-state-machine.md) | Sinh tồn V1.1: [luật & state machine](02-game-modes/survival/02-rules-state-machine.md), [dữ liệu](02-game-modes/survival/03-data-architecture.md), [báo cáo cân bằng](02-game-modes/survival/23-balance-report.md) |
 | ★ [expedition/](02-game-modes/expedition/01-vien-chinh-gdd.md) | Viễn Chinh: [GDD hai đạo quân trên sa bàn](02-game-modes/expedition/01-vien-chinh-gdd.md) (**APPROVED**, có code sau cờ `EXPEDITION_ENABLED`); [đề xuất sa bàn và nhiệm vụ](02-game-modes/expedition/02-map-va-nhiem-vu-proposal.md) (DRAFT); [thiết kế chi tiết Cửa Biển](02-game-modes/expedition/03-cua-bien-thiet-ke.md) (APPROVED, đang code) |
-| [future/](02-game-modes/future/README.md) | Đề xuất chưa triển khai: Binh Pháp, Tầm Tướng Ký ([design freeze LT-00](02-game-modes/future/14-tam-tuong-ky-design-freeze.md), **FROZEN**; [catalog LT-01](02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md), [engine LT-02](02-game-modes/future/16-tam-tuong-ky-lt02-engine.md), [server LT-04](02-game-modes/future/17-tam-tuong-ky-lt04-server.md), [Gói 1 LT-05](02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md), [Hạng tuần LT-06](02-game-modes/future/19-tam-tuong-ky-lt06-ranked.md), [nghiệm thu LT-07](02-game-modes/future/20-tam-tuong-ky-lt07-acceptance.md), [Gói 2](02-game-modes/future/21-tam-tuong-ky-pack-2.md), [Gói 3](02-game-modes/future/22-tam-tuong-ky-pack-3.md), [cân bằng nguyên tố và cảnh báo](02-game-modes/future/23-tam-tuong-ky-can-bang-va-canh-bao.md)), định hướng Tháp/Sinh tồn, [Quần Hùng PvP trực tiếp](02-game-modes/future/13-quan-hung-pvp-truc-tiep.md) (**DRAFT**, design only), [Khai Lộ](02-game-modes/future/24-khai-lo-gdd.md) (**DRAFT**, giải đố xóa khối, có bản chơi thử) |
+| ★ [tam-tuong-ky/](02-game-modes/tam-tuong-ky/design-freeze.md) | Tầm Tướng Ký (có code sau cờ `TAM_TUONG_KY_ENABLED`): [design freeze](02-game-modes/tam-tuong-ky/design-freeze.md) (**FROZEN**, luật), [engine](02-game-modes/tam-tuong-ky/engine.md), [server chế độ Thường](02-game-modes/tam-tuong-ky/server.md), [Hạng tuần](02-game-modes/tam-tuong-ky/hang-tuan.md), [Gói 1](02-game-modes/tam-tuong-ky/goi-1.md), [Gói 2](02-game-modes/tam-tuong-ky/goi-2.md), [Gói 3](02-game-modes/tam-tuong-ky/goi-3.md), [cân bằng nguyên tố và cảnh báo](02-game-modes/tam-tuong-ky/can-bang-va-canh-bao.md), [nghiệm thu](02-game-modes/tam-tuong-ky/nghiem-thu.md) |
+| ★ [tran-do/](02-game-modes/tran-do/gdd.md) | Trận Đồ (tên mã Binh Pháp): [GDD](02-game-modes/tran-do/gdd.md), luật chơi thử và xếp hạng; giao diện ở [màn Trận Đồ](05-ui-ux/screens/tran-do.md) |
+| ★ [khai-lo/](02-game-modes/khai-lo/gdd.md) | Khai Lộ: [GDD](02-game-modes/khai-lo/gdd.md), giải đố xóa khối, có bản chơi thử |
+| [future/](02-game-modes/future/quan-hung-pvp-truc-tiep.md) | Chỉ còn đề xuất chưa có code: [Quần Hùng PvP trực tiếp](02-game-modes/future/quan-hung-pvp-truc-tiep.md) (**DRAFT**) |
 
 ## 03 · Nhân vật & kỹ năng (`03-characters/`)
 
@@ -51,7 +55,6 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | [ky-nang/mo-hinh-nhan-vat.md](03-characters/ky-nang/mo-hinh-nhan-vat.md) | Mô hình nhân vật, nghề, luật dùng kỹ năng (bộ chiêu cụ thể đã thay) |
 | [ky-nang/preset-ai-he-cu.md](03-characters/ky-nang/preset-ai-he-cu.md) | Bộ kỹ năng hệ cũ, chỉ dùng cho preset AI chiến dịch |
 | [ky-nang/data/](03-characters/ky-nang/data/skill-chase-v3.md) | Dữ liệu sinh từ code và bảng kỹ năng 60 nhân vật kèm |
-| [ky-nang/lich-su/](03-characters/ky-nang/lich-su/21-combo-dong-doi.md) | Phiên bản kỹ năng cũ (SUPERSEDED) |
 
 ## 04 · Trang bị (`04-equipment/`)
 
@@ -70,7 +73,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [screens/doanh-trai.md](05-ui-ux/screens/doanh-trai.md) | Doanh Trại (màn Hồ sơ cũ): Tướng sĩ, Đội hình, Kho đồ, bảng chọn trang bị, điện thoại |
 | ★ [screens/tran-do.md](05-ui-ux/screens/tran-do.md) | Giao diện Trận Đồ: sa bàn là bản đồ, quân, chướng ngại, yêu cầu ảnh, gợi ý màn chế độ (**DRAFT**) |
 | ★ [screens/tam-tuong-ky.md](05-ui-ux/screens/tam-tuong-ky.md) | Giao diện Tầm Tướng Ký: Vạn Vật Lục, Đài Hợp Nguyên, Tướng Lục, cờ bật (**DRAFT**) |
-| ★ [campaign/README.md](05-ui-ux/campaign/README.md) | UI riêng Campaign: thoại, Sử ký, World Atlas; [task board](05-ui-ux/campaign/task-board.md), [Polish V2](05-ui-ux/campaign/polish-v2/README.md), [audio (DEFERRED)](05-ui-ux/campaign/audio-todo/README.md): [kiến trúc và bảng cue mọi chế độ](05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md), [prompt triển khai và tạo âm thanh](05-ui-ux/campaign/audio-todo/04-prompts-trien-khai-theo-che-do.md) |
+| ★ [campaign/README.md](05-ui-ux/campaign/README.md) | UI riêng Bình Loạn: thoại, Sử ký, bản đồ toàn cảnh; [âm thanh (để sau)](05-ui-ux/campaign/audio-todo/README.md): [kiến trúc và bảng cue mọi chế độ](05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md), [prompt triển khai và tạo âm thanh](05-ui-ux/campaign/audio-todo/04-prompts-trien-khai-theo-che-do.md) |
 | ★ [implementation/roadmap.md](05-ui-ux/implementation/roadmap.md) | Lộ trình UI-00…UI-09, UI-02A…E |
 
 ## 06 · Đồ họa (`06-art/`)
@@ -80,7 +83,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [art-bible.md](06-art/art-bible.md) | Phong cách, bảng màu art, yêu cầu cho họa sĩ, quy ước đưa hình vào `public/art/` |
 | [ke-hoach-do-hoa.md](06-art/ke-hoach-do-hoa.md) | Kế hoạch đồ họa & hoạt ảnh Đ0–Đ9 |
 | ★ [prompts/v4-2/](06-art/prompts/v4-2/00-bao-cao.md) | Điểm vào bộ prompt; [Xạ thủ và prompt Sát thủ đa vũ khí](06-art/prompts/v4-2/09-14-heroes-character-and-frame-prompts-v4-3.md). Năm Xạ thủ W02 là DRAFT, Kim/Mộc bảo toàn |
-| [prompts/](06-art/prompts/do-hoa.md) | [Đồ họa ngoài nhân vật](06-art/prompts/do-hoa.md), [Codex dựng rig](06-art/prompts/codex-rig-nhan-vat.md); bản cũ SUPERSEDED: [nhân vật](06-art/prompts/nhan-vat.md), [tư thế](06-art/prompts/tu-the.md) |
+| [prompts/](06-art/prompts/do-hoa.md) | [Đồ họa ngoài nhân vật](06-art/prompts/do-hoa.md), [Codex dựng rig](06-art/prompts/codex-rig-nhan-vat.md) |
 | [prompts/thu-cuon-lien-he.md](06-art/prompts/thu-cuon-lien-he.md) | Prompt tranh khung thư cuộn liên hệ ở footer (nền trong suốt, vùng giữa phẳng cho chữ) và ấn đỏ tuỳ chọn; DRAFT, chưa có tranh |
 | [prompts/chan-dung-lich-su.md](06-art/prompts/chan-dung-lich-su.md) | Prompt chân dung bán thân tướng sĩ phong cách lịch sử, bớt fantasy (tranh gouache trầm, nền sương, khung 1:1); làm thử 2 nhân vật (Nguyễn Bặc, Hà Vân) trước; DRAFT |
 | [prompts/nen-phong-thai.md](06-art/prompts/nen-phong-thai.md) | Tranh nền sân khấu ảnh phong thái theo hệ (7 tranh, khổ 2:1, vầng sáng ở giữa; nhân vật trong suốt đặt lên trên); APPROVED, hệ Hỏa đã gắn (`public/art/stage/he-hoa.webp`) |
@@ -117,6 +120,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 |---|---|
 | ★ [kien-truc.md](07-architecture/kien-truc.md) | Công nghệ, sơ đồ, tích hợp ShanVerse |
 | ★ [ha-tang.md](07-architecture/ha-tang.md) | Server có thẩm quyền, database, tài khoản, BXH, chống gian lận |
+| ★ [quy-trinh-test.md](07-architecture/quy-trinh-test.md) | Quy trình test ba tầng: `pnpm check` trên máy, CI (gồm smoke test trình duyệt), checklist trước phát hành |
 
 ## 09 · Lộ trình & quyết định
 
@@ -126,26 +130,18 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [09-roadmap/cau-hoi-mo.md](09-roadmap/cau-hoi-mo.md) | Mọi câu hỏi còn mở (TODO) |
 | ★ [decisions/changelog.md](decisions/changelog.md) | Nhật ký quyết định thiết kế theo ngày |
 
-## Lịch sử và bằng chứng (không phải luật hiện hành)
+## Báo cáo (không phải luật hiện hành)
 
-- [audits/](audits/DOC-01-docs-structure-audit.md): audit tài liệu và Campaign.
-- [reports/](reports/2026-10-22-ky-nang.md): báo cáo mô phỏng, dữ liệu kiểm chứng. **Không đổi đường dẫn**: script trong `scripts/` đọc/ghi thẳng vào đây.
-- [archive/](archive/pr/2026-10-22-chase-pr.md): kế hoạch đã thực hiện, bản sao mô tả PR, task docs cũ.
-
-Theo dòng thời gian cải tổ kỹ năng 22–23/10/2026:
-
-- [Cải tổ kỹ năng nghề + hệ](03-characters/ky-nang/lich-su/20-cai-to-ky-nang.md) · [báo cáo 2.784 trận](reports/2026-10-22-ky-nang.md) · [AI, Tinh thần A–E](reports/2026-10-22-tinh-than-ai.md) · [phương án F](reports/2026-10-22-tinh-than-F.md)
-- [Bàn giao combo](archive/plans/2026-10-22-combo-handoff.md) · [kỹ năng phiên bản 2](03-characters/ky-nang/lich-su/21-combo-dong-doi.md) · [triển khai combo](reports/2026-10-22-combo.md)
-- [Chốt F + chase](03-characters/ky-nang/README.md) · [kế hoạch cân bằng chase](archive/plans/2026-10-22-can-bang-chase.md)
-- [Task1 baseline](reports/2026-10-22-baseline-f/README.md) · [Task2 AI](reports/2026-10-22-ai-f/README.md) · [Task3 cân bằng](reports/2026-10-22-balance-f/README.md) · [Task4 PvE/UI](reports/2026-10-23-pve-ui-handoff/README.md)
+- [reports/](reports/2026-11-11-destiny-v2-balance.md): báo cáo mô phỏng và kiểm kê còn dùng làm căn cứ cho luật hiện hành. Chỉ giữ bản tóm tắt `.md`; dữ liệu thô không commit.
+- Tài liệu đã xóa (kế hoạch, prompt giao việc, audit, báo cáo cũ) tra ở [MOVED.md](MOVED.md#đã-xóa).
 
 ## Quy ước viết docs
 
 Đầy đủ ở [quy-dinh-tai-lieu.md](00-overview/quy-dinh-tai-lieu.md). Tóm tắt:
 
-- Viết tiếng Việt; mỗi file một tiêu đề `#`, dưới là `> Cập nhật: dd/mm/yyyy` và `> Trạng thái: **...**`.
+- Viết tiếng Việt; mỗi file một tiêu đề `#`, dưới là `> Cập nhật: dd/mm/yyyy` và `> Trạng thái: **...**` (bắt buộc với mọi file, CI kiểm).
 - Một khái niệm chỉ định nghĩa ở **một** file (★ ở trên); file khác link tới đó.
 - Việc chưa chốt ghi `> TODO:` tại chỗ và trong [cau-hoi-mo.md](09-roadmap/cau-hoi-mo.md); quyết định mới ghi vào [changelog.md](decisions/changelog.md).
-- Chuyển/đổi tên file: `git mv` + thêm dòng vào [MOVED.md](MOVED.md).
-- Chạy `pnpm docs:check` trước khi commit.
+- Chuyển/đổi tên file: `git mv` + thêm dòng vào [MOVED.md](MOVED.md). Tài liệu hết hiệu lực (bị thay, kế hoạch hay QA của việc đã xong) thì **xóa** và ghi vào bảng [Đã xóa](MOVED.md#đã-xóa), không lưu trữ.
+- Chạy `pnpm check` (gồm `pnpm docs:check`) trước khi commit; xem [quy trình test](07-architecture/quy-trinh-test.md).
 

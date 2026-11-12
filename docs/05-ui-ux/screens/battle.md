@@ -1,6 +1,7 @@
 # Giao diện
 
 > Cập nhật: 02/11/2026
+> Trạng thái: **IMPLEMENTED**
 
 ## 1. Bố cục màn hình trận đấu
 

@@ -1,5 +1,5 @@
 // Quyền quét Trial: chỉ lập và lưu receipt. Task này không tạo sự kiện thưởng và không đổi ví đá.
-import { TRIAL_FLOORS, type TrialProgress, type TrialSweepTier } from "../progress/dualTowerState";
+import { TRIAL_SWEEP_MAX_TIER, trialSweepTierOf, type TrialProgress, type TrialSweepTier } from "../progress/dualTowerState";
 import { vnDay } from "../progress/quests";
 
 /** Timezone nghiệp vụ; Việt Nam hiện không dùng DST. */
@@ -11,11 +11,14 @@ export const TRIAL_SWEEP_STONES_BY_TIER: Readonly<Record<TrialSweepTier, number>
   2: 2,
   3: 3,
   4: 4,
+  5: 5,
+  6: 6,
+  7: 7,
 });
 
 /** Invalid or ineligible tiers emit zero; callers must never accept a client amount. */
 export function trialSweepStoneAmount(tier: number): number {
-  if (!Number.isInteger(tier) || tier < 1 || tier > 4) return 0;
+  if (!Number.isInteger(tier) || tier < 1 || tier > TRIAL_SWEEP_MAX_TIER) return 0;
   return TRIAL_SWEEP_STONES_BY_TIER[tier as TrialSweepTier];
 }
 
@@ -29,11 +32,8 @@ export function nextTrialSweepResetAt(now: number): number {
   return Date.UTC(year!, month! - 1, date! + 1) - 7 * 60 * 60 * 1_000;
 }
 
-/** 0 = chưa đủ điều kiện; sau đó mỗi 5 tầng là một tier. */
-export function trialSweepTier(highestCleared: number): 0 | TrialSweepTier {
-  if (!Number.isInteger(highestCleared) || highestCleared <= 0) return 0;
-  return Math.min(4, Math.ceil(Math.min(highestCleared, TRIAL_FLOORS) / 5)) as TrialSweepTier;
-}
+/** 0 = chưa đủ điều kiện; tầng 1-20 mỗi 5 tầng một bậc, tầng 21-50 mỗi 10 tầng một bậc (tối đa 7). */
+export const trialSweepTier = trialSweepTierOf;
 
 export type TrialSweepStateResult =
   | {

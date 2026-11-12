@@ -9,6 +9,7 @@ import { ONLINE_BATTLE_KEY } from "../battle/online";
 import { useScene } from "../SceneContext";
 import {
   companionOptions,
+  suggestCompanions,
   toggleCompanion,
   TRIAL_ERROR_TEXT,
   type LeaderBuild,
@@ -61,23 +62,29 @@ export default function TrialScreen() {
   const [loadError, setLoadError] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
+  const apply = useCallback((tower: TrialOverview | null, stored: ProfileResponse | null) => {
+    if (!tower || !stored?.profile) {
+      setLoadError(true);
+      return;
+    }
+    const preferred = tower.active?.floor ?? tower.floors.find((entry) => entry.state === "open")?.floor.floor ?? tower.floors.at(-1)?.floor.floor ?? null;
+    const rules = tower.floors.find((entry) => entry.floor.floor === preferred)?.floor.rules ?? {};
+    setOverview(tower);
+    setProfile(stored.profile);
+    // Đội mặc định của hồ sơ có thể phạm luật tầng (ví dụ tầng 1 cấm Hỏa): gợi ý sẵn một đội hợp luật.
+    setCompanions(suggestCompanions(stored.profile, rules, stored.profile.team.slice(0, 2)));
+    setBuild(null);
+    setFloor(preferred);
+  }, []);
+
   const load = useCallback(async () => {
     setLoadError(false);
     const [tower, stored] = await Promise.all([
       json<TrialOverview>("/api/trial"),
       json<ProfileResponse>("/api/profile"),
     ]);
-    if (!tower || !stored?.profile) {
-      setLoadError(true);
-      return;
-    }
-    setOverview(tower);
-    setProfile(stored.profile);
-    setCompanions(stored.profile.team.slice(0, 2));
-    setBuild(null);
-    const preferred = tower.active?.floor ?? tower.floors.find((entry) => entry.state === "open")?.floor.floor ?? tower.floors.at(-1)?.floor.floor ?? null;
-    setFloor(preferred);
-  }, []);
+    apply(tower, stored);
+  }, [apply]);
 
   useEffect(() => {
     let mounted = true;
@@ -85,21 +92,12 @@ export default function TrialScreen() {
       json<TrialOverview>("/api/trial"),
       json<ProfileResponse>("/api/profile"),
     ]).then(([tower, stored]) => {
-      if (!mounted) return;
-      if (!tower || !stored?.profile) {
-        setLoadError(true);
-        return;
-      }
-      setOverview(tower);
-      setProfile(stored.profile);
-      setCompanions(stored.profile.team.slice(0, 2));
-      setBuild(null);
-      setFloor(tower.active?.floor ?? tower.floors.find((entry) => entry.state === "open")?.floor.floor ?? tower.floors.at(-1)?.floor.floor ?? null);
+      if (mounted) apply(tower, stored);
     });
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [apply]);
 
   if (!overview || !profile) {
     return (
@@ -187,6 +185,8 @@ export default function TrialScreen() {
         message={message}
         onSelectFloor={(next) => {
           setFloor(next);
+          const rules = overview.floors.find((entry) => entry.floor.floor === next)?.floor.rules ?? {};
+          setCompanions(suggestCompanions(profile, rules, companions));
           setBuild(null);
           setMessage(null);
         }}

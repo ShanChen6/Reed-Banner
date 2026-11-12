@@ -1,4 +1,4 @@
-// Khai Lộ: mini game xóa khối ô ngọc, luật ở docs/02-game-modes/future/24-khai-lo-gdd.md.
+// Khai Lộ: mini game xóa khối ô ngọc, luật ở docs/02-game-modes/khai-lo/gdd.md.
 // Chạm một ô thuộc nhóm từ 2 ô cùng loại liền cạnh: cả nhóm biến mất, ô phía trên rơi xuống, cột trống thì các cột bên
 // phải dồn sang trái. Không có ô mới rơi vào, nên mỗi màn là một bài toán tất định theo seed. Logic thuần, không đọc giờ.
 

@@ -1,7 +1,7 @@
 // Catalog Tầm Tướng Ký: Gói 1 (12 tướng, LT-05) và slice-1 (3 tướng, tập con của Gói 1, dùng cho test).
 // Công thức là biểu trưng của trò chơi, không phải diễn giải sử học, và **không dựa vào art nhân vật** (Shan, 04/11/2026):
 // công thức cuối của mỗi tướng = node vai trò (nghề × hệ theo roster, tướng đặc biệt: dung hợp) + dấu danh tính lấy từ
-// tước hiệu, địa danh, mốc chiến dịch, tên chiêu hoặc lore đã duyệt. Báo cáo: docs/02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md.
+// tước hiệu, địa danh, mốc chiến dịch, tên chiêu hoặc lore đã duyệt. Báo cáo: docs/02-game-modes/tam-tuong-ky/goi-1.md.
 
 import { ELEMENTS, type Element, type Profession } from "../battle";
 import { historySource } from "../campaign/history";
@@ -288,7 +288,7 @@ export const PACK_1: Pack = {
 
 // ——— Gói 2 (Shan chọn 04/11/2026): 8 sứ quân còn lại + Đinh Bộ Lĩnh (bậc đặc biệt, A-21). ———
 // Dùng chung sổ với Gói 1 (gộp bằng `mergePacks`), bật cùng cờ chế độ khi đã duyệt (`published`). Cùng cách dựng: vai trò +
-// dấu danh tính (đất phong, tên chiêu riêng), không dựa vào art. Báo cáo: docs/02-game-modes/future/21-tam-tuong-ky-pack-2.md.
+// dấu danh tính (đất phong, tên chiêu riêng), không dựa vào art. Báo cáo: docs/02-game-modes/tam-tuong-ky/goi-2.md.
 
 const PACK_2_NODES: readonly CatalogNode[] = [
   mat("grain", "Lúa", "thien-nhien"),
@@ -386,7 +386,7 @@ export const PACK_2: Pack = {
 // ——— Gói 3 (Shan, 04/11/2026: “đưa mọi tướng vào Tầm Tướng Ký”): 56 tướng thường, 8 nghề × 7 hệ, mỗi tổ hợp một người. ———
 // Bậc thường, đúng 7 lần ghép: công thức cuối = vai trò sơ học (nghề × hệ, 3 lần ghép) + tuyệt chiêu riêng (3 lần ghép).
 // Không dựa vào art. Cần Gói 2 (dùng Lúa). Ra mắt khi Shan duyệt và đổi `status` sang `published` (cùng cờ TAM_TUONG_KY_ENABLED).
-// Báo cáo: docs/02-game-modes/future/22-tam-tuong-ky-pack-3.md.
+// Báo cáo: docs/02-game-modes/tam-tuong-ky/goi-3.md.
 
 const PROFESSION_VI: Readonly<Record<Profession, string>> = {
   tuongSi: "Tướng sĩ",

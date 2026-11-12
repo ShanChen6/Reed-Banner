@@ -51,6 +51,10 @@ prisma/*.db-journal
 balance-output/
 simulations/output/
 *.replay.json
+# Báo cáo trong docs/reports/ chỉ commit bản tóm tắt; dữ liệu thô tạo lại bằng script (quy định tài liệu mục 5).
+docs/reports/**/*.gz
+docs/reports/**/*.jsonl
+docs/reports/**/*.csv
 
 # ─── Notion sync ────────────────────────────────────────────
 # File JSON tĩnh sinh từ Notion ĐƯỢC commit (game đọc lúc build).

@@ -1,5 +1,21 @@
 # Nhật ký thay đổi thiết kế
 
+> Trạng thái: **REFERENCE** — nhật ký quyết định theo ngày.
+
+## 12/11/2026
+
+**Dọn tài liệu (Shan duyệt đề xuất)**
+- Xóa 473 file (cộng 3 file gộp vào nguồn chính), khoảng 52 MB: prompt giao việc đã chạy xong, báo cáo và dữ liệu thô đợt cải tổ kỹ năng 22–23/10 (kèm 28 script audit một lần và một fixture không dùng), đề xuất cũ trong `future/` đã bị thay, audit/QA/nghiệm thu/kế hoạch của task đã xong (bỏ `archive/`, `audits/`), các bản SUPERSEDED, catalog Tầm Tướng Ký LT-01. `docs/` còn 129 file `.md`, 4,6 MB. Danh sách và lý do ở [MOVED.md](../MOVED.md#đã-xóa).
+- Tầm Tướng Ký, Trận Đồ, Khai Lộ có thư mục riêng trong `02-game-modes/`; `future/` chỉ còn Quần Hùng PvP (chưa có code).
+- Gộp: ghi chú nguồn Chương II, III vào sổ nguồn; mốc tuyển tướng vào Campaign design freeze (mục 12); kết quả mô phỏng Trận Đồ vào GDD Trận Đồ; nguồn vật biểu trưng Gói 1 vào tài liệu Gói 1.
+- [Quy định tài liệu](../00-overview/quy-dinh-tai-lieu.md) đổi: hết hiệu lực thì xóa, không lưu trữ; prompt giao việc xóa khi xong; dữ liệu thô của báo cáo không commit. Nhãn trạng thái bắt buộc với mọi file; bỏ `SUPERSEDED`, `ARCHIVED`, thêm `REFERENCE`. `pnpm docs:check` kiểm cả hai.
+- Viết lại [lộ trình](../09-roadmap/lo-trinh.md) theo chế độ hiện có; ghi tình trạng thật của [kế hoạch đồ họa](../06-art/ke-hoach-do-hoa.md).
+
+**Quy trình test ba tầng (có code)**
+- Shan duyệt quy trình test không cần AI: tầng 1 `pnpm check` trên máy; tầng 2 CI hai job song song (kiểm tra cũ + smoke test trình duyệt); tầng 3 checklist tay trước khi gộp vào `main`. Nguồn chính: [quy trình test](../07-architecture/quy-trinh-test.md).
+- Thêm Playwright (`@playwright/test` 1.63.0), `playwright.config.ts` và `e2e/smoke.spec.ts`: mọi màn trong `scene.ts` trên máy tính và điện thoại, cùng các luồng Thao Luyện, Giao Tranh, Tháp Thiên Mệnh, Tháp Thí Luyện, chặn khách. CI chuyển sang Node 24 cho khớp `package.json` và Vercel.
+- `scripts/ui-audit.mjs` dùng Playwright của dự án thay vì bản cài ngoài.
+
 ## 11/11/2026
 
 **Tháp Thiên Mệnh: 20 tầng và 8 Phúc mới (có code)**
@@ -33,7 +49,7 @@
 ## 06/11/2026
 
 **Tầm Tướng Ký: nút ghép giữ chữ “Hợp Nguyên”, bỏ emoji gợi ý**
-- Shan: đặt lại cặp đã thử vẫn hiện cảnh báo, nhưng nút giữ nguyên “Hợp Nguyên”, không đổi thành “Vẫn hợp nguyên” / “Vẫn ghép”. Sửa [cảnh báo cặp đã thử](../02-game-modes/future/23-tam-tuong-ky-can-bang-va-canh-bao.md#2-cảnh-báo-cặp-đã-thử). Icon gợi ý thay emoji bằng đèn dầu vẽ tay (`HintIcon`), theo quy tắc không dùng emoji.
+- Shan: đặt lại cặp đã thử vẫn hiện cảnh báo, nhưng nút giữ nguyên “Hợp Nguyên”, không đổi thành “Vẫn hợp nguyên” / “Vẫn ghép”. Sửa [cảnh báo cặp đã thử](../02-game-modes/tam-tuong-ky/can-bang-va-canh-bao.md#2-cảnh-báo-cặp-đã-thử). Icon gợi ý thay emoji bằng đèn dầu vẽ tay (`HintIcon`), theo quy tắc không dùng emoji.
 
 **Tầm Tướng Ký: sửa giao diện theo góp ý (có code)**
 - Làm 7.2–7.6 của [giao diện Tầm Tướng Ký](../05-ui-ux/screens/tam-tuong-ky.md#7-sửa-theo-góp-ý-06112026-đã-triển-khai) trong một PR: ba khung thẳng hàng (bỏ `sticky`), ô trước/ô sau cao cố định và bấm vào ô để bỏ, ô yếu tố cao cố định, Vạn Vật Lục và Tướng Lục phân trang, Tướng Lục chia nhóm theo quan hệ (Cờ lau Hoa Lư, Thập nhị sứ quân, Kỳ nhân, 8 nghề), hiệu ứng hợp nguyên và thẻ kết quả. Không đổi server, gói phát hành hay thành tựu.
@@ -67,22 +83,22 @@
 - Sau bản review, Shan cho sửa lối tắt: làm xong rút dân và cắt viện rồi rút quân thì trước đây vẫn tính qua bậc. Giờ kết thúc Giữ dân không mở bậc sau, không có món, vàng chỉ bằng mức thắng lại × 0,6. Xem [thiết kế Cửa Biển mục 4](../02-game-modes/expedition/03-cua-bien-thiet-ke.md#4-kết-thúc-và-thưởng).
 
 **Khai Lộ: quân nguyên tố và chế độ Cấp tốc**
-- Shan: thay quân vật phẩm bằng quân 7 nguyên tố có màu riêng cho dễ phân biệt; thêm chế độ tính giờ. Cấp tốc: mỗi màn 60 giây (+15 giây mỗi hệ mới), hết giờ là hết màn, giây dư khi dọn sạch thành điểm. Xem [GDD Khai Lộ](../02-game-modes/future/24-khai-lo-gdd.md#25-chế-độ).
+- Shan: thay quân vật phẩm bằng quân 7 nguyên tố có màu riêng cho dễ phân biệt; thêm chế độ tính giờ. Cấp tốc: mỗi màn 60 giây (+15 giây mỗi hệ mới), hết giờ là hết màn, giây dư khi dọn sạch thành điểm. Xem [GDD Khai Lộ](../02-game-modes/khai-lo/gdd.md#25-chế-độ).
 
 **Khai Lộ: mini game giải đố mới (DRAFT, có bản chơi thử)**
-- Shan muốn một mini game giải đố kiểu Block'D (xóa nhóm cùng màu) dùng ô ngọc của game, chốt tên **Khai Lộ**. Chạm một ô xóa cả khối cùng loại liền cạnh, ô rơi và cột dồn, không có ô mới; điểm n², quân lực, đạo cụ Lốc Phong và Sấm Sét. Xem [GDD Khai Lộ](../02-game-modes/future/24-khai-lo-gdd.md).
+- Shan muốn một mini game giải đố kiểu Block'D (xóa nhóm cùng màu) dùng ô ngọc của game, chốt tên **Khai Lộ**. Chạm một ô xóa cả khối cùng loại liền cạnh, ô rơi và cột dồn, không có ô mới; điểm n², quân lực, đạo cụ Lốc Phong và Sấm Sét. Xem [GDD Khai Lộ](../02-game-modes/khai-lo/gdd.md).
 
 ## 04/11/2026
 
 **Tầm Tướng Ký: Shan duyệt cân bằng nguyên tố và cảnh báo**
-- Duyệt 11 cặp ghép mới và lời cảnh báo cặp đã thử ([tài liệu 23](../02-game-modes/future/23-tam-tuong-ky-can-bang-va-canh-bao.md), **DRAFT → APPROVED**). Có hiệu lực khi merge vào `develop` và deploy.
+- Duyệt 11 cặp ghép mới và lời cảnh báo cặp đã thử ([tài liệu 23](../02-game-modes/tam-tuong-ky/can-bang-va-canh-bao.md), **DRAFT → APPROVED**). Có hiệu lực khi merge vào `develop` và deploy.
 
 **Tầm Tướng Ký: cân bằng nguyên tố, cảnh báo cặp đã thử (DRAFT, có code)**
 - Shan: bước ghép đầu lệch về Mộc, Thủy, Thổ. Thêm 11 cặp ghép (Hỏa, Phong, Lôi, Kim) ra vật liệu bậc 1 sẵn có; 27/49 cặp gốc có công thức, mỗi hệ 7 cặp (Thổ 8). Không đổi số lần ghép của tướng nào. `PACK_1.contentVersion` 2 → 3.
-- Shan: lần đầu ghép sai vẫn mất; lần sau đặt lại đúng cặp đó thì cảnh báo trước, không nói công thức sai. Server ghi `Profile.tamTuongKy.triedPairs` (tối đa 400). Xem [cân bằng và cảnh báo](../02-game-modes/future/23-tam-tuong-ky-can-bang-va-canh-bao.md).
+- Shan: lần đầu ghép sai vẫn mất; lần sau đặt lại đúng cặp đó thì cảnh báo trước, không nói công thức sai. Server ghi `Profile.tamTuongKy.triedPairs` (tối đa 400). Xem [cân bằng và cảnh báo](../02-game-modes/tam-tuong-ky/can-bang-va-canh-bao.md).
 
 **Tầm Tướng Ký: Gói 3 đã bật**
-- PR #262 merge vào `develop`; Shan bật Gói 3 (một biến `TAM_TUONG_KY_ENABLED`). [Gói 3](../02-game-modes/future/22-tam-tuong-ky-pack-3.md) **APPROVED → IMPLEMENTED**; sổ đủ 77 tướng. Bật giữa tuần (thứ Tư) nên nếu Hạng đang bật thì danh sách đề cử tuần 2026-11-02 đổi từ lúc deploy; điểm đã ghi giữ nguyên.
+- PR #262 merge vào `develop`; Shan bật Gói 3 (một biến `TAM_TUONG_KY_ENABLED`). [Gói 3](../02-game-modes/tam-tuong-ky/goi-3.md) **APPROVED → IMPLEMENTED**; sổ đủ 77 tướng. Bật giữa tuần (thứ Tư) nên nếu Hạng đang bật thì danh sách đề cử tuần 2026-11-02 đổi từ lúc deploy; điểm đã ghi giữ nguyên.
 
 **Viễn Chinh: code kịch bản Cửa Biển**
 - Cửa Biển thành kịch bản cố định theo [thiết kế](../02-game-modes/expedition/03-cua-bien-thiet-ke.md): bố cục 11 ô mới, lệnh Trinh sát, đường bị phá, con nước, rút dân, thuyền viện, phản công Chợ, trận giữ cầu, hộ tống và phá cổng (công trình trong engine), bốn kết thúc. Mô phỏng ngắn 6 lượt Bậc I chỉ để soát chơi được (kế hoạch tham lam không làm việc phụ), không cân bằng.
@@ -97,14 +113,14 @@
 - Tranh nền: Shan chốt mỗi sa bàn một tranh mới (không cắt bản đồ tổng); câu lệnh vẽ ở [Prompt tranh sa bàn](../06-art/prompts/vien-chinh-sa-ban.md). Chưa có tranh thì tạm hiện một vùng bản đồ tổng Bình Loạn.
 
 **Tầm Tướng Ký: Shan duyệt Gói 3**
-- Duyệt 8 tri thức sơ học, 56 công thức tuyệt chiêu, 56 lời dẫn và 9 thành tựu (3 500 vàng) của [Gói 3](../02-game-modes/future/22-tam-tuong-ky-pack-3.md) (**DRAFT → APPROVED**); `PACK_3` đặt `published`. Ra mắt cùng cờ `TAM_TUONG_KY_ENABLED` khi merge vào `develop` và deploy.
+- Duyệt 8 tri thức sơ học, 56 công thức tuyệt chiêu, 56 lời dẫn và 9 thành tựu (3 500 vàng) của [Gói 3](../02-game-modes/tam-tuong-ky/goi-3.md) (**DRAFT → APPROVED**); `PACK_3` đặt `published`. Ra mắt cùng cờ `TAM_TUONG_KY_ENABLED` khi merge vào `develop` và deploy.
 
 **Tầm Tướng Ký: Gói 3 — mọi tướng vào sổ (DRAFT, có code)**
-- Shan: gộp các cờ Tầm Tướng Ký còn **một biến** `TAM_TUONG_KY_ENABLED`, mở chế độ Thường, Hạng tuần và mọi gói `published`. `TAM_TUONG_KY_RANKED_ENABLED`, `TAM_TUONG_KY_PACK2_ENABLED`, `TAM_TUONG_KY_PACK3_ENABLED` không còn tác dụng; `/api/health` liệt kê chúng ở `obsolete` nếu còn đặt. Gói 3 ra mắt khi đổi `PACK_3.status` sang `published`. Sửa P-28 ở [Design Freeze](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md). Xem [nghiệm thu LT-07](../02-game-modes/future/20-tam-tuong-ky-lt07-acceptance.md#3-bật-và-rút-lại).
-- Shan: đưa mọi tướng vào Tầm Tướng Ký. [Gói 3](../02-game-modes/future/22-tam-tuong-ky-pack-3.md) thêm 56 tướng thường (8 nghề × 7 hệ), 7 lần ghép: vai trò sơ học + tuyệt chiêu riêng. Sổ ba gói 77 tướng, validator sạch. Xoay vòng Hạng thêm bước bảo đảm tuần nào cũng có tướng đặc biệt; đề cử Gói 1, Gói 1 + 2 không đổi. Thành tựu đề xuất 9 bộ (3 500 vàng), chờ duyệt.
+- Shan: gộp các cờ Tầm Tướng Ký còn **một biến** `TAM_TUONG_KY_ENABLED`, mở chế độ Thường, Hạng tuần và mọi gói `published`. `TAM_TUONG_KY_RANKED_ENABLED`, `TAM_TUONG_KY_PACK2_ENABLED`, `TAM_TUONG_KY_PACK3_ENABLED` không còn tác dụng; `/api/health` liệt kê chúng ở `obsolete` nếu còn đặt. Gói 3 ra mắt khi đổi `PACK_3.status` sang `published`. Sửa P-28 ở [Design Freeze](../02-game-modes/tam-tuong-ky/design-freeze.md). Xem [nghiệm thu LT-07](../02-game-modes/tam-tuong-ky/nghiem-thu.md#3-bật-và-rút-lại).
+- Shan: đưa mọi tướng vào Tầm Tướng Ký. [Gói 3](../02-game-modes/tam-tuong-ky/goi-3.md) thêm 56 tướng thường (8 nghề × 7 hệ), 7 lần ghép: vai trò sơ học + tuyệt chiêu riêng. Sổ ba gói 77 tướng, validator sạch. Xoay vòng Hạng thêm bước bảo đảm tuần nào cũng có tướng đặc biệt; đề cử Gói 1, Gói 1 + 2 không đổi. Thành tựu đề xuất 9 bộ (3 500 vàng), chờ duyệt.
 
 **Tầm Tướng Ký: Gói 2 đã bật**
-- PR #258 merge vào `develop`; Shan bật `TAM_TUONG_KY_PACK2_ENABLED`. [Gói 2](../02-game-modes/future/21-tam-tuong-ky-pack-2.md) **APPROVED → IMPLEMENTED**. Bật giữa tuần (thứ Tư) nên nếu chế độ Hạng đang bật thì danh sách đề cử tuần 2026-11-02 đổi từ lúc bật; điểm đã ghi giữ nguyên.
+- PR #258 merge vào `develop`; Shan bật `TAM_TUONG_KY_PACK2_ENABLED`. [Gói 2](../02-game-modes/tam-tuong-ky/goi-2.md) **APPROVED → IMPLEMENTED**. Bật giữa tuần (thứ Tư) nên nếu chế độ Hạng đang bật thì danh sách đề cử tuần 2026-11-02 đổi từ lúc bật; điểm đã ghi giữ nguyên.
 
 **Viễn Chinh: hai đạo quân trên sa bàn (APPROVED, có code sau cờ)**
 - Shan chọn cơ chế "Hai đạo quân trên sa bàn" trong ba phương án (sai quân tự động, một đạo rẽ nhánh). Chia 6 tướng làm hai đạo; mỗi ngày một đạo tiến một ô, đạo kia nghỉ (+15% máu, cả người gục); giặc tăng viện 5%/ngày; giáp công khi đạo kia đứng kề (máu địch ×0,75); thua trận chỉ rút về; hết ngày là thua. Ba sa bàn Ải Bắc, Thượng Du, Cửa Biển × 3 bậc; thưởng trận như trận thường, thưởng lần đầu mỗi bậc 300/600/1 000 vàng + món Lam/Tím/Cam.
@@ -112,37 +128,37 @@
 - Shan chốt mục 8 cùng ngày: thua trận chỉ rút về; giới hạn 3 lượt xuất quân mỗi ngày (giờ Việt Nam); có bảng xếp hạng Viễn Chinh (tổng sao, rồi tổng ngày ít nhất). Vì có bảng xếp hạng nên chế độ chỉ cho tài khoản đã đăng nhập, theo luật 01/11/2026.
 
 **Tầm Tướng Ký: Shan duyệt Gói 2**
-- Duyệt 9 công thức, 9 lời dẫn và 8 thành tựu (3 500 vàng) của [Gói 2](../02-game-modes/future/21-tam-tuong-ky-pack-2.md) (**DRAFT → APPROVED**); `PACK_2` đặt `published`. Thành tựu Gói 2 hiện ở trang Nhiệm vụ khi cờ `TAM_TUONG_KY_PACK2_ENABLED` bật. Còn chờ ngày bật cờ.
+- Duyệt 9 công thức, 9 lời dẫn và 8 thành tựu (3 500 vàng) của [Gói 2](../02-game-modes/tam-tuong-ky/goi-2.md) (**DRAFT → APPROVED**); `PACK_2` đặt `published`. Thành tựu Gói 2 hiện ở trang Nhiệm vụ khi cờ `TAM_TUONG_KY_PACK2_ENABLED` bật. Còn chờ ngày bật cờ.
 
 **Tầm Tướng Ký: Gói 2 (DRAFT, có code)**
-- Shan chọn Gói 2 = 8 sứ quân còn lại + Đinh Bộ Lĩnh (bậc đặc biệt), gộp chung sổ với Gói 1. `PACK_2` + `mergePacks` → `PACK_1_2` (21 tướng, 95 công thức, validator sạch; sứ quân 12 lần ghép, Đinh Bộ Lĩnh 9). Cờ `TAM_TUONG_KY_PACK2_ENABLED`; Tướng Lục chia mục theo gói; Hạng xoay vòng qua 21 tướng; tắt Gói 2 không xóa khám phá. Thành tựu Gói 2 đề xuất (8 bộ, 3 500 vàng), chờ duyệt. Xem [Gói 2](../02-game-modes/future/21-tam-tuong-ky-pack-2.md).
+- Shan chọn Gói 2 = 8 sứ quân còn lại + Đinh Bộ Lĩnh (bậc đặc biệt), gộp chung sổ với Gói 1. `PACK_2` + `mergePacks` → `PACK_1_2` (21 tướng, 95 công thức, validator sạch; sứ quân 12 lần ghép, Đinh Bộ Lĩnh 9). Cờ `TAM_TUONG_KY_PACK2_ENABLED`; Tướng Lục chia mục theo gói; Hạng xoay vòng qua 21 tướng; tắt Gói 2 không xóa khám phá. Thành tựu Gói 2 đề xuất (8 bộ, 3 500 vàng), chờ duyệt. Xem [Gói 2](../02-game-modes/tam-tuong-ky/goi-2.md).
 
 **Tầm Tướng Ký: tab Xếp hạng, phiếu trên trang Nhiệm vụ**
 - Trang Xếp hạng thêm tab Tầm Tướng Ký (bảng tuần, khi cờ Hạng bật), API `GET /api/tam-tuong-ky/board`. Trang Nhiệm vụ ghi rõ thưởng nào kèm phiếu và số phiếu hiện có, chỉ cho người đã vào chế độ khi cờ bật ([giao diện](../05-ui-ux/screens/tam-tuong-ky.md)).
 
 **Tầm Tướng Ký: cờ đọc dễ dãi hơn, kiểm cờ ở `/api/health`**
-- Shan báo bản deploy chưa thấy chế độ Hạng. Code trên `develop` đúng; nghi biến `TAM_TUONG_KY_RANKED_ENABLED` có giá trị khác đúng chữ `true` hoặc chưa deploy lại. Hai cờ Tầm Tướng Ký giờ chấp nhận `true` không phân biệt hoa thường, bỏ khoảng trắng/xuống dòng (cờ chế độ khác giữ nguyên). `/api/health` thêm `features` (trạng thái cờ, biến đặt sai, cờ Hạng bị bỏ qua vì thiếu cờ chế độ). Xem [nghiệm thu LT-07](../02-game-modes/future/20-tam-tuong-ky-lt07-acceptance.md#3-bật-và-rút-lại).
+- Shan báo bản deploy chưa thấy chế độ Hạng. Code trên `develop` đúng; nghi biến `TAM_TUONG_KY_RANKED_ENABLED` có giá trị khác đúng chữ `true` hoặc chưa deploy lại. Hai cờ Tầm Tướng Ký giờ chấp nhận `true` không phân biệt hoa thường, bỏ khoảng trắng/xuống dòng (cờ chế độ khác giữ nguyên). `/api/health` thêm `features` (trạng thái cờ, biến đặt sai, cờ Hạng bị bỏ qua vì thiếu cờ chế độ). Xem [nghiệm thu LT-07](../02-game-modes/tam-tuong-ky/nghiem-thu.md#3-bật-và-rút-lại).
 
 **Tầm Tướng Ký: LT-07 nghiệm thu, sẵn sàng bật theo cờ**
 - Gói 1 đặt `published` (Shan đã duyệt nội dung); phát hành chỉ còn do cờ `TAM_TUONG_KY_ENABLED` / `TAM_TUONG_KY_RANKED_ENABLED`. Trang Nhiệm vụ ẩn thành tựu `ttk.*` khi cờ tắt.
-- Kiểm: toàn bộ test, typecheck, lint, docs, `next build`; chạy bản production với cờ tắt và bật (Home, màn, API, Nhiệm vụ, thưởng hạng, 6 màn khác, luồng Thường và Hạng, điện thoại). Thêm Tầm Tướng Ký vào [bảng chế độ](../02-game-modes/README.md#1-tổng-quan) và [ai chơi được chế độ nào](../02-game-modes/README.md#61-ai-chơi-được-chế-độ-nào-shan-01112026). Xem [nghiệm thu LT-07](../02-game-modes/future/20-tam-tuong-ky-lt07-acceptance.md).
+- Kiểm: toàn bộ test, typecheck, lint, docs, `next build`; chạy bản production với cờ tắt và bật (Home, màn, API, Nhiệm vụ, thưởng hạng, 6 màn khác, luồng Thường và Hạng, điện thoại). Thêm Tầm Tướng Ký vào [bảng chế độ](../02-game-modes/README.md#1-tổng-quan) và [ai chơi được chế độ nào](../02-game-modes/README.md#61-ai-chơi-được-chế-độ-nào-shan-01112026). Xem [nghiệm thu LT-07](../02-game-modes/tam-tuong-ky/nghiem-thu.md).
 
 **Tầm Tướng Ký: Shan duyệt L5-1…L5-7; LT-06 chế độ Hạng tuần (DRAFT, có code)**
-- Duyệt: 15 lần ghép mỗi phiếu; bó nguyên tố **tự chọn** (7 đơn vị dùng cho hệ nào cũng được); **7 tướng đề cử** mỗi tuần; dấu “còn công thức chưa tìm”; gợi ý nhắm tướng; 69 công thức và 12 lời dẫn Gói 1; ô đề cử kèm điểm. Design Freeze P-8, P-9, P-11, P-17 sửa theo; [Gói 1](../02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md) **DRAFT → APPROVED**.
-- Chế độ Hạng sau cờ `TAM_TUONG_KY_RANKED_ENABLED`: túi tự chọn, cấp nền 3 bó/tuần, kho tuần, đề cử xoay vòng chỉ hiện lời dẫn + điểm, điểm 300/200 một lần, bảng tuần `season_scores` chế độ `tamTuongKy`, cửa hàng 300 vàng (tối đa 2/tuần), thưởng hạng vàng như Trấn Ải. API `/api/tam-tuong-ky/ranked` (GET, `combine`, `buy`). Xem [Hạng tuần LT-06](../02-game-modes/future/19-tam-tuong-ky-lt06-ranked.md).
+- Duyệt: 15 lần ghép mỗi phiếu; bó nguyên tố **tự chọn** (7 đơn vị dùng cho hệ nào cũng được); **7 tướng đề cử** mỗi tuần; dấu “còn công thức chưa tìm”; gợi ý nhắm tướng; 69 công thức và 12 lời dẫn Gói 1; ô đề cử kèm điểm. Design Freeze P-8, P-9, P-11, P-17 sửa theo; [Gói 1](../02-game-modes/tam-tuong-ky/goi-1.md) **DRAFT → APPROVED**.
+- Chế độ Hạng sau cờ `TAM_TUONG_KY_RANKED_ENABLED`: túi tự chọn, cấp nền 3 bó/tuần, kho tuần, đề cử xoay vòng chỉ hiện lời dẫn + điểm, điểm 300/200 một lần, bảng tuần `season_scores` chế độ `tamTuongKy`, cửa hàng 300 vàng (tối đa 2/tuần), thưởng hạng vàng như Trấn Ải. API `/api/tam-tuong-ky/ranked` (GET, `combine`, `buy`). Xem [Hạng tuần LT-06](../02-game-modes/tam-tuong-ky/hang-tuan.md).
 - Thưởng hạng chế độ theo tuần (Đại trận, Thiên Mệnh, Trấn Ải, Quần Hùng, Tầm Tướng Ký) kèm bó 5/4/3/2/1 khi cờ Tầm Tướng Ký bật; vàng không đổi ([chế độ chơi mục 6](../02-game-modes/README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt)).
 
 **Tầm Tướng Ký: công thức không dựa vào art, lời dẫn chế độ Hạng (Shan)**
-- A-22: art nhân vật sẽ đổi nên công thức không dựa vào vũ khí, trang phục, phụ kiện. Gói 1 viết lại: công thức cuối = node vai trò (nghề × hệ theo roster; đặc biệt “Vạn tượng”) + dấu danh tính (tước hiệu, địa danh, mốc chiến dịch, tên chiêu, lore). Validator thêm `roleMismatch`, `missingAnchor`. Gói 1 còn 69 công thức, 57 yếu tố trung gian; số lần ghép giữ 12/9. Slice-1 thành tập con của Gói 1; [catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md) **APPROVED → SUPERSEDED**.
+- A-22: art nhân vật sẽ đổi nên công thức không dựa vào vũ khí, trang phục, phụ kiện. Gói 1 viết lại: công thức cuối = node vai trò (nghề × hệ theo roster; đặc biệt “Vạn tượng”) + dấu danh tính (tước hiệu, địa danh, mốc chiến dịch, tên chiêu, lore). Validator thêm `roleMismatch`, `missingAnchor`. Gói 1 còn 69 công thức, 57 yếu tố trung gian; số lần ghép giữ 12/9. Slice-1 thành tập con của Gói 1; catalog LT-01 **APPROVED → SUPERSEDED**.
 - A-23: chế độ Hạng không hiện rõ tướng đề cử, chỉ một lời dẫn mô tả tướng (chữ; sau này ảnh, câu nói). Mỗi tướng Gói 1 có lời dẫn chữ của trò chơi; validator chặn lời dẫn chứa tên tướng (`clueSpoils`, `missingClue`). P-16 sửa theo.
-- Mô phỏng chạy lại trên gói mới: kết luận giữ nguyên ([Gói 1 LT-05](../02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md#6-cần-shan-chọn)).
+- Mô phỏng chạy lại trên gói mới: kết luận giữ nguyên ([Gói 1 LT-05](../02-game-modes/tam-tuong-ky/goi-1.md#6-cần-shan-chọn)).
 
 **Tầm Tướng Ký: LT-05 Gói 1 và mô phỏng (DRAFT, có code)**
 - `PACK_1` (bản đầu, viết lại cùng ngày theo A-22): 12 tướng Shan duyệt, 82 công thức, 70 yếu tố trung gian; lịch sử đều 12 lần ghép, đặc biệt đều 9; không ngõ cụt; giữ mọi ID của slice-1. Thành tựu bộ theo P-21 (9 bộ, 3 200 vàng). Server chuyển sang chạy Gói 1 (vẫn `draft`, sau cờ).
-- `scripts/tam-tuong-ky-sim.ts`: người mới đoán mò cần khoảng 92–136 ngày cho tướng đầu với gợi ý hiện tại; thêm dấu “còn công thức chưa tìm” và gợi ý nhắm tướng thì còn khoảng 9 ngày, đủ 12 tướng khoảng 72 ngày. Bó chia đều 7 hệ phí vì cả gói cần 51 Mộc, 3 Lôi. Đề xuất: 15 lần/phiếu, bó tự chọn, 7 tướng đề cử. Xem [Gói 1 LT-05](../02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md#6-cần-shan-chọn).
+- `scripts/tam-tuong-ky-sim.ts`: người mới đoán mò cần khoảng 92–136 ngày cho tướng đầu với gợi ý hiện tại; thêm dấu “còn công thức chưa tìm” và gợi ý nhắm tướng thì còn khoảng 9 ngày, đủ 12 tướng khoảng 72 ngày. Bó chia đều 7 hệ phí vì cả gói cần 51 Mộc, 3 Lôi. Đề xuất: 15 lần/phiếu, bó tự chọn, 7 tướng đề cử. Xem [Gói 1 LT-05](../02-game-modes/tam-tuong-ky/goi-1.md#6-cần-shan-chọn).
 
 **Tầm Tướng Ký: LT-04 server chế độ Thường (DRAFT, có code)**
-- Phiếu (3 khi bắt đầu, trần 10), lượt 15 lần ghép (hết hạn 24 giờ), gợi ý 2 lượt mỗi ngày, sổ khám phá lưu trong hồ sơ tài khoản (`Profile.tamTuongKy`, không thêm bảng). API `/api/tam-tuong-ky` (GET, `session`, `combine`, `hint`) sau cờ và đăng nhập; `requestId` chống trừ hai lần. Xem [server LT-04](../02-game-modes/future/17-tam-tuong-ky-lt04-server.md).
+- Phiếu (3 khi bắt đầu, trần 10), lượt 15 lần ghép (hết hạn 24 giờ), gợi ý 2 lượt mỗi ngày, sổ khám phá lưu trong hồ sơ tài khoản (`Profile.tamTuongKy`, không thêm bảng). API `/api/tam-tuong-ky` (GET, `session`, `combine`, `hint`) sau cờ và đăng nhập; `requestId` chống trừ hai lần. Xem [server LT-04](../02-game-modes/tam-tuong-ky/server.md).
 - Phiếu kèm thưởng: nhận nốt nhiệm vụ ngày +1, “Thắng 15 trận” +2, điểm danh ngày 7 +1 (chỉ người đã vào chế độ); vàng nhiệm vụ giữ nguyên.
 - Thành tựu bộ tướng (vàng + huy hiệu) từ `Pack.achievementSets`; chỉ gói đã phát hành hiện ở trang Nhiệm vụ, gói thử chưa có.
 - Màn chơi dùng server thay bản xem trước: phiếu ở góc, nút “Mở lượt mới · 1 phiếu”, mẹo người mới, khóa nút khi chờ.
@@ -153,21 +169,21 @@
 - Phân cảnh `/game/tam-tuong-ky` sau cờ `TAM_TUONG_KY_ENABLED` (mặc định tắt); khách thấy màn nhắc đăng nhập. Vạn Vật Lục (tìm không dấu, lọc nhóm), Đài Hợp Nguyên (ô trước/ô sau, đổi chỗ, 15 lần ghép, 2 gợi ý), Tướng Lục bóng mờ; điện thoại có thanh Hợp Nguyên ở đáy. Bản xem trước chưa lưu, chưa tốn phiếu. Xem [giao diện Tầm Tướng Ký](../05-ui-ux/screens/tam-tuong-ky.md).
 
 **Tầm Tướng Ký: LT-02 engine ghép (có code)**
-- Shan duyệt công thức slice LT-01; [catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md) **DRAFT → APPROVED**.
-- `src/core/tam-tuong-ky/engine.ts`, `hints.ts`: ghép chế độ Thường (sổ khám phá) và Hạng (kho, tiêu cả khi ghép sai, tướng không vào kho), gợi ý mức 1–2 không lộ đủ công thức; 29 test. Xem [engine LT-02](../02-game-modes/future/16-tam-tuong-ky-lt02-engine.md). Chưa có server, UI hay dữ liệu lưu.
+- Shan duyệt công thức slice LT-01; catalog LT-01 **DRAFT → APPROVED**.
+- `src/core/tam-tuong-ky/engine.ts`, `hints.ts`: ghép chế độ Thường (sổ khám phá) và Hạng (kho, tiêu cả khi ghép sai, tướng không vào kho), gợi ý mức 1–2 không lộ đủ công thức; 29 test. Xem [engine LT-02](../02-game-modes/tam-tuong-ky/engine.md). Chưa có server, UI hay dữ liệu lưu.
 
 **Tầm Tướng Ký: LT-01 catalog slice (có code)**
 - Shan chốt số lần ghép tối thiểu **cố định**: thường 7, đặc biệt 9, lịch sử 12 (thay khung 5–7 / 7–9 / 9–12 duyệt trước đó trong ngày). Validator đổi `tierOrder`/`tierRange` thành một lỗi `tierCombines`; slice chỉnh lại: Đinh Ngọc 9, Lê Hoàn 12, Nguyễn Bặc 12.
-- `src/core/tam-tuong-ky/`: kiểu dữ liệu, đồ thị công thức có thứ tự, validator theo Design Freeze mục 7.2 và `SLICE_PACK` (draft) cho Nguyễn Bặc, Lê Hoàn, Đinh Ngọc; 27 test ở `tests/core/tam-tuong-ky/`. Báo cáo: [catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md). Chưa có engine, UI, route hay dữ liệu lưu.
+- `src/core/tam-tuong-ky/`: kiểu dữ liệu, đồ thị công thức có thứ tự, validator theo Design Freeze mục 7.2 và `SLICE_PACK` (draft) cho Nguyễn Bặc, Lê Hoàn, Đinh Ngọc; 27 test ở `tests/core/tam-tuong-ky/`. Báo cáo: catalog LT-01. Chưa có engine, UI, route hay dữ liệu lưu.
 
 **Tầm Tướng Ký: bản chốt thiết kế LT-00 (DRAFT)**
-- Thêm [14 — Tầm Tướng Ký Design Freeze](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md): kiểm kê code (7 hệ, 8 nghề, `chauNgoc`/`toKim`/`viTrieu` và chân dung, thành tựu, mùa tuần, sổ thưởng hạng), luật, ví dụ chuẩn và 50 test Given/When/Then.
+- Thêm [14 — Tầm Tướng Ký Design Freeze](../02-game-modes/tam-tuong-ky/design-freeze.md): kiểm kê code (7 hệ, 8 nghề, `chauNgoc`/`toKim`/`viTrieu` và chân dung, thành tựu, mùa tuần, sổ thưởng hạng), luật, ví dụ chuẩn và 50 test Given/When/Then.
 - Shan chốt 10 quyết định: tên Tầm Tướng Ký (bỏ “Liệt Truyện”); ghép có thứ tự, `A+A` được phép; hai chế độ Thường (phiếu) và Hạng tuần (kho nguyên tố bị tiêu, thưởng); độ khó lịch sử > đặc biệt > thường; gợi ý chỉ ở Thường, 2 lượt miễn phí, không lộ đủ công thức, không tự mở; ghép ra tướng chỉ mở thành tựu; bắt buộc đăng nhập; Tướng Lục hiện bóng mờ đủ pack; tạm dùng nghề/hệ/vật biểu trưng. Thay luật “không thứ tự”, “cho khách chơi offline”, “hint 3 mức” trong GDD 08. Còn 27 đề xuất và 7 câu mở chờ duyệt; chưa mở LT-01.
 - Shan chốt đợt 2: 1 phiếu = 1 lượt 15–20 lần ghép; gợi ý 2 lượt miễn phí mỗi ngày (Claude đồng ý); thành tựu theo bộ tướng có vàng + huy hiệu, không cho tướng lẻ; ghép sai ở Hạng mất nguyên liệu, không hoàn; nguyên liệu Hạng từ thưởng hạng các chế độ, cân nhắc cửa hàng (**thay quyết định 01/11/2026 “thưởng hạng chỉ là vàng”** ở phần nguyên liệu, số vàng giữ nguyên); số tướng đề cử cố định, xoay vòng theo tuần, chốt sau cân bằng; gói đầu 10 tướng lịch sử + 2 đặc biệt.
 - Shan chốt đợt 3: bán bó nguyên tố ở cửa hàng, giới hạn mỗi tuần; duyệt 12 tướng gói đầu; Đinh Bộ Lĩnh xây theo hướng nhân vật đặc biệt; **Đinh Ngọc** và **Trần Vũ Phong** (chốt họ Trần) thành nhân vật chính thức: [Đinh Ngọc](../03-characters/dinh-ngoc.md) và [Trần Vũ Phong](../03-characters/vu-phong.md) đổi **DRAFT → APPROVED**. Code còn tên “Vũ Phong” và chưa mở hai nhân vật trong game (task riêng).
 - Shan chốt cách mở nhân vật đặc biệt: chuỗi nhiệm vụ phụ, Đinh Ngọc sau Chương II, Trần Vũ Phong sau Chương IV, gia nhập cấp 1; không bán vàng, không quay, không lấy từ Tầm Tướng Ký ([Đinh Ngọc — mở khóa](../03-characters/dinh-ngoc.md#mo-khoa-nhan-vat-dac-biet)). Nội dung 3 bước là đề xuất.
-- Shan duyệt mục 3.2 của [Design Freeze](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md#32-đề-xuất-đã-duyệt), sửa khung số lần ghép tối thiểu: thường 5–7, đặc biệt 7–9, lịch sử 9–12 (thứ tự chặt trong pack). Design Freeze **DRAFT → FROZEN**; bắt đầu LT-01.
-- Sửa [danh mục chế độ](../02-game-modes/future/01-mode-portfolio.md#rủi-ro-sản-phẩm): code đã bật 8 nghề (`NEW_PROFESSIONS_ENABLED = true`), không còn là 6.
+- Shan duyệt mục 3.2 của [Design Freeze](../02-game-modes/tam-tuong-ky/design-freeze.md#32-đề-xuất-đã-duyệt), sửa khung số lần ghép tối thiểu: thường 5–7, đặc biệt 7–9, lịch sử 9–12 (thứ tự chặt trong pack). Design Freeze **DRAFT → FROZEN**; bắt đầu LT-01.
+- Sửa danh mục chế độ: code đã bật 8 nghề (`NEW_PROFESSIONS_ENABLED = true`), không còn là 6.
 
 **Hồ sơ đổi thành Doanh Trại**
 - Shan: màn Hồ sơ đổi tên hiển thị thành Doanh Trại, quản lý được 50–100 nhân vật; mục Tướng sĩ / Đội hình / Kho đồ, Cửa hàng là lối vào riêng; kỹ năng nằm trong chi tiết từng tướng. Đường dẫn `/game/profile` giữ nguyên, luật trang bị/ghép/đội hình không đổi ([Doanh Trại](../05-ui-ux/screens/doanh-trai.md)). Tiêu đề mục tiện ích ở màn chính đổi từ "Doanh trại" thành "Quân vụ" để không trùng.
@@ -235,7 +251,7 @@
 - Nguyên nhân: chân dung là ảnh WebP nạp trong SVG, chỉ tải khi quân xuất hiện lần đầu nên ô nền và huy hiệu hiện ngay còn gương mặt trễ. Giờ vào màn chơi là tải sẵn (và giải mã) chân dung của mọi quân có thể ra trong bộ luật đang chơi, các bậc khác tải lúc rảnh (`src/app/game/formation/preload.ts`).
 
 **Trận Đồ: quân thường mới luôn liên quan tới quân trên bàn (Shan quyết định)**
-- Chơi thử Đại trận thấy quân không dính gì với bàn (Sát thủ Thổ khi bàn không có Sát thủ hay Thổ). Luật: quân thường mới luôn chung nghề hoặc hệ với một quân thường bất kỳ trên bàn, **không cần còn ô trống kề bên** (vẫn có quân không đặt được để Bỏ Lệnh có tác dụng); chỉ khi có Quân Lệnh hoặc quân dung hợp còn ô trống kề bên thì không ràng buộc. Bỏ khái niệm xác suất liên quan đã thử. Bộ luật các bậc tăng version. Ván dễ hơn (Đại trận greedy 33% → 88%): [số đo](../02-game-modes/future/05-binh-phap-balance-qa.md#đo-lại-sau-khi-đổi-luật-sinh-quân-02112026), chờ Shan chọn độ khó mục tiêu.
+- Chơi thử Đại trận thấy quân không dính gì với bàn (Sát thủ Thổ khi bàn không có Sát thủ hay Thổ). Luật: quân thường mới luôn chung nghề hoặc hệ với một quân thường bất kỳ trên bàn, **không cần còn ô trống kề bên** (vẫn có quân không đặt được để Bỏ Lệnh có tác dụng); chỉ khi có Quân Lệnh hoặc quân dung hợp còn ô trống kề bên thì không ràng buộc. Bỏ khái niệm xác suất liên quan đã thử. Bộ luật các bậc tăng version. Ván dễ hơn (Đại trận greedy 33% → 88%): số đo, chờ Shan chọn độ khó mục tiêu.
 
 **Trận Đồ: 5 ảnh bản đồ thật**
 - Hoa Lư, Bố Hải Khẩu, Đằng Châu, Bình Kiều, Đường Lâm thay ảnh giữ chỗ (1024², WebP). Còn 25 bản đồ.
@@ -287,7 +303,7 @@
 - Chưa mở ở chế độ nào: hai nhân vật nằm ở `SPECIAL_COMPANIONS`, chưa thuộc `ALL_COMPANIONS` (shop, Chiến dịch, Tháp, Sinh tồn). Trận Đồ vẫn dùng hai nhân vật như quân dung hợp, không đổi.
 
 **Trận Đồ — bật Đinh Ngọc và Vũ Phong làm quân dung hợp**
-- Theo yêu cầu "thêm vào các chế độ chơi", Shan chọn chỉ Trận Đồ ở lần này: `FUSION_CHARACTERS` có Đinh Ngọc và Vũ Phong ở Khó và Đại trận, `version` hai bậc 6→7. Đo lại 1.500 ván mỗi ô: tỉ lệ thắng gần như không đổi ở 1,5% (xem [GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)).
+- Theo yêu cầu "thêm vào các chế độ chơi", Shan chọn chỉ Trận Đồ ở lần này: `FUSION_CHARACTERS` có Đinh Ngọc và Vũ Phong ở Khó và Đại trận, `version` hai bậc 6→7. Đo lại 1.500 ván mỗi ô: tỉ lệ thắng gần như không đổi ở 1,5% (xem [GDD mục 11.1](../02-game-modes/tran-do/gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)).
 - Chưa đưa hai nhân vật vào các chế độ đấu (Thường, Chiến dịch, Tháp, Sinh tồn): chưa có runtime kỹ năng/nội tại, cách mở khóa chưa chốt.
 
 **Vũ Phong — dựng hình động (rig)**
@@ -388,24 +404,22 @@
 - Mỗi tướng có6 chủ động +4 bị động (2 nghề +2 hệ); truy kích tự nối có giới hạn12 phản ứng/sâu4.
 - Danh mục và hợp đồng: [thiết kế22](../03-characters/ky-nang/README.md). Chưa test lại, mô phỏng hoặc cân bằng theo yêu cầu.
 
-
 ## 22/10/2026 — kỹ năng phiên bản 2 và phối hợp đồng đội
 
 - Đổi tuyệt chiêu sang ô4/cấp10, nghề nâng cao sang ô5/cấp15; chuyển khóa đầu tư o4/o5 có marker, không mất điểm.
 - Bổ sung sáu mẫu bị động phối hợp cho 61 nhân vật và builder NPC; mở điều kiện thực, người chơi tự chọn hành động tận dụng, giới hạn cơ hội và không tạo chuỗi tự động.
-- UI/AI đọc cấu hình chung; giữ nguyên Tinh thần A, lương, chỉ số và preset trùm. [Thiết kế](../03-characters/ky-nang/lich-su/21-combo-dong-doi.md).
+- UI/AI đọc cấu hình chung; giữ nguyên Tinh thần A, lương, chỉ số và preset trùm. Thiết kế.
 
 ## 22/10/2026 — thử nghiệm Tinh thần F
 
 - Thêm F vào cấu hình thử nghiệm chung: giảm 5/lượt từ25, giữ hệ số ATK/DEF 100%, hồi/Khiên mới có sàn20% theo người nhận. Mặc định vẫn A.
-- Bổ sung telemetry Khiên hữu ích, test tương tác và [báo cáo đối chứng A/D/E/F](../reports/2026-10-22-tinh-than-F.md); giữ nguyên kỹ năng, lương, tiến trình và preset.
+- Bổ sung telemetry Khiên hữu ích, test tương tác và báo cáo đối chứng A/D/E/F; giữ nguyên kỹ năng, lương, tiến trình và preset.
 
 ## 22/10/2026 — kỹ năng theo vai trò nghề
 
 - Nhân vật chơi được: 3 chiêu nghề, 2 chiêu hệ và 1 tuyệt chiêu riêng; mở theo ô 1/2/3/5/4/6 ở cấp 1/1/5/10/15/20.
 - Giữ khóa nâng theo ô và tiến trình; hồ sơ nghề cổ hoàn điểm thực chi một lần. AI chiến dịch giữ preset cũ tường minh.
-- Thiết kế và kiểm chứng: [20](../03-characters/ky-nang/lich-su/20-cai-to-ky-nang.md). Các mục ghi bộ 6 chiêu hệ dưới đây là lịch sử trước cải tổ.
-
+- Thiết kế và kiểm chứng: 20. Các mục ghi bộ 6 chiêu hệ dưới đây là lịch sử trước cải tổ.
 
 > Mới nhất ở trên cùng. Mỗi mục ghi quyết định và lý do nếu có.
 
@@ -420,7 +434,7 @@
 - 56 prompt toàn thân thay dáng chữ A chung bằng dáng theo nghề và thái độ riêng từng người, vẫn giữ khe hở giữa tay và thân cho live2dlayer. Bảy nhân vật đã có hình giữ nguyên.
 
 **Tướng thường có nét riêng trong prompt ảnh (Shan đồng ý)**
-- 40 tướng thường (trừ Trần Cương, Đào Lam đã có hình) thêm tuổi, vóc dáng, tóc/râu, một dấu hiệu nhận diện riêng và kiểu đồ cầm tay riêng trong nghề, áp cho cả [Prompt nhân vật](../06-art/prompts/nhan-vat.md) và [Prompt tư thế](../06-art/prompts/tu-the.md). Sứ quân Phạm Bạch Hổ (đao bản rộng chuôi lông trắng) và Đỗ Cảnh Thạc (búa chiến cán dài) đổi vũ khí để khác Đinh Bộ Lĩnh, Nguyễn Bặc và Trần Cương cùng cầm đao.
+- 40 tướng thường (trừ Trần Cương, Đào Lam đã có hình) thêm tuổi, vóc dáng, tóc/râu, một dấu hiệu nhận diện riêng và kiểu đồ cầm tay riêng trong nghề, áp cho cả Prompt nhân vật và Prompt tư thế. Sứ quân Phạm Bạch Hổ (đao bản rộng chuôi lông trắng) và Đỗ Cảnh Thạc (búa chiến cán dài) đổi vũ khí để khác Đinh Bộ Lĩnh, Nguyễn Bặc và Trần Cương cùng cầm đao.
 
 ## 20/10/2026
 
@@ -429,7 +443,7 @@
 - So với bản Shan gửi: không thêm ô nguyên tố hay ngọc 3D động (bàn cờ giữ 7 loại ô và dáng ô); trang bị chỉ là biểu tượng, không vẽ lên người vì không dùng DragonBones; khung sơn mài viền trống đồng thay gỗ mun mây Lê–Trần; thanh chỉ số màu phẳng thay neon.
 
 **Bộ prompt ảnh cho toàn bộ nhân vật (Shan yêu cầu)**
-- Thêm [Prompt nhân vật](../06-art/prompts/nhan-vat.md): 63 prompt toàn thân ráp sẵn (Đinh Bộ Lĩnh 3 thời kỳ, 6 tướng lịch sử, 12 sứ quân, 42 tướng thường), khớp nghề và hệ trong `roster.ts`.
+- Thêm Prompt nhân vật: 63 prompt toàn thân ráp sẵn (Đinh Bộ Lĩnh 3 thời kỳ, 6 tướng lịch sử, 12 sứ quân, 42 tướng thường), khớp nghề và hệ trong `roster.ts`.
 - So với bản Shan gửi: bỏ chữ Spine; bỏ họa tiết rồng, phượng và giáp vai đầu rồng; vũ khí không kèm hiệu ứng để tách lớp sạch; tư thế ba phần tư quay phải, chừa khe giữa tay và thân; nền xanh lá (Mộc, Phong nền hồng tươi); Quân sư cầm thẻ tre và cờ lệnh. Giới tính tướng thường do Claude đặt, chưa có trong code.
 
 **Hoạt ảnh nhân vật tự viết bằng code, không mua Spine (Shan chốt sau bản thử Đ0)**
@@ -669,18 +683,17 @@
 
 - Bản chốt thiết kế đầu tiên sau buổi phản biện (`docs/co-lau-design.md`).
 
-
 ## 30/10/2026 — Giá 14 tướng Xạ thủ/Sát thủ
 
 Shan chốt RB-062–075 giá 1.500 vàng mỗi người, dùng mức basic hiện có. Không cấp miễn phí cho hồ sơ cũ; giữ khóa phát hành đến nghiệm thu PROF-06. Nguồn thông số: [thiết kế hai nghề](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md).
 
 ## 31/10/2026 — Trận Đồ (Binh Pháp) bản chơi thử
 
-Triển khai BP-01 đến BP-04 một phần theo yêu cầu của Shan: engine `src/core/binh-phap/`, scene `FORMATION` (`/game/formation`), mô phỏng `scripts/binh-phap-sim.ts`. Các câu hỏi BP-00 lấy giá trị đề xuất làm mặc định, **chưa được duyệt** ([GDD mục 11](../02-game-modes/future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline)). Offline, không thưởng, chưa có feature flag.
+Triển khai BP-01 đến BP-04 một phần theo yêu cầu của Shan: engine `src/core/binh-phap/`, scene `FORMATION` (`/game/formation`), mô phỏng `scripts/binh-phap-sim.ts`. Các câu hỏi BP-00 lấy giá trị đề xuất làm mặc định, **chưa được duyệt** ([GDD mục 11](../02-game-modes/tran-do/gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline)). Offline, không thưởng, chưa có feature flag.
 
 ## 01/11/2026 — Trận Đồ: bàn chữ nhật, chướng ngại, điểm và thưởng theo bậc
 
-Shan chốt: bàn không cần vuông (5×7, 7×9, 9×9…), có ô chướng ngại ngẫu nhiên không đặt được quân, xếp hạng cao được thưởng và thưởng chia theo bậc chơi; thanh Bỏ Lệnh và xác suất quân đặc biệt giữ đề xuất. Đã code bàn chữ nhật, chướng ngại, điểm mới và quân đặc biệt mới. Xếp hạng và thưởng mới có thiết kế ([GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)), chưa có code.
+Shan chốt: bàn không cần vuông (5×7, 7×9, 9×9…), có ô chướng ngại ngẫu nhiên không đặt được quân, xếp hạng cao được thưởng và thưởng chia theo bậc chơi; thanh Bỏ Lệnh và xác suất quân đặc biệt giữ đề xuất. Đã code bàn chữ nhật, chướng ngại, điểm mới và quân đặc biệt mới. Xếp hạng và thưởng mới có thiết kế ([GDD mục 12](../02-game-modes/tran-do/gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)), chưa có code.
 
 ### 01/11/2026 (bổ sung) — Cỡ bàn các bậc Trận Đồ
 
@@ -688,23 +701,23 @@ Shan chốt: Hướng dẫn 3×3 (không xếp hạng, không thưởng), Thư�
 
 ### 01/11/2026 (bổ sung) — Quân nhân vật đặc biệt nhiều nghề/hệ trong Trận Đồ
 
-Shan đồng ý tổng quát hóa quân thành tập nghề, tập hệ giao nhau để chứa Đinh Ngọc và các nhân vật đặc biệt sắp thiết kế. Đã code hạ tầng; danh sách nhân vật để trống, chưa nhân vật nào được bật ([GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)).
+Shan đồng ý tổng quát hóa quân thành tập nghề, tập hệ giao nhau để chứa Đinh Ngọc và các nhân vật đặc biệt sắp thiết kế. Đã code hạ tầng; danh sách nhân vật để trống, chưa nhân vật nào được bật ([GDD mục 11.1](../02-game-modes/tran-do/gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)).
 
 ### 01/11/2026 (sửa) — Chỉ giữ nhân vật dung hợp đủ 8 nghề, 7 hệ
 
-Shan loại bỏ nhân vật 2 nghề + 2 hệ khỏi Trận Đồ vì làm giảm độ khó; chỉ giữ tối đa hai nhân vật mang đủ 8 nghề và 7 hệ như Đinh Ngọc, vẫn phải đặt sát một quân. Kiểu `multi` (tập nghề, tập hệ) được thay bằng kiểu `fusion` đơn giản. Danh sách vẫn rỗng ([GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)).
+Shan loại bỏ nhân vật 2 nghề + 2 hệ khỏi Trận Đồ vì làm giảm độ khó; chỉ giữ tối đa hai nhân vật mang đủ 8 nghề và 7 hệ như Đinh Ngọc, vẫn phải đặt sát một quân. Kiểu `multi` (tập nghề, tập hệ) được thay bằng kiểu `fusion` đơn giản. Danh sách vẫn rỗng ([GDD mục 11.1](../02-game-modes/tran-do/gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)).
 
 ### 01/11/2026 (bổ sung) — Nhân vật dung hợp thứ hai và phạm vi bậc
 
-Nhân vật dung hợp thứ hai của Trận Đồ là Trần Vũ Phong – Vân Du Tử (đang thiết kế). Cả hai nhân vật dung hợp chỉ xuất hiện ở bậc Khó và Đại trận, không ở Hướng dẫn và Thường ([GDD mục 11.1](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)). Code khóa phạm vi bậc bằng `FUSION_ALLOWED_LEVELS`; danh sách vẫn rỗng cho tới khi duyệt.
+Nhân vật dung hợp thứ hai của Trận Đồ là Trần Vũ Phong – Vân Du Tử (đang thiết kế). Cả hai nhân vật dung hợp chỉ xuất hiện ở bậc Khó và Đại trận, không ở Hướng dẫn và Thường ([GDD mục 11.1](../02-game-modes/tran-do/gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc)). Code khóa phạm vi bậc bằng `FUSION_ALLOWED_LEVELS`; danh sách vẫn rỗng cho tới khi duyệt.
 
 ### 01/11/2026 (bổ sung) — Trận Đồ xếp hạng và thưởng (server)
 
-Theo yêu cầu của Shan, đã code phần server: kỳ (ngày cho Thường và Khó, tuần cho Đại trận), seed server phát, server giữ ván và áp từng lệnh, hạng, thưởng vàng theo bậc, nhận thưởng một lần, bảng `formation_entries`. Tắt mặc định sau `FORMATION_RANKED_ENABLED`. Thay đổi so với kế hoạch trước: server giữ ván thay vì kiểm lại nhật ký của client, để chặn luyện trước. Bảng thưởng là điểm xuất phát chờ Shan duyệt ([GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)).
+Theo yêu cầu của Shan, đã code phần server: kỳ (ngày cho Thường và Khó, tuần cho Đại trận), seed server phát, server giữ ván và áp từng lệnh, hạng, thưởng vàng theo bậc, nhận thưởng một lần, bảng `formation_entries`. Tắt mặc định sau `FORMATION_RANKED_ENABLED`. Thay đổi so với kế hoạch trước: server giữ ván thay vì kiểm lại nhật ký của client, để chặn luyện trước. Bảng thưởng là điểm xuất phát chờ Shan duyệt ([GDD mục 12](../02-game-modes/tran-do/gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)).
 
 ### 01/11/2026 (sửa) — Thưởng xếp hạng Trận Đồ không đòi số người tối thiểu
 
-Shan: bảng ít người vẫn phải có thưởng. Bỏ điều kiện "đủ người thắng" ở các bậc thưởng; một mình một bảng vẫn là hạng nhất. Đánh đổi: tài khoản phụ dễ nhận thưởng hơn ([GDD mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)).
+Shan: bảng ít người vẫn phải có thưởng. Bỏ điều kiện "đủ người thắng" ở các bậc thưởng; một mình một bảng vẫn là hạng nhất. Đánh đổi: tài khoản phụ dễ nhận thưởng hơn ([GDD mục 12](../02-game-modes/tran-do/gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)).
 
 ### 01/11/2026 (bổ sung) — Xếp hạng chỉ cho tài khoản đăng nhập; thưởng vàng theo hạng cho Nhật Lệnh và Thiên Mệnh
 
@@ -712,7 +725,7 @@ Shan chốt: (1) vào chế độ xếp hạng phải đăng nhập, khách khô
 
 ### 01/11/2026 (bổ sung) — Khách chỉ chơi thường; Bình Loạn không có BXH; hướng PvP Quần Hùng
 
-Shan chốt: (1) khách chơi thường thoải mái, chế độ **online có bảng xếp hạng và thưởng** chặn hết khách: Nhật Lệnh, Trấn Ải, Quần Hùng, Tháp Thiên Mệnh (cùng Trận Đồ xếp hạng) trả `401 loginRequired` ở server, giao diện hiện màn nhắc đăng nhập; (2) Bình Loạn là offline theo tuyến lịch sử nên **không có bảng xếp hạng**, hai bảng Chiến dịch và Từng trận gỡ khỏi giao diện; (3) Quần Hùng hiện giữ nguyên là tìm đối thủ offline, sắp tới thêm chế độ online hai người chơi đấu trực tiếp, ghi vào [thiết kế DRAFT](../02-game-modes/future/13-quan-hung-pvp-truc-tiep.md) để phát triển sau.
+Shan chốt: (1) khách chơi thường thoải mái, chế độ **online có bảng xếp hạng và thưởng** chặn hết khách: Nhật Lệnh, Trấn Ải, Quần Hùng, Tháp Thiên Mệnh (cùng Trận Đồ xếp hạng) trả `401 loginRequired` ở server, giao diện hiện màn nhắc đăng nhập; (2) Bình Loạn là offline theo tuyến lịch sử nên **không có bảng xếp hạng**, hai bảng Chiến dịch và Từng trận gỡ khỏi giao diện; (3) Quần Hùng hiện giữ nguyên là tìm đối thủ offline, sắp tới thêm chế độ online hai người chơi đấu trực tiếp, ghi vào [thiết kế DRAFT](../02-game-modes/future/quan-hung-pvp-truc-tiep.md) để phát triển sau.
 
 ### 01/11/2026 (bổ sung) — Khách không xem bảng xếp hạng; mùa tuần cho Trấn Ải và Quần Hùng
 
@@ -738,7 +751,7 @@ Shan: sa bàn dùng ảnh bản đồ riêng làm nền; đặt quân thì ô s�
 
 Shan chốt: kho ảnh bản đồ xoay theo kỳ (13 địa danh thật thời Loạn 12 sứ quân); ô chưa mở là ảnh che đặc kín (không để ảnh mờ của bản đồ); chướng ngại 4 biến thể (núi, rừng, đầm lầy, thành lũy) với nền ô riêng; quân đủ huy hiệu nghề và hệ nhỏ vừa đủ; hoàn thành thì hiện ảnh đầy đủ; thêm chế độ **tùy chỉnh** trong Chơi thường (cột, hàng, nghề, hệ, quân đặc biệt, chướng ngại); gợi ý giao diện triển khai trước. Đã code với ảnh giữ chỗ ([giao diện Trận Đồ](../05-ui-ux/screens/tran-do.md)).
 
-**Sửa bảo mật:** tự rà soát phát hiện ván xếp hạng dò được seed (32 bit, bàn cờ hiển thị) nên biết trước dãy quân. Đã thêm **muối bí mật** cho ván xếp hạng ([GDD Binh Pháp mục 12](../02-game-modes/future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)). Ván xếp hạng đang dở tạo trước bản sửa vẫn chạy theo cách cũ (không muối) cho tới khi kết thúc.
+**Sửa bảo mật:** tự rà soát phát hiện ván xếp hạng dò được seed (32 bit, bàn cờ hiển thị) nên biết trước dãy quân. Đã thêm **muối bí mật** cho ván xếp hạng ([GDD Binh Pháp mục 12](../02-game-modes/tran-do/gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)). Ván xếp hạng đang dở tạo trước bản sửa vẫn chạy theo cách cũ (không muối) cho tới khi kết thúc.
 
 ### 02/11/2026 (bổ sung) — Kho bản đồ 30, màn chế độ và màn chơi chi tiết Trận Đồ
 

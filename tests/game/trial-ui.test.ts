@@ -5,7 +5,16 @@ import {
   companionOptions,
   describeRules,
   firstClearText,
+  foeInfo,
+  formatDateKey,
+  isBossFloor,
   leaderChoices,
+  nextSweepTierHint,
+  lineupErrorText,
+  stageIndexOf,
+  suggestCompanions,
+  trialStages,
+  unclaimedStones,
   navigateIndex,
   previewLineup,
   sweepButtonState,
@@ -74,5 +83,62 @@ describe("UI Tháp Thí Luyện", () => {
       disabled: true,
       text: "Cần vượt ít nhất tầng 1",
     });
+  });
+
+  it("chia 50 tầng thành 5 chặng, đếm tầng đã qua và đá lần đầu còn lại", () => {
+    const cleared = 23;
+    const floors = Array.from({ length: 50 }, (_, i) => ({
+      floor: { floor: i + 1, firstClearStones: 2, difficulty: (i + 1) % 10 === 0 ? "boss" : "normal" },
+      state: i + 1 <= cleared ? "cleared" : i + 1 === cleared + 1 ? "open" : "locked",
+      firstClearClaimed: i + 1 <= cleared,
+      record: null,
+    })) as unknown as TrialFloorEntry[];
+    const stages = trialStages(floors);
+    assert.deepEqual(stages.map((s) => [s.roman, s.from, s.to, s.cleared, s.state]), [
+      ["I", 1, 10, 10, "cleared"],
+      ["II", 11, 20, 10, "cleared"],
+      ["III", 21, 30, 3, "open"],
+      ["IV", 31, 40, 0, "locked"],
+      ["V", 41, 50, 0, "locked"],
+    ]);
+    assert.deepEqual([1, 10, 11, 50].map(stageIndexOf), [0, 0, 1, 4]);
+    assert.equal(unclaimedStones(stages[2]!.floors), 14);
+    assert.deepEqual(stages[2]!.floors.filter(isBossFloor).map((f) => f.floor.floor), [30]);
+    assert.deepEqual(trialStages([]), []);
+  });
+
+  it("gợi ý bậc quét kế tiếp, ngày dễ đọc và thẻ đối thủ", () => {
+    assert.equal(nextSweepTierHint(0, 50), "Qua tầng 1 để quét được 1 đá mỗi ngày");
+    assert.equal(nextSweepTierHint(23, 50), "Qua tầng 31 để quét được 6 đá mỗi ngày");
+    assert.equal(nextSweepTierHint(41, 50), null);
+    assert.equal(nextSweepTierHint(50, 50), null);
+    assert.equal(formatDateKey("2026-11-10"), "10/11/2026");
+    assert.equal(formatDateKey("lạ"), "lạ");
+    assert.deepEqual(foeInfo("haVan"), { id: "haVan", name: "Hà Vân", element: "hoa", profession: "phapSu" });
+    assert.deepEqual(foeInfo("khongCo"), { id: "khongCo", name: "khongCo", element: null, profession: null });
+  });
+
+  it("đủ 2 tướng thì khóa tạm các tướng còn lại mà không lặp lý do", () => {
+    const picked = profile.team.slice(0, 2);
+    const rest = companionOptions(profile, free, picked).filter((o) => !o.selected);
+    assert.ok(rest.length > 0 && rest.every((o) => o.disabled && o.reason === null));
+  });
+
+  it("gợi ý đội hợp luật: giữ đội đang chọn khi được, thay tướng bị cấm khi không", () => {
+    const team = profile.team.slice(0, 2);
+    assert.deepEqual(suggestCompanions(profile, free, team), team);
+    const banFire: FloorRules = { bannedElements: ["hoa"] };
+    const picked = suggestCompanions(profile, banFire, ["haVan", "leThach"]);
+    assert.equal(picked.length, 2);
+    assert.ok(picked.includes("leThach") && !picked.includes("haVan"));
+    assert.ok(leaderChoices(profile, banFire, picked).length > 0);
+    // Chưa chọn ai vẫn gợi ý được một cặp hợp luật.
+    assert.equal(suggestCompanions(profile, { minProfessions: { ySu: 1, binhLinh: 1 } }, []).length, 2);
+  });
+
+  it("lỗi đội hình hiện tên hệ/nghề tiếng Việt, không lộ mã", () => {
+    const r = previewLineup(profile, { bannedElements: ["hoa"] }, ["haVan", "leThach"], { element: "moc", profession: "tuongSi" });
+    assert.equal(r.status, "invalid");
+    if (r.status === "invalid") assert.deepEqual(r.errors.map(lineupErrorText), ["Hệ Hỏa bị cấm ở tầng này"]);
   });
 });

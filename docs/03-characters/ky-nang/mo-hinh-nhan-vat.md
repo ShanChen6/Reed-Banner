@@ -1,12 +1,9 @@
 # Nhân vật, nghề & kỹ năng
 
-> Trạng thái: **SUPERSEDED một phần** — mô hình chung và luật dùng kỹ năng còn hiệu lực; bộ chiêu cụ thể xem [Kỹ năng hiện hành](README.md).
+> Cập nhật: 12/11/2026
+> Trạng thái: **IMPLEMENTED** — mô hình nhân vật, nghề, nội tại, luật dùng kỹ năng và preset chiêu nghề của tùy tướng AI chiến dịch. Bộ kỹ năng của nhân vật phe người chơi ở [Kỹ năng hiện hành](README.md).
 
-> Cập nhật tiếp theo: [kỹ năng phiên bản 2 và combo đồng đội](lich-su/21-combo-dong-doi.md). Layout mới đổi tuyệt chiêu sang ô 4, nghề nâng cao sang ô 5, có chuyển hồ sơ giữ điểm. Các định nghĩa legacy/lịch sử bên dưới cần đọc cùng tài liệu phiên bản 2.
-
-> Cập nhật: 20/10/2026
->
-> Các con số là **điểm xuất phát**. Script cân bằng sẽ chỉnh lại.
+Các con số là **điểm xuất phát**; số đang chạy nằm trong code `src/core/battle/`.
 
 ## 1. Mô hình chung
 
@@ -39,7 +36,7 @@ Một kỹ năng có thể thuộc nhiều loại, ví dụ vừa gây sát thư
 
 ### 2.2 Bộ kỹ năng hiện hành
 
-Danh sách đầy đủ 18 chiêu nghề, 14 chiêu hệ và ánh xạ hồ sơ ở [Cải tổ kỹ năng](lich-su/20-cai-to-ky-nang.md).
+Danh sách đầy đủ ở [Kỹ năng hiện hành](README.md) và dữ liệu sinh từ code trong [data/](data/ky-nang-dong-hanh.md).
 
 | Ô | Nguồn | Mở khóa |
 |---|---|---|
@@ -86,7 +83,7 @@ Xem [Danh sách nhân vật, mục 1](../danh-sach-nhan-vat.md#1-khung-chung-c�
 
 ### 4.3 Bộ chiêu nghề
 
-**Preset nghề cũ, chỉ tùy tướng AI** ở chiến dịch dùng bộ này (nấc 1 và một chiêu nhánh nấc 2, cộng [dấu ấn nguyên tố](../../01-gameplay/nguyen-to.md#5-dấu-ấn-nguyên-tố-trên-chiêu-nghề)); nhân vật phe người chơi dùng bộ nghề + hệ mới ở [20](lich-su/20-cai-to-ky-nang.md). Các chiêu dưới giữ nguyên để không đổi độ khó chiến dịch.
+**Preset nghề cũ, chỉ tùy tướng AI** ở chiến dịch dùng bộ này (nấc 1 và một chiêu nhánh nấc 2, cộng [dấu ấn nguyên tố](../../01-gameplay/nguyen-to.md#5-dấu-ấn-nguyên-tố-trên-chiêu-nghề)); nhân vật phe người chơi dùng bộ nghề + hệ mới ở [20](README.md). Các chiêu dưới giữ nguyên để không đổi độ khó chiến dịch.
 
 **⚔️ Tướng sĩ AI cũ: dồn sát thương, cổ vũ cả đội**
 - Nấc 1, **Trảm kích:** 210% ATK vào 1 đối thủ.
@@ -128,8 +125,6 @@ Xem [Danh sách nhân vật, mục 1](../danh-sach-nhan-vat.md#1-khung-chung-c�
 
 Đã chuyển sang [Danh sách nhân vật](../danh-sach-nhan-vat.md): tuyệt chiêu của 42 tướng thường (mục 4), tướng lịch sử (mục 5), sứ quân và chiêu riêng (mục 6).
 
-- Lịch sử mô phỏng tuyệt chiêu (19/10/2026, khung cũ): AI chấm kỹ năng theo giá trị trên mỗi điểm năng lượng nên hiếm khi để dành tới 100; sau khi AI tính cả lượt dùng kỹ năng ([10-ai](../../01-gameplay/ai.md)) cả 5 tuyệt chiêu khởi đầu đều được dùng, tỉ lệ thắng theo hệ đổi trong mức nhiễu.
-- Lịch sử mô phỏng chiêu riêng sứ quân (20/10/2026, 60 trận mỗi màn): 11/12 sứ quân dùng chiêu riêng 0,25–1,6 lần mỗi trận; Nguyễn Siêu gần như không dùng (chiêu thủ). Giá 80 đầu tiên gần như không được AI dùng nên hạ còn 60 (trùm 80); Phong Châu Lôi Kích giảm từ 140% ATK, −30 năng lượng, 6 ô vì màn Phong Châu chỉ còn 35% thắng.
 
 ## 5. Kỹ năng tác động lên bàn cờ
 

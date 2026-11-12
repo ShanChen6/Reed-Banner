@@ -1,6 +1,7 @@
 # Tổng quan
 
 > Cập nhật: 18/10/2026
+> Trạng thái: **REFERENCE** — ý tưởng, phạm vi và nguồn gốc dự án.
 
 ## Ý tưởng
 
