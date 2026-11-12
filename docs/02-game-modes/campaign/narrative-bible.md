@@ -1,8 +1,9 @@
 # CAMP-00.03 — Narrative Bible
 
 > Cập nhật: 24/10/2026
+> Trạng thái: **FROZEN** — content freeze v1 cho cấu trúc kể chuyện 6 chương, 24 nhiệm vụ.
 
-Trạng thái: **content freeze v1** cho cấu trúc kể chuyện 6 chương/24 nhiệm vụ. Đọc cùng [Historical Source Ledger](history-sources.md) và [Warlord Matrix](warlord-matrix.md). Bảng mission tự chứa ở [mission-matrix.md](mission-matrix.md).
+Đọc cùng [Historical Source Ledger](history-sources.md) và [Warlord Matrix](warlord-matrix.md). Bảng mission tự chứa ở [mission-matrix.md](mission-matrix.md).
 
 ## 1. Phạm vi và tình trạng dependency
 

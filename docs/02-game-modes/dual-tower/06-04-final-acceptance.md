@@ -1,12 +1,13 @@
 # T06.04 — Documentation và Release Readiness
 
 > Cập nhật: 24/10/2026
+> Trạng thái: **AUDIT** — nghiệm thu Song Tháp; cổng trước public launch còn mở.
 
 ## Phạm vi nghiệm thu
 
 Nghiệm thu Song Tháp V1.0 dựa trên implementation hiện có và các báo cáo
-[regression](06-01-regression.md), [Trial QA](06-02-trial-qa.md),
-[Destiny/economy simulation](06-03-balance.md). Task này chỉ cập nhật tài liệu và release gates; không đổi code
+regression, Trial QA,
+Destiny/economy simulation. Task này chỉ cập nhật tài liệu và release gates; không đổi code
 production, balance, schema hay triển khai cường hóa trang bị.
 
 Working copy được kiểm tra trên nhánh `update/tower`, không phải `develop` nêu trong brief. Đây là nhánh người dùng
@@ -48,7 +49,7 @@ dưới. Destiny chỉ nên limited beta/telemetry; không mở cường hóa tr
 | Destiny giữa tầng | 0 đá | chỉ offer run-local |
 
 Số chi tiết theo từng Trial floor nằm trong data/report T02.06; emission 7/30/90 ngày và benchmark không-production
-nằm ở [T03.02](03-02-stone-economy.md) và [T06.03](06-03-balance.md). Không suy bảng benchmark thành giá cường hóa.
+nằm ở T03.02 và T06.03. Không suy bảng benchmark thành giá cường hóa.
 
 ## Launch và rollback
 
@@ -76,7 +77,7 @@ nằm ở [T03.02](03-02-stone-economy.md) và [T06.03](06-03-balance.md). Khôn
 - Nếu cấp sai, dùng backup + script bù/trừ được review và chạy thủ công; không sửa wallet từ client.
 - Migration chỉ thêm cấu trúc; khi rollback ngừng đọc bảng mới, không tự `DROP`.
 
-Chi tiết matrix legacy và backup: [T00.03](00-03-migration-plan.md).
+Chi tiết matrix legacy và backup: T00.03.
 
 ## Compatibility
 
@@ -142,4 +143,4 @@ cần limited beta/điều chỉnh, và full public launch chưa đạt GO.
 HEAD `develop` `5c0a8247d276a2f4b1cfc3051e9cce3ba54ffdd7` đã được GitHub Actions CI run #261 xác minh
 PASS trên Node 22/Linux, gồm cả `pnpm build` mặc định bằng Turbopack. Lỗi Turbopack local Windows/Node 24 vẫn tái
 hiện, trong khi webpack fallback PASS; vì lỗi không tái hiện trên CI nên không đổi production build command.
-Chi tiết lệnh, exit code và giới hạn working copy xem [post-merge verification](06-07-post-merge-verification.md).
+Chi tiết lệnh, exit code và giới hạn working copy xem post-merge verification.

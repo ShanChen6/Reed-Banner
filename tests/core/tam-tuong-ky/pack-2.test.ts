@@ -1,4 +1,4 @@
-// Gói 2: 8 sứ quân còn lại + Đinh Bộ Lĩnh, gộp chung sổ với Gói 1 (docs/02-game-modes/future/21-tam-tuong-ky-pack-2.md).
+// Gói 2: 8 sứ quân còn lại + Đinh Bộ Lĩnh, gộp chung sổ với Gói 1 (docs/02-game-modes/tam-tuong-ky/goi-2.md).
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import path from "node:path";

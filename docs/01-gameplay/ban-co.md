@@ -1,6 +1,7 @@
 # Bàn cờ & luật ghép
 
 > Cập nhật: 18/10/2026
+> Trạng thái: **IMPLEMENTED**
 
 ## 1. Bàn cờ
 

@@ -1,5 +1,5 @@
 // Cân bằng nguyên tố ở bước ghép đầu và cảnh báo cặp đã thử (Shan, 04/11/2026).
-// Tài liệu: docs/02-game-modes/future/23-tam-tuong-ky-can-bang-va-canh-bao.md.
+// Tài liệu: docs/02-game-modes/tam-tuong-ky/can-bang-va-canh-bao.md.
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {

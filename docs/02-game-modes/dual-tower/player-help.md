@@ -1,6 +1,7 @@
 # Song Tháp — hướng dẫn người chơi
 
 > Cập nhật: 11/11/2026 (Tháp Thí Luyện 50 tầng; Tháp Thiên Mệnh 20 tầng, Phúc mới; viết lại bằng từ của người chơi)
+> Trạng thái: **REFERENCE** — hướng dẫn cho người chơi.
 
 Từ dùng trong hướng dẫn và trên màn hình: **lượt leo** là một lần leo tháp từ tầng 1 với đội hình đã khóa;
 **đội hình** là các tướng mang theo; **tướng ra trận** là ba người đánh ở một tầng, số còn lại là **dự bị**.

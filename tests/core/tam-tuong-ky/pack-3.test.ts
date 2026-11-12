@@ -1,4 +1,4 @@
-// Gói 3: 56 tướng thường, 8 nghề × 7 hệ (docs/02-game-modes/future/22-tam-tuong-ky-pack-3.md).
+// Gói 3: 56 tướng thường, 8 nghề × 7 hệ (docs/02-game-modes/tam-tuong-ky/goi-3.md).
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import path from "node:path";

@@ -2,7 +2,7 @@
 
 // Tầm Tướng Ký chế độ Thường: Vạn Vật Lục + Đài Hợp Nguyên + Tướng Lục. Phiếu, lượt, gợi ý và sổ khám phá nằm trên
 // server theo tài khoản (LT-04, src/server/tamTuongKy.ts); màn chỉ gửi ý định và vẽ lại theo `view` server trả về.
-// Chế độ Hạng là LT-06. Luật: docs/02-game-modes/future/14-tam-tuong-ky-design-freeze.md.
+// Chế độ Hạng là LT-06. Luật: docs/02-game-modes/tam-tuong-ky/design-freeze.md.
 // Giao diện: docs/05-ui-ux/screens/tam-tuong-ky.md.
 
 import { MODE_CONTENT_WIDTH } from "@/components/game-ui";

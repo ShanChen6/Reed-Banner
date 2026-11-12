@@ -9,7 +9,7 @@ và `src/server/expeditionSettle.ts` (server), `src/app/game/expedition/Expediti
 
 ## 1. Vì sao cần cơ chế riêng
 
-Trước đây Viễn Chinh bị hoãn vì "chưa tìm ra cơ chế đủ riêng" ([danh mục chế độ](../future/01-mode-portfolio.md)). Các chế
+Trước đây Viễn Chinh bị hoãn vì "chưa tìm ra cơ chế đủ riêng". Các chế
 độ đang có đều điều **một đội 3 người**:
 
 | Chế độ | Điều gì người chơi quyết định |

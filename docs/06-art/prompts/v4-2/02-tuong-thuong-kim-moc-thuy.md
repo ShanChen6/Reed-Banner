@@ -1,5 +1,7 @@
 # REED BANNER — V4.2 / 02-tuong-thuong-kim-moc-thuy
 
+> Trạng thái: **APPROVED** — thuộc bộ prompt V4.2 đang dùng.
+
 > Ngày cập nhật: **24/10/2026**. Mỗi tướng có hồ sơ đối chiếu asset bằng tiếng Việt và 6 prompt tiếng Anh độc lập. Chưa phải duyệt ảnh hay kiểm chứng skill ID.
 
 ### RB-020 — Trần Cương · Tướng sĩ / Kim

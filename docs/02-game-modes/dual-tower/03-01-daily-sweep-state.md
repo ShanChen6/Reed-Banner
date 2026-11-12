@@ -1,5 +1,7 @@
 # T03.01 — Daily Sweep State
 
+> Trạng thái: **IMPLEMENTED**
+
 ## Hợp đồng
 
 - Timezone nghiệp vụ: `Asia/Ho_Chi_Minh`; date key `YYYY-MM-DD`, đổi lúc 00:00 Việt Nam.

@@ -1,6 +1,7 @@
 # Hạ tầng & chống gian lận
 
 > Cập nhật: 19/10/2026
+> Trạng thái: **IMPLEMENTED**
 
 ## 1. Nguyên tắc
 
@@ -44,7 +45,6 @@
 - Hồ sơ tiến trình trên server (`src/server/profiles.ts`, bảng `profiles`): trận online dựng đội theo hồ sơ (cấp, kỹ năng đã nâng, chiêu nhánh đang chọn), đối thủ cùng cấp với nhân vật chính, nguyên tố và nghề vừa chọn được lưu lại. Trận kết thúc thì server cộng thưởng vào hồ sơ đúng một lần (cột `matches.rewarded_at` đặt kèm điều kiện) và gửi `outcome` trong response đó. Bỏ trận quá 24 giờ vẫn được cộng thưởng của trận thua, vào lần mở trận kế tiếp. Ghi hồ sơ kèm điều kiện `version`, bị ghi trước thì đọc lại và thử lại tối đa 3 lần. Thao tác hồ sơ dùng chung `applyProfileAction` của core với `/demo`.
 - Việc định kỳ (Vercel Cron, `vercel.json`): `GET /api/cron/daily` chạy mỗi ngày lúc 20:00 UTC (3 giờ sáng giờ Việt Nam; gói Hobby chỉ cho chạy 1 lần/ngày). Chốt trận chưa cộng thưởng và không đổi quá 24 giờ (xử thua, cộng thưởng vào hồ sơ), xóa trận và hồ sơ của khách (chưa đăng nhập lần nào) không có hoạt động quá 30 ngày. Mỗi lần tối đa 200 trận và 500 khách, còn sót thì hôm sau làm tiếp. Cần biến `CRON_SECRET` trên Vercel: Vercel tự gửi `Authorization: Bearer <CRON_SECRET>`, thiếu biến thì route từ chối mọi lời gọi.
 - Chưa có: cửa hàng dùng vàng. Đối thủ là các nhân vật kèm khởi đầu chọn theo seed.
-
 
 ## 3. Database
 

@@ -1,6 +1,7 @@
 # AI (Tianwu)
 
 > Cập nhật: 18/10/2026
+> Trạng thái: **IMPLEMENTED**
 
 - Đóng vai các sứ quân. Mỗi đối thủ AI có nghề và nguyên tố, nên lối đánh khác nhau một cách tự nhiên.
 - Duyệt mọi nước đổi ô hợp lệ trên bàn 12×8 (tối đa 172 cặp ô kề nhau: 88 cặp ngang + 84 cặp dọc), mô phỏng phần cascade biết chắc rồi chấm điểm (xem [Chấm điểm theo độ khó](#chấm-điểm-theo-độ-khó)).
@@ -39,14 +40,14 @@
 
 ## Cải tổ 22/10/2026
 
-Bộ người chơi dùng [khung nghề + hệ](../03-characters/ky-nang/lich-su/20-cai-to-ky-nang.md). AI xét mọi mục tiêu còn sống, bị Khiêu khích thì chọn đúng người buộc phải đánh. Hồi máu chấm theo máu thiếu, Hồi phục theo lượng hồi hữu ích; Thanh tẩy chỉ đếm bất lợi, Xua tan chỉ đếm có lợi. Câm lặng ưu tiên đối thủ có kỹ năng và năng lượng; hiệu ứng tự hại trừ điểm. Khiêu khích vô ích trong 1vs1, giá trị tăng khi người đỡ đòn còn khỏe và còn đồng đội. Phá vùng chấm nhanh mọi vùng khác nhau trên bàn nhìn thấy, chọn 6 vùng triển vọng để chấm cascade biết chắc với thu hoạch giảm; ô ngẫu nhiên chỉ dùng kỳ vọng, không đọc RNG.
+Bộ người chơi dùng [bộ kỹ năng hiện hành](../03-characters/ky-nang/README.md#bộ-kỹ-năng-được-chốt). AI xét mọi mục tiêu còn sống, bị Khiêu khích thì chọn đúng người buộc phải đánh. Hồi máu chấm theo máu thiếu, Hồi phục theo lượng hồi hữu ích; Thanh tẩy chỉ đếm bất lợi, Xua tan chỉ đếm có lợi. Câm lặng ưu tiên đối thủ có kỹ năng và năng lượng; hiệu ứng tự hại trừ điểm. Khiêu khích vô ích trong 1vs1, giá trị tăng khi người đỡ đòn còn khỏe và còn đồng đội. Phá vùng chấm nhanh mọi vùng khác nhau trên bàn nhìn thấy, chọn 6 vùng triển vọng để chấm cascade biết chắc với thu hoạch giảm; ô ngẫu nhiên chỉ dùng kỳ vọng, không đọc RNG.
 
 Đây vẫn là heuristic: không tối ưu phối hợp nhiều lượt, thời điểm tích năng lượng hoặc chọn người hành động. Không đồng nhất tỉ lệ thắng AI với cân bằng khi người thật chơi.
 
 ## Kiểm chứng AI/Tinh thần sau cải tổ
 
-Scorer dùng chỉ số hiệu dụng theo Tinh thần/buff/sĩ khí/bị động, trừ Khiên/Hồi phục đã có và dùng sàn hồi/Khiên20% tại Tinh thần0 theo F hiện hành. Câm lặng chỉ có giá trị nếu mục tiêu kịp hành động trong thời hạn; Phản kích xét hướng đòn/Khiêu khích; kỹ năng có thưởng kết liễu như nước đổi ô. `inspectSkillChoices` dùng cùng scorer/selector để ghi score, đối thủ cạnh tranh và lý do bỏ qua; không áp quota dùng chiêu. Baseline AI cũ đóng băng trong scripts/fixtures. [Báo cáo mới](../reports/2026-10-22-tinh-than-ai.md) tách so AI với thử luật Tinh thần, cùng các giới hạn heuristic.
+Scorer dùng chỉ số hiệu dụng theo Tinh thần/buff/sĩ khí/bị động, trừ Khiên/Hồi phục đã có và dùng sàn hồi/Khiên20% tại Tinh thần0 theo F hiện hành. Câm lặng chỉ có giá trị nếu mục tiêu kịp hành động trong thời hạn; Phản kích xét hướng đòn/Khiêu khích; kỹ năng có thưởng kết liễu như nước đổi ô. `inspectSkillChoices` dùng cùng scorer/selector để ghi score, đối thủ cạnh tranh và lý do bỏ qua; không áp quota dùng chiêu. Baseline AI cũ đóng băng trong scripts/fixtures. Báo cáo mới tách so AI với thử luật Tinh thần, cùng các giới hạn heuristic.
 
 ## Baseline F cho cân bằng (task2)
 
-[Chẩn đoán task2](../reports/2026-10-22-ai-f/README.md) sửa bug điểm phối hợp hồi: chỉ người nhận thực của từng bước, còn thiếu HP và nhận hồi sau làm tròn/F, mới tạo tín hiệu chấm điểm. Không đổi trọng số, hệ số chiến đấu hoặc ép dùng chiêu. AI trước/sau được đóng băng; dùng SHA trong `ai-version.json` của báo cáo cho task3. Audit nguồn Nộ/truy kích không tham gia quyết định gameplay.
+Chẩn đoán task2 sửa bug điểm phối hợp hồi: chỉ người nhận thực của từng bước, còn thiếu HP và nhận hồi sau làm tròn/F, mới tạo tín hiệu chấm điểm. Không đổi trọng số, hệ số chiến đấu hoặc ép dùng chiêu. AI trước/sau được đóng băng; dùng SHA trong `ai-version.json` của báo cáo cho task3. Audit nguồn Nộ/truy kích không tham gia quyết định gameplay.

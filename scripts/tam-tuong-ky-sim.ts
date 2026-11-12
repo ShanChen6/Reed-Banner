@@ -1,7 +1,7 @@
 // Mô phỏng LT-05 cho Tầm Tướng Ký: độ khó chế độ Thường (người biết công thức, người mới thử ngẫu nhiên có/không gợi ý)
 // và nguyên liệu chế độ Hạng (số bó nguyên tố cần cho danh sách đề cử 5/7/10 tướng). Deterministic theo seed.
 // Chạy: pnpm tsx scripts/tam-tuong-ky-sim.ts [--runs 200]
-// Ghi: docs/reports/2026-11-04-tam-tuong-ky-lt05/sim.json; tóm tắt ở docs/02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md.
+// Ghi: docs/reports/2026-11-04-tam-tuong-ky-lt05/sim.json; tóm tắt ở docs/02-game-modes/tam-tuong-ky/goi-1.md.
 
 import { mkdirSync, writeFileSync } from "node:fs";
 import { ELEMENTS, type Element } from "../src/core/battle";

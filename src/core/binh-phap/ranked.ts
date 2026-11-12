@@ -1,5 +1,5 @@
 // Trận Đồ có xếp hạng và thưởng: kỳ, hạng, bậc thưởng. Thuần túy, không đụng DB hay giờ hệ thống.
-// Thiết kế ở docs/02-game-modes/future/02-binh-phap-gdd.md mục 12. Mức thưởng là điểm xuất phát chờ Shan duyệt.
+// Thiết kế ở docs/02-game-modes/tran-do/gdd.md mục 12. Mức thưởng là điểm xuất phát chờ Shan duyệt.
 
 import { rewardTier, type RewardTier } from "../progress/rankRewards";
 import { vnDay, vnWeek } from "../progress/quests";

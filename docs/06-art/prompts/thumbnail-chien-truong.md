@@ -35,7 +35,7 @@ High quality hand-painted 2D environment illustration for a Vietnamese historica
 
 ## 3. Khai Lộ — mở đường qua bàn ngọc
 
-Ý chính ([GDD](../../02-game-modes/future/24-khai-lo-gdd.md)): chạm xóa cả khối quân ngọc cùng hệ, mở dần đường đi. Quân là
+Ý chính ([GDD](../../02-game-modes/khai-lo/gdd.md)): chạm xóa cả khối quân ngọc cùng hệ, mở dần đường đi. Quân là
 ngọc nhuộm màu theo bảy nguyên tố. Tranh không dùng người; thay vào đó là mặt sân lát ngọc được dọn dần để lộ con đường dẫn
 tới cổng thành xa.
 

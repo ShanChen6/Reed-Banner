@@ -2,9 +2,8 @@
 
 > Trạng thái: **IMPLEMENTED** — chỉ còn dùng cho preset AI chiến dịch; nhân vật chơi được dùng [Kỹ năng hiện hành](README.md).
 
-> Cập nhật tiếp theo: [kỹ năng phiên bản 2 và combo đồng đội](lich-su/21-combo-dong-doi.md). Layout mới đổi tuyệt chiêu sang ô 4, nghề nâng cao sang ô 5, có chuyển hồ sơ giữ điểm. Các định nghĩa legacy/lịch sử bên dưới cần đọc cùng tài liệu phiên bản 2.
 
-> **Từ 22/10/2026:** nhân vật chơi được dùng [3 nghề + 2 hệ + 1 tuyệt chiêu](lich-su/20-cai-to-ky-nang.md). Các bộ 6 chiêu và mốc mở dưới đây chỉ giữ cho thủ lĩnh AI chiến dịch; tuyệt chiêu ô 5 và bị động vẫn dùng cho Đinh Bộ Lĩnh, nhưng ô 5 của người chơi mở ở cấp 10.
+> **Từ 22/10/2026:** nhân vật chơi được dùng [3 nghề + 2 hệ + 1 tuyệt chiêu](README.md). Các bộ 6 chiêu và mốc mở dưới đây chỉ giữ cho thủ lĩnh AI chiến dịch; tuyệt chiêu ô 5 và bị động vẫn dùng cho Đinh Bộ Lĩnh, nhưng ô 5 của người chơi mở ở cấp 10.
 >
 > Cập nhật: 19/10/2026 · Trạng thái: **Shan đã duyệt** (18/10/2026). Đã có trong code đủ 7 hệ (19/10/2026).
 >

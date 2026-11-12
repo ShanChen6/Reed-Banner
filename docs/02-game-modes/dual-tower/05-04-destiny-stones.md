@@ -1,6 +1,7 @@
 # T05.04 — Thưởng đá mốc và chu kỳ Destiny
 
 > Cập nhật: 11/11/2026 (thêm chính sách V2 cho 20 tầng, Shan chốt)
+> Trạng thái: **IMPLEMENTED**
 
 ## Chính sách V2 (20 tầng, chu kỳ từ 16/11/2026)
 
