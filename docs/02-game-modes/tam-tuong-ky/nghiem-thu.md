@@ -3,7 +3,7 @@
 > Cập nhật: 04/11/2026
 > Trạng thái: **DRAFT** — kiểm thử tổng thể đạt trên nhánh `feat/lt-tam-tuong-ky`; chờ Shan chơi thử và ra lệnh bật cờ production. Code chưa merge vào `develop`.
 
-Luật ở [Design Freeze](14-tam-tuong-ky-design-freeze.md); chi tiết từng phần: [Gói 1](18-tam-tuong-ky-lt05-pack-1.md), [server Thường](17-tam-tuong-ky-lt04-server.md), [Hạng tuần](19-tam-tuong-ky-lt06-ranked.md), [giao diện](../../05-ui-ux/screens/tam-tuong-ky.md).
+Luật ở [Design Freeze](design-freeze.md); chi tiết từng phần: [Gói 1](goi-1.md), [server Thường](server.md), [Hạng tuần](hang-tuan.md), [giao diện](../../05-ui-ux/screens/tam-tuong-ky.md).
 
 ## 1. Kết quả kiểm
 
@@ -52,7 +52,7 @@ Khách (chưa đăng nhập) thấy màn nhắc đăng nhập; API trả 401 (te
 
 - Gói nào được chơi do code quyết định: gói có `status: "published"` (Gói 1, Gói 2) có mặt; gói `draft` (Gói 3 hiện nay) chưa. Ra mắt gói mới = Shan duyệt, đổi `status` sang `published`, merge và deploy (nên deploy vào thứ Hai để tuần Hạng đầu đủ 7 ngày và danh sách đề cử không đổi giữa tuần).
 - Các biến cũ `TAM_TUONG_KY_RANKED_ENABLED`, `TAM_TUONG_KY_PACK2_ENABLED`, `TAM_TUONG_KY_PACK3_ENABLED` **không còn tác dụng**, có thể xóa khỏi môi trường.
-- Xem [Gói 2](21-tam-tuong-ky-pack-2.md#2-gộp-sổ), [Gói 3](22-tam-tuong-ky-pack-3.md#3-gộp-sổ-và-xoay-vòng-hạng).
+- Xem [Gói 2](goi-2.md#2-gộp-sổ), [Gói 3](goi-3.md#3-gộp-sổ-và-xoay-vòng-hạng).
 
 **Kiểm cờ sau khi deploy:** mở `/api/health`, mục `features.tamTuongKy`:
 

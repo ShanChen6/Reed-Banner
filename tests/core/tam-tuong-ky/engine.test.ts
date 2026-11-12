@@ -1,5 +1,5 @@
 // LT-02: engine ghép thuần Tầm Tướng Ký (Design Freeze mục 4 và test contract mục 7.1,
-// docs/02-game-modes/future/14-tam-tuong-ky-design-freeze.md).
+// docs/02-game-modes/tam-tuong-ky/design-freeze.md).
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";

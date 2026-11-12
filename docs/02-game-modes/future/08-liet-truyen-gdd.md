@@ -2,7 +2,7 @@
 
 > **CONCEPT APPROVED / RULES PROPOSED** · 27/10/2026. Đây là thiết kế mode mới lấy cảm hứng từ cơ chế khám phá kết hợp của Doodle God; chưa phải đặc tả luật được sign-off, chưa có engine, route, UI hay thưởng. Không đổi luật Campaign/Binh Pháp.
 >
-> 03/11/2026: chế độ đổi tên thành **Tầm Tướng Ký**; Shan chốt luật mới ở [14 — Design Freeze](14-tam-tuong-ky-design-freeze.md) (ghép có thứ tự, hai chế độ Thường/Hạng, bắt buộc đăng nhập…). Luật trong file này đã cũ ở những điểm đó; file 14 thắng.
+> 03/11/2026: chế độ đổi tên thành **Tầm Tướng Ký**; Shan chốt luật mới ở [14 — Design Freeze](../tam-tuong-ky/design-freeze.md) (ghép có thứ tự, hai chế độ Thường/Hạng, bắt buộc đăng nhập…). Luật trong file này đã cũ ở những điểm đó; file 14 thắng.
 
 ## 1. Định vị và mục tiêu
 

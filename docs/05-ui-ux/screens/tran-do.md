@@ -3,7 +3,7 @@
 > Cập nhật: 02/11/2026
 > Trạng thái: **DRAFT** — sa bàn là bản đồ, màn chế độ và màn chơi chi tiết đã có code; ô che, 4 icon chướng ngại v1 và đủ 30 ảnh bản đồ thật (Shan tạo) đã tích hợp; Shan test lần 1 rồi góp ý.
 
-Luật chơi ở [GDD Binh Pháp](../../02-game-modes/future/02-binh-phap-gdd.md); tài liệu này chỉ nói về giao diện. Màn chơi nằm ở `src/app/game/formation/`.
+Luật chơi ở [GDD Binh Pháp](../../02-game-modes/tran-do/gdd.md); tài liệu này chỉ nói về giao diện. Màn chơi nằm ở `src/app/game/formation/`.
 
 ## 1. Quyết định của Shan (02/11/2026)
 

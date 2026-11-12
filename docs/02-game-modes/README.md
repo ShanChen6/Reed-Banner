@@ -15,8 +15,8 @@
 | **Tháp Thí Luyện (Trial)** | 20 tầng cố định, luật đội hình/bàn cờ và thưởng đá lần đầu | 3vs3 | Song Tháp V1.0 |
 | **Tháp Thiên Mệnh (Destiny, tên cũ Tháp Vận Mệnh)** | Run 20 tầng theo chu kỳ tuần (10 tầng trước chu kỳ 16/11/2026), roster khóa và tài nguyên xuyên tầng | 3vs3 | Song Tháp V1.0; 20 tầng từ 11/11/2026 |
 | **Sinh tồn** | Một trận không kết thúc, đối thủ theo đợt, báo trước đợt kế tiếp | 3vs3 | Sau giai đoạn 4 |
-| **Trận Đồ** | Game xếp quân theo nghề/hệ, không đánh nhau; chơi thử offline (không thưởng) và xếp hạng có thưởng trên server (tắt mặc định, `FORMATION_RANKED_ENABLED`). Luật ở [GDD Binh Pháp](future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline) | Một người, 4 bậc 3×3–8×8 | Sau Song Tháp |
-| **Tầm Tướng Ký** | Ghép yếu tố có thứ tự từ 7 hệ để tìm chân dung tướng, không đánh nhau. Chế độ Thường tốn phiếu; Hạng tuần tiêu nguyên liệu, có bảng và thưởng. Bắt buộc đăng nhập; tắt mặc định, một biến `TAM_TUONG_KY_ENABLED` mở cả chế độ, Hạng và các gói đã duyệt. Luật ở [Design Freeze](future/14-tam-tuong-ky-design-freeze.md) | Một người, 3 gói: 77 tướng (mọi tướng) | Sau Trận Đồ |
+| **Trận Đồ** | Game xếp quân theo nghề/hệ, không đánh nhau; chơi thử offline (không thưởng) và xếp hạng có thưởng trên server (tắt mặc định, `FORMATION_RANKED_ENABLED`). Luật ở [GDD Binh Pháp](tran-do/gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline) | Một người, 4 bậc 3×3–8×8 | Sau Song Tháp |
+| **Tầm Tướng Ký** | Ghép yếu tố có thứ tự từ 7 hệ để tìm chân dung tướng, không đánh nhau. Chế độ Thường tốn phiếu; Hạng tuần tiêu nguyên liệu, có bảng và thưởng. Bắt buộc đăng nhập; tắt mặc định, một biến `TAM_TUONG_KY_ENABLED` mở cả chế độ, Hạng và các gói đã duyệt. Luật ở [Design Freeze](tam-tuong-ky/design-freeze.md) | Một người, 3 gói: 77 tướng (mọi tướng) | Sau Trận Đồ |
 | **Viễn Chinh** | Chia 6 tướng làm hai đạo, mỗi ngày một đạo tiến một ô trên sa bàn, đạo kia nghỉ hồi sức; giặc tăng viện theo ngày, hai đạo giáp công thành đích. Thưởng trận như trận thường, thưởng lớn lần đầu mỗi bậc; 3 lượt xuất quân mỗi ngày. Chơi offline, khách chơi được, không bảng xếp hạng; tắt mặc định (`EXPEDITION_ENABLED`). Luật ở [GDD Viễn Chinh](expedition/01-vien-chinh-gdd.md) | Hai đạo 3vs3, 6 sa bàn × 3 bậc | Sau Tầm Tướng Ký |
 
 ## 2. Chiến dịch
@@ -233,16 +233,16 @@ Shan (01/11/2026): trước mắt thưởng xếp hạng của **mọi chế đ�
 
 | Chế độ | Kỳ | Hạng nhất | Top 3 | Top 10 | Nửa trên | Có tên trên bảng | Cơ chế |
 |---|---|---|---|---|---|---|---|
-| **Trận Đồ** Thường / Khó / Đại trận | ngày / ngày / tuần | 150 / 300 / 1 000 | 100 / 200 / 600 | 60 / 120 / 350 | 30 / 60 / 150 | 20 / 40 / 80 (thắng ván) | Sổ riêng trong `formation_entries`, chi tiết ở [GDD Binh Pháp mục 12](future/02-binh-phap-gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt); tắt mặc định |
+| **Trận Đồ** Thường / Khó / Đại trận | ngày / ngày / tuần | 150 / 300 / 1 000 | 100 / 200 / 600 | 60 / 120 / 350 | 30 / 60 / 150 | 20 / 40 / 80 (thắng ván) | Sổ riêng trong `formation_entries`, chi tiết ở [GDD Binh Pháp mục 12](tran-do/gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt); tắt mặc định |
 | **Nhật Lệnh** | ngày | 100 | 70 | 50 | 30 | 10 | Sổ chung `rank_reward_claims`; cộng thêm 150/50 vàng cố định mỗi ván |
 | **Tháp Thiên Mệnh** | chu kỳ 7 ngày | 800 | 500 | 300 | 150 | 60 | Sổ chung `rank_reward_claims`; cộng thêm đá cuối chu kỳ; chỉ khi cờ `DESTINY_ENABLED` bật |
 | **Trấn Ải** | mùa tuần | 500 | 300 | 180 | 80 | 30 | Sổ chung `rank_reward_claims`, điểm mùa ở `season_scores` ([mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng)) |
 | **Quần Hùng** | mùa tuần | 600 | 400 | 240 | 100 | 40 | Như Trấn Ải |
-| **Tầm Tướng Ký** Hạng tuần | tuần | 500 | 300 | 180 | 80 | 30 | Sổ chung `rank_reward_claims`, điểm tuần ở `season_scores` chế độ `tamTuongKy`; chỉ khi cờ `TAM_TUONG_KY_ENABLED` bật ([LT-06](future/19-tam-tuong-ky-lt06-ranked.md)) |
+| **Tầm Tướng Ký** Hạng tuần | tuần | 500 | 300 | 180 | 80 | 30 | Sổ chung `rank_reward_claims`, điểm tuần ở `season_scores` chế độ `tamTuongKy`; chỉ khi cờ `TAM_TUONG_KY_ENABLED` bật ([LT-06](tam-tuong-ky/hang-tuan.md)) |
 
 **Trạng thái duyệt:** Shan đã duyệt toàn bộ bảng vàng ở trên (Trận Đồ, Nhật Lệnh, Tháp Thiên Mệnh, Trấn Ải, Quần Hùng) ngày 01/11/2026. Muốn đổi số phải qua quyết định mới.
 
-**Bó nguyên tố Tầm Tướng Ký (04/11/2026):** thưởng hạng chế độ theo tuần (Trận Đồ Đại trận, Tháp Thiên Mệnh, Trấn Ải, Quần Hùng, Tầm Tướng Ký) kèm bó 5 / 4 / 3 / 2 / 1 theo bậc cho người đã vào Tầm Tướng Ký, chỉ khi cờ `TAM_TUONG_KY_ENABLED` bật. Số vàng ở bảng trên không đổi. Xem [LT-06](future/19-tam-tuong-ky-lt06-ranked.md#2-bó-trong-thưởng-hạng-các-chế-độ).
+**Bó nguyên tố Tầm Tướng Ký (04/11/2026):** thưởng hạng chế độ theo tuần (Trận Đồ Đại trận, Tháp Thiên Mệnh, Trấn Ải, Quần Hùng, Tầm Tướng Ký) kèm bó 5 / 4 / 3 / 2 / 1 theo bậc cho người đã vào Tầm Tướng Ký, chỉ khi cờ `TAM_TUONG_KY_ENABLED` bật. Số vàng ở bảng trên không đổi. Xem [LT-06](tam-tuong-ky/hang-tuan.md#2-bó-trong-thưởng-hạng-các-chế-độ).
 
 Bậc: hạng 1; hạng 2–3; hạng 4–10; từ hạng 11 tới hết nửa trên (làm tròn lên); còn lại. Code: `src/core/progress/rankRewards.ts` (bậc và bảng vàng), `src/server/rankRewards.ts` (nguồn theo chế độ, sổ nhận, nhận thưởng), `/api/rank-rewards` (danh sách chờ nhận) và `/api/rank-rewards/claim`. Chỉ nhận được các kỳ đã khép trong 7 kỳ gần nhất.
 
@@ -260,7 +260,7 @@ Khách chơi thường thoải mái; chế độ **online có bảng xếp hạn
 
 ### 6.2 Quần Hùng online hai người chơi (phát triển sau)
 
-Quần Hùng hiện là tìm đối thủ offline (mục 5.3). Shan muốn thêm chế độ **online hai người chơi đấu trực tiếp**; xem [thiết kế DRAFT](future/13-quan-hung-pvp-truc-tiep.md). Chưa có code.
+Quần Hùng hiện là tìm đối thủ offline (mục 5.3). Shan muốn thêm chế độ **online hai người chơi đấu trực tiếp**; xem [thiết kế DRAFT](future/quan-hung-pvp-truc-tiep.md). Chưa có code.
 
 ### 6.3 Mùa theo tuần của Trấn Ải và Quần Hùng
 

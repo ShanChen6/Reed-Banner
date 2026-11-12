@@ -1,6 +1,6 @@
 // Tầm Tướng Ký trên tài khoản (LT-04): phiếu, lượt chơi Thường, gợi ý theo ngày, sổ khám phá, chống gửi trùng.
 // Thuần: server truyền `now` (ms) và `day` (khóa ngày giờ Việt Nam) vào; file này không đọc đồng hồ, không import progress.
-// Luật: docs/02-game-modes/future/14-tam-tuong-ky-design-freeze.md (A-5, A-6, A-12, P-8, P-9, P-10, P-23).
+// Luật: docs/02-game-modes/tam-tuong-ky/design-freeze.md (A-5, A-6, A-12, P-8, P-9, P-10, P-23).
 
 import { combineNormal, initialDiscovery, chargesCombine, type Catalog, type DiscoveryState, type InvalidReason } from "./engine";
 import { hintFor, type Hint, type HintLevel } from "./hints";

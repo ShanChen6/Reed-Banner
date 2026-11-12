@@ -1,6 +1,6 @@
 // Engine ghép thuần của Tầm Tướng Ký (LT-02): chế độ Thường (sổ khám phá, không tiêu nguyên liệu) và chế độ Hạng
 // (kho đơn vị, mỗi lần ghép tiêu nguyên liệu kể cả ghép sai). Luật: Design Freeze mục 4
-// (docs/02-game-modes/future/14-tam-tuong-ky-design-freeze.md).
+// (docs/02-game-modes/tam-tuong-ky/design-freeze.md).
 // Không RNG, không thời gian, không mạng; không đụng roster, hồ sơ, vàng. State bất biến: thao tác không đổi gì
 // thì trả về đúng tham chiếu state cũ.
 

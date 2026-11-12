@@ -3,7 +3,7 @@
 > Cập nhật: 04/11/2026
 > Trạng thái: **IMPLEMENTED** — Shan duyệt công thức, lời dẫn và thành tựu ngày 04/11/2026; code trên `develop` (PR #258); Shan bật cờ `TAM_TUONG_KY_PACK2_ENABLED` cùng ngày.
 
-Shan chọn ngày 04/11/2026: Gói 2 gồm **8 sứ quân còn lại + Đinh Bộ Lĩnh**, **gộp vào cùng một sổ** với Gói 1. Luật theo [Design Freeze](14-tam-tuong-ky-design-freeze.md); cách dựng công thức như [Gói 1](18-tam-tuong-ky-lt05-pack-1.md#1-cách-dựng-công-thức-a-22): vai trò (nghề × hệ theo roster) + dấu danh tính, không dựa vào art.
+Shan chọn ngày 04/11/2026: Gói 2 gồm **8 sứ quân còn lại + Đinh Bộ Lĩnh**, **gộp vào cùng một sổ** với Gói 1. Luật theo [Design Freeze](design-freeze.md); cách dựng công thức như [Gói 1](goi-1.md#1-cách-dựng-công-thức-a-22): vai trò (nghề × hệ theo roster) + dấu danh tính, không dựa vào art.
 
 ## 1. Chín tướng
 

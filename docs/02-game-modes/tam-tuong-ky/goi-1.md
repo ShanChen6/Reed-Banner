@@ -3,7 +3,7 @@
 > Cập nhật: 04/11/2026
 > Trạng thái: **APPROVED** — Shan duyệt cả 7 đề xuất ở [mục 6](#6-cần-shan-chọn) ngày 04/11/2026 (15 lần ghép, bó tự chọn, 7 tướng đề cử, dấu “còn công thức”, gợi ý nhắm tướng, 69 công thức và 12 lời dẫn, điểm ô đề cử). Gói 1 có code (`PACK_1`), pack vẫn `draft` tới khi phát hành.
 
-Luật theo [Design Freeze](14-tam-tuong-ky-design-freeze.md). File này ghi nội dung Gói 1, kết quả kiểm và mô phỏng; không đặt luật mới.
+Luật theo [Design Freeze](design-freeze.md). File này ghi nội dung Gói 1, kết quả kiểm và mô phỏng; không đặt luật mới.
 
 ## 1. Cách dựng công thức (A-22)
 

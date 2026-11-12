@@ -2,7 +2,7 @@
 
 // Trận Đồ (Binh Pháp): bày quân lệnh theo nghề hoặc hệ để khai thông toàn bộ sa bàn, mỗi ô khai thông lộ một mảnh bản đồ.
 // Chơi thường chạy offline (không thưởng, không xếp hạng, ván dở lưu ở trình duyệt); xếp hạng chạy trên server (ván nằm ở
-// server, client chỉ giữ bản công khai). Luật ở src/core/binh-phap, spec ở docs/02-game-modes/future/02-binh-phap-gdd.md,
+// server, client chỉ giữ bản công khai). Luật ở src/core/binh-phap, spec ở docs/02-game-modes/tran-do/gdd.md,
 // giao diện ở docs/05-ui-ux/screens/tran-do.md.
 
 import { ModeScreen as GameModeScreen } from "@/components/game-ui";

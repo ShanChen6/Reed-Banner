@@ -1,9 +1,9 @@
 # 16 — Tầm Tướng Ký: engine ghép LT-02
 
 > Cập nhật: 03/11/2026
-> Trạng thái: **APPROVED** — engine thuần đã có code (`src/core/tam-tuong-ky/engine.ts`, `hints.ts`) theo luật [Design Freeze](14-tam-tuong-ky-design-freeze.md#4-luật-chơi); chưa nối vào server, UI hay dữ liệu lưu.
+> Trạng thái: **APPROVED** — engine thuần đã có code (`src/core/tam-tuong-ky/engine.ts`, `hints.ts`) theo luật [Design Freeze](design-freeze.md#4-luật-chơi); chưa nối vào server, UI hay dữ liệu lưu.
 
-File này ghi API và phạm vi của engine; luật nằm ở Design Freeze, nội dung công thức ở [catalog LT-01](15-tam-tuong-ky-lt01-catalog.md).
+File này ghi API và phạm vi của engine; luật nằm ở Design Freeze, nội dung công thức ở [catalog LT-01](../future/15-tam-tuong-ky-lt01-catalog.md).
 
 ## 1. API
 
@@ -25,7 +25,7 @@ Thao tác không đổi gì (`invalid`, `noRecipe` ở Thường, `alreadyKnown`
 
 ## 3. Kiểm thử
 
-`tests/core/tam-tuong-ky/engine.test.ts` (29 test) phủ [mục 7.1](14-tam-tuong-ky-design-freeze.md#71-engine) và phần engine của [mục 7.4](14-tam-tuong-ky-design-freeze.md#74-chế-độ-hạng-tuần-server):
+`tests/core/tam-tuong-ky/engine.test.ts` (29 test) phủ [mục 7.1](design-freeze.md#71-engine) và phần engine của [mục 7.4](design-freeze.md#74-chế-độ-hạng-tuần-server):
 
 - thứ tự ô, `A+A`, `alreadyKnown`, `noRecipe`, `invalid` không đổi state;
 - 2 000 thao tác giả ngẫu nhiên không làm sổ có ID trùng; khám phá đủ mọi node và ba tướng từ starter;

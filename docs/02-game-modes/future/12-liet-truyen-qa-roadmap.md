@@ -58,16 +58,16 @@ Nếu mở reward/chiêu mộ tương lai:
 ## Trạng thái hiện tại
 
 - [x] Concept và tài liệu draft.
-- [x] LT-00 bản chốt đề xuất và 10 quyết định của Shan (03/11/2026): [14 — Design Freeze](14-tam-tuong-ky-design-freeze.md). Roadmap mới ở [mục 9](14-tam-tuong-ky-design-freeze.md#9-roadmap) thay bảng trên.
+- [x] LT-00 bản chốt đề xuất và 10 quyết định của Shan (03/11/2026): [14 — Design Freeze](../tam-tuong-ky/design-freeze.md). Roadmap mới ở [mục 9](../tam-tuong-ky/design-freeze.md#9-roadmap) thay bảng trên.
 - [x] LT-00 sign-off (Design Freeze FROZEN, 03/11/2026).
 - [x] LT-01 catalog slice và validator: [15 — catalog LT-01](15-tam-tuong-ky-lt01-catalog.md) (03/11/2026).
-- [x] Engine/tests: [16 — engine LT-02](16-tam-tuong-ky-lt02-engine.md) (03/11/2026).
+- [x] Engine/tests: [16 — engine LT-02](../tam-tuong-ky/engine.md) (03/11/2026).
 - [x] UI LT-03 có code, chờ Shan chơi thử: [giao diện Tầm Tướng Ký](../../05-ui-ux/screens/tam-tuong-ky.md) (03/11/2026).
 - [ ] UI/asset approved.
-- [x] Persistence theo tài khoản, phiếu, gợi ý theo ngày: [server LT-04](17-tam-tuong-ky-lt04-server.md) (04/11/2026).
-- [x] LT-05 Gói 1 (12 tướng) và mô phỏng: [18 — Gói 1](18-tam-tuong-ky-lt05-pack-1.md) (04/11/2026), chờ Shan chọn số.
-- [x] LT-06 chế độ Hạng tuần: [19 — Hạng tuần](19-tam-tuong-ky-lt06-ranked.md) (04/11/2026).
-- [x] LT-07 kiểm thử tổng thể, kế hoạch bật/rút lại: [20 — nghiệm thu](20-tam-tuong-ky-lt07-acceptance.md) (04/11/2026).
+- [x] Persistence theo tài khoản, phiếu, gợi ý theo ngày: [server LT-04](../tam-tuong-ky/server.md) (04/11/2026).
+- [x] LT-05 Gói 1 (12 tướng) và mô phỏng: [18 — Gói 1](../tam-tuong-ky/goi-1.md) (04/11/2026), chờ Shan chọn số.
+- [x] LT-06 chế độ Hạng tuần: [19 — Hạng tuần](../tam-tuong-ky/hang-tuan.md) (04/11/2026).
+- [x] LT-07 kiểm thử tổng thể, kế hoạch bật/rút lại: [20 — nghiệm thu](../tam-tuong-ky/nghiem-thu.md) (04/11/2026).
 - [ ] Release: chờ Shan merge và bật cờ production.
 
 **No production changes in this docs PR.**

@@ -1,5 +1,5 @@
 // Chế độ Hạng tuần của Tầm Tướng Ký (LT-06), phần thuần. Luật: Design Freeze A-7, A-8, A-9, A-10, A-23, P-11…P-19
-// (docs/02-game-modes/future/14-tam-tuong-ky-design-freeze.md). Server truyền khóa tuần (`week`, thứ Hai giờ Việt Nam) và
+// (docs/02-game-modes/tam-tuong-ky/design-freeze.md). Server truyền khóa tuần (`week`, thứ Hai giờ Việt Nam) và
 // vàng hiện có; file này không đọc đồng hồ, không import progress.
 
 import { combineRanked, initialRanked, type Catalog, type RankedState, type Stock } from "./engine";

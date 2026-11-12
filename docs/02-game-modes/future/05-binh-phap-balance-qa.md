@@ -84,7 +84,7 @@ Theo package.json và toolchain thực tế tại thời điểm triển khai: c
 
 ## Kết quả mô phỏng baseline (01/11/2026)
 
-Lệnh: `pnpm exec tsx scripts/binh-phap-sim.ts --runs 2000 --seed 1`. Bốn bậc theo [GDD mục 11](02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline): 3×3, 5×5, 6×6, và Đại trận cỡ ngẫu nhiên 7–10. Mỗi ván chạy lại bằng `replay` và so sánh state; 0 nước hợp lệ bị từ chối, 0 lệch replay. Agent *random* chọn ngẫu nhiên trong các ô đặt được (bỏ lệnh khi hết nước); *greedy* ưu tiên nước cho nhiều ô khai thông và điểm nhất, chỉ dùng Thu Hồi khi thanh đã nóng. Người chơi thật nằm quanh hoặc trên greedy, nên số này là **điểm xuất phát**, không phải mục tiêu.
+Lệnh: `pnpm exec tsx scripts/binh-phap-sim.ts --runs 2000 --seed 1`. Bốn bậc theo [GDD mục 11](../tran-do/gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline): 3×3, 5×5, 6×6, và Đại trận cỡ ngẫu nhiên 7–10. Mỗi ván chạy lại bằng `replay` và so sánh state; 0 nước hợp lệ bị từ chối, 0 lệch replay. Agent *random* chọn ngẫu nhiên trong các ô đặt được (bỏ lệnh khi hết nước); *greedy* ưu tiên nước cho nhiều ô khai thông và điểm nhất, chỉ dùng Thu Hồi khi thanh đã nóng. Người chơi thật nằm quanh hoặc trên greedy, nên số này là **điểm xuất phát**, không phải mục tiêu.
 
 | Bậc | Agent | Thắng | Lượt (trung vị / p90, mọi ván) | Bỏ lệnh TB | Khai thông TB |
 |---|---|---|---|---|---|
