@@ -1,5 +1,7 @@
 # CAMP-00.04 — Campaign V2 Reset Policy
 
+> Trạng thái: **IMPLEMENTED**
+
 > Phiên bản: 1.0 — 24/10/2026
 >
 > Áp dụng cùng [Campaign V2 Design Freeze](design-freeze.md)

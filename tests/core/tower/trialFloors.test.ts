@@ -1,3 +1,4 @@
+import { TRIAL_FLOORS } from "../../../src/core/progress/dualTowerState";
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
@@ -70,7 +71,7 @@ describe("schema tầng Trial", () => {
     assert.deepEqual(codes(null), ["not_object"]);
     assert.ok(codes({ ...fixture(1), schema: 2 }).includes("bad_schema"));
     assert.ok(codes(fixture(1, { floor: 0 })).includes("bad_floor"));
-    assert.ok(codes(fixture(1, { floor: 21, id: "trial.f21" })).includes("bad_floor"));
+    assert.ok(codes(fixture(1, { floor: TRIAL_FLOORS + 1, id: `trial.f${TRIAL_FLOORS + 1}` })).includes("bad_floor"));
     assert.ok(codes(fixture(1, { id: "trial.f02" })).includes("bad_id"));
     assert.ok(codes(fixture(1, { extra: 1 })).includes("unknown_key"));
     assert.ok(codes(fixture(1, { contentVersion: 0 })).includes("bad_version"));
@@ -128,7 +129,7 @@ describe("registry tầng Trial", () => {
     assert.ok(other.ok && other.registry.snapshot() !== a.registry.snapshot());
   });
 
-  it("từ chối: tầng hỏng, trùng id, thiếu liên tục, chưa đủ 20", () => {
+  it("từ chối: tầng hỏng, trùng id, thiếu liên tục, chưa đủ số tầng", () => {
     const bad = createTrialRegistry([fixture(1), fixture(2, { turnLimit: 0 })]);
     assert.ok(!bad.ok && bad.error.code === "invalid_floor" && bad.error.index === 1);
     const dup = createTrialRegistry([fixture(1), fixture(1)]);
@@ -137,7 +138,7 @@ describe("registry tầng Trial", () => {
     assert.ok(!gap.ok && gap.error.code === "non_contiguous");
     const part = createTrialRegistry(set(5), { requireComplete: true });
     assert.ok(!part.ok && part.error.code === "incomplete");
-    assert.ok(createTrialRegistry(set(20), { requireComplete: true }).ok);
+    assert.ok(createTrialRegistry(set(TRIAL_FLOORS), { requireComplete: true }).ok);
   });
 
   it("bản công khai không lộ dữ liệu server-only", () => {

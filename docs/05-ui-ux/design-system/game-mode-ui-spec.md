@@ -1,5 +1,7 @@
 # Reed Banner — Game Mode UI/UX Design System v1
 
+> Trạng thái: **APPROVED** — đặc tả giao diện các chế độ; phần đã làm theo dõi ở lộ trình UI.
+
 > 27/10/2026 · **DESIGN SPEC / NOT IMPLEMENTED** · Áp dụng Home và các chế độ ngoài Campaign; Campaign là visual baseline, **không sửa**.
 >
 > Nguồn kiểm tra: `src/app/game/MenuScene.tsx`, `GameShell.tsx`, `trial/TrialView.tsx`, `destiny/DestinyScreen.tsx`, `survival/SurvivalScreen.tsx`, `daily/DailyScreen.tsx`, `arena/ArenaScreen.tsx`, `docs/02-game-modes/README.md`, `docs/02-game-modes/future/01-mode-portfolio.md`, `docs/02-game-modes/future/06-towers-survival-future.md`; ảnh chụp UI do chủ dự án cung cấp 27/10. Cơ chế thực tế luôn ưu tiên code/server contract hơn hình mockup.

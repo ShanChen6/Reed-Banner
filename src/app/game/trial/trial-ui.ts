@@ -5,6 +5,8 @@ import {
   companionById,
   leaderBuildOptions,
   MAIN_ID,
+  trialSweepStoneAmount,
+  trialSweepTier,
   validateLineup,
   type Element,
   type FloorRules,
@@ -69,6 +71,84 @@ export function sweepButtonState(
   if (!sweep.eligible) return { disabled: true, text: "Cần vượt ít nhất tầng 1" };
   if (sweep.claimedToday) return { disabled: true, text: "Đã nhận hôm nay" };
   return { disabled: false, text: `Quét nhận ${sweep.amount} đá` };
+}
+
+/** "2026-11-10" thành "10/11/2026" để người chơi đọc. Chuỗi lạ giữ nguyên. */
+export function formatDateKey(dateKey: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateKey);
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : dateKey;
+}
+
+/** Mỗi chặng 10 tầng; tên theo nội dung luật của chặng. Tháp dài hơn thì chặng dư lấy tên theo số. */
+export const STAGE_SIZE = 10;
+const STAGE_NAMES = ["Nhập Môn", "Luyện Trận", "Lệnh Mới", "Song Lệnh", "Tam Lệnh"] as const;
+const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"] as const;
+
+export interface TrialStage {
+  readonly index: number;
+  readonly roman: string;
+  readonly name: string;
+  readonly from: number;
+  readonly to: number;
+  readonly floors: readonly TrialFloorEntry[];
+  readonly cleared: number;
+  readonly state: FloorState;
+}
+
+export const stageIndexOf = (floor: number): number => Math.max(0, Math.floor((floor - 1) / STAGE_SIZE));
+
+/** Chia danh sách tầng thành các chặng; chặng "đang mở" là chặng có tầng đang mở, "đã qua" khi qua hết. */
+export function trialStages(floors: readonly TrialFloorEntry[]): readonly TrialStage[] {
+  const out: TrialStage[] = [];
+  for (let start = 0; start < floors.length; start += STAGE_SIZE) {
+    const part = floors.slice(start, start + STAGE_SIZE);
+    const index = out.length;
+    const cleared = part.filter((f) => f.state === "cleared").length;
+    out.push({
+      index,
+      roman: ROMAN[index] ?? String(index + 1),
+      name: STAGE_NAMES[index] ?? `Chặng ${index + 1}`,
+      from: part[0]!.floor.floor,
+      to: part.at(-1)!.floor.floor,
+      floors: part,
+      cleared,
+      state: cleared === part.length ? "cleared" : part.some((f) => f.state !== "locked") ? "open" : "locked",
+    });
+  }
+  return out;
+}
+
+/** Tầng ải trùm (độ khó Trùm/Ác mộng) được đánh dấu riêng trên lưới tầng. */
+export const isBossFloor = (entry: TrialFloorEntry): boolean =>
+  entry.floor.difficulty === "boss" || entry.floor.difficulty === "nightmare";
+
+/** Tổng đá lần đầu chưa nhận trong một nhóm tầng. */
+export const unclaimedStones = (floors: readonly TrialFloorEntry[]): number =>
+  floors.reduce((sum, f) => sum + (f.firstClearClaimed ? 0 : f.floor.firstClearStones), 0);
+
+/** Gợi ý mốc tầng nâng bậc quét kế tiếp; null khi đã ở bậc cao nhất hoặc tháp đã qua hết. */
+export function nextSweepTierHint(cleared: number, totalFloors: number): string | null {
+  const current = trialSweepTier(cleared);
+  for (let floor = Math.max(1, cleared + 1); floor <= totalFloors; floor++) {
+    const tier = trialSweepTier(floor);
+    if (tier > current) return `Qua tầng ${floor} để quét được ${trialSweepStoneAmount(tier)} đá mỗi ngày`;
+  }
+  return null;
+}
+
+export interface FoeInfo {
+  readonly id: string;
+  readonly name: string;
+  readonly element: Element | null;
+  readonly profession: Profession | null;
+}
+
+/** Tên và hệ/nghề của đối thủ để hiện thẻ; id lạ (dữ liệu mới hơn client) vẫn hiện được bằng id. */
+export function foeInfo(id: string): FoeInfo {
+  const c = companionById(id);
+  return c
+    ? { id, name: c.name, element: c.element, profession: c.profession }
+    : { id, name: id, element: null, profession: null };
 }
 
 const list = (xs: readonly string[]) => xs.join(", ");
@@ -159,7 +239,7 @@ export function companionOptions(
     let reason: string | null = null;
     if (banE.has(m.element)) reason = `Hệ ${el(m.element)} bị cấm ở tầng này`;
     else if (banP.has(m.profession)) reason = `Nghề ${pr(m.profession)} bị cấm ở tầng này`;
-    else if (!isSel && selected.length >= COMPANION_COUNT) reason = "Đã chọn đủ 2 tướng";
+    const full = !isSel && selected.length >= COMPANION_COUNT;
     return {
       id: m.id,
       name: companionById(m.id)?.name ?? m.id,
@@ -167,7 +247,8 @@ export function companionOptions(
       profession: m.profession,
       selected: isSel,
       // Tướng đã chọn mà bị cấm vẫn bấm được để bỏ chọn.
-      disabled: reason !== null && !isSel,
+      // Đủ 2 người thì các tướng còn lại khóa tạm, không lặp lý do trên từng thẻ (tiêu đề đã ghi "đã chọn 2/2").
+      disabled: (reason !== null || full) && !isSel,
       reason,
     };
   });
@@ -233,6 +314,67 @@ export function defaultBuild(
   if (options.length === 0 || options.some((o) => o.element === cur.element && o.profession === cur.profession))
     return cur;
   return options[0]!;
+}
+
+/**
+ * Hai tướng kèm gợi ý cho tầng: giữ đội đang chọn nếu hợp luật; không thì tìm cặp hợp luật giữ lại nhiều tướng đang
+ * chọn nhất (ưu tiên theo thứ tự `preferred`, rồi thứ tự id). Không có cặp nào hợp luật thì trả lại `preferred`.
+ */
+export function suggestCompanions(
+  profile: Profile,
+  rules: FloorRules,
+  preferred: readonly string[],
+): readonly string[] {
+  const legal = (pair: readonly string[]) => leaderChoices(profile, rules, pair).length > 0;
+  const current = preferred.slice(0, COMPANION_COUNT);
+  if (current.length === COMPANION_COUNT && legal(current)) return current;
+  const owned = ownedCompanions(profile).map((m) => m.id);
+  const order = [...current.filter((id) => owned.includes(id)), ...owned.filter((id) => !current.includes(id))];
+  let best: readonly string[] | null = null;
+  let bestKept = -1;
+  for (let a = 0; a < order.length; a++)
+    for (let b = a + 1; b < order.length; b++) {
+      const pair = [order[a]!, order[b]!];
+      const kept = pair.filter((id) => current.includes(id)).length;
+      if (kept > bestKept && legal(pair)) {
+        best = pair;
+        bestKept = kept;
+      }
+    }
+  return best ?? preferred;
+}
+
+/** Lỗi đội hình bằng tên hệ/nghề tiếng Việt (thông báo gốc của core dùng mã như "hoa", "phapSu"). */
+export function lineupErrorText(e: LineupError): string {
+  const subject = e.subject ?? "";
+  const element = ELEMENT_NAME[subject as Element] ?? subject;
+  const profession = PROFESSION_NAME[subject as Profession] ?? subject;
+  switch (e.code) {
+    case "banned_element":
+      return `Hệ ${element} bị cấm ở tầng này`;
+    case "banned_profession":
+      return `Nghề ${profession} bị cấm ở tầng này`;
+    case "min_element":
+      return `Đội cần có tướng hệ ${element}`;
+    case "min_profession":
+      return `Đội cần có ${profession}`;
+    case "max_element":
+      return `Quá nhiều tướng hệ ${element}`;
+    case "max_profession":
+      return `Quá nhiều ${profession}`;
+    case "max_same_element":
+      return `Quá nhiều tướng cùng hệ ${element}`;
+    case "max_same_profession":
+      return `Quá nhiều tướng cùng nghề ${profession}`;
+    case "size":
+      return "Cần đúng 3 tướng ra trận";
+    case "leader_missing":
+      return "Đinh Bộ Lĩnh phải ra trận";
+    case "duplicate_member":
+      return "Một tướng bị chọn hai lần";
+    case "invalid_member":
+      return "Có tướng không hợp lệ";
+  }
 }
 
 export const NAV_KEYS: readonly string[] = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End"];

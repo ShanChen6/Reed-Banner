@@ -1,5 +1,7 @@
 # Survival Defense V1.1 — Balance Simulation Report
 
+> Trạng thái: **AUDIT** — mô phỏng cân bằng Trấn Ải V1.1.
+
 **Kết luận: NO-GO cho sign-off cân bằng; giữ nguyên luật 10% hiện tại trong lúc thu thập mẫu lớn hơn.**  
 Không có thay đổi production, kỹ năng, lương, tinh thần, hoặc tỷ lệ hồi phục trong task này.
 
@@ -213,4 +215,4 @@ Các CI đều chứa 0; không kết luận profession/element nào tốt hơn.
 - Không đạt 200 paired seeds/cấp/treatment do chi phí chạy: pilot full-matrix được dừng trước khi có artifact; matrix hợp lệ dùng n=10 cho reserve và n=3 cho rotation/build.
 - Chưa chạy factorial 6 profession × 7 element, nhiều seed riêng cho Boss, trang bị, hoặc các cấu hình roster khác.
 - Chưa có policy mô phỏng người thật hay telemetry thời gian thao tác UI.
-- Không chạy browser E2E; task này chỉ đánh giá core simulation. Regression suite/UI coverage được ghi riêng trong [22-qa-report.md](./22-qa-report.md).
+- Không chạy browser E2E; task này chỉ đánh giá core simulation. Regression suite/UI coverage do test trong `tests/` đảm nhiệm.

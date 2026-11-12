@@ -269,3 +269,50 @@ Mỗi task triển khai MUST:
 - `WarlordEncounterCatalog` của mục 5 là `src/core/campaign/warlords.ts` (đủ 12 sứ quân). Raid giữ 3 tier, level bonus, AI difficulty, home terrain, gold/gear reward và luật chiến đấu; Raid ID đổi từ id màn cũ sang id sứ quân (id màn cũ còn làm encounter ID nội bộ), bậc đã thắng chuyển theo. Tower, Survival, Daily, Arena giữ nguyên hành vi (cùng thứ tự, cùng seed ra cùng đối thủ).
 - **Đổi Raid role của mục 5 (Shan chốt 25/10/2026): Raid chỉ còn 6 boss**, là 6 sứ quân bị đánh dẹp theo tổng thuật (nhóm `military` của sổ thế cục): Kiều Công Hãn M15, Kiều Thuận M16, Lý Khuê M17, Nguyễn Thủ Tiệp M18, Nguyễn Siêu M20, Đỗ Cảnh Thạc M21. Mỗi trận là tái đấu. Trần Lãm (liên minh), nhóm quy phục (Phạm Bạch Hổ, Ngô Xương Xí, Ngô Nhật Khánh) và nhóm tan rã/chưa chắc (Nguyễn Khoan, Lữ Đường) không có trận Raid, để game không dựng trận đánh với người không bị đánh dẹp. Dòng "Trần Lãm … Raid là sparring/what-if" và các dòng Raid khác của 6 người này trong bảng mục 5 hết hiệu lực; cột Unlock của họ chỉ còn là mốc mở bán ở cửa hàng (`unlockedContent` kind `raid` vẫn giữ làm mốc gặp sứ quân). Thoại nhóm đánh dẹp bỏ các câu khẳng định thêm (ví dụ "mười một sứ quân đã hàng"). Bậc Raid đã lưu của 6 người kia còn trong hồ sơ nhưng không được đọc.
 - Bảng xếp hạng chiến dịch tính số nhiệm vụ V2 hoàn thành, tổng lượt chỉ của nhiệm vụ có trận; bảng từng trận là `mission:<M..>`. Nhiệm vụ tuần "thắng trận chiến dịch hoặc đánh trùm" chỉ đếm trận thắng, không đếm hoàn thành sự kiện. Thành tựu Chương I đếm 4 nhiệm vụ Chương I.
+
+## 12. Mốc tuyển tướng đồng hành
+
+Gộp từ `recruits.md` (CAMP-03.03, 24/10/2026) ngày 12/11/2026; bỏ mục audit trước khi sửa. Code: `src/core/campaign/recruits.ts`.
+
+Mở khóa đồng hành là **phần thưởng gameplay**, không phải mốc lịch sử về việc ai gia nhập lúc nào. UI ghi "Mở khóa đồng hành", không ghi "gia nhập".
+
+### 12.1 Bảng mốc tuyển (đã khóa trong code, tự kiểm khi nạp module)
+
+| Tướng | Mốc mở khóa | Vai trò lịch sử (trong giới hạn nguồn) | Basis | Confidence | Nguồn | Không được khẳng định |
+|---|---|---|---|---|---|---|
+| Đinh Liễn | M04, hết Chương I | Con trưởng Đinh Bộ Lĩnh; con tin năm 951; cùng cha nương Trần Minh Công; về Hoa Lư sau 965 | `recorded` | vừa | E04a, S02, E08, S01, E06 | Không gia nhập ở Phong Châu hay sau khi hạ sứ quân; không là bại tướng; không định tuổi |
+| Nguyễn Bặc | M08, hết Chương II | Người cùng quê Hoa Lư trong truyện cờ lau | `legend` | thấp | E12, S07 | Không tuyển ở M01 hay Bố Hải |
+| Đinh Điền | M12, hết Chương III | Nhóm bạn thuở nhỏ trong truyện cờ lau | `legend`, `fictional` | thấp | E12, S07 | Không có nhiệm vụ quân sự cụ thể nào là sử chép |
+| Lưu Cơ | M16, hết Chương IV | Liên hệ sớm theo lớp truyền thuyết Hoa Lư | `legend`, `fictional` | thấp | E12, S07 | Vai trò quân sư là game; không gán hạ Lý Khuê hay sứ quân nào |
+| Trịnh Tú | M20, hết Chương V | Liên hệ sớm theo lớp truyền thuyết Hoa Lư | `legend`, `fictional` | thấp | E12, S07 | Y tế/hậu cần là game |
+| Lê Hoàn | M24, hết Chương VI | S04 ghi chức vụ dưới triều Đinh sau 968; không cho biết theo từ lúc nào | `recorded`, `reconstructed` | vừa | S04, E10 | Không gia nhập ở Tam Đái hay trước 968 |
+
+Tên khớp `HERO_COMPANIONS`. Field trong code là `historicalConfidence` (`high`/`medium`/`low`), là trường `historical_confidence` mà task yêu cầu, viết theo kiểu camelCase của repo. Không tướng nào được `high`, vì ledger chưa có nguồn chính sử riêng cho thời điểm gia nhập. `recruitTableErrors()` chặn: lệch mốc so với `STORY_NODES`, sai tên, mã nguồn ngoài allowlist, `high` khi không có `recorded`.
+
+Nghề và nguyên tố (`gameRole`) là lớp game, không dùng để chứng minh lịch sử.
+
+### 12.2 Thay đổi cơ chế
+
+- Màn cũ **không còn chiêu mộ**. `joins` chỉ còn cho mô phỏng `pnpm sim -- --team heroes`, đánh dấu `@deprecated`; `joinStory` không còn hiển thị. Tướng lịch sử chỉ đến từ mốc V2 qua `applyCampaignFirstClear`, cấp trong cùng một lần ghi CAS với hoàn thành chương, có phiếu `hero:<id>`.
+- Duplicate guard giữ nguyên: đã có tướng thì giữ cấp, XP, điểm kỹ năng và trang bị, không tạo bản sao, không bồi thường; mở lại mốc thì thưởng 0.
+- Cửa hàng sứ quân: `shopUnlocked` dùng `warlordUnlockMission(id)` (cùng mốc mở Đánh trùm trong freeze mục 5: Trần Lãm M08, Phạm Bạch Hổ M11, … Đỗ Cảnh Thạc M21) thay cho `legacy.cleared`. Giá không đổi. Server dùng chung `applyProfileAction`, nên kiểm tra phía server.
+- `ShopPanel`: tướng lịch sử hiện "Mở khóa đồng hành sau Mxx …", sứ quân hiện "Mở bán sau Mxx …".
+- Dữ liệu dev: hồ sơ nào đã có tướng nhờ màn cũ thì **giữ nguyên** (không xóa companion theo reset-policy); mốc V2 về sau chỉ ghi phiếu. Sứ quân đã mua vẫn giữ; sứ quân chưa mua thì phải qua nhiệm vụ V2 mới mua được.
+
+### 12.3 Chia nhân vật theo chương và ranh giới thời đại
+
+Phạm vi thời gian của Campaign: **939–968**. Mốc 970 (niên hiệu Thái Bình, E11) chỉ dùng để loại trừ, không thuộc câu chuyện.
+
+| Chương | Mốc chương | Đồng hành sở hữu được (cộng dồn) | Cameo trong lời kể (không phải tuyển) | Ghi chú thời đại |
+|---|---|---|---|---|
+| I Hoa Lư dựng cờ | M04 | Đinh Liễn | Nguyễn Bặc, Đinh Điền (M01, M03) | 944–951; Đinh Liễn là nhân vật có sử chép sớm nhất |
+| II Nghĩa tình Bố Hải | M08 | + Nguyễn Bặc | Trịnh Tú (M05), Đinh Điền (M07), Trần Minh Công (đồng minh, không sở hữu được trong story) | Bố Hải, thời điểm còn tranh luận (U02) |
+| III Nhà Ngô rạn vỡ | M12 | + Đinh Điền | Lưu Cơ (M10), Đinh Liễn (M09) | Sau 965 |
+| IV Miền tây tự giữ | M16 | + Lưu Cơ | Lưu Cơ (M14) | Tuyến địa lý, không chronology |
+| V Vòng cung phía đông | M20 | + Trịnh Tú | Lưu Cơ, Đinh Điền (M17), Trịnh Tú (M18), Lê Hoàn (M19, chỉ dự thính) | Song song chương IV |
+| VI Về một mối | M24 | + Lê Hoàn | Lê Hoàn (M22–M24), cả sáu (M23) | 968; Lê Hoàn mở sau 968 vì S04 chỉ ghi chức vụ thời Đinh |
+
+Ranh giới:
+- **Không có nhân vật lịch sử thế kỷ XI–XII** (thời Lý, Trần) trong tuyến 965–968. Đã rà `ALL_COMPANIONS`: 42 tướng thường đều là tên hư cấu, 6 tướng lịch sử và 12 sứ quân đều thuộc thế kỷ X. Nếu sau này thêm nhân vật đời sau, nên đặt ở chế độ ngoài Campaign (Tháp, Đấu trường) và ghi rõ là "khách mời ngoài thời đại".
+- Với M11 (Đằng Châu, hội kiến không trận), đội 3 người là: Đinh Bộ Lĩnh + Đinh Liễn + Nguyễn Bặc, hoặc hai tướng khởi đầu Hà Vân, Mai Thanh. Trận 3vs3 kế tiếp có tướng lịch sử là M15.
+- Trần Minh Công và 11 sứ quân khác chỉ mua được ở cửa hàng sau mốc của họ, như lựa chọn gameplay; lời kể không gọi đó là "quy phục" hay "gia nhập".

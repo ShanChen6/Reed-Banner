@@ -1,13 +1,15 @@
 # Song Tháp — hướng dẫn người chơi
 
-> Cập nhật: 11/11/2026 (Tháp Thiên Mệnh 20 tầng, Phúc mới; viết lại bằng từ của người chơi)
+> Cập nhật: 11/11/2026 (Tháp Thí Luyện 50 tầng; Tháp Thiên Mệnh 20 tầng, Phúc mới; viết lại bằng từ của người chơi)
+> Trạng thái: **REFERENCE** — hướng dẫn cho người chơi.
 
 Từ dùng trong hướng dẫn và trên màn hình: **lượt leo** là một lần leo tháp từ tầng 1 với đội hình đã khóa;
 **đội hình** là các tướng mang theo; **tướng ra trận** là ba người đánh ở một tầng, số còn lại là **dự bị**.
 
 ## Chọn tháp
 
-- **Tháp Thí Luyện:** 20 tầng cố định để giải luật. Mỗi lần vào tầng, máu và lương bắt đầu lại; tầng đã thắng có
+- **Tháp Thí Luyện:** 50 tầng cố định để giải luật, chia 5 chặng 10 tầng (Nhập Môn, Luyện Trận, Lệnh Mới, Song Lệnh,
+  Tam Lệnh); tầng 21 trở lên gặp đối thủ là tướng cửa hàng và ghép dần hai, ba luật. Mỗi lần vào tầng, máu và lương bắt đầu lại; tầng đã thắng có
   thể chơi lại nhưng thưởng đá lần đầu không lặp.
 - **Tháp Thiên Mệnh** (tên cũ: Tháp Vận Mệnh): hành trình **20 tầng** trong chu kỳ tuần, áp dụng từ chu kỳ
   16/11/2026 (trước đó là 10 tầng). Đội hình được khóa khi bắt đầu lượt leo; máu, năng lượng và lương còn lại
@@ -32,11 +34,14 @@ khóa đội hình mới để leo lại từ tầng 1.
 
 | Nguồn | Điều kiện | Đá |
 |---|---|---:|
-| Thí Luyện, lần đầu vượt tầng | Thắng mỗi tầng lần đầu | Tổng tối đa 77/20 tầng |
+| Thí Luyện, lần đầu vượt tầng | Thắng mỗi tầng lần đầu | Tổng tối đa 355/50 tầng (77 ở tầng 1–20, 278 ở tầng 21–50) |
 | Thí Luyện, quét tháp bậc 1 | Tầng cao nhất 1–5 | 1/ngày |
 | Thí Luyện, quét tháp bậc 2 | Tầng cao nhất 6–10 | 2/ngày |
 | Thí Luyện, quét tháp bậc 3 | Tầng cao nhất 11–15 | 3/ngày |
 | Thí Luyện, quét tháp bậc 4 | Tầng cao nhất 16–20 | 4/ngày |
+| Thí Luyện, quét tháp bậc 5 | Tầng cao nhất 21–30 | 5/ngày |
+| Thí Luyện, quét tháp bậc 6 | Tầng cao nhất 31–40 | 6/ngày |
+| Thí Luyện, quét tháp bậc 7 | Tầng cao nhất 41–50 | 7/ngày |
 | Thiên Mệnh, mốc tầng | Lần đầu qua tầng 5 / 10 / 15 / 20 trong chu kỳ: 3 / 4 / 5 / 6 đá | Tối đa 18/chu kỳ |
 | Thiên Mệnh, cuối chu kỳ | Kỷ lục chu kỳ: tầng 1–4 / 5–9 / 10–14 / 15–19 / 20 cho 1 / 2 / 3 / 4 / 5 đá | 0–5/chu kỳ |
 | Thiên Mệnh, phần thưởng giữa tầng | Chọn hồi phục hoặc Phúc | 0 |

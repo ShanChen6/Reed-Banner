@@ -1,5 +1,7 @@
 # Theme Cờ Lau
 
+> Trạng thái: **IMPLEMENTED**
+
 Tham khảo cách tổ chức của [ShanVerse](https://github.com/ShanChen6/shanverse): bảng màu → token ngữ nghĩa → typography/base → component với variants. Reed Banner dùng **một theme Cờ Lau duy nhất**. Không thêm theme provider, bộ chọn dark/light hay font của ShanVerse.
 
 ## Cấu trúc

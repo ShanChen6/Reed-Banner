@@ -1,5 +1,7 @@
 # Prompt cho Codex: dựng đồ họa nhân vật Cờ Lau
 
+> Trạng thái: **REFERENCE** — prompt dùng lại khi dựng rig nhân vật mới.
+
 > Viết 20/10/2026, theo đúng quy trình Claude đã dùng cho Đào Lam (PR #80), Trần Cương (PR #83) và Đinh Bộ Lĩnh (PR #86).
 > Cách dùng: dán toàn bộ phần **Prompt** bên dưới cho Codex, rồi thêm một dòng cho nhân vật cần làm (mã nhân vật, nghề, đường dẫn các tranh).
 

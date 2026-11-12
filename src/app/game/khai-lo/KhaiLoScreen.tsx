@@ -2,7 +2,7 @@
 
 // Khai Lộ: chạm một ô để xóa cả khối quân nguyên tố cùng hệ liền cạnh; ô rơi xuống, cột trống dồn sang trái. Chơi offline,
 // ván dở và điểm cao nhất lưu ở trình duyệt, riêng từng chế độ (Thường, Cấp tốc). Luật ở src/core/khai-lo, spec ở
-// docs/02-game-modes/future/24-khai-lo-gdd.md.
+// docs/02-game-modes/khai-lo/gdd.md.
 //
 // Điều khiển: rê chuột để xem trước khối (máy tính), chạm lần đầu để xem trước rồi chạm lại để xóa (điện thoại),
 // bàn phím: mũi tên di chuyển, Enter/Space chọn, Z hoàn tác, 1 Lốc, 2 Sấm, Esc bỏ chọn đạo cụ.

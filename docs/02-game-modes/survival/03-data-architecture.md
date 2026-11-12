@@ -1,10 +1,12 @@
 # Survival V1.1 — Roster Data Architecture
 
-> **Final implementation note (Task 24):** Sections marked as early-task status describe the design checkpoint at that time, not current shipping state. Current implementation supports initial roster selection, BREAK rotation/build/revive confirmation, persistence and server-side sequence validation; see [24-final-acceptance.md](./24-final-acceptance.md) and [22-qa-report.md](./22-qa-report.md).
+> Trạng thái: **IMPLEMENTED**
+
+> **Final implementation note (Task 24):** Sections marked as early-task status describe the design checkpoint at that time, not current shipping state. Current implementation supports initial roster selection, BREAK rotation/build/revive confirmation, persistence and server-side sequence validation; see the code in `src/core/survival/` and tests in `tests/core/survival/`.
 
 > Thiết kế dữ liệu cho roster tối đa 5 fighter chạy trên battle engine chỉ nhận 3 active.
 > Thiết kế mục tiêu; trạng thái triển khai hiện tại được ghi ở ghi chú bên dưới.
-> Căn cứ: [01-current-state-audit.md](./01-current-state-audit.md), [02-rules-state-machine.md](./02-rules-state-machine.md).
+> Căn cứ: [02-rules-state-machine.md](./02-rules-state-machine.md).
 
 > **Implementation status (Tasks 04–09):** `createSurvivalRoster` tạo snapshot 3 active + tối đa 2 reserve từ Profile đã xác thực và khóa `orderIds` theo thứ tự ban đầu để tie-break không đổi khi đổi slot. `SurvivalRun` mới lưu roster và `stateVersion: 2`. `survivalActiveSideConfig` chiếu đúng ba snapshot active sang `SideConfig` và giữ Đinh Bộ Lĩnh ở leader index 0; `readSurvivalFighterState` ánh xạ active runtime từ BattleState theo fighter ID và reserve runtime từ roster; `syncSurvivalRosterState` ghi knockout wave theo ID và đồng bộ field `downed[]` tương thích. `deserializeSurvivalRun` xác thực V2 hoặc chuyển bản lưu legacy 3-active sang V2 mà không dựng lại BattleState/board, hồi HP hay reset energy; V2 cũ thiếu `orderIds` được chuẩn hóa theo active/reserve order hiện có. `DrizzleMatchStore.get` áp dụng adapter khi load; JSONB payload schema không đổi. `recoverSurvivalRoster` settle recovery theo đúng role của wave thắng: active sống +20%, reserve sống +10%, fighter gục không heal; marker `settledThroughWave` chặn settle hai lần. `planBreak` chọn auto/paid revive theo stable fighter ID trên toàn roster; reserve revive cập nhật runtime và vẫn ở reserve. `beginWave` nhận battle đã recovery và `heal: 0` từ Survival để không cộng lại. Active HP/energy vẫn authoritative ở BattleState, reserve runtime ở roster. Thay đội hình vẫn chưa triển khai.
 

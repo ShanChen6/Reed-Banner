@@ -1,5 +1,7 @@
 # Danh mục bị động truy kích và tuyệt chiêu Đinh Bộ Lĩnh
 
+> Trạng thái: **REFERENCE** — sinh từ code bằng `scripts/export-skill-chase.ts`.
+
 Sinh từ dữ liệu code bằng `pnpm exec tsx scripts/export-skill-chase.ts`. Đây là xuất dữ liệu, không phải báo cáo test hoặc cân bằng.
 
 ## Ba bị động phản ứng theo nghề/hệ

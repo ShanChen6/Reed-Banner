@@ -1,6 +1,5 @@
 // Song Tháp (Trial / Destiny) lưu trong hồ sơ.
-// Chỉ định danh và parse/serialize; luật tầng, thưởng và UI nằm ở task sau.
-// Xem docs/02-game-modes/dual-tower/00-03-migration-plan.md.
+// Chỉ định danh và parse/serialize; luật ở docs/02-game-modes/dual-tower/00-02-rules.md.
 
 import { ELEMENTS, ENERGY_MAX, PROFESSIONS, type FighterConfig } from "../battle";
 import { GEAR_SLOTS, TIERS, type GearItem } from "../gear";
@@ -16,7 +15,7 @@ export function parseTowerMode(raw: unknown): TowerMode | null {
     : null;
 }
 
-export const TRIAL_FLOORS = 20;
+export const TRIAL_FLOORS = 50;
 export const DUAL_TOWER_SCHEMA = 1;
 /** Trần an toàn của đá tài khoản. */
 export const STONES_MAX = Number.MAX_SAFE_INTEGER;
@@ -42,7 +41,18 @@ export interface TrialFloorRecord {
   readonly bestTurns: number;
 }
 
-export type TrialSweepTier = 1 | 2 | 3 | 4;
+export type TrialSweepTier = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+export const TRIAL_SWEEP_MAX_TIER = 7;
+
+/**
+ * Bậc quét theo tầng cao nhất đã qua (0 = chưa đủ điều kiện). Tầng 1-20 giữ bậc cũ (mỗi 5 tầng một bậc, tối đa 4)
+ * để người chơi cũ không mất quyền lợi; tầng 21-50 mỗi 10 tầng thêm một bậc (5, 6, 7).
+ */
+export function trialSweepTierOf(highestCleared: number): 0 | TrialSweepTier {
+  if (!Number.isInteger(highestCleared) || highestCleared <= 0) return 0;
+  const cleared = Math.min(highestCleared, TRIAL_FLOORS);
+  return (cleared <= 20 ? Math.ceil(cleared / 5) : 4 + Math.ceil((cleared - 20) / 10)) as TrialSweepTier;
+}
 
 /** Receipt authoritative của lần quét gần nhất; tier được chụp từ `cleared` tại lúc claim. */
 export interface TrialSweepClaim {
@@ -294,12 +304,12 @@ function parseTrial(raw: unknown): TrialProgress {
     validDay(sweep.dateKey) &&
     Number.isInteger(sweep.tier) &&
     (sweep.tier as number) >= 1 &&
-    (sweep.tier as number) <= 4 &&
+    (sweep.tier as number) <= TRIAL_SWEEP_MAX_TIER &&
     Number.isSafeInteger(sweep.claimedAt) &&
     (sweep.claimedAt as number) >= 0
       ? { dateKey: sweep.dateKey, tier: sweep.tier as TrialSweepTier, claimedAt: sweep.claimedAt as number }
       : validDay(raw.lastSweepDay) && cleared > 0
-        ? { dateKey: raw.lastSweepDay, tier: Math.min(4, Math.ceil(cleared / 5)) as TrialSweepTier, claimedAt: 0 }
+        ? { dateKey: raw.lastSweepDay, tier: trialSweepTierOf(cleared) as TrialSweepTier, claimedAt: 0 }
         : null;
   return {
     cleared,

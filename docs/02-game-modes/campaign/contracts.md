@@ -1,5 +1,7 @@
 # CAMP-01.01 — Story Node Contract
 
+> Trạng thái: **IMPLEMENTED**
+
 > Runtime source: `src/core/campaign/storyNodes.ts`
 >
 > Design authority: [Campaign V2 Design Freeze](design-freeze.md)

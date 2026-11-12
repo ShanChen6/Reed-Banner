@@ -1,7 +1,7 @@
 // Tầm Tướng Ký chế độ Thường trên server (LT-04). Server giữ phiếu, lượt, gợi ý theo ngày và sổ khám phá trong hồ sơ
 // tài khoản; client chỉ gửi ý định (mở lượt, ghép hai yếu tố, xin gợi ý) kèm `requestId`. Ghi qua `updateProfile`
 // (điều kiện version, thử lại khi hai request cùng lúc). Luật thuần ở @/core/tam-tuong-ky/account.
-// Thiết kế: docs/02-game-modes/future/17-tam-tuong-ky-lt04-server.md.
+// Thiết kế: docs/02-game-modes/tam-tuong-ky/server.md.
 
 import { seasonKey, vnDay } from "@/core";
 import {

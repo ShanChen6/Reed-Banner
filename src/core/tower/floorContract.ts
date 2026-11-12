@@ -157,7 +157,7 @@ export function resolveFloor(
   };
 }
 
-/** Bảng tầng Trial phải đủ 20 tầng liên tục, mỗi tầng dựng được. */
+/** Bảng tầng Trial phải đủ TRIAL_FLOORS tầng liên tục, mỗi tầng dựng được. */
 export function validateTrialFloorSet(defs: readonly FloorDefinition[]): readonly string[] {
   const problems: string[] = [];
   if (defs.length !== TRIAL_FLOORS) problems.push(`Cần ${TRIAL_FLOORS} tầng, có ${defs.length}`);
