@@ -15,6 +15,12 @@ import {
   ElementIcon,
 } from "../art/icons";
 
+/**
+ * Đang ngắm kỹ năng. `choose`: có nhiều mục tiêu để chọn (bấm thẻ, mũi tên trái/phải); `target`: mục tiêu đã chọn.
+ * Kỹ năng phá vùng còn chọn tâm trên bàn cờ sau khi có mục tiêu.
+ */
+export type Aim = { skill: SkillDef; choose: boolean; target?: number } | null;
+
 /** Đang chọn tâm lốc xoáy: cho kỹ năng Phong, hoặc lần xoay miễn phí (skill null). */
 export type WhirlAim = {
   readonly skill: SkillDef | null;
