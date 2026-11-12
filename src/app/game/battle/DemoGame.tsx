@@ -1,40 +1,27 @@
 "use client";
 
-import SkillDetails from "./SkillDetails";
-import { skillText } from "./labels";
-
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   act,
   swapCells,
   applyProfileAction,
-  BAG_LIMIT,
   applyRewards,
   battleRewards,
-  canFreeWhirl,
   defaultSkillTarget,
   skillTargetOptions,
   isAdjacent,
   isWhirlCenter,
   previewWhirl,
-  companionById,
   fighterSkill,
-  isAlive,
-  MAIN_ID,
   needsCell,
   newProfile,
-  PASSIVE,
   playAiTurn,
-  RAID_TIER_INFO,
   receiveDrop,
   selectableActors,
   comboSkillCost,
   whirlStep,
-  raidBossById,
-  specialQuestById,
   settleCampaignScenario,
   storyNodeById,
-  missionCopy,
   campaignSurviveTurns,
   campaignPhaseLabels,
   campaignScenarioByNode,
@@ -60,12 +47,7 @@ import {
   type ExpeditionObjective,
 } from "@/core";
 import {
-  DIFFICULTY_NAME,
   ERROR_TEXT,
-  gearText,
-  TILE_NAME,
-  SPECIAL_NAME,
-  TIER_CLASS,
 } from "./labels";
 import { useAudio } from "../audio/AudioProvider";
 import type { MusicId } from "../audio/cues";
@@ -76,19 +58,11 @@ import { COMBAT_PACING } from "./pacing";
 import {
   CloudCorner,
   DongSonBand,
-  ElementIcon,
-  FoodIcon,
-  ProfessionIcon,
 } from "../art/icons";
-import { GearIcon } from "../art/gear";
-
-import { SkillIcon } from "../art/skills";
 
 import SurvivalBreakScreen from "../survival/SurvivalBreakScreen";
-import { BoardCrest, TileArt } from "../art/tiles";
-import ProgressPanel from "./ProgressPanel";
-import GearPanel from "./GearPanel";
-import ShopPanel from "./ShopPanel";
+import { BoardCrest } from "../art/tiles";
+
 import SetupLobby from "./SetupLobby";
 import {
   actOnline,
@@ -101,9 +75,9 @@ import {
   toBattleState,
   type OnlineResponse,
 } from "./online";
-import { SceneLink } from "../SceneContext";
+
 import BattleStage from "../stage/BattleStage";
-import { buttonVariants } from "@/components/ui";
+
 import { MODE_CONTENT_WIDTH, OrnateFrame } from "@/components/game-ui";
 import { createCueBus, stageCues } from "../stage/director";
 import {
@@ -123,22 +97,26 @@ import {
   type Outcome,
   demoDrop,
 } from "./demoSetup";
-import { describe, fighterName, type LogLine } from "./battleLog";
+import { describe, type LogLine } from "./battleLog";
+import { BattleResult } from "./BattleResult";
+
 import {
   TurnClock,
   WaveBanner,
+  type Aim,
   type WhirlAim,
   whirlHint,
-  inRing,
   useStageVisible,
 } from "./BattleHud";
-import { FighterCard, FLOAT_STAGGER_MS, prefersReducedMotion, type Float } from "./FighterCard";
+import { FLOAT_STAGGER_MS, prefersReducedMotion, type Float } from "./FighterCard";
+import { CampaignResult } from "./CampaignResult";
+import { SkillBar } from "./SkillBar";
+import { useBattleKeyboard } from "./useBattleKeyboard";
+import { TeamColumn } from "./TeamColumn";
+import { BoardCells } from "./BoardCells";
+import { BattleHeader } from "./BattleHeader";
+import { ProgressSection } from "./ProgressSection";
 
-/**
- * Đang ngắm kỹ năng. `choose`: có nhiều mục tiêu để chọn (bấm thẻ, mũi tên trái/phải); `target`: mục tiêu đã chọn.
- * Kỹ năng phá vùng còn chọn tâm trên bàn cờ sau khi có mục tiêu.
- */
-type Aim = { skill: SkillDef; choose: boolean; target?: number } | null;
 const FLOAT_MS = 1100;
 
 const SWIPE_PX = 12;
@@ -906,90 +884,29 @@ export default function DemoGame({
   );
 
   // Điều khiển bàn phím, docs/05-ui-ux/screens/battle.md mục 2.3.
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (!myTurn) return;
-      const dirs: Record<string, [number, number]> = {
-        ArrowUp: [-1, 0],
-        w: [-1, 0],
-        W: [-1, 0],
-        ArrowDown: [1, 0],
-        s: [1, 0],
-        S: [1, 0],
-        ArrowLeft: [0, -1],
-        a: [0, -1],
-        A: [0, -1],
-        ArrowRight: [0, 1],
-        d: [0, 1],
-        D: [0, 1],
-      };
-      const dir = dirs[e.key];
-      if (whirlAim?.center && /^[qe]$/i.test(e.key)) {
-        e.preventDefault();
-        const turns = (e.key.toLowerCase() === "e" ? 1 : -1) * (e.shiftKey ? 2 : 1);
-        if (Math.abs(turns) <= whirlAim.max) spinWhirl(turns);
-        return;
-      }
-      if (aim?.choose && aim.target === undefined) {
-        const options = skillTargetOptions(state, aim.skill);
-        const n = options.length;
-        if (dir && dir[1] !== 0) {
-          e.preventDefault();
-          setAimIndex((i) => options[(options.indexOf(i) + dir[1] + n) % n] ?? options[0]!);
-        } else if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          fireAim(aimIndex);
-        } else if (e.key === "Escape") setAim(null);
-        return;
-      }
-      if (dir) {
-        e.preventDefault();
-        setShowCursor(true);
-        const next = {
-          row: Math.max(0, Math.min(state.board.rows - 1, cursor.row + dir[0])),
-          col: Math.max(0, Math.min(state.board.cols - 1, cursor.col + dir[1])),
-        };
-        if (selected && !aim) {
-          trySwap(selected, next);
-          setCursor(next);
-        } else setCursor(next);
-        return;
-      }
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        setShowCursor(true);
-        onCell(cursor);
-      } else if (e.key === "Escape") {
-        setSelected(null);
-        setAim(null);
-        setWhirlAim(null);
-        setPendingWhirl(null);
-      } else if (e.key === "Tab") {
-        e.preventDefault();
-        switchActor(e.shiftKey ? -1 : 1);
-      } else if (/^[1-6]$/.test(e.key)) {
-        const def = skills[Number(e.key) - 1];
-        if (def) castSkill(def);
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [
-    myTurn,
+  useBattleKeyboard({
     aim,
     aimIndex,
-    whirlAim,
-    spinWhirl,
-    cursor,
-    selected,
-    state,
-    skills,
-    fireAim,
-    onCell,
-    trySwap,
-    switchActor,
     castSkill,
-  ]);
+    cursor,
+    fireAim,
+    myTurn,
+    onCell,
+    selected,
+    setAim,
+    setAimIndex,
+    setCursor,
+    setPendingWhirl,
+    setSelected,
+    setShowCursor,
+    setWhirlAim,
+    skills,
+    spinWhirl,
+    state,
+    switchActor,
+    trySwap,
+    whirlAim,
+  });
 
   // Món rơi sau trận theo bảng rơi đồ của core. Tiến trình (và Chơi online) lấy món đã vào túi từ `outcome`;
   // Luyện tập chỉ hiển thị.
@@ -1192,133 +1109,42 @@ export default function DemoGame({
   // Màn rộng (lg+): kỹ năng nằm dưới thẻ phe mình ở cột trái, để thấy cùng lúc sân đấu, bàn cờ và kỹ năng
   // mà không phải cuộn. Màn hẹp giữ ngay dưới bàn cờ.
   const skillBar = (stacked: boolean) => (
-    <div
-      className={
-        stacked
-          ? "hidden grid-cols-3 gap-1.5 lg:grid"
-          : "grid grid-cols-3 gap-1.5 sm:flex sm:flex-wrap sm:items-stretch lg:hidden"
-      }
-      aria-label="Kỹ năng"
-    >
-      <span className="col-span-3 w-full text-caption text-on-wood-soft">
-        Kỹ năng của {actor.name}:
-      </span>
-      {skills.map((def, i) => {
-        const disabled =
-          !myTurn || state.turn.skillUsed || actor.energy < comboSkillCost(actor,def);
-        const aiming =
-          aim?.skill.id === def.id || whirlAim?.skill?.id === def.id;
-        return (
-          <button
-            key={def.id}
-            type="button"
-            onClick={() => {
-              if (!aiming) return castSkill(def);
-              setAim(null);
-              setWhirlAim(null);
-              setPendingWhirl(null);
-            }}
-            className={`relative flex w-full flex-col items-center gap-0.5 rounded-lg p-1 text-caption leading-tight ${stacked ? "" : "sm:w-[4.5rem]"} border ${aiming ? "border-stat-hp bg-stat-hp text-white" : "border-frame-line-soft bg-wood-panel hover:border-frame-gold"} ${
-              disabled && !aiming ? "opacity-40 grayscale" : ""
-            }`}
-            title={`${skillText(def)} · phím ${i + 1}`}
-          >
-            <SkillIcon def={def} className="size-10" />
-            <span className="absolute left-1 top-1 rounded-br bg-black/60 px-1 text-[11px] font-bold text-white">
-              {i + 1}
-            </span>
-            <span className="absolute right-1 top-1 rounded-bl bg-stat-energy/90 px-1 text-[11px] tabular-nums text-white">
-              {comboSkillCost(actor,def)}
-            </span>
-            <span className="text-center">{def.name}</span>
-          </button>
-        );
-      })}
-      <SkillDetails skills={skills} passive={actor.comboPassive} fighter={actor} />
-      {myTurn && canFreeWhirl(state) && (
-        <button
-          type="button"
-          onClick={() => {
-            setAim(null);
-            setSelected(null);
-            setWhirlAim(
-              whirlAim && !whirlAim.skill
-                ? null
-                : {
-                    skill: null,
-                    max: PASSIVE.phongFreeWhirlTurns,
-                    center: null,
-                  },
-            );
-          }}
-          className={`col-span-3 flex items-center justify-center gap-1 rounded px-2 py-2 text-caption ${stacked ? "" : "sm:col-auto"} ${whirlAim && !whirlAim.skill ? "bg-stat-hp text-white" : "bg-info text-white"}`}
-        >
-          <ElementIcon element="phong" className="size-3.5" /> Xoay
-          miễn phí
-        </button>
-      )}
-    </div>
+    <SkillBar
+      actor={actor}
+      aim={aim}
+      castSkill={castSkill}
+      myTurn={myTurn}
+      setAim={setAim}
+      setPendingWhirl={setPendingWhirl}
+      setSelected={setSelected}
+      setWhirlAim={setWhirlAim}
+      skills={skills}
+      stacked={stacked}
+      state={state}
+      whirlAim={whirlAim}
+    />
   );
 
   const side = (s: 0 | 1, inline = false) => {
     const own = (heldSides ?? state.sides)[s];
     return (
-      <div
-        className={`w-full grid-cols-3 gap-1.5 md:w-40 md:shrink-0 md:flex-col md:gap-2 lg:w-56 3xl:w-72 ${
-          s === AI ? "order-1 grid md:order-none md:flex" : inline ? "grid md:hidden" : "hidden md:flex"
-        }`}
-      >
-        <div className="col-span-3 flex items-center justify-between text-caption opacity-80">
-          <span className="font-semibold">
-            {s === PLAYER
-              ? "Phe bạn"
-              : arenaFoe
-                ? `Bóng ma · ${arenaFoe.rating} điểm`
-                : "Tianwu"}
-          </span>
-          <span
-            title="Lương thực"
-            className="flex items-center gap-1 tabular-nums"
-          >
-            <FoodIcon className="size-3.5" /> {own.food}/100
-          </span>
-        </div>
-        {own.fighters.map((f, i) => {
-          const isActor =
-            state.winner === null &&
-            state.turn.side === s &&
-            state.turn.actor === i;
-          const canPick =
-            s === PLAYER && selectable.includes(i) && !state.turn.skillUsed;
-          const target =
-            (s === AI && aimingFoe) || (s === PLAYER && aimingAlly);
-          return (
-            <FighterCard
-              key={f.id}
-              fighter={f}
-              experimentalSpirit={state.experimentalSpirit}
-              comboTurns={f.comboReady ? Math.max(0,f.comboReady.expiresAt-(state.comboState?.sideTurns[s]??0)-1) : undefined}
-              comboSource={f.comboReady ? state.sides[f.comboReady.source.side].fighters[f.comboReady.source.fighter]?.name : undefined}
-              comboTarget={f.comboReady?.target ? state.sides[f.comboReady.target.side].fighters[f.comboReady.target.fighter]?.name : undefined}
-              leader={own.leader === i}
-              rage={own.leader === i ? own.rage : null}
-              rageTurns={own.leader === i ? own.passiveTurns : 0}
-              active={isActor}
-              selectable={canPick && !aim}
-              targetable={!!target && aimMark === i && isAlive(f)}
-              floats={floats.filter((x) => x.side === s && x.fighter === i)}
-              onClick={
-                target && isAlive(f)
-                  ? () => fireAim(i)
-                  : canPick && !aim && !isActor
-                    ? () => apply({ type: "selectActor", fighter: i })
-                    : undefined
-              }
-            />
-          );
-        })}
-        {s === PLAYER && !inline && started && skillBar(true)}
-      </div>
+      <TeamColumn
+        aim={aim}
+        aimMark={aimMark}
+        aimingAlly={aimingAlly}
+        aimingFoe={aimingFoe}
+        apply={apply}
+        arenaFoe={arenaFoe}
+        fireAim={fireAim}
+        floats={floats}
+        inline={inline}
+        own={own}
+        s={s}
+        selectable={selectable}
+        skillBar={skillBar}
+        started={started}
+        state={state}
+      />
     );
   };
 
@@ -1328,59 +1154,22 @@ export default function DemoGame({
       className={`${palette} ui-mode-screen`}
     >
       <OrnateFrame level="raised" flush className={`mx-auto flex w-full flex-col gap-3 p-3 sm:p-5 ${MODE_CONTENT_WIDTH}`}>
-        <header className="flex flex-wrap items-center justify-between gap-2 border-b border-frame-line-soft pb-2">
-          {/* Tên chế độ đã ở header chung; giữ h1 cho trình đọc màn hình. */}
-          <h1 className="sr-only">
-            {online ? "Cờ Lau · Giao Tranh" : "Cờ Lau · Thao Luyện"}
-          </h1>
-          <div className="text-sm font-semibold text-title-on-wood" aria-live="polite">
-            {!started
-              ? ""
-              : atBreak
-                ? `Hạ hết đợt ${survival!.wave}, nghỉ giữa đợt`
-                : scenarioOver && state.winner === null
-                  ? scenarioFailed
-                    ? "Phòng tuyến chưa giữ được"
-                    : "Hoàn thành mục tiêu"
-                  : survival && state.winner !== null
-                  ? "Lượt sinh tồn kết thúc"
-                  : state.winner !== null
-                    ? state.winner === PLAYER
-                      ? "Bạn thắng!"
-                      : "Tianwu thắng"
-                    : pending
-                      ? "Đang chờ máy chủ…"
-                      : playerTurn
-                        ? state.turn.extra
-                          ? "Lượt thêm của bạn"
-                          : "Lượt của bạn"
-                        : "Lượt đối thủ…"}
-          </div>
-          {!online && started && (
-            <button
-              type="button"
-              onClick={() => { setProfile(loadProfile()); setStarted(false); }}
-              className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-9 pointer-coarse:min-h-11 gap-1.5 text-caption" })}
-            >
-              <ProfessionIcon profession={profession} className="size-4" />
-              Đổi đội hình
-            </button>
-          )}
-          <label className="flex items-center gap-2 text-caption text-on-wood-soft">
-            Độ khó
-            <select
-              value={difficulty}
-              onChange={(e) => setDifficulty(e.target.value as Difficulty)}
-              className="min-h-9 pointer-coarse:min-h-11 rounded-control border border-frame-line-soft bg-wood-inset px-2 py-1 text-on-wood"
-            >
-              {DIFFICULTIES.map((d) => (
-                <option key={d} value={d}>
-                  {DIFFICULTY_NAME[d]}
-                </option>
-              ))}
-            </select>
-          </label>
-        </header>
+        <BattleHeader
+          atBreak={atBreak}
+          difficulty={difficulty}
+          online={online}
+          pending={pending}
+          playerTurn={playerTurn}
+          profession={profession}
+          scenarioFailed={scenarioFailed}
+          scenarioOver={scenarioOver}
+          setDifficulty={setDifficulty}
+          setProfile={setProfile}
+          setStarted={setStarted}
+          started={started}
+          state={state}
+          survival={survival}
+        />
         {scenario && live && !scenarioOver && (phaseTurns || labels.length > 1) && (
           <p className="rounded-md border border-frame-line bg-frame-gold/10 px-3 py-1 text-sm text-title-on-wood">
             {storyNodeById(scenario.nodeId)?.title}
@@ -1498,65 +1287,19 @@ export default function DemoGame({
                 role="grid"
                 aria-label="Bàn cờ"
               >
-                {board.cells.map((tile, i) => {
-                  const pos = {
-                    row: Math.floor(i / board.cols),
-                    col: i % board.cols,
-                  };
-                  const cellAnim = frame?.anims[i];
-                  const center = whirlCenter;
-                  const isSel =
-                    (selected?.row === pos.row && selected.col === pos.col) ||
-                    (center?.row === pos.row && center.col === pos.col);
-                  const isRing = !!center && inRing(center, pos);
-                  // Xem trước: ô trong vòng hiện quân sau khi xoay; ô sẽ ghép được viền vàng.
-                  const shown = spinView && isRing ? spinView.after.cells[i] : tile;
-                  const willMatch = !!spinView?.matched.has(i);
-                  const isCur =
-                    showCursor &&
-                    cursor.row === pos.row &&
-                    cursor.col === pos.col;
-                  return (
-                    <div
-                      key={cellAnim ? `${anim!.id}-${anim!.i}-${i}` : i}
-                      role="gridcell"
-                      data-row={pos.row}
-                      data-col={pos.col}
-                      aria-label={
-                        tile
-                          ? tile.special
-                            ? SPECIAL_NAME[tile.special][tile.kind]
-                            : TILE_NAME[tile.kind]
-                          : "Ô trống"
-                      }
-                      onPointerDown={(e) => onPointerDown(pos, e)}
-                      className={`relative aspect-square rounded-md bg-[var(--battle-cell)] ${
-                        isSel ? "z-10 scale-110 ring-2 ring-frame-gold-hi" : ""
-                      } ${isRing ? "ring-2 ring-info" : ""} ${willMatch ? "z-10 ring-2 ring-frame-gold-hi brightness-125" : ""} ${isCur ? "outline-2 outline-stat-shield" : ""} ${(aim && needsCell(aim.skill)) || whirlAim ? "cursor-crosshair" : "cursor-pointer"}`}
-                    >
-                      {shown && (
-                        <span
-                          className={`absolute inset-0 flex items-center justify-center ${spinView && isRing ? "opacity-80" : ""} ${cellAnim ? `tile-anim tile-anim-${cellAnim.kind}` : ""}`}
-                          style={
-                            cellAnim
-                              ? ({
-                                  "--dx": cellAnim.dx,
-                                  "--dy": cellAnim.dy,
-                                  animationDuration: `${frame!.ms}ms`,
-                                } as React.CSSProperties)
-                              : undefined
-                          }
-                        >
-                          <TileArt
-                            kind={shown.kind}
-                            special={shown.special}
-                            className={`size-full ${shown.special === "strong" ? "tile-strong" : ""}`}
-                          />
-                        </span>
-                      )}
-                    </div>
-                  );
-                })}
+                <BoardCells
+                  aim={aim}
+                  anim={anim}
+                  board={board}
+                  cursor={cursor}
+                  frame={frame}
+                  onPointerDown={onPointerDown}
+                  selected={selected}
+                  showCursor={showCursor}
+                  spinView={spinView}
+                  whirlAim={whirlAim}
+                  whirlCenter={whirlCenter}
+                />
                 {/* Nút hoa đồng ở giao điểm các ô, như đinh tán trên bàn ngọc. */}
                 <div
                   aria-hidden
@@ -1609,293 +1352,34 @@ export default function DemoGame({
                   />
                 )}
                 {scenario && (scenarioOver || state.winner !== null) && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-wood-lo/90 p-4 text-center text-on-wood">
-                    <p className="text-kicker text-frame-gold">
-                      {scenario.nodeId} · {storyNodeById(scenario.nodeId)?.title}
-                    </p>
-                    <p className="text-xl font-bold">
-                      {scenarioFailed
-                        ? "Phòng tuyến chưa giữ được"
-                        : phaseAdvanced
-                          ? `Qua giai đoạn ${scenario.phaseIndex + 1}/${labels.length}: ${labels[scenario.phaseIndex]}`
-                          : "Hoàn thành mục tiêu!"}
-                    </p>
-                    {phaseAdvanced ? (
-                      <p className="max-w-sm text-sm text-on-wood-soft italic">
-                        {`${bossThreshold ? `${phaseBoss?.name ?? "Trùm"} lui về tuyến trong với ${Math.round((Math.max(0, phaseBoss?.hp ?? 0) / (phaseBoss?.maxHp ?? 1)) * 100)}% máu. ` : ""}Trận chưa kết thúc, nhiệm vụ chưa hoàn thành. Giai đoạn tiếp theo: ${labels[scenario.phaseIndex + 1]}. Lương còn lại mang sang trận sau.`}
-                      </p>
-                    ) : (
-                      // Thắng thì lời kết, thua thì lời thua: đọc đủ mọi câu, không chiếu lời thắng sau trận thua.
-                      <div className="flex max-h-[40vh] max-w-md flex-col gap-1.5 overflow-y-auto text-sm">
-                        {(
-                          (scenarioFailed
-                            ? missionCopy(scenario.nodeId)?.defeat
-                            : missionCopy(scenario.nodeId)?.outro) ?? []
-                        ).map((b, i) => (
-                          <p
-                            key={i}
-                            className={
-                              b.speaker ? "text-on-wood" : "text-on-wood-soft italic"
-                            }
-                          >
-                            {b.speaker && (
-                              <span className="font-semibold text-frame-gold">
-                                {b.speaker}:{" "}
-                              </span>
-                            )}
-                            {b.speaker ? `“${b.text}”` : b.text}
-                          </p>
-                        ))}
-                      </div>
-                    )}
-                    {outcome && (
-                      <p className="text-sm">
-                        +{outcome.rewards.xp[0]} kinh nghiệm mỗi người · +
-                        {outcome.rewards.gold} vàng
-                        {outcome.campaignV2?.firstClear &&
-                          ` · thưởng lần đầu +${outcome.campaignV2.totalGold} vàng`}
-                      </p>
-                    )}
-                    <SceneLink
-                      scene="CAMPAIGN"
-                      className={buttonVariants({ size: "sm" })}
-                    >
-                      {phaseAdvanced ? "Chuẩn bị giai đoạn tiếp" : "Về Bình Loạn"}
-                    </SceneLink>
-                  </div>
+                  <CampaignResult
+                    bossThreshold={bossThreshold}
+                    labels={labels}
+                    outcome={outcome}
+                    phaseAdvanced={phaseAdvanced}
+                    phaseBoss={phaseBoss}
+                    scenario={scenario}
+                    scenarioFailed={scenarioFailed}
+                  />
                 )}
                 {!scenario && state.winner !== null && !atBreak && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-wood-lo/90 text-on-wood">
-                    <p className="text-xl font-bold">
-                      {survival
-                        ? state.winner === PLAYER
-                          ? "Dừng lại, ghi điểm"
-                          : "Cả đội đã gục"
-                        : state.winner === PLAYER
-                          ? "Bạn thắng!"
-                          : "Tianwu thắng"}
-                    </p>
-                    {raidBoss && raidBossById(raidBoss) && (
-                      <p className="max-w-sm text-center text-sm text-on-wood-soft italic">
-                        {raidBossById(raidBoss)!.foes[0]!.name}: “
-                        {state.winner === PLAYER
-                          ? raidBossById(raidBoss)!.lines.win
-                          : raidBossById(raidBoss)!.lines.lose}
-                        ”
-                      </p>
-                    )}
-                    {specialQuestId && specialQuestById(specialQuestId) && (
-                      <p className="max-w-sm text-center text-sm text-on-wood-soft italic">
-                        {companionById(specialQuestId)?.name}: “
-                        {state.winner === PLAYER
-                          ? specialQuestById(specialQuestId)!.lines.win
-                          : specialQuestById(specialQuestId)!.lines.lose}
-                        ”
-                      </p>
-                    )}
-                    {(!online || outcome) && (
-                      <p className="text-sm">
-                        {drop ? (
-                          <>
-                            <span className="flex items-center gap-2">
-                              <GearIcon
-                                slot={drop.slot}
-                                element={drop.element}
-                                tier={drop.tier}
-                                set={drop.set}
-                                profession={drop.profession}
-                                className="size-12 shrink-0"
-                              />
-                              <span>
-                                Chiến lợi phẩm:{" "}
-                                <span
-                                  className={`font-semibold ${TIER_CLASS[drop.tier]}`}
-                                >
-                                  {gearText(drop)}
-                                </span>
-                              </span>
-                            </span>
-                          </>
-                        ) : outcome && outcome.soldFor > 0 ? (
-                          `Túi đồ đầy: món rơi được bán ngay, +${outcome.soldFor} vàng.`
-                        ) : (
-                          "Không rơi trang bị."
-                        )}
-                      </p>
-                    )}
-                    {outcome && (
-                      <div className="text-center text-sm">
-                        <p>
-                          +{outcome.rewards.xp[0]} kinh nghiệm mỗi người · +
-                          {outcome.rewards.gold} vàng
-                        </p>
-                        {outcome.destiny && (
-                          <p className={`font-semibold ${outcome.destiny.won ? "text-frame-gold" : "text-danger"}`}>
-                            {outcome.destiny.completed
-                              ? `Thiên Mệnh: đã vượt tầng ${outcome.destiny.floor}, tầng cuối của tháp. Lượt leo hoàn thành.`
-                              : outcome.destiny.won
-                              ? `Thiên Mệnh: đã vượt tầng ${outcome.destiny.floor}. Hãy chọn một phần thưởng.`
-                              : `Thiên Mệnh: đội hình gục ở tầng ${outcome.destiny.floor}. Lượt leo kết thúc tại đây.`}
-                          </p>
-                        )}
-                        {outcome.expedition && (
-                          <p className={`font-semibold ${outcome.expedition.won ? "text-frame-gold" : "text-danger"}`}>
-                            {outcome.expedition.phase === "won"
-                              ? `Viễn Chinh: đã chiếm thành đích! ${"★".repeat(outcome.expedition.end?.stars ?? 1)} +${outcome.expedition.end?.gold ?? 0} vàng${outcome.expedition.end?.firstClear ? " (lần đầu)" : ""}.`
-                              : outcome.expedition.phase === "lost"
-                                ? "Viễn Chinh: hết ngày hành quân, lượt viễn chinh kết thúc."
-                                : outcome.expedition.won
-                                  ? "Viễn Chinh: đã chiếm ô. Về sa bàn để đi tiếp."
-                                  : "Viễn Chinh: đạo quân thua, rút về ô cũ để nghỉ sức."}
-                          </p>
-                        )}
-                        {outcome.daily && (
-                          <p className="font-semibold text-frame-gold">
-                            Nhật Lệnh:{" "}
-                            {outcome.daily.score.won
-                              ? `thắng sau ${outcome.daily.score.turns} lượt`
-                              : "thua"}
-                            {outcome.daily.rank !== null &&
-                              `, hạng ${outcome.daily.rank} hôm nay`}
-                            .
-                          </p>
-                        )}
-                        {outcome.arena && (
-                          <p
-                            className={`font-semibold ${outcome.arena.won ? "text-frame-gold" : "text-danger"}`}
-                          >
-                            Quần Hùng: {outcome.arena.won ? "thắng" : "thua"}{" "}
-                            {outcome.arena.opponent},{" "}
-                            {outcome.arena.delta >= 0 ? "+" : "−"}
-                            {Math.abs(outcome.arena.delta)} điểm
-                            {outcome.arena.rating !== null &&
-                              ` (còn ${outcome.arena.rating})`}
-                            {outcome.arena.gold > 0 &&
-                              `, +${outcome.arena.gold} vàng thắng trận`}
-                            .
-                          </p>
-                        )}
-                        {outcome.survival && (
-                          <p className="font-semibold text-frame-gold">
-                            Vượt qua {outcome.survival.cleared} đợt
-                            {outcome.survival.gold > 0 &&
-                              `, +${outcome.survival.gold} vàng theo đợt`}
-                            .{outcome.survival.newBest && " Kỷ lục mới!"}
-                          </p>
-                        )}
-                        {outcome.specialQuest?.joined && (
-                          <p className="font-semibold text-frame-gold">
-                            {fighterName(outcome.specialQuest.id)} gia nhập đội ở cấp 1!
-                          </p>
-                        )}
-                        {outcome.raid?.firstClear && (
-                          <p className="font-semibold text-frame-gold">
-                            Thắng {RAID_TIER_INFO[outcome.raid.tier].name} lần
-                            đầu: +{outcome.raid.bonusGold} vàng
-                            {outcome.raid.item
-                              ? ` · ${gearText(outcome.raid.item)}`
-                              : outcome.raid.soldFor > 0
-                                ? ` · túi đầy, món thưởng bán được ${outcome.raid.soldFor} vàng`
-                                : ""}
-                          </p>
-                        )}
-                        {outcome.levelUps.map((u) => (
-                          <p
-                            key={u.id}
-                            className="font-semibold text-frame-gold"
-                          >
-                            {fighterName(u.id)} lên cấp {u.level}!
-                          </p>
-                        ))}
-                      </div>
-                    )}
-                    <div className="flex flex-wrap justify-center gap-2">
-                      {!online && (
-                        <a
-                          href="/game"
-                          target="_blank"
-                          rel="noopener"
-                          className={buttonVariants({ size: "sm" })}
-                        >
-                          Lưu tiến độ &amp; chơi chiến dịch
-                        </a>
-                      )}
-                      {destinyFloorNo !== null && towerFeatures.destiny && (
-                        <SceneLink
-                          scene="DESTINY"
-                          className={buttonVariants({ size: "sm" })}
-                        >
-                          {outcome?.destiny?.won && !outcome.destiny.completed ? "Chọn thưởng Thiên Mệnh" : "Về Tháp Thiên Mệnh"}
-                        </SceneLink>
-                      )}
-                      {expeditionMatch && (
-                        <SceneLink
-                          scene="EXPEDITION"
-                          className={buttonVariants({ size: "sm" })}
-                        >
-                          Về sa bàn Viễn Chinh
-                        </SceneLink>
-                      )}
-                      {dailyDay && (
-                        <SceneLink
-                          scene="DAILY"
-                          className={buttonVariants({ size: "sm" })}
-                        >
-                          Xem bảng xếp hạng
-                        </SceneLink>
-                      )}
-                      {arenaFoe && (
-                        <SceneLink
-                          scene="ARENA"
-                          className={buttonVariants({ size: "sm" })}
-                        >
-                          Về Quần Hùng
-                        </SceneLink>
-                      )}
-                      {survival && (
-                        <SceneLink
-                          scene="SURVIVAL"
-                          className={buttonVariants({ size: "sm" })}
-                        >
-                          Về Trấn Ải
-                        </SceneLink>
-                      )}
-                      {specialQuestId && (
-                        <SceneLink
-                          scene="QUESTS"
-                          className={buttonVariants({ size: "sm" })}
-                        >
-                          Về nhiệm vụ
-                        </SceneLink>
-                      )}
-                      {raidBoss && (
-                        <SceneLink
-                          scene="CAMPAIGN"
-                          className={buttonVariants({ size: "sm" })}
-                        >
-                          Về Bình Loạn
-                        </SceneLink>
-                      )}
-                      {!online && mode === "practice" && (
-                        <button
-                          type="button"
-                          onClick={replay}
-                          className={buttonVariants({ variant: "secondary", size: "sm" })}
-                        >
-                          Chơi lại
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        onClick={restart}
-                        className={buttonVariants({ variant: "secondary", size: "sm" })}
-                      >
-                        {mode === "progress"
-                          ? "Nâng kỹ năng & đánh tiếp"
-                          : "Đổi đội hình"}
-                      </button>
-                    </div>
-                  </div>
+                  <BattleResult
+                    arenaFoe={arenaFoe}
+                    dailyDay={dailyDay}
+                    destinyFloorNo={destinyFloorNo}
+                    drop={drop}
+                    expeditionMatch={expeditionMatch}
+                    mode={mode}
+                    online={online}
+                    outcome={outcome}
+                    raidBoss={raidBoss}
+                    replay={replay}
+                    restart={restart}
+                    specialQuestId={specialQuestId}
+                    state={state}
+                    survival={survival}
+                    towerFeatures={towerFeatures}
+                  />
                 )}
               </div>
             </div>
@@ -1960,46 +1444,16 @@ export default function DemoGame({
         {/* Giao Tranh online: chỉ giữ chọn đội nhanh và lối sang Doanh Trại (trang bị, kỹ năng chỉnh ở đó). Lúc đang đánh thì ẩn hẳn
             để bàn cờ không bị đẩy xuống. Chơi thử Tiến trình (offline) vẫn đủ panel vì hồ sơ nằm trên trình duyệt. */}
         {mode === "progress" && !(online && started && state.winner === null) && (
-          <div
-            className={`flex flex-col gap-3 ${started ? "" : "mx-auto w-full max-w-4xl"}`}
-          >
-            <div className="ui-frame-inset rounded-xl p-3">
-              <ShopPanel
-                compact={online}
-                profile={profile}
-                locked={started && state.winner === null}
-                onAction={profileAction}
-              />
-            </div>
-
-            {online ? (
-              <p className="ui-frame-inset rounded-xl p-3 text-caption text-on-wood-soft">
-                Túi đồ {profile.bag.length}/{BAG_LIMIT} món. Mặc trang bị và nâng kỹ năng ở{" "}
-                <SceneLink scene="PROFILE" className="ui-link text-frame-gold underline underline-offset-2">
-                  Doanh Trại
-                </SceneLink>
-                , đội sẽ cập nhật ở đây khi quay lại.
-              </p>
-            ) : (
-              <>
-                <GearPanel
-                  noShop={false}
-                  profile={{ ...profile, element, profession }}
-                  teamIds={[MAIN_ID, ...profile.team]}
-                  locked={started && state.winner === null}
-                  onAction={profileAction}
-                />
-                <ProgressPanel
-                  profile={{ ...profile, element }}
-                  teamIds={[MAIN_ID, ...profile.team]}
-                  locked={started && state.winner === null}
-                  storage="lưu trên trình duyệt này"
-                  onAction={profileAction}
-                  onReset={() => changeProfile(newProfile())}
-                />
-              </>
-            )}
-          </div>
+          <ProgressSection
+            changeProfile={changeProfile}
+            element={element}
+            online={online}
+            profession={profession}
+            profile={profile}
+            profileAction={profileAction}
+            started={started}
+            state={state}
+          />
         )}
 
         <section
