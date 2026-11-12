@@ -3,8 +3,9 @@
 //   node scripts/ui-audit.mjs [--base http://localhost:3000] [--register] [--shots <thư mục>] [--only menu,shop] [--widths 360,1280] [--detail]
 //
 // Đo từng màn ở 360/768/1280/1920px: tràn ngang và lỗi JS (thất bại, thoát mã 1), vùng chạm dưới 44px trên màn cảm ứng
-// và chữ dưới 13px (cảnh báo). Cần Playwright + Chromium (không nằm trong dependencies của dự án):
-//   pnpm dlx playwright install chromium   rồi chạy với NODE_PATH trỏ tới nơi cài, hoặc dùng bản đã cài sẵn trong môi trường.
+// và chữ dưới 13px (cảnh báo). Dùng Playwright của dự án (@playwright/test); máy mới cần tải trình duyệt một lần:
+//   pnpm exec playwright install chromium
+// Nằm trong checklist trước phát hành: docs/07-architecture/quy-trinh-test.md mục 4.
 // `--register` tự đăng ký một tài khoản tạm (chỉ dùng được trên bản dev dùng kho trong bộ nhớ) để vào các màn cần đăng nhập.
 // Tài khoản thật: truyền qua biến môi trường AUDIT_USER và AUDIT_PASS, không bao giờ qua dòng lệnh hay file.
 
@@ -14,9 +15,9 @@ import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 let chromium;
 try {
-  ({ chromium } = require("playwright"));
+  ({ chromium } = require("@playwright/test"));
 } catch {
-  console.error("Thiếu Playwright. Cài: pnpm dlx playwright install chromium (hoặc đặt NODE_PATH tới bản đã có).");
+  console.error("Thiếu Playwright. Chạy pnpm install rồi pnpm exec playwright install chromium.");
   process.exit(2);
 }
 

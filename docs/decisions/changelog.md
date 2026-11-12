@@ -1,5 +1,12 @@
 # Nhật ký thay đổi thiết kế
 
+## 12/11/2026
+
+**Quy trình test ba tầng (có code)**
+- Shan duyệt quy trình test không cần AI: tầng 1 `pnpm check` trên máy; tầng 2 CI hai job song song (kiểm tra cũ + smoke test trình duyệt); tầng 3 checklist tay trước khi gộp vào `main`. Nguồn chính: [quy trình test](../07-architecture/quy-trinh-test.md).
+- Thêm Playwright (`@playwright/test` 1.63.0), `playwright.config.ts` và `e2e/smoke.spec.ts`: mọi màn trong `scene.ts` trên máy tính và điện thoại, cùng các luồng Thao Luyện, Giao Tranh, Tháp Thiên Mệnh, Tháp Thí Luyện, chặn khách. CI chuyển sang Node 24 cho khớp `package.json` và Vercel.
+- `scripts/ui-audit.mjs` dùng Playwright của dự án thay vì bản cài ngoài.
+
 ## 11/11/2026
 
 **Tháp Thiên Mệnh: 20 tầng và 8 Phúc mới (có code)**
