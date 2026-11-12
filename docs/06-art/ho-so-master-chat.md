@@ -19,7 +19,7 @@ Ngữ cảnh đầu vào cho các phiên chat mới làm việc với hình đ�
   - `battle/battle.ts`: hàm `createBattle`.
   - `progress/profile.ts`: đội mặc định là `haVan` và `maiThanh`.
 - **Phần sân khấu `src/app/game/stage`:** vẽ bằng PixiJS 8.
-  - `rigs.ts` là sổ đăng ký hình động. Bản đồ `RIGS` trỏ từ id nhân vật tới rig. Nhân vật chưa có rig thì sân hiện chân dung.
+  - `rigs/` là sổ đăng ký hình động: mỗi nhân vật một file `rigs/<dir>.ts` (tên theo thư mục tranh), kiểu ở `rigs/types.ts`, bản đồ `RIGS` trong `rigs/index.ts` trỏ từ id nhân vật tới rig. Nhân vật chưa có rig thì sân hiện chân dung.
   - `WarriorRig` là khung xương chuẩn cho mọi nhân vật mới:
     - `parts`: 5 lớp ảnh `body`, `armR`, `sword` (vũ khí), `arm` (nắm tay cầm vũ khí), `head`.
     - `cloth`: dải vải bay theo gió (tùy chọn). `covers`: lớp che.
@@ -91,7 +91,7 @@ Người dùng gửi 5 ảnh nền trong suốt: đứng, đánh thường, ra c
    - `standing`, `style`: thu còn ¼.
    - `portrait`: 192×192, cắt quanh mặt.
 4. **Đăng ký rig:**
-   - Thêm `const X: WarriorRig` vào `rigs.ts` ngay trước `/** Hình động theo id nhân vật.`, rồi thêm vào `RIGS`.
+   - Tạo `rigs/<dir>.ts` xuất `const X: WarriorRig` (chép dạng của một nhân vật có sẵn), rồi import và thêm vào `RIGS` trong `rigs/index.ts`.
    - `anchor` lấy điểm giữa hai bàn chân. `scale` đo theo khóa thắt lưng (dựng ảnh so cạnh dáng đứng ở cùng mặt đất).
    - Tranh hướng sang trái thì lật ngang.
    - Thiếu tranh ra chiêu thì bỏ `cast`, rig dùng nhịp động tác sẵn có.

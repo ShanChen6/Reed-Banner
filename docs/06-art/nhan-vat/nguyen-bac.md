@@ -1,6 +1,6 @@
 # Nguyễn Bặc — hình động trong trận
 
-> Cập nhật 12/11/2026: rig đã dựng lại từ bộ tranh mới Shan gửi (tờ ghép 6 dáng 1536×1024 + chân dung bán thân), xem chú thích trên `NGUYEN_BAC` trong `src/app/game/stage/rigs.ts`. Các lớp vải (cape, ribbon, sash), lớp che vai và `nguyen-bac-boxes.json` không còn dùng; phần dưới đây mô tả bản cũ, giữ để tham khảo.
+> Cập nhật 12/11/2026: rig đã dựng lại từ bộ tranh mới Shan gửi (tờ ghép 6 dáng 1536×1024 + chân dung bán thân), xem chú thích trên `NGUYEN_BAC` trong `src/app/game/stage/rigs/nguyenBac.ts`. Các lớp vải (cape, ribbon, sash), lớp che vai và `nguyen-bac-boxes.json` không còn dùng; phần dưới đây mô tả bản cũ, giữ để tham khảo.
 > Trạng thái: **IMPLEMENTED**
 
 - Roster: `nguyenBac`, tướng sĩ Hỏa; không sửa `src/core/`.
@@ -26,7 +26,7 @@ Tọa độ đều trong khung nguồn 1024×1536, không phải pixel WebP. Kh�
 
 ## Tái xuất
 
-Dự án không giữ file Python. Khi cần tái xuất, cắt lớp từ ảnh nguồn `nguyễn bặc.png` (1024×1536) cùng ảnh tách nền có alpha đúng khung nguồn, theo tọa độ trong `nguyen-bac-boxes.json`, chạy Python nội tuyến (`python3 - <<'EOF' ... EOF`) như quy ước ở `docs/06-art/prompts/codex-rig-nhan-vat.md`: từ chối ảnh khác kích thước, cắt lớp, kiểm tra ảnh ráp, ghi WebP và metadata. Sau khi đổi đường cắt phải đồng bộ PartBox trong `rigs.ts`; test sẽ bắt tọa độ không khớp.
+Dự án không giữ file Python. Khi cần tái xuất, cắt lớp từ ảnh nguồn `nguyễn bặc.png` (1024×1536) cùng ảnh tách nền có alpha đúng khung nguồn, theo tọa độ trong `nguyen-bac-boxes.json`, chạy Python nội tuyến (`python3 - <<'EOF' ... EOF`) như quy ước ở `docs/06-art/prompts/codex-rig-nhan-vat.md`: từ chối ảnh khác kích thước, cắt lớp, kiểm tra ảnh ráp, ghi WebP và metadata. Sau khi đổi đường cắt phải đồng bộ PartBox trong `stage/rigs/`; test sẽ bắt tọa độ không khớp.
 
 Prompt alpha cuối, dùng công cụ imagegen tích hợp:
 

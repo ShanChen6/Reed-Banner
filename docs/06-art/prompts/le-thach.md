@@ -146,4 +146,4 @@ Edit this image. KEEP exactly: the face and its expression, the small scar on th
 
 ## 6. Khi dùng được: việc tôi làm tiếp
 
-Thay `docs/06-art/prompts/le-thach.md` trong repo bằng bản này; gắn ảnh vào `public/art/characters/le-thach/`; chỉnh tọa độ trong `LE_THACH` (`rigs.ts`; vũ khí vẫn giáo nên nhịp Đâm giữ); tách lớp lại hình động đứng (giáo cùng nắm tay, khiên cùng cẳng tay, đầu và nón lá); làm `portrait.webp` từ ảnh chuẩn.
+Thay `docs/06-art/prompts/le-thach.md` trong repo bằng bản này; gắn ảnh vào `public/art/characters/le-thach/`; chỉnh tọa độ trong `LE_THACH` (`src/app/game/stage/rigs/le-thach.ts`; vũ khí vẫn giáo nên nhịp Đâm giữ); tách lớp lại hình động đứng (giáo cùng nắm tay, khiên cùng cẳng tay, đầu và nón lá); làm `portrait.webp` từ ảnh chuẩn.

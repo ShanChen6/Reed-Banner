@@ -143,12 +143,12 @@ Painting style: clean ink outlines, soft cel-like shading with simplified shadow
 
 ## 10. Quy cách gửi lại
 
-Gửi **PNG gốc**, tên `chuan`, `bust`, `style`, `attack`, `cast`, `ultimate`, `down`. Tôi sẽ cắt, co về đúng cỡ, thay vào `public/art/characters/ho-lang/`, chỉnh tọa độ trong `HO_LANG` (`rigs.ts`; vũ khí vẫn là đinh ba/giáo nên giữ nhịp đâm), tách lớp lại hình động đứng (đinh ba cùng nắm tay, bàn tay buông, đầu và khăn) và làm `portrait.webp`.
+Gửi **PNG gốc**, tên `chuan`, `bust`, `style`, `attack`, `cast`, `ultimate`, `down`. Tôi sẽ cắt, co về đúng cỡ, thay vào `public/art/characters/ho-lang/`, chỉnh tọa độ trong `HO_LANG` (`src/app/game/stage/rigs/ho-lang.ts`; vũ khí vẫn là đinh ba/giáo nên giữ nhịp đâm), tách lớp lại hình động đứng (đinh ba cùng nắm tay, bàn tay buông, đầu và khăn) và làm `portrait.webp`.
 
 ## 11. Kết quả (09/11/2026)
 
 Shan gửi 7 ảnh: chuẩn, bust, ra đòn (ngang 1536×1024), ra chiêu (quăng lưới), tuyệt chiêu, phong thái (ngồi mũi thuyền vá lưới), gục (ngang 1536×1024). Nền trong suốt sẵn.
 
-- **Tranh tư thế:** cắt sát, co 0,4 lần (`pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down`); phong thái co 0,5 lần; `standing.webp` co 0,25 lần. Tọa độ mới trong `HO_LANG` (`rigs.ts`); tranh ra chiêu vẽ to hơn nên đặt `scale` 0,87. Điểm bắn: mũi đinh ba (ra đòn, tuyệt chiêu), lưới đang tung (ra chiêu).
+- **Tranh tư thế:** cắt sát, co 0,4 lần (`pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down`); phong thái co 0,5 lần; `standing.webp` co 0,25 lần. Tọa độ mới trong `HO_LANG` (`src/app/game/stage/rigs/ho-lang.ts`); tranh ra chiêu vẽ to hơn nên đặt `scale` 0,87. Điểm bắn: mũi đinh ba (ra đòn, tuyệt chiêu), lưới đang tung (ra chiêu).
 - **Hình động đứng:** `sword` là đinh ba, `arm` là nắm tay phải (cả hai xoay quanh cổ tay), `armR` là bàn tay trái chống hông, `head` là đầu kèm khăn. Phần cẳng tay sau cán được vá bằng nội suy hai bên, đai lưng sau bàn tay vá bằng khuếch tán màu. Lớp `ribbon` cũ đã bỏ.
 - **Chân dung:** `bust.webp` 384×384 (đã thêm `hoLang` vào `BUST_IDS`); `portrait.webp` 192×192. Tổng thư mục khoảng 304 KB.

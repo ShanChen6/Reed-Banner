@@ -108,7 +108,7 @@ export const foeIds = (team: readonly string[]) =>
     .slice(0, 3)
     .map((c) => c.id);
 
-/** Nhân vật đã có hình động (src/app/game/stage/rigs.ts), cho đứng đầu đội Tianwu ở Luyện tập để xem thử. */
+/** Nhân vật đã có hình động (src/app/game/stage/rigs/), cho đứng đầu đội Tianwu ở Luyện tập để xem thử. */
 export const SHOWCASE_FOES = ["tranCuong", "ngoXuongXi", "phamBachHo", "tranLam", "dinhLien", "leHoan", "trinhTu", "luuCo", "dinhDien", "nguyenBac", "daoLam"];
 
 export const practiceFoeIds = (team: readonly string[]) => {

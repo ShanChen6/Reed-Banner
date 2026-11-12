@@ -325,7 +325,7 @@ Mở rộng quy ước ở [Hình ảnh 2.6](art-bible.md#26-đưa-hình-vào-ga
 | Đ0, Đ1 | Xong: chọn tự viết rig bằng code (mục 3.2), [art bible](art-bible.md) |
 | Đ2 Pipeline ảnh | **Chưa làm**: chưa có `art:build`/`art:check`, chưa có ngân sách dung lượng trong CI |
 | Đ3 Màn trận + đạo diễn | Một phần: có đạo diễn dòng thời gian (`src/app/game/stage/director.ts`); **chưa tách `DemoGame.tsx`** (2 647 dòng), AI chưa chạy trong worker |
-| Đ4, Đ5 | Xong theo cách khác: mỗi nhân vật một rig riêng (`src/app/game/stage/rigs.ts`) thay cho 6 bộ xương theo nghề |
+| Đ4, Đ5 | Xong theo cách khác: mỗi nhân vật một rig riêng (`src/app/game/stage/rigs/`, mỗi nhân vật một file) thay cho 6 bộ xương theo nghề |
 | Đ6 Hiệu ứng | Xong: hiệu ứng theo hệ và tuyệt chiêu trong `src/app/game/stage/` |
 | Đ7 Trang trí | Phần lớn xong: tranh chế độ ở Chiến trường, bản đồ chiến dịch, nền phong thái theo hệ |
 | Đ8 Nhân vật theo lô | Xong: 77 nhân vật có rig và tranh trong `public/art/characters/` |
