@@ -85,8 +85,6 @@ export interface WarriorRig {
   readonly skeleton: "warrior";
   /** Nhịp vũ khí riêng; bỏ trống giữ nhát chém của các tướng sĩ cũ. */
   readonly weapon?: "spear" | "fan" | "gourd" | "staff";
-  /** Góc giơ vũ khí khi chiến thắng/phản ứng (rad), thay mặc định theo loại vũ khí; kiếm buông thõng cần nhỏ. */
-  readonly raise?: number;
   /** Điểm cầm để hồ lô lắc nhẹ trong tay, cùng hệ tọa độ ảnh nguồn. */
   readonly grip?: Point;
   /** Tay áo dài uốn theo gió trong cùng khớp với tay cầm quạt. */
@@ -1628,7 +1626,6 @@ const LUC_DIEP: WarriorRig = {
 const NHAN_TRUC: WarriorRig = {
   skeleton: "warrior",
   weapon: "staff",
-  raise: -0.04,
   dir: "nhan-truc",
   texScale: 0.5,
   foot: { x: 490, y: 1532 },
@@ -1805,7 +1802,6 @@ const KHA_SON: WarriorRig = {
 const THAI_HA: WarriorRig = {
   skeleton: "warrior",
   weapon: "staff",
-  raise: -0.05,
   dir: "thai-ha",
   texScale: 0.5,
   foot: { x: 500, y: 1515 },
@@ -1895,7 +1891,6 @@ const MAI_THANH: WarriorRig = {
 const QUACH_AN: WarriorRig = {
   skeleton: "warrior",
   weapon: "staff",
-  raise: -0.03,
   dir: "quach-an",
   texScale: 0.5,
   foot: { x: 500, y: 1519 },
@@ -2210,7 +2205,6 @@ const HONG_DAN: WarriorRig = {
 const NINH_HOA: WarriorRig = {
   skeleton: "warrior",
   weapon: "fan",
-  raise: -0.08,
   dir: "ninh-hoa",
   texScale: 0.5,
   foot: { x: 500, y: 1525 },
@@ -2438,7 +2432,6 @@ const MA_NHAC: WarriorRig = {
 const TA_THACH: WarriorRig = {
   skeleton: "warrior",
   weapon: "staff",
-  raise: -0.03,
   dir: "ta-thach",
   texScale: 0.5,
   foot: { x: 500, y: 1480 },
@@ -2527,7 +2520,6 @@ const TONG_TAN: WarriorRig = {
  * Cỡ người các tranh tư thế so theo chiều cao đầu.
  */
 const VU_LOI: WarriorRig = {
-  raise: -0.1,
   skeleton: "warrior",
   dir: "vu-loi",
   texScale: 0.5,
@@ -2704,7 +2696,6 @@ const TU_KINH: WarriorRig = {
  */
 const MAC_VAN: WarriorRig = {
   skeleton: "warrior",
-  raise: 0.06,
   dir: "mac-van",
   texScale: 0.5,
   foot: { x: 470, y: 1505 },
@@ -3066,7 +3057,6 @@ const BACH_NO_LANG: WarriorRig = {
 const THANH_LAM_XA: WarriorRig = {
   skeleton: "warrior",
   weapon: "staff",
-  raise: -0.03,
   dir: "thanh-lam-xa",
   texScale: 0.5,
   foot: { x: 430, y: 1495 },
