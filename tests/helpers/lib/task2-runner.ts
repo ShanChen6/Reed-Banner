@@ -1,4 +1,4 @@
-import { createBattle, playAiTurn, inspectSkillChoices, chooseMove, fighterSkill, hasEffect, type BattleEvent, type AiView, type SkillChoice } from '../../src/core';
+import { createBattle, playAiTurn, inspectSkillChoices, chooseMove, fighterSkill, hasEffect, type BattleEvent, type AiView, type SkillChoice } from '../../../src/core';
 import * as old from '../fixtures/2026-10-22-ai-task2-before';
 import type { MeasuredCase } from './task2-cases';
 export function measured(c:MeasuredCase, revision:'before'|'after'='after',cap=120,capture=false) {

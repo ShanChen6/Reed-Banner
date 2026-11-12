@@ -59,11 +59,6 @@ export const InfoGlyph = (p: P) => (
     <path d="M12 11v5M12 8v.01" />
   </Svg>
 );
-export const MergeGlyph = (p: P) => (
-  <Svg {...p}>
-    <path d="M5 4v4c0 3 3 4 7 6M19 4v4c0 3-3 4-7 6v6M9 17l3 3 3-3" />
-  </Svg>
-);
 export const CoinGlyph = (p: P) => (
   <Svg {...p}>
     <circle cx={12} cy={12} r={8.5} />

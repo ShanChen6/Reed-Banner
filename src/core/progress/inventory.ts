@@ -34,8 +34,6 @@ export interface SavedLoadout {
   readonly slots: Partial<Record<NonWeaponSlot, string>>;
 }
 
-export const EMPTY_SAVED_LOADOUT: SavedLoadout = { weapons: {}, slots: {} };
-
 /** Số món tối đa trong túi đồ (cả món đang mặc). Đầy thì món rơi được bán ngay. */
 export const BAG_LIMIT = 200;
 /** Vàng nhận khi bán một món, theo phẩm. Điểm xuất phát. */

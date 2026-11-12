@@ -1,5 +1,4 @@
-// Frozen task1 AI; only import paths adjusted.
-import { CHASE_PASSIVES, type ChasePassiveDef } from "../../src/core/battle/chase";
+// Frozen AI baseline from uncommitted skill reform; do not use in production.
 // AI Tianwu, xem docs/01-gameplay/ai.md.
 // Ngang bằng thông tin: AI chỉ nhận AiView (không có luồng ngẫu nhiên của bàn cờ),
 // chỉ mô phỏng phần biết chắc, và dùng luồng ngẫu nhiên riêng (aiRng).
@@ -15,24 +14,13 @@ import {
   type Move,
   type Whirl,
   type TileKind,
-} from "../../src/core/board";
+} from "../../../src/core/board";
 import {
   act,
-  comboMultiplier,
-  comboOpportunityValue,
-  comboSkillCost,
-  comboReady,
-  COMBO_PASSIVES,
   canFreeWhirl,
   cascadeMultiplier,
   defenseMultiplier,
   elementMultiplier,
-  effectiveAtk,
-  effectiveDef,
-  spiritHealMultiplier,
-  passiveOn,
-  nextActor,
-  findEffect,
   fighterSkill,
   hasEffect,
   isAlive,
@@ -54,9 +42,9 @@ import {
   type SkillDef,
   type SkillStep,
   type StepRecipient,
-} from "../../src/core/battle";
-import { createRng, type Rng } from "../../src/core/rng";
-import { simulateFrom, simulateKnown, type KnownOutcome } from "../../src/core/ai/simulate";
+} from "../../../src/core/battle";
+import { createRng, type Rng } from "../../../src/core/rng";
+import { simulateFrom, simulateKnown, type KnownOutcome } from "../../../src/core/ai/simulate";
 
 export type Difficulty = "easy" | "normal" | "hard" | "boss" | "nightmare";
 
@@ -84,8 +72,7 @@ interface Context {
 function context(view: AiView): Context {
   const own = view.sides[view.turn.side];
   const foe = view.sides[otherSide(view.turn.side)];
-  const forced = view.sides.every(s => s.fighters.length === 1) ? -1 : foe.fighters.findIndex(f => isAlive(f) && !hasEffect(f.effects, "freeze") && hasEffect(f.effects, "taunt"));
-  const t = forced >= 0 ? forced : pickTarget(foe, view.turn.actor);
+  const t = pickTarget(foe, view.turn.actor);
   return { view, me: own.fighters[view.turn.actor]!, target: t === null ? undefined : foe.fighters[t] };
 }
 
@@ -102,7 +89,7 @@ function tileValue(ctx: Context, kind: TileKind): number {
     case "banhChung":
       return 4 * unit * (own.food < 30 ? 3 : own.food < 70 ? 1 : 0.3);
     case "tim":
-      return Math.min(me.maxHp - me.hp, Math.round(me.maxHp * 0.03 * (me.profession === "ySu" ? 1.5 : 1) * spiritHealMultiplier(me.spirit, view.experimentalSpirit))) * 0.8;
+      return Math.min(me.maxHp - me.hp, me.maxHp * 0.03) * 0.8;
     case "trong": {
       const leader = own.fighters[own.leader]!;
       return isAlive(leader) && own.passiveTurns === 0 ? 8 * unit * 0.6 : 0;
@@ -116,9 +103,7 @@ function tileValue(ctx: Context, kind: TileKind): number {
 function swordDamage({ view, me, target }: Context): number {
   if (!target) return 0;
   const morale = MORALE_DAMAGE[moraleOf(view.sides[view.turn.side].food)];
-  const own = view.sides[view.turn.side];
-  const foe = view.sides[otherSide(view.turn.side)];
-  return comboMultiplier(view,{side:view.turn.side,fighter:view.turn.actor},"damage",{side:otherSide(view.turn.side),fighter:foe.fighters.indexOf(target)}) * effectiveAtk(me, view.experimentalSpirit) * morale * (passiveOn(own, me, "hoa") ? 1 + PASSIVE.hoaDamage : 1) * elementMultiplier(me.element, target.element) * defenseMultiplier(effectiveDef(foe, target, view.experimentalSpirit), passiveOn(own, me, "kim") ? PASSIVE.kimPierce : 0);
+  return me.atk * morale * elementMultiplier(me.element, target.element) * defenseMultiplier(target.def);
 }
 
 /** fromSkill: bàn cờ đổi do kỹ năng hoặc xoay miễn phí, thu hoạch giảm như trong battle.ts. */
@@ -278,58 +263,32 @@ function scoreSkillTarget(view: AiView, def: SkillDef, selected?: number): { sco
       }
       case "damage": {
         for (const t of hit) {
-          const ownSide = view.sides[view.turn.side];
-          const pierce = 1 - (1 - (step.pierce ?? 0)) * (1 - (passiveOn(ownSide, ctx.me, "kim") ? PASSIVE.kimPierce : 0));
-          const defense = defenseMultiplier(effectiveDef(foe, t, view.experimentalSpirit), pierce);
-          const baseRaw = Math.round(step.atk * (step.execute && t.hp / t.maxHp <= step.execute.threshold ? step.execute.multiplier : 1) * (def.target === "allEnemies" && view.sides.every(s => s.fighters.length === 1) ? 1.5 : 1) * effectiveAtk(ctx.me, view.experimentalSpirit) * MORALE_DAMAGE[moraleOf(ownSide.food)] * (passiveOn(ownSide, ctx.me, "hoa") ? 1 + PASSIVE.hoaDamage : 1) * elementMultiplier(ctx.me.element, t.element) * defense);
-          const raw = Math.round(baseRaw * comboMultiplier(view,{side:view.turn.side,fighter:view.turn.actor},"damage",{side:otherSide(view.turn.side),fighter:foe.fighters.indexOf(t)}));
-          const shield = step.pierceShield || passiveOn(ownSide, ctx.me, "kim") ? 0 : findEffect(t.effects, "shield")?.value ?? 0;
-          const dealt = Math.min(t.hp + shield, raw);
-          score += dealt;
-          if (raw >= t.hp + shield) score += ctx.me.atk * 10; // Cùng thưởng kết liễu như khi chấm nước đổi ô.
-          if (step.lifesteal) score += Math.min(ctx.me.maxHp - ctx.me.hp, Math.round(Math.round(dealt * step.lifesteal) * spiritHealMultiplier(ctx.me.spirit, view.experimentalSpirit)));
+          const defense = defenseMultiplier(t.def, step.pierce ?? 0);
+          score += Math.min(t.hp, step.atk * (step.execute && t.hp / t.maxHp <= step.execute.threshold ? step.execute.multiplier : 1) * (def.target === "allEnemies" && foe.fighters.length === 1 ? 1.5 : 1) * ctx.me.atk * elementMultiplier(ctx.me.element, t.element) * defense);
         }
         break;
       }
       case "heal":
-        for (const r of list(step.to)) score += Math.min(r.maxHp - r.hp, Math.round(Math.round(Math.round(r.maxHp * step.ratio) * comboMultiplier(view,{side:view.turn.side,fighter:view.turn.actor},"sustain")) * spiritHealMultiplier(r.spirit, view.experimentalSpirit)));
+        for (const r of list(step.to)) score += Math.min(r.maxHp - r.hp, r.maxHp * step.ratio);
         break;
       case "effect": {
         for (const r of list(step.to)) {
-          const existing = findEffect(r.effects, step.effect);
-          if (existing && existing.value >= step.value && (existing.turns === null || (existing.turns ?? 0) >= (step.turns ?? 0)) && step.effect !== "shield" && step.effect !== "regen" && step.effect !== "burn") continue;
+          if (hasEffect(r.effects, step.effect)) continue;
           const friendly = own.fighters.includes(r);
           const harmful = NEGATIVE_EFFECTS.includes(step.effect);
           const sign = (friendly && harmful) || (!friendly && POSITIVE_EFFECTS.includes(step.effect)) ? -1 : 1;
           let worth = ctx.me.atk * 0.8;
-          if (step.effect === "atkUp" || step.effect === "atkDown") worth = effectiveAtk(r, view.experimentalSpirit) * 3 * (Math.max(0, step.value - (existing?.value ?? 0)) * (step.turns ?? 1) + (existing?.value ?? 0) * Math.max(0, (step.turns ?? 0) - (existing?.turns ?? 0))) * 0.9;
+          if (step.effect === "atkUp" || step.effect === "atkDown") worth = r.atk * 3 * step.value * (step.turns ?? 1) * 0.9;
           if (step.effect === "defUp" || step.effect === "defDown") {
             const changed = r.def * (step.effect === "defUp" ? 1 + step.value : 1 - step.value);
             worth = Math.abs(defenseMultiplier(r.def) - defenseMultiplier(changed)) * ctx.me.atk * 3 * (step.turns ?? 1);
           }
           if (step.effect === "burn") worth = (step.ofAtk ? ctx.me.atk * step.value : step.value) * (step.turns ?? 1);
           if (step.effect === "freeze" && hasEffect(r.effects, "freezeImmune")) worth = 0;
-          if (step.effect === "shield") worth = Math.max(0, Math.round(Math.round((step.ofMaxHp ? Math.round(r.maxHp * step.value) : step.ofAtk ? Math.round(ctx.me.atk * step.value) : step.value) * comboMultiplier(view,{side:view.turn.side,fighter:view.turn.actor},"sustain")) * spiritHealMultiplier(r.spirit, view.experimentalSpirit)) - (existing?.value ?? 0)) * SHIELD_WORTH;
-          if (step.effect === "regen") worth = Math.min(r.maxHp - r.hp, Math.max(0, Math.round(Math.round(r.maxHp * step.value) * spiritHealMultiplier(r.spirit, view.experimentalSpirit)) * (step.turns ?? 1) - Math.round((existing?.value ?? 0) * spiritHealMultiplier(r.spirit, view.experimentalSpirit)) * (existing?.turns ?? 0))) * 0.7;
+          if (step.effect === "shield") worth = (step.ofMaxHp ? r.maxHp * step.value : step.ofAtk ? ctx.me.atk * step.value : step.value) * SHIELD_WORTH;
+          if (step.effect === "regen") worth = Math.min(r.maxHp - r.hp, r.maxHp * step.value * (step.turns ?? 1)) * 0.7;
           if (step.effect === "taunt") worth = own.fighters.filter(f => isAlive(f) && f !== r).length ? ctx.me.atk * (r.hp / r.maxHp) : 0;
-          if (step.effect === "silence") {
-            const enemySide = view.sides[otherSide(view.turn.side)];
-            const minimum = Math.min(Infinity, ...(r.skills ?? []).map(id => fighterSkill(r,id)?.cost ?? Infinity));
-            let last = view.lastActors[otherSide(view.turn.side)];
-            let actions = 0;
-            for (let i = 0; i < (step.turns ?? 1); i++) {
-              const next = nextActor(enemySide, last, last);
-              if (next === null) break;
-              if (enemySide.fighters[next] === r) actions++;
-              last = next;
-            }
-            worth = hasEffect(r.effects, "freeze") || minimum === Infinity ? 0 : effectiveAtk(r, view.experimentalSpirit) * (r.energy >= minimum ? 2 : r.energy / Math.max(1,minimum)) * actions;
-          }
-          if (step.effect === "reflect") {
-            const directed = own.fighters.filter(isAlive).length === 1 || hasEffect(r.effects, "taunt") || def.steps.some(s => s.type === "effect" && s.effect === "taunt");
-            const incoming = enemies.reduce((sum,e) => sum + effectiveAtk(e, view.experimentalSpirit), 0) * (step.turns ?? 1) * (directed ? 1 : 1 / Math.max(1,own.fighters.filter(isAlive).length));
-            worth = Math.min(r.hp + (findEffect(r.effects,"shield")?.value ?? 0), incoming) * Math.max(0,step.value - (existing?.value ?? 0));
-          }
+          if (step.effect === "silence") worth = (r.skills?.length ?? 0) ? ctx.me.atk * (0.3 + r.energy / 50) : 0;
           score += sign * worth * (step.chance ?? 1);
         }
         break;
@@ -338,11 +297,11 @@ function scoreSkillTarget(view: AiView, def: SkillDef, selected?: number): { sco
         for (const r of list(step.to)) score += r.effects.some(e => NEGATIVE_EFFECTS.includes(e.kind)) ? ctx.me.atk : 0;
         break;
       case "dispel":
-        for (const r of hit) score += r.effects.filter(e => POSITIVE_EFFECTS.includes(e.kind)).reduce((sum, e) => sum + (e.kind === "shield" ? e.value * SHIELD_WORTH : ctx.me.atk * 2), 0) + comboOpportunityValue(view,{side:otherSide(view.turn.side),fighter:foe.fighters.indexOf(r)});
+        for (const r of hit) score += r.effects.filter(e => POSITIVE_EFFECTS.includes(e.kind)).reduce((sum, e) => sum + (e.kind === "shield" ? e.value * SHIELD_WORTH : ctx.me.atk * 2), 0);
         break;
       case "energy":
         for (const r of list(step.to)) {
-          score += (step.amount < 0 ? Math.min(r.energy, -step.amount + ((()=>{const ready=comboReady(view,{side:view.turn.side,fighter:view.turn.actor});return ready&&COMBO_PASSIVES[ready.passive].payoff==="drain"&&ready.target?.side===otherSide(view.turn.side)&&ready.target.fighter===foe.fighters.indexOf(r)?COMBO_PASSIVES[ready.passive].value:0;})())) : Math.min(100 - r.energy + (r === ctx.me ? def.cost : 0), step.amount)) * ctx.me.atk * 0.05;
+          score += (step.amount < 0 ? Math.min(r.energy, -step.amount) : Math.min(100 - r.energy, step.amount)) * ctx.me.atk * 0.05;
         }
         break;
       case "enemyFood":
@@ -384,52 +343,30 @@ function scoreSkillTarget(view: AiView, def: SkillDef, selected?: number): { sco
         break;
     }
   }
-  if (score > 0) score += comboSetupValue(view,def,hit);
   if (score <= 0) return null;
   const target = def.target === "enemy" ? lowestEnemy : def.target === "ally" ? lowestAlly : undefined;
   return { score, ...(target === undefined ? {} : { target }), ...(whirl ? { whirl } : {}), ...(cell ? { cell } : {}) };
 }
 
-export interface SkillChoice {
-  readonly id: string; readonly cost: number; readonly score: number; readonly ratio: number;
-  readonly action?: BattleAction; readonly reason: string;
-}
-
-/** Chẩn đoán dùng cùng phép chấm/chọn với AI thực, không tiêu thụ RNG. */
-export function inspectSkillChoices(view: AiView): SkillChoice[] {
-  const me = view.sides[view.turn.side].fighters[view.turn.actor]!;
-  const options = (me.skills ?? []).map(id => {
-    const base = fighterSkill(me,id)!;
-    const def = { ...base, cost: comboSkillCost(me,base) };
-    const scored = scoreSkill(view,def);
-    const score = scored?.score ?? 0;
-    const ratio = score / Math.max(1,(def.cost + TURN_SLOT_ENERGY)*me.atk*0.02);
-    const cell = scored?.cell ?? (needsCell(def)?{row:Math.floor(view.board.rows/2),col:Math.floor(view.board.cols/2)}:undefined);
-    const action: BattleAction = {type:"skill",skill:id,target:scored?.target,cell,whirl:scored?.whirl};
-    return {id,cost:def.cost,score,ratio,action,reason:""};
-  });
-  const bestRatio = Math.max(0,...options.map(o=>o.ratio));
-  let best: typeof options[number] | undefined;
-  for (const o of options) {
-    if(view.turn.skillUsed) o.reason="slotUsed";
-    else if(hasEffect(me.effects,"silence")) o.reason="silenced";
-    else if(o.score<=0) o.reason="noValue";
-    else if(o.cost>me.energy) o.reason="energy";
-    else if(o.ratio<bestRatio*SAVE_FOR_BETTER) o.reason="saving";
-    else if(o.ratio<=1) o.reason="belowThreshold";
-    else if(!best||o.ratio>best.ratio) best=o;
-  }
-  for(const o of options) if(!o.reason) o.reason=o===best?"chosen":`dominated:${best?.id ?? "none"}`;
-  return options;
-}
 export function chooseSkill(view: AiView): BattleAction | null {
-  return inspectSkillChoices(view).find(o=>o.reason==="chosen")?.action ?? null;
-}
-
-export interface AiTurnPolicy {
-  readonly chooseSkill?: (view: AiView) => BattleAction | null;
-  readonly chooseMove?: typeof chooseMove;
-  readonly bestWhirl?: typeof bestWhirl;
+  const me = view.sides[view.turn.side].fighters[view.turn.actor]!;
+  if (view.turn.skillUsed || hasEffect(me.effects, "silence")) return null;
+  const options = (me.skills ?? []).flatMap((id) => {
+    const def = fighterSkill(me, id);
+    const scored = def && scoreSkill(view, def);
+    if (!def || !scored) return [];
+    return [{ id, def, scored, ratio: scored.score / Math.max(1, (def.cost + TURN_SLOT_ENERGY) * me.atk * 0.02) }];
+  });
+  // Kỹ năng đáng hơn nhưng chưa đủ năng lượng thì để dành, không tiêu vào kỹ năng kém hơn.
+  const bestRatio = Math.max(0, ...options.map((o) => o.ratio));
+  let best: { action: BattleAction; ratio: number } | null = null;
+  for (const { id, def, scored, ratio } of options) {
+    if (def.cost > me.energy || ratio < bestRatio * SAVE_FOR_BETTER) continue;
+    if (ratio <= 1 || (best && best.ratio >= ratio)) continue;
+    const cell = scored.cell ?? (needsCell(def) ? { row: Math.floor(view.board.rows / 2), col: Math.floor(view.board.cols / 2) } : undefined);
+    best = { action: { type: "skill", skill: id, target: scored.target, cell, whirl: scored.whirl }, ratio };
+  }
+  return best?.action ?? null;
 }
 
 /**
@@ -440,7 +377,6 @@ export function playAiTurn(
   start: BattleState,
   difficulty: Difficulty,
   now = 0,
-  policy: AiTurnPolicy = {},
 ): { state: BattleState; events: BattleEvent[] } {
   let state = start;
   const side = state.turn.side;
@@ -457,45 +393,17 @@ export function playAiTurn(
   while (state.winner === null && state.turn.side === side && state.turn.number === number) {
     if (selectableActors(state).length === 0) break;
     if (canFreeWhirl(state)) {
-      const free = (policy.bestWhirl ?? bestWhirl)(toView(state), PASSIVE.phongFreeWhirlTurns);
+      const free = bestWhirl(toView(state), PASSIVE.phongFreeWhirlTurns);
       if (free.score > 0) apply({ type: "whirl", whirl: free.whirl });
       if (state.winner !== null) break;
     }
-    const skill = (policy.chooseSkill ?? chooseSkill)(toView(state));
+    const skill = chooseSkill(toView(state));
     if (skill) apply(skill);
     if (state.winner !== null) break;
     const rng = createRng(state.aiRng);
-    const move = (policy.chooseMove ?? chooseMove)(toView(state), difficulty, rng);
+    const move = chooseMove(toView(state), difficulty, rng);
     state = { ...state, aiRng: rng.state() };
     if (!apply({ type: "swap", from: move.from, to: move.to })) throw new Error("AI chọn nước đi không hợp lệ");
   }
   return { state, events };
-}
-
-/** Small preparation credit, only for a reachable useful event and a living eligible teammate. */
-function comboSetupValue(view:AiView,def:SkillDef,hit:readonly Fighter[]):number {
- const side=view.turn.side,own=view.sides[side],caster=own.fighters[view.turn.actor]!;
- // Prepared opportunities and immediate chase are evaluated separately.
- const kinds=new Set<string>();
- for(const step of def.steps){
-  if(step.type==='damage'&&hit.some(f=>f.hp>0))kinds.add('skillDamage');
-  if(step.type==='effect'&&step.effect==='defDown'&&hit.some(f=>(findEffect(f.effects,'defDown')?.value??0)<step.value))kinds.add('armorBroken');
-  if(step.type==='effect'&&(step.effect==='freeze'||step.effect==='silence')&&hit.some(f=>!hasEffect(f.effects,step.effect)&&!(step.effect==='freeze'&&hasEffect(f.effects,'freezeImmune'))))kinds.add('controlled');
-  if(step.type==='dispel'&&hit.some(f=>f.comboReady||f.effects.some(e=>POSITIVE_EFFECTS.includes(e.kind))))kinds.add('dispelled');
-  if(step.type==='heal'&&own.fighters.some(f=>isAlive(f)&&f.hp<f.maxHp&&spiritHealMultiplier(f.spirit,view.experimentalSpirit)>0))kinds.add('healed');
- }
- const preparation=caster.comboReady?0:own.fighters.reduce((sum,f,i)=>{if(i===view.turn.actor||!isAlive(f)||!f.comboPassive||f.comboReady||hasEffect(f.effects,'silence')||hasEffect(f.effects,'freeze')||f.comboOpenedAt===view.comboState?.sideTurns[side])return sum;const p=COMBO_PASSIVES[f.comboPassive];return sum+(p.triggers.some(k=>kinds.has(k))?Math.min(f.atk*.3,caster.atk*.3):0);},0);
- // Visible first-hop estimate only. No future-board reads or attempt to price the whole chain.
- const chase=own.fighters.reduce((sum,f,i)=>{
-   if(!isAlive(f)||hasEffect(f.effects,'silence')||hasEffect(f.effects,'freeze'))return sum;
-   return sum+(f.chasePassives??[]).reduce((value,id)=>{
-     const p:ChasePassiveDef=CHASE_PASSIVES[id];
-     if((p.alliesOnly&&i===view.turn.actor)||!p.triggers.some(k=>kinds.has(k)))return value;
-     if(p.effect==='damage')return value+f.atk*p.value*.5;
-     if(p.effect==='heal')return value+Math.max(0,...own.fighters.filter(isAlive).map(x=>Math.min(x.maxHp-x.hp,Math.round(x.maxHp*p.value*spiritHealMultiplier(x.spirit,view.experimentalSpirit)))))*.5;
-     if(p.effect==='shield')return value+Math.max(0,...own.fighters.filter(isAlive).map(x=>Math.max(0,Math.round(x.maxHp*p.value*spiritHealMultiplier(x.spirit,view.experimentalSpirit))-(findEffect(x.effects,'shield')?.value??0))))*.25;
-     return value+Math.min(f.atk*.1,p.value);
-   },0);
- },0);
- return preparation+chase;
 }

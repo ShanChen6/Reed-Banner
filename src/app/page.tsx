@@ -1,4 +1,4 @@
-import { Badge, buttonClassName } from "@/components/ui";
+import { Badge, buttonVariants } from "@/components/ui";
 import Link from "next/link";
 import {
   BOARD_COLS,
@@ -102,7 +102,7 @@ function PlayButton({ className = "", children = "Chơi ngay" }: { className?: s
   return (
     <Link
       href="/game"
-      className={buttonClassName({ variant: "ornate", className: `fx-btn uppercase tracking-wider ${className}` })}
+      className={buttonVariants({ variant: "ornate", className: `fx-btn uppercase tracking-wider ${className}` })}
     >
       {children}
     </Link>

@@ -90,5 +90,3 @@ export function lightning(parent: Container, color: number) {
     },
   };
 }
-
-export type Lightning = ReturnType<typeof lightning>;

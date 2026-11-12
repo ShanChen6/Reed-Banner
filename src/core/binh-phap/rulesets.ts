@@ -92,9 +92,6 @@ export const RULESETS: readonly Ruleset[] = [
   },
 ];
 
-/** Bậc không xếp hạng, không thưởng (bậc học). */
-export const UNRANKED_RULESET_IDS: readonly string[] = ["huong-dan"];
-
 export function rulesetById(id: string): Ruleset | undefined {
   return RULESETS.find((r) => r.id === id);
 }

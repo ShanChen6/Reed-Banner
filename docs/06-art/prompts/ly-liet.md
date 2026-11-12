@@ -145,12 +145,12 @@ Painting style: clean ink outlines, soft cel-like shading with simplified shadow
 
 ## 10. Quy cách gửi lại
 
-Gửi **PNG gốc**, tên `chuan`, `bust`, `style`, `attack`, `cast`, `ultimate`, `down`. Tôi sẽ cắt, co về đúng cỡ, thay vào `public/art/characters/ly-liet/`, chỉnh tọa độ trong `LY_LIET` (`rigs.ts`; vũ khí vẫn là đao nên giữ nhịp chém), tách lớp lại hình động đứng (đao cùng nắm tay, bàn tay buông, đầu và dải khăn) và làm `portrait.webp`.
+Gửi **PNG gốc**, tên `chuan`, `bust`, `style`, `attack`, `cast`, `ultimate`, `down`. Tôi sẽ cắt, co về đúng cỡ, thay vào `public/art/characters/ly-liet/`, chỉnh tọa độ trong `LY_LIET` (`src/app/game/stage/rigs/ly-liet.ts`; vũ khí vẫn là đao nên giữ nhịp chém), tách lớp lại hình động đứng (đao cùng nắm tay, bàn tay buông, đầu và dải khăn) và làm `portrait.webp`.
 
 ## Kết quả (09/11/2026)
 
 Shan gửi 7 ảnh: chuẩn, bust, ra đòn (ngang 1536×1024), ra chiêu, tuyệt chiêu, phong thái (vác đao trên vai), gục (ngang 1536×1024). Nền trong suốt sẵn; vũ khí giữ đao cán dài buộc dải vải đỏ.
 
-- **Tranh tư thế:** cắt sát, co 0,4 lần (`pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down`); phong thái co 0,5 lần; `standing.webp` co 0,25 lần. Tọa độ mới trong `LY_LIET` (`rigs.ts`). Điểm bắn ở mũi đao cả ba tranh.
+- **Tranh tư thế:** cắt sát, co 0,4 lần (`pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down`); phong thái co 0,5 lần; `standing.webp` co 0,25 lần. Tọa độ mới trong `LY_LIET` (`src/app/game/stage/rigs/ly-liet.ts`). Điểm bắn ở mũi đao cả ba tranh.
 - **Hình động đứng:** `sword` là đao kèm dải vải, `arm` là nắm tay phải (cả hai xoay quanh cổ tay), `armR` là bàn tay trái chống hông, `head` là đầu. Cẳng tay và hộ uyển sau cán được vá bằng nội suy hai bên, đai lưng sau bàn tay vá bằng khuếch tán màu.
 - **Chân dung:** `bust.webp` 384×384 (đã thêm `lyLiet` vào `BUST_IDS`); `portrait.webp` là bust co về 192×192. Tổng thư mục khoảng 231 KB.

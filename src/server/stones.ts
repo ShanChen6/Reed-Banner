@@ -35,13 +35,6 @@ export const trialPlanner =
     return r.ok ? { ok: true, patch: { trial: r.next }, plan: r } : r;
   };
 
-export const destinyPlanner =
-  (plan: (d: DestinyProgress) => ReturnType<typeof import("@/core").planDestinyCycleEnd>): StonePlanner =>
-  ({ destiny }) => {
-    const r = plan(destiny);
-    return r.ok ? { ok: true, patch: { destiny: r.next }, plan: r } : r;
-  };
-
 export async function awardStones(
   store: ProfileStore,
   ownerId: string,

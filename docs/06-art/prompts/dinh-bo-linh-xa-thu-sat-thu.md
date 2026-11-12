@@ -7,7 +7,7 @@
 
 Thiết kế gameplay duy nhất: [Đinh Bộ Lĩnh — thêm Xạ thủ/Sát thủ](../../03-characters/dinh-bo-linh-xa-thu-sat-thu.md). Tài liệu này chỉ quyết định **cái gì thay đổi về hình**, không định nghĩa chiêu hay số liệu.
 
-Hiện Đinh Bộ Lĩnh dùng một rig (`dinhBoLinh` trong [rigs.ts](../../../src/app/game/stage/rigs.ts), ảnh ở `public/art/characters/dinh-bo-linh/`) với một thanh kiếm cho cả sáu nghề cũ. Hai nghề mới cầm kiếm sẽ lệch với tên chiêu, nên chỉ hai nghề này có biến thể; **sáu nghề cũ giữ nguyên hình hiện có**.
+Hiện Đinh Bộ Lĩnh dùng một rig (`dinhBoLinh`, dữ liệu ở [rigs/dinh-bo-linh.ts](../../../src/app/game/stage/rigs/dinh-bo-linh.ts), ảnh ở `public/art/characters/dinh-bo-linh/`) với một thanh kiếm cho cả sáu nghề cũ. Hai nghề mới cầm kiếm sẽ lệch với tên chiêu, nên chỉ hai nghề này có biến thể; **sáu nghề cũ giữ nguyên hình hiện có**.
 
 ## Khóa nhân dạng (không đổi ở mọi biến thể)
 

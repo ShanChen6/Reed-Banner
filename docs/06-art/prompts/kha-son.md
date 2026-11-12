@@ -203,4 +203,4 @@ Pose: sitting exhausted on the ground, seen from the side, his back sagging, lea
 
 ## 6. Nếu dùng được: việc tôi làm tiếp
 
-Cắt, co về đúng cỡ, thay vào `public/art/characters/kha-son/`, chỉnh tọa độ trong `KHA_SON` (`rigs.ts`; rìu hai tay, nhịp Chém giữ), tách lớp lại hình động đứng (rìu cùng nắm tay, bàn tay buông, đầu) và làm `portrait.webp`. Vì làm mới từ đầu nên phần tách lớp phải làm lại.
+Cắt, co về đúng cỡ, thay vào `public/art/characters/kha-son/`, chỉnh tọa độ trong `KHA_SON` (`src/app/game/stage/rigs/kha-son.ts`; rìu hai tay, nhịp Chém giữ), tách lớp lại hình động đứng (rìu cùng nắm tay, bàn tay buông, đầu) và làm `portrait.webp`. Vì làm mới từ đầu nên phần tách lớp phải làm lại.

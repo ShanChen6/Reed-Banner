@@ -15,7 +15,7 @@ existing characters `daoLam`, `tranCuong` and `dinhBoLinh` were built. Read this
 
 ### 0. Read first
 
-- `src/app/game/stage/rigs.ts`: every animated character is one entry here (`MageRig` or `WarriorRig`). Copy the shape of
+- `src/app/game/stage/rigs/`: every animated character is one file here, `rigs/<dir>.ts`, named after its art folder and exporting one `MageRig` or `WarriorRig`; types are in `rigs/types.ts`, the `RIGS` registry in `rigs/index.ts`. Copy the shape of
   `DINH_BO_LINH` (the most complete example: cloth layers, a cover layer, pose art).
 - `src/app/game/stage/warrior.ts`, `src/app/game/stage/puppet.ts` (mage), `src/app/game/stage/kit.ts` (shared helpers:
   `layers()` sprite/mesh/joint/bend, `particles()`, `reaction()`), `src/app/game/stage/director.ts` (battle events to cues:
@@ -85,7 +85,7 @@ Hand-drawn polygons alone are not enough. The method that worked:
    - where inpaint still looks wrong behind an apron or sash, fill with the flat local color (for example the trouser color);
    - force-fill the area under a cloth layer that will move (the sash polygon on the body), so the body under it is solid.
 5. **Crop and record boxes.** Save each layer cropped to its alpha bounding box and write `{x, y, w, h}` in ORIGINAL image
-   coordinates to a JSON file. These boxes go straight into `parts`, `cloth[].box`, `covers[].box` in `rigs.ts`.
+   coordinates to a JSON file. These boxes go straight into `parts`, `cloth[].box`, `covers[].box` in the character's `rigs/<dir>.ts`.
 6. **Joints and blade.** Read from the grid: `shoulder` (pivot of the sword arm, the whole arm and sword rotate here),
    `elbowR` (free arm), `neck`, `blade` = [hilt point, tip point] at rest, `foot` = midpoint between the feet on the ground,
    `height` = figure height in source pixels.
@@ -106,7 +106,7 @@ structure.
 
 ### 6. Step 4: the rig entry
 
-Add a `WarriorRig` (or `MageRig`) to `rigs.ts` and register it in `RIGS` under the character id from
+Add a `WarriorRig` (or `MageRig`) in a new file `rigs/<dir>.ts`, import it in `rigs/index.ts` and register it in `RIGS` under the character id from
 `src/core/roster/roster.ts`. Wind on cloth: `axis` "x" for horizontal cloth (cape, ribbon: also `vertical: true` and, if it is
 anchored on the right, `reverse: true`), "y" for hanging cloth (sash, apron); amplitudes 5–16, frequencies 1.2–1.8, a different
 `phase` per layer. `fxColor` is the glow color of the character's element/theme.

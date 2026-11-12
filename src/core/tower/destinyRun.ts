@@ -7,6 +7,7 @@ import {
 } from "../progress/dualTowerState";
 import { destinyRulesVersionForCycle } from "./destinyRules";
 import { analyzeFeasibility } from "./puzzleValidator";
+import { VN_UTC_OFFSET_MS, vnWeek } from "../vnTime";
 import type { FloorRules, LineupMember } from "./floorRules";
 
 export const DESTINY_CYCLE_DAYS = 7;
@@ -34,12 +35,8 @@ export type DestinyRunCreateResult =
 
 /** Monday 00:00 Việt Nam của chu kỳ chứa `now`, dạng YYYY-MM-DD. */
 export function destinyCycleId(now: number): string | null {
-  if (!Number.isSafeInteger(now) || now < 0 || Number.isNaN(new Date(now).valueOf())) return null;
-  const local = new Date(now + 7 * 60 * 60 * 1_000);
-  const day = local.getUTCDay();
-  const mondayOffset = day === 0 ? 6 : day - 1;
-  const monday = new Date(Date.UTC(local.getUTCFullYear(), local.getUTCMonth(), local.getUTCDate() - mondayOffset));
-  return monday.toISOString().slice(0, 10);
+  if (!Number.isSafeInteger(now) || now < 0 || Number.isNaN(new Date(now + VN_UTC_OFFSET_MS).valueOf())) return null;
+  return vnWeek(now);
 }
 
 function equippedItems(profile: Profile, id: string): readonly GearItem[] {

@@ -11,8 +11,6 @@ import {
 } from "@/core";
 import { destinyCycleById, destinyCycleSeed } from "./destinyCycle";
 
-export type DestinyContentError = "invalid_run" | "invalid_secret" | "floor_not_found";
-
 /** Dựng lại snapshot cycle từ roster khóa; cùng cycle/secret/run luôn giống nhau. */
 export function destinyCycleSnapshot(run: DestinyRun, secret: string) {
   if (run.stateVersion !== 1 || !run.cycleId || !run.fighters)

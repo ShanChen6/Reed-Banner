@@ -476,11 +476,6 @@ export type ChapterMissionStatus =
   /** Đã mở theo server nhưng chưa có nội dung trong bản này. */
   | "comingSoon";
 
-/** Trạng thái từng nhiệm vụ Chương I, suy ra hoàn toàn từ state server trả về. */
-export function chapterOneStatus(campaign: CampaignProgressV2) {
-  return chapterStatus(campaign, CHAPTER_ONE);
-}
-
 /** Trạng thái từng nhiệm vụ của một chương, suy ra hoàn toàn từ state server trả về. */
 export function chapterStatus(
   campaign: CampaignProgressV2,
@@ -503,13 +498,6 @@ export function chapterStatus(
     else status = "open";
     return { id, status };
   });
-}
-
-/** Nhiệm vụ nên mở sẵn khi vào màn: dở trước, rồi nhiệm vụ mở đầu tiên, rồi nhiệm vụ đã qua gần nhất. */
-export function chapterOneFocus(
-  campaign: CampaignProgressV2,
-): CampaignMissionId {
-  return chapterFocus(campaign, CHAPTER_ONE);
 }
 
 export function chapterFocus(

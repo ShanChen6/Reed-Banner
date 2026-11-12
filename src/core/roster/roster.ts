@@ -129,8 +129,6 @@ export const EXPANSION_COMPANIONS: readonly FighterConfig[] = [
   {...companion("loiAnh","Mẫn Tuyên","satThu","loi"),chasePassives:["assassinPrepared","loi1","tanVuHoiNhip"]},
   {...companion("voAnh","Liễu Thiều","satThu","phong"),chasePassives:["assassinPrepared","phong1","duAmTiepVan"]},
 ];
-/** Product IDs remain stable independently of camelCase runtime/save IDs. */
-export const EXPANSION_CHARACTER_IDS: Readonly<Record<string,string>> = Object.fromEntries(EXPANSION_COMPANIONS.map((f,i)=>[`RB-${String(62+i).padStart(3,'0')}`,f.id]));
 /** Giá basic 1.500 vàng/tướng được Shan chốt trong task PROF ngày 30/10/2026. */
 export const EXPANSION_SHOP_COMPANIONS: readonly ShopCompanion[] = EXPANSION_COMPANIONS.map(fighter=>({fighter,price:SHOP_PRICES.basic}));
 export const SHOP_COMPANIONS: readonly ShopCompanion[] = [...LEGACY_SHOP_COMPANIONS, ...(NEW_PROFESSIONS_ENABLED ? EXPANSION_SHOP_COMPANIONS : [])];
