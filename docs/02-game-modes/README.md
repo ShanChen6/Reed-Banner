@@ -1,8 +1,8 @@
 # Chế độ chơi
 
-> **Quyết định sản phẩm mới (27/10/2026):** tham khảo [Game Modes 2026: định hướng, Binh Pháp và Song Tháp](future/README.md). Nội dung chi tiết bên dưới mô tả **implementation baseline trước khi triển khai các đề xuất**, không có nghĩa mode mới đã tồn tại. Các giá trị Trial 20 / Destiny 10 / nhãn Sinh tồn ở bảng dưới là **trạng thái code hiện tại**, còn định hướng tương lai xem tài liệu mới.
+> **Quyết định sản phẩm mới (27/10/2026):** tham khảo [Game Modes 2026: định hướng, Binh Pháp và Song Tháp](future/README.md). Nội dung chi tiết bên dưới mô tả **implementation baseline trước khi triển khai các đề xuất**, không có nghĩa mode mới đã tồn tại. Các giá trị Trial 20 / nhãn Sinh tồn ở bảng dưới là **trạng thái code hiện tại**, còn định hướng tương lai xem tài liệu mới. Tháp Thiên Mệnh đã lên 20 tầng từ chu kỳ 16/11/2026 (Shan chốt 11/11/2026).
 
-> Cập nhật: 01/11/2026 (khách và chế độ xếp hạng, Bình Loạn không có bảng, hướng PvP Quần Hùng; 31/10: thêm Trận Đồ bản chơi thử; 25/10: CAMP-08.04 gỡ chiến dịch 13 màn cũ, tách Đánh trùm/BXH/nhiệm vụ khỏi màn cũ)
+> Cập nhật: 11/11/2026 (Tháp Thiên Mệnh 20 tầng và 8 Phúc mới; 01/11: khách và chế độ xếp hạng, Bình Loạn không có bảng, hướng PvP Quần Hùng; 31/10: thêm Trận Đồ bản chơi thử; 25/10: CAMP-08.04 gỡ chiến dịch 13 màn cũ, tách Đánh trùm/BXH/nhiệm vụ khỏi màn cũ)
 
 ## 1. Tổng quan
 
@@ -13,7 +13,7 @@
 | **Chiến dịch (Campaign V2)** | 6 chương, 24 nhiệm vụ (sự kiện, ngoại giao, trận); lương mang sang; địa hình theo nhiệm vụ | Mỗi nhiệm vụ có trận quy định | 4 |
 | **Đánh trùm** | Tái đấu 6 sứ quân bị đánh dẹp ở mức khó cao hơn, mở theo mốc chiến dịch, có luật "sân nhà" và phần thưởng riêng | Mỗi sứ quân quy định | 4 |
 | **Tháp Thí Luyện (Trial)** | 20 tầng cố định, luật đội hình/bàn cờ và thưởng đá lần đầu | 3vs3 | Song Tháp V1.0 |
-| **Tháp Vận Mệnh (Destiny)** | Run 10 tầng theo chu kỳ tuần, roster khóa và tài nguyên xuyên tầng | 3vs3 | Song Tháp V1.0 |
+| **Tháp Thiên Mệnh (Destiny, tên cũ Tháp Vận Mệnh)** | Run 20 tầng theo chu kỳ tuần (10 tầng trước chu kỳ 16/11/2026), roster khóa và tài nguyên xuyên tầng | 3vs3 | Song Tháp V1.0; 20 tầng từ 11/11/2026 |
 | **Sinh tồn** | Một trận không kết thúc, đối thủ theo đợt, báo trước đợt kế tiếp | 3vs3 | Sau giai đoạn 4 |
 | **Trận Đồ** | Game xếp quân theo nghề/hệ, không đánh nhau; chơi thử offline (không thưởng) và xếp hạng có thưởng trên server (tắt mặc định, `FORMATION_RANKED_ENABLED`). Luật ở [GDD Binh Pháp](future/02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline) | Một người, 4 bậc 3×3–8×8 | Sau Song Tháp |
 | **Tầm Tướng Ký** | Ghép yếu tố có thứ tự từ 7 hệ để tìm chân dung tướng, không đánh nhau. Chế độ Thường tốn phiếu; Hạng tuần tiêu nguyên liệu, có bảng và thưởng. Bắt buộc đăng nhập; tắt mặc định, một biến `TAM_TUONG_KY_ENABLED` mở cả chế độ, Hạng và các gói đã duyệt. Luật ở [Design Freeze](future/14-tam-tuong-ky-design-freeze.md) | Một người, 3 gói: 77 tướng (mọi tướng) | Sau Trận Đồ |
@@ -71,13 +71,16 @@
 
 ### 3.1 Song Tháp V1.0
 
-Song Tháp gồm hai chế độ hiện hành: Tháp Thí Luyện và Tháp Vận Mệnh.
+Song Tháp gồm hai chế độ hiện hành: Tháp Thí Luyện và Tháp Thiên Mệnh (tên cũ trong tài liệu: Tháp Vận Mệnh).
 
 - **Trial — Tháp Thí Luyện:** 20 tầng cố định; mỗi lần thử reset HP/lương; chọn ba active từ tướng đã sở hữu.
   Đinh Bộ Lĩnh bắt buộc ở slot thủ lĩnh, được đổi nghề/hệ miễn phí trước tầng và phải hợp luật. Tầng đã qua được
   đánh lại nhưng đá first-clear chỉ nhận một lần. Quét dùng tiến độ phía server, nhận 1/2/3/4 đá mỗi ngày theo
   mốc tầng 1–5/6–10/11–15/16–20, đổi ngày lúc 00:00 Việt Nam và không tích lượt bỏ lỡ.
-- **Destiny — Tháp Vận Mệnh:** chu kỳ 7 ngày từ thứ Hai 00:00 Việt Nam; luật được snapshot và không đổi trong
+- **Destiny — Tháp Thiên Mệnh:** **20 tầng** mỗi chu kỳ từ chu kỳ 16/11/2026 (trước đó 10 tầng), chia bốn nhóm
+  khó 5 tầng (Dễ, Thường, Khó, Trùm); thắng tầng cuối là hoàn thành run. Số liệu ở
+  [luật Song Tháp §11](dual-tower/00-02-rules.md#11-destiny-v2--20-tầng-shan-chốt-11112026), 15 Phúc ở
+  [T04.06](dual-tower/04-06-destiny-boons.md). Chu kỳ 7 ngày từ thứ Hai 00:00 Việt Nam; luật được snapshot và không đổi trong
   chu kỳ. Run khóa roster từ toàn bộ tướng đã sở hữu, không giới hạn tối đa, giữ HP, energy và lương qua
   tầng; dự bị không tự hồi. Sau tầng chọn hồi phục, Phúc hoặc tài nguyên theo offer; không có đá trong reward
   giữa tầng. Đá tài khoản chỉ đến từ mốc và settlement cuối chu kỳ.

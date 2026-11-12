@@ -1,6 +1,8 @@
 # T00.02 — Chốt luật Song Tháp
 
-Design-only. Dựa trên [00-01-audit.md](./00-01-audit.md). Mọi con số ghi **[TBD]** hoặc **[TEST]** chưa được duyệt, không được coi là balance chính thức. Nâng cấp trang bị nằm ở [equipment-enhancement-todo.md](../../04-equipment/cuong-hoa-todo.md) (GEAR-01–08), ngoài phạm vi.
+> Cập nhật: 11/11/2026 (thêm §11: Tháp Thiên Mệnh 20 tầng)
+
+Design-only (§1–§10). Số liệu Destiny đang chạy nằm ở [§11](#11-destiny-v2--20-tầng-shan-chốt-11112026). Dựa trên [00-01-audit.md](./00-01-audit.md). Mọi con số ghi **[TBD]** hoặc **[TEST]** chưa được duyệt, không được coi là balance chính thức. Nâng cấp trang bị nằm ở [equipment-enhancement-todo.md](../../04-equipment/cuong-hoa-todo.md) (GEAR-01–08), ngoài phạm vi.
 
 ## 1. Thuật ngữ
 
@@ -184,7 +186,7 @@ Quy tắc chung: mọi action kiểm tra ở server, xác thực chủ sở hữ
 | Giới hạn roster Destiny | Không giới hạn tối đa; có thể mang toàn bộ tướng sở hữu | Đã chốt |
 | Độ dài chu kỳ | 7 ngày, thứ Hai 00:00 VN | Mặc định, cấu hình được |
 | Số tầng Trial | 50 | 20 tầng ở bản đầu, thêm 30 tầng ngày 11/11/2026 |
-| Mọi lượng đá, mốc, mức HP/lương khởi đầu, lượng hồi, giá trị Phúc, số tầng Destiny | — | [TBD] — cần simulation + duyệt |
+| Mọi lượng đá, mốc, mức HP/lương khởi đầu, lượng hồi, giá trị Phúc, số tầng Destiny | — | [TBD] ở thời điểm T00.02; giá trị đang chạy xem [§11](#11-destiny-v2--20-tầng-shan-chốt-11112026) |
 
 ## 9. Decision log
 
@@ -209,3 +211,48 @@ Quy tắc chung: mọi action kiểm tra ở server, xác thực chủ sở hữ
 - "Hồi phục là lựa chọn" khớp "không hồi dự bị tự động".
 - "Đá ở mốc/chu kỳ" khớp "reward giữa tầng không có đá".
 - Quy tắc không dùng số balance mới: mọi số là [TBD]/[TEST].
+
+## 11. Destiny V2 — 20 tầng (Shan chốt 11/11/2026)
+
+Tháp Thiên Mệnh (tên trong tài liệu cũ: Tháp Vận Mệnh, tên mã `destiny`) tăng từ 10 lên **20 tầng mỗi chu kỳ** và mở rộng Phúc. Shan chọn ba phương án: sức địch **dốc vừa**, đá mốc **giữ tổng 18 và chia lại**, **8 Phúc mới chỉ dùng hook có sẵn** (không sửa lõi trận đấu). Các luật ở §4 không nhắc ở đây thì giữ nguyên.
+
+### 11.1 Version luật và ngày áp dụng
+
+| Version | Chu kỳ | Số tầng | Code |
+|---|---|---:|---|
+| V1 | trước 16/11/2026 | 10 | `destinyRulesVersionForCycle` trả 1 |
+| V2 | từ thứ Hai **16/11/2026** (`DESTINY_V2_FIRST_CYCLE`) | 20 | trả 2 |
+
+- Version chỉ phụ thuộc id chu kỳ. Run lưu `rulesVersion` lúc tạo và dùng nó tới khi kết thúc: run V1 đang chạy vẫn đủ 10 tầng, luật, sức địch, Phúc và đá của V1.
+- Nếu bản này lên máy chủ **sau** 16/11/2026, run V1 mở trước đó trong cùng chu kỳ vẫn chạy tiếp theo V1; run mới của chu kỳ dùng V2. Chu kỳ đó chỉ phát một bảng đá mốc (bảng nào được nhận trước).
+- Bảng xếp hạng tính theo chu kỳ nên không trộn run 10 và 20 tầng, trừ chu kỳ chuyển tiếp nêu trên.
+
+### 11.2 Tầng, nhóm khó và sức địch
+
+| Tầng | Nhóm luật | AI địch | Hệ số sức địch |
+|---|---:|---|---|
+| 1–5 | 1 | Dễ | 0,74 – 0,82 |
+| 6–10 | 2 | Thường | 0,84 – 0,92 |
+| 11–15 | 3 | Khó | 0,94 – 1,02 |
+| 16–20 | 4 | Trùm | 1,04 – 1,12 |
+
+- Hệ số sức địch V2 = `0,72 + 0,02 × tầng` (V1: `0,72 + 0,03 × tầng`, tầng 10 là 1,02). Cấp địch vẫn bằng cấp cao nhất trong roster khóa.
+- Mỗi nhóm có **8 luật** (V1: 4/6/4/3). Trong một chu kỳ, một nhóm không lặp luật chừng nào pool còn luật khả thi với roster đã khóa; hết thì mới dùng lại, không còn luật nào khả thi thì tầng đó không có luật (như V1).
+- Luật mới so với V1: cấm hệ Thủy/Thổ, cấm nghề Binh lính/Y sư, bắt buộc Pháp sư/Tướng sĩ, cấm hai hệ Kim và Hỏa cùng lúc, và các tổ hợp cấm + bắt buộc + giới hạn trùng ở nhóm 3–4. Danh sách đầy đủ: `POOLS_V2` trong `src/core/tower/destinyRules.ts`.
+
+### 11.3 Hoàn thành run
+
+- Thắng **tầng cuối** (tầng 20 ở V2, tầng 10 ở V1) thì run kết thúc ở trạng thái hoàn thành (`phase: done`, `completed: true`): không mở phần thưởng giữa tầng, không có tầng kế.
+- Trước đây thắng tầng 10 vẫn mở phần thưởng rồi đưa run sang "chuẩn bị tầng 11" không có nội dung; lỗi này được sửa cho cả V1.
+- Hoàn thành rồi vẫn mở được run mới trong cùng chu kỳ (để rút ngắn tổng lượt trên bảng xếp hạng); đá mốc và đá chu kỳ không phát lại.
+
+### 11.4 Thưởng
+
+- **Đá mốc V2:** tầng 5 / 10 / 15 / 20 cho 3 / 4 / 5 / 6 đá, tổng 18 như V1. Chi tiết và đá cuối chu kỳ: [T05.04](./05-04-destiny-stones.md).
+- **Vàng theo hạng** giữ 800 / 500 / 300 / 150 / 60 ([chế độ chơi mục 6](../README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt)).
+- **Thưởng giữa tầng:** vẫn chọn 1 trong 3 (hồi phục hoặc Phúc). "Lương" ở §4.1 nay có qua Phúc Kho lương. Danh sách Phúc: [T04.06](./04-06-destiny-boons.md).
+
+### 11.5 Cân bằng
+
+Mô phỏng 4 chu kỳ V2 bằng `pnpm exec tsx scripts/destiny-stone-sim.ts` (thêm `--v1` để đo luật cũ): [báo cáo 11/11/2026](../../reports/2026-11-11-destiny-v2-balance.md).
+

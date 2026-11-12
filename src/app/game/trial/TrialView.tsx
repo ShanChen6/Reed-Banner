@@ -358,7 +358,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
               </div>
             ) : (
               <p className="mt-2 text-caption text-on-wood-soft">
-                {companions.length < 2 ? "Chọn đủ 2 tướng để xem hệ và nghề hợp luật của thủ lĩnh." : "Thủ lĩnh không có hệ, nghề nào hợp luật khi đi cùng 2 tướng này. Hãy đổi tướng kèm."}
+                {companions.length < 2 ? "Chọn đủ 2 tướng để xem nghề và hệ hợp luật của thủ lĩnh." : "Thủ lĩnh không có nghề và hệ nào hợp luật khi đi cùng 2 tướng này. Hãy đổi tướng kèm."}
               </p>
             )}
             <p className="mt-2 text-caption text-on-wood-soft">Đổi nghề/hệ chỉ áp dụng cho trận này, không đổi hồ sơ.</p>

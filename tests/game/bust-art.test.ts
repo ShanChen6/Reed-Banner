@@ -15,7 +15,6 @@ describe("Chân dung bán thân (bust.webp)", () => {
 
   it("nhân vật chưa có bust thì bustUrl là null", () => {
     assert.equal(bustUrl("khongCoNguoiNay"), null);
-    assert.equal(bustUrl("dinhNgoc"), null);
   });
 });
 

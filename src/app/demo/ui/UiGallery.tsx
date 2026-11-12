@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Button, ChoiceChip, Tabs } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
+import { PLAYABLE_COMPANIONS } from "@/core";
+import CompanionPicker from "@/app/game/campaign/CompanionPicker";
 import { FrameInset, ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 
 const TABS = [
@@ -18,6 +20,7 @@ export default function UiGallery() {
   const [tab, setTab] = useState<Tab>("heroes");
   const [level, setLevel] = useState<string>("Thường");
   const paged = usePagedItems(FLOORS, 6);
+  const [team, setTeam] = useState<readonly string[]>([]);
   return (
     <ModeScreen label="Bộ giao diện chung">
       <ModeBanner title="Tháp Thí Luyện" kicker="Song Tháp" art="/art/home/trial.webp"
@@ -64,6 +67,17 @@ export default function UiGallery() {
             {paged.pageItems.map((f) => <li key={f} className="ui-frame-inset p-2 text-center">{f}</li>)}
           </ul>
           <PageControls paged={paged} label="Phân trang mẫu" className="mt-2" />
+        </OrnateFrame>
+
+        <OrnateFrame className="lg:col-span-2">
+          <SectionTitle description="Chọn người đi cùng trước trận Bình Loạn: tìm tên, lọc hệ/nghề/khắc địch, cắt trang.">Chọn người đi cùng</SectionTitle>
+          <CompanionPicker
+            owned={PLAYABLE_COMPANIONS.map((c) => c.id)}
+            team={team}
+            marks={["moc", "phong"]}
+            labelId="demo-team"
+            onToggle={(id) => setTeam((t) => (t.includes(id) ? t.filter((x) => x !== id) : t.length < 2 ? [...t, id] : t))}
+          />
         </OrnateFrame>
 
         <OrnateFrame level="raised" paper>

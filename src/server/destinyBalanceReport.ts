@@ -1,5 +1,7 @@
 import {
-  DESTINY_STONE_MILESTONES,
+  destinyFloorCount,
+  destinyRunRulesVersion,
+  destinyStoneMilestones,
   MAIN_ID,
   SHOP_COMPANIONS,
   analyzeFeasibility,
@@ -96,7 +98,8 @@ export function simulateDestinyCycle(cycleId: string, rosterCap: 3 | 5 | 8, leve
   if (!created.ok) throw new Error(`không tạo được run: ${created.error}`);
   let run: DestinyRun = { ...created.run, rulesVersion: cycle.rulesVersion };
   let turns = 0, revives = 0, boonPicks = 0, recoveryPicks = 0, floors = 0;
-  for (let floor = 1; floor <= 10; floor++) {
+  const version = destinyRunRulesVersion(run);
+  for (let floor = 1; floor <= destinyFloorCount(version); floor++) {
     const content = resolveDestinyFloor(run, SECRET);
     if (!content.ok) break;
     const selected = lineup(run, content.floor.rules);
@@ -117,6 +120,7 @@ export function simulateDestinyCycle(cycleId: string, rosterCap: 3 | 5 | 8, leve
     turns += state.turn.number;
     if (!settled.won) break;
     floors = floor;
+    if (run.completed) break;
     const pick = chooseReward(run, policy);
     if (!pick) break;
     if (pick.offer.kind === "boon") {
@@ -132,9 +136,9 @@ export function simulateDestinyCycle(cycleId: string, rosterCap: 3 | 5 | 8, leve
   }
   const fighters = Object.values(run.fighters ?? {});
   const hpRatio = fighters.length === 0 ? 0 : fighters.reduce((sum, f) => sum + f.hp / f.config.maxHp, 0) / fighters.length;
-  const milestone = DESTINY_STONE_MILESTONES.filter(({ floor }) => floor <= floors).reduce((sum, item) => sum + item.stones, 0);
+  const milestone = destinyStoneMilestones(version).filter(({ floor }) => floor <= floors).reduce((sum, item) => sum + item.stones, 0);
   return { cycleId, rosterCap, level, policy, floors, turns, food: run.food, hpRatio, revives, boonPicks, recoveryPicks,
-    stones: milestone + destinyCycleStoneReward(floors) };
+    stones: milestone + destinyCycleStoneReward(floors, version) };
 }
 
 export function summarize(values: readonly number[]) {

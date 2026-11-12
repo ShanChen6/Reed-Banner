@@ -16,9 +16,13 @@ import { clampDestinyFood } from "./destinyRun";
 import { LINEUP_SIZE, validateLineup, type FloorRules, type LineupError } from "./floorRules";
 import {
   applyDestinyBoonStats,
+  applyDestinyFloorHeal,
+  applyDestinyTerrain,
   destinyAppliedEnergyBonus,
   destinyAppliedRageBonus,
 } from "./destinyBoons";
+import { destinyFloorCount, destinyRunRulesVersion } from "./destinyRules";
+import { STANDARD_WEIGHTS } from "../board";
 
 export interface DestinyLeaderBuild {
   readonly element: Element;
@@ -103,7 +107,9 @@ export function createDestinyFloorBattle(run: DestinyRun, input: DestinyBattleIn
     ...(input.now === undefined ? {} : { now: input.now }),
     ...(input.timer === undefined ? {} : { timer: input.timer }),
     ...(input.firstSide === undefined ? {} : { firstSide: input.firstSide }),
-    ...(input.weights === undefined ? {} : { weights: input.weights }),
+    ...(input.weights === undefined && !run.boons?.some(({ id }) => id === "terrain")
+      ? {}
+      : { weights: applyDestinyTerrain(run, input.weights ?? STANDARD_WEIGHTS, input.leaderBuild.element) }),
   });
   input.activeIds.forEach((id, index) => {
     created.state.sides[0].fighters[index]!.energy = Math.min(
@@ -136,7 +142,7 @@ export function settleDestinyFloor(run: DestinyRun, battle: BattleState): Destin
   if (run.stateVersion !== 1 || !run.fighters)
     return { ok: false, error: "invalid_run" };
   if ((run.settledFloor ?? 0) >= run.floor) {
-    const won = run.phase === "reward";
+    const won = run.phase === "reward" || run.completed === true;
     return { ok: true, run, changed: false, won };
   }
   if (!run.active) return { ok: false, error: "invalid_run" };
@@ -171,6 +177,9 @@ export function settleDestinyFloor(run: DestinyRun, battle: BattleState): Destin
 
   const allActiveDown = active.every(({ id }) => fighters[id]!.hp === 0);
   const won = battle.winner === 0 && !allActiveDown;
+  // Thắng tầng cuối là hoàn thành run: không còn tầng kế nên không mở phần thưởng giữa tầng.
+  const completed = won && run.floor >= destinyFloorCount(destinyRunRulesVersion(run));
+  if (won) Object.assign(fighters, applyDestinyFloorHeal(run, fighters, active.map(({ id }) => id)));
   return {
     ok: true,
     changed: true,
@@ -189,8 +198,9 @@ export function settleDestinyFloor(run: DestinyRun, battle: BattleState): Destin
       )),
       totalTurns: (run.totalTurns ?? 0) + Math.max(0, Math.round(battle.turn.number)),
       settledFloor: run.floor,
-      phase: won ? "reward" : "done",
-      active: won,
+      phase: won && !completed ? "reward" : "done",
+      active: won && !completed,
+      ...(completed ? { completed: true } : {}),
     },
   };
 }

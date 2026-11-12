@@ -293,7 +293,7 @@ interface Outcome {
   };
   /** Chỉ có ở trận đánh trùm online. */
   readonly raid?: RaidResult;
-  readonly destiny?: { readonly floor: number; readonly won: boolean; readonly phase: "reward" | "done" };
+  readonly destiny?: { readonly floor: number; readonly won: boolean; readonly phase: "reward" | "done"; readonly completed?: boolean };
   /** Trận Viễn Chinh: kết quả trên sa bàn, có `end` khi trận này kết thúc lượt viễn chinh. */
   readonly expedition?: {
     readonly won: boolean;
@@ -1814,6 +1814,77 @@ export default function DemoGame({
   const aimMark = aim?.target ?? aimIndex;
 
   /** `inline`: bản phe mình đặt ngay dưới bàn cờ, chỉ hiện trên điện thoại. */
+  // Màn rộng (lg+): kỹ năng nằm dưới thẻ phe mình ở cột trái, để thấy cùng lúc sân đấu, bàn cờ và kỹ năng
+  // mà không phải cuộn. Màn hẹp giữ ngay dưới bàn cờ.
+  const skillBar = (stacked: boolean) => (
+    <div
+      className={
+        stacked
+          ? "hidden grid-cols-3 gap-1.5 lg:grid"
+          : "grid grid-cols-3 gap-1.5 sm:flex sm:flex-wrap sm:items-stretch lg:hidden"
+      }
+      aria-label="Kỹ năng"
+    >
+      <span className="col-span-3 w-full text-caption text-on-wood-soft">
+        Kỹ năng của {actor.name}:
+      </span>
+      {skills.map((def, i) => {
+        const disabled =
+          !myTurn || state.turn.skillUsed || actor.energy < comboSkillCost(actor,def);
+        const aiming =
+          aim?.skill.id === def.id || whirlAim?.skill?.id === def.id;
+        return (
+          <button
+            key={def.id}
+            type="button"
+            onClick={() => {
+              if (!aiming) return castSkill(def);
+              setAim(null);
+              setWhirlAim(null);
+              setPendingWhirl(null);
+            }}
+            className={`relative flex w-full flex-col items-center gap-0.5 rounded-lg p-1 text-caption leading-tight ${stacked ? "" : "sm:w-[4.5rem]"} border ${aiming ? "border-stat-hp bg-stat-hp text-white" : "border-frame-line-soft bg-wood-panel hover:border-frame-gold"} ${
+              disabled && !aiming ? "opacity-40 grayscale" : ""
+            }`}
+            title={`${skillText(def)} · phím ${i + 1}`}
+          >
+            <SkillIcon def={def} className="size-10" />
+            <span className="absolute left-1 top-1 rounded-br bg-black/60 px-1 text-[11px] font-bold text-white">
+              {i + 1}
+            </span>
+            <span className="absolute right-1 top-1 rounded-bl bg-stat-energy/90 px-1 text-[11px] tabular-nums text-white">
+              {comboSkillCost(actor,def)}
+            </span>
+            <span className="text-center">{def.name}</span>
+          </button>
+        );
+      })}
+      <SkillDetails skills={skills} passive={actor.comboPassive} fighter={actor} />
+      {myTurn && canFreeWhirl(state) && (
+        <button
+          type="button"
+          onClick={() => {
+            setAim(null);
+            setSelected(null);
+            setWhirlAim(
+              whirlAim && !whirlAim.skill
+                ? null
+                : {
+                    skill: null,
+                    max: PASSIVE.phongFreeWhirlTurns,
+                    center: null,
+                  },
+            );
+          }}
+          className={`col-span-3 flex items-center justify-center gap-1 rounded px-2 py-2 text-caption ${stacked ? "" : "sm:col-auto"} ${whirlAim && !whirlAim.skill ? "bg-stat-hp text-white" : "bg-info text-white"}`}
+        >
+          <ElementIcon element="phong" className="size-3.5" /> Xoay
+          miễn phí
+        </button>
+      )}
+    </div>
+  );
+
   const side = (s: 0 | 1, inline = false) => {
     const own = (heldSides ?? state.sides)[s];
     return (
@@ -1871,6 +1942,7 @@ export default function DemoGame({
             />
           );
         })}
+        {s === PLAYER && !inline && started && skillBar(true)}
       </div>
     );
   };
@@ -2029,7 +2101,11 @@ export default function DemoGame({
                 waiting={pending}
               />
             )}
-            <div className="relative mt-3 rounded-xl border-2 border-[var(--primary)] bg-[var(--decorative-frame)] p-1.5 shadow-lg">
+            {/* lg+: bàn cờ không cao quá phần màn hình còn lại dưới sân đấu, để thấy cả hoạt ảnh lẫn bàn cờ khi chơi. */}
+            <div
+              className="relative mx-auto mt-3 w-full rounded-xl border-2 border-[var(--primary)] bg-[var(--decorative-frame)] p-1.5 shadow-lg lg:max-w-[max(30rem,calc((100dvh-21rem)*var(--board-ratio)))]"
+              style={{ "--board-ratio": board.cols / board.rows } as React.CSSProperties}
+            >
               <BoardCrest className="pointer-events-none absolute -top-4 left-1/2 z-10 h-8 w-40 -translate-x-1/2 md:-top-5 md:h-10 md:w-52" />
               {CORNERS.map((c) => (
                 <CloudCorner
@@ -2280,9 +2356,11 @@ export default function DemoGame({
                         </p>
                         {outcome.destiny && (
                           <p className={`font-semibold ${outcome.destiny.won ? "text-frame-gold" : "text-danger"}`}>
-                            {outcome.destiny.won
+                            {outcome.destiny.completed
+                              ? `Thiên Mệnh: đã vượt tầng ${outcome.destiny.floor}, tầng cuối của tháp. Lượt leo hoàn thành.`
+                              : outcome.destiny.won
                               ? `Thiên Mệnh: đã vượt tầng ${outcome.destiny.floor}. Hãy chọn một phần thưởng.`
-                              : `Thiên Mệnh: đội hình gục ở tầng ${outcome.destiny.floor}. Run đã kết thúc.`}
+                              : `Thiên Mệnh: đội hình gục ở tầng ${outcome.destiny.floor}. Lượt leo kết thúc tại đây.`}
                           </p>
                         )}
                         {outcome.expedition && (
@@ -2372,7 +2450,7 @@ export default function DemoGame({
                           scene="DESTINY"
                           className={buttonVariants({ size: "sm" })}
                         >
-                          {outcome?.destiny?.won ? "Chọn thưởng Thiên Mệnh" : "Về Tháp Thiên Mệnh"}
+                          {outcome?.destiny?.won && !outcome.destiny.completed ? "Chọn thưởng Thiên Mệnh" : "Về Tháp Thiên Mệnh"}
                         </SceneLink>
                       )}
                       {expeditionMatch && (
@@ -2449,68 +2527,7 @@ export default function DemoGame({
 
             {started && side(PLAYER, true)}
 
-            <div
-              className="grid grid-cols-3 gap-1.5 sm:flex sm:flex-wrap sm:items-stretch"
-              aria-label="Kỹ năng"
-            >
-              <span className="col-span-3 w-full text-caption text-on-wood-soft">
-                Kỹ năng của {actor.name}:
-              </span>
-              {skills.map((def, i) => {
-                const disabled =
-                  !myTurn || state.turn.skillUsed || actor.energy < comboSkillCost(actor,def);
-                const aiming =
-                  aim?.skill.id === def.id || whirlAim?.skill?.id === def.id;
-                return (
-                  <button
-                    key={def.id}
-                    type="button"
-                    onClick={() => {
-                      if (!aiming) return castSkill(def);
-                      setAim(null);
-                      setWhirlAim(null);
-                      setPendingWhirl(null);
-                    }}
-                    className={`relative flex w-full flex-col items-center gap-0.5 rounded-lg p-1 text-caption leading-tight sm:w-[4.5rem] border ${aiming ? "border-stat-hp bg-stat-hp text-white" : "border-frame-line-soft bg-wood-panel hover:border-frame-gold"} ${
-                      disabled && !aiming ? "opacity-40 grayscale" : ""
-                    }`}
-                    title={`${skillText(def)} · phím ${i + 1}`}
-                  >
-                    <SkillIcon def={def} className="size-10" />
-                    <span className="absolute left-1 top-1 rounded-br bg-black/60 px-1 text-[11px] font-bold text-white">
-                      {i + 1}
-                    </span>
-                    <span className="absolute right-1 top-1 rounded-bl bg-stat-energy/90 px-1 text-[11px] tabular-nums text-white">
-                      {comboSkillCost(actor,def)}
-                    </span>
-                    <span className="text-center">{def.name}</span>
-                  </button>
-                );
-              })}
-              <SkillDetails skills={skills} passive={actor.comboPassive} fighter={actor} />
-              {myTurn && canFreeWhirl(state) && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAim(null);
-                    setSelected(null);
-                    setWhirlAim(
-                      whirlAim && !whirlAim.skill
-                        ? null
-                        : {
-                            skill: null,
-                            max: PASSIVE.phongFreeWhirlTurns,
-                            center: null,
-                          },
-                    );
-                  }}
-                  className={`col-span-3 flex items-center justify-center gap-1 rounded px-2 py-2 text-caption sm:col-auto ${whirlAim && !whirlAim.skill ? "bg-stat-hp text-white" : "bg-info text-white"}`}
-                >
-                  <ElementIcon element="phong" className="size-3.5" /> Xoay
-                  miễn phí
-                </button>
-              )}
-            </div>
+            {skillBar(false)}
             {whirlAim && (
               <div className="flex flex-wrap items-center gap-1.5 text-caption">
                 {whirlAim.center &&
