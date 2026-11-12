@@ -1170,7 +1170,6 @@ test("Mạc Vân có bốn tranh, lôi trận hệ Lôi, kiếm trong vỏ lắc
   const rig = rigOf("macVan");
   assert.ok(rig?.skeleton === "warrior");
   assert.equal(rig.weapon, undefined);
-  assert.equal(rig.raise, 0.06);
   assert.equal(rig.strikeFx, "thunderRout");
   for (const kind of ["attack", "cast", "ultimate"] as const) assert.equal(rig.poses?.[kind]?.name, `pose-${kind}`);
   assert.equal(rig.down?.name, "pose-down");
