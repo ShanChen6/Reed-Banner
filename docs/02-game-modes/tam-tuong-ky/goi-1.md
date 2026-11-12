@@ -292,3 +292,17 @@ L5-2, L5-4, L5-5 đổi luật đã FROZEN nên cần quyết định mới trư
 | Tre | Lũy đất | Lũy tre làng (3) |
 | Mây trời | Lũy tre làng | Vân du (5) |
 | Vạn tượng | Vân du | **Trần Vũ Phong (9)** |
+
+## 8. Nguồn vật biểu trưng và nguồn sử
+
+| Tướng | Vật biểu trưng | Nguồn trong repo |
+|---|---|---|
+| Nguyễn Bặc | Đại đao đơn lưỡi, dải vải đỏ ở chắn tay; chiêu Định Quốc Hỏa Kỳ | Audit vũ khí nhóm A, [danh sách nhân vật](../../03-characters/danh-sach-nhan-vat.md#5-tướng-lịch-sử) |
+| Lê Hoàn | Cờ lệnh tam giác, bó thẻ tre; chiêu Thập Đạo Lôi Binh | Audit vũ khí nhóm A, [danh sách nhân vật](../../03-characters/danh-sach-nhan-vat.md#5-tướng-lịch-sử) |
+| Đinh Ngọc | Kiếm ngắn thẳng, mặt ngọc giọt nước ở ngực; mở khóa theo chủ đề cứu trợ, giữ đường | [Đinh Ngọc](../../03-characters/dinh-ngoc.md) |
+
+Hai tướng lịch sử gắn mã nguồn `S04` (Việt Nam sử lược, mục Đinh Tiên Hoàng) trong [sổ nguồn](../campaign/history-sources.md). “Hỏa kỳ” và “Thập đạo” lấy từ tên chiêu trong game, gợi tới tước Định Quốc công và chức Thập đạo tướng quân. Sổ nguồn **chưa có claim** riêng cho hai tước này, và phiên làm LT-01 không mở được Wikisource để đối chiếu (mạng chặn).
+
+> TODO: Thêm claim tước Nguyễn Bặc, Lê Hoàn vào sổ nguồn và đối chiếu S04 trước khi Tướng Lục hiện mô tả lịch sử; tới lúc đó Tướng Lục chỉ hiện nghề, hệ, vật biểu trưng (A-16).
+
+Chuyển từ catalog LT-01 (đã xóa 12/11/2026); ba tướng đầu của Gói 1.

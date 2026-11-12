@@ -1,6 +1,7 @@
 # Kế hoạch đồ họa & hoạt ảnh
 
-> Cập nhật: 20/10/2026 · Trạng thái: **đề xuất**, chưa triển khai code. Các mục ghi "chờ chốt" cần Shan duyệt trước khi làm.
+> Cập nhật: 12/11/2026
+> Trạng thái: **IMPLEMENTED** — phần lớn đã có code (rig 77 nhân vật, sân khấu PixiJS, đạo diễn trận, hiệu ứng theo hệ); còn lại xem [mục 9](#9-lộ-trình-triển-khai). Viết 20/10/2026 dạng đề xuất; các mục "chờ chốt" bên dưới là ghi chú lúc đó.
 
 Kế hoạch đưa Cờ Lau từ bộ hình SVG tạm sang đồ họa hoàn chỉnh theo phong cách **fantasy lịch sử Việt Nam cách điệu**, nhân vật có hoạt ảnh hành động, mà game vẫn nhẹ và mượt trên điện thoại. Phong cách SVG hiện có, bảng màu và bản yêu cầu họa sĩ ở [Hình ảnh](art-bible.md); file này không chép lại mà mở rộng từ đó. Danh sách nhân vật ở [Danh sách nhân vật](../03-characters/danh-sach-nhan-vat.md).
 
@@ -317,6 +318,19 @@ Mở rộng quy ước ở [Hình ảnh 2.6](art-bible.md#26-đưa-hình-vào-ga
 
 ## 9. Lộ trình triển khai
 
+**Tình trạng 12/11/2026** (đối chiếu code `develop`):
+
+| Bước | Tình trạng |
+|---|---|
+| Đ0, Đ1 | Xong: chọn tự viết rig bằng code (mục 3.2), [art bible](art-bible.md) |
+| Đ2 Pipeline ảnh | **Chưa làm**: chưa có `art:build`/`art:check`, chưa có ngân sách dung lượng trong CI |
+| Đ3 Màn trận + đạo diễn | Một phần: có đạo diễn dòng thời gian (`src/app/game/stage/director.ts`); **chưa tách `DemoGame.tsx`** (2 647 dòng), AI chưa chạy trong worker |
+| Đ4, Đ5 | Xong theo cách khác: mỗi nhân vật một rig riêng (`src/app/game/stage/rigs.ts`) thay cho 6 bộ xương theo nghề |
+| Đ6 Hiệu ứng | Xong: hiệu ứng theo hệ và tuyệt chiêu trong `src/app/game/stage/` |
+| Đ7 Trang trí | Phần lớn xong: tranh chế độ ở Chiến trường, bản đồ chiến dịch, nền phong thái theo hệ |
+| Đ8 Nhân vật theo lô | Xong: 77 nhân vật có rig và tranh trong `public/art/characters/` |
+| Đ9 Hiệu năng cuối | **Chưa làm** |
+
 Mỗi bước là một hoặc vài PR vào develop. Cột "Ai" là phần việc chính; "Claude" là code, "Shan / họa sĩ" là vẽ.
 
 | Bước | Việc | Ai | Xong khi |
@@ -334,7 +348,7 @@ Mỗi bước là một hoặc vài PR vào develop. Cột "Ai" là phần việ
 
 - Đ2 và Đ3 không cần hình, làm được ngay sau khi chốt Đ0.
 - Đ5–Đ8 đi theo tốc độ có hình; code luôn có **đường dự phòng** (chân dung SVG tạm) nên không chặn phát hành.
-- Âm thanh ([lộ trình 6.2](../09-roadmap/lo-trinh.md#giai-đoạn-6-đánh-bóng-và-phát-hành)) cắm vào đạo diễn trận ở Đ3, cùng dòng thời gian với hoạt ảnh.
+- Âm thanh ([lộ trình](../09-roadmap/lo-trinh.md#2-việc-còn-lại)) cắm vào đạo diễn trận ở Đ3, cùng dòng thời gian với hoạt ảnh.
 
 ## 10. Rủi ro
 

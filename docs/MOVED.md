@@ -11,6 +11,8 @@ Prompt, ghi chú hoặc commit cũ còn nhắc một đường dẫn không còn
 
 | Đường dẫn cũ | Đường dẫn mới |
 |---|---|
+| `docs/02-game-modes/campaign/chapter-2-sources.md` | [`docs/02-game-modes/campaign/history-sources.md`](02-game-modes/campaign/history-sources.md#6-ghi-chú-nguồn-chương-ii-m05m08) |
+| `docs/02-game-modes/campaign/chapter-3-sources.md` | [`docs/02-game-modes/campaign/history-sources.md`](02-game-modes/campaign/history-sources.md#7-ghi-chú-nguồn-chương-iii-m11m13) |
 | `docs/02-game-modes/future/02-binh-phap-gdd.md` | [`docs/02-game-modes/tran-do/gdd.md`](02-game-modes/tran-do/gdd.md) |
 | `docs/02-game-modes/future/24-khai-lo-gdd.md` | [`docs/02-game-modes/khai-lo/gdd.md`](02-game-modes/khai-lo/gdd.md) |
 | `docs/02-game-modes/future/14-tam-tuong-ky-design-freeze.md` | [`docs/02-game-modes/tam-tuong-ky/design-freeze.md`](02-game-modes/tam-tuong-ky/design-freeze.md) |
@@ -31,15 +33,15 @@ Prompt, ghi chú hoặc commit cũ còn nhắc một đường dẫn không còn
 | `docs/art/nguyen-bac-boxes.json` | [`docs/06-art/nhan-vat/nguyen-bac-boxes.json`](06-art/nhan-vat/nguyen-bac-boxes.json) |
 | `docs/art/nguyen-bac.md` | [`docs/06-art/nhan-vat/nguyen-bac.md`](06-art/nhan-vat/nguyen-bac.md) |
 | `docs/campaign-v2/balance-report.md` | [`docs/02-game-modes/campaign/balance-report.md`](02-game-modes/campaign/balance-report.md) |
-| `docs/campaign-v2/chapter-2-sources.md` | [`docs/02-game-modes/campaign/chapter-2-sources.md`](02-game-modes/campaign/chapter-2-sources.md) |
-| `docs/campaign-v2/chapter-3-sources.md` | [`docs/02-game-modes/campaign/chapter-3-sources.md`](02-game-modes/campaign/chapter-3-sources.md) |
+| `docs/campaign-v2/chapter-2-sources.md` | [`docs/02-game-modes/campaign/history-sources.md`](02-game-modes/campaign/history-sources.md#6-ghi-chú-nguồn-chương-ii-m05m08) |
+| `docs/campaign-v2/chapter-3-sources.md` | [`docs/02-game-modes/campaign/history-sources.md`](02-game-modes/campaign/history-sources.md#7-ghi-chú-nguồn-chương-iii-m11m13) |
 | `docs/campaign-v2/contracts.md` | [`docs/02-game-modes/campaign/contracts.md`](02-game-modes/campaign/contracts.md) |
 | `docs/campaign-v2/design-freeze.md` | [`docs/02-game-modes/campaign/design-freeze.md`](02-game-modes/campaign/design-freeze.md) |
 | `docs/campaign-v2/final-acceptance.md` | [`docs/02-game-modes/campaign/final-acceptance.md`](02-game-modes/campaign/final-acceptance.md) |
 | `docs/campaign-v2/history-sources.md` | [`docs/02-game-modes/campaign/history-sources.md`](02-game-modes/campaign/history-sources.md) |
 | `docs/campaign-v2/mission-matrix.md` | [`docs/02-game-modes/campaign/mission-matrix.md`](02-game-modes/campaign/mission-matrix.md) |
 | `docs/campaign-v2/narrative-bible.md` | [`docs/02-game-modes/campaign/narrative-bible.md`](02-game-modes/campaign/narrative-bible.md) |
-| `docs/campaign-v2/recruits.md` | [`docs/02-game-modes/campaign/recruits.md`](02-game-modes/campaign/recruits.md) |
+| `docs/campaign-v2/recruits.md` | [`docs/02-game-modes/campaign/design-freeze.md`](02-game-modes/campaign/design-freeze.md#12-mốc-tuyển-tướng-đồng-hành) |
 | `docs/campaign-v2/reset-policy.md` | [`docs/02-game-modes/campaign/reset-policy.md`](02-game-modes/campaign/reset-policy.md) |
 | `docs/campaign-v2/ui/09-chot-giao-dien-ban-do-toan-canh.md` | [`docs/05-ui-ux/campaign/09-chot-giao-dien-ban-do-toan-canh.md`](05-ui-ux/campaign/09-chot-giao-dien-ban-do-toan-canh.md) |
 | `docs/campaign-v2/ui/audio-todo/README.md` | [`docs/05-ui-ux/campaign/audio-todo/README.md`](05-ui-ux/campaign/audio-todo/README.md) |
@@ -323,3 +325,4 @@ Các bản dưới đây bị xóa theo yêu cầu người dùng; tra lịch s�
 | `docs/survival-v1.1/01-current-state-audit.md` | Xóa 12/11/2026 (đã chuyển thành `docs/02-game-modes/survival/01-current-state-audit.md` rồi xóa): audit, QA, nghiệm thu hoặc kế hoạch của task đã xong |
 | `docs/survival-v1.1/22-qa-report.md` | Xóa 12/11/2026 (đã chuyển thành `docs/02-game-modes/survival/22-qa-report.md` rồi xóa): audit, QA, nghiệm thu hoặc kế hoạch của task đã xong |
 | `docs/survival-v1.1/24-final-acceptance.md` | Xóa 12/11/2026 (đã chuyển thành `docs/02-game-modes/survival/24-final-acceptance.md` rồi xóa): audit, QA, nghiệm thu hoặc kế hoạch của task đã xong |
+| `docs/02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md` | Xóa 12/11/2026: catalog slice LT-01 đã thay bằng Gói 1–3 và code `src/core/tam-tuong-ky/catalog.ts` |

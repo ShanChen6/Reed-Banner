@@ -3,7 +3,7 @@
 > Cập nhật: 06/11/2026
 > Trạng thái: **DRAFT** — màn chế độ Thường đã có code (`src/app/game/tam-tuong-ky/`), chạy trên server theo tài khoản từ LT-04; bật bằng cờ `TAM_TUONG_KY_ENABLED` (mặc định tắt). Shan góp ý 6 điểm ngày 06/11/2026; đã sửa theo [mục 7](#7-sửa-theo-góp-ý-06112026-đã-triển-khai), mục 3 mô tả bản sau khi sửa.
 
-Luật ở [Design Freeze](../../02-game-modes/tam-tuong-ky/design-freeze.md); nội dung công thức ở [catalog LT-01](../../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md). Tài liệu này chỉ nói về giao diện.
+Luật ở [Design Freeze](../../02-game-modes/tam-tuong-ky/design-freeze.md); nội dung công thức ở [Gói 1](../../02-game-modes/tam-tuong-ky/goi-1.md) và code `src/core/tam-tuong-ky/catalog.ts`. Tài liệu này chỉ nói về giao diện.
 
 ## 1. Vào màn
 

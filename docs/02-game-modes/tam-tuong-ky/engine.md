@@ -3,7 +3,7 @@
 > Cập nhật: 03/11/2026
 > Trạng thái: **APPROVED** — engine thuần đã có code (`src/core/tam-tuong-ky/engine.ts`, `hints.ts`) theo luật [Design Freeze](design-freeze.md#4-luật-chơi); chưa nối vào server, UI hay dữ liệu lưu.
 
-File này ghi API và phạm vi của engine; luật nằm ở Design Freeze, nội dung công thức ở [catalog LT-01](../future/15-tam-tuong-ky-lt01-catalog.md).
+File này ghi API và phạm vi của engine; luật nằm ở Design Freeze, nội dung công thức ở [Gói 1](goi-1.md), [Gói 2](goi-2.md), [Gói 3](goi-3.md) và code `src/core/tam-tuong-ky/catalog.ts`.
 
 ## 1. API
 

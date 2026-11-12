@@ -7,7 +7,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 
-export const STATUSES = ["DRAFT", "APPROVED", "FROZEN", "IMPLEMENTED", "DEFERRED", "SUPERSEDED", "ARCHIVED", "AUDIT"] as const;
+export const STATUSES = ["DRAFT", "APPROVED", "FROZEN", "IMPLEMENTED", "DEFERRED", "AUDIT", "REFERENCE"] as const;
 
 export interface Issue {
   file: string;

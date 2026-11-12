@@ -34,7 +34,7 @@ Bằng chứng cho GO:
 | Content | 24 nhiệm vụ M01–M24, 6 chương, đồ thị tiền đề hai tuyến tây/đông hội ở M21 | ✅ | `src/core/campaign/storyNodes.ts`; `tests/core/campaign/storyNodes.test.ts` |
 | Content | Lời kể từng nhiệm vụ, lựa chọn chỉ đổi cách kể, không đổi kết cục lịch sử | ✅ | `campaignCopyErrors() = []` (test các chương); `docs/campaign-v2/narrative-bible.md` |
 | Content | 6 tướng lịch sử gia nhập đúng mốc (M04, M08, M12, M16, M20, M24), không nhân bản | ✅ | `recruits.ts`; `tests/server/campaignE2E.test.ts` |
-| Source | Nhãn `recorded` / `reconstructed` / `disputed` / `fictional` kèm mã nguồn; hư cấu không viết thành chính sử | ✅ | `history-sources.md`, `chapter-2-sources.md`, `chapter-3-sources.md`, báo cáo CAMP-08.02 (Sử ký) |
+| Source | Nhãn `recorded` / `reconstructed` / `disputed` / `fictional` kèm mã nguồn; hư cấu không viết thành chính sử | ✅ | `history-sources.md` (mục 6–7 là ghi chú nguồn Chương II, III), báo cáo CAMP-08.02 (Sử ký) |
 | Source | 970–971 chỉ là ghi chú nguồn, không có cảnh | ✅ | `tests/server/campaignDangQuang.test.ts` |
 | Engine | Hoàn thành, thưởng, tuyển tướng, lựa chọn đều do server chốt, có biên nhận chống nhận hai lần | ✅ | `rewards.ts` (`node:` / `chapter:`); `campaignE2E.test.ts`; `campaignEvents.test.ts` |
 | Engine | Phòng thủ, trùm có ngưỡng máu, công thành 3 phase chốt qua một hàm `settleCampaignScenario` | ✅ | `scenarios.ts`; `campaignScenarios.test.ts`; `campaignDoDong.test.ts`; `campaignTayPhuLiet.test.ts` |

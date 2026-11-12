@@ -140,7 +140,7 @@
 - Thưởng hạng chế độ theo tuần (Đại trận, Thiên Mệnh, Trấn Ải, Quần Hùng, Tầm Tướng Ký) kèm bó 5/4/3/2/1 khi cờ Tầm Tướng Ký bật; vàng không đổi ([chế độ chơi mục 6](../02-game-modes/README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt)).
 
 **Tầm Tướng Ký: công thức không dựa vào art, lời dẫn chế độ Hạng (Shan)**
-- A-22: art nhân vật sẽ đổi nên công thức không dựa vào vũ khí, trang phục, phụ kiện. Gói 1 viết lại: công thức cuối = node vai trò (nghề × hệ theo roster; đặc biệt “Vạn tượng”) + dấu danh tính (tước hiệu, địa danh, mốc chiến dịch, tên chiêu, lore). Validator thêm `roleMismatch`, `missingAnchor`. Gói 1 còn 69 công thức, 57 yếu tố trung gian; số lần ghép giữ 12/9. Slice-1 thành tập con của Gói 1; [catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md) **APPROVED → SUPERSEDED**.
+- A-22: art nhân vật sẽ đổi nên công thức không dựa vào vũ khí, trang phục, phụ kiện. Gói 1 viết lại: công thức cuối = node vai trò (nghề × hệ theo roster; đặc biệt “Vạn tượng”) + dấu danh tính (tước hiệu, địa danh, mốc chiến dịch, tên chiêu, lore). Validator thêm `roleMismatch`, `missingAnchor`. Gói 1 còn 69 công thức, 57 yếu tố trung gian; số lần ghép giữ 12/9. Slice-1 thành tập con của Gói 1; catalog LT-01 **APPROVED → SUPERSEDED**.
 - A-23: chế độ Hạng không hiện rõ tướng đề cử, chỉ một lời dẫn mô tả tướng (chữ; sau này ảnh, câu nói). Mỗi tướng Gói 1 có lời dẫn chữ của trò chơi; validator chặn lời dẫn chứa tên tướng (`clueSpoils`, `missingClue`). P-16 sửa theo.
 - Mô phỏng chạy lại trên gói mới: kết luận giữ nguyên ([Gói 1 LT-05](../02-game-modes/tam-tuong-ky/goi-1.md#6-cần-shan-chọn)).
 
@@ -160,12 +160,12 @@
 - Phân cảnh `/game/tam-tuong-ky` sau cờ `TAM_TUONG_KY_ENABLED` (mặc định tắt); khách thấy màn nhắc đăng nhập. Vạn Vật Lục (tìm không dấu, lọc nhóm), Đài Hợp Nguyên (ô trước/ô sau, đổi chỗ, 15 lần ghép, 2 gợi ý), Tướng Lục bóng mờ; điện thoại có thanh Hợp Nguyên ở đáy. Bản xem trước chưa lưu, chưa tốn phiếu. Xem [giao diện Tầm Tướng Ký](../05-ui-ux/screens/tam-tuong-ky.md).
 
 **Tầm Tướng Ký: LT-02 engine ghép (có code)**
-- Shan duyệt công thức slice LT-01; [catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md) **DRAFT → APPROVED**.
+- Shan duyệt công thức slice LT-01; catalog LT-01 **DRAFT → APPROVED**.
 - `src/core/tam-tuong-ky/engine.ts`, `hints.ts`: ghép chế độ Thường (sổ khám phá) và Hạng (kho, tiêu cả khi ghép sai, tướng không vào kho), gợi ý mức 1–2 không lộ đủ công thức; 29 test. Xem [engine LT-02](../02-game-modes/tam-tuong-ky/engine.md). Chưa có server, UI hay dữ liệu lưu.
 
 **Tầm Tướng Ký: LT-01 catalog slice (có code)**
 - Shan chốt số lần ghép tối thiểu **cố định**: thường 7, đặc biệt 9, lịch sử 12 (thay khung 5–7 / 7–9 / 9–12 duyệt trước đó trong ngày). Validator đổi `tierOrder`/`tierRange` thành một lỗi `tierCombines`; slice chỉnh lại: Đinh Ngọc 9, Lê Hoàn 12, Nguyễn Bặc 12.
-- `src/core/tam-tuong-ky/`: kiểu dữ liệu, đồ thị công thức có thứ tự, validator theo Design Freeze mục 7.2 và `SLICE_PACK` (draft) cho Nguyễn Bặc, Lê Hoàn, Đinh Ngọc; 27 test ở `tests/core/tam-tuong-ky/`. Báo cáo: [catalog LT-01](../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md). Chưa có engine, UI, route hay dữ liệu lưu.
+- `src/core/tam-tuong-ky/`: kiểu dữ liệu, đồ thị công thức có thứ tự, validator theo Design Freeze mục 7.2 và `SLICE_PACK` (draft) cho Nguyễn Bặc, Lê Hoàn, Đinh Ngọc; 27 test ở `tests/core/tam-tuong-ky/`. Báo cáo: catalog LT-01. Chưa có engine, UI, route hay dữ liệu lưu.
 
 **Tầm Tướng Ký: bản chốt thiết kế LT-00 (DRAFT)**
 - Thêm [14 — Tầm Tướng Ký Design Freeze](../02-game-modes/tam-tuong-ky/design-freeze.md): kiểm kê code (7 hệ, 8 nghề, `chauNgoc`/`toKim`/`viTrieu` và chân dung, thành tựu, mùa tuần, sổ thưởng hạng), luật, ví dụ chuẩn và 50 test Given/When/Then.
