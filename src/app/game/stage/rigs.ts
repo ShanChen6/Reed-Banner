@@ -904,46 +904,50 @@ const KIEU_CONG_HAN: WarriorRig = {
 };
 
 /**
- * Nguyễn Khoan, sứ quân Tam Đái, binh lính hệ Thổ. Bộ tranh Shan gửi 03/11 (nền đã trong suốt): ảnh đứng tách lớp
- * bằng code. Giáo cùng nắm tay xoay quanh cổ tay (cẳng tay sau cán giáo vá lại); khiên mây kèm cẳng tay là lớp tay
- * không, nâng lên khi vào thế và đỡ đòn, vạt áo sau khiên nội suy theo cột. Hệ tọa độ: ảnh đứng 1024×1536.
+ * Nguyễn Khoan, sứ quân Tam Đái, binh lính hệ Thổ. Bộ tranh Shan gửi 12/11 (8 tranh rời, nền trong suốt): khăn nâu
+ * đỏ, khăn quàng thêu vạch vàng, giáp lá da, giáo mũi chữ thập, khiên tròn viền đồng. Ảnh đứng tách lớp bằng code:
+ * nắm tay phải cùng cây giáo dựng đứng xoay quanh nắm tay (cổ tay áo sau cán vá nội suy theo hàng), khiên là lớp tay
+ * không xoay quanh cẳng tay trái sau khiên, nâng lên khi vào thế và đỡ đòn (ống tay và vạt giáp sau khiên kéo dài từ
+ * mép trái rồi làm mờ), đầu cùng dải khăn. Tư thế giữ tranh nguồn 1536×1024. Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const NGUYEN_KHOAN: WarriorRig = {
   skeleton: "warrior",
   weapon: "spear",
   dir: "nguyen-khoan",
   texScale: 0.5,
-  foot: { x: 505, y: 1495 },
-  height: 1360,
+  foot: { x: 535, y: 1500 },
+  height: 1330,
   parts: {
-    body: { x: 202, y: 139, w: 573, h: 1364 },
-    armR: { x: 628, y: 524, w: 235, h: 417 },
-    sword: { x: 221, y: 35, w: 65, h: 1464 },
-    arm: { x: 200, y: 472, w: 74, h: 80 },
-    head: { x: 400, y: 139, w: 175, h: 191 },
+    body: { x: 186, y: 10, w: 606, h: 1498 },
+    armR: { x: 672, y: 573, w: 216, h: 438 },
+    sword: { x: 196, y: 12, w: 80, h: 1506 },
+    arm: { x: 188, y: 520, w: 94, h: 100 },
+    head: { x: 409, y: 173, w: 204, h: 202 },
   },
   cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 245, y: 540 },
-    elbowR: { x: 640, y: 600 },
-    neck: { x: 485, y: 320 },
+    shoulder: { x: 234, y: 568 },
+    elbowR: { x: 720, y: 700 },
+    neck: { x: 550, y: 360 },
   },
-  blade: [{ x: 243, y: 520 }, { x: 252, y: 40 }],
+  blade: [{ x: 236, y: 560 }, { x: 236, y: 30 }],
   shieldRaise: -0.35,
   strikeFx: "earthWard",
   fxColor: 0xa5772f,
-  // Đâm giáo qua mép khiên (đánh thường), giơ giáo thủ khiên (ra chiêu), thế tấn thấp giáo chĩa trước (tuyệt chiêu).
+  // Đâm giáo qua mép khiên (đánh thường), tấn rộng dựng giáo, khiên chắn trước (ra chiêu), hô xung phong, khiên đẩy
+  // tới, giáo chĩa thấp (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 89, y: 10 },
-      anchor: { x: 575, y: 995 }, scale: 1, burst: { x: 1465, y: 175 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 183, y: 12 },
-      anchor: { x: 845, y: 995 }, scale: 1.03, burst: { x: 790, y: 25 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 63, y: 43 },
-      anchor: { x: 857, y: 985 }, scale: 0.97, burst: { x: 1300, y: 215 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 80, y: 41 },
+      anchor: { x: 515, y: 990 }, scale: 1, burst: { x: 1480, y: 345 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 283, y: 10 },
+      anchor: { x: 865, y: 995 }, scale: 1.15, burst: { x: 580, y: 30 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 40, y: 30 },
+      anchor: { x: 570, y: 990 }, scale: 1, burst: { x: 1490, y: 470 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 45, y: 117 },
-    anchor: { x: 880, y: 700 }, scale: 0.9 },
+  // Quỳ một gối, cúi đầu, tay chống đất, giáo và khiên rơi bên cạnh.
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 31, y: 28 },
+    anchor: { x: 650, y: 840 }, scale: 1 },
 };
 
 /**
