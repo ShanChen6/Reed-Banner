@@ -311,8 +311,8 @@ export function warrior(
         lift = v.lift;
         lean = -0.03 * v.tilt;
         squash += v.squash;
-        armRot += raiseAngle * v.raise;
-        armRRot += -0.1 * v.raise;
+        // Không xoay cổ tay hay vũ khí: phần lớn rig xoay vũ khí quanh nắm tay nên giơ lên trông gãy cổ tay (Shan
+        // duyệt 12/11); chỉ ngẩng đầu, nhún nhảy, đung đưa và hào quang.
         headRot += -0.04 * v.raise;
         aura += v.glow;
       } else {
