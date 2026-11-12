@@ -1132,51 +1132,50 @@ const LU_DUONG: WarriorRig = {
 };
 
 /**
- * Nguyễn Siêu, sứ quân Tây Phù Liệt, binh lính hệ Hỏa. Bộ tranh Shan gửi 24/10 (nền trong suốt sẵn, trừ tranh gục
- * và tranh phong thái cạnh cột cờ có nền ca-rô vẽ sẵn, tách bằng code). Ảnh đứng tách lớp như Nguyễn Khoan: giáo
- * có cờ đuôi nheo cùng nắm tay xoay quanh cổ tay, khiên mây là lớp tay không nâng lên khi vào thế và đỡ đòn.
- * Hệ tọa độ: ảnh đứng 1024×1536.
+ * Nguyễn Siêu, sứ quân Tây Phù Liệt, binh lính hệ Hỏa. Bộ tranh Shan gửi 12/11 (7 tranh rời, nền trong suốt): khăn
+ * đỏ, áo đỏ thêu lũy lửa vàng, giáp lá đen, giáo mũi thoi, khiên hình giọt nước đỏ viền đồng. Ảnh đứng tách lớp như
+ * Nguyễn Khoan: nắm tay phải cùng cây giáo dựng đứng xoay quanh nắm tay, khiên là lớp tay không xoay quanh cẳng tay
+ * trái sau khiên, nâng lên khi vào thế và đỡ đòn (vạt giáp sau khiên kéo dài từ mép rồi làm mờ), đầu cùng dải khăn.
+ * Tư thế giữ tranh nguồn 1536×1024. Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const NGUYEN_SIEU: WarriorRig = {
   skeleton: "warrior",
   weapon: "spear",
   dir: "nguyen-sieu",
   texScale: 0.5,
-  foot: { x: 530, y: 1490 },
-  height: 1340,
+  foot: { x: 516, y: 1505 },
+  height: 1363,
   parts: {
-    body: { x: 151, y: 172, w: 786, h: 1351 },
-    armR: { x: 760, y: 515, w: 253, h: 566 },
-    sword: { x: 66, y: 8, w: 242, h: 1480 },
-    arm: { x: 184, y: 598, w: 101, h: 119 },
-    head: { x: 480, y: 172, w: 195, h: 231 },
+    body: { x: 183, y: 150, w: 598, h: 1364 },
+    armR: { x: 626, y: 505, w: 250, h: 622 },
+    sword: { x: 225, y: 14, w: 52, h: 1490 },
+    arm: { x: 198, y: 412, w: 98, h: 104 },
+    head: { x: 364, y: 150, w: 208, h: 222 },
   },
-  cloth: [
-    { name: "ribbon", box: { x: 288, y: 260, w: 209, h: 180 }, behind: true,
-      wind: { axis: "x", start: 0.15, amp: 7, freq: 1.6, k: 3, phase: 1.1, vertical: true, reverse: true } },
-  ],
+  cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 262, y: 655 },
-    elbowR: { x: 790, y: 640 },
-    neck: { x: 560, y: 395 },
+    shoulder: { x: 248, y: 462 },
+    elbowR: { x: 690, y: 620 },
+    neck: { x: 470, y: 355 },
   },
-  blade: [{ x: 230, y: 650 }, { x: 282, y: 20 }],
+  blade: [{ x: 250, y: 470 }, { x: 250, y: 30 }],
   shieldRaise: -0.35,
   strikeFx: "flameWall",
   fxColor: 0xd9502a,
-  // Đâm giáo sau khiên (đánh thường), thế thủ giơ khiên trấn lũy (tuyệt chiêu); ra chiêu dùng nhịp đẩy giáo.
+  // Tấn thấp đâm giáo qua mép khiên (đánh thường), hô xung phong, khiên đẩy tới, giáo chĩa thấp (ra chiêu), tấn rộng
+  // khiên dựng chắn trước, giáo gác ngang vai (tuyệt chiêu Hỏa Lũy, thủ thân).
   poses: {
-    // Ra chiêu: tranh Shan gửi 03/11, giơ khiên mây chắn trước, giáo chúc xuống (cỡ so theo đầu).
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 14, y: 1 },
-      anchor: { x: 625, y: 1255 }, scale: 1, burst: { x: 1060, y: 250 } },
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 17, y: 14 },
-      anchor: { x: 680, y: 955 }, scale: 1.1, burst: { x: 1495, y: 110 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 99, y: 2 },
-      anchor: { x: 680, y: 1120 }, scale: 1.1, burst: { x: 1120, y: 510 } },
+    attack: { name: "pose-attack", texScale: 0.4, origin: { x: 48, y: 12 },
+      anchor: { x: 605, y: 985 }, scale: 1.03, burst: { x: 1495, y: 335 } },
+    cast: { name: "pose-cast", texScale: 0.4, origin: { x: 122, y: 14 },
+      anchor: { x: 800, y: 1000 }, scale: 1.03, burst: { x: 1520, y: 490 } },
+    ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 48, y: 18 },
+      anchor: { x: 630, y: 1000 }, scale: 1.03, burst: { x: 1495, y: 280 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 17, y: 87 },
-    anchor: { x: 760, y: 900 }, scale: 0.9 },
+  // Quỳ một gối, cúi đầu, tay chống đất, giáo và khiên rơi trước mặt.
+  down: { name: "pose-down", texScale: 0.4, origin: { x: 75, y: 36 },
+    anchor: { x: 680, y: 900 }, scale: 1.03 },
 };
 
 /**
