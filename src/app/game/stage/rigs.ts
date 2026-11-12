@@ -987,47 +987,48 @@ const KIEU_THUAN: WarriorRig = {
 };
 
 /**
- * Lý Khuê, sứ quân Siêu Loại, tướng sĩ hệ Kim. Bộ tranh Shan gửi 24/10 (nền đã trong suốt, trừ tranh phong thái
- * có nền ca-rô vẽ sẵn đã tách bằng code): ảnh đứng tách lớp bằng code. Cẳng tay và kiếm đồng xoay quanh khuỷu,
- * phần thân sau lưỡi kiếm vá bằng inpaint. Hệ tọa độ: ảnh đứng 1024×1536.
+ * Lý Khuê, sứ quân Siêu Loại, tướng sĩ hệ Kim. Bộ tranh Shan gửi 12/11: áo choàng trắng ngà vá vảy vàng, giáp vảy bạc,
+ * kiếm thẳng. Ảnh đứng tách lớp bằng code: hai bàn tay chắp trên chuôi cùng thanh kiếm cắm mũi xuống đất xoay quanh
+ * nắm tay (chỗ kiếm che giáp và vạt áo vá nội suy theo hàng rồi làm mờ), cổ tay trái phủ lại, đầu. Năm tranh tư thế cắt
+ * từ một tấm 1536×1024 (đứng, phong thái, đánh thường | ra chiêu, tuyệt chiêu, gục), giữ cỡ ô. Hệ tọa độ: ảnh đứng
+ * 1024×1536.
  */
 const LY_KHUE: WarriorRig = {
   skeleton: "warrior",
   dir: "ly-khue",
   texScale: 0.5,
-  foot: { x: 600, y: 1500 },
-  height: 1495,
+  foot: { x: 552, y: 1500 },
+  height: 1466,
   parts: {
-    body: { x: 10, y: 3, w: 1014, h: 1525 },
-    armR: { x: 895, y: 557, w: 110, h: 264 },
-    sword: { x: 184, y: 634, w: 624, h: 592 },
-    arm: { x: 255, y: 506, w: 171, h: 290 },
-    head: { x: 610, y: 11, w: 172, h: 252 },
+    body: { x: 154, y: 34, w: 716, h: 1476 },
+    armR: { x: 650, y: 560, w: 96, h: 102 },
+    sword: { x: 503, y: 735, w: 146, h: 790 },
+    arm: { x: 493, y: 600, w: 162, h: 140 },
+    head: { x: 386, y: 34, w: 202, h: 242 },
   },
-  cloth: [
-    { name: "ribbon", box: { x: 148, y: 85, w: 473, h: 326 }, behind: true,
-      wind: { axis: "x", start: 0.15, amp: 8, freq: 1.5, k: 3.2, phase: 0.4, vertical: true, reverse: true } },
-  ],
+  cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 350, y: 545 },
-    elbowR: { x: 930, y: 590 },
-    neck: { x: 715, y: 250 },
+    shoulder: { x: 572, y: 680 },
+    elbowR: { x: 700, y: 610 },
+    neck: { x: 505, y: 255 },
   },
-  blade: [{ x: 380, y: 800 }, { x: 772, y: 1190 }],
+  blade: [{ x: 574, y: 880 }, { x: 575, y: 1515 }],
   strikeFx: "armorPierce",
   fxColor: 0x9ea4ad,
-  // Thế thủ thấp chém chéo (đánh thường), đâm vươn tay (ra chiêu), lao người đâm xuyên giáp (tuyệt chiêu).
+  // Sải bước đâm kiếm thẳng (đánh thường), giơ kiếm dựng đứng, tay kia xòe chặn (ra chiêu), hai tay vung kiếm qua đầu
+  // trong thế tấn rộng (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 16, y: 3 },
-      anchor: { x: 730, y: 1175 }, scale: 1.05, burst: { x: 1150, y: 1000 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 16, y: 7 },
-      anchor: { x: 640, y: 985 }, scale: 1.15, burst: { x: 1505, y: 300 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 6, y: 13 },
-      anchor: { x: 620, y: 960 }, scale: 1.15, burst: { x: 1505, y: 400 } },
+    attack: { name: "pose-attack", texScale: 1 / 3, origin: { x: 0, y: 0 },
+      anchor: { x: 510, y: 1182 }, scale: 1.11, burst: { x: 1620, y: 294 } },
+    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 0, y: 0 },
+      anchor: { x: 390, y: 1629 }, scale: 1.11, burst: { x: 120, y: 60 } },
+    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 0, y: 0 },
+      anchor: { x: 555, y: 1392 }, scale: 1.11, burst: { x: 1080, y: 285 } },
   },
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 6, y: 73 },
-    anchor: { x: 780, y: 950 }, scale: 0.9 },
+  // Ngồi bệt dựa tay, cúi đầu, kiếm rơi nằm trước mặt.
+  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 0, y: 0 },
+    anchor: { x: 660, y: 957 }, scale: 1.11 },
 };
 
 /**
