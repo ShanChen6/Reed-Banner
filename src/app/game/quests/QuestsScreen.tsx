@@ -6,7 +6,7 @@ import { FrameInset, ModeScreen, OrnateFrame, SectionTitle } from "@/components/
 // Nhiệm vụ: điểm danh 7 ngày, nhiệm vụ ngày/tuần, thành tựu. Tiến độ do server cộng khi trận kết thúc; bấm
 // Nhận thì server kiểm tra lại rồi cộng vàng.
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ACHIEVEMENTS,
   achievementProgress,
@@ -23,10 +23,9 @@ import {
   type ProfileAction,
   type QuestDef,
 } from "@/core";
-import { fetchProfile, sendProfileAction } from "../battle/online";
-import { PROFILE_ERROR } from "../battle/ProgressPanel";
 import PlacesPanel from "./PlacesPanel";
 import SpecialQuestsPanel from "./SpecialQuestsPanel";
+import { useProfile } from "../profile/useProfile";
 
 interface Row {
   readonly id: string;
@@ -65,19 +64,9 @@ export default function QuestsScreen({
   tamTuongKyPack2?: boolean;
   tamTuongKyPack3?: boolean;
 }) {
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loadError, setLoadError] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const { profile, loadError, busy, message, act } = useProfile();
   // Giờ lúc mở trang, chỉ để hiển thị; server dùng giờ của server khi nhận thưởng.
   const [now] = useState(() => Date.now());
-
-  useEffect(() => {
-    void fetchProfile().then((r) => {
-      if (r.profile) setProfile(r.profile);
-      else setLoadError(true);
-    });
-  }, []);
 
   if (!profile) {
     return (
@@ -88,18 +77,6 @@ export default function QuestsScreen({
       </Shell>
     );
   }
-
-  const act = async (a: ProfileAction) => {
-    setBusy(true);
-    const r = await sendProfileAction(a);
-    setBusy(false);
-    if (r.profile) setProfile(r.profile);
-    setMessage(
-      r.error
-        ? (PROFILE_ERROR[r.error as keyof typeof PROFILE_ERROR] ?? r.error)
-        : null,
-    );
-  };
 
   // Phiếu Tầm Tướng Ký kèm thưởng (Design Freeze P-10): chỉ hiện khi chế độ bật và người chơi đã vào chế độ,
   // vì phiếu chỉ cộng cho người đã vào.

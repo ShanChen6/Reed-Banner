@@ -1,4 +1,5 @@
 "use client";
+import { requestJson } from "../api";
 import { ModeScreen } from "@/components/game-ui";
 import { Button } from "@/components/ui";
 
@@ -33,14 +34,6 @@ interface SweepResponse {
   readonly error?: string;
 }
 
-async function json<T>(url: string, init?: RequestInit): Promise<T | null> {
-  try {
-    const response = await fetch(url, { ...init, cache: "no-store" });
-    return (await response.json()) as T;
-  } catch {
-    return null;
-  }
-}
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
@@ -80,8 +73,8 @@ export default function TrialScreen() {
   const load = useCallback(async () => {
     setLoadError(false);
     const [tower, stored] = await Promise.all([
-      json<TrialOverview>("/api/trial"),
-      json<ProfileResponse>("/api/profile"),
+      requestJson<TrialOverview>("/api/trial"),
+      requestJson<ProfileResponse>("/api/profile"),
     ]);
     apply(tower, stored);
   }, [apply]);
@@ -89,8 +82,8 @@ export default function TrialScreen() {
   useEffect(() => {
     let mounted = true;
     void Promise.all([
-      json<TrialOverview>("/api/trial"),
-      json<ProfileResponse>("/api/profile"),
+      requestJson<TrialOverview>("/api/trial"),
+      requestJson<ProfileResponse>("/api/profile"),
     ]).then(([tower, stored]) => {
       if (mounted) apply(tower, stored);
     });
@@ -125,7 +118,7 @@ export default function TrialScreen() {
     setBusy(true);
     setMessage(null);
     const body = { floor, companions, ...(build ? { leaderBuild: build } : {}) };
-    const result = await json<StartResponse>("/api/trial/battles", {
+    const result = await requestJson<StartResponse>("/api/trial/battles", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(body),
@@ -146,7 +139,7 @@ export default function TrialScreen() {
   const abandon = async () => {
     setBusy(true);
     setMessage(null);
-    const result = await json<{ abandoned?: boolean; error?: string }>("/api/trial/battles", { method: "DELETE" });
+    const result = await requestJson<{ abandoned?: boolean; error?: string }>("/api/trial/battles", { method: "DELETE" });
     if (!result || result.error) {
       setBusy(false);
       setMessage(TRIAL_ERROR_TEXT[result?.error ?? "network"] ?? "Không bỏ được trận, hãy thử lại");
@@ -159,7 +152,7 @@ export default function TrialScreen() {
   const sweep = async () => {
     setSweepBusy(true);
     setMessage(null);
-    const result = await json<SweepResponse>("/api/trial/sweep", { method: "POST" });
+    const result = await requestJson<SweepResponse>("/api/trial/sweep", { method: "POST" });
     if (!result?.ok) {
       setSweepBusy(false);
       setMessage(TRIAL_ERROR_TEXT[result?.error ?? "network"] ?? "Không quét được tháp, hãy thử lại");

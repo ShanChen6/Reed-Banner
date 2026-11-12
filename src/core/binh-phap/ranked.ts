@@ -2,7 +2,7 @@
 // Thiết kế ở docs/02-game-modes/tran-do/gdd.md mục 12. Mức thưởng là điểm xuất phát chờ Shan duyệt.
 
 import { rewardTier, type RewardTier } from "../progress/rankRewards";
-import { vnDay, vnWeek } from "../progress/quests";
+import { DAY_MS, vnDay, vnDayStart, vnWeek } from "../vnTime";
 import { themeOfState } from "./reducer";
 import type { PuzzleState } from "./types";
 
@@ -30,7 +30,7 @@ export function periodEnd(levelId: string, now: number): number | null {
   const key = periodKey(levelId, now);
   if (!level || key === null) return null;
   const days = level.cadence === "day" ? 1 : 7;
-  return Date.parse(`${key}T00:00:00.000Z`) - 7 * 3600_000 + days * 24 * 3600_000;
+  return vnDayStart(key) + days * DAY_MS;
 }
 
 /** Kỳ đã khép lại khi khóa của nó nhỏ hơn khóa kỳ hiện tại. */

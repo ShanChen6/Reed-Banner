@@ -3,41 +3,26 @@
 // Màn chiến dịch: Campaign V2 (6 chương, 24 nhiệm vụ) và khu Đánh trùm bên dưới. Chiến dịch 13 màn cũ đã gỡ ở
 // CAMP-08.04. Mọi luật ở @/core, server kiểm tra lại.
 
-import { useEffect, useState } from "react";
 import { Alert } from "@/components/ui";
 import {
   raidBossById,
   raidSetup,
-  type Profile,
-  type ProfileAction,
   type RaidTier,
 } from "@/core";
 import {
   createOnline,
-  fetchProfile,
   ONLINE_BATTLE_KEY,
   ONLINE_ERROR_TEXT,
-  sendProfileAction,
 } from "../battle/online";
-import { PROFILE_ERROR } from "../battle/ProgressPanel";
 import { ModeScreen } from "@/components/game-ui";
 import ChapterOne from "./ChapterOne";
 import RaidHall from "./RaidPanel";
 import { useScene } from "../SceneContext";
+import { useProfile } from "../profile/useProfile";
 
 export default function CampaignScreen() {
   const { go } = useScene();
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loadError, setLoadError] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-
-  useEffect(() => {
-    void fetchProfile().then((r) => {
-      if (r.profile) setProfile(r.profile);
-      else setLoadError(true);
-    });
-  }, []);
+  const { profile, setProfile, loadError, busy, setBusy, message, setMessage, act } = useProfile();
 
   if (!profile) {
     return (
@@ -50,18 +35,6 @@ export default function CampaignScreen() {
       </Shell>
     );
   }
-
-  const act = async (a: ProfileAction) => {
-    setBusy(true);
-    const r = await sendProfileAction(a);
-    setBusy(false);
-    if (r.profile) setProfile(r.profile);
-    setMessage(
-      r.error
-        ? (PROFILE_ERROR[r.error as keyof typeof PROFILE_ERROR] ?? r.error)
-        : null,
-    );
-  };
 
   const startRaid = async (bossId: string, raid: RaidTier) => {
     const boss = raidBossById(bossId);

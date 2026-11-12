@@ -14,47 +14,13 @@ import {
   type LineupMember,
   type Profession,
   type Profile,
-  type TrialFloorPublic,
   type WinCriteria,
 } from "@/core";
+import type { FloorState, TrialFloorEntry, TrialOverview } from "@/server/trialApi";
 import { ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
 
-export type FloorState = "locked" | "open" | "cleared";
-
-/** Dữ liệu GET /api/trial (khớp trialOverview ở server). */
-export interface TrialFloorEntry {
-  readonly floor: TrialFloorPublic;
-  readonly state: FloorState;
-  readonly firstClearClaimed: boolean;
-  readonly record: { readonly floor: number; readonly clears: number; readonly bestTurns: number } | null;
-}
-
-export interface TrialOverview {
-  readonly available: boolean;
-  readonly supported: boolean;
-  readonly cleared: number;
-  readonly stones: number;
-  readonly active: { readonly matchId: string; readonly floor: number } | null;
-  readonly sweep: {
-    readonly eligible: boolean;
-    readonly tier: number;
-    readonly amount: number;
-    readonly claimedToday: boolean;
-    readonly nextAt: number;
-    readonly lastClaim: {
-      readonly dateKey: string;
-      readonly tier: number;
-      readonly amount: number;
-      readonly claimedAt: number;
-    } | null;
-    readonly history: readonly {
-      readonly dateKey: string;
-      readonly amount: number | null;
-      readonly claimedAt: number | null;
-    }[];
-  };
-  readonly floors: readonly TrialFloorEntry[];
-}
+/** Dữ liệu GET /api/trial: dùng chung kiểu với server để hai bên không lệch nhau. */
+export type { FloorState, TrialFloorEntry, TrialOverview };
 
 export const formatSweepTime = (time: number): string =>
   new Intl.DateTimeFormat("vi-VN", {
