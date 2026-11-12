@@ -92,7 +92,7 @@ test("Trần Cương có tranh đánh thường, ra chiêu, tuyệt chiêu, bị
 test("Kiều Công Hãn có đủ bốn tranh, sét hệ Lôi, khớp nằm trong lớp và texture khớp tọa độ", () => {
   const rig = rigOf("kieuCongHan");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "staff");
+  assert.equal(rig.weapon, undefined);
   assert.equal(rig.strikeFx, "lightning");
   assert.equal(rig.fxColor, 0xb98cff);
   assert.equal(rig.poses?.attack?.name, "pose-attack");
@@ -107,7 +107,7 @@ test("Kiều Công Hãn có đủ bốn tranh, sét hệ Lôi, khớp nằm tron
   contains(rig.joints.elbowR, rig.parts.body);
   contains(rig.joints.neck, rig.parts.head);
   contains(rig.joints.neck, rig.parts.body);
-  contains(rig.orb!, rig.parts.sword);
+  assert.equal(rig.orb, undefined);
   for (const [name, box] of [...Object.entries(rig.parts), ...rig.cloth.map((c) => [c.name, c.box] as const)]) {
     const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
     assert.equal(data.toString("ascii", 12, 16), "VP8X");
