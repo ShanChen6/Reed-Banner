@@ -1883,10 +1883,10 @@ test("Phạm Bạch Hổ bộ mới cầm đao: đủ bốn tranh tư thế, kh�
   }
 });
 
-test("Ngô Xương Xí bộ mới cầm quạt lông: đủ bốn tranh tư thế, khớp nằm trong lớp và texture khớp tọa độ", () => {
+test("Ngô Xương Xí bộ mới cầm kiếm: đủ bốn tranh tư thế, khớp nằm trong lớp và texture khớp tọa độ", () => {
   const rig = rigOf("ngoXuongXi");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "fan");
+  assert.equal(rig.weapon, undefined);
   assert.deepEqual(rig.cloth, []);
   assert.deepEqual(rig.covers, []);
   assert.equal(rig.poses?.attack?.name, "pose-attack");
