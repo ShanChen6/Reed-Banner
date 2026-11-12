@@ -1,11 +1,9 @@
 "use client";
 
-import FighterKindIcons from "./FighterKindIcons";
-import { fusionPassiveLines, fusionSummary, isFusion } from "./special-labels";
 import SkillDetails from "./SkillDetails";
 import { skillText } from "./labels";
 
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   act,
   swapCells,
@@ -14,46 +12,23 @@ import {
   applyRewards,
   battleRewards,
   canFreeWhirl,
-  createBattle,
   defaultSkillTarget,
   skillTargetOptions,
-  createRng,
-  getSkill,
   isAdjacent,
   isWhirlCenter,
   previewWhirl,
-  buildCompanion,
-  buildMain,
-  maxProgress,
-  MAX_TIER,
-  ELEMENTS,
   companionById,
   fighterSkill,
   isAlive,
-  leveledFoe,
   MAIN_ID,
   needsCell,
   newProfile,
-  parseProfile,
   PASSIVE,
-  PASSIVES,
   playAiTurn,
-  presetLoadout,
   RAID_TIER_INFO,
-  profileTeam,
   receiveDrop,
-  rollDrop,
   selectableActors,
-  COMBO_PASSIVES,
-  comboDescription,
-  CHASE_PASSIVES,
-  DEFAULT_SPIRIT_EXPERIMENT,
-  chasePassives,
   comboSkillCost,
-  SPIRIT_EXPERIMENTS,
-  type SpiritExperiment,
-  spiritStatMultiplier,
-  spiritHealMultiplier,
   whirlStep,
   raidBossById,
   specialQuestById,
@@ -65,45 +40,29 @@ import {
   campaignScenarioByNode,
   completedPlayerTurns,
   type CampaignScenarioTag,
-  STARTER_COMPANIONS,
   tileAt,
-  withGear,
   GRACE_MS,
   TURN_MS,
   type BattleAction,
   type Board,
-  type BattleRewards,
-  type RaidResult,
   type BattleEvent,
   type BattleState,
   type Difficulty,
   type Element,
-  type Fighter,
-  type FighterConfig,
-  type GearItem,
-  type LevelUp,
   type Pos,
   type Profession,
   type Profile,
   type ProfileAction,
-  type SideConfig,
   type SkillDef,
   type Whirl,
-  type Tier,
   type MatchAction,
-  type SurvivalResult,
-  type DailyScore,
   type SurvivalView,
-  type WavePreview,
   type ExpeditionObjective,
 } from "@/core";
 import {
   DIFFICULTY_NAME,
-  EFFECT_NAME,
   ERROR_TEXT,
   gearText,
-  passiveText,
-  GOOD_EFFECTS,
   TILE_NAME,
   SPECIAL_NAME,
   TIER_CLASS,
@@ -117,17 +76,14 @@ import { COMBAT_PACING } from "./pacing";
 import {
   CloudCorner,
   DongSonBand,
-  ELEMENT_COLOR,
   ElementIcon,
   FoodIcon,
-  LeaderFlag,
   ProfessionIcon,
-  ShieldIcon,
 } from "../art/icons";
 import { GearIcon } from "../art/gear";
-import { Portrait } from "../art/portraits";
+
 import { SkillIcon } from "../art/skills";
-import { PassiveIcon, ragePassiveId } from "../art/passives";
+
 import SurvivalBreakScreen from "../survival/SurvivalBreakScreen";
 import { BoardCrest, TileArt } from "../art/tiles";
 import ProgressPanel from "./ProgressPanel";
@@ -143,7 +99,6 @@ import {
   ONLINE_ERROR_TEXT,
   sendProfileAction,
   toBattleState,
-  type ArenaResult,
   type OnlineResponse,
 } from "./online";
 import { SceneLink } from "../SceneContext";
@@ -151,620 +106,40 @@ import BattleStage from "../stage/BattleStage";
 import { buttonVariants } from "@/components/ui";
 import { MODE_CONTENT_WIDTH, OrnateFrame } from "@/components/game-ui";
 import { createCueBus, stageCues } from "../stage/director";
-
-const PLAYER = 0;
-const AI = 1;
-/** Seed của bàn xem trước lúc mới vào (cố định để server và trình duyệt dựng cùng một bàn). */
-const DEMO_SEED = 2026;
-/** Seed mới cho mỗi trận chơi offline. */
-const randomSeed = () => crypto.getRandomValues(new Uint32Array(1))[0]!;
-const DIFFICULTIES: Difficulty[] = [
-  "easy",
-  "normal",
-  "hard",
-  "boss",
-  "nightmare",
-];
-
-/** Nguyên tố đã có bộ kỹ năng nhân vật chính. */
-const MAIN_ELEMENTS = ELEMENTS;
-
-const byId = (id: string) => companionById(id)!;
-
-/** Trang bị mẫu của trận demo: bậc 0 là không mặc đồ; `set` null là không bộ nào đạt mốc. */
-interface DemoGear {
-  readonly tier: 0 | Tier;
-  readonly set: string | null;
-}
-
-const NO_GEAR: DemoGear = { tier: 0, set: null };
-/** Chơi thử mặc định: đủ 9 món phẩm cao nhất, bộ Cờ Lau. */
-const MAX_GEAR: DemoGear = { tier: MAX_TIER, set: "coLau" };
-
-/** Mặc đủ 9 món cùng hệ với nhân vật. Đội Tianwu mặc cùng bậc nhưng không có thưởng bộ. */
-function gearUp(
-  f: FighterConfig,
-  gear: DemoGear,
-  set: string | null,
-): FighterConfig {
-  return gear.tier === 0
-    ? f
-    : withGear(f, presetLoadout(f.element, f.profession, gear.tier, set));
-}
-
-/** Nhân vật ở tiến trình tối đa: cấp 30, mọi kỹ năng cấp tối đa. */
-function maxed(base: FighterConfig): FighterConfig {
-  return buildCompanion(base, maxProgress(null));
-}
-
-/**
- * Luyện tập: cả hai đội ở tiến trình tối đa. Tiến trình: đội theo hồ sơ lưu trên trình duyệt, đối thủ
- * cùng cấp với nhân vật chính.
- */
-type DemoMode = "practice" | "progress";
-
-interface Setup {
-  readonly element: Element;
-  readonly profession: Profession;
-  readonly gear: DemoGear;
-  readonly mode: DemoMode;
-  readonly profile: Profile;
-}
-
-/** Đội Tianwu: 3 nhân vật kèm khởi đầu đầu tiên không có trong đội người chơi. */
-const foeIds = (team: readonly string[]) =>
-  STARTER_COMPANIONS.filter((c) => !team.includes(c.id))
-    .slice(0, 3)
-    .map((c) => c.id);
-
-/** Nhân vật đã có hình động (src/app/game/stage/rigs.ts), cho đứng đầu đội Tianwu ở Luyện tập để xem thử. */
-const SHOWCASE_FOES = ["tranCuong", "ngoXuongXi", "phamBachHo", "tranLam", "dinhLien", "leHoan", "trinhTu", "luuCo", "dinhDien", "nguyenBac", "daoLam"];
-const practiceFoeIds = (team: readonly string[]) => {
-  const shown = SHOWCASE_FOES.filter((id) => !team.includes(id));
-  return [...shown, ...foeIds(team)].slice(0, 3);
-};
-
-/** Trận demo: nhân vật chính và 2 nhân vật kèm của hồ sơ, đấu đội Tianwu 3 người. */
-function demoSides({
-  element,
-  profession,
-  gear,
-  mode,
-  profile,
-}: Setup): [SideConfig, SideConfig] {
-  const leveled = { ...profile, element, profession };
-  const team =
-    mode === "progress"
-      ? profileTeam(leveled, profile.team)
-      : [
-          buildMain(maxProgress(null), element, profession),
-          ...profile.team.map((id) => maxed(byId(id))),
-        ];
-  const level = profile.main.level;
-  const foes =
-    mode === "progress"
-      ? foeIds(profile.team).map((id) => leveledFoe(byId(id), level))
-      : practiceFoeIds(profile.team).map((id) => maxed(byId(id)));
-  // Tiến trình mặc đồ trong túi đồ của hồ sơ (profileTeam); đồ mẫu chỉ dùng ở Luyện tập.
-  const preset = mode === "progress" ? NO_GEAR : gear;
-  return [
-    { fighters: team.map((f) => gearUp(f, preset, preset.set)), leader: 0 },
-    { fighters: foes.map((f) => gearUp(f, preset, null)), leader: 0 },
-  ];
-}
-
-function newBattle(seed: number, setup: Setup): BattleState {
-  return createBattle({
-    sides: demoSides(setup),
-    seed,
-    firstSide: PLAYER,
-  }).state;
-}
-
-const PROFILE_KEY = "coLau.profile.v1";
-
-function loadProfile(): Profile {
-  try {
-    const raw = window.localStorage.getItem(PROFILE_KEY);
-    return parseProfile(raw ? JSON.parse(raw) : null);
-  } catch {
-    return newProfile();
-  }
-}
-
-function saveProfile(p: Profile): void {
-  try {
-    window.localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
-  } catch {
-    // Trình duyệt chặn lưu trữ: hồ sơ chỉ sống tới khi tải lại trang.
-  }
-}
-
-interface Outcome {
-  readonly rewards: BattleRewards;
-  readonly levelUps: readonly LevelUp[];
-  /** Món rơi đã vào túi đồ; null khi không rơi hoặc túi đầy (bán ngay được `soldFor` vàng). */
-  readonly drop: GearItem | null;
-  readonly soldFor: number;
-  /** Campaign V2: hoàn thành và thưởng lần đầu đã ghi trên server. */
-  readonly campaignV2?: {
-    readonly firstClear: boolean;
-    readonly totalGold: number;
-  };
-  /** Chỉ có ở trận đánh trùm online. */
-  readonly raid?: RaidResult;
-  readonly destiny?: { readonly floor: number; readonly won: boolean; readonly phase: "reward" | "done"; readonly completed?: boolean };
-  /** Trận Viễn Chinh: kết quả trên sa bàn, có `end` khi trận này kết thúc lượt viễn chinh. */
-  readonly expedition?: {
-    readonly won: boolean;
-    readonly phase: "march" | "won" | "lost";
-    readonly end?: { readonly won: boolean; readonly stars: number; readonly gold: number; readonly firstClear: boolean };
-  };
-  readonly survival?: SurvivalResult;
-  readonly daily?: { readonly score: DailyScore; readonly rank: number | null };
-  readonly arena?: ArenaResult;
-  /** Trận cuối nhiệm vụ nhân vật đặc biệt: nhân vật đã gia nhập chưa. */
-  readonly specialQuest?: { readonly id: string; readonly joined: boolean };
-}
-
-function demoDrop(
-  seed: number,
-  round: number,
-  difficulty: Difficulty,
-  won: boolean,
-): GearItem | null {
-  return rollDrop(
-    createRng(Math.imul(seed, 31) ^ 0x5bd1e995),
-    difficulty,
-    won,
-    `drop-${round}`,
-  );
-}
-
-const fighterName = (id: string) =>
-  id === MAIN_ID ? "Đinh Bộ Lĩnh" : (companionById(id)?.name ?? id);
+import {
+  PLAYER,
+  AI,
+  DEMO_SEED,
+  randomSeed,
+  DIFFICULTIES,
+  MAIN_ELEMENTS,
+  type DemoGear,
+  MAX_GEAR,
+  type DemoMode,
+  type Setup,
+  newBattle,
+  loadProfile,
+  saveProfile,
+  type Outcome,
+  demoDrop,
+} from "./demoSetup";
+import { describe, fighterName, type LogLine } from "./battleLog";
+import {
+  TurnClock,
+  WaveBanner,
+  type WhirlAim,
+  whirlHint,
+  inRing,
+  useStageVisible,
+} from "./BattleHud";
+import { FighterCard, FLOAT_STAGGER_MS, prefersReducedMotion, type Float } from "./FighterCard";
 
 /**
  * Đang ngắm kỹ năng. `choose`: có nhiều mục tiêu để chọn (bấm thẻ, mũi tên trái/phải); `target`: mục tiêu đã chọn.
  * Kỹ năng phá vùng còn chọn tâm trên bàn cờ sau khi có mục tiêu.
  */
 type Aim = { skill: SkillDef; choose: boolean; target?: number } | null;
-
-/** Đang chọn tâm lốc xoáy: cho kỹ năng Phong, hoặc lần xoay miễn phí (skill null). */
-type WhirlAim = {
-  readonly skill: SkillDef | null;
-  readonly max: number;
-  readonly center: Pos | null;
-} | null;
-
-interface LogLine {
-  readonly id: number;
-  readonly text: string;
-}
-
-/** Số sát thương/hồi máu bay lên trên thẻ nhân vật. */
-interface Float {
-  readonly id: number;
-  readonly side: number;
-  readonly fighter: number;
-  readonly text: string;
-  readonly tone: "damage" | "shield" | "heal";
-  /** Thứ tự trong cùng thẻ, để các số nối đuôi nhau thay vì chồng lên nhau. */
-  readonly order: number;
-}
-
-const FLOAT_STAGGER_MS = 160;
 const FLOAT_MS = 1100;
-const FLOAT_TONE: Record<Float["tone"], string> = {
-  damage: "text-stat-hp",
-  shield: "text-stat-shield",
-  heal: "text-stat-spirit",
-};
-
-const prefersReducedMotion = () =>
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-function describe(state: BattleState, e: BattleEvent): string | null {
-  const name = (side: number, i: number) =>
-    state.sides[side as 0 | 1].fighters[i]?.name ?? "?";
-  switch (e.type) {
-    case "skill":
-      return `${name(e.side, e.fighter)} dùng ${getSkill(e.skill)?.name ?? e.skill}`;
-    case "damage":
-      return e.amount > 0
-        ? `${name(e.side, e.fighter)} mất ${e.amount} máu`
-        : null;
-    case "heal":
-      return `${name(e.side, e.fighter)} hồi ${e.amount} máu`;
-    case "ko":
-      return `${name(e.side, e.fighter)} bị hạ gục`;
-    case "wave":
-      return `Đợt ${e.wave} kéo đến`;
-    case "revive":
-      return `${name(e.side, e.fighter)} đứng dậy với ${e.hp} máu`;
-    case "timeout":
-      return e.side === PLAYER ? "Hết giờ, bạn mất lượt" : "Đối thủ hết giờ";
-    case "passive": {
-      const own = state.sides[e.side];
-      const passive = PASSIVES[own.fighters[own.leader]!.element].name;
-      return e.side === PLAYER
-        ? `Bị động ${passive} của phe bạn kích hoạt`
-        : `Bị động ${passive} của đối thủ kích hoạt`;
-    }
-    case "whirl":
-      return e.free
-        ? `${name(e.side, e.fighter)} xoay lốc xoáy miễn phí quanh ô hàng ${e.whirl.center.row + 1}, cột ${e.whirl.center.col + 1}`
-        : null;
-    case "shuffle":
-      return "Hết nước đi, bàn cờ được xáo lại";
-    case "chase": return `${name(e.side,e.fighter)} · ${CHASE_PASSIVES[e.passive].name}: truy kích → ${name(e.target.side,e.target.fighter)} (nhịp ${e.depth})`;
-    case "combo": {
-      const passive=COMBO_PASSIVES[e.passive].name;
-      return `${name(e.side,e.fighter)} · ${passive}: ${e.outcome==='opened'?'sẵn sàng phối hợp':e.outcome==='used'?'đã tận dụng':e.outcome==='expired'?'cơ hội hết hạn':'cơ hội bị phá'}`;
-    }
-    case "spirit": {
-      const firstAlive = state.sides[e.side].fighters.findIndex(
-        (f) => f.hp > 0,
-      );
-      if (e.spirit !== 100 - SPIRIT_EXPERIMENTS[state.experimentalSpirit ?? DEFAULT_SPIRIT_EXPERIMENT].decay || e.fighter !== firstAlive) return null;
-      return e.side === PLAYER
-        ? "Trận kéo dài, tinh thần phe bạn bắt đầu giảm"
-        : "Trận kéo dài, tinh thần đối thủ bắt đầu giảm";
-    }
-    case "frozenSkip":
-      return e.side === PLAYER
-        ? "Phe bạn bị Đóng băng, mất lượt"
-        : "Đối thủ bị Đóng băng, mất lượt";
-    case "end":
-      return e.winner === PLAYER ? "Bạn thắng!" : "Tianwu thắng";
-    default:
-      return null;
-  }
-}
-
-function WaveFoes({ preview }: { preview: WavePreview }) {
-  return (
-    <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-0.5">
-      {preview.foes.map((f, i) => (
-        <span key={`${f.id}-${i}`} className="inline-flex items-center gap-1">
-          <ElementIcon element={f.element} className="size-3.5" />
-          {f.name}
-        </span>
-      ))}
-    </span>
-  );
-}
-
-/** Đồng hồ lượt trên bàn cờ: số giây còn lại và vạch cạn dần; đỏ khi còn dưới 10 giây. */
-function TurnClock({
-  seconds,
-  mine,
-  extra,
-  waiting,
-}: {
-  seconds: number | null;
-  mine: boolean;
-  extra: boolean;
-  waiting: boolean;
-}) {
-  const total = TURN_MS / 1000;
-  const left = seconds ?? total;
-  const urgent = mine && seconds !== null && left <= 10;
-  const label = waiting
-    ? "Đang chờ máy chủ…"
-    : mine
-      ? extra
-        ? "Lượt thêm của bạn"
-        : "Lượt của bạn"
-      : "Đối thủ đang đi";
-  return (
-    <div
-      className={`flex items-center gap-3 ui-frame-inset rounded-lg px-3 py-1.5 ${
-        urgent ? "!border-stat-hp" : ""
-      }`}
-      role="timer"
-      aria-label={seconds === null ? label : `${label}, còn ${seconds} giây`}
-    >
-      <span className="w-32 shrink-0 text-sm font-semibold">{label}</span>
-      <div className="h-2 min-w-0 flex-1 overflow-hidden rounded-full bg-black/30">
-        <div
-          className={`h-full rounded-full transition-[width] duration-300 ease-linear ${
-            !mine ? "bg-on-wood-soft/60" : urgent ? "bg-stat-hp" : "bg-frame-gold-hi"
-          }`}
-          style={{ width: `${(left / total) * 100}%` }}
-        />
-      </div>
-      <span
-        className={`w-12 shrink-0 text-right font-mono text-lg font-bold tabular-nums ${
-          urgent ? "animate-pulse text-stat-hp" : ""
-        }`}
-      >
-        {seconds === null ? "--" : `${seconds}s`}
-      </span>
-    </div>
-  );
-}
-
-/** Dải trên bàn cờ của sinh tồn: đợt đang đánh và báo trước đợt kế. */
-function WaveBanner({
-  survival,
-  resting,
-}: {
-  survival: SurvivalView;
-  resting: boolean;
-}) {
-  const { current, next } = survival;
-  return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 ui-frame-inset rounded-lg px-3 py-1.5 text-sm">
-      <span className="font-bold">
-        Đợt {survival.wave}
-        {current.boss && <span className="text-stat-hp"> · trùm</span>}
-      </span>
-      <span className="text-caption opacity-80">
-        Đã vượt qua {survival.cleared} đợt
-      </span>
-      {next && !resting && (
-        <span className="flex flex-wrap items-center gap-1 text-caption">
-          <span className="font-semibold">
-            Đợt kế ({next.foes.length} đối thủ cấp {next.level}
-            {next.boss ? ", có sứ quân" : ""}):
-          </span>
-          <WaveFoes preview={next} />
-        </span>
-      )}
-    </div>
-  );
-}
-
-function whirlHint(a: NonNullable<WhirlAim>): string {
-  const name = a.skill ? a.skill.name : "Xoay miễn phí";
-  return a.center
-    ? `${name}: chọn chiều xoay${a.max > 1 ? " và số nấc" : ""} (phím Q ↺, E ↻${a.max > 1 ? ", Shift để xoay 2 nấc" : ""}).`
-    : `${name}: chạm một ô không sát mép làm tâm, 8 ô quanh nó sẽ xoay vòng.`;
-}
-
-/** Ô nằm trong vòng 8 ô quanh tâm lốc xoáy. */
-const inRing = (c: Pos, p: Pos) =>
-  Math.max(Math.abs(c.row - p.row), Math.abs(c.col - p.col)) === 1;
-
-/**
- * Sân khấu hình tướng chỉ hiện từ 640px (sm) trở lên: trên điện thoại nhỏ nó chiếm cả màn hình đầu mà thẻ tướng bên dưới
- * đã đủ thông tin, nên bỏ hẳn (không dựng) để bàn cờ lên trước. Không dùng CSS ẩn để khỏi tải tranh vô ích.
- */
-const STAGE_QUERY = "(min-width: 640px)";
-function useStageVisible(): boolean {
-  return useSyncExternalStore(
-    (notify) => {
-      const mq = window.matchMedia(STAGE_QUERY);
-      mq.addEventListener("change", notify);
-      return () => mq.removeEventListener("change", notify);
-    },
-    () => window.matchMedia(STAGE_QUERY).matches,
-    () => true,
-  );
-}
-
-function Bar({
-  value,
-  max,
-  color,
-  label,
-  keepValue = false,
-}: {
-  value: number;
-  max: number;
-  color: string;
-  label: string;
-  /** Trên điện thoại thẻ gọn chỉ còn thanh; giữ số (máu) khi cần. */
-  keepValue?: boolean;
-}) {
-  const pct = max > 0 ? Math.max(0, Math.min(100, (value / max) * 100)) : 0;
-  return (
-    <div
-      className="flex items-center gap-1.5 text-caption leading-none"
-      aria-label={`${label} ${Math.round(value)}/${max}`}
-    >
-      <span className="hidden w-7 shrink-0 opacity-70 md:block">{label}</span>
-      <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded bg-black/30 md:h-2">
-        <div
-          className={`h-full ${color} transition-[width] duration-300`}
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-      <span className={`${keepValue ? "" : "hidden md:block"} shrink-0 text-right tabular-nums md:w-11 lg:w-[4.5rem]`}>
-        {Math.round(value)}
-        <span className="hidden lg:inline">/{max}</span>
-      </span>
-    </div>
-  );
-}
-
-function FighterCard({
-  fighter,
-  experimentalSpirit = DEFAULT_SPIRIT_EXPERIMENT,
-  comboTurns, comboSource, comboTarget,
-  leader,
-  rage,
-  rageTurns = 0,
-  active,
-  selectable,
-  targetable,
-  floats,
-  onClick,
-}: {
-  fighter: Fighter;
-  experimentalSpirit?: SpiritExperiment;
-  comboTurns?: number; comboSource?: string; comboTarget?: string;
-  leader: boolean;
-  rage: number | null;
-  /** Số lượt còn lại của bị động thủ lĩnh khi đầy Nộ (chỉ thẻ thủ lĩnh). */
-  rageTurns?: number;
-  active: boolean;
-  selectable: boolean;
-  targetable: boolean;
-  floats: readonly Float[];
-  onClick?: () => void;
-}) {
-  const alive = isAlive(fighter);
-  const comboBlocked = fighter.effects.some(e => e.kind === "silence" || e.kind === "freeze");
-  const ref = useRef<HTMLButtonElement>(null);
-  const lastFloat = floats.at(-1)?.id;
-
-  // Rung thẻ khi trúng đòn, viền xanh khi được hồi máu.
-  useEffect(() => {
-    const el = ref.current;
-    if (lastFloat === undefined || !el || prefersReducedMotion()) return;
-    const hit = floats.some((f) => f.tone !== "heal");
-    el.animate(
-      hit
-        ? [
-            { transform: "none" },
-            { transform: "translateX(-4px)" },
-            { transform: "translateX(4px)" },
-            { transform: "translateX(-2px)" },
-            { transform: "none" },
-          ]
-        : [
-            { boxShadow: "none" },
-            { boxShadow: "0 0 0 3px rgb(52 211 153 / 0.6)" },
-            { boxShadow: "none" },
-          ],
-      { duration: hit ? 380 : 600, easing: "ease-in-out" },
-    );
-    // Chỉ chạy khi có lượt số mới, không chạy lại khi floats đổi vì số cũ hết hạn.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lastFloat]);
-
-  // Nội tại chỉ nằm trong tooltip; thẻ chỉ hiện buff/debuff.
-  const cardTitle = [
-    `ATK ${fighter.atk} · DEF ${fighter.def} · Máu tối đa ${fighter.maxHp}`,
-    fusionSummary(fighter),
-    isFusion(fighter)
-      ? `Nội tại: ${fusionPassiveLines(fighter).map((l) => l.name).join(" · ")}`
-      : fighter.comboPassive && `Nội tại · ${comboDescription(fighter)}`,
-    !isFusion(fighter) &&
-      fighter.chasePassives &&
-      `Truy kích: ${chasePassives(fighter).map((id) => CHASE_PASSIVES[id].name).join(" · ")}`,
-    `Tinh thần: Công/Thủ ${Math.round(spiritStatMultiplier(fighter.spirit, experimentalSpirit) * 100)}% · Hồi/Khiên mới ${Math.round(spiritHealMultiplier(fighter.spirit, experimentalSpirit) * 100)}%`,
-  ]
-    .filter(Boolean)
-    .join("\n");
-
-  const ring = targetable
-    ? "ring-2 ring-stat-hp"
-    : active
-      ? "ring-2 ring-frame-gold-hi"
-      : selectable
-        ? "ring-1 ring-frame-gold-hi/40"
-        : "ring-1 ring-white/10";
-  return (
-    <button
-      ref={ref}
-      type="button"
-      onClick={onClick}
-      disabled={!onClick || !alive}
-      className={`relative w-full min-w-0 rounded-lg border border-l-4 border-frame-line-soft bg-wood-panel p-1.5 text-left md:p-2 ${ring} ${alive ? "" : "opacity-40 grayscale"} disabled:cursor-default`}
-      style={{ borderLeftColor: ELEMENT_COLOR[fighter.element] }}
-      title={cardTitle}
-    >
-      <div className="mb-1 flex flex-col items-start gap-1 md:flex-row md:items-center md:gap-2">
-        <Portrait
-          id={fighter.id}
-          element={fighter.element}
-          profession={fighter.profession}
-          level={fighter.level}
-          className="size-8 shrink-0 md:size-7 lg:size-11"
-        />
-        <div className="w-full min-w-0 md:flex-1">
-          <span className="flex min-w-0 items-center gap-1 text-caption font-semibold leading-tight md:text-sm">
-            {leader && (
-              <span title="Thủ lĩnh" className="shrink-0">
-                <LeaderFlag className="size-3 md:size-4" />
-              </span>
-            )}
-            <span className="line-clamp-2 break-words md:truncate">{fighter.name}</span>
-          </span>
-          <span className="hidden items-center gap-1 text-caption opacity-75 md:flex">
-            <FighterKindIcons fighter={fighter} showName />
-          </span>
-        </div>
-      </div>
-      <div className="space-y-1">
-        <Bar
-          label={fighter.structure ? "Độ bền" : "Máu"}
-          value={fighter.hp}
-          max={fighter.maxHp}
-          color={fighter.structure ? "bg-frame-bronze" : "bg-stat-hp"}
-          keepValue
-        />
-        {/* Công trình (cổng thành) không ra tay: không có năng lượng, tinh thần. */}
-        {!fighter.structure && (
-          <>
-            <Bar label="NL" value={fighter.energy} max={100} color="bg-stat-energy" />
-            <div className="hidden md:block">
-              <Bar
-                label="TT"
-                value={fighter.spirit}
-                max={100}
-                color="bg-stat-spirit"
-              />
-            </div>
-          </>
-        )}
-        {rage !== null && (
-          <Bar label="Nộ" value={rage} max={100} color="bg-stat-rage" />
-        )}
-      </div>
-      {(fighter.effects.length > 0 || fighter.comboReady || rageTurns > 0) && (
-        <div className="mt-1.5 flex flex-wrap gap-1">
-          {rageTurns > 0 && (
-            <span
-              className="inline-flex items-center gap-1 rounded bg-stat-rage/40 px-1 py-0.5 text-caption"
-              title={`Bị động khi đầy Nộ · ${passiveText(fighter.element)} · còn ${rageTurns} lượt`}
-            >
-              <PassiveIcon id={ragePassiveId(fighter.element)} name={PASSIVES[fighter.element].name} className="size-3.5" />
-              {PASSIVES[fighter.element].name} · {rageTurns}
-            </span>
-          )}
-          {fighter.comboReady && fighter.comboPassive && (
-            <span
-              className={`inline-flex items-center gap-1 rounded px-1 py-0.5 text-caption ${comboBlocked ? "bg-ash/50" : "bg-frame-bronze/40"}`}
-              title={`Do ${comboSource} mở${comboTarget ? ` · mục tiêu ${comboTarget}` : ""} · ${comboTurns ? `${comboTurns} lượt thường kế tiếp` : "lượt hiện tại"}. Chọn hành động để tận dụng.`}
-            >
-              <PassiveIcon id={fighter.comboPassive} name={COMBO_PASSIVES[fighter.comboPassive].name} className="size-3.5" />
-              {COMBO_PASSIVES[fighter.comboPassive].name}
-              {comboBlocked ? " · bị chặn" : ""}
-            </span>
-          )}
-          {fighter.effects.map((e) => (
-            <span
-              key={e.kind}
-              className={`rounded px-1 py-0.5 text-caption ${GOOD_EFFECTS.includes(e.kind) ? "bg-stat-spirit/40" : "bg-stat-hp/40"}`}
-            >
-              {EFFECT_NAME[e.kind]}
-              {e.kind === "shield"
-                ? ` ${Math.round(e.value)}`
-                : e.turns !== null
-                  ? ` ${e.turns}`
-                  : ""}
-            </span>
-          ))}
-        </div>
-      )}
-      {floats.map((f) => (
-        <span
-          key={f.id}
-          aria-hidden
-          className={`float-up pointer-events-none absolute right-2 top-1 flex items-center gap-0.5 text-lg font-extrabold tabular-nums drop-shadow ${FLOAT_TONE[f.tone]}`}
-          style={{ animationDelay: `${f.order * FLOAT_STAGGER_MS}ms` }}
-        >
-          {f.tone === "shield" && <ShieldIcon className="size-4" />}
-          {f.text}
-        </span>
-      ))}
-    </button>
-  );
-}
 
 const SWIPE_PX = 12;
 
