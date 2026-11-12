@@ -560,9 +560,6 @@ export const PACK_1_2: Pack = mergePacks("pack-1-2", "Gói 1 + Gói 2", [PACK_1,
 /** Sổ gộp ba gói (khi cờ Gói 3 bật; Gói 3 cần Gói 2). */
 export const PACK_1_2_3: Pack = mergePacks("pack-1-2-3", "Gói 1 + Gói 2 + Gói 3", [PACK_1, PACK_2, PACK_3]);
 
-/** Tên các gói theo `pack` của tướng, cho Tướng Lục chia mục. */
-export const PACK_NAMES: Readonly<Record<string, string>> = { "pack-1": PACK_1.nameVi, "pack-2": PACK_2.nameVi, "pack-3": PACK_3.nameVi };
-
 /** Mọi node và công thức của mọi gói đã viết: khi rút một gói, sổ người chơi không mất khám phá của gói đó. */
 export const KNOWN_NODE_IDS: ReadonlySet<string> = new Set(PACK_1_2_3.nodes.map((n) => n.id));
 export const KNOWN_RECIPE_IDS: ReadonlySet<string> = new Set(PACK_1_2_3.recipes.map((x) => x.id));

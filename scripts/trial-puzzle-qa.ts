@@ -1,3 +1,5 @@
+// Kiểm nội dung Tháp Thí Luyện: registry hợp lệ và deterministic, mỗi tầng có cặp starter hợp luật, thắng đủ ở cấp chuẩn.
+// Chạy: pnpm exec tsx scripts/trial-puzzle-qa.ts
 import assert from "node:assert/strict";
 import { analyzeFeasibility, createTrialRegistry, profileCandidates } from "../src/core";
 import { TRIAL_FLOOR_DATA } from "../src/server/trialContent";

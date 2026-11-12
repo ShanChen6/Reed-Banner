@@ -1,7 +1,6 @@
 import { createHmac } from "node:crypto";
-import { destinyRulesVersionForCycle } from "@/core";
+import { DESTINY_CYCLE_DAYS, destinyRulesVersionForCycle } from "@/core";
 
-export const DESTINY_CYCLE_DAYS = 7;
 export const DESTINY_TIME_ZONE = "Asia/Ho_Chi_Minh";
 const VN_OFFSET_MS = 7 * 60 * 60 * 1_000;
 const DAY_MS = 24 * 60 * 60 * 1_000;

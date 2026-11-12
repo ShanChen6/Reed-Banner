@@ -209,8 +209,6 @@ export interface DualTowerV1 {
 }
 
 export const STONE_LEDGER_MAX = 500;
-/** Định danh ổn định của vật liệu; dữ liệu cũ/mới dùng chung, không đổi tên. */
-export const ENHANCEMENT_STONE_ID = "enhancementStone";
 
 /** Schema mới hơn bản code này hiểu: giữ nguyên, không ghi đè. */
 export type DualTowerFuture = Readonly<Record<string, unknown>> & {

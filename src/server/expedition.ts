@@ -145,7 +145,7 @@ function scenarioView(run: ExpeditionRun) {
   const carrier = run.refugees === 0 || run.refugees === 1 ? run.refugees : null;
   const chase =
     refugees && carrier !== null && run.armies[carrier].at === refugees.village && !run.nodes[refugees.chaseUnless]?.cleared
-      ? expeditionChaseEncounter(run, carrier, refugees.village)
+      ? expeditionChaseEncounter(run, refugees.village)
       : null;
   const counter = run.market?.status === "due" && holder >= 0 ? expeditionCounterEncounter(run, holder as 0 | 1) : null;
   return {

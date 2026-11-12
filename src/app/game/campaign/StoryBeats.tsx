@@ -82,24 +82,6 @@ export const FACTION_STATUS_TEXT: Record<CampaignFactionStatus, string> = {
   defeated: "Đánh dẹp",
 };
 
-/** Cảnh dựng mở màn: khung riêng, luôn là lời game. */
-export function Cinematic({ nodeId }: { nodeId: string }) {
-  const beats = missionCopy(nodeId)?.cinematic;
-  if (!beats?.length) return null;
-  return (
-    <figure className="rounded-lg border border-frame-line-soft bg-gradient-to-b from-wood-lo/60 to-wood/60 p-3">
-      <figcaption className="mb-1 text-kicker text-frame-gold/80">
-        Cảnh dựng · game sáng tác
-      </figcaption>
-      {beats.map((b, i) => (
-        <p key={i} className="font-serif text-sm text-on-wood/90 italic">
-          {b.text}
-        </p>
-      ))}
-    </figure>
-  );
-}
-
 export function SourceNotes({
   nodeId,
   label = "Ghi chú nguồn",

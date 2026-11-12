@@ -44,7 +44,7 @@ Tóm tắt thông số: **tranh vẽ tay 2D điện ảnh đúng phong cách n�
 
 Cấu trúc `ModeScreen.tsx`. Hai tab khi xếp hạng đang mở (**Xếp hạng · có thưởng**, **Chơi thường**); khi xếp hạng tắt chỉ có Chơi thường, không hiện tab.
 
-- **Thẻ bậc là một tấm bản đồ** (`MapCard.tsx`): ảnh bản đồ phủ bằng ô che đặc kín từ trên xuống, phần đã khai thông lộ ra từ dưới lên theo tiến độ. Ở thẻ xếp hạng: chưa chơi thì che kín và **giấu cả tên địa danh** ("Bản đồ chưa lộ"), đang chơi thì lộ theo phần trăm khai thông, thắng thì lộ hết kèm tên. Thẻ chơi thường là bản đồ mẫu (đổi theo ngày, chỉ để trang trí) vì ván thật chọn ngẫu nhiên.
+- **Thẻ bậc dùng ảnh thumbnail cố định của bậc** (Shan chốt 06/11/2026, xem [lộ trình UI V2-02](../implementation/roadmap.md#v2-02--trận-đồ-ảnh-thumbnail-cố-định-cho-từng-bậc)). Thiết kế cũ (ảnh bản đồ phủ ô che lộ dần theo tiến độ, `MapCard.tsx`) đã bỏ; thành phần đó xóa 12/11/2026.
 - **Đồng hồ kỳ** trên thẻ xếp hạng ("Còn 5 giờ 12 phút" theo giờ server, tự tải lại bảng khi kỳ hết), số người đã thắng, trạng thái ván.
 - **Hạng hiện tại và thưởng dự kiến** (hạng/số người thắng, bậc thưởng, vàng) khi đã thắng, kèm lưu ý hạng còn đổi tới hết kỳ.
 - **Thang thưởng dạng bậc thang** (`RewardLadder.tsx`): năm bậc cao thấp khác nhau, vàng từng bậc, bậc hiện tại của người chơi sáng lên.

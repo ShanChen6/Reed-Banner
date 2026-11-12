@@ -1,3 +1,5 @@
+// Mô phỏng cân bằng Trấn Ải V1.1 (roster 3 active + dự bị, xoay tướng, hồi sinh). Tham số xem parseArgs bên dưới.
+// Chạy: pnpm exec tsx scripts/survival-v11-balance.ts
 import { writeFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import {

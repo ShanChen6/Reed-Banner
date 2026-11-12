@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import { it } from 'node:test';
 import { act, createBattle, getSkill, scoreSkill, toView, type FighterConfig } from '../../../src/core';
-import { scoreSkill as beforeScore } from '../../../scripts/fixtures/2026-10-22-ai-task2-before';
-import { task2Cases, LEVELS, GEARS } from '../../../scripts/lib/task2-cases';
-import { measured } from '../../../scripts/lib/task2-runner';
+import { scoreSkill as beforeScore } from '../../helpers/fixtures/2026-10-22-ai-task2-before';
+import { task2Cases, LEVELS, GEARS } from '../../helpers/lib/task2-cases';
+import { measured } from '../../helpers/lib/task2-runner';
 const unit=(id:string,extra:Partial<FighterConfig>={}):FighterConfig=>({id,name:id,profession:'ySu',element:'thuy',maxHp:1000,atk:100,def:0,skills:[],...extra});
 it('AI: self-heal đầy máu không nhận điểm phối hợp từ đồng đội bị thương',()=>{
  const s=createBattle({sides:[{fighters:[unit('caster',{skills:['element_thanhLuuTayTran']}),unit('ally',{comboPassive:'coordination',chasePassives:['commander','tho1','thuy2']})],leader:0},{fighters:[unit('enemy')],leader:0}],seed:31,timer:false}).state;

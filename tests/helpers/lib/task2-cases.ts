@@ -1,5 +1,5 @@
-import { ALL_COMPANIONS, PROFESSIONS, ELEMENTS, buildMain, buildCompanion, autoProgress, withGear, GEAR_SLOTS, equip, EMPTY_LOADOUT, type Profession, type FighterConfig, type GearItem, type Loadout } from '../../src/core';
-import type { AuditCase } from '../../src/core/sim/audit';
+import { ALL_COMPANIONS, PROFESSIONS, ELEMENTS, buildMain, buildCompanion, autoProgress, withGear, GEAR_SLOTS, equip, EMPTY_LOADOUT, type Profession, type FighterConfig, type GearItem, type Loadout } from '../../../src/core';
+import type { AuditCase } from '../../../src/core/sim/audit';
 export const LEVELS = [1,4,5,9,10,14,15,19,20,30] as const;
 export const GEARS = ['none','ordinary','invested'] as const;
 export type GearPolicy = typeof GEARS[number];

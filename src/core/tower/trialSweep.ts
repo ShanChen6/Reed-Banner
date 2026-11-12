@@ -2,9 +2,6 @@
 import { TRIAL_SWEEP_MAX_TIER, trialSweepTierOf, type TrialProgress, type TrialSweepTier } from "../progress/dualTowerState";
 import { vnDay } from "../progress/quests";
 
-/** Timezone nghiệp vụ; Việt Nam hiện không dùng DST. */
-export const TRIAL_TIME_ZONE = "Asia/Ho_Chi_Minh";
-
 /** Balance table only; settlement remains a separate task and must be server-authoritative. */
 export const TRIAL_SWEEP_STONES_BY_TIER: Readonly<Record<TrialSweepTier, number>> = Object.freeze({
   1: 1,

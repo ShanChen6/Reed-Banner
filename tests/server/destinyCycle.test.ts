@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { DESTINY_CYCLE_DAYS } from "../../src/core";
 import {
-  DESTINY_CYCLE_DAYS,
   DESTINY_TIME_ZONE,
   activeDestinyCycle,
   destinyCycleById,

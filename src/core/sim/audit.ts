@@ -70,19 +70,3 @@ export function campaignAuditCases(seeds:readonly number[]=[701,1907,3119],equip
  }
  return out;
 }
-
-/** F follow-up: DBL healer/soldier and heavy sustain teams against attack, plus healer mirror. */
-export function pressureCases(seeds:readonly number[]=[3119,4567]):AuditCase[]{
- const out:AuditCase[]=[];
- for(const kind of ['soldierAttack','healerAttack','healersAttack','healersMirror'] as const)for(const level of [9,10,15,20])for(const seed of seeds){
-  const profession:Profession=kind==='soldierAttack'?'binhLinh':'ySu';
-  const element=ELEMENTS[(level+seeds.indexOf(seed))%7]!;
-  const main=buildMain(autoProgress(level,null),element,profession);
-  const support:readonly Profession[]=kind.startsWith('healers')?['ySu','ySu']:['binhLinh','ySu'];
-  const own=[main,...support.map((p,j)=>unit(p,level+j*7,level))];
-  const foe=(kind==='healersMirror'?['ySu','ySu','ySu'] as const:roles.attack).map((p,j)=>unit(p,level+4+j*3,level));
-  const key=`pressure:${kind}:${level}:${seed}`;
-  out.push(...pair({pair:key,group:'spirit',level,profession,element,profile:'defense',equipment:'none'}, {sides:[{fighters:own,leader:0},{fighters:foe,leader:0}],seed:(seed+level*7919)>>>0,firstSide:0}));
- }
- return out;
-}

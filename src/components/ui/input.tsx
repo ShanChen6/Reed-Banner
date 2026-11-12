@@ -12,6 +12,3 @@ export function Input({ className, ...props }: ComponentProps<"input">) {
 export function Select({ className, ...props }: ComponentProps<"select">) {
   return <select data-slot="select" className={controlVariants(className)} {...props} />;
 }
-export function Textarea({ className, ...props }: ComponentProps<"textarea">) {
-  return <textarea data-slot="textarea" className={controlVariants(cn("min-h-28 resize-y", className))} {...props} />;
-}
