@@ -20,4 +20,4 @@ Trước khi đọc hoặc sửa tài liệu trong `docs/`, làm theo [quy đị
 
 ## Kiểm tra trước khi commit
 
-Chạy `pnpm check` (lint, typecheck, docs, test). Sửa giao diện hoặc luồng màn thì chạy thêm `pnpm e2e`. Quy trình đầy đủ và nơi đặt test mới: [quy trình test](docs/07-architecture/quy-trinh-test.md).
+Chạy `pnpm check` (lint, typecheck, knip, docs, test). Sửa giao diện hoặc luồng màn thì chạy thêm `pnpm e2e`. Quy trình đầy đủ và nơi đặt test mới: [quy trình test](docs/07-architecture/quy-trinh-test.md).
