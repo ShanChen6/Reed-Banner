@@ -424,47 +424,47 @@ const DINH_BO_LINH: WarriorRig = {
     anchor: { x: 520, y: 1400 }, scale: 0.97 },
 };
 
-/** Nguyễn Bặc, tướng sĩ Hỏa. Mảnh vá từ ảnh phẳng; tọa độ ráp 1024×1536. */
+/**
+ * Nguyễn Bặc, tướng sĩ Hỏa. Bộ tranh Shan gửi 12/11 là một tờ ghép 6 dáng (1536×1024, nền trong suốt): giáp lá đồng,
+ * áo choàng đỏ, khăn đỏ buộc trán, đại đao một lưỡi. Mỗi dáng phóng ×3 làm hệ tọa độ (ảnh đứng đặt vào khung
+ * 1024×1536). Ảnh đứng tách lớp bằng code: đại đao (cả tua đỏ) cùng nắm tay phải xoay quanh cổ tay, bàn tay trái chống
+ * hông lắc nhẹ (thân giữ nguyên bản dưới), đầu (cả đuôi khăn) tách riêng.
+ */
 const NGUYEN_BAC: WarriorRig = {
   skeleton: "warrior",
   dir: "nguyenBac",
   texScale: 0.5,
-  foot: { x: 620, y: 1518 },
-  height: 1518,
+  foot: { x: 520, y: 1515 },
+  height: 1490,
   parts: {
-    body: { x: 235, y: 178, w: 774, h: 1344 },
-    head: { x: 488, y: 3, w: 230, h: 280 },
-    arm: { x: 259, y: 446, w: 200, h: 358 },
-    armR: { x: 821, y: 486, w: 162, h: 342 },
-    sword: { x: 18, y: 614, w: 412, h: 740 },
+    body: { x: 255, y: 34, w: 750, h: 1492 },
+    head: { x: 440, y: 34, w: 290, h: 252 },
+    arm: { x: 256, y: 760, w: 104, h: 84 },
+    armR: { x: 698, y: 612, w: 104, h: 92 },
+    sword: { x: 18, y: 842, w: 354, h: 658 },
   },
   joints: {
-    shoulder: { x: 411, y: 470 },
-    elbowR: { x: 850, y: 525 },
-    neck: { x: 598, y: 245 },
+    shoulder: { x: 320, y: 790 },
+    elbowR: { x: 770, y: 630 },
+    neck: { x: 600, y: 275 },
   },
-  cloth: [
-    { name: "cape", box: { x: 41, y: 466, w: 316, h: 682 }, behind: true,
-      wind: { axis: "x", start: 0.2, amp: 6, freq: 1.2, k: 3.2, phase: 1.4, reverse: true, vertical: true } },
-    { name: "ribbon", box: { x: 253, y: 99, w: 264, h: 282 }, behind: true,
-      wind: { axis: "x", start: 0.2, amp: 6, freq: 1.8, k: 4.5, phase: 0.3, reverse: true, vertical: true } },
-    { name: "sash", box: { x: 604, y: 579, w: 152, h: 576 },
-      wind: { axis: "y", start: 0.25, amp: 2, freq: 1.3, k: 2.6, phase: 2.1 } },
-  ],
-  covers: [{ name: "shoulder", box: { x: 335, y: 264, w: 146, h: 242 } }],
-  blade: [{ x: 295, y: 825 }, { x: 20, y: 1350 }],
+  cloth: [],
+  covers: [],
+  blade: [{ x: 300, y: 880 }, { x: 25, y: 1470 }],
   fxColor: 0xff783d,
-  down: {
-    name: "pose-ko", texScale: 1 / 3,
-    origin: { x: 9, y: 63 }, anchor: { x: 850, y: 980 },
-    scale: 1,
-  },
+  // Tấn rộng hai tay kéo đao ngang hông (đánh thường), vươn thẳng tay chém đao tới trước, tay kia xòe ra sau (ra chiêu),
+  // hai tay giơ đao qua đầu bổ xuống (tuyệt chiêu). Tranh tư thế lưu đúng cỡ ô trong tờ ghép (texScale 1/3).
   poses: {
-    // Đánh thường: tranh Shan gửi 03/11, chém đao thấp trong thế tấn rộng (cỡ so theo thân trên).
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 98, y: 15 }, anchor: { x: 670, y: 1145 }, scale: 1.2, burst: { x: 1085, y: 850 } },
-    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 13, y: 6 }, anchor: { x: 810, y: 1020 }, scale: 1.25, burst: { x: 1500, y: 245 } },
-    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 13, y: 10 }, anchor: { x: 650, y: 1006 }, scale: 1.25, burst: { x: 1500, y: 30 } },
+    attack: { name: "pose-attack", texScale: 1 / 3, origin: { x: 0, y: 0 },
+      anchor: { x: 669, y: 1314 }, scale: 1.02, burst: { x: 1720, y: 147 } },
+    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 0, y: 0 },
+      anchor: { x: 642, y: 1323 }, scale: 1.02, burst: { x: 1740, y: 80 } },
+    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 0, y: 0 },
+      anchor: { x: 459, y: 1485 }, scale: 1.02, burst: { x: 1059, y: 30 } },
   },
+  // Quỳ gục, tay chống đất, đao rơi bên gối.
+  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 0, y: 0 },
+    anchor: { x: 690, y: 1120 }, scale: 1.02 },
 };
 
 /**
