@@ -100,8 +100,6 @@ export interface SetBonus {
   readonly nine: StatBonus;
 }
 
-export const SET_THRESHOLDS = [6, 9] as const;
-
 export interface GearSetDef extends SetBonus {
   readonly id: string;
   readonly name: string;

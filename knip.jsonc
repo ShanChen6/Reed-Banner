@@ -1,0 +1,17 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  // Điểm vào ngoài Next.js (plugin Next tự nhận app/, route, config): script CLI, test, smoke test.
+  "entry": ["scripts/*.{ts,mts,mjs,cjs}", "tests/**/*.test.ts", "e2e/**/*.spec.ts"],
+  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.{ts,mts,mjs,cjs}", "tests/**/*.ts", "e2e/**/*.ts"],
+  // Export chỉ dùng trong chính file đó không tính là thừa.
+  "ignoreExportsUsedInFile": true,
+  // tailwindcss nạp qua `@import "tailwindcss"` trong CSS; postcss do @tailwindcss/postcss và Next.js mang theo.
+  "ignoreDependencies": ["tailwindcss", "postcss"],
+  // Hai bí danh có chủ ý: thủ lĩnh dùng mọi nghề đang bật; gói Tầm Tướng Ký đang chạy là Gói 1.
+  // Bản chụp code AI ngày 22/10 để test so sánh trước/sau; đóng băng, không sửa.
+  "ignore": ["tests/helpers/fixtures/**"],
+  "ignoreIssues": {
+    "src/core/battle/rules.ts": ["duplicates"],
+    "src/core/tam-tuong-ky/catalog.ts": ["duplicates"]
+  }
+}

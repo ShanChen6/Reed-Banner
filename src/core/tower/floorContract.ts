@@ -189,12 +189,6 @@ export interface StoneRewardEvent {
   readonly key: string;
 }
 
-/** Reward nội bộ Destiny: chỉ ảnh hưởng run, không bao giờ có đá/vàng/EXP/trang bị. */
-export type RunReward =
-  | { readonly kind: "heal" }
-  | { readonly kind: "food" }
-  | { readonly kind: "boon"; readonly boon: "atk" | "def" | "hp" };
-
 export const stoneKeys = {
   trialFirst: (floor: number) => `trial:first:${floor}`,
   trialSweep: (day: string) => `trial:sweep:${day}`,

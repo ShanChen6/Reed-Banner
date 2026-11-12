@@ -22,8 +22,6 @@ export type KlTool = "whirl" | "thunder";
 
 /** Thường: không giới hạn thời gian. Cấp tốc: mỗi màn có đồng hồ, hết giờ là hết màn, dọn sạch thì giây dư thành điểm. */
 export type KlMode = "classic" | "timed";
-
-export const KL_MODES: readonly KlMode[] = ["classic", "timed"];
 /** Cấp tốc: điểm thưởng cho mỗi giây còn lại khi dọn sạch bàn. */
 export const KL_TIME_BONUS_PER_SECOND = 25;
 

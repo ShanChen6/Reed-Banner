@@ -1,5 +1,5 @@
-import { comboSkillCost, chooseMove, createBattle, fighterSkill, hasEffect, inspectSkillChoices, isAlive, playAiTurn, type AiView, type BattleAction, type BattleEvent, type SkillChoice, type SpiritExperiment } from '../../src/core';
-import type { AuditCase } from '../../src/core/sim/audit';
+import { comboSkillCost, chooseMove, createBattle, fighterSkill, hasEffect, inspectSkillChoices, isAlive, playAiTurn, type AiView, type BattleAction, type BattleEvent, type SkillChoice, type SpiritExperiment } from '../../../src/core';
+import type { AuditCase } from '../../../src/core/sim/audit';
 import * as before from '../fixtures/2026-10-22-ai-before';
 
 function beforeChoices(view:AiView):SkillChoice[]{

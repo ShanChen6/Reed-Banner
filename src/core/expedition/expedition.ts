@@ -262,8 +262,8 @@ export function expeditionEncounter(run: ExpeditionRun, nodeId: string, army: Ar
   return { ...base, foes, hpRatio };
 }
 
-/** Truy binh đuổi đoàn dân: đạo `army` đang mang dân rời làng tới `to`. */
-export function expeditionChaseEncounter(run: ExpeditionRun, army: ArmyIndex, to: string): ExpeditionEncounter | null {
+/** Truy binh đuổi đoàn dân đang rời làng tới `to`. */
+export function expeditionChaseEncounter(run: ExpeditionRun, to: string): ExpeditionEncounter | null {
   const refugees = expeditionScenarioOf(run)?.refugees;
   const map = expeditionMapOf(run);
   if (!refugees) return null;
@@ -592,7 +592,7 @@ export function marchExpedition(run: ExpeditionRun, army: ArmyIndex, to: string)
     }
     const r = scenario.refugees;
     if (r && run.refugees === army && a.at === r.village && !run.nodes[r.chaseUnless]?.cleared && !hasFight(run, to)) {
-      const encounter = expeditionChaseEncounter(run, army, to);
+      const encounter = expeditionChaseEncounter(run, to);
       if (encounter) return { ok: true, kind: "battle", encounter };
     }
   }

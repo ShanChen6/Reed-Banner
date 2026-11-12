@@ -194,7 +194,7 @@ Thứ tự đề xuất: V2-07, V2-01, V2-03 (nhỏ, chỉ UI) → V2-04 → V2-
 - **Hiện tại**: thẻ bậc ở cả hai tab dùng `MapCard`: ô che gỗ phủ kín ("Bản đồ chưa lộ") và lộ dần theo tiến độ, thắng thì lộ hết kèm tên địa danh.
 - **Shan chốt (06/11)**: mọi thẻ bậc, cả tab Xếp hạng lẫn Chơi thường, dùng ảnh thumbnail cố định của bậc đó; bỏ ô che lộ dần trên thẻ. Đã nối ảnh (06/11). Tiến độ và địa danh của kỳ vẫn xem trong ván và ở Bộ sưu tập.
 - **Ảnh**: 7 tệp (4 bậc Chơi thường + 3 bậc Xếp hạng, bản Xếp hạng thêm hậu tố `-ranked`) ở `public/art/formation/levels/`, 2:1, 1280×640 WebP; prompt ở [prompt hình ảnh Trận Đồ mục 5](../../06-art/prompts/tran-do-hinh-anh.md#5-thumbnail-thẻ-bậc-bản-2-06112026). Thiếu bản `-ranked` thì dùng ảnh Chơi thường cùng bậc; chưa có ảnh nào thì giữ thẻ như bây giờ.
-- `MapCard` chỉ còn dùng cho khung kết quả cuối ván (hiện cả bản đồ).
+- Thành phần ô che lộ dần (`MapCard`) đã xóa 12/11/2026 vì không còn chỗ nào dùng.
 
 ### V2-03 — Trận Đồ: thẻ cao bằng nhau
 

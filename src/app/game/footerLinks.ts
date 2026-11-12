@@ -83,7 +83,6 @@ export const SOCIAL_BLURB: Readonly<Record<SocialPlatform, string>> = {
 /** Chữ trong thư cuộn: tiêu đề, lời dẫn, và dòng ghi cho nền tảng chưa có địa chỉ. */
 export const CONTACT_TITLE = "Thư tín bốn phương";
 export const CONTACT_SUB = "Trạm dịch ngựa phi, thư gửi về doanh trại tác giả";
-export const CONTACT_PENDING = "Trạm thư sắp mở";
 /** Nhãn của dòng gộp các nền tảng chưa có địa chỉ ở cuối thư. */
 export const CONTACT_PENDING_LABEL = "Trạm thư sắp mở:";
 

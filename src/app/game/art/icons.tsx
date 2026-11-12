@@ -23,17 +23,6 @@ export function ElementIcon({ element, className = "size-4" }: { element: Elemen
   );
 }
 
-export const PROFESSION_COLOR: Record<Profession, string> = {
-  xaThu: "#476b47",
-  satThu: "#554266",
-  tuongSi: "#9b2c1f",
-  phapSu: "#6b3fa0",
-  binhLinh: "#6b4a2b",
-  ySu: "#2f7a5a",
-  muuSi: "#a8801f",
-  quanSu: "#2f5f8a",
-};
-
 /** Biểu tượng nghề: ảnh vẽ tay ở public/art/professions/<nghề>.webp; "tongHop" là biểu tượng gộp mọi nghề. */
 export function ProfessionIcon({ profession, className = "size-4" }: { profession: Profession | "tongHop"; className?: string }) {
   return (

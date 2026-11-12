@@ -120,10 +120,6 @@ export const CAMPAIGN_RECRUITS: readonly CampaignRecruit[] = [
   },
 ];
 
-export function campaignRecruit(id: string): CampaignRecruit | undefined {
-  return CAMPAIGN_RECRUITS.find((r) => r.id === id);
-}
-
 /** Nhiệm vụ chốt mở khóa tướng lịch sử `id` (theo unlockedContent của node). */
 export function recruitMilestone(id: string): CampaignMissionId | undefined {
   return STORY_NODES.find((node) =>
