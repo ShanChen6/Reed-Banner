@@ -67,14 +67,13 @@ Không tự khai màu nút, tab, khung trong component màn; không thêm `bg-am
 
 ```tsx
 import {
-  Button, Card, CardHeader, CardTitle, CardDescription,
+  Button, Card, CardHeader, CardTitle,
   CardBody, CardFooter, FormField, Input,
 } from "@/components/ui";
 
 <Card padding="none" variant="elevated">
   <CardHeader>
     <CardTitle>Thông tin tài khoản</CardTitle>
-    <CardDescription>Cập nhật tên hiển thị</CardDescription>
   </CardHeader>
   <CardBody>
     <FormField label="Tên hiển thị">
@@ -91,14 +90,14 @@ import {
 | Component | API chính |
 | --- | --- |
 | `Card` | `as`: section/article/div; `variant`: default/elevated/inset; `padding`: default/none |
-| `CardHeader`, `CardBody`, `CardFooter` | Composition với padding và đường ngăn thống nhất; `CardContent` là alias của CardBody |
-| `CardTitle`, `CardDescription` | Tiêu đề h2 và mô tả theo token |
+| `CardHeader`, `CardBody`, `CardFooter` | Composition với padding và đường ngăn thống nhất |
+| `CardTitle` | Tiêu đề h2 theo token |
 | `Button` | `variant`: primary (sơn mài)/secondary (gỗ viền đồng)/outline/ghost/danger/link, `ornate` là tên cũ của primary; `size`: sm/md/lg/icon; `fullWidth` |
 | `Tabs`, `ChoiceChip`, `choiceVariants()` | Lựa chọn: `role=tab` + `aria-selected`, chip `aria-pressed`; mũi tên/Home/End chuyển tab |
 | `OrnateFrame`, `FrameInset`, `FrameCorners` | `@/components/game-ui`; `level`: panel/raised/hero, `paper` |
 | `ModeScreen`, `ModeBanner`, `SectionTitle` | `@/components/game-ui`; khung màn chế độ |
-| `buttonVariants()` | Dùng cùng style với Link, SceneLink, a; `buttonClassName()` là alias tương thích |
-| `Input`, `Select`, `Textarea` | Thuộc tính native, ref, sự kiện, validation, disabled và aria-invalid |
+| `buttonVariants()` | Dùng cùng style với Link, SceneLink, a |
+| `Input`, `Select` | Thuộc tính native, ref, sự kiện, validation, disabled và aria-invalid |
 | `FormField` | Label bao quanh control, hint tùy chọn |
 | `Alert` | error/warning/success/info; role alert cho lỗi, status cho thông báo |
 | `Badge` | default/muted/success/warning/danger |

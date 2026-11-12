@@ -38,8 +38,6 @@ export function buttonVariants({ variant = "primary", size = "md", fullWidth, cl
   );
 }
 
-/** Compatibility with existing callers. */
-export const buttonClassName = buttonVariants;
 export type ButtonProps = ComponentProps<"button"> & ButtonStyleProps;
 
 export function Button({ variant = "primary", size = "md", fullWidth, className, type = "button", ...props }: ButtonProps) {

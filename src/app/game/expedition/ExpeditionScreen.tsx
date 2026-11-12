@@ -3,6 +3,7 @@
 // Viễn Chinh: chọn sa bàn và bậc, chia 6 tướng làm hai đạo, rồi điều quân trên sa bàn. Mọi luật chạy ở server
 // (/api/expedition); màn này chỉ hiển thị và gửi ý định. Luật: docs/02-game-modes/expedition/01-vien-chinh-gdd.md.
 
+import { requestJson, postJson } from "../api";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ModeBanner, ModeScreen } from "@/components/game-ui";
 import { Alert, Button, choiceVariants } from "@/components/ui";
@@ -167,21 +168,7 @@ const KIND_TEXT: Record<ExpeditionNodeKind, string> = {
 const ARMY_NAME = ["Đạo Chính", "Biệt đạo"] as const;
 const ARMY_COLOR = ["#e0a33a", "#5fb3c9"] as const;
 
-async function json<T>(url: string, init?: RequestInit): Promise<T | null> {
-  try {
-    const response = await fetch(url, { ...init, cache: "no-store" });
-    return (await response.json()) as T;
-  } catch {
-    return null;
-  }
-}
 
-const post = <T,>(url: string, body?: unknown) =>
-  json<T>(url, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
-  });
 
 function Stars({ n, className = "" }: { n: number; className?: string }) {
   return (
@@ -221,7 +208,7 @@ export default function ExpeditionScreen() {
   const [target, setTarget] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    const [o, p] = await Promise.all([json<Overview>("/api/expedition"), json<{ profile?: Profile }>("/api/profile")]);
+    const [o, p] = await Promise.all([requestJson<Overview>("/api/expedition"), requestJson<{ profile?: Profile }>("/api/profile")]);
     if (!o || !p?.profile) {
       setFailed(true);
       return;
@@ -248,7 +235,7 @@ export default function ExpeditionScreen() {
     setBusy(true);
     setMessage(null);
     setNotice(null);
-    const r = await post<ApiResult>(url, body);
+    const r = await postJson<ApiResult>(url, body);
     if (!r?.ok) {
       fail(r?.error);
       if (r?.error === "conflict") await load();

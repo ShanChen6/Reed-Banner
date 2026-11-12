@@ -18,9 +18,9 @@ import {
   leveledFoe,
   newProfile,
   profileTeam,
-  vnDay,
 } from "../progress";
 import { createRng, type Rng } from "../rng";
+import { vnDay } from "../vnTime";
 import { SHOP_COMPANIONS, STARTER_COMPANIONS } from "../roster";
 
 /** Mọi người cùng cấp và không trang bị, để chỉ còn tài đánh. */

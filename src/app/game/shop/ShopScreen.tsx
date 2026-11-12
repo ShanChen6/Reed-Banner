@@ -4,15 +4,13 @@
 // mọi giao dịch là thao tác hồ sơ (buyCompanion, buyGear, buyFood) do @/core áp dụng và server kiểm tra lại;
 // màn này chỉ hiển thị và gửi thao tác, dùng lại ShopPanel của hồ sơ; trang bị ở GearStore, vật phẩm ở ItemsStore.
 
-import { useEffect, useState } from "react";
-import type { Profile, ProfileAction } from "@/core";
+import { useState } from "react";
 import { ModeScreen, OrnateFrame } from "@/components/game-ui";
 import { Alert, Tabs, type TabItem } from "@/components/ui";
-import { fetchProfile, sendProfileAction } from "../battle/online";
-import { PROFILE_ERROR } from "../battle/ProgressPanel";
 import ShopPanel from "../battle/ShopPanel";
 import GearStore from "./GearStore";
 import ItemsStore from "./ItemsStore";
+import { useProfile } from "../profile/useProfile";
 
 type Tab = "heroes" | "gear" | "items";
 const TABS: readonly TabItem<Tab>[] = [
@@ -22,28 +20,8 @@ const TABS: readonly TabItem<Tab>[] = [
 ];
 
 export default function ShopScreen() {
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loadError, setLoadError] = useState(false);
+  const { profile, loadError, busy, message, act } = useProfile();
   const [tab, setTab] = useState<Tab>("heroes");
-  const [message, setMessage] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-
-  useEffect(() => {
-    void fetchProfile().then((r) => {
-      if (r.profile) setProfile(r.profile);
-      else setLoadError(true);
-    });
-  }, []);
-
-  const act = async (a: ProfileAction): Promise<string | null> => {
-    setBusy(true);
-    const r = await sendProfileAction(a);
-    setBusy(false);
-    if (r.profile) setProfile(r.profile);
-    const error = r.error ?? null;
-    setMessage(error ? (PROFILE_ERROR[error as keyof typeof PROFILE_ERROR] ?? error) : null);
-    return error;
-  };
 
   return (
     <ModeScreen label="Cửa Hàng">

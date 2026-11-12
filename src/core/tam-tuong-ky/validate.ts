@@ -135,7 +135,3 @@ export function validatePack(pack: Pack, deps: CatalogDeps): readonly CatalogIss
 
   return issues;
 }
-
-export function catalogErrors(pack: Pack, deps: CatalogDeps): readonly CatalogIssue[] {
-  return validatePack(pack, deps).filter((i) => i.severity === "error");
-}

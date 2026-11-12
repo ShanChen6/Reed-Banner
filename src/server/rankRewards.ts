@@ -9,6 +9,7 @@ import {
   WEEKLY_RANK_REWARD_MODES,
   type Profile,
   rankRewardGold,
+  DAY_MS,
   vnDay,
   vnWeek,
   type RankRewardMode,
@@ -20,7 +21,6 @@ import type { DestinyLeaderboardStore } from "./destinyLeaderboard";
 import { updateProfile, type ProfileStore } from "./profiles";
 import type { SeasonStore } from "./seasons";
 
-const DAY_MS = 24 * 60 * 60 * 1000;
 /** Chỉ cho nhận thưởng của vài kỳ gần nhất, để danh sách chờ nhận không dài vô hạn. */
 export const CLAIM_WINDOW_PERIODS = 7;
 

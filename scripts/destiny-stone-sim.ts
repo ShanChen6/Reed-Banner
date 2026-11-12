@@ -1,3 +1,5 @@
+// Mô phỏng Tháp Thiên Mệnh và đá Cường Hóa mỗi tuần: 4 chu kỳ × roster 3/5/8 × cấp 5/10/20/30 × hai cách chọn thưởng.
+// Chạy: pnpm exec tsx scripts/destiny-stone-sim.ts [--v1]
 import { simulateDestinyCycle, summarize, type DestinySimPolicy } from "../src/server/destinyBalanceReport";
 
 // Mặc định đo luật V2 (20 tầng, chu kỳ từ 16/11/2026); thêm `--v1` để đo lại luật 10 tầng cũ.

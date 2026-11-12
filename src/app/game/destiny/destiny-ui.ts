@@ -5,6 +5,7 @@ import {
   destinyFloorTier,
   destinyTierDifficulty,
   leaderBuildOptions,
+  vnDay,
   validateLineup,
   type DestinyBoon,
   type DestinyBoonRarity,
@@ -181,10 +182,9 @@ export function destinyTierSpans(floorCount: number, version: DestinyRulesVersio
   return spans;
 }
 
-const VN_OFFSET_MS = 7 * 60 * 60 * 1_000;
 const dayMonth = (time: number) => {
-  const date = new Date(time + VN_OFFSET_MS);
-  return `${String(date.getUTCDate()).padStart(2, "0")}/${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
+  const [, month, day] = vnDay(time).split("-");
+  return `${day}/${month}`;
 };
 
 /** "16/11 – 22/11" theo giờ Việt Nam; ngày cuối là ngày còn chơi được. */

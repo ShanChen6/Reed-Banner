@@ -1,9 +1,6 @@
 // Quyền quét Trial: chỉ lập và lưu receipt. Task này không tạo sự kiện thưởng và không đổi ví đá.
 import { TRIAL_SWEEP_MAX_TIER, trialSweepTierOf, type TrialProgress, type TrialSweepTier } from "../progress/dualTowerState";
-import { vnDay } from "../progress/quests";
-
-/** Timezone nghiệp vụ; Việt Nam hiện không dùng DST. */
-export const TRIAL_TIME_ZONE = "Asia/Ho_Chi_Minh";
+import { DAY_MS, vnDay, vnDayStart } from "../vnTime";
 
 /** Balance table only; settlement remains a separate task and must be server-authoritative. */
 export const TRIAL_SWEEP_STONES_BY_TIER: Readonly<Record<TrialSweepTier, number>> = Object.freeze({
@@ -27,9 +24,7 @@ export const trialDateKey = (now: number): string => vnDay(now);
 
 /** Epoch của 00:00 Việt Nam kế tiếp; Việt Nam không dùng DST. */
 export function nextTrialSweepResetAt(now: number): number {
-  const day = trialDateKey(now);
-  const [year, month, date] = day.split("-").map(Number);
-  return Date.UTC(year!, month! - 1, date! + 1) - 7 * 60 * 60 * 1_000;
+  return vnDayStart(trialDateKey(now)) + DAY_MS;
 }
 
 /** 0 = chưa đủ điều kiện; tầng 1-20 mỗi 5 tầng một bậc, tầng 21-50 mỗi 10 tầng một bậc (tối đa 7). */

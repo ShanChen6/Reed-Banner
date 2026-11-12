@@ -71,7 +71,7 @@ Quy tắc (Shan chốt 08/11/2026, ngoại hiệu bản 2 chờ duyệt):
 6. **Không đổi `id`** (`haVan`, `chauNgoc`, `bachNoLang`…): `id` là khóa trong mã, hồ sơ, tên thư mục tranh. Chỉ đổi chữ hiển thị.
 7. **Tên có thật trong sử** (Đinh Bộ Lĩnh, sứ quân, tướng lịch sử) **không đổi** và không có ngoại hiệu tự đặt.
 
-**Ảnh hưởng khi áp dụng:** 3 tên của tướng thường và 14 tên của xạ thủ, sát thủ đổi chuỗi `name` ở `roster.ts` (mỗi tên một dòng), cùng vài chuỗi trong test và chú thích mã (`rigs.ts`, `skills.tsx`, `rigs.test.ts`); tên cũ xuất hiện ở nhiều tệp tài liệu. Ngoại hiệu cần một trường tùy chọn `epithet` cho nhân vật; chưa làm.
+**Ảnh hưởng khi áp dụng:** 3 tên của tướng thường và 14 tên của xạ thủ, sát thủ đổi chuỗi `name` ở `roster.ts` (mỗi tên một dòng), cùng vài chuỗi trong test và chú thích mã (`stage/rigs/`, `skills.tsx`, `rigs.test.ts`); tên cũ xuất hiện ở nhiều tệp tài liệu. Ngoại hiệu cần một trường tùy chọn `epithet` cho nhân vật; chưa làm.
 
 **Tướng sĩ**
 
@@ -174,7 +174,7 @@ Quy tắc (Shan chốt 08/11/2026, ngoại hiệu bản 2 chờ duyệt):
 
 **Quy tắc chọn:** món nhân vật mang theo **mặc định là vật dụng**; chỉ lên làm vũ khí khi nó (1) vung hoặc chỉa được như một vũ khí và (2) hợp nghề (người đọc nhìn là hiểu nghề). Cân đồng, chày giã thuốc, sáo, ống thẻ, cần câu, tráp sổ… là vật dụng, không là vũ khí.
 
-**Hiện trạng trong mã** (`src/app/game/stage/rigs.ts`, `warrior.ts`): 77 nhân vật, mỗi người một bộ hình động riêng; vũ khí hiển thị chỉ để vẽ và chuyển động, không ảnh hưởng chiêu thức. Có **bốn nhịp** riêng (giáo, trượng, hồ lô, quạt) cộng nhịp chém kiếm. **Cả bảy tướng thường cùng nghề đang cầm cùng một hình** (bảy y sư đều hồ lô, bảy mưu sĩ đều quạt, bảy pháp sư đều trượng), nên nhìn giống nhau. Món vũ khí **trang bị** (đồ trong kho) là hệ thống khác, gắn theo **nghề**, không gắn theo hình trong tranh.
+**Hiện trạng trong mã** (`src/app/game/stage/rigs/`, mỗi nhân vật một file; `warrior.ts`): 77 nhân vật, mỗi người một bộ hình động riêng; vũ khí hiển thị chỉ để vẽ và chuyển động, không ảnh hưởng chiêu thức. Có **bốn nhịp** riêng (giáo, trượng, hồ lô, quạt) cộng nhịp chém kiếm. **Cả bảy tướng thường cùng nghề đang cầm cùng một hình** (bảy y sư đều hồ lô, bảy mưu sĩ đều quạt, bảy pháp sư đều trượng), nên nhìn giống nhau. Món vũ khí **trang bị** (đồ trong kho) là hệ thống khác, gắn theo **nghề**, không gắn theo hình trong tranh.
 
 ### 3.1 Bộ vũ khí hợp lý cho từng nghề (chọn trong đây)
 
@@ -458,7 +458,7 @@ Tổng: **20 nghĩa quân Hoa Lư** và **36 lính hoặc hàng binh của 12 s�
 | 2 | `bust.webp` | Làm trước, chuẩn cho các bước sau (prompt đã có) |
 | 3 | `style.webp` (tranh lớn) | Không gắn với hình động trận |
 | 4 | `standing.webp` và các lớp | Cắt lớp lại; chỉ tốn thêm khi **đổi vũ khí** (vật dụng đặc trưng vẽ trên thân nên không tốn) |
-| 5 | `pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down` | Giữ dáng tranh cũ làm tham chiếu, đặt lại tọa độ trong `rigs.ts` |
+| 5 | `pose-attack`, `pose-cast`, `pose-ultimate`, `pose-down` | Giữ dáng tranh cũ làm tham chiếu, đặt lại tọa độ trong `stage/rigs/` |
 | 6 | Ghép vào trận, chỉnh tọa độ, chụp so sánh | Claude làm |
 
 **Quy tắc nét mặt (Shan, 10/11/2026):** chỉ **bán thân** và **tranh phong thái** được cười. Dáng chuẩn đứng bình thản. Các dáng chiến đấu phải có **sắc thái chiến đấu**, không chỉ là "không cười":

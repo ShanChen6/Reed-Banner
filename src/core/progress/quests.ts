@@ -2,22 +2,7 @@
 // bấm nhận thưởng. Ngày và tuần tính theo giờ Việt Nam. Số liệu là điểm xuất phát do Claude đặt, chờ Shan duyệt.
 // Xem docs/02-game-modes/README.md mục 5.2.
 
-/** Ngày và tuần đổi lúc 0 giờ giờ Việt Nam (UTC+7). */
-export const VN_UTC_OFFSET_MS = 7 * 60 * 60 * 1000;
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-/** Khóa ngày dạng YYYY-MM-DD theo giờ Việt Nam. */
-export function vnDay(now: number): string {
-  return new Date(now + VN_UTC_OFFSET_MS).toISOString().slice(0, 10);
-}
-
-/** Khóa tuần: ngày thứ Hai đầu tuần (giờ Việt Nam). */
-export function vnWeek(now: number): string {
-  const local = now + VN_UTC_OFFSET_MS;
-  // getUTCDay: 0 là Chủ nhật; lùi về thứ Hai.
-  const back = (new Date(local).getUTCDay() + 6) % 7;
-  return new Date(local - back * DAY_MS).toISOString().slice(0, 10);
-}
+import { DAY_MS, vnDay, vnWeek } from "../vnTime";
 
 /** Loại trận, để nhiệm vụ đếm đúng chế độ. */
 export type MatchMode =

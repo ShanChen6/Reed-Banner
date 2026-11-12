@@ -186,4 +186,4 @@ Painting style: stylised digital painting for a strategy game, clean confident i
 
 ## 10. Quy cách gửi lại
 
-Gửi **PNG gốc**, tên `chuan`, `bust`, `style`, `attack`, `cast`, `ultimate`, `down`. Tôi sẽ cắt, co về đúng cỡ, thay vào `public/art/characters/dam-thao/`, chỉnh tọa độ trong `DAM_THAO` (`rigs.ts`), tách lớp lại hình động đứng và làm `portrait.webp`. Tranh toàn thân mới khác hẳn tranh cũ nên phần tách lớp phải làm lại từ đầu.
+Gửi **PNG gốc**, tên `chuan`, `bust`, `style`, `attack`, `cast`, `ultimate`, `down`. Tôi sẽ cắt, co về đúng cỡ, thay vào `public/art/characters/dam-thao/`, chỉnh tọa độ trong `DAM_THAO` (`src/app/game/stage/rigs/dam-thao.ts`), tách lớp lại hình động đứng và làm `portrait.webp`. Tranh toàn thân mới khác hẳn tranh cũ nên phần tách lớp phải làm lại từ đầu.

@@ -4,7 +4,7 @@
 //   Quần Hùng: điểm mùa = tổng điểm đấu trường đã nhận được từ các trận mình đi đánh trong tuần (không tính phòng thủ);
 //              chỉ người có tổng dương mới có tên trên bảng. Điểm Elo gốc không reset.
 
-import { vnWeek } from "./quests";
+import { vnWeek } from "../vnTime";
 
 /** `tamTuongKy`: điểm tuần chế độ Hạng Tầm Tướng Ký; bảng riêng ở màn chế độ, không nằm trong `SEASON_MODES` của trang Xếp hạng. */
 export type SeasonMode = "survival" | "arena" | "tamTuongKy";

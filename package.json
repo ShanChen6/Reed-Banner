@@ -13,9 +13,10 @@
     "lint": "eslint .",
     "docs:check": "tsx scripts/check-docs.ts",
     "typecheck": "tsc --noEmit",
+    "knip": "knip --no-progress",
     "test": "node --import tsx --test \"tests/**/*.test.ts\"",
     "e2e": "playwright test",
-    "check": "pnpm lint && pnpm typecheck && pnpm docs:check && pnpm test",
+    "check": "pnpm lint && pnpm typecheck && pnpm knip && pnpm docs:check && pnpm test",
     "sim": "tsx scripts/balance.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx scripts/migrate.mts"
@@ -42,6 +43,7 @@
     "drizzle-kit": "0.31.5",
     "eslint": "^9.39.5",
     "eslint-config-next": "16.4.2",
+    "knip": "5.88.1",
     "tailwindcss": "4.3.3",
     "tsx": "4.23.15",
     "typescript": "5.9.3"

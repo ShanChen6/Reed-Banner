@@ -18,10 +18,10 @@ import {
   newProfile,
   profileTeam,
   progressOf,
-  vnDay,
   type Profile,
 } from "../progress";
 import { createRng, type Rng } from "../rng";
+import { vnDay } from "../vnTime";
 import { SHOP_COMPANIONS, STARTER_COMPANIONS } from "../roster";
 
 /** Điểm khởi đầu, cũng là điểm của bóng ma do máy tạo. */

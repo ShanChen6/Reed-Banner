@@ -5,10 +5,8 @@ import type { TileKind } from "../board";
 
 /** Sáu nghề đã phát hành; cũng là danh sách nghề của Đinh Bộ Lĩnh. */
 export const LEGACY_PROFESSIONS = ["tuongSi", "phapSu", "binhLinh", "ySu", "muuSi", "quanSu"] as const;
-export type LegacyProfession = (typeof LEGACY_PROFESSIONS)[number];
 /** ID canonical: alias cungThu chỉ được đọc tại biên dữ liệu. */
 export const EXPANSION_PROFESSIONS = ["xaThu", "satThu"] as const;
-export type ExpansionProfession = (typeof EXPANSION_PROFESSIONS)[number];
 export const ALL_PROFESSIONS = [...LEGACY_PROFESSIONS, ...EXPANSION_PROFESSIONS] as const;
 export type GameProfession = (typeof ALL_PROFESSIONS)[number];
 export type Profession = GameProfession;
@@ -38,10 +36,6 @@ export const ATTACK_TILE: TileKind = "kiem";
 export const PROFESSION_RESOURCE_TILE: Readonly<Partial<Record<Profession, TileKind>>> = {
   phapSu: "amDuong", binhLinh: "banhChung", ySu: "tim", muuSi: "vang", quanSu: "sach",
 };
-/** @deprecated Dữ liệu legacy; không dùng để định nghĩa ô công kích hay thêm nghề mới. */
-export const PROFESSION_TILE: Readonly<Record<LegacyProfession, TileKind>> = {
-  tuongSi: ATTACK_TILE, ...PROFESSION_RESOURCE_TILE,
-} as Readonly<Record<LegacyProfession, TileKind>>;
 
 /** 1vs1: máu tối đa nhân thêm, vì không có đồng đội chia sát thương. Điểm xuất phát theo mô phỏng. */
 export const SOLO_HP_MULTIPLIER = 2;
@@ -53,9 +47,6 @@ export const SOLO_HP_MULTIPLIER = 2;
  */
 export const SPIRIT_MAX = 100;
 export const SPIRIT_DECAY_START_TURN = 25;
-export const SPIRIT_DECAY = 5;
-/** ATK và DEF còn tỉ lệ này khi Tinh thần về 0. */
-export const SPIRIT_STAT_FLOOR = 1;
 
 /** Chỉ harness mô phỏng truyền lựa chọn này; API ứng dụng không nhận cấu hình thử nghiệm. */
 export type SpiritExperiment = "A" | "B" | "C" | "D" | "E" | "F";

@@ -97,7 +97,7 @@ it('Phản đòn không nhân TT lần hai; đòn xuyên giáp dùng DEF sau buf
  const s=setup(['role_phaTran']);const a=s.sides[0].fighters[0]!,t=s.sides[1].fighters[0]!;a.energy=100;a.spirit=40;a.effects=[{kind:'atkUp',value:0.25,turns:2}];s.sides[1].fighters[0]={...t,def:100,spirit:40,effects:[{kind:'defUp',value:0.5,turns:2}]};
  const r=act(s,{type:'skill',skill:'role_phaTran',target:0});assert.ok(r.ok);const hit=r.events.find(e=>e.type==='damage'&&e.source==='skill');assert.ok(hit?.type==='damage');assert.equal(hit.amount,Math.round(2.5*100*1.25*100/(100+100*1.5*0.7)));
 });
-import { runMeasured } from '../../../scripts/lib/spirit-runner';
+import { runMeasured } from '../../helpers/lib/spirit-runner';
 it('runner tách chạm giới hạn, không tính lượt vừa khởi đầu ngoài cap',()=>{
  const c=screeningCases()[0]!;const r=runMeasured(c,'after','F',2);
  assert.equal(r.capHit,true);assert.equal(r.winner,null);assert.deepEqual(r.counts.turns,[1,1]);

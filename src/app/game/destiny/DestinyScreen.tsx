@@ -1,4 +1,5 @@
 "use client";
+import { requestJson, postJson } from "../api";
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { FrameInset, ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { Alert, Button, ChoiceChip } from "@/components/ui";
@@ -74,20 +75,7 @@ interface ApiResult {
   readonly error?: string;
 }
 
-async function json<T>(url: string, init?: RequestInit): Promise<T | null> {
-  try {
-    const response = await fetch(url, { ...init, cache: "no-store" });
-    return await response.json() as T;
-  } catch {
-    return null;
-  }
-}
 
-const post = <T,>(url: string, body?: unknown) => json<T>(url, {
-  method: "POST",
-  headers: { "content-type": "application/json" },
-  ...(body === undefined ? {} : { body: JSON.stringify(body) }),
-});
 
 interface OfferText { readonly tag: string; readonly title: string; readonly body: string; readonly note?: string }
 
@@ -211,8 +199,8 @@ export default function DestinyScreen() {
 
   const load = useCallback(async () => {
     const [destiny, stored] = await Promise.all([
-      json<DestinyOverview>("/api/destiny"),
-      json<{ profile?: Profile }>("/api/profile"),
+      requestJson<DestinyOverview>("/api/destiny"),
+      requestJson<{ profile?: Profile }>("/api/profile"),
     ]);
     if (!destiny || !stored?.profile) { setFailed(true); return; }
     setFailed(false);
@@ -261,7 +249,7 @@ export default function DestinyScreen() {
 
   const startRun = async () => {
     setBusy(true); setMessage(null);
-    const result = await post<ApiResult>("/api/destiny/run", { rosterIds: roster });
+    const result = await postJson<ApiResult>("/api/destiny/run", { rosterIds: roster });
     if (!result?.ok) { setBusy(false); fail(result?.error); return; }
     await refreshAfter();
   };
@@ -269,7 +257,7 @@ export default function DestinyScreen() {
   const startBattle = async () => {
     if (!chosenBuild) return;
     setBusy(true); setMessage(null);
-    const result = await post<ApiResult>("/api/destiny/battles", { activeIds: active, leaderBuild: chosenBuild });
+    const result = await postJson<ApiResult>("/api/destiny/battles", { activeIds: active, leaderBuild: chosenBuild });
     if (!result?.id) { setBusy(false); fail(result?.error); return; }
     rememberBattle(result.id);
     go("PLAYING", { resume: "1" });
@@ -289,14 +277,14 @@ export default function DestinyScreen() {
       return;
     }
     setBusy(true); setMessage(null);
-    const result = await post<ApiResult>("/api/destiny/reward", { floor: run.floor, index: offerIndex, targetIds: targets });
+    const result = await postJson<ApiResult>("/api/destiny/reward", { floor: run.floor, index: offerIndex, targetIds: targets });
     if (!result?.ok) { setBusy(false); fail(result?.error); return; }
     await refreshAfter();
   };
 
   const stop = async () => {
     setBusy(true); setMessage(null);
-    const result = await post<ApiResult>("/api/destiny/stop");
+    const result = await postJson<ApiResult>("/api/destiny/stop");
     if (!result?.ok) { setBusy(false); fail(result?.error); return; }
     await refreshAfter();
   };

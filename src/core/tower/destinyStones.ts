@@ -1,9 +1,6 @@
 import type { DestinyMilestone } from "./floorContract";
 import { DESTINY_RULE_DATA_VERSION, type DestinyRulesVersion } from "./destinyRules";
 
-/** Chính sách thưởng đá Destiny; đổi version/id nếu cân bằng các mốc đã phát hành. V2 đi cùng luật 20 tầng. */
-export const DESTINY_STONE_POLICY_VERSION = 2;
-
 const MILESTONES_V1: readonly DestinyMilestone[] = [
   { id: "floor-3-v1", floor: 3, stones: 3 },
   { id: "floor-5-v1", floor: 5, stones: 5 },
@@ -21,9 +18,6 @@ const MILESTONES_V2: readonly DestinyMilestone[] = [
 export const destinyStoneMilestones = (
   version: DestinyRulesVersion = DESTINY_RULE_DATA_VERSION,
 ): readonly DestinyMilestone[] => version >= 2 ? MILESTONES_V2 : MILESTONES_V1;
-
-/** Bảng mốc của version mới nhất. */
-export const DESTINY_STONE_MILESTONES: readonly DestinyMilestone[] = MILESTONES_V2;
 
 /** Thưởng tham gia theo thành tích, cố ý nén chênh lệch và không phụ thuộc hạng BXH. */
 export function destinyCycleStoneReward(
