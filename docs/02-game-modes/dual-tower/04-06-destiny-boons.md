@@ -1,6 +1,7 @@
 # T04.06 — Phúc Destiny
 
 > Cập nhật: 11/11/2026 (thêm 8 Phúc của luật V2, Shan chốt)
+> Trạng thái: **IMPLEMENTED**
 
 Phúc chỉ tồn tại trong một Destiny run. Thứ tự chỉ số là: build/cấp → trang bị và cộng hưởng hệ → tổng phần trăm Phúc → làm tròn. Bonus năng lượng/nộ khí đầu trận là tạm thời và bị loại khỏi runtime khi settle để không cộng lặp qua tầng.
 

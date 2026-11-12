@@ -1,6 +1,7 @@
 # Trận đấu
 
 > Cập nhật: 18/10/2026
+> Trạng thái: **IMPLEMENTED**
 
 ## 1. Hai thể thức
 

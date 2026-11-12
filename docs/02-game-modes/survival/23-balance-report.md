@@ -1,5 +1,7 @@
 # Survival Defense V1.1 — Balance Simulation Report
 
+> Trạng thái: **AUDIT** — mô phỏng cân bằng Trấn Ải V1.1.
+
 **Kết luận: NO-GO cho sign-off cân bằng; giữ nguyên luật 10% hiện tại trong lúc thu thập mẫu lớn hơn.**  
 Không có thay đổi production, kỹ năng, lương, tinh thần, hoặc tỷ lệ hồi phục trong task này.
 

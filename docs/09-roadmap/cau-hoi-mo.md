@@ -1,6 +1,7 @@
 # Câu hỏi còn mở
 
 > Cập nhật: 20/10/2026
+> Trạng thái: **REFERENCE** — danh sách việc chưa chốt.
 >
 > Mọi TODO trong docs đều có mặt ở đây. Chốt xong mục nào thì sửa file liên quan, đánh dấu ở đây và ghi vào [nhật ký thay đổi](../decisions/changelog.md).
 
@@ -10,7 +11,6 @@
 - [ ] Mức lợi thế "sân nhà" của trùm và bảng tỉ lệ ô cho từng màn. → [Bàn cờ](../01-gameplay/ban-co.md#tỉ-lệ-sinh-ô-theo-màn)
 - [ ] Thời lượng mục tiêu riêng cho 1vs1 (đã có máu ×2 và Tinh thần). → [Trận đấu](../01-gameplay/tran-dau.md#3-luật-1vs1)
 - [ ] Chỉ số gốc theo nghề và theo cấp (sau khi chạy mô phỏng), cân lại máu và sát thương vì đã bỏ luật trụ vững. → [Trận đấu](../01-gameplay/tran-dau.md#4-máu--thời-lượng)
-
 
 ## Nhân vật & kỹ năng
 
@@ -82,7 +82,6 @@
 - [x] Chỉ số chính của 9 ô trang bị (3 ô ATK, 3 ô Máu, 3 ô DEF).
 - [x] 5 phẩm Trắng, Lục, Lam, Tím, Cam; ghép luôn thành công.
 - [x] Thể thức của từng chế độ chơi; thêm Thử thách hằng ngày, Thế cờ, Đấu trường bóng ma.
-
 
 ## Xạ thủ và Sát thủ — 30/10/2026
 

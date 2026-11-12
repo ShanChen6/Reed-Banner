@@ -1,6 +1,7 @@
 # AI (Tianwu)
 
 > Cập nhật: 18/10/2026
+> Trạng thái: **IMPLEMENTED**
 
 - Đóng vai các sứ quân. Mỗi đối thủ AI có nghề và nguyên tố, nên lối đánh khác nhau một cách tự nhiên.
 - Duyệt mọi nước đổi ô hợp lệ trên bàn 12×8 (tối đa 172 cặp ô kề nhau: 88 cặp ngang + 84 cặp dọc), mô phỏng phần cascade biết chắc rồi chấm điểm (xem [Chấm điểm theo độ khó](#chấm-điểm-theo-độ-khó)).

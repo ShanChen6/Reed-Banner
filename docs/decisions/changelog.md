@@ -1,6 +1,15 @@
 # Nhật ký thay đổi thiết kế
 
+> Trạng thái: **REFERENCE** — nhật ký quyết định theo ngày.
+
 ## 12/11/2026
+
+**Dọn tài liệu (Shan duyệt đề xuất)**
+- Xóa 473 file (cộng 3 file gộp vào nguồn chính), khoảng 52 MB: prompt giao việc đã chạy xong, báo cáo và dữ liệu thô đợt cải tổ kỹ năng 22–23/10 (kèm 28 script audit một lần và một fixture không dùng), đề xuất cũ trong `future/` đã bị thay, audit/QA/nghiệm thu/kế hoạch của task đã xong (bỏ `archive/`, `audits/`), các bản SUPERSEDED, catalog Tầm Tướng Ký LT-01. `docs/` còn 129 file `.md`, 4,6 MB. Danh sách và lý do ở [MOVED.md](../MOVED.md#đã-xóa).
+- Tầm Tướng Ký, Trận Đồ, Khai Lộ có thư mục riêng trong `02-game-modes/`; `future/` chỉ còn Quần Hùng PvP (chưa có code).
+- Gộp: ghi chú nguồn Chương II, III vào sổ nguồn; mốc tuyển tướng vào Campaign design freeze (mục 12); kết quả mô phỏng Trận Đồ vào GDD Trận Đồ; nguồn vật biểu trưng Gói 1 vào tài liệu Gói 1.
+- [Quy định tài liệu](../00-overview/quy-dinh-tai-lieu.md) đổi: hết hiệu lực thì xóa, không lưu trữ; prompt giao việc xóa khi xong; dữ liệu thô của báo cáo không commit. Nhãn trạng thái bắt buộc với mọi file; bỏ `SUPERSEDED`, `ARCHIVED`, thêm `REFERENCE`. `pnpm docs:check` kiểm cả hai.
+- Viết lại [lộ trình](../09-roadmap/lo-trinh.md) theo chế độ hiện có; ghi tình trạng thật của [kế hoạch đồ họa](../06-art/ke-hoach-do-hoa.md).
 
 **Quy trình test ba tầng (có code)**
 - Shan duyệt quy trình test không cần AI: tầng 1 `pnpm check` trên máy; tầng 2 CI hai job song song (kiểm tra cũ + smoke test trình duyệt); tầng 3 checklist tay trước khi gộp vào `main`. Nguồn chính: [quy trình test](../07-architecture/quy-trinh-test.md).
@@ -395,7 +404,6 @@
 - Mỗi tướng có6 chủ động +4 bị động (2 nghề +2 hệ); truy kích tự nối có giới hạn12 phản ứng/sâu4.
 - Danh mục và hợp đồng: [thiết kế22](../03-characters/ky-nang/README.md). Chưa test lại, mô phỏng hoặc cân bằng theo yêu cầu.
 
-
 ## 22/10/2026 — kỹ năng phiên bản 2 và phối hợp đồng đội
 
 - Đổi tuyệt chiêu sang ô4/cấp10, nghề nâng cao sang ô5/cấp15; chuyển khóa đầu tư o4/o5 có marker, không mất điểm.
@@ -412,7 +420,6 @@
 - Nhân vật chơi được: 3 chiêu nghề, 2 chiêu hệ và 1 tuyệt chiêu riêng; mở theo ô 1/2/3/5/4/6 ở cấp 1/1/5/10/15/20.
 - Giữ khóa nâng theo ô và tiến trình; hồ sơ nghề cổ hoàn điểm thực chi một lần. AI chiến dịch giữ preset cũ tường minh.
 - Thiết kế và kiểm chứng: 20. Các mục ghi bộ 6 chiêu hệ dưới đây là lịch sử trước cải tổ.
-
 
 > Mới nhất ở trên cùng. Mỗi mục ghi quyết định và lý do nếu có.
 
@@ -675,7 +682,6 @@
 ## 16/10/2026
 
 - Bản chốt thiết kế đầu tiên sau buổi phản biện (`docs/co-lau-design.md`).
-
 
 ## 30/10/2026 — Giá 14 tướng Xạ thủ/Sát thủ
 

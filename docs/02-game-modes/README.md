@@ -3,6 +3,7 @@
 > Nội dung chi tiết bên dưới mô tả **implementation baseline trước khi triển khai các đề xuất**, không có nghĩa mode mới đã tồn tại. Các giá trị Trial 20 / nhãn Sinh tồn ở bảng dưới là **trạng thái code hiện tại**, còn định hướng tương lai xem tài liệu mới. Tháp Thiên Mệnh đã lên 20 tầng từ chu kỳ 16/11/2026 (Shan chốt 11/11/2026).
 
 > Cập nhật: 11/11/2026 (Tháp Thiên Mệnh 20 tầng và 8 Phúc mới; 01/11: khách và chế độ xếp hạng, Bình Loạn không có bảng, hướng PvP Quần Hùng; 31/10: thêm Trận Đồ bản chơi thử; 25/10: CAMP-08.04 gỡ chiến dịch 13 màn cũ, tách Đánh trùm/BXH/nhiệm vụ khỏi màn cũ)
+> Trạng thái: **IMPLEMENTED** — tổng hợp mọi chế độ đang có trong code; chế độ sau cờ ghi rõ tên cờ.
 
 ## 1. Tổng quan
 

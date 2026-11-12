@@ -1,6 +1,7 @@
 # Kiến trúc & tích hợp ShanVerse
 
 > Cập nhật: 24/10/2026
+> Trạng thái: **IMPLEMENTED**
 
 ## 1. Repo
 

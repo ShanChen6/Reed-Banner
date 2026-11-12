@@ -1,6 +1,7 @@
 # Nguyên tố
 
 > Cập nhật: 18/10/2026
+> Trạng thái: **IMPLEMENTED**
 
 Cờ Lau có **7 nguyên tố**: ⚙️ Kim, 🌳 Mộc, 💧 Thủy, 🔥 Hỏa, ⛰️ Thổ, ⚡ Lôi, 🌪️ Phong. Năm nguyên tố đầu theo vòng ngũ hành truyền thống; **Lôi** và **Phong** là hai nguyên tố thêm, đứng ngoài vòng tương sinh (riêng Phong sinh ra Hỏa).
 

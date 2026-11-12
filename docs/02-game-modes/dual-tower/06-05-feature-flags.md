@@ -1,6 +1,7 @@
 # RH-02 — Feature flags Song Tháp
 
 > Cập nhật: 24/10/2026
+> Trạng thái: **IMPLEMENTED**
 
 ## Cấu hình
 

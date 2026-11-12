@@ -1,6 +1,7 @@
 # Bộ prompt đồ họa game Cờ Lau
 
 > Cập nhật: 20/10/2026
+> Trạng thái: **REFERENCE** — thư viện prompt đồ họa ngoài nhân vật.
 >
 > Bổ sung cho [bộ prompt nhân vật V4.2](v4-2/00-bao-cao.md): prompt ráp sẵn cho **mọi thứ ngoài nhân vật**: trang bị, ô bàn cờ, nền trận, mẫu giao diện, tranh lớn, linh vật và hạt hiệu ứng. Danh sách lấy từ code (`src/core/gear`, `src/core/board`, `src/core/campaign`), quy tắc theo [Hình ảnh](../art-bible.md) và [Kế hoạch đồ họa](../ke-hoach-do-hoa.md). Giải thích bằng tiếng Việt, prompt bằng tiếng Anh.
 
@@ -43,7 +44,6 @@ Prompt bên dưới đã ráp sẵn một trong ba khối này, không cần dá
 - **Icon** (trang bị, ô cờ): nét nâu đậm, tô 1–2 tông, dáng to đọc được ở 48 px, một vật, lề 8%, không chữ, không khung, không phát sáng.
 - **Nền trận**: tranh vẽ 16:9, màu trầm hơi nhạt, tương phản thấp, giữa khung yên vì bàn cờ che, hai góc dưới là đất trống cho nhân vật đứng, không người, không chữ.
 - **Tranh lớn** (landing, menu): chi tiết như hình mẫu Đinh Bộ Lĩnh, vẫn một chủ thể mỗi hình để làm lớp parallax.
-
 
 ## 4. Trang bị
 
@@ -625,7 +625,6 @@ Wide 2D game menu background, 16:9: the interior of a 10th-century Vietnamese wa
 ```text
 Top-down hand-painted map for a 2D game, 16:9: the Red River delta of northern Vietnam drawn on aged yellowish do paper with diagonal fibers, dark-brown ink linework, rivers in indigo, the sea in moss green with carved wave patterns, small ink drawings of karst hills in the southwest, earthen forts and villages as tiny symbols scattered across the delta, edges darkening like old paper. Style: Vietnamese folk woodblock print look, flat colors. No text, no letters, no labels, no compass.
 ```
-
 
 ## 9. Linh vật nguyên tố (tùy chọn)
 

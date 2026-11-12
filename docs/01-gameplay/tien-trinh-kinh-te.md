@@ -1,6 +1,7 @@
 # Tiến trình & kinh tế
 
 > Cập nhật: 20/10/2026
+> Trạng thái: **IMPLEMENTED**
 >
 > Làm ở giai đoạn 3–4 (xem [Lộ trình](../09-roadmap/lo-trinh.md)). Phần cấp, điểm kỹ năng, nâng kỹ năng và phần thưởng cuối trận đã có logic trong `src/core/progress/` (19/10/2026), chơi thử được ở chế độ Tiến trình của `/demo`. Số liệu dưới đây là điểm xuất phát do Claude đặt, chờ Shan duyệt.
 

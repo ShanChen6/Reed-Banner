@@ -1,11 +1,12 @@
 # Danh sách nhân vật
 
+> Trạng thái: **IMPLEMENTED**
+
 > Nhân vật đặc biệt chính thức (Shan, 03/11/2026): [Đinh Ngọc — Vạn Tượng Hành Giả](dinh-ngoc.md) và [Trần Vũ Phong — Vân Du Tử](vu-phong.md). Bộ 6 chủ động + 4 nội tại dung hợp 8 nghề/7 hệ đã chạy trong core; số liệu là điểm xuất phát, chưa mở trong game.
 
 > Thiết kế lại nhân vật (08/11/2026, APPROVED): phe, tên, ngoại hiệu, vũ khí, quan hệ và hồ sơ 37 tướng thường ở [thiet-ke-lai-nhan-vat.md](thiet-ke-lai-nhan-vat.md). **Đã áp dụng vào mã:** ba tên tướng thường đổi (Châu Ngọc → Trần Ngọc, Bế Liên → Mã Liên, Đào Lam → Vi Lam, nhắc ở đây bằng tên mới) và 14 Xạ thủ, Sát thủ có họ tên mới (tên cũ thành ngoại hiệu, ví dụ Bạch Nỏ Lang → Đoàn Cự); `id` không đổi. Ngoại hiệu, phe, tiểu sử, quan hệ nằm ở `src/core/roster/lore.ts` và hiện ở tab Chi tiết.
 
 > Thiết kế mở rộng 30/10/2026: xem [nguồn Xạ thủ](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md). Từ 31/10/2026 14 nhân vật Xạ thủ/Sát thủ (RB-062–075) đã vào trận và shop (1.500 vàng); số liệu vẫn là điểm xuất phát chờ mô phỏng, Đinh Bộ Lĩnh chưa dùng hai nghề này. Sát thủ dùng bộ W02 đa vũ khí mới, chưa triển khai runtime.
-
 
 > Cập nhật: 20/10/2026
 >
@@ -219,7 +220,6 @@ Phó tướng, thầy pháp, lang y… đi kèm sứ quân ở chiến dịch kh
 ## 9. Hồ sơ cũ
 
 Hồ sơ lưu trước 20/10/2026 có nhân vật kèm nâng chiêu nghề theo id hoặc đã mua chiêu nhánh. Khi đọc hồ sơ, những nhân vật này được **xóa khóa chiêu nghề/nhánh cũ và hoàn đúng điểm đã chi** (giá nâng 1,1,2,2 và giá nhánh 1), cộng vào điểm chưa chi; giữ cấp, kinh nghiệm và khóa ô nếu có. Xóa khóa/nhánh cũ là dấu hiệu đã chuyển, nên đọc lại không hoàn lặp; trường `branchChoice` bị bỏ. Hồ sơ khóa ô của mọi nhân vật giữ nguyên, kể cả cấp nâng của ô 4/6 tạm khóa theo mốc mới. Chi tiết ở 20.
-
 
 ## 10. Cân bằng Xạ thủ và Sát thủ (31/10/2026)
 

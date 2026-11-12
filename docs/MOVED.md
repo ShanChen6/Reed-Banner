@@ -1,6 +1,7 @@
 # Đường dẫn đã chuyển
 
 > Cập nhật: 12/11/2026
+> Trạng thái: **REFERENCE** — tra đường dẫn đã chuyển hoặc đã xóa.
 
 Prompt, ghi chú hoặc commit cũ còn nhắc một đường dẫn không còn tồn tại thì tra ở đây:
 
@@ -105,7 +106,6 @@ Prompt, ghi chú hoặc commit cũ còn nhắc một đường dẫn không còn
 | `docs/ui-design-system/implementation-roadmap.md` | [`docs/05-ui-ux/implementation/roadmap.md`](05-ui-ux/implementation/roadmap.md) |
 | `docs/ui-design-system/README.md` | [`docs/05-ui-ux/design-system/README.md`](05-ui-ux/design-system/README.md) |
 | `docs/README.md` mục Thuật ngữ | [`docs/00-overview/thuat-ngu.md`](00-overview/thuat-ngu.md) |
-
 
 ## Thay thiết kế Xạ thủ — 30/10/2026
 

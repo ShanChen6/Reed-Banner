@@ -1,6 +1,7 @@
 # Hiệu ứng trạng thái
 
 > Cập nhật: 18/10/2026
+> Trạng thái: **IMPLEMENTED**
 
 ## 1. Hiệu ứng kéo dài (9)
 

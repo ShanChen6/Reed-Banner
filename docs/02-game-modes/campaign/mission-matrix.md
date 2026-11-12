@@ -1,6 +1,7 @@
 # CAMP-00.03 — Mission Matrix M01–M24
 
 > Cập nhật: 24/10/2026
+> Trạng thái: **IMPLEMENTED**
 
 Đây là bảng canonical proposal tự chứa cho Narrative V2. Thứ tự M11–M21 là tuyến **địa lý/pacing `reconstructed`**, không phải chronology đánh dẹp. Historical basis dùng claim IDs trong [history-sources.md](history-sources.md) và W IDs trong [warlord-matrix.md](warlord-matrix.md). Voice mặc định của mọi nhân vật là `fictional`.
 

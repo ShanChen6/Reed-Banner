@@ -1,6 +1,6 @@
 # Reed Banner — UI Design System (Home & Game Modes)
 
-**Status:** specification and migration plan only · **Date:** 27/10/2026 · **Baseline:** `develop`
+> Trạng thái: **REFERENCE** — mục lục hệ thống giao diện.
 
 - [Game Mode UI/UX Specification](game-mode-ui-spec.md): design language, responsive/layout rules, screen-by-screen information architecture, interaction and visual wireframes; **Home V2 approved visual direction (section 14)**.
 - [Implementation Roadmap](../implementation/roadmap.md): tasks UI-00..UI-09, source impact, acceptance tests, art checklist and risks; **UI-02 Home V2 refined implementation gate (section 7)**.

@@ -1,6 +1,9 @@
 # CAMP-00.02 — Historical Source Ledger
 
-Trạng thái: **frozen baseline v1**, 2026-10-24 (Asia/Saigon). Freeze quy tắc sử dụng chứng cứ, tên chuẩn và các khoảng chưa biết; không tuyên bố mọi tranh luận sử học đã được giải quyết.
+> Cập nhật: 12/11/2026 (gộp ghi chú nguồn Chương II, III vào mục 6–7)
+> Trạng thái: **FROZEN** — baseline v1, 24/10/2026.
+
+Freeze quy tắc sử dụng chứng cứ, tên chuẩn và các khoảng chưa biết; không tuyên bố mọi tranh luận sử học đã được giải quyết.
 
 Snapshot code đã kiểm tra: `b99f94316b1d84c185874b43096c8eff58439618`.
 

@@ -1,8 +1,7 @@
 # Reed Banner — Equipment Enhancement (Future TODO)
 
 > Cập nhật: 24/10/2026
-
-Status: **PLANNED / DO NOT IMPLEMENT during Dual Tower V1.0**.
+> Trạng thái: **DEFERRED** — chưa làm; Đá Cường Hóa hiện chưa có chỗ tiêu.
 
 ## Mục tiêu
 
