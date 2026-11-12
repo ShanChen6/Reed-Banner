@@ -1802,10 +1802,10 @@ test("Đinh Liễn bộ mới cầm kiếm: đủ bốn tranh tư thế, khớp 
   }
 });
 
-test("Trần Lãm bộ mới cầm gậy: đủ bốn tranh tư thế, khớp nằm trong lớp và texture khớp tọa độ", () => {
+test("Trần Lãm bộ mới cầm đao: đủ bốn tranh tư thế, khớp nằm trong lớp và texture khớp tọa độ", () => {
   const rig = rigOf("tranLam");
   assert.ok(rig?.skeleton === "warrior");
-  assert.equal(rig.weapon, "staff");
+  assert.equal(rig.weapon, undefined);
   assert.deepEqual(rig.cloth, []);
   assert.deepEqual(rig.covers, []);
   assert.equal(rig.poses?.attack?.name, "pose-attack");
