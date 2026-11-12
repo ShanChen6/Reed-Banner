@@ -1,10 +1,29 @@
 # Đường dẫn đã chuyển
 
-> Cập nhật: 27/10/2026
+> Cập nhật: 12/11/2026
 
 DOC-02 (27/10/2026) chuyển tài liệu sang thư mục theo domain. Prompt, ghi chú hoặc commit cũ còn nhắc đường dẫn bên trái thì mở đường dẫn bên phải. Lịch sử từng file theo được bằng `git log --follow <đường dẫn mới>`.
 
 Không đổi: `docs/reports/`, `docs/audits/` (script đọc/ghi thẳng vào đây). Danh mục và lý do phân loại: [DOC-01](audits/DOC-01-docs-structure-audit.md).
+
+## 12/11/2026 — chuyển tài liệu chế độ đã có code ra khỏi `future/`
+
+| Đường dẫn cũ | Đường dẫn mới |
+|---|---|
+| `docs/02-game-modes/future/02-binh-phap-gdd.md` | [`docs/02-game-modes/tran-do/gdd.md`](02-game-modes/tran-do/gdd.md) |
+| `docs/02-game-modes/future/24-khai-lo-gdd.md` | [`docs/02-game-modes/khai-lo/gdd.md`](02-game-modes/khai-lo/gdd.md) |
+| `docs/02-game-modes/future/14-tam-tuong-ky-design-freeze.md` | [`docs/02-game-modes/tam-tuong-ky/design-freeze.md`](02-game-modes/tam-tuong-ky/design-freeze.md) |
+| `docs/02-game-modes/future/16-tam-tuong-ky-lt02-engine.md` | [`docs/02-game-modes/tam-tuong-ky/engine.md`](02-game-modes/tam-tuong-ky/engine.md) |
+| `docs/02-game-modes/future/17-tam-tuong-ky-lt04-server.md` | [`docs/02-game-modes/tam-tuong-ky/server.md`](02-game-modes/tam-tuong-ky/server.md) |
+| `docs/02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md` | [`docs/02-game-modes/tam-tuong-ky/goi-1.md`](02-game-modes/tam-tuong-ky/goi-1.md) |
+| `docs/02-game-modes/future/19-tam-tuong-ky-lt06-ranked.md` | [`docs/02-game-modes/tam-tuong-ky/hang-tuan.md`](02-game-modes/tam-tuong-ky/hang-tuan.md) |
+| `docs/02-game-modes/future/20-tam-tuong-ky-lt07-acceptance.md` | [`docs/02-game-modes/tam-tuong-ky/nghiem-thu.md`](02-game-modes/tam-tuong-ky/nghiem-thu.md) |
+| `docs/02-game-modes/future/21-tam-tuong-ky-pack-2.md` | [`docs/02-game-modes/tam-tuong-ky/goi-2.md`](02-game-modes/tam-tuong-ky/goi-2.md) |
+| `docs/02-game-modes/future/22-tam-tuong-ky-pack-3.md` | [`docs/02-game-modes/tam-tuong-ky/goi-3.md`](02-game-modes/tam-tuong-ky/goi-3.md) |
+| `docs/02-game-modes/future/23-tam-tuong-ky-can-bang-va-canh-bao.md` | [`docs/02-game-modes/tam-tuong-ky/can-bang-va-canh-bao.md`](02-game-modes/tam-tuong-ky/can-bang-va-canh-bao.md) |
+| `docs/02-game-modes/future/13-quan-hung-pvp-truc-tiep.md` | [`docs/02-game-modes/future/quan-hung-pvp-truc-tiep.md`](02-game-modes/future/quan-hung-pvp-truc-tiep.md) |
+
+## 27/10/2026 — DOC-02 chuyển tài liệu sang thư mục theo domain
 
 | Đường dẫn cũ | Đường dẫn mới |
 |---|---|
@@ -33,7 +52,7 @@ Không đổi: `docs/reports/`, `docs/audits/` (script đọc/ghi thẳng vào �
 | `docs/campaign-v2/ui/07-don-dep-docs-cu.md` | [`docs/archive/campaign-ui/07-don-dep-docs-cu.md`](archive/campaign-ui/07-don-dep-docs-cu.md) |
 | `docs/campaign-v2/ui/08-atlas-sach-mo-asset-production.md` | [`docs/05-ui-ux/campaign/08-atlas-sach-mo-asset-production.md`](05-ui-ux/campaign/08-atlas-sach-mo-asset-production.md) |
 | `docs/campaign-v2/ui/09-chot-giao-dien-ban-do-toan-canh.md` | [`docs/05-ui-ux/campaign/09-chot-giao-dien-ban-do-toan-canh.md`](05-ui-ux/campaign/09-chot-giao-dien-ban-do-toan-canh.md) |
-| `docs/campaign-v2/ui/10-world-atlas-task-board.md` | [`docs/05-ui-ux/campaign/task-board.md`](05-ui-ux/campaign/task-board.md#world-atlas-đã-duyệt-thay-phần-map-010203-ở-bảng-trên) (gộp vào cuối file) |
+| `docs/campaign-v2/ui/10-world-atlas-task-board.md` | [`docs/05-ui-ux/campaign/task-board.md`](05-ui-ux/campaign/task-board.md) (gộp vào cuối file) |
 | `docs/campaign-v2/ui/11-map-00-audit.md` | [`docs/05-ui-ux/campaign/11-map-00-audit.md`](05-ui-ux/campaign/11-map-00-audit.md) |
 | `docs/campaign-v2/ui/audio-todo/README.md` | [`docs/05-ui-ux/campaign/audio-todo/README.md`](05-ui-ux/campaign/audio-todo/README.md) |
 | `docs/campaign-v2/ui/polish-v2/prompts/P00.md` | [`docs/05-ui-ux/campaign/polish-v2/prompts/P00.md`](05-ui-ux/campaign/polish-v2/prompts/P00.md) |
@@ -90,7 +109,7 @@ Không đổi: `docs/reports/`, `docs/audits/` (script đọc/ghi thẳng vào �
 | `docs/design/20-cai-to-ky-nang.md` | [`docs/03-characters/ky-nang/lich-su/20-cai-to-ky-nang.md`](03-characters/ky-nang/lich-su/20-cai-to-ky-nang.md) |
 | `docs/design/21-combo-dong-doi.md` | [`docs/03-characters/ky-nang/lich-su/21-combo-dong-doi.md`](03-characters/ky-nang/lich-su/21-combo-dong-doi.md) |
 | `docs/design/22-ky-nang-chase.md` | [`docs/03-characters/ky-nang/README.md`](03-characters/ky-nang/README.md) |
-| `docs/design/23-can-bang-f.md` | [`docs/03-characters/ky-nang/README.md`](03-characters/ky-nang/README.md#cân-bằng-f-giá-thủ-thành) (gộp vào cuối file) |
+| `docs/design/23-can-bang-f.md` | [`docs/03-characters/ky-nang/README.md`](03-characters/ky-nang/README.md) (gộp vào cuối file) |
 | `docs/design/data/ky-nang-dong-hanh.md` | [`docs/03-characters/ky-nang/data/ky-nang-dong-hanh.md`](03-characters/ky-nang/data/ky-nang-dong-hanh.md) |
 | `docs/design/data/skill-chase-v3.json` | [`docs/03-characters/ky-nang/data/skill-chase-v3.json`](03-characters/ky-nang/data/skill-chase-v3.json) |
 | `docs/design/data/skill-chase-v3.md` | [`docs/03-characters/ky-nang/data/skill-chase-v3.md`](03-characters/ky-nang/data/skill-chase-v3.md) |
@@ -132,7 +151,7 @@ Không đổi: `docs/reports/`, `docs/audits/` (script đọc/ghi thẳng vào �
 | `docs/dual-tower/06-07-post-merge-verification.md` | [`docs/02-game-modes/dual-tower/06-07-post-merge-verification.md`](02-game-modes/dual-tower/06-07-post-merge-verification.md) |
 | `docs/dual-tower/player-help.md` | [`docs/02-game-modes/dual-tower/player-help.md`](02-game-modes/dual-tower/player-help.md) |
 | `docs/game-modes/01-mode-portfolio.md` | [`docs/02-game-modes/future/01-mode-portfolio.md`](02-game-modes/future/01-mode-portfolio.md) |
-| `docs/game-modes/02-binh-phap-gdd.md` | [`docs/02-game-modes/future/02-binh-phap-gdd.md`](02-game-modes/future/02-binh-phap-gdd.md) |
+| `docs/game-modes/02-binh-phap-gdd.md` | [`docs/02-game-modes/tran-do/gdd.md`](02-game-modes/tran-do/gdd.md) |
 | `docs/game-modes/03-binh-phap-architecture.md` | [`docs/02-game-modes/future/03-binh-phap-architecture.md`](02-game-modes/future/03-binh-phap-architecture.md) |
 | `docs/game-modes/04-binh-phap-ui-art.md` | [`docs/02-game-modes/future/04-binh-phap-ui-art.md`](02-game-modes/future/04-binh-phap-ui-art.md) |
 | `docs/game-modes/05-binh-phap-balance-qa.md` | [`docs/02-game-modes/future/05-binh-phap-balance-qa.md`](02-game-modes/future/05-binh-phap-balance-qa.md) |

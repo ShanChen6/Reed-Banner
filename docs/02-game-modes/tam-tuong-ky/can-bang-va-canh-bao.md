@@ -8,7 +8,7 @@ Shan (04/11/2026), xem trên bản đang chạy:
 1. Đồng ý có những cặp ghép không ra gì, nhưng muốn **cân bằng nguyên tố**: bước ghép đầu đang lệch về Mộc, Thủy, Thổ.
 2. **Lần đầu ghép sai vẫn mất** (lần ghép ở Thường, nguyên liệu ở Hạng). **Lần sau phải có cảnh báo**, nhưng không nói rõ là công thức sai.
 
-Luật gốc ở [Design Freeze](14-tam-tuong-ky-design-freeze.md) (cặp có thứ tự, A+A được; ghép sai mất nguyên liệu A-8; Thường trừ lần ghép khi ra yếu tố mới hoặc ghép sai P-9) giữ nguyên.
+Luật gốc ở [Design Freeze](design-freeze.md) (cặp có thứ tự, A+A được; ghép sai mất nguyên liệu A-8; Thường trừ lần ghép khi ra yếu tố mới hoặc ghép sai P-9) giữ nguyên.
 
 ## 1. Cân bằng nguyên tố
 

@@ -2,12 +2,12 @@
 
 > 27/10/2026 · trạng thái: **DOCS / DESIGN ONLY**. Không thay code, DB, Battle Engine, UI hay phần thưởng. PR này là đề xuất để review; chưa phải release.
 >
-> 31/10/2026: **Binh Pháp (hiển thị là Trận Đồ) đã có bản chơi thử offline** theo [GDD mục 11](02-binh-phap-gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline); luật vẫn chờ BP-00. Liệt Truyện và các mục còn lại vẫn là design only.
+> 31/10/2026: **Binh Pháp (hiển thị là Trận Đồ) đã có bản chơi thử offline** theo [GDD mục 11](../tran-do/gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline); luật vẫn chờ BP-00. Liệt Truyện và các mục còn lại vẫn là design only.
 
 ## Đọc theo thứ tự
 
 1. [01 — Danh mục chế độ và các quyết định](01-mode-portfolio.md)
-2. [02 — Binh Pháp: Game Design Document](02-binh-phap-gdd.md)
+2. [02 — Binh Pháp: Game Design Document](../tran-do/gdd.md)
 3. [03 — Kiến trúc và contracts](03-binh-phap-architecture.md)
 4. [04 — UX, Art Bible và prompt ảnh](04-binh-phap-ui-art.md)
 5. [05 — Mô phỏng, QA và cân bằng](05-binh-phap-balance-qa.md)
@@ -18,18 +18,18 @@
 10. [10 — Kiến trúc engine ghép yếu tố](10-liet-truyen-architecture.md)
 11. [11 — UX, Art Bible của Liệt Truyện](11-liet-truyen-ui-art.md)
 12. [12 — QA và roadmap Liệt Truyện](12-liet-truyen-qa-roadmap.md)
-13. [13 — Quần Hùng online: đấu trực tiếp hai người chơi](13-quan-hung-pvp-truc-tiep.md) (DRAFT, phát triển sau)
-14. [14 — Tầm Tướng Ký: Design Freeze LT-00](14-tam-tuong-ky-design-freeze.md) (FROZEN; nguồn chính luật Tầm Tướng Ký, thay luật trong 08–12)
+13. [13 — Quần Hùng online: đấu trực tiếp hai người chơi](quan-hung-pvp-truc-tiep.md) (DRAFT, phát triển sau)
+14. [14 — Tầm Tướng Ký: Design Freeze LT-00](../tam-tuong-ky/design-freeze.md) (FROZEN; nguồn chính luật Tầm Tướng Ký, thay luật trong 08–12)
 15. [15 — Tầm Tướng Ký: catalog slice LT-01](15-tam-tuong-ky-lt01-catalog.md) (APPROVED, có code)
-16. [16 — Tầm Tướng Ký: engine ghép LT-02](16-tam-tuong-ky-lt02-engine.md) (APPROVED, có code)
-17. [17 — Tầm Tướng Ký: server chế độ Thường LT-04](17-tam-tuong-ky-lt04-server.md) (DRAFT, có code)
-18. [18 — Tầm Tướng Ký: Gói 1 và mô phỏng LT-05](18-tam-tuong-ky-lt05-pack-1.md) (APPROVED, có code)
-19. [19 — Tầm Tướng Ký: chế độ Hạng tuần LT-06](19-tam-tuong-ky-lt06-ranked.md) (DRAFT, có code)
-20. [20 — Tầm Tướng Ký: nghiệm thu và phát hành LT-07](20-tam-tuong-ky-lt07-acceptance.md) (DRAFT)
-21. [21 — Tầm Tướng Ký: Gói 2](21-tam-tuong-ky-pack-2.md) (IMPLEMENTED, đã bật)
-22. [22 — Tầm Tướng Ký: Gói 3 (tướng thường)](22-tam-tuong-ky-pack-3.md) (IMPLEMENTED, đã bật)
-23. [23 — Tầm Tướng Ký: cân bằng nguyên tố và cảnh báo cặp đã thử](23-tam-tuong-ky-can-bang-va-canh-bao.md) (APPROVED, có code)
-24. [24 — Khai Lộ: giải đố xóa khối ô ngọc](24-khai-lo-gdd.md) (DRAFT, có bản chơi thử offline)
+16. [16 — Tầm Tướng Ký: engine ghép LT-02](../tam-tuong-ky/engine.md) (APPROVED, có code)
+17. [17 — Tầm Tướng Ký: server chế độ Thường LT-04](../tam-tuong-ky/server.md) (DRAFT, có code)
+18. [18 — Tầm Tướng Ký: Gói 1 và mô phỏng LT-05](../tam-tuong-ky/goi-1.md) (APPROVED, có code)
+19. [19 — Tầm Tướng Ký: chế độ Hạng tuần LT-06](../tam-tuong-ky/hang-tuan.md) (DRAFT, có code)
+20. [20 — Tầm Tướng Ký: nghiệm thu và phát hành LT-07](../tam-tuong-ky/nghiem-thu.md) (DRAFT)
+21. [21 — Tầm Tướng Ký: Gói 2](../tam-tuong-ky/goi-2.md) (IMPLEMENTED, đã bật)
+22. [22 — Tầm Tướng Ký: Gói 3 (tướng thường)](../tam-tuong-ky/goi-3.md) (IMPLEMENTED, đã bật)
+23. [23 — Tầm Tướng Ký: cân bằng nguyên tố và cảnh báo cặp đã thử](../tam-tuong-ky/can-bang-va-canh-bao.md) (APPROVED, có code)
+24. [24 — Khai Lộ: giải đố xóa khối ô ngọc](../khai-lo/gdd.md) (DRAFT, có bản chơi thử offline)
 25. [prompts/](prompts/) — Prompt Claude/Codex cho Binh Pháp và Liệt Truyện.
 
 ## Quy ước quyết định

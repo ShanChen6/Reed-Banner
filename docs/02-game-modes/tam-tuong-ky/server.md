@@ -3,7 +3,7 @@
 > Cập nhật: 04/11/2026
 > Trạng thái: **DRAFT** — có code sau cờ `TAM_TUONG_KY_ENABLED` (mặc định tắt): phiếu, lượt, gợi ý theo ngày, sổ khám phá theo tài khoản, phiếu từ nhiệm vụ, thành tựu bộ. Chờ Shan chơi thử.
 
-Luật theo [Design Freeze](14-tam-tuong-ky-design-freeze.md) (A-5, A-6, A-12, A-13, A-14, P-8, P-9, P-10, P-20, P-23). Giao diện ở [màn Tầm Tướng Ký](../../05-ui-ux/screens/tam-tuong-ky.md).
+Luật theo [Design Freeze](design-freeze.md) (A-5, A-6, A-12, A-13, A-14, P-8, P-9, P-10, P-20, P-23). Giao diện ở [màn Tầm Tướng Ký](../../05-ui-ux/screens/tam-tuong-ky.md).
 
 ## 1. Dữ liệu
 
@@ -56,6 +56,6 @@ Chỉ gói **đã phát hành** (`PUBLISHED_PACKS`) mới hiện thành tựu �
 - `tests/server/tamTuongKy.test.ts` (8 test): cờ tắt, khách, GET không ghi, chưa mở lượt, luồng đủ, hai request cùng `requestId` song song, hai lần mở lượt song song, hết phiếu.
 - Playwright với cờ bật: đăng ký, mở lượt (3 → 2 phiếu), ghép ra Đinh Ngọc, bấm đúp Hợp Nguyên chỉ trừ 1 lần ghép, tải lại trang vẫn giữ sổ và lượt, gợi ý trừ còn 1/2.
 
-> Chế độ Hạng tuần: [LT-06](19-tam-tuong-ky-lt06-ranked.md).
+> Chế độ Hạng tuần: [LT-06](hang-tuan.md).
 
 > TODO: trang Nhiệm vụ chưa ghi chú phiếu Tầm Tướng Ký đi kèm thưởng; số vàng thành tựu của gói thật đặt khi phát hành gói.

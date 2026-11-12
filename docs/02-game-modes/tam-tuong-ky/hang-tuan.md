@@ -3,7 +3,7 @@
 > Cập nhật: 04/11/2026
 > Trạng thái: **DRAFT** — có code sau cờ `TAM_TUONG_KY_ENABLED` (mặc định tắt; từ 04/11/2026 Hạng đi cùng cờ chế độ, không còn biến riêng). Chờ Shan chơi thử.
 
-Luật theo [Design Freeze](14-tam-tuong-ky-design-freeze.md) (A-7, A-8, A-9, A-19, A-23, P-11…P-19, Shan duyệt L5-1…L5-7 ngày 04/11/2026). Nội dung tướng và lời dẫn ở [Gói 1](18-tam-tuong-ky-lt05-pack-1.md). Phần chế độ Thường ở [server LT-04](17-tam-tuong-ky-lt04-server.md).
+Luật theo [Design Freeze](design-freeze.md) (A-7, A-8, A-9, A-19, A-23, P-11…P-19, Shan duyệt L5-1…L5-7 ngày 04/11/2026). Nội dung tướng và lời dẫn ở [Gói 1](goi-1.md). Phần chế độ Thường ở [server LT-04](server.md).
 
 ## 1. Luật đã code
 

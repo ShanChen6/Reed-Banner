@@ -7,7 +7,7 @@ Shan (04/11/2026): **đưa mọi tướng vào Tầm Tướng Ký**. Gói 1 + G�
 
 ## 1. Cách dựng công thức
 
-Theo [Design Freeze](14-tam-tuong-ky-design-freeze.md): bậc thường đúng **7 lần ghép** (P-5), không dựa vào art (A-22).
+Theo [Design Freeze](design-freeze.md): bậc thường đúng **7 lần ghép** (P-5), không dựa vào art (A-22).
 
 - **Công thức cuối = vai trò sơ học + tuyệt chiêu.**
   - Vai trò sơ học, ví dụ “Tướng sĩ hệ Kim” = Võ nghệ sơ học + Kim: 3 lần ghép, khớp nghề/hệ roster (`roleMismatch`).

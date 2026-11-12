@@ -145,7 +145,7 @@ Chuỗi 3 bước theo chủ đề “dung hợp nghề/hệ” (nội dung bư�
 2. Thắng một trận có luật nghề/hệ, ví dụ tầng Tháp Thí Luyện “Ba Vai Trò” hoặc “Tam Hành”.
 3. Trận cuối đấu với chính nhân vật (có thoại ngắn); thắng thì nhân vật gia nhập ở cấp 1.
 
-- Không bán bằng vàng, không quay ngẫu nhiên, không lấy từ [Tầm Tướng Ký](../02-game-modes/future/14-tam-tuong-ky-design-freeze.md) (khám phá ở đó không cấp sở hữu).
+- Không bán bằng vàng, không quay ngẫu nhiên, không lấy từ [Tầm Tướng Ký](../02-game-modes/tam-tuong-ky/design-freeze.md) (khám phá ở đó không cấp sở hữu).
 - Server ghi tiến độ từng bước và cấp nhân vật đúng một lần, như nhiệm vụ và thành tựu hiện có.
 - Là đồng hành chiếm một trong hai slot, không thay Đinh Bộ Lĩnh.
 
@@ -211,4 +211,4 @@ Giới hạn "một lần mỗi lượt" của hệ truy kích hiện hành đư
 
 ## Trận Đồ (Binh Pháp)
 
-Đinh Ngọc là nhân vật dung hợp đầu tiên dự kiến cho [Trận Đồ](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc): quân mang đủ 8 nghề và 7 hệ, khớp mọi quân kề nhưng vẫn phải đặt sát một quân. Trận Đồ chỉ giữ tối đa hai nhân vật loại này (Shan chốt 01/11/2026; nhân vật thứ hai là Trần Vũ Phong – Vân Du Tử, đang thiết kế) và chỉ cho xuất hiện ở bậc Khó và Đại trận. **Chưa bật**: nhân vật chưa duyệt và chưa đăng ký vào roster, nên danh sách dung hợp của Trận Đồ đang rỗng. Muốn bật chỉ cần thêm một dòng vào `src/core/binh-phap/specials.ts` sau khi được duyệt.
+Đinh Ngọc là nhân vật dung hợp đầu tiên dự kiến cho [Trận Đồ](../02-game-modes/tran-do/gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc): quân mang đủ 8 nghề và 7 hệ, khớp mọi quân kề nhưng vẫn phải đặt sát một quân. Trận Đồ chỉ giữ tối đa hai nhân vật loại này (Shan chốt 01/11/2026; nhân vật thứ hai là Trần Vũ Phong – Vân Du Tử, đang thiết kế) và chỉ cho xuất hiện ở bậc Khó và Đại trận. **Chưa bật**: nhân vật chưa duyệt và chưa đăng ký vào roster, nên danh sách dung hợp của Trận Đồ đang rỗng. Muốn bật chỉ cần thêm một dòng vào `src/core/binh-phap/specials.ts` sau khi được duyệt.

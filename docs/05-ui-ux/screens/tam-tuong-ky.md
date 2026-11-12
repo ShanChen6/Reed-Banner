@@ -3,7 +3,7 @@
 > Cập nhật: 06/11/2026
 > Trạng thái: **DRAFT** — màn chế độ Thường đã có code (`src/app/game/tam-tuong-ky/`), chạy trên server theo tài khoản từ LT-04; bật bằng cờ `TAM_TUONG_KY_ENABLED` (mặc định tắt). Shan góp ý 6 điểm ngày 06/11/2026; đã sửa theo [mục 7](#7-sửa-theo-góp-ý-06112026-đã-triển-khai), mục 3 mô tả bản sau khi sửa.
 
-Luật ở [Design Freeze](../../02-game-modes/future/14-tam-tuong-ky-design-freeze.md); nội dung công thức ở [catalog LT-01](../../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md). Tài liệu này chỉ nói về giao diện.
+Luật ở [Design Freeze](../../02-game-modes/tam-tuong-ky/design-freeze.md); nội dung công thức ở [catalog LT-01](../../02-game-modes/future/15-tam-tuong-ky-lt01-catalog.md). Tài liệu này chỉ nói về giao diện.
 
 ## 1. Vào màn
 
@@ -41,7 +41,7 @@ Ba khung cùng một hàng lưới trên máy tính, mép trên thẳng hàng v�
 - Ô thông báo `aria-live`: khám phá mới, tìm thấy chân dung, đã biết (không trừ lần ghép), chưa tìm được mối liên hệ, yếu tố không hợp lệ, lời gợi ý. Khi thẻ dưới hai ô đã nói điều đó thì ô thông báo chỉ còn cho máy đọc màn hình (không lặp chữ); lỗi luôn hiện.
 - Số lần ghép còn lại của lượt (15) và nút “Lượt mới” khi hết; một hàng gợi ý: “Nhóm”, “Nguyên liệu” (kèm icon đèn dầu vẽ tay `HintIcon`, không dùng emoji), “còn x/2” hôm nay.
 - “Lần ghép gần đây”: 5 lần gần nhất, luôn hiện, mỗi dòng dạng icon `A + B → C` (không ra gì: `✕`); bấm một dòng thì đặt lại đúng cặp đó vào hai ô.
-- Đặt lại một cặp đã ghép mà không ra gì (cả Thường và Hạng): hiện cảnh báo “Bạn đã ghép cặp này ở lần trước…” ngay dưới nút (để nút không nhảy); nút vẫn ghi “Hợp Nguyên” (Shan, 06/11/2026: không đổi chữ trên nút). Không nói công thức sai. Xem [cảnh báo cặp đã thử](../../02-game-modes/future/23-tam-tuong-ky-can-bang-va-canh-bao.md#2-cảnh-báo-cặp-đã-thử).
+- Đặt lại một cặp đã ghép mà không ra gì (cả Thường và Hạng): hiện cảnh báo “Bạn đã ghép cặp này ở lần trước…” ngay dưới nút (để nút không nhảy); nút vẫn ghi “Hợp Nguyên” (Shan, 06/11/2026: không đổi chữ trên nút). Không nói công thức sai. Xem [cảnh báo cặp đã thử](../../02-game-modes/tam-tuong-ky/can-bang-va-canh-bao.md#2-cảnh-báo-cặp-đã-thử).
 
 **Tướng Lục**
 - Đủ số tướng của sổ đang chạy (A-15), chia **nhóm theo quan hệ** (chỉ để hiển thị; gói phát hành giữ nguyên trong code và thành tựu): Cờ lau Hoa Lư (Đinh Bộ Lĩnh và 6 tướng theo ông), Thập nhị sứ quân, Kỳ nhân (Đinh Ngọc, Trần Vũ Phong), 8 nhóm tướng thường theo nghề. Bộ lọc hai tầng, mỗi tầng một hàng: thanh 4 mục **Hoa Lư · Sứ quân · Kỳ nhân · Tướng thường** kèm `x/y`; chọn Tướng thường thì hiện hàng icon 8 nghề (tên và `x/y` ở nhãn, `title`). Thêm nghề hay nhóm mới không thêm hàng. Mặc định nhóm đầu tiên chưa đủ; một dòng tên nhóm và giới thiệu (chữ của trò chơi). Logic ở `ledgerGroup`, `ledgerGroups`, `ledgerSections` (`altar.ts`).
@@ -58,7 +58,7 @@ Ba khung cùng một hàng lưới trên máy tính, mép trên thẳng hàng v�
 - Có lượt: nút **Hợp Nguyên** và dòng “Lượt này còn x/15 lần ghép”.
 - Sổ mới (chưa ghép công thức nào): ô thông báo hiện mẹo “chọn Mộc vào ô trước và Mộc vào ô sau”.
 - Mọi nút khóa trong lúc chờ server (chống bấm đúp); lỗi mạng thì bấm lại gửi cùng `requestId`.
-- Sổ, phiếu, lượt và gợi ý lưu theo tài khoản; tải lại trang hay đổi máy vẫn còn. Chi tiết ở [server LT-04](../../02-game-modes/future/17-tam-tuong-ky-lt04-server.md).
+- Sổ, phiếu, lượt và gợi ý lưu theo tài khoản; tải lại trang hay đổi máy vẫn còn. Chi tiết ở [server LT-04](../../02-game-modes/tam-tuong-ky/server.md).
 
 ## 5. Chế độ Hạng tuần (LT-06)
 

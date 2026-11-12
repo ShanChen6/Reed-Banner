@@ -3,7 +3,7 @@
 > Cập nhật: 03/11/2026
 > Trạng thái: **FROZEN** — Shan chốt mục 3.1 và duyệt mục 3.2 ngày 03/11/2026; thêm A-22, A-23 và duyệt L5-1…L5-7 ngày 04/11/2026. Số liệu ở mục 3.2 là **điểm xuất phát**: LT-05 được chỉnh trong khoảng đã ghi bằng mô phỏng; đổi luật phải qua quyết định mới.
 
-File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây gọi “Liệt Truyện — Tầm Tướng Ký”). Nó thay các đề xuất trong [GDD](08-liet-truyen-gdd.md), [công thức](09-liet-truyen-recipes.md), [kiến trúc](10-liet-truyen-architecture.md), [UI/art](11-liet-truyen-ui-art.md) và [QA/roadmap](12-liet-truyen-qa-roadmap.md); khi khác nhau, file này thắng. Tên file 08–12 giữ nguyên `liet-truyen` để không làm hỏng link và script.
+File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây gọi “Liệt Truyện — Tầm Tướng Ký”). Nó thay các đề xuất trong [GDD](../future/08-liet-truyen-gdd.md), [công thức](../future/09-liet-truyen-recipes.md), [kiến trúc](../future/10-liet-truyen-architecture.md), [UI/art](../future/11-liet-truyen-ui-art.md) và [QA/roadmap](../future/12-liet-truyen-qa-roadmap.md); khi khác nhau, file này thắng. Tên file 08–12 giữ nguyên `liet-truyen` để không làm hỏng link và script.
 
 Đối chiếu code `develop` ngày 03/11/2026. Không có code, route, asset hay dữ liệu nào được thêm trong task này.
 
@@ -43,8 +43,8 @@ File này là **nguồn chính cho luật Tầm Tướng Ký** (trước đây g
 
 ### 2.2 Mâu thuẫn và điểm cần lưu ý
 
-1. **Số nghề active.** Tài liệu cũ ghi 6 nghề; code đã bật 8. Đã sửa [danh mục chế độ](01-mode-portfolio.md#rủi-ro-sản-phẩm).
-2. **Ví dụ công thức 09 không còn dùng được.** [09 mục 2](09-liet-truyen-recipes.md#2-ba-cây-thử-nghiệm-chưa-khóa) viết cho ba tướng thường theo luật không thứ tự. Gói đầu không có tướng thường, nên ba cây đó chỉ còn làm dữ liệu test engine.
+1. **Số nghề active.** Tài liệu cũ ghi 6 nghề; code đã bật 8. Đã sửa [danh mục chế độ](../future/01-mode-portfolio.md#rủi-ro-sản-phẩm).
+2. **Ví dụ công thức 09 không còn dùng được.** [09 mục 2](../future/09-liet-truyen-recipes.md#2-ba-cây-thử-nghiệm-chưa-khóa) viết cho ba tướng thường theo luật không thứ tự. Gói đầu không có tướng thường, nên ba cây đó chỉ còn làm dữ liệu test engine.
 3. **Thưởng hạng không còn chỉ là vàng.** Shan chốt 01/11/2026 “trước mắt thưởng xếp hạng mọi chế độ chỉ là vàng” ([chế độ chơi mục 6](../README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt)). Quyết định 03/11/2026 thêm nguyên liệu Tầm Tướng Ký vào thưởng hạng; khi code phải sửa mục đó. Số vàng đã duyệt không đổi.
 4. **Hai tướng đặc biệt đã chính thức, code chưa theo kịp.** Shan duyệt [Đinh Ngọc](../../03-characters/dinh-ngoc.md) và [Trần Vũ Phong](../../03-characters/vu-phong.md) ngày 03/11/2026. Code vẫn ghi tên “Vũ Phong” (`roster.ts`, `binh-phap/specials.ts`, `demo/characters/catalog.ts`) và cả hai vẫn là nhân vật xem thử, chưa có cách mở trong game. Đổi tên và mở chính thức là task code riêng, không thuộc LT-00.
 5. **Đinh Bộ Lĩnh.** Hệ và nghề đổi theo người chơi (`mainCharacter(element, profession)`), nên không xếp được vào bộ theo hệ. Shan chốt 03/11/2026: trong Tầm Tướng Ký, Đinh Bộ Lĩnh xây theo hướng **nhân vật đặc biệt** (A-21).
@@ -120,7 +120,7 @@ Shan duyệt toàn bộ ngày 03/11/2026; riêng P-5 Shan đổi thành số c�
 | P-14 | Node trung gian ghép ở Hạng chỉ sống trong tuần; hết tuần bỏ, nguyên tố còn dư giữ trong túi. Tướng tạo ra không vào túi |
 | P-15 | Mỗi lần ghép tiêu 1 đơn vị mỗi nguyên liệu (`A+A` tiêu 2); thành công cộng 1 đơn vị kết quả; `noRecipe` vẫn tiêu (A-8). Không tốn phiếu |
 | P-16 | Đề cử: server chọn đầu tuần, giống nhau cho mọi người, xoay vòng sao cho mỗi tướng trong gói được đề cử đều nhau. Mỗi tuần có ít nhất 1 tướng đặc biệt. Theo A-23 (04/11/2026): mỗi ô đề cử chỉ hiện **lời dẫn** và số điểm của ô (theo bậc); không hiện tên, chân dung, nghề, hệ cho tới khi ghép ra |
-| P-17 | **7 tướng đề cử mỗi tuần** (Shan chốt L5-3, 04/11/2026), cố định, xoay vòng. Mô phỏng: người chơi trung bình (7 bó) ghép được 4/7 nếu biết công thức ([Gói 1 LT-05](18-tam-tuong-ky-lt05-pack-1.md#5-mô-phỏng-chế-độ-hạng)) |
+| P-17 | **7 tướng đề cử mỗi tuần** (Shan chốt L5-3, 04/11/2026), cố định, xoay vòng. Mô phỏng: người chơi trung bình (7 bó) ghép được 4/7 nếu biết công thức ([Gói 1 LT-05](goi-1.md#5-mô-phỏng-chế-độ-hạng)) |
 | P-18 | Điểm: mỗi tướng đề cử tính một lần, đặc biệt 200, lịch sử 300 (thường 100 cho gói sau). Bằng điểm thì ít nguyên tố tiêu trong tuần hơn xếp trên, rồi ai đạt trước |
 | P-19 | Thưởng hạng Tầm Tướng Ký: vàng 500 / 300 / 180 / 80 / 30 (bằng Trấn Ải) cộng bó theo P-11 |
 

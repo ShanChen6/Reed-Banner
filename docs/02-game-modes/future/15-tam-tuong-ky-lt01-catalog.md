@@ -1,11 +1,11 @@
 # 15 — Tầm Tướng Ký: catalog slice LT-01
 
 > Cập nhật: 03/11/2026
-> Trạng thái: **SUPERSEDED** — công thức trong file này dựa vào art nhân vật nên đã bỏ theo A-22 (04/11/2026); slice-1 nay là tập con của Gói 1, xem [18 — Gói 1](18-tam-tuong-ky-lt05-pack-1.md).
+> Trạng thái: **SUPERSEDED** — công thức trong file này dựa vào art nhân vật nên đã bỏ theo A-22 (04/11/2026); slice-1 nay là tập con của Gói 1, xem [18 — Gói 1](../tam-tuong-ky/goi-1.md).
 
-Từ LT-05, server chạy [Gói 1](18-tam-tuong-ky-lt05-pack-1.md); slice-1 giữ làm dữ liệu test và mọi ID của nó nằm nguyên trong Gói 1.
+Từ LT-05, server chạy [Gói 1](../tam-tuong-ky/goi-1.md); slice-1 giữ làm dữ liệu test và mọi ID của nó nằm nguyên trong Gói 1.
 
-Luật theo [Design Freeze](14-tam-tuong-ky-design-freeze.md) (FROZEN). File này ghi nội dung slice và kết quả kiểm; dữ liệu thật nằm trong code, file này không định nghĩa luật mới.
+Luật theo [Design Freeze](../tam-tuong-ky/design-freeze.md) (FROZEN). File này ghi nội dung slice và kết quả kiểm; dữ liệu thật nằm trong code, file này không định nghĩa luật mới.
 
 ## 1. Code
 
@@ -13,7 +13,7 @@ Luật theo [Design Freeze](14-tam-tuong-ky-design-freeze.md) (FROZEN). File nà
 |---|---|
 | `src/core/tam-tuong-ky/types.ts` | Node, công thức có thứ tự, pack, bậc tướng, mã lỗi |
 | `src/core/tam-tuong-ky/graph.ts` | `recipeKey` (`A>B`), `computeMetrics` (`minCombines`, `starterCost`), `findCycles` |
-| `src/core/tam-tuong-ky/validate.ts` | `validatePack`: lỗi và cảnh báo theo [mục 7.2](14-tam-tuong-ky-design-freeze.md#72-validator-catalog); `TIER_COMBINES` (thường 7, đặc biệt 9, lịch sử 12) |
+| `src/core/tam-tuong-ky/validate.ts` | `validatePack`: lỗi và cảnh báo theo [mục 7.2](../tam-tuong-ky/design-freeze.md#72-validator-catalog); `TIER_COMBINES` (thường 7, đặc biệt 9, lịch sử 12) |
 | `src/core/tam-tuong-ky/catalog.ts` | `SLICE_PACK` (draft), `rosterCharacter` đọc nghề/hệ/bậc từ roster, `CORE_CATALOG_DEPS` |
 | `tests/core/tam-tuong-ky/catalog.test.ts` | 27 test: slice hợp lệ, số đo, mỗi lỗi và cảnh báo của validator |
 
@@ -29,7 +29,7 @@ Catalog không chép nghề, hệ hay tên chân dung: validator đọc từ `ro
 | Lê Hoàn | lịch sử | 12 | **12** | 13 | Thập đạo + Binh thư |
 | Nguyễn Bặc | lịch sử | 12 | **12** | 13 | Đại đao buộc vải đỏ + Hỏa kỳ |
 
-- Số lần ghép bắt buộc theo [P-5](14-tam-tuong-ky-design-freeze.md#32-đề-xuất-đã-duyệt): thường 7, đặc biệt 9, lịch sử 12 (Shan chốt 03/11/2026).
+- Số lần ghép bắt buộc theo [P-5](../tam-tuong-ky/design-freeze.md#32-đề-xuất-đã-duyệt): thường 7, đặc biệt 9, lịch sử 12 (Shan chốt 03/11/2026).
 - 7/7 starter đều được dùng; 28 công thức, 25 node trung gian.
 - 10/49 cặp starter có công thức, trong đó 3 cặp `A+A` (Mộc+Mộc, Thủy+Thủy, Thổ+Thổ) và 1 cặp gương ra hai kết quả khác nhau (Mộc+Thủy → Lau sậy, Thủy+Mộc → Dược thảo).
 - Node dùng chung: Tre (3 nhánh), Vải gai (2), Dải vải đỏ (2), Sắt rèn (2).
@@ -102,4 +102,4 @@ Hai tướng lịch sử gắn mã nguồn `S04` (Việt Nam sử lược, mục
 ## 5. Việc tiếp theo
 
 - [x] Shan duyệt tên node và công thức ở mục 3 (03/11/2026).
-- [x] LT-02: engine thuần cho chế độ Thường và Hạng, xem [16 — engine LT-02](16-tam-tuong-ky-lt02-engine.md).
+- [x] LT-02: engine thuần cho chế độ Thường và Hạng, xem [16 — engine LT-02](../tam-tuong-ky/engine.md).

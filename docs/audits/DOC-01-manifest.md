@@ -196,7 +196,7 @@ Cột "Trỏ tới" = số link Markdown / số file code trỏ vào file đó. 
 | `docs/dual-tower/06-07-post-merge-verification.md` | 97 | HISTORY | IMPLEMENTED | `docs/02-game-modes/dual-tower/06-07-post-merge-verification.md` | 1/0 | Bằng chứng task/QA |
 | `docs/dual-tower/player-help.md` | 44 | CANONICAL | IMPLEMENTED | `docs/02-game-modes/dual-tower/player-help.md` | 3/0 |  |
 | `docs/game-modes/01-mode-portfolio.md` | 45 | CANONICAL | DRAFT (design only) | `docs/02-game-modes/future/01-mode-portfolio.md` | 1/0 |  |
-| `docs/game-modes/02-binh-phap-gdd.md` | 89 | CANONICAL | DRAFT (design only) | `docs/02-game-modes/future/02-binh-phap-gdd.md` | 1/0 |  |
+| `docs/game-modes/02-binh-phap-gdd.md` | 89 | CANONICAL | DRAFT (design only) | `docs/02-game-modes/tran-do/gdd.md` | 1/0 |  |
 | `docs/game-modes/03-binh-phap-architecture.md` | 73 | CANONICAL | DRAFT (design only) | `docs/02-game-modes/future/03-binh-phap-architecture.md` | 1/0 |  |
 | `docs/game-modes/04-binh-phap-ui-art.md` | 73 | CANONICAL | DRAFT (design only) | `docs/02-game-modes/future/04-binh-phap-ui-art.md` | 1/0 |  |
 | `docs/game-modes/05-binh-phap-balance-qa.md` | 84 | CANONICAL | DRAFT (design only) | `docs/02-game-modes/future/05-binh-phap-balance-qa.md` | 1/0 |  |

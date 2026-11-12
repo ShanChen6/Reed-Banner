@@ -1,4 +1,4 @@
-// Trận Đồ (Binh Pháp): game xếp quân độc lập với Battle Engine. Luật ở docs/02-game-modes/future/02-binh-phap-gdd.md (mục 11).
+// Trận Đồ (Binh Pháp): game xếp quân độc lập với Battle Engine. Luật ở docs/02-game-modes/tran-do/gdd.md (mục 11).
 // Mọi kiểu ở đây là dữ liệu thuần, chuyển được sang JSON.
 
 import type { Element, Profession } from "../battle";

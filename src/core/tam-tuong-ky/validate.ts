@@ -1,5 +1,5 @@
 // Validator catalog Tầm Tướng Ký: test contract mục 7.2 của Design Freeze
-// (docs/02-game-modes/future/14-tam-tuong-ky-design-freeze.md).
+// (docs/02-game-modes/tam-tuong-ky/design-freeze.md).
 
 import { ELEMENTS } from "../battle";
 import { computeMetrics, findCycles, recipeKey } from "./graph";
