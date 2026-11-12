@@ -727,47 +727,48 @@ const TRAN_LAM: WarriorRig = {
 };
 
 /**
- * Ngô Nhật Khánh (Ngô Nam công), quân sư hệ Phong. Bộ tranh Shan gửi 03/11 (nền trong suốt sẵn) theo Master RB-011:
- * áo giao lĩnh tía, áo khoác cộc nâu, khăn vai vàng nghệ, giáo có tua đỏ và cờ nhỏ, kiếm tra vỏ hông trái. Ảnh đứng
- * tách lớp bằng code: bàn tay nắm cùng cây giáo xoay quanh cổ tay, bàn tay đặt trên chuôi kiếm, đầu; chỗ bàn tay che tay
- * áo và chuôi kiếm được vá bằng khuếch tán màu xung quanh. Hệ tọa độ: ảnh đứng 1024×1536.
+ * Ngô Nhật Khánh (Ngô Nam công), quân sư hệ Phong. Bộ tranh Shan gửi 12/11: khăn đỏ tía đính bài đồng, áo giao lĩnh
+ * tía, áo khoác cộc nâu, khăn vai vàng nghệ, giáo tua đỏ, kiếm tra vỏ hông trái. Ảnh đứng tách lớp bằng code: nắm tay
+ * cùng cây giáo dựng đứng xoay quanh nắm tay (giáo nằm ngoài thân nên không cần vá), bàn tay đặt trên chuôi kiếm phủ
+ * lại, đầu cùng dải khăn. Năm tranh tư thế cắt từ một tấm 1536×1024 (đứng, phong thái, đánh thường | ra chiêu, tuyệt
+ * chiêu, gục), giữ cỡ ô. Hệ tọa độ: ảnh đứng 1024×1536.
  */
 const NGO_NHAT_KHANH: WarriorRig = {
   skeleton: "warrior",
   weapon: "spear",
   dir: "ngo-nhat-khanh",
   texScale: 0.5,
-  foot: { x: 500, y: 1498 },
-  height: 1318,
+  foot: { x: 541, y: 1505 },
+  height: 1384,
   parts: {
-    body: { x: 223, y: 179, w: 569, h: 1328 },
-    armR: { x: 564, y: 706, w: 100, h: 90 },
-    sword: { x: 181, y: 17, w: 117, h: 1483 },
-    arm: { x: 226, y: 588, w: 79, h: 87 },
-    head: { x: 320, y: 179, w: 280, h: 221 },
+    body: { x: 297, y: 121, w: 536, h: 1404 },
+    armR: { x: 592, y: 700, w: 106, h: 100 },
+    sword: { x: 191, y: 34, w: 118, h: 1486 },
+    arm: { x: 230, y: 586, w: 100, h: 92 },
+    head: { x: 322, y: 121, w: 272, h: 236 },
   },
   cloth: [],
   covers: [],
   joints: {
-    shoulder: { x: 298, y: 630 },
-    elbowR: { x: 650, y: 722 },
-    neck: { x: 510, y: 385 },
+    shoulder: { x: 278, y: 630 },
+    elbowR: { x: 645, y: 750 },
+    neck: { x: 550, y: 337 },
   },
-  blade: [{ x: 266, y: 630 }, { x: 262, y: 30 }],
+  blade: [{ x: 275, y: 630 }, { x: 270, y: 40 }],
   fxColor: 0x2e9e90,
-  // Theo POSE ID của prompt RB-011: đâm giáo chéo thấp hai tay (đánh thường), giữ giáo dựng, hai ngón tay chỉ đường quân
-  // (ra chiêu), bước tới giương giáo chéo cao làm hiệu tập hợp (tuyệt chiêu). Cỡ so theo bề ngang khăn đầu.
+  // Tấn thấp hai tay đâm giáo ngang (đánh thường), dựng giáo, tay kia giơ ra hiệu (ra chiêu), bước tới giương giáo chéo
+  // cao (tuyệt chiêu).
   poses: {
-    attack: { name: "pose-attack", texScale: 0.3, origin: { x: 156, y: 36 },
-      anchor: { x: 565, y: 995 }, scale: 1.05, burst: { x: 1395, y: 620 } },
-    cast: { name: "pose-cast", texScale: 0.3, origin: { x: 156, y: 32 },
-      anchor: { x: 500, y: 1498 }, scale: 1, burst: { x: 930, y: 348 } },
-    ultimate: { name: "pose-ultimate", texScale: 0.3, origin: { x: 189, y: 29 },
-      anchor: { x: 510, y: 1160 }, scale: 1.16, burst: { x: 1185, y: 33 } },
+    attack: { name: "pose-attack", texScale: 1 / 3, origin: { x: 0, y: 0 },
+      anchor: { x: 504, y: 1092 }, scale: 1.08, burst: { x: 1374, y: 624 } },
+    cast: { name: "pose-cast", texScale: 1 / 3, origin: { x: 0, y: 0 },
+      anchor: { x: 375, y: 1590 }, scale: 1.08, burst: { x: 855, y: 330 } },
+    ultimate: { name: "pose-ultimate", texScale: 1 / 3, origin: { x: 0, y: 0 },
+      anchor: { x: 474, y: 1458 }, scale: 1.08, burst: { x: 1305, y: 30 } },
   },
-  // Ngồi bệt ngả sang bên, một chân duỗi, giáo rơi nằm chéo trước mặt.
-  down: { name: "pose-down", texScale: 0.3, origin: { x: 53, y: 73 },
-    anchor: { x: 850, y: 900 }, scale: 1 },
+  // Ngồi bệt ngả người, một chân duỗi, giáo rơi nằm trước mặt.
+  down: { name: "pose-down", texScale: 1 / 3, origin: { x: 0, y: 0 },
+    anchor: { x: 750, y: 987 }, scale: 1.08 },
 };
 
 /**
