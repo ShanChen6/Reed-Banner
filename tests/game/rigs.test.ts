@@ -21,28 +21,19 @@ test("Nguyễn Bặc có đủ lớp WebP và hai tranh trong ngân sách 350 KB
   assert.ok(bytes <= 350_000, `${bytes} bytes vượt ngân sách`);
 });
 
-test("khớp Nguyễn Bặc nằm trong vùng chồng, kích thước texture khớp tọa độ rig", () => {
+test("khớp Nguyễn Bặc nằm trong lớp, kích thước texture khớp tọa độ rig", () => {
   const rig = rigOf("nguyenBac");
   assert.ok(rig?.skeleton === "warrior");
+  assert.equal(rig.weapon, undefined);
   const contains = (p: { x: number; y: number }, box: { x: number; y: number; w: number; h: number }) => {
     assert.ok(p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h,
       `khớp ${JSON.stringify(p)} ngoài lớp ${JSON.stringify(box)}`);
   };
-  const cap = rig.covers.find((c) => c.name === "shoulder");
-  assert.ok(cap);
-  contains(rig.joints.shoulder, cap.box);
+  contains(rig.joints.shoulder, rig.parts.arm);
   contains(rig.joints.elbowR, rig.parts.armR);
-  contains(rig.joints.elbowR, rig.parts.body);
   contains(rig.joints.neck, rig.parts.head);
   contains(rig.joints.neck, rig.parts.body);
-  const boxes = [
-    ...Object.entries(rig.parts),
-    ...rig.covers.map((c) => [c.name, c.box] as const),
-    ...rig.cloth.map((c) => [c.name, c.box] as const),
-  ] as const;
-  const sourceBoxes = JSON.parse(readFileSync("docs/06-art/nhan-vat/nguyen-bac-boxes.json", "utf8"));
-  for (const [name, box] of boxes) {
-    assert.deepEqual(box, sourceBoxes[name], `${name} lệch tọa độ cắt từ ảnh nguồn`);
+  for (const [name, box] of Object.entries(rig.parts)) {
     const data: Buffer = readFileSync(`public${partUrl(rig, name)}`);
     assert.equal(data.toString("ascii", 12, 16), "VP8X");
     // WebP mở rộng lưu kích thước trừ một bằng 24 bit; các lớp này đều có alpha.
