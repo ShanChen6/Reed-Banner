@@ -1,6 +1,6 @@
 // Bốn bậc của Trận Đồ, theo yêu cầu của Shan (01/11/2026): Hướng dẫn 3×3 (không xếp hạng, không thưởng), Thường 5×5,
 // Khó 6×6, Đại trận cỡ ngẫu nhiên mỗi cạnh 7–10. Giá trị là điểm xuất phát, đo bằng
-// `pnpm exec tsx scripts/binh-phap-sim.ts` (docs/02-game-modes/future/05-binh-phap-balance-qa.md).
+// `pnpm exec tsx scripts/binh-phap-sim.ts` (kết quả ở docs/02-game-modes/tran-do/gdd.md, mục Mô phỏng cân bằng).
 // Đổi bất kỳ giá trị nào của một bậc phải tăng `version` của bậc đó.
 //
 // Ghi chú cân bằng (đo 600 ván mỗi cấu hình, bot random và greedy):

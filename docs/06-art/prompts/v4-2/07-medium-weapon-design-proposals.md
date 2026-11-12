@@ -1,6 +1,7 @@
 # Reed Banner — Rà soát 16 cảnh báo MEDIUM: đề xuất tạo hình vũ khí độc bản
 
 > Cập nhật: 24/10/2026 · Trạng thái: **ĐỀ XUẤT CHỜ DUYỆT** · Không tạo ảnh, không sửa gameplay, không ghi đè Weapon DNA trong 6 prompt.
+> Trạng thái: **DRAFT** — đề xuất chờ duyệt.
 
 ## Kết luận rà soát
 

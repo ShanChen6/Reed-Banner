@@ -1,5 +1,7 @@
 # CAMP-00.02 — Warlord matrix: 12 sứ quân
 
+> Trạng thái: **IMPLEMENTED**
+
 Baseline v1: 2026-10-24. Đọc cùng [source ledger và quy tắc nhãn](history-sources.md). Số W01–W12 chỉ là khóa hồ sơ, **không là thứ tự đánh dẹp**. Existing fighter ID chỉ dùng truy vết code V1, không sửa ID/data trong task này.
 
 `Cao/vừa/thấp` sau đây tách **nhận diện** khỏi **kết cục**. Tên và địa bàn truyền thống của cả 12 có ghi ở **S01, mục Bính Dần 966**, đối chiếu **S05, danh sách Thập nhị sứ quân**. Quan hệ/kết cục ở nguồn hiện đại được ghi đúng tầng, không nhận vơ là chính sử. Các link source IDs trỏ về ledger chứa URL và đơn vị xuất bản.

@@ -1,6 +1,7 @@
 # Nguyên tố
 
 > Cập nhật: 18/10/2026
+> Trạng thái: **IMPLEMENTED**
 
 Cờ Lau có **7 nguyên tố**: ⚙️ Kim, 🌳 Mộc, 💧 Thủy, 🔥 Hỏa, ⛰️ Thổ, ⚡ Lôi, 🌪️ Phong. Năm nguyên tố đầu theo vòng ngũ hành truyền thống; **Lôi** và **Phong** là hai nguyên tố thêm, đứng ngoài vòng tương sinh (riêng Phong sinh ra Hỏa).
 
@@ -79,4 +80,4 @@ Mỗi nhân vật mang đúng một nguyên tố. Nhân vật chính được đ
 | ⚡ Lôi | Trừ 10 năng lượng mục tiêu | Câm lặng mục tiêu 1 lượt |
 | 🌪️ Phong | Công −10% mục tiêu 1 lượt | Xua tan mục tiêu |
 
-- Bộ mới của mọi nhân vật chơi được chỉ Ngũ hành ấn có bước dấu ấn cường hóa; các chiêu nghề khác không tự cộng. Xem [20](../03-characters/ky-nang/lich-su/20-cai-to-ky-nang.md).
+- Bộ mới của mọi nhân vật chơi được chỉ Ngũ hành ấn có bước dấu ấn cường hóa; các chiêu nghề khác không tự cộng. Xem [bộ kỹ năng hiện hành](../03-characters/ky-nang/README.md#bộ-kỹ-năng-được-chốt).

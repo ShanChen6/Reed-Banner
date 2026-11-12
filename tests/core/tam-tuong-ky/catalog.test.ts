@@ -1,5 +1,5 @@
 // LT-01: catalog slice và validator Tầm Tướng Ký (Design Freeze mục 7.2,
-// docs/02-game-modes/future/14-tam-tuong-ky-design-freeze.md).
+// docs/02-game-modes/tam-tuong-ky/design-freeze.md).
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import path from "node:path";

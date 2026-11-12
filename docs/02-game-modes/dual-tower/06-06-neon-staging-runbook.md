@@ -1,6 +1,7 @@
 # RH-03 — Neon staging migration và restore drill
 
 > Cập nhật: 24/10/2026
+> Trạng thái: **REFERENCE** — các bước chạy migration trên Neon staging.
 
 ## Trạng thái phiên làm việc
 

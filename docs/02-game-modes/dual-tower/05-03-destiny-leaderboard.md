@@ -1,5 +1,7 @@
 # T05.03 — Destiny leaderboard theo chu kỳ
 
+> Trạng thái: **IMPLEMENTED**
+
 ## Xếp hạng
 
 Mỗi tài khoản có tối đa một best row trong một `cycleId`. Thứ tự authoritative:

@@ -1,5 +1,7 @@
 # Reed Banner — Weapon Reference Sheets V1 (5 nhân vật)
 
+> Trạng thái: **DRAFT** — thông số tạo hình vũ khí đề xuất.
+
 > **Ngày cập nhật:** 24/10/2026 · **Trạng thái:** Thông số art đề xuất để dựng ảnh tham chiếu; **chưa có ảnh được nghiệm thu**. Không thay gameplay, asset hiện có hay bảng cân bằng.
 
 ## Nguyên tắc chung

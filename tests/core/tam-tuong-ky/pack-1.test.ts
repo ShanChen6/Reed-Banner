@@ -1,4 +1,4 @@
-// LT-05: Gói 1 (10 tướng lịch sử + 2 tướng đặc biệt). Báo cáo: docs/02-game-modes/future/18-tam-tuong-ky-lt05-pack-1.md.
+// LT-05: Gói 1 (10 tướng lịch sử + 2 tướng đặc biệt). Báo cáo: docs/02-game-modes/tam-tuong-ky/goi-1.md.
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import path from "node:path";

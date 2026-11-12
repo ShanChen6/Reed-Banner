@@ -1,5 +1,7 @@
 # Kỹ năng 60 nhân vật đồng hành — không gồm Đinh Bộ Lĩnh
 
+> Trạng thái: **REFERENCE** — sinh từ code.
+
 Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thông số dưới đây là cấp kỹ năng1, đã đồng bộ giá Thủ thành theo [task3](../README.md). Mỗi người có6 chủ động và4 bị động (2 nghề +2 hệ). Các tướng cùng nghề/hệ dùng chung phần nghề/hệ; tuyệt chiêu ô4 là phần riêng của nhân vật.
 
 Ô1/3/5: nghề; ô2/6: hệ; ô4: tuyệt chiêu. Mốc mở tương ứng1/1/5/10/15/20. Bị động nghề1 mở cơ hội để người chơi tận dụng; nghề2 và hai bị động hệ là phản ứng truy kích trong cùng hành động. Mỗi bị động phản ứng tối đa một lần/hành động; toàn chuỗi tối đa12 phản ứng, sâu4. Tinh thần F áp dụng cho hồi/Khiên mới theo người nhận.

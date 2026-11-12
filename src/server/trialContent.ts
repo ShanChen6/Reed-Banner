@@ -1,5 +1,6 @@
 // Nội dung phát hành Tháp Thí Luyện: 50 tầng cố định (1-20 là bản V1, 21-50 thêm 11/11/2026). Chỉ chứa dữ liệu trận;
-// lý do thiết kế và bằng chứng validator nằm ở docs/02-game-modes/dual-tower/02-06-trial-content-report.md.
+// cân bằng chạy `pnpm exec tsx scripts/trial-content-report.ts`, kiểm tra bằng `pnpm exec tsx scripts/trial-puzzle-qa.ts`;
+// luật và bảng thưởng ở docs/02-game-modes/dual-tower/00-02-rules.md §12.
 import { trialFloorId, type FloorRules, type TrialFloorSpec } from "@/core";
 
 const STANDARD = { kiem: 18, amDuong: 16, banhChung: 15, tim: 15, vang: 11, sach: 11, trong: 14 } as const;

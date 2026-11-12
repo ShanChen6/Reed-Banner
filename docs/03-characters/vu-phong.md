@@ -10,7 +10,7 @@
 | Mục | Đề xuất |
 |---|---|
 | Tên | **Trần Vũ Phong** (Shan chốt họ Trần 03/11/2026) |
-| Tên đầy đủ | Trần Vũ Phong, như [GDD Binh Pháp](../02-game-modes/future/02-binh-phap-gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc); tài liệu này có chỗ viết gọn Vũ Phong. Tên hiển thị trong roster đổi thành Trần Vũ Phong ở task code riêng |
+| Tên đầy đủ | Trần Vũ Phong, như [GDD Binh Pháp](../02-game-modes/tran-do/gdd.md#111-nhân-vật-dung-hợp-kiểu-đinh-ngọc); tài liệu này có chỗ viết gọn Vũ Phong. Tên hiển thị trong roster đổi thành Trần Vũ Phong ở task code riêng |
 | Danh xưng | Vân Du Tử — "kẻ rong chơi trên mây" |
 | Phân loại | Nhân vật hư cấu, nam khoảng 25–30 tuổi (chọn 28 để dựng hình); không phải nhân vật lịch sử |
 | Bối cảnh | Low fantasy lấy cảm hứng thế kỷ X thời Đinh – Cờ Lau, như [art bible](../06-art/art-bible.md) |

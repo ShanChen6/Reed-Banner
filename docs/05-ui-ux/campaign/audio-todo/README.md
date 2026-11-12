@@ -1,6 +1,7 @@
 # AUDIO/VOICE — TODO / DEFERRED (CHƯA THỰC HIỆN)
 
 > Cập nhật: 26/10/2026  
+> Trạng thái: **DEFERRED** — một phần nhạc và âm thanh đã có code; phần còn lại để sau.
 > Trạng thái của **tất cả task** ở đây: `TODO`, không nằm trong phạm vi triển khai thoại chữ + bản đồ.
 
 ## Mục tiêu tương lai

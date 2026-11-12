@@ -9,7 +9,7 @@
 pnpm exec tsx scripts/destiny-stone-sim.ts
 ```
 
-Cùng harness với [T06.03](../02-game-modes/dual-tower/06-03-balance.md) (thêm `--v1` để đo lại luật 10 tầng): dùng thẳng core production gồm seed HMAC theo chu kỳ, bộ sinh luật, roster khóa, dựng tầng, `createDestinyFloorBattle`, AI, settlement, offer, Phúc/hồi phục và bảng đá.
+Harness ở `src/server/destinyBalanceReport.ts` (thêm `--v1` để đo lại luật 10 tầng): dùng thẳng core production gồm seed HMAC theo chu kỳ, bộ sinh luật, roster khóa, dựng tầng, `createDestinyFloorBattle`, AI, settlement, offer, Phúc/hồi phục và bảng đá.
 
 - 4 chu kỳ V2: `2026-11-16`, `2026-11-23`, `2026-11-30`, `2026-12-07`.
 - Roster 3 / 5 / 8 tướng, cấp 5 / 10 / 20 / 30. Địch theo cấp cao nhất của roster.

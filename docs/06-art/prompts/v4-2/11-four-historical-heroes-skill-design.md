@@ -1,5 +1,7 @@
 # Reed Banner — Ba nhân vật bổ sung cho chiến dịch loạn 12 sứ quân: 3 × (6 chủ động + 4 bị động)
 
+> Trạng thái: **DRAFT** — RB-076 đến RB-078, chưa có trong code.
+
 > **24/10/2026 · Design proposal only.** Không sửa code, không kích hoạt roster, không tạo asset. Mã mới **RB-076 → RB-078**, nâng tổng nhân vật thiết kế lên **78**.
 
 ## Quyết định roster và mốc truyện

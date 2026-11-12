@@ -5,7 +5,7 @@
 
 Mỗi sứ quân có một lá cờ trên bản đồ Bình Loạn (`WorldMap.tsx`, `FactionFlag`). **Sử không chép cờ của 12 sứ quân** ([Narrative Bible](../../02-game-modes/campaign/narrative-bible.md)), nên đây là **ký hiệu game tự đặt** lấy ý từ tên đất và tạo hình nhân vật, không phải huy hiệu lịch sử. Tranh không được kèm chữ, chữ Hán hay chú thích nào khiến người xem tưởng đó là cờ thật.
 
-Prompt viết bằng tiếng Anh (công cụ tạo ảnh), giải thích bằng tiếng Việt. Khối phong cách lấy đúng khối nhân vật ([prompt nhân vật](nhan-vat.md), "Khối phong cách chung") để cờ cùng nét với tướng.
+Prompt viết bằng tiếng Anh (công cụ tạo ảnh), giải thích bằng tiếng Việt. Khối phong cách lấy đúng khối nhân vật (khối phong cách chung của [bộ prompt V4.2](v4-2/00-bao-cao.md)) để cờ cùng nét với tướng.
 
 ## 1. Chọn cách làm: tạo hình ký hiệu, không tạo cả lá cờ
 

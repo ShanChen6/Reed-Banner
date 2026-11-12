@@ -1,6 +1,7 @@
 # Thuật ngữ
 
 > Cập nhật: 11/11/2026 (thêm từ của Tháp Thiên Mệnh; 27/10: tách từ `docs/README.md` ở DOC-02, nội dung giữ nguyên)
+> Trạng thái: **REFERENCE** — thuật ngữ dùng chung.
 
 | Thuật ngữ | Nghĩa |
 |---|---|
