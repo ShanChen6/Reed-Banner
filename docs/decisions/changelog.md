@@ -4,6 +4,12 @@
 
 ## 12/11/2026
 
+**Dọn code (Shan duyệt quy trình; không đổi hành vi)**
+- Đo bằng knip (thêm devDependency, `knip.jsonc`) và TypeScript: xóa 1 file, 30 export và 5 type không ai dùng, gồm cả hằng luật cũ gây nhầm như bảng màu nghề lệch màu đang chạy. Helper chỉ test dùng chuyển từ `scripts/` vào `tests/helpers/`. Thêm `scripts/README.md` liệt kê mọi script.
+- Gộp code lặp: quy tắc giờ Việt Nam về một chỗ (`src/core/vnTime.ts`, có test so với công thức cũ), hàm gọi API của giao diện (`src/app/game/api.ts`), hook `useProfile()` cho bốn màn, kiểu phản hồi API Thí Luyện dùng chung giữa server và giao diện.
+- Tách file lớn: `DemoGame.tsx` 2 647 → 2 022 dòng (thêm `demoSetup.ts`, `battleLog.ts`, `BattleHud.tsx`, `FighterCard.tsx`), `survival.ts` 2 012 → 1 042 (`serialize.ts`, `lineup.ts`), `server/battles.ts` 1 511 → 1 044 (`battleRewards.ts`). `stage/rigs.ts` (3 796 dòng) chưa tách vì đang được sửa liên tục khi thêm tranh nhân vật.
+- Chống tái phát: bật `noUnusedLocals`, `noUnusedParameters`; `pnpm check` và CI chạy thêm `pnpm knip` ([quy trình test](../07-architecture/quy-trinh-test.md)).
+
 **Dọn tài liệu (Shan duyệt đề xuất)**
 - Xóa 473 file (cộng 3 file gộp vào nguồn chính), khoảng 52 MB: prompt giao việc đã chạy xong, báo cáo và dữ liệu thô đợt cải tổ kỹ năng 22–23/10 (kèm 28 script audit một lần và một fixture không dùng), đề xuất cũ trong `future/` đã bị thay, audit/QA/nghiệm thu/kế hoạch của task đã xong (bỏ `archive/`, `audits/`), các bản SUPERSEDED, catalog Tầm Tướng Ký LT-01. `docs/` còn 129 file `.md`, 4,6 MB. Danh sách và lý do ở [MOVED.md](../MOVED.md#đã-xóa).
 - Tầm Tướng Ký, Trận Đồ, Khai Lộ có thư mục riêng trong `02-game-modes/`; `future/` chỉ còn Quần Hùng PvP (chưa có code).

@@ -1,13 +1,13 @@
 # Quy trình test
 
-> Cập nhật: 12/11/2026
+> Cập nhật: 12/11/2026 (thêm knip và kiểm biến/tham số thừa)
 > Trạng thái: **IMPLEMENTED** — Shan duyệt 12/11/2026; tầng 1 và 2 đã có trong repo và CI, tầng 3 là checklist tay.
 
 Ba tầng kiểm tra, không cần AI. Tầng sau không thay tầng trước.
 
 | Tầng | Khi nào | Ai chạy | Lệnh | Thời gian |
 |---|---|---|---|---|
-| 1. Trên máy | Trước mỗi commit | Người làm | `pnpm check` | khoảng 4 phút |
+| 1. Trên máy | Trước mỗi commit | Người làm | `pnpm check` | khoảng 5 phút |
 | 2. CI | Mỗi PR, mỗi lần đẩy lên `develop`/`main` | GitHub Actions, tự động | `.github/workflows/ci.yml` | khoảng 6–8 phút |
 | 3. Trước phát hành | Trước khi gộp `develop` vào `main` | Người làm, theo checklist | [mục 4](#4-tầng-3-checklist-trước-phát-hành) | tùy thay đổi |
 
@@ -19,7 +19,12 @@ Máy dev dùng **Node 24** như `package.json` và Vercel; CI cũng chạy Node 
 pnpm check
 ```
 
-`pnpm check` chạy lần lượt `pnpm lint`, `pnpm typecheck`, `pnpm docs:check`, `pnpm test`, dừng ở bước đỏ đầu tiên. Đỏ thì sửa rồi mới commit.
+`pnpm check` chạy lần lượt `pnpm lint`, `pnpm typecheck`, `pnpm knip`, `pnpm docs:check`, `pnpm test`, dừng ở bước đỏ đầu tiên. Đỏ thì sửa rồi mới commit.
+
+Hai bước chặn code chết:
+
+- `pnpm typecheck` báo biến, hàm nội bộ, import và tham số không dùng (`noUnusedLocals`, `noUnusedParameters` trong `tsconfig.json`). Tham số bắt buộc phải có theo chữ ký mà không dùng thì đặt tên bắt đầu bằng `_`.
+- `pnpm knip` báo file không ai import, export không ai dùng, dependency thừa hoặc thiếu. Cấu hình và lý do từng ngoại lệ ở `knip.jsonc`. Khi knip báo một export thừa: không ai cần thì xóa; chỉ dùng trong file thì bỏ chữ `export`; có lý do giữ thì thêm vào `knip.jsonc` kèm chú thích.
 
 Khi đang sửa một chỗ, chạy riêng cho nhanh:
 
@@ -42,7 +47,7 @@ CI có hai job chạy song song, cả hai phải xanh:
 
 | Job | Kiểm gì |
 |---|---|
-| **Lint, typecheck, docs, test, build** | Như `pnpm check`, thêm `pnpm build` |
+| **Lint, typecheck, docs, test, build** | Như `pnpm check` (gồm cả knip), thêm `pnpm build`. Tên job giữ nguyên để không làm hỏng luật bảo vệ nhánh |
 | **Smoke test trình duyệt** | `pnpm e2e` trên hai cỡ màn (máy tính 1280px, điện thoại Pixel 7) |
 
 Smoke test (`e2e/smoke.spec.ts`) kiểm game còn chạy được trên trình duyệt thật, không kiểm luật chơi:
