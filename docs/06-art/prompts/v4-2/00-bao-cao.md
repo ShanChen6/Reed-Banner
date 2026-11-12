@@ -1,6 +1,6 @@
 # Reed Banner — Báo cáo sản xuất nhân vật & chuẩn prompt V4.2
 
-> Trạng thái: **APPROVED** — bộ prompt nhân vật đang dùng (Shan chốt 27/10/2026), thay [nhan-vat.md](../nhan-vat.md) và [tu-the.md](../tu-the.md). Các hạn chế ghi bên dưới vẫn còn.
+> Trạng thái: **APPROVED** — bộ prompt nhân vật đang dùng (Shan chốt 27/10/2026), thay bộ prompt nhân vật và tư thế cũ (đã xóa). Các hạn chế ghi bên dưới vẫn còn.
 
 **Ngày cập nhật:** 30/10/2026. **Nhánh:** develop.
 

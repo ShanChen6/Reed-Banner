@@ -7,7 +7,7 @@ Nguồn chính của giao diện Trận Đồ là [giao diện Trận Đồ](../
 
 ## 0. Phong cách và thông số chung
 
-**Phong cách (cập nhật 02/11/2026).** Bản đầu của bộ prompt yêu cầu "bản đồ thủy mặc trên giấy dó nhìn từ trên xuống"; ảnh tạo ra từ đó đọc như một tấm bản đồ phương Đông chung chung, chi tiết nhỏ, không đồng bộ với nền Bình Loạn. Bản này đổi sang **tranh vẽ tay 2D điện ảnh** theo đúng khối phong cách đã cho ra các nền chiến dịch (`public/art/campaign/bg/`, prompt gốc ở [prompt ảnh chiến dịch](../../05-ui-ux/campaign/05-asset-prompts.md) mục 2), chỉ bỏ các điều kiện của hộp thoại (vùng dưới, vùng chân dung) và thêm điều kiện của **nền sa bàn**: bố cục vuông, góc nhìn hơi cao, chi tiết rải đều toàn khung, mảng hình lớn dễ đọc, tông trung bình để chân dung quân đọc rõ.
+**Phong cách (cập nhật 02/11/2026).** Bản đầu của bộ prompt yêu cầu "bản đồ thủy mặc trên giấy dó nhìn từ trên xuống"; ảnh tạo ra từ đó đọc như một tấm bản đồ phương Đông chung chung, chi tiết nhỏ, không đồng bộ với nền Bình Loạn. Bản này đổi sang **tranh vẽ tay 2D điện ảnh** theo đúng khối phong cách đã cho ra các nền chiến dịch (`public/art/campaign/bg/`, prompt gốc ở prompt ảnh chiến dịch mục 2), chỉ bỏ các điều kiện của hộp thoại (vùng dưới, vùng chân dung) và thêm điều kiện của **nền sa bàn**: bố cục vuông, góc nhìn hơi cao, chi tiết rải đều toàn khung, mảng hình lớn dễ đọc, tông trung bình để chân dung quân đọc rõ.
 
 | Mục | Giá trị |
 |---|---|

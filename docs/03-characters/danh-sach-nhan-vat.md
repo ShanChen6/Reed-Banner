@@ -6,15 +6,14 @@
 
 > Thiết kế mở rộng 30/10/2026: xem [nguồn Xạ thủ](../06-art/prompts/v4-2/08-new-professions-14-skill-kits.md). Từ 31/10/2026 14 nhân vật Xạ thủ/Sát thủ (RB-062–075) đã vào trận và shop (1.500 vàng); số liệu vẫn là điểm xuất phát chờ mô phỏng, Đinh Bộ Lĩnh chưa dùng hai nghề này. Sát thủ dùng bộ W02 đa vũ khí mới, chưa triển khai runtime.
 
-> Cập nhật tiếp theo: [kỹ năng phiên bản 2 và combo đồng đội](ky-nang/lich-su/21-combo-dong-doi.md). Layout mới đổi tuyệt chiêu sang ô 4, nghề nâng cao sang ô 5, có chuyển hồ sơ giữ điểm. Các định nghĩa legacy/lịch sử bên dưới cần đọc cùng tài liệu phiên bản 2.
 
 > Cập nhật: 20/10/2026
 >
-> Danh sách đầy đủ mọi nhân vật chơi được: Đinh Bộ Lĩnh, 42 tướng thường, 6 tướng lịch sử và 12 sứ quân. Luật chung về nghề, nội tại và cách dùng kỹ năng ở [Nhân vật, nghề & kỹ năng](ky-nang/mo-hinh-nhan-vat.md); bộ kỹ năng hiện hành ở [Cải tổ kỹ năng](ky-nang/lich-su/20-cai-to-ky-nang.md). Tên nhân vật hư cấu và tên chiêu do Claude tự đặt (clean-room), số liệu đã qua mô phỏng `pnpm sim -- --roster` ngày 20/10/2026 (mục 8), chờ Shan duyệt. Dữ liệu nằm trong `src/core/roster/roster.ts` và `src/core/battle/skills.ts`.
+> Danh sách đầy đủ mọi nhân vật chơi được: Đinh Bộ Lĩnh, 42 tướng thường, 6 tướng lịch sử và 12 sứ quân. Luật chung về nghề, nội tại và cách dùng kỹ năng ở [Nhân vật, nghề & kỹ năng](ky-nang/mo-hinh-nhan-vat.md); bộ kỹ năng hiện hành ở [Cải tổ kỹ năng](ky-nang/README.md). Tên nhân vật hư cấu và tên chiêu do Claude tự đặt (clean-room), số liệu đã qua mô phỏng `pnpm sim -- --roster` ngày 20/10/2026 (mục 8), chờ Shan duyệt. Dữ liệu nằm trong `src/core/roster/roster.ts` và `src/core/battle/skills.ts`.
 
 ## 1. Khung chung của nhân vật kèm
 
-Từ 22/10/2026 mọi nhân vật chơi được dùng **3 kỹ năng nghề + 2 kỹ năng hệ + 1 tuyệt chiêu riêng**. Thiết kế và danh sách ở [Cải tổ kỹ năng](ky-nang/lich-su/20-cai-to-ky-nang.md). Cùng hệ nhưng khác nghề có 3 chiêu khác nhau.
+Từ 22/10/2026 mọi nhân vật chơi được dùng **3 kỹ năng nghề + 2 kỹ năng hệ + 1 tuyệt chiêu riêng**. Thiết kế và danh sách ở [Cải tổ kỹ năng](ky-nang/README.md). Cùng hệ nhưng khác nghề có 3 chiêu khác nhau.
 
 | Ô | Vai trò | Mở ở cấp |
 |---|---|---|
@@ -61,7 +60,7 @@ Từ 22/10/2026 mọi nhân vật chơi được dùng **3 kỹ năng nghề + 2
 
 ## 2. Hai kỹ năng theo hệ
 
-Mỗi hệ có chiêu bàn cờ ô 2 và bổ trợ ô 6; danh sách, giá và cơ chế đầy đủ ở [20 §14 chiêu hệ](ky-nang/lich-su/20-cai-to-ky-nang.md#14-chiêu-hệ). Bị động thủ lĩnh giữ nguyên. Ô 5 mặc định của hệ chỉ Đinh Bộ Lĩnh dùng; nhân vật kèm thay bằng kỹ năng riêng ở các bảng dưới.
+Mỗi hệ có chiêu bàn cờ ô 2 và bổ trợ ô 6; danh sách, giá và cơ chế đầy đủ ở [bộ kỹ năng hiện hành](ky-nang/README.md#bộ-kỹ-năng-được-chốt). Bị động thủ lĩnh giữ nguyên. Ô 5 mặc định của hệ chỉ Đinh Bộ Lĩnh dùng; nhân vật kèm thay bằng kỹ năng riêng ở các bảng dưới.
 
 ## 3. Đinh Bộ Lĩnh
 
@@ -219,7 +218,7 @@ Phó tướng, thầy pháp, lang y… đi kèm sứ quân ở chiến dịch kh
 
 ## 9. Hồ sơ cũ
 
-Hồ sơ lưu trước 20/10/2026 có nhân vật kèm nâng chiêu nghề theo id hoặc đã mua chiêu nhánh. Khi đọc hồ sơ, những nhân vật này được **xóa khóa chiêu nghề/nhánh cũ và hoàn đúng điểm đã chi** (giá nâng 1,1,2,2 và giá nhánh 1), cộng vào điểm chưa chi; giữ cấp, kinh nghiệm và khóa ô nếu có. Xóa khóa/nhánh cũ là dấu hiệu đã chuyển, nên đọc lại không hoàn lặp; trường `branchChoice` bị bỏ. Hồ sơ khóa ô của mọi nhân vật giữ nguyên, kể cả cấp nâng của ô 4/6 tạm khóa theo mốc mới. Chi tiết ở [20](ky-nang/lich-su/20-cai-to-ky-nang.md#ánh-xạ-cũ--mới-và-lưu-trữ).
+Hồ sơ lưu trước 20/10/2026 có nhân vật kèm nâng chiêu nghề theo id hoặc đã mua chiêu nhánh. Khi đọc hồ sơ, những nhân vật này được **xóa khóa chiêu nghề/nhánh cũ và hoàn đúng điểm đã chi** (giá nâng 1,1,2,2 và giá nhánh 1), cộng vào điểm chưa chi; giữ cấp, kinh nghiệm và khóa ô nếu có. Xóa khóa/nhánh cũ là dấu hiệu đã chuyển, nên đọc lại không hoàn lặp; trường `branchChoice` bị bỏ. Hồ sơ khóa ô của mọi nhân vật giữ nguyên, kể cả cấp nâng của ô 4/6 tạm khóa theo mốc mới. Chi tiết ở 20.
 
 
 ## 10. Cân bằng Xạ thủ và Sát thủ (31/10/2026)
