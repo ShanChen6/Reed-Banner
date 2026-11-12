@@ -239,8 +239,8 @@ export function reaction(kind: ReactionKind, a: number): Reaction {
 }
 
 /**
- * Ăn mừng: 1,2 s đầu nhảy lên, nâng vũ khí lên cao; sau đó lặp nhịp đung đưa, vũ khí vẫn giơ cao. Không bao
- * giờ xong, động tác khác (hoặc đợt mới) mới thay.
+ * Ăn mừng: 1,2 s đầu nhảy lên, ngẩng lên (`raise`; hình tướng không xoay vũ khí theo nhịp này); sau đó lặp nhịp đung
+ * đưa. Không bao giờ xong, động tác khác (hoặc đợt mới) mới thay.
  */
 export function victory(a: number): Omit<Reaction, "done" | "tint"> {
   const raise = pulse(a, 0.1, 0.5);
