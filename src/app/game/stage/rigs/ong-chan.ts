@@ -37,7 +37,7 @@ export const ONG_CHAN: WarriorRig = {
     cast: { name: "pose-cast", texScale: 0.4, origin: { x: 91, y: 26 },
       anchor: { x: 505, y: 1519 }, scale: 1, burst: { x: 620, y: 40 } },
     ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 40, y: 14 },
-      anchor: { x: 510, y: 1508 }, scale: 1.05, burst: { x: 880, y: 25 } },
+      anchor: { x: 510, y: 1508 }, scale: 1.05, burst: { x: 690, y: 30 } },
   },
   down: { name: "pose-down", texScale: 0.4, origin: { x: 18, y: 21 },
     anchor: { x: 760, y: 990 }, scale: 1.1 },

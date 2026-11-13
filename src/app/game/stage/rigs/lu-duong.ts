@@ -37,7 +37,7 @@ export const LU_DUONG: WarriorRig = {
     attack: { name: "pose-attack", texScale: 0.4, origin: { x: 48, y: 16 },
       anchor: { x: 530, y: 1000 }, scale: 1.02, burst: { x: 1500, y: 360 } },
     cast: { name: "pose-cast", texScale: 0.4, origin: { x: 425, y: 4 },
-      anchor: { x: 770, y: 1012 }, scale: 1.02, burst: { x: 1150, y: 215 } },
+      anchor: { x: 770, y: 1012 }, scale: 1.25, burst: { x: 1150, y: 215 } },
     ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 74, y: 20 },
       anchor: { x: 635, y: 1010 }, scale: 1.02, burst: { x: 1500, y: 420 } },
   },

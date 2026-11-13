@@ -36,9 +36,9 @@ export const KIEU_CONG_HAN: WarriorRig = {
     attack: { name: "pose-attack", texScale: 0.4, origin: { x: 101, y: 1 },
       anchor: { x: 620, y: 1015 }, scale: 1.06, burst: { x: 1500, y: 210 } },
     cast: { name: "pose-cast", texScale: 0.4, origin: { x: 72, y: 14 },
-      anchor: { x: 440, y: 1518 }, scale: 1, burst: { x: 950, y: 560 } },
+      anchor: { x: 440, y: 1518 }, scale: 1, burst: { x: 895, y: 360 } },
     ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 384, y: 15 },
-      anchor: { x: 750, y: 1012 }, scale: 1.15, burst: { x: 1000, y: 40 } },
+      anchor: { x: 750, y: 1012 }, scale: 1.25, burst: { x: 1000, y: 40 } },
   },
   // Quỳ một gối, cúi đầu, tay chống đất, đao rơi trước mặt.
   down: { name: "pose-down", texScale: 0.4, origin: { x: 276, y: 10 },

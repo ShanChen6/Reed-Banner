@@ -36,7 +36,7 @@ export const VO_ANH: WarriorRig = {
     cast: { name: "pose-cast", texScale: 0.4, origin: { x: 126, y: 23 },
       anchor: { x: 470, y: 1510 }, scale: 1, burst: { x: 640, y: 290 } },
     ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 332, y: 9 },
-      anchor: { x: 820, y: 995 }, scale: 1.1, burst: { x: 1250, y: 260 } },
+      anchor: { x: 820, y: 995 }, scale: 1.2, burst: { x: 870, y: 190 } },
   },
   down: { name: "pose-down", texScale: 0.4, origin: { x: 213, y: 10 },
     anchor: { x: 760, y: 960 }, scale: 1.05 },
