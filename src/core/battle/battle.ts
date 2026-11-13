@@ -150,8 +150,8 @@ export type BattleEvent =
       readonly amount: number;
     }
   | { readonly type: "food"; readonly side: SideIndex; readonly amount: number }
-  | { readonly type: "rage"; readonly side: SideIndex; readonly amount: number }
-  | { readonly type: "passive"; readonly side: SideIndex }
+  | { readonly type: "rage"; readonly side: SideIndex; readonly amount: number; readonly fighter?: number }
+  | { readonly type: "passive"; readonly side: SideIndex; readonly fighter?: number }
   | {
       readonly type: "effect";
       readonly side: SideIndex;
@@ -229,6 +229,8 @@ export interface BattleConfig {
   readonly timer?: boolean;
   readonly firstSide?: SideIndex;
   readonly now?: number;
+  /** Mỗi tướng có Nộ và bị động riêng (Đấu người 3vs3) thay vì một Nộ chung của thủ lĩnh. */
+  readonly perFighterRage?: boolean;
 }
 
 const AI_SEED_SALT = 0x9e3779b9;
@@ -281,6 +283,12 @@ export function createBattle(config: BattleConfig): {
   const board = generateBoard(rng, weights);
   const solo = config.sides.every((s) => s.fighters.length === 1);
   const sides = config.sides.map((s) => buildSide(s, solo)) as [Side, Side];
+  if (config.perFighterRage) {
+    for (const side of sides) {
+      side.rages = side.fighters.map(() => 0);
+      side.passives = side.fighters.map(() => 0);
+    }
+  }
   const first = config.firstSide ?? 0;
   const state: BattleState = {
     sides,
@@ -477,7 +485,7 @@ export function canFreeWhirl(state: BattleState): boolean {
     !state.turn.skillUsed &&
     !state.turn.whirlUsed &&
     own.freeWhirls > 0 &&
-    passiveOn(own, own.fighters[own.leader]!, "phong")
+    anyPassiveOn(own, "phong")
   );
 }
 
@@ -607,12 +615,22 @@ export function passiveOn(
   f: Fighter,
   element: Fighter["element"],
 ): boolean {
+  if (side.passives) {
+    const i = side.fighters.indexOf(f);
+    return i >= 0 && (side.passives[i] ?? 0) > 0 && f.element === element && isAlive(f);
+  }
   return (
     side.passiveTurns > 0 &&
     side.fighters[side.leader] === f &&
     f.element === element &&
     isAlive(f)
   );
+}
+
+/** Có tướng nào của phe đang có bị động nguyên tố `element` hiệu lực (bị động dùng chung cho cả phe). */
+function anyPassiveOn(side: Side, element: Fighter["element"]): boolean {
+  if (side.passives) return side.fighters.some((f) => passiveOn(side, f, element));
+  return passiveOn(side, side.fighters[side.leader]!, element);
 }
 
 /** Gộp hai tỉ lệ xuyên giáp: phần DEF còn lại nhân với nhau. */
@@ -702,6 +720,7 @@ class Ctx {
 
     this.combo.beginTurn(side);
     if (own.passiveTurns > 0) own.passiveTurns--;
+    if (own.passives) own.passives = own.passives.map((t) => Math.max(0, t - 1));
 
     const hasBinhLinh = own.fighters.some(
       (f) => isAlive(f) && intrinsicProfession(f) === "binhLinh",
@@ -1182,7 +1201,7 @@ class Ctx {
     if (intrinsicProfession(actor) === "phapSu") energy *= R.ENERGY_PHAP_SU;
     if (morale === "hungry" || morale === "starving") energy *= R.ENERGY_HUNGRY;
     energy += count("amDuong", "weak") * R.BUA_AM_DUONG_ENERGY;
-    if (passiveOn(own, own.fighters[own.leader]!, "loi"))
+    if (anyPassiveOn(own, "loi"))
       energy += h.amDuong * PASSIVE.loiEnergyPerTile;
     if (fromSkill) energy *= R.SKILL_BOARD_ENERGY;
     if (energy > 0) this.gainEnergy(self, Math.round(energy));
@@ -1219,7 +1238,7 @@ class Ctx {
       h.trong * R.RAGE_PER_DRUM +
       count("trong", "weak") * R.TRONG_DA_RAGE +
       count("trong", "strong") * R.TRONG_DONG_RAGE;
-    if (rage > 0) this.addRage(sideIdx, rage);
+    if (rage > 0) this.addRage(sideIdx, rage, self.fighter);
     if (count("trong", "strong") > 0) {
       for (const i of aliveIndices(own)) {
         this.applyEffect(
@@ -1311,27 +1330,39 @@ class Ctx {
     if (convertOverflow && overflow > 0) this.applyEffect(ref, { kind: "shield", value: overflow, turns: R.Y_SU_SHIELD_TURNS }, true);
   }
 
-  private addRage(side: SideIndex, amount: number): void {
+  /** Cộng Nộ cho phe. Chế độ Nộ riêng thì `fighter` là tướng nhận Nộ; còn lại Nộ chung thuộc thủ lĩnh. */
+  private addRage(side: SideIndex, amount: number, fighter?: number): void {
     const own = this.state.sides[side];
-    const leader = own.fighters[own.leader]!;
-    if (!isAlive(leader) || own.passiveTurns > 0) return;
-    own.rage = Math.min(R.RAGE_MAX, own.rage + amount);
-    this.emit({ type: "rage", side, amount });
-    if (own.rage >= R.RAGE_MAX) {
-      own.rage = 0;
+    const idx = own.rages && fighter !== undefined ? fighter : own.leader;
+    const owner = own.fighters[idx]!;
+    if (!isAlive(owner)) return;
+    const solo = own.rages !== undefined && own.passives !== undefined && fighter !== undefined;
+    if (solo ? own.passives![idx]! > 0 : own.passiveTurns > 0) return;
+    const total = Math.min(R.RAGE_MAX, (solo ? own.rages![idx]! : own.rage) + amount);
+    if (solo) own.rages![idx] = total;
+    else own.rage = total;
+    this.emit({ type: "rage", side, amount, ...(solo ? { fighter: idx } : {}) });
+    if (total >= R.RAGE_MAX) {
       // +1 vì lượt đang diễn ra không tính; bị động có hiệu lực 3 lượt tiếp theo của phe.
-      own.passiveTurns = R.PASSIVE_TURNS + 1;
-      this.emit({ type: "passive", side });
+      if (solo) {
+        own.rages![idx] = 0;
+        own.passives![idx] = R.PASSIVE_TURNS + 1;
+      } else {
+        own.rage = 0;
+        own.passiveTurns = R.PASSIVE_TURNS + 1;
+      }
+      this.emit({ type: "passive", side, ...(solo ? { fighter: idx } : {}) });
       if (this.state.audit) this.emit({ type: 'sourceAudit', source: 'rage', phase: 'begin' });
-      try { this.combo.withoutTriggers(() => this.triggerPassive(side)); }
+      try { this.combo.withoutTriggers(() => this.triggerPassive(side, idx)); }
       finally { if (this.state.audit) this.emit({ type: 'sourceAudit', source: 'rage', phase: 'end' }); }
     }
   }
 
-  private triggerPassive(side: SideIndex): void {
+  private triggerPassive(side: SideIndex, owner?: number): void {
     const s = this.state;
     const own = s.sides[side];
-    const leaderRef: FighterRef = { side, fighter: own.leader };
+    const lead = owner ?? own.leader;
+    const leaderRef: FighterRef = { side, fighter: lead };
     const leader = this.fighter(leaderRef);
     // Hiệu ứng chạy hoặc hết hạn theo lượt của phe: kích hoạt trong lượt của phe mình thì lượt này
     // chưa tính, nên cộng thêm 1 để đủ 3 lượt.
@@ -1353,7 +1384,7 @@ class Ctx {
         }
         break;
       case "thuy": {
-        const t = pickTarget(s.sides[foeIdx], own.leader);
+        const t = pickTarget(s.sides[foeIdx], lead);
         // Kích hoạt trong lượt đối thủ thì Đóng băng phải qua hết lượt đó mới có tác dụng.
         if (t !== null)
           this.applyEffect(
@@ -1428,8 +1459,8 @@ class Ctx {
       }
     }
 
-    if (ref.fighter === own.leader && isAlive(f) && lost > 0) {
-      this.addRage(ref.side, (lost / f.maxHp) * R.RAGE_PER_HP_RATIO);
+    if ((own.rages ? true : ref.fighter === own.leader) && isAlive(f) && lost > 0) {
+      this.addRage(ref.side, (lost / f.maxHp) * R.RAGE_PER_HP_RATIO, own.rages ? ref.fighter : undefined);
     }
     if (!isAlive(f)) {
       f.effects = f.effects.filter(e => e.kind !== "poison");

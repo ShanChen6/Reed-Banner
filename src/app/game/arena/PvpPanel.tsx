@@ -800,7 +800,7 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
 
         <div className={team ? "grid gap-2 md:grid-cols-3" : ""}>
           {foe.fighters.map((f, i) => (
-            <FighterPanel key={i} f={f} rage={foe.rage} showRage={i === foe.leader} mine={false} active={!over && state.turn.side === foeSide && state.turn.actor === i} tag={team ? seatTag(foeSide, i) : undefined} />
+            <FighterPanel key={i} f={f} rage={foe.rages?.[i] ?? foe.rage} showRage={foe.rages ? true : i === foe.leader} mine={false} active={!over && state.turn.side === foeSide && state.turn.actor === i} tag={team ? seatTag(foeSide, i) : undefined} />
           ))}
         </div>
 
@@ -835,7 +835,7 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
 
         <div className={team ? "grid gap-2 md:grid-cols-3" : ""}>
           {own.fighters.map((f, i) => (
-            <FighterPanel key={i} f={f} rage={own.rage} showRage={i === own.leader} mine active={!over && state.turn.side === mySide && state.turn.actor === i} tag={team ? seatTag(mySide, i) : undefined} />
+            <FighterPanel key={i} f={f} rage={own.rages?.[i] ?? own.rage} showRage={own.rages ? true : i === own.leader} mine active={!over && state.turn.side === mySide && state.turn.actor === i} tag={team ? seatTag(mySide, i) : undefined} />
           ))}
         </div>
         {captainPick.length > 1 && (

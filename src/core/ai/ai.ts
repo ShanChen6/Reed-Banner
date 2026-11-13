@@ -103,6 +103,10 @@ function tileValue(ctx: Context, kind: TileKind): number {
     case "tim":
       return Math.min(me.maxHp - me.hp, Math.round(me.maxHp * 0.03 * (me.profession === "ySu" ? 1.5 : 1) * spiritHealMultiplier(me.spirit, view.experimentalSpirit))) * 0.8;
     case "trong": {
+      if (own.passives) {
+        const i = own.fighters.indexOf(me);
+        return i >= 0 && isAlive(me) && (own.passives[i] ?? 0) === 0 ? 8 * unit * 0.6 : 0;
+      }
       const leader = own.fighters[own.leader]!;
       return isAlive(leader) && own.passiveTurns === 0 ? 8 * unit * 0.6 : 0;
     }
