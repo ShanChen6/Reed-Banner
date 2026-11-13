@@ -28,6 +28,7 @@ export const TRAN_CUONG: WarriorRig = {
     neck: { x: 510, y: 240 },
   },
   blade: [{ x: 270, y: 885 }, { x: 745, y: 1398 }],
+  strikeFx: "ironCharge",
   fxColor: 0xffd27a,
   // Ba tranh ra đòn: chém ngang tầm thắt lưng (đánh thường), dựng đao trước mặt (ra chiêu), giơ đao quá đầu (tuyệt chiêu).
   poses: {

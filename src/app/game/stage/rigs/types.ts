@@ -162,6 +162,16 @@ export interface WarriorRig {
    * trống trước chính mình; `stormVolley` chỉ ở tuyệt chiêu, ba loạt kim tím liên tiếp tới đối thủ đứng đầu, sét giáng
    * và mây giông cuộn quanh họ; `flutePulse` chỉ ở tuyệt chiêu, sóng âm từ ống sáo tới đầu đối thủ đứng đầu và cơn lốc
    * cuốn quanh họ.
+   *
+   * Hiệu ứng riêng của tướng lịch sử (chỉ ở tuyệt chiêu, theo chiêu ô 4): `fireBanner` (Nguyễn Bặc) cầu lửa giáng xuống
+   * đối thủ đứng đầu, lửa bén lên họ, mũi tên vàng dâng quanh đồng đội; `earthAegis` (Đinh Điền) khiên mặt trống trước
+   * từng đồng đội, sóng đất và vòng gai đá quanh chính mình; `goldEdict` (Lưu Cơ) tiền vàng bật khỏi và khiên giáp nứt
+   * trên từng đối thủ; `herbGrace` (Trịnh Tú) hai đợt vòng lá nở dưới chân từng đồng đội; `royalSeal` (Đinh Liễn) cột
+   * nước đông băng và ấn nứt trên từng đối thủ; `ironCharge` (Trần Cương) mũi sáng phá giáp tới đối thủ đứng đầu, giáp
+   * họ vỡ; `riverGuard` (Trần Lãm) sương nước phủ từng đối thủ, cột nước trên đối thủ đứng đầu; `galeRise` (Ngô Nhật
+   * Khánh) lốc cuốn và khiên nứt trên từng đối thủ; `goldPlot` (Ngô Xương Xí) mũi sáng tới đối thủ đứng đầu rồi tiền
+   * vàng bật khỏi họ; `tigerClaw` (Phạm Bạch Hổ) hai nhát chém lửa bắt chéo như vuốt hổ, lửa bén lên đối thủ, mũi tên
+   * vàng quanh chính mình.
    */
   readonly strikeFx?:
     | "lightning"
@@ -224,7 +234,22 @@ export interface WarriorRig {
     | "twinCleave"
     | "earthClaw"
     | "stormVolley"
-    | "flutePulse";
+    | "flutePulse"
+    | "fireBanner"
+    | "earthAegis"
+    | "goldEdict"
+    | "herbGrace"
+    | "royalSeal"
+    | "ironCharge"
+    | "riverGuard"
+    | "galeRise"
+    | "goldPlot"
+    | "tigerClaw";
+  /**
+   * Đinh Bộ Lĩnh đổi nghề và hệ theo người chơi: tuyệt chiêu mượn hiệu ứng và màu của nhân vật kèm cùng nghề, cùng hệ
+   * (xem `rigFor`).
+   */
+  readonly adaptiveFx?: boolean;
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
   readonly shieldRaise?: number;
   readonly poses?: Readonly<Partial<Record<PoseKind, PoseArt>>>;

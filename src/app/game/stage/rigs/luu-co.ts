@@ -28,6 +28,7 @@ export const LUU_CO: WarriorRig = {
     neck: { x: 599, y: 243 },
   },
   blade: [{ x: 276, y: 558 }, { x: 140, y: 335 }],
+  strikeFx: "goldEdict",
   fxColor: 0xf0cf8a,
   poses: {
     // Đánh thường: tranh Shan gửi 03/11, quét quạt lông ngang người (cỡ so theo đầu).

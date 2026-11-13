@@ -28,6 +28,7 @@ export const DINH_LIEN: WarriorRig = {
     neck: { x: 505, y: 320 },
   },
   blade: [{ x: 640, y: 800 }, { x: 641, y: 1500 }],
+  strikeFx: "royalSeal",
   fxColor: 0x9fe3ff,
   // Tấn dài đâm kiếm thẳng tay (đánh thường), dựng kiếm bên vai, tay kia đẩy chưởng (ra chiêu), hai tay giơ kiếm chéo
   // qua đầu trong thế tấn (tuyệt chiêu). Tranh tư thế lưu đúng cỡ ô trong tờ ghép (texScale 1/3).

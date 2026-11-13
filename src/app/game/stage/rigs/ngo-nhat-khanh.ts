@@ -29,6 +29,7 @@ export const NGO_NHAT_KHANH: WarriorRig = {
     neck: { x: 550, y: 337 },
   },
   blade: [{ x: 275, y: 630 }, { x: 270, y: 40 }],
+  strikeFx: "galeRise",
   fxColor: 0x2e9e90,
   // Tấn thấp hai tay đâm giáo ngang (đánh thường), dựng giáo, tay kia giơ ra hiệu (ra chiêu), bước tới giương giáo chéo
   // cao (tuyệt chiêu).
