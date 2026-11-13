@@ -50,3 +50,16 @@ High quality hand-painted 2D environment illustration for a Vietnamese historica
 3. Chụp lại màn Chiến trường ở 360 và 1440px, so với các thẻ khác (cùng độ sáng vùng dưới để chữ tên đọc được).
 
 Tranh Khai Lộ là sân lát ngọc bảy sắc hệ với con đường được dọn dần tới cổng thành; tranh Viễn Chinh là hai đạo quân cờ vàng và cờ xanh ngọc tiến về một thành đất, có thuyền chiến trên sông. Cả hai có phần dưới êm và tối nên tên chế độ đè lên vẫn đọc rõ.
+
+## 4. Do Thám — sa bàn dò bẫy (13/11/2026, chờ Shan tạo tranh)
+
+Thẻ Do Thám (`MODES` trong `MenuScene.tsx`) đang dùng tranh mực tạm vì chưa có `public/art/home/do-tham.webp`. Tạo tranh theo thông số mục 1 (16:9, vùng dưới êm và tối, không chữ, không mặt rõ). Khi gửi lại tranh, Claude xuất WebP 960×540 vào `public/art/home/do-tham.webp` và thêm `art: "do-tham"` cho thẻ.
+
+Ý chính: một bãi lau mờ sương nhìn từ trên cao chếch, lưới ô đất phủ lau, vài ô đã mở lộ nền đất, một **cờ lau** cắm trên ô nghi bẫy và vài mũi **chông tre** nhô ra ở một ô xa; xa xa là bóng lũy tre và một người trinh sát rất nhỏ, không rõ mặt. Hai màu: vàng đồng ấm với điểm son nhẹ.
+
+```text
+Stylised digital painting of a historical Vietnamese scouting scene for a strategy game, 16:9 landscape, 10th-century Dinh dynasty. A grid-like field of earth and reed plots seen from a slightly raised angle in soft mist: several plots cleared to bare brown earth, the others still covered with pale reeds (lau). A small reed flag (co lau) stuck in one covered plot, and a few sharpened bamboo stakes peeping out of a plot far away. Faint bamboo palisade and a watchtower in the haze at the horizon, a tiny scout figure with a conical hat far away, face not visible. Thin ink outlines of varied thickness, soft painterly shading, warm antique bronze and rice-paper tones with a hint of vermilion, medium saturation, no pure black and no blown highlights. The lower third is calm, darker and plain so a title can sit on it. No text, no letters, no numbers, no logo, no UI, no frame, no border, no watermark, no close-up faces.
+```
+
+Nếu công cụ có ô negative: dùng khối ở mục 1.
+

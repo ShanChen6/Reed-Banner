@@ -8,7 +8,7 @@ const lines = Object.entries(MODE_GUIDES).flatMap(([scene, g]) =>
 );
 
 describe("Thẻ Hướng dẫn của các chế độ", () => {
-  it("có đủ mười chế độ ở thẻ Chiến Trường, không thừa không thiếu", () => {
+  it("có đủ mười một chế độ ở thẻ Chiến Trường, không thừa không thiếu", () => {
     assert.deepEqual([...GUIDE_SCENES].sort(), Object.keys(MODE_TEXT).sort());
     assert.deepEqual(Object.keys(MODE_GUIDES).sort(), [...GUIDE_SCENES].sort());
   });

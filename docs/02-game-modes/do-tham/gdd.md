@@ -1,7 +1,7 @@
-# Dò Bẫy: giải đố tìm bẫy trên sa bàn
+# Do Thám: giải đố dò bẫy trên sa bàn
 
 > Cập nhật: 13/11/2026
-> Trạng thái: **DRAFT** — Shan đồng ý ý tưởng đưa trò dò mìn vào game ngày 13/11/2026. Tên **Dò Bẫy**, các bậc và số liệu là đề xuất của Claude, chờ Shan chốt ở [mục 8](#8-câu-hỏi-mở). Chưa có code, route hay tranh.
+> Trạng thái: **IMPLEMENTED (bản chơi thử)** — Shan đồng ý ý tưởng và chốt tên **Do Thám**, ba bậc, bàn suy luận được ngay từ bản đầu, có đạo cụ nguyên tố, tranh thẻ vẽ riêng (13/11/2026). Bản chơi thử offline đã có code; thưởng, xếp hạng và phát lại trên server chưa làm.
 
 ## 1. Định vị
 
@@ -68,10 +68,10 @@ Ba bậc đầu theo cỡ kinh điển, người chơi đã quen. Chỉ **bậc 
 
 ## 6. Kiến trúc dự kiến
 
-- **Lõi:** `src/core/do-bay/` thuần TypeScript, không đọc đồng hồ: bàn sinh sau nước đầu từ `seed + ô đầu`, hàm mở ô, mở lan, mở nhanh, cắm cờ, kiểm tra thắng thua. Test ở `tests/core/do-bay/`.
-- **Màn chơi:** phân cảnh `DO_BAY` (tên hiển thị "Dò Bẫy", slug `trap-sweep`), `src/app/game/do-bay/`. Thêm vào `scene.ts`, `MODE_TEXT`, `MODE_INFO`, thẻ ở Chiến Trường và thẻ Hướng dẫn ở `modeGuides.ts` (test `mode-guides` sẽ đòi mười một chế độ).
-- **Lưu trữ bản đầu:** ván dở và thời gian tốt nhất mỗi bậc ở `localStorage` (`reed-banner:do-bay:*`), không cần đăng nhập, không thưởng, như Khai Lộ.
-- **Văn phong:** theo [Văn phong giao diện](../../00-overview/thuat-ngu.md#văn-phong-giao-diện); tên chế độ hoa mọi chữ (Dò Bẫy), nhãn nút chỉ hoa chữ đầu.
+- **Lõi:** `src/core/do-tham/` thuần TypeScript, không đọc đồng hồ: bàn sinh sau nước đầu từ `seed + ô đầu`, hàm mở ô, mở lan, mở nhanh, cắm cờ, kiểm tra thắng thua. Test ở `tests/core/do-tham/`.
+- **Màn chơi:** phân cảnh `DO_THAM` (tên hiển thị "Do Thám", slug `scout`), `src/app/game/do-tham/`. Thêm vào `scene.ts`, `MODE_TEXT`, `MODE_INFO`, thẻ ở Chiến Trường và thẻ Hướng dẫn ở `modeGuides.ts` (test `mode-guides` sẽ đòi mười một chế độ).
+- **Lưu trữ bản đầu:** ván dở và thời gian tốt nhất mỗi bậc ở `localStorage` (`reed-banner:do-tham:*`), không cần đăng nhập, không thưởng, như Khai Lộ.
+- **Văn phong:** theo [Văn phong giao diện](../../00-overview/thuat-ngu.md#văn-phong-giao-diện); tên chế độ hoa mọi chữ (Do Thám), nhãn nút chỉ hoa chữ đầu.
 
 ## 7. Lộ trình
 
@@ -89,11 +89,33 @@ Ba bậc đầu theo cỡ kinh điển, người chơi đã quen. Chỉ **bậc 
 - **Thưởng vàng** theo mốc hoặc nhiệm vụ ngày; số liệu do Shan duyệt.
 - Bật bằng cờ tính năng như các chế độ xếp hạng khác.
 
-## 8. Câu hỏi mở
+## 8. Quyết định của Shan (13/11/2026)
 
-- Tên chế độ: **Dò Bẫy** (đề xuất) hay Rà Lũy, Gài Chông, tên khác?
-- Bản đầu có đủ ba bậc hay chỉ Nhập môn và Thường?
-- Có bản "không phải đoán mò" ngay từ bản đầu, hay để bước 2?
-- Có đạo cụ theo nguyên tố (ví dụ Y sư lộ một ô an toàn, Mưu sĩ gợi ý một nước) không? Đề xuất để sau, bản đầu thuần luật gốc để người quen dò mìn chơi được ngay.
-- Có dấu hỏi `?` ngoài cờ lau không (đề xuất bỏ cho gọn).
-- Tranh thẻ Chiến Trường: vẽ riêng hay cắt từ tranh có sẵn (bãi lau, lũy tre)?
+- **Tên:** Do Thám (trên giao diện hoa mọi chữ, tên chế độ; mô tả ngắn viết "do thám").
+- **Bậc:** đủ ba bậc ở bản đầu: Nhập môn 9×9 với 10 bẫy, Thường 16×16 với 40 bẫy, Khó 30×16 với 99 bẫy. Bậc Tùy chọn để sau.
+- **Bàn suy luận được ngay từ bản đầu:** bàn chỉ được dùng khi người dò chỉ cần suy luận từ nước đầu là mở hết ô an toàn (bộ giải ở `deduce`, `isGuessFree`). Đo ngày 13/11/2026: Nhập môn và Thường sinh trong vài mili giây, Khó khoảng 10 mili giây trung bình (tối đa 20), không có bàn nào hết số lần thử.
+- **Có đạo cụ nguyên tố:** mang tối đa hai, mỗi cái dùng một lần (mục 9).
+- **Tranh thẻ vẽ riêng:** Shan vẽ; prompt ở [thumbnail-chien-truong.md](../../06-art/prompts/thumbnail-chien-truong.md). Chưa có tranh thì thẻ dùng tranh mực tạm.
+- **Dấu hỏi `?`:** bỏ, chỉ có cờ lau.
+
+## 9. Đạo cụ nguyên tố (bản đầu)
+
+Trước ván (hoặc trước nước đầu) bạn chọn tối đa hai trong bảy hệ. Mỗi đạo cụ dùng một lần. Đạo cụ không làm ván thắng hay thua thay bạn: chúng chỉ cho thông tin hoặc đỡ một lỗi.
+
+| Hệ | Đạo cụ | Tác dụng |
+|---|---|---|
+| Kim | Dò chông | Cắm cờ lên một ô có bẫy thật (ưu tiên ô sát vùng đã mở) |
+| Mộc | Mầm xanh | Chọn một ô chưa mở: an toàn thì mở, có bẫy thì tự cắm cờ mà không thua |
+| Thủy | Soi nước | Chọn một ô: biết trong vùng 3×3 quanh nó có bao nhiêu bẫy |
+| Hỏa | Đốt lau | Chọn một ô: mở hết ô an toàn trong vùng 3×3, cắm cờ lên các bẫy |
+| Thổ | Khiên đất | Đỡ một lần sa bẫy (dùng được cả trước nước đầu) |
+| Lôi | Sấm báo | Chọn hàng hoặc cột rồi một ô: biết trên đó có bao nhiêu bẫy |
+| Phong | Gió mách | Chỉ ra một ô chắc chắn an toàn hoặc chắc chắn có bẫy, theo suy luận từ các số đang hiện |
+
+Tên đạo cụ do Claude đặt, Shan có thể đổi.
+
+## 10. Câu hỏi mở
+
+- Bàn "bậc Tùy chọn" (cột 8–30, hàng 8–24) có làm không?
+- Có cho đạo cụ cơ chế nâng cấp hoặc kiếm được từ chế độ khác không?
+- Thưởng vàng và xếp hạng bước 2 theo thời gian hay theo số bàn liên tiếp?

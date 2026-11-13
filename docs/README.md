@@ -37,7 +37,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [tam-tuong-ky/](02-game-modes/tam-tuong-ky/design-freeze.md) | Tầm Tướng Ký (có code sau cờ `TAM_TUONG_KY_ENABLED`): [design freeze](02-game-modes/tam-tuong-ky/design-freeze.md) (**FROZEN**, luật), [engine](02-game-modes/tam-tuong-ky/engine.md), [server chế độ Thường](02-game-modes/tam-tuong-ky/server.md), [Hạng tuần](02-game-modes/tam-tuong-ky/hang-tuan.md), [Gói 1](02-game-modes/tam-tuong-ky/goi-1.md), [Gói 2](02-game-modes/tam-tuong-ky/goi-2.md), [Gói 3](02-game-modes/tam-tuong-ky/goi-3.md), [cân bằng nguyên tố và cảnh báo](02-game-modes/tam-tuong-ky/can-bang-va-canh-bao.md), [nghiệm thu](02-game-modes/tam-tuong-ky/nghiem-thu.md) |
 | ★ [tran-do/](02-game-modes/tran-do/gdd.md) | Trận Đồ (tên mã Binh Pháp): [GDD](02-game-modes/tran-do/gdd.md), luật chơi thử và xếp hạng; giao diện ở [màn Trận Đồ](05-ui-ux/screens/tran-do.md) |
 | ★ [khai-lo/](02-game-modes/khai-lo/gdd.md) | Khai Lộ: [GDD](02-game-modes/khai-lo/gdd.md), giải đố xóa khối, có bản chơi thử |
-| ★ [do-bay/](02-game-modes/do-bay/gdd.md) | Dò Bẫy: [GDD](02-game-modes/do-bay/gdd.md), giải đố dò bẫy (dò mìn đổi chủ đề thế kỷ X); DRAFT, chưa có code |
+| ★ [do-tham/](02-game-modes/do-tham/gdd.md) | Do Thám: [GDD](02-game-modes/do-tham/gdd.md), giải đố dò bẫy, bàn suy luận được, đạo cụ nguyên tố; có bản chơi thử |
 | [future/](02-game-modes/future/quan-hung-pvp-truc-tiep.md) | Chỉ còn đề xuất chưa có code: [Quần Hùng PvP trực tiếp](02-game-modes/future/quan-hung-pvp-truc-tiep.md) (**DRAFT**) |
 
 ## 03 · Nhân vật & kỹ năng (`03-characters/`)
