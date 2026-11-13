@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const scene = sceneOf((await params).scene);
   return {
     title: !scene || scene === "MENU" ? "Cờ Lau" : `${SCENE_TITLE[scene]} · Cờ Lau`,
-    description: "Cờ Lau: match-3 chiến đấu theo lượt thời Loạn 12 Sứ Quân.",
+    description: "Cờ Lau: ghép ba chiến đấu theo lượt thời Loạn 12 sứ quân.",
   };
 }
 

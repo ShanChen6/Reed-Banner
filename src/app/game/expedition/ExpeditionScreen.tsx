@@ -120,18 +120,18 @@ interface ApiResult {
 }
 
 const ERROR_TEXT: Record<string, string> = {
-  runActive: "Đang có một lượt viễn chinh. Hãy đi tiếp hoặc rút quân trước.",
-  tierLocked: "Bậc này chưa mở: hãy thắng bậc trước của sa bàn này.",
+  runActive: "Đang có một lượt viễn chinh. Xin đi tiếp hoặc rút quân trước.",
+  tierLocked: "Bậc này chưa mở: xin thắng bậc trước của sa bàn này.",
   duplicate: "Mỗi tướng chỉ đi một đạo.",
   notOwned: "Có tướng chưa chiêu mộ.",
-  badArmy: "Đạo Chính cần 2 tướng đi cùng Đinh Bộ Lĩnh, Biệt đạo cần 3 tướng.",
+  badArmy: "Đạo Chính cần 2 tướng đi cùng Đinh Bộ Lĩnh, Biệt Đạo cần 3 tướng.",
   notAdjacent: "Chỉ tiến được sang ô kề vị trí của đạo quân.",
-  armyDown: "Cả đạo đang gục. Hãy cho đạo này nghỉ (đạo kia tiến quân hoặc đóng quân) để hồi sức.",
+  armyDown: "Cả đạo đang gục. Xin cho đạo này nghỉ (đạo kia tiến quân hoặc đóng quân) để hồi sức.",
   notMarching: "Lượt viễn chinh đã kết thúc hoặc đang có trận.",
-  conflict: "Dữ liệu vừa đổi ở nơi khác. Đang tải lại.",
+  conflict: "Quân tình vừa đổi ở nơi khác. Đang tải lại.",
   dailyLimit: "Hôm nay đã hết lượt xuất quân. Lượt mới mở lúc 0 giờ (giờ Việt Nam).",
   featureDisabled: "Viễn Chinh chưa mở.",
-  roadBroken: "Đường này đã bị phá, hãy đi đường khác.",
+  roadBroken: "Đường này đã bị phá. Xin đi đường khác.",
   highTide: "Cửa nước đang lên. Chờ ngày nước rút.",
   counterPending: "Giặc đang phản công Chợ: đạo giữ chợ phải đánh trước.",
 };
@@ -165,7 +165,7 @@ const KIND_TEXT: Record<ExpeditionNodeKind, string> = {
   shoal: "Bãi cạn, không có địch. Đứng chờ con nước được; ngày nước rút đi được cửa nước vào thành.",
 };
 
-const ARMY_NAME = ["Đạo Chính", "Biệt đạo"] as const;
+const ARMY_NAME = ["Đạo Chính", "Biệt Đạo"] as const;
 const ARMY_COLOR = ["#e0a33a", "#5fb3c9"] as const;
 
 
@@ -229,7 +229,7 @@ export default function ExpeditionScreen() {
     [profile],
   );
 
-  const fail = (error?: string) => setMessage(ERROR_TEXT[error ?? ""] ?? "Không thực hiện được. Hãy tải lại.");
+  const fail = (error?: string) => setMessage(ERROR_TEXT[error ?? ""] ?? "Lệnh chưa thành. Xin tải lại trang.");
 
   const act = async (url: string, body?: unknown) => {
     setBusy(true);
@@ -263,7 +263,7 @@ export default function ExpeditionScreen() {
         <div className="py-24 text-center text-on-wood-soft">
         {failed ? (
           <div className="text-center">
-            <p role="alert">Không tải được Viễn Chinh.</p>
+            <p role="alert">Chưa mở được sa bàn Viễn Chinh. Xin tải lại trang.</p>
             <Button variant="secondary" className="mt-3" onClick={() => void load()}>Tải lại</Button>
           </div>
         ) : (
@@ -362,7 +362,7 @@ function SetupView(props: {
   const info = map.tiers.find((t) => t.tier === tier)!;
   const ready = main.length === 2 && second.length === 3 && info.unlocked && props.runsLeft > 0;
 
-  // Bấm một tướng: chưa đi → Đạo Chính (nếu còn chỗ) → Biệt đạo (nếu còn chỗ) → bỏ.
+  // Bấm một tướng: chưa đi → Đạo Chính (nếu còn chỗ) → Biệt Đạo (nếu còn chỗ) → bỏ.
   const cycle = (id: string) => {
     if (main.includes(id)) {
       setMain(main.filter((x) => x !== id));
@@ -427,7 +427,7 @@ function SetupView(props: {
       <section className="ui-frame p-4 sm:p-5">
         <h2 className="font-serif text-xl font-bold">2. Chia hai đạo quân</h2>
         <p className="mt-1 text-sm text-on-wood-soft">
-          Bấm tướng để đưa vào Đạo Chính (đi cùng Đinh Bộ Lĩnh, 2 chỗ), bấm lần nữa để chuyển sang Biệt đạo (3 chỗ, người
+          Bấm tướng để đưa vào Đạo Chính (đi cùng Đinh Bộ Lĩnh, 2 chỗ), bấm lần nữa để chuyển sang Biệt Đạo (3 chỗ, người
           đầu là thống lĩnh), bấm lần ba để bỏ ra. Chỉ số và trang bị được chụp lúc xuất quân.
         </p>
         <div className="mt-3 grid gap-3 md:grid-cols-2">

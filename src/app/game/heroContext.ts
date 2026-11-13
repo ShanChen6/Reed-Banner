@@ -1,7 +1,7 @@
 // Nút chính ở hero Chiến trường đổi theo ngữ cảnh người chơi (Shan yêu cầu 07/11/2026). Hàm thuần suy ra từ hồ sơ và việc có trận
 // Giao Tranh đang dở, để test được. Thứ tự ưu tiên:
 //   1. Có trận Giao Tranh online đang dở (đồng hồ lượt chạy theo giờ máy chủ) → "Tiếp tục trận dở".
-//   2. Chưa chơi chiến dịch → "Bắt đầu chiến dịch" (cốt truyện chính là lối vào tốt nhất cho người mới).
+//   2. Chưa chơi chiến dịch → "Bắt đầu Bình Loạn" (cốt truyện chính là lối vào tốt nhất cho người mới).
 //   3. Chiến dịch đang dở → "Tiếp tục Bình Loạn" kèm chương và số nhiệm vụ đã xong.
 //   4. Chiến dịch đã xong hết nhiệm vụ → "Vào trận" (Giao Tranh).
 //   5. Chưa tải được hồ sơ → "Vào trận" như trước (không đoán sai ngữ cảnh).
@@ -37,7 +37,7 @@ export function heroPlan(profile: Profile | null, savedBattle: boolean): HeroPla
     ? null
     : finished
       ? null
-      : { scene: "CAMPAIGN", label: started ? "Tiếp tục Bình Loạn" : "Bắt đầu chiến dịch" };
+      : { scene: "CAMPAIGN", label: started ? "Tiếp tục Bình Loạn" : "Bắt đầu Bình Loạn" };
 
   if (savedBattle)
     return {
@@ -59,7 +59,7 @@ export function heroPlan(profile: Profile | null, savedBattle: boolean): HeroPla
     return {
       primary: PLAY,
       secondary: { scene: "ARENA", label: "Quần Hùng" },
-      hint: "Bình Loạn đã khép lại. Ra Giao Tranh thử sức cùng Tianwu.",
+      hint: "Bình Loạn đã khép lại. Ra Giao Tranh thử sức cùng đối thủ.",
     };
 
   const chapter = campaignFocusChapter(campaign);

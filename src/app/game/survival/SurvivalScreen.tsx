@@ -47,10 +47,10 @@ const SELECTION_ERROR: Record<
   NonNullable<ReturnType<typeof validateSurvivalRosterSelection>>,
   string
 > = {
-  activeCount: "Hãy chọn đủ hai đồng đội cho đội phòng thủ.",
+  activeCount: "Xin chọn đủ hai phó tướng cho đội phòng thủ.",
   duplicateFighter: "Mỗi tướng chỉ được chọn vào một vị trí.",
-  unownedFighter: "Có tướng không thuộc quyền sở hữu của bạn.",
-  tooManyReserves: "Doanh trại chỉ nhận tối đa hai tướng dự bị.",
+  unownedFighter: "Có tướng chưa chiêu mộ.",
+  tooManyReserves: "Doanh Trại chỉ nhận tối đa hai tướng dự bị.",
 };
 
 export default function SurvivalScreen() {
@@ -122,7 +122,7 @@ export default function SurvivalScreen() {
         <div className="py-24 text-center text-on-wood-soft">
           {loadError ? (
             <>
-              <p>Không tải được hồ sơ. Hãy kiểm tra kết nối rồi thử lại.</p>
+              <p>Chưa mở được hồ sơ. Xin kiểm tra mạng rồi thử lại.</p>
               <Button variant="secondary"
                 type="button"
                 onClick={() => {
@@ -188,7 +188,7 @@ export default function SurvivalScreen() {
     if (!res.id) {
       setBusy(false);
       setMessage(
-        ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Không tạo được trận",
+        ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Chưa bày được trận. Xin thử lại.",
       );
       return;
     }
@@ -302,7 +302,7 @@ export default function SurvivalScreen() {
             {slotPicker("active", 1, activeIds[1] ?? "")}
           </div>
           <div className="border-t border-frame-gold/25 pt-3">
-            <h3 className="font-bold text-title">Doanh trại · Dự bị</h3>
+            <h3 className="font-bold text-title">Doanh Trại · Dự bị</h3>
             <p className="mb-2 text-caption text-on-wood-soft">
               Dự bị không tham chiến trong đợt. Có thể mang tối đa hai tướng; không bắt buộc đủ.
             </p>
@@ -312,7 +312,7 @@ export default function SurvivalScreen() {
             </div>
           </div>
           <p className="text-caption text-on-wood-soft">
-            Danh sách chỉ gồm nhân vật đã sở hữu. Cấp, nghề, hệ và chỉ số được chụp vào lượt chơi khi bắt đầu.
+            Danh sách chỉ gồm tướng quân đã có. Cấp, nghề, hệ và chỉ số được chụp vào lượt chơi khi bắt đầu.
           </p>
         </OrnateFrame>
 

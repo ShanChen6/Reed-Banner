@@ -1,6 +1,6 @@
 "use client";
 
-// Vùng trái của tab Tướng sĩ: tìm, lọc, sắp xếp và lưới thẻ có vùng cuộn riêng. Trạng thái tìm/lọc/sắp xếp nằm ở
+// Vùng trái của tab Tướng quân: tìm, lọc, sắp xếp và lưới thẻ có vùng cuộn riêng. Trạng thái tìm/lọc/sắp xếp nằm ở
 // Barracks để giữ nguyên khi đổi tab hay mở chi tiết trên điện thoại; ở đây chỉ hiển thị và báo thay đổi.
 
 import { useId, useRef, useState, type KeyboardEvent, type Ref } from "react";
@@ -25,7 +25,7 @@ const TEAM_FILTER_NAME: Readonly<Record<Exclude<TeamFilter, "all">, string>> = {
   out: "Ngoài đội hình",
 };
 
-/** Số tướng hiện mỗi đợt ở danh sách Tướng sĩ. */
+/** Số tướng hiện mỗi đợt ở danh sách Tướng quân. */
 const HERO_BATCH = 24;
 
 const toggle = <T,>(list: readonly T[], v: T): T[] => (list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
@@ -41,7 +41,7 @@ export default function HeroList({
   onSelect,
   scrollRef,
 }: {
-  /** Mọi tướng sĩ đã có. */
+  /** Mọi tướng quân đã có. */
   entries: readonly RosterEntry[];
   /** Kết quả sau lọc và sắp xếp. */
   shown: readonly RosterEntry[];
@@ -105,9 +105,9 @@ export default function HeroList({
       <div className="flex items-center justify-between gap-2 px-1">
         <h2 className="barracks-title flex items-center gap-2 font-serif text-xl font-bold">
           <TeamGlyph className="size-5 text-[var(--frame-gold-hi)]" />
-          Tướng sĩ
+          Tướng quân
         </h2>
-        <span className="font-serif text-lg font-semibold text-[var(--frame-gold-hi)] tabular-nums" aria-label={`Có ${entries.length} tướng sĩ`}>
+        <span className="font-serif text-lg font-semibold text-[var(--frame-gold-hi)] tabular-nums" aria-label={`Có ${entries.length} tướng quân`}>
           {entries.length}
         </span>
       </div>
@@ -120,7 +120,7 @@ export default function HeroList({
             value={filter.query}
             onChange={(e) => onFilter({ ...filter, query: e.target.value })}
             placeholder="Tìm theo tên…"
-            aria-label="Tìm tướng sĩ theo tên, gõ có dấu hoặc không dấu"
+            aria-label="Tìm tướng quân theo tên, gõ có dấu hoặc không dấu"
             className="size-full min-h-10 pointer-coarse:min-h-11 rounded-md bg-transparent pr-2 pl-9 text-[15px] text-on-wood outline-none placeholder:text-on-wood-soft"
           />
         </label>
@@ -143,7 +143,7 @@ export default function HeroList({
             <select
               value={sort}
               onChange={(e) => onSort(e.target.value as RosterSort)}
-              aria-label="Sắp xếp tướng sĩ"
+              aria-label="Sắp xếp tướng quân"
               className="size-full min-h-10 pointer-coarse:min-h-11 cursor-pointer appearance-none rounded-md bg-transparent pr-6 pl-8 text-[15px] text-on-wood outline-none"
             >
               {(Object.keys(SORT_NAME) as RosterSort[]).map((s) => (
@@ -158,7 +158,7 @@ export default function HeroList({
       </div>
 
       {panel && (
-        <div id={panelId} role="group" aria-label="Bộ lọc tướng sĩ" className="barracks-inset mt-2 flex flex-col gap-2 rounded-md p-2.5 text-sm">
+        <div id={panelId} role="group" aria-label="Bộ lọc tướng quân" className="barracks-inset mt-2 flex flex-col gap-2 rounded-md p-2.5 text-sm">
           <FilterRow label="Hệ">
             {ELEMENTS.map((el) => (
               <IconToggle
@@ -226,7 +226,7 @@ export default function HeroList({
       )}
 
       <p className="mt-2 px-1 text-sm text-[var(--on-wood-soft)]" aria-live="polite">
-        <span className="font-semibold text-on-wood tabular-nums">{shown.length}</span> / {entries.length} tướng sĩ
+        <span className="font-semibold text-on-wood tabular-nums">{shown.length}</span> / {entries.length} tướng quân
       </p>
 
       {hiddenSelected && (
@@ -243,7 +243,7 @@ export default function HeroList({
       <div ref={scrollRef} className="barracks-scroll mt-2 min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1" tabIndex={-1}>
         {shown.length === 0 ? (
           <div className="flex flex-col items-center gap-2 py-10 text-center text-[15px] text-[var(--on-wood-soft)]">
-            <p>{entries.length === 0 ? "Chưa có tướng sĩ nào." : "Không tìm thấy tướng sĩ phù hợp."}</p>
+            <p>{entries.length === 0 ? "Chưa có tướng quân nào." : "Không tìm thấy tướng quân phù hợp."}</p>
             {isFiltered(filter) && (
               <button type="button" onClick={() => onFilter(NO_FILTER)} className="barracks-btn min-h-10 pointer-coarse:min-h-11 rounded-md px-4">
                 Xóa bộ lọc
@@ -253,7 +253,7 @@ export default function HeroList({
         ) : (
           <ul
             ref={listRef}
-            aria-label="Danh sách tướng sĩ"
+            aria-label="Danh sách tướng quân"
             onKeyDown={onGridKey}
             className="grid grid-cols-[repeat(auto-fill,minmax(6.5rem,1fr))] gap-2 pb-1"
           >

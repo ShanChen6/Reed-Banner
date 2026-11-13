@@ -295,15 +295,15 @@ export function sendProfileAction(
 }
 
 export const ONLINE_ERROR_TEXT: Record<string, string> = {
-  network: "Mất kết nối tới server, thử lại",
-  notFound: "Không tìm thấy trận",
-  conflict: "Trận vừa được cập nhật ở nơi khác, đã tải lại",
-  staleSeq: "Bàn cờ đã đổi (hết giờ?), đã tải lại",
-  badRequest: "Yêu cầu không hợp lệ",
-  dailyDone: "Hôm nay bạn đã đánh thử thách ngày rồi",
-  arenaLimit: "Hôm nay bạn đã hết lượt đấu trường",
-  arenaGone: "Đối thủ này không còn, hãy chọn đối thủ khác",
-  locked: "Nhiệm vụ này chưa mở",
-  invalidChoice: "Lựa chọn không hợp lệ cho nhiệm vụ này",
-  notEvent: "Nhiệm vụ này cần xuất quân",
+  network: "Tin báo đứt quãng, chưa liên lạc được máy chủ. Xin thử lại.",
+  notFound: "Không tìm thấy trận này. Xin quay về Chiến Trường.",
+  conflict: "Trận vừa đổi ở nơi khác, đã tải lại thế trận.",
+  staleSeq: "Bàn cờ đã đổi (có thể vì hết giờ), đã tải lại thế trận.",
+  badRequest: "Lệnh không hợp lệ. Xin tải lại trang rồi thử lại.",
+  dailyDone: "Nhật Lệnh hôm nay đã nhận và đánh xong. Mai xin quay lại.",
+  arenaLimit: "Hôm nay đã hết lượt thách đấu Quần Hùng. Mai xin quay lại.",
+  arenaGone: "Đối thủ này đã rời trường đấu. Xin chọn đối thủ khác.",
+  locked: "Nhiệm vụ này chưa mở.",
+  invalidChoice: "Lời đáp này không hợp với nhiệm vụ. Xin chọn lại.",
+  notEvent: "Nhiệm vụ này phải xuất quân mới xong.",
 };

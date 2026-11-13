@@ -22,19 +22,19 @@ import { ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
 /** Mã lỗi từ API. Dùng từ của người chơi: "lượt leo" (một lần leo tháp với đội đã khóa), "đội hình", "tướng ra trận". */
 export const DESTINY_ERROR_TEXT: Readonly<Record<string, string>> = {
   featureDisabled: "Tháp Thiên Mệnh đang tạm đóng. Tiến trình và trận đang dở được giữ nguyên.",
-  bad_request: "Yêu cầu không hợp lệ. Hãy tải lại trang rồi thử lại.",
-  invalid_roster: "Đội hình này không xếp được ba tướng hợp luật cho mọi tầng của chu kỳ. Hãy chọn thêm tướng.",
+  bad_request: "Lệnh không hợp lệ. Xin tải lại trang rồi thử lại.",
+  invalid_roster: "Đội hình này không xếp được ba tướng hợp luật cho mọi tầng của chu kỳ. Xin chọn thêm tướng.",
   invalid_lineup: "Ba tướng ra trận chưa hợp luật tầng, hoặc có tướng đã gục.",
-  invalid_phase: "Lượt leo vừa thay đổi ở một thiết bị hoặc thẻ khác. Hãy tải lại trang.",
+  invalid_phase: "Lượt leo vừa thay đổi ở một thiết bị hoặc thẻ khác. Xin tải lại trang.",
   stale_reward: "Phần thưởng này đã được nhận hoặc không còn hiệu lực.",
   invalid_reward: "Chưa chọn đúng tướng nhận phần thưởng này.",
-  conflict: "Dữ liệu vừa thay đổi ở nơi khác. Hãy thử lại.",
-  cycle_expired: "Chu kỳ đã kết thúc. Hãy khóa đội hình và bắt đầu lượt leo mới.",
-  run_exists: "Bạn đang có một lượt leo trong chu kỳ này.",
-  floor_not_found: "Không tìm thấy tầng này. Hãy tải lại trang.",
-  invalid_secret: "Máy chủ chưa sẵn sàng cho Tháp Thiên Mệnh. Hãy thử lại sau.",
-  unsupported_schema: "Dữ liệu Song Tháp của bạn thuộc phiên bản mới hơn, chưa chơi được ở bản này.",
-  network: "Không kết nối được máy chủ. Hãy kiểm tra mạng rồi thử lại.",
+  conflict: "Quân tình vừa đổi ở nơi khác. Xin thử lại.",
+  cycle_expired: "Chu kỳ đã kết thúc. Xin khóa đội hình và bắt đầu lượt leo mới.",
+  run_exists: "Đang có một lượt leo trong chu kỳ này. Xin leo tiếp lượt đó.",
+  floor_not_found: "Không tìm thấy tầng này. Xin tải lại trang.",
+  invalid_secret: "Máy chủ chưa sẵn sàng cho Tháp Thiên Mệnh. Xin thử lại sau.",
+  unsupported_schema: "Dữ liệu Tháp Thiên Mệnh thuộc phiên bản mới hơn, bản này chưa đọc được. Xin tải lại trang.",
+  network: "Tin báo đứt quãng, chưa liên lạc được máy chủ. Xin kiểm tra mạng rồi thử lại.",
 };
 
 export function aliveIds(run: DestinyRun): readonly string[] {

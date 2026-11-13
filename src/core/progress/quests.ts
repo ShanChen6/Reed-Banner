@@ -55,7 +55,7 @@ export const DAILY_QUESTS: readonly QuestDef[] = [
   },
   {
     id: "d.daily",
-    title: "Đánh thử thách ngày",
+    title: "Nhận Nhật Lệnh",
     stat: "daily",
     target: 1,
     gold: 50,
@@ -73,14 +73,14 @@ export const WEEKLY_QUESTS: readonly QuestDef[] = [
   },
   {
     id: "w.waves20",
-    title: "Vượt 20 đợt sinh tồn",
+    title: "Trấn Ải vượt 20 đợt",
     stat: "waves",
     target: 20,
     gold: 300,
   },
   {
     id: "w.daily5",
-    title: "Đánh thử thách ngày 5 hôm",
+    title: "Nhận Nhật Lệnh 5 hôm",
     stat: "daily",
     target: 5,
     gold: 300,

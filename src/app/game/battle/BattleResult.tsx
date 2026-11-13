@@ -72,7 +72,7 @@ export function BattleResult({
             : "Cả đội đã gục"
           : state.winner === PLAYER
             ? "Bạn thắng!"
-            : "Tianwu thắng"}
+            : "Bạn thua"}
       </p>
       {raidBoss && raidBossById(raidBoss) && (
         <p className="max-w-sm text-center text-sm text-on-wood-soft italic">
@@ -216,7 +216,7 @@ export function BattleResult({
             rel="noopener"
             className={buttonVariants({ size: "sm" })}
           >
-            Lưu tiến độ &amp; chơi chiến dịch
+            Lưu tiến độ &amp; chơi Bình Loạn
           </a>
         )}
         {destinyFloorNo !== null && towerFeatures.destiny && (
