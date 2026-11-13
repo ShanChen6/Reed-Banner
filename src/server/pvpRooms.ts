@@ -122,7 +122,7 @@ const sideOfSlot = (slot: number): SideIndex => (slot < 3 ? 0 : 1);
 const slotOf = (r: PvpRoomRecord, owner: string) => r.slots.findIndex((s) => s.owner === owner);
 const replaceSlot = (r: PvpRoomRecord, i: number, s: PvpRoomSlot): PvpRoomSlot[] => r.slots.map((x, k) => (k === i ? s : x));
 
-interface HeroInfo {
+export interface HeroInfo {
   readonly id: string;
   readonly name: string;
   readonly element: Element;
@@ -131,7 +131,7 @@ interface HeroInfo {
 }
 
 /** Tướng người này chọn được: Đinh Bộ Lĩnh theo nghề, hệ trong hồ sơ, và các tướng đã có. */
-async function heroesOf(owner: string, deps: PvpDeps): Promise<HeroInfo[]> {
+export async function heroesOf(owner: string, deps: PvpDeps): Promise<HeroInfo[]> {
   const { profile } = await loadProfile(deps.profiles, owner);
   const out: HeroInfo[] = [{ id: MAIN_ID, name: "Đinh Bộ Lĩnh", element: profile.element, profession: profile.profession, level: profile.main.level }];
   for (const id of Object.keys(profile.companions)) {

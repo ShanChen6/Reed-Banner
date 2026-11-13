@@ -96,6 +96,7 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
   const [busy, setBusy] = useState(false);
   const [matchId, setMatchId] = useState<string | null>(null);
   const [inRoom, setInRoom] = useState(false);
+  const [teamHero, setTeamHero] = useState<string | null>(null);
   /** Nghề và hệ chọn cho trận kế tiếp; chưa chọn thì lấy theo hồ sơ. */
   const [pick, setPick] = useState<{ element?: Element; profession?: Profession }>({});
 
@@ -120,9 +121,9 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
     onBusyChange?.(!!matchId || !!overview?.queue);
   }, [matchId, overview?.queue, onBusyChange]);
 
-  const queue = async () => {
+  const queue = async (format: "duel" | "team" = "duel") => {
     setBusy(true);
-    const r = await call("/api/pvp", { action: "queue", format: "duel", element: pick.element ?? overview?.build.element, profession: pick.profession ?? overview?.build.profession });
+    const r = await call("/api/pvp", { action: "queue", format, hero: format === "team" ? (teamHero ?? MAIN_ID) : undefined, element: pick.element ?? overview?.build.element, profession: pick.profession ?? overview?.build.profession });
     setBusy(false);
     if (r.status === 200) {
       setMessage("");
@@ -201,7 +202,7 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
       {o?.queue ? (
         <div role="status" aria-live="polite" className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-on-wood">
-            Đang tìm đối thủ có điểm gần bạn… đã chờ {Math.floor(o.queue.waitedMs / 1000)} giây. Hãy để trang này mở.
+            {o.queue.format === "team" ? "Đang ghép trận 3vs3, máy sẽ điền chỗ trống nếu chờ lâu…" : "Đang tìm đối thủ có điểm gần bạn…"} đã chờ {Math.floor(o.queue.waitedMs / 1000)} giây. Hãy để trang này mở.
           </p>
           <Button variant="secondary" disabled={busy} onClick={() => void leave()}>
             Rời hàng đợi
@@ -246,7 +247,7 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
           )}
         <div className="flex flex-wrap items-center gap-3">
           <Button size="lg" disabled={busy || !o || !!o.banUntil} onClick={() => void queue()}>
-            Tìm đối thủ
+            Tìm đối thủ 1vs1
           </Button>
           <p className="text-sm text-on-wood-soft">
             Mỗi lượt 30 giây. Bỏ lượt liên tục là phá trận và không được tính điểm; mất mạng được tha 3 lần mỗi ngày.
@@ -255,6 +256,35 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
         </div>
       )}
     </OrnateFrame>
+      {o && !o.queue && (
+        <OrnateFrame level="raised" className="flex flex-col gap-3">
+          <SectionTitle description="Đấu 3vs3 xếp hạng: mỗi người một tướng của mình, đủ sáu người thì vào ngay, chờ lâu thì máy điền chỗ trống (trận có máy được ít điểm hơn). Điểm 3vs3 tính riêng.">
+            3vs3 xếp hạng
+          </SectionTitle>
+          <p className="text-on-wood">
+            Điểm {o.ratings.team.rating} · {o.ratings.team.wins} thắng · {o.ratings.team.losses} thua
+          </p>
+          <div className="flex flex-wrap items-end gap-3">
+            <label className="flex flex-col gap-1 text-sm text-on-wood-soft">
+              Tướng của bạn
+              <select
+                className="min-h-11 rounded-control border border-frame-line bg-wood-inset px-3 text-on-wood"
+                value={teamHero ?? MAIN_ID}
+                onChange={(e) => setTeamHero(e.target.value)}
+              >
+                {o.heroes.map((h) => (
+                  <option key={h.id} value={h.id}>
+                    {h.name} · cấp {h.level}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <Button disabled={busy || !!o.banUntil} onClick={() => void queue("team")}>
+              Tìm trận 3vs3
+            </Button>
+          </div>
+        </OrnateFrame>
+      )}
       {o && !o.queue && (
         <OrnateFrame level="raised" className="flex flex-col gap-3">
           <SectionTitle description="Đấu 3vs3 giao hữu với bạn bè: mỗi người một tướng của mình, chỗ trống có thể để máy điều khiển. Giao hữu không tính điểm hạng, không có vàng.">

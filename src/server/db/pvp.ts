@@ -67,7 +67,7 @@ export class DrizzlePvpStore implements PvpStore {
       .values({ ...row, matchId: null })
       .onConflictDoUpdate({
         target: pvpQueue.ownerId,
-        set: { format: row.format, rating: row.rating, enqueuedAt: row.enqueuedAt, lastSeen: row.lastSeen, matchId: null },
+        set: { format: row.format, rating: row.rating, enqueuedAt: row.enqueuedAt, lastSeen: row.lastSeen, matchId: null, hero: row.hero },
       });
   }
 
@@ -93,16 +93,16 @@ export class DrizzlePvpStore implements PvpStore {
     return rows.map(toQueue);
   }
 
-  async claimPair(a: string, b: string, matchId: string): Promise<boolean> {
-    // Một câu lệnh: chỉ cập nhật khi cả hai còn chờ; đủ hai dòng bị cập nhật thì mới là đã ghép.
+  async claimGroup(owners: readonly string[], matchId: string): Promise<boolean> {
+    // Một câu lệnh: chỉ cập nhật những người còn chờ; đủ cả nhóm bị cập nhật thì mới là đã ghép.
     const rows = await this.db
       .update(pvpQueue)
       .set({ matchId })
-      .where(and(inArray(pvpQueue.ownerId, [a, b]), isNull(pvpQueue.matchId)))
+      .where(and(inArray(pvpQueue.ownerId, [...owners]), isNull(pvpQueue.matchId)))
       .returning({ ownerId: pvpQueue.ownerId });
-    if (rows.length === 2) return true;
-    // Một người đã bị ghép chỗ khác: trả lại người còn lại về trạng thái chờ.
-    if (rows.length === 1) await this.db.update(pvpQueue).set({ matchId: null }).where(and(eq(pvpQueue.ownerId, rows[0]!.ownerId), eq(pvpQueue.matchId, matchId)));
+    if (rows.length === owners.length) return true;
+    // Có người đã bị ghép chỗ khác: trả những người đã giữ về trạng thái chờ.
+    if (rows.length > 0) await this.db.update(pvpQueue).set({ matchId: null }).where(and(inArray(pvpQueue.ownerId, rows.map((r) => r.ownerId)), eq(pvpQueue.matchId, matchId)));
     return false;
   }
 

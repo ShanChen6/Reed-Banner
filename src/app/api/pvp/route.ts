@@ -8,12 +8,20 @@ import { NextResponse, type NextRequest } from "next/server";
 import { pvpEnabled } from "@/server/featureFlags";
 import { guestOf, isSignedInAccount, loginRequiredResponse, readJson, sameOrigin } from "@/server/http";
 import { pvpEnqueue, pvpLeaveQueue, pvpOverview, type PvpDeps } from "@/server/pvp";
-import { profileStore, pvpStore, seasonStore } from "@/server/store";
+import { accountStore, profileStore, pvpStore, seasonStore } from "@/server/store";
 
 const noStore = { "cache-control": "no-store" };
 
 function deps(): PvpDeps {
-  return { pvp: pvpStore(), profiles: profileStore(), seasons: seasonStore(), now: Date.now(), seed: randomInt(0, 2 ** 31), newId: () => randomUUID() };
+  return {
+    pvp: pvpStore(),
+    profiles: profileStore(),
+    seasons: seasonStore(),
+    now: Date.now(),
+    seed: randomInt(0, 2 ** 31),
+    newId: () => randomUUID(),
+    nameOf: async (id) => (await accountStore().get(id))?.name ?? `Khách ${id.slice(-4)}`,
+  };
 }
 
 async function owner(request: NextRequest): Promise<string | NextResponse> {
@@ -33,12 +41,12 @@ export async function POST(request: NextRequest) {
   if (!sameOrigin(request)) return NextResponse.json({ error: "badRequest" }, { status: 403, headers: noStore });
   const who = await owner(request);
   if (typeof who !== "string") return who;
-  const body = (await readJson(request)) as { action?: unknown; format?: unknown; element?: unknown; profession?: unknown } | null;
+  const body = (await readJson(request)) as { action?: unknown; format?: unknown; element?: unknown; profession?: unknown; hero?: unknown } | null;
   const d = deps();
   if (body?.action === "leave") {
     await pvpLeaveQueue(who, d);
   } else if (body?.action === "queue") {
-    const r = await pvpEnqueue(who, body.format as "duel", d, { element: body.element, profession: body.profession });
+    const r = await pvpEnqueue(who, body.format as "duel" | "team", d, { element: body.element, profession: body.profession, hero: body.hero });
     if (!r.ok)
       return NextResponse.json({ error: r.error, ...(r.until ? { until: r.until } : {}) }, { status: r.error === "inMatch" ? 409 : r.error === "banned" ? 403 : 400, headers: noStore });
   } else {

@@ -257,6 +257,8 @@ export const pvpQueue = pgTable(
     enqueuedAt: bigint("enqueued_at", { mode: "number" }).notNull(),
     lastSeen: bigint("last_seen", { mode: "number" }).notNull(),
     matchId: text("match_id"),
+    /** Tướng chọn khi xếp hàng 3vs3 (null ở 1vs1). */
+    hero: text("hero"),
   },
   (t) => [index("pvp_queue_wait_idx").on(t.format, t.matchId, t.enqueuedAt)],
 );
