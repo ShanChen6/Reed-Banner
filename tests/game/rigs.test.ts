@@ -1925,7 +1925,7 @@ test("11 tướng lịch sử có hiệu ứng tuyệt chiêu riêng; Đinh Bộ
 
 test("NPC Bình Loạn có hình động, mượn hiệu ứng tuyệt chiêu theo nghề và hệ", async () => {
   const { campaignNpc } = await import("../../src/core");
-  const ids = ["bo-hai-raider-boatman", "bo-hai-raider-chief", "bo-hai-raider-scout", "do-dong-guard", "do-dong-healer", "do-dong-lookout", "do-dong-road-captain", "do-dong-strategist", "do-dong-vanguard"];
+  const ids = ["bo-hai-raider-boatman", "bo-hai-raider-chief", "bo-hai-raider-scout", "do-dong-guard", "do-dong-healer", "do-dong-lookout", "do-dong-road-captain", "do-dong-strategist", "do-dong-vanguard", "hoa-lu-raider-chief", "hoi-ho-bank-guard", "hoi-ho-ritualist", "ngo-951-field-commander", "ngo-951-soldier", "ngo-951-strategist", "phong-chau-strategist", "phong-chau-vanguard", "phu-liet-healer", "phu-liet-raid-leader", "phu-liet-scout", "phu-liet-vanguard"];
   for (const id of ids) {
     const npc = campaignNpc(id);
     assert.ok(npc, id);
