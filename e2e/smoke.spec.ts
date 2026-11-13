@@ -29,7 +29,7 @@ test("khách chơi được trận Thao Luyện", async ({ page }) => {
 test("khách bị chặn ở chế độ xếp hạng và thấy màn nhắc đăng nhập", async ({ page }) => {
   const problems = watchProblems(page);
   await page.goto("/game/destiny");
-  await expect(page.getByRole("link", { name: "Đăng nhập để chơi" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Trình danh để chơi" })).toBeVisible();
   expectClean(problems);
 });
 
