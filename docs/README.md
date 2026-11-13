@@ -38,7 +38,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [tran-do/](02-game-modes/tran-do/gdd.md) | Trận Đồ (tên mã Binh Pháp): [GDD](02-game-modes/tran-do/gdd.md), luật chơi thử và xếp hạng; giao diện ở [màn Trận Đồ](05-ui-ux/screens/tran-do.md) |
 | ★ [khai-lo/](02-game-modes/khai-lo/gdd.md) | Khai Lộ: [GDD](02-game-modes/khai-lo/gdd.md), giải đố xóa khối, có bản chơi thử |
 | ★ [do-tham/](02-game-modes/do-tham/gdd.md) | Do Thám: [GDD](02-game-modes/do-tham/gdd.md), giải đố dò bẫy, bàn suy luận được, đạo cụ nguyên tố; có bản chơi thử |
-| [future/](02-game-modes/future/quan-hung-pvp-truc-tiep.md) | Chỉ còn đề xuất chưa có code: [Quần Hùng PvP trực tiếp](02-game-modes/future/quan-hung-pvp-truc-tiep.md) (**DRAFT**) |
+| [future/](02-game-modes/future/quan-hung-pvp-truc-tiep.md) | Đề xuất đang làm dần (lõi PvP đã có code): [Quần Hùng PvP trực tiếp](02-game-modes/future/quan-hung-pvp-truc-tiep.md) (**DRAFT**) |
 
 ## 03 · Nhân vật & kỹ năng (`03-characters/`)
 
