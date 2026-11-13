@@ -84,7 +84,7 @@ export default function HeaderAccountMenu({ scene, account }: { scene: Scene; ac
         <div className="border-b border-[var(--frame-bronze)]/40 px-3 pt-2 pb-2.5">
           <p className="font-serif font-semibold break-words text-[var(--on-wood)]">{name}</p>
           <p className="text-caption text-[var(--on-wood-soft)]">
-            {account ? "Đã đăng nhập" : "Tiến độ đang lưu trên trình duyệt này. Đăng nhập để giữ trên tài khoản."}
+            {account ? "Đã trình danh" : "Tiến độ đang lưu trên trình duyệt này. Trình danh để giữ trên tài khoản."}
           </p>
         </div>
         <ul className="mt-1 flex flex-col">
@@ -140,7 +140,7 @@ export default function HeaderAccountMenu({ scene, account }: { scene: Scene; ac
                   className={item}
                 >
                   <PersonGlyph />
-                  Đăng nhập
+                  Trình danh
                 </SceneLink>
               </li>
               <li>

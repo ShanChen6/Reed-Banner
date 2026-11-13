@@ -205,7 +205,7 @@ export default function FormationScreen() {
       const r = await startRanked(level);
       setBusy(false);
       if (!r.ok) {
-        setClaimNote(r.status === 403 ? "Chế độ xếp hạng chưa mở." : r.status === 401 ? "Cần đăng nhập để chơi xếp hạng." : "Chưa mở được ván xếp hạng. Xin thử lại.");
+        setClaimNote(r.status === 403 ? "Chế độ xếp hạng chưa mở." : r.status === 401 ? "Cần trình danh để chơi xếp hạng." : "Chưa mở được ván xếp hạng. Xin thử lại.");
         return;
       }
       setClaimNote("");

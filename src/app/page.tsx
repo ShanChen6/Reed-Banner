@@ -140,7 +140,7 @@ export default function Home() {
             ))}
           </ul>
           <Link href="/game/login" className="ml-auto text-sm text-on-wood-soft hover:text-[var(--primary)] md:ml-2">
-            Đăng nhập
+            Trình danh
           </Link>
           <PlayButton className="px-3 py-1.5 text-sm" />
         </nav>
@@ -368,7 +368,7 @@ export default function Home() {
           <SectionTitle
             kicker="Chế độ chơi"
             title="Từ Thao Luyện tới Bình Loạn"
-            sub="Chơi bằng tài khoản khách ngay, tiến trình gắn với trình duyệt. Đăng nhập để giữ tiến trình trên mọi máy."
+            sub="Chơi bằng tài khoản khách ngay, tiến trình gắn với trình duyệt. Trình danh để giữ tiến trình trên mọi máy."
           />
           <ul className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {MODES.map((m) => {
@@ -472,7 +472,7 @@ export default function Home() {
               {[
                 { href: "/game", label: "Vào game" },
                 { href: "/game/practice", label: "Thao Luyện" },
-                { href: "/game/login", label: "Đăng nhập" },
+                { href: "/game/login", label: "Trình danh" },
                 { href: "/game/register", label: "Ghi danh" },
               ].map((l) => (
                 <li key={l.href}>

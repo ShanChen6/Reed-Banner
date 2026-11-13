@@ -1,6 +1,6 @@
 // Quét chữ hiển thị (chuỗi có dấu tiếng Việt và mọi chữ JSX) trong src/app theo quy ước
 // "Văn phong giao diện" ở docs/00-overview/thuat-ngu.md: chặn tên chế độ cũ, từ tiếng Anh,
-// "Tianwu" trong trận, "nhé", "nhân vật kèm". Chú thích và tên mã không bị quét.
+// "Tianwu" trong trận, "nhé", "nhân vật kèm", "đăng nhập". Chú thích và tên mã không bị quét.
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -56,6 +56,8 @@ const RULES: readonly Rule[] = [
     allow: (t) => t.file === join("src/app/page.tsx") || t.file.startsWith(join("src/app/home")) },
   { name: "nhé", pattern: /(?<!\p{L})nhé(?!\p{L})/u },
   { name: "nhân vật kèm", pattern: /nhân vật kèm/iu },
+  // Đăng nhập gọi là "trình danh"; chỉ giữ từ cũ trong ngoặc của nhãn "Danh hiệu (tên đăng nhập)".
+  { name: "đăng nhập", pattern: /(?<!tên )đăng nhập/iu },
 ];
 
 describe("văn phong giao diện", () => {
