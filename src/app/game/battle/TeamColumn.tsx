@@ -100,8 +100,8 @@ export function TeamColumn({
             comboSource={f.comboReady ? state.sides[f.comboReady.source.side].fighters[f.comboReady.source.fighter]?.name : undefined}
             comboTarget={f.comboReady?.target ? state.sides[f.comboReady.target.side].fighters[f.comboReady.target.fighter]?.name : undefined}
             leader={own.leader === i}
-            rage={own.leader === i ? own.rage : null}
-            rageTurns={own.leader === i ? own.passiveTurns : 0}
+            rage={own.rages ? (own.rages[i] ?? 0) : own.leader === i ? own.rage : null}
+            rageTurns={own.passives ? (own.passives[i] ?? 0) : own.leader === i ? own.passiveTurns : 0}
             active={isActor}
             selectable={canPick && !aim}
             targetable={!!target && aimMark === i && isAlive(f)}

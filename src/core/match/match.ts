@@ -143,6 +143,8 @@ export function startMatch(config: MatchConfig): MatchStep {
     sides: [config.sides[0], config.sides[1]],
     seed: config.seed,
     timer: true,
+    // Trận có đội nhiều người: mỗi tướng có Nộ và bị động riêng (xem docs/01-gameplay/tai-nguyen-cong-thuc.md mục 3).
+    ...(config.sides.some((s) => s.fighters.length > 1) ? { perFighterRage: true } : {}),
     firstSide: config.firstSide,
     now: config.now,
     ...(config.weights ? { weights: config.weights } : {}),
