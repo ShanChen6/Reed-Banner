@@ -11,8 +11,8 @@ import styles from "./AuthLinks.module.css";
 import { PROVIDER_NAME, ProviderLogo } from "./ProviderLogo";
 
 const PROVIDER_BLURB: Record<ProviderId, string> = {
-  google: "Đóng ấn bằng tài khoản Google",
-  github: "Đóng ấn bằng tài khoản GitHub",
+  google: "Đóng ấn tín bằng tài khoản Google",
+  github: "Đóng ấn tín bằng tài khoản GitHub",
 };
 
 /** Sang phân cảnh tài khoản khác, giữ nguyên `returnTo`. */
@@ -51,7 +51,7 @@ export function ProviderButtons({ providers }: { providers: readonly ProviderId[
               <ProviderLogo provider={p} />
             </span>
             <span className={styles.providerText}>
-              <span className={styles.providerName}>Tiếp tục với {PROVIDER_NAME[p]}</span>
+              <span className={styles.providerName}>Vào trại bằng {PROVIDER_NAME[p]}</span>
               <span className={styles.providerBlurb}>{PROVIDER_BLURB[p]}</span>
             </span>
             <span aria-hidden className={styles.chev}>
