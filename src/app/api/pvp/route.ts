@@ -39,7 +39,8 @@ export async function POST(request: NextRequest) {
     await pvpLeaveQueue(who, d);
   } else if (body?.action === "queue") {
     const r = await pvpEnqueue(who, body.format as "duel", d);
-    if (!r.ok) return NextResponse.json({ error: r.error }, { status: r.error === "inMatch" ? 409 : 400, headers: noStore });
+    if (!r.ok)
+      return NextResponse.json({ error: r.error, ...(r.until ? { until: r.until } : {}) }, { status: r.error === "inMatch" ? 409 : r.error === "banned" ? 403 : 400, headers: noStore });
   } else {
     return NextResponse.json({ error: "badRequest" }, { status: 400, headers: noStore });
   }

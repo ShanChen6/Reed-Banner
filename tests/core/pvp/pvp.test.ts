@@ -6,6 +6,13 @@ import { STARTER_COMPANIONS, mainCharacter, SHOP_COMPANIONS } from "../../../src
 import { createRng } from "../../../src/core/rng";
 import {
   PVP_AI_FACTOR_MIN,
+  PVP_BAN_BASE_MS,
+  PVP_BAN_MAX_MS,
+  PVP_GOLD_DAILY_CAP,
+  PVP_GOLD_LOSS,
+  PVP_GOLD_WIN,
+  pvpBanMs,
+  pvpGoldBase,
   PVP_DISCONNECT_MS,
   PVP_FORGIVE_PER_DAY,
   PVP_REJOIN_MS,
@@ -504,5 +511,22 @@ describe("PvP: mô phỏng trận qua cùng đường pvpAct", () => {
     const r = pvpSettle(state, {});
     assert.equal(r.length, 5);
     assert.ok(r.every((x) => x.before === PVP_ELO_START && x.after >= 0));
+  });
+});
+
+describe("PvP: vàng và hạn chế ghép trận", () => {
+  it("vàng gốc theo thắng, thua và giảm theo số AI", () => {
+    assert.equal(pvpGoldBase(true, 0), PVP_GOLD_WIN);
+    assert.equal(pvpGoldBase(false, 0), PVP_GOLD_LOSS);
+    assert.ok(pvpGoldBase(true, 1) < PVP_GOLD_WIN && pvpGoldBase(true, 1) > 0);
+    assert.ok(PVP_GOLD_DAILY_CAP > PVP_GOLD_WIN);
+  });
+
+  it("phá trận lần đầu chỉ cảnh cáo; từ lần hai hạn chế 15 phút, gấp đôi mỗi lần, tối đa 24 giờ", () => {
+    assert.equal(pvpBanMs(1), 0);
+    assert.equal(pvpBanMs(2), PVP_BAN_BASE_MS);
+    assert.equal(pvpBanMs(3), PVP_BAN_BASE_MS * 2);
+    assert.equal(pvpBanMs(30), PVP_BAN_MAX_MS);
+    assert.throws(() => pvpBanMs(0), RangeError);
   });
 });

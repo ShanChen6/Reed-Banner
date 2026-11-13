@@ -37,3 +37,29 @@ export function pvpEloDelta(params: { readonly won: boolean; readonly own: numbe
   // Làm tròn về số nguyên gần nhất, tránh -0.
   return Math.round(raw) + 0;
 }
+
+/** Vàng mỗi trận PvP cho người được tính điểm: thắng, thua (đề xuất, chờ Shan duyệt). */
+export const PVP_GOLD_WIN = 60;
+export const PVP_GOLD_LOSS = 20;
+/** Trần vàng PvP mỗi người mỗi ngày (giờ Việt Nam). Số trận không bị giới hạn, chỉ vàng bị giới hạn. */
+export const PVP_GOLD_DAILY_CAP = 300;
+/** Một người chỉ có vàng ở bấy nhiêu trận đầu mỗi ngày với cùng một đối thủ; trận sau vẫn tính điểm nhưng không có vàng. */
+export const PVP_GOLD_PER_OPPONENT = 2;
+/** Hạn chế ghép trận khi phá trận lần thứ hai trong tuần: 15 phút, gấp đôi mỗi lần lặp lại, tối đa 24 giờ. */
+export const PVP_BAN_BASE_MS = 15 * 60_000;
+export const PVP_BAN_MAX_MS = 24 * 60 * 60_000;
+
+/** Vàng gốc của một trận cho người được tính điểm, đã giảm theo số AI trong trận (làm tròn). */
+export function pvpGoldBase(won: boolean, aiCount: number): number {
+  return Math.round((won ? PVP_GOLD_WIN : PVP_GOLD_LOSS) * pvpAiFactor(aiCount));
+}
+
+/**
+ * Hậu quả của lần phá trận thứ `count` trong tuần: lần đầu chỉ cảnh cáo, từ lần hai bị hạn chế ghép trận
+ * (`PVP_BAN_BASE_MS` nhân đôi mỗi lần, không quá `PVP_BAN_MAX_MS`). Trả số mili giây bị hạn chế, 0 là chỉ cảnh cáo.
+ */
+export function pvpBanMs(count: number): number {
+  if (!Number.isInteger(count) || count < 1) throw new RangeError("Số lần phá trận không hợp lệ");
+  if (count === 1) return 0;
+  return Math.min(PVP_BAN_MAX_MS, PVP_BAN_BASE_MS * 2 ** (count - 2));
+}

@@ -4,10 +4,10 @@ import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
 import { chooseMove, toView } from "../../src/core/ai";
-import { PVP_DISCONNECT_MS, PVP_ELO_START, PVP_FORGIVE_PER_DAY, PVP_REJOIN_MS, newProfile, pvpActorOwner, createRng, TURN_MS, vnDay } from "../../src/core";
+import { PVP_BAN_BASE_MS, PVP_GOLD_DAILY_CAP, PVP_GOLD_LOSS, PVP_GOLD_PER_OPPONENT, PVP_GOLD_WIN, PVP_DISCONNECT_MS, PVP_ELO_START, PVP_FORGIVE_PER_DAY, PVP_REJOIN_MS, newProfile, pvpActorOwner, createRng, TURN_MS, vnDay } from "../../src/core";
 import { DrizzlePvpStore } from "../../src/server/db/pvp";
 import type { Db } from "../../src/server/db/store";
-import { MemoryProfileStore, type ProfileStore } from "../../src/server/profiles";
+import { MemoryProfileStore, loadProfile, type ProfileStore } from "../../src/server/profiles";
 import {
   MemoryPvpStore,
   PVP_MATCH_ANY_AFTER_MS,
@@ -240,6 +240,88 @@ for (const [name, factory] of stores) {
       assert.equal(row.forgiveUsed, 1);
       assert.equal((await pvpOverview(first, mk(T0 + TURN_MS + 4000))).forgiveLeft, PVP_FORGIVE_PER_DAY - 1);
       assert.equal(PVP_DISCONNECT_MS < TURN_MS, true);
+    });
+
+    /** Ép trận kết thúc với người thắng `winner` (phe 0 hoặc 1), có thể đánh dấu người phá trận, rồi để server tính điểm. */
+    const finish = async (pvp: PvpStore, mk: (n: number) => PvpDeps, id: string, winner: 0 | 1, now: number, breaker?: string) => {
+      const mid = (await pvp.getMatch(id))!;
+      const players = breaker ? { ...mid.state.players, [breaker]: { ...mid.state.players[breaker]!, breaker: true } } : mid.state.players;
+      const forced = { ...mid, state: { ...mid.state, players, battle: { ...mid.state.battle, winner } }, seq: mid.seq + 1 };
+      assert.equal(await pvp.saveMatch(forced, mid.seq), true);
+      const r = await pvpGetMatch(id, "a", mk(now));
+      assert.ok(r.ok);
+      return r.ok ? r.view : null;
+    };
+
+    it("vàng: thắng 60, thua 20, tính đúng một lần, trừ vào trần vàng mỗi ngày", async () => {
+      const { mk, pvp, profiles } = await setup();
+      const id = await pair(mk);
+      const rec = (await pvp.getMatch(id))!;
+      const winnerSide = 0 as const;
+      const winner = rec.state.seats[winnerSide][0] as string;
+      const loser = rec.state.seats[1][0] as string;
+      await finish(pvp, mk, id, winnerSide, T0 + 5000);
+      await Promise.all([pvpGetMatch(id, "a", mk(T0 + 6000)), pvpGetMatch(id, "b", mk(T0 + 6000))]);
+      assert.equal((await loadProfile(profiles, winner)).profile.gold, PVP_GOLD_WIN);
+      assert.equal((await loadProfile(profiles, loser)).profile.gold, PVP_GOLD_LOSS);
+      assert.equal(await pvp.goldToday(winner, vnDay(T0 + 5000)), PVP_GOLD_WIN);
+      assert.equal((await pvpOverview(winner, mk(T0 + 7000))).goldLeft, PVP_GOLD_DAILY_CAP - PVP_GOLD_WIN);
+      const v = await pvpGetMatch(id, winner, mk(T0 + 8000));
+      assert.ok(v.ok);
+      if (v.ok) assert.equal(v.view.result?.gold, PVP_GOLD_WIN);
+    });
+
+    it("vàng bị cắt ở trần mỗi ngày nhưng số trận không bị giới hạn; điểm hạng vẫn tính", async () => {
+      const { mk, pvp, profiles } = await setup();
+      await pvp.addGold("a", vnDay(T0), PVP_GOLD_DAILY_CAP - 10);
+      await pvp.addGold("b", vnDay(T0), PVP_GOLD_DAILY_CAP);
+      const id = await pair(mk);
+      await finish(pvp, mk, id, 0, T0 + 5000);
+      const rec = (await pvp.getMatch(id))!;
+      const a = rec.results!.find((r) => r.player === "a")!;
+      const b = rec.results!.find((r) => r.player === "b")!;
+      assert.equal(a.gold, Math.min(10, a.won ? PVP_GOLD_WIN : PVP_GOLD_LOSS));
+      assert.equal(b.gold, 0);
+      assert.notEqual(a.delta, 0);
+      assert.equal((await loadProfile(profiles, "b")).profile.gold, 0);
+      // Hết trần vẫn vào hàng đợi được: không có giới hạn trận.
+      assert.deepEqual(await pvpEnqueue("b", "duel", mk(T0 + 9000)), { ok: true });
+    });
+
+    it("đấu quá PVP_GOLD_PER_OPPONENT trận trong ngày với cùng một người thì trận sau không có vàng", async () => {
+      const { mk, pvp } = await setup();
+      for (let i = 1; i <= PVP_GOLD_PER_OPPONENT + 1; i++) {
+        const t = T0 + i * 100_000;
+        const id = await pair(mk, "a", "b", t);
+        await finish(pvp, mk, id, 0, t + 5000);
+        const rec = (await pvp.getMatch(id))!;
+        const gold = rec.results!.reduce((n, r) => n + r.gold, 0);
+        if (i <= PVP_GOLD_PER_OPPONENT) assert.ok(gold > 0, `trận ${i}`);
+        else assert.equal(gold, 0, `trận ${i}`);
+      }
+    });
+
+    it("phá trận: lần đầu trong tuần cảnh cáo, lần hai bị hạn chế ghép trận và không vào hàng đợi được tới khi hết hạn", async () => {
+      const { mk, pvp } = await setup();
+      const id1 = await pair(mk, "a", "b", T0);
+      const v1 = await finish(pvp, mk, id1, 1, T0 + 5000, "a");
+      assert.ok(v1);
+      const r1 = (await pvp.getMatch(id1))!.results!.find((r) => r.player === "a")!;
+      assert.deepEqual([r1.counted, r1.delta, r1.gold, r1.warned, r1.banUntil], [false, 0, 0, true, null]);
+      assert.equal((await pvpOverview("a", mk(T0 + 6000))).breakCount, 1);
+      assert.deepEqual(await pvpEnqueue("a", "duel", mk(T0 + 7000)), { ok: true });
+      await pvpLeaveQueue("a", mk(T0 + 7500));
+
+      const t2 = T0 + 200_000;
+      const id2 = await pair(mk, "a", "b", t2);
+      await finish(pvp, mk, id2, 1, t2 + 5000, "a");
+      const r2 = (await pvp.getMatch(id2))!.results!.find((r) => r.player === "a")!;
+      assert.equal(r2.warned, false);
+      assert.equal(r2.banUntil, t2 + 5000 + PVP_BAN_BASE_MS);
+      const o = await pvpOverview("a", mk(t2 + 6000));
+      assert.equal(o.banUntil, r2.banUntil);
+      assert.deepEqual(await pvpEnqueue("a", "duel", mk(t2 + 7000)), { ok: false, error: "banned", until: r2.banUntil as number });
+      assert.deepEqual(await pvpEnqueue("a", "duel", mk(t2 + 5000 + PVP_BAN_BASE_MS + 1)), { ok: true });
     });
   });
 }
