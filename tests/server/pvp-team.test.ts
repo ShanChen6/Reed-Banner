@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
-import { PVP_DRAFT_TURN_MS, PVP_ELO_START, newProfile } from "../../src/core";
+import { PVP_DRAFT_TURN_MS, PVP_PREP_MS, PVP_ELO_START, newProfile } from "../../src/core";
 import { DrizzlePvpStore } from "../../src/server/db/pvp";
 import type { Db } from "../../src/server/db/store";
 import { MemoryProfileStore, loadProfile, type ProfileStore } from "../../src/server/profiles";
@@ -93,8 +93,33 @@ for (const [name, factory] of stores) {
         assert.ok(res.ok, res.ok ? "" : res.error);
         v = (res as { ok: true; view: PvpDraftView }).view;
       }
+      // Cấm chọn xong thì sang chuẩn bị, chưa có trận.
+      assert.equal(v.status, "prep");
+      assert.equal(v.matchId, null);
+      assert.equal(v.prep!.lineup.length, 3);
+      assert.equal(v.prep!.foes.length, 3);
+      let cap = "";
+      for (const u of names) if ((await view(id, u, mk, t)).prep!.captain) cap = u;
+      assert.ok(cap);
+      const cv = await view(id, cap, mk, t);
+      const before = cv.prep!.lineup.map((x) => x.hero.id);
+      const other = names.find((u) => u !== cap && cv.humans.some((h) => h.name === `Tên ${u}` && !h.mine))!;
+      // Người không phải đội trưởng không xếp được; ngoài phạm vi bị từ chối.
+      const notCap = await view(id, other, mk, t);
+      if (!notCap.prep!.captain) assert.deepEqual((await pvpDraftPlay(id, other, { type: "swap", a: 0, b: 1 }, mk(t))).ok, false);
+      assert.deepEqual((await pvpDraftPlay(id, cap, { type: "swap", a: 0, b: 9 }, mk(t))).ok, false);
+      const swapped = await pvpDraftPlay(id, cap, { type: "swap", a: 0, b: 1 }, mk(t));
+      assert.ok(swapped.ok);
+      const after = (swapped as { ok: true; view: PvpDraftView }).view.prep!.lineup.map((x) => x.hero.id);
+      assert.deepEqual(after, [before[1], before[0], ...before.slice(2)]);
+      // Mọi người thật sẵn sàng thì dựng trận ngay, theo đội hình đã xếp.
+      for (const u of names) v = (((await pvpDraftPlay(id, u, { type: "ready" }, mk(t + 100))) as { ok: true; view: PvpDraftView }).view);
       assert.equal(v.status, "done");
       assert.ok(v.matchId);
+      const built = (await pvp.getMatch(v.matchId!))!;
+      const capSide = built.state.seats[0].includes(cap) ? 0 : 1;
+      assert.equal(built.state.battle.sides[capSide]!.fighters[0]!.id, after[0]);
+      assert.equal(built.state.captains[capSide], built.state.seats[capSide].indexOf(cap));
       const rec = (await pvp.getMatch(v.matchId!))!;
       assert.equal(rec.format, "team");
       assert.notEqual(rec.state.friendly, true);
@@ -112,18 +137,22 @@ for (const [name, factory] of stores) {
       const { mk, pvp } = await setup();
       const id = await toDraft(mk);
       assert.deepEqual(await pvpEnqueue("u1", "team", mk(T0 + PVP_TEAM_FILL_MS + 3000)), { ok: false, error: "inMatch" });
-      const v = await view(id, "u2", mk, T0 + PVP_TEAM_FILL_MS + 3000 + 20 * PVP_DRAFT_TURN_MS);
+      const t1 = T0 + PVP_TEAM_FILL_MS + 3000 + 20 * PVP_DRAFT_TURN_MS;
+      assert.equal((await view(id, "u2", mk, t1)).status, "prep");
+      // Không ai bấm sẵn sàng: hết giờ chuẩn bị thì tự dựng trận.
+      const v = await view(id, "u2", mk, t1 + PVP_PREP_MS + 1000);
       assert.equal(v.status, "done");
       assert.ok(v.bans.every((b) => b.auto));
       const rec = (await pvp.getMatch(v.matchId!))!;
       assert.equal(rec.state.seats.flat().filter((p) => p !== null).length, 3);
-      assert.deepEqual((await pvpOverview("u3", mk(T0 + PVP_TEAM_FILL_MS + 4000 + 20 * PVP_DRAFT_TURN_MS))).matchId, v.matchId);
+      assert.deepEqual((await pvpOverview("u3", mk(t1 + PVP_PREP_MS + 2000))).matchId, v.matchId);
     });
 
     it("xong trận: điểm và vàng tính riêng từng người ở 3vs3, không đụng điểm 1vs1", async () => {
       const { mk, pvp, profiles } = await setup();
       const id = await toDraft(mk);
-      const t = T0 + PVP_TEAM_FILL_MS + 3000 + 20 * PVP_DRAFT_TURN_MS;
+      const t = T0 + PVP_TEAM_FILL_MS + 3000 + 20 * PVP_DRAFT_TURN_MS + PVP_PREP_MS + 1000;
+      await view(id, "u1", mk, T0 + PVP_TEAM_FILL_MS + 3000 + 20 * PVP_DRAFT_TURN_MS);
       const v = await view(id, "u1", mk, t);
       const mid = (await pvp.getMatch(v.matchId!))!;
       const forced = { ...mid, state: { ...mid.state, battle: { ...mid.state.battle, winner: 0 as const } }, seq: mid.seq + 1 };

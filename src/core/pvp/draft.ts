@@ -11,6 +11,8 @@ import { pvpSideRating } from "./elo";
 export const PVP_DRAFT_BANS_PER_SIDE = 3;
 /** Thời gian cho mỗi lượt cấm hoặc chọn. */
 export const PVP_DRAFT_TURN_MS = 20_000;
+/** Thời gian chuẩn bị sau cấm chọn: đổi trang bị, đội trưởng xếp vị trí, mọi người bấm sẵn sàng. */
+export const PVP_PREP_MS = 45_000;
 const MAX_CATCH_UP = 64;
 
 export type DraftBan =
@@ -39,6 +41,19 @@ export interface DraftPick {
   readonly hero: DraftHero;
 }
 
+/** Một vị trí trong đội hình: người thật cầm tướng, hoặc máy (owner null). */
+export interface LineupSlot {
+  readonly owner: string | null;
+  readonly hero: DraftHero;
+}
+
+/** Màn chuẩn bị sau cấm chọn: đội hình hai phe (vị trí 1, 2, 3), ai đã sẵn sàng, hạn chuẩn bị. */
+export interface DraftPrep {
+  readonly lineup: readonly [readonly LineupSlot[], readonly LineupSlot[]];
+  readonly ready: readonly string[];
+  readonly deadline: number;
+}
+
 export interface PvpDraft {
   readonly seed: number;
   /** Người thật của từng phe, theo thứ tự chỗ ngồi. */
@@ -55,6 +70,8 @@ export interface PvpDraft {
   readonly deadline: number | null;
   readonly bans: readonly { readonly side: SideIndex; readonly ban: DraftBan; readonly auto: boolean }[];
   readonly picks: readonly DraftPick[];
+  /** Có khi cấm chọn xong và đang chuẩn bị. */
+  readonly prep?: DraftPrep | null;
 }
 
 export interface DraftConfig {
@@ -67,7 +84,7 @@ export interface DraftConfig {
   readonly now: number;
 }
 
-export type DraftError = "notYourTurn" | "draftOver" | "badBan" | "banned" | "badHero" | "heroTaken" | "dblTaken" | "badBuild";
+export type DraftError = "notPrep" | "notCaptain" | "badSlot" | "notYourTurn" | "draftOver" | "badBan" | "banned" | "badHero" | "heroTaken" | "dblTaken" | "badBuild";
 
 export type DraftResult = { readonly ok: true; readonly draft: PvpDraft } | { readonly ok: false; readonly error: DraftError };
 
@@ -209,4 +226,49 @@ export function draftCatchUp(start: PvpDraft, now: number): PvpDraft {
   let d = start;
   for (let guard = 0; guard < MAX_CATCH_UP && !draftOver(d) && d.deadline !== null && d.deadline <= now; guard++) d = autoStep(d, d.deadline);
   return d;
+}
+
+/** Đội trưởng của phe: người thật đầu tiên, được xếp vị trí cho cả phe. */
+export const draftCaptain = (d: PvpDraft, side: SideIndex): string => d.humans[side][0] as string;
+
+/**
+ * Vào màn chuẩn bị: đội hình mỗi phe là các tướng đã chọn (theo thứ tự chỗ ngồi) rồi tới tướng máy điền (`fillers`).
+ * Đội trưởng sau đó xếp lại vị trí.
+ */
+export function draftBeginPrep(d: PvpDraft, fillers: readonly [readonly DraftHero[], readonly DraftHero[]], now: number): PvpDraft {
+  const lineup = ([0, 1] as const).map((side) => [
+    ...d.picks
+      .filter((p) => p.side === side)
+      .sort((a, b) => d.humans[side].indexOf(a.owner) - d.humans[side].indexOf(b.owner))
+      .map((p): LineupSlot => ({ owner: p.owner, hero: p.hero })),
+    ...fillers[side].map((hero): LineupSlot => ({ owner: null, hero })),
+  ]) as unknown as DraftPrep["lineup"];
+  return { ...d, prep: { lineup, ready: [], deadline: now + PVP_PREP_MS } };
+}
+
+/** Đội trưởng đổi chỗ hai vị trí trong phe mình. Chỉ trước khi hết giờ chuẩn bị; ai đã sẵn sàng vẫn giữ trạng thái. */
+export function draftPrepSwap(d: PvpDraft, owner: string, a: number, b: number): DraftResult {
+  if (!d.prep) return { ok: false, error: "notPrep" };
+  const side: SideIndex = d.humans[1].includes(owner) ? 1 : 0;
+  if (draftCaptain(d, side) !== owner) return { ok: false, error: "notCaptain" };
+  const row = d.prep.lineup[side];
+  if (!Number.isInteger(a) || !Number.isInteger(b) || a < 0 || b < 0 || a >= row.length || b >= row.length) return { ok: false, error: "badSlot" };
+  const next = [...row];
+  [next[a], next[b]] = [row[b] as LineupSlot, row[a] as LineupSlot];
+  const lineup = (side === 0 ? [next, d.prep.lineup[1]] : [d.prep.lineup[0], next]) as unknown as DraftPrep["lineup"];
+  return { ok: true, draft: { ...d, prep: { ...d.prep, lineup } } };
+}
+
+export function draftPrepReady(d: PvpDraft, owner: string): DraftResult {
+  if (!d.prep) return { ok: false, error: "notPrep" };
+  if (d.prep.ready.includes(owner)) return { ok: true, draft: d };
+  return { ok: true, draft: { ...d, prep: { ...d.prep, ready: [...d.prep.ready, owner] } } };
+}
+
+/** Chuẩn bị xong: hết giờ hoặc mọi người thật đều sẵn sàng. */
+export function draftPrepDone(d: PvpDraft, now: number): boolean {
+  const p = d.prep;
+  if (!p) return false;
+  const seated = p.lineup.flat().flatMap((s) => (s.owner === null ? [] : [s.owner]));
+  return now >= p.deadline || seated.every((o) => p.ready.includes(o));
 }

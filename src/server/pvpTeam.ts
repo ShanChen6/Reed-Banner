@@ -14,6 +14,7 @@ import {
   pvpFirstSide,
   pvpSideRating,
   type DraftHero,
+  type PvpDraft,
   type FighterConfig,
   type SideIndex,
 } from "@/core";
@@ -61,50 +62,60 @@ export async function buildDraft(group: readonly PvpQueueRow[], deps: PvpDeps): 
   return { id: deps.newId(), state, seq: 1, status: "active", matchId: null, owners: ranked.map((r) => r.ownerId), createdAt: deps.now, updatedAt: deps.now };
 }
 
-/** Dựng trận từ phiên cấm chọn đã xong: tướng người chọn theo hồ sơ của họ, chỗ trống máy điền (không trùng tướng, không bị cấm). */
+/** Tướng máy điền chỗ trống của từng phe: không trùng tướng trong phe, không bị cấm, cấp bằng cấp trung bình của người thật. */
+export function draftFillers(d: PvpDraft): [DraftHero[], DraftHero[]] {
+  const rng = createRng(d.seed + 17);
+  const banned = new Set(d.bans.flatMap((b) => (b.ban.kind === "hero" ? [b.ban.id] : [])));
+  const level = Math.max(1, Math.round(d.picks.reduce((a, p) => a + p.hero.level, 0) / Math.max(1, d.picks.length)));
+  return ([0, 1] as const).map((side) => {
+    const used = new Set(d.picks.filter((p) => p.side === side).map((p) => p.hero.id));
+    const out: DraftHero[] = [];
+    while (used.size < 3) {
+      const free = STARTER_COMPANIONS.filter((c) => !used.has(c.id));
+      const pool = free.filter((c) => !banned.has(c.id));
+      const choices = pool.length ? pool : free;
+      const pick = choices[rng.int(0, choices.length - 1)] as FighterConfig;
+      used.add(pick.id);
+      out.push({ id: pick.id, name: pick.name, level, element: pick.element, profession: pick.profession });
+    }
+    return out;
+  }) as [DraftHero[], DraftHero[]];
+}
+
+/** Dựng trận từ đội hình đã chuẩn bị: người thật dựng tướng từ hồ sơ hiện tại của họ (trang bị mới nhất), máy dựng theo cấp đã định. */
 export async function buildTeamMatch(draft: PvpDraftRecord, deps: PvpDeps, forgiveLeft: (ownerId: string) => Promise<number>): Promise<PvpMatchRecord> {
   const d = draft.state;
-  const rng = createRng(d.seed + 17);
-  const bannedHero = new Set(d.bans.flatMap((b) => (b.ban.kind === "hero" ? [b.ban.id] : [])));
-  const levels: number[] = [];
-  const sides = ([0, 1] as const).map((side) => ({ picks: d.picks.filter((p) => p.side === side) }));
-  const sideSpecs: { fighters: FighterConfig[]; players: (string | null)[]; names: (string | null)[] }[] = [];
-  for (const { picks } of sides) {
+  const lineup = d.prep!.lineup;
+  const sideSpecs: { fighters: FighterConfig[]; players: (string | null)[]; names: (string | null)[]; captain: number }[] = [];
+  for (const side of [0, 1] as const) {
     const fighters: FighterConfig[] = [];
     const players: (string | null)[] = [];
     const names: (string | null)[] = [];
-    for (const p of picks) {
-      const { profile } = await loadProfile(deps.profiles, p.owner);
-      const cfg =
-        p.hero.id === MAIN_ID
-          ? profileTeam({ ...profile, element: p.hero.element, profession: p.hero.profession })[0]
-          : profileTeam(profile, [p.hero.id])[1];
+    for (const slot of lineup[side]) {
+      let cfg: FighterConfig | undefined;
+      if (slot.owner !== null) {
+        const { profile } = await loadProfile(deps.profiles, slot.owner);
+        cfg =
+          slot.hero.id === MAIN_ID
+            ? profileTeam({ ...profile, element: slot.hero.element, profession: slot.hero.profession })[0]
+            : profileTeam(profile, [slot.hero.id])[1];
+      } else {
+        const base = STARTER_COMPANIONS.find((c) => c.id === slot.hero.id);
+        cfg = base ? leveledFoe(base, slot.hero.level) : undefined;
+      }
       if (!cfg) continue;
       fighters.push(cfg);
-      players.push(p.owner);
-      names.push(d.names[p.owner] ?? null);
-      levels.push(p.hero.level);
+      players.push(slot.owner);
+      names.push(slot.owner === null ? null : (d.names[slot.owner] ?? null));
     }
-    sideSpecs.push({ fighters, players, names });
+    sideSpecs.push({ fighters, players, names, captain: Math.max(0, players.indexOf(d.humans[side][0] ?? null)) });
   }
-  const level = Math.max(1, Math.round(levels.reduce((a, b) => a + b, 0) / Math.max(1, levels.length)));
-  for (const spec of sideSpecs) {
-    const used = new Set(spec.fighters.map((f) => f.id));
-    while (spec.fighters.length < 3) {
-      const pool = STARTER_COMPANIONS.filter((c) => !used.has(c.id) && !bannedHero.has(c.id));
-      const choices = pool.length ? pool : STARTER_COMPANIONS.filter((c) => !used.has(c.id));
-      const pick = choices[rng.int(0, choices.length - 1)] as FighterConfig;
-      used.add(pick.id);
-      spec.fighters.push(leveledFoe(pick, level));
-      spec.players.push(null);
-      spec.names.push(null);
-    }
-  }
+  const rng = createRng(d.seed + 31);
   const forgive: Record<string, number> = {};
   for (const o of draft.owners) forgive[o] = await forgiveLeft(o);
   const avg = (side: number) => pvpSideRating(d.humans[side]!.map((p) => d.ratings[p] ?? 0));
   const { state } = createPvpMatch({
-    sides: sideSpecs.map((s) => ({ fighters: s.fighters, players: s.players, captain: 0 })) as never,
+    sides: sideSpecs.map((s) => ({ fighters: s.fighters, players: s.players, captain: s.captain })) as never,
     seed: deps.seed,
     firstSide: pvpFirstSide([avg(0), avg(1)], rng),
     now: deps.now,

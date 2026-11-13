@@ -107,7 +107,8 @@ export interface PvpMatchRecord {
   readonly settledAt: number | null;
 }
 
-export type PvpDraftStatus = "active" | "done" | "abandoned";
+/** active: cấm chọn; prep: chuẩn bị đội hình và trang bị; done: đã dựng trận. */
+export type PvpDraftStatus = "active" | "prep" | "done" | "abandoned";
 
 export interface PvpDraftRecord {
   readonly id: string;
@@ -414,7 +415,7 @@ export async function pvpEnqueue(
   if (cur?.matchId) {
     const m = await deps.pvp.getMatch(cur.matchId);
     if (m && m.status === "active") return { ok: false, error: "inMatch" };
-    if (!m && (await deps.pvp.getDraft(cur.matchId))?.status === "active") return { ok: false, error: "inMatch" };
+    if (!m && ["active", "prep"].includes((await deps.pvp.getDraft(cur.matchId))?.status ?? "")) return { ok: false, error: "inMatch" };
   }
   const { rating } = own;
   await deps.pvp.enqueue({ ownerId, format, rating, enqueuedAt: deps.now, lastSeen: deps.now, matchId: null });
@@ -540,7 +541,7 @@ export async function pvpOverview(ownerId: string, deps: PvpDeps): Promise<PvpOv
     } else {
       // Mã trong hàng đợi là phiên cấm chọn: đang cấm chọn thì vào lại màn đó, xong thì sang trận đã dựng.
       const dr = await deps.pvp.getDraft(q.matchId);
-      if (dr?.status === "active") draftId = dr.id;
+      if (dr?.status === "active" || dr?.status === "prep") draftId = dr.id;
       else if (dr?.status === "done" && dr.matchId) {
         const built = await deps.pvp.getMatch(dr.matchId);
         if (built?.status === "active" && built.owners.includes(ownerId)) matchId = built.id;

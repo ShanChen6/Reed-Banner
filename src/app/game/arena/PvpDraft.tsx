@@ -37,6 +37,9 @@ const ERROR_TEXT: Record<string, string> = {
   heroTaken: "Phe của bạn đã có tướng này.",
   dblTaken: "Đinh Bộ Lĩnh đã có người chọn trong trận này.",
   badBuild: "Nghề hoặc hệ không hợp lệ.",
+  notCaptain: "Chỉ đội trưởng mới xếp được vị trí.",
+  badSlot: "Vị trí không hợp lệ.",
+  notPrep: "Chưa tới bước chuẩn bị.",
   conflict: "Máy chủ đang bận, hãy thử lại.",
   notFound: "Không tìm thấy phiên cấm chọn này.",
 };
@@ -126,8 +129,10 @@ export default function PvpDraftScreen({ id, onMatch, onExit }: { id: string; on
             {view.turn.mine ? "Đến lượt bạn " : `Lượt của ${view.turn.name} (${sideName(view.turn.side)}) `}
             {view.turn.kind === "ban" ? "cấm" : "chọn"} · còn {remain} giây
           </p>
+        ) : view.prep ? (
+          <p className="text-on-wood">Chuẩn bị trận · còn {Math.max(0, Math.ceil((view.prep.deadline - (clockNow + offset)) / 1000))} giây</p>
         ) : (
-          <p className="text-on-wood">Cấm chọn xong, đang dựng trận…</p>
+          <p className="text-on-wood">Đang dựng trận…</p>
         )}
         <ol className="flex gap-1" aria-label="Tiến trình">
           {view.steps.map((s, i) => (
@@ -248,6 +253,46 @@ export default function PvpDraftScreen({ id, onMatch, onExit }: { id: string; on
             <Button disabled={busy || !chosen} onClick={doPick}>
               Chọn tướng này
             </Button>
+          </div>
+        </div>
+      )}
+      {view.prep && (
+        <div className="flex flex-col gap-3" role="group" aria-label="Chuẩn bị">
+          <p className="text-sm text-on-wood-soft">
+            Vị trí 1 đánh đầu tiên khi tới lượt phe. Đội trưởng ({view.prep.captainName}) xếp vị trí cho cả phe. Trận lấy cấp và trang bị theo hồ sơ lúc hết giờ chuẩn bị: bạn có thể đổi trang bị trong lúc chờ.
+          </p>
+          <ol className="flex flex-col gap-2">
+            {view.prep.lineup.map((slot, i) => (
+              <li key={i}>
+                <FrameInset className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-on-wood">
+                    Vị trí {i + 1}: {slot.hero.name} · cấp {slot.hero.level} · {PROFESSION_NAME[slot.hero.profession as keyof typeof PROFESSION_NAME] ?? slot.hero.profession} · {ELEMENT_NAME[slot.hero.element]}
+                    {" "}
+                    <span className="text-on-wood-soft">({slot.mine ? "bạn" : (slot.name ?? "máy điều khiển")})</span>
+                  </p>
+                  {view.prep!.captain && (
+                    <span className="flex gap-2">
+                      <Button size="sm" variant="secondary" disabled={busy || i === 0} aria-label={`Đưa vị trí ${i + 1} lên`} onClick={() => void send({ type: "swap", a: i, b: i - 1 })}>
+                        Lên
+                      </Button>
+                      <Button size="sm" variant="secondary" disabled={busy || i === view.prep!.lineup.length - 1} aria-label={`Đưa vị trí ${i + 1} xuống`} onClick={() => void send({ type: "swap", a: i, b: i + 1 })}>
+                        Xuống
+                      </Button>
+                    </span>
+                  )}
+                </FrameInset>
+              </li>
+            ))}
+          </ol>
+          <p className="text-sm text-on-wood-soft">Phe đối thủ: {view.prep.foes.map((f) => f.hero.name).sort().join(", ")}</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button disabled={busy || view.prep.youReady} onClick={() => void send({ type: "ready" })}>
+              {view.prep.youReady ? "Đã sẵn sàng" : "Sẵn sàng"}
+            </Button>
+            <a className="text-title-on-wood underline" href="/game/profile" target="_blank" rel="noopener noreferrer">
+              Mở Doanh Trại để đổi trang bị (cửa sổ mới)
+            </a>
+            <p className="text-sm text-on-wood-soft">Đã sẵn sàng: {view.prep.readyNames.join(", ") || "chưa ai"}</p>
           </div>
         </div>
       )}
