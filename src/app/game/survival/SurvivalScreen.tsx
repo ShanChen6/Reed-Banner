@@ -40,6 +40,7 @@ import {
   survivalRosterPayload,
   validateSurvivalRosterSelection,
 } from "./roster-selection";
+import { ModeGuideTabs } from "../ModeGuide";
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
@@ -280,6 +281,7 @@ export default function SurvivalScreen() {
           </>
         }
       />
+      <ModeGuideTabs scene="SURVIVAL">
 
       <RankRewardsPanel mode="survival" />
       <SeasonBoardPanel board="survival" />
@@ -373,6 +375,7 @@ export default function SurvivalScreen() {
           </div>
         </OrnateFrame>
       </div>
+      </ModeGuideTabs>
     </ModeScreen>
   );
 }

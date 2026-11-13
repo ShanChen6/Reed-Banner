@@ -21,6 +21,7 @@ import {
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { SeasonBoardPanel } from "../leaderboard/boards";
 import { SceneLink, useScene } from "../SceneContext";
+import { ModeGuideTabs } from "../ModeGuide";
 
 function Members({ list }: { list: readonly ArenaMember[] }) {
   return (
@@ -127,6 +128,7 @@ export default function ArenaScreen() {
           { label: "Lượt hôm nay", value: `${left}/${data.attacksPerDay ?? 0}` },
         ]}
       />
+      <ModeGuideTabs scene="ARENA">
 
       <RankRewardsPanel mode="arena" />
       <SeasonBoardPanel board="arena" />
@@ -233,6 +235,7 @@ export default function ArenaScreen() {
           </div>
         </OrnateFrame>
       </div>
+      </ModeGuideTabs>
     </ModeScreen>
   );
 }

@@ -90,6 +90,7 @@ import {
   TONE_TEXT,
 } from "./StoryBeats";
 import { useScene } from "../SceneContext";
+import { ModeGuidePanel } from "../ModeGuide";
 
 /** Bước đang xem của nhiệm vụ: chỉ là tiện ích hiển thị, không phải tiến độ. */
 const STEP_KEY = "coLau.campaign.v2.step";
@@ -637,7 +638,7 @@ export default function ChapterOne({
     const saved = readJson<AtlasState>(ATLAS_KEY);
     return {
       view:
-        saved?.view === "mission" || saved?.view === "codex" || saved?.view === "raid"
+        saved?.view === "mission" || saved?.view === "codex" || saved?.view === "raid" || saved?.view === "guide"
           ? saved.view
           : "atlas",
       stronghold:
@@ -797,7 +798,7 @@ export default function ChapterOne({
     <section
       ref={sectionRef}
       aria-labelledby={
-        atlas.view === "atlas" ? "chapter-one-title" : "mission-title"
+        atlas.view === "atlas" ? "chapter-one-title" : atlas.view === "guide" ? "mode-guide-title" : "mission-title"
       }
       className="flex scroll-mt-4 flex-col gap-4"
     >
@@ -897,7 +898,11 @@ export default function ChapterOne({
               )}
             </div>
           )}
-      {atlas.view === "codex" ? (
+      {atlas.view === "guide" ? (
+        <div className="px-1 sm:px-2">
+          <ModeGuidePanel scene="CAMPAIGN" headingId="mode-guide-title" />
+        </div>
+      ) : atlas.view === "codex" ? (
         <>
           <WorldLedger campaign={profile.campaign} />
           <WarlordCodex campaign={campaign} />

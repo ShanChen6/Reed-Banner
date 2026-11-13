@@ -37,6 +37,7 @@ import { Portrait } from "../art/portraits";
 import { ONLINE_BATTLE_KEY } from "../battle/online";
 import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, TIER_COLOR_NAME } from "../battle/labels";
 import { useScene } from "../SceneContext";
+import { ModeGuideTabs } from "../ModeGuide";
 
 interface TierView {
   readonly tier: ExpeditionTier;
@@ -286,6 +287,7 @@ export default function ExpeditionScreen() {
           art="/art/home/campaign.webp"
           description="Chia sáu tướng làm hai đạo. Mỗi ngày một đạo tiến một ô, đạo kia nghỉ hồi sức. Giặc tăng viện theo ngày; đứng kề ô bị đánh thì hai đạo giáp công. Chiếm thành đích trước khi hết ngày."
         />
+        <ModeGuideTabs scene="EXPEDITION">
 
         {message && <Alert>{message}</Alert>}
         {notice && <Alert tone="success">{notice}</Alert>}
@@ -333,6 +335,7 @@ export default function ExpeditionScreen() {
             }}
           />
         )}
+        </ModeGuideTabs>
       </div>
     </ModeScreen>
   );

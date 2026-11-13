@@ -26,6 +26,7 @@ import {
 } from "../battle/online";
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { SceneLink, useScene } from "../SceneContext";
+import { ModeGuideTabs } from "../ModeGuide";
 
 function scoreText(s: DailyScore): string {
   return s.won
@@ -135,6 +136,7 @@ export default function DailyScreen() {
           { label: "Thua", value: `${DAILY_GOLD.loss} vàng` },
         ]}
       />
+      <ModeGuideTabs scene="DAILY">
 
       <RankRewardsPanel mode="daily" />
 
@@ -231,6 +233,7 @@ export default function DailyScreen() {
           )}
         </OrnateFrame>
       </div>
+      </ModeGuideTabs>
     </ModeScreen>
   );
 }
