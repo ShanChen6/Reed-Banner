@@ -12,7 +12,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Element } from "@/core/battle/elements";
 import {
   KL_MIN_GROUP,
-  KL_TIME_BONUS_PER_SECOND,
   createGame,
   groupAt,
   groupScore,
@@ -512,18 +511,6 @@ export default function KhaiLoScreen() {
               </div>
             </div>
           )}
-          <details className="ui-frame p-4" open={state.level === 1 && state.moves === 0}>
-            <summary className="cursor-pointer ui-title-on-wood font-bold pointer-coarse:py-3.5">Luật chơi</summary>
-            <ul className="mt-2 list-disc space-y-1.5 pl-5 text-[15px] leading-snug">
-              <li>Chạm một quân có ít nhất 1 quân cùng hệ liền cạnh (trên, dưới, trái, phải): <b>cả khối</b> biến mất. Khối n quân được n² điểm, nên gom khối to rồi mới xóa.</li>
-              <li>Quân phía trên rơi xuống; cột trống hẳn thì các cột bên phải dồn sang trái. Không có quân mới rơi vào.</li>
-              <li>Quân có <b>hào quang</b> nhân điểm cả khối chứa nó (mỗi quân hào quang ×1 thêm).</li>
-              <li>Hết khối để xóa là hết màn: mỗi quân còn sót trừ 1 quân lực. Dọn sạch bàn được thưởng điểm theo màn, +5 quân lực và +1 mỗi đạo cụ. Quân lực về 0 là hết ván.</li>
-              <li>Màn càng sau càng nhiều hệ (3 lên 6). Mỗi màn được hoàn tác 1 lần.</li>
-              <li><b>Lốc Phong</b> xoay 8 ô quanh một tâm; <b>Sấm Sét</b> phá vùng 3×3 (không cộng điểm).</li>
-              <li><b>Cấp tốc</b>: mỗi màn {levelTimeLimit(1)} giây (thêm 15 giây mỗi hệ mới). Hết giờ là hết màn; dọn sạch bàn thì mỗi giây dư được {KL_TIME_BONUS_PER_SECOND} điểm. Đồng hồ dừng khi rời trang.</li>
-            </ul>
-          </details>
           <p className="text-sm text-on-wood-soft">Bản chơi thử, không cần mạng: chưa có thưởng và bảng xếp hạng. Ván dở và điểm cao nhất mỗi chế độ lưu trên trình duyệt này.</p>
         </aside>
       </div>
