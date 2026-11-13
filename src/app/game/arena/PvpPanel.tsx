@@ -27,6 +27,8 @@ import { Alert, Button, ChoiceChip } from "@/components/ui";
 import { FrameInset, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { ElementIcon } from "../art/icons";
 import { TileArt } from "../art/tiles";
+import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
+import { SeasonBoardPanel } from "../leaderboard/boards";
 import { ELEMENT_NAME, EFFECT_NAME, ERROR_TEXT, PROFESSION_NAME, skillText } from "../battle/labels";
 
 const POLL_MS = 1500;
@@ -139,6 +141,7 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
 
   const o = overview;
   return (
+    <div className="flex flex-col gap-4">
     <OrnateFrame level="raised" className="flex flex-col gap-4">
       <SectionTitle description="Đấu 1vs1 với người khác, mỗi bên chỉ có Đinh Bộ Lĩnh. Điểm hạng riêng cho Đấu người, thắng tăng, thua giảm. Số trận không giới hạn, vàng thưởng có trần mỗi ngày.">
         Đấu người
@@ -188,6 +191,9 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
         </div>
       )}
     </OrnateFrame>
+      <RankRewardsPanel mode="pvp" />
+      <SeasonBoardPanel board="pvp" />
+    </div>
   );
 }
 

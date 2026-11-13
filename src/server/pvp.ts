@@ -33,6 +33,7 @@ import {
   type PvpState,
 } from "@/core";
 import { loadProfile, updateProfile, type ProfileStore } from "./profiles";
+import { recordSeason, type SeasonStore } from "./seasons";
 
 /** Bản đầu chỉ mở 1vs1. */
 export const PVP_FORMATS: readonly PvpFormat[] = ["duel"];
@@ -274,6 +275,8 @@ export class MemoryPvpStore implements PvpStore {
 export interface PvpDeps {
   readonly pvp: PvpStore;
   readonly profiles: ProfileStore;
+  /** Điểm mùa theo tuần của Đấu người; bỏ trống (test) thì không ghi. */
+  readonly seasons?: SeasonStore;
   readonly now: number;
   /** Hạt giống cho trận mới và id trận. */
   readonly seed: number;
@@ -533,6 +536,8 @@ async function settleIfOver(rec: PvpMatchRecord, deps: PvpDeps): Promise<PvpMatc
   const results: PvpSettled[] = [];
   for (const r of base) {
     await deps.pvp.applyResult(r.player, rec.format, { delta: r.delta, won: r.won, counted: r.counted, forgiven: r.disconnects, day, now: deps.now });
+    // Điểm mùa = tổng Elo đổi trong tuần của các trận được tính; chỉ người có tổng dương lên bảng.
+    if (r.counted && r.delta !== 0) await recordSeason(deps.seasons, { mode: "pvp", ownerId: r.player, now: deps.now, add: r.delta });
     let gold = 0;
     if (r.counted) {
       const opponent = rec.owners.find((o) => o !== r.player);

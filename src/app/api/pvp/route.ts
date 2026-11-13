@@ -8,12 +8,12 @@ import { NextResponse, type NextRequest } from "next/server";
 import { pvpEnabled } from "@/server/featureFlags";
 import { guestOf, isSignedInAccount, loginRequiredResponse, readJson, sameOrigin } from "@/server/http";
 import { pvpEnqueue, pvpLeaveQueue, pvpOverview, type PvpDeps } from "@/server/pvp";
-import { profileStore, pvpStore } from "@/server/store";
+import { profileStore, pvpStore, seasonStore } from "@/server/store";
 
 const noStore = { "cache-control": "no-store" };
 
 function deps(): PvpDeps {
-  return { pvp: pvpStore(), profiles: profileStore(), now: Date.now(), seed: randomInt(0, 2 ** 31), newId: () => randomUUID() };
+  return { pvp: pvpStore(), profiles: profileStore(), seasons: seasonStore(), now: Date.now(), seed: randomInt(0, 2 ** 31), newId: () => randomUUID() };
 }
 
 async function owner(request: NextRequest): Promise<string | NextResponse> {
