@@ -272,7 +272,7 @@ Khách chơi thường thoải mái; chế độ **online có bảng xếp hạn
 
 ### 6.2 Quần Hùng online hai người chơi (phát triển sau)
 
-Quần Hùng hiện là tìm đối thủ offline (mục 5.3). Shan muốn thêm chế độ **online hai người chơi đấu trực tiếp**; xem [thiết kế DRAFT](future/quan-hung-pvp-truc-tiep.md). Chưa có code.
+Quần Hùng hiện là tìm đối thủ offline (mục 5.3). Shan muốn thêm chế độ **online người với người, 1vs1 (Đinh Bộ Lĩnh) và 3vs3 (mỗi người một tướng)**; xem [thiết kế DRAFT](future/quan-hung-pvp-truc-tiep.md). Chưa có code.
 
 ### 6.3 Mùa theo tuần của Trấn Ải và Quần Hùng
 
