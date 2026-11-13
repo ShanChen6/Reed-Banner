@@ -186,6 +186,8 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Bảng mùa theo tuần chỉ tính các trận bạn đi đánh, không tính phòng thủ. Hạng cuối mùa có thưởng vàng.",
     ],
     tips: [
+      "Khi Đấu người được mở, bạn chọn Đấu người để đánh trực tiếp 1vs1 với người khác: ai cũng dùng Đinh Bộ Lĩnh, hệ thống ghép người có điểm gần bạn, mỗi lượt 30 giây.",
+      "Ở Đấu người, bỏ lượt liên tục là phá trận và không được tính điểm. Mất mạng được tha 3 lần mỗi ngày; mất mạng quá 90 giây thì máy điều khiển tướng của bạn.",
       "Thắng đối thủ mạnh hơn bạn được nhiều điểm hơn, thua đối thủ yếu hơn mất nhiều điểm hơn.",
       "Cần đăng nhập để chơi và lên bảng.",
     ],

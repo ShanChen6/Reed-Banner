@@ -1,7 +1,7 @@
 "use client";
 
 import { ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
-import { Alert, Button, buttonVariants } from "@/components/ui";
+import { Alert, Button, ChoiceChip, buttonVariants } from "@/components/ui";
 
 // Quần Hùng: điểm và thành tích, đội phòng thủ (bản chụp đội 3vs3 đang chọn), 3 đối thủ đang bày.
 // Đánh dùng đội 3vs3 đang chọn ở hồ sơ; đối thủ do AI điều khiển.
@@ -22,6 +22,7 @@ import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { SeasonBoardPanel } from "../leaderboard/boards";
 import { SceneLink, useScene } from "../SceneContext";
 import { ModeGuideTabs } from "../ModeGuide";
+import PvpPanel, { probePvp } from "./PvpPanel";
 
 function Members({ list }: { list: readonly ArenaMember[] }) {
   return (
@@ -58,8 +59,17 @@ export default function ArenaScreen() {
   const [message, setMessage] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
+  /** Đấu người (PvP) chỉ hiện khi máy chủ bật cờ; đang có trận dở hoặc đang chờ ghép thì mở sẵn. */
+  const [pvpOpen, setPvpOpen] = useState(false);
+  const [mode, setMode] = useState<"ghost" | "pvp">("ghost");
+  const [pvpBusy, setPvpBusy] = useState(false);
+
   useEffect(() => {
     void fetchArena().then(setData);
+    void probePvp().then((p) => {
+      setPvpOpen(p.available);
+      if (p.available && p.busy) setMode("pvp");
+    });
   }, []);
 
   if (data?.rating === undefined) {
@@ -129,6 +139,18 @@ export default function ArenaScreen() {
         ]}
       />
       <ModeGuideTabs scene="ARENA">
+        {pvpOpen && (
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Cách đấu">
+            <ChoiceChip selected={mode === "ghost"} size="md" disabled={pvpBusy} onClick={() => setMode("ghost")}>
+              Đấu bóng ma
+            </ChoiceChip>
+            <ChoiceChip selected={mode === "pvp"} size="md" onClick={() => setMode("pvp")}>
+              Đấu người
+            </ChoiceChip>
+          </div>
+        )}
+        {pvpOpen && mode === "pvp" ? <PvpPanel onBusyChange={setPvpBusy} /> : (
+          <>
 
       <RankRewardsPanel mode="arena" />
       <SeasonBoardPanel board="arena" />
@@ -235,6 +257,8 @@ export default function ArenaScreen() {
           </div>
         </OrnateFrame>
       </div>
+          </>
+        )}
       </ModeGuideTabs>
     </ModeScreen>
   );
