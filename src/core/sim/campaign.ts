@@ -2,6 +2,7 @@
 // dựng ở một cấp, đấu đúng đội và luật server dùng. AI Thường đánh thay người chơi. Chiến dịch 13 màn cũ và
 // `--stage` đã gỡ ở CAMP-08.04. Xem docs/02-game-modes/README.md mục 2.
 
+import { simRageOption } from "./rage";
 import { createBattle, type FighterConfig, type SideIndex } from "../battle";
 import { playAiTurn } from "../ai";
 import { findValidMoves } from "../board";
@@ -308,6 +309,7 @@ export function simulateMission(
       ],
       seed: (seed + run * 7919 + p * 104729) >>> 0,
       timer: false,
+      ...simRageOption([{ fighters }, { fighters: foes }]),
       firstSide: ((run + p) % 2) as SideIndex,
       ...(phase.weights ? { weights: phase.weights } : {}),
     });

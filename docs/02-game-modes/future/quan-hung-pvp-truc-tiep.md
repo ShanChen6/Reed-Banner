@@ -84,7 +84,7 @@ Quy trình (số lượng cấm do Shan chốt; thứ tự và giờ là đề x
   - tướng nào mất máu thì **thanh của tướng đó** +1 Nộ cho mỗi 2% máu tối đa bị mất;
   - đầy 100 thì bị động của chính tướng đó kích hoạt 3 lượt của phe, rồi Nộ về 0; tướng gục thì Nộ dừng tích;
   - các luật còn lại (Nộ về 0 mỗi trận; ở PvP 3vs3 Nộ vẫn tích khi bị động đang chạy, xem PVP-06) giữ nguyên.
-  Đổi này **chỉ áp dụng cho trận PvP**; các chế độ hiện tại giữ một thanh Nộ cho thủ lĩnh. Hệ quả cần cân bằng: phe 3 người có tới 3 thanh Nộ, và ở 1vs1 (một tướng) thì vẫn là một thanh như cũ.
+  Nộ riêng sau đó được mở cho mọi chế độ có đội từ 2 người (xem tài nguyên mục 3). Hệ quả cần cân bằng: phe 3 người có tới 3 thanh Nộ, và ở 1vs1 (một tướng) thì vẫn là một thanh như cũ.
 
 ### 3.6 Bỏ lượt và phá trận
 

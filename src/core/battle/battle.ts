@@ -380,6 +380,12 @@ export function beginWave(
   own.passiveTurns = 0;
   own.freeWhirls = 0;
   state.sides[1] = buildSide(config.foes, false);
+  // Nộ riêng: Nộ giữ qua đợt như Nộ chung, bị động hết hiệu lực; phe địch mới cũng có Nộ riêng.
+  if (own.rages) {
+    own.passives = own.fighters.map(() => 0);
+    state.sides[1].rages = state.sides[1].fighters.map(() => 0);
+    state.sides[1].passives = state.sides[1].fighters.map(() => 0);
+  }
   state.lastActors = [state.lastActors[0], null];
   if(state.comboState)state.comboState={...state.comboState,sideTurns:[0,0]};
   state.turn = { ...state.turn, number: 0 };
