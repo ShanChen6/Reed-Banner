@@ -3,7 +3,7 @@
 > Cập nhật: 13/11/2026
 > Trạng thái: **DRAFT** — prompt 6 vai NPC Bình Loạn dùng chung, chưa có ảnh; khi có ảnh thì thêm id vào `NPC_PORTRAIT_IDS` (`src/app/game/art/portrait-data.ts`).
 
-> **Quyết định của Shan (13/11/2026):** 30 nhân vật hư cấu trong Bình Loạn (`src/core/campaign/encounters.ts`) hiện dùng **hình tạm vẽ SVG theo nghề**. Làm **một bộ chân dung bán thân cho mỗi vai** (6 vai), rồi **đổi màu và biểu tượng theo phe** để ít ảnh nhất. Bán thân thôi; trong trận vẫn dùng hình động theo nghề.
+> **Quyết định của Shan (13/11/2026):** 30 nhân vật hư cấu trong Bình Loạn (`src/core/campaign/encounters.ts`) hiện dùng **hình tạm vẽ SVG theo nghề**. Làm **một bộ chân dung bán thân cho mỗi vai** (6 vai), rồi **đổi màu và biểu tượng theo phe** để ít ảnh nhất. **Phiên bản hiện tại chỉ làm ảnh avatar (bán thân) cho NPC; không làm ảnh dáng chiến đấu** (Shan chốt 13/11/2026). Trong trận NPC chỉ có ô chân dung tròn, chưa có hình động; bộ dáng theo vai để phiên bản sau.
 
 ## 1. Cách làm (hai bước)
 
