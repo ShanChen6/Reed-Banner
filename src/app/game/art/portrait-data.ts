@@ -118,6 +118,7 @@ export const NPC_PORTRAIT_IDS: ReadonlySet<string> = new Set([
   "story-nguoi-dan-hoa-lu",
   "story-nguoi-dua-tin",
   "story-su-gia-hoa-lu",
+  "story-tuong-bo-hai",
   "tien-du-healer",
   "tien-du-vanguard",
 ]);
