@@ -35,6 +35,7 @@ import { Alert, Button, ChoiceChip } from "@/components/ui";
 import { FrameInset, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { ElementIcon } from "../art/icons";
 import { TileArt } from "../art/tiles";
+import PvpDraftScreen from "./PvpDraft";
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { SeasonBoardPanel } from "../leaderboard/boards";
 import { describe } from "../battle/battleLog";
@@ -96,7 +97,7 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
   const [busy, setBusy] = useState(false);
   const [matchId, setMatchId] = useState<string | null>(null);
   const [inRoom, setInRoom] = useState(false);
-  const [teamHero, setTeamHero] = useState<string | null>(null);
+  const [draftId, setDraftId] = useState<string | null>(null);
   /** Nghề và hệ chọn cho trận kế tiếp; chưa chọn thì lấy theo hồ sơ. */
   const [pick, setPick] = useState<{ element?: Element; profession?: Profession }>({});
 
@@ -106,6 +107,7 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
       const o = r.data as unknown as PvpOverview;
       setOverview(o);
       setMatchId((cur) => cur ?? o.matchId);
+      setDraftId((cur) => cur ?? o.draftId);
     } else if (r.data.error === "network") setMessage(errorText(r.data));
   }, []);
 
@@ -118,18 +120,19 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
   }, [matchId, refresh]);
 
   useEffect(() => {
-    onBusyChange?.(!!matchId || !!overview?.queue);
-  }, [matchId, overview?.queue, onBusyChange]);
+    onBusyChange?.(!!matchId || !!draftId || !!overview?.queue);
+  }, [matchId, draftId, overview?.queue, onBusyChange]);
 
   const queue = async (format: "duel" | "team" = "duel") => {
     setBusy(true);
-    const r = await call("/api/pvp", { action: "queue", format, hero: format === "team" ? (teamHero ?? MAIN_ID) : undefined, element: pick.element ?? overview?.build.element, profession: pick.profession ?? overview?.build.profession });
+    const r = await call("/api/pvp", { action: "queue", format, element: pick.element ?? overview?.build.element, profession: pick.profession ?? overview?.build.profession });
     setBusy(false);
     if (r.status === 200) {
       setMessage("");
       const o = r.data as unknown as PvpOverview;
       setOverview(o);
       if (o.matchId) setMatchId(o.matchId);
+      if (o.draftId) setDraftId(o.draftId);
     } else setMessage(errorText(r.data));
   };
 
@@ -149,6 +152,22 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
         }}
         onExit={() => {
           setInRoom(false);
+          void refresh();
+        }}
+      />
+    );
+  }
+
+  if (draftId && !matchId) {
+    return (
+      <PvpDraftScreen
+        id={draftId}
+        onMatch={(id) => {
+          setDraftId(null);
+          setMatchId(id);
+        }}
+        onExit={() => {
+          setDraftId(null);
           void refresh();
         }}
       />
@@ -258,30 +277,17 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
     </OrnateFrame>
       {o && !o.queue && (
         <OrnateFrame level="raised" className="flex flex-col gap-3">
-          <SectionTitle description="Đấu 3vs3 xếp hạng: mỗi người một tướng của mình, đủ sáu người thì vào ngay, chờ lâu thì máy điền chỗ trống (trận có máy được ít điểm hơn). Điểm 3vs3 tính riêng.">
+          <SectionTitle description="Đấu 3vs3 xếp hạng: đủ sáu người thì cấm chọn ngay, chờ lâu thì máy điền chỗ trống (trận có máy được ít điểm hơn). Điểm 3vs3 tính riêng.">
             3vs3 xếp hạng
           </SectionTitle>
           <p className="text-on-wood">
             Điểm {o.ratings.team.rating} · {o.ratings.team.wins} thắng · {o.ratings.team.losses} thua
           </p>
-          <div className="flex flex-wrap items-end gap-3">
-            <label className="flex flex-col gap-1 text-sm text-on-wood-soft">
-              Tướng của bạn
-              <select
-                className="min-h-11 rounded-control border border-frame-line bg-wood-inset px-3 text-on-wood"
-                value={teamHero ?? MAIN_ID}
-                onChange={(e) => setTeamHero(e.target.value)}
-              >
-                {o.heroes.map((h) => (
-                  <option key={h.id} value={h.id}>
-                    {h.name} · cấp {h.level}
-                  </option>
-                ))}
-              </select>
-            </label>
+          <div className="flex flex-wrap items-center gap-3">
             <Button disabled={busy || !!o.banUntil} onClick={() => void queue("team")}>
               Tìm trận 3vs3
             </Button>
+            <p className="text-sm text-on-wood-soft">Ghép đủ người thì cấm chọn tướng công khai, mỗi phe cấm 3 tướng rồi mỗi người chọn một tướng của mình.</p>
           </div>
         </OrnateFrame>
       )}

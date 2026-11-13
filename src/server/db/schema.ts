@@ -247,6 +247,22 @@ export const pvpMatches = pgTable(
   (t) => [index("pvp_matches_status_idx").on(t.status, t.updatedAt)],
 );
 
+/** Phiên cấm chọn của trận 3vs3 xếp hạng: sau khi ghép đủ nhóm, trước khi dựng trận. `matchId` đặt khi cấm chọn xong. */
+export const pvpDrafts = pgTable(
+  "pvp_drafts",
+  {
+    id: text("id").primaryKey(),
+    state: jsonb("state").notNull(),
+    seq: integer("seq").notNull(),
+    status: text("status").notNull(),
+    owners: jsonb("owners").notNull(),
+    matchId: text("match_id"),
+    createdAt: bigint("created_at", { mode: "number" }).notNull(),
+    updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+  },
+  (t) => [index("pvp_drafts_status_idx").on(t.status, t.updatedAt)],
+);
+
 /** Hàng đợi ghép trận: mỗi người một dòng. `matchId` đặt khi đã được ghép, người chơi đọc ra ở lần hỏi kế tiếp. */
 export const pvpQueue = pgTable(
   "pvp_queue",
@@ -257,8 +273,6 @@ export const pvpQueue = pgTable(
     enqueuedAt: bigint("enqueued_at", { mode: "number" }).notNull(),
     lastSeen: bigint("last_seen", { mode: "number" }).notNull(),
     matchId: text("match_id"),
-    /** Tướng chọn khi xếp hàng 3vs3 (null ở 1vs1). */
-    hero: text("hero"),
   },
   (t) => [index("pvp_queue_wait_idx").on(t.format, t.matchId, t.enqueuedAt)],
 );
