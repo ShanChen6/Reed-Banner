@@ -74,10 +74,10 @@ export const SCENE_TITLE: Record<Scene, string> = {
   LEADERBOARD: "Công Trạng",
   PROFILE: "Doanh Trại",
   LOGIN: "Đăng nhập",
-  REGISTER: "Đăng ký",
+  REGISTER: "Ghi danh",
   ACCOUNT: "Tài khoản",
-  FORGOT_PASSWORD: "Quên mật khẩu",
-  RESET_PASSWORD: "Đặt lại mật khẩu",
+  FORGOT_PASSWORD: "Quên mật lệnh",
+  RESET_PASSWORD: "Đặt lại mật lệnh",
 };
 
 /** Phân cảnh tài khoản: dựng sẵn ở server (cần cookie, cấu hình) rồi truyền vào màn chơi. */

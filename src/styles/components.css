@@ -4,6 +4,13 @@
   .ui-button[aria-disabled="true"] { pointer-events: none; opacity: 0.45; }
   .ui-control::placeholder { color: var(--muted); }
   .ui-control:disabled { cursor: not-allowed; }
+  /* Trình duyệt tự điền (gợi ý tên đăng nhập) tô nền xám/xanh riêng: giữ nền và chữ của ô như lúc gõ tay.
+     Nền tự điền không ghi đè được bằng background, nên hoãn nó bằng transition rất dài. */
+  .ui-control:is(:-webkit-autofill, :autofill) {
+    -webkit-text-fill-color: var(--foreground);
+    caret-color: var(--foreground);
+    transition: background-color 600000s 0s, color 600000s 0s;
+  }
   .ui-control option { background: var(--control-background); color: var(--foreground); }
   .ui-screen {
     flex: 1;
