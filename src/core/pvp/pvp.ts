@@ -22,6 +22,13 @@ import { PVP_ELO_START, pvpAiFactor, pvpEloDelta, pvpSideRating } from "./elo";
 /** Bỏ lượt liên tiếp bấy nhiêu lần của chính một người thì bị coi là phá trận (đề xuất, chờ đo). */
 export const PVP_BREAKER_STREAK = 3;
 
+/** Im lặng quá bấy nhiêu mili giây (không có tín hiệu còn sống) thì coi là mất kết nối. */
+export const PVP_DISCONNECT_MS = 15_000;
+/** Mất kết nối quá bấy nhiêu mili giây thì AI tiếp quản tướng đó và người chơi không vào lại được. */
+export const PVP_REJOIN_MS = 90_000;
+/** Số lần được tha "mất kết nối" mỗi ngày: lượt vẫn mất nhưng không tính vào phá trận (đề xuất, chờ đo). */
+export const PVP_FORGIVE_PER_DAY = 3;
+
 export type PvpFormat = "duel" | "team";
 
 /** Người ngồi ở một tướng: id tài khoản, hoặc null là AI điền chỗ trống. */
@@ -45,6 +52,8 @@ export interface PvpConfig {
   readonly now?: number;
   /** Mức AI cho các tướng AI điền chỗ. */
   readonly aiDifficulty?: Difficulty;
+  /** Số lần còn được tha mất kết nối hôm nay của từng người; thiếu thì `PVP_FORGIVE_PER_DAY`. Server giữ và trừ sau trận. */
+  readonly forgiveLeft?: Readonly<Record<string, number>>;
 }
 
 export interface PvpPlayerStat {
@@ -58,6 +67,14 @@ export interface PvpPlayerStat {
   readonly moves: number;
   /** Bị coi là phá trận trong trận này. */
   readonly breaker: boolean;
+  /** Lần cuối có tín hiệu còn sống (ms theo đồng hồ của server). */
+  readonly lastSeen: number;
+  /** Số lượt đã được tha vì mất kết nối trong trận này. */
+  readonly disconnects: number;
+  /** Số lần còn được tha mất kết nối hôm nay. */
+  readonly forgiveLeft: number;
+  /** AI đã tiếp quản tướng của người này (mất kết nối quá hạn). Không vào lại được. */
+  readonly left: boolean;
 }
 
 export interface PvpState {
@@ -76,7 +93,8 @@ export type PvpError =
   | "unknownPlayer"
   | "notYourTurn"
   | "notCaptain"
-  | "cannotTimeout";
+  | "cannotTimeout"
+  | "left";
 
 export type PvpResult =
   | { readonly ok: true; readonly state: PvpState; readonly events: readonly BattleEvent[] }
@@ -91,6 +109,10 @@ export type PvpTimeoutResult =
       readonly player: string | null;
       /** Lần hết giờ này làm người đó thành phá trận. */
       readonly becameBreaker: boolean;
+      /** `afk` là bỏ lượt khi vẫn có tín hiệu; `disconnect` là mất kết nối (được tha, không tính phá trận); `ai` là tướng AI. */
+      readonly kind: "afk" | "disconnect" | "ai";
+      /** Mất kết nối nhưng hết lượt được tha nên vẫn tính như bỏ lượt. */
+      readonly forgivenessExhausted: boolean;
     }
   | { readonly ok: false; readonly error: BattleError };
 
@@ -132,7 +154,7 @@ export function createPvpMatch(config: PvpConfig): { state: PvpState; events: Ba
   const players: Record<string, PvpPlayerStat> = {};
   config.sides.forEach((spec, side) => {
     spec.players.forEach((p, position) => {
-      if (p !== null) players[p] = { side: side as SideIndex, position, timeouts: 0, streak: 0, moves: 0, breaker: false };
+      if (p !== null) players[p] = { side: side as SideIndex, position, timeouts: 0, streak: 0, moves: 0, breaker: false, lastSeen: config.now ?? 0, disconnects: 0, forgiveLeft: config.forgiveLeft?.[p] ?? PVP_FORGIVE_PER_DAY, left: false };
     });
   });
   return {
@@ -188,6 +210,7 @@ function withStat(state: PvpState, player: string, patch: Partial<PvpPlayerStat>
 export function pvpAct(state: PvpState, player: string, action: BattleAction, now: number): PvpResult {
   const stat = state.players[player];
   if (!stat) return { ok: false, error: "unknownPlayer" };
+  if (stat.left) return { ok: false, error: "left" };
   if (state.battle.winner !== null) return { ok: false, error: "battleOver" };
   if (action.type === "timeout") return { ok: false, error: "cannotTimeout" };
   const { turn } = state.battle;
@@ -198,14 +221,33 @@ export function pvpAct(state: PvpState, player: string, action: BattleAction, no
   }
   const r = act(state.battle, action, now);
   if (!r.ok) return { ok: false, error: r.error };
-  let next: PvpState = { ...state, battle: r.state };
+  let next: PvpState = withStat({ ...state, battle: r.state }, player, { lastSeen: now });
   if (action.type === "swap") next = withStat(next, player, { streak: 0, moves: stat.moves + 1 });
   return { ok: true, state: next, events: r.events };
 }
 
 /**
- * Hết giờ lượt hiện tại: người đang hành động mất lượt và quyền đi chuyển sang đối thủ. Bỏ lượt liên tiếp
- * `PVP_BREAKER_STREAK` lần thì bị coi là phá trận. Tướng AI hết giờ không bị tính.
+ * Người chơi còn sống: ghi nhận tín hiệu từ client (gọi mỗi vài giây, và mỗi lần mở lại trang). Người đã bị AI tiếp quản
+ * không vào lại được.
+ */
+export function pvpHeartbeat(state: PvpState, player: string, now: number): { ok: true; state: PvpState } | { ok: false; error: "unknownPlayer" | "left" } {
+  const stat = state.players[player];
+  if (!stat) return { ok: false, error: "unknownPlayer" };
+  if (stat.left) return { ok: false, error: "left" };
+  return { ok: true, state: withStat(state, player, { lastSeen: Math.max(stat.lastSeen, now) }) };
+}
+
+/** Người này đang mất kết nối ở thời điểm `now` (im lặng quá `PVP_DISCONNECT_MS`). */
+export const pvpIsDisconnected = (state: PvpState, player: string, now: number): boolean => {
+  const stat = state.players[player];
+  return !!stat && !stat.left && now - stat.lastSeen > PVP_DISCONNECT_MS;
+};
+
+/**
+ * Hết giờ lượt hiện tại: người đang hành động mất lượt và quyền đi chuyển sang đối thủ.
+ * - Bỏ lượt khi vẫn có tín hiệu còn sống: tính vào số lần liên tiếp; đủ `PVP_BREAKER_STREAK` lần thì phá trận.
+ * - Hết giờ khi đã mất kết nối: được tha (không tính liên tiếp) tới hết số lần tha hôm nay, quá số đó thì tính như bỏ lượt.
+ * - Tướng AI hết giờ không bị tính cho ai.
  */
 export function pvpTimeout(state: PvpState, now: number): PvpTimeoutResult {
   const owner = pvpActorOwner(state);
@@ -213,14 +255,51 @@ export function pvpTimeout(state: PvpState, now: number): PvpTimeoutResult {
   if (!r.ok) return { ok: false, error: r.error };
   let next: PvpState = { ...state, battle: r.state };
   let becameBreaker = false;
+  let kind: "afk" | "disconnect" | "ai" = "ai";
+  let forgivenessExhausted = false;
   if (owner !== null) {
     const stat = state.players[owner] as PvpPlayerStat;
-    const streak = stat.streak + 1;
-    becameBreaker = !stat.breaker && streak >= PVP_BREAKER_STREAK;
-    next = withStat(next, owner, { timeouts: stat.timeouts + 1, streak, breaker: stat.breaker || becameBreaker });
+    const dropped = now - stat.lastSeen > PVP_DISCONNECT_MS;
+    if (dropped && stat.forgiveLeft > 0) {
+      kind = "disconnect";
+      next = withStat(next, owner, { timeouts: stat.timeouts + 1, disconnects: stat.disconnects + 1, forgiveLeft: stat.forgiveLeft - 1 });
+    } else {
+      kind = "afk";
+      forgivenessExhausted = dropped;
+      const streak = stat.streak + 1;
+      becameBreaker = !stat.breaker && streak >= PVP_BREAKER_STREAK;
+      next = withStat(next, owner, { timeouts: stat.timeouts + 1, streak, breaker: stat.breaker || becameBreaker });
+    }
   }
-  return { ok: true, state: next, events: r.events, player: owner, becameBreaker };
+  return { ok: true, state: next, events: r.events, player: owner, becameBreaker, kind, forgivenessExhausted };
 }
+
+/**
+ * Mất kết nối quá `PVP_REJOIN_MS`: AI tiếp quản tướng của người đó và họ không vào lại được. Đội trưởng bị thay thì người thật
+ * có vị trí nhỏ nhất của phe làm đội trưởng; phe không còn người thật nào thì không ai đổi được người hành động (-1).
+ * Trả về danh sách người vừa bị thay.
+ */
+export function pvpTakeover(state: PvpState, now: number): { state: PvpState; replaced: string[] } {
+  const replaced = Object.entries(state.players)
+    .filter(([, p]) => !p.left && now - p.lastSeen > PVP_REJOIN_MS)
+    .map(([id]) => id);
+  if (replaced.length === 0 || state.battle.winner !== null) return { state, replaced: [] };
+  const seats = [[...state.seats[0]], [...state.seats[1]]] as [PvpPlayerId[], PvpPlayerId[]];
+  const captains: [number, number] = [state.captains[0], state.captains[1]];
+  const players = { ...state.players };
+  for (const id of replaced) {
+    const stat = players[id] as PvpPlayerStat;
+    seats[stat.side][stat.position] = null;
+    players[id] = { ...stat, left: true };
+  }
+  for (const side of [0, 1] as const) {
+    if (seats[side][captains[side]] === null) captains[side] = seats[side].findIndex((p) => p !== null);
+  }
+  return { state: { ...state, seats, captains, players }, replaced };
+}
+
+/** Còn người thật nào trong trận không. Hết người thật thì server nên kết thúc trận, không để hai AI đánh nhau mãi. */
+export const pvpHasHumans = (state: PvpState): boolean => state.seats.some((side) => side.some((p) => p !== null));
 
 /** Bước xoay lốc miễn phí của AI (nếu bị động Phong cho phép). Kỹ năng và đổi ô xử lý ở `pvpAdvanceAi`. Chỉ gọi khi chủ là AI. */
 function aiSteps(battle: BattleState): BattleAction[] {
@@ -288,15 +367,19 @@ export interface PvpPlayerResult {
   readonly before: number;
   readonly after: number;
   readonly delta: number;
-  /** Có được tính điểm hay không: người phá trận không được tính. */
+  /** Có được tính điểm hay không: người phá trận và người bị AI tiếp quản không được tính. */
   readonly counted: boolean;
   readonly breaker: boolean;
+  /** Bị AI tiếp quản giữa trận (mất kết nối quá hạn). */
+  readonly left: boolean;
+  /** Số lượt đã được tha vì mất kết nối, để server trừ vào số lần tha hôm nay. */
+  readonly disconnects: number;
 }
 
 /**
  * Điểm hạng sau trận. `ratings` là điểm Elo hiện tại của từng người thật ở thể thức này (thiếu thì lấy điểm khởi đầu).
- * Kỳ vọng tính từ điểm trung bình hai phe (tướng AI không có điểm riêng), người phá trận không đổi điểm, trận có AI
- * được ít điểm hơn.
+ * Kỳ vọng tính từ điểm trung bình hai phe (tướng AI không có điểm riêng, kể cả tướng do AI tiếp quản). Người phá trận và
+ * người bị AI tiếp quản không đổi điểm; tướng AI trong trận làm điểm của những người còn lại ít đi.
  */
 export function pvpSettle(state: PvpState, ratings: Readonly<Record<string, number>>): PvpPlayerResult[] {
   const winner = state.battle.winner;
@@ -306,16 +389,13 @@ export function pvpSettle(state: PvpState, ratings: Readonly<Record<string, numb
   const aiCount = state.seats.flat().filter((p) => p === null).length;
   pvpAiFactor(aiCount);
   const out: PvpPlayerResult[] = [];
-  for (const side of [0, 1] as const) {
-    for (const p of state.seats[side]) {
-      if (p === null) continue;
-      const stat = state.players[p] as PvpPlayerStat;
-      const before = rating(p);
-      const won = winner === side;
-      const counted = !stat.breaker;
-      const delta = counted ? pvpEloDelta({ won, own: sideAvg[side] as number, foe: sideAvg[1 - side] as number, aiCount }) : 0;
-      out.push({ player: p, side, won, before, after: Math.max(0, before + delta), delta: Math.max(0, before + delta) - before, counted, breaker: stat.breaker });
-    }
+  for (const [p, stat] of Object.entries(state.players)) {
+    const before = rating(p);
+    const won = winner === stat.side;
+    const counted = !stat.breaker && !stat.left;
+    const raw = counted ? pvpEloDelta({ won, own: sideAvg[stat.side] as number, foe: sideAvg[1 - stat.side] as number, aiCount }) : 0;
+    const after = Math.max(0, before + raw);
+    out.push({ player: p, side: stat.side, won, before, after, delta: after - before, counted, breaker: stat.breaker, left: stat.left, disconnects: stat.disconnects });
   }
-  return out;
+  return out.sort((x, y) => x.side - y.side || (state.players[x.player]?.position ?? 0) - (state.players[y.player]?.position ?? 0));
 }

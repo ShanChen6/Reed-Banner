@@ -6,6 +6,13 @@ import { STARTER_COMPANIONS, mainCharacter, SHOP_COMPANIONS } from "../../../src
 import { createRng } from "../../../src/core/rng";
 import {
   PVP_AI_FACTOR_MIN,
+  PVP_DISCONNECT_MS,
+  PVP_FORGIVE_PER_DAY,
+  PVP_REJOIN_MS,
+  pvpHasHumans,
+  pvpHeartbeat,
+  pvpIsDisconnected,
+  pvpTakeover,
   PVP_BREAKER_STREAK,
   PVP_ELO_K,
   PVP_ELO_START,
@@ -171,15 +178,25 @@ describe("PvP: đồng hồ, mất lượt và phá trận", () => {
     const target = pvpActorOwner(s) as string;
     let now = 0;
     let breaker = false;
+    /** Người chơi vẫn còn kết nối (có tín hiệu) nhưng không đi nước nào: đây mới là bỏ lượt. */
+    const alive = (at: number) => {
+      for (const p of ["a", "b"]) {
+        const hb = pvpHeartbeat(s, p, at);
+        assert.ok(hb.ok);
+        if (hb.ok) s = hb.state;
+      }
+    };
     // Mỗi vòng: target hết giờ, đối thủ hết giờ (để quyền quay lại target).
     for (let i = 0; i < PVP_BREAKER_STREAK; i++) {
       while (pvpActorOwner(s) !== target) {
         now = (s.battle.turn.deadline as number) + GRACE_MS + 1;
+        alive(now);
         const r = pvpTimeout(s, now);
         assert.ok(r.ok);
         if (r.ok) s = r.state;
       }
       now = (s.battle.turn.deadline as number) + 1;
+      alive(now);
       const r = pvpTimeout(s, now);
       assert.ok(r.ok);
       if (!r.ok) return;
@@ -192,6 +209,7 @@ describe("PvP: đồng hồ, mất lượt và phá trận", () => {
 
     // Người khác đi nước thì streak của người khác về 0; target đi một nước thì streak về 0 nhưng vẫn là phá trận.
     while (pvpActorOwner(s) !== target) {
+      alive((s.battle.turn.deadline as number) + 1);
       const r = pvpTimeout(s, (s.battle.turn.deadline as number) + 1);
       assert.ok(r.ok);
       if (r.ok) s = r.state;
@@ -221,6 +239,132 @@ describe("PvP: đồng hồ, mất lượt và phá trận", () => {
       assert.equal(r.player, null);
       assert.deepEqual(Object.values(r.state.players).map((p) => p.timeouts), Object.values(s.players).map((p) => p.timeouts));
     }
+  });
+});
+
+describe("PvP: mất kết nối", () => {
+  /** Cho `player` im lặng (không tín hiệu) rồi tới lúc hết giờ lượt hiện tại. */
+  const timeoutAt = (s: PvpState) => (s.battle.turn.deadline as number) + 1;
+
+  it("tín hiệu còn sống và nước đi cập nhật lastSeen; im lặng quá ngưỡng là mất kết nối", () => {
+    let s = createPvpMatch(duel()).state;
+    assert.equal(pvpIsDisconnected(s, "a", PVP_DISCONNECT_MS), false);
+    assert.equal(pvpIsDisconnected(s, "a", PVP_DISCONNECT_MS + 1), true);
+    const hb = pvpHeartbeat(s, "a", 20_000);
+    assert.ok(hb.ok);
+    if (hb.ok) s = hb.state;
+    assert.equal(pvpIsDisconnected(s, "a", 20_000 + PVP_DISCONNECT_MS), false);
+    assert.deepEqual(pvpHeartbeat(s, "ai-la", 0), { ok: false, error: "unknownPlayer" });
+  });
+
+  it("hết giờ khi mất kết nối được tha: lượt vẫn mất nhưng không tính phá trận và trừ một lần tha", () => {
+    let s = createPvpMatch(duel()).state;
+    const target = pvpActorOwner(s) as string;
+    // Không tín hiệu nào từ lúc dựng trận, nên tới lúc hết giờ (30 giây) người này đã im lặng hơn 15 giây.
+    for (let i = 0; i < 5; i++) {
+      while (pvpActorOwner(s) !== target) {
+        const r = pvpTimeout(s, timeoutAt(s));
+        assert.ok(r.ok);
+        if (r.ok) s = r.state;
+      }
+      const r = pvpTimeout(s, timeoutAt(s));
+      assert.ok(r.ok);
+      if (!r.ok) return;
+      s = r.state;
+      if (i < PVP_FORGIVE_PER_DAY) {
+        assert.equal(r.kind, "disconnect");
+        assert.equal(s.players[target]?.streak, 0);
+        assert.equal(s.players[target]?.breaker, false);
+        assert.equal(s.players[target]?.forgiveLeft, PVP_FORGIVE_PER_DAY - 1 - i);
+      }
+    }
+    // Hết lượt tha: hai lần cuối tính như bỏ lượt (đối thủ cũng im lặng nên cả hai cùng chịu).
+    assert.equal(s.players[target]?.disconnects, PVP_FORGIVE_PER_DAY);
+    assert.ok((s.players[target]?.streak ?? 0) >= 1);
+  });
+
+  it("bỏ lượt khi vẫn có tín hiệu không được tha", () => {
+    let s = createPvpMatch(duel()).state;
+    const target = pvpActorOwner(s) as string;
+    const hb = pvpHeartbeat(s, target, 25_000);
+    assert.ok(hb.ok);
+    if (hb.ok) s = hb.state;
+    const r = pvpTimeout(s, timeoutAt(s));
+    assert.ok(r.ok);
+    if (r.ok) {
+      assert.equal(r.kind, "afk");
+      assert.equal(r.state.players[target]?.streak, 1);
+      assert.equal(r.state.players[target]?.forgiveLeft, PVP_FORGIVE_PER_DAY);
+    }
+  });
+
+  it("số lần tha hôm nay lấy từ cấu hình của từng người", () => {
+    const s = createPvpMatch({ ...duel(), forgiveLeft: { a: 0, b: 1 } }).state;
+    assert.equal(s.players.a?.forgiveLeft, 0);
+    assert.equal(s.players.b?.forgiveLeft, 1);
+    const target = pvpActorOwner(s) as string;
+    const r = pvpTimeout(s, timeoutAt(s));
+    assert.ok(r.ok);
+    if (r.ok && target === "a") {
+      assert.equal(r.kind, "afk");
+      assert.equal(r.forgivenessExhausted, true);
+    }
+  });
+
+  it("quá hạn giữ chỗ thì AI tiếp quản, không vào lại được, đội trưởng chuyển cho người thật khác", () => {
+    let s = createPvpMatch(team(T6)).state;
+    // Mọi người im lặng trừ p2, p3 và q1..q3 có tín hiệu gần đây.
+    for (const p of ["p2", "p3", "q1", "q2", "q3"]) {
+      const hb = pvpHeartbeat(s, p, PVP_REJOIN_MS);
+      assert.ok(hb.ok);
+      if (hb.ok) s = hb.state;
+    }
+    assert.deepEqual(pvpTakeover(s, PVP_REJOIN_MS).replaced, []);
+    const t = pvpTakeover(s, PVP_REJOIN_MS + 1);
+    assert.deepEqual(t.replaced, ["p1"]);
+    assert.equal(t.state.seats[0][0], null);
+    assert.equal(t.state.captains[0], 1);
+    assert.equal(t.state.players.p1?.left, true);
+    assert.deepEqual(pvpHeartbeat(t.state, "p1", PVP_REJOIN_MS + 2), { ok: false, error: "left" });
+    assert.deepEqual(pvpAct(t.state, "p1", { type: "selectActor", fighter: 1 }, 0), { ok: false, error: "left" });
+    // AI đi thay tướng 1 của phe 0 khi đến lượt.
+    assert.equal(pvpActorOwner(t.state), null);
+    const adv = pvpAdvanceAi(t.state, 1000);
+    assert.notEqual(adv.state.battle.turn.number, t.state.battle.turn.number);
+    assert.ok(pvpHasHumans(t.state));
+  });
+
+  it("phe hết người thật thì không còn đội trưởng; cả trận hết người thật thì báo", () => {
+    let s = createPvpMatch(duel()).state;
+    const t = pvpTakeover(s, PVP_REJOIN_MS + 1);
+    assert.deepEqual([...t.replaced].sort(), ["a", "b"]);
+    assert.deepEqual(t.state.captains, [-1, -1]);
+    assert.equal(pvpHasHumans(t.state), false);
+    s = t.state;
+  });
+
+  it("settle: người bị AI tiếp quản không đổi điểm và không bị cảnh cáo; người ở lại ít điểm hơn vì có AI", () => {
+    let s = createPvpMatch(duel()).state;
+    const hb = pvpHeartbeat(s, "b", PVP_REJOIN_MS);
+    assert.ok(hb.ok);
+    if (hb.ok) s = hb.state;
+    s = pvpTakeover(s, PVP_REJOIN_MS + 1).state;
+    s = { ...s, battle: { ...s.battle, winner: 1 } };
+    const r = pvpSettle(s, { a: 1000, b: 1000 });
+    const a = r.find((x) => x.player === "a")!;
+    const b = r.find((x) => x.player === "b")!;
+    assert.deepEqual([a.delta, a.counted, a.left, a.breaker], [0, false, true, false]);
+    assert.ok(b.delta > 0 && b.delta < PVP_ELO_K / 2);
+  });
+
+  it("settle báo số lượt đã được tha để server trừ vào số lần tha hôm nay", () => {
+    let s = createPvpMatch(duel()).state;
+    const r1 = pvpTimeout(s, (s.battle.turn.deadline as number) + 1);
+    assert.ok(r1.ok);
+    if (!r1.ok) return;
+    s = { ...r1.state, battle: { ...r1.state.battle, winner: 0 } };
+    const out = pvpSettle(s, {});
+    assert.equal(out.reduce((n, x) => n + x.disconnects, 0), 1);
   });
 });
 
