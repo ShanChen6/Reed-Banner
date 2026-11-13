@@ -59,7 +59,7 @@ Phe đi trước bốc ngẫu nhiên hoặc phe điểm thấp hơn đi trước
 Quy trình (số lượng cấm do Shan chốt; thứ tự và giờ là đề xuất, cần mô phỏng ở PVP-00):
 
 1. **Cấm:** hai phe lần lượt **cấm**, mỗi phe cấm **3 tướng** của đối phương (tướng bị cấm không ai trong cả trận chọn được). Riêng **Đinh Bộ Lĩnh chỉ cấm theo một nghề hoặc một hệ** của ông (mục 3.8), mỗi lượt cấm ông vẫn tính một trong 3 lượt. Mỗi lượt cấm tối đa 20 giây; **hết giờ thì máy cấm ngẫu nhiên** một tướng trong kho chung hợp lệ.
-2. **Chọn:** các phe lần lượt chọn theo thứ tự xen kẽ (đề xuất 1-2-2-1 hoặc A-B-B-A-A-B), mỗi người chọn đúng **một tướng đang sở hữu**. Hết giờ chọn thì máy chọn thay tướng hợp lệ có cấp cao nhất.
+2. **Chọn:** phe điểm thấp hơn chọn trước, các phe lần lượt chọn theo thứ tự xen kẽ (đề xuất 1-2-2-1 hoặc A-B-B-A-A-B), mỗi người chọn đúng **một tướng đang sở hữu**. Hết giờ chọn thì máy chọn thay tướng hợp lệ có cấp cao nhất.
 3. **Không trùng tướng trong cùng phe**; tướng đã chọn hoặc đã bị cấm không ai chọn lại. **Cả trận chỉ có một Đinh Bộ Lĩnh**: ai chọn ông trước (phe nào cũng được) thì mọi người còn lại, kể cả phe kia, không chọn được ông nữa (mục 3.8).
 4. **Đội trưởng** (người vào trước, hoặc chủ phòng) xếp **vị trí 1 / 2 / 3** cho phe mình sau khi các tướng đã chọn xong.
 5. Hai phe **thấy tướng của nhau** từ lúc chọn. Cấp và trang bị chi tiết hiện sau khi vào trận.
@@ -108,7 +108,7 @@ Quy trình (số lượng cấm do Shan chốt; thứ tự và giờ là đề x
 - **Cả trận chỉ có một Đinh Bộ Lĩnh** (Shan, 13/11/2026): phe nào chọn ông trước thì **phe kia không được chọn ông nữa**, và đồng đội trong phe đó cũng không chọn lại. Cấp của ông là cấp trong hồ sơ người chọn.
 - **Cấm theo nghề hoặc theo hệ, không cấm cả ông:** bạn không cấm "Đinh Bộ Lĩnh" nói chung mà cấm **một nghề** (ví dụ Tướng sĩ) **hoặc một hệ** (ví dụ Hỏa) của ông. Phe bị cấm không chọn được kiểu Đinh Bộ Lĩnh trùng nghề hoặc hệ đó nhưng vẫn chọn được các kiểu còn lại. Vì ông có 56 kiểu nên một lượt cấm gần như không làm mất ông khỏi trận, nhưng giúp phe cấm hạn chế kiểu mạnh nhất mà phe kia sẽ chọn. Lượt cấm này **tính vào 3 lượt cấm của phe** như cấm một tướng khác.
 - **Giới hạn khuyến nghị:** vì mỗi lượt cấm chỉ chặn một phần kiểu, nên cần mô phỏng cân bằng 56 kiểu; nếu có kiểu quá mạnh thì tăng độ ưu tiên cấm hoặc điều chỉnh số trị riêng của PvP, không đổi chỉ số ở các chế độ khác.
-- **Hệ quả cần cân bằng:** vì chỉ một phe có ông, **thứ tự chọn quyết định phe nào lấy được ông**. Phe được chọn trước có lợi thế. Đề xuất để bù: phe điểm thấp hơn được chọn trước, hoặc phe chọn trước phải cấm trước, hoặc thêm một lượt chọn riêng cho Đinh Bộ Lĩnh. Cần mô phỏng; nếu lợi thế quá lớn thì xem lại.
+- **Hệ quả và cách bù (Shan đồng ý 13/11/2026):** vì chỉ một phe có ông, thứ tự chọn quyết định phe nào lấy được ông. Luật bù: **phe có Elo trung bình thấp hơn được chọn trước** (phe còn lại **cấm trước**, nên phe chọn trước thấy lượt cấm của đối thủ sau cùng). Hòa điểm thì bốc ngẫu nhiên. Cách thứ ba, thêm một lượt chọn riêng cho Đinh Bộ Lĩnh, chưa áp dụng; xem xét sau khi mô phỏng nếu lợi thế người chọn trước vẫn lớn. *Claude hiểu "đồng ý" là chọn hai cách đầu; Shan báo nếu muốn khác.*
 - **Nộ và bị động:** ông dùng bị động theo nghề và hệ đã chọn như các tướng khác.
 
 ### 3.9 Thưởng
