@@ -90,7 +90,14 @@ Quy trình (số lượng cấm do Shan chốt; thứ tự và giờ là đề x
 
 - **Hết giờ thì mất lượt:** người hết giờ không đi nước nào, **quyền đi chuyển sang đối thủ** (ở 3vs3, sang phe đối diện). Trận tiếp tục; không xử thua.
 - **Phá trận:** một người **bỏ lượt liên tục** (đề xuất 3 lượt của chính mình liên tiếp) bị đánh dấu phá trận. Lần đầu: **cảnh cáo** hiện ngay ở trận và ghi vào tài khoản. Lặp lại trong một kỳ: **hạn chế ghép trận** (đề xuất giảm ưu tiên hàng đợi, rồi khóa ghép tạm thời tăng dần). Luật này Shan đồng ý.
-- **Mất kết nối** tính như bỏ lượt. Kết nối lại trong trận thì bỏ dấu liên tiếp.
+- **Mất kết nối (Shan đồng ý 13/11/2026):** tách khỏi bỏ lượt, dựa vào **tín hiệu còn sống** client gửi mỗi vài giây (mỗi nước đi cũng tính).
+  - **Im lặng quá 15 giây** là mất kết nối. Lượt hết giờ **khi còn tín hiệu** là bỏ lượt và tính vào phá trận; lượt hết giờ **khi đã mất kết nối** thì **vẫn mất lượt** (đối thủ không phải chờ) nhưng **không tính vào phá trận**.
+  - **Số lần tha:** mỗi người **3 lần mất kết nối được tha mỗi ngày** (theo ngày Việt Nam). Quá số đó thì lượt mất kết nối tính như bỏ lượt, và lặp lại thì thành phá trận. Server giữ và trừ số lần tha sau trận.
+  - **Giữ chỗ 90 giây:** kết nối lại trong 90 giây thì vào tiếp, tướng giữ nguyên. **Quá 90 giây, AI tiếp quản** tướng đó và người chơi không vào lại được (không giành lại tướng).
+  - **Điểm:** người bị AI tiếp quản **không đổi Elo** và **không bị cảnh cáo** (khác phá trận). Những người còn lại vẫn được tính nhưng ít điểm hơn vì trận có AI (mục 3.7).
+  - **1vs1:** giữ luật hết giờ 30 giây như 3vs3, đối thủ không được chờ thêm.
+  - Đội trưởng bị AI tiếp quản thì người thật có vị trí nhỏ nhất của phe làm đội trưởng; phe hết người thật thì không ai đổi được người hành động. Hết người thật cả trận thì server kết thúc trận.
+  - Số liệu 15 giây, 90 giây, 3 lần chỉ là đề xuất, cần đo sau khi có dữ liệu thật.
 - Con số ngưỡng và thời gian hạn chế chỉ là đề xuất, cần Shan chốt sau khi đo.
 
 ### 3.7 Điểm hạng (Elo từng người)
@@ -138,7 +145,7 @@ Làm **1vs1 trước**, vì khái quát trận cho nhiều chủ sở hữu và 
 | Task | Phạm vi | Nghiệm thu |
 |---|---|---|
 | PVP-00 | Duyệt luật mục 3, chốt các câu hỏi mở (mục 6), chọn kênh đẩy | Rulebook và ADR được Shan duyệt |
-| PVP-01 | **Đã làm (13/11/2026):** lõi `src/core/pvp/` quanh `BattleState` hai phe: chủ sở hữu theo từng tướng (hoặc AI điền), chỉ chủ tướng đang hành động được đi nước, chỉ đội trưởng đổi người hành động, hết giờ thì mất lượt và quyền sang đối thủ, bỏ lượt liên tiếp (3 lần của chính người đó, đề xuất) là phá trận, Elo từng người (phá trận không đổi điểm, hệ số giảm khi có AI), phe Elo thấp đi trước. Có test và mô phỏng 1vs1, 3vs3 sáu bot, có AI điền và có người bỏ lượt (`tests/core/pvp/`). **Chưa làm:** lưu và đồng bộ qua server (PVP-02), Nộ riêng từng người (PVP-06, cần sửa lõi trận) | Mô phỏng hai AI đấu nhau, rồi sáu AI, qua cùng đường kiểm tra quyền (đạt; đường server là PVP-02) |
+| PVP-01 | **Đã làm (13/11/2026):** lõi `src/core/pvp/` quanh `BattleState` hai phe: chủ sở hữu theo từng tướng (hoặc AI điền), chỉ chủ tướng đang hành động được đi nước, chỉ đội trưởng đổi người hành động, hết giờ thì mất lượt và quyền sang đối thủ, bỏ lượt liên tiếp (3 lần của chính người đó, đề xuất) là phá trận, Elo từng người (phá trận không đổi điểm, hệ số giảm khi có AI), phe Elo thấp đi trước. Có test và mô phỏng 1vs1, 3vs3 sáu bot, có AI điền và có người bỏ lượt (`tests/core/pvp/`). **Cũng đã làm (13/11/2026):** tín hiệu còn sống, tách mất kết nối khỏi bỏ lượt, tha 3 lần mỗi ngày, AI tiếp quản sau 90 giây, người bị tiếp quản không đổi Elo. **Chưa làm:** lưu và đồng bộ qua server (PVP-02), Nộ riêng từng người (PVP-06, cần sửa lõi trận) | Mô phỏng hai AI đấu nhau, rồi sáu AI, qua cùng đường kiểm tra quyền (đạt; đường server là PVP-02) |
 | PVP-02 | Hàng đợi 1vs1 theo Elo, bảng `pvp_matches`, API ghép và đi nước | Test ghép trận, chạy song song, chặn lượt sai |
 | PVP-03 | Giao diện 1vs1: màn chờ ghép, trận trực tiếp, kết quả | QA desktop và điện thoại, mất mạng giữa trận |
 | PVP-04 | Elo 1vs1, giới hạn trận mỗi ngày, chặn đánh lại, thưởng vàng, cảnh cáo phá trận | Cân bằng và kiểm chống farm |
