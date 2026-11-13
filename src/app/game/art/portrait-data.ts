@@ -84,7 +84,13 @@ const PHOTOS: Readonly<Record<string, string>> = {
  * (`public/art/npc/<id>.webp`, 384×384, nền tranh sương; prompt ở docs/06-art/prompts/npc-binh-loan.md).
  * Thiếu thì ô chân dung dùng hình tạm theo nghề như cũ. Thêm id vào đây khi có ảnh.
  */
-export const NPC_PORTRAIT_IDS: ReadonlySet<string> = new Set([]);
+export const NPC_PORTRAIT_IDS: ReadonlySet<string> = new Set([
+  "phong-chau-strategist",
+  "tien-du-vanguard",
+  "ngo-951-soldier",
+  "phu-liet-wall-archer",
+  "phu-liet-healer",
+]);
 
 export function portraitUrl(id: string): string | null {
   if (NPC_PORTRAIT_IDS.has(id)) return `/art/npc/${id}.webp`;
