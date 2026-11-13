@@ -40,6 +40,7 @@ const TTK_NOTE =
 
 const SEASON_NOTE = {
   survival: "Mùa theo tuần, đổi vào thứ Hai 0 giờ: số đợt cao nhất đã vượt trong một lượt chơi của tuần. Hạng cuối mùa nhận vàng.",
+  pvp: "Mùa theo tuần, đổi vào thứ Hai 0 giờ: tổng điểm hạng Đấu người bạn nhận được từ các trận được tính trong tuần (chỉ người có tổng dương mới có tên). Hạng cuối mùa nhận vàng.",
   arena:
     "Mùa theo tuần, đổi vào thứ Hai 0 giờ: tổng điểm Quần Hùng nhận được từ các trận bạn đi đánh trong tuần (chỉ người có tổng dương mới có tên). Hạng cuối mùa nhận vàng.",
 } as const;
@@ -106,11 +107,11 @@ function useJson<T extends { error?: string }>(url: string | null): T | null {
   return data;
 }
 
-const seasonScore = (board: "survival" | "arena", score: number) => (board === "arena" ? `+${score} điểm` : `${score} đợt`);
+const seasonScore = (board: "survival" | "arena" | "pvp", score: number) => (board === "survival" ? `${score} đợt` : `+${score} điểm`);
 
 /** Bảng mùa tuần hiện tại của Trấn Ải hoặc Quần Hùng. */
-export function SeasonBoardPanel({ board }: { board: "survival" | "arena" }) {
-  const data = useJson<SeasonBoardResponse>(`/api/leaderboard?board=${board}&season=current`);
+export function SeasonBoardPanel({ board }: { board: "survival" | "arena" | "pvp" }) {
+  const data = useJson<SeasonBoardResponse>(board === "pvp" ? "/api/pvp/board" : `/api/leaderboard?board=${board}&season=current`);
   return (
     <OrnateFrame className="flex flex-col gap-3">
       <SectionTitle description={`${SEASON_NOTE[board]}${data?.season ? ` (mùa bắt đầu ${data.season})` : ""}`}>Bảng xếp hạng mùa này</SectionTitle>

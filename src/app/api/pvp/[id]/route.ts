@@ -8,12 +8,12 @@ import { parseAction } from "@/server/battles";
 import { pvpEnabled } from "@/server/featureFlags";
 import { guestOf, isSignedInAccount, loginRequiredResponse, readJson, sameOrigin } from "@/server/http";
 import { pvpGetMatch, pvpPlay, type PvpDeps, type PvpMatchResult } from "@/server/pvp";
-import { profileStore, pvpStore } from "@/server/store";
+import { profileStore, pvpStore, seasonStore } from "@/server/store";
 
 const noStore = { "cache-control": "no-store" };
 
 function deps(): PvpDeps {
-  return { pvp: pvpStore(), profiles: profileStore(), now: Date.now(), seed: randomInt(0, 2 ** 31), newId: () => randomUUID() };
+  return { pvp: pvpStore(), profiles: profileStore(), seasons: seasonStore(), now: Date.now(), seed: randomInt(0, 2 ** 31), newId: () => randomUUID() };
 }
 
 function reply(r: PvpMatchResult) {

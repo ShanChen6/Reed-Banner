@@ -4,10 +4,12 @@ import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
 import { chooseMove, toView } from "../../src/core/ai";
-import { PVP_BAN_BASE_MS, PVP_GOLD_DAILY_CAP, PVP_GOLD_LOSS, PVP_GOLD_PER_OPPONENT, PVP_GOLD_WIN, PVP_DISCONNECT_MS, PVP_ELO_START, PVP_FORGIVE_PER_DAY, PVP_REJOIN_MS, newProfile, pvpActorOwner, createRng, TURN_MS, vnDay } from "../../src/core";
+import { PVP_BAN_BASE_MS, PVP_GOLD_DAILY_CAP, PVP_GOLD_LOSS, PVP_GOLD_PER_OPPONENT, PVP_GOLD_WIN, PVP_DISCONNECT_MS, PVP_ELO_START, PVP_FORGIVE_PER_DAY, RANK_REWARD_GOLD, vnWeek, PVP_REJOIN_MS, newProfile, pvpActorOwner, createRng, TURN_MS, vnDay } from "../../src/core";
 import { DrizzlePvpStore } from "../../src/server/db/pvp";
 import type { Db } from "../../src/server/db/store";
 import { MemoryProfileStore, loadProfile, type ProfileStore } from "../../src/server/profiles";
+import { MemoryRankRewardStore, claimRankReward, pendingRankRewards, seasonSource } from "../../src/server/rankRewards";
+import { MemorySeasonStore, type SeasonStore } from "../../src/server/seasons";
 import {
   MemoryPvpStore,
   PVP_MATCH_ANY_AFTER_MS,
@@ -51,8 +53,9 @@ for (const [name, factory] of stores) {
       const pvp = await factory();
       const profiles: ProfileStore = new MemoryProfileStore();
       for (const id of ["a", "b", "c"]) await profiles.put(id, newProfile(), 0, T0);
-      const mk = (now: number): PvpDeps => ({ pvp, profiles, now, seed: 12345 + seq++, newId: () => `m${++seq}` });
-      return { pvp, profiles, mk };
+      const seasons: SeasonStore = new MemorySeasonStore();
+      const mk = (now: number): PvpDeps => ({ pvp, profiles, seasons, now, seed: 12345 + seq++, newId: () => `m${++seq}` });
+      return { pvp, profiles, seasons, mk };
     };
 
     /** Hai người vào hàng đợi rồi hỏi: người sau thấy mình đã được ghép. */
@@ -299,6 +302,30 @@ for (const [name, factory] of stores) {
         if (i <= PVP_GOLD_PER_OPPONENT) assert.ok(gold > 0, `trận ${i}`);
         else assert.equal(gold, 0, `trận ${i}`);
       }
+    });
+
+    it("điểm mùa: người thắng cộng Elo vào bảng tuần, người thua (tổng âm) không lên bảng; hạng cuối tuần nhận vàng một lần", async () => {
+      const { mk, pvp, seasons, profiles } = await setup();
+      const id = await pair(mk);
+      const rec = (await pvp.getMatch(id))!;
+      const winner = rec.state.seats[0][0] as string;
+      const loser = rec.state.seats[1][0] as string;
+      await finish(pvp, mk, id, 0, T0 + 5000);
+      const week = vnWeek(T0 + 5000);
+      assert.equal((await seasons.rankOf("pvp", week, winner))?.rank, 1);
+      assert.equal(await seasons.rankOf("pvp", week, loser), null);
+      assert.equal(await seasons.count("pvp", week), 1);
+      // Qua tuần sau thì tuần này là kỳ đã khép: người đứng đầu nhận vàng hạng nhất đúng một lần.
+      const nextWeek = T0 + 8 * 24 * 3600_000;
+      const deps = { sources: [seasonSource("pvp", seasons)], claims: new MemoryRankRewardStore(), profiles, now: nextWeek, isSignedIn: async () => true };
+      const pending = await pendingRankRewards(deps, winner);
+      const item = pending.items.find((i) => i.mode === "pvp" && i.period === week);
+      assert.ok(item);
+      assert.equal(item?.tier, "top1");
+      const before = (await loadProfile(profiles, winner)).profile.gold;
+      assert.equal((await claimRankReward(deps, winner, "pvp", week)).ok, true);
+      assert.equal((await loadProfile(profiles, winner)).profile.gold - before, RANK_REWARD_GOLD.pvp.top1);
+      assert.equal((await claimRankReward(deps, winner, "pvp", week)).ok, false);
     });
 
     it("phá trận: lần đầu trong tuần cảnh cáo, lần hai bị hạn chế ghép trận và không vào hàng đợi được tới khi hết hạn", async () => {

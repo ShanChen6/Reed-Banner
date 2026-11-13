@@ -250,6 +250,7 @@ Shan (01/11/2026): trước mắt thưởng xếp hạng của **mọi chế đ�
 | **Tháp Thiên Mệnh** | chu kỳ 7 ngày | 800 | 500 | 300 | 150 | 60 | Sổ chung `rank_reward_claims`; cộng thêm đá cuối chu kỳ; chỉ khi cờ `DESTINY_ENABLED` bật |
 | **Trấn Ải** | mùa tuần | 500 | 300 | 180 | 80 | 30 | Sổ chung `rank_reward_claims`, điểm mùa ở `season_scores` ([mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng)) |
 | **Quần Hùng** | mùa tuần | 600 | 400 | 240 | 100 | 40 | Như Trấn Ải |
+| **Quần Hùng · Đấu người** (PvP) | mùa tuần | 600 | 400 | 240 | 100 | 40 | Như Quần Hùng; điểm mùa = tổng điểm hạng Đấu người nhận được trong tuần (chỉ người có tổng dương lên bảng); chỉ khi bật cờ `PVP_ENABLED`. Đề xuất, chờ Shan duyệt ([PvP](future/quan-hung-pvp-truc-tiep.md)) |
 | **Tầm Tướng Ký** Hạng tuần | tuần | 500 | 300 | 180 | 80 | 30 | Sổ chung `rank_reward_claims`, điểm tuần ở `season_scores` chế độ `tamTuongKy`; chỉ khi cờ `TAM_TUONG_KY_ENABLED` bật ([LT-06](tam-tuong-ky/hang-tuan.md)) |
 
 **Trạng thái duyệt:** Shan đã duyệt toàn bộ bảng vàng ở trên (Trận Đồ, Nhật Lệnh, Tháp Thiên Mệnh, Trấn Ải, Quần Hùng) ngày 01/11/2026. Muốn đổi số phải qua quyết định mới.

@@ -155,7 +155,7 @@ Làm **1vs1 trước**, vì khái quát trận cho nhiều chủ sở hữu và 
 | PVP-04 | **Đã làm (13/11/2026):** vàng mỗi trận (thắng 60, thua 20, giảm khi có AI), trần 300 vàng mỗi ngày, chỉ 2 trận đầu mỗi ngày với cùng một đối thủ có vàng, **không giới hạn số trận**; cảnh cáo phá trận lần đầu trong tuần, từ lần hai hạn chế ghép trận (15 phút nhân đôi mỗi lần, tối đa 24 giờ); bảng `pvp_daily`, `pvp_pairs` và 3 cột mới của `pvp_ratings` (migration `0013_pvp_gold`). Giao diện hiện vàng còn nhận, cảnh cáo, hạn chế, vàng nhận được sau trận. Test bộ nhớ và PGlite. Các con số vàng, trần và ngưỡng hạn chế là đề xuất | Cân bằng và kiểm chống farm (số liệu thật chưa có) |
 | PVP-05 | 3vs3: phòng mời bằng mã, hàng đợi sáu người, điền AI | Test ghép trận sáu người, bỏ cuộc giữa trận |
 | PVP-06 | 3vs3: bước cấm (3 tướng mỗi phe, hết giờ máy cấm), chọn tướng lần lượt, đội trưởng xếp vị trí; **màn chờ chuẩn bị** trang bị; Nộ riêng từng người | Mô phỏng chọn tướng, không trùng, hết giờ chọn; mô phỏng cân bằng Nộ riêng |
-| PVP-07 | Bảng xếp hạng theo kỳ, thưởng cuối kỳ | Dùng sổ `rank_reward_claims`, nhận một lần |
+| PVP-07 | **Đã làm (13/11/2026):** bảng mùa theo tuần của Đấu người (điểm mùa = tổng điểm hạng nhận được trong tuần từ các trận được tính, chỉ người có tổng dương lên bảng; `GET /api/pvp/board`, `SeasonBoardPanel board="pvp"`) và thưởng vàng cuối tuần theo hạng qua sổ nhận chung (`rank_reward_claims`, nhận đúng một lần; hạng nhất 600, top 3 400, top 10 240, nửa trên 100, có tên 40, đề xuất bằng Quần Hùng bóng ma). Không có bó nguyên tố Tầm Tướng Ký. Test bộ nhớ | Dùng sổ `rank_reward_claims`, nhận một lần (đạt) |
 
 ## 6. Câu hỏi mở
 
@@ -167,6 +167,7 @@ Làm **1vs1 trước**, vì khái quát trận cho nhiều chủ sở hữu và 
 - **Màn chuẩn bị:** giờ chờ (đề xuất 60 giây) và có cho đổi nghề, hệ của Đinh Bộ Lĩnh ở đây không.
 - **Điền AI:** chờ bao lâu thì điền; hệ số giảm điểm khi có AI.
 - **Phá trận:** số lượt bỏ liên tiếp để cảnh cáo, mức hạn chế ghép và có reset theo mùa không.
+- **Thưởng cuối tuần:** mức 600/400/240/100/40 chờ Shan duyệt; có kèm bó nguyên tố Tầm Tướng Ký như các chế độ tuần khác không.
 - **Con số:** vàng mỗi trận (60 và 20), trần vàng mỗi ngày (300), số trận có vàng với cùng một đối thủ (2), mức hạn chế phá trận (15 phút nhân đôi, tối đa 24 giờ).
 - **Elo qua lại giữa hai tài khoản:** hiện chỉ chặn vàng, chưa chặn điểm hạng khi hai người đấu nhau liên tục; có cần giảm điểm khi đấu lại cùng một người không?
 - **Kênh đẩy:** polling, SSE hay dịch vụ ngoài (đề xuất polling ở bản đầu rồi đo).
