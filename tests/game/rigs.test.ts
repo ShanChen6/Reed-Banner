@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { statSync, readFileSync } from "node:fs";
+import { existsSync, statSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 import { partsOf, partUrl, rigFor, rigOf } from "../../src/app/game/stage/rigs";
 
@@ -1921,4 +1921,19 @@ test("11 tướng lịch sử có hiệu ứng tuyệt chiêu riêng; Đinh Bộ
   assert.ok(moc?.skeleton === "warrior" && moc.strikeFx, "Mộc tướng sĩ có hiệu ứng");
   assert.ok(thuy?.skeleton === "warrior" && thuy.strikeFx && thuy.strikeFx !== moc.strikeFx, "đổi hệ thì đổi hiệu ứng");
   assert.equal(rigFor({ id: "lyKhue", element: "moc", profession: "ySu" }), rigOf("lyKhue"));
+});
+
+test("NPC Bình Loạn có hình động, mượn hiệu ứng tuyệt chiêu theo nghề và hệ", async () => {
+  const { campaignNpc } = await import("../../src/core");
+  const ids = ["bo-hai-raider-boatman", "bo-hai-raider-chief", "bo-hai-raider-scout", "do-dong-guard", "do-dong-healer", "do-dong-lookout", "do-dong-road-captain", "do-dong-strategist", "do-dong-vanguard"];
+  for (const id of ids) {
+    const npc = campaignNpc(id);
+    assert.ok(npc, id);
+    const rig = rigOf(id);
+    assert.ok(rig?.skeleton === "warrior" && rig.adaptiveFx && rig.down, id);
+    assert.deepEqual(Object.keys(rig.poses ?? {}).sort(), ["attack", "cast", "ultimate"]);
+    for (const name of partsOf(rig)) assert.ok(existsSync(`public${partUrl(rig, name)}`), `${id}/${name}`);
+    const fought = rigFor(npc);
+    assert.ok(fought?.skeleton === "warrior" && fought.strikeFx, `${id} cần hiệu ứng mượn`);
+  }
 });

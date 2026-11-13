@@ -1,6 +1,6 @@
 import { stat } from "node:fs/promises";
 import path from "node:path";
-import { ALL_COMPANIONS, mainCharacter, type Element, type GameProfession } from "@/core";
+import { ALL_COMPANIONS, campaignNpc, mainCharacter, type Element, type GameProfession } from "@/core";
 import { portraitUrl } from "@/app/game/art/portrait-data";
 import { partsOf, partUrl, rigIds, rigOf } from "@/app/game/stage/rigs";
 import type { CharacterPreview, PreviewFile } from "./types";
@@ -21,8 +21,9 @@ export async function characterCatalog(): Promise<CharacterPreview[]> {
   const roster = [mainCharacter("moc"), ...ALL_COMPANIONS];
   return Promise.all(rigIds().map(async (id) => {
     const rig = rigOf(id)!;
-    const character = roster.find((c) => c.id === id) ?? PREVIEW_ONLY[id];
-    if (!character) throw new Error(`${id} có rig nhưng không có trong roster`);
+    // NPC Bình Loạn chỉ có trong encounter, không có trong roster.
+    const character = roster.find((c) => c.id === id) ?? PREVIEW_ONLY[id] ?? campaignNpc(id);
+    if (!character) throw new Error(`${id} có rig nhưng không có trong roster hay encounter`);
     const file = async (url: string | null): Promise<PreviewFile | null> => {
       if (!url) return null;
       try {

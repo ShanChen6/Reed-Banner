@@ -247,7 +247,7 @@ export interface WarriorRig {
     | "tigerClaw";
   /**
    * Đinh Bộ Lĩnh đổi nghề và hệ theo người chơi: tuyệt chiêu mượn hiệu ứng và màu của nhân vật kèm cùng nghề, cùng hệ
-   * (xem `rigFor`).
+   * (xem `rigFor`). NPC Bình Loạn cũng mượn như vậy theo nghề và hệ của mình.
    */
   readonly adaptiveFx?: boolean;
   /** Khiên trên tay không cầm vũ khí: góc (radian) nâng khiên khi vào thế, đỡ đòn, được tăng (ứng với `raise` = 1). */
