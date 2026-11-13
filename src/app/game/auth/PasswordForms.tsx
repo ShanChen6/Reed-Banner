@@ -8,18 +8,18 @@ import { ReturnToInput } from "../SceneContext";
 import { OnArrival } from "./AuthLinks";
 
 export const PASSWORD_ERROR: Record<PasswordError, string> = {
-  badUsername: "Tên đăng nhập gồm 3–20 ký tự: chữ không dấu, số, dấu chấm hoặc gạch dưới.",
-  badPassword: `Mật khẩu cần từ ${PASSWORD_MIN} ký tự trở lên.`,
-  mismatch: "Hai lần nhập mật khẩu không khớp.",
-  taken: "Tên đăng nhập này đã có người dùng. Xin chọn tên khác.",
-  hasPassword: "Tài khoản này đã có tên đăng nhập.",
-  wrong: "Sai tên đăng nhập hoặc mật khẩu.",
-  locked: "Sai quá nhiều lần, tên đăng nhập này tạm khóa 15 phút. Xin quay lại sau.",
-  noPassword: "Tài khoản này chưa có mật khẩu.",
-  badEmail: "Email không hợp lệ.",
-  emailTaken: "Email này đã gắn với một tài khoản khác.",
+  badUsername: "Danh hiệu gồm 3–20 ký tự: chữ không dấu, số, dấu chấm hoặc gạch dưới.",
+  badPassword: `Mật lệnh cần từ ${PASSWORD_MIN} ký tự trở lên.`,
+  mismatch: "Hai lần đọc mật lệnh không khớp nhau. Xin nhập lại.",
+  taken: "Danh hiệu này đã có người mang. Xin chọn danh hiệu khác.",
+  hasPassword: "Tài khoản này đã có danh hiệu.",
+  wrong: "Danh hiệu hoặc mật lệnh không đúng. Lính gác chưa cho qua.",
+  locked: "Sai quá nhiều lần, cổng trại đóng với danh hiệu này 15 phút. Xin quay lại sau.",
+  noPassword: "Tài khoản này chưa đặt mật lệnh.",
+  badEmail: "Địa chỉ thư (email) không hợp lệ.",
+  emailTaken: "Địa chỉ thư này đã thuộc về một tài khoản khác.",
   badToken: "Đường dẫn đã dùng rồi hoặc hết hạn. Xin gửi yêu cầu mới.",
-  tooMany: "Thư đã gửi quá nhiều. Xin đợi một giờ rồi thử lại.",
+  tooMany: "Trạm thư đã gửi quá nhiều. Xin đợi một canh giờ rồi thử lại.",
 };
 
 
@@ -41,7 +41,7 @@ function Field({ label, ...props }: { label: string } & React.InputHTMLAttribute
   );
 }
 
-function EmailField({ label = "Email (không bắt buộc)", required }: { label?: string; required?: boolean }) {
+function EmailField({ label = "Địa chỉ thư (email, không bắt buộc)", required }: { label?: string; required?: boolean }) {
   return <Field label={label} name="email" type="email" autoComplete="email" maxLength={EMAIL_MAX} required={required} />;
 }
 
@@ -50,10 +50,10 @@ export function LoginForm({ username, error }: { username: string; error: Passwo
     <form action="/api/auth/password/login" method="post" className="flex flex-col gap-3">
       <ErrorLine error={error} />
       <ReturnToInput />
-      <Field label="Tên đăng nhập" name="username" defaultValue={username} autoComplete="username" required autoCapitalize="none" />
-      <Field label="Mật khẩu" name="password" type="password" autoComplete="current-password" required />
+      <Field label="Danh hiệu (tên đăng nhập)" name="username" defaultValue={username} autoComplete="username" required autoCapitalize="none" />
+      <Field label="Mật lệnh (mật khẩu)" name="password" type="password" autoComplete="current-password" required />
       <Button type="submit">
-        Đăng nhập
+        Vào trại
       </Button>
     </form>
   );
@@ -64,7 +64,7 @@ export function RegisterForm({
   returnTo,
   username,
   error,
-  label = "Đăng ký",
+  label = "Ghi danh",
   mail,
 }: {
   /** Bỏ trống thì lấy `returnTo` trên thanh địa chỉ. */
@@ -80,7 +80,7 @@ export function RegisterForm({
       <ErrorLine error={error} />
       {returnTo ? <input type="hidden" name="returnTo" value={returnTo} /> : <ReturnToInput />}
       <Field
-        label="Tên đăng nhập"
+        label="Danh hiệu (tên đăng nhập)"
         name="username"
         defaultValue={username}
         autoComplete="username"
@@ -88,21 +88,21 @@ export function RegisterForm({
         minLength={3}
         maxLength={20}
         pattern="[A-Za-z0-9_.]{3,20}"
-        title="3–20 ký tự: chữ không dấu, số, dấu chấm hoặc gạch dưới"
+        title="Danh hiệu 3–20 ký tự: chữ không dấu, số, dấu chấm hoặc gạch dưới"
         autoCapitalize="none"
       />
-      <Field label={`Mật khẩu (từ ${PASSWORD_MIN} ký tự)`} name="password" type="password" autoComplete="new-password" required minLength={PASSWORD_MIN} />
-      <Field label="Nhập lại mật khẩu" name="confirm" type="password" autoComplete="new-password" required minLength={PASSWORD_MIN} />
+      <Field label={`Mật lệnh (mật khẩu, từ ${PASSWORD_MIN} ký tự)`} name="password" type="password" autoComplete="new-password" required minLength={PASSWORD_MIN} />
+      <Field label="Nhắc lại mật lệnh" name="confirm" type="password" autoComplete="new-password" required minLength={PASSWORD_MIN} />
       {mail ? (
         <>
           <EmailField />
           <Alert tone="warning" className="text-caption">
-            Thêm email để lấy lại mật khẩu khi quên (chúng tôi gửi thư xác nhận trước). Không có email thì quên mật khẩu là mất tài khoản.
+            Để lại địa chỉ thư thì quên mật lệnh còn đường lấy lại; trạm thư sẽ gửi thư xác nhận trước. Không để lại thì quên mật lệnh là mất tài khoản.
           </Alert>
         </>
       ) : (
         <Alert tone="warning" className="text-caption">
-          Chưa có cách lấy lại mật khẩu: quên là mất tài khoản. Nên liên kết thêm Google hoặc GitHub sau khi đăng ký.
+          Chưa có đường lấy lại mật lệnh: quên là mất tài khoản. Nên liên kết thêm Google hoặc GitHub sau khi ghi danh.
         </Alert>
       )}
       <Button type="submit">
@@ -115,12 +115,12 @@ export function RegisterForm({
 export function ChangePasswordForm({ error }: { error: PasswordError | null }) {
   return (
     <form action="/api/auth/password/change" method="post" className="flex flex-col gap-3">
-      <ErrorLine error={error} text={{ wrong: "Mật khẩu hiện tại không đúng." }} />
-      <Field label="Mật khẩu hiện tại" name="current" type="password" autoComplete="current-password" required />
-      <Field label={`Mật khẩu mới (từ ${PASSWORD_MIN} ký tự)`} name="password" type="password" autoComplete="new-password" required minLength={PASSWORD_MIN} />
-      <Field label="Nhập lại mật khẩu mới" name="confirm" type="password" autoComplete="new-password" required minLength={PASSWORD_MIN} />
+      <ErrorLine error={error} text={{ wrong: "Mật lệnh hiện tại không đúng." }} />
+      <Field label="Mật lệnh hiện tại" name="current" type="password" autoComplete="current-password" required />
+      <Field label={`Mật lệnh mới (từ ${PASSWORD_MIN} ký tự)`} name="password" type="password" autoComplete="new-password" required minLength={PASSWORD_MIN} />
+      <Field label="Nhắc lại mật lệnh mới" name="confirm" type="password" autoComplete="new-password" required minLength={PASSWORD_MIN} />
       <Button type="submit">
-        Đổi mật khẩu
+        Đổi mật lệnh
       </Button>
     </form>
   );
@@ -130,9 +130,9 @@ export function ChangePasswordForm({ error }: { error: PasswordError | null }) {
 export function ForgotPasswordForm() {
   return (
     <form action="/api/auth/password/forgot" method="post" className="flex flex-col gap-3">
-      <Field label="Tên đăng nhập hoặc email" name="login" autoComplete="username" required maxLength={EMAIL_MAX} autoCapitalize="none" />
+      <Field label="Danh hiệu hoặc địa chỉ thư" name="login" autoComplete="username" required maxLength={EMAIL_MAX} autoCapitalize="none" />
       <Button type="submit">
-        Gửi thư đặt lại mật khẩu
+        Gửi thư đặt lại mật lệnh
       </Button>
     </form>
   );
@@ -143,10 +143,10 @@ export function ResetPasswordForm({ token, error }: { token: string; error: Pass
     <form action="/api/auth/password/reset" method="post" className="flex flex-col gap-3">
       <ErrorLine error={error} />
       <input type="hidden" name="token" value={token} />
-      <Field label={`Mật khẩu mới (từ ${PASSWORD_MIN} ký tự)`} name="password" type="password" autoComplete="new-password" required minLength={PASSWORD_MIN} />
-      <Field label="Nhập lại mật khẩu mới" name="confirm" type="password" autoComplete="new-password" required minLength={PASSWORD_MIN} />
+      <Field label={`Mật lệnh mới (từ ${PASSWORD_MIN} ký tự)`} name="password" type="password" autoComplete="new-password" required minLength={PASSWORD_MIN} />
+      <Field label="Nhắc lại mật lệnh mới" name="confirm" type="password" autoComplete="new-password" required minLength={PASSWORD_MIN} />
       <Button type="submit">
-        Đặt mật khẩu mới
+        Đặt mật lệnh mới
       </Button>
     </form>
   );
@@ -157,7 +157,7 @@ export function EmailForm({ current, error }: { current: string | null; error: P
   return (
     <form action="/api/auth/email" method="post" className="flex flex-col gap-3">
       <ErrorLine error={error} />
-      <EmailField label={current ? "Email mới" : "Email"} required />
+      <EmailField label={current ? "Địa chỉ thư mới (email)" : "Địa chỉ thư (email)"} required />
       <Button type="submit">
         Gửi thư xác nhận
       </Button>

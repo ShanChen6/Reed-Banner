@@ -473,7 +473,7 @@ export default function Home() {
                 { href: "/game", label: "Vào game" },
                 { href: "/game/practice", label: "Thao Luyện" },
                 { href: "/game/login", label: "Đăng nhập" },
-                { href: "/game/register", label: "Đăng ký" },
+                { href: "/game/register", label: "Ghi danh" },
               ].map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="inline-flex min-h-11 items-center hover:text-[var(--primary)]">
