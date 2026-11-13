@@ -6,7 +6,8 @@ import { ELEMENT_COLOR } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import type { Cue, CueBus, CueKind } from "./director";
 import type { Puppet } from "./kit";
-import { rigOf, type Rig } from "./rigs";
+import { rigFor, type Rig } from "./rigs";
+import type { Element, Profession } from "@/core";
 
 /**
  * Vị trí ngang (0..1) của nhân vật trên sân khấu. Người đầu đội (thủ lĩnh) đứng gần giữa sân nhất, hai
@@ -187,7 +188,7 @@ export default function BattleStage({
           side: s as 0 | 1,
           index: i,
           fighter: f,
-          rig: rigOf(f.id),
+          rig: rigFor(f),
         })),
       ),
     [sides],
@@ -195,7 +196,7 @@ export default function BattleStage({
   /** Danh sách nhân vật có hình động; đổi thì dựng lại sân PixiJS (ví dụ đợt mới ở Sinh tồn). */
   const rigged = slots
     .filter((s) => s.rig)
-    .map((s) => `${s.key}=${s.fighter.id}`)
+    .map((s) => `${s.key}=${s.fighter.id}=${s.fighter.element}=${s.fighter.profession}`)
     .join(",");
   /** Bản mới nhất của `slots` cho các hàm chạy ngoài lần vẽ (nạp xong hình, nhận động tác). */
   const latest = useRef(slots);
@@ -268,9 +269,9 @@ export default function BattleStage({
       app.stage.sortableChildren = true;
 
       const entries = rigged.split(",").map((s) => {
-        const [key, id] = s.split("=") as [string, string];
+        const [key, id, element, profession] = s.split("=") as [string, string, Element, Profession];
         const [side, index] = key.split(":").map(Number) as [0 | 1, number];
-        return { key, side, index, rig: rigOf(id)! };
+        return { key, side, index, rig: rigFor({ id, element, profession })! };
       });
       const loaded = await Promise.all(
         entries.map((e) => loadPuppet(e.rig, still)),
@@ -530,6 +531,132 @@ export default function BattleStage({
             alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, 0.3 + n * 0.08));
           });
           return [roar, ward];
+        }
+        if (rig.strikeFx === "fireBanner" || rig.strikeFx === "tigerClaw") {
+          const cut = flameCleave(sky, rig.fxColor);
+          const rain = fireRain(sky, rig.fxColor);
+          const fire = flameWall(sky, rig.fxColor);
+          const rally = ironFormation(sky, rig.fxColor);
+          // Định Quốc Hỏa Kỳ (Nguyễn Bặc): cầu lửa giáng xuống đối thủ đứng đầu, lửa bén lên họ (Thiêu đốt), mũi tên vàng dâng
+          // quanh cả đội (Công tăng). Bạch Hổ Xuất Sơn (Phạm Bạch Hổ): hai nhát chém lửa bắt chéo như vuốt hổ, lửa bén lên
+          // đối thủ, mũi tên vàng quanh chính mình (Công tăng).
+          loaded[i]!.onStrike?.((kind) => {
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !foe) return;
+            const size = app.screen.height * FIGURE;
+            if (rig.strikeFx === "fireBanner") {
+              rain.fall(spot(foe, 0), size, facing);
+              fire.burn(spot(foe, 0), size, 0.35);
+              alive(true).forEach((s, n) => rally.rally(spot(s, 0), size, 0.25 + n * 0.08));
+            } else {
+              cut.slash(spot(foe, 0), size, facing);
+              cut.slash(spot(foe, 0), size, -facing, 0.14);
+              fire.burn(spot(foe, 0), size, 0.3);
+              const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+              if (me) rally.rally(spot(me, 0), size, 0.25);
+            }
+          });
+          return [cut, rain, fire, rally];
+        }
+        if (rig.strikeFx === "earthAegis") {
+          const ward = drumShield(sky, rig.fxColor, facing);
+          const roar = tauntRoar(sky, rig.fxColor);
+          // Ngoại Giáp Hộ Quân: khiên mặt trống trước từng đồng đội (Khiên), sóng đất và vòng gai đá quanh chính mình
+          // (Khiêu khích, Phản đòn).
+          loaded[i]!.onStrike?.((kind) => {
+            const me = latest.current.find((s) => s.side === e.side && s.index === e.index);
+            if (kind !== "ultimate" || !me) return;
+            const size = app.screen.height * FIGURE;
+            roar.roar(spot(me, 0), alive(false).map((s) => spot(s, 0)), size);
+            alive(true).forEach((s, n) => ward.cover(spot(s, 0), size, 0.25 + n * 0.08));
+          });
+          return [ward, roar];
+        }
+        if (rig.strikeFx === "goldEdict" || rig.strikeFx === "goldPlot") {
+          const coins = coinScatter(sky, rig.fxColor);
+          const crack = ironFormation(sky, rig.fxColor);
+          const ray = armorPierce(sky, rig.fxColor);
+          // Đô Hộ Phủ Lệnh (Lưu Cơ): tiền vàng bật khỏi từng đối thủ (rút năng lượng, câm lặng), khiên giáp họ nứt (Thủ
+          // giảm). Ngô Gia Di Mưu (Ngô Xương Xí): mũi sáng xuyên giáp tới đối thủ đứng đầu rồi tiền vàng bật khỏi họ.
+          loaded[i]!.onStrike?.((kind, at) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            if (rig.strikeFx === "goldEdict") {
+              alive(false).forEach((s, n) => {
+                coins.scatter(spot(s, 0.5), size);
+                crack.shatter(spot(s, 0.5), size, 0.2 + n * 0.08);
+              });
+            } else {
+              const foe = alive(false)[0];
+              if (!foe) return;
+              ray.pierce(at, spot(foe, 0.5), Math.max(3, app.screen.height * 0.022));
+              coins.scatter(spot(foe, 0.5), size);
+            }
+          });
+          return [coins, crack, ray];
+        }
+        if (rig.strikeFx === "herbGrace") {
+          const bloom = leafBloom(sky, rig.fxColor, SPRING, halo);
+          const regrow = leafBloom(sky, rig.fxColor, BREEZE, halo);
+          // Hoa Lư Thảo Dược: vòng lá nở dưới chân từng đồng đội (Hồi máu, giải trừ), rồi đợt lá thứ hai nhạt hơn (hồi
+          // máu mỗi lượt).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(true).forEach((s, n) => {
+              bloom.cover(spot(s, 0), size, n * 0.08);
+              regrow.cover(spot(s, 0), size, 0.45 + n * 0.08);
+            });
+          });
+          return [bloom, regrow];
+        }
+        if (rig.strikeFx === "royalSeal" || rig.strikeFx === "riverGuard") {
+          const pillar = waterPillar(sky, rig.fxColor);
+          const crack = ironFormation(sky, rig.fxColor);
+          const mist = poisonMist(sky, rig.fxColor, TIDE);
+          // Nam Việt Vương Ấn (Đinh Liễn): cột nước đông băng dưới từng đối thủ (Đóng băng), ấn nứt trên ngực họ. Bố Hải
+          // Trấn Giang (Trần Lãm): sương nước phủ từng đối thủ (Công giảm), cột nước đông băng trên đối thủ đứng đầu.
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            const foes = alive(false);
+            if (rig.strikeFx === "royalSeal") {
+              foes.forEach((s, n) => {
+                pillar.cover(spot(s, 0), size * 0.8, n * 0.1);
+                crack.shatter(spot(s, 0.5), size, 0.35 + n * 0.08);
+              });
+            } else {
+              foes.forEach((s, n) => mist.cover(spot(s, 0), size * 0.8, n * 0.08));
+              if (foes[0]) pillar.cover(spot(foes[0], 0), size * 0.8, 0.3);
+            }
+          });
+          return [pillar, crack, mist];
+        }
+        if (rig.strikeFx === "ironCharge") {
+          const ray = armorPierce(sky, rig.fxColor);
+          const crack = ironFormation(sky, rig.fxColor);
+          // Kim Qua Thiết Mã: mũi sáng phá giáp từ mũi đao tới đối thủ đứng đầu (xuyên giáp), giáp họ vỡ (Thủ giảm).
+          loaded[i]!.onStrike?.((kind, at) => {
+            const foe = alive(false)[0];
+            if (kind !== "ultimate" || !foe) return;
+            ray.pierce(at, spot(foe, 0.5), Math.max(4, app.screen.height * 0.028));
+            crack.shatter(spot(foe, 0.5), app.screen.height * FIGURE, 0.15);
+          });
+          return [ray, crack];
+        }
+        if (rig.strikeFx === "galeRise") {
+          const gale = galeSlash(sky, rig.fxColor);
+          const crack = ironFormation(sky, rig.fxColor);
+          // Đường Lâm Phong Khởi: lốc cuốn quanh chân từng đối thủ, khiên giáp họ nứt (giải trừ, Công giảm).
+          loaded[i]!.onStrike?.((kind) => {
+            if (kind !== "ultimate") return;
+            const size = app.screen.height * FIGURE;
+            alive(false).forEach((s, n) => {
+              gale.whirl(spot(s, 0), size, n * 0.1);
+              crack.shatter(spot(s, 0.5), size, 0.3 + n * 0.08);
+            });
+          });
+          return [gale, crack];
         }
         if (rig.strikeFx === "flameCleave") {
           const cut = flameCleave(sky, rig.fxColor);

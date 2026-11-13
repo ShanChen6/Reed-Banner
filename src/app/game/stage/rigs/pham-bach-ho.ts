@@ -28,6 +28,7 @@ export const PHAM_BACH_HO: WarriorRig = {
     neck: { x: 520, y: 290 },
   },
   blade: [{ x: 215, y: 890 }, { x: 475, y: 1450 }],
+  strikeFx: "tigerClaw",
   fxColor: 0xff913f,
   // Sải bước đâm đao thẳng ra trước (đánh thường), đứng thẳng giơ đao dựng đứng (ra chiêu), hai tay vung đao qua vai
   // trong thế tấn rộng (tuyệt chiêu). Tranh giữ cỡ ô của tấm gốc.

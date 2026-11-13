@@ -440,7 +440,7 @@ export function rescaleSurvivalHp(
     newMaxHp < 1 ||
     !validHpRatio(normalizedRatio)
   )
-    throw new RangeError("Trạng thái HP Survival không hợp lệ");
+    throw new RangeError("Trạng thái máu Trấn Ải không hợp lệ");
   if (hp === 0) return 0;
   return Math.max(1, Math.min(newMaxHp, Math.round(normalizedRatio * newMaxHp)));
 }
@@ -747,7 +747,7 @@ export function newSurvivalRun(
     (() => {
       const result = createSurvivalRoster(profile, [MAIN_ID, ...profile.team]);
       if (!result.ok)
-        throw new RangeError(`Không tạo được đội Sinh tồn: ${result.error}`);
+        throw new RangeError(`Không tạo được đội Trấn Ải: ${result.error}`);
       return result.roster;
     })();
   return {

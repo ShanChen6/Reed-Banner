@@ -369,7 +369,7 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
         refs: ["E08"],
       },
       {
-        text: "Mở khóa đồng hành và mở Tập dượt với Trần Lãm là phần thưởng của game, không phải mốc lịch sử về việc ai gia nhập lúc nào.",
+        text: "Cho tướng quân gia nhập và mở Tập dượt với Trần Lãm là phần thưởng của game, không phải mốc lịch sử về việc ai gia nhập lúc nào.",
         basis: "fictional",
       },
     ],

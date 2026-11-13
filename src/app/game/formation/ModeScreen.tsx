@@ -176,7 +176,7 @@ export default function ModeScreen({
     <>
       {overview?.failed && (
         <div role="alert" className="ui-frame flex flex-wrap items-center justify-between gap-3 p-4">
-          <p className="max-w-xl text-[15px]">Chưa tải được chế độ xếp hạng. Kiểm tra mạng rồi thử lại; chơi thường vẫn chơi được.</p>
+          <p className="max-w-xl text-[15px]">Chưa mở được chế độ xếp hạng. Xin kiểm tra mạng rồi thử lại; chơi thường vẫn chơi được.</p>
           <button type="button" onClick={onExpire} className={buttonVariants({ className: "flex min-h-12 items-center px-6" })}>Thử lại</button>
         </div>
       )}

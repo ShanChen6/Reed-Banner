@@ -7,6 +7,8 @@
  * Thêm nhân vật: tạo `<dir>.ts` xuất một `WarriorRig` hoặc `MageRig`, import ở dưới và thêm vào `RIGS`.
  */
 
+import type { Element, Profession } from "@/core";
+import { ALL_COMPANIONS } from "@/core/roster/roster";
 import { MAGE_PARTS, type Rig } from "./types";
 import { DAO_LAM } from "./dao-lam";
 import { TRAN_CUONG } from "./tran-cuong";
@@ -188,6 +190,21 @@ const RIGS: Readonly<Record<string, Rig>> = {
 
 export function rigOf(id: string): Rig | null {
   return RIGS[id] ?? null;
+}
+
+/**
+ * Rig dùng trong trận cho một nhân vật cụ thể. Đinh Bộ Lĩnh (`adaptiveFx`) mượn hiệu ứng tuyệt chiêu và màu của nhân
+ * vật kèm cùng nghề, cùng hệ có hiệu ứng riêng, vì tuyệt chiêu của anh đổi theo nghề và hệ người chơi chọn.
+ */
+export function rigFor(f: { readonly id: string; readonly element: Element; readonly profession: Profession }): Rig | null {
+  const rig = rigOf(f.id);
+  if (!rig || rig.skeleton !== "warrior" || !rig.adaptiveFx) return rig;
+  for (const c of ALL_COMPANIONS) {
+    if (c.element !== f.element || c.profession !== f.profession) continue;
+    const twin = rigOf(c.id);
+    if (twin?.skeleton === "warrior" && twin.strikeFx) return { ...rig, strikeFx: twin.strikeFx, fxColor: twin.fxColor };
+  }
+  return rig;
 }
 
 export function rigIds(): readonly string[] {

@@ -37,7 +37,7 @@ export const NINH_HOA: WarriorRig = {
     attack: { name: "pose-attack", texScale: 0.4, origin: { x: 231, y: 4 },
       anchor: { x: 720, y: 1022 }, scale: 1, burst: { x: 1200, y: 180 } },
     cast: { name: "pose-cast", texScale: 0.4, origin: { x: 147, y: 12 },
-      anchor: { x: 470, y: 1525 }, scale: 1, burst: { x: 940, y: 640 } },
+      anchor: { x: 470, y: 1525 }, scale: 1, burst: { x: 950, y: 310 } },
     ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 174, y: 7 },
       anchor: { x: 465, y: 1527 }, scale: 1, burst: { x: 830, y: 280 } },
   },

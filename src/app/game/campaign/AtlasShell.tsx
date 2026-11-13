@@ -65,7 +65,7 @@ export function ChapterRail({
     >
       <AtlasCorners />
       <h2 className="mb-2 hidden px-1 text-center text-sm font-bold tracking-widest text-ink uppercase xl:block">
-        Chương chiến dịch
+        Chương Bình Loạn
       </h2>
       <div
         role="tablist"
@@ -540,7 +540,7 @@ export function StrongholdPanel({
         {!s.faction && (
           <p className="text-sm leading-relaxed">
             Căn cứ của Đinh Bộ Lĩnh, không tính là một trong 12 sứ quân. Các
-            nhiệm vụ ở đây mở đầu và khép lại chiến dịch.
+            nhiệm vụ ở đây mở đầu và khép lại Bình Loạn.
           </p>
         )}
         {!s.at && (

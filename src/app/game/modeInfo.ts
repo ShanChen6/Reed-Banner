@@ -34,11 +34,11 @@ export interface ModeInfo {
 
 export const MODE_INFO: Partial<Record<Scene, ModeInfo>> = {
   TRIAL: {
-    text: MODE_TEXT.TRIAL, art: "trial", kicker: "Song Tháp",
+    text: MODE_TEXT.TRIAL, art: "trial", kicker: "Leo tháp",
     perks: ["Luật cấm, bắt buộc hoặc giới hạn đội theo tầng", "Đá Cường Hóa cho lần vượt đầu tiên", "Quét tháp mỗi ngày khi đã qua tầng 1"],
   },
   DESTINY: {
-    text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Song Tháp",
+    text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Leo tháp",
     perks: ["Đội hình khóa cho cả lượt leo", "Máu, năng lượng và lương mang sang tầng sau", "Thắng mỗi tầng chọn Phúc hoặc hồi phục", "Bảng xếp hạng riêng cho từng chu kỳ tuần"],
   },
   SURVIVAL: {
@@ -58,7 +58,7 @@ export const MODE_INFO: Partial<Record<Scene, ModeInfo>> = {
     perks: ["Mỗi lượt chơi tốn một phiếu", "Tướng tìm được ghi vào Tướng Lục theo tài khoản"],
   },
   LEADERBOARD: {
-    text: "Thành tích theo mùa của bạn ở mọi chế độ có xếp hạng.", kicker: "Công trạng",
+    text: "Thành tích theo mùa của bạn ở mọi chế độ có xếp hạng.", kicker: "Công Trạng",
     perks: ["Hạng hiện tại ở từng chế độ", "Các mùa trước: hạng và thưởng đã nhận"],
   },
 };

@@ -132,7 +132,7 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
     ],
     outro: [
       {
-        text: "Chiến dịch được chia theo tuyến địa lý. Ở bản này các nhiệm vụ vẫn mở lần lượt; tuyến bạn xem trước không đổi gì.",
+        text: "Bình Loạn được chia theo tuyến địa lý. Ở bản này các nhiệm vụ vẫn mở lần lượt; tuyến bạn xem trước không đổi gì.",
         basis: "reconstructed",
       },
     ],

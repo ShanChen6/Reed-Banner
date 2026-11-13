@@ -44,6 +44,7 @@ export const DINH_BO_LINH: WarriorRig = {
     { x: 300, y: 830 },
     { x: 35, y: 1345 },
   ],
+  adaptiveFx: true,
   fxColor: 0xffc46b,
   // Chém ngang (đánh thường), đâm đao chéo lên (ra chiêu), vung đao qua đầu (tuyệt chiêu). Cỡ so theo khóa thắt lưng
   // (65 px đứng).

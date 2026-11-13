@@ -23,7 +23,7 @@ export default function UiGallery() {
   const [team, setTeam] = useState<readonly string[]>([]);
   return (
     <ModeScreen label="Bộ giao diện chung">
-      <ModeBanner title="Tháp Thí Luyện" kicker="Song Tháp" art="/art/home/trial.webp"
+      <ModeBanner title="Tháp Thí Luyện" kicker="Leo tháp" art="/art/home/trial.webp"
         description="Banner chế độ: tranh, nhãn nhỏ, một câu mô tả và vài số liệu. Tên chế độ đã có trên header nên mặc định chỉ đọc cho trình đọc màn hình."
         stats={[{ label: "Đã qua", value: "3/20" }, { label: "Đá Cường Hóa", value: 12 }]} />
 

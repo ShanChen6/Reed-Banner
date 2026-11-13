@@ -370,18 +370,18 @@ export function navigateIndex(index: number, key: string, count: number, columns
 
 /** Mã lỗi từ API mở trận. */
 export const TRIAL_ERROR_TEXT: Record<string, string> = {
-  featureDisabled: "Tháp Thí Luyện đang tạm đóng; tiến trình và trận dở được giữ nguyên",
-  network: "Mất kết nối tới server, thử lại",
-  bad_request: "Yêu cầu không hợp lệ",
-  floor_not_found: "Tầng này chưa có",
-  floor_locked: "Tầng này chưa mở khóa",
-  win_unsupported: "Tầng này dùng điều kiện thắng chưa hỗ trợ",
-  lineup_invalid: "Đội hình không hợp luật tầng",
-  unsupported_schema: "Dữ liệu Song Tháp của bạn thuộc phiên bản mới hơn, chưa chơi được ở bản này",
-  active_elsewhere: "Bạn đang có một trận Thí Luyện ở tầng khác, hãy tiếp tục hoặc bỏ trận đó",
-  conflict: "Dữ liệu vừa đổi ở nơi khác, thử lại",
-  no_cleared_floors: "Cần vượt ít nhất tầng 1 để quét",
-  overflow: "Ví đá đã đạt giới hạn an toàn",
+  featureDisabled: "Tháp Thí Luyện đang tạm đóng cửa. Tiến trình và trận dở được giữ nguyên.",
+  network: "Tin báo đứt quãng, chưa liên lạc được máy chủ. Xin thử lại.",
+  bad_request: "Lệnh không hợp lệ. Xin tải lại trang rồi thử lại.",
+  floor_not_found: "Tầng này chưa dựng xong.",
+  floor_locked: "Tầng này chưa mở. Xin vượt tầng trước.",
+  win_unsupported: "Tầng này dùng điều kiện thắng mà bản này chưa có. Xin chờ cập nhật.",
+  lineup_invalid: "Đội hình chưa hợp luật tầng. Xin đổi tướng.",
+  unsupported_schema: "Dữ liệu Tháp Thí Luyện thuộc phiên bản mới hơn, bản này chưa đọc được. Xin tải lại trang.",
+  active_elsewhere: "Đang có một trận Thí Luyện ở tầng khác. Xin đánh tiếp hoặc bỏ trận đó.",
+  conflict: "Quân tình vừa đổi ở nơi khác. Xin thử lại.",
+  no_cleared_floors: "Phải vượt ít nhất tầng 1 mới quét tháp được.",
+  overflow: "Túi đá đã đầy tới giới hạn. Xin dùng bớt rồi quét tiếp.",
 };
 
 /** Nhãn chữ cho từng loại luật (thay emoji ⛔ ✔ ⚖). */

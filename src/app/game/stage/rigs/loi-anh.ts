@@ -36,7 +36,7 @@ export const LOI_ANH: WarriorRig = {
     cast: { name: "pose-cast", texScale: 0.4, origin: { x: 135, y: 6 },
       anchor: { x: 620, y: 995 }, scale: 1.1, burst: { x: 1360, y: 330 } },
     ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 59, y: 4 },
-      anchor: { x: 600, y: 990 }, scale: 1.1, burst: { x: 1380, y: 450 } },
+      anchor: { x: 600, y: 990 }, scale: 1.1, burst: { x: 1250, y: 210 } },
   },
   down: { name: "pose-down", texScale: 0.4, origin: { x: 192, y: 5 },
     anchor: { x: 760, y: 960 }, scale: 1 },

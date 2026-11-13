@@ -30,7 +30,7 @@ const GUIDE = [
   ],
   [
     "Gặp sứ quân, tái đấu",
-    "Mở được sứ quân nào thì tab Tái đấu cho bạn thử sức lại với sứ quân ấy, ở nhiều bậc khó khác nhau.",
+    "Mở được sứ quân nào thì thẻ Tái đấu cho bạn thử sức lại với sứ quân ấy, ở nhiều bậc khó khác nhau.",
   ],
 ] as const;
 

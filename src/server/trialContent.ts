@@ -106,6 +106,6 @@ export const TRIAL_DESIGN_REASON: readonly string[] = [
   "Luật ba đầu tiên; Lê Thạch là neo đội hình.", "Thủ lĩnh hệ Mộc; loại Hà Vân, buộc ba nghề.",
   "Loại Tô Kim và build Tướng sĩ; buộc ba hệ.", "Mai Thanh thỏa cả hai điều kiện bắt buộc.",
   "Ải trùm: chỉ còn ba starter hợp lệ, Lê Thạch bắt buộc.", "Thủ lĩnh Sát thủ, đội ba hệ không Lôi.",
-  "Hà Vân bắt buộc; không khiên, không thuốc.", "Thủ lĩnh Xạ thủ đi cùng Lê Thạch.",
+  "Hà Vân bắt buộc; không Khiên, không thuốc.", "Thủ lĩnh Xạ thủ đi cùng Lê Thạch.",
   "Còn Hà Vân, Mai Thanh, Tô Kim; siết hồi phục trước đỉnh tháp.", "Đỉnh tháp ghép ba luật đa dạng; starter vẫn đủ lời giải.",
 ];

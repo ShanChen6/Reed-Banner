@@ -98,7 +98,7 @@ export default function TrialScreen() {
         <div className="py-24 text-center text-on-wood-soft">
           {loadError ? (
             <>
-              <p role="alert">Không tải được Tháp Thí Luyện. Hãy kiểm tra kết nối rồi thử lại.</p>
+              <p role="alert">Chưa mở được cửa Tháp Thí Luyện. Xin kiểm tra mạng rồi thử lại.</p>
               <Button variant="secondary" type="button" onClick={() => void load()} className="mt-4 min-h-11">
                 Tải lại
               </Button>
@@ -125,7 +125,7 @@ export default function TrialScreen() {
     });
     if (!result?.id) {
       setBusy(false);
-      setMessage(TRIAL_ERROR_TEXT[result?.error ?? "network"] ?? "Không vào được tầng, hãy thử lại");
+      setMessage(TRIAL_ERROR_TEXT[result?.error ?? "network"] ?? "Chưa vào được tầng. Xin thử lại.");
       return;
     }
     try {
@@ -142,7 +142,7 @@ export default function TrialScreen() {
     const result = await requestJson<{ abandoned?: boolean; error?: string }>("/api/trial/battles", { method: "DELETE" });
     if (!result || result.error) {
       setBusy(false);
-      setMessage(TRIAL_ERROR_TEXT[result?.error ?? "network"] ?? "Không bỏ được trận, hãy thử lại");
+      setMessage(TRIAL_ERROR_TEXT[result?.error ?? "network"] ?? "Chưa bỏ được trận. Xin thử lại.");
       return;
     }
     await load();
@@ -155,7 +155,7 @@ export default function TrialScreen() {
     const result = await requestJson<SweepResponse>("/api/trial/sweep", { method: "POST" });
     if (!result?.ok) {
       setSweepBusy(false);
-      setMessage(TRIAL_ERROR_TEXT[result?.error ?? "network"] ?? "Không quét được tháp, hãy thử lại");
+      setMessage(TRIAL_ERROR_TEXT[result?.error ?? "network"] ?? "Chưa quét được tháp. Xin thử lại.");
       return;
     }
     await load();

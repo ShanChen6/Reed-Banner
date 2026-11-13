@@ -3,7 +3,7 @@
 import { ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { Alert, Button, buttonVariants } from "@/components/ui";
 
-// Đấu trường bóng ma: điểm và thành tích, đội phòng thủ (bản chụp đội 3vs3 đang chọn), 3 đối thủ đang bày.
+// Quần Hùng: điểm và thành tích, đội phòng thủ (bản chụp đội 3vs3 đang chọn), 3 đối thủ đang bày.
 // Đánh dùng đội 3vs3 đang chọn ở hồ sơ; đối thủ do AI điều khiển.
 
 import { useEffect, useState } from "react";
@@ -65,7 +65,7 @@ export default function ArenaScreen() {
     return (
       <ModeScreen label="Quần Hùng">
         <p className="py-24 text-center text-on-wood-soft">
-          {data ? "Không tải được đấu trường, thử tải lại trang." : "Đang tải…"}
+          {data ? "Chưa mở được Quần Hùng. Xin tải lại trang." : "Đang tải…"}
         </p>
       </ModeScreen>
     );
@@ -81,7 +81,7 @@ export default function ArenaScreen() {
     const next = await fetchArena(action);
     setBusy(null);
     if (next.rating === undefined)
-      return setMessage(ONLINE_ERROR_TEXT[next.error ?? "network"] ?? "Lỗi");
+      return setMessage(ONLINE_ERROR_TEXT[next.error ?? "network"] ?? "Có trục trặc chưa rõ. Xin thử lại.");
     setData(next);
     if (action === "defend") setNotice("Đã cập nhật đội phòng thủ.");
   };
@@ -101,7 +101,7 @@ export default function ArenaScreen() {
     if (!res.id) {
       setBusy(null);
       setMessage(
-        ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Không tạo được trận",
+        ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Chưa bày được trận. Xin thử lại.",
       );
       if (res.error === "arenaGone") void fetchArena().then(setData);
       return;
@@ -118,7 +118,7 @@ export default function ArenaScreen() {
     <ModeScreen wide label="Quần Hùng">
       <ModeBanner
         title="Quần Hùng"
-        kicker="Đấu trường bóng ma"
+        kicker="Đấu người"
         art="/art/home/arena.webp"
         description={`Đánh với đội phòng thủ của người chơi khác, do máy điều khiển ở mức ${DIFFICULTY_NAME[ARENA_DIFFICULTY]}. Thắng cộng điểm, thua trừ điểm.`}
         stats={[

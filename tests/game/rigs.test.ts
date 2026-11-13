@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { statSync, readFileSync } from "node:fs";
 import { test } from "node:test";
-import { partsOf, partUrl, rigOf } from "../../src/app/game/stage/rigs";
+import { partsOf, partUrl, rigFor, rigOf } from "../../src/app/game/stage/rigs";
 
 test("Nguyễn Bặc có đủ lớp WebP và hai tranh trong ngân sách 350 KB", () => {
   const rig = rigOf("nguyenBac");
@@ -1907,4 +1907,18 @@ test("Ngô Xương Xí bộ mới cầm kiếm: đủ bốn tranh tư thế, kh�
     assert.equal(data.readUIntLE(24, 3) + 1, Math.floor(box.w * rig.texScale), name);
     assert.equal(data.readUIntLE(27, 3) + 1, Math.floor(box.h * rig.texScale), name);
   }
+});
+
+test("11 tướng lịch sử có hiệu ứng tuyệt chiêu riêng; Đinh Bộ Lĩnh mượn hiệu ứng theo nghề và hệ", () => {
+  const own = { nguyenBac: "fireBanner", dinhDien: "earthAegis", luuCo: "goldEdict", trinhTu: "herbGrace", dinhLien: "royalSeal",
+    tranCuong: "ironCharge", tranLam: "riverGuard", ngoNhatKhanh: "galeRise", ngoXuongXi: "goldPlot", phamBachHo: "tigerClaw" } as const;
+  for (const [id, fx] of Object.entries(own)) {
+    const rig = rigOf(id);
+    assert.ok(rig?.skeleton === "warrior" && rig.strikeFx === fx, id);
+  }
+  const moc = rigFor({ id: "dinhBoLinh", element: "moc", profession: "tuongSi" });
+  const thuy = rigFor({ id: "dinhBoLinh", element: "thuy", profession: "phapSu" });
+  assert.ok(moc?.skeleton === "warrior" && moc.strikeFx, "Mộc tướng sĩ có hiệu ứng");
+  assert.ok(thuy?.skeleton === "warrior" && thuy.strikeFx && thuy.strikeFx !== moc.strikeFx, "đổi hệ thì đổi hiệu ứng");
+  assert.equal(rigFor({ id: "lyKhue", element: "moc", profession: "ySu" }), rigOf("lyKhue"));
 });

@@ -49,10 +49,10 @@ export default function RankRewardsPanel({ mode, onClaimed }: { mode: RankReward
         body: JSON.stringify({ mode: item.mode, period: item.period }),
       });
       const body = (await res.json()) as { gold?: number; rank?: number; participants?: number };
-      setNote(res.ok ? `Đã nhận ${body.gold} vàng (hạng ${body.rank}/${body.participants}).` : "Không nhận được thưởng, thử lại sau nhé.");
+      setNote(res.ok ? `Đã nhận ${body.gold} vàng (hạng ${body.rank}/${body.participants}).` : "Chưa nhận được thưởng. Xin thử lại sau.");
       if (res.ok) onClaimed?.();
     } catch {
-      setNote("Không nhận được thưởng, thử lại sau nhé.");
+      setNote("Chưa nhận được thưởng. Xin thử lại sau.");
     }
     setBusy(false);
     void load();

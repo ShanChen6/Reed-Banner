@@ -39,7 +39,7 @@ export const TAT_PHONG_LANG: WarriorRig = {
     cast: { name: "pose-cast", texScale: 0.4, origin: { x: 115, y: 11 },
       anchor: { x: 380, y: 995 }, scale: 1.2, burst: { x: 1050, y: 550 } },
     ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 129, y: 11 },
-      anchor: { x: 440, y: 1000 }, scale: 1.2, burst: { x: 1240, y: 330 } },
+      anchor: { x: 440, y: 1000 }, scale: 1.2, burst: { x: 1180, y: 595 } },
   },
   down: { name: "pose-down", texScale: 0.4, origin: { x: 97, y: 14 },
     anchor: { x: 640, y: 950 }, scale: 1.1 },

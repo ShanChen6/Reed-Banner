@@ -31,6 +31,7 @@ export const TRINH_TU: WarriorRig = {
     neck: { x: 613, y: 232 },
   },
   blade: [{ x: 167, y: 414 }, { x: 157, y: 285 }],
+  strikeFx: "herbGrace",
   fxColor: 0x9bd777,
   poses: {
     // Đánh thường: tranh Shan gửi 03/11, tấn rộng ôm bầu thuốc, tay trái đẩy ra (cỡ so theo đầu).

@@ -76,8 +76,8 @@ export default function CustomForm({ onStart }: { onStart: (rules: Ruleset) => v
         <div className="flex flex-col gap-3">
           <Slider id="fm-wild" label="Quân Lệnh" value={o.wildPermille / 10} min={0} max={L.maxWildPermille / 10} step={0.5} unit="%" onChange={(n) => set({ wildPermille: Math.round(n * 10) })} />
           <Slider id="fm-eraser" label="Thu Hồi" value={o.eraserPermille / 10} min={0} max={L.maxEraserPermille / 10} step={0.5} unit="%" onChange={(n) => set({ eraserPermille: Math.round(n * 10) })} />
-          <Slider id="fm-fusion" label="Nhân vật dung hợp" value={o.fusionPermille / 10} min={0} max={L.maxFusionPermille / 10} step={0.5} unit="%" disabled={!hasFusion} onChange={(n) => set({ fusionPermille: Math.round(n * 10) })} />
-          {!hasFusion && <p className="text-sm text-on-wood-soft">Chưa có nhân vật dung hợp nào được duyệt nên chưa dùng được.</p>}
+          <Slider id="fm-fusion" label="Tướng quân dung hợp" value={o.fusionPermille / 10} min={0} max={L.maxFusionPermille / 10} step={0.5} unit="%" disabled={!hasFusion} onChange={(n) => set({ fusionPermille: Math.round(n * 10) })} />
+          {!hasFusion && <p className="text-sm text-on-wood-soft">Chưa có tướng quân dung hợp nào được duyệt nên chưa dùng được.</p>}
         </div>
       </div>
 

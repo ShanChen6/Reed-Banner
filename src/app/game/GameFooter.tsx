@@ -50,7 +50,7 @@ export default function GameFooter() {
             <LogoMark className="size-14" />
             <div>
               <p className="font-serif text-2xl font-bold text-on-wood">Cờ Lau</p>
-              <p className="mt-0.5 text-base">Mini game thuộc ShanVerse</p>
+              <p className="mt-0.5 text-base">Trò chơi nhỏ thuộc ShanVerse</p>
             </div>
           </div>
           <nav aria-label="Liên kết" className="border-y border-frame-line-soft py-3">

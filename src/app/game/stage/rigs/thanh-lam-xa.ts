@@ -37,7 +37,7 @@ export const THANH_LAM_XA: WarriorRig = {
     attack: { name: "pose-attack", texScale: 0.4, origin: { x: 474, y: 9 },
       anchor: { x: 680, y: 990 }, scale: 1.45, burst: { x: 1095, y: 300 } },
     cast: { name: "pose-cast", texScale: 0.4, origin: { x: 377, y: 12 },
-      anchor: { x: 1120, y: 1000 }, scale: 1.3, burst: { x: 1310, y: 460 } },
+      anchor: { x: 1120, y: 1000 }, scale: 1.3, burst: { x: 1110, y: 460 } },
     ultimate: { name: "pose-ultimate", texScale: 0.4, origin: { x: 106, y: 3 },
       anchor: { x: 620, y: 1000 }, scale: 1.15, burst: { x: 1390, y: 410 } },
   },

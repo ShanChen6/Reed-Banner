@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import type { Application } from "pixi.js";
 import type { Puppet } from "@/app/game/stage/kit";
 import type { CueKind } from "@/app/game/stage/director";
-import { rigOf } from "@/app/game/stage/rigs";
+import { rigFor } from "@/app/game/stage/rigs";
+import type { Element, Profession } from "@/core";
 
 const ACTIONS = [
   { kind: "idle", label: "Đứng", ms: 2000 },
@@ -35,8 +36,11 @@ const STATUSES = [
 type StatusToggle = (typeof STATUSES)[number]["kind"];
 const button = "rounded-lg border border-amber-800/70 bg-stone-900 px-3 py-2 text-sm font-medium hover:bg-amber-900/40 aria-pressed:border-amber-300 aria-pressed:bg-amber-900/60 disabled:opacity-40";
 
-export default function RigPreview({ id, size, onSnapshot }: {
+export default function RigPreview({ id, element, profession, size, onSnapshot }: {
   id: string;
+  /** Hệ và nghề đang xem, để Đinh Bộ Lĩnh mượn đúng hiệu ứng tuyệt chiêu. */
+  element: Element;
+  profession: Profession;
   size: "battle" | "large";
   onSnapshot: (url: string) => void;
 }) {
@@ -54,7 +58,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
 
   useEffect(() => {
     const el = host.current;
-    const rig = rigOf(id);
+    const rig = rigFor({ id, element, profession });
     if (!el || !rig) return;
     let disposed = false;
     let app: Application | null = null;
@@ -464,6 +468,65 @@ export default function RigPreview({ id, size, onSnapshot }: {
         if (venom) loaded.onStrike?.((kind) => {
           if (kind === "ultimate" && loaded) venom.cover({ x: el.clientWidth - 70, y: loaded.view.y }, rig.height * loaded.view.scale.y * 0.8, 0.15);
         });
+        // Hiệu ứng riêng của tướng lịch sử: đối thủ giả ở mép phải khung (một hoặc hai người), đồng đội là chính mình.
+        const hero = team === "fireBanner" || team === "tigerClaw" || team === "earthAegis" || team === "goldEdict" || team === "goldPlot"
+          || team === "herbGrace" || team === "royalSeal" || team === "riverGuard" || team === "ironCharge" || team === "galeRise"
+          ? {
+            cut: flameCleave(app.stage, rig.fxColor), rain: fireRain(app.stage, rig.fxColor), fire: flameWall(app.stage, rig.fxColor),
+            rally: ironFormation(app.stage, rig.fxColor), ward: drumShield(app.stage, rig.fxColor), roar: tauntRoar(app.stage, rig.fxColor),
+            coins: coinScatter(app.stage, rig.fxColor), ray: armorPierce(app.stage, rig.fxColor),
+            bloom: leafBloom(app.stage, rig.fxColor, SPRING, halo), regrow: leafBloom(app.stage, rig.fxColor, BREEZE, halo),
+            pillar: waterPillar(app.stage, rig.fxColor), mist: poisonMist(app.stage, rig.fxColor, TIDE), gale: galeSlash(app.stage, rig.fxColor),
+          }
+          : null;
+        if (hero) loaded.onStrike?.((kind, at) => {
+          if (kind !== "ultimate" || !loaded) return;
+          const size = rig.height * loaded.view.scale.y;
+          const me = { x: loaded.view.x, y: loaded.view.y };
+          const foes = [0.76, 0.9].map((k) => ({ x: el.clientWidth * k, y: loaded!.view.y }));
+          const chest = (p: { x: number; y: number }) => ({ x: p.x, y: p.y - size * 0.5 });
+          const w = Math.max(4, size * 0.03);
+          if (team === "fireBanner") {
+            hero.rain.fall(foes[0]!, size * 0.8, 1);
+            hero.fire.burn(foes[0]!, size * 0.8, 0.35);
+            hero.rally.rally(me, size, 0.25);
+          } else if (team === "tigerClaw") {
+            hero.cut.slash(foes[0]!, size * 0.8, 1);
+            hero.cut.slash(foes[0]!, size * 0.8, -1, 0.14);
+            hero.fire.burn(foes[0]!, size * 0.8, 0.3);
+            hero.rally.rally(me, size, 0.25);
+          } else if (team === "earthAegis") {
+            hero.roar.roar(me, foes, size);
+            hero.ward.cover(me, size, 0.25);
+          } else if (team === "goldEdict") {
+            foes.forEach((f, n) => {
+              hero.coins.scatter(chest(f), size * 0.8);
+              hero.rally.shatter(chest(f), size * 0.8, 0.2 + n * 0.08);
+            });
+          } else if (team === "goldPlot") {
+            hero.ray.pierce(at, chest(foes[0]!), w);
+            hero.coins.scatter(chest(foes[0]!), size * 0.8);
+          } else if (team === "herbGrace") {
+            hero.bloom.cover(me, size);
+            hero.regrow.cover(me, size, 0.45);
+          } else if (team === "royalSeal") {
+            foes.forEach((f, n) => {
+              hero.pillar.cover(f, size * 0.7, n * 0.1);
+              hero.rally.shatter(chest(f), size * 0.8, 0.35 + n * 0.08);
+            });
+          } else if (team === "riverGuard") {
+            foes.forEach((f, n) => hero.mist.cover(f, size * 0.7, n * 0.08));
+            hero.pillar.cover(foes[0]!, size * 0.7, 0.3);
+          } else if (team === "ironCharge") {
+            hero.ray.pierce(at, chest(foes[0]!), w);
+            hero.rally.shatter(chest(foes[0]!), size * 0.8, 0.15);
+          } else {
+            foes.forEach((f, n) => {
+              hero.gale.whirl(f, size * 0.8, n * 0.1);
+              hero.rally.shatter(chest(f), size * 0.8, 0.3 + n * 0.08);
+            });
+          }
+        });
         // Vô thanh đoạt phách hệ Phong: sóng âm từ ống sáo tới đầu một người ở mép phải khung, lốc cuốn quanh người đó.
         const flute = team === "flutePulse" ? [flutePulse(app.stage, rig.fxColor), galeSlash(app.stage, rig.fxColor)] as const : null;
         if (flute) loaded.onStrike?.((kind, at) => {
@@ -524,6 +587,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
           guard?.update(dt);
           myriad?.forEach((f) => f.update(dt));
           venom?.update(dt);
+          if (hero) Object.values(hero).forEach((f) => f.update(dt));
           flute?.[0].update(dt);
           flute?.[1].update(dt);
           blaze?.forEach((b) => b.update(dt));
@@ -570,7 +634,7 @@ export default function RigPreview({ id, size, onSnapshot }: {
       layout.current = null;
       destroy();
     };
-  }, [id, onSnapshot]);
+  }, [id, element, profession, onSnapshot]);
 
   useEffect(() => { layout.current?.(); }, [size]);
 

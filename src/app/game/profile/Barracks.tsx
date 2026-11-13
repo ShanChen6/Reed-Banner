@@ -31,7 +31,7 @@ import TeamTab from "./TeamTab";
 
 type Tab = "heroes" | "team" | "armory";
 const TABS: readonly { id: Tab; name: string }[] = [
-  { id: "heroes", name: "Tướng sĩ" },
+  { id: "heroes", name: "Tướng quân" },
   { id: "team", name: "Đội hình" },
   { id: "armory", name: "Kho đồ" },
 ];
@@ -163,7 +163,7 @@ export default function Barracks({
                   scene="SHOP"
                   className="barracks-btn flex min-h-11 items-center gap-1 rounded-md px-2 font-serif text-[15px] font-semibold sm:gap-2 sm:px-3"
                 >
-                  <ShopGlyph className="size-5" /> Cửa hàng
+                  <ShopGlyph className="size-5" /> Cửa Hàng
                 </SceneLink>
                 <span
                   className="barracks-pill is-gold max-sm:hidden! min-h-11 px-2! text-base sm:px-3!"
@@ -195,7 +195,7 @@ export default function Barracks({
             {tab === "heroes" && (
               <div className="grid gap-3 lg:h-[max(32rem,calc(100dvh-14rem))] lg:grid-cols-[minmax(0,38fr)_minmax(0,62fr)]">
                 <section
-                  aria-label="Danh sách tướng sĩ"
+                  aria-label="Danh sách tướng quân"
                   className={`barracks-panel min-h-0 flex-col rounded-lg p-3 lg:flex ${mobileDetail ? "hidden" : "flex"}`}
                 >
                   <HeroList
@@ -212,7 +212,7 @@ export default function Barracks({
                 </section>
                 <section
                   ref={detailTop}
-                  aria-label="Chi tiết tướng sĩ"
+                  aria-label="Chi tiết tướng quân"
                   className={`barracks-panel barracks-scroll min-h-0 scroll-mt-20 rounded-lg p-3 sm:p-4 lg:block lg:overflow-y-auto ${mobileDetail ? "block" : "hidden"}`}
                 >
                   {selected ? (
@@ -227,7 +227,7 @@ export default function Barracks({
                     />
                   ) : (
                     <p className="py-16 text-center text-[var(--on-wood-soft)]">
-                      Chưa có tướng sĩ để xem.
+                      Chưa có tướng quân để xem.
                     </p>
                   )}
                 </section>

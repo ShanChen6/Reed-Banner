@@ -56,7 +56,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
         refs: ["S04", "S06", "W12"],
       },
       {
-        text: "Đây không phải trận cuối được sử xác nhận. Game chọn Đỗ Động làm cao trào của chiến dịch. Thời gian vây, người cầm quân và số phận Đỗ Cảnh Thạc đều chưa có chứng cứ.",
+        text: "Đây không phải trận cuối được sử xác nhận. Game chọn Đỗ Động làm cao trào của Bình Loạn. Thời gian vây, người cầm quân và số phận Đỗ Cảnh Thạc đều chưa có chứng cứ.",
         basis: "disputed",
         refs: ["U07"],
       },
@@ -356,7 +356,7 @@ export const CHAPTER_SIX_COPY: readonly MissionCopy[] = [
     ],
     outro: [
       {
-        text: "Đại Cồ Việt, kinh đô Hoa Lư, năm 968: đây là mốc kết của chiến dịch.",
+        text: "Đại Cồ Việt, kinh đô Hoa Lư, năm 968: đây là mốc kết của Bình Loạn.",
         basis: "recorded",
         refs: ["E10", "S04", "S08"],
       },

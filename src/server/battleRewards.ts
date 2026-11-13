@@ -94,7 +94,7 @@ export async function settleArena(
         );
     return { won, opponent: opp.name, delta: d.attacker, rating, gold };
   } catch (e) {
-    console.error("Không ghi được điểm đấu trường", ownerId, e);
+    console.error("Không ghi được điểm Quần Hùng", ownerId, e);
     return { won, opponent: opp.name, delta: 0, rating: null, gold };
   }
 }
@@ -256,7 +256,7 @@ export async function rewardCampaignV2(
     deps.now,
   );
   if (!updated.ok) {
-    console.error("Không cộng được thưởng Campaign V2", r.id, updated.error);
+    console.error("Không cộng được thưởng Bình Loạn", r.id, updated.error);
     return undefined;
   }
   await submitProfile(
@@ -344,7 +344,7 @@ export async function rewardDaily(
     }),
     deps.now,
   );
-  if (!u.ok) console.error("Không cộng được thưởng thử thách ngày", r.id);
+  if (!u.ok) console.error("Không cộng được thưởng Nhật Lệnh", r.id);
   let rank: number | null = null;
   if (deps.daily) {
     await deps.daily.finish(day, r.ownerId, score, deps.now);
