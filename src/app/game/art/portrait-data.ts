@@ -85,11 +85,24 @@ const PHOTOS: Readonly<Record<string, string>> = {
  * Thiếu thì ô chân dung dùng hình tạm theo nghề như cũ. Thêm id vào đây khi có ảnh.
  */
 export const NPC_PORTRAIT_IDS: ReadonlySet<string> = new Set([
-  "phong-chau-strategist",
-  "tien-du-vanguard",
+  "bo-hai-raider-boatman",
+  "do-dong-boatman",
+  "do-dong-strategist",
+  "hoi-ho-ritualist",
   "ngo-951-soldier",
-  "phu-liet-wall-archer",
+  "ngo-951-strategist",
+  "phong-chau-strategist",
+  "phong-chau-vanguard",
   "phu-liet-healer",
+  "phu-liet-raid-leader",
+  "phu-liet-scout",
+  "phu-liet-wall-archer",
+  "phu-liet-wall-captain",
+  "phu-liet-wall-guard",
+  "sieu-loai-strategist",
+  "sieu-loai-vanguard",
+  "tien-du-healer",
+  "tien-du-vanguard",
 ]);
 
 export function portraitUrl(id: string): string | null {
