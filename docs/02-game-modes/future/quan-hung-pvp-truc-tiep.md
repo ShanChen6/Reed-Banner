@@ -1,7 +1,7 @@
 # 13 — Quần Hùng online: đấu trực tiếp giữa người với người (1vs1 và 3vs3)
 
 > Cập nhật: 13/11/2026
-> Trạng thái: **DRAFT** — Shan chốt hướng 01/11/2026 và duyệt luật 1vs1, 3vs3 ngày 13/11/2026 (mục 1.1, đã bổ sung vòng hai cùng ngày). Chưa có code. Các con số kỹ thuật (giờ, ngưỡng cảnh cáo, hàng đợi) là đề xuất của Claude, chờ đo.
+> Trạng thái: **DRAFT** — Shan chốt hướng 01/11/2026 và duyệt luật 1vs1, 3vs3 ngày 13/11/2026 (mục 1.1, đã bổ sung vòng hai cùng ngày). Lõi PVP-01 đã có code (`src/core/pvp/`, mục 5); server, giao diện, ghép trận, cấm chọn và Nộ riêng chưa có. Các con số kỹ thuật (giờ, ngưỡng cảnh cáo, hàng đợi) là đề xuất của Claude, chờ đo.
 
 ## 1. Quyết định của Shan
 
@@ -138,7 +138,7 @@ Làm **1vs1 trước**, vì khái quát trận cho nhiều chủ sở hữu và 
 | Task | Phạm vi | Nghiệm thu |
 |---|---|---|
 | PVP-00 | Duyệt luật mục 3, chốt các câu hỏi mở (mục 6), chọn kênh đẩy | Rulebook và ADR được Shan duyệt |
-| PVP-01 | Khái quát `Match`: danh sách chủ sở hữu theo từng tướng, đồng hồ từng người, mất lượt và phá trận (chỉ lõi, có test, chưa UI) | Mô phỏng hai AI đấu nhau qua cùng đường server, rồi sáu AI |
+| PVP-01 | **Đã làm (13/11/2026):** lõi `src/core/pvp/` quanh `BattleState` hai phe: chủ sở hữu theo từng tướng (hoặc AI điền), chỉ chủ tướng đang hành động được đi nước, chỉ đội trưởng đổi người hành động, hết giờ thì mất lượt và quyền sang đối thủ, bỏ lượt liên tiếp (3 lần của chính người đó, đề xuất) là phá trận, Elo từng người (phá trận không đổi điểm, hệ số giảm khi có AI), phe Elo thấp đi trước. Có test và mô phỏng 1vs1, 3vs3 sáu bot, có AI điền và có người bỏ lượt (`tests/core/pvp/`). **Chưa làm:** lưu và đồng bộ qua server (PVP-02), Nộ riêng từng người (PVP-06, cần sửa lõi trận) | Mô phỏng hai AI đấu nhau, rồi sáu AI, qua cùng đường kiểm tra quyền (đạt; đường server là PVP-02) |
 | PVP-02 | Hàng đợi 1vs1 theo Elo, bảng `pvp_matches`, API ghép và đi nước | Test ghép trận, chạy song song, chặn lượt sai |
 | PVP-03 | Giao diện 1vs1: màn chờ ghép, trận trực tiếp, kết quả | QA desktop và điện thoại, mất mạng giữa trận |
 | PVP-04 | Elo 1vs1, giới hạn trận mỗi ngày, chặn đánh lại, thưởng vàng, cảnh cáo phá trận | Cân bằng và kiểm chống farm |
