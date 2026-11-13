@@ -91,25 +91,51 @@ function CharacterDetails({ character, size }: { character: CharacterPreview; si
   );
 }
 
+type Tab = "heroes" | "npc";
+
+const TABS: readonly { readonly value: Tab; readonly label: string }[] = [
+  { value: "heroes", label: "Nhân vật" },
+  { value: "npc", label: "NPC Bình Loạn" },
+];
+
+/** Đổi tham số URL tại chỗ (không tải lại trang); useSearchParams nhận thay đổi từ history.pushState. */
+function pushQuery(params: Readonly<Record<string, string | null>>) {
+  const url = new URL(window.location.href);
+  for (const [key, value] of Object.entries(params)) {
+    if (value === null) url.searchParams.delete(key);
+    else url.searchParams.set(key, value);
+  }
+  window.history.pushState(null, "", `${url.pathname}${url.search}`);
+}
+
 export default function CharacterPreviewer({ characters }: { characters: readonly CharacterPreview[] }) {
   const query = useSearchParams();
   const [size, setSize] = useState<"battle" | "large">("battle");
   const [filter, setFilter] = useState<CharacterFilterValue>(NO_CHARACTER_FILTER);
-  const character = characters.find((c) => c.id === query.get("id")) ?? characters.find((c) => c.id === "nguyenBac") ?? characters[0];
+  const picked = characters.find((c) => c.id === query.get("id"));
+  // Tab theo nhân vật đang xem, để link ?id=<npc> mở đúng tab; chưa chọn ai thì theo ?tab.
+  const tab: Tab = picked ? (picked.npc ? "npc" : "heroes") : query.get("tab") === "npc" ? "npc" : "heroes";
+  const pool = characters.filter((c) => c.npc === (tab === "npc"));
+  const character = (picked && pool.includes(picked) ? picked : undefined) ?? pool.find((c) => c.id === "nguyenBac") ?? pool[0];
   if (!character) return <p>Chưa có nhân vật có hình động.</p>;
   // Giữ nhân vật đang xem trong danh sách dù không khớp bộ lọc để ô chọn không nhảy sang người khác.
-  const options = characters.filter((c) => c.id === character.id || matchesCharacterFilter(c, filter));
+  const options = pool.filter((c) => c.id === character.id || matchesCharacterFilter(c, filter));
   return (
     <div className="space-y-5">
-      <CharacterFilter value={filter} onChange={setFilter} shown={options.length - (matchesCharacterFilter(character, filter) ? 0 : 1)} total={characters.length} />
+      <div className="flex flex-wrap gap-2" role="tablist" aria-label="Nhóm nhân vật">
+        {TABS.map((t) => (
+          <button key={t.value} type="button" role="tab" aria-selected={tab === t.value}
+            onClick={() => pushQuery({ tab: t.value === "npc" ? "npc" : null, id: null })}
+            className="rounded-lg border border-stone-600 px-4 py-2 text-sm font-medium aria-selected:border-amber-300 aria-selected:bg-amber-900/50">
+            {t.label} ({characters.filter((c) => c.npc === (t.value === "npc")).length})
+          </button>
+        ))}
+      </div>
+      <CharacterFilter value={filter} onChange={setFilter} shown={options.length - (matchesCharacterFilter(character, filter) ? 0 : 1)} total={pool.length} />
       <div className="flex flex-wrap items-end justify-between gap-3 rounded-xl border border-amber-900/70 bg-black/20 p-3">
         <label className="flex min-w-0 flex-col gap-1 text-sm font-medium">
-          Nhân vật
-          <Select value={character.id} onChange={(event) => {
-            const url = new URL(window.location.href);
-            url.searchParams.set("id", event.target.value);
-            window.history.pushState(null, "", `${url.pathname}${url.search}`);
-          }} className="min-w-0">
+          {tab === "npc" ? "NPC" : "Nhân vật"}
+          <Select value={character.id} onChange={(event) => pushQuery({ id: event.target.value })} className="min-w-0">
             {options.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </Select>
         </label>
