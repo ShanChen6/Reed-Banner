@@ -260,10 +260,10 @@ function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; n
             <>
               <span className="flex min-w-0 flex-1 items-center gap-1.5 text-[var(--ash)]">
                 {needsLogin && <LockGlyph />}
-                <span className="leading-tight">{needsLogin ? "Đăng nhập để ghi danh xếp hạng" : mode.status}</span>
+                <span className="leading-tight">{needsLogin ? "Trình danh để có tên trên bảng xếp hạng" : mode.status}</span>
               </span>
               <span className="home-enter flex shrink-0 items-center gap-1 rounded-full border border-frame-gold/50 bg-black/30 px-3 py-1 font-serif font-semibold transition group-hover:border-frame-gold group-hover:bg-frame-gold/20">
-                {needsLogin ? "Đăng nhập" : mode.cta} <span aria-hidden>›</span>
+                {needsLogin ? "Trình danh" : mode.cta} <span aria-hidden>›</span>
               </span>
             </>
           )}

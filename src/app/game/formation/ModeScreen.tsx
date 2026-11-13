@@ -93,7 +93,7 @@ function RankedCard({ l, now, busy, canPlay, onPlay }: { l: LevelOverview; now: 
         </div>
         <RewardLadder level={l.level} rank={m?.status === "won" ? (m.rank ?? null) : null} winners={l.winners} />
         <button type="button" disabled={busy || !canPlay} onClick={() => onPlay(l.level)} className={buttonVariants({ className: "mt-auto min-h-12 px-4" })}>
-          {canPlay ? action : "Đăng nhập để chơi"}
+          {canPlay ? action : "Trình danh để chơi"}
         </button>
       </div>
     </li>
@@ -182,8 +182,8 @@ export default function ModeScreen({
       )}
       {!overview?.canPlay && !overview?.failed && (
         <div role="note" className="ui-frame flex flex-wrap items-center justify-between gap-3 p-4">
-          <p className="max-w-xl text-[15px]">Chế độ xếp hạng chỉ dành cho tài khoản đã đăng nhập. Chơi thường vẫn thoải mái, không cần đăng nhập.</p>
-          <SceneLink scene="LOGIN" className={buttonVariants({ className: "flex min-h-12 items-center px-6" })}>Đăng nhập</SceneLink>
+          <p className="max-w-xl text-[15px]">Chế độ xếp hạng chỉ dành cho tài khoản đã ghi danh. Chơi thường vẫn thoải mái, không cần trình danh.</p>
+          <SceneLink scene="LOGIN" className={buttonVariants({ className: "flex min-h-12 items-center px-6" })}>Trình danh</SceneLink>
         </div>
       )}
     </>

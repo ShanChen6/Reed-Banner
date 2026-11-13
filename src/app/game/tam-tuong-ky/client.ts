@@ -46,7 +46,7 @@ export const ERROR_TEXT: Readonly<Record<string, string>> = {
   noTicket: "Hết phiếu. Nhận thêm phiếu từ nhiệm vụ ngày, nhiệm vụ tuần “Thắng 15 trận” và điểm danh ngày thứ 7.",
   noSession: "Lượt đã hết hoặc hết hạn. Mở lượt mới để ghép tiếp.",
   noHint: "Hôm nay đã dùng hết gợi ý.",
-  loginRequired: "Cần đăng nhập để chơi.",
+  loginRequired: "Cần trình danh để chơi.",
   featureDisabled: "Chế độ này chưa mở.",
   conflict: "Có lệnh khác đang chạy cùng lúc. Xin thử lại.",
   badRequest: "Lệnh không hợp lệ. Xin tải lại trang rồi thử lại.",

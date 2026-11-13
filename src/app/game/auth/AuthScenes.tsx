@@ -37,7 +37,7 @@ export function LoginScene({
   mail: boolean;
 }) {
   return (
-    <AuthCard title="Đăng nhập" subtitle="Trình danh hiệu để vào trại. Chiến công theo bạn tới mọi nơi đặt chân." oauthError={q.oauthError}>
+    <AuthCard title="Trình danh" subtitle="Trình danh hiệu để vào trại. Chiến công theo bạn tới mọi nơi đặt chân." oauthError={q.oauthError}>
       <div className="mt-5 flex flex-col gap-3">
         <Notice show={q.emailVerified}>Thư tín đã xác nhận. Xin trình danh hiệu để vào trại.</Notice>
         <ProviderButtons providers={providers} />
@@ -78,7 +78,7 @@ export function RegisterScene({ q, providers, mail }: { q: AuthParams; providers
         <p className="text-center text-sm text-on-wood-soft">
           Đã có tên trong sổ quân?{" "}
           <AuthSceneLink scene="LOGIN" className="ui-link font-semibold text-primary hover:underline">
-            Đăng nhập
+            Trình danh
           </AuthSceneLink>
         </p>
       </div>

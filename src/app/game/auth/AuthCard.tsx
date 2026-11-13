@@ -29,7 +29,7 @@ export function AuthCard({
         </header>
         {oauthError && (
           <OnArrival>
-            <Alert className="mt-4">Đăng nhập chưa thành. Xin thử lại.</Alert>
+            <Alert className="mt-4">Trình danh chưa thành. Xin thử lại.</Alert>
           </OnArrival>
         )}
         {children}

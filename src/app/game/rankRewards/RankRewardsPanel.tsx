@@ -62,8 +62,8 @@ export default function RankRewardsPanel({ mode, onClaimed }: { mode: RankReward
   if (!state.canClaim)
     return (
       <p role="note" className="rounded border border-frame-gold-hi/20 bg-black/20 px-3 py-2 text-sm text-muted">
-        Thưởng vàng theo hạng cuối kỳ chỉ dành cho tài khoản đã đăng nhập.{" "}
-        <SceneLink scene="LOGIN" className="text-frame-gold underline">Đăng nhập</SceneLink>
+        Thưởng vàng theo hạng cuối kỳ chỉ dành cho tài khoản đã ghi danh.{" "}
+        <SceneLink scene="LOGIN" className="text-frame-gold underline">Trình danh</SceneLink>
       </p>
     );
   if (state.items.length === 0 && !note) return null;
