@@ -1,6 +1,6 @@
 # Thuật ngữ
 
-> Cập nhật: 13/11/2026 (thêm mục Văn phong giao diện, Shan duyệt; 11/11: thêm từ của Tháp Thiên Mệnh; 27/10: tách từ `docs/README.md` ở DOC-02, nội dung giữ nguyên)
+> Cập nhật: 13/11/2026 (Xưng hô: vài chỗ gọi "Chúa công"; thêm mục Văn phong giao diện, Shan duyệt; 11/11: thêm từ của Tháp Thiên Mệnh; 27/10: tách từ `docs/README.md` ở DOC-02, nội dung giữ nguyên)
 > Trạng thái: **REFERENCE** — thuật ngữ dùng chung.
 
 | Thuật ngữ | Nghĩa |
@@ -38,8 +38,8 @@ Quy ước Shan duyệt 13/11/2026. Áp cho mọi chữ người chơi thấy; t
 
 | Mảng | Quy ước |
 |---|---|
-| Xưng hô | Lời hệ thống gọi người chơi là **bạn**, không dùng "người chơi" trên giao diện. Lời thoại nhân vật giữ giọng cổ (ta, ngươi, các ngươi) |
-| Phe trong trận | **Phe bạn** và **Đối thủ**. Kết quả: "Bạn thắng!" / "Bạn thua". "Tianwu" chỉ xuất hiện ở trang giới thiệu, nơi nói đó là AI của game; "địch" chỉ dùng trong mô tả kỹ năng |
+| Xưng hô | Lời hệ thống gọi người chơi là **bạn**, không dùng "người chơi" trên giao diện. **Ngoại lệ (Shan, 13/11/2026): chỉ vài chỗ gọi "Chúa công"**, để giữ giọng quân doanh: dòng kết quả trận ("Chúa công thắng!", "Chúa công thua", cả nhật ký trận) và dòng "Chúa công đã đánh hôm nay" ở Nhật Lệnh. Hướng dẫn, nút, nhãn, thông báo lỗi và mọi chỗ khác vẫn là "bạn". Không đặt "Chúa công" vào lời nhân vật lịch sử (không bịa cách gọi cho người thật) và không dùng ở chương Đinh Bộ Lĩnh còn nhỏ Lời thoại nhân vật giữ giọng cổ (ta, ngươi, các ngươi) |
+| Phe trong trận | **Phe bạn** và **Đối thủ**. Kết quả: "Chúa công thắng!" / "Chúa công thua". "Tianwu" chỉ xuất hiện ở trang giới thiệu, nơi nói đó là AI của game; "địch" chỉ dùng trong mô tả kỹ năng |
 | Gọi nhân vật | Tướng quân, chủ tướng, phó tướng (bảng trên). "Tướng sĩ" chỉ là tên nghề |
 | Chỉ số | Máu, Công, Thủ (không HP, ATK, DEF) |
 | Màn tài khoản | Giọng giang hồ, quân doanh (Shan, 13/11/2026): tên đăng nhập → **danh hiệu**, mật khẩu → **mật lệnh**, đăng ký → **ghi danh**, email → **địa chỉ thư**, khách → **lữ khách**; nút đăng nhập là "Vào trại". Nhãn ô nhập ghi kèm từ quen trong ngoặc ở lần đầu ("Danh hiệu (tên đăng nhập)", "Mật lệnh (mật khẩu)") để người mới vẫn hiểu. Tiêu đề màn "Đăng nhập" giữ nguyên |
