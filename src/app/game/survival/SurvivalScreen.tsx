@@ -213,7 +213,7 @@ export default function SurvivalScreen() {
     ];
     const label =
       kind === "active"
-        ? `Đồng đội ${slot + 1}`
+        ? `Phó tướng ${slot + 1}`
         : `Tướng dự bị ${slot + 1}`;
     const entry = fighterById.get(value);
     return (

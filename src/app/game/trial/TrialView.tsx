@@ -466,7 +466,7 @@ export default function TrialView(props: TrialViewProps) {
     <>
       <ModeBanner
         title="Tháp Thí Luyện"
-        kicker="Song Tháp"
+        kicker="Leo tháp"
         art="/art/home/trial.webp"
         artPosition="center 42%"
         description={`${total} tầng, mỗi tầng một luật chọn đội riêng. Đánh lại tùy ý; Đá Cường Hóa lần đầu của mỗi tầng chỉ nhận một lần.`}

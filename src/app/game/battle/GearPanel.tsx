@@ -263,8 +263,8 @@ export default function GearPanel({
           );
         })}
         <span className="ml-1 tabular-nums opacity-80">
-          +{stats.flat.atk} ATK · +{stats.flat.maxHp} Máu · +{stats.flat.def}{" "}
-          DEF · +{Math.round(stats.percent.atk * 100)}% ATK · +{Math.round(stats.percent.maxHp * 100)}% Máu · +{Math.round(stats.percent.def * 100)}% DEF
+          +{stats.flat.atk} Công · +{stats.flat.maxHp} Máu · +{stats.flat.def}{" "}
+          Thủ · +{Math.round(stats.percent.atk * 100)}% Công · +{Math.round(stats.percent.maxHp * 100)}% Máu · +{Math.round(stats.percent.def * 100)}% Thủ
         </span>
       </div>
       {stats.bonuses.length > 0 && (

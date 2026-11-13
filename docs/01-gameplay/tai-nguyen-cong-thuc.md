@@ -21,7 +21,7 @@
 - Sĩ khí chỉ tác động lên **sát thương và năng lượng**, không tác động lên hồi máu hay DEF. Khác với [Tinh thần](#5-tinh-thần-f-riêng-từng-tướng-hiện-hành), giảm theo độ dài trận.
 - AI chịu đúng luật như người chơi.
 - **Chế độ Thường:** lương reset mỗi trận.
-- **Chiến dịch:** lương mang sang trận sau (xem [Chế độ chơi](../02-game-modes/README.md)).
+- **Bình Loạn:** lương mang sang trận sau (xem [Chế độ chơi](../02-game-modes/README.md)).
 
 ## 2. Năng lượng (riêng từng người, tối đa 100)
 
@@ -41,7 +41,7 @@
   - Lượt thêm không tính là một lượt của phe, nên không trừ thời hạn bị động (xem [Trận đấu](tran-dau.md#5-cấu-trúc-một-lượt)).
   - Trong lúc bị động đang có hiệu lực, thanh nộ không tích thêm.
   - Thủ lĩnh đã gục thì nộ dừng tích, giữ nguyên số đang có.
-- Nộ reset về 0 mỗi trận (kể cả Chiến dịch).
+- Nộ reset về 0 mỗi trận (kể cả Bình Loạn).
 - Mục tiêu cân bằng: bị động kích hoạt khoảng 2–3 lần mỗi trận chuẩn.
 
 > TODO: kiểm tra tốc độ tích nộ bằng mô phỏng.
@@ -84,7 +84,7 @@ Chốt theo [thiết kế22](../03-characters/ky-nang/README.md).
 - ATK/DEF không giảm theo Tinh thần; buff/debuff, nội tại, quân lương và xuyên giáp giữ luật riêng.
 - Hồi trực tiếp, tim, Hồi phục, hút máu và Khiên mới nhân `0.2 + 0.8 × Tinh thần/100` của **người nhận**. Khiên đã có không co hồi tố. Hồi dư Y sư chuyển Khiên sau hệ số, không nhân lần hai.
 - Mốc lượt24/25/30/35/40/44+: hồi/Khiên100%/96%/76%/56%/36%/20%.
-- Sang trận mới reset100; sinh tồn reset100 mỗi đợt theo `beginWave`, kể cả người đang gục. Hồi nghỉ giữa đợt là luật ngoài chiến đấu, không nhân hệ số này.
+- Sang trận mới reset100; Trấn Ải reset100 mỗi đợt theo `beginWave`, kể cả người đang gục. Hồi nghỉ giữa đợt là luật ngoài chiến đấu, không nhân hệ số này.
 - F là mặc định chung trong rules, engine, AI và UI; không thêm tùy chọn luật vào API.
 
 ### Lịch sử trước khi chốt F
