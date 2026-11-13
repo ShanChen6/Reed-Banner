@@ -39,10 +39,11 @@ import {
 } from "@/core";
 import { loadProfile, updateProfile, type ProfileStore } from "./profiles";
 import { recordSeason, type SeasonStore } from "./seasons";
-import type { PvpRoomRecord } from "./pvpRooms";
+import { heroesOf, type PvpRoomRecord } from "./pvpRooms";
+import { buildTeamMatch, pickTeamGroup } from "./pvpTeam";
 
 /** Bản đầu chỉ mở 1vs1. */
-export const PVP_FORMATS: readonly PvpFormat[] = ["duel"];
+export const PVP_FORMATS: readonly PvpFormat[] = ["duel", "team"];
 
 /** Người đứng hàng đợi im lặng quá bấy nhiêu thì bị bỏ qua khi ghép (đã đóng trang). */
 export const PVP_QUEUE_STALE_MS = 30_000;
@@ -89,6 +90,8 @@ export interface PvpQueueRow {
   readonly enqueuedAt: number;
   readonly lastSeen: number;
   readonly matchId: string | null;
+  /** Tướng chọn khi xếp hàng 3vs3; null ở 1vs1. */
+  readonly hero: string | null;
 }
 
 export interface PvpMatchRecord {
@@ -128,7 +131,7 @@ export interface PvpStore {
   /** Người đang chờ (chưa ghép) còn tín hiệu sau `since`, ai chờ lâu hơn trước. */
   waiting(format: PvpFormat, since: number): Promise<PvpQueueRow[]>;
   /** Đặt `matchId` cho hai người nếu cả hai còn đang chờ; false khi một người đã bị ghép hoặc rời hàng đợi. */
-  claimPair(a: string, b: string, matchId: string): Promise<boolean>;
+  claimGroup(owners: readonly string[], matchId: string): Promise<boolean>;
   createMatch(record: PvpMatchRecord): Promise<void>;
   getMatch(id: string): Promise<PvpMatchRecord | null>;
   saveMatch(record: PvpMatchRecord, expectedSeq: number): Promise<boolean>;
@@ -224,12 +227,10 @@ export class MemoryPvpStore implements PvpStore {
       .map((r) => ({ ...r }));
   }
 
-  async claimPair(a: string, b: string, matchId: string): Promise<boolean> {
-    const ra = this.queue.get(a);
-    const rb = this.queue.get(b);
-    if (!ra || !rb || ra.matchId !== null || rb.matchId !== null) return false;
-    this.queue.set(a, { ...ra, matchId });
-    this.queue.set(b, { ...rb, matchId });
+  async claimGroup(owners: readonly string[], matchId: string): Promise<boolean> {
+    const rows = owners.map((o) => this.queue.get(o));
+    if (rows.some((r) => !r || r.matchId !== null)) return false;
+    for (const r of rows) this.queue.set(r!.ownerId, { ...r!, matchId });
     return true;
   }
 
@@ -324,7 +325,7 @@ export class MemoryPvpStore implements PvpStore {
   }
 
   async attachMatch(ownerId: string, format: PvpFormat, matchId: string, now: number): Promise<void> {
-    this.queue.set(ownerId, { ownerId, format, rating: 0, enqueuedAt: now, lastSeen: now, matchId });
+    this.queue.set(ownerId, { ownerId, format, rating: 0, enqueuedAt: now, lastSeen: now, matchId, hero: null });
   }
 }
 
@@ -337,6 +338,8 @@ export interface PvpDeps {
   /** Hạt giống cho trận mới và id trận. */
   readonly seed: number;
   readonly newId: () => string;
+  /** Tên hiển thị của tài khoản (trận 3vs3 hiện tên người chơi); bỏ trống thì không có tên. */
+  readonly nameOf?: (ownerId: string) => Promise<string>;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -349,7 +352,7 @@ export function pvpMatchWindow(waitedMs: number): number {
   return PVP_MATCH_WINDOW + Math.floor(Math.max(0, waitedMs) / PVP_MATCH_WINDOW_EVERY_MS) * PVP_MATCH_WINDOW_STEP;
 }
 
-export type PvpQueueError = "badFormat" | "inMatch" | "banned" | "badBuild";
+export type PvpQueueError = "badFormat" | "inMatch" | "banned" | "badBuild" | "badHero";
 
 /** Nghề và hệ Đinh Bộ Lĩnh mang vào trận 1vs1. */
 export interface PvpBuild {
@@ -362,7 +365,7 @@ export async function pvpEnqueue(
   ownerId: string,
   format: PvpFormat,
   deps: PvpDeps,
-  build?: { readonly element?: unknown; readonly profession?: unknown },
+  build?: { readonly element?: unknown; readonly profession?: unknown; readonly hero?: unknown },
 ): Promise<{ ok: true } | { ok: false; error: PvpQueueError; until?: number }> {
   if (!PVP_FORMATS.includes(format)) return { ok: false, error: "badFormat" };
   // Chọn nghề và hệ trước khi vào hàng đợi: lưu vào hồ sơ như Giao Tranh, trận dựng theo hồ sơ lúc ghép được.
@@ -372,6 +375,14 @@ export async function pvpEnqueue(
     if (!ELEMENTS.includes(el as Element) || !PROFESSIONS.includes(pr as Profession)) return { ok: false, error: "badBuild" };
     await updateProfile(deps.profiles, ownerId, (p) => ({ ok: true, profile: { ...p, element: el as Element, profession: pr as Profession } }), deps.now);
   }
+  let hero: string | null = null;
+  if (format === "team") {
+    // 3vs3: mỗi người một tướng của mình; Đinh Bộ Lĩnh dùng nghề và hệ vừa lưu ở trên.
+    const pickHero = build?.hero;
+    const mine = typeof pickHero === "string" ? (await heroesOf(ownerId, deps)).find((h) => h.id === pickHero) : undefined;
+    if (!mine) return { ok: false, error: "badHero" };
+    hero = mine.id;
+  }
   const own = await deps.pvp.rating(ownerId, format);
   if (own.banUntil > deps.now) return { ok: false, error: "banned", until: own.banUntil };
   const cur = await deps.pvp.queueOf(ownerId);
@@ -380,7 +391,7 @@ export async function pvpEnqueue(
     if (m && m.status === "active") return { ok: false, error: "inMatch" };
   }
   const { rating } = own;
-  await deps.pvp.enqueue({ ownerId, format, rating, enqueuedAt: deps.now, lastSeen: deps.now, matchId: null });
+  await deps.pvp.enqueue({ ownerId, format, rating, enqueuedAt: deps.now, lastSeen: deps.now, matchId: null, hero });
   return { ok: true };
 }
 
@@ -422,6 +433,7 @@ async function buildDuel(a: PvpQueueRow, b: PvpQueueRow, deps: PvpDeps): Promise
 
 /** Thử ghép `ownerId` với người đang chờ gần điểm nhất trong khoảng cho phép. Trả id trận nếu ghép được. */
 async function tryMatch(me: PvpQueueRow, deps: PvpDeps): Promise<string | null> {
+  if (me.format === "team") return tryTeamMatch(me, deps);
   const others = (await deps.pvp.waiting(me.format, deps.now - PVP_QUEUE_STALE_MS)).filter((r) => r.ownerId !== me.ownerId);
   const mine = pvpMatchWindow(deps.now - me.enqueuedAt);
   let best: PvpQueueRow | null = null;
@@ -436,7 +448,7 @@ async function tryMatch(me: PvpQueueRow, deps: PvpDeps): Promise<string | null> 
   const [first, second] = me.enqueuedAt <= best.enqueuedAt ? [me, best] : [best, me];
   const record = await buildDuel(first, second, deps);
   await deps.pvp.createMatch(record);
-  const won = await deps.pvp.claimPair(first.ownerId, second.ownerId, record.id);
+  const won = await deps.pvp.claimGroup([first.ownerId, second.ownerId], record.id);
   if (won) await deps.pvp.recordPair(first.ownerId, second.ownerId, vnDay(deps.now));
   if (!won) {
     // Người kia vừa bị ghép hoặc rời đi: bỏ trận dư này, không ảnh hưởng ai.
@@ -446,8 +458,36 @@ async function tryMatch(me: PvpQueueRow, deps: PvpDeps): Promise<string | null> 
   return record.id;
 }
 
+/** Ghép 3vs3: gom nhóm trong hàng chờ, chờ lâu thì máy điền chỗ trống. */
+async function tryTeamMatch(me: PvpQueueRow, deps: PvpDeps): Promise<string | null> {
+  const others = (await deps.pvp.waiting("team", deps.now - PVP_QUEUE_STALE_MS)).filter((r) => r.ownerId !== me.ownerId);
+  const group = pickTeamGroup(me, others, deps.now, pvpMatchWindow);
+  if (!group) return null;
+  const day = vnDay(deps.now);
+  const record = await buildTeamMatch(group, deps, {
+    forgiveLeft: async (id) => {
+      const r = await deps.pvp.rating(id, "team");
+      return r.forgiveDay === day ? Math.max(0, PVP_FORGIVE_PER_DAY - r.forgiveUsed) : PVP_FORGIVE_PER_DAY;
+    },
+    ...(deps.nameOf ? { nameOf: deps.nameOf } : {}),
+  });
+  if (!record) {
+    // Có người không còn dùng được tướng đã chọn: bỏ họ khỏi hàng đợi để nhóm sau không vướng lại.
+    for (const g of group) {
+      if (g.hero && !(await heroesOf(g.ownerId, deps)).some((h) => h.id === g.hero)) await deps.pvp.dequeue(g.ownerId);
+    }
+    return null;
+  }
+  await deps.pvp.createMatch(record);
+  if (!(await deps.pvp.claimGroup(record.owners, record.id))) {
+    await deps.pvp.saveMatch({ ...record, status: "abandoned", seq: 2 }, 1);
+    return null;
+  }
+  return record.id;
+}
+
 export interface PvpOverview {
-  readonly ratings: { readonly duel: { readonly rating: number; readonly wins: number; readonly losses: number } };
+  readonly ratings: { readonly duel: { readonly rating: number; readonly wins: number; readonly losses: number }; readonly team: { readonly rating: number; readonly wins: number; readonly losses: number } };
   readonly queue: { readonly format: PvpFormat; readonly waitedMs: number } | null;
   /** Trận đang chơi (hoặc vừa ghép); null khi không có. */
   readonly matchId: string | null;
@@ -457,6 +497,8 @@ export interface PvpOverview {
   readonly build: PvpBuild;
   /** Vàng PvP còn nhận được hôm nay (trần mỗi ngày trừ số đã nhận); số trận không giới hạn. */
   readonly goldLeft: number;
+  /** Tướng chọn được khi xếp hàng 3vs3: Đinh Bộ Lĩnh và các tướng đã có. */
+  readonly heroes: readonly { readonly id: string; readonly name: string; readonly level: number }[];
   /** Mã phòng mời đang ở (3vs3 giao hữu), null nếu không ở phòng nào. */
   readonly room: string | null;
   /** Số lần bị tính phá trận trong tuần này. */
@@ -482,6 +524,7 @@ export async function pvpOverview(ownerId: string, deps: PvpDeps): Promise<PvpOv
     if (m && m.status === "active") matchId = m.id;
   }
   const r = await deps.pvp.rating(ownerId, "duel");
+  const rt = await deps.pvp.rating(ownerId, "team");
   const day = vnDay(deps.now);
   const gold = await deps.pvp.goldToday(ownerId, day);
   const { profile } = await loadProfile(deps.profiles, ownerId);
@@ -497,11 +540,12 @@ export async function pvpOverview(ownerId: string, deps: PvpDeps): Promise<PvpOv
   }
   return {
     build: { element: profile.element, profession: profile.profession },
+    heroes: (await heroesOf(ownerId, deps)).map((h) => ({ id: h.id, name: h.name, level: h.level })),
     room,
     goldLeft: Math.max(0, PVP_GOLD_DAILY_CAP - gold),
     breakCount: r.breakWeek === vnWeek(deps.now) ? r.breakCount : 0,
     banUntil: r.banUntil > deps.now ? r.banUntil : null,
-    ratings: { duel: { rating: r.rating, wins: r.wins, losses: r.losses } },
+    ratings: { duel: { rating: r.rating, wins: r.wins, losses: r.losses }, team: { rating: rt.rating, wins: rt.wins, losses: rt.losses } },
     queue: q && q.matchId === null ? { format: q.format, waitedMs: deps.now - q.enqueuedAt } : null,
     matchId,
     forgiveLeft: r.forgiveDay === day ? Math.max(0, PVP_FORGIVE_PER_DAY - r.forgiveUsed) : PVP_FORGIVE_PER_DAY,
@@ -638,7 +682,8 @@ async function settleIfOver(rec: PvpMatchRecord, deps: PvpDeps): Promise<PvpMatc
     if (r.counted && r.delta !== 0) await recordSeason(deps.seasons, { mode: "pvp", ownerId: r.player, now: deps.now, add: r.delta });
     let gold = 0;
     if (r.counted) {
-      const opponent = rec.owners.find((o) => o !== r.player);
+      // Giới hạn vàng theo cùng một đối thủ chỉ áp dụng ở 1vs1.
+      const opponent = rec.format === "duel" ? rec.owners.find((o) => o !== r.player) : undefined;
       const meetings = opponent ? await deps.pvp.pairMatches(r.player, opponent, day) : 0;
       if (meetings <= PVP_GOLD_PER_OPPONENT) {
         const left = Math.max(0, PVP_GOLD_DAILY_CAP - (await deps.pvp.goldToday(r.player, day)));

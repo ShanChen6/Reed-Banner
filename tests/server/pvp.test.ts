@@ -74,7 +74,8 @@ for (const [name, factory] of stores) {
       const { mk } = await setup();
       const o = await pvpOverview("a", mk(T0));
       assert.deepEqual([o.queue, o.matchId, o.ratings.duel.rating, o.forgiveLeft], [null, null, PVP_ELO_START, PVP_FORGIVE_PER_DAY]);
-      assert.deepEqual(await pvpEnqueue("a", "team" as never, mk(T0)), { ok: false, error: "badFormat" });
+      assert.deepEqual(await pvpEnqueue("a", "solo" as never, mk(T0)), { ok: false, error: "badFormat" });
+      assert.deepEqual(await pvpEnqueue("a", "team", mk(T0)), { ok: false, error: "badHero" });
       await pvpEnqueue("a", "duel", mk(T0));
       assert.equal((await pvpOverview("a", mk(T0 + 1000))).queue?.waitedMs, 1000);
       await pvpLeaveQueue("a", mk(T0 + 2000));

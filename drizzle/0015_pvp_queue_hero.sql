@@ -1,0 +1,1 @@
+ALTER TABLE "pvp_queue" ADD COLUMN "hero" text;
