@@ -148,7 +148,7 @@ export default function HeaderAccountMenu({ scene, account }: { scene: Scene; ac
                   <svg aria-hidden viewBox="0 0 24 24" className="size-[18px] shrink-0 text-[var(--frame-bronze-hi)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round">
                     <path d="M12 5v14M5 12h14" />
                   </svg>
-                  Đăng ký
+                  Ghi danh
                 </SceneLink>
               </li>
             </>

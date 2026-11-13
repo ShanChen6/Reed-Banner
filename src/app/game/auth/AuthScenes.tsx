@@ -37,31 +37,31 @@ export function LoginScene({
   mail: boolean;
 }) {
   return (
-    <AuthCard title="Đăng nhập" subtitle="Đăng nhập để giữ tiến độ và chơi tiếp trên mọi thiết bị." oauthError={q.oauthError}>
+    <AuthCard title="Đăng nhập" subtitle="Trình danh hiệu để vào trại. Chiến công theo bạn tới mọi nơi đặt chân." oauthError={q.oauthError}>
       <div className="mt-5 flex flex-col gap-3">
-        <Notice show={q.emailVerified}>Đã xác nhận email. Xin đăng nhập để chơi tiếp.</Notice>
+        <Notice show={q.emailVerified}>Thư tín đã xác nhận. Xin trình danh hiệu để vào trại.</Notice>
         <ProviderButtons providers={providers} />
-        <Divider>{providers.length > 0 ? "hoặc dùng tên đăng nhập" : "Dùng tên đăng nhập"}</Divider>
+        <Divider>{providers.length > 0 ? "hoặc trình danh hiệu và mật lệnh" : "Trình danh hiệu và mật lệnh"}</Divider>
         <LoginForm username={q.username} error={q.error} />
         {mail && (
           <p className="-mt-1 text-right text-sm">
             <AuthSceneLink scene="FORGOT_PASSWORD" className="ui-link text-on-wood-soft hover:text-primary hover:underline">
-              Quên mật khẩu?
+              Quên mật lệnh?
             </AuthSceneLink>
           </p>
         )}
         <p className="text-center text-sm text-on-wood-soft">
-          Chưa có tài khoản?{" "}
+          Chưa có tên trong sổ quân?{" "}
           <AuthSceneLink scene="REGISTER" className="ui-link font-semibold text-primary hover:underline">
-            Đăng ký
+            Ghi danh
           </AuthSceneLink>
         </p>
         <Divider>hoặc</Divider>
         <ReturnLink className={buttonVariants({ variant: "secondary", fullWidth: true })}>
-          {guest ? "Chơi tiếp với tư cách khách" : "Chơi với tư cách khách"}
+          {guest ? "Đi tiếp với thân phận lữ khách" : "Vào trại với thân phận lữ khách"}
         </ReturnLink>
         <p className="text-center text-caption text-on-wood-soft">
-          Tài khoản khách gắn với trình duyệt này, xóa dữ liệu trình duyệt là mất. Đăng nhập sau vẫn giữ được trận và tiến độ của khách.
+          Thân phận lữ khách chỉ ghi trong trình duyệt này, xóa dữ liệu trình duyệt là mất dấu. Ghi danh sau vẫn giữ được trận và chiến công đã có.
         </p>
       </div>
     </AuthCard>
@@ -70,13 +70,13 @@ export function LoginScene({
 
 export function RegisterScene({ q, providers, mail }: { q: AuthParams; providers: readonly ProviderId[]; mail: boolean }) {
   return (
-    <AuthCard title="Đăng ký" subtitle="Tạo tài khoản để giữ tiến độ. Trận và tiến độ đang chơi được giữ nguyên." oauthError={q.oauthError}>
+    <AuthCard title="Ghi danh" subtitle="Ghi tên vào sổ quân để giữ chiến công lâu dài. Trận đang đánh và tiến độ đã có được giữ nguyên." oauthError={q.oauthError}>
       <div className="mt-5 flex flex-col gap-3">
         <ProviderButtons providers={providers} />
-        <Divider>{providers.length > 0 ? "hoặc tạo tên đăng nhập" : "Tạo tên đăng nhập"}</Divider>
+        <Divider>{providers.length > 0 ? "hoặc tự đặt danh hiệu" : "Tự đặt danh hiệu"}</Divider>
         <RegisterForm username={q.username} error={q.error} mail={mail} />
         <p className="text-center text-sm text-on-wood-soft">
-          Đã có tài khoản?{" "}
+          Đã có tên trong sổ quân?{" "}
           <AuthSceneLink scene="LOGIN" className="ui-link font-semibold text-primary hover:underline">
             Đăng nhập
           </AuthSceneLink>
@@ -142,15 +142,15 @@ export function AccountScene({
           {account.username ? (
             <>
               <p>
-                Tên đăng nhập: <span className="font-semibold">{account.username}</span>
+                Danh hiệu: <span className="font-semibold">{account.username}</span>
               </p>
               {(q.passwordChanged || q.passwordReset) && (
                 <OnArrival>
-                  <p className="mt-2 text-jade">{q.passwordReset ? "Đã đặt mật khẩu mới." : "Đã đổi mật khẩu."}</p>
+                  <p className="mt-2 text-jade">{q.passwordReset ? "Đã đặt mật lệnh mới." : "Đã đổi mật lệnh."}</p>
                 </OnArrival>
               )}
               <details open={q.error !== null} className="mt-2">
-                <summary className="cursor-pointer text-on-wood-soft pointer-coarse:py-3.5">Đổi mật khẩu</summary>
+                <summary className="cursor-pointer text-on-wood-soft pointer-coarse:py-3.5">Đổi mật lệnh</summary>
                 <div className="mt-3">
                   <ChangePasswordForm error={q.error} />
                 </div>
@@ -158,9 +158,9 @@ export function AccountScene({
             </>
           ) : (
             <details open={q.error !== null}>
-              <summary className="cursor-pointer text-on-wood-soft pointer-coarse:py-3.5">Thêm tên đăng nhập và mật khẩu</summary>
+              <summary className="cursor-pointer text-on-wood-soft pointer-coarse:py-3.5">Thêm danh hiệu và mật lệnh</summary>
               <div className="mt-3">
-                <RegisterForm returnTo={here} username={q.username} error={q.error} label="Lưu tên đăng nhập" mail={mail} />
+                <RegisterForm returnTo={here} username={q.username} error={q.error} label="Lưu danh hiệu" mail={mail} />
               </div>
             </details>
           )}
@@ -171,13 +171,13 @@ export function AccountScene({
               Email:{" "}
               {account.email ? <span className="font-semibold break-all">{account.email}</span> : <span className="text-on-wood-soft">chưa có</span>}
             </p>
-            <Notice show={q.emailVerified}>Đã xác nhận email. Quên mật khẩu thì lấy lại qua email này.</Notice>
+            <Notice show={q.emailVerified}>Thư tín đã xác nhận. Quên mật lệnh thì lấy lại qua địa chỉ thư này.</Notice>
             <Notice show={q.emailSent}>Đã gửi thư xác nhận. Xin mở thư và bấm đường dẫn trong đó.</Notice>
             {!account.email && (
-              <Alert tone="warning" className="p-2 text-caption">Chưa có email thì quên mật khẩu là không lấy lại được.</Alert>
+              <Alert tone="warning" className="p-2 text-caption">Chưa có địa chỉ thư thì quên mật lệnh là không lấy lại được.</Alert>
             )}
             <details open={q.emailError !== null}>
-              <summary className="cursor-pointer text-on-wood-soft pointer-coarse:py-3.5">{account.email ? "Đổi email" : "Thêm email để lấy lại mật khẩu"}</summary>
+              <summary className="cursor-pointer text-on-wood-soft pointer-coarse:py-3.5">{account.email ? "Đổi địa chỉ thư" : "Thêm địa chỉ thư để lấy lại mật lệnh"}</summary>
               <div className="mt-3">
                 <EmailForm current={account.email} error={q.emailError} />
               </div>
@@ -196,26 +196,26 @@ export function AccountScene({
 
 export function ForgotPasswordScene({ q, mail }: { q: AuthParams; mail: boolean }) {
   return (
-    <AuthCard title="Quên mật khẩu">
+    <AuthCard title="Quên mật lệnh">
       <div className="mt-5 flex flex-col gap-3">
         {!mail ? (
-          <p className="text-center text-sm text-on-wood-soft">Trò chơi chưa bật gửi email nên chưa lấy lại được mật khẩu.</p>
+          <p className="text-center text-sm text-on-wood-soft">Trạm thư chưa mở nên chưa lấy lại được mật lệnh.</p>
         ) : q.sent ? (
           <Alert tone="success">
-            Nếu thông tin đúng và tài khoản đã xác nhận email, thư đặt lại mật khẩu đang trên đường tới. Đường dẫn trong thư dùng được
+            Nếu thông tin đúng và tài khoản đã xác nhận email, thư đặt lại mật lệnh đang trên đường tới. Đường dẫn trong thư dùng được
             một lần trong {RESET_TTL_MS / 60_000} phút. Không thấy thì xem cả thư mục thư rác.
           </Alert>
         ) : (
           <>
             <p className="text-center text-sm text-on-wood-soft">
-              Nhập tên đăng nhập hoặc email, chúng tôi gửi đường dẫn đặt mật khẩu mới tới email đã xác nhận của tài khoản.
+              Xưng danh hiệu hoặc địa chỉ thư, trạm thư sẽ gửi đường dẫn đặt mật lệnh mới tới địa chỉ thư đã xác nhận của tài khoản.
             </p>
             <ForgotPasswordForm />
           </>
         )}
         <p className="text-center text-sm text-on-wood-soft">
           <AuthSceneLink scene="LOGIN" className="ui-link font-semibold text-primary hover:underline">
-            Quay lại đăng nhập
+            Quay lại cổng trại
           </AuthSceneLink>
         </p>
       </div>
@@ -225,7 +225,7 @@ export function ForgotPasswordScene({ q, mail }: { q: AuthParams; mail: boolean 
 
 export function ResetPasswordScene({ q }: { q: AuthParams }) {
   return (
-    <AuthCard title="Đặt lại mật khẩu">
+    <AuthCard title="Đặt lại mật lệnh">
       <div className="mt-5 flex flex-col gap-3">
         {q.token ? (
           <ResetPasswordForm token={q.token} error={q.error} />
@@ -236,7 +236,7 @@ export function ResetPasswordScene({ q }: { q: AuthParams }) {
         )}
         <p className="text-center text-sm text-on-wood-soft">
           <AuthSceneLink scene="FORGOT_PASSWORD" className="ui-link font-semibold text-primary hover:underline">
-            Gửi lại thư đặt lại mật khẩu
+            Gửi lại thư đặt lại mật lệnh
           </AuthSceneLink>
         </p>
       </div>
