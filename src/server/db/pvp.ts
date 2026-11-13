@@ -5,7 +5,8 @@ import { and, asc, eq, gte, inArray, isNull, sql } from "drizzle-orm";
 import type { PvpFormat, PvpPlayerResult, PvpState } from "@/core";
 import { PVP_ELO_START } from "@/core";
 import type { PvpMatchRecord, PvpMatchStatus, PvpQueueRow, PvpRatingRow, PvpResultInput, PvpSettled, PvpStore } from "../pvp";
-import { pvpDaily, pvpMatches, pvpPairs, pvpQueue, pvpRatings } from "./schema";
+import { pvpDaily, pvpMatches, pvpPairs, pvpQueue, pvpRatings, pvpRoomMembers, pvpRooms } from "./schema";
+import type { PvpRoomRecord, PvpRoomSlot, PvpRoomStatus } from "../pvpRooms";
 import type { Db } from "./store";
 
 const toMatch = (r: typeof pvpMatches.$inferSelect): PvpMatchRecord => ({
@@ -199,5 +200,49 @@ export class DrizzlePvpStore implements PvpStore {
       .insert(pvpRatings)
       .values({ ownerId, format, rating: PVP_ELO_START, banUntil: until, updatedAt: now })
       .onConflictDoUpdate({ target: [pvpRatings.ownerId, pvpRatings.format], set: { banUntil: until, updatedAt: now } });
+  }
+
+  async createRoom(room: PvpRoomRecord): Promise<boolean> {
+    const rows = await this.db
+      .insert(pvpRooms)
+      .values({ code: room.code, host: room.host, status: room.status, slots: room.slots, fillAi: room.fillAi, matchId: room.matchId, seq: room.seq, createdAt: room.createdAt, updatedAt: room.updatedAt })
+      .onConflictDoNothing()
+      .returning({ code: pvpRooms.code });
+    return rows.length === 1;
+  }
+
+  async getRoom(code: string): Promise<PvpRoomRecord | null> {
+    const [r] = await this.db.select().from(pvpRooms).where(eq(pvpRooms.code, code)).limit(1);
+    return r ? { ...r, status: r.status as PvpRoomStatus, slots: r.slots as PvpRoomSlot[] } : null;
+  }
+
+  async saveRoom(room: PvpRoomRecord, expectedSeq: number): Promise<boolean> {
+    const rows = await this.db
+      .update(pvpRooms)
+      .set({ host: room.host, status: room.status, slots: room.slots, fillAi: room.fillAi, matchId: room.matchId, seq: room.seq, updatedAt: room.updatedAt })
+      .where(and(eq(pvpRooms.code, room.code), eq(pvpRooms.seq, expectedSeq)))
+      .returning({ code: pvpRooms.code });
+    return rows.length === 1;
+  }
+
+  async roomCodeOf(ownerId: string): Promise<string | null> {
+    const [r] = await this.db.select({ code: pvpRoomMembers.code }).from(pvpRoomMembers).where(eq(pvpRoomMembers.ownerId, ownerId)).limit(1);
+    return r?.code ?? null;
+  }
+
+  async setMember(ownerId: string, code: string): Promise<boolean> {
+    await this.db.insert(pvpRoomMembers).values({ ownerId, code }).onConflictDoNothing();
+    return (await this.roomCodeOf(ownerId)) === code;
+  }
+
+  async clearMember(ownerId: string, code: string): Promise<void> {
+    await this.db.delete(pvpRoomMembers).where(and(eq(pvpRoomMembers.ownerId, ownerId), eq(pvpRoomMembers.code, code)));
+  }
+
+  async attachMatch(ownerId: string, format: PvpFormat, matchId: string, now: number): Promise<void> {
+    await this.db
+      .insert(pvpQueue)
+      .values({ ownerId, format, rating: 0, enqueuedAt: now, lastSeen: now, matchId })
+      .onConflictDoUpdate({ target: pvpQueue.ownerId, set: { format, matchId, lastSeen: now } });
   }
 }

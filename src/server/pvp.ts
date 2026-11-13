@@ -39,6 +39,7 @@ import {
 } from "@/core";
 import { loadProfile, updateProfile, type ProfileStore } from "./profiles";
 import { recordSeason, type SeasonStore } from "./seasons";
+import type { PvpRoomRecord } from "./pvpRooms";
 
 /** Bản đầu chỉ mở 1vs1. */
 export const PVP_FORMATS: readonly PvpFormat[] = ["duel"];
@@ -144,6 +145,17 @@ export interface PvpStore {
   /** Ghi một lần phá trận trong tuần `week` (tuần mới thì đếm lại từ 1) và trả số lần trong tuần. */
   recordBreak(ownerId: string, format: PvpFormat, week: string, now: number): Promise<number>;
   setBan(ownerId: string, format: PvpFormat, until: number, now: number): Promise<void>;
+  /** Phòng mời bằng mã. */
+  createRoom(room: PvpRoomRecord): Promise<boolean>;
+  getRoom(code: string): Promise<PvpRoomRecord | null>;
+  saveRoom(room: PvpRoomRecord, expectedSeq: number): Promise<boolean>;
+  /** Phòng đang ở của người này, null nếu không ở phòng nào. */
+  roomCodeOf(ownerId: string): Promise<string | null>;
+  /** Đặt người vào phòng; false khi người này đã ở một phòng khác. */
+  setMember(ownerId: string, code: string): Promise<boolean>;
+  clearMember(ownerId: string, code: string): Promise<void>;
+  /** Gắn trận đang chơi vào hàng của người này để `pvpOverview` mở lại trận (như khi được ghép trong hàng đợi). */
+  attachMatch(ownerId: string, format: PvpFormat, matchId: string, now: number): Promise<void>;
 }
 
 const defaultRating = (ownerId: string, format: PvpFormat, now = 0): PvpRatingRow => ({
@@ -166,6 +178,8 @@ export class MemoryPvpStore implements PvpStore {
   private readonly matches = new Map<string, PvpMatchRecord>();
   private readonly gold = new Map<string, number>();
   private readonly pairs = new Map<string, number>();
+  private readonly rooms = new Map<string, PvpRoomRecord>();
+  private readonly members = new Map<string, string>();
 
   async rating(ownerId: string, format: PvpFormat): Promise<PvpRatingRow> {
     return structuredClone(this.ratings.get(`${ownerId}|${format}`) ?? defaultRating(ownerId, format));
@@ -274,6 +288,43 @@ export class MemoryPvpStore implements PvpStore {
   async setBan(ownerId: string, format: PvpFormat, until: number, now: number): Promise<void> {
     const cur = this.ratings.get(`${ownerId}|${format}`) ?? defaultRating(ownerId, format);
     this.ratings.set(`${ownerId}|${format}`, { ...cur, banUntil: until, updatedAt: now });
+  }
+
+  async createRoom(room: PvpRoomRecord): Promise<boolean> {
+    if (this.rooms.has(room.code)) return false;
+    this.rooms.set(room.code, structuredClone(room));
+    return true;
+  }
+
+  async getRoom(code: string): Promise<PvpRoomRecord | null> {
+    const r = this.rooms.get(code);
+    return r ? structuredClone(r) : null;
+  }
+
+  async saveRoom(room: PvpRoomRecord, expectedSeq: number): Promise<boolean> {
+    const cur = this.rooms.get(room.code);
+    if (!cur || cur.seq !== expectedSeq) return false;
+    this.rooms.set(room.code, structuredClone(room));
+    return true;
+  }
+
+  async roomCodeOf(ownerId: string): Promise<string | null> {
+    return this.members.get(ownerId) ?? null;
+  }
+
+  async setMember(ownerId: string, code: string): Promise<boolean> {
+    const cur = this.members.get(ownerId);
+    if (cur && cur !== code) return false;
+    this.members.set(ownerId, code);
+    return true;
+  }
+
+  async clearMember(ownerId: string, code: string): Promise<void> {
+    if (this.members.get(ownerId) === code) this.members.delete(ownerId);
+  }
+
+  async attachMatch(ownerId: string, format: PvpFormat, matchId: string, now: number): Promise<void> {
+    this.queue.set(ownerId, { ownerId, format, rating: 0, enqueuedAt: now, lastSeen: now, matchId });
   }
 }
 
@@ -406,6 +457,8 @@ export interface PvpOverview {
   readonly build: PvpBuild;
   /** Vàng PvP còn nhận được hôm nay (trần mỗi ngày trừ số đã nhận); số trận không giới hạn. */
   readonly goldLeft: number;
+  /** Mã phòng mời đang ở (3vs3 giao hữu), null nếu không ở phòng nào. */
+  readonly room: string | null;
   /** Số lần bị tính phá trận trong tuần này. */
   readonly breakCount: number;
   /** Bị hạn chế ghép trận tới mốc này (ms), null nếu không. */
@@ -432,8 +485,19 @@ export async function pvpOverview(ownerId: string, deps: PvpDeps): Promise<PvpOv
   const day = vnDay(deps.now);
   const gold = await deps.pvp.goldToday(ownerId, day);
   const { profile } = await loadProfile(deps.profiles, ownerId);
+  // Rời phòng khi trận của phòng đã xong hoặc phòng đã đóng, để vào phòng khác được.
+  let room = await deps.pvp.roomCodeOf(ownerId);
+  if (room) {
+    const rr = await deps.pvp.getRoom(room);
+    const over = !rr || rr.status === "closed" || (rr.status === "started" && (!rr.matchId || (await deps.pvp.getMatch(rr.matchId))?.status !== "active"));
+    if (over) {
+      await deps.pvp.clearMember(ownerId, room);
+      room = null;
+    }
+  }
   return {
     build: { element: profile.element, profession: profile.profession },
+    room,
     goldLeft: Math.max(0, PVP_GOLD_DAILY_CAP - gold),
     breakCount: r.breakWeek === vnWeek(deps.now) ? r.breakCount : 0,
     banUntil: r.banUntil > deps.now ? r.banUntil : null,
@@ -493,6 +557,8 @@ export interface PvpMatchView {
   readonly status: PvpMatchStatus;
   readonly seq: number;
   readonly serverNow: number;
+  /** Giao hữu (phòng mời bằng mã): không đổi điểm, không có vàng. */
+  readonly friendly: boolean;
   readonly you: {
     readonly side: 0 | 1;
     readonly position: number;
@@ -503,7 +569,7 @@ export interface PvpMatchView {
     readonly forgiveLeft: number;
   };
   /** Chỗ ngồi: không lộ id tài khoản của người khác. */
-  readonly seats: readonly { readonly side: 0 | 1; readonly position: number; readonly mine: boolean; readonly ai: boolean }[];
+  readonly seats: readonly { readonly side: 0 | 1; readonly position: number; readonly mine: boolean; readonly ai: boolean; readonly name: string | null }[];
   readonly clock: { readonly side: 0 | 1; readonly actor: number; readonly mine: boolean; readonly deadline: number | null; readonly remainingMs: number | null };
   readonly battle: Omit<PvpState["battle"], "boardRng" | "aiRng">;
   /** Diễn biến gần nhất (tối đa 80 mục), mã tăng dần để client bỏ mục đã đọc. */
@@ -525,6 +591,7 @@ function viewOf(rec: PvpMatchRecord, owner: string, now: number): PvpMatchView {
     status: rec.status,
     seq: rec.seq,
     serverNow: now,
+    friendly: rec.state.friendly === true,
     you: {
       side: you.side,
       position: you.position,
@@ -535,7 +602,7 @@ function viewOf(rec: PvpMatchRecord, owner: string, now: number): PvpMatchView {
       forgiveLeft: you.forgiveLeft,
     },
     seats: rec.state.seats.flatMap((row, side) =>
-      row.map((p, position) => ({ side: side as 0 | 1, position, mine: p === owner, ai: p === null })),
+      row.map((p, position) => ({ side: side as 0 | 1, position, mine: p === owner, ai: p === null, name: rec.state.names?.[side as 0 | 1][position] ?? null })),
     ),
     clock: { side: clock.side, actor: clock.actor, mine: clock.player === owner, deadline: clock.deadline, remainingMs: clock.remainingMs },
     battle,
@@ -552,6 +619,11 @@ function viewOf(rec: PvpMatchRecord, owner: string, now: number): PvpMatchView {
  */
 async function settleIfOver(rec: PvpMatchRecord, deps: PvpDeps): Promise<PvpMatchRecord> {
   if (rec.state.battle.winner === null || rec.settledAt !== null) return rec;
+  // Giao hữu: chỉ đánh dấu đã xong, không điểm hạng, không vàng, không bảng mùa.
+  if (rec.state.friendly === true) {
+    await deps.pvp.claimSettle(rec.id, [], deps.now);
+    return (await deps.pvp.getMatch(rec.id)) ?? rec;
+  }
   const ratings: Record<string, number> = {};
   for (const p of rec.owners) ratings[p] = (await deps.pvp.rating(p, rec.format)).rating;
   const base = pvpSettle(rec.state, ratings);
