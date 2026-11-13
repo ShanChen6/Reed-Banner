@@ -6,10 +6,11 @@ import { ARENA_ATTACKS_PER_DAY, ARENA_WIN_GOLD } from "@/core/arena/arena";
 import { DAILY_GOLD } from "@/core/daily/daily";
 import { SURVIVAL_BOSS_EVERY, SURVIVAL_WAVE_GOLD } from "@/core/survival/survival";
 import { TRIAL_FLOORS } from "@/core/progress/dualTowerState";
+import { DT_ITEM_PICKS, DT_LEVELS } from "@/core/do-tham";
 import { KL_CLEAR_TROOPS, KL_HEIGHT, KL_START_TROOPS, KL_TIME_BONUS_PER_SECOND, KL_WIDTH, levelTimeLimit } from "@/core/khai-lo/engine";
 import type { Scene } from "./scene";
 
-/** Các chế độ có thẻ Hướng dẫn (đúng mười chế độ ở thẻ Chiến Trường). */
+/** Các chế độ có thẻ Hướng dẫn (đúng mười một chế độ ở thẻ Chiến Trường). */
 export type GuideScene = Extract<
   Scene,
   | "CAMPAIGN"
@@ -20,6 +21,7 @@ export type GuideScene = Extract<
   | "ARENA"
   | "FORMATION"
   | "KHAI_LO"
+  | "DO_THAM"
   | "TAM_TUONG_KY"
   | "EXPEDITION"
 >;
@@ -46,6 +48,7 @@ export const GUIDE_SCENES: readonly GuideScene[] = [
   "ARENA",
   "FORMATION",
   "KHAI_LO",
+  "DO_THAM",
   "TAM_TUONG_KY",
   "EXPEDITION",
 ];
@@ -232,6 +235,29 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     tips: [
       "Rê chuột qua khối để xem trước số quân và điểm. Trên điện thoại, chạm lần đầu để xem, chạm lần nữa để xóa.",
       "Xóa khối nhỏ trước để các khối khác dồn lại thành khối lớn.",
+    ],
+  },
+  DO_THAM: {
+    goal: "Dò bẫy trên sa bàn. Mở từng ô, suy ra chỗ giấu bẫy từ các con số rồi cắm cờ lau. Mọi bàn đều suy luận được từ đầu đến cuối, bạn không cần đoán.",
+    steps: [
+      `Chọn bậc: Nhập môn ${DT_LEVELS.nhapMon.width}×${DT_LEVELS.nhapMon.height} với ${DT_LEVELS.nhapMon.mines} bẫy, Thường ${DT_LEVELS.thuong.width}×${DT_LEVELS.thuong.height} với ${DT_LEVELS.thuong.mines} bẫy, Khó ${DT_LEVELS.kho.width}×${DT_LEVELS.kho.height} với ${DT_LEVELS.kho.mines} bẫy.`,
+      `Chọn tối đa ${DT_ITEM_PICKS} đạo cụ nguyên tố mang theo, rồi mở một ô bất kỳ. Ô đầu và 8 ô quanh nó luôn an toàn.`,
+      "Đọc con số trên ô đã mở: đó là số bẫy ở 8 ô quanh nó. Suy ra ô nào có bẫy thì cắm cờ lau, ô nào an toàn thì mở.",
+      "Mở hết mọi ô an toàn là thắng.",
+    ],
+    rules: [
+      "Số 0 tự mở lan ra các ô kề.",
+      "Chuột phải hoặc chạm giữ để cắm cờ. Cờ chỉ là dấu ghi nhớ, không làm ván thắng hay thua. Bấm vào ô số đã đủ cờ thì mở nhanh các ô còn lại quanh nó; cắm sai cờ thì có thể sa bẫy.",
+      "Mở trúng bẫy là thua, trừ khi Khiên đất còn.",
+      "Mỗi đạo cụ dùng một lần: Dò chông (Kim) lộ một bẫy; Mầm xanh (Mộc) mở thử một ô không sợ bẫy; Soi nước (Thủy) báo số bẫy trong vùng 3×3; Đốt lau (Hỏa) mở sạch vùng 3×3; Khiên đất (Thổ) đỡ một lần sa bẫy; Sấm báo (Lôi) báo số bẫy cả hàng hoặc cột; Gió mách (Phong) chỉ ra một ô chắc chắn.",
+    ],
+    rewards: [
+      "Chơi ngay trên máy bạn, không thưởng và không xếp hạng. Thời gian tốt nhất của từng bậc lưu trên trình duyệt này.",
+    ],
+    tips: [
+      "Bắt đầu từ góc nhỏ có số 1 nằm cạnh các ô đã biết: thường chỉ còn một ô để dò.",
+      "Khi hai ô số chung nhau vài ô trống, so sánh số bẫy của chúng để tìm ô chắc chắn.",
+      "Cất Gió mách cho lúc bí: nó luôn chỉ ra một ô suy ra được.",
     ],
   },
   TAM_TUONG_KY: {

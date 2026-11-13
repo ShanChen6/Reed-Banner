@@ -2,7 +2,7 @@
 
 > Nội dung chi tiết bên dưới mô tả **implementation baseline trước khi triển khai các đề xuất**, không có nghĩa mode mới đã tồn tại. Các giá trị Trial 20 / nhãn Sinh tồn ở bảng dưới là **trạng thái code hiện tại**, còn định hướng tương lai xem tài liệu mới. Tháp Thiên Mệnh đã lên 20 tầng từ chu kỳ 16/11/2026 (Shan chốt 11/11/2026).
 
-> Cập nhật: 13/11/2026 (thêm Dò Bẫy, DRAFT; 11/11: Tháp Thiên Mệnh 20 tầng và 8 Phúc mới; 01/11: khách và chế độ xếp hạng, Bình Loạn không có bảng, hướng PvP Quần Hùng; 31/10: thêm Trận Đồ bản chơi thử; 25/10: CAMP-08.04 gỡ chiến dịch 13 màn cũ, tách Đánh trùm/BXH/nhiệm vụ khỏi màn cũ)
+> Cập nhật: 13/11/2026 (thêm Do Thám, bản chơi thử; 11/11: Tháp Thiên Mệnh 20 tầng và 8 Phúc mới; 01/11: khách và chế độ xếp hạng, Bình Loạn không có bảng, hướng PvP Quần Hùng; 31/10: thêm Trận Đồ bản chơi thử; 25/10: CAMP-08.04 gỡ chiến dịch 13 màn cũ, tách Đánh trùm/BXH/nhiệm vụ khỏi màn cũ)
 > Trạng thái: **IMPLEMENTED** — tổng hợp mọi chế độ đang có trong code; chế độ sau cờ ghi rõ tên cờ.
 
 ## 1. Tổng quan
@@ -19,7 +19,7 @@
 | **Trận Đồ** | Game xếp quân theo nghề/hệ, không đánh nhau; chơi thử offline (không thưởng) và xếp hạng có thưởng trên server (tắt mặc định, `FORMATION_RANKED_ENABLED`). Luật ở [GDD Binh Pháp](tran-do/gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline) | Một người, 4 bậc 3×3–8×8 | Sau Song Tháp |
 | **Tầm Tướng Ký** | Ghép yếu tố có thứ tự từ 7 hệ để tìm chân dung tướng, không đánh nhau. Chế độ Thường tốn phiếu; Hạng tuần tiêu nguyên liệu, có bảng và thưởng. Bắt buộc đăng nhập; tắt mặc định, một biến `TAM_TUONG_KY_ENABLED` mở cả chế độ, Hạng và các gói đã duyệt. Luật ở [Design Freeze](tam-tuong-ky/design-freeze.md) | Một người, 3 gói: 77 tướng (mọi tướng) | Sau Trận Đồ |
 | **Viễn Chinh** | Chia 6 tướng làm hai đạo, mỗi ngày một đạo tiến một ô trên sa bàn, đạo kia nghỉ hồi sức; giặc tăng viện theo ngày, hai đạo giáp công thành đích. Thưởng trận như trận thường, thưởng lớn lần đầu mỗi bậc; 3 lượt xuất quân mỗi ngày. Chơi offline, khách chơi được, không bảng xếp hạng; tắt mặc định (`EXPEDITION_ENABLED`). Luật ở [GDD Viễn Chinh](expedition/01-vien-chinh-gdd.md) | Hai đạo 3vs3, 6 sa bàn × 3 bậc | Sau Tầm Tướng Ký |
-| **Dò Bẫy** (đề xuất, DRAFT) | Giải đố dò bẫy trên sa bàn, dùng cờ lau đánh dấu; chưa có code. Luật ở [GDD](do-bay/gdd.md) | Một người, 3 bậc | Sau Khai Lộ |
+| **Do Thám** | Giải đố dò bẫy trên sa bàn, cờ lau đánh dấu; 3 bậc (9×9, 16×16, 30×16), bàn suy luận được, đạo cụ nguyên tố. Bản chơi thử offline, khách chơi được, chưa thưởng và chưa xếp hạng. Luật ở [GDD](do-tham/gdd.md) | Một người, 3 bậc | Sau Khai Lộ |
 
 <a id="2-chiến-dịch"></a>
 
