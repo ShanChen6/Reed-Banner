@@ -179,7 +179,7 @@ export default function DailyScreen() {
           <div className="flex flex-wrap items-center gap-3">
             {mine?.result ? (
               <Alert tone="success" className="p-3 text-sm font-semibold">
-                Bạn đã đánh hôm nay: {scoreText(mine.result)}
+                Chúa công đã đánh hôm nay: {scoreText(mine.result)}
                 {mine.rank !== null && ` · hạng ${mine.rank}`}
               </Alert>
             ) : (
