@@ -6,7 +6,7 @@ import { ARENA_ATTACKS_PER_DAY, ARENA_WIN_GOLD } from "@/core/arena/arena";
 import { DAILY_GOLD } from "@/core/daily/daily";
 import { SURVIVAL_BOSS_EVERY, SURVIVAL_WAVE_GOLD } from "@/core/survival/survival";
 import { TRIAL_FLOORS } from "@/core/progress/dualTowerState";
-import { KL_HEIGHT, KL_START_TROOPS, KL_WIDTH } from "@/core/khai-lo/engine";
+import { KL_CLEAR_TROOPS, KL_HEIGHT, KL_START_TROOPS, KL_TIME_BONUS_PER_SECOND, KL_WIDTH, levelTimeLimit } from "@/core/khai-lo/engine";
 import type { Scene } from "./scene";
 
 /** Các chế độ có thẻ Hướng dẫn (đúng mười chế độ ở thẻ Chiến Trường). */
@@ -191,20 +191,21 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     goal: "Bày quân tướng theo nghề và hệ để khai thông toàn bộ sa bàn. Không đánh nhau; mỗi ô khai thông lộ một mảnh bản đồ thời Loạn 12 sứ quân.",
     steps: [
       "Chọn bậc: Hướng dẫn 3×3, Thường 5×5, Khó 6×6, Đại trận (cạnh từ 7 đến 10).",
-      "Đặt quân hiện tại vào một ô trống hợp lệ.",
-      "Lấp đầy một hàng hoặc một cột thì quân ở hàng cột đó được dọn đi, ô vẫn giữ trạng thái khai thông.",
-      "Khai thông hết mọi ô là thắng.",
+      "Đặt quân hiện tại vào một ô trống sát một quân đã có. Sa bàn đang trống thì đặt ở ô nào cũng được.",
+      "Lấp kín một hàng hoặc một cột (từ 3 ô chơi được trở lên) thì quân ở đó được dọn đi, ô vẫn giữ vệt khai thông.",
+      "Khai thông hết mọi ô chơi được là thắng và hiện cả bản đồ.",
     ],
     rules: [
       "Quân mới phải cùng nghề hoặc cùng hệ với từng quân kề (trên, dưới, trái, phải). Chỉ cần một quân kề không khớp là không đặt được.",
-      "Bỏ Lệnh bỏ quân hiện tại nhưng nâng thanh rủi ro (0 đến 3). Bỏ khi thanh đã đầy thì thua. Đặt quân thành công hạ thanh 1.",
-      "Quân Lệnh thay được cho mọi nghề và hệ. Thu Hồi gỡ một quân khỏi bàn.",
-      "Ô chướng ngại không đặt được quân và không cần khai thông.",
+      "Quân tướng kế tiếp luôn có chung nghề hoặc hệ với một quân trên bàn, nhưng chưa chắc còn chỗ đặt. Lúc đó hãy Bỏ Lệnh.",
+      "Bỏ Lệnh đổi sang quân khác nhưng làm ngọn lửa bùng lên. Lửa đầy mà còn bỏ nữa là thua. Đặt quân thành công hạ lửa 1 bậc, dọn được hàng hoặc cột thì tắt hết.",
+      "Quân Lệnh đặt ở ô trống bất kỳ và khớp mọi quân kề. Thu Hồi xóa một quân trên bàn.",
+      "Chướng ngại (núi, rừng, đầm lầy, thành lũy) mọc ngẫu nhiên: không đặt quân được, không cần khai thông và không nối được hai quân.",
     ],
     rewards: [
       "Chơi thường không thưởng, không xếp hạng, chơi bao nhiêu ván tùy ý.",
       "Xếp hạng có thưởng ở các bậc Thường, Khó và Đại trận khi chế độ này đang mở. Bậc Hướng dẫn không xếp hạng.",
-      "Điểm: đặt quân 10, mỗi quân kề khớp cả nghề lẫn hệ thêm 5, mỗi hàng hoặc cột dọn 50, thắng thêm 500 và thưởng theo vạch Bỏ Lệnh còn trống.",
+      "Điểm: đặt quân 10, mỗi quân kề khớp cả nghề lẫn hệ thêm 5, mỗi hàng hoặc cột dọn 50, thắng thêm 500 và thưởng theo bậc lửa còn trống.",
     ],
     tips: ["Bắt đầu ở bậc Hướng dẫn để quen luật khớp nghề và hệ."],
   },
@@ -212,18 +213,20 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     goal: "Giải đố trên bàn cờ quân nguyên tố. Chạm một quân để xóa cả khối cùng hệ, gom khối to để được nhiều điểm và mở đường xuyên bàn cờ.",
     steps: [
       "Chọn Thường (không giới hạn thời gian) hoặc Cấp tốc (có đồng hồ cho mỗi màn).",
-      "Chạm vào một quân thuộc khối từ 2 quân cùng hệ liền cạnh. Cả khối biến mất, quân phía trên rơi xuống.",
+      "Chạm vào một quân có ít nhất 1 quân cùng hệ liền cạnh. Cả khối biến mất, quân phía trên rơi xuống.",
       "Hết khối để xóa thì màn kết thúc. Dọn sạch bàn được thưởng.",
     ],
     rules: [
-      `Bàn có ${KL_WIDTH} cột và ${KL_HEIGHT} hàng. Quân lẻ không xóa được; liền cạnh không tính đường chéo.`,
+      `Bàn có ${KL_WIDTH} cột và ${KL_HEIGHT} hàng. Quân lẻ không xóa được; liền cạnh không tính đường chéo. Không có quân mới rơi vào, cột trống thì các cột bên phải dồn sang trái.`,
+      "Màn càng sau càng nhiều hệ, từ 3 lên 6.",
       `Ván bắt đầu với ${KL_START_TROOPS} quân lực. Mỗi quân còn sót cuối màn trừ 1 quân lực; hết quân lực là hết ván.`,
       "Đạo cụ Lốc Phong xoay 8 ô quanh một tâm, Sấm Sét phá vùng 3×3. Hai đạo cụ không cộng điểm.",
       "Mỗi màn được hoàn tác một lần, chỉ lùi được nước vừa đi.",
+      `Cấp tốc: mỗi màn ${levelTimeLimit(1)} giây ở bàn 3 hệ, thêm 15 giây cho mỗi hệ mới. Hết giờ là hết màn. Đồng hồ dừng khi bạn rời trang.`,
     ],
     rewards: [
-      "Khối n quân được n² điểm, nhân thêm theo số quân hào quang trong khối.",
-      "Dọn sạch bàn: thưởng theo màn, thêm quân lực và đạo cụ. Cấp tốc cộng thêm điểm cho mỗi giây còn dư.",
+      "Khối n quân được n² điểm. Quân hào quang nhân điểm cả khối chứa nó, mỗi quân hào quang cộng thêm một lần.",
+      `Dọn sạch bàn: thưởng điểm theo màn, cộng ${KL_CLEAR_TROOPS} quân lực và 1 đạo cụ mỗi loại. Cấp tốc cộng thêm ${KL_TIME_BONUS_PER_SECOND} điểm cho mỗi giây còn dư.`,
       "Chơi ngay trên máy bạn, không thưởng và không xếp hạng.",
     ],
     tips: [

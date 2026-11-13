@@ -15,7 +15,6 @@ import LevelCard from "./LevelCard";
 import { MAP_POOL } from "./maps";
 import type { LevelOverview, Overview } from "./rankedClient";
 import RewardLadder from "./RewardLadder";
-import Rules from "./Rules";
 import { ModeGuidePanel } from "../ModeGuide";
 import { formatRemaining } from "./time";
 
@@ -345,15 +344,7 @@ export default function ModeScreen({
         </section>
       )}
 
-      {active !== "guide" && (
-        <>
-          <Collection collected={collection} />
-          <section aria-labelledby="tran-do-rules" className="ui-frame p-4">
-            <h2 id="tran-do-rules" className="mb-2 font-serif text-xl font-bold text-title-on-wood">Luật chơi</h2>
-            <Rules />
-          </section>
-        </>
-      )}
+      {active !== "guide" && <Collection collected={collection} />}
     </>
   );
 }
