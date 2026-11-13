@@ -9,26 +9,28 @@
 
 | Chế độ | Mô tả | Thể thức | Giai đoạn |
 |---|---|---|---|
-| **Luyện tập / Chơi thử** | Offline, không thưởng, không lưu (gồm trang `/demo`); có thể tắt đồng hồ 30 giây | 1vs1 hoặc 3vs3 | 1 |
-| **Thường (Normal)** | Trận sinh ngẫu nhiên đấu Tianwu; chọn độ khó; lương reset mỗi trận | Người chơi chọn 1vs1 hoặc 3vs3 | 2–3 |
-| **Chiến dịch (Campaign V2)** | 6 chương, 24 nhiệm vụ (sự kiện, ngoại giao, trận); lương mang sang; địa hình theo nhiệm vụ | Mỗi nhiệm vụ có trận quy định | 4 |
-| **Đánh trùm** | Tái đấu 6 sứ quân bị đánh dẹp ở mức khó cao hơn, mở theo mốc chiến dịch, có luật "sân nhà" và phần thưởng riêng | Mỗi sứ quân quy định | 4 |
+| **Thao Luyện** (tên cũ Luyện tập / Chơi thử) | Offline, không thưởng, không lưu (gồm trang `/demo`); có thể tắt đồng hồ 30 giây | 1vs1 hoặc 3vs3 | 1 |
+| **Giao Tranh** (tên cũ Thường, Normal) | Trận sinh ngẫu nhiên đấu Tianwu; chọn độ khó; lương reset mỗi trận | Người chơi chọn 1vs1 hoặc 3vs3 | 2–3 |
+| **Bình Loạn** (tên cũ Chiến dịch, Campaign V2) | 6 chương, 24 nhiệm vụ (sự kiện, ngoại giao, trận); lương mang sang; địa hình theo nhiệm vụ | Mỗi nhiệm vụ có trận quy định | 4 |
+| **Tái đấu sứ quân** (tên cũ Đánh trùm) | Tái đấu 6 sứ quân bị đánh dẹp ở mức khó cao hơn, mở theo mốc Bình Loạn, có luật "sân nhà" và phần thưởng riêng | Mỗi sứ quân quy định | 4 |
 | **Tháp Thí Luyện (Trial)** | 20 tầng cố định, luật đội hình/bàn cờ và thưởng đá lần đầu | 3vs3 | Song Tháp V1.0 |
 | **Tháp Thiên Mệnh (Destiny, tên cũ Tháp Vận Mệnh)** | Run 20 tầng theo chu kỳ tuần (10 tầng trước chu kỳ 16/11/2026), roster khóa và tài nguyên xuyên tầng | 3vs3 | Song Tháp V1.0; 20 tầng từ 11/11/2026 |
-| **Sinh tồn** | Một trận không kết thúc, đối thủ theo đợt, báo trước đợt kế tiếp | 3vs3 | Sau giai đoạn 4 |
+| **Trấn Ải** (tên cũ Sinh tồn) | Một trận không kết thúc, đối thủ theo đợt, báo trước đợt kế tiếp | 3vs3 | Sau giai đoạn 4 |
 | **Trận Đồ** | Game xếp quân theo nghề/hệ, không đánh nhau; chơi thử offline (không thưởng) và xếp hạng có thưởng trên server (tắt mặc định, `FORMATION_RANKED_ENABLED`). Luật ở [GDD Binh Pháp](tran-do/gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline) | Một người, 4 bậc 3×3–8×8 | Sau Song Tháp |
 | **Tầm Tướng Ký** | Ghép yếu tố có thứ tự từ 7 hệ để tìm chân dung tướng, không đánh nhau. Chế độ Thường tốn phiếu; Hạng tuần tiêu nguyên liệu, có bảng và thưởng. Bắt buộc đăng nhập; tắt mặc định, một biến `TAM_TUONG_KY_ENABLED` mở cả chế độ, Hạng và các gói đã duyệt. Luật ở [Design Freeze](tam-tuong-ky/design-freeze.md) | Một người, 3 gói: 77 tướng (mọi tướng) | Sau Trận Đồ |
 | **Viễn Chinh** | Chia 6 tướng làm hai đạo, mỗi ngày một đạo tiến một ô trên sa bàn, đạo kia nghỉ hồi sức; giặc tăng viện theo ngày, hai đạo giáp công thành đích. Thưởng trận như trận thường, thưởng lớn lần đầu mỗi bậc; 3 lượt xuất quân mỗi ngày. Chơi offline, khách chơi được, không bảng xếp hạng; tắt mặc định (`EXPEDITION_ENABLED`). Luật ở [GDD Viễn Chinh](expedition/01-vien-chinh-gdd.md) | Hai đạo 3vs3, 6 sa bàn × 3 bậc | Sau Tầm Tướng Ký |
 
-## 2. Chiến dịch
+<a id="2-chiến-dịch"></a>
 
-- **Campaign V2** là chiến dịch duy nhất: 6 chương, 24 nhiệm vụ M01–M24, từ thuở nhỏ ở Hoa Lư tới Đại lễ đăng quang năm 968. Phạm vi, đồ thị mở khóa, thưởng và quy tắc nguồn sử ở `docs/02-game-modes/campaign/` (`design-freeze.md`, `mission-matrix.md`, `history-sources.md`). Code ở `src/core/campaign/` (`storyNodes.ts`, `encounters.ts`, `scenarios.ts`, `rewards.ts`), chơi ở `/game/campaign`.
+## 2. Bình Loạn
+
+- **Campaign V2** là cốt truyện duy nhất của Bình Loạn: 6 chương, 24 nhiệm vụ M01–M24, từ thuở nhỏ ở Hoa Lư tới Đại lễ đăng quang năm 968. Phạm vi, đồ thị mở khóa, thưởng và quy tắc nguồn sử ở `docs/02-game-modes/campaign/` (`design-freeze.md`, `mission-matrix.md`, `history-sources.md`). Code ở `src/core/campaign/` (`storyNodes.ts`, `encounters.ts`, `scenarios.ts`, `rewards.ts`), chơi ở `/game/campaign`.
 - Người chơi đóng vai **Đinh Bộ Lĩnh**. **Tianwu** không xuất hiện như một nhân vật trong truyện; chỉ đóng vai AI điều khiển các nhân vật đối thủ.
 - **Loại nhiệm vụ:** sự kiện, chuẩn bị và ngoại giao hoàn thành qua `completeCampaignEvent` (không phải trận, không tính lượt); trận, phòng thủ, công thành và trùm hoàn thành khi server chốt trận đạt mục tiêu.
 - **Lương mang sang trận sau:** kẹp trong **20 đến 100**, bắt đầu 60, doanh trại đổi 3 vàng lấy 1 lương (mua ở màn chuẩn bị trận). Lương chốt theo phần chênh của chính trận đó (CAMP-08.03). Sự kiện và ngoại giao không trừ, không nạp lương.
-- Thưởng: như trận thường (kinh nghiệm, vàng, đồ rơi), thêm vàng lần đầu hoàn thành nhiệm vụ và mốc chương; tướng lịch sử mở theo mốc chương. Chiến dịch không phát Đá Cường Hóa.
+- Thưởng: như trận thường (kinh nghiệm, vàng, đồ rơi), thêm vàng lần đầu hoàn thành nhiệm vụ và mốc chương; tướng lịch sử mở theo mốc chương. Bình Loạn không phát Đá Cường Hóa.
   - Vàng lần đầu cả 24 nhiệm vụ là 3 975 (50–300 mỗi nhiệm vụ, `storyNodes.ts`), cộng 6 × 250 vàng chương
-    (`CAMPAIGN_CHAPTER_FIRST_CLEAR_GOLD`) và thành tựu "Chương I" và "Hoàn thành chiến dịch" (500 mỗi cái). Tổng là
+    (`CAMPAIGN_CHAPTER_FIRST_CLEAR_GOLD`) và thành tựu "Chương I" và "Hoàn thành Bình Loạn" (500 mỗi cái). Tổng là
     6 475 vàng một lần.
   - Thưởng nhiệm vụ chỉ có trường `firstClearGold`: không có đá, không có trang bị cố định.
   - Mọi thưởng lần đầu ghi biên nhận `node:<M..>` / `chapter:<n>` do server chốt, nên đánh lại hay gửi lại chỉ nhận
@@ -46,11 +48,13 @@
 - Kiểm thử E2E M01 → M24 và hồi quy các chế độ: `docs/02-game-modes/campaign/regression-report.md`. Nghiệm thu phát hành:
   `docs/02-game-modes/campaign/final-acceptance.md`.
 
-### 2.1 Đánh trùm (Claude đặt 20/10/2026, chuyển sang Campaign V2 ở CAMP-08.04)
+<a id="21-đánh-trùm-claude-đặt-20102026-chuyển-sang-campaign-v2-ở-camp-0804"></a>
 
-- Chế độ lặp lại riêng, không phải nhiệm vụ chiến dịch và không chặn kết thúc chiến dịch. **Chỉ 6 sứ quân bị đánh dẹp trong cốt truyện là trùm** (nhóm `military` của sổ thế cục `factions.ts`; Shan chốt 25/10/2026, design-freeze bổ sung 1.1), mỗi trận là **tái đấu**. Mỗi người mở sau nhiệm vụ mốc (`unlockedContent` của nhiệm vụ): Kiều Công Hãn M15, Kiều Thuận M16, Lý Khuê M17, Nguyễn Thủ Tiệp M18, Nguyễn Siêu M20, Đỗ Cảnh Thạc M21. Server chỉ mở khi nhiệm vụ đó đã có trong `campaign.completed`.
-- Trần Lãm (đồng minh), Phạm Bạch Hổ, Ngô Xương Xí, Ngô Nhật Khánh (quy phục), Nguyễn Khoan và Lữ Đường (tan rã/chưa chắc) không có trận Đánh trùm; mốc của họ (M08, M11–M14, M19) chỉ mở bán ở cửa hàng. Tất cả trùm đều đánh 3vs3.
-- **3 bậc**, mở lần lượt: Bậc I mở khi qua mốc, bậc sau mở khi thắng bậc trước. Bậc lưu ở `campaign.raids[idSứQuân]`, giữ qua mọi lần đặt lại tiến độ chiến dịch. Code ở `src/core/campaign/raids.ts`, giao diện là khu "Đánh trùm" dưới chiến dịch (`src/app/game/campaign/RaidPanel.tsx`); sứ quân chưa mở không lộ tên.
+### 2.1 Tái đấu sứ quân (tên cũ Đánh trùm; Claude đặt 20/10/2026, chuyển sang Campaign V2 ở CAMP-08.04)
+
+- Chế độ lặp lại riêng, không phải nhiệm vụ Bình Loạn và không chặn kết thúc Bình Loạn. **Chỉ 6 sứ quân bị đánh dẹp trong cốt truyện là trùm** (nhóm `military` của sổ thế cục `factions.ts`; Shan chốt 25/10/2026, design-freeze bổ sung 1.1), mỗi trận là **tái đấu**. Mỗi người mở sau nhiệm vụ mốc (`unlockedContent` của nhiệm vụ): Kiều Công Hãn M15, Kiều Thuận M16, Lý Khuê M17, Nguyễn Thủ Tiệp M18, Nguyễn Siêu M20, Đỗ Cảnh Thạc M21. Server chỉ mở khi nhiệm vụ đó đã có trong `campaign.completed`.
+- Trần Lãm (đồng minh), Phạm Bạch Hổ, Ngô Xương Xí, Ngô Nhật Khánh (quy phục), Nguyễn Khoan và Lữ Đường (tan rã/chưa chắc) không có trận Tái đấu sứ quân; mốc của họ (M08, M11–M14, M19) chỉ mở bán ở cửa hàng. Tất cả trùm đều đánh 3vs3.
+- **3 bậc**, mở lần lượt: Bậc I mở khi qua mốc, bậc sau mở khi thắng bậc trước. Bậc lưu ở `campaign.raids[idSứQuân]`, giữ qua mọi lần đặt lại tiến độ Bình Loạn. Code ở `src/core/campaign/raids.ts`, giao diện là khu "Đánh trùm" dưới chiến dịch (`src/app/game/campaign/RaidPanel.tsx`); sứ quân chưa mở không lộ tên.
 - Payload tạo trận: `{ raidBoss: <id sứ quân>, raid: 1|2|3 }`. Thiếu một trong hai, id lạ, id màn cũ hay trộn với chế độ khác đều bị từ chối.
 - Đối thủ là sứ quân và tùy tướng của danh mục ở cấp gốc **+4 / +8 / +12** (tối đa 30), AI khó hơn mức gốc **1 / 2 / 3 nấc** (Dễ → Thường → Khó → Trùm → Ác mộng). Thủ lĩnh máu ×1,5 (cả 6 trùm đều đánh 3vs3).
 - **Sân nhà:** bàn cờ nghiêng về loại ô hợp với nguyên tố sứ quân (`HOME_TERRAIN`) và sứ quân vào trận đầy lương (100). Người chơi vào trận với lương thường, không dùng và không đổi lương chiến dịch.
@@ -60,11 +64,11 @@
 
 ### 2.2 Bảng xếp hạng (Claude đặt 20/10/2026, chuyển sang Campaign V2 ở CAMP-08.04)
 
-- Trang bảng xếp hạng có các bảng: **Sinh tồn**, **Đấu trường**, **Vận Mệnh**. Sinh tồn và Đấu trường mặc định hiện **bảng mùa tuần này**, có nút chuyển sang **Mọi thời đại** (bảng cộng dồn cũ); xem [mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng). Mỗi bảng hiện 50 người đứng đầu và hạng của người đang xem. Thử thách hằng ngày giữ bảng riêng, Trận Đồ xếp hạng nằm trong màn Trận Đồ.
-- **Bình Loạn không có bảng xếp hạng** (Shan, 01/11/2026): chiến dịch là chế độ offline theo tuyến lịch sử. Hai bảng **Chiến dịch** và **Từng trận** dưới đây đã bị gỡ khỏi giao diện; server và dữ liệu cũ (`campaign`, `mission:<M..>`) vẫn còn, chưa xóa.
+- Trang bảng xếp hạng có các bảng: **Trấn Ải**, **Quần Hùng**, **Tháp Thiên Mệnh**. Trấn Ải và Quần Hùng mặc định hiện **bảng mùa tuần này**, có nút chuyển sang **Mọi thời đại** (bảng cộng dồn cũ); xem [mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng). Mỗi bảng hiện 50 người đứng đầu và hạng của người đang xem. Thử thách hằng ngày giữ bảng riêng, Trận Đồ xếp hạng nằm trong màn Trận Đồ.
+- **Bình Loạn không có bảng xếp hạng** (Shan, 01/11/2026): Bình Loạn là chế độ không cần mạng theo tuyến lịch sử. Hai bảng **Chiến dịch** và **Từng trận** dưới đây đã bị gỡ khỏi giao diện; server và dữ liệu cũ (`campaign`, `mission:<M..>`) vẫn còn, chưa xóa.
 - **Chiến dịch (đã gỡ khỏi giao diện):** hoàn thành nhiều nhiệm vụ V2 hơn đứng trên (sự kiện và ngoại giao cũng tính là hoàn thành); bằng số nhiệm vụ thì tổng số lượt ít nhất của các **nhiệm vụ có trận** ít hơn đứng trên. Sự kiện không có lượt nên không cộng gì; nhiệm vụ có trận đã xong mà chưa có số lượt tính 200 lượt.
 - **Từng trận (đã gỡ khỏi giao diện)** (`mission:<M..>`): hoàn thành nhiệm vụ có trận đó với ít lượt nhất (đếm lượt của cả hai phe), lấy từ `campaign.bestBattleTurns`. Chỉ nhiệm vụ trận, phòng thủ, công thành, trùm có bảng; không tính đánh trùm.
-- **Sinh tồn:** số đợt nhiều nhất đã vượt.
+- **Trấn Ải:** số đợt nhiều nhất đã vượt.
 - Bằng điểm thì người đạt điểm đó trước đứng trên. Khách hiện là "Khách" kèm 4 ký tự cuối mã.
 - Server ghi điểm vào bảng `leaderboard_scores` sau mỗi lần cộng thưởng trận online; người chơi có thành tích từ trước được ghi khi mở trang. Code ở `src/core/progress/leaderboard.ts` và `src/server/leaderboard.ts`.
 
@@ -93,7 +97,9 @@ Song Tháp gồm hai chế độ hiện hành: Tháp Thí Luyện và Tháp Thi�
 Hướng dẫn người chơi và bảng thưởng: [Song Tháp cho người chơi](dual-tower/player-help.md). Bằng chứng QA,
 balance và release: [T06.04](dual-tower/06-04-final-acceptance.md).
 
-## 4. Sinh tồn
+<a id="4-sinh-tồn"></a>
+
+## 4. Trấn Ải
 
 - Cùng một bàn cờ trong suốt lượt chơi. Đối thủ kéo đến theo **đợt**, mạnh dần.
 - **Đợt ≠ lượt.** Một đợt là một nhóm đối thủ kéo vào sân; đợt kết thúc khi toàn bộ đối thủ của đợt bị hạ gục. Mục tiêu tạm thời: 2–3 đối thủ mỗi đợt, khoảng 6–10 lượt mỗi bên (2–3 phút).
@@ -149,10 +155,12 @@ Mỗi đợt khoảng 10 lượt mỗi bên, đúng mức trên của mục tiê
 
 - 🗓️ **Thử thách hằng ngày:** một seed chung cho mọi người chơi mỗi ngày, mỗi người chơi một lần, xếp hạng theo số lượt hoặc máu còn lại. Seed vẫn chỉ nằm trên server.
 - 🧩 **Thế cờ:** bàn cờ dựng sẵn, ô rơi cố định, hạ gục đối thủ trong đúng K nước.
-- ⚔️ **Đấu trường bóng ma:** PvP không đồng bộ, đánh với đội hình của người chơi khác do AI điều khiển. Bản đầu ở mục 5.3.
+- ⚔️ **Quần Hùng** (tên cũ Đấu trường bóng ma): PvP không đồng bộ, đánh với đội hình của người chơi khác do AI điều khiển. Bản đầu ở mục 5.3.
 - **Cơ chế giữ chân:** nhiệm vụ ngày/tuần, thành tựu, bộ sưu tập nhân vật.
 
-### 5.1 Thử thách hằng ngày (Claude đặt 20/10/2026, chờ Shan duyệt)
+<a id="51-thử-thách-hằng-ngày-claude-đặt-20102026-chờ-shan-duyệt"></a>
+
+### 5.1 Nhật Lệnh (tên cũ Thử thách hằng ngày; Claude đặt 20/10/2026, chờ Shan duyệt)
 
 Trang `/daily`, code ở `src/core/daily/` (đề và điểm), `src/server/daily.ts` (seed, lượt, bảng xếp hạng), bảng `daily_entries`.
 
@@ -186,23 +194,23 @@ Trang `/quests`, code ở `src/core/progress/quests.ts` và `achievements.ts`, l
 | Đánh trận | 3 | 60 |
 | Thắng trận | 2 | 80 |
 | Nhặt ô vàng trên bàn cờ | 30 | 60 |
-| Đánh thử thách ngày | 1 | 50 |
+| Nhận Nhật Lệnh | 1 | 50 |
 
 | Nhiệm vụ tuần | Mục tiêu | Vàng |
 |---|---|---|
 | Thắng trận | 15 | 400 |
-| Thắng trận chiến dịch hoặc đánh trùm (chỉ trận thắng của nhiệm vụ có trận, kể cả qua một phase công thành; hoàn thành sự kiện/ngoại giao không tính) | 5 | 300 |
+| Thắng trận Bình Loạn hoặc Tái đấu sứ quân (chỉ trận thắng của nhiệm vụ có trận, kể cả qua một phase công thành; hoàn thành sự kiện/ngoại giao không tính) | 5 | 300 |
 | Qua tầng tháp | 10 | 300 |
-| Vượt đợt sinh tồn | 20 | 300 |
-| Đánh thử thách ngày (số hôm) | 5 | 300 |
+| Trấn Ải vượt đợt | 20 | 300 |
+| Nhận Nhật Lệnh (số hôm) | 5 | 300 |
 
-- **Thắng trận sinh tồn:** tính là thắng khi vượt qua ít nhất 1 đợt.
+- **Thắng trận Trấn Ải:** tính là thắng khi vượt qua ít nhất 1 đợt.
 - **Thành tựu (nhận một lần):**
   - Thắng trận: 1 trận (50 vàng), 50 trận (300), 200 trận (1000).
-  - Qua hết chương 1 chiến dịch: 500 (đếm 4 nhiệm vụ của Chương I V2, CAMP-08.04).
+  - Qua hết chương 1 Bình Loạn: 500 (đếm 4 nhiệm vụ của Chương I V2, CAMP-08.04).
   - Tháp tầng 10 / 25: 300 / 800.
-  - Sinh tồn 10 / 20 đợt: 300 / 800.
-  - Thử thách ngày 7 hôm: 300.
+  - Trấn Ải 10 / 20 đợt: 300 / 800.
+  - Nhật Lệnh 7 hôm: 300.
   - Điểm danh 7 ngày liền: 300.
   - Đinh Bộ Lĩnh cấp 10 / 30: 200 / 1000.
 - **Điểm danh:**
@@ -210,19 +218,21 @@ Trang `/quests`, code ở `src/core/progress/quests.ts` và `achievements.ts`, l
   - Chuỗi 7 ngày nhận lần lượt 50, 60, 80, 100, 120, 150, 300 vàng.
   - Bỏ một ngày thì chuỗi về ngày 1. Đủ 7 ngày thì bắt đầu chuỗi mới.
 
-### 5.3 Đấu trường bóng ma (Claude đặt 20/10/2026, chờ Shan duyệt)
+<a id="53-đấu-trường-bóng-ma-claude-đặt-20102026-chờ-shan-duyệt"></a>
+
+### 5.3 Quần Hùng (tên cũ Đấu trường bóng ma; Claude đặt 20/10/2026, chờ Shan duyệt)
 
 Trang `/arena`, code ở `src/core/arena/` (đội phòng thủ, bóng ma máy tạo, điểm), `src/server/arena.ts` (kho, bày đối thủ), bảng `arena_players`.
 
-- **Đội phòng thủ:** bản chụp đội 3vs3 đang chọn ở hồ sơ (chỉ số, kỹ năng, trang bị lúc chụp). Tự chụp khi mở đấu trường lần đầu; nâng cấp hay đổi đội xong thì bấm "Cập nhật theo đội hiện tại". Nhân vật chính của đội phòng thủ mang tên chủ đội.
+- **Đội phòng thủ:** bản chụp đội 3vs3 đang chọn ở hồ sơ (chỉ số, kỹ năng, trang bị lúc chụp). Tự chụp khi mở Quần Hùng lần đầu; nâng cấp hay đổi đội xong thì bấm "Cập nhật theo đội hiện tại". Nhân vật chính của đội phòng thủ mang tên chủ đội.
 - **Đánh:** mỗi lần bày 3 đối thủ, ưu tiên người chơi thật có điểm gần mình nhất (chọn ngẫu nhiên trong 12 người gần nhất), thiếu thì thêm "bóng ma luyện tập" do máy tạo (đội ngẫu nhiên cùng cấp, không trang bị, 1000 điểm). Bấm "Đổi đối thủ" thì bày lại, miễn phí. Người đánh dùng đội 3vs3 đang chọn; đội phòng thủ do AI mức Khó điều khiển. Ai đi trước bốc ngẫu nhiên.
 - **Lượt:** 10 trận mỗi ngày, đổi lúc 0 giờ giờ Việt Nam. Đánh xong thì đối thủ đã bày bị xóa, mở lại trang có đối thủ mới.
 - **Điểm (kiểu Elo):** bắt đầu 1000. Người đánh đổi 32 × (kết quả − kỳ vọng), người phòng thủ đổi ngược dấu một nửa (16 ×). Ngang điểm thì thắng +16, thua −16, người phòng thủ −8/+8. Điểm không xuống dưới 0. Bóng ma máy tạo luôn 1000 điểm, nên càng lên cao đánh bóng ma càng ít điểm.
 - **Thưởng:** thưởng trận thường (kinh nghiệm, vàng nhặt, món rơi theo độ khó Khó) và thêm 50 vàng khi thắng.
-- **Bảng xếp hạng:** tab Đấu trường ở `/leaderboard`, theo điểm; lên bảng khi có đội phòng thủ.
+- **Bảng xếp hạng:** bảng Quần Hùng ở Công Trạng (`/leaderboard`), theo điểm; lên bảng khi có đội phòng thủ.
 - **Mùa và thưởng:** có mùa theo tuần và thưởng vàng theo hạng, xem [mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng).
 - **Chưa làm:** nhật ký bị đánh (chỉ có số trận giữ được và bị mất), chặn đánh lại cùng một người.
-- **Hướng sắp tới:** chế độ online hai người chơi đấu trực tiếp, xem [mục 6.2](#62-quần-hùng-online-hai-người-chơi-phát-triển-sau). Đấu trường bóng ma hiện tại giữ nguyên.
+- **Hướng sắp tới:** chế độ online hai người chơi đấu trực tiếp, xem [mục 6.2](#62-quần-hùng-online-hai-người-chơi-phát-triển-sau). Quần Hùng bất đồng bộ hiện tại giữ nguyên.
 
 ### 5.4 Viễn Chinh (Shan chọn cơ chế 04/11/2026)
 
@@ -255,7 +265,7 @@ Khách chơi thường thoải mái; chế độ **online có bảng xếp hạn
 
 | Khách chơi được | Chỉ tài khoản đăng nhập |
 |---|---|
-| Luyện tập / Chơi thử, Giao Tranh (trận thường), Bình Loạn, Đánh trùm, Tháp Thí Luyện, **Trận Đồ chơi thường**, **Viễn Chinh** (offline, không bảng xếp hạng; Shan 04/11/2026) | **Nhật Lệnh**, **Trấn Ải** (Sinh tồn), **Quần Hùng** (Đấu trường), **Tháp Thiên Mệnh**, **Trận Đồ xếp hạng**, trang **Bảng xếp hạng**, **Tầm Tướng Ký** (cả chế độ Thường, vì mỗi lượt tốn phiếu; Shan 03/11/2026) |
+| Luyện tập / Chơi thử, Giao Tranh (trận thường), Bình Loạn, Tái đấu sứ quân, Tháp Thí Luyện, **Trận Đồ chơi thường**, **Viễn Chinh** (offline, không bảng xếp hạng; Shan 04/11/2026) | **Nhật Lệnh**, **Trấn Ải** (Sinh tồn), **Quần Hùng** (Đấu trường), **Tháp Thiên Mệnh**, **Trận Đồ xếp hạng**, trang **Bảng xếp hạng**, **Tầm Tướng Ký** (cả chế độ Thường, vì mỗi lượt tốn phiếu; Shan 03/11/2026) |
 
 **Khách cũng không xem** bảng xếp hạng, đề Nhật Lệnh, màn Thiên Mệnh và màn Quần Hùng/Trấn Ải: các API `GET` tương ứng trả `401`, Trận Đồ xếp hạng chỉ báo "cần đăng nhập" không kèm bảng, và giao diện hiện màn nhắc đăng nhập ở cả trang Xếp hạng (Shan, 01/11/2026). Trận xếp hạng đang dở của một khách cũ (đăng xuất giữa chừng) không xem và không đi tiếp được (`getBattle` và `actBattle` trả `loginRequired`); riêng "dừng run" Thiên Mệnh vẫn cho phép để kết thúc run có sẵn. Code: `Deps.isSignedIn` ở `src/server/battles.ts`, helper `isSignedInAccount` và `loginRequiredResponse` ở `src/server/http.ts`, màn nhắc `src/app/game/LoginGate.tsx`. Tháp Thí Luyện không có bảng xếp hạng nên vẫn mở cho khách.
 
@@ -268,7 +278,7 @@ Quần Hùng hiện là tìm đối thủ offline (mục 5.3). Shan muốn thêm
 Shan (01/11/2026): Trấn Ải và Quần Hùng có **mùa theo tuần**, đổi vào thứ Hai 0 giờ giờ Việt Nam (cùng khóa với Đại trận và chu kỳ Thiên Mệnh). Điểm mùa bắt đầu lại từ 0 mỗi tuần; hạng cuối mùa nhận vàng ([mục 6](#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt)). Bảng mọi thời đại cũ vẫn còn để xem.
 
 - **Trấn Ải:** điểm mùa = số đợt cao nhất đã vượt trong **một lượt chơi** của tuần (lượt kém hơn không hạ điểm).
-- **Quần Hùng:** điểm mùa = tổng điểm đấu trường nhận được từ các trận **mình đi đánh** trong tuần (thắng cộng, thua trừ); không tính phòng thủ, để người chỉ treo đội phòng thủ không leo hạng. Chỉ người có tổng **dương** mới có tên trên bảng. **Điểm Elo gốc không bị reset**; mùa chỉ đo mức tiến bộ trong tuần. *Shan chốt cách tính này ngày 01/11/2026. Phương án đã cân nhắc và không chọn: xếp theo Elo cuối tuần có reset mềm (cần chụp bảng cuối mùa).*
+- **Quần Hùng:** điểm mùa = tổng điểm Quần Hùng nhận được từ các trận **mình đi đánh** trong tuần (thắng cộng, thua trừ); không tính phòng thủ, để người chỉ treo đội phòng thủ không leo hạng. Chỉ người có tổng **dương** mới có tên trên bảng. **Điểm Elo gốc không bị reset**; mùa chỉ đo mức tiến bộ trong tuần. *Shan chốt cách tính này ngày 01/11/2026. Phương án đã cân nhắc và không chọn: xếp theo Elo cuối tuần có reset mềm (cần chụp bảng cuối mùa).*
 - Ghi điểm mùa lúc trận kết thúc, cùng lúc cộng thưởng; lỗi ghi mùa chỉ ghi log, không làm hỏng thưởng cuối trận. Code: `src/server/seasons.ts`, `src/server/db/seasons.ts`, bảng `season_scores` (migration 0011), API `GET /api/leaderboard?board=survival|arena&season=current|<thứ Hai>`.
 - Số người có tên trên bảng (điểm dương) là số người để tính nửa trên. Không đòi số người tối thiểu, như các chế độ khác.
 
