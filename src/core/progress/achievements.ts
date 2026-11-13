@@ -60,7 +60,7 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
   },
   {
     id: "a.chapter1",
-    title: "Qua hết chương 1 chiến dịch",
+    title: "Qua hết chương 1 Bình Loạn",
     target: CHAPTER1_STAGES,
     gold: 500,
     // Chỉ đếm nhiệm vụ của Chương I (sự kiện hay trận đều là hoàn thành nhiệm vụ), không đếm nhiệm vụ chương sau.
@@ -70,7 +70,7 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
   {
     // Chiến dịch V2 khép ở M24 (Đại lễ đăng quang 968), không đếm số trận thắng.
     id: "a.campaign",
-    title: "Đại Cồ Việt: hoàn thành chiến dịch",
+    title: "Đại Cồ Việt: hoàn thành Bình Loạn",
     target: 1,
     gold: 500,
     value: (p) => (campaignCompleted(p.campaign) ? 1 : 0),
@@ -91,7 +91,7 @@ export const ACHIEVEMENTS: readonly AchievementDef[] = [
   },
   {
     id: "a.daily7",
-    title: "Đánh thử thách ngày 7 hôm",
+    title: "Nhận Nhật Lệnh 7 hôm",
     target: 7,
     gold: 300,
     value: (p) => p.quests.totals.daily ?? 0,

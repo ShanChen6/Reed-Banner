@@ -80,7 +80,7 @@ export default function GearPicker({
               {SLOT_NAME[slot]} · {name}
             </h2>
             <p className="text-sm text-[var(--on-wood-soft)]">
-              {slot === "vuKhi" ? `Chỉ vũ khí nghề ${PROFESSION_NAME[fighter.profession]}.` : "Mọi tướng sĩ mặc được."} Mỗi món chỉ một người dùng.
+              {slot === "vuKhi" ? `Chỉ vũ khí nghề ${PROFESSION_NAME[fighter.profession]}.` : "Mọi tướng quân mặc được."} Mỗi món chỉ một người dùng.
             </p>
           </div>
           <button type="button" onClick={onClose} aria-label="Đóng bảng chọn đồ" className="barracks-btn flex size-11 shrink-0 items-center justify-center rounded-md">
@@ -97,7 +97,7 @@ export default function GearPicker({
               <p>Kho chưa có món {SLOT_NAME[slot].toLowerCase()} dùng được cho {name}.</p>
               {otherProfession > 0 && <p className="text-sm text-[var(--on-wood-soft)]">{otherProfession} vũ khí của nghề khác không dùng được.</p>}
               <SceneLink scene="SHOP" className="barracks-btn is-action min-h-10 pointer-coarse:min-h-11 rounded-md px-4 leading-10">
-                Mua ở Cửa hàng
+                Mua ở Cửa Hàng
               </SceneLink>
             </div>
           ) : (

@@ -324,7 +324,7 @@ export interface ExpeditionStartInput {
   readonly tier: ExpeditionTier;
   /** Hai nhân vật kèm đi cùng Đinh Bộ Lĩnh ở đạo Chính. */
   readonly main: readonly string[];
-  /** Ba nhân vật kèm của Biệt đạo; người đầu là thống lĩnh. */
+  /** Ba nhân vật kèm của Biệt Đạo; người đầu là thống lĩnh. */
   readonly second: readonly string[];
 }
 
@@ -458,7 +458,7 @@ function logLine(run: ExpeditionRun, line: string): ExpeditionRun {
   return { ...run, log: [...(run.log ?? []), `Ngày ${run.day}: ${line}`].slice(-EXPEDITION_LOG_SIZE) };
 }
 
-export const EXPEDITION_ARMY_NAME: Readonly<Record<ArmyIndex, string>> = { 0: "Đạo Chính", 1: "Biệt đạo" };
+export const EXPEDITION_ARMY_NAME: Readonly<Record<ArmyIndex, string>> = { 0: "Đạo Chính", 1: "Biệt Đạo" };
 
 /** Cuối ngày của sa bàn có kịch bản: thuyền viện tới thành đích, giặc phản công kho lương. */
 function scenarioDayEnd(run: ExpeditionRun, scenario: ExpeditionScenario): ExpeditionRun {

@@ -76,8 +76,8 @@ const FEATURES: { tile: Tile; title: string; body: string }[] = [
 
 /** Các chế độ đang có trong màn chơi /game (cùng danh sách với MenuScene). `flag`: chế độ bật bằng biến môi trường lúc build. */
 const MODES: readonly { slug: ModeIconKind; name: string; body: string; flag?: keyof TowerFeatureFlags }[] = [
-  { slug: "practice", name: "Thao Luyện", body: "Vào trận ngay, offline, 3vs3 đấu Tianwu với đội cấp tối đa. Không cần tài khoản." },
-  { slug: "play", name: "Giao Tranh", body: "Trận online có đồng hồ 30 giây, nhận vàng, kinh nghiệm và chiến lợi phẩm." },
+  { slug: "practice", name: "Thao Luyện", body: "Vào trận ngay, không cần mạng, 3vs3 đấu Tianwu với đội cấp tối đa. Không cần tài khoản." },
+  { slug: "play", name: "Giao Tranh", body: "Trận trực tuyến có đồng hồ 30 giây, nhận vàng, kinh nghiệm và chiến lợi phẩm." },
   { slug: "campaign", name: "Bình Loạn", body: "Sáu chương dẹp loạn 12 sứ quân, tướng lịch sử gia nhập, rồi Tái đấu sứ quân bị đánh dẹp ở 3 bậc." },
   { slug: "trial", name: "Tháp Thí Luyện", body: "20 tầng cố định, tự chọn đội và luật riêng từng tầng.", flag: "trial" },
   { slug: "destiny", name: "Tháp Thiên Mệnh", body: "Khóa đội hình theo chu kỳ, giữ máu và lương xuyên tầng.", flag: "destiny" },
@@ -229,7 +229,7 @@ export default function Home() {
 
         {/* Ba thời của nhân vật chính, từ cậu bé cờ lau tới hoàng đế. */}
         <section id="hero-story" className="scroll-mt-16 px-4 py-16">
-          <SectionTitle kicker="Nhân vật chính" title="Đinh Bộ Lĩnh qua ba thời" sub="Từ cậu bé chăn trâu cầm cờ lau, thành vị tướng dẹp loạn sứ quân, rồi lên ngôi hoàng đế." />
+          <SectionTitle kicker="Chủ tướng" title="Đinh Bộ Lĩnh qua ba thời" sub="Từ cậu bé chăn trâu cầm cờ lau, thành vị tướng dẹp loạn sứ quân, rồi lên ngôi hoàng đế." />
           <ul className="mx-auto grid max-w-5xl grid-cols-3 gap-3 md:gap-6">
             {DBL_ERAS.map((e) => (
               <li key={e.src} className="flex flex-col items-center justify-end rounded-2xl fx-panel-hi p-2 text-center md:p-4">
@@ -321,7 +321,7 @@ export default function Home() {
           <SectionTitle
             kicker="7 nguyên tố"
             title="Đổi hệ, đổi lối đánh"
-            sub={`${ELEMENTS.map((e) => ELEMENT_NAME[e]).join(", ")}. Nhân vật chính đổi nguyên tố trước mỗi trận, kéo theo bị động và cả bộ 6 kỹ năng.`}
+            sub={`${ELEMENTS.map((e) => ELEMENT_NAME[e]).join(", ")}. Chủ tướng đổi nguyên tố trước mỗi trận, kéo theo bị động và cả bộ 6 kỹ năng.`}
           />
           <div className="mx-auto max-w-5xl">
             <ElementPicker />
@@ -330,7 +330,7 @@ export default function Home() {
             {[
               { k: "Khắc", v: "×1.25", body: "Đánh vào hệ mình khắc, sát thương tăng một phần tư." },
               { k: "Tương sinh", v: "×1.1", body: "Đánh vào hệ mình sinh ra, sát thương nhỉnh hơn một chút." },
-              { k: "Trang bị cùng hệ", v: "×1.5", body: "Mặc đồ đúng hệ nhân vật, chỉ số trang bị tăng một nửa." },
+              { k: "Trang bị cùng hệ", v: "×1.5", body: "Mặc đồ đúng hệ tướng quân, chỉ số trang bị tăng một nửa." },
             ].map((c) => (
               <li key={c.k} className="rounded-2xl fx-panel p-5">
                 <p className="text-kicker text-on-wood-soft">{c.k}</p>
@@ -367,7 +367,7 @@ export default function Home() {
         <section id="modes" className="scroll-mt-16 px-4 py-16">
           <SectionTitle
             kicker="Chế độ chơi"
-            title="Từ trận thử tới chiến dịch"
+            title="Từ Thao Luyện tới Bình Loạn"
             sub="Chơi bằng tài khoản khách ngay, tiến trình gắn với trình duyệt. Đăng nhập để giữ tiến trình trên mọi máy."
           />
           <ul className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -409,7 +409,7 @@ export default function Home() {
             {[
               ["quests", "Nhiệm vụ và điểm danh"],
               ["leaderboard", "Bảng xếp hạng"],
-              ["profile", "Hồ sơ, trang bị, cửa hàng"],
+              ["profile", "Doanh Trại, trang bị, Cửa Hàng"],
             ].map(([slug, label], i) => (
               <span key={slug}>
                 {i > 0 && " · "}
@@ -458,7 +458,7 @@ export default function Home() {
               <LogoMark className="size-14" />
               <div>
                 <p className="font-serif text-2xl font-bold text-on-wood">Cờ Lau</p>
-                <p className="mt-0.5 text-base">Mini game thuộc ShanVerse</p>
+                <p className="mt-0.5 text-base">Trò chơi nhỏ thuộc ShanVerse</p>
               </div>
             </div>
             <ul className="grid grid-cols-2 gap-x-6 border-y border-frame-gold/20 py-3 text-base sm:grid-cols-3">

@@ -40,7 +40,7 @@ export default function SpecialQuestsPanel({ profile }: { profile: Profile }) {
     });
     if (!res.id) {
       setBusy(false);
-      setMessage(ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Không tạo được trận");
+      setMessage(ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Chưa bày được trận. Xin thử lại.");
       return;
     }
     try {
@@ -53,8 +53,8 @@ export default function SpecialQuestsPanel({ profile }: { profile: Profile }) {
 
   return (
     <OrnateFrame className="flex flex-col gap-3">
-      <SectionTitle description="Làm đủ ba bước để nhân vật gia nhập đội ở cấp 1. Không bán ở cửa hàng.">
-        Nhiệm vụ phụ: nhân vật đặc biệt
+      <SectionTitle description="Làm đủ ba bước để tướng quân gia nhập đội ở cấp 1. Không bán ở Cửa Hàng.">
+        Nhiệm vụ phụ: tướng quân đặc biệt
       </SectionTitle>
       {message && <Alert>{message}</Alert>}
       <div className="grid gap-3 md:grid-cols-2">

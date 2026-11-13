@@ -123,7 +123,7 @@ export default function HeroDetail({
     <div className="flex flex-col">
       {onBack && (
         <button type="button" onClick={onBack} className="barracks-btn mb-2 flex min-h-11 items-center gap-2 self-start rounded-md px-3 text-[15px] lg:hidden">
-          <BackGlyph className="size-5" /> Danh sách tướng sĩ
+          <BackGlyph className="size-5" /> Danh sách tướng quân
         </button>
       )}
 
@@ -350,8 +350,8 @@ function Overview({ profile, id, fighter, bare, worn }: { profile: Profile; id: 
       <Meter label="Kinh nghiệm" value={xpNow} max={xpMax} text={maxed ? "Cấp tối đa" : `${xpNow} / ${xpMax}`} />
       <dl className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         <StatCard label="Máu" value={fighter.maxHp} bonus={fighter.maxHp - bare.maxHp} />
-        <StatCard label="Công (ATK)" value={fighter.atk} bonus={fighter.atk - bare.atk} />
-        <StatCard label="Thủ (DEF)" value={fighter.def} bonus={fighter.def - bare.def} />
+        <StatCard label="Công" value={fighter.atk} bonus={fighter.atk - bare.atk} />
+        <StatCard label="Thủ" value={fighter.def} bonus={fighter.def - bare.def} />
         <StatCard label="Trang bị" value={`${worn.length}/9`} />
       </dl>
       {bonuses.length > 0 && (
@@ -474,8 +474,8 @@ function Details({ profile, id, fighter, bare, worn }: { profile: Profile; id: s
   const ultimate = id === MAIN_ID ? dinhBoLinhUltimate(profile.profession, profile.element) : personalSkillOf(id);
   const rows: readonly [string, number, number][] = [
     ["Máu", bare.maxHp, fighter.maxHp],
-    ["Công (ATK)", bare.atk, fighter.atk],
-    ["Thủ (DEF)", bare.def, fighter.def],
+    ["Công", bare.atk, fighter.atk],
+    ["Thủ", bare.def, fighter.def],
   ];
   return (
     <div className="flex flex-col gap-3 text-[15px]">

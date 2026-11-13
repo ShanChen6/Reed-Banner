@@ -178,7 +178,7 @@ export default function RaidHall({
     >
       <SectionTitle
         id="raid-hall-title"
-        description="Chế độ lặp lại riêng, không phải nhiệm vụ chiến dịch: tái đấu các sứ quân bị đánh dẹp, mỗi người mở sau nhiệm vụ mốc của họ trong chiến dịch."
+        description="Chế độ lặp lại riêng, không phải nhiệm vụ Bình Loạn: tái đấu các sứ quân bị đánh dẹp, mỗi người mở sau nhiệm vụ mốc của họ trong chiến dịch."
         action={<span className="text-sm text-on-wood-soft">{openCount}/{RAID_BOSSES.length} sứ quân đã mở</span>}
       >
         Tái đấu sứ quân

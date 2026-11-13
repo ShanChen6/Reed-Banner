@@ -478,7 +478,7 @@ export default function TrialView(props: TrialViewProps) {
 
       {!overview.supported && (
         <Alert role="alert" className="p-3 text-sm">
-          Dữ liệu Song Tháp của bạn thuộc phiên bản mới hơn bản này. Hãy tải lại trang hoặc chờ cập nhật; tiến trình không bị ghi đè.
+          Dữ liệu Tháp Thí Luyện thuộc phiên bản mới hơn bản này. Xin tải lại trang hoặc chờ cập nhật; tiến trình không bị ghi đè.
         </Alert>
       )}
 

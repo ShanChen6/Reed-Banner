@@ -4,7 +4,7 @@ import type { Element, Profession, TileKind } from "@/core";
 
 /** Tính cách và hiệu ứng hay dùng theo docs/01-gameplay/nguyen-to.md mục 2. */
 export const ELEMENT_TRAIT: Record<Element, { readonly role: string; readonly tags: readonly string[] }> = {
-  kim: { role: "Đánh chắc, xuyên giáp", tags: ["Thủ−", "Bỏ qua DEF", "Xuyên Khiên"] },
+  kim: { role: "Đánh chắc, xuyên giáp", tags: ["Thủ−", "Bỏ qua Thủ", "Xuyên Khiên"] },
   moc: { role: "Đánh dai, hồi máu", tags: ["Hồi phục", "Hồi máu", "Phá ô"] },
   thuy: { role: "Khống chế", tags: ["Đóng băng", "Tẩy hiệu ứng"] },
   hoa: { role: "Sát thương lớn, thủ yếu", tags: ["Thiêu đốt", "Công+"] },
@@ -30,10 +30,10 @@ export const PROFESSION_PERK: Record<Profession, string> = {
   satThu: "Chuẩn bị công kích khi đồng đội khống chế",
   tuongSi: "Ghép từ 4 kiếm: +30% sát thương",
   phapSu: "Năng lượng từ âm dương ×1.5",
-  binhLinh: "Lương tụt chậm, sĩ khí cao thì thêm DEF",
+  binhLinh: "Lương tụt chậm, sĩ khí cao thì thêm Thủ",
   ySu: "Hồi máu ×1.5, hồi tràn thành Khiên",
   muuSi: "Ghép vàng rút năng lượng đối thủ",
-  quanSu: "Ghép sách giảm ATK đối thủ",
+  quanSu: "Ghép sách giảm Công đối thủ",
 };
 
 export const FAQ: readonly { readonly q: string; readonly a: string }[] = [
@@ -51,14 +51,14 @@ export const FAQ: readonly { readonly q: string; readonly a: string }[] = [
   },
   {
     q: "Đối thủ là ai?",
-    a: "Tianwu, AI của Cờ Lau, điều khiển phe đối thủ. Tianwu chỉ biết đúng những gì người chơi thấy trên bàn và chịu cùng một luật.",
+    a: "Tianwu, AI của Cờ Lau, điều khiển phe đối thủ. Tianwu chỉ biết đúng những gì bạn thấy trên bàn và chịu cùng một luật.",
   },
   {
     q: "Nhân vật trong game có thật không?",
-    a: "Bối cảnh Loạn 12 Sứ Quân và tên các nhân vật lịch sử là lịch sử chung. Tính cách, kỹ năng và lời thoại gán cho họ là hư cấu; các đồng đội đi cùng Đinh Bộ Lĩnh là nhân vật hư cấu.",
+    a: "Bối cảnh Loạn 12 sứ quân và tên các nhân vật lịch sử là lịch sử chung. Tính cách, kỹ năng và lời thoại gán cho họ là hư cấu; các đồng đội đi cùng Đinh Bộ Lĩnh là nhân vật hư cấu.",
   },
   {
     q: "Có những chế độ nào?",
-    a: "Thao Luyện offline, Giao Tranh online, Bình Loạn dẹp 12 sứ quân kèm Tái đấu sứ quân, Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh và Quần Hùng. Thêm nhiệm vụ, điểm danh và bảng xếp hạng.",
+    a: "Thao Luyện không cần mạng, Giao Tranh trực tuyến, Bình Loạn dẹp 12 sứ quân kèm Tái đấu sứ quân, Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh và Quần Hùng. Thêm nhiệm vụ, điểm danh và bảng xếp hạng.",
   },
 ];

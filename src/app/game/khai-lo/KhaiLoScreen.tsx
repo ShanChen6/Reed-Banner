@@ -519,10 +519,10 @@ export default function KhaiLoScreen() {
               <li>Hết khối để xóa là hết màn: mỗi quân còn sót trừ 1 quân lực. Dọn sạch bàn được thưởng điểm theo màn, +5 quân lực và +1 mỗi đạo cụ. Quân lực về 0 là hết ván.</li>
               <li>Màn càng sau càng nhiều hệ (3 lên 6). Mỗi màn được hoàn tác 1 lần.</li>
               <li><b>Lốc Phong</b> xoay 8 ô quanh một tâm; <b>Sấm Sét</b> phá vùng 3×3 (không cộng điểm).</li>
-              <li><b>Cấp tốc</b>: mỗi màn {levelTimeLimit(1)} giây (thêm 15 giây mỗi hệ mới). Hết giờ là hết màn; dọn sạch bàn thì mỗi giây dư được {KL_TIME_BONUS_PER_SECOND} điểm. Đồng hồ dừng khi rời tab.</li>
+              <li><b>Cấp tốc</b>: mỗi màn {levelTimeLimit(1)} giây (thêm 15 giây mỗi hệ mới). Hết giờ là hết màn; dọn sạch bàn thì mỗi giây dư được {KL_TIME_BONUS_PER_SECOND} điểm. Đồng hồ dừng khi rời trang.</li>
             </ul>
           </details>
-          <p className="text-sm text-on-wood-soft">Bản chơi thử offline: chưa có thưởng và bảng xếp hạng. Ván dở và điểm cao nhất mỗi chế độ lưu trên trình duyệt này.</p>
+          <p className="text-sm text-on-wood-soft">Bản chơi thử, không cần mạng: chưa có thưởng và bảng xếp hạng. Ván dở và điểm cao nhất mỗi chế độ lưu trên trình duyệt này.</p>
         </aside>
       </div>
     </Shell>

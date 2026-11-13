@@ -70,7 +70,7 @@ export const COMBO_PASSIVES = {
     value: 0.25,
     targeted: false,
     description:
-      "Đồng đội dùng kỹ năng gây mất HP thực: kỹ năng hồi/cấp Khiên hữu hiệu tiếp theo tăng 25% lượng gốc của các bước hồi/Khiên trực tiếp, trước hệ số Tinh thần của người nhận.",
+      "Đồng đội dùng kỹ năng gây mất máu thực: kỹ năng hồi/cấp Khiên hữu hiệu tiếp theo tăng 25% lượng gốc của các bước hồi/Khiên trực tiếp, trước hệ số Tinh thần của người nhận.",
   },
   phongLenh: {
     id: "phongLenh",
@@ -100,7 +100,7 @@ export const COMBO_PASSIVES = {
     value: 10,
     targeted: false,
     description:
-      "Đồng đội dùng kỹ năng hồi HP thực hoặc Khiên do đồng đội cấp cho người khác đỡ đòn chủ động: kỹ năng tiếp theo giảm 10 năng lượng, không thấp hơn 0.",
+      "Đồng đội dùng kỹ năng hồi máu thực hoặc Khiên do đồng đội cấp cho người khác đỡ đòn chủ động: kỹ năng tiếp theo giảm 10 năng lượng, không thấp hơn 0.",
   },
 } as const satisfies Record<string, ComboPassiveDef>;
 export type ComboPassiveId = keyof typeof COMBO_PASSIVES;

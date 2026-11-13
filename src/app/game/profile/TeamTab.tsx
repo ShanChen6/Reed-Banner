@@ -53,7 +53,7 @@ export default function TeamTab({
           <h2 id="team-title" className="barracks-title flex items-center gap-2 font-serif text-xl font-bold">
             <TeamGlyph className="size-5 text-[var(--frame-gold-hi)]" /> Đội hình 3vs3
           </h2>
-          <p className="text-sm text-[var(--on-wood-soft)]">Chủ tướng luôn ra trận; chọn 2 nhân vật kèm.</p>
+          <p className="text-sm text-[var(--on-wood-soft)]">Chủ tướng luôn ra trận; chọn 2 phó tướng.</p>
         </div>
         <ol className="mt-3 grid gap-3 sm:grid-cols-3">
           {members.map((m, i) => {
@@ -63,7 +63,7 @@ export default function TeamTab({
               <li key={m.id} className={`team-card relative flex flex-col overflow-hidden rounded-lg ${on ? "is-selected" : ""}`}>
                 <div className="relative flex h-44 items-end justify-center overflow-hidden" style={{ background: `radial-gradient(circle at 50% 70%, ${ELEMENT_COLOR[m.element]}88, var(--tone-1b110c) 72%)` }}>
                   <ProfileArt id={m.id} element={m.element} profession={m.profession} className="h-full max-w-full object-contain object-bottom" fallbackClassName="mb-3 size-32" />
-                  <span className="absolute top-2 left-2 rounded bg-black/65 px-2 py-0.5 text-sm font-semibold text-title-on-wood">{i === 0 ? "Chủ tướng" : `Vị trí ${i + 1}`}</span>
+                  <span className="absolute top-2 left-2 rounded bg-black/65 px-2 py-0.5 text-sm font-semibold text-title-on-wood">{i === 0 ? "Chủ tướng" : "Phó tướng"}</span>
                 </div>
                 <div className="flex flex-1 flex-col gap-2 p-2.5">
                   <div className="flex items-baseline justify-between gap-2">
@@ -107,18 +107,18 @@ export default function TeamTab({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Tìm theo tên…"
-              aria-label="Tìm nhân vật kèm theo tên"
+              aria-label="Tìm phó tướng theo tên"
               className="size-full min-h-10 pointer-coarse:min-h-11 bg-transparent pr-2 pl-9 text-[15px] text-on-wood outline-none placeholder:text-on-wood-soft"
             />
           </label>
           <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-md px-3">
-            <ShopGlyph className="size-4" /> Tuyển thêm ở Cửa hàng
+            <ShopGlyph className="size-4" /> Tuyển thêm ở Cửa Hàng
           </SceneLink>
         </div>
         {bench.length === 0 ? (
-          <p className="py-6 text-center text-[15px] text-[var(--on-wood-soft)]">Không tìm thấy nhân vật kèm phù hợp.</p>
+          <p className="py-6 text-center text-[15px] text-[var(--on-wood-soft)]">Không tìm thấy phó tướng phù hợp.</p>
         ) : (
-          <ul aria-label="Nhân vật kèm đã có" className="barracks-scroll mt-3 grid max-h-[28rem] grid-cols-[repeat(auto-fill,minmax(6.5rem,1fr))] gap-2 overflow-y-auto pr-1">
+          <ul aria-label="Phó tướng đã có" className="barracks-scroll mt-3 grid max-h-[28rem] grid-cols-[repeat(auto-fill,minmax(6.5rem,1fr))] gap-2 overflow-y-auto pr-1">
             {bench.map((e) => (
               <li key={e.key} className={busy ? "pointer-events-none opacity-60" : ""}>
                 <HeroCard entry={e} selected={profile.team[slot] === e.id} tabbable onClick={() => place(e.id)} />

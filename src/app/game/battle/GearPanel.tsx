@@ -210,7 +210,7 @@ export default function GearPanel({
       <div
         className="mb-2 flex flex-wrap gap-1"
         role="tablist"
-        aria-label="Nhân vật"
+        aria-label="Tướng quân"
       >
         {teamIds.map((id) => (
           <button
@@ -407,7 +407,7 @@ export default function GearPanel({
       )}
       <p className="mt-2 opacity-60">
         Mỗi món chỉ một người mặc. Vũ khí của Đinh Bộ Lĩnh giữ riêng theo nghề;
-        nhân vật kèm chỉ mặc vũ khí đúng nghề. Ghép cần 3 món cùng ô, cùng hệ,
+        phó tướng chỉ mặc vũ khí đúng nghề. Ghép cần 3 món cùng ô, cùng hệ,
         cùng phẩm (vũ khí cùng nghề).
       </p>
     </section>

@@ -205,7 +205,7 @@ export default function FormationScreen() {
       const r = await startRanked(level);
       setBusy(false);
       if (!r.ok) {
-        setClaimNote(r.status === 403 ? "Chế độ xếp hạng chưa mở." : r.status === 401 ? "Cần đăng nhập để chơi xếp hạng." : "Không mở được ván xếp hạng, thử lại nhé.");
+        setClaimNote(r.status === 403 ? "Chế độ xếp hạng chưa mở." : r.status === 401 ? "Cần đăng nhập để chơi xếp hạng." : "Chưa mở được ván xếp hạng. Xin thử lại.");
         return;
       }
       setClaimNote("");
@@ -241,7 +241,7 @@ export default function FormationScreen() {
       setBusy(false);
       if (!r.ok) {
         if (r.data.view) setRanked(r.data.view);
-        setMessage(r.data.reason ? "Lệnh không hợp lệ." : r.data.error === "conflict" ? "Ván vừa được cập nhật, đã tải lại." : "Không gửi được lệnh, thử lại nhé.");
+        setMessage(r.data.reason ? "Lệnh không hợp lệ." : r.data.error === "conflict" ? "Ván vừa được cập nhật, đã tải lại." : "Lệnh chưa tới nơi. Xin thử lại.");
         return;
       }
       for (const c of cuesForEvents(r.data.events, local.discardHeat)) audio.play(c.id, { rate: c.rate });
@@ -259,7 +259,7 @@ export default function FormationScreen() {
     async (level: string, period: string) => {
       const r = await claimRanked(level, period);
       if (r.ok) audio.play("formation.rank");
-      setClaimNote(r.ok ? `Đã nhận ${r.data.gold} vàng (hạng ${r.data.rank}/${r.data.winners}).` : "Không nhận được thưởng, thử lại sau nhé.");
+      setClaimNote(r.ok ? `Đã nhận ${r.data.gold} vàng (hạng ${r.data.rank}/${r.data.winners}).` : "Chưa nhận được thưởng. Xin thử lại sau.");
       refreshOverview();
     },
     [refreshOverview, audio],
@@ -543,7 +543,7 @@ function Result({ state, best, map, custom, onRestart, onLeave }: { state: Puzzl
     <section role="status" aria-label="Kết quả" className="ui-frame flex flex-col gap-3 p-4">
       <h2 className="font-serif text-2xl font-bold text-title-on-wood">{won ? "Khai thông sa bàn!" : "Trận đồ vỡ"}</h2>
       <p className="text-[15px]">
-        {won ? `Bạn đạt ${state.score} điểm${!custom && state.score >= best ? " (cao nhất từ trước tới nay)" : ""}.` : "Bỏ lệnh quá nhiều lần liên tiếp. Thử lại với seed mới nhé."}
+        {won ? `Bạn đạt ${state.score} điểm${!custom && state.score >= best ? " (cao nhất từ trước tới nay)" : ""}.` : "Bỏ lệnh quá nhiều lần liên tiếp. Xin bày lại ván mới."}
       </p>
       <p className="text-sm text-on-wood-soft">Chế độ chơi thường: không có thưởng và không lên bảng xếp hạng.</p>
       {won && <CompletedMap map={map} />}
