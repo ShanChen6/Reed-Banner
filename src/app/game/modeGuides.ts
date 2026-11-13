@@ -117,11 +117,11 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     ],
     rewards: [
       "Đá Cường Hóa khi lần đầu qua các mốc tầng và theo kỷ lục cuối chu kỳ. Chọn Phúc hoặc hồi phục giữa tầng không cho đá.",
-      "Bảng xếp hạng riêng theo chu kỳ tuần, có thưởng vàng theo hạng cuối kỳ cho tài khoản đã đăng nhập.",
+      "Bảng xếp hạng riêng theo chu kỳ tuần, có thưởng vàng theo hạng cuối kỳ cho tài khoản đã ghi danh.",
     ],
     tips: [
       "Đừng dồn hết sức vào các tầng đầu: tầng sau khó dần và máu không tự đầy lại.",
-      "Cần đăng nhập để chơi và lên bảng.",
+      "Cần trình danh để chơi và lên bảng.",
     ],
   },
   SURVIVAL: {
@@ -145,7 +145,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     ],
     tips: [
       "Xoay người giữa các đợt để tướng yếu có lúc hồi sức.",
-      "Cần đăng nhập để chơi và lên bảng.",
+      "Cần trình danh để chơi và lên bảng.",
     ],
   },
   DAILY: {
@@ -189,7 +189,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Khi Đấu người được mở, bạn chọn Đấu người để đánh trực tiếp 1vs1 với người khác: ai cũng dùng Đinh Bộ Lĩnh, hệ thống ghép người có điểm gần bạn, mỗi lượt 30 giây.",
       "Ở Đấu người, bỏ lượt liên tục là phá trận và không được tính điểm. Mất mạng được tha 3 lần mỗi ngày; mất mạng quá 90 giây thì máy điều khiển tướng của bạn.",
       "Thắng đối thủ mạnh hơn bạn được nhiều điểm hơn, thua đối thủ yếu hơn mất nhiều điểm hơn.",
-      "Cần đăng nhập để chơi và lên bảng.",
+      "Cần trình danh để chơi và lên bảng.",
     ],
   },
   FORMATION: {
@@ -272,7 +272,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     rules: [
       "Chế độ Thường: mỗi lượt chơi tốn một phiếu, nguyên liệu không mất. Có gợi ý, nhưng gợi ý không lộ đủ công thức.",
       "Chế độ Hạng tuần: mỗi lần ghép tiêu nguyên liệu, ghép sai cũng mất, không hoàn lại. Danh sách tướng đề cử đổi theo tuần.",
-      "Cần đăng nhập, khách không chơi được.",
+      "Cần trình danh, khách không chơi được.",
     ],
     rewards: [
       "Mở đủ một bộ tướng thì nhận vàng và huy hiệu. Mở một tướng lẻ không có thành tựu.",
