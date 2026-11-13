@@ -28,6 +28,7 @@ export const NGO_XUONG_XI: WarriorRig = {
     neck: { x: 592, y: 285 },
   },
   blade: [{ x: 318, y: 950 }, { x: 140, y: 1475 }],
+  strikeFx: "goldPlot",
   fxColor: 0xf1d28c,
   // Sải bước đâm kiếm thẳng (đánh thường), dựng kiếm trước ngực, hai ngón chỉ về trước (ra chiêu), tấn rộng kiếm chếch
   // xuống, tay kia vươn xòe (tuyệt chiêu).

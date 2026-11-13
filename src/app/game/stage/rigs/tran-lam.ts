@@ -29,6 +29,7 @@ export const TRAN_LAM: WarriorRig = {
     neck: { x: 352, y: 397 },
   },
   blade: [{ x: 500, y: 955 }, { x: 1010, y: 1265 }],
+  strikeFx: "riverGuard",
   fxColor: 0x7fcaff,
   // Tấn thấp hai tay đẩy đao ngang (đánh thường), dựng đao thẳng trước ngực (ra chiêu), hai tay giơ đao qua đầu trong
   // thế tấn rộng (tuyệt chiêu).

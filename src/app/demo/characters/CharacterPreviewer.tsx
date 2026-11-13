@@ -43,7 +43,7 @@ function CharacterDetails({ character, size }: { character: CharacterPreview; si
           <p className="mt-1 text-xs text-stone-400">Rig trong trận: {bytes(character.rigBytes)} · Tất cả: {bytes(total)}</p>
         </div>
       </header>
-      <RigPreview id={character.id} size={size} onSnapshot={setSnapshot} />
+      <RigPreview id={character.id} element={character.element} profession={character.profession} size={size} onSnapshot={setSnapshot} />
       <section aria-label="Tranh nhân vật" className="space-y-3">
         <h2 className="text-lg font-semibold">Đối chiếu hình ảnh</h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
