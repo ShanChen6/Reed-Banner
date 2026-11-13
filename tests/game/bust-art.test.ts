@@ -27,7 +27,7 @@ describe("Chân dung NPC Bình Loạn", () => {
   });
 
   it("NPC chưa có ảnh thì không có đường dẫn (dùng hình tạm theo nghề)", () => {
-    assert.equal(portraitUrl("phong-chau-vanguard"), null);
+    assert.equal(portraitUrl("khong-co-npc-nay"), null);
   });
 });
 
