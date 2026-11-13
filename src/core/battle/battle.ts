@@ -720,7 +720,13 @@ class Ctx {
 
     this.combo.beginTurn(side);
     if (own.passiveTurns > 0) own.passiveTurns--;
-    if (own.passives) own.passives = own.passives.map((t) => Math.max(0, t - 1));
+    if (own.passives) {
+      own.passives = own.passives.map((t) => Math.max(0, t - 1));
+      // Nộ giữ đầy trong lúc bị động chạy thì kích hoạt lại ngay khi bị động hết.
+      own.fighters.forEach((f, i) => {
+        if (isAlive(f) && own.rages![i]! >= R.RAGE_MAX && own.passives![i] === 0) this.fireRage(side, i, true);
+      });
+    }
 
     const hasBinhLinh = own.fighters.some(
       (f) => isAlive(f) && intrinsicProfession(f) === "binhLinh",
@@ -1337,25 +1343,30 @@ class Ctx {
     const owner = own.fighters[idx]!;
     if (!isAlive(owner)) return;
     const solo = own.rages !== undefined && own.passives !== undefined && fighter !== undefined;
-    if (solo ? own.passives![idx]! > 0 : own.passiveTurns > 0) return;
+    // Nộ riêng vẫn tích khi bị động đang chạy (giữ ở mức đầy, kích hoạt lại ngay khi bị động hết); Nộ chung thì dừng tích.
+    if (!solo && own.passiveTurns > 0) return;
     const total = Math.min(R.RAGE_MAX, (solo ? own.rages![idx]! : own.rage) + amount);
     if (solo) own.rages![idx] = total;
     else own.rage = total;
     this.emit({ type: "rage", side, amount, ...(solo ? { fighter: idx } : {}) });
-    if (total >= R.RAGE_MAX) {
-      // +1 vì lượt đang diễn ra không tính; bị động có hiệu lực 3 lượt tiếp theo của phe.
-      if (solo) {
-        own.rages![idx] = 0;
-        own.passives![idx] = R.PASSIVE_TURNS + 1;
-      } else {
-        own.rage = 0;
-        own.passiveTurns = R.PASSIVE_TURNS + 1;
-      }
-      this.emit({ type: "passive", side, ...(solo ? { fighter: idx } : {}) });
-      if (this.state.audit) this.emit({ type: 'sourceAudit', source: 'rage', phase: 'begin' });
-      try { this.combo.withoutTriggers(() => this.triggerPassive(side, idx)); }
-      finally { if (this.state.audit) this.emit({ type: 'sourceAudit', source: 'rage', phase: 'end' }); }
+    if (total >= R.RAGE_MAX && (!solo || own.passives![idx]! === 0)) this.fireRage(side, idx, solo);
+  }
+
+  /** Nộ đầy: bị động của tướng kích hoạt, Nộ về 0. */
+  private fireRage(side: SideIndex, idx: number, solo: boolean): void {
+    const own = this.state.sides[side];
+    // +1 vì lượt đang diễn ra không tính; bị động có hiệu lực 3 lượt tiếp theo của phe.
+    if (solo) {
+      own.rages![idx] = 0;
+      own.passives![idx] = R.PASSIVE_TURNS + 1;
+    } else {
+      own.rage = 0;
+      own.passiveTurns = R.PASSIVE_TURNS + 1;
     }
+    this.emit({ type: "passive", side, ...(solo ? { fighter: idx } : {}) });
+    if (this.state.audit) this.emit({ type: 'sourceAudit', source: 'rage', phase: 'begin' });
+    try { this.combo.withoutTriggers(() => this.triggerPassive(side, idx)); }
+    finally { if (this.state.audit) this.emit({ type: 'sourceAudit', source: 'rage', phase: 'end' }); }
   }
 
   private triggerPassive(side: SideIndex, owner?: number): void {
