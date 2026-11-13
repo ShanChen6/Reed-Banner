@@ -100,6 +100,7 @@ for (const [name, factory] of stores) {
       assert.notEqual(rec.state.friendly, true);
       assert.deepEqual(rec.state.battle.sides.map((s) => s.fighters.length), [3, 3]);
       assert.equal(rec.state.seats.flat().filter((p) => p !== null).length, 3);
+      assert.deepEqual(rec.state.battle.sides.map((x) => x.rages), [[0, 0, 0], [0, 0, 0]]);
       for (const side of rec.state.battle.sides) assert.equal(new Set(side.fighters.map((f) => f.id)).size, 3);
       for (const u of USERS) assert.equal((await pvpOverview(u, mk(t + 100))).matchId, v.matchId);
       const m = await pvpGetMatch(v.matchId!, "u1", mk(t + 200));

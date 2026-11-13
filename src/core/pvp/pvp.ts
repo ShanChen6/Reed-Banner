@@ -171,6 +171,8 @@ export function createPvpMatch(config: PvpConfig): { state: PvpState; events: Ba
     ],
     seed: config.seed,
     timer: true,
+    // 3vs3: mỗi người chơi có Nộ và bị động riêng cho tướng của mình.
+    ...(format === "team" ? { perFighterRage: true } : {}),
     ...(config.firstSide !== undefined ? { firstSide: config.firstSide } : {}),
     ...(config.now !== undefined ? { now: config.now } : {}),
   });
