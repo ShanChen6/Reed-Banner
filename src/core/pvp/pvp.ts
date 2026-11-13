@@ -60,6 +60,10 @@ export interface PvpConfig {
   readonly aiDifficulty?: Difficulty;
   /** Số lần còn được tha mất kết nối hôm nay của từng người; thiếu thì `PVP_FORGIVE_PER_DAY`. Server giữ và trừ sau trận. */
   readonly forgiveLeft?: Readonly<Record<string, number>>;
+  /** Giao hữu (phòng mời bằng mã): không tính điểm hạng, không có vàng, không tính mùa. */
+  readonly friendly?: boolean;
+  /** Tên hiển thị của từng chỗ ngồi, cùng thứ tự với `sides[].players` (null là AI). */
+  readonly names?: readonly [readonly (string | null)[], readonly (string | null)[]];
 }
 
 export interface PvpPlayerStat {
@@ -92,6 +96,10 @@ export interface PvpState {
   readonly captains: readonly [number, number];
   readonly players: Readonly<Record<string, PvpPlayerStat>>;
   readonly aiDifficulty: Difficulty;
+  /** Giao hữu: không đổi điểm, không có vàng. */
+  readonly friendly: boolean;
+  /** Tên hiển thị của từng chỗ ngồi; null khi không có tên (AI hoặc trận ghép trong hàng đợi). */
+  readonly names: readonly [readonly (string | null)[], readonly (string | null)[]] | null;
   /** Diễn biến gần nhất (sự kiện nhỏ gọn, không có bàn cờ) để mọi người cùng đọc; tối đa `PVP_LOG_SIZE` mục. */
   readonly log: readonly PvpLogEntry[];
   /** Mã của mục nhật ký kế tiếp. */
@@ -181,6 +189,8 @@ export function createPvpMatch(config: PvpConfig): { state: PvpState; events: Ba
       captains: [a.captain, b.captain],
       players,
       aiDifficulty: config.aiDifficulty ?? "hard",
+      friendly: config.friendly ?? false,
+      names: config.names ?? null,
       log: [],
       logNext: 1,
     },

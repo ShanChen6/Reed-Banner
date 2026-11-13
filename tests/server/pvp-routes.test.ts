@@ -3,6 +3,7 @@ import { afterEach, describe, it } from "node:test";
 import { NextRequest } from "next/server";
 import { GET as getOverview, POST as postQueue } from "../../src/app/api/pvp/route";
 import { GET as getMatch, POST as postAction } from "../../src/app/api/pvp/[id]/route";
+import { GET as getRoom, POST as postRoom } from "../../src/app/api/pvp/rooms/route";
 import { pvpEnabled } from "../../src/server/featureFlags";
 
 const saved = process.env.PVP_ENABLED;
@@ -30,6 +31,8 @@ describe("PvP: cờ tính năng và cổng đăng nhập", () => {
       await postQueue(post("/api/pvp", { action: "queue", format: "duel" })),
       await getMatch(req("/api/pvp/m1"), { params }),
       await postAction(post("/api/pvp/m1", { action: { type: "swap", from: { row: 0, col: 0 }, to: { row: 0, col: 1 } } }), { params }),
+      await getRoom(req("/api/pvp/rooms")),
+      await postRoom(post("/api/pvp/rooms", { action: "create" })),
     ]) {
       assert.equal(res.status, 503);
       assert.equal((await res.json()).error, "featureDisabled");
@@ -43,6 +46,8 @@ describe("PvP: cờ tính năng và cổng đăng nhập", () => {
       await postQueue(post("/api/pvp", { action: "queue", format: "duel" })),
       await getMatch(req("/api/pvp/m1"), { params }),
       await postAction(post("/api/pvp/m1", { action: { type: "swap", from: { row: 0, col: 0 }, to: { row: 0, col: 1 } } }), { params }),
+      await getRoom(req("/api/pvp/rooms")),
+      await postRoom(post("/api/pvp/rooms", { action: "create" })),
     ]) {
       assert.equal(res.status, 401);
       assert.equal((await res.json()).error, "loginRequired");

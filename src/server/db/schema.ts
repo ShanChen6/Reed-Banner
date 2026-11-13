@@ -307,3 +307,29 @@ export const pvpPairs = pgTable(
   },
   (t) => [primaryKey({ columns: [t.day, t.ownerId, t.opponentId] })],
 );
+
+/**
+ * Phòng mời bằng mã của Đấu người 3vs3 (giao hữu, không tính điểm). `slots` là sáu chỗ ngồi (0–2 phe một, 3–5 phe hai) gồm người,
+ * tướng đã chọn và nghề, hệ nếu là Đinh Bộ Lĩnh. Ghi kèm điều kiện `seq` như trận.
+ */
+export const pvpRooms = pgTable(
+  "pvp_rooms",
+  {
+    code: text("code").primaryKey(),
+    host: text("host").notNull(),
+    status: text("status").notNull(),
+    slots: jsonb("slots").notNull(),
+    fillAi: boolean("fill_ai").notNull().default(false),
+    matchId: text("match_id"),
+    seq: integer("seq").notNull(),
+    createdAt: bigint("created_at", { mode: "number" }).notNull(),
+    updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+  },
+  (t) => [index("pvp_rooms_updated_idx").on(t.status, t.updatedAt)],
+);
+
+/** Mỗi người chỉ ở một phòng: dòng này chỉ ra phòng đang ở. */
+export const pvpRoomMembers = pgTable("pvp_room_members", {
+  ownerId: text("owner_id").primaryKey(),
+  code: text("code").notNull(),
+});
