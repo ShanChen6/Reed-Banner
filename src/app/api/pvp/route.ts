@@ -41,12 +41,12 @@ export async function POST(request: NextRequest) {
   if (!sameOrigin(request)) return NextResponse.json({ error: "badRequest" }, { status: 403, headers: noStore });
   const who = await owner(request);
   if (typeof who !== "string") return who;
-  const body = (await readJson(request)) as { action?: unknown; format?: unknown; element?: unknown; profession?: unknown; hero?: unknown } | null;
+  const body = (await readJson(request)) as { action?: unknown; format?: unknown; element?: unknown; profession?: unknown } | null;
   const d = deps();
   if (body?.action === "leave") {
     await pvpLeaveQueue(who, d);
   } else if (body?.action === "queue") {
-    const r = await pvpEnqueue(who, body.format as "duel" | "team", d, { element: body.element, profession: body.profession, hero: body.hero });
+    const r = await pvpEnqueue(who, body.format as "duel" | "team", d, { element: body.element, profession: body.profession });
     if (!r.ok)
       return NextResponse.json({ error: r.error, ...(r.until ? { until: r.until } : {}) }, { status: r.error === "inMatch" ? 409 : r.error === "banned" ? 403 : 400, headers: noStore });
   } else {

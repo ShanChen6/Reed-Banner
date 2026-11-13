@@ -2,10 +2,10 @@
 // (ghép trận, ghi trận, tính điểm) đều là một câu lệnh có điều kiện.
 
 import { and, asc, eq, gte, inArray, isNull, sql } from "drizzle-orm";
-import type { PvpFormat, PvpPlayerResult, PvpState } from "@/core";
+import type { PvpDraft, PvpFormat, PvpPlayerResult, PvpState } from "@/core";
 import { PVP_ELO_START } from "@/core";
-import type { PvpMatchRecord, PvpMatchStatus, PvpQueueRow, PvpRatingRow, PvpResultInput, PvpSettled, PvpStore } from "../pvp";
-import { pvpDaily, pvpMatches, pvpPairs, pvpQueue, pvpRatings, pvpRoomMembers, pvpRooms } from "./schema";
+import type { PvpDraftRecord, PvpDraftStatus, PvpMatchRecord, PvpMatchStatus, PvpQueueRow, PvpRatingRow, PvpResultInput, PvpSettled, PvpStore } from "../pvp";
+import { pvpDaily, pvpDrafts, pvpMatches, pvpPairs, pvpQueue, pvpRatings, pvpRoomMembers, pvpRooms } from "./schema";
 import type { PvpRoomRecord, PvpRoomSlot, PvpRoomStatus } from "../pvpRooms";
 import type { Db } from "./store";
 
@@ -67,7 +67,7 @@ export class DrizzlePvpStore implements PvpStore {
       .values({ ...row, matchId: null })
       .onConflictDoUpdate({
         target: pvpQueue.ownerId,
-        set: { format: row.format, rating: row.rating, enqueuedAt: row.enqueuedAt, lastSeen: row.lastSeen, matchId: null, hero: row.hero },
+        set: { format: row.format, rating: row.rating, enqueuedAt: row.enqueuedAt, lastSeen: row.lastSeen, matchId: null },
       });
   }
 
@@ -132,6 +132,24 @@ export class DrizzlePvpStore implements PvpStore {
       .set({ state: r.state, seq: r.seq, status: r.status, updatedAt: r.updatedAt })
       .where(and(eq(pvpMatches.id, r.id), eq(pvpMatches.seq, expectedSeq)))
       .returning({ id: pvpMatches.id });
+    return rows.length === 1;
+  }
+
+  async createDraft(r: PvpDraftRecord): Promise<void> {
+    await this.db.insert(pvpDrafts).values({ id: r.id, state: r.state, seq: r.seq, status: r.status, owners: r.owners, matchId: r.matchId, createdAt: r.createdAt, updatedAt: r.updatedAt });
+  }
+
+  async getDraft(id: string): Promise<PvpDraftRecord | null> {
+    const [r] = await this.db.select().from(pvpDrafts).where(eq(pvpDrafts.id, id)).limit(1);
+    return r ? { id: r.id, state: r.state as PvpDraft, seq: r.seq, status: r.status as PvpDraftStatus, owners: r.owners as string[], matchId: r.matchId, createdAt: r.createdAt, updatedAt: r.updatedAt } : null;
+  }
+
+  async saveDraft(r: PvpDraftRecord, expectedSeq: number): Promise<boolean> {
+    const rows = await this.db
+      .update(pvpDrafts)
+      .set({ state: r.state, seq: r.seq, status: r.status, matchId: r.matchId, updatedAt: r.updatedAt })
+      .where(and(eq(pvpDrafts.id, r.id), eq(pvpDrafts.seq, expectedSeq)))
+      .returning({ id: pvpDrafts.id });
     return rows.length === 1;
   }
 
