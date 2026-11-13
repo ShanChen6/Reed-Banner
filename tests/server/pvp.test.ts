@@ -328,6 +328,39 @@ for (const [name, factory] of stores) {
       assert.equal((await claimRankReward(deps, winner, "pvp", week)).ok, false);
     });
 
+    it("nhật ký diễn biến: người xem thấy sự kiện của cả hai phía, kể cả nước đi của đối thủ", async () => {
+      const { mk, pvp } = await setup();
+      const id = await pair(mk);
+      const rec = (await pvp.getMatch(id))!;
+      const first = pvpActorOwner(rec.state) as string;
+      const other = first === "a" ? "b" : "a";
+      const m = chooseMove(toView(rec.state.battle), "normal", createRng(rec.state.battle.aiRng));
+      const r = await pvpPlay(id, first, { type: "swap", from: m.from, to: m.to }, mk(T0 + 1000));
+      assert.ok(r.ok);
+      const seen = await pvpGetMatch(id, other, mk(T0 + 1500));
+      assert.ok(seen.ok);
+      if (!seen.ok) return;
+      assert.ok(seen.view.log.length > 0, "người kia thấy nhật ký");
+      assert.ok(seen.view.log.every((e) => e.event.type !== "swap" && e.event.type !== "shuffle"));
+      assert.deepEqual(seen.view.log.map((e) => e.id), [...seen.view.log.map((e) => e.id)].sort((x, y) => x - y));
+    });
+
+    it("chọn nghề và hệ trước khi vào hàng đợi: lưu vào hồ sơ và mang vào trận; giá trị lạ bị từ chối", async () => {
+      const { mk, pvp, profiles } = await setup();
+      assert.deepEqual(await pvpEnqueue("a", "duel", mk(T0), { element: "xyz", profession: "tuongSi" }), { ok: false, error: "badBuild" });
+      assert.deepEqual(await pvpEnqueue("a", "duel", mk(T0), { element: "loi", profession: "phapSu" }), { ok: true });
+      assert.deepEqual((await pvpOverview("a", mk(T0 + 100))).build, { element: "loi", profession: "phapSu" });
+      assert.equal((await loadProfile(profiles, "a")).profile.element, "loi");
+      await pvpEnqueue("b", "duel", mk(T0 + 200), { element: "thuy", profession: "yu" as never }).catch(() => null);
+      await pvpEnqueue("b", "duel", mk(T0 + 300), { element: "thuy", profession: "ySu" });
+      await pvpOverview("a", mk(T0 + 400));
+      const id = (await pvpOverview("b", mk(T0 + 500))).matchId ?? (await pvpOverview("a", mk(T0 + 600))).matchId;
+      assert.ok(id);
+      const rec = (await pvp.getMatch(id!))!;
+      const fighters = rec.state.battle.sides.map((sd) => `${sd.fighters[0]!.element}/${sd.fighters[0]!.profession}`).sort();
+      assert.deepEqual(fighters, ["loi/phapSu", "thuy/ySu"]);
+    });
+
     it("phá trận: lần đầu trong tuần cảnh cáo, lần hai bị hạn chế ghép trận và không vào hàng đợi được tới khi hết hạn", async () => {
       const { mk, pvp } = await setup();
       const id1 = await pair(mk, "a", "b", T0);

@@ -12,10 +12,15 @@ import {
   isAdjacent,
   isWhirlCenter,
   needsCell,
+  ELEMENTS,
   PASSIVE,
+  PROFESSIONS,
   skillTargetOptions,
   whirlStep,
   type BattleAction,
+  type BattleEvent,
+  type Element,
+  type Profession,
   type BattleState,
   type Fighter,
   type Pos,
@@ -29,6 +34,7 @@ import { ElementIcon } from "../art/icons";
 import { TileArt } from "../art/tiles";
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { SeasonBoardPanel } from "../leaderboard/boards";
+import { describe } from "../battle/battleLog";
 import { ELEMENT_NAME, EFFECT_NAME, ERROR_TEXT, PROFESSION_NAME, skillText } from "../battle/labels";
 
 const POLL_MS = 1500;
@@ -86,6 +92,8 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [matchId, setMatchId] = useState<string | null>(null);
+  /** Nghề và hệ chọn cho trận kế tiếp; chưa chọn thì lấy theo hồ sơ. */
+  const [pick, setPick] = useState<{ element?: Element; profession?: Profession }>({});
 
   const refresh = useCallback(async () => {
     const r = await call("/api/pvp");
@@ -110,7 +118,7 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
 
   const queue = async () => {
     setBusy(true);
-    const r = await call("/api/pvp", { action: "queue", format: "duel" });
+    const r = await call("/api/pvp", { action: "queue", format: "duel", element: pick.element ?? overview?.build.element, profession: pick.profession ?? overview?.build.profession });
     setBusy(false);
     if (r.status === 200) {
       setMessage("");
@@ -181,6 +189,42 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
           </Button>
         </div>
       ) : (
+        <div className="flex flex-col gap-3">
+          {o && (
+            <div className="flex flex-wrap items-end gap-3" role="group" aria-label="Chuẩn bị Đinh Bộ Lĩnh">
+              <label className="flex flex-col gap-1 text-sm text-on-wood-soft">
+                Nghề
+                <select
+                  className="min-h-11 rounded-control border border-frame-line bg-wood-inset px-3 text-on-wood"
+                  value={pick.profession ?? o.build.profession}
+                  onChange={(e) => setPick((p) => ({ ...p, profession: e.target.value as Profession }))}
+                >
+                  {PROFESSIONS.map((x) => (
+                    <option key={x} value={x}>
+                      {PROFESSION_NAME[x as keyof typeof PROFESSION_NAME] ?? x}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="flex flex-col gap-1 text-sm text-on-wood-soft">
+                Hệ
+                <select
+                  className="min-h-11 rounded-control border border-frame-line bg-wood-inset px-3 text-on-wood"
+                  value={pick.element ?? o.build.element}
+                  onChange={(e) => setPick((p) => ({ ...p, element: e.target.value as Element }))}
+                >
+                  {ELEMENTS.map((x) => (
+                    <option key={x} value={x}>
+                      {ELEMENT_NAME[x]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <p className="text-sm text-on-wood-soft">
+                Cấp và trang bị theo Doanh Trại. Nghề và hệ khóa khi vào trận.
+              </p>
+            </div>
+          )}
         <div className="flex flex-wrap items-center gap-3">
           <Button size="lg" disabled={busy || !o || !!o.banUntil} onClick={() => void queue()}>
             Tìm đối thủ
@@ -188,6 +232,7 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
           <p className="text-sm text-on-wood-soft">
             Mỗi lượt 30 giây. Bỏ lượt liên tục là phá trận và không được tính điểm; mất mạng được tha 3 lần mỗi ngày.
           </p>
+        </div>
         </div>
       )}
     </OrnateFrame>
@@ -199,6 +244,15 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+/** Đổi chỗ hai phe để người xem luôn là phe 0 ("bạn"): đảo mọi chỉ số phe trong trạng thái và sự kiện. */
+const flip = <T,>(v: T): T => JSON.parse(JSON.stringify(v), (k, x) => ((k === "side" || k === "winner") && (x === 0 || x === 1) ? 1 - x : x)) as T;
+
+function asMine(state: BattleState, mySide: 0 | 1): BattleState {
+  if (mySide === 0) return state;
+  const f = flip(state);
+  return { ...f, sides: [f.sides[1], f.sides[0]], lastActors: [f.lastActors[1], f.lastActors[0]] } as BattleState;
+}
+
 const toState = (v: PvpMatchView): BattleState => ({ ...v.battle, boardRng: 0, aiRng: 0 }) as BattleState;
 
 function Bar({ value, max, label, tone }: { value: number; max: number; label: string; tone: "hp" | "energy" | "rage" }) {
@@ -208,7 +262,7 @@ function Bar({ value, max, label, tone }: { value: number; max: number; label: s
     <div className="flex items-center gap-2 text-caption">
       <span className="w-14 shrink-0 text-on-wood-soft">{label}</span>
       <div className="h-2.5 flex-1 overflow-hidden rounded bg-wood-inset" role="meter" aria-label={label} aria-valuemin={0} aria-valuemax={max} aria-valuenow={value}>
-        <div className={`h-full ${color}`} style={{ width: `${pct}%` }} />
+        <div className={`h-full ${color} transition-[width] duration-500 motion-reduce:transition-none`} style={{ width: `${pct}%` }} />
       </div>
       <span className="w-16 shrink-0 text-right tabular-nums">
         {Math.round(value)}/{Math.round(max)}
@@ -288,6 +342,19 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
   }, []);
 
   const state = useMemo(() => (view ? toState(view) : null), [view]);
+  /** Nhật ký diễn biến theo góc nhìn của bạn, mới nhất trước. */
+  const lines = useMemo(() => {
+    if (!view || !state) return [];
+    // Hai bên đều là Đinh Bộ Lĩnh nên nhật ký gọi theo phe: "Bạn" và "Đối thủ".
+    const base = asMine(state, view.you.side);
+    const mine = { ...base, sides: base.sides.map((sd, i) => ({ ...sd, fighters: sd.fighters.map((f) => ({ ...f, name: i === 0 ? "Bạn" : "Đối thủ" })) })) } as unknown as BattleState;
+    return view.log
+      .slice(-30)
+      .map((entry) => ({ id: entry.id, text: describe(mine, view.you.side === 0 ? entry.event : flip<BattleEvent>(entry.event)) }))
+      .filter((l): l is { id: number; text: string } => !!l.text)
+      .reverse()
+      .slice(0, 14);
+  }, [view, state]);
   const mySide = view?.you.side ?? 0;
   const foeSide = (1 - mySide) as 0 | 1;
   const myTurn = !!view && view.status === "active" && view.clock.mine && !view.you.left;
@@ -454,6 +521,16 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
 
         <FighterPanel f={own.fighters[0] as Fighter} rage={own.rage} mine active={myTurn} />
 
+        {lines.length > 0 && (
+          <FrameInset className="flex flex-col gap-1 p-3">
+            <h3 className="text-sm font-bold text-frame-gold">Diễn biến</h3>
+            <ol className="flex flex-col gap-0.5 text-caption text-on-wood-soft" aria-label="Diễn biến trận">
+              {lines.map((l) => (
+                <li key={l.id}>{l.text}</li>
+              ))}
+            </ol>
+          </FrameInset>
+        )}
         {aim?.choose && targetNames && (
           <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Chọn mục tiêu">
             <span className="text-sm text-on-wood-soft">Chọn mục tiêu:</span>

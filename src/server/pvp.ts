@@ -21,6 +21,11 @@ import {
   pvpFirstSide,
   pvpHasHumans,
   pvpHeartbeat,
+  pvpLogAppend,
+  PROFESSIONS,
+  ELEMENTS,
+  type Element,
+  type Profession,
   pvpSettle,
   pvpTakeover,
   pvpTimeout,
@@ -293,15 +298,29 @@ export function pvpMatchWindow(waitedMs: number): number {
   return PVP_MATCH_WINDOW + Math.floor(Math.max(0, waitedMs) / PVP_MATCH_WINDOW_EVERY_MS) * PVP_MATCH_WINDOW_STEP;
 }
 
-export type PvpQueueError = "badFormat" | "inMatch" | "banned";
+export type PvpQueueError = "badFormat" | "inMatch" | "banned" | "badBuild";
+
+/** Nghề và hệ Đinh Bộ Lĩnh mang vào trận 1vs1. */
+export interface PvpBuild {
+  readonly element: Element;
+  readonly profession: Profession;
+}
 
 /** Vào hàng đợi. Đang có trận dở thì không vào được (hết hạn tự đóng khi trận chạy bù tới lúc xong). */
 export async function pvpEnqueue(
   ownerId: string,
   format: PvpFormat,
   deps: PvpDeps,
+  build?: { readonly element?: unknown; readonly profession?: unknown },
 ): Promise<{ ok: true } | { ok: false; error: PvpQueueError; until?: number }> {
   if (!PVP_FORMATS.includes(format)) return { ok: false, error: "badFormat" };
+  // Chọn nghề và hệ trước khi vào hàng đợi: lưu vào hồ sơ như Giao Tranh, trận dựng theo hồ sơ lúc ghép được.
+  if (build && (build.element !== undefined || build.profession !== undefined)) {
+    const el = build.element;
+    const pr = build.profession;
+    if (!ELEMENTS.includes(el as Element) || !PROFESSIONS.includes(pr as Profession)) return { ok: false, error: "badBuild" };
+    await updateProfile(deps.profiles, ownerId, (p) => ({ ok: true, profile: { ...p, element: el as Element, profession: pr as Profession } }), deps.now);
+  }
   const own = await deps.pvp.rating(ownerId, format);
   if (own.banUntil > deps.now) return { ok: false, error: "banned", until: own.banUntil };
   const cur = await deps.pvp.queueOf(ownerId);
@@ -383,6 +402,8 @@ export interface PvpOverview {
   readonly matchId: string | null;
   /** Số lần còn được tha mất kết nối hôm nay (thể thức 1vs1). */
   readonly forgiveLeft: number;
+  /** Nghề và hệ Đinh Bộ Lĩnh trong hồ sơ, sẽ mang vào trận kế tiếp. */
+  readonly build: PvpBuild;
   /** Vàng PvP còn nhận được hôm nay (trần mỗi ngày trừ số đã nhận); số trận không giới hạn. */
   readonly goldLeft: number;
   /** Số lần bị tính phá trận trong tuần này. */
@@ -410,7 +431,9 @@ export async function pvpOverview(ownerId: string, deps: PvpDeps): Promise<PvpOv
   const r = await deps.pvp.rating(ownerId, "duel");
   const day = vnDay(deps.now);
   const gold = await deps.pvp.goldToday(ownerId, day);
+  const { profile } = await loadProfile(deps.profiles, ownerId);
   return {
+    build: { element: profile.element, profession: profile.profession },
     goldLeft: Math.max(0, PVP_GOLD_DAILY_CAP - gold),
     breakCount: r.breakWeek === vnWeek(deps.now) ? r.breakCount : 0,
     banUntil: r.banUntil > deps.now ? r.banUntil : null,
@@ -483,6 +506,8 @@ export interface PvpMatchView {
   readonly seats: readonly { readonly side: 0 | 1; readonly position: number; readonly mine: boolean; readonly ai: boolean }[];
   readonly clock: { readonly side: 0 | 1; readonly actor: number; readonly mine: boolean; readonly deadline: number | null; readonly remainingMs: number | null };
   readonly battle: Omit<PvpState["battle"], "boardRng" | "aiRng">;
+  /** Diễn biến gần nhất (tối đa 80 mục), mã tăng dần để client bỏ mục đã đọc. */
+  readonly log: PvpState["log"];
   readonly winner: 0 | 1 | null;
   /** Kết quả điểm sau trận, chỉ của chính người hỏi. */
   readonly result: PvpSettled | null;
@@ -514,6 +539,7 @@ function viewOf(rec: PvpMatchRecord, owner: string, now: number): PvpMatchView {
     ),
     clock: { side: clock.side, actor: clock.actor, mine: clock.player === owner, deadline: clock.deadline, remainingMs: clock.remainingMs },
     battle,
+    log: rec.state.log,
     winner: rec.state.battle.winner,
     result: rec.results?.find((r) => r.player === owner) ?? null,
   };
@@ -594,7 +620,7 @@ async function withMatch(
     let status = rec.status;
     if (status === "active") {
       const caught = pvpCatchUp(state, deps.now);
-      state = caught.state;
+      state = pvpLogAppend(caught.state, caught.events);
       events.push(...caught.events);
       // Tín hiệu của người hỏi tính sau khi đã chạy bù, để lượt mất kết nối đã qua không bị che.
       const hb = pvpHeartbeat(state, owner, deps.now);
@@ -607,7 +633,7 @@ async function withMatch(
           await deps.pvp.saveMatch({ ...rec, state, status, seq: rec.seq + 1, updatedAt: deps.now }, rec.seq);
           return { ok: false, error: r.error, ...(r.detail ? { detail: r.detail } : {}) };
         }
-        state = r.state;
+        state = pvpLogAppend(r.state, r.events);
         events.push(...r.events);
       } else if (apply) {
         return { ok: false, error: "battleOver" };

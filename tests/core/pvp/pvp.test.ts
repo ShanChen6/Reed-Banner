@@ -6,6 +6,8 @@ import { STARTER_COMPANIONS, mainCharacter, SHOP_COMPANIONS } from "../../../src
 import { createRng } from "../../../src/core/rng";
 import {
   PVP_AI_FACTOR_MIN,
+  PVP_LOG_SIZE,
+  pvpLogAppend,
   PVP_BAN_BASE_MS,
   PVP_BAN_MAX_MS,
   PVP_GOLD_DAILY_CAP,
@@ -528,5 +530,20 @@ describe("PvP: vàng và hạn chế ghép trận", () => {
     assert.equal(pvpBanMs(3), PVP_BAN_BASE_MS * 2);
     assert.equal(pvpBanMs(30), PVP_BAN_MAX_MS);
     assert.throws(() => pvpBanMs(0), RangeError);
+  });
+});
+
+describe("PvP: nhật ký diễn biến", () => {
+  it("chỉ giữ sự kiện nhỏ gọn, mã tăng dần, tối đa PVP_LOG_SIZE mục mới nhất", () => {
+    let s = createPvpMatch(duel()).state;
+    assert.deepEqual([s.log.length, s.logNext], [0, 1]);
+    const damage = { type: "damage", side: 1, fighter: 0, amount: 5, absorbed: 0, source: { kind: "swap" } } as never;
+    const heavy = { type: "shuffle", board: s.battle.board } as never;
+    s = pvpLogAppend(s, [heavy, damage]);
+    assert.deepEqual(s.log.map((e) => e.event.type), ["damage"]);
+    for (let i = 0; i < PVP_LOG_SIZE + 20; i++) s = pvpLogAppend(s, [damage]);
+    assert.equal(s.log.length, PVP_LOG_SIZE);
+    assert.equal(s.log.at(-1)?.id, s.logNext - 1);
+    assert.equal(pvpLogAppend(s, [heavy]), s);
   });
 });

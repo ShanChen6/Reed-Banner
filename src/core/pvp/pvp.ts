@@ -31,6 +31,12 @@ export const PVP_FORGIVE_PER_DAY = 3;
 
 export type PvpFormat = "duel" | "team";
 
+/** Số mục nhật ký giữ lại trong trận. */
+export const PVP_LOG_SIZE = 80;
+
+/** Sự kiện nào đáng đưa vào nhật ký: bỏ các sự kiện mang cả bàn cờ hoặc chỉ để kiểm tra. */
+const LOGGED: ReadonlySet<BattleEvent["type"]> = new Set(["turnStart", "skill", "whirl", "damage", "heal", "ko", "passive", "timeout", "frozenSkip", "chase", "combo", "end"]);
+
 /** Người ngồi ở một tướng: id tài khoản, hoặc null là AI điền chỗ trống. */
 export type PvpPlayerId = string | null;
 
@@ -86,6 +92,15 @@ export interface PvpState {
   readonly captains: readonly [number, number];
   readonly players: Readonly<Record<string, PvpPlayerStat>>;
   readonly aiDifficulty: Difficulty;
+  /** Diễn biến gần nhất (sự kiện nhỏ gọn, không có bàn cờ) để mọi người cùng đọc; tối đa `PVP_LOG_SIZE` mục. */
+  readonly log: readonly PvpLogEntry[];
+  /** Mã của mục nhật ký kế tiếp. */
+  readonly logNext: number;
+}
+
+export interface PvpLogEntry {
+  readonly id: number;
+  readonly event: BattleEvent;
 }
 
 export type PvpError =
@@ -166,9 +181,20 @@ export function createPvpMatch(config: PvpConfig): { state: PvpState; events: Ba
       captains: [a.captain, b.captain],
       players,
       aiDifficulty: config.aiDifficulty ?? "hard",
+      log: [],
+      logNext: 1,
     },
     events,
   };
+}
+
+/** Thêm sự kiện của một lần ra tay (hoặc chạy bù) vào nhật ký trận; chỉ giữ các sự kiện nhỏ gọn, tối đa `PVP_LOG_SIZE` mục mới nhất. */
+export function pvpLogAppend(state: PvpState, events: readonly BattleEvent[]): PvpState {
+  const fresh = events.filter((e) => LOGGED.has(e.type));
+  if (fresh.length === 0) return state;
+  let id = state.logNext;
+  const added = fresh.map((event) => ({ id: id++, event }));
+  return { ...state, log: [...state.log, ...added].slice(-PVP_LOG_SIZE), logNext: id };
 }
 
 /** Phe đi trước: phe điểm trung bình thấp hơn; hòa điểm thì bốc theo `rng`. */
