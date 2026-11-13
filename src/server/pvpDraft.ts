@@ -6,25 +6,32 @@ import {
   companionById,
   draftBan,
   draftCatchUp,
+  draftBeginPrep,
   draftChoices,
   draftOver,
+  draftPrepDone,
+  draftPrepReady,
+  draftPrepSwap,
   draftPick,
   draftStep,
   vnDay,
   type DraftBan,
   type DraftError,
   type DraftHero,
+  type LineupSlot,
   type Element,
   type Profession,
   type PvpDraft,
   type SideIndex,
 } from "@/core";
 import type { PvpDeps, PvpDraftRecord, PvpDraftStatus } from "./pvp";
-import { buildTeamMatch } from "./pvpTeam";
+import { buildTeamMatch, draftFillers } from "./pvpTeam";
 
 export type PvpDraftAction =
   | { readonly type: "ban"; readonly ban: DraftBan }
-  | { readonly type: "pick"; readonly hero: string; readonly element?: Element; readonly profession?: Profession };
+  | { readonly type: "pick"; readonly hero: string; readonly element?: Element; readonly profession?: Profession }
+  | { readonly type: "swap"; readonly a: number; readonly b: number }
+  | { readonly type: "ready" };
 
 export interface PvpDraftView {
   readonly id: string;
@@ -42,6 +49,17 @@ export interface PvpDraftView {
   readonly picks: readonly { readonly side: SideIndex; readonly owner: string; readonly name: string; readonly hero: DraftHero }[];
   /** Tướng còn cấm được (chưa bị cấm). */
   readonly roster: readonly { readonly id: string; readonly name: string }[];
+  /** Màn chuẩn bị (status "prep"): đội hình của phe người xem theo vị trí 1, 2, 3, tướng phe kia, ai đã sẵn sàng. */
+  readonly prep: {
+    readonly deadline: number;
+    readonly remainingMs: number;
+    readonly captain: boolean;
+    readonly captainName: string;
+    readonly youReady: boolean;
+    readonly readyNames: readonly string[];
+    readonly lineup: readonly { readonly name: string | null; readonly mine: boolean; readonly hero: DraftHero }[];
+    readonly foes: readonly { readonly name: string | null; readonly hero: DraftHero }[];
+  } | null;
   /** Tướng của người xem và lý do chưa chọn được. */
   readonly choices: readonly { readonly hero: DraftHero; readonly error: DraftError | null }[];
   readonly serverNow: number;
@@ -79,6 +97,18 @@ function viewOf(rec: PvpDraftRecord, owner: string, now: number): PvpDraftView {
     })),
     picks: d.picks.map((p) => ({ side: p.side, owner: p.owner, name: nameOf(p.owner), hero: p.hero })),
     roster: d.roster.filter((id) => !d.bans.some((b) => b.ban.kind === "hero" && b.ban.id === id)).map((id) => ({ id, name: heroName(id) })),
+    prep: d.prep
+      ? {
+          deadline: d.prep.deadline,
+          remainingMs: Math.max(0, d.prep.deadline - now),
+          captain: d.humans[mySide][0] === owner,
+          captainName: nameOf(d.humans[mySide][0] as string),
+          youReady: d.prep.ready.includes(owner),
+          readyNames: d.prep.ready.map(nameOf),
+          lineup: d.prep.lineup[mySide].map((s: LineupSlot) => ({ name: s.owner === null ? null : nameOf(s.owner), mine: s.owner === owner, hero: s.hero })),
+          foes: d.prep.lineup[(1 - mySide) as SideIndex].map((s: LineupSlot) => ({ name: s.owner === null ? null : nameOf(s.owner), hero: s.hero })),
+        }
+      : null,
     choices: draftChoices(d, owner),
     serverNow: now,
   };
@@ -95,15 +125,18 @@ async function withDraft(
   for (let attempt = 0; attempt < MAX_TRIES; attempt++) {
     const rec = await deps.pvp.getDraft(id);
     if (!rec || !rec.owners.includes(owner)) return { ok: false, error: "notFound" };
-    if (rec.status !== "active") return { ok: true, view: viewOf(rec, owner, deps.now) };
+    if (rec.status === "done" || rec.status === "abandoned") return { ok: true, view: viewOf(rec, owner, deps.now) };
     let state = draftCatchUp(rec.state, deps.now);
     let error: DraftError | null = null;
-    if (apply && !draftOver(state)) {
+    if (apply) {
       const r = apply(state);
       if (r.ok) state = r.draft;
       else error = r.error;
     }
-    if (draftOver(state)) {
+    // Cấm chọn xong thì sang màn chuẩn bị: máy điền chỗ trống, đội hình theo thứ tự ghế, đội trưởng xếp lại.
+    if (draftOver(state) && !state.prep) state = draftBeginPrep(state, draftFillers(state), state.deadline ?? deps.now);
+    const status: PvpDraftRecord["status"] = state.prep ? "prep" : "active";
+    if (draftPrepDone(state, deps.now)) {
       const day = vnDay(deps.now);
       const match = await buildTeamMatch({ ...rec, state }, deps, async (o) => {
         const r = await deps.pvp.rating(o, "team");
@@ -120,8 +153,8 @@ async function withDraft(
       return error ? { ok: false, error } : { ok: true, view: viewOf(next, owner, deps.now) };
     }
     let cur = rec;
-    if (state !== rec.state) {
-      const next: PvpDraftRecord = { ...rec, state, seq: rec.seq + 1, updatedAt: deps.now };
+    if (state !== rec.state || status !== rec.status) {
+      const next: PvpDraftRecord = { ...rec, state, status, seq: rec.seq + 1, updatedAt: deps.now };
       if (!(await deps.pvp.saveDraft(next, rec.seq))) continue;
       cur = next;
     }
@@ -133,9 +166,16 @@ async function withDraft(
 export const pvpDraftGet = (id: string, owner: string, deps: PvpDeps) => withDraft(id, owner, deps, null);
 
 export function pvpDraftPlay(id: string, owner: string, action: PvpDraftAction, deps: PvpDeps): Promise<PvpDraftResult> {
-  return withDraft(id, owner, deps, (d) =>
-    action.type === "ban"
-      ? draftBan(d, owner, action.ban, deps.now)
-      : draftPick(d, owner, { hero: action.hero, ...(action.element ? { element: action.element } : {}), ...(action.profession ? { profession: action.profession } : {}) }, deps.now),
-  );
+  return withDraft(id, owner, deps, (d) => {
+    switch (action.type) {
+      case "ban":
+        return draftBan(d, owner, action.ban, deps.now);
+      case "pick":
+        return draftPick(d, owner, { hero: action.hero, ...(action.element ? { element: action.element } : {}), ...(action.profession ? { profession: action.profession } : {}) }, deps.now);
+      case "swap":
+        return draftPrepSwap(d, owner, action.a, action.b);
+      case "ready":
+        return draftPrepReady(d, owner);
+    }
+  });
 }

@@ -1,5 +1,6 @@
 // GET /api/pvp/draft/:id: phiên cấm chọn 3vs3 xếp hạng sau khi chạy bù các lượt quá hạn; xong thì có `matchId` của trận.
-// POST /api/pvp/draft/:id `{ type: "ban", ban: { kind, id | value } } | { type: "pick", hero, element?, profession? }`.
+// POST /api/pvp/draft/:id `{ type: "ban", ban: { kind, id | value } } | { type: "pick", hero, element?, profession? }`;
+// khi chuẩn bị: `{ type: "swap", a, b }` (đội trưởng đổi chỗ hai vị trí) và `{ type: "ready" }`.
 // Chỉ người đang tới lượt làm được; hết giờ máy tự cấm ngẫu nhiên hoặc chọn thay.
 
 import { randomInt, randomUUID } from "node:crypto";
@@ -41,6 +42,8 @@ function parse(body: unknown): PvpDraftAction | null {
       ...(PROFESSIONS.includes(b.profession as Profession) ? { profession: b.profession as Profession } : {}),
     };
   }
+  if (b.type === "ready") return { type: "ready" };
+  if (b.type === "swap" && Number.isInteger(b.a) && Number.isInteger(b.b)) return { type: "swap", a: b.a as number, b: b.b as number };
   if (b.type === "ban" && typeof b.ban === "object" && b.ban !== null) {
     const ban = b.ban as Record<string, unknown>;
     if (ban.kind === "hero" && typeof ban.id === "string") return { type: "ban", ban: { kind: "hero", id: ban.id } satisfies DraftBan };

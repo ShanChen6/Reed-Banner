@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { MAIN_ID, PVP_DRAFT_TURN_MS, createDraft, draftBan, draftCatchUp, draftOver, draftPick, draftStep, type DraftHero, type PvpDraft } from "../../../src/core";
+import { MAIN_ID, PVP_DRAFT_TURN_MS, PVP_PREP_MS, createDraft, draftBeginPrep, draftPrepDone, draftPrepReady, draftPrepSwap, draftBan, draftCatchUp, draftOver, draftPick, draftStep, type DraftHero, type PvpDraft } from "../../../src/core";
 
 const T0 = 1_000_000;
 const hero = (id: string, level = 3, element: DraftHero["element"] = "kim", profession: DraftHero["profession"] = "tuongSi"): DraftHero => ({ id, name: id, level, element, profession });
@@ -73,5 +73,30 @@ describe("PvP cấm chọn", () => {
   it("chưa hết giờ thì chạy bù không đổi gì", () => {
     const d = make();
     assert.equal(draftCatchUp(d, T0 + PVP_DRAFT_TURN_MS - 1), d);
+  });
+
+  it("chuẩn bị: đội hình theo ghế rồi tướng máy; chỉ đội trưởng đổi chỗ; sẵn sàng hết hoặc hết giờ thì xong", () => {
+    const done = draftCatchUp(make(), T0 + 20 * PVP_DRAFT_TURN_MS);
+    const filler = hero("f1", 3);
+    const fillers = [[filler, filler, filler].slice(0, 3 - done.picks.filter((p) => p.side === 0).length), [filler, filler, filler].slice(0, 3 - done.picks.filter((p) => p.side === 1).length)] as const;
+    const d = draftBeginPrep(done, fillers, T0);
+    assert.deepEqual(d.prep!.lineup.map((l) => l.length), [3, 3]);
+    assert.equal(d.prep!.deadline, T0 + PVP_PREP_MS);
+    assert.deepEqual(draftPrepSwap(d, "a2", 0, 1), { ok: false, error: "notCaptain" });
+    assert.deepEqual(draftPrepSwap(d, "a1", 0, 3), { ok: false, error: "badSlot" });
+    assert.deepEqual(draftPrepSwap(make(), "a1", 0, 1), { ok: false, error: "notPrep" });
+    const r = draftPrepSwap(d, "a1", 0, 2);
+    assert.ok(r.ok);
+    if (r.ok) assert.deepEqual(r.draft.prep!.lineup[0].map((s) => s.hero.id), [d.prep!.lineup[0][2]!.hero.id, d.prep!.lineup[0][1]!.hero.id, d.prep!.lineup[0][0]!.hero.id]);
+    assert.equal(draftPrepDone(d, T0 + 1000), false);
+    let all = d;
+    for (const o of ["a1", "a2", "a3", "b1", "b2", "b3"]) {
+      assert.equal(draftPrepDone(all, T0 + 1000), false);
+      const x = draftPrepReady(all, o);
+      assert.ok(x.ok);
+      if (x.ok) all = x.draft;
+    }
+    assert.equal(draftPrepDone(all, T0 + 1000), true);
+    assert.equal(draftPrepDone(d, T0 + PVP_PREP_MS), true);
   });
 });
