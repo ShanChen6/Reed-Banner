@@ -16,7 +16,7 @@
 - **Ghép trận 3vs3:** có hàng đợi và **phòng mời bạn bè bằng mã**; sau thời gian chờ có thể **điền AI** vào chỗ trống (ngưỡng chờ chọn khi đo). Trận có AI **vẫn tính Elo nhưng được ít điểm hơn** (mục 3.7). Giao hữu qua phòng mã **không tính Elo, không thưởng**.
 - **Cấp:** dùng **cấp của chính tướng được chọn** trong hồ sơ người chơi, không chuẩn hóa. Ví dụ Hà Vân cấp 2 thì vào trận ở cấp 2, Đinh Bộ Lĩnh cấp 5 thì vào trận ở cấp 5. **Có tính trang bị** của tướng đó.
 - **Chuẩn bị:** sau khi chọn tướng có **màn chờ chuẩn bị** để người chơi sắp xếp trang bị cho tướng mình đã chọn (mục 3.4).
-- **Chọn tướng 3vs3:** **lần lượt, có cấm chọn**; **mỗi phe cấm 3 tướng**, hết giờ cấm thì máy cấm ngẫu nhiên (mục 3.3).
+- **Chọn tướng 3vs3:** **lần lượt, cấm và chọn công khai**; **mỗi phe cấm 3 tướng**, hết giờ cấm thì máy cấm ngẫu nhiên (mục 3.3).
 - **Đinh Bộ Lĩnh ở 3vs3:** chọn được, **cấm theo nghề hoặc hệ** của ông (không cấm cả ông), **cả trận chỉ có một Đinh Bộ Lĩnh**: phe nào chọn ông trước thì phe kia không chọn được nữa (mục 3.8).
 - **Nộ:** **tính riêng cho từng người chơi**, mỗi tướng có thanh Nộ và bị động của chính mình (mục 3.5).
 - **Bỏ lượt:** người hết giờ thì **mất lượt, lượt chuyển sang đối thủ**. Bỏ lượt liên tục bị coi là **phá trận**: cảnh cáo, về sau hạn chế ghép trận (mục 3.6). Chưa xử thua vì bỏ lượt. Luật phá trận được Shan đồng ý.
@@ -58,6 +58,7 @@ Phe đi trước bốc ngẫu nhiên hoặc phe điểm thấp hơn đi trước
 
 Quy trình (số lượng cấm do Shan chốt; thứ tự và giờ là đề xuất, cần mô phỏng ở PVP-00):
 
+0. **Cấm và chọn đều công khai** (Shan, 13/11/2026): mọi lượt cấm và chọn hiện ngay cho cả hai phe thấy, không cấm kín cùng lúc. Phe cấm trước thấy ít thông tin hơn phe cấm sau, và đó là lý do phe Elo cao hơn cấm trước (bù ở mục 3.8).
 1. **Cấm:** hai phe lần lượt **cấm**, mỗi phe cấm **3 tướng** của đối phương (tướng bị cấm không ai trong cả trận chọn được). Riêng **Đinh Bộ Lĩnh chỉ cấm theo một nghề hoặc một hệ** của ông (mục 3.8), mỗi lượt cấm ông vẫn tính một trong 3 lượt. Mỗi lượt cấm tối đa 20 giây; **hết giờ thì máy cấm ngẫu nhiên** một tướng trong kho chung hợp lệ.
 2. **Chọn:** phe điểm thấp hơn chọn trước, các phe lần lượt chọn theo thứ tự xen kẽ (đề xuất 1-2-2-1 hoặc A-B-B-A-A-B), mỗi người chọn đúng **một tướng đang sở hữu**. Hết giờ chọn thì máy chọn thay tướng hợp lệ có cấp cao nhất.
 3. **Không trùng tướng trong cùng phe**; tướng đã chọn hoặc đã bị cấm không ai chọn lại. **Cả trận chỉ có một Đinh Bộ Lĩnh**: ai chọn ông trước (phe nào cũng được) thì mọi người còn lại, kể cả phe kia, không chọn được ông nữa (mục 3.8).
