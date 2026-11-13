@@ -101,5 +101,7 @@ Cờ Lau viết mới hoàn toàn bằng **TypeScript**. Không dùng Java và k
 
 - Trận Đồ xếp hạng (`FORMATION_RANKED_ENABLED`, mặc định tắt, chỉ `true` mới bật) cần `SESSION_SECRET` để HMAC seed theo bậc và kỳ. Server giữ trạng thái ván trong bảng `formation_entries` và không gửi seed cho client; xem [GDD Binh Pháp mục 12](../02-game-modes/tran-do/gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt).
 
+- Quần Hùng online (PvP, `PVP_ENABLED`, mặc định tắt, chỉ `true` mới bật, chỉ tài khoản đăng nhập): bảng `pvp_matches` (trạng thái cả trận, ghi kèm điều kiện `seq`), `pvp_queue` (hàng đợi ghép trận) và `pvp_ratings` (Elo từng người, số lần tha mất kết nối trong ngày). Không có tiến trình nền: mỗi lần client hỏi (`GET /api/pvp`, `GET /api/pvp/:id`, polling 1–2 giây) server thử ghép trận, chạy bù lượt hết giờ và AI tiếp quản tới thời điểm hiện tại. Ghép trận và tính điểm đều là một câu lệnh có điều kiện (Neon HTTP không có transaction). Luật ở [Quần Hùng PvP](../02-game-modes/future/quan-hung-pvp-truc-tiep.md).
+
 Nghiệm thu hiện tại:
 [T06.04](../02-game-modes/dual-tower/06-04-final-acceptance.md).
