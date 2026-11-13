@@ -275,7 +275,35 @@ export const pvpRatings = pgTable(
     losses: integer("losses").notNull().default(0),
     forgiveDay: text("forgive_day").notNull().default(""),
     forgiveUsed: integer("forgive_used").notNull().default(0),
+    /** Tuần (giờ Việt Nam) của bộ đếm `breakCount`: số trận bị tính phá trận trong tuần. */
+    breakWeek: text("break_week").notNull().default(""),
+    breakCount: integer("break_count").notNull().default(0),
+    /** Bị hạn chế ghép trận tới mốc này (ms); 0 là không bị hạn chế. */
+    banUntil: bigint("ban_until", { mode: "number" }).notNull().default(0),
     updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
   },
   (t) => [primaryKey({ columns: [t.ownerId, t.format] }), index("pvp_ratings_rank_idx").on(t.format, t.rating)],
+);
+
+/** Vàng PvP đã nhận mỗi ngày (giờ Việt Nam), để giữ trần vàng mỗi ngày. Số trận không bị giới hạn. */
+export const pvpDaily = pgTable(
+  "pvp_daily",
+  {
+    ownerId: text("owner_id").notNull(),
+    day: text("day").notNull(),
+    gold: integer("gold").notNull().default(0),
+  },
+  (t) => [primaryKey({ columns: [t.ownerId, t.day] })],
+);
+
+/** Số trận một người đã đấu với cùng một đối thủ trong ngày: quá mức thì trận đó không có vàng (điểm hạng vẫn tính). */
+export const pvpPairs = pgTable(
+  "pvp_pairs",
+  {
+    day: text("day").notNull(),
+    ownerId: text("owner_id").notNull(),
+    opponentId: text("opponent_id").notNull(),
+    matches: integer("matches").notNull().default(0),
+  },
+  (t) => [primaryKey({ columns: [t.day, t.ownerId, t.opponentId] })],
 );

@@ -121,8 +121,12 @@ Quy trình (số lượng cấm do Shan chốt; thứ tự và giờ là đề x
 
 ### 3.9 Thưởng
 
-- **Chỉ vàng.** Thưởng mỗi trận nhỏ cho cả người thắng lẫn thua, và thưởng cuối kỳ theo hạng bằng [cơ chế thưởng hạng chung](../README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt). Kỳ đề xuất theo tuần; bảng theo mùa tính từ Elo đổi trong tuần, như Quần Hùng hiện tại.
-- **Giới hạn trận mỗi ngày:** có (đề xuất), để chống cày và giữ tải.
+- **Chỉ vàng.** **Giới hạn vàng, không giới hạn số trận** (Shan, 13/11/2026): bạn đánh bao nhiêu trận cũng được, vàng PvP mỗi ngày có trần.
+- **Vàng mỗi trận** (đề xuất, chờ Shan duyệt): thắng 60, thua 20, chỉ cho người **được tính điểm** (không cho người phá trận hay người bị AI tiếp quản). Trận có AI giảm theo cùng hệ số AI của điểm hạng (mục 3.7), làm tròn.
+- **Trần vàng:** 300 vàng mỗi người mỗi ngày (giờ Việt Nam), đủ khoảng 5 trận thắng. Hết trần thì trận vẫn tính điểm hạng nhưng không có vàng.
+- **Cùng một đối thủ:** mỗi ngày chỉ **2 trận đầu** với cùng một người có vàng; trận sau vẫn tính điểm hạng nhưng không có vàng, để hai tài khoản không đổi vàng qua lại. Điểm Elo chưa chặn (xem câu hỏi mở).
+- **Phá trận:** lần đầu trong tuần chỉ cảnh cáo; từ lần hai bị **hạn chế ghép trận** 15 phút, gấp đôi mỗi lần lặp lại, tối đa 24 giờ. Người bị hạn chế không vào hàng đợi được tới khi hết hạn. Bộ đếm theo tuần (thứ Hai đầu tuần, giờ Việt Nam).
+- **Thưởng cuối kỳ theo hạng** bằng [cơ chế thưởng hạng chung](../README.md#6-thưởng-vàng-theo-hạng-cuối-kỳ-claude-đặt-01112026-chờ-shan-duyệt), kỳ theo tuần: chưa làm (PVP-07).
 - Chỉ **tài khoản đã đăng nhập**; khách không vào.
 
 ## 4. Đề xuất kỹ thuật
@@ -146,16 +150,16 @@ Làm **1vs1 trước**, vì khái quát trận cho nhiều chủ sở hữu và 
 |---|---|---|
 | PVP-00 | Duyệt luật mục 3, chốt các câu hỏi mở (mục 6), chọn kênh đẩy | Rulebook và ADR được Shan duyệt |
 | PVP-01 | **Đã làm (13/11/2026):** lõi `src/core/pvp/` quanh `BattleState` hai phe: chủ sở hữu theo từng tướng (hoặc AI điền), chỉ chủ tướng đang hành động được đi nước, chỉ đội trưởng đổi người hành động, hết giờ thì mất lượt và quyền sang đối thủ, bỏ lượt liên tiếp (3 lần của chính người đó, đề xuất) là phá trận, Elo từng người (phá trận không đổi điểm, hệ số giảm khi có AI), phe Elo thấp đi trước. Có test và mô phỏng 1vs1, 3vs3 sáu bot, có AI điền và có người bỏ lượt (`tests/core/pvp/`). **Cũng đã làm (13/11/2026):** tín hiệu còn sống, tách mất kết nối khỏi bỏ lượt, tha 3 lần mỗi ngày, AI tiếp quản sau 90 giây, người bị tiếp quản không đổi Elo. **Chưa làm:** lưu và đồng bộ qua server (PVP-02), Nộ riêng từng người (PVP-06, cần sửa lõi trận) | Mô phỏng hai AI đấu nhau, rồi sáu AI, qua cùng đường kiểm tra quyền (đạt; đường server là PVP-02) |
-| PVP-02 | **Đã làm phần 1vs1 (13/11/2026):** bảng `pvp_matches`, `pvp_queue`, `pvp_ratings` (migration `0012_pvp`); `src/server/pvp.ts` (hàng đợi, ghép theo Elo với khoảng điểm nới dần, trận có thẩm quyền, chạy bù hết giờ và AI tiếp quản khi có người hỏi, tính điểm đúng một lần, trừ số lần tha mất kết nối); API `GET/POST /api/pvp` và `GET/POST /api/pvp/:id`, polling, sau cờ `PVP_ENABLED` (mặc định tắt) và cổng đăng nhập. Test bộ nhớ và PGlite chạy cùng migration. **Chưa làm:** giao diện (PVP-03), giới hạn trận mỗi ngày, chặn đánh lại, thưởng vàng, cảnh cáo và hạn chế ghép phá trận (PVP-04), 3vs3 (PVP-05, 06) | Test ghép trận, chạy song song, chặn lượt sai (đạt trên bộ nhớ và PGlite; chưa thử trên Neon thật) |
+| PVP-02 | **Đã làm phần 1vs1 (13/11/2026):** bảng `pvp_matches`, `pvp_queue`, `pvp_ratings` (migration `0012_pvp`); `src/server/pvp.ts` (hàng đợi, ghép theo Elo với khoảng điểm nới dần, trận có thẩm quyền, chạy bù hết giờ và AI tiếp quản khi có người hỏi, tính điểm đúng một lần, trừ số lần tha mất kết nối); API `GET/POST /api/pvp` và `GET/POST /api/pvp/:id`, polling, sau cờ `PVP_ENABLED` (mặc định tắt) và cổng đăng nhập. Test bộ nhớ và PGlite chạy cùng migration. **Chưa làm:** 3vs3 (PVP-05, 06) | Test ghép trận, chạy song song, chặn lượt sai (đạt trên bộ nhớ và PGlite; chưa thử trên Neon thật) |
 | PVP-03 | **Đã làm bản 1vs1 (13/11/2026):** thẻ **Đấu người** trong màn Quần Hùng (`src/app/game/arena/PvpPanel.tsx`), chỉ hiện khi máy chủ bật `PVP_ENABLED`; màn chờ ghép (hỏi lại mỗi 2 giây), trận trực tiếp (bàn cờ, máu, năng lượng, Nộ, đồng hồ lượt 30 giây, kỹ năng gồm chọn mục tiêu, chọn ô và xoáy ô, báo bỏ lượt liên tiếp), màn kết quả với điểm đổi; trận dở được mở lại khi tải trang. Đã thử hai trình duyệt đánh nhau trên bản dev. **Chưa làm:** hoạt ảnh nước đi và nhật ký diễn biến (mới hiện trạng thái sau mỗi nước), chọn nghề, hệ của Đinh Bộ Lĩnh và màn chuẩn bị trang bị (cần PVP-06), âm thanh, kiểm điện thoại | QA desktop (đạt); điện thoại và mất mạng giữa trận (chưa) |
-| PVP-04 | Elo 1vs1, giới hạn trận mỗi ngày, chặn đánh lại, thưởng vàng, cảnh cáo phá trận | Cân bằng và kiểm chống farm |
+| PVP-04 | **Đã làm (13/11/2026):** vàng mỗi trận (thắng 60, thua 20, giảm khi có AI), trần 300 vàng mỗi ngày, chỉ 2 trận đầu mỗi ngày với cùng một đối thủ có vàng, **không giới hạn số trận**; cảnh cáo phá trận lần đầu trong tuần, từ lần hai hạn chế ghép trận (15 phút nhân đôi mỗi lần, tối đa 24 giờ); bảng `pvp_daily`, `pvp_pairs` và 3 cột mới của `pvp_ratings` (migration `0013_pvp_gold`). Giao diện hiện vàng còn nhận, cảnh cáo, hạn chế, vàng nhận được sau trận. Test bộ nhớ và PGlite. Các con số vàng, trần và ngưỡng hạn chế là đề xuất | Cân bằng và kiểm chống farm (số liệu thật chưa có) |
 | PVP-05 | 3vs3: phòng mời bằng mã, hàng đợi sáu người, điền AI | Test ghép trận sáu người, bỏ cuộc giữa trận |
 | PVP-06 | 3vs3: bước cấm (3 tướng mỗi phe, hết giờ máy cấm), chọn tướng lần lượt, đội trưởng xếp vị trí; **màn chờ chuẩn bị** trang bị; Nộ riêng từng người | Mô phỏng chọn tướng, không trùng, hết giờ chọn; mô phỏng cân bằng Nộ riêng |
 | PVP-07 | Bảng xếp hạng theo kỳ, thưởng cuối kỳ | Dùng sổ `rank_reward_claims`, nhận một lần |
 
 ## 6. Câu hỏi mở
 
-Đã chốt ở mục 1.1 (gồm Đinh Bộ Lĩnh ở 3vs3): đội hình 1vs1 và 3vs3, cấp (cấp của chính tướng), có tính trang bị, màn chuẩn bị, cấm chọn 3 tướng mỗi phe, Nộ riêng, bỏ lượt và phá trận, Elo từng người (phá trận không tính điểm, trận có AI ít điểm hơn), giao hữu, thưởng vàng. Còn lại:
+Đã chốt ở mục 1.1 (gồm Đinh Bộ Lĩnh ở 3vs3): đội hình 1vs1 và 3vs3, cấp (cấp của chính tướng), có tính trang bị, màn chuẩn bị, cấm chọn 3 tướng mỗi phe, Nộ riêng, bỏ lượt và phá trận, Elo từng người (phá trận không tính điểm, trận có AI ít điểm hơn), giao hữu, thưởng vàng có trần mỗi ngày và không giới hạn số trận. Còn lại:
 
 - **Đinh Bộ Lĩnh ở 3vs3:** đã chốt phương án A với một Đinh Bộ Lĩnh cho cả trận; còn cần mô phỏng cân bằng 56 kiểu, lợi thế người chọn trước và kiểm cấm theo nghề, hệ.
 - **Nộ riêng:** cách tích mục 3.5 đúng ý Shan chưa (người ghép bộ trống nhận Nộ)? Cần mô phỏng cân bằng vì phe 3 người có ba thanh.
@@ -163,6 +167,7 @@ Làm **1vs1 trước**, vì khái quát trận cho nhiều chủ sở hữu và 
 - **Màn chuẩn bị:** giờ chờ (đề xuất 60 giây) và có cho đổi nghề, hệ của Đinh Bộ Lĩnh ở đây không.
 - **Điền AI:** chờ bao lâu thì điền; hệ số giảm điểm khi có AI.
 - **Phá trận:** số lượt bỏ liên tiếp để cảnh cáo, mức hạn chế ghép và có reset theo mùa không.
-- **Con số:** giờ mỗi lượt khi mất kết nối, số trận mỗi ngày, số lần đánh lại cùng một người, thưởng vàng mỗi trận.
+- **Con số:** vàng mỗi trận (60 và 20), trần vàng mỗi ngày (300), số trận có vàng với cùng một đối thủ (2), mức hạn chế phá trận (15 phút nhân đôi, tối đa 24 giờ).
+- **Elo qua lại giữa hai tài khoản:** hiện chỉ chặn vàng, chưa chặn điểm hạng khi hai người đấu nhau liên tục; có cần giảm điểm khi đấu lại cùng một người không?
 - **Kênh đẩy:** polling, SSE hay dịch vụ ngoài (đề xuất polling ở bản đầu rồi đo).
 - **Song song với Quần Hùng bóng ma hay thay thế dần?**

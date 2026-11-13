@@ -6,6 +6,11 @@
 import {
   PVP_ELO_START,
   PVP_FORGIVE_PER_DAY,
+  PVP_GOLD_DAILY_CAP,
+  PVP_GOLD_PER_OPPONENT,
+  pvpBanMs,
+  pvpGoldBase,
+  vnWeek,
   createPvpMatch,
   createRng,
   profileTeam,
@@ -27,7 +32,7 @@ import {
   type PvpPlayerResult,
   type PvpState,
 } from "@/core";
-import { loadProfile, type ProfileStore } from "./profiles";
+import { loadProfile, updateProfile, type ProfileStore } from "./profiles";
 
 /** Bản đầu chỉ mở 1vs1. */
 export const PVP_FORMATS: readonly PvpFormat[] = ["duel"];
@@ -52,7 +57,22 @@ export interface PvpRatingRow {
   /** Ngày (giờ Việt Nam) của bộ đếm `forgiveUsed`. */
   readonly forgiveDay: string;
   readonly forgiveUsed: number;
+  /** Tuần (giờ Việt Nam) của `breakCount`. */
+  readonly breakWeek: string;
+  /** Số trận bị tính phá trận trong tuần `breakWeek`. */
+  readonly breakCount: number;
+  /** Bị hạn chế ghép trận tới mốc này (ms); 0 là không. */
+  readonly banUntil: number;
   readonly updatedAt: number;
+}
+
+/** Kết quả một người sau trận, kèm vàng đã nhận và hậu quả phá trận. */
+export interface PvpSettled extends PvpPlayerResult {
+  readonly gold: number;
+  /** Bị cảnh cáo phá trận (lần đầu trong tuần). */
+  readonly warned: boolean;
+  /** Bị hạn chế ghép trận tới mốc này (ms), null nếu không. */
+  readonly banUntil: number | null;
 }
 
 export interface PvpQueueRow {
@@ -72,7 +92,7 @@ export interface PvpMatchRecord {
   readonly seq: number;
   readonly status: PvpMatchStatus;
   readonly owners: readonly string[];
-  readonly results: readonly PvpPlayerResult[] | null;
+  readonly results: readonly PvpSettled[] | null;
   readonly createdAt: number;
   readonly updatedAt: number;
   readonly settledAt: number | null;
@@ -107,6 +127,17 @@ export interface PvpStore {
   saveMatch(record: PvpMatchRecord, expectedSeq: number): Promise<boolean>;
   /** Đặt `settledAt` và kết quả đúng một lần; true chỉ cho lần gọi đầu tiên. */
   claimSettle(id: string, results: readonly PvpPlayerResult[], now: number): Promise<boolean>;
+  /** Ghi đè kết quả đã tính xong (kèm vàng và hậu quả); chỉ người thắng `claimSettle` gọi. */
+  finalizeResults(id: string, results: readonly PvpSettled[]): Promise<void>;
+  /** Vàng PvP đã nhận trong ngày `day`. */
+  goldToday(ownerId: string, day: string): Promise<number>;
+  addGold(ownerId: string, day: string, amount: number): Promise<void>;
+  /** Số trận đã bắt đầu giữa hai người trong ngày (cùng một con số cho cả hai chiều). */
+  pairMatches(ownerId: string, opponentId: string, day: string): Promise<number>;
+  recordPair(a: string, b: string, day: string): Promise<void>;
+  /** Ghi một lần phá trận trong tuần `week` (tuần mới thì đếm lại từ 1) và trả số lần trong tuần. */
+  recordBreak(ownerId: string, format: PvpFormat, week: string, now: number): Promise<number>;
+  setBan(ownerId: string, format: PvpFormat, until: number, now: number): Promise<void>;
 }
 
 const defaultRating = (ownerId: string, format: PvpFormat, now = 0): PvpRatingRow => ({
@@ -117,6 +148,9 @@ const defaultRating = (ownerId: string, format: PvpFormat, now = 0): PvpRatingRo
   losses: 0,
   forgiveDay: "",
   forgiveUsed: 0,
+  breakWeek: "",
+  breakCount: 0,
+  banUntil: 0,
   updatedAt: now,
 });
 
@@ -124,6 +158,8 @@ export class MemoryPvpStore implements PvpStore {
   private readonly ratings = new Map<string, PvpRatingRow>();
   private readonly queue = new Map<string, PvpQueueRow>();
   private readonly matches = new Map<string, PvpMatchRecord>();
+  private readonly gold = new Map<string, number>();
+  private readonly pairs = new Map<string, number>();
 
   async rating(ownerId: string, format: PvpFormat): Promise<PvpRatingRow> {
     return structuredClone(this.ratings.get(`${ownerId}|${format}`) ?? defaultRating(ownerId, format));
@@ -197,8 +233,41 @@ export class MemoryPvpStore implements PvpStore {
   async claimSettle(id: string, results: readonly PvpPlayerResult[], now: number): Promise<boolean> {
     const cur = this.matches.get(id);
     if (!cur || cur.settledAt !== null) return false;
-    this.matches.set(id, { ...cur, settledAt: now, results: structuredClone([...results]) });
+    this.matches.set(id, { ...cur, settledAt: now, results: structuredClone(results.map((r) => ({ ...r, gold: 0, warned: false, banUntil: null }))) });
     return true;
+  }
+
+  async finalizeResults(id: string, results: readonly PvpSettled[]): Promise<void> {
+    const cur = this.matches.get(id);
+    if (cur) this.matches.set(id, { ...cur, results: structuredClone([...results]) });
+  }
+
+  async goldToday(ownerId: string, day: string): Promise<number> {
+    return this.gold.get(`${ownerId}|${day}`) ?? 0;
+  }
+
+  async addGold(ownerId: string, day: string, amount: number): Promise<void> {
+    this.gold.set(`${ownerId}|${day}`, (this.gold.get(`${ownerId}|${day}`) ?? 0) + amount);
+  }
+
+  async pairMatches(ownerId: string, opponentId: string, day: string): Promise<number> {
+    return this.pairs.get(`${day}|${ownerId}|${opponentId}`) ?? 0;
+  }
+
+  async recordPair(a: string, b: string, day: string): Promise<void> {
+    for (const [x, y] of [[a, b], [b, a]] as const) this.pairs.set(`${day}|${x}|${y}`, (this.pairs.get(`${day}|${x}|${y}`) ?? 0) + 1);
+  }
+
+  async recordBreak(ownerId: string, format: PvpFormat, week: string, now: number): Promise<number> {
+    const cur = this.ratings.get(`${ownerId}|${format}`) ?? defaultRating(ownerId, format);
+    const count = (cur.breakWeek === week ? cur.breakCount : 0) + 1;
+    this.ratings.set(`${ownerId}|${format}`, { ...cur, breakWeek: week, breakCount: count, updatedAt: now });
+    return count;
+  }
+
+  async setBan(ownerId: string, format: PvpFormat, until: number, now: number): Promise<void> {
+    const cur = this.ratings.get(`${ownerId}|${format}`) ?? defaultRating(ownerId, format);
+    this.ratings.set(`${ownerId}|${format}`, { ...cur, banUntil: until, updatedAt: now });
   }
 }
 
@@ -221,21 +290,23 @@ export function pvpMatchWindow(waitedMs: number): number {
   return PVP_MATCH_WINDOW + Math.floor(Math.max(0, waitedMs) / PVP_MATCH_WINDOW_EVERY_MS) * PVP_MATCH_WINDOW_STEP;
 }
 
-export type PvpQueueError = "badFormat" | "inMatch";
+export type PvpQueueError = "badFormat" | "inMatch" | "banned";
 
 /** Vào hàng đợi. Đang có trận dở thì không vào được (hết hạn tự đóng khi trận chạy bù tới lúc xong). */
 export async function pvpEnqueue(
   ownerId: string,
   format: PvpFormat,
   deps: PvpDeps,
-): Promise<{ ok: true } | { ok: false; error: PvpQueueError }> {
+): Promise<{ ok: true } | { ok: false; error: PvpQueueError; until?: number }> {
   if (!PVP_FORMATS.includes(format)) return { ok: false, error: "badFormat" };
+  const own = await deps.pvp.rating(ownerId, format);
+  if (own.banUntil > deps.now) return { ok: false, error: "banned", until: own.banUntil };
   const cur = await deps.pvp.queueOf(ownerId);
   if (cur?.matchId) {
     const m = await deps.pvp.getMatch(cur.matchId);
     if (m && m.status === "active") return { ok: false, error: "inMatch" };
   }
-  const { rating } = await deps.pvp.rating(ownerId, format);
+  const { rating } = own;
   await deps.pvp.enqueue({ ownerId, format, rating, enqueuedAt: deps.now, lastSeen: deps.now, matchId: null });
   return { ok: true };
 }
@@ -293,6 +364,7 @@ async function tryMatch(me: PvpQueueRow, deps: PvpDeps): Promise<string | null> 
   const record = await buildDuel(first, second, deps);
   await deps.pvp.createMatch(record);
   const won = await deps.pvp.claimPair(first.ownerId, second.ownerId, record.id);
+  if (won) await deps.pvp.recordPair(first.ownerId, second.ownerId, vnDay(deps.now));
   if (!won) {
     // Người kia vừa bị ghép hoặc rời đi: bỏ trận dư này, không ảnh hưởng ai.
     await deps.pvp.saveMatch({ ...record, status: "abandoned", seq: 2 }, 1);
@@ -308,6 +380,12 @@ export interface PvpOverview {
   readonly matchId: string | null;
   /** Số lần còn được tha mất kết nối hôm nay (thể thức 1vs1). */
   readonly forgiveLeft: number;
+  /** Vàng PvP còn nhận được hôm nay (trần mỗi ngày trừ số đã nhận); số trận không giới hạn. */
+  readonly goldLeft: number;
+  /** Số lần bị tính phá trận trong tuần này. */
+  readonly breakCount: number;
+  /** Bị hạn chế ghép trận tới mốc này (ms), null nếu không. */
+  readonly banUntil: number | null;
   readonly serverNow: number;
 }
 
@@ -328,7 +406,11 @@ export async function pvpOverview(ownerId: string, deps: PvpDeps): Promise<PvpOv
   }
   const r = await deps.pvp.rating(ownerId, "duel");
   const day = vnDay(deps.now);
+  const gold = await deps.pvp.goldToday(ownerId, day);
   return {
+    goldLeft: Math.max(0, PVP_GOLD_DAILY_CAP - gold),
+    breakCount: r.breakWeek === vnWeek(deps.now) ? r.breakCount : 0,
+    banUntil: r.banUntil > deps.now ? r.banUntil : null,
     ratings: { duel: { rating: r.rating, wins: r.wins, losses: r.losses } },
     queue: q && q.matchId === null ? { format: q.format, waitedMs: deps.now - q.enqueuedAt } : null,
     matchId,
@@ -400,7 +482,7 @@ export interface PvpMatchView {
   readonly battle: Omit<PvpState["battle"], "boardRng" | "aiRng">;
   readonly winner: 0 | 1 | null;
   /** Kết quả điểm sau trận, chỉ của chính người hỏi. */
-  readonly result: PvpPlayerResult | null;
+  readonly result: PvpSettled | null;
 }
 
 function viewOf(rec: PvpMatchRecord, owner: string, now: number): PvpMatchView {
@@ -434,17 +516,50 @@ function viewOf(rec: PvpMatchRecord, owner: string, now: number): PvpMatchView {
   };
 }
 
-/** Tính điểm hạng khi trận vừa xong; chỉ một request thắng quyền `claimSettle`. */
+/**
+ * Tính điểm hạng, vàng và hậu quả phá trận khi trận vừa xong; chỉ một request thắng quyền `claimSettle`.
+ * Vàng chỉ cho người được tính điểm, giảm theo số AI trong trận, có trần mỗi ngày và chỉ ở `PVP_GOLD_PER_OPPONENT` trận
+ * đầu mỗi ngày với cùng một đối thủ. Phá trận lần đầu trong tuần là cảnh cáo, từ lần hai bị hạn chế ghép trận.
+ */
 async function settleIfOver(rec: PvpMatchRecord, deps: PvpDeps): Promise<PvpMatchRecord> {
   if (rec.state.battle.winner === null || rec.settledAt !== null) return rec;
   const ratings: Record<string, number> = {};
   for (const p of rec.owners) ratings[p] = (await deps.pvp.rating(p, rec.format)).rating;
-  const results = pvpSettle(rec.state, ratings);
-  if (!(await deps.pvp.claimSettle(rec.id, results, deps.now))) return (await deps.pvp.getMatch(rec.id)) ?? rec;
+  const base = pvpSettle(rec.state, ratings);
+  if (!(await deps.pvp.claimSettle(rec.id, base, deps.now))) return (await deps.pvp.getMatch(rec.id)) ?? rec;
   const day = vnDay(deps.now);
-  for (const r of results) {
+  const week = vnWeek(deps.now);
+  const aiCount = rec.state.seats.flat().filter((p) => p === null).length;
+  const results: PvpSettled[] = [];
+  for (const r of base) {
     await deps.pvp.applyResult(r.player, rec.format, { delta: r.delta, won: r.won, counted: r.counted, forgiven: r.disconnects, day, now: deps.now });
+    let gold = 0;
+    if (r.counted) {
+      const opponent = rec.owners.find((o) => o !== r.player);
+      const meetings = opponent ? await deps.pvp.pairMatches(r.player, opponent, day) : 0;
+      if (meetings <= PVP_GOLD_PER_OPPONENT) {
+        const left = Math.max(0, PVP_GOLD_DAILY_CAP - (await deps.pvp.goldToday(r.player, day)));
+        gold = Math.min(pvpGoldBase(r.won, aiCount), left);
+      }
+      if (gold > 0) {
+        const paid = await updateProfile(deps.profiles, r.player, (p) => ({ ok: true, profile: { ...p, gold: p.gold + gold } }), deps.now);
+        if (paid.ok) await deps.pvp.addGold(r.player, day, gold);
+        else gold = 0;
+      }
+    }
+    let warned = false;
+    let banUntil: number | null = null;
+    if (r.breaker) {
+      const count = await deps.pvp.recordBreak(r.player, rec.format, week, deps.now);
+      const ms = pvpBanMs(count);
+      if (ms > 0) {
+        banUntil = deps.now + ms;
+        await deps.pvp.setBan(r.player, rec.format, banUntil, deps.now);
+      } else warned = true;
+    }
+    results.push({ ...r, gold, warned, banUntil });
   }
+  await deps.pvp.finalizeResults(rec.id, results);
   return (await deps.pvp.getMatch(rec.id)) ?? rec;
 }
 

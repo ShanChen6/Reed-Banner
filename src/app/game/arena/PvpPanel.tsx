@@ -59,6 +59,7 @@ const ERROR_NAME: Record<string, string> = {
   network: "Mất kết nối tới máy chủ. Hãy kiểm tra mạng, ván vẫn chạy trong lúc bạn tải lại.",
   inMatch: "Bạn đang có một trận dở. Hãy vào lại trận đó.",
   badFormat: "Thể thức này chưa mở.",
+  banned: "Bạn đang bị hạn chế ghép trận vì phá trận.",
   conflict: "Máy chủ đang bận, hãy thử lại.",
   notYourTurn: "Chưa đến lượt bạn.",
   notCaptain: "Chỉ đội trưởng mới đổi được người hành động.",
@@ -69,7 +70,10 @@ const ERROR_NAME: Record<string, string> = {
   notFound: "Không tìm thấy trận này.",
 };
 
+const clockTime = (ms: number) => new Date(ms).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
+
 const errorText = (data: Json): string => {
+  if (data.error === "banned" && typeof data.until === "number") return `Bạn bị hạn chế ghép trận vì phá trận, được ghép lại sau ${clockTime(data.until)}.`;
   const detail = typeof data.detail === "string" ? data.detail : "";
   if (detail in ERROR_TEXT) return ERROR_TEXT[detail as keyof typeof ERROR_TEXT];
   return ERROR_NAME[String(data.error)] ?? "Có lỗi xảy ra, hãy thử lại.";
@@ -136,11 +140,11 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
   const o = overview;
   return (
     <OrnateFrame level="raised" className="flex flex-col gap-4">
-      <SectionTitle description="Đấu 1vs1 với người khác, mỗi bên chỉ có Đinh Bộ Lĩnh. Điểm hạng riêng cho Đấu người, thắng tăng, thua giảm.">
+      <SectionTitle description="Đấu 1vs1 với người khác, mỗi bên chỉ có Đinh Bộ Lĩnh. Điểm hạng riêng cho Đấu người, thắng tăng, thua giảm. Số trận không giới hạn, vàng thưởng có trần mỗi ngày.">
         Đấu người
       </SectionTitle>
       {message && <Alert role="alert">{message}</Alert>}
-      <div className="grid grid-cols-3 gap-2 text-center" aria-label="Thành tích Đấu người">
+      <div className="grid grid-cols-2 gap-2 text-center sm:grid-cols-4" aria-label="Thành tích Đấu người">
         <FrameInset>
           <p className="text-caption text-on-wood-soft">Điểm</p>
           <p className="text-xl font-bold text-title-on-wood">{o?.ratings.duel.rating ?? "–"}</p>
@@ -155,7 +159,15 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
           <p className="text-caption text-on-wood-soft">Lượt mất mạng được tha hôm nay</p>
           <p className="text-xl font-bold text-title-on-wood">{o?.forgiveLeft ?? "–"}</p>
         </FrameInset>
+        <FrameInset>
+          <p className="text-caption text-on-wood-soft">Vàng còn nhận được hôm nay</p>
+          <p className="text-xl font-bold text-title-on-wood">{o?.goldLeft ?? "–"}</p>
+        </FrameInset>
       </div>
+      {o?.banUntil && <Alert role="alert">Bạn bị hạn chế ghép trận vì phá trận, được ghép lại sau {clockTime(o.banUntil)}.</Alert>}
+      {!o?.banUntil && !!o?.breakCount && (
+        <Alert role="status">Bạn đã bị tính phá trận {o.breakCount} lần trong tuần này. Phá trận thêm sẽ bị hạn chế ghép trận.</Alert>
+      )}
       {o?.queue ? (
         <div role="status" aria-live="polite" className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-on-wood">
@@ -167,7 +179,7 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
         </div>
       ) : (
         <div className="flex flex-wrap items-center gap-3">
-          <Button size="lg" disabled={busy || !o} onClick={() => void queue()}>
+          <Button size="lg" disabled={busy || !o || !!o.banUntil} onClick={() => void queue()}>
             Tìm đối thủ
           </Button>
           <p className="text-sm text-on-wood-soft">
@@ -503,7 +515,7 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
           {result ? (
             <p>
               {result.counted
-                ? `Điểm ${result.before} → ${result.after} (${result.delta >= 0 ? "+" : ""}${result.delta}).`
+                ? `Điểm ${result.before} → ${result.after} (${result.delta >= 0 ? "+" : ""}${result.delta}).${result.gold > 0 ? ` Thưởng ${result.gold} vàng.` : " Trận này không có vàng (đã đủ trần vàng hôm nay, hoặc đã đấu quá nhiều trận với cùng một người)."}`
                 : result.left
                   ? "Tướng của bạn đã do máy điều khiển nên trận này không đổi điểm."
                   : "Bạn bị tính phá trận nên trận này không đổi điểm."}
@@ -513,6 +525,8 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
           ) : (
             <p>Đang tính điểm…</p>
           )}
+          {result?.warned && <Alert role="alert">Bạn bị cảnh cáo phá trận. Lần sau trong tuần này bạn sẽ bị hạn chế ghép trận.</Alert>}
+          {result?.banUntil && <Alert role="alert">Bạn bị hạn chế ghép trận vì phá trận, được ghép lại sau {clockTime(result.banUntil)}.</Alert>}
           <Button size="lg" onClick={onExit}>
             Về sảnh
           </Button>

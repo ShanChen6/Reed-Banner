@@ -4,8 +4,8 @@
 import { and, asc, eq, gte, inArray, isNull, sql } from "drizzle-orm";
 import type { PvpFormat, PvpPlayerResult, PvpState } from "@/core";
 import { PVP_ELO_START } from "@/core";
-import type { PvpMatchRecord, PvpMatchStatus, PvpQueueRow, PvpRatingRow, PvpResultInput, PvpStore } from "../pvp";
-import { pvpMatches, pvpQueue, pvpRatings } from "./schema";
+import type { PvpMatchRecord, PvpMatchStatus, PvpQueueRow, PvpRatingRow, PvpResultInput, PvpSettled, PvpStore } from "../pvp";
+import { pvpDaily, pvpMatches, pvpPairs, pvpQueue, pvpRatings } from "./schema";
 import type { Db } from "./store";
 
 const toMatch = (r: typeof pvpMatches.$inferSelect): PvpMatchRecord => ({
@@ -15,7 +15,7 @@ const toMatch = (r: typeof pvpMatches.$inferSelect): PvpMatchRecord => ({
   seq: r.seq,
   status: r.status as PvpMatchStatus,
   owners: r.owners as string[],
-  results: (r.results as PvpPlayerResult[] | null) ?? null,
+  results: (r.results as PvpSettled[] | null) ?? null,
   createdAt: r.createdAt,
   updatedAt: r.updatedAt,
   settledAt: r.settledAt,
@@ -29,7 +29,7 @@ export class DrizzlePvpStore implements PvpStore {
   async rating(ownerId: string, format: PvpFormat): Promise<PvpRatingRow> {
     const [r] = await this.db.select().from(pvpRatings).where(and(eq(pvpRatings.ownerId, ownerId), eq(pvpRatings.format, format))).limit(1);
     if (r) return { ...r, format };
-    return { ownerId, format, rating: PVP_ELO_START, wins: 0, losses: 0, forgiveDay: "", forgiveUsed: 0, updatedAt: 0 };
+    return { ownerId, format, rating: PVP_ELO_START, wins: 0, losses: 0, forgiveDay: "", forgiveUsed: 0, breakWeek: "", breakCount: 0, banUntil: 0, updatedAt: 0 };
   }
 
   async applyResult(ownerId: string, format: PvpFormat, i: PvpResultInput): Promise<void> {
@@ -141,5 +141,63 @@ export class DrizzlePvpStore implements PvpStore {
       .where(and(eq(pvpMatches.id, id), isNull(pvpMatches.settledAt)))
       .returning({ id: pvpMatches.id });
     return rows.length === 1;
+  }
+
+  async finalizeResults(id: string, results: readonly PvpSettled[]): Promise<void> {
+    await this.db.update(pvpMatches).set({ results: [...results] }).where(eq(pvpMatches.id, id));
+  }
+
+  async goldToday(ownerId: string, day: string): Promise<number> {
+    const [r] = await this.db.select({ gold: pvpDaily.gold }).from(pvpDaily).where(and(eq(pvpDaily.ownerId, ownerId), eq(pvpDaily.day, day))).limit(1);
+    return r?.gold ?? 0;
+  }
+
+  async addGold(ownerId: string, day: string, amount: number): Promise<void> {
+    if (amount <= 0) return;
+    await this.db
+      .insert(pvpDaily)
+      .values({ ownerId, day, gold: amount })
+      .onConflictDoUpdate({ target: [pvpDaily.ownerId, pvpDaily.day], set: { gold: sql`${pvpDaily.gold} + ${amount}` } });
+  }
+
+  async pairMatches(ownerId: string, opponentId: string, day: string): Promise<number> {
+    const [r] = await this.db
+      .select({ matches: pvpPairs.matches })
+      .from(pvpPairs)
+      .where(and(eq(pvpPairs.day, day), eq(pvpPairs.ownerId, ownerId), eq(pvpPairs.opponentId, opponentId)))
+      .limit(1);
+    return r?.matches ?? 0;
+  }
+
+  async recordPair(a: string, b: string, day: string): Promise<void> {
+    for (const [ownerId, opponentId] of [[a, b], [b, a]] as const) {
+      await this.db
+        .insert(pvpPairs)
+        .values({ day, ownerId, opponentId, matches: 1 })
+        .onConflictDoUpdate({ target: [pvpPairs.day, pvpPairs.ownerId, pvpPairs.opponentId], set: { matches: sql`${pvpPairs.matches} + 1` } });
+    }
+  }
+
+  async recordBreak(ownerId: string, format: PvpFormat, week: string, now: number): Promise<number> {
+    const [r] = await this.db
+      .insert(pvpRatings)
+      .values({ ownerId, format, rating: PVP_ELO_START, breakWeek: week, breakCount: 1, updatedAt: now })
+      .onConflictDoUpdate({
+        target: [pvpRatings.ownerId, pvpRatings.format],
+        set: {
+          breakCount: sql`case when ${pvpRatings.breakWeek} = ${week} then ${pvpRatings.breakCount} + 1 else 1 end`,
+          breakWeek: week,
+          updatedAt: now,
+        },
+      })
+      .returning({ count: pvpRatings.breakCount });
+    return r?.count ?? 1;
+  }
+
+  async setBan(ownerId: string, format: PvpFormat, until: number, now: number): Promise<void> {
+    await this.db
+      .insert(pvpRatings)
+      .values({ ownerId, format, rating: PVP_ELO_START, banUntil: until, updatedAt: now })
+      .onConflictDoUpdate({ target: [pvpRatings.ownerId, pvpRatings.format], set: { banUntil: until, updatedAt: now } });
   }
 }
