@@ -79,7 +79,15 @@ const PHOTOS: Readonly<Record<string, string>> = {
   voAnh: "/art/characters/vo-anh/portrait.webp",
 };
 
+/**
+ * NPC hư cấu của Bình Loạn (id trong `src/core/campaign/encounters.ts`, `hero: false`) đã có chân dung riêng
+ * (`public/art/npc/<id>.webp`, 384×384, nền tranh sương; prompt ở docs/06-art/prompts/npc-binh-loan.md).
+ * Thiếu thì ô chân dung dùng hình tạm theo nghề như cũ. Thêm id vào đây khi có ảnh.
+ */
+export const NPC_PORTRAIT_IDS: ReadonlySet<string> = new Set([]);
+
 export function portraitUrl(id: string): string | null {
+  if (NPC_PORTRAIT_IDS.has(id)) return `/art/npc/${id}.webp`;
   return PHOTOS[id] ?? null;
 }
 
