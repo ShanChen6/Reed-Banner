@@ -86,7 +86,7 @@ function PieceText({ hand }: { hand: PuzzleState["hand"] }) {
 export function CommandCard({ state }: { state: PuzzleState }) {
   return (
     <section aria-label="Quân đang cầm" className="relative overflow-hidden rounded-lg border-2 border-frame-bronze bg-gradient-to-br from-paper-hi to-paper-deep p-3 text-wood shadow-[0_4px_14px_rgb(0_0_0/0.55)]">
-      <span aria-hidden className="absolute top-0 right-3 rounded-b bg-lacquer px-2 pt-0.5 pb-1 font-serif text-[11px] font-bold tracking-[0.2em] text-title-on-wood">LỆNH BÀI</span>
+      <span aria-hidden className="absolute top-0 right-3 rounded-b bg-lacquer px-2 pt-0.5 pb-1 font-serif text-[11px] font-bold uppercase tracking-[0.2em] text-title-on-wood">Lệnh bài</span>
       <div className="flex items-center gap-3 pt-3">
         <div className="size-24 shrink-0 rounded-md bg-wood/10 p-1"><PieceFace piece={state.hand} large /></div>
         <div className="min-w-0 text-[15px] leading-snug"><PieceText hand={state.hand} /></div>

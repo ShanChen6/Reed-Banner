@@ -39,7 +39,7 @@ export function LoginScene({
   return (
     <AuthCard title="Đăng nhập" subtitle="Đăng nhập để giữ tiến độ và chơi tiếp trên mọi thiết bị." oauthError={q.oauthError}>
       <div className="mt-5 flex flex-col gap-3">
-        <Notice show={q.emailVerified}>Đã xác nhận email. Đăng nhập để chơi tiếp nhé.</Notice>
+        <Notice show={q.emailVerified}>Đã xác nhận email. Xin đăng nhập để chơi tiếp.</Notice>
         <ProviderButtons providers={providers} />
         <Divider>{providers.length > 0 ? "hoặc dùng tên đăng nhập" : "Dùng tên đăng nhập"}</Divider>
         <LoginForm username={q.username} error={q.error} />
@@ -172,7 +172,7 @@ export function AccountScene({
               {account.email ? <span className="font-semibold break-all">{account.email}</span> : <span className="text-on-wood-soft">chưa có</span>}
             </p>
             <Notice show={q.emailVerified}>Đã xác nhận email. Quên mật khẩu thì lấy lại qua email này.</Notice>
-            <Notice show={q.emailSent}>Đã gửi thư xác nhận. Bạn mở thư và bấm đường dẫn trong đó nhé.</Notice>
+            <Notice show={q.emailSent}>Đã gửi thư xác nhận. Xin mở thư và bấm đường dẫn trong đó.</Notice>
             {!account.email && (
               <Alert tone="warning" className="p-2 text-caption">Chưa có email thì quên mật khẩu là không lấy lại được.</Alert>
             )}
@@ -231,7 +231,7 @@ export function ResetPasswordScene({ q }: { q: AuthParams }) {
           <ResetPasswordForm token={q.token} error={q.error} />
         ) : (
           <Alert role="alert" className="text-sm">
-            {q.error === "badToken" ? "Đường dẫn đã dùng rồi hoặc hết hạn." : "Đường dẫn thiếu mã đặt lại."} Bạn gửi yêu cầu mới nhé.
+            {q.error === "badToken" ? "Đường dẫn đã dùng rồi hoặc hết hạn." : "Đường dẫn thiếu mã đặt lại."} Xin gửi yêu cầu mới.
           </Alert>
         )}
         <p className="text-center text-sm text-on-wood-soft">

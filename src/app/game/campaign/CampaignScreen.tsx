@@ -29,8 +29,8 @@ export default function CampaignScreen() {
       <Shell>
         <p className="py-24 text-center text-on-wood-soft">
           {loadError
-            ? "Không tải được hồ sơ, thử tải lại trang."
-            : "Đang tải chiến dịch…"}
+            ? "Chưa mở được hồ sơ. Xin tải lại trang."
+            : "Đang mở Bình Loạn…"}
         </p>
       </Shell>
     );
@@ -53,7 +53,7 @@ export default function CampaignScreen() {
     if (!res.id) {
       setBusy(false);
       setMessage(
-        ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Không tạo được trận",
+        ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Chưa bày được trận. Xin thử lại.",
       );
       return;
     }

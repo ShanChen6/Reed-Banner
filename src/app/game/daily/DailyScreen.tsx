@@ -76,7 +76,7 @@ export default function DailyScreen() {
       <ModeScreen label="Nhật Lệnh">
         <p className="py-24 text-center text-on-wood-soft">
           {data
-            ? "Không tải được thử thách hôm nay, thử tải lại trang."
+            ? "Chưa nhận được Nhật Lệnh hôm nay. Xin tải lại trang."
             : "Đang tải…"}
         </p>
       </ModeScreen>
@@ -109,7 +109,7 @@ export default function DailyScreen() {
     if (!res.id) {
       setBusy(false);
       setMessage(
-        ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Không tạo được trận",
+        ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Chưa bày được trận. Xin thử lại.",
       );
       return;
     }

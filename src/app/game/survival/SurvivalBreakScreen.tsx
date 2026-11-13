@@ -49,7 +49,7 @@ export default function SurvivalBreakScreen(props: SurvivalBreakScreenProps) {
         role="alert"
         className="fixed inset-2 z-40 m-auto flex max-h-[90dvh] max-w-3xl flex-col justify-center gap-4 overflow-y-auto rounded-xl border border-danger/70 bg-wood-lo/[.98] p-4 text-on-wood shadow-2xl sm:p-6"
       >
-        <h2 className="text-xl font-bold text-title-on-wood">Không tải được dữ liệu nghỉ</h2>
+        <h2 className="text-xl font-bold text-title-on-wood">Chưa nhận được tin lúc nghỉ giữa đợt</h2>
         <p className="text-sm text-on-wood-soft">
           Máy chủ chưa gửi bản xem trước đội hình, hồi phục và lương. Không thể tự tính thay hoặc tự bắt đầu đợt kế.
         </p>
@@ -211,8 +211,8 @@ function SurvivalBreakReady({
           <p className="text-sm text-on-wood-soft">
             Đợt tiếp theo: {next.wave}
             {next.boss && (
-              <span className="ml-2 inline-flex rounded-full bg-lacquer px-2 py-0.5 text-caption font-bold text-on-wood">
-                CẢNH BÁO TRÙM
+              <span className="ml-2 inline-flex rounded-full bg-lacquer px-2 py-0.5 text-caption font-bold uppercase text-on-wood">
+                Cảnh báo trùm
               </span>
             )}
           </p>
@@ -367,10 +367,10 @@ function SurvivalBreakReady({
                         )}
                         <span className="min-w-0 flex-1">
                           <span className="block text-caption text-on-wood-soft">
-                            Đồng đội {slot} · {fighter?.hpAfterRecovery ?? 0}/{fighter?.maxHp ?? 0} HP
+                            Phó tướng {slot} · {fighter?.hpAfterRecovery ?? 0}/{fighter?.maxHp ?? 0} máu
                           </span>
                           <Select
-                            aria-label={`Chọn đồng đội vị trí ${slot}`}
+                            aria-label={`Chọn phó tướng vị trí ${slot}`}
                             disabled={pending}
                             value={id}
                             onChange={(event) =>
@@ -413,7 +413,7 @@ function SurvivalBreakReady({
                         />
                         <span>{fighter.name}</span>
                         <span className={fighter.hpAfterRecovery === 0 ? "text-danger" : "text-jade"}>
-                          {fighter.hpAfterRecovery === 0 ? "Gục" : `${fighter.hpAfterRecovery}/${fighter.maxHp} HP`}
+                          {fighter.hpAfterRecovery === 0 ? "Gục" : `${fighter.hpAfterRecovery}/${fighter.maxHp} máu`}
                         </span>
                       </li>
                     ))}
@@ -472,11 +472,11 @@ function SurvivalBreakReady({
                         className="size-11"
                       />
                       <span>
-                        HP {preview.leaderBuildBasis.hp}/{preview.leaderBuildBasis.maxHp}
+                        Máu {preview.leaderBuildBasis.hp}/{preview.leaderBuildBasis.maxHp}
                         {" → "}
                         {leaderPreview.hp}/{leaderPreview.config.maxHp}
                         {" · "}
-                        ATK {leaderPreview.config.atk} · DEF {leaderPreview.config.def}
+                        Công {leaderPreview.config.atk} · Thủ {leaderPreview.config.def}
                       </span>
                     </div>
                     <p className="mt-1 text-caption text-on-wood-soft">

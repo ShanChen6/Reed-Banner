@@ -116,14 +116,14 @@ export default function MusterPanel({
           </ul>
           {campaign.unlockedHeroes.length > 0 && (
             <p className="mt-1 text-caption text-jade">
-              Đồng hành đã mở khóa:{" "}
+              Tướng quân đã gia nhập:{" "}
               {campaign.unlockedHeroes
                 .map((id) => companionById(id)?.name ?? id)
                 .join(", ")}
             </p>
           )}
           <p className="mt-1 text-caption text-on-wood-soft">
-            Đổi đội ở mục Đội hình & cửa hàng.
+            Đổi đội ở Doanh Trại, thẻ Đội hình.
           </p>
         </div>
         <div className="rounded-md border border-white/10 bg-black/25 p-2 text-sm">
@@ -189,7 +189,7 @@ export default function MusterPanel({
         <summary
           className={`flex min-h-11 cursor-pointer items-center font-semibold text-frame-gold ${FOCUS}`}
         >
-          Còn {remaining.length}/24 nhiệm vụ cho chiến dịch toàn quốc
+          Còn {remaining.length}/24 nhiệm vụ cho cuộc bình loạn toàn quốc
         </summary>
         <ul className="mt-1 grid gap-0.5 text-caption text-on-wood-soft sm:grid-cols-2">
           {remaining.map((id) => (

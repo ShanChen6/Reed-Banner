@@ -95,7 +95,7 @@ export default function GameShell({
         <GameHeader scene={currentScene} account={account} />
         {arrived && api.params.get("login") === "error" && !(currentScene in auth) && (
           <p role="alert" className="bg-danger-surface/60 px-4 py-2 text-center text-sm text-danger">
-            Đăng nhập không thành công, thử lại nhé.
+            Đăng nhập chưa thành. Xin thử lại.
           </p>
         )}
         <div key={currentScene} className="scene-enter flex flex-1 flex-col">

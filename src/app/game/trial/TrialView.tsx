@@ -466,7 +466,7 @@ export default function TrialView(props: TrialViewProps) {
     <>
       <ModeBanner
         title="Tháp Thí Luyện"
-        kicker="Song Tháp"
+        kicker="Leo tháp"
         art="/art/home/trial.webp"
         artPosition="center 42%"
         description={`${total} tầng, mỗi tầng một luật chọn đội riêng. Đánh lại tùy ý; Đá Cường Hóa lần đầu của mỗi tầng chỉ nhận một lần.`}
@@ -478,7 +478,7 @@ export default function TrialView(props: TrialViewProps) {
 
       {!overview.supported && (
         <Alert role="alert" className="p-3 text-sm">
-          Dữ liệu Song Tháp của bạn thuộc phiên bản mới hơn bản này. Hãy tải lại trang hoặc chờ cập nhật; tiến trình không bị ghi đè.
+          Dữ liệu Tháp Thí Luyện thuộc phiên bản mới hơn bản này. Xin tải lại trang hoặc chờ cập nhật; tiến trình không bị ghi đè.
         </Alert>
       )}
 

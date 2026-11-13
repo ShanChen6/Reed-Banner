@@ -9,10 +9,10 @@ const withCampaign = (over: Partial<Profile["campaign"]>): Profile => {
 };
 
 describe("nút chính ở hero Chiến trường theo ngữ cảnh người chơi", () => {
-  it("người mới chưa chơi chiến dịch: Bắt đầu chiến dịch, phụ là Thao Luyện", () => {
+  it("người mới chưa chơi chiến dịch: Bắt đầu Bình Loạn, phụ là Thao Luyện", () => {
     const plan = heroPlan(newProfile(), false);
     assert.equal(plan.primary.scene, "CAMPAIGN");
-    assert.equal(plan.primary.label, "Bắt đầu chiến dịch");
+    assert.equal(plan.primary.label, "Bắt đầu Bình Loạn");
     assert.equal(plan.secondary?.scene, "PRACTICE");
     assert.match(plan.hint ?? "", /chương I/);
   });
@@ -47,7 +47,7 @@ describe("nút chính ở hero Chiến trường theo ngữ cảnh người chơ
   });
 
   it("trận dở: nút phụ là việc chiến dịch tiếp theo, hoặc Vào trận mới khi chiến dịch xong hay không có hồ sơ", () => {
-    assert.equal(heroPlan(newProfile(), true).secondary?.label, "Bắt đầu chiến dịch");
+    assert.equal(heroPlan(newProfile(), true).secondary?.label, "Bắt đầu Bình Loạn");
     assert.equal(heroPlan(withCampaign({ completed: [CAMPAIGN_MISSION_IDS[0]!] }), true).secondary?.label, "Tiếp tục Bình Loạn");
     assert.equal(heroPlan(withCampaign({ completed: [...CAMPAIGN_MISSION_IDS] }), true).secondary?.label, "Vào trận mới");
     assert.equal(heroPlan(null, true).secondary?.label, "Vào trận mới");

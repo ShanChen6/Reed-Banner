@@ -13,7 +13,7 @@ export default function SkillDetails({skills,passive,fighter,paper=false}:{paper
   if(fusion.length)return <details className={box}>
     <summary className="cursor-pointer font-semibold pointer-coarse:py-3.5">Bộ 6 chủ động · 4 nội tại dung hợp</summary>
     <ul className={`mt-2 space-y-2 ${accent}`}>{fusion.map(line=><li key={line.label}>{line.label} · {line.name}: {line.description}</li>)}</ul>
-    <p className="mt-2 opacity-70">Nhân vật dung hợp không nhận nội tại nghề mặc định; chỉ bốn nội tại này. Truy kích tự nối trong cùng hành động, không tốn lượt hay năng lượng; mỗi nội tại tối đa một lần mỗi hành động, toàn chuỗi tối đa 12 phản ứng, sâu 4. Đóng băng/Câm lặng chặn phản ứng; riêng nội tại cuối lượt vẫn chạy khi còn sống.</p>
+    <p className="mt-2 opacity-70">Tướng quân dung hợp không nhận nội tại nghề mặc định; chỉ bốn nội tại này. Truy kích tự nối trong cùng hành động, không tốn lượt hay năng lượng; mỗi nội tại tối đa một lần mỗi hành động, toàn chuỗi tối đa 12 phản ứng, sâu 4. Đóng băng/Câm lặng chặn phản ứng; riêng nội tại cuối lượt vẫn chạy khi còn sống.</p>
     <ul className="mt-2 space-y-2">{skills.map(skill=><li key={skill.id}>{skillText(skill)}</li>)}</ul>
   </details>;
   return <details className={box}>

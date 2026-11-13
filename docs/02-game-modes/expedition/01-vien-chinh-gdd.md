@@ -29,7 +29,7 @@ nào đóng quân dù giặc đang tăng viện. Trận vẫn là trận match-3
 
 1. **Chọn sa bàn và bậc.** Sáu sa bàn (mục 4), mỗi sa bàn ba bậc. Bậc I luôn mở; bậc sau mở khi đã thắng bậc trước của
    cùng sa bàn.
-2. **Chia hai đạo.** Đạo Chính: Đinh Bộ Lĩnh (nghề và hệ đang chọn ở Doanh Trại) và 2 tướng. Biệt đạo: 3 tướng, người đầu
+2. **Chia hai đạo.** Đạo Chính: Đinh Bộ Lĩnh (nghề và hệ đang chọn ở Doanh Trại) và 2 tướng. Biệt Đạo: 3 tướng, người đầu
    là thống lĩnh. Sáu người khác nhau, đều đã chiêu mộ. Người mới có đúng 5 tướng khởi đầu nên vào được ngay.
    Chỉ số và trang bị được **chụp lúc xuất quân**; đổi đồ trong lúc viễn chinh không ảnh hưởng.
 3. **Hành quân theo ngày.** Mỗi ngày chọn **một** việc:

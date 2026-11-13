@@ -48,9 +48,9 @@ export const ERROR_TEXT: Readonly<Record<string, string>> = {
   noHint: "Hôm nay đã dùng hết gợi ý.",
   loginRequired: "Cần đăng nhập để chơi.",
   featureDisabled: "Chế độ này chưa mở.",
-  conflict: "Có thao tác khác cùng lúc, thử lại nhé.",
-  badRequest: "Yêu cầu không hợp lệ.",
+  conflict: "Có lệnh khác đang chạy cùng lúc. Xin thử lại.",
+  badRequest: "Lệnh không hợp lệ. Xin tải lại trang rồi thử lại.",
   noGold: "Không đủ vàng để mua bó.",
   shopLimit: "Tuần này đã mua đủ 2 bó.",
-  network: "Mất kết nối, thử lại nhé.",
+  network: "Tin báo đứt quãng, chưa liên lạc được máy chủ. Xin thử lại.",
 };

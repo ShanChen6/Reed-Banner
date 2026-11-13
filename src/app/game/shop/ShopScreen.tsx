@@ -28,11 +28,11 @@ export default function ShopScreen() {
       <h1 className="sr-only">Cửa Hàng</h1>
       {!profile ? (
         <OrnateFrame as="div" role="status" className="py-16 text-center text-on-wood-soft">
-          {loadError ? "Không tải được hồ sơ, thử tải lại trang." : "Đang mở cửa hàng…"}
+          {loadError ? "Chưa mở được hồ sơ. Xin tải lại trang." : "Đang mở Cửa Hàng…"}
         </OrnateFrame>
       ) : (
         <OrnateFrame level="raised" className="flex flex-col gap-3">
-          <Tabs label="Mục cửa hàng" items={TABS} value={tab} onChange={setTab} fullWidth panelId="shop-panel" className="[&>button]:whitespace-nowrap [&>button]:px-2" />
+          <Tabs label="Mục Cửa Hàng" items={TABS} value={tab} onChange={setTab} fullWidth panelId="shop-panel" className="[&>button]:whitespace-nowrap [&>button]:px-2" />
           {message && <Alert className="p-3 text-sm">{message}</Alert>}
           <div id="shop-panel" role="tabpanel" className="min-w-0">
             {tab === "heroes" && <ShopPanel sellOnly profile={profile} locked={busy} onAction={act} />}

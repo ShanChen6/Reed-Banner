@@ -162,7 +162,7 @@ export default function SetupLobby({
         {/* Ba khối chọn gọn một hàng nhãn + chip: nhãn trái, lựa chọn phải; đang chọn là giấy dó (quy tắc bề mặt ở theme.md). */}
         <div className="flex flex-col gap-3 ui-frame-inset rounded-xl p-3">
           <Row title="Nguyên tố">
-            <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Nguyên tố nhân vật chính">
+            <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Nguyên tố chủ tướng">
               {elements.map((e) => (
                 <button key={e} type="button" role="radio" aria-checked={element === e} onClick={() => onElement(e)} title={ELEMENT_TRAIT[e].role} className={`${chip(element === e)} min-h-11 gap-1.5`}>
                   <ElementIcon element={e} className="size-6" />
@@ -176,7 +176,7 @@ export default function SetupLobby({
           </Row>
 
           <Row title="Nghề">
-            <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Nghề nhân vật chính">
+            <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Nghề chủ tướng">
               {PROFESSIONS.map((p) => (
                 <button key={p} type="button" role="radio" aria-checked={profession === p} onClick={() => onProfession(p)} title={PROFESSION_PERK[p]} className={`${chip(profession === p)} min-h-11 gap-1.5`}>
                   <ProfessionIcon profession={p} className="size-6" />
@@ -241,7 +241,7 @@ export default function SetupLobby({
                 </div>
               </>
             )}
-          <p className="mt-1.5 text-caption text-on-wood-soft">Trang bị mẫu: cả hai đội mặc đủ 9 món cùng hệ; Tianwu không có thưởng bộ.</p>
+          <p className="mt-1.5 text-caption text-on-wood-soft">Trang bị mẫu: cả hai đội mặc đủ 9 món cùng hệ; đối thủ không có thưởng bộ.</p>
           </Row>
         )}
 
