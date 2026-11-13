@@ -12,7 +12,7 @@ const gameFont = localFont({
 
 export const metadata: Metadata = {
   title: "Cờ Lau",
-  description: "Game match-3 chiến đấu theo lượt thời Loạn 12 Sứ Quân.",
+  description: "Game ghép ba chiến đấu theo lượt thời Loạn 12 sứ quân.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -21,3 +21,11 @@ Trước khi đọc hoặc sửa tài liệu trong `docs/`, làm theo [quy đị
 ## Kiểm tra trước khi commit
 
 Chạy `pnpm check` (lint, typecheck, knip, docs, test). Sửa giao diện hoặc luồng màn thì chạy thêm `pnpm e2e`. Quy trình đầy đủ và nơi đặt test mới: [quy trình test](docs/07-architecture/quy-trinh-test.md).
+
+## Commit và PR
+
+- Commit bằng tên Shan: `git config user.name "ShanChen6"` và `git config user.email "131275070+ShanChen6@users.noreply.github.com"`.
+- Không thêm dòng `Co-Authored-By` (hay `Claude-Session`) vào commit.
+- Không thêm "Generated with Claude Code" vào commit hoặc PR.
+- Không thêm dòng "Requested by Shan · project thread" (hay comment attribution) vào thân PR.
+- PR nhắm `develop`, nhánh và tiêu đề theo tiền tố `feat/`, `fix/`, `docs/`… (không `claude/`).

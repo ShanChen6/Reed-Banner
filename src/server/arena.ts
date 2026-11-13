@@ -271,7 +271,7 @@ export async function arenaView(
       await deps.leaderboard
         .submit(ownerId, [{ board: "arena", score: row.rating }], now)
         .catch((e: unknown) =>
-          console.error("Không ghi được bảng đấu trường", e),
+          console.error("Không ghi được bảng Quần Hùng", e),
         );
   }
   if (row.offers.length === 0 || command === "refresh")

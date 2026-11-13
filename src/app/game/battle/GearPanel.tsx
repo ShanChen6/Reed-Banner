@@ -210,7 +210,7 @@ export default function GearPanel({
       <div
         className="mb-2 flex flex-wrap gap-1"
         role="tablist"
-        aria-label="Nhân vật"
+        aria-label="Tướng quân"
       >
         {teamIds.map((id) => (
           <button
@@ -263,8 +263,8 @@ export default function GearPanel({
           );
         })}
         <span className="ml-1 tabular-nums opacity-80">
-          +{stats.flat.atk} ATK · +{stats.flat.maxHp} Máu · +{stats.flat.def}{" "}
-          DEF · +{Math.round(stats.percent.atk * 100)}% ATK · +{Math.round(stats.percent.maxHp * 100)}% Máu · +{Math.round(stats.percent.def * 100)}% DEF
+          +{stats.flat.atk} Công · +{stats.flat.maxHp} Máu · +{stats.flat.def}{" "}
+          Thủ · +{Math.round(stats.percent.atk * 100)}% Công · +{Math.round(stats.percent.maxHp * 100)}% Máu · +{Math.round(stats.percent.def * 100)}% Thủ
         </span>
       </div>
       {stats.bonuses.length > 0 && (
@@ -407,7 +407,7 @@ export default function GearPanel({
       )}
       <p className="mt-2 opacity-60">
         Mỗi món chỉ một người mặc. Vũ khí của Đinh Bộ Lĩnh giữ riêng theo nghề;
-        nhân vật kèm chỉ mặc vũ khí đúng nghề. Ghép cần 3 món cùng ô, cùng hệ,
+        phó tướng chỉ mặc vũ khí đúng nghề. Ghép cần 3 món cùng ô, cùng hệ,
         cùng phẩm (vũ khí cùng nghề).
       </p>
     </section>

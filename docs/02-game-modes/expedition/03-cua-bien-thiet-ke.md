@@ -29,7 +29,7 @@ thua trận rút về, sương mù theo [GDD mục 3.8](01-vien-chinh-gdd.md#38-
 | id | Tên | Loại | Địch | Vai trò |
 |---|---|---|---|---|
 | `trai-ben` | Trại Bến Thuyền | Trại | — | Đạo Chính xuất phát. Nơi đưa dân về |
-| `trai-bai` | Trại Bãi Sậy | Trại | — | Biệt đạo xuất phát |
+| `trai-bai` | Trại Bãi Sậy | Trại | — | Biệt Đạo xuất phát |
 | `ben-coi` | Đồn Bến Cói | Đồn | 2 | Chặn đường lên Làng Chài |
 | `lang-chai` | Làng Chài | Làng + nhiệm vụ | — | Hồi máu như làng thường; nhận đoàn dân |
 | `dai-trieu` | Đài Quan Triều | Chòi canh | 2 | Vén sương 2 bước; lộ lịch con nước |
@@ -86,9 +86,9 @@ bị phá là đường duy nhất tới một ô, nên mọi tổ hợp đườ
 - **Sức địch ×0,87** (`foePower`, Shan chọn 05/11/2026): mọi địch trên sa bàn, cả truy binh và phản công, nhẹ hơn các
   sa bàn khác vì việc phụ ăn hết ngày. Bậc I / II / III thắng 85 / 70 / 40% (trước 50 / 28 / 8%), xem
   [GDD mục 5.3](01-vien-chinh-gdd.md#53-nhiệm-vụ-và-sức-địch-cửa-biển-05112026-lần-8).
-- Đường ngắn nhất chỉ chiếm thành: Biệt đạo trai-bai → bai-su → doi-cat → trai-tay = 3 ngày, nhưng đánh 3 trận liền không
+- Đường ngắn nhất chỉ chiếm thành: Biệt Đạo trai-bai → bai-su → doi-cat → trai-tay = 3 ngày, nhưng đánh 3 trận liền không
   nghỉ và trận cuối có phase phá cổng.
-- Đường Toàn thắng thường gặp (ước tính tay, chưa mô phỏng): Biệt đạo giữ cầu ở ngày 2; đạo Chính rút dân ngày 3–6
+- Đường Toàn thắng thường gặp (ước tính tay, chưa mô phỏng): Biệt Đạo giữ cầu ở ngày 2; đạo Chính rút dân ngày 3–6
   (đi, ghé làng, về hai bước); hai đạo tới hai cổng rồi đánh, khoảng ngày 9–10.
 
 ## 3. Luật mới trên sa bàn
@@ -270,7 +270,7 @@ là người đứng đầu tiên không phải công trình.
 - Cạnh: bộ nét liền, nước và đầm nét đứt xanh, cửa nước nét đứt xanh có biểu tượng sóng (ghi ngày nước rút khi đã biết),
   cạnh bị phá đã lộ nét đứt đỏ có dấu ✕.
 - Đạo mang dân có cờ nhỏ hình thuyền nan cạnh cờ đạo. Cảnh báo đỏ trước trận khi mang dân.
-- Thông báo khi bị chặn: "Đường bị phá — Biệt đạo mất ngày 6" hoặc "Nước đang lên — cửa nước rút vào ngày 7, 10".
+- Thông báo khi bị chặn: "Đường bị phá — Biệt Đạo mất ngày 6" hoặc "Nước đang lên — cửa nước rút vào ngày 7, 10".
 - Trận riêng: khung trên bàn cờ ghi mục tiêu ("Giữ cầu: còn 3 lượt", "Phá cổng: cổng còn 64%") như màn Bình Loạn V2.
 - Màn kết thúc: tên kết thúc, việc phụ đã làm, sao, thưởng.
 - Nhật ký chiến dịch ngắn (5 dòng gần nhất) dưới sa bàn để biết vì sao sa bàn đổi.

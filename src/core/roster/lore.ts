@@ -48,7 +48,7 @@ export interface CharacterLore {
 
 export const CHARACTER_LORE: Readonly<Record<string, CharacterLore>> = {
   haVan: { epithet: "Đảm Hỏa", epithetMeaning: "gánh lửa, nhận phần nặng", faction: "hoaLu", factionNote: "Nghĩa quân Hoa Lư (cờ lau)", age: 25, hometown: "làng đúc đồng ven sông",
-    backstory: "Con gái thợ đúc, lớn lên bên lò lửa và khung dệt của mẹ. Khi cờ lau cần giáo và trống đồng, cô mang lửa lò theo đi, thành người \"gọi lửa\" của đội quân.",
+    backstory: "Con gái thợ đúc, lớn lên bên lò lửa và khung dệt của mẹ. Khi cờ lau cần giáo và trống đồng, cô mang lửa lò theo đi, thành người “gọi lửa” của đội quân.",
     personality: "điềm tĩnh, kín tiếng, ít cười; thói quen lau lư hương mỗi sáng.",
     quote: "Lửa lò nuôi được cả làng, lửa trận thì tôi xin nhận phần nặng." },
   leThach: { epithet: "Thủ Thổ", epithetMeaning: "giữ đất", faction: "hoaLu", factionNote: "Dân binh trong nghĩa quân Hoa Lư", age: 30, hometown: "làng ven đê",

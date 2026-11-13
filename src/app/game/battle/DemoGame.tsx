@@ -992,7 +992,7 @@ export default function DemoGame({
     clockOffset.current = res.now - Date.now();
     if (!res.view || !res.id)
       return flash(
-        ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Không tạo được trận",
+        ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Chưa bày được trận. Xin thử lại.",
       );
     seq.current = res.view.seq;
     setRaidBoss(res.view.raidBoss ?? null);
@@ -1319,14 +1319,14 @@ export default function DemoGame({
                     key={turnBanner.id}
                     role="status"
                     aria-live="polite"
-                    className={`turn-banner pointer-events-none absolute inset-x-3 top-1/2 z-20 rounded border px-3 py-2 text-center font-serif text-base font-black tracking-[0.16em] shadow-lg sm:inset-x-10 sm:text-lg ${
+                    className={`turn-banner pointer-events-none absolute inset-x-3 top-1/2 z-20 rounded border px-3 py-2 text-center font-serif text-base font-black uppercase tracking-[0.16em] shadow-lg sm:inset-x-10 sm:text-lg ${
                       turnBanner.side === AI
                         ? "border-stat-hp/70 bg-danger-surface/90 text-danger shadow-danger-surface/60"
                         : "border-frame-gold-hi/70 bg-success-surface/90 text-title-on-wood shadow-success-surface/60"
                     }`}
                     style={{ "--turn-banner-ms": `${turnBanner.side === AI ? COMBAT_PACING.enemyTurnBannerMs : COMBAT_PACING.playerTurnBannerMs}ms` } as React.CSSProperties}
                   >
-                    {turnBanner.side === AI ? "LƯỢT ĐỐI THỦ" : "ĐẾN LƯỢT BẠN"}
+                    {turnBanner.side === AI ? "Lượt đối thủ" : "Đến lượt bạn"}
                   </div>
                 )}
                 {toast && (
@@ -1432,7 +1432,7 @@ export default function DemoGame({
               Vuốt hoặc chạm hai ô kề nhau để đổi chỗ.
             </p>
             <p className="hidden text-caption opacity-70 md:block">
-              Vuốt, kéo hoặc click hai ô kề nhau để đổi chỗ. Bàn phím: mũi tên
+              Vuốt, kéo hoặc bấm hai ô kề nhau để đổi chỗ. Bàn phím: mũi tên
               hoặc WASD, Enter chọn ô, 1–6 dùng kỹ năng, Tab đổi người hành
               động, Esc hủy.
             </p>

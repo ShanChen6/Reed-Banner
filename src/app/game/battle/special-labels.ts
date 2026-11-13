@@ -41,5 +41,5 @@ export function fusionPassiveLines(f: Pick<FighterConfig, "special" | "professio
 
 /** Dòng tóm tắt nhân vật dung hợp trong tooltip thẻ nhân vật. */
 export function fusionSummary(f: Pick<FighterConfig, "special" | "element">): string | null {
-  return isFusion(f) ? `Nhân vật đặc biệt: ${FUSION_PROFESSION_NAME}, ${FUSION_ELEMENT_NAME} · hệ phòng thủ ${ELEMENT_NAME[f.element as Element]}` : null;
+  return isFusion(f) ? `Tướng quân đặc biệt: ${FUSION_PROFESSION_NAME}, ${FUSION_ELEMENT_NAME} · hệ phòng thủ ${ELEMENT_NAME[f.element as Element]}` : null;
 }

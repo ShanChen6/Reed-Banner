@@ -74,11 +74,11 @@ export function BattleHeader({
                 ? "Phòng tuyến chưa giữ được"
                 : "Hoàn thành mục tiêu"
               : survival && state.winner !== null
-              ? "Lượt sinh tồn kết thúc"
+              ? "Trấn Ải kết thúc"
               : state.winner !== null
                 ? state.winner === PLAYER
                   ? "Bạn thắng!"
-                  : "Tianwu thắng"
+                  : "Bạn thua"
                 : pending
                   ? "Đang chờ máy chủ…"
                   : playerTurn

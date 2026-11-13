@@ -63,7 +63,7 @@ describe("mảng màn trận tách từ DemoGame", () => {
   it("BattleResult: thắng, thua, có thưởng và đồ rơi, Thiên Mệnh hoàn thành tháp", () => {
     const won = battle(0);
     assert.match(render(createElement(BattleResult, resultProps(won))), /Bạn thắng!/);
-    assert.match(render(createElement(BattleResult, resultProps(battle(1)))), /Tianwu thắng/);
+    assert.match(render(createElement(BattleResult, resultProps(battle(1)))), /Bạn thua/);
 
     const item: GearItem = { id: "g1", slot: "yPhuc", element: "hoa", tier: 3, set: "coLau" };
     const withLoot = render(createElement(BattleResult, resultProps(won, { mode: "progress", outcome: outcome(won, { drop: item }), drop: item })));

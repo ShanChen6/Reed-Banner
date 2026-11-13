@@ -244,7 +244,7 @@ export default function DestinyScreen() {
   const leaderNeedsRescue = !!run?.fighters?.[MAIN_ID] &&
     (run.fighters[MAIN_ID]!.downed || run.fighters[MAIN_ID]!.hp <= 0);
 
-  const fail = (error?: string) => setMessage(DESTINY_ERROR_TEXT[error ?? "network"] ?? "Không thực hiện được. Hãy tải lại trang.");
+  const fail = (error?: string) => setMessage(DESTINY_ERROR_TEXT[error ?? "network"] ?? "Lệnh chưa thành. Xin tải lại trang.");
   const refreshAfter = async () => { await load(); setBusy(false); };
 
   const startRun = async () => {
@@ -294,7 +294,7 @@ export default function DestinyScreen() {
       <div className="py-24 text-center text-on-wood-soft">
         {failed ? (
           <>
-            <p role="alert">Không tải được Tháp Thiên Mệnh.</p>
+            <p role="alert">Chưa mở được cửa Tháp Thiên Mệnh. Xin tải lại trang.</p>
             <Button variant="secondary" className="mt-3 min-h-11" onClick={() => void load()}>Tải lại</Button>
           </>
         ) : <p role="status">Đang tải Tháp Thiên Mệnh…</p>}
